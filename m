@@ -1,49 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34DA928B419;
-	Tue, 10 Jun 2025 09:27:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408D1280CFA;
+	Tue, 10 Jun 2025 09:28:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749547663; cv=none; b=S0Rg43UlzxNYlAPXTKGn5DGPBb16xoKQgEbxOM68o6kPh9s88i9miQk/gD1EzQVrtkGe1YvbS3U/JCnA2MaXUfItD9oHY4hqRwGV2tn2TS142wKL1oQYfFI2qCLR91OdsWVKzor+iCtlm7C2O6jJzhJpGC7vCIxXwR9hI2327/M=
+	t=1749547731; cv=none; b=I0jUZfdA2rBF4qLEMGPiVPH0A6Tyl1/ohA7kjFynM6xZu2XTLESROYvXRDz8BRGrtqOACfuGsvpotPwqE8+tNNN5yLgg/8f+76U9eRYdT3OWq9PEx8ghPYEOJh2wN2eG6pCH6lZ5U7QWBIOe7lTpYtbMwPBBD/MKwJvgIxIg+o8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749547663; c=relaxed/simple;
-	bh=lfBamJGxY5k+dFxogqH5eoJqA8X1z7zpTPGsxWnNEMw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qyWN9Tq4V6r+VSci17TsOjhRj0GTZ3KrSppfeVdwHDpAUMIA4/eZHnMUrGCR5ghoJiFSOUkdYz7OiN+GYzc06g18yZnjUX5Rl+Kd+jq1qMyLeMlpFMoh/EmXWp+b0Y7/vsdphQVliocwoOXQsmtOAkAiYmiepNWmzOVGi/LW0xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DbRw67rI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749547731; c=relaxed/simple;
+	bh=IaYOK2B/lZua6SAzd/RoyITvIaEYGw7gzCzQ4KCweeM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tiZPIGUTauSJQtO52la5C07gPbWTZjUCDkI0S8ue4WpBemhCy3fLqibnbhivRWHoQbjjYGx3kLlHssYLXPWA/wrHDthhevlDOHQq3vOpZ8YwJ4lQn0WQQwmx0AuCyDBdGjf96/8kRJUsFO/0bg+04FRJNzwK5nZ5Sxo/i6xl3KY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XAEeAVmV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DbRw67rI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44959C4CEFB;
-	Tue, 10 Jun 2025 09:27:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XAEeAVmV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9EA1C4CEED;
+	Tue, 10 Jun 2025 09:28:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749547663;
-	bh=lfBamJGxY5k+dFxogqH5eoJqA8X1z7zpTPGsxWnNEMw=;
+	s=k20201202; t=1749547730;
+	bh=IaYOK2B/lZua6SAzd/RoyITvIaEYGw7gzCzQ4KCweeM=;
 	h=From:To:Cc:Subject:Date:From;
-	b=DbRw67rIApDToeSQaohj/IYtUXaxmet2X06VVVtEMc/pzT7jP+Esfx5dUB9SwZZdt
-	 Kf2ARcaInme/RHykD6bXQ8QmRpRe4kMJ5teA4TWVNKvWdNib61o+tFjJ7PxEGnPesw
-	 7fbXg+IPCGHYW5CGjr3TqupIMgeHaLHp/1n6q5zxdAA/BE6uXjfP+QKPXqWCiqlGe3
-	 7Qw0Seh6l3DB3BsSfPV+nXzO9u/v/x1zdx+F6sx3p4sagQctSj2JRghnEaHSo2UArn
-	 HNedLWqE2GXk2Va58A52uzpxXsmD0lZ2dy7/Q08WWanoscB0TqsCPMJqaNyOqZSgPq
-	 YlBZHY3yitH/w==
+	b=XAEeAVmV/Yn7Hgcyi6RCsTZrN7/s5G967uRy3AS0PzJccsHjtbwxr434duTyhpuzK
+	 24jasXy1KEWWZimYdYErqOLOsHKL9KBrsLIWA+ezY7lkJrKAZTIJhx+UfAltbH3D+Q
+	 y2SG1qGvgM/HG9WuVYTfqm72/gmkieO6LbUsy9avWQ2J+zG86Op+r215bmdk7sC2Pf
+	 1M3+8TJkjn53R6IsqbPkNA+wSdSRNEoxt9ZNfWwospo7ZpTdyQzdXkWE7CnX5iKip0
+	 miJ9BsC8n7gieBuKB1N3LHt4COOgtd2zLMcPdEAPMCAa9FFcFkeX6htXM4wyIS2Tec
+	 t6KMgA+BeEbfA==
 From: Arnd Bergmann <arnd@kernel.org>
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Nathan Chancellor <nathan@kernel.org>
+To: Leon Romanovsky <leon@kernel.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Patrisious Haddad <phaddad@nvidia.com>
 Cc: Arnd Bergmann <arnd@arndb.de>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH] drm: omapdrm: reduce clang stack usage
-Date: Tue, 10 Jun 2025 11:27:33 +0200
-Message-Id: <20250610092737.2641862-1-arnd@kernel.org>
+	=?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>,
+	Serge Hallyn <serge@hallyn.com>,
+	Chiara Meiohas <cmeiohas@nvidia.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] RDMA/mlx5: reduce stack usage in mlx5_ib_ufile_hw_cleanup
+Date: Tue, 10 Jun 2025 11:28:42 +0200
+Message-Id: <20250610092846.2642535-1-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -55,33 +50,56 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-The thread sanitizer makes the stack usage explode from extra variable
-spills in dispc_runtime_resume:
+This function has an array of eight mlx5_async_cmd structures, which
+often fits on the stack, but depending on the configuration can
+end up blowing the stack frame warning limit:
 
-drivers/gpu/drm/omapdrm/dss/dispc.c:4735:27: error: stack frame size (1824) exceeds limit (1280) in 'dispc_runtime_resume' [-Werror,-Wframe-larger-than]
+drivers/infiniband/hw/mlx5/devx.c:2670:6: error: stack frame size (1392) exceeds limit (1280) in 'mlx5_ib_ufile_hw_cleanup' [-Werror,-Wframe-larger-than]
 
-I could not figure out what exactly is going on here, but I see that
-whenever dispc_restore_context() is not inlined, that function
-and its caller shrink below 900 bytes combined of stack usage.
+Change this to a dynamic allocation instead. While a kmalloc()
+can theoretically fail, a GFP_KERNEL allocation under a page will
+block until memory has been freed up, so in the worst case, this
+only adds extra time in an already constrained environment.
 
+Fixes: 7c891a4dbcc1 ("RDMA/mlx5: Add implementation for ufile_hw_cleanup device operation")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/gpu/drm/omapdrm/dss/dispc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/mlx5/devx.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/omapdrm/dss/dispc.c b/drivers/gpu/drm/omapdrm/dss/dispc.c
-index 533f70e8a4a6..cf055815077c 100644
---- a/drivers/gpu/drm/omapdrm/dss/dispc.c
-+++ b/drivers/gpu/drm/omapdrm/dss/dispc.c
-@@ -524,7 +524,7 @@ static void dispc_save_context(struct dispc_device *dispc)
- 	DSSDBG("context saved\n");
+diff --git a/drivers/infiniband/hw/mlx5/devx.c b/drivers/infiniband/hw/mlx5/devx.c
+index 2479da8620ca..c3c0ea219ab7 100644
+--- a/drivers/infiniband/hw/mlx5/devx.c
++++ b/drivers/infiniband/hw/mlx5/devx.c
+@@ -2669,7 +2669,7 @@ static void devx_wait_async_destroy(struct mlx5_async_cmd *cmd)
+ 
+ void mlx5_ib_ufile_hw_cleanup(struct ib_uverbs_file *ufile)
+ {
+-	struct mlx5_async_cmd async_cmd[MAX_ASYNC_CMDS];
++	struct mlx5_async_cmd *async_cmd;
+ 	struct ib_ucontext *ucontext = ufile->ucontext;
+ 	struct ib_device *device = ucontext->device;
+ 	struct mlx5_ib_dev *dev = to_mdev(device);
+@@ -2678,6 +2678,10 @@ void mlx5_ib_ufile_hw_cleanup(struct ib_uverbs_file *ufile)
+ 	int head = 0;
+ 	int tail = 0;
+ 
++	async_cmd = kcalloc(MAX_ASYNC_CMDS, sizeof(*async_cmd), GFP_KERNEL);
++	if (WARN_ON(!async_cmd))
++		return;
++
+ 	list_for_each_entry(uobject, &ufile->uobjects, list) {
+ 		WARN_ON(uverbs_try_lock_object(uobject, UVERBS_LOOKUP_WRITE));
+ 
+@@ -2713,6 +2717,8 @@ void mlx5_ib_ufile_hw_cleanup(struct ib_uverbs_file *ufile)
+ 		devx_wait_async_destroy(&async_cmd[head % MAX_ASYNC_CMDS]);
+ 		head++;
+ 	}
++
++	kfree(async_cmd);
  }
  
--static void dispc_restore_context(struct dispc_device *dispc)
-+static noinline_for_stack void dispc_restore_context(struct dispc_device *dispc)
- {
- 	int i, j;
- 
+ static ssize_t devx_async_cmd_event_read(struct file *filp, char __user *buf,
 -- 
 2.39.5
 
