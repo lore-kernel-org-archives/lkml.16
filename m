@@ -1,46 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB21A2248BD;
-	Tue, 10 Jun 2025 14:16:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ECF22248BD;
+	Tue, 10 Jun 2025 14:16:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749564998; cv=none; b=Bk4oHeAMoH7EG+LKwdE7S3k+IjAXjwXcoijIOyclXUYe3TrPK5GoOAhNAEULN7rTBIfe0BqYWF7OoWjZiY3eiExG0sqp1sAqPCBfJ8Si/FNoN23MVP8OUGzBsquchf0+hv6Ek9v7yw5dq1RDDu2+zQmTlRNH7+jndKAcnB9c+Uo=
+	t=1749565001; cv=none; b=iV2di4BWkU4cZkNdukYUod7bp6dKSAWDgLOCvhf+FjNkFtiarGihT4WTG15ulY08zQfxasKWT5/tDo7mJDh7Li/IKi7cjll6CGNGCGG0FPYpG6fIjYQiaLI4u6uNpr9q1kmcFXLQTUcoBm1/D+kZV9LhOF9jkitAblw5dY6SBCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749564998; c=relaxed/simple;
-	bh=7mGVnBrDOT08Nq5IroCPSq34eFZ/6sYyG6SvpJ18f6o=;
+	s=arc-20240116; t=1749565001; c=relaxed/simple;
+	bh=xzjkJXy5nV12SXSVlGCVriM090em/5m6G36M0RvdZnU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=qHzgAhTXEM/xqFXXYegYb6FiVs2mGAj1oe3rWlCMRCeGEOJ2mo+CHylc6GdjEI0PtV73z+L3Ap38J8lr/KlUxfPlJOcW1Lspd76gDHtp8vwflvUkQXXB7WqpKjsf7G5W3TcrjZI5JLZhonZusCwQz3ybBRfISt1IGQ8H1lTNWdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l/5xyELM; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=HBisKkk8JmI1e409wAQCYkAl09oBbP0GfP2yreoLeniaa+cTgM5Y/vpSvDJ69Avnwddda9ehhfnywpPkEx98jydMthkeIht51LfWUomRLN1UJ7vMOu/L+i8/w5kORaM4//R/kS++5aB5X2GqOjYOr1Z225GAP3f2I4pWgSo/4Xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PI9OD33N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l/5xyELM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99C36C4CEED;
-	Tue, 10 Jun 2025 14:16:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PI9OD33N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3360C4CEF1;
+	Tue, 10 Jun 2025 14:16:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749564997;
-	bh=7mGVnBrDOT08Nq5IroCPSq34eFZ/6sYyG6SvpJ18f6o=;
+	s=k20201202; t=1749565000;
+	bh=xzjkJXy5nV12SXSVlGCVriM090em/5m6G36M0RvdZnU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=l/5xyELM8eESbIfWL+s4jIQecmJI9aNJh0AeoBwO6bivdDRhqb1ce6UaScDQCdGfX
-	 YRiecXwQ+trUCBqHzrr/WYn4ka5YQjhjG9SAUu14WI6lHf6Ix2r6+q95r2v4bcSV8D
-	 1VX8QCg4Rmef62EM5753PCnW9zbFTDqJpwc6Prx90K7hSEeiP3Owcosv/SM3PMS6PU
-	 fEJL7mGMeojUpGb363OLDHLzB+bGWJvGRvg89TzOWCQsIdMH4y6uS9TPOFkJtfJ7y3
-	 oz/v/CJ271deYzTniO0vLVPPtDjwKaulRVyFXl5I+RrVCf5cLWBr47aeBD+xJTC5oZ
-	 P3E5TCis086Mw==
+	b=PI9OD33Nff5Z58Y9xqxk+aTeRsPO5ykdw0lzLY2KdlEJud4eaIvJLOxJ54ElWfXmy
+	 JtzOXWFfln2LcPRCCsSW92Jmv7xvgI4tG2vIctS9GcuN+SGp8YWg0+YqmctcjZnMnA
+	 M9sDfaGfa5LE45rUqnLI+pdTMYsLkdmwkWcQ09TP1uxhn41DzhVS826AHq+NupzZ0y
+	 5+WAwQ3mC3HZwMXNmeqSUNqDOR6xiiPdisyXCifmaq9aqQ1g88+Gp3Kfm4n3HT40uO
+	 J6bmC6ULP+Mf1XHzQ5R3bns/v57SgZn0+a8ZpnlYM92z1DxoCyyCys1Qfi2uvvjwfQ
+	 eGeIdUWWwSqVQ==
 From: Mark Brown <broonie@kernel.org>
 To: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, 
- =?utf-8?q?Martin_Povi=C5=A1er?= <povik+lin@cutebit.org>, 
- Arnd Bergmann <arnd@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, 
+ Takashi Iwai <tiwai@suse.com>, Bard Liao <yung-chuan.liao@linux.intel.com>, 
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, 
+ Vijendar Mukunda <Vijendar.Mukunda@amd.com>, 
+ =?utf-8?q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>, 
  Charles Keepax <ckeepax@opensource.cirrus.com>, 
- Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
+ Richard Fitzgerald <rf@opensource.cirrus.com>, 
+ Peter Zijlstra <peterz@infradead.org>, 
+ Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, 
+ Thorsten Blum <thorsten.blum@linux.dev>
+Cc: stable@vger.kernel.org, Liam Girdwood <liam.r.girdwood@intel.com>, 
  linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250610093057.2643233-1-arnd@kernel.org>
-References: <20250610093057.2643233-1-arnd@kernel.org>
-Subject: Re: [PATCH] ASoC: ops: dynamically allocate struct
- snd_ctl_elem_value
-Message-Id: <174956499535.45975.12838399607440197526.b4-ty@kernel.org>
-Date: Tue, 10 Jun 2025 15:16:35 +0100
+In-Reply-To: <20250610103225.1475-2-thorsten.blum@linux.dev>
+References: <20250610103225.1475-2-thorsten.blum@linux.dev>
+Subject: Re: [PATCH] ASoC: sdw_utils: Fix potential NULL pointer deref in
+ is_sdca_endpoint_present()
+Message-Id: <174956499773.45975.12052046970647716420.b4-ty@kernel.org>
+Date: Tue, 10 Jun 2025 15:16:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,18 +55,11 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Tue, 10 Jun 2025 11:30:53 +0200, Arnd Bergmann wrote:
-> This structure is really too larget to be allocated on the stack:
+On Tue, 10 Jun 2025 12:32:16 +0200, Thorsten Blum wrote:
+> Check the return value of kzalloc() and exit early to avoid a potential
+> NULL pointer dereference.
 > 
-> sound/soc/soc-ops.c:435:5: error: stack frame size (1296) exceeds limit (1280) in 'snd_soc_limit_volume' [-Werror,-Wframe-larger-than]
 > 
-> Change the function to dynamically allocate it instead.
-> 
-> There is probably a better way to do it since only two integer fields
-> inside of that structure are actually used, but this is the simplest
-> rework for the moment.
-> 
-> [...]
 
 Applied to
 
@@ -70,8 +67,8 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: ops: dynamically allocate struct snd_ctl_elem_value
-      commit: 7e10d7242ea8a5947878880b912ffa5806520705
+[1/1] ASoC: sdw_utils: Fix potential NULL pointer deref in is_sdca_endpoint_present()
+      commit: 6325766d69900d1aa9733fc7572456fc4427b708
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
