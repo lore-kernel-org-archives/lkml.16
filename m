@@ -1,107 +1,115 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A08023717C;
-	Tue, 10 Jun 2025 16:07:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14359204680;
+	Tue, 10 Jun 2025 16:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749571662; cv=none; b=DceCrnuEE/7rxZwRRI6glSecGAIqn7FPGS8bF5yTv3kIe1t2fnnG9jPLAs+kSfpRZZJfezEVycILkBHjWwI+5k4OO+e+GSbGyCgndAG5O8VHCTzROOK3/iwaBA7kPJulvC5QFYZTIXwdDpXfbkm4jo5VdXTr26bQdLgIooF1N4Q=
+	t=1749571674; cv=none; b=jc6YVCLO3NRXOxr/EYvsKiZxGHIw6RIxtGCJVRzD5dyVXyv2/y1tbs9IwVOHeOSzkAlyshg9Ewrzf5TZillRxdHkqC4yepi7Zo48E1zxUk0nmoQTcd3H0QmAy8o2Wt0sHPQveHnIHEK6L3jHxBWkjy2Mnf5eExScUpuxbwjr+yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749571662; c=relaxed/simple;
-	bh=HSn8K1pGrU2ROniCJak99jKwGsLdGfOVBBfXcOPx+xk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hy3bPntALiAsAEYmc/uSeIs30Q3ryn3exBs0WcvFwu2Oq/lTt8jG/PooFKCMYI93yjpCrSsjt9fXNxDZn/5rOwATnh84ZdZRYPMVMSMccDHdk35itTxd6GBStGWoZrADoDqy3Tdx44+o/lKJBpSa3G10mlsHdbOZTgHEhzQdmv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KDHDwlw0; arc=none smtp.client-ip=209.85.218.41
+	s=arc-20240116; t=1749571674; c=relaxed/simple;
+	bh=W1BITlzur69yftGlPfm6ex930CZl9IBW3CAWbDhhnEo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XkW40XxfP+FtW2sHAlBmbnnQeprCGvbpRR/HR+Ssf6mGP8iBQcqX47VuRWuM0wfkaiB1N0hUboWELokgknotbdQYRUv0RkQ9WM5GVOhXS7FW/OGbAsACBM6R/Osb9VeoW7PUVnZZ6mHT58YkDJPppCM+mVTf5H+rCJmNl0vFtY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XOrwjONn; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KDHDwlw0"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ade58f04fb2so330801166b.0;
-        Tue, 10 Jun 2025 09:07:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XOrwjONn"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-234d3103237so7027925ad.0;
+        Tue, 10 Jun 2025 09:07:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749571659; x=1750176459; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HSn8K1pGrU2ROniCJak99jKwGsLdGfOVBBfXcOPx+xk=;
-        b=KDHDwlw0axN5TYDliRaN8L/XFV+Bw1IKADrmX73F2cdvD98TpTCNkoTU5/qFqbjgKT
-         pEu/o1HqQvue5abd6I1nlkeiJBaSKcUT8b8Svy4BsoS7Rpj++t0Lf4l+jAm6fMg8JOpK
-         g2wV2DnelJtXis9jH1glIVNgXt92i4jlj+TA9lJ6IfmQiEuktYfzlzTrGJRutgJ1ncbv
-         ES/tUktqezwpSkQtIogr6o90lmR92hjcFV9Jl/YgW7xXnAZBoFe2OW7ayCN7tXihOCxh
-         UYptwCyzzYgkfZgK+eC/xPiDOV37OxtAjiDF3z41jKGBVXC21tuNaUJYp7b60KRywSVO
-         gU9g==
+        d=gmail.com; s=20230601; t=1749571672; x=1750176472; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W1BITlzur69yftGlPfm6ex930CZl9IBW3CAWbDhhnEo=;
+        b=XOrwjONnbrWHAulz4fzMmIqi/sv/GbSLVYLd/dlMGQtUqW4ymPnnRYCMO8OWLDC+iT
+         mDXCR2toyk7b7PI5sE2Aj+EnuGRv3PdsIkIPXpUc8deAMURhryUMKTEcq6g9DVd8v+mv
+         hZ11UNbc1XCwlp47flEPjyJgQyptG6ozFT1fYcI+wisp37O6d2wwOqQ6D+5Cm4maRCcm
+         O90LO7eb/tI3mhxAyC8vQp41ylQ4ToCPZ4Ads3Nc7KxpdmmLZ7wQRuFf6wMpDcsC3Cig
+         kgsHiRnA7xXE05V+4awVqI0N0jN/0PLDyCHEKujY6L1z/XgrMKHCrJPzFDjQpE6jphKe
+         aIcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749571659; x=1750176459;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HSn8K1pGrU2ROniCJak99jKwGsLdGfOVBBfXcOPx+xk=;
-        b=X9lDbynIDilKop08GCjyn8Lvo2Ib7of8amXZN3g1CH1f6Wioz5W3hltaSjqxg/FaAz
-         ixZsjgvAZs711cw3FnWLXDEuW8nGoHzJF+4/a+qKWeCEJwlTDAF0MP+k3rNxf72KY8PC
-         CACKB20Y0EPqVI5/xJEfl/nOICZ/deoZWMvA2+AnrlDu9V6M+tethhO9PP0qxDsb6Otk
-         zaoQpkJDCagjLX5f1Lzmw1tR6IjXY4K49fdzwzNPgQhwbLPK5V6JRDyoF73Sf+5DV+FM
-         IVCTjUfkSzIfU1U0exHO3BLdQx0vix76qHadWoC66LUAtNPdOdu3vNlH8OfBDq1wCFLp
-         QCjA==
-X-Forwarded-Encrypted: i=1; AJvYcCWxczRU6msyXCiIoLOvo1glk8Q5QHvDHnWz57ZBnwUbMgAPrHKDhd5BgnHMlY/xu4JS0MZqPuTu532xfXMY@vger.kernel.org, AJvYcCX14lb/556s6r9JlRuD1AbCwEeV42Bi6KPhSfnFjxVKrDCHiBytf4+LrK409CLmZkKx+NeWEeYjfL/N@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1Mgn51myi+NCShpZ7O+aa73H7IZY5u7eOMoF+HsW0T/Nr0+Qw
-	VDDxIKsv3x/2wD6vOsc+bMLR8PkoeRv9c7QtESf4JYhiiNbzuY+Y8WcZ
-X-Gm-Gg: ASbGnctJusLKgF6NK3tmMg8EPiHHb9nsbu1oYCbpR8X/504imWzQAidIG25QWg8ff1y
-	BFw+LetFcTepuIr/v4KXnKmxjgRL33DFM7RJUZa/ZBoz/fAmEphtNqUAfq0771yYQdqi0vdMPLU
-	Sx8j/MLO6McPnU8zStpbVeezskAk2psDtzWb5PkfdDXsv/1vg589snV6cvWvZ6RBqIECXNU34c8
-	pvJsUpkOfSLCGr7DfmfNsFsN0lcjREazeetYlnKlmG5AhZrZVkHKMxxIRUr6J+YY6kRsFpT41aq
-	iJjMWgPJO9NPNfYvHN3TRjWf6lxbEugddnspZghAbd29NNfwsis3QAK4Gutk8yGskODwe8eGvw2
-	UzrUkv3bwAXrUScgYp17gZAKU
-X-Google-Smtp-Source: AGHT+IFBP4Ac0eMIqhVrxF6UOvlGCckI5Ip5teFsrW6N1rBQqfQi8L7Td5UuhoSZZjUStG87k5oXlw==
-X-Received: by 2002:a17:907:3da3:b0:ad9:db54:ba47 with SMTP id a640c23a62f3a-ade1a9c802emr1697209966b.43.1749571659205;
-        Tue, 10 Jun 2025 09:07:39 -0700 (PDT)
-Received: from [192.168.1.129] ([82.79.237.69])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60778376e48sm6305308a12.18.2025.06.10.09.07.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jun 2025 09:07:38 -0700 (PDT)
-Message-ID: <c346fa54-41f1-4574-abea-a6fb2771bcad@gmail.com>
-Date: Tue, 10 Jun 2025 19:07:37 +0300
+        d=1e100.net; s=20230601; t=1749571672; x=1750176472;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W1BITlzur69yftGlPfm6ex930CZl9IBW3CAWbDhhnEo=;
+        b=uIecb1XyJNpH+WUADx8DQl3Pi72RGdK6za7XqoHO9ugBVmqZ3pXlEhEJieGCZI3x/n
+         3Vm7bOtjSlIRdqi8NlkeaJkgcwsKyCG/1KKfYKkxYU7TJCyjUM8j1KY64Xi7O2Kdo65g
+         ufSBB6jNrZ9b4wHEecpvhSCpTZRLu+v4cBBuhB1Sfc6M5DJH9hEEXISGy2I/8ejPDmkj
+         xMqPr/a3Wf/VGiN9xx5re9Y1GOiInf47CZdJIQgUcus/0Xo4t+6uzDWsmY2y4ZsGC3bd
+         Bxn/8IjE6jLrCMlu1iQZr7hGUSfAMj+2k71ryj2ZM6nBIAZYVnxiZJFs4pufnaiAWi0c
+         i/ew==
+X-Forwarded-Encrypted: i=1; AJvYcCUywly4tTQqR7LpjXl0zMvF7CRkE+Q8d/gjdthgav+ko67dE1wMcfLOwCxuSmkFir6usB968ZbaW1+PZmYr@vger.kernel.org, AJvYcCVkjX9l3RJBkR0n3fG72QybfCIuUqcAsgMsjho0aMAf2VZB5VCoJ08mdUPJxxrWKoDx8hSOeSIk0nPVO2TP@vger.kernel.org, AJvYcCVwx5dxnACFHHg7yysJA7LyFMYtRn+2L9OpijTuvW/27Bs/CWz5unAn1yrfuWy8BMhWdKbqeXfS3cZl@vger.kernel.org, AJvYcCW6Kwmqya5l4yj8QigGNzSLVTtu/ukjGo0E5r8Yz6OIOWSFAY8lnHQVp4NU4wW44kiAHQIqXmP3rSEj@vger.kernel.org, AJvYcCWDIGFGL0njzfxbuSM2NNUyVXtWTZDSuoERxVQzyt4JhSxh8Ha+dhHo/X++PLrjwbIrCim7ytST@vger.kernel.org, AJvYcCX8wh7J3eV1pVTgs9ne2JQD6vKBoV5HGGkbL0ujrh9Gi9BZ96xvO0CqVsAoniZ+bcJPtHAKCgHdQsHEWgeLwe4=@vger.kernel.org, AJvYcCXE5bOZNlDOkKzSL+ZL5FX1XjL4QuEDG3wvm0wrunNihv19nHoy7j4thZwOG4LMfat39+vI7+VkM+09enAI0iY/@vger.kernel.org, AJvYcCXvPktjcXsfhPOh3L6PXAQ6v0nE2DDueSXtUcE7g295/BPEhEYy+iKoJEjoCOwde1hlsqRSAzedewf/sfU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxN9DHF3QC/5a8kXkCkdPQnUWbAQXWrQ2D06kFwz+x+28gdtvns
+	kHnb+gJebS+C8N4WkNkExc3oQy0XZd/kiuMOlhHjzxugngQeXpjbJW9yyDdQNj8YrW9yfKmdcFw
+	XizoTZknseMdxKRN2SbYh8xyFck1MEsA=
+X-Gm-Gg: ASbGncsCLH8vBHQCWgD/wZrTP3W1cesZK7xczQ4o9vL+WF0/TovVA9VHnyRHS+FUvkP
+	qQgxy14f2VJpX2aonOLpQDhSz8Tj14B4EBFEZGpfnbazGPjx4O0e2xeLDUN94IvKrr9UkoyMqaQ
+	IyLX4lrx9Vwoq/F5vXAg9KJOGP62aMcW0Eqo79sbvPz0k=
+X-Google-Smtp-Source: AGHT+IEkveDPapEYWYF5Lme4xzYT3aU2PAb3RMnK2FhgBqYClnpHcHMaaMDanexVO7MdhtPZZBHJv9udTG6GaKIHKaY=
+X-Received: by 2002:a17:903:1a67:b0:234:bfe3:c4a3 with SMTP id
+ d9443c01a7336-23603fce7aemr92246085ad.0.1749571672166; Tue, 10 Jun 2025
+ 09:07:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 3/6] bus: add driver for IMX AIPSTZ bridge
-To: Shawn Guo <shawnguo2@yeah.net>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- Daniel Baluta <daniel.baluta@nxp.com>, Shengjiu Wang
- <shengjiu.wang@nxp.com>, Frank Li <Frank.li@nxp.com>,
- Marco Felsch <m.felsch@pengutronix.de>,
- Marc Kleine-Budde <mkl@pengutronix.de>,
- Alexander Stein <alexander.stein@ew.tq-group.com>,
- Pengutronix Kernel Team <kernel@pengutronix.de>, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250415171919.5623-1-laurentiumihalcea111@gmail.com>
- <20250415171919.5623-4-laurentiumihalcea111@gmail.com>
- <aD0j3gXeD6Nn6L60@dragon>
-Content-Language: en-US
-From: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
-In-Reply-To: <aD0j3gXeD6Nn6L60@dragon>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250418-ptr-as-ptr-v10-0-3d63d27907aa@gmail.com>
+ <20250418-ptr-as-ptr-v10-4-3d63d27907aa@gmail.com> <CANiq72kWtEsXDuoXpbTNRLiZ=c==Ne=v4igxCWMwWFj0LOC-Yw@mail.gmail.com>
+ <CAJ-ks9ny_VNvKM-w04kkk4Yw=UpYEt82TyFZZuXEFK=DxfwcgQ@mail.gmail.com>
+In-Reply-To: <CAJ-ks9ny_VNvKM-w04kkk4Yw=UpYEt82TyFZZuXEFK=DxfwcgQ@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 10 Jun 2025 18:07:38 +0200
+X-Gm-Features: AX0GCFt25dqMhp8iaQDA-26WJJC7gjowsiCCK-_ghe8BM57dzBLtofxE1fBcZ34
+Message-ID: <CANiq72k6MkVGtdgkSuy392T_xxO-5kTJuN7kh41N=UBc0SeFLw@mail.gmail.com>
+Subject: Re: [PATCH v10 4/6] rust: enable `clippy::as_underscore` lint
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
+	Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Frederic Weisbecker <frederic@kernel.org>, Lyude Paul <lyude@redhat.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, 
+	linux-block@vger.kernel.org, devicetree@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Jun 10, 2025 at 4:14=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
+ wrote:
+>
+> Yeah, I think these are good calls - I'll fix it in v11. When would
+> you like me to send it?
 
+Since -rc1 is out, please feel free to send it already if you can. It
+would be nice to see if we can apply it all soon in the cycle, but we
+will see if everyone is OK with the changes in their files.
 
-On 6/2/2025 7:09 AM, Shawn Guo wrote:
-> On Tue, Apr 15, 2025 at 01:19:16PM -0400, Laurentiu Mihalcea wrote:
->> Add driver for this IP. Since there's currently no framework for
->> access controllers (and since there's currently no need for having
->> flexibility w.r.t the configurations) all this driver does is it
->> applies a relaxed, "default" configuration, in which all masters
->> are trusted for R/W.
-> Just out of curiosity, is there any ongoing/planned effort about creating
-> a framework for access controllers at all?
+Worst case, we can apply as much as possible, and leave the actual
+lint enablement for a final round, like we did in other cases for
+things like this.
 
-no plan ATM. Though, I would be interested in knowing if anyone else would benefit
-from such an API? I know that STM also has some access controller-related drivers,
-but I wonder if STM's drivers and the AIPSTZ are just some isolated cases in which
-security-related configuration is done from EL1?
+Thanks!
+
+Cheers,
+Miguel
