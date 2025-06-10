@@ -1,146 +1,142 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15C8B299959
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:11:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0771EA84;
+	Tue, 10 Jun 2025 13:12:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749561088; cv=none; b=KWTCE3rbbEHjiOrIyexBGCEE8Mrd1mQ1GiG14Xd2KkWPv3KMVWcT+hWMiJPoQCFSosDjvDqimhJeRXn9K43gyHscN2sUrYrBZ/acXPXolHQRmDrUh7n/XG0hIDrumlG7bBR0RXBpmOLb5RsBogHOi4KZluM0SgIHUHExgSDRhjI=
+	t=1749561157; cv=none; b=Hl8vwHC7EBlQtmpdMTrpA4qMCTxiqKAN8XLhS8aM/Ki32oMj/gnimSu+JSGhSdHLelmki+hqP1LpKROb1GXD26eBFEwu3uEAMwkPJx8hA6+2vbrw927rATXxFXB0JoDbYp9asla2sZvqU1R5JWzpwn8UQLL0kHHgz3bAp6Jg8Dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749561088; c=relaxed/simple;
-	bh=MYPUHwF67Fearz+rOgxVPcNJW3AHAjWJJ8so8yTInSw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DTs9QfG1tNe9p73Sy68oUKUaUbP/K2qdRxTvR/e+cLZy8wJ8FbqnME+AL3GUulSkpQ6PZ5I6RaH5BJ5YbpfzfVEU+5tCxkjoXFpPTflm5DTrsMTEnG900/lOezktSr+P7nypPipQSDy15J9akLzPyoukvXAshHkx10x4uVE4uqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NqcNGqmJ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749561157; c=relaxed/simple;
+	bh=6oeZOytuYucvgLaM0ld/mM9EhcHGSBHO4kacpgrnfFs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KBoxSJQQ6GIYHknnnk7tufBmOta7IjZhSmfH9fOdyxkpbu1F0HqMfTVIZGvvNGMLd70t3tb6fQk/dMGhYMOVML2ptC8cEyXD0n3Y12/lsfutp9+7x73vhygtBVTcqWVZCWa9Ftq3V0HqWY57if7p4g3fAVVuj4mb2hm23N2B06I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cJrz0K17; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NqcNGqmJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749561085;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PhqS06saP1LVqx4PfgAfErKznxSNHLACuFCn7pP6egw=;
-	b=NqcNGqmJ0Uvr25lwP0jgyD8qud5rHSOZXJyfdestcdJ+AZNVmOt9dHeUnvvy8UaKFA+fvY
-	qNKv5hTd9kAWNwoXn+MkqTcYxs+2MEn174NQStRuutTx1iNvMyhMS5EYOT0CToyestRxXq
-	/2qLUEwztki0q2DVk1JiKmC2EEfKkAE=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-608-a2Pb_BqkMFGVoYd0o68BDg-1; Tue, 10 Jun 2025 09:11:24 -0400
-X-MC-Unique: a2Pb_BqkMFGVoYd0o68BDg-1
-X-Mimecast-MFC-AGG-ID: a2Pb_BqkMFGVoYd0o68BDg_1749561084
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d2107d6b30so708554785a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 06:11:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749561084; x=1750165884;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PhqS06saP1LVqx4PfgAfErKznxSNHLACuFCn7pP6egw=;
-        b=i06EGs6Og8R7f9k+Gqigw9Bxmhe3msRSTWK0L+woPACQxCoKIw64dQsrO6hTEp9LHf
-         bDbv7tHygBeybclVJBPN0jjzu/EfwB5nX3x9icYTo8RGfQaexiKUOA4ZRTExvqUEBnl6
-         haMWLDmjWEJ2gRndrXQtKEe+C5XrMzmONRa6rFwWxEsedk8SIfNPQ1NmmsheY9esIxD7
-         gwmCGVg5qmrtGbYhxXGzNM7VMBDKkvc5GoYmM8QynsxOzbxYeUj8mjQ5pu3KaBuf8hqf
-         jjMa/ThBy2fdKbM6+usEjA17MnxFKhQhHT/g58oghAEs97J0mMsCLrguZHWu0suSpOx8
-         K+Cg==
-X-Forwarded-Encrypted: i=1; AJvYcCXfOVrgt5e3qn3Nl/A3V0v96hiqZKTbwJTCJcIkuitmugjOgayFmJrsMEPhpSJrXXdMsMnWEJwz+2ny+i4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzyKQgzS+V2g+J6LKgZUVoENPtu6FPhix1q/qLYo3DHMSat55FB
-	nHszxEq4XFwnbf8iqjXCAKncXqCZmtSZas7rPWVFp2ag26e6b3w2+ckgPjbkjOK4EkRMI3FRdda
-	Xz7hNmGWjZS6MamQl1qpJ9UIdGCGBdl359G8gS5rM6fZPp7TnUhhsUgNP1qck+Zek2Q==
-X-Gm-Gg: ASbGncvbW8vWbf9aNSE9Ak+HP2ROEl+iyULd79lGzv+GP0csdR4uJNCSrrUkJZZDQr/
-	fMytNJUcmzBXgjTCW5busxkkwcDmiNhzZGKsPyObdww5GyytCPd2ferexizcQf+D3xhSRZs2wQu
-	T3HrwNdwKX4GKaEQCGrgANxXTsmnpXgHkq4QM7O5q2zXDC96EigyoM8woibtDf7/I/K+faI0fbN
-	Y4vUY2uvp/1ruKHI3+bvW10XoBuFDV5zGHHkrj1OzR9Mb4UoxIq/943Vgm7DpzuFW5QVIDkey4f
-	JLRrVryC76hxIQ==
-X-Received: by 2002:a05:620a:2894:b0:7cd:45ed:c4a5 with SMTP id af79cd13be357-7d22978d152mr2576821685a.0.1749561084045;
-        Tue, 10 Jun 2025 06:11:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH5Kg4madu7LuU/8MhY9BTy7JYlDFWkE0RIx1LsqTkElbqQyUnF78engArSsUFzoomYY/zZkQ==
-X-Received: by 2002:a05:620a:2894:b0:7cd:45ed:c4a5 with SMTP id af79cd13be357-7d22978d152mr2576816985a.0.1749561083551;
-        Tue, 10 Jun 2025 06:11:23 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d38e0b379dsm416030385a.117.2025.06.10.06.11.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 06:11:22 -0700 (PDT)
-Date: Tue, 10 Jun 2025 09:11:20 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Tal Zussman <tz2294@columbia.edu>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	David Hildenbrand <david@redhat.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Andrea Arcangeli <aarcange@redhat.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] userfaultfd: remove (VM_)BUG_ON()s
-Message-ID: <aEgu-DA3pgKSYHRK@x1.local>
-References: <20250607-uffd-fixes-v2-0-339dafe9a2fe@columbia.edu>
- <20250607-uffd-fixes-v2-2-339dafe9a2fe@columbia.edu>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cJrz0K17"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0059CC4CEED;
+	Tue, 10 Jun 2025 13:12:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749561157;
+	bh=6oeZOytuYucvgLaM0ld/mM9EhcHGSBHO4kacpgrnfFs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=cJrz0K17Y0hZnBOUk77bxf7bCBmMz9u5xDYUECv8lvhSejz5p3qZJo5+Y7aNsTSqY
+	 3ufUa7OQhdRckVp6+HKwR7RyPsR77ygrhwsEq4thghrn3WG0Wi5JyIdvLOr72Y1Z6g
+	 jywKOd54b333xJHejkdCSRfWXq6RINhD9q3zZ/PGYRve7ceZbzvPptPDtyQmxCIdgV
+	 3vR1sJVBdOYWc/siKUnPpXaTjwvmGzROu9dWKsFUlwU2z82PSlLnw4Y8o/Mh0z3sDn
+	 sXv8gN95onojXWTwYhYJtaGzIGuOa8V2zIYNCHHG51aeQx9N5m+bYAfcY3hWlHKFCu
+	 swW9Zz8EXPlFA==
+Message-ID: <2bed4569-27a9-4173-af32-e6016c88f2c9@kernel.org>
+Date: Tue, 10 Jun 2025 15:12:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250607-uffd-fixes-v2-2-339dafe9a2fe@columbia.edu>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 1/4] dt-bindings: mmc: Add dll-hsr-list for HS400 and
+ HS200 modes
+To: Ram Prakash Gupta <quic_rampraka@quicinc.com>,
+ Sachin Gupta <quic_sachgupt@quicinc.com>,
+ Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ quic_cang@quicinc.com, quic_nguyenb@quicinc.com, quic_bhaskarv@quicinc.com,
+ quic_mapa@quicinc.com, quic_nitirawa@quicinc.com, quic_sartgarg@quicinc.com,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+References: <20250122094707.24859-1-quic_sachgupt@quicinc.com>
+ <20250122094707.24859-2-quic_sachgupt@quicinc.com>
+ <72b02fd1-5195-4bb0-b01d-5481b49a5680@kernel.org>
+ <e0f43fc7-2f38-335d-1515-c97594a55566@quicinc.com>
+ <18053999-c337-47e5-b6df-72c2be6a72df@kernel.org>
+ <3b75fe83-85c5-f0d3-c5db-481ef133d6de@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <3b75fe83-85c5-f0d3-c5db-481ef133d6de@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, Jun 07, 2025 at 02:40:01AM -0400, Tal Zussman wrote:
-> BUG_ON() is deprecated [1]. Convert all the BUG_ON()s and VM_BUG_ON()s
-> to use VM_WARN_ON_ONCE().
+On 10/06/2025 15:07, Ram Prakash Gupta wrote:
 > 
-> While at it, also convert the WARN_ON_ONCE()s in move_pages() to use
-> VM_WARN_ON_ONCE(), as the relevant conditions are already checked in
-> validate_range() in move_pages()'s caller.
+> On 6/10/2025 6:23 PM, Krzysztof Kozlowski wrote:
+>> On 10/06/2025 14:07, Ram Prakash Gupta wrote:
+>>> Hi Krzysztof,
+>>>
+>>> Thanks for your comment, The Qualcomm Engineer who initiated this work,
+>>> is no longer working on this and I am taking up the responsibility to continue
+>>> on this work. I have started to check this and will start with addressing your
+>>> comment next.
+>>>
+>>> Thanks,
+>>> Ram
+>>>
+>>> On 1/22/2025 3:56 PM, Krzysztof Kozlowski wrote:
+>>>> On 22/01/2025 10:47, Sachin Gupta wrote:
+>> Above timeline is interesting:
+>> 1. Patch sent on 22nd January.
+>> 2. I provided comments few hours later, the same day.
+>> 3. Silence.
+>> 4. Employee changes job.
+>> 5. Five months later...
+>>
+>> Not your fault Ram of course, but above timeline is not a responsible
+>> way of upstreaming patches.
+>>
+>> Best regards,
+>> Krzysztof
 > 
-> [1] https://www.kernel.org/doc/html/v6.15/process/coding-style.html#use-warn-rather-than-bug
-> 
-> Signed-off-by: Tal Zussman <tz2294@columbia.edu>
-> ---
->  fs/userfaultfd.c | 59 +++++++++++++++++++++++++-------------------------
->  mm/userfaultfd.c | 66 +++++++++++++++++++++++++++-----------------------------
->  2 files changed, 61 insertions(+), 64 deletions(-)
-> 
-> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-> index 22f4bf956ba1..80c95c712266 100644
-> --- a/fs/userfaultfd.c
-> +++ b/fs/userfaultfd.c
-> @@ -165,14 +165,14 @@ static void userfaultfd_ctx_get(struct userfaultfd_ctx *ctx)
->  static void userfaultfd_ctx_put(struct userfaultfd_ctx *ctx)
->  {
->  	if (refcount_dec_and_test(&ctx->refcount)) {
-> -		VM_BUG_ON(spin_is_locked(&ctx->fault_pending_wqh.lock));
-> -		VM_BUG_ON(waitqueue_active(&ctx->fault_pending_wqh));
-> -		VM_BUG_ON(spin_is_locked(&ctx->fault_wqh.lock));
-> -		VM_BUG_ON(waitqueue_active(&ctx->fault_wqh));
-> -		VM_BUG_ON(spin_is_locked(&ctx->event_wqh.lock));
-> -		VM_BUG_ON(waitqueue_active(&ctx->event_wqh));
-> -		VM_BUG_ON(spin_is_locked(&ctx->fd_wqh.lock));
-> -		VM_BUG_ON(waitqueue_active(&ctx->fd_wqh));
-> +		VM_WARN_ON_ONCE(spin_is_locked(&ctx->fault_pending_wqh.lock));
-> +		VM_WARN_ON_ONCE(waitqueue_active(&ctx->fault_pending_wqh));
-> +		VM_WARN_ON_ONCE(spin_is_locked(&ctx->fault_wqh.lock));
-> +		VM_WARN_ON_ONCE(waitqueue_active(&ctx->fault_wqh));
-> +		VM_WARN_ON_ONCE(spin_is_locked(&ctx->event_wqh.lock));
-> +		VM_WARN_ON_ONCE(waitqueue_active(&ctx->event_wqh));
-> +		VM_WARN_ON_ONCE(spin_is_locked(&ctx->fd_wqh.lock));
-> +		VM_WARN_ON_ONCE(waitqueue_active(&ctx->fd_wqh));
->  		mmdrop(ctx->mm);
->  		kmem_cache_free(userfaultfd_ctx_cachep, ctx);
+> my apologies for this, I will give inputs internally to improve process
+> for changing hands.
 
-I didn't follow closely on the latest discussions on BUG_ON, but here I
-just stumbled on top of this chunk, it does look like a slight overkill
-using tons of bools for each of them.. even if the doc suggested
-WARN_ON_ONCE().
 
-David might have a better picture of what's our plan for mm to properly
-assert while reducing the overhead as much as possible.
+Not your fault, don't worry.
 
-For this specific one, if we really want to convert we could also merge
-them into one, so one bool to cover all.
-
--- 
-Peter Xu
-
+Best regards,
+Krzysztof
