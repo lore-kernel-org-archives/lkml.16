@@ -1,118 +1,131 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A97265609
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 20:04:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA9026461F
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 20:07:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749585860; cv=none; b=O62jFdtD/9Y/FT7inpCMFTWZtGTIOiFd/AOySL9xu9CJ+eTgodFIXMaYN5l10DNl6cuHxHjvFlrNxkWx0aUCjb6M6IRbrry+adUvrOEw1hCh+FOoMUcE76hA/5TLCyPRx8rNNb09FddZZKO8mRjH5li4oNvxMXYW5pBtmuFQ4eE=
+	t=1749586046; cv=none; b=ZJ4TiIZ4F4IIgH6cQHrMIaqKFsDAVb4WMoNLLey+NqZQqLzofkBbDn2x4J0kjzcBfMfwnCJzEiav22JZ/mqVUwCbgdH0a9+5RLLfi7+pNnFfnH3HFZilNc4UZcH0W6SiOJOgxP8/lDXVNFhAcBivJTGkWzueda6JVvuP7e+JUBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749585860; c=relaxed/simple;
-	bh=cP23wtFMvKOpdUnof+BSPUV5OQaMXrVObxebToJ9P+U=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Lbo5mLs+VJN8eitSq9nCje0iNijKYbTE5jgk1AYnh9pd0kW5ahLylOaB7dPrQqit9laXxPly/1NmSbhCFacjBhT6li1EeXnKahEDN9IL9zIJEVe4cEMkiyBi5yqNyUyCfDnFH52dadtiKOoJFE1ICiUwJLHDCbOC+oeoHrx6h3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sima.ai; spf=pass smtp.mailfrom=sima.ai; dkim=pass (2048-bit key) header.d=sima.ai header.i=@sima.ai header.b=DxzJaouo; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sima.ai
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sima.ai
+	s=arc-20240116; t=1749586046; c=relaxed/simple;
+	bh=cyniiTjRd17/axtqY1LXsVxllwk2gLonVeQz+TEtSOI=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
+	 Content-Type; b=ZNxlN3w+roY3YNEEJ93DAgV6DwuoHYQ7FRwaLSD/7bczC0Ndf80sh1mm39qQ9JhEHt+EmzJTIku9VtY5n7NbqPiHS4Xz1RNGJLJ0Bpco1NZ4pJGeSwixnIx1nWtV2YQoCG0O55EC2/uNwkoewEKIaqqBHU7ix5Mj4AwY2A8Um5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=bPeuTlWo; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sima.ai header.i=@sima.ai header.b="DxzJaouo"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2352b04c7c1so8831225ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:04:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="bPeuTlWo"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-23539a1a421so51236895ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:07:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sima.ai; s=google; t=1749585856; x=1750190656; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SLBrHn1lo0nb3pErG+htfOLCGfPDjEh1wfPdZMI4yH4=;
-        b=DxzJaouoC0p+ArLVOixO3GHQwYFwTy4pz6kdhb6n3F/oTB5WB7QniE+7Fz9mfvJbZ+
-         1UKNJvzOHhuJ1lMlqGWWbIRYSESRC/FHsawSuBD2uuLYwyfJa26oY/ohC6ARmRkmhI2g
-         JcySKdZGqreeAeWsj3RsS4uhuk/RUWP/I02yXFHXbEu5jTpB5M+5COJ3vtFmOh+99Uvx
-         6Xfejq3C/6vp8JpksUBFWm9RjbfyBUEgVPxpJ+kWi7wnNe3U1gKNkcDW7a6Oc9CuvQuX
-         z6Ooe5qobd9tMSTxe0iJ1H0VsSN+eNX4KMfAgps3liPgnSTCWGVFz9Rs37DcF0C+b9/E
-         jdUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749585856; x=1750190656;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1749586044; x=1750190844; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=SLBrHn1lo0nb3pErG+htfOLCGfPDjEh1wfPdZMI4yH4=;
-        b=fSzHKe4hEKVSTLoGiTbWNWu/XPmOdF+lg6EywPBHb103S464Zh5X2502+65MP3GkUa
-         t5h226DjVO/eL+HmHojgXYnLrCyvd348UETE9YHgD4lQa1Zy5XHHs7JYeBlSkxOSdTVq
-         kJ9nmsTE79lzXZM7wr9Q+/59a12GkKeKDBZ1M84ua3PBmFOZOj761UoO6bWPiVogtsZ0
-         lGOpwwu9VgRpcrbLCkBYtx0NUoCzOgG7zuywlz5GR2jZ+dO7MdS9HtXDYdCCSK9j7poN
-         YFbf66JplbOL4nN1mlpqogzDsH5c+7dTH3pC3xeqE85+edCEcng4OWM1JuvK9heXtMHC
-         Xdcw==
-X-Forwarded-Encrypted: i=1; AJvYcCWPZaadDsfNgPvZkRUae1U/vE7pkrCEVRhZh5lMiyrxvihYuEeziRKZKT/LnaB74G8/w0QiFJfAgJw0yRs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1MvwDsQzX2/6Utd25xYXFav2qPNKZYYs8fRVD7l8EBDNhIGWg
-	40Fqeqch00pzaR+CucDOSW7DUEcU8DtK6xp/aNgIGFKfOw78v+lRTg2dh9Lf00Eo1m8=
-X-Gm-Gg: ASbGncvNFeH+ZjAQnK7/HNVr76a5NHbCUiGdQSoEMlZZ+nm17QdqcHwM0ylezqWWY6W
-	J4mh6Fst1ObIS9HadRJUeR4GsBJflBPXMQ+AcbUS8PaC4glJaD1EUL8lwjFa0s3Q/oYzqI8PGJN
-	QS5DEHIbT93G5S3Esf3o0MA/2OGzB9sM8MrtklWjsP1LbgxMvxVlHc+Is4+jN9fTayT+4+3Ww6F
-	OdY/9uWTiBuULvvcUcW717+L8MF02VRaJdb9of32h0L9f5BIZLdsdFlzdqVw0RP2jKZDPFBq9H1
-	blN4/myPbMGF52Z/Uxrrmzy4hqHXXhFgNnBPBfBlx7plFlp+11x3UbOMcdRW9313HtW+/sBCWWK
-	z8WZAGc1dFEVFjno=
-X-Google-Smtp-Source: AGHT+IER+o3LTU2puTUgTzx5nfZBbOjCThFzTKIlbQejci+9CZwNjpKLs8gAK20uD5mbsirIIc3WyA==
-X-Received: by 2002:a17:902:e806:b0:234:d7b2:2abe with SMTP id d9443c01a7336-23641ac62fcmr3095555ad.7.1749585856133;
-        Tue, 10 Jun 2025 13:04:16 -0700 (PDT)
-Received: from nikunj-kela-u22.eng.sima.ai ([205.234.21.7])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31349ffc151sm7629818a91.48.2025.06.10.13.04.14
+        bh=d9ivsrx9S86u8HBiaynDXVu9vEEgacXBDB8VknWbxl8=;
+        b=bPeuTlWofxxJXKNAFtRfAMuHutSiiOOT7ZTZrS03YFwWXmcWeaTTTH92758HFzr6dZ
+         v9Np3wJhkm1/fGwCelp537ksqWHMt4vQuApqaLwFz3KaIyxjelFbE080bZxATEJeI5Pu
+         Iw2e3CGj28UM+d/5gjG5QRxp08VPPlEyysh3ZY7sLlgRATHBr5mdYE9yTaStbj/WeDNn
+         GsX8fBkoolMNu+Glwodt5wsTlTRa5HGTHgxhv5y1Cbgpz67a4Sa+uMp1PX4yKQFLS+8t
+         Ecju3DobIivl9e6YKSQ/P7QSkJBy3kN/Hxj8Nra5r/9r631JJLV1VDceAUJYJrUioPqV
+         bthw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749586044; x=1750190844;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d9ivsrx9S86u8HBiaynDXVu9vEEgacXBDB8VknWbxl8=;
+        b=nb9j77lThZS1Hq3fNYOKBxbfaJScP3ZMDw39Oazc5KM7q+oscBWa0ZZEkkDAu5aofX
+         7Y2x+xCSRbaxigKV+c3wcawsokL659h4kqbS5mLZfSUayiJrY6EFWwxR0NA0QnLBDkBU
+         TzfkyZZZ169kO5Gk2kL1nZw0kyXYb38aiBf7aJuUfroNXvStQPQqwVjJiv749HVPrSwU
+         I3lXA63iCw37uMPz0LuPtl+rBIKU489THXnwdq+1P/UMRDPpeybOlbbw4UG6uBPGb38e
+         2KlJ14D+feD85Uz21kGrAm66Yh8ICFWBCLCS8FDGMO4efe8oVc21Td0lb1uHc11h15cI
+         qVsg==
+X-Forwarded-Encrypted: i=1; AJvYcCVhzVuaZhYDN1besqRak7Ydv47QWhhBOxqfxON+lTHzARwnWsPwGjQeMvyqCk+C4MFuQ/QuYfosijMmmkc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMZWEimVk0QgDCVZF+YhqwGMgWOBnMplNAEAHP6vcqSvSWbCMZ
+	1+hzXW8Tp4fNIxS8s96C8SGWYvc62SrxtcguHv3qZ1ovfQNgQ3aJZluaLjxLcyFTaXU=
+X-Gm-Gg: ASbGncvE0J9cReXWEmh1lLo6WQ54NJJAmM/nsjhZWAqsvY0/fibKrnkj98rtpneASMY
+	KRrf119C5LuZhkP7oKBhT1U+TS6f2oUGNiObyqq4386qWvfVB2AdWXM2N6tqx2RGNtBuYIdjofS
+	kze0gAt6xqBlP9WzkzX2mQicYmpp1IS+iaXRAHoh/k3f+o72pBcBO6yEN3rh0++VN+F3pKoIl4G
+	2seGPO4i6dn8QcEg63hhcR2iozTDXJvS1NJ4PQTJ9MPQulKEt9ua/lOToBZ4Ji8ZPbFt5O7ruvE
+	HDst46s4lnQSuU8kl6Occx8kLy9mu+3otmHATRZ6DkLnbQQACjbgL55ObRFE
+X-Google-Smtp-Source: AGHT+IHEbTLkjhkPgVR7LBY0WE0PQew4VX94TRVLTFzVkKHWIErfOlXv0qU9OV/7D6BdyLmWtWCVwA==
+X-Received: by 2002:a17:902:cf11:b0:234:8a4a:adac with SMTP id d9443c01a7336-23641a99f5fmr7343495ad.20.1749586043748;
+        Tue, 10 Jun 2025 13:07:23 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:500::7:116a])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-23603078121sm75380565ad.27.2025.06.10.13.07.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 13:04:15 -0700 (PDT)
-From: Nikunj Kela <nikunj.kela@sima.ai>
-To: andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	mcoquelin.stm32@gmail.com,
-	alexandre.torgue@foss.st.com
-Cc: rmk+kernel@armlinux.org.uk,
-	prabhakar.mahadev-lad.rj@bp.renesas.com,
-	romain.gantois@bootlin.com,
-	inochiama@gmail.com,
-	l.rubusch@gmail.com,
-	quentin.schulz@cherry.de,
-	netdev@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Nikunj Kela <nikunj.kela@sima.ai>
-Subject: [PATCH] net: stmmac: extend use of snps,multicast-filter-bins property to xgmac
-Date: Tue, 10 Jun 2025 13:04:11 -0700
-Message-Id: <20250610200411.3751943-1-nikunj.kela@sima.ai>
-X-Mailer: git-send-email 2.34.1
+        Tue, 10 Jun 2025 13:07:23 -0700 (PDT)
+Date: Tue, 10 Jun 2025 13:07:23 -0700 (PDT)
+X-Google-Original-Date: Tue, 10 Jun 2025 13:07:21 PDT (-0700)
+Subject:     Re: [PATCH] riscv: vdso: Exclude .rodata from the PT_DYNAMIC segment
+In-Reply-To: <20250603215218.GA3631276@ax162>
+CC: i@maskray.me, Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
+  Alexandre Ghiti <alex@ghiti.fr>, nick.desaulniers+lkml@gmail.com, morbo@google.com, justinstitt@google.com,
+  linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: nathan@kernel.org
+Message-ID: <mhng-417C3662-1666-4A7D-9800-0F68016C1D9C@palmerdabbelt-mac>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hash based multicast filtering is an optional feature. Currently,
-driver overrides the value of multicast_filter_bins based on the hash
-table size. If the feature is not supported, hash table size reads 0
-however the value of multicast_filter_bins remains set to default
-HASH_TABLE_SIZE which is incorrect. Let's extend the use of the property
-snps,multicast-filter-bins to xgmac so it can be set to 0 via devicetree
-to indicate multicast filtering is not supported.
+On Tue, 03 Jun 2025 14:52:18 PDT (-0700), nathan@kernel.org wrote:
+> On Mon, Jun 02, 2025 at 08:48:44PM -0700, Fangrui Song wrote:
+>> .rodata is implicitly included in the PT_DYNAMIC segment due to
+>> inheriting the segment of the preceding .dynamic section (in both GNU ld
+>> and LLD).  When the .rodata section's size is not a multiple of 16
+>> bytes on riscv64, llvm-readelf will report a "PT_DYNAMIC dynamic table
+>> is invalid" warning.  Note: in the presence of the .dynamic section, GNU
+>> readelf and llvm-readelf's -d option decodes the dynamic section using
+>> the section.
+>>
+>> This issue arose after commit 8f8c1ff879fab60f80f3a7aec3000f47e5b03ba9
+>> ("riscv: vdso.lds.S: remove hardcoded 0x800 .text start addr"), which
+>> placed .rodata directly after .dynamic by removing .eh_frame.
+>>
+>> This patch resolves the implicit inclusion into PT_DYNAMIC by explicitly
+>> specifying the :text output section phdr.
+>>
+>> Reported-by: Nathan Chancellor <nathan@kernel.org>
+>> Closes: https://github.com/ClangBuiltLinux/linux/issues/2093
+>> Signed-off-by: Fangrui Song <i@maskray.me>
+>
+> Tested-by: Nathan Chancellor <nathan@kernel.org>
 
-Signed-off-by: Nikunj Kela <nikunj.kela@sima.ai>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c | 2 ++
- 1 file changed, 2 insertions(+)
+Thanks, I'll pick it up (might take a bit to show up on fixes, I'm 
+trying to sort out another amdgpu stack warning...)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-index b80c1efdb323..4164b3a580d8 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-@@ -579,6 +579,8 @@ stmmac_probe_config_dt(struct platform_device *pdev, u8 *mac)
- 		plat->pmt = 1;
- 		if (of_property_read_bool(np, "snps,tso"))
- 			plat->flags |= STMMAC_FLAG_TSO_EN;
-+		of_property_read_u32(np, "snps,multicast-filter-bins",
-+				     &plat->multicast_filter_bins);
- 	}
- 
- 	dma_cfg = devm_kzalloc(&pdev->dev, sizeof(*dma_cfg),
--- 
-2.34.1
-
+>
+>> ---
+>>  arch/riscv/kernel/vdso/vdso.lds.S | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/riscv/kernel/vdso/vdso.lds.S b/arch/riscv/kernel/vdso/vdso.lds.S
+>> index abc69cda0445b1f500a89b47deefa31349103f08..62e0410f69f09e2bbf27101c000d604193f525cb 100644
+>> --- a/arch/riscv/kernel/vdso/vdso.lds.S
+>> +++ b/arch/riscv/kernel/vdso/vdso.lds.S
+>> @@ -30,7 +30,7 @@ SECTIONS
+>>  		*(.data .data.* .gnu.linkonce.d.*)
+>>  		*(.dynbss)
+>>  		*(.bss .bss.* .gnu.linkonce.b.*)
+>> -	}
+>> +	}						:text
+>>
+>>  	.note		: { *(.note.*) }		:text	:note
+>>
+>>
+>> ---
+>> base-commit: 1a3f6980889df3fc90ad3e4a525061d2c138adba
+>> change-id: 20250602-riscv-vdso-13efdee34a24
+>>
+>> Best regards,
+>> --
+>> Fangrui Song <i@maskray.me>
+>>
