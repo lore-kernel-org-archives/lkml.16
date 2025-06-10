@@ -1,62 +1,63 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B97552820A4
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:12:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2090B2820DD
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749543130; cv=none; b=RojrE93DmM6zqwlV/vKl6JaGXwgQmvdglHqUTRUqHrRBaDi85CFPgSFQ9XWsjcvlHggrQE7gO0L/XL5eq/RX4hT3D+IoRS4aq+J53e0i0IMdtNHWBzjYPFG6C8ZEMFnSSLw8Upf7OUO7yLbXTE3Z/PGlIE7jqYKPDodFK4YtD2w=
+	t=1749543133; cv=none; b=Z5HfIBwYO+PYvxlLqizN+txi4XSWQHeV+U9VsI6u0J3HXbN38U4HqTCsnj84e3F+WoWDiqHBRYeddxf1lOh8QheA8A0/BBwSbEPyGZRGsRAq/g88LnmVxxWPPtCl2U/aPJKRdMnMG3YVHzoY+JHvoyfrFjvIj2J19wQWmlhsNPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749543130; c=relaxed/simple;
-	bh=v2CT6plJIgNl22pzwKw1D3YejkQkKza1J01LiUDlcu0=;
+	s=arc-20240116; t=1749543133; c=relaxed/simple;
+	bh=oJYRsQDIZIFS1gyuxKSeATK987ZVV/SuTaXBG/5waxc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Jw6ZpeLLshKLTZB+O5cHJjeE6fsV94bIFB4PfWd6tWn8g5sB5QgdwocnFCBtCBc+RLw4M43qYj0pVb1+3virhOHSiZFptTuhiisRPpkhHDq7xP3uYOD5a8albxuZurh9pY/j+tv+dlP3xvNVpuLSO3kU2xqCZaG6Tt7jS6k5hGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=nUJZDlkb; arc=none smtp.client-ip=209.85.128.43
+	 MIME-Version:Content-Type; b=EhCLUKlHUN2QepmSXa8OyeC9PlDWzgJoJfhgoEVkgHxAR8VpGLiMgLW5Fw5JOo4L+2+i+o23nG8WkuodLxI4un+JU1dy0qj5ddCYkPRp/u4j8jEp0loWmaNw3K3qlfhOFoZLUDDusBNsZfhjN99aS5xXwOd9xVlxnM11p22+5GA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=VSTJ3ZQb; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="nUJZDlkb"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-45300c82c1cso8576085e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 01:12:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="VSTJ3ZQb"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a53359dea5so2094265f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 01:12:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749543127; x=1750147927; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749543128; x=1750147928; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yho1AYPPcSyhpFNf11EN63wRjrUMMghOh4GvyBpFQxk=;
-        b=nUJZDlkbBm5vttk3sySpcJHq8ezQTRBwOuEhUiKUTueYiRzHx2gzRalgkt/0rnUgNj
-         PPU9c1iOjNQXgn7JPAJY18m5+dKHYmOTDjW99GNxyZIaBC4onOusR3ja8uGUIdjzmRQZ
-         uj2E0LcYCewrZWYgoHx9ZsnVmn3ySwPanqMnF/U0Rn3lAPpormMNcU6fn1NEM4OjD8iX
-         tuWBjJeEoKFGzdHzAfClsr00UL0NuVWAyTWO9ZYTD9uVfCHNtYAf/zXZo3un9x4Mkgwy
-         5LG5v77NGOvXBv8q8aZ37j4AJ4qBmnldFCNcXArZBK4wAH6Dd0HyiVMqYVnoAUJIl4ur
-         ZARA==
+        bh=AQOikj5+hOjYofyjQTxrgd5Ve5lIEwTQk5A2jm1d/4w=;
+        b=VSTJ3ZQbLKJ73vDbsJTxvlGnM+HqfKpGH/byEpyxS+kwzYNjznr83uVz//Gf1Low3v
+         DGZmfprQp6kN/SRATd/Y1UwanZrBqX/dppygYNtAUIa6QifJG65z4k19NbyIH14x4GLK
+         J/kVAHKF/wm+9S9yp8+R6L6G1MYklbKtZB5SfV+IBDSFcLkom/cpPDgm+bOwvOLfTDYz
+         F6oxtwp4tC7Ip7GH6dUejzYZb2QO3zRiovCt0YzbZu3akdee95l95rpj2IQU89hcSGOB
+         LUit1EHgTVi+ChscFqOxeKGSLlkFmLxE57jILytCM0eHvxDWGbzno7jdMQQ7+l74P8R8
+         /fog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749543127; x=1750147927;
+        d=1e100.net; s=20230601; t=1749543128; x=1750147928;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yho1AYPPcSyhpFNf11EN63wRjrUMMghOh4GvyBpFQxk=;
-        b=eGpXj3m1NuCbFqqyeCePkI6x9ZZFvzzHWMjRKw+oq9CqDD93hW7PoMcURsCsRn1Wm/
-         2C46HBpKr1WPW14rzPYCIm1A3netzgkdao1KIAW1Cs2KRI7BruWftMbY7BPjWwoOtTAx
-         KOuXpbEtOqBAQOwKntdSsYh4T2JD1jbqVofbnpWPgIKqPUC0QRHNBwN2mdHwVAzH8ELF
-         Q2VrtxgOwUkEc5Yjr7zNwA7s0rL+e9JFz99Eehthz3qzWXaTip5fxJvEsn2uR/WV4Evf
-         De+nmGvxBeruRZjyxJHm4zlar+txqPguH0V+kIyPHc8ddwapUMB5r4Yp9NZfOIW3FcrD
-         UOLA==
-X-Forwarded-Encrypted: i=1; AJvYcCU/X6wzZDnzu26piKVxxoQtBB37FIDB8aetruxoxGHrCZlsD3vnGSG4JCD8PFdII5YbVP7IuwUXWAlMxtM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0CKdNDtAAO9cAe3wsrd/0mXwl+GkFFr8PHTHo6M92XbqG08vB
-	SMPcan1UmG0RZ7ySezpUC2Ly4iDMKwInBQWzvSesHgqdBRIsXc0XZ8uSsaPnutTgKVA=
-X-Gm-Gg: ASbGncvd2zxhuldGFB6q/VYzboPN1WEKLK4wSey+UA7xioT29DW0/lQ34v8Fino+iRw
-	jcmDYx6cbrfuKtTHTEcCto+ImicKoG5lBYu8Qujy1Uzy4K8p/1US9UIvgdO6aTF/sLDtOZMKIEk
-	UPZg/sPfI1h/YjL1KNxs9utyqbOMziZlACCsrUCM7jCxIsUO8oQrzlW9QSmu9s2QkktME3Ri89S
-	tRxosiGpRqv27aW7QN08OdTI23R1ZMDO2aXpSp94InYtolo9zN9/N1zsN1PIas3OXK/nwrpaywP
-	o3wOJAavyI0C5B9tZoL/9N7CP/Thr5x7dnr5DriJphXoUv6uQtdcFaRdkHJbKkA5OWiCGSI=
-X-Google-Smtp-Source: AGHT+IGOtNoadr72JztV6ZhAT+ubSCYHDknKz2gb1C9ZO0My9Ib2KVUPVReo+n/L60M1Q/VEFy9cMA==
-X-Received: by 2002:a05:600c:3587:b0:43c:f6c6:578c with SMTP id 5b1f17b1804b1-452013ab6b1mr159226445e9.15.1749543127060;
-        Tue, 10 Jun 2025 01:12:07 -0700 (PDT)
+        bh=AQOikj5+hOjYofyjQTxrgd5Ve5lIEwTQk5A2jm1d/4w=;
+        b=bPh3okDHbfoo5xe4O/01vQueePZRcd+ZJ8L2e35wFZdRjtCQqYYIBRe4atfZmQPJ1Z
+         3Z6neBOC5ai7H+ZtaQ2YqSdFNGl0tSQWMG470zo75MKjSvQFh4VT2PXmUQsv2HHh9PqY
+         pQxRZvXytIBPSmeViYjuna1XWA3E17U/i1RezFZFmDr0k8FG0j7mmmZWU7x67jkETjGh
+         d0ztRyPB5HHzhdYWrusZuAILYTpnMjVupl8UJw4azRfWb3LiXZB5wJjxUR9I2a0KQSZ5
+         cQBFlau9ABuZGqw4mjm27eIngdGNgafthFY3ZMsCVIuFxILP3x+mFMI2aQX5HIomsNZ9
+         B4Xg==
+X-Forwarded-Encrypted: i=1; AJvYcCUHi+dOLN/6pYq8Uc5sGj7/1R9EeeXlo1bhFJPjCM9JMRSsDzdZtvO5PAL4j4bPIQHV6wg+LLJT3enqtFM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhLrq+MsWvJkDGSBIIdyaRMHTmUD+/Ed8gTc68Ir6GkNNST7Ef
+	G8PaiegZxlgcht9TQPDTNGU6Tjkmtkbt9fouPL+Tg+ilxdzfmeTLWQxLnZ0PT0TURK+39Kj0yN+
+	858jB
+X-Gm-Gg: ASbGncu7ldb4AV0ZYoIxFuE1btDkj4CoOTk8J1dwp/i0XLCqDX6i6Hi/uamTVCqSZ5O
+	h6gpciiKqmxDMfxfRTZE5kFeDpYW6NQxZ36W+mwWOQppwuzqdGGfkTIDKOCQ0+Eavm/EwqAUntw
+	OjDyWAWrmD2pd5qQEGSkFWVDACnMPDRC7ohGGEOc4aDXQnr1yyDJWC1AzGUJGRqDTQ8DaIdkMOR
+	//6ay/KDwwzPzCooVTFCFKFv0FARArHRnChzcSV9zhQYxPX5qQelocIh7Myrp28aA1thvK4RujA
+	UesXSWb8zha3mltCQq9i4M2mpRKECmka068mVtnta1Yy5tIeihQgR2VAB3Td
+X-Google-Smtp-Source: AGHT+IHeh5JOUa/6DesJDFgxEXglaZaNBYUlWKW1tsF1e+6vqxndSIUGrZ0XXtHALOHyX4qbc6zicA==
+X-Received: by 2002:a5d:64c6:0:b0:3a4:ec23:dba7 with SMTP id ffacd0b85a97d-3a531886727mr13057182f8f.31.1749543128214;
+        Tue, 10 Jun 2025 01:12:08 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:4d:e52b:812d:eb7c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452730b9b3esm130838565e9.25.2025.06.10.01.12.05
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452730b9b3esm130838565e9.25.2025.06.10.01.12.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 01:12:06 -0700 (PDT)
+        Tue, 10 Jun 2025 01:12:07 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
@@ -69,12 +70,12 @@ To: Linus Walleij <linus.walleij@linaro.org>,
 	Frank Li <Frank.Li@nxp.com>
 Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	imx@lists.linux.dev
-Subject: Re: [PATCH 1/1] dt-bindings: gpio: convert nxp,lpc1850-gpio.txt to yaml format
-Date: Tue, 10 Jun 2025 10:11:54 +0200
-Message-ID: <174954311123.28634.2017679231712927757.b4-ty@linaro.org>
+Subject: Re: [PATCH v3 1/1] dt-bindings: gpio: convert gpio-74xx-mmio.txt to yaml format
+Date: Tue, 10 Jun 2025 10:11:55 +0200
+Message-ID: <174954311123.28634.14290388105456519016.b4-ty@linaro.org>
 X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250602144259.944257-1-Frank.Li@nxp.com>
-References: <20250602144259.944257-1-Frank.Li@nxp.com>
+In-Reply-To: <20250604144631.1141430-1-Frank.Li@nxp.com>
+References: <20250604144631.1141430-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,20 +88,15 @@ Content-Transfer-Encoding: 8bit
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
-On Mon, 02 Jun 2025 10:42:58 -0400, Frank Li wrote:
-> Convert nxp,lpc1850-gpio.txt to yaml format.
+On Wed, 04 Jun 2025 10:46:30 -0400, Frank Li wrote:
+> Convert gpio-74xx-mmio.txt to yaml format.
 > 
-> Additional changes:
-> - remove interrupt-controller and #interupt-cells from required list to
->   match existed dts files.
-> - remove gpio consumer in examples.
 > 
-> [...]
 
 Applied, thanks!
 
-[1/1] dt-bindings: gpio: convert nxp,lpc1850-gpio.txt to yaml format
-      https://git.kernel.org/brgl/linux/c/114ab5afdf6640d40c8982170ea78c127c983dad
+[1/1] dt-bindings: gpio: convert gpio-74xx-mmio.txt to yaml format
+      https://git.kernel.org/brgl/linux/c/0e3b7b8759a7f3597e64fc12a8a017111edbf777
 
 Best regards,
 -- 
