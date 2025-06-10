@@ -1,121 +1,156 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9DF28315B;
-	Tue, 10 Jun 2025 10:25:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6FD28CF4C;
+	Tue, 10 Jun 2025 10:25:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749551118; cv=none; b=KAfArYR60/DFjrBMF5XyW3FglK9gge2u5OxE5/r+8w+KSzk16OZ5SdO/f8Y6jNPilA+oPeW05Xmq+jn12NYW3opU9dMywsoeuF9zs5juAL4B++MErNw5svP2W8VhDH1Db6FGlAFeyd+p265Kb2kn/K/ZRNCd1snuQgFxM9NueWY=
+	t=1749551122; cv=none; b=V3f8yEQCD7RHuslbzRp+hsdHNS3NwAtXZNSzWiYkA65OoDYRQnTHOgTy5oDotS9Gl08rhpf9Ymr5iH4DSdwkCamSdVFX11ERuRECTwJJMLxppq/A5gV6bqq4qo7Rn3KeVx+pKQ4/dRJ/hZklnh2fOf4iI7qtzg1wJUu/V5tQOT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749551118; c=relaxed/simple;
-	bh=ROS8mtNiUd4xDjSycsgTS1G1TFzJbGvldHsVm3fwtWw=;
+	s=arc-20240116; t=1749551122; c=relaxed/simple;
+	bh=E3G8JLOFOz6gdX2I9IACKDS0gwH+Jplg/jGdoU+kY5g=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Fag//t/yta+yCCNb3SdJsWgWQkrfxRVI5IYXzLptxj5eEwfocaivfqRfD+j3YoQH2kgLABInojUzydXWWdCv724xN1VMtJSf8CSDAm50gNCHF+ZmGz5HtEfAh8W+z6oWhNkxMGyYChfVktIw/5cglBa6gbQ7ivH+4j8zxIAo/co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t1GFuKMg; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=e8UraBdQToNTM4554dx0ywcy2iDPmWV0ziqPfKpZ1hWZdZF1P4uNnQ1WPFIxf0tt3AFU0Jq+RoU6XRyt9ndTgbhnb7kCtiok744+XRWRTMJrfG1+/j26yYPeF16BDKMJp14Ik+UtwOGE0rxrrOvkLpW7xnb3ec3jIgeWTInKzO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UgNDHfKN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t1GFuKMg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9902BC4CEED;
-	Tue, 10 Jun 2025 10:25:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UgNDHfKN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD546C4CEED;
+	Tue, 10 Jun 2025 10:25:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749551118;
-	bh=ROS8mtNiUd4xDjSycsgTS1G1TFzJbGvldHsVm3fwtWw=;
+	s=k20201202; t=1749551122;
+	bh=E3G8JLOFOz6gdX2I9IACKDS0gwH+Jplg/jGdoU+kY5g=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=t1GFuKMgZYhQ4KSiDsCEMXN0MJSQ8z7/xR8B0n7RRHNt9gP67TxvdFew1L4ljIoHL
-	 3N7tn1hA5vX15Gkos0gnDWOucPiV1+P90CWK+tMR7FgWzXFj7luQajQoPMahnvIb4J
-	 F3KQnBJlXN1DInHVt8Ol+ImBQUuBdbk4SAffSnXfi069EMvZBuN/58rQTyYHK6knCa
-	 l0pmwIHfUwjp8xfxKXnv9nFmoI4AwSFPtSM7aP24gnINmkjCa4612izUDmrqDMGdKF
-	 Wcdnbgvorcqop37EuoiZO5Gobrab3wkoIcD9kKuMLZJhttSTq/pwoX5CSgxt7sZJvD
-	 BeO3EdpXZnPZQ==
+	b=UgNDHfKNBbMxGZNfvawnBASc4E/MmDqHkEHlYfiE7bMcQyDQjfXjwbOE7BE8k3EWK
+	 t6IKCIx/3Q9uQJU1qDsyk7z6V6pz7W7JUc7T2zVsp6Ld03yGsXU070qMsusEnm7Q1F
+	 CyF2ZAXOAmLqktaPjHVh+YyyUwKPBJOe2RerendUBwq7VMZYiFYvmffA5G3A4h8lfP
+	 oO+mVDvLp1An08Q2oN4Wo1lgMP9uGiHonWH0R4BedXTVgT7Vm1tQqKWyk161npo/j3
+	 PgqTW6Z6aVS0Q3Weoj6di7WHt4S+UtesN3Dwjvrwn2pn1qa21nrN9kkj+wkDWlFBMM
+	 Twq7WEsSMAOMg==
 From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Benno Lossin" <lossin@kernel.org>
-Cc: "Danilo Krummrich" <dakr@kernel.org>,  "Miguel Ojeda"
- <ojeda@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
- <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
- =?utf-8?Q?=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor
- Gross" <tmgross@umich.edu>,  "Bjorn Helgaas" <bhelgaas@google.com>,
-  Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,  "Greg
- Kroah-Hartman"
- <gregkh@linuxfoundation.org>,  "Rafael J. Wysocki" <rafael@kernel.org>,
-  "Tamir Duberstein" <tamird@gmail.com>,  "Viresh Kumar"
- <viresh.kumar@linaro.org>,  <rust-for-linux@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>,  <linux-pci@vger.kernel.org>,
-  =?utf-8?Q?Ma=C3=ADra?=
- Canal <mcanal@igalia.com>
-Subject: Re: [PATCH] rust: types: add FOREIGN_ALIGN to ForeignOwnable
-In-Reply-To: <DAIRJ71UP655.2NF13FJSA0G68@kernel.org> (Benno Lossin's message
-	of "Tue, 10 Jun 2025 11:58:07 +0200")
-References: <20250605-pointed-to-v1-1-ee1e262912cc@kernel.org>
-	<WubHJPtx9Uu0qugeELZ2ooYWKq4KDj7r8P7k4i_QhgOP53MWk1V3XHH4Ztmzp42zMwHSntslAbfpLFY9AhjfxQ==@protonmail.internalid>
-	<DAFB0GKSGPSF.24BE695LGC28Z@kernel.org> <87sek82bgf.fsf@kernel.org>
-	<B5pQuQkk-qtv2Ot8IX9eCoREwxBBx4xPoUIVYwdYjryB3OAHUhSOhZISNh1ft6F38icSGojZSIsxsyoX_nBRDQ==@protonmail.internalid>
-	<DAIRJ71UP655.2NF13FJSA0G68@kernel.org>
+To: "FUJITA Tomonori" <fujita.tomonori@gmail.com>
+Cc: <alex.gaynor@gmail.com>,  <ojeda@kernel.org>,  <aliceryhl@google.com>,
+  <anna-maria@linutronix.de>,  <bjorn3_gh@protonmail.com>,
+  <boqun.feng@gmail.com>,  <dakr@kernel.org>,  <frederic@kernel.org>,
+  <gary@garyguo.net>,  <jstultz@google.com>,
+  <linux-kernel@vger.kernel.org>,  <lossin@kernel.org>,
+  <lyude@redhat.com>,  <rust-for-linux@vger.kernel.org>,
+  <sboyd@kernel.org>,  <tglx@linutronix.de>,  <tmgross@umich.edu>
+Subject: Re: [PATCH v3 3/3] rust: time: Add ktime_get() to ClockSource trait
+In-Reply-To: <20250610.171506.1930082951902279512.fujita.tomonori@gmail.com>
+	(FUJITA Tomonori's message of "Tue, 10 Jun 2025 17:15:06 +0900")
+References: <-OrPPXscT_4STsX2CDg5ki77Lz68HLwGbucr-EZuMsTXhLnEdyuDfskI5daZYIwNuMJN_CBXX-gW_RLrw_H-aA==@protonmail.internalid>
+	<20250609010415.3302835-4-fujita.tomonori@gmail.com>
+	<874iwo3tze.fsf@kernel.org>
+	<dLoUGc_2n-ucLABtNidnDEFHkzly22x6iRKRh7Fz_7uoj9tvw9qZySUE5dIVWndnQlq9044P04kltwMTMuUI2Q==@protonmail.internalid>
+	<20250610.171506.1930082951902279512.fujita.tomonori@gmail.com>
 User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Tue, 10 Jun 2025 12:25:08 +0200
-Message-ID: <87bjqv3ncr.fsf@kernel.org>
+Date: Tue, 10 Jun 2025 11:34:00 +0200
+Message-ID: <87h60o2b5j.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-"Benno Lossin" <lossin@kernel.org> writes:
+"FUJITA Tomonori" <fujita.tomonori@gmail.com> writes:
 
-> On Tue Jun 10, 2025 at 11:27 AM CEST, Andreas Hindborg wrote:
->> Hi Benno,
->>
->> "Benno Lossin" <lossin@kernel.org> writes:
->>
->>> The title should probably also mention that it removes `PointedTo`.
+> On Tue, 10 Jun 2025 10:01:57 +0200
+> Andreas Hindborg <a.hindborg@kernel.org> wrote:
 >
-> Just making sure that you saw this.
->
->>> On Thu Jun 5, 2025 at 9:55 PM CEST, Andreas Hindborg wrote:
->>>>  pub unsafe trait ForeignOwnable: Sized {
->>>> -    /// Type used when the value is foreign-owned. In practical terms only defines the alignment of
->>>> -    /// the pointer.
->>>> -    type PointedTo;
->>>> +    /// The alignment of pointers returned by `into_foreign`.
->>>> +    const FOREIGN_ALIGN: usize;
->>>>
->>>>      /// Type used to immutably borrow a value that is currently foreign-owned.
->>>>      type Borrowed<'a>;
->>>> @@ -39,18 +35,17 @@ pub unsafe trait ForeignOwnable: Sized {
->>>>
->>>>      /// Converts a Rust-owned object to a foreign-owned one.
->>>>      ///
->>>> -    /// # Guarantees
+>> "FUJITA Tomonori" <fujita.tomonori@gmail.com> writes:
+>>
+>>> Introduce the ktime_get() associated function to the ClockSource
+>>> trait, allowing each clock source to specify how it retrieves the
+>>> current time. This enables Instant::now() to be implemented
+>>> generically using the type-level ClockSource abstraction.
 >>>
->>> Why remove this section? I think we should streamline it, (make it use
->>> bullet points, shorten the sentences etc). We can keep the paragraph you
->>> wrote below as normal docs.
+>>> This change enhances the type safety and extensibility of timekeeping
+>>> by statically associating time retrieval mechanisms with their
+>>> respective clock types. It also reduces the reliance on hardcoded
+>>> clock logic within Instant.
+>>>
+>>> Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+>>> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+>>> ---
+>>>  rust/helpers/helpers.c |  1 +
+>>>  rust/helpers/time.c    | 18 ++++++++++++++++++
+>>>  rust/kernel/time.rs    | 32 ++++++++++++++++++++++++++++----
+>>>  3 files changed, 47 insertions(+), 4 deletions(-)
+>>>  create mode 100644 rust/helpers/time.c
+>>>
+>>> diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
+>>> index 0f1b5d115985..0613a849e05c 100644
+>>> --- a/rust/helpers/helpers.c
+>>> +++ b/rust/helpers/helpers.c
+>>> @@ -39,6 +39,7 @@
+>>>  #include "spinlock.c"
+>>>  #include "sync.c"
+>>>  #include "task.c"
+>>> +#include "time.c"
+>>>  #include "uaccess.c"
+>>>  #include "vmalloc.c"
+>>>  #include "wait.c"
+>>> diff --git a/rust/helpers/time.c b/rust/helpers/time.c
+>>> new file mode 100644
+>>> index 000000000000..9c296e93a560
+>>> --- /dev/null
+>>> +++ b/rust/helpers/time.c
+>>> @@ -0,0 +1,18 @@
+>>> +// SPDX-License-Identifier: GPL-2.0
+>>> +
+>>> +#include <linux/timekeeping.h>
+>>> +
+>>> +ktime_t rust_helper_ktime_get_real(void)
+>>> +{
+>>> +	return ktime_get_with_offset(TK_OFFS_REAL);
+>>> +}
+>>> +
+>>> +ktime_t rust_helper_ktime_get_boottime(void)
+>>> +{
+>>> +	return ktime_get_with_offset(TK_OFFS_BOOT);
+>>> +}
+>>> +
+>>> +ktime_t rust_helper_ktime_get_clocktai(void)
+>>> +{
+>>> +	return ktime_get_with_offset(TK_OFFS_TAI);
+>>> +}
 >>
->> Not sure exactly what you are going for here. How is this:
->>
->>
->>   Converts a Rust-owned object to a foreign-owned one.
->>
->>   The foreign representation is a pointer to void.
->>
->>   # Guarantees
->>
->>   - Minimum alignment of returned pointer is [`Self::FOREIGN_ALIGN`].
->>
->>   There are no other guarantees for this pointer. For example, it might be invalid, dangling
->>   or pointing to uninitialized memory. Using it in any way except for [`from_foreign`],
->>   [`try_from_foreign`], [`borrow`], or [`borrow_mut`] can result in undefined behavior.
+>> This just caught my eye. I think policy is to make helpers as much 1:1 as
+>> possible. We should not inject arguments here. Instead, we should have
+>> just one function that passes the argument along.
 >
-> Maybe even move this paragraph above the `Guarantees` section and change
-> the beginning of it to "Aside from the guarantees listed below, there
-> are no other..."?
+> Indeed, you're right. It should have been as follows:
+>
+> +++ b/rust/helpers/time.c
+> @@ -0,0 +1,18 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/timekeeping.h>
+> +
+> +ktime_t rust_helper_ktime_get_real(void)
+> +{
+> +	return ktime_get_real();
+> +}
+> +
+> +ktime_t rust_helper_ktime_get_boottime(void)
+> +{
+> +	return ktime_get_boottime();
+> +}
+> +
+> +ktime_t rust_helper_ktime_get_clocktai(void)
+> +{
+> +	return ktime_get_clocktai();
+> +}
 
-Alright.
+Yes, even better =F0=9F=91=8D
 
 
 Best regards,
 Andreas Hindborg
+
 
 
 
