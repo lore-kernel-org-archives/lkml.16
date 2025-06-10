@@ -1,94 +1,102 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A26262918D0
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:28:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C718828F503;
+	Tue, 10 Jun 2025 12:29:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749558525; cv=none; b=WN/4YVdS9EweY+CmF+2mvWYjYi4j7AOT+EnAB20/0tk3yeKxP8wo/MPKPws7o2OyfuCoCBR431WVJPHTsAKqXh9FDbzYGHoiOe4MxPaJ3DW53VxCUHyBxXXbfYplMUSjcQ8pTV6S0Owbz3jDVU1oRnmb62yJYc+1I11BTQeLd3w=
+	t=1749558544; cv=none; b=i4FAmXUIevhjQCKMrs0wPsTvMxvuxc1bs2MeSb7ZF6ohCl4qBjI26d1DDol8Qi/mLQgHzJ50tQj0tGxl8BrPLWfbNt8lMsoUirIqVRxTKlK49QcA/26Gdf8LNvM/I79xt/usS9vqwGTsWkClbhaMjtltvIG4a36ztz3Cbsqjd40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749558525; c=relaxed/simple;
-	bh=qpvt2l7UUTiMSp9Nt2nHtj3uisD8+uoR1/1D3UNyhR8=;
+	s=arc-20240116; t=1749558544; c=relaxed/simple;
+	bh=2UbnsN/0HzJVFD9xlg8jO4RD2i/2zdrcJP360HZf1sg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Nx8+o/FVcCcEsKGWfUVYHWnMkQREIMBiMkSF1KY4HJ8czNuCguqmkNQfv8t5USAWtGa6nmXo5Dg4p/QiB32ElaG73IznR2PYdaVIRzj9cwqkLegiZ394Lf71Qmba9lvPWBmqk9xDc75cm0ZeDM5Ys0dUevKmTqcPShgsLbhKptA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LKRL/wkh; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=BpERMqeefHJ9OHHHssrTmmAT0dls984l8JE8Wy8udoY6L6UMDOJNomXe8wbqFtdSlnzvm/FkbyAOAK9mOynI+p7lOiC5EX6148GIbG1FSC46ewvRkXe6JOaKyOc++FC+1xw3L2SJnAbR8OqWJa5rHoGvXLDwtqVjuodKorhxXKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fqXFtLY7; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LKRL/wkh"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5532e0ad84aso5614607e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 05:28:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fqXFtLY7"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-313290ea247so796561a91.3;
+        Tue, 10 Jun 2025 05:29:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749558521; x=1750163321; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749558542; x=1750163342; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GsOrVxtqepjy8J80Lyog9ns9pzcfAzcmyvDrXuJUtgY=;
-        b=LKRL/wkht4QnbzCRHU/vBDVUMjED1jaa0jjtHJvHAlutsaNYecC4eFasiWryepV/ll
-         Y+x6UvmsgzLDvOy63wAExi66zcdfI4UprmZHRjrCTCJ/NnR6BnF00ZdbNmmHRBfHVYO9
-         lWLg9r8eTokbfiRRDSvEtZYWuMy7aHJo7eRcD7SjlZdfPA44U5FxPAfJ93xS8n1BYKcy
-         6auYsn14kfIvYNwArTOr/uYnz0/wScCoxMyRnaHEzg3ptihTotOJsyhwdS+bK4JQXH1m
-         0NrHWXJKb+ErGqTlxIMavAM8R9dzm575lfhqDHPiUGwPrj6dSeEkdfYRjxH9sbW7ZVzJ
-         SQuw==
+        bh=2UbnsN/0HzJVFD9xlg8jO4RD2i/2zdrcJP360HZf1sg=;
+        b=fqXFtLY74Fe3HLxwrSUeUv1xQdLX8JoFsCoj2qXezKhexfg2pVcPGcLrGXtgD8l980
+         FvqLxvPPQ8W/A7Ped3TklzHRAWoiocGC4zpE7Irih56I9SKEpBdq9Y4u0/WvUhWKI2xU
+         tJiH6d4fdUPfQA7xTg/qUiDeKvGmOO5AbtrimJ3J/SuQgM7ylN9uuj/tcjasuP2bvf7K
+         ci4uDT0dE4sNAaj0jGUydWDErvL0viF6hq334JQNubUQOCPnlQoDBkVDmt1bO4rAx0P6
+         Dy5P2bsvUfyX3lpeYBRIA7r0SzSIk+aPA0DzJ0Ut7E/Otttg2oDNNGkffgnqNN4/G+su
+         ubpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749558521; x=1750163321;
+        d=1e100.net; s=20230601; t=1749558542; x=1750163342;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GsOrVxtqepjy8J80Lyog9ns9pzcfAzcmyvDrXuJUtgY=;
-        b=lr4KbEnMm2Jgozi298if8uF5Wj7nF1Q8klbWbClARwXIkUd7m0DL1G42wbvHBSpaT7
-         +WINhxCCPkUUvnLTym4NEqB/afSUo4AjPoPlk0ignXxRbrszbM9doVfW4oFKIDG3hgSN
-         tHm++naefad2XRjsqlP1NdjP/G3rghbjrDpx9x1z53haK1Siwfv64y1ciwQrCIEnqNJh
-         +/Vt0d4aXYNJofKxL56VHC1scCdXaLxFWuTPd85ENFByGg13bc2l4vHKooYDNfpSjYsV
-         vvaIPp9T+bjAqajUUOSP046NgKDrjnLytQs5r8Z5Vq8AdXwIuwcUDfXdZIT6pdYIc4LZ
-         KB5g==
-X-Forwarded-Encrypted: i=1; AJvYcCVAL9h18Hs9g5TtGxxMpKswIXJfSq+1HzGEZE6nKrb3DXWZrpMPLxWtBGkhIpkffQj2i9cG845EFBIIG4s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdNiyn+vMYow4afA+cItzVmIs1qnJqlnZyiZF2ON2DrkPOWUwI
-	p5h8g5c1SMOr0nlfCLIpI0vFfyjUGdEnI9nXwbZG0MgXYuJb7i7yqWko6vTd7pZADhEdar0aJcL
-	8uE8tAySQUq+tD4BcUfFmh7wxMco8S73b3Nar08BLCw==
-X-Gm-Gg: ASbGncs9XaJBDhpexAxv5RKHMVzB1IW69Km5tr2xPj7SjwsbzAamlsn+z9T/g9fMrxk
-	+jUa2mLDrWn8F7ZvXaBUZUutT8zI6ZB27x9U3eIhGsW8Iq/p+M30KpJ6LJ2mvXg6CmR1lZlrPSw
-	MzFGfWBOto8h1ZYmzzbjc5YAI0tSq7lSK8TTGCMbwEjrs=
-X-Google-Smtp-Source: AGHT+IGIP7rndrIqf6RWqLJPp4xdoAE+TRSEB9XlMrQhxRf3kV/JruNVdV2IPEdtEosg+5E6PSBoZ/3/v3lz/smQsyE=
-X-Received: by 2002:a2e:a595:0:b0:32a:651c:9af9 with SMTP id
- 38308e7fff4ca-32adfd5e7b1mr45162751fa.37.1749558520672; Tue, 10 Jun 2025
- 05:28:40 -0700 (PDT)
+        bh=2UbnsN/0HzJVFD9xlg8jO4RD2i/2zdrcJP360HZf1sg=;
+        b=mXvWEq8Gcj8fV7Z0xvXxO1AGbzvTs1fWZg3Ji+j/gm36XKo9h1OdQ2G4FbwR4uD3+a
+         SwdlQRU3t+BYFM5E7zugMj1WD83UPTM9Mwhpym6GPmmR6Typm9MZP2gtMp40VRkBBmk9
+         aSZe1uuYw3aIZ76CzGtiywnCJhq0YUsDPYPwbHuBo8cHMDdJr+7EEnhr4Yr3FtiMRLEp
+         Uk+fGgmXHrkRxSBsxlttJiZ0n4zQKSbUC5MD1HJN3raxjZtKDCsrwhSvx/KwniKXHeRe
+         enQ1FuGFa9Nk2TB2SrhkDT9iaBUBZUp82UYtyn0BYekLblD4vm+Cs1A/6Sfc+xJ+0tHJ
+         WGIA==
+X-Forwarded-Encrypted: i=1; AJvYcCU4/He7tT2vND9UWu4Gx5Zu7s+tFWtxpoVFssGxonsgLgMYXpW/cMQjr1UUYw9CRSSmmEe5cx7TSFj0VEwcO24=@vger.kernel.org, AJvYcCV+Mz1r6wvTWuD+/i5vxBWAVqJ8tnR9MCPYiKnli4MM4cc7Hkjh2sv+iWAopT6tJaAcFk1XhY93xjky@vger.kernel.org, AJvYcCXKXxTRKCimEnM8ZI5pKK1Dy+aOFKIFOSG5o3yWAt4/8H8MbVX0mgIFzd7ZQiOTMNP856Daw5NNJD35DVU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNglMIfelzUGtPuzKvAuujtkg7jeOI67lVACzIXi8x7zMgibg8
+	z6iTyUQ8pnIEwf/4YoMS7vG4lnpBG3JqNs2w5AA84Oe7x/oinRbqtAg5sVW2R7YyVpSyjG69oBV
+	jurrShsAkj6GGVN+jJAmLB4xcCC0gRo8=
+X-Gm-Gg: ASbGnctZgVAhD1vehpXpAMZO0raMhYNYmT1TGWu2Oo9nfy1U02LhD8jnnb9XQr4U5wZ
+	TJBtLMWPas77g3o54go0qy25UvE4lf3/tvjp4eOtgC33qgPQhg9dA1rfEIE1CHg/4wW3Rf/SfcI
+	rgRlLyiYFYnApkcMSknS5fp6SFHy4EVKqNqX+EJC2izAI=
+X-Google-Smtp-Source: AGHT+IGKJQK2v6FM0o5IGKEscQY3VpiTZYOi6jXZ0deKyklBQPXuPdbcZh/CoYwKmI+Zc2LZCYY1j8Z4rnonUI10r5A=
+X-Received: by 2002:a17:90b:53cf:b0:312:e9d:3fff with SMTP id
+ 98e67ed59e1d1-3134e2da3c9mr8566788a91.1.1749558541925; Tue, 10 Jun 2025
+ 05:29:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250604-dt-bindings-psy-monitored-battery-v1-0-7f755ff75218@linaro.org>
- <20250604-dt-bindings-psy-monitored-battery-v1-6-7f755ff75218@linaro.org>
-In-Reply-To: <20250604-dt-bindings-psy-monitored-battery-v1-6-7f755ff75218@linaro.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 10 Jun 2025 14:28:28 +0200
-X-Gm-Features: AX0GCFs14D3DfdKPGW1oWe6McnWZU01oPtzxcnEFGOdPnt5cB-b18SjhfOGEaq0
-Message-ID: <CACRpkdbMFZmK3oUapXDrJjtfhBn56shGu9uoFYPT2_HesTF+Xg@mail.gmail.com>
-Subject: Re: [PATCH 6/6] dt-bindings: power: supply: Drop redundant
- monitored-battery ref
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>, 
-	Casey Connolly <casey.connolly@linaro.org>, Jakob Hauser <jahau@rocketmail.com>, 
-	David Heidelberg <david@ixit.cz>, Dmitry Osipenko <digetx@gmail.com>, 
-	Tobias Schrammm <t.schramm@manjaro.org>, Chen-Yu Tsai <wens@csie.org>, linux-pm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250610-pointed-to-v2-1-fad8f92cf1e5@kernel.org>
+ <ABpacmV2zqpdR5tk6NDHTg9kbssxZOay4JLvHJWs6pS0swz_krftwuUN8k_SABP04TF1k1Z4uW4IH29D2Qb5OA==@protonmail.internalid>
+ <CANiq72kYdtozcN1U1yGhi_orh-OVO2xp3=wQPAhwgx=wTi-neA@mail.gmail.com> <871prr24he.fsf@kernel.org>
+In-Reply-To: <871prr24he.fsf@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 10 Jun 2025 14:28:48 +0200
+X-Gm-Features: AX0GCFsUeLNISdH1VBrQM4vnuNs7e3EdSLQvU8l0WJ9OFeQ0M33QThRkcxjaYO4
+Message-ID: <CANiq72kxN45+U9VA8mrPtzYG0xdomehO5A==CX+79iJFJ0edeg@mail.gmail.com>
+Subject: Re: [PATCH v2] rust: types: add FOREIGN_ALIGN to ForeignOwnable
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Tamir Duberstein <tamird@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 4, 2025 at 10:19=E2=80=AFAM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
-
-> Bindings reference the common power supply schema, which already defines
-> the type (ref) for "monitored-battery" property.  Drop the redundant ref
-> from individual device schemas along with obvious description also
-> duplicating what is in power-supply.yaml.
+On Tue, Jun 10, 2025 at 1:58=E2=80=AFPM Andreas Hindborg <a.hindborg@kernel=
+.org> wrote:
 >
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Yea, sorry. I just changed the kbox file where Benno pointed this out. I
+> can change the rest of the places as well.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+No worries!
 
-Yours,
-Linus Walleij
+If they are new cases, then I would use the unqualified ones (which
+are also in the prelude now), since we are trying to more towards that
+(commit 3d5bef5d47c3 ("rust: add C FFI types to the prelude")).
+
+That way we have fewer to clean later on.
+
+Thanks!
+
+Cheers,
+Miguel
