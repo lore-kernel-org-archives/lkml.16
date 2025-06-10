@@ -1,320 +1,281 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C7C236429;
-	Tue, 10 Jun 2025 18:15:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98850236429
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 18:16:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749579344; cv=none; b=rkEIwnOpeJeGSALdBzpo0tc1W/KG3LZqSbta2vIi3xrEBL+nKnESOfDnDt3K5Z0nvneOFCsAn39R7xnMxWLSQpSvXwKLXPTrKkcSB6chzbqk+FqXlRsJ3Mw/DRLr1ubaLMGIP7NrLMPuPB5cN0SeqShA2fL87v8vpEVwHIEi2CY=
+	t=1749579416; cv=none; b=OnTca/4mxEz3/Sp31GpL95LizjrZeGnQhXVyj7C+vst+MQU5MkW+Tp3NBhVk35OMEamZttLJXfbQBAcJVZc94uNkpzLLtnIbkAz1rCIeKloEOtVd9AEMa6mvencKMzZVex3aSPne+p/Nt2MqsiiYf/i+GpGsqve2VoLf6h95ENg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749579344; c=relaxed/simple;
-	bh=5zhnt1c0lZT3OLH7CzVt7TZ9CQ82Lt78WV/RF/ijulU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rtb2yAvfZbE0w/KN7ijo4TCG6tZ8qHGSvLQjjZPW+uQoD3OjhvQKPCUvT/62LT1FhcNMNrxsWjfZP3kgllplPbucl82w2JxHw03uEd3im5op0RjMVrH0M5nHB0lHAXS5kIwPld8t/Tl2NLhV8d5+PVGsi67zFm+Fkc3irtT0ju0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tcQCf/A8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749579416; c=relaxed/simple;
+	bh=QyksRAC+GP5Nw9IMTue9HAksp35Uzu5WlRtEeJZMqJA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rBrsOhHmPGNShkzSp9mWbNZCNAL6BuPrMOgOFigbtOIPc01h6EoQTQ9Kf+9kYZOeRJvTACSOisA3Y7Uhr2zePnQyy9+ZtvA+o82V1gX68QXM1SZUmcQF2Asegv9dw9kOnOFryu5W5uez/22Mt5wIbOLqYMtZN/zhGaVU0c4NO70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cXEeS/ZK; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tcQCf/A8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9F16C4CEED;
-	Tue, 10 Jun 2025 18:15:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749579343;
-	bh=5zhnt1c0lZT3OLH7CzVt7TZ9CQ82Lt78WV/RF/ijulU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tcQCf/A8aRdQcOkf9YgLLFbg0vq14IlRcZyxzsxaFgdIqC3cWb8++rEN/gyHvLZtm
-	 mpysfcNEiDr4Gq/+1a1yJe+aGTC+cfYpEwhZ7+zCj29NKeRTUq1j6a7+SJUEFQ1hSW
-	 X/vnfmEmVi9hRIl2A3AQmYev4iBoTwt4fSSz56taUjqG+EWZ8ipkx4wnQCR3eiAMZS
-	 G4Po/STLKg24RmmuUfPTngUhRxwwxk7XoDKqa4U/AAA30KUCsTJtGLqTPnXdBikBCZ
-	 at+BQwW2WsQUb5AGyWOMoexnChYPlxTEQ0gg1zfSu0bD6ov1q2JP3Y98AJiryzh6m9
-	 MuzB0mBdfOUIg==
-Date: Tue, 10 Jun 2025 13:15:42 -0500
-From: Rob Herring <robh@kernel.org>
-To: =?utf-8?B?VG9tw6HFoSBKdcWZZW5h?= <jurenatomas@gmail.com>
-Cc: dmitry.torokhov@gmail.com, krzk+dt@kernel.org, conor+dt@kernel.org,
-	linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input: tca6416-keypad - Add OF support for driver
- instantiation
-Message-ID: <20250610181542.GA2396962-robh@kernel.org>
-References: <20250610154609.1382818-1-jurenatomas@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cXEeS/ZK"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-747fc77ba9eso4337715b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 11:16:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749579414; x=1750184214; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DduieBxwKYFUWaIYXduFYzsh5Cay+ey5g9zc90whlU4=;
+        b=cXEeS/ZKMww5EOMTklFvT7odO7P2bhnQsm/wa0ZYxRcFd5OU7qLXNzcw1zqH+cGv+8
+         S5GFE6oLTjcfNdFZ3ZOW95vzbQW2ie9Kh2bdiEFGJE2RQbQRd0C9H7BOmy5l4EhHfTq9
+         PhOiJBU8SkxPayJs03G5Ijj0ZdOnur2sWEEixyiy1GCp4Ow5Obs1B+7M7aP9P1JF4lmu
+         Vx17a+83q2fYXtrQw3Q3fnd0iFNKCXkGd1RtbPxzhrTAhyY0LrqdvVvP8sHUsPCAMHvm
+         vpBK1b7dLwLdMSkqNlrc70du7yd0X7LoB7PxNeynoIFOr+IKpoJp/eWZ6hPh1hvqwput
+         9pNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749579414; x=1750184214;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DduieBxwKYFUWaIYXduFYzsh5Cay+ey5g9zc90whlU4=;
+        b=oI4tTPbKRVZEsMZdbToe6vIorSOTRSFLqxza++QRtK1DlLrENGipVxerTkj3RxArUE
+         pIZXNomcTNY23q+NHmnfYK1pVNs/BAPVQ2bJ58QnJuBxIs92ihVWh6kbGWiZ8rs2ytKa
+         IYQSW9UBIUIDRK9AphVLz6P73/bsNxwU/4s3u2bhHPXEohN+L1P3lpch84EzWk4XXLpt
+         panOnagMWCmjFKIanCDq09/mPBBm78sO4B7XJi7MC5uvlylAFMcYLWg9nXBJ+nSn1PT9
+         UXcQ8Zj486iMawDXTkz1YzESkeqJHz5kmqah0FLCk2iyzitVRI49tM8usmnJKnUhAi7M
+         xSLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXGVs3cwjYVbaoWnL/L6xkR5DJuFt5/LA/3MdUiKkQKDG/lWkGm/2m1sSiy9mxp55DabLKIum3p+/oQqUI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy40rK4C9s2pIKZx+54A6YqHxkPED7T3u4fJb1sDdrhoOUkqhDJ
+	VF0gCtFzkQNd9oXCJBR2Sm6v8+Y9NyzghHuJgUrKmG884QkHE0V0VZn1
+X-Gm-Gg: ASbGncsdP/+Q8PMHXwbO6ZIfM7eHactzR4ChsaoDoiWROKNpCHMUyymY+A/f0IhGoek
+	7oTnX1QHyGSyyuDg8RS1joLhqGzXZyiAzPqsMqqQBvLC9PagR+og2nY9FUGr+bYnZKcFbKHo6I0
+	I9rnUxodhXGVZ/hKzFO4JqryaZ3oiTXYpz+3QPsA/u3sN0xcoWFYuA+m5ZdHA4Wes6DS88sQjuL
+	zTBE1XwNGt67R+vcXGGE4lEsnqyR0SwTahDE1FpaUPj/MEPg6V/34qvCrA2gDD54+m084LLzLSb
+	vGq6+lWKGWFobZpG7arksSkqdtLXRbZGXaCRuC41ib4V3vlAUc0EI5gOS3sSnjjNyq9ZcDlxItX
+	I4avbxcg=
+X-Google-Smtp-Source: AGHT+IFRb5pPmXpQFPdoAC7qoXDoCFxLUXqFm0RRzubQmJUoqejBxmqSt7jX4eHk0+tpsHj5WvN8Zw==
+X-Received: by 2002:a05:6a20:918b:b0:1ee:dcd3:80d7 with SMTP id adf61e73a8af0-21f863a0fd3mr859577637.0.1749579413830;
+        Tue, 10 Jun 2025 11:16:53 -0700 (PDT)
+Received: from KASONG-MC4.tencent.com ([101.32.222.185])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b0c0138sm7705822b3a.110.2025.06.10.11.16.50
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 10 Jun 2025 11:16:53 -0700 (PDT)
+From: Kairui Song <ryncsn@gmail.com>
+To: linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Hugh Dickins <hughd@google.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Kemeng Shi <shikemeng@huaweicloud.com>,
+	Chris Li <chrisl@kernel.org>,
+	Nhat Pham <nphamcs@gmail.com>,
+	Baoquan He <bhe@redhat.com>,
+	Barry Song <baohua@kernel.org>,
+	Usama Arif <usamaarif642@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	Kairui Song <kasong@tencent.com>
+Subject: [PATCH v3] mm/shmem, swap: fix softlockup with mTHP swapin
+Date: Wed, 11 Jun 2025 02:16:45 +0800
+Message-ID: <20250610181645.45922-1-ryncsn@gmail.com>
+X-Mailer: git-send-email 2.49.0
+Reply-To: Kairui Song <kasong@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250610154609.1382818-1-jurenatomas@gmail.com>
 
-On Tue, Jun 10, 2025 at 05:46:10PM +0200, Tomáš Juřena wrote:
-> From: Tomas Jurena <jurenatomas@gmail.com>
-> 
-> Adds support for instantiating the tca6416-keypad driver via
-> Device Tree. If no platform data is present, the driver can now be
-> probed based on OF bindings.
-> 
-> A corresponding Device Tree binding document is added at:
->   Documentation/devicetree/bindings/input/tca6416-keypad.yaml
-> 
-> This allows the driver to be used in systems that rely solely on the
-> Device Tree for hardware description, such as embedded ARM platforms.
-> 
-> Tested on Toradex Ixora 1.3A board and Apalis imx8 SOM.
+From: Kairui Song <kasong@tencent.com>
 
-We already have a GPIO driver for this chip. Would the 
-gpio-keys driver work here instead? Seems to work for 
-arch/arm/boot/dts/ti/omap/am3517-evm-ui.dtsi.
+Following softlockup can be easily reproduced on my test machine with:
 
-> 
-> Signed-off-by: Tomas Jurena <jurenatomas@gmail.com>
-> ---
->  .../bindings/input/tca6416-keypad.yaml        | 87 ++++++++++++++++++
+echo always > /sys/kernel/mm/transparent_hugepage/hugepages-64kB/enabled
+swapon /dev/zram0 # zram0 is a 48G swap device
+mkdir -p /sys/fs/cgroup/memory/test
+echo 1G > /sys/fs/cgroup/test/memory.max
+echo $BASHPID > /sys/fs/cgroup/test/cgroup.procs
+while true; do
+    dd if=/dev/zero of=/tmp/test.img bs=1M count=5120
+    cat /tmp/test.img > /dev/null
+    rm /tmp/test.img
+done
 
-Bindings should be a separate patch.
+Then after a while:
+watchdog: BUG: soft lockup - CPU#0 stuck for 763s! [cat:5787]
+Modules linked in: zram virtiofs
+CPU: 0 UID: 0 PID: 5787 Comm: cat Kdump: loaded Tainted: G             L      6.15.0.orig-gf3021d9246bc-dirty #118 PREEMPT(voluntary)·
+Tainted: [L]=SOFTLOCKUP
+Hardware name: Red Hat KVM/RHEL-AV, BIOS 0.0.0 02/06/2015
+RIP: 0010:mpol_shared_policy_lookup+0xd/0x70
+Code: e9 b8 b4 ff ff 31 c0 c3 cc cc cc cc 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 66 0f 1f 00 0f 1f 44 00 00 41 54 55 53 <48> 8b 1f 48 85 db 74 41 4c 8d 67 08 48 89 fb 48 89 f5 4c 89 e7 e8
+RSP: 0018:ffffc90002b1fc28 EFLAGS: 00000202
+RAX: 00000000001c20ca RBX: 0000000000724e1e RCX: 0000000000000001
+RDX: ffff888118e214c8 RSI: 0000000000057d42 RDI: ffff888118e21518
+RBP: 000000000002bec8 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000bf4 R11: 0000000000000000 R12: 0000000000000001
+R13: 00000000001c20ca R14: 00000000001c20ca R15: 0000000000000000
+FS:  00007f03f995c740(0000) GS:ffff88a07ad9a000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f03f98f1000 CR3: 0000000144626004 CR4: 0000000000770eb0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ shmem_alloc_folio+0x31/0xc0
+ shmem_swapin_folio+0x309/0xcf0
+ ? filemap_get_entry+0x117/0x1e0
+ ? xas_load+0xd/0xb0
+ ? filemap_get_entry+0x101/0x1e0
+ shmem_get_folio_gfp+0x2ed/0x5b0
+ shmem_file_read_iter+0x7f/0x2e0
+ vfs_read+0x252/0x330
+ ksys_read+0x68/0xf0
+ do_syscall_64+0x4c/0x1c0
+ entry_SYSCALL_64_after_hwframe+0x76/0x7e
+RIP: 0033:0x7f03f9a46991
+Code: 00 48 8b 15 81 14 10 00 f7 d8 64 89 02 b8 ff ff ff ff eb bd e8 20 ad 01 00 f3 0f 1e fa 80 3d 35 97 10 00 00 74 13 31 c0 0f 05 <48> 3d 00 f0 ff ff 77 4f c3 66 0f 1f 44 00 00 55 48 89 e5 48 83 ec
+RSP: 002b:00007fff3c52bd28 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+RAX: ffffffffffffffda RBX: 0000000000040000 RCX: 00007f03f9a46991
+RDX: 0000000000040000 RSI: 00007f03f98ba000 RDI: 0000000000000003
+RBP: 00007fff3c52bd50 R08: 0000000000000000 R09: 00007f03f9b9a380
+R10: 0000000000000022 R11: 0000000000000246 R12: 0000000000040000
+R13: 00007f03f98ba000 R14: 0000000000000003 R15: 0000000000000000
+ </TASK>
 
->  drivers/input/keyboard/tca6416-keypad.c       | 88 +++++++++++++++++--
->  2 files changed, 170 insertions(+), 5 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/input/tca6416-keypad.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/input/tca6416-keypad.yaml b/Documentation/devicetree/bindings/input/tca6416-keypad.yaml
-> new file mode 100644
-> index 000000000000..f050403c4dbe
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/tca6416-keypad.yaml
-> @@ -0,0 +1,87 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/input/tca6416-keypad.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: TI TCA6416 keypad
-> +
-> +maintainers:
-> +
-> +description: |
+The reason is simple, readahead brought some order 0 folio in swap cache,
+and the swapin mTHP folio being allocated is in confict with it, so
+swapcache_prepare fails and causes shmem_swap_alloc_folio to return
+-EEXIST, and shmem simply retries again and again causing this loop.
 
-Don't need '|'
+Fix it by applying a similar fix for anon mTHP swapin.
 
-> +  Texas Instruments TCA6416 IO expander as a keypad input device.
-> +
-> +allOf:
-> +  - $ref: input.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ti,tca6416_keys
-> +      - ti,tca6408_keys
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  linux,gpio-keymap:
+The performance change is very slight, time of swapin 10g zero folios
+with shmem (test for 12 times):
+Before:  2.47s
+After:   2.48s
 
-linux,keymap
+Fixes: 1dd44c0af4fa1 ("mm: shmem: skip swapcache for swapin of synchronous swap device")
+Signed-off-by: Kairui Song <kasong@tencent.com>
+Reviewed-by: Barry Song <baohua@kernel.org>
+Acked-by: Nhat Pham <nphamcs@gmail.com>
 
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    description: |
-> +      Array of gpio keys provided by the driver instance. Each entry is a
-> +      bitfield holding configuration of the input key. The bitfield looks like
-> +      this:
-> +      +------------------------------------------------------------+
-> +      | Bits     | 31:18    |         17 | 16:14 | 13:10    | 9:0  |
-> +      | Function | reserved | active_low | type  | reserved | code |
-> +      +------------------------------------------------------------+
-> +      code - Linux key code
-> +      type - EV_KEY or EV_SW
-> +      active_low - Key is active in low state
-> +
-> +  linux,keycodes:
-> +    minItems: 1
-> +    maxItems: 16
-> +
-> +  autorepeat:
-> +    type: boolean
-> +    description: |
-> +      Enables the Linux input system's autorepeat feature on the input device.
-> +
-> +  polling:
-> +    type: boolean
-> +    description: |
-> +      Forces driver to use polling mode instead of IRQ.
-> +
-> +  pinmask:
-> +    description: |
-> +      Allows to disable certain keys. By default are all inputs enabled.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    i2c {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +      keypad@21 {
-> +        compatible = "ti,tca6416_keys";
-> +        reg = <0x21>;
-> +        interrupt-parent = <&gpio>;
-> +        interrupts = <26 IRQ_TYPE_EDGE_FALLING>;
-> +        linux,gpio-keymap = <
-> +                            0x24290, // active low, EV_KEY, 0, KEY_MACRO1
-> +                            0x24291, // active low, EV_KEY, 1, KEY_MACRO2
-> +                            0x24292, // active low, EV_KEY, 2, KEY_MACRO3
-> +        >;
-> +      };
-> +    };
-> +
-> +...
-> diff --git a/drivers/input/keyboard/tca6416-keypad.c b/drivers/input/keyboard/tca6416-keypad.c
-> index fbc674d7b9f0..8910498cf266 100644
-> --- a/drivers/input/keyboard/tca6416-keypad.c
-> +++ b/drivers/input/keyboard/tca6416-keypad.c
-> @@ -17,6 +17,7 @@
->  #include <linux/i2c.h>
->  #include <linux/input.h>
->  #include <linux/tca6416_keypad.h>
-> +#include <linux/bitfield.h>
->  
->  #define TCA6416_INPUT          0
->  #define TCA6416_OUTPUT         1
-> @@ -24,6 +25,7 @@
->  #define TCA6416_DIRECTION      3
->  
->  #define TCA6416_POLL_INTERVAL	100 /* msec */
-> +#define TCA6416_MAX_IO_SIZE 16 /* maximum number of inputs */
->  
->  static const struct i2c_device_id tca6416_id[] = {
->  	{ "tca6416-keys", 16, },
-> @@ -173,9 +175,67 @@ static int tca6416_setup_registers(struct tca6416_keypad_chip *chip)
->  	return 0;
->  }
->  
-> +/* Configuration bitmap
-> + * | 31:18    |         17 | 16:14 | 13:10    | 9:0  |
-> + * | reserved | active_low | type  | reserved | code |
-> + */
-> +#define CFG_CODE GENMASK(9, 0)
-> +#define CFG_TYPE GENMASK(16, 14)
-> +#define CFG_ACTIVE_LOW BIT(17)
-> +
-> +static struct tca6416_keys_platform_data *
-> +tca6416_parse_properties(struct device *dev, uint8_t io_size)
-> +{
-> +	static const char keymap_property[] = "linux,gpio-keymap";
-> +	struct tca6416_keys_platform_data *pdata;
-> +	u32 keymap[TCA6416_MAX_IO_SIZE];
-> +	struct tca6416_button *buttons;
-> +	int ret, i;
-> +	u8 pin;
-> +
-> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-> +	if (!pdata)
-> +		return NULL;
-> +
-> +	ret = device_property_count_u32(dev, keymap_property);
-> +	if (ret <= 0)
-> +		return NULL;
-> +
-> +	pdata->nbuttons = ret;
-> +	if (pdata->nbuttons > io_size)
-> +		pdata->nbuttons = io_size;
-> +
-> +	ret = device_property_read_u32_array(dev, keymap_property, keymap,
-> +					     pdata->nbuttons);
-> +	if (ret)
-> +		return NULL;
-> +
-> +	buttons = devm_kcalloc(dev, pdata->nbuttons, sizeof(*buttons),
-> +			       GFP_KERNEL);
-> +	if (!buttons)
-> +		return NULL;
-> +
-> +	for (i = 0; i < pdata->nbuttons; i++) {
-> +		buttons[i].code = FIELD_GET(CFG_CODE, keymap[i]);
-> +		buttons[i].type = FIELD_GET(CFG_TYPE, keymap[i]);
-> +		buttons[i].active_low = FIELD_GET(CFG_ACTIVE_LOW, keymap[i]);
-> +		/* enable all inputs by default */
-> +		pdata->pinmask |= BIT(i);
-> +	}
-> +
-> +	pdata->buttons = buttons;
-> +
-> +	pdata->rep = device_property_read_bool(dev, "autorepeat");
-> +	/* we can ignore the result as by default all inputs are enabled */
-> +	device_property_read_u16(dev, "pinmask", &pdata->pinmask);
-> +	pdata->use_polling = device_property_read_bool(dev, "polling");
-> +
-> +	return pdata;
-> +}
-> +
->  static int tca6416_keypad_probe(struct i2c_client *client)
->  {
-> -	const struct i2c_device_id *id = i2c_client_get_device_id(client);
-> +	uint8_t io_size = (uintptr_t)i2c_get_match_data(client);
->  	struct tca6416_keys_platform_data *pdata;
->  	struct tca6416_keypad_chip *chip;
->  	struct input_dev *input;
-> @@ -190,9 +250,13 @@ static int tca6416_keypad_probe(struct i2c_client *client)
->  	}
->  
->  	pdata = dev_get_platdata(&client->dev);
-> -	if (!pdata) {
-> -		dev_dbg(&client->dev, "no platform data\n");
-> -		return -EINVAL;
-> +	if (!pdata && dev_fwnode(&client->dev)) {
-> +		pdata = tca6416_parse_properties(&client->dev, io_size);
-> +		if (!pdata) {
-> +			dev_err(&client->dev,
-> +				"Failed to parse device configuration from properties\n");
-> +			return -EINVAL;
-> +		}
->  	}
->  
->  	chip = devm_kzalloc(&client->dev,
-> @@ -207,7 +271,7 @@ static int tca6416_keypad_probe(struct i2c_client *client)
->  
->  	chip->client = client;
->  	chip->input = input;
-> -	chip->io_size = id->driver_data;
-> +	chip->io_size = io_size;
->  	chip->pinmask = pdata->pinmask;
->  	chip->use_polling = pdata->use_polling;
->  
-> @@ -279,9 +343,23 @@ static int tca6416_keypad_probe(struct i2c_client *client)
->  	return 0;
->  }
->  
-> +static const struct of_device_id tca6416_of_match[] = {
-> +	{
-> +		.compatible = "ti,tca6416_keys",
-> +		.data = (void *)16,
-> +	},
-> +	{
-> +		.compatible = "ti,tca6408_keys",
-> +		.data = (void *)8,
-> +	},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, tca6416_of_match);
-> +
->  static struct i2c_driver tca6416_keypad_driver = {
->  	.driver = {
->  		.name	= "tca6416-keypad",
-> +		.of_match_table = tca6416_of_match,
->  	},
->  	.probe		= tca6416_keypad_probe,
->  	.id_table	= tca6416_id,
-> -- 
-> 2.34.1
-> 
+---
+
+V1: https://lore.kernel.org/linux-mm/20250608192713.95875-1-ryncsn@gmail.com/
+Updates:
+- Move non_swapcache_batch check before swapcache_prepare, I was
+  expecting this could improve the performance, turns out it barely
+  helps and may even cause more overhead in some cases. [ Barry Song ]
+- Remove zero map check, no need to do that for shmem [ Barry Song,
+  Baolin Wang ]
+- Fix build bot error.
+
+V2: https://lore.kernel.org/linux-mm/20250609171751.36305-1-ryncsn@gmail.com/
+Updates:
+- Minor comment adjustment [ Nhat Pham ]
+
+ mm/memory.c | 20 --------------------
+ mm/shmem.c  |  6 +++++-
+ mm/swap.h   | 23 +++++++++++++++++++++++
+ 3 files changed, 28 insertions(+), 21 deletions(-)
+
+diff --git a/mm/memory.c b/mm/memory.c
+index 8eba595056fe..b0cda5aab398 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -4315,26 +4315,6 @@ static struct folio *__alloc_swap_folio(struct vm_fault *vmf)
+ }
+ 
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+-static inline int non_swapcache_batch(swp_entry_t entry, int max_nr)
+-{
+-	struct swap_info_struct *si = swp_swap_info(entry);
+-	pgoff_t offset = swp_offset(entry);
+-	int i;
+-
+-	/*
+-	 * While allocating a large folio and doing swap_read_folio, which is
+-	 * the case the being faulted pte doesn't have swapcache. We need to
+-	 * ensure all PTEs have no cache as well, otherwise, we might go to
+-	 * swap devices while the content is in swapcache.
+-	 */
+-	for (i = 0; i < max_nr; i++) {
+-		if ((si->swap_map[offset + i] & SWAP_HAS_CACHE))
+-			return i;
+-	}
+-
+-	return i;
+-}
+-
+ /*
+  * Check if the PTEs within a range are contiguous swap entries
+  * and have consistent swapcache, zeromap.
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 0c5fb4ffa03a..3a5a65b1f41a 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -2259,6 +2259,7 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+ 	folio = swap_cache_get_folio(swap, NULL, 0);
+ 	order = xa_get_order(&mapping->i_pages, index);
+ 	if (!folio) {
++		int nr_pages = 1 << order;
+ 		bool fallback_order0 = false;
+ 
+ 		/* Or update major stats only when swapin succeeds?? */
+@@ -2272,9 +2273,12 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+ 		 * If uffd is active for the vma, we need per-page fault
+ 		 * fidelity to maintain the uffd semantics, then fallback
+ 		 * to swapin order-0 folio, as well as for zswap case.
++		 * Any existing sub folio in the swap cache also blocks
++		 * mTHP swapin.
+ 		 */
+ 		if (order > 0 && ((vma && unlikely(userfaultfd_armed(vma))) ||
+-				  !zswap_never_enabled()))
++				  !zswap_never_enabled() ||
++				  non_swapcache_batch(swap, nr_pages) != nr_pages))
+ 			fallback_order0 = true;
+ 
+ 		/* Skip swapcache for synchronous device. */
+diff --git a/mm/swap.h b/mm/swap.h
+index 2269eb9df0af..9096082a915e 100644
+--- a/mm/swap.h
++++ b/mm/swap.h
+@@ -106,6 +106,25 @@ static inline int swap_zeromap_batch(swp_entry_t entry, int max_nr,
+ 		return find_next_bit(sis->zeromap, end, start) - start;
+ }
+ 
++static inline int non_swapcache_batch(swp_entry_t entry, int max_nr)
++{
++	struct swap_info_struct *si = swp_swap_info(entry);
++	pgoff_t offset = swp_offset(entry);
++	int i;
++
++	/*
++	 * While allocating a large folio and doing mTHP swapin, we need to
++	 * ensure all entries are not cached, otherwise, the mTHP folio will
++	 * be in conflict with the folio in swap cache.
++	 */
++	for (i = 0; i < max_nr; i++) {
++		if ((si->swap_map[offset + i] & SWAP_HAS_CACHE))
++			return i;
++	}
++
++	return i;
++}
++
+ #else /* CONFIG_SWAP */
+ struct swap_iocb;
+ static inline void swap_read_folio(struct folio *folio, struct swap_iocb **plug)
+@@ -199,6 +218,10 @@ static inline int swap_zeromap_batch(swp_entry_t entry, int max_nr,
+ 	return 0;
+ }
+ 
++static inline int non_swapcache_batch(swp_entry_t entry, int max_nr)
++{
++	return 0;
++}
+ #endif /* CONFIG_SWAP */
+ 
+ /**
+-- 
+2.49.0
+
