@@ -1,118 +1,132 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E088928C853
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 10:41:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66939284B4C;
+	Tue, 10 Jun 2025 10:43:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749552118; cv=none; b=f8PyTo3HavsFxJuU3OSmU+vnVi4rY/gXYld7gl3rkjIBnGrlAk8V6pZ7a6S99yphP18NBT6EK7xLR5Z9xtH/+N57KfYrjTnvS6FZxWZfvez2W5Ft1XNXIo9XkRV+0z6VK+OAw7cAO6wp+NNLyg+WLLDqxZ6uHRQg2wdjjk2s1g4=
+	t=1749552203; cv=none; b=vBt0PIzBn0wrMd4a+nv89RTkGqwHHzO6+H/8HE1wE6pd5BYTpzrMTf+zMtmhjGultNUoZp9UQTX8jswqIUNPv0XI8SzusirrPj5/6nqbqrB49M7VsH/Ci7sOwk7vBsG6/fvC3z4ssG9Uf5P3I/AmCm1uyZnumI13Er+rP9wuXZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749552118; c=relaxed/simple;
-	bh=HrubCorwEI4QzVE/jzPQeSmrMn2QE2G/08itsfpnLpY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c4WUn3keviyHfPFOUH6DYl+JksDRLGhBKT7yVkeFCyuM/uKMxX7Z54OZLzTW7TLkcz955e0M2sSU7dQvLQt97Zhv1PQa4AYLSyC2xucqjGUM+qqRZ/h0pxmMP1xq5j/z8MIJ7byYONzzSJllWXcrHeBQYA9r+l6Eq88hLBiJXSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=eZjAL4LM; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1749552203; c=relaxed/simple;
+	bh=z2e8Cx4N22j0jFPYP9dn1ksvGApxjY/BLZUazVli9yA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YDM8FumG1cOduVHOhoqvVmYTszpFFjspBnyQtR8Z2YzOhMTuaI3gKgk9CAyFdo8bIizXLEHoMwf8WqiD16QFl5stZBxqeN9UydjY8zlrhjydLMwR0OpPNdffXUF0q/Ldoqn92uw3WsGE5QJUV+Pg6JGOcZOuPR+5UxfFWicclSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OVqNtd/M; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="eZjAL4LM"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749552114;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=rEgV8+jcHG8DYIUGohYSskDCUEUrKKBIFZXspFzbGyU=;
-	b=eZjAL4LMXs5XY5pP0nCn1K//1kwYiqhXDNFRKcOLNmTKxhVLJkgeAWDwMVDvQmMEgzSx8S
-	/GhKEdKpKEsx0fHSwZonkrZTUIXhRuBI9LI3coOFYXEpuO7y83J53BGW+j9BLQ8yu5fWdC
-	Miv76Au4XAj/ldFz52sOugUd/Ifeb/A=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Peter Rosin <peda@axentia.se>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH RESEND] mux: Convert mux_control_ops to a flex array member in mux_chip
-Date: Tue, 10 Jun 2025 12:40:59 +0200
-Message-ID: <20250610104106.1948-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OVqNtd/M"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-450cb2ddd46so31917115e9.2;
+        Tue, 10 Jun 2025 03:43:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749552200; x=1750157000; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kOaDoz9H3gJVjVkXf5SppnF68Xo6KIKjXhIxBWkW7q8=;
+        b=OVqNtd/MkKBwLKdX1eaDYWbcIZHVkLTPtropkpmNz2rKGwdMVZlWNiue9eT+halpQZ
+         9J7bZIQ560j3TO+t2E2PMwmdvTw/NoW4dapBUbaEsvblZgJvweh+VuK+LT16x+4OMGpg
+         kz5EDMQZuYUybLjLIkqnX385BjtDE2SI8H8NDnbJt6cGdJUOoQknOd7MJxWf21hzjegY
+         NjT0XWQdVlV7GubgvjwS4cRyj7ssmYxyWp86aInL0i7dU8XOYGGYLhMgfMZr1FhRM4r8
+         I9Mx8HAkAhqjuNYA0kgJkcAyFgr2dDBAZcmj/JSOqn76tBf5c99y0gxNCtmZM6bNwIXW
+         V76Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749552200; x=1750157000;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kOaDoz9H3gJVjVkXf5SppnF68Xo6KIKjXhIxBWkW7q8=;
+        b=ueqZjvcu71X5/3nwLqA7BP8ZJlByc5ralwYeWi5D6Uwj3OYwb+MNZ975MIGuimxKxG
+         SmF/1Ej1Qr0M0OlKPra6xSXtlZ1TEL740u4PlVQ1qeAbDIgkm6WkSCvNyozVyrrqhofP
+         EQ0px6ZBldi+7uJKTAzqhdD1a4ogfereBRcgVNAzl6om2vE7vRhMItrQiVD+ZiFvJ/gP
+         qfEPoq/2p68XMVsfxn7+mS0hb2JK3UDbN7Fft4XWfEaEhFPIga4DEtXJ+mLUnoHTu7Qb
+         vSdzsJ2DWvEcrzGHuHfiIfrKOb0iGb1ZBbrCsRgIt35xVhGvU6R+/Ou/1i1W3QmhvI9B
+         e7yA==
+X-Forwarded-Encrypted: i=1; AJvYcCUAV2OoSZS3Hy6qGlg4xfL2aJ4QCM0SeLFJCmCuXMO4RCT406OXO/6V6QCvj4Kauj5W7EqHzsOIegkl@vger.kernel.org, AJvYcCUyOTqUVKKyRO3k3szOWJPsLyia8byE/9ZbGaytTALhJq7OCxIpR1D0AeK1ZOAqStuYRcQq+biW8jRH6/s=@vger.kernel.org, AJvYcCWRzzlhUGf/73cGv+ymQBqs5Yli9TpxX0rwnLXJYNi4xadwDyKgoOioJvhgnPuIvY8sAq3FQmXSsXr/U/FruQ==@vger.kernel.org, AJvYcCXLRQI1E3EAvIh0/tXHUv6xDPCue5x3Ylt4sDaUqjJUF3nTtiWcJapVMzWVwBBSeLhilAtSZOt/RUzf6QL5@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw04nr+7aj/wSb/lZrk7WJKzJfgPlNl0vEGk7WfYJaTrtKA6SiD
+	jOf1KQyS33/qzLBzXjJuQcaGGumI8FhsjkHT/I9FmApdjS4wjz9bMmb9
+X-Gm-Gg: ASbGnctoJ/IARBtHeHXIwIatqHTz/O5WPwkocVbxl84N1lsEWwwiAX5FKIZKIHO18pd
+	TZfYpREkJP+OTwqeEvp1CfdYu/RgLPkE+PyujWdREIe2HVmoz6kTv8R1h8U/9tBngtEe+1iRrtW
+	IDNbDWSkbZ8cTQL3nbDl/lloK3jg3SLEsY360/NbKPLWZ1fEdCCInpJS3zeYJKMy7GeUzG9KGBx
+	YJm9xn8SxjMJVKTVkf0cjfQl2MgyihsRVTKJeYqagROqVTS2DSebZXvh/JcGZqbtVDiSJrnSIwT
+	K0u441gFQaSBUE7oT2QymDE0FSkxTIRA2lMDZ3R+tV7It6CZcppUB/EBAk7Jdrz3f+nFevsuY/v
+	qtlTInThqIw1Yb4hRvwK+/4jSFx0Sj/o3Wu6OoStulbMHr82dCBd4YAobxGM=
+X-Google-Smtp-Source: AGHT+IHQ/+H0xmT4/n8SzqPJO5wYfpUJEhNk4WbIofE8jpTP1D8Vxb32j//I2sl0mRwL2FnnAavasQ==
+X-Received: by 2002:a05:600c:8218:b0:43d:5ec:b2f4 with SMTP id 5b1f17b1804b1-4531de00602mr28517275e9.10.1749552199291;
+        Tue, 10 Jun 2025 03:43:19 -0700 (PDT)
+Received: from orome (p200300e41f281b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1b00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4521370961csm137172115e9.22.2025.06.10.03.43.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 03:43:17 -0700 (PDT)
+Date: Tue, 10 Jun 2025 12:43:15 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
+	Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+	Nishanth Menon <nm@ti.com>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>, 
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, Hector Martin <marcan@marcan.st>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Suman Anna <s-anna@ti.com>, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-amlogic@lists.infradead.org, linux-sunxi@lists.linux.dev, asahi@lists.linux.dev, 
+	linux-tegra@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 4/5] dt-bindings: mailbox: nvidia,tegra186-hsp: Use
+ generic node name
+Message-ID: <hcw6q4iwiout2htnq7wdd3bijozjoqbfdk3tdt42ynr4cx53uy@rxd4io4oua3a>
+References: <20250603-dt-bindings-mailbox-cleanup-v1-0-724407563997@linaro.org>
+ <20250603-dt-bindings-mailbox-cleanup-v1-4-724407563997@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="abxrtw4wmi4tc3x3"
+Content-Disposition: inline
+In-Reply-To: <20250603-dt-bindings-mailbox-cleanup-v1-4-724407563997@linaro.org>
 
-Convert mux_control_ops to a flexible array member at the end of the
-mux_chip struct and add the __counted_by() compiler attribute to
-improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-CONFIG_FORTIFY_SOURCE.
 
-Use struct_size() to calculate the number of bytes to allocate for a new
-mux chip and to remove the following Coccinelle/coccicheck warning:
+--abxrtw4wmi4tc3x3
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 4/5] dt-bindings: mailbox: nvidia,tegra186-hsp: Use
+ generic node name
+MIME-Version: 1.0
 
-  WARNING: Use struct_size
+On Tue, Jun 03, 2025 at 01:57:11PM +0200, Krzysztof Kozlowski wrote:
+> According to Devicetree specifications, device node names should be
+> generic, thus Mailbox provider should be called "mailbox", not "hsp".
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/mailbox/nvidia,tegra186-hsp.yaml | 5 +=
+----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
 
-Use size_add() to safely add any extra bytes.
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-No functional changes intended.
+--abxrtw4wmi4tc3x3
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Link: https://github.com/KSPP/linux/issues/83
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- drivers/mux/core.c         | 7 +++----
- include/linux/mux/driver.h | 4 ++--
- 2 files changed, 5 insertions(+), 6 deletions(-)
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/drivers/mux/core.c b/drivers/mux/core.c
-index 02be4ba37257..a3840fe0995f 100644
---- a/drivers/mux/core.c
-+++ b/drivers/mux/core.c
-@@ -98,13 +98,12 @@ struct mux_chip *mux_chip_alloc(struct device *dev,
- 	if (WARN_ON(!dev || !controllers))
- 		return ERR_PTR(-EINVAL);
- 
--	mux_chip = kzalloc(sizeof(*mux_chip) +
--			   controllers * sizeof(*mux_chip->mux) +
--			   sizeof_priv, GFP_KERNEL);
-+	mux_chip = kzalloc(size_add(struct_size(mux_chip, mux, controllers),
-+				    sizeof_priv),
-+			   GFP_KERNEL);
- 	if (!mux_chip)
- 		return ERR_PTR(-ENOMEM);
- 
--	mux_chip->mux = (struct mux_control *)(mux_chip + 1);
- 	mux_chip->dev.class = &mux_class;
- 	mux_chip->dev.type = &mux_type;
- 	mux_chip->dev.parent = dev;
-diff --git a/include/linux/mux/driver.h b/include/linux/mux/driver.h
-index 18824064f8c0..e58e59354e23 100644
---- a/include/linux/mux/driver.h
-+++ b/include/linux/mux/driver.h
-@@ -56,18 +56,18 @@ struct mux_control {
- /**
-  * struct mux_chip -	Represents a chip holding mux controllers.
-  * @controllers:	Number of mux controllers handled by the chip.
-- * @mux:		Array of mux controllers that are handled.
-  * @dev:		Device structure.
-  * @id:			Used to identify the device internally.
-  * @ops:		Mux controller operations.
-+ * @mux:		Array of mux controllers that are handled.
-  */
- struct mux_chip {
- 	unsigned int controllers;
--	struct mux_control *mux;
- 	struct device dev;
- 	int id;
- 
- 	const struct mux_control_ops *ops;
-+	struct mux_control mux[] __counted_by(controllers);
- };
- 
- #define to_mux_chip(x) container_of((x), struct mux_chip, dev)
--- 
-2.49.0
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmhIDEAACgkQ3SOs138+
+s6FLeA/8C28wIE1XdUrfWbZVBn7aovpLS99DRcLoPyMvhw8fjByqxokguQTPyVMb
+uUYMChlSTxFTyYulzP+K2kv12E04Yeu6n4nhk6gOx90ItrPuiqCqPsBrp8WU6Ktu
+/Xr/DpwTy6DdlN+Xb5RZ6FtcncU0CMdf7bpB0ZxYIciQfRnimdpG6e8JTxE5ShIa
+uLTNQjPYdtJb7RSE4jaQ3KZFLP5tUsb43sh/Yr+8356lE0ehI+L994IO+H8J5OKn
+0A8ZKhCRzXwMdMb3N9bYfP0BpMRlgnk5BhGMEu5BTGVt1QjNTlSSstt3kaees5pd
+3D+2vN4NLXtkSoSUjyxIwUK+nJhZudE7DjySBZpIf1TiJ3Js64i6wMwWEqs4v+0/
+7jPjZp9JXKzFvBoBUtmEpGt3YM9B4kALq9gqooFzH8IkowTK6FUlamTqSlBytDrd
+0ZjwrGllN7fYZZaxZ4L/5CIeLyo/XLG/AgVm45QeuGIpT3uBRVdox3X1oPgHKz57
+dCnGomNKN7WyMEqXCE2TSJQkIh3qdhtpHg0p/Wf3gvKg+ak8kJYE099TTtOYS6VN
+DyHrxbecTi/ktRX9d7TmReGlCkFwrmLrl5FECpWWUEO0ZnrFXuQj5cNues8Y5wSQ
+V3Ey7khUayaf0c9EiafF4zDHDgx4YBeHw7Rn3bRM6PzdboL3EcQ=
+=rTWv
+-----END PGP SIGNATURE-----
 
+--abxrtw4wmi4tc3x3--
