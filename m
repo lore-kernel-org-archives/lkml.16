@@ -1,57 +1,57 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FFFE28D8FE
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:57:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8FE428750C
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:57:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749596268; cv=none; b=aXy/y5Rg4HRealcBFqKGWyuRG0Np98UpZgeVMXOOeXHf8ByB9GHmYdG+ex+Rk0hyqqeMsIa0Du1mdbRMjGHskZ02H11AFUAOErTrJjvbHcLKgcQbSYSbm5t1w4c/yR4+IMwIDqHWIj952hTwh15rIrnCtMqcQASeGDbn6Kw7lXA=
+	t=1749596270; cv=none; b=AXk2cVDV0INmaMxkhb9wWlZYfT4QBBpE/T346lZOAbrVxCv2NqNsOMurvdABeTxHMOeZIovcrW7bMS3q8leje2ue0VWjnWVwDAmVhOE7s8BaIBpqL54cRDVpi/5n7+lvLNAOi9Vqaql2G9p5tUO2EzALT/EeZILGg+1v4ttYyEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749596268; c=relaxed/simple;
-	bh=9VEAvtUsud2CGs9vlrwfusz06B+7ZsvAKB7oC960uWQ=;
+	s=arc-20240116; t=1749596270; c=relaxed/simple;
+	bh=h9i+uZd04eChsW+nlNKQ3UAXF59GUvx7ckxUk1JRgd4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=OcRKl/bNFIHXq73IePPOn4G9yyplDkE2OsoQc1fFjPKb/GhrOBrRqcV56bySvwDVz+iTftB3o0s4FKiFpi8UAO/fNqqwqVPPCnli1JFHjuGQpea6ZFNV8VLjzwnAloN5Ok2w9Buha3gO4YHemRw1a9JVnptDVQib67aULG2liVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ziGyi8Ma; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=PNGQJjbqyT1zvLEEMTFBmG4qfppOAVX2ry+5w4mdLyVJBdowu21jpG9wklfKI7xwJleY8MXIusDCo2y6fVTmaWSb2t7ifC9JZjbRtD4x3AgVVSrlOPydNUmyIn0LPV+bzmVEqEy46xWinzW1/QupaNMHhTAL3m6nmXyIJfbtGqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rTx17Bn5; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ziGyi8Ma"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-747d84fe5f8so3448880b3a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:57:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rTx17Bn5"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30a39fa0765so8614000a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:57:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749596266; x=1750201066; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749596268; x=1750201068; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=sgbdhI3yd/wQ/3cQ73eXvLbLWKSkDV545uFxsAvOoCg=;
-        b=ziGyi8Mavn6a6PdpdzWGfFzc3CBeFRC3BGD2s3dVd9sJlC5ZiL9GRhM/S69ZWV655j
-         ormtFGCto370krwFDKu/iWosSmSyfoRdrDh/p188J77npgoe6EO66htmdNC7hNUgvNKF
-         gF3JomtT6WVwMiWTIBwtHu2J5a87LpsfqE50wsu3UcBBRLT+eqFPHLS1e03dUNOh3NBR
-         xU+1zW5iLQvFZHEPN5UOHgtykctpNvEwtiamJDPmGzO09nPt/LADrwEp6UxxgdXnY4El
-         XjL/Asu+IhBcj+bvH6xEV65QLReNca0W+r6cX4r36zIGBUb6/agntTRjXyWR638m8Zv4
-         1u9Q==
+        bh=SoQUNiBbCP8FPIO1f5Uwyh/idHejyF8GDJKfEhkOQsI=;
+        b=rTx17Bn57VyUIawH+WDV368ZGhe/qJCAlvNgITFnGOweL9ibJpIxbSSEubV8kKSP97
+         FekRb6+GEuhlWRJIFtMR7WTA6vAmRm5Z/tNlZSBy3aSmODHp8TuCoXo0Rmp8qi4tQmP1
+         yY3Vfe0+m5jfkyvGyDsPA1U4yQXXylTTumToO+DTZrGcslRi3HSHS8McNei6hkSnTGDA
+         1LriH1qMGrrGdcoMngVm8t2RVgJW33jMj2Eh2Jkh420oDFZwNhWAjSsjOvEj0pLN0VJd
+         xXRwgohNPL69gzf5gSlejwH4GOabZsObpVq5Q1tlGim/PjfKltIkJOnL+RFk0F1F6vr+
+         HmdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749596266; x=1750201066;
+        d=1e100.net; s=20230601; t=1749596268; x=1750201068;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=sgbdhI3yd/wQ/3cQ73eXvLbLWKSkDV545uFxsAvOoCg=;
-        b=YkGxxAuhmR3Zeo7iME34Ztuu+z0kr+nH4zs6lG9Rzw4cU71/5Vxzc0bRdFDCptipd5
-         hC5dW5xbHjyU1v33PxcwW6IdKg48IX/zbwhXvb8yGoB5zZfjzLZMvswT8UYbGs2Vgwjh
-         Ttloel1oMUPZC07CdMpfIA/LlIalkAIbSurWWrDJb7/hPwPRUGwa1sIm510MtrRbDTq1
-         baQPgNN24haX6ADqQ8cM/bp8l/2zvcmM6GwmFguujBFXNeCuBPu3r+ikvu+Jkmf1iOo+
-         /ReF/2qhAmTSprQCqA/aQoQaIKZbZ6//XLB882ZH+Ne1hHuucOjVO+MeZ3Wh7T9w1gdL
-         9QcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUmNYZNjY1W/Xv3b497eZgb+/TiEFkJYPwM0viBDGRL+pzxA9Y6mqpvK4EiG4kzPDarHgbc+VaNEU6Ez0E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1jmnhBSBqqbZaYyO4Ube2PAqBGsMZlapFEhzmmCLc02jTKTpQ
-	k846/vPn99d3hM181XQ5OJmsdbWmzw4Ma/zFfAILAcGAJrCUZtRi/xtPVg2rdJkBDNepjcCrnMP
-	e4Pl1qQ==
-X-Google-Smtp-Source: AGHT+IFoj6QRzLKrYLLSAJQ2LmKp+ObVPY/ahIVkPm5UND4Cxp0AWwCGUQGOuOLKDbn2xQa0z5KnVXCOFdg=
-X-Received: from pffv21.prod.google.com ([2002:aa7:8095:0:b0:746:2897:67f3])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:2d92:b0:748:32cc:eebc
- with SMTP id d2e1a72fcca58-7486cbd9035mr1442926b3a.17.1749596266499; Tue, 10
- Jun 2025 15:57:46 -0700 (PDT)
+        bh=SoQUNiBbCP8FPIO1f5Uwyh/idHejyF8GDJKfEhkOQsI=;
+        b=e5txncgGQtpntzyeQXjc0XJmQzY+DySiE6aiX0iRXWUDLb9tn64yRpJbGYxRo5GiL1
+         y98VmZAazv585Ql3++Kt/yCxrNX3tHTqQYX8GOUIapOHgF3+0hsniywQ/fnOW+hQMdtA
+         gk3q1BdesHb0iuxmBOvcwZC7vvDX8kJNsmY5b/Q3riwM9Lja46bz2iws7kBh2aRLfr27
+         qBLn4+dYQSHI87fAj0emFw0lQmR+9UluqLACKA+g5GZadGXJb2Rzjq8dfu727W+f0pej
+         AgsW8ErtdGxtCNvlrucgsnWunb0Qv5EK57ir/pEEoZp+CcXXdwkD6cz+lOCEWRSNYdK9
+         ZvBA==
+X-Forwarded-Encrypted: i=1; AJvYcCVYDCsXP/sEIWxyO8a8rsKWknsBuVbd4cCm5x66/2oSMBroTlQqh1l5cH/+ZzK9rRGiaNBC82EiMVd5i4U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNB6gSOq6iAd5mkjx02iFXCmXpwxp1MZVGqdXaviBBFClhy4wN
+	jTv+uLw6fjCO4QpuJVG7LcDkOs1yDcjIEUWWqsvmKNEKeu9fENcLuGQK1LLPZzvS2qC1ctflqA1
+	S6sE54w==
+X-Google-Smtp-Source: AGHT+IFXybDfHkTW5ENG82VCoMPz90fwPWH+yLTn1OifXhmiBLrjBHv9sk6PMNKANCsysYSoP522+lIAWmc=
+X-Received: from pjbsv3.prod.google.com ([2002:a17:90b:5383:b0:311:6040:2c7a])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1f8f:b0:311:9c1f:8516
+ with SMTP id 98e67ed59e1d1-313af13d310mr1609638a91.15.1749596268237; Tue, 10
+ Jun 2025 15:57:48 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Tue, 10 Jun 2025 15:57:08 -0700
+Date: Tue, 10 Jun 2025 15:57:09 -0700
 In-Reply-To: <20250610225737.156318-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,9 +61,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250610225737.156318-1-seanjc@google.com>
 X-Mailer: git-send-email 2.50.0.rc0.642.g800a2b2222-goog
-Message-ID: <20250610225737.156318-4-seanjc@google.com>
-Subject: [PATCH v2 03/32] KVM: SVM: Don't BUG if setting up the MSR intercept
- bitmaps fails
+Message-ID: <20250610225737.156318-5-seanjc@google.com>
+Subject: [PATCH v2 04/32] KVM: SVM: Tag MSR bitmap initialization helpers with __init
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
@@ -72,85 +71,38 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Manali Shukla <Manali.Shukla@amd.com>
 Content-Type: text/plain; charset="UTF-8"
 
-WARN and reject module loading if there is a problem with KVM's MSR
-interception bitmaps.  Panicking the host in this situation is inexcusable
-since it is trivially easy to propagate the error up the stack.
+Tag init_msrpm_offsets() and add_msr_offset() with __init, as they're used
+only during hardware setup to map potential passthrough MSRs to offsets in
+the bitmap.
 
+Reviewed-by: Chao Gao <chao.gao@intel.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/svm/svm.c | 25 +++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+ arch/x86/kvm/svm/svm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 262eae46a396..f70211780880 100644
+index f70211780880..0c71efc99208 100644
 --- a/arch/x86/kvm/svm/svm.c
 +++ b/arch/x86/kvm/svm/svm.c
 @@ -945,7 +945,7 @@ static void svm_msr_filter_changed(struct kvm_vcpu *vcpu)
  	}
  }
  
--static void add_msr_offset(u32 offset)
-+static int add_msr_offset(u32 offset)
+-static int add_msr_offset(u32 offset)
++static __init int add_msr_offset(u32 offset)
  {
  	int i;
  
-@@ -953,7 +953,7 @@ static void add_msr_offset(u32 offset)
- 
- 		/* Offset already in list? */
- 		if (msrpm_offsets[i] == offset)
--			return;
-+			return 0;
- 
- 		/* Slot used by another offset? */
- 		if (msrpm_offsets[i] != MSR_INVALID)
-@@ -962,17 +962,13 @@ static void add_msr_offset(u32 offset)
- 		/* Add offset to list */
- 		msrpm_offsets[i] = offset;
- 
--		return;
-+		return 0;
- 	}
- 
--	/*
--	 * If this BUG triggers the msrpm_offsets table has an overflow. Just
--	 * increase MSRPM_OFFSETS in this case.
--	 */
--	BUG();
-+	return -ENOSPC;
+@@ -968,7 +968,7 @@ static int add_msr_offset(u32 offset)
+ 	return -ENOSPC;
  }
  
--static void init_msrpm_offsets(void)
-+static int init_msrpm_offsets(void)
+-static int init_msrpm_offsets(void)
++static __init int init_msrpm_offsets(void)
  {
  	int i;
  
-@@ -982,10 +978,13 @@ static void init_msrpm_offsets(void)
- 		u32 offset;
- 
- 		offset = svm_msrpm_offset(direct_access_msrs[i].index);
--		BUG_ON(offset == MSR_INVALID);
-+		if (WARN_ON(offset == MSR_INVALID))
-+			return -EIO;
- 
--		add_msr_offset(offset);
-+		if (WARN_ON_ONCE(add_msr_offset(offset)))
-+			return -EIO;
- 	}
-+	return 0;
- }
- 
- void svm_copy_lbrs(struct vmcb *to_vmcb, struct vmcb *from_vmcb)
-@@ -5505,7 +5504,9 @@ static __init int svm_hardware_setup(void)
- 	}
- 	kvm_enable_efer_bits(EFER_NX);
- 
--	init_msrpm_offsets();
-+	r = init_msrpm_offsets();
-+	if (r)
-+		return r;
- 
- 	kvm_caps.supported_xcr0 &= ~(XFEATURE_MASK_BNDREGS |
- 				     XFEATURE_MASK_BNDCSR);
 -- 
 2.50.0.rc0.642.g800a2b2222-goog
 
