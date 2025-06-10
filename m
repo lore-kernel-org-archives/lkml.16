@@ -1,621 +1,203 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12C732417C3;
-	Tue, 10 Jun 2025 02:12:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D243C23D2BA;
+	Tue, 10 Jun 2025 02:13:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749521573; cv=none; b=IsuZ44Zc39EtTAwvTxIPB3VxWSAC30dlXFqPAYGP18c6EXfCjZHS5zq55fXMOKRjEyM5UEqk0X4Tuw0a7RAi1JPWW/7hkIbirB7DNuMDn67r0jZGOy19SKQlHfjBwj1/aRhL/vE8qEFbo2eVTVGvhmkUrtyB3/v1ny6L5UCAyp8=
+	t=1749521614; cv=none; b=T3Uy0wGvoB9cRd3dTIyZlmJ5JkqIXLl79mc5zdEtAJvu/SI+NPjOr1NyDrRMeyR5TmyzVTvUvBZnXzYTWX/aCmpzW8q+7nKn6PPULUTfnuXFdEBLiYT70YGHe73nBrTUwA4t8xdE+m/nxsQShgH9v5QgndE9FcqvV8KQny0mHKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749521573; c=relaxed/simple;
-	bh=NAv2hCN7En1PoZdqOHvjJQX5puZrkNe7Ii3+2hcJ03w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g6jq7HZNnHM8xMexS2AEgjBzLU9Q8CSUE0p7i//wS5eXUFFltJhB5n82DhIJ0G7J9iWLVQarzI3ehBHwL8TrlaS1PYdCIC/En6+ZwKk+9g+J+LWVrZQbDpgNQOzxpmxYtKIycjGKzMo7/t2TIemtLmSjkTLbFUgj3MOYnZMj0c4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rTlewb5G; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749521614; c=relaxed/simple;
+	bh=NVTsJwWcXFDFZ4Y85Wn3fSXU/hI/TUr9NDS1bsnh/4A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uMhtTjl3ANavTZ8xnZ0E+Cif9swwSwKraA6Rc253Yuj3h7TGjZ6PmtZZ3hpuiceVQDdTeNf/P+GPyLfcCkfV9I8FLAjDveoBFAhmoAMV5jtubjKK7/cN3626boYtTCgbqtq9af1nRAo9Kjy+aI9w/GKw2cuYwEVK08OXIpiU0e4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BrCVKHVZ; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rTlewb5G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 154B8C4CEEB;
-	Tue, 10 Jun 2025 02:12:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749521572;
-	bh=NAv2hCN7En1PoZdqOHvjJQX5puZrkNe7Ii3+2hcJ03w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rTlewb5GLEEeQuxsXGy7AwFt/F1y0eUQeAqYpet0SanFaM4uB8GpLdAw1y8LLLCPz
-	 /qijWRe2oQKzoDVomHcSkAXwDfPmvl15nOO3eAk4qT4L+K55ykgEKuaKl60xyX38Rx
-	 W/zGx3GfJzdZnjp221+4hD0H6RpgHc/ft2+fb9ytx3jD0HNaQu8WRvCTNZJqnkKyo5
-	 9/yrdclQrGTkK0Wui6j3Jui1z6z2QLnY7Zk9lmPi2GLxlZ3Fg0kyuuTjbgEK6hNFTN
-	 8H86bSMBj4dZAnr4A31rI+IfDgQaqQ1t3p2l5I6QxhetDk+QuU7+EFr0LChPJvwogY
-	 VMA7NKY+/xF8w==
-Date: Tue, 10 Jun 2025 10:12:43 +0800
-From: "Peter Chen (CIX)" <peter.chen@kernel.org>
-To: John Ernberg <john.ernberg@actia.se>
-Cc: Xu Yang <xu.yang_2@nxp.com>, Shawn Guo <shawnguo2@yeah.net>,
-	Shawn Guo <shawnguo@kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: i.MX kernel hangup caused by chipidea USB gadget driver
-Message-ID: <20250610021243.GA1610560@nchen-desktop>
-References: <aEZxmlHmjeWcXiF3@dragon>
- <c56pgxmfscg6tpqxjayu4mvxc2g5kgmfitpvp36lxulpq4jxmg@ces5l7ofab6s>
- <aEbstxkQmji4tfjf@w447anl.localdomain>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BrCVKHVZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749521612; x=1781057612;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=NVTsJwWcXFDFZ4Y85Wn3fSXU/hI/TUr9NDS1bsnh/4A=;
+  b=BrCVKHVZBJ3Hcay93Dh03L7wVXYrCwzUKh7gia7XNrHVHWdh2InuQP7e
+   EUk/f9z2P8rAt5qVzz/4td6CPFG8pb3wDt6VT4n6Pl9ttyeqFtYfmL0LT
+   nVaIEEg3e0xZVu39ke/zJA2jFzRUZ3WeLatnttW+btPBjAqvs2hnFAb2g
+   VDb/5Oco7N7JgwISyNe6XH+aXiUkop0mssFdOl5FPOjxzAx7UK3sbD9A7
+   LmfJkjYF4a8dA6ESUIhdzc482L16TamQ/+/8Lfj5jadkSfLkoa6QHM7+L
+   gH3wYq9B+UVG/vs5ST8zb1QK8gKWMYwZGV7Q459PrUpytrrB+cOEJX7YR
+   w==;
+X-CSE-ConnectionGUID: mR8C8rh4RRqrdRMElsNDOA==
+X-CSE-MsgGUID: ynSL9UynTw+SAfGBy7EldA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="50841170"
+X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
+   d="scan'208";a="50841170"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 19:13:31 -0700
+X-CSE-ConnectionGUID: 7GAzcJjtSvyxqEu/2rAAYQ==
+X-CSE-MsgGUID: JeVmcStKTXmAnOwxIfnevA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
+   d="scan'208";a="147253707"
+Received: from litbin-desktop.sh.intel.com ([10.239.156.93])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 19:13:26 -0700
+From: Binbin Wu <binbin.wu@linux.intel.com>
+To: pbonzini@redhat.com,
+	seanjc@google.com,
+	kvm@vger.kernel.org
+Cc: rick.p.edgecombe@intel.com,
+	kai.huang@intel.com,
+	adrian.hunter@intel.com,
+	reinette.chatre@intel.com,
+	xiaoyao.li@intel.com,
+	tony.lindgren@intel.com,
+	isaku.yamahata@intel.com,
+	yan.y.zhao@intel.com,
+	mikko.ylinen@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	kirill.shutemov@intel.com,
+	jiewen.yao@intel.com,
+	binbin.wu@linux.intel.com
+Subject: [RFC PATCH 0/4] TDX attestation support and GHCI fixup
+Date: Tue, 10 Jun 2025 10:14:18 +0800
+Message-ID: <20250610021422.1214715-1-binbin.wu@linux.intel.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEbstxkQmji4tfjf@w447anl.localdomain>
+Content-Transfer-Encoding: 8bit
 
-On 25-06-09 14:17:30, John Ernberg wrote:
-> Hi Shawn, Xu,
-> 
-> On Mon, Jun 09, 2025 at 07:53:22PM +0800, Xu Yang wrote:
-> > Hi Shawn,
-> > 
-> > Thanks for your reports!
-> > 
-> > On Mon, Jun 09, 2025 at 01:31:06PM +0800, Shawn Guo wrote:
-> > > Hi Xu, Peter,
-> > > 
-> > > I'm seeing a kernel hangup on imx8mm-evk board.  It happens when:
-> > > 
-> > >  - USB gadget is enabled as Ethernet
-> > >  - There is data transfer over USB Ethernet
-> > >  - Device is going in/out suspend
-> > > 
-> > > A simple way to reproduce the issue could be:
-> > > 
-> > >  1. Copy a big file (like 500MB) from host PC to device with scp
-> > > 
-> > >  2. While the file copy is ongoing, suspend & resume the device like:
-> > > 
-> > >     $ echo +3 > /sys/class/rtc/rtc0/wakealarm; echo mem > /sys/power/state
-> > > 
-> > >  3. The device will hang up there
-> > > 
-> > > I reproduced on the following kernels:
-> > > 
-> > >  - Mainline kernel
-> > >  - NXP kernel lf-6.6.y
-> > >  - NXP kernel lf-6.12.y
-> > > 
-> > > But NXP kernel lf-6.1.y doesn't have this problem.  I tracked it down to
-> > > Peter's commit [1] on lf-6.1.y, and found that the gadget disconnect &
-> > > connect calls got lost from suspend & resume hooks, when the commit were
-> > > split and pushed upstream.  I confirm that adding the calls back fixes
-> > > the hangup.
-> 
-> We probably ran into the same problem trying to bring onboard 6.12, going
-> from 6.1, on iMX8QXP. I managed to trace the hang to EP priming through a
-> combination of debug tracing and BUG_ON experiments. See if it starts
-> splatin with the below change.
+Hi,
 
-Hi John and Shawn,
+This patch set includes TDX attestation support patch from [0] and some
+fixups according to the proposed GHCI spec changes below. Tag the patch set
+as RFC since it's based on the proposed GHCI spec changes. However, the
+proposal and the patch set are expected to be discussed/finalized. The
+attestation support and the fixups are hoped to be merged during the 6.16
+merge window as part of the initial TDX support.
 
-Like Alan and Xu's suggestion, there are probably two problems here:
-- When the system enters the suspend, the USB bus may neither at suspend
-nor disconnect state if USB controller/phy's power is not off and VBUS
-is there. So, the host still considers the device is active, it could
-trigger transfer any time. If the transfer occurs during system resume,
-the USB controller triggers interrupt to CPU, and USB's interrupt handler
-is triggered. If the USB's hardware is still at low power mode (or clock
-is gated off), it may cause system hang (CPU gets error response from USB)
-after access register.
+Paolo once suggested to implement all the TDVMCALLs defined in the current
+GHCI 1.5 spec [1]. However, since there is a proposal to fix the GHCI spec
+issues, this patch set doesn't implement the support for Service
+SetupEventNotifyInterrupt, Instruction.WBINVD and Instruction.PCONFIG since
+these TDVMCALLs have no real users for now.
 
-With Shawn's change, it pulls D+ down during the suspend, and the host
-is notified of disconnection, so the host will not trigger transfer
-until D+ is pulled up by calling usb_gadget_connect. The USB leaves
-low power mode (and turn clock on) before that, the access register
-will not cause system hang.
+Notable changes since attestation v2 [0]
+========================================
+- Use TDVMCALL_STATUS_SUBFUNC_UNSUPPORTED instead of
+  TDVMCALL_STATUS_INVALID_OPERAND for unsupported TDVMCALLs.
+- Document the definition of "The base GHCI TDVMCALLs".
+- Forward GetTdVmCallInfo to userspace with the new exit reason
+  KVM_EXIT_TDX_GET_TDVMCALL_INFO when leaf (r12) input is 1 to allow
+  userspace to provide the information of TDVMCALLs supported in userspace.
+- Move the check of userspace's opt-in of KVM exit on KVM_HC_MAP_GPA_RANGE
+  to KVM_TDX_FINALIZE_VM, since MapGPA is one of the GHCI base TDVMCALLs
+  according to the proposal below.
+  This requires some changes to the TDX KVM selftests cases posted [2] to
+  always opt-in KVM exit on KVM_HC_MAP_GPA_RANGE before
+  KVM_TDX_FINALIZE_VM.
+- Since there is no opt-in from userspace for GetTdVmCallInfo and GetQuote,
+  userspace is required to handle the exit reasons
+  KVM_EXIT_TDX_GET_TDVMCALL_INFO and KVM_EXIT_TDX_GET_QUOTE as the initial
+  support for TDX. To simplify the implementation in userspace, userspace
+  could return TDVMCALL_STATUS_SUBFUNC_UNSUPPORTED for GetQuote.
 
-- The current chipidea driver doesn't notify gadget driver when it
-enters system suspend routine. In fact, during system suspend/resume,
-the controller driver may not respond middle layer's (network) request 
-well due to it enters low power mode, so calling usb_gadget_driver->
-disconnect (composite_disconnect) is needed during controller's suspend
-routine, it calls function->disable for USB function driver and
-ends/stop middle layer process.
+GHCI Change Proposal
+====================
+Current TDX Guest Host communication Interface (GHCI) spec[3] implies that
+VMM should only return success for TDG.VP.VMCALL<GetTdVmCallInfo> if *all*
+TDVMCALLs defined in the GHCI spec are supported. The spec is ambiguous on
+the following perspectives:
+- The description "all TDG.VP.VMCALLs defined in this specification" is not
+  forward-compatible since more and more TDVMCALLs will be added when the
+  GHCI spec evolves.
+- It actually doesn't cover how to handle if the guest calls an unsupported
+  TDVMCALL.
+  Historically, KVM has returned TDVMCALL_STATUS_INVALID_OPERAND for any
+  unknown TDVMCALL, as a reasonable interpretation of the ambiguous spec.
+  However, TDX guests can't distinguish the error is due to the TDVMCALL is
+  not supported or an invalid input of the TDVMCALL.
+Also, enforce VMMs to implement the TDVMCALLs without real users is an
+unnecessary burden.
 
-Peter
+To address the issues, the following are the proposed GHCI spec changes:
+- Define "the GHCI base TDVMCALLs", which are: <GetTdVmCallInfo>, <MapGPA>,
+  <ReportFatalError>, <Instruction.CPUID>, <#VE.RequestMMIO>,
+  <Instruction.HLT>, <Instruction.IO>, <Instruction.RDMSR> and
+  <Instruction.WRMSR>.
+- Limit the scope of the TDG.VP.VMCALL<GetTdVmCallInfo> with leaf (R12) set
+  to 0 to the GHCI base VMCALLs, so that the meaning is clear and
+  unambiguous.
+- Extend the TDG.VP.VMCALL<GetTdVmCallInfo> with leaf (R12) set to 1 to
+  allow TDX guests to query the supported TDVMCALLs beyond the GHCI base
+  TDVMCALLs.
+  Use R11 - R14 to return the supported TDVMCALLs, which are defined as
+  * R11
+    bit 0: <GetQuote>
+    bit 1: <SetupEventNotifyInterrupt>
+    bit 2: <Service>
+    bit 3: <MigTD>
+    Other bits of R11 are reserved and must be 0.
+  * R12
+    bit 0: <Instruction.WBINVD>
+    bit 1: <Instruction.PCONFIG>
+    Other bits of R12 are reserved and must be 0.
+  * R13 and R14 are reserved and must be 0.
+- Add TDVMCALL_STATUS_SUBFUNC_UNSUPPORTED to the TDVMCALL status codes for
+  the ones that beyond GHCI base TDVMCALLs to indicate the subfunction is
+  not supported.
+  For the back-compatibility analysis, please refer to the change log of
+  "KVM: TDX: Add new TDVMCALL status code for unsupported subfuncs".
 
-> 
-> ----------------->8------------------
-> 
-> From 092599ab6f9e20412a7ca1eb118dd2be80cd18ff Mon Sep 17 00:00:00 2001
-> From: John Ernberg <john.ernberg@actia.se>
-> Date: Mon, 5 May 2025 09:09:01 +0200
-> Subject: [PATCH] USB: ci: gadget: Panic if priming when gadget off
-> 
-> ---
->  drivers/usb/chipidea/udc.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
-> index 2fea263a5e30..544aa4fa2d1d 100644
-> --- a/drivers/usb/chipidea/udc.c
-> +++ b/drivers/usb/chipidea/udc.c
-> @@ -203,8 +203,10 @@ static int hw_ep_prime(struct ci_hdrc *ci, int num, int dir, int is_ctrl)
->  
->     hw_write(ci, OP_ENDPTPRIME, ~0, BIT(n));
->  
-> -   while (hw_read(ci, OP_ENDPTPRIME, BIT(n)))
-> +   while (hw_read(ci, OP_ENDPTPRIME, BIT(n))) {
->         cpu_relax();
-> +       BUG_ON(dir == TX && !hw_read(ci, OP_ENDPTCTRL + num, ENDPTCTRL_TXE));
-> +   }
->     if (is_ctrl && dir == RX && hw_read(ci, OP_ENDPTSETUPSTAT, BIT(num)))
->         return -EAGAIN;
->  
-> ----------------->8------------------
-> 
-> On the iMX8QXP you may additionally run into asychronous aborts and SError
-> due to resource being disabled.
-> 
-> > > 
-> > > ---8<--------------------
-> > > 
-> > > diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
-> > > index 8a9b31fd5c89..72329a7eac4d 100644
-> > > --- a/drivers/usb/chipidea/udc.c
-> > > +++ b/drivers/usb/chipidea/udc.c
-> > > @@ -2374,6 +2374,9 @@ static void udc_suspend(struct ci_hdrc *ci)
-> > >          */
-> > >         if (hw_read(ci, OP_ENDPTLISTADDR, ~0) == 0)
-> > >                 hw_write(ci, OP_ENDPTLISTADDR, ~0, ~0);
-> > > +
-> > > +       if (ci->driver && ci->vbus_active && (ci->gadget.state != USB_STATE_SUSPENDED))
-> > > +               usb_gadget_disconnect(&ci->gadget);
-> > >  }
-> > >  
-> > >  static void udc_resume(struct ci_hdrc *ci, bool power_lost)
-> > > @@ -2384,6 +2387,9 @@ static void udc_resume(struct ci_hdrc *ci, bool power_lost)
-> > >                                         OTGSC_BSVIS | OTGSC_BSVIE);
-> > >                 if (ci->vbus_active)
-> > >                         usb_gadget_vbus_disconnect(&ci->gadget);
-> > > +       } else {
-> > > +               if (ci->driver && ci->vbus_active)
-> > > +                       usb_gadget_connect(&ci->gadget);
-> > >         }
-> > >  
-> > >         /* Restore value 0 if it was set for power lost check */
-> > > 
-> > > ---->8------------------
-> > 
-> > During the scp process, the usb host won't put usb device to suspend state.
-> > In current design, then the ether driver doesn't know the system has
-> > suspended after echo mem. The root cause is that ether driver is still tring
-> > to queue usb request after usb controller has suspended where usb clock is off,
-> > then the system hang.
-> > 
-> > With the above changes, I think the ether driver will fail to eth_start_xmit() 
-> > at an ealier stage, so the issue can't be triggered.
-> > 
-> > I think the ether driver needs call gether_suspend() accordingly, to do this,
-> > the controller driver need explicitly call suspend() function when it's going
-> > to be suspended. Could you check whether below patch fix the issue?
-> > 
-> >  ---8<--------------------
-> > 
-> > diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
-> > index 8a9b31fd5c89..27a7674ed62c 100644
-> > --- a/drivers/usb/chipidea/udc.c
-> > +++ b/drivers/usb/chipidea/udc.c
-> > @@ -2367,6 +2367,8 @@ static void udc_id_switch_for_host(struct ci_hdrc *ci)
-> >  #ifdef CONFIG_PM_SLEEP
-> >  static void udc_suspend(struct ci_hdrc *ci)
-> >  {
-> > +       ci->driver->suspend(&ci->gadget);
-> > +
-> >         /*
-> >          * Set OP_ENDPTLISTADDR to be non-zero for
-> >          * checking if controller resume from power lost
-> > @@ -2389,6 +2391,8 @@ static void udc_resume(struct ci_hdrc *ci, bool power_lost)
-> >         /* Restore value 0 if it was set for power lost check */
-> >         if (hw_read(ci, OP_ENDPTLISTADDR, ~0) == 0xFFFFFFFF)
-> >                 hw_write(ci, OP_ENDPTLISTADDR, ~0, 0);
-> > +
-> > +       ci->driver->resume(&ci->gadget);
-> >  }
-> >  #endif
-> > 
-> >  ---->8------------------
-> 
-> I tested this during my debugging and it doesn't work because suspend/resume
-> callbacks on the gadgets are designed for USB triggered suspend/resume and
-> not system triggered suspend/resume. Meaning that the link will just be
-> woken up again by the next USB transfer.
-> 
-> > 
-> > Thanks,
-> > Xu Yang
-> > 
-> > > 
-> > > But it's unclear to me why the hangup happens and how the change above
-> > > fix the problem.  Do you guys have any insight here?o
-> > > 
-> > > Shawn
-> > > 
-> > > [1] https://github.com/reMarkable/linux-imx/commit/0791d25578cb0e46fd93ae7a3c36ff7a424f3547
-> > > 
-> 
-> I didn't find the missing lines of code that Shawn found and instead ended
-> up looking at why the UDC core isn't suspending the gadgets when the system
-> is going to suspend. Because to me it feels like a job of UDC core.
-> 
-> I ended up with the monstrosity below that I have been intended to send as
-> an RFC when I'm done thinking about it. It currently applies on 6.12.20.
-> 
-> But since Shawn also ran into the problem I'm including it for the sake of
-> discussion about what the correct path of solving it is.
-> 
-> Best regards // John Ernberg
-> 
-> ----------------->8------------------
-> 
-> From 3c1d167f1eff0bd010b797530e3d03f6939db322 Mon Sep 17 00:00:00 2001
-> From: John Ernberg <john.ernberg@actia.se>
-> Date: Mon, 5 May 2025 09:09:50 +0200
-> Subject: [PATCH] WIP: Suspend getherlink on system suspend
-> 
-> ---
->  drivers/usb/gadget/composite.c        | 68 +++++++++++++++++++++++++++
->  drivers/usb/gadget/configfs.c         | 53 +++++++++++++++++++++
->  drivers/usb/gadget/function/f_ecm.c   | 22 +++++++++
->  drivers/usb/gadget/function/u_ether.c | 34 ++++++++++++++
->  drivers/usb/gadget/function/u_ether.h |  2 +
->  drivers/usb/gadget/udc/core.c         | 29 ++++++++++++
->  include/linux/usb/composite.h         |  4 ++
->  include/linux/usb/gadget.h            |  2 +
->  8 files changed, 214 insertions(+)
-> 
-> diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
-> index 8402a86176f4..f1ed1db1e1d0 100644
-> --- a/drivers/usb/gadget/composite.c
-> +++ b/drivers/usb/gadget/composite.c
-> @@ -2669,6 +2669,72 @@ void composite_resume(struct usb_gadget *gadget)
->  	cdev->suspended = 0;
->  }
->  
-> +int composite_system_suspend(struct usb_gadget *gadget)
-> +{
-> +	struct usb_composite_dev	*cdev = get_gadget_data(gadget);
-> +	struct usb_function		*f;
-> +	int				ret;
-> +
-> +	DBG(cdev, "system suspend\n");
-> +	if (cdev->config) {
-> +		list_for_each_entry(f, &cdev->config->functions, list) {
-> +			if (f->system_suspend) {
-> +				ret = f->system_suspend(f);
-> +				if (ret)
-> +					return ret;
-> +			}
-> +		}
-> +	}
-> +
-> +	if (cdev->config &&
-> +	    cdev->config->bmAttributes & USB_CONFIG_ATT_SELFPOWER)
-> +		usb_gadget_set_selfpowered(gadget);
-> +
-> +	usb_gadget_vbus_draw(gadget, 2);
-> +
-> +	return 0;
-> +}
-> +
-> +int composite_system_resume(struct usb_gadget *gadget)
-> +{
-> +	struct usb_composite_dev	*cdev = get_gadget_data(gadget);
-> +	struct usb_function		*f;
-> +	unsigned			maxpower;
-> +	int				ret;
-> +
-> +	DBG(cdev, "system resume\n");
-> +	if (cdev->config) {
-> +		list_for_each_entry(f, &cdev->config->functions, list) {
-> +			if (f->system_resume) {
-> +				ret = f->system_resume(f);
-> +				if (ret)
-> +					return ret;
-> +			}
-> +		}
-> +
-> +		maxpower = cdev->config->MaxPower ?
-> +			cdev->config->MaxPower : CONFIG_USB_GADGET_VBUS_DRAW;
-> +		if (gadget->speed < USB_SPEED_SUPER)
-> +			maxpower = min(maxpower, 500U);
-> +		else
-> +			maxpower = min(maxpower, 900U);
-> +
-> +		if (maxpower > USB_SELF_POWER_VBUS_MAX_DRAW ||
-> +		    !(cdev->config->bmAttributes & USB_CONFIG_ATT_SELFPOWER))
-> +			usb_gadget_clear_selfpowered(gadget);
-> +		else
-> +			usb_gadget_set_selfpowered(gadget);
-> +
-> +		usb_gadget_vbus_draw(gadget, maxpower);
-> +	} else {
-> +		maxpower = CONFIG_USB_GADGET_VBUS_DRAW;
-> +		maxpower = min(maxpower, 100U);
-> +		usb_gadget_vbus_draw(gadget, maxpower);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  /*-------------------------------------------------------------------------*/
->  
->  static const struct usb_gadget_driver composite_driver_template = {
-> @@ -2681,6 +2747,8 @@ static const struct usb_gadget_driver composite_driver_template = {
->  
->  	.suspend	= composite_suspend,
->  	.resume		= composite_resume,
-> +	.system_suspend	= composite_system_suspend,
-> +	.system_resume	= composite_system_resume,
->  
->  	.driver	= {
->  		.owner		= THIS_MODULE,
-> diff --git a/drivers/usb/gadget/configfs.c b/drivers/usb/gadget/configfs.c
-> index 29390d573e23..e0d2f0998e86 100644
-> --- a/drivers/usb/gadget/configfs.c
-> +++ b/drivers/usb/gadget/configfs.c
-> @@ -1962,6 +1962,57 @@ static void configfs_composite_resume(struct usb_gadget *gadget)
->  	spin_unlock_irqrestore(&gi->spinlock, flags);
->  }
->  
-> +static int configfs_composite_system_suspend(struct usb_gadget *gadget)
-> +{
-> +	struct usb_composite_dev *cdev;
-> +	struct gadget_info *gi;
-> +	unsigned long flags;
-> +	int ret;
-> +
-> +	cdev = get_gadget_data(gadget);
-> +	if (!cdev)
-> +		return 0;
-> +
-> +	gi = container_of(cdev, struct gadget_info, cdev);
-> +	spin_lock_irqsave(&gi->spinlock, flags);
-> +	cdev = get_gadget_data(gadget);
-> +	if (!cdev || gi->unbind) {
-> +		spin_unlock_irqrestore(&gi->spinlock, flags);
-> +		return 0;
-> +	}
-> +
-> +	ret = composite_system_suspend(gadget);
-> +	spin_unlock_irqrestore(&gi->spinlock, flags);
-> +
-> +	return ret;
-> +}
-> +
-> +static int configfs_composite_system_resume(struct usb_gadget *gadget)
-> +{
-> +	struct usb_composite_dev *cdev;
-> +	struct gadget_info *gi;
-> +	unsigned long flags;
-> +	int ret;
-> +
-> +	cdev = get_gadget_data(gadget);
-> +	if (!cdev)
-> +		return 0;
-> +
-> +	gi = container_of(cdev, struct gadget_info, cdev);
-> +	spin_lock_irqsave(&gi->spinlock, flags);
-> +	cdev = get_gadget_data(gadget);
-> +	if (!cdev || gi->unbind) {
-> +		spin_unlock_irqrestore(&gi->spinlock, flags);
-> +		return 0;
-> +	}
-> +
-> +	ret = composite_system_resume(gadget);
-> +	spin_unlock_irqrestore(&gi->spinlock, flags);
-> +
-> +	return ret;
-> +}
-> +
-> +
->  static const struct usb_gadget_driver configfs_driver_template = {
->  	.bind           = configfs_composite_bind,
->  	.unbind         = configfs_composite_unbind,
-> @@ -1972,6 +2023,8 @@ static const struct usb_gadget_driver configfs_driver_template = {
->  
->  	.suspend	= configfs_composite_suspend,
->  	.resume		= configfs_composite_resume,
-> +	.system_suspend	= configfs_composite_system_suspend,
-> +	.system_resume	= configfs_composite_system_resume,
->  
->  	.max_speed	= USB_SPEED_SUPER_PLUS,
->  	.driver = {
-> diff --git a/drivers/usb/gadget/function/f_ecm.c b/drivers/usb/gadget/function/f_ecm.c
-> index 6cb7771e8a69..4df67d5ee0fa 100644
-> --- a/drivers/usb/gadget/function/f_ecm.c
-> +++ b/drivers/usb/gadget/function/f_ecm.c
-> @@ -892,6 +892,26 @@ static void ecm_resume(struct usb_function *f)
->  	gether_resume(&ecm->port);
->  }
->  
-> +static int ecm_system_suspend(struct usb_function *f)
-> +{
-> +	struct f_ecm *ecm = func_to_ecm(f);
-> +	struct usb_composite_dev *cdev = ecm->port.func.config->cdev;
-> +
-> +	DBG(cdev, "ECM System Suspend\n");
-> +
-> +	return gether_system_suspend(&ecm->port);
-> +}
-> +
-> +static int ecm_system_resume(struct usb_function *f)
-> +{
-> +	struct f_ecm *ecm = func_to_ecm(f);
-> +	struct usb_composite_dev *cdev = ecm->port.func.config->cdev;
-> +
-> +	DBG(cdev, "ECM System Resume\n");
-> +
-> +	return gether_system_resume(&ecm->port);
-> +}
-> +
->  static void ecm_free(struct usb_function *f)
->  {
->  	struct f_ecm *ecm;
-> @@ -961,6 +981,8 @@ static struct usb_function *ecm_alloc(struct usb_function_instance *fi)
->  	ecm->port.func.free_func = ecm_free;
->  	ecm->port.func.suspend = ecm_suspend;
->  	ecm->port.func.resume = ecm_resume;
-> +	ecm->port.func.system_suspend = ecm_system_suspend;
-> +	ecm->port.func.system_resume = ecm_system_resume;
->  
->  	return &ecm->port.func;
->  }
-> diff --git a/drivers/usb/gadget/function/u_ether.c b/drivers/usb/gadget/function/u_ether.c
-> index f58590bf5e02..d4f0e28ffd4d 100644
-> --- a/drivers/usb/gadget/function/u_ether.c
-> +++ b/drivers/usb/gadget/function/u_ether.c
-> @@ -1078,6 +1078,40 @@ void gether_resume(struct gether *link)
->  }
->  EXPORT_SYMBOL_GPL(gether_resume);
->  
-> +int gether_system_suspend(struct gether *link)
-> +{
-> +	struct eth_dev *dev = link->ioport;
-> +	struct net_device *ndev = dev->net;
-> +
-> +	rtnl_lock();
-> +	if (netif_running(ndev)) {
-> +		netif_tx_lock_bh(ndev);
-> +		netif_device_detach(ndev);
-> +		netif_tx_unlock_bh(ndev);
-> +	}
-> +	rtnl_unlock();
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(gether_system_suspend);
-> +
-> +int gether_system_resume(struct gether *link)
-> +{
-> +	struct eth_dev *dev = link->ioport;
-> +	struct net_device *ndev = dev->net;
-> +
-> +	rtnl_lock();
-> +	if (netif_running(ndev)) {
-> +		netif_tx_lock_bh(ndev);
-> +		netif_device_attach(ndev);
-> +		netif_tx_unlock_bh(ndev);
-> +	}
-> +	rtnl_unlock();
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(gether_system_resume);
-> +
->  /*
->   * gether_cleanup - remove Ethernet-over-USB device
->   * Context: may sleep
-> diff --git a/drivers/usb/gadget/function/u_ether.h b/drivers/usb/gadget/function/u_ether.h
-> index 34be220cef77..ffd023b7be7b 100644
-> --- a/drivers/usb/gadget/function/u_ether.h
-> +++ b/drivers/usb/gadget/function/u_ether.h
-> @@ -261,6 +261,8 @@ void gether_cleanup(struct eth_dev *dev);
->  
->  void gether_suspend(struct gether *link);
->  void gether_resume(struct gether *link);
-> +int gether_system_suspend(struct gether *link);
-> +int gether_system_resume(struct gether *link);
->  
->  /* connect/disconnect is handled by individual functions */
->  struct net_device *gether_connect(struct gether *);
-> diff --git a/drivers/usb/gadget/udc/core.c b/drivers/usb/gadget/udc/core.c
-> index 4b3d5075621a..1e4ee5ffcfbf 100644
-> --- a/drivers/usb/gadget/udc/core.c
-> +++ b/drivers/usb/gadget/udc/core.c
-> @@ -1683,6 +1683,30 @@ static void gadget_unbind_driver(struct device *dev)
->  	kobject_uevent(&udc->dev.kobj, KOBJ_CHANGE);
->  }
->  
-> +static int gadget_suspend_driver(struct device *dev)
-> +{
-> +	struct usb_gadget *gadget = dev_to_usb_gadget(dev);
-> +	struct usb_udc *udc = gadget->udc;
-> +	struct usb_gadget_driver *driver = udc->driver;
-> +
-> +	if (driver->system_suspend)
-> +		return driver->system_suspend(gadget);
-> +
-> +	return 0;
-> +}
-> +
-> +static int gadget_resume_driver(struct device *dev)
-> +{
-> +	struct usb_gadget *gadget = dev_to_usb_gadget(dev);
-> +	struct usb_udc *udc = gadget->udc;
-> +	struct usb_gadget_driver *driver = udc->driver;
-> +
-> +	if (driver->system_resume)
-> +		return driver->system_resume(gadget);
-> +
-> +	return 0;
-> +}
-> +
->  /* ------------------------------------------------------------------------- */
->  
->  int usb_gadget_register_driver_owner(struct usb_gadget_driver *driver,
-> @@ -1896,11 +1920,16 @@ static const struct class udc_class = {
->  	.dev_uevent	= usb_udc_uevent,
->  };
->  
-> +static const struct dev_pm_ops gadget_bus_pm_ops = {
-> +	SET_SYSTEM_SLEEP_PM_OPS(gadget_suspend_driver, gadget_resume_driver)
-> +};
-> +
->  static const struct bus_type gadget_bus_type = {
->  	.name = "gadget",
->  	.probe = gadget_bind_driver,
->  	.remove = gadget_unbind_driver,
->  	.match = gadget_match_driver,
-> +	.pm = &gadget_bus_pm_ops,
->  };
->  
->  static int __init usb_udc_init(void)
-> diff --git a/include/linux/usb/composite.h b/include/linux/usb/composite.h
-> index 6e38fb9d2117..f42ba1cfd181 100644
-> --- a/include/linux/usb/composite.h
-> +++ b/include/linux/usb/composite.h
-> @@ -226,6 +226,8 @@ struct usb_function {
->  					bool config0);
->  	void			(*suspend)(struct usb_function *);
->  	void			(*resume)(struct usb_function *);
-> +	int			(*system_suspend)(struct usb_function *);
-> +	int			(*system_resume)(struct usb_function *);
->  
->  	/* USB 3.0 additions */
->  	int			(*get_status)(struct usb_function *);
-> @@ -522,6 +524,8 @@ extern int composite_setup(struct usb_gadget *gadget,
->  		const struct usb_ctrlrequest *ctrl);
->  extern void composite_suspend(struct usb_gadget *gadget);
->  extern void composite_resume(struct usb_gadget *gadget);
-> +extern int composite_system_suspend(struct usb_gadget *gadget);
-> +extern int composite_system_resume(struct usb_gadget *gadget);
->  
->  /*
->   * Some systems will need runtime overrides for the  product identifiers
-> diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
-> index df33333650a0..8cdfdece1561 100644
-> --- a/include/linux/usb/gadget.h
-> +++ b/include/linux/usb/gadget.h
-> @@ -744,6 +744,8 @@ struct usb_gadget_driver {
->  	void			(*disconnect)(struct usb_gadget *);
->  	void			(*suspend)(struct usb_gadget *);
->  	void			(*resume)(struct usb_gadget *);
-> +	int			(*system_suspend)(struct usb_gadget *);
-> +	int			(*system_resume)(struct usb_gadget *);
->  	void			(*reset)(struct usb_gadget *);
->  
->  	/* FIXME support safe rmmod */
+Testing
+=======
+This series is based on kvm/next with the commit:
+- '61374cc145f4' ("Merge tag 'kvmarm-fixes-6.16-1' of
+  https://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD").
 
+A matching QEMU is here:
+https://github.com/intel-staging/qemu-tdx/commits/binbinwu/GetTdVmCallInfo_fixup
+
+It requires TDX module 1.5.06.00.0744 [4], or later.
+A working edk2 commit is 95d8a1c ("UnitTestFrameworkPkg: Use TianoCore
+mirror of subhook submodule").
+
+This patch series passed the TDX kvm-unit-tests, booting a Linux TD, and
+TDX enhanced KVM selftests. It also passed the TDX related test cases
+defined in the LKVS test suite as described in:
+https://github.com/intel/lkvs/blob/main/KVM/docs/lkvs_on_avocado.md
+
+KVM selftests patches based on the latest TDX KVM selftests patch
+series [2], were used to test the flows of GetQuote, GetTdVmCallInfo with
+leaf 1, unsupported TDVMCALL, and some modifications were made because the
+opt-in of KVM exit on KVM_HC_MAP_GPA_RANGE should be done before
+KVM_TDX_FINALIZE_VM.
+
+[0] https://lore.kernel.org/kvm/20250416055433.2980510-1-binbin.wu@linux.intel.com
+[1] https://lore.kernel.org/kvm/5e7e8cb7-27b2-416d-9262-e585034327be@redhat.com
+[2] https://lore.kernel.org/kvm/20250414214801.2693294-1-sagis@google.com
+[3] https://cdrdv2.intel.com/v1/dl/getContent/726792
+[4] https://github.com/intel/tdx-module/releases/tag/TDX_1.5.06
+
+Binbin Wu (4):
+  KVM: TDX: Add new TDVMCALL status code for unsupported subfuncs
+  KVM: TDX: Handle TDG.VP.VMCALL<GetQuote>
+  KVM: TDX: Exit to userspace for GetTdVmCallInfo
+  KVM: TDX: Check KVM exit on KVM_HC_MAP_GPA_RANGE when TD finalize
+
+ Documentation/virt/kvm/api.rst           | 44 ++++++++++++
+ Documentation/virt/kvm/x86/intel-tdx.rst | 12 ++++
+ arch/x86/include/asm/shared/tdx.h        |  1 +
+ arch/x86/kvm/vmx/tdx.c                   | 85 +++++++++++++++++++-----
+ include/uapi/linux/kvm.h                 | 14 ++++
+ 5 files changed, 141 insertions(+), 15 deletions(-)
+
+
+base-commit: 61374cc145f4a56377eaf87c7409a97ec7a34041
 -- 
+2.46.0
 
-Best regards,
-Peter
