@@ -1,221 +1,212 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mxde.zte.com.cn (mxde.zte.com.cn [209.9.37.143])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550F021B191
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 100521D555;
+	Tue, 10 Jun 2025 08:34:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.9.37.143
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749544470; cv=none; b=VPx67Ogrg/DSxYoAFV9Eb+7ZMP4AOSqkajVLgIaYQcuakK3ld6ao3JEzS5soBA1wDucLJsBtJ+tVNjHq857QCcbMcjZIbj7ND3qj4Hx/tuN9tbpVM82N6uoaSrj82iCeIX8IP70cHguCvPHUJDkYFhYV9cf6KIIqmMIkEUVReCA=
+	t=1749544492; cv=none; b=E1JBgxFyFa4Ouh8WB4PXcq90vJQfcpwSCNCia/foAIBms3klreoGFDIAP0TG3HA2WKjNYugB0qPP2ysWgstgb1DMuqZGIP+pqEIMGG2ccIX2T/+LDS0LFxm9T6EY1q+A/1wqmvoLclrVkqOfdjOIpqNxqtRuGbBsnhvtI5eOjC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749544470; c=relaxed/simple;
-	bh=ELvV6gFOrQIcF0RS07T+VrEtALbsCpR6LtE6ysH5Zp8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nFlu7LHJtoyQvqPpu8lRYrv7WabciNR9srZGmkxb3LeHVcWdan7liQ69AnEDmOTHzP3lN/tZOgTfmZld8bcgSJzDcenzr4RcVWah63Uf6r4Yn6NqMMSGPAH1HourWUmC8V3ra6sCJ6WeA5hGejGF/eN6gojz8sgqCJr3jXsXEvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=MpOher5H; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="MpOher5H"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-32addf54a00so34928451fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 01:34:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749544466; x=1750149266; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rnI1DgLPkvl+HoplXFXE1JhP6UTW1WaSqL4iwK2lNM4=;
-        b=MpOher5HAwZT00p0pOGJJMyVwWc1RCFH4NRDVYrcq7zUpwbobV2VWaPEQhyzZqwUmr
-         U6IjuYElpeypvuugvgEMxfLpJ2qiS/R7ntkVgbMBxQOAh2i8uPRXuO5tJKyyBf8AhcAm
-         CsqrLBcd2jlzhxEvPXE3tBIm79mEReGYfhPq5SFwRL6YReDAE0EYgg2ODT9waLtrsFLo
-         b1qE3SOahtJ64LDjdJqL1o5g7ZmgoM84aCASvTiVvmrj/QSV2o4ZlS4sBiJzeA3T2ftW
-         5xC7dcOZPyg71y/0IE7bezueZrHfOoRgNofzgScR/HCXBaAvfzGy8r+mqZk7S27UgL/w
-         99Ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749544466; x=1750149266;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rnI1DgLPkvl+HoplXFXE1JhP6UTW1WaSqL4iwK2lNM4=;
-        b=SySiyDYTP3LIL2IYzf1wn0HmYq+pOoBRgkQWo7fQEScbArk1oj3qXR3x70U5LEm1DN
-         dpUa7bmk52fyh5huusKVdvSHxtyR2zXD9Tpee0vlpmGTOeP41hlAdYvfZc36Mr4PK4Z0
-         dlZxxjxlIfawq+R6slblfzFTQQm4X5T9LXWV00vQM2v0FsOZvNEiJRhPp6IwZ/EVbsvf
-         zHuucACDe7HTrquXZMWKatR3PTIvFI/O2P6llanhKtkmkoL+79sUEYI82aokgVRZiFFW
-         35ujosveMHKAOkJCCWuramizzWES+eN4zkRZUT+8f64fAYypRSOzB5sqVu5AmksaVJra
-         M/qw==
-X-Gm-Message-State: AOJu0YwHCMUQ+j9ntiAGN0n9kHKT+7LWqMWYWQYYPzN5n+zhxt+iMNqP
-	pha5ObBjOVVkOGwPLO8e/aAKbL918s9wjq4oNwjHlkhK8hYGC8rSp8rED1jVPLwAOZvJpBRSJ+L
-	cG/KpXpnrixrgjr4MO56XStqfYNbRS1Tetk9npwtQ6Q==
-X-Gm-Gg: ASbGncsDIjXXutCYURDip0r0sroshgIjy9uE2GNIDnAEA9xc9rlO+FFafuLZeirzEDm
-	lfV91kBt48PxX/xdva1dECeP3cqXNXXYsM0etb1KPCUq4ZtC0KSENc3/lnfnV1r9wopNbpaZFWM
-	6g5Qbm3O45hMjd23muVLVjgZ23xRSw+N7aTbcltN8L12+TSP+iAOVTBSihSvLjMykNUIGW0FtX5
-	ZT/
-X-Google-Smtp-Source: AGHT+IGr9lWmFu1UQyUJGI/4Xo4wowgXACRdyNHtL5UnU6rXIUKc6xZwnJe2wtyMu2A1FZQOzpdRtDBMYc+8yGgtfXU=
-X-Received: by 2002:a2e:a9a7:0:b0:32a:7750:a0e1 with SMTP id
- 38308e7fff4ca-32adfc0ee43mr45834241fa.26.1749544466311; Tue, 10 Jun 2025
- 01:34:26 -0700 (PDT)
+	s=arc-20240116; t=1749544492; c=relaxed/simple;
+	bh=btIRtQmLoXDnPdAl2vERwqdyVKMgYNNkSMM7j+ikU6Y=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=NWBL6PT7/szcW2Er/UQ4VU550JbSLd7NBwIeWutZ71bzEc7mrFqQDOwKn8hM7qQO7GV3vBJjUhBhy5qffy3n8FebLcZttcsNEskH/mORHV0ViydLOVfg33OUkIzPFU8CTu0Myp0kUnqnVTdV+wd1ZsmC/U7uBYWuvEQeEB40JEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=209.9.37.143
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mxhk.zte.com.cn (unknown [192.168.250.138])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mxde.zte.com.cn (FangMail) with ESMTPS id 4bGht75wDVz5Bdcy;
+	Tue, 10 Jun 2025 16:34:39 +0800 (CST)
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4bGhsy0jvvz5DXWl;
+	Tue, 10 Jun 2025 16:34:30 +0800 (CST)
+Received: from xaxapp05.zte.com.cn ([10.99.98.109])
+	by mse-fl2.zte.com.cn with SMTP id 55A8YG0C000519;
+	Tue, 10 Jun 2025 16:34:16 +0800 (+08)
+	(envelope-from shao.mingyin@zte.com.cn)
+Received: from mapi (xaxapp04[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Tue, 10 Jun 2025 16:34:19 +0800 (CST)
+Date: Tue, 10 Jun 2025 16:34:19 +0800 (CST)
+X-Zmail-TransId: 2afb6847ee0bffffffff9f2-c7679
+X-Mailer: Zmail v1.0
+Message-ID: <202506101634190538mcMSzfKfxQTy4LgbSpOy@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250609103535.780069-1-marco.crivellari@suse.com> <aEcvBadg_rT2_roQ@slm.duckdns.org>
-In-Reply-To: <aEcvBadg_rT2_roQ@slm.duckdns.org>
-From: Marco Crivellari <marco.crivellari@suse.com>
-Date: Tue, 10 Jun 2025 10:34:15 +0200
-X-Gm-Features: AX0GCFvP5ttnL06alMQqaDCLEYNQYALKFKO-ol6iDkY7yG85bcqTtlov5MhRegs
-Message-ID: <CAAofZF6AfmjYcNQSBFHsteN_10=z0RSt20DpOM8i_NLQBO5qLQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] Workqueue: rename system workqueue and add WQ_PERCPU
-To: Tejun Heo <tj@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Michal Hocko <mhocko@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+From: <shao.mingyin@zte.com.cn>
+To: <ulf.hansson@linaro.org>
+Cc: <geert+renesas@glider.be>, <magnus.damm@gmail.com>, <heiko@sntech.de>,
+        <krzk@kernel.org>, <alim.akhtar@samsung.com>,
+        <walker.chen@starfivetech.com>, <changhuang.liang@starfivetech.com>,
+        <sebastian.reichel@collabora.com>, <detlev.casanova@collabora.com>,
+        <finley.xiao@rock-chips.com>, <shawn.lin@rock-chips.com>,
+        <pgwipeout@gmail.com>, <qiu.yutan@zte.com.cn>,
+        <shao.mingyin@zte.com.cn>, <linux-pm@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-rockchip@lists.infradead.org>,
+        <linux-samsung-soc@vger.kernel.org>, <yang.yang29@zte.com.cn>,
+        <xu.xin16@zte.com.cn>, <yang.tao172@zte.com.cn>,
+        <ye.xingchen@zte.com.cn>
+Subject: =?UTF-8?B?cG1kb21haW46IFVzZSBzdHJfZW5hYmxlX2Rpc2FibGUtbGlrZSBoZWxwZXJz?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl2.zte.com.cn 55A8YG0C000519
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 6847EE1E.000/4bGht75wDVz5Bdcy
 
-Hello Tejun,
+From: Shao Mingyin <shao.mingyin@zte.com.cn>
 
-Thanks!
+Replace ternary (condition ? "enable" : "disable") syntax and ternary
+(condition ? "on" : "off") syntax with helpers from
+string_choices.h because:
+1. Simple function call with one argument is easier to read.  Ternary
+   operator has three arguments and with wrapping might lead to quite
+   long code.
+2. Is slightly shorter thus also easier to read.
+3. It brings uniformity in the text - same string.
+4. Allows deduping by the linker, which results in a smaller binary
+   file.
 
-Let's see if I understood what you mean.
+Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
+---
+ drivers/pmdomain/renesas/rcar-gen4-sysc.c    | 3 ++-
+ drivers/pmdomain/renesas/rcar-sysc.c         | 3 ++-
+ drivers/pmdomain/rockchip/pm-domains.c       | 3 ++-
+ drivers/pmdomain/samsung/exynos-pm-domains.c | 6 +++---
+ drivers/pmdomain/starfive/jh71xx-pmu.c       | 5 +++--
+ 5 files changed, 12 insertions(+), 8 deletions(-)
 
->- Separate out patches to add the new flag and wq. Don't add the warnings
->  yet. I'll commit these patches to a separate wq branch.
+diff --git a/drivers/pmdomain/renesas/rcar-gen4-sysc.c b/drivers/pmdomain/renesas/rcar-gen4-sysc.c
+index e001b5c25bed..c8aa7538e95f 100644
+--- a/drivers/pmdomain/renesas/rcar-gen4-sysc.c
++++ b/drivers/pmdomain/renesas/rcar-gen4-sysc.c
+@@ -18,6 +18,7 @@
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
+ #include <linux/types.h>
++#include <linux/string_choices.h>
 
-Basically these means have 2 more patches, one for WQ_PERCPU (only the
-new flag, like in the v1 let's say) and another patch that adds the wq(s).
+ #include "rcar-gen4-sysc.h"
 
-So, all the logic changes (also in __alloc_workqueue), pr_warn_once() will
-stay in the other patch (that you will apply later); this is not only 1 pat=
-ch,
-following your next point.
+@@ -171,7 +172,7 @@ static int rcar_gen4_sysc_power(u8 pdr, bool on)
+  out:
+        spin_unlock_irqrestore(&rcar_gen4_sysc_lock, flags);
 
-If I understood correctly, it makes sense to me.
+-       pr_debug("sysc power %s domain %d: %08x -> %d\n", on ? "on" : "off",
++       pr_debug("sysc power %s domain %d: %08x -> %d\n", str_on_off(on),
+                 pdr, ioread32(rcar_gen4_sysc_base + SYSCISCR(reg_idx)), ret);
+        return ret;
+ }
+diff --git a/drivers/pmdomain/renesas/rcar-sysc.c b/drivers/pmdomain/renesas/rcar-sysc.c
+index 047495f54e8a..dae01ca0ef6a 100644
+--- a/drivers/pmdomain/renesas/rcar-sysc.c
++++ b/drivers/pmdomain/renesas/rcar-sysc.c
+@@ -17,6 +17,7 @@
+ #include <linux/io.h>
+ #include <linux/iopoll.h>
+ #include <linux/soc/renesas/rcar-sysc.h>
++#include <linux/string_choices.h>
 
->- Split out patches by subsystems. I know this is tedious but think it'd
-> still be worth doing. It doesn't have to be completely granular. e.g. We
-> know that network changes go through a single tree, so all network change=
-s
->  can be in a single patch. Each patch can explain the workqueue changes a=
-nd
->  that the patch can be either routed through the subysstem which would
->  require pulling from the above wq branch, or, as the default option, we'=
-d
->  be happy to route the patch through the workqueue tree. I can create a
->  separate branch to collect the conversion patches that can go through wq
->  tree.
+ #include "rcar-sysc.h"
 
-This impacts patch 3, so instead of 1 big patch, you are thinking of N patc=
-hes,
-in order to add WQ_PERCPU to the callers of subsystems first.
+@@ -162,7 +163,7 @@ static int rcar_sysc_power(const struct rcar_sysc_pd *pd, bool on)
 
-So, something like:
-- net/
-- mm/
-- fs/
+        spin_unlock_irqrestore(&rcar_sysc_lock, flags);
 
-Do you have something different in mind?
+-       pr_debug("sysc power %s domain %d: %08x -> %d\n", on ? "on" : "off",
++       pr_debug("sysc power %s domain %d: %08x -> %d\n", str_on_off(on),
+                 pd->isr_bit, ioread32(rcar_sysc_base + SYSCISR), ret);
+        return ret;
+ }
+diff --git a/drivers/pmdomain/rockchip/pm-domains.c b/drivers/pmdomain/rockchip/pm-domains.c
+index 4cce407bb1eb..0681c763f843 100644
+--- a/drivers/pmdomain/rockchip/pm-domains.c
++++ b/drivers/pmdomain/rockchip/pm-domains.c
+@@ -21,6 +21,7 @@
+ #include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/mfd/syscon.h>
++#include <linux/string_choices.h>
+ #include <soc/rockchip/pm_domains.h>
+ #include <soc/rockchip/rockchip_sip.h>
+ #include <dt-bindings/power/px30-power.h>
+@@ -595,7 +596,7 @@ static int rockchip_do_pmu_set_power_domain(struct rockchip_pm_domain *pd,
+                                        is_on == on, 0, 10000);
+        if (ret) {
+                dev_err(pmu->dev, "failed to set domain '%s' %s, val=%d\n",
+-                       genpd->name, on ? "on" : "off", is_on);
++                       genpd->name, str_on_off(on), is_on);
+                return ret;
+        }
 
->- After the next rc1 drops, I can apply the patches to add warnings to the
->  -fixes branch and then send them to Linus.
+diff --git a/drivers/pmdomain/samsung/exynos-pm-domains.c b/drivers/pmdomain/samsung/exynos-pm-domains.c
+index 9b502e8751d1..1a892c611dad 100644
+--- a/drivers/pmdomain/samsung/exynos-pm-domains.c
++++ b/drivers/pmdomain/samsung/exynos-pm-domains.c
+@@ -13,6 +13,7 @@
+ #include <linux/err.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
++#include <linux/string_choices.h>
+ #include <linux/pm_domain.h>
+ #include <linux/delay.h>
+ #include <linux/of.h>
+@@ -38,7 +39,6 @@ static int exynos_pd_power(struct generic_pm_domain *domain, bool power_on)
+        struct exynos_pm_domain *pd;
+        void __iomem *base;
+        u32 timeout, pwr;
+-       char *op;
 
-Sounds good.
+        pd = container_of(domain, struct exynos_pm_domain, pd);
+        base = pd->base;
+@@ -51,8 +51,8 @@ static int exynos_pd_power(struct generic_pm_domain *domain, bool power_on)
 
-Thank you again.
+        while ((readl_relaxed(base + 0x4) & pd->local_pwr_cfg) != pwr) {
+                if (!timeout) {
+-                       op = (power_on) ? "enable" : "disable";
+-                       pr_err("Power domain %s %s failed\n", domain->name, op);
++                       pr_err("Power domain %s %s failed\n", domain->name,
++                              str_enable_disable(power_on));
+                        return -ETIMEDOUT;
+                }
+                timeout--;
+diff --git a/drivers/pmdomain/starfive/jh71xx-pmu.c b/drivers/pmdomain/starfive/jh71xx-pmu.c
+index 74720c09a6e3..0e8fca4e2de9 100644
+--- a/drivers/pmdomain/starfive/jh71xx-pmu.c
++++ b/drivers/pmdomain/starfive/jh71xx-pmu.c
+@@ -12,6 +12,7 @@
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_domain.h>
++#include <linux/string_choices.h>
+ #include <dt-bindings/power/starfive,jh7110-pmu.h>
 
-On Mon, Jun 9, 2025 at 8:59=E2=80=AFPM Tejun Heo <tj@kernel.org> wrote:
->
-> Hello, Marco.
->
-> On Mon, Jun 09, 2025 at 12:35:31PM +0200, Marco Crivellari wrote:
-> > =3D=3D=3D Introduced Changes by this patchset =3D=3D=3D
-> >
-> > 1)  [P 1-2] system workqueue rename:
-> >
-> >               system_wq is a per-CPU workqueue, but his name is not cle=
-ar.
-> >               system_unbound_wq is to be used when locality is not requ=
-ired.
-> >
-> >               Because of that, system_wq has been renamed in system_per=
-cpu_wq,
-> >               while system_unbound_wq is now system_dfl_wq.
-> >
-> >               The old wq are still around, but if used in queue_work(),=
- a pr_warn_once()
-> >               will be printed and the wq used is automatically assigned=
- to the new
-> >               default (system_dfl_wq or system_percpu_wq).
-> >
-> > 2)  [P 3] Introduction of WQ_PERCPU.
-> >
-> >               This patch adds the new WQ_PERCPU flag to explicitly requ=
-ire to be per-cpu.
-> >
-> >               Every alloc_workqueue() caller should use one among WQ_PE=
-RCPU or
-> >               WQ_UNBOUND. This is actually enforced warning if both or =
-none of them
-> >               are present at the same time.
-> >
-> >               WQ_UNBOUND will be removed in a next release cycle.
-> >
-> >               Because of that, this patch also adds to every alloc_work=
-queue() caller
-> >               that require it, the new WQ_PERCPU flag.
-> >
-> > 3)  [P 4] WQ_PERCPU documented in workqueue.rst
-> >
-> >               Added a short section about WQ_PERCPU and a Note under WQ=
-_UNBOUND
-> >               mentioning that it will be removed in the future.
->
-> Thanks for working on this and the changes generally make sense to me.
-> However, I think we should try a bit harder to reduce friction with the
-> affected subsystems. It's a bit unfortunate that we're already at rc1. It
-> would have been better if the new flags and wq were introduced before rc1=
-.
-> Oh well, we can manage. How about something like this?
->
-> - Separate out patches to add the new flag and wq. Don't add the warnings
->   yet. I'll commit these patches to a separate wq branch.
->
-> - Split out patches by subsystems. I know this is tedious but think it'd
->   still be worth doing. It doesn't have to be completely granular. e.g. W=
-e
->   know that network changes go through a single tree, so all network chan=
-ges
->   can be in a single patch. Each patch can explain the workqueue changes =
-and
->   that the patch can be either routed through the subysstem which would
->   require pulling from the above wq branch, or, as the default option, we=
-'d
->   be happy to route the patch through the workqueue tree. I can create a
->   separate branch to collect the conversion patches that can go through w=
-q
->   tree.
->
-> - After the next rc1 drops, I can apply the patches to add warnings to th=
-e
->   -fixes branch and then send them to Linus.
->
-> This is a bit more work but would likely produce less friction without
-> delaying the timeline significantly.
->
-> Thanks.
->
-> --
-> tejun
+ /* register offset */
+@@ -155,7 +156,7 @@ static int jh7110_pmu_set_state(struct jh71xx_pmu_dev *pmd, u32 mask, bool on)
 
+        if (ret) {
+                dev_err(pmu->dev, "%s: failed to power %s\n",
+-                       pmd->genpd.name, on ? "on" : "off");
++                       pmd->genpd.name, str_on_off(on));
+                return -ETIMEDOUT;
+        }
 
+@@ -198,7 +199,7 @@ static int jh71xx_pmu_set_state(struct jh71xx_pmu_dev *pmd, u32 mask, bool on)
 
---
+        if (is_on == on) {
+                dev_dbg(pmu->dev, "pm domain [%s] is already %sable status.\n",
+-                       pmd->genpd.name, on ? "en" : "dis");
++                       pmd->genpd.name, str_enable_disable(on));
+                return 0;
+        }
 
-Marco Crivellari
-
-L3 Support Engineer, Technology & Product
-
-
-
-
-marco.crivellari@suse.com
+-- 
+2.25.1
