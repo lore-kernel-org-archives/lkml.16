@@ -1,118 +1,201 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8727F1632F2
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 00:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC9C151985;
+	Tue, 10 Jun 2025 00:57:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749517046; cv=none; b=P533tdSRO/5Vd4Laq6RSepZ6hVEI4ctQYfNDAMUSF1TgUw+0e0fD9TDkhe449WMiw31NPcZHxQnEXjIICYctbSXZb3YGBDOrfC8EDVFGKkkB3xbmjvmHlzl0zWW3Jp512yzPDHmoewQg7CLXTZPcHtuzmU/B0YsDXUwbAjKbxQA=
+	t=1749517063; cv=none; b=QF2fC7rYT9SfYWLIc3Pir/MJO6fmQKKbXGv/EMnjDKOW0ByohXizgS3v66j/lxiVa7bysGiWCqeDKYV4xvGOl13+QNFA2w/Ae16z0lJKO5+dwsLKrpcS8GcIq7wgd1+TzDJQi7fXXvVfgw0lV+43Ht2+1YR22iLvYKQeCfNYUEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749517046; c=relaxed/simple;
-	bh=p/XSuCXGPS17CXVAw4xGn4f5MNxiAyBtMTSqDEOx0Pg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QV+E2gw82HWRqbo6fgItpkHWXMJHXYyCxMflTsNhMHvD5IEvCgRfKNFEHZ65JLX83Y7CqH5PziasU2AFZATMgljcw+vQEa0Kh/5pXvTJdY+ta4EJi39/+h+/MQiwX0GEW7+WIF3YndCeKuS0BTZQDXICaRQhJCVmlltzayAuXRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VF3IiZpN; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749517063; c=relaxed/simple;
+	bh=+4CQSPMqTNQcE956N50cCEl2XjxjoVAzYnvINs2GZME=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AVkvR6Ish+BCEsqfiT3U52O6wSryjbrAK+Yv0zuXv3X6/rH1fnEUQh9fnfszLovq8rym3+FmgBXT3PMYu1obhtnmnwOL5nQmyBo3Q+Gm0WshInxTKLWTDG+t3YP/Bdkvk+T6rzdqMlFn/rbIS2EAWcIsw3zk4MKyH4htIIEDv4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MBpAEPOU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VF3IiZpN"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-23508d30142so63810425ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 17:57:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749517044; x=1750121844; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=c1rQwYkfS8VPR2HtcdFz5xQMJ3QnFjshutUNq6gvzdg=;
-        b=VF3IiZpNvMTJUqVh9zt8gej3e418SoXcYMYjnpSL8WMH0T5gzjlJ1E15IclwSg/Gu8
-         usza/+6sciwnszxi1CrMpMJFdGhkoORyZCgu7FqmP4vs+YWJazErjeAZ/tIs9LcvQVKu
-         Rh9zYVRAjNHRf+1g5t7Dzw3EGdG5q2Re5ASeUJzLhDx1duJ/z6TtWZUiIaP9Q7zAGt1I
-         r1hfyGUb4VNxCVDCZ/DmCJVPaQ6pyAG5GXf470FMPLT8qcMssbq0/1fmmU8QibZFdafs
-         oNFKrkw8+Xe88bcysKGalbErpkWv95o4KglkZY9DhN6ZjQBDM4f/0YjPGEojJIMdsIa0
-         5UfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749517044; x=1750121844;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=c1rQwYkfS8VPR2HtcdFz5xQMJ3QnFjshutUNq6gvzdg=;
-        b=uF4GpM/PhXB+UinZlHC8BvJ8LW0yP3zKog5VkvkHd1dUI5TC1G3L/WyRk8KNinYqbB
-         prqPeEZKPGOgjidbo3RS27bvtJw6I7jl6sD0E6mt5+/mHzIUT5SsEm83NEn2/SnASz9z
-         iQUkyAEaU0KGQ4Z33QMux8tephVzrSIoprxM/eRq6SkFZRRcRV6rzISYRKypqqXxuJ8H
-         KHb5PUffYP390W9AkrlOSfvQB2YGYNKyydeS2ouGILotVEVkqzaT/RgovCKn4siBVWS/
-         Lo5gVGlsJrrGFejKXxlT97fee2qW1F+8XeVquqw/Fw6dmhCANaDZUsW3LFF5Ti/Qc2aO
-         /J3g==
-X-Forwarded-Encrypted: i=1; AJvYcCX17k1uTStGaqRlQvwFz0dRMeBtyKQfOHAFrqylwfiyK6TFOb0NstF5Sz7++hgvZxCOarrpJ8xfsQsiIlo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yym1EeGj4zz6du1sM/RmKVP3CrH+yPTVmOFaJDRgMaDfz7CC6SJ
-	G2rwiILP8c/raURBob8ISsHfx+oHAr6w1lRvSDRULge7ckHwuc/ULKPV4nX5OPaCMvs=
-X-Gm-Gg: ASbGncs8xpv9JF9A3+zeW4mv3F7ICykojvpnuwpZko5LG1vwFZryjBDnnzG74c+EZo+
-	2pZax1eBFWXQVI2VF8mxpox2ZqKLF4NpRMkQgm1Hpp3vNAhZI/ErH8dlJdbfTHVWapriWisCpw2
-	aP7Q6v3xOyl+bSq1UtmDvD87i8yIdkjS/YWHpl13WvM8BhwVO/3wGQWjdmcHoVVUREjn+dk4jfX
-	w5u9rWkeHBn9jnUi51xFD8HC1aZYUzQvYgzt7iNGoZd8otnWrJtItcD3TXf9+0uckkQE4tkPhtt
-	vl1XcVYpW07SeRkCjEF7Evn1MWpCREVPp6YhZxvorPrtJseSmWTmzRSvh8JN9b8=
-X-Google-Smtp-Source: AGHT+IEdl8eeFf7aJp3yaKtzoKAh6ceNn/qekzHSRC0NuzHU4sIrFSD+owbOXJVQKsMXXNVfTFyxWg==
-X-Received: by 2002:a17:903:2c9:b0:234:d778:13fa with SMTP id d9443c01a7336-23601d13585mr206171875ad.26.1749517043866;
-        Mon, 09 Jun 2025 17:57:23 -0700 (PDT)
-Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236037ae33dsm60076015ad.206.2025.06.09.17.57.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 17:57:23 -0700 (PDT)
-Date: Tue, 10 Jun 2025 06:27:17 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
-Cc: rafael@kernel.org, dakr@kernel.org, maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
-	simona@ffwll.ch, mcgrof@kernel.org, russ.weight@linux.dev,
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org,
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
-	leitao@debian.org, gregkh@linuxfoundation.org,
-	david.m.ertman@intel.com, ira.weiny@intel.com, leon@kernel.org,
-	fujita.tomonori@gmail.com, tamird@gmail.com,
-	igor.korotin.linux@gmail.com, walmeida@microsoft.com,
-	anisse@astier.eu, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, nouveau@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH] rust: module: remove deprecated author key
-Message-ID: <20250610005717.kd32qk7jvrioyds3@vireshk-i7>
-References: <20250609122200.179307-1-trintaeoitogc@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MBpAEPOU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6371C4CEEB;
+	Tue, 10 Jun 2025 00:57:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749517063;
+	bh=+4CQSPMqTNQcE956N50cCEl2XjxjoVAzYnvINs2GZME=;
+	h=From:To:Cc:Subject:Date:From;
+	b=MBpAEPOUit4Bw5ymbT8exTZdBaANv9ON6RgT/skiHcf62mCPOyRjPead/L7SdaDKY
+	 w648U9t0nPqfUpSrIbpseUflapbc/0ZcrwmldS77TvxTeaNLgaoo683SETWMDJy0ba
+	 yTjKO7swbfyA7IrrFGGb4DMGo8BJ76nDBvEjqCFPSovpLj6k9Qly22iGeSTdCgIZys
+	 RaSsKZIzzN0T8iV1d/82QC77u3adR8O8aG753E+62JV+Z94F88tmUjEYvbEfgNaexX
+	 HctKexYunHCMdiR9z0d2k1gxnkZ/KwRcsxVHI0v8cO7VwEjf8iH1xySPYCCVh5YYtv
+	 4M367IRcp83RQ==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Ravi Bangoria <ravi.bangoria@amd.com>
+Subject: [PATCH for-v6.16] perf mem: Describe the new output fields in the doc
+Date: Mon,  9 Jun 2025 17:57:42 -0700
+Message-ID: <20250610005742.2173050-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.50.0.rc0.604.gd4ff7b7c86-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250609122200.179307-1-trintaeoitogc@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On 09-06-25, 09:22, Guilherme Giacomo Simoes wrote:
-> Commit 38559da6afb2 ("rust: module: introduce `authors` key") introduced
-> a new `authors` key to support multiple module authors, while keeping
-> the old `author` key for backward compatibility.
-> 
-> Now that all in-tree modules have migrated to `authors`, remove:
-> 1. The deprecated `author` key support from the module macro
-> 2. Legacy `author` entries from remaining modules
-> 
-> Signed-off-by: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
-> ---
->  drivers/cpufreq/rcpufreq_dt.rs        | 2 +-
+Update the documentation of the new fields with examples and caveats.
+Also update the related documentation for AMD IBS.
+
+Cc: Ravi Bangoria <ravi.bangoria@amd.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/Documentation/perf-amd-ibs.txt | 59 ++++++++++++++++-------
+ tools/perf/Documentation/perf-mem.txt     | 50 +++++++++++++++++++
+ 2 files changed, 92 insertions(+), 17 deletions(-)
+
+diff --git a/tools/perf/Documentation/perf-amd-ibs.txt b/tools/perf/Documentation/perf-amd-ibs.txt
+index 55f80beae0375a72..54854993576070c3 100644
+--- a/tools/perf/Documentation/perf-amd-ibs.txt
++++ b/tools/perf/Documentation/perf-amd-ibs.txt
+@@ -171,23 +171,48 @@ Below is a simple example of the perf mem tool.
+ 	# perf mem report
  
-> diff --git a/drivers/cpufreq/rcpufreq_dt.rs b/drivers/cpufreq/rcpufreq_dt.rs
-> index 94ed81644fe1..bdf4b844de42 100644
-> --- a/drivers/cpufreq/rcpufreq_dt.rs
-> +++ b/drivers/cpufreq/rcpufreq_dt.rs
-> @@ -220,7 +220,7 @@ fn probe(
->  module_platform_driver! {
->      type: CPUFreqDTDriver,
->      name: "cpufreq-dt",
-> -    author: "Viresh Kumar <viresh.kumar@linaro.org>",
-> +    authors: ["Viresh Kumar <viresh.kumar@linaro.org>"],
->      description: "Generic CPUFreq DT driver",
->      license: "GPL v2",
->  }
-
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-
+ A normal perf mem report output will provide detailed memory access profile.
+-However, it can also be aggregated based on output fields. For example:
+-
+-	# perf mem report -F mem,sample,snoop
+-	Samples: 3M of event 'ibs_op//', Event count (approx.): 23524876
+-	Memory access                                 Samples  Snoop
+-	N/A                                           1903343  N/A
+-	L1 hit                                        1056754  N/A
+-	L2 hit                                          75231  N/A
+-	L3 hit                                           9496  HitM
+-	L3 hit                                           2270  N/A
+-	RAM hit                                          8710  N/A
+-	Remote node, same socket RAM hit                 3241  N/A
+-	Remote core, same node Any cache hit             1572  HitM
+-	Remote core, same node Any cache hit              514  N/A
+-	Remote node, same socket Any cache hit           1216  HitM
+-	Remote node, same socket Any cache hit            350  N/A
+-	Uncached hit                                       18  N/A
++New output fields will show related access info together.  For example:
++
++	# perf mem report -F overhead,cache,snoop,comm
++	...
++	# Samples: 92K of event 'ibs_op//'
++	# Total weight : 531104
++	#
++	#           ---------- Cache -----------  --- Snoop ----
++	# Overhead       L1     L2 L1-buf  Other     HitM  Other  Command
++	# ........  ............................  ..............  ..........
++	#
++	    76.07%     5.8%  35.7%   0.0%  34.6%    23.3%  52.8%  cc1
++	     5.79%     0.2%   0.0%   0.0%   5.6%     0.1%   5.7%  make
++	     5.78%     0.1%   4.4%   0.0%   1.2%     0.5%   5.3%  gcc
++	     5.33%     0.3%   3.9%   0.0%   1.1%     0.2%   5.2%  as
++	     5.00%     0.1%   3.8%   0.0%   1.0%     0.3%   4.7%  sh
++	     1.56%     0.1%   0.1%   0.0%   1.4%     0.6%   0.9%  ld
++	     0.28%     0.1%   0.0%   0.0%   0.2%     0.1%   0.2%  pkg-config
++	     0.09%     0.0%   0.0%   0.0%   0.1%     0.0%   0.1%  git
++	     0.03%     0.0%   0.0%   0.0%   0.0%     0.0%   0.0%  rm
++	     ...
++
++Also, it can be aggregated based on various memory access info using the
++sort keys.  For example:
++
++	# perf mem report -s mem,snoop
++	...
++	# Samples: 92K of event 'ibs_op//'
++	# Total weight : 531104
++	# Sort order   : mem,snoop
++	#
++	# Overhead       Samples  Memory access                            Snoop
++	# ........  ............  .......................................  ............
++	#
++	    47.99%          1509  L2 hit                                   N/A
++	    25.08%           338  core, same node Any cache hit            HitM
++	    10.24%         54374  N/A                                      N/A
++	     6.77%         35938  L1 hit                                   N/A
++	     6.39%           101  core, same node Any cache hit            N/A
++	     3.50%            69  RAM hit                                  N/A
++	     0.03%           158  LFB/MAB hit                              N/A
++	     0.00%             2  Uncached hit                             N/A
+ 
+ Please refer to their man page for more detail.
+ 
+diff --git a/tools/perf/Documentation/perf-mem.txt b/tools/perf/Documentation/perf-mem.txt
+index 965e73d377724607..4d164836d0943119 100644
+--- a/tools/perf/Documentation/perf-mem.txt
++++ b/tools/perf/Documentation/perf-mem.txt
+@@ -119,6 +119,22 @@ REPORT OPTIONS
+ 	And the default sort keys are changed to local_weight, mem, sym, dso,
+ 	symbol_daddr, dso_daddr, snoop, tlb, locked, blocked, local_ins_lat.
+ 
++-F::
++--fields=::
++	Specify output field - multiple keys can be specified in CSV format.
++	Please see linkperf:perf-report[1] for details.
++
++	In addition to the default fields, 'perf mem report' will provide the
++	following fields to break down sample periods.
++
++	- op: operation in the sample instruction (load, store, prefetch, ...)
++	- cache: location in CPU cache (L1, L2, ...) where the sample hit
++	- mem: location in memory or other places the sample hit
++	- dtlb: location in Data TLB (L1, L2) where the sample hit
++	- snoop: snoop result for the sampled data access
++
++	Please take a look at the OUTPUT FIELD SELECTION section for caveats.
++
+ -T::
+ --type-profile::
+ 	Show data-type profile result instead of code symbols.  This requires
+@@ -156,6 +172,40 @@ there are two samples in perf.data file, both with the same sample period,
+   90%   [k] memcpy
+   10%   [.] strcmp
+ 
++OUTPUT FIELD SELECTION
++----------------------
++"perf mem report" adds a number of new output fields specific to data source
++information in the sample.  Some of them have the same name with the existing
++sort keys ("mem" and "snoop").  So unlike other fields and sort keys, they'll
++behave differently when it's used by -F/--fields or -s/--sort.
++
++Using those two as output fields will aggregate samples altogether and show
++breakdown.
++
++  $ perf mem report -F mem,snoop
++  ...
++  # ------ Memory -------  --- Snoop ----
++  #     RAM Uncach  Other     HitM  Other
++  # .....................  ..............
++  #
++       3.5%   0.0%  96.5%    25.1%  74.9%
++
++But using the same name for sort keys will aggregate samples for each type
++separately.
++
++  $ perf mem report -s mem,snoop
++  # Overhead       Samples  Memory access                            Snoop
++  # ........  ............  .......................................  ............
++  #
++      47.99%          1509  L2 hit                                   N/A
++      25.08%           338  core, same node Any cache hit            HitM
++      10.24%         54374  N/A                                      N/A
++       6.77%         35938  L1 hit                                   N/A
++       6.39%           101  core, same node Any cache hit            N/A
++       3.50%            69  RAM hit                                  N/A
++       0.03%           158  LFB/MAB hit                              N/A
++       0.00%             2  Uncached hit                             N/A
++
+ SEE ALSO
+ --------
+ linkperf:perf-record[1], linkperf:perf-report[1], linkperf:perf-arm-spe[1]
 -- 
-viresh
+2.50.0.rc0.604.gd4ff7b7c86-goog
+
