@@ -1,147 +1,183 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0971DD9D3;
-	Tue, 10 Jun 2025 08:41:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63E8F28000A
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:41:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749544900; cv=none; b=oaZEnBClHOUk84e3j85X0y8rCEXN5X5CsPmPAEohblmdgxh8UeN+9FI7DzwHNtXiWvxMaGg0X2xvCMdMF044T07qGeuz4bdtSyT/uYH2H4h8g++2mG0tsi9V9N1oOJ+ENnfRlN7WxhdfdyWDdQEz8BOxK2sHlLmcY3XihgCJ0QU=
+	t=1749544905; cv=none; b=lD7jrfz6FOSmiUnpDct0tTF5G4IbZC+3VxAPHKY7c1VZzOnSGN26w2nGNz3XJAN/elYl5DpKYrt5R5a2V1x6pL+xJOpuPNmNP/zvmsXsPYMCTXNsY+cWl5nF03MrpnvvpfjLcfVHCcBHGbcFlx981IWLtljG702x5DuhZdlSN4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749544900; c=relaxed/simple;
-	bh=ln5MjJzHQG7ZWw3NC74Hj688AJ7slzwp1oytTIRVk40=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=PJEea7K47tvWJ0Uy7HIzUg0w79r/GBIFEBluCvBOE+F/ZImPz9b/Oj7ipJ8zEocnf9HipVdHmJBDwZKu5pm/tUQHZ7mztCHm7Ky4HHSegvXAvqerK+kt4jTX7jJMpPvKF4/fyxF5szzHP2iCz9clsEfC+I4Dp4QZMzvyVxFonZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ltiS+IDc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749544905; c=relaxed/simple;
+	bh=Q5rzGJxgYYGUJYSn3BucfvWcD9ZpOZ0TQF0QhdLktaY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=jjIuOK7y5eqFysS7BfBwHKYxu3EGtHw93h52mlV1wrnHXw2DEprNlJdeNgQYAgXG12nQqiQmLoytwzXn8j8gvhuqePD6csVtSZ5kBfroVpgRXulbVxLVmazQ0WkWOOG3gQhoDCYgeOGWTIOc5TOAt5j7Y+/WyuAl7cRLVwYSVws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=cQ776wuP; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ltiS+IDc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6C79C4CEEF;
-	Tue, 10 Jun 2025 08:41:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749544899;
-	bh=ln5MjJzHQG7ZWw3NC74Hj688AJ7slzwp1oytTIRVk40=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ltiS+IDcUQAI0c5QSox1FawCBRerhP6by1wyMHss+mYDQUlBL9bl89WbWacxl9XpU
-	 F/ELM/mkYHI6mwY90t4hgyu1a31LOFdq2unS/Undgewq2N/R1gXzP9DyVpbCllrMuD
-	 mwU/wzjRXpiGGKBSJM0zgb2T4gOSAG++NDAoWAdYTyQ66p0OL1R0e2PSND2qaRJpK3
-	 V7fMOaBQtKFgytxN+vIXhno0Ng11a2t9Nc3AQIPepVOaS+4UJt2nuTWR2OIt1kx+jl
-	 4KToxlpP8Xmy7wyq9yNiCZg6e3r0SOgNvID7a1DYXkiZEDvXJF6wDngQVB51pHuEtc
-	 ikIIGt35xyOPw==
-Date: Tue, 10 Jun 2025 17:41:36 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, open list
- <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, Stephen
- Rothwell <sfr@canb.auug.org.au>, Arnd Bergmann <arnd@arndb.de>, Dan
- Carpenter <dan.carpenter@linaro.org>, Anders Roxell
- <anders.roxell@linaro.org>, Peter Zijlstra <peterz@infradead.org>, Ingo
- Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org
-Subject: Re: next-20250605: Test regression: qemu-x86_64-compat mode ltp
- tracing Oops int3 kernel panic
-Message-Id: <20250610174136.b88bd16959a4d7eff27cc3fa@kernel.org>
-In-Reply-To: <20250609220934.2c3ed98ba8c624fc7cb45172@kernel.org>
-References: <CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com>
-	<20250609220934.2c3ed98ba8c624fc7cb45172@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="cQ776wuP"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a528243636so3085052f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 01:41:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749544900; x=1750149700; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UGW8iJAI4d8ECYwe0VR4sPZslEWIE655LfOuaiUIB4Y=;
+        b=cQ776wuPq1OG7FH6KQx9N/d1sJfVBGcvHwF6DPK/Fapu9NZZD+kUZ4XbSEiSi6xxqM
+         UNMx+HXgtpK7+bI1jbevKEDGfWPY7kBLnAi4SDBCokvl5SAS8TLbsepGtnDG/u9OjeoO
+         QyI+o6TroArNaYdjL/EDpqLAKmfOhql97be6TNgO8Z+2XyN3xcfU4SN4PgdFVjZEEwio
+         PoblTu0BG905lb6r4m3qMiXj+Nn1AzcUw91LssJpjg6jpRBL5OTnmZQt9HqQhoPAcHTg
+         EfCMo5XLJO9bv59NQAkUoDLsV9X3SiumPvzAUza9ZuFrSVYdkv5W4KzpSBuO6DzcOXbn
+         Zn1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749544900; x=1750149700;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UGW8iJAI4d8ECYwe0VR4sPZslEWIE655LfOuaiUIB4Y=;
+        b=MOKDfEFPp41yJWvnc2syIqgB7Qlzp31wF9mFeM6MNkJeAx30K+cj9NC7ljIQfhms7C
+         gWqfCkKTFYCkVq58RH5L5DTL6JFKfdxGBrbujQ2JdSVPAvBt4L85yxy+7xPApQQ/Ss9y
+         FRDVcUaqMEvdC/aHrgYjSG5nmaReitD69tm6eGEC1uDfrh0FkMNmturukQ70dup81q6B
+         BJfsyIFal/Ev3++3C5enW927vJ/StUQRX/dc5scwI388QFKCovslIrpxdSu3Y2yIXh1S
+         f5xnZ+trOoWhRfv0QHwR2TDsiIkbCfXhO0E6YmxzYHEp1EJ0yQneZ60MhhLSyuC/wZPu
+         F7sg==
+X-Forwarded-Encrypted: i=1; AJvYcCXg1Aq4gxHqfov3haNInn51bcLuRlTMxzan8hcLQrcmiP1KUijKVuFNQENa++fmYiAh2SEwFsvCF2+GA5k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywk6mq0EgemK2LkqH42cNMcIdNLSSoQD9VceNnMQMDZAJLBHFEK
+	msNgdtNH3Ow38mFYK8DR/CiDFbAX2AUDKlSgMT8hnRoq4R3ShAR7truNrAUlomXiylSXtaxuv/+
+	j+PkO
+X-Gm-Gg: ASbGncu7B0618kWHV/1KVEBHEwDXEzo0CpSETp+2KjciFWy8gdJnOWssDbJGVx533fB
+	el5WGJcFzwD412lcqpGw4MwT6DkKMzyv4MFRp9yMPovCWluLsWC09+clLaO7WlQQQjfkOnzvTj0
+	VdfI9diugqD6BNyJnipxG6ui1AoV/SMMwHCX6RxnQTJaMyWBeVu0+a7yaaphHjB7aKq05QrtX3Y
+	kYVB73h4Q6QWs1DYnsTlLZJmCkdaTQ9H93h7QaWvOVatGnLVa+gpDJsL0ckv1a4tzTszpLJmlef
+	70yUYEjyb7tZty5fBABwz/KS1qLLfHXeXaQcnxrbttr0rlBI1VyctDZQEuV374YQoIP594RfpHn
+	Tx3N+b+9MC5w=
+X-Google-Smtp-Source: AGHT+IF5Hy+W7eJEsz9nfiEjDp4g9V2OouL1vq4RYWNSfJAncW0esLQvk1Ns6l9ob0WZXNoLO5a6pw==
+X-Received: by 2002:a05:6000:240e:b0:3a5:2dae:970c with SMTP id ffacd0b85a97d-3a5319b466cmr12384021f8f.37.1749544899900;
+        Tue, 10 Jun 2025 01:41:39 -0700 (PDT)
+Received: from toaster.baylibre.com ([2a01:e0a:3c5:5fb1:d157:fe04:6aba:2e4b])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4526e055d2asm132685545e9.2.2025.06.10.01.41.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 01:41:39 -0700 (PDT)
+From: Jerome Brunet <jbrunet@baylibre.com>
+Date: Tue, 10 Jun 2025 10:41:07 +0200
+Subject: [PATCH] platform: arm64: lenovo-yoga-c630: use the auxiliary
+ device creation helper
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250610-yoga-aux-v1-1-d6115aa1683c@baylibre.com>
+X-B4-Tracking: v=1; b=H4sIAKLvR2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDM0MD3cr89ETdxNIKXWMDc0NTA2OzRIs0EyWg8oKi1LTMCrBR0bG1tQC
+ 9PpsgWgAAAA==
+X-Change-ID: 20250610-yoga-aux-30715036a8f4
+To: Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jerome Brunet <jbrunet@baylibre.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2393; i=jbrunet@baylibre.com;
+ h=from:subject:message-id; bh=Q5rzGJxgYYGUJYSn3BucfvWcD9ZpOZ0TQF0QhdLktaY=;
+ b=owEBbQKS/ZANAwAKAeb8Dxw38tqFAcsmYgBoR+/C6z2Vh5l44BmNOBoMv+oUh35AAjPUM8A4w
+ 39sxFR+y6KJAjMEAAEKAB0WIQT04VmuGPP1bV8btxvm/A8cN/LahQUCaEfvwgAKCRDm/A8cN/La
+ hVTgEACF8Ne+oA8t2M8ZxaBgZ4VFlxy2TmHj1B8emzUJTRhbLVe5lvPX93ccYQL7PRYVW/UOXaZ
+ kfV8t4mXrQc8x1QvfK8k5Xhf/PI8B7GO3Ugtq2PtSlSdRN/V3QpGn1AVVh6loKuSrlxBK29MWHF
+ JFX0gaADWcNeD55dgVKi4d7WHsotg98repPBYG/qfBOLzfZ+xsXIzPEKE7t59rhsyysfsaahkED
+ ePMF7lewyxp0qAPWWgtPT/Xw/hSOf6OaQjGrt3NKLAN8p1D3sw3FcxSqL5VGvZ/wNP2Ms/PRIgz
+ aS2r+QddQNLsNeiKvC3RcGiCShs5osHsNiSsqulwU1n/hH1NhMp3J/5SLq4oYY1GWaJWMGQbHwI
+ pO9DHxE5t0MhJNCA8PaJd3+aPoCpthMy41tWCzXMVqyeJMEZxbuB3hmcwSzgCddzuiy393VkwjO
+ AevoJbhUMmfAhXfJoig5/+zLY1kDrBawWff6AgbPJ4fmAJsBYSRajFugb9NClg8KjZIOBfL5wYX
+ huXTk3cfXNeBS2LrmCh/cf90mehUeJ9qw/yveqy4y89jzV/jTD4uYCIA91K36XHBq+j3ykkTFvJ
+ 0o6/fXTKQec/5GbiuRFd3Lfvy3evJTnySIYf8nGsxVHYAwcJfotY99VjWuxdpv8b/SwKfiOXbjL
+ N2TRLG3kONhZYbw==
+X-Developer-Key: i=jbrunet@baylibre.com; a=openpgp;
+ fpr=F29F26CF27BAE1A9719AE6BDC3C92AAF3E60AED9
 
-On Mon, 9 Jun 2025 22:09:34 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+The auxiliary device creation of this driver is simple enough to
+use the available auxiliary device creation helper.
 
-[...]
-> Here is the compiled code of _raw_spin_lock.
-> 
-> ffffffff825daa00 <_raw_spin_lock>:
-> ffffffff825daa00:       f3 0f 1e fa             endbr64
-> ffffffff825daa04:       e8 47 a6 d5 fe          call   ffffffff81335050 <__fentry__>
-> 
-> Since int3 exception happens after decoded int3 (1 byte), the RIP
-> `_raw_spin_lock+0x05` is not an instruction boundary.
-> 
-> > <4>[   58.998563] Code: 5d e9 ff 12 00 00 66 66 2e 0f 1f 84 00 00 00
-> > 00 00 0f 1f 40 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3
-> > 0f 1e fa 0f <1f> 44 00 00 55 48 89 e5 53 48 89 fb bf 01 00 00 00 e8 15
-> > 12 e4 fe
-> 
-> And the call is already modified back to a 5-bytes nop when we
-> dump the code. Thus it may hit the intermediate int3 for transforming
-> code.
-> 
-> e8 47 a6 d5 fe
->  (first step)
-> cc 47 a6 d5 fe
->  (second step)
-> cc 1f 44 00 00 <- hit?
->  (third step)
-> 0f 1f 44 00 00 <- handle int3
-> 
-> It is very unlikely scenario (and I'm not sure qemu can correctly
-> emulate it.) But if a CPU hits the int3 (cc) on _raw_spin_lock()+0x4
-> before anoter CPU' runs third step in smp_text_poke_batch_finish(),
-> and before the CPU runs smp_text_poke_int3_handler(), the CPU' runs
-> the thrid step and sets text_poke_array_refs 0, 
-> the smp_text_poke_int3_handler() returns 0 and causes the same
-> problem. 
-> 
-> <CPU0>					<CPU1>
-> 					Start smp_text_poke_batch_finish().
-> 					Finish second step.
-> Hit int3 (*)
-> 					Finish third step.
-> 					Run smp_text_poke_sync_each_cpu().(**)
-> 					Clear text_poke_array_refs[cpu0]
-> Start smp_text_poke_int3_handler()
-> Failed to get text_poke_array_refs[cpu0]
-> Oops: int3
-> 
-> 
-> But as I said it is very unlikely, because as far as I know;
-> 
-> (*) smp_text_poke_int3_handler() is called directly from exc_int3()
->    which is a kind of NMI, so other interrupt should not run.
-> (**) In the third step, smp_text_poke_batch_finish() sends IPI for
->    sync core after removing int3. Thus any int3 exception handling
->    should be finished.
+Use it and remove some boilerplate code.
 
-Maybe one possible scenario is to hit the int3 after the third step
-somehow (on I-cache?).
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+This is essentially a resend of this change [1] which was sent a few months
+ago. The necessary auxiliary bus support has now been merged with
+v6.16-rc1, so this change should be safe to apply.
 
-------
-<CPU0>					<CPU1>
-					Start smp_text_poke_batch_finish().
-					Start the third step. (remove INT3)
-					on_each_cpu(do_sync_core)
-do_sync_core(do SERIALIZE)
-					Finish the third step.
-Hit INT3 (from I-cache?)
-					Clear text_poke_array_refs[cpu0]
-Start smp_text_poke_int3_handler()
-Failed to get text_poke_array_refs[cpu0]
-Oops: int3
-------
+[1]: https://lore.kernel.org/r/20250218-aux-device-create-helper-v4-4-c3d7dfdea2e6@baylibre.com
+---
+ drivers/platform/arm64/lenovo-yoga-c630.c | 40 +++----------------------------
+ 1 file changed, 3 insertions(+), 37 deletions(-)
 
+diff --git a/drivers/platform/arm64/lenovo-yoga-c630.c b/drivers/platform/arm64/lenovo-yoga-c630.c
+index 1f05c9a6a89d5ee146144062f5d2e36795c56639..75060c842b249c1b4cab21fef943266ae0b31d32 100644
+--- a/drivers/platform/arm64/lenovo-yoga-c630.c
++++ b/drivers/platform/arm64/lenovo-yoga-c630.c
+@@ -191,50 +191,16 @@ void yoga_c630_ec_unregister_notify(struct yoga_c630_ec *ec, struct notifier_blo
+ }
+ EXPORT_SYMBOL_GPL(yoga_c630_ec_unregister_notify);
+ 
+-static void yoga_c630_aux_release(struct device *dev)
+-{
+-	struct auxiliary_device *adev = to_auxiliary_dev(dev);
+-
+-	kfree(adev);
+-}
+-
+-static void yoga_c630_aux_remove(void *data)
+-{
+-	struct auxiliary_device *adev = data;
+-
+-	auxiliary_device_delete(adev);
+-	auxiliary_device_uninit(adev);
+-}
+-
+ static int yoga_c630_aux_init(struct device *parent, const char *name,
+ 			      struct yoga_c630_ec *ec)
+ {
+ 	struct auxiliary_device *adev;
+-	int ret;
+ 
+-	adev = kzalloc(sizeof(*adev), GFP_KERNEL);
++	adev = devm_auxiliary_device_create(parent, name, ec);
+ 	if (!adev)
+-		return -ENOMEM;
+-
+-	adev->name = name;
+-	adev->id = 0;
+-	adev->dev.parent = parent;
+-	adev->dev.release = yoga_c630_aux_release;
+-	adev->dev.platform_data = ec;
+-
+-	ret = auxiliary_device_init(adev);
+-	if (ret) {
+-		kfree(adev);
+-		return ret;
+-	}
+-
+-	ret = auxiliary_device_add(adev);
+-	if (ret) {
+-		auxiliary_device_uninit(adev);
+-		return ret;
+-	}
++		return -ENODEV;
+ 
+-	return devm_add_action_or_reset(parent, yoga_c630_aux_remove, adev);
++	return 0;
+ }
+ 
+ static int yoga_c630_ec_probe(struct i2c_client *client)
 
-SERIALIZE instruction may flash pipeline, thus the processor needs
-to reload the instruction. But it is not ensured to reload it from
-memory because SERIALIZE does not invalidate the cache.
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250610-yoga-aux-30715036a8f4
 
-If that hypotheses is correct, we need to invalidate the cache
-(flush TLB) in the third step, before the do_sync_core().
-
-Or, if it is unsure, we can just evacuate the kernel from die("int3")
-by retrying the new instruction, when the INT3 is disappeared.
-
-
-Thank you,
-
+Best regards,
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Jerome
+
