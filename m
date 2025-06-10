@@ -1,46 +1,58 @@
-Received: from mail.thorsis.com (mail.thorsis.com [217.92.40.78])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62FDC7464;
-	Tue, 10 Jun 2025 06:16:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.92.40.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79FB32163BD;
+	Tue, 10 Jun 2025 06:16:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749536191; cv=none; b=qJbKH1QoX9Oo6cZRKMjyWqR30Ct29XXDBUBMTq1opf31dYHT4dw6RmabuvYHVQTHYkX1mGmEhq8T5GOnMNKQZK1YnzpPFW+vqwuNCtVOf/6Z4aAaMoC219X/fxgOj1h016XCjFDrLZPyyu+YLioXJn3ol/2WljA0/aiK8AuPY6o=
+	t=1749536216; cv=none; b=KXa5JVgbJvzVMiVhYGovYStgC1nLFLOvC+eRxPKRlqk5ZXRItADj4PdiDFruvtkHV4pAmgJaJT2JF596x0uTBjhX5kDTbIrLcwNLf/d3SgwfdBiM6hnZ8Kw06mRF12XzYkvbO2yT/fbu7Lkc2zmPW87GOrkhUfBmwQ6vOg5+sR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749536191; c=relaxed/simple;
-	bh=x0Xt63bNLSJDQD8ocdTTG0aGRtfg3vP02MPH/I2anUs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=H1D2Fr6zhC2RF2a8994nmOnIKJuifDvBt87a4nImQb5tfhLYavRzSAHqhWBffP9rG3g79VsjUD8gA1O3FlkMO9TlIwxAg4DwxxH4iSBmOsFap5ro1skvqlMtKecQE7Jm/E8dsaV8/djkjb/LfFHC21UeSxE2GHBpLWdPFE5js3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com; spf=pass smtp.mailfrom=thorsis.com; dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b=DxP4gN/o; arc=none smtp.client-ip=217.92.40.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thorsis.com
+	s=arc-20240116; t=1749536216; c=relaxed/simple;
+	bh=CZ+kCbfqNafjJHBBswE7R5WpV86k36fuwntQQPYxvLM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lPNDob9t0mBiZMtwHeMaqRV0AEsx4TS6MISqfI6ytTKgZqHOIOnBUmK9kPSSXBftZRAdyrpL/KGMNEsTt27cflO/TnZQJ33pp+PIOG63yMmiXcfyiLIcwtNnBVKerGQabdM7HhpFlbppbRiKt9H5UboTbKb9LtNv2j/3xCL2D7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=toxh8ybx; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b="DxP4gN/o"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id AB8E81485BB5;
-	Tue, 10 Jun 2025 08:08:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thorsis.com; s=dkim;
-	t=1749535683; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding; bh=I4ti+/foQg3QbjYgEJL1AVz6uH68ooxEzV0rGfw+TYU=;
-	b=DxP4gN/oqr6gN9kmsdPBSyeLw6tkZIOAmwNldabPG+7Hhp9EtGCtotcehqu0dNUnjHlOAT
-	LUIMnguyEn0vT5FWSRzuscfaELFyJOCVX1wO0fZcHVSYt+HJDqUwaayGGPj3Hakr3cg0Gn
-	bnaPOVZtSmsP/J+kZRd8jUoHnr+ratbdESmBrU1vRgAaK+m8fShfZXIYEUyJ+Wv6C3AC1m
-	Nv1QLKDjAZcP5FBDWSbj7o0TrI97MxCRCFA8K8AuiGpw9v8KPJxU4DSPYyKKEG2J9K2UnP
-	9U+cEqXuI8FsOxG9eSbLlMNp0TuSRFkP9Vgel0sLaD5fzh6IZdzJry7VcrjbEw==
-From: Alexander Dahl <ada@thorsis.com>
-To: devicetree@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	imx@lists.linux.dev (open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] arm64: dts: imx8dxl-ss-conn: Disable USB3 nodes
-Date: Tue, 10 Jun 2025 08:07:56 +0200
-Message-Id: <20250610060756.8212-1-ada@thorsis.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="toxh8ybx"
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55A6GeAn2202387;
+	Tue, 10 Jun 2025 01:16:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1749536200;
+	bh=2yH8BB10rwYOkRXdp18lG+iXwMuV7jIvlVlKDcjTkGw=;
+	h=From:To:CC:Subject:Date;
+	b=toxh8ybxtfM4nMbZ9x+mzssj3M9jn++2m+5xQjlPRlEb5X1Um4nxRC7m04iBvL8JN
+	 vz0ZWKUwpHO0m9P0dXAp9tV53HlTgzSM3Yx/fstqhkQvKtICWhlXEqaLkTISklft8p
+	 TVmkrP9Q1eJ0o4S6eqNHjUkpZtImZA+WOHRC5ItE=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55A6Ge5n164656
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Tue, 10 Jun 2025 01:16:40 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 10
+ Jun 2025 01:16:39 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 10 Jun 2025 01:16:39 -0500
+Received: from localhost (akira.dhcp.ti.com [10.24.69.4])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55A6GcYT2608655;
+	Tue, 10 Jun 2025 01:16:39 -0500
+From: Himanshu Mittal <h-mittal1@ti.com>
+To: <h-mittal1@ti.com>, <pabeni@redhat.com>, <kuba@kernel.org>,
+        <edumazet@google.com>, <davem@davemloft.net>, <andrew+netdev@lunn.ch>
+CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>,
+        Roger Quadros <rogerq@kernel.org>, <danishanwar@ti.com>,
+        <m-malladi@ti.com>, <pratheesh@ti.com>, <prajith@ti.com>
+Subject: [PATCH net-next] net: ti: icssg-prueth: Add prp offload support to ICSSG driver
+Date: Tue, 10 Jun 2025 11:46:38 +0530
+Message-ID: <20250610061638.62822-1-h-mittal1@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,43 +60,103 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-The i.MX 8DualXLite/8SoloXLite has a different connectivity memory map
-than the generic i.MX8 has.  One conflicting resource is usb, where the
-imx8dxl has a second usb2 phy @5b110000, while the generic imx8 dtsi has
-one usb2 phy and one usb3 phy, and the usb3otg @5b110000.  When
-including both imx8dxl-ss-conn.dtsi and imx8-ss-conn.dtsi as done in
-imx8dxl.dtsi this leads to a duplicate unit-address warning.
+Add support for ICSSG PRP mode which supports offloading of:
+ - Packet duplication and PRP trailer insertion
+ - Packet duplicate discard and PRP trailer removal
 
-The usb3otg node was introduced after the initial imx8dxl support with
-commit a8bd7f155126 ("arm64: dts: imx8qxp: add cadence usb3 support")
-and since then leads to warnings like this (when building with ptxdist):
-
-    CPP generic/platform-v8a/build-target/linux-6.12/arch/arm64/boot/dts/freescale/imx8dxl-evk.dts
-    DTC generic/platform-v8a/packages/linux-6.12/boot/imx8dxl-evk.dtb
-    /home/adahl/Work/bsp/thorsis/generic/platform-v8a/build-target/linux-6.12/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi:148.24-182.4: Warning (unique_unit_address): /bus@5b000000/usb@5b110000: duplicate unit-address (also used in node /bus@5b000000/usbphy@5b110000)
-
-Signed-off-by: Alexander Dahl <ada@thorsis.com>
+Signed-off-by: Himanshu Mittal <h-mittal1@ti.com>
 ---
- arch/arm64/boot/dts/freescale/imx8dxl-ss-conn.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/ti/icssg/icssg_prueth.c | 23 +++++++++++++++++++-
+ drivers/net/ethernet/ti/icssg/icssg_prueth.h |  3 +++
+ 2 files changed, 25 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8dxl-ss-conn.dtsi b/arch/arm64/boot/dts/freescale/imx8dxl-ss-conn.dtsi
-index 9b114bed084b..a66ba6d0a8c0 100644
---- a/arch/arm64/boot/dts/freescale/imx8dxl-ss-conn.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8dxl-ss-conn.dtsi
-@@ -5,6 +5,8 @@
+diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth.c b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
+index 86fc1278127c..65883c7851c5 100644
+--- a/drivers/net/ethernet/ti/icssg/icssg_prueth.c
++++ b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
+@@ -138,6 +138,19 @@ static struct icssg_firmwares icssg_hsr_firmwares[] = {
+ 	}
+ };
  
- /delete-node/ &enet1_lpcg;
- /delete-node/ &fec2;
-+/delete-node/ &usbotg3;
-+/delete-node/ &usb3_phy;
++static struct icssg_firmwares icssg_prp_firmwares[] = {
++	{
++		.pru = "ti-pruss/am65x-sr2-pru0-pruprp-fw.elf",
++		.rtu = "ti-pruss/am65x-sr2-rtu0-pruprp-fw.elf",
++		.txpru = "ti-pruss/am65x-sr2-txpru0-pruprp-fw.elf",
++	},
++	{
++		.pru = "ti-pruss/am65x-sr2-pru1-pruprp-fw.elf",
++		.rtu = "ti-pruss/am65x-sr2-rtu1-pruprp-fw.elf",
++		.txpru = "ti-pruss/am65x-sr2-txpru1-pruprp-fw.elf",
++	}
++};
++
+ static struct icssg_firmwares icssg_switch_firmwares[] = {
+ 	{
+ 		.pru = "ti-pruss/am65x-sr2-pru0-prusw-fw.elf",
+@@ -187,8 +200,10 @@ static int prueth_emac_start(struct prueth *prueth)
  
- / {
- 	conn_enet0_root_clk: clock-conn-enet0-root {
-
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+ 	if (prueth->is_switch_mode)
+ 		firmwares = icssg_switch_firmwares;
+-	else if (prueth->is_hsr_offload_mode)
++	else if (prueth->is_hsr_offload_mode && HSR_V1 == prueth->hsr_prp_version)
+ 		firmwares = icssg_hsr_firmwares;
++	else if (prueth->is_hsr_offload_mode && PRP_V1 == prueth->hsr_prp_version)
++		firmwares = icssg_prp_firmwares;
+ 	else
+ 		firmwares = icssg_emac_firmwares;
+ 
+@@ -1566,6 +1581,7 @@ static int prueth_netdevice_event(struct notifier_block *unused,
+ 	struct netdev_notifier_changeupper_info *info;
+ 	struct prueth_emac *emac = netdev_priv(ndev);
+ 	struct prueth *prueth = emac->prueth;
++	enum hsr_version hsr_ndev_version;
+ 	int ret = NOTIFY_DONE;
+ 
+ 	if (ndev->netdev_ops != &emac_netdev_ops)
+@@ -1577,6 +1593,11 @@ static int prueth_netdevice_event(struct notifier_block *unused,
+ 
+ 		if ((ndev->features & NETIF_PRUETH_HSR_OFFLOAD_FEATURES) &&
+ 		    is_hsr_master(info->upper_dev)) {
++			hsr_get_version(info->upper_dev, &hsr_ndev_version);
++			if (hsr_ndev_version != HSR_V1 && hsr_ndev_version != PRP_V1)
++				return -EOPNOTSUPP;
++			prueth->hsr_prp_version = hsr_ndev_version;
++
+ 			if (info->linking) {
+ 				if (!prueth->hsr_dev) {
+ 					prueth->hsr_dev = info->upper_dev;
+diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth.h b/drivers/net/ethernet/ti/icssg/icssg_prueth.h
+index 23c465f1ce7f..02d9d76cd287 100644
+--- a/drivers/net/ethernet/ti/icssg/icssg_prueth.h
++++ b/drivers/net/ethernet/ti/icssg/icssg_prueth.h
+@@ -13,6 +13,7 @@
+ #include <linux/etherdevice.h>
+ #include <linux/genalloc.h>
+ #include <linux/if_vlan.h>
++#include <linux/if_hsr.h>
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
+ #include <linux/mfd/syscon.h>
+@@ -290,6 +291,7 @@ struct icssg_firmwares {
+  * @vlan_tbl: VLAN-FID table pointer
+  * @hw_bridge_dev: pointer to HW bridge net device
+  * @hsr_dev: pointer to the HSR net device
++ * @hsr_prp_version: enum to store the protocol version of hsr master
+  * @br_members: bitmask of bridge member ports
+  * @hsr_members: bitmask of hsr member ports
+  * @prueth_netdevice_nb: netdevice notifier block
+@@ -329,6 +331,7 @@ struct prueth {
+ 
+ 	struct net_device *hw_bridge_dev;
+ 	struct net_device *hsr_dev;
++	enum hsr_version hsr_prp_version;
+ 	u8 br_members;
+ 	u8 hsr_members;
+ 	struct notifier_block prueth_netdevice_nb;
 -- 
-2.39.5
+2.34.1
 
