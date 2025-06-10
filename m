@@ -1,45 +1,41 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129EA298CB8;
-	Tue, 10 Jun 2025 12:33:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749558821; cv=pass; b=r3S9Fpw+y+zE9QNXDYhsECRLm/SK6ixO/59s2tz+1HutWWdqaZuaaQhesIniLG7c9UkV1ISsVrx7OEmrXNfKXXKvGyclRugk4g7k5kcIMtyc98LrB92x+NN8Dlhw23JwFjxA1ljSU10zXOx1PE7qX2uhXkDlG5ud0CkNJDtDuQE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749558821; c=relaxed/simple;
-	bh=FoWMjDmO2aKeoAixKfxZAoOSSDCvWyZ86m4+dMoOY44=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cRWZJ1t159jhIQUKY26ejocNTRHhlICpEA/CU6AGQ7HAD0HlQRgw6rnLu1NnhwqwLuuJ6nj1dduBoVAcJ5z1ziLaOgM2isPbdB6S6RuNYgWgdUQ/SZdB30+t8EsaBvovNS+dhfU5MxA4Etq0+Dk6Wpy9zji7de+g0y4GYuXLnfc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=gkJdcgSe; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7253299A8C;
+	Tue, 10 Jun 2025 12:33:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749558822; cv=none; b=K4+xYlYcFL2gKM5IjgnG18nz9K1QVDAUK9zfQvrKKOd6gfi2UExeUM2Td2brEvYiMaGfTn4a48hpKVMJSYz2dbjAO8sGOXjeuZZwWRlQkDTRydD4POZPDrOPgUf4p5RDBOduP2Fdsjc4wzCwKYoNYQvzr/ObPZAzHPnBrXe3C5A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749558822; c=relaxed/simple;
+	bh=z5wf/2Wt6sJmolssQJVbXfiaB3yA+Y6FQUeMotADxpw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=XEM69odvJ14+AbuEjgHVuwE3lW3S1q05f0aVneZT32nXnjs85oZrZ0MbilUHe/27D1uCWXqziUDgGgtbV4rr2HkdZ3NDuhusDD+Pp2XA23tixa+/y5x+GkzlN24U7m4e4K5qdWqe6qlN1xFWj13NKv0wYGsf2DiWuVdlBALdqtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gGxRGaVQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="gkJdcgSe"
-ARC-Seal: i=1; a=rsa-sha256; t=1749558785; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=MeOm41MaWGxGL7YqS4yDr6YL5/olgjHZDsXQuea9QkvhYD+8RtW9XaIhto0djhvM8rGSbD1Uu2PsZ1YFEKHVgULB1MPgfCp4LoouN3Y47wWetlq2jH3RsZPI6gzrOjFD2NKav+ElL3YGVhBbRz4lwlZyXKAXuRAYwptu+LgMH5Q=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1749558785; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=P1s5SW5XXy2Nmw/a2myc1LsBMYI2XBbGAAdPmoWnhN4=; 
-	b=GAGJdAdkS2hsWAm2KlXqSB83GqJfFf9+2dwnE2nz4hzAR7QGpvFKqfNSeQ0/vjj5pGd2BY90BKyde/41WSuD5Q/DDjrOE2vA9q/5xcMqBBVWGEAvEOqeENXXNvhl/EEE441+QoECt04+xLf8m4fTOPHoaiHKHMDOLper3aIQ6gk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749558785;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=P1s5SW5XXy2Nmw/a2myc1LsBMYI2XBbGAAdPmoWnhN4=;
-	b=gkJdcgSeGcq+BldCIcz9rSefLdShudVUVLHy5TUE3k1hhZ+T5/U3bF4hqtb6ffCr
-	u5EbzpzuZGuf5Hfq2wG/5dctOeU1yMFcWIj6goIsGVJJnIBM84d4nZtk3WV51BM8oY0
-	tLE3ewmBPpD9ujJsl3qN7cykAc/OqZWonGEOMk2E=
-Received: by mx.zohomail.com with SMTPS id 1749558783838173.35577891638252;
-	Tue, 10 Jun 2025 05:33:03 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Tue, 10 Jun 2025 14:32:40 +0200
-Subject: [PATCH v6 4/7] dt-bindings: thermal: rockchip: document otp
- thermal trim
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gGxRGaVQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91A32C4CEF1;
+	Tue, 10 Jun 2025 12:33:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749558821;
+	bh=z5wf/2Wt6sJmolssQJVbXfiaB3yA+Y6FQUeMotADxpw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=gGxRGaVQPetq/DA84SLHE7nJpJdrIs7p4nkoTpvcMjV7nn0S2SIgXXdTDJlYK6/We
+	 96VF+cCmppPk3BG+3ZwYfUKW08D2jBCIlkH6hXC8qUVylCARTtsdR4ZktCi+zbPJum
+	 k7DT2M9e9pmOcomirunTVF0sqMtCPCGo+XlTOL37FKKAk82wlTtvqxiqy20CN1Fcdy
+	 cxWWQa7oJ7y+UWgK/vecoXYPKFQ4DdgtTSh/FBdcKcp07k8s6epEk6ORBaa7jE9sS3
+	 VeQsPSzfRKkA4D8C2QZg2LOdD3xJZwOYTRQ3MkzhTVa64/wIQAs/x6d1mIvHjgf39g
+	 yf+3QKM9LLh5g==
+From: Niklas Cassel <cassel@kernel.org>
+To: linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, 
+ Johannes Berg <johannes@sipsolutions.net>
+Cc: Damien Le Moal <dlemoal@kernel.org>, 
+ Johannes Berg <johannes.berg@intel.com>, Arnd Bergmann <arnd@arndb.de>
+In-Reply-To: <20250606090110.15784-2-johannes@sipsolutions.net>
+References: <20250606090110.15784-2-johannes@sipsolutions.net>
+Subject: Re: [PATCH] ata: pata_cs5536: fix build on 32-bit UML
+Message-Id: <174955882032.1439612.8694655458527101424.b4-ty@kernel.org>
+Date: Tue, 10 Jun 2025 14:33:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,140 +44,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250610-rk3576-tsadc-upstream-v6-4-b6e9efbf1015@collabora.com>
-References: <20250610-rk3576-tsadc-upstream-v6-0-b6e9efbf1015@collabora.com>
-In-Reply-To: <20250610-rk3576-tsadc-upstream-v6-0-b6e9efbf1015@collabora.com>
-To: Alexey Charkov <alchark@gmail.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
- Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
- Jonas Karlman <jonas@kwiboo.se>
-Cc: Sebastian Reichel <sebastian.reichel@collabora.com>, 
- kernel@collabora.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
- linux-kernel@vger.kernel.org, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 X-Mailer: b4 0.14.2
 
-Several Rockchip SoCs, such as the RK3576, can store calibration trim
-data for thermal sensors in OTP cells. This capability should be
-documented.
+On Fri, 06 Jun 2025 11:01:11 +0200, Johannes Berg wrote:
+> On 32-bit ARCH=um, CONFIG_X86_32 is still defined, so it
+> doesn't indicate building on real X86 machines. There's
+> no MSR on UML though, so add a check for CONFIG_X86.
+> 
+> 
 
-Such a rockchip thermal sensor may reference cell handles that store
-both a chip-wide trim for all the sensors, as well as cell handles
-for each individual sensor channel pointing to that specific sensor's
-trim value.
+Applied to libata/linux.git (for-6.16-fixes), thanks!
 
-Additionally, the thermal sensor may optionally reference cells which
-store the base in terms of degrees celsius and decicelsius that the trim
-is relative to.
+[1/1] ata: pata_cs5536: fix build on 32-bit UML
+      https://git.kernel.org/libata/linux/c/fe5b391f
 
-Each SoC that implements this appears to have a slightly different
-combination of chip-wide trim, base, base fractional part and
-per-channel trim, so which ones do which is documented in the bindings.
-
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
----
- .../bindings/thermal/rockchip-thermal.yaml         | 61 ++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/thermal/rockchip-thermal.yaml b/Documentation/devicetree/bindings/thermal/rockchip-thermal.yaml
-index 49ceed68c92ce5a32ed8d4f39bd88fd052de0e80..573f447cc26ed7100638277598b0e745d436fd01 100644
---- a/Documentation/devicetree/bindings/thermal/rockchip-thermal.yaml
-+++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.yaml
-@@ -40,6 +40,17 @@ properties:
-       - const: tsadc
-       - const: apb_pclk
- 
-+  nvmem-cells:
-+    items:
-+      - description: cell handle to where the trim's base temperature is stored
-+      - description:
-+          cell handle to where the trim's tenths of Celsius base value is stored
-+
-+  nvmem-cell-names:
-+    items:
-+      - const: trim_base
-+      - const: trim_base_frac
-+
-   resets:
-     minItems: 1
-     maxItems: 3
-@@ -51,6 +62,12 @@ properties:
-       - const: tsadc
-       - const: tsadc-phy
- 
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
-+
-   "#thermal-sensor-cells":
-     const: 1
- 
-@@ -72,6 +89,27 @@ properties:
-     $ref: /schemas/types.yaml#/definitions/uint32
-     enum: [0, 1]
- 
-+patternProperties:
-+  "@[0-9a-f]+$":
-+    type: object
-+    properties:
-+      reg:
-+        maxItems: 1
-+        description: sensor ID, a.k.a. channel number
-+
-+      nvmem-cells:
-+        items:
-+          - description: handle of cell containing calibration data
-+
-+      nvmem-cell-names:
-+        items:
-+          - const: trim
-+
-+    required:
-+      - reg
-+
-+    unevaluatedProperties: false
-+
- required:
-   - compatible
-   - reg
-@@ -80,6 +118,29 @@ required:
-   - clock-names
-   - resets
- 
-+allOf:
-+  - if:
-+      not:
-+        properties:
-+          compatible:
-+            contains:
-+              const: rockchip,rk3568-tsadc
-+    then:
-+      properties:
-+        nvmem-cells: false
-+        nvmem-cell-names: false
-+  - if:
-+      not:
-+        properties:
-+          compatible:
-+            contains:
-+              enum:
-+                - rockchip,rk3568-tsadc
-+                - rockchip,rk3576-tsadc
-+    then:
-+      patternProperties:
-+        "@[0-9a-f]+$": false
-+
- unevaluatedProperties: false
- 
- examples:
-
--- 
-2.49.0
+Kind regards,
+Niklas
 
