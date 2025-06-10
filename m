@@ -1,127 +1,139 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 655952367CC
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 17:54:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C03112367CC;
+	Tue, 10 Jun 2025 17:54:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749578080; cv=none; b=Yc5x6wMw8Nfymi26nRrewLUN64fLsbtykH+LV0E0gKnepBPQdRO8W9oypXM/9C3XJGzXv2MtbMcfsmasx6x6CYO65VJUuLVzK0ttFZbXUSyK6psKIeb120BbDUZYxmzWVUsmLmHwBgFh8pKjhOobwtn0ASlBa2ATQ66wpgp8fE4=
+	t=1749578086; cv=none; b=Py2ZXm3XIuh15GJy9rfofnNcXEizLDAqRW8B2+sIMLNbEERfx9YrCzTAx4gprOxAgEJjk9ZUXlPwYZKJnzfjjyf/1sS1v8Hdk6Hr8NswvwcFaEc2Bo4UDxHqoyjosgx41ZuS4NNseJtx3zrAG/PXgJQ6rYr6ojmYDs8bq0hGli4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749578080; c=relaxed/simple;
-	bh=ianbddjc1XphHcmE63ieTxfCE+wZXczp2Z2tA7s+ncI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XGe+aD5WSWidmVIQCXENzBaaJ9nWUCBjAAlQZbijG8gHJpV+7ltgzmns20X06/tizD1ASsevRv3n6H9ZxlXcHBxkutasIzrv1Wng2vJyz1E9gAJqhk0Vsaq7zWbIuPQ/JeP3hK9reeqpWKbI5FWbTj5CMvrQzoDuK1Zq9e1J04Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uXURicik; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749578086; c=relaxed/simple;
+	bh=tQJJVVL0eqt772KtNAuNcEbkrh0mO/guKZpsGTY4qMs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mK1FeCCgts9HntuA9KnM8HHMv/P5C2vuSQ1kRtWdbIm4KHzvJWfVPZOy+6Nh+0WzE3MSMApvPKJ22TZU4fdVyQt+r7cF/KOakOOYTCroF3lj+sGfBUSIFRAbyUc3akUV9SmpusNcBujJ6jC0i5pHv3XJu9BDJBuksUITs09DwVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TJ+E0Ndi; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uXURicik"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-601a67c6e61so1210a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 10:54:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TJ+E0Ndi"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-236377f00a1so11522395ad.3;
+        Tue, 10 Jun 2025 10:54:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749578077; x=1750182877; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=YvAr7sx4/tHhlSv2OBT4UQtf2qLWNKlOCp57zbBnAu4=;
-        b=uXURicikAGRGi5ED+h0XUyNe/NN3IGokxjk/fwpqdip/usl9gykAF9RN6bEDYAGCry
-         NLGQCpy0h5NiArb1wmP8aD7lMiyIZiu+dxCQIfOZnVHeaf457ySB5Wv8uI4LMWIqOkVM
-         6XiGu3ImwXkoyNSa1KRhk8j6EKVW6g94pc9k7iE6fD082zrOqh4hoWa3IpZx0MxTrN4b
-         4uSPbO96lbDAxHhL+nePr+HIJNXT7/a3i7/IBGIHD+MV5W1Bs7xrQzWdTKuqaKVdllay
-         sEhOlyVlS1TQdynhZuOXp+VZTQRPBTzgKqlCytvfNfXgxOw8tdPUcygXHiUXMNBRr2Hx
-         E5WQ==
+        d=gmail.com; s=20230601; t=1749578084; x=1750182884; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=e5JsbzcuPMRv3BROQqL987dI+PHmhbXk76yQ+kmKPwE=;
+        b=TJ+E0Ndiz90qRjwfRNP9rlZ5VnFbR9VkgcoZ/xeLNLUE1AMqVolx5NB7Hr5fsZChF6
+         +u3fDr5c6G5Dhi2rsezpCDgM9AsjXXfEb6xGOvgBERkyI7G7u/7nbaX9yQRh0JBDM706
+         l0Z2eYVl5cf0scGNlxQzXQb8+DW/YXmdbNuBC4ypcytrX5E3efvRPPWJWXbRNp98Hpb7
+         ypa6O6ZcfNxR9JOc7IDR1PVuhxwavWwV1s1kZ8HqW4Ocq1H3s754R9X/k6ueOfsKPGvV
+         BcSa15GvVfcNrPMx8X+ywVEouAcTLOQjF+Uu8Mqbr/N0kHqmBftcwrNpCQcTbw2bpaZA
+         RzJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749578077; x=1750182877;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1749578084; x=1750182884;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=YvAr7sx4/tHhlSv2OBT4UQtf2qLWNKlOCp57zbBnAu4=;
-        b=NegicvnipU0f5YHpAIo+epov4q+R2Vmqgli29lTwusq+CB4/VA1iEG9KKeGOViCR+h
-         63k2T0QfheH4fCYyeKtLXVumVP1Ssyk6Fc3XZOSX85EKLakm/jcx8Xcpnl1qcPk0dBRR
-         0E/ga1GO+OVlWCXoPZN3kCX8Gr46oQ2aWO3oggXRjbGMiZU+jdA1ylpXkagKfOA6gjqB
-         HR2NP0nCSGABD8RxI+LC69N4f23TzSCQnPNspxJ6RQFYQPqzYDKNBoZWeB84MJ/7XGTl
-         WQq/66YsTOgmeykJ1ZJ1gvnlDn6nZ+LxTqRD1Hu++GiLGhnxV714ow1STbcflghDY+mK
-         bCqg==
-X-Forwarded-Encrypted: i=1; AJvYcCU97Jts0y5FlsZfGInv/FCb7+ub9a/eLTUdzaHrCYPcDLESeuVxPutaTzxAtBUdUMjNW7V1obgEJuhDj6o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzseabH3UDBxEA2+VfZWzKce8IuCe5pXrJQKLHsFOVfIWq2vN2s
-	/8wCwzyNQzGKDLDK3dpPKIjMxZZBN5MzxAVHSv2TdFbhrzOIFLontPii0pKiBFZdFdjJTJ/KSJk
-	v32ehk+GF1X9CgM04Q1TwVbeA3mpG/Rq9134OmvYC
-X-Gm-Gg: ASbGncvciuWAVfXof6pTPK7zbnP7pYwRpVx+BSFomDDU+gDs8rHef8TbbFs+x6xzHO8
-	dyMV31YN83Ipq5cf2aIDskJ9W1qWQJl79bzTOX8jA3OOisz8RBvSU2CnGDIIa6ike9xe+xTH6CD
-	9fXXQvhyTYjst19saYoIOQ2HvDAWYj2kzz/jhoZmIWObqn8ngiOS7UY9W1qhLlLeIf7qYcWJH/U
-	w==
-X-Google-Smtp-Source: AGHT+IGK1Te+JNjSV+u4fxDZ3o1EB1kPJBHXmCjp5m53KFUwoTCOg7xxR8lGIvrTaVAiwmQuC+BOHR7+06qqyjZG0jU=
-X-Received: by 2002:a05:6402:b9c:b0:607:efee:369a with SMTP id
- 4fb4d7f45d1cf-6084442442bmr15031a12.4.1749578076490; Tue, 10 Jun 2025
- 10:54:36 -0700 (PDT)
+        bh=e5JsbzcuPMRv3BROQqL987dI+PHmhbXk76yQ+kmKPwE=;
+        b=qd523oR/sJSfMzlFje715BTjWy+rh2On8TKpsu72FXyPQRggepKjeAEVHQn1yj+exp
+         BdjeDiY3dGRjebAR6CPNfobE3QAPhjvusnbOB8+75Ooh7G3JsciRew92TIetRMF88zsC
+         vDSa4vIwqdofJPC2cDKMUn2AJfye28Hd36RXWCKxgyRwoe1XSLmGob7+2qcQQgl9Yyo4
+         YMwI6s8pDGZ+KzsdXpEhBJcWnWxf5NdIIha9LLoAt1+2bnIzHeHQymg3p1SA5TLevIFI
+         5JLLpXec45L2MVuuHaWxRJidds3rYkMmaB/VH+6uQXD/1ZQ3t6gwrU4YQVlY8ni4BWLd
+         bLBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWcHGDg8Re66GRfJcPvJBjT0065E9L9wqM05tYPtsK2bmqUSYhzUWDcVY410wZxdwJgsu+B1Ie5Q4VewCU=@vger.kernel.org, AJvYcCXyDoRLXlfFJUgvRAY2pc022B4Axog+c0CsjKbViNZm5UAp5XzHh567EudH3ZJ/HtvlDe1IAlFz@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7DpnbklhKawOJUw9mJfKO4VljKTHUXEL/l5Z0lHPbNnr4frPI
+	Q+EpxRr0vXyniCxuTtdEoJ2L6tjhaUR6QhP+j9bDox6HDGbqySPGvwAx1jfX
+X-Gm-Gg: ASbGncsIFbMXw9bs7lYceehyEGFfEzw8rf8qlL3eBB4TLtQSxYWm4jgwY2wwxklKd/v
+	w1trehKjDu2VkQU86dFaB80jSg0rVAfDA1GLpAKRzytsbdYoaioIxm6w8toVUKJgAvUeGoh6Ahf
+	i9yCbYUGEnamSonDUW3NO7Mc0II/h9b38pDs461Mn8lXYbBIJOM5fEE3SdeNy1K7Tnf65SCC09s
+	l8iuDpVX87EoPaoCLIshRJyL2rL02AX8Dhk8Q2s5HOx3BFaIaFu1P/pRtWgxP18Utr3RWoTcFlb
+	JioAk0bmaOpceHAlvn2b2zQi870nF6w2BAQl1AAwATbvZiMLh3PgG1blA93nOLln5ogHHEFC6GC
+	EzzTtWMTEIh5Sp4nfvNPeqzs=
+X-Google-Smtp-Source: AGHT+IGVcqG1LowNwUuMehBhqun6fUhP34xVFnmk2EXdHllUdHXUpiYS9CVKQCt4hVUx8kUTyTRQRA==
+X-Received: by 2002:a17:902:f611:b0:235:f45f:ed49 with SMTP id d9443c01a7336-23641b1a711mr2483835ad.33.1749578083762;
+        Tue, 10 Jun 2025 10:54:43 -0700 (PDT)
+Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-23603077ffasm73819425ad.30.2025.06.10.10.54.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 10:54:43 -0700 (PDT)
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: bpf@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	song@kernel.org,
+	yhs@fb.com,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	akpm@linux-foundation.org,
+	lumag@kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH bpf] MAINTAINERS: add myself as bpf networking reviewer
+Date: Tue, 10 Jun 2025 10:54:37 -0700
+Message-ID: <20250610175442.2138504-1-stfomichev@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aC5XDi7SaDJeUaAC@google.com> <aC7DVewqqWIKetmk@pollux>
- <aC8uNmrLUSS8sxHU@google.com> <2025052201-return-reprogram-add9@gregkh>
- <aC9krUYJmJqu0xVR@cassiopeiae> <2025052330-reverence-slideshow-d498@gregkh>
- <aDBC__rflS8625Vb@cassiopeiae> <aDCrufEjtJeGjO6z@google.com>
- <aDG6t-HdZSuWyPGo@pollux.localdomain> <aDWkGmcUBVHl7QmM@google.com> <aDWnCsVvlnpmYxUz@cassiopeiae>
-In-Reply-To: <aDWnCsVvlnpmYxUz@cassiopeiae>
-From: Matthew Maurer <mmaurer@google.com>
-Date: Tue, 10 Jun 2025 10:54:24 -0700
-X-Gm-Features: AX0GCFsWyX3EaA5GxRfrgpq61a-WCT0s04HVyWUG5Kb_ijfZycvo0GUAd9G8RlQ
-Message-ID: <CAGSQo02XEuHGJ8YMvBp=S=3sWt=0R-wEkdkTp7aEsnaCBEB1wg@mail.gmail.com>
-Subject: Re: [PATCH v5 4/4] rust: samples: Add debugfs sample
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Alice Ryhl <aliceryhl@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Benno Lossin <lossin@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Sami Tolvanen <samitolvanen@google.com>, Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-I'm going to try to rework the patch based on the feedback here, and
-have a few things I want to check on to reduce cycling:
+I've been focusing on networking BPF bits lately, add myself as a
+reviewer.
 
-1. Every approach described in this thread will result in the creation
-APIs (create a root dir, create a subdir, create a file) being
-fallible (returns `Result<>`) because they use `Arc` in the
-implementation which fundamentally allocates. I previously got the
-feedback that the debugfs API should have no possibility of handleable
-errors. This would *not* mean that we were signaling the errors out of
-the raw debugfs bindings into Rust, but Rust would be able to detect
-`Arc` allocation failures unless you really want me to be hiding
-allocation failures (I could theoretically do this by generating a
-dummy object on allocation failure, but this would add complexity and
-seems questionable).
-2. If we're not using borrowing to statically prevent entries from
-outliving their parents, there are two possible semantics for what to
-do when an entry *does* outlive its parent:
-  a. The parent doesn't actually get `debugfs_remove` called until all
-its child objects have left scope too. This can be accomplished by
-just having a `_parent: Option<Arc<Entry>>` in each `Entry` structure.
-  b. We get ghost objects, e.g. the child object is still around, but
-it is somehow able to discover that its `dentry` pointer is no longer
-valid and avoids trying to use it. The best solution I have to this is
-to again maintain an optional parent `Arc`, but also have `Entry` hold
-an additional refcount member. When you want to create a subdir, a
-file in a directory, or delete any of those, you'd walk the spine of
-parents, trying to claim the extra refcount on everything. Once you've
-got it, you can safely delete yourself or create a subdirectory or
-file. Then, whoever is last out of the extra refcount (either the
-owning object or someone holding a reference while they perform an
-operation on themselves) can try to clean up, again by claiming the
-spine above them.
-3. If we're not supporting `leak` or lifetime-based `File` anymore,
-then I don't think my method of attaching data is needed anymore. It
-was complex primarily in order to support statically enforced
-lifetimes on dirs/subdirs/files, and several of the tricks I was using
-don't work without a lifetime on the `File` type. Instead, I'll make
-it so that `File` objects can attach a `ForeignOwnable`, with the
-expected common cases being either `&'static MyData` or `Arc<MyData>`.
+Signed-off-by: Stanislav Fomichev <stfomichev@gmail.com>
+---
+ .mailmap    | 1 +
+ MAINTAINERS | 3 +++
+ 2 files changed, 4 insertions(+)
 
-Unless I get additional feedback, I'm currently implementing 2-a,
-using `ForeignOwnable` based attachments of data to files, and
-returning `Result` where the only actual failure possibility is
-allocation failure.
+diff --git a/.mailmap b/.mailmap
+index 77bb62564ef7..7641338b8d3f 100644
+--- a/.mailmap
++++ b/.mailmap
+@@ -712,6 +712,7 @@ Srinivas Ramana <quic_sramana@quicinc.com> <sramana@codeaurora.org>
+ Sriram R <quic_srirrama@quicinc.com> <srirrama@codeaurora.org>
+ Sriram Yagnaraman <sriram.yagnaraman@ericsson.com> <sriram.yagnaraman@est.tech>
+ Stanislav Fomichev <sdf@fomichev.me> <sdf@google.com>
++Stanislav Fomichev <sdf@fomichev.me> <stfomichev@gmail.com>
+ Stefan Wahren <wahrenst@gmx.net> <stefan.wahren@i2se.com>
+ Stéphane Witzmann <stephane.witzmann@ubpmes.univ-bpclermont.fr>
+ Stephen Hemminger <stephen@networkplumber.org> <shemminger@linux-foundation.org>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8d314e169486..8e109f4436eb 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4555,6 +4555,7 @@ BPF [NETWORKING] (tcx & tc BPF, sock_addr)
+ M:	Martin KaFai Lau <martin.lau@linux.dev>
+ M:	Daniel Borkmann <daniel@iogearbox.net>
+ R:	John Fastabend <john.fastabend@gmail.com>
++R:	Stanislav Fomichev <sdf@fomichev.me>
+ L:	bpf@vger.kernel.org
+ L:	netdev@vger.kernel.org
+ S:	Maintained
+@@ -26948,6 +26949,7 @@ M:	David S. Miller <davem@davemloft.net>
+ M:	Jakub Kicinski <kuba@kernel.org>
+ M:	Jesper Dangaard Brouer <hawk@kernel.org>
+ M:	John Fastabend <john.fastabend@gmail.com>
++R:	Stanislav Fomichev <sdf@fomichev.me>
+ L:	netdev@vger.kernel.org
+ L:	bpf@vger.kernel.org
+ S:	Supported
+@@ -26969,6 +26971,7 @@ M:	Björn Töpel <bjorn@kernel.org>
+ M:	Magnus Karlsson <magnus.karlsson@intel.com>
+ M:	Maciej Fijalkowski <maciej.fijalkowski@intel.com>
+ R:	Jonathan Lemon <jonathan.lemon@gmail.com>
++R:	Stanislav Fomichev <sdf@fomichev.me>
+ L:	netdev@vger.kernel.org
+ L:	bpf@vger.kernel.org
+ S:	Maintained
+-- 
+2.49.0
+
