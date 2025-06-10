@@ -1,211 +1,204 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDF53198E75;
-	Tue, 10 Jun 2025 13:42:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E06222F173
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:44:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749562966; cv=none; b=e66Ii/SMHrs30d3zGdxLppiKQnGj11TOkIkAyJOEzol9ZhXOa1WNVINXB4C4SbYGkBxYUtGt5pq5Pns+gdpC5PRs7hTlyYuB7BNmvyvEL8IG4NPn/c5M+LNvoU7VPJVqFw324h8IjWm5xSpnqrZm1YMX6BzQe2kWpDiXR8cTMW4=
+	t=1749563074; cv=none; b=Mu6QQlHtb4T2qtiksut9XvnJApXhN3ZvwnejtDJb6zBrozA5HAHUnpkSMJCbwMOD3k7z9imf+jt/ZLcopNv3TXNiaKL7yBVAb3QpYl8L6V8SW2N1XlqRmzi+Rd5SX2reeZ7rdasWSH8HYrAGd8DqGmDXwfJnXGw2ec4iwW5+F7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749562966; c=relaxed/simple;
-	bh=uqkMppCdjUDEemFxHWjQHwuVSVKoC4JVUeGIHIrkidI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L6+F2G3qFxJRhhhep2mwIzpxjZqkwYN/sUe+0Ue6/h5U9nq/GSweEN4hbbZ/Urqx5DF7EkPJG1DBj2Dx5FgkTIITWIhmELs8qghN5RypWLMf6schGbVWWj55xe+YMnjiaOtsN63SX4uvww5SLC7WtKfvTxEQ6ooSEBbv/NgkUQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8ED6E14BF;
-	Tue, 10 Jun 2025 06:42:23 -0700 (PDT)
-Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A5843F59E;
-	Tue, 10 Jun 2025 06:42:41 -0700 (PDT)
-Date: Tue, 10 Jun 2025 14:42:29 +0100
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: Dhruva Gole <d-gole@ti.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>, arm-scmi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, vigneshr@ti.com, khilman@baylibre.com
-Subject: Re: [RFC PATCH] pmdomain: arm: scmi_pm_domain: Do lazy init as part
- of probe
-Message-ID: <aEg2RcGGGBNL3cB0@pluto>
-References: <20250530103527.2244951-1-d-gole@ti.com>
- <20250530-honest-chital-of-growth-db31e1@sudeepholla>
- <20250610114314.dpfedrbok2pmfgxu@lcpd911>
+	s=arc-20240116; t=1749563074; c=relaxed/simple;
+	bh=wvZxPHzF12u3SY1iPiS6eNL/OVGcaqNIhjGbqmT3/xk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Aqf9Bm8qG9PAbjQiXqYL7EfiQZ6pmX22K5AxoQvout3f5AykjJE3Hc/tRiH/P0MmmeNdQVKZntdej50oSz/15G6pA99Ug88zljKevX5jsskVK4EffWfzYOjFl/v+4IHgUqCIGN/6MCWG3z7cHFUUNyNuieMaprPJYTkojYr+R1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NVo8BxO6; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NVo8BxO6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749563071;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=x2VmyAImjj4hzOnuu3f/wVygVhYGF647p7FjFNq+/QM=;
+	b=NVo8BxO6ypdHU4Z8m18ERCqYPSfV7mxnF9BE8+Va7A8+kZEyu1TcKyAzvBwe9k1VUXYKNF
+	nLiEKPbNtsZ6oLIDnQAlNx+v/K87IxdydXMuKrS5cFNxXq9w817xrwbMc2MRvP3Sh/Kw98
+	5+O0HGNouUusovXpTQbrrIkvjiDUt48=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-148-LMFSrxXyN0-oIZmoP3dyZQ-1; Tue, 10 Jun 2025 09:44:30 -0400
+X-MC-Unique: LMFSrxXyN0-oIZmoP3dyZQ-1
+X-Mimecast-MFC-AGG-ID: LMFSrxXyN0-oIZmoP3dyZQ_1749563069
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4f858bc5eso3983051f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 06:44:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749563069; x=1750167869;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=x2VmyAImjj4hzOnuu3f/wVygVhYGF647p7FjFNq+/QM=;
+        b=hyxR/5pmQGzIaLT72QeUKDhQXBQOssU0Rf0L/HUJSKevz9hRUSWlyVnifX9aBcahxO
+         79KzTimqoQld983M/2v102Okr3KCfHnVBxYgd/ugYIYjI9ZFISQCZKmvAnM9al64Oc2h
+         VuHI2Bg1hUu5PlgHAA7OIgUcESE+NHEQho5UMAIrqAAUnIQt7NJbWo8LXmZ47HMb0bff
+         SYm+TbnRLtWvMvgXgHgLha55ZZrGUzBarXyXKnf4anOhY5U1ffxk2kIYfQsYzF8V8hKA
+         1aKaWoAIObslENXjb70DR1Mol2NE1KgSyt6/3pQlJPJQSv3YVVthqhoDsadEXQwMMlzl
+         HK6w==
+X-Forwarded-Encrypted: i=1; AJvYcCWLdogCz82gzgTDrrg4ZBqEjqnDW8wuujmHfOmEBpgf01FwvqH13NdfV1YCIQWVqj6B/SGYzkG/ElgE+kI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YycxntjMb6MYnkO04gszEDWvQYvdNcNP5kMpsL0mDB30JAcJIn9
+	15yi7C1oqhPEi5U/FNCYi1wYwF+zXYMoIKzMpyhGkJjG5in2coz8wHwa3UA8jTUxzVnx83cf466
+	I0/7SIsNelro/fsa4t392pFEnWfWjLjc+Ndrdsk9V5sUeNkzEuRGYFStHN65ngfUN8g==
+X-Gm-Gg: ASbGncvnaSg1Fg+bNfySOLhhfW9xXV6E7znayAYu+6owMX3kWy7VwBLvb7xSkwxGLc8
+	MXZ3vLUBFDHW8cKhXjtPR5ruvs1W6SFiFGmgTiRX/H5yNetwwUy96DEn1tJxkbAb22K8Q6y/pCX
+	9778gU1WoLUN9q+VEZzueDDQP1WrtI4HV7ZbJ4Rbww3HygrtdqN6uOg42k+qAilqVGD770MdW73
+	r/Z3RCsdKDs1Ucrn5ScxsHk/3V/Xpa2WYfKvC036x5WWgU960vy2rGZj6fZwm0hGIr49A5hPWsa
+	oMbvVj0r0Ua9y3o7dIk1QH9mgxrBU8vqTtqytqKemOxr1yf0mH0KBxg=
+X-Received: by 2002:a05:6000:290f:b0:3a4:f655:8c4d with SMTP id ffacd0b85a97d-3a531cafc03mr14432429f8f.27.1749563069107;
+        Tue, 10 Jun 2025 06:44:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGu/x/Paa24Rvj8SNK0TN6cfVpKUqZgPCpL5Aazl2BPcT87efCPXFP3jrKdeAxwrMIiICtIHA==
+X-Received: by 2002:a05:6000:290f:b0:3a4:f655:8c4d with SMTP id ffacd0b85a97d-3a531cafc03mr14432395f8f.27.1749563068705;
+        Tue, 10 Jun 2025 06:44:28 -0700 (PDT)
+Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45320b16657sm14394555e9.8.2025.06.10.06.44.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Jun 2025 06:44:28 -0700 (PDT)
+Message-ID: <881baf6e-8118-4d09-86dc-09dcf3a3cd02@redhat.com>
+Date: Tue, 10 Jun 2025 15:44:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250610114314.dpfedrbok2pmfgxu@lcpd911>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] mm: Allow lockless kernel pagetable walking
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org,
+ catalin.marinas@arm.com, will@kernel.org, Liam.Howlett@oracle.com,
+ vbabka@suse.cz, rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, suzuki.poulose@arm.com,
+ steven.price@arm.com, gshan@redhat.com,
+ linux-arm-kernel@lists.infradead.org, yang@os.amperecomputing.com,
+ ryan.roberts@arm.com, anshuman.khandual@arm.com
+References: <20250610114401.7097-1-dev.jain@arm.com>
+ <20250610114401.7097-2-dev.jain@arm.com>
+ <db04bd02-0090-4aff-bb2e-0d1e023757a5@lucifer.local>
+ <970e1b84-7f47-4a51-ad99-4df9026b8f7d@redhat.com>
+ <359668fb-df61-4135-89ee-2675a06a5c1b@lucifer.local>
+ <bea0969f-5a6c-4486-aeba-964fa79bd714@redhat.com>
+ <1c4714bb-97f3-4261-92b7-34223a32e016@lucifer.local>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <1c4714bb-97f3-4261-92b7-34223a32e016@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 10, 2025 at 05:13:14PM +0530, Dhruva Gole wrote:
-> Hi,
+On 10.06.25 15:35, Lorenzo Stoakes wrote:
+> On Tue, Jun 10, 2025 at 03:31:56PM +0200, David Hildenbrand wrote:
+>> On 10.06.25 15:27, Lorenzo Stoakes wrote:
+>>> On Tue, Jun 10, 2025 at 03:24:16PM +0200, David Hildenbrand wrote:
+>>>> On 10.06.25 14:07, Lorenzo Stoakes wrote:
+>>>>> OK so I think the best solution here is to just update check_ops_valid(), which
+>>>>> was kind of sucky anyway (we check everywhere but walk_page_range_mm() to
+>>>>> enforce the install pte thing).
+>>>>>
+>>>>> Let's do something like:
+>>>>>
+>>>>> #define OPS_MAY_INSTALL_PTE	(1<<0)
+>>>>> #define OPS_MAY_AVOID_LOCK	(1<<1)
+>>>>>
+>>>>> and update check_ops_valid() to take a flags or maybe 'capabilities' field.
+>>>>>
+>>>>> Then check based on this e.g.:
+>>>>>
+>>>>> if (ops->install_pte && !(capabilities & OPS_MAY_INSTALL_PTE))
+>>>>> 	return false;
+>>>>>
+>>>>> if (ops->walk_lock == PGWALK_NOLOCK && !(capabilities & OPS_MAY_AVOID_LOCK))
+>>>>> 	return false;
+>>>>>
+>>>>
+>>>> Hm. I mean, we really only want to allow this lockless check for
+>>>> walk_kernel_page_table_range(), right?
+>>>>
+>>>> Having a walk_kernel_page_table_range_lockeless() might (or might not) be
+>>>> better, to really only special-case this specific path.
+>>>
+>>> Agree completely, Dev - let's definitely do this.
+>>>
+>>>>
+>>>> So, I am wondering if we should further start splitting the
+>>>> kernel-page-table walker up from the mm walker, at least on the "entry"
+>>>> function for now.
+>>>
+>>> How do you mean?
+>>
+>> In particular, "struct mm_walk_ops"
+>>
+>> does not quite make sense when not actually walking a "real" mm .
+>>
+>> So maybe we should start having a separate structure where *vma,
+>> install_pte, walk_lock, hugetlb* does not even exist.
+>>
+>> It might be a bit of churn, though ... not sure if there could be an easy
+>> translation layer for now.
 > 
-> On May 30, 2025 at 17:31:08 +0100, Sudeep Holla wrote:
-> > On Fri, May 30, 2025 at 04:05:27PM +0530, Dhruva Gole wrote:
-> > > Optimize the SCMI power domain driver to only initialize domains that are
-> > > actually referenced in the device tree. Previously, the driver would
-> > > initialize all possible domains up to the maximum ID, which could lead to
-> > > unnecessary firmware calls and longer probe times.
-> > > 
-> > > Key changes:
-> > > - Scan device tree to identify which power domains are actually referenced
-> > 
-
-Hi,
-
-forgot this thread...
-
+> But you know... I looove churn right? <3 <3 <3 :)))
 > 
-> -- 
-> Best regards,
-> Dhruva Gole
-> Texas Instruments Incorporated
-> > How do this work with runtime DT overlays ?
-> 
-> Thanks for bringing this up, I hadn't considered runtime DT overlays for
-> this particular patch.
-> Off the top of my mind, we can initialize all at probe, but only query state
-> for referenced ones.
+> That's a nice idea, but I think something that should be a follow up.
 
-Indeed, DT overlays is a good point, I missed that issue...
+Yes, absolutely, just wanted to raise it :)
 
-> 
-> > 
-> > > - Use bitmap to track needed domains instead of initializing all
-> > > - Only perform state queries and initialization for referenced domains
-> > > - Maintain proper array sizing for power domain framework compatibility
-> > > - Keep full provider structure to support late binding
-> > > 
-> > > This optimization reduces probe time and unnecessary firmware interactions
-> > > by only initializing power domains that are actually used in the system.
-> > 
-> > Why is this very specific to power domains only ? This must apply for other
-> > domains like perf or clock or reset ?
-> 
-> Yes, it should. Starting out with just power domains for now though. I
-> haven't looked at other places like perf and clock yet.
-> 
-> > 
-> > > For example, in a system with 100 possible domains but only 3 referenced
-> > > in the device tree, we now only initialize those 3 domains instead of
-> > > all 100.
-> > > 
-> > 
-> > Well, how much of these PD will get used in the final products ? I can
-> > understand the need to use just 3 in devel platforms. Just trying to see
-> > how realistic is the scenario ? Is there any other optimisation possible
-> > from the firmware ? Does getting the state of a PD takes so much time
-> > on the platform in question ?
-> 
-> Well, it's not only about how much time it takes on any particular platform
-> to query the state of a PD. Even if say it takes 10us to query it, it will
-> add a whole 1ms to the probe time. This mean 1ms more of boot time, and
-> perhaps boot time experts can chime in here but every optimisation
-> possible matters!
-> ARM systems are usually very strict on boot time requirements.
-> 
-> Even if we somehow optimise the firmware, to me it seems like kernel is
-> wasting time querrying for something that it doesn't need at that moment.
-> 
+-- 
+Cheers,
 
-I can agree on this, and it would be interesting to optimize the usual SCMI
-'query storm' at probe time across all protocols (liek Sudeep suggested),
-BUT first of all I would ask, if Linux refers just 3 resources why the
-firmware, when queried, returns the full set of N resources....one of the
-selling point of the SCMI protocol (especially in virtualized envs) should
-be that the server can expose a per-agent view so that each agent on the
-same system will see just the stuff that it needs, or in some case have
-limited access to some resources.
+David / dhildenb
 
-So my point is, why are you (linux agent) even able to see such resources
-when querying the server, if those resources are NOT meant to be accessed at
-all by that agent in any capacity, not even read-oly ?
-
-I could understand that a small ratio of exposed/used resources for the
-sake of easy of configuration BUT it would seem unreasonable to, say,
-expose 100 or 100 of resources to agent A if such agent only use
-3/4...consider that in turn, exposing all of such unused resources, will
-impact query time and query traffic (beside later also being needlessly
-registered with the core without your patch)
-
-> Just replying here to your next reply on the thread:
-> > And I missed another point. Someone will soon complain Linux no longer
-> > turns off unused power domains. So I am inclined against this optimisation.
-> > We need to consider all the above point before .
-> 
-> I agree on some points like the runtime overlay. However I am not sure
-> why Linux should be the one to turn OFF power domains that it's
-> _unaware_ of. "unused" would probably be a wrong assumption to make.
-> There maybe other entities that would be using power domains that
-> are not in the device tree. (For eg. an RTOS running on the same system
-> accessing a PD that is controlled by the SCP firmware but not mentioned in the
-> device tree.)
-> 
-> While one may argue that's why firmware should be the one to keep ref
-> counts to avoid resource conflicts, one could also argue that firmwares
-> could be the one to turn off unused power domains.
-> 
-> Why should the kernel touch something that it hasn't been told about
-> explicitly in the DT? Isn't the whole point of DT to be the literal
-> hardware descriptor for the kernel? So if something doesn't exist in the
-> DT, kernel shouldn't have other places telling it does - in this context
-> power domains.
-
-As per my understanding, in a subsystem like clocks, the Kernel will turn
-off any unused (from his pov) resource that is found to be on at the end of
-the probe phase of the subsystem itself...in other words kernel will do try
-to turn off any resource that it has no use for it (so that it has not 
-found in the DT)...so currently if we register 100 resources (all that we
-found) and only 3 are used (referred) it will issue an OFF for all the
-remaining unused 97...
-
-..and you are right, there will be other non-Linux agents on the system
-issuing their requests on that same resources if they are shared, and the
-server will have to refcount such requests to act properly when handling
-shared resources, so if res_X is not used by the Kernel and we just dont
-register it with the Kernel subsystem (like in your patch), it wont be
-turned off as unused anymore AND that would be FINE, since, this agent
-has NO use for them and never issued any ON-request before...
-
-...BUT.... :P
-
-...the issue would be when you have a system where you have something like
-an SCMI capable bootloader that will have turned ON some of these shared
-resources during its boot-phase AND then left those resources ON, as a
-courtesy :P, so that the 'incoming' booting Kernel can found them ON (I
-think usually is what happens with resources related to displays if you
-dont want to disrupt the boot..)
-
-...in such a scenario the booting Kernel takes-over, in the eyes of the
-server, the same agent role as the bootloader which is substituting, since
-it highjacks and uses the same SCMI channel as the disappearfing bootloader..
-
-...so the server will see that resources as refcounted+1 (left by the ghost of
-the bootloader :D)...so for power optimnization the Kernel will issue an OFF
-on all unused resources and that will cause a refcount-1 server side and
-the final physical OFF when all the other possible users of that shared resource
-will have released it...
-
-...if you just dont register such resource becasue it is NOT referred in
-the DT, surely the Kernel wont try to turn it off as unused and so you
-will break this case....
-
-..same if the bootloader is NON-SCMI compliant and just leave a resource ON...
-
-..all of this complicated by the never ending question around which
-resource state should be returned on query: physical vs virtual
-(currently is IMPDEF)
-
-So I think your optimization is nice in general (even better for all
-protocols) BUT we should address all these corner cases somehow...
-
-... or proof all of my hallucination above non-existent/non-accurate :P,
-which is posibility since we discuss all of this more than 1 year ago...
-
-Thanks,
-Cristian
