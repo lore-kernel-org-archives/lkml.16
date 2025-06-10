@@ -1,94 +1,121 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4324E28C2BE;
-	Tue, 10 Jun 2025 10:23:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9DF28315B;
+	Tue, 10 Jun 2025 10:25:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749550995; cv=none; b=fIlEbrs8b0h+4dyNcVujAak+VEDX6yRWbymcqhvAHQwGFzSuSxfzPRMg8X7NMPDGxKAshhYXHOKea4FQRp9LFT2Flgxr/D+pxkD29Y/hVh6oK0Sd8XqYU/rKUYMSi+hwFNp2l03GCG5/7bbdRTotqwVOV75zMTrNJPn6mi1Jj2s=
+	t=1749551118; cv=none; b=KAfArYR60/DFjrBMF5XyW3FglK9gge2u5OxE5/r+8w+KSzk16OZ5SdO/f8Y6jNPilA+oPeW05Xmq+jn12NYW3opU9dMywsoeuF9zs5juAL4B++MErNw5svP2W8VhDH1Db6FGlAFeyd+p265Kb2kn/K/ZRNCd1snuQgFxM9NueWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749550995; c=relaxed/simple;
-	bh=VNtBnJhPXmI/qog9mM4TuSFWEYyWcVDED/9b8AqhcX8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q7doUIqEP8KKqGOTnfBacZLZDkfhDIulz2lxJdjqpv2QA+gdZjY6oJowL876QTRZZZC2r7gLK9xvaWHZxl5LZn80Tf2m+p2x9lEPBgMWI0GuJeQm08slNxwx68K5NPfSI8tBtBBolQQdPHMUDe5tTIh7GX5yHwJ8/CaFDqOSuow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YuQdFdUI; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749551118; c=relaxed/simple;
+	bh=ROS8mtNiUd4xDjSycsgTS1G1TFzJbGvldHsVm3fwtWw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Fag//t/yta+yCCNb3SdJsWgWQkrfxRVI5IYXzLptxj5eEwfocaivfqRfD+j3YoQH2kgLABInojUzydXWWdCv724xN1VMtJSf8CSDAm50gNCHF+ZmGz5HtEfAh8W+z6oWhNkxMGyYChfVktIw/5cglBa6gbQ7ivH+4j8zxIAo/co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t1GFuKMg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YuQdFdUI"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-311f6be42f1so1059448a91.0;
-        Tue, 10 Jun 2025 03:23:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749550993; x=1750155793; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VNtBnJhPXmI/qog9mM4TuSFWEYyWcVDED/9b8AqhcX8=;
-        b=YuQdFdUIts5XsYxMdxq0TzUBd5dh5rsoJXOPe9Esgs/UFyn/+QKwAjy2Wux9XGV4VV
-         4qiCOQj8NqkthSJbEUdHLmSRB4HJT9mBormlFwA+LY5bC6+4BsSJXpEhOqVMb5paZz/n
-         pqpJrtanQ8ssuvipFhW/o7CvHqfNBwA4EjafDI7L49B2dpTzrfsM5nnsdXdLxZK/E2il
-         xzcjxMqLu0eoR8I3ZJfJc/bez+D28Y+Orz3OY2SPyJGG926AK4aLEyrTJUC8ibXZrpxt
-         if4GERPkDLF8a6F73hxynhgApWc7fiSAYMFCBJ2fwJ0f7mspryUoyWLyu3g4RA1sTwwC
-         tFYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749550993; x=1750155793;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VNtBnJhPXmI/qog9mM4TuSFWEYyWcVDED/9b8AqhcX8=;
-        b=ISnIXSMhCp0DhqWbqPDqF6+jmmXOWZPYnsbxmT9DRjPiz2njgQgRMPvfkHrQPZYykq
-         YGh8l6vA9Sx8UWHET25rQIU8ArqehUnRXwwZ2pkykiC7/UpHgCMNpjlQmS8dsZttFXdG
-         a2GYNeGd34cYCVbSqPwZve/UeCBllf7Zdye+3ZeF7iypzD1cndy1jtQFzOIENkO/LKcs
-         VdlhCFGV+SL+kJet0oTRLb/zxGKaWmG6x041tSeUXzyHt+8TIZZUAMXgJRBEIqSuApIa
-         AAAVD/rdWsVUmQQpHc6IjpffNu2syBkioneW1wELrvikEPtjF1+o3hXQFcB7IFaL2fbl
-         9I1A==
-X-Forwarded-Encrypted: i=1; AJvYcCV18Mqvcys9x7Q5EtPc0cpSMYkrP9CwXxZJDvRD7jbBIgcmrJNe+v5hPGl3IhCHb5hM5ZYo5SWfVscNkgXJ+eI=@vger.kernel.org, AJvYcCXMF0y8rTvxkC5XMYneh/OsvAWnQQuuUBAqjWZVYwVR2HPTctdKdc9l34nexf9XZ9HRTTbqLtJH624Yw9U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSBtJyJPxvKcl8b0znPh+KFB/O4wYxMga9ePAE9Cxy5ZpL65QC
-	7OZsqsgZkUNsfpHr9g3GAALneYnzLNlpE122crENGBxQInJvFIxXJLREouxk46nk/MnrKUWw/Ej
-	G3+VouElcktjbSDAujgsNY8rHNSowvxw=
-X-Gm-Gg: ASbGncvwms/agmiMEycu8IKFZ67jYX5NeyN9tW0pfwJ2n4CUgX4xfeic10BU9rlunCh
-	8Z0f3kWNZzOy7xCfRiKy0qrlMvhk3kqca2Ges1hBQ6BLViw8jsC33mApnLtsyRnVH7KGyFcrQ4E
-	raTFubBka2+U9tcYgh28kIFQWyJNMyDStPi2Mhtvj550Q=
-X-Google-Smtp-Source: AGHT+IHyUkNAc0JIV9q0LiaAdIeTF/k2n5W13Vsuy1g9zC8wrFEwVzaPl6HlNMf4m2h8nQJ6Ng+MolkHJQP6SBthxXM=
-X-Received: by 2002:a17:90b:3890:b0:2ff:7970:d2b6 with SMTP id
- 98e67ed59e1d1-3134753c519mr8544569a91.5.1749550993495; Tue, 10 Jun 2025
- 03:23:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t1GFuKMg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9902BC4CEED;
+	Tue, 10 Jun 2025 10:25:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749551118;
+	bh=ROS8mtNiUd4xDjSycsgTS1G1TFzJbGvldHsVm3fwtWw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=t1GFuKMgZYhQ4KSiDsCEMXN0MJSQ8z7/xR8B0n7RRHNt9gP67TxvdFew1L4ljIoHL
+	 3N7tn1hA5vX15Gkos0gnDWOucPiV1+P90CWK+tMR7FgWzXFj7luQajQoPMahnvIb4J
+	 F3KQnBJlXN1DInHVt8Ol+ImBQUuBdbk4SAffSnXfi069EMvZBuN/58rQTyYHK6knCa
+	 l0pmwIHfUwjp8xfxKXnv9nFmoI4AwSFPtSM7aP24gnINmkjCa4612izUDmrqDMGdKF
+	 Wcdnbgvorcqop37EuoiZO5Gobrab3wkoIcD9kKuMLZJhttSTq/pwoX5CSgxt7sZJvD
+	 BeO3EdpXZnPZQ==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Benno Lossin" <lossin@kernel.org>
+Cc: "Danilo Krummrich" <dakr@kernel.org>,  "Miguel Ojeda"
+ <ojeda@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
+ <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
+ =?utf-8?Q?=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor
+ Gross" <tmgross@umich.edu>,  "Bjorn Helgaas" <bhelgaas@google.com>,
+  Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,  "Greg
+ Kroah-Hartman"
+ <gregkh@linuxfoundation.org>,  "Rafael J. Wysocki" <rafael@kernel.org>,
+  "Tamir Duberstein" <tamird@gmail.com>,  "Viresh Kumar"
+ <viresh.kumar@linaro.org>,  <rust-for-linux@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>,  <linux-pci@vger.kernel.org>,
+  =?utf-8?Q?Ma=C3=ADra?=
+ Canal <mcanal@igalia.com>
+Subject: Re: [PATCH] rust: types: add FOREIGN_ALIGN to ForeignOwnable
+In-Reply-To: <DAIRJ71UP655.2NF13FJSA0G68@kernel.org> (Benno Lossin's message
+	of "Tue, 10 Jun 2025 11:58:07 +0200")
+References: <20250605-pointed-to-v1-1-ee1e262912cc@kernel.org>
+	<WubHJPtx9Uu0qugeELZ2ooYWKq4KDj7r8P7k4i_QhgOP53MWk1V3XHH4Ztmzp42zMwHSntslAbfpLFY9AhjfxQ==@protonmail.internalid>
+	<DAFB0GKSGPSF.24BE695LGC28Z@kernel.org> <87sek82bgf.fsf@kernel.org>
+	<B5pQuQkk-qtv2Ot8IX9eCoREwxBBx4xPoUIVYwdYjryB3OAHUhSOhZISNh1ft6F38icSGojZSIsxsyoX_nBRDQ==@protonmail.internalid>
+	<DAIRJ71UP655.2NF13FJSA0G68@kernel.org>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Tue, 10 Jun 2025 12:25:08 +0200
+Message-ID: <87bjqv3ncr.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1749463570.git.viresh.kumar@linaro.org> <f10910c7585f5556869ea6f34b64d4136b8d5581.1749463570.git.viresh.kumar@linaro.org>
- <CANiq72=WpuGELzLbH-fxdOeJy9fiDFwatz6ynERDh=HP2z2MBw@mail.gmail.com>
- <20250610060711.zp6lua4kcwi2z777@vireshk-i7> <CANiq72kD9iQh6TPo3Rwk7AmPXEarogUrM2fmhkDn5XNfKrr_jw@mail.gmail.com>
- <20250610101849.ymuw4bmjsucsoblp@vireshk-i7>
-In-Reply-To: <20250610101849.ymuw4bmjsucsoblp@vireshk-i7>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 10 Jun 2025 12:23:00 +0200
-X-Gm-Features: AX0GCFuUlSq_Xn70A18RdA7B2S12Fu_LrRq3arVotD4opnMPnqxymDjzAQdofq4
-Message-ID: <CANiq72n1FxBW6EydLyyMYkJZ062S=xRtPmmBdPrYKh6dDsY9Xw@mail.gmail.com>
-Subject: Re: [PATCH V2 1/2] rust: cpu: Introduce CpuId abstraction
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Danilo Krummrich <dakr@kernel.org>, FUJITA Tomonori <fujita.tomonori@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Yury Norov <yury.norov@gmail.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Tue, Jun 10, 2025 at 12:18=E2=80=AFPM Viresh Kumar <viresh.kumar@linaro.=
-org> wrote:
+"Benno Lossin" <lossin@kernel.org> writes:
+
+> On Tue Jun 10, 2025 at 11:27 AM CEST, Andreas Hindborg wrote:
+>> Hi Benno,
+>>
+>> "Benno Lossin" <lossin@kernel.org> writes:
+>>
+>>> The title should probably also mention that it removes `PointedTo`.
 >
-> Something like this ?
+> Just making sure that you saw this.
+>
+>>> On Thu Jun 5, 2025 at 9:55 PM CEST, Andreas Hindborg wrote:
+>>>>  pub unsafe trait ForeignOwnable: Sized {
+>>>> -    /// Type used when the value is foreign-owned. In practical terms only defines the alignment of
+>>>> -    /// the pointer.
+>>>> -    type PointedTo;
+>>>> +    /// The alignment of pointers returned by `into_foreign`.
+>>>> +    const FOREIGN_ALIGN: usize;
+>>>>
+>>>>      /// Type used to immutably borrow a value that is currently foreign-owned.
+>>>>      type Borrowed<'a>;
+>>>> @@ -39,18 +35,17 @@ pub unsafe trait ForeignOwnable: Sized {
+>>>>
+>>>>      /// Converts a Rust-owned object to a foreign-owned one.
+>>>>      ///
+>>>> -    /// # Guarantees
+>>>
+>>> Why remove this section? I think we should streamline it, (make it use
+>>> bullet points, shorten the sentences etc). We can keep the paragraph you
+>>> wrote below as normal docs.
+>>
+>> Not sure exactly what you are going for here. How is this:
+>>
+>>
+>>   Converts a Rust-owned object to a foreign-owned one.
+>>
+>>   The foreign representation is a pointer to void.
+>>
+>>   # Guarantees
+>>
+>>   - Minimum alignment of returned pointer is [`Self::FOREIGN_ALIGN`].
+>>
+>>   There are no other guarantees for this pointer. For example, it might be invalid, dangling
+>>   or pointing to uninitialized memory. Using it in any way except for [`from_foreign`],
+>>   [`try_from_foreign`], [`borrow`], or [`borrow_mut`] can result in undefined behavior.
+>
+> Maybe even move this paragraph above the `Guarantees` section and change
+> the beginning of it to "Aside from the guarantees listed below, there
+> are no other..."?
 
-Yeah, something like that was what I was thinking (maybe with a
-comment if it is not obvious why we have that one). Thanks!
+Alright.
 
-Cheers,
-Miguel
+
+Best regards,
+Andreas Hindborg
+
+
+
