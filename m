@@ -1,176 +1,152 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 254AE24A07A
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 18:51:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1962494ED;
+	Tue, 10 Jun 2025 18:52:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749581512; cv=none; b=EKJgV6RNCKIyLzOlf2Jb4ruTjTJ9LTfDOluud4mIXyyNRF/rpvfJVHHyu8sB+An6TS729F/ruNaW9RAzG/vHEgC4CIQGGj8+ZqYf2acwO7oss6e55DXFg9vV08e4qzzlhmkL+V36sCA8WwjV/B8qDf60pg803CwlFPj7jfV2lUg=
+	t=1749581541; cv=none; b=lq0ikA85+tyCceUMgZc3JJcd3plvaQPwyW1Li2bnrXbwnDDN0oVKT08wAqEki7eWSCjCkMB5pkm3G4cKrdzgqBNyJ7dpAKkr1GG0W6x5oyUhQV7f6bWMBjuzOWxQsecYqahtJWLCik0WtGGJETS9JgzwA4ekjFaXtZyakLxjByQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749581512; c=relaxed/simple;
-	bh=LA9Qk4SdWa9X4tlsVdBIe1GqEScGKDmIKhA7TdPco6Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nWhgG7wIdLI2DxvnGxRO+f6+h1dgyNStd77NGGphM1KAnKuuwgCV79dzuvEfZ7w9kjc3+WgenslBtajdvhURHhHxXfqQuB5bX350KOvp8unGwnLZSv+My8d27DVlaYllBSN9//e2zyG8J7jmJ2doypcGS9Sv+aYOXFWWR9F/TRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=FhWmBNK4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=TrA3Wn1u; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QilBw13s; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Hd6gaiD4; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1749581541; c=relaxed/simple;
+	bh=D+SLbgwqbHoCj3oO6CuUATPS7+/ovg9hSc1l4QTqaYI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UUdSZlgNbakGE74uAxvzuEBDUmd8u+DiaE4TIX1z42j7krFDM1NSRH1CnI3pVZclSI+LflsyAQvtEbpqYPx9nEisB4I6DsQG7d01dzNsSrdDGn65scZA+qzhHSZ4DYXSiMyYAITl8UJzudglWI58lx6C3u77iH/8905OI3WU7lk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vA7GkvRD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="FhWmBNK4";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="TrA3Wn1u";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QilBw13s";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Hd6gaiD4"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id C4ABF1F76C;
-	Tue, 10 Jun 2025 18:51:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749581508; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7mQHH+vhumL7j1yn5CjeuyhPzB/xFc8OjZKcCfAnLSY=;
-	b=FhWmBNK4SlsBAz0cGHhQXWDUjYxTVy7wxoteIKaXh83YDzH3Dc06mfj/I7iOF4yrScpW3D
-	Orfb9VJ5rsHF0CwNgxj8vTtCNoPAJsDtjOJA2SDvJgyUrt/MVnKAAORjF0Mt4NbE8jzcOY
-	VxngHvqMQVwj8zvXW+ipspyTaGFtDi0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749581508;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7mQHH+vhumL7j1yn5CjeuyhPzB/xFc8OjZKcCfAnLSY=;
-	b=TrA3Wn1u32KhOgjGEFyTfYktr6z8wooevRmrvqQ33bnMyGDwIyPaI+saRKZ9p9zANPaSes
-	T89BUBHRZUaUjqDw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=QilBw13s;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Hd6gaiD4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749581507; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7mQHH+vhumL7j1yn5CjeuyhPzB/xFc8OjZKcCfAnLSY=;
-	b=QilBw13srQbiscx39rJPkukhgkxO34+Pa4ggEZTdpAZrs+7dWVjRhHk182x+kN5tyjIhKr
-	5f59F1LxTvX5I7R5oXRTNm6rvApahCi0KQl50f+9PjX1/T3GlZJN98deIsyxJ7R2DgZ69l
-	Al1uiNiTNIxxA//P83GsoJNhLTTbwew=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749581507;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7mQHH+vhumL7j1yn5CjeuyhPzB/xFc8OjZKcCfAnLSY=;
-	b=Hd6gaiD4/7foGkYjndKWD+wby1+yyE0adoLeu1wrGZqiFwcN+jHL83wjp3ATzhbXbnr4ny
-	GSbSlg9HlHzbHTCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 76667139E2;
-	Tue, 10 Jun 2025 18:51:47 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ajdFGsN+SGjqDAAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Tue, 10 Jun 2025 18:51:47 +0000
-Date: Tue, 10 Jun 2025 20:51:45 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: Hu Song <husong@kylinos.cn>
-Cc: muchun.song@linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hugetlbfs:inode: initialize 'error' variable at
- definition to reduce code redundancy
-Message-ID: <aEh-wRb_j5seV2Iz@localhost.localdomain>
-References: <20250609065615.108240-1-husong@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vA7GkvRD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B038CC4CEED;
+	Tue, 10 Jun 2025 18:52:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749581540;
+	bh=D+SLbgwqbHoCj3oO6CuUATPS7+/ovg9hSc1l4QTqaYI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=vA7GkvRDeNEkKZ0x5bgHWPa6SW5jph1vEukaxaD/VWMWQ9v8MOTFfBFJILKH7RQ2j
+	 4Eskbu/gmfN+5YecJCn4f/6ZRenm+JRYNbTqWwUHVMt4VWXMzy4Frl+Ddj3M1locN6
+	 myC1gTAqyBgcCWfgpz6nrOERV+fDUBk9T0SOgMq9iNJ+32XL33mxFzeAOABtmM7nMk
+	 AlKb713enWkTQZ8GU0RYGLpbOWIeZxA+Egofn5N/aUtwWZQ1b2OQ8UFZWT+NUp1usr
+	 dGZJxlzGmP8OewvVNvjXQv/BqvB6KjJA0foVAWqZPJW/2HYRxCqMFfcIPMDPA4JzRW
+	 OBD4PW275/DCA==
+Message-ID: <d237b434-1add-4686-95c0-fd167bc9e6c0@kernel.org>
+Date: Tue, 10 Jun 2025 20:52:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250609065615.108240-1-husong@kylinos.cn>
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,localhost.localdomain:mid]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: C4ABF1F76C
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -4.51
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/5] i2c: piix4: Depends on X86
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mario Limonciello <superm1@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, Borislav Petkov <bp@alien8.de>,
+ Jean Delvare <jdelvare@suse.com>, Andi Shyti <andi.shyti@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Yazen Ghannam <yazen.ghannam@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+ "H . Peter Anvin" <hpa@zytor.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>,
+ "open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>,
+ Ingo Molnar <mingo@kernel.org>, linux-mips@vger.kernel.org,
+ loongarch@lists.linux.dev
+References: <20250422234830.2840784-1-superm1@kernel.org>
+ <20250422234830.2840784-3-superm1@kernel.org>
+ <CAMuHMdVPQLjOox5sMp34Z5MTwKv2WOpHa=MpZr8hWG22fQKcjw@mail.gmail.com>
+ <CAAhV-H70LXsDYMA7wz4x828rEFoJsNX0=m8F73Ge9=yfpzBpZQ@mail.gmail.com>
+ <24febda9-6360-459f-82d3-6fba9ed9be83@kernel.org>
+ <30a7f1a6-1e04-4fc5-9bea-e2b5956b28b7@kernel.org>
+ <1e06c620-8f8e-4ddf-8356-0782bccd63a2@kernel.org>
+ <CAMuHMdXtrJn0i5ehBSq85+gTZ7fmeeQ=r-8fzV4GRFvmgOY1DQ@mail.gmail.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <CAMuHMdXtrJn0i5ehBSq85+gTZ7fmeeQ=r-8fzV4GRFvmgOY1DQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 09, 2025 at 02:56:15PM +0800, Hu Song wrote:
-> Initialize the error variable to -ENOMEM at definition in
-> init_hugetlbfs_fs().This removes the need for a separate
-> initialization later and makes the code slightly more concise,
-> while still preserving the original logic.
-> No functional change intended.
+Hi Geert,
+
+On 10-Jun-25 18:59, Geert Uytterhoeven wrote:
+> Hi Hans,
 > 
-> Signed-off-by: Hu Song <husong@kylinos.cn>
-> ---
->  fs/hugetlbfs/inode.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+> On Tue, 10 Jun 2025 at 16:55, Hans de Goede <hansg@kernel.org> wrote:
+>> On 10-Jun-25 16:53, Hans de Goede wrote:
+>>> On 10-Jun-25 16:12, Mario Limonciello wrote:
+>>>> On 6/10/2025 2:24 AM, Huacai Chen wrote:
+>>>>> On Tue, Jun 10, 2025 at 5:16 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>>>>>> On Wed, 23 Apr 2025 at 01:49, Mario Limonciello <superm1@kernel.org> wrote:
+>>>>>>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>>>>>>
+>>>>>>> PIIX4 and compatible controllers are only for X86. As some headers are
+>>>>>>> being moved into x86 specific headers PIIX4 won't compile on non-x86.
+>>>>>>>
+>>>>>>> Suggested-by: Ingo Molnar <mingo@kernel.org>
+>>>>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>>>>>>
+>>>>>> Thanks for your patch, which is now commit 7e173eb82ae97175
+>>>>>> ("i2c: piix4: Make CONFIG_I2C_PIIX4 dependent on CONFIG_X86")
+>>>>>> in v6.16-rc1.
+>>>>>>
+>>>>>>> --- a/drivers/i2c/busses/Kconfig
+>>>>>>> +++ b/drivers/i2c/busses/Kconfig
+>>>>>>> @@ -200,7 +200,7 @@ config I2C_ISMT
+>>>>>>>
+>>>>>>>   config I2C_PIIX4
+>>>>>>>          tristate "Intel PIIX4 and compatible (ATI/AMD/Serverworks/Broadcom/SMSC)"
+>>>>>>> -       depends on PCI && HAS_IOPORT
+>>>>>>> +       depends on PCI && HAS_IOPORT && X86
+>>>>>>
+>>>>>> Are you sure this south-bridge is not used on non-x86 platforms?
+>>>>>> It is enabled in several non-x86 defconfigs:
+>>>>>>
+>>>>>>      arch/loongarch/configs/loongson3_defconfig:CONFIG_I2C_PIIX4=y
+>>>>>>      arch/mips/configs/ip27_defconfig:CONFIG_I2C_PIIX4=m
+>>>>>>      arch/mips/configs/loongson2k_defconfig:CONFIG_I2C_PIIX4=y
+>>>>>>      arch/mips/configs/loongson3_defconfig:CONFIG_I2C_PIIX4=y
+>>>>>>
+>>>>>> The loongarch and loongson entries are probably bogus, but I wouldn't
+>>>>>> be surprised if the SGI Onyx and Origin do use Intel south-bridges.
+>>>>> Loongson can use AMD SB700/SB800 south bridges, which have I2C_PIIX4.
+>>>>
+>>>> Well we could revert this patch, but it's going to be a compile failure because of 624b0d5696a89b138408d385899dd35372db324b and other patches that go on top of that.
+>>>>
+>>>> My current leaning is we make a dummy fch.h header for these archs with #defines for 0.
+>>>
+>>> Move "fch.h" to include/linux/platform/x86/ so that it is available on all arches
+>>> and if necessary ifdef out anything x86 specific in the C-code referencing it ?
+>>
+>> Correction that should be include/linux/platform_data/x86/
 > 
-> diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-> index e4de5425838d..390cddd5872c 100644
-> --- a/fs/hugetlbfs/inode.c
-> +++ b/fs/hugetlbfs/inode.c
-> @@ -1600,7 +1600,7 @@ static int __init init_hugetlbfs_fs(void)
->  {
->  	struct vfsmount *mnt;
->  	struct hstate *h;
-> -	int error;
-> +	int error = -ENOMEM;
->  	int i;
->  
->  	if (!hugepages_supported()) {
-> @@ -1608,7 +1608,6 @@ static int __init init_hugetlbfs_fs(void)
->  		return -ENOTSUPP;
->  	}
->  
-> -	error = -ENOMEM;
->  	hugetlbfs_inode_cachep = kmem_cache_create("hugetlbfs_inode_cache",
->  					sizeof(struct hugetlbfs_inode_info),
->  					0, SLAB_ACCOUNT, init_once);
+> Is that a good location?
 
-Uhmf, I do not know. 
+It is a location typically used for x86 headers which we want to be
+available when not building on x86 too.
 
-Often, we tend to use those declarations in order to mark what error
-code we will return if we fail the next operationg. E.g:
+> It is not x86-specific, and I see no platform_data (struct) definitions in
+> arch/x86/include/asm/amd/fch.h?
 
-  error = -ENOMEM
-  if (try_to_allocate)
-    goto out;
- 
-  error = -EINVAL
-  if (check_params)
-    goto out;
- 
- out:
-  return error
+If it is not x86 specific then maybe just include/linux/amd_fch.h ?
 
-No really strong opinion here, but I'd vote for leave it as is?
+Anyways I don't really give much about the exact name, the essence of
+my suggestion is that we can fix this by moving fch.h to some place
+(and maybe a new name) under include/linux so that the header is also
+available when not building for x86.
+
+Regards,
+
+Hans
 
 
--- 
-Oscar Salvador
-SUSE Labs
+
+
+
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+
