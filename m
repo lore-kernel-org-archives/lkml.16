@@ -1,473 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB28123816B;
-	Tue, 10 Jun 2025 15:37:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1757D23909F
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:37:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749569837; cv=none; b=ADpZuYgJO95Wd6/CXNvmR6FM9XgojpGfXQvSjwsW0brLr8lGWTy0lpaQLurx+lhFnKK8FiF/1r6pfW7Jm52+QsyB/IQHlOJZgyq3I5Slfb1mjAKf4mA+ELjtE129ne+EppWACb//sLA5tJV9PrV76Z9o1WYjKp5IdAtA7ybbilg=
+	t=1749569841; cv=none; b=bWnuXG0aEI2R7CvmMooiqeGl7HP19QU9fCQ4XlNiOjeA8UkrrOoz5sI7pmyTedfgWj8Gzfl5M//08N1Gvxi9DonTMLdAD22fRpP4YnxYi++AtUWLmnYgWdCx/ybUsPwdPtGMxECl98mYWxXiq+Fxjf1/YcYAn1QqbmDaSoMviiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749569837; c=relaxed/simple;
-	bh=Mg5I9GQaPwUd+79TO7AVQNChtWaRs7LbsN5ONrDkgus=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Dv57ZT9BD4gddmIfuzyF0WQ+W0yjig3u2Fo64tm78Xqk/rAN3SoJh0+004v6iTp9EjuvbtU+WcuOu2LxF1PBH5/SU9X2bhcmdccOc6MhFSJueEfYNRfjI2VkLqCtub6V+z+JpmWZu3DCHcxVxI3h1a82V7RybSNgzEBZCs/HaUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R4ikQudC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749569841; c=relaxed/simple;
+	bh=Ge1LFO3GJbt9hd5N8cGDfDJg7Ju9ZPGoCT0kFFxY694=;
+	h=Content-Type:Message-ID:Date:MIME-Version:To:Cc:From:Subject; b=r7RRIpcjsjom7rSZx437tHbQTsD+CLtzv8qSUFmN56eUJb5gH3NPg9sO8lGgqZJzuSKFywRXpfPWLsw/RRgYSnRFW4GdU+Mo39IKuNHPu09R1APFbjAzADsmuPu5rLRzWo9YK0sIXnXzYL/gZa3iDzhd5Aw8hO6QAE3H6OVo/Qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ON2vEwHa; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R4ikQudC"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 54C41C4CEFD;
-	Tue, 10 Jun 2025 15:37:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749569837;
-	bh=Mg5I9GQaPwUd+79TO7AVQNChtWaRs7LbsN5ONrDkgus=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=R4ikQudCs/V6nNUNuH9kTaWvBScujTRdis2jD8qgfhT2lxUZrMelji3Yik0wAdzYq
-	 rwRIUVGBApwlT0cLtbx8zn3dJdzyCzvYyN/cTRUWpFdJ+sRTq1A1EB7ritD0pDD0UT
-	 XEvLi5sLk8OsEOU6pWdUw+8YRoKw5MLfoy7UENH9b0tfonGoZOybgHB8OV5isFfjlp
-	 TkcqYmuDOFIxFQ29bUPjM3R1DAJ0akp7CiAsLWwjjB0k3nu5i396u7AosJUqgGqPHK
-	 cA1sHlgG9Gm1aYeVqR840Fo3dZmzeFLj+9yUEqgO4zMep9+Ki6gQvYw9ukaK9EQy04
-	 aAn9c92iP8cow==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFB6C678DA;
-	Tue, 10 Jun 2025 15:37:17 +0000 (UTC)
-From: Mahesh Rao via B4 Relay <devnull+mahesh.rao.altera.com@kernel.org>
-Date: Tue, 10 Jun 2025 23:37:12 +0800
-Subject: [PATCH v4 5/5] firmware: stratix10-rsu: Migrate RSU driver to use
- stratix10 asynchronous framework.
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ON2vEwHa"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4a5ae2fdf4eso61854671cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:37:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1749569837; x=1750174637; darn=vger.kernel.org;
+        h=subject:from:cc:to:content-language:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=nh+mGpHpRQJpNMq16cUvVk7l1gQB7lXYTYB8ff8wx5k=;
+        b=ON2vEwHa6wpDttnIQUUM1hkDGhGAF48c1oOwgFGzl9uxk8+GxucSGtA0nwumkRqmT3
+         om+D5offFKK8MGcLDRm+uYK0jqBW0L3Z/ReRxZfP2TNVtSWDrMYU0vlf64Z9Te3LMdti
+         dLiTCVwCofbWAVjI0tJDyNVKoo56oFktIhUFw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749569837; x=1750174637;
+        h=subject:from:cc:to:content-language:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nh+mGpHpRQJpNMq16cUvVk7l1gQB7lXYTYB8ff8wx5k=;
+        b=wA3dn3z2G+ZJskK4kKKw0N5WWnBGwMNMgxJdH1aR35vwDDVq0AwlNge1RL1N9N5KzC
+         7ekBSYaQPiRwXyiyRgXcL2aLk1roLInwtYOjFaGgSnTfbmj9JAwLTW0kZINGQqn388Nt
+         i3tH4PMgL7kP4tVQhMsYIl+JA/GFYqfWTntiMMCZc/bjfYg7kHR2VQHWmoxlYenBVJRB
+         LEGd8Hrf4wQBM5QQSVo9EzoXE/V4orjrGpMJLP+rrCxA16Rxa6Byd09YJpbiij17f9le
+         vNonxBssJJu6vopa4EExuoehr+C2iC52XfRc9fCDpHC7RQ8l5ZzVFMnT+vdlyXjQpn0g
+         RxpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW6Uf3YmLDfHEMZqrsL4juzDAEA0aKkKYThnQHmkmDH8TserrAySFudPe/fWE/QiEm6dwEP3ZYU7ibOp3A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDR8dybq/KTvmVRcCVKPNpKL9qOzck+Ur23jGJXQ6l6JgONPtV
+	7RECI97pd/ty2IWK8Oi665dpFQE5sAbtpYtM4Gr8OShQe/AmolSiiVGI5ZeXhBRnuCk=
+X-Gm-Gg: ASbGncuMSlV4YEyYhljD1xI/5jlotPdouhJP+GIIduAKzLTJSreaMB8YVxRbS8YOvvY
+	pzHYJCyEHazAv55gz+hbVpGnfxOvAfvUc62M7oTbi4x/u8eX6AheQA+JVrMEoGn1lrjCVpLAu69
+	SrUrVv0pU1k2nC4tBkO/QdHom15qGAUTGOKOL9EjcAw0hoc8nXLk8yzmqh7snKKwWEZqMpm20gX
+	6YU4sWmTG4ij9d3OIp6R79YUcKcki1j5pfCxj7U1IUxspWFMI/gafD3RDQC0zbwRFQxbmugxDFp
+	OyDc2dJMEkPW92ygNKjOHhkrn0y6VtWaF0Jq9b0nCs6tBc/KMgnHlu/OWLaYDX0YD26MQPMx0mb
+	+AcHliE3efBc=
+X-Google-Smtp-Source: AGHT+IHZRFV8Mnfm66KxgqbQ+xn/V03aqh6SUiPn4eSw5iLcmKe2WvnZXGgaVLUZu9Zeyu5/wNzwfA==
+X-Received: by 2002:a05:622a:5587:b0:49c:d64b:3d5f with SMTP id d75a77b69052e-4a708ce76e9mr56271861cf.9.1749569836627;
+        Tue, 10 Jun 2025 08:37:16 -0700 (PDT)
+Received: from [10.212.144.179] ([12.216.155.19])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a6ef785c23sm57361681cf.35.2025.06.10.08.37.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Jun 2025 08:37:16 -0700 (PDT)
+Content-Type: multipart/mixed; boundary="------------Zvf7rR069wIOZjcyzA1npCtG"
+Message-ID: <ab7fe518-0177-4178-a40d-51e0a5fbe8aa@linuxfoundation.org>
+Date: Tue, 10 Jun 2025 09:37:15 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: shuah <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
+ "John B. Wyatt IV" <jwyatt@redhat.com>, John Kacur <jkacur@redhat.com>,
+ Thomas Renninger <trenn@suse.com>, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Thorsten Leemhuis <linux@leemhuis.info>
+From: Shuah Khan <skhan@linuxfoundation.org>
+Subject: [GIT PULL] cpupower urgent fix for Linux 6.16-rc2
+
+This is a multi-part message in MIME format.
+--------------Zvf7rR069wIOZjcyzA1npCtG
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250610-sip_svc_upstream-v4-5-bcd9d6089071@altera.com>
-References: <20250610-sip_svc_upstream-v4-0-bcd9d6089071@altera.com>
-In-Reply-To: <20250610-sip_svc_upstream-v4-0-bcd9d6089071@altera.com>
-To: Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Mahesh Rao <mahesh.rao@altera.com>
-Cc: Matthew Gerlach <matthew.gerlach@altera.com>, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749569835; l=13278;
- i=mahesh.rao@altera.com; s=20250107; h=from:subject:message-id;
- bh=kI23gIa6PngF5SYH1gAyhV6qX0hobd+0qY9aPOd8c7U=;
- b=gdY+7QiobUcZk2EV8wO5pf4GTh8115EDp6Z2bOeWn7DhX80Ge1gdq44i8DRP4dDRNb/NCa8g9
- WScspgG/jFbCE2XNZSU0SCYJ/6Wju5JjY6cd7JMbLwiQPvZhtzPsO3V
-X-Developer-Key: i=mahesh.rao@altera.com; a=ed25519;
- pk=tQiFUzoKxHrQLDtWeEeaeTeJTl/UfclUHWZy1fjSiyg=
-X-Endpoint-Received: by B4 Relay for mahesh.rao@altera.com/20250107 with
- auth_id=337
-X-Original-From: Mahesh Rao <mahesh.rao@altera.com>
-Reply-To: mahesh.rao@altera.com
 
-From: Mahesh Rao <mahesh.rao@altera.com>
+Hi Rafael,
 
-* Add support for asynchronous communication to the
-  RSU client channel.
-* Migrate functions that communicate with the SDM
-  to use the asynchronous framework.
+Please pull this cpupower urgent fix for Linux 6.16-rc2.
 
-Signed-off-by: Mahesh Rao <mahesh.rao@altera.com>
----
- drivers/firmware/stratix10-rsu.c | 272 ++++++++++++++++++++-------------------
- 1 file changed, 142 insertions(+), 130 deletions(-)
+Add unitdir variable for specifying the location to install systemd
+service units instead of installing under ${libdir}/systemd/system
+which doesn't work on some distributions.
 
-diff --git a/drivers/firmware/stratix10-rsu.c b/drivers/firmware/stratix10-rsu.c
-index 1ea39a0a76c787c6396300734b636b4b3a0ae04d..53b67b242cf0afa4102340aa099cef66b642effa 100644
---- a/drivers/firmware/stratix10-rsu.c
-+++ b/drivers/firmware/stratix10-rsu.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2018-2019, Intel Corporation
-+ * Copyright (C) 2025, Altera Corporation
-  */
- 
- #include <linux/arm-smccc.h>
-@@ -14,11 +15,9 @@
- #include <linux/firmware/intel/stratix10-svc-client.h>
- #include <linux/string.h>
- #include <linux/sysfs.h>
-+#include <linux/delay.h>
- 
--#define RSU_STATE_MASK			GENMASK_ULL(31, 0)
--#define RSU_VERSION_MASK		GENMASK_ULL(63, 32)
--#define RSU_ERROR_LOCATION_MASK		GENMASK_ULL(31, 0)
--#define RSU_ERROR_DETAIL_MASK		GENMASK_ULL(63, 32)
-+#define RSU_ERASE_SIZE_MASK		GENMASK_ULL(63, 32)
- #define RSU_DCMF0_MASK			GENMASK_ULL(31, 0)
- #define RSU_DCMF1_MASK			GENMASK_ULL(63, 32)
- #define RSU_DCMF2_MASK			GENMASK_ULL(31, 0)
-@@ -35,7 +34,8 @@
- #define INVALID_DCMF_STATUS		0xFFFFFFFF
- #define INVALID_SPT_ADDRESS		0x0
- 
--#define RSU_GET_SPT_CMD			0x5A
-+#define RSU_RETRY_SLEEP_MS		(1U)
-+#define RSU_ASYNC_MSG_RETRY		(3U)
- #define RSU_GET_SPT_RESP_LEN		(4 * sizeof(unsigned int))
- 
- typedef void (*rsu_callback)(struct stratix10_svc_client *client,
-@@ -64,7 +64,6 @@ typedef void (*rsu_callback)(struct stratix10_svc_client *client,
-  * @max_retry: the preset max retry value
-  * @spt0_address: address of spt0
-  * @spt1_address: address of spt1
-- * @get_spt_response_buf: response from sdm for get_spt command
-  */
- struct stratix10_rsu_priv {
- 	struct stratix10_svc_chan *chan;
-@@ -99,47 +98,32 @@ struct stratix10_rsu_priv {
- 
- 	unsigned long spt0_address;
- 	unsigned long spt1_address;
--
--	unsigned int *get_spt_response_buf;
- };
- 
-+typedef void (*rsu_async_callback)(struct device *dev,
-+	struct stratix10_rsu_priv *priv, struct stratix10_svc_cb_data *data);
-+
- /**
-- * rsu_status_callback() - Status callback from Intel Service Layer
-- * @client: pointer to service client
-+ * rsu_async_status_callback() - Status callback from rsu_async_send()
-+ * @dev: pointer to device object
-+ * @priv: pointer to priv object
-  * @data: pointer to callback data structure
-  *
-- * Callback from Intel service layer for RSU status request. Status is
-- * only updated after a system reboot, so a get updated status call is
-- * made during driver probe.
-+ * Callback from rsu_async_send() to get the system rsu error status.
-  */
--static void rsu_status_callback(struct stratix10_svc_client *client,
--				struct stratix10_svc_cb_data *data)
-+static void rsu_async_status_callback(struct device *dev,
-+				      struct stratix10_rsu_priv *priv,
-+				      struct stratix10_svc_cb_data *data)
- {
--	struct stratix10_rsu_priv *priv = client->priv;
--	struct arm_smccc_res *res = (struct arm_smccc_res *)data->kaddr1;
--
--	if (data->status == BIT(SVC_STATUS_OK)) {
--		priv->status.version = FIELD_GET(RSU_VERSION_MASK,
--						 res->a2);
--		priv->status.state = FIELD_GET(RSU_STATE_MASK, res->a2);
--		priv->status.fail_image = res->a1;
--		priv->status.current_image = res->a0;
--		priv->status.error_location =
--			FIELD_GET(RSU_ERROR_LOCATION_MASK, res->a3);
--		priv->status.error_details =
--			FIELD_GET(RSU_ERROR_DETAIL_MASK, res->a3);
--	} else {
--		dev_err(client->dev, "COMMAND_RSU_STATUS returned 0x%lX\n",
--			res->a0);
--		priv->status.version = 0;
--		priv->status.state = 0;
--		priv->status.fail_image = 0;
--		priv->status.current_image = 0;
--		priv->status.error_location = 0;
--		priv->status.error_details = 0;
--	}
--
--	complete(&priv->completion);
-+	struct arm_smccc_1_2_regs *res = (struct arm_smccc_1_2_regs *)data->kaddr1;
-+
-+	priv->status.current_image = res->a2;
-+	priv->status.fail_image = res->a3;
-+	priv->status.state = res->a4;
-+	priv->status.version = res->a5;
-+	priv->status.error_location = res->a7;
-+	priv->status.error_details = res->a8;
-+	priv->retry_counter = res->a9;
- }
- 
- /**
-@@ -163,32 +147,6 @@ static void rsu_command_callback(struct stratix10_svc_client *client,
- 	complete(&priv->completion);
- }
- 
--/**
-- * rsu_retry_callback() - Callback from Intel service layer for getting
-- * the current image's retry counter from the firmware
-- * @client: pointer to client
-- * @data: pointer to callback data structure
-- *
-- * Callback from Intel service layer for retry counter, which is used by
-- * user to know how many times the images is still allowed to reload
-- * itself before giving up and starting RSU fail-over flow.
-- */
--static void rsu_retry_callback(struct stratix10_svc_client *client,
--			       struct stratix10_svc_cb_data *data)
--{
--	struct stratix10_rsu_priv *priv = client->priv;
--	unsigned int *counter = (unsigned int *)data->kaddr1;
--
--	if (data->status == BIT(SVC_STATUS_OK))
--		priv->retry_counter = *counter;
--	else if (data->status == BIT(SVC_STATUS_NO_SUPPORT))
--		dev_warn(client->dev, "Secure FW doesn't support retry\n");
--	else
--		dev_err(client->dev, "Failed to get retry counter %lu\n",
--			BIT(data->status));
--
--	complete(&priv->completion);
--}
- 
- /**
-  * rsu_max_retry_callback() - Callback from Intel service layer for getting
-@@ -270,34 +228,19 @@ static void rsu_dcmf_status_callback(struct stratix10_svc_client *client,
- 	complete(&priv->completion);
- }
- 
--static void rsu_get_spt_callback(struct stratix10_svc_client *client,
--				 struct stratix10_svc_cb_data *data)
-+/**
-+ * rsu_async_get_spt_table_callback() - Callback to be used by the rsu_async_send()
-+ * to retrieve the SPT table information.
-+ * @dev: pointer to device object
-+ * @priv: pointer to priv object
-+ * @data: pointer to callback data structure
-+ */
-+static void rsu_async_get_spt_table_callback(struct device *dev,
-+					     struct stratix10_rsu_priv *priv,
-+					     struct stratix10_svc_cb_data *data)
- {
--	struct stratix10_rsu_priv *priv = client->priv;
--	unsigned long *mbox_err = (unsigned long *)data->kaddr1;
--	unsigned long *resp_len = (unsigned long *)data->kaddr2;
--
--	if (data->status != BIT(SVC_STATUS_OK) || (*mbox_err) ||
--	    (*resp_len != RSU_GET_SPT_RESP_LEN))
--		goto error;
--
--	priv->spt0_address = priv->get_spt_response_buf[0];
--	priv->spt0_address <<= 32;
--	priv->spt0_address |= priv->get_spt_response_buf[1];
--
--	priv->spt1_address = priv->get_spt_response_buf[2];
--	priv->spt1_address <<= 32;
--	priv->spt1_address |= priv->get_spt_response_buf[3];
--
--	goto complete;
--
--error:
--	dev_err(client->dev, "failed to get SPTs\n");
--
--complete:
--	stratix10_svc_free_memory(priv->chan, priv->get_spt_response_buf);
--	priv->get_spt_response_buf = NULL;
--	complete(&priv->completion);
-+	priv->spt0_address = *((unsigned long *)data->kaddr1);
-+	priv->spt1_address = *((unsigned long *)data->kaddr2);
- }
- 
- /**
-@@ -329,14 +272,6 @@ static int rsu_send_msg(struct stratix10_rsu_priv *priv,
- 	if (arg)
- 		msg.arg[0] = arg;
- 
--	if (command == COMMAND_MBOX_SEND_CMD) {
--		msg.arg[1] = 0;
--		msg.payload = NULL;
--		msg.payload_length = 0;
--		msg.payload_output = priv->get_spt_response_buf;
--		msg.payload_length_output = RSU_GET_SPT_RESP_LEN;
--	}
--
- 	ret = stratix10_svc_send(priv->chan, &msg);
- 	if (ret < 0)
- 		goto status_done;
-@@ -362,6 +297,95 @@ static int rsu_send_msg(struct stratix10_rsu_priv *priv,
- 	return ret;
- }
- 
-+/**
-+ * soc64_async_callback() - Callback from Intel service layer for async requests
-+ * @ptr: pointer to the completion object
-+ */
-+static void soc64_async_callback(void *ptr)
-+{
-+	if (ptr)
-+		complete(ptr);
-+}
-+
-+/**
-+ * rsu_send_async_msg() - send an async message to Intel service layer
-+ * @dev: pointer to device object
-+ * @priv: pointer to rsu private data
-+ * @command: RSU status or update command
-+ * @arg: the request argument, notify status
-+ * @callback: function pointer for the callback (status or update)
-+ */
-+static int rsu_send_async_msg(struct device *dev, struct stratix10_rsu_priv *priv,
-+			      enum stratix10_svc_command_code command,
-+			      unsigned long arg,
-+			      rsu_async_callback callback)
-+{
-+	struct stratix10_svc_client_msg msg = {0};
-+	struct stratix10_svc_cb_data data = {0};
-+	struct completion completion;
-+	int status, index, ret;
-+	void *handle = NULL;
-+
-+	msg.command = command;
-+	msg.arg[0] = arg;
-+
-+	init_completion(&completion);
-+
-+	for (index = 0; index < RSU_ASYNC_MSG_RETRY; index++) {
-+		status = stratix10_svc_async_send(priv->chan, &msg,
-+						  &handle, soc64_async_callback,
-+						  &completion);
-+		if (status == 0)
-+			break;
-+		dev_warn(dev, "Failed to send async message\n");
-+		msleep(RSU_RETRY_SLEEP_MS);
-+	}
-+
-+	if (status && !handle) {
-+		dev_err(dev, "Failed to send async message\n");
-+		return -ETIMEDOUT;
-+	}
-+
-+	ret = wait_for_completion_io_timeout(&completion, RSU_TIMEOUT);
-+	if (ret > 0)
-+		dev_dbg(dev, "Received async interrupt\n");
-+	else if (ret == 0)
-+		dev_dbg(dev, "Timeout occurred. Trying to poll the response\n");
-+
-+	for (index = 0; index < RSU_ASYNC_MSG_RETRY; index++) {
-+		status = stratix10_svc_async_poll(priv->chan, handle, &data);
-+		if (status == -EAGAIN) {
-+			dev_dbg(dev, "Async message is still in progress\n");
-+		} else if (status < 0) {
-+			dev_alert(dev, "Failed to poll async message\n");
-+			ret = -ETIMEDOUT;
-+		} else if (status == 0) {
-+			ret = 0;
-+			break;
-+		}
-+		msleep(RSU_RETRY_SLEEP_MS);
-+	}
-+
-+	if (ret) {
-+		dev_err(dev, "Failed to get async response\n");
-+		goto status_done;
-+	}
-+
-+	if (data.status == 0) {
-+		ret = 0;
-+		if (callback)
-+			callback(dev, priv, &data);
-+	} else {
-+		dev_err(dev, "%s returned 0x%x from SDM\n", __func__,
-+			data.status);
-+		ret = -EFAULT;
-+	}
-+
-+status_done:
-+	stratix10_svc_async_done(priv->chan, handle);
-+	return ret;
-+}
-+
- /*
-  * This driver exposes some optional features of the Intel Stratix 10 SoC FPGA.
-  * The sysfs interfaces exposed here are FPGA Remote System Update (RSU)
-@@ -597,27 +621,20 @@ static ssize_t notify_store(struct device *dev,
- 	if (ret)
- 		return ret;
- 
--	ret = rsu_send_msg(priv, COMMAND_RSU_NOTIFY,
--			   status, rsu_command_callback);
-+	ret = rsu_send_async_msg(dev, priv, COMMAND_RSU_NOTIFY, status, NULL);
- 	if (ret) {
- 		dev_err(dev, "Error, RSU notify returned %i\n", ret);
- 		return ret;
- 	}
- 
- 	/* to get the updated state */
--	ret = rsu_send_msg(priv, COMMAND_RSU_STATUS,
--			   0, rsu_status_callback);
-+	ret = rsu_send_async_msg(dev, priv, COMMAND_RSU_STATUS, 0,
-+				 rsu_async_status_callback);
- 	if (ret) {
- 		dev_err(dev, "Error, getting RSU status %i\n", ret);
- 		return ret;
- 	}
- 
--	ret = rsu_send_msg(priv, COMMAND_RSU_RETRY, 0, rsu_retry_callback);
--	if (ret) {
--		dev_err(dev, "Error, getting RSU retry %i\n", ret);
--		return ret;
--	}
--
- 	return count;
- }
- 
-@@ -737,12 +754,19 @@ static int stratix10_rsu_probe(struct platform_device *pdev)
- 		return PTR_ERR(priv->chan);
- 	}
- 
-+	ret = stratix10_svc_add_async_client(priv->chan, false);
-+	if (ret) {
-+		dev_err(dev, "failed to add async client\n");
-+		stratix10_svc_free_channel(priv->chan);
-+		return ret;
-+	}
-+
- 	init_completion(&priv->completion);
- 	platform_set_drvdata(pdev, priv);
- 
- 	/* get the initial state from firmware */
--	ret = rsu_send_msg(priv, COMMAND_RSU_STATUS,
--			   0, rsu_status_callback);
-+	ret = rsu_send_async_msg(dev, priv, COMMAND_RSU_STATUS, 0,
-+				 rsu_async_status_callback);
- 	if (ret) {
- 		dev_err(dev, "Error, getting RSU status %i\n", ret);
- 		stratix10_svc_free_channel(priv->chan);
-@@ -763,12 +787,6 @@ static int stratix10_rsu_probe(struct platform_device *pdev)
- 		stratix10_svc_free_channel(priv->chan);
- 	}
- 
--	ret = rsu_send_msg(priv, COMMAND_RSU_RETRY, 0, rsu_retry_callback);
--	if (ret) {
--		dev_err(dev, "Error, getting RSU retry %i\n", ret);
--		stratix10_svc_free_channel(priv->chan);
--	}
--
- 	ret = rsu_send_msg(priv, COMMAND_RSU_MAX_RETRY, 0,
- 			   rsu_max_retry_callback);
- 	if (ret) {
-@@ -776,18 +794,12 @@ static int stratix10_rsu_probe(struct platform_device *pdev)
- 		stratix10_svc_free_channel(priv->chan);
- 	}
- 
--	priv->get_spt_response_buf =
--		stratix10_svc_allocate_memory(priv->chan, RSU_GET_SPT_RESP_LEN);
- 
--	if (IS_ERR(priv->get_spt_response_buf)) {
--		dev_err(dev, "failed to allocate get spt buffer\n");
--	} else {
--		ret = rsu_send_msg(priv, COMMAND_MBOX_SEND_CMD,
--				   RSU_GET_SPT_CMD, rsu_get_spt_callback);
--		if (ret) {
--			dev_err(dev, "Error, getting SPT table %i\n", ret);
--			stratix10_svc_free_channel(priv->chan);
--		}
-+	ret = rsu_send_async_msg(dev, priv, COMMAND_RSU_GET_SPT_TABLE, 0,
-+				 rsu_async_get_spt_table_callback);
-+	if (ret) {
-+		dev_err(dev, "Error, getting SPT table %i\n", ret);
-+		stratix10_svc_free_channel(priv->chan);
- 	}
- 
- 	return ret;
+Note: I meant to send this during the merge window and ran into some
+merge conflicts during the PR test. Decided to wait on it until rc1.
 
--- 
-2.35.3
+diff is attached.
 
+thanks,
+-- Shuah
 
+----------------------------------------------------------------
+The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
+
+   Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
+
+are available in the Git repository at:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux tags/linux-cpupower-6.16-rc2-fixes
+
+for you to fetch changes up to e044b8a9545cd8265c7110c179aeec2624c16455:
+
+   cpupower: split unitdir from libdir in Makefile (2025-06-09 10:17:46 -0600)
+
+----------------------------------------------------------------
+linux-cpupower-6.16-rc2-fixes
+
+Add unitdir variable for specifying the location to install systemd
+service units instead of installing under ${libdir}/systemd/system
+which doesn't work on some distributions.
+
+----------------------------------------------------------------
+Francesco Poli (wintermute) (1):
+       cpupower: split unitdir from libdir in Makefile
+
+  tools/power/cpupower/Makefile | 9 +++++----
+  1 file changed, 5 insertions(+), 4 deletions(-)
+
+----------------------------------------------------------------
+--------------Zvf7rR069wIOZjcyzA1npCtG
+Content-Type: text/x-patch; charset=UTF-8;
+ name="linux-cpupower-6.16-rc2-fixes.diff"
+Content-Disposition: attachment; filename="linux-cpupower-6.16-rc2-fixes.diff"
+Content-Transfer-Encoding: base64
+
+ZGlmZiAtLWdpdCBhL3Rvb2xzL3Bvd2VyL2NwdXBvd2VyL01ha2VmaWxlIGIvdG9vbHMvcG93
+ZXIvY3B1cG93ZXIvTWFrZWZpbGUKaW5kZXggYmU4ZGZhYzE0MDc2Li5jNDNkYjFjNDEyMDUg
+MTAwNjQ0Ci0tLSBhL3Rvb2xzL3Bvd2VyL2NwdXBvd2VyL01ha2VmaWxlCisrKyBiL3Rvb2xz
+L3Bvd2VyL2NwdXBvd2VyL01ha2VmaWxlCkBAIC03Myw2ICs3Myw3IEBAIHNiaW5kaXIgPz0J
+L3Vzci9zYmluCiBtYW5kaXIgPz0JL3Vzci9tYW4KIGxpYmRpciA/PQkvdXNyL2xpYgogbGli
+ZXhlY2RpciA/PQkvdXNyL2xpYmV4ZWMKK3VuaXRkaXIgPz0JL3Vzci9saWIvc3lzdGVtZC9z
+eXN0ZW0KIGluY2x1ZGVkaXIgPz0JL3Vzci9pbmNsdWRlCiBsb2NhbGVkaXIgPz0JL3Vzci9z
+aGFyZS9sb2NhbGUKIGRvY2RpciA/PSAgICAgICAvdXNyL3NoYXJlL2RvYy9wYWNrYWdlcy9j
+cHVwb3dlcgpAQCAtMzA5LDkgKzMxMCw5IEBAIGluc3RhbGwtdG9vbHM6ICQoT1VUUFVUKWNw
+dXBvd2VyCiAJJChJTlNUQUxMX0RBVEEpIGNwdXBvd2VyLXNlcnZpY2UuY29uZiAnJChERVNU
+RElSKSR7Y29uZmRpcn0nCiAJJChJTlNUQUxMKSAtZCAkKERFU1RESVIpJHtsaWJleGVjZGly
+fQogCSQoSU5TVEFMTF9QUk9HUkFNKSBjcHVwb3dlci5zaCAnJChERVNURElSKSR7bGliZXhl
+Y2Rpcn0vY3B1cG93ZXInCi0JJChJTlNUQUxMKSAtZCAkKERFU1RESVIpJHtsaWJkaXJ9L3N5
+c3RlbWQvc3lzdGVtCi0Jc2VkICdzfF9fX0NESVJfX198JHtjb25mZGlyfXw7IHN8X19fTERJ
+Ul9fX3wke2xpYmV4ZWNkaXJ9fCcgY3B1cG93ZXIuc2VydmljZS5pbiA+ICckKERFU1RESVIp
+JHtsaWJkaXJ9L3N5c3RlbWQvc3lzdGVtL2NwdXBvd2VyLnNlcnZpY2UnCi0JJChTRVRQRVJN
+X0RBVEEpICckKERFU1RESVIpJHtsaWJkaXJ9L3N5c3RlbWQvc3lzdGVtL2NwdXBvd2VyLnNl
+cnZpY2UnCisJJChJTlNUQUxMKSAtZCAkKERFU1RESVIpJHt1bml0ZGlyfQorCXNlZCAnc3xf
+X19DRElSX19ffCR7Y29uZmRpcn18OyBzfF9fX0xESVJfX198JHtsaWJleGVjZGlyfXwnIGNw
+dXBvd2VyLnNlcnZpY2UuaW4gPiAnJChERVNURElSKSR7dW5pdGRpcn0vY3B1cG93ZXIuc2Vy
+dmljZScKKwkkKFNFVFBFUk1fREFUQSkgJyQoREVTVERJUikke3VuaXRkaXJ9L2NwdXBvd2Vy
+LnNlcnZpY2UnCiAKIGluc3RhbGwtbWFuOgogCSQoSU5TVEFMTF9EQVRBKSAtRCBtYW4vY3B1
+cG93ZXIuMSAkKERFU1RESVIpJHttYW5kaXJ9L21hbjEvY3B1cG93ZXIuMQpAQCAtMzQ4LDcg
+KzM0OSw3IEBAIHVuaW5zdGFsbDoKIAktIHJtIC1mICQoREVTVERJUikke2JpbmRpcn0vdXRp
+bHMvY3B1cG93ZXIKIAktIHJtIC1mICQoREVTVERJUikke2NvbmZkaXJ9Y3B1cG93ZXItc2Vy
+dmljZS5jb25mCiAJLSBybSAtZiAkKERFU1RESVIpJHtsaWJleGVjZGlyfS9jcHVwb3dlcgot
+CS0gcm0gLWYgJChERVNURElSKSR7bGliZGlyfS9zeXN0ZW1kL3N5c3RlbS9jcHVwb3dlci5z
+ZXJ2aWNlCisJLSBybSAtZiAkKERFU1RESVIpJHt1bml0ZGlyfS9jcHVwb3dlci5zZXJ2aWNl
+CiAJLSBybSAtZiAkKERFU1RESVIpJHttYW5kaXJ9L21hbjEvY3B1cG93ZXIuMQogCS0gcm0g
+LWYgJChERVNURElSKSR7bWFuZGlyfS9tYW4xL2NwdXBvd2VyLWZyZXF1ZW5jeS1zZXQuMQog
+CS0gcm0gLWYgJChERVNURElSKSR7bWFuZGlyfS9tYW4xL2NwdXBvd2VyLWZyZXF1ZW5jeS1p
+bmZvLjEK
+
+--------------Zvf7rR069wIOZjcyzA1npCtG--
