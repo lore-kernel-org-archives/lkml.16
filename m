@@ -1,90 +1,117 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB77178F34
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2D478F34;
+	Tue, 10 Jun 2025 22:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749595520; cv=none; b=XLxZLrlYqZNy5i8txPvLUJyHRWHWS0+LeWHnliSlNFxuckUab/gKj+qo45SLmKk+Rd0EvX3e/W98tTuMCu+gln+EjpHasN4iCEh1js6SWQZePMlnNctfBHZp8wDJLb+Hl1upqbvTYbK+LJ7hqT0qQ8lCg+aJ1JNkA9VcYKJ9KE0=
+	t=1749595815; cv=none; b=hPIf97UdCPAWP/vaI9KF2iqDDU7STysuL/QKtcmNmxJnj5IhIctDRi8TWYZOJY48BNz1D5tSOeH6NiZnrJi5zn0dfJhJqnsslzQ7LPRzr8+KcocF1o7okFfx0+4u2QS4AG3MLSEj8nEwbaj8J5b7aZ73DF7aSoM8lqYxAfr9m+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749595520; c=relaxed/simple;
-	bh=P3Kb68R1Z70usEnSE/SHL7A0xnBfjEoj+PnoUkVhR1Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Sk/YKcVcSCUn8YZ1YAaKB6GWwTkvr1L9GBf3bj7MtPegWwHxakLnv3r4Saf1+Nh9HFeIoB7ScZwdTGZGsVGC3bK47YwMvgO3QUsNZ1vLhAi0fMzypYo1yKrCEGf25aduHgHeXDAlnY8p9Togp/mdaH0MeNQGfPHxnFBQPC+VwAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=0ConQXYz; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1749595815; c=relaxed/simple;
+	bh=fIZTCPSARKxpy7CGzYoZF6RYIr35LcsFBI2p7GEumAE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IrlTkJHMy5ph81d4zYO7HALNd7FPYNul1+iVvaHpjtiGP9B0F0ZRhlD6fnu5vo9Due16N7IBypK88B+EtA8CY9TZeAWCTcbn96JkwlSzMD0pH7LdD8MdydP9D98mcsi4L7x7TTnx1U91ysJxPp/mFrA5SpAlPqg/Ab3Q617PPUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nuwnk8MV; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="0ConQXYz"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4a5ae2fdf4eso3683481cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:45:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nuwnk8MV"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-73c17c770a7so6653266b3a.2;
+        Tue, 10 Jun 2025 15:50:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1749595516; x=1750200316; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=P3Kb68R1Z70usEnSE/SHL7A0xnBfjEoj+PnoUkVhR1Q=;
-        b=0ConQXYz9vgabrP/h0wNseLrNGhjBlER7i0j7l81wn7PvoGs5GfjJ9ZD8iGvoigdXw
-         mEprP3sYjqmn/fCcluipg2aSotCQDX83XXUk8dEjs+DnEU0aYCcuisix34sciqs9882S
-         nalLFv/kF0dDnmfytEQZTswI46JMSsF/luNJDDoLV23L4d9zfOIOPMOM9n1mYk4BmZ2t
-         hoKytzRMfWsu40GHY61XoWueL7Z3wRj31C+EyY2tK1DFOgTjy966vSSG7/xM/OiR8M1K
-         pkFb4v5f+2k2QmD01HBXr1lFihRkdnyIkrUOxgaAbo/VaiZHFlIjTaOBzgE6TZuFXFEQ
-         M3fQ==
+        d=gmail.com; s=20230601; t=1749595813; x=1750200613; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sMaN5CtVOZf+HFnSMc8Gruk/tIIqcD2xs0sOKADjgPg=;
+        b=Nuwnk8MVS84ntpYl5EdJrKorWTfCEkqPi9X8xUM0bTvW7/kZGPlluL0ACfwnHjsnQm
+         MxFmA3IP+6HwHrfxIbBNjeD5p67j2miAGyWVzPMH5gpR9UqtAP7Jx0Mjp6SH00/4r9I8
+         WJ5wYdGedu14quZJv50ymFP4sSrfWMdwxR+kLafUhiKLdHOEkLqLqXs3MNs3se5kVaEn
+         EU4tXVgPQOa1cfm06t9SVT08XukMvVdel02vZv4PQytRpMamLEnc1d1J3LkR82ItCdda
+         bPDCa4ps/baSrXL+YuAgyhypjXIYMuJxSXGWWBwSp5SICTQ4ihByOvJN3FRx65md5Wt7
+         lyuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749595516; x=1750200316;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=P3Kb68R1Z70usEnSE/SHL7A0xnBfjEoj+PnoUkVhR1Q=;
-        b=mXphjeGSwbkO1YfChel6thNlpxnv290GS6644MyE5khglCxVgzXFfIDVmSzNBdpgdp
-         L6BUMshqSSFDyIlFDtLumxxJRvCNENp1eXvJyC4TxF+z20GodhnMtm2NuU9cHYE5GJ6J
-         WJBhMXET7FsJhbGjOAOhMXijpYkMXDzUEQlvu1N9aiVbyPMX91TDHM3kKhcBvqu2uwxR
-         VXwekPzkZG/nM0R2Et46U1+a6vG2whVI1VUCZNxZSydkY9Vi449N8WNUpzdP/mrnY7XO
-         ZWcdleF9Dlx1zRXK7wNUvTO8N/oKOr0dqFFRHBWzKeZt5ngwg/XC75Y0rRBXHItKnx7e
-         lSKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUeFH4VzQ6rmXD2wPwxLJLoElBBLORA94TulSGDZb3x7VWLJCxqK2DiafEsa2GsBO8rbcpEJq7XBWIt7TU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxf08fVyisE5DqWSgfmRefcPPcaziIXNVfMyZmJfQrXJloUIHqz
-	h7imcFw8Tok485wd060IgYFtSqMDWBt7CCRridhotoPnLGjGOw/CMkMebyMZJIH1+SI6TBTZVfy
-	SsrP7vRMze6kq1crl7gfd/Ig+7ggVuMwc4gu8Ow0QtA==
-X-Gm-Gg: ASbGncukEReoC6+oz6WPG+mdmgneXARA8rOS0DDw7uduD/nmYbsrGrf2hD0t2MGg21B
-	eP1p0O6I7ruJB8/ENBdMDCn/nbtOfg+drhAB5kpRNFvlI+E+ym+2tZA/C2xZizF/WytsvozBD1k
-	2xb4sOrurcaYeu++QF0Esfb1bG+wSZKvmYdIxhlzQt
-X-Google-Smtp-Source: AGHT+IGJBCoY2BSTgZVJ9PJPU9ONDD7Heq2g8GGzNzWCWXXG69HepYVSefbdNRPd5nytDpdM+XQwjF4VCWLZ42gOlww=
-X-Received: by 2002:a05:622a:1f09:b0:494:b1f9:d699 with SMTP id
- d75a77b69052e-4a713ca3022mr22642371cf.23.1749595515969; Tue, 10 Jun 2025
- 15:45:15 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749595813; x=1750200613;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sMaN5CtVOZf+HFnSMc8Gruk/tIIqcD2xs0sOKADjgPg=;
+        b=Hi2myWmCJ6OE7jt6iiz9o2+ek4JOzEcCwmz7PiUpZEote199WsSJnRCe4VZ1QjslNq
+         b13lFIastQjv/tVMK7dDqSVqK3dL0OfsRTLrobhznCFwAQMkde2sMoKB607sxotUSxsJ
+         TvVAzH0bYA0RAU9EguEOuKgo/yt1iNg4QJw7WUvaRId1EUBOtLbG6p6cZdpJ/giOA/+j
+         ao2FZXnBag1/dK7QBvlfQKXqXI2spaSXE8+k1oHdI6n3wNqB8Sx+vaglRzU58O/LyZuJ
+         CukPIIpgp+9Nb2OrB3Og71Ay2sWpvbSnGhZ4NK/5Va9H1gVrqOocmKJQAFP//j+Coohg
+         wpng==
+X-Forwarded-Encrypted: i=1; AJvYcCW8VVmWNSBGGSD9AKiyOTD3euhE3XavZ0wsSHEqTrOWimsHT6jQAHudsbqaPht0Fs7Bhw3dule4Ucc=@vger.kernel.org, AJvYcCWSffIioC/Lhva/1nLjSezklUaW01inFb8OHBBQo2hCrLg0XlRF8SiLWRQmtAzrlCQL2Arh9461dKev7NO/kA==@vger.kernel.org, AJvYcCWtyJ2fL5igUyuPJqdIy833nsAe6A5/suTHeAFwMEOcIbofbDGhxUSkIzWSuSRpI/6kvfnTRZ6fX0lArLw6@vger.kernel.org
+X-Gm-Message-State: AOJu0YztB4zeDyzCTpiLQfPLRnoySY7pbLUh/1ME+GVZuXu3QTj1Q3/3
+	NY/Rr2Wkm7QBOfugrCpuTn0L7IV54ONz3JvKIax0X8e5itQERNs2EPr26Gl3RQ==
+X-Gm-Gg: ASbGncs0UjTGsTL/UmrQrTuz6i039BeC56G9sGvpb1GYPx0OkeYlYUscinepYIlYubb
+	H7R88+obWDEednkm4w5LvIwxnKr0uNBLZA2uO6jT4U3XEkDYIgM+utL9Wxn8S3LYV0BT0VY/QZU
+	F7cgt3BfmOtBGCjwlmnpVs5rgn9qEDZV7KFtVyjInpaOZIYoOhhS5/NFKmrdyyajKKJGSLIrHZp
+	G1gC0xA7AL0WvNaIKLhRya+I+HfQ5rR2i8Na+mV9wAX8R/z0GeYiKUb1aoRUtVukgftoEyjm4VN
+	i+m/GBMP6+vHe+IKtwt1UHdgk4/V+Q6X+3K7wiAwziBuuEU+CG9G90DCzFOGEg==
+X-Google-Smtp-Source: AGHT+IE31JuZyP4Lqszx50ANjTakcQMRLueFIwYYJxebv8ZQtcAk5srkqZe+w6aDFy9a35XDsPfOxw==
+X-Received: by 2002:a05:6a21:6daa:b0:215:efe1:a680 with SMTP id adf61e73a8af0-21f8664772amr1668153637.16.1749595813059;
+        Tue, 10 Jun 2025 15:50:13 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2f5f67505asm7360525a12.45.2025.06.10.15.50.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 15:50:12 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 08301420AA82; Wed, 11 Jun 2025 05:50:08 +0700 (WIB)
+Date: Wed, 11 Jun 2025 05:50:08 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Chen Linxuan <chenlinxuan@uniontech.com>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: zhanjun@uniontech.com, niecheng1@uniontech.com,
+	Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND] doc: fuse: Add max_background and
+ congestion_threshold
+Message-ID: <aEi2oPUdTUiRkzSl@archie.me>
+References: <20250610021124.2800951-2-chenlinxuan@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610214140.2775339-1-mclapinski@google.com>
-In-Reply-To: <20250610214140.2775339-1-mclapinski@google.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Tue, 10 Jun 2025 18:44:38 -0400
-X-Gm-Features: AX0GCFtNzdj1Q_Sh0PElEUysz7r0FEmwXQtH5NSQLtcg3vWsni8v23ZtIRM1yPY
-Message-ID: <CA+CK2bA_HpaZCeRgrBMWE+_1XCnu+Of7OEMg59CDBZHtaNGTsg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] x86/boot/compressed: Fix avoiding memmap in physical KASLR
-To: Michal Clapinski <mclapinski@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>, Dan Williams <dan.j.williams@intel.com>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="M/CU2qPWiXAOhvhs"
+Content-Disposition: inline
+In-Reply-To: <20250610021124.2800951-2-chenlinxuan@uniontech.com>
+
+
+--M/CU2qPWiXAOhvhs
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 10, 2025 at 5:42=E2=80=AFPM Michal Clapinski <mclapinski@google=
-.com> wrote:
->
-> The intent of the code was to cancel KASLR if there are more than 4
-> memmap args. Unfortunately, it was only doing that if the memmap args
-> were comma delimited, not if they were entirely separate.
-> This change fixes it.
+On Tue, Jun 10, 2025 at 10:11:25AM +0800, Chen Linxuan wrote:
+> +        max_background
+> +          The maximum number of background requests that can be outstand=
+ing
+                                   outstanding background requests
+> +          at a time. When the number of background requests reaches this=
+ limit,
+> +          further requests will be blocked until some are completed, pot=
+entially
+> +          causing I/O operations to stall.
 
-Fixes: d52e7d5a952c ("x86/KASLR: Parse all 'memmap=3D' boot option entries"=
-)
+Thanks.
 
-> Signed-off-by: Michal Clapinski <mclapinski@google.com>
+--=20
+An old man doll... just what I always wanted! - Clara
 
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+--M/CU2qPWiXAOhvhs
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaEi2nQAKCRD2uYlJVVFO
+o/SbAP9n70Sh81jc5otTVcPOmm03/0gxJcu58hAnES7USTRPoAEAv/yiEqcSe/AZ
+gu/KY9E+FQPGaOGGhT3Uzi4jTyFJ3wE=
+=XnIT
+-----END PGP SIGNATURE-----
+
+--M/CU2qPWiXAOhvhs--
