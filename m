@@ -1,121 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320DE29C340;
-	Tue, 10 Jun 2025 12:42:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F70629B8D5
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:42:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749559354; cv=none; b=oqOVuk9NklePhcY9IiRiGIv4I7S34712OOZvHotJaZLtbIHwgBmOR037d4HLiJTkFDzQ9ZiwDYHqGYnXMF7EmwZ3M9pgzgxXLUgpsuEppCuarwFoPIJvXtMt3lKsjj4wVn4OkJNKVKRkUWjj5l5g7hSyakDfNbR9O8DizCOv2hQ=
+	t=1749559354; cv=none; b=HceiTX1gsmvjvoUg/NwgM0cpRnbTCAeD7TU5+K0Dlv7FnT2AK10I/ka6ZU1P9wpBNNxlStutHhTS221HNxZEcjAxC+S9fL69lE8QT0DhTHn6ScipkbEECbtPBbK+d+p8icVfJnz5OGiW+ES+c37E5CMN4Z1IrtFrwgsA8L/a5wA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749559354; c=relaxed/simple;
-	bh=J6AFLpxqvQUWE4ch4VBYYdyyIA1JHulBUl77i0XMQXw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Sm7J83djf9VcOmm6GqE/zpOnYCsaVHJ09JRQpgi3C2yPm48omoEBP9JwY24QqHOi5UkPGG2cfrzHKCSjFRWBusXY9xbw/rY452jEKQd+Wjr3sRxzr1045wBYtPyhzWCvBw7WfNJEjS4OdLVnEnjnmn1CPto4LgQUh+8QLpi+888=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NRkuzvM1; arc=none smtp.client-ip=10.30.226.201
+	bh=U6Na6s2P5c1DqTdnoC6CkwOGk4v/Ph4Wt3KUWux1jLg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VPNIs/L5ngpUd3TD57iNKt/l48ZWGKw4n7sfgB/rKa7eZxB0qA684dk+ceuOdXcbySzWx5YMeu5yTMSUMHNEf7MFIYBiGV9PZSIbCazIitUeZLDvmSCkf+gL8yyD4fv3kMRC7blEMqdwgFxCadaKKnVHEtUHUP5fPoo0X7CJ758=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=m8HBbj0L; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NRkuzvM1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FCB9C4CEED;
-	Tue, 10 Jun 2025 12:42:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749559354;
-	bh=J6AFLpxqvQUWE4ch4VBYYdyyIA1JHulBUl77i0XMQXw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=NRkuzvM1VuWrjni1jIHamlCP5Bf1frhkd/OQ6upItw68wDuIDQ1w3JYAKfbPY1Sel
-	 H5fw+qaJ6BDT3n2lXXAAxygtCxT6mJBewqs0LfJhbg0liyACN1ArVO1sqhIUoP4srk
-	 Sr9bAd64TUSiT441BkLsLPAQbKzvz8GVl8ATS2d9ZiV0PVC6bX4ddtl8GQ7/OIwuNL
-	 VJdq0ggAuB9KpbiTPog1ER1NI4nHonjdr2vkoViqzSWM2f0qzyRE2fOJRwGWGtlCip
-	 nNuxSAZZ1A5LNrfl9qVcDSlHNWjc4ax4O2s2vdzysJDPhGZanrVgCL2x49ZOre1E6z
-	 K5uRdO1yCKOfA==
-From: Mark Brown <broonie@kernel.org>
-Date: Tue, 10 Jun 2025 13:29:45 +0100
-Subject: [PATCH v2 2/4] tools/nolibc: Provide vfork()
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m8HBbj0L"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-32925727810so45606411fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 05:42:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749559351; x=1750164151; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U6Na6s2P5c1DqTdnoC6CkwOGk4v/Ph4Wt3KUWux1jLg=;
+        b=m8HBbj0L7i1RABUFxPposqPNyroZKieLJZOGFjMx+TwBkab7hbA8C2H/psaZLeSOPi
+         sRQxVNWVZCEDHv28JUEyncQJwmAmxXZz/w+wT32fhcwLdCQcBDQhj1HOKFkNFBxv92dH
+         mdzzYZ1PSW+Hfe/Tb/IIHq+S1Tm0CITtJuRbT22xOkNzG0fFTzUeomoobToNpkz1w9LL
+         YrMU3WGaEg5dkNjJrCMyA2JUkr36nIop6D+T3Uuh2RDjT1kA85uu4B4mSz6c31EuMmha
+         /7qhSQR24VhkIlaY/TpC0W0rvx06Taew5/Q6WwUjArn6gxdRgYofKPwggLDX88FeIdKA
+         jqSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749559351; x=1750164151;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=U6Na6s2P5c1DqTdnoC6CkwOGk4v/Ph4Wt3KUWux1jLg=;
+        b=sqhGTRtxHDofmCWxs/xtVDIfRi+PnSxkwwgwCv1FRLDQxtuLG8PzRdp+yIoikbGZQC
+         FK7awXFfHR3welL50hF3IcXQh4putijvND6/IflkAWGafO0KCIyw6ODcO4tsDsPakz2M
+         b25++IlwOXsR3gK6yNJcZocVVO5aounXMknyfo2m8YVJKvZAB+CleEdx5SwUed23Ju2A
+         5ENiw92zAi8eqBCQq5mUQ1PwJI/imUBRk2yGQ9GQbszQVfBMtDnBw0HQYAvIZfbnzice
+         Tjt3CaBT/BwLEwmd3GNQtVGL9u9K4gE1qzM3CYLd7wR2xEYIvetFhFVHWRjaw2FX9xc9
+         bzvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV7ddLgZPw0faDKGzjNau07sKEodn9KOwej8TwhKqtdSzihjnyS5eAi2aPrywcCTwXQ9Z/pQXmccN6Ui64=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQiCOQJB3uRA36LL7yKNiIKQbSzyiVphbR2xNCrIK5Mk9NyJHl
+	r0JVwnbRpCe57FKISvUA3bwhcDVgCKtsLjAu3lrR0PbYtPbVfMxn7IHBbWEkw6FJ2RFLHnP2999
+	tBK4eY+8p5xq37sfSpIFBnacLu6lrHN3GePdplJ+jCg==
+X-Gm-Gg: ASbGnctTyL+GVdnqT6n28Md77O7lIsxQYwHFSw22LfvS0qf5N3t/x4zq9FPvMfd84wl
+	/xigiw1nwjYAzuefLPt1koILP29VAeDYVCfIDCGvuW+iDiT9tCd+Ee5wE9PbITL4hP+i8vDVGDF
+	VMuyda/1GArcdsrQAuD0oD4hsnX4I82I2bshOEdpddzrG2GqSuccWsJA==
+X-Google-Smtp-Source: AGHT+IGD5WXbHGGhhGRo5sVeUpYouurIwKWToxCb9XtYaZwZ9hBmk03t06DwUfTbDOn7DXb0nilwhoBbFz43CxKKxzc=
+X-Received: by 2002:a2e:a78a:0:b0:32a:9a0b:4697 with SMTP id
+ 38308e7fff4ca-32b152d6ecdmr8013991fa.21.1749559350758; Tue, 10 Jun 2025
+ 05:42:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250610-arm64-gcs-vfork-exit-v2-2-929443dfcf82@kernel.org>
-References: <20250610-arm64-gcs-vfork-exit-v2-0-929443dfcf82@kernel.org>
-In-Reply-To: <20250610-arm64-gcs-vfork-exit-v2-0-929443dfcf82@kernel.org>
-To: Willy Tarreau <w@1wt.eu>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
- Christian Brauner <brauner@kernel.org>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
- Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-kselftest@vger.kernel.org, Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1550; i=broonie@kernel.org;
- h=from:subject:message-id; bh=J6AFLpxqvQUWE4ch4VBYYdyyIA1JHulBUl77i0XMQXw=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoSCgvukmbaMjh17UgVr99O7M6G30oiXXdn4BKoDV/
- rkfEdzyJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaEgoLwAKCRAk1otyXVSH0KMuB/
- 4wSoNjdhT70WakS3tv5X9iBatU6hPJ1jqe4SqsQejll0GFhY4EP6j92MKruox3yVgGp1es9BfWiK7k
- pHdfUp4iCpcVTo1xaJBB1kS47mnEoMvOYLFccmH9Ka8i+j2G+FpSqtaD/xhQL34NNbtCk84Js59oAY
- cF6v4jl1b6CYWsDFpwxBYvZ3Mv4rVE9ZOfGch/2tA/dnmeIopWbEBZeBciROMX312SXGh0+3A1CCsU
- 2unwKDDBDqYbC62Cj+arSFXSG9p4cN3HD596UwoRvcOk8ocu/PHCgN3/5trKu3VQfR5t8IigKQc6up
- RP53ygLYtS+Kxmxi1rrN9y5tMeVTap
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+References: <20250609-aaeon-up-board-pinctrl-support-v7-0-1ab73ec0cb98@bootlin.com>
+In-Reply-To: <20250609-aaeon-up-board-pinctrl-support-v7-0-1ab73ec0cb98@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 10 Jun 2025 14:42:19 +0200
+X-Gm-Features: AX0GCFvbZS-4AQxpsQip_StlBivPF4rBRcoZGRYX2DDCi0OTfFjKlqil2Mw3JNM
+Message-ID: <CACRpkdZpn5xy+6yb-mQd6wDs05X0QqRCQo7QpL6=aEWtyU-zTg@mail.gmail.com>
+Subject: Re: [PATCH v7 00/10] Add pinctrl support for the AAEON UP board FPGA
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-To allow testing of vfork() support in the arm64 basic-gcs test provide an
-implementation for nolibc, using the vfork() syscall if one is available
-and otherwise clone3(). We implement in terms of clone3() since the order
-of the arguments for clone() varies between architectures.
+On Mon, Jun 9, 2025 at 11:51=E2=80=AFAM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- tools/include/nolibc/sys.h | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+> This is the seventh version of this series. Only few changes, the series =
+has
+> been rebased on v6.16-rc1, the pinctrl patches were dropped as they were
+> already merged and a fix was added in upboard_pinctrl_dbg_show() to handl=
+e
+> the case upboard_pinctrl_pin_get_mode() returns an error.
+>
+> Best Regards,
+>
+> Thomas
+>
+> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 
-diff --git a/tools/include/nolibc/sys.h b/tools/include/nolibc/sys.h
-index aabac97a7fb0..5932ae8828a1 100644
---- a/tools/include/nolibc/sys.h
-+++ b/tools/include/nolibc/sys.h
-@@ -22,6 +22,7 @@
- #include <linux/time.h>
- #include <linux/auxvec.h>
- #include <linux/fcntl.h> /* for O_* and AT_* */
-+#include <linux/sched.h> /* for clone_args */
- #include <linux/stat.h>  /* for statx() */
- 
- #include "errno.h"
-@@ -340,6 +341,32 @@ pid_t fork(void)
- 	return __sysret(sys_fork());
- }
- 
-+static __attribute__((unused))
-+pid_t sys_vfork(void)
-+{
-+#if defined(__NR_vfork)
-+	return my_syscall0(__NR_vfork);
-+#elif defined(__NR_clone3)
-+	/*
-+	 * clone() could be used but has different argument orders per
-+	 * architecture.
-+	 */
-+	struct clone_args args = {
-+		.flags		= CLONE_VM | CLONE_VFORK,
-+		.exit_signal	= SIGCHLD,
-+	};
-+
-+	return my_syscall2(__NR_clone3, &args, sizeof(args));
-+#else
-+	return __nolibc_enosys(__func__);
-+#endif
-+}
-+
-+static __attribute__((unused))
-+pid_t vfork(void)
-+{
-+	return __sysret(sys_vfork());
-+}
- 
- /*
-  * int fsync(int fd);
+Looks good to me, some testbot was complaining about something
+but certainly we can merge the majority?
 
--- 
-2.39.5
+Bartosz when you feel confidence in the patch set, will you queue an
+immutable branch and I will pull it into pinctrl as well.
 
+Yours,
+Linus Walleij
