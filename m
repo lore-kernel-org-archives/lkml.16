@@ -1,169 +1,335 @@
-Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 043E47D098;
-	Tue, 10 Jun 2025 15:46:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54AB9224AFE;
+	Tue, 10 Jun 2025 15:46:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749570378; cv=none; b=hy+s8Zh/7hKsy68MZ+vBKR2HmoSRKqFyhwMzP8UQNHr03YW97j7VchaZN8NjfOZ6pzcI0ClB1njUZnkO/VDof/vV6g5yuqa5Q8reFU2Msa3J/t4jL/k/zaztzs6YJFV8zC5zi1PxLU1AN7A/+DE5UCYCm5ug2e2YI3K1Mb26sJg=
+	t=1749570391; cv=none; b=MlmGPhhhRaHPglw5NGedEG4rI/5lTCfgEf1RJ4as80NV1kO8kVWU2n8zuZ6mVtZCB71JEX9cGNkEsUqxOjyyaJMGSkQjaDdjMUs7tji0PxsEpKTGmgkuIMngGc+JRfMKAYppJWzAbkxYS56Dn3RtnvK26fVUL7INNziZDtuhTiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749570378; c=relaxed/simple;
-	bh=/w+J3Jyg+r+gCZOFLX3yqRPy0i117VGuFdXqxa9PPFM=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=VBWim91kfeId9ugkTLj+Zzeqz1tL7ITVupG1W7ETAOXkFGIoLrG8Q5ObNPRXuDsch2VYfoJ3GaclEIjd2q2XjtioeerErmsyiB7CmHcPIxp0kkQW0uMpcVrA50hEjEAUgrBcXE2UzkA83PS05XqghVLT1fSjb07Q5U1utKvQaFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=EvKFBZKA; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=dzYY7pX7; arc=none smtp.client-ip=103.168.172.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1749570391; c=relaxed/simple;
+	bh=pfG1s9183abezt7qZiUMs/BwwFhBunVV8SYSk6+J1I4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CX2wHQ13HMqeuOWEADfciXiCAS0OyjgJhnZrTjD2R44Y1iGlGu32wFrn8f86a/BlsKbd1liyAY/mVd7sziMgMT2TX/OBQ32LOdxuuBrTnElD6rFQL8NBUJiwOWijSN/srG3RffdSP+zb4uOUe4EppkEKcWrCIQoXKtjAl2coCAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=STsVFGk1; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="EvKFBZKA";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dzYY7pX7"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.phl.internal (Postfix) with ESMTP id 13FF6138037E;
-	Tue, 10 Jun 2025 11:46:15 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Tue, 10 Jun 2025 11:46:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1749570375;
-	 x=1749656775; bh=sWQd/cEpHYbeMdzEp6MUu3/KzvU4FMthc1pbkqdosho=; b=
-	EvKFBZKAplwtJlh5g9Mpb3dq4hCEJt6Jjbk2nMN0PsXZWvZEF+2qXl+JqSkgubR0
-	2upi3k0HJpIl4W1HpShG0aejROcTdYn/r5O4ssIf1hRUuHOA669859KNki5a/3u5
-	aR9jlTxh9jXqE3su2dFNWSr7LExal/iETVj0D/Q1fRZFXoyPRXwJNluNJa0ViDiF
-	nJKWciPx9Sz6ZSkxcUgVSf5NnAKDMWpVEosQhZuel+5wQ+r9cyqlLwK1QqbH4ZrO
-	X8ioJJPLM64ww5AnXM2DtcKO+1A19H2FOYl5EqfW+QyR9NrB3hICP78oLhJNS66C
-	OkhBhudQ4aiWAfhcD02bwQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749570375; x=
-	1749656775; bh=sWQd/cEpHYbeMdzEp6MUu3/KzvU4FMthc1pbkqdosho=; b=d
-	zYY7pX7gyFK+TkIa1ysxtpLD8g5DEQBxL7z6lGc7BFTU2GL3pJoCR+vRUpJPi5Fj
-	GKVbugocUrBc9dFqevN6Zb2ynrsP5/pDw/e+bByHckm7jRlMbdKgXJ6xp5/Iy7wj
-	0Lp1c06aaoqQwr7UTf3/tQg+vp5MyqWi6gsfBcRjenjhw1zvPbVODdnONPJZaRVz
-	rcAQw1iJVSizU3CmyRZ9zKZMgVFR459vTCu5cN2b5lcunXHo+ALmUlR4T/TXjGxT
-	c94rp0adhyp6kB91Zz3gnqNQRv3R7nf2f/PKfW33di20xRB0Je32zc/Q7z+A18FR
-	GD43vNqbPRFzy1fYKnBMA==
-X-ME-Sender: <xms:RlNIaB-TX9etE2s4t33juPXJPJR3hjUDUKsuRiNzw9aw8LDhw9Amrg>
-    <xme:RlNIaFuaaVw0W-TEU-XXCdg7d28u4yHdgAZwh0joF5RWqq7xQCkklLzuzNdvfgeYd
-    _5bXSakyAlXdk4ghK4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddutdelgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
-    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
-    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopedu
-    uddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghrnhgusehkvghrnhgvlhdroh
-    hrghdprhgtphhtthhopeifvghirdhlihhusehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pehnuhhnohgurghsnhgvvhgvsheslhhinhhugidrmhhitghrohhsohhfthdrtghomhdprh
-    gtphhtthhopehrohhmrghnkheslhhinhhugidrmhhitghrohhsohhfthdrtghomhdprhgt
-    phhtthhopehsshgvnhhgrghrsehlihhnuhigrdhmihgtrhhoshhofhhtrdgtohhmpdhrtg
-    hpthhtohepuggvtghuihesmhhitghrohhsohhfthdrtghomhdprhgtphhtthhopehhrghi
-    higrnhhgiiesmhhitghrohhsohhfthdrtghomhdprhgtphhtthhopehkhihssehmihgtrh
-    hoshhofhhtrdgtohhmpdhrtghpthhtohepmhhhkhhlihhnuhigsehouhhtlhhoohhkrdgt
-    ohhm
-X-ME-Proxy: <xmx:RlNIaPDS6Gb2fiYaUPdCqmutr2DjEsat7F9y0Pv_HJl69-abk1Jrzw>
-    <xmx:RlNIaFfcyNghJBMuS3ggojuxVvv5RwpNSNSLdoQCtTR99VTYMLr9AA>
-    <xmx:RlNIaGO_85FF_gvM69SeBk-Oh4HRLoCVo89PfgrBGx23kEntDWs7yg>
-    <xmx:RlNIaHkL5uwMkFsoFk1KO7px8fnGOb746MVCpe7uJhSrt4XYYlhm5A>
-    <xmx:R1NIaMyIrkATadJCdtrFGFa80cz0M6HDP863PdBs_3UOIqjmAWjLFDDD>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id C72ED700061; Tue, 10 Jun 2025 11:46:14 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="STsVFGk1"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-607ec30df2bso4732456a12.1;
+        Tue, 10 Jun 2025 08:46:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749570387; x=1750175187; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=d4YS4P0Up7khVvMxUsDAYxrG2IpA3abnuSN0A4MRVwo=;
+        b=STsVFGk1UHiQ6yVpeeuetXvMgslZo3y/vAQ53rcXNk9eNNEnv23HB1GtzBd82Z73kd
+         fs3FlEhSPik0+ipr2Qhn1LYQkhaoaH83nNI0NW2fhGlTzpMn7IqKAVBxy2w/AbT31Go0
+         2p4qPu1R3txhJB5bFeGFx200bOnXUFLHpQdpg41eYqJml+RUqFLQgtKKfsGkNM7k9+cw
+         kptqCe4ftHmDyS2r7rTiGFIjpl61KwGE6QzsYBpNbQ38kS7hBCiJnbP4bVablaVTZ0JP
+         Qs+2zqG8zocjeBx2JQ3NO1YhUQJ4agPJchkhxCzdAJQHtNOKL6AlnNtaJMreY8EiFyY0
+         ws3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749570388; x=1750175188;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=d4YS4P0Up7khVvMxUsDAYxrG2IpA3abnuSN0A4MRVwo=;
+        b=Jsz1YLzqA9YmQXrXmGud7epQCe0mqVehB7vBTkfs1Z/BKDMS33RDXkr91aHfKxnKzR
+         PBLc4gnQ5zNkKYhO1qx8OFQN8SZJ91ERQHOeQQCy4VsuPc3NoJUwbCmdBmK5HkjHPG6U
+         B25Lk0OXC/a0huO4iO+2hai6QByBC0TTqE7McrSEIo+0SiMDa2U6dKMFiJu+2hqms5KG
+         b1Wf4EKZld11o/+r4JCwTTaACu4KaXLoi4fm4z+B1h1REoIEfmi1tqeA/ZIeZGLPND7R
+         zJlkBeX92+9HeS0/0BZAWSURTAZTk8oIgJOMkpSOda1YlRs7H59B5iT6V6qr507vBRfc
+         uWSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCULHtJFbGcCH6D6TYfpBrSpLMYWMFLrVADR+8JI+SjZ2DxoKc/KfvU3S6X3EXbdioKfOSFUQb667Y3w@vger.kernel.org, AJvYcCWZJ8x1JdpSSkBTcXntoJae9jkAxXRSx7ZsOlxt/I76Sb35EWSQLvbTOpupAsoniAdATSAqFwARt9ZCRN4=@vger.kernel.org, AJvYcCWq157IaHQQ0q/pU42M0ydf9aREwO2OD4BX5c2f2ywOEa34DlTL9PrLV2oQCP35beUtAnEIQIkld7Lg1rIO@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwImm4pf+Ix5hWJCAjrrVAP6OjjpnJxPkXyzluQSeHHwT0ZsgV
+	/MKrLUBgop2dJJX31XzkKywE9O1qLnC2+Nmib2J74+SX3VNDYJNVpbhC
+X-Gm-Gg: ASbGncvjWrsNja4RKcal2C3+LCXkDIrGl9qiiE98tR30K1cT8wvEmTk+dr2sRIOAu99
+	W46pznN4e1O5KTkibM/irnuNxM25eNBRcxx7+vfMJ3xzwVhh9zE4ReM4TLOKuukc2vIuwF9BoFH
+	4FCkbPjGwtXUGdhbvvmRMT90dXVG01I4IFx6/gLD4pvIfr4iRS+uP5ELaMa1DJ2HgSPEHGbLu8Z
+	5nsjL9a7ur7y2kjXhw3bpbx5apZiJE5eLv3jGOIN5dlUx9/fn4dcO9DumFThG9B3xFB8343TgfX
+	jsXIing104gjAjl38VRsULcQH5hYX8vUWYqXLCMgFViG78+isE8UISlcy/UEQXr0pgjaRqoeAf2
+	gJSv5g5U19zk=
+X-Google-Smtp-Source: AGHT+IEDXtfS66XNV/mYblarMp3AlD3RJypXTbsURR1nOQJSYGHfyO5uBLmrdUAls16LsBGLPzUjIA==
+X-Received: by 2002:a05:6402:40c1:b0:606:741f:194e with SMTP id 4fb4d7f45d1cf-6082dbed2c2mr3007949a12.32.1749570387328;
+        Tue, 10 Jun 2025 08:46:27 -0700 (PDT)
+Received: from jurenat-workstationFai.utb.cz ([195.178.92.53])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6078a54da54sm5390609a12.6.2025.06.10.08.46.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 08:46:26 -0700 (PDT)
+From: =?UTF-8?q?Tom=C3=A1=C5=A1=20Ju=C5=99ena?= <jurenatomas@gmail.com>
+To: dmitry.torokhov@gmail.com
+Cc: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-input@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Tomas Jurena <jurenatomas@gmail.com>
+Subject: [PATCH] Input: tca6416-keypad - Add OF support for driver instantiation
+Date: Tue, 10 Jun 2025 17:46:10 +0200
+Message-Id: <20250610154609.1382818-1-jurenatomas@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tc9e620b0a09597a4
-Date: Tue, 10 Jun 2025 17:45:54 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Roman Kisel" <romank@linux.microsoft.com>,
- "Arnd Bergmann" <arnd@kernel.org>
-Cc: "Dexuan Cui" <decui@microsoft.com>,
- "Haiyang Zhang" <haiyangz@microsoft.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, "Michael Kelley" <mhklinux@outlook.com>,
- nunodasneves@linux.microsoft.com,
- "Saurabh Singh Sengar" <ssengar@linux.microsoft.com>,
- "Wei Liu" <wei.liu@kernel.org>
-Message-Id: <df1261e1-25d4-43ae-88c4-4f5d75370aee@app.fastmail.com>
-In-Reply-To: <20250610153354.2780-1-romank@linux.microsoft.com>
-References: <20250610091810.2638058-1-arnd@kernel.org>
- <20250610153354.2780-1-romank@linux.microsoft.com>
-Subject: Re: [PATCH] hv: add CONFIG_EFI dependency
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 10, 2025, at 17:33, Roman Kisel wrote:
->> Selecting SYSFB causes a link failure on arm64 kernels with EFI disabled:
->>
->> ld.lld-21: error: undefined symbol: screen_info
->> >>> referenced by sysfb.c
->> >>>               drivers/firmware/sysfb.o:(sysfb_parent_dev) in archive vmlinux.a
->> >>> referenced by sysfb.c
->>
->> The problem is that sysfb works on the global 'screen_info' structure, which
->> is provided by the firmware interface, either the generic EFI code or the
->> x86 BIOS startup.
->>
->> Assuming that HV always boots Linux using UEFI, the dependency also makes
->> logical sense, since otherwise it is impossible to boot a guest.
->>
->
-> Hyper-V as of recent can boot off DeviceTree with the direct kernel 
-> boot, no UEFI
-> is required (examples would be OpenVMM and the OpenHCL paravisor on 
-> arm64).
+From: Tomas Jurena <jurenatomas@gmail.com>
 
-I was aware of hyperv no longer needing ACPI, but devicetree and UEFI
-are orthogonal concepts, and I had expected that even the devicetree
-based version would still get booted using a tiny UEFI implementation
-even if the kernel doesn't need that. Do you know what type of bootloader
-is actually used in the examples you mentioned? Does the hypervisor
-just start the kernel at the native entry point without a bootloader
-in this case?
+Adds support for instantiating the tca6416-keypad driver via
+Device Tree. If no platform data is present, the driver can now be
+probed based on OF bindings.
 
-> Being no expert in Kconfig unfortunately... If another solution is possible to
-> find given the timing constraints (link errors can't wait iiuc) that would be
-> great :)
->
-> Could something like "select EFI if SYSFB" work?
+A corresponding Device Tree binding document is added at:
+  Documentation/devicetree/bindings/input/tca6416-keypad.yaml
 
-You probably mean the reverse here:
+This allows the driver to be used in systems that rely solely on the
+Device Tree for hardware description, such as embedded ARM platforms.
 
-      select SYSFB if EFI && !HYPERV_VTL_MODE
+Tested on Toradex Ixora 1.3A board and Apalis imx8 SOM.
 
-I think that should work, as long as the change from the 96959283a58d
-("Drivers: hv: Always select CONFIG_SYSFB for Hyper-V guests") patch
-is not required in the cases where the guest has no bootloader.
+Signed-off-by: Tomas Jurena <jurenatomas@gmail.com>
+---
+ .../bindings/input/tca6416-keypad.yaml        | 87 ++++++++++++++++++
+ drivers/input/keyboard/tca6416-keypad.c       | 88 +++++++++++++++++--
+ 2 files changed, 170 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/tca6416-keypad.yaml
 
-Possibly this would also work
+diff --git a/Documentation/devicetree/bindings/input/tca6416-keypad.yaml b/Documentation/devicetree/bindings/input/tca6416-keypad.yaml
+new file mode 100644
+index 000000000000..f050403c4dbe
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/tca6416-keypad.yaml
+@@ -0,0 +1,87 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/input/tca6416-keypad.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: TI TCA6416 keypad
++
++maintainers:
++
++description: |
++  Texas Instruments TCA6416 IO expander as a keypad input device.
++
++allOf:
++  - $ref: input.yaml#
++
++properties:
++  compatible:
++    enum:
++      - ti,tca6416_keys
++      - ti,tca6408_keys
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  linux,gpio-keymap:
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    description: |
++      Array of gpio keys provided by the driver instance. Each entry is a
++      bitfield holding configuration of the input key. The bitfield looks like
++      this:
++      +------------------------------------------------------------+
++      | Bits     | 31:18    |         17 | 16:14 | 13:10    | 9:0  |
++      | Function | reserved | active_low | type  | reserved | code |
++      +------------------------------------------------------------+
++      code - Linux key code
++      type - EV_KEY or EV_SW
++      active_low - Key is active in low state
++
++  linux,keycodes:
++    minItems: 1
++    maxItems: 16
++
++  autorepeat:
++    type: boolean
++    description: |
++      Enables the Linux input system's autorepeat feature on the input device.
++
++  polling:
++    type: boolean
++    description: |
++      Forces driver to use polling mode instead of IRQ.
++
++  pinmask:
++    description: |
++      Allows to disable certain keys. By default are all inputs enabled.
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      keypad@21 {
++        compatible = "ti,tca6416_keys";
++        reg = <0x21>;
++        interrupt-parent = <&gpio>;
++        interrupts = <26 IRQ_TYPE_EDGE_FALLING>;
++        linux,gpio-keymap = <
++                            0x24290, // active low, EV_KEY, 0, KEY_MACRO1
++                            0x24291, // active low, EV_KEY, 1, KEY_MACRO2
++                            0x24292, // active low, EV_KEY, 2, KEY_MACRO3
++        >;
++      };
++    };
++
++...
+diff --git a/drivers/input/keyboard/tca6416-keypad.c b/drivers/input/keyboard/tca6416-keypad.c
+index fbc674d7b9f0..8910498cf266 100644
+--- a/drivers/input/keyboard/tca6416-keypad.c
++++ b/drivers/input/keyboard/tca6416-keypad.c
+@@ -17,6 +17,7 @@
+ #include <linux/i2c.h>
+ #include <linux/input.h>
+ #include <linux/tca6416_keypad.h>
++#include <linux/bitfield.h>
+ 
+ #define TCA6416_INPUT          0
+ #define TCA6416_OUTPUT         1
+@@ -24,6 +25,7 @@
+ #define TCA6416_DIRECTION      3
+ 
+ #define TCA6416_POLL_INTERVAL	100 /* msec */
++#define TCA6416_MAX_IO_SIZE 16 /* maximum number of inputs */
+ 
+ static const struct i2c_device_id tca6416_id[] = {
+ 	{ "tca6416-keys", 16, },
+@@ -173,9 +175,67 @@ static int tca6416_setup_registers(struct tca6416_keypad_chip *chip)
+ 	return 0;
+ }
+ 
++/* Configuration bitmap
++ * | 31:18    |         17 | 16:14 | 13:10    | 9:0  |
++ * | reserved | active_low | type  | reserved | code |
++ */
++#define CFG_CODE GENMASK(9, 0)
++#define CFG_TYPE GENMASK(16, 14)
++#define CFG_ACTIVE_LOW BIT(17)
++
++static struct tca6416_keys_platform_data *
++tca6416_parse_properties(struct device *dev, uint8_t io_size)
++{
++	static const char keymap_property[] = "linux,gpio-keymap";
++	struct tca6416_keys_platform_data *pdata;
++	u32 keymap[TCA6416_MAX_IO_SIZE];
++	struct tca6416_button *buttons;
++	int ret, i;
++	u8 pin;
++
++	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return NULL;
++
++	ret = device_property_count_u32(dev, keymap_property);
++	if (ret <= 0)
++		return NULL;
++
++	pdata->nbuttons = ret;
++	if (pdata->nbuttons > io_size)
++		pdata->nbuttons = io_size;
++
++	ret = device_property_read_u32_array(dev, keymap_property, keymap,
++					     pdata->nbuttons);
++	if (ret)
++		return NULL;
++
++	buttons = devm_kcalloc(dev, pdata->nbuttons, sizeof(*buttons),
++			       GFP_KERNEL);
++	if (!buttons)
++		return NULL;
++
++	for (i = 0; i < pdata->nbuttons; i++) {
++		buttons[i].code = FIELD_GET(CFG_CODE, keymap[i]);
++		buttons[i].type = FIELD_GET(CFG_TYPE, keymap[i]);
++		buttons[i].active_low = FIELD_GET(CFG_ACTIVE_LOW, keymap[i]);
++		/* enable all inputs by default */
++		pdata->pinmask |= BIT(i);
++	}
++
++	pdata->buttons = buttons;
++
++	pdata->rep = device_property_read_bool(dev, "autorepeat");
++	/* we can ignore the result as by default all inputs are enabled */
++	device_property_read_u16(dev, "pinmask", &pdata->pinmask);
++	pdata->use_polling = device_property_read_bool(dev, "polling");
++
++	return pdata;
++}
++
+ static int tca6416_keypad_probe(struct i2c_client *client)
+ {
+-	const struct i2c_device_id *id = i2c_client_get_device_id(client);
++	uint8_t io_size = (uintptr_t)i2c_get_match_data(client);
+ 	struct tca6416_keys_platform_data *pdata;
+ 	struct tca6416_keypad_chip *chip;
+ 	struct input_dev *input;
+@@ -190,9 +250,13 @@ static int tca6416_keypad_probe(struct i2c_client *client)
+ 	}
+ 
+ 	pdata = dev_get_platdata(&client->dev);
+-	if (!pdata) {
+-		dev_dbg(&client->dev, "no platform data\n");
+-		return -EINVAL;
++	if (!pdata && dev_fwnode(&client->dev)) {
++		pdata = tca6416_parse_properties(&client->dev, io_size);
++		if (!pdata) {
++			dev_err(&client->dev,
++				"Failed to parse device configuration from properties\n");
++			return -EINVAL;
++		}
+ 	}
+ 
+ 	chip = devm_kzalloc(&client->dev,
+@@ -207,7 +271,7 @@ static int tca6416_keypad_probe(struct i2c_client *client)
+ 
+ 	chip->client = client;
+ 	chip->input = input;
+-	chip->io_size = id->driver_data;
++	chip->io_size = io_size;
+ 	chip->pinmask = pdata->pinmask;
+ 	chip->use_polling = pdata->use_polling;
+ 
+@@ -279,9 +343,23 @@ static int tca6416_keypad_probe(struct i2c_client *client)
+ 	return 0;
+ }
+ 
++static const struct of_device_id tca6416_of_match[] = {
++	{
++		.compatible = "ti,tca6416_keys",
++		.data = (void *)16,
++	},
++	{
++		.compatible = "ti,tca6408_keys",
++		.data = (void *)8,
++	},
++	{}
++};
++MODULE_DEVICE_TABLE(of, tca6416_of_match);
++
+ static struct i2c_driver tca6416_keypad_driver = {
+ 	.driver = {
+ 		.name	= "tca6416-keypad",
++		.of_match_table = tca6416_of_match,
+ 	},
+ 	.probe		= tca6416_keypad_probe,
+ 	.id_table	= tca6416_id,
+-- 
+2.34.1
 
-     select SYSFB if X86 && !HYPERV_VTL_MODE
-
-in case only the x86 host requires the sysfb hack, but arm can
-rely on PCI device probing instead.
-
-Or perhaps this version
-
---- a/drivers/hv/Kconfig
-+++ b/drivers/hv/Kconfig
-@@ -19,6 +19,7 @@ config HYPERV_VTL_MODE
-        bool "Enable Linux to boot in VTL context"
-        depends on (X86_64 || ARM64) && HYPERV
-        depends on SMP
-+       depends on !EFI
-        default n
-        help
-          Virtual Secure Mode (VSM) is a set of hypervisor capabilities and
-
-if the VTL mode is never used with a boot loader in the guest.
-
-     Arnd
