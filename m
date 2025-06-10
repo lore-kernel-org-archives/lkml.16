@@ -1,154 +1,147 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86AB82253F8
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 11:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEADD2253F8
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 11:37:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749555385; cv=none; b=lgnKz545UzabSKQMBKoqZipaFlNP0L7wME3U4Utv4slTV6V4xnD+BAwcK0IPAQtzqhvkGWQvs7U/ARcr1nsVDCiC6MKQMs27Xfuu26eBDwSOCSC1mb5xeu439TAr2VE6mQ33P5MxBMyeEJ9mHGW+iojBDK5a7qDVTzIu9fNsKBA=
+	t=1749555427; cv=none; b=Cv/+I6w4n0/vZLply20txs89GyTXLNabn74mwuILyIDFDOWmZa4i4/4PvXHryTEUdwfOy7lt81qAh+6pDJoM+HCWp1+xtQwPoZMysjDxZyy0ccWShtWETBHJDzrcvWqrLGnUXcs95k3TBowX3adoEF/W39xln+vfvmPvFysELL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749555385; c=relaxed/simple;
-	bh=zBlm+ov1YdPOK+eo/xgzpL/Az+rYHrupYQlhswUJOtA=;
+	s=arc-20240116; t=1749555427; c=relaxed/simple;
+	bh=Nnx5SwmZD0+RTHgrHJfEuPfmmfeN1X0Axl/gTjNoQjQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DymwMCHIMejLEu7kO6aYIYjx45vwIxPkVYpsm+HEPkVn8tBQcD7eXRrs8KVsVd5HL3FsQ6aUOJYZBhRFc3IEBblkC80oFum5Ugn41fcx73uare4KC9zLQ9UNiN37Fi1lUC8tf9OL9+5/+aJ6TdZ5L9EY+KLWaDkzdX9aE/hxHv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gckAeiQE; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=blUS29VgjtxCrjcyMGx83sXhQLq3r/Tph+EdyLtXY+XD6Q6VyZ/7e+w5dydn5S3pOiEadqGkUxS0Hre1nuH6o2wp+dWjb0KwhvHQlGbIFwjwZXmiDJP5jocGj8XoOWEQJn97s12wquVeiagMJfFsUvAK6s9Y+MmHSdCAbrEGGHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dY5IAR3/; arc=none smtp.client-ip=209.85.219.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gckAeiQE"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-3138e64b42aso1729149a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 04:36:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dY5IAR3/"
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6fae8838c1aso2430116d6.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 04:37:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749555383; x=1750160183; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=/X080miYLYNnIb/KqgwO3FJea0593LzGodrcP0cmSBk=;
-        b=gckAeiQEK6p7EdMZ9DW5Nfb6bEbfW/hh2JMNqVp1dLp2xaaZDBGx5ev6TWUHOS94v6
-         yvT6pxFLgusMDgwj2CPzSov0JsKH238cVyScElB+XtXfjoMY7CAztjQb+v1y/QxdIpk6
-         CvR6KSlQTSvR4gycQOtz/fPdM7ZLh2fB6O55FUWkJGXR6xVyDfWkH9COEJRk0l4eEGvV
-         0EYf8VKiAaZsoWI7YfVnYTJBZaRoW5WPkjH0mIfx3fqws5Skmq/dUDAMMPn50z7cdu5v
-         HrYyGo8vHqIhZXekVw5vmr23+HWrtH6S2HdQjHU4EO2ZfMTf8j5Ui3quEDZv/lfY+dP6
-         G0CA==
+        d=linaro.org; s=google; t=1749555425; x=1750160225; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1IEUo4OXi/6u8Jsr6TBxYCa+QoyT/MABPEkrypIa5tU=;
+        b=dY5IAR3/zwN7HvLpIlZ75fM2eIvKEFNc42D+9Zt3vuyraa7WsG9le969bFbTUo778Z
+         1f7msh0V+JsTz+R1zknKBNHeIP9j4CRz8pQO3QRfnmX54fJWx8rHaWJ65ZsrAMTPyS6X
+         QcK3I8wb7g6daMP9blSHwKXfhpk168NuqHHZFhq6tiAHFYuM6m3UYgJyu95BDu7mNB4e
+         sOL+bFbZVgrvZXCs2XQUy5+h+iUE1p5uFdjMPua++P0vaihIdwZETHbKH5ZZHdP180lN
+         XAaMmd7JSrknYE/+Hbuih9HCyKAtrXIZy4yVnwb1mMmJBvDg1nJytM+Tmdbo6SmoQ4ZL
+         w6Pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749555383; x=1750160183;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/X080miYLYNnIb/KqgwO3FJea0593LzGodrcP0cmSBk=;
-        b=qONM3iZHLwUnvGeh1UXk13TjkivG1ppzuq3ksIEsleKcX/DdnJRLCKysxOphQIBZpx
-         T29WVc3d2AEWEMJTSqQbdN/0V7hYa7uniAo1+bP6lvkC2rqLYt/Zt0PhNSY2Z6ppYali
-         aIo8j7Eu804fHazGbHHJW2AyCW9JtuXhfObAaVq3q96mpyWKQ/hh7CkjTH6qFQzEmT4S
-         sQV//+VM+I+TQgvSgLy2UYPm2+MqW0xFQloiEd+FvtTnBzb5BFlLhfmhkK53SHz66+zF
-         9jzomv7528CPzvYqMzVivn14utzAMoar8c/JC9HdLpJA3RcEvkHj2a2zNidLjSL3rHcQ
-         OcIA==
-X-Forwarded-Encrypted: i=1; AJvYcCWRgI4BexWtWQCMV/KpNIhPD84sj6DJIYI7SwdRHbL6sNH6xTgOPX267o+EasundHrEUfHp0B3th4pYv/M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywmm5tleTdM7mLF38gS07GEkwfexSLZlv2g23zAA7r6XEYtsGeu
-	tT71yXwXc9Vb0FIefRlb98sWIRko5P51O2C2iW7k6+ISB5Wg/JI/yfxaS3QYd/Wz2FIbnpyetYZ
-	6Bwblfd3VAGhlmGSMYQc8gNSTQkeNnCpvwqWnnngV
-X-Gm-Gg: ASbGnctvY7K4WNSzQogYAZGM1nDMeLqHNUKofIlOxyn0NxK6PKHzpflYSYcXhiw867O
-	82t5oy+UABT5JBjRu0k6UjBsl4EQBfnrEsMmeVt14j9bQvGZ/yUO3yfRUoA5pcV9p219y3M7o+n
-	Ak4juJ7IUi3ea+83MD/fAt2H3BMDwqVEizd6InCNL3gsiNd2vUsd9LbaaOl41tlX6vsXDJfO7B
-X-Google-Smtp-Source: AGHT+IEwCAvIsXym5DldP9LOU03dANKhI7iiGAjGK8vDeAOOjBWjSCWQznQqPPXeNPhc91g4jQb2wx42ypb9h9ekuWo=
-X-Received: by 2002:a17:90b:3d0a:b0:311:abba:53d2 with SMTP id
- 98e67ed59e1d1-313a1695651mr3853031a91.17.1749555382592; Tue, 10 Jun 2025
- 04:36:22 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749555425; x=1750160225;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1IEUo4OXi/6u8Jsr6TBxYCa+QoyT/MABPEkrypIa5tU=;
+        b=UumwxcTXO+yqdnIvSjGUYWNlxDG1S6bB62MPYgpXrbD2GmaMwUxiHVaSm9lgpN04zh
+         lJxeKgYkx+raHDFaewddC1RNoA4N8kKc40mSccixYmRMMHakDLD2sZRVT577RFNZfKBe
+         c8HX6xzr1Kq3VG1adJxJwLIOL7s+ZZm86FR8gw6KGIvyuRcA/X9EYXEKrSmACS0uOQld
+         YDzsktQF19SsjoZ6X7pRKcVVwEHCWoj/Z6r10QHVwXKZOQtwyrH5x+oVrEUhHnNmhWgS
+         VcTugwH51Bi2alu5FFbltzIj/6tPRUm4uSIKAulmaYPPFf5x8bKYrEV4uvV1CQo1FWCh
+         OyIw==
+X-Gm-Message-State: AOJu0Yxjk2O5dujROl+eZ7+abEAu1GXZabFo/SKpMkyAcY+U/jN1p0D2
+	hMHdhEWmVzW2i83qWdMs0cQZlYJ1hLVSwpmSyHuKwlfW69VUONEe2mif7y/tu9xcX9kfPEMwhnq
+	zg2Iafw2UIsc0tluV78ZRYQO6Z6IwGryhD/o+vDSA+w==
+X-Gm-Gg: ASbGnct0fbxb10QGIXmUocqmM1ErrMPSXuwo+SULC3JofG64lsz04ZSNr3WNh+tK9lm
+	aUN0HEUzKu4qM8giBchWjzs8Tr0hj8SRudHKDOBzszhUm8HBJdMrDggPo42cyL3Y0BFwv3/9Mho
+	P8fc+dmAftrMBl9ra9NsZd3obZB4a5FQ8TIzNO6V3MaA==
+X-Google-Smtp-Source: AGHT+IHvHKo08me5RcB6HhT8MUj1njWXYeU3P86l+7s/He8833skTN9xQoNPfcqRdrNFzqssiZdslfW5Rg84q+3rI0M=
+X-Received: by 2002:ad4:5d44:0:b0:6fa:c5be:dabd with SMTP id
+ 6a1803df08f44-6fb09f8a766mr87178436d6.11.1749555424663; Tue, 10 Jun 2025
+ 04:37:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610111559.1667156-1-matt@readmodwrite.com>
-In-Reply-To: <20250610111559.1667156-1-matt@readmodwrite.com>
-From: Marco Elver <elver@google.com>
-Date: Tue, 10 Jun 2025 13:35:44 +0200
-X-Gm-Features: AX0GCFvr9SRXT7rpoCzd8enf5Vhs7VR8MrQOwlNAo7Y3z6-SB7lEBEyUj25Qfmo
-Message-ID: <CANpmjNMkVGVnmeKK5QmwDPZv9QrF0omNz-TmgY0Dqqg-=uAN4Q@mail.gmail.com>
-Subject: Re: [PATCH] stackdepot: Make max number of pools build-time configurable
-To: Matt Fleming <matt@readmodwrite.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-	kernel-team@cloudflare.com, Alexander Potapenko <glider@google.com>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Oscar Salvador <osalvador@suse.de>, Vlastimil Babka <vbabka@suse.cz>, 
-	Matt Fleming <mfleming@cloudflare.com>
+References: <CA+G9fYuppX5LeRjOAZWsYRCs76PVbnv-TN_RrszhDsk=KregyA@mail.gmail.com>
+ <15979303.uLZWGnKmhe@diego>
+In-Reply-To: <15979303.uLZWGnKmhe@diego>
+From: Anders Roxell <anders.roxell@linaro.org>
+Date: Tue, 10 Jun 2025 13:36:53 +0200
+X-Gm-Features: AX0GCFt6fIa22bGlOZEBQVbwxbv765S6LyHqHyQH8BFAYJiOCtlXCLCPP7EEZaI
+Message-ID: <CADYN=9L+Gao0w_CThNd96-yYbZDMZnwY7RvagCOdzUC4rKc-Ug@mail.gmail.com>
+Subject: Re: next-20250610: arm64 No rule to make target rockchip rk3399-rockpro64-screen.dtso
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	Linux Regressions <regressions@lists.linux.dev>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Naresh Kamboju <naresh.kamboju@linaro.org>, 
+	Peter Robinson <pbrobinson@gmail.com>, krzk+dt@kernel.org, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 10 Jun 2025 at 13:16, Matt Fleming <matt@readmodwrite.com> wrote:
+On Tue, 10 Jun 2025 at 13:22, Heiko St=C3=BCbner <heiko@sntech.de> wrote:
 >
-> From: Matt Fleming <mfleming@cloudflare.com>
->
-> We're hitting the WARN in depot_init_pool() about reaching the stack
-> depot limit. My assumption is because we have long stacks that don't
-> dedup very well.
->
-> Introduce a new config to allow users to set the number of maximum stack
-> depot pools at build time. Also, turn the silent capping into a
-> build-time assert to provide more obvious feedback when users set this
-> value too high.
->
-> Signed-off-by: Matt Fleming <mfleming@cloudflare.com>
-> ---
->  lib/Kconfig      | 6 ++++++
->  lib/stackdepot.c | 9 ++++-----
->  2 files changed, 10 insertions(+), 5 deletions(-)
->
-> diff --git a/lib/Kconfig b/lib/Kconfig
-> index b38849af6f13..2c5af89daff9 100644
-> --- a/lib/Kconfig
-> +++ b/lib/Kconfig
-> @@ -720,6 +720,12 @@ config STACKDEPOT_MAX_FRAMES
->         default 64
->         depends on STACKDEPOT
->
-> +config STACKDEPOT_MAX_POOLS
-> +       int "Maximum number of stack depot pools to store stack traces"
+> Hi Naresh,
 
-I wouldn't want most kernel configs change this. Can we make it an
-expert option? I.e.
+Hi Heiko,
 
-  int "Maximum number of stack depot pools to store stack traces" if EXPERT
-
-> +       range 1024 131071
-> +       default 8192
-> +       depends on STACKDEPOT
-> +
->  config REF_TRACKER
->         bool
->         depends on STACKTRACE_SUPPORT
-> diff --git a/lib/stackdepot.c b/lib/stackdepot.c
-> index 245d5b416699..1c24230b4a37 100644
-> --- a/lib/stackdepot.c
-> +++ b/lib/stackdepot.c
-> @@ -36,11 +36,7 @@
->  #include <linux/memblock.h>
->  #include <linux/kasan-enabled.h>
 >
-> -#define DEPOT_POOLS_CAP 8192
-> -/* The pool_index is offset by 1 so the first record does not have a 0 handle. */
-> -#define DEPOT_MAX_POOLS \
-> -       (((1LL << (DEPOT_POOL_INDEX_BITS)) - 1 < DEPOT_POOLS_CAP) ? \
-> -        (1LL << (DEPOT_POOL_INDEX_BITS)) - 1 : DEPOT_POOLS_CAP)
-> +#define DEPOT_MAX_POOLS CONFIG_STACKDEPOT_MAX_POOLS
->
->  static bool stack_depot_disabled;
->  static bool __stack_depot_early_init_requested __initdata = IS_ENABLED(CONFIG_STACKDEPOT_ALWAYS_INIT);
-> @@ -245,6 +241,9 @@ static bool depot_init_pool(void **prealloc)
->  {
->         lockdep_assert_held(&pool_lock);
->
-> +       /* The pool_index is offset by 1 so the first record does not have a 0 handle. */
-> +       BUILD_BUG_ON((1LL << (DEPOT_POOL_INDEX_BITS)) - 1 < DEPOT_MAX_POOLS);
+> Am Dienstag, 10. Juni 2025, 12:25:31 Mitteleurop=C3=A4ische Sommerzeit sc=
+hrieb Naresh Kamboju:
+> > Regression while building arm64 with the Linux next-20250610
 
-This is a constant expression, and could be a static_assert() (with
-inverted condition) next to the '#define DEPOT_MAX_POOLS'.
-BUILD_BUG_ON() is a bit less efficient (compile-time wise), and cannot
-be substituted with static_assert() only if part of the expression is
-a non-constant expression yet we rely on the compiler to optimize the
-condition into a constant if there's a bug.
+[...]
 
->         if (unlikely(pools_num >= DEPOT_MAX_POOLS)) {
->                 /* Bail out if we reached the pool limit. */
->                 WARN_ON_ONCE(pools_num > DEPOT_MAX_POOLS); /* should never happen */
-> --
-> 2.34.1
+> > https://storage.tuxsuite.com/public/linaro/lkft/builds/2yJ4IOQa1XxMqDgm=
+zjEl7VszYE9/build.log
+> > * Build link:  https://storage.tuxsuite.com/public/linaro/lkft/builds/2=
+yJ4IOQa1XxMqDgmzjEl7VszYE9/
+> > * Kernel config:
+> > https://storage.tuxsuite.com/public/linaro/lkft/builds/2yJ4IOQa1XxMqDgm=
+zjEl7VszYE9/config
+>
+> thanks a lot for this notification.
+>
+> I'm surprised that overlay build at all when I built it yesterday.
+> But yeah, the dtbs_install target really broke with that change.
+>
+> I've amended the commit now [0]
+
+Thank you for the quick fix.
+I applied your patch and built it, it worked fine for me.
+
+I built it like this:
+tuxmake --runtime podman --target-arch arm64 --toolchain gcc-13
+--kconfig defconfig dtbs
+
+Tested-by: Anders Roxell <anders.roxell@linaro.org>
+
+
+Cheers,
+Anders
+
+>, to change dtso to dtbo and ran the
+> dtbs_install target sucessfully with that change.
+>
+> So on the next linux-next creation, this should hopefully be gone.
+>
+>
+> Heiko
+>
+> [0] https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.=
+git/commit/?h=3Dv6.17-armsoc/dts64&id=3De14491aaa6ff598bbe9d462e44c01ac6575=
+4f445
+>
+>
+>
+> >
+> > ## Steps to reproduce
+> >  - tuxmake --runtime podman --target-arch arm64 --toolchain gcc-13
+> > --kconfig defconfig
+> >
+> > --
+> > Linaro LKFT
+> > https://lkft.linaro.org
+> >
+>
+>
+>
 >
