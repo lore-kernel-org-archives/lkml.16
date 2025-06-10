@@ -1,204 +1,324 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE8328C03B
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 09:44:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D74CD28C012;
+	Tue, 10 Jun 2025 09:44:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749548648; cv=none; b=U5xqMux6agIke0cl3Gum7FKtnzfm+Lw0X7vqC30ZdmOkmaHBYX6vZbjNNv8KlO56rp2NuzOBlEsUmFH758L6AgkNf67ND1ky8Bb9cP+poPw3PbsoEqXsZFysRr7wHxQLQ3Dxe9i5vGQzgsBKdMRw64gxplDBpsAqVrQkdt8Y4U8=
+	t=1749548648; cv=none; b=jUNhpgMiQUtTqqUYaH/onYebfIXtHHe2+8Hk/DhSPIIswqGhxECEBxvJuJgS8oQSyzGMDa+RTRtL6WOy5A4gkGvdpE7084OL8vOPK+5oT8W9V2L3nvY3ESQoh8AzWxOvOwGqVG4W/Fy7P4R4VBYFsFTwxgcxqtGBkxUHDG8ipKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749548648; c=relaxed/simple;
-	bh=QWLCswuVXOzsyDLwB7rh4VyUKA23f/FOPB6FbILMyzo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=c2U3n7uxzZ2F3/En54DdMTavs/diCH0eSAbaMbhjdWa53qnOWfWZPb/GBgbJ3WuawzWLsYAKV9+XeGpjuqLAGixPky66d+oaCUg1rD8ntSXSmb/3RAcJ8vLOJDEEL6WPgIOkJztHL64iAdML+OD9c5gGwX4ibp8Wj2eKZQcXoz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=cnCesy0L; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	bh=dBhFX5LP+1DhN/RyhzVOgZ6I6blBB4/8LieTzplFxR0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=b0p+qUlOH/mqIgq/CQ60Ili2o4xzBYYUC8C1OJpl7uBnYRdWzSz6k6160nmvXBoZyQvZkpbjUcSRyGgZM8K1TQYI4fg08rVF2meJ6DktWBtryIcSGJl5y3wzIaOTDkOrCUWC+CMvc+TgQHEk8fw1WjGynaLY3+ahVDDhNH796FE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eFWbyeND; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BnOt/kkc; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="cnCesy0L"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a51d552de4so2811735f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 02:44:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749548645; x=1750153445; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AP2lApXT3oK4hCPR2yyZqkXMhT/gHqM9SDhESroajJo=;
-        b=cnCesy0LNL6xPxEGV9jDZVQjHCqHITiHkzu2uzv1W3yOkpvyXWB8lGX3P3AzrsILLY
-         xaqZCxFxNbjtv2XoP0gYHzKecX4zSUqjUUyanbjiUC+YAWh0+v9eZBug2uzZmtMoKImy
-         6JwzS2CMQ9dXoqPKc2Yg0DDnsAyW14gAaOQ6fnncY2EzvfC+6zodKJFgBu2tne65Hy3e
-         m4fjLOyng8pO7gS3vTmE14IiVm8kHMkCAbCHMT06pEWQpYoUUkIOuYSBTrh0mrhAkyHs
-         eH88wtO5wm9h21Pt8zyEeekZ9fp/pOgBcksuiLW32QqdrPDCuQZCNOhdKLvTGWCmjHmr
-         p9GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749548645; x=1750153445;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AP2lApXT3oK4hCPR2yyZqkXMhT/gHqM9SDhESroajJo=;
-        b=Tc7zYwnNp0tz803FUX3rTWpZhmTX3j0nusCUYRF7n+MBkb6CBtMEJyiwaBF+RLqUlf
-         Yq8Zab4pCFA+FuM5/1am9GwZJB7/W0hj4R+DRuRRlEj7J7lPD8dzmT7oAeKUMUcsUC+g
-         fTTC8q1FIVddLAnsoIhv7qOYFlXdoQjGVlnlqryiFP3uxqKfS8NG6tgwPmPi8LZO/p3+
-         /iSgnLKiVs8WcmIVcDXrDS45Wmy4ln8sh/j5WDFW5FrUIJgi89VdM70w3knZ9/f5Bdgr
-         N4c+Lc/9KYLrzig5FsO4vrsBvfI9R/2dcpfR7olemkDRek6SopsgiQBcUPG4tWdAannq
-         QmBw==
-X-Gm-Message-State: AOJu0YwYag6YMMVn23SvQMvcC54xV0lriBsKeQpMZCvnepxvr0iosLKV
-	aaA4yMu+J4dTS3lmcuDZeU5JCXvd96ysvlClIJHOUijv/Fb7W0L/apHEM1+JaG5xjY4=
-X-Gm-Gg: ASbGncuzb69iS5zDkeW1/lE96VhhFNQUwiL3iw7KsYudawig0VQM/WSvz4xtU+GBa+e
-	D58xHXH7s6N3xLzhp/bpSJ5/Ar++jePMZmTuoaY9qkGTSbTkYdX1xA3Na771dd7ny78tuj2Pu7y
-	VmxzwxBVdcrBUr1G1Tb9SsOj42LEY0kHGUBvsKHx2KYzE3/N2hcGKYi6UM7n/OmyS4Iz757jsgr
-	oATc4w4EzctWHGvJk1ONhkY+/Or/MsBAsPF2izF/1B506Ciw5agQIR+zIFVZ0ZOgMZqnjWJMn+Y
-	upM71qiT8injWwC+MmLFjWuBgT+MED3HnND4jkKaKUSKVhQ9gAjc
-X-Google-Smtp-Source: AGHT+IGc2KM5AHFDg0UZ+9LBR81/PsWs240h3WEszfvWbHPGb9vWNuxU4xjmtYVvcZ/UZFPLVTjYVA==
-X-Received: by 2002:a05:6000:2512:b0:3a4:f722:f98d with SMTP id ffacd0b85a97d-3a531ab6df7mr13667513f8f.51.1749548641167;
-        Tue, 10 Jun 2025 02:44:01 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:4d:e52b:812d:eb7c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45209bc6905sm136450895e9.8.2025.06.10.02.43.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 02:43:59 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 10 Jun 2025 11:43:58 +0200
-Subject: [PATCH RESEND] platform: cznic: use new GPIO line value setter
- callbacks
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eFWbyeND";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BnOt/kkc"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749548643;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DHPOCi4ISkjjArIEAexgTMmc+gJfxVlUqx0t1gCSkcE=;
+	b=eFWbyeNDN+gfsohck49tvzWP0Zfn5W0oGhKczHlHBvJQj8sY1G1IL3GiFSE0A5oYNs64FN
+	lM+EkKPUZY3hc1/AbhY1f94efvOmSQG65DmYkMZj+N1lRHP7fcYeSsMHwO0crDpWsEwidf
+	fuipuybyhhVs6Q3VgyV1TLxD7BWFN0Tm9pZgDu0yQzuRAPEHtZL7zyLp6aJtPP8kyYB6sc
+	a8RJq3/5BWfpAdd91D3m5Cogxs7NuyjpZZMQrzAf3kRQHOOfaXYNdoebrpZXzW2tF4YAsn
+	0PI8RFgKcUpPrrvEHj9fvRdm7TZvRzxvgjtvorLfX5BsZnHXQRk4r4YMxvDZNg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749548643;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DHPOCi4ISkjjArIEAexgTMmc+gJfxVlUqx0t1gCSkcE=;
+	b=BnOt/kkcn75JlSSLDDQVZ+Huz+IvDuRph23wPkC9JhFngZ22CmYE9+11IiUmAmvbUy5Qlh
+	U6WvJid6CIgbPuAg==
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: john.ogness@linutronix.de,
+	Nam Cao <namcao@linutronix.de>
+Subject: [PATCH v10 09/19] verification/dot2k: Prepare the frontend for LTL inclusion
+Date: Tue, 10 Jun 2025 11:43:34 +0200
+Message-Id: <bbe1a0a35118a7829c0d4f2ff5a3cac6e5740891.1749547399.git.namcao@linutronix.de>
+In-Reply-To: <cover.1749547399.git.namcao@linutronix.de>
+References: <cover.1749547399.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250610-gpiochip-set-rv-platform-cznic-v1-1-30afd2444756@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAF3+R2gC/4XNMQ+CMBQE4L9C3uwzlBYxTg6yOuhoGEop8BJsm
- 5Y0KuG/2xB3x7tL7lsgaE86wClbwOtIgaxJge0yUKM0g0bqUoYiL8pc5AwHR1aN5DDoGX1EN8m
- 5t/6J6mNIIZOMH9pOVLJsIZ04r3t6bcADbvW9vl6gSf1IYbb+vbmRbeuPOP4jIkOGindCV4UQn
- PfniYz0dm/9AM26rl+gg+3X1QAAAA==
-X-Change-ID: 20250401-gpiochip-set-rv-platform-cznic-1a136bd47a5b
-To: =?utf-8?q?Marek_Beh=C3=BAn?= <kabel@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3702;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=pYxbyIrnxsxPSFmRinhVqBD4ziNyGPLYFRlg+L3caks=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoR/5fvZhhVDSj8LyHz0YKZEKCPJ9Wl4mSygojm
- GeZuNtcyhyJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaEf+XwAKCRARpy6gFHHX
- crqrEADS5I0ITOeC63rZHdwLYW2YThlKx/Z1GfyAXXADsIMCoT8jpCLEoRwKMcu1C/iVghXuE/D
- 9suaLKwU1QtXC9Tt/v1/7COZUGqWp+u4jsuyRtdMlFZ4VJ7Ho/ZPcKLDKzJnCw04DKIJlMyYIkY
- YPBuCNtaBC+2+/gYvOYjZnom2O6D9R9Ld1i7C51gWWeQ6ib7MgS1tppXjThvkY7XR2P4VnYmtiJ
- DYDBIuE4cCtstB+w4QmUYBwiqWVaglxpS3tjzuS02mK+GMDchaiVyYrtepmgONoCUGZ1+AdQHrf
- QCw5G48fa8yKuJChe0oYnxWARCJrz7jXRWFp6cfVtqMti56KL6ctWdXk2eU0+ZxCdKG3MBiZGtJ
- K4KhiuE7kiS7ANx0Y8SdKswXG1OGFk7zgrP0KGsQRmD63qrhyGsvrb40yx+blqOgsgYbMgjxSif
- d1+Q6LvmtJllSXVcg3JXMWe9kCjZZJvHfh4nshjVNgTJGlbeOkVzb6UAm0oJLgM8RMNyg711qnU
- KeKZlEdUZJLax1n4uMCGJcCRha6K9ATYgaYVt6PO81KyNEvLFnjjIg/F879U6qwc9P3EC2fem+o
- Ndn13ZtIEFtLlH3VoqkWIz27q9EGMLNkVAnhme8JR0atmQjCwcP60IXyUmcLNA8WRrICiPOc0W6
- uyHNsLYA7nZhG6Q==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+The dot2k tool has some code that can be reused for linear temporal logic
+monitor. Prepare its frontend for LTL inclusion:
 
-struct gpio_chip now has callbacks for setting line values that return
-an integer, allowing to indicate failures. Convert the driver to using
-them.
+  1. Rename to be generic: rvgen
 
-Signed-off-by: Marek Behún <kabel@kernel.org>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+  2. Replace the parameter --dot with 2 parameters:
+     --class: to specific the monitor class, can be 'da' or 'ltl'
+     --spec: the monitor specification file, .dot file for DA, and .ltl
+             file for LTL
+
+The old command:
+
+  python3 dot2/dot2k monitor -d wip.dot -t per_cpu
+
+is equivalent to the new commands:
+
+  python3 rvgen monitor -c da -s wip.dot -t per_cpu
+
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
-Nodoby picked this one up for v6.16, resending for v6.17.
+ tools/verification/{dot2 =3D> rvgen}/Makefile    | 10 +++++-----
+ .../{dot2/dot2k =3D> rvgen/__main__.py}          | 18 +++++++++++++-----
+ tools/verification/{dot2 =3D> rvgen}/dot2c       |  2 +-
+ .../{dot2 =3D> rvgen}/dot2k_templates/Kconfig    |  0
+ .../dot2k_templates/Kconfig_container          |  0
+ .../{dot2 =3D> rvgen}/dot2k_templates/main.c     |  0
+ .../dot2k_templates/main_container.c           |  0
+ .../dot2k_templates/main_container.h           |  0
+ .../{dot2 =3D> rvgen}/dot2k_templates/trace.h    |  0
+ .../{dot2 =3D> rvgen/rvgen}/automata.py          |  0
+ .../{dot2 =3D> rvgen/rvgen}/dot2c.py             |  2 +-
+ .../{dot2 =3D> rvgen/rvgen}/dot2k.py             | 10 +++++-----
+ 12 files changed, 25 insertions(+), 17 deletions(-)
+ rename tools/verification/{dot2 =3D> rvgen}/Makefile (55%)
+ rename tools/verification/{dot2/dot2k =3D> rvgen/__main__.py} (72%)
+ rename tools/verification/{dot2 =3D> rvgen}/dot2c (97%)
+ rename tools/verification/{dot2 =3D> rvgen}/dot2k_templates/Kconfig (100%)
+ rename tools/verification/{dot2 =3D> rvgen}/dot2k_templates/Kconfig_contai=
+ner (100%)
+ rename tools/verification/{dot2 =3D> rvgen}/dot2k_templates/main.c (100%)
+ rename tools/verification/{dot2 =3D> rvgen}/dot2k_templates/main_container=
+.c (100%)
+ rename tools/verification/{dot2 =3D> rvgen}/dot2k_templates/main_container=
+.h (100%)
+ rename tools/verification/{dot2 =3D> rvgen}/dot2k_templates/trace.h (100%)
+ rename tools/verification/{dot2 =3D> rvgen/rvgen}/automata.py (100%)
+ rename tools/verification/{dot2 =3D> rvgen/rvgen}/dot2c.py (99%)
+ rename tools/verification/{dot2 =3D> rvgen/rvgen}/dot2k.py (98%)
 
-Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
-values") added new line setter callbacks to struct gpio_chip. They allow
-to indicate failures to callers. We're in the process of converting all
-GPIO controllers to using them before removing the old ones.
----
- drivers/platform/cznic/turris-omnia-mcu-gpio.c | 35 ++++++++++++++++----------
- 1 file changed, 22 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/platform/cznic/turris-omnia-mcu-gpio.c b/drivers/platform/cznic/turris-omnia-mcu-gpio.c
-index c2df24ea8686782c18b7cbdc62e3ff6aecd9503a..77184c8b42ea21a2e4194074bdb1eef1806a7ba7 100644
---- a/drivers/platform/cznic/turris-omnia-mcu-gpio.c
-+++ b/drivers/platform/cznic/turris-omnia-mcu-gpio.c
-@@ -439,27 +439,28 @@ static int omnia_gpio_get_multiple(struct gpio_chip *gc, unsigned long *mask,
- 	return 0;
- }
- 
--static void omnia_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
-+static int omnia_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
- {
- 	const struct omnia_gpio *gpio = &omnia_gpios[offset];
- 	struct omnia_mcu *mcu = gpiochip_get_data(gc);
- 	u16 val, mask;
- 
- 	if (!gpio->ctl_cmd)
--		return;
-+		return -EINVAL;
- 
- 	mask = BIT(gpio->ctl_bit);
- 	val = value ? mask : 0;
- 
--	omnia_ctl_cmd(mcu, gpio->ctl_cmd, val, mask);
-+	return omnia_ctl_cmd(mcu, gpio->ctl_cmd, val, mask);
- }
- 
--static void omnia_gpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
--				    unsigned long *bits)
-+static int omnia_gpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
-+				   unsigned long *bits)
- {
- 	unsigned long ctl = 0, ctl_mask = 0, ext_ctl = 0, ext_ctl_mask = 0;
- 	struct omnia_mcu *mcu = gpiochip_get_data(gc);
- 	unsigned int i;
-+	int err;
- 
- 	for_each_set_bit(i, mask, ARRAY_SIZE(omnia_gpios)) {
- 		unsigned long *field, *field_mask;
-@@ -488,13 +489,21 @@ static void omnia_gpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
- 
- 	guard(mutex)(&mcu->lock);
- 
--	if (ctl_mask)
--		omnia_ctl_cmd_locked(mcu, OMNIA_CMD_GENERAL_CONTROL,
--				     ctl, ctl_mask);
-+	if (ctl_mask) {
-+		err = omnia_ctl_cmd_locked(mcu, OMNIA_CMD_GENERAL_CONTROL,
-+					   ctl, ctl_mask);
-+		if (err)
-+			return err;
-+	}
- 
--	if (ext_ctl_mask)
--		omnia_ctl_cmd_locked(mcu, OMNIA_CMD_EXT_CONTROL,
--				     ext_ctl, ext_ctl_mask);
-+	if (ext_ctl_mask) {
-+		err = omnia_ctl_cmd_locked(mcu, OMNIA_CMD_EXT_CONTROL,
-+					   ext_ctl, ext_ctl_mask);
-+		if (err)
-+			return err;
-+	}
-+
-+	return 0;
- }
- 
- static bool omnia_gpio_available(struct omnia_mcu *mcu,
-@@ -1015,8 +1024,8 @@ int omnia_mcu_register_gpiochip(struct omnia_mcu *mcu)
- 	mcu->gc.direction_output = omnia_gpio_direction_output;
- 	mcu->gc.get = omnia_gpio_get;
- 	mcu->gc.get_multiple = omnia_gpio_get_multiple;
--	mcu->gc.set = omnia_gpio_set;
--	mcu->gc.set_multiple = omnia_gpio_set_multiple;
-+	mcu->gc.set_rv = omnia_gpio_set;
-+	mcu->gc.set_multiple_rv = omnia_gpio_set_multiple;
- 	mcu->gc.init_valid_mask = omnia_gpio_init_valid_mask;
- 	mcu->gc.can_sleep = true;
- 	mcu->gc.names = omnia_mcu_gpio_names;
-
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250401-gpiochip-set-rv-platform-cznic-1a136bd47a5b
-
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+diff --git a/tools/verification/dot2/Makefile b/tools/verification/rvgen/Ma=
+kefile
+similarity index 55%
+rename from tools/verification/dot2/Makefile
+rename to tools/verification/rvgen/Makefile
+index 021beb07a5213..cea9c21c3bced 100644
+--- a/tools/verification/dot2/Makefile
++++ b/tools/verification/rvgen/Makefile
+@@ -3,7 +3,7 @@ INSTALL=3Dinstall
+ prefix  ?=3D /usr
+ bindir  ?=3D $(prefix)/bin
+ mandir  ?=3D $(prefix)/share/man
+-miscdir ?=3D $(prefix)/share/dot2
++miscdir ?=3D $(prefix)/share/rvgen
+ srcdir  ?=3D $(prefix)/src
+=20
+ PYLIB  ?=3D $(shell python3 -c 'import sysconfig;  print (sysconfig.get_pa=
+th("purelib"))')
+@@ -16,11 +16,11 @@ clean:
+=20
+ .PHONY: install
+ install:
+-	$(INSTALL) automata.py -D -m 644 $(DESTDIR)$(PYLIB)/dot2/automata.py
+-	$(INSTALL) dot2c.py -D -m 644 $(DESTDIR)$(PYLIB)/dot2/dot2c.py
++	$(INSTALL) rvgen/automata.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/automata.=
+py
++	$(INSTALL) rvgen/dot2c.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/dot2c.py
+ 	$(INSTALL) dot2c -D -m 755 $(DESTDIR)$(bindir)/
+-	$(INSTALL) dot2k.py -D -m 644 $(DESTDIR)$(PYLIB)/dot2/dot2k.py
+-	$(INSTALL) dot2k -D -m 755 $(DESTDIR)$(bindir)/
++	$(INSTALL) rvgen/dot2k.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/dot2k.py
++	$(INSTALL) __main__.py -D -m 755 $(DESTDIR)$(bindir)/rvgen
+=20
+ 	mkdir -p ${miscdir}/
+ 	cp -rp dot2k_templates $(DESTDIR)$(miscdir)/
+diff --git a/tools/verification/dot2/dot2k b/tools/verification/rvgen/__mai=
+n__.py
+similarity index 72%
+rename from tools/verification/dot2/dot2k
+rename to tools/verification/rvgen/__main__.py
+index 133fb17d9d475..994d320ad2d1f 100644
+--- a/tools/verification/dot2/dot2k
++++ b/tools/verification/rvgen/__main__.py
+@@ -9,11 +9,11 @@
+ #   Documentation/trace/rv/da_monitor_synthesis.rst
+=20
+ if __name__ =3D=3D '__main__':
+-    from dot2.dot2k import dot2k
++    from rvgen.dot2k import dot2k
+     import argparse
+     import sys
+=20
+-    parser =3D argparse.ArgumentParser(description=3D'transform .dot file =
+into kernel rv monitor')
++    parser =3D argparse.ArgumentParser(description=3D'Generate kernel rv m=
+onitor')
+     parser.add_argument("-D", "--description", dest=3D"description", requi=
+red=3DFalse)
+     parser.add_argument("-a", "--auto_patch", dest=3D"auto_patch",
+                         action=3D"store_true", required=3DFalse,
+@@ -25,7 +25,9 @@ if __name__ =3D=3D '__main__':
+     monitor_parser.add_argument('-n', "--model_name", dest=3D"model_name")
+     monitor_parser.add_argument("-p", "--parent", dest=3D"parent",
+                                 required=3DFalse, help=3D"Create a monitor=
+ nested to parent")
+-    monitor_parser.add_argument('-d', "--dot", dest=3D"dot_file")
++    monitor_parser.add_argument('-c', "--class", dest=3D"monitor_class",
++                                help=3D"Monitor class, either \"da\" or \"=
+ltl\"")
++    monitor_parser.add_argument('-s', "--spec", dest=3D"spec", help=3D"Mon=
+itor specification file")
+     monitor_parser.add_argument('-t', "--monitor_type", dest=3D"monitor_ty=
+pe",
+                                 help=3Df"Available options: {', '.join(dot=
+2k.monitor_types.keys())}")
+=20
+@@ -36,8 +38,14 @@ if __name__ =3D=3D '__main__':
+=20
+     try:
+         if params.subcmd =3D=3D "monitor":
+-            print("Opening and parsing the dot file %s" % params.dot_file)
+-            monitor =3D dot2k(params.dot_file, params.monitor_type, vars(p=
+arams))
++            print("Opening and parsing the specification file %s" % params=
+.spec)
++            if params.monitor_class =3D=3D "da":
++                monitor =3D dot2k(params.spec, params.monitor_type, vars(p=
+arams))
++            elif params.monitor_class =3D=3D "ltl":
++                raise NotImplementedError
++            else:
++                print("Unknown monitor class:", params.monitor_class)
++                sys.exit(1)
+         else:
+             monitor =3D dot2k(None, None, vars(params))
+     except Exception as e:
+diff --git a/tools/verification/dot2/dot2c b/tools/verification/rvgen/dot2c
+similarity index 97%
+rename from tools/verification/dot2/dot2c
+rename to tools/verification/rvgen/dot2c
+index 3fe89ab88b65a..bf0c67c5b66c8 100644
+--- a/tools/verification/dot2/dot2c
++++ b/tools/verification/rvgen/dot2c
+@@ -14,7 +14,7 @@
+ #   Documentation/trace/rv/deterministic_automata.rst
+=20
+ if __name__ =3D=3D '__main__':
+-    from dot2 import dot2c
++    from rvgen import dot2c
+     import argparse
+     import sys
+=20
+diff --git a/tools/verification/dot2/dot2k_templates/Kconfig b/tools/verifi=
+cation/rvgen/dot2k_templates/Kconfig
+similarity index 100%
+rename from tools/verification/dot2/dot2k_templates/Kconfig
+rename to tools/verification/rvgen/dot2k_templates/Kconfig
+diff --git a/tools/verification/dot2/dot2k_templates/Kconfig_container b/to=
+ols/verification/rvgen/dot2k_templates/Kconfig_container
+similarity index 100%
+rename from tools/verification/dot2/dot2k_templates/Kconfig_container
+rename to tools/verification/rvgen/dot2k_templates/Kconfig_container
+diff --git a/tools/verification/dot2/dot2k_templates/main.c b/tools/verific=
+ation/rvgen/dot2k_templates/main.c
+similarity index 100%
+rename from tools/verification/dot2/dot2k_templates/main.c
+rename to tools/verification/rvgen/dot2k_templates/main.c
+diff --git a/tools/verification/dot2/dot2k_templates/main_container.c b/too=
+ls/verification/rvgen/dot2k_templates/main_container.c
+similarity index 100%
+rename from tools/verification/dot2/dot2k_templates/main_container.c
+rename to tools/verification/rvgen/dot2k_templates/main_container.c
+diff --git a/tools/verification/dot2/dot2k_templates/main_container.h b/too=
+ls/verification/rvgen/dot2k_templates/main_container.h
+similarity index 100%
+rename from tools/verification/dot2/dot2k_templates/main_container.h
+rename to tools/verification/rvgen/dot2k_templates/main_container.h
+diff --git a/tools/verification/dot2/dot2k_templates/trace.h b/tools/verifi=
+cation/rvgen/dot2k_templates/trace.h
+similarity index 100%
+rename from tools/verification/dot2/dot2k_templates/trace.h
+rename to tools/verification/rvgen/dot2k_templates/trace.h
+diff --git a/tools/verification/dot2/automata.py b/tools/verification/rvgen=
+/rvgen/automata.py
+similarity index 100%
+rename from tools/verification/dot2/automata.py
+rename to tools/verification/rvgen/rvgen/automata.py
+diff --git a/tools/verification/dot2/dot2c.py b/tools/verification/rvgen/rv=
+gen/dot2c.py
+similarity index 99%
+rename from tools/verification/dot2/dot2c.py
+rename to tools/verification/rvgen/rvgen/dot2c.py
+index fa2816ac7b61a..6009caf568d92 100644
+--- a/tools/verification/dot2/dot2c.py
++++ b/tools/verification/rvgen/rvgen/dot2c.py
+@@ -13,7 +13,7 @@
+ # For further information, see:
+ #   Documentation/trace/rv/deterministic_automata.rst
+=20
+-from dot2.automata import Automata
++from .automata import Automata
+=20
+ class Dot2c(Automata):
+     enum_suffix =3D ""
+diff --git a/tools/verification/dot2/dot2k.py b/tools/verification/rvgen/rv=
+gen/dot2k.py
+similarity index 98%
+rename from tools/verification/dot2/dot2k.py
+rename to tools/verification/rvgen/rvgen/dot2k.py
+index 9ec99e297012a..e294624131943 100644
+--- a/tools/verification/dot2/dot2k.py
++++ b/tools/verification/rvgen/rvgen/dot2k.py
+@@ -8,13 +8,13 @@
+ # For further information, see:
+ #   Documentation/trace/rv/da_monitor_synthesis.rst
+=20
+-from dot2.dot2c import Dot2c
++from .dot2c import Dot2c
+ import platform
+ import os
+=20
+ class dot2k(Dot2c):
+     monitor_types =3D { "global" : 1, "per_cpu" : 2, "per_task" : 3 }
+-    monitor_templates_dir =3D "dot2/dot2k_templates/"
++    monitor_templates_dir =3D "rvgen/dot2k_templates/"
+     rv_dir =3D "kernel/trace/rv"
+     monitor_type =3D "per_cpu"
+=20
+@@ -60,14 +60,14 @@ class dot2k(Dot2c):
+         if platform.system() !=3D "Linux":
+             raise OSError("I can only run on Linux.")
+=20
+-        kernel_path =3D "/lib/modules/%s/build/tools/verification/dot2/dot=
+2k_templates/" % (platform.release())
++        kernel_path =3D "/lib/modules/%s/build/tools/verification/rvgen/do=
+t2k_templates/" % (platform.release())
+=20
+         if os.path.exists(kernel_path):
+             self.monitor_templates_dir =3D kernel_path
+             return
+=20
+-        if os.path.exists("/usr/share/dot2/dot2k_templates/"):
+-            self.monitor_templates_dir =3D "/usr/share/dot2/dot2k_template=
+s/"
++        if os.path.exists("/usr/share/rvgen/dot2k_templates/"):
++            self.monitor_templates_dir =3D "/usr/share/rvgen/dot2k_templat=
+es/"
+             return
+=20
+         raise FileNotFoundError("Could not find the template directory, do=
+ you have the kernel source installed?")
+--=20
+2.39.5
 
