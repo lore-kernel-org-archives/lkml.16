@@ -1,56 +1,59 @@
-Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77DAE27FD6B;
-	Tue, 10 Jun 2025 07:35:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7300C28134F;
+	Tue, 10 Jun 2025 07:35:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749540932; cv=none; b=N0vibb5nx8ycnsiISxKwKkx6M1YUSeg1/CENw9X7H1kkKLdqEthFk+9K1TvLTxrfYgcb4X2rBrsKnDDw0AqfWhq9gksuwttgjBe36LzD+/aWucO7d+prF4fYSdeVG+/doelnx4V4G7is6ccEi2gKNb7gS06bnck+8DbrP5tTEIk=
+	t=1749540934; cv=none; b=Nbyz/pVgD765Y9z5JWEps/1HHk1R3JbBZeWdM4YsTv+Gxsfy//Y/sGwDB053hPO6UB3eDtxOiAjkT0fJaJI+o0u9iliXj+9bRqtp2xNKFTtSfbGv6Un7YlaosXv3i9r9mvimluw13EbqdONauEiLlbT2Gro7WrGhPUlymLonqEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749540932; c=relaxed/simple;
-	bh=LpB0tn2W8J57FOE/gT31lMBVVdtKo2lsnkxO3IobWoQ=;
+	s=arc-20240116; t=1749540934; c=relaxed/simple;
+	bh=YGNBbAmxGFyyZoPX38c/y8+uQSUZrM5W1KEjtKOY3G8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=hCmH5nqYmggPw+OM2kQPt5cIz/af/m9PDHi5DtavaaVt3RWZRBjlSEi+ujxC19nDMVB92B4hrU5skagyOv2dw/fZT5al81Fy/VDfFUBso+rJYpE1wcT3xWdeT7zZokANv1+awkjb+xmKhMrutW2JNSELsiluvVxyPpgPTAPNIV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=SSMIWlDK; arc=none smtp.client-ip=148.163.135.77
+	 In-Reply-To:To:CC; b=gFXjDEdg8v4TvvJsudC9iN6WalwYyBHVQemXhTJ/83lLsfJsGv28cbRHDzn1KwyXJ+u+wsTnViTJ3bjw9EaWm8G6tlCU2ammFiYl3RiZ306Epk75ZbCMC/IFc4vlHGcR4d7/6BDTuLMScS58wH+WivxbrLf2QWEPdP9PXijk0wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=CrB2e0zc; arc=none smtp.client-ip=148.163.135.77
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="SSMIWlDK"
-Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
-	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55A6lCQ8030659;
-	Tue, 10 Jun 2025 03:35:11 -0400
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="CrB2e0zc"
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55A62TUG027961;
+	Tue, 10 Jun 2025 03:35:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=adjeN
-	tw0XQXx7CGsSo6c8VElZl2N4SywtE1Yxk4K2KQ=; b=SSMIWlDKKBk8Olhs6chpw
-	5xp/i+Fne5fp1I3OAjmRUUQsZSORrvQw1+BbQtwmRFN/WfQg4FidSl6FIGLD4Tsz
-	PRwUDfXjjNw5h9iFTRlE3D7dCU1PrZjPvQdaM7SCRBkDMwuLjJuPdJbfAnTv6n+z
-	n6aEq5LEmBo/5mepGSBaGmFTKrvUxQg2KqfojvFBqveq6UGFYPjn66hoMYoeQkM8
-	lR/PrOMQUgKEtxOYkW6s8Xlj3JNBLeJ8cMHG6+KwYQtc2dxnkjPPB24w0845MQ2N
-	7dKx/HxtTXPUSgiUiUuwA4FQ9t9s6RraHIqwveVG7MEeY4CRnF3sVv6MIaosyFIa
-	w==
+	:message-id:mime-version:references:subject:to; s=DKIM; bh=JxEhi
+	YuNWK027Yt40xFcHXX2Aoc+OVtIhuqCOWB0K+w=; b=CrB2e0zcjVlCkpc3yC7Ek
+	MpxNcZrNuXCnOXNPyOj3rV6x9y5Foh314EahIVDpXqJC4RQJayurQPfCkbBOgQAA
+	/hqz5icqkoGiz8pF4nOES7Y2smVH/q5QEF8gaHQ2irtgNjm7CsVFZRIUgeta2qr9
+	v2Am9mTSH0lCznsTCph59mVEotooGytL7ZwCJfOVLSKmnjFDGk4Xr+HX7otaTONo
+	SFWba/CgS7N0XYAhgtp9JWCPW1HX88/ONgvvueDMrzg/SS+dg9cv+EO3zLWy9kd0
+	EDRfQ5MWW05MVJSDsjalX54qfJxRlb8ijk/eUu6pO+SzM/LIl6QCjdx9n0PZ14W2
+	g==
 Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 476fc30bkg-1
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 475u346d0a-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Jun 2025 03:35:10 -0400 (EDT)
+	Tue, 10 Jun 2025 03:35:06 -0400 (EDT)
 Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 55A7Z91X056157
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 55A7Z5Zw056142
 	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 10 Jun 2025 03:35:09 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Tue, 10 Jun
- 2025 03:35:09 -0400
+	Tue, 10 Jun 2025 03:35:05 -0400
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Tue, 10 Jun 2025 03:35:05 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Tue, 10 Jun 2025 03:35:05 -0400
 Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
  (10.64.17.10) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
- Transport; Tue, 10 Jun 2025 03:35:09 -0400
+ Transport; Tue, 10 Jun 2025 03:35:05 -0400
 Received: from HYB-DlYm71t3hSl.ad.analog.com (HYB-DlYm71t3hSl.ad.analog.com [10.44.3.51])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 55A7YkMj002608;
-	Tue, 10 Jun 2025 03:35:03 -0400
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 55A7YkMg002608;
+	Tue, 10 Jun 2025 03:34:57 -0400
 From: Jorge Marques <jorge.marques@analog.com>
-Date: Tue, 10 Jun 2025 09:34:38 +0200
-Subject: [PATCH v3 5/8] docs: iio: ad4052: Add offload support
- documentation
+Date: Tue, 10 Jun 2025 09:34:35 +0200
+Subject: [PATCH v3 2/8] dt-bindings: iio: adc: Add adi,ad4052
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,7 +62,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250610-iio-driver-ad4052-v3-5-cf1e44c516d4@analog.com>
+Message-ID: <20250610-iio-driver-ad4052-v3-2-cf1e44c516d4@analog.com>
 References: <20250610-iio-driver-ad4052-v3-0-cf1e44c516d4@analog.com>
 In-Reply-To: <20250610-iio-driver-ad4052-v3-0-cf1e44c516d4@analog.com>
 To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
@@ -72,91 +75,276 @@ To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
         David Lechner
 	<dlechner@baylibre.com>,
         =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
-        Andy
- Shevchenko <andy@kernel.org>,
+        "Andy
+ Shevchenko" <andy@kernel.org>,
         =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
 	<ukleinek@kernel.org>
 CC: <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-doc@vger.kernel.org>,
         <linux-pwm@vger.kernel.org>, Jorge Marques <jorge.marques@analog.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749540886; l=1826;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749540886; l=7557;
  i=jorge.marques@analog.com; s=20250303; h=from:subject:message-id;
- bh=LpB0tn2W8J57FOE/gT31lMBVVdtKo2lsnkxO3IobWoQ=;
- b=gASwBhMMaHdCRv4Vgk2/VpMe65RuPPDsnn+Uyu5xAKCfhzYFNe5zhAftG5PKERUGOlwbJFxro
- qLHyKV2qP84C2D9gJ++nH7Txq5M7F6b6oi76mFdgRVd3IIaxPxwLSrx
+ bh=YGNBbAmxGFyyZoPX38c/y8+uQSUZrM5W1KEjtKOY3G8=;
+ b=aKrdiDdqVVHWfeJUVEf5ZCLAedHsNREQHvSQJOKbVvwPFa58LS0THfAymaunjxDY83jsmUkJy
+ xWuIvmeoy61BltViWT0vgQ2Y377BJwysziIglIfrMmh/FAh5FX/gza9
 X-Developer-Key: i=jorge.marques@analog.com; a=ed25519;
  pk=NUR1IZZMH0Da3QbJ2tBSznSPVfRpuoWdhBzKGSpAdbg=
 X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: EYNPHrycvRh5RSJZAG4llzmJl9D6xp_R
-X-Proofpoint-ORIG-GUID: EYNPHrycvRh5RSJZAG4llzmJl9D6xp_R
-X-Authority-Analysis: v=2.4 cv=LtaSymdc c=1 sm=1 tr=0 ts=6847e02e cx=c_pps
+X-Authority-Analysis: v=2.4 cv=R74DGcRX c=1 sm=1 tr=0 ts=6847e02b cx=c_pps
  a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=wI1k2SEZAAAA:8 a=gAnH3GRIAAAA:8
- a=d3jCkwYfNc7Hc5xPy-QA:9 a=QEXdDO2ut3YA:10 a=6HWbV-4b7c7AdzY24d_u:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDA1NiBTYWx0ZWRfX3Lbf+Jp+a27B
- LIOj4O2rONhlQ2H1Lwr0nGPAotpSdxMN3fdD1UsWWBYUYjAopojWACWGZqYoloOueHOhEFqrHp7
- 0gXD2JaZwBpnPrFRO2y+jVDamWWaFNHxMATmAuOzmGcykYcPjchBJUulApqKjjzt98xDY9nK1WH
- U9Ho8nm7LhAnAMdiD3RZRgGn9fzyXabEXdeQ1gMF/AusdiHZo3oVMPfLFmkmQRhTk/1tT6hTbhz
- Xofp/MRCt8a9kSK5mdPRegzh6OliU6QVa5dwTgdM6JQSEes+sB/kVHAu0dySuFIy0orVTdCCkUx
- +6oCmfUzm16hFBg9luDgsektuQjeziiBDmnMV83+kfHAzwLypCETfpLFxZPQFugS5D30b14cVZ6
- rnpoKAhI5ltL8XfGHBbTXe+vA9LLvjmiQeeqt8N8GdlT8v4HMvMdydyv901CSzkIi28wsosa
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=gEfo2CItAAAA:8 a=gAnH3GRIAAAA:8
+ a=VwQbUJbxAAAA:8 a=EgBP3gVEkGq-cZKvRrIA:9 a=QEXdDO2ut3YA:10
+ a=sptkURWiP4Gy88Gu7hUp:22
+X-Proofpoint-ORIG-GUID: JH1l5m-eslA2QLcWD3VGlzRUctT3KMg0
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDA1NiBTYWx0ZWRfXxt/YAPiVab6O
+ vH1rUFw0AzuWuXMk9iYAjvYgIdr+ilmRmqYCnl3MRuT1CKzHL1kbyfzKpnFTcgTTNMSWRVumr+x
+ ezyhxe2u0ybmXB9mqxs2xsVVfL7dHGlHtuSK/1UbdB0qAj4Mexxt3j/0oxxwTANqM/Zlaq606ps
+ RsSWCeh8vD+/ZZ3ypqiv+nFU+sN+CL0T62ZoJ/gxzjNs0s5A5EFkmiGbvsXEHV5/c6v64bCcJBU
+ cJzi/g8C4SHdYQGsg9BHOfcjhWpICFCsuokDlXp4xPofbC3tAnyb/HhgDcAGVYGKEfD1QNaySBs
+ 2SzwA+dYOGerow0xL5DaCf427KmVXUlwsgYBm83xUyqFhH87UBzQSRXSat4G5pqQrG5XctBTAW0
+ YgAVW7PC1LOkfMypzuq9pfukbr7dGDMs7Wtu12KUszg5L7wTkbUWv2ZnJyntkYi0XC9l+6il
+X-Proofpoint-GUID: JH1l5m-eslA2QLcWD3VGlzRUctT3KMg0
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-06-10_02,2025-06-09_02,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 malwarescore=0 priorityscore=1501 phishscore=0
- lowpriorityscore=0 mlxlogscore=906 impostorscore=0 mlxscore=0 spamscore=0
- clxscore=1015 suspectscore=0 bulkscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506100056
+ clxscore=1015 impostorscore=0 priorityscore=1501 malwarescore=0 bulkscore=0
+ lowpriorityscore=0 phishscore=0 mlxscore=0 adultscore=0 spamscore=0
+ suspectscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506100056
 
-Explain the AD4052 support for the SPI Engine Offload.
+Add dt-bindings for AD4052 family, devices AD4050/AD4052/AD4056/AD4058,
+low-power with monitor capabilities SAR ADCs. Each variant of the family
+differs in speed and resolution, resulting in different scan types and
+spi word sizes, that are matched by the compatible with the chip_info.
+The device contains one input (cnv) and two outputs (gp0, gp1).
+The outputs can be configured for range of options, such as threshold
+and data ready.
+The spi-max-frequency refers to the configuration mode maximum access
+speed. The ADC mode speed depends on the vio input voltage.
 
 Signed-off-by: Jorge Marques <jorge.marques@analog.com>
 ---
- Documentation/iio/ad4052.rst | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ .../devicetree/bindings/iio/adc/adi,ad4052.yaml    | 167 +++++++++++++++++++++
+ MAINTAINERS                                        |   6 +
+ include/dt-bindings/iio/adc/adi,ad4052.h           |  17 +++
+ 3 files changed, 190 insertions(+)
 
-diff --git a/Documentation/iio/ad4052.rst b/Documentation/iio/ad4052.rst
-index 25e55eb72e167bd2b2195ba789b45ce402869b0f..2ad1c7712766118b03c48929d1f2b7670d5f8d41 100644
---- a/Documentation/iio/ad4052.rst
-+++ b/Documentation/iio/ad4052.rst
-@@ -49,6 +49,12 @@ The ADC contains only one channel with following attributes:
-    * - ``in_voltage_oversampling_ratio_available``
-      - List of available oversampling values. Value 1 disable the burst
-        averaging mode.
-+   * - ``in_voltage_sampling_frequency``
-+     - Set the sampling frequency, only present if SPI Offload is being used.
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4052.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad4052.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..2cf197e2d872d9a3d4f7210121a1e38f784f92dc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4052.yaml
+@@ -0,0 +1,167 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright 2025 Analog Devices Inc.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/adi,ad4052.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+If `gp1` interrupt is not set, the driver will not wait for the data ready
-+assertion, and will result in reading a sample before it's ready, particularly
-+in oversampling mode.
++title: Analog Devices AD4052 ADC family device driver
++
++maintainers:
++  - Jorge Marques <jorge.marques@analog.com>
++
++description: |
++  Analog Devices AD4052 Single Channel Precision SAR ADC family
++
++  https://www.analog.com/media/en/technical-documentation/data-sheets/ad4050-ad4056.pdf
++  https://www.analog.com/media/en/technical-documentation/data-sheets/ad4052-ad4058.pdf
++
++properties:
++  compatible:
++    enum:
++      - adi,ad4050
++      - adi,ad4052
++      - adi,ad4056
++      - adi,ad4058
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    items:
++      - description: Signal coming from the GP0 pin.
++      - description: Signal coming from the GP1 pin.
++
++  interrupt-names:
++    items:
++      - const: gp0
++      - const: gp1
++
++  cnv-gpios:
++    description: The Convert Input (CNV). If omitted, CNV is tied to SPI CS.
++    maxItems: 1
++
++  pwms:
++    maxItems: 1
++    description: PWM connected to the CNV pin.
++
++  trigger-sources:
++    minItems: 1
++    maxItems: 2
++    description:
++      Describes the output pin and event associated.
++
++  "#trigger-source-cells":
++    const: 2
++    description: |
++      Output pins used as trigger source.
++
++      Cell 0 defines the event:
++      * 0 = Data ready
++      * 1 = Min threshold
++      * 2 = Max threshold
++      * 3 = Either threshold
++      * 4 = CHOP control
++      * 5 = Device enable
++      * 6 = Device ready (only GP1)
++
++      Cell 1 defines which pin:
++      * 0 = GP0
++      * 1 = GP1
++
++      For convenience, macros for these values are available in
++      dt-bindings/iio/adc/adi,ad4052.h.
++
++  spi-max-frequency:
++    maximum: 83333333
++
++  vdd-supply:
++    description: Analog power supply.
++
++  vio-supply:
++    description: Digital interface logic power supply.
++
++  ref-supply:
++    description: |
++      Reference voltage to set the ADC full-scale range. If not present,
++      vdd-supply is used as the reference voltage.
++
++required:
++  - compatible
++  - reg
++  - vdd-supply
++  - vio-supply
++
++allOf:
++  - $ref: /schemas/spi/spi-peripheral-props.yaml#
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/iio/adc/adi,ad4052.h>
++
++    spi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        adc@0 {
++            compatible = "adi,ad4052";
++            reg = <0>;
++            vdd-supply = <&vdd>;
++            vio-supply = <&vio>;
++            ref-supply = <&ref>;
++            spi-max-frequency = <83333333>;
++
++            #trigger-source-cells = <2>;
++            trigger-sources = <&adc AD4052_TRIGGER_EVENT_EITHER_THRESH
++                                    AD4052_TRIGGER_PIN_GP0
++                               &adc AD4052_TRIGGER_EVENT_DATA_READY
++                                    AD4052_TRIGGER_PIN_GP1>;
++            interrupt-parent = <&gpio>;
++            interrupts = <0 0 IRQ_TYPE_EDGE_RISING>,
++                         <0 1 IRQ_TYPE_EDGE_FALLING>;
++            interrupt-names = "gp0", "gp1";
++            cnv-gpios = <&gpio 2 GPIO_ACTIVE_HIGH>;
++        };
++    };
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/iio/adc/adi,ad4052.h>
++
++    rx_dma {
++            #dma-cells = <1>;
++    };
++
++    spi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        dmas = <&rx_dma 0>;
++        dma-names = "offload0-rx";
++        trigger-sources = <&adc AD4052_TRIGGER_EVENT_DATA_READY
++                                AD4052_TRIGGER_PIN_GP1>;
++
++        adc@0 {
++            compatible = "adi,ad4052";
++            reg = <0>;
++            vdd-supply = <&vdd>;
++            vio-supply = <&vio>;
++            spi-max-frequency = <83333333>;
++            pwms = <&adc_trigger 0 10000 0>;
++
++            #trigger-source-cells = <2>;
++            trigger-sources = <&adc AD4052_TRIGGER_EVENT_EITHER_THRESH
++                                    AD4052_TRIGGER_PIN_GP0
++                               &adc AD4052_TRIGGER_EVENT_DATA_READY
++                                    AD4052_TRIGGER_PIN_GP1>;
++            interrupt-parent = <&gpio>;
++            interrupts = <0 0 IRQ_TYPE_EDGE_RISING>,
++                         <0 1 IRQ_TYPE_EDGE_FALLING>;
++            interrupt-names = "gp0", "gp1";
++            cnv-gpios = <&gpio 2 GPIO_ACTIVE_HIGH>;
++        };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c02d83560058f7ea75e24509b4d87ef293df6773..d000c7de7ff9eba390f87593bc2b1847f966f48b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1337,6 +1337,12 @@ F:	Documentation/devicetree/bindings/iio/adc/adi,ad4030.yaml
+ F:	Documentation/iio/ad4030.rst
+ F:	drivers/iio/adc/ad4030.c
  
- Also contain the following device attributes:
- 
-@@ -69,3 +75,21 @@ Low-power mode
- The device enters low-power mode on idle to save power. Enabling an event puts
- the device out of the low-power since the ADC autonomously samples to assert
- the event condition.
++ANALOG DEVICES INC AD4052 DRIVER
++M:	Jorge Marques <jorge.marques@analog.com>
++S:	Supported
++W:	https://ez.analog.com/linux-software-drivers
++F:	Documentation/devicetree/bindings/iio/adc/adi,ad4052.yaml
 +
-+SPI offload support
-+===================
+ ANALOG DEVICES INC AD4080 DRIVER
+ M:	Antoniu Miclaus <antoniu.miclaus@analog.com>
+ L:	linux-iio@vger.kernel.org
+diff --git a/include/dt-bindings/iio/adc/adi,ad4052.h b/include/dt-bindings/iio/adc/adi,ad4052.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..37db5d9d10e788d5e7fb715c4ba9077e555131d5
+--- /dev/null
++++ b/include/dt-bindings/iio/adc/adi,ad4052.h
+@@ -0,0 +1,17 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
 +
-+To be able to achieve the maximum sample rate, the driver can be used with the
-+`AXI SPI Engine`_ to provide SPI offload support.
++#ifndef _DT_BINDINGS_ADI_AD4052_H
++#define _DT_BINDINGS_ADI_AD4052_H
 +
-+.. _AXI SPI Engine: http://analogdevicesinc.github.io/hdl/projects/ad4052_ardz/index.html
++#define AD4052_TRIGGER_EVENT_DATA_READY		0
++#define AD4052_TRIGGER_EVENT_MIN_THRESH		1
++#define AD4052_TRIGGER_EVENT_MAX_THRESH		2
++#define AD4052_TRIGGER_EVENT_EITHER_THRESH	3
++#define AD4052_TRIGGER_EVENT_CHOP		4
++#define AD4052_TRIGGER_EVENT_DEV_ENABLED	5
++#define AD4052_TRIGGER_EVENT_DEV_READY		6
 +
-+When SPI offload is being used, additional attributes are present:
++#define AD4052_TRIGGER_PIN_GP0		0
++#define AD4052_TRIGGER_PIN_GP1		1
 +
-+.. list-table:: Additional attributes
-+   :header-rows: 1
-+
-+   * - Attribute
-+     - Description
-+   * - ``in_voltage_sampling_frequency``
-+     - Set the sampling frequency.
++#endif /* _DT_BINDINGS_ADI_AD4052_H */
 
 -- 
 2.49.0
