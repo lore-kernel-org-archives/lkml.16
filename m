@@ -1,117 +1,127 @@
-Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 882A8235354;
-	Tue, 10 Jun 2025 15:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A80323A99D;
+	Tue, 10 Jun 2025 15:49:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749570543; cv=none; b=Me7ZqfzV+YFslFG0s2AvUdITUTboCgANLZOar34M7bYfdeOsvAMt9l3CoAOb1VfbJcRTJfQ5/dJowPv/zRjPsuNmlvCs4yxFFn9ybEGpIMr2CYhLiPJMqKdX+UnmhKfE3gp8q2ZcglF0sDDe0Zzs53PzZIcj/AIMawxvg5qi2kw=
+	t=1749570548; cv=none; b=MJ262U52KskTPQ58N7VewWQXYkFHD1/g7tUAjOwpV8NKtQ8XqG9Rv63Mv0S1m7JpU3XyGPgToFgvsQ1W/FZJk3RXNvkefIUrR90pTjANqmyesK/uoMPz8frodZ80NFiwy6Dq8yplk4TdRNY4Ayi/+2V4j9ElDL1ZOs1JfZwOp88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749570543; c=relaxed/simple;
-	bh=CF9pirNlJKKWScnB4iiSz1km2xm1OOfVg1OY6MAlK2g=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=ubpyqRvL127xpDZNfTqF3xHFU710X38aVg7HxVVTGlblePf96mHwH6Bl3U7Pen7WQRMzhbClPBaZL+uhhrEcX9mrye5FrkIU3BqINWIMlmob7RoyRKTWa5b9tcIlBvPCmUyCS0IiRRa51TLVPZQGCTJLjTN4Hpli6nxE88n0wU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=nfo7s0PC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=MtHlk1cv; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="nfo7s0PC";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MtHlk1cv"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id A664F1140138;
-	Tue, 10 Jun 2025 11:49:00 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Tue, 10 Jun 2025 11:49:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1749570540;
-	 x=1749656940; bh=qhJ9rARWvXH6b5vxwlzrrjHa4TjKQAJ9KOsyecEZi9E=; b=
-	nfo7s0PC49ZuvoHue2elR1gN/qUizRRv4/TanVsoMDbmQzZuuJtdze6W49VVIKsv
-	ffjp4PjFwaFrRMKm+0IkgsT2RF5Jf6WhYuXRwFWg8z27ALbtpTcLCOGCb6YqzUPO
-	bMJ9dG/DM5zRg7Ks/YzbsQ8uLp8rv+F90DfzLhdj9hnhg/OtKlA3Dafho8wwNo/V
-	DRRtOJB0qKfFs31OL1arC9ChQhQzDE9hGWM2cYm9i17Ftt61AM5xGwKB5lsCZABd
-	4hV2oZfQ3gVyWXgqpysyXE0DGIN7B6x3dxrvk6K/s9LG5wLgYill/GiNZqiL15zc
-	PAv2vD/+r0WSszR5QRtcsQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749570540; x=
-	1749656940; bh=qhJ9rARWvXH6b5vxwlzrrjHa4TjKQAJ9KOsyecEZi9E=; b=M
-	tHlk1cv3uHHa7tzhq9qZNaeOGsv0m3F5ek6RcNRS8OTlWVT7G03rkMDF/EO9x0WV
-	g0TdHvJiWl36NK0SIpl+2yeG4LyM978stB/C6CSReNr5yYWnVtwCxVGBd4xskHW6
-	ZU/kwcWjGAOvrqvZAeN9k3iMV6h2dySTx0DSx4eBlRuVaYlqfGXG1SMdbobLembn
-	vzotDckXCSSylaJv0Cx4p4K5ndDS3dOUwJyAj1CVSall/+fjkFM8e98cfAwfjBWL
-	LCZuUye1vfTbfNHEA7Y9Ht+QGtx+i+f096RwzPzoq01yrUi8uQQRWhztNjiRHk3B
-	9dj6OBFf1bA/CbxkoYAzQ==
-X-ME-Sender: <xms:7FNIaOHmiIFc-0Wuv2T1zFxgTWE3Rz0prZabT7hv5y_LhFll7iKURg>
-    <xme:7FNIaPWPGmSSNGNpmvTVgAiSSnSwNihmwhMOYjgbVoSTYCzr2AIWydqOy-FUr_pYL
-    L-j0Lfz08lmOTMUxwg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddutdelgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
-    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
-    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeek
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopeholhhtvggrnhhvsehgmhgrihhlrd
-    gtohhmpdhrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthht
-    ohepjhgrmhgvshdrtghlrghrkheslhhinhgrrhhordhorhhgpdhrtghpthhtohepihhmgi
-    eslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehfrhgrnhhkrdhlihesnhig
-    phdrtghomhdprhgtphhtthhopehvlhgrughimhhirhdrohhlthgvrghnsehngihprdgtoh
-    hmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtoheplhhinhhugidqshhpihesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:7FNIaILB4Z-8DwwtSD2OhuQlPMfNz-w2_MJdKTjR6akamWZ6M8mzqQ>
-    <xmx:7FNIaIGctUtbNIXeFHjIcC82ILcjDwVEUXOilZrHDguuXuFrOu9bAQ>
-    <xmx:7FNIaEVNH8jjMQjI0ilB-7LT84YJs4SWUuIWGbAdQ0fdDRwiN1HqdA>
-    <xmx:7FNIaLOAQue49TFOnnQn7ToPemc5EAcW47ipu0h86tbl70leKFDtrQ>
-    <xmx:7FNIaPP2yl9vHD5X6Lul_tdRoUhkhSJ_5_dFn5f6dqjeageOmTYtm_1g>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 6AE6D700061; Tue, 10 Jun 2025 11:49:00 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1749570548; c=relaxed/simple;
+	bh=V4tHes/IIVg1jqX+Ct0xk1PjTUOkWhWVAb1ShBKNSXc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bz6ZycOsvvgzvdH0kjmxK8GayN1hhBnOWeJgao0IhYYvGLzqRJUymXQmhQmCJUtJOBXmTgJlnVdZemO/27gFjCJ7XmU/Qe3HAH+ng+fDXBIf/48i1wlFxhZzjlv3KAkzlqcwZ4VaENNhFpj/h1gFdVZGpN/q2e1bDLpdKEHYzcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 0C7CCE3A82;
+	Tue, 10 Jun 2025 15:49:04 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id A3E8B8000F;
+	Tue, 10 Jun 2025 15:49:00 +0000 (UTC)
+Date: Tue, 10 Jun 2025 11:50:30 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Naresh Kamboju
+ <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>,
+ Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+ lkft-triage@lists.linaro.org, Stephen Rothwell <sfr@canb.auug.org.au>, Arnd
+ Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, Anders
+ Roxell <anders.roxell@linaro.org>
+Subject: Re: [RFC PATCH 2/2] x86: alternative: Invalidate the cache for
+ updated instructions
+Message-ID: <20250610115030.0d60da65@gandalf.local.home>
+In-Reply-To: <174956686826.1494782.11512582667456262594.stgit@mhiramat.tok.corp.google.com>
+References: <20250610234307.c675969e83ce53bb856e94d7@kernel.org>
+	<174956686826.1494782.11512582667456262594.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T7ec8a5524929d219
-Date: Tue, 10 Jun 2025 17:48:40 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Frank Li" <Frank.li@nxp.com>, "James Clark" <james.clark@linaro.org>
-Cc: "Vladimir Oltean" <olteanv@gmail.com>, "Mark Brown" <broonie@kernel.org>,
- "Vladimir Oltean" <vladimir.oltean@nxp.com>, linux-spi@vger.kernel.org,
- imx@lists.linux.dev, linux-kernel@vger.kernel.org
-Message-Id: <de7142ac-f1a3-412f-9f00-502222b20165@app.fastmail.com>
-In-Reply-To: <aEhMBsqlx9I4XqJS@lizhi-Precision-Tower-5810>
-References: <20250609-james-nxp-spi-dma-v1-0-2b831e714be2@linaro.org>
- <20250609-james-nxp-spi-dma-v1-2-2b831e714be2@linaro.org>
- <aEhMBsqlx9I4XqJS@lizhi-Precision-Tower-5810>
-Subject: Re: [PATCH 2/4] spi: spi-fsl-dspi: Use non-coherent memory for DMA
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: A3E8B8000F
+X-Stat-Signature: btc1whwobcsppfxog961a7zz8aund8cf
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+66znbe2HhnZqCoZnA2V3tB1XX0Vz9A78=
+X-HE-Tag: 1749570540-55510
+X-HE-Meta: U2FsdGVkX1/F2SJyN4sNJx3EpcJ6DBc4FcT1KbCSoIFXGTb28Nwg6vzEFOrBaxY+l6kWl/iV/P8WBiztKeHX+3N433I6bpQKr7d1nLPKlFBM3ONKIyff3sOVsKEVqphVEktl4bMSEnDZGDZrarrbsUpDOcbwrQ2LBEYNp+ZIWcn4lZtR5T3Zjub0ld8hM2hBhobAz1ZGASqokTeqBdjsB+zKjp9oeXlPGuWIMRUh4Wdnz5LDJpFeEyJBaGNE+G/FmSPY/vXFv/N71sXZK5Vt19bV+lqs1iX1XO02doj4lcKTJ7tnORwww/yBrn4v+jMicExeoa5yzfxq8P+6bPAMW4pf8ulOP/ZSQaIR+SEnsgiyD3FroahWG6J4ZSR3ObPIra4QaJ0AUmOoXqX7RtY1cZvAUWatR6kns1R3ZUVecf8=
 
-On Tue, Jun 10, 2025, at 17:15, Frank Li wrote:
-> On Mon, Jun 09, 2025 at 04:32:39PM +0100, James Clark wrote:
->> Using coherent memory here isn't functionally necessary.
->> Because the
->> change to use non-coherent memory isn't overly complex and only a few
->> synchronization points are required, we might as well do it while fixing
->> up some other DMA issues.
->
-> Any beanfit by use on-coherent memory here?
+On Tue, 10 Jun 2025 23:47:48 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-The driver copies data in and out of a coherent buffer by default. This is
-fine if the buffer is only a few bytes in size, but for large transfers
-this is quite slow because this bypasses the cache for any DMA master
-that is marked as not "dma-coherent" in devicetree.
+> Maybe one possible scenario is to hit the int3 after the third step
+> somehow (on I-cache).
+> 
+> ------
+> <CPU0>					<CPU1>
+> 					Start smp_text_poke_batch_finish().
+> 					Start the third step. (remove INT3)
+> 					on_each_cpu(do_sync_core)
+> do_sync_core(do SERIALIZE)
+> 					Finish the third step.
+> Hit INT3 (from I-cache)
+> 					Clear text_poke_array_refs[cpu0]
+> Start smp_text_poke_int3_handler()
 
-Patch 3/4 changes the size from a few bytes to many pages of memory,
-so it's access the buffer in cache first and manually maintain
-coherency.
+I believe your analysis is the issue here. The commit that changed the ref
+counter from a global to per cpu didn't cause the issue, it just made the
+race window bigger.
 
-     Arnd
+> Failed to get text_poke_array_refs[cpu0]
+> Oops: int3
+> ------
+> 
+> SERIALIZE instruction flashes pipeline, thus the processor needs
+> to reload the instruction. But it is not ensured to reload it from
+> memory because SERIALIZE does not invalidate the cache.
+> 
+> To prevent reloading replaced INT3, we need to invalidate the cache
+> (flush TLB) in the third step, before the do_sync_core().
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> Closes: https://lore.kernel.org/all/CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com/
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  arch/x86/kernel/alternative.c |   10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+> index ecfe7b497cad..1b606db48017 100644
+> --- a/arch/x86/kernel/alternative.c
+> +++ b/arch/x86/kernel/alternative.c
+> @@ -2949,8 +2949,16 @@ void smp_text_poke_batch_finish(void)
+>  		do_sync++;
+>  	}
+>  
+> -	if (do_sync)
+> +	if (do_sync) {
+> +		/*
+> +		 * Flush the instructions on the cache, then serialize the
+> +		 * pipeline of each CPU.
+
+The IPI interrupt should flush the cache. And the TLB should not be an
+issue here. If anything, this may work just because it will make the race
+smaller. 
+
+I'm thinking this may be a QEMU bug. If QEMU doesn't flush the icache on an
+IPI then this would indeed be an problem.
+
+-- Steve
+
+
+> +		 */
+> +		flush_tlb_kernel_range((unsigned long)text_poke_addr(&text_poke_array.vec[0]),
+> +				       (unsigned long)text_poke_addr(text_poke_array.vec +
+> +								text_poke_array.nr_entries - 1));
+>  		smp_text_poke_sync_each_cpu();
+> +	}
+>  
+>  	/*
+>  	 * Remove and wait for refs to be zero.
