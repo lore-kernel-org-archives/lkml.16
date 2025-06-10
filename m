@@ -1,230 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC8A18A92D;
-	Tue, 10 Jun 2025 16:05:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B2532397BE
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 16:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749571538; cv=none; b=KhQ0eeLZN89sQy9eS6dZNe1GrbYZAvQTvs1LgMtdqQC4KcNfF7TJ2Sor7qygt8um5Y+uJrTpGOzgrrmiK6zkXKBEGHIRLXfMNI3Mt113dsSyos+Gt+t/A6O0t2SkfLEczDSI8lA293MsgOvYS0pLQkDoLgZSLKowNxKbMwBu4fY=
+	t=1749571571; cv=none; b=IcXcNPPfahwvpgrXidYWqE9M2twpVr3U2C9xOo6/7G1IBEl0qGYj/q13hSzyUu1o5Zn/qtzeXcTmLb1D+7eLgF9LV8qVHnVoIeK5rWKxWy6D4LPSfC92n1SO334yQzwoSgcLf3BBVBASSNgJpnef14q0TQH36tqI9xbg1s0eqiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749571538; c=relaxed/simple;
-	bh=9NrEzp00CGmjzxsEm6Mps/pz8PgCShBimEpq82zblss=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tGHNUq4xH3HUigaom1uBgmYZ8FjAh9/FpQReRyKSPC2e7QxNO3CrkzlOp1/fZ4RV0KJRtO1Eyb92+sUKMOBVnS2H0UfyC30LsiNFZXJ9+scbunH+nlsxbgICwNtXfnm5bIlonBNKNgQUAqj0djykwoeC3h6wfa2lF6rnPtaMVUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=heV6QvYD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749571571; c=relaxed/simple;
+	bh=u6cGggZH3SoNATQpjfjKdz2DCIZcJJHBoyp8JLYX+lk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AtW1QdvkewQlYMYDy9VqvVxI2+f04Cejj8SQeURrIpGhO2mGBWa3bR6qSbRyUyqWD4A865udypQeDp03LU67VdYpJfnDD7qJXphvRmjqSlq3POdSxiolGaRvoEzYxsnkwQAlPeOYM3X9+0yo1sT5WcdMXvZkgK0ymjKLAtQQ9NI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=eQLzL2y0; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="heV6QvYD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B06CC4CEED;
-	Tue, 10 Jun 2025 16:05:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749571536;
-	bh=9NrEzp00CGmjzxsEm6Mps/pz8PgCShBimEpq82zblss=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=heV6QvYDmRpD51BpuyiznNI8t94OO1K1ZnJWnPpizw538PxI8/rS6jd65puDgYHTj
-	 kAKJFu/QqvirokH6ZKgn5VPHJOsiQX1aa5MJ/J9HS8V7tMK5zo629uQJXZmye/8bqj
-	 Qx2RJ5KpdYhrDhN5FDxfXKHYRC/apa/TazR+rTZoORSYmf9eIRaS8hnFph0anK1LG/
-	 7SpNuybVe1aHgFQc61n42vB4jt74sdVJRDKyE7AMczih+4Klw/OX5jl2rGzc+cAG01
-	 +HzCsUoPxNbP1FrQhXB1QiTCymAcsKNcsnZkLXfbYY4wmI/sE+647th2i2hYDEQ16o
-	 OBUSEi8gkrY6g==
-Date: Tue, 10 Jun 2025 18:05:33 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Brian Masney <bmasney@redhat.com>
-Cc: Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Michael Turquette <mturquette@baylibre.com>, 
-	Alberto Ruiz <aruiz@redhat.com>
-Subject: Re: [PATCH v2 07/10] clk: test: introduce test suite for sibling
- rate changes on a gate
-Message-ID: <20250610-brawny-pompous-iguana-0b38e4@houat>
-References: <20250528-clk-wip-v2-v2-0-0d2c2f220442@redhat.com>
- <20250528-clk-wip-v2-v2-7-0d2c2f220442@redhat.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="eQLzL2y0"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5533303070cso5849824e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 09:06:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749571567; x=1750176367; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hBeEGoByLmNx0JymY4xT4q6q7D7j914xDLGGfvyG00M=;
+        b=eQLzL2y00GZ30dqiHn6Z1b8t15Dk78jqEBxhQOW7DYZJ0tatu3bvWrxkImq7R8+6oH
+         Sk8Kk+HmW4erRVPpuqSQuziMhY5h1ClbUuyf/rTCVyxgYXLDylH9a9OGKF3TVDx6lrPq
+         fOpbWE6tBhoIQP2vUi5otZpT255Az8Jvmm3wLpN2NnaUTa6/b2R3Wiw7BfuSNUgBjC7A
+         VV/DWSmphV21TDzFLEyvzo399gowzCR4YUxHsbkpXFU9yNrjmehqsArk5TBpsXeGWoyj
+         kJyEbitcGIs7cWEScx/9kS9/nm7sPOvjoDJr/zTudNI+DuDG1c8KD+TvjhgdXQ3Qg4i7
+         fX3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749571567; x=1750176367;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hBeEGoByLmNx0JymY4xT4q6q7D7j914xDLGGfvyG00M=;
+        b=d+jCutGZylhRJvk0kcqtwDDr7r8AzzvDfLt7RoDI/PYPJg27SshTXlf7PE8jHFuyc2
+         b23L3TOk9+c+XPzlrYW1DpmX6L46UIPV0aIPPKRWpVHUPNZH55cg4v+O5nu01YH0n/f6
+         8XLzL6jKi7NiO0W49AoanpqkPZ9ifULe/hmhdQNMPp8XC9iscB6Mog3OdFgAM5qrajdj
+         sf09jK/+i11zKxkSEL45hRgCh/68V7SYFIGuM3F8Sy0LsNDq/eCbuvP9CAfknrGH9QQH
+         3gen2oYnNWZsMr3C9hIX6eg/R6Ggs1f2JAJjJ1uh3t1apIXs2ud4nH96BVjEetl/vOFy
+         F4Ag==
+X-Forwarded-Encrypted: i=1; AJvYcCXwAYx6+kdOciH+5eGh58kCBHiD3S569iCfxOJFOiExKccpZ35zqQ3zlu9+M2U/YrjxwlMA9e6zoOLvEmE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYwW0MGxyT0YQJqD0qJec9lD3LWLsik5S7D+q7WC/AVlCESfrL
+	PuEA3CW7FUARHkxB3n8BmDVyGlnIWLlFcs2yxF2nAahRAtVXfkxx7zAv16IP/MZahGIw3BI/W3n
+	sE2oO2Wi5CPPQwZxta5R6bDWUR3FDL0RZczJ0bxRGkA==
+X-Gm-Gg: ASbGnctgQrncLOBC17GTR8r6dq4y7pd90XvIp0OWVJvOomKFMn9WssSzXN1PS8fT0UJ
+	0fhBcQ2exhT0DO7R1O2qaExz7yVFShMrKmI9tdau8jg1qY8OkB8hY3UzDNzIelKdJBGabxbJ75F
+	CCkcpEq7C88gthLwfD53Z7mQUWb6TolWtedo5YQJ5UFdJSHbQwLRI14Exp5ULymZXA1YhdSTSA
+X-Google-Smtp-Source: AGHT+IHd3I1OVEWgMny7h2Baqh5DBJB572YkfzrpOW/nSB1wjoInAYuzH6/ihFE+HkYDZj2j7lo3/mOOSaalg7HeZM0=
+X-Received: by 2002:a2e:bc23:0:b0:32a:87ce:1235 with SMTP id
+ 38308e7fff4ca-32adfc3f54fmr52666951fa.36.1749571567213; Tue, 10 Jun 2025
+ 09:06:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="wamzdha63cyo2dkq"
-Content-Disposition: inline
-In-Reply-To: <20250528-clk-wip-v2-v2-7-0d2c2f220442@redhat.com>
-
-
---wamzdha63cyo2dkq
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
+References: <20250610-gpiochip-set-rv-net-v1-0-35668dd1c76f@linaro.org>
+ <20250610-gpiochip-set-rv-net-v1-3-35668dd1c76f@linaro.org>
+ <b2f87cff-3a81-482b-bfdd-389950b7ec8e@wanadoo.fr> <CAMRc=MfCwz3BV15aATr_5er7wU=AmKV=Z=sHJyrjEvLwx2cMjQ@mail.gmail.com>
+ <b9ea7e0e-7dd1-460b-950a-083620dd52e9@wanadoo.fr>
+In-Reply-To: <b9ea7e0e-7dd1-460b-950a-083620dd52e9@wanadoo.fr>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 10 Jun 2025 18:05:55 +0200
+X-Gm-Features: AX0GCFsFWH4b7yJkolxQLHQKmDUo4N7FgPgYNia8CjJoC_PxTolZxLLShEa2WEo
+Message-ID: <CAMRc=Mf4qupdJEm9mWPF3-B3hprn6AvP7Po2=aQYbaSvFf8OeA@mail.gmail.com>
+Subject: Re: [PATCH 3/4] net: can: mcp251x: use new GPIO line value setter callbacks
+To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, linux-can@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Andrew Lunn <andrew@lunn.ch>, 
+	Vladimir Oltean <olteanv@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, "Chester A. Unal" <chester.a.unal@arinc9.com>, 
+	Daniel Golle <daniel@makrotopia.org>, DENG Qingfang <dqfext@gmail.com>, 
+	Sean Wang <sean.wang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Marc Kleine-Budde <mkl@pengutronix.de>, Heiner Kallweit <hkallweit1@gmail.com>, 
+	Russell King <linux@armlinux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 07/10] clk: test: introduce test suite for sibling
- rate changes on a gate
-MIME-Version: 1.0
 
-On Wed, May 28, 2025 at 07:16:53PM -0400, Brian Masney wrote:
-> Introduce a test suite that creates a parent with two children: a
-> divider and a gate. Ensure that changing the rate of one child does
-> not affect the rate of the gate.
->=20
-> Some of the tests are disabled until the relevant issue(s) are fixed in
-> the clk core. This is also implemented as a parameterized kunit test
-> since additional test variations will be added.
->=20
-> Signed-off-by: Brian Masney <bmasney@redhat.com>
-> ---
->  drivers/clk/clk_test.c | 156 +++++++++++++++++++++++++++++++++++++++++++=
-++++++
->  1 file changed, 156 insertions(+)
->=20
-> diff --git a/drivers/clk/clk_test.c b/drivers/clk/clk_test.c
-> index c2337527873d3241e7b0a38f67ecaa13535bcc71..1440eb3c41def8c549f92c0e9=
-5b2a472f3bdb4a7 100644
-> --- a/drivers/clk/clk_test.c
-> +++ b/drivers/clk/clk_test.c
-> @@ -825,6 +825,161 @@ static struct kunit_suite clk_rate_change_sibling_d=
-iv_div_test_suite =3D {
->  	.test_cases =3D clk_rate_change_sibling_div_div_cases,
->  };
-> =20
-> +struct clk_test_rate_change_sibling_clk_ctx {
-> +	struct clk *parent_clk, *child1_clk, *child2_clk;
-> +};
-> +
-> +static void
-> +clk_test_rate_change_sibling_clk_ctx_put(struct clk_test_rate_change_sib=
-ling_clk_ctx *clk_ctx)
-> +{
-> +	clk_put(clk_ctx->parent_clk);
-> +	clk_put(clk_ctx->child1_clk);
-> +	clk_put(clk_ctx->child2_clk);
-> +}
-> +
-> +struct clk_rate_change_sibling_div_gate_sibling_context {
-> +	struct clk_dummy_context parent;
-> +	struct clk_dummy_div child1;
-> +	struct clk_dummy_gate child2;
-> +	struct clk_test_rate_change_sibling_clk_ctx clk_ctx;
-> +};
-> +
-> +static struct clk_test_rate_change_sibling_clk_ctx *
-> +clk_rate_change_sibling_div_gate_test_init(struct kunit *test)
-> +{
-> +	struct clk_rate_change_sibling_div_gate_sibling_context *ctx;
-> +	int ret;
-> +
-> +	ctx =3D kunit_kzalloc(test, sizeof(*ctx), GFP_KERNEL);
-> +	if (!ctx)
-> +		return ERR_PTR(-ENOMEM);
-> +	test->priv =3D ctx;
-> +
-> +	ctx->parent.hw.init =3D CLK_HW_INIT_NO_PARENT("parent", &clk_dummy_rate=
-_ops, 0);
-> +	ctx->parent.rate =3D DUMMY_CLOCK_RATE_24_MHZ;
-> +	ret =3D clk_hw_register_kunit(test, NULL, &ctx->parent.hw);
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> +
-> +	ctx->child1.hw.init =3D CLK_HW_INIT_HW("child1", &ctx->parent.hw,
-> +					     &clk_dummy_div_ops,
-> +					     CLK_SET_RATE_PARENT);
-> +	ret =3D clk_hw_register_kunit(test, NULL, &ctx->child1.hw);
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> +
-> +	ctx->child2.hw.init =3D CLK_HW_INIT_HW("child2", &ctx->parent.hw,
-> +					     &clk_dummy_gate_ops,
-> +					     CLK_SET_RATE_PARENT);
-> +	ret =3D clk_hw_register_kunit(test, NULL, &ctx->child2.hw);
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> +
-> +	ctx->clk_ctx.parent_clk =3D clk_hw_get_clk(&ctx->parent.hw, NULL);
-> +	ctx->clk_ctx.child1_clk =3D clk_hw_get_clk(&ctx->child1.hw, NULL);
-> +	ctx->clk_ctx.child2_clk =3D clk_hw_get_clk(&ctx->child2.hw, NULL);
-> +
-> +	KUNIT_EXPECT_EQ(test, clk_get_rate(ctx->clk_ctx.parent_clk),
-> +			DUMMY_CLOCK_RATE_24_MHZ);
+On Tue, Jun 10, 2025 at 5:48=E2=80=AFPM Vincent Mailhol
+<mailhol.vincent@wanadoo.fr> wrote:
+>
+> On 10/06/2025 at 23:05, Bartosz Golaszewski wrote:
+> > On Tue, Jun 10, 2025 at 3:55=E2=80=AFPM Vincent Mailhol
+> > <mailhol.vincent@wanadoo.fr> wrote:
+> >>
+> >> On 10/06/2025 at 21:37, Bartosz Golaszewski wrote:
+> >>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >>>
+> >>> struct gpio_chip now has callbacks for setting line values that retur=
+n
+> >>> an integer, allowing to indicate failures. Convert the driver to usin=
+g
+> >>> them.
+> >>>
+> >>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >>                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> >>
+> >> This does not match the address with which you sent the patch: brgl@bg=
+dev.pl
+> >>
+> >>> ---
+> >>>  drivers/net/can/spi/mcp251x.c | 16 ++++++++++------
+> >>>  1 file changed, 10 insertions(+), 6 deletions(-)
+> >>>
+> >>> diff --git a/drivers/net/can/spi/mcp251x.c b/drivers/net/can/spi/mcp2=
+51x.c
+> >>> index ec5c64006a16f703bc816983765584c5f3ac76e8..7545497d14b46c6388f39=
+76c2bf7b9a99e959c1e 100644
+> >>> --- a/drivers/net/can/spi/mcp251x.c
+> >>> +++ b/drivers/net/can/spi/mcp251x.c
+> >>> @@ -530,8 +530,8 @@ static int mcp251x_gpio_get_multiple(struct gpio_=
+chip *chip,
+> >>>       return 0;
+> >>>  }
+> >>>
+> >>> -static void mcp251x_gpio_set(struct gpio_chip *chip, unsigned int of=
+fset,
+> >>> -                          int value)
+> >>> +static int mcp251x_gpio_set(struct gpio_chip *chip, unsigned int off=
+set,
+> >>> +                         int value)
+> >>>  {
+> >>>       struct mcp251x_priv *priv =3D gpiochip_get_data(chip);
+> >>>       u8 mask, val;
+> >>> @@ -545,9 +545,11 @@ static void mcp251x_gpio_set(struct gpio_chip *c=
+hip, unsigned int offset,
+> >>>
+> >>>       priv->reg_bfpctrl &=3D ~mask;
+> >>>       priv->reg_bfpctrl |=3D val;
+> >>> +
+> >>> +     return 0;
+> >>
+> >> mcp251x_gpio_set() calls mcp251x_write_bits() which calls mcp251x_spi_=
+write()
+> >> which can fail.
+> >>
+> >> For this change to really make sense, the return value of mcp251x_spi_=
+write()
+> >> should be propagated all the way around.
+> >>
+> >
+> > I don't know this code so I followed the example of the rest of the
+> > codebase where the result of this function is never checked - even in
+> > functions that do return values. I didn't know the reason for this and
+> > so didn't want to break anything as I have no means of testing it.
+>
+> The return value of mcp251x_spi_write() is used in mcp251x_hw_reset(). In=
+ other
+> locations, mcp251x_spi_write() is only used in functions which return voi=
+d, so
+> obviously, the return value is not checked.
+>
 
-EXPECT is for the expected output of the test. It looks to me that
-you're are here checking if the test is properly setup, which would be
-an assertion.
+Wait, after a second look GPIO callbacks (including those that return
+a value like request()) use mcp251x_write_bits() which has no return
+value. It probably should propagate what mcp251x_spi_write() returns
+but that's material for a different series. The goal of this one is to
+use the new setters treewide and drop the old ones from struct
+gpio_chip.
 
-> +	return &ctx->clk_ctx;
-> +}
-> +
-> +struct clk_test_rate_change_sibling_test_case {
-> +	const char *desc;
-> +	struct clk_test_rate_change_sibling_clk_ctx *(*init)(struct kunit *test=
-);
-> +};
-> +
-> +static struct clk_test_rate_change_sibling_test_case clk_test_rate_chang=
-e_sibling_test_cases[] =3D {
-> +	{
-> +		.desc =3D "div_gate",
-> +		.init =3D clk_rate_change_sibling_div_gate_test_init,
-> +	},
-> +};
-> +
-> +KUNIT_ARRAY_PARAM_DESC(clk_test_rate_change_sibling_test_case,
-> +		       clk_test_rate_change_sibling_test_cases, desc);
-
-I'm not sure making them parameterized is a good idea (yet), I tend to
-think that the more straightforward the tests are the better. That can
-indeed lead to repetitions, but it's also much easier to debug once we
-get a test failure.
-
-> +
-> +/*
-> + * Test that, for a parent with two children and one requests a rate cha=
-nge that
-> + * requires a change to the parent rate, the sibling rates are not affec=
-ted.
-> + */
-> +static void clk_test_rate_change_sibling_1(struct kunit *test)
-> +{
-> +	struct clk_test_rate_change_sibling_test_case *testcase =3D
-> +		(struct clk_test_rate_change_sibling_test_case *) test->param_value;
-> +	struct clk_test_rate_change_sibling_clk_ctx *ctx;
-> +	int ret;
-> +
-> +	kunit_skip(test, "This needs to be fixed in the core.");
-> +
-> +	ctx =3D testcase->init(test);
-> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
-> +
-> +	KUNIT_EXPECT_EQ(test, clk_get_rate(ctx->child2_clk), DUMMY_CLOCK_RATE_2=
-4_MHZ);
-> +
-> +	ret =3D clk_set_rate(ctx->child1_clk, DUMMY_CLOCK_RATE_48_MHZ);
-> +	KUNIT_ASSERT_EQ(test, ret, 0);
-> +
-> +	KUNIT_EXPECT_GE(test, clk_get_rate(ctx->parent_clk), DUMMY_CLOCK_RATE_4=
-8_MHZ);
-> +	KUNIT_EXPECT_EQ(test, clk_get_rate(ctx->child1_clk), DUMMY_CLOCK_RATE_4=
-8_MHZ);
-> +	KUNIT_EXPECT_EQ(test, clk_get_rate(ctx->child2_clk), DUMMY_CLOCK_RATE_2=
-4_MHZ);
-
-And also, we wouldn't have the same expectations between a gate like
-here, and a mux (that can reparent), so sharing the code isn't going to
-be trivial.
-
-> +	clk_test_rate_change_sibling_clk_ctx_put(ctx);
-
-This won't be run if you hit any KUNIT_ASSERT_*() conditions. We should
-probably create a kunit-managed clk_hw_get() variant so we don't have to
-deal with this.
-
-Maxime
-
---wamzdha63cyo2dkq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaEhXzQAKCRAnX84Zoj2+
-dnE3AX0dwtL/2zl+Bf8b6HLTJ2FnBO8EaQcmVS6QWBK5jCaJ2IDoeUJA9zkLDb5s
-BYXCXwMBfRCwOR/HWokStMqDA/ue/9Nl1I4n6QD+AfwtoB4Sj42Kbo1tyMQ5kqR3
-302+ajbCZw==
-=imfa
------END PGP SIGNATURE-----
-
---wamzdha63cyo2dkq--
+Bart
