@@ -1,81 +1,91 @@
-Received: from lithops.sigma-star.at (mailout.nod.at [116.203.167.152])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02B212652AF
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:54:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.167.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC35F29A9E1;
+	Tue, 10 Jun 2025 12:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749560063; cv=none; b=RlfTBMrPrgxGi+/0C1v6YHVwkOAhBmCfuA+CHyK7qb3jyz4HV19JcIHDpQZFIs9oZGdBnqLvJ1xHgy0MCxet39Cu6X7lHDFn04e6DW0CanJBm5bZJWu8PEyz2+Hf9JlrgrMd4GkEtJvtTOw52KotIxhhdsGCvoZAcAxZObqzjTU=
+	t=1749560163; cv=none; b=c/nBUtBmob7Zs/xyYEM8nt8LNHPzF2welh6qMRbavR1fXbDAr9UjjijSB8wNnwr0aFVHlbPTAIEeXIH7RtEMdDrl/bcD3AMqvFwQSG3OC+295Y8Qauvd7SNlel3Bgp44Fhc3rWPapoKh9RurTgheqgVUobLJUhZbCizAyuaBTIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749560063; c=relaxed/simple;
-	bh=exyrFs2tLRjKZJJRGP84bEPbsp2IHltaGUJWqGXhjKQ=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=U/8xtRnEyZAkUspoScuL7AA2hDe8HbcNvuMccE58/aGXs4GVo1/mOmdQXJVJ3HY9I5cJutghu/XJXMWUPXfMYD1H/pfkPe+1zGceljrnaiJaATGZTDNnmWBgi4ZPbLRAEUHfiXJV4cgQazjKGKIv6TRfWDxnG89SgiuvAMH/O5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=116.203.167.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 834F9298566;
-	Tue, 10 Jun 2025 14:54:17 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id DCYGTvMI3Iu6; Tue, 10 Jun 2025 14:54:17 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 2E6D1298567;
-	Tue, 10 Jun 2025 14:54:17 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id zw_wcXX2ljw5; Tue, 10 Jun 2025 14:54:17 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-	by lithops.sigma-star.at (Postfix) with ESMTP id E4391298566;
-	Tue, 10 Jun 2025 14:54:16 +0200 (CEST)
-Date: Tue, 10 Jun 2025 14:54:16 +0200 (CEST)
-From: Richard Weinberger <richard@nod.at>
-To: Alexander Usyskin <alexander.usyskin@intel.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, 
-	Lucas De Marchi <lucas.demarchi@intel.com>, 
-	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Jani Nikula <jani.nikula@linux.intel.com>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
-	Tvrtko Ursulin <tursulin@ursulin.net>, 
-	Karthik Poosa <karthik.poosa@intel.com>, 
-	Reuven Abliyev <reuven.abliyev@intel.com>, 
-	Oren Weil <oren.jer.weil@intel.com>, 
-	linux-mtd <linux-mtd@lists.infradead.org>, 
-	DRI mailing list <dri-devel@lists.freedesktop.org>, 
-	intel-gfx <intel-gfx@lists.freedesktop.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>
-Message-ID: <130790886.134361099.1749560056731.JavaMail.zimbra@nod.at>
-In-Reply-To: <CY5PR11MB6366B2B40E0C357D6C0935C2ED6AA@CY5PR11MB6366.namprd11.prod.outlook.com>
-References: <20250302140921.504304-1-alexander.usyskin@intel.com> <87ikl5xnbc.fsf@bootlin.com> <CY5PR11MB63660CFA966BCA1B44528BB1ED6BA@CY5PR11MB6366.namprd11.prod.outlook.com> <4d55ac06-c357-4d78-b8b8-5b26486ce529@roeck-us.net> <CY5PR11MB63662D21B2C7B1A1C2E6BC4BED6BA@CY5PR11MB6366.namprd11.prod.outlook.com> <2e5ebbdd-2a57-4f1f-85c6-7c2dff127b50@roeck-us.net> <1176847729.134356549.1749504429656.JavaMail.zimbra@nod.at> <CY5PR11MB6366B2B40E0C357D6C0935C2ED6AA@CY5PR11MB6366.namprd11.prod.outlook.com>
-Subject: Re: [PATCH v6 01/11] mtd: core: always create master device
+	s=arc-20240116; t=1749560163; c=relaxed/simple;
+	bh=ymdmRNA1an7znV7VwE8aKDdd9upCMjadrk7wwCN+JS0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=XIW2jolqGctnmyLh2WQc3+AO90rwPXRU5jap0AVVfr6fUR5sTWcj5Qkiz7kUR+yWi0GjT5ZqQsL6HLH/R4jCkYkXlMwgqYsqcncz+wBqt+wUbRyFaNH7eApX9jH3PswsMVpUrZxtz9xCAkfC4YT1ovRTd4hIPX684+JmcgCcGHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iGzKdesq; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iGzKdesq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EB62C4CEEF;
+	Tue, 10 Jun 2025 12:55:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749560162;
+	bh=ymdmRNA1an7znV7VwE8aKDdd9upCMjadrk7wwCN+JS0=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=iGzKdesqdm1MrpyWKVIbnnnTO2O5kjtU0RWXuPsX72qmoBIf1+QGRaRjgZ2tudgyJ
+	 r066JMd+OFmUd03hH7AREG3eFtPRIYeT5fffPBhRHTDNsYzZrn6GSXuoczYlB+tFEM
+	 Xv83cl923uHkQY0nVAc6FsJLFl6Xy4uunqWmjZpzls9Pcz/9aoH+/TifQuZ8u0DNrI
+	 nrPNp24G+J/OqKYjScTqVdrdyOBtof8CkpfQeM/WEzZpnj9R7LbpZfTUgnHFRF9Fse
+	 9ejaWmya7EgYDDrJ7BRajiE9GTVPe8gd8UDUzd+NxnZW5xx5LIyQvYxetZHzMia4dg
+	 ACzOo9EY8FAwQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF139 (Linux)/8.8.12_GA_3809)
-Thread-Topic: core: always create master device
-Thread-Index: AQHbi35N9ptLZMK+/0+KHmcJoUKk0bP5FNKAgABXSdCAANahSoAAWdKAgACSaAOAACUigIAAFAQAgAAhxhCAAAxMAIAAXViAgADet1B87pkdBw==
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 10 Jun 2025 14:55:55 +0200
+Message-Id: <DAIVBBJADWNR.1LLZJ6YWV8IN2@kernel.org>
+Cc: <a.hindborg@kernel.org>, <airlied@gmail.com>, <alex.gaynor@gmail.com>,
+ <aliceryhl@google.com>, <anisse@astier.eu>, <bjorn3_gh@protonmail.com>,
+ <boqun.feng@gmail.com>, <dakr@kernel.org>, <david.m.ertman@intel.com>,
+ <dri-devel@lists.freedesktop.org>, <fujita.tomonori@gmail.com>,
+ <gary@garyguo.net>, <gregkh@linuxfoundation.org>,
+ <igor.korotin.linux@gmail.com>, <ira.weiny@intel.com>, <leitao@debian.org>,
+ <leon@kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-pm@vger.kernel.org>, <maarten.lankhorst@linux.intel.com>,
+ <mcgrof@kernel.org>, <mripard@kernel.org>, <nouveau@lists.freedesktop.org>,
+ <ojeda@kernel.org>, <rafael@kernel.org>, <russ.weight@linux.dev>,
+ <rust-for-linux@vger.kernel.org>, <simona@ffwll.ch>, <tamird@gmail.com>,
+ <tmgross@umich.edu>, <tzimmermann@suse.de>, <viresh.kumar@linaro.org>,
+ <walmeida@microsoft.com>
+Subject: Re: [PATCH] rust: module: remove deprecated author key
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Guilherme Giacomo Simoes" <trintaeoitogc@gmail.com>,
+ <miguel.ojeda.sandonis@gmail.com>
+X-Mailer: aerc 0.20.1
+References: <CANiq72kORZjTe3tPEBueDi57TGF7KfxgTSw4Tn0DQeK_X5hi5A@mail.gmail.com> <20250610123731.194853-1-trintaeoitogc@gmail.com>
+In-Reply-To: <20250610123731.194853-1-trintaeoitogc@gmail.com>
 
------ Urspr=C3=BCngliche Mail -----
-> Von: "Alexander Usyskin" <alexander.usyskin@intel.com>
-> Richard, I've reproduced your setup (modulo that I must load mtdram manua=
-lly)
-> and patch provided in this thread helps to fix the issue.
-> Can you apply and confirm?
+On Tue Jun 10, 2025 at 2:37 PM CEST, Guilherme Giacomo Simoes wrote:
+> Miguel Ojeda <miguel.ojeda.sandonis@gmail.com> wrotes:
+>> On Tue, Jun 10, 2025 at 12:12=E2=80=AFPM Benno Lossin <lossin@kernel.org=
+> wrote:
+>> >
+>> > Hmm, I guess a checkpatch lint fits better then?
+>>=20
+>> Yeah, that would work.
+>>=20
+>> Probably for the C side too -- from a quick grep I don't see it.
+> Maybe, after this patch we can make a checkpatch change for check the `au=
+thors`
+> key (and MODULE_AUTHOR for C side), and throw a WARN if the author is a n=
+ame
+> (not a url, or "rust for linux") and don't have a email address.=20
 
-Yes, it fixes the issue here! :-)
+Most other authors fields that don't list explicit names use "Rust for
+Linux Contributors", so we should probably scan for that instead.
 
-Thanks,
-//richard
+But I think that we should no longer add any author fields using that.
+Things with that are from way back in the day (when RfL was still out of
+tree) where many people contributed to a single file, hence the use of
+that phrase.
+
+> Unless you guys tell me otherwise, I guess this is not so priority.
+
+Yeah this isn't high priority. We can just make this into a
+good-first-issue, then someone can eventually pick it up.
+
+---
+Cheers,
+Benno
