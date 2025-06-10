@@ -1,97 +1,110 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439DF28E598
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A1228E5FA;
+	Tue, 10 Jun 2025 12:12:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749557465; cv=none; b=PggNvv+ZbJJ5Rzl4x5EExVeeW8iY8W2KYkHQMC4Z+vBaQcKVP1YgmV6MB6dNs8sYwUi+EDFxNPRq3IVF59anbj3LWlg2ivkd40k3U2fdPzrRfnQ0K6EzOmmKF7bNCaP9j6O4lUtC8BDHTbYQnpgpy+vOHIkc0rWEJ3e8/GrXAmQ=
+	t=1749557537; cv=none; b=JwOzapAohlwa9ax3AP8iro4/b2TEgf2GIRCXM9yOayJ4W99YgN2iGyVyX34y4nmLczAegAa1pkPvMCSKORd9Gk2q0fwIJTvLINfku5YwGM82vqowiFBpQhxQnWaaSftNimfXn6ULtS6JtcYqw6deJXtVGjR0rQxWnOBZJi5EnvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749557465; c=relaxed/simple;
-	bh=w1Llf8EPf4z/jroevvo0GVj85/0YAeGUzCIO2oQllTs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A5itWJShCPWVM+4Y+elpxM5fCwumhbdAYnt9PBhV9JMSetXGJtgxyc2RiN/OSzYFLfL8KOFAm6IwFO+//4B8oQN35Vs5spiZDAQIAm8SecOzEIVKliEsoL6VQC1QC97Y/OglyMbzQnzyWfiSZO0g0l/vh6HWGlRLKm7igBi2Eh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qA8OmISY; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749557537; c=relaxed/simple;
+	bh=IdIgWgA4HsbTmTwzHl/YQnzy5xBRzu15AjtN91AYt6g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=E2Gx0dlXLou0jpgjkKFlpe7n3LnS6LUbU0zMsCfdmOoTW57luRqaiTurdlrYymLXd4nGjQm5+9Twn6xEkTdQaAsCUOBkbc9G7NSLVAaKAaq8IlZuqDQm6r6qL2HHkumqbTrn/vtoxh8qvT9Yf7sYXElxm2lotHMC6QQBbedhaAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=t6dw14ZV; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qA8OmISY"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-55324062ea8so6987429e87.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 05:11:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749557461; x=1750162261; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+NOuROJ72i5jBg6IZns7LWWw5bhW6PqP3nknc7q7Xb8=;
-        b=qA8OmISYZhD/wD1r/7m77r5nkiZ/yepSu9M5PJdeI9QrKdqG8tEQZ5BcsjBUG9tR81
-         kSHNoTSv6spY1XVsW9DWqY+dPCXr9VoU/LjX+j1C/FJitrrXQV7knzlax8BgzBTyuhZX
-         skN5lUtVejn8o7EivsOyHszssiMwLoR/Boa1jjFEFKUv/v3tuKt72G0XPgJCrL8WQom8
-         kM385dG5eBrRutefcIqQErfVaIINiU3km47wtKBa5as4jnf2QeSyUnobJjbaVxlFGI17
-         NvRdlQg7pgULbdfdpQiMQpL/Qn49as9atSpRnus+dDjkVr8Jez6a4gdq76D6lVEBmlb2
-         cSjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749557461; x=1750162261;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+NOuROJ72i5jBg6IZns7LWWw5bhW6PqP3nknc7q7Xb8=;
-        b=iA0W9Lsh0wL8cwXhxrT2uLxOIHrQK/VEGV1RrbaayvnTQEKXf9RWxjj2USz923p1nw
-         StflWy/pSQ0pqUxJzVNqM7fD3CVXcGsrVkBOWeTeJ/e1hyjJWvBpmvIKKF1raKotLGZa
-         w9RUlsnx4xvT6Ok4Pi906JoMNg3R9W2BJ+5JXz5Lw6ab8Rtc3RjjBjGEEcYbt1PB8XTH
-         /X4jhYAKvvjOCElSWwTGHxNNBWbuliiSntkvH12Zo01b8uQxh+5fMvUoJgGq0mgKeme9
-         R+MPMLjUeVncWBw6Vum3GPAVeMO160I9enC++Bu4Pg71iI+ywsH4uuX1z0abmlK4pMIu
-         CIKg==
-X-Forwarded-Encrypted: i=1; AJvYcCWbIrfYiHHWrG/iuYj96oQl2Wto6KtzoyCVkdWBV1TzwP/K31QrkpSkT74Nx1uBwwqz6i1aO8v0JzJ2/MU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPzE+Zt6UuXIW7A0q6icBAQaZe3itcoowMyNefPGdTLKgWr0sS
-	OYTImlwUi7lStOmLD0FF3nEPc8hwlWy/CdgEDh0pdVgMXmJxmWBzo0nng5sb8voKJyPLsmlgDH+
-	1Cx0qiVZkdl7YCgQ4lj92jYLJoVResmLvB5jyVty68P5h1cIaAGwo
-X-Gm-Gg: ASbGncsocWCP1JwTDdl/mscWlDXFrzY12ihjaYLxly7N472LYgoEwZNj+/WrQYdbtxF
-	QZ9uRFIG/kdt5EoAfY09dsBlUbdM6V+mvPKgAU4LKbZijpLYsAOdjRpCnme1RFc4OyC15+g7Tia
-	7QTvJ2TCRn+S1NH0c+11yvzkn7qzC/JTIjKZVe9+jPXp4=
-X-Google-Smtp-Source: AGHT+IFOaMh8nguz7KHH0YUJYEvUW0KxuIsZirmTBD11BY3isr05ce1T1ObffoEpspV/AnboQI2h1yWBLpHu5xR5+Ac=
-X-Received: by 2002:a05:651c:1545:b0:32a:8bb1:d971 with SMTP id
- 38308e7fff4ca-32adfc290f3mr40168071fa.18.1749557461281; Tue, 10 Jun 2025
- 05:11:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="t6dw14ZV"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55AC90Ov024216;
+	Tue, 10 Jun 2025 14:12:00 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	MXR00VLxmhsH+jMRE5s/YJIThaFKie022RUlAGpjRqQ=; b=t6dw14ZVsezx0sZs
+	dftYh8TOHkwZtHKigra6IELajwcohq2X2U/EEzOrgg0UgqcCvyxyY95HhWWoKgi2
+	l4ZJJjbTa8HLWqKfQm2wmIhV23PM+pZlQmpP8ZqXmB7w5Uf/sVmqzPJA0LWQ3kzx
+	ZGDc3AczGGayRcDDLvlGgg5SfZ13prHfUyt+Ywh3/Jr8eSaFyEFcCezGJD7sBfT4
+	yo67Out2oEAp5y//3gcZ3GC3tcrKPk8c+QbnrmIiPOzCjQ5TIcxZ2wQ28JCT4cF6
+	dPSGGljjkPcfzRdCSTvtcIyJm+uXEV+vGImsJ/DQAgwWFd7J3L8SD+EZ/j+BJKwG
+	ZYYf5g==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474aumd4ej-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Jun 2025 14:12:00 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id F28EA40054;
+	Tue, 10 Jun 2025 14:10:46 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 42B8AB3A752;
+	Tue, 10 Jun 2025 14:10:07 +0200 (CEST)
+Received: from [10.48.86.185] (10.48.86.185) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Jun
+ 2025 14:10:06 +0200
+Message-ID: <60423d3e-20b2-47c7-a889-f5cbffb83734@foss.st.com>
+Date: Tue, 10 Jun 2025 14:10:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250527-s6-s7-pinctrl-v3-0-44f6a0451519@amlogic.com>
-In-Reply-To: <20250527-s6-s7-pinctrl-v3-0-44f6a0451519@amlogic.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 10 Jun 2025 14:10:49 +0200
-X-Gm-Features: AX0GCFsNvqdvdVYFA3r4z4h1YT4-Cj2REHImr1bxE1u6VG-oVRcj138Ag5WMjho
-Message-ID: <CACRpkdacp1YVjrjfGvHu_8Y2hq03LNwG8Yka30xMbTEwtQ_drA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] Add support for Amlogic S7/S7D/S6 pinctrl
-To: xianwei.zhao@amlogic.com
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/9] dt-bindings: pinctrl: stm32: Introduce HDP
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Linus Walleij
+	<linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime
+ Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+CC: <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>
+References: <20250528-hdp-upstream-v4-0-7e9b3ad2036d@foss.st.com>
+ <20250528-hdp-upstream-v4-2-7e9b3ad2036d@foss.st.com>
+ <57667ad9-d98f-4f8b-9b70-428960765ddb@kernel.org>
+Content-Language: en-US
+From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
+In-Reply-To: <57667ad9-d98f-4f8b-9b70-428960765ddb@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-10_04,2025-06-10_01,2025-03-28_01
 
-On Tue, May 27, 2025 at 7:23=E2=80=AFAM Xianwei Zhao via B4 Relay
-<devnull+xianwei.zhao.amlogic.com@kernel.org> wrote:
+On 5/29/25 11:14, Krzysztof Kozlowski wrote:
+> On 28/05/2025 15:30, Clément Le Goffic wrote:
+>> 'HDP' stands for Hardware Debug Port, it is an hardware block in
+>> STMicrolectronics' MPUs that let the user decide which internal SoC's
+>> signal to observe.
+>> It provides 8 ports and for each port there is up to 16 different
+>> signals that can be output.
+>> Signals are different for each MPU.
+>>
+>> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> 
+> Drop reviewed tag. It was given under assumption that you will test your
+> code before sending.
 
-> Xianwei Zhao (6):
->       dt-bindings: pinctl: amlogic,pinctrl-a4: Add compatible string for =
-S7/S7D/S6
->       pinctrl: meson: a4: remove special data processing
->       pinctrl: meson: support amlogic S6/S7/S7D SoC
+Hi, yes sure, sorry for that..
 
-I have applied these three to the pin control tree for v6.17.
+> 
+> 
+> Best regards,
+> Krzysztof
 
->       dts: arm64: amlogic: add S7 pinctrl node
->       dts: arm64: amlogic: add S7D pinctrl node
->       dts: arm64: amlogic: add S6 pinctrl node
-
-Please funnel these through the SoC tree!
-
-Yours,
-Linus Walleij
+Clément
