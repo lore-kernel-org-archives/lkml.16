@@ -1,204 +1,273 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C5F52A1BF;
-	Tue, 10 Jun 2025 00:27:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749515271; cv=none; b=MCwafwGJpjKCnh7EE4BWzRveEUYvjtd9R23Hk/GHEjOKiUM0pQTt3bbeHdvLY66ehZktxrNSNTEUJj9F62CFSMQ0Fbb/VW4gfwwuGFKIaO0NC87u6ERtLX/RYJz/06SLnNKLLkgAll5X9DZZDK8J2BMAm3Q++iKiPpH26GKUE3s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749515271; c=relaxed/simple;
-	bh=cpHQeBF27zHGQHWG/rVLTKUoz1iYVbYnx7lUbYJioCE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eqAQQSUlBZIjmnJLaDM/7vmFVqOQwqw3ChtUb5vKuvc2FKC60rdLGiWeGdN0aQOOaqg1SzNs+brq0W444sVVIVSGwQDSCK1W/+HE5mQGn6s856EUG9vWzQKgJ7EMhxeKj2dIet33poyiyRjxt+6Z+z/XAaM139oVeNqK2PohJTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 06D418065A;
-	Tue, 10 Jun 2025 00:27:45 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id E711C2F;
-	Tue, 10 Jun 2025 00:27:42 +0000 (UTC)
-Date: Mon, 9 Jun 2025 20:29:11 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: open list <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, Stephen
- Rothwell <sfr@canb.auug.org.au>, Masami Hiramatsu <mhiramat@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>,
- Anders Roxell <anders.roxell@linaro.org>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner
- <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org
-Subject: Re: next-20250605: Test regression: qemu-x86_64-compat mode ltp
- tracing Oops int3 kernel panic
-Message-ID: <20250609202911.2e25f528@gandalf.local.home>
-In-Reply-To: <CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com>
-References: <CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07AC8382
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 00:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749515456; cv=fail; b=UPRrD+o5cgoVRoOWXxfULhjiShkL8FMz+EQMBSiodkWrc05aZlDAQz01SNn/MH2OpUCfj0PT7//t+2RG3XYqqOVJBnQz8y5Htdo977HVBxL9xM8RGX4goJxX1HroZPx+ykZSNF55ZpUNPJvYqe5VCJrSPQYqYstMz9UZINtJyVM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749515456; c=relaxed/simple;
+	bh=z72oVktT8qBZKas8Q2lMNEO/LhpepVI+FTnSH2XJoI8=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=HqkmQrnia6VMhauIe9f2/a3LF33REUuo43SF4/B36DQG4ZF3F8zFiKpXhVAj2RjnpoD0CLBbOAMcGogP/ob5RUMTOgbWS5SD7c1ZnsM9xosbK3/CYD2oLd4hyPbwdp8+M7lc+x+K4mNlnhgvSRnT7qsAAILiC/pauRogRJNQ+0I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B0o4tLhH; arc=fail smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B0o4tLhH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749515455; x=1781051455;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=z72oVktT8qBZKas8Q2lMNEO/LhpepVI+FTnSH2XJoI8=;
+  b=B0o4tLhHrzFWhvVmCxTg9Ku5vQiczyUpN8S6INYRNTmr3A2j+PD+oxul
+   b4sPu5LZnZAKnPHijQymMOa/WD2MgSo91h6QWmXooXMUmvWSUdmmJnkeO
+   zoGk0JJ8s26myrzAOpkdjkDIfzOmmxSJhaKWp1y7471K0wQ9SGA/yBm4B
+   tVTQH8+S2ks/p9xkSFK1+aIn/vPiLxFJ+sUTr0HzP0vqPpNgFtWW89qGu
+   gef8DnfORP2BNWSLqbsVMJyu/DOci4WKkYARiCrsYAuQo6w9GgRcOXoKv
+   ykoJyZhmFNZszjKiWl5H2xBC7VP2+2m5F9aHnMTncYcSNHjKdiQpcC5e1
+   g==;
+X-CSE-ConnectionGUID: 4Kw9iDBVSv+J3/u4zoehHw==
+X-CSE-MsgGUID: ClkCBG40QTWdFNcnLqsHeg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="63013623"
+X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
+   d="scan'208";a="63013623"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 17:30:54 -0700
+X-CSE-ConnectionGUID: TS4RJU0ZRfS7vHvmfuaG+A==
+X-CSE-MsgGUID: W15F0j9jSvK38iriYELL+g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
+   d="scan'208";a="177600190"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 17:30:55 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Mon, 9 Jun 2025 17:30:53 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Mon, 9 Jun 2025 17:30:53 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (40.107.243.85)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.55; Mon, 9 Jun 2025 17:30:51 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gTvzy0r11Yl5eXoC+xaqFN2GzAYU0cy3pC+29RCq6eE7XIqQyqB/9PPv0qJZNOvx4vnc/Q3XeUbW//qzBE6h0iF1VPhgCJoK+GFI3xSRaRf58vuOURsSxnfDSFTgLmX33cTrdxdfIc6T6LfuAWnP5t46lXQRe920joa2hzIYHCAR6XNBU7bJGa3r/YjnS3w8FWgno/D6cBpBLkx6BeGL0Vue4DsAxpy1V7mY+utI/PuR/utCCbHrERmK71Iu74uJA3mCPq+iG2pzxyj/f5TQOgjIDy2cnsbBTk0WimjgIKQoZ4RbtmmdeK4o45Jug/+mBUAQrJVq+0HrprPcHy7PFA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QMCXs8dHBvlyNmdtvZo1MyDJS9r4hRUz3TELDUTLOE4=;
+ b=B1sDwGPrgYgP1OkxwZSIGOY6TICqHSv1kDsrOyXox5oh1ClICXcbVlmp9mHOdZzTph4qErg1fCiwyK00K6C9LusVNuG5W/TU0H92MhXky9PCcKDRyqtYk8pXcnDPgZ79iGKhsYjKSsE2L8GJ5vKvQC9M3nb/3+oDaAdPjVbkbC+JWjpsbmaM/HDGvGtCeFEhSBUDsTNh0GmeUcBENo7lmh2j+zVFWuIZAwdE1ihI32NPXVJRLDDDwF6hd1xm541rYrxMgZ5gws1/Om9mvy4t02wmCIHtNpx1OGlGHLFPR7V6QHR2ZaoG4eA1DFZvFhou9nD+zmWt7yc1H1hMnUw45w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
+ by BL1PR11MB5221.namprd11.prod.outlook.com (2603:10b6:208:310::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.26; Tue, 10 Jun
+ 2025 00:30:36 +0000
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf%6]) with mapi id 15.20.8792.034; Tue, 10 Jun 2025
+ 00:30:36 +0000
+Message-ID: <71a51672-4cc7-47eb-bbbb-a3195189becc@intel.com>
+Date: Mon, 9 Jun 2025 17:30:34 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 27/29] fs/resctrl: Add file system mechanism for
+ architecture info file
+To: "Luck, Tony" <tony.luck@intel.com>
+CC: Fenghua Yu <fenghuay@nvidia.com>, "Wieczor-Retman, Maciej"
+	<maciej.wieczor-retman@intel.com>, Peter Newman <peternewman@google.com>,
+	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>, "Drew
+ Fustini" <dfustini@baylibre.com>, Dave Martin <Dave.Martin@arm.com>,
+	"Keshavamurthy, Anil S" <anil.s.keshavamurthy@intel.com>, "Chen, Yu C"
+	<yu.c.chen@intel.com>, "x86@kernel.org" <x86@kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"patches@lists.linux.dev" <patches@lists.linux.dev>
+References: <20250521225049.132551-1-tony.luck@intel.com>
+ <20250521225049.132551-28-tony.luck@intel.com>
+ <f25d136c-b1d3-483a-ac77-92464d7fe25c@intel.com>
+ <aEIxzbuFybLBE3xt@agluck-desk3>
+ <9eb9a466-2895-405a-91f7-cda75e75f7ae@intel.com>
+ <aEMlznLgnn6bK9lo@agluck-desk3>
+ <d2be3a4e-1075-459d-9bf7-b6aefcb93820@intel.com>
+ <aEcsxjWroliWf3G0@agluck-desk3>
+ <fb2396c1-3799-4d45-ae24-ce7e6f0d42e2@intel.com>
+ <SJ1PR11MB60834D5E5D78CE229D04204FFC6BA@SJ1PR11MB6083.namprd11.prod.outlook.com>
+From: Reinette Chatre <reinette.chatre@intel.com>
+Content-Language: en-US
+In-Reply-To: <SJ1PR11MB60834D5E5D78CE229D04204FFC6BA@SJ1PR11MB6083.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR05CA0019.namprd05.prod.outlook.com
+ (2603:10b6:a03:c0::32) To SJ2PR11MB7573.namprd11.prod.outlook.com
+ (2603:10b6:a03:4d2::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: E711C2F
-X-Stat-Signature: n5e6p39xhrcxewrmtf6qgw5timpgabmy
-X-Rspamd-Server: rspamout05
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19ZjXJReMgOFSLQfgw0U9IgsFYl/V0RtRo=
-X-HE-Tag: 1749515262-39919
-X-HE-Meta: U2FsdGVkX18tEsfiPuU5ryucdfb9zRKArBFbJaS75xlyGybrV4Fgy9UPIQOHvt1RrwEgFuyCkj+UsRx0q8DNeT768RgczmwK5S8rkqw86XheE6pIZ4p/f13ZfaXdRoxOxR90JsFiv9i1Ag5VC+sUqcwJzDXXAv8NBXDGF8ShtGld7zWsdrcOA+LcAIG/2AFTvIY6RyVR0NB9N+hTmp1cdHxPrwMWkEC4Nu1+2LNUWi5zUUCaUmM87yfkaJcsmqJLLIFZ0Jp4orobu0torBlmPQtcSSSl1FtA4qlUmsc3Ut1dOKyZRpuslkJByPj84ogNyxxc519ackHnlpwW+Fgcm/PDVQGO2C4AKD2X3V/QgjKbqsArIGbuZecLdNeiwGwK90fEnVkKi6w2w0RwYcRwCEpjRiZ7wgGgJlNk275kRVfljltV52DoHbeK1tesSKjL/YFx8KwFOxcbhR5RkC8eR/FgpNdYiUW2bQ65w0dXv9xFOzFO2w3bmg==
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|BL1PR11MB5221:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4231e7b0-1e50-4ac3-44a0-08dda7b604a1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|13003099007;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?YW92WGZKaWY2b0RoVVExS3IvaGhBb0xsSUhkdm1adlR1QmhGbUF6Q2o1MFRy?=
+ =?utf-8?B?R1VpdU5wNkNWYlJwMmw3TWJIQkhGcjdtSmVWOGE3VU5MM1piQS8wUW4yNEw0?=
+ =?utf-8?B?THRiQy9RWm1DNmUxSENaMUJFSmlzNEJXNytSc3FwT1pTLytmZ0JxVWVNYnJ4?=
+ =?utf-8?B?SDByMDlOTmVDOHVjS081MlBVcEJoa2RidFVRQXFHNW1jelVObFZwSGJrM0tX?=
+ =?utf-8?B?ZE9sWG8yYS9xY0w1NGNRemlQL2ZHczVxZ095YldTTzlxOForWkFtSlkrajVj?=
+ =?utf-8?B?eFNJSWo1VndGN2ZEaGxuNnMxa2lleFdBSHlTSHlHTWd5cXAvSlpDWUZrclNv?=
+ =?utf-8?B?NDVoVkFXLzRyOFdhMXYyWFZGSDUycFI5QjJYVytoamZUelZDbkorL0pnaHNM?=
+ =?utf-8?B?cThHUmxacEt4bFEzeEY2bHRjb25PWXdZN2xubkJMREhVWi9WRm9QYjVxdXpP?=
+ =?utf-8?B?ZnNubWNTWGJUSEsweE9SN3dYemEzNjJHK0MrU2w3ZnpDOTZ5SGQwQjRhVU9K?=
+ =?utf-8?B?Q3R4dVZjd0MyVzlvTUkvdmVVcXUvQlpLTS9kMWM5SVR3TW1RSkVOQ3pYK1hr?=
+ =?utf-8?B?TndxTjloazI0SXdMTFJVbS9NT0R1YkZ5WlVpYjFXWlBienhpSnNucFd3Yzh3?=
+ =?utf-8?B?Ymw3V2tuYUNUVVZzSmdRQWFTWTVsamFUOXpkL3l5dmVsV3JwY0pzT0tRZzla?=
+ =?utf-8?B?YVVtdGpEeVZtZnZCb3hLU2dLYWRmV1dsTmNVblBnSkFlcitmRXpKVDg1Vm11?=
+ =?utf-8?B?SjVIc2tSdlFBT0k0WHJzbmN4dzRZY0dhRU9CZTlSYVlBZGhuSjl1WWU4OFgz?=
+ =?utf-8?B?Vm83ZzRZemZiQjFGblJVMTJweUN2UGpWVkFuN3ZmdHBXejRabmFsYm5lOXJl?=
+ =?utf-8?B?UFUzQXA1VVZVNUtIWklESjhUVkZiVVVTdEFmQ1VKcWpVRjVVOTV2WHZRN2lP?=
+ =?utf-8?B?S0dIUWRySUtRaGY2eXFycmlmZ255Smtpdk95NUNGd0FCZWVLcFhOZ0lmemRz?=
+ =?utf-8?B?ZXB6empOSGJRL2Y3MHh4dkowUjlYQ2R0WUFmQ3NzdmU5czAramw2ZVlyTjUr?=
+ =?utf-8?B?N0RqVk44Tyt5MWcxV3U2WkhLL0NQcUNPZW5ySGllK29Ndmxwd3poWElVSjRs?=
+ =?utf-8?B?a2pIc1AxcDNIdjloMmw1TGFvTzUvVXZFVE5EWC9VQnp4dmVpMm9CS1NwRzlN?=
+ =?utf-8?B?SFNKNUR0RlV2Yk0vczZURnJkbDJZaFlxaVBrVTB6Mms1cDZXRVh1aHpqdGha?=
+ =?utf-8?B?dGxlU3M0UkpyMGlNOWtVVGt0cW9vMlg0TkVoZXdWaitlcDFQZ3Rjd0xFaXl5?=
+ =?utf-8?B?OVoyZXN3SG40OEVuck1FS1dhUVpnMUdqbVhkbHNNdmhxL21oci9xczRML2lB?=
+ =?utf-8?B?ZThwWTk1b09ZcFpCWCtDaHJML2pMZ3BYK3VZNDhNdlc1SW5RRGtHWW5KbVBU?=
+ =?utf-8?B?bXdNamRsRHR0SUJ2OGVNY2QxWjBRWE5yeTZPb0FoS1lGQWRRWWo5cmVWSjNl?=
+ =?utf-8?B?U3NRRjRXenlBbkJLdFNIekxKL0taTXlxS2NRcTVxdFFHdnJlQ040MXlpeVRT?=
+ =?utf-8?B?QWorVWhtcVlzbWJSVERtRUVYOXhjdUpWSnJ0WnVoMjM2MWtHY1RKbnZUdHda?=
+ =?utf-8?B?c2hreG1zc1I4eE9FQTMxTnVkZG5aQkpSNitwQ2VIRHRPNjVxYWV0Mm5rV0lS?=
+ =?utf-8?B?R0ZaMmQ2TUN1aDgzNEZRTHF5N0FlTENFd3BmU0hPQ240Tkt6bmM3aUk2YUdW?=
+ =?utf-8?B?UWRjNncrNXEvOG92QmYvaXJVOEY1bjN1YWZnTHdramZLcXdLcDZXYUp5NmZ0?=
+ =?utf-8?B?S0NXL0RWQm4zd3g3V2ZIbHlzaDY5ajlVM2NrMkgveFlJK2xOekFPUnNLeHU2?=
+ =?utf-8?B?d0hwck9LV3pWNWp2NVdlUVJZU202L0FwVVBuU21DT0J6WWNnaDdxTTVyQWo4?=
+ =?utf-8?Q?M/nAOo0TGD0=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(13003099007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?czZPTk1xcGxTMXVlTXZ0RU9jTEg2OW9LaVlveFRsMU0xd29wb2h6ZURKTGNm?=
+ =?utf-8?B?b1B5dUlXOHlKVjdPZDFaMXB1TnRZZE1CYTdaWk1DWE9TcFp4T0ZPS3lWK2o4?=
+ =?utf-8?B?dGhlbURzRnJLTjg5ajBnZzRBejhUY1hGeEpEYW9jUUpHb3VtT05FWGtOSC9D?=
+ =?utf-8?B?TnljT3Y0Z2FmbGhVMDUxZzFEUnRzdlNyb3U0OHVrZEdIYk1jVzRoeE13NmFW?=
+ =?utf-8?B?MjlZbFJ5MmdGcHZLQ05TaGNueUk1S2daaUpOMW5SSGR0YmdzcnNvKzNlbFNM?=
+ =?utf-8?B?dldlSFQxYUMwNlU5bzRMWUgxUU9PcERwakpMdXJsMW4wcTVCSUVXMjhlYmls?=
+ =?utf-8?B?S3lGY0d0YXVOUWJXSElNUjl2c1BqcGYrYm5QTU5YRkNzQmpyRWk3c1ozTzQr?=
+ =?utf-8?B?WXRoS2IrWXBCdzdTTGJYSG5FV0VPRU4vQ1V4alRoNjh1aVN2czZiNC92Zm96?=
+ =?utf-8?B?MHM4N29acUd3V21RMHcxWm8wb2I5MmZOMVQvYnIyakpxWGNETVlOMS9GUDhy?=
+ =?utf-8?B?L2QrNW1JRktqQWF5ZjhUUDhDYUYvb1liSVkxSFBUdlRUVmtFUjY0TXpId2xi?=
+ =?utf-8?B?Z1UxZTFScEJ4QjAraXJGNzBhb2NUZExnWUZrcUc1bUdmL0F4ZFQ2L1ppdUJL?=
+ =?utf-8?B?dzRCbkFTbXlGM3AvbTFKZGpDSjBlN2ZscmJ0NlU5WmlYT3NCQ045eENJL3FO?=
+ =?utf-8?B?cHQ2QTlLVDd1QlltK1hYaVpyWG0rcEJSTjlYVFFsK2R0dVk2M3dDSWd1emRa?=
+ =?utf-8?B?NURDT3dTZ3d2c0ZIRS93WExUNGxVZFhZdHg0UXg4SUtVS1BvRktwYnkrcEVD?=
+ =?utf-8?B?ZndpVW9zUERjM3BiR1VjTFZmZW5BZ3pWYXJEV29tczhKZ3NLbUVNTnVNSUlw?=
+ =?utf-8?B?L2YzMW9LUlVrZk5yL1g0dGV5ZUp0d2pyQmRDYjNvRkR5MFJ2bzFTd1gxUjBw?=
+ =?utf-8?B?VGxLdGpEaUo0c1lpSkFZcVovcmVvYkVYclgvNGkyVkxhSmZpdXJPZ3lyNUI5?=
+ =?utf-8?B?em1YaUZjakI2bFJhbS9MUHIxcGl4YTVOZndsZFZJejVrZG5YckZ6dXZRTUQz?=
+ =?utf-8?B?bmVlQnVWT0tEeUxyUWlnczBCVU5BWE5YM3M2WHY1Y01TQTR4cE5RdHBCVjIx?=
+ =?utf-8?B?Q2pNU2FIYmNqbG9EbjA5OWc3VGlLbEF2SzNZbzZqdmVWeC9yN3hscER6V2pW?=
+ =?utf-8?B?ei9BYzBseUFTTHhPWlBPTlMvMUpXRTdXTXVuaDVyVTBDRzlQZ0REWnkvbFZ3?=
+ =?utf-8?B?UUNSVWNVVy85d0V4NG5WTnNQZUZnc3M0UjJCRlZTSjJlQkRLQkJyc1MrUW9P?=
+ =?utf-8?B?TXpOSk0zS0V1WUJCTUkxMHZtQWcrNkNYNzN2ZVhQN1VBbnMrVmNmalBlemhX?=
+ =?utf-8?B?T0NMTkJ4SXNBd2dJWklZc0lvM1pCQUlvb0JsUThxWmswWE5SVGlPbzk4THVq?=
+ =?utf-8?B?V09OZjBqcW9uU01SVWZ2d2xSQUE1dDU2SUlCZDNIc2RSR1ZwVzdQdWFEMisy?=
+ =?utf-8?B?aUVGMzNEMkNsaGdpSytkazlObDlMczRsYURjRGU3enAyUlB4RXdycDJPdkIz?=
+ =?utf-8?B?VEEzMFR4VVVwVHYyVEo4RDZUOWhCdDRFWmNxZmdOb0hqM055cVdJL0E3ajNu?=
+ =?utf-8?B?Z0hDRDY1YVpuMnJBUUdTZUN6UktEYXNqcEp3WjN1QVN5S3pHUkNkcjA5eHFm?=
+ =?utf-8?B?MUVKZ0JjVThSdml0aml6M2QxUTdBNzNmQ2o0S1lNaDMrZ01yR085alI3aVBZ?=
+ =?utf-8?B?b3dvZDk1cUE5eEc1cUNwUERzNG5UMGxBTXdGTGVhT2RXbVlJZndJK25RLzlH?=
+ =?utf-8?B?bldHTkhwS2JOclRMdElFcXlpeUFIZDI3SDJqbWd5c29ad0hxd3BSNE55SkF3?=
+ =?utf-8?B?cHVFb3lvdDJRZWo5S3UwVWV1WUtNa3NGSEJNZDh1ajNodk1iTjhWMHhHdUZ3?=
+ =?utf-8?B?cFp3N0FBWk16dVFjTCs4bnhSaFpFSzRwY3QzbTNCZ2NtdlJBR216OEtsN2pK?=
+ =?utf-8?B?by9aeWJUdERiK1VxQy8yc3VMQVg2ck14bUgvazk4dDdDdHVNQUg5RDIvRWtW?=
+ =?utf-8?B?RFVxM29mcW1lYkphbnNXaHoxUW95YzkwdUhUYjJrQ0F2ZThCZDR5WE11MEVS?=
+ =?utf-8?B?TnI0WUhLQ3EwV1MyYzJkRm5vODlmdFh0OVJJZ2tuMFF2YXc1eEM5RXVyV0g2?=
+ =?utf-8?B?dWc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4231e7b0-1e50-4ac3-44a0-08dda7b604a1
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 00:30:36.1520
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8slaAi8ZifsVuhdQEjYMgvN990/suIe7mB1tOyW1hzuYXnE0GKP47RZy2qT2Dj3VyM5k3o9UDXHJLoo/cjsv++60TeqPBXiA5Btq47Tfbms=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB5221
+X-OriginatorOrg: intel.com
 
 
-[ Adding x86 and text_poke folks ]
 
-On Thu, 5 Jun 2025 17:12:10 +0530
-Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-
-> Regressions found on qemu-x86_64 with compat mode (64-bit kernel
-> running on 32-bit userspace) while running LTP tracing test suite
-> on Linux next-20250605 tag kernel.
+On 6/9/25 4:34 PM, Luck, Tony wrote:
+> Reinette,
 > 
-> Regressions found on
->  - LTP tracing
+> Trimming to focus on why I was confused by your message.
 > 
-> Regression Analysis:
->  - New regression? Yes
->  - Reproducible? Intermittent
+>>> One possibility, that supports intended use while keeping the door open to support
+>>> future resctrl fs use of the debugfs, could be  a new resctrl fs function,
+>>> for example resctrl_create_mon_resource_debugfs(struct rdt_resource *r), that will initialize
+>>> rdt_resource::arch_debug_info(*) to point to the dentry of newly created
+>>> /sys/kernel/debug/resctrl/info/<rdt_resource::name>_MON/arch_debug_name_TBD *if*
+>>> the associated resource is capable of monitoring 
 > 
-> Test regression: qemu-x86_64-compat mode ltp tracing Oops int3 kernel panic
-> 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> 
-> ## Test log
-> ftrace-stress-test: <12>[   21.971153] /usr/local/bin/kirk[277]:
-> starting test ftrace-stress-test (ftrace_stress_test.sh 90)
-> <4>[   58.997439] Oops: int3: 0000 [#1] SMP PTI
+> What exactly is this dentry pointing to? I was mistakenly of the impression that it was a directory.
 
-Did anything change with text_poke? Ftrace just happens to stress text_poke
-more than anything else, as it updates tens of thousands of locations at a time.
+Yes, it has been directory since https://lore.kernel.org/lkml/9eb9a466-2895-405a-91f7-cda75e75f7ae@intel.com/
+If your impression was indeed that it was a directory then why did your patch not
+create a directory?
 
-The ftrace code hasn't changed in a while, but I think there's been updates
-to text_poke.
+I am now going to repeat what I said in https://lore.kernel.org/lkml/9eb9a466-2895-405a-91f7-cda75e75f7ae@intel.com/
 
-The modifying of code and adding and removing the int3 handler needs to be
-synchronized correctly or something like this bug can happen.
-
--- Steve
-
-
-> <4>[   58.998089] CPU: 0 UID: 0 PID: 323 Comm: sh Not tainted
-> 6.15.0-next-20250605 #1 PREEMPT(voluntary)
-> <4>[   58.998152] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
-> BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-> <4>[   58.998260] RIP: 0010:_raw_spin_lock+0x5/0x50
-> <4>[   58.998563] Code: 5d e9 ff 12 00 00 66 66 2e 0f 1f 84 00 00 00
-> 00 00 0f 1f 40 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3
-> 0f 1e fa 0f <1f> 44 00 00 55 48 89 e5 53 48 89 fb bf 01 00 00 00 e8 15
-> 12 e4 fe
-> <4>[   58.998610] RSP: 0018:ffff9494007bbe98 EFLAGS: 00000246
-> <4>[   58.998715] RAX: ffff912a042edd00 RBX: 000000000000000b RCX:
-> 0000000000000000
-> <4>[   58.998727] RDX: 0000000000000000 RSI: 0000000000000006 RDI:
-> ffff912a00f2c8c0
-> <4>[   58.998737] RBP: ffff9494007bbeb8 R08: 0000000000000000 R09:
-> 0000000000000000
-> <4>[   58.998748] R10: 0000000000000000 R11: 0000000000000000 R12:
-> ffff912a00f2c8c0
-> <4>[   58.998759] R13: ffff912a00f2c840 R14: 0000000000000006 R15:
-> 0000000000000000
-> <4>[   58.998804] FS:  0000000000000000(0000)
-> GS:ffff912ad7cbf000(0063) knlGS:00000000f7f05580
-> <4>[   58.998821] CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-> <4>[   58.998832] CR2: 00000000f7d8f890 CR3: 000000010124e000 CR4:
-> 00000000000006f0
-> <4>[   58.998915] Call Trace:
-> <4>[   58.999010]  <TASK>
-> <4>[   58.999077]  ? file_close_fd+0x32/0x60
-> <4>[   58.999147]  __ia32_sys_close+0x18/0x90
-> <4>[   58.999172]  ia32_sys_call+0x1c3c/0x27e0
-> <4>[   58.999183]  __do_fast_syscall_32+0x79/0x1e0
-> <4>[   58.999194]  do_fast_syscall_32+0x37/0x80
-> <4>[   58.999203]  do_SYSENTER_32+0x23/0x30
-> <4>[   58.999211]  entry_SYSENTER_compat_after_hwframe+0x84/0x8e
-> <4>[   58.999254] RIP: 0023:0xf7f0c579
-> <4>[   58.999459] Code: b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10
-> 08 03 74 d8 01 00 00 00 00 00 00 00 00 00 00 00 00 00 51 52 55 89 e5
-> 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 2e 8d b4 26 00 00 00 00 8d b4 26
-> 00 00 00
-> <4>[   58.999466] RSP: 002b:00000000fff98500 EFLAGS: 00000206
-> ORIG_RAX: 0000000000000006
-> <4>[   58.999479] RAX: ffffffffffffffda RBX: 000000000000000b RCX:
-> 0000000000000000
-> <4>[   58.999484] RDX: 0000000000000000 RSI: 0000000000000000 RDI:
-> 0000000000000000
-> <4>[   58.999488] RBP: 0000000000000000 R08: 0000000000000000 R09:
-> 0000000000000000
-> <4>[   58.999492] R10: 0000000000000000 R11: 0000000000000206 R12:
-> 0000000000000000
-> <4>[   58.999497] R13: 0000000000000000 R14: 0000000000000000 R15:
-> 0000000000000000
-> <4>[   58.999534]  </TASK>
-> <4>[   58.999579] Modules linked in:
-> <4>[   58.999895] ---[ end trace 0000000000000000 ]---
-> <4>[   58.999892] Oops: int3: 0000 [#2] SMP PTI
-> <4>[   58.999997] RIP: 0010:_raw_spin_lock+0x5/0x50
-> <4>[   59.000008] Code: 5d e9 ff 12 00 00 66 66 2e 0f 1f 84 00 00 00
-> 00 00 0f 1f 40 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3
-> 0f 1e fa 0f <1f> 44 00 00 55 48 89 e5 53 48 89 fb bf 01 00 00 00 e8 15
-> 12 e4 fe
-> <4>[   59.000010] CPU: 1 UID: 0 PID: 339 Comm: sh Tainted: G      D
->          6.15.0-next-20250605 #1 PREEMPT(voluntary)
-> <4>[   59.000014] RSP: 0018:ffff9494007bbe98 EFLAGS: 00000246
-> <4>[   59.000021] RAX: ffff912a042edd00 RBX: 000000000000000b RCX:
-> 0000000000000000
-> <4>[   59.000026] RDX: 0000000000000000 RSI: 0000000000000006 RDI:
-> ffff912a00f2c8c0
-> <4>[   59.000030] RBP: ffff9494007bbeb8 R08: 0000000000000000 R09:
-> 0000000000000000
-> <4>[   59.000040] R10: 0000000000000000 R11: 0000000000000000 R12:
-> ffff912a00f2c8c0
-> <4>[   59.000044] R13: ffff912a00f2c840 R14: 0000000000000006 R15:
-> 0000000000000000
-> <4>[   59.000049] FS:  0000000000000000(0000)
-> GS:ffff912ad7cbf000(0063) knlGS:00000000f7f05580
-> <4>[   59.000054] CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-> <4>[   59.000059] CR2: 00000000f7d8f890 CR3: 000000010124e000 CR4:
-> 00000000000006f0
-> <4>[   59.000070] Tainted: [D]=DIE
-> <4>[   59.000080] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
-> BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-> <4>[   59.000085] RIP: 0010:_raw_spin_lock+0x5/0x50
-> <4>[   59.000101] Code: 5d e9 ff 12 00 00 66 66 2e 0f 1f 84 00 00 00
-> 00 00 0f 1f 40 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3
-> 0f 1e fa 0f <1f> 44 00 00 55 48 89 e5 53 48 89 fb bf 01 00 00 00 e8 15
-> 12 e4 fe
-> <4>[   59.000108] RSP: 0018:ffff9494000e0e88 EFLAGS: 00000097
-> <4>[   59.000117] RAX: 0000000000010002 RBX: ffff912a7bd29500 RCX:
-> ffff912a7bd2a400
-> <0>[   59.000179] Kernel panic - not syncing: Fatal exception in interrupt
-> <0>[   60.592321] Shutting down cpus with NMI
-> <0>[   60.593242] Kernel Offset: 0x20800000 from 0xffffffff81000000
-> (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-> <0>[   60.618536] ---[ end Kernel panic - not syncing: Fatal exception
-> in interrupt ]---
 > 
-> ## Source
-> * Kernel version: 6.15.0-next-20250605
-> * Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-> * Git sha: 4f27f06ec12190c7c62c722e99ab6243dea81a94
+> Now I think that you intend it to be a single file with a name chosen by filesystem code.
 > 
-> ## Build
-> * Test log: https://qa-reports.linaro.org/api/testruns/28675335/log_file/
-> * Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2y4whKazVqJKOUFD08taHC8XHRq/
-> * Kernel config:
-> https://storage.tuxsuite.com/public/linaro/lkft/builds/2y4whKazVqJKOUFD08taHC8XHRq/config
-> 
-> 
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
+> Is that right?
+Not what I have been saying, no.
 
+> 
+> If so, there needs to be "umode_t mode" and "struct file_operations *fops" arguments
+> for architecture to say whether this file is readable, writeable, and most importantly
+> to specify the architecture functions to be called when the user accesses this file.
+> 
+> With added "mode" and "fops" arguments this proposal meets my needs.
+> 
+> Choosing the exact string for the "arch_debug_name_TBD" file name that
+
+This should be a directory, a directory owned by the arch where it can create
+debug infrastructure required by arch. The directory name chosen and
+assigned by resctrl fs, while arch has freedom to create more directories
+and add files underneath it. Goal is to isolate all arch specific debug to
+a known location.
+
+Again, we need to prepare for resctrl fs to potentially use debugfs for its own
+debug and when it does this the expectation is that the layout will mirror
+/sys/fs/resctrl. Creating a directory /sys/kernel/debug/resctrl/info/<rdt_resource::name>_MON
+and then handing it off to the arch goes *against* this. It gives arch
+control over a directory that should be owned by resctrl fs.
+
+What I have been trying to propose is that resctrl fs create a directory
+/sys/kernel/debug/resctrl/info/<rdt_resource::name>_MON/arch_debug_name_TBD and hand
+a dentry pointer to it to the arch where it can do what is needed to support its debugging needs.
+Isn't this exactly what I wrote in the snippet above? Above you respond with
+statement that you were under impression that it was a directory ... and then
+send a patch that does something else. I am so confused. Gaslighting is
+beneath you.
+
+> will be given to any other users needs some thought. I was planning on
+> simply "status" since the information that I want to convey is read-only
+> status about each of the telemetry collection aggregators. But that feels
+> like it might be limiting if a future use includes any control options by
+> providing a writable file.
+
+The file containing the debug information for this feature will be added within
+the directory that we are talking about here.
+
+Reinette
