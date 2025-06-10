@@ -1,80 +1,40 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31898278E53
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 06:34:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58079279792;
+	Tue, 10 Jun 2025 06:35:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749537288; cv=none; b=hz4d7QXBRHz2cLy9+YulpxqMwpY2Hn/nR+gfgKMXHac+BUi8TmKNDfdBs0ZG7Euj+9auwHr3YPbsqndDAO83ktQkXy1tzrAxkdIS+/xxIEyZ3SGv+1a9aZd4SOCwiwhnqsJVmu4jdcoHjDOly8seegYRCFBoxwQNUYpPMqJA3Wg=
+	t=1749537308; cv=none; b=LNmWsCizQI8qS53dwMuCy2UsFAkC2PbFzuONu8udLttzeT8P0P2mzBaxd2vk3AJT3EZZaW30fVB45PHrHjfB9487J+826ZqYNpi+Mg6vM5/YY7Nl2eTh6Z5FKEHWK/CyTGMQk5uJ2sPg1m/52yBpyYAWJxmw1NmZY2Z+6yfDdws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749537288; c=relaxed/simple;
-	bh=i26MHPsWyMpA/vIVdZLIh+KpoJG4cIY5pq43DPT70/M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tjE3tK7tFnHkaUv25apSjXI+u99+nLmzPRp9jzf+SjNSBEvM+7atAQ43qeCcU9kzkPJJWuq7ULkQw6VHWHwhxC20k+VADoypVX/azNcuFWk3p4uXABrXPWVVahkA4PdgEHHMW2vDWi/BqJJF7LI3mlLqSgv87E8SVSkCij9EG7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=e5o37NNI; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e5o37NNI"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-234c5b57557so46725795ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 23:34:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1749537286; x=1750142086; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9s3bFxA/iUmk6qSfJ/+0ju+9AuK7egSHjY2rer4xcAU=;
-        b=e5o37NNICsXR46EMRSX65qg7lZBkvSeUstYBUw/Y2pgQEWWXTZbg/FuQZVfuKbJF33
-         oFUwIBXi5+vKfmRofosvsE3IBLddaNfnSB6TnnujvWuKVGOVjtHUyeJkLypzYRRa4N4w
-         TVrOz95cn0vlRDKXzUesUWWu61EpzbEWAkqfo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749537286; x=1750142086;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9s3bFxA/iUmk6qSfJ/+0ju+9AuK7egSHjY2rer4xcAU=;
-        b=ij6xZxOv9ZnekV6kaAwi7SU3B085ekWFFzoyrxhghUCxodu+dusXmHTlwkpCAP+G5W
-         ZBiYdtCz1OnmKljGjKybmqueVvPDSGqGCaWCSRiLcDeV9Qtn/PYiJUwRhQ28eJswRbOp
-         LRrFD7j5AOIV4iOyraJpjaFzADM9zbNDVimjI7s7gYSRDcONOFNc3kaE/v+7+2+XCeVJ
-         0rE33B4iquG7rybcO0MD0t0a0+lQV5ssgRT30ir+Lk2frKSmg5pNZtbvovIuHrxzbX8K
-         9aj+WJyGmZzjoBREC7oEbdnBziag9prC8kzP9+o39zRX9vxTB1Q++vSwUqkFuD+rEcfE
-         SUoA==
-X-Forwarded-Encrypted: i=1; AJvYcCWzWstHI+zaC8Xmlz22sk7qlizkzO35chPzlI/rz46Vdwcf4ErmS+1Ck4Ue5NOBd6Gf8W6HQKNJV4Krbb4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9eazySw9NFvsCjEv4C+oFCRL+Tv5/MbeEeJUCiCFpsaqY08W9
-	W68RqFsEqxl7kHjzPFoArSNPmml0sikI4xCPgg5RlRK1iWR7ohPCtQnF6QhswuFZ4A==
-X-Gm-Gg: ASbGncs5K9Cnp5fNkx0p9RymSH+xAPhWSDKkqKC8/8ZhmaPv6UGAzaC7Uo0TyVAxVxH
-	pyHtc0DL80BeVTsPo3Wt2S1aaAQlv7RlJEF0oW4upCL5zrMqU6QapyrdvELLrFQEDvoG+kEUJIi
-	4iDwSCZ3ToTYzYnx1SclDM697Mq+/67fMWXmeEHS7yOHMkWCURfZHIR+wXZ5hGjBgg2HvFJwbZ8
-	h6Zam0EXdiuzsw2wXYxUFsR3a8yjmfMlW+Z1Qg0OoqqjHQ1J56TxeWYXe8pYm1tNRzs06yKnQo9
-	qWeL+nI0sFv36LYX7M6urNA2hNLZi7r5zijj6Ttik5jUrcjV9SkZw/lya0kQwLhp0abHHZy3bKs
-	PJyFI8QArPo2VEHI=
-X-Google-Smtp-Source: AGHT+IFSfenrPgpYS8YpG+M5+osrGMDb3jGStM+tUH+0iHwn7+BobeG4OBWi4Cm0UHiMF1nHBAIopg==
-X-Received: by 2002:a17:902:d58b:b0:235:eca0:12d4 with SMTP id d9443c01a7336-23601dcd1f1mr210895915ad.53.1749537286555;
-        Mon, 09 Jun 2025 23:34:46 -0700 (PDT)
-Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:2826:ada4:efac:14e8])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603092ee2sm64596765ad.82.2025.06.09.23.34.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 23:34:46 -0700 (PDT)
-From: Chen-Yu Tsai <wenst@chromium.org>
-To: Srinivas Kandagatla <srini@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-	Lala Lin <lala.lin@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Chen-Yu Tsai <wenst@chromium.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] arm64: dts: mediatek: mt8188: Change efuse fallback compatible to mt8186
-Date: Tue, 10 Jun 2025 14:34:30 +0800
-Message-ID: <20250610063431.2955757-3-wenst@chromium.org>
-X-Mailer: git-send-email 2.50.0.rc0.604.gd4ff7b7c86-goog
-In-Reply-To: <20250610063431.2955757-1-wenst@chromium.org>
-References: <20250610063431.2955757-1-wenst@chromium.org>
+	s=arc-20240116; t=1749537308; c=relaxed/simple;
+	bh=prQ571B04ZB88nywJ8I3jLBsgWGpqSZ+R8BQnMA0Nj4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BcN8rlxNfAqJt1eFQr5d9Cm0g3RELpIw0ZkqDW5YPVDPoiKyPcftRK94WHNHlFIqBot7kG0Nkola67tcgFo35ty+zp1KzXlbOL0RtM4GPHILzZ22BxFtVDHbc4lNDUQph1B4BwAL2Zh9aDeLiTQH5+7qJdh0mPTwmyt+O+eq3jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4bGfBZ0dhRz1g2V3;
+	Tue, 10 Jun 2025 14:33:42 +0800 (CST)
+Received: from kwepemg500006.china.huawei.com (unknown [7.202.181.43])
+	by mail.maildlp.com (Postfix) with ESMTPS id 96F1D140277;
+	Tue, 10 Jun 2025 14:35:00 +0800 (CST)
+Received: from huawei.com (10.50.165.33) by kwepemg500006.china.huawei.com
+ (7.202.181.43) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 10 Jun
+ 2025 14:34:59 +0800
+From: Longfang Liu <liulongfang@huawei.com>
+To: <alex.williamson@redhat.com>, <jgg@nvidia.com>,
+	<shameerali.kolothum.thodi@huawei.com>, <jonathan.cameron@huawei.com>
+CC: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linuxarm@openeuler.org>, <liulongfang@huawei.com>
+Subject: [PATCH v4 3/3] migration: adapt to new migration configuration
+Date: Tue, 10 Jun 2025 14:32:51 +0800
+Message-ID: <20250610063251.27526-4-liulongfang@huawei.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20250610063251.27526-1-liulongfang@huawei.com>
+References: <20250610063251.27526-1-liulongfang@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,35 +42,265 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemg500006.china.huawei.com (7.202.181.43)
 
-The efuse block in the MT8188 contains the GPU speed bin cell, and like
-the MT8186 one, has the same conversion scheme to work with the GPU OPP
-binding. This was reflected in a corresponding change to the efuse DT
-binding.
+On the new hardware platform, the migration region has been
+relocated from the VF to the PF. The driver must also be modified
+accordingly to adapt to the new hardware device.
 
-Change the fallback compatible of the MT8188's efuse block from the
-generic one to the MT8186 one. This also makes GPU DVFS work properly.
+Utilize the PF's I/O base directly on the new hardware platform,
+and no mmap operation is required. If it is on an old platform,
+the driver needs to be compatible with the old solution.
 
-Fixes: d39aacd1021a ("arm64: dts: mediatek: mt8188: add lvts definitions")
-Fixes: 50e7592cb696 ("arm64: dts: mediatek: mt8188: Add GPU speed bin NVMEM cells")
-Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+Signed-off-by: Longfang Liu <liulongfang@huawei.com>
 ---
- arch/arm64/boot/dts/mediatek/mt8188.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 166 ++++++++++++------
+ .../vfio/pci/hisilicon/hisi_acc_vfio_pci.h    |   7 +
+ 2 files changed, 120 insertions(+), 53 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8188.dtsi b/arch/arm64/boot/dts/mediatek/mt8188.dtsi
-index 202478407727..90c388f1890f 100644
---- a/arch/arm64/boot/dts/mediatek/mt8188.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8188.dtsi
-@@ -2183,7 +2183,7 @@ imp_iic_wrap_en: clock-controller@11ec2000 {
- 		};
+diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+index b16115f590fd..ab815fa4258c 100644
+--- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
++++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+@@ -125,6 +125,72 @@ static int qm_get_cqc(struct hisi_qm *qm, u64 *addr)
+ 	return 0;
+ }
  
- 		efuse: efuse@11f20000 {
--			compatible = "mediatek,mt8188-efuse", "mediatek,efuse";
-+			compatible = "mediatek,mt8188-efuse", "mediatek,mt8186-efuse";
- 			reg = <0 0x11f20000 0 0x1000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
++static int qm_get_xqc_regs(struct hisi_acc_vf_core_device *hisi_acc_vdev,
++			   struct acc_vf_data *vf_data)
++{
++	struct hisi_qm *qm = &hisi_acc_vdev->vf_qm;
++	struct device *dev = &qm->pdev->dev;
++	u32 eqc_addr, aeqc_addr;
++	int ret;
++
++	if (qm->ver == QM_HW_V3) {
++		eqc_addr = QM_EQC_DW0;
++		aeqc_addr = QM_AEQC_DW0;
++	} else {
++		eqc_addr = QM_EQC_PF_DW0;
++		aeqc_addr = QM_AEQC_PF_DW0;
++	}
++
++	/* QM_EQC_DW has 7 regs */
++	ret = qm_read_regs(qm, eqc_addr, vf_data->qm_eqc_dw, 7);
++	if (ret) {
++		dev_err(dev, "failed to read QM_EQC_DW\n");
++		return ret;
++	}
++
++	/* QM_AEQC_DW has 7 regs */
++	ret = qm_read_regs(qm, aeqc_addr, vf_data->qm_aeqc_dw, 7);
++	if (ret) {
++		dev_err(dev, "failed to read QM_AEQC_DW\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static int qm_set_xqc_regs(struct hisi_acc_vf_core_device *hisi_acc_vdev,
++			   struct acc_vf_data *vf_data)
++{
++	struct hisi_qm *qm = &hisi_acc_vdev->vf_qm;
++	struct device *dev = &qm->pdev->dev;
++	u32 eqc_addr, aeqc_addr;
++	int ret;
++
++	if (qm->ver == QM_HW_V3) {
++		eqc_addr = QM_EQC_DW0;
++		aeqc_addr = QM_AEQC_DW0;
++	} else {
++		eqc_addr = QM_EQC_PF_DW0;
++		aeqc_addr = QM_AEQC_PF_DW0;
++	}
++
++	/* QM_EQC_DW has 7 regs */
++	ret = qm_write_regs(qm, eqc_addr, vf_data->qm_eqc_dw, 7);
++	if (ret) {
++		dev_err(dev, "failed to write QM_EQC_DW\n");
++		return ret;
++	}
++
++	/* QM_AEQC_DW has 7 regs */
++	ret = qm_write_regs(qm, aeqc_addr, vf_data->qm_aeqc_dw, 7);
++	if (ret) {
++		dev_err(dev, "failed to write QM_AEQC_DW\n");
++		return ret;
++	}
++
++	return 0;
++}
++
+ static int qm_get_regs(struct hisi_qm *qm, struct acc_vf_data *vf_data)
+ {
+ 	struct device *dev = &qm->pdev->dev;
+@@ -167,20 +233,6 @@ static int qm_get_regs(struct hisi_qm *qm, struct acc_vf_data *vf_data)
+ 		return ret;
+ 	}
+ 
+-	/* QM_EQC_DW has 7 regs */
+-	ret = qm_read_regs(qm, QM_EQC_DW0, vf_data->qm_eqc_dw, 7);
+-	if (ret) {
+-		dev_err(dev, "failed to read QM_EQC_DW\n");
+-		return ret;
+-	}
+-
+-	/* QM_AEQC_DW has 7 regs */
+-	ret = qm_read_regs(qm, QM_AEQC_DW0, vf_data->qm_aeqc_dw, 7);
+-	if (ret) {
+-		dev_err(dev, "failed to read QM_AEQC_DW\n");
+-		return ret;
+-	}
+-
+ 	return 0;
+ }
+ 
+@@ -239,20 +291,6 @@ static int qm_set_regs(struct hisi_qm *qm, struct acc_vf_data *vf_data)
+ 		return ret;
+ 	}
+ 
+-	/* QM_EQC_DW has 7 regs */
+-	ret = qm_write_regs(qm, QM_EQC_DW0, vf_data->qm_eqc_dw, 7);
+-	if (ret) {
+-		dev_err(dev, "failed to write QM_EQC_DW\n");
+-		return ret;
+-	}
+-
+-	/* QM_AEQC_DW has 7 regs */
+-	ret = qm_write_regs(qm, QM_AEQC_DW0, vf_data->qm_aeqc_dw, 7);
+-	if (ret) {
+-		dev_err(dev, "failed to write QM_AEQC_DW\n");
+-		return ret;
+-	}
+-
+ 	return 0;
+ }
+ 
+@@ -522,6 +560,10 @@ static int vf_qm_load_data(struct hisi_acc_vf_core_device *hisi_acc_vdev,
+ 		return ret;
+ 	}
+ 
++	ret = qm_set_xqc_regs(hisi_acc_vdev, vf_data);
++	if (ret)
++		return ret;
++
+ 	ret = hisi_qm_mb(qm, QM_MB_CMD_SQC_BT, qm->sqc_dma, 0, 0);
+ 	if (ret) {
+ 		dev_err(dev, "set sqc failed\n");
+@@ -589,6 +631,10 @@ static int vf_qm_state_save(struct hisi_acc_vf_core_device *hisi_acc_vdev,
+ 	vf_data->vf_qm_state = QM_READY;
+ 	hisi_acc_vdev->vf_qm_state = vf_data->vf_qm_state;
+ 
++	ret = qm_get_xqc_regs(hisi_acc_vdev, vf_data);
++	if (ret)
++		return ret;
++
+ 	ret = vf_qm_read_data(vf_qm, vf_data);
+ 	if (ret)
+ 		return ret;
+@@ -1186,34 +1232,47 @@ static int hisi_acc_vf_qm_init(struct hisi_acc_vf_core_device *hisi_acc_vdev)
+ {
+ 	struct vfio_pci_core_device *vdev = &hisi_acc_vdev->core_device;
+ 	struct hisi_qm *vf_qm = &hisi_acc_vdev->vf_qm;
++	struct hisi_qm *pf_qm = hisi_acc_vdev->pf_qm;
+ 	struct pci_dev *vf_dev = vdev->pdev;
+ 
+-	/*
+-	 * ACC VF dev BAR2 region consists of both functional register space
+-	 * and migration control register space. For migration to work, we
+-	 * need access to both. Hence, we map the entire BAR2 region here.
+-	 * But unnecessarily exposing the migration BAR region to the Guest
+-	 * has the potential to prevent/corrupt the Guest migration. Hence,
+-	 * we restrict access to the migration control space from
+-	 * Guest(Please see mmap/ioctl/read/write override functions).
+-	 *
+-	 * Please note that it is OK to expose the entire VF BAR if migration
+-	 * is not supported or required as this cannot affect the ACC PF
+-	 * configurations.
+-	 *
+-	 * Also the HiSilicon ACC VF devices supported by this driver on
+-	 * HiSilicon hardware platforms are integrated end point devices
+-	 * and the platform lacks the capability to perform any PCIe P2P
+-	 * between these devices.
+-	 */
++	if (pf_qm->ver == QM_HW_V3) {
++		/*
++		 * ACC VF dev BAR2 region consists of both functional register space
++		 * and migration control register space. For migration to work, we
++		 * need access to both. Hence, we map the entire BAR2 region here.
++		 * But unnecessarily exposing the migration BAR region to the Guest
++		 * has the potential to prevent/corrupt the Guest migration. Hence,
++		 * we restrict access to the migration control space from
++		 * Guest(Please see mmap/ioctl/read/write override functions).
++		 *
++		 * Please note that it is OK to expose the entire VF BAR if migration
++		 * is not supported or required as this cannot affect the ACC PF
++		 * configurations.
++		 *
++		 * Also the HiSilicon ACC VF devices supported by this driver on
++		 * HiSilicon hardware platforms are integrated end point devices
++		 * and the platform lacks the capability to perform any PCIe P2P
++		 * between these devices.
++		 */
+ 
+-	vf_qm->io_base =
+-		ioremap(pci_resource_start(vf_dev, VFIO_PCI_BAR2_REGION_INDEX),
+-			pci_resource_len(vf_dev, VFIO_PCI_BAR2_REGION_INDEX));
+-	if (!vf_qm->io_base)
+-		return -EIO;
++		vf_qm->io_base =
++			ioremap(pci_resource_start(vf_dev, VFIO_PCI_BAR2_REGION_INDEX),
++				pci_resource_len(vf_dev, VFIO_PCI_BAR2_REGION_INDEX));
++		if (!vf_qm->io_base)
++			return -EIO;
+ 
+-	vf_qm->fun_type = QM_HW_VF;
++		vf_qm->fun_type = QM_HW_VF;
++		vf_qm->ver = pf_qm->ver;
++	} else {
++		/*
++		 * On the new HW device, the migration function register is placed
++		 * in the BAR2 configuration region of the PF, and each VF device
++		 * occupies 8KB of configuration space.
++		 */
++		vf_qm->io_base = pf_qm->io_base + QM_MIG_REGION_OFFSET +
++				 hisi_acc_vdev->vf_id * QM_MIG_REGION_SIZE;
++		vf_qm->fun_type = QM_HW_PF;
++	}
+ 	vf_qm->pdev = vf_dev;
+ 	mutex_init(&vf_qm->mailbox_lock);
+ 
+@@ -1539,7 +1598,8 @@ static void hisi_acc_vfio_pci_close_device(struct vfio_device *core_vdev)
+ 	hisi_acc_vf_disable_fds(hisi_acc_vdev);
+ 	mutex_lock(&hisi_acc_vdev->open_mutex);
+ 	hisi_acc_vdev->dev_opened = false;
+-	iounmap(vf_qm->io_base);
++	if (vf_qm->ver == QM_HW_V3)
++		iounmap(vf_qm->io_base);
+ 	mutex_unlock(&hisi_acc_vdev->open_mutex);
+ 	vfio_pci_core_close_device(core_vdev);
+ }
+diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
+index 91002ceeebc1..348f8bb5b42c 100644
+--- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
++++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
+@@ -59,6 +59,13 @@
+ #define ACC_DEV_MAGIC_V1	0XCDCDCDCDFEEDAACC
+ #define ACC_DEV_MAGIC_V2	0xAACCFEEDDECADEDE
+ 
++#define QM_MIG_REGION_OFFSET		0x180000
++#define QM_MIG_REGION_SIZE		0x2000
++
++#define QM_SUB_VERSION_ID		0x100210
++#define QM_EQC_PF_DW0			0x1c00
++#define QM_AEQC_PF_DW0			0x1c20
++
+ struct acc_vf_data {
+ #define QM_MATCH_SIZE offsetofend(struct acc_vf_data, qm_rsv_state)
+ 	/* QM match information */
 -- 
-2.50.0.rc0.604.gd4ff7b7c86-goog
+2.24.0
 
