@@ -1,135 +1,230 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C61FAD21
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 07:00:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDD9BAD21
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 07:04:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749538851; cv=none; b=WgRSn+Jb6uASmhUFkincD6YTGTiYVIelXg4063pLs4jJb1LUsHYHqaGPK0mICKFD27Y4F+0q4ZUxX2f5KkjpmB/23oP2udc5t6UgRlUP+DgXyofbKeaz+NjIEuKIYnWmPp3mB0szvowngkUVnUc44nCYDEx1g/icGUuWulBaG+4=
+	t=1749539044; cv=none; b=ofeY6oyBeUecpzma71e96KUeSoniM40uv7mhXZ+JMqAX0gXrstzY5Tps56XCZAZ7zma6CqAMvsbgHzR0laohlXmYVnEi/rnW1KTzw9+cGSCReMrq2OVpu4cID6bL3JPJL0TPUM/ni43J5RKKAHZkqvFxDOc0LDDgDh2R94LoseI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749538851; c=relaxed/simple;
-	bh=nxzPfqmfptUSQtLazHsiK0dcb5LFkkFm+nAYN/C+p7s=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tKaOG0vS/9lh6UF5HhXg06IMNjLb9/Qm8D7HA/RD0BVGrutx+lSl9Dzh2fwb+2tach9o0PTOq5px740fuHY/MW4dtpD8+lJNyifSp9LoBrR1jniM9Q32dLKXCWP/VlOF7Qoa+TssGQBpStChIzBhZam5xQMgWvKu27QG/NoP8/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=dtGcd7wR; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1749539044; c=relaxed/simple;
+	bh=SOE0EGxdT+ZoTFY+LYr7w9QEblNrOFYo+oRHrEAUMAE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=usJJ0UYbFbhUfd+BdxbNJ0e8S2B4QgxFl1Nd97s3BaU6KmrOc++OJlfrCaQmH4Ek8VeucinLlxfcfvzpYKkzZMIKFtZdcDnhD/vGftCmcxlJZXJEfrGIHxxCn1n9Pfoxzq3kBf1F2jkUWBAQ3Qkl8mARythO0O7VW0/FuYvpG8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N5yU1G74; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="dtGcd7wR"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-742c035f2afso3580856b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 00:00:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N5yU1G74"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-4a5ae2fdf4eso56989161cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 00:04:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1749538849; x=1750143649; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1749539042; x=1750143842; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JUJitp02dLbwyW6XXbPMt7kAqtrb2lpqnpotbucX9CA=;
-        b=dtGcd7wRQWbYXVW4cPdjrFKOIBrbFi3WDWaK7NW2K73TdOc4KAlxMd2EVnHR22IX3H
-         nkJUmm2LohJQzU8ZT9d3DqS0+HPANe0dMuy5WDAIgVlRLtu7JHS/LPOisEIF1s+vKMh6
-         +MAxwRlMf1HO6mSCZJffHi+1YqBjSrNnoeMxkykBPZvZvBxtjkcLq36m1RsaQfUpcc3i
-         H+Znmjj8POkJWaKy4KoEokiYSrC3su5AWljkfHoC/axQ0xVjyvOPDGMxTF44XvKlcgE8
-         iud94qfA9k7FXCKOXvZBDlO0mtHnP3DhcXLNFAOe/w65cCnm6JJvMipnjdKK49steX5s
-         KRAA==
+        bh=hRxCgz3ov39f3NkO1C/Ste+6+jR42JfHSBXHuL3upq4=;
+        b=N5yU1G74fBDgbAxdvoztrKG0wKqzsrV1d6uekhO04xvgjKUZQMl/Jj5BdiC2r1TtQl
+         4ApVNzNX4lhKM1U6Dmu4BHc4B+z6uVAFtpNjK5qUR9IJaGd2eJt1rbtR/LRdgW1WCpR0
+         OEtUZ5lWJuCTXAXMqKA66svHpGnJgp+2kVcVh/g88muca2vou1ZtIskZLcpKpEDdHIyX
+         zpUBXDU8F2Z643+hOhG1rseAbqZYWyYJY0JqR8+uP4hLuyOTF2/r374eG8sM166Ge980
+         47i0UQZcg25mcD9D/PdunWeZLKSDbtrvioVF3PtIEMmH/NksFTb+HirFnGnjSWFoOngv
+         P+7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749538849; x=1750143649;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1749539042; x=1750143842;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JUJitp02dLbwyW6XXbPMt7kAqtrb2lpqnpotbucX9CA=;
-        b=r69QkCgkXvEgZvK/L82FeS5oZxKaflnonnrMqEYxZu2afIihe+w6xkAcVv+ThAxRR5
-         tfX30pDSrZTHQgAtJZH8veRvkAZMD7Uzpbu9rtv5jgJraN9WYL2I3RlyS9O09UmKbWdu
-         kQaqYrlhc/ETpqv3KobedJ3I+LOUhGXaxxD2cT8V+BR9iz0dlV4dSev4LBJKg7LZHFHc
-         qkQigq3BDq/+BWje75gZobF1uftk36Ih8orY+Lcd3ntwo24CqIUZmx9nQ/vtYzuqNBxD
-         xnFAFYdPyjplSgCOxEgzGR6M2qceqvkZe0YXrFIt1wCuxK3POcSGVTff1XktWB0X4aWZ
-         ihSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXYLH9d7SZhLu01lqG3NEOSYN5A2G6875iQ5LoQc2eRE//nx3jbdzIIaWtvbsYVcgCdBT/yUQ1OML4W5vM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvOWnsO8rCNh6G2P0OAEbeeFfiIr5Q5b2SCGLbQSC4G7bip3/C
-	OFLzbik/2hganlnuxnDLMRLKC7Yyn/VIeLv2XGvx+g6vV9I2ivRkDhltgUpPkUs78nI=
-X-Gm-Gg: ASbGncuiKzXV0hkC58i67pAoaf+2HaeIAIb+c57dAlMiVa2Dkz7P/7ck3fzdQXcny1p
-	BmafTmRlfgdPkLARL2lQaI8VV2syz7/hMMyMOPQTHVM+d8bZR0RWhgzoB/icRnjOwGld39fNctM
-	3lkgLTrGxEOGABYrE1PslrOlxG0WTsiD8CwbLXlYstP79OeWXLVLguqXBK5zDfsnsQ112PEAQoa
-	tWq75+XA/8eFJGU87eHBqVSaq4imfDbtcxVEQci2YJGeIpYIY78qbJwwERZ+l1NZuTwUynaKJvs
-	m/rt7CtuT7y/silCmNToex3Rbe/8Shi7pW0/PbGN5oub549ZlhK32gQgsRv3RTw0PTKOgN3qZui
-	gJ2H1nZ3ArDRp7RaXF65DeIw=
-X-Google-Smtp-Source: AGHT+IF8uzdNqEI314pocfYYQWBeowDkb4F+LwQ50ySlNHswx1qiGOLWHPFnpEwYjMluBjhKg3WXFg==
-X-Received: by 2002:aa7:88c1:0:b0:748:1bac:aff9 with SMTP id d2e1a72fcca58-74861888babmr2307166b3a.18.1749538849387;
-        Tue, 10 Jun 2025 00:00:49 -0700 (PDT)
-Received: from mattc--Mac15.purestorage.com ([165.225.242.245])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-7482af7af0csm7038483b3a.62.2025.06.10.00.00.47
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 10 Jun 2025 00:00:48 -0700 (PDT)
-From: Matthew W Carlis <mattc@purestorage.com>
-To: macro@orcam.me.uk
-Cc: alex.williamson@redhat.com,
-	bhelgaas@google.com,
-	davem@davemloft.net,
-	david.abdurachmanov@gmail.com,
-	edumazet@google.com,
-	helgaas@kernel.org,
-	kuba@kernel.org,
-	leon@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	lukas@wunner.de,
-	mahesh@linux.ibm.com,
-	mattc@purestorage.com,
-	mika.westerberg@linux.intel.com,
-	netdev@vger.kernel.org,
-	npiggin@gmail.com,
-	oohall@gmail.com,
-	pabeni@redhat.com,
-	pali@kernel.org,
-	saeedm@nvidia.com,
-	sr@denx.de,
-	wilson@tuliptree.org
-Subject: PCI: Work around PCIe link training failures
-Date: Tue, 10 Jun 2025 00:00:44 -0700
-Message-Id: <20250610070044.92057-1-mattc@purestorage.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <alpine.DEB.2.21.2410031135250.45128@angie.orcam.me.uk>
-References: <alpine.DEB.2.21.2410031135250.45128@angie.orcam.me.uk>
+        bh=hRxCgz3ov39f3NkO1C/Ste+6+jR42JfHSBXHuL3upq4=;
+        b=tt/24ja/FJWz7AaCUe4ePNQZqqkJR/zP65ubvxJ7x/8nDMeRoTfmt+Uyoj6Nn5F3dx
+         BnbF3TGA4ELc9UKnpMzloru4dLB5dPOTUl7IOmgb+6EbgTGKe2ZVUDMT3cIUdhKwNiAB
+         VC/CkXbS2G71zhaiwLB+1W2cWasMVKUcHNWfYpZr1JW8NoqxR9fDHF88nF/tt8Vtm0Xp
+         lGxRlnE3akskMAcPP/TJYCWNYGgE0ooHmZc4qmV7TTZpl3slXb5Z/rsCj0xromC4DnBt
+         3n7FDh43hlUDk+lpoVyh1gIzd7WKSKs/GCzTnxSL75Tf+a3vIZgjkCLaZi197aUiCXbp
+         nIOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUkJgClz6Akb76pgldleTntYaqZFgHRtecoeinTIh+D4NWYWQZrKUqFgasBiyER8H9FQ2/earejJnUFWDM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeQfe+96E0M4bxqWQKSdvhctUJcfjpjeBVXP3B65ZVIN7Xxa0O
+	0660oIq6Kihgh9EaMqdCPjYRp1/SWlZ4FXbqXdtAVEgg6uCD7/LJ1diD8F95tJujlpjw6JhkNnH
+	tQLQ3DTn1Yf2am9X0eKQpbiXXpV+eMZmY5vmg
+X-Gm-Gg: ASbGnctQx4C0Yxe+/0682w34mGlrqaWdLVdk8yw5SfgVBHNVZeXTPPGMt5rlqST09jb
+	TSuzjXFEtoGxOwX/P6oEV9TAO5+rxKGOxfTul17y9/9HCLh/DHfnt77kqkhLd/Du/ayuu5klH98
+	6OT/UCez3j8gkWUeyGemQ/ViB66VkgWSk/w9HkDk1sziRK
+X-Google-Smtp-Source: AGHT+IHQS/YTqX0/RrUUYk+jBcicnmche2QaN2G7qxoFRaV8iI3I4823oDVD+CXzXXILw4YsvumYKvj6iy5XGekoduA=
+X-Received: by 2002:a05:6102:5802:b0:4e5:9608:1298 with SMTP id
+ ada2fe7eead31-4e7a5d9219amr2083010137.9.1749539029690; Tue, 10 Jun 2025
+ 00:03:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250610035043.75448-1-dev.jain@arm.com> <20250610035043.75448-3-dev.jain@arm.com>
+In-Reply-To: <20250610035043.75448-3-dev.jain@arm.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Tue, 10 Jun 2025 19:03:38 +1200
+X-Gm-Features: AX0GCFssF_BfaHBSnwwuRHl4g5EboG5sCNvwQwRg64OyRx_hLEwKVZyhAQ8jJH4
+Message-ID: <CAGsJ_4xPq-eJ7JE-SFhhO2TboH8HKGifaYCwKw8cqd_2K=uD4w@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] mm: Optimize mremap() by PTE batching
+To: Dev Jain <dev.jain@arm.com>
+Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com, 
+	lorenzo.stoakes@oracle.com, vbabka@suse.cz, jannh@google.com, 
+	pfalcato@suse.de, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	david@redhat.com, peterx@redhat.com, ryan.roberts@arm.com, mingo@kernel.org, 
+	libang.li@antgroup.com, maobibo@loongson.cn, zhengqi.arch@bytedance.com, 
+	anshuman.khandual@arm.com, willy@infradead.org, ioworker0@gmail.com, 
+	yang@os.amperecomputing.com, baolin.wang@linux.alibaba.com, ziy@nvidia.com, 
+	hughd@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello again.. It looks like there are specific system configurations that are
-extremely likely to have issues with this patch & result in undesirable
-system behavior..
+Hi Dev,
 
-  Specifically hot-plug systems with side-band presence detection & without
-Power Controls (i.e PwrCtrl-) given to config space. It may also be related
-to presence on U.2 connectors being first-to-mate/last-to-break, but
-I don't have much experience with the different connectors. The main
-issue is that the quirk is invoked in at least two common cases when
-it is not expected that the link would train. 
-  For example, if I power off the slot via an out-of-band vendor specific
-mechanism we see the kernel decide that the link should be training,
-presumable because it will see PresDet+ in Slot Status. In this case it
-decides the link failed to train, writes the Gen1 speed value into TLS
-(target link speed) & returns after waiting for the link one more time.
-The next time the slot is powered on the link will train to Gen1 due to TLS.
-  Another problematic case is when we physically insert a device. In my case
-I am using nvme drives with U.2 connectors from several different vendors.
-The presence event is often generated before the device is fully powered on
-due to U.2 assigning presence as a first-to-mate & power being last-to-mate.
-I believe in this case that the kernel is expecting the link to train too
-soon & therefore we find that the quirk often applies the Gen1 TLS speed.
-Later, when the link comes up it is frequently observed at Gen1. I tried
-to unset bit 3 in Slot Control (Presence Detect Changed Enable), but we
-still hit the first case I described with powering off slots.
-  I should be clear and say that we are able to see devices forced to Gen1
-extremely often in the side-band presence configuration. We would really like
-to see this "quirk" removed or put behind an opt-in config since it causes
-significant regression in common configurations of pcie-hotplug. I have tried
-to come up with ideas to modify/improve the quirk, but I am not very
-confident that there is a good solution if the kernel cannot know for certain
-whether the link is expected to train.
+On Tue, Jun 10, 2025 at 3:51=E2=80=AFPM Dev Jain <dev.jain@arm.com> wrote:
+>
+> Use folio_pte_batch() to optimize move_ptes(). On arm64, if the ptes
+> are painted with the contig bit, then ptep_get() will iterate through all=
+ 16
+> entries to collect a/d bits. Hence this optimization will result in a 16x
+> reduction in the number of ptep_get() calls. Next, ptep_get_and_clear()
+> will eventually call contpte_try_unfold() on every contig block, thus
+> flushing the TLB for the complete large folio range. Instead, use
+> get_and_clear_full_ptes() so as to elide TLBIs on each contig block, and =
+only
+> do them on the starting and ending contig block.
+>
+> For split folios, there will be no pte batching; nr_ptes will be 1. For
+> pagetable splitting, the ptes will still point to the same large folio;
+> for arm64, this results in the optimization described above, and for othe=
+r
+> arches (including the general case), a minor improvement is expected due =
+to
+> a reduction in the number of function calls.
+>
+> Signed-off-by: Dev Jain <dev.jain@arm.com>
+> ---
+>  mm/mremap.c | 39 ++++++++++++++++++++++++++++++++-------
+>  1 file changed, 32 insertions(+), 7 deletions(-)
+>
+> diff --git a/mm/mremap.c b/mm/mremap.c
+> index 180b12225368..18b215521ada 100644
+> --- a/mm/mremap.c
+> +++ b/mm/mremap.c
+> @@ -170,6 +170,23 @@ static pte_t move_soft_dirty_pte(pte_t pte)
+>         return pte;
+>  }
+>
+> +static int mremap_folio_pte_batch(struct vm_area_struct *vma, unsigned l=
+ong addr,
+> +               pte_t *ptep, pte_t pte, int max_nr)
+> +{
+> +       const fpb_t flags =3D FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+> +       struct folio *folio;
+> +
+> +       if (max_nr =3D=3D 1)
+> +               return 1;
+> +
+> +       folio =3D vm_normal_folio(vma, addr, pte);
+> +       if (!folio || !folio_test_large(folio))
 
-Thanks,
--Matt
+I'm curious about the following case:
+If the addr/ptep is not the first subpage of the folio=E2=80=94for example,=
+ the
+14th subpage=E2=80=94will mremap_folio_pte_batch() return 3?
+If so, get_and_clear_full_ptes() would operate on 3 subpages of the folio.
+In that case, can unfold still work correctly?
+
+Similarly, if the addr/ptep points to the first subpage, but max_nr is
+less than CONT_PTES, what will happen in that case?
+
+
+> +               return 1;
+> +
+> +       return folio_pte_batch(folio, addr, ptep, pte, max_nr, flags, NUL=
+L,
+> +                              NULL, NULL);
+> +}
+> +
+>  static int move_ptes(struct pagetable_move_control *pmc,
+>                 unsigned long extent, pmd_t *old_pmd, pmd_t *new_pmd)
+>  {
+> @@ -177,7 +194,7 @@ static int move_ptes(struct pagetable_move_control *p=
+mc,
+>         bool need_clear_uffd_wp =3D vma_has_uffd_without_event_remap(vma)=
+;
+>         struct mm_struct *mm =3D vma->vm_mm;
+>         pte_t *old_ptep, *new_ptep;
+> -       pte_t pte;
+> +       pte_t old_pte, pte;
+>         pmd_t dummy_pmdval;
+>         spinlock_t *old_ptl, *new_ptl;
+>         bool force_flush =3D false;
+> @@ -185,6 +202,8 @@ static int move_ptes(struct pagetable_move_control *p=
+mc,
+>         unsigned long new_addr =3D pmc->new_addr;
+>         unsigned long old_end =3D old_addr + extent;
+>         unsigned long len =3D old_end - old_addr;
+> +       int max_nr_ptes;
+> +       int nr_ptes;
+>         int err =3D 0;
+>
+>         /*
+> @@ -236,14 +255,16 @@ static int move_ptes(struct pagetable_move_control =
+*pmc,
+>         flush_tlb_batched_pending(vma->vm_mm);
+>         arch_enter_lazy_mmu_mode();
+>
+> -       for (; old_addr < old_end; old_ptep++, old_addr +=3D PAGE_SIZE,
+> -                                  new_ptep++, new_addr +=3D PAGE_SIZE) {
+> +       for (; old_addr < old_end; old_ptep +=3D nr_ptes, old_addr +=3D n=
+r_ptes * PAGE_SIZE,
+> +               new_ptep +=3D nr_ptes, new_addr +=3D nr_ptes * PAGE_SIZE)=
+ {
+>                 VM_WARN_ON_ONCE(!pte_none(*new_ptep));
+>
+> -               if (pte_none(ptep_get(old_ptep)))
+> +               nr_ptes =3D 1;
+> +               max_nr_ptes =3D (old_end - old_addr) >> PAGE_SHIFT;
+> +               old_pte =3D ptep_get(old_ptep);
+> +               if (pte_none(old_pte))
+>                         continue;
+>
+> -               pte =3D ptep_get_and_clear(mm, old_addr, old_ptep);
+>                 /*
+>                  * If we are remapping a valid PTE, make sure
+>                  * to flush TLB before we drop the PTL for the
+> @@ -255,8 +276,12 @@ static int move_ptes(struct pagetable_move_control *=
+pmc,
+>                  * the TLB entry for the old mapping has been
+>                  * flushed.
+>                  */
+> -               if (pte_present(pte))
+> +               if (pte_present(old_pte)) {
+> +                       nr_ptes =3D mremap_folio_pte_batch(vma, old_addr,=
+ old_ptep,
+> +                                                        old_pte, max_nr_=
+ptes);
+>                         force_flush =3D true;
+> +               }
+> +               pte =3D get_and_clear_full_ptes(mm, old_addr, old_ptep, n=
+r_ptes, 0);
+>                 pte =3D move_pte(pte, old_addr, new_addr);
+>                 pte =3D move_soft_dirty_pte(pte);
+>
+> @@ -269,7 +294,7 @@ static int move_ptes(struct pagetable_move_control *p=
+mc,
+>                                 else if (is_swap_pte(pte))
+>                                         pte =3D pte_swp_clear_uffd_wp(pte=
+);
+>                         }
+> -                       set_pte_at(mm, new_addr, new_ptep, pte);
+> +                       set_ptes(mm, new_addr, new_ptep, pte, nr_ptes);
+>                 }
+>         }
+>
+> --
+> 2.30.2
+>
+
+Thanks
+Barry
