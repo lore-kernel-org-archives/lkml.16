@@ -1,134 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CCD12980BC;
-	Tue, 10 Jun 2025 12:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D382980BC;
+	Tue, 10 Jun 2025 12:50:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749559792; cv=none; b=iozG9rQUxKEGaRCstt1DPE6yfMbkNQw81F16DbZkwVNJRxFqVErIip6ds0COfJSq98XcjQHLu/TOJqsiFo0AS8DEapR8EE84GUtHSzQX6aJDEocQCAVtbcxNZdxlBaEMORtRbUouizFsBGUY78kgqsALRLZ5vEhOqPI2G11462w=
+	t=1749559813; cv=none; b=EvMA3SiIVWNsSPgHAJIr0AuzyJAeGCpRNC8KS5LhnYWNmY+UncYBf4R/CdAOLnQljEryOUUG8HKtrYZmBGByf6MWzNVRw5vDTDirPCxXzQ1l7HIx4PCGqvv5jEpI5maAkIJ/4sAF3/N+38LMfgd8fKUwrb3WxZPrEc+Y2fc5vPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749559792; c=relaxed/simple;
-	bh=W25gwF8YLypX00uVpfkkP6wlbnXPxSb2jvfHBAnd+vY=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=lJubkXEyRNO7jdi++gHu7bfUrSJGBBAnGd+BIolsmEnUK1XWrW6BFB3HDkL61aGyOjiEXk+ILt+dKI1t8ujKVARDfxPZmNs5egQXCzBFza/AWBJZakZp5QZzueSe1Ptyb6J8ihdFI5DePMllyGFCV90VKxwjlfmBvr3T845AUK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VwUg6wmW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749559813; c=relaxed/simple;
+	bh=xYRmbHCiSt/4kk7rpcC2ftng1cfPPYAJDj28TMRmGfo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To; b=sIElr9/H+9+hDsXS4CxsBaXILfChvMO/tv1agV/1m4oW1J0EAd+bxZ/qh/3NcFtXm0WDry4xAtlVR4/BS3X8u9fC00ftjU8g99nTO8/7mw+GLmdjgSWh6Bz9mzCKYwfA2yKTUDG8ATK80pw1+28O0ZoUe8g24RgH+GjJF8xHmh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dUtQ0X6G; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VwUg6wmW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF2F3C4CEED;
-	Tue, 10 Jun 2025 12:49:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749559792;
-	bh=W25gwF8YLypX00uVpfkkP6wlbnXPxSb2jvfHBAnd+vY=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=VwUg6wmWcuTukn6x1MQGWJPG+DKhnF59n+5X7dRAFpNe9wLyOZUORUruold83pPJB
-	 bj9cUFcdGcwRTmqRe1QJrvcNaGpT4Th/3mWc72HdtaMPxBjuw3O5XQblI2i2oY8nXT
-	 L3taybLarOHsO/T1+5z3pIpkQdsF4ZnOF8zKXn8BaNBkC7oX6XCBQYxvLxoPp9NhLy
-	 1nk/dp4mTL8TcPpEScGuJW6VI+BWDrvXhKEfsxcmbs7RzsSBqetC126UdT5W2iZFMp
-	 gdfi9PFgSsMe3rNi1AC5u9W0TCBRza9ek1otV993a1VUp7GYyGo2rrL+0+2dXcG4YJ
-	 8EDLEncuDDzvg==
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dUtQ0X6G"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7280B43A10;
+	Tue, 10 Jun 2025 12:50:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1749559803;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=3C3o0IMeAbxHYY9zE2a3M74zmHC7R/FFLuOJDYKXdFo=;
+	b=dUtQ0X6GNgLioF8U6KVXXljzf7QwK1Ud0DXKLaPwnEvjWk3oLvVsVG8XKWmkHQdUws/HBt
+	AQf4gl67TWtpUx8paycCDT9ATRIu1XQ7GoND8fIOdE/eks08h4/GoF1BthM8GCDrXswD18
+	be0+dBf7PeP39aksSwowtofcWWuWSJqPTgF6szvefIojucBhbhFBDuZGfxvsB07PDEXNFO
+	VdeLKMjWxwbWLn6NMSb5YBKvtVN/bzylgZqxRC7BRAqhbYjKdSXP1xJHS3g1N3geqct4tn
+	s4ThtPJ/2j1nExrOC5/ECeN53aw88qCa4uuaCm0tlgdTrVSbcn8+FLPY5YICsg==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Subject: [PATCH ethtool 0/2] Add support for PTP hardware source
+Date: Tue, 10 Jun 2025 14:50:00 +0200
+Message-Id: <20250610-feature_phc_source-v1-0-cbd1adef12aa@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 10 Jun 2025 14:49:47 +0200
-Message-Id: <DAIV6MJAJ5R0.3TZ4IC2KO9MOL@kernel.org>
-Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-pci@vger.kernel.org>, =?utf-8?q?Ma=C3=ADra_Canal?=
- <mcanal@igalia.com>
-Subject: Re: [PATCH v2] rust: types: add FOREIGN_ALIGN to ForeignOwnable
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Andreas Hindborg" <a.hindborg@kernel.org>, "Danilo Krummrich"
- <dakr@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Alice Ryhl" <aliceryhl@google.com>, "Trevor
- Gross" <tmgross@umich.edu>, "Bjorn Helgaas" <bhelgaas@google.com>,
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Tamir Duberstein" <tamird@gmail.com>, "Viresh Kumar"
- <viresh.kumar@linaro.org>
-X-Mailer: aerc 0.20.1
-References: <20250610-pointed-to-v2-1-fad8f92cf1e5@kernel.org>
-In-Reply-To: <20250610-pointed-to-v2-1-fad8f92cf1e5@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAPgpSGgC/x3MwQqEIBRG4VeJu07QYiJ6lYgQ/R0vRMbVIojef
+ WSW3+KchzKEkWlqHhJcnDntFaZtyEW7f6HYV1Onu48ejFYBtpyC9YhuzekUB+XNAHhv3Rh6quE
+ hCHz/pzOhxJLSRsv7/gAVLyVebQAAAA==
+To: Michal Kubecek <mkubecek@suse.cz>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Andrew Lunn <andrew@lunn.ch>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Jason Xing <kernelxing@tencent.com>, Russell King <linux@armlinux.org.uk>, 
+ Maxime Chevallier <maxime.chevallier@bootlin.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Kory Maincent <kory.maincent@bootlin.com>
+X-Mailer: b4 0.15-dev-8cb71
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddutdejhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffufffkgggtgffvofesthekredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeduudevkefftdelffeiffeikeefueeutddvtdehteehgeekvdejgedvteegffetkeenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedufedprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepfihilhhlvghmuggvsghruhhijhhnrdhkvghrnhgvlhesghhmrghilhdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehmkhhusggvtggvkhesshhushgvrdgtiidprhgtphhtthhopehthhhomhgrshdrphgvthgriiiio
+ hhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhk
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On Tue Jun 10, 2025 at 1:30 PM CEST, Andreas Hindborg wrote:
-> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
-> index 22985b6f6982..0ccef6b5a20a 100644
-> --- a/rust/kernel/types.rs
-> +++ b/rust/kernel/types.rs
-> @@ -21,15 +21,11 @@
->  ///
->  /// # Safety
->  ///
-> -/// Implementers must ensure that [`into_foreign`] returns a pointer whi=
-ch meets the alignment
-> -/// requirements of [`PointedTo`].
-> -///
-> -/// [`into_foreign`]: Self::into_foreign
-> -/// [`PointedTo`]: Self::PointedTo
-> +/// Implementers must ensure that [`Self::into_foreign`] returns pointer=
-s aligned to
-> +/// [`Self::FOREIGN_ALIGN`].
->  pub unsafe trait ForeignOwnable: Sized {
-> -    /// Type used when the value is foreign-owned. In practical terms on=
-ly defines the alignment of
-> -    /// the pointer.
-> -    type PointedTo;
-> +    /// The alignment of pointers returned by `into_foreign`.
-> +    const FOREIGN_ALIGN: usize;
-> =20
->      /// Type used to immutably borrow a value that is currently foreign-=
-owned.
->      type Borrowed<'a>;
-> @@ -39,18 +35,20 @@ pub unsafe trait ForeignOwnable: Sized {
-> =20
->      /// Converts a Rust-owned object to a foreign-owned one.
->      ///
-> +    /// The foreign representation is a pointer to void. Aside from the =
-guarantees listed below,
+Add description of the PTP hardware source to indicate whether the
+timestamp comes from a PHY or a MAC.
 
-I feel like this reads better:
-
-s/guarantees/ones/
-
-> +    /// there are no other guarantees for this pointer. For example, it =
-might be invalid, dangling
-
-We should also mention that it could be null. (or is that assumption
-wrong?)
-
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
-Cheers,
-Benno
+Kory Maincent (2):
+      update UAPI header copies
+      tsinfo: Add support for PTP hardware source
 
-> +    /// or pointing to uninitialized memory. Using it in any way except =
-for [`from_foreign`],
-> +    /// [`try_from_foreign`], [`borrow`], or [`borrow_mut`] can result i=
-n undefined behavior.
-> +    ///
->      /// # Guarantees
->      ///
-> -    /// The return value is guaranteed to be well-aligned, but there are=
- no other guarantees for
-> -    /// this pointer. For example, it might be null, dangling, or point =
-to uninitialized memory.
-> -    /// Using it in any way except for [`ForeignOwnable::from_foreign`],=
- [`ForeignOwnable::borrow`],
-> -    /// [`ForeignOwnable::try_from_foreign`] can result in undefined beh=
-avior.
-> +    /// - Minimum alignment of returned pointer is [`Self::FOREIGN_ALIGN=
-`].
->      ///
->      /// [`from_foreign`]: Self::from_foreign
->      /// [`try_from_foreign`]: Self::try_from_foreign
->      /// [`borrow`]: Self::borrow
->      /// [`borrow_mut`]: Self::borrow_mut
-> -    fn into_foreign(self) -> *mut Self::PointedTo;
-> +    fn into_foreign(self) -> *mut crate::ffi::c_void;
-> =20
->      /// Converts a foreign-owned object back to a Rust-owned one.
->      ///
+ netlink/tsinfo.c                       |  34 +++++++++
+ uapi/linux/ethtool.h                   | 134 +++++++++++++++++----------------
+ uapi/linux/ethtool_netlink_generated.h |  19 +++--
+ uapi/linux/if_link.h                   |  15 ++++
+ 4 files changed, 132 insertions(+), 70 deletions(-)
+---
+base-commit: 9338aa51d4856273539a052332de3695e09620bd
+change-id: 20250610-feature_phc_source-d16eeddac8f3
+
+Best regards,
+-- 
+Köry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
