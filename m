@@ -1,230 +1,142 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C4EC225A32
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 14:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B5142A8B;
+	Tue, 10 Jun 2025 14:14:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749564836; cv=none; b=EQzP0Ku1g5ZfqO/qSV21Ns6/6EOND4J7RiSu5wjHj84TBlRFPYV4O9Flssjdu5qmeypFtw4724sizh8yVP57im8YATryKoHEYpK2o0L2XfJAFBzDLn4e8OrRlmV5FLc0AP642AEidvm0wWm0TT/u8sNg7zu553SpcBXQizc7jx4=
+	t=1749564870; cv=none; b=YvAt46+FQBKuqe+058Jr8jpjVkD8SD/yEZtgZwsTnZy1ct7+DT3Oqe70FOWYg5XGVdZ636dPBgCab7RAg84oyUEB7L0vzcUMBis22yRryzzEDK1RMBaDL+VJ4svi3FGddjEkPL+cG9nR9dAOgv51QE73ELEU+At2l4qtMxrSGDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749564836; c=relaxed/simple;
-	bh=mCi2Lk1ZS1odoDUcbstUDUsvqfLqxYiCBM41SWzjhLI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F1rx/FQXR4K6U2hphZZ2O+iOWe2y8Ok19TvJXqjBTUqLBUia1rWNHSmDVu9qy7HA2qnK+L9KVKlU9V47f7nDQArdB7uW6UScQhTe1ZSdy0hzJD8M79+Rfn+bNhCQ1y823U59BRgN1HbMgLeuxH12UE3uE+8vyOTo1I/29b6vYr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UIYK7eHB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=w0XR/JIU; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=C9hvL1E+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Gm7jUAe6; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1749564870; c=relaxed/simple;
+	bh=sPd2q1kJbN8qnD3LntQitJqqVFUiNmhSJ4fKZSeUThU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=srPMpNtA7DIJbNU/zAWgJ0beYInB2PhBpgyeB85neD1IYuZldM6CZD1380QFqrxyEOGbsI622Zo8h5IZPWYaswZaa4SMARllkZ3GTUKm7HhCpJo5O48F9jMKVgLA0XbAb1G+l735fxveVI36GQQ0tl7WU8w8ggLnjX0bec7DFa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g8UlAxUx; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UIYK7eHB";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="w0XR/JIU";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="C9hvL1E+";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Gm7jUAe6"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id EEEB11F76B;
-	Tue, 10 Jun 2025 14:13:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749564832; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1MQSXXafvP/LLujHfyD/l7INR/OL5srFwLiZqmlLeww=;
-	b=UIYK7eHB0AF9rpEztfwaWmAqGLJ/lMc1jm8teffNbo5hIr+hpjhM/Xq7p3bkqsZJ5pePRL
-	BGod60gQpIKzmVkNGySgGqls4ea9KjQTZw4ccdh7TT1/7KGhFX12y2YtnzUnD0bgWUFV7K
-	PZFoCHmvSYs7j85Wt959OYiyVLCBfxw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749564832;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1MQSXXafvP/LLujHfyD/l7INR/OL5srFwLiZqmlLeww=;
-	b=w0XR/JIUTDWdcy8kCxYLuuLdNBG+ekiJ8+EL2keuBdlgJiWFOYZGJByacAeRzlIRO9US/M
-	m+1QSDHZtdG+irBw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=C9hvL1E+;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Gm7jUAe6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749564831; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1MQSXXafvP/LLujHfyD/l7INR/OL5srFwLiZqmlLeww=;
-	b=C9hvL1E+2HIk8OagG9rvR6rflGt2gg3GY7VeJAkv/DU0QFmGG78fJD0q8niZtv1GCK9QVV
-	wa9xxkzx4VDzE+CJcMcWGiGhUXgxbzimDnDDdk3CTvqv5EI0FrEYHug7CI8YqEvzrod0Y3
-	vJQjWnZCzd0dGoL0iHyBH+0lBNB5UlQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749564831;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1MQSXXafvP/LLujHfyD/l7INR/OL5srFwLiZqmlLeww=;
-	b=Gm7jUAe6YI8zWx0kaLtiFebWapGhfZfXSscjgRwmHFKTFmEhyslcbNk3tihMs/fZLx/Y+T
-	bTves1OV2m3xb7CQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 77D57139E2;
-	Tue, 10 Jun 2025 14:13:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id efZnGp89SGiwNQAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Tue, 10 Jun 2025 14:13:51 +0000
-Date: Tue, 10 Jun 2025 16:13:45 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: Peter Xu <peterx@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	David Hildenbrand <david@redhat.com>,
-	James Houghton <jthoughton@google.com>,
-	Gavin Guo <gavinguo@igalia.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/3] mm, hugetlb: Clean up locking in hugetlb_fault
- and hugetlb_wp
-Message-ID: <aEg9mTDDA1TXJ9by@localhost.localdomain>
-References: <20250602141610.173698-1-osalvador@suse.de>
- <20250602141610.173698-2-osalvador@suse.de>
- <aD2_0qoh1Os6srsA@x1.local>
- <aD4NyEmRc50OCUBy@localhost.localdomain>
- <aD4X68QSmrvI4P_D@x1.local>
- <aD79vg-jQQU69raX@localhost.localdomain>
- <aD8NUSUV5zA4yNY3@x1.local>
- <aD8_c9uEMn6NXXAX@x1.local>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g8UlAxUx"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-32ac52f78c1so55855131fa.3;
+        Tue, 10 Jun 2025 07:14:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749564867; x=1750169667; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vuMEGKtcKU7mmxYrWQc80Di8yLcBsgrY66zcTsKw9jA=;
+        b=g8UlAxUxrXM4AsYNAA8aOhoRbCxuPAcvCUC28HKuwkE5XUq08VNP9dvqgVwhtcEWyF
+         zImAtUEH2m+Oo5fbH0p+wEThiQLtpBaGv1O9ph6wTEEbi8znOkBRu+hBcrhcPyxD6FBd
+         4IJGpQlRSjS71G3y0qrH35W3VUfZAsOh6VK4G70zAHIo25l8nbOWvo2e+L32ZMZwLxwB
+         Saq40EEuYgdPN3v2IvOV41NohXG/hbOZ4jl5BAARzhD5phxSkZYFDdADlijxm4n4Y9US
+         VOxh0MtBzTAJUGmj39Yh0q7ja4T3xXKjg1sLY53lOnovViJ/1jcG4P1yH2wVgYLGjR2Q
+         j6hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749564867; x=1750169667;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vuMEGKtcKU7mmxYrWQc80Di8yLcBsgrY66zcTsKw9jA=;
+        b=bQZ4Pv4k7RmBSHz1JgVDtM6uWuCLZ0mfzlb+WaZCMfWaiqZn9tMlK8ZcuuZ3BVesC6
+         VRPJ+KvRut1ZllExL20oPdUBc5gxnxWJSgYKfgW1yf0P70QAnBI9UEVOvEa/53qPN19M
+         HS+SLad50/QEEnn8PO/9PrV4wi5OrBhqbOesfhRn/FMx3kM2ujFNRrp3xzOXXJBB/pEM
+         5BWsdr5qOe47NZjsaGypzOag5k7LjypRbOoufzpirFup0Ds3yrul+wMGQYw8EijQRV4x
+         xGis3Dzlt+9XRuStwM0q1otaWeg6KR3gxyLFqs+pu9oeu6gFZh2qQqUrx32A7P/mM1/e
+         umtw==
+X-Forwarded-Encrypted: i=1; AJvYcCUHna4Pr6LqCVGR+P1y+VkJzgc8mhb55I4pkBxVxbzswb0oBvh1Hbc80C9ZjR2kUzIWZclWY8bbtYvte/U=@vger.kernel.org, AJvYcCVoWOpO9aR3ZGm1CTPC6heKUjwmotd4oFYipiKV+RmcrkH0TOUZnKrO8moaY7wldJ7Ryl7vgmIf@vger.kernel.org, AJvYcCWsxhbz4rSi4lxorsfztj2LXoju7Z4ARj06D0/xhVZfrBEvAPytokcmor46xh9oNCy28lUN59GKlhgO@vger.kernel.org, AJvYcCX0miSQcONPypmRY0DYXZRCcac3ZQsjScNUVFATHFkku5FLu2gWC8SBEt1L/S2mbKfvdPsNU8Il5ujSTYEfhTU=@vger.kernel.org, AJvYcCXKhBKzxZLJ5ar1LwR1FLQWKM3+i22C7QFNjM6+Nw7z1rVeCWB1cADuOb0LWvqvQ1HkoiECmDQfLrmf@vger.kernel.org, AJvYcCXNw9qqJ9xrIbNYR30U0L2mwGU9KYPDRXXSJJzY1btWsC0FDVK9gVIY6ysoJ65B0tCUrje0iPTBSg8BXJPp@vger.kernel.org, AJvYcCXQ+nBdjDmbhD7bxfYB32xvFQHL5CXV5/hLY/VcKx8DUfKsAFgS1r1EPBal0lWXseaH6HZ1/u+z6Dn/icP+@vger.kernel.org, AJvYcCXv+VaQoxkq9k6+VmkXcKXwuULAQhe6IG6/zc+2MOpH0FLvODcTo1lJ6mnIJ590eGaeunbIewbdLTqD4tNtry87@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywh9fyHduOEO/xYcSna2NypfHSg3eCUZVoSn7jl6yJLhnUnidT8
+	gUrrBg9M5izryLwge1HKF7OXZxAwF1duBMegLL560D/fnFKtLXbmeG0M9THgL76iGr7KIh6ef3e
+	DyeicIQKT7iL6liO+oZg5CqzBQPHvxiQ=
+X-Gm-Gg: ASbGncu1NsWIngkWysdKWPmXIgwAxni+ocAXc+pHvae1QQ6l+NNatw2wcxUIOmo7X1u
+	ok3btoL2x7XqQXdLKsf/L70wyxsFETcnFwODB+2XniwQKLD5hntt3HtoDm2kCRYAsDF/CKITQ/c
+	yKBv6dbl59AeaHt1ALQDmwDsnCEmumnPUykGqR65IdOPku0i6iIcGa7WoMdRs=
+X-Google-Smtp-Source: AGHT+IFs+FOaKv26OTPjKCXkGEVIsKYLeIeoc9L5o7yKIFbtvD9PHVbw58XaSCpX4CNs2yC2qsatn7XHITlBY36o8SI=
+X-Received: by 2002:a05:651c:19a2:b0:32a:6b16:3a27 with SMTP id
+ 38308e7fff4ca-32adfe1dbf3mr46462091fa.35.1749564866581; Tue, 10 Jun 2025
+ 07:14:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aD8_c9uEMn6NXXAX@x1.local>
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: EEEB11F76B
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Score: -4.51
-X-Spam-Level: 
+References: <20250418-ptr-as-ptr-v10-0-3d63d27907aa@gmail.com>
+ <20250418-ptr-as-ptr-v10-4-3d63d27907aa@gmail.com> <CANiq72kWtEsXDuoXpbTNRLiZ=c==Ne=v4igxCWMwWFj0LOC-Yw@mail.gmail.com>
+In-Reply-To: <CANiq72kWtEsXDuoXpbTNRLiZ=c==Ne=v4igxCWMwWFj0LOC-Yw@mail.gmail.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Tue, 10 Jun 2025 10:13:50 -0400
+X-Gm-Features: AX0GCFuew5JuDEc_jx48ZSACU5BVvcLvpbd6GdnUaVlDV59_UtgyTusAE2HFbXQ
+Message-ID: <CAJ-ks9ny_VNvKM-w04kkk4Yw=UpYEt82TyFZZuXEFK=DxfwcgQ@mail.gmail.com>
+Subject: Re: [PATCH v10 4/6] rust: enable `clippy::as_underscore` lint
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
+	Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Frederic Weisbecker <frederic@kernel.org>, Lyude Paul <lyude@redhat.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, 
+	linux-block@vger.kernel.org, devicetree@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 03, 2025 at 02:31:15PM -0400, Peter Xu wrote:
-> > There're actually three places this patch touched, the 3rd one is
-> > hugetlb_no_page(), in which case I also think we should lock it, not only
-> > because file folios normally does it (see do_fault(), for example), but
-> > also that's exactly what James mentioned I believe on possible race of
-> > !uptodate hugetlb folio being injected by UFFDIO_CONTINUE, along the lines:
-> > 
-> > 		folio = alloc_hugetlb_folio(vma, vmf->address, false);
-> >                 ...
-> > 		folio_zero_user(folio, vmf->real_address);
-> > 		__folio_mark_uptodate(folio);
-> 
-> I think I was wrong here at least partly..  So what this patch changed is
-> only the lookup of the no_page path, hence what I said here doesn't apply.
-> This patch also mentioned in the commit message on why James's concern was
-> ok - the fault mutex was held.  Yes I agree. Actually even without fault
-> mutex, the folio is only injected into page cache after mark uptodate.. so
-> it looks fine even without the mutex.
-> 
-> Though it's still true there're three paths to be discussed, which should
-> include no_page, and it's still needed to be discussed when any of us like
-> to remove folio lock even in the lookup path.
-> 
-> For example, I'm not sure whether it's always thread safe to do
-> folio_test_hwpoison() when without it, even with the fault mutex.
-> 
-> Sorry for the confusion, Oscar.
+On Sun, Jun 8, 2025 at 5:06=E2=80=AFPM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> On Fri, Apr 18, 2025 at 5:37=E2=80=AFPM Tamir Duberstein <tamird@gmail.co=
+m> wrote:
+> >
+> > -            bindings::BLK_STS_OK as _
+> > +            bindings::BLK_STS_OK as u8
+>
+> > -        unsafe { bindings::blk_mq_end_request(request_ptr, bindings::B=
+LK_STS_OK as _) };
+> > +        unsafe { bindings::blk_mq_end_request(request_ptr, bindings::B=
+LK_STS_OK as u8) };
+>
+> For these two: `BLK_STS_OK` was discussed in a previous version, but
+> why are we not using `blk_status_t` type instead?
+>
+> We are even already using it in the first case, and in the second it
+> is the parameter's type.
+>
+> > -/// # use kernel::{bindings, c_str, device::Device, devres::Devres, io=
+::{Io, IoRaw}};
+> > +/// # use kernel::{bindings, c_str, device::Device, devres::Devres, ff=
+i::c_void, io::{Io, IoRaw}};
+>
+> For v11 this can be removed since it is now in the prelude. There may
+> others that can be removed too (I would not add an import just to use
+> it in these patches, but if the prelude is already imported, then we
+> should use it).
+>
+> > -        result.minor =3D bindings::MISC_DYNAMIC_MINOR as _;
+> > +        result.minor =3D bindings::MISC_DYNAMIC_MINOR as i32;
+>
+> Similarly here, shouldn't we use `c_int`?
+>
+> i.e. it is the one in the C side, not the "resolved" `i32` that the
+> compiler suggests.
+>
+> > -                    bindings::wq_misc_consts_WORK_CPU_UNBOUND as _,
+> > +                    bindings::wq_misc_consts_WORK_CPU_UNBOUND as i32,
+>
+> Similarly, this should probably be `c_int` since that is the
+> parameter's type, right?
 
-So, I'm having another go at this.
-I started with replacing the check for cow-on-private-mappings [1].
-
-I'm still to figure out how to approach the other locks though.
-The thing is, we only need the lock in two cases:
-
-1) folio is the original folio in the pagecache: We need to lock it to
-   copy it over to another page (do_fault->do_cow_page locks the folio
-   via filemap_fault).
-   Although, the truth be told, we even lock the folio on read-fault in
-   do_read_fault. Maybe that is just because __do_fault() ends up
-   calling filemap_fault (so it doesn't differentiate?).
-   But that is not a problem, just a note.
-   So it is ok for hugetlb_no_page() to also take the lock when
-   read-faulting.
-   We need to take the lock here.
-
-2) folio is anonymous: We need to take the lock when we want to check
-   if we can re-use the folio in hugetlb_wp.
-   Normal faulting path does it in wp_can_reuse_anon_folio().
-
-Now, the scope for them is different.
-Normal faulting path only locks the anonymous folio when calling
-wp_can_reuse_anon_folio() (so, it isn't hold during the copy), while we
-lock folios from the pagecache in filemap_fault() and keep the lock until
-we have a) mapped it into our pagetables (read-fault) b) or we have
-copied it over to another page.
-
-Representing this difference of timespan in hugetlb is rather tricky as
-is.
-Maybe it could be done if we refactor hugetlb_{fault,no_page,wp} to look
-more alike to the non-hugetlb faulting path.
-E.g: hugetlb_fault could directly call hugetlb_wp if it sees that
-FAULT_FLAG_WRITE is on, instead of doing a first pass to
-hugetlb_no_page, and leave hugetlb_no_page for only RO stuff.
-Not put much though on it, but just an idead of how do_fault() handles
-it.
-
-(In an ideal world hugetlb could be re-routed to generic faulting path
-but we would need to sort out somehow the need to allocate folios,
-reserves etc. so that is still far future)
-
-Anyway, as I said, representing this different of timespan file vs
-anonymous in hugetlb is tricky, so I think the current state of locks,
-with [1] applied is fine.
-
-hugetlb_fault:
-               - locks the folio mapped in pte_orig
-hugetlb_no_page:
-               - locks the folio from the pagecache
-	       - or allocates a new folio
-	         - and inserts it into the pagecache and locks it
-	         - and locks it (anonymous)
-
-So, hugetlb_wp() already gets the folio locked and doesn't have to
-bother about anything else.
-
-Of course, while I think that locks can be keep as they are, I plan to
-document them properly so the next poor soul that comes along doesn't
-have to spend time trying to figure out why we do what we do.
-
-Another thing of keeping the locks is that for the future we can
-potentially rely less on the faulting mutex.
-
-
-[1] https://github.com/leberus/linux/commit/b8e10b854fc3e427fd69d61d065798c7f31ebd55
-
- 
-
--- 
-Oscar Salvador
-SUSE Labs
+Yeah, I think these are good calls - I'll fix it in v11. When would
+you like me to send it?
