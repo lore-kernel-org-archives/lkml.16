@@ -1,203 +1,91 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail.actia.se (mail.actia.se [212.181.117.226])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2AC4239085;
-	Tue, 10 Jun 2025 15:03:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCCFD235355;
+	Tue, 10 Jun 2025 15:03:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.181.117.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749567795; cv=none; b=nhEggROgr+GNy3e6z8F+dehZ9i5RQTN7IiGD1xZZtYo7osl15Hx6PppmOPzKFcfhlhlaNQdiq2/MA2a9gya4RoZVRtj/WP6WIMhHdQKag33Uta/EDpPloR6OpTMwQOWkgd8RShsYsSJqi1TqoHjR3i798uFGY5N92bOUcodmSak=
+	t=1749567816; cv=none; b=Nj4tghxfEK9j+rrLj4rstNla5EBLbvsZI2YnRy4q3w9vr+0too7vJULvMXi8goWPSVuPCoZqXvPZYNUAXQRF0Vgp1yXoIhyc9j6MAmFm40M2HPveOxh7fcAtG5/nkqqK9EiWqcqDJk21HfSj91vWVAVAlyPUjlxNakfNvljyle0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749567795; c=relaxed/simple;
-	bh=fLM1J7jVqqiZf/ld7d1JFGfRWVz+teNjK6y084/tbPs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jol19xdslwFNbi0pe7miihJGHBB/3c80Kd0fqqx1AcirLTjrohoRckvyQmtjLp2df0uzu+DrCko1Fkbv9yaFZwh9XjVGC7i6VWQvgNIXgRTPnpek2a6Ki5S+v+SJx75UUFXxDa3kOb59DrxwxiOmRvvwy5/ZrwyMFHh9QEA6NiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ddxdvx+G; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ddxdvx+G"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-60727e46168so9597590a12.0;
-        Tue, 10 Jun 2025 08:03:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749567792; x=1750172592; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oudxA8JPC06HRjXurKEPIdr/6i2EGFIADSPFZLQo5s0=;
-        b=ddxdvx+GmNN00bF+E1yjB4oBe/F8/At0+fE0nib9tgiiUZGlAIRj2XOiLyxyVVLMwZ
-         emp51Nq7MF2hTzako4tsaHdZ0sWWefVOKcKBvfiSPiiGW+ZheqPCYcyj8NwZHEfafTPB
-         yr2bRggDv9NmjfihYt7BI/hrFInLXjxzLnjVumo3zyrslUTJoS+kHMph6naNqcXya1z5
-         R19EuBYobDQxxvHf3+X+QrXn7ZfMANzpTvxgR1nz7ticd3UHQT2BIzM7j7ez6HMDgiv8
-         IEv+RmWBxoN30smexkoZU/D/JUQpURzUI/xTDScLQsPrFz49Fm89b4VADKCbJ1tb23Wu
-         emXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749567792; x=1750172592;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=oudxA8JPC06HRjXurKEPIdr/6i2EGFIADSPFZLQo5s0=;
-        b=Au/vaoCGIyXbXonrwdVwX8BaV4qtzpbRN9ZUNCoBne65zGD6LxHMYht5opqHyMGO/f
-         D6NE4CFEHYhCOb3W5rYHZt5CI6OyW3oRuHSogvHPHOoIUBPYsTXyiU1GFUZiFjQd3q15
-         aEbZLhxWRTKnnliJt5lUDVxv8yRgPu57PZ6pAbaXWnBz5s9IgLaKNzDG/VWPRx6FbJGY
-         ggEbw2bk7uOlsaDUPSu7PLSMB7paJGUt7e/fUuMl23LtBLsTXPvdZcSzyIRn3KbNRgKC
-         Bn4TELLsf+qeHDTNoSBDSTBBMG8AyrZepQDYzY8qf6/ztw2Hi/XxSFsmT51czjN6SewS
-         e9fA==
-X-Forwarded-Encrypted: i=1; AJvYcCUb0msEYGc2XTFPbwegV6mxbnIQ38Kut2TwMcZfth08WFeKdiglq5AMRj48m8G+G7cz4fpcQdHnOr+rs1Ap@vger.kernel.org, AJvYcCVwsYyP0nQC4E1XHcReFoQnpE77hAm290MdLk+MzcOu1+nmmOLMMvWGsE9CuveJjM8LquEb/1ozwh8J@vger.kernel.org, AJvYcCXmCP67QSg6uXA+zKPB+h5Z0pXXsk4fDQKvvi4HUXZTyuR7EA59QjgGjADwD6S+/ADc5PBGp62886yZGrw2Tlc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YweuDrF6TdutJ1nTEiMJ63cud80ij4OfbHH02XbPMzBarqNDVp1
-	EprlFva1HtnVzUbOVwZQ3lRNdRCiVrITUPkrM6RSrtRTsAM/bA+xnLnZyOoVj4SKGE4=
-X-Gm-Gg: ASbGncvrnuSAgCoBN95Z42s6YS9v/5VJfs9JUYLVeJx9ligtOgcWvNMLknR8h2Ut2KS
-	3HwcDq4jxZWvYCNwhX4RhykRR1McXYEIvVulhub0HeZmw1gUi86rJrsRuO1o/5LbtknGI3VHxLB
-	84/tFbAt6bj3YIbH1hlpva1tMdfkc80AX60Rl5twFW3RT37/lcrGsdaT9/HRPGO6PIwePSZ7iQ6
-	FwRfZs4fiAiCjaQx/tREPqS1LeOwzlConm8zYoTu9q+D+daCmbZ8if4JOlIrAYoIzikiqd6saSS
-	0ZMzmhED78Z3D/LiAQYx5TOTQFjH/W4sQZ4S4zrb4pxBEs2OJpn1HiiLtrkNZ5/+HuplErhuBWi
-	rl6C4F8UUfrbNCwuHUB29ckgt+snqw1xqMF+G
-X-Google-Smtp-Source: AGHT+IH0+AZPTlciHmkGllD/oma4zGiZ8/jDRd0hiXsfTZ/a0TRwnby3WB2wlYT/JkgeoZpgsuc5Fw==
-X-Received: by 2002:a05:6000:4205:b0:3a4:c75c:efd5 with SMTP id ffacd0b85a97d-3a5319b4d6bmr15095416f8f.46.1749567781536;
-        Tue, 10 Jun 2025 08:03:01 -0700 (PDT)
-Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53244e0e3sm12721205f8f.68.2025.06.10.08.03.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 08:03:00 -0700 (PDT)
-Sender: Igor Korotin <igorkor.3vium@gmail.com>
-From: Igor Korotin <igor.korotin.linux@gmail.com>
-To: ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	rafael@kernel.org,
-	gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Cc: boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	dakr@kernel.org,
-	lenb@kernel.org,
-	wedsonaf@gmail.com,
-	viresh.kumar@linaro.org,
-	alex.hung@amd.com,
-	dingxiangfei2009@gmail.com
-Subject: [PATCH v4 1/5] rust: acpi: add `acpi::DeviceId` abstraction
-Date: Tue, 10 Jun 2025 16:00:51 +0100
-Message-ID: <20250610150051.237201-1-igor.korotin.linux@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250610145234.235005-1-igor.korotin.linux@gmail.com>
-References: <20250610145234.235005-1-igor.korotin.linux@gmail.com>
+	s=arc-20240116; t=1749567816; c=relaxed/simple;
+	bh=PTMdhk67xc7XKkOuFv//TWr5oxho4kXHuNSuGFjH+xE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=F7C7RTumPeTJExmIYIqgMNu6WmRAWQrvsZal/XofyVTT9AB/gdC3apGv9QB7Bem6NGGA3XnUGmeKQz7VEaSWckOgdUYzxj9WczPnaQrjmVfz00po28VEssBfZesKf889UpThLnIGR8Q/Oh75CWoUtOVTKgZahit0J6ttUD+6E9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=actia.se; spf=pass smtp.mailfrom=actia.se; arc=none smtp.client-ip=212.181.117.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=actia.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=actia.se
+Received: from S036ANL.actianordic.se (10.12.31.117) by S036ANL.actianordic.se
+ (10.12.31.117) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Jun
+ 2025 17:03:25 +0200
+Received: from S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69]) by
+ S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69%3]) with mapi id
+ 15.01.2507.039; Tue, 10 Jun 2025 17:03:25 +0200
+From: John Ernberg <john.ernberg@actia.se>
+To: Shawn Guo <shawnguo2@yeah.net>
+CC: Xu Yang <xu.yang_2@nxp.com>, Peter Chen <peter.chen@kernel.org>, Shawn Guo
+	<shawnguo@kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: i.MX kernel hangup caused by chipidea USB gadget driver
+Thread-Topic: i.MX kernel hangup caused by chipidea USB gadget driver
+Thread-Index: AQHb2Uk8r5zPXewyY0SsDNZZa8wLobP7lMcAgADIvwA=
+Date: Tue, 10 Jun 2025 15:03:24 +0000
+Message-ID: <8b48c88f-4d70-403a-b1a5-bb80643086ed@actia.se>
+References: <aEZxmlHmjeWcXiF3@dragon>
+ <c56pgxmfscg6tpqxjayu4mvxc2g5kgmfitpvp36lxulpq4jxmg@ces5l7ofab6s>
+ <aEbstxkQmji4tfjf@w447anl.localdomain> <aEeg1s9A0F8x0U2+@dragon>
+In-Reply-To: <aEeg1s9A0F8x0U2+@dragon>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-esetresult: clean, is OK
+x-esetid: 37303A2955B14453627660
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9A91E4C4EE6A4C4B8F9753C8D81719A4@actia.se>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-`acpi::DeviceId` is an abstraction around `struct acpi_device_id`.
-
-This is used by subsequent patches, in particular the i2c driver
-abstractions, to create ACPI device ID tables.
-
-Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
----
- MAINTAINERS         |  1 +
- rust/kernel/acpi.rs | 61 +++++++++++++++++++++++++++++++++++++++++++++
- rust/kernel/lib.rs  |  1 +
- 3 files changed, 63 insertions(+)
- create mode 100644 rust/kernel/acpi.rs
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a92290fffa16..6c809ea30e6a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -302,6 +302,7 @@ F:	include/linux/acpi.h
- F:	include/linux/fwnode.h
- F:	include/linux/fw_table.h
- F:	lib/fw_table.c
-+F:	rust/kernel/acpi.rs
- F:	tools/power/acpi/
- 
- ACPI APEI
-diff --git a/rust/kernel/acpi.rs b/rust/kernel/acpi.rs
-new file mode 100644
-index 000000000000..f9a98dc4eb8a
---- /dev/null
-+++ b/rust/kernel/acpi.rs
-@@ -0,0 +1,61 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Advanced Configuration and Power Interface abstractions.
-+
-+use crate::{bindings, device_id::RawDeviceId, prelude::*};
-+
-+/// IdTable type for ACPI drivers.
-+pub type IdTable<T> = &'static dyn kernel::device_id::IdTable<DeviceId, T>;
-+
-+/// An ACPI device id.
-+#[repr(transparent)]
-+#[derive(Clone, Copy)]
-+pub struct DeviceId(bindings::acpi_device_id);
-+
-+// SAFETY:
-+// * `DeviceId` is a `#[repr(transparent)` wrapper of `struct acpi_device_id` and does not add
-+//   additional invariants, so it's safe to transmute to `RawType`.
-+// * `DRIVER_DATA_OFFSET` is the offset to the `data` field.
-+unsafe impl RawDeviceId for DeviceId {
-+    type RawType = bindings::acpi_device_id;
-+
-+    const DRIVER_DATA_OFFSET: usize = core::mem::offset_of!(bindings::acpi_device_id, driver_data);
-+
-+    fn index(&self) -> usize {
-+        self.0.driver_data as _
-+    }
-+}
-+
-+impl DeviceId {
-+    const ACPI_ID_LEN: usize = 16;
-+
-+    /// Create a new device id from an ACPI 'id' string.
-+    pub const fn new(id: &'static CStr) -> Self {
-+        assert!(id.len() <= Self::ACPI_ID_LEN, "ID exceeds 16 bytes");
-+        let src = id.as_bytes_with_nul();
-+        // Replace with `bindings::acpi_device_id::default()` once stabilized for `const`.
-+        // SAFETY: FFI type is valid to be zero-initialized.
-+        let mut acpi: bindings::acpi_device_id = unsafe { core::mem::zeroed() };
-+        let mut i = 0;
-+        while i < src.len() {
-+            acpi.id[i] = src[i];
-+            i += 1;
-+        }
-+
-+        Self(acpi)
-+    }
-+}
-+
-+/// Create an ACPI `IdTable` with an "alias" for modpost.
-+#[macro_export]
-+macro_rules! acpi_device_table {
-+    ($table_name:ident, $module_table_name:ident, $id_info_type: ty, $table_data: expr) => {
-+        const $table_name: $crate::device_id::IdArray<
-+            $crate::acpi::DeviceId,
-+            $id_info_type,
-+            { $table_data.len() },
-+        > = $crate::device_id::IdArray::new($table_data);
-+
-+        $crate::module_device_table!("acpi", $module_table_name, $table_name);
-+    };
-+}
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 6b4774b2b1c3..5bbf3627212f 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -51,6 +51,7 @@
- 
- pub use ffi;
- 
-+pub mod acpi;
- pub mod alloc;
- #[cfg(CONFIG_AUXILIARY_BUS)]
- pub mod auxiliary;
--- 
-2.43.0
-
+SGkgU2hhd24sDQoNCk9uIDYvMTAvMjUgNTowNCBBTSwgU2hhd24gR3VvIHdyb3RlOg0KPiBIaSBK
+b2huLA0KPiANCj4gT24gTW9uLCBKdW4gMDksIDIwMjUgYXQgMDI6MTc6MzBQTSArMDAwMCwgSm9o
+biBFcm5iZXJnIHdyb3RlOg0KPiANCj4gPHNuaXA+DQo+IA0KPj4gV2UgcHJvYmFibHkgcmFuIGlu
+dG8gdGhlIHNhbWUgcHJvYmxlbSB0cnlpbmcgdG8gYnJpbmcgb25ib2FyZCA2LjEyLCBnb2luZw0K
+Pj4gZnJvbSA2LjEsIG9uIGlNWDhRWFAuIEkgbWFuYWdlZCB0byB0cmFjZSB0aGUgaGFuZyB0byBF
+UCBwcmltaW5nIHRocm91Z2ggYQ0KPj4gY29tYmluYXRpb24gb2YgZGVidWcgdHJhY2luZyBhbmQg
+QlVHX09OIGV4cGVyaW1lbnRzLiBTZWUgaWYgaXQgc3RhcnRzDQo+PiBzcGxhdGluIHdpdGggdGhl
+IGJlbG93IGNoYW5nZS4NCj4+DQo+PiAtLS0tLS0tLS0tLS0tLS0tLT44LS0tLS0tLS0tLS0tLS0t
+LS0tDQo+Pg0KPj4gIEZyb20gMDkyNTk5YWI2ZjllMjA0MTJhN2NhMWViMTE4ZGQyYmU4MGNkMThm
+ZiBNb24gU2VwIDE3IDAwOjAwOjAwIDIwMDENCj4+IEZyb206IEpvaG4gRXJuYmVyZyA8am9obi5l
+cm5iZXJnQGFjdGlhLnNlPg0KPj4gRGF0ZTogTW9uLCA1IE1heSAyMDI1IDA5OjA5OjAxICswMjAw
+DQo+PiBTdWJqZWN0OiBbUEFUQ0hdIFVTQjogY2k6IGdhZGdldDogUGFuaWMgaWYgcHJpbWluZyB3
+aGVuIGdhZGdldCBvZmYNCj4+DQo+PiAtLS0NCj4+ICAgZHJpdmVycy91c2IvY2hpcGlkZWEvdWRj
+LmMgfCA0ICsrKy0NCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxl
+dGlvbigtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9jaGlwaWRlYS91ZGMuYyBi
+L2RyaXZlcnMvdXNiL2NoaXBpZGVhL3VkYy5jDQo+PiBpbmRleCAyZmVhMjYzYTVlMzAuLjU0NGFh
+NGZhMmQxZCAxMDA2NDQNCj4+IC0tLSBhL2RyaXZlcnMvdXNiL2NoaXBpZGVhL3VkYy5jDQo+PiAr
+KysgYi9kcml2ZXJzL3VzYi9jaGlwaWRlYS91ZGMuYw0KPj4gQEAgLTIwMyw4ICsyMDMsMTAgQEAg
+c3RhdGljIGludCBod19lcF9wcmltZShzdHJ1Y3QgY2lfaGRyYyAqY2ksIGludCBudW0sIGludCBk
+aXIsIGludCBpc19jdHJsKQ0KPj4NCj4+ICAgICAgaHdfd3JpdGUoY2ksIE9QX0VORFBUUFJJTUUs
+IH4wLCBCSVQobikpOw0KPj4NCj4+IC0gICB3aGlsZSAoaHdfcmVhZChjaSwgT1BfRU5EUFRQUklN
+RSwgQklUKG4pKSkNCj4+ICsgICB3aGlsZSAoaHdfcmVhZChjaSwgT1BfRU5EUFRQUklNRSwgQklU
+KG4pKSkgew0KPj4gICAgICAgICAgY3B1X3JlbGF4KCk7DQo+PiArICAgICAgIEJVR19PTihkaXIg
+PT0gVFggJiYgIWh3X3JlYWQoY2ksIE9QX0VORFBUQ1RSTCArIG51bSwgRU5EUFRDVFJMX1RYRSkp
+Ow0KPj4gKyAgIH0NCj4+ICAgICAgaWYgKGlzX2N0cmwgJiYgZGlyID09IFJYICYmIGh3X3JlYWQo
+Y2ksIE9QX0VORFBUU0VUVVBTVEFULCBCSVQobnVtKSkpDQo+PiAgICAgICAgICByZXR1cm4gLUVB
+R0FJTjsNCj4+DQo+PiAtLS0tLS0tLS0tLS0tLS0tLT44LS0tLS0tLS0tLS0tLS0tLS0tDQo+IA0K
+PiBIbW0sIEkganVzdCB0ZXN0ZWQgdGhlIGNoYW5nZSBvbiBpLk1YOE1NIGJ1dCBkaWRuJ3Qgc2Vl
+IHRoZSBzcGxhdHRpbmcuDQo+IE1heWJlIHdlIGFyZSBydW5uaW5nIGludG8gYSBzbGlnaHRseSBk
+aWZmZXJlbnQgcHJvYmxlbXM/DQo+IA0KPiBTaGF3bg0KPiANCg0KUGVyaGFwcyB0aGUgaGFuZ2lu
+ZyBwb2ludCBpcyBkaWZmZXJlbnQgaW4gaS5NWDhNTSwgSSB1bmZvcnR1bmF0ZWx5IGRvIA0Kbm90
+IGhhdmUgYW55IGJvYXJkcyB3aXRoIHRoYXQgU29DIG9uIHRoZW0uIFdoZW4gSSB0cmFja2VkIGRv
+d24gdGhlIA0KcHJvYmxlbSBvbiBRWFAgSSB0aHJldyBzaW1pbGFyIEJVR19PTiBzdGF0ZW1lbnRz
+IGluIG1vc3Qgd2hpbGUgbG9vcHMuDQoNCkJ1dCBzaW5jZSBhIGZpeCBpcyB2ZXJ5IGxpa2VseSBp
+ZGVudGlmaWVkIGFscmVhZHkgYnkgeW91IEknbSBub3Qgc3VyZSBpbiANCnRoZSB2YWx1ZSBvZiBm
+aW5kaW5nIHRoZSBleGFjdCBzcG90Lg0KDQpCZXN0IHJlZ2FyZHMgLy8gSm9obiBFcm5iZXJn
