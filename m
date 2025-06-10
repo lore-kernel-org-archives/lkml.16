@@ -1,141 +1,111 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6C53242930
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 16:37:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449EE24167E;
+	Tue, 10 Jun 2025 16:37:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749573445; cv=none; b=gkMvdkhUm+LLJVRRb4afT4B9zf7/tyX4dL07Uy4wqwafb4IAl+bP5StCRBzDSvVtj5GAEi5NPUFCW7vtezJuejixBu8Nt9QcDcPjjfsBhCv+2uIg3oaeU0cyxIB9niGkNAI4fKUM6o8K78cxNTtRnmUZokiyBrvsBgk73onwYNU=
+	t=1749573457; cv=none; b=PRBiG/ToEy+ovkV3SoV02Z6uVWpeV34VBixGrgmdW4iihU30+5F7w2S6yLfj0hfcHY7kFKPKLqv6PMFtYzRkHr4mRlLxxv0Hg7mILN8Pu9xA6sZEJhNuTjhN6Vq1TGoSdAFIee8dCfZnRqRpSPKxqrso6nfDZ1zvAslcGFr1ySc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749573445; c=relaxed/simple;
-	bh=VjFarI2Codh6KqWltoYZ4DowgWzKrAUhwRXr/w7VIzw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YNKnXGCy54E832ZDEYBRNp75n78ujQ0Vbrokho7z6VnNVyGKT6Nw3CkCOU9w8kCtSMoMOzkd2e51/2p1mxVgFsLTdDVtA53dv0c5uiZn86ZCWXpr8GhHdY+EkAeQyibNDXQRkeWOyX+oNtM9Jy9KoXyznTDoX6k2h+tsgZEWVVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 93BD714BF;
-	Tue, 10 Jun 2025 09:37:03 -0700 (PDT)
-Received: from [10.1.33.221] (XHFQ2J9959.cambridge.arm.com [10.1.33.221])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2EE033F673;
-	Tue, 10 Jun 2025 09:37:22 -0700 (PDT)
-Message-ID: <b567a16a-8d80-4aab-84c2-21cbc6a6a35d@arm.com>
-Date: Tue, 10 Jun 2025 17:37:20 +0100
+	s=arc-20240116; t=1749573457; c=relaxed/simple;
+	bh=XIFaf4bEWALQrBBhUMLGiEsl+xvEuzIUbJHmGcT3v04=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h836r40mercZtCjPBN3UTtq+0supog1VyYvb2grYr8l3EKrtMEQ0PKllo47DX0vGNMKf99+GKXhr/ZmrY3Bc/+OGj9xQ8ZFfvOYZdFI6+0oK24gK7QC4RXq8N5TFIoOl6PjOqWnehAmUD6EL4bNX8XuwmFBphScNEDuj4reaXgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mo0l9itf; arc=none smtp.client-ip=209.85.222.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mo0l9itf"
+Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-86d587dbc15so6601241.1;
+        Tue, 10 Jun 2025 09:37:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749573455; x=1750178255; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Jr1AjOf8uNWev/Vso1mJTfg4siB3r6WSL8vizNNJAl0=;
+        b=Mo0l9itfV98uU2sBBVAcPkPd8n8anRlhpwcJLIT7rKWdq4BA15vL9uQBs4lfOk3p/W
+         oyVh6+PzQsggJhoW8QQPfUhc3XTUj+MCbQFNmdqWGUAB3XijTSzLT9FOrlYs59VOK0B3
+         lxpdlUgZkK9uVDv66ZVlU8gDzlYb8Acv+UjbH/Y94lGp2rc8UiNnJOADl3mcdi/xNmad
+         WRUpYMtNb/jcJQN3Km8qg3sYPfKq/vM18cJViRlOZMj+izoXNMQiAaElxck42SRNkIsa
+         R8kPx0zWGr3wEEr1uVAHarRFRN2sPtd8YA+XaRhcnsX52RyI9cajUmkFk8d9luBhtUhT
+         Y1xQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749573455; x=1750178255;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Jr1AjOf8uNWev/Vso1mJTfg4siB3r6WSL8vizNNJAl0=;
+        b=lHxYfz0s5bV6e3drEJpuoih21A+pkUEek/T+or9ozkkyXbkck5N7vuYEbwsgYLb1eR
+         AvMN+i1rqQZ9kZXJNMNEKYa3gqHvwWzbMKcfAv9xInpqx1zhR5s6s4G5kCX/RKqv+RZX
+         eNXJzRpXhD0BUw38WngZmghI3okjuFpZKMYyFmPlpeRCv+F1pxFadYYMHfrmihmantEk
+         vJYLlwv5l78DYAqnvDKtFdJ6rscRfjcpnkoQGmsLpj4IflFCeRGMh7lZegYzS9qp8Syk
+         EQqmsECPsPGxHS1d64wUSIvhoc6Xpst8O4SVDsMYM/vBba0mcW5xSwy9BsnxRMHdc8jh
+         xpbA==
+X-Forwarded-Encrypted: i=1; AJvYcCULO+jV2ihRNDzpYRYTVo277NG6toN4QD0giA6UwEnCaC1yMMOdrn6Nohh/zV2tVM+fDEnJh/XkyZrL@vger.kernel.org, AJvYcCXQxXvPBLGg13kejpDeztDfB1l4Q5SOCErhQYjTymKeoQvDHB5EQWwTKR/JU1L3C9bUzGPj/wM1mKeUDS8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5bmwvk3QENajNy3SzFPP14bQKsAQZ1Ra1S+Nb6qrEV6/5Xlx9
+	vGj+Z9k8BQX/is3B6e3SuunNi9AN0RLbXm64nz3ha2f22zebNQ7jfjDK
+X-Gm-Gg: ASbGncsbzqAtmjCfp17Vy9ot3GFlA/AdrU1Ct7W6ytvxLZCKd+TILTHdUY7MkCe3KtL
+	DQiXZsilpgq0k3fI6WWxiZbenLLqLSzyseULtRJMcge/uhgfDUdu6XRmXBFSuYTTo08ngvznbZI
+	k/zKKybDF3ynuUtLAIot2j078cP1tmCxuOsZlt1jKYx4MLH9xImy5Ix1La/sO7tm8Yr4xRjrvxc
+	5xT+3HDZ/zkTcHKHCbxOULbr/EFYAu7gdz0z+Z3Od0EIr4nnuV7DinNJguSItSDzbJk4+ii7H0C
+	2Kwwo9ZtJ47SOvAF455Lbw4/OKD/71Qa29h4BONxb5RrwbpIWA==
+X-Google-Smtp-Source: AGHT+IE8Big/lftsM2jqr/dJ0fUdU/HQyEnl6k3nT8QeUNCa9mrBUfckol12Cv9K8cvwwPN75N28vA==
+X-Received: by 2002:ac5:c5db:0:b0:531:188b:c1a0 with SMTP id 71dfb90a1353d-53121e4f7bbmr94264e0c.4.1749573455100;
+        Tue, 10 Jun 2025 09:37:35 -0700 (PDT)
+Received: from geday ([2804:7f2:800b:5a56::dead:c001])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-53113c0ee03sm1594059e0c.39.2025.06.10.09.37.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 09:37:34 -0700 (PDT)
+Date: Tue, 10 Jun 2025 13:37:29 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: linux-rockchip@lists.infradead.org
+Cc: Hugh Cole-Baker <sigmaris@gmail.com>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v2 2/2] arm64: dts: rockchip: drop PCIe 3v3 always-on and
+ boot-on
+Message-ID: <28fb85b76b3adba86995b187036f3eff8a68e10e.1749572238.git.geraldogabriel@gmail.com>
+References: <cover.1749572238.git.geraldogabriel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] arm64/mm: Ensure lazy_mmu_mode never nests
-Content-Language: en-GB
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250606135654.178300-1-ryan.roberts@arm.com>
- <aEgeQCCzRt-B8_nW@arm.com> <3cad01ea-b704-4156-807e-7a83643917a8@arm.com>
- <aEhKSq0zVaUJkomX@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <aEhKSq0zVaUJkomX@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1749572238.git.geraldogabriel@gmail.com>
 
-On 10/06/2025 16:07, Catalin Marinas wrote:
-> On Tue, Jun 10, 2025 at 02:41:01PM +0100, Ryan Roberts wrote:
->> On 10/06/2025 13:00, Catalin Marinas wrote:
->>> On Fri, Jun 06, 2025 at 02:56:52PM +0100, Ryan Roberts wrote:
->>>> Commit 1ef3095b1405 ("arm64/mm: Permit lazy_mmu_mode to be nested")
->>>> provided a quick fix to ensure that lazy_mmu_mode continues to work when
->>>> CONFIG_DEBUG_PAGEALLOC is enabled, which can cause lazy_mmu_mode to
->>>> nest.
->>>>
->>>> The solution in that patch is the make the implementation tolerant to
->>>
->>> s/is the make/is to make/
->>>
->>>> nesting; when the inner nest exits lazy_mmu_mode, we exit then the outer
->>>> exit becomes a nop. But this sacrifices the optimization opportunity for
->>>> the remainder of the outer user.
->>> [...]
->>>> I wonder if you might be willing to take this for v6.16? I think its a neater
->>>> solution then my first attempt - Commit 1ef3095b1405 ("arm64/mm: Permit
->>>> lazy_mmu_mode to be nested") - which is already in Linus's master.
->>>>
->>>> To be clear, the current solution is safe, I just think this is much neater.
->>>
->>> Maybe better, though I wouldn't say much neater. One concern I have is
->>> about whether we'll get other such nesting in the future and we need to
->>> fix them in generic code. Here we control __kernel_map_pages() but we
->>> may not for other cases.
->>>
->>> Is it the fault of the arch code that uses apply_to_page_range() via
->>> __kernel_map_pages()? It feels like it shouldn't care about the lazy
->>> mode as that's some detail of the apply_to_page_range() implementation.
->>> Maybe this API should just allow nesting.
->>
->> I don't think it is possible to properly support nesting:
->>
->> enter_lazy_mmu
->>     for_each_pte {
->>         read/modify-write pte
->>
->>         alloc_page
->>             enter_lazy_mmu
->>                 make page valid
->>             exit_lazy_mmu
->>
->>         write_to_page
->>     }
->> exit_lazy_mmu
->>
->> This example only works because lazy_mmu doesn't support nesting. The "make page
->> valid" operation is completed by the time of the inner exit_lazy_mmu so that the
->> page can be accessed in write_to_page. If nesting was supported, the inner
->> exit_lazy_mmu would become a nop and write_to_page would explode.
-> 
-> What I meant is for enter/exit_lazy_mmu to handle a kind of de-nesting
-> themselves: enter_lazy_mmu would emit the barriers if already in lazy
-> mode, clear pending (well, it doesn't need to do this but it may be
-> easier to reason about in terms of flattening). exit_lazy_mmu also needs
-> to emit the barriers but leave the lazy mode on if already on when last
-> entered. This does need some API modifications to return the old mode on
-> enter and get an argument for exit. But the correctness wouldn't be
-> affected since exit_lazy_mmu still emits the barriers irrespective of
-> the nesting level.
+Example commit of needed dropping of regulator always-on/boot-on
+declarations to make sure quirky devices known to not be working
+on RK3399 are able to enumerate on second try without
+assertion/deassertion of PERST# in-band PCIe reset signal.
 
-Ahh I see what you mean now; exit always emits barriers but only the last exit
-clears TIF_LAZY_MMU.
+One example only, to avoid patch-bomb.
 
-I think that's much cleaner, but we are changing the API which needs changes to
-all the arches and my attempt at [1] didn't really gain much enthusiasm.
+Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi | 2 --
+ 1 file changed, 2 deletions(-)
 
-> 
->> So the conclusion I eventually came to (after being nudged by Mike Rapoport at
->> [1]) is that this _is_ arm64's fault for creating a loop via
->> apply_to_page_range(). So I'm trying to fix this by breaking the loop.
->>
->> [1] https://lore.kernel.org/all/aDqz7H-oBo35FRXe@kernel.org/
-> 
-> If the only such loop is the arm64 code, fine by me to fix it this way.
-> Your series above had 6 patches and I thought there's more to fix.
-
-My previous attempt was, in hindsight, hideous. It seems to be the case that
-only arm64 suffers this problem so let's just fix it here.
-
-> 
->> We could alternatively use some per-cpu storage for a nest count, but that gets
->> ugly quite quickly I suspect.
-> 
-> Yeah, the thread flag is much nicer.
-> 
->> But regardless, I'm not convinced the semantics of a properly nested
->> lazy_mmu are safe.
-> 
-> I think we can make them safe but there would be opposition from the mm
-> people and it may not be trivial on x86. So, I'm fine with this arm64
-> specific change:
-> 
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-
-Agreed, and thanks!
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
+index 8ce7cee92af0..d31fd3d34cda 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
+@@ -25,8 +25,6 @@ vcc3v3_pcie: regulator-vcc-pcie {
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pcie_pwr>;
+ 		regulator-name = "vcc3v3_pcie";
+-		regulator-always-on;
+-		regulator-boot-on;
+ 		vin-supply = <&vcc5v0_sys>;
+ 	};
+ 
+-- 
+2.49.0
 
