@@ -1,111 +1,167 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2041.outbound.protection.outlook.com [40.107.212.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D3022472B9
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 18:48:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749581318; cv=none; b=t/sfRW+Z/fzZVIcPfs1Anz9gbJ83eV9Ybjb0k+eubIkQ9RIWgnENnIvQHk6degTVJ8ta3nzHwut0fM+fEZvoL4ingeQ0zy5UAWnLjyJgJFJ4mfmrYwGgYag6ML5hmaYX8zt/0Jmbn0KDRaUKthJlQEA/cue7UKSlawNgD0B96b4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749581318; c=relaxed/simple;
-	bh=JdYBANVXTPzIVDhBJ340XB4Orydp/8+n8ekFirtZGg4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kmQQG91jF6sWLsc/VPJ6qjAn3s77S05UTyiEYYE3O8oP39U+wzOpsOmkYm4oDPhIz6YTHyxplHFxJTPbobwRZyfoKWhQRFpatXrSX66YQ3NnxRwf3Y5sjPp7CVygOAcawd0b7/ddvvRRdhEaiZ3uSyQAu5G7urHX17E8o0Hx4Fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PfQ5/WbF; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B2A24679E;
+	Tue, 10 Jun 2025 18:49:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749581353; cv=fail; b=LqXqyxbTTaBTf22OfUlk8luTdGikXwDIdcdZ0SJzn4k4MCCPguhDz0LFhSEm1ZTBpx4mJMhwATM/IWT77LGyh8yv0vijD/+J7teDEZWea4TdE4Yn7qFKfr+oKN46aCV1UDWUilauOiM/4bh0RfGq+TMB+0fF06ZLU/bM/4YfNkE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749581353; c=relaxed/simple;
+	bh=j6Z6n8044IiuaHU0oplYnAc7pkHVRqGjgE6/T+u3hz4=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EnQ4RoK6bLOZdrbMj5mPTVJ2TjRdTXQwNu4AMNTHK6CouWvcKY1I03G3rbhceCvF1kb4uw9ASU5HMNeEvdWFcb70Fjwy67L5kjFdfv4SwUQ/HNK6xeaDosVBGqlMDmto9P92qHvuZSUsENa2RtgLf/r+1dEHQMudYYls2VNw1us=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=fail (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=B72BlcuC reason="signature verification failed"; arc=fail smtp.client-ip=40.107.212.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PfQ5/WbF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749581317; x=1781117317;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=JdYBANVXTPzIVDhBJ340XB4Orydp/8+n8ekFirtZGg4=;
-  b=PfQ5/WbF1ONu3mDtrAdomkW3UZ6xXr0PTXgIgrKEr+MAyW5uGuDsqOt3
-   0h3kLf3b0hPS4GPoof5ul3UVGdGKl8RvkHjpo+JWowYNFml/iQpB2r8jj
-   RKu+m5TetBU0kWWoSaNUQhl9zYU7JR55ie2l6aSMS3C8x89dMFsRyxLgF
-   p+cMPEKLoamLn1s+0tUBll3bZ0sIqawMIBxTVzBHyJ7aTorQHElVebG9R
-   juwtHGvbyQ+tLD6iHRGiM0+hWumcH3n9GEvgXp8ytDPAInNXUHZcIpHl7
-   wzRrXEouZY2lS+M2ZZsoKX6sKauGJMSWKIO11YcUJkLrvzli28tGhUsRW
-   g==;
-X-CSE-ConnectionGUID: yPRIGlOoQNybdjB9Yqvt+Q==
-X-CSE-MsgGUID: ZVmt4JhVRn6JyLUlyZ9R/A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="50932550"
-X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
-   d="scan'208";a="50932550"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 11:48:36 -0700
-X-CSE-ConnectionGUID: FdqcHoJMR0mFF0WuHWi5ew==
-X-CSE-MsgGUID: E7hbCtomS7+Gz1L5FtuHig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
-   d="scan'208";a="146904849"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 11:48:36 -0700
-Date: Tue, 10 Jun 2025 11:48:33 -0700
-From: "Luck, Tony" <tony.luck@intel.com>
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Fenghua Yu <fenghuay@nvidia.com>,
-	"Wieczor-Retman, Maciej" <maciej.wieczor-retman@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
-	Drew Fustini <dfustini@baylibre.com>,
-	Dave Martin <Dave.Martin@arm.com>,
-	"Keshavamurthy, Anil S" <anil.s.keshavamurthy@intel.com>,
-	"Chen, Yu C" <yu.c.chen@intel.com>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"patches@lists.linux.dev" <patches@lists.linux.dev>
-Subject: Re: [PATCH v5 27/29] fs/resctrl: Add file system mechanism for
- architecture info file
-Message-ID: <aEh-AbZ8N_WZqogb@agluck-desk3>
-References: <20250521225049.132551-28-tony.luck@intel.com>
- <f25d136c-b1d3-483a-ac77-92464d7fe25c@intel.com>
- <aEIxzbuFybLBE3xt@agluck-desk3>
- <9eb9a466-2895-405a-91f7-cda75e75f7ae@intel.com>
- <aEMlznLgnn6bK9lo@agluck-desk3>
- <d2be3a4e-1075-459d-9bf7-b6aefcb93820@intel.com>
- <aEcsxjWroliWf3G0@agluck-desk3>
- <fb2396c1-3799-4d45-ae24-ce7e6f0d42e2@intel.com>
- <SJ1PR11MB60834D5E5D78CE229D04204FFC6BA@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <71a51672-4cc7-47eb-bbbb-a3195189becc@intel.com>
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="B72BlcuC"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xyhqVlw5tAfUSaDbm2wH2fhFli+CzPJFLAjDiwrlBoLPunsMTAdfbkh+hfr/J4tmYTVyTOBCUj/Xvlza06pZwtLjIgY9UELbPygGhRaxrq3LpPJreVusnsZaqq2i9bh8r0rjg0BUzKI2gaFNKqIike9rPWthP5GMMWiga1cTun/v5vku8wVlu/MqLbFZDpgtdGMm5U2td6TwEXpsjkxSMQFxmt6AejXDQM+sHdX7lFb5SvDO8MMlKx+yGW4vvtwxXtYMppPe985UzMZc1EnbVMMbb0n/1V2uEoOADO8LlL0GVb63eI9skm9h+9zqNK+YSe1ILxpGSWftFijkVjdEoQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tqcHxFG7B5sSZm4aHWn6kYdKM//gd8AiG/oDuBUuBa8=;
+ b=raLACctl1C1cb1tEfV1fn3Hy+Es+mLzdwllDj3KLZ7391zlKjTqIE7xFctpjFcUjqkSubRFNGv8Itkmrb0JK1hKm08sW1SS3u9Sbp0pi6Z5bRgmxzC693Vo+qyzbl1Oov0EICixI9duHH1fWNfxrgjr7g9qAPZ4lnYq9x5tB/yjw7MxCPQVXgjuHrcZwKWNam+fVW10Gkycsnb/ExoJMbtdcMWaAKsKQeRnRtPNM7fZE/bp+ziFuY1xg+zlr/YsadACEvUA9980MlcJD0HoKmK8NqPDUIwufYNa/sJkVFg+ACy77uobT+btviITeS15C0zGOfYh9xl5tAlznvsW20g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=linutronix.de smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tqcHxFG7B5sSZm4aHWn6kYdKM//gd8AiG/oDuBUuBa8=;
+ b=B72BlcuCdf4Ah6JfqXe6sUaRAvvK+mlXsWGUwG7LsEAN1ARWczrp5BKiqJYcBv4DbUFp0f0Nw7no2g08sae68eIoujFYrQMBC2bUlNZuUCXwwxieYZdGjXSWuXb6TPfuoSbud8JnXCKtIB7Zmuq9YhYIreB3xoEg3oSQLD8Sny/GnS25Vj6qqicIqMugigIuYp9v5A3RcxMgdT8YW4GBEeB4SyMxUK/uTrr/J3jk58Fvq8WBUYUt+4uE8WDvjThuXbRln8CVsPLttIXLRtU4VsMHkp6AhfBeLiNTldrKTW1zAuQFMVm3Oslv2sDZqP636a+hEbblz9+ZP010al3FJg==
+Received: from BYAPR07CA0080.namprd07.prod.outlook.com (2603:10b6:a03:12b::21)
+ by CH3PR12MB8852.namprd12.prod.outlook.com (2603:10b6:610:17d::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.39; Tue, 10 Jun
+ 2025 18:49:07 +0000
+Received: from MWH0EPF000989E5.namprd02.prod.outlook.com
+ (2603:10b6:a03:12b:cafe::92) by BYAPR07CA0080.outlook.office365.com
+ (2603:10b6:a03:12b::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.18 via Frontend Transport; Tue,
+ 10 Jun 2025 18:49:07 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ MWH0EPF000989E5.mail.protection.outlook.com (10.167.241.132) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8835.15 via Frontend Transport; Tue, 10 Jun 2025 18:49:06 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 10 Jun
+ 2025 11:48:49 -0700
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 10 Jun
+ 2025 11:48:49 -0700
+Received: from nvidia.com (10.127.8.12) by mail.nvidia.com (10.129.68.8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Tue, 10 Jun 2025 11:48:46 -0700
+Date: Tue, 10 Jun 2025 11:48:44 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, "Willy
+ Tarreau" <w@1wt.eu>, Thomas =?iso-8859-1?Q?Wei=DFschuh?=
+	<linux@weissschuh.net>, Kees Cook <kees@kernel.org>, Andy Lutomirski
+	<luto@amacapital.net>, Will Drewry <wad@chromium.org>, Mark Brown
+	<broonie@kernel.org>, Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	<linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH v4 09/14] selftests: harness: Move teardown conditional
+ into test metadata
+Message-ID: <aEh+DNmbZrqg6rHR@nvidia.com>
+References: <20250505-nolibc-kselftest-harness-v4-0-ee4dd5257135@linutronix.de>
+ <20250505-nolibc-kselftest-harness-v4-9-ee4dd5257135@linutronix.de>
+ <aEfVYQaid5uOHB+Y@nvidia.com>
+ <20250610130817-253d2b2d-030a-4eda-91fc-3edb58a4f549@linutronix.de>
+ <20250610120902.GB543171@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Disposition: inline
-In-Reply-To: <71a51672-4cc7-47eb-bbbb-a3195189becc@intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250610120902.GB543171@nvidia.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWH0EPF000989E5:EE_|CH3PR12MB8852:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4ded4774-4b65-42d1-a110-08dda84f7a8c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|82310400026|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?iso-8859-1?Q?nIgtpXWrj0wIa/IMhnGQYfueJamQgrV5AHH6zPQkfYF9VgswSyUdZCg+th?=
+ =?iso-8859-1?Q?KvCs+tFuLWoTRMylH72UBQwRGVsCKPRZXrteHM5sIh0NdtIUB1vKx1C27s?=
+ =?iso-8859-1?Q?jMAAL8CbLM4wTnR54J+8vKPEI0ONiY01VmmrHMAeaGes6msVRBfgbWv/GD?=
+ =?iso-8859-1?Q?//EwcxL76cdIhchnQgQTTOIWJhXb1FciUTlPqiuRGyJMP1ITVTYtWDElok?=
+ =?iso-8859-1?Q?6w+Wj+ow7s+9s8OQ6/gc5L4tCiMLCOTXtQ1eiVcaqo/P3+U+q/AJqYathf?=
+ =?iso-8859-1?Q?Iry9MLUntPJ825iAfBK6C/362PX9PrtiPwFEmESugbtlbLrziOxFgeTFpX?=
+ =?iso-8859-1?Q?TfwA8m4PehD/hqLVQB43ft3uJEvG/R4TAKSHw5abO5AUcBdFbHm+PzQfZs?=
+ =?iso-8859-1?Q?Aks8uc/JPF1mEYxU2nGcGSAfwQ1PncQ/JrLM7YQ7k1pTk9ZoaOCCZqRZRe?=
+ =?iso-8859-1?Q?s/QtzQ6ynZIuzNsPX6E89uNb1zwU+f8Bj+cK5Vphi/VjTHrOTggV+aKoWl?=
+ =?iso-8859-1?Q?EymLTfOGe+lgLTiiRhGAC5+X2Tna04dB0SJERIiF11eswvn6DaWYt6GIiJ?=
+ =?iso-8859-1?Q?VUDBsW4kK5mR8j1dO5U0nB6pUOZIXrzN4uU6psnEghqJTVGiqOTya5TozY?=
+ =?iso-8859-1?Q?fQ+QkUnpHiQJKBewvln3Qfra8j9YUQ9JgaE1mCSY6wIBoONhKmmAK6lcGd?=
+ =?iso-8859-1?Q?j6MrU+vCBUVgy5rXq9I2DEiqIeHPuAPalRmtAGRn199mDgFuApUrmoKdZu?=
+ =?iso-8859-1?Q?LuDvvbyCcHW9GdSa+e7xMP8VSa0IxqAegDnUMnCQUD7mJfYqMW4f2lbHgy?=
+ =?iso-8859-1?Q?X2fhS7mJp3nylbcgsHWgw7XFir9LBOGifN+Dwewpc/5q23DSmtzmYMbLPt?=
+ =?iso-8859-1?Q?5MeEopVpftcKljUFxBu3w6KKfj62U30duSTJ7PbasjOR0YH2a1NMJp9Bbr?=
+ =?iso-8859-1?Q?YjoGI4jXFlfWYIySWNUcXEuCr893OXs0QH6WLGRT1VRVBxC6X0K5iaGS+W?=
+ =?iso-8859-1?Q?ppuDnOcuXNgy+D010CVskPKzP9i6dj1/gjPog5igv0i3xedUp9VsCgSoCk?=
+ =?iso-8859-1?Q?VJo6H5uJZHt4tclasDjBnZaJhu7r7HyjkbBbzLlK33qDOM+hlov0KsasSt?=
+ =?iso-8859-1?Q?qxynSywLN62ACZjotfviMEd1Sv7PPgkdhBeb4uUxeHJ9Z3IRrsK3pxsVy7?=
+ =?iso-8859-1?Q?wTt2vOzcpqN3Rd/slNO+FUfbQllRhYXzUSokrcfNANK3IYG1C6sdj8ofSB?=
+ =?iso-8859-1?Q?kn8BQ7Z/GCCCPjr4UnLo1DkMnLpysnGmHJ+Fgi2EatagcnSwDoOnbsYTSh?=
+ =?iso-8859-1?Q?NgPvfJW5Z3m7LrmJ7J5bZUTIYElF7EQZwQFB5zox9BuL4Qefs7zKcK2oeX?=
+ =?iso-8859-1?Q?20LY1UCQY1VHH7gUGjUak0SScby4Asd1/1tlH4tV2pkYjNcoSpen71p2jb?=
+ =?iso-8859-1?Q?SNTFhVfU5tGGZNXpSomWYBePtV2/fm5nbQeEjr2gBdK1/6pSxvuJg/c31g?=
+ =?iso-8859-1?Q?Dg6160TMK57nLdI3JHKFwkyANTtjzntuAndc/AoucJ/1zXu1pjhmLYVHX0?=
+ =?iso-8859-1?Q?NYH010Fkpbk8vr4J42nsewf7KRHc?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 18:49:06.6986
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4ded4774-4b65-42d1-a110-08dda84f7a8c
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MWH0EPF000989E5.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8852
 
-On Mon, Jun 09, 2025 at 05:30:34PM -0700, Reinette Chatre wrote:
-> This should be a directory, a directory owned by the arch where it can create
-> debug infrastructure required by arch. The directory name chosen and
-> assigned by resctrl fs, while arch has freedom to create more directories
-> and add files underneath it. Goal is to isolate all arch specific debug to
-> a known location.
+On Tue, Jun 10, 2025 at 09:09:02AM -0300, Jason Gunthorpe wrote:
+> On Tue, Jun 10, 2025 at 01:38:22PM +0200, Thomas Weißschuh wrote:
+> > > ------------------------------------------------------------------
+> > > #  RUN           iommufd_dirty_tracking.domain_dirty128M_huge.enforce_dirty ...
+> > > # enforce_dirty: Test terminated unexpectedly by signal 11
 > 
-> Again, we need to prepare for resctrl fs to potentially use debugfs for its own
-> debug and when it does this the expectation is that the layout will mirror
-> /sys/fs/resctrl. Creating a directory /sys/kernel/debug/resctrl/info/<rdt_resource::name>_MON
-> and then handing it off to the arch goes *against* this. It gives arch
-> control over a directory that should be owned by resctrl fs.
+> Sig 11 is weird..
+
+> > On another note, the selftest should use the kselftest_harness' ASSERT_*()
+> > macros instead of plain assert().
 > 
-> What I have been trying to propose is that resctrl fs create a directory
-> /sys/kernel/debug/resctrl/info/<rdt_resource::name>_MON/arch_debug_name_TBD and hand
-> a dentry pointer to it to the arch where it can do what is needed to support its debugging needs.
-> Isn't this exactly what I wrote in the snippet above? Above you respond with
-> statement that you were under impression that it was a directory ... and then
-> send a patch that does something else. I am so confused. Gaslighting is
-> beneath you.
+> IIRC the kselftest stuff explodes if you try to use it's assert
+> functions within a fixture setup/teardown context.
+> 
+> I also wasn't able to reproduce this (x86 ubuntu 24 LTS OS) Maybe
+> it is ARM specific, I think Nicolin is running on ARM..
 
-For the precise name of the "arch_debug_name_TBD" directory, is simply "arch"
-sufficient? That leaves every other name available for resctrl
-filesystem code free choice if it does add some debug files here.
+Yes. And I was running with 64KB page size. I just quickly retried
+with 4KB page size (matching x86), and all failed tests pass now.
 
-Or would $ARCH ("x86" in my case) be better to keep distinct debug name
-spaces between architectures?
-
--Tony
+Thanks
+Nicolin
