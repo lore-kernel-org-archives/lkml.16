@@ -1,280 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206771DD9D3;
-	Tue, 10 Jun 2025 08:42:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20EBA22DFBB;
+	Tue, 10 Jun 2025 08:44:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749544956; cv=none; b=pb9dThWMy9F029j8McvBhTz4pzBNVdcHj6MaCUc/+2KCeK4kP+3ZYf0XifSwUiqxu18EKzMpBybYb19L7rrVrK3IhbRAMShZ3keOLgsamDL+4dia3p9yadEJkbAAbFC/Lsk+EnAZR83ebDpbIn5MSu0ZZB9Hc5BT8gNLbUB579g=
+	t=1749545058; cv=none; b=Aiq489R4AFO+wQSgxku51b+mUJjhRPOJ9UCqUKB8HOgaFIvONW3crMujE6WlXZPMgMtuaWLw8e0NW4lqbAXsZ6fkyptB8W3tU3oMQ9h82cRwbV1j1sNf0BFke9RZlTxGH8q1AYAi2jKpJMQrp8TZZxS4vTm/Swb9g7XB+RtCf8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749544956; c=relaxed/simple;
-	bh=WUurtHlZl4cO07q4cNhak6zc66i0f6kHUn1JCxCVaSA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=uAvbomeYkPA62fE55HV1YLgMTznP4ZZee6vLhGRgth3lOuITWhdvu9+h2vec8/5D6pzBTSy6lVuZvAqbdHxu/tHE+U/3W6nOHaAFR0GEzF0jNkk2OolAmrGWDxnAUbzuCRl3LbQex9iwpu/tnx+JxQsoRm1ntuUoGJFjVWcy4vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VmWKb/7N; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749545058; c=relaxed/simple;
+	bh=ybgxTm+kvB6cJ0D3DyEVRKBYFC8Z0+U7/NRwx8tLwLE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=heSSyInBmnnVEbXCE6ZOLDFEz5n9aaa4Oo5QuJcc9Ql0xHEotFAHEbszmyQI7HeO1DDArKqTrTacmK0GE1iyaRjccKnn9QZnianAAYbSm5r4i5th2RiICEsVvpsPxXJK6QiVKuWN/J88Sgq8ARecn12TpSK7sYrcuIoXb58UZhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f8vwcNtU; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VmWKb/7N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749544956; x=1781080956;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=WUurtHlZl4cO07q4cNhak6zc66i0f6kHUn1JCxCVaSA=;
-  b=VmWKb/7N+H1JvQcWzLmgqxBrX2/qlHNuZWZzF9YGBBKJfGZojfEywPzA
-   EJ128PCFq0gfW48+M69aM6O2XdRg80idRyqdFA4OTcD6I/P224g4aVKa5
-   L6Jtd/9fbHjwDWdmVHrUd16AuoaV7q6w2IroU24JgzTWqv+2Xm9F4Dvgc
-   sQj/b+tTC2xfRf0TOdoUoAmTBusTSjD4+ZWV3Aag/H3RxR4VX7RQ9aQPf
-   CANSMlaa5fVIcA/and/oOFrcz8QdpGF2CNXCgjPjbewNM0PEwtpL9KKms
-   RH+hxyVC0qEEGcFmwrV9cuvvENOcn2PnFZgVn/qjPbueDy9s09gV5celg
-   A==;
-X-CSE-ConnectionGUID: efIY7f4rQeypkgzS+Du5sQ==
-X-CSE-MsgGUID: 0WD1/uxnRwm1/xfA8Ps1wg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51353426"
-X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
-   d="scan'208";a="51353426"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 01:42:35 -0700
-X-CSE-ConnectionGUID: znwp2azGRUyEOd9NKPjhNg==
-X-CSE-MsgGUID: k8eUFTqiSnqHlGGcfOV1UA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
-   d="scan'208";a="146683403"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.144]) ([10.124.245.144])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 01:42:33 -0700
-Message-ID: <574f8adc-6aea-4460-9211-685091a30f5e@linux.intel.com>
-Date: Tue, 10 Jun 2025 16:42:30 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f8vwcNtU"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-451d54214adso42213985e9.3;
+        Tue, 10 Jun 2025 01:44:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749545054; x=1750149854; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ufg6uwyWwGQNdeZaC5T+n52EK93yzGWyzvZoh5XZFzA=;
+        b=f8vwcNtUnKy6qZMHoBLqDQyW/S11geLbj7lsOq1Gzqj3RgwSOOk6yxlEf92zK0Ccun
+         BV+6AwzYRuzSWLPiImp68NennUC0vfBLnngu8q1QPuLr/Km8zQBj1wN5OetnpQmOM5gX
+         HuzUUAoeIprfHO95Ljn372PGiOuxLGBjkqedZBr1zStxkk6lobUf14Xw4Y2VxX/JwnSD
+         dhd2yZ7AaS3gzQFwiFLTCpbpagt3GTerL983WQmwAVqZBFJIaIvrzycYK6vj17lkaNjD
+         oEPF6UG4qualjwXRUgWK80ohzWt3k+ngL4vmvrIAq2lrPLn5jdnMLmoA9PGINqRGDCdw
+         4VAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749545054; x=1750149854;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ufg6uwyWwGQNdeZaC5T+n52EK93yzGWyzvZoh5XZFzA=;
+        b=W2IerGAvhfkkW4vlrM5jNPeXvOvConZJjw1Gj447XX2ZFqQXhOb5yH4qf9+ECYslfM
+         e2rBGco6P0q+ElJ0ktUFyBml0Amn9zOuZPQDhvPVEXz7AU1MmEewMUrpPIveMKo83RaW
+         l3mhSXo2eLZ3aGHEeyS9v+yCwuWPfBc8PJoIWtuPmZAPEiKGGZ0nuSUgtT5KsfBQ5Vvg
+         CkAizT5dc3JWS6senCZI6wv7Hc97nthY3R19Ddx3DFSMUq8Xg0SwpRY0TW83o3/fIjy8
+         xfsZj78QIFxb4Uv8FZu8Nt+XG/4qd8HHX2J0vzRGHTCAoyrE1gfewhKRzy+0bEtwFY1J
+         473w==
+X-Forwarded-Encrypted: i=1; AJvYcCUN62rokCTKnBiBZMRgZ/9qWEkjB9MOIQtgW5//9rXcOuZN1BmiyJQTBE71+q7jeijSTV1BuX730pBReDS6@vger.kernel.org, AJvYcCV9qMCBDUMsidm+lO1sX8hFfmM0j8hfYnmMaBd6/B0QqOYAkrCZtcEUf6v9LtJhlMU/bwJJkKPf423M@vger.kernel.org, AJvYcCWRcUs6GXTINnM8YQXOejYvcyqyVj+jVSzPINfL+3KgvcwpIZQiej3TqokeBzscviKK0SEps7sp7ncDoak=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4MyId7ElAdMpZKWHSjfYfPTqeIUdcRLz5NzqthmllPap2aAe8
+	pWJRopvABdiLdbLfIz9+teIhyDcbltYDpVUK5HYbisVrmGIQsLvWStJ0
+X-Gm-Gg: ASbGncvwbN0BtydCqMNeINfNfuPr1o195iHyHWEDxRW8U4Hpulf8E1gzpLN7hscAEU/
+	Y/BNZp01Z3/l17WOKJO9ZdgUflZO/FCwRFKqaKXt4pIzXzS3SDiflmej9cVIyq1bzQ5BH3rrd7P
+	Ln/tPAnphnr1OREbAjxrkuIL9FaYC1cJugQv3XkVlmkKc1mTrm+apuvBYN6BZJ9SCVRxkStLZzi
+	IpENHwOnGbFP7oeVX1BGlgPLPTmwc1qw5QZ9ca8alQML1VGpfypkO4UNHB1vuCqFustI2fVTQ7K
+	nJ44JI90NDDHP8w9xWwlAcu9ihqthncIIpbcHO61w/SEONcCeOVM6XnqasZ4iHatFeqPT2xvjK6
+	frGsEik6BffztXyQdvr+rq+1lCOuQQ1pekP35r/NFSFyE4ApP
+X-Google-Smtp-Source: AGHT+IEI6U/wlkyv60EtHKpGkOxvKNc8dBNCAlpQUDw7Gbe+DfsHFVL8q5OU8MIyrQVeRvXJaoxmiQ==
+X-Received: by 2002:a05:6000:2082:b0:3a5:2cb5:6402 with SMTP id ffacd0b85a97d-3a55226815cmr1210790f8f.12.1749545054244;
+        Tue, 10 Jun 2025 01:44:14 -0700 (PDT)
+Received: from orome (p200300e41f281b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1b00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532452d7esm11567635f8f.85.2025.06.10.01.44.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 01:44:13 -0700 (PDT)
+Date: Tue, 10 Jun 2025 10:44:11 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Mikko Perttunen <cyndis@kapsi.fi>
+Cc: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>, 
+	Mikko Perttunen <mperttunen@nvidia.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/3] drm/tegra: Add NVJPG driver
+Message-ID: <fhumfjczxcohn5h5mnrdmz3x23ituxktzudtfutly35jkziiou@ocffx4vennrn>
+References: <20250606-diogo-nvjpg-v1-0-5f2c36feeb39@tecnico.ulisboa.pt>
+ <20250606-diogo-nvjpg-v1-1-5f2c36feeb39@tecnico.ulisboa.pt>
+ <811ad406-4afb-45c5-9783-683779f874cc@kapsi.fi>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/3] KVM: selftests: Test behavior of
- KVM_X86_DISABLE_EXITS_APERFMPERF
-To: Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>
-References: <20250530185239.2335185-1-jmattson@google.com>
- <20250530185239.2335185-4-jmattson@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20250530185239.2335185-4-jmattson@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="4tgir5eftbmngfvg"
+Content-Disposition: inline
+In-Reply-To: <811ad406-4afb-45c5-9783-683779f874cc@kapsi.fi>
 
 
-On 5/31/2025 2:52 AM, Jim Mattson wrote:
-> For a VCPU thread pinned to a single LPU, verify that interleaved host
-> and guest reads of IA32_[AM]PERF return strictly increasing values when
-> APERFMPERF exiting is disabled.
->
-> Signed-off-by: Jim Mattson <jmattson@google.com>
-> ---
->  tools/testing/selftests/kvm/Makefile.kvm      |   1 +
->  .../testing/selftests/kvm/include/kvm_util.h  |   2 +
->  tools/testing/selftests/kvm/lib/kvm_util.c    |  17 +++
->  .../selftests/kvm/x86/aperfmperf_test.c       | 132 ++++++++++++++++++
->  4 files changed, 152 insertions(+)
->  create mode 100644 tools/testing/selftests/kvm/x86/aperfmperf_test.c
->
-> diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
-> index 3e786080473d..8d42a3bd0dd8 100644
-> --- a/tools/testing/selftests/kvm/Makefile.kvm
-> +++ b/tools/testing/selftests/kvm/Makefile.kvm
-> @@ -131,6 +131,7 @@ TEST_GEN_PROGS_x86 += x86/amx_test
->  TEST_GEN_PROGS_x86 += x86/max_vcpuid_cap_test
->  TEST_GEN_PROGS_x86 += x86/triple_fault_event_test
->  TEST_GEN_PROGS_x86 += x86/recalc_apic_map_test
-> +TEST_GEN_PROGS_x86 += x86/aperfmperf_test
->  TEST_GEN_PROGS_x86 += access_tracking_perf_test
->  TEST_GEN_PROGS_x86 += coalesced_io_test
->  TEST_GEN_PROGS_x86 += dirty_log_perf_test
-> diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-> index 93013564428b..43a1bef10ec0 100644
-> --- a/tools/testing/selftests/kvm/include/kvm_util.h
-> +++ b/tools/testing/selftests/kvm/include/kvm_util.h
-> @@ -1158,4 +1158,6 @@ bool vm_is_gpa_protected(struct kvm_vm *vm, vm_paddr_t paddr);
->  
->  uint32_t guest_get_vcpuid(void);
->  
-> +int pin_task_to_one_cpu(void);
-> +
->  #endif /* SELFTEST_KVM_UTIL_H */
-> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-> index 5649cf2f40e8..b6c707ab92d7 100644
-> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
-> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-> @@ -10,6 +10,7 @@
->  #include "ucall_common.h"
->  
->  #include <assert.h>
-> +#include <pthread.h>
->  #include <sched.h>
->  #include <sys/mman.h>
->  #include <sys/resource.h>
-> @@ -2321,3 +2322,19 @@ bool vm_is_gpa_protected(struct kvm_vm *vm, vm_paddr_t paddr)
->  	pg = paddr >> vm->page_shift;
->  	return sparsebit_is_set(region->protected_phy_pages, pg);
->  }
-> +
-> +int pin_task_to_one_cpu(void)
-> +{
-> +	int cpu = sched_getcpu();
-> +	cpu_set_t cpuset;
-> +	int rc;
-> +
-> +	CPU_ZERO(&cpuset);
-> +	CPU_SET(cpu, &cpuset);
-> +
-> +	rc = pthread_setaffinity_np(pthread_self(), sizeof(cpuset), &cpuset);
-> +	TEST_ASSERT(rc == 0, "%s: Can't set thread affinity", __func__);
-> +
-> +	return cpu;
-> +}
-> +
-> diff --git a/tools/testing/selftests/kvm/x86/aperfmperf_test.c b/tools/testing/selftests/kvm/x86/aperfmperf_test.c
-> new file mode 100644
-> index 000000000000..64d976156693
-> --- /dev/null
-> +++ b/tools/testing/selftests/kvm/x86/aperfmperf_test.c
-> @@ -0,0 +1,132 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Test for KVM_X86_DISABLE_EXITS_APERFMPERF
-> + *
-> + * Copyright (C) 2025, Google LLC.
-> + *
-> + * Test the ability to disable VM-exits for rdmsr of IA32_APERF and
-> + * IA32_MPERF. When these VM-exits are disabled, reads of these MSRs
-> + * return the host's values.
-> + *
-> + * Note: Requires read access to /dev/cpu/<lpu>/msr to read host MSRs.
-> + */
-> +
-> +#include <fcntl.h>
-> +#include <limits.h>
-> +#include <stdbool.h>
-> +#include <stdio.h>
-> +#include <stdint.h>
-> +#include <unistd.h>
-> +#include <asm/msr-index.h>
-> +
-> +#include "kvm_util.h"
-> +#include "processor.h"
-> +#include "test_util.h"
-> +
-> +#define NUM_ITERATIONS 100
-> +
-> +static int open_dev_msr(int cpu)
-> +{
-> +	char path[PATH_MAX];
-> +
-> +	snprintf(path, sizeof(path), "/dev/cpu/%d/msr", cpu);
-> +	return open_path_or_exit(path, O_RDONLY);
-> +}
-> +
-> +static uint64_t read_dev_msr(int msr_fd, uint32_t msr)
-> +{
-> +	uint64_t data;
-> +	ssize_t rc;
-> +
-> +	rc = pread(msr_fd, &data, sizeof(data), msr);
-> +	TEST_ASSERT(rc == sizeof(data), "Read of MSR 0x%x failed", msr);
-> +
-> +	return data;
-> +}
-> +
-> +static void guest_code(void)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < NUM_ITERATIONS; i++)
-> +		GUEST_SYNC2(rdmsr(MSR_IA32_APERF), rdmsr(MSR_IA32_MPERF));
-> +
-> +	GUEST_DONE();
-> +}
-> +
-> +int main(int argc, char *argv[])
-> +{
-> +	uint64_t host_aperf_before, host_mperf_before;
-> +	struct kvm_vcpu *vcpu;
-> +	struct kvm_vm *vm;
-> +	int msr_fd;
-> +	int cpu;
-> +	int i;
-> +
-> +	cpu = pin_task_to_one_cpu();
-> +
-> +	msr_fd = open_dev_msr(cpu);
-> +
-> +	/*
-> +	 * This test requires a non-standard VM initialization, because
-> +	 * KVM_ENABLE_CAP cannot be used on a VM file descriptor after
-> +	 * a VCPU has been created.
-> +	 */
-> +	vm = vm_create(1);
-> +
-> +	TEST_REQUIRE(vm_check_cap(vm, KVM_CAP_X86_DISABLE_EXITS) &
-> +		     KVM_X86_DISABLE_EXITS_APERFMPERF);
-> +
-> +	vm_enable_cap(vm, KVM_CAP_X86_DISABLE_EXITS,
-> +		      KVM_X86_DISABLE_EXITS_APERFMPERF);
-> +
-> +	vcpu = vm_vcpu_add(vm, 0, guest_code);
-> +
-> +	host_aperf_before = read_dev_msr(msr_fd, MSR_IA32_APERF);
-> +	host_mperf_before = read_dev_msr(msr_fd, MSR_IA32_MPERF);
-> +
-> +	for (i = 0; i < NUM_ITERATIONS; i++) {
-> +		uint64_t host_aperf_after, host_mperf_after;
-> +		uint64_t guest_aperf, guest_mperf;
-> +		struct ucall uc;
-> +
-> +		vcpu_run(vcpu);
-> +		TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_IO);
-> +
-> +		switch (get_ucall(vcpu, &uc)) {
-> +		case UCALL_DONE:
-> +			break;
-> +		case UCALL_ABORT:
-> +			REPORT_GUEST_ASSERT(uc);
-> +		case UCALL_SYNC:
-> +			guest_aperf = uc.args[0];
-> +			guest_mperf = uc.args[1];
-> +
-> +			host_aperf_after = read_dev_msr(msr_fd, MSR_IA32_APERF);
-> +			host_mperf_after = read_dev_msr(msr_fd, MSR_IA32_MPERF);
-> +
-> +			TEST_ASSERT(host_aperf_before < guest_aperf,
-> +				    "APERF: host_before (0x%" PRIx64 ") >= guest (0x%" PRIx64 ")",
-> +				    host_aperf_before, guest_aperf);
-> +			TEST_ASSERT(guest_aperf < host_aperf_after,
-> +				    "APERF: guest (0x%" PRIx64 ") >= host_after (0x%" PRIx64 ")",
-> +				    guest_aperf, host_aperf_after);
-> +			TEST_ASSERT(host_mperf_before < guest_mperf,
-> +				    "MPERF: host_before (0x%" PRIx64 ") >= guest (0x%" PRIx64 ")",
-> +				    host_mperf_before, guest_mperf);
-> +			TEST_ASSERT(guest_mperf < host_mperf_after,
-> +				    "MPERF: guest (0x%" PRIx64 ") >= host_after (0x%" PRIx64 ")",
-> +				    guest_mperf, host_mperf_after);
+--4tgir5eftbmngfvg
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 1/3] drm/tegra: Add NVJPG driver
+MIME-Version: 1.0
 
-Should we consider the possible overflow case of these 2 MSRs although it
-could be extremely rare? Thanks.
+On Tue, Jun 10, 2025 at 12:26:07PM +0900, Mikko Perttunen wrote:
+> On 6/6/25 7:45 PM, Diogo Ivo wrote:
+> > Add support for booting and using NVJPG on Tegra210 to the Host1x
+> > and TegraDRM drivers. This driver only supports the new TegraDRM uAPI.
+>=20
+> Hello Diogo -- I'm happy to see this driver!
 
+So am I, nice work!
 
-> +
-> +			host_aperf_before = host_aperf_after;
-> +			host_mperf_before = host_mperf_after;
-> +
-> +			break;
-> +		}
-> +	}
-> +
-> +	kvm_vm_free(vm);
-> +	close(msr_fd);
-> +
-> +	return 0;
-> +}
+[...]
+> > +	if (IS_ERR(nvjpg->regs))
+> > +		return PTR_ERR(nvjpg->regs);
+> > +
+> > +	nvjpg->rst =3D devm_reset_control_get_exclusive_released(&pdev->dev, =
+"nvjpg");
+> > +	if (IS_ERR(nvjpg->rst)) {
+> > +		err =3D PTR_ERR(nvjpg->rst);
+> > +
+> > +		if (err !=3D -EBUSY || WARN_ON(!pdev->dev.pm_domain)) {
+> > +			dev_err(&pdev->dev, "failed to get reset control: %d\n",
+> > +				err);
+> > +			return err;
+> > +		}
+> > +
+> > +		/*
+> > +		 * At this point, the reset control is most likely being used
+> > +		 * by the generic power domain implementation. With any luck
+> > +		 * the power domain will have taken care of resetting the SOR
+> > +		 * and we don't have to do anything.
+> > +		 */
+> > +		nvjpg->rst =3D NULL;
+> > +	}
+>=20
+> I see you've taken this from sor.c, but I think it should be unnecessary.=
+ I
+> imagine the code in sor.c is overcomplicated as well, maybe because we us=
+ed
+> not to have the power domain implementation.
+
+Agreed. SOR is also slightly older than NVJPG and used on Tegra124 where
+we don't use power domains, so most of these quirks are for backwards-
+compatibility. If we can avoid them for NVJPG, that'd be great.
+
+Thierry
+
+--4tgir5eftbmngfvg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmhH8FcACgkQ3SOs138+
+s6HO5xAAuFcTDTd//elXh91lR+ye68vqyuQs9ieD1JizLFCjtviETpAU/eRizVY3
+nptiSkEPE3sVenbPIFwveqnkYiAGWAk6oOcixS3TG7GSEJg8iZKhT9firLCNNp7h
+lJWHQVN4RLywgBHPeZx8vpupyZBWi7Qv8uiSu37b6EsOWiUacvI7nQgQGY19/Iwe
+H/EnohUJL5mN79V4Y8P+8gwuy+8gJAl1iAa39oeFBR9xJFtxDMm582nWb5txhyY+
+8smkQfRYdNmsyxJtzewPIoUTxSpycM7OjCv3idK6ezYQ1kaXtx55IVzgwlaKO4SP
+oOW6U7Vzj40bufDjOyKCCIc1BUrnxsiQGBKdqJKTUVQSVC2xFiafHWIDD9w9mLYN
+Cspt1zyGIM0rAF+RB+Az4FQwly21KVlyruZ5BnhES2LrZIEDcFWhbjvftqvSFV8r
+EJDSZyVDyGg37Sgl3VkRWYdtt3Ao/tv/Lii0VBOS8v5wvkZ9xv9OXN1GSV4DGF18
+G40Ixjy3362iiecmwA8DU+ExFQGx2JTPtMIf+Cqb6yP9qHGY6ZrN00ai1Gu8ti3U
+EpMs7y7hRbuLP4TdZGnXMhGGUh1wjF/h3dLszxLUKunYkDRegAV6N2cpal7NwiVv
+JBrwR/L8nJMVO5fkhMlybop1j0c6SwJaVY/7BAe3U97G9GyNlCg=
+=tF10
+-----END PGP SIGNATURE-----
+
+--4tgir5eftbmngfvg--
