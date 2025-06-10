@@ -1,237 +1,185 @@
-Received: from mail-4317.protonmail.ch (mail-4317.protonmail.ch [185.70.43.17])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2060.outbound.protection.outlook.com [40.107.102.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65AA31487D1
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 18:31:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749580291; cv=none; b=kna9o0jeRPswuL2gAPwr/Al7NRPvSCfpKBbwactTGnGytW6lmUXlki0sbMVCGukhx7azTZJ59F5KEKGUtU2Y3UM5fL0smYBFEVs8jk8gijE6HzMVc0Q1jf3oQ3VB4m2n3C6Qg1DFmvjSORxMmr8NdDegqkNnFQpYR2kW9oDp9jc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749580291; c=relaxed/simple;
-	bh=E8XqcwdsNNWpw6uZ9YmZxqybI06IKcJfrKYJybCfHm8=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DuFnKrDtyuhC4DnjGM3/YXMm1lAvxD9uFLAZpnLzlQsQ0poAHxl/A3VvRXtwU0Mq3LVVBSsclw1jjjezv6ntu/tzgQ+mRF1qS1lfJEVD6/cDBLW/QPKjdbcToN1rIQGM5s1nV19IxzPp84jLlKtQOom1V5Up7ysffRoD/Q7jLng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gianis.ca; spf=pass smtp.mailfrom=gianis.ca; dkim=pass (2048-bit key) header.d=gianis.ca header.i=@gianis.ca header.b=VxTa8r74; arc=none smtp.client-ip=185.70.43.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gianis.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gianis.ca
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E801170A2B
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 18:32:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749580365; cv=fail; b=oWlb6eOvQhQOJoN5f7YNXjxvEh4/1/kKVlZMliuZxCbfvGGd6E4ELk12K+vioDuvB0XvgEAklqYUr4YmpFCZbM6csyFdwdDd0Hzuk7093qQp4sXrrOfGRhacG31sngDqT7gWFLkuubsuEEFKY3zkKXLHMlSQ6ZjkX2OWXwWRc30=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749580365; c=relaxed/simple;
+	bh=ShUP28h8KS1cCepgIA+DffwIUzROCf+XfVakMMehnSM=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T38qLDbMCag1MQIgUKcYpWKBnRodBlCR+BHPgGahFdeHTnkhYE4JtQhi2ggEgFDhltgJI5dC/4Hu8pkIMtM7jy3HpOM+g65TegE/5DA0HhQU7g6shP6y0m/fUQ8BqC9I9/V89fAxjodtq2ysfeDzTKyL8TlTYkiYRL8v6adtz/A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=DGH9/8DV; arc=fail smtp.client-ip=40.107.102.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gianis.ca header.i=@gianis.ca header.b="VxTa8r74"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gianis.ca;
-	s=protonmail; t=1749580284; x=1749839484;
-	bh=AjYACY9r2SnXHCSGXldKUiuZBnOjF586F6MufeOrzL4=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=VxTa8r74l2B+RhlcVjKr6A5ByP0zTLBnBHzaSC+AEd8utDgPFh65fL8fiuzWFAoeJ
-	 BI0K+e6NlsDlq1NpCgZfAC3lbr7k+7yKNcC3FAu00vA6BbJTvjbjwzXIUXMVDKouPv
-	 NvJX0eKVddAr5rNNtBBhBARne9KYxvRoqUXY2erpqiIO7YYDfHL8L2mTX6rMSzjUdA
-	 CHm5M7pnflhyPXkjRmH/DbMmPMXYFKRfRDT0QfnwoZoMVNUZ7VAK1r9INLydKMlS4f
-	 nsX4yc226TC7WBw+dICjpg2URLHV/Nzn0Pmeb3H/cYGVYT4iM/OORgfwFUX8kJrrZO
-	 ReBFjWyY+T2Hw==
-Date: Tue, 10 Jun 2025 18:31:17 +0000
-To: Chris Hyser <chris.hyser@oracle.com>
-From: Dhaval Giani <dhaval@gianis.ca>
-Cc: Peter Zijlstra <peterz@infradead.org>, Mel Gorman <mgorman@techsingularity.net>, longman@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] sched/numa: Add ability to override task's numa_preferred_nid.
-Message-ID: <aEh57Evd4WmrrvJx@fedora>
-In-Reply-To: <20250415013625.3922497-1-chris.hyser@oracle.com>
-References: <20250415013625.3922497-1-chris.hyser@oracle.com>
-Feedback-ID: 128275035:user:proton
-X-Pm-Message-ID: 90d4a2606a44807fb094d3a81946aa08cbd9fbad
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="DGH9/8DV"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ZspFmFldlHaV2dBXODbLjKiDE7zNBqF1MgU2BS+ZZn8KZ7zYONEhBVZ9Ldf7OLIP3gVwBLtJZhBGN18Fu9SdDMamL4NcoSPfDYzm3GxIy5TELhVQQ1O/Q17pjJ3fYJFpWA0c8RIp966CI3tZtJzAXwHDZVsyA++uLvRcbzRbWmyDHhGRvl9FXF4dibs/HxK0mYmsG9X6W3Juwft8YX0X/WIrhcK8azsXgVnjwCZTNrFWZGCiWHCB9oxDIiaZUFqqXzd7UVeKlDrD4CK0zUN68ETvwya3TrCLJRh1G3rbIQI/2dGiHhK2orjC/4weRJ/2YqvpIro8DfZDrzbrSwkY2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hj4eIt+VHqO2LftBpI1JFvYK+i8DFAwq/017OGu24Bs=;
+ b=boV4lghEu3j3K8yqOrqNqltFIC/PtKYbc5bsuFlsnKgPIqZw2BXZsFqEFxydKVHmI5c5wr27phT54MSNDH1eBMBgEQ19zxuWcKznd+9G+0BbNWvlzmFMrgBgjvLcKZG0iCye1nT/31AmCfFfUWugm0is9dWCcQAGKhM/zd4Aisem14gEeamdLlu2gyzH2of99l6OP5FGRZU6qvI2I3OUByS0OPyo3pJIs3RB9hWhsUGTNIDFFhhjkFwXkBy6qBbFLey58Y1/5cc5Ddo+prJc02uZJ18Wv+9QnT+IwsXdnPwGJQ6ie8u6AggYR7L9aEyZzn0TI1pAXmmIIq1BOBiLwg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hj4eIt+VHqO2LftBpI1JFvYK+i8DFAwq/017OGu24Bs=;
+ b=DGH9/8DVlm9k5Qt7xSmBSh49ed+YbOU0sw0qxMc13+cvq8PplPz4PlGdNNgY0Z9qZg90vSQVPeq+fu426YwTp3rGDgiRgqI9s994SQzpg48NwgbACWuuNQDSQThihk9kFEYlzvx6Bfgy5bLLA2UWbi7T1zZtlWUDm04XzVZqFSxLGM2cJl27k7HSowzjJZ3+UDyyxnlmRlBl/2/Mowu1xipkV2IzNCNr9HUEh0tMONd02KKwHWOh0eJHNRmNQ5hM7D8ckyGXdYcu8ldo7oKrfe53886Bivyf9e+ZmvdPPRK1jwrO0GXJZ0fn8b+axhpDfOnOK7F/FsLBcnIrUTYFaA==
+Received: from CH5P221CA0005.NAMP221.PROD.OUTLOOK.COM (2603:10b6:610:1f2::29)
+ by DS2PR12MB9592.namprd12.prod.outlook.com (2603:10b6:8:27c::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Tue, 10 Jun
+ 2025 18:32:40 +0000
+Received: from CH3PEPF0000000E.namprd04.prod.outlook.com
+ (2603:10b6:610:1f2:cafe::50) by CH5P221CA0005.outlook.office365.com
+ (2603:10b6:610:1f2::29) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.35 via Frontend Transport; Tue,
+ 10 Jun 2025 18:32:39 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ CH3PEPF0000000E.mail.protection.outlook.com (10.167.244.42) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8835.15 via Frontend Transport; Tue, 10 Jun 2025 18:32:39 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 10 Jun
+ 2025 11:32:22 -0700
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 10 Jun
+ 2025 11:32:22 -0700
+Received: from nvidia.com (10.127.8.12) by mail.nvidia.com (10.129.68.9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Tue, 10 Jun 2025 11:32:19 -0700
+Date: Tue, 10 Jun 2025 11:32:17 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: <jgg@nvidia.com>, <kevin.tian@intel.com>
+CC: <will@kernel.org>, <robin.murphy@arm.com>, <joro@8bytes.org>,
+	<ddutile@redhat.com>, <yi.l.liu@intel.com>, <peterz@infradead.org>,
+	<jsnitsel@redhat.com>, <praan@google.com>,
+	<linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, <patches@lists.linux.dev>,
+	<baolu.lu@linux.intel.com>
+Subject: Re: [PATCH v1 00/12] iommufd: Repare for IOMMUFD_OBJ_HW_QUEUE
+Message-ID: <aEh6Ma6hLrs78VMA@nvidia.com>
+References: <cover.1749488870.git.nicolinc@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <cover.1749488870.git.nicolinc@nvidia.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PEPF0000000E:EE_|DS2PR12MB9592:EE_
+X-MS-Office365-Filtering-Correlation-Id: d465d5ae-fd34-4da5-f61d-08dda84d2e56
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|7416014|376014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?u1iM7jmzI8EA7TJ1R5S0eLezyRD9SrrRPWghAUBLtwoGqnQxZpCvsuD/iOBe?=
+ =?us-ascii?Q?sMgSpVB8fxPd1+Dmluxm+0rmngLA6snR2ou1XQOPxGKW5UsQDBMkEBdjwXUK?=
+ =?us-ascii?Q?y3XMe+ugsT/xOqMjcnMrOH3a2cS7OskgIyd1GJZ4TyWk7ZriyGfjGZ/DQWRQ?=
+ =?us-ascii?Q?tGlAThfPpgkeChBgkxNhK3yKrDokbX6FYsg9rae40M9A3BerV1Djb4xCCQi6?=
+ =?us-ascii?Q?6z7AAvt2ejKYKghhzt+t3ZlSaauPb7fLYiunUl0bOwt2qngzBhy9zY/EUPMB?=
+ =?us-ascii?Q?HUGTt6kciWtu6DNTvhiqGQYZi+NX3tvi+2DcnQO+ATepy/ivuX1wd244pw18?=
+ =?us-ascii?Q?8sKvOwRf3/VOQJSZzHB7uayAvUAPOw8m9SpggSMznabaJ+V0oTkN2Hu+vUKF?=
+ =?us-ascii?Q?+8urdkVfTmvuJG198Q7U0G2jokqFfQR3+VjyutAZnbAOi9q35qNY90U0V0Ix?=
+ =?us-ascii?Q?KdKlSzYlPvR8smFIxbgVIbbhnFYza5cajFNtgwxitnUQNnoOGIsWP79wxNpd?=
+ =?us-ascii?Q?l8QOoEPfJ8qZV92rENHemh73BTCS4WBA/1DM83GO3DvzBQGwNvR+ak21R5ic?=
+ =?us-ascii?Q?F+xBYeUZnwzPgxTN6LoiFojjnSx7u8olB43intEWMxVIU4XHtZ8B38GTHEw9?=
+ =?us-ascii?Q?dlNS8RD4yVOc7MStx8Gn9ld15PHSM2kvirevah8a49iwvRLEQj16Wlbx4oDg?=
+ =?us-ascii?Q?Hn52pKiXnbQGTjwmZm5DeO1v0WuL1vkFC7aRBUekhddMKYFWdf/rBkYpGcpi?=
+ =?us-ascii?Q?LYVVhbFHk6/gPTBs8W7IGaZKSXiHA8g/reCWRiO+L8TYrYTKXFMJd/ySLT+0?=
+ =?us-ascii?Q?VlnVeoY+cv2wIWJuigKgCl8/48fbf9tRcLhOa3yq3Bt9mIUvjpX8nGgw8y56?=
+ =?us-ascii?Q?K/1cUihUGaqVqHzAmXeG6T3VOeSL2fjE8c1ncuOISCTPtDK1Tf/P7sx7VKgR?=
+ =?us-ascii?Q?BBv1MZ03hoB5ocbh2s91VcGmQQZ4fe93Hvd8tSF810SXVUDe33LgT9NDhuaY?=
+ =?us-ascii?Q?vEDmy1V37lPoj6sV8yWipq8A525PXOxtRJCauugyID47ADWtlzAqNIhNYUfS?=
+ =?us-ascii?Q?GRULlY2zwAcYaO7IhUbjYL1oIR44tA+vt5pN3guI6oCeVy/TWG6CIG8kn1tz?=
+ =?us-ascii?Q?cR3rTrM/8jJ5fzvWMhY+3a4TVgJ7jT5FeEDg7wxZzO6laE9e37nqTlBs+cGV?=
+ =?us-ascii?Q?jVagGNIdalOqjDQhy9vq1daTgGtvYIClIwKwVJrhkk3TQ1UFtPAnYJOBcZPb?=
+ =?us-ascii?Q?KNsgtri5YhVCxjZCM6Rn12StaaZJpbCjhkTNz6GesDXwUJOnAX4p1Gf+gV2o?=
+ =?us-ascii?Q?gh4dwlIzYLxBQDAwpiXJwBjt9bDEx4LB6jTyTCpPwrFysXJ8QW3syfIkW4UX?=
+ =?us-ascii?Q?bB7C29uD5c45UJa6Pbzi2nUDEAs7+dydR6P9eyns6j6itMtFNdB0hvECwvG4?=
+ =?us-ascii?Q?SdWL0VBOJ+NGT2XeADWJZswNvTbxsA30uzgwy0C0tMBjetcnZTI81gptJ4Ao?=
+ =?us-ascii?Q?Cxowq9qaeFvGjYAXHVXR4uW1UVduDI555nCV?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(7416014)(376014)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 18:32:39.8518
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d465d5ae-fd34-4da5-f61d-08dda84d2e56
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH3PEPF0000000E.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS2PR12MB9592
 
-On Mon, Apr 14, 2025 at 09:35:51PM -0400, Chris Hyser wrote:
-> From: chris hyser <chris.hyser@oracle.com>
->=20
-> This patch allows directly setting and subsequent overriding of a task's
-> "Preferred Node Affinity" by setting the task's numa_preferred_nid and
-> relying on the existing NUMA balancing infrastructure.
->=20
-> NUMA balancing introduced the notion of tracking and using a task's
-> preferred memory node for both migrating/consolidating the physical pages
-> accessed by a task and to assist the scheduler in making NUMA aware
-> placement and load balancing decisions.
->=20
-> The existing mechanism for determining this, Auto NUMA Balancing, relies
-> on periodic removal of virtual mappings for blocks of a task's address
-> space. The resulting faults can indicate a preference for an accessed
-> node.
->=20
-> This has two issues that this patch seeks to overcome:
->=20
-> - there is a trade-off between faulting overhead and the ability to detec=
-t
->   dynamic access patterns. In cases where the task or user understand the
->   NUMA sensitivities, this patch can enable the benefits of setting a
->   preferred node used either in conjunction with Auto NUMA Balancing's
->   default parameters or adjusting the NUMA balance parameters to reduce t=
-he
->   faulting rate (potentially to 0).
->=20
-> - memory pinned to nodes or to physical addresses such as RDMA cannot be
->   migrated and have thus far been excluded from the scanning. Not taking
->   those faults however can prevent Auto NUMA Balancing from reliably
->   detecting a node preference with the scheduler load balancer then
->   possibly operating with incorrect NUMA information.
->=20
-> The following results were from TPCC runs on an Oracle Database. The syst=
-em
-> was a 2-node Intel machine with a database running on each node with loca=
-l
-> memory allocations. No tasks or memory were pinned.
->=20
-> There are four scenarios of interest:
->=20
-> - Auto NUMA Balancing OFF.
->     base value
->=20
-> - Auto NUMA Balancing ON.
->     1.2% - ANB ON better than ANB OFF.
->=20
-> - Use the prctl(), ANB ON, parameters set to prevent faulting.
->     2.4% - prctl() better then ANB OFF.
->     1.2% - prctl() better than ANB ON.
->=20
-> - Use the prctl(), ANB parameters normal.
->     3.1% - prctl() and ANB ON better than ANB OFF.
->     1.9% - prctl() and ANB ON better than just ANB ON.
->     0.7% - prctl() and ANB ON better than prctl() and ANB ON/faulting off
->=20
-> In benchmarks pinning large regions of heavily accessed memory, the
-> advantages of the prctl() over Auto NUMA Balancing alone is significantly
-> higher.
->=20
-> Signed-off-by: Chris Hyser <chris.hyser@oracle.com>
-> ---
->  include/linux/sched.h |  1 +
->  init/init_task.c      |  1 +
->  kernel/sched/core.c   |  5 ++++-
->  kernel/sched/debug.c  |  1 +
->  kernel/sched/fair.c   | 15 +++++++++++++--
->  5 files changed, 20 insertions(+), 3 deletions(-)
->=20
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index f96ac1982893..373046c82b35 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -1350,6 +1350,7 @@ struct task_struct {
->  =09short=09=09=09=09pref_node_fork;
->  #endif
->  #ifdef CONFIG_NUMA_BALANCING
-> +=09int=09=09=09=09numa_preferred_nid_force;
->  =09int=09=09=09=09numa_scan_seq;
->  =09unsigned int=09=09=09numa_scan_period;
->  =09unsigned int=09=09=09numa_scan_period_max;
-> diff --git a/init/init_task.c b/init/init_task.c
-> index e557f622bd90..1921a87326db 100644
-> --- a/init/init_task.c
-> +++ b/init/init_task.c
-> @@ -184,6 +184,7 @@ struct task_struct init_task __aligned(L1_CACHE_BYTES=
-) =3D {
->  =09.vtime.state=09=3D VTIME_SYS,
->  #endif
->  #ifdef CONFIG_NUMA_BALANCING
-> +=09.numa_preferred_nid_force =3D NUMA_NO_NODE,
->  =09.numa_preferred_nid =3D NUMA_NO_NODE,
->  =09.numa_group=09=3D NULL,
->  =09.numa_faults=09=3D NULL,
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 79692f85643f..7d1532f35d15 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -7980,7 +7980,10 @@ void sched_setnuma(struct task_struct *p, int nid)
->  =09if (running)
->  =09=09put_prev_task(rq, p);
->=20
-> -=09p->numa_preferred_nid =3D nid;
-> +=09if (p->numa_preferred_nid_force !=3D NUMA_NO_NODE)
-> +=09=09p->numa_preferred_nid =3D p->numa_preferred_nid_force;
-> +=09else
-> +=09=09p->numa_preferred_nid =3D nid;
->=20
->  =09if (queued)
->  =09=09enqueue_task(rq, p, ENQUEUE_RESTORE | ENQUEUE_NOCLOCK);
-> diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-> index 56ae54e0ce6a..4cba21f5d24d 100644
-> --- a/kernel/sched/debug.c
-> +++ b/kernel/sched/debug.c
-> @@ -1154,6 +1154,7 @@ static void sched_show_numa(struct task_struct *p, =
-struct seq_file *m)
->  =09=09P(mm->numa_scan_seq);
->=20
->  =09P(numa_pages_migrated);
-> +=09P(numa_preferred_nid_force);
->  =09P(numa_preferred_nid);
->  =09P(total_numa_faults);
->  =09SEQ_printf(m, "current_node=3D%d, numa_group_id=3D%d\n",
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 0c19459c8042..79d3d0840fb2 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -2642,9 +2642,15 @@ static void numa_migrate_preferred(struct task_str=
-uct *p)
->  =09unsigned long interval =3D HZ;
->=20
->  =09/* This task has no NUMA fault statistics yet */
-> -=09if (unlikely(p->numa_preferred_nid =3D=3D NUMA_NO_NODE || !p->numa_fa=
-ults))
-> +=09if (unlikely(p->numa_preferred_nid =3D=3D NUMA_NO_NODE))
->  =09=09return;
->=20
-> +=09/* Execute rest of function if forced PNID */
+On Mon, Jun 09, 2025 at 10:13:23AM -0700, Nicolin Chen wrote:
+> The new HW Queue object will require more interactions with IOMMU drivers,
+> with a few more for-driver APIs. This will complicate the driver-allocated
+> structure design like the viommu_alloc op: since the core structure is not
+> initialized during the driver allocation stage, a new for-driver API can't
+> reference any member in the core vIOMMU structure.
+> 
+> Make a preparatory series doing:
 
-This comment had me confused, expecially since you check for
-NUMA_NO_NODE and exit right after. Move it to after please.
+So, Don pointed out that "Repare" is a typo here. All this series
+doing is to "Prepare", as IOMMUFD_OBJ_HW_QUEUE hasn't been merged
+yet.
 
-> +=09if (p->numa_preferred_nid_force =3D=3D NUMA_NO_NODE) {
-> +=09=09if (unlikely(!p->numa_faults))
-> +=09=09=09return;
-> +=09}
-> +
+Also the main goal of this series is to replace viommu_alloc with
+get_viommu_size + viommu_init. The patch that introduces the two
+new ops has the full details (though I should have some narrative
+clearly show the idea in the cover letter too):
 
-I am in two minds with this one here -> Why the unlikely for
-p->numa_faults, and can we just make it one single if function?
+--------------------------------------------------------------------------
+So far, a vIOMMU object has been allocated by IOMMU driver and initialized
+with the driver-level structure, before it returns to the iommufd core for
+core-level structure initialization. It has been requiring iommufd core to
+expose some core structure/helpers in its driver.c file, which result in a
+size increase of this driver module.
 
->  =09/* Periodically retry migrating the task to the preferred node */
->  =09interval =3D min(interval, msecs_to_jiffies(p->numa_scan_period) / 16=
-);
->  =09p->numa_migrate_retry =3D jiffies + interval;
-> @@ -3578,6 +3584,7 @@ void init_numa_balancing(unsigned long clone_flags,=
- struct task_struct *p)
->=20
->  =09/* New address space, reset the preferred nid */
->  =09if (!(clone_flags & CLONE_VM)) {
-> +=09=09p->numa_preferred_nid_force =3D NUMA_NO_NODE;
->  =09=09p->numa_preferred_nid =3D NUMA_NO_NODE;
->  =09=09return;
->  =09}
-> @@ -9301,7 +9308,11 @@ static long migrate_degrades_locality(struct task_=
-struct *p, struct lb_env *env)
->  =09if (!static_branch_likely(&sched_numa_balancing))
->  =09=09return 0;
->=20
-> -=09if (!p->numa_faults || !(env->sd->flags & SD_NUMA))
-> +=09/* Execute rest of function if forced PNID */
+Meanwhile, IOMMU drivers are now requiring more vIOMMU-base structures for
+some advanced feature, such as the existing vDEVICE and a future HW_QUEUE.
+Initializing a core-structure later than driver-structure gives for-driver
+helpers some trouble, when they are used by IOMMU driver assuming that the
+new structure (including core) are fully initialized, for example:
+    // my_viommu is successfully allocated
+    my_viommu = iommufd_viommu_alloc(...);
+    // This may crash if it reads viommu->ictx
+    new = iommufd_new_viommu_helper(my_viommu->core ...);
 
-Same here.
+To ease such a condition, allow the IOMMU driver to report the size of its
+vIOMMU structure, let the core allocate a vIOMMU object and initialize the
+core-level structure first, and then hand it over the driver to initialize
+its driver-level structure.
 
-> +=09if (p->numa_preferred_nid_force =3D=3D NUMA_NO_NODE && !p->numa_fault=
-s)
-> +=09=09return 0;
-> +
-> +=09if (!(env->sd->flags & SD_NUMA))
->  =09=09return 0;
->=20
->  =09src_nid =3D cpu_to_node(env->src_cpu);
-> --
-> 2.43.5
->=20
->=20
+Thus, this requires two new iommu ops, get_viommu_size and viommu_init, so
+iommufd core can communicate with drivers to replace the viommu_alloc op.
 
+This also adds a VIOMMU_STRUCT_SIZE macro, for drivers to use, which would
+statically sanitize the driver structure.
+--------------------------------------------------------------------------
+
+Thanks.
