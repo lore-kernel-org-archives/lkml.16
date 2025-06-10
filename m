@@ -1,39 +1,72 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91E3B284680;
-	Tue, 10 Jun 2025 10:29:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D2621CC71
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 10:31:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749551349; cv=none; b=GW8jKBl+HR3B3aohmffE2GqE5qZkGFTDwFDZVRUhG99+EFezId4MuhvvqnhXUa7avdLdwT4Li/664mzae/jrsNFrCQLTbQaQ1SHAF2oPKmYK+4yuUmOP8HFqNzI14fLFmgB97oXYy0/sk920NnTxMeV9k3o9j9k1vqqQydVs7jE=
+	t=1749551499; cv=none; b=D4lsIgzjn1rHpmsbodYxF93HlO0T+8yV+wgXt/n2s6Pu7Fh173ziilFX5VsHxcFsgmKoeQpAmeQ5MUCJ/bjbS1nvkbTU4cK1mBRfsEyiBIz0UaBjwV2hUz/vW7h1Lw1qlz1zWKJCPiYcxzbdcEN8x9jxn7dRsu2Ph5nV283ulqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749551349; c=relaxed/simple;
-	bh=Rtd3pFuAhLEj1b++dY11/888BB8LN7Xu4DyIIFzdmvE=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=CZTqu7QNWAbn2QyGwwq+Uk/wNuNXOIgm8Ozz1OV+Yvb/Nrgqu2cnZvCfiS5hFo/e8qoDJPKOPtp/+e4UePMS7H8o02sPliALNEtJMxECLk/nkHyT0AoclqZ1ANy5kNkMBNCoLA0h3vw31nHnG+f7QCyhPhI/hfDK/OXqYHit6jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=teIVKaOm; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1749551499; c=relaxed/simple;
+	bh=LOqe1RLdwEyzMY3A0yfvtChRFDkRw9QBcQz7Tw0jUdc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EMzaMM3SfNVLUm4xZmBmPERYtqiwoPO6t93JBv8YfBpVf+h6EMqx4QmtHkMR9dWL+3x996svWGBlTX96muBRyNgaiZdoFsycqccYp2j7NfouFt/DWybcA862SJxj0+VDU6QaETRisKMaUvivM+n1VAtZf7VfbeD9/MsshjZqxsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bvyta0Ed; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="teIVKaOm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1749551324; x=1750156124; i=markus.elfring@web.de;
-	bh=iplk9G/YUE6CdfGYRbp70bB5+UXPrtqOFc3uVsWuJLI=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
-	 Subject:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=teIVKaOmraJpH9b5udlaRX2XwEHJH8j76j0Ms6Sw7ViLdXrtAEp/LUQX/OlHe5fX
-	 CoEyH9l75ZjtI4y0c3RXnzKtqxBPXMX18rGX7EukRTqpxGNCQwV1AD2ZmToxZuLz1
-	 ujzs1TQIcyKp85AnjsPLfrQNCq4YWxHnPuk92WZDxseirZyULPK7OZ5Fp+540Pvy6
-	 ed5Q0oWgZETXd2tmDYPiN/TvafUQCtvQyzMFTXxXrrtmu9MJB6lHTyMYH03shVIT3
-	 yNWuArbF+Ja6u3d7olIRYbqPmoasC5aORIoO+vLc11MPo3bqvahd9JxmWy5/NJ88w
-	 DJcAkjxHaHxh2qoJcQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.69.183]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mkmvj-1v6pYi47B9-00bVLU; Tue, 10
- Jun 2025 12:28:44 +0200
-Message-ID: <d3066a18-2e78-43ae-ad3b-8931777ee265@web.de>
-Date: Tue, 10 Jun 2025 12:28:43 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bvyta0Ed"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749551496;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=N1iMTIMQ7+7DUjp8KDqPoWh+KLZ78KCNqt1HLSEYoGw=;
+	b=bvyta0EdrfdvBdCuz1plkEH0lLOUSQ4y9cuwzy2WhU8S2RB6OKj7AKynH70C/qwVSQrGCr
+	mLq0SR76R9XPCYc1CVLmc4vNyj37aoojEAHXJKXT0GAAcEYwV5E4EoS86XXKMldD17AW0H
+	7kAxKVaOawBYU5ZRz69G6xjRrQIcMJQ=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-53-lkGAw1GOPwmfKrQz9ykjEA-1; Tue, 10 Jun 2025 06:31:35 -0400
+X-MC-Unique: lkGAw1GOPwmfKrQz9ykjEA-1
+X-Mimecast-MFC-AGG-ID: lkGAw1GOPwmfKrQz9ykjEA_1749551494
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-39ee4b91d1cso2995829f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 03:31:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749551494; x=1750156294;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=N1iMTIMQ7+7DUjp8KDqPoWh+KLZ78KCNqt1HLSEYoGw=;
+        b=APLC5k12mW9FrTQzITEsK1a9gOCzRGyOg+2ENnh2oO6vmVH/AZcX/9hp/R+WbLNa31
+         +f1O8IFCcHFONYXGoBwny2sJPuLmPJLIEjOXmb3Gkxe1rj1vvRwppKXEsdz2DZmB+1QQ
+         SBWPWWmfVBTMcEgTItqZjvPtky1K/Ah2VRe/dUt2p4XGAqGoH7V1xB9C+6TxrLGrk5Fd
+         8OoZ49Bb44KrZAfgvvaSfqi3Xl3C9envRAqIsIcZGLWihH7XwmrWQ2Fye2B+sX8zuF/L
+         W7EVOHVvQWc0bjQ1YyuE+bt3ZIYYc+txQ/R9+7fng8kwztdgydW2abMyL9YBNiJLdbav
+         Q47A==
+X-Forwarded-Encrypted: i=1; AJvYcCUSiZEPsNUC+DK5zP+8gXNa22O1WUfri4+mDrKFnuvPwe1cElOkMHxrrhG+VDAYQRaA2Xj8UzmkXbU6hzQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLwAw+p6/yEAe136b1K0Y9M/JddwQtKLQu3r1ZcsxV6DBGuil5
+	oBALls3VqkJpoOhcWkr9e2r2D1yuZhHSWDxjbBkh6PBl7MktmJcLZR4pmU9ptWkTxyFW1zYtxpH
+	4ZHNteDfoTlK6HKA6uzJZqZuILzjFHgFfjzPXKySzhvTQra9sM4bsHTVcD6VpYcpqcQ==
+X-Gm-Gg: ASbGncvaYuh9g3R+FHeRMiaW3Ef3AXFWJJfK2ZurOTW1LkfQlM4zFjVxYWfmfjaMxV5
+	1xdkhYKwCKA/aGdQClvlscteAcpaavuKFjHCqeOVvQKJ4z0caIrrnU6eEWp9YzHM9fhVmeHBEhZ
+	PulUt6v8Um2eZCf3jleKg+OOet6QqmIMoC9P+7idY91IgkU1QBuyExeSgyll4oSu5TquhVgxWeQ
+	21QmJTBo/+DRCe5DI1sQN7S61ssRDECQcAsgo41hA0jV484gM/dZOhs5BQPTtAB3teB0OIzrpqy
+	U370ZI5I+Y8wc5RmdyKSpOyeAPPJs+DbUXC/QeiC60IQaMK27Tj8CfA=
+X-Received: by 2002:a05:6000:2582:b0:3a4:eee4:cdec with SMTP id ffacd0b85a97d-3a5513de345mr2353231f8f.6.1749551493741;
+        Tue, 10 Jun 2025 03:31:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IELymAnGPTU47bn5imUR1l2ClSyV29BnZs5PUjEk1sVG38IO8kWXeey+NsP5zTE8kHRmyj6VQ==
+X-Received: by 2002:a05:6000:2582:b0:3a4:eee4:cdec with SMTP id ffacd0b85a97d-3a5513de345mr2353208f8f.6.1749551493381;
+        Tue, 10 Jun 2025 03:31:33 -0700 (PDT)
+Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4526e155ce7sm135671755e9.10.2025.06.10.03.31.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Jun 2025 03:31:32 -0700 (PDT)
+Message-ID: <f9155f8d-022c-4341-85da-5b08d6a3aee9@redhat.com>
+Date: Tue, 10 Jun 2025 12:31:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,100 +74,137 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: linux-mips@vger.kernel.org, Jiri Slaby <jirislaby@kernel.org>,
- =?UTF-8?Q?Thomas_Bogend=C3=B6rfer?= <tsbogend@alpha.franken.de>,
- Thomas Gleixner <tglx@linutronix.de>
-Content-Language: en-GB, de-DE
-Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] MIPS: SGI-IP27: Delete an unnecessary check before kfree() in
- hub_domain_free()
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:6sDCa4Zz9iTo+8qgwRBAhbZqXlQPhEz5rIry9Gt9Y9huqtNkume
- CQFLuysP+UwRJNHPI8xMNOWyrUFjId5Ia0/nidX3ME3U47GsA8XuyPczOTCLOP9EK7PbTIz
- bWZsAfaGW6hNNcMbE5Sk4d5MQ3hImNzmj/ZH4yyXBOiW0QEKvtQ0V5fsVN5VZ+SVfbhfyoc
- D+bNDq4LK+rAwmcoP0WFw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:pORGXAqGw8o=;g/8gELKiq71z+3ouoZm/VuC5TEP
- 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
+Subject: Re: [PATCH] lib/test_hmm: reduce stack usage
+To: Arnd Bergmann <arnd@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?=
+ <jglisse@redhat.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Alistair Popple <apopple@nvidia.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Thorsten Blum <thorsten.blum@linux.dev>,
+ Jeff Johnson <jeff.johnson@oss.qualcomm.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250610092159.2639515-1-arnd@kernel.org>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250610092159.2639515-1-arnd@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Tue, 10 Jun 2025 11:44:20 +0200
+On 10.06.25 11:21, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> The various test ioctl handlers use arrays of 64 integers that add up to 1KiB
+> of stack data, which in turn leads to exceeding the warning limit in some
+> configurations:
+> 
+> lib/test_hmm.c:935:12: error: stack frame size (1408) exceeds limit (1280) in 'dmirror_migrate_to_device' [-Werror,-Wframe-larger-than]
+> 
+> Use half the size for these arrays, in order to stay under the warning limits.
+> The code can already deal with arbitrary lengths, but this may be a little less
+> efficient.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>   lib/test_hmm.c | 14 +++++++-------
+>   1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/lib/test_hmm.c b/lib/test_hmm.c
+> index 5b144bc5c4ec..761725bc713c 100644
+> --- a/lib/test_hmm.c
+> +++ b/lib/test_hmm.c
+> @@ -330,7 +330,7 @@ static int dmirror_fault(struct dmirror *dmirror, unsigned long start,
+>   {
+>   	struct mm_struct *mm = dmirror->notifier.mm;
+>   	unsigned long addr;
+> -	unsigned long pfns[64];
+> +	unsigned long pfns[32];
+>   	struct hmm_range range = {
+>   		.notifier = &dmirror->notifier,
+>   		.hmm_pfns = pfns,
+> @@ -879,8 +879,8 @@ static int dmirror_migrate_to_system(struct dmirror *dmirror,
+>   	unsigned long size = cmd->npages << PAGE_SHIFT;
+>   	struct mm_struct *mm = dmirror->notifier.mm;
+>   	struct vm_area_struct *vma;
+> -	unsigned long src_pfns[64] = { 0 };
+> -	unsigned long dst_pfns[64] = { 0 };
+> +	unsigned long src_pfns[32] = { 0 };
+> +	unsigned long dst_pfns[32] = { 0 };
+>   	struct migrate_vma args = { 0 };
+>   	unsigned long next;
+>   	int ret;
+> @@ -939,8 +939,8 @@ static int dmirror_migrate_to_device(struct dmirror *dmirror,
+>   	unsigned long size = cmd->npages << PAGE_SHIFT;
+>   	struct mm_struct *mm = dmirror->notifier.mm;
+>   	struct vm_area_struct *vma;
+> -	unsigned long src_pfns[64] = { 0 };
+> -	unsigned long dst_pfns[64] = { 0 };
+> +	unsigned long src_pfns[32] = { 0 };
+> +	unsigned long dst_pfns[32] = { 0 };
+>   	struct dmirror_bounce bounce;
+>   	struct migrate_vma args = { 0 };
+>   	unsigned long next;
+> @@ -1144,8 +1144,8 @@ static int dmirror_snapshot(struct dmirror *dmirror,
+>   	unsigned long size = cmd->npages << PAGE_SHIFT;
+>   	unsigned long addr;
+>   	unsigned long next;
+> -	unsigned long pfns[64];
+> -	unsigned char perm[64];
+> +	unsigned long pfns[32];
+> +	unsigned char perm[32];
+>   	char __user *uptr;
+>   	struct hmm_range range = {
+>   		.hmm_pfns = pfns,
 
-It can be known that the function =E2=80=9Ckfree=E2=80=9D performs a null =
-pointer check
-for its input parameter.
-It is therefore not needed to repeat such a check before its call.
+Should we just add a define for the common value (now 32)?
 
-Thus remove a redundant pointer check.
+TEST_HMM_NR_PFN or sth like that.
 
-The source code was transformed by using the Coccinelle software.
+-- 
+Cheers,
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- arch/mips/sgi-ip27/ip27-irq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/mips/sgi-ip27/ip27-irq.c b/arch/mips/sgi-ip27/ip27-irq.c
-index 288d4d17eddd..20ef663af16e 100644
-=2D-- a/arch/mips/sgi-ip27/ip27-irq.c
-+++ b/arch/mips/sgi-ip27/ip27-irq.c
-@@ -165,7 +165,7 @@ static void hub_domain_free(struct irq_domain *domain,
- 		return;
-=20
- 	irqd =3D irq_domain_get_irq_data(domain, virq);
--	if (irqd && irqd->chip_data)
-+	if (irqd)
- 		kfree(irqd->chip_data);
- }
-=20
-=2D-=20
-2.49.0
+David / dhildenb
 
