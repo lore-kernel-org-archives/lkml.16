@@ -1,102 +1,176 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C718828F503;
-	Tue, 10 Jun 2025 12:29:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8931228F503;
+	Tue, 10 Jun 2025 12:29:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749558544; cv=none; b=i4FAmXUIevhjQCKMrs0wPsTvMxvuxc1bs2MeSb7ZF6ohCl4qBjI26d1DDol8Qi/mLQgHzJ50tQj0tGxl8BrPLWfbNt8lMsoUirIqVRxTKlK49QcA/26Gdf8LNvM/I79xt/usS9vqwGTsWkClbhaMjtltvIG4a36ztz3Cbsqjd40=
+	t=1749558555; cv=none; b=Wi03Qaej8r7mQloqso7MmS7KxPssyQQab5+KURsuojdRgfeWkvnRn80+j6n000MzXQd62Edz1xaO520ezuysww+woZ7kDMYKuEBal4qPl23PYKI+2R9vC+4D/tnwtV4rSLS02gVsCEpEXrvT2SEUDKR5R6puL7aLy8giHrmboJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749558544; c=relaxed/simple;
-	bh=2UbnsN/0HzJVFD9xlg8jO4RD2i/2zdrcJP360HZf1sg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BpERMqeefHJ9OHHHssrTmmAT0dls984l8JE8Wy8udoY6L6UMDOJNomXe8wbqFtdSlnzvm/FkbyAOAK9mOynI+p7lOiC5EX6148GIbG1FSC46ewvRkXe6JOaKyOc++FC+1xw3L2SJnAbR8OqWJa5rHoGvXLDwtqVjuodKorhxXKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fqXFtLY7; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749558555; c=relaxed/simple;
+	bh=s/Mms/MwIMqVWLnjCgYLsX7RxmSQ4yf/IkuaD8FSw5s=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=pNoCA09l++Rp8Dxj8mHYiKOh8ISrJpjpGSngS8be2pHJRKD0vnCtQYr4WCRRIdUzzESSexUUrTBS+F+eAfVniyNctYXxaHVE5D23V2QaielfTB9if+5NLRg/k5OgZW5qdkPOfZCLBFI1mQ1RgWmKDeNaB1jOeicrRVxgV9+lUZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=SQHIPIgZ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=HzuuaZn9; arc=none smtp.client-ip=202.12.124.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fqXFtLY7"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-313290ea247so796561a91.3;
-        Tue, 10 Jun 2025 05:29:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749558542; x=1750163342; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2UbnsN/0HzJVFD9xlg8jO4RD2i/2zdrcJP360HZf1sg=;
-        b=fqXFtLY74Fe3HLxwrSUeUv1xQdLX8JoFsCoj2qXezKhexfg2pVcPGcLrGXtgD8l980
-         FvqLxvPPQ8W/A7Ped3TklzHRAWoiocGC4zpE7Irih56I9SKEpBdq9Y4u0/WvUhWKI2xU
-         tJiH6d4fdUPfQA7xTg/qUiDeKvGmOO5AbtrimJ3J/SuQgM7ylN9uuj/tcjasuP2bvf7K
-         ci4uDT0dE4sNAaj0jGUydWDErvL0viF6hq334JQNubUQOCPnlQoDBkVDmt1bO4rAx0P6
-         Dy5P2bsvUfyX3lpeYBRIA7r0SzSIk+aPA0DzJ0Ut7E/Otttg2oDNNGkffgnqNN4/G+su
-         ubpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749558542; x=1750163342;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2UbnsN/0HzJVFD9xlg8jO4RD2i/2zdrcJP360HZf1sg=;
-        b=mXvWEq8Gcj8fV7Z0xvXxO1AGbzvTs1fWZg3Ji+j/gm36XKo9h1OdQ2G4FbwR4uD3+a
-         SwdlQRU3t+BYFM5E7zugMj1WD83UPTM9Mwhpym6GPmmR6Typm9MZP2gtMp40VRkBBmk9
-         aSZe1uuYw3aIZ76CzGtiywnCJhq0YUsDPYPwbHuBo8cHMDdJr+7EEnhr4Yr3FtiMRLEp
-         Uk+fGgmXHrkRxSBsxlttJiZ0n4zQKSbUC5MD1HJN3raxjZtKDCsrwhSvx/KwniKXHeRe
-         enQ1FuGFa9Nk2TB2SrhkDT9iaBUBZUp82UYtyn0BYekLblD4vm+Cs1A/6Sfc+xJ+0tHJ
-         WGIA==
-X-Forwarded-Encrypted: i=1; AJvYcCU4/He7tT2vND9UWu4Gx5Zu7s+tFWtxpoVFssGxonsgLgMYXpW/cMQjr1UUYw9CRSSmmEe5cx7TSFj0VEwcO24=@vger.kernel.org, AJvYcCV+Mz1r6wvTWuD+/i5vxBWAVqJ8tnR9MCPYiKnli4MM4cc7Hkjh2sv+iWAopT6tJaAcFk1XhY93xjky@vger.kernel.org, AJvYcCXKXxTRKCimEnM8ZI5pKK1Dy+aOFKIFOSG5o3yWAt4/8H8MbVX0mgIFzd7ZQiOTMNP856Daw5NNJD35DVU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNglMIfelzUGtPuzKvAuujtkg7jeOI67lVACzIXi8x7zMgibg8
-	z6iTyUQ8pnIEwf/4YoMS7vG4lnpBG3JqNs2w5AA84Oe7x/oinRbqtAg5sVW2R7YyVpSyjG69oBV
-	jurrShsAkj6GGVN+jJAmLB4xcCC0gRo8=
-X-Gm-Gg: ASbGnctZgVAhD1vehpXpAMZO0raMhYNYmT1TGWu2Oo9nfy1U02LhD8jnnb9XQr4U5wZ
-	TJBtLMWPas77g3o54go0qy25UvE4lf3/tvjp4eOtgC33qgPQhg9dA1rfEIE1CHg/4wW3Rf/SfcI
-	rgRlLyiYFYnApkcMSknS5fp6SFHy4EVKqNqX+EJC2izAI=
-X-Google-Smtp-Source: AGHT+IGKJQK2v6FM0o5IGKEscQY3VpiTZYOi6jXZ0deKyklBQPXuPdbcZh/CoYwKmI+Zc2LZCYY1j8Z4rnonUI10r5A=
-X-Received: by 2002:a17:90b:53cf:b0:312:e9d:3fff with SMTP id
- 98e67ed59e1d1-3134e2da3c9mr8566788a91.1.1749558541925; Tue, 10 Jun 2025
- 05:29:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="SQHIPIgZ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HzuuaZn9"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 3F4692540105;
+	Tue, 10 Jun 2025 08:29:11 -0400 (EDT)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-12.internal (MEProxy); Tue, 10 Jun 2025 08:29:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1749558551;
+	 x=1749644951; bh=b0KTzhdLUwJk/RA13SFXN+xVrwh40xkCwJtg+vK9uD0=; b=
+	SQHIPIgZzfBrshp4cxz+AB5A778efV2gH0zQ2/lJ9RPmwKPasv3t/YtcYc8G+Mqh
+	ULw6AXTRxXrLL0R0eT0Y+PO3OX+Bu5msiAmyLY640iaXQW7gNqKjk9MdT26pkah6
+	8FaPOwmoiUHB84BqvGAFPX8ZdGT8jXh7dLA6Nzr5gVLHb1d/tmPwk1V4rSodEJoC
+	VBccAx1AYw6h8/p/LdL8DKVjjC3IhZuQlRFEohbwbk5rzhedtoXmzhZ3ViokvutE
+	HMryuSGG1x6x+Fpg9cC8aFIWTyGUHg1Ve2J3lkY32/ietD12FxfriHNRMuwSC1z9
+	E+/5IziFbmxUQR7JgHmqHQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749558551; x=
+	1749644951; bh=b0KTzhdLUwJk/RA13SFXN+xVrwh40xkCwJtg+vK9uD0=; b=H
+	zuuaZn9g6Q7jc7zlV7wtU/xVlh4ExQcCROsAxd5szo+vDar+59MY5uBIkm3lE8aD
+	vgYnDVKN0KDlmnbIXVVmsbuRFlbxjbTxDqsqhDaXuVQnn/v58GMKDzO7Hb4RMHs8
+	PWxOLz3T46MhzHyYBW94mlF88OtaH9GU9P39GRMyZ/3jphG5mhubjngFwcwB+Pzg
+	A0zAzfh1fFx+TjhF6FJgoBzUWbncJZ9EbaUtgxj6DnKR2R7u3Md0qafqqA7eUMo6
+	DeVmxIVoJebyMYzMv8cS0a0GMKqt7is3ZSHJ64RMq7uMHgs8A41Ljk8CG/wkrpwG
+	MDDV4TsVT8K+zImFI+Hyw==
+X-ME-Sender: <xms:FiVIaD1p4SHd_Ol7AIJrdF3aCDwxTwnOzEIeR-C0lCPLLQX5qUOEqQ>
+    <xme:FiVIaCG5uCPvHYYfdSIAp5AbFmhEI9uqQqxboi9Jrak6CVy9CNNpA35eHyERPTxFK
+    ZyEv6jdOOIwx1K4ECY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddutdejgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
+    jeenucfhrhhomhepfdforghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvg
+    hnohhvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthhtvghrnhepgedvgeeufffhtdel
+    iefgjefhgffgiedvjeegleeujeeutdduteehjeduhedtiedtnecuffhomhgrihhnpehkvg
+    hrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhnsggprh
+    gtphhtthhopeduvddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepihhkvghprghn
+    hhgtsehgmhgrihhlrdgtohhmpdhrtghpthhtohepfigprghrmhhinhesghhmgidruggvpd
+    hrtghpthhtohephhhmhheshhhmhhdrvghnghdrsghrpdhrtghpthhtoheplhhkphesihhn
+    thgvlhdrtghomhdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlih
+    hnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepihhlphhordhjrghrvhhinhgvnhes
+    lhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehisghmqdgrtghpihdquggvvh
+    gvlheslhhishhtshdrshhouhhrtggvfhhorhhgvgdrnhgvthdprhgtphhtthhopegtohhr
+    sggvtheslhifnhdrnhgvthdprhgtphhtthhopehhuggvghhovgguvgesrhgvughhrghtrd
+    gtohhm
+X-ME-Proxy: <xmx:FiVIaD7RxmtHxMynnUN8zHb7dflxNnYKtL1YzN2d5z3nArN4N6r5RQ>
+    <xmx:FiVIaI03sHHcoqn41xDZOXyD7KpDhGFmAPuFdUMlbPACTMpmGt_XIQ>
+    <xmx:FiVIaGEZMHKlc1Ma8crv7vr0ybroCqlOU4sVUmImkV0R3xkL9huROg>
+    <xmx:FiVIaJ-QmtmUwgm5Iosg0B3oz9qxAvmOe9bd0YyudIq4vywN8Nwr0w>
+    <xmx:FyVIaNUPQ_RaKZ61HuNj6fZFZuijvSnE6BDgT_fH-FZ0-iXL4YYD63WG>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 09BB62CE0063; Tue, 10 Jun 2025 08:29:10 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610-pointed-to-v2-1-fad8f92cf1e5@kernel.org>
- <ABpacmV2zqpdR5tk6NDHTg9kbssxZOay4JLvHJWs6pS0swz_krftwuUN8k_SABP04TF1k1Z4uW4IH29D2Qb5OA==@protonmail.internalid>
- <CANiq72kYdtozcN1U1yGhi_orh-OVO2xp3=wQPAhwgx=wTi-neA@mail.gmail.com> <871prr24he.fsf@kernel.org>
-In-Reply-To: <871prr24he.fsf@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 10 Jun 2025 14:28:48 +0200
-X-Gm-Features: AX0GCFsUeLNISdH1VBrQM4vnuNs7e3EdSLQvU8l0WJ9OFeQ0M33QThRkcxjaYO4
-Message-ID: <CANiq72kxN45+U9VA8mrPtzYG0xdomehO5A==CX+79iJFJ0edeg@mail.gmail.com>
-Subject: Re: [PATCH v2] rust: types: add FOREIGN_ALIGN to ForeignOwnable
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Tamir Duberstein <tamird@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>
-Content-Type: text/plain; charset="UTF-8"
+X-ThreadId: T95b0e86a2866f664
+Date: Tue, 10 Jun 2025 08:28:49 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Hans de Goede" <hdegoede@redhat.com>, "Jonathan Corbet" <corbet@lwn.net>,
+ ikepanhc@gmail.com, "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
+ "Armin Wolf" <W_Armin@gmx.de>,
+ "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+ linux-doc@vger.kernel.org,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ ibm-acpi-devel@lists.sourceforge.net, LKML <linux-kernel@vger.kernel.org>,
+ "kernel test robot" <lkp@intel.com>
+Message-Id: <f3b5c138-5576-4c01-b177-7450f1e91d24@app.fastmail.com>
+In-Reply-To: <b792059e-44d2-82c0-574c-76c3f6a3129d@linux.intel.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20250609122736.3373471-1-mpearson-lenovo@squebb.ca>
+ <20250609122736.3373471-2-mpearson-lenovo@squebb.ca>
+ <b792059e-44d2-82c0-574c-76c3f6a3129d@linux.intel.com>
+Subject: Re: [PATCH v3 2/2] platform/x86: thinklmi: improved DMI handling
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 10, 2025 at 1:58=E2=80=AFPM Andreas Hindborg <a.hindborg@kernel=
-.org> wrote:
+Hi Ilpo,
+
+On Tue, Jun 10, 2025, at 3:35 AM, Ilpo J=C3=A4rvinen wrote:
+> On Mon, 9 Jun 2025, Mark Pearson wrote:
 >
-> Yea, sorry. I just changed the kbox file where Benno pointed this out. I
-> can change the rest of the places as well.
+>> Fix issues reported by kernel test robot.
+>>  - Require DMI for think-lmi.
+>>  - Check return from getting serial string
+>>=20
+>> Reported-by: kernel test robot <lkp@intel.com>
+>> Closes: https://lore.kernel.org/oe-kbuild-all/202506062319.F0IpDxF6-l=
+kp@intel.com/
+>>=20
+>> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>> ---
+>>  - New patch added to series.
+>>=20
+>>  drivers/platform/x86/lenovo/Kconfig     | 1 +
+>>  drivers/platform/x86/lenovo/think-lmi.c | 8 +++++---
+>>  2 files changed, 6 insertions(+), 3 deletions(-)
+>>=20
+>> diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x=
+86/lenovo/Kconfig
+>> index a4b565283768..207dd7f88ed0 100644
+>> --- a/drivers/platform/x86/lenovo/Kconfig
+>> +++ b/drivers/platform/x86/lenovo/Kconfig
+>> @@ -197,6 +197,7 @@ config THINKPAD_ACPI_HOTKEY_POLL
+>>  config THINKPAD_LMI
+>>  	tristate "Lenovo WMI-based systems management driver"
+>>  	depends on ACPI_WMI
+>> +	depends on DMI
+>>  	select FW_ATTR_CLASS
+>>  	help
+>>  	  This driver allows changing BIOS settings on Lenovo machines whose
+>> diff --git a/drivers/platform/x86/lenovo/think-lmi.c b/drivers/platfo=
+rm/x86/lenovo/think-lmi.c
+>> index 143d9fdedb65..8f70c60f791f 100644
+>> --- a/drivers/platform/x86/lenovo/think-lmi.c
+>> +++ b/drivers/platform/x86/lenovo/think-lmi.c
+>> @@ -772,6 +772,7 @@ static ssize_t certificate_store(struct kobject *=
+kobj,
+>>  	struct tlmi_pwd_setting *setting =3D to_tlmi_pwd_setting(kobj);
+>>  	enum cert_install_mode install_mode =3D TLMI_CERT_INSTALL;
+>>  	char *auth_str, *new_cert;
+>> +	const char *serial;
+>>  	char *signature;
+>>  	char *guid;
+>>  	int ret;
+>> @@ -789,9 +790,10 @@ static ssize_t certificate_store(struct kobject =
+*kobj,
+>>  			return -EACCES;
+>> =20
+>>  		/* Format: 'serial#, signature' */
+>> -		auth_str =3D cert_command(setting,
+>> -					dmi_get_system_info(DMI_PRODUCT_SERIAL),
+>> -					setting->signature);
+>> +		serial =3D dmi_get_system_info(DMI_PRODUCT_SERIAL);
+>> +		if (!serial)
+>> +			return -EINVAL;
+>
+> This should not return -EINVAL as it is not a problem with the input=20
+> parameters. Perhaps -ENODEV would make sense instead?
+>
 
-No worries!
+Good point.
+Unless Andy strongly thinks I should drop this bit, I'll fix in the next=
+ version
 
-If they are new cases, then I would use the unqualified ones (which
-are also in the prelude now), since we are trying to more towards that
-(commit 3d5bef5d47c3 ("rust: add C FFI types to the prelude")).
-
-That way we have fewer to clean later on.
-
-Thanks!
-
-Cheers,
-Miguel
+Thanks
+Mark
