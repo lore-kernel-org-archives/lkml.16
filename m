@@ -1,119 +1,82 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C4BA28A41F;
-	Tue, 10 Jun 2025 09:11:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CF2728B7EF
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 09:11:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749546684; cv=none; b=mqEj1z4C39EtFtOwfRTzXh3RAvM8dWyjs4qdZE2XmMDrtQ/FOL1FlSzcvVpVB2U96Xk9Xjd5U15A0U9x8CvQIvC71Bgm+KExnWNI8rIfsW0ZsmvMklohVmjergzv4Y6BnuxYZX9WFsPOw+volxSkRtaJ76grrNq4fG+NL77pF4w=
+	t=1749546690; cv=none; b=m5MACjSwErtbX4XhFdoQARtuRJM72lJoGSZQN5JoTtXcJw3Y7UgiBTiNZn0feKbDGfo6p5XM3vrOwFZr5Xf8nwT+lqIAeTTGJQub1TNTgoiwa8FH4YVMeSrnSXklaPSUjAVyzSIo17FfzAs1TGl+ORwVq6r+Vk8WRmx186hkihw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749546684; c=relaxed/simple;
-	bh=uGevn5VR673nRTdKY/+4Lo8yeeVvw62KFi9Iuxip3pY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MmXAQXEPg/808aQbhlr9g84AwxIzKO+1Bd9RIyrtpHxLBx/WfDH7wirWrbJZRvUofS4stsIkm9zgY3fUGixZXzNQqb2ULyhKnWzO/6m7PPf4lHUccklP3HmRf4HqhGoKYuzS9/je0Hd9gKiXsOP6ldNcPVr/shHTQaC51J0B6Yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=HptMnFW1; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1749546690; c=relaxed/simple;
+	bh=9anzCkLa9MXw6aZtNXBr2K9y68pZ+bkSnCoMWyUH4V0=;
+	h=Mime-Version:Subject:From:To:CC:Message-ID:Date:Content-Type:
+	 References; b=X5YliFkJiERrrIXKYEGfBs4bZ0KSdoUSqZyCQfUA1EiqIXChKc0wqObN1C1yqR+6uUMBeWuIRyp6RcIlBjUWw4jsNKYoDj2dEoawo8ANIyPyvKtg7jfcy+zf+gV4qeQ+5HHbLVo7+K2DpSne2OG7YCmxmsfPfRxmEm/Qfa4yttA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=partner.samsung.com; spf=pass smtp.mailfrom=partner.samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ZmNqYGwb; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=partner.samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=partner.samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="HptMnFW1"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55A89ZaA018771;
-	Tue, 10 Jun 2025 11:11:04 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	gq6NiYoztE5n+qnbOG6J5+Yuv0005vgbJ4zJGtQw7Ug=; b=HptMnFW1g7R9y75t
-	DG+W4OEBtE0xjhNFIALlIrAztVa7FoQjzoF23OL4KD03pu2hMy4hRCaB4YjkYPa3
-	u7j149Dx/GVmXE6ROqoHJjNnpQkOtYxOxdFOjaaZ9LM3PlZPBufBN9pWM2uRiqU9
-	vgJTB0YSGJbZGdvpNBRdK3dLbN87GXszRZdZ/0FJgZ1STaCOYbS0AxUMw264BFW1
-	NJUUqqqZHtyNPkBHB71PsNA6zKOdnK3dmtfdzdvZ7CWRpfDh1wQ3+JByvJ1o2itE
-	2w4fi/nKzdaoNlc3+hX4yVhOhl4N8szMRh9QcBWV/53WhZgjSWtj6HILLlpQ096c
-	glU63Q==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474aja3cww-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Jun 2025 11:11:04 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id C5ADC4004A;
-	Tue, 10 Jun 2025 11:09:46 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 177B038C0DA;
-	Tue, 10 Jun 2025 11:08:42 +0200 (CEST)
-Received: from localhost (10.130.77.120) by SHFDAG1NODE3.st.com (10.75.129.71)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Jun
- 2025 11:08:41 +0200
-From: Christian Bruel <christian.bruel@foss.st.com>
-To: <christian.bruel@foss.st.com>, <lpieralisi@kernel.org>,
-        <kwilczynski@kernel.org>, <mani@kernel.org>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
-        <p.zabel@pengutronix.de>, <johan+linaro@kernel.org>,
-        <cassel@kernel.org>, <shradha.t@samsung.com>,
-        <thippeswamy.havalige@amd.com>, <quic_schintav@quicinc.com>
-CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v12 9/9] arm64: dts: st: Enable PCIe on the stm32mp257f-ev1 board
-Date: Tue, 10 Jun 2025 11:07:14 +0200
-Message-ID: <20250610090714.3321129-10-christian.bruel@foss.st.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250610090714.3321129-1-christian.bruel@foss.st.com>
-References: <20250610090714.3321129-1-christian.bruel@foss.st.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZmNqYGwb"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250610091125euoutp01f800337cb781f56c549d26d0b08ca349~Ho3DfYq4f1772217722euoutp01H
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 09:11:25 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250610091125euoutp01f800337cb781f56c549d26d0b08ca349~Ho3DfYq4f1772217722euoutp01H
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1749546685;
+	bh=9anzCkLa9MXw6aZtNXBr2K9y68pZ+bkSnCoMWyUH4V0=;
+	h=Subject:Reply-To:From:To:CC:Date:References:From;
+	b=ZmNqYGwbs+K96//SzvY2L0QWp+m/QYyzAf4xAek4HsWXYi0hgGbwf064I/jK0jUAE
+	 +YqCx5QDtE5KgFA8cAHo/EcMAhxmmiScp1W1om0EoWmIXSBYUwa/bYuU7Xgtp0okr0
+	 l+B4k8gRHPDaALHFlos4mHSYn8Q0nAp/B79cxRNo=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-10_03,2025-06-09_02,2025-03-28_01
+Mime-Version: 1.0
+Subject: RE: Re: Re: Re: Re: [PATCH bpf v2] xsk: Fix out of order segment
+ free in __xsk_generic_xmit()
+Reply-To: e.kubanski@partner.samsung.com
+Sender: Eryk Kubanski <e.kubanski@partner.samsung.com>
+From: Eryk Kubanski <e.kubanski@partner.samsung.com>
+To: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
+CC: Stanislav Fomichev <stfomichev@gmail.com>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "bjorn@kernel.org" <bjorn@kernel.org>,
+	"magnus.karlsson@intel.com" <magnus.karlsson@intel.com>,
+	"jonathan.lemon@gmail.com" <jonathan.lemon@gmail.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20250610091125eucms1p3b7b0b19a533caffddce07c75596f3714@eucms1p3>
+Date: Tue, 10 Jun 2025 11:11:25 +0200
+X-CMS-MailID: 20250610091125eucms1p3b7b0b19a533caffddce07c75596f3714
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250530103506eucas1p1e4091678f4157b928ddfa6f6534a0009
+X-EPHeader: Mail
+X-ConfirmMail: N,general
+X-CMS-RootMailID: 20250530103506eucas1p1e4091678f4157b928ddfa6f6534a0009
+References: <CGME20250530103506eucas1p1e4091678f4157b928ddfa6f6534a0009@eucms1p3>
 
-Add PCIe RC and EP support on stm32mp257f-ev1 board.
-Default to RC mode.
+> I've come with something as below. Idea is to embed addr at the end of
+> linear part of skb/at the end of page frag.
 
-Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
----
- arch/arm64/boot/dts/st/stm32mp257f-ev1.dts | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+Are you sure that this is safe for other components?
 
-diff --git a/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts b/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
-index 2f561ad40665..f97581aa0841 100644
---- a/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
-+++ b/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
-@@ -265,6 +265,27 @@ scmi_vdd_sdcard: regulator@23 {
- 	};
- };
- 
-+&pcie_ep {
-+	pinctrl-names = "default", "init";
-+	pinctrl-0 = <&pcie_pins_a>;
-+	pinctrl-1 = <&pcie_init_pins_a>;
-+	reset-gpios = <&gpioj 8 GPIO_ACTIVE_LOW>;
-+	status = "disabled";
-+};
-+
-+&pcie_rc {
-+	pinctrl-names = "default", "init", "sleep";
-+	pinctrl-0 = <&pcie_pins_a>;
-+	pinctrl-1 = <&pcie_init_pins_a>;
-+	pinctrl-2 = <&pcie_sleep_pins_a>;
-+	status = "okay";
-+
-+	pcie@0,0 {
-+		 reset-gpios = <&gpioj 8 GPIO_ACTIVE_LOW>;
-+		 wake-gpios = <&gpioh 5 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-+	};
-+};
-+
- &sdmmc1 {
- 	pinctrl-names = "default", "opendrain", "sleep";
- 	pinctrl-0 = <&sdmmc1_b4_pins_a>;
--- 
-2.34.1
+So instead of storing entire array at the skb_shared_info (skb->end),
+we store It 8-bytes per PAGE fragment and 8-byte at skb->end.
+Technically noone should edit skb past-the-end, it
+looks good to me.
 
+In=C2=A0xsk_cq_submit_locked()=20you=20use=20only=20xskq_prod_write_addr.=
+=0D=0AI=20think=20that=20this=20may=20cause=20synchronization=20issues=20on=
+=20reader=20side.=0D=0AYou=20don't=20perform=20ATOMIC_RELEASE,=20so=20this=
+=20producer=20incrementation=0D=0Ais=20atomic=20(u32)=20but=20it=20doesn't=
+=20synchronize=20address=20write.=0D=0A=0D=0AI=20think=20that=20you=20shoul=
+d=20accumulate=20local=20producer=20and=0D=0Astore=20it=20with=20ATOMIC_REL=
+EASE=20after=20writing=20descriptors.=0D=0AIn=20current=20situation=20someo=
+ne=20may=20see=20producer=20incrementation,=0D=0Abut=20address=20stored=20i=
+n=20this=20bank=20doesn't=20need=20to=20be=20synchronized=20yet.
