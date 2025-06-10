@@ -1,166 +1,104 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF43F246BC9
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CF0B17A301;
+	Tue, 10 Jun 2025 13:33:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749562404; cv=none; b=Xl0rb3v99qlTMDVirBzskXD+zC4LeoznhwxXWMRkWqzyqE3huwsDOGn9FfOHiZe0NPOYnLdQTZlfsYmTOHFHsy0FLXNX64Vg0CvRaFfxBm0LR4yWQ5mIrVR1TnONYdwgNj4CFqbTpPKQCHLCIU58CDFGSh5iD7JlPnO0kD5IZl4=
+	t=1749562420; cv=none; b=aMbDtSrLWNbtNf2DDwwAh2po/7GfGO/ydkvZGRxzohYxRvMhd01aGZon/vOExl9y/IpNczHs9r3iDl847xmG5u1EVlsDWQx0xYtJq36FHgMn0jmkcadDp/iM/1CCZUWmsXse/kAy6rBjA6ceD1uEQmzseOrNFOfjhOVQZ8/J00s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749562404; c=relaxed/simple;
-	bh=kBu2U59AaQV7icfovVyvlI2+b63QrLthVpms/gIWz2Y=;
+	s=arc-20240116; t=1749562420; c=relaxed/simple;
+	bh=4eF9/CmotdESBddggte8FL/5iJIVylN8R74UX+xQaak=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GeG+8qBFisNMzKGgTQrHctfx5rc+QBAIbjLuyhcAhccZWL3++2jxOPKINWLNdTf8rkcK34YHDBqk1EmA5NPs0VOGp89FGzrZnd4earcdIQ3XeTlwtGlMqPsOw4p4dhEduIIGV9mG18PfmTXHqqZXziJCJmGMvPOwHw6lsKqmO8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E9LWYs6v; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=bYJJfTSSfpSfDtFVvBYghlOS98ajGueq5ETnnv/auEzCraqkbJa7BmOeVCBe5cfJdtRCzwg4mDuEBvxeELvhOF2d+HiYjmIdjGGLmnY1BJ2rOT1Nkubv0UXQ7KxwaFo9y02GpIo8s5dKS1SRyYy4qapqG845hcRO9nR+5oW9Eqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A8qrUIzH; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E9LWYs6v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749562398;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AtqlHRGptORwtIvFn6KwxIkuSp1lm8xfaqwxzgijrrY=;
-	b=E9LWYs6vyiyn0XxFFvQN1i0pJnFGqj7gzkfSr0OEoFtSClk4USq4J4H+VTTwfZAlcDuZWc
-	ZpIEUTE4p68JAarFEhGzreFXUXY4KCwCNzE1Kap2cvApRKse6FN12TsAqmeLkXbTbiTHwM
-	N2UR+z+A4kf43hkL8M6/RRUr5xfoVMs=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-612-kK4ix4mDPEqhlMj_0fF01g-1; Tue, 10 Jun 2025 09:33:17 -0400
-X-MC-Unique: kK4ix4mDPEqhlMj_0fF01g-1
-X-Mimecast-MFC-AGG-ID: kK4ix4mDPEqhlMj_0fF01g_1749562396
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-adb33457610so508707366b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 06:33:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749562396; x=1750167196;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AtqlHRGptORwtIvFn6KwxIkuSp1lm8xfaqwxzgijrrY=;
-        b=XfQdIuF6+E1Ve2dxjURxE7GJbcb0te9CtNMyXxEgpm0Ndp1WkPP2ASC9QdgGG8LJU6
-         Vw0AteU0y893JKdETZwtuWMndBbN+W/fTP4UUDi2oVAKBRB1ut4TVRfO4i2Dx68FzIws
-         Uy2k2UebiQGdNPd7lHNFwSM+p9ri8XB6am2uquzQNXu7vY0gbabKgeHuUXsacRjbnGJx
-         fJ3UcaSXCog0UwMl7KuJwCGDbKvCDTMaQRHtJ9qPLZqB2VDaFyLiK5jkvkc98fupGRme
-         nHv2LLu+weg5iAXWlIYy6uJNULPuy4rjMZWWl77ut9PkI+yXtwzbMkFQ0Z9KmdeQTRoh
-         Sq8w==
-X-Forwarded-Encrypted: i=1; AJvYcCWS44lr1dxQbgc+sFsxQDKXWcWgZqBYwjb6KZzJhLEbzkFJX9jGE0n2nsZX7FEm0C1vjPFRUreuE9qLfno=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzidAskWFi+rMISUQx4bHQDrB9fLQBsjxHGyqfClEotYTB4P/BW
-	f5MYVZ1DblbhBuZv+/N+OTYNV9xAQoZg1jg6WUBZM2UABy8bkyag82yEfufJlEy38m1DkrQDL0n
-	fdWHCfxiWxu4pQTu6OwU8E2ymnjmtWTvPdgN2BgUrWarj9cSpUT6W3xxk58nYigtILg==
-X-Gm-Gg: ASbGncsnoQ3MEvRB9UbkIXR+LI+CjR8JA4Tmwjp7xyUMTM7ZeF46Kk56dhEk/eHABNU
-	aY9dGA8YUZBD94z8AqM7TFEg9dJncpp5NmwUT1jL+1oSfw+wL6gujOhBwCWy9GzNz9p2e7Cd6vL
-	ypxyUUmJHLho7KYID1NLfHk7rIoY7o7F3A9P6u9KnWMSzB95ZaD+YJz90oIo1ZAc2bHkMNkdGM2
-	Urz/YiqeY76Q7tlMn9NjFOXZFDddq1IQKN9co9p6RSrB8TxY8Qwq583E0wTFe9St8aI9fUsGZYX
-	2XshnqX//P+rwf/BP3YVnbLLrXhJ
-X-Received: by 2002:a17:907:3f89:b0:ade:4121:8d32 with SMTP id a640c23a62f3a-ade4121a383mr1222161666b.3.1749562395877;
-        Tue, 10 Jun 2025 06:33:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEbCYWNhgV43RFZfnzAeG7ctwgQxrUyNw/JhykbTR3vkEQZBONy5pO/0Uf1BHdqc/iqEcYmPw==
-X-Received: by 2002:a17:907:3f89:b0:ade:4121:8d32 with SMTP id a640c23a62f3a-ade4121a383mr1222157766b.3.1749562395268;
-        Tue, 10 Jun 2025 06:33:15 -0700 (PDT)
-Received: from sgarzare-redhat ([193.207.220.112])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc7b55bsm721616066b.160.2025.06.10.06.33.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 06:33:14 -0700 (PDT)
-Date: Tue, 10 Jun 2025 15:33:09 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Manos Pitsidianakis <manos.pitsidianakis@linaro.org>
-Cc: David Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>, 
-	Dmitry Osipenko <dmitry.osipenko@collabora.com>, Gurchetan Singh <gurchetansingh@chromium.org>, 
-	Chia-I Wu <olvaffe@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Simona Vetter <simona@ffwll.ch>, Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, dri-devel@lists.freedesktop.org, virtualization@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] virtgpu: add virtio_gpu_fence_cleanup()
-Message-ID: <4izeqsk6wgptwbk37qlbsp4fmxwgen6xyqqscrvgcejkoeh6nn@7g433deykx3x>
-References: <20250505-virtgpu-queue-cleanup-v1-v1-0-810923da2b1e@linaro.org>
- <20250505-virtgpu-queue-cleanup-v1-v1-2-810923da2b1e@linaro.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A8qrUIzH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749562418; x=1781098418;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=4eF9/CmotdESBddggte8FL/5iJIVylN8R74UX+xQaak=;
+  b=A8qrUIzHaXRRmYiEqY20P+GZO6RUiNAxDoBFcOywqp0TeTjPkiS38vWd
+   kA5kZZEVkBMcHSmqnH19FKqCCrTBsAzf6NNebKYAs5N2VNCHiBS1TcE6g
+   2LLvmdDrWzvNGsySH/9AP6MHOnkUB0Erw36/KQyeF8rvbbI1hbKojncF4
+   9pV40xP5eHdsk4PY9MsJbwyKMc5y7tvP8ojhIfkyZ7NSkt+F5QQkgjjea
+   MWTNN1kEdud8FRRTBWAzKgBEMiDcmJOtS69P9fvXJ60muGI5xHvZ//mAB
+   2zncrVHlEIYLAgg7itjTlvuxC8NDc+ffojEms9HyHxIcITZzeSgG5Wci6
+   Q==;
+X-CSE-ConnectionGUID: 3fXDgfZVSkCdmM0X69haiw==
+X-CSE-MsgGUID: MjHCugElSjOY3j9b9gLdqg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="55464395"
+X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
+   d="scan'208";a="55464395"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 06:33:37 -0700
+X-CSE-ConnectionGUID: 67tGi3H5SDaALS0eLrw+yg==
+X-CSE-MsgGUID: eWeYUNL+RHS8Glqniw5VYQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
+   d="scan'208";a="146712823"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 06:33:34 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uOz6Z-00000005MWZ-2ZGq;
+	Tue, 10 Jun 2025 16:33:31 +0300
+Date: Tue, 10 Jun 2025 16:33:31 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>, ikepanhc@gmail.com,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Armin Wolf <W_Armin@gmx.de>, linux-doc@vger.kernel.org,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+	ibm-acpi-devel@lists.sourceforge.net,
+	LKML <linux-kernel@vger.kernel.org>,
+	kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v3 2/2] platform/x86: thinklmi: improved DMI handling
+Message-ID: <aEg0K1OE6zhL97me@smile.fi.intel.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20250609122736.3373471-1-mpearson-lenovo@squebb.ca>
+ <20250609122736.3373471-2-mpearson-lenovo@squebb.ca>
+ <b792059e-44d2-82c0-574c-76c3f6a3129d@linux.intel.com>
+ <f3b5c138-5576-4c01-b177-7450f1e91d24@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250505-virtgpu-queue-cleanup-v1-v1-2-810923da2b1e@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f3b5c138-5576-4c01-b177-7450f1e91d24@app.fastmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, May 05, 2025 at 11:59:15AM +0300, Manos Pitsidianakis wrote:
->When virtio_gpu_remove() is called, there might be in-flight command
->objects in the virtqueues that the VIRTIO device hasn't processed. These
->commands might use fences, which end up being leaked, as reported by
->/sys/kernel/debug/kmemleak.
->
->This commit adds a cleanup function that lowers the reference count of
->all in-flight fences, resulting in their de-allocation.
->
->Signed-off-by: Manos Pitsidianakis <manos.pitsidianakis@linaro.org>
->---
-> drivers/gpu/drm/virtio/virtgpu_drv.h   |  1 +
-> drivers/gpu/drm/virtio/virtgpu_fence.c | 12 ++++++++++++
-> drivers/gpu/drm/virtio/virtgpu_kms.c   |  1 +
-> 3 files changed, 14 insertions(+)
->
->diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
->index b3d367be6f204dbc98bf1c6e5c43a37ac8c0d8b3..c94b5edb2aec42fe5cd6416e243cf40e4e2b060f 100644
->--- a/drivers/gpu/drm/virtio/virtgpu_drv.h
->+++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
->@@ -465,6 +465,7 @@ void virtio_gpu_fence_emit(struct virtio_gpu_device *vgdev,
-> 			  struct virtio_gpu_fence *fence);
-> void virtio_gpu_fence_event_process(struct virtio_gpu_device *vdev,
-> 				    u64 fence_id);
->+void virtio_gpu_fence_cleanup(struct virtio_gpu_device *vdev);
->
-> /* virtgpu_object.c */
-> void virtio_gpu_cleanup_object(struct virtio_gpu_object *bo);
->diff --git a/drivers/gpu/drm/virtio/virtgpu_fence.c b/drivers/gpu/drm/virtio/virtgpu_fence.c
->index 44c1d8ef3c4d07881e2c4c92cc67f6aba7a5df4f..3e536d190c0464f4db8955605bbf0aa4aa3612bd 100644
->--- a/drivers/gpu/drm/virtio/virtgpu_fence.c
->+++ b/drivers/gpu/drm/virtio/virtgpu_fence.c
->@@ -157,3 +157,15 @@ void virtio_gpu_fence_event_process(struct virtio_gpu_device *vgdev,
-> 	}
-> 	spin_unlock_irqrestore(&drv->lock, irq_flags);
-> }
->+
->+void virtio_gpu_fence_cleanup(struct virtio_gpu_device *vgdev)
->+{
->+	struct virtio_gpu_fence_driver *drv = &vgdev->fence_drv;
->+	struct virtio_gpu_fence *curr, *tmp;
->+
->+	list_for_each_entry_safe(curr, tmp, &drv->fences, node) {
+On Tue, Jun 10, 2025 at 08:28:49AM -0400, Mark Pearson wrote:
+> On Tue, Jun 10, 2025, at 3:35 AM, Ilpo Järvinen wrote:
+> > On Mon, 9 Jun 2025, Mark Pearson wrote:
 
-I don't know this code, but I see that when we access `drv->fences` we 
-hold `drv->lock`, should we do the same here? (or it isn't needed since 
-we are in the cleaning phase?)
+...
 
-The rest LGTM!
+> >> +		serial = dmi_get_system_info(DMI_PRODUCT_SERIAL);
+> >> +		if (!serial)
+> >> +			return -EINVAL;
+> >
+> > This should not return -EINVAL as it is not a problem with the input 
+> > parameters. Perhaps -ENODEV would make sense instead?
+> 
+> Good point.
+> Unless Andy strongly thinks I should drop this bit, I'll fix in the next version
 
-Thanks,
-Stefano
+If maintainers are okay to take this approach (both Kconfig and C file
+changes), I am fine.
 
+-- 
+With Best Regards,
+Andy Shevchenko
 
->+		dma_fence_signal_locked(&curr->f);
->+		list_del(&curr->node);
->+		dma_fence_put(&curr->f);
->+	}
->+}
->diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
->index da70d9248072b64786a5d48b71bccaa80b8aae8f..7b3c4d314f8eee692e2842a7056d6dc64936fc2f 100644
->--- a/drivers/gpu/drm/virtio/virtgpu_kms.c
->+++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
->@@ -286,6 +286,7 @@ void virtio_gpu_deinit(struct drm_device *dev)
-> 	flush_work(&vgdev->cursorq.dequeue_work);
-> 	flush_work(&vgdev->config_changed_work);
-> 	virtio_reset_device(vgdev->vdev);
->+	virtio_gpu_fence_cleanup(vgdev);
-> 	virtio_gpu_queue_cleanup(vgdev);
-> 	vgdev->vdev->config->del_vqs(vgdev->vdev);
-> }
->
->-- 
->2.47.2
->
->
 
