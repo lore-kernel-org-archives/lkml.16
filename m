@@ -1,92 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81D6238D53;
-	Tue, 10 Jun 2025 15:21:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 160B0231858;
+	Tue, 10 Jun 2025 15:21:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749568888; cv=none; b=YE8YdMGotkSHvU7EKFr6jHYK8zhzaSP0hTFHhC6XGIsMAyRh3xbAtPj6diMunr+/CHrtAH6j4i0zx1zK2NjUVcq9DN0JOWiX2U1DK8CnNelUFG11LRZxEdtBEr0A+dSUrDQPbtyspkcpxVJ2FMlOz0lFE29Rvak3Ei8C2F/I91w=
+	t=1749568905; cv=none; b=Fejks5JyUaixCdHYllyzgkrH33xkEG+E2GFoqrH3loLIlw2QguvCxLMyrpWtvkezVOFL0ugbOlxE/hbfozwx2Qi2DcSynIh98cmxWt5jaBUujHFkBKJVoAyX12Su9qGxr5gu2qigKRVMPAaNPsysHPxmdOrPZVq4uQgD0DkWD9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749568888; c=relaxed/simple;
-	bh=E1xqj+u3vf1FQ4JfQQLgsK2d1JGFFQy+vq6VMPj9YVo=;
+	s=arc-20240116; t=1749568905; c=relaxed/simple;
+	bh=ZDPC+Zvhv6bvCgKo7qyJDoaCmns1b7BJIKlJTcGDLPU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O5wnh0raRJ3T0TahjkBZzbjHEA9sKllwPU7GdoW3j3QULVYbWGc5mu5LXKZjqf5KBbgsWs+u0AhDhidmctFp0ORQCtNR/bf0kAefnQ2GaiMpk/BWTFXvLm4W5C7m91N6JCLXc1TqxOjaJtTSMOski+3q3/lSJ1u6aD/L8e4e5eI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oksrL1/Y; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=WaI34peGmGOTmAiQN9/ioQa3a1qBxUk4ojhUWDS1b9/DWW2exKKWgS4dQ/e9/BicDpO5bZBek7jkOrhhdsfC52vRqcZuXVU26XXL/QvmnhWC9cLPEQe03xpNgr7/Dyr4t324ddb4iXBPJoYqnbENibzys5Rbjit0Oa1wraqmVns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OB/itAkO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oksrL1/Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18015C4CEED;
-	Tue, 10 Jun 2025 15:21:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OB/itAkO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6B73C4CEED;
+	Tue, 10 Jun 2025 15:21:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749568888;
-	bh=E1xqj+u3vf1FQ4JfQQLgsK2d1JGFFQy+vq6VMPj9YVo=;
+	s=k20201202; t=1749568904;
+	bh=ZDPC+Zvhv6bvCgKo7qyJDoaCmns1b7BJIKlJTcGDLPU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oksrL1/YngNECF96m3avQ+YGC7rZcfdVOSkr1F7L17EpDj7HxIjIU6TuJfabOslPm
-	 2kSVH0OmyaJf6II4wLaQ2Lewmx1ZcqauQ680kLk0dpw0ZjFpVysUcGRaZC5Ku82B6y
-	 ljkYQ3d/3EdV/tI7XmtDh/o6YJrsKtQty2p/ZwPSeHzgelbN+yJGxFA+BFBNIl1Ne1
-	 XSfSAb9xi3CUrtQAg3ld+EzBT7YzXeV82JBy10eeYra56J+WirDw0XNyl5I1GP9hOA
-	 53DT07/IoNQ1drNvCqPqptH3qNe5YmWLoOgF7tf+lYKYSk6ASAMS9p+xT779oNHa/e
-	 j+b1V38mqCkVw==
-Date: Tue, 10 Jun 2025 16:21:22 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH] dt-bindings: display: renesas,rzg2l-du: Add support for
- RZ/V2N SoC
-Message-ID: <20250610-outgrow-reputably-a2141617d2db@spud>
-References: <20250609231905.511904-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	b=OB/itAkOa1IIGbT5iloMMpzs9GpLqPzU8C6RD284AUu2XEPIzb87tI2EbWXRV4v2R
+	 nAKJM5GpUwWe1h39l3K8pRHzrzjlyRAohuGTZooi6gJ3PgrwtIDFsBjVCj0CsvzBHt
+	 ANvbIBFfgU540mG4rHI3goAEzm2+G8Vd/TU6NvcimXNzh9qU3P0E1afzTrmbohDn4T
+	 JCtYxHX7vA8jngp7QKTb1hOCHX2buD+wWlkZfgjtrNdSJ6JJ4jh9P8n76/4g5tBO5l
+	 rGy+nLcpLeX4tbMAR6P0mYsFjtzDCM/cT3cNlp2jUNn/ZYJAd0LZ4xg4KHEpzFYwNY
+	 scDw4zCxazlSw==
+Date: Tue, 10 Jun 2025 16:21:39 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: catalin.marinas@arm.com, pcc@google.com, will@kernel.org,
+	anshuman.khandual@arm.com, joey.gouly@arm.com,
+	yury.khrustalev@arm.com, maz@kernel.org, oliver.upton@linux.dev,
+	frederic@kernel.org, shmeerali.kolothum.thodi@huawei.com,
+	akpm@linux-foundation.org, surenb@google.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v5 4/6] kselftest/arm64/mte: preparation for mtefar test
+Message-ID: <6b13e414-9377-4806-abd5-fdebda6c14f2@sirena.org.uk>
+References: <20250610150144.2523945-1-yeoreum.yun@arm.com>
+ <20250610150144.2523945-5-yeoreum.yun@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="glvRYTcO4HsikMOq"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="+GOU5km0pmcdcSUm"
 Content-Disposition: inline
-In-Reply-To: <20250609231905.511904-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250610150144.2523945-5-yeoreum.yun@arm.com>
+X-Cookie: When in doubt, follow your heart.
 
 
---glvRYTcO4HsikMOq
+--+GOU5km0pmcdcSUm
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 10, 2025 at 12:19:05AM +0100, Prabhakar wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Tue, Jun 10, 2025 at 04:01:42PM +0100, Yeoreum Yun wrote:
+> If FEAT_MTE_TAGGED_FAR (Armv8.9) is supported, bits 63:60 of the fault ad=
+dress
+> are preserved in response to synchronous tag check faults (SEGV_MTESERR).
 >=20
-> Document support for the DU IP found on the Renesas RZ/V2N (R9A09G056) So=
-C.
-> The DU IP is functionally identical to that on the RZ/V2H(P) SoC, so no
-> driver changes are needed. The existing `renesas,r9a09g057-du` compatible
-> will be used as a fallback for the RZ/V2N SoC.
->=20
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> This patch is preparation for testing FEAT_MTE_TAGGED_FAR.
+> It shouldn't change the test result.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+I'm not clear from the above what the change is intended to do (ie, how
+does it prepare for testing FEAT_MTE_TAGGED_FAR).  I think this could
+usefully be split out into multiple commits (eg, adding logging of the
+additional si_ fields separately, or splitting the renaming MT_CLEAR_TAG
+to MT_CLEAR_TAGS), it's kind of hard to review as is.
 
---glvRYTcO4HsikMOq
+> @@ -45,13 +64,18 @@ void mte_default_handler(int signum, siginfo_t *si, v=
+oid *uc)
+>  		}
+>  		/* Compare the context for precise error */
+>  		else if (si->si_code =3D=3D SEGV_MTESERR) {
+> +		 	if ((!mtefar_support && si_atag) || (si_atag !=3D MT_FETCH_ATAG(cur_=
+mte_cxt.trig_addr))) {
+> +			  ksft_print_msg("Invalid MTE synchronous exception caught for addres=
+s tag! si_tag=3D%x, si_atag: %x\n", si_tag, si_atag);
+> +			  exit(1);
+> +			}
+
+We should really exit with a kselftest error rather than just a number,
+though I see this is just copying the existing style for the file so
+*shrug*.
+
+--+GOU5km0pmcdcSUm
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaEhNcgAKCRB4tDGHoIJi
-0ihBAP0caHWmTlCMBGf10BqmonncXuuqquzAPIjevbfMbJqjpgEAq1e/Lwlsz3zH
-nPa5REoaGnuz3tHm/EBSbKhqaJWDkQ4=
-=I3B8
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhITYIACgkQJNaLcl1U
+h9A4kgf/QplQ4dWFT6f/xxxKyypU2qtRmPJRXs/iiAORuXfp1kEonCeiT4uAi3+F
+M3uLr8ISj6doJQcRo6YA5czQ+3uwL+iB35MEWJPxuPgdE4Fedxytn/9fs9A1FTfs
+zft71Zjl+3xUdSR8uWJeCnwvYRnI2FPQmSx6HQRVlCOQ02FC8sLbsgTikN+H5+uZ
+ojjS49eRV7qEd+Oj7vQ/BojjxQr0OSGmMkox964ZhpiBKjIgjg78aA9OsYBy00Mb
+WzVXqYbANk3Xx8oMn7Ei6K9OIDuPacGYZOAZqF28BEPhCwnoHgLicOTFlIh5M+O0
+XXSh6nKKo3EbB6cVs/iL2jv+rGT0yw==
+=8x/9
 -----END PGP SIGNATURE-----
 
---glvRYTcO4HsikMOq--
+--+GOU5km0pmcdcSUm--
