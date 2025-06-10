@@ -1,109 +1,121 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A05BA45;
-	Tue, 10 Jun 2025 02:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F2425E80B
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 02:52:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749523697; cv=none; b=fqPkHZi5p5K15T10fTV7o5zTjuDWmXtpRX624JHFAow86rdrftUrupm2U9EYx3V4BboqyrN/X1BQB57JFT+s2ViOcAMvzITG0h3W8m4UepMK+xgmYVrHoUdAU+ng1k4q78SJDN8lr9qbxk7AicfbrNiJUB7Ku5aT+rCxUWZV6sk=
+	t=1749523935; cv=none; b=dET0eWNaxmjNQ3UGw/7MJck6h29BcFeBCrEL/FNJsfarNXDZSzNDFRkblft/j6z/7D4f338YblBVgXLy7I7onVdEZxB7p4nyK40EOiZqKRDRJPUweeEYszzeawxyve4IG3qnnZP4G0O3chqTKeItrc2ZQ+cCTkfJ3ArKq32XwCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749523697; c=relaxed/simple;
-	bh=tyL3sDxaUW7wfbGxZHW6COIcBEmWJUmUVpztWNtQcWw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=DYST1RrxAo3qnb5KQY/mqHqlluqJcvCb+69hSY/Y9U/62udoiliyxuR6WWzZFHCJzox6iw3TcUurKTI9QpSlBf/2ZUTItngIHJmrv2lWMCEoqjWuWKLg7KITN4+GhQHNoXWt4aUFEZPsIMK0qfEQpDSyFBqiTOPGtQ1r7/+82/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Catthj7j; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1749523935; c=relaxed/simple;
+	bh=BJSAuM/KEuH1gidHkhv+0rdYBs0sl4fswnQ67X/V5y8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Amotz9nkfdDtdsW1tfJk1EeRHVPmiQySMiv4/xoxVNT/zBd4KZPY/wGlnRpbU+P2gHfEs5NAuYOFWLOfgyFD4opmYd4X/JudIPN5QhHuRf74y2uouWrxNDg6w+zlw9k7/Xn9fXcBQ4AdPa889qgrx6+n96UX0oqPmqG1FDhE6QE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QLWe4uge; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Catthj7j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1749523691;
-	bh=v8qGSKqYmLAneTxuYDnB1D6/yHuF6lrd/pyw2iVA0Bc=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Catthj7jgd8LmNVunr8NjWZZxt0pgo/GPOA23t0oJUAS50BaRBEySdxR0uCglqGXh
-	 0gfozzpe1g4Fj5y5N2UErwC09iw7Q4LDwQSiXTKSrHHBEWmdR9kspTc3XrNslHVhwn
-	 FLSOsCsxiu9IxEiIL9ETmMsdDUg5Osvktag1mFLA7nyLB+5CqLLhO8rdsEEe9zn8ZS
-	 Sk+iKRo3TNduL1JytPdt5zKL14ie/Amr8y3MwhBg2r4vhhA1aY9GrdK8S/DfLlUfFP
-	 tuxtxBbmrpszAETtMOBU+2V5aEwUUojzd0LMVORgSmXJV+ogpDCqahtT7XcjcUMPXI
-	 3uD04eLzSxH5w==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bGYBK6td8z4wj2;
-	Tue, 10 Jun 2025 12:48:09 +1000 (AEST)
-Date: Tue, 10 Jun 2025 12:48:09 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Simona Vetter <simona.vetter@ffwll.ch>
-Cc: Jeff Hugo <jeff.hugo@oss.qualcomm.com>, Bjorn Helgaas
- <bhelgaas@google.com>, Ilpo =?UTF-8?B?SsOkcnZpbmVu?=
- <ilpo.jarvinen@linux.intel.com>, Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
- <kwilczynski@kernel.org>, Intel Graphics <intel-gfx@lists.freedesktop.org>,
- DRI <dri-devel@lists.freedesktop.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: semantic conflict  between  the drm-misc tree and
- Linus' tree
-Message-ID: <20250610124809.1e1ff0cd@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QLWe4uge"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2363497cc4dso6321485ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 19:52:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1749523933; x=1750128733; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rm7rFkHvnvV5pN555kvAO+KRnM6aiD+6xk7uYMzjvLU=;
+        b=QLWe4ugeX2+zvNXVl0saAH25f8B6ENIKkDorKxTErK5J3QH0T131mP8i4QyF7wp4gE
+         5aDl+5U1fMvIo5OVSXit76CWa5dZwuSlNVgOQ4xsFUn5jBhgdDrOoypZjkSVz2NRIAi5
+         +Rg2woHIuDv+0U01CNu424kG2Wq9/mjnPFIa0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749523933; x=1750128733;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Rm7rFkHvnvV5pN555kvAO+KRnM6aiD+6xk7uYMzjvLU=;
+        b=QpJ51MRPmIYgPxESLgCnUxSrTP2jvKq90lk4zyOEyB+62yvk3EEdhd6Up5lNYCQbAV
+         5L9U59JDet5lPEjiU3AOIT5uS1HTyCOfvAsx0t4Gjp8gKc9t8ddk9HWaT2P4iG1pTheG
+         R0bemtFoIYAGNjkPq7GBnxJYjaYu2pzU/mqj2I4BQLbIzUp+aaLpr2KTmg8Vid4/Tf8l
+         twPMwAuA7wuIqsGRaCfaMQ8SogcrSXIUii7Is7zMy9P+QxLTpRunefrsd05IPnUroTxY
+         jq/W+xE/urqnG3/TGsf3EwW0uZP7QYpRXIO5cbF3ykOWYuc5Ig9kOG46fzX7n/A8ojmc
+         y70g==
+X-Forwarded-Encrypted: i=1; AJvYcCW46mDJbEvZ8wUhT/UtKkrscqAG04iWGIfMLrTauws5zYUNWnypPCdsXtX5q3qQcmRaDf8qnNaoRlBjyU8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwdUiOXMHlaD7XLx/8CP7+JTRAALYBRMluIpqU8fcbX3gfD2la
+	j8Kc2WbJru1INaC1zjMCKWqjJ1fo39B/aYNlAEyjAI+rlo7XEyfdLMPBXXughiXHBw==
+X-Gm-Gg: ASbGncuCl6+KyWfvQ0JnjtoHhBZtHRO38SCuUf04ul2x2scT0LaOAVWqVMAYBSyBzZ+
+	YoiDz7hFe4qr6Rg9ksl/LbgDqJ+DudSreT5QheEYt4qZdSpcxCMTZM5r31/IJEZ75jPMc8TCqi1
+	/iSrvnmIsM6GJMjVDDAhDc7ytBaRrZY87b2pOYH+8/fAw40eEsllLvB+oCf9qNDqnaeHTUw4dCp
+	Fmb1M6ad22PHvP927ihz0uV5Gym/WntmwkqnfPJQMh3p/MC6WsSy8qESYCQ7jgPsd6YKArnkPiw
+	TarPzdevFC1uiOc+KlNkZgR4DC/yjOsnkYVIdV52ZB0cpoBt23DJHhDszevMok/fTtjUPpMW0bE
+	NN2a649A9UvebWOZyQTU=
+X-Google-Smtp-Source: AGHT+IGm82o58ZVjCAo3PybTPYdGDfXUbsMi8+8LjHbWtOpjdJXIBSCQJyWdYXNP2Z2kXvDi5YGUeg==
+X-Received: by 2002:a17:902:cf03:b0:234:9375:e07c with SMTP id d9443c01a7336-23601dbd9fcmr242591495ad.46.1749523933313;
+        Mon, 09 Jun 2025 19:52:13 -0700 (PDT)
+Received: from naoyatezuka1.tok.corp.google.com ([2401:fa00:8f:203:4173:c66c:ee04:82a8])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603514230sm61107305ad.245.2025.06.09.19.52.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jun 2025 19:52:12 -0700 (PDT)
+From: Naoya Tezuka <naoyatezuka@chromium.org>
+To: Benson Leung <bleung@chromium.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G . Piccoli" <gpiccoli@igalia.com>
+Cc: chrome-platform@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Naoya Tezuka <naoyatezuka@chromium.org>
+Subject: [PATCH] platform/chrome: chromeos_pstore: Add ecc_size module parameter
+Date: Tue, 10 Jun 2025 11:51:37 +0900
+Message-ID: <20250610025152.3844404-1-naoyatezuka@chromium.org>
+X-Mailer: git-send-email 2.50.0.rc0.604.gd4ff7b7c86-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/T77Pp_HWM8GH0TUTsKa4OJM";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
---Sig_/T77Pp_HWM8GH0TUTsKa4OJM
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On ChromiumOS devices, the ecc_size is set to 0 (check dmesg | grep ecc 
+to see `ecc: 0`): this disables ECC for ramoops region, even when 
+ramoops.ecc=1 is given to kernel command line parameter.
 
-Hi all,
+This patch introduces ecc_size module parameter to provide an method to 
+turn on ECC for ramoops and set different values of ecc_size per devices.
 
-After merging the drm-misc tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+Signed-off-by: Naoya Tezuka <naoyatezuka@chromium.org>
+---
+ drivers/platform/chrome/chromeos_pstore.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-drivers/accel/qaic/qaic_ras.c: In function 'decode_ras_msg':
-drivers/accel/qaic/qaic_ras.c:325:17: error: implicit declaration of functi=
-on 'pci_printk'; did you mean 'pci_intx'? [-Wimplicit-function-declaration]
-  325 |                 pci_printk(level, qdev->pdev, "RAS event.\nClass:%s=
-\nDescription:%s %s %s\nError Threshold for this report %d\nSyndrome:\n    =
-0x%llx\n    0x%llx\n    0x%llx\n    0x%llx\n    0x%llx\n    0x%llx\n    0x%=
-llx\n    0x%llx\n",
-      |                 ^~~~~~~~~~
-      |                 pci_intx
+diff --git a/drivers/platform/chrome/chromeos_pstore.c b/drivers/platform/chrome/chromeos_pstore.c
+index f37c0ef4af1f..255818f24c2e 100644
+--- a/drivers/platform/chrome/chromeos_pstore.c
++++ b/drivers/platform/chrome/chromeos_pstore.c
+@@ -9,6 +9,10 @@
+ #include <linux/platform_device.h>
+ #include <linux/pstore_ram.h>
+ 
++static int ecc_size;
++module_param(ecc_size, int, 0444);
++MODULE_PARM_DESC(ecc_size, "ECC parity data size in bytes. A positive value enables ECC for the ramoops region.");
++
+ static const struct dmi_system_id chromeos_pstore_dmi_table[] __initconst = {
+ 	{
+ 		/*
+@@ -115,8 +119,12 @@ static inline bool chromeos_check_acpi(void) { return false; }
+ 
+ static int __init chromeos_pstore_init(void)
+ {
++
+ 	bool acpi_dev_found;
+ 
++	if (ecc_size > 0)
++		chromeos_ramoops_data.ecc_info.ecc_size = ecc_size;
++
+ 	/* First check ACPI for non-hardcoded values from firmware. */
+ 	acpi_dev_found = chromeos_check_acpi();
+ 
+-- 
+2.50.0.rc0.604.gd4ff7b7c86-goog
 
-Caused by commit
-
-  c11a50b170e7 ("accel/qaic: Add Reliability, Accessibility, Serviceability=
- (RAS)")
-
-interacting with commit
-
-  1c8a0ed2043c ("PCI: Remove unused pci_printk()")
-
-from Linus' tree (in v6.16-rc1).
-
-As a fix up patch would be a bit of a mess, I have used the drm-misc
-tree from next-20250606 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/T77Pp_HWM8GH0TUTsKa4OJM
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhHnOkACgkQAVBC80lX
-0GxP2ggAo19Tr02P/N3wNq2xlLcQEBlaxxHwXNEzxpmLQASTE3YmVgiOYa0AcDiv
-qT29I817Qz6uZ390Om3YNOPp5GArsTWlt/Wl78qgZaAdU8ibbaQzVAYC99vAKJ9g
-vtF3WbwzRxiuMQTN/fa7V6gByttn3yKS18v4Liw7U9bwXI1CvkPLST5JUvHfemrn
-d+EX12x+nXWB/EGhQeUrt+aUq0OwZklaCe/2vsBkBxn1DP/6OY3dg85OwZTtUhJm
-8LGrlDsedIeEeMCusbpnYIXmVXD2fGs4+DSTaMINOStlWgOrrLnf+rPnQ5oy88WY
-TKKFQdZjYhli4bO03r4WV4HPrs6U8A==
-=lo4c
------END PGP SIGNATURE-----
-
---Sig_/T77Pp_HWM8GH0TUTsKa4OJM--
