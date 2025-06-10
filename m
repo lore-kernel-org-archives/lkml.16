@@ -1,124 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401B017736;
-	Tue, 10 Jun 2025 14:28:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E2E528F508
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 14:29:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749565694; cv=none; b=a8adxahimsUPEDotJGCbqsSqmo4cvTEqo0jknYQK3/DY80yJBvnmpgYO5L01vCz2vJ13KKoSJJLpHpch1w4NAKWxY6Vkdgg1QvhwQXo/Jk27hcyy7qgAOANCnBcUnYf7Mymbt4pEkLc+jgFcXZvUxxVMcCzpHk33JvO+acLSSPU=
+	t=1749565792; cv=none; b=PMJNRFBi3KZNlZH/fAuaACQvm/+kvtuwdksGJpVIok/HqDR1+WynRwR1pGL3pXxlHWnHyv6J87nUgmTJjV/KyXLDje5FOoH+3I8JzGs4guDr4zYtNee1PXYd9+UUyLBe4eU4YRWhoklXo22hFPm+rlyQPeBBktLqGqIghvqo0RE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749565694; c=relaxed/simple;
-	bh=gTGrkkXJXtcN3VCr/khEFI8vA0euMy7qN+z/5//IhEQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=VpLGSbR4jgH6CpvDrEGdxDujs7AAHaUGYLmcI7k2VeByiGEgoGQE25iiY+yuUUVUg/i6uyyliKsrEks9v2JWopCVDwSN6EEJPeaB2QPub2skQs8ybQSSLciuCBuOVcGBNyl4bkwWm6FDOgmCpPDzTTAwZxCl78XiqEpSpHMfdRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J0t+PbkW; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749565792; c=relaxed/simple;
+	bh=UAkfwZw9spUNUaNEZrnrHExT4X2NKjMnXpIzkUAlzNs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WCSZO337hZW/sLk263Tl5+98UF6OiahHJ68z3c6SlurFnBnzkJdh5SQo93IFNsa7tiTVykrnHumqgfFUiQIxndzjpSoGvwKM2UGqlv1G+xC0Phdx8ZkGtrIKWzretAmuT4A94iTfsQj+YzG9H+8LgApX9WlZALfH/b+H6XUGizY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TnCFbq7R; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J0t+PbkW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749565693; x=1781101693;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=gTGrkkXJXtcN3VCr/khEFI8vA0euMy7qN+z/5//IhEQ=;
-  b=J0t+PbkWG+BwrbSPNJmth8n+2jFnNTtontcCUhYQ93bBod39JKMgEjBE
-   Hi0Xab3AGMnZdTSOxsDNNrNUzTnhSbHPAy1cUzgS+uDSE6ea7VaEsXB89
-   nOtp/9RQPdJ4cm1OIGvYGOJIT3RW4ygTcC8VuHPZkofa2kPpzFpClxLRh
-   nxm1b0CzMrHKH2Qe1LijWpxAsj7U7LSpVFFTq/Jfz2U5OPAdeUSaFs1kK
-   BW0j6nk8vhilOeRqAnZdC9foHD8VoJiDn8xIMWgo39KGB5zfslSzG4712
-   yslvh+gjoKktHgDSRJtS+WzM9PJy251luwKsT6ejAwa6JfNnYDu1IXKZ5
-   Q==;
-X-CSE-ConnectionGUID: 0WezmPsRQ3SMUHy4R1mdhw==
-X-CSE-MsgGUID: NWI3x6k1TOq2UHIgNCA5Yg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="63032983"
-X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
-   d="scan'208";a="63032983"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 07:28:12 -0700
-X-CSE-ConnectionGUID: F+yeyCRiTtW8dhS1ONg2RA==
-X-CSE-MsgGUID: TnlSzNbkQImsd4kwRZbssw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
-   d="scan'208";a="146782750"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 07:28:12 -0700
-Received: from [10.124.220.93] (unknown [10.124.220.93])
-	by linux.intel.com (Postfix) with ESMTP id B11A220B5736;
-	Tue, 10 Jun 2025 07:28:11 -0700 (PDT)
-Message-ID: <9d4ab150-0006-40a9-9056-71c16971d928@linux.intel.com>
-Date: Tue, 10 Jun 2025 07:28:11 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TnCFbq7R"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a52878d37aso937961f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 07:29:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749565789; x=1750170589; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=esEZPNG+RjP7eIdE+H90U4csFlF97uknnEYr/Yzqr4Y=;
+        b=TnCFbq7RnH9BYVyod5Pwtv4I1QfSBj2B2yMVHJU7/pgFt7LY5ezLtS56fXEZOKh7K/
+         Aug6/DIvRsfVRVOc3F/5vDis0SX0O1l1qDW6b3itg11k5VK0YLQwjP4mYcJN9vo3WS7V
+         mx3nqZG/ZRNWmSf6QP8BGE6Z+JCBro+MB7hijaaTkG7UvMF2sQ0Y/SxXzycxc1k2Jb8J
+         EX+J3M10xsMwsCEVLgGCiVIu22ZqceyICs2JK+hWZjr/Of5/rcRIelcuhuF2xvaZPfdO
+         N+fiukDLvccmm942yruQcFiPEZOKzdCL8S9PThByqlmd60/QkF+iWBzp8ZGbM/QvXrQ1
+         xKtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749565789; x=1750170589;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=esEZPNG+RjP7eIdE+H90U4csFlF97uknnEYr/Yzqr4Y=;
+        b=h5RsnXbxkpjSlt5EQImwgxyNzQbdTQhjwrFv4c9ozm3qkgVjzU7uKjKR1m2QAdMoyl
+         QeoOjAj6rzJ7zKVVamROEqVqvhmxsYUe7i6djMmIWgoYiX8UZeBtnrmrSYEmljjMTrwa
+         U+jOSUojL6LiMNHqmC2aOsI6BYmeTEB/DPJQfe/P3GMjfpuzBbUrZd1ol/nEhOn1Zum0
+         b4/9nneeYYYYrHjadtQj6qBRqBFwSeWq/ek26wmH9W0A1nsbFkv6Qa9g2ChEHyJOwrIA
+         RPlzM1OFlJyCiSrg5JgyM1CJyKIOP3zkgqyGmihZZHe+amPGHJKR6RIwViaDiwj1d3M5
+         eznw==
+X-Forwarded-Encrypted: i=1; AJvYcCXvd1XcEaJrgY5Vyk+9Ef8F+O6can0WbsKHK6ZayLsNfKkijpaoah5Ecdfdfpv2azAwh17Oj0h1uGSANzs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyb6FAiFu4iMAVOIOxMIB9GGaHHycDJFHXpTMy+Fm/Ijtgn3mON
+	xvU+iZMRrW/SfgeRa6uXXIDaSlX/ST2DtN/uEj30aq0BqlEnA6A7dOsC
+X-Gm-Gg: ASbGncuoLabZWU6GVqmzo3n46RtRcvcGDTlGb6izU26uqcYeM4yeBGFwRR41luO0oV7
+	R3QeL20hurthZemmXUrywdT7dC48UVkB8IdzLzyI5fCGRTy5tb8NK3sBzbvaB7IwiZs0IF/nnFj
+	RfuuAHEfhOXAZhUkOqm/Ig7qtiKhESyQ1kLdpCSf0ac+g3HRS95MSwnnOZv35xY7sVk8kqr2ktT
+	ldL7MfDRNSa+aUBzT5vgJAABAUeezYMIb0GyyG3it048/wSO5qp0TxjxH5EiQ1rJrbVklQW2SHv
+	bkivETE9Y4MHQ8RS6UbbYUdDEEEj1FO2nytUMlL49RkJUpHSQIJ2gVHILers10gom+HWX0Z8B99
+	PgC51+s4PXDdVX8o=
+X-Google-Smtp-Source: AGHT+IEsEw3VXsZOTaD+aKW25Mfmt5QTfOeNT+U4CyY9HFg2QSr7SIkvRCBKCEAtxjFu1sU2doGYRw==
+X-Received: by 2002:a05:600c:4e12:b0:451:dee4:f667 with SMTP id 5b1f17b1804b1-452fe0a41c5mr55546505e9.7.1749565788521;
+        Tue, 10 Jun 2025 07:29:48 -0700 (PDT)
+Received: from thomas-precision3591.imag.fr ([2001:660:5301:24:31ff:bbc1:f423:fc85])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a53229de53sm12376324f8f.8.2025.06.10.07.29.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 07:29:48 -0700 (PDT)
+From: Thomas Fourier <fourier.thomas@gmail.com>
+To: 
+Cc: Thomas Fourier <fourier.thomas@gmail.com>,
+	Anatolij Gustschin <agust@denx.de>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	linuxppc-dev@lists.ozlabs.org (open list:LINUX FOR POWERPC EMBEDDED MPC5XXX),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] (powerpc/512) Fix possible `dma_unmap_single()` on uninitialized pointer
+Date: Tue, 10 Jun 2025 16:29:11 +0200
+Message-ID: <20250610142918.169540-2-fourier.thomas@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] PCI: Cleanup pci_scan_child_bus_extend() loop
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250610105820.7126-1-ilpo.jarvinen@linux.intel.com>
- <20250610105820.7126-3-ilpo.jarvinen@linux.intel.com>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20250610105820.7126-3-ilpo.jarvinen@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+If the device configuration fails (if `dma_dev->device_config()`),
+`sg_dma_address(&sg)` is not initialized and the jump to `err_dma_prep`
+leads to calling `dma_unmap_single()` on `sg_dma_address(&sg)`.
 
-On 6/10/25 3:58 AM, Ilpo Järvinen wrote:
-> pci_scan_child_bus_extend() open-codes device number iteration in the
-> for loop. Convert to use PCI_DEVFN() and add PCI_MAX_NR_DEVS (there
-> seems to be no pre-existing defines for this purpose).
->
-> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> ---
+Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+---
+ arch/powerpc/platforms/512x/mpc512x_lpbfifo.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-
->   drivers/pci/pci.h   | 1 +
->   drivers/pci/probe.c | 6 +++---
->   2 files changed, 4 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 12215ee72afb..caa6e02a9aea 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -8,6 +8,7 @@ struct pcie_tlp_log;
->   
->   /* Number of possible devfns: 0.0 to 1f.7 inclusive */
->   #define MAX_NR_DEVFNS 256
-> +#define PCI_MAX_NR_DEVS	32
->   
->   #define MAX_NR_LANES 16
->   
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index f08e754c404b..963cab481327 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -3029,14 +3029,14 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
->   {
->   	unsigned int used_buses, normal_bridges = 0, hotplug_bridges = 0;
->   	unsigned int start = bus->busn_res.start;
-> -	unsigned int devfn, cmax, max = start;
-> +	unsigned int devnr, cmax, max = start;
->   	struct pci_dev *dev;
->   
->   	dev_dbg(&bus->dev, "scanning bus\n");
->   
->   	/* Go find them, Rover! */
-> -	for (devfn = 0; devfn < 256; devfn += 8)
-> -		pci_scan_slot(bus, devfn);
-> +	for (devnr = 0; devnr < PCI_MAX_NR_DEVS; devnr++)
-> +		pci_scan_slot(bus, PCI_DEVFN(devnr, 0));
->   
->   	/* Reserve buses for SR-IOV capability */
->   	used_buses = pci_iov_bus_range(bus);
-
+diff --git a/arch/powerpc/platforms/512x/mpc512x_lpbfifo.c b/arch/powerpc/platforms/512x/mpc512x_lpbfifo.c
+index 9668b052cd4b..f251e0f68262 100644
+--- a/arch/powerpc/platforms/512x/mpc512x_lpbfifo.c
++++ b/arch/powerpc/platforms/512x/mpc512x_lpbfifo.c
+@@ -240,10 +240,8 @@ static int mpc512x_lpbfifo_kick(void)
+ 	dma_conf.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+ 
+ 	/* Make DMA channel work with LPB FIFO data register */
+-	if (dma_dev->device_config(lpbfifo.chan, &dma_conf)) {
+-		ret = -EINVAL;
+-		goto err_dma_prep;
+-	}
++	if (dma_dev->device_config(lpbfifo.chan, &dma_conf))
++		return -EINVAL;
+ 
+ 	sg_init_table(&sg, 1);
+ 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+2.43.0
 
