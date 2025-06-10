@@ -1,382 +1,199 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+Received: from mail.actia.se (mail.actia.se [212.181.117.226])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A233425E80A
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B133280005;
+	Tue, 10 Jun 2025 08:51:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.181.117.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749545465; cv=none; b=brkkbwIoYb9K7Jsg74wblX+TmqDaniOZsxzXOpIrbiFcGooNJbSiIEJ/Q1nfPBWWZwriDlTs3qFh82+DpaztrbYQQIULvC+pXmRWJMK6+RyJJYwpcKHaJFe2X5Eg7Ngl+YjiDQ5Ps4FTLRhlbsZZEGHi+8CfmU3FTYfyetNbGf8=
+	t=1749545483; cv=none; b=p4NFeNBv6By//HDLwH+ue1qhR1ir5CIrHBugXoVYJk+t7dfTpart2nqB60v20aqqQM4qPGpFL7kt1NOEnPMDKULgfwuam8nNASS6R7/YAdFDUr37dNGdpCg9Zbeq8225aMLRP7EKXQiHbWDd2liW5efpQ8QsfwBihlDySDOTR1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749545465; c=relaxed/simple;
-	bh=cZMFMbnANfOGp6G/85j9XlhUxeccdzVKiJJ6WRNFPZY=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=BoH+ENkaSwvpdlDiRj2k5HqdMja6FDf73S9JZDyMkT7Sr3F0+V1mXGX7RhLgeKdz/qoW9NiHyDbz0AVBy/KkygVFF5SvgehHffXe5ES7eRLoCKGPDjjXsz77gp28+vt2RI18zAq+3+thgf2AeLI8Pqq/sZ7TTje2xPKyjecB6uI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddce94383bso21313925ab.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 01:51:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749545462; x=1750150262;
-        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
-         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=73T0lfZ3kvQiYBnHANkABrzDOGL6CV/WmuHAW1Pj0Qw=;
-        b=okbPp/SUmeSEQnU5WFdkOvtzGHvHK0MxwqD5P/LL0/3Dm9fsm87algM/nuPfhpu6xg
-         xAVbqIYTCe7JwSnO3zEsbRHdXGvh91iBPwc0/3UiRpkklSWig0JvfiW45yRWhpKSZxLc
-         qPRUYI1RLgnEwLKKlc8t2cIiZlhc+m8mpxpnSTJYkC6gCjRF3/4GTkv+7WQI5GGqwQmK
-         wEuPoZ0BKVyKjGmKIWGd1N01Z7IR2scu8urA712cy/aFUZIfNnheRAckuWDfzpRdUY3n
-         FgZN9H4f50rAQP6xXTGoQX3L1oLUz5ErkIpG7h+jZcjHqCi1UGJucadTrVeK+hA20Stc
-         AE/g==
-X-Forwarded-Encrypted: i=1; AJvYcCVUq/RLVvRLoHQOAhJocI5lUKVmJbOF4AbTAbzMAryQsjvTz5FAmmJ7QEKLY83ZSdVH4f9owl350mAtMWw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5/AS5N2qju93b1pPVGdlYMXU8GdfUQO8xSfZMNTZb97Jw5+Ie
-	2B4m9asU53hr9MBvT484QCigCgSEqw0jgJehM+bx09RYeQBsIeaGAKXgsnKaFtSpr+JwlIuYAdF
-	KrJFOWbz7DoFPEoRvoaA4fjaA8YBlSXlY41DMeUhybEYUeNU8T0+EZK2zOsU=
-X-Google-Smtp-Source: AGHT+IF7+KKmH3zRLZFTPfNReHRoPcPKVSbU/VLCN4+/t2uMYScf6jGgJ8qSNjZBGxbIR9d6z5kh1mI+mgxNpdy+e/GdW/2Aztif
+	s=arc-20240116; t=1749545483; c=relaxed/simple;
+	bh=QxfcMoCfjYgI1nO1ChcTWdd/28VuBb1oQTwWwPRfEhI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=JFJdNbBIViatBtDhOiahk0vGtZGj5bM/dEHsOJnuJqdFTREbRSucLfhgtmcsnpSEr3QTayvx9P4rUkvR3iy1Dht/YkP+Hvsx4HYB1kksLhmYiYrjW+cceUlLD5TngxiuTSRIchUeYsiY6ua4S1IgW1SNuVoP7taDIR68p7glF/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=actia.se; spf=pass smtp.mailfrom=actia.se; arc=none smtp.client-ip=212.181.117.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=actia.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=actia.se
+Received: from S036ANL.actianordic.se (10.12.31.117) by S035ANL.actianordic.se
+ (10.12.31.116) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Jun
+ 2025 10:51:17 +0200
+Received: from S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69]) by
+ S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69%3]) with mapi id
+ 15.01.2507.039; Tue, 10 Jun 2025 10:51:17 +0200
+From: John Ernberg <john.ernberg@actia.se>
+To: =?iso-8859-2?Q?Horia_Geant=E3?= <horia.geanta@nxp.com>, Pankaj Gupta
+	<pankaj.gupta@nxp.com>, Gaurav Jain <gaurav.jain@nxp.com>, Herbert Xu
+	<herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, "Rob
+ Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+	<s.hauer@pengutronix.de>
+CC: Frank Li <Frank.Li@nxp.com>, Peng Fan <peng.fan@nxp.com>, "Pengutronix
+ Kernel Team" <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, John Ernberg <john.ernberg@actia.se>,
+	"stable@kernel.org" <stable@kernel.org>
+Subject: [PATCH v5 1/4] crypto: caam - Prevent crash on suspend with iMX8QM /
+ iMX8ULP
+Thread-Topic: [PATCH v5 1/4] crypto: caam - Prevent crash on suspend with
+ iMX8QM / iMX8ULP
+Thread-Index: AQHb2eTUol39c1y3wkmD2fV61R6EFw==
+Date: Tue, 10 Jun 2025 08:51:17 +0000
+Message-ID: <20250610085110.2295392-2-john.ernberg@actia.se>
+References: <20250610085110.2295392-1-john.ernberg@actia.se>
+In-Reply-To: <20250610085110.2295392-1-john.ernberg@actia.se>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-mailer: git-send-email 2.49.0
+x-esetresult: clean, is OK
+x-esetid: 37303A2956B1445362776A
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:cdaa:0:b0:3dd:b569:6448 with SMTP id
- e9e14a558f8ab-3ddce3e4cd3mr185586035ab.6.1749545462638; Tue, 10 Jun 2025
- 01:51:02 -0700 (PDT)
-Date: Tue, 10 Jun 2025 01:51:02 -0700
-In-Reply-To: <20250610084126.1020-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6847f1f6.a70a0220.27c366.0061.GAE@google.com>
-Subject: Re: [syzbot] [net?] KASAN: use-after-free Read in __linkwatch_run_queue
-From: syzbot <syzbot+1ec2f6a450f0b54af8c8@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Since the CAAM on these SoCs is managed by another ARM core, called the
+SECO (Security Controller) on iMX8QM and Secure Enclave on iMX8ULP, which
+also reserves access to register page 0 suspend operations cannot touch
+this page.
 
-syzbot tried to test the proposed patch but the build/boot failed:
+This is similar to when running OPTEE, where OPTEE will reserve page 0.
 
-[  190.178605][ T3436]      task_work_run+0x78/0xd4
-[  190.178605][ T3436]      do_exit+0x24c/0x930
-[  190.178605][ T3436]      do_group_exit+0x34/0x90
-[  190.178605][ T3436]      pid_child_should_wake+0x0/0x5c
-[  190.178605][ T3436]      invoke_syscall+0x48/0x110
-[  190.178605][ T3436]      el0_svc_common.constprop.0+0x40/0xe0
-[  190.178605][ T3436]      do_el0_svc+0x1c/0x28
-[  190.178605][ T3436]      el0_svc+0xa8/0x124
-[  190.178605][ T3436]      el0t_64_sync_handler+0x10c/0x138
-[  190.178605][ T3436]      el0t_64_sync+0x1a4/0x1a8
-[  190.178605][ T3436]=20
-[  190.228833][ T2102] unregister_netdevice: waiting for netdevsim3 to beco=
-me free. Usage count =3D 2
-[  190.230735][ T2102] ref_tracker: eth%d@00000000c82ae5fb has 1/1 users at
-[  190.230735][ T2102]      linkwatch_fire_event+0x124/0x170
-[  190.230735][ T2102]      netif_carrier_off+0x3c/0x94
-[  190.230735][ T2102]      nsim_stop+0x20/0xd4
-[  190.230735][ T2102]      __dev_close_many+0xbc/0x208
-[  190.230735][ T2102]      dev_close_many+0xb0/0x184
-[  190.230735][ T2102]      unregister_netdevice_many_notify+0x194/0xadc
-[  190.230735][ T2102]      unregister_netdevice_queue+0xec/0x12c
-[  190.230735][ T2102]      nsim_destroy+0x60/0x150
-[  190.230735][ T2102]      __nsim_dev_port_del+0x58/0x8c
-[  190.230735][ T2102]      nsim_dev_reload_destroy+0x70/0x130
-[  190.230735][ T2102]      nsim_dev_reload_down+0x24/0x5c
-[  190.230735][ T2102]      devlink_reload+0x78/0x2cc
-[  190.230735][ T2102]      devlink_pernet_pre_exit+0xd4/0x148
-[  190.230735][ T2102]      ops_undo_list+0x8c/0x23c
-[  190.230735][ T2102]      cleanup_net+0x1f8/0x3d0
-[  190.230735][ T2102]      process_one_work+0x178/0x2cc
-[  190.230735][ T2102]=20
+Track this situation using a new state variable no_page0, reflecting if
+page 0 is reserved elsewhere, either by other management cores in SoC or
+by OPTEE.
 
-VM DIAGNOSIS:
-08:49:39  Registers:
-info registers vcpu 0
+Replace the optee_en check in suspend/resume with the new check.
 
-CPU#0
- PC=3Dffff8000808cbe78 X00=3D0000000000000002 X01=3D0000000000000018
-X02=3Dffff800082cd5018 X03=3Dffff800082a93160 X04=3Df9f00000030dd080
-X05=3D0000000000000072 X06=3D000000000000000a X07=3D0000000000000000
-X08=3D7f7f7f7f7f7f7f7f X09=3Dffff800082a93190 X10=3D0000000000000001
-X11=3Dffff8000830b3e10 X12=3Dffff8000829e0168 X13=3Dffff8000830b3b7d
-X14=3Dffff8000830b3b88 X15=3Dffff8000830b39f0 X16=3D00000000b21b6dbc
-X17=3D00000000cb486fb5 X18=3D00000000ffffffff X19=3Df6f000000303b077
-X20=3Dffff8000808cbf28 X21=3Df9f00000030dd080 X22=3Df6f000000303b077
-X23=3Dffff8000808cbf28 X24=3D000000000000037d X25=3D0000000000000001
-X26=3Df2f00000032b5b40 X27=3D0000000000000000 X28=3D0000000000000000
-X29=3Dffff8000830b3c90 X30=3Dffff8000808cbf50  SP=3Dffff8000830b3c90
-PSTATE=3D814020c9 N--- EL2h  SVCR=3D00000000 --  BTYPE=3D0     FPCR=3D00000=
-000 FPSR=3D00000010
-P00=3D0000000000000000 P01=3D0000000000000000 P02=3D0000000000000000
-P03=3D0000000000000000 P04=3D0000000000000000 P05=3D0000000000000000
-P06=3D0000000000000000 P07=3D0000000000000000 P08=3D0000000000000000
-P09=3D0000000000000000 P10=3D0000000000000000 P11=3D0000000000000000
-P12=3D0000000000000000 P13=3D0000000000000000 P14=3D0000000000000000
-P15=3D0000000000000000 FFR=3D0000000000000000
-Z00=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:3fd040b9c43ccc73
-Z01=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:3fd3333333333333
-Z02=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:4192950384000000
-Z03=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:72f1afb4f1977729:f160d24104bbfccb
-Z04=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:bf898c0527c9d117:e9b5e5f6290a35f7
-Z05=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:155438e8b0885b01:6424fbf699fd98b4
-Z06=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:caac770d9cb4e7f1:2264182514179617
-Z07=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:6b9a14e76a498dfa:e66bf7d2cde7cab3
-Z08=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:c3e8b28178f8a364:28b175fbdd869837
-Z09=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:f1fd7ae76558d840:c289317c1109b285
-Z10=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:cd8eb63f771925cc:9c6f0f49a83bcb7f
-Z11=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:775e3ea536d2040f:099b24d7639968aa
-Z12=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:a58046e2fb7bf1bd:cb546256d4d6994f
-Z13=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:7d5540a18e90912b:66de107f74d3e462
-Z14=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:f9af977d8c41e6cf:6bb516ffe6268900
-Z15=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:612c18dc0ceed46d:f73a681b6535faac
-Z16=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:4ed35c21df472cd3
-Z17=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:8f1bbcdc8f1bbcdc
-Z18=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:ca62c1d6ca62c1d6
-Z19=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:6ed9eba15a827999
-Z20=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:6f453a7d6f453a7d:6f453a7d6f453a7d
-Z21=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:7402081e7402081e:7402081e7402081e
-Z22=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:62c20b1762c20b17:62c20b1762c20b17
-Z23=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:55799b9b55799b9b:55799b9b55799b9b
-Z24=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:2f21a6f82f21a6f8:2f21a6f82f21a6f8
-Z25=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:cfde6eb1cfde6eb1:cfde6eb1cfde6eb1
-Z26=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:6036fbdf6036fbdf:6036fbdf6036fbdf
-Z27=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:b09738e5b09738e5:b09738e5b09738e5
-Z28=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:0000000000000000
-Z29=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:0000000000000000
-Z30=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000002:7962a9c3309ca05e
-Z31=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0e0d0c0f0a09080b:0605040702010003
-info registers vcpu 1
+optee_en cannot go away as it's needed elsewhere to gate OPTEE specific
+situations.
 
-CPU#1
- PC=3Dffff800080020cfc X00=3D0000000000000001 X01=3Dffff8000891b3830
-X02=3Dffff8000891b3b30 X03=3D0000000000000040 X04=3Dffff8000891b4000
-X05=3Dffff8000891b32f8 X06=3Dffff8000891b3310 X07=3Dffff8000891b3d80
-X08=3Dffff8000891b3298 X09=3D0000000000002d40 X10=3Df4f000008866959a
-X11=3D0101010101010101 X12=3D0000000000000029 X13=3D0000000000000000
-X14=3Dffffffffffffffff X15=3Dffff8000891b3560 X16=3D0000000000000000
-X17=3D0000000000000000 X18=3D00000000ffffffff X19=3D0000000000002d40
-X20=3D0000000000000003 X21=3D0000000000002d40 X22=3D0000000000000050
-X23=3D0000000000136780 X24=3Dfff000007a336780 X25=3Dfff000007a200000
-X26=3Dfaf0000005a96ec0 X27=3Dffff800082c44180 X28=3D000000008a113678
-X29=3Dffff8000891b3290 X30=3Dffff800080135d8c  SP=3Dffff8000891b3280
-PSTATE=3D81402809 N--- EL2h  SVCR=3D00000000 --  BTYPE=3D2     FPCR=3D00000=
-000 FPSR=3D00000000
-P00=3D0000000000000000 P01=3D0000000000000000 P02=3D0000000000000000
-P03=3D0000000000000000 P04=3D0000000000000000 P05=3D0000000000000000
-P06=3D0000000000000000 P07=3D0000000000000000 P08=3D0000000000000000
-P09=3D0000000000000000 P10=3D0000000000000000 P11=3D0000000000000000
-P12=3D0000000000000000 P13=3D0000000000000000 P14=3D0000000000000000
-P15=3D0000000000000000 FFR=3D0000000000000000
-Z00=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:6b000a32203d2074:6e756f6320656761
-Z01=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:00ff000000000000:0000000000000000
-Z02=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:0100000000000000
-Z03=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:000000ff0000ff00:00ff0000000000ff
-Z04=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:000f00f00f00000f
-Z05=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:726f6620676e6974:696177203a656369
-Z06=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:696177203a656369:76656474656e5f72
-Z07=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:6e75745f7a797320:726f6620676e6974
-Z08=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:0000000000000000
-Z09=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:0000000000000000
-Z10=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:0000000000000000
-Z11=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:0000000000000000
-Z12=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:0000000000000000
-Z13=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:0000000000000000
-Z14=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:0000000000000000
-Z15=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:0000000000000000
-Z16=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000ffffcb805360:0000ffffcb805360
-Z17=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:ffffff80ffffffd0:0000ffffcb805330
-Z18=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:0000000000000000
-Z19=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:0000000000000000
-Z20=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:0000000000000000
-Z21=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:0000000000000000
-Z22=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:0000000000000000
-Z23=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:0000000000000000
-Z24=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:0000000000000000
-Z25=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:0000000000000000
-Z26=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:0000000000000000
-Z27=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:0000000000000000
-Z28=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:0000000000000000
-Z29=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:0000000000000000
-Z30=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:0000000000000000
-Z31=3D0000000000000000:0000000000000000:0000000000000000:0000000000000000:0=
-000000000000000:0000000000000000:0000000000000000:0000000000000000
+Fixes the following splat at suspend:
 
+    Internal error: synchronous external abort: 0000000096000010 [#1] SMP
+    Hardware name: Freescale i.MX8QXP ACU6C (DT)
+    pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=3D--)
+    pc : readl+0x0/0x18
+    lr : rd_reg32+0x18/0x3c
+    sp : ffffffc08192ba20
+    x29: ffffffc08192ba20 x28: ffffff8025190000 x27: 0000000000000000
+    x26: ffffffc0808ae808 x25: ffffffc080922338 x24: ffffff8020e89090
+    x23: 0000000000000000 x22: ffffffc080922000 x21: ffffff8020e89010
+    x20: ffffffc080387ef8 x19: ffffff8020e89010 x18: 000000005d8000d5
+    x17: 0000000030f35963 x16: 000000008f785f3f x15: 000000003b8ef57c
+    x14: 00000000c418aef8 x13: 00000000f5fea526 x12: 0000000000000001
+    x11: 0000000000000002 x10: 0000000000000001 x9 : 0000000000000000
+    x8 : ffffff8025190870 x7 : ffffff8021726880 x6 : 0000000000000002
+    x5 : ffffff80217268f0 x4 : ffffff8021726880 x3 : ffffffc081200000
+    x2 : 0000000000000001 x1 : ffffff8020e89010 x0 : ffffffc081200004
+    Call trace:
+     readl+0x0/0x18
+     caam_ctrl_suspend+0x30/0xdc
+     dpm_run_callback.constprop.0+0x24/0x5c
+     device_suspend+0x170/0x2e8
+     dpm_suspend+0xa0/0x104
+     dpm_suspend_start+0x48/0x50
+     suspend_devices_and_enter+0x7c/0x45c
+     pm_suspend+0x148/0x160
+     state_store+0xb4/0xf8
+     kobj_attr_store+0x14/0x24
+     sysfs_kf_write+0x38/0x48
+     kernfs_fop_write_iter+0xb4/0x178
+     vfs_write+0x118/0x178
+     ksys_write+0x6c/0xd0
+     __arm64_sys_write+0x14/0x1c
+     invoke_syscall.constprop.0+0x64/0xb0
+     do_el0_svc+0x90/0xb0
+     el0_svc+0x18/0x44
+     el0t_64_sync_handler+0x88/0x124
+     el0t_64_sync+0x150/0x154
+    Code: 88dffc21 88dffc21 5ac00800 d65f03c0 (b9400000)
 
-syzkaller build log:
-go env (err=3D<nil>)
-GO111MODULE=3D'auto'
-GOARCH=3D'amd64'
-GOBIN=3D''
-GOCACHE=3D'/syzkaller/.cache/go-build'
-GOENV=3D'/syzkaller/.config/go/env'
-GOEXE=3D''
-GOEXPERIMENT=3D''
-GOFLAGS=3D''
-GOHOSTARCH=3D'amd64'
-GOHOSTOS=3D'linux'
-GOINSECURE=3D''
-GOMODCACHE=3D'/syzkaller/jobs/linux/gopath/pkg/mod'
-GONOPROXY=3D''
-GONOSUMDB=3D''
-GOOS=3D'linux'
-GOPATH=3D'/syzkaller/jobs/linux/gopath'
-GOPRIVATE=3D''
-GOPROXY=3D'https://proxy.golang.org,direct'
-GOROOT=3D'/syzkaller/jobs/linux/gopath/pkg/mod/golang.org/toolchain@v0.0.1-=
-go1.23.7.linux-amd64'
-GOSUMDB=3D'sum.golang.org'
-GOTMPDIR=3D''
-GOTOOLCHAIN=3D'auto'
-GOTOOLDIR=3D'/syzkaller/jobs/linux/gopath/pkg/mod/golang.org/toolchain@v0.0=
-.1-go1.23.7.linux-amd64/pkg/tool/linux_amd64'
-GOVCS=3D''
-GOVERSION=3D'go1.23.7'
-GODEBUG=3D''
-GOTELEMETRY=3D'local'
-GOTELEMETRYDIR=3D'/syzkaller/.config/go/telemetry'
-GCCGO=3D'gccgo'
-GOAMD64=3D'v1'
-AR=3D'ar'
-CC=3D'gcc'
-CXX=3D'g++'
-CGO_ENABLED=3D'1'
-GOMOD=3D'/syzkaller/jobs/linux/gopath/src/github.com/google/syzkaller/go.mo=
-d'
-GOWORK=3D''
-CGO_CFLAGS=3D'-O2 -g'
-CGO_CPPFLAGS=3D''
-CGO_CXXFLAGS=3D'-O2 -g'
-CGO_FFLAGS=3D'-O2 -g'
-CGO_LDFLAGS=3D'-O2 -g'
-PKG_CONFIG=3D'pkg-config'
-GOGCCFLAGS=3D'-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=3D0=
- -ffile-prefix-map=3D/tmp/go-build4094526140=3D/tmp/go-build -gno-record-gc=
-c-switches'
+Fixes: d2835701d93c ("crypto: caam - i.MX8ULP donot have CAAM page0 access"=
+)
+Cc: stable@kernel.org # v6.10+
+Signed-off-by: John Ernberg <john.ernberg@actia.se>
+Reviewed-by: Peng Fan <peng.fan@nxp.com>
 
-git status (err=3D<nil>)
-HEAD detached at 4826c28ef2
-nothing to commit, working tree clean
+---
 
+I noticed this when enabling the iMX8QXP support (next patch), hence the
+iMX8QXP backtrace, but the iMX8QM CAAM integration works exactly the same
+and according to the NXP tree [1] the iMX8ULP suffers the same issue.
 
-tput: No value for $TERM and no -T specified
-tput: No value for $TERM and no -T specified
-Makefile:31: run command via tools/syz-env for best compatibility, see:
-Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
-ing.md#using-syz-env
-go: downloading github.com/prometheus/client_golang v1.22.0
-go list -f '{{.Stale}}' ./sys/syz-sysgen | grep -q false || go install ./sy=
-s/syz-sysgen
-make .descriptions
-tput: No value for $TERM and no -T specified
-tput: No value for $TERM and no -T specified
-Makefile:31: run command via tools/syz-env for best compatibility, see:
-Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
-ing.md#using-syz-env
-bin/syz-sysgen
-touch .descriptions
-GOOS=3Dlinux GOARCH=3Darm64 go build -ldflags=3D"-s -w -X github.com/google=
-/syzkaller/prog.GitRevision=3D4826c28ef2aca1ee7dba7111e48d3b6a9c83d9a8 -X g=
-ithub.com/google/syzkaller/prog.gitRevisionDate=3D20250606-171009"  -o ./bi=
-n/linux_arm64/syz-execprog github.com/google/syzkaller/tools/syz-execprog
-mkdir -p ./bin/linux_arm64
-aarch64-linux-gnu-g++ -o ./bin/linux_arm64/syz-executor executor/executor.c=
-c \
-	-O2 -pthread -Wall -Werror -Wparentheses -Wunused-const-variable -Wframe-l=
-arger-than=3D16384 -Wno-stringop-overflow -Wno-array-bounds -Wno-format-ove=
-rflow -Wno-unused-but-set-variable -Wno-unused-command-line-argument -stati=
-c-pie -std=3Dc++17 -I. -Iexecutor/_include   -DGOOS_linux=3D1 -DGOARCH_arm6=
-4=3D1 \
-	-DHOSTGOOS_linux=3D1 -DGIT_REVISION=3D\"4826c28ef2aca1ee7dba7111e48d3b6a9c=
-83d9a8\"
-go: downloading github.com/klauspost/compress v1.18.0
-/usr/lib/gcc-cross/aarch64-linux-gnu/12/../../../../aarch64-linux-gnu/bin/l=
-d: /tmp/cc4lBGkG.o: in function `Connection::Connect(char const*, char cons=
-t*)':
-executor.cc:(.text._ZN10Connection7ConnectEPKcS1_[_ZN10Connection7ConnectEP=
-KcS1_]+0xd8): warning: Using 'gethostbyname' in statically linked applicati=
-ons requires at runtime the shared libraries from the glibc version used fo=
-r linking
+[1]: https://github.com/nxp-imx/linux-imx/commit/653712ffe52dd59f407af1b781=
+ce318f3d9e17bb
 
+---
 
-Error text is too large and was truncated, full error text is at:
-https://syzkaller.appspot.com/x/error.txt?x=3D1472aa82580000
+v5:
+ - Collect tags
 
+v4:
+ - Drop 2nd Fixes tag (Frank Li)
 
-Tested on:
+v3:
+ - no changes
 
-commit:         f09079bd Merge tag 'powerpc-6.16-2' of git://git.kerne..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3D2f8ce980f626e3f=
-9
-dashboard link: https://syzkaller.appspot.com/bug?extid=3D1ec2f6a450f0b54af=
-8c8
-compiler:       aarch64-linux-gnu-gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GN=
-U Binutils for Debian) 2.40
-userspace arch: arm64
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=3D127669d45800=
-00
+v2:
+ - Adjust commit message to make it clearer what is happening around no_pag=
+e0 (Frank Li)
+---
+ drivers/crypto/caam/ctrl.c   | 5 +++--
+ drivers/crypto/caam/intern.h | 1 +
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
+index 38ff931059b4..766c447c9cfb 100644
+--- a/drivers/crypto/caam/ctrl.c
++++ b/drivers/crypto/caam/ctrl.c
+@@ -831,7 +831,7 @@ static int caam_ctrl_suspend(struct device *dev)
+ {
+ 	const struct caam_drv_private *ctrlpriv =3D dev_get_drvdata(dev);
+=20
+-	if (ctrlpriv->caam_off_during_pm && !ctrlpriv->optee_en)
++	if (ctrlpriv->caam_off_during_pm && !ctrlpriv->no_page0)
+ 		caam_state_save(dev);
+=20
+ 	return 0;
+@@ -842,7 +842,7 @@ static int caam_ctrl_resume(struct device *dev)
+ 	struct caam_drv_private *ctrlpriv =3D dev_get_drvdata(dev);
+ 	int ret =3D 0;
+=20
+-	if (ctrlpriv->caam_off_during_pm && !ctrlpriv->optee_en) {
++	if (ctrlpriv->caam_off_during_pm && !ctrlpriv->no_page0) {
+ 		caam_state_restore(dev);
+=20
+ 		/* HW and rng will be reset so deinstantiation can be removed */
+@@ -908,6 +908,7 @@ static int caam_probe(struct platform_device *pdev)
+=20
+ 		imx_soc_data =3D imx_soc_match->data;
+ 		reg_access =3D reg_access && imx_soc_data->page0_access;
++		ctrlpriv->no_page0 =3D !reg_access;
+ 		/*
+ 		 * CAAM clocks cannot be controlled from kernel.
+ 		 */
+diff --git a/drivers/crypto/caam/intern.h b/drivers/crypto/caam/intern.h
+index e51320150872..51c90d17a40d 100644
+--- a/drivers/crypto/caam/intern.h
++++ b/drivers/crypto/caam/intern.h
+@@ -115,6 +115,7 @@ struct caam_drv_private {
+ 	u8 blob_present;	/* Nonzero if BLOB support present in device */
+ 	u8 mc_en;		/* Nonzero if MC f/w is active */
+ 	u8 optee_en;		/* Nonzero if OP-TEE f/w is active */
++	u8 no_page0;		/* Nonzero if register page 0 is not controlled by Linux */
+ 	bool pr_support;        /* RNG prediction resistance available */
+ 	int secvio_irq;		/* Security violation interrupt number */
+ 	int virt_en;		/* Virtualization enabled in CAAM */
+--=20
+2.49.0
