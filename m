@@ -1,45 +1,55 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ACC17083C;
-	Tue, 10 Jun 2025 05:48:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD98025EFB6;
+	Tue, 10 Jun 2025 05:49:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749534490; cv=none; b=HPn918sp+POPpyRCihFhe4Y4Dzym2uA48AaSG7mcjapjIjqqf6HfuQzxo7Kt9dnCoHxFq1qiqJ5rVUnfIRGi7hPuZWa83Xexj+CHU16ABobaTi0zAlZtYoo0iRSIX8+JOts/XUB4k1VOkGgVthf2bV1j9W8Go/OWMd9xXeHLies=
+	t=1749534574; cv=none; b=CZBJPLpEvcL6R1Z0oc5sfGFBLjqWgvDql2w+2qhzXxBd9c1i7W7URKWVQLyd7KSAMQvNmDpwbZlZT99jljqSEK/Dc2SCvXKnq9Lo8vEzBMZWARkmHCx/loqvs8WcDLkH/7XTEucvOBgt9XwI/ajjnUE1wG2erQ25C2sEZnokwd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749534490; c=relaxed/simple;
-	bh=4kKbrgZIEsRfSqcwLUy0JoyoJPmIGHgvkQVsEOSQFm4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Wumh/qx3VUOQoZ9jbS2Q/iLQkTKPK/GdxQrjCii27jdZyB0kVohhHcSP6GbXcBT8lYtB61QMdQgVM/d4b83Zu3P97fz+H50x/hMZhAT0ILfU3AM1m1nbigv3lkyBg0aW4f5MSTT1m0byJyo/A2mWqPNbfGIlJN4OL2g3hvA+Lm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hAvjxf7Y; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1749534574; c=relaxed/simple;
+	bh=ykHciBnkT0hXgcM958UyGsU5I55SBpDRdhHEee2wXd0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QjiWWrjbuAudcnzG8MnsSYpH0t80i6wVaN48xVHjtWuO6Zkm9ZvaoVSTNZjjR3WPnUxaHlFUShn7UAqOFLE3viB5/3LuSPe1kcAR5BSY+DN8brGekV7QQ8DYCebuN4w0yY0w20mOF0jFCbVGQjtnSVOohPjNUOMP9QKFbvjrO+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=i8E94JcG; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hAvjxf7Y"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=jfuZXvb7ZY6kqP+DobC6hQA99SJpUyjsbbWyK9b/5/w=; b=hAvjxf7Yerj364IcazgYqB8V/a
-	WRiBo9d51OAI4C1Lgvlzx9TQUhY160VtlF7grJh7WoB7p9GP802vnPtqllwz6wXa8bcjQvHNndlmV
-	KeNgo/suCdsKNCSjBxWJX1EDaYmctPT8GmbuP4Q6eZK+HOR9TP0g4s4SYZ0XScrvpleuhzYR811jp
-	6txGTUybvLGOompRhtzjACN7rCS/kwt4XTGoJbK7dg4XrwC2/8si+bQuVK7nZ+MDsAsHCyLQ3VoGS
-	CBVnGv1qKymLdGmc+CdHBQvLe6dqqL/gGfSSuVs8xq+uwLtXYxlkkbPF6k/ImfjFU6AkLUQIGg5oD
-	LVqAlZtA==;
-Received: from [50.53.25.54] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uOrqC-00000005rpL-2Uit;
-	Tue, 10 Jun 2025 05:48:08 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Nicolas Pitre <npitre@baylibre.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-serial@vger.kernel.org
-Subject: [PATCH v3] vt: fix kernel-doc warnings in ucs_get_fallback()
-Date: Mon,  9 Jun 2025 22:48:07 -0700
-Message-ID: <20250610054807.3955933-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="i8E94JcG"
+Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55A5nQjx2202934;
+	Tue, 10 Jun 2025 00:49:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1749534566;
+	bh=Du2O03Hp0aOTb5aL/J9+f9wo5qv/YYwht5W3A/NuOXI=;
+	h=From:To:CC:Subject:Date;
+	b=i8E94JcGs9P2psU458AbJo6VWOHEvUxw9xCLLuT8me0tEIVekJFdp1So6r7oWS9sU
+	 0p5ss6QJRe8gFDdSCojD8cl2byKtRZAIzdqPeThCSLHQmZ3xDnR9j3yxK0ee+zcm77
+	 Sf6hIECo+4eVaeksefszz37Y+YL0f24jz0DUiSUI=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55A5nQwc1900885
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Tue, 10 Jun 2025 00:49:26 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 10
+ Jun 2025 00:49:25 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 10 Jun 2025 00:49:24 -0500
+Received: from hp-z2-tower.dhcp.ti.com (hp-z2-tower.dhcp.ti.com [172.24.227.4])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55A5nLp12421739;
+	Tue, 10 Jun 2025 00:49:21 -0500
+From: Hrushikesh Salunke <h-salunke@ti.com>
+To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <s-vadapalli@ti.com>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <h-salunke@ti.com>, <danishanwar@ti.com>
+Subject: [PATCH v2] arm64: dts: ti: k3-am642-evm-pcie0-ep: Add boot phase tag to "pcie0_ep"
+Date: Tue, 10 Jun 2025 11:19:20 +0530
+Message-ID: <20250610054920.2395509-1-h-salunke@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,34 +57,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Use the correct function parameter name in ucs_get_fallback() to prevent
-kernel-doc warnings:
+AM64X SoC has one instance of PCIe which is PCIe0. To support PCIe boot
+on AM64X SoC, PCIe0 needs to be in endpoint mode and it needs to be
+functional at all stages of PCIe boot process. Thus add the
+"bootph-all" boot phase tag to "pcie0_ep" device tree node.
 
-Warning: drivers/tty/vt/ucs.c:218 function parameter 'cp' not described in 'ucs_get_fallback'
-Warning: drivers/tty/vt/ucs.c:218 Excess function parameter 'base' description in 'ucs_get_fallback'
-
-Fixes: fe26933cf1e1 ("vt: add ucs_get_fallback()")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Nicolas Pitre <npitre@baylibre.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jirislaby@kernel.org>
-Cc: linux-serial@vger.kernel.org
+Signed-off-by: Hrushikesh Salunke <h-salunke@ti.com>
 ---
-v2: add Jiri and linux-serial. Mea culpa.
-v3: drop "Base" from @cp description (Nicolas).
+This patch is based on commit
+475c850a7fdd Add linux-next specific files for 20250606
 
- drivers/tty/vt/ucs.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes since v1
+As per feedback from Nishanth, changed the position of "bootph-all"
+tag, according to ordering rules for device tree properties.
 
---- lnx-616-rc1.orig/drivers/tty/vt/ucs.c
-+++ lnx-616-rc1/drivers/tty/vt/ucs.c
-@@ -206,7 +206,7 @@ static int ucs_page_entry_cmp(const void
- 
- /**
-  * ucs_get_fallback() - Get a substitution for the provided Unicode character
-- * @base: Base Unicode code point (UCS-4)
-+ * @cp: Unicode code point (UCS-4)
-  *
-  * Get a simpler fallback character for the provided Unicode character.
-  * This is used for terminal display when corresponding glyph is unavailable.
+v1 : https://lore.kernel.org/all/20250609115930.w2s6jzg7xii55dlu@speckled/
+
+ arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso b/arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso
+index 432751774853..a7e8d4ea98ac 100644
+--- a/arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso
++++ b/arch/arm64/boot/dts/ti/k3-am642-evm-pcie0-ep.dtso
+@@ -46,6 +46,7 @@ pcie0_ep: pcie-ep@f102000 {
+ 		max-functions = /bits/ 8 <1>;
+ 		phys = <&serdes0_pcie_link>;
+ 		phy-names = "pcie-phy";
++		bootph-all;
+ 		ti,syscon-pcie-ctrl = <&pcie0_ctrl 0x0>;
+ 	};
+ };
+-- 
+2.34.1
+
