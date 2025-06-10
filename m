@@ -1,229 +1,148 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC947243379
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 17:13:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EAAB2B9BF;
+	Tue, 10 Jun 2025 17:15:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749575640; cv=none; b=ciz35LIBl3hfxC6KVE/PA34izRJTSz1kqd4Z1bBNlGr0besT0JOXSo9nMVrEdEWmMn77QNqtfmOTjwv3suZoJ4ka0jMqa5S18/LRGHhCL7FOkHAlt2562IDwZydPGPneMFe5TBPwqzpUfqujGl3H6YTxtNiRK43gJx5B3Rdvk9E=
+	t=1749575726; cv=none; b=OtJ6LOBPD+e81UpTMCaoYkHOizOao7V9A6hhuklF0JERi43OVKr7KF/wE18ZS+bXy3mehDp+1iTJrJUuFeJACHmsWLCQ7WN4vSCUBSeZ9Bt/BFMFnYJQkOA3wS+aOex3BqwRR2a73PmpiJIuxmWLoGMhWFZsDfyru83iYrbryQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749575640; c=relaxed/simple;
-	bh=IIbDWH/7uO8zCznUKnaWKZek4JT2VZ1NfMINJ1+lJ7Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EFAy1MRv5DfdEXYZgVRJ3KX2aBKF0WTKwzOrJqYHcU08HCByaOkEuluRcR5KFeghERVxdp7/V14OsYVZt+zvcF7jzyvgCTv4EaYRdW1EOTVfpvO5ZZ9E2TYjG3kXx6+gIoRsOCzbmEGeqRRfkpVEiOGoVscii+EWHpHuWh74lGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A03ED14BF;
-	Tue, 10 Jun 2025 10:13:37 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F6AF3F66E;
-	Tue, 10 Jun 2025 10:13:56 -0700 (PDT)
-Date: Tue, 10 Jun 2025 18:13:50 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Ada Couprie Diaz <ada.coupriediaz@arm.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 1/2] arm64/debug: Drop redundant DBG_MDSCR_* macros
-Message-ID: <aEhnzsXHfilVhJ1s@J2N7QTR9R3>
-References: <20250610053128.4118784-1-anshuman.khandual@arm.com>
- <20250610053128.4118784-2-anshuman.khandual@arm.com>
+	s=arc-20240116; t=1749575726; c=relaxed/simple;
+	bh=UN0Hiqo7RA5+6NVe3K2fpW9RJZ2Ll/nJGDYiqbb4iH8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LUpLAU89bu67yiV1glDU30y1J8oNYsxuyMduDu7JvdSnx27PoRXU3iFoDTu0KXhRJluhSA1FH6JWky9/5++a/K+B5noBeK6QgfcCVqwR6P6qd22pOzi/kmGHnUr4/uX3BFYrbwMIj9noFvP+ID2Y+Ja/7IhoFleKuxtXnd/ijsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JxuQW/W2; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JxuQW/W2"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-235e1d710d8so70484195ad.1;
+        Tue, 10 Jun 2025 10:15:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749575724; x=1750180524; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1XpoQDBnkJ85m3RkfJrVclHVsiYiR+siVaD2J76Ul8c=;
+        b=JxuQW/W20jrJfiMMDQUW1bzQLREPQPHpu/qvSzj0/cTKEZsYhTpryfyiei5lEc5dtq
+         L6lJwwuhel4ecV5R7fTHrS2btrr/fHWEfq8sWzfQ2+gpuJcaRvuItJqNrISXnb4ojTXk
+         BmxCKKkMHSpeKTo5vuXZpv5lPBIWDEKdmySJt+/VyqEpE0zWax6vhxxqSu+yDtaa/j8h
+         NCvBoUSXM+G3hZxmrwFpaHZOyfJ0WElMUJocFzuEQGaTE3XU3ZlyY/92es8gGFInbP3E
+         5EvNZWKRoqB6BUa49rFKB1yeeyGgLN1GUhgztCUMXcK2t4lVRtWUsPNVhtzWQvk2wKfC
+         xx0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749575724; x=1750180524;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1XpoQDBnkJ85m3RkfJrVclHVsiYiR+siVaD2J76Ul8c=;
+        b=SbuSqk1SQBtEtzfRWwDZXGT41kDMg7ygN7+3hyJJ33xMc4VQra211tlxXPyjgMsFFc
+         IAp4YeoB1Ha00JeyOLKJn+/Yw1bjAOTGJUHsl/wYhdk72BPMjrfA8GAQ8CPdco0ng97W
+         jtcS1vsZUZMH9NylFZBDd+t6itGCT0qyOpFptGKkafFfc17n0ch28/OPWeap1KZOEYPL
+         DgUXiPljPLOw9EB/eRfjwD4boS8XVIPXPGpCRWHw+YZ0nYPdopL8sIPhCGKaWi8NWdnx
+         /swCRL05nLvg16ebh3KojbQCr46i51ApYvHH3NsYXdDn2fdZweoydFQtcED06RD8yaa3
+         oJwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWUre7WO+fdIfJKp/X5hHJJDAZr0VREMwDteoFa/BBMBzvHRO7DVmsxf1pQIHGSB/IpTXCtPMcjTJBC+qhvwxeS@vger.kernel.org, AJvYcCX/Lb1AvW4nd6himoJz+8AlfCrfq0MnHm2CG2gghMiq2Vw+Ivquwm8K6HDqPtJ4FDqYJKkFi+bUfz54rf0=@vger.kernel.org, AJvYcCXSFVDO9AXaA7HZ2MSyg0IjSVv2haFIWX08C8oVZvk+WkzoWfEY0EavbNTVfJ7V/R5WUXyAuDslalu90Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaPU6qio6mavt3WXQrvUcimk42curokFL0jVnXS7p5gDETxZn+
+	PggGJ8oscpO3U/iimzpa9/rtrgvi+TTK9xjjRNGU4fXMEyKUccrdjCJluFUQ
+X-Gm-Gg: ASbGnctDbosAgRj48YHYV8trAXsUszQ2701xJVeNbsFfxUrjNTHHUHfhJN69XJr1EK+
+	uS6H8+1dZYsFb4qVSny0t5n1F4MP27dyXDWsjIhqXoh0kThfX6YcoN/iMZ4lZzFy2FnKrZHRPru
+	ROjNRxvKqKzbvA0oPz44vXkWtnuUwr+VdbSh0f56lyeTecv6Ph3lYICuHHArLfQZCE7Pl55wFCP
+	QH4bhFoY1whjboTndka20thBkRggFRYd+grsR8liike1wxG1RYlq+mQeoUKu9YdF/67eUZv7m5o
+	Vqt4dnLMNIpqb/6fotzSckjdT6JfZtG59rvz+dJzNekUJq0Ni5OUTtbg+RPqciobJ77X98ddDOr
+	G2xW8H2MfusbjiFUSMwZwmfo=
+X-Google-Smtp-Source: AGHT+IEE1VyaEjF+SToiH2KCZZ8fObccPrLHHXbkTDAAnPtCNTBgNOACDl44GLw6Tjp2I7FIdab+6w==
+X-Received: by 2002:a17:902:e5c6:b0:235:caa8:1a72 with SMTP id d9443c01a7336-23641b19943mr1127805ad.30.1749575724034;
+        Tue, 10 Jun 2025 10:15:24 -0700 (PDT)
+Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-23603504ed2sm73695875ad.219.2025.06.10.10.15.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 10:15:23 -0700 (PDT)
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	skalluru@marvell.com,
+	manishc@marvell.com,
+	andrew+netdev@lunn.ch,
+	michael.chan@broadcom.com,
+	pavan.chebbi@broadcom.com,
+	ajit.khaparde@broadcom.com,
+	sriharsha.basavapatna@broadcom.com,
+	somnath.kotur@broadcom.com,
+	anthony.l.nguyen@intel.com,
+	przemyslaw.kitszel@intel.com,
+	tariqt@nvidia.com,
+	saeedm@nvidia.com,
+	louis.peens@corigine.com,
+	shshaikh@marvell.com,
+	GR-Linux-NIC-Dev@marvell.com,
+	ecree.xilinx@gmail.com,
+	horms@kernel.org,
+	dsahern@kernel.org,
+	shuah@kernel.org,
+	ruanjinjie@huawei.com,
+	mheib@redhat.com,
+	stfomichev@gmail.com,
+	linux-kernel@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org,
+	linux-rdma@vger.kernel.org,
+	oss-drivers@corigine.com,
+	linux-net-drivers@amd.com,
+	linux-kselftest@vger.kernel.org,
+	leon@kernel.org
+Subject: [PATCH net-next v3 0/4] udp_tunnel: remove rtnl_lock dependency
+Date: Tue, 10 Jun 2025 10:15:18 -0700
+Message-ID: <20250610171522.2119030-1-stfomichev@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250610053128.4118784-2-anshuman.khandual@arm.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 10, 2025 at 11:01:27AM +0530, Anshuman Khandual wrote:
-> MDSCR_EL1 has already been defined in tools sysreg format and hence can be
-> used in all debug monitor related call paths. Subsequently all DBG_MDSCR_*
-> macros become redundant and hence can be dropped off completely. While here
-> convert all variables handling MDSCR_EL1 register as u64 which reflects its
-> true width as well.
+Recently bnxt had to grow back a bunch of rtnl dependencies because
+of udp_tunnel's infra. Add separate (global) mutext to protect
+udp_tunnel state.
 
-I think that for now it'd be best to *only* change over to the
-generated MDSCR_EL1_* defintions, and leave the register sizes as-is.
+v3:
+- fix 2 test failures (Jakub NIPA)
 
-Those are logically distinct changes, and AFAICT the latter is a
-requirement for using extended breakpoints, where it would be clearer to
-have that change as part of the series adding that support, with an
-explanation as to why we care.
+v2:
+- move the lock into udp_tunnel_nic (Jakub)
+- reorder the lock ordering (Jakub)
+- move udp_ports_sleep removal into separate patch and update the test
+  (Jakub)
 
-Mark.
+Cc: Michael Chan <michael.chan@broadcom.com>
 
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Reviewed-by: Ada Couprie Diaz <ada.coupriediaz@arm.com>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
->  arch/arm64/include/asm/assembler.h      |  4 ++--
->  arch/arm64/include/asm/debug-monitors.h |  6 ------
->  arch/arm64/kernel/debug-monitors.c      | 22 +++++++++++-----------
->  arch/arm64/kernel/entry-common.c        |  4 ++--
->  4 files changed, 15 insertions(+), 21 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
-> index ad63457a05c5..f229d96616e5 100644
-> --- a/arch/arm64/include/asm/assembler.h
-> +++ b/arch/arm64/include/asm/assembler.h
-> @@ -53,7 +53,7 @@
->  	.macro	disable_step_tsk, flgs, tmp
->  	tbz	\flgs, #TIF_SINGLESTEP, 9990f
->  	mrs	\tmp, mdscr_el1
-> -	bic	\tmp, \tmp, #DBG_MDSCR_SS
-> +	bic	\tmp, \tmp, #MDSCR_EL1_SS
->  	msr	mdscr_el1, \tmp
->  	isb	// Take effect before a subsequent clear of DAIF.D
->  9990:
-> @@ -63,7 +63,7 @@
->  	.macro	enable_step_tsk, flgs, tmp
->  	tbz	\flgs, #TIF_SINGLESTEP, 9990f
->  	mrs	\tmp, mdscr_el1
-> -	orr	\tmp, \tmp, #DBG_MDSCR_SS
-> +	orr	\tmp, \tmp, #MDSCR_EL1_SS
->  	msr	mdscr_el1, \tmp
->  9990:
->  	.endm
-> diff --git a/arch/arm64/include/asm/debug-monitors.h b/arch/arm64/include/asm/debug-monitors.h
-> index 8f6ba31b8658..1f37dd01482b 100644
-> --- a/arch/arm64/include/asm/debug-monitors.h
-> +++ b/arch/arm64/include/asm/debug-monitors.h
-> @@ -13,14 +13,8 @@
->  #include <asm/ptrace.h>
->  
->  /* Low-level stepping controls. */
-> -#define DBG_MDSCR_SS		(1 << 0)
->  #define DBG_SPSR_SS		(1 << 21)
->  
-> -/* MDSCR_EL1 enabling bits */
-> -#define DBG_MDSCR_KDE		(1 << 13)
-> -#define DBG_MDSCR_MDE		(1 << 15)
-> -#define DBG_MDSCR_MASK		~(DBG_MDSCR_KDE | DBG_MDSCR_MDE)
-> -
->  #define	DBG_ESR_EVT(x)		(((x) >> 27) & 0x7)
->  
->  /* AArch64 */
-> diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
-> index 58f047de3e1c..08f1d02507cd 100644
-> --- a/arch/arm64/kernel/debug-monitors.c
-> +++ b/arch/arm64/kernel/debug-monitors.c
-> @@ -34,7 +34,7 @@ u8 debug_monitors_arch(void)
->  /*
->   * MDSCR access routines.
->   */
-> -static void mdscr_write(u32 mdscr)
-> +static void mdscr_write(u64 mdscr)
->  {
->  	unsigned long flags;
->  	flags = local_daif_save();
-> @@ -43,7 +43,7 @@ static void mdscr_write(u32 mdscr)
->  }
->  NOKPROBE_SYMBOL(mdscr_write);
->  
-> -static u32 mdscr_read(void)
-> +static u64 mdscr_read(void)
->  {
->  	return read_sysreg(mdscr_el1);
->  }
-> @@ -79,16 +79,16 @@ static DEFINE_PER_CPU(int, kde_ref_count);
->  
->  void enable_debug_monitors(enum dbg_active_el el)
->  {
-> -	u32 mdscr, enable = 0;
-> +	u64 mdscr, enable = 0;
->  
->  	WARN_ON(preemptible());
->  
->  	if (this_cpu_inc_return(mde_ref_count) == 1)
-> -		enable = DBG_MDSCR_MDE;
-> +		enable = MDSCR_EL1_MDE;
->  
->  	if (el == DBG_ACTIVE_EL1 &&
->  	    this_cpu_inc_return(kde_ref_count) == 1)
-> -		enable |= DBG_MDSCR_KDE;
-> +		enable |= MDSCR_EL1_KDE;
->  
->  	if (enable && debug_enabled) {
->  		mdscr = mdscr_read();
-> @@ -100,16 +100,16 @@ NOKPROBE_SYMBOL(enable_debug_monitors);
->  
->  void disable_debug_monitors(enum dbg_active_el el)
->  {
-> -	u32 mdscr, disable = 0;
-> +	u64 mdscr, disable = 0;
->  
->  	WARN_ON(preemptible());
->  
->  	if (this_cpu_dec_return(mde_ref_count) == 0)
-> -		disable = ~DBG_MDSCR_MDE;
-> +		disable = ~MDSCR_EL1_MDE;
->  
->  	if (el == DBG_ACTIVE_EL1 &&
->  	    this_cpu_dec_return(kde_ref_count) == 0)
-> -		disable &= ~DBG_MDSCR_KDE;
-> +		disable &= ~MDSCR_EL1_KDE;
->  
->  	if (disable) {
->  		mdscr = mdscr_read();
-> @@ -415,7 +415,7 @@ void kernel_enable_single_step(struct pt_regs *regs)
->  {
->  	WARN_ON(!irqs_disabled());
->  	set_regs_spsr_ss(regs);
-> -	mdscr_write(mdscr_read() | DBG_MDSCR_SS);
-> +	mdscr_write(mdscr_read() | MDSCR_EL1_SS);
->  	enable_debug_monitors(DBG_ACTIVE_EL1);
->  }
->  NOKPROBE_SYMBOL(kernel_enable_single_step);
-> @@ -423,7 +423,7 @@ NOKPROBE_SYMBOL(kernel_enable_single_step);
->  void kernel_disable_single_step(void)
->  {
->  	WARN_ON(!irqs_disabled());
-> -	mdscr_write(mdscr_read() & ~DBG_MDSCR_SS);
-> +	mdscr_write(mdscr_read() & ~MDSCR_EL1_SS);
->  	disable_debug_monitors(DBG_ACTIVE_EL1);
->  }
->  NOKPROBE_SYMBOL(kernel_disable_single_step);
-> @@ -431,7 +431,7 @@ NOKPROBE_SYMBOL(kernel_disable_single_step);
->  int kernel_active_single_step(void)
->  {
->  	WARN_ON(!irqs_disabled());
-> -	return mdscr_read() & DBG_MDSCR_SS;
-> +	return mdscr_read() & MDSCR_EL1_SS;
->  }
->  NOKPROBE_SYMBOL(kernel_active_single_step);
->  
-> diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
-> index 7c1970b341b8..171f93f2494b 100644
-> --- a/arch/arm64/kernel/entry-common.c
-> +++ b/arch/arm64/kernel/entry-common.c
-> @@ -344,7 +344,7 @@ static DEFINE_PER_CPU(int, __in_cortex_a76_erratum_1463225_wa);
->  
->  static void cortex_a76_erratum_1463225_svc_handler(void)
->  {
-> -	u32 reg, val;
-> +	u64 reg, val;
->  
->  	if (!unlikely(test_thread_flag(TIF_SINGLESTEP)))
->  		return;
-> @@ -354,7 +354,7 @@ static void cortex_a76_erratum_1463225_svc_handler(void)
->  
->  	__this_cpu_write(__in_cortex_a76_erratum_1463225_wa, 1);
->  	reg = read_sysreg(mdscr_el1);
-> -	val = reg | DBG_MDSCR_SS | DBG_MDSCR_KDE;
-> +	val = reg | MDSCR_EL1_SS | MDSCR_EL1_KDE;
->  	write_sysreg(val, mdscr_el1);
->  	asm volatile("msr daifclr, #8");
->  	isb();
-> -- 
-> 2.25.1
-> 
+Stanislav Fomichev (4):
+  udp_tunnel: remove rtnl_lock dependency
+  net: remove redundant ASSERT_RTNL() in queue setup functions
+  netdevsim: remove udp_ports_sleep
+  Revert "bnxt_en: bring back rtnl_lock() in the bnxt_open() path"
+
+ .../net/ethernet/broadcom/bnx2x/bnx2x_main.c  |  3 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c     | 42 ++++---------------
+ drivers/net/ethernet/emulex/benet/be_main.c   |  3 +-
+ drivers/net/ethernet/intel/i40e/i40e_main.c   |  1 -
+ drivers/net/ethernet/intel/ice/ice_main.c     |  1 -
+ .../net/ethernet/mellanox/mlx4/en_netdev.c    |  3 +-
+ .../net/ethernet/mellanox/mlx5/core/en_main.c |  3 +-
+ .../ethernet/netronome/nfp/nfp_net_common.c   |  3 +-
+ .../net/ethernet/qlogic/qede/qede_filter.c    |  3 --
+ .../net/ethernet/qlogic/qlcnic/qlcnic_main.c  |  1 -
+ drivers/net/ethernet/sfc/ef10.c               |  1 -
+ drivers/net/netdevsim/netdevsim.h             |  2 -
+ drivers/net/netdevsim/udp_tunnels.c           | 12 ------
+ include/net/udp_tunnel.h                      |  8 ++--
+ net/core/dev.c                                |  2 -
+ net/ipv4/udp_tunnel_nic.c                     | 30 +++++++------
+ .../drivers/net/netdevsim/udp_tunnel_nic.sh   | 23 +---------
+ 17 files changed, 32 insertions(+), 109 deletions(-)
+
+-- 
+2.49.0
+
