@@ -1,167 +1,137 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5099C248F74
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:52:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34BFC78F34;
+	Tue, 10 Jun 2025 22:54:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749595954; cv=none; b=Kmtw4s3GuAVqbh4hTi+EjIr/WJErYqtHXLK3PmyXQUYMzN2H+Xog19XI6qPpJ5sEv9hsm5yNVLRwpyaZGGrG7W7Q9pJHQVCiEL3Jli4Es2wRUVWjf1q4uCIdNcOaKVBi1WOjPEEZ8Er6wUrdELQLJPibPsgqsfr6HfHrjIW5gkc=
+	t=1749596090; cv=none; b=fSBwt7xeeDPnMAYFOrkJH5V7d95UEZ3opjM9eHrIi66zPIX+wFLDHJ9ahP/xVkcyS77TjFCIDdgxnAMLjodBQl6w9oBtNsBypwvnMtW9/GqRKw1h/G2XxkOS3kqCUC4qQp+cytL1QQ1MbF/Gt0MFQQYPe5JgEDLOe9vbtamw8eI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749595954; c=relaxed/simple;
-	bh=dGvEL7VFQMEHyCl9uhKD2qLMJqcGj2fNl68zFI+CAcQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EfJ/NavhXOmfEH6m8S7ml2C0lkO7zeE3mt7uGeMCaNpYQWs17mfzvKEFd+7Yqgv/aSdYrbUFC31jY6IN7LCeA4XVtl5lEPkPMbtLU9PWjTLP8dF4QmrLz/Wjz1AUTZ6dgGVYcpuOGoas9l87gCCs8cpAhfm1SG1PL6zsfNttJjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DQ51gCR4; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749596090; c=relaxed/simple;
+	bh=GjJNDRHDSPTY4qbExjVJ1cRYRVbR+Duc+V5hfDwUHSA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bPUbQEcQrZ6qlpxNxiEw6lgG2VJ+BNJDDdqzMD2pj6MltqiUJSFBfWbVNaeBcpGWUlahHYrCPRFPNcvBtBSjyVdOgDUpHPcoCD+eolquIyR4d8IL5dBJK3+qKEcWUgmytwBWwQ74Y/qWJTc+d9iSFLUyfN3kABZLwunEOecSo/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=faoACHy8; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DQ51gCR4"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-553230a9753so768998e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:52:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="faoACHy8"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-31329098ae8so282317a91.1;
+        Tue, 10 Jun 2025 15:54:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749595949; x=1750200749; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jDzIKnfoXKVxpTDnGzOlzzRBRZz/lpcLf4ffLk3rm3E=;
-        b=DQ51gCR4zyHBQsAO3THxmep1HOUDK+vpZCSjhA94cktIduNcodYUGsXUImm2utb1HR
-         lNi594PgRpr0EaFMAxAXtC5hnKB4rmFzprNLmK+/3QLWDdtVAItrMfEJQ97SpG8vtrSG
-         C5NRZ/QcOYRTX/FVO9JE3/3pNJJU8komB3YkQczkMF1ALSApqcvltWNYHAWDKu6Aybzd
-         HxBRiVLaOF+mbs+JqROqeICRXVF9javIo8MWyFBe2xQIt0wW0c955Vr6X+eRS0Kh3w5S
-         aoLP29XsVEdqM2yvJ2RqhrWMHW7XcKv3j0dfbx7CGRhhoFf6sq1t1dzl2kLAO/DJHvBr
-         gBaw==
+        d=gmail.com; s=20230601; t=1749596088; x=1750200888; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GjJNDRHDSPTY4qbExjVJ1cRYRVbR+Duc+V5hfDwUHSA=;
+        b=faoACHy8nXPmd6kyHwn2WE7QxHyhXHfMFzX42PnpGMoPCTxhWt7jwJJMTaQB5e5MAX
+         /BMX3qkGgYEtvDuzZCAyjTRHXQ6Fsh4UHE07x2M+P8AsozRdKp81iJ/yaLGRuaYOig1H
+         xY6ZwXZEGacV84nx/Rz8geZ5YDP2DYnmGfncLXxd5Qq8sqaIuToSBVVjALLZRQcoC2u/
+         Pe0echX9oGQ027gLelF88AVXfU4b+N8A5AyIKke/FoDG9NMKnl6xJPeCp+3+cp8VuDWJ
+         hIGLs6RZOTXLq3Z0uimRRrgCnl3FgVcP4YqeMEpXulpr53GyUni1anWBqx4/qkNepvJS
+         o9RA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749595949; x=1750200749;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jDzIKnfoXKVxpTDnGzOlzzRBRZz/lpcLf4ffLk3rm3E=;
-        b=Il6Cf8xk/AZxwxalJba7wts9JEPk4WWwk7fAigMXc8uoMyKj/ecva/PHtwdOSVkapz
-         qTxvCbBCFNFKE0qjp5RLtUn5j5hqAYQpfaB19xvZuCmuGX6Rtr0LiOIzQjReE43V5H4P
-         rvEJk4KGdSWG60AJR5gvbab27nNIMJK74KwMX+Ozwk+OSqDcIV7tNK69qlvYs1CRXvuG
-         jTmuGGLJmtw/f3/NHCetqtu++xL0Qs8gL4h/j95YaoT3khBoWIcbi/7NB4fZWArwtfgD
-         gCLz71/1Zo1paIkACz+DYbePW2elLfiMerAPPoYMvI9J/7r+bITQlqzsA4BipZSijXrF
-         94DQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXeNbSPxvdC52R0N463zUiC5AfCQEbmN6P5leNxeI0P73HXbARfyCcXsqoMeN7+xRdrnLZqKw+EOGhb/08=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcuGY6i/yAIcElOsiutYJ0vHJ7lMAwxak4faCayCTeddDbVmx/
-	eyG7L4uaNUVPQsy6io4Kxj2KegkVyFfx9bu4vw/Bcu1Ftrdmucc50NGF6l6D2TQpfaM=
-X-Gm-Gg: ASbGncsq/B4Z46ezPxBP/9SG79U5PWaYKOjzvszcUlpxCLD0T3N7LYqzY89LcxKEoAa
-	+3yGndF7yuEcWnKQkvQONgvXWiKvjj2S40CaXTsr+yvNk1+1wZG/MbVOuBSEchFmvZYdQDIHtZG
-	VU3xi5+sqfdRJzEqEcPaFFc3GPOaFP7KsLeJVA/YZ3Nxg8UOFM9kiI8NZK30R6y7T9nTp4X1sig
-	8jHfREu0KiZK6Ed/mQWvrb+11yOUAvRrbnEZsMIygmcY2JjyjZiiPoHdE0ZAq+XWTjmHlkSkLGs
-	7kKSgszTjzHMwnPv/2MfxIIjmvz/I6jD0SIbHm0sRJsHbvkdY3CCZXFAlUv37oU6ZACMfmpu3Mv
-	EEOvwZohao7hHrpbAswTCHwUKCN8KQ80J1QrsN0Yy
-X-Google-Smtp-Source: AGHT+IEtuqJcRIG0E5fei0/F3drx/EifVxzaUFRy6V7mzVWAdahdyPi7wDfC9TSKmVZdcMYEaT5BQw==
-X-Received: by 2002:a05:6512:39c1:b0:553:2874:8efb with SMTP id 2adb3069b0e04-5539c2482femr113667e87.11.1749595949406;
-        Tue, 10 Jun 2025 15:52:29 -0700 (PDT)
-Received: from [192.168.1.4] (88-112-131-206.elisa-laajakaista.fi. [88.112.131.206])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553676d03acsm1722972e87.32.2025.06.10.15.52.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jun 2025 15:52:27 -0700 (PDT)
-Message-ID: <13db6444-d9e9-4c37-a68d-7ed2c4d52ef6@linaro.org>
-Date: Wed, 11 Jun 2025 01:52:27 +0300
+        d=1e100.net; s=20230601; t=1749596088; x=1750200888;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GjJNDRHDSPTY4qbExjVJ1cRYRVbR+Duc+V5hfDwUHSA=;
+        b=KkKKNPH4vdpU4UOsNqj2l5+IRjutGQcxrFt8nP9sRVNeG1m2p7oqLDlNi3KmBhpKUz
+         fw3fEhepzCBMYs+qWGJk/BEyd9CNQRb7HQlDjZpRqAnpZ3leKWLzuOP9xZB7SVT8jHrP
+         zTbFZExagc2tfWLKZcsIkIKTchFNBjKjKxDJQC6Fg21pcZbVI1Cdbka9zFXLdFYmaFXq
+         aD1MisAQgbFHkwnTfTiW8A04ECKtAr9TEJdO3pAoLuB/vInp6fkcyQMIve3Hsjz9zpXu
+         fqeZ5iT2kaw/EqrtzGntBbkz/TEl8K7j4u9M1ohCRe+Kb5kAlZC5N1kCLnxQ4XieTlZj
+         o0TQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVKtM5u4fQqT3NoQRoO+9nDqYPANXLh1oVbdD2B+3h9byfh1gsXBuDL4G8TS3YLF80KmveM0P6s9ao=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrBm3N1Fka9GtXfxn3S0il2VdpVupaw8uNenBakKCggRunlYkX
+	l7l0c34v/hWZHQbfHvKKs7SY3xHMcXctCmmo93NxDc7oEEGmQR7LTB3n
+X-Gm-Gg: ASbGncvvB4wnSTDrSUiwdM9PMS/eQHwK9AWPTL5CAUysdjdmicZDQzIMaFgG5Fbgo7A
+	Xcc3zSIk8cMDGZEFYUB8xFCn/IpB7G8JsuTiudIiCrqKG33tQfjk9IU44XO9B8J+MsOMBIEhmsM
+	CXYDNE2JoLb7CMO8+kFK1rYRhCy19SqzImeFVy2KrrsX2pZhMKpNHty557yrl92K/KafISeJt7E
+	GzjtLhjvV5UCGWJGMyUYvkz0x/0FxM77668yBMPQCHR013dFSJGDUE7y4HU/3+tcObHS8KVVtaQ
+	TQOdPpZR7pIoPZ96xK1U/EgXXM2lQSZb6BfDOFjksd/gr6ENh8hPBAXECstowA==
+X-Google-Smtp-Source: AGHT+IFYQbzGkMxnLdttdH0C0UEyAC07I8+QKLbmKT/c2gH4xa9ESZ4V8XlwVs4gBqreKC2pV2Zsag==
+X-Received: by 2002:a17:90a:d410:b0:312:e73e:cded with SMTP id 98e67ed59e1d1-313af99193bmr1313804a91.16.1749596088256;
+        Tue, 10 Jun 2025 15:54:48 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313b204ce25sm111309a91.45.2025.06.10.15.54.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 15:54:46 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 266CF420AA82; Wed, 11 Jun 2025 05:54:43 +0700 (WIB)
+Date: Wed, 11 Jun 2025 05:54:43 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Harry Yoo <harry.yoo@oracle.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Documentation <linux-doc@vger.kernel.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Feng Tang <feng.tang@intel.com>, Christoph Lameter <cl@gentwo.org>,
+	David Rientjes <rientjes@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Danilo Krummrich <dakr@kernel.org>
+Subject: Re: [PATCH] mm: slub: Wrap krealloc() __GFP_ZERO semantics diagram
+ in literal code block
+Message-ID: <aEi3s7jvyPw9-SP5@archie.me>
+References: <20250610092153.55093-1-bagasdotme@gmail.com>
+ <aEg_HtGuJ8Q8G_s8@hyeyoo>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND] arm64: dts: qcom: sm8550: Add support for camss
-Content-Language: ru-RU
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Wenmeng Liu <quic_wenmliu@quicinc.com>, rfoss@kernel.org,
- todor.too@gmail.com, andersson@kernel.org, konradybcio@kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- quic_depengs@quicinc.com
-References: <20250516072707.388332-1-quic_wenmliu@quicinc.com>
- <0367d5bd-a42e-4b6c-b841-ba20190b3127@linaro.org>
- <dc4720a8-2f15-44aa-9a52-8440c7518328@linaro.org>
- <739bad1b-f26d-44a6-9cc1-eee28023474f@linaro.org>
- <dc82457e-de2b-43ec-a50c-08f7d8bdeff1@linaro.org>
- <1883d9d7-26d4-40b1-9848-ae0477cf95c7@linaro.org>
- <6bbd526c-3193-40c7-91be-e629949dca8a@oss.qualcomm.com>
- <b4a7aed0-a05e-4d1b-965f-78e0c5e0709b@linaro.org>
- <10f07a65-0549-443d-889b-d36b3515a237@linaro.org>
-From: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
-In-Reply-To: <10f07a65-0549-443d-889b-d36b3515a237@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="h4oSwMBGfaZhoS6j"
+Content-Disposition: inline
+In-Reply-To: <aEg_HtGuJ8Q8G_s8@hyeyoo>
 
 
+--h4oSwMBGfaZhoS6j
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 6/11/25 01:17, Bryan O'Donoghue wrote:
-> On 10/06/2025 22:13, Vladimir Zapolskiy wrote:
->> Hi Konrad.
->>
->> On 6/11/25 00:04, Konrad Dybcio wrote:
->>> On 6/10/25 11:02 PM, Vladimir Zapolskiy wrote:
->>>> On 6/10/25 22:02, Bryan O'Donoghue wrote:
->>>>> On 10/06/2025 13:49, Vladimir Zapolskiy wrote:
->>>>>>>
->>>>>>> List feedback from DT people is isp@ is the correct prefix.
->>>>>>>
->>>>>>
->>>>>> My bad, but I don't understand this comment, it seems irrelevant...
->>>>>>
->>>>>> The expressed concern is about the novel label name.
->>>>>
->>>>> I mean to say the feedback from Krzysztof was that we should use isp@
->>>>> not camss@ and I agree.
->>>>>
->>>>
->>>> Let me repeat it thrice, it's okay...
->>>>
->>>> I don't object against the properly selected device tree node name
->>>> "isp",
->>>> here I object against a never used and very questionable label name
->>>> "isp".
->>>>
->>>> Please feel free to ask more questions, if you still find it confusing.
->>>>
->>>> Again, I may missed a discussion about the need to get and use a novel
->>>> label name, then please share a link to it, it'll be very much
->>>> appreciated.
->>>
->>> To hopefully help out:
->>>
->>> label: node-name@unit-address {
->>>      property = value;
->>> };
->>>
->>
->> Thank you, here is a link to the wanted section of the dt specification
->> for Bryan's comprehension:
->>
->> * https://github.com/devicetree-org/devicetree-specification/blob/main/
->> source/chapter6-source-language.rst.
->>
->> If for whatever reason a proposed "isp" label is preferred, then
->> since a label rename is not an ABI change, it would make sense to
->> do a massive change of renaming all camss labels. Otherwise there will
->> be an outstanding incorrespondence/confusion of the label names in
->> board .dts files, and that's bad.
->>
->> -- 
->> Best wishes,
->> Vladimir
-> 
-> Ah the label, I thought you meant node.
+On Tue, Jun 10, 2025 at 11:20:14PM +0900, Harry Yoo wrote:
+> On Tue, Jun 10, 2025 at 04:21:53PM +0700, Bagas Sanjaya wrote:
+> > Sphinx reports htmldocs warnings:
+> >=20
+> > Documentation/core-api/mm-api:40: ./mm/slub.c:4936: WARNING: Block quot=
+e ends without a blank line; unexpected unindent. [docutils]
+> > Documentation/core-api/mm-api:40: ./mm/slub.c:4936: ERROR: Undefined su=
+bstitution referenced: "--------". [docutils]
+> >=20
+> > Fix the warning by wrapping krealloc() semantics diagram for __GFP_ZERO
+> > in literal code block.
+> >=20
+> > Fixes: 489a744e5fb1 ("mm: krealloc: clarify valid usage of __GFP_ZERO")
+> > Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+> > ---
+>=20
+> Hmm not sure what I am missing, but neither `make htmldocs` on my machine
+> nor docs.kernel.org [1] list kerneldoc for *_noprof() functions properly
+> (which should have been listed), so no errors show up...
+>=20
+> [1] https://docs.kernel.org/core-api/mm-api.html
 
-I'm trying to do my best in expressing myself by means of the second
-signaling system. As an example when I write "a label" repeatedly, I mean
-to transmit "a label" symbol, hence I hope it should not be overly
-complicated to understand me.
+I was encountering the warnings on docs-next (see MAINTAINERS), something t=
+hat
+I forget to mention when posting this patch.
 
-It's great that the understanding is reached now, it would be better,
-if we can save some time in future.
+Thanks.
 
-There is no bug introduced in this particular change, however it shall be
-fixed and be resubmitted.
+--=20
+An old man doll... just what I always wanted! - Clara
 
---
-Best wishes,
-Vladimir
+--h4oSwMBGfaZhoS6j
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaEi3sgAKCRD2uYlJVVFO
+owTRAP0Z2dOdBEmOjXllQJg2vhWjdiMaNOfYVPFJQVFxsLLfmgD/bLWK+ZJhMWNX
+IlYe4cP0wPpNHVC0fh8Lh7iBx46MqwE=
+=dQAJ
+-----END PGP SIGNATURE-----
+
+--h4oSwMBGfaZhoS6j--
