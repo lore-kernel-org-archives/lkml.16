@@ -1,246 +1,215 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F411625
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 18:14:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6991D23A993;
+	Tue, 10 Jun 2025 18:15:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749579251; cv=none; b=HNRV08u8ByGgl/h8S2Ew6dl7pMFoAMNw/ch1oZomVVTRaUFBMxeVs3IPq7elbt2lRo4SDTce0rkL5AbZK/T2mV/7R39mStVmjGquZtMeg7W+t5AEhBhZKVUzC59+xjFwQreZx739yF17fyr8mLryhYG/TipgoBBEgaL41qmwShM=
+	t=1749579311; cv=none; b=fiFakbd6QNRgkfra6qdgcwahGBntRPnp718uKJBWhBiNR5e6n1jDpnJLjKWtnEfPp5Sm3y1+q/1f3u3c3dS6w0I/h6AA6uxG2r0vPKvYXIpU1TyBZXRfyEG2BY6Lc8Bz6sFPRPSZM6FXnWd61j3sFDfAw0P6Js7ERVGNXSWRFB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749579251; c=relaxed/simple;
-	bh=HTzJ4CeEqQieDasfVAxFSBHNx5uBQqcVsEFN/1PuvDE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b9TeURHP8Lb/L+9BelagtAwEDCK/zgyrYe3rA5EDwpJSgqeWwBR/Y1e9g0e7CaxCFZ9FV0WzNUgKPAgMx1J9HGa00JWXY0Ro3IGEG/k+qGhbJrY+IOrJheP+plqVr1Mu0nakUycEuzKxkM3YCMWhX4IdxhoVMgdSH2uMS6QSU2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=2UnrrDuk; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
+	s=arc-20240116; t=1749579311; c=relaxed/simple;
+	bh=mL4bjzx4+LiYoVCmPebXQFcmiHtDaruNtlb215BQcb0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=L0gQDGDTxFCoBlaXjqSI6sdP9kzyKHYIaG2607lystfdAZEhTcIYL6cc83N7CvI/KfDYghSMr6Z15IklZHBSp8iK9+p5Gz508AjQ5ypBGTPSzsTF83S7zBCdDbfrg9ek/CD7ggLw8fWGjwZ0+8rhaNDmdGih42XdxSKi2eGoPTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ir7AKMgd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="2UnrrDuk"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-742c3d06de3so6651075b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 11:14:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1749579248; x=1750184048; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Buv6QogeYoqXPnf42/VWqtqjYW36NJ7ABH1YHvLm5sY=;
-        b=2UnrrDukpeNHh88+6YLmi7MZ2u3Rtab4fBHguHIZyHNgdblRW4ZGC1+IlLTpC0bvfW
-         16ZK6PkTUJT6OB4fxarjt7EmRDv/8Aj+vKbhslKJ+z3sjcaTftvjkpq1hXMUcV0uJPTP
-         187LXwTp6j5gjcJQVKVV8y9cHpAeDkCnd9CTI0e5JzncyPkypPnXdLTszUhlxJc5AoHA
-         L8uq65HmabCR1zDJHRbiirQrcxKqyGsSPqfZF38yysXg+4H/6/mCOlehsq+FBb9Xo0tC
-         T2iSoaUJOMi5+7j83tVoCfOUNMIRX084Yb28vV6U/jx+67iTDIN27QFASYZALm2amD6Q
-         rO9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749579248; x=1750184048;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Buv6QogeYoqXPnf42/VWqtqjYW36NJ7ABH1YHvLm5sY=;
-        b=mgbn43OsFk1jZelWxneI44VIkO4J9eLHgoRk+/rjQoRN/L59RqzWnfGHPbrBtIDy7b
-         uBBYsdF6eBPGpWXPcXhrnsXeT7zv+IGsnbQR5sNL8mxD7WDZypWxjdEN/0bmp3QNzZ+b
-         0ZlsyRBU4AslNFH3ilVUTXW9BQ07W0k/abqHgq8MaqpUZyByNL97fwKvJTngKi+xEpcg
-         hlRZNFUYPZtB7q93AsW8voEOR8rHvUqpH+Swu1Xgil29zLflRosZRpYn5WRnYqVrha2m
-         uzC0JFjoljBOS6EcEyWKE3RxGFh86OrzF22LBfNSWLXp44EnXgPPrTvSjREz2oSe1NhD
-         Kahw==
-X-Forwarded-Encrypted: i=1; AJvYcCU/pMOsJkPXPQzNIesaOGwBMTbrcj+IARavo2RJLUO+7+EbSUgkD+r7rnQa3hvxEKX5GDTzhVq3ghm5JoY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzH21wGAyIkhdXTMB8h90ms22NWJKMynrjjibhqWe/8L2bYL8aK
-	EB37DTytzFHX5y7EH9qGeEnokJ/6eycSQ4NCImoDcefqhvyTedlnErJH7T18/SgEbVM=
-X-Gm-Gg: ASbGnctimUlRW2c0dvGa58qXiDKEa0yzRVNFvuTR8DPVtZabimYG3SnUbxlptNFLk2W
-	/ZcB2ZmJ3eVTTP5dkruEtQHR93MlJGe1z48LNhxR3iEWYsH0RYMTiMA9I2ZeOP7+xGsZKQBdsoO
-	k8VCD2GKEfXhW/TFW8G2gzZvXevDm7s0NnLqbkf7ntpPtteqW5YP08NNIQQ6Qj+JM9IlvwBaNNY
-	dU8DDkqzdnEcI9gDLX/asp+Ss23sA7VQlIjY5SlhlcdgQRcsQg0KiAUF9GY1HmEYkATcoDvqiZn
-	+3dUSnMGTXR1+KkGVjHgQLZNC0fw/sL5r1Axj1jwE4KN7uJkR4hbtQAEIIMWQIE1ocIIIxcpXQ=
-	=
-X-Google-Smtp-Source: AGHT+IEKKfnqp8pCNkWI7DvGsMSwF7RA49Rt6mnDZLu2angUdnwaCraNN4mnhemBVW55MDBsnha8Sg==
-X-Received: by 2002:a05:6a00:170b:b0:748:2ff7:5e22 with SMTP id d2e1a72fcca58-7486cb4cb97mr680434b3a.10.1749579247498;
-        Tue, 10 Jun 2025 11:14:07 -0700 (PDT)
-Received: from x1 (97-120-245-201.ptld.qwest.net. [97.120.245.201])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482af3835fsm7775456b3a.27.2025.06.10.11.14.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 11:14:07 -0700 (PDT)
-Date: Tue, 10 Jun 2025 11:14:05 -0700
-From: Drew Fustini <drew@pdp7.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Dan Williams <dan.j.williams@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, nvdimm@lists.linux.dev,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH v3] dt-bindings: pmem: Convert binding to YAML
-Message-ID: <aEh17S0VPqakdsEg@x1>
-References: <20250606184405.359812-4-drew@pdp7.com>
- <20250609133241.GA1855507-robh@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ir7AKMgd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A45BC4CEED;
+	Tue, 10 Jun 2025 18:15:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749579309;
+	bh=mL4bjzx4+LiYoVCmPebXQFcmiHtDaruNtlb215BQcb0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ir7AKMgdfT7Ag0B78irRVqOgGX9tfN2NxzxTrifLgUH4aHa6zBo7Ezhbu9JhZd9fi
+	 3C6eoFAYDaJbSj77j0jslXWr2sz1OuapecwE97i7lGtEfqbkIoTnsloPPKsQflKWqK
+	 VE1NpN99wQgJtbRS013S9UeKdfiMu2dR16Ve9MK4YBN+B+ESUdHSNNXCYFGXKA7cHU
+	 zBLiFfpDUDqBQ5ENkcInvai1OhRQorJbNoOo12sPSFR4SZOLW6ANaUbQMqBKpPLy3Q
+	 xE7X/OYNTuScllG3UnktakTaNr/lOSyWtnC4j+qRyDG0vsTUtpz2Ht5IAfUHp4VgdO
+	 0/PeqriqUsgYQ==
+Received: by pali.im (Postfix)
+	id 457C84F1; Tue, 10 Jun 2025 20:15:07 +0200 (CEST)
+From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To: Steve French <sfrench@samba.org>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Tom Talpey <tom@talpey.com>
+Cc: linux-cifs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] cifs: Show reason why autodisabling serverino support
+Date: Tue, 10 Jun 2025 20:15:02 +0200
+Message-Id: <20250610181502.15839-1-pali@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250610172221.ihsrjrikbiijyb4n@pali>
+References: <20250610172221.ihsrjrikbiijyb4n@pali>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250609133241.GA1855507-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 09, 2025 at 08:32:41AM -0500, Rob Herring wrote:
-> On Fri, Jun 06, 2025 at 11:11:17AM -0700, Drew Fustini wrote:
-> > Convert the PMEM device tree binding from text to YAML. This will allow
-> > device trees with pmem-region nodes to pass dtbs_check.
-> > 
-> > Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> > Acked-by: Oliver O'Halloran <oohall@gmail.com>
-> > Signed-off-by: Drew Fustini <drew@pdp7.com>
-> > ---
-> > Dan/Dave/Vishal: does it make sense for this pmem binding patch to go
-> > through the nvdimm tree?
-> > 
-> > Note: checkpatch complains about "DT binding docs and includes should
-> > be a separate patch". Rob told me that this a false positive. I'm hoping
-> > that I can fix the false positive at some point if I can remember enough
-> > perl :)
-> > 
-> > v3:
-> >  - no functional changes
-> >  - add Oliver's Acked-by
-> >  - bump version to avoid duplicate message-id mess in v2 and v2 resend:
-> >    https://lore.kernel.org/all/20250520021440.24324-1-drew@pdp7.com/
-> > 
-> > v2 resend:
-> >  - actually put v2 in the Subject
-> >  - add Conor's Acked-by
-> >    - https://lore.kernel.org/all/20250520-refract-fling-d064e11ddbdf@spud/
-> > 
-> > v2:
-> >  - remove the txt file to make the conversion complete
-> >  - https://lore.kernel.org/all/20250520021440.24324-1-drew@pdp7.com/
-> > 
-> > v1:
-> >  - https://lore.kernel.org/all/20250518035539.7961-1-drew@pdp7.com/
-> > 
-> >  .../devicetree/bindings/pmem/pmem-region.txt  | 65 -------------------
-> >  .../devicetree/bindings/pmem/pmem-region.yaml | 49 ++++++++++++++
-> >  MAINTAINERS                                   |  2 +-
-> >  3 files changed, 50 insertions(+), 66 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/pmem/pmem-region.txt
-> >  create mode 100644 Documentation/devicetree/bindings/pmem/pmem-region.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pmem/pmem-region.txt b/Documentation/devicetree/bindings/pmem/pmem-region.txt
-> > deleted file mode 100644
-> > index cd79975e85ec..000000000000
-> > --- a/Documentation/devicetree/bindings/pmem/pmem-region.txt
-> > +++ /dev/null
-> > @@ -1,65 +0,0 @@
-> > -Device-tree bindings for persistent memory regions
-> > ------------------------------------------------------
-> > -
-> > -Persistent memory refers to a class of memory devices that are:
-> > -
-> > -	a) Usable as main system memory (i.e. cacheable), and
-> > -	b) Retain their contents across power failure.
-> > -
-> > -Given b) it is best to think of persistent memory as a kind of memory mapped
-> > -storage device. To ensure data integrity the operating system needs to manage
-> > -persistent regions separately to the normal memory pool. To aid with that this
-> > -binding provides a standardised interface for discovering where persistent
-> > -memory regions exist inside the physical address space.
-> > -
-> > -Bindings for the region nodes:
-> > ------------------------------
-> > -
-> > -Required properties:
-> > -	- compatible = "pmem-region"
-> > -
-> > -	- reg = <base, size>;
-> > -		The reg property should specify an address range that is
-> > -		translatable to a system physical address range. This address
-> > -		range should be mappable as normal system memory would be
-> > -		(i.e cacheable).
-> > -
-> > -		If the reg property contains multiple address ranges
-> > -		each address range will be treated as though it was specified
-> > -		in a separate device node. Having multiple address ranges in a
-> > -		node implies no special relationship between the two ranges.
-> > -
-> > -Optional properties:
-> > -	- Any relevant NUMA associativity properties for the target platform.
-> > -
-> > -	- volatile; This property indicates that this region is actually
-> > -	  backed by non-persistent memory. This lets the OS know that it
-> > -	  may skip the cache flushes required to ensure data is made
-> > -	  persistent after a write.
-> > -
-> > -	  If this property is absent then the OS must assume that the region
-> > -	  is backed by non-volatile memory.
-> > -
-> > -Examples:
-> > ---------------------
-> > -
-> > -	/*
-> > -	 * This node specifies one 4KB region spanning from
-> > -	 * 0x5000 to 0x5fff that is backed by non-volatile memory.
-> > -	 */
-> > -	pmem@5000 {
-> > -		compatible = "pmem-region";
-> > -		reg = <0x00005000 0x00001000>;
-> > -	};
-> > -
-> > -	/*
-> > -	 * This node specifies two 4KB regions that are backed by
-> > -	 * volatile (normal) memory.
-> > -	 */
-> > -	pmem@6000 {
-> > -		compatible = "pmem-region";
-> > -		reg = < 0x00006000 0x00001000
-> > -			0x00008000 0x00001000 >;
-> > -		volatile;
-> > -	};
-> > -
-> > diff --git a/Documentation/devicetree/bindings/pmem/pmem-region.yaml b/Documentation/devicetree/bindings/pmem/pmem-region.yaml
-> > new file mode 100644
-> > index 000000000000..a4aa4ce3318b
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pmem/pmem-region.yaml
-> > @@ -0,0 +1,49 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/pmem-region.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +maintainers:
-> > +  - Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Drop Bjorn. He only did typo fixes on this.
-> 
-> > +  - Oliver O'Halloran <oohall@gmail.com>
-> > +
-> > +title: Persistent Memory Regions
-> > +
-> > +description: |
-> > +  Persistent memory refers to a class of memory devices that are:
-> > +
-> > +    a) Usable as main system memory (i.e. cacheable), and
-> > +    b) Retain their contents across power failure.
-> > +
-> > +  Given b) it is best to think of persistent memory as a kind of memory mapped
-> > +  storage device. To ensure data integrity the operating system needs to manage
-> > +  persistent regions separately to the normal memory pool. To aid with that this
-> > +  binding provides a standardised interface for discovering where persistent
-> > +  memory regions exist inside the physical address space.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: pmem-region
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  volatile:
-> > +    description: |
-> 
-> Don't need '|' here.
+Extend cifs_autodisable_serverino() function to print also text message why
+the function was called.
 
-Rob - Thanks for the feedback. Should I send a new revision with these
-two changes?
+The text message is printed just once for mount then autodisabling
+serverino support. Once the serverino support is disabled for mount it will
+not be re-enabled. So those text messages do not cause flooding logs.
 
-Drew
+This change allows to debug issues why cifs.ko decide to turn off server
+inode number support and hence disable support for detection of hardlinks.
+
+Signed-off-by: Pali Rohár <pali@kernel.org>
+---
+Paulo and Tom, could you check if this change is better now for you?
+It should address problems with logs flooding and also information about
+harlinks (it is already printed as can be seen also in this diff).
+I would like to get your ACK, so I'm trying to improve it.
+---
+ fs/smb/client/cifsproto.h | 2 +-
+ fs/smb/client/connect.c   | 2 +-
+ fs/smb/client/dfs_cache.c | 2 +-
+ fs/smb/client/inode.c     | 6 +++---
+ fs/smb/client/misc.c      | 6 +++++-
+ fs/smb/client/readdir.c   | 4 ++--
+ 6 files changed, 13 insertions(+), 9 deletions(-)
+
+diff --git a/fs/smb/client/cifsproto.h b/fs/smb/client/cifsproto.h
+index d550662b4e72..07a67c8c37ce 100644
+--- a/fs/smb/client/cifsproto.h
++++ b/fs/smb/client/cifsproto.h
+@@ -586,9 +586,9 @@ extern int cifs_do_set_acl(const unsigned int xid, struct cifs_tcon *tcon,
+ 			   const struct nls_table *nls_codepage, int remap);
+ extern int CIFSGetExtAttr(const unsigned int xid, struct cifs_tcon *tcon,
+ 			const int netfid, __u64 *pExtAttrBits, __u64 *pMask);
+ #endif /* CIFS_ALLOW_INSECURE_LEGACY */
+-extern void cifs_autodisable_serverino(struct cifs_sb_info *cifs_sb);
++extern void cifs_autodisable_serverino(struct cifs_sb_info *cifs_sb, const char *reason, int rc);
+ extern bool couldbe_mf_symlink(const struct cifs_fattr *fattr);
+ extern int check_mf_symlink(unsigned int xid, struct cifs_tcon *tcon,
+ 			      struct cifs_sb_info *cifs_sb,
+ 			      struct cifs_fattr *fattr,
+diff --git a/fs/smb/client/connect.c b/fs/smb/client/connect.c
+index 6bf04d9a5491..819721dfd5bb 100644
+--- a/fs/smb/client/connect.c
++++ b/fs/smb/client/connect.c
+@@ -3907,9 +3907,9 @@ int cifs_mount(struct cifs_sb_info *cifs_sb, struct smb3_fs_context *ctx)
+ 	/*
+ 	 * After reconnecting to a different server, unique ids won't match anymore, so we disable
+ 	 * serverino. This prevents dentry revalidation to think the dentry are stale (ESTALE).
+ 	 */
+-	cifs_autodisable_serverino(cifs_sb);
++	cifs_autodisable_serverino(cifs_sb, "Reconnecting to different server, inode numbers won't match anymore", 0);
+ 	/*
+ 	 * Force the use of prefix path to support failover on DFS paths that resolve to targets
+ 	 * that have different prefix paths.
+ 	 */
+diff --git a/fs/smb/client/dfs_cache.c b/fs/smb/client/dfs_cache.c
+index 4dada26d56b5..c3fe85c31e2b 100644
+--- a/fs/smb/client/dfs_cache.c
++++ b/fs/smb/client/dfs_cache.c
+@@ -1288,9 +1288,9 @@ int dfs_cache_remount_fs(struct cifs_sb_info *cifs_sb)
+ 	/*
+ 	 * After reconnecting to a different server, unique ids won't match anymore, so we disable
+ 	 * serverino. This prevents dentry revalidation to think the dentry are stale (ESTALE).
+ 	 */
+-	cifs_autodisable_serverino(cifs_sb);
++	cifs_autodisable_serverino(cifs_sb, "Reconnecting to different server, inode numbers won't match anymore", 0);
+ 	/*
+ 	 * Force the use of prefix path to support failover on DFS paths that resolve to targets
+ 	 * that have different prefix paths.
+ 	 */
+diff --git a/fs/smb/client/inode.c b/fs/smb/client/inode.c
+index cd06598eacbd..b1c6e3986278 100644
+--- a/fs/smb/client/inode.c
++++ b/fs/smb/client/inode.c
+@@ -1076,9 +1076,9 @@ static void cifs_set_fattr_ino(int xid, struct cifs_tcon *tcon, struct super_blo
+ 		if (*inode)
+ 			fattr->cf_uniqueid = CIFS_I(*inode)->uniqueid;
+ 		else {
+ 			fattr->cf_uniqueid = iunique(sb, ROOT_I);
+-			cifs_autodisable_serverino(cifs_sb);
++			cifs_autodisable_serverino(cifs_sb, "Cannot retrieve inode number via get_srv_inum", rc);
+ 		}
+ 		return;
+ 	}
+ 
+@@ -1529,9 +1529,9 @@ cifs_iget(struct super_block *sb, struct cifs_fattr *fattr)
+ 		if (fattr->cf_flags & CIFS_FATTR_INO_COLLISION) {
+ 			fattr->cf_flags &= ~CIFS_FATTR_INO_COLLISION;
+ 
+ 			if (inode_has_hashed_dentries(inode)) {
+-				cifs_autodisable_serverino(CIFS_SB(sb));
++				cifs_autodisable_serverino(CIFS_SB(sb), "Inode number collision detected", 0);
+ 				iput(inode);
+ 				fattr->cf_uniqueid = iunique(sb, ROOT_I);
+ 				goto retry_iget5_locked;
+ 			}
+@@ -1596,9 +1596,9 @@ struct inode *cifs_root_iget(struct super_block *sb)
+ iget_root:
+ 	if (!rc) {
+ 		if (fattr.cf_flags & CIFS_FATTR_JUNCTION) {
+ 			fattr.cf_flags &= ~CIFS_FATTR_JUNCTION;
+-			cifs_autodisable_serverino(cifs_sb);
++			cifs_autodisable_serverino(cifs_sb, "Cannot retrieve attributes for junction point", rc);
+ 		}
+ 		inode = cifs_iget(sb, &fattr);
+ 	}
+ 
+diff --git a/fs/smb/client/misc.c b/fs/smb/client/misc.c
+index e77017f47084..409277883e8a 100644
+--- a/fs/smb/client/misc.c
++++ b/fs/smb/client/misc.c
+@@ -551,9 +551,9 @@ dump_smb(void *buf, int smb_buf_length)
+ 		       smb_buf_length, true);
+ }
+ 
+ void
+-cifs_autodisable_serverino(struct cifs_sb_info *cifs_sb)
++cifs_autodisable_serverino(struct cifs_sb_info *cifs_sb, const char *reason, int rc)
+ {
+ 	if (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM) {
+ 		struct cifs_tcon *tcon = NULL;
+ 
+@@ -561,8 +561,12 @@ cifs_autodisable_serverino(struct cifs_sb_info *cifs_sb)
+ 			tcon = cifs_sb_master_tcon(cifs_sb);
+ 
+ 		cifs_sb->mnt_cifs_flags &= ~CIFS_MOUNT_SERVER_INUM;
+ 		cifs_sb->mnt_cifs_serverino_autodisabled = true;
++		if (rc)
++			cifs_dbg(VFS, "%s: %d\n", reason, rc);
++		else
++			cifs_dbg(VFS, "%s\n", reason);
+ 		cifs_dbg(VFS, "Autodisabling the use of server inode numbers on %s\n",
+ 			 tcon ? tcon->tree_name : "new server");
+ 		cifs_dbg(VFS, "The server doesn't seem to support them properly or the files might be on different servers (DFS)\n");
+ 		cifs_dbg(VFS, "Hardlinks will not be recognized on this mount. Consider mounting with the \"noserverino\" option to silence this message.\n");
+diff --git a/fs/smb/client/readdir.c b/fs/smb/client/readdir.c
+index 787d6bcb5d1d..06e90921f751 100644
+--- a/fs/smb/client/readdir.c
++++ b/fs/smb/client/readdir.c
+@@ -412,9 +412,9 @@ _initiate_cifs_search(const unsigned int xid, struct file *file,
+ 	if (rc == 0) {
+ 		cifsFile->invalidHandle = false;
+ 	} else if ((rc == -EOPNOTSUPP) &&
+ 		   (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM)) {
+-		cifs_autodisable_serverino(cifs_sb);
++		cifs_autodisable_serverino(cifs_sb, "Cannot retrieve inode number via query_dir_first", rc);
+ 		goto ffirst_retry;
+ 	}
+ error_exit:
+ 	cifs_put_tlink(tlink);
+@@ -1006,9 +1006,9 @@ static int cifs_filldir(char *find_entry, struct file *file,
+ 	if (de.ino && (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM)) {
+ 		fattr.cf_uniqueid = de.ino;
+ 	} else {
+ 		fattr.cf_uniqueid = iunique(sb, ROOT_I);
+-		cifs_autodisable_serverino(cifs_sb);
++		cifs_autodisable_serverino(cifs_sb, "Cannot retrieve inode number", 0);
+ 	}
+ 
+ 	if ((cifs_sb->mnt_cifs_flags & CIFS_MOUNT_MF_SYMLINKS) &&
+ 	    couldbe_mf_symlink(&fattr))
+-- 
+2.20.1
+
