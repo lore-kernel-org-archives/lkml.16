@@ -1,46 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4098D242D90;
-	Tue, 10 Jun 2025 18:48:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D3022472B9
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 18:48:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749581300; cv=none; b=K1s24Dcqy0tWM3KiE6Cw9bKlpgP+zhIuuZc128Bc9gRE44Y+YU1sHwVWA6UTRiqehC/76DQhAzaEZrMD2aF9RAQAHh6HJAwD4rVCGrV5nAjU6kfpQLXiUU8J4B+IszntYw4HuXWyJ/UbDvzEeCY0qaqd9hC2XmM4xKMnsqN+4RM=
+	t=1749581318; cv=none; b=t/sfRW+Z/fzZVIcPfs1Anz9gbJ83eV9Ybjb0k+eubIkQ9RIWgnENnIvQHk6degTVJ8ta3nzHwut0fM+fEZvoL4ingeQ0zy5UAWnLjyJgJFJ4mfmrYwGgYag6ML5hmaYX8zt/0Jmbn0KDRaUKthJlQEA/cue7UKSlawNgD0B96b4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749581300; c=relaxed/simple;
-	bh=fW4WUlLPzTcOGUmKEUJPh5AreVUZepIXG7py1Yrxjzw=;
+	s=arc-20240116; t=1749581318; c=relaxed/simple;
+	bh=JdYBANVXTPzIVDhBJ340XB4Orydp/8+n8ekFirtZGg4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J5fdeL4tAz0i77qjv2ivPrif6dpY94K3J/TuAVDuXMIo33I2TwfarApBIzMzg1cMDflinlFfnpJITUF41rdS+hndXpjtCfrJA5sMnRti5QLgOEdIotnS1wu/ciWMPTz1oSujgnqS3wSLeqabqq2BVyc+jQdxYQ4bnC4UDU6AY40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N2rR2VQ8; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=kmQQG91jF6sWLsc/VPJ6qjAn3s77S05UTyiEYYE3O8oP39U+wzOpsOmkYm4oDPhIz6YTHyxplHFxJTPbobwRZyfoKWhQRFpatXrSX66YQ3NnxRwf3Y5sjPp7CVygOAcawd0b7/ddvvRRdhEaiZ3uSyQAu5G7urHX17E8o0Hx4Fo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PfQ5/WbF; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N2rR2VQ8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B537C4CEED;
-	Tue, 10 Jun 2025 18:48:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749581299;
-	bh=fW4WUlLPzTcOGUmKEUJPh5AreVUZepIXG7py1Yrxjzw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N2rR2VQ8Oq9Cmc6H9eooraC/6WL6LWGn/CyQscdSYoBnxrd6j556t8Yr4T5TQT33Y
-	 KjAddPGzxn/a1xZsEPhM/wtGddhOqKWPsMgUketQdpHVnfaf6YaA4v61Gwh2iKlc4q
-	 XkImdNQGb8y/Dgab6Udgq58Wxqco3rHtvNJ/qMnxwy9JcEIqHgZDQeAJCWUxC+A3oV
-	 OL2cGfo+A5I1Vic3XRH5dNQh8oPwI4lU72wrwqRIvmCAJJGgAq2b9hXkSx0B0RmSDD
-	 yJDpesZCL8iTxUJpJJvTqXeUEjtLqkz9iTejv45bhW3iFAmqRSy59HNfkPBVXi01hH
-	 mICO2Doj48fpw==
-Date: Tue, 10 Jun 2025 11:47:55 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
-	x86@kernel.org, linux-arch@vger.kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"Jason A . Donenfeld" <Jason@zx2c4.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 00/12] lib/crc: improve how arch-optimized code is
- integrated
-Message-ID: <20250610184755.GC1649@sol>
-References: <20250607200454.73587-1-ebiggers@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PfQ5/WbF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749581317; x=1781117317;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=JdYBANVXTPzIVDhBJ340XB4Orydp/8+n8ekFirtZGg4=;
+  b=PfQ5/WbF1ONu3mDtrAdomkW3UZ6xXr0PTXgIgrKEr+MAyW5uGuDsqOt3
+   0h3kLf3b0hPS4GPoof5ul3UVGdGKl8RvkHjpo+JWowYNFml/iQpB2r8jj
+   RKu+m5TetBU0kWWoSaNUQhl9zYU7JR55ie2l6aSMS3C8x89dMFsRyxLgF
+   p+cMPEKLoamLn1s+0tUBll3bZ0sIqawMIBxTVzBHyJ7aTorQHElVebG9R
+   juwtHGvbyQ+tLD6iHRGiM0+hWumcH3n9GEvgXp8ytDPAInNXUHZcIpHl7
+   wzRrXEouZY2lS+M2ZZsoKX6sKauGJMSWKIO11YcUJkLrvzli28tGhUsRW
+   g==;
+X-CSE-ConnectionGUID: yPRIGlOoQNybdjB9Yqvt+Q==
+X-CSE-MsgGUID: ZVmt4JhVRn6JyLUlyZ9R/A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="50932550"
+X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
+   d="scan'208";a="50932550"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 11:48:36 -0700
+X-CSE-ConnectionGUID: FdqcHoJMR0mFF0WuHWi5ew==
+X-CSE-MsgGUID: E7hbCtomS7+Gz1L5FtuHig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
+   d="scan'208";a="146904849"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 11:48:36 -0700
+Date: Tue, 10 Jun 2025 11:48:33 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Fenghua Yu <fenghuay@nvidia.com>,
+	"Wieczor-Retman, Maciej" <maciej.wieczor-retman@intel.com>,
+	Peter Newman <peternewman@google.com>,
+	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
+	Drew Fustini <dfustini@baylibre.com>,
+	Dave Martin <Dave.Martin@arm.com>,
+	"Keshavamurthy, Anil S" <anil.s.keshavamurthy@intel.com>,
+	"Chen, Yu C" <yu.c.chen@intel.com>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"patches@lists.linux.dev" <patches@lists.linux.dev>
+Subject: Re: [PATCH v5 27/29] fs/resctrl: Add file system mechanism for
+ architecture info file
+Message-ID: <aEh-AbZ8N_WZqogb@agluck-desk3>
+References: <20250521225049.132551-28-tony.luck@intel.com>
+ <f25d136c-b1d3-483a-ac77-92464d7fe25c@intel.com>
+ <aEIxzbuFybLBE3xt@agluck-desk3>
+ <9eb9a466-2895-405a-91f7-cda75e75f7ae@intel.com>
+ <aEMlznLgnn6bK9lo@agluck-desk3>
+ <d2be3a4e-1075-459d-9bf7-b6aefcb93820@intel.com>
+ <aEcsxjWroliWf3G0@agluck-desk3>
+ <fb2396c1-3799-4d45-ae24-ce7e6f0d42e2@intel.com>
+ <SJ1PR11MB60834D5E5D78CE229D04204FFC6BA@SJ1PR11MB6083.namprd11.prod.outlook.com>
+ <71a51672-4cc7-47eb-bbbb-a3195189becc@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,67 +78,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250607200454.73587-1-ebiggers@kernel.org>
+In-Reply-To: <71a51672-4cc7-47eb-bbbb-a3195189becc@intel.com>
 
-On Sat, Jun 07, 2025 at 01:04:42PM -0700, Eric Biggers wrote:
-> This series is also available at:
+On Mon, Jun 09, 2025 at 05:30:34PM -0700, Reinette Chatre wrote:
+> This should be a directory, a directory owned by the arch where it can create
+> debug infrastructure required by arch. The directory name chosen and
+> assigned by resctrl fs, while arch has freedom to create more directories
+> and add files underneath it. Goal is to isolate all arch specific debug to
+> a known location.
 > 
->     git fetch https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git lib-crc-arch-v2
+> Again, we need to prepare for resctrl fs to potentially use debugfs for its own
+> debug and when it does this the expectation is that the layout will mirror
+> /sys/fs/resctrl. Creating a directory /sys/kernel/debug/resctrl/info/<rdt_resource::name>_MON
+> and then handing it off to the arch goes *against* this. It gives arch
+> control over a directory that should be owned by resctrl fs.
 > 
-> This series improves how lib/crc supports arch-optimized code.  First,
-> instead of the arch-optimized CRC code being in arch/$(SRCARCH)/lib/, it
-> will now be in lib/crc/$(SRCARCH)/.  Second, the API functions (e.g.
-> crc32c()), arch-optimized functions (e.g. crc32c_arch()), and generic
-> functions (e.g. crc32c_base()) will now be part of a single module for
-> each CRC type, allowing better inlining and dead code elimination.  The
-> second change is made possible by the first.
-> 
-> As an example, consider CONFIG_CRC32=m on x86.  We'll now have just
-> crc32.ko instead of both crc32-x86.ko and crc32.ko.  The two modules
-> were already coupled together and always both got loaded together via
-> direct symbol dependency, so the separation provided no benefit.
-> 
-> Note: later I'd like to apply the same design to lib/crypto/ too, where
-> often the API functions are out-of-line so this will work even better.
-> In those cases, for each algorithm we currently have 3 modules all
-> coupled together, e.g. libsha256.ko, libsha256-generic.ko, and
-> sha256-x86.ko.  We should have just one, inline things properly, and
-> rely on the compiler's dead code elimination to decide the inclusion of
-> the generic code instead of manually setting it via kconfig.
-> 
-> Having arch-specific code outside arch/ was somewhat controversial when
-> Zinc proposed it back in 2018.  But I don't think the concerns are
-> warranted.  It's better from a technical perspective, as it enables the
-> improvements mentioned above.  This model is already successfully used
-> in other places in the kernel such as lib/raid6/.  The community of each
-> architecture still remains free to work on the code, even if it's not in
-> arch/.  At the time there was also a desire to put the library code in
-> the same files as the old-school crypto API, but that was a mistake; now
-> that the library is separate, that's no longer a constraint either.
-> 
-> Changed in v2:
->    - Fixed build warning on architectures without any optimized CRC code
->    - Fixed build warning in sparc/crc32.h by removing pr_fmt
->    - Moved fallback definitions of crc32*_arch back into arch files
->    - Remove ARCH_HAS_CRC* symbols at end of series instead of beginning,
->      so that they're not removed until they're no longer being selected
->    - Slightly improved some commit messages
->    - Rebased onto other pending lib/crc changes
-> 
-> Eric Biggers (12):
->   lib/crc: move files into lib/crc/
->   lib/crc: prepare for arch-optimized code in subdirs of lib/crc/
->   lib/crc/arm: migrate arm-optimized CRC code into lib/crc/
->   lib/crc/arm64: migrate arm64-optimized CRC code into lib/crc/
->   lib/crc/loongarch: migrate loongarch-optimized CRC code into lib/crc/
->   lib/crc/mips: migrate mips-optimized CRC code into lib/crc/
->   lib/crc/powerpc: migrate powerpc-optimized CRC code into lib/crc/
->   lib/crc/riscv: migrate riscv-optimized CRC code into lib/crc/
->   lib/crc/s390: migrate s390-optimized CRC code into lib/crc/
->   lib/crc/sparc: migrate sparc-optimized CRC code into lib/crc/
->   lib/crc/x86: migrate x86-optimized CRC code into lib/crc/
->   lib/crc: remove ARCH_HAS_* kconfig symbols
+> What I have been trying to propose is that resctrl fs create a directory
+> /sys/kernel/debug/resctrl/info/<rdt_resource::name>_MON/arch_debug_name_TBD and hand
+> a dentry pointer to it to the arch where it can do what is needed to support its debugging needs.
+> Isn't this exactly what I wrote in the snippet above? Above you respond with
+> statement that you were under impression that it was a directory ... and then
+> send a patch that does something else. I am so confused. Gaslighting is
+> beneath you.
 
-Applied to https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git/log/?h=crc-next
+For the precise name of the "arch_debug_name_TBD" directory, is simply "arch"
+sufficient? That leaves every other name available for resctrl
+filesystem code free choice if it does add some debug files here.
 
-- Eric
+Or would $ARCH ("x86" in my case) be better to keep distinct debug name
+spaces between architectures?
+
+-Tony
