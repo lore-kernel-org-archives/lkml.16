@@ -1,128 +1,70 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEDD524338F
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 17:04:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A61242D97;
+	Tue, 10 Jun 2025 17:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749575091; cv=none; b=uKLUUIjctYN6QL11FjJm7nYGgXChpE2vSgV/JyjcApuRmcUZXpwMuub793vYKqwKKBd4LMGE2lAPK66g+bZdPQiFB5X9fP5a+Nk7auF1Dvtv5P4N18DV+OmCGAFpiE2yT1hhlC8315ZTN7E3ej1NDbT4+iDyP7FLP6VrVrLyTeU=
+	t=1749575114; cv=none; b=Xuz23TFF+8R/Uky8rZMXtkHxSvdht0RtIa4Nxp9CH+TXCYq7kIs9Aowyvv0MDpwhX0o7M9Osr96YRF55HzI1ZHvuKy1nHfsW99Gk3lpeSHF7QG8KXKGg0mwJFg3+CUaAikrbpnDYOAAZDMepv0zV4hJ+irYHE4IJtln5NLHNxDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749575091; c=relaxed/simple;
-	bh=HlSQboCqp0PnQ00GB+6CCKMVwWcrMXPm6kbrM95SHaA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=iDIUVsSClALjN0BME0JgPDC5gU4qB+KaPwxqJYzurBLsECrOWz6amFui+85/1fLzINHvhOfD2uSnhAqGLp4+cvN5Pe/OzAf2uRfWJMd4xdVADxYpBvpfnkMy15kwM3IHWw7YAdCjsnMlqkIaWcinqqjY70fWFN0Hl8AtlT73xAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SVbXxblB; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
+	s=arc-20240116; t=1749575114; c=relaxed/simple;
+	bh=PzeAzduunYZau5o/6CmFk/6Cqsgz/Cuzms58X9YsVig=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Dqd3pRa/LHBKMSdVMaM2RerpbrJeyOObivKt3K21ON75RcX3MRUn36VKo3iS8oUJ+FYTqU8W9VMVzLzNA1W3TnMKXodyhw+/ExXh6mBwt1nx+SjoT3KjiB5lK+s0uJ61W6d90PAflrQdNKrAt4dvQRG5CUc20ToIfz2QlfouuuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=I0Xs/87x; arc=none smtp.client-ip=128.199.32.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SVbXxblB"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-450d64026baso35479165e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 10:04:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749575088; x=1750179888; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fn3PhM+6LELPC5xE451c7krwbXmvn1wLfXtY2hbkuXk=;
-        b=SVbXxblBIqyRuydR4o6N4iLjEKdt7DPra47cQfq1vzeqCO6YtnSY9iiNodN4NOBLuu
-         S0N9Pp3Hqc5L9DMinY9MeWkxtvR8Od/plmEZboa5v+9acUFSsBeNMan8kIPlLYJ+d5xq
-         p6LKiUiWzrOMhfnFXbVTLd/oT48awtWtsKbiTebBnvau8cBak4TuCORRHGkRbXULTi3E
-         7fpiv2ndhWTv23sfqQkzW8GfrgcF93rQQ3XqbtRTVFjL+oxtU9n0ErYEBRi1VNLm5+Hm
-         0CdR8qm6W47gVbnr42gjb0MLelGq4vR4USK1a+TEI73VqwZALIfo7xqXT7V756pdE3So
-         BWyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749575088; x=1750179888;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fn3PhM+6LELPC5xE451c7krwbXmvn1wLfXtY2hbkuXk=;
-        b=Lw81+pNLETCnPFDg+sZVH0LI4dCnT7FBCArhwROlGDH/m1NP8LZDEPBb2CXhq6javk
-         ChgCRDPEIWhJKtMxb6qNQXi72jPliNAcyNCZbTumUVGiSCIyizjvCbbIUny5pwrLgWWz
-         WYfvBpU6N8BZXY1WZZUxum834mcLfUDLXYPel9ZIEnZ9zreuMAvtS2eCgXWRWzCsL+Pq
-         +42HN+IrO16B0C4aNbq5rQkA5O0eehhtTUCvluJ+7+P9M4Mkt4TWKe2zIFs/qTRq9F+i
-         kQWqczNcG6fJ24O/NkkD/wKjmetRQYco99uTs0Vk+9GHofdZC2tlizVoxMeBMwz3mhpM
-         j5iQ==
-X-Gm-Message-State: AOJu0YwmnaKB8bjpRejHup8xNTfhaNweTIISJtTS0n0gvw33G7xnQFCw
-	ehAaxoQv4e+c/eka/pnxDr8B0nZoU1LWZmRIwq2HVCqvKoIl0NeqyBVz8CW2F6TIhrV/D2plUcw
-	QNo3I2lMx6y7R6w==
-X-Google-Smtp-Source: AGHT+IGuoHKyepOKuCopPSY2XL0HemV9xoMey65JxzRCECFk56/te0vuTyrZ59WQnTjaRIsbDfaWdtinm9UG+w==
-X-Received: from wmsr16.prod.google.com ([2002:a05:600c:8b10:b0:451:deba:e06f])
- (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:1552:b0:442:e03b:58a9 with SMTP id 5b1f17b1804b1-4531de836c9mr33031645e9.25.1749575088123;
- Tue, 10 Jun 2025 10:04:48 -0700 (PDT)
-Date: Tue, 10 Jun 2025 17:04:46 +0000
-In-Reply-To: <20250313-asi-page-alloc-v1-0-04972e046cea@google.com>
+	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="I0Xs/87x"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
+	t=1749575111; bh=PzeAzduunYZau5o/6CmFk/6Cqsgz/Cuzms58X9YsVig=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=I0Xs/87xVuuPN9B5QIwPjx+/ESoBx4wnxwFFHw5puHX6aT9mSeG0nTVHFHHBSQruG
+	 QkFe9PdO8ghZa/cpK3uE8N/8+Ct/CEuP1dOqqGejo3uHVO16XWHDIqOrKEBxlWCqsn
+	 dyBK+JDddpBHDf2HKMetWpqJW0whZ7FNQpldiRAE=
+Message-ID: <97a76eee-1c06-49bc-a572-809c6e8de4aa@lucaweiss.eu>
+Date: Tue, 10 Jun 2025 19:05:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250313-asi-page-alloc-v1-0-04972e046cea@google.com>
-X-Mailer: aerc 0.20.1
-Message-ID: <DAJ0LUX8F2IW.Q95PTFBNMFOI@google.com>
-Subject: Re: [PATCH RFC 00/11] mm: ASI integration for the page allocator
-From: Brendan Jackman <jackmanb@google.com>
-To: Brendan Jackman <jackmanb@google.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, <x86@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, David Rientjes <rientjes@google.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, David Hildenbrand <david@redhat.com>
-Cc: <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, 
-	Mike Rapoport <rppt@kernel.org>, Junaid Shahid <junaids@google.com>, 
-	Reiji Watanabe <reijiw@google.com>, Patrick Bellasi <derkling@google.com>, 
-	Yosry Ahmed <yosry.ahmed@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Subject: Re: [PATCH 0/4] Add support for Sony Xperia Z Ultra (togari)
+Content-Language: en-US
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: Kevin Widjaja <kevin.widjaja21@gmail.com>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250419-togari-v1-0-45840c677364@lucaweiss.eu>
+ <8c0c0740-3f75-47dd-8f11-c03fbf8b1583@oss.qualcomm.com>
+From: Luca Weiss <luca@lucaweiss.eu>
+In-Reply-To: <8c0c0740-3f75-47dd-8f11-c03fbf8b1583@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu Mar 13, 2025 at 6:11 PM UTC, Brendan Jackman wrote:
-> .:: Patchset overview
+On 23-04-2025 1:55 a.m., Konrad Dybcio wrote:
+> On 4/19/25 11:00 AM, Luca Weiss wrote:
+>> Do some tweaks to the common file for the devices in the 'rhine' family
+>> of Sony devices, and add a dts for togari.
+>>
+>> Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
+>> ---
+> 
+> I don't really know for sure, but maybe this driver could be suitable
+> for its touchscreen
+> 
+> drivers/input/touchscreen/atmel_mxt_ts.c
 
-Hey all, I have been down the pagetable mines lately trying to figure
-out a solution to the page cache issue (the 70% FIO degradatation [0]).
-I've got a prototype based on the idea I discussed at LSF/MM/BPF
-that's slowly coming together. My hope is that as soon as I can
-convincingly claim with a straight face that I know how to solve that
-problem, I can transition from <post an RFC every N months then
-disappear> mode into being a bit more visible with development
-iterations...
+I don't have this device myself, but maybe Kevin plans on continuing 
+work on this device. Thanks!
 
-[0] https://lore.kernel.org/linux-mm/20250129144320.2675822-1-jackmanb@google.com/
+Regards
+Luca
 
-In the meantime, I am still provisionally planning to make the topic
-of this RFC the first [PATCH] series for ASI. Obviously before I can
-seriously ask Andrew to merge I'll also need to establish some
-consensus on the x86 side, but in the meantime I think we're getting
-close enough to start discussing the mm code.
-
-So.. does anyone have a bit of time to look over this and see if the
-implementation makes sense? Is the basic idea on the right lines?
-Also if there's anything I can do to make that easier (is it worth
-rebasing?) let me know.
-
-Also, I guess I should also note my aspirational plan for the next few
-months, it goes...
-
-1. Get a convincing PoC working that improves the FIO degradation.
-
-2. Gather it into a fairly messy but at least surveyable branch and push
-   that to Github or whatever.
-
-3. Show that to x86 folks and hopefully (!!) get some maintainers to
-   give a nod like "yep we want ASI and we're more or less sold that
-   the developers know how to make it performant".
-
-4. Turn this [RFC] into a [PATCH]. So start by trying to merge the stuff
-   that manages the restricted address space, leaving the logic of actually
-   _using_ it for a later series.
-
-5. [Maybe this can be partially paralellised with 4] start a new [PATCH]
-   series that starts adding in the x86 stuff to actually switch address
-   spaces etc. Basically this means respinning the patches that Boris
-   has reviewed in [1]. Since we already have the page_alloc stuff, it
-   should be possible to start testing this code end-to-end quickly.
-
-[1] https://lore.kernel.org/linux-mm/20250110-asi-rfc-v2-v2-0-8419288bc805@google.com/
-
-Anyone have any thoughts on that overall strategy?
-
-Cheers,
-Brendan
+> 
+> Konrad
 
