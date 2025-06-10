@@ -1,91 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC35F29A9E1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF6D8299951;
 	Tue, 10 Jun 2025 12:56:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749560163; cv=none; b=c/nBUtBmob7Zs/xyYEM8nt8LNHPzF2welh6qMRbavR1fXbDAr9UjjijSB8wNnwr0aFVHlbPTAIEeXIH7RtEMdDrl/bcD3AMqvFwQSG3OC+295Y8Qauvd7SNlel3Bgp44Fhc3rWPapoKh9RurTgheqgVUobLJUhZbCizAyuaBTIA=
+	t=1749560164; cv=none; b=p27zNCtJj5oQHLv4D+BBJh00MKsBS3gdkfDvNAAIeWCLijqM7sElSq3KjJhP5dP5NEoVYIRPViIwre3hI1SiXgpxr7FSFm3dKZSsz/Qg3v10B6ndGqAj1Xnh97fWPG2Mx08cI0oonCI2OUGHC7tTPgH6PWE/qreaRjBn6Ukabss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749560163; c=relaxed/simple;
-	bh=ymdmRNA1an7znV7VwE8aKDdd9upCMjadrk7wwCN+JS0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=XIW2jolqGctnmyLh2WQc3+AO90rwPXRU5jap0AVVfr6fUR5sTWcj5Qkiz7kUR+yWi0GjT5ZqQsL6HLH/R4jCkYkXlMwgqYsqcncz+wBqt+wUbRyFaNH7eApX9jH3PswsMVpUrZxtz9xCAkfC4YT1ovRTd4hIPX684+JmcgCcGHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iGzKdesq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749560164; c=relaxed/simple;
+	bh=obh81dA6n2/QIwn9xppDLCO+0C+676zJ02YSkOC1q4g=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JUp+iF3D7Bta21c5X5Hu8+hWQLjebyG6h5dwhHkAsTaOqGSQnCADe+yqjTre37da/B7hv1IoXfC0jDHhjb52DrRfp/rcVT/eT+KhoEdBoETRZBzNtgpNfv0GMxC4mucS9Y/Dar5vSMn28m9g0Di8YAWFPU/Y5uA2ub6ely7t42E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=DNWTm1pg; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iGzKdesq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EB62C4CEEF;
-	Tue, 10 Jun 2025 12:55:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749560162;
-	bh=ymdmRNA1an7znV7VwE8aKDdd9upCMjadrk7wwCN+JS0=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=iGzKdesqdm1MrpyWKVIbnnnTO2O5kjtU0RWXuPsX72qmoBIf1+QGRaRjgZ2tudgyJ
-	 r066JMd+OFmUd03hH7AREG3eFtPRIYeT5fffPBhRHTDNsYzZrn6GSXuoczYlB+tFEM
-	 Xv83cl923uHkQY0nVAc6FsJLFl6Xy4uunqWmjZpzls9Pcz/9aoH+/TifQuZ8u0DNrI
-	 nrPNp24G+J/OqKYjScTqVdrdyOBtof8CkpfQeM/WEzZpnj9R7LbpZfTUgnHFRF9Fse
-	 9ejaWmya7EgYDDrJ7BRajiE9GTVPe8gd8UDUzd+NxnZW5xx5LIyQvYxetZHzMia4dg
-	 ACzOo9EY8FAwQ==
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="DNWTm1pg"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55ACLEi6010655;
+	Tue, 10 Jun 2025 14:50:43 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	oUcADHRW/CG5RbFLRdu854s7Rq7hg+3h+CuKTVAO9D0=; b=DNWTm1pgax86feqh
+	VyQ9dkmv0nUbLOq5uDjbAxuM8ulylwzQ12xk+fUxjbJVzMTCEKRzp1NqbS5kQQ8Z
+	Kw7Hoh3GAfa2VjSwCKQ/OHIbrlHEVlDzCAYPgZyxiJcBsrgELSm1heXWGf7bF5ci
+	p6RdusyQaF0d0x1b52UJCFYqHVMnKAsbUm1gXQ5LRco+WEnHW6CEHTTe5S1J6/cL
+	qzoR3/eS5tv0CINKBRxOsflTw6x64V4uwYdsaMwsLwE2Yufti2X1JOq2DJseQC9Q
+	A8zAlxrg2K1ASNnLXLt0VMVQYsFJDtbIcpKRlOpZxCFKzVB8PzldBJSfobnObLMX
+	0tjHVA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474y052j0v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Jun 2025 14:50:43 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 64AC24004B;
+	Tue, 10 Jun 2025 14:49:43 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A4C03B34ED0;
+	Tue, 10 Jun 2025 14:49:00 +0200 (CEST)
+Received: from localhost (10.48.86.132) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Jun
+ 2025 14:49:00 +0200
+From: Antonio Borneo <antonio.borneo@foss.st.com>
+To: Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Andy Shevchenko
+	<andy@kernel.org>,
+        David Lechner <dlechner@baylibre.com>,
+        Fabrice Gasnier
+	<fabrice.gasnier@foss.st.com>,
+        Gatien Chevallier
+	<gatien.chevallier@foss.st.com>,
+        Jonathan Cameron <jic23@kernel.org>, Lee
+ Jones <lee@kernel.org>,
+        <linux-iio@vger.kernel.org>,
+        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+        Olivier Moysan
+	<olivier.moysan@foss.st.com>
+CC: Antonio Borneo <antonio.borneo@foss.st.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>
+Subject: [PATCH 2/5] iio: adc: stm32-dfsdm: Fix build warnings about export.h
+Date: Tue, 10 Jun 2025 14:48:52 +0200
+Message-ID: <20250610124855.269158-3-antonio.borneo@foss.st.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250610124855.269158-1-antonio.borneo@foss.st.com>
+References: <20250610124855.269158-1-antonio.borneo@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 10 Jun 2025 14:55:55 +0200
-Message-Id: <DAIVBBJADWNR.1LLZJ6YWV8IN2@kernel.org>
-Cc: <a.hindborg@kernel.org>, <airlied@gmail.com>, <alex.gaynor@gmail.com>,
- <aliceryhl@google.com>, <anisse@astier.eu>, <bjorn3_gh@protonmail.com>,
- <boqun.feng@gmail.com>, <dakr@kernel.org>, <david.m.ertman@intel.com>,
- <dri-devel@lists.freedesktop.org>, <fujita.tomonori@gmail.com>,
- <gary@garyguo.net>, <gregkh@linuxfoundation.org>,
- <igor.korotin.linux@gmail.com>, <ira.weiny@intel.com>, <leitao@debian.org>,
- <leon@kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-pm@vger.kernel.org>, <maarten.lankhorst@linux.intel.com>,
- <mcgrof@kernel.org>, <mripard@kernel.org>, <nouveau@lists.freedesktop.org>,
- <ojeda@kernel.org>, <rafael@kernel.org>, <russ.weight@linux.dev>,
- <rust-for-linux@vger.kernel.org>, <simona@ffwll.ch>, <tamird@gmail.com>,
- <tmgross@umich.edu>, <tzimmermann@suse.de>, <viresh.kumar@linaro.org>,
- <walmeida@microsoft.com>
-Subject: Re: [PATCH] rust: module: remove deprecated author key
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Guilherme Giacomo Simoes" <trintaeoitogc@gmail.com>,
- <miguel.ojeda.sandonis@gmail.com>
-X-Mailer: aerc 0.20.1
-References: <CANiq72kORZjTe3tPEBueDi57TGF7KfxgTSw4Tn0DQeK_X5hi5A@mail.gmail.com> <20250610123731.194853-1-trintaeoitogc@gmail.com>
-In-Reply-To: <20250610123731.194853-1-trintaeoitogc@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SAFCAS1NODE2.st.com (10.75.90.13) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-10_05,2025-06-10_01,2025-03-28_01
 
-On Tue Jun 10, 2025 at 2:37 PM CEST, Guilherme Giacomo Simoes wrote:
-> Miguel Ojeda <miguel.ojeda.sandonis@gmail.com> wrotes:
->> On Tue, Jun 10, 2025 at 12:12=E2=80=AFPM Benno Lossin <lossin@kernel.org=
-> wrote:
->> >
->> > Hmm, I guess a checkpatch lint fits better then?
->>=20
->> Yeah, that would work.
->>=20
->> Probably for the C side too -- from a quick grep I don't see it.
-> Maybe, after this patch we can make a checkpatch change for check the `au=
-thors`
-> key (and MODULE_AUTHOR for C side), and throw a WARN if the author is a n=
-ame
-> (not a url, or "rust for linux") and don't have a email address.=20
+After commit a934a57a42f6 ("scripts/misc-check: check missing #include
+<linux/export.h> when W=1") and commit 7d95680d64ac ("scripts/misc-check:
+check unnecessary #include <linux/export.h> when W=1") we get the build
+warnings with W=1:
 
-Most other authors fields that don't list explicit names use "Rust for
-Linux Contributors", so we should probably scan for that instead.
+drivers/iio/adc/stm32-dfsdm-adc.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+drivers/iio/adc/stm32-dfsdm-core.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
 
-But I think that we should no longer add any author fields using that.
-Things with that are from way back in the day (when RfL was still out of
-tree) where many people contributed to a single file, hence the use of
-that phrase.
+Fix them.
 
-> Unless you guys tell me otherwise, I guess this is not so priority.
-
-Yeah this isn't high priority. We can just make this into a
-good-first-issue, then someone can eventually pick it up.
-
+Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
 ---
-Cheers,
-Benno
+ drivers/iio/adc/stm32-dfsdm-adc.c  | 1 +
+ drivers/iio/adc/stm32-dfsdm-core.c | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
+index f583924eb16bb..c2d21eecafe79 100644
+--- a/drivers/iio/adc/stm32-dfsdm-adc.c
++++ b/drivers/iio/adc/stm32-dfsdm-adc.c
+@@ -8,6 +8,7 @@
+ 
+ #include <linux/dmaengine.h>
+ #include <linux/dma-mapping.h>
++#include <linux/export.h>
+ #include <linux/iio/adc/stm32-dfsdm-adc.h>
+ #include <linux/iio/backend.h>
+ #include <linux/iio/buffer.h>
+diff --git a/drivers/iio/adc/stm32-dfsdm-core.c b/drivers/iio/adc/stm32-dfsdm-core.c
+index 041dc9ebc0482..47e2d1338e9e6 100644
+--- a/drivers/iio/adc/stm32-dfsdm-core.c
++++ b/drivers/iio/adc/stm32-dfsdm-core.c
+@@ -8,6 +8,7 @@
+ 
+ #include <linux/bitfield.h>
+ #include <linux/clk.h>
++#include <linux/export.h>
+ #include <linux/iio/iio.h>
+ #include <linux/iio/sysfs.h>
+ #include <linux/interrupt.h>
+-- 
+2.34.1
+
