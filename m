@@ -1,222 +1,225 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B25D259CBF;
-	Tue, 10 Jun 2025 05:58:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749535139; cv=fail; b=i2lzXGb1SX0wWeHrLX8k4YK08kKWHcyCVbXRPaudov5Oar+g44GXNbA709hKeW1orMv32nYr9xYmVSrbf3XfKxQLj6BEci5TQTw84bICGvciKJPEfUaTHMlcS2K79h4t/3lI1QD30MF7xnfnmUDTtulkIk7ZcjxX1PKkBYP4RIA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749535139; c=relaxed/simple;
-	bh=0Elrtk0K5fgT082my7WTx5sRzOihIb3v+FjmoRhxhMk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=XgWuioCRJKxE0ow7MnnT8atY4wpwn/YjurHpCqWc4la4xGGLGhI2J7UxGVpLGb9cdsq80fteiF01pfAoojElOhR+0FvTSKJFfVs66k0h+fL/WIL/F++mGoGmjBCGq/9gQKttus5oQIvTMNrrOSvWHx/kWymh+vpMmsVkj+37MIM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VWiIA9a2; arc=fail smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB9325F7B2
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 05:59:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749535174; cv=none; b=nOH1LAAQDq9mCFKzT6mt5gwFHhUuAMenNNeMrxU5dznZB3ZrdSBdoWdpsCkMhpAFKIG4U7lQBQs6mcqImp0jnN9uWQvuHwaKG5y7lX+lpgbITc8jY7J1ACOE/WzJ/kfHnrVozWRN4iTenQmSPOLrFWEHmk87JnCV9i+T6VmG0Sg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749535174; c=relaxed/simple;
+	bh=tBeO556y82ud3EBcMDK6ZJNN5GK1Ey0BbUH6DULTNpQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=fDq3ce7MlYlW+WOrpKwJF+hS+adkkpvhRilEcXFOo7YMJeKRNuMf+/mKHDBBb0hE7q8cSuBSYmRnwkMrlDrm+MeqIQZCyW1kLkovrYUK42VjuyBiaka4w9p0eQtN5sYMDGq+NIcV/KkVkC9caiQd7sQV1mVFOa0E/9QQkSEwTKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B8gkgUYu; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VWiIA9a2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749535138; x=1781071138;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=0Elrtk0K5fgT082my7WTx5sRzOihIb3v+FjmoRhxhMk=;
-  b=VWiIA9a2eISH+vzef7/dy9rkgh/AwNvaa9usxoJu7KQwDmdm0LdEUE9t
-   J9bTKacJ++e1bwrNK45Q1ZPLWe3EiX+0wKu9Vj7sYoWQ1an0d242HcPVv
-   ldDkCdDRFKpUJsqhNwc5malSBvesZJ+wRFvPsb9FPw/gULeV2V2iUS86x
-   JCeX4cXePeDJQwmDbb0FbdjN39YSUniO5fBan/TbsaP3jIrurBuKNu2t8
-   6zIQmgxXYTb96wgaqohPpLk+i43AT6SIk4z3uCgktb3Z9isF5yZ0bJRXg
-   zr+IEhyI6kG7atba7pGvMkr+QjWDMoAiGJT0ROfdszbVTquEMYL76dOJ+
-   w==;
-X-CSE-ConnectionGUID: n9SlmWwNSs6aBf2gtW8R3w==
-X-CSE-MsgGUID: VR+RhIpqSBer+YLHx4fs+g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51714187"
-X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
-   d="scan'208";a="51714187"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 22:58:57 -0700
-X-CSE-ConnectionGUID: sEoUwyKeTI+G2Rgbh5JmrQ==
-X-CSE-MsgGUID: 4tEBuKrrQRivmcNmJ45Vag==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
-   d="scan'208";a="169902625"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 22:58:56 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Mon, 9 Jun 2025 22:58:56 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Mon, 9 Jun 2025 22:58:56 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (40.107.223.79)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Mon, 9 Jun 2025 22:58:55 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DvgclrxwPkAeSbnZZWF1r6Cq4guFrBv1NySCSbqcAB7YYFO/19k16Quz1XGjWthuc8ANqC2IZDViPIct+ftVPg9/A1hFBVJ8Rb+G9kGVxPaZB8uSsl9iKUf9jwCJPQ49PriNI6JhZP1exn66Y0UY1GUkWaJeIiswNpxLP3HdGb/rhXDM5tBbzdQXYCYKdbVoeCdbHJHMsto0Fbf82f35Wqdo4fuaF4FDPARNTTejPRofB/Cdt4IJN5yaQzJiwSitCPuVig+ml9ZuCvPQtbXXtIfVyPJbt9pY+myf1ZdDZ6JyluCYG4cvpET5jMCC8JBjxyLpVdt3uAWEo86lZEzBsw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0Elrtk0K5fgT082my7WTx5sRzOihIb3v+FjmoRhxhMk=;
- b=bsBdN0PsaETmeR7ih9aiCWSAqCzlcdqKOqPs7W8VqtOjv2sCwY2d0KJ4TXaGzgxJInD8kqxCcSZg48LopoRFaCXjsY65nCjw+lGi7nHrRGzUSMr5aJ/rWJ/Dpme4Sgu+0hlGP2JPOxiEPKWfMZSiAjXEJehTKvuIu+V6R4LtVbLV6faCS8wO3VVl1baG7ve2WzRhoTcQOlQDJ5puwsE7X1upq0iBNSoyLT2QKGS8w/6fBQEGmdWvFo4o7NnU8EvmYZeH8L/zcbwE4+kmhHzZDu3AJ+/YrSiXCNUnqN4DtHPCylrkR2Qt2DvPAzCBKG4/0Xd7OQBmwYnTawL8I3Hlvg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from SJ2PR11MB8452.namprd11.prod.outlook.com (2603:10b6:a03:574::22)
- by PH0PR11MB5158.namprd11.prod.outlook.com (2603:10b6:510:3b::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.30; Tue, 10 Jun
- 2025 05:58:54 +0000
-Received: from SJ2PR11MB8452.namprd11.prod.outlook.com
- ([fe80::d200:bfac:918a:1a38]) by SJ2PR11MB8452.namprd11.prod.outlook.com
- ([fe80::d200:bfac:918a:1a38%6]) with mapi id 15.20.8813.022; Tue, 10 Jun 2025
- 05:58:53 +0000
-From: "Kubalewski, Arkadiusz" <arkadiusz.kubalewski@intel.com>
-To: Jakub Kicinski <kuba@kernel.org>
-CC: "donald.hunter@gmail.com" <donald.hunter@gmail.com>, "davem@davemloft.net"
-	<davem@davemloft.net>, "edumazet@google.com" <edumazet@google.com>,
-	"pabeni@redhat.com" <pabeni@redhat.com>, "horms@kernel.org"
-	<horms@kernel.org>, "vadim.fedorenko@linux.dev" <vadim.fedorenko@linux.dev>,
-	"jiri@resnulli.us" <jiri@resnulli.us>, "Nguyen, Anthony L"
-	<anthony.l.nguyen@intel.com>, "Kitszel, Przemyslaw"
-	<przemyslaw.kitszel@intel.com>, "andrew+netdev@lunn.ch"
-	<andrew+netdev@lunn.ch>, "Loktionov, Aleksandr"
-	<aleksandr.loktionov@intel.com>, "Olech, Milena" <milena.olech@intel.com>,
-	"corbet@lwn.net" <corbet@lwn.net>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "intel-wired-lan@lists.osuosl.org"
-	<intel-wired-lan@lists.osuosl.org>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>
-Subject: RE: [PATCH net-next v4 1/3] dpll: add phase-offset-monitor feature to
- netlink spec
-Thread-Topic: [PATCH net-next v4 1/3] dpll: add phase-offset-monitor feature
- to netlink spec
-Thread-Index: AQHby/owcizuLGg/C0GwDd53CbG5irPqXOOAgBGkFwA=
-Date: Tue, 10 Jun 2025 05:58:53 +0000
-Message-ID: <SJ2PR11MB8452106F3451FC770C6E067E9B6AA@SJ2PR11MB8452.namprd11.prod.outlook.com>
-References: <20250523154224.1510987-1-arkadiusz.kubalewski@intel.com>
-	<20250523154224.1510987-2-arkadiusz.kubalewski@intel.com>
- <20250529173311.15fcff9b@kernel.org>
-In-Reply-To: <20250529173311.15fcff9b@kernel.org>
-Accept-Language: pl-PL, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SJ2PR11MB8452:EE_|PH0PR11MB5158:EE_
-x-ms-office365-filtering-correlation-id: 4389318c-98fd-46b7-8012-08dda7e3e15f
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016|38070700018;
-x-microsoft-antispam-message-info: =?us-ascii?Q?6cQp52KKG9QO+OB2oE1BFSyYr5kgO6DjneyeFhjzTN+cX01GKcnAPuSPnslQ?=
- =?us-ascii?Q?GBUbqaUf0DBNEesCPPClIwBKGUoXAcO+9Tt7KQdzwYZm8Q2rpKdGL6rGceps?=
- =?us-ascii?Q?b1vF72OJ+uLdNMV5MBWiArrRRYSCkGfJ0ccU/V/uXUkBLZeffq1E4ukU/yVl?=
- =?us-ascii?Q?zABBfjrKJE2vEeYRiZrkd6YVFlEeKSRmjZRbeitpAFiov88Tx0jmGmJTfm6i?=
- =?us-ascii?Q?GQ67bVLKTWKdDsYTbuI5b6ZNWXfzcQ3dfe4SvobGdxdxsuZtEw2NBdtG7iMj?=
- =?us-ascii?Q?3LCcu5WSMiIQRnvYKsuCmG1FRK9qCne1Q4CiMGgKsMHuxVRM+X6cST6SDQeG?=
- =?us-ascii?Q?G8Xz6aGXhuLT57UhWsWjTbEAjt5i99/+DEPmxmktb62Ag8i23eszYjezoNxJ?=
- =?us-ascii?Q?8rQBNoc8pAFT4FL9k7I9ImaPxDxWyuJUmteODWlvnWeCO67Tr2dOmOoSDQu/?=
- =?us-ascii?Q?BG80hsjR2HaepDE++70N8j31P/7Pjr1prIV07VmJ0kcaLnhK7wsr6QLL8WGd?=
- =?us-ascii?Q?2KX7pmo2N8A4QaYOEA9WJYm3pYSmb/zHiR/bqVgfEnsPYfcGmGN9Mzzfm9ZD?=
- =?us-ascii?Q?CP9xotiOKTQ0UIwIASnT2WLcADOciZzEt6Ku4RG8VF9du7/iGhPuihReVqiW?=
- =?us-ascii?Q?m8MdqjP6jt2q9v4/+1gNXwQ6rsMSYgLXbWCRIaW3xEhEikdDoPJ1x0JU3Gto?=
- =?us-ascii?Q?Y/gjy6+Mh9tTryclNehvtvnTawjf0VZrCUWICK6j9MLfhRBLlKWbgBG8DeLl?=
- =?us-ascii?Q?jLVCJIOry6BAyeL3TrcfWDMPWJGwpS9iSVYkICP66Q9d6zq2josPrxtEz/kE?=
- =?us-ascii?Q?Dz7lG9j6BPUEGeFor0Ag9rPgZEfcfNqtQXmqwPG+Yjy71dwHWf/b4BDwPpwy?=
- =?us-ascii?Q?AmkThIvMzSJA9Fj2A+Hwufn4VvuCkYUVRFZJanSBpMWNNd7/z4T9JdFDlQ8p?=
- =?us-ascii?Q?3KHYu5lOESy5QPTnLoMt67a/Tc9OzGePl4fgiI0dZXPjnIh7dvsZVUpFy3rc?=
- =?us-ascii?Q?pcOx9uWhBxG10eWAxsG5X7VybAZXSxnOJsQjtTajFgB2/oAD5cmwofVfBwtT?=
- =?us-ascii?Q?beHC3xMOGKTIquKBUidFrON16runeF9qK/wf4iAi7FUt++ku2Piq+gTKl5td?=
- =?us-ascii?Q?rrbTrxKEoOVtGC195OWZ/tFaN3kqfSOzfP8aaxuAAe6Br6yCoUTrO8A6mnR8?=
- =?us-ascii?Q?3RKSyZS5/9XxXL1qmP9R7URj/WHBWwVp91uOk5xf6IiE6kgR0O3GwJOI5RDi?=
- =?us-ascii?Q?KGtTGcFiwtObkEHq8tU2S1glwOSLR9JizUrdlxQP7doSUiElJEPG31Mv4aGQ?=
- =?us-ascii?Q?dgeCRCvcP8Wh5CfSnBf4lijepWLDpNmK/KOQ33ZI3GdCEGl6BJBQNRXotJF4?=
- =?us-ascii?Q?zFaCYSbP7pv5wPUWd1YPchJYhysZELVFGMusPjShmJZ9fK3jBy+NlHEb2wPX?=
- =?us-ascii?Q?ZrzpKbZiehWRzp4TTX/32r55U8Yhdxfs5bazM0PYGn30SxpnNxJKUAto0T5W?=
- =?us-ascii?Q?13wzIGQ3JGbflOk=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB8452.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?A66DDt+yV91Yh05wlzMs3vARHr/VVdsBV8RGF4jzdFDeUUCpAcMqFpk+kLTE?=
- =?us-ascii?Q?ZZWOrxTAdKwyEXpj4Q0mtxvM7UoyeUYgeNiHW+mDg5SN//VLLVfB8ZIEq3De?=
- =?us-ascii?Q?CZzFYyJj2eAStE6c6+6t6oH0yi4wUClOgp4YjDvKYH3dbKVyrYDRf5DPyqv4?=
- =?us-ascii?Q?2T42iPOoCUp2sGeAWHNOspgpUc3LJOH3ctywziGpVO790OWDxey/v+jZdk82?=
- =?us-ascii?Q?VsXbcsrvP7Cy0vRJz/7nQ2Qc3TE5X8s+wp5CshU2TuIgnwVlRdDNVYGuRyFu?=
- =?us-ascii?Q?I+iPX+jGnCmqax/iL5hZxFO0q73NO+T3ZbxreHBRYmoCErRWO0pe6EviUljQ?=
- =?us-ascii?Q?+pRmuCfHemj1sbt+WaJJ4XFMyyeCZhUas4abCXNtiJYNL/38SjpUR0J/EGgB?=
- =?us-ascii?Q?XJbzE38dcYRSmGgQAip++amznVoSFyULZADpY00pKYIz++3nySW7cNWAj9Mv?=
- =?us-ascii?Q?LSWlOXA8ohIQZqd8ximjANz0dYnqVU7RTMgfNy1KPEf5xaeQzdklWTrRE+co?=
- =?us-ascii?Q?eUhMZ0K1nJ0cXXKJ8axeljfoZsoVyz1PmPUifN4SRz5jNSz+oSTDJCTH872V?=
- =?us-ascii?Q?fj6cNMYAV1dRvr1WJEsyMNvwDK3NR8meyIAJns4bIqf/28S/gTm4Gi/zU03q?=
- =?us-ascii?Q?okWnA3szn94eKZx9K5j5uI5+WZMuYilY2CN7/8A2+o2HzjbQ6QdLy3li+6OS?=
- =?us-ascii?Q?1RqioLNaPdHQrZZERazOLxGwgaBnU22xeKHSdUW/3IyCKeLkgUqrCp8Yi/QE?=
- =?us-ascii?Q?uhVqD9pnJQZxbi2gUg7d/mLY/LT3EfulesGfPe7QL4f6rVM9hTiBRiTg4tRT?=
- =?us-ascii?Q?VLONK9PlSwLKiClUyU0xl/g8nCWSczXQC//Wr4akmUNVMGZQ79itl7dBQUPy?=
- =?us-ascii?Q?3sOi89z40T5ydoFYlIC0Vgs4W7DXgOIEuRvwRCBV7SiOCUCIudBiSk6GE8QL?=
- =?us-ascii?Q?+jqIXwbniWSjVkgpD08kccQZI0jgAAnKd5/XBVwXPmsftW5DcnOUHx5K2OY4?=
- =?us-ascii?Q?oN+MCUdGAVMbJtAxd34jVnyUTD1l9QsUAvd+ocJELEYLRy/fppqmgU2t3KAC?=
- =?us-ascii?Q?PIJpKEaPXZzDW3LfdjPFjFV+OjKf2cFuvaOdCdJheBLWR0stNR3KIVRZPC/S?=
- =?us-ascii?Q?B4hYtHnNSxCgtWoQbXTPnxIZcp6To8MKKyO/D5OQ+uwC7F2f4fFqkgUHiUle?=
- =?us-ascii?Q?NqKytbWX8+3B3V4djCqJVDncyLQpIxeEmMiFQ6btFJSJaWDl70Mol2kFJqkX?=
- =?us-ascii?Q?oeR/U1/dfqfhPP+K0KTBZCDY2/lywCVlLpNT5HA2XQ3i0hgqWQ0QiORTeC4j?=
- =?us-ascii?Q?Wx0H9BOn6TBGvlyttWSq6iBOzpCA99vzhJyUXf7M1gjAiFgu6Ti9dIzOP1kE?=
- =?us-ascii?Q?nLzbo6KBBZjW/3t39WGqmVDFc6UGm+5KKk46xutuELulM3YuSFMaP6Nq8JtM?=
- =?us-ascii?Q?MaygIfHGhLefdn2FI4+RQ6hWYI1wOGCBVyRzRIx9MZzQjAOuCt/jFDx4il2j?=
- =?us-ascii?Q?RIFiXls1uyCatCyIh8VWWfgwUMx5KPyh4bKFd4WR6pa6zQFwoTzf/PnaYDI0?=
- =?us-ascii?Q?HxjIKzvay6xNcWfOS/dnJDkXagH/358O6ocZBI05lV+herOcdmeTOpQb72+u?=
- =?us-ascii?Q?RQ=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B8gkgUYu"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-73bf5aa95e7so3780705b3a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 22:59:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749535172; x=1750139972; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uMGllP0kHtqQgBWxobNAgqAN07VXjKAKrzg9IPnrFtA=;
+        b=B8gkgUYu6FBcf0Yv9wumFVPDk9rYK65TUrJAlukfG7tKRZw+iiRP2ekbovWx7Ea78M
+         aKSCTB3AaPY9WZX7gk8BAJoaNpUEJZ9nGB6N6pZHPeofNxD0KjaQ8OFzcosAmv/i/euD
+         67u/GlHQT6wFSWt5LyEKS9NdncfjifJBPoRWzY+BwQQE6MjEtwFUrXdbn7ULeTZ2RA8Z
+         PCqPCtBBb8gMVOJ3eAwAo3QFFKO3nXdLwrVwPzkFuYFR0KC1ll60Q6+KOYj17OpL2GQv
+         6xgiYrU3PilguxvUohi1b7sW1L85Pblzc21B5XYhNTZD5WXmoX4ItWrZuEusFja5scON
+         rwAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749535172; x=1750139972;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uMGllP0kHtqQgBWxobNAgqAN07VXjKAKrzg9IPnrFtA=;
+        b=QxZR8LRa/ogZ2JVtHihMVhVMqxVnF1M+gKcbyTPfbWdVPeshLZ5vI8YSsvmoEKvEwq
+         v2yUn/MakxvC5/ZW7HeYT8aOQDdXPcwM4fZ7eHqaEzei/rrvKdakt3U/mlR+b9O3F7qE
+         MKY59up06CaR4zjAf4D/VlKtwybzTAToCgXx/rxPWOuRpMM7cMfKA45Az0h13BnAxu3p
+         ni0M7p1pDsPefIpvm41woQ+7zFrNzPVWAUK5eLiAiWya2C/+Eh92rhm4r6D1KWMPshxi
+         u+2LmI5vrG+dAuNeGVTAezwKPCK5f021S4WMRs5AYXPLn+9FEdjrT6XfZI8Cadv4jhkM
+         1NoA==
+X-Gm-Message-State: AOJu0YwXhsCyXNWrSuLV4k3GA0lkhqCxBBx1FJB57zat4sjWGPBr2f48
+	xMw1KFf4oNfOhs947u9P0E+VhUwm5Jgvk5e0MsfMbxDG61ixXPJQlTeZ
+X-Gm-Gg: ASbGncsNCg4NOa42VnsyGyQNuJUrrN9mCdMK0Q/0Xq1n5n4sMGv+de6Y8X73OmIhPrS
+	940gqfLDRX2jbGsZVihQuPo6QXca1kizovat9KzQCYN1IrzEfDpcWVoAtqdM/B8r2sG7RBfNomV
+	VylzUKWzM06sWv6fgCPL0Q//FaHmfo2dtP0+vl2TjuhCfifs1T5T7Vy/cKGPXKJjWtqkfXa6hHJ
+	dnwfqdOZDDykAerksk+Wdg3vxf+FTH0fH71mUJBAixIaX5OMoBNZVQp4YXYu9OFqzZEeqT6ZA/w
+	VVsSermxl1mcJ+tpr5qAX1CD5sUEfVKpgzVKlE2SRXxvmVFaOjh6hH1o4iPCk4j7vyMVVyzZTW+
+	07nGEfum58wE26Eo=
+X-Google-Smtp-Source: AGHT+IEAcEs3T8PPYHuPGihjJG7CmDR9TSUX/bdswV8JxA1i4kvPMQcC7N7Q+Baxtj7fUMX8e+g4oQ==
+X-Received: by 2002:a05:6a00:4607:b0:736:32d2:aa82 with SMTP id d2e1a72fcca58-74827f33090mr20226636b3a.23.1749535171847;
+        Mon, 09 Jun 2025 22:59:31 -0700 (PDT)
+Received: from Barrys-MBP.hub ([118.92.145.159])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482af7b4b9sm6708007b3a.71.2025.06.09.22.59.25
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Mon, 09 Jun 2025 22:59:30 -0700 (PDT)
+From: Barry Song <21cnbao@gmail.com>
+To: akpm@linux-foundation.org,
+	linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org,
+	Barry Song <v-songbaohua@oppo.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	David Hildenbrand <david@redhat.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Jann Horn <jannh@google.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Lokesh Gidra <lokeshgidra@google.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Michal Hocko <mhocko@suse.com>,
+	Tangquan Zheng <zhengtangquan@oppo.com>,
+	Qi Zheng <zhengqi.arch@bytedance.com>
+Subject: [PATCH RFC] mm: madvise: use per_vma lock for MADV_FREE
+Date: Tue, 10 Jun 2025 17:59:20 +1200
+Message-Id: <20250610055920.21323-1-21cnbao@gmail.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB8452.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4389318c-98fd-46b7-8012-08dda7e3e15f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2025 05:58:53.6525
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9zfnxCCSFZiwHhbMNtd8vIj/CJFzRhUEmT1OQuQyYMhTNdP5ebtksk1xvUGrNLhulEwRCl3xG5sd0z1cSqaN+7o11GV7uGyKPeAZtfbdJPA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5158
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
->From: Jakub Kicinski <kuba@kernel.org>
->Sent: Friday, May 30, 2025 2:33 AM
->
->On Fri, 23 May 2025 17:42:22 +0200 Arkadiusz Kubalewski wrote:
->> +Phase offset measurement is typically performed against the current
->>active
->> +source. However, some DPLL (Digital Phase-Locked Loop) devices may offe=
-r
->> +the capability to monitor phase offsets across all available inputs.
->> +The attribute and current feature state shall be included in the
->>response
->> +message of the ``DPLL_CMD_DEVICE_GET`` command for supported DPLL
->>devices.
->> +In such cases, users can also control the feature using the
->> +``DPLL_CMD_DEVICE_SET`` command by setting the ``enum
->>dpll_feature_state``
->> +values for the attribute.
->
->Since we're waiting for the merge window to be over - could you mention
->the attribute the PHASE_OFFSET comes out as? DPLL_A_PIN_PHASE_OFFSET ?
->
+From: Barry Song <v-songbaohua@oppo.com>
 
-Sure, will do in v5.
+MADV_FREE is another option, besides MADV_DONTNEED, for dynamic memory
+freeing in user-space native or Java heap memory management. For example,
+jemalloc can be configured to use MADV_FREE, and recent versions of the
+Android Java heap have also increasingly adopted MADV_FREE. Supporting
+per-VMA locking for MADV_FREE thus appears increasingly necessary.
 
->BTW I noticed that in the YAML spec, in a comment we say
->DPLL_A_PHASE_OFFSET a couple of times, missing the _PIN.
+We have replaced walk_page_range() with walk_page_range_vma(). Along with
+the proposed madvise_lock_mode by Lorenzo, the necessary infrastructure is
+now in place to begin exploring per-VMA locking support for MADV_FREE and
+potentially other madvise using walk_page_range_vma().
 
-Hm, true, will try to prepare separated fix commit for those.
+This patch adds support for the PGWALK_VMA_RDLOCK walk_lock mode in
+walk_page_range_vma(), and leverages madvise_lock_mode from
+madv_behavior to select the appropriate walk_lock—either mmap_lock or
+per-VMA lock—based on the context.
 
-Thank you!
-Arkadiusz
+To ensure thread safety, madvise_free_walk_ops is now defined as a stack
+variable instead of a global constant.
+
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Jann Horn <jannh@google.com>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Lokesh Gidra <lokeshgidra@google.com>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Tangquan Zheng <zhengtangquan@oppo.com>
+Cc: Qi Zheng <zhengqi.arch@bytedance.com>
+Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+---
+ include/linux/pagewalk.h |  2 ++
+ mm/madvise.c             | 20 ++++++++++++++------
+ mm/pagewalk.c            |  6 ++++++
+ 3 files changed, 22 insertions(+), 6 deletions(-)
+
+diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
+index 9700a29f8afb..a4afa64ef0ab 100644
+--- a/include/linux/pagewalk.h
++++ b/include/linux/pagewalk.h
+@@ -14,6 +14,8 @@ enum page_walk_lock {
+ 	PGWALK_WRLOCK = 1,
+ 	/* vma is expected to be already write-locked during the walk */
+ 	PGWALK_WRLOCK_VERIFY = 2,
++	/* vma is expected to be already read-locked during the walk */
++	PGWALK_VMA_RDLOCK_VERIFY = 3,
+ };
+ 
+ /**
+diff --git a/mm/madvise.c b/mm/madvise.c
+index 381eedde8f6d..23d58eb31c8f 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -775,10 +775,14 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
+ 	return 0;
+ }
+ 
+-static const struct mm_walk_ops madvise_free_walk_ops = {
+-	.pmd_entry		= madvise_free_pte_range,
+-	.walk_lock		= PGWALK_RDLOCK,
+-};
++static inline enum page_walk_lock get_walk_lock(enum madvise_lock_mode mode)
++{
++	/* Other modes don't require fixing up the walk_lock. */
++	VM_WARN_ON_ONCE(mode != MADVISE_VMA_READ_LOCK &&
++			mode != MADVISE_MMAP_READ_LOCK);
++	return mode == MADVISE_VMA_READ_LOCK ?
++			PGWALK_VMA_RDLOCK_VERIFY : PGWALK_RDLOCK;
++}
+ 
+ static int madvise_free_single_vma(struct madvise_behavior *madv_behavior,
+ 			struct vm_area_struct *vma,
+@@ -787,6 +791,9 @@ static int madvise_free_single_vma(struct madvise_behavior *madv_behavior,
+ 	struct mm_struct *mm = vma->vm_mm;
+ 	struct mmu_notifier_range range;
+ 	struct mmu_gather *tlb = madv_behavior->tlb;
++	struct mm_walk_ops walk_ops = {
++		.pmd_entry		= madvise_free_pte_range,
++	};
+ 
+ 	/* MADV_FREE works for only anon vma at the moment */
+ 	if (!vma_is_anonymous(vma))
+@@ -806,8 +813,9 @@ static int madvise_free_single_vma(struct madvise_behavior *madv_behavior,
+ 
+ 	mmu_notifier_invalidate_range_start(&range);
+ 	tlb_start_vma(tlb, vma);
++	walk_ops.walk_lock = get_walk_lock(madv_behavior->lock_mode);
+ 	walk_page_range_vma(vma, range.start, range.end,
+-			&madvise_free_walk_ops, tlb);
++			&walk_ops, tlb);
+ 	tlb_end_vma(tlb, vma);
+ 	mmu_notifier_invalidate_range_end(&range);
+ 	return 0;
+@@ -1653,7 +1661,6 @@ static enum madvise_lock_mode get_lock_mode(struct madvise_behavior *madv_behavi
+ 	case MADV_WILLNEED:
+ 	case MADV_COLD:
+ 	case MADV_PAGEOUT:
+-	case MADV_FREE:
+ 	case MADV_POPULATE_READ:
+ 	case MADV_POPULATE_WRITE:
+ 	case MADV_COLLAPSE:
+@@ -1662,6 +1669,7 @@ static enum madvise_lock_mode get_lock_mode(struct madvise_behavior *madv_behavi
+ 		return MADVISE_MMAP_READ_LOCK;
+ 	case MADV_DONTNEED:
+ 	case MADV_DONTNEED_LOCKED:
++	case MADV_FREE:
+ 		return MADVISE_VMA_READ_LOCK;
+ 	default:
+ 		return MADVISE_MMAP_WRITE_LOCK;
+diff --git a/mm/pagewalk.c b/mm/pagewalk.c
+index e478777c86e1..c984aacc5552 100644
+--- a/mm/pagewalk.c
++++ b/mm/pagewalk.c
+@@ -420,6 +420,9 @@ static int __walk_page_range(unsigned long start, unsigned long end,
+ static inline void process_mm_walk_lock(struct mm_struct *mm,
+ 					enum page_walk_lock walk_lock)
+ {
++	if (walk_lock == PGWALK_VMA_RDLOCK_VERIFY)
++		return;
++
+ 	if (walk_lock == PGWALK_RDLOCK)
+ 		mmap_assert_locked(mm);
+ 	else
+@@ -437,6 +440,9 @@ static inline void process_vma_walk_lock(struct vm_area_struct *vma,
+ 	case PGWALK_WRLOCK_VERIFY:
+ 		vma_assert_write_locked(vma);
+ 		break;
++	case PGWALK_VMA_RDLOCK_VERIFY:
++		vma_assert_locked(vma);
++		break;
+ 	case PGWALK_RDLOCK:
+ 		/* PGWALK_RDLOCK is handled by process_mm_walk_lock */
+ 		break;
+-- 
+2.39.3 (Apple Git-146)
+
