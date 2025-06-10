@@ -1,255 +1,353 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10olkn2026.outbound.protection.outlook.com [40.92.42.26])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 158AD2D1936;
-	Tue, 10 Jun 2025 14:06:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.42.26
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749564394; cv=fail; b=X+99ZTtl9ba1F3hLhHkkFKIhwRVBR5kGitRGaFG38a5ybJmqF9JODBOzC1hLggD2vE3jbo6/qRI9GvmUEYD43veL1I0L6JxJ8gTtr/C6RIuuqbScP5RKW9x5dOmRkI4QmCPKzvL5LH8u7hEqzlrpj7temFXDL9vEj+T+E9qm8AY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6983A2BD580
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 14:06:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749564394; cv=none; b=osurImzrnRFBwXlXrJfAkCYe8vCupJ3wPHzMslJAAagqjl2BFhAU0uGEI5fMVeoNX/UQ0AQG75qGvRdL1KCr3/94ZryZ3r4Gj6Q326kXpC7F+FX4X+90loN7CTKB+16JI0FWm+ITacuKSbn/5ChHOBBii8Yq58NE2nr4jL8PZ5s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749564394; c=relaxed/simple;
-	bh=pF3r/2aKP/shESIy1Kmhx/tahgUU79/I1ASz8Z863kE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=P0Z2g8DiRetlSV3KrOolpT36zTknQMdzGG8t/bCDwct0AdGMJKG8wC+Aq/OKZGIeAyc3DK6mEfG06xqE2Ezfi18oDznlmIPnzCKlHkw1I5gFM26QS9YRSTheHiovZT+YlXxnk11yxiMtz3w7PtfrDMdlLaTR0mSR/siwVQQ8GNw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=CTYxun1d; arc=fail smtp.client-ip=40.92.42.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	bh=rD/vxqx5nSUfP2XbOh0k+p4MMI3tgwoJRLYjdRzeMRE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=k+HqbNDOHrY/CIHLF1zyf6/GJmZcl3Vx4Kkxy1+RwnMDB57t0Y0h4APzxbULHCATeRq/sI6vSaK3iZJBuQAFzXO/pljHYp4iD0D2JvvoaRoB2XV9xxm//fwXSIBi/SemYcFu9MIy44GxkhUUroFpmo9q2qsj5OOQvlUY6duBC4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hLFuOwzC; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="CTYxun1d"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=c4QQ23ZQjOA7AiHwM4mwLsOm0rSn1Ea78/cNz+VGB8H1BX0+qnQFUQeeSdUF+7OHRXlkxtoB019KDjVoFeDTcNRWg6LGC6KvUtZMv+3hU6LM2syV2jiPewOffWtt2/3xJOm55vNotoni9XvcywtQ2YNgJNn59mN1vDLZ6tWJDW6B38JILvb0d/TgPQk93OVG+fV3jszOXvytqD7SSUPZL5uyk7r7kNRpfwsSGsJm63GsKIUdtpyKvNRKt0R9fTdbgC6krXGUbdvtboF4YIdhXRn2qWFWQhS72Gv9RbqQcYynvXVdcAtfmKYGZ7pCGm4lcgTm/GeaVtrq9RvnO/qb2A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=s0N7bxGH7AEgA/eIhml4KaCiUhKub9dDNJO+qLuCI/E=;
- b=XPSgswYCrrKWpmjImCn/IZcHlL6hB1V5qphW6VVDaJRQYY4+hhLHgNOOEp5IXckVz36MobYiSCNGPQwhJNShCVDHTxtVt1OVfdGyszMcM1AQ+LCOpRfAopebeoltHSdI/aY98Psc3kL6TfVQudksmCXV7yA5+TegTot1JWUbnVz56ez2cSj9m5mD9p/8jqjN3ZlpdLCwkBZjvta6OlG78oVNaEWJ+TeCcZV++j8L2NA+VoXJsyPTqC4sJS8QbSzlrBBFhN3DguPLgC4dUbgwPIV6P+DFn1VrHNgPwA6Qug57EmYvt5M5akIWr9gfkyfACrl/S39OuI43jVf6rFHUcA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=s0N7bxGH7AEgA/eIhml4KaCiUhKub9dDNJO+qLuCI/E=;
- b=CTYxun1dfJLTztprzOXaxXf9XeiWAO3db0Gd80OnXVKsCRl4I60W4FXrRVtuMx1UW/BWgu2IF5xDj5u0pI/8MgvfUu63TANviwhv7I3XHD2MZC+9YSr94L/AEnI4LEwffwjpoHevGuCyrcL/6i9vcfVYg9SAq+ROchHpJAnVgru+sq8B2wE5FJWHvjv+WlEZejCsH0LQHfYB1vjFdcEHYMD8gdlXsaL2Ph/0QwnpQaCRk5hcpdBqSTwfKt3BCEA4MAT/4UUGv8nDhvbtYPb4xP5zaFfIXW2GGLXqJxkp6Kh7J+kZn5TjK68kjo/R4F2ry6HkamkCeTqjNWOGUQ6H2A==
-Received: from DS7PR19MB8883.namprd19.prod.outlook.com (2603:10b6:8:253::16)
- by SA3PR19MB8167.namprd19.prod.outlook.com (2603:10b6:806:397::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.15; Tue, 10 Jun
- 2025 14:06:29 +0000
-Received: from DS7PR19MB8883.namprd19.prod.outlook.com
- ([fe80::e0c2:5b31:534:4305]) by DS7PR19MB8883.namprd19.prod.outlook.com
- ([fe80::e0c2:5b31:534:4305%6]) with mapi id 15.20.8835.012; Tue, 10 Jun 2025
- 14:06:29 +0000
-Message-ID:
- <DS7PR19MB8883BEBE4168DD1682F858749D6AA@DS7PR19MB8883.namprd19.prod.outlook.com>
-Date: Tue, 10 Jun 2025 18:06:14 +0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10] arm64: dts: qcom: ipq5018: Add tsens node
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Amit Kucheria <amitk@kernel.org>, Thara Gopinath <thara.gopinath@gmail.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Sricharan Ramabadhran <quic_srichara@quicinc.com>,
- Dmitry Baryshkov <lumag@kernel.org>
-References: <20250610-ipq5018-tsens-v10-1-3a10a5a2642c@outlook.com>
- <f123294b-b944-4723-bd74-713970468d51@oss.qualcomm.com>
-Content-Language: en-US
-From: George Moussalem <george.moussalem@outlook.com>
-In-Reply-To: <f123294b-b944-4723-bd74-713970468d51@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DX2P273CA0012.AREP273.PROD.OUTLOOK.COM
- (2603:1086:300:8::24) To DS7PR19MB8883.namprd19.prod.outlook.com
- (2603:10b6:8:253::16)
-X-Microsoft-Original-Message-ID:
- <7abecc74-ff4b-4b6c-a0fa-8c185d07b20b@outlook.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hLFuOwzC"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a4e749d7b2so729247f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 07:06:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749564391; x=1750169191; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=J+s2K9q0nfSbrKocqSr/McebFVTHHj9+pTuCq5ceG5Q=;
+        b=hLFuOwzClrjVbfFh6VfW6VvqQYuxpyKFSgIv0VC+oQNIX6SF5KQYwyLITJ/bldEGa1
+         kdwQhV3SX7Rp0mBP0GWEmravGGRoEumBBCyjk+bSipFfO4XzXbAk7bm7FFxbRAdIpxAx
+         n5JrfVoByZKIhSfHfxy35Mzms2CFPuShoNwBvDHjFW4eqn44fzQZbl1gs8pMdadI9FN7
+         bkTbVAuBTwdALD03KDtcvIsfuufRDiOo2ahQZWekicFj7+Gce1H3wOm7Fhm+mh+VTRMz
+         uwooEhDoRa1mWrgBylU6Rafw02xBK4iJ6pyvoyUqTzb7QC/687E5XbPivO7oegeOvz8n
+         7QVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749564391; x=1750169191;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=J+s2K9q0nfSbrKocqSr/McebFVTHHj9+pTuCq5ceG5Q=;
+        b=W0BrtneXQyRZoCBsWXO7AIRuseDXNqVFpHcY8iLoJG0MUNTOC6v1dlnLlJS6BGxOFv
+         iuj4t6Bp0iHlTiKrWRdjVOzVRgW4PlhWQOLYTAI1HuOlBRhjmY5ykVKQv8SMr6S+M7TQ
+         Tu36uDRVc4+f/DjNuAGdWAPBzsnb1rrFjrq2LmCgQxnaRG8QX9o3R3K35i+JKkokDpaG
+         oFd9+UNAnJtb50rpFIbtkUnPrhw2YuyBV18AWNHlwKoQ1Ea/8ZT0+BTuuK6JtWwCfEVf
+         Bs5HISz35uxqFRsbH/SyaIEx4yXy8Kj8e9OmYunVnv7Lt8qwPHEeabbHqwBHCB+hf2Dz
+         n9AA==
+X-Forwarded-Encrypted: i=1; AJvYcCWzNnj27iczFB4E1dbsXrzC5Urqb7ZH+MxXWdWPDGu1QulEM8ptIykXevjhMfG+Wo1LxqNZ3GMKugh7PtQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdGfUxqk/pXWwSqrrZ11c6yLw7xDsnir+92DG+tPgrBRGQUXVY
+	DH3eoInLijwRdKWr6MNPrDGe+0stOSd252r1PeoY77rZv2OJmlLoSWt6kTZmaRKv1iI=
+X-Gm-Gg: ASbGnctVNbTwRSGx8p8kKMLpf5OHh2SZixfVlNos0Rz+RRZUcTwi2NsBlqTatINF8bR
+	IwF2P186uRqV6z35vX4FkriL2bDjSJ/vcCXiu5KLmWu60QsDcGsHRrnIEqpc3jaThTHJXgB6ZXr
+	sdbzpi0i7q9aaYaOTXKu/u1tcuVfua22Lwoxl4kX6jLy4IhI9WOcFhtrsZGoumvp9YExQaOJ+CK
+	uhMVUbZjh8Q11M6XXk+RnB0CeX4EOq3caTJ2SNT1L6SPdMVHW64cl11xHvhZ7ag/0BwxrYNSRBw
+	3TakFHkQV3KZBpGvEfFgrj8WXfqbCs+Lw8tqjwhu4WQoKubCh6dJu0RBtdeto2ta+s2hpPP2iin
+	kMiWOjw==
+X-Google-Smtp-Source: AGHT+IGOD7neS88gds4HjMSeiykUy2lf9EPuFamRjB8ThGGIlXT3+gNiU9q5oyf/nxbFns/0GxUlTA==
+X-Received: by 2002:a05:6000:26d3:b0:3a4:d7c7:89d1 with SMTP id ffacd0b85a97d-3a531789bb8mr5438073f8f.4.1749564390577;
+        Tue, 10 Jun 2025 07:06:30 -0700 (PDT)
+Received: from [192.168.1.29] ([178.197.223.125])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53244df06sm12734469f8f.69.2025.06.10.07.06.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 07:06:30 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Date: Tue, 10 Jun 2025 16:05:48 +0200
+Subject: [PATCH v6 10/17] drm/msm/dsi/phy: Add support for SM8750
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR19MB8883:EE_|SA3PR19MB8167:EE_
-X-MS-Office365-Filtering-Correlation-Id: 85c4e3ea-f560-4b48-fa2e-08dda827fe7c
-X-MS-Exchange-SLBlob-MailProps:
-	Cq7lScuPrnpxiy/k40MKpm6IShHTEdBe8tshc2UKkUchF985hM2kWot/rr6QAuruuiHPySNi9k2jCtyxjtLCbKa30YrJ4t36uyZ1SHtxCug48pTX1utInukXrSSaZ0tTrTEx+S4cnllbIIo1kucMLvo4sznSnoXIBVWGXFZVxHmvPA3Vkz0RZ8E7e0ydOI3wMwv8373MDlrEPbdOB3dy6ifwkgeysANglqfypaq6loVqITO3uXksuIp23nSxaYAp7WhF//EE1pbFcJDkfD9mzNw+yJErQxqG+FDkEhT1CKV2UtQRb4ZNFRSXFMwKQ1e+kDJyLCZYXAw95NCzc4ADussIl3bcXBVEq6q8hs71he8/Pb0B2tJi7vGe+DYl2aL8l4cRfEGAEm815dyN7+OzEqjst7U70OCXQfyMyn/90UTl+46RdI+N/EyvEwj3hmNnJC6uM95AQTykQoSmrdZb7FtR295iGgKTVMhmmTcy6t33bq8PG5X7p/LoEZuFJBCbeHxa2whBudagFdOlbAYMHX3mJhVXkjEr90RH4UB6Ejv3L9PAMaAmZI3xIC9JbsuofH22VorjGPen3K/2Zkeeu0OjEV2bPKdzI0buZkSlwvoGVF1Dlv7XSNkcgKrCfcWJpRDRS3/8f/UKzH3X/oCpjHWRQpIMfuvddGhroMuzs7sXwChsSqKHrTrl9fvqyY+1b7aqpgqKMbpy0HNaHx4aVkqjr0e299FcjwRPe6XsVqhzIICpxzW/PDmiXFTiGpAMHmEa0Mg1QRE=
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|5072599009|19110799006|6090799003|15080799009|13031999003|7092599006|8060799009|461199028|440099028|3412199025;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RkVJd0lwQnZCSnZpbm0rWk83MkpPcytkd2htSk9FVkhrbGtBemVHVmVMUDNU?=
- =?utf-8?B?OFhXVGNPaW9FYnJiMkErTTdJYXIwR0ZSTmJKcjFxcEN1OTQrUlE4N1dQYjBo?=
- =?utf-8?B?ZWRmYjEyN3FzTHpHV01ESjNObTQvR3gvZElxTDgyTnFvWnVkanFaOUFBaEVW?=
- =?utf-8?B?cWhMOSt3cWZXSHZydVQ4S1QvcmtKa2daQkVTZE9vV2oyelRvZW4rL0oxdWkv?=
- =?utf-8?B?cUtQSlRpVDBEUVpPK2xMbTFBNXlEL1pob29Danc2NlpFMFVpWkMrK3A5TVdp?=
- =?utf-8?B?dXZLY0NoSWhsMUdnVVVWdjRma1VCbjVaTi9JamY2VTV2N3J6RWFjSjVjSldQ?=
- =?utf-8?B?TVAyWHdSWkQ3NHBVM2dnZHVJSlB6ZFA4Ymk4R2d3QWxOVEFNS2p3MjhNaklM?=
- =?utf-8?B?aHZvWHhWT3NhSUVTZ2FWQzR1R0J1S2dmUUV1MnM3S0ZNOEJEQnpCY09EUlNm?=
- =?utf-8?B?eFdVUHRiSEZOV1FQVnpFMG9FU3M1THpPTTVGQW1zMi9OS1NnbVN1U1Y4LzRM?=
- =?utf-8?B?QUFyR21xakVQNjVGVkx0dEJ2NWZqVVFZM2hvSnlCNzF4WFFiSm0rQnFMOXBt?=
- =?utf-8?B?S1FFcDRKbzBaSlRvVXZINjFTMW5raHV4VkRoY01DWnJPREhiN0s3ZGh4SG1X?=
- =?utf-8?B?bDNLZ2dvTTN2UkE4QnpjTG1rMzJ3blRXOE4weE8vMUNPMnI5eldPMDBxTkdk?=
- =?utf-8?B?ZExKSjdyQm8vVGZLc1YyZ0NOOWkxbndmVWQwRUFidU1NWHhyMXRKT2Q1OVJw?=
- =?utf-8?B?WG92YzVrZmxlSWZTYTJpcm85K1N5dnkzVGhXaHRIQ09ZT3cxREJaNk5GUjNT?=
- =?utf-8?B?SnNJM3B3d2FiTEVJalEydURHKzM0VGE2bUIvK20xTEJVR1Y4SVlRTmJhTVFC?=
- =?utf-8?B?cHBZS240ZFcvRTQxbUZoV0VVVFVoU2tlMS9JZ3BZVmVoYjlZcVB5V1VnYVYz?=
- =?utf-8?B?NWEwRmJBYXVxZXhJWFRFU0MwSTE4b1U5VWw5UTZsMU5VMDBmaExwT2QzNkdK?=
- =?utf-8?B?NFZuUllFZUtzOExJTW5kS2VzNkN6Nnp6eVB3Qkg5VU9xakdsLzdKT0dxRW5j?=
- =?utf-8?B?bFVPT251a3hQeUxjbU4zZWM1NFVOa0NFZ1VNNUNObS9yNmFRSm51THhxTnBw?=
- =?utf-8?B?U2hVT3RsbStZaXBjWjR2dHpuNlR4UjZlZkJKZWQwYmMwQXhOeEV1QmR1NldV?=
- =?utf-8?B?Z2VUUHYwN0FpbW1QaWF1dDdLV2VZaDlKTUhINlppdk8yR1dLSXRQSFJpOXlQ?=
- =?utf-8?B?MVlRbnZXcFRORlNMV0IwVGxEQzErZTZhTWtqVm1ablR4ZXVoOGRab0Z4N0ZW?=
- =?utf-8?B?Q1lqWkM5TWd5bnk2TnlVSzZTV0dGU0dlY0pKUEdXZlhlN1VRSzJ6a1c4NWYy?=
- =?utf-8?B?MUpVR2pIaUNzdlVBTSszelc1NzJXa0J4cGk3Zk9sN21qQ0RzWklxdUV0OFgx?=
- =?utf-8?B?TDIxd0VOaHhHTmQ4am02c3lZTnh6SStESWVCZjFkMVNYNlRhazlTb1hUSXcr?=
- =?utf-8?B?eVJJd1JYMDVlZ2lkMDMyc3YxbzZFQS91Um1EeWptU0dWTUtWREROVzVnMVFZ?=
- =?utf-8?Q?2UCI6hFQ84embgArVxNQykLeI=3D?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?S1FqL2E0cUUrdXhnZ3FEYnpXSG5VLzd5d294UEQ5aXlnMjJPcFYrMk55Q1Vl?=
- =?utf-8?B?RzR0VExRdnZJbzZRSmhkNzMvd09WWm1ZbHVKYmFQVER3UmV4MnRGSFNtMXd6?=
- =?utf-8?B?c0d4bVJ5Y3h5UlI3aFVyS3VlN0FUTkx6SmgyMHQwRHNhbDExa1BUNWFvK3o5?=
- =?utf-8?B?eFhwaGJncVFqOFpuUWRKYlN0ZFUzOWZpUTlFamdhaXJOTE15ZXppZkpXV1E2?=
- =?utf-8?B?SmVTWjQvbkRNWFpScjZ6U0MvbWJSTkVtVzIwZTF3c2RyMWFmYklNVEhRdjJr?=
- =?utf-8?B?akluaFJBcEJnV2VZTW5STXhTTnJuRG1OdGlXS2JYKzdHbllodkhRZWpwTXll?=
- =?utf-8?B?aDIxZkNJNTRZNG1CY1ZOMHpOR3pRUndJTnJiQW1id3VudlYvRGFSc1FVUkIv?=
- =?utf-8?B?amdQSFpsL1pxalhpbFhvVmNYMDVVWHpFYUZ2QWFBcUJyeWZkUDlYUjl2OFNa?=
- =?utf-8?B?QytOcmNNOTBId0hPeTNKTEZnUk93MDNOS0w2dnFHVW5VTVBmS3phZTlqR2Y5?=
- =?utf-8?B?czc2SHlFMERhVWQ3N3hpeHZCZmdBWHdrdWdaRW9VUFdwYytTNmo4Z3VXTHdq?=
- =?utf-8?B?QWV3QmNYR2FVdzA4NFUwc1ZmTHdhblhCT0pDMDduazNPaVVuUC92NGhUVitw?=
- =?utf-8?B?UVUvbmc4aXNBS2pDSVpqdCtIeEdIblROV2xHZE9ubDBtUmVMZ2lMcUpUWVJx?=
- =?utf-8?B?N2VxallybGI0RitIOEViQXNBQS9IUVlVeVdOV1Mxc0gzUjR5UVkyNVRodUhJ?=
- =?utf-8?B?TmU2a0o4S1gxeDJlN3lWMzhlYVZ0OWYwdndiNVZ0NmhuRjhXZEdEdEFwNU1N?=
- =?utf-8?B?cHRkVFNaKzd5bVBTa2ZmaHpkSzRZc3REak5UeUJQdnRPTHY2cjBlQncxRTJz?=
- =?utf-8?B?K3lweGd3ZVVMbkdsdEpqVzViVmRqRkl0b2J2UnZHd2hpd3o2QzRqTnN6d1pl?=
- =?utf-8?B?SFlEWGZFNVhmTnM0VkFMbHcySDgwRVcwenNnS2xXMko4REFDdmQvcUxxTGdt?=
- =?utf-8?B?dndpcG5pa1FQNzUzZ0Ztb2h1Qm83WmpSTkZuYTYxNG0ybDFYU0JoTE5kTTRy?=
- =?utf-8?B?MlpJZzMzZHJhcFg3Rlk1SVJPUysyeHlTakJ4aUZBL2hBSFh1b2Q4b1E3SXFM?=
- =?utf-8?B?VEZXZGNDL0pHTHo2WnlZWnI3ckNkWW5XV0dKRjBoa2lmZmdhQ2JKZGhJZXRC?=
- =?utf-8?B?dk8yUEFSZU84REM0TnEzZ1B5dUoxYUZIbUFnSkplaUx2MDEwdG9tVUFxTG11?=
- =?utf-8?B?SkFwcDZ0SGN6OXlSRHN2UUZXMGx5Z2ZNL2JQV2JGV1BLREpGSzkzWmZRMDJK?=
- =?utf-8?B?VldHMkZmQWw5Z0pDdGFBS1lQTUo5VnJxK09hRXZJdTd4QlptTzNrVmh6RWdr?=
- =?utf-8?B?aHJyOTZGbGRid2xzMHBrSHYrRk5PNjJpdWMwRjF5Z09hSkg1RzlOM2h5WWhm?=
- =?utf-8?B?SjhuTjNMdW1QTVFLTHR1VHJDN0N4bWJ1c0Q5VFc5L1REYmh5M3pOa3RLeEtq?=
- =?utf-8?B?MlJIaFJtcytRS0lJZjZXU1lTYzFsazU2V2dTQUNNRnovblRuL2tTRnlEeW1C?=
- =?utf-8?B?U1RQWUl6cjltcXlVbzVRMG9vSlEvR3BRTVV6TGxXMDZ3a0RWWXU4bzZyWWtG?=
- =?utf-8?B?WmEzTjI3YmhtcU40MmR5T0JOeWpRQWlrNGE5ajNtNm5YV3RPWmZBd3VVWDZs?=
- =?utf-8?B?MmFuMHFsc3Fjc1lsMXJMNW5uZFJSaWhpQjUyb0UzQkxtY2wybXQyaURTZUVs?=
- =?utf-8?Q?dkD17FFQshmYKBni1649PgUgkSz9YEdaTjMNsav?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 85c4e3ea-f560-4b48-fa2e-08dda827fe7c
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR19MB8883.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 14:06:29.0648
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR19MB8167
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250610-b4-sm8750-display-v6-10-ee633e3ddbff@linaro.org>
+References: <20250610-b4-sm8750-display-v6-0-ee633e3ddbff@linaro.org>
+In-Reply-To: <20250610-b4-sm8750-display-v6-0-ee633e3ddbff@linaro.org>
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Krishna Manikandan <quic_mkrishn@quicinc.com>, 
+ Jonathan Marek <jonathan@marek.ca>, Kuogee Hsieh <quic_khsieh@quicinc.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Dmitry Baryshkov <lumag@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Clark <robin.clark@oss.qualcomm.com>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ linux-clk@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>, 
+ Srinivas Kandagatla <srini@kernel.org>, 
+ Rob Clark <robin.clark@oss.qualcomm.com>, 
+ Dmitry Baryshkov <lumag@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=10153;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=rD/vxqx5nSUfP2XbOh0k+p4MMI3tgwoJRLYjdRzeMRE=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoSDvHUNhdu3vSKx/mraq9Kly5KAZiQfWX7c0JK
+ 41wUf+BNMSJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaEg7xwAKCRDBN2bmhouD
+ 14IjD/wP95Wp0SNg33Fm+5sDnjY4h7IEFpwDtESb5WPp2bnpxwdKV543cD2webG8KFgWAqn3t64
+ P3Mtm+DSpy2AWdtJNpoicTOyWL355MkW95Qpja0snlHcN2fF9X4HrvkdcxKMcOpWgJT9u1o9sd/
+ bL9ZN6SbtAcYUxNi0q3Rfnuaqt4FrqNe47bZirxwfilTaDK4S/k1XhnyP3o5buo7nd8bH3ecsNB
+ cw6P26Hffj+bjI1ywxyNja0sYZrrzmafQlp5wdFGkj4DFsVbCvfxYuc5YLPq0h91MoZP21ye3kb
+ FfTvfW8YgicTuo5dRZwxg/E5BecI6ybNfqhibhmTrwlPNCYeSRfdEBMpKgk7vQfTTnA1htJqPIs
+ 9NS/3srf0SRZDdplpVsepChyX1uMMC+k09vu8rugzNKPjLAqD6+pV4dTYEex7M9efbuZtgmBhrB
+ 6b4EwnKk9vFCr5/Mg6Ih375zIJe5/SOZa4tqq9dWvcRHzvsQz4RFbjoK0E4ZvVxWRMp9/ciapgu
+ /2/MO17YPelMXquw7n6qIpC/4PSRXQ/sfUtl89b5FYd+g+J7jihSzgxwLJEcxDRD+5cSFh0f+nn
+ jdYhFueUP2R4/7U2+OwVmATGv3BK34IJeQbl9yr2xZJEmz2BDNlQTjqK687QEAtjRIjwSLmFuc5
+ 1rY6JjXSnZt4PTA==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
+Add support for DSI PHY v7.0 on Qualcomm SM8750 SoC which comes with an
+incompatible hardware interface change:
 
+ICODE_ACCUM_STATUS_LOW and ALOG_OBSV_BUS_STATUS_1 registers - their
+offsets were just switched.  Currently these registers are not used in
+the driver, so the easiest is to document both but keep them commented
+out to avoid conflict.
 
-On 6/10/25 17:08, Konrad Dybcio wrote:
-> On 6/10/25 3:03 PM, George Moussalem via B4 Relay wrote:
->> From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
->>
->> IPQ5018 has tsens V1.0 IP with 5 sensors, though 4 are in use.
->> There is no RPM, so tsens has to be manually enabled. Adding the tsens
->> and nvmem nodes and adding 4 thermal sensors (zones). With the
->> critical temperature being 120'C and action is to reboot.
->>
->> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
->> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
->> ---
-> 
-> [...]
-> 
->> +		tsens: thermal-sensor@4a9000 {
->> +			compatible = "qcom,ipq5018-tsens";
->> +			reg = <0x004a9000 0x1000>, /* TM */
->> +			      <0x004a8000 0x1000>; /* SROT */
-> 
-> Please drop these comments
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
 
-will drop
+Changes in v2:
+1. Fix pll freq check for clock inverters
+   160000000ULL -> 163000000ULL
+---
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy.c              |  2 +
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy.h              |  1 +
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c          | 79 ++++++++++++++++++++--
+ .../gpu/drm/msm/registers/display/dsi_phy_7nm.xml  | 14 ++++
+ 4 files changed, 90 insertions(+), 6 deletions(-)
 
-> 
-> [...]
-> 
->> +	thermal-zones {
->> +		cpu-thermal {
->> +			polling-delay-passive = <0>;
->> +			polling-delay = <0>;
->> +			thermal-sensors = <&tsens 2>;
->> +
->> +			trips {
->> +				cpu-critical {
->> +					temperature = <120000>;
->> +					hysteresis = <2>;
->> +					type = "critical";
->> +				};
->> +			};
->> +		};
->> +
->> +		gephy-thermal {
->> +			polling-delay-passive = <0>;
->> +			polling-delay = <0>;
->> +			thermal-sensors = <&tsens 4>;
->> +
->> +			trips {
->> +				gephy-critical {
->> +					temperature = <120000>;
-> 
-> I'm not sure whether there's any firmware/hardware measure to shut
-> down these beforehand. It's better to have a software trip at 120C
-> than to not have any at all, but you may want to try and find a
-> case_therm or so thermistor for your devices..
+diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
+index 5973d7325699bf5fc67c4cf93fcaf04abb618b46..221f12db5f8b7686b2f37524322ea3e118f503b1 100644
+--- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
++++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
+@@ -597,6 +597,8 @@ static const struct of_device_id dsi_phy_dt_match[] = {
+ 	  .data = &dsi_phy_4nm_8550_cfgs },
+ 	{ .compatible = "qcom,sm8650-dsi-phy-4nm",
+ 	  .data = &dsi_phy_4nm_8650_cfgs },
++	{ .compatible = "qcom,sm8750-dsi-phy-3nm",
++	  .data = &dsi_phy_3nm_8750_cfgs },
+ #endif
+ 	{}
+ };
+diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
+index 82baec385b3224c8b3e36742230d806c4fe68cbb..93fb5a30a755f7cade56af271640670cbb2e50a0 100644
+--- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
++++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
+@@ -63,6 +63,7 @@ extern const struct msm_dsi_phy_cfg dsi_phy_5nm_8775p_cfgs;
+ extern const struct msm_dsi_phy_cfg dsi_phy_5nm_sar2130p_cfgs;
+ extern const struct msm_dsi_phy_cfg dsi_phy_4nm_8550_cfgs;
+ extern const struct msm_dsi_phy_cfg dsi_phy_4nm_8650_cfgs;
++extern const struct msm_dsi_phy_cfg dsi_phy_3nm_8750_cfgs;
+ 
+ struct msm_dsi_dphy_timing {
+ 	u32 clk_zero;
+diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
+index c8b4a84b38340e0f907e0123299b493768454160..fd405e257f89181f32432dc4865475eeb7a88f5f 100644
+--- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
++++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
+@@ -51,6 +51,8 @@
+ #define DSI_PHY_7NM_QUIRK_V4_3		BIT(3)
+ /* Hardware is V5.2 */
+ #define DSI_PHY_7NM_QUIRK_V5_2		BIT(4)
++/* Hardware is V7.0 */
++#define DSI_PHY_7NM_QUIRK_V7_0		BIT(5)
+ 
+ struct dsi_pll_config {
+ 	bool enable_ssc;
+@@ -139,9 +141,30 @@ static void dsi_pll_calc_dec_frac(struct dsi_pll_7nm *pll, struct dsi_pll_config
+ 	dec_multiple = div_u64(pll_freq * multiplier, divider);
+ 	dec = div_u64_rem(dec_multiple, multiplier, &frac);
+ 
+-	if (pll->phy->cfg->quirks & DSI_PHY_7NM_QUIRK_PRE_V4_1)
++	if (pll->phy->cfg->quirks & DSI_PHY_7NM_QUIRK_PRE_V4_1) {
+ 		config->pll_clock_inverters = 0x28;
+-	else if ((pll->phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V5_2)) {
++	} else if ((pll->phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V7_0)) {
++		if (pll_freq < 163000000ULL)
++			config->pll_clock_inverters = 0xa0;
++		else if (pll_freq < 175000000ULL)
++			config->pll_clock_inverters = 0x20;
++		else if (pll_freq < 325000000ULL)
++			config->pll_clock_inverters = 0xa0;
++		else if (pll_freq < 350000000ULL)
++			config->pll_clock_inverters = 0x20;
++		else if (pll_freq < 650000000ULL)
++			config->pll_clock_inverters = 0xa0;
++		else if (pll_freq < 700000000ULL)
++			config->pll_clock_inverters = 0x20;
++		else if (pll_freq < 1300000000ULL)
++			config->pll_clock_inverters = 0xa0;
++		else if (pll_freq < 2500000000ULL)
++			config->pll_clock_inverters = 0x20;
++		else if (pll_freq < 4000000000ULL)
++			config->pll_clock_inverters = 0x00;
++		else
++			config->pll_clock_inverters = 0x40;
++	} else if ((pll->phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V5_2)) {
+ 		if (pll_freq <= 1300000000ULL)
+ 			config->pll_clock_inverters = 0xa0;
+ 		else if (pll_freq <= 2500000000ULL)
+@@ -260,7 +283,8 @@ static void dsi_pll_config_hzindep_reg(struct dsi_pll_7nm *pll)
+ 			vco_config_1 = 0x01;
+ 	}
+ 
+-	if ((pll->phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V5_2)) {
++	if ((pll->phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V5_2) ||
++	    (pll->phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V7_0)) {
+ 		if (pll->vco_current_rate < 1557000000ULL)
+ 			vco_config_1 = 0x08;
+ 		else
+@@ -669,6 +693,7 @@ static int dsi_7nm_pll_restore_state(struct msm_dsi_phy *phy)
+ static int dsi_7nm_set_usecase(struct msm_dsi_phy *phy)
+ {
+ 	struct dsi_pll_7nm *pll_7nm = to_pll_7nm(phy->vco_hw);
++	void __iomem *base = phy->base;
+ 	u32 data = 0x0;	/* internal PLL */
+ 
+ 	DBG("DSI PLL%d", pll_7nm->phy->id);
+@@ -678,6 +703,9 @@ static int dsi_7nm_set_usecase(struct msm_dsi_phy *phy)
+ 		break;
+ 	case MSM_DSI_PHY_MASTER:
+ 		pll_7nm->slave = pll_7nm_list[(pll_7nm->phy->id + 1) % DSI_MAX];
++		/* v7.0: Enable ATB_EN0 and alternate clock output to external phy */
++		if (phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V7_0)
++			writel(0x07, base + REG_DSI_7nm_PHY_CMN_CTRL_5);
+ 		break;
+ 	case MSM_DSI_PHY_SLAVE:
+ 		data = 0x1; /* external PLL */
+@@ -966,7 +994,8 @@ static int dsi_7nm_phy_enable(struct msm_dsi_phy *phy,
+ 
+ 	/* Request for REFGEN READY */
+ 	if ((phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V4_3) ||
+-	    (phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V5_2)) {
++	    (phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V5_2) ||
++	    (phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V7_0)) {
+ 		writel(0x1, phy->base + REG_DSI_7nm_PHY_CMN_GLBL_DIGTOP_SPARE10);
+ 		udelay(500);
+ 	}
+@@ -1000,7 +1029,20 @@ static int dsi_7nm_phy_enable(struct msm_dsi_phy *phy,
+ 		lane_ctrl0 = 0x1f;
+ 	}
+ 
+-	if ((phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V5_2)) {
++	if ((phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V7_0)) {
++		if (phy->cphy_mode) {
++			/* TODO: different for second phy */
++			vreg_ctrl_0 = 0x57;
++			vreg_ctrl_1 = 0x41;
++			glbl_rescode_top_ctrl = 0x3d;
++			glbl_rescode_bot_ctrl = 0x38;
++		} else {
++			vreg_ctrl_0 = 0x56;
++			vreg_ctrl_1 = 0x19;
++			glbl_rescode_top_ctrl = less_than_1500_mhz ? 0x3c :  0x03;
++			glbl_rescode_bot_ctrl = less_than_1500_mhz ? 0x38 :  0x3c;
++		}
++	} else if ((phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V5_2)) {
+ 		if (phy->cphy_mode) {
+ 			vreg_ctrl_0 = 0x45;
+ 			vreg_ctrl_1 = 0x41;
+@@ -1066,6 +1108,7 @@ static int dsi_7nm_phy_enable(struct msm_dsi_phy *phy,
+ 
+ 	/* program CMN_CTRL_4 for minor_ver 2 chipsets*/
+ 	if ((phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V5_2) ||
++	    (phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V7_0) ||
+ 	    (readl(base + REG_DSI_7nm_PHY_CMN_REVISION_ID0) & (0xf0)) == 0x20)
+ 		writel(0x04, base + REG_DSI_7nm_PHY_CMN_CTRL_4);
+ 
+@@ -1182,7 +1225,8 @@ static void dsi_7nm_phy_disable(struct msm_dsi_phy *phy)
+ 
+ 	/* Turn off REFGEN Vote */
+ 	if ((phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V4_3) ||
+-	    (phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V5_2)) {
++	    (phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V5_2) ||
++	    (phy->cfg->quirks & DSI_PHY_7NM_QUIRK_V7_0)) {
+ 		writel(0x0, base + REG_DSI_7nm_PHY_CMN_GLBL_DIGTOP_SPARE10);
+ 		wmb();
+ 		/* Delay to ensure HW removes vote before PHY shut down */
+@@ -1453,3 +1497,26 @@ const struct msm_dsi_phy_cfg dsi_phy_4nm_8650_cfgs = {
+ 	.num_dsi_phy = 2,
+ 	.quirks = DSI_PHY_7NM_QUIRK_V5_2,
+ };
++
++const struct msm_dsi_phy_cfg dsi_phy_3nm_8750_cfgs = {
++	.has_phy_lane = true,
++	.regulator_data = dsi_phy_7nm_98000uA_regulators,
++	.num_regulators = ARRAY_SIZE(dsi_phy_7nm_98000uA_regulators),
++	.ops = {
++		.enable = dsi_7nm_phy_enable,
++		.disable = dsi_7nm_phy_disable,
++		.pll_init = dsi_pll_7nm_init,
++		.save_pll_state = dsi_7nm_pll_save_state,
++		.restore_pll_state = dsi_7nm_pll_restore_state,
++		.set_continuous_clock = dsi_7nm_set_continuous_clock,
++	},
++	.min_pll_rate = 600000000UL,
++#ifdef CONFIG_64BIT
++	.max_pll_rate = 5000000000UL,
++#else
++	.max_pll_rate = ULONG_MAX,
++#endif
++	.io_start = { 0xae95000, 0xae97000 },
++	.num_dsi_phy = 2,
++	.quirks = DSI_PHY_7NM_QUIRK_V7_0,
++};
+diff --git a/drivers/gpu/drm/msm/registers/display/dsi_phy_7nm.xml b/drivers/gpu/drm/msm/registers/display/dsi_phy_7nm.xml
+index d49122b88d14896ef3e87b783a1691f85b61aa9c..f41516dd0567ca7406b0d41c9410e28084f2b03c 100644
+--- a/drivers/gpu/drm/msm/registers/display/dsi_phy_7nm.xml
++++ b/drivers/gpu/drm/msm/registers/display/dsi_phy_7nm.xml
+@@ -35,6 +35,7 @@ xsi:schemaLocation="https://gitlab.freedesktop.org/freedreno/ rules-fd.xsd">
+ 	<reg32 offset="0x00028" name="CTRL_1"/>
+ 	<reg32 offset="0x0002c" name="CTRL_2"/>
+ 	<reg32 offset="0x00030" name="CTRL_3"/>
++	<reg32 offset="0x001b0" name="CTRL_5"/>
+ 	<reg32 offset="0x00034" name="LANE_CFG0"/>
+ 	<reg32 offset="0x00038" name="LANE_CFG1"/>
+ 	<reg32 offset="0x0003c" name="PLL_CNTRL"/>
+@@ -200,11 +201,24 @@ xsi:schemaLocation="https://gitlab.freedesktop.org/freedreno/ rules-fd.xsd">
+ 	<reg32 offset="0x01b0" name="COMMON_STATUS_ONE"/>
+ 	<reg32 offset="0x01b4" name="COMMON_STATUS_TWO"/>
+ 	<reg32 offset="0x01b8" name="BAND_SEL_CAL"/>
++	<!--
++	Starting with SM8750, offset moved from 0x01bc to 0x01cc, however
++	we keep only one register map.  That's not a problem, so far,
++	because this register is not used.  The register map should be split
++	once it is going to be used.  Comment out the code to prevent
++	any misuse due to the change in the offset.
+ 	<reg32 offset="0x01bc" name="ICODE_ACCUM_STATUS_LOW"/>
++	<reg32 offset="0x01cc" name="ICODE_ACCUM_STATUS_LOW"/>
++	-->
+ 	<reg32 offset="0x01c0" name="ICODE_ACCUM_STATUS_HIGH"/>
+ 	<reg32 offset="0x01c4" name="FD_OUT_LOW"/>
+ 	<reg32 offset="0x01c8" name="FD_OUT_HIGH"/>
++	<!--
++	Starting with SM8750, offset moved from 0x01cc to 0x01bc, however
++	we keep only one register map.  See above comment.
+ 	<reg32 offset="0x01cc" name="ALOG_OBSV_BUS_STATUS_1"/>
++	<reg32 offset="0x01bc" name="ALOG_OBSV_BUS_STATUS_1"/>
++	-->
+ 	<reg32 offset="0x01d0" name="PLL_MISC_CONFIG"/>
+ 	<reg32 offset="0x01d4" name="FLL_CONFIG"/>
+ 	<reg32 offset="0x01d8" name="FLL_FREQ_ACQ_TIME"/>
 
-these are the temps as defined for the critical trips by qcom. IPQ8074 
-has the temp set at 110C, while IPQ6018 even higher at 125C.
-They've also defined lower temp trips in the downstream DTS files.
-Should I try and add those? I could check if the driver supports them..
+-- 
+2.45.2
 
-FWIW, devices I've tested don't go above 70C even under load.
-
-> 
->> +					hysteresis = <2>;
->> +					type = "critical";
->> +				};
->> +			};
->> +		};
->> +
->> +		top-glue-thermal {
->> +			polling-delay-passive = <0>;
->> +			polling-delay = <0>;
-> 
-> 0 is default here, you can drop all such entries
-
-will drop
-
-> 
->> +			thermal-sensors = <&tsens 3>;
->> +
->> +			trips {
->> +				top_glue-critical {
-> 
-> underscores are not allowed in DTs (see:
-> Documentation/devicetree/bindings/dts-coding-style.rst)
-> 
-> use a hyphen instead
-
-will update to hyphen, thanks!
-
-> 
-> Konrad
-
-Best regards,
-George
