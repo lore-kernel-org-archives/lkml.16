@@ -1,299 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D909227EA3;
-	Tue, 10 Jun 2025 11:24:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12762227EA3;
+	Tue, 10 Jun 2025 11:26:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749554643; cv=none; b=mcT0VytlOW34UOGl1rOjTAqv82H2siIAHrcAcLILS9kNfMHaWxBaM+vPiq8JtEV8j+8rpC3PtjM3Uz1w2f77ZL8SrPDzdI3nzJwGCxHaUHrIDffU7WSrp6zXXAo9OrfgMa8CCBiFpfvs+HXLj6BH7zepcbOiAjUQyHW3rupf7e4=
+	t=1749554783; cv=none; b=QSupaZy6me+JXMo9QU1h6tNagHdE6vrwYj+xeplgY7XFWNby7neiJZfcK/8nHOHVd1lkZ0xrmCG/HLvGio6XDwy2grxEwnvLHS49PicMulN0MwSM5+vzZR5/eLULlNjQUsSxKhZbSlnKs+gWzpqdUeOOUkuQshxu/FTKuFRNt7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749554643; c=relaxed/simple;
-	bh=nN0ISiXyc8XuJnFSXPqaX/pMz8eCyow5+vzT8WEFryU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uJbGrgYby3IAVfeJ38JKhKcg/u6h6us0wDe40CpDcxnVddOPiKHf0zbvWffn+S2D/K02hd/n6X0RVffmnkni0sgGG0QZepF7SEz/58mxqo2S0iRohM27qEujhVzWUSLaMg0TfgFY1TM+vKfeg04NTj5AKoMctWJ1/x8XoX/sELU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VJz2yXxj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749554783; c=relaxed/simple;
+	bh=/z0GgE9IRkDYGHI/IsWXrA2ubAR+Pni9VNySYq6a7tc=;
+	h=From:To:Cc:Subject:In-Reply-To:Message-ID:References:Date:
+	 MIME-Version:Content-Type; b=AK+rSuq698/auuriTwnhx8NNnra1wQpCJTYlbUYZYU9d3tvtklVpEOdTsp6dseQdT8IDpoh9yjudrBTC5aAvhCApsP7ObaerJqp+2zqd12yXkJJwz/NktamlDqc0gJ6MeVt2/FN/wOnP4NoAdI6qelMNVnvInyDTCgZ0G/rUf5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=un6UbFjP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VJz2yXxj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D78EC4CEED;
-	Tue, 10 Jun 2025 11:24:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="un6UbFjP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3EB8C4CEED;
+	Tue, 10 Jun 2025 11:26:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749554642;
-	bh=nN0ISiXyc8XuJnFSXPqaX/pMz8eCyow5+vzT8WEFryU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=VJz2yXxjwhRNUFzgTWtsg1POeNxBM/YAk2daMD4qnmkQ7mfqIWudSaxcfoPoxKXnH
-	 G9FqXSujr+g4o+ZaAFLw8f1Z/0d9GcCIXvrhAJI4pC54I0cnHIYL1vro2CqWCjrMvc
-	 1Vflmq00sHkSZrnKVXLQYa9rMNZgCSAhz/G/TJ99M9aLOO4BjpG/8pXpq9fdJhAQ69
-	 bblWVc9/8+OWXp4WjtEW10InDgzpMxoioCp2x2YrK97tnNhO0jrBxgCRaePMHX2RPW
-	 kdwrmJ6qWzQQnvRPBSqsu1/R5w7b99+NOfAxJ9KPF9CO7xPR3Bpn2lpPYuXIZO7AiO
-	 UFhyvlDxMqPNg==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Andy Shevchenko <andy@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Riyan Dhiman <riyandhiman14@gmail.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] staging: fbtft: reduce stack usage
-Date: Tue, 10 Jun 2025 13:23:28 +0200
-Message-Id: <20250610112357.3306246-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=k20201202; t=1749554782;
+	bh=/z0GgE9IRkDYGHI/IsWXrA2ubAR+Pni9VNySYq6a7tc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=un6UbFjPtKuVDW/6YPewUO7WtDpdqp0iNkImIUx8y8YJ/0yXWxLxCS+2dWSuG8FFG
+	 Nebf7BD5tATniIyJNi3zQ4LFdtALVfMJ0m81WmfBzjPfYakFyl5EXKNJ+XIlnW+NyK
+	 LqUuhITKY9Jl1etGapomihcbm5k05gOSLwhQhcA93XKq/G3JFnM6qynNfG5E+cEqjj
+	 EhmGfpH5DrWzpRd30EJSxJzsKB6vtG3hkPC06qOfExGKg5VuvONpsRaJ6Wrj0sV0oM
+	 2ciRCEPMZ6S+m8oC6xfq04c5rhz6tAXMPKG3dtncG+796KqY+qMJFbLx1Qj8oM5BGU
+	 +TmNphtLDkl0w==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "FUJITA Tomonori" <fujita.tomonori@gmail.com>
+Cc: <alex.gaynor@gmail.com>,  <ojeda@kernel.org>,  <aliceryhl@google.com>,
+  <anna-maria@linutronix.de>,  <bjorn3_gh@protonmail.com>,
+  <boqun.feng@gmail.com>,  <dakr@kernel.org>,  <frederic@kernel.org>,
+  <gary@garyguo.net>,  <jstultz@google.com>,
+  <linux-kernel@vger.kernel.org>,  <lossin@kernel.org>,
+  <lyude@redhat.com>,  <rust-for-linux@vger.kernel.org>,
+  <sboyd@kernel.org>,  <tglx@linutronix.de>,  <tmgross@umich.edu>
+Subject: Re: [PATCH v2 4/5] rust: time: Make HasHrTimer generic over
+ HrTimerMode
+In-Reply-To: <20250609102418.3345792-5-fujita.tomonori@gmail.com> (FUJITA
+	Tomonori's message of "Mon, 09 Jun 2025 19:24:17 +0900")
+Message-ID: <87o6uv27qr.fsf@kernel.org>
+References: <20250609102418.3345792-1-fujita.tomonori@gmail.com>
+	<1zU91IwxagjPCPl0Nw9xz728DEqNqtV7KHWwCZYP2EiiVcUrZT3T2VFLOOdsmQ-LT9GrdHddepVw6__or-ZvPQ==@protonmail.internalid>
+	<20250609102418.3345792-5-fujita.tomonori@gmail.com>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Tue, 10 Jun 2025 13:25:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: Arnd Bergmann <arnd@arndb.de>
+"FUJITA Tomonori" <fujita.tomonori@gmail.com> writes:
 
-The use of vararg function pointers combined with a huge number of
-arguments causes some configurations to exceed the stack size warning
-limit:
+> Add a `TimerMode` associated type to the `HasHrTimer` trait to
+> represent the operational mode of the timer, such as absolute or
+> relative expiration. This new type must implement the `HrTimerMode`
+> trait, which defines how expiration values are interpreted.
+>
+> Update the `start()` method to accept an `expires` parameter of type
+> `<Self::TimerMode as HrTimerMode>::Expires` instead of the fixed `Ktime`.
+> This enables different timer modes to provide strongly typed expiration
+> values, such as `Instant<C>` or `Delta`.
+>
+> The `impl_has_hr_timer` macro is also extended to allow specifying the
+> `HrTimerMode`. In the following example, it guarantees that the
+> `start()` method for `Foo` only accepts `Instant<Monotonic>`. Using a
+> `Delta` or an `Instant` with a different clock source will result in a
+> compile-time error:
+>
+> struct Foo {
+>     #[pin]
+>     timer: HrTimer<Self>,
+> }
+>
+> impl_has_hr_timer! {
+>     impl HasHrTimer<Self> for Foo {
+>         mode : AbsoluteMode<Monotonic>,
+>         field : self.timer
+>     }
 
-drivers/staging/fbtft/fbtft-core.c:863:12: error: stack frame size (1512) exceeds limit (1280) in 'fbtft_init_display_from_property' [-Werror,-Wframe-larger-than]
+Can you add an optional comma after the `field` entry? I think it is
+`$(,)?` in the macro declaration.
 
-drivers/staging/fbtft/fb_ssd1331.c:131:30: error: stack frame size (1392) exceeds limit (1280) in 'set_gamma' [-Werror,-Wframe-larger-than]
-                  ^
-drivers/staging/fbtft/fb_ssd1351.c:120:30: error: stack frame size (1392) exceeds limit (1280) in 'set_gamma' [-Werror,-Wframe-larger-than]
 
-Move the varargs handling into a separate noinline function so each
-individual function stays below the limit. A better approach might be to
-replace the varargs function with one that takes an array of arguments,
-but that would be a much larger rework of the other callers.
+Best regards,
+Andreas Hindborg
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-v2: use u32 types consistently, suggested by Andy Shevchenko
----
- drivers/staging/fbtft/fb_ssd1331.c | 36 ++++++++++++------
- drivers/staging/fbtft/fb_ssd1351.c | 42 +++++++++++---------
- drivers/staging/fbtft/fbtft-core.c | 61 +++++++++++++-----------------
- 3 files changed, 74 insertions(+), 65 deletions(-)
 
-diff --git a/drivers/staging/fbtft/fb_ssd1331.c b/drivers/staging/fbtft/fb_ssd1331.c
-index 06b7056d6c71..f43ee3249175 100644
---- a/drivers/staging/fbtft/fb_ssd1331.c
-+++ b/drivers/staging/fbtft/fb_ssd1331.c
-@@ -107,6 +107,28 @@ static void write_reg8_bus8(struct fbtft_par *par, int len, ...)
- 	va_end(args);
- }
- 
-+static noinline_for_stack void write_gamma_reg(struct fbtft_par *par,
-+					       u32 gamma[63])
-+{
-+	write_reg(par, 0xB8,
-+		  gamma[0],  gamma[1],  gamma[2],  gamma[3],
-+		  gamma[4],  gamma[5],  gamma[6],  gamma[7],
-+		  gamma[8],  gamma[9],  gamma[10], gamma[11],
-+		  gamma[12], gamma[13], gamma[14], gamma[15],
-+		  gamma[16], gamma[17], gamma[18], gamma[19],
-+		  gamma[20], gamma[21], gamma[22], gamma[23],
-+		  gamma[24], gamma[25], gamma[26], gamma[27],
-+		  gamma[28], gamma[29], gamma[30], gamma[31],
-+		  gamma[32], gamma[33], gamma[34], gamma[35],
-+		  gamma[36], gamma[37], gamma[38], gamma[39],
-+		  gamma[40], gamma[41], gamma[42], gamma[43],
-+		  gamma[44], gamma[45], gamma[46], gamma[47],
-+		  gamma[48], gamma[49], gamma[50], gamma[51],
-+		  gamma[52], gamma[53], gamma[54], gamma[55],
-+		  gamma[56], gamma[57], gamma[58], gamma[59],
-+		  gamma[60], gamma[61], gamma[62]);
-+}
-+
- /*
-  * Grayscale Lookup Table
-  * GS1 - GS63
-@@ -130,7 +152,7 @@ static void write_reg8_bus8(struct fbtft_par *par, int len, ...)
-  */
- static int set_gamma(struct fbtft_par *par, u32 *curves)
- {
--	unsigned long tmp[GAMMA_NUM * GAMMA_LEN];
-+	u32 tmp[GAMMA_NUM * GAMMA_LEN];
- 	int i, acc = 0;
- 
- 	for (i = 0; i < 63; i++) {
-@@ -150,17 +172,7 @@ static int set_gamma(struct fbtft_par *par, u32 *curves)
- 		}
- 	}
- 
--	write_reg(par, 0xB8,
--		  tmp[0], tmp[1], tmp[2], tmp[3], tmp[4], tmp[5], tmp[6],
--		  tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], tmp[12], tmp[13],
--		  tmp[14], tmp[15], tmp[16], tmp[17], tmp[18], tmp[19], tmp[20],
--		  tmp[21], tmp[22], tmp[23], tmp[24], tmp[25], tmp[26],	tmp[27],
--		  tmp[28], tmp[29], tmp[30], tmp[31], tmp[32], tmp[33], tmp[34],
--		  tmp[35], tmp[36], tmp[37], tmp[38], tmp[39], tmp[40], tmp[41],
--		  tmp[42], tmp[43], tmp[44], tmp[45], tmp[46], tmp[47], tmp[48],
--		  tmp[49], tmp[50], tmp[51], tmp[52], tmp[53], tmp[54], tmp[55],
--		  tmp[56], tmp[57], tmp[58], tmp[59], tmp[60], tmp[61],
--		  tmp[62]);
-+	write_gamma_reg(par, tmp);
- 
- 	return 0;
- }
-diff --git a/drivers/staging/fbtft/fb_ssd1351.c b/drivers/staging/fbtft/fb_ssd1351.c
-index 6736b09b2f45..eb8bee6993c3 100644
---- a/drivers/staging/fbtft/fb_ssd1351.c
-+++ b/drivers/staging/fbtft/fb_ssd1351.c
-@@ -96,6 +96,28 @@ static int set_var(struct fbtft_par *par)
- 	return 0;
- }
- 
-+static noinline_for_stack void write_gamma_reg(struct fbtft_par *par,
-+					       u32 gamma[63])
-+{
-+	write_reg(par, 0xB8,
-+		  gamma[0],  gamma[1],  gamma[2],  gamma[3],
-+		  gamma[4],  gamma[5],  gamma[6],  gamma[7],
-+		  gamma[8],  gamma[9],  gamma[10], gamma[11],
-+		  gamma[12], gamma[13], gamma[14], gamma[15],
-+		  gamma[16], gamma[17], gamma[18], gamma[19],
-+		  gamma[20], gamma[21], gamma[22], gamma[23],
-+		  gamma[24], gamma[25], gamma[26], gamma[27],
-+		  gamma[28], gamma[29], gamma[30], gamma[31],
-+		  gamma[32], gamma[33], gamma[34], gamma[35],
-+		  gamma[36], gamma[37], gamma[38], gamma[39],
-+		  gamma[40], gamma[41], gamma[42], gamma[43],
-+		  gamma[44], gamma[45], gamma[46], gamma[47],
-+		  gamma[48], gamma[49], gamma[50], gamma[51],
-+		  gamma[52], gamma[53], gamma[54], gamma[55],
-+		  gamma[56], gamma[57], gamma[58], gamma[59],
-+		  gamma[60], gamma[61], gamma[62]);
-+}
-+
- /*
-  * Grayscale Lookup Table
-  * GS1 - GS63
-@@ -119,7 +141,7 @@ static int set_var(struct fbtft_par *par)
-  */
- static int set_gamma(struct fbtft_par *par, u32 *curves)
- {
--	unsigned long tmp[GAMMA_NUM * GAMMA_LEN];
-+	u32 tmp[GAMMA_NUM * GAMMA_LEN];
- 	int i, acc = 0;
- 
- 	for (i = 0; i < 63; i++) {
-@@ -139,23 +161,7 @@ static int set_gamma(struct fbtft_par *par, u32 *curves)
- 		}
- 	}
- 
--	write_reg(par, 0xB8,
--		  tmp[0],  tmp[1],  tmp[2],  tmp[3],
--		  tmp[4],  tmp[5],  tmp[6],  tmp[7],
--		  tmp[8],  tmp[9],  tmp[10], tmp[11],
--		  tmp[12], tmp[13], tmp[14], tmp[15],
--		  tmp[16], tmp[17], tmp[18], tmp[19],
--		  tmp[20], tmp[21], tmp[22], tmp[23],
--		  tmp[24], tmp[25], tmp[26], tmp[27],
--		  tmp[28], tmp[29], tmp[30], tmp[31],
--		  tmp[32], tmp[33], tmp[34], tmp[35],
--		  tmp[36], tmp[37], tmp[38], tmp[39],
--		  tmp[40], tmp[41], tmp[42], tmp[43],
--		  tmp[44], tmp[45], tmp[46], tmp[47],
--		  tmp[48], tmp[49], tmp[50], tmp[51],
--		  tmp[52], tmp[53], tmp[54], tmp[55],
--		  tmp[56], tmp[57], tmp[58], tmp[59],
--		  tmp[60], tmp[61], tmp[62]);
-+	write_gamma_reg(par, tmp);
- 
- 	return 0;
- }
-diff --git a/drivers/staging/fbtft/fbtft-core.c b/drivers/staging/fbtft/fbtft-core.c
-index da9c64152a60..231cc6d7343c 100644
---- a/drivers/staging/fbtft/fbtft-core.c
-+++ b/drivers/staging/fbtft/fbtft-core.c
-@@ -833,6 +833,28 @@ int fbtft_unregister_framebuffer(struct fb_info *fb_info)
- }
- EXPORT_SYMBOL(fbtft_unregister_framebuffer);
- 
-+static noinline_for_stack void fbtft_write_register_64(struct fbtft_par *par,
-+							int i, u32 buf[64])
-+{
-+	par->fbtftops.write_register(par, i,
-+		buf[0], buf[1], buf[2], buf[3],
-+		buf[4], buf[5], buf[6], buf[7],
-+		buf[8], buf[9], buf[10], buf[11],
-+		buf[12], buf[13], buf[14], buf[15],
-+		buf[16], buf[17], buf[18], buf[19],
-+		buf[20], buf[21], buf[22], buf[23],
-+		buf[24], buf[25], buf[26], buf[27],
-+		buf[28], buf[29], buf[30], buf[31],
-+		buf[32], buf[33], buf[34], buf[35],
-+		buf[36], buf[37], buf[38], buf[39],
-+		buf[40], buf[41], buf[42], buf[43],
-+		buf[44], buf[45], buf[46], buf[47],
-+		buf[48], buf[49], buf[50], buf[51],
-+		buf[52], buf[53], buf[54], buf[55],
-+		buf[56], buf[57], buf[58], buf[59],
-+		buf[60], buf[61], buf[62], buf[63]);
-+}
-+
- /**
-  * fbtft_init_display_from_property() - Device Tree init_display() function
-  * @par: Driver data
-@@ -842,7 +864,7 @@ EXPORT_SYMBOL(fbtft_unregister_framebuffer);
- static int fbtft_init_display_from_property(struct fbtft_par *par)
- {
- 	struct device *dev = par->info->device;
--	int buf[64], count, index, i, j, ret;
-+	u32 buf[64], count, index, i, j, ret;
- 	u32 *values;
- 	u32 val;
- 
-@@ -887,23 +909,8 @@ static int fbtft_init_display_from_property(struct fbtft_par *par)
- 				fbtft_par_dbg(DEBUG_INIT_DISPLAY, par,
- 					      "buf[%d] = %02X\n", j, buf[j]);
- 
--			par->fbtftops.write_register(par, i,
--				buf[0], buf[1], buf[2], buf[3],
--				buf[4], buf[5], buf[6], buf[7],
--				buf[8], buf[9], buf[10], buf[11],
--				buf[12], buf[13], buf[14], buf[15],
--				buf[16], buf[17], buf[18], buf[19],
--				buf[20], buf[21], buf[22], buf[23],
--				buf[24], buf[25], buf[26], buf[27],
--				buf[28], buf[29], buf[30], buf[31],
--				buf[32], buf[33], buf[34], buf[35],
--				buf[36], buf[37], buf[38], buf[39],
--				buf[40], buf[41], buf[42], buf[43],
--				buf[44], buf[45], buf[46], buf[47],
--				buf[48], buf[49], buf[50], buf[51],
--				buf[52], buf[53], buf[54], buf[55],
--				buf[56], buf[57], buf[58], buf[59],
--				buf[60], buf[61], buf[62], buf[63]);
-+			fbtft_write_register_64(par, i, buf);
-+
- 		} else if (val & FBTFT_OF_INIT_DELAY) {
- 			fbtft_par_dbg(DEBUG_INIT_DISPLAY, par,
- 				      "init: msleep(%u)\n", val & 0xFFFF);
-@@ -996,23 +1003,7 @@ int fbtft_init_display(struct fbtft_par *par)
- 				}
- 				buf[j++] = par->init_sequence[i++];
- 			}
--			par->fbtftops.write_register(par, j,
--				buf[0], buf[1], buf[2], buf[3],
--				buf[4], buf[5], buf[6], buf[7],
--				buf[8], buf[9], buf[10], buf[11],
--				buf[12], buf[13], buf[14], buf[15],
--				buf[16], buf[17], buf[18], buf[19],
--				buf[20], buf[21], buf[22], buf[23],
--				buf[24], buf[25], buf[26], buf[27],
--				buf[28], buf[29], buf[30], buf[31],
--				buf[32], buf[33], buf[34], buf[35],
--				buf[36], buf[37], buf[38], buf[39],
--				buf[40], buf[41], buf[42], buf[43],
--				buf[44], buf[45], buf[46], buf[47],
--				buf[48], buf[49], buf[50], buf[51],
--				buf[52], buf[53], buf[54], buf[55],
--				buf[56], buf[57], buf[58], buf[59],
--				buf[60], buf[61], buf[62], buf[63]);
-+			fbtft_write_register_64(par, j, buf);
- 			break;
- 		case -2:
- 			i++;
--- 
-2.39.5
 
