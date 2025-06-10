@@ -1,121 +1,180 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flow-a2-smtp.messagingengine.com (flow-a2-smtp.messagingengine.com [103.168.172.137])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECAB328B4FD
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:25:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03991242D7D;
+	Tue, 10 Jun 2025 22:26:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749594357; cv=none; b=OHUtK+WB0jKkgv5y7Q2c2vGQTUB8ZeLQyzfFuX8gjmsw/n/LY6f9er/awICp5oqxmH14llA0Twdz86175/din2/BGLObjEDvtcMcQS4698nyXak55NzL806V7zAGrLwULKXEHOOlW697GuAprJhJlXzyZmx/CavoeUtLRP151sU=
+	t=1749594409; cv=none; b=icAlwjLQfWnjsaQRxmzpxtIRvypZ71RuSBna50yMdhghoMhCdt446SGyVZY38URZcPTKFOQa7TA++0hZdMOE2VnCsgzblm3H18r3RqUNO9UxoNGHkbC6mTcUm4ORtLMIRpOUGssNGAcPtHKqmTny03t+xfqSaSM7xQuT2KHoqhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749594357; c=relaxed/simple;
-	bh=uYJQKmJTyzVi2r0a2NAfYx9rHlYgz3eWvS+kZCor0Iw=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=VNSjer1LECSFTcQvpj7Iua1nA0dUKBM99xuEAx2Ap8T9F73UkUwUZEUPyDySm5CXllEmb/CoumUcWE6tVIEZG5V3PiboA828VWOVl1A20DmlUPhUU12OeFTT+gPWGAOHcuAbacu3HhPZGSuyj6I99FFCK2j8cSV+xKBw1Rk/HNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=ffnUG15z; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	s=arc-20240116; t=1749594409; c=relaxed/simple;
+	bh=n8Q4u2oeyOV/7+exq8azslKtTa2cYnR5fxSWc0KScxc=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=EeX7eE3y5VoB18jp6S6rH0nS5zM1OALG1cp+6Ve3vWae4nNzeNwSFLRVptbjxDS2aWaBnG2NBALlQFiyag4pTxI9VGh9Q9orZNgA9rGg+tEWCtMMkM2erlCAyQReZTlt3XiDzn/q1oNP8Zqo7//oRTI2UwsZgrjWvxxtQ+PUY34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=maowtm.org; spf=pass smtp.mailfrom=maowtm.org; dkim=pass (2048-bit key) header.d=maowtm.org header.i=@maowtm.org header.b=OIvzHK+K; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=SzYUHwkp; arc=none smtp.client-ip=103.168.172.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=maowtm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maowtm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="ffnUG15z"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b2c49373c15so4199448a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:25:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1749594354; x=1750199154; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vFz6mun+uYpuugiJ+s3Ifj5c4f1eeTX2hZ/twyLOLMw=;
-        b=ffnUG15zj2PQ7xISI95BhqKjRPmngjp74E7W3n8RRq6em0k8yH18yFUB2hHVFXaPjU
-         +JE5ye+ugz+gZkyBFLJTTarafE7nD9/UvqQUdxp671mBqc1UsRg1WXFjSbn/JJ7Iddrd
-         j0TYy2OIzqWM+YEBv9dotkbGaXjmB3dvThxiSXn6S/JIWkTZPfIiLimHY9/oqYTMfLY8
-         zBwGKZu/PY5N3WhoGDUIuSa+5EwPjGvcAeoiMA7Ll3OuQX3nLGD1ikMj3VbCN21em88B
-         4PDjCV8Tqnicj3qV54uPy3MI0rDwYDaZ/qFuC/uNeB0L1ps/qntikEWjvsllbJGchnd9
-         wwYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749594354; x=1750199154;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vFz6mun+uYpuugiJ+s3Ifj5c4f1eeTX2hZ/twyLOLMw=;
-        b=o+SB0G2HTPHiPpKJEgH+kWg9ORlOX9+TGfi+j4r2Cg0BwbnpBjQnjdyD+5IqAvTmuS
-         SvZ/3UB/zIYUlDTn9IfyZpDgSyoXf5c1iePIMUhglh47buBlgsBdaMD5QBZP2a6kVa8E
-         BXBnONIu49AzYP++iG/BuGC/HB0fsXhOR2V6Behb5KFwJnZkKX11SwxbfdI23g2o6yBP
-         xzJu/o2PY7Oe+o3D96I24hi+QNCG3UvlMqHdCy1MYqVtBaDkkjGCPPAHr8Tidfq1EfJg
-         foss/z0f/dIMpPX3PgC3mqm9QU9PKL891nd/IPdVBfVUU+rGlct6BwP41wcdhjv3f2t2
-         C2+w==
-X-Gm-Message-State: AOJu0Yx5S/Mv3p76uJTb7UJYmxapdojg9Da/TuPQXb5mzgE1tjeAR0eg
-	oH3ggfVE8IGCUhlkow3N6geGdXl1RwFpPMpcUYKfEnXEnSZQSVeTSkRtykfGzVwqlqzFx63jAj/
-	0Z6mj
-X-Gm-Gg: ASbGncuZZZLXYl8utuIrtGD8ZQVhg55Iq+WFNT+rakOebfKdAMO31oI15Gmtt6lbce+
-	Xy2Uspl3DsDhxeXBGd3V5FIVIqHy1BMZvdyABFYtOpFOEzVPF4xlTS42mWrK7kwJHcW490GKHB8
-	2MVtxI/QIg9N/HTA/d+gp7mRBBxOGw1exFdKJNza8gYvF5kADtsLDvtvek9XRUB+q8QGrCMdpHz
-	BhCzKZPcka+PFlowATo9Y8ET0gutknzI2D68kdq/EbBd2moQOn2R+pzwaLktgFmU2jO21nGKAcb
-	AFOZiECESgo7BpscWKoGWaxUX4IrtmgI4rFjnCwveNwjfzOtF2MRTCMU6i79
-X-Google-Smtp-Source: AGHT+IHynsKdRvBN3oI9T3paL+PT9XlTomdzjUiaZnqBTmpFwlwV5yQgC4iGq19Rvnfsn48Yz8BXZQ==
-X-Received: by 2002:a17:90b:540c:b0:311:df4b:4b93 with SMTP id 98e67ed59e1d1-313b1ea41c8mr550768a91.7.1749594353931;
-        Tue, 10 Jun 2025 15:25:53 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:500::7:116a])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-236034059b3sm75234975ad.175.2025.06.10.15.25.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 15:25:53 -0700 (PDT)
-Date: Tue, 10 Jun 2025 15:25:53 -0700 (PDT)
-X-Google-Original-Date: Tue, 10 Jun 2025 15:18:32 PDT (-0700)
-Subject:     Re: [PATCH v1 1/1] riscv: fix runtime constant support for nommu kernels
-In-Reply-To: <20250530211422.784415-2-cmirabil@redhat.com>
-CC: linux-kernel@vger.kernel.org, Paul Walmsley <paul.walmsley@sifive.com>,
-  aou@eecs.berkeley.edu, Alexandre Ghiti <alex@ghiti.fr>, Charlie Jenkins <charlie@rivosinc.com>,
-  linux-riscv@lists.infradead.org (open list:RISC-V ARCHITECTURE), cmirabil@redhat.com
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: cmirabil@redhat.com
-Message-ID: <mhng-25801815-A406-4521-8A19-2F2B5E7AB30D@palmerdabbelt-mac>
+	dkim=pass (2048-bit key) header.d=maowtm.org header.i=@maowtm.org header.b="OIvzHK+K";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SzYUHwkp"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailflow.phl.internal (Postfix) with ESMTP id E19692002FE;
+	Tue, 10 Jun 2025 18:26:45 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-09.internal (MEProxy); Tue, 10 Jun 2025 18:26:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maowtm.org; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1749594405;
+	 x=1749601605; bh=TxAnDEWJjQsKX26bwE46ame44kXTPSaz+0UXyq1anCs=; b=
+	OIvzHK+K6Tfy6RB6U4Jns32ib4vRtt7zkMrmZPFB/IM29aKjcQTs22DFN1+JrMI0
+	NJe2io+254WdvKYyNYM/h0jHpcKX+7HjMa2wTAs1JexjcTaGChj9AgmDGoBTmF4Y
+	mP6SVWscVaNiSViTcEO8qhut6MMsUgFZ/1YCmxy7IcRwh4omDhFqtjQ5PRESfgBn
+	8YzAoytXOBLaDfXOF8zCmyzkFf9gTwp/GzD/bj9Ezcbuj1/Gz0DBgZtW0yFdkTfB
+	m0Lm4MDY9+Hz1UGy3OgDYmoFs8kHcHTvBgR7bOulRIHQ6HjgvCaIJWN/3RpL9NXu
+	ccJEh9DDbyh3asuksIrBcQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749594405; x=
+	1749601605; bh=TxAnDEWJjQsKX26bwE46ame44kXTPSaz+0UXyq1anCs=; b=S
+	zYUHwkpatPE5DmHQMXURlWceO6/Xr9241OzrPNC5wR4hDA1HQvwc87Fsal1Nejb7
+	hlSaNvKO/dmX1OKjHyIxI/5Zx4sgkcNmcDYsqiuPi9iQq3Jn+FuywMEHZxQ257jB
+	/Hd49YbsfUvmtHVWbyHIIo9Vgl6os97jmPv1t4eJA9R8S148zi0pZwQfzA7Y1WzF
+	HV3ADwxMB11tI5ZK7qCsb54Un9icIwYIYYL8NgZ8r5GS2iYAj6MbPlKe+7W+KZlZ
+	FtqOh3qHkspgIsvVe4xI91nm9ldTgyEKGI4VZXKiLl8yGHxlfApn7U19y83LjsCT
+	go3jMeqmxNRhwyxwkYwSA==
+X-ME-Sender: <xms:JLFIaKFnBAS5bR4XB4wiKssU2_fEjDwWRXYpfTLyiFggD6q4svqG-Q>
+    <xme:JLFIaLXhXBkxRePNPL1Bvc2wbOhI6cmJuGfSAceaw-2kkDGo9IE48cWogwcnD9EqQ
+    QO_Qvi5yO6kk8MQQH0>
+X-ME-Received: <xmr:JLFIaEIQkT-5YS7sYuUPvWGNPenACNYPPPKEAHrAS9QqF2SfqxN2Xr7fRaDssVcAJcZ8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduudeffecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefkffggfgfhuffvvehfjggtgfesthekredttddv
+    jeenucfhrhhomhepvfhinhhgmhgrohcuhggrnhhguceomhesmhgrohifthhmrdhorhhgqe
+    enucggtffrrghtthgvrhhnpedvgeduuefgudejgfdtteffudejjeelleeiudekueejudeh
+    tefghfegvdetveffueenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
+    hlfhhrohhmpehmsehmrghofihtmhdrohhrghdpnhgspghrtghpthhtohepvddvpdhmohgu
+    vgepshhmthhpohhuthdprhgtphhtthhopehsohhngheskhgvrhhnvghlrdhorhhgpdhrtg
+    hpthhtohepmhhitgesughighhikhhougdrnhgvthdprhgtphhtthhopegsphhfsehvghgv
+    rhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqfhhsuggvvhgvlhesvh
+    hgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhes
+    vhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhsvggtuhhrih
+    hthidqmhhoughulhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgv
+    rhhnvghlqdhtvggrmhesmhgvthgrrdgtohhmpdhrtghpthhtoheprghnughrihhisehkvg
+    hrnhgvlhdrohhrghdprhgtphhtthhopegvugguhiiikeejsehgmhgrihhlrdgtohhm
+X-ME-Proxy: <xmx:JLFIaEGkGuPc-ZHIo2fTCLBNjfrkcLmdcfLodzJyLOv2Af9sDeOdhA>
+    <xmx:JLFIaAUaGqiaWfBpvoWs-zuEgr6PS_sNpConKTnVXV_UAiDUOFjAaQ>
+    <xmx:JLFIaHMuANo8ROhHG_OEcaqpafbD87NO8KIXakg5IzDidkSPE0ueZw>
+    <xmx:JLFIaH2qcPoeib2UOGrqOx57u33HIi-kh-nlyNs8ec2RufFDK47HAQ>
+    <xmx:JbFIaKEOWGvRZRhdNbaTX6Iq_7XYUXUvezcGjKK8FHo00ftQBgTU2hFa>
+Feedback-ID: i580e4893:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 10 Jun 2025 18:26:42 -0400 (EDT)
+Message-ID: <d7d755ea-5942-440b-8154-21198cb6a0f1@maowtm.org>
+Date: Tue, 10 Jun 2025 23:26:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Tingmao Wang <m@maowtm.org>
+Subject: Re: [PATCH v3 bpf-next 1/5] namei: Introduce new helper function
+ path_walk_parent()
+To: Song Liu <song@kernel.org>, =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?=
+ <mic@digikod.net>
+Cc: bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+ kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org,
+ daniel@iogearbox.net, martin.lau@linux.dev, viro@zeniv.linux.org.uk,
+ brauner@kernel.org, jack@suse.cz, kpsingh@kernel.org,
+ mattbobrowski@google.com, amir73il@gmail.com, repnop@google.com,
+ jlayton@kernel.org, josef@toxicpanda.com, gnoack@google.com
+References: <20250606213015.255134-1-song@kernel.org>
+ <20250606213015.255134-2-song@kernel.org> <20250610.rox7aeGhi7zi@digikod.net>
+ <CAPhsuW5G0Th+9dRSmxDjo5E7CxV1E9N8AiKjw3cKyEhOBVWJFw@mail.gmail.com>
+Content-Language: en-US
+In-Reply-To: <CAPhsuW5G0Th+9dRSmxDjo5E7CxV1E9N8AiKjw3cKyEhOBVWJFw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On Fri, 30 May 2025 14:14:22 PDT (-0700), cmirabil@redhat.com wrote:
-> the `__runtime_fixup_32` function does not handle the case where `val` is
-> zero correctly (as might occur when patching a nommu kernel and referring
-> to a physical address below the 4GiB boundary whose upper 32 bits are all
-> zero) because nothing in the existing logic prevents the code from taking
-> the `else` branch of both nop-checks and emitting two `nop` instructions.
->
-> This leaves random garbage in the register that is supposed to receive the
-> upper 32 bits of the pointer instead of zero that when combined with the
-> value for the lower 32 bits yields an invalid pointer and causes a kernel
-> panic when that pointer is eventually accessed.
->
-> The author clearly considered the fact that if the `lui` is converted into
-> a `nop` that the second instruction needs to be adjusted to become an `li`
-> instead of an `addi`, hence introducing the `addi_insn_mask` variable, but
-> didn't follow that logic through fully to the case where the `else` branch
-> executes. To fix it just adjust the logic to ensure that the second `else`
-> branch is not taken if the first instruction will be patched to a `nop`.
->
-> Fixes: a44fb5722199 ("riscv: Add runtime constant support")
->
-> Signed-off-by: Charles Mirabile <cmirabil@redhat.com>
-> ---
->  arch/riscv/include/asm/runtime-const.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/riscv/include/asm/runtime-const.h b/arch/riscv/include/asm/runtime-const.h
-> index 451fd76b8811..d766e2b9e6df 100644
-> --- a/arch/riscv/include/asm/runtime-const.h
-> +++ b/arch/riscv/include/asm/runtime-const.h
-> @@ -206,7 +206,7 @@ static inline void __runtime_fixup_32(__le16 *lui_parcel, __le16 *addi_parcel, u
->  		addi_insn_mask &= 0x07fff;
->  	}
->
-> -	if (lower_immediate & 0x00000fff) {
-> +	if (lower_immediate & 0x00000fff || lui_insn == RISCV_INSN_NOP4) {
->  		/* replace upper 12 bits of addi with lower 12 bits of val */
->  		addi_insn &= addi_insn_mask;
->  		addi_insn |= (lower_immediate & 0x00000fff) << 20;
+On 6/10/25 18:26, Song Liu wrote:
+> On Tue, Jun 10, 2025 at 10:19 AM Mickaël Salaün <mic@digikod.net> wrote:
+>>
+>> On Fri, Jun 06, 2025 at 02:30:11PM -0700, Song Liu wrote:
+>>> [...]
+>>> + * Returns:
+>>> + *  true  - if @path is updated to its parent.
+>>> + *  false - if @path is already the root (real root or @root).
+>>> + */
+>>> +bool path_walk_parent(struct path *path, const struct path *root)
+>>> +{
+>>> +     struct dentry *parent;
+>>> +
+>>> +     if (path_equal(path, root))
+>>> +             return false;
+>>> +
+>>> +     if (unlikely(path->dentry == path->mnt->mnt_root)) {
+>>> +             struct path p;
+>>> +
+>>> +             if (!choose_mountpoint(real_mount(path->mnt), root, &p))
+>>> +                     return false;
+>>> +             path_put(path);
+>>> +             *path = p;
+>>> +     }
+>>> +
+>>> +     if (unlikely(IS_ROOT(path->dentry)))
+>>
+>> path would be updated while false is returned, which is not correct.
+> 
+> Good catch.. How about the following:
+> 
+> bool path_walk_parent(struct path *path, const struct path *root)
+> {
+>         struct dentry *parent;
+>         bool ret = false;
+> 
+>         if (path_equal(path, root))
+>                 return false;
+> 
+>         if (unlikely(path->dentry == path->mnt->mnt_root)) {
+>                 struct path p;
+> 
+>                 if (!choose_mountpoint(real_mount(path->mnt), root, &p))
+>                         return false;
+>                 path_put(path);
+>                 *path = p;
+>                 ret = true;
+>         }
+> 
+>         if (unlikely(IS_ROOT(path->dentry)))
+>                 return ret;
 
-Thanks.  This looks reasonable to me, so I've stuck it on fixes -- I'm 
-still sorting out some post-merge-window cruft, so it might take a bit 
-to show up for real.
+Returning true here would be the wrong semantic right?  This whole thing
+is only possible when some mount shadows "/".  Say if you have a landlock
+rule on the old "/", but then we mount a new "/" and chroot into it (via
+"/.."), the landlock rule on the old "/" should not apply, but if we
+change *path and return true here then this will "expose" that old "/" to
+landlock.
+
+A quick suggestion although I haven't tested anything - maybe we should do
+a special case check for IS_ROOT inside the
+    if (unlikely(path->dentry == path->mnt->mnt_root))
+? Before "path_put(path);", if IS_ROOT(p.dentry) then we just path_get(p)
+and return false.
+
+> 
+>         parent = dget_parent(path->dentry);
+>         dput(path->dentry);
+>         path->dentry = parent;
+>         return true;
+> }
+> 
+> Thanks,
+> Song
+
