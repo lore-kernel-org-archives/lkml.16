@@ -1,97 +1,127 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A66C21FF55;
-	Tue, 10 Jun 2025 10:16:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DBB9283121
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 10:17:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749550613; cv=none; b=pXmDTOdYn//NHlgBzIjVepMw4A68wz6jwxP5L6/Iuds+49CHEFy9DohrTLxBOskXx68hiKCIgKkh/KKOTxY7s1c39TMr0N3qmuWFM6DY1QueJL0dKi1ACma6MFqrk2E1VGgZOqL9zN9I/rIduhb58f/HRr+ydQj+Ta6m9OGIpGs=
+	t=1749550661; cv=none; b=qqleNAkHKyoSGnSBUBVi94PPw9wl+qtB2ebfHxiVu3siKZpa0KBFQYnunZdKCh5fGyUvshwnMs5IO90MCZ5034430ccVXuQxsmpy9w1IoKW+hjREwXM2BhXkKRvFGHeI0rkg/uGb2o1evNCCLTj8MPip9nclVcKDOryWK4m0B8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749550613; c=relaxed/simple;
-	bh=UUKpD09dHui4C4fVtz7ec5/TcctLfFsmGhQ+qO4+hGE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z73UuCcxPELKRr6ABDxa8wI3wsgvjMmokPxEjnjHlT4W/FlpULCzXZZ1WYFvZ7D8O+duWu0gBUTmOiFWU5c49S7w1CZqDwHtRGCDX0HSMLFKgjC7BpwBrwngOJ5QPzo1RFmS48Yc5xbeNzsZu9GO5fE5vUvQaoyQHDEpNMGInLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QMM1aMQJ; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749550661; c=relaxed/simple;
+	bh=dDDNfBinN8PAMwqLA5OJNpKoERFQz6yp9KWAM79txZU=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Dw/sRilwA5taSUIU2N/ohUhoXZVCilCV9z9xG/x5DZKy7IUM50Pko/PwMYFAMDUf/tBepidj0eamXc/w7dzELGjAq7uZRJclu8K9mZuWOdgFBexmEUP/jgXGCU0GfrM2DnRCetR6ml7Y+9xkGoS/dqtk6GSOzFbr5tlhcdXmgBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=neon.tech; spf=pass smtp.mailfrom=neon.tech; dkim=pass (1024-bit key) header.d=neon.tech header.i=@neon.tech header.b=gsK4CrBa; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=neon.tech
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neon.tech
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QMM1aMQJ"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-235db423abdso6412725ad.1;
-        Tue, 10 Jun 2025 03:16:51 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=neon.tech header.i=@neon.tech header.b="gsK4CrBa"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-607ea238c37so4723547a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 03:17:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749550611; x=1750155411; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UUKpD09dHui4C4fVtz7ec5/TcctLfFsmGhQ+qO4+hGE=;
-        b=QMM1aMQJtT2uTs3UxjQSmmheeralkBoUCTuGiaFuLO9HKTy+OcSkGtBpNUE96gawwe
-         1dOchvLFlPvOIZWQSnU1BwGWjwdzWSRULmBmvGosYRxfwSg0tD55bJiqV2Wk9bcfdrt2
-         W2inQr9ZYjmXEkcENyTGtcKuXkco/iQ2a9G/c8Cb94obBYsv5yCf3njL6pa3G4xOkRbG
-         pPlp1iW+9FVp78QPBqzVFT4kKCO+bF8zJyeqMV4FsKM+ABv0FyKy+As22dsua95+oUG+
-         iJweeRMedV5fB7adC4iTMeFrWdTM9kqQB+RPuOZC/fO1iju4Ze8W36yUdP5TnQ9pg6OM
-         lu2A==
+        d=neon.tech; s=google; t=1749550658; x=1750155458; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=MdXAoe13GikYW3/JVVfkOpgxOfq/BMWnCOBM8bUopok=;
+        b=gsK4CrBaOwxFmvjJ+xZF/fT7RoXxPU+8x+RC9s+ZtzL+6afaq/CLYSreaJJ6topzXX
+         dzl8Kh6F24CwJJbMNZBAdoXr5Kzu5pocHspsg2cdjVH5+j/zkzlDV1jvOL6gR3M9D+bn
+         ECaT27Y8nrVhN+zL+c+cPiGsL2EH/Du5ofn3E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749550611; x=1750155411;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UUKpD09dHui4C4fVtz7ec5/TcctLfFsmGhQ+qO4+hGE=;
-        b=mEDV3aDMh4B/u5mHCb92EKP1xfaxu+eM6n/pJMBNjNT9UkvrS2rSNtvOKxgDyL9K6q
-         A2yL0VLVCDmVcKO2WMWFvPqzeR3KA6uzZEDVqm1SpgAixSKitY1j4HAbgBG3G1Iw9aQg
-         Gp5YQqURVD1TEValdko9k/4ktue4WfF1fzPIuhNv/RLCBBPnHCwsfWi7zN5aFXUaL3bS
-         Jn/pVOKBUAEn+aKrXCdBSoTgxJARpo+qaRXPDXgJyP/WzK8KgvhWGWx+1sYy3K54oDW3
-         zNoV9vN+IvwUjglWOU+WlN4c/BIfFkVRyoOu5lA+EYRghli5FwsasX3kpJHyitOIw+hQ
-         41nw==
-X-Forwarded-Encrypted: i=1; AJvYcCU0LVxo3pYypuCO2UDqkqsA6j+nIht0Pa2vZkiHDP56FRAT3nA8dVRlSPYtKrTYYhwqt+ILfL2lgQRRRRAtb8g=@vger.kernel.org, AJvYcCWxXUKBzRFjZ/KcJnNYDaw35f1AiOj//kFm0eSgkBSLKpJwmDM8i/Jawj9M0OzuyKuoy/8VRoD4S+tGv5o=@vger.kernel.org, AJvYcCXi6P932JAhd/atAJFNKTOt/sTOPcF/chUVanWyDkXUzUXiyx79/sq4J81mAk3dKgNcSO1dXM71qrc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIg3LwXkYjbOF7uRY+bh978WObK9nQGXUJLMu/HneuZvHsEuc/
-	GG7G8qOb5pHY/wGn5pATNQEBkJ6nEf4FXDtmiFwsQP+pomFcOTv2WH1mJph+zgbyLP0i4WY+eF9
-	kcrbLhPgaqLJXTmVNdwI9Xsdo+rnaQrw=
-X-Gm-Gg: ASbGnctrC0oI5sjWBqoNkM/AXYhk4DR8civuJOOUtb4fcj3BrTm/iY2dKTiGcs/lSNw
-	9J6iKsIRW1GUZj77es81UkaSgxExNRlngkvk9aKjUQ+rYJHjaJs0qWe7eTdXFb2Map4aNRczfiO
-	638nKbjqm+g7WTzC20Xb+sghrI8eyMjxooPrtU1gKLt+A=
-X-Google-Smtp-Source: AGHT+IGjNe4w/TZWClCQSXCO0edDTMBkbQhOnY+c8pbDSn5UW9W4Wf46Bs/AhhcRk7i4bblmszBZ6m7JuEbjAxmj0uM=
-X-Received: by 2002:a17:902:ce85:b0:234:adce:3ea4 with SMTP id
- d9443c01a7336-23601da9a61mr93668205ad.10.1749550611325; Tue, 10 Jun 2025
- 03:16:51 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749550658; x=1750155458;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MdXAoe13GikYW3/JVVfkOpgxOfq/BMWnCOBM8bUopok=;
+        b=prOsavK8rR3qxFQRmJjRje80GDkpQTxXa+1eTX1vS7ptIHb+9dgFk3lZnzYh2p1vFt
+         tdBpaxagmUHX9LGavIVqIUonqFk7kNkGG2mXOZYDbpLSW+sfJ7pt1/Oh/zJKYlGBCRwj
+         pz+SKz+f7Z4/NeTdJq61uUhb53JpFhvt/kqGTafTSfojD3b2EUZUTEO8QIM181lh8CZ7
+         xC6qsavMIIX5cts93aOg12zaE7oTXaTRxA3Rrm3d9RCw3xia8DnH0vVXJ/RLkRqyXKsp
+         g0wv2yx52e3rwrFtCPOKXEHbo+l1kLw523CMMTIzOugu6ykEoppI7v8dGIkFjdPGEw+4
+         vZWg==
+X-Gm-Message-State: AOJu0YwKU85YR7gVEoJG6A0jJJ6RXZjnBjI3cqsOo0Hj7ldXA/tg8qJb
+	4vdCBv6w8vp7q8cyj2OCDtXfCtNny8i8Zm8Slwo5i06FkPHmBMDE9rAfLNYoUFvKM9opyYzetMN
+	3SzBqdFbGkw==
+X-Gm-Gg: ASbGncuJTT/pTaWBFfjwJvLhcKTQUAD4yP1d3FswaUfdVm4VABbBCG7ceKRBv9dNC3T
+	SLN4jVbsu4XQ/0XrgYmOUyUlP/w5mBkFY/bqT5HfGRJcL9Wu1zok1ZUtlB6dG0w0h4D7wqHDFk2
+	rk4hievHp1483f66n8t1JaXfKlUl4XD5EB1xCf4LHJ5RY7NJN0S5Ad3jK1OjKs0qDu52oeRh5y4
+	9jnnax/JwTgspUTXboluXU8LHl6mdr4h/hxtT61Z1dhQvuE/0dmiWJ/2vEI4EeoP16r9aG7l92Q
+	SyPrQVN4NeMPMd5VAPlsEysX+5bxW+/LHrznCIsWQ1MUkxQUyBhbYlnO2we4tmG73A==
+X-Google-Smtp-Source: AGHT+IEBICJlJWbKgkwUwtxDPeNS/LZyZLquBPse/trluqTy6pSNdxV8h8W68MABHGTpCpR+5A/3gQ==
+X-Received: by 2002:a05:6402:5249:b0:606:f37b:7ed1 with SMTP id 4fb4d7f45d1cf-607748987e0mr13057422a12.21.1749550658244;
+        Tue, 10 Jun 2025 03:17:38 -0700 (PDT)
+Received: from [192.168.86.142] ([84.65.228.220])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6077836fed7sm6043562a12.7.2025.06.10.03.17.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Jun 2025 03:17:37 -0700 (PDT)
+Message-ID: <92894a9b-3088-4cf7-83bb-ea7382a35d82@neon.tech>
+Date: Tue, 10 Jun 2025 11:17:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250609122200.179307-1-trintaeoitogc@gmail.com>
- <DAIQ9342ZFYD.3VQVI80A18HKX@kernel.org> <CANiq72kC1j-kprAQ5WU0QVV_zhyKfDPJ_M5E9xZ+8+fxt4R6qQ@mail.gmail.com>
- <DAIRU9INPO8A.1PLCLKFJJGODH@kernel.org>
-In-Reply-To: <DAIRU9INPO8A.1PLCLKFJJGODH@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 10 Jun 2025 12:16:36 +0200
-X-Gm-Features: AX0GCFvnab1QEUDa9dFfE8CNMQFcfiIoOKuRWyWSIv2LB_UaenukRWb6fdKCArM
-Message-ID: <CANiq72kORZjTe3tPEBueDi57TGF7KfxgTSw4Tn0DQeK_X5hi5A@mail.gmail.com>
-Subject: Re: [PATCH] rust: module: remove deprecated author key
-To: Benno Lossin <lossin@kernel.org>
-Cc: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>, rafael@kernel.org, viresh.kumar@linaro.org, 
-	dakr@kernel.org, maarten.lankhorst@linux.intel.com, mripard@kernel.org, 
-	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, mcgrof@kernel.org, 
-	russ.weight@linux.dev, ojeda@kernel.org, alex.gaynor@gmail.com, 
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, 
-	leitao@debian.org, gregkh@linuxfoundation.org, david.m.ertman@intel.com, 
-	ira.weiny@intel.com, leon@kernel.org, fujita.tomonori@gmail.com, 
-	tamird@gmail.com, igor.korotin.linux@gmail.com, walmeida@microsoft.com, 
-	anisse@astier.eu, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: [PATCH v3 2/2] x86/mm: Use GFP_KERNEL for alloc_low_pages() after
+ boot
+From: Em Sharnoff <sharnoff@neon.tech>
+To: linux-kernel@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org
+Cc: Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
+ <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+ "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+ Oleg Vasilev <oleg@neon.tech>, Arthur Petukhovsky <arthur@neon.tech>,
+ Stefan Radig <stefan@neon.tech>, Misha Sakhnov <misha@neon.tech>
+References: <a31e3b89-5040-4426-9ce8-d674b8554aa1@neon.tech>
+Content-Language: en-US
+In-Reply-To: <a31e3b89-5040-4426-9ce8-d674b8554aa1@neon.tech>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 10, 2025 at 12:12=E2=80=AFPM Benno Lossin <lossin@kernel.org> w=
-rote:
+Currently it's GFP_ATOMIC. GFP_KERNEL seems more correct.
+
+From Ingo M. [1]
+
+> There's no real reason why it should be GFP_ATOMIC AFAICS, other than
+> some historic inertia that nobody bothered to fix.
+
+and previously Mike R. [2]
+
+> The few callers that effectively use page allocator for the direct map
+> updates are gart_iommu_init() and memory hotplug. Neither of them
+> happen in an atomic context so there is no reason to use GFP_ATOMIC
+> for these allocations.
 >
-> Hmm, I guess a checkpatch lint fits better then?
+> Replace GFP_ATOMIC with GFP_KERNEL to avoid using atomic reserves for
+> allocations that do not require that.
 
-Yeah, that would work.
+[1]: https://lore.kernel.org/all/aEE6_S2a-1tk1dtI@gmail.com/
+[2]: https://lore.kernel.org/all/20211111110241.25968-5-rppt@kernel.org/
 
-Probably for the C side too -- from a quick grep I don't see it.
+Signed-off-by: Em Sharnoff <sharnoff@neon.tech>
+---
+Changelog:
+- v2: Add this patch
+- v3: No changes
+---
+ arch/x86/mm/init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Cheers,
-Miguel
+diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+index a2665b6fe376..3a25cd9e9076 100644
+--- a/arch/x86/mm/init.c
++++ b/arch/x86/mm/init.c
+@@ -131,7 +131,7 @@ __ref void *alloc_low_pages(unsigned int num)
+ 		unsigned int order;
+ 
+ 		order = get_order((unsigned long)num << PAGE_SHIFT);
+-		return (void *)__get_free_pages(GFP_ATOMIC | __GFP_ZERO, order);
++		return (void *)__get_free_pages(GFP_KERNEL | __GFP_ZERO, order);
+ 	}
+ 
+ 	if ((pgt_buf_end + num) > pgt_buf_top || !can_use_brk_pgt) {
+-- 
+2.39.5
+
