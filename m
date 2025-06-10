@@ -1,180 +1,80 @@
-Received: from flow-a2-smtp.messagingengine.com (flow-a2-smtp.messagingengine.com [103.168.172.137])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03991242D7D;
-	Tue, 10 Jun 2025 22:26:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.137
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E15E197A88;
+	Tue, 10 Jun 2025 22:28:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749594409; cv=none; b=icAlwjLQfWnjsaQRxmzpxtIRvypZ71RuSBna50yMdhghoMhCdt446SGyVZY38URZcPTKFOQa7TA++0hZdMOE2VnCsgzblm3H18r3RqUNO9UxoNGHkbC6mTcUm4ORtLMIRpOUGssNGAcPtHKqmTny03t+xfqSaSM7xQuT2KHoqhM=
+	t=1749594528; cv=none; b=STxGPOdYKtdKX1r0fRluBQrMFQ4T5SZz+Pa36vVewyQwXYQMFfoCw5BBurkOLz34gcGWZh0gByJmMq8ryM77c4TYxzUCi0qiBIjXLJg7reXaVJ3dTyRHQDvt3Nialrr+TAf2vj4h8DS4wNTEmV+w/JDg8T8HhPnLFqamC52nFFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749594409; c=relaxed/simple;
-	bh=n8Q4u2oeyOV/7+exq8azslKtTa2cYnR5fxSWc0KScxc=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=EeX7eE3y5VoB18jp6S6rH0nS5zM1OALG1cp+6Ve3vWae4nNzeNwSFLRVptbjxDS2aWaBnG2NBALlQFiyag4pTxI9VGh9Q9orZNgA9rGg+tEWCtMMkM2erlCAyQReZTlt3XiDzn/q1oNP8Zqo7//oRTI2UwsZgrjWvxxtQ+PUY34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=maowtm.org; spf=pass smtp.mailfrom=maowtm.org; dkim=pass (2048-bit key) header.d=maowtm.org header.i=@maowtm.org header.b=OIvzHK+K; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=SzYUHwkp; arc=none smtp.client-ip=103.168.172.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=maowtm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maowtm.org
+	s=arc-20240116; t=1749594528; c=relaxed/simple;
+	bh=glSB2G/oGANGnauIPzHZT4WfObIz737+humylOVK+10=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ojFpYDtpTDFbPIML7zVv6MNwgc/t3DgsBGxwjU0Ud4HQAU2aI3jrwyhHvBwXBtplOzYLZ5c8c8AsNqFHoJ1pQczhXdezyVOrAFamXoVxAsu2zYVT3F9Kprp7WeCRWvESy9W4N9MNWQAf5cv9pjzrZvuwaHGlOXq8ZgB83pZ8npU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qtzqqcuw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=maowtm.org header.i=@maowtm.org header.b="OIvzHK+K";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SzYUHwkp"
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailflow.phl.internal (Postfix) with ESMTP id E19692002FE;
-	Tue, 10 Jun 2025 18:26:45 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-09.internal (MEProxy); Tue, 10 Jun 2025 18:26:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maowtm.org; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1749594405;
-	 x=1749601605; bh=TxAnDEWJjQsKX26bwE46ame44kXTPSaz+0UXyq1anCs=; b=
-	OIvzHK+K6Tfy6RB6U4Jns32ib4vRtt7zkMrmZPFB/IM29aKjcQTs22DFN1+JrMI0
-	NJe2io+254WdvKYyNYM/h0jHpcKX+7HjMa2wTAs1JexjcTaGChj9AgmDGoBTmF4Y
-	mP6SVWscVaNiSViTcEO8qhut6MMsUgFZ/1YCmxy7IcRwh4omDhFqtjQ5PRESfgBn
-	8YzAoytXOBLaDfXOF8zCmyzkFf9gTwp/GzD/bj9Ezcbuj1/Gz0DBgZtW0yFdkTfB
-	m0Lm4MDY9+Hz1UGy3OgDYmoFs8kHcHTvBgR7bOulRIHQ6HjgvCaIJWN/3RpL9NXu
-	ccJEh9DDbyh3asuksIrBcQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749594405; x=
-	1749601605; bh=TxAnDEWJjQsKX26bwE46ame44kXTPSaz+0UXyq1anCs=; b=S
-	zYUHwkpatPE5DmHQMXURlWceO6/Xr9241OzrPNC5wR4hDA1HQvwc87Fsal1Nejb7
-	hlSaNvKO/dmX1OKjHyIxI/5Zx4sgkcNmcDYsqiuPi9iQq3Jn+FuywMEHZxQ257jB
-	/Hd49YbsfUvmtHVWbyHIIo9Vgl6os97jmPv1t4eJA9R8S148zi0pZwQfzA7Y1WzF
-	HV3ADwxMB11tI5ZK7qCsb54Un9icIwYIYYL8NgZ8r5GS2iYAj6MbPlKe+7W+KZlZ
-	FtqOh3qHkspgIsvVe4xI91nm9ldTgyEKGI4VZXKiLl8yGHxlfApn7U19y83LjsCT
-	go3jMeqmxNRhwyxwkYwSA==
-X-ME-Sender: <xms:JLFIaKFnBAS5bR4XB4wiKssU2_fEjDwWRXYpfTLyiFggD6q4svqG-Q>
-    <xme:JLFIaLXhXBkxRePNPL1Bvc2wbOhI6cmJuGfSAceaw-2kkDGo9IE48cWogwcnD9EqQ
-    QO_Qvi5yO6kk8MQQH0>
-X-ME-Received: <xmr:JLFIaEIQkT-5YS7sYuUPvWGNPenACNYPPPKEAHrAS9QqF2SfqxN2Xr7fRaDssVcAJcZ8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduudeffecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefkffggfgfhuffvvehfjggtgfesthekredttddv
-    jeenucfhrhhomhepvfhinhhgmhgrohcuhggrnhhguceomhesmhgrohifthhmrdhorhhgqe
-    enucggtffrrghtthgvrhhnpedvgeduuefgudejgfdtteffudejjeelleeiudekueejudeh
-    tefghfegvdetveffueenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
-    hlfhhrohhmpehmsehmrghofihtmhdrohhrghdpnhgspghrtghpthhtohepvddvpdhmohgu
-    vgepshhmthhpohhuthdprhgtphhtthhopehsohhngheskhgvrhhnvghlrdhorhhgpdhrtg
-    hpthhtohepmhhitgesughighhikhhougdrnhgvthdprhgtphhtthhopegsphhfsehvghgv
-    rhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqfhhsuggvvhgvlhesvh
-    hgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhes
-    vhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhsvggtuhhrih
-    hthidqmhhoughulhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgv
-    rhhnvghlqdhtvggrmhesmhgvthgrrdgtohhmpdhrtghpthhtoheprghnughrihhisehkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopegvugguhiiikeejsehgmhgrihhlrdgtohhm
-X-ME-Proxy: <xmx:JLFIaEGkGuPc-ZHIo2fTCLBNjfrkcLmdcfLodzJyLOv2Af9sDeOdhA>
-    <xmx:JLFIaAUaGqiaWfBpvoWs-zuEgr6PS_sNpConKTnVXV_UAiDUOFjAaQ>
-    <xmx:JLFIaHMuANo8ROhHG_OEcaqpafbD87NO8KIXakg5IzDidkSPE0ueZw>
-    <xmx:JLFIaH2qcPoeib2UOGrqOx57u33HIi-kh-nlyNs8ec2RufFDK47HAQ>
-    <xmx:JbFIaKEOWGvRZRhdNbaTX6Iq_7XYUXUvezcGjKK8FHo00ftQBgTU2hFa>
-Feedback-ID: i580e4893:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 10 Jun 2025 18:26:42 -0400 (EDT)
-Message-ID: <d7d755ea-5942-440b-8154-21198cb6a0f1@maowtm.org>
-Date: Tue, 10 Jun 2025 23:26:41 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qtzqqcuw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B306C4CEED;
+	Tue, 10 Jun 2025 22:28:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749594527;
+	bh=glSB2G/oGANGnauIPzHZT4WfObIz737+humylOVK+10=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=QtzqqcuwGJjqSN7V+WmZM18z7dxfbijv9iSnPv1S+t9UmCaF+FNGQbQfSlKjehJtV
+	 /1OEG93XiigM2xivO2UOxDM2pGFeKHyrHKtfuePn5XgGjsM2/tHSOoBqyPrFBUY7Ie
+	 pOXLoquTnniTFXMc96i35g3H6YOlQdFgW2c024t5c8U4YUMV6kGCUT3v/R1VGLiY1K
+	 tHtNBvt5j+mmjmmP5d7IhVsXl41f+J7hJ3rVtCb2+4Wcuke+ab9gw28m5UrukdZDXl
+	 wBca/M7r6UDmqBql32AJ2A4Hkv222FiRciTUHwuZVNhP9ybUI7GXfirLV6xn6Xd3wj
+	 PzOvyY78N8MZA==
+Date: Wed, 11 Jun 2025 00:28:44 +0200 (CEST)
+From: Jiri Kosina <jikos@kernel.org>
+To: Ping Cheng <pinglinux@gmail.com>
+cc: stable@kernel.org, Thomas Zeitlhofer <thomas.zeitlhofer+lkml@ze-it.at>, 
+    Jason Gerecke <jason.gerecke@wacom.com>, 
+    Benjamin Tissoires <bentiss@kernel.org>, 
+    Josh Dickens <joshua.dickens@wacom.com>, 
+    Tatsunosuke Tobita <tatsunosuke.wacom@gmail.com>, 
+    Aaron Skomra <aaron.skomra@wacom.com>, linux-input@vger.kernel.org, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] HID: wacom: fix crash in wacom_aes_battery_handler()
+In-Reply-To: <CAF8JNhKjXH+zD6-b=ym+Y8SPwPEUdUu+r8k25FBefYg+aEi6JQ@mail.gmail.com>
+Message-ID: <n1375n01-ons7-4766-8q99-p5on1691q2rr@xreary.bet>
+References: <aCrx1iRQ-9tXiyJp@x1.ze-it.at> <p4917005-n9n1-0577-q49n-o9639pos5o44@xreary.bet> <CAF8JNhKjXH+zD6-b=ym+Y8SPwPEUdUu+r8k25FBefYg+aEi6JQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Tingmao Wang <m@maowtm.org>
-Subject: Re: [PATCH v3 bpf-next 1/5] namei: Introduce new helper function
- path_walk_parent()
-To: Song Liu <song@kernel.org>, =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?=
- <mic@digikod.net>
-Cc: bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
- kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org,
- daniel@iogearbox.net, martin.lau@linux.dev, viro@zeniv.linux.org.uk,
- brauner@kernel.org, jack@suse.cz, kpsingh@kernel.org,
- mattbobrowski@google.com, amir73il@gmail.com, repnop@google.com,
- jlayton@kernel.org, josef@toxicpanda.com, gnoack@google.com
-References: <20250606213015.255134-1-song@kernel.org>
- <20250606213015.255134-2-song@kernel.org> <20250610.rox7aeGhi7zi@digikod.net>
- <CAPhsuW5G0Th+9dRSmxDjo5E7CxV1E9N8AiKjw3cKyEhOBVWJFw@mail.gmail.com>
-Content-Language: en-US
-In-Reply-To: <CAPhsuW5G0Th+9dRSmxDjo5E7CxV1E9N8AiKjw3cKyEhOBVWJFw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-On 6/10/25 18:26, Song Liu wrote:
-> On Tue, Jun 10, 2025 at 10:19 AM Mickaël Salaün <mic@digikod.net> wrote:
->>
->> On Fri, Jun 06, 2025 at 02:30:11PM -0700, Song Liu wrote:
->>> [...]
->>> + * Returns:
->>> + *  true  - if @path is updated to its parent.
->>> + *  false - if @path is already the root (real root or @root).
->>> + */
->>> +bool path_walk_parent(struct path *path, const struct path *root)
->>> +{
->>> +     struct dentry *parent;
->>> +
->>> +     if (path_equal(path, root))
->>> +             return false;
->>> +
->>> +     if (unlikely(path->dentry == path->mnt->mnt_root)) {
->>> +             struct path p;
->>> +
->>> +             if (!choose_mountpoint(real_mount(path->mnt), root, &p))
->>> +                     return false;
->>> +             path_put(path);
->>> +             *path = p;
->>> +     }
->>> +
->>> +     if (unlikely(IS_ROOT(path->dentry)))
->>
->> path would be updated while false is returned, which is not correct.
-> 
-> Good catch.. How about the following:
-> 
-> bool path_walk_parent(struct path *path, const struct path *root)
-> {
->         struct dentry *parent;
->         bool ret = false;
-> 
->         if (path_equal(path, root))
->                 return false;
-> 
->         if (unlikely(path->dentry == path->mnt->mnt_root)) {
->                 struct path p;
-> 
->                 if (!choose_mountpoint(real_mount(path->mnt), root, &p))
->                         return false;
->                 path_put(path);
->                 *path = p;
->                 ret = true;
->         }
-> 
->         if (unlikely(IS_ROOT(path->dentry)))
->                 return ret;
+On Tue, 10 Jun 2025, Ping Cheng wrote:
 
-Returning true here would be the wrong semantic right?  This whole thing
-is only possible when some mount shadows "/".  Say if you have a landlock
-rule on the old "/", but then we mount a new "/" and chroot into it (via
-"/.."), the landlock rule on the old "/" should not apply, but if we
-change *path and return true here then this will "expose" that old "/" to
-landlock.
-
-A quick suggestion although I haven't tested anything - maybe we should do
-a special case check for IS_ROOT inside the
-    if (unlikely(path->dentry == path->mnt->mnt_root))
-? Before "path_put(path);", if IS_ROOT(p.dentry) then we just path_get(p)
-and return false.
-
+> > > Commit fd2a9b29dc9c ("HID: wacom: Remove AES power_supply after extended
+> > > inactivity") introduced wacom_aes_battery_handler() which is scheduled
+> > > as a delayed work (aes_battery_work).
+> > >
+> > > In wacom_remove(), aes_battery_work is not canceled. Consequently, if
+> > > the device is removed while aes_battery_work is still pending, then hard
+> > > crashes or "Oops: general protection fault..." are experienced when
+> > > wacom_aes_battery_handler() is finally called. E.g., this happens with
+> > > built-in USB devices after resume from hibernate when aes_battery_work
+> > > was still pending at the time of hibernation.
+> > >
+> > > So, take care to cancel aes_battery_work in wacom_remove().
+> > >
+> > > Fixes: fd2a9b29dc9c ("HID: wacom: Remove AES power_supply after extended inactivity")
+> > > Signed-off-by: Thomas Zeitlhofer <thomas.zeitlhofer+lkml@ze-it.at>
 > 
->         parent = dget_parent(path->dentry);
->         dput(path->dentry);
->         path->dentry = parent;
->         return true;
-> }
+> Acked-by: Ping Cheng <ping.cheng@wacom.com>
 > 
-> Thanks,
-> Song
+> Thank you, Thomas, for the patch. Your support is greatly appreciated!
+
+Excellent, thanks. Now queued in hid.git#for-6.16/upstream-fixes.
+
+Thanks,
+
+-- 
+Jiri Kosina
+SUSE Labs
 
