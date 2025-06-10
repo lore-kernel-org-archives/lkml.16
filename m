@@ -1,209 +1,181 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4578428DF0E
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 11:07:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015DC28DF0E;
+	Tue, 10 Jun 2025 11:07:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749553649; cv=none; b=No3x3k9Eagi6hBiB4qdiEyODDmFbsGb8nTOsf9nTyi9E2fuWUlQgin/RVhngiqgYwhspKi+J8mE8Y3HsyndHjjxWek+tAS80n42lmR5DKJOSZjG5ymR1gaWUdqhmql8TSQF4GmchWK1jqPrjg0ZK8ax7QE0GxFTMs/ZCTzb+cK0=
+	t=1749553661; cv=none; b=qjmN0b2eDOc0b5kFkYcVIsslJIdl93le3wdZSiP0R6O0kUR/YIqxcmYAGdD+HVclQSlL9lJYeeG/77XqaPL9x8Nz6Vf5tdsCV+WRB3b38iW4D1mvM73PraXkmctqq8ZfXdx2/C7RApMVMChj0lhxJ4qHRI/mfVmLNK2bFfAqEDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749553649; c=relaxed/simple;
-	bh=UPlSsOeQrv5JUW5Lfe0X5nkvCTI9hlUwH96nurL1irc=;
+	s=arc-20240116; t=1749553661; c=relaxed/simple;
+	bh=5WyJDjOsacc1tyrhglR5f00AB2huMpl9kWaITwLH2gs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mKxmV32YQxGfD7mBNbDlw1IqLfhYEPtjCm9lYQxc/iYZ4mjpLRH6hl1huyt3VxuluneAYDhNKqduNB74q22T57YiReJLPX0FMYmHH/waCcmcYgPh8Cj5Kz4o7UHHYnWEbFBtFqHJmPb23lBlT75mIP3uCT43cOOoHq9s1F7MCeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ozUwuk4p; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=uOa9DNu7g9yS7nRYN91fzLbFj69mR919Ok/mEhQ3fKI5sigeKY82ixczBXM0yudi+tHJ/+4f5K3E+yGUJFkpgkSHZsDZONj2QXtZaNHyvmKicwyJZeqqiCp9yJuTd2yWSdoyBh1qxwUsRmD5EwELesfr1xFmSxLwVibkaIc7iWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dre9Zpx8; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ozUwuk4p"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55AAD9xa011076
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 11:07:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=67IOVthVyAUCNLQvy2dAGJFK
-	71qcOVj/j2a2DCuKxFc=; b=ozUwuk4pI0e+BxTK6z0TRimpey/N3EVTyiLkO8F/
-	ZdhOSPQny7XTvFSQtffbeCuqqhPCZhVcUfTxOOwAlIJsoJztI3ck/uc/lAMXBcxQ
-	2CkfXC9Y58MUy9wKtnaeSLhFEE/Iy+gp/WxWMk4uXl/z/rdE8nZqg4WPcFBNz4+K
-	+nPw3fv2LnzRgJYv8YObNiOedcMZOCahxWelcy/FEIi32XGtuq8vTck+vFh2Vsvp
-	jHHS17fUDzCywifq6rOXnC1Lm5hFSPciCBNMFebGqVvptcWfnEBGJmyYyzEztA3I
-	Q2CU4gQ5O0p2w1WTnWWqjnT4bSMQsqRdwlSzlfdU0uaTNA==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 476jrh85bd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 11:07:26 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d0aa9cdecdso491301485a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 04:07:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dre9Zpx8"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-450cfb6a794so34332035e9.1;
+        Tue, 10 Jun 2025 04:07:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749553658; x=1750158458; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lSDkUNg7pCMVGDi1JhrPkWKMxNcgCg8HawFBRzXOTrI=;
+        b=dre9Zpx8/rNdCYA1RW70X6SMxRNeaA8IaQWu7NUnG5CVbaW2fUGuWmxHyEPI3ExH+H
+         PX2GZuNcHtUp7dwRWUbY/Wp3dTLQWtMwZEQf+CX5qI+ZQxOMKHG1yMLB6GwI3lPOJoFg
+         KsNJp7KI29a3LtAKhm4u/l7jsFQ9nstNQygzEuSh7avf6KE2OM7S8GvFXYaF/MNa1Kh6
+         c2eqx8m/Xxb43fa2DwJK1sFOUMlxKOuZpzgFlBLCamDbhC+LassZxE6SAJfxJKEe94dC
+         Hi8qWn/Ej00lCQspDuH8fVZvk/zSfIAgMD9UnFtwEWUt9yK8yhvfyHpovXNbgXZ0oDmR
+         pbOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749553646; x=1750158446;
+        d=1e100.net; s=20230601; t=1749553658; x=1750158458;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=67IOVthVyAUCNLQvy2dAGJFK71qcOVj/j2a2DCuKxFc=;
-        b=qKjGhFacqn2Bq6fXctOi7NhAiKE6zhnfoBUlgE3TPfuGP4MgPtyTOdVl/58KHIotnK
-         VyG9m+ydiEp5xIFqHuJtQaVvA4VudlECpqgfis8HvoD8xjt7R5EStygFxslhUD5qB7wg
-         v2ik8XBPj7/QFrKDPEFB0LP9ZnFpQfvpYlCCu1/gzt7edeGwOoAzf+9cxntUoJJK96DM
-         PE8N2QETznbBULWDgVb92ovDtP3sJAyb2zlXgEs+CG/E673vNNbA+33K/YaGep2CdE1j
-         VhbiWH8h7L+hax+Jz3eDO92crvsEGlM+XMuWmknsep3kFGiUEcZqrYVYBKSJ9DEPTuB8
-         /GyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVtgnvUyB4xymhPWDRPqm32HFGBLHy9p9iWHL6Gyyx7wsuAj37qmolOHrN1bfWU61ryDg1fui9xc/CCyVY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMAQSWsEP+16QC1x5H+/ngHlxTPHc05hqxijdxgaG0tD/jc0XV
-	WdNrM0+UJxIiBrKLgt2lkUjYbcvLxO4CTAbDhH62E3DUJekGUzzP5h9zF+93yZZ+EylX+4uOHVP
-	U7gJC8c/zza+2m8eMaQqX7XsP3paahdtvquSLRANjmc/Ulh71Y5yAsASk2jTQv6U6vGI=
-X-Gm-Gg: ASbGncuAOU0taf/6t0tq5f65gV/r/fh66UTDQU8RhVRSg594jfXO/cXoSVbI7Lj6nml
-	SFkdUFhYZyJpbqSTqLeOeGpn7ZT/Qg3ZTUbS+Vhh/yYvXzRKalMVi1rXXKYcXCIqdPZ2bHrPeh4
-	b3/Gx1wLWXbsVLssH1OJOQULO+dsaisTIcYRRSZrIFUtlZOVMZJJkIy+2a2f9LqQ6UbH9ZWrxsM
-	B9EzWCXN3kt/CmAFP21A9RO3NHDccS4rr2cdPRacRi7vIiqg2FUem1zQ8Ziw+nC1zJijFsV8c1V
-	bnMsEhEpbWcYPgQLaAf2eX7jtqw3wldGlNU+lzy5fZ82/ZiRX6RlNpuNaq4eNPCyTnj22Xyc9f1
-	A+Xlir3G2R/utH/AkE6hPedW3MdwbEOO4HN4=
-X-Received: by 2002:a05:620a:17a5:b0:7ca:f09d:1473 with SMTP id af79cd13be357-7d22997212cmr2105916385a.28.1749553646124;
-        Tue, 10 Jun 2025 04:07:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFQUgDPSzkOF7xlBQA+g6oVPlHMD5leL1gdy86R0SYpc/kGI1tFwHixo/KGMNQxz18+0VYj+A==
-X-Received: by 2002:a05:620a:17a5:b0:7ca:f09d:1473 with SMTP id af79cd13be357-7d22997212cmr2105912785a.28.1749553645647;
-        Tue, 10 Jun 2025 04:07:25 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5536772aa46sm1503884e87.187.2025.06.10.04.07.23
+        bh=lSDkUNg7pCMVGDi1JhrPkWKMxNcgCg8HawFBRzXOTrI=;
+        b=D2x2GnJylpydS9RBnKc+5YA5d7R7Yb+ElpiSpyyTvAkLi3qNrUA10iiRbRxcG4dxFp
+         LAVOsuSwlNjw5F1m/nOI/HZ9DAItaJcuBjXkC7V1S2QFEjzNQ6SQxDBwFiXJTZHXy43q
+         kkhCL9Is4xbIthTdkFQP7pHpDqKQsu47Ne/gDn6BvChMRtkUx6UsNXgudPB+kz/MC7bt
+         FYZdsmqcirBonaNiWITGFaX3INImZOly4TAEPhPLMv13nPbw/b8FYE40iryPOFhka/2N
+         CMAgxubuqGcFKjPAxBsrMRET9eq41m+VvAlFci1wlU89PDMWFwtuOZzwA5xtgwY9zjS9
+         RLgg==
+X-Forwarded-Encrypted: i=1; AJvYcCUG1IRFzTVIUPfcM+VTMckrwRSrUmn+6VYFlfI4gLCXmSpbBEgAJuSURBYy8AuDmblrNsGFcsXOO+2Vlzur@vger.kernel.org, AJvYcCWUGdXsdDBFRUX1sAVT68nrnmGGv5Ff/iGvw6VqLIjnFGD/KFNAWwpuZZlWoVHdngLopdAUEypPdJE=@vger.kernel.org, AJvYcCWetYkFf3WaVr8ByMEh5RCxEXPaejVqjmgxmrPCqTyJ5EpNLBfUtELYebHLxtVASebfVFFo7LboO3gMqUc=@vger.kernel.org, AJvYcCXzyebREo2T2ZodbTO0xKITytIzGxymsw/uP/PPA9oFTgXGlq0mtwwo/t9r1Nq3dLwMlZ8P6MnlHxo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbOWCHolJJBi9v3OYReN59nZ/tRyX7ZBAoMbnbpqdgwte6nhQ1
+	dPasEyBjWj1LDdegwB3HP2nCF82yrPLl128y02Zen8COc8OWJxsAXPsS
+X-Gm-Gg: ASbGncs31PX2xwYsd2DCC0Y3TPuXXUdmT6njfLPoWKbAaZnp/L/+qS6Zs1pVtMI1N46
+	jnygpqia9f7Wj82iELVy3kqQThr3evpcyuEmsSYhMlFIUl32sLXCTebvtA8JJ96KzXzMDdG2rC8
+	m1pwNhrrQI3ZENA8bdlhcA78MplZ/dla1TDSqByewC+GXxOHCvmUSxivV5d+B26BrPEoOI2eaPW
+	SKpqD37g+q/aqR6t2QyfZ/7716UnG2TZQrugcly2WtLgAMYcnvwc53ym/Sxs+yEE0oWSR9WhOYN
+	U9webGFseRrc1yPn/BU3WuioJtXVbIIi6GFnvQnI/hPy4fLi8tDGTu7paLqpFxRNdegZWxwON8t
+	jIRx6u0G1Ut53BxEoCbWbA0rBPgV71Ban+DkSw5YFCU+JBSSo
+X-Google-Smtp-Source: AGHT+IGJLn68qlQRgM1RWjGLvgYWa/yZA0vynepgw1pm/prSBNurVotzXJWhrmwMI0/EhEopshwdMw==
+X-Received: by 2002:a05:600c:8b72:b0:43d:94:2d1e with SMTP id 5b1f17b1804b1-4531de00a15mr22080545e9.13.1749553658041;
+        Tue, 10 Jun 2025 04:07:38 -0700 (PDT)
+Received: from orome (p200300e41f281b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1b00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45307b4788fsm88637525e9.21.2025.06.10.04.07.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 04:07:24 -0700 (PDT)
-Date: Tue, 10 Jun 2025 14:07:21 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] arm64: dts: qcom: sm8450-qrd: add pmic glink node
-Message-ID: <20250610110721.tn7kkbcucbfx2o2e@umbar.lan>
-References: <20250610091805.2997546-1-krishna.kurapati@oss.qualcomm.com>
- <20250610091805.2997546-2-krishna.kurapati@oss.qualcomm.com>
+        Tue, 10 Jun 2025 04:07:36 -0700 (PDT)
+Date: Tue, 10 Jun 2025 13:07:34 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Svyatoslav Ryhel <clamor95@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, 
+	Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-pm@vger.kernel.org
+Subject: Re: [PATCH v1 2/3] drivers: clk: tegra: add DFLL support for Tegra 4
+Message-ID: <g7kegtso3opafpwocvibhm3rym35oikxoyq2wmphqy3wjenzpa@m7extntwahau>
+References: <20250321095556.91425-1-clamor95@gmail.com>
+ <20250321095556.91425-3-clamor95@gmail.com>
+ <aef4574b-8167-4af3-a29c-8c962b396496@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="mdr3yu4j4s5eicl5"
 Content-Disposition: inline
-In-Reply-To: <20250610091805.2997546-2-krishna.kurapati@oss.qualcomm.com>
-X-Authority-Analysis: v=2.4 cv=EovSrTcA c=1 sm=1 tr=0 ts=684811ee cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=5fFL1RxHffGAKPhwOvIA:9 a=CjuIK1q_8ugA:10
- a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-ORIG-GUID: SIx7ptTrkphp_fKK8MVlnJA1eCVmGuPU
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDA4NiBTYWx0ZWRfXzwTfTyjNnB/K
- BowojTZeZSyEOlMiLk8NOz691zVKMPyhIZts2YumBbh7DV/xDXPs/qxrO5P9SwT9++GiK6QZIJf
- Pe57NL5ayrsWORE/7iK/kaPVsEmZNp6IQ3Qk9pkE/vL0s2T95kg7oq/OaviQCbnGjAIK6NF7Toy
- hHp27UatW7kCCopPsbTpKR1+9t2DNBaUfYMA1FeFe/N0XLcuwFCo/lCbq90LOjmV7xpGfSx0gg/
- 9nqX87h5DfuC9SRLP14gljzUtIOYXXuFZ5JLhC8aH4bm8cRFKeQeVLc9ZXnI0BSdQMdv92lthDx
- PH1MxvqceyMNSzmszYp9lM1t2u5br5lkyHVtm27/u1O5oTJQ4xFMc2AgFObpHzrHE0qlMhOBU3L
- oGTbV6LMstDyjyE+5FbVU1UWViKLcfrtC14yaraD/lpporgW0B5LQRD5/7MngnvZ7ughU+BD
-X-Proofpoint-GUID: SIx7ptTrkphp_fKK8MVlnJA1eCVmGuPU
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-10_04,2025-06-09_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 spamscore=0 suspectscore=0 priorityscore=1501 mlxlogscore=924
- mlxscore=0 clxscore=1015 malwarescore=0 adultscore=0 lowpriorityscore=0
- phishscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506100086
+In-Reply-To: <aef4574b-8167-4af3-a29c-8c962b396496@kernel.org>
 
-On Tue, Jun 10, 2025 at 02:48:04PM +0530, Krishna Kurapati wrote:
-> Add the pmic glink node linked with the DWC3 USB controller
-> switched to OTG mode and tagged with usb-role-switch.
-> 
-> Signed-off-by: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
-> ---
->  arch/arm64/boot/dts/qcom/sm8450-qrd.dts | 54 ++++++++++++++++++++++++-
->  1 file changed, 53 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8450-qrd.dts b/arch/arm64/boot/dts/qcom/sm8450-qrd.dts
-> index 8c39fbcaad80..0580408485eb 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8450-qrd.dts
-> +++ b/arch/arm64/boot/dts/qcom/sm8450-qrd.dts
-> @@ -37,6 +37,49 @@ vph_pwr: vph-pwr-regulator {
->  		regulator-always-on;
->  		regulator-boot-on;
->  	};
-> +
-> +	pmic-glink {
-> +		compatible = "qcom,sm8450-pmic-glink", "qcom,pmic-glink";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		orientation-gpios = <&tlmm 91 GPIO_ACTIVE_HIGH>;
-> +
-> +		connector@0 {
-> +			compatible = "usb-c-connector";
-> +			reg = <0>;
-> +			power-role = "dual";
-> +			data-role = "dual";
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +
-> +					pmic_glink_hs_in: endpoint {
-> +						remote-endpoint = <&usb_1_dwc3_hs>;
-> +					};
-> +				};
-> +
-> +				port@1 {
-> +					reg = <1>;
-> +
-> +					pmic_glink_ss_in: endpoint {
-> +						remote-endpoint = <&usb_1_qmpphy_out>;
-> +					};
-> +				};
-> +
-> +				port@2 {
-> +					reg = <2>;
-> +
-> +					pmic_glink_sbu: endpoint {
-> +					};
-> +				};
-> +
-> +			};
-> +		};
-> +	};
->  };
->  
->  &apps_rsc {
-> @@ -462,7 +505,12 @@ &usb_1 {
->  };
->  
->  &usb_1_dwc3 {
-> -	dr_mode = "peripheral";
-> +	dr_mode = "otg";
 
-It should be a default, you can drop it.
+--mdr3yu4j4s5eicl5
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v1 2/3] drivers: clk: tegra: add DFLL support for Tegra 4
+MIME-Version: 1.0
 
-> +	usb-role-switch;
+On Fri, Mar 21, 2025 at 09:50:09PM +0100, Krzysztof Kozlowski wrote:
+> On 21/03/2025 10:55, Svyatoslav Ryhel wrote:
+> > Extend the Tegra124 driver to include DFLL configuration settings requi=
+red
+> > for Tegra114 compatibility.
+> >=20
+> > Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
+>=20
+> <form letter>
+> Please use scripts/get_maintainers.pl to get a list of necessary people
+> and lists to CC (and consider --no-git-fallback argument, so you will
+> not CC people just because they made one commit years ago). It might
+> happen, that command when run on an older kernel, gives you outdated
+> entries. Therefore please be sure you base your patches on recent Linux
+> kernel.
+>=20
+> Tools like b4 or scripts/get_maintainer.pl provide you proper list of
+> people, so fix your workflow. Tools might also fail if you work on some
+> ancient tree (don't, instead use mainline) or work on fork of kernel
+> (don't, instead use mainline). Just use b4 and everything should be
+> fine, although remember about `b4 prep --auto-to-cc` if you added new
+> patches to the patchset.
+> </form letter>
+>=20
+>=20
+>=20
+> > +++ b/include/dt-bindings/reset/tegra114-car.h
+>=20
+> Filename based on compatible.
+>=20
+> > @@ -0,0 +1,13 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
+> > +/*
+> > + * This header provides Tegra114-specific constants for binding
+> > + * nvidia,tegra114-car.
+> > + */
+> > +
+> > +#ifndef _DT_BINDINGS_RESET_TEGRA114_CAR_H
+> > +#define _DT_BINDINGS_RESET_TEGRA114_CAR_H
+> > +
+> > +#define TEGRA114_RESET(x)		(5 * 32 + (x))
+>=20
+>=20
+> Does not look like a binding, but some sort of register. Binding IDs
+> start from 0 (or 1) and are incremented by 1.
 
-This should go to sm8450.dtsi
+I'll try and clear up some of the confusion around this. The way that
+resets are handled on these Tegra devices is that there is a set of
+peripheral clocks & resets which are paired up. This is because they
+are laid out in banks within the CAR (clock and reset) controller. In
+most cases we're referring to those resets, so you'll often see a clock
+ID used in conjection with the same reset ID for a given IP block.
 
-> +};
-> +
-> +&usb_1_dwc3_hs {
-> +	remote-endpoint = <&pmic_glink_hs_in>;
->  };
->  
->  &usb_1_hsphy {
-> @@ -487,3 +535,7 @@ &usb_1_qmpphy {
->  	vdda-phy-supply = <&vreg_l6b_1p2>;
->  	vdda-pll-supply = <&vreg_l1b_0p91>;
->  };
-> +
-> +&usb_1_qmpphy_out {
-> +	remote-endpoint = <&pmic_glink_ss_in>;
-> +};
-> -- 
-> 2.34.1
-> 
+In addition to those peripheral resets, there are a number of extra
+resets that don't have a corresponding clock and which are exposed in
+registers outside of the peripheral banks, but still part of the CAR.
+To support those "special" registers, the TEGRA*_RESET() is used to
+denote resets outside of the regular peripheral resets. Essentially it
+defines the offset within the CAR at which special resets start. In the
+above case, Tegra114 has 5 banks with 32 peripheral resets each. The
+first special reset, TEGRA114_RESET(0), therefore gets ID 5 * 32 + 0.
 
--- 
-With best wishes
-Dmitry
+So to summarize: We cannot start enumerating these at 0 because that
+would fall into the range of peripheral reset IDs.
+
+Thierry
+
+--mdr3yu4j4s5eicl5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmhIEfMACgkQ3SOs138+
+s6GhaRAAmd49Bi91xyPfMgzNKI861C3Y5GeN/U4iPxCnbuxP6d/aG+FGMZgfL6rt
+1oEh6iocRWI6eF3ydldX6NAQec3h8kbQUT2wxfybcfjpUVH4vwqfHnV4BcWdNmKO
+kDxZIxDWCzZxUAT9DsqKT0p4GKdWreJO5JEdsZBw/tc0szmMB2+5yQxA3eKgOLjG
+kvRAxBvt8dfb6Y+MiDFESKX3SwUVKzfSZYofLxZDo0HS74fJlNlP0MtTu47QN4H/
+C3HdExss0D9Z6T2FuFXeKXiTlDO2x4q6ZBuSyVsrYAlUGtWAoeQD5s59zL26Vfuu
+xQYo5a8iPSaE3LNyyiEavk5NPkaNo+2Y4f9JMls09n69uEeQIL6+bAGJ0fKKhZ/Z
+5DuTugrGpHFs6r8wKC4rGsKq40aprc7Q0eOZFL1bBQyh08yPsi72QgQM5edVYxcC
+xjsNPjAm3PhGsUE+5MMBMV8uArxQGrPJLghz9MzsVGimjePZg6KE35xNkOeYUhn9
+1UHksmOY0TYJEuxu3+o0IxuFwzHAqcO+v6B+gusqAxeHhPn5kaPSMK4wYeCwnhAk
+EOuvs1Wnqw3FPrSnahnuoodY8Muz7fSuXG9sGmxRJZtekSzRiZ4qvTBQZCgcUrUp
+WFNWYoNNf1N72sSPVZAfeOne9c+U37vTi83ieJGI6qQoXePP4Eg=
+=N9Uu
+-----END PGP SIGNATURE-----
+
+--mdr3yu4j4s5eicl5--
