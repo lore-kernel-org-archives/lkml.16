@@ -1,81 +1,44 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7E1227EA3
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 11:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D909227EA3;
+	Tue, 10 Jun 2025 11:24:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749554626; cv=none; b=XH+QPnW0bbl80R51hvIHitHSAnCFJDnaKDboiGcoK8FQGBinkuXXb3fkf+pDmPNFzMGrQ1vAh75S/40/hQgtbkeM4GWgvdATjd7U5a0d9ZfYnmsLb6Aglr6uGrZetVlzVRD2fSfpjKP26AUt/OtgadZ7MPJk6d5uhGbcvDu/cAk=
+	t=1749554643; cv=none; b=mcT0VytlOW34UOGl1rOjTAqv82H2siIAHrcAcLILS9kNfMHaWxBaM+vPiq8JtEV8j+8rpC3PtjM3Uz1w2f77ZL8SrPDzdI3nzJwGCxHaUHrIDffU7WSrp6zXXAo9OrfgMa8CCBiFpfvs+HXLj6BH7zepcbOiAjUQyHW3rupf7e4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749554626; c=relaxed/simple;
-	bh=vCjb0uxbfPFk0UYdvMbqoDPkEkRiXB/JN/UWoh+Hxsk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IU+LrwsFZEtpEF937AhDl0ruEyxpdGtH1+zqJs00Rk59CyjGMgJh9X+YFDIfcyhzuIuyNFrOteCcxdGLNoNmnOO0PflYt1nQS+bfS1IGoQ1jjIrxl3xzLfkIdG9nxGrV4UKO+BPhmne83tCgHTkc5PHUQhoWsY3E5tt+CQ1m8tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tV29Jtwd; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749554643; c=relaxed/simple;
+	bh=nN0ISiXyc8XuJnFSXPqaX/pMz8eCyow5+vzT8WEFryU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uJbGrgYby3IAVfeJ38JKhKcg/u6h6us0wDe40CpDcxnVddOPiKHf0zbvWffn+S2D/K02hd/n6X0RVffmnkni0sgGG0QZepF7SEz/58mxqo2S0iRohM27qEujhVzWUSLaMg0TfgFY1TM+vKfeg04NTj5AKoMctWJ1/x8XoX/sELU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VJz2yXxj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tV29Jtwd"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-af51596da56so3709911a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 04:23:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749554623; x=1750159423; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QAOxshUoslySRqoBSqJuXZMRLjIvGL3UlikR3NO42PI=;
-        b=tV29JtwdoG3nSfw8/RxiMhIAjuYPuTrDKkEGi76UA3Otv1vnrIzDOaBOKpLtevRcqp
-         t5k/MOG91Lnvt/hH0f/9evv6U1WhElcU0xFqQ/YcfPdpdf0CWxLxE6gHooWDklXIlIol
-         kyaHkkhFkAOjV7a7RT+C8+J14E6gL+g7MbS924hiYrRPvwbPgQR7PtUPwU+YhsUr893h
-         DyNPXvS81K73cap0IyBEu6dUmbAHujGthrVXLrWNCGtMQhP2wtjmMsUZkeZizH7S51Jo
-         HTrEle8MPwPkgivZY3OTFF3qB6cGQgGlJSPNE6vbtFS3voi7PrGPBmNPU2a4pHcGBDrn
-         kw/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749554623; x=1750159423;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QAOxshUoslySRqoBSqJuXZMRLjIvGL3UlikR3NO42PI=;
-        b=NIM/uH3UA8plxGcdoxeLrD6DJkSNvc5MB2zDRk70EuVoOKat5rN2oUfZ6bxuM68UWW
-         GehoCt0pYrrqmE/TC6dEMcSDBwWNETMHSUigSOOeiwthe+ZdEYobgv4VBFniL5HiUbRB
-         gaurfAzTNByH7Ha/K8WfDrd11mS1sIO1hkXWcxY6ZAQZlldYfFVygFGgq34do5udtwPK
-         GFdUO4dydcH1KWy5t/DiivW3o8cxwdxyrl8fiP5bdTljMyR8lKemABHjzKs6E2rP2pme
-         WOKXu/CagEzTHb0Yctht6suxFes5bBJMiTOWMU3LTxB8S4oV2MUvNAJmSsBtVa4wFbWS
-         DzhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUCMxPYOg8qJ58aJUOG0UHyu9/LTapNmu+2DjUqDFg8KIQ02XxXl2CUXSKxUf0FyKmq1J1rhe5S2TiqGLU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKorSMQaf8UBPafusWrmZOiPRPIWkrW66PxwQPDIcuylycRWym
-	J/+5MAtHGu/cyyrTPANXcSsoGuHJ2FTwmiEt9xW13cg3wYDcNhgLmlXqmQcwEn9vCGY=
-X-Gm-Gg: ASbGnctvU49fuwWRGZ1qA1SRyUzbKKAkQDa5qe/avtWPOcIIlaGHTuQdybJKx78q1m/
-	bU/LM3Zy26L4d8JKMS78ogPSHgQjshHVjAifpFfGX7TluvnlZVN5E5UOdB5I/FwLs9MJghVS+Lw
-	YLBNx+DyB7E2LSL7hm0ADmbhiiXm/7f4bCrJ015FSEB+cE1LAZWSuDeI2+V5n/Xc9D7u85ifRZ1
-	MJ6DhzFvl953cwuq9QgLIZ/qPaXeUWsVxWBZ1q7o5CrSMeoNDZ+6CKd5YneO86hmLJBMhilppiM
-	exVX9FK1S3KkKUx5Lmjpcx8PZ/xSgZKqtS3/inpEjDLO5HfxJVxiFmgZ8GmofP8=
-X-Google-Smtp-Source: AGHT+IECQ3d1p5YhRXaqwtWVtF4QNxUMVW4lM2m6vVyst0oTYorm1TkVH4ar0oNCMOIXUUZpiF/4cg==
-X-Received: by 2002:a17:90b:3b42:b0:312:959:dc42 with SMTP id 98e67ed59e1d1-31347302b63mr24129745a91.11.1749554622954;
-        Tue, 10 Jun 2025 04:23:42 -0700 (PDT)
-Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31349f32df7sm7090063a91.15.2025.06.10.04.23.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 04:23:42 -0700 (PDT)
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>,
-	linux-pm@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VJz2yXxj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D78EC4CEED;
+	Tue, 10 Jun 2025 11:24:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749554642;
+	bh=nN0ISiXyc8XuJnFSXPqaX/pMz8eCyow5+vzT8WEFryU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=VJz2yXxjwhRNUFzgTWtsg1POeNxBM/YAk2daMD4qnmkQ7mfqIWudSaxcfoPoxKXnH
+	 G9FqXSujr+g4o+ZaAFLw8f1Z/0d9GcCIXvrhAJI4pC54I0cnHIYL1vro2CqWCjrMvc
+	 1Vflmq00sHkSZrnKVXLQYa9rMNZgCSAhz/G/TJ99M9aLOO4BjpG/8pXpq9fdJhAQ69
+	 bblWVc9/8+OWXp4WjtEW10InDgzpMxoioCp2x2YrK97tnNhO0jrBxgCRaePMHX2RPW
+	 kdwrmJ6qWzQQnvRPBSqsu1/R5w7b99+NOfAxJ9KPF9CO7xPR3Bpn2lpPYuXIZO7AiO
+	 UFhyvlDxMqPNg==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Andy Shevchenko <andy@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Riyan Dhiman <riyandhiman14@gmail.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	dri-devel@lists.freedesktop.org,
+	linux-fbdev@vger.kernel.org,
+	linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] cpufreq: Convert `/// SAFETY` lines to `# Safety` sections
-Date: Tue, 10 Jun 2025 16:53:34 +0530
-Message-Id: <4823a58093c6dfa20df62b5c18da613621b9716e.1749554599.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
+Subject: [PATCH] [v2] staging: fbtft: reduce stack usage
+Date: Tue, 10 Jun 2025 13:23:28 +0200
+Message-Id: <20250610112357.3306246-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,306 +47,253 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Replace `/// SAFETY` comments in doc comments with proper `# Safety`
-sections, as per rustdoc conventions.
+From: Arnd Bergmann <arnd@arndb.de>
 
-Also mark the C FFI callbacks as `unsafe` to correctly reflect their
-safety requirements.
+The use of vararg function pointers combined with a huge number of
+arguments causes some configurations to exceed the stack size warning
+limit:
 
-Reported-by: Miguel Ojeda <ojeda@kernel.org>
-Closes: https://github.com/Rust-for-Linux/linux/issues/1169
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+drivers/staging/fbtft/fbtft-core.c:863:12: error: stack frame size (1512) exceeds limit (1280) in 'fbtft_init_display_from_property' [-Werror,-Wframe-larger-than]
+
+drivers/staging/fbtft/fb_ssd1331.c:131:30: error: stack frame size (1392) exceeds limit (1280) in 'set_gamma' [-Werror,-Wframe-larger-than]
+                  ^
+drivers/staging/fbtft/fb_ssd1351.c:120:30: error: stack frame size (1392) exceeds limit (1280) in 'set_gamma' [-Werror,-Wframe-larger-than]
+
+Move the varargs handling into a separate noinline function so each
+individual function stays below the limit. A better approach might be to
+replace the varargs function with one that takes an array of arguments,
+but that would be a much larger rework of the other callers.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- rust/kernel/cpufreq.rs | 146 ++++++++++++++++++++++++++++++-----------
- 1 file changed, 109 insertions(+), 37 deletions(-)
+v2: use u32 types consistently, suggested by Andy Shevchenko
+---
+ drivers/staging/fbtft/fb_ssd1331.c | 36 ++++++++++++------
+ drivers/staging/fbtft/fb_ssd1351.c | 42 +++++++++++---------
+ drivers/staging/fbtft/fbtft-core.c | 61 +++++++++++++-----------------
+ 3 files changed, 74 insertions(+), 65 deletions(-)
 
-diff --git a/rust/kernel/cpufreq.rs b/rust/kernel/cpufreq.rs
-index b0a9c6182aec..9b995f18aac6 100644
---- a/rust/kernel/cpufreq.rs
-+++ b/rust/kernel/cpufreq.rs
-@@ -1055,8 +1055,11 @@ pub fn new_foreign_owned(dev: &Device<Bound>) -> Result {
- impl<T: Driver> Registration<T> {
-     /// Driver's `init` callback.
-     ///
--    /// SAFETY: Called from C. Inputs must be valid pointers.
--    extern "C" fn init_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi::c_int {
-+    /// # Safety
-+    ///
-+    /// - This function may only be called from the cpufreq C infrastructure.
-+    /// - The pointer arguments must be valid pointers.
-+    unsafe extern "C" fn init_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi::c_int {
-         from_result(|| {
-             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
-             // lifetime of `policy`.
-@@ -1070,8 +1073,11 @@ extern "C" fn init_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi::
+diff --git a/drivers/staging/fbtft/fb_ssd1331.c b/drivers/staging/fbtft/fb_ssd1331.c
+index 06b7056d6c71..f43ee3249175 100644
+--- a/drivers/staging/fbtft/fb_ssd1331.c
++++ b/drivers/staging/fbtft/fb_ssd1331.c
+@@ -107,6 +107,28 @@ static void write_reg8_bus8(struct fbtft_par *par, int len, ...)
+ 	va_end(args);
+ }
  
-     /// Driver's `exit` callback.
-     ///
--    /// SAFETY: Called from C. Inputs must be valid pointers.
--    extern "C" fn exit_callback(ptr: *mut bindings::cpufreq_policy) {
-+    /// # Safety
-+    ///
-+    /// - This function may only be called from the cpufreq C infrastructure.
-+    /// - The pointer arguments must be valid pointers.
-+    unsafe extern "C" fn exit_callback(ptr: *mut bindings::cpufreq_policy) {
-         // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
-         // lifetime of `policy`.
-         let policy = unsafe { Policy::from_raw_mut(ptr) };
-@@ -1082,8 +1088,11 @@ extern "C" fn exit_callback(ptr: *mut bindings::cpufreq_policy) {
++static noinline_for_stack void write_gamma_reg(struct fbtft_par *par,
++					       u32 gamma[63])
++{
++	write_reg(par, 0xB8,
++		  gamma[0],  gamma[1],  gamma[2],  gamma[3],
++		  gamma[4],  gamma[5],  gamma[6],  gamma[7],
++		  gamma[8],  gamma[9],  gamma[10], gamma[11],
++		  gamma[12], gamma[13], gamma[14], gamma[15],
++		  gamma[16], gamma[17], gamma[18], gamma[19],
++		  gamma[20], gamma[21], gamma[22], gamma[23],
++		  gamma[24], gamma[25], gamma[26], gamma[27],
++		  gamma[28], gamma[29], gamma[30], gamma[31],
++		  gamma[32], gamma[33], gamma[34], gamma[35],
++		  gamma[36], gamma[37], gamma[38], gamma[39],
++		  gamma[40], gamma[41], gamma[42], gamma[43],
++		  gamma[44], gamma[45], gamma[46], gamma[47],
++		  gamma[48], gamma[49], gamma[50], gamma[51],
++		  gamma[52], gamma[53], gamma[54], gamma[55],
++		  gamma[56], gamma[57], gamma[58], gamma[59],
++		  gamma[60], gamma[61], gamma[62]);
++}
++
+ /*
+  * Grayscale Lookup Table
+  * GS1 - GS63
+@@ -130,7 +152,7 @@ static void write_reg8_bus8(struct fbtft_par *par, int len, ...)
+  */
+ static int set_gamma(struct fbtft_par *par, u32 *curves)
+ {
+-	unsigned long tmp[GAMMA_NUM * GAMMA_LEN];
++	u32 tmp[GAMMA_NUM * GAMMA_LEN];
+ 	int i, acc = 0;
  
-     /// Driver's `online` callback.
-     ///
--    /// SAFETY: Called from C. Inputs must be valid pointers.
--    extern "C" fn online_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi::c_int {
-+    /// # Safety
-+    ///
-+    /// - This function may only be called from the cpufreq C infrastructure.
-+    /// - The pointer arguments must be valid pointers.
-+    unsafe extern "C" fn online_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi::c_int {
-         from_result(|| {
-             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
-             // lifetime of `policy`.
-@@ -1094,8 +1103,13 @@ extern "C" fn online_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi
+ 	for (i = 0; i < 63; i++) {
+@@ -150,17 +172,7 @@ static int set_gamma(struct fbtft_par *par, u32 *curves)
+ 		}
+ 	}
  
-     /// Driver's `offline` callback.
-     ///
--    /// SAFETY: Called from C. Inputs must be valid pointers.
--    extern "C" fn offline_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi::c_int {
-+    /// # Safety
-+    ///
-+    /// - This function may only be called from the cpufreq C infrastructure.
-+    /// - The pointer arguments must be valid pointers.
-+    unsafe extern "C" fn offline_callback(
-+        ptr: *mut bindings::cpufreq_policy,
-+    ) -> kernel::ffi::c_int {
-         from_result(|| {
-             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
-             // lifetime of `policy`.
-@@ -1106,8 +1120,13 @@ extern "C" fn offline_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ff
+-	write_reg(par, 0xB8,
+-		  tmp[0], tmp[1], tmp[2], tmp[3], tmp[4], tmp[5], tmp[6],
+-		  tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], tmp[12], tmp[13],
+-		  tmp[14], tmp[15], tmp[16], tmp[17], tmp[18], tmp[19], tmp[20],
+-		  tmp[21], tmp[22], tmp[23], tmp[24], tmp[25], tmp[26],	tmp[27],
+-		  tmp[28], tmp[29], tmp[30], tmp[31], tmp[32], tmp[33], tmp[34],
+-		  tmp[35], tmp[36], tmp[37], tmp[38], tmp[39], tmp[40], tmp[41],
+-		  tmp[42], tmp[43], tmp[44], tmp[45], tmp[46], tmp[47], tmp[48],
+-		  tmp[49], tmp[50], tmp[51], tmp[52], tmp[53], tmp[54], tmp[55],
+-		  tmp[56], tmp[57], tmp[58], tmp[59], tmp[60], tmp[61],
+-		  tmp[62]);
++	write_gamma_reg(par, tmp);
  
-     /// Driver's `suspend` callback.
-     ///
--    /// SAFETY: Called from C. Inputs must be valid pointers.
--    extern "C" fn suspend_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi::c_int {
-+    /// # Safety
-+    ///
-+    /// - This function may only be called from the cpufreq C infrastructure.
-+    /// - The pointer arguments must be valid pointers.
-+    unsafe extern "C" fn suspend_callback(
-+        ptr: *mut bindings::cpufreq_policy,
-+    ) -> kernel::ffi::c_int {
-         from_result(|| {
-             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
-             // lifetime of `policy`.
-@@ -1118,8 +1137,11 @@ extern "C" fn suspend_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ff
+ 	return 0;
+ }
+diff --git a/drivers/staging/fbtft/fb_ssd1351.c b/drivers/staging/fbtft/fb_ssd1351.c
+index 6736b09b2f45..eb8bee6993c3 100644
+--- a/drivers/staging/fbtft/fb_ssd1351.c
++++ b/drivers/staging/fbtft/fb_ssd1351.c
+@@ -96,6 +96,28 @@ static int set_var(struct fbtft_par *par)
+ 	return 0;
+ }
  
-     /// Driver's `resume` callback.
-     ///
--    /// SAFETY: Called from C. Inputs must be valid pointers.
--    extern "C" fn resume_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi::c_int {
-+    /// # Safety
-+    ///
-+    /// - This function may only be called from the cpufreq C infrastructure.
-+    /// - The pointer arguments must be valid pointers.
-+    unsafe extern "C" fn resume_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi::c_int {
-         from_result(|| {
-             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
-             // lifetime of `policy`.
-@@ -1130,8 +1152,11 @@ extern "C" fn resume_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi
++static noinline_for_stack void write_gamma_reg(struct fbtft_par *par,
++					       u32 gamma[63])
++{
++	write_reg(par, 0xB8,
++		  gamma[0],  gamma[1],  gamma[2],  gamma[3],
++		  gamma[4],  gamma[5],  gamma[6],  gamma[7],
++		  gamma[8],  gamma[9],  gamma[10], gamma[11],
++		  gamma[12], gamma[13], gamma[14], gamma[15],
++		  gamma[16], gamma[17], gamma[18], gamma[19],
++		  gamma[20], gamma[21], gamma[22], gamma[23],
++		  gamma[24], gamma[25], gamma[26], gamma[27],
++		  gamma[28], gamma[29], gamma[30], gamma[31],
++		  gamma[32], gamma[33], gamma[34], gamma[35],
++		  gamma[36], gamma[37], gamma[38], gamma[39],
++		  gamma[40], gamma[41], gamma[42], gamma[43],
++		  gamma[44], gamma[45], gamma[46], gamma[47],
++		  gamma[48], gamma[49], gamma[50], gamma[51],
++		  gamma[52], gamma[53], gamma[54], gamma[55],
++		  gamma[56], gamma[57], gamma[58], gamma[59],
++		  gamma[60], gamma[61], gamma[62]);
++}
++
+ /*
+  * Grayscale Lookup Table
+  * GS1 - GS63
+@@ -119,7 +141,7 @@ static int set_var(struct fbtft_par *par)
+  */
+ static int set_gamma(struct fbtft_par *par, u32 *curves)
+ {
+-	unsigned long tmp[GAMMA_NUM * GAMMA_LEN];
++	u32 tmp[GAMMA_NUM * GAMMA_LEN];
+ 	int i, acc = 0;
  
-     /// Driver's `ready` callback.
-     ///
--    /// SAFETY: Called from C. Inputs must be valid pointers.
--    extern "C" fn ready_callback(ptr: *mut bindings::cpufreq_policy) {
-+    /// # Safety
-+    ///
-+    /// - This function may only be called from the cpufreq C infrastructure.
-+    /// - The pointer arguments must be valid pointers.
-+    unsafe extern "C" fn ready_callback(ptr: *mut bindings::cpufreq_policy) {
-         // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
-         // lifetime of `policy`.
-         let policy = unsafe { Policy::from_raw_mut(ptr) };
-@@ -1140,8 +1165,13 @@ extern "C" fn ready_callback(ptr: *mut bindings::cpufreq_policy) {
+ 	for (i = 0; i < 63; i++) {
+@@ -139,23 +161,7 @@ static int set_gamma(struct fbtft_par *par, u32 *curves)
+ 		}
+ 	}
  
-     /// Driver's `verify` callback.
-     ///
--    /// SAFETY: Called from C. Inputs must be valid pointers.
--    extern "C" fn verify_callback(ptr: *mut bindings::cpufreq_policy_data) -> kernel::ffi::c_int {
-+    /// # Safety
-+    ///
-+    /// - This function may only be called from the cpufreq C infrastructure.
-+    /// - The pointer arguments must be valid pointers.
-+    unsafe extern "C" fn verify_callback(
-+        ptr: *mut bindings::cpufreq_policy_data,
-+    ) -> kernel::ffi::c_int {
-         from_result(|| {
-             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
-             // lifetime of `policy`.
-@@ -1152,8 +1182,13 @@ extern "C" fn verify_callback(ptr: *mut bindings::cpufreq_policy_data) -> kernel
+-	write_reg(par, 0xB8,
+-		  tmp[0],  tmp[1],  tmp[2],  tmp[3],
+-		  tmp[4],  tmp[5],  tmp[6],  tmp[7],
+-		  tmp[8],  tmp[9],  tmp[10], tmp[11],
+-		  tmp[12], tmp[13], tmp[14], tmp[15],
+-		  tmp[16], tmp[17], tmp[18], tmp[19],
+-		  tmp[20], tmp[21], tmp[22], tmp[23],
+-		  tmp[24], tmp[25], tmp[26], tmp[27],
+-		  tmp[28], tmp[29], tmp[30], tmp[31],
+-		  tmp[32], tmp[33], tmp[34], tmp[35],
+-		  tmp[36], tmp[37], tmp[38], tmp[39],
+-		  tmp[40], tmp[41], tmp[42], tmp[43],
+-		  tmp[44], tmp[45], tmp[46], tmp[47],
+-		  tmp[48], tmp[49], tmp[50], tmp[51],
+-		  tmp[52], tmp[53], tmp[54], tmp[55],
+-		  tmp[56], tmp[57], tmp[58], tmp[59],
+-		  tmp[60], tmp[61], tmp[62]);
++	write_gamma_reg(par, tmp);
  
-     /// Driver's `setpolicy` callback.
-     ///
--    /// SAFETY: Called from C. Inputs must be valid pointers.
--    extern "C" fn setpolicy_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi::c_int {
-+    /// # Safety
-+    ///
-+    /// - This function may only be called from the cpufreq C infrastructure.
-+    /// - The pointer arguments must be valid pointers.
-+    unsafe extern "C" fn setpolicy_callback(
-+        ptr: *mut bindings::cpufreq_policy,
-+    ) -> kernel::ffi::c_int {
-         from_result(|| {
-             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
-             // lifetime of `policy`.
-@@ -1164,8 +1199,11 @@ extern "C" fn setpolicy_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::
+ 	return 0;
+ }
+diff --git a/drivers/staging/fbtft/fbtft-core.c b/drivers/staging/fbtft/fbtft-core.c
+index da9c64152a60..231cc6d7343c 100644
+--- a/drivers/staging/fbtft/fbtft-core.c
++++ b/drivers/staging/fbtft/fbtft-core.c
+@@ -833,6 +833,28 @@ int fbtft_unregister_framebuffer(struct fb_info *fb_info)
+ }
+ EXPORT_SYMBOL(fbtft_unregister_framebuffer);
  
-     /// Driver's `target` callback.
-     ///
--    /// SAFETY: Called from C. Inputs must be valid pointers.
--    extern "C" fn target_callback(
-+    /// # Safety
-+    ///
-+    /// - This function may only be called from the cpufreq C infrastructure.
-+    /// - The pointer arguments must be valid pointers.
-+    unsafe extern "C" fn target_callback(
-         ptr: *mut bindings::cpufreq_policy,
-         target_freq: u32,
-         relation: u32,
-@@ -1180,8 +1218,11 @@ extern "C" fn target_callback(
++static noinline_for_stack void fbtft_write_register_64(struct fbtft_par *par,
++							int i, u32 buf[64])
++{
++	par->fbtftops.write_register(par, i,
++		buf[0], buf[1], buf[2], buf[3],
++		buf[4], buf[5], buf[6], buf[7],
++		buf[8], buf[9], buf[10], buf[11],
++		buf[12], buf[13], buf[14], buf[15],
++		buf[16], buf[17], buf[18], buf[19],
++		buf[20], buf[21], buf[22], buf[23],
++		buf[24], buf[25], buf[26], buf[27],
++		buf[28], buf[29], buf[30], buf[31],
++		buf[32], buf[33], buf[34], buf[35],
++		buf[36], buf[37], buf[38], buf[39],
++		buf[40], buf[41], buf[42], buf[43],
++		buf[44], buf[45], buf[46], buf[47],
++		buf[48], buf[49], buf[50], buf[51],
++		buf[52], buf[53], buf[54], buf[55],
++		buf[56], buf[57], buf[58], buf[59],
++		buf[60], buf[61], buf[62], buf[63]);
++}
++
+ /**
+  * fbtft_init_display_from_property() - Device Tree init_display() function
+  * @par: Driver data
+@@ -842,7 +864,7 @@ EXPORT_SYMBOL(fbtft_unregister_framebuffer);
+ static int fbtft_init_display_from_property(struct fbtft_par *par)
+ {
+ 	struct device *dev = par->info->device;
+-	int buf[64], count, index, i, j, ret;
++	u32 buf[64], count, index, i, j, ret;
+ 	u32 *values;
+ 	u32 val;
  
-     /// Driver's `target_index` callback.
-     ///
--    /// SAFETY: Called from C. Inputs must be valid pointers.
--    extern "C" fn target_index_callback(
-+    /// # Safety
-+    ///
-+    /// - This function may only be called from the cpufreq C infrastructure.
-+    /// - The pointer arguments must be valid pointers.
-+    unsafe extern "C" fn target_index_callback(
-         ptr: *mut bindings::cpufreq_policy,
-         index: u32,
-     ) -> kernel::ffi::c_int {
-@@ -1200,8 +1241,11 @@ extern "C" fn target_index_callback(
+@@ -887,23 +909,8 @@ static int fbtft_init_display_from_property(struct fbtft_par *par)
+ 				fbtft_par_dbg(DEBUG_INIT_DISPLAY, par,
+ 					      "buf[%d] = %02X\n", j, buf[j]);
  
-     /// Driver's `fast_switch` callback.
-     ///
--    /// SAFETY: Called from C. Inputs must be valid pointers.
--    extern "C" fn fast_switch_callback(
-+    /// # Safety
-+    ///
-+    /// - This function may only be called from the cpufreq C infrastructure.
-+    /// - The pointer arguments must be valid pointers.
-+    unsafe extern "C" fn fast_switch_callback(
-         ptr: *mut bindings::cpufreq_policy,
-         target_freq: u32,
-     ) -> kernel::ffi::c_uint {
-@@ -1212,7 +1256,11 @@ extern "C" fn fast_switch_callback(
-     }
- 
-     /// Driver's `adjust_perf` callback.
--    extern "C" fn adjust_perf_callback(
-+    ///
-+    /// # Safety
-+    ///
-+    /// - This function may only be called from the cpufreq C infrastructure.
-+    unsafe extern "C" fn adjust_perf_callback(
-         cpu: u32,
-         min_perf: usize,
-         target_perf: usize,
-@@ -1225,8 +1273,11 @@ extern "C" fn adjust_perf_callback(
- 
-     /// Driver's `get_intermediate` callback.
-     ///
--    /// SAFETY: Called from C. Inputs must be valid pointers.
--    extern "C" fn get_intermediate_callback(
-+    /// # Safety
-+    ///
-+    /// - This function may only be called from the cpufreq C infrastructure.
-+    /// - The pointer arguments must be valid pointers.
-+    unsafe extern "C" fn get_intermediate_callback(
-         ptr: *mut bindings::cpufreq_policy,
-         index: u32,
-     ) -> kernel::ffi::c_uint {
-@@ -1243,8 +1294,11 @@ extern "C" fn get_intermediate_callback(
- 
-     /// Driver's `target_intermediate` callback.
-     ///
--    /// SAFETY: Called from C. Inputs must be valid pointers.
--    extern "C" fn target_intermediate_callback(
-+    /// # Safety
-+    ///
-+    /// - This function may only be called from the cpufreq C infrastructure.
-+    /// - The pointer arguments must be valid pointers.
-+    unsafe extern "C" fn target_intermediate_callback(
-         ptr: *mut bindings::cpufreq_policy,
-         index: u32,
-     ) -> kernel::ffi::c_int {
-@@ -1262,12 +1316,21 @@ extern "C" fn target_intermediate_callback(
-     }
- 
-     /// Driver's `get` callback.
--    extern "C" fn get_callback(cpu: u32) -> kernel::ffi::c_uint {
-+    ///
-+    /// # Safety
-+    ///
-+    /// - This function may only be called from the cpufreq C infrastructure.
-+    unsafe extern "C" fn get_callback(cpu: u32) -> kernel::ffi::c_uint {
-         PolicyCpu::from_cpu(cpu).map_or(0, |mut policy| T::get(&mut policy).map_or(0, |f| f))
-     }
- 
-     /// Driver's `update_limit` callback.
--    extern "C" fn update_limits_callback(ptr: *mut bindings::cpufreq_policy) {
-+    ///
-+    /// # Safety
-+    ///
-+    /// - This function may only be called from the cpufreq C infrastructure.
-+    /// - The pointer arguments must be valid pointers.
-+    unsafe extern "C" fn update_limits_callback(ptr: *mut bindings::cpufreq_policy) {
-         // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
-         // lifetime of `policy`.
-         let policy = unsafe { Policy::from_raw_mut(ptr) };
-@@ -1276,8 +1339,11 @@ extern "C" fn update_limits_callback(ptr: *mut bindings::cpufreq_policy) {
- 
-     /// Driver's `bios_limit` callback.
-     ///
--    /// SAFETY: Called from C. Inputs must be valid pointers.
--    extern "C" fn bios_limit_callback(cpu: i32, limit: *mut u32) -> kernel::ffi::c_int {
-+    /// # Safety
-+    ///
-+    /// - This function may only be called from the cpufreq C infrastructure.
-+    /// - The pointer arguments must be valid pointers.
-+    unsafe extern "C" fn bios_limit_callback(cpu: i32, limit: *mut u32) -> kernel::ffi::c_int {
-         from_result(|| {
-             let mut policy = PolicyCpu::from_cpu(cpu as u32)?;
- 
-@@ -1288,8 +1354,11 @@ extern "C" fn bios_limit_callback(cpu: i32, limit: *mut u32) -> kernel::ffi::c_i
- 
-     /// Driver's `set_boost` callback.
-     ///
--    /// SAFETY: Called from C. Inputs must be valid pointers.
--    extern "C" fn set_boost_callback(
-+    /// # Safety
-+    ///
-+    /// - This function may only be called from the cpufreq C infrastructure.
-+    /// - The pointer arguments must be valid pointers.
-+    unsafe extern "C" fn set_boost_callback(
-         ptr: *mut bindings::cpufreq_policy,
-         state: i32,
-     ) -> kernel::ffi::c_int {
-@@ -1303,8 +1372,11 @@ extern "C" fn set_boost_callback(
- 
-     /// Driver's `register_em` callback.
-     ///
--    /// SAFETY: Called from C. Inputs must be valid pointers.
--    extern "C" fn register_em_callback(ptr: *mut bindings::cpufreq_policy) {
-+    /// # Safety
-+    ///
-+    /// - This function may only be called from the cpufreq C infrastructure.
-+    /// - The pointer arguments must be valid pointers.
-+    unsafe extern "C" fn register_em_callback(ptr: *mut bindings::cpufreq_policy) {
-         // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
-         // lifetime of `policy`.
-         let policy = unsafe { Policy::from_raw_mut(ptr) };
+-			par->fbtftops.write_register(par, i,
+-				buf[0], buf[1], buf[2], buf[3],
+-				buf[4], buf[5], buf[6], buf[7],
+-				buf[8], buf[9], buf[10], buf[11],
+-				buf[12], buf[13], buf[14], buf[15],
+-				buf[16], buf[17], buf[18], buf[19],
+-				buf[20], buf[21], buf[22], buf[23],
+-				buf[24], buf[25], buf[26], buf[27],
+-				buf[28], buf[29], buf[30], buf[31],
+-				buf[32], buf[33], buf[34], buf[35],
+-				buf[36], buf[37], buf[38], buf[39],
+-				buf[40], buf[41], buf[42], buf[43],
+-				buf[44], buf[45], buf[46], buf[47],
+-				buf[48], buf[49], buf[50], buf[51],
+-				buf[52], buf[53], buf[54], buf[55],
+-				buf[56], buf[57], buf[58], buf[59],
+-				buf[60], buf[61], buf[62], buf[63]);
++			fbtft_write_register_64(par, i, buf);
++
+ 		} else if (val & FBTFT_OF_INIT_DELAY) {
+ 			fbtft_par_dbg(DEBUG_INIT_DISPLAY, par,
+ 				      "init: msleep(%u)\n", val & 0xFFFF);
+@@ -996,23 +1003,7 @@ int fbtft_init_display(struct fbtft_par *par)
+ 				}
+ 				buf[j++] = par->init_sequence[i++];
+ 			}
+-			par->fbtftops.write_register(par, j,
+-				buf[0], buf[1], buf[2], buf[3],
+-				buf[4], buf[5], buf[6], buf[7],
+-				buf[8], buf[9], buf[10], buf[11],
+-				buf[12], buf[13], buf[14], buf[15],
+-				buf[16], buf[17], buf[18], buf[19],
+-				buf[20], buf[21], buf[22], buf[23],
+-				buf[24], buf[25], buf[26], buf[27],
+-				buf[28], buf[29], buf[30], buf[31],
+-				buf[32], buf[33], buf[34], buf[35],
+-				buf[36], buf[37], buf[38], buf[39],
+-				buf[40], buf[41], buf[42], buf[43],
+-				buf[44], buf[45], buf[46], buf[47],
+-				buf[48], buf[49], buf[50], buf[51],
+-				buf[52], buf[53], buf[54], buf[55],
+-				buf[56], buf[57], buf[58], buf[59],
+-				buf[60], buf[61], buf[62], buf[63]);
++			fbtft_write_register_64(par, j, buf);
+ 			break;
+ 		case -2:
+ 			i++;
 -- 
-2.31.1.272.g89b43f80a514
+2.39.5
 
