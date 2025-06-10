@@ -1,194 +1,536 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp-fw-80007.amazon.com (smtp-fw-80007.amazon.com [99.78.197.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBEF8280CD0
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:53:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F706482EB
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:53:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749545617; cv=none; b=FdKeMmgpPPpFsm4Z5NVLfy8nKXO2ivFjRUdQpiq1jrmLtYjj+/XADl2sbzYQk9E/4dH4P6VIgjB9jcq4xuiRSv8TCv9FXImbhStfRmxoLoB+NzKVCpvffC6uVZbkb6HV4iMpfOfsJv5w9wMWKKH7Cl/teqyrUsOatyMWTOU2TM0=
+	t=1749545615; cv=none; b=GHqhV1KjxnO3fc4tcAi5sUnQl4SqXGfs8vIbalNEDFBmUSkTJBWThYeWlEdykvJE6ZjX3DfAxiBJGzmQCHRmFjfO90LjlOQcfk8JpHPcSBBDYaAsYngXduOBSMVp+AhqS1eurvG1Lcd0EG6U8SPk4z5fOHAj5fOENpFz6UUoaUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749545617; c=relaxed/simple;
-	bh=0DpUZ9KkrwL5L0LBxsRrJTljyTI0zyHeRhsfl1KdLQM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EPQE5Hx8C344Xhq4LuVrIEg2OtWRtWdG+ZOjpmF5aeZpqI6mrq5p9JUA5PzoIBp8U9MeB0BN4QCFTO4uDUpI//nOPghpysstsPDj+TE2Fe5obB05ysgxkMlRJT60sEOr/zy5an+VlYNBu9yNc8bKy19gdnxsrWhXvWlMEhBtrLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K4BjTzX9; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749545615; c=relaxed/simple;
+	bh=e/TwFnpFr+FfWVZqcRDjsNvUqC6upzE/OJxBlY8jGIg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bf3sLRpa5RQWJA+4NJ2SOgiwu//737cIcqEgNkW7ThiVSgKCA6XTgcpgH8lNtdOaYlhKFvLJ9Eckx+2eTfEJ5KprN9pZwyLtOCMOISuKHZ5s3VKMt9d5sfG7deL4kxtQp9W6ovQcd4xbrMN4xiaR+pT+T/ETFg03FtRoXjTT2ho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=glVoF/8w; arc=none smtp.client-ip=99.78.197.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K4BjTzX9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749545614;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BLr0XlGOIN+Wt+CCLv/Qc/6mxQSoqncCTsMpm4BEGzs=;
-	b=K4BjTzX9SL3D1doyDasGcKjxgV6bDk4IQhKZrry8gHJIs56JWc5EWe1NkE0ryWyxmBK6Xm
-	UmkAYQMsnHiwxjL47t2Z+6WWS8b4AVeIZW7uw9m8c6ivHOiRv1mjsuaLN2G59XVp5ro7dK
-	B+A5m0MS+j/Woq6ZyuxNHQLqdJbK5LE=
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
- [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-591-y55ibX8qN3CPzFRfHQzqhg-1; Tue, 10 Jun 2025 04:53:33 -0400
-X-MC-Unique: y55ibX8qN3CPzFRfHQzqhg-1
-X-Mimecast-MFC-AGG-ID: y55ibX8qN3CPzFRfHQzqhg_1749545613
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-7482e90feacso3007983b3a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 01:53:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749545612; x=1750150412;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BLr0XlGOIN+Wt+CCLv/Qc/6mxQSoqncCTsMpm4BEGzs=;
-        b=YVQCTEghUQVCvSzo2WC8pT4S5RXhKolMzA6jLZBhI8J8VRbRC1AthGJSKgVThy8BJ7
-         TSUopJrnZpxxjnO2PQn3IRYHk63Y+cS0hjf3AMzg281vrQZn6ezfNc4PtRoKR/WL6pkl
-         ovoyErg0g58EL8kkvynXGd9FtIYkSGpsfAL20UGVwyCoTM77ir1o8VqJPFJvuwSeKA2B
-         e1Iq/brJIRBdqb1RMfldtSKXuyAtmjCN546Kprg5AcowMW7eKzpo1agfv4+GK4q+2cbV
-         m8avuPwREdYOkE/Ypbc+xvyarpRhRHri8EKZkjYUWXz7/rkbZNCkmaEwir2dtsL82rSb
-         Cyhg==
-X-Forwarded-Encrypted: i=1; AJvYcCWruUNyJsqYSoqfAcCzPunic1p9zudNlpWM8LaH7Pl/HWpRC6WjHkMbO2Cy4lhGG1vtQMeMPeC7S5oacJ4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbNknhQq6vr0XdxtKZ50wfYTDs9MW72A75A7I8oL3wPSUmg2HE
-	VZ62XzlWOjJAREBxj1HJSbDXDdpHyloA0O6uihYFu9nUBxglyST35M7LjM5FBn44/M9qsZrNQSF
-	gV1HmOmqMIGDB+1h5R62A0c1SRi/DrtUzHYQQ+rqYTBtbSXb2ov6YetO1SWpLHQPm2VH/7DruYB
-	CObQ1+JNnlQ0K0eocpoSYJjfNrrL+jILHPE2CUo8Hv
-X-Gm-Gg: ASbGnctR1Roa8H6KQDzTukdTNZuqNF1/hPQxIBzxjAiV8/tx5SUQR4TcZDSlGX0eI7e
-	nKA0/5aByWgtMWGPs8/PiI/uyUf0JrMqDuZ903ggM9bTDOtT/zb1dBysG6p5Cm9WpWBzuOMk6wj
-	LNzWeb
-X-Received: by 2002:a05:6a00:488b:b0:748:2eb7:8cc7 with SMTP id d2e1a72fcca58-7482eb793b6mr14576144b3a.21.1749545612511;
-        Tue, 10 Jun 2025 01:53:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEDtQATZhNUeHCayiq82Q3uWbh+a992wQoACyQuVqjg1uIut3p9JRqy80WxfvRLTLkZ3TwDx6H3hdyFEwqiPfI=
-X-Received: by 2002:a05:6a00:488b:b0:748:2eb7:8cc7 with SMTP id
- d2e1a72fcca58-7482eb793b6mr14576134b3a.21.1749545612160; Tue, 10 Jun 2025
- 01:53:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="glVoF/8w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1749545613; x=1781081613;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=yqLJuq6pUhpV84S3LTSeHV7jpLp85KZfWOXzmy+DqNk=;
+  b=glVoF/8w5+lsNzOvBlEeAOuOhjqNO5kmdlZ7B4c1MnNyljgzyoaJIuID
+   qcVtn5mj5rBMm9Ik8NFmEpFm9u3Dy5DPxJYD3Xxjin2JtgsdBr4OeRHGK
+   h9v5IVe33d4++dwJNLYiHgc5aZ7Nxs0EDI362EYTRQtXhs8VXZfAdjNYe
+   kAkFNioJU/zfwzzHJDr0JXly1NeBich05RQmZ+h9LtqzVNfRPeP5CI/VB
+   v5QlvXJlULQq6FjdWo7IT/Tq6mNpH+2SkEetyNqNNN/c6gwDelsIAUlCF
+   oGdGQWpeZRkNR+8RrXZlhiWX4ned/Otws/4o+RYzJrv+uz5hCfe/9oyZN
+   w==;
+X-IronPort-AV: E=Sophos;i="6.16,224,1744070400"; 
+   d="scan'208";a="414825054"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 08:53:32 +0000
+Received: from EX19MTAUWB002.ant.amazon.com [10.0.21.151:55261]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.39.175:2525] with esmtp (Farcaster)
+ id 3973ca56-6c43-4750-ae37-7f3a2d5fbb16; Tue, 10 Jun 2025 08:53:31 +0000 (UTC)
+X-Farcaster-Flow-ID: 3973ca56-6c43-4750-ae37-7f3a2d5fbb16
+Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
+ EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 10 Jun 2025 08:53:30 +0000
+Received: from ip-10-253-83-51.amazon.com (172.19.99.218) by
+ EX19D020UWC004.ant.amazon.com (10.13.138.149) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 10 Jun 2025 08:53:29 +0000
+From: Alexander Graf <graf@amazon.com>
+To: <kexec@lists.infradead.org>
+CC: <linux-kernel@vger.kernel.org>, Pasha Tatashin
+	<pasha.tatashin@soleen.com>, <nh-open-source@amazon.com>, Baoquan He
+	<bhe@redhat.com>, Zhongkun He <hezhongkun.hzk@bytedance.com>, Andrew Morton
+	<akpm@linux-foundation.org>
+Subject: [PATCH v5] kexec: Enable CMA based contiguous allocation
+Date: Tue, 10 Jun 2025 08:53:27 +0000
+Message-ID: <20250610085327.51817-1-graf@amazon.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250606115012.1331551-1-eperezma@redhat.com> <20250606115012.1331551-3-eperezma@redhat.com>
- <CACGkMEuGC6NQmfUgXj1YVyURQ6-S2YT2qkAuYQGLpqVaV75kJg@mail.gmail.com> <CAJaqyWcvHx7kwcTceN2jazT0nKNo1r5zdzqWHqpxdna-kCS1RA@mail.gmail.com>
-In-Reply-To: <CAJaqyWcvHx7kwcTceN2jazT0nKNo1r5zdzqWHqpxdna-kCS1RA@mail.gmail.com>
-From: Jason Wang <jasowang@redhat.com>
-Date: Tue, 10 Jun 2025 16:53:20 +0800
-X-Gm-Features: AX0GCFuqGQsBNSumlUewaUtQcwP98_Y_ku7R1josEfD_6XY6HQFkMkPp5R96B_Q
-Message-ID: <CACGkMEu+s_4feR6X2MBOPQFjwULEkD933ZTbQnkG+GfZ9rqcMg@mail.gmail.com>
-Subject: Re: [RFC 2/6] vduse: add vq group support
-To: Eugenio Perez Martin <eperezma@redhat.com>
-Cc: Yongji Xie <xieyongji@bytedance.com>, Cindy Lu <lulu@redhat.com>, 
-	linux-kernel@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, Maxime Coquelin <mcoqueli@redhat.com>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, virtualization@lists.linux.dev, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Laurent Vivier <lvivier@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: EX19D038UWB002.ant.amazon.com (10.13.139.185) To
+ EX19D020UWC004.ant.amazon.com (10.13.138.149)
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 9, 2025 at 2:03=E2=80=AFPM Eugenio Perez Martin <eperezma@redha=
-t.com> wrote:
->
-> On Mon, Jun 9, 2025 at 3:55=E2=80=AFAM Jason Wang <jasowang@redhat.com> w=
-rote:
-> >
-> > On Fri, Jun 6, 2025 at 7:50=E2=80=AFPM Eugenio P=C3=A9rez <eperezma@red=
-hat.com> wrote:
-> > >
-> > > The virtqueue group is the minimal set of virtqueues that must share =
-an
-> > > address space.  And the address space identifier could only be attach=
-ed
-> > > to a specific virtqueue group.  The virtqueue is attached to a
-> > > virtqueue group for all the life of the device.
-> > >
-> > > During vDPA device allocation, the VDUSE device needs to report the
-> > > number of virtqueue groups supported. At this moment only vhost_vdpa =
-is
-> > > able to do it.
-> > >
-> > > This helps to isolate the environments for the virtqueue that will no=
-t
-> > > be assigned directly. E.g in the case of virtio-net, the control
-> > > virtqueue will not be assigned directly to guest.
-> > >
-> > > As we need to back the vq groups with a struct device for the file
-> > > operations, let's keep this number as low as possible at the moment: =
-2.
-> > > We can back one VQ group with the vduse device and the other one with
-> > > the vdpa device.
-> > >
-> > > Signed-off-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
-> > > ---
-> > >  drivers/vdpa/vdpa_user/vduse_dev.c | 44 ++++++++++++++++++++++++++++=
-+-
-> > >  include/uapi/linux/vduse.h         | 17 +++++++++++-
-> > >  2 files changed, 59 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/vdpa/vdpa_user/vduse_dev.c b/drivers/vdpa/vdpa_u=
-ser/vduse_dev.c
-> > > index 6a9a37351310..6fa687bc4912 100644
-> > > --- a/drivers/vdpa/vdpa_user/vduse_dev.c
-> > > +++ b/drivers/vdpa/vdpa_user/vduse_dev.c
-> > > @@ -46,6 +46,11 @@
-> > >  #define VDUSE_IOVA_SIZE (VDUSE_MAX_BOUNCE_SIZE + 128 * 1024 * 1024)
-> > >  #define VDUSE_MSG_DEFAULT_TIMEOUT 30
-> > >
-> > > +/*
-> > > + * Let's make it 2 for simplicity.
-> > > + */
-> > > +#define VDUSE_MAX_VQ_GROUPS 2
-> > > +
-> > >  #define IRQ_UNBOUND -1
-> > >
-> > >  struct vduse_virtqueue {
-> > > @@ -114,6 +119,7 @@ struct vduse_dev {
-> > >         u8 status;
-> > >         u32 vq_num;
-> > >         u32 vq_align;
-> > > +       u32 ngroups;
-> > >         struct vduse_umem *umem;
-> > >         struct mutex mem_lock;
-> > >         unsigned int bounce_size;
-> > > @@ -592,6 +598,25 @@ static int vduse_vdpa_set_vq_state(struct vdpa_d=
-evice *vdpa, u16 idx,
-> > >         return 0;
-> > >  }
-> > >
-> > > +static u32 vduse_get_vq_group(struct vdpa_device *vdpa, u16 idx)
-> > > +{
-> > > +       struct vduse_dev *dev =3D vdpa_to_vduse(vdpa);
-> > > +       struct vduse_dev_msg msg =3D { 0 };
-> > > +       int ret;
-> > > +
-> > > +       if (dev->api_version < VDUSE_API_VERSION_1)
-> > > +               return 0;
-> > > +
-> > > +       msg.req.type =3D VDUSE_GET_VQ_GROUP;
-> > > +       msg.req.vq_group.index =3D idx;
-> >
-> > Considering there will be a set_group_asid request, could the kernel
-> > cache the result so we don't need to bother with requests from
-> > userspace?
-> >
->
-> Yes we can, actually a previous version did it. But what's the use? It
-> is not used in the dataplane, so we reduce complexity if we don't
-> store it.
+When booting a new kernel with kexec_file, the kernel picks a target
+location that the kernel should live at, then allocates random pages,
+checks whether any of those patches magically happens to coincide with
+a target address range and if so, uses them for that range.
 
-It helps to reduce the chance to wait for the userspace. I think it's safer=
-.
+For every page allocated this way, it then creates a page list that the
+relocation code - code that executes while all CPUs are off and we are
+just about to jump into the new kernel - copies to their final memory
+location. We can not put them there before, because chances are pretty
+good that at least some page in the target range is already in use by
+the currently running Linux environment. Copying is happening from a
+single CPU at RAM rate, which takes around 4-50 ms per 100 MiB.
 
-For example, we cache device status as well, if needed userspace can
-update the status via ioctl().
+All of this is inefficient and error prone.
 
->
-> What's more, in the case of the net device, the vq number -> vq group
-> association can change in a reset as the CVQ is either the last one or
-> #2 if MQ is negotiated. We need to code when to reset this
-> association, so complexity grows even more. And the vq group are not
-> asked by QEMU after that point anyway.
+To successfully kexec, we need to quiesce all devices of the outgoing
+kernel so they don't scribble over the new kernel's memory. We have seen
+cases where that does not happen properly (*cough* GIC *cough*) and hence
+the new kernel was corrupted. This started a month long journey to root
+cause failing kexecs to eventually see memory corruption, because the new
+kernel was corrupted severely enough that it could not emit output to
+tell us about the fact that it was corrupted. By allocating memory for the
+next kernel from a memory range that is guaranteed scribbling free, we can
+boot the next kernel up to a point where it is at least able to detect
+corruption and maybe even stop it before it becomes severe. This increases
+the chance for successful kexecs.
 
-Yes, we can have an array. E.g simulator has something like:
+Since kexec got introduced, Linux has gained the CMA framework which
+can perform physically contiguous memory mappings, while keeping that
+memory available for movable memory when it is not needed for contiguous
+allocations. The default CMA allocator is for DMA allocations.
 
-        struct vhost_iotlb *iommu;
+This patch adds logic to the kexec file loader to attempt to place the
+target payload at a location allocated from CMA. If successful, it uses
+that memory range directly instead of creating copy instructions during
+the hot phase. To ensure that there is a safety net in case anything goes
+wrong with the CMA allocation, it also adds a flag for user space to force
+disable CMA allocations.
 
-Thanks
+Using CMA allocations has two advantages:
+
+  1) Faster by 4-50 ms per 100 MiB. There is no more need to copy in the
+     hot phase.
+  2) More robust. Even if by accident some page is still in use for DMA,
+     the new kernel image will be safe from that access because it resides
+     in a memory region that is considered allocated in the old kernel and
+     has a chance to reinitialize that component.
+
+Signed-off-by: Alexander Graf <graf@amazon.com>
+Acked-by: Baoquan He <bhe@redhat.com>
+
+---
+
+v1 -> v2:
+
+  - Clarify patch description
+  - Move cma pointer out of kexec_segment. That is a sneaky UAPI struct we
+    can not modify. Fixes non kexec_file path
+  - Coding style
+  - Move memset(0) to only clear remainder
+  - Move kexec_alloc_contig() into kexec_locate_mem_hole(). Makes the code
+    flow easier to read.
+  - Sanitize return values
+
+v2 -> v3:
+
+  - Fix refactoring bug which meant we never exercised the new code path
+
+v3 -> v4:
+
+  - Skip CMA for crash kernels (thanks Zhongkun He!)
+
+v4 -> v5:
+
+  - Rebased to 6.16
+---
+ arch/riscv/kernel/kexec_elf.c |   1 +
+ include/linux/kexec.h         |  10 ++++
+ include/uapi/linux/kexec.h    |   1 +
+ kernel/kexec.c                |   2 +-
+ kernel/kexec_core.c           | 100 +++++++++++++++++++++++++++++++---
+ kernel/kexec_file.c           |  51 ++++++++++++++++-
+ kernel/kexec_internal.h       |   2 +-
+ 7 files changed, 156 insertions(+), 11 deletions(-)
+
+diff --git a/arch/riscv/kernel/kexec_elf.c b/arch/riscv/kernel/kexec_elf.c
+index f4755d49b89e..56444c7bd34e 100644
+--- a/arch/riscv/kernel/kexec_elf.c
++++ b/arch/riscv/kernel/kexec_elf.c
+@@ -95,6 +95,7 @@ static int elf_find_pbase(struct kimage *image, unsigned long kernel_len,
+ 	kbuf.buf_align = PMD_SIZE;
+ 	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+ 	kbuf.memsz = ALIGN(kernel_len, PAGE_SIZE);
++	kbuf.cma = NULL;
+ 	kbuf.top_down = false;
+ 	ret = arch_kexec_locate_mem_hole(&kbuf);
+ 	if (!ret) {
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 03f85ad03025..1b10a5d84b68 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -79,6 +79,12 @@ extern note_buf_t __percpu *crash_notes;
+ 
+ typedef unsigned long kimage_entry_t;
+ 
++/*
++ * This is a copy of the UAPI struct kexec_segment and must be identical
++ * to it because it gets copied straight from user space into kernel
++ * memory. Do not modify this structure unless you change the way segments
++ * get ingested from user space.
++ */
+ struct kexec_segment {
+ 	/*
+ 	 * This pointer can point to user memory if kexec_load() system
+@@ -172,6 +178,7 @@ int kexec_image_post_load_cleanup_default(struct kimage *image);
+  * @buf_align:	Minimum alignment needed.
+  * @buf_min:	The buffer can't be placed below this address.
+  * @buf_max:	The buffer can't be placed above this address.
++ * @cma:	CMA page if the buffer is backed by CMA.
+  * @top_down:	Allocate from top of memory.
+  * @random:	Place the buffer at a random position.
+  */
+@@ -184,6 +191,7 @@ struct kexec_buf {
+ 	unsigned long buf_align;
+ 	unsigned long buf_min;
+ 	unsigned long buf_max;
++	struct page *cma;
+ 	bool top_down;
+ #ifdef CONFIG_CRASH_DUMP
+ 	bool random;
+@@ -340,6 +348,7 @@ struct kimage {
+ 
+ 	unsigned long nr_segments;
+ 	struct kexec_segment segment[KEXEC_SEGMENT_MAX];
++	struct page *segment_cma[KEXEC_SEGMENT_MAX];
+ 
+ 	struct list_head control_pages;
+ 	struct list_head dest_pages;
+@@ -361,6 +370,7 @@ struct kimage {
+ 	 */
+ 	unsigned int hotplug_support:1;
+ #endif
++	unsigned int no_cma:1;
+ 
+ #ifdef ARCH_HAS_KIMAGE_ARCH
+ 	struct kimage_arch arch;
+diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
+index 5ae1741ea8ea..8958ebfcff94 100644
+--- a/include/uapi/linux/kexec.h
++++ b/include/uapi/linux/kexec.h
+@@ -27,6 +27,7 @@
+ #define KEXEC_FILE_ON_CRASH	0x00000002
+ #define KEXEC_FILE_NO_INITRAMFS	0x00000004
+ #define KEXEC_FILE_DEBUG	0x00000008
++#define KEXEC_FILE_NO_CMA	0x00000010
+ 
+ /* These values match the ELF architecture values.
+  * Unless there is a good reason that should continue to be the case.
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index a6b3f96bb50c..28008e3d462e 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -152,7 +152,7 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
+ 		goto out;
+ 
+ 	for (i = 0; i < nr_segments; i++) {
+-		ret = kimage_load_segment(image, &image->segment[i]);
++		ret = kimage_load_segment(image, i);
+ 		if (ret)
+ 			goto out;
+ 	}
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 9c59fa480b0b..2305e0046d71 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -40,6 +40,7 @@
+ #include <linux/hugetlb.h>
+ #include <linux/objtool.h>
+ #include <linux/kmsg_dump.h>
++#include <linux/dma-map-ops.h>
+ 
+ #include <asm/page.h>
+ #include <asm/sections.h>
+@@ -553,6 +554,24 @@ static void kimage_free_entry(kimage_entry_t entry)
+ 	kimage_free_pages(page);
+ }
+ 
++static void kimage_free_cma(struct kimage *image)
++{
++	unsigned long i;
++
++	for (i = 0; i < image->nr_segments; i++) {
++		struct page *cma = image->segment_cma[i];
++		u32 nr_pages = image->segment[i].memsz >> PAGE_SHIFT;
++
++		if (!cma)
++			continue;
++
++		arch_kexec_pre_free_pages(page_address(cma), nr_pages);
++		dma_release_from_contiguous(NULL, cma, nr_pages);
++		image->segment_cma[i] = NULL;
++	}
++
++}
++
+ void kimage_free(struct kimage *image)
+ {
+ 	kimage_entry_t *ptr, entry;
+@@ -591,6 +610,9 @@ void kimage_free(struct kimage *image)
+ 	/* Free the kexec control pages... */
+ 	kimage_free_page_list(&image->control_pages);
+ 
++	/* Free CMA allocations */
++	kimage_free_cma(image);
++
+ 	/*
+ 	 * Free up any temporary buffers allocated. This might hit if
+ 	 * error occurred much later after buffer allocation.
+@@ -716,9 +738,69 @@ static struct page *kimage_alloc_page(struct kimage *image,
+ 	return page;
+ }
+ 
+-static int kimage_load_normal_segment(struct kimage *image,
+-					 struct kexec_segment *segment)
++static int kimage_load_cma_segment(struct kimage *image, int idx)
++{
++	struct kexec_segment *segment = &image->segment[idx];
++	struct page *cma = image->segment_cma[idx];
++	char *ptr = page_address(cma);
++	unsigned long maddr;
++	size_t ubytes, mbytes;
++	int result = 0;
++	unsigned char __user *buf = NULL;
++	unsigned char *kbuf = NULL;
++
++	if (image->file_mode)
++		kbuf = segment->kbuf;
++	else
++		buf = segment->buf;
++	ubytes = segment->bufsz;
++	mbytes = segment->memsz;
++	maddr = segment->mem;
++
++	/* Then copy from source buffer to the CMA one */
++	while (mbytes) {
++		size_t uchunk, mchunk;
++
++		ptr += maddr & ~PAGE_MASK;
++		mchunk = min_t(size_t, mbytes,
++				PAGE_SIZE - (maddr & ~PAGE_MASK));
++		uchunk = min(ubytes, mchunk);
++
++		if (uchunk) {
++			/* For file based kexec, source pages are in kernel memory */
++			if (image->file_mode)
++				memcpy(ptr, kbuf, uchunk);
++			else
++				result = copy_from_user(ptr, buf, uchunk);
++			ubytes -= uchunk;
++			if (image->file_mode)
++				kbuf += uchunk;
++			else
++				buf += uchunk;
++		}
++
++		if (result) {
++			result = -EFAULT;
++			goto out;
++		}
++
++		ptr    += mchunk;
++		maddr  += mchunk;
++		mbytes -= mchunk;
++
++		cond_resched();
++	}
++
++	/* Clear any remainder */
++	memset(ptr, 0, mbytes);
++
++out:
++	return result;
++}
++
++static int kimage_load_normal_segment(struct kimage *image, int idx)
+ {
++	struct kexec_segment *segment = &image->segment[idx];
+ 	unsigned long maddr;
+ 	size_t ubytes, mbytes;
+ 	int result;
+@@ -733,6 +815,9 @@ static int kimage_load_normal_segment(struct kimage *image,
+ 	mbytes = segment->memsz;
+ 	maddr = segment->mem;
+ 
++	if (image->segment_cma[idx])
++		return kimage_load_cma_segment(image, idx);
++
+ 	result = kimage_set_destination(image, maddr);
+ 	if (result < 0)
+ 		goto out;
+@@ -787,13 +872,13 @@ static int kimage_load_normal_segment(struct kimage *image,
+ }
+ 
+ #ifdef CONFIG_CRASH_DUMP
+-static int kimage_load_crash_segment(struct kimage *image,
+-					struct kexec_segment *segment)
++static int kimage_load_crash_segment(struct kimage *image, int idx)
+ {
+ 	/* For crash dumps kernels we simply copy the data from
+ 	 * user space to it's destination.
+ 	 * We do things a page at a time for the sake of kmap.
+ 	 */
++	struct kexec_segment *segment = &image->segment[idx];
+ 	unsigned long maddr;
+ 	size_t ubytes, mbytes;
+ 	int result;
+@@ -858,18 +943,17 @@ static int kimage_load_crash_segment(struct kimage *image,
+ }
+ #endif
+ 
+-int kimage_load_segment(struct kimage *image,
+-				struct kexec_segment *segment)
++int kimage_load_segment(struct kimage *image, int idx)
+ {
+ 	int result = -ENOMEM;
+ 
+ 	switch (image->type) {
+ 	case KEXEC_TYPE_DEFAULT:
+-		result = kimage_load_normal_segment(image, segment);
++		result = kimage_load_normal_segment(image, idx);
+ 		break;
+ #ifdef CONFIG_CRASH_DUMP
+ 	case KEXEC_TYPE_CRASH:
+-		result = kimage_load_crash_segment(image, segment);
++		result = kimage_load_crash_segment(image, idx);
+ 		break;
+ #endif
+ 	}
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 69fe76fd9233..41271eee0f99 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -26,6 +26,7 @@
+ #include <linux/kernel_read_file.h>
+ #include <linux/syscalls.h>
+ #include <linux/vmalloc.h>
++#include <linux/dma-map-ops.h>
+ #include "kexec_internal.h"
+ 
+ #ifdef CONFIG_KEXEC_SIG
+@@ -253,6 +254,8 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 		ret = 0;
+ 	}
+ 
++	image->no_cma = !!(flags & KEXEC_FILE_NO_CMA);
++
+ 	if (cmdline_len) {
+ 		image->cmdline_buf = memdup_user(cmdline_ptr, cmdline_len);
+ 		if (IS_ERR(image->cmdline_buf)) {
+@@ -434,7 +437,7 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+ 			      i, ksegment->buf, ksegment->bufsz, ksegment->mem,
+ 			      ksegment->memsz);
+ 
+-		ret = kimage_load_segment(image, &image->segment[i]);
++		ret = kimage_load_segment(image, i);
+ 		if (ret)
+ 			goto out;
+ 	}
+@@ -663,6 +666,43 @@ static int kexec_walk_resources(struct kexec_buf *kbuf,
+ 		return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
+ }
+ 
++static int kexec_alloc_contig(struct kexec_buf *kbuf)
++{
++	size_t nr_pages = kbuf->memsz >> PAGE_SHIFT;
++	unsigned long mem;
++	struct page *p;
++
++	/* User space disabled CMA allocations, bail out. */
++	if (kbuf->image->no_cma)
++		return -EPERM;
++
++	/* Skip CMA logic for crash kernel */
++	if (kbuf->image->type == KEXEC_TYPE_CRASH)
++		return -EPERM;
++
++	p = dma_alloc_from_contiguous(NULL, nr_pages, get_order(kbuf->buf_align), true);
++	if (!p)
++		return -ENOMEM;
++
++	pr_debug("allocated %zu DMA pages at 0x%lx", nr_pages, page_to_boot_pfn(p));
++
++	mem = page_to_boot_pfn(p) << PAGE_SHIFT;
++
++	if (kimage_is_destination_range(kbuf->image, mem, mem + kbuf->memsz)) {
++		/* Our region is already in use by a statically defined one. Bail out. */
++		pr_debug("CMA overlaps existing mem: 0x%lx+0x%lx\n", mem, kbuf->memsz);
++		dma_release_from_contiguous(NULL, p, nr_pages);
++		return -EBUSY;
++	}
++
++	kbuf->mem = page_to_boot_pfn(p) << PAGE_SHIFT;
++	kbuf->cma = p;
++
++	arch_kexec_post_alloc_pages(page_address(p), (int)nr_pages, 0);
++
++	return 0;
++}
++
+ /**
+  * kexec_locate_mem_hole - find free memory for the purgatory or the next kernel
+  * @kbuf:	Parameters for the memory search.
+@@ -687,6 +727,13 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
+ 	if (ret <= 0)
+ 		return ret;
+ 
++	/*
++	 * Try to find a free physically contiguous block of memory first. With that, we
++	 * can avoid any copying at kexec time.
++	 */
++	if (!kexec_alloc_contig(kbuf))
++		return 0;
++
+ 	if (!IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK))
+ 		ret = kexec_walk_resources(kbuf, locate_mem_hole_callback);
+ 	else
+@@ -732,6 +779,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
+ 	/* Ensure minimum alignment needed for segments. */
+ 	kbuf->memsz = ALIGN(kbuf->memsz, PAGE_SIZE);
+ 	kbuf->buf_align = max(kbuf->buf_align, PAGE_SIZE);
++	kbuf->cma = NULL;
+ 
+ 	/* Walk the RAM ranges and allocate a suitable range for the buffer */
+ 	ret = arch_kexec_locate_mem_hole(kbuf);
+@@ -744,6 +792,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
+ 	ksegment->bufsz = kbuf->bufsz;
+ 	ksegment->mem = kbuf->mem;
+ 	ksegment->memsz = kbuf->memsz;
++	kbuf->image->segment_cma[kbuf->image->nr_segments] = kbuf->cma;
+ 	kbuf->image->nr_segments++;
+ 	return 0;
+ }
+diff --git a/kernel/kexec_internal.h b/kernel/kexec_internal.h
+index 30a733a55a67..228bb88c018b 100644
+--- a/kernel/kexec_internal.h
++++ b/kernel/kexec_internal.h
+@@ -10,7 +10,7 @@ struct kimage *do_kimage_alloc_init(void);
+ int sanity_check_segment_list(struct kimage *image);
+ void kimage_free_page_list(struct list_head *list);
+ void kimage_free(struct kimage *image);
+-int kimage_load_segment(struct kimage *image, struct kexec_segment *segment);
++int kimage_load_segment(struct kimage *image, int idx);
+ void kimage_terminate(struct kimage *image);
+ int kimage_is_destination_range(struct kimage *image,
+ 				unsigned long start, unsigned long end);
+-- 
+2.34.1
+
+
+
+
+Amazon Web Services Development Center Germany GmbH
+Tamara-Danz-Str. 13
+10243 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
+Sitz: Berlin
+Ust-ID: DE 365 538 597
 
