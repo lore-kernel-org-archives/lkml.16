@@ -1,147 +1,99 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1CAD285406
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:05:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB98B283FD7
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:06:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749593161; cv=none; b=BGd88akdPDaERXq00qsGzKvWd/60Qk2PYyD0wVZsoSyO05dU2Yo2hCqWURX8eRZ7YcyPe19IEH4VqMa4QkWY2lnilNI5EhNYd3VMeyT5jbZCv6qhtW/MDpAAr5R6o0EyGPDAyR3rV6xKCB2XiF2oub6sWYuhOlaSuYk5dzkkoU8=
+	t=1749593209; cv=none; b=SkqNy9Hfs6LjqnukvaCh27zh12kydwNj62vKWwJoCrJSLtqYn50tIAdSh/wuITFgbsOuidz2CVpaTc5xI2jyWqu+4+LdNGsMX9og+R8DRgP0YwTO+KZu4RhN1hgPtPYibZsUFMiWdsooBxFmrqDaapVRsTmxEc5o7hckLbOh44k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749593161; c=relaxed/simple;
-	bh=sOHGjtlBSSivUwJ9y42B0KUdi/GHMLZsTPcNzS2pquc=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=CWUKofViBBsbd4bxA6K5jpUKEMDm8bGEqYVOsnGAJMXjZFBvqK9L0oYzhSoj/omtP8NhJxSEMMOIqKi0CctIRJ27P609BmW/atOA12b99FPdvz9RmFYmydPV0R2aebcyKajbOfNtQ/YyGfJ8OoqzTx/2ZsaIgjp9DM1AaglTFNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=iEts/3p5; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	s=arc-20240116; t=1749593209; c=relaxed/simple;
+	bh=WEjoFKJq1fwhLjJL/1LIboVF8pYHP56Xq9jI3aQ+dvM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=u4/s3nY49D0UeYznIXT8tu3KpqzCf7ly0cpRySEkt8v/0ElzdfAoHV4l94AnlvpVuVQ72dGe3YgPWuTQLTtue2+EKYhPVKhwEeZiIEAj/E1eeu2mhiR8ObOf1OmBxF96C1BS6OesPx5aF9dqteIma0i0PMu6/6nRo1m9KKrvrMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JBJYrun6; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="iEts/3p5"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2350fc2591dso2802085ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:05:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JBJYrun6"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-55351af2fc6so7162642e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:06:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1749593159; x=1750197959; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wHqcA3zVz9S368+hvL9R5MdY9BW6tTYhYF+8x4BDYC8=;
-        b=iEts/3p5ipgqqSIoJKYPRK4u6JhseN3Rx46rLLZoaMP11gMGteYKtIA7rnl7XFsEV5
-         Cf01EeI/ireaUp38DG94sSxSfYQ1TgA6//gPbwtNXNxaFpi+FZ6CAq9/cPOCfTlz04a5
-         bsywqCnWTV9/3pg/1lpnsbb7SkzCwo3YLqK738WWtf/VPCIQSyPLqYWe7lPScz9vkiFF
-         ipKPt51IhA2zpZ3dw2+46uDlrmfE2KH9bkCkONqhsqo2nhFLGgMoZP8f8mG4TteYlPML
-         V3PBXN4cukM+oOd0a4b8ePY5PmW27Zb3biovYaHQIKyPUtNqaRTnCeI8LXGATjkaNKq0
-         tTeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749593159; x=1750197959;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1749593204; x=1750198004; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wHqcA3zVz9S368+hvL9R5MdY9BW6tTYhYF+8x4BDYC8=;
-        b=ZkwxXcPU1HFkkqjncp4EBsQ1uLtg1O+Rcmg1LzRtx8jhRfGtOAelmhY3bSFVu0BbA9
-         dLhLEHn/alYzu9dSOEOW8xkOBOpCHI2aMp6iHPFA0pTj90y2potnPbFOMQOjcL9iFbxT
-         XDy9Dv0CsmkNvGJq1XuypP+2kv4h4cKOeyKm1eEh49pS37CfIo22bl1fkZTSvVWxTq3S
-         kaZQO3x5OvvgsnNNE3p9cXWXV1xFC5VJLmg9TTRfWeWw9J26zqX3wK8yHkMQRLlKOJbZ
-         XGiOx9V2gbugAxGsd0s83iz6UntIhC/qNEqoJK3esrJaXoUdlxxdD/Jwx9Pjs2hnPZEW
-         ouFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXvqeDVWppNSyoHdlSNVrNQegiN8qGiwbGYe6SV3iOTtOOwiAPLWfKl9GV3FEL7E5Oe5mEVlGWbs78Ek9M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwX1GruaBDetyFmaoaRQTOF5+or+bPhSAWUb+1HrVgbBfJIJp1f
-	YbNVucy57+SCOhUF43VncIC7ro1o9FnfObFkFwOM9aSCh72xJAzeP9o6aGZUEBjCcTc=
-X-Gm-Gg: ASbGncuwzw6Udj8UI+F9aYMPraNpzE4aXIfrkbKvSKEXztiwT/f15AhAf/iovjmf+KL
-	VrscIPVzIfLlVxONjvuGAXe+O2LYJ7emnNCKd/X1iA/gMsZ2l/3ZcMdKo3Vw8VK87aWI+WmOlnS
-	zRxBKCDY7rX+h1T8o+9sBVSnWBmu8G2yUccpY3coSxJdmmcSjr1E1V7Oam6JCsJBPwQRoRtoX/V
-	stt3MpX/C+kqplHydjcEEoeHZoVEOC1wPll13wb9UH8nIOSkVqSTnTnyfoCrx8YQvyPCYrMTAmv
-	TriDS8HOS6AksVzDs/bplbHcfndxfGjL5tp6eIEF0NjbR3y/F1keXGvM2FDu
-X-Google-Smtp-Source: AGHT+IFDADkuWil1bWnN6dI1d8MxdEDW3cXaZee41rfaousESkYjlPck3T795KMl0sR8ywtHR+O3Jw==
-X-Received: by 2002:a17:902:f60d:b0:215:a303:24e9 with SMTP id d9443c01a7336-2364169f4aamr11793605ad.3.1749593158758;
-        Tue, 10 Jun 2025 15:05:58 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:500::7:116a])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2360340fbffsm75592285ad.197.2025.06.10.15.05.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 15:05:58 -0700 (PDT)
-Date: Tue, 10 Jun 2025 15:05:58 -0700 (PDT)
-X-Google-Original-Date: Tue, 10 Jun 2025 15:05:50 PDT (-0700)
-Subject:     Re: [PATCH] riscv: vector: fix xtheadvector save/restore
-In-Reply-To: <CAAT7Ki8Z5O61j8bS3OkdYMbcnfJBY18zxJe=qZeJWCpYTibReg@mail.gmail.com>
-CC: Alexandre Ghiti <alex@ghiti.fr>, linux-riscv@lists.infradead.org,
-  Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu, Charlie Jenkins <charlie@rivosinc.com>,
-  jesse@rivosinc.com, andybnac@gmail.com, linux-kernel@vger.kernel.org
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: rabenda.cn@gmail.com
-Message-ID: <mhng-08D1FAC4-22A7-424E-A1C8-89B71D89BF01@palmerdabbelt-mac>
+        bh=WEjoFKJq1fwhLjJL/1LIboVF8pYHP56Xq9jI3aQ+dvM=;
+        b=JBJYrun6Y8qBLpH9PeR9sxX/5z4fhsjOpHAkFqgY0n2+M6LRu3j4vZiLPDo+BfITjb
+         Oa9OiHV6c2aIF8gRcMZtA8BdO0qGfwjvCCnFAPTjF+5ODhsxXVyIWWTQFP/oMQH0bO+y
+         BslMRlE/h2JaJl4K0u1Z54N15+GJSs/nex480LPcBIEZtTWNUvMV4H+MDCyGVjXj1O0O
+         2JouZ2smwpnISJy3oXIlUy8shjX00CXFA2iiS7ZJzTjsiOe9O5hQF84Y8YCFdVZGn5TW
+         iIJA7+dXQwCW35mgrBlQWbGKdJWrQD2QR3uI/Z9S4gxp4O75uxJ68M/6XhNV6iGLN6uU
+         cxdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749593204; x=1750198004;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WEjoFKJq1fwhLjJL/1LIboVF8pYHP56Xq9jI3aQ+dvM=;
+        b=DfB38BdTTLaOy0QGTLwFrwM421tjWAimwGEbTHoylYnSRPD6v+JdDNlLBmc+CLhGwy
+         QgkXiMDKaBT4bdDCoqCtzibwCT9bx1/MN4e4jLUKRCMacLvVLtJApvdNbx+WNR8ivQlp
+         edCXkvmK7IUWcQ1pDORMAy9Xbh5CRY0arzoUqHTDwRwHuRd/9vwP/ogWgruQpQ3fAp7V
+         KBgnmsZU1Ne7uF4Tv+Vv9RaDEgQFJzS8DwUg9wav3fininTIDBtdzuRIF53Uynuy5DJt
+         w+aJm8apdVqf2LY4AK93fighwtHt3ahCLCJpQRxcWdZXU9ZUuJe+HkeLV838F15vkVuK
+         Fuww==
+X-Forwarded-Encrypted: i=1; AJvYcCVSTJBg1jsmBg13PlIw5PpKfX4IVLXCSl3HBGGI4cO/3tH3PPp5RgTnAB094wxRnf5snjawqYyYZfxJS7w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcdFYLaQ4CV94oj/yWgfWyARvPyuYtY9I1X8cos2g96DNJDWHO
+	qtq7Ta2Pf+rkK8vHhizmI1mobgdoNM7rGBgmBud8rr9UPhneb3evT2Ohl0Cznjo/3GacJR8sFRV
+	mE+LrI4BGhaYoNJ8VjKpShKn/j1+yIWqE+zq+Ef5V3Q==
+X-Gm-Gg: ASbGncsk7y3ad3JF3dKBbFVFQz55WKxld7QKyiXOrT0hUUox9KAf/8IXgteenSwJGdX
+	RnrbZs7TAss0FWcAP3pMOvXlTM+vlaKQBvYo2BAnMZ80zW2lnsfKRF2jNnWrEu6s4+FvUr3u/ud
+	jthoEcEapLG4/oNEJQqQFPsKSFNXR66FaUNrZLk5f2sAY=
+X-Google-Smtp-Source: AGHT+IGlqZqOxo94Fq1AxRXbuSE8IQ4NwQa1mjzmaOgaM7Du8n0a08UJH2Mj9vvFcKeYpn253k3S/NXDYuSRYxggVL8=
+X-Received: by 2002:ac2:4c4f:0:b0:553:659c:53fa with SMTP id
+ 2adb3069b0e04-5539d4be3f5mr111095e87.5.1749593203962; Tue, 10 Jun 2025
+ 15:06:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+References: <20250610-gpiochip-set-rv-gpio-v1-0-3a9a3c1472ff@linaro.org> <20250610-gpiochip-set-rv-gpio-v1-8-3a9a3c1472ff@linaro.org>
+In-Reply-To: <20250610-gpiochip-set-rv-gpio-v1-8-3a9a3c1472ff@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 11 Jun 2025 00:06:32 +0200
+X-Gm-Features: AX0GCFsQuNMrR1lnqoFxpoWnn4BCOjfc6g0nU8IoyS3i9wf_s_1MzLLDkyq5jQE
+Message-ID: <CACRpkdb8GBwtOGQYrVkxiv8ZCjEE6pkQ_kSEutY2jYG0bUbFVg@mail.gmail.com>
+Subject: Re: [PATCH 08/12] gpio: nomadik: use new GPIO line value setter callbacks
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>, 
+	Conor Dooley <conor.dooley@microchip.com>, Daire McNamara <daire.mcnamara@microchip.com>, 
+	Daniel Palmer <daniel@thingy.jp>, Romain Perier <romain.perier@gmail.com>, 
+	Avi Fishman <avifishman70@gmail.com>, Tomer Maimon <tmaimon77@gmail.com>, 
+	Tali Perry <tali.perry1@gmail.com>, Patrick Venture <venture@google.com>, 
+	Nancy Yuen <yuenn@google.com>, Benjamin Fair <benjaminfair@google.com>, 
+	Grygorii Strashko <grygorii.strashko@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, 
+	Kevin Hilman <khilman@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org, 
+	linux-omap@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 23 May 2025 02:46:50 PDT (-0700), rabenda.cn@gmail.com wrote:
-> I will release v2 later to add explanation and add fix tag
+On Tue, Jun 10, 2025 at 2:33=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 
-Sorry if I missed it, but I don't see a v2 (I'm scrubbing through stuff 
-post merge window).
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
->
-> Thanks,
->
-> Han
->
-> On Fri, May 23, 2025 at 4:54 PM Alexandre Ghiti <alex@ghiti.fr> wrote:
->>
->> Hi Han,
->>
->> On 5/22/25 19:27, Han Gao wrote:
->> > Fix [1] save/restore vector register error
->> >
->> > Link: https://lore.kernel.org/all/20241113-xtheadvector-v11-9-236c22791ef9@rivosinc.com/ [1]
->>
->>
->> Would you mind rephrasing the log? It should explain what was wrong and
->> how you fixed it.
->>
->> Thanks,
->>
->> Alex
->>
->>
->> >
->> > Signed-off-by: Han Gao <rabenda.cn@gmail.com>
->> > ---
->> >   arch/riscv/include/asm/vector.h | 12 ++++++------
->> >   1 file changed, 6 insertions(+), 6 deletions(-)
->> >
->> > diff --git a/arch/riscv/include/asm/vector.h b/arch/riscv/include/asm/vector.h
->> > index e8a83f55be2b..7df6355023a3 100644
->> > --- a/arch/riscv/include/asm/vector.h
->> > +++ b/arch/riscv/include/asm/vector.h
->> > @@ -200,11 +200,11 @@ static inline void __riscv_v_vstate_save(struct __riscv_v_ext_state *save_to,
->> >                       THEAD_VSETVLI_T4X0E8M8D1
->> >                       THEAD_VSB_V_V0T0
->> >                       "add            t0, t0, t4\n\t"
->> > -                     THEAD_VSB_V_V0T0
->> > +                     THEAD_VSB_V_V8T0
->> >                       "add            t0, t0, t4\n\t"
->> > -                     THEAD_VSB_V_V0T0
->> > +                     THEAD_VSB_V_V16T0
->> >                       "add            t0, t0, t4\n\t"
->> > -                     THEAD_VSB_V_V0T0
->> > +                     THEAD_VSB_V_V24T0
->> >                       : : "r" (datap) : "memory", "t0", "t4");
->> >       } else {
->> >               asm volatile (
->> > @@ -236,11 +236,11 @@ static inline void __riscv_v_vstate_restore(struct __riscv_v_ext_state *restore_
->> >                       THEAD_VSETVLI_T4X0E8M8D1
->> >                       THEAD_VLB_V_V0T0
->> >                       "add            t0, t0, t4\n\t"
->> > -                     THEAD_VLB_V_V0T0
->> > +                     THEAD_VLB_V_V8T0
->> >                       "add            t0, t0, t4\n\t"
->> > -                     THEAD_VLB_V_V0T0
->> > +                     THEAD_VLB_V_V16T0
->> >                       "add            t0, t0, t4\n\t"
->> > -                     THEAD_VLB_V_V0T0
->> > +                     THEAD_VLB_V_V24T0
->> >                       : : "r" (datap) : "memory", "t0", "t4");
->> >       } else {
->> >               asm volatile (
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
