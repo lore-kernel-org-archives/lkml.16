@@ -1,105 +1,94 @@
-Received: from mx.swemel.ru (mx.swemel.ru [95.143.211.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 396692918C1;
-	Tue, 10 Jun 2025 12:27:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.143.211.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A26262918D0
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:28:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749558475; cv=none; b=bHIzeC2qw79UpP23HSYh0Iw0bSCTRsPEP7iVIzBc/11d3luEmv97rtmVi0uWbmnrfqhTnVPZeDjQRsRXI1GQMf+3t5TgUyrN8GeQCkGBiAoBB1uMoQgXcq53+06nronh/JSuibUMvr0j5XHIdpVCsky1c6nDIQ+GqnhldMqeIuw=
+	t=1749558525; cv=none; b=WN/4YVdS9EweY+CmF+2mvWYjYi4j7AOT+EnAB20/0tk3yeKxP8wo/MPKPws7o2OyfuCoCBR431WVJPHTsAKqXh9FDbzYGHoiOe4MxPaJ3DW53VxCUHyBxXXbfYplMUSjcQ8pTV6S0Owbz3jDVU1oRnmb62yJYc+1I11BTQeLd3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749558475; c=relaxed/simple;
-	bh=Fgl8Km4RcqFqfY5t3kYoDxE8TNS0WlKWi77RytkhSfQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CnuRRIgnzurCyr/Os8mo9wT6W7EZd75jkhcJxHUy/apuxvUm2oxCAD2zsjWZQrrL52xim4evpIcdk3grwi+wWjaTb2VVrM6T5F+EKh12Mt0cw3kCoCJ2FqqyZvHfQxHO016hKGZvO8SaWByQ2YYyR4S9lQpzDe2TxVDPiB3AiS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru; spf=pass smtp.mailfrom=swemel.ru; dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b=A1U0ge5c; arc=none smtp.client-ip=95.143.211.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=swemel.ru
+	s=arc-20240116; t=1749558525; c=relaxed/simple;
+	bh=qpvt2l7UUTiMSp9Nt2nHtj3uisD8+uoR1/1D3UNyhR8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Nx8+o/FVcCcEsKGWfUVYHWnMkQREIMBiMkSF1KY4HJ8czNuCguqmkNQfv8t5USAWtGa6nmXo5Dg4p/QiB32ElaG73IznR2PYdaVIRzj9cwqkLegiZ394Lf71Qmba9lvPWBmqk9xDc75cm0ZeDM5Ys0dUevKmTqcPShgsLbhKptA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LKRL/wkh; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b="A1U0ge5c"
-From: Denis Arefev <arefev@swemel.ru>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=swemel.ru; s=mail;
-	t=1749558468;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=+Bbt95GEmQZjMfBLT8mqmVirRMgBRSh8XbLFCIcVluk=;
-	b=A1U0ge5cGHWCXef1/O7X6PRMh1IycsE0FrYls3CumAZvkv6CE6op5zROUo50PfT/Sjf3iC
-	EY2cFaSkyb3p4cxNoaS9gGaBYVWqoRcE26N+Zd2GK2jXneEBuVZ5AkEsK/E+h8XO0qeFzz
-	27yONfEjeP5PYKNbxNkp6G8YJGubTOM=
-To: stable@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Andy Gross <agross@kernel.org>,
-	Bjorn Andersson <bjorn.andersson@linaro.org>,
-	Felipe Balbi <balbi@kernel.org>,
-	Lee Jones <lee.jones@linaro.org>,
-	linux-arm-msm@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	Miaoqian Lin <linmq006@gmail.com>
-Subject: [PATCH 5.10] usb: dwc3: dwc3-qcom: Add missing platform_device_put() in dwc3_qcom_acpi_register_core
-Date: Tue, 10 Jun 2025 15:27:46 +0300
-Message-ID: <20250610122748.22575-1-arefev@swemel.ru>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LKRL/wkh"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5532e0ad84aso5614607e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 05:28:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749558521; x=1750163321; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GsOrVxtqepjy8J80Lyog9ns9pzcfAzcmyvDrXuJUtgY=;
+        b=LKRL/wkht4QnbzCRHU/vBDVUMjED1jaa0jjtHJvHAlutsaNYecC4eFasiWryepV/ll
+         Y+x6UvmsgzLDvOy63wAExi66zcdfI4UprmZHRjrCTCJ/NnR6BnF00ZdbNmmHRBfHVYO9
+         lWLg9r8eTokbfiRRDSvEtZYWuMy7aHJo7eRcD7SjlZdfPA44U5FxPAfJ93xS8n1BYKcy
+         6auYsn14kfIvYNwArTOr/uYnz0/wScCoxMyRnaHEzg3ptihTotOJsyhwdS+bK4JQXH1m
+         0NrHWXJKb+ErGqTlxIMavAM8R9dzm575lfhqDHPiUGwPrj6dSeEkdfYRjxH9sbW7ZVzJ
+         SQuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749558521; x=1750163321;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GsOrVxtqepjy8J80Lyog9ns9pzcfAzcmyvDrXuJUtgY=;
+        b=lr4KbEnMm2Jgozi298if8uF5Wj7nF1Q8klbWbClARwXIkUd7m0DL1G42wbvHBSpaT7
+         +WINhxCCPkUUvnLTym4NEqB/afSUo4AjPoPlk0ignXxRbrszbM9doVfW4oFKIDG3hgSN
+         tHm++naefad2XRjsqlP1NdjP/G3rghbjrDpx9x1z53haK1Siwfv64y1ciwQrCIEnqNJh
+         +/Vt0d4aXYNJofKxL56VHC1scCdXaLxFWuTPd85ENFByGg13bc2l4vHKooYDNfpSjYsV
+         vvaIPp9T+bjAqajUUOSP046NgKDrjnLytQs5r8Z5Vq8AdXwIuwcUDfXdZIT6pdYIc4LZ
+         KB5g==
+X-Forwarded-Encrypted: i=1; AJvYcCVAL9h18Hs9g5TtGxxMpKswIXJfSq+1HzGEZE6nKrb3DXWZrpMPLxWtBGkhIpkffQj2i9cG845EFBIIG4s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdNiyn+vMYow4afA+cItzVmIs1qnJqlnZyiZF2ON2DrkPOWUwI
+	p5h8g5c1SMOr0nlfCLIpI0vFfyjUGdEnI9nXwbZG0MgXYuJb7i7yqWko6vTd7pZADhEdar0aJcL
+	8uE8tAySQUq+tD4BcUfFmh7wxMco8S73b3Nar08BLCw==
+X-Gm-Gg: ASbGncs9XaJBDhpexAxv5RKHMVzB1IW69Km5tr2xPj7SjwsbzAamlsn+z9T/g9fMrxk
+	+jUa2mLDrWn8F7ZvXaBUZUutT8zI6ZB27x9U3eIhGsW8Iq/p+M30KpJ6LJ2mvXg6CmR1lZlrPSw
+	MzFGfWBOto8h1ZYmzzbjc5YAI0tSq7lSK8TTGCMbwEjrs=
+X-Google-Smtp-Source: AGHT+IGIP7rndrIqf6RWqLJPp4xdoAE+TRSEB9XlMrQhxRf3kV/JruNVdV2IPEdtEosg+5E6PSBoZ/3/v3lz/smQsyE=
+X-Received: by 2002:a2e:a595:0:b0:32a:651c:9af9 with SMTP id
+ 38308e7fff4ca-32adfd5e7b1mr45162751fa.37.1749558520672; Tue, 10 Jun 2025
+ 05:28:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250604-dt-bindings-psy-monitored-battery-v1-0-7f755ff75218@linaro.org>
+ <20250604-dt-bindings-psy-monitored-battery-v1-6-7f755ff75218@linaro.org>
+In-Reply-To: <20250604-dt-bindings-psy-monitored-battery-v1-6-7f755ff75218@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 10 Jun 2025 14:28:28 +0200
+X-Gm-Features: AX0GCFs14D3DfdKPGW1oWe6McnWZU01oPtzxcnEFGOdPnt5cB-b18SjhfOGEaq0
+Message-ID: <CACRpkdbMFZmK3oUapXDrJjtfhBn56shGu9uoFYPT2_HesTF+Xg@mail.gmail.com>
+Subject: Re: [PATCH 6/6] dt-bindings: power: supply: Drop redundant
+ monitored-battery ref
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>, 
+	Casey Connolly <casey.connolly@linaro.org>, Jakob Hauser <jahau@rocketmail.com>, 
+	David Heidelberg <david@ixit.cz>, Dmitry Osipenko <digetx@gmail.com>, 
+	Tobias Schrammm <t.schramm@manjaro.org>, Chen-Yu Tsai <wens@csie.org>, linux-pm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Miaoqian Lin <linmq006@gmail.com>
+On Wed, Jun 4, 2025 at 10:19=E2=80=AFAM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 
-commit fa0ef93868a6062babe1144df2807a8b1d4924d2 upstream.
+> Bindings reference the common power supply schema, which already defines
+> the type (ref) for "monitored-battery" property.  Drop the redundant ref
+> from individual device schemas along with obvious description also
+> duplicating what is in power-supply.yaml.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Add the missing platform_device_put() before return from
-dwc3_qcom_acpi_register_core in the error handling case.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Fixes: 2bc02355f8ba ("usb: dwc3: qcom: Add support for booting with ACPI")
-Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
-Link: https://lore.kernel.org/r/20211231113641.31474-1-linmq006@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[Denis: minor fix to resolve merge conflict and add tag Fixes.]
-Signed-off-by: Denis Arefev <arefev@swemel.ru>                                    
----
-Backport fix for CVE-2023-22995
-Link: https://nvd.nist.gov/vuln/detail/cve-2023-22995
----
- drivers/usb/dwc3/dwc3-qcom.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-index db3559a10207..568973582b75 100644
---- a/drivers/usb/dwc3/dwc3-qcom.c
-+++ b/drivers/usb/dwc3/dwc3-qcom.c
-@@ -622,8 +622,10 @@ static int dwc3_qcom_acpi_register_core(struct platform_device *pdev)
- 	qcom->dwc3->dev.coherent_dma_mask = dev->coherent_dma_mask;
- 
- 	child_res = kcalloc(2, sizeof(*child_res), GFP_KERNEL);
--	if (!child_res)
-+	if (!child_res) {
-+		platform_device_put(qcom->dwc3);
- 		return -ENOMEM;
-+	}
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (!res) {
-@@ -659,10 +661,15 @@ static int dwc3_qcom_acpi_register_core(struct platform_device *pdev)
- 	}
- 
- 	ret = platform_device_add(qcom->dwc3);
--	if (ret)
-+	if (ret) {
- 		dev_err(&pdev->dev, "failed to add device\n");
-+		goto out;
-+	}
-+	kfree(child_res);
-+	return 0;
- 
- out:
-+	platform_device_put(qcom->dwc3);
- 	kfree(child_res);
- 	return ret;
- }
--- 
-2.43.0
-
+Yours,
+Linus Walleij
