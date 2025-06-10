@@ -1,230 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E2AD22172F;
-	Tue, 10 Jun 2025 09:27:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34DA928B419;
+	Tue, 10 Jun 2025 09:27:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749547659; cv=none; b=Sz0WhbDEeWLop5rKMAgPQ9OoourymyeW4b90plTsg+Q3VFAM+SyoIJdgiglDfgq29AsJXyZmbT7eMGbZw8rcZbCOf7rap/GSQf8Oz4zXhyp+NJUDIslrKz7mfBqUmb1xbUwtFSnie4DqEC4GRWibmGLH5IuGYCxBqVV0qf7FSrk=
+	t=1749547663; cv=none; b=S0Rg43UlzxNYlAPXTKGn5DGPBb16xoKQgEbxOM68o6kPh9s88i9miQk/gD1EzQVrtkGe1YvbS3U/JCnA2MaXUfItD9oHY4hqRwGV2tn2TS142wKL1oQYfFI2qCLR91OdsWVKzor+iCtlm7C2O6jJzhJpGC7vCIxXwR9hI2327/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749547659; c=relaxed/simple;
-	bh=ZqzZXwBienY7zE2X7UrzBwvmMt1YWhqjZH4WMRWX/Zo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=S646/lJgC+sURd8Lm+6OvVwm4n3MzCf1LvM8FAWLnumnhDZkYCUnt0235Gh9of4Kr73fPkZVo5ZMa2NyyKKdONfOth2tbQ+FoFnQPcTmynr+o+oRCNKYWhu8st7sZwKLFcPjDxeARaLLueGZ85tstsshWEd3D0QrIX7AyTB4o/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AyRXYHiW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749547663; c=relaxed/simple;
+	bh=lfBamJGxY5k+dFxogqH5eoJqA8X1z7zpTPGsxWnNEMw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qyWN9Tq4V6r+VSci17TsOjhRj0GTZ3KrSppfeVdwHDpAUMIA4/eZHnMUrGCR5ghoJiFSOUkdYz7OiN+GYzc06g18yZnjUX5Rl+Kd+jq1qMyLeMlpFMoh/EmXWp+b0Y7/vsdphQVliocwoOXQsmtOAkAiYmiepNWmzOVGi/LW0xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DbRw67rI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AyRXYHiW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 630E1C4CEED;
-	Tue, 10 Jun 2025 09:27:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DbRw67rI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44959C4CEFB;
+	Tue, 10 Jun 2025 09:27:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749547659;
-	bh=ZqzZXwBienY7zE2X7UrzBwvmMt1YWhqjZH4WMRWX/Zo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=AyRXYHiWAEcp+X0pY5kz+1POSUUq2ems/XitGiLQs2i7z1GICUOyZzcPKeEYJOFfi
-	 XPYiIQXtSWVXOBNHDRewq1DowMlebBIJCeOYo8RJf2yHWhCtS4lxvPVst6jqxQ4X+n
-	 qJEyfIDVygKPARuYxlqqOsKOA5Fnu6dn1gGposASs03Yw1yLvXmdwhTCz01qoGVnm5
-	 e+eA26om9KAtz8ez/ultTGmP+z/F+gX0ta8mAqwOQKbU06bfjBc2o1Di/F3bd1rZtc
-	 qIUqSuJ3EmEQyJWlk5q/Gen4EDNepQplZZfF+fjlmp+5Q3rFQ011FW2hmtsTNsCY9d
-	 6eUZtWUUzJeUA==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Benno Lossin" <lossin@kernel.org>
-Cc: "Danilo Krummrich" <dakr@kernel.org>,  "Miguel Ojeda"
- <ojeda@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
- <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
- =?utf-8?Q?=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor
- Gross" <tmgross@umich.edu>,  "Bjorn Helgaas" <bhelgaas@google.com>,
-  Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,  "Greg
- Kroah-Hartman"
- <gregkh@linuxfoundation.org>,  "Rafael J. Wysocki" <rafael@kernel.org>,
-  "Tamir Duberstein" <tamird@gmail.com>,  "Viresh Kumar"
- <viresh.kumar@linaro.org>,  <rust-for-linux@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>,  <linux-pci@vger.kernel.org>,
-  =?utf-8?Q?Ma=C3=ADra?=
- Canal <mcanal@igalia.com>
-Subject: Re: [PATCH] rust: types: add FOREIGN_ALIGN to ForeignOwnable
-In-Reply-To: <DAFB0GKSGPSF.24BE695LGC28Z@kernel.org> (Benno Lossin's message
-	of "Fri, 06 Jun 2025 10:23:21 +0200")
-References: <20250605-pointed-to-v1-1-ee1e262912cc@kernel.org>
-	<WubHJPtx9Uu0qugeELZ2ooYWKq4KDj7r8P7k4i_QhgOP53MWk1V3XHH4Ztmzp42zMwHSntslAbfpLFY9AhjfxQ==@protonmail.internalid>
-	<DAFB0GKSGPSF.24BE695LGC28Z@kernel.org>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Tue, 10 Jun 2025 11:27:28 +0200
-Message-ID: <87sek82bgf.fsf@kernel.org>
+	s=k20201202; t=1749547663;
+	bh=lfBamJGxY5k+dFxogqH5eoJqA8X1z7zpTPGsxWnNEMw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DbRw67rIApDToeSQaohj/IYtUXaxmet2X06VVVtEMc/pzT7jP+Esfx5dUB9SwZZdt
+	 Kf2ARcaInme/RHykD6bXQ8QmRpRe4kMJ5teA4TWVNKvWdNib61o+tFjJ7PxEGnPesw
+	 7fbXg+IPCGHYW5CGjr3TqupIMgeHaLHp/1n6q5zxdAA/BE6uXjfP+QKPXqWCiqlGe3
+	 7Qw0Seh6l3DB3BsSfPV+nXzO9u/v/x1zdx+F6sx3p4sagQctSj2JRghnEaHSo2UArn
+	 HNedLWqE2GXk2Va58A52uzpxXsmD0lZ2dy7/Q08WWanoscB0TqsCPMJqaNyOqZSgPq
+	 YlBZHY3yitH/w==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Nathan Chancellor <nathan@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH] drm: omapdrm: reduce clang stack usage
+Date: Tue, 10 Jun 2025 11:27:33 +0200
+Message-Id: <20250610092737.2641862-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Benno,
+From: Arnd Bergmann <arnd@arndb.de>
 
-"Benno Lossin" <lossin@kernel.org> writes:
+The thread sanitizer makes the stack usage explode from extra variable
+spills in dispc_runtime_resume:
 
-> The title should probably also mention that it removes `PointedTo`.
->
-> On Thu Jun 5, 2025 at 9:55 PM CEST, Andreas Hindborg wrote:
->> The current implementation of `ForeignOwnable` is leaking the type of the
->> opaque pointer to consumers of the API. This allows consumers of the opa=
-que
->> pointer to rely on the information that can be extracted from the pointer
->> type.
->>
->> To prevent this, change the API to the version suggested by Maira
->> Canal (link below): Remove `ForeignOwnable::PointedTo` in favor of a
->> constant, which specifies the alignment of the pointers returned by
->> `into_foreign`.
->>
->> Suggested-by: Alice Ryhl <aliceryhl@google.com>
->> Suggested-by: Ma=C3=ADra Canal <mcanal@igalia.com>
->> Link: https://lore.kernel.org/r/20240309235927.168915-3-mcanal@igalia.com
->> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
->
-> A couple nits and documentation review below, with those fixed:
->
-> Reviewed-by: Benno Lossin <lossin@kernel.org>
->
->> ---
->>  rust/kernel/alloc/kbox.rs | 40 ++++++++++++++++++++++------------------
->>  rust/kernel/miscdevice.rs | 10 +++++-----
->>  rust/kernel/pci.rs        |  2 +-
->>  rust/kernel/platform.rs   |  2 +-
->>  rust/kernel/sync/arc.rs   | 23 ++++++++++++-----------
->>  rust/kernel/types.rs      | 46 +++++++++++++++++++++-------------------=
-------
->>  rust/kernel/xarray.rs     |  8 ++++----
->>  7 files changed, 66 insertions(+), 65 deletions(-)
->>
->> diff --git a/rust/kernel/alloc/kbox.rs b/rust/kernel/alloc/kbox.rs
->> index c386ff771d50..97f45bc4d74f 100644
->> --- a/rust/kernel/alloc/kbox.rs
->> +++ b/rust/kernel/alloc/kbox.rs
->> @@ -398,70 +398,74 @@ fn try_init<E>(init: impl Init<T, E>, flags: Flags=
-) -> Result<Self, E>
->>      }
->>  }
->>
->> -// SAFETY: The `into_foreign` function returns a pointer that is well-a=
-ligned.
->> +// SAFETY: The pointer returned by `into_foreign` comes from a well ali=
-gned
->> +// pointer to `T`.
->>  unsafe impl<T: 'static, A> ForeignOwnable for Box<T, A>
->>  where
->>      A: Allocator,
->>  {
->> -    type PointedTo =3D T;
->> +    const FOREIGN_ALIGN: usize =3D core::mem::align_of::<T>();
->>      type Borrowed<'a> =3D &'a T;
->>      type BorrowedMut<'a> =3D &'a mut T;
->>
->> -    fn into_foreign(self) -> *mut Self::PointedTo {
->> -        Box::into_raw(self)
->> +    fn into_foreign(self) -> *mut crate::ffi::c_void {
->
-> How about we import the prelude, then you can just write `*mut c_void`
-> everywhere instead of having to write `crate::ffi` all the time.
+drivers/gpu/drm/omapdrm/dss/dispc.c:4735:27: error: stack frame size (1824) exceeds limit (1280) in 'dispc_runtime_resume' [-Werror,-Wframe-larger-than]
 
-OK.
+I could not figure out what exactly is going on here, but I see that
+whenever dispc_restore_context() is not inlined, that function
+and its caller shrink below 900 bytes combined of stack usage.
 
->
->> diff --git a/rust/kernel/sync/arc.rs b/rust/kernel/sync/arc.rs
->> index c7af0aa48a0a..6603079b05af 100644
->> --- a/rust/kernel/sync/arc.rs
->> +++ b/rust/kernel/sync/arc.rs
->> @@ -140,10 +140,9 @@ pub struct Arc<T: ?Sized> {
->>      _p: PhantomData<ArcInner<T>>,
->>  }
->>
->> -#[doc(hidden)]
->>  #[pin_data]
->>  #[repr(C)]
->> -pub struct ArcInner<T: ?Sized> {
->> +struct ArcInner<T: ?Sized> {
->
-> I agree with this change, but let's mention it in the commit message.
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/gpu/drm/omapdrm/dss/dispc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Right.
-
->
->>      refcount: Opaque<bindings::refcount_t>,
->>      data: T,
->>  }
->
->> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
->> index 22985b6f6982..025c619a2195 100644
->> --- a/rust/kernel/types.rs
->> +++ b/rust/kernel/types.rs
->> @@ -21,15 +21,11 @@
->>  ///
->>  /// # Safety
->>  ///
->> -/// Implementers must ensure that [`into_foreign`] returns a pointer wh=
-ich meets the alignment
->> -/// requirements of [`PointedTo`].
->> -///
->> -/// [`into_foreign`]: Self::into_foreign
->> -/// [`PointedTo`]: Self::PointedTo
->> +/// Implementers must ensure that [`Self::into_foreign`] return pointer=
-s with alignment that is an
->
-> s/return/returns/
-
-Thanks.
-
->
->> +/// integer multiple of [`Self::FOREIGN_ALIGN`].
->
-> I would just write "returns pointers aligned to [`Self::FOREIGN_ALIGN`]".
-
-OK.
-
->
->>  pub unsafe trait ForeignOwnable: Sized {
->> -    /// Type used when the value is foreign-owned. In practical terms o=
-nly defines the alignment of
->> -    /// the pointer.
->> -    type PointedTo;
->> +    /// The alignment of pointers returned by `into_foreign`.
->> +    const FOREIGN_ALIGN: usize;
->>
->>      /// Type used to immutably borrow a value that is currently foreign=
--owned.
->>      type Borrowed<'a>;
->> @@ -39,18 +35,17 @@ pub unsafe trait ForeignOwnable: Sized {
->>
->>      /// Converts a Rust-owned object to a foreign-owned one.
->>      ///
->> -    /// # Guarantees
->
-> Why remove this section? I think we should streamline it, (make it use
-> bullet points, shorten the sentences etc). We can keep the paragraph you
-> wrote below as normal docs.
-
-Not sure exactly what you are going for here. How is this:
-
-
-  Converts a Rust-owned object to a foreign-owned one.
-
-  The foreign representation is a pointer to void.
-
-  # Guarantees
-
-  - Minimum alignment of returned pointer is [`Self::FOREIGN_ALIGN`].
-
-  There are no other guarantees for this pointer. For example, it might be =
-invalid, dangling
-  or pointing to uninitialized memory. Using it in any way except for [`fro=
-m_foreign`],
-  [`try_from_foreign`], [`borrow`], or [`borrow_mut`] can result in undefin=
-ed behavior.
-
-
-
-Best regards,
-Andreas Hindborg
-
+diff --git a/drivers/gpu/drm/omapdrm/dss/dispc.c b/drivers/gpu/drm/omapdrm/dss/dispc.c
+index 533f70e8a4a6..cf055815077c 100644
+--- a/drivers/gpu/drm/omapdrm/dss/dispc.c
++++ b/drivers/gpu/drm/omapdrm/dss/dispc.c
+@@ -524,7 +524,7 @@ static void dispc_save_context(struct dispc_device *dispc)
+ 	DSSDBG("context saved\n");
+ }
+ 
+-static void dispc_restore_context(struct dispc_device *dispc)
++static noinline_for_stack void dispc_restore_context(struct dispc_device *dispc)
+ {
+ 	int i, j;
+ 
+-- 
+2.39.5
 
