@@ -1,111 +1,88 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF1428315C
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 10:18:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4CEE28C2C2
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 10:19:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749550734; cv=none; b=liSzuu0r2uYjS9HVObq+/C0677qmJsiRtKPCcr3HQMQ/klgr5bLsV7NfcVS6ekfAl+L4dxwXEui++0ajYKnX9Qcg2l1ocRXAbRN3xju0rSxUtYQYpO5BspyPv87HQIdilDU6AN+nYe3HtsF8T+m5pCUz0Fe6Ab9J/NR1z1WoRV0=
+	t=1749550780; cv=none; b=hA+5zmyuKCiHSW10yof8OdKiQYag6wL8aLOTY59NlD8PyGACixg/vPCB6jZsXRDAsB1g0zT4jQu5Pg795KdkzmllMV4i8iOzpctNKZRCmsz+pFhlmGn4IbTGv7Qijct7mBYkUciXKAP9tnnudqSlHd46aSSR3gTvi6H2eyFfMQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749550734; c=relaxed/simple;
-	bh=P+pX/aqYW/tn+7GsUtbwqwHh0UwfFNgdZ9EdR9PIOm4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rs2nWhn6moJZRs7ihzdvFft86E+PjAmlMnMUPuW2fJigUQA2t3ZeM8b1+e1Kot5WCGwGgUVMc869zj+t4GpjiQta55nGpZKSkI0MV4a8KVkpxfrwp33pKHa4sWT0/2PVm7pLbknY884v4NIEe0Gftd0ia/HkGrtf1tCJtsgcijM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Zxhxj4bi; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749550780; c=relaxed/simple;
+	bh=KF0IhGV/YNxW7lLT7JdCh6GbHi7Mpvxy/sSQeOI9XcA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CvV+ZKqfWE1Bh3po7L0rIRtIsqLhCSpkEcQEPji0ZdH2EWE98Se6lyHCl+zCIqMa0yoU9g5VAn6Y8sjYSWocOTmlL44KL0ltBltZq4RCyhZmOCp3VKlRhoyOjRHjHLTwi108xr/XWWwzXNR81roes2UWkka7BKjMOKRBBffPckc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=neon.tech; spf=pass smtp.mailfrom=neon.tech; dkim=pass (1024-bit key) header.d=neon.tech header.i=@neon.tech header.b=l752W+Mq; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=neon.tech
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neon.tech
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zxhxj4bi"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-234b9dfb842so46584395ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 03:18:52 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=neon.tech header.i=@neon.tech header.b="l752W+Mq"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-604f5691bceso10692493a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 03:19:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749550732; x=1750155532; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xd4yvKuwBDUgL3fi5ckGjS4L+klFHNpCPWQEORhaTVc=;
-        b=Zxhxj4bib0Yeu0S2aKVjyE9Yd8dUR2spgiYxARQ7Hyk37ktdzvYCIecDLwxICRC2/9
-         KZB9HM5fb8ulqah+Og+ja67DMV/JrCOvBeM1ddjzhhmgxoJMnUGxG4krKgjLD3aeI3SK
-         0pWnyVGIk2PWUV2HLXGrtAo6pZfTTRJHcsx1de8ApucGolcAqzjDFna5onnOb2DLacrX
-         PxapJ4+VzUiBCdH+EFUlZYEzVg+JSjTO7UIQPJM6+rqnsJCCcTdXeSFyc1i2YJeioMY/
-         Mu01v0ZV83SY1Jrr2k4qudY8Ve4fGgFvURWMxMyVdqJYXFPPt9BP4xYP8A1jyoyvCJOp
-         pxdA==
+        d=neon.tech; s=google; t=1749550777; x=1750155577; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KF0IhGV/YNxW7lLT7JdCh6GbHi7Mpvxy/sSQeOI9XcA=;
+        b=l752W+MqC4wFs5OC2F3jkrCncCms1IyZAKFeX1DjiSOfhQQ27N6Yv0UiNSBdbd1mGK
+         Z1xMBRBBfZG2K95i/R0RIh4OI8o0L/yH1nFqpJ2+qKHmCBSLsCwtjZg5wXU6GRYatkMN
+         G2eoCTshp4JFLJX5Rb2quJycS081W4zfzFtOA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749550732; x=1750155532;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Xd4yvKuwBDUgL3fi5ckGjS4L+klFHNpCPWQEORhaTVc=;
-        b=OekgaonfTFs+ix/NOw8RJXJQBQ7XjR7gfp9AZsE/l2ZOq3qmCO12haTjsYP40U7mKV
-         7ltFG/XXKGUvmoGOScq4IAtnfBrrXC6Ur3eGpxgEApx/glLEfW1S2oOW0Mk2DVVlAdfF
-         2GU1LvGYhv/2tqTdgPilAWX2bhBQyBaILv+YT5xRBoHnercgcZgCQxEZVFLqL62OrpZ2
-         bpx0+3pYLTr6IXR+KjW9/0rR+0yGxmCj1p4hFGJDTX5GHHnAmLp9Mp3nozS+tHKbtvDa
-         H1EO8kudcPVOHpo+M3XTRSu4rsOAVf0HKyM0FoKHj5PsobDf7GYXQxdU8QXeLeYTlcSG
-         q5wQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUnSP4oVEcbdJUBfiVq0TY2NGW+/nESAeQFveOXSltOQ41iwG9mhpu4yxX99xRNndZ9vbslKpdDnI5w+dA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyITzPlknpAZHoMky3DoB7MK3H4bzyuq7hGsOo94H3qsqZAYG0L
-	5WuN78XsEUjKbZ89eM63CP2nTXjt0tCAvRza5RIJDh4MCI94TW8ggj+PVccp0mCKqio=
-X-Gm-Gg: ASbGnctd/6VTsacViNmC2fZjTCMUbf/ZylG7urP6H6JCg0cp0PzG/LmftPiIjcSBjaP
-	uOjiOkgH+bk7rjXldjGExCy9EUcYEit6a+Jsv1yX5zQZv7ITpRI7RgQkw3JoXM2S0FgRKgfkN0s
-	NkQSr1CZO9yrChK7SOVyUCPyV/S/IIzVw3j99YJrzVOWlBkTFmUau8apMc/4PGRaG9SJYz8nRRs
-	MBtCv2YDiTq4Y6e3tdnIYie+0ESRP/QaJWVztDCFwMfDhWcWRa6/AefDgfk/I93EUOgAtWA+9b1
-	5taoNgyh2hhEYs5V0QhIRoUhr9VGQ3HmV/SOitWDZ0Pnvya1x6WJO6iKGt8xcI4=
-X-Google-Smtp-Source: AGHT+IF2ajXihlooCdYmJCHgGy6pGgCT4fNV+OZVa0XGOt0sKvsGARYbwa52gflRTEuMl1+UMJvbFQ==
-X-Received: by 2002:a17:902:d2c6:b0:235:efbb:9539 with SMTP id d9443c01a7336-23601cfebb3mr228429815ad.17.1749550731983;
-        Tue, 10 Jun 2025 03:18:51 -0700 (PDT)
-Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603077ee6sm68294295ad.32.2025.06.10.03.18.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 03:18:51 -0700 (PDT)
-Date: Tue, 10 Jun 2025 15:48:49 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Danilo Krummrich <dakr@kernel.org>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Yury Norov <yury.norov@gmail.com>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 1/2] rust: cpu: Introduce CpuId abstraction
-Message-ID: <20250610101849.ymuw4bmjsucsoblp@vireshk-i7>
-References: <cover.1749463570.git.viresh.kumar@linaro.org>
- <f10910c7585f5556869ea6f34b64d4136b8d5581.1749463570.git.viresh.kumar@linaro.org>
- <CANiq72=WpuGELzLbH-fxdOeJy9fiDFwatz6ynERDh=HP2z2MBw@mail.gmail.com>
- <20250610060711.zp6lua4kcwi2z777@vireshk-i7>
- <CANiq72kD9iQh6TPo3Rwk7AmPXEarogUrM2fmhkDn5XNfKrr_jw@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1749550777; x=1750155577;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KF0IhGV/YNxW7lLT7JdCh6GbHi7Mpvxy/sSQeOI9XcA=;
+        b=DinmkSsP/86RwCvdTi7K0KNp6ek2qCPVoLM+nz3Ex1Lofg+4Iml2EKfouamsBtWb53
+         gvQfYBrPokfwlC+19zFRZhUFKT95PVTxPYrtCABaM5V/vkJCcv6IPunvfxDEtpbKtq9Q
+         sKRtl+S+Y0P92jEv5596aYe1y78fyJ1fGjzhBKdMC7t2DNS/zbJleWVCXwA/+2+Bbit3
+         NSUB/zk7nBl2x6UiDUmBQpOA2jYShWZHz4UzDqGRInOTZaTyFwcQvhBl3c9RExEP1mht
+         8U+3XNbjsrDMPfSvIKerZ9ZQN+uNJXIV8rG1nSLOWWHpMnDxMCHD4jIbVj3motEhC3VV
+         o8QQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWgG4C980I1zvgULvhCguwaQVzUTrFK9utPRLBY4A1so9trDdm0VuhCKfmviBE9d1TzbaBubDrRvZuA79Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHNkrLOBMLLRBhMYFPDITN6zL5SYcVVr8QHXptt2nJ758EobDv
+	rOOFZaqxkqZkFmgRxiaPxwSHt03BN2eWVt5NLdVc1Zn5cfmoB0JoauzMYy9quaiZ9tY=
+X-Gm-Gg: ASbGncuBCxSorVBJq0O20iV00/5eph0qpuq8YxyXKXbxYN0wEY/+eGhlf3cZOan/Dky
+	188PmOypq8FVnna6kaRs7CE33MwexQ303Zr7jG3qsnkUOwI5qJ4QyHkEY6ZK9Fxq4lrnIaAucKH
+	Jpxm9TC19ObolVBlJ29OhATov75345Su7zCzDuk2sSiVytLQ9Nr6+buT5DWzFaGE5wLb6Q8SveN
+	MjWoV+4wXf0aYrYLXPh+5G3az5Az26Ox0sZGXLBDS8h4wmF2wfz1Nqd7cdoch+W3RiV14qc/CXR
+	okxUqP0Elv5DG29D/ZSwlkE1usVxOsylPvSQae+aah/8LNQhU6A/dIOsPmX9VuDjPA==
+X-Google-Smtp-Source: AGHT+IHDGq+r2IlKiecsvDQCxKT8f5zu0ppTH97cYtt7W5yjJyBOo4m2JwFoDG0lIxxYNFZqnFnEIQ==
+X-Received: by 2002:a05:6402:26c6:b0:607:2a09:38dd with SMTP id 4fb4d7f45d1cf-6082d9b391bmr1857192a12.18.1749550776974;
+        Tue, 10 Jun 2025 03:19:36 -0700 (PDT)
+Received: from [192.168.86.142] ([84.65.228.220])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-607783dd48esm5869944a12.56.2025.06.10.03.19.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Jun 2025 03:19:36 -0700 (PDT)
+Message-ID: <1eef4644-f22d-4c5b-8cfe-843ed88c050c@neon.tech>
+Date: Tue, 10 Jun 2025 11:19:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANiq72kD9iQh6TPo3Rwk7AmPXEarogUrM2fmhkDn5XNfKrr_jw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] x86/mm: Handle alloc failure in phys_*_init()
+To: kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-mm@kvack.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+ Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
+ <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+ "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+ Oleg Vasilev <oleg@neon.tech>, Arthur Petukhovsky <arthur@neon.tech>,
+ Stefan Radig <stefan@neon.tech>, Misha Sakhnov <misha@neon.tech>
+References: <25c5e747-107f-4450-8eb0-11b2f0dab14d@neon.tech>
+ <202506100041.N8Bgx8q0-lkp@intel.com>
+Content-Language: en-US
+From: Em Sharnoff <sharnoff@neon.tech>
+In-Reply-To: <202506100041.N8Bgx8q0-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 10-06-25, 11:43, Miguel Ojeda wrote:
-> (By the way, as far as I understand there is no way we could wrap
-> going to `i32`, but it may not hurt to add a `debug_assert!` in the
-> `u32` constructors.)
+Apologies for not catching this. New version here:
+https://lore.kernel.org/all/a31e3b89-5040-4426-9ce8-d674b8554aa1@neon.tech/
 
-Something like this ?
-
-@@ -79,6 +79,7 @@ pub fn from_i32(id: i32) -> Option<Self> {
-     #[inline]
-     pub unsafe fn from_u32_unchecked(id: u32) -> Self {
-         debug_assert!(id < nr_cpu_ids());
-+        debug_assert!(id <= i32::MAX as u32);
-
-         // INVARIANT: The function safety guarantees `id` is a valid CPU id.
-         Self(id)
-
--- 
-viresh
+Em
