@@ -1,123 +1,109 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B74F78F34;
-	Tue, 10 Jun 2025 23:04:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3552D5403;
+	Tue, 10 Jun 2025 23:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749596690; cv=none; b=XPknHTmsdDc5ktpJtn80IDYkPfxJwoCEirfTP7VE5norFcWcKEs7SiR2az4sp2pW3+eqqUzAG8+em4VZCTzc/A+Y45NVNKM05iJFLvurpa1f+yxHmNa60xosWScmO9hlHOfLesNTuO87ejJla3kZej2NkOWmlDB9ZwNiYs1zObU=
+	t=1749596901; cv=none; b=GXrJvOInJqXcegEKcPxNK/LqSASSrlLNFnvaTQnwTPaqrwCBtrfNlnNrIji945MxLmo52OI7olt7mjKPZaHcNO4eQx2ZYydZX2gZstblVdPGuz6ZBOZ7DSpm86r7qM74W4kz6IaD6s5O8Yfos6pSoDjixlDCk8SroX7SjUl6U+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749596690; c=relaxed/simple;
-	bh=NuZBUFZ3Z4XX4PgFlUpCgydrKQCPkczti63A/LvaRwY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K4gVcxRzItuPc7dyan/kKTkpEmYatCLvppwksPxWzb0lFn8RQeKtP41B0BXYs6eLO9pBipeOTEWDGEuR0c98RwvMYm7+pBYE40AKinxBJPII1DLx6+b2T1761VlfaWcmb35JdCUsKcoCLuNHZ6qpPNeRl/byxwefqUX0cZzHpTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=ZMD1pj8s; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1749596901; c=relaxed/simple;
+	bh=vOAAvEx4E+8UjppT46gHSojDmxrWyNLo9cdzD7FA+rc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tiUBMoxRdmiWlrbACaDuEKcdPN+KBhgseA3C1MzQsXMk+6yGCWMminrTzS784aid2+gZX3s9qBRfl0uzbbL1NW+Cs+bh0oHPKRoZUGLDme32AIARjMEPblUUE9BwLt3Ea6Znjl/MTltpJBZazJVB82XSOurnYy5BpZqQZmTIAbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VmmtZeb2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZMD1pj8s"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1749596685;
-	bh=muDFxLfY0+qeyLI3mE8/sqT0z3/gvu2RClGHImS1nX0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ZMD1pj8siDTBORviatsIe4lYZrJR4nlhYEN3vJ27H+r3K3pQ3Ep7ajkhs0pl0NnY9
-	 SVgdmap932TmWkhVuRnF51VAvXZCWtx/XL2W+4KpyXUugp3v6M0yQGZ002erMFpRKH
-	 rmHb3HAFLwZcXcma9w0rp65GsUEazukpVUzqMXxUyzEA1STYRNJP8BGsVId4os1cMg
-	 tZxqmcXbUzi3AJjhk3w1y3Gw7pxZG7eIp2znCY/yq0KgXhXi0EPgUCId1dol3legH9
-	 xFmRwYeBQB4wvnR+tM6RTMQxW36+efH/o7skmmoxA76qiQDnSa9YcHLO5LMDIQJOjz
-	 kGcRl+Al1GztA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bH4B45D4zz4w2Q;
-	Wed, 11 Jun 2025 09:04:44 +1000 (AEST)
-Date: Wed, 11 Jun 2025 09:04:44 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, ARM
- <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: Re: linux-next: duplicate patches in the stm32 tree
-Message-ID: <20250611090444.237c9562@canb.auug.org.au>
-In-Reply-To: <20250522113816.16953357@canb.auug.org.au>
-References: <20250522113816.16953357@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VmmtZeb2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F4E4C4CEF3;
+	Tue, 10 Jun 2025 23:08:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749596900;
+	bh=vOAAvEx4E+8UjppT46gHSojDmxrWyNLo9cdzD7FA+rc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=VmmtZeb2utDRFMCLcnI+EFjIb/ePZ95my4a6Yj5o8dvzSu8CKzuCsIsjsyYKCSzP4
+	 C/yPlvqqAqgpMqdOxWr3yOw/WxE5b2nbVKtJ8kiMNQiV+u6HfOultf1pxoGJgvPunu
+	 E1nQ+y2fg/SZtPcq/v6IPFppzZa+oQhimwTGRgnHXxp3ddZjPrgtdPTI/Cg1wvyTFH
+	 EUO9u9o6HrdExqGY0WBoAHzJwEL+ponltPd49UHDAohzv7l0P1BDeGptO8LSag9eOV
+	 h1mNbgQTvX0fEUymrmrHmhFqHpGgUwiiCYhUq4+B1MLTe6puTI+PWOj9T7v5stQ1l0
+	 RK9s/BSzdEnjw==
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6facba680a1so64133896d6.3;
+        Tue, 10 Jun 2025 16:08:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVpK65AR5lENARFbWAXWK7hiOhF6o5swPnQ4U3J1EP8dbKX3OjlOA+Olp5fj4fuHqnRCi7G50hjTEC91BZKyQ==@vger.kernel.org, AJvYcCWV49yNcfMcMh1uB1g5r1tIn0aUmiTKX0ifofTQr1s6Hg4jQYUVrtEtlIQNx5YdFY9quuWCb3CRo/i9NCoUdRfZLoOYNQst@vger.kernel.org, AJvYcCXCH0yCfFA2EkQfhoLI41CoONXY3UdOglvB6OdIum+p80dSr3FvxHylvj2c1r0jEweWEQw=@vger.kernel.org, AJvYcCXSryMujoKhPsA+1XGUZlO7xJ9prgliFRnO76Vsyb/NKH5ugCw8N5bQ6LbW3XMeeykmzQN4fMQxzcIkz6yS@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzt04GyBK6gMse60zDorxJwKHm65144fmk0tX6g3nWklzedvnnG
+	4REJFlDAafXHlLXgOna+zauMGEnANS/vwdS4YbPDzigVZHH/bKpxO8EDcMBynAzM9wN29Ha/ZgY
+	+vYOUAkKQWnl8w4SDeh+r7i7laUqiWb0=
+X-Google-Smtp-Source: AGHT+IGQwb7bLPJ7uaxum7qOUIy/8C94KF54pMNu1cwD2A2emExMuBIuVS0BNScxi1yUGqW5hw93a0PxpKiAZS9jT/k=
+X-Received: by 2002:ad4:5d46:0:b0:6fa:bb09:43d0 with SMTP id
+ 6a1803df08f44-6fb2c3723bbmr22557596d6.32.1749596899582; Tue, 10 Jun 2025
+ 16:08:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/b=7_cKKdRrcq./9hKW8B1SC";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/b=7_cKKdRrcq./9hKW8B1SC
-Content-Type: text/plain; charset=US-ASCII
+References: <20250606213015.255134-1-song@kernel.org> <20250606213015.255134-2-song@kernel.org>
+ <20250610.rox7aeGhi7zi@digikod.net> <CAPhsuW5G0Th+9dRSmxDjo5E7CxV1E9N8AiKjw3cKyEhOBVWJFw@mail.gmail.com>
+ <d7d755ea-5942-440b-8154-21198cb6a0f1@maowtm.org>
+In-Reply-To: <d7d755ea-5942-440b-8154-21198cb6a0f1@maowtm.org>
+From: Song Liu <song@kernel.org>
+Date: Tue, 10 Jun 2025 16:08:08 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW75h3efyXmCcYE_UEmZGXR5KMSEw8h-_vrZH82BYU=WVw@mail.gmail.com>
+X-Gm-Features: AX0GCFvLr6ZpvpJJmf_Db7fELs42Mf-Bt8O_6VwLs3YNEtG0tanEPc7gL84uHg8
+Message-ID: <CAPhsuW75h3efyXmCcYE_UEmZGXR5KMSEw8h-_vrZH82BYU=WVw@mail.gmail.com>
+Subject: Re: [PATCH v3 bpf-next 1/5] namei: Introduce new helper function path_walk_parent()
+To: Tingmao Wang <m@maowtm.org>
+Cc: =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, 
+	daniel@iogearbox.net, martin.lau@linux.dev, viro@zeniv.linux.org.uk, 
+	brauner@kernel.org, jack@suse.cz, kpsingh@kernel.org, 
+	mattbobrowski@google.com, amir73il@gmail.com, repnop@google.com, 
+	jlayton@kernel.org, josef@toxicpanda.com, gnoack@google.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
-
-On Thu, 22 May 2025 11:38:16 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
+On Tue, Jun 10, 2025 at 3:26=E2=80=AFPM Tingmao Wang <m@maowtm.org> wrote:
+[..]
+> >
+> >                 if (!choose_mountpoint(real_mount(path->mnt), root, &p)=
+)
+> >                         return false;
+> >                 path_put(path);
+> >                 *path =3D p;
+> >                 ret =3D true;
+> >         }
+> >
+> >         if (unlikely(IS_ROOT(path->dentry)))
+> >                 return ret;
 >
-> The following commits are also in the arm-soc tree as different commits
-> (but the same patches):
->=20
->   0a0e8571837d ("ARM: dts: stm32: add vrefint calibration on stm32mp13")
->   2a47c4033e09 ("ARM: dts: stm32: add an extra pin map for USART1 on stm3=
-2h743"
->   3acfa4becfda ("arm64: dts: st: Add SPI NOR flash support on stm32mp257f=
--ev1 board")
->   3bd31eb4f6ee ("ARM: dts: stm32: add vrefint support to adc on stm32mp13=
-")
->   3f70ddb86143 ("ARM: dts: stm32: add initial support for stm32mp157-ultr=
-a-fly-sbc board")
->   46e2ad9fd187 ("ARM: dts: stm32: add low power timer on STM32F746")
->   532c5a818d2e ("arm64: defconfig: enable STM32 LP timer clockevent drive=
-r")
->   7b6bbef62485 ("ARM: dts: stm32: support STM32h747i-disco board")
->   7b7b6bb0f98d ("dt-bindings: clock: stm32h7: rename USART{7,8}_CK to UAR=
-T{7,8}_CK")
->   826e6fb26193 ("dt-bindings: vendor-prefixes: Add Ultratronik")
->   878dec8597d4 ("arm64: dts: st: Add OMM node on stm32mp251")
->   8b773be67b10 ("MAINTAINERS: Add entry for ULTRATRONIK BOARD SUPPORT")
->   8c18889c702d ("arm64: dts: st: use lptimer3 as tick broadcast source on=
- stm32mp257f-ev1")
->   a4d2108a4b3f ("ARM: stm32: add a new SoC - STM32H747")
->   a09cdc01ad4a ("ARM: dts: stm32: add pin map for UART8 controller on stm=
-32h743")
->   bf98eb91ac66 ("ARM: dts: stm32h7-pinctrl: add _a suffix to u[s]art_pins=
- phandles")
->   caeec8e2b846 ("dt-bindings: arm: stm32: add compatible for stm32h747i-d=
-isco board")
->   dd9bfe13b47e ("ARM: dts: st: stm32: Align wifi node name with bindings")
->   df863325b92c ("arm64: dts: st: add low-power timer nodes on stm32mp251")
->   f069852c9b33 ("dt-bindings: arm: stm32: Document Ultratronik's Fly boar=
-d DT binding")
->   f80958d949c3 ("arm64: dts: st: Add ospi port1 pinctrl entries in stm32m=
-p25-pinctrl.dtsi")
->   fe8690b58efb ("ARM: dts: stm32: add uart8 node for stm32h743 MCU")
+> Returning true here would be the wrong semantic right?  This whole thing
+> is only possible when some mount shadows "/".  Say if you have a landlock
+> rule on the old "/", but then we mount a new "/" and chroot into it (via
+> "/.."), the landlock rule on the old "/" should not apply, but if we
+> change *path and return true here then this will "expose" that old "/" to
+> landlock.
 
-Can the stm32 tree please be clean up?
---=20
-Cheers,
-Stephen Rothwell
+Could you please provide more specific information about this case?
 
---Sig_/b=7_cKKdRrcq./9hKW8B1SC
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Thanks,
+Song
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhIugwACgkQAVBC80lX
-0Gy2yQgAkAGaQZt4GSiuHRyOcqcwXyNSNRa0g4NUcNGWrIaM/LKfrx7mqTXuIFDs
-Y80fon+MqVpxmAWsCGfb9r4s9DAAugr/7TZhCd66AC09aVyCeIJaUWe1a4mWBEY5
-vm0uDKvZRg79C+jj3ePHn8gLyjK8uuUryae2YqctXUcb0FxdDiD7e6/HpTrngt1E
-b+FM0EywOiRU1oZP1svCd2YBF5/dEpp+PFZEnPYjqmTqbs5sZDhCtzA5HRBKaZiS
-kHW6xfWRYFN2mtD9h4SvEFXPhBriUFqC/CN8f1tnIAdPgHI0E/mR7EW5dMZxUy4O
-fbYTxNVQtpDYZUEoKqvtrxqwfPEDmg==
-=hXim
------END PGP SIGNATURE-----
-
---Sig_/b=7_cKKdRrcq./9hKW8B1SC--
+> A quick suggestion although I haven't tested anything - maybe we should d=
+o
+> a special case check for IS_ROOT inside the
+>     if (unlikely(path->dentry =3D=3D path->mnt->mnt_root))
+> ? Before "path_put(path);", if IS_ROOT(p.dentry) then we just path_get(p)
+> and return false.
+>
+> >
+> >         parent =3D dget_parent(path->dentry);
+> >         dput(path->dentry);
+> >         path->dentry =3D parent;
+> >         return true;
+> > }
+> >
+> > Thanks,
+> > Song
+>
