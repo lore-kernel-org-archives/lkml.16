@@ -1,46 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9CE7221262;
-	Tue, 10 Jun 2025 18:44:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E9AD35958
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 18:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749581091; cv=none; b=EYuoWbIDzh161xMXoUVBJcT3aZAx+JNRaBobMW9UIERqcNflTvv1OvTz8NzqaAr61IlESrz+ITkyk/ZFOTTXXgXnGZx8pPHtQIV1sxwNZR01dzQfD5mWs/aaefdaHhEwoPg71nP0uOfCME7kPAm5rYZf6YLWAn5VEoS7ICrQd7I=
+	t=1749581127; cv=none; b=RdeQ4rr+/UQK+elXvMZYHnOsQeA4FLBDHqzwTZWfOfGeDk/OwXg+3B3t3W2hr1XQMhNoPocdiIljAungABP3wILm3CSLPWYcO5ZRaSVX55Ih8TaJNzuQsyXmFmdMw4+Av1+FRz247QM11uBANmksd85+g6EloN2NWa9ExhFKrls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749581091; c=relaxed/simple;
-	bh=joj/ZjLFg+NBtbJ9iqvbjqCoxWFWArbEFXoFWaKYYBc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=JbvgJ9khmmyCamOIGAEGc9Mn0x/Gya1Z3FuUfILqSr2qXLEuOanZrf3OcXH65N/wP45hhlONwDS7x71ZXHdGPpZT1rjLsyVgDYlkHUNwv9WPJfPLtXvEq5IZ93Mat8zZR/RWHZXOCVZ2/ZXd7BGBRrBQQCv8HKpHqV6EaD2vdbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IR8Z198K; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749581127; c=relaxed/simple;
+	bh=+fn9osG/M+26f2D/gzNkIld1kqaGSVgUtuP7Ju7z0ps=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FXgKZr6kzdjdITmIjbEG/no7VvxepAQrcfl8iJ+n3iOc3E/xIc71Azt8gjSrPxT2mBf7DGXOU+uHrbMfRy836Iu6tSgTp5TS7/U2ndRzzENAlvKh0xXLck6WVzy903oxTQOMlVZqqFNhvbkPMnuw9XpPRE90mxsqojw57D+/4Ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gHzkqnn5; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JMmAAnF+; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gHzkqnn5; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JMmAAnF+; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IR8Z198K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F070C4CEED;
-	Tue, 10 Jun 2025 18:44:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749581091;
-	bh=joj/ZjLFg+NBtbJ9iqvbjqCoxWFWArbEFXoFWaKYYBc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=IR8Z198Ks7LgP8Zr1K0TzyqrbxOmz1AnrckCdFX1UFZxj6XqJYw+H3SkpnglH7fw1
-	 7di9Jnz3jA85BbcW4Y+Hh7gLq/hmo7tI8OgRmTAGh2+kSFIj/0GJPAqxdomg5vc9Jg
-	 XmT3ONIwah7+lDvloqeVaqh4HTczwqvFFEpbUkd8fdzBAdGWj1x/sGcmQglv82A2LW
-	 5CU8FiMK//EImFO6sNfsiapjvKjfme0I7u2cxN0TuxFP3R7TegAJK96DOR0hNV0gy8
-	 ATJdQ2Pc6vJ+faC71tgFx+zgvksU3SnUjT8FgXHiBr6PWEkCx8oFREuwT19ThQrtrk
-	 v7zvhIC4+GGHw==
-Date: Tue, 10 Jun 2025 13:44:49 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Geraldo Nascimento <geraldogabriel@gmail.com>
-Cc: linux-rockchip@lists.infradead.org,
-	Hugh Cole-Baker <sigmaris@gmail.com>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 1/2] PCI: rockchip-host: Retry link training on
- failure without PERST#
-Message-ID: <20250610184449.GA819185@bhelgaas>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gHzkqnn5";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JMmAAnF+";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gHzkqnn5";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JMmAAnF+"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 5EFD1211A3;
+	Tue, 10 Jun 2025 18:45:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749581123; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sr7TxE0fMIVJqY4goPJsfGRsQqTX+JqGpVwsxM5JubI=;
+	b=gHzkqnn5ZtWckU9ajahns7moKGuKJwCcKc2k/fS3XkIC53bYHF1/+hdbMhiuoS+8b0U06w
+	8ZBrEWk0jdxauhYNrXSsrZDyfYVwFRYF00k8N45cLlLlKBGHW1aA/ZMzRmV+XpkD1bjPMq
+	a3eZyv7SnIx2l/qOiR/ZlzMuUtYuyYo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749581123;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sr7TxE0fMIVJqY4goPJsfGRsQqTX+JqGpVwsxM5JubI=;
+	b=JMmAAnF+71wDkIwsn+OciphIa4oNVjF6oRbCCF9C4H9d6ZrhySqWVIgqG3u6IMFG+oBvqj
+	qrgYk0r46xLHsFCA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749581123; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sr7TxE0fMIVJqY4goPJsfGRsQqTX+JqGpVwsxM5JubI=;
+	b=gHzkqnn5ZtWckU9ajahns7moKGuKJwCcKc2k/fS3XkIC53bYHF1/+hdbMhiuoS+8b0U06w
+	8ZBrEWk0jdxauhYNrXSsrZDyfYVwFRYF00k8N45cLlLlKBGHW1aA/ZMzRmV+XpkD1bjPMq
+	a3eZyv7SnIx2l/qOiR/ZlzMuUtYuyYo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749581123;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sr7TxE0fMIVJqY4goPJsfGRsQqTX+JqGpVwsxM5JubI=;
+	b=JMmAAnF+71wDkIwsn+OciphIa4oNVjF6oRbCCF9C4H9d6ZrhySqWVIgqG3u6IMFG+oBvqj
+	qrgYk0r46xLHsFCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0D4AF139E2;
+	Tue, 10 Jun 2025 18:45:23 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ckdrAEN9SGgpCwAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Tue, 10 Jun 2025 18:45:23 +0000
+Date: Tue, 10 Jun 2025 20:45:21 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Li Zhijian <lizhijian@fujitsu.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org,
+	Ying Huang <huang.ying.caritas@gmail.com>
+Subject: Re: [PATCH] mm/memory-tier: Fix abstract distance calculation
+ overflow
+Message-ID: <aEh9QaU2wUkufK18@localhost.localdomain>
+References: <20250610062751.2365436-1-lizhijian@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,64 +87,59 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <810f533e9e8f6844df2f9f2eda28fdbeb11db05e.1749572238.git.geraldogabriel@gmail.com>
+In-Reply-To: <20250610062751.2365436-1-lizhijian@fujitsu.com>
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kvack.org,linux-foundation.org,vger.kernel.org,gmail.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email,localhost.localdomain:mid]
+X-Spam-Level: 
 
-On Tue, Jun 10, 2025 at 01:37:12PM -0300, Geraldo Nascimento wrote:
-> After almost 30 days of battling with RK3399 buggy PCIe on my Rock Pi
-> N10 through trial-and-error debugging, I finally got positive results
-> with enumeration on the PCI bus for both a Realtek 8111E NIC and a
-> Samsung PM981a SSD.
+On Tue, Jun 10, 2025 at 02:27:51PM +0800, Li Zhijian wrote:
+> In mt_perf_to_adistance(), the calculation of abstract distance (adist)
+> involves multiplying several int values including MEMTIER_ADISTANCE_DRAM.
+> ```
+> *adist = MEMTIER_ADISTANCE_DRAM *
+> 		(perf->read_latency + perf->write_latency) /
+> 		(default_dram_perf.read_latency + default_dram_perf.write_latency) *
+> 		(default_dram_perf.read_bandwidth + default_dram_perf.write_bandwidth) /
+> 		(perf->read_bandwidth + perf->write_bandwidth);
+> ```
+> Since these values can be large, the multiplication may exceed the maximum
+> value of an int (INT_MAX) and overflow (Our platform did), leading to an
+> incorrect adist.
+> 
+> Change MEMTIER_ADISTANCE_DRAM to be a long constant by writing it with the
+> 'L' suffix. This prevents the overflow because the multiplication will then
+> be done in the long type which has a larger range.
+> 
+> Fixes: 3718c02dbd4c ("acpi, hmat: calculate abstract distance with HMAT")
+> Cc: Ying Huang <huang.ying.caritas@gmail.com>
+> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
 
-> +static int rockchip_pcie_set_vpcie(struct rockchip_pcie *rockchip)
-> +{
-> +	struct device *dev = rockchip->dev;
-> +	int err;
-> +
-> +	if (!IS_ERR(rockchip->vpcie12v)) {
-> +		err = regulator_enable(rockchip->vpcie12v);
-> +		if (err) {
-> +			dev_err(dev, "fail to enable vpcie12v regulator\n");
-> +			goto err_out;
-> +		}
-> +	}
-> +
-> +	if (!IS_ERR(rockchip->vpcie3v3)) {
-> +		err = regulator_enable(rockchip->vpcie3v3);
-> +		if (err) {
-> +			dev_err(dev, "fail to enable vpcie3v3 regulator\n");
-> +			goto err_disable_12v;
-> +		}
-> +	}
-> +
-> +	err = regulator_enable(rockchip->vpcie1v8);
-> +	if (err) {
-> +		dev_err(dev, "fail to enable vpcie1v8 regulator\n");
-> +		goto err_disable_3v3;
-> +	}
-> +
-> +	err = regulator_enable(rockchip->vpcie0v9);
-> +	if (err) {
-> +		dev_err(dev, "fail to enable vpcie0v9 regulator\n");
-> +		goto err_disable_1v8;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_disable_1v8:
-> +	regulator_disable(rockchip->vpcie1v8);
-> +err_disable_3v3:
-> +	if (!IS_ERR(rockchip->vpcie3v3))
-> +		regulator_disable(rockchip->vpcie3v3);
-> +err_disable_12v:
-> +	if (!IS_ERR(rockchip->vpcie12v))
-> +		regulator_disable(rockchip->vpcie12v);
-> +err_out:
-> +	return err;
-> +}
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
 
-This *looks* like it could be strictly a move of
-rockchip_pcie_set_vpcie(), without changing it at all.
 
-If that's the case, please make the move a separate patch so it's more
-obvious what the interesting changes that actually make a difference
-are.
+-- 
+Oscar Salvador
+SUSE Labs
