@@ -1,103 +1,121 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FFF713790B;
-	Tue, 10 Jun 2025 01:50:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1563813790B
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 01:52:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749520226; cv=none; b=QxiSPRV4GDV11hvlbURzFU9ozEBD1W7Vl8L7HS2XvDpU3nwegUJnpl4gfiDuCKki1CD/bMCgzohyq4DQC/QmBiimwjXmJrdSUBTo7ABVSQmI7oLD1cst9qVk794HFDbp2gGpRU9ZaAojle3zQYVP03Gbfu3JZyEFtgHzMXj6/qc=
+	t=1749520344; cv=none; b=sbGidcnuYSyCOrK/71NwZT9Zq71hnut7zAue5i6fIo1+xwIMVOxed7ET7gtvSWfZZ4EpO3Av4Ikjdpz6dTCcwKCNQtWZ6PoO+gsi/oVN7eeltZUMdorJJFqeVBKkcbFsihJAadZRNJHSR+fEtrDeZ+1FNxeCPwAr0ZldhMfs/3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749520226; c=relaxed/simple;
-	bh=LsztCVXZZPbLzW5t60Ca3HvRdV7GOesUL5uH8ho9IOE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dk41jz8aO7UC2cjg+t9U5v7cxv+A8O5c3Z04P0yA1Ba4GN726iG4wvMMEl0J44Vnr8H5viNbFtpseoKPUpYflIgL/Kgujsy3U2/KJgBCiQkGwCoFi41k70pH9nGN/9cCF1FG2v3D+aBfIYdFeNLBZx50CbZHsQm6HqOCXyl2obw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T3BkOKNA; arc=none smtp.client-ip=209.85.222.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749520344; c=relaxed/simple;
+	bh=Tz6FQ4zC04lAPPNDfI2jkH1EmEdxhsyCW4P06YkJSX8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fMYJcSAkQI5I+nNixoOJf+/jnG7ljpL8AV0zvtnKNspxZrzNXIioOWJfXp27pvEbItZqItvngem8rnkuSI/z/355KVFHLgC7B53XkzFGA49OEtmvjTKH1Jl6JnfVUOWqe3Cy7uPnvMupRYU3hwKwnErqg6MtCu2HZpRtfmJX9iA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jQ6bWXKr; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T3BkOKNA"
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7d21f21baf7so460918585a.0;
-        Mon, 09 Jun 2025 18:50:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749520223; x=1750125023; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PJ+k4mMk424f8gSBCF0DcdgBmLjrlumxnw+t8TKS1zw=;
-        b=T3BkOKNAlqQIB3a4oyVhaCzET6jM2dtZTMN8K54lQiZvWs3CAbSPFIkd3X6L2vMG44
-         opVzcRNTug21Cy5hKgV3DDhUZKd/A8kGjByPglbQoGSVmkp6s5/eapryM7LsXlNDo0Br
-         SCIrnYIMIAYr65MwjUvEcPuLTBLP54uthQadSIPsgjfJKHmVfD+3rNQieRx69GEfX79D
-         OWvyN6ljBdhTbqu2dnJ73r6aCl2UGYAtXzWJnbZrGKjccc73fE6j7RbzNVwH/jGgV2S1
-         ro6GwV7rxV7wT+QOIBObyOkxiKW0i/rrHT7tgCHqQtEQ3n4UvA0SQwqJUop5tSVgi+/s
-         G31w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749520223; x=1750125023;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PJ+k4mMk424f8gSBCF0DcdgBmLjrlumxnw+t8TKS1zw=;
-        b=L8i+EIDJxu6SdrlCfQVVZKs2sDLaXIbLjAsJC7X5qEpd8tlsz9x9GjpSJYSZtbnZkV
-         xU76DwDouDqWIXh/SNuSytoIz6TIOU8FpsvD6k8366CD1CqfKG799pEQyDRRc0NKutDu
-         lQWvEZCSj32VvlsGzAnReTRknBzrIHM/90GloVeylA2ekRM03hx0Fkl9J7F0FBOy/q61
-         2kNp8sULas4wBWDR6VhhRuzPsOwXkckZ/SQa/ukxvge/RMN44pcviec50jD4wrwSbKZ0
-         37Hq4c6SwgmmFcAaq0hWSmvmSa5e42Uy0pJ15q7qYGPJ3UN6tvJyxBK5nYrUPOoxgjBf
-         5fBA==
-X-Forwarded-Encrypted: i=1; AJvYcCUKxKOCkvZkFCzpyaYSNTvX1OmBT+RQusKK62zpRkVh0sfEHB8eLvPgMruOYDfphjkOFijkrNW4PCR9@vger.kernel.org, AJvYcCWKXPxMrVGh84v1ksDXFCECM78UA+ZfngXPnJqe6OqbgE43W0Bma6QF0vA1VwWb3CXLq8CO1p1hRpcz4pM+@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrNsMR+S9/puKEReLSaFoOmg0wetc+Mbs6kgap5w6EOQpxAqyp
-	rjIhgcrLBXlGcWFRfdAw92LMxdam6oBHy+L68Oy3PczvM8hVe96M2u0o
-X-Gm-Gg: ASbGnct61R8nmJ5YKK0FUgLiQt5CXY7m5bm/403V1E0+gE8YlwfgwgB5JVjrkLxy3zX
-	kY7/72PSu7HUczjhuVSTfI7xYa+7ZiACiTc60xsR7itdIkABrWFZTHcanWl2q14U/jkKKFoliGW
-	KfgoEFxpMfWv1b1W8I0cgLDfF6oHxFE5uNbyh6glGOXJCsThJx9Ekq8ejaAIH+Jc1IyGpdmCk/y
-	lzFo4RiYIRAqE6Ks8fn/qN1us/aaTD1NBX+zjaC3QE7HlNlwiAp6eGvF0yESd4BpyWh1LzJu9EL
-	HayGb89XnBRXc9cv2MjyhRovCzDfgiN/XpPnNA==
-X-Google-Smtp-Source: AGHT+IGMgWEajIStyhq4ZxgjEnDpGh/DhsVjHF6fVJlErUi/6EmExzbw4J5ZZ8yxGUZo19XRc5vv/g==
-X-Received: by 2002:a05:620a:400c:b0:7c5:962b:e87c with SMTP id af79cd13be357-7d39f62dad1mr139939085a.44.1749520223312;
-        Mon, 09 Jun 2025 18:50:23 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7d25a61d730sm618530785a.82.2025.06.09.18.50.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 18:50:22 -0700 (PDT)
-Date: Tue, 10 Jun 2025 09:49:16 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
-	linux-kernel@vger.kernel.org
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@gmail.com>, devicetree@vger.kernel.org, 
-	sophgo@lists.linux.dev
-Subject: Re: [PATCH 0/2] Add reset controller support for Sophgo SG2000 SoC
-Message-ID: <nztbl7ki2pmgb4nrahdyam6yeu7xtlv7lgfuqcl6qzibbjqceo@osltqayu4meg>
-References: <20250609230417.620089-1-alexander.sverdlin@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jQ6bWXKr"
+Message-ID: <f8dc510a-1525-45f0-bfc3-8afe26ef20fe@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749520339;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=txTKTVbjb1Tcro1zaVUKXsDZFFkm5+kxAZnE4eguYL4=;
+	b=jQ6bWXKrvpYQX6ruyOxhS3SgK3yIHWX6uZtvI6yIkZqIXHA8pADCGoyIK+CIEGhgpSuBNe
+	HKVOAiqkMnsTzsuIT/ZACfjrbHSyysCLEsqKY8TCnQ3vPd3wGTFDumZBdz4SiWpm4PguQf
+	7K9+z0riZBcZsmjh9ymkZvqNMxPBrKw=
+Date: Tue, 10 Jun 2025 09:51:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250609230417.620089-1-alexander.sverdlin@gmail.com>
+Subject: Re: [PATCH] mm/memfd: Rename error labels for clarity
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Ye Liu <liuye@kylinos.cn>
+References: <20250609031858.73415-1-ye.liu@linux.dev>
+ <20250609172654.a99c06d8ad90a6a994545e5f@linux-foundation.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Ye Liu <ye.liu@linux.dev>
+In-Reply-To: <20250609172654.a99c06d8ad90a6a994545e5f@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Jun 10, 2025 at 01:04:13AM +0200, Alexander Sverdlin wrote:
-> Add DT bindings and the corresponding compatible to reset-simple driver;
-> provide the include file with reset lines enumerated.
-> 
-> Alexander Sverdlin (2):
->   dt-bindings: reset: sophgo: support SG2000
->   reset: simple: add support for Sophgo SG2000
-> 
->  .../bindings/reset/sophgo,sg2000-reset.yaml   | 35 +++++++
->  drivers/reset/reset-simple.c                  |  2 +
->  .../dt-bindings/reset/sophgo,sg2000-reset.h   | 92 +++++++++++++++++++
->  3 files changed, 129 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reset/sophgo,sg2000-reset.yaml
->  create mode 100644 include/dt-bindings/reset/sophgo,sg2000-reset.h
-> 
-> -- 
-> 2.49.0
-> 
 
-I think use sophgo,cv1800b-reset is enough, there should be no difference
-between them.
 
-Regard,
-Inochi
+On 2025/6/10 08:26, Andrew Morton wrote:
+> On Mon,  9 Jun 2025 11:18:58 +0800 Ye Liu <ye.liu@linux.dev> wrote:
+> 
+>> From: Ye Liu <liuye@kylinos.cn>
+>>
+>> err_name --> err_fd (fd failure case)
+>> err_fd --> err_file (file failure case)
+>>
+>> ...
+>>
+>> --- a/mm/memfd.c
+>> +++ b/mm/memfd.c
+>> @@ -475,22 +475,22 @@ SYSCALL_DEFINE2(memfd_create,
+>>  	fd = get_unused_fd_flags((flags & MFD_CLOEXEC) ? O_CLOEXEC : 0);
+>>  	if (fd < 0) {
+>>  		error = fd;
+>> -		goto err_name;
+>> +		goto err_fd;
+>>  	}
+>>  
+>>  	file = alloc_file(name, flags);
+>>  	if (IS_ERR(file)) {
+>>  		error = PTR_ERR(file);
+>> -		goto err_fd;
+>> +		goto err_file;
+>>  	}
+>>  
+>>  	fd_install(fd, file);
+>>  	kfree(name);
+>>  	return fd;
+>>  
+>> -err_fd:
+>> +err_file:
+>>  	put_unused_fd(fd);
+>> -err_name:
+>> +err_fd:
+>>  	kfree(name);
+>>  	return error;
+>>  }
+> 
+> Not really, but I see what you mean.
+> 
+> "err_name" means "there was an error, so free the name". 
+> 
+> "err_fd" means "there was a problem with the fd".
+> 
+> 
+> We tend to use the former convention.  See
+> 
+> 	grep err_free mm/*.c
+> 
+> The memfd_create() code would be better if it used "err_free_name" and
+> "err_free_fd" to remove this ambiguity.
+> 
+> Someone who was feeling bored could go through
+> 
+> 	grep "goto err_" mm/*.c
+> 
+> and check that we use this convention uniformly ;)
+> 
+As suggested, I've reviewed error handling labels in mm/*.c.
+"err_free_name" and "err_free_fd" would be better.
+I will send patch v2 later using Subject: [PATCH v2] mm/memfd:
+Clarify error handling labels in memfd_create ()    
+
+Thanks，
+Ye
+
+          
