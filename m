@@ -1,232 +1,146 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B463221562;
-	Tue, 10 Jun 2025 14:33:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DFA919B3CB
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 14:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749565987; cv=none; b=j9BJOqwhkDsPaqZxq7eQuw/QLriIrJS+gCay82z33oE2ylc/JdrPQ6ejEt3USYma0KLCzVMYOPdLkuUyLJzOsseMdoK3+ytTpfEQLSUJqFmnj1cY0Nl8aOJe9LMu0AmEk7Bs1c0bl7osrRUnY44Ios7PsWICXZH4oYUZtJdlX2U=
+	t=1749566043; cv=none; b=LY4DR4bKTcZuB2oAvp+2QbWIREDSaJJmU2Qwzn5EkLAKSqfKaKZ7/MPhkZ5ChviM5CjLClEs77t2q1ZxuldXdn4412S5goe8UhybUv5/GwWqYBLEkUvVtYLB/KPs4TbYPHyai/JaUQft/HfD13tMnE/RvgIZ3ny4riM+pOqm/dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749565987; c=relaxed/simple;
-	bh=+LrpRN5ivi0vMmbh7LVb4ueqS6Bninxly8WIos8C+1Q=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=glw3aMERhoMl6I88KxYBmFyQwChx/PgvSxHiPCgnZ/wIjulAoBYpU4ziadZuFUSYDLpBueOwoh45HcdoDWSMSC9WST7pnJ8cuJZJZGALOY6hTNJkLocV0usCxwDqwy2uY7/f6hDFbirN6xlbYXRdVpsYWSFxgfvM7Bk1zCZ2hEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=hftHrf/m; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1749566043; c=relaxed/simple;
+	bh=pAKxeGee5hYim+nL+Rs/49E6KsFoJV+dqj4fAlLpzDE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dmplrMd2kSRe6W5F3JAzuSoLmxzTdY22qJ95lAmN8BWDeqCB6Noj4UKz5kpWAyBDwy7K1lR7qj1n2z9+peXE3DV/LAO+OIevBqDrwH/ZhOuNo/Wwof2zX0G7B3WRu4TXj4wE+yUn9TTjfQ6ku1MbeA1oCbM+0VGnvkTEPIrsXpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=uXRrrlKv; arc=none smtp.client-ip=209.85.166.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="hftHrf/m"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55ACLDfV012929;
-	Tue, 10 Jun 2025 16:32:46 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	JkfG8YXz0QvamudIhCtDRX+9K9gQecYFXtrNBuUy3iE=; b=hftHrf/mn+BLdir3
-	rR60G4wkeaI4uYHS2fdRciYhBawaBorbRsChkNY86w4UCXuxgCIfeXSO3aGLfdRK
-	hX9WF72u0J4rz9nYP0BPtJDbequG0V4AJZftM5aw0d1YZQOhHxN9ibvRGIPRa20h
-	ToBlDYYZBfw26vena3kO+Bs4kRSItvba07CuwUKo89O23Iw+JyTAx16tjkQ9Omfh
-	epVSBcOn95T4lxI04veNc7eRnGA5GAlyOENF/uGHsCZ0hSksFMkSwdJaIHwlGDHl
-	Z5ZnVMtEsBmgxYXf7DALd1wXn8N464Ge0Jkdg19iZkIfdqGaXCCR/kW+dBLz6220
-	86Xhag==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474aumdsb4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Jun 2025 16:32:46 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 6496040066;
-	Tue, 10 Jun 2025 16:31:43 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7C206B3C2F1;
-	Tue, 10 Jun 2025 16:30:48 +0200 (CEST)
-Received: from localhost (10.48.86.132) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Jun
- 2025 16:30:48 +0200
-From: Antonio Borneo <antonio.borneo@foss.st.com>
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-CC: Antonio Borneo <antonio.borneo@foss.st.com>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        =?UTF-8?q?Cl=C3=A9ment=20Le=20Goffic?=
-	<clement.legoffic@foss.st.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Stephane Danieau
-	<stephane.danieau@foss.st.com>
-Subject: [PATCH v2 4/5] pinctrl: stm32: Allow compile as module for stm32mp257
-Date: Tue, 10 Jun 2025 16:30:41 +0200
-Message-ID: <20250610143042.295376-5-antonio.borneo@foss.st.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250610143042.295376-1-antonio.borneo@foss.st.com>
-References: <20250610143042.295376-1-antonio.borneo@foss.st.com>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="uXRrrlKv"
+Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-8731c3473c3so144776439f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 07:33:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1749566038; x=1750170838; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ekBoU2yYMPWW4Dnqk5aHWEL3RevwpBEXg8v1UkgbqYY=;
+        b=uXRrrlKv/v4gNahOzqz2E5Iuz1IU2B8im4X3TOliFz27x8J95njyKsICvm7Jt7dmot
+         SgfCoyEbVWFMRM3nuxgoEsK0i47H/4nhMq+U2vyQQEevJRw9LBfpGGLSeh4DopgaosNC
+         ndZ1nW+4su8sHsK9iPHhSlYKQ4PMoIrr55X+d0q1tO+LVjrp/M0zSYA5XuIaroLl9VcW
+         /pXA5UUumzzQurtNSsajRB+kO7Ux9vJeEfH9VXX2NbLRCO8sE7s20TzYgpSYUSLh1vve
+         hn5NYbcmA7Sp0No/VO3y6pjFzZqbitveFRSk4N9Yd9wkWarSQcgwoCgbMEHZxRV+R+F1
+         DxtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749566038; x=1750170838;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ekBoU2yYMPWW4Dnqk5aHWEL3RevwpBEXg8v1UkgbqYY=;
+        b=ZvMFzI7Dwggnsd5A8ZK+ZpVS0gK0BVd6JcUS4NrxTIPSgbxzWa3mG+32whrIvu4U5p
+         1KJnyhe4brPih6Jwzy8BQ4R1XgL1PoLVJ1WNkLvSTIOrT6140QpG/84soSqHkww+xfKI
+         bNkNi5mYT/nbPVZ2d3e8QmaORSG9Vsy+7fHD/OKccEFUoNyGXpyNku8NaQunMCPeJw26
+         F4miMijra/FvcHJqtlk1YBHRCrN9lkZnLAdB1Co9aegbM1QfX6YnnKMc8MzKBhampa23
+         XaO13QoFfwC7gkehNfZlrsEsgakEFMW3KBmXgjRC1nSi3qdexyjamaT19z6R6i44J0/6
+         b+3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUBZ+m0HYUjvtcnXf7IC4JRMXMbuadKgu0p7mczEPpau0x0y7G7vuntgw90JMYl733rNLpuizlC5nLQU/c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyc5gvMnXQzRuuuJrxtDcD6H8pPram/0U3VBR9p5ZZUY3jJC310
+	tvoqxilTVz2zhqHttjAut1JbHRQA91hubjspd3MgQzHzCpy+PmdCR7EymRR6rxYb5yM=
+X-Gm-Gg: ASbGncvlBC1nc/0CmIy/e0ZUHWLgbA0+AwHIpJC5Wld3D94ElurCma1/SYFaBpIoh4B
+	t4KV/lSDjJo2/+fA7tx2pcXFY/5qs+diJEf1J5B0qu0NAnn/9ahTYhqf8HAMHPmLBsEQUAZoDmM
+	FrAbtUa/gWTojLlbgYnx2T3H1LTyf74idP/tjHSnvG0pdfgFms8pMkzlZHQg/xt3eD0G8hT/FjF
+	/WcJk2oROEGlfEdj+I8i8NP3K7ayn9jnLw3xhXTlfk52cXZY1YRi/S320R4gJXilN/hyFWfMHeV
+	VmLB4V/H4DnmMx6BeTlFUPdKva9Juu12da1RvDarMePnZk+NrOg0bSM0jic=
+X-Google-Smtp-Source: AGHT+IFtnHWEz/+j2BG9QS02+XZtsC51R6Y1Jc7tbT048c7lAH39CFIlkqW/kelKNrFEkzXDFWCCdQ==
+X-Received: by 2002:a92:c242:0:b0:3dd:89dc:ab07 with SMTP id e9e14a558f8ab-3ddce3ef67fmr186968655ab.8.1749566038458;
+        Tue, 10 Jun 2025 07:33:58 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-500df6102e3sm2315805173.128.2025.06.10.07.33.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Jun 2025 07:33:57 -0700 (PDT)
+Message-ID: <ab764b69-6b94-4163-b114-f4889a043040@kernel.dk>
+Date: Tue, 10 Jun 2025 08:33:56 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SAFCAS1NODE2.st.com (10.75.90.13) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-10_05,2025-06-10_01,2025-03-28_01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] io_uring: fix use-after-free of sq->thread in
+ __io_uring_show_fdinfo()
+To: Penglei Jiang <superman.xpt@gmail.com>
+Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
+ syzbot+531502bbbe51d2f769f4@syzkaller.appspotmail.com
+References: <20250610111721.37036-1-superman.xpt@gmail.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20250610111721.37036-1-superman.xpt@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Stephane Danieau <stephane.danieau@foss.st.com>
+On 6/10/25 5:17 AM, Penglei Jiang wrote:
+> diff --git a/io_uring/fdinfo.c b/io_uring/fdinfo.c
+> index e9355276ab5d..2911352bbae1 100644
+> --- a/io_uring/fdinfo.c
+> +++ b/io_uring/fdinfo.c
+> @@ -141,19 +141,23 @@ static void __io_uring_show_fdinfo(struct io_ring_ctx *ctx, struct seq_file *m)
+>  
+>  	if (ctx->flags & IORING_SETUP_SQPOLL) {
+>  		struct io_sq_data *sq = ctx->sq_data;
+> +		struct task_struct *tsk;
+>  
+> +		rcu_read_lock();
+> +		tsk = rcu_dereference(sq->thread);
+>  		/*
+>  		 * sq->thread might be NULL if we raced with the sqpoll
+>  		 * thread termination.
+>  		 */
+> -		if (sq->thread) {
+> +		if (tsk) {
+>  			sq_pid = sq->task_pid;
+>  			sq_cpu = sq->sq_cpu;
+> -			getrusage(sq->thread, RUSAGE_SELF, &sq_usage);
+> +			getrusage(tsk, RUSAGE_SELF, &sq_usage);
+>  			sq_total_time = (sq_usage.ru_stime.tv_sec * 1000000
+>  					 + sq_usage.ru_stime.tv_usec);
+>  			sq_work_time = sq->work_time;
+>  		}
+> +		rcu_read_unlock();
+>  	}
 
-Add ability to build pinctrl for stm32mp257 as a kernel module.
-Add kernel-doc to the exported symbols.
+Don't think this will work, if we're racing with the mmput and then end
+up doing that inside an RCU read locked region...
 
-Signed-off-by: Stephane Danieau <stephane.danieau@foss.st.com>
-Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
----
- arch/arm64/Kconfig.platforms               |  1 -
- drivers/pinctrl/stm32/Kconfig              |  6 +++---
- drivers/pinctrl/stm32/pinctrl-stm32.c      |  8 ++++++++
- drivers/pinctrl/stm32/pinctrl-stm32.h      | 14 ++++++++++++++
- drivers/pinctrl/stm32/pinctrl-stm32mp257.c | 11 ++++++-----
- 5 files changed, 31 insertions(+), 9 deletions(-)
+> diff --git a/io_uring/sqpoll.c b/io_uring/sqpoll.c
+> index 03c699493b5a..0625a421626f 100644
+> --- a/io_uring/sqpoll.c
+> +++ b/io_uring/sqpoll.c
+> @@ -270,7 +270,8 @@ static int io_sq_thread(void *data)
+>  	/* offload context creation failed, just exit */
+>  	if (!current->io_uring) {
+>  		mutex_lock(&sqd->lock);
+> -		sqd->thread = NULL;
+> +		rcu_assign_pointer(sqd->thread, NULL);
+> +		put_task_struct(current);
+>  		mutex_unlock(&sqd->lock);
+>  		goto err_out;
+>  	}
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index a541bb029aa4e..d6cfcfad26e47 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -311,7 +311,6 @@ config ARCH_STM32
- 	bool "STMicroelectronics STM32 SoC Family"
- 	select GPIOLIB
- 	select PINCTRL
--	select PINCTRL_STM32MP257
- 	select ARM_SMC_MBOX
- 	select ARM_SCMI_PROTOCOL
- 	select REGULATOR
-diff --git a/drivers/pinctrl/stm32/Kconfig b/drivers/pinctrl/stm32/Kconfig
-index 2656d3d3ae402..297a2f088bc1f 100644
---- a/drivers/pinctrl/stm32/Kconfig
-+++ b/drivers/pinctrl/stm32/Kconfig
-@@ -2,7 +2,7 @@
- if ARCH_STM32 || COMPILE_TEST
- 
- config PINCTRL_STM32
--	bool
-+	tristate
- 	depends on OF
- 	select PINMUX
- 	select GENERIC_PINCONF
-@@ -53,8 +53,8 @@ config PINCTRL_STM32MP157
- 	select PINCTRL_STM32
- 
- config PINCTRL_STM32MP257
--	bool "STMicroelectronics STM32MP257 pin control" if COMPILE_TEST && !MACH_STM32MP25
-+	tristate "STMicroelectronics STM32MP257 pin control"
- 	depends on OF && HAS_IOMEM
--	default MACH_STM32MP25
-+	default MACH_STM32MP25 || (ARCH_STM32 && ARM64)
- 	select PINCTRL_STM32
- endif
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index e7621f9b00056..ce2a5fee42303 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -8,6 +8,7 @@
-  */
- #include <linux/bitfield.h>
- #include <linux/clk.h>
-+#include <linux/export.h>
- #include <linux/gpio/driver.h>
- #include <linux/hwspinlock.h>
- #include <linux/io.h>
-@@ -1785,6 +1786,7 @@ int stm32_pctl_probe(struct platform_device *pdev)
- 	clk_bulk_disable_unprepare(banks, pctl->clks);
- 	return ret;
- }
-+EXPORT_SYMBOL(stm32_pctl_probe);
- 
- static int __maybe_unused stm32_pinctrl_restore_gpio_regs(
- 					struct stm32_pinctrl *pctl, u32 pin)
-@@ -1857,6 +1859,7 @@ int __maybe_unused stm32_pinctrl_suspend(struct device *dev)
- 
- 	return 0;
- }
-+EXPORT_SYMBOL(stm32_pinctrl_suspend);
- 
- int __maybe_unused stm32_pinctrl_resume(struct device *dev)
- {
-@@ -1873,3 +1876,8 @@ int __maybe_unused stm32_pinctrl_resume(struct device *dev)
- 
- 	return 0;
- }
-+EXPORT_SYMBOL(stm32_pinctrl_resume);
-+
-+MODULE_AUTHOR("Alexandre Torgue <alexandre.torgue@foss.st.com>");
-+MODULE_DESCRIPTION("STM32 core pinctrl driver");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.h b/drivers/pinctrl/stm32/pinctrl-stm32.h
-index ed525f5bdd7cd..9e44ad8c35b35 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.h
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.h
-@@ -66,8 +66,22 @@ struct stm32_pinctrl_match_data {
- 	bool rif_control;
- };
- 
-+/**
-+ * stm32_pctl_probe() - Common probe for stm32 pinctrl drivers.
-+ * @pdev: Pinctrl platform device.
-+ */
- int stm32_pctl_probe(struct platform_device *pdev);
-+
-+/**
-+ * stm32_pinctrl_suspend() - Common suspend for stm32 pinctrl drivers.
-+ * @dev: Pinctrl device.
-+ */
- int stm32_pinctrl_suspend(struct device *dev);
-+
-+/**
-+ * stm32_pinctrl_resume() - Common resume for stm32 pinctrl drivers.
-+ * @dev: Pinctrl device.
-+ */
- int stm32_pinctrl_resume(struct device *dev);
- 
- #endif /* __PINCTRL_STM32_H */
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32mp257.c b/drivers/pinctrl/stm32/pinctrl-stm32mp257.c
-index 984587207956a..d226de524bfc1 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32mp257.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32mp257.c
-@@ -4,6 +4,7 @@
-  * Author: Alexandre Torgue <alexandre.torgue@foss.st.com> for STMicroelectronics.
-  */
- #include <linux/init.h>
-+#include <linux/module.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
- 
-@@ -2564,6 +2565,7 @@ static const struct of_device_id stm32mp257_pctrl_match[] = {
- 	},
- 	{ }
- };
-+MODULE_DEVICE_TABLE(of, stm32mp257_pctrl_match);
- 
- static const struct dev_pm_ops stm32_pinctrl_dev_pm_ops = {
- 	 SET_LATE_SYSTEM_SLEEP_PM_OPS(stm32_pinctrl_suspend, stm32_pinctrl_resume)
-@@ -2577,9 +2579,8 @@ static struct platform_driver stm32mp257_pinctrl_driver = {
- 		.pm = &stm32_pinctrl_dev_pm_ops,
- 	},
- };
-+module_platform_driver(stm32mp257_pinctrl_driver);
- 
--static int __init stm32mp257_pinctrl_init(void)
--{
--	return platform_driver_register(&stm32mp257_pinctrl_driver);
--}
--arch_initcall(stm32mp257_pinctrl_init);
-+MODULE_AUTHOR("Alexandre Torgue <alexandre.torgue@foss.st.com>");
-+MODULE_DESCRIPTION("STM32MP257 pinctrl driver");
-+MODULE_LICENSE("GPL");
+You do this in both spots, why the put_task_struct(current)? That seems
+like that would be very wrong and instantly break. Did you run this
+patch?
+
+I do agree that there's an issue here though, let me take a closer look
+at it. This would have been introduced with the getrusage change though,
+no? This one:
+
+ommit 3fcb9d17206e31630f802a3ab52081d1342b8ed9
+Author: Xiaobing Li <xiaobing.li@samsung.com>
+Date:   Wed Feb 28 17:12:51 2024 +0800
+
+    io_uring/sqpoll: statistics of the true utilization of sq threads
+
+as that is the one that added prodding at sq->thread from fdinfo.
+
 -- 
-2.34.1
-
+Jens Axboe
