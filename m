@@ -1,78 +1,47 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78DEA28CF68
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 10:36:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E52221D59F;
+	Tue, 10 Jun 2025 10:37:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749551791; cv=none; b=niN7aCPiGWCjbgZ4L+6JM4fclQt5SEyVCSPkoJZUQbachPRwH1mYDFHyXegQ3DkRZHa5PSgxZJ/cwKyOsgttHhfJU0FscWWlhwlBv3+5SJ3uLRwhItiUQ3bSlOWri3aSiNuiR3E36NaY4iVQzuyTXZs5iGCvaUl4k52IRZfLY74=
+	t=1749551855; cv=none; b=Xw9H4sQwPCOAi4bOTgghXjUAmJLSTuVJeXjwpeGVLgTNWPEZhu4HR/Yi0/kzonljQYGD+8yEHgXz+s7E5rXtK1lYIO0x0+OV0RkiUdj7Gu1tj7sRKnFrkvVhTZ+clYTff5iudCmJx+hpkFAmI5W6fWWYugcYHveE0xiOGj4J7LM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749551791; c=relaxed/simple;
-	bh=DdIhTy3q8p6bXogIHoQAqq/ZvjVwNbGYehglCiP06dw=;
+	s=arc-20240116; t=1749551855; c=relaxed/simple;
+	bh=L2xbVLQlsBf/xieCX2SEZx2rt1ajw+J8rd/rO3kjmwY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KukeRhKoz1JFIfTRhAeBQV36z+57DMCSdEmz/WH8zNOHVycxflpRJHuLbx3816J3EVCSAGhUw6PxrfxRE2cAu8TxQ3NjgxIw8W3fGzZvqrHMEN2SkaMrnVdwPVbNuJK3Zur5tK+/JNSJUHxISTyYJtHek2UU1H5Da8KTB8ClQTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=inventec.com; spf=pass smtp.mailfrom=inventec.com; dkim=pass (2048-bit key) header.d=inventec.com header.i=@inventec.com header.b=TRxj7Ibj; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=inventec.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inventec.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=inventec.com header.i=@inventec.com header.b="TRxj7Ibj"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-236377f00easo7708125ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 03:36:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=inventec.com; s=google; t=1749551789; x=1750156589; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Rrcg34+lsviAoAZUAGZxbxbJA9K//cWkgoq+Xni+Ow4=;
-        b=TRxj7Ibj2DtgPA8FIaTSjDb9U6iV4eNJdIFHXLg9XiVI4j09fL4dcDfd+Y3B4D5lC6
-         r9ZDTnQGoQoc216/tEcmm8u3o93V0aGz3k+bdhNwWalorifgdRNrZV7MvRjlh1tE8YOF
-         +wJhYfoxATNp7YRJNNqspChji1ElsNfGP0RXSxDA5FWOPDEB0o1h3QXASCftU9E5dyhp
-         mlzsCT7WKbWjWSJ2YYGCC9VT3Xni6DY+D6dSabaTLcJleW86fOEccndaFTviPBsy7cgg
-         UoPmosBjyKvwE3Uz48pvAstiYBZb/8FZV0s22Mg/NhT+wiZSDdw9ia8HdEQVXk1Hwscx
-         Aarw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749551789; x=1750156589;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Rrcg34+lsviAoAZUAGZxbxbJA9K//cWkgoq+Xni+Ow4=;
-        b=cShscLvQpHlLUYtztr6tttPDXl9zgY1Jr9yDfoIcaSRUjBS9/FEO8shrRHTD2JAkTB
-         mEoCX3VvrZqEdjb+smLpOV3pOC1PkXjH5KtPsnvxoC4tGsta+kd7ShMqeKJ7m5bFgUAK
-         KcAHGrkDwbpIY8G2B2sCozMg/aEbiXmCI/gdslko62D8G8grp/UtEeuHiV519xBgqlLw
-         Lt3+V56NvuPW0x7sEbxrDHojLb7L/z0owcpi8VFtekAoMFIbaghbOMz6XB4a4G/zWdBK
-         RMQ7ATRYV64a+IdNHlGweRdNNaHbJFpAOifBRAII+52Jc/8t22ONxJ4T4X8w1Ue8AUIX
-         1rdw==
-X-Forwarded-Encrypted: i=1; AJvYcCU5G/OTHzLNa9WCqeVYfVdfd1PxKTIohhPVYoUWX8lft/6E1GnF3tRZAZ5Uwg4FFTIyMz/RbhrLHBmcDVc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yychkq2+eNMcsyngYcsQwkMNJmkAIMKCOp58x9R0azzHmZBlipM
-	+6dtC+K97t4gN1Pn/D3ahXEZewApqdQ0Dp4R55Mnp6TFCxNbb0MNOwSllsc0qVKDOuP8EA5FMS2
-	uIDBL
-X-Gm-Gg: ASbGncsMRKTsVekkEXkLkiLoZ0X+QNfIK55u+Ce1VaP/bF0a+hL+HYCq1dj7Fz0N6AZ
-	PBrdnoJHqPHb82RtMILY9/pXkAUczw3amM8TRi1nUb+AswDMsPxPhKRINOnIdjZ9qXOCAB2zggh
-	xA47xXJKgQNgM8yMyhFm4vmHdk7SzAJ6c324IhEDJmd5IR+tC3wFC7rMXE53hm5szTSAdJ/vQK5
-	1+I/6gkbfLMIhNFQMEHMhE3nxRmnF9exi66HamMXMHqJs2vKstSxyvmVj5yeLIh9fbCjLErgP86
-	WD7WZMLW83AKxYoZe+DFxufddTdn76RxLZvf1DogmPt/UiyHdPYqpyhs1y0EKLLv8Vzqdqe3OOk
-	AHFCGoypZgKnlZ96cJlVAF5GAVy9+eK0Iaxpe+lyLwif1RZd/AwT6OA==
-X-Google-Smtp-Source: AGHT+IEXd1Hcw9c3aT+Co83iBRXaANe5QdZsyUaTImfUlQrhm5qcc9u+SApj2W2xKK1ATcOsPs45wQ==
-X-Received: by 2002:a17:90b:2ecc:b0:311:e5b2:356b with SMTP id 98e67ed59e1d1-313472e9005mr25567000a91.11.1749551777007;
-        Tue, 10 Jun 2025 03:36:17 -0700 (PDT)
-Received: from localhost.localdomain (60-250-242-163.hinet-ip.hinet.net. [60.250.242.163])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31349ff7e14sm7800595a91.45.2025.06.10.03.36.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 03:36:16 -0700 (PDT)
-From: Chiang Brian <chiang.brian@inventec.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Chiang Brian <chiang.brian@inventec.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v9 1/2] dt-bindings: trivial: Add tps53685 support
-Date: Tue, 10 Jun 2025 18:25:54 +0800
-Message-Id: <20250610102556.236300-2-chiang.brian@inventec.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250610102556.236300-1-chiang.brian@inventec.com>
-References: <20250610102556.236300-1-chiang.brian@inventec.com>
+	 MIME-Version; b=jS8DCCkxfT15D0pCMRk6FlBK7Nie64fQBsqFrGozJACeE5gFH1/k3/QN6d6d0kX4DZy3E32yQGt+QmI2qKWTqoRD2z2q6tpunZD8IYCChNwh2XO37xbYDFeLqwm2OyB6fch+C/ycocbXB1DKyNq13z8waJm6qh/ysP9Z1BbDSuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6486C14BF;
+	Tue, 10 Jun 2025 03:37:13 -0700 (PDT)
+Received: from usa.arm.com (unknown [10.57.49.127])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 031EB3F673;
+	Tue, 10 Jun 2025 03:37:29 -0700 (PDT)
+From: Aishwarya <aishwarya.tcv@arm.com>
+To: pulehui@huaweicloud.com
+Cc: Liam.Howlett@oracle.com,
+	akpm@linux-foundation.org,
+	jannh@google.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	lorenzo.stoakes@oracle.com,
+	mhiramat@kernel.org,
+	oleg@redhat.com,
+	peterz@infradead.org,
+	pfalcato@suse.de,
+	pulehui@huawei.com,
+	stable@vger.kernel.org,
+	vbabka@suse.cz,
+	broonie@kernel.org,
+	Ryan.Roberts@arm.com,
+	Dev.Jain@arm.com
+Subject: Re: [PATCH v1 4/4] selftests/mm: Add test about uprobe pte be orphan during vma merge
+Date: Tue, 10 Jun 2025 11:37:29 +0100
+Message-Id: <20250610103729.72440-1-aishwarya.tcv@arm.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20250529155650.4017699-5-pulehui@huaweicloud.com>
+References: <20250529155650.4017699-5-pulehui@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,45 +50,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add device type support for tps53685
+Hi,
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Chiang Brian <chiang.brian@inventec.com>
----
-v8 -> v9:
-- No code changed, correct the order of Acked-by tag
-- Link to v8: https://lore.kernel.org/all/20250602042454.184643-2-chiang.brian@inventec.com/
+kselftest-mm test 'merge.handle_uprobe_upon_merged_vma' is failing
+against mainline master v6.16-rc1 with Arm64 on Ampere Altra/TX2 in our
+CI. The kernel was built using defconfig along with the additional
+config fragment from:
 
-v3 -> v8:
-- No code changed, included Acked-by tag from v2 review
-- Patch kept in sync with series version
-- Link to v3: https://lore.kernel.org/all/20250515081449.1433772-2-chiang.brian@inventec.com/
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/testing/selftests/mm/config
 
-v2 -> v3:
-- Fix the order of patches
-- Link to v2: https://lore.kernel.org/all/20250424132538.2004510-3-chiang.brian@inventec.corp-partner.google.com/
+I understand the failure is already being discussed and is expected to be
+addressed by including sys/syscall.h.Sharing this observation here 
+for reference.
 
-v1 -> v2:
-- Correct the subject and commit message
-- Link to v1: https://lore.kernel.org/all/20250314032802.3187097-1-chiang.brian@inventec.com/
+A bisect identified commit efe99fabeb11b030c89a7dc5a5e7a7558d0dc7ec as the
+first bad commit. This was bisected against tag v6.16-rc1 from:
 
+  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
 
- Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+This test passes on Linux version v6.15-13627-g119b1e61a769.
 
-diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-index 27930708ccd5..a613b9c3f6ea 100644
---- a/Documentation/devicetree/bindings/trivial-devices.yaml
-+++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-@@ -396,6 +396,8 @@ properties:
-           - ti,tps53679
-             # TI Dual channel DCAP+ multiphase controller TPS53681
-           - ti,tps53681
-+            # TI Dual channel DCAP+ multiphase controller TPS53685 with AMD-SVI3
-+          - ti,tps53685
-             # TI Dual channel DCAP+ multiphase controller TPS53688
-           - ti,tps53688
-             # TI DC-DC converters on PMBus
--- 
-2.25.1
+Failure log:
 
+  7151 12:46:54.627936  # # #  RUN           merge.handle_uprobe_upon_merged_vma ...
+  7152 12:46:54.639014  # # f /sys/bus/event_source/devices/uprobe/type
+  7153 12:46:54.639306  # # fopen: No such file or directory
+  7154 12:46:54.650451  # # # merge.c:473:handle_uprobe_upon_merged_vma:Expected read_sysfs("/sys/bus/event_source/devices/uprobe/type", &type) (1) == 0 (0)
+  7155 12:46:54.650730  # # # handle_uprobe_upon_merged_vma: Test terminated by assertion
+  7156 12:46:54.661750  # # #          FAIL  merge.handle_uprobe_upon_merged_vma
+  7157 12:46:54.662030  # # not ok 8 merge.handle_uprobe_upon_merged_vma
+
+Git bisection log:
+
+git bisect start
+# status: waiting for both good and bad commits
+# good: [119b1e61a769aa98e68599f44721661a4d8c55f3] Merge tag 'riscv-for-linus-6.16-mw1' of git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux
+git bisect good 119b1e61a769aa98e68599f44721661a4d8c55f3
+# status: waiting for bad commit, 1 good commit known
+# bad: [19272b37aa4f83ca52bdf9c16d5d81bdd1354494] Linux 6.16-rc1
+git bisect bad 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+# bad: [b3154a6ff1f53b794c01096577700f35b1be9cc2] Merge tag 'sh-for-v6.16-tag1' of git://git.kernel.org/pub/scm/linux/kernel/git/glaubitz/sh-linux
+git bisect bad b3154a6ff1f53b794c01096577700f35b1be9cc2
+# bad: [5b032cac622533631b8f9b7826498b7ce75001c6] Merge tag 'ubifs-for-linus-6.16-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/rw/ubifs
+git bisect bad 5b032cac622533631b8f9b7826498b7ce75001c6
+# good: [2da20fd904f87f7bb31b79719bc3dda4093f8cdb] kernel/rcu/tree_stall: add /sys/kernel/rcu_stall_count
+git bisect good 2da20fd904f87f7bb31b79719bc3dda4093f8cdb
+# good: [d3c82f618a9c2b764b7651afe16594ffeb50ade9] Merge tag 'mm-hotfixes-stable-2025-06-06-16-02' of git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+git bisect good d3c82f618a9c2b764b7651afe16594ffeb50ade9
+# bad: [efe99fabeb11b030c89a7dc5a5e7a7558d0dc7ec] selftests/mm: add test about uprobe pte be orphan during vma merge
+git bisect bad efe99fabeb11b030c89a7dc5a5e7a7558d0dc7ec
+# good: [2b12d06c37fd3a394376f42f026a7478d826ed63] mm: fix uprobe pte be overwritten when expanding vma
+git bisect good 2b12d06c37fd3a394376f42f026a7478d826ed63
+# good: [6fb6223347d5d9512875120267c117e7437f0db6] selftests/mm: extract read_sysfs and write_sysfs into vm_util
+git bisect good 6fb6223347d5d9512875120267c117e7437f0db6
+# first bad commit: [efe99fabeb11b030c89a7dc5a5e7a7558d0dc7ec] selftests/mm: add test about uprobe pte be orphan during vma merge
+
+Thanks,
+Aishwarya
