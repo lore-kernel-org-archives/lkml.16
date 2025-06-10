@@ -1,263 +1,308 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68B71D90C8;
-	Tue, 10 Jun 2025 15:18:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749568685; cv=fail; b=BxEkvPKEjjJDwV349XSpVGYfh8KAd6uPxJeKiXKVCTIsAVRmAWX60SvCp0h6uA1ulkUenN4VDce5EiyvDVd8vL/1Qpi+PsUyYw0ZbMKZ75FhSzvvJeOlI0/orRWwbTBi/lV6LCh6erWveJ0A8KfuEtC0P0ZYGuATdLv4Is0eh5k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749568685; c=relaxed/simple;
-	bh=1RjTqebKKx4scLIqvhttyAlBOPmhlRIsM6/7kOhjrUE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=eTPsyjQj5E8OtPKr1WPWS+JDNHNAjTHGSKPuXEdPeyJ8ZSvKv9CtS75iU0Jm8ft4V/Hd6sKNJ20wjjZuV5K0iqhKIO3NswC7Chr3lyNdfE6AtddByb5gZnZOmdVDSp7mAOhoXTMoH4WSK0KQsVQ2Y9+m0IZZb5nezuuM/Vki6lA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=LXJ7BUlV; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=X9lSz3Gf; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C34322A4CC;
+	Tue, 10 Jun 2025 15:18:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749568702; cv=none; b=Hrjy7xJQdbsjgU9hm8v+CZoG0HMtkMEj3dDa7Y9FRZXa1JMLQpzQNF9NjrdCn767zr1ZdoFht9tZYcdywl1q+ffNGd7AfnZKMMLlnETVDcqARjR/lu/WBEWiPS3C1QXqDVbAijwlbnHqUhsQ1TmZnRUNn+GIo8lsmnKGeQM6wZA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749568702; c=relaxed/simple;
+	bh=OKdKK12Iq422U1/f3KpZ9kmapPOtIkN5J87lwnhRmRk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Cksgcq9FpVct1SffyNI+bJi/EGuLIQHk6mmrtyHMti8yZJ2irAIrLEra9oCIcDI6nyA572ZeWx7Vk2IT50N8jI1BfLWwwKmBdjTDZ29LDVHh2iy1oQA/5m9q68GjVRXnufT0m39Zc1YcCZy6omaSl0pjrvfVTa1tuxYol1Lc2y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OfuY8ddk; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LXJ7BUlV";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="X9lSz3Gf"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55AEXeSF029113;
-	Tue, 10 Jun 2025 15:17:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=1RjTqebKKx4scLIqvh
-	ttyAlBOPmhlRIsM6/7kOhjrUE=; b=LXJ7BUlVqhJlBW6p0ft15hxV1V5NraCDeM
-	l2faSJH62ytuiUjqn1G7Foo7y6QZDG6QrnqWdV9p//sGYxpLVcRbPOcxC7843214
-	NXl8pOOMnB6HG0q6bFWwvVVg6QoVf9FhPq+Lfogq1/lKewR/nT5ek9wTAU4a5pyc
-	+B6+bEx8+DkVeVlnvQHJxZYQIdLmyqgQUWYaqmt5dZ/kG6uwt5LCcZOSdN996pmq
-	97Wnq58NeJYz0c1LHVZYrhMYth8VFqobTLdWgH4Q9sfC7JCMU841sDOEcT5ywy0s
-	tVSY1F9UybMOARq9TZD53qSmk5mnXpkKyV/edOtRWNz1TSVWtgOg==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 474d1v4gxn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 10 Jun 2025 15:17:39 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55ADf73W007539;
-	Tue, 10 Jun 2025 15:17:38 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11on2081.outbound.protection.outlook.com [40.107.223.81])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 474bv8maq9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 10 Jun 2025 15:17:38 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NO1xWBsHcjv54bjxxCaUOEkukSRuaSydu7dHCI3ZXHVFNrG1W4lJ6S58lXA8+G8UIQ1xrAVRc/zAkXqTSsRGinXdu0ymMdmNPd9nTCuEOsHVkhV/3R+xH0O38ECvPdlEiedl7rpDrWAgiHFhPXL4hB2QhC0ATjVHNbGIX9I/kO63HfM79CUFoqkRysEzdeD2Ktsgw31vNZARUHQruGd3+5OhsFpLxvmVlITC5TSkJWOOC9JHQwfiufBR3qw2ubMLRxosyxop5RKER1iUUZ1KQHUrYRZbVcqG7ecd1uHwDdAx57x9ExeQy2jLJbCFFnV4OJuYvXVuhILP8Khp/aPvrw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1RjTqebKKx4scLIqvhttyAlBOPmhlRIsM6/7kOhjrUE=;
- b=GuwqKbpaRZEVHtYZQ74FbxefAhmr5wesvgQLRkYUC3qjY0g65FcsHvWCzALq+V3pYVESVOhsPdJIZOyFZNhrCO9sh0/ONoJgzanjlY0EUuUeYRMV/xajr3eVLlDFDMO5NNeYi1h5/gXRQF/ceQPSOXcuE3cD5M+nWWUP1eL8gn9Tbcb9heCgux5hxcKB6fDYFUE5kB4oC0tKRoqWF4ucjRYlmcLjGqWRLucnvDm+2UIJ43/pFl3RTmziZsg4o5xgjvBV8G9Jf4cLGO2koyzKhu0MYfAcLhbCCrnRS2DbSGzY1NomMTZPkVEbY538rlRnY8NczgrlcGoEYcbVcn6K2A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OfuY8ddk"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-3292aad800aso55817491fa.0;
+        Tue, 10 Jun 2025 08:18:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1RjTqebKKx4scLIqvhttyAlBOPmhlRIsM6/7kOhjrUE=;
- b=X9lSz3GfQ2zFpYZPttZGjljvtJYdqBlyWjFgfZiVykLSdtSJhikxCWRkchRTG9kgETnfr3mOyAaGGtwaVgxS6vMZVM1uPuHahcDiRhA+TZlbHkM4vB8ibr7ZWtwfdWGmgeibgb/m4MGD4uIsa0xqGlbUCdkEk+v30inXXx6eKU4=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by BL4PR10MB8231.namprd10.prod.outlook.com (2603:10b6:208:4e6::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.18; Tue, 10 Jun
- 2025 15:17:36 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%6]) with mapi id 15.20.8813.024; Tue, 10 Jun 2025
- 15:17:36 +0000
-Date: Tue, 10 Jun 2025 16:17:33 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Usama Arif <usamaarif642@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-        Shakeel Butt <shakeel.butt@linux.dev>,
-        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
-        David Hildenbrand <david@redhat.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Jann Horn <jannh@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <brauner@kernel.org>, SeongJae Park <sj@kernel.org>,
-        Mike Rapoport <rppt@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
-        Barry Song <21cnbao@gmail.com>, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, Pedro Falcato <pfalcato@suse.de>
-Subject: Re: [DISCUSSION] proposed mctl() API
-Message-ID: <fcaa7ce6-3f03-4e3d-aa9f-1b1b53ed88f5@lucifer.local>
-References: <85778a76-7dc8-4ea8-8827-acb45f74ee05@lucifer.local>
- <e166592f-aeb3-4573-bb73-270a2eb90be3@gmail.com>
- <d7ccb47b-7124-45e9-ace0-b0fa49f881ef@lucifer.local>
- <f8db6b39-f11a-4378-8976-4169f4674e85@gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f8db6b39-f11a-4378-8976-4169f4674e85@gmail.com>
-X-ClientProxiedBy: LNXP265CA0090.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:76::30) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+        d=gmail.com; s=20230601; t=1749568698; x=1750173498; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kkIN98kkjc/rusmJx4gySWmf+VhEEgW8XhFdLMsrBE0=;
+        b=OfuY8ddkX7ycCO7Ky3n+q0yRqJVwPBpS4Zw7DOMbVgoMKeJMhRK5hiPvhFqSznw8jO
+         ts6Oi1kuScWQCkzdoMAWp1fuMnmN1WqBmB9goen/sd+DYyDomEDFc5kSzuiA4me69QY4
+         CUWqr/d8kDE+4im5DPQVNxxpJG6q8RGwp5XNOdjMB+6s3GyikpsxCAedxM7umjTwxCBC
+         8UiJyNR641CQmPRQA9mEmJaL5/weafSsjS0u6pwkrPrTjM96gUcSaOhZMzuMR7A7P4Id
+         D3NzXfdNB/zc7sHf0JjD9kjK//vlRKuB8ir4sT7yN1isIQ0uAkwHYi6u3OMqbgft5OPt
+         D08w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749568698; x=1750173498;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kkIN98kkjc/rusmJx4gySWmf+VhEEgW8XhFdLMsrBE0=;
+        b=fvu+3Jb+9CI/pezwjfGChl+erVh+74yeps8KmZgpSGyMoGd36f6UYa+IJLOha5hL3R
+         HuZmZu1ZenFOZqDqFD8gHX+zHyVlmnExcbetsDxhDIa0pgATiP0QjyMsF/RfsCTyzrr/
+         C99FKnw3BHUUYCLvuDWJQRp2xiYVj2Ik6kjzFyrt8DKZF8tMUqeypALg7zhA2jCZ1/yT
+         BjkseK+YZgd4LgSzmpALelvD8LD+rwUXc0y9fHOGDNnAxMaSo5urvNGeVmA+9EIltqBO
+         NQFnt2mePXeS+n7Un1GzE/Om/QrUpUcNI/69+T5nW8VrGnKIDMGf/GFwkRPxQkHmpFyH
+         dawA==
+X-Forwarded-Encrypted: i=1; AJvYcCVoEs5APnZ9+zNdbcKPwiEaBdfxd2BBBP0vOPAwRD1jWRK3vFiblBWoWhD9/zaY1/WAfJLT+GXMpvuk+oY=@vger.kernel.org, AJvYcCX1FPV9qNd/yzylwxMlaOlbZ+zu85I3yLUpA78pka/urCBTSq0q2mEsZ0rT7OPnpRy8dFF+VEiQWy6q7V2U7AQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOk0w7OwyC2huRw0FIk6yhFkrMk+KyJ3AWC7KtNQyYjhLDhcxW
+	r31yDtYEPz0sVikKbtgYCpWiB6vFDhz5QLkslz123gjcrKj0bmfV9zLDhlfDz79u
+X-Gm-Gg: ASbGncs+W/6eLko0FxShMzqaoGzVjFE7NxCqSvafizMZs8BDTxRkTVhM+22Yk0EKViL
+	WZvDZBOvHKIOpgsDhgJNa03ormzyanjd0D9Z46lKtwz8k8Jyg5KOZK2cTjuNnV1ykuCc2GPYpmi
+	4EUpNClkuK4gofqxzSErVkfVeieVcYXXSptO4YLdC6iGBTmTdYnxVAI21NDAcU1WzL7SeNGWGER
+	3gjRM1AIz/nwlkuiejfkdEqO01MYPOXtVg+6J1lp5KrkRSSyGFQS5argtmVo0/oAlD9sTPe6vsG
+	Eb2xa/p3CAa0ZAlWABOSCMIHVy7xEVd0ohONcTQn8HbQgc7FTCIv9GJxS5WBdGel+MdxX4y34H1
+	S+X9qcO8YJfDsWSJGghnDs0Iqaul30JW6MHGxd/zUw3MVUb3JDQJ1sQ==
+X-Google-Smtp-Source: AGHT+IHFstzegUCu3unNRoyjx6xH2EWT5QGEdOnhTn0NWFMHzCdU63lOrpQBWfJQFi0HeyCGkJ2rQA==
+X-Received: by 2002:a17:907:3eaa:b0:ad2:27b1:7214 with SMTP id a640c23a62f3a-ade771c4846mr386662266b.17.1749568687596;
+        Tue, 10 Jun 2025 08:18:07 -0700 (PDT)
+Received: from olsa.tail3379.ts.net (h-85-24-244-168.A980.priv.bahnhof.se. [85.24.244.168])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade31cc25b7sm665901266b.66.2025.06.10.08.18.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 08:18:07 -0700 (PDT)
+From: =?UTF-8?q?Oliver=20S=C3=A4fstr=C3=B6m?= <safstrom.oliver@gmail.com>
+To: rafael@kernel.org,
+	viresh.kumar@linaro.org
+Cc: ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	lossin@kernel.org,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	dakr@kernel.org,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Oliver=20S=C3=A4fstr=C3=B6m?= <safstrom.oliver@gmail.com>
+Subject: [PATCH] docs: rust: Refactor safety lines docs to sections in cpufreq.rs
+Date: Tue, 10 Jun 2025 17:17:50 +0200
+Message-ID: <20250610151750.46314-1-safstrom.oliver@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|BL4PR10MB8231:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9b300aa0-b387-4154-66f1-08dda831ee53
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?WMyMKC7OizxFBQ77lGWdqg3gvPc7V8daeFCtQZxCKs/OvpBkZRtImICi4hVF?=
- =?us-ascii?Q?apiXS2uwIAkoTPN1gSeRLtQD/EnyNrXClLKH4/iEakiravyZqnHk/JH+Zk1O?=
- =?us-ascii?Q?ueD9zhMAnLXvq/Vyj0IaHqeK0FQQ9fqiXJLlbpjF5OAdzWW/FZyD8HNKVuqM?=
- =?us-ascii?Q?1mYVFSOuYM7Hl5/zFAWhbiGF2QB6wga5T9OEJcXymEobaeCcaUL9KXSUf1p6?=
- =?us-ascii?Q?G3wtCYgCxq3STi1tim2z0OGrVGnYJMRLVuYTTWAyObJuRJWNCL7AO19x51O3?=
- =?us-ascii?Q?YaA2+U46GNhRpTxB2pYLr2/GtE1s/PwuJnuoZHD0TGpu4nZJ017AmEoht/Yo?=
- =?us-ascii?Q?aL4SEmX81tVawiPZgJWPSqaH95DFXyxmcmS83I1lkgCD98LHKi6IAnzxGY7Q?=
- =?us-ascii?Q?G/W9ZnWR7fdoJPTELEu56OA8O9QqBeNorkQ9L9IAobkeWiiHNk0eEF5HTX4I?=
- =?us-ascii?Q?ikhKw5wdPcWJal6IvycmxbuO4Ov75NtUXvpRRwKuRbR5QBI5QUbb7WUCTEMP?=
- =?us-ascii?Q?ZcuQH3obAVrjYfCPj946pdapm27YXLjbiWXkT5fdZIgev/aEYZfrldLijsVF?=
- =?us-ascii?Q?lGP10T7qpRZoRcwemHQJQpQT3XSPo7iKk8mjYa5/pxc7oI1lN6BtHefAQa91?=
- =?us-ascii?Q?4SHmF5Xpo+f0yrJhny7GIeaStWq8DA5tV34CfEzYK8hG1PI5881xtah+1SKt?=
- =?us-ascii?Q?/dllNERyy85uJ5lznzT2pLozb0hjmm+iq51xdz6CwDBT+PjB9EgTtd470yr+?=
- =?us-ascii?Q?o5ILnrSqdISHYmk3fw+3iaIJyzXA4fnmws0TRGCPvJaLGAP++X2qkfaPIiRy?=
- =?us-ascii?Q?UjvhjmMMTd0mNGQQ3h2gt1Mgb9jhPHxS5OfaX9YkFbpT6wvc+AiZ9Mx1uLm8?=
- =?us-ascii?Q?OHQ5DAKY6BUpLG+FrAtxRJEjP2zKN7sbbiGf41CSoECtsN4co6w+m/l6OsBk?=
- =?us-ascii?Q?769TtE+9ZAfwTzoR3b/yphIGaxJzaujhj0c6gumV5M127rhNKeQoTTwHA0hc?=
- =?us-ascii?Q?Kp2hKWVGx8XQJnJscKFlkJvuQFmXhG2+sgK560XTf1+VESw0/OSWDq3pkqZv?=
- =?us-ascii?Q?XHtlzXEvXGcv/bhjDKHxYW4E51i2XTwsXP66kyncuxHiBvqbIE8QG8032Vh7?=
- =?us-ascii?Q?H9+/42zzY2mxepmSK3gHnhnPWmecb8BExCQSnIMcxih+XmBRtGUbVR+A7o2D?=
- =?us-ascii?Q?28BwdtH12BX5vWfRC8oN2WdWv77gzy2JV3PuEWQ39HuXtLefFNDyHXvQ4HFc?=
- =?us-ascii?Q?l0QKPBfZhEk5C0WBtNENO8EbIFAdpwNBpINYyzIYnbuziczY56WLSPCvzIu5?=
- =?us-ascii?Q?8ySPiUI96hvl+qXYqL8ZcZk8jlmbxVQ60/9+FHCJ0a+ax5On5VyUrSsTexqo?=
- =?us-ascii?Q?Y4gP47Nk5BiF/D5IyAeJLf1kqglZO49yaSR4gZhpkDvdl3YJCnp6eqV22PA/?=
- =?us-ascii?Q?ghlg9Y4WS6Y=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?t7QRI+MczXPl5Yx2tKRlSQ8zw75NbwRf8ujvxeP2VmezAEFXs0Clh5K4HlLm?=
- =?us-ascii?Q?cojYexWbWv6iQpVxlZPm3fMhm2q38EDFFT+lLQuRU8tg0nzJjNNgsM7NkigP?=
- =?us-ascii?Q?djzL8G0+FlyB8n1W0TM8FoSC+zlhQGSBBKBnSkHBP1k3TiihyADejv1glCpq?=
- =?us-ascii?Q?xS0bJp4BxP8mXmGOAV/gOrfayNAE8iiPsY2PHH6nhBIZFWag16zPpAdfMEuG?=
- =?us-ascii?Q?kGkZLjPR+JRlsHfaUTYYr5jRoMh2OI8VaAoYoWpCtT+SaxG2So4D8c8lNE4q?=
- =?us-ascii?Q?fhiJAxnAVtx+7sUbyjn1ONP/7WHAXfKhTzTyhX5hBEeosRtvriUujFxHUjDE?=
- =?us-ascii?Q?JlEgJ7MNfnPlJe+qLWon2E3OnUay3C+a7xRIi2JjYoGIFhO7SLVFSUZxzMvW?=
- =?us-ascii?Q?JRyKJkTAIdSNBchUFU/w/p1jQMICnjvLZwayeKvZDRUVTXwndeB5aTKNe5Ku?=
- =?us-ascii?Q?ygVeexcKZKiq183uztON7vewAv5zqB/O7J/FRUIE/4b4zLPdrh+iWAvSVoHb?=
- =?us-ascii?Q?wgvpYaJmINUOhVy+zGNmqA25/JALhvxSGVp/QhZRexc0BUyruTwKsYH+5aDG?=
- =?us-ascii?Q?IIXh+B7UQPBlZeQRN+x6ZSJ9GjMeVdKneicJ2xHT2zt6MrD1r720/IqLQTDj?=
- =?us-ascii?Q?sqoQztfGoaT84mrunfqCXD934hfWJvi/A+dcId0ULg4C2qPKYB5veJERmqfE?=
- =?us-ascii?Q?FOSfUAyYhBCcuiZK6EIBon/409Nj72nKv9PVaP7lC6cMwxwV3d2oiEM9ys0Y?=
- =?us-ascii?Q?Xl9MGAn1qHlisMLhTpJ1S27ie4fY/k12ZKbg+bm8T8lOOKkTC5UIXewhRXjX?=
- =?us-ascii?Q?b64pfIVBzTQTGmtWcv7NDkm3L2PA9Sgyz2t+HvjtR/S8rEuTtqolYtgXX4M5?=
- =?us-ascii?Q?FONAIQ/xBSdJ3M6sgICoUGh8Zl+UV6WM/EnYMf1wXAHTN1xooCTaF50WLMwu?=
- =?us-ascii?Q?8zd9jfq8m1G2EqLKCTBlNA5qejw6GRqfCxyeMRtNTlp2dmPz30XrRxdJsjdL?=
- =?us-ascii?Q?F8AO+OVRgGgcNvpGo1lAiGSgP0lGnH3OTf5of6hDjZeLh+N8RNbmMELEp8t/?=
- =?us-ascii?Q?zbEAxXpy70sm+PTTOuTQDGTNH6/3Df5VZadCvlJE8hrh30u3rSREByMZgN2A?=
- =?us-ascii?Q?fp1Ji5EPsgqifIVW7lvt+GfmHa37ptg2jHvyMb6uH1gCswGp5xATaSfdET8j?=
- =?us-ascii?Q?Raiiv2MYUcyG7+9vUwDbjatEdbrK5aMKk5RvijwaM8BWdP6saN2OWxABr1ux?=
- =?us-ascii?Q?qgrXIiQ1n6dFas5owOZuhj4zgCAhQTorBxR7DXyMvfXWNhxW1D4LEvCbibF1?=
- =?us-ascii?Q?/5BcdJ7OwUa1Vc/4kRJijbByRD5TVoFkEaAS27DMLImv1a9WJe9SU7HrmIm+?=
- =?us-ascii?Q?KEjBxzeuCDHjtasuW526/w/z+qL60m8nMkLj9f/E6VETUj4D5vDavHu2hCWL?=
- =?us-ascii?Q?TvzFyeEkPlY8OLws7zJ/ne/FAMssdp+/m1/TIj+TzHotutRx07tBSYr/ZXp3?=
- =?us-ascii?Q?wTI4LagpAqQ1IrBHHDjvarEYB4MMs9PZDWV22nJODC38SjFk1ubSyFd65cZ3?=
- =?us-ascii?Q?kbBdrDuCd/qQJ7tBH5j6a0gd/sbtgvOl7sIGjyvE3pfBgRwrFUiKpWSSc/Cj?=
- =?us-ascii?Q?rw=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	6mEZH14B/kXdBe5/Jt+1PZkEaXCeFlZVCt6+rWHvXjoAUVCRHUB50aSPa1xqShBxN5kcPfT3x5WIt//LvPxKDhUMa4AZdLlc74vFjnBGm87pUc3fYyH5a2Za0ePDT64O4ihjqXCj4ODdoaTi77RP0hVzoeiS+LTSAck1joHGBQt3ZXRo09prQNdqB5h9hsWStkizod1w724vwo/I0tyrxyFfvGAelyfMF9NjIDRQJp0sQAIH96tJPjLn+MCVKUJVfjQIF+RAXUdtdKN+l/qe/LX6uMweFlRdZ64wKILBbxV7EbE5RJKAPpUhSGtZR5Av0SVDd4KcvMVt0WN8SUitKDJ/13mQGH6ukih232ah23EDpY03TBzQLAGQ4WAvgCMwx51FgPiFQ45fuEypDDaA0qAdwjsefAFWY7rU09Y4PLKLoBxbtdKfbRJYLJXra3YOx3Spcmug5XOKEcLIuq4ARqwpGpu7YadnMdMK7MQkQOVVb6M1bub7BECA5zJCv2W1dZbKuPqN0ND5ADUI4zOjpZ2aMT7ZeD/MJBY8i0ORyjwVF5BTvjR5FSVhii5IPQ00Nzh+rLnnN1abdhpJBJadQbood9+KmV+MMy3kLruVmC8=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b300aa0-b387-4154-66f1-08dda831ee53
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 15:17:36.2739
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VIHQqSurznSAT42qU4kEjWTCvDlhPhaM02AcyM/DbSq6lg27mUUlt4UvLpw8nGkDp54lG/Ta+ndnP8aYOANVCrh4t5sNAcNQtXiua3gcf1o=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL4PR10MB8231
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-10_07,2025-06-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
- malwarescore=0 suspectscore=0 spamscore=0 mlxscore=0 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2505160000 definitions=main-2506100122
-X-Proofpoint-GUID: WWqXizaySfZG0u8yF7LlJAOpexlV-5av
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDEyMiBTYWx0ZWRfX/M7bsk4XJDi+ 8c4RnyYvhgix3SUjOV4wXXQFVajziNKDujsi9nfIV3lUb0a5lkvHbRNfkDx1IU10nsIIAaTvdyW Jg0hv2HeL2Xe/G3chLfEQ1C9HVNaeyxct+253J5cztYzozltIhO3tHt1WIoIfDod0xcbFqsaOhU
- 50gSTfR8RTMKu47dXjvlGgrLTKGOhbN9J1cKfW4oQp5n7An2zgohvQgQ4jEZUVpp3wR9Yb7a83H IyT0F5sEZwWTZnln0fjGzpjIw6x4OzltOPNzGiBshIrhcbsQGkddf8Mvk3rWHaYHqWQZcxWsi20 HmzEbRo7aJsFcpMauyxkhoAYnnV6VXFNKXPsdkCoEvFPc7an4XMdOv8xgyEIqH2Cnt51ZyK28QR
- R1OCpQf3cU3BuRCjyL548otWAHXsfXgwNmVN65/4MfqiSA0ZGb8jyFDiIxnYeN/U+DhF9Hbn
-X-Proofpoint-ORIG-GUID: WWqXizaySfZG0u8yF7LlJAOpexlV-5av
-X-Authority-Analysis: v=2.4 cv=d731yQjE c=1 sm=1 tr=0 ts=68484c93 cx=c_pps a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=eKjrHVYcWXu7wmRAu4UA:9 a=CjuIK1q_8ugA:10
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 10, 2025 at 04:03:07PM +0100, Usama Arif wrote:
->
->
-> On 30/05/2025 14:10, Lorenzo Stoakes wrote:
-> > On Thu, May 29, 2025 at 06:21:55PM +0100, Usama Arif wrote:
-> >>
-> >>
-> >> My knowledge is security is limited, so please bare with me, but I actually
-> >> didn't understand the security issue and the need for CAP_SYS_ADMIN for
-> >> doing VM_(NO)HUGEPAGE.
-> >>
-> >> A process can already madvise its own VMAs, and this is just doing that
-> >> for the entire process. And VM_INIT_DEF_MASK is already set to VM_NOHUGEPAGE
-> >> so it will be inherited by the parent. Just adding VM_HUGEPAGE shouldnt be
-> >> a issue? Inheriting MMF_VM_HUGEPAGE will mean that khugepaged would enter
-> >> for that process as well, which again doesnt seem like a security issue
-> >> to me.
-> >
-> > W.R.T. the current process, the Issue is one Jann raised, in relation to
-> > propagation of behaviour to privileged (e.g. setuid) processes.
-> >
->
-> But what is the actual security issue of having hugepages (or not having them) when
-> the process is running with setuid?
+Closes: https://github.com/Rust-for-Linux/linux/issues/1169
 
-Speak to Jann about this. Security isn't my area. He gave feedback on this,
-which is why I raised it, if you search through previous threads you can find
-it.
+Signed-off-by: Oliver Säfström <safstrom.oliver@gmail.com>
+Suggested-by: Miguel Ojeda <ojeda@kernel.org>
+---
+ rust/kernel/cpufreq.rs | 76 +++++++++++++++++++++++++++++++-----------
+ 1 file changed, 57 insertions(+), 19 deletions(-)
 
->
-> I know the cgroup proposal has been shot down, but lets imagine if this was a cgroup
-> setting, similar to the other memory controls we have, for e.g. memory.swap.{max,high,peak}.
->
-> We can chown the cgroup so that the property is set by unprivileged process.
->
-> Having the process swap with setuid when the unprivileged process has swap disabled
-> in the cgroup is not the right behaviour. What currently happens is that the process
-> after obtaining the higher privilege level doesn't swap as well.
->
-> Similarly for hugepages, if it was a cgroup level setting, having the process give
-> hugepages always with setuid when the unprivileged user had it disabled it or vice versa
-> would not be the right behaviour.
->
-> Another example is PR_SET_MEMORY_MERGE, setuid does not change how it works as far as
-> I can tell.
->
-> So madlibs I dont see what the security issue is and why we would need to elevate privileges
-> to do this.
->
-> > W.R.T. remote processes, obviously we want to make sure we are permitted to do
-> > so.
-> >
->
-> I know that this needs to be future proof. But I don't actually know of a real world
-> usecase where we want to do any of these things for remote processes.
-> Whether its the existing per process changes like PR_SET_MEMORY_MERGE for KSM and
-> PR_SET_THP_DISABLE for THP or the newer proposals of PR_DEFAULT_MADV_(NO)HUGEPAGE
-> or Barrys proposal.
-> All of them are for the process itself (and its children by fork+exec) and not for
-> remote processes. As we try to make our changes usecase driven, I think we should
-> not add support for remote processes (which is another reason why I think this might
-> sit better in prctl).
+diff --git a/rust/kernel/cpufreq.rs b/rust/kernel/cpufreq.rs
+index b0a9c6182aec..685442135c39 100644
+--- a/rust/kernel/cpufreq.rs
++++ b/rust/kernel/cpufreq.rs
+@@ -901,12 +901,16 @@ fn register_em(_policy: &mut Policy) {
+ #[repr(transparent)]
+ pub struct Registration<T: Driver>(KBox<UnsafeCell<bindings::cpufreq_driver>>, PhantomData<T>);
+ 
+-/// SAFETY: `Registration` doesn't offer any methods or access to fields when shared between threads
++/// # Safety
++///
++/// `Registration` doesn't offer any methods or access to fields when shared between threads
+ /// or CPUs, so it is safe to share it.
+ unsafe impl<T: Driver> Sync for Registration<T> {}
+ 
+ #[allow(clippy::non_send_fields_in_send_ty)]
+-/// SAFETY: Registration with and unregistration from the cpufreq subsystem can happen from any
++/// # Safety
++///
++/// Registration with and unregistration from the cpufreq subsystem can happen from any
+ /// thread.
+ unsafe impl<T: Driver> Send for Registration<T> {}
+ 
+@@ -1055,7 +1059,9 @@ pub fn new_foreign_owned(dev: &Device<Bound>) -> Result {
+ impl<T: Driver> Registration<T> {
+     /// Driver's `init` callback.
+     ///
+-    /// SAFETY: Called from C. Inputs must be valid pointers.
++    /// # Safety
++    ///
++    /// Called from C. Inputs must be valid pointers.
+     extern "C" fn init_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi::c_int {
+         from_result(|| {
+             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+@@ -1070,7 +1076,9 @@ extern "C" fn init_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi::
+ 
+     /// Driver's `exit` callback.
+     ///
+-    /// SAFETY: Called from C. Inputs must be valid pointers.
++    /// # Safety
++    ///
++    /// Called from C. Inputs must be valid pointers.
+     extern "C" fn exit_callback(ptr: *mut bindings::cpufreq_policy) {
+         // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+         // lifetime of `policy`.
+@@ -1082,7 +1090,9 @@ extern "C" fn exit_callback(ptr: *mut bindings::cpufreq_policy) {
+ 
+     /// Driver's `online` callback.
+     ///
+-    /// SAFETY: Called from C. Inputs must be valid pointers.
++    /// # Safety
++    ///
++    /// Called from C. Inputs must be valid pointers.
+     extern "C" fn online_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi::c_int {
+         from_result(|| {
+             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+@@ -1094,7 +1104,9 @@ extern "C" fn online_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi
+ 
+     /// Driver's `offline` callback.
+     ///
+-    /// SAFETY: Called from C. Inputs must be valid pointers.
++    /// # Safety
++    ///
++    /// Called from C. Inputs must be valid pointers.
+     extern "C" fn offline_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi::c_int {
+         from_result(|| {
+             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+@@ -1106,7 +1118,9 @@ extern "C" fn offline_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ff
+ 
+     /// Driver's `suspend` callback.
+     ///
+-    /// SAFETY: Called from C. Inputs must be valid pointers.
++    /// # Safety
++    ///
++    /// Called from C. Inputs must be valid pointers.
+     extern "C" fn suspend_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi::c_int {
+         from_result(|| {
+             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+@@ -1118,7 +1132,9 @@ extern "C" fn suspend_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ff
+ 
+     /// Driver's `resume` callback.
+     ///
+-    /// SAFETY: Called from C. Inputs must be valid pointers.
++    /// # Safety
++    ///
++    /// Called from C. Inputs must be valid pointers.
+     extern "C" fn resume_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi::c_int {
+         from_result(|| {
+             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+@@ -1130,7 +1146,9 @@ extern "C" fn resume_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi
+ 
+     /// Driver's `ready` callback.
+     ///
+-    /// SAFETY: Called from C. Inputs must be valid pointers.
++    /// # Safety
++    ///
++    /// Called from C. Inputs must be valid pointers.
+     extern "C" fn ready_callback(ptr: *mut bindings::cpufreq_policy) {
+         // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+         // lifetime of `policy`.
+@@ -1140,7 +1158,9 @@ extern "C" fn ready_callback(ptr: *mut bindings::cpufreq_policy) {
+ 
+     /// Driver's `verify` callback.
+     ///
+-    /// SAFETY: Called from C. Inputs must be valid pointers.
++    /// # Safety
++    ///
++    /// Called from C. Inputs must be valid pointers.
+     extern "C" fn verify_callback(ptr: *mut bindings::cpufreq_policy_data) -> kernel::ffi::c_int {
+         from_result(|| {
+             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+@@ -1152,7 +1172,9 @@ extern "C" fn verify_callback(ptr: *mut bindings::cpufreq_policy_data) -> kernel
+ 
+     /// Driver's `setpolicy` callback.
+     ///
+-    /// SAFETY: Called from C. Inputs must be valid pointers.
++    /// # Safety
++    ///
++    /// Called from C. Inputs must be valid pointers.
+     extern "C" fn setpolicy_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::ffi::c_int {
+         from_result(|| {
+             // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+@@ -1164,7 +1186,9 @@ extern "C" fn setpolicy_callback(ptr: *mut bindings::cpufreq_policy) -> kernel::
+ 
+     /// Driver's `target` callback.
+     ///
+-    /// SAFETY: Called from C. Inputs must be valid pointers.
++    /// # Safety
++    ///
++    /// Called from C. Inputs must be valid pointers.
+     extern "C" fn target_callback(
+         ptr: *mut bindings::cpufreq_policy,
+         target_freq: u32,
+@@ -1180,7 +1204,9 @@ extern "C" fn target_callback(
+ 
+     /// Driver's `target_index` callback.
+     ///
+-    /// SAFETY: Called from C. Inputs must be valid pointers.
++    /// # Safety
++    ///
++    /// Called from C. Inputs must be valid pointers.
+     extern "C" fn target_index_callback(
+         ptr: *mut bindings::cpufreq_policy,
+         index: u32,
+@@ -1200,7 +1226,9 @@ extern "C" fn target_index_callback(
+ 
+     /// Driver's `fast_switch` callback.
+     ///
+-    /// SAFETY: Called from C. Inputs must be valid pointers.
++    /// # Safety
++    ///
++    /// Called from C. Inputs must be valid pointers.
+     extern "C" fn fast_switch_callback(
+         ptr: *mut bindings::cpufreq_policy,
+         target_freq: u32,
+@@ -1225,7 +1253,9 @@ extern "C" fn adjust_perf_callback(
+ 
+     /// Driver's `get_intermediate` callback.
+     ///
+-    /// SAFETY: Called from C. Inputs must be valid pointers.
++    /// # Safety
++    ///
++    /// Called from C. Inputs must be valid pointers.
+     extern "C" fn get_intermediate_callback(
+         ptr: *mut bindings::cpufreq_policy,
+         index: u32,
+@@ -1243,7 +1273,9 @@ extern "C" fn get_intermediate_callback(
+ 
+     /// Driver's `target_intermediate` callback.
+     ///
+-    /// SAFETY: Called from C. Inputs must be valid pointers.
++    /// # Safety
++    ///
++    /// Called from C. Inputs must be valid pointers.
+     extern "C" fn target_intermediate_callback(
+         ptr: *mut bindings::cpufreq_policy,
+         index: u32,
+@@ -1276,7 +1308,9 @@ extern "C" fn update_limits_callback(ptr: *mut bindings::cpufreq_policy) {
+ 
+     /// Driver's `bios_limit` callback.
+     ///
+-    /// SAFETY: Called from C. Inputs must be valid pointers.
++    /// # Safety
++    ///
++    /// Called from C. Inputs must be valid pointers.
+     extern "C" fn bios_limit_callback(cpu: i32, limit: *mut u32) -> kernel::ffi::c_int {
+         from_result(|| {
+             let mut policy = PolicyCpu::from_cpu(cpu as u32)?;
+@@ -1288,7 +1322,9 @@ extern "C" fn bios_limit_callback(cpu: i32, limit: *mut u32) -> kernel::ffi::c_i
+ 
+     /// Driver's `set_boost` callback.
+     ///
+-    /// SAFETY: Called from C. Inputs must be valid pointers.
++    /// # Safety
++    ///
++    /// Called from C. Inputs must be valid pointers.
+     extern "C" fn set_boost_callback(
+         ptr: *mut bindings::cpufreq_policy,
+         state: i32,
+@@ -1303,7 +1339,9 @@ extern "C" fn set_boost_callback(
+ 
+     /// Driver's `register_em` callback.
+     ///
+-    /// SAFETY: Called from C. Inputs must be valid pointers.
++    /// # Safety
++    ///
++    /// Called from C. Inputs must be valid pointers.
+     extern "C" fn register_em_callback(ptr: *mut bindings::cpufreq_policy) {
+         // SAFETY: The `ptr` is guaranteed to be valid by the contract with the C code for the
+         // lifetime of `policy`.
+-- 
+2.49.0
 
-I'm extremely confused as to why you think this propoal is predicated upon
-remote process manipulation? It was simply suggested as a possibility for
-increased flexibility.
-
-We can just remove this parameter no?
-
-It is entirely orthogonal to the prctl() stuff.
-
-Overall at this point I share Matthew's point of view on this - we shouldn't be
-doing any of this upstream.
