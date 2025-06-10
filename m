@@ -1,908 +1,249 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2064.outbound.protection.outlook.com [40.107.94.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82D0928BA8E;
-	Tue, 10 Jun 2025 09:44:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749548661; cv=none; b=iMKYFnkQLRKljR9mjaiSVsMeIPwie65b8eeZtkRWsENFJ/AklGa/qvAnZOBJWOIQqCu++VwgXetGcPklkOsRdvzQtLuGhQOHIhvZCUldAoRlf7pX3/dLf+qFE+qVfUIcBJcBaphrxeKJ2n/qHwp/H0K9vbyw7df7Gg9psX+xwP8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749548661; c=relaxed/simple;
-	bh=MR5Z/32Id5IWeFkjk+3OyfDLdSnjAdUA2K0Nas9sU+c=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kgCCRoTnW9affWDZw6gEE6Z0Z0GuDUg7Rr8KVX7cx4qlo4YJmVvUwvrR9yF923HNVCSWpWs/CExmniUKa1Qct9zPJ+Y+R/I76CRecs2IDuiLtsjhXX8XgAjZ7Fx+xMsSwpm+AluLT+qlag1pD0/jQOECLiXDnKbAMNge6R3Na6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=itOjy8LD; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 738FF28C019;
+	Tue, 10 Jun 2025 09:44:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749548672; cv=fail; b=eKVoqwtdkVA5zQ4PPJynbJDen7QktcJm9lFCMWglIpRD1G95HOv5N8Pwy2KX/5+d/hBRpeivY6Jb6rqsU09aqM3gTP5RS7sJmZaRKTQQlhCbe7+uERf7JoEmqx9tanXAdcC5c83YU8HURTzzVR3DPdZ/WOXJZx7oQXzxGc/AcIA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749548672; c=relaxed/simple;
+	bh=a1zckwee8BO1dcf/qrGRaEANs8mq3PE9OfJkvpR/j8Q=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=WY4HVqKlrMc7b1gFyNodwLBKsPp5lVt5pizUX9K2LT/EyVU5uSK/zIZ781MlDENSlf3vntY8Bi1uwBulCutcz3kTd+P1db3UyrcrYJa0d3MVT6+sZwLU2bU0K05au/0s3DUmmZwkxGnL1ZNgLqq6V+7Y0cILwa9c/jRCos6uyyI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=SKc2xBAi; arc=fail smtp.client-ip=40.107.94.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="itOjy8LD"
-X-UUID: 5a3f731a45dd11f0b33aeb1e7f16c2b6-20250610
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=n/55Ia2Of2UsBoc9fjX14SlXbX4iblzdkQkASj7xk4I=;
-	b=itOjy8LDaoeRAY+bApgo5Y2LZMtu13ESQoTUCf5quOWxeNB/dSN6HqUuCJnyfY2A9pcdWMwRDHntLLx8tnz6QOs0HyyQAHl7G1OlfD+6r82gJAmDUrSUv3xaDpVM9BZwQcWdQ67cLF0HYSU1WVgu2ytubvaGTgRL0+sHWuoboAM=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.3,REQID:b8a400a6-4aee-4389-b6e6-f991b31d3b41,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:09905cf,CLOUDID:2834d781-ef30-4982-a001-67a9a83f2fda,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
-	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
-	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 5a3f731a45dd11f0b33aeb1e7f16c2b6-20250610
-Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw02.mediatek.com
-	(envelope-from <darren.ye@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 2129396858; Tue, 10 Jun 2025 17:29:05 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Tue, 10 Jun 2025 17:29:04 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Tue, 10 Jun 2025 17:29:03 +0800
-From: Darren.Ye <darren.ye@mediatek.com>
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Linus
- Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-CC: <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>, Darren Ye
-	<darren.ye@mediatek.com>
-Subject: [PATCH v4 03/10] ASoC: mediatek: mt8196: support audio clock control
-Date: Tue, 10 Jun 2025 17:27:20 +0800
-Message-ID: <20250610092852.21986-4-darren.ye@mediatek.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20250610092852.21986-1-darren.ye@mediatek.com>
-References: <20250610092852.21986-1-darren.ye@mediatek.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="SKc2xBAi"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=eq7Hh2ML720OfQ0us3Yi5A5YkVOu7Qfg/OvzEqSSp6it+V98bQfd/999gFgFeIiM+lvHoFBG25yiJZjd8b/rnZEaJPbZonzO35X2yAshbGQRf8J6oUz17/vS4VGtYn7+JZY/mUXMnB7mTdyG56lWHL0Jc0pxH6yZQYj/9MQWKkuWqzylXQHlENDDUa33zJDjFPRWYQlVeKDUOgil1LAiNqIUPbaZnemYWHMDGuV/f9Sl9bTxeH3mQXVAnJKpYgUL2NLnUOMjiN4JmIRTadMFDDHV+Olpx/Po4vEdrdRkK/uRFfYnXD9DDMlpN8lYUbYmo5KtV7+ON+ASsl9pnXT6Mw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vCth0qxQjG5LLAPDQjJOw7OWRl+sTNqJ6FE38nhgrpI=;
+ b=oRmFaNV6caZQbVhro7aeOpkjUwWH85/LSuyZDAWGWT4ti1ACG1JZWnl93J8ZpqhaoLgI1ow5EQE8BZQrVyck7rKNE71D/Hh+3QLOJJpjnLyY1bfQsMPPhZ8olTHjcIS0zR4Luw4yKbjFfbP/NtAnVAywCgDMy/ZQjzaRgBFH5J01KgPtQs2fuUyTO2pl3wCH5tJMpSvhFG7IkI2NLZTkf5OlsxWlAre/QVCE/oXFNMa4k6z2xVBJRJOfhVXavtO7MDHUcOcgOrwfu+gIy5Qz3jGA3Y3toIy0QAJDIBDS187Yz3d/7GD4wBgUB203cO9UtMm/SqFW2ebVAF2QpDnC8w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vCth0qxQjG5LLAPDQjJOw7OWRl+sTNqJ6FE38nhgrpI=;
+ b=SKc2xBAiBWql8YkBOykTkYPf+0hHg36eJFD6hwCHBsoqh2oWCzWwO8RfMRjerysf2G+YtSZt7lS0ww8bNkFfDz9YvflILZTPfg07spMK0etfvnEA5r+S3J8o6vujCVWOHtQ82+l3C6tAydYE9TKg5e4qildPLUSm0kixBCpW/gLlxzQ9bMjj8mTzD1z5duAIAVz1ucIg9yrNZjeKZCdUzR2RQnegiA4Fja+U9WkkO727ogql4LHlXDB+qaf9fuMNPBxwUQq+zF/NCzuhreHjSCbrdsTWoDFSBj/vDm+qKtWnbhgYgUX5MHS0G5QYUa2Zf+jqjpONV4tmaYOiNiKbCg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SJ2PR12MB8784.namprd12.prod.outlook.com (2603:10b6:a03:4d0::11)
+ by DM4PR12MB6568.namprd12.prod.outlook.com (2603:10b6:8:8f::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.39; Tue, 10 Jun
+ 2025 09:44:27 +0000
+Received: from SJ2PR12MB8784.namprd12.prod.outlook.com
+ ([fe80::1660:3173:eef6:6cd9]) by SJ2PR12MB8784.namprd12.prod.outlook.com
+ ([fe80::1660:3173:eef6:6cd9%3]) with mapi id 15.20.8792.036; Tue, 10 Jun 2025
+ 09:44:27 +0000
+Message-ID: <baaa083b-9a69-460f-ab35-2a7cb3246ffd@nvidia.com>
+Date: Tue, 10 Jun 2025 10:44:21 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v2] net: phy: realtek: Add support for WOL magic
+ packet on RTL8211F
+To: daniel.braunwarth@kuka.com, Andrew Lunn <andrew@lunn.ch>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250429-realtek_wol-v2-1-8f84def1ef2c@kuka.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Content-Language: en-US
+In-Reply-To: <20250429-realtek_wol-v2-1-8f84def1ef2c@kuka.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO2P265CA0361.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a3::13) To SJ2PR12MB8784.namprd12.prod.outlook.com
+ (2603:10b6:a03:4d0::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR12MB8784:EE_|DM4PR12MB6568:EE_
+X-MS-Office365-Filtering-Correlation-Id: 50dc75da-8ff3-4f1d-97be-08dda8036417
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|10070799003|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?eVZPM2RucXhZaVJ5WGtzamlFT2FRdHowN0c3c1VJU3V0Q3lCNUdLcExsMWcy?=
+ =?utf-8?B?NTJTZnFGYVQrL1ZEVXhKSVozaXQ5SUpCRnc1R0dWVHAxMlZUSlRjekpWRmZY?=
+ =?utf-8?B?RUM3bW1aaWVYTzh4RlZ1MnIzUU92akpzNm1ZcStRSTVaUHdUWSs4QWp3YTZ5?=
+ =?utf-8?B?UzVkWGtUalNVeitTR3k1MmQyT0lFN0kycEpaS0V3b0JWbmJtdjBFY09hejdD?=
+ =?utf-8?B?VjFUQUNWL21zN1BXNE1sNmF2TUNMdmxoVTNvN1BaWVdqOWttZzVQeTgzZFdp?=
+ =?utf-8?B?VEpMeExuaTlkOTN6cVYwNWhkVkxwQkJpRUZ5QVo4amdPQitEeStGMnNkUnEv?=
+ =?utf-8?B?TTJwZHhBQWRMMzNaVk9RZUJIQnFaWkVUTzY5ZldoOEw2K2ZCTkZXbFA0NWtL?=
+ =?utf-8?B?dFVmQW1odjh6dXdBRTBSVE9BWENPQ2QrcFZFOWxBSjRsTmNCY1FieXRKV0hV?=
+ =?utf-8?B?blVFcmkrRTIzR0hyZFkvL1JLZ1FMN3R6eldjSGt6Z2J0aFY1MVdCTkN2aVZS?=
+ =?utf-8?B?SE1EbndxcmEzTFJIV0g4dUY0M1VURTNwSXEzNnFBWndiUDRYVHJYYU1vcWJD?=
+ =?utf-8?B?UDRqMXAvSEFjcUVRakp6R2FDdTNZWExqdk1ITFJseXN1dE93YmlBRlFFaWZp?=
+ =?utf-8?B?b25Wd0xOMEFRQUQ5bDFhU3dQcFY5NmFoOTlEcHhEZm9EakFIODZhbDFTN1gx?=
+ =?utf-8?B?NDFNV1Mya2t6Z3d3cTVRQUllNkY3WndzRlltR3E4ZXFrVk9zR2sxeE5CaWxs?=
+ =?utf-8?B?Y2s5KzRIU0JlS2UzdWVTcHRYWXhseTByVFlHVzg1cXZ4NUdNTld6R09xclho?=
+ =?utf-8?B?QW1aenNTNWZVYktGWlZqMVRnRHNUZWNORFFTYnp2YXZ6T2t6UC9Xd0I1dGZh?=
+ =?utf-8?B?Z1V0di9PMFpPNnV6VUlVaE9mdUc1V1VGL1ZreGFCTStIUmVWTjVOR2RsMmtz?=
+ =?utf-8?B?YlFBNU9xeVJYM0tGcWl6MXRWWjV0aFJyT3llOXBIdUlnbUlOeWNvZEY4TjZC?=
+ =?utf-8?B?dmt2Y2JuRW5JQ3FaWUFRL043UjZ0bWFrRnI5NmtFeDJWdGk3TDFkcytpa2k0?=
+ =?utf-8?B?NVErYVBYMmlCR2FOMDQ4NmFIanczQ2s0RkRnWGR5WnoyWjhlODBiSlNWN1hB?=
+ =?utf-8?B?cnRhc1FNbVk4MnVLaGZ0Ny9ldGNHOFdLTUNCamtXd2k3dGU4ajMwU2lqV2xU?=
+ =?utf-8?B?VVFITzhQWjNndjhuVWRWWlZic1hQNERBVjdVZnVHSE1scEVPS2F2R3A0SkIx?=
+ =?utf-8?B?SkVzK1MzL1cwdG9ZbU45TS9QK3Y0SSs5OHFPck9CV1VRK2w0ZHRFWEpuOTl5?=
+ =?utf-8?B?QkhueFlzcm9lbkRHQ01XdERTWkY1Um1xN0kxbHBHN2FQTGsyS1FSMGYzbWll?=
+ =?utf-8?B?dnkwcU81MTlnbDFkalRFYkNaWGp3M3MzSDBYQmUrNyt0UkhZeEtXdWVjS1Bh?=
+ =?utf-8?B?T3Z5MGNtc1Nsb05wclE5VFB3MGRxWmIvTDZBZHlxQW9uYm44bldZZW82OXlU?=
+ =?utf-8?B?eXFuNGRkQTVMNElCeHVjZTZ0Y0ZKaVBBZWQxM2hwYitvV25hNkhyWWpNRjNM?=
+ =?utf-8?B?OEhFWkJwbGYvN0JNWkQvelRNQUtTZ3lxRkU1ejQ4bzdlQzB3NUZVMDErUWlO?=
+ =?utf-8?B?UzRicHFwaC82bEE0S1JIbmwrbFd1SDJ6bThJeXZ6Yy9WbFd4MldzWXhJWUJF?=
+ =?utf-8?B?MGl3cWVMK3l1SjFKRk16YytaVjFXZE1hSytXWlJxcnpwSC96N2pZQ3NTdG9p?=
+ =?utf-8?B?N3A3bmNycTNGL1U3b2k4Y2hpZU1TOUhiYWRLSkJBQnY4RDBKR1RoVGlNN1hN?=
+ =?utf-8?B?QUdaL29zcFF5SG56R0NxTXcxMlc5QnZOeGJGSzFlS1JJcm9nRnNQSklOY2Fm?=
+ =?utf-8?B?b0UzdytDZ3UwR0hyNkVHV0NPaEZRUDc2SElSMnE1bFk5WmZvMkpnd05TOXpy?=
+ =?utf-8?Q?feDod3bBK6A=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8784.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(10070799003)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NVdQRVRSTU9qUHQyR29ZaHh1d24wZ0lFVE1SRFJ0VHhBcDNpSGE1em5ldUhs?=
+ =?utf-8?B?SmdtejFzeHJWVzRlaUFYWXE4WXN4WDdkMEZOajVuYkhPbnUyZEhWMmp2cVk0?=
+ =?utf-8?B?QlN6d1R5UlV1M2J4MWZwbjZCQlFnd1FEQkVPOS9LYjFTWGV0RjNBMllScFBC?=
+ =?utf-8?B?K3c2Zy8wZ3o2T0JwbEJxdVcvM0JCVzRXNHpyYkxmSG5qNW5GbFBoOG1VTXNy?=
+ =?utf-8?B?RDRsS1hIblJlZ2k4MG0yMjJvN0w1WW5vL0VwTWJiM3ExNW1XSVkyQ3NXSVFX?=
+ =?utf-8?B?aHFEM2JSbFoyajB1aE94NVFKa0ZabTB1NlNpSXNaalg4V3NUcFdIU0JCYUR1?=
+ =?utf-8?B?WXY0SmpzQXpLUm8yZkduSjAxZHZNWTVDVUErVGpWUkV5QUZIMWttYVVvTDFM?=
+ =?utf-8?B?eXVXMEd4czkvbkJXaUx4NEd4SWora3hwbGxRakZQZzk1bVJGNllub1pjdGxt?=
+ =?utf-8?B?T3dRUWV2clF5U1hLZGErSlpXNTl2NjQ2aGRTeXl0aUNaRFAwNTUzVzNkcnA4?=
+ =?utf-8?B?cmdjZU9SbG84SWdCRzhlREJIRnlQY3UzU3hoZUJzWjF5Q1ZSVjVNNkwzY3BK?=
+ =?utf-8?B?YUQ1MFBtNHZ5Rk9ydVJmeU9FQkV5YytodG1MNHlWakwvc0J3c2tHOXdmbFUx?=
+ =?utf-8?B?YkwrRSttMUduMG5CRSt2MFlsaXNwdU1zcW1DVmszVkNpSmw4K1lreTI2L1d1?=
+ =?utf-8?B?WXhiVkRFTGtibEo0R2lXN1FaSUJJdFFuemZDWFhoUEQ2ckNxRWZzWCtITzJO?=
+ =?utf-8?B?TU9KNkVkTkRQeGIzQkQ1eUVBMFpiRGtKdUYvdFNVV2tpTzdOYnBFVGFYMHA0?=
+ =?utf-8?B?N29YaXQ4aWFSWDVCZjNrMUw3cUtCcGFLYW8wcEllckhJalg4YXltcU5sQ2po?=
+ =?utf-8?B?aUlNQXBRSllETjFhNURhdFMrV1h1UXhKNGt3Y3pRRXBHQ1dVM2FGZkZyRXpm?=
+ =?utf-8?B?VGRrQVJ2NFpuZXB2ajNqWG1QK2szNysycEJPakFRenk2M2hEak02bWNRSCtP?=
+ =?utf-8?B?c05reDhJa2VMVEpnYnVtd0JXMFk4VzBzeGZJY3JubjdFbjBGa1B5dmxyMWJZ?=
+ =?utf-8?B?STlBYmRBT0VLNUEwMFhMTXVabTJlVkNjc2dJM1NuOEZ6TjVGblJxL0NHWEZr?=
+ =?utf-8?B?Z1Y3YnRJOUE5M2hqV01WbW5QZlZMZDVaUTR6czB0WW9BcUY2L05YcmJsdjNM?=
+ =?utf-8?B?c1hFTThpSkJiUmwwKzJJQklrc0wvQzFOT2ZsZ0VEOW9Hc3RYVHFvbHhMNjlH?=
+ =?utf-8?B?S3U4S0V5Z2k4Wk1ySjEwVkhpTktJaU1UcWNSSnpUczdhL3k2U1RxWnZxOHF0?=
+ =?utf-8?B?TVR3K0lhb3V0clF2N3NERGZGclNpeEptWi8xS3c4WTNpRUFiWng0ZkFDajg3?=
+ =?utf-8?B?NWZpSnpwdmVOSnhoVXZGQ1JNazQ1OU1NRmY0NTVpMjZZaU5wdEQwY3ZoU2oz?=
+ =?utf-8?B?cHV6cDJ1d05BOTlqZ3I3ZlV4eTBIT1FTazFpajhySEp4aGxqdC95YUhrNVlz?=
+ =?utf-8?B?bDJVQUl0QnRSS1oraGpTWE1NMEFTYzlyYjY3STl3Tk5CWmx1RUhxYWdoc3Nu?=
+ =?utf-8?B?ZDN1OEYxQkFOblZYZm1XU0JZL1pNcWFuZDFFcUVrR2d0b3FQNU5YUStpRGNt?=
+ =?utf-8?B?eUhYT3RYMmwwV1paaXlIdnJRa0ZPZmVPVGpOaFUzN0F2UnNycTdjU0hyaXJp?=
+ =?utf-8?B?N2x5aThlZlpyWHRTN2ZPZnc0R0ZBMWJsWEZxbXhoYk1SZWpVQmpxTzFhQ244?=
+ =?utf-8?B?c2JwMGN1M0QyS3hJM2hBRlJIVzRCSzRhNUVrS1VxcmJFZ09qTTRySEdoaXdp?=
+ =?utf-8?B?dFl5OHc0bmZmOGdXdW5Ma2MrMUZDSWJ4bWRJR1h2SWZlS1RXTkRIdmhvQ2ZP?=
+ =?utf-8?B?NElKNFVXK3A5VDhBV25WakwxM2lDaDZ4ajJCc1UwOStWeSs1M1pjUzN4aW1i?=
+ =?utf-8?B?bUk2SVNhS0t2UEtjS2xBVks0dEtLcmJXOVkrWFEyVk1rTlBXV2hhTG5uZGNT?=
+ =?utf-8?B?UXRUa3hEbFhra3FOdWgzN0c5TnBzcjlkQ1puVFNud0dUdm1IQlhObVFBemVn?=
+ =?utf-8?B?TjgvakRDZzFwWU40RmpXUEpUckswU1BwTG1UUVFZUXdxTTdSa1RjQmtlZ3Rs?=
+ =?utf-8?B?SjF2eHQzYVJDRXF1aWxyZ29lWjFMRWdHaDgzaWZndStjTTVxakVjSkdSZHJn?=
+ =?utf-8?Q?F4zJv31WV4vJEeY7ujV9VYJ+nisDxzGMSDjZwdnTAFXA?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 50dc75da-8ff3-4f1d-97be-08dda8036417
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8784.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 09:44:27.6672
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bc6jYlg/BtjC9alcQF54nzwtv1rZPaQ7BWf9CS/AjK8XTJpUy809HatsEpQy4VAhXxdQ2214TGxixY789ypPxg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6568
 
-From: Darren Ye <darren.ye@mediatek.com>
+Hi Daniel,
 
-Add audio clock wrapper and audio tuner control.
+On 29/04/2025 12:33, Daniel Braunwarth via B4 Relay wrote:
+> From: Daniel Braunwarth <daniel.braunwarth@kuka.com>
+> 
+> The RTL8211F supports multiple WOL modes. This patch adds support for
+> magic packets.
+> 
+> The PHY notifies the system via the INTB/PMEB pin when a WOL event
+> occurs.
+> 
+> Signed-off-by: Daniel Braunwarth <daniel.braunwarth@kuka.com>
+> ---
+> Changes in v2:
+> - Read current WOL configuration from PHY
+> - Replace magic numbers with defines
+> - Link to v1: https://lore.kernel.org/r/20250428-realtek_wol-v1-1-15de3139d488@kuka.com
+> ---
+>   drivers/net/phy/realtek/realtek_main.c | 69 ++++++++++++++++++++++++++++++++++
+>   1 file changed, 69 insertions(+)
+> 
+> diff --git a/drivers/net/phy/realtek/realtek_main.c b/drivers/net/phy/realtek/realtek_main.c
+> index 893c824796715a905bab99646a474c3bea95ec11..05c4f4d394a5ff32b43dd51f0bff08f437ad0494 100644
+> --- a/drivers/net/phy/realtek/realtek_main.c
+> +++ b/drivers/net/phy/realtek/realtek_main.c
+> @@ -10,6 +10,7 @@
+>   #include <linux/bitops.h>
+>   #include <linux/of.h>
+>   #include <linux/phy.h>
+> +#include <linux/netdevice.h>
+>   #include <linux/module.h>
+>   #include <linux/delay.h>
+>   #include <linux/clk.h>
+> @@ -38,6 +39,24 @@
+>   
+>   #define RTL8211F_INSR				0x1d
+>   
+> +/* RTL8211F WOL interrupt configuration */
+> +#define RTL8211F_INTBCR_PAGE			0xd40
+> +#define RTL8211F_INTBCR				0x16
+> +#define RTL8211F_INTBCR_INTB_PMEB		BIT(5)
+> +
+> +/* RTL8211F WOL settings */
+> +#define RTL8211F_WOL_SETTINGS_PAGE		0xd8a
+> +#define RTL8211F_WOL_SETTINGS_EVENTS		16
+> +#define RTL8211F_WOL_EVENT_MAGIC		BIT(12)
+> +#define RTL8211F_WOL_SETTINGS_STATUS		17
+> +#define RTL8211F_WOL_STATUS_RESET		(BIT(15) | 0x1fff)
+> +
+> +/* RTL8211F Unique phyiscal and multicast address (WOL) */
+> +#define RTL8211F_PHYSICAL_ADDR_PAGE		0xd8c
+> +#define RTL8211F_PHYSICAL_ADDR_WORD0		16
+> +#define RTL8211F_PHYSICAL_ADDR_WORD1		17
+> +#define RTL8211F_PHYSICAL_ADDR_WORD2		18
+> +
+>   #define RTL8211F_LEDCR				0x10
+>   #define RTL8211F_LEDCR_MODE			BIT(15)
+>   #define RTL8211F_LEDCR_ACT_TXRX			BIT(4)
+> @@ -123,6 +142,7 @@ struct rtl821x_priv {
+>   	u16 phycr2;
+>   	bool has_phycr2;
+>   	struct clk *clk;
+> +	u32 saved_wolopts;
+>   };
+>   
+>   static int rtl821x_read_page(struct phy_device *phydev)
+> @@ -354,6 +374,53 @@ static irqreturn_t rtl8211f_handle_interrupt(struct phy_device *phydev)
+>   	return IRQ_HANDLED;
+>   }
+>   
+> +static void rtl8211f_get_wol(struct phy_device *dev, struct ethtool_wolinfo *wol)
+> +{
+> +	wol->supported = WAKE_MAGIC;
+> +	if (phy_read_paged(dev, RTL8211F_WOL_SETTINGS_PAGE, RTL8211F_WOL_SETTINGS_EVENTS)
+> +	    & RTL8211F_WOL_EVENT_MAGIC)
 
-Signed-off-by: Darren Ye <darren.ye@mediatek.com>
----
- sound/soc/mediatek/mt8196/mt8196-afe-clk.c | 728 +++++++++++++++++++++
- sound/soc/mediatek/mt8196/mt8196-afe-clk.h |  80 +++
- 2 files changed, 808 insertions(+)
- create mode 100644 sound/soc/mediatek/mt8196/mt8196-afe-clk.c
- create mode 100644 sound/soc/mediatek/mt8196/mt8196-afe-clk.h
+Given that phy_read_paged() can return an error, should we not check the 
+value return is greater than 0 before ANDing with RTL8211F_WOL_EVENT_MAGIC?
 
-diff --git a/sound/soc/mediatek/mt8196/mt8196-afe-clk.c b/sound/soc/mediatek/mt8196/mt8196-afe-clk.c
-new file mode 100644
-index 000000000000..aa8ed9c0143d
---- /dev/null
-+++ b/sound/soc/mediatek/mt8196/mt8196-afe-clk.c
-@@ -0,0 +1,728 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  mt8196-afe-clk.c  --  Mediatek 8196 afe clock ctrl
-+ *
-+ *  Copyright (c) 2024 MediaTek Inc.
-+ *  Author: Darren Ye <darren.ye@mediatek.com>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/syscon.h>
-+#include "mt8196-afe-common.h"
-+#include "mt8196-afe-clk.h"
-+
-+static const char *aud_clks[MT8196_CLK_NUM] = {
-+	/* vlp clk */
-+	[MT8196_CLK_VLP_MUX_AUDIOINTBUS] = "top_aud_intbus",
-+	[MT8196_CLK_VLP_MUX_AUD_ENG1] = "top_aud_eng1",
-+	[MT8196_CLK_VLP_MUX_AUD_ENG2] = "top_aud_eng2",
-+	[MT8196_CLK_VLP_MUX_AUDIO_H] = "top_aud_h",
-+	[MT8196_CLK_VLP_CLK26M] = "vlp_clk26m",
-+	/* pll */
-+	[MT8196_CLK_TOP_APLL1_CK] = "apll1",
-+	[MT8196_CLK_TOP_APLL2_CK] = "apll2",
-+	/* divider */
-+	[MT8196_CLK_TOP_APLL1_D4] = "apll1_d4",
-+	[MT8196_CLK_TOP_APLL2_D4] = "apll2_d4",
-+	[MT8196_CLK_TOP_APLL12_DIV_I2SIN0] = "apll12_div_i2sin0",
-+	[MT8196_CLK_TOP_APLL12_DIV_I2SIN1] = "apll12_div_i2sin1",
-+	[MT8196_CLK_TOP_APLL12_DIV_FMI2S] = "apll12_div_fmi2s",
-+	[MT8196_CLK_TOP_APLL12_DIV_TDMOUT_M] = "apll12_div_tdmout_m",
-+	[MT8196_CLK_TOP_APLL12_DIV_TDMOUT_B] = "apll12_div_tdmout_b",
-+	/* mux */
-+	[MT8196_CLK_TOP_MUX_AUD_1] = "top_apll1",
-+	[MT8196_CLK_TOP_MUX_AUD_2] = "top_apll2",
-+	[MT8196_CLK_TOP_I2SIN0_M_SEL] = "top_i2sin0",
-+	[MT8196_CLK_TOP_I2SIN1_M_SEL] = "top_i2sin1",
-+	[MT8196_CLK_TOP_FMI2S_M_SEL] = "top_fmi2s",
-+	[MT8196_CLK_TOP_TDMOUT_M_SEL] = "top_dptx",
-+	[MT8196_CLK_TOP_ADSP_SEL] = "top_adsp",
-+	/* top 26m*/
-+	[MT8196_CLK_TOP_CLK26M] = "clk26m",
-+};
-+
-+int mt8196_afe_enable_clk(struct mtk_base_afe *afe, struct clk *clk)
-+{
-+	int ret;
-+
-+	if (clk) {
-+		ret = clk_prepare_enable(clk);
-+		if (ret) {
-+			dev_dbg(afe->dev, "failed to enable clk\n");
-+			return ret;
-+		}
-+	} else {
-+		dev_dbg(afe->dev, "NULL clk\n");
-+	}
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(mt8196_afe_enable_clk);
-+
-+void mt8196_afe_disable_clk(struct mtk_base_afe *afe, struct clk *clk)
-+{
-+	if (clk)
-+		clk_disable_unprepare(clk);
-+	else
-+		dev_dbg(afe->dev, "NULL clk\n");
-+}
-+EXPORT_SYMBOL_GPL(mt8196_afe_disable_clk);
-+
-+static int mt8196_afe_set_clk_rate(struct mtk_base_afe *afe, struct clk *clk,
-+				   unsigned int rate)
-+{
-+	int ret;
-+
-+	if (clk) {
-+		ret = clk_set_rate(clk, rate);
-+		if (ret) {
-+			dev_dbg(afe->dev, "failed to set clk rate\n");
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int mt8196_afe_set_clk_parent(struct mtk_base_afe *afe, struct clk *clk,
-+				     struct clk *parent)
-+{
-+	int ret;
-+
-+	if (clk && parent) {
-+		ret = clk_set_parent(clk, parent);
-+		if (ret) {
-+			dev_dbg(afe->dev, "failed to set clk parent %d\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static unsigned int get_top_cg_reg(unsigned int cg_type)
-+{
-+	switch (cg_type) {
-+	case MT8196_AUDIO_26M_EN_ON:
-+	case MT8196_AUDIO_F3P25M_EN_ON:
-+	case MT8196_AUDIO_APLL1_EN_ON:
-+	case MT8196_AUDIO_APLL2_EN_ON:
-+		return AUDIO_ENGEN_CON0;
-+	case MT8196_CG_AUDIO_HOPPING_CK:
-+	case MT8196_CG_AUDIO_F26M_CK:
-+	case MT8196_CG_APLL1_CK:
-+	case MT8196_CG_APLL2_CK:
-+	case MT8196_PDN_APLL_TUNER2:
-+	case MT8196_PDN_APLL_TUNER1:
-+		return AUDIO_TOP_CON4;
-+	default:
-+		return 0;
-+	}
-+}
-+
-+static unsigned int get_top_cg_mask(unsigned int cg_type)
-+{
-+	switch (cg_type) {
-+	case MT8196_AUDIO_26M_EN_ON:
-+		return AUDIO_26M_EN_ON_MASK_SFT;
-+	case MT8196_AUDIO_F3P25M_EN_ON:
-+		return AUDIO_F3P25M_EN_ON_MASK_SFT;
-+	case MT8196_AUDIO_APLL1_EN_ON:
-+		return AUDIO_APLL1_EN_ON_MASK_SFT;
-+	case MT8196_AUDIO_APLL2_EN_ON:
-+		return AUDIO_APLL2_EN_ON_MASK_SFT;
-+	case MT8196_CG_AUDIO_HOPPING_CK:
-+		return CG_AUDIO_HOPPING_CK_MASK_SFT;
-+	case MT8196_CG_AUDIO_F26M_CK:
-+		return CG_AUDIO_F26M_CK_MASK_SFT;
-+	case MT8196_CG_APLL1_CK:
-+		return CG_APLL1_CK_MASK_SFT;
-+	case MT8196_CG_APLL2_CK:
-+		return CG_APLL2_CK_MASK_SFT;
-+	case MT8196_PDN_APLL_TUNER2:
-+		return PDN_APLL_TUNER2_MASK_SFT;
-+	case MT8196_PDN_APLL_TUNER1:
-+		return PDN_APLL_TUNER1_MASK_SFT;
-+	default:
-+		return 0;
-+	}
-+}
-+
-+static unsigned int get_top_cg_on_val(unsigned int cg_type)
-+{
-+	switch (cg_type) {
-+	case MT8196_AUDIO_26M_EN_ON:
-+	case MT8196_AUDIO_F3P25M_EN_ON:
-+	case MT8196_AUDIO_APLL1_EN_ON:
-+	case MT8196_AUDIO_APLL2_EN_ON:
-+		return get_top_cg_mask(cg_type);
-+	case MT8196_CG_AUDIO_HOPPING_CK:
-+	case MT8196_CG_AUDIO_F26M_CK:
-+	case MT8196_CG_APLL1_CK:
-+	case MT8196_CG_APLL2_CK:
-+	case MT8196_PDN_APLL_TUNER2:
-+	case MT8196_PDN_APLL_TUNER1:
-+		return 0;
-+	default:
-+		return 0;
-+	}
-+}
-+
-+static unsigned int get_top_cg_off_val(unsigned int cg_type)
-+{
-+	switch (cg_type) {
-+	case MT8196_AUDIO_26M_EN_ON:
-+	case MT8196_AUDIO_F3P25M_EN_ON:
-+	case MT8196_AUDIO_APLL1_EN_ON:
-+	case MT8196_AUDIO_APLL2_EN_ON:
-+		return 0;
-+	case MT8196_CG_AUDIO_HOPPING_CK:
-+	case MT8196_CG_AUDIO_F26M_CK:
-+	case MT8196_CG_APLL1_CK:
-+	case MT8196_CG_APLL2_CK:
-+	case MT8196_PDN_APLL_TUNER2:
-+	case MT8196_PDN_APLL_TUNER1:
-+		return get_top_cg_mask(cg_type);
-+	default:
-+		return get_top_cg_mask(cg_type);
-+	}
-+}
-+
-+static int mt8196_afe_enable_top_cg(struct mtk_base_afe *afe, unsigned int cg_type)
-+{
-+	unsigned int reg = get_top_cg_reg(cg_type);
-+	unsigned int mask = get_top_cg_mask(cg_type);
-+	unsigned int val = get_top_cg_on_val(cg_type);
-+
-+	if (!afe->regmap) {
-+		dev_warn(afe->dev, "skip regmap\n");
-+		return 0;
-+	}
-+
-+	dev_dbg(afe->dev, "reg: 0x%x, mask: 0x%x, val: 0x%x\n", reg, mask, val);
-+	regmap_update_bits(afe->regmap, reg, mask, val);
-+	return 0;
-+}
-+
-+static int mt8196_afe_disable_top_cg(struct mtk_base_afe *afe, unsigned int cg_type)
-+{
-+	unsigned int reg = get_top_cg_reg(cg_type);
-+	unsigned int mask = get_top_cg_mask(cg_type);
-+	unsigned int val = get_top_cg_off_val(cg_type);
-+
-+	if (!afe->regmap) {
-+		dev_warn(afe->dev, "skip regmap\n");
-+		return 0;
-+	}
-+
-+	dev_dbg(afe->dev, "reg: 0x%x, mask: 0x%x, val: 0x%x\n", reg, mask, val);
-+	regmap_update_bits(afe->regmap, reg, mask, val);
-+
-+	return 0;
-+}
-+
-+static int apll1_mux_setting(struct mtk_base_afe *afe, bool enable)
-+{
-+	struct mt8196_afe_private *afe_priv = afe->platform_priv;
-+	int ret = 0;
-+
-+	dev_dbg(afe->dev, "enable: %d\n", enable);
-+
-+	if (enable) {
-+		ret = mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_1]);
-+		if (ret)
-+			return ret;
-+
-+		ret = mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_1],
-+						afe_priv->clk[MT8196_CLK_TOP_APLL1_CK]);
-+		if (ret)
-+			return ret;
-+
-+		/* 180.6336 / 4 = 45.1584MHz */
-+		ret = mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUD_ENG1]);
-+		if (ret)
-+			return ret;
-+
-+		ret = mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUD_ENG1],
-+						afe_priv->clk[MT8196_CLK_TOP_APLL1_D4]);
-+		if (ret)
-+			return ret;
-+
-+		ret = mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H]);
-+		if (ret)
-+			return ret;
-+
-+		ret = mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H],
-+						afe_priv->clk[MT8196_CLK_TOP_APLL1_CK]);
-+		if (ret)
-+			return ret;
-+	} else {
-+		ret = mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUD_ENG1],
-+						afe_priv->clk[MT8196_CLK_VLP_CLK26M]);
-+		if (ret)
-+			return ret;
-+
-+		mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUD_ENG1]);
-+
-+		ret = mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_1],
-+						afe_priv->clk[MT8196_CLK_TOP_CLK26M]);
-+		if (ret)
-+			return ret;
-+
-+		mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_1]);
-+		mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H],
-+					  afe_priv->clk[MT8196_CLK_VLP_CLK26M]);
-+		mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H]);
-+	}
-+
-+	return 0;
-+}
-+
-+static int apll2_mux_setting(struct mtk_base_afe *afe, bool enable)
-+{
-+	struct mt8196_afe_private *afe_priv = afe->platform_priv;
-+	int ret = 0;
-+
-+	dev_dbg(afe->dev, "enable: %d\n", enable);
-+
-+	if (enable) {
-+		ret = mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_2]);
-+		if (ret)
-+			return ret;
-+
-+		ret = mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_2],
-+						afe_priv->clk[MT8196_CLK_TOP_APLL2_CK]);
-+		if (ret)
-+			return ret;
-+
-+		/* 196.608 / 4 = 49.152MHz */
-+		ret = mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUD_ENG2]);
-+		if (ret)
-+			return ret;
-+
-+		ret = mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUD_ENG2],
-+						afe_priv->clk[MT8196_CLK_TOP_APLL2_D4]);
-+		if (ret)
-+			return ret;
-+
-+		ret = mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H]);
-+		if (ret)
-+			return ret;
-+
-+		ret = mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H],
-+						afe_priv->clk[MT8196_CLK_TOP_APLL2_CK]);
-+		if (ret)
-+			return ret;
-+	} else {
-+		ret = mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUD_ENG2],
-+						afe_priv->clk[MT8196_CLK_VLP_CLK26M]);
-+		if (ret)
-+			return ret;
-+
-+		mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUD_ENG2]);
-+
-+		ret = mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_2],
-+						afe_priv->clk[MT8196_CLK_TOP_CLK26M]);
-+		if (ret)
-+			return ret;
-+
-+		mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_2]);
-+		mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H],
-+					  afe_priv->clk[MT8196_CLK_VLP_CLK26M]);
-+		mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H]);
-+	}
-+
-+	return 0;
-+}
-+
-+static int mt8196_afe_disable_apll(struct mtk_base_afe *afe)
-+{
-+	struct mt8196_afe_private *afe_priv = afe->platform_priv;
-+	int ret = 0;
-+
-+	ret = mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H]);
-+	if (ret)
-+		return ret;
-+
-+	ret = mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_1]);
-+	if (ret)
-+		goto clk_ck_mux_aud1_err;
-+
-+	ret = mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_1],
-+					afe_priv->clk[MT8196_CLK_TOP_CLK26M]);
-+	if (ret)
-+		goto clk_ck_mux_aud1_parent_err;
-+
-+	ret = mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_2]);
-+	if (ret)
-+		goto clk_ck_mux_aud2_err;
-+
-+	ret = mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_2],
-+					afe_priv->clk[MT8196_CLK_TOP_CLK26M]);
-+	if (ret)
-+		goto clk_ck_mux_aud2_parent_err;
-+
-+	mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_1]);
-+	mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_2]);
-+	mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H],
-+				  afe_priv->clk[MT8196_CLK_VLP_CLK26M]);
-+	mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H]);
-+	return 0;
-+
-+clk_ck_mux_aud2_parent_err:
-+	mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_2]);
-+clk_ck_mux_aud2_err:
-+	mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_1],
-+				  afe_priv->clk[MT8196_CLK_TOP_APLL1_CK]);
-+clk_ck_mux_aud1_parent_err:
-+	mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_TOP_MUX_AUD_1]);
-+clk_ck_mux_aud1_err:
-+	mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H]);
-+
-+	return ret;
-+}
-+
-+static void mt8196_afe_apll_init(struct mtk_base_afe *afe)
-+{
-+	struct mt8196_afe_private *afe_priv = afe->platform_priv;
-+
-+	if (afe_priv->vlp_ck) {
-+		dev_warn(afe->dev, "vlp_ck regmap is null ptr\n");
-+		return;
-+	}
-+
-+	regmap_write(afe_priv->vlp_ck, VLP_APLL1_TUNER_CON0, VLP_APLL1_TUNER_CON0_VALUE);
-+	regmap_write(afe_priv->vlp_ck, VLP_APLL2_TUNER_CON0, VLP_APLL2_TUNER_CON0_VALUE);
-+}
-+
-+int mt8196_apll1_enable(struct mtk_base_afe *afe)
-+{
-+	int ret;
-+
-+	/* setting for APLL */
-+	apll1_mux_setting(afe, true);
-+
-+	ret = mt8196_afe_enable_top_cg(afe, MT8196_CG_APLL1_CK);
-+	if (ret)
-+		goto err_clk_apll1;
-+
-+	ret = mt8196_afe_enable_top_cg(afe, MT8196_PDN_APLL_TUNER1);
-+	if (ret)
-+		goto err_clk_apll1_tuner;
-+
-+	/* sel 44.1kHz:1, apll_div:7, upper bound:3 */
-+	regmap_update_bits(afe->regmap, AFE_APLL1_TUNER_CFG,
-+			   XTAL_EN_128FS_SEL_MASK_SFT | APLL_DIV_MASK_SFT | UPPER_BOUND_MASK_SFT,
-+			   (0x1 << XTAL_EN_128FS_SEL_SFT) | (7 << APLL_DIV_SFT) |
-+			   (3 << UPPER_BOUND_SFT));
-+
-+	/* apll1 freq tuner enable */
-+	regmap_update_bits(afe->regmap, AFE_APLL1_TUNER_CFG,
-+			   FREQ_TUNER_EN_MASK_SFT,
-+			   0x1 << FREQ_TUNER_EN_SFT);
-+
-+	/* audio apll1 on */
-+	mt8196_afe_enable_top_cg(afe, MT8196_AUDIO_APLL1_EN_ON);
-+
-+	return 0;
-+
-+err_clk_apll1_tuner:
-+	mt8196_afe_disable_top_cg(afe, MT8196_PDN_APLL_TUNER1);
-+err_clk_apll1:
-+	mt8196_afe_disable_top_cg(afe, MT8196_CG_APLL1_CK);
-+	return ret;
-+}
-+
-+void mt8196_apll1_disable(struct mtk_base_afe *afe)
-+{
-+	/* audio apll1 off */
-+	mt8196_afe_disable_top_cg(afe, MT8196_AUDIO_APLL1_EN_ON);
-+
-+	/* apll1 freq tuner disable */
-+	regmap_update_bits(afe->regmap, AFE_APLL1_TUNER_CFG,
-+			   FREQ_TUNER_EN_MASK_SFT,
-+			   0x0);
-+
-+	mt8196_afe_disable_top_cg(afe, MT8196_PDN_APLL_TUNER1);
-+	mt8196_afe_disable_top_cg(afe, MT8196_CG_APLL1_CK);
-+	apll1_mux_setting(afe, false);
-+}
-+
-+int mt8196_apll2_enable(struct mtk_base_afe *afe)
-+{
-+	int ret;
-+
-+	/* setting for APLL */
-+	apll2_mux_setting(afe, true);
-+
-+	ret = mt8196_afe_enable_top_cg(afe, MT8196_CG_APLL2_CK);
-+	if (ret)
-+		goto err_clk_apll2;
-+
-+	ret = mt8196_afe_enable_top_cg(afe, MT8196_PDN_APLL_TUNER2);
-+	if (ret)
-+		goto err_clk_apll2_tuner;
-+
-+	/* sel 48kHz: 2, apll_div: 7, upper bound: 3*/
-+	regmap_update_bits(afe->regmap, AFE_APLL2_TUNER_CFG,
-+			   XTAL_EN_128FS_SEL_MASK_SFT | APLL_DIV_MASK_SFT | UPPER_BOUND_MASK_SFT,
-+			   (0x2 << XTAL_EN_128FS_SEL_SFT) | (7 << APLL_DIV_SFT) |
-+			   (3 << UPPER_BOUND_SFT));
-+
-+	/* apll2 freq tuner enable */
-+	regmap_update_bits(afe->regmap, AFE_APLL2_TUNER_CFG,
-+			   FREQ_TUNER_EN_MASK_SFT,
-+			   0x1 << FREQ_TUNER_EN_SFT);
-+
-+	/* audio apll2 on */
-+	mt8196_afe_enable_top_cg(afe, MT8196_AUDIO_APLL2_EN_ON);
-+	return 0;
-+
-+err_clk_apll2_tuner:
-+	mt8196_afe_disable_top_cg(afe, MT8196_PDN_APLL_TUNER2);
-+err_clk_apll2:
-+	mt8196_afe_disable_top_cg(afe, MT8196_CG_APLL2_CK);
-+	return 0;
-+}
-+
-+void mt8196_apll2_disable(struct mtk_base_afe *afe)
-+{
-+	/* audio apll2 off */
-+	mt8196_afe_disable_top_cg(afe, MT8196_AUDIO_APLL2_EN_ON);
-+
-+	/* apll2 freq tuner disable */
-+	regmap_update_bits(afe->regmap, AFE_APLL2_TUNER_CFG,
-+			   FREQ_TUNER_EN_MASK_SFT,
-+			   0x0);
-+
-+	mt8196_afe_disable_top_cg(afe, MT8196_PDN_APLL_TUNER2);
-+	mt8196_afe_disable_top_cg(afe, MT8196_CG_APLL2_CK);
-+	apll2_mux_setting(afe, false);
-+}
-+
-+int mt8196_get_apll_rate(struct mtk_base_afe *afe, int apll)
-+{
-+	struct mt8196_afe_private *afe_priv = afe->platform_priv;
-+	int clk_id = 0;
-+
-+	if (apll < MT8196_APLL1 || apll > MT8196_APLL2) {
-+		dev_warn(afe->dev, "invalid clk id %d\n", apll);
-+		return 0;
-+	}
-+
-+	if (apll == MT8196_APLL1)
-+		clk_id = MT8196_CLK_TOP_APLL1_CK;
-+	else
-+		clk_id = MT8196_CLK_TOP_APLL2_CK;
-+
-+	return clk_get_rate(afe_priv->clk[clk_id]);
-+}
-+
-+int mt8196_get_apll_by_rate(struct mtk_base_afe *afe, int rate)
-+{
-+	return (rate % 8000) ? MT8196_APLL1 : MT8196_APLL2;
-+}
-+
-+int mt8196_get_apll_by_name(struct mtk_base_afe *afe, const char *name)
-+{
-+	if (strcmp(name, APLL1_W_NAME) == 0)
-+		return MT8196_APLL1;
-+
-+	return MT8196_APLL2;
-+}
-+
-+/* mck */
-+struct mt8196_mck_div {
-+	int m_sel_id;
-+	int div_clk_id;
-+};
-+
-+static const struct mt8196_mck_div mck_div[MT8196_MCK_NUM] = {
-+	[MT8196_I2SIN0_MCK] = {
-+		.m_sel_id = MT8196_CLK_TOP_I2SIN0_M_SEL,
-+		.div_clk_id = MT8196_CLK_TOP_APLL12_DIV_I2SIN0,
-+	},
-+	[MT8196_I2SIN1_MCK] = {
-+		.m_sel_id = MT8196_CLK_TOP_I2SIN1_M_SEL,
-+		.div_clk_id = MT8196_CLK_TOP_APLL12_DIV_I2SIN1,
-+	},
-+	[MT8196_FMI2S_MCK] = {
-+		.m_sel_id = MT8196_CLK_TOP_FMI2S_M_SEL,
-+		.div_clk_id = MT8196_CLK_TOP_APLL12_DIV_FMI2S,
-+	},
-+	[MT8196_TDMOUT_MCK] = {
-+		.m_sel_id = MT8196_CLK_TOP_TDMOUT_M_SEL,
-+		.div_clk_id = MT8196_CLK_TOP_APLL12_DIV_TDMOUT_M,
-+	},
-+	[MT8196_TDMOUT_BCK] = {
-+		.m_sel_id = -1,
-+		.div_clk_id = MT8196_CLK_TOP_APLL12_DIV_TDMOUT_B,
-+	},
-+};
-+
-+int mt8196_mck_enable(struct mtk_base_afe *afe, int mck_id, int rate)
-+{
-+	struct mt8196_afe_private *afe_priv = afe->platform_priv;
-+	int apll = mt8196_get_apll_by_rate(afe, rate);
-+	int apll_clk_id = apll == MT8196_APLL1 ?
-+			  MT8196_CLK_TOP_MUX_AUD_1 : MT8196_CLK_TOP_MUX_AUD_2;
-+	int m_sel_id;
-+	int div_clk_id;
-+	int ret;
-+
-+	dev_dbg(afe->dev, "mck_id: %d, rate: %d\n", mck_id, rate);
-+
-+	if (mck_id >= MT8196_MCK_NUM || mck_id < 0)
-+		return -EINVAL;
-+
-+	m_sel_id = mck_div[mck_id].m_sel_id;
-+	div_clk_id = mck_div[mck_id].div_clk_id;
-+
-+	/* select apll */
-+	if (m_sel_id >= 0) {
-+		ret = mt8196_afe_enable_clk(afe, afe_priv->clk[m_sel_id]);
-+		if (ret)
-+			return ret;
-+
-+		ret = mt8196_afe_set_clk_parent(afe, afe_priv->clk[m_sel_id],
-+						afe_priv->clk[apll_clk_id]);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	/* enable div, set rate */
-+	if (div_clk_id < 0) {
-+		dev_err(afe->dev, "invalid div_clk_id %d\n", div_clk_id);
-+		return -EINVAL;
-+	}
-+	if (div_clk_id == MT8196_CLK_TOP_APLL12_DIV_TDMOUT_B)
-+		rate = rate * 16;
-+
-+	ret = mt8196_afe_enable_clk(afe, afe_priv->clk[div_clk_id]);
-+	if (ret)
-+		return ret;
-+
-+	ret = mt8196_afe_set_clk_rate(afe, afe_priv->clk[div_clk_id], rate);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+int mt8196_mck_disable(struct mtk_base_afe *afe, int mck_id)
-+{
-+	struct mt8196_afe_private *afe_priv = afe->platform_priv;
-+	int m_sel_id;
-+	int div_clk_id;
-+
-+	dev_dbg(afe->dev, "mck_id: %d.\n", mck_id);
-+
-+	if (mck_id < 0) {
-+		dev_err(afe->dev, "mck_id = %d < 0\n", mck_id);
-+		return -EINVAL;
-+	}
-+
-+	m_sel_id = mck_div[mck_id].m_sel_id;
-+	div_clk_id = mck_div[mck_id].div_clk_id;
-+
-+	if (div_clk_id < 0) {
-+		dev_err(afe->dev, "div_clk_id = %d < 0\n",
-+			div_clk_id);
-+		return -EINVAL;
-+	}
-+
-+	mt8196_afe_disable_clk(afe, afe_priv->clk[div_clk_id]);
-+
-+	if (m_sel_id >= 0)
-+		mt8196_afe_disable_clk(afe, afe_priv->clk[m_sel_id]);
-+
-+	return 0;
-+}
-+
-+int mt8196_afe_enable_reg_rw_clk(struct mtk_base_afe *afe)
-+{
-+	struct mt8196_afe_private *afe_priv = afe->platform_priv;
-+
-+	/* bus clock for AFE external access, like DRAM */
-+	mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_TOP_ADSP_SEL]);
-+
-+	/* bus clock for AFE internal access, like AFE SRAM */
-+	mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIOINTBUS]);
-+	mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIOINTBUS],
-+				  afe_priv->clk[MT8196_CLK_VLP_CLK26M]);
-+	/* enable audio vlp clock source */
-+	mt8196_afe_enable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H]);
-+	mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H],
-+				  afe_priv->clk[MT8196_CLK_VLP_CLK26M]);
-+
-+	/* AFE hw clock */
-+	/* IPM2.0: USE HOPPING & 26M */
-+	/* set in the regmap_register_patch */
-+	return 0;
-+}
-+
-+int mt8196_afe_disable_reg_rw_clk(struct mtk_base_afe *afe)
-+{
-+	struct mt8196_afe_private *afe_priv = afe->platform_priv;
-+
-+	/* IPM2.0: Use HOPPING & 26M */
-+	/* set in the regmap_register_patch */
-+
-+	mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H],
-+				  afe_priv->clk[MT8196_CLK_VLP_CLK26M]);
-+
-+	mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIO_H]);
-+	mt8196_afe_set_clk_parent(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIOINTBUS],
-+				  afe_priv->clk[MT8196_CLK_VLP_CLK26M]);
-+	mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_VLP_MUX_AUDIOINTBUS]);
-+	mt8196_afe_disable_clk(afe, afe_priv->clk[MT8196_CLK_TOP_ADSP_SEL]);
-+	return 0;
-+}
-+
-+int mt8196_afe_enable_main_clock(struct mtk_base_afe *afe)
-+{
-+	mt8196_afe_enable_top_cg(afe, MT8196_AUDIO_26M_EN_ON);
-+	return 0;
-+}
-+
-+int mt8196_afe_disable_main_clock(struct mtk_base_afe *afe)
-+{
-+	mt8196_afe_disable_top_cg(afe, MT8196_AUDIO_26M_EN_ON);
-+	return 0;
-+}
-+
-+int mt8196_init_clock(struct mtk_base_afe *afe)
-+{
-+	struct mt8196_afe_private *afe_priv = afe->platform_priv;
-+	int ret = 0;
-+	int i = 0;
-+
-+	afe_priv->clk = devm_kcalloc(afe->dev, MT8196_CLK_NUM, sizeof(*afe_priv->clk),
-+				     GFP_KERNEL);
-+	if (!afe_priv->clk)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < MT8196_CLK_NUM; i++) {
-+		afe_priv->clk[i] = devm_clk_get(afe->dev, aud_clks[i]);
-+		if (IS_ERR(afe_priv->clk[i])) {
-+			dev_err(afe->dev, "devm_clk_get %s fail\n", aud_clks[i]);
-+			return PTR_ERR(afe_priv->clk[i]);
-+		}
-+	}
-+
-+	afe_priv->vlp_ck = syscon_regmap_lookup_by_phandle(afe->dev->of_node,
-+							   "vlpcksys");
-+	if (IS_ERR(afe_priv->vlp_ck)) {
-+		dev_err(afe->dev, "Cannot find vlpcksys\n");
-+		return PTR_ERR(afe_priv->vlp_ck);
-+	}
-+
-+	mt8196_afe_apll_init(afe);
-+
-+	ret = mt8196_afe_disable_apll(afe);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-diff --git a/sound/soc/mediatek/mt8196/mt8196-afe-clk.h b/sound/soc/mediatek/mt8196/mt8196-afe-clk.h
-new file mode 100644
-index 000000000000..854da3844104
---- /dev/null
-+++ b/sound/soc/mediatek/mt8196/mt8196-afe-clk.h
-@@ -0,0 +1,80 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * mt8196-afe-clk.h  --  Mediatek MT8196 AFE Clock Control definitions
-+ *
-+ * Copyright (c) 2024 MediaTek Inc.
-+ *  Author: Darren Ye <darren.ye@mediatek.com>
-+ */
-+
-+#ifndef _MT8196_AFE_CLOCK_CTRL_H_
-+#define _MT8196_AFE_CLOCK_CTRL_H_
-+
-+/* vlp_cksys_clk: 0x1c016000 */
-+#define VLP_APLL1_TUNER_CON0 0x02a4
-+#define VLP_APLL2_TUNER_CON0 0x02a8
-+
-+/* vlp apll1 tuner default value*/
-+#define VLP_APLL1_TUNER_CON0_VALUE 0x6f28bd4d
-+/* vlp apll2 tuner default value + 1*/
-+#define VLP_APLL2_TUNER_CON0_VALUE 0x78fd5265
-+
-+/* APLL */
-+#define APLL1_W_NAME "APLL1"
-+#define APLL2_W_NAME "APLL2"
-+
-+enum {
-+	MT8196_APLL1 = 0,
-+	MT8196_APLL2,
-+};
-+
-+enum {
-+	/* vlp clk */
-+	MT8196_CLK_VLP_MUX_AUDIOINTBUS,
-+	MT8196_CLK_VLP_MUX_AUD_ENG1,
-+	MT8196_CLK_VLP_MUX_AUD_ENG2,
-+	MT8196_CLK_VLP_MUX_AUDIO_H,
-+	MT8196_CLK_VLP_CLK26M,
-+	/* pll */
-+	MT8196_CLK_TOP_APLL1_CK,
-+	MT8196_CLK_TOP_APLL2_CK,
-+	/* divider */
-+	MT8196_CLK_TOP_APLL1_D4,
-+	MT8196_CLK_TOP_APLL2_D4,
-+	MT8196_CLK_TOP_APLL12_DIV_I2SIN0,
-+	MT8196_CLK_TOP_APLL12_DIV_I2SIN1,
-+	MT8196_CLK_TOP_APLL12_DIV_FMI2S,
-+	MT8196_CLK_TOP_APLL12_DIV_TDMOUT_M,
-+	MT8196_CLK_TOP_APLL12_DIV_TDMOUT_B,
-+	/* mux */
-+	MT8196_CLK_TOP_MUX_AUD_1,
-+	MT8196_CLK_TOP_MUX_AUD_2,
-+	MT8196_CLK_TOP_I2SIN0_M_SEL,
-+	MT8196_CLK_TOP_I2SIN1_M_SEL,
-+	MT8196_CLK_TOP_FMI2S_M_SEL,
-+	MT8196_CLK_TOP_TDMOUT_M_SEL,
-+	MT8196_CLK_TOP_ADSP_SEL,
-+	/* top 26m */
-+	MT8196_CLK_TOP_CLK26M,
-+	MT8196_CLK_NUM,
-+};
-+
-+struct mtk_base_afe;
-+
-+int mt8196_mck_enable(struct mtk_base_afe *afe, int mck_id, int rate);
-+int mt8196_mck_disable(struct mtk_base_afe *afe, int mck_id);
-+int mt8196_get_apll_rate(struct mtk_base_afe *afe, int apll);
-+int mt8196_get_apll_by_rate(struct mtk_base_afe *afe, int rate);
-+int mt8196_get_apll_by_name(struct mtk_base_afe *afe, const char *name);
-+int mt8196_init_clock(struct mtk_base_afe *afe);
-+int mt8196_afe_enable_clk(struct mtk_base_afe *afe, struct clk *clk);
-+void mt8196_afe_disable_clk(struct mtk_base_afe *afe, struct clk *clk);
-+int mt8196_apll1_enable(struct mtk_base_afe *afe);
-+void mt8196_apll1_disable(struct mtk_base_afe *afe);
-+int mt8196_apll2_enable(struct mtk_base_afe *afe);
-+void mt8196_apll2_disable(struct mtk_base_afe *afe);
-+int mt8196_afe_enable_main_clock(struct mtk_base_afe *afe);
-+int mt8196_afe_disable_main_clock(struct mtk_base_afe *afe);
-+int mt8196_afe_enable_reg_rw_clk(struct mtk_base_afe *afe);
-+int mt8196_afe_disable_reg_rw_clk(struct mtk_base_afe *afe);
-+
-+#endif
+Thanks
+Jon
+
 -- 
-2.45.2
+nvpublic
 
