@@ -1,200 +1,72 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 007AB23AB86
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:08:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D538F2D3A69
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:09:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749560938; cv=none; b=Sl8MZuM0s4Q6tO//Iej/8bw6osZu0JRoOpjCAI2bkYk0K9+ee4Muh/TixPfo1pPVrG11fXcWUOUtG1ta8U6BRqs0JkDpt5l4cmCcljIWK+Lqf7V5kaoqz5TYoSxhvmfa6ooJ/sJOhD4cdE2x4h7iv4BYjMPckptFCEhqbg7MZXQ=
+	t=1749560945; cv=none; b=Y11+8nCxa30V9U5wsJnZgvp2+C2VVbPFNcHB5U5u0MKhTDq+RltQJ+ViysBHFQKPJdP2B/3zwCwUUIEF41ss3A4lEdqlyrsID2m3qtPlhI5hUlDg1iKzUDpxjQJ4/pV0JS+4lXGuzj1QT5V07qqVN5F6nPth4oFxc2tQkEQ8jSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749560938; c=relaxed/simple;
-	bh=evfZ6g1FYwwlpCeQBDLuX2LOv/1nyUFtLivVJP8bURc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Dc2YEh7VkVCH6MHQaXPs489x7v+yb2JzJ+Nszx/toRKg4dKTaSPGrdEK0rHD4aEXctWf0YRom0Jf1xeDzpVk2sbz6kPa5gdUPV06fjFJr8LrIURd6QDeseT8EKOPw2pazaXD/+MOI0WBQue74CQAb7MzaZFwiyKZ4qGHDsZZItk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=BCkZ/GeY; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="BCkZ/GeY"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55A9t1KI008107
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:08:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	R1erattER2EyDtlcsiT8to8amhSAT62hbSa4lAh3IJM=; b=BCkZ/GeY5eGSI8p6
-	K8aH8PRZnsnzqX+zl5WUM4d9MxgjBgI/aA2PoYMfx3zcuDS2BPzVkwbhMLlc7Hbs
-	tZhGOAcGhecoujv0poqQo5VYwuxeuaGTFWYrMZGnRTn+eA7ImT3ybu8fqyMzfoVV
-	db7nyOfQ+GZqkYNv2M+c+ieRLdyYfqSn5HehXtpAtSedO3VjGw3zjc7Mhe3UI30C
-	KhHVo2mW2mxxZ3N6ceBVIHH6qJSGvuvRgh+D+pSTSckONEethNOiyfzMmA+KORvz
-	2/Lw+2CdLBnEngpH/BSqd75pkuxg6RLUUEpBGLz917x+Y1C5zR1p4mjmEIExOuhu
-	PSgjJg==
-Received: from mail-oo1-f71.google.com (mail-oo1-f71.google.com [209.85.161.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474d121m9f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:08:55 +0000 (GMT)
-Received: by mail-oo1-f71.google.com with SMTP id 006d021491bc7-60be791ca09so1329328eaf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 06:08:55 -0700 (PDT)
+	s=arc-20240116; t=1749560945; c=relaxed/simple;
+	bh=N21Pj8e1H3gkNGAXJCePbJBcSmrFY3XrntX39WSICaM=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=PB/VrU0ETgq434XHljlX83cao74dMr8lRk9oZYZ/0WPwUZSqg/jGRDSetD13rADG0xXK6+0xur67TusePehkW1LzKFy1Gjg0zw7C1fkdD/g585Kcr9R94MmNJiqlMfGwHWCfLRaTN0HsonBhcjsuNELxeLTmBWICzQOdJJSsFmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-86cf306fc68so895311839f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 06:09:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749560924; x=1750165724;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1749560943; x=1750165743;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=R1erattER2EyDtlcsiT8to8amhSAT62hbSa4lAh3IJM=;
-        b=Xs2D6G85em/pI59TFcaqS8zhnLx3QBOJfdmfGnka4NLzLRqQd+nJ5CId7U19n8v3Zo
-         bU0qdTpzGva6iltQes0sAqZ1eZBPq9IdH8uAZwgbUQKaRLRvQhLs19CadyWmoHEfF+9b
-         FyIp6zNqEMELmkdTeiNgWuIFmxlJqPxPb183DElseseqFDOubmgGjufrRII5RFx0vfo8
-         CiPrBCKMom3QA8wDE1oD6ITaZYQCD2Ta+ZZgM5YKZNTqA3imlE153O33gLXi42pALhhI
-         PUhjx1nrxPPhHgd2lAU6MHP0w2N0YJySVEFc2hbcTfCQTIWdbdja6oZbbk6/dQfU/gDR
-         QYzw==
-X-Forwarded-Encrypted: i=1; AJvYcCUsvSgcL1r5AYG6eJjQ4BkYUo0NFmOTBSdzbtpfmiRoWVc4iwyGteWWhEsA8I4BqgcmPXUnonBUck3kclQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvfQTOCwC46XAVHKDwg/GSmS1C3Po83DCXB0Xo8ews8DYd89e7
-	Vk9ChNhzkEf6hKnu16KWqm81/QBrs+Vk1VGIN2ztU67+wTdyPAesq92GYE5C+mFPlGVLTfcZvlX
-	xRQTrLW5iYORK7bhg0nRg9kPdA00afJrGP77WE27DdrqPViIAn3yKoxz2X2v5focqkYa4Z7ZcxE
-	U=
-X-Gm-Gg: ASbGnctpkX4PbWr0PdpazsVNnJhDoWTj4Bi9rblf6CPDrPQDViB6ZLpYpLKBwzZVx5T
-	BeFvbuEpuTo0MA+/VgZJzEsNBr0920N8W1XBEULIldkdxJt8xvTFHBZnqaUTi7OMZqqxz4eJKPR
-	4M60WvFwS4xt25DGXVhnE/dZcBdLrC7fPJ5jO0efNP+VOe5GSpQNKFit+45pNP9AZTspo08VnUr
-	8XWmtjCHyTY3zJZB3tnZ5s99GoRWAr0KN+VDNayBB2dbHtEZQiiQcDoE6jBPJCBud7rmpDHAMpW
-	sFcQjURXtJgAC2siEDXzyYNAamtFoyPyRhsF9GkuKW8sKILuRxf+Fx4tj951Y22Ltd51dtgciGF
-	S
-X-Received: by 2002:a05:6830:618b:b0:727:41d9:bcca with SMTP id 46e09a7af769-7388bb22c72mr4740411a34.3.1749560924552;
-        Tue, 10 Jun 2025 06:08:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHumeK8s6YcLMXzmdaaLzgYlUSa+GoLCZFmNnBzQDlQdOXmx6iMWgCspTl9NFPTRxuzi3p5yw==
-X-Received: by 2002:a05:620a:408c:b0:7c5:79e8:412a with SMTP id af79cd13be357-7d331c39c85mr858426185a.2.1749560911969;
-        Tue, 10 Jun 2025 06:08:31 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1d754653sm718680666b.20.2025.06.10.06.08.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jun 2025 06:08:31 -0700 (PDT)
-Message-ID: <f123294b-b944-4723-bd74-713970468d51@oss.qualcomm.com>
-Date: Tue, 10 Jun 2025 15:08:29 +0200
+        bh=N34zunht3H8Jmd3lb1JGf6Lms/qVN6ns2F9A9mDcHmc=;
+        b=K45rVVF37DHXXp22PeOncIaK97Xl1yv89cadFKLPstKv5TWmMk8SiKYcvSnOmLKeo2
+         kjijMC27/pBtiRdr0ITg/rCunMHmk9BXDGSdbljIWYdKev91CFcRFj65MzqD1ZT6oKq+
+         06LEWpoC35jhuHLzw6iI4kL4mpfBcmRUBiBS1n+cFB6+A6Xd6bhB14ISOgh39bQMSGDF
+         N5OSo4QWXzNy9eBG8TIUQcj4ji2xfSz3M52zUtvHrnR3gk7srv+hz51Db/k7WhV39z/F
+         pkapAPOpYyty/ltMRMFDqQOsBNfvH6GSetJblu4Gu57NA9hVvGGwMNWfAiaHpJ7g29gY
+         Cnag==
+X-Forwarded-Encrypted: i=1; AJvYcCWZAB8WqzEe4Qd/VWsWvfgmvKzvzuU4x9p4uCftt0mspxmMQvupehMBBUoD0uuHVWxMOevN6gj2EtfEy2o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4TyYpuPCr3/mCp4dhOeW1EE80zz2pvnn1OLxKKZfHwsULXVCT
+	uA1B+pmYIG+JPN+01rGbzn1a6Ms5tvss8bdIXrLP/ghg3yEdzqmOjvmyzgNmWTfNYBOkDT361vq
+	sonj6VzMJRG1d4hhNStJnza4iZpEZRLn/RN+at03w8NUgrz+9FT7P5m98Pkw=
+X-Google-Smtp-Source: AGHT+IFF9mpKtLyzahZuJl0C/q72ifot0RbFXUsQCEcsDEts+qWbOqcz6hLPTFmF16zblkydyAGdTIgMz8MgaylmfUicJlUQnArm
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10] arm64: dts: qcom: ipq5018: Add tsens node
-To: george.moussalem@outlook.com, Amit Kucheria <amitk@kernel.org>,
-        Thara Gopinath <thara.gopinath@gmail.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sricharan Ramabadhran <quic_srichara@quicinc.com>,
-        Dmitry Baryshkov <lumag@kernel.org>
-References: <20250610-ipq5018-tsens-v10-1-3a10a5a2642c@outlook.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250610-ipq5018-tsens-v10-1-3a10a5a2642c@outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: 72SyFihBWkOnIQADtyeIP081j7z1T7PL
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDEwMyBTYWx0ZWRfX6vBaf5b3ScdR
- WtBkcnfiFHRgAFyaMA43ShYMemR2xOWU8tF1rcCBVlC5OrHMLGp3viGfPaDbxNtghgAVEJMCaVs
- yvQ1dJe2AVZk63wN7T+zyT8ZnNUa44uIOLBQ2V0EcqbKdUZdpbOLrjzRZ52EjCUOaYaakvAazsh
- J3OlWXD+TfSxCdJSQ8j5uEEkWYEghP1dDlA12NsmkCKNxqAuveeSIXd5j3zkQQ0U8tPeCIWCkUu
- MhsolNO8rkeSLE9sQUEQUniDRqImEG0NiM3l84VwWHbzOuM3kedL0BmB6WiRfHB7BJD7rIkDwkK
- we12XFX5gYGS8pRFDSp8hWEIxZT3Q/qez4OGWyNHPWEpilsAhO1WBiaPOkKr7emsOm2EmM+zMck
- 1KGnNl9blziQjDx39wO+p4Xfo4UMs4u27o7e9edlx/U3F+hl5vF2KEGSnJdIzliiCDGFgCku
-X-Authority-Analysis: v=2.4 cv=GYkXnRXL c=1 sm=1 tr=0 ts=68482e67 cx=c_pps
- a=V4L7fE8DliODT/OoDI2WOg==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8
- a=UqCG9HQmAAAA:8 a=gCHPDHSnq_wzHoAtv_MA:9 a=QEXdDO2ut3YA:10
- a=WZGXeFmKUf7gPmL3hEjn:22 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: 72SyFihBWkOnIQADtyeIP081j7z1T7PL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-10_05,2025-06-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 bulkscore=0
- impostorscore=0 clxscore=1015 malwarescore=0 priorityscore=1501 mlxscore=0
- adultscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506100103
+X-Received: by 2002:a05:6e02:2162:b0:3dd:b5ef:4556 with SMTP id
+ e9e14a558f8ab-3ddeddd7398mr29862165ab.18.1749560942922; Tue, 10 Jun 2025
+ 06:09:02 -0700 (PDT)
+Date: Tue, 10 Jun 2025 06:09:02 -0700
+In-Reply-To: <20250610124453.1064-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68482e6e.a70a0220.27c366.0064.GAE@google.com>
+Subject: Re: [syzbot] [hams?] possible deadlock in nr_rt_device_down (3)
+From: syzbot <syzbot+ccdfb85a561b973219c7@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 6/10/25 3:03 PM, George Moussalem via B4 Relay wrote:
-> From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-> 
-> IPQ5018 has tsens V1.0 IP with 5 sensors, though 4 are in use.
-> There is no RPM, so tsens has to be manually enabled. Adding the tsens
-> and nvmem nodes and adding 4 thermal sensors (zones). With the
-> critical temperature being 120'C and action is to reboot.
-> 
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
-> ---
+Hello,
 
-[...]
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-> +		tsens: thermal-sensor@4a9000 {
-> +			compatible = "qcom,ipq5018-tsens";
-> +			reg = <0x004a9000 0x1000>, /* TM */
-> +			      <0x004a8000 0x1000>; /* SROT */
+Reported-by: syzbot+ccdfb85a561b973219c7@syzkaller.appspotmail.com
+Tested-by: syzbot+ccdfb85a561b973219c7@syzkaller.appspotmail.com
 
-Please drop these comments
+Tested on:
 
-[...]
+commit:         f09079bd Merge tag 'powerpc-6.16-2' of git://git.kerne..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=104769d4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5080a302f3378422
+dashboard link: https://syzkaller.appspot.com/bug?extid=ccdfb85a561b973219c7
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=131b69d4580000
 
-> +	thermal-zones {
-> +		cpu-thermal {
-> +			polling-delay-passive = <0>;
-> +			polling-delay = <0>;
-> +			thermal-sensors = <&tsens 2>;
-> +
-> +			trips {
-> +				cpu-critical {
-> +					temperature = <120000>;
-> +					hysteresis = <2>;
-> +					type = "critical";
-> +				};
-> +			};
-> +		};
-> +
-> +		gephy-thermal {
-> +			polling-delay-passive = <0>;
-> +			polling-delay = <0>;
-> +			thermal-sensors = <&tsens 4>;
-> +
-> +			trips {
-> +				gephy-critical {
-> +					temperature = <120000>;
-
-I'm not sure whether there's any firmware/hardware measure to shut
-down these beforehand. It's better to have a software trip at 120C
-than to not have any at all, but you may want to try and find a
-case_therm or so thermistor for your devices..
-
-> +					hysteresis = <2>;
-> +					type = "critical";
-> +				};
-> +			};
-> +		};
-> +
-> +		top-glue-thermal {
-> +			polling-delay-passive = <0>;
-> +			polling-delay = <0>;
-
-0 is default here, you can drop all such entries
-
-> +			thermal-sensors = <&tsens 3>;
-> +
-> +			trips {
-> +				top_glue-critical {
-
-underscores are not allowed in DTs (see:
-Documentation/devicetree/bindings/dts-coding-style.rst)
-
-use a hyphen instead
-
-Konrad
+Note: testing is done by a robot and is best-effort only.
