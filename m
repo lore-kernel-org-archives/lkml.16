@@ -1,39 +1,107 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E5E242D92;
-	Tue, 10 Jun 2025 16:42:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B9C242D82
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 16:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749573742; cv=none; b=Hdv8ECuanTQgsmUOdIGfQqEhI3pjj3GMnVxPpC8CaXTuYs5/sv/wK5XUG5il66MBfwc8+WGNX19bY2xllDWnUGWQEbZzOCmv/MZVDVffnTMGLRPq4xQ8GhbtG6dn9eol7dDSuDDjP/osn9PNT4VAVQkfSW3+H1HuA6GwzG4FZ9U=
+	t=1749573781; cv=none; b=tSCVYDc/uDUmjjFkhAB+kYHGw2oDBcDOcqsdByNnsRKRoFcGLBc9CGh94F/tPi01W6PqovP7Zs+CCXb+xcsTAhOv4vLsSbIVBjcWj8DPaLvok4siXKBWbdbNZnVWuqYMFJNvAzXucYZA8nFc9XMrbobFePeXbW0SLCXOwEPzpa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749573742; c=relaxed/simple;
-	bh=hS9bew/V9dOguSA0Tn0RisCGc1oHuJaDh8mlmT55Dlw=;
+	s=arc-20240116; t=1749573781; c=relaxed/simple;
+	bh=63M8EFXm8sBwKZFSPxGOeNfWKp+6FLaM+HabAL+PUKg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=brstHWGlzDk6r4sUv/gI2F8R70emLPyRWmsYtHM9nKeWx9mWpfv58BKNHYw16z9+2f1x0yO2zg+oiBiqzd8Q93Abr5uYkIIoT2a01HT+pL5FjI+v7QZXx0eJXMoWVq9YyT3uLP6T2BDed+dqW90dDjJZDJ1NB9B7tGpN6E0FITM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=CfCoWXmP; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=a8YYRS8H6hiZdUP2INHIxSmTYs//rflgtlZJmmQW5gfBxaO43ERujXavglLH5rXHYiEYkyVvX2A0X32WLiKuXunYBrOM/fPXLeeX7QeZUlr9Fbqzjc0FtmJYCfB8pck5RqP6QMWt8Cs41XMk6tOqUFfZYES6kvH6KFQhTvbNbpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bz+7CE2l; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="CfCoWXmP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1749573733;
-	bh=hS9bew/V9dOguSA0Tn0RisCGc1oHuJaDh8mlmT55Dlw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CfCoWXmP9M9d2PUtc3aKPyBuRWWT8BMhuiSPV2cuX1PYHPHiO/K5CSh9KXk007Jfz
-	 XXmnmnncq/sEDQDzP52wwGhIe4CzhCS10deNuG0GpSwyakhXpx2PPS8YKNuQKMWuOy
-	 akbGSb17qyCAzrv5C/6OyAz3FljQe5nMRaei+JLA=
-Date: Tue, 10 Jun 2025 18:42:13 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Mark Brown <broonie@kernel.org>
-Cc: Willy Tarreau <w@1wt.eu>, Christian Brauner <brauner@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Shuah Khan <shuah@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] tools/nolibc: Provide vfork()
-Message-ID: <5ce6fcb4-be3d-461b-9b17-495eff6ea2d5@t-8ch.de>
-References: <20250610-arm64-gcs-vfork-exit-v2-0-929443dfcf82@kernel.org>
- <20250610-arm64-gcs-vfork-exit-v2-2-929443dfcf82@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bz+7CE2l"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6fb0a05b56cso75970286d6.3
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 09:42:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749573779; x=1750178579; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r0CWEECpRT9Cmdly39tbOBk7JejOCx9iUlAXd39yK2Y=;
+        b=bz+7CE2lMrG6RqQeVYq0GIQuxvLQA4G7yKkxSt403CmPuUP7g2uLLZai/twNfKG0mY
+         gPOLLXfQGDPPiS0zA2A3J2J1yStBZljuWpEw/Ha0MYRiAhUCzLsieHNyWhZDniPJqLzR
+         9nYzij9YfE08AStEugQ3biY/yyFQxTeOkXeTSwOV/gh4Pu25ET65TQo/jVRDdpaj0JUr
+         tiNvR9oOycrU0o8hWUueua6dhErbVFIFEgumi4Ef9RhPmCOwN1EVFnLixYo/byTinqcE
+         wZ4IGcgm3Xti9UNc3Zgbqn2MO+OZn6kaw+w2nSh596MWRsL6qZppqN8i8vqjqKsbG7nQ
+         rstQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749573779; x=1750178579;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=r0CWEECpRT9Cmdly39tbOBk7JejOCx9iUlAXd39yK2Y=;
+        b=MpCyfc6StMvb3OZUEW3efYHxB8O9e2ze4FvaCNl/28u5fvN01BE+wM1LtO/DcyNdiR
+         /3Zqx6JfyXyzM5sPFZeFKiggvOltuJ8cqZArEzFaqwMMXxQDJQfrB6X5CGqEl5DIqDaO
+         NorbtfhqVWYDV6DE9xlYOdlba4DZWxIRZD41G4rGMYiMsjmwfNBfRLFqxdFjGxLMKkQo
+         5pXCPBjIcbgCCpJaMHWxrPX55S1qBa056sVtYndCq11r8t/Faburs1suOpfdfJ1SH4dE
+         kCaUR7epyz1MgtP3gcmOO4kSDA885JCiopE/xltHSWXvaHMSe5+kWgdw9OlSs7cUOM6z
+         xhgg==
+X-Gm-Message-State: AOJu0YyAvwV/mNcIBVBhbeq/IKjAr1eYktRhZmwmRcDPzaoXPzPhyUbC
+	V4aORXoY4VktEt2+GV/YuzfnTO07c03A7L8trGOVY8sRJoH9jmzvJVKFfnCBIw==
+X-Gm-Gg: ASbGncup7YrvZky/+xyrizhQg2sis/Nvfr4Llzx9PFvin19kNWstXc745MkH6pBCWBs
+	CNiShdSbfqe15XcGEIzelo3GWS/M5wF9uTJzBDHMg8yrb9RuJcMEwipLS3WSLuvRLpOPzcBceP8
+	5HGFb/9NwwA+DfisIeupEBQk1O8m/qMCTKVenH8Qm2Dqt1ohZUgI0/GnEO6Ft6RpxMIBRCQJcRX
+	H6zEapBqBbAwu+GNfIE/zRU98o9DvVZBJNu0Vz/ghOrPZMS3o4bK9DdSA4DZFnL7V6RG5xDnNfI
+	7bpRS1mnR9+Dxvb1blfk6MDOmqu+gHeDZtm6pKc/pDrNJHpJKq0n4N48W8CL7EAMhkB5vO0wRaa
+	M4+lb4HGJ6ZTqYbw5NqfFYk+xNCP5QBjHU39bJp68pj/OJ7E9YL7q
+X-Google-Smtp-Source: AGHT+IEYEiSqaHdxm46rrnAh71iN23AAhX9Jl3CrrIidf9aMQL0RmyPHcVlV4Pkw4V7s2UUgh+FKMQ==
+X-Received: by 2002:ad4:5cab:0:b0:6fa:ce21:cad with SMTP id 6a1803df08f44-6fb2c32b287mr2738866d6.18.1749573778290;
+        Tue, 10 Jun 2025 09:42:58 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d25a608ff5sm722535885a.76.2025.06.10.09.42.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 09:42:57 -0700 (PDT)
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 5862C1200066;
+	Tue, 10 Jun 2025 12:42:57 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-10.internal (MEProxy); Tue, 10 Jun 2025 12:42:57 -0400
+X-ME-Sender: <xms:kWBIaJS2MBRHeVgIu_Vr0wImDcwO5J6cu_RkaxyRDKXsWBJg_ExvWw>
+    <xme:kWBIaCzRLE2SvdJpkcXdTjuXmDyjuA5ruoQ1YwjOJZlzgGxo8shBnNb990kYuafj1
+    OEfuCr_fC3NlaXrRw>
+X-ME-Received: <xmr:kWBIaO3v8hMvFHYa06eIgCVoFBJvNAZ7LWWRNpmnZxENpwDlk4-zje0sQQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddutdellecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
+    necuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilh
+    drtghomheqnecuggftrfgrthhtvghrnhephedugfduffffteeutddvheeuveelvdfhleel
+    ieevtdeguefhgeeuveeiudffiedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghl
+    ihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepgh
+    hmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopeejpdhmohgu
+    vgepshhmthhpohhuthdprhgtphhtthhopehvihhrvghshhdrkhhumhgrrheslhhinhgrrh
+    hordhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhn
+    vghlrdhorhhgpdhrtghpthhtohepvhhinhgtvghnthdrghhuihhtthhotheslhhinhgrrh
+    hordhorhhgpdhrtghpthhtohepnhgvvghrrghjrdhuphgrughhhigrhieskhgvrhhnvghl
+    rdhorhhgpdhrtghpthhtohepthhglhigsehlihhnuhhtrhhonhhigidruggvpdhrtghpth
+    htohepphgruhhlmhgtkheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsghoqhhunhes
+    fhhigihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:kWBIaBCCXrvrYXxkRJ-CI6rI1ts3KPpmrI52c95mcnrgdAf0KW8EbQ>
+    <xmx:kWBIaCiFG7MTFYhh4kZJS593gunRkHnNKyZ6CfMxk3siV_Ke1CrnnQ>
+    <xmx:kWBIaFo-IO5pJ2WKef_R9JGr7LG_Ul_4CB7qJ480rMvmo1PBFZA_Kw>
+    <xmx:kWBIaNj5VFVPDSgUxSfzGLaNSw8QOx4G2g5V8dqFV8htydY4gOU9-w>
+    <xmx:kWBIaNQ9d1m_SMq7EbSC1DOWW3FdJ-_u6omb9wUP8jlZHUpEfNdo68Pt>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 10 Jun 2025 12:42:56 -0400 (EDT)
+Date: Tue, 10 Jun 2025 09:42:55 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: linux-kernel@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH] smp: Fix typo in comment for raw_smp_processor_id()
+Message-ID: <aEhgj793zqsdbp6m@tardis.local>
+References: <d096779819962c305b85cd12bda41b593e0981aa.1749536622.git.viresh.kumar@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,73 +110,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250610-arm64-gcs-vfork-exit-v2-2-929443dfcf82@kernel.org>
+In-Reply-To: <d096779819962c305b85cd12bda41b593e0981aa.1749536622.git.viresh.kumar@linaro.org>
 
-On 2025-06-10 13:29:45+0100, Mark Brown wrote:
-> To allow testing of vfork() support in the arm64 basic-gcs test provide an
-> implementation for nolibc, using the vfork() syscall if one is available
-> and otherwise clone3(). We implement in terms of clone3() since the order
-> of the arguments for clone() varies between architectures.
+On Tue, Jun 10, 2025 at 01:27:13PM +0530, Viresh Kumar wrote:
+> The comment in `smp.h` incorrectly refers to `raw_processor_id()`
+> instead of the correct function name `raw_smp_processor_id()`.
 > 
-> Signed-off-by: Mark Brown <broonie@kernel.org>
+> Suggested-by: Boqun Feng <boqun.feng@gmail.com>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+
+Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+
+Regards,
+Boqun
+
 > ---
->  tools/include/nolibc/sys.h | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
+>  include/linux/smp.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/tools/include/nolibc/sys.h b/tools/include/nolibc/sys.h
-> index aabac97a7fb0..5932ae8828a1 100644
-> --- a/tools/include/nolibc/sys.h
-> +++ b/tools/include/nolibc/sys.h
-> @@ -22,6 +22,7 @@
->  #include <linux/time.h>
->  #include <linux/auxvec.h>
->  #include <linux/fcntl.h> /* for O_* and AT_* */
-> +#include <linux/sched.h> /* for clone_args */
->  #include <linux/stat.h>  /* for statx() */
+> diff --git a/include/linux/smp.h b/include/linux/smp.h
+> index f1aa0952e8c3..bea8d2826e09 100644
+> --- a/include/linux/smp.h
+> +++ b/include/linux/smp.h
+> @@ -234,7 +234,7 @@ static inline int get_boot_cpu_id(void)
+>  #endif /* !SMP */
 >  
->  #include "errno.h"
-> @@ -340,6 +341,32 @@ pid_t fork(void)
->  	return __sysret(sys_fork());
->  }
->  
-> +static __attribute__((unused))
-> +pid_t sys_vfork(void)
-> +{
-> +#if defined(__NR_vfork)
-> +	return my_syscall0(__NR_vfork);
-> +#elif defined(__NR_clone3)
-> +	/*
-> +	 * clone() could be used but has different argument orders per
-> +	 * architecture.
-> +	 */
-> +	struct clone_args args = {
-> +		.flags		= CLONE_VM | CLONE_VFORK,
-> +		.exit_signal	= SIGCHLD,
-> +	};
-> +
-> +	return my_syscall2(__NR_clone3, &args, sizeof(args));
-> +#else
-> +	return __nolibc_enosys(__func__);
-> +#endif
-> +}
-
-It seems that on SPARC __NR_vfork has the same non-standard return value
-as __NR_fork. It therefore needs the same special handling in arch-sparc.h.
-Maybe with a helper to avoid the duplication.
-
-If you want I can fix this up when applying.
-Otherwise the series looks good.
-
-> +
-> +static __attribute__((unused))
-> +pid_t vfork(void)
-> +{
-> +	return __sysret(sys_vfork());
-> +}
->  
->  /*
->   * int fsync(int fd);
-> 
+>  /**
+> - * raw_processor_id() - get the current (unstable) CPU id
+> + * raw_smp_processor_id() - get the current (unstable) CPU id
+>   *
+>   * For then you know what you are doing and need an unstable
+>   * CPU id.
 > -- 
-> 2.39.5
+> 2.31.1.272.g89b43f80a514
 > 
