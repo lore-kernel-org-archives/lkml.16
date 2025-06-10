@@ -1,253 +1,129 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8EA92CCC9
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 00:24:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D342111
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 00:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749515060; cv=none; b=n752cQEJQCBWQ98Hf7GkPm1LcFICOK6MYyCGoF7G5g7Nr5g34+3y9i4t8qbDIgToot2gJaxLpsaq+S9ew/Ly54wbVnkVJIf+NnvLygFHO0bA/lS9B0bQ7+zGZDbGNhC0SGUB8/BPw8tk/zdc3hiCWwSRA+AVf6GtUq0FBS6qdTo=
+	t=1749515136; cv=none; b=reBS499U9cisVkJNQpcr8ZU/DJ8T9Ybexdw523+ckKuG6csUvJSmKgp+eyxgwfhhMpvNyr33f0C1zh3gKnZHni2RA4zkE6dz9goyPqpAhW6wPl+LFDFbj4Mz2lp1leMP0eTo4P5dk9tavW2lTQhM+K7LDfa5t5CXqC/FjPe+HzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749515060; c=relaxed/simple;
-	bh=7jmPTNP5wXkOM5VKAK8B4cmHLCsgMV0sC67D2Tc8tnw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=URpqR7g+7xK/90S1iz1X5A1n675W6bg2x4k8+cflGFrbXS4jBZsTYZX3y0eUZH9h3OYzQ3Rj3fEAU0ABksl7MfojMWWgkKkX5TrKiA+ETAmexOpvQz11y8zj72z0+bU10qt1+YsvW6aby/V2wMZWEfIc+mVBZQTTnWAiPLxWb1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gateworks.com; spf=pass smtp.mailfrom=gateworks.com; dkim=pass (2048-bit key) header.d=gateworks.com header.i=@gateworks.com header.b=iska8Fr3; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gateworks.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gateworks.com
+	s=arc-20240116; t=1749515136; c=relaxed/simple;
+	bh=aWBGDsONt3DsLjvWK84WyJYg7SV4UPTZ1BXTjC/JrWg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gt0dJw9XWpg8QesBQnm/6UsUEvoU3rKbjeQmEPNdhNIYwzJWeBFnDplb5P5gwuGROJGo1JlCxxk2oe+IGSUABhGB0aLp4KmCzLIVzksipHFwuei8ndZS8J5hOTn95ntHmDrJ067axy4oMOzv4TvRF1sIzKb+mQfpfTv0/LOd91w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=kpDb1dMD; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gateworks.com header.i=@gateworks.com header.b="iska8Fr3"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-70f94fe1e40so59376817b3.1
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 17:24:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gateworks.com; s=google; t=1749515055; x=1750119855; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4p6WWlOvtLKrokUmhKFbxMIWiiDCNI86TAtn3rEDUQM=;
-        b=iska8Fr3I/6mpXtAyNYvHvqOVfOeEz/ht64sFyVYGZMCTyqNSZzq0G3JIPIv3/eyQk
-         jL45vVNTskVEsnGp0w/N74wm6hz130KU+6slU2sHAeyySD5JedFd9Nug/KhnSp4FIvGy
-         8An92g5wb4msyKTHQ9nmk+Ggh/35w0z+tTYBsUbyE+heZ3H/HT7lOzO2fbHqjUkJ6BSH
-         W+fx11MPFR1hX8ycHWlnDgGA6WInOvWArpvhqwrYLrBO6QvAJ4Q0Gm1GwFvfpCAh6Lx3
-         T6nqa8MY0qGzuSsHiEl1cJM/vFcnA4Z9/7K4Hwhcd9Mn08HldOrq8SFoYiz6Zgi4X5V8
-         TNUg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="kpDb1dMD"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 559KOsGR017676
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 00:25:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	09vmSKArL95chil96Dhr62OqEuJwsqeryT0wyUra1sM=; b=kpDb1dMDg3Hno0DS
+	5gjYFOI1O2StNBnOWfSDaGMePQRiS3m6oxqJchOnrsGgCmR3jrcxZT0Rp768bSWB
+	+EwwGJnicIFX74T6DuMlcmc7gk3mHgmDg1bXKGwG/r694Gay3DFd1b0xe2nAM+zO
+	918Jf5YQ9qvAth+frXwH2PuTa3/jJlBufDFaMDn6bkguoWaCl0K1qSbe+49QJ2rU
+	tdCN0s6As6lYVVdb764/Y2CBcS/iQZsGvpkpRtZlMgRUfuZrUuu5fm8mz8I8Gkzd
+	4DPlIMw1cDSE6pgOPmzoIFapQ5YnjFs3XaFZO1Pr2bEMNhboqKLftsZoLj5gyJPF
+	8XIR4A==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4766mcgd42-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 00:25:32 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d094e04aa4so94293185a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 17:25:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749515055; x=1750119855;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4p6WWlOvtLKrokUmhKFbxMIWiiDCNI86TAtn3rEDUQM=;
-        b=DbpUTFUq4r7TXGpcMSnMincHVDZ8gdfYLw/6pepELCGv+PhwCdOs16RzDhffK/pJqh
-         UddbE7ph0uoz2G57jZR44bJrvavnuktkKYSXjtl/R6mFNd5PohMj3GU5plgSD/C4ra+e
-         0TCapxN5BV/cWrPBmMnoGca3ha55xXAiOa9pDk8BoNds4PO3tJIKznokmoggS2MVv46c
-         4NwVZ4wFKlf3qNwwB1NBySe/lRcYcVHIoU9KBevjnaT8IpbiKVfpCQU1yYlhZQibuZiA
-         I00ROis5Olk22QutUB08wT7EiJYg7Z3tfmzbZXuxVBtFhnWlii4d8atBoETwLULASg8H
-         +vNA==
-X-Forwarded-Encrypted: i=1; AJvYcCVqhtGP+YD+Ty+EgiLfXK7RiQ33T5r0Aug1gvEjShIG4YcgHLmZC8jNamY5ZauZJOJFcbbz0T/qLQobSnA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwK6LdO7Nt6qVbPA9Hjc4QC5a1M1CnyXSNieJ8CiZNg5SPj+082
-	7aoxSOwcgosQtOXmxBYpmwOMUKl+X9SMW2URHM2JFXhWsfhzFBIQhHf8p5HlussnMbb7ijCExm9
-	4x+cw3YvqA73IwB0UeCK0pfQ4ST+uTXx1aKdBPN7kJw==
-X-Gm-Gg: ASbGnctE9GUAs5hdM792yUgvtNKcx8e0wnV8/MKFbN0unHy3dH4RAZShP1tTAU6jqM5
-	mzLFE+IFCqV+RzYKSdhtC2mTGWQvviLip6qgUpheUDg7tLR/bgSRU5er8ZcxhNJKdJPpud8cBv4
-	j6c/ToRhQpVSnmhtEJh+1WTIv+eoX45U7i4myuYZmse+nrHy3zB7eUqA==
-X-Google-Smtp-Source: AGHT+IEIwckNC6Mk3FUMcw8lzb7oJYprV7CNZkimjX4sCr2WuaRjl9EYST/x4A5RYQYDa8DuCIr4jskjKGm1oKna1b0=
-X-Received: by 2002:a05:690c:7204:b0:70e:76eb:8fb0 with SMTP id
- 00721157ae682-71133929d3dmr23571387b3.13.1749515055615; Mon, 09 Jun 2025
- 17:24:15 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749515132; x=1750119932;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=09vmSKArL95chil96Dhr62OqEuJwsqeryT0wyUra1sM=;
+        b=ar1X5z8x+y6cI+wKqXlkimuCamWxEHxYzRKJVByTutjqEXHbZ7Iz8D6O5GajfEIhJo
+         g1e+ERXEuL2NheF9sl2LVHE6ragJ3pOPFVwVlvwitlPC8dgINvmD+6lu1W+XfWyon8sa
+         vxsmnKao5f3SvecvdmldocG9ai4l1cSkCPwaWLQXV+po2TXnCvSSOJAGNsAddGJQCngz
+         F5bQtJm/9fMjbOJMw2IYWQs5SGfyGG7YQkfbI9sGK+bEit3sOb+zP5wa6sFHIrwhCbRx
+         Llgp6KP1emaG8ez7VeEc8ubKXFRSsOt5e3Nr3qwZ8dXh3gfdckKUA3PW1JD6FyvejavA
+         0F9g==
+X-Forwarded-Encrypted: i=1; AJvYcCX7IJkFfqHfx5FAB7CAsYbJ7dQykLUNATARMjcWhG2CDtm4ksYK4XUUrpsE8oX7xglkn4xAQB8r2/+OPfA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKgp/n3Z770d0wGVTGX3nHq0gvrkO5fpYfGzUqaokOOo6dm+6J
+	hzDwtzk6sdF7M+olt4Jrg8GXuCOb7y2/nxc/bQr/cyJ9llxYgpFK9E0J5/UieC/YM07OASX1e0V
+	bRUgIDLE/huVQ4H51pvjNkzcLwzpHaaMerpZwBWXh1RsLXfbXRth9OJqxiZTjChoKSig=
+X-Gm-Gg: ASbGncsBn3FX3eGeHDSmEjpkpUuRKLkyrYKzmWoQohq14m0fpfOta3/VnkrFXI37ebN
+	ZLA47sSlt8k+UaoCit3wCImkAHX6OsmPUov5BELl8rlreTAk9/Eyu2MPfP/QPqnNYGC4fQYr96Q
+	9uaCpIzVAh5OS2z/vDX366GOwIrnEZlX6A6H+zptOMSJBWLfJod9JO9nz3AHOAlk7hbEVCYRbir
+	na8PHESL/dgopOdwWeqWJ207tP4wofYmCmc4bVSR6rYKYKAO8s5Rrx1sFKOAS1jq9wZ2HRMoZRY
+	TsRMmcynOOH3ugkThicTv/2zqmqTZiANVXoXac6OBntHQFaHCnOvZUa1onlcYZOyuqqF5ckKUA5
+	c
+X-Received: by 2002:ac8:59cf:0:b0:472:1d00:1fc3 with SMTP id d75a77b69052e-4a669071b67mr92670541cf.8.1749515132091;
+        Mon, 09 Jun 2025 17:25:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHfBazml5ir8PMKKBZnsIy6xGkN7uScP9aQfNz9MkoMEsDOeZMCUgKUdSP77uFtWQjRzg3uTA==
+X-Received: by 2002:ac8:59cf:0:b0:472:1d00:1fc3 with SMTP id d75a77b69052e-4a669071b67mr92670401cf.8.1749515131704;
+        Mon, 09 Jun 2025 17:25:31 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60778377686sm5444185a12.25.2025.06.09.17.25.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Jun 2025 17:25:30 -0700 (PDT)
+Message-ID: <e1367b38-875f-4a9f-9dab-9aa9f12488af@oss.qualcomm.com>
+Date: Tue, 10 Jun 2025 02:25:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241126075702.4099164-1-hongxing.zhu@nxp.com>
- <20241126075702.4099164-6-hongxing.zhu@nxp.com> <CAJ+vNU3ohR2YKTwC4xoYrc1z-neDoH2TTZcMHDy+poj9=jSy+w@mail.gmail.com>
- <AS8PR04MB8676C1206066A3215DB5F3B78C6BA@AS8PR04MB8676.eurprd04.prod.outlook.com>
-In-Reply-To: <AS8PR04MB8676C1206066A3215DB5F3B78C6BA@AS8PR04MB8676.eurprd04.prod.outlook.com>
-From: Tim Harvey <tharvey@gateworks.com>
-Date: Mon, 9 Jun 2025 17:24:04 -0700
-X-Gm-Features: AX0GCFvJVHqxJw3QT2Hj1OmwNvuRPr_efH3vouQUS0tjvRGC0_axQFmE3cNvLZA
-Message-ID: <CAJ+vNU0rO0tJyon6HGYTZHu5oii5vH-dPpnSH7RQj43+nE1KDQ@mail.gmail.com>
-Subject: Re: [PATCH v7 05/10] PCI: imx6: Deassert apps_reset in imx_pcie_deassert_core_reset()
-To: Hongxing Zhu <hongxing.zhu@nxp.com>
-Cc: "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "bhelgaas@google.com" <bhelgaas@google.com>, 
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>, 
-	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, "robh@kernel.org" <robh@kernel.org>, 
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
-	"shawnguo@kernel.org" <shawnguo@kernel.org>, Frank Li <frank.li@nxp.com>, 
-	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, 
-	"imx@lists.linux.dev" <imx@lists.linux.dev>, "kernel@pengutronix.de" <kernel@pengutronix.de>, 
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: qcom: sdm850-lenovo-yoga-c630: enable sensors
+ DSP
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250608-c630-slpi-v1-1-72210249e37e@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250608-c630-slpi-v1-1-72210249e37e@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=T8KMT+KQ c=1 sm=1 tr=0 ts=68477b7c cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=UYkWuftlsXAw6W1qggYA:9
+ a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-ORIG-GUID: 2Y_D1CbwCP2t5OdXezo2Yl6fDGdM0fWJ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDAwMSBTYWx0ZWRfXyg5WFm50C/ia
+ ecr17DuVqHi+VxWacKxjZ2Q8YMV1e+X2+OjThzDKcK0e3+sg8Av4bC9x3tzvTnRH47Me9wr16gd
+ ZgW9460ORadBu7H3KDDWIg4VUOqcT7zKp9uWLYpjrZHJnBLk4zG5FGRnQ9Y2YIqKiNC/aCqOlJq
+ 706A9sk0Sx0u7HFLBk8wnyM2+pTXKZXzxP4ZvQf+59hyMdmTnKHn+tLwb4N/au8o50znFAYB6QJ
+ WAGhG5wnEmNEGAGp9rGn+g9UClMMYagkYhJB1am1NonVRyWEPZNQn988p1IAt4QGhZcjWU9DXuD
+ gQCMrlRLk5/+BzeRAfSevx1akrCa8BFVQSe3dgzhxEdxx8KMD1O6GEypeZVMFbTo9Dp8UtgcrFD
+ RguQuepKILSDFrMqy7w6QAN+PBK2Td1db9sK9tVwtzHZudAka8L7hDKuOJjn7aKQa7SYBQyu
+X-Proofpoint-GUID: 2Y_D1CbwCP2t5OdXezo2Yl6fDGdM0fWJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-09_10,2025-06-09_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 bulkscore=0 clxscore=1015 malwarescore=0 impostorscore=0
+ spamscore=0 priorityscore=1501 lowpriorityscore=0 mlxscore=0 phishscore=0
+ mlxlogscore=599 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506100001
 
-On Mon, Jun 9, 2025 at 1:03=E2=80=AFAM Hongxing Zhu <hongxing.zhu@nxp.com> =
-wrote:
->
-> > -----Original Message-----
-> > From: Tim Harvey <tharvey@gateworks.com>
-> > Sent: 2025=E5=B9=B46=E6=9C=887=E6=97=A5 5:04
-> > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > Cc: l.stach@pengutronix.de; bhelgaas@google.com; lpieralisi@kernel.org;
-> > kw@linux.com; manivannan.sadhasivam@linaro.org; robh@kernel.org;
-> > krzk+dt@kernel.org; conor+dt@kernel.org; shawnguo@kernel.org; Frank Li
-> > <frank.li@nxp.com>; s.hauer@pengutronix.de; festevam@gmail.com;
-> > imx@lists.linux.dev; kernel@pengutronix.de; linux-pci@vger.kernel.org;
-> > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
-> > linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH v7 05/10] PCI: imx6: Deassert apps_reset in
-> > imx_pcie_deassert_core_reset()
-> >
-> > On Tue, Nov 26, 2024 at 12:03=E2=80=AFAM Richard Zhu <hongxing.zhu@nxp.=
-com>
-> > wrote:
-> > >
-> > > Since the apps_reset is asserted in imx_pcie_assert_core_reset(), it
-> > > should be deasserted in imx_pcie_deassert_core_reset().
-> > >
-> > > Fixes: 9b3fe6796d7c ("PCI: imx6: Add code to support i.MX7D")
-> > > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> > > Reviewed-by: Manivannan Sadhasivam
-> > <manivannan.sadhasivam@linaro.org>
-> > > Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> > > ---
-> > >  drivers/pci/controller/dwc/pci-imx6.c | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/drivers/pci/controller/dwc/pci-imx6.c
-> > > b/drivers/pci/controller/dwc/pci-imx6.c
-> > > index 3538440601a7..413db182ce9f 100644
-> > > --- a/drivers/pci/controller/dwc/pci-imx6.c
-> > > +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> > > @@ -776,6 +776,7 @@ static void imx_pcie_assert_core_reset(struct
-> > > imx_pcie *imx_pcie)  static int imx_pcie_deassert_core_reset(struct
-> > > imx_pcie *imx_pcie)  {
-> > >         reset_control_deassert(imx_pcie->pciephy_reset);
-> > > +       reset_control_deassert(imx_pcie->apps_reset);
-> > >
-> > >         if (imx_pcie->drvdata->core_reset)
-> > >                 imx_pcie->drvdata->core_reset(imx_pcie, false);
-> > > --
-> > > 2.37.1
-> > >
-> > >
-> >
-> > Hi Richard,
-> >
-> > I've found that this patch causes a regression on i.MX8MM and i.MX8MP
-> > boards with hotplug capable bridges:
-> > i.MX8MM+PI7C9X2G404EV (this switch does not support hotplug) - no issue=
-s
-> > i.MX8MM+PI7C9X2G608GP (hotplug) - fails to reliably enumerate
-> > downstream devices about 80% of the time ^^^ when this occurs
-> > PCI_PRIMARY_BUS (0x18) for the root complex
-> > 0000:00:00.0 reads 0x00000000 instead of 0x00ff0100
-> > (PCI_SECONDARY_BUS is 0 instead of 1 and PCI_SUBBORDINATE_BUS is 0
-> > instead of 0xff) i.MX8MP+PI7C9X2G608GP (hotplug) - hangs at
-> > imx_pcie_ltssm_enable deassert apps_reset
-> >
-> > In both cases here reverting ef61c7d8d032 ("PCI: imx6: Deassert apps_re=
-set
-> > in imx_pcie_deassert_core_reset()") resolves this.
-> >
-> [Richard Zhu] I'm afraid that the ltssm_en bit assert to 1b'1 in
->  imx_pcie_deassert_core_reset() is not correct in your use case.
->
+On 6/8/25 6:02 PM, Dmitry Baryshkov wrote:
+> Enable SLPI, Sensors DSP on the Lenovo Yoga C630. The DSP boots the
+> firmware and provides QMI services, however it is of limited
+> functionality due to the missing fastrpc_shell_1 binary.
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> ---
 
-Hi Richard,
+Check if the Flex 5G's signing key is different (or maybe Lenovo
+had more sdm850 models?)
 
-Thanks for your quick response. Do you mean not correct for newer IP
-core in i.MX8MM/i.MX8MP or in the case of a bridge?
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-> Actually, the apps_reset isn't a real reset. It's the ltssm_en bit.
-> From this perspective view, It's inappropriate to toggle the ltssm_en bit=
- in
->  imx_pcie_assert/deassert_core_reset() functions.
-> I consider to move the apps_reset out of _reset_ functions.
-> Can you help to test the following changes in you use-case?
->
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -776,7 +776,6 @@ static int imx7d_pcie_core_reset(struct imx_pcie *imx=
-_pcie, bool assert)
->  static void imx_pcie_assert_core_reset(struct imx_pcie *imx_pcie)
->  {
->         reset_control_assert(imx_pcie->pciephy_reset);
-> -       reset_control_assert(imx_pcie->apps_reset);
->
->         if (imx_pcie->drvdata->core_reset)
->                 imx_pcie->drvdata->core_reset(imx_pcie, true);
-> @@ -788,7 +787,6 @@ static void imx_pcie_assert_core_reset(struct imx_pci=
-e *imx_pcie)
->  static int imx_pcie_deassert_core_reset(struct imx_pcie *imx_pcie)
->  {
->         reset_control_deassert(imx_pcie->pciephy_reset);
-> -       reset_control_deassert(imx_pcie->apps_reset);
->
->         if (imx_pcie->drvdata->core_reset)
->                 imx_pcie->drvdata->core_reset(imx_pcie, false);
-> @@ -1176,6 +1174,9 @@ static int imx_pcie_host_init(struct dw_pcie_rp *pp=
-)
->                 }
->         }
->
-> +       /* Make sure that PCIe LTSSM is cleared */
-> +       imx_pcie_ltssm_disable(dev);
-> +
->         ret =3D imx_pcie_deassert_core_reset(imx_pcie);
->         if (ret < 0) {
->                 dev_err(dev, "pcie deassert core reset failed: %d\n", ret=
-);
->
-
-Yes this resolves the regression of failing to reliably enumerate
-downstream devices. I think that should be submitted with a fixes tag.
-
-The i.MX8MP+PI7C9X2G608GP switch hanging issue was hardware related...
-i was sadly testing on an old board with a defect. I did previously
-have a hang issue there discussed previously here [1] but it was
-resolved with commit 9c03e30e3ade ("PCI: imx6: Skip link up workaround
-for newer platforms").
-
-How much testing is done with i.MX8M{M,P} board with a switch? I feel
-like I'm the only one with these SoC's and a switch and I need to get
-better at monitoring patches to the IMX6 PCI controller driver and
-testing these scenarios.
-
-Best Regards,
-
-Tim
-[1] https://www.spinics.net/lists/linux-pci/msg142764.html
-
-
-
-
-> > I notice the sequence of events here is:
-> > imx_pcie_assert_core_reset asserts apps_reset (disables LTSSM)
-> > imx_pcie_deassert_core_reset deasserts apps_reset (enables LTSSM)
-> > imx_pcie_ltssm_enable deasserts apps_reset (enables LTSSM; this is wher=
-e it
-> > hangs on imx8mp)
-> >
-> > Is there perhaps some issue with de-asserting this (enabling LTSSM) whe=
-n it's
-> > already in this state?
-> [Richard Zhu]The apps_reset is updated by src driver by regmap_update_bit=
-s().
-> I can't find the exceptions to update one bit, already has the according =
-value.
->
-> Best Regards
-> Richard Zhu
-> >
-> > In the case where downstream devices do not enumerate some investigatio=
-n
-> > points to them not being happy that the link drops so perhaps deasserti=
-ng
-> > apps_reset when its already asserted drops the link and restarts it?
-> >
-> > Best Regards,
-> >
-> > Tim
+Konrad
