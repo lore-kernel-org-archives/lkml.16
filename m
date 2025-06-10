@@ -1,210 +1,115 @@
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE5825F993;
-	Tue, 10 Jun 2025 19:05:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BE72609D9;
+	Tue, 10 Jun 2025 19:05:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749582336; cv=none; b=X0oPhSnzf3vEMBTXI3u1zMwZLdd7RzNEfe9i4syyIfeHQc1VYQzSbzh3t26ouqUrMT8CDWLcyw/9eOluTEirBAQuWW8qFYectLE7dUcSS99aK/l0RXjp7UZmgvpJigiXo29siqEJCvV2Xb5OKvG1vYcyHIETiLPDSIneSz0w7XE=
+	t=1749582341; cv=none; b=aszhTWWL9vq4buo5hmBJd1NgNC3MWv2XQ5RygF1UqCq/N7U96JGZ4esA0ItFE/6iZdZs9h3pDADz1pcyOIMMxZQ0200NamDT6lmhC2b3t8ilvGVGMDwJW48Qgi46u83ubxlG6Ri+QeBov8DiWioxWInKgZD13ZbICE2n4O6jk1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749582336; c=relaxed/simple;
-	bh=//nXbLD2pIuvtyrRVZcEXjq2xBxd7UhWVYykh8/Hv4o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AsZl4vtKUMGPDzfZeKE1bce0agTBjSHC+H0RldZdqxWjn91XuFg1VUHq1jKZhInkZg1K1/rEGBW6IWPGJHNm5rZosKcazup2+NqKr8FcHpVWmvNUtnAGw7kxdGw+FZUMYBNOJGEItN0tLk3mntYyShLyVDstoA5iDvBvTsDfk6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jPsUqLyd; arc=none smtp.client-ip=209.85.221.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749582341; c=relaxed/simple;
+	bh=XoHE7rwIpW75cxE3NkPum8Nv0zq5MnmrOJxIUeuPjBU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tWDNm3lQo9UColE/ZPfdBHXxpQTdiBZA4mGUnQ+4C++FozNieJlC4vMZY15ZpVttPfWYojttux9+oxMXs/fTMr+MkWg+qDnzdj9UCoCW75VfdODy/7x/X0N0j82J5HT8iA9rtRrhv6U0c8eidRynrVIjm+6z57NJL94Kd82zas4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=olkmG6TM; arc=none smtp.client-ip=213.133.104.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jPsUqLyd"
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-530fd330f1bso1951796e0c.3;
-        Tue, 10 Jun 2025 12:05:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749582334; x=1750187134; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=soqipNezQwywsZZXzZxEBkeNsem3MKqc8B9xNxUP6fI=;
-        b=jPsUqLyd3Hx2frZqPYJ07XT4+/RZMe/MfJnVi4FLPsjXNKpGdN4ndt9/dsmZwH703q
-         TeGOCMBVSF9xK8Y0lhsqnkt3bav7vKHioj315AZgDmyvhQKsD1W2cPdr2y8OY6Me10Kx
-         jo8VSQC88FqthkwEwhDAwPagNurb8liixxXa93SUvVLU+VZ4fqhpixANDkxv2CG2CNaF
-         QykOVgZoN0OSmdyUQOZxWnVOPg1F0HFSKLy4s+T3maB1t4huUxmsbySuv6RPZv7MQKeh
-         c2fSrXeiKbAF0/uu3YwQB/MsrbvZ16osWQBAEkXuM8MpQQCcD/E1ESl5An67PAJM1MJY
-         VqNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749582334; x=1750187134;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=soqipNezQwywsZZXzZxEBkeNsem3MKqc8B9xNxUP6fI=;
-        b=FXDHj8igvJhfZfiAhka6A73N6R3h2DRPIH6Sb1YMsizjGhYfytCYD7ACZckWMw5F6e
-         vX0YZkPJFSqc6xJ2FE6N0dP7jJ5poHC6fTiogMfszuui23Js0HMSgt2aukBxpCIfp2d2
-         klhjhIOYDh0Quzw888Jvr6tih6T32zvWOJf19x6EuSRuyG4Samsa92D863+3353mQyZi
-         1ifCSB0nuRwSS6qHvSr9nR0P0w9Y0sMVM+bWI5b9JtiDL4vQym3ZwAD4tGdHX+qvLbWG
-         eOJGjCpPBohEGWQQWeUSLPK/SUcScviBAvELhiPBucgM1oFQq5jQN3Gnco9RfsyXRuAG
-         Bh/A==
-X-Forwarded-Encrypted: i=1; AJvYcCWvJLa2HKGA4669OHjCw6rPZJmPpxJij5thCPGK19zjOPTmqmUMQgRSjzkwMhwITsJhecOozcDqgUS9D3A=@vger.kernel.org, AJvYcCXQANKDBy30P53n4kyVfJQRyQkzWndegUoCSpf6EcQp8wPzd5p7jPqjtdxWo57ci1AODa3ihUkksq6f@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiVYaSksD39KVS92cmoaGfxMNwn8d8MbK2fwA4LCveWSx9wuNF
-	FGs5XUtMmo8WxmMs4TWB/KKQ+rwfBgos8R+TctWsE64TJC6ubWCeElI1
-X-Gm-Gg: ASbGnctNLMaXht/LNNQO3CxAiZKrnAC7hSeEGWtAxSJz0odWnMcH/ndUYOMyKytuQjx
-	6fRsxhtYOo5PvLcDZfnm22Eivoxpt9EEnoXilguw1VdwDyCrHHzgIs/kN1BGX1048QWuYtfguVk
-	q2/B8cT5AKxzFOs3a2QBtSLPnmL9ehJn2XWHFB4qyoVvA7iORJgXgdzTbOSawvjhCQlyxfpTiL2
-	EJM4jhydCYkem0oG5ZOJdqUiyqLs3JdBAVjjawiFWElixpJdMaTW9eg37G1Z5hrsABHyQqK9JXf
-	PeGR48Vwcw8cjBsVhxBBBWop/8+VN471u6WckVT7BQBZZbVV+nwX38xDBUEb
-X-Google-Smtp-Source: AGHT+IEcI/mcsGgLUh+d/2//VapgDjFnlJXzSCse2dstT8suxfebV9YntzheIBzZcHTa8k/XMYDp4A==
-X-Received: by 2002:a05:6122:1826:b0:530:5308:42ec with SMTP id 71dfb90a1353d-53122259816mr651950e0c.8.1749582333918;
-        Tue, 10 Jun 2025 12:05:33 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:5a56::dead:c001])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-531224b91aesm192109e0c.8.2025.06.10.12.05.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 12:05:33 -0700 (PDT)
-Date: Tue, 10 Jun 2025 16:05:28 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: linux-rockchip@lists.infradead.org
-Cc: Hugh Cole-Baker <sigmaris@gmail.com>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v3 1/3] PCI: rockchip-host: reorder
- rockchip_pcie_set_vpcie()
-Message-ID: <55166f9fb72229f9cfd40b5334083b8837548a18.1749582046.git.geraldogabriel@gmail.com>
-References: <cover.1749582046.git.geraldogabriel@gmail.com>
+	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="olkmG6TM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=vsOL9HjFuesZRM4LC588aOJ2IAXWcopQUhkn/lRI5iY=; b=olkmG6TMQfW+uUtGze4N3AVXlf
+	kdVhKU9k1H6keVcJxAq9pFcloNt1ACUS2mQsayE+2okUDaVqQ87DcXzsm9gt2smnCTN5eKq451hGY
+	ZUWx1KW0rgRydseFQDj892Bw5uEapDxFnRJtbpz5BTwZZ5X1eLj05pyCZ5qdIo6xF0lFRpzE/l41y
+	MoJV0NuHkChkkbbXEH5y9apSihNoCz4MCr5GAIti70RRPpZC4v7JtMy9IyUKbIHgSJ3yIkcVngfwt
+	Mf5jiQE2axWqw9xPyVKsmzlAN1pjRb5jazsJWi3NJ5eedyCzq992mYwoLryd7rl3p9K3zZsULWPAJ
+	4PpvUV5Q==;
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1uP3pj-000Pqd-1C;
+	Tue, 10 Jun 2025 20:36:27 +0200
+Received: from localhost ([127.0.0.1])
+	by sslproxy06.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1uP3pi-000Juz-1o;
+	Tue, 10 Jun 2025 20:36:26 +0200
+Message-ID: <1c133144-7868-4d6d-878d-e1db71de23be@iogearbox.net>
+Date: Tue, 10 Jun 2025 20:36:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1749582046.git.geraldogabriel@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf] MAINTAINERS: add myself as bpf networking reviewer
+To: Stanislav Fomichev <stfomichev@gmail.com>, bpf@vger.kernel.org,
+ netdev@vger.kernel.org
+Cc: ast@kernel.org, andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
+ yhs@fb.com, john.fastabend@gmail.com, kpsingh@kernel.org, haoluo@google.com,
+ jolsa@kernel.org, akpm@linux-foundation.org, lumag@kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250610175442.2138504-1-stfomichev@gmail.com>
+Content-Language: en-US
+From: Daniel Borkmann <daniel@iogearbox.net>
+Autocrypt: addr=daniel@iogearbox.net; keydata=
+ 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
+In-Reply-To: <20250610175442.2138504-1-stfomichev@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: Clear (ClamAV 1.0.7/27664/Tue Jun 10 10:41:04 2025)
 
-rockchip_pcie_set_vpcie() is needed for re-enabling power regulators
-after disabling them, if link training fails. This permits quirky
-endpoint devices to complete link training, enumerate sucessfully
-on the PCI bus and generally work with RK3399 PCIe.
+On 6/10/25 7:54 PM, Stanislav Fomichev wrote:
+> I've been focusing on networking BPF bits lately, add myself as a
+> reviewer.
+> 
+> Signed-off-by: Stanislav Fomichev <stfomichev@gmail.com>
 
-Reorder the function - no functional change intended.
-
-Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
----
- drivers/pci/controller/pcie-rockchip-host.c | 94 ++++++++++-----------
- 1 file changed, 47 insertions(+), 47 deletions(-)
-
-diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
-index b9e7a8710cf0..2a1071cd3241 100644
---- a/drivers/pci/controller/pcie-rockchip-host.c
-+++ b/drivers/pci/controller/pcie-rockchip-host.c
-@@ -284,6 +284,53 @@ static void rockchip_pcie_set_power_limit(struct rockchip_pcie *rockchip)
- 	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_DCR);
- }
- 
-+static int rockchip_pcie_set_vpcie(struct rockchip_pcie *rockchip)
-+{
-+	struct device *dev = rockchip->dev;
-+	int err;
-+
-+	if (!IS_ERR(rockchip->vpcie12v)) {
-+		err = regulator_enable(rockchip->vpcie12v);
-+		if (err) {
-+			dev_err(dev, "fail to enable vpcie12v regulator\n");
-+			goto err_out;
-+		}
-+	}
-+
-+	if (!IS_ERR(rockchip->vpcie3v3)) {
-+		err = regulator_enable(rockchip->vpcie3v3);
-+		if (err) {
-+			dev_err(dev, "fail to enable vpcie3v3 regulator\n");
-+			goto err_disable_12v;
-+		}
-+	}
-+
-+	err = regulator_enable(rockchip->vpcie1v8);
-+	if (err) {
-+		dev_err(dev, "fail to enable vpcie1v8 regulator\n");
-+		goto err_disable_3v3;
-+	}
-+
-+	err = regulator_enable(rockchip->vpcie0v9);
-+	if (err) {
-+		dev_err(dev, "fail to enable vpcie0v9 regulator\n");
-+		goto err_disable_1v8;
-+	}
-+
-+	return 0;
-+
-+err_disable_1v8:
-+	regulator_disable(rockchip->vpcie1v8);
-+err_disable_3v3:
-+	if (!IS_ERR(rockchip->vpcie3v3))
-+		regulator_disable(rockchip->vpcie3v3);
-+err_disable_12v:
-+	if (!IS_ERR(rockchip->vpcie12v))
-+		regulator_disable(rockchip->vpcie12v);
-+err_out:
-+	return err;
-+}
-+
- /**
-  * rockchip_pcie_host_init_port - Initialize hardware
-  * @rockchip: PCIe port information
-@@ -613,53 +660,6 @@ static int rockchip_pcie_parse_host_dt(struct rockchip_pcie *rockchip)
- 	return 0;
- }
- 
--static int rockchip_pcie_set_vpcie(struct rockchip_pcie *rockchip)
--{
--	struct device *dev = rockchip->dev;
--	int err;
--
--	if (!IS_ERR(rockchip->vpcie12v)) {
--		err = regulator_enable(rockchip->vpcie12v);
--		if (err) {
--			dev_err(dev, "fail to enable vpcie12v regulator\n");
--			goto err_out;
--		}
--	}
--
--	if (!IS_ERR(rockchip->vpcie3v3)) {
--		err = regulator_enable(rockchip->vpcie3v3);
--		if (err) {
--			dev_err(dev, "fail to enable vpcie3v3 regulator\n");
--			goto err_disable_12v;
--		}
--	}
--
--	err = regulator_enable(rockchip->vpcie1v8);
--	if (err) {
--		dev_err(dev, "fail to enable vpcie1v8 regulator\n");
--		goto err_disable_3v3;
--	}
--
--	err = regulator_enable(rockchip->vpcie0v9);
--	if (err) {
--		dev_err(dev, "fail to enable vpcie0v9 regulator\n");
--		goto err_disable_1v8;
--	}
--
--	return 0;
--
--err_disable_1v8:
--	regulator_disable(rockchip->vpcie1v8);
--err_disable_3v3:
--	if (!IS_ERR(rockchip->vpcie3v3))
--		regulator_disable(rockchip->vpcie3v3);
--err_disable_12v:
--	if (!IS_ERR(rockchip->vpcie12v))
--		regulator_disable(rockchip->vpcie12v);
--err_out:
--	return err;
--}
--
- static void rockchip_pcie_enable_interrupts(struct rockchip_pcie *rockchip)
- {
- 	rockchip_pcie_write(rockchip, (PCIE_CLIENT_INT_CLI << 16) &
--- 
-2.49.0
-
+Acked-by: Daniel Borkmann <daniel@iogearbox.net>
