@@ -1,114 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65EB01AAA29;
-	Tue, 10 Jun 2025 19:02:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2461A25E813
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 19:02:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749582121; cv=none; b=BdtWQ+TZSAze6vKsIn9GWh+1kuSU9qlg6DXQe4vJlDslvpORErwPM1FzWrUYrj7a5/tJantVd78XQ737gPOrc4PzLl/HvrIoVP0N0HcdBALsOkW7ecud9vo6e0hdVXlinTSM9cuv3ueCd23y+L/RNwgePnu4+3cut3ixvonUm/0=
+	t=1749582168; cv=none; b=nxiFsoQkte5uIMLiiv+WaWnm0xV+3XIQQWkbY6VI1j/TTDhXJM/3k16vLdnysfL5oVVvW/azvoSeLzFDohABVOEhq01bDM9/l3d8Qz6cLFgqsFH0K41JpZpmuhmRmJ9WgHJ8tLqbKI9We28miDlJ+0EzBosBdUjrd4ssbhfy0Ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749582121; c=relaxed/simple;
-	bh=4S/1UkKdaVmCq84FpA74723iMquEj+Z1lqgTsvWJcrU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hdOW+oZkp0wyqErt/IH6XOUhphJIaoosHXp7Cq+PoxSTzBJVhXD1vi2iyxOjCpQNxAj8jogirCXPdN/d7jKxY5Ll5Hhz0aidOoJSIgofE5mQg/bnR1Fx1IntRVMJ4ogiDj6yxBWrM6IbYD9JQ6hg3sZmwdwXlir56S94Kq/wWgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dGh0TMV+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749582168; c=relaxed/simple;
+	bh=rVgCB7d7YXT7wIutQuTOIOcSHXIfRaLciYLBxJ/BQ+g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rohkWTk9IrnUjUV3Ws95QRVK4yaRvZKYYUlQvHk1my1L+U2n7MKRHzawu1yv7pK9W8e13Xyz2ERTeBmRqDTfKo2wQRAAi7Sa3+zkP5NCbGhzENpPiAt+gKy2Fb02C9ttjNEeDHV3rGQNzdWXCI8ksl1Mss3F6Stw3Ys46hWuQvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tkNyE+SH; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dGh0TMV+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFC94C4CEED;
-	Tue, 10 Jun 2025 19:02:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749582120;
-	bh=4S/1UkKdaVmCq84FpA74723iMquEj+Z1lqgTsvWJcrU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=dGh0TMV+PTJf8jpIa3GnGDFFxFE9OqZB6amw7k529q8WrITwmCo3MEXOlL6nNqq5K
-	 JsYTQHMTAzqRL8qhBvc8+0fxsVdGtwcreT1I8U6KyKtoYQVSbn59EwMSArkaNOcne3
-	 kERBUoNKdqaTypH8MdkBjR1gJTMfX8ORbNR+T3ZXPhHNLpzVC3dToBELdfHKDuOr/A
-	 sXsWDyFHJrzVchdzg3K9M8mF7+eyGha7uLopHfpaRX+JHmmI6r63MiNmq91rPHkOFi
-	 wg/0X0V1Jv8X7+KL2B0k6A56p8GbnM8GtbN/X10jAqzOcaE90bCJULtcJIQruf0qXP
-	 5EyL7SM9I3YDQ==
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2d0920ce388so2896843fac.0;
-        Tue, 10 Jun 2025 12:02:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVegR1VcIrZsuk/czIXxP8nhchK/Xi7ALShEQVcDUIDHKVKYU7u1U9Dz6q5Annl7rkDWBc9pUNA9ik=@vger.kernel.org, AJvYcCWFRh1rfvr79SsjAS3bJxdw20XnMnVI6yG+kkjtdIIvOjLf/CmjjgHaVNQ8EPRO1t9MPbnjZ8OEs/cE1VE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxuAZcZIzf0tTls6fdShKYJX46b5w5vH2hYm9XJ08NG0sGaR1g
-	0eGlACjd4/Q2WLSpy9PG+5masggtfSfeZuXfGoPz+W6Y03x9ZRiA+5Ox9e9cFGwnN6S3wJjNNRU
-	Jr94htr2lBO868NtuTmT6cqdPdRJSyN4=
-X-Google-Smtp-Source: AGHT+IEfHETqXj3BAsLgdQ4AVCIgPE+WnuBRf4symV/b7gLRyCs+GuAHjQfHulFgVo40e6GhO4NKRj7IX02uB4ddAqM=
-X-Received: by 2002:a05:6871:330b:b0:2c1:62e9:584b with SMTP id
- 586e51a60fabf-2ea96ffde0cmr280949fac.39.1749582120228; Tue, 10 Jun 2025
- 12:02:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tkNyE+SH"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-451e2f0d9c2so1270685e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:02:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749582165; x=1750186965; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=G0B62z85gJOzviEKEobgsDAJxP79FoIq671m5PuGPz8=;
+        b=tkNyE+SHO/Fhy64hJhu5/hPcHaFrMEYeizRhKYv0ev/fqpw4zW9kVf61EFaX8SZuJ4
+         bdiial7zjsftKx5H0ygPk2lVicILHo+DV0lRaeV1kYfIrmO8sTcGXg13AM/yGCLv0DME
+         DFLXrWJ2zy8iZjlnqkjk2K7DU0D9uR1fZi+/uArnBhW8FDPo5mHGTJTp6yyrrBgvUgu7
+         1v6N1QkM4cVZyz7SJ4KsEVng0lxxfzF48F6HB+xlecVg8Gt8uJk6gDYvtUwyRkR0QHQe
+         0RbwhEvLW9siuXaIf/HeoYJQUx3WEPYlLIzokSlc9V1h06I0epzd/bz7o02NRoAjZeBR
+         PEQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749582165; x=1750186965;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=G0B62z85gJOzviEKEobgsDAJxP79FoIq671m5PuGPz8=;
+        b=wGJ9S0rGvZm9Yk66dor3qaOyacHovm4Wc780A7kYsrltubhbff0h5PlTyGISssBtNF
+         03/6rqTkXuYezGm96JQPQ4YvpfMQ+lldOoOl9T/0ROT8GFB9R2GZ7TVtzRWalkB2a9k2
+         3lZPNZ5BPUXVgHx8UEtPrTLfLt/dPzBCuF5/6Po/yLlezfQv40khiIsSvOOVSLtNBvPe
+         JdMmfabZWCV+J+CIl3x5Q0qtutgUP5RxxELEfskNgSvCxQHKOnSRV+edYrrT4XSgb6fk
+         Ts3L3oDatxAaoQwhMqum9s2bZda/FaJ5l1kZrWlTEbMlqEMwxETyciMdB/GkQgLhExfY
+         v1zg==
+X-Forwarded-Encrypted: i=1; AJvYcCXNm/H788mHcR+hR/BS/woGWyKhbIsRR8bEbWTuL+RenVjFBv4EcZdYWhHeZZRJNM9KQ3OwwWyM7nSdWwc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQzEXPfZRfdgCWGkKKwPS89zhtLgsyGzsB0SsiYnfZ9EbTd12K
+	C8KTss61k2yv2p4Bk+9UViZfdVI01M3j9qhiBN76CzctRboHutaMLbaJwxwwywzeHxM=
+X-Gm-Gg: ASbGncti+O6tcLsW5CPe+ZDCdzLXmUCKmKta7tv8Gb38sRSjFMaUGz06cHQitN75Bze
+	TVkH2yLqjxKbdqjLKmSZuSex2Ep2JBdkMKi74qhxKOKHuj7qni10h55936PDPUbTaDyvPXLER2W
+	07IwsWaUR86V6I/KazMxBpnUP7L6MhfOS8k331FLpab7+gcCrgkfcFE0QoJk+iE5jvqJH1V1OhV
+	T7cvN6NCk+pZX3+JVFNip8qEGttUfOiCmtBjwMhUhfpOS/M8hqDNjn10bhgSKvORY5sF8bk6EDr
+	z4NNI6gzE6wldNm9/6eUDrPGQmHwLouWAQ2PGN14NYkm96eaAHZmSpthSaMq/rseWZrd92JpOud
+	H1s5J+VDqBGy8CLcb7Ch1dm+bF6k=
+X-Google-Smtp-Source: AGHT+IFwHj1Ai6p+bfN7fWQ4SsvEeoKINwwWMCKycaDl0KtYSEyjI42LVgjGupK18UiLTuO2p2Q3dg==
+X-Received: by 2002:a05:600c:c494:b0:439:8878:5029 with SMTP id 5b1f17b1804b1-4532426d53bmr4645735e9.2.1749582165343;
+        Tue, 10 Jun 2025 12:02:45 -0700 (PDT)
+Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45209ce1afasm151989555e9.10.2025.06.10.12.02.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Jun 2025 12:02:44 -0700 (PDT)
+Message-ID: <dc82457e-de2b-43ec-a50c-08f7d8bdeff1@linaro.org>
+Date: Tue, 10 Jun 2025 20:02:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ab7fe518-0177-4178-a40d-51e0a5fbe8aa@linuxfoundation.org>
-In-Reply-To: <ab7fe518-0177-4178-a40d-51e0a5fbe8aa@linuxfoundation.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 10 Jun 2025 21:01:49 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0h+HAqH-aG9R86eWtnbv0cSUUBiMV1Fdt+VEhm3y2F=KA@mail.gmail.com>
-X-Gm-Features: AX0GCFt-RuA_b-R9Pf445uj94L6GZJNA-7svlDSPCsip6h3JixVSFU5NvtO2SMk
-Message-ID: <CAJZ5v0h+HAqH-aG9R86eWtnbv0cSUUBiMV1Fdt+VEhm3y2F=KA@mail.gmail.com>
-Subject: Re: [GIT PULL] cpupower urgent fix for Linux 6.16-rc2
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, shuah <shuah@kernel.org>, 
-	"John B. Wyatt IV" <jwyatt@redhat.com>, John Kacur <jkacur@redhat.com>, Thomas Renninger <trenn@suse.com>, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Thorsten Leemhuis <linux@leemhuis.info>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND] arm64: dts: qcom: sm8550: Add support for camss
+To: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
+ Wenmeng Liu <quic_wenmliu@quicinc.com>, rfoss@kernel.org,
+ todor.too@gmail.com, andersson@kernel.org, konradybcio@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ quic_depengs@quicinc.com
+References: <20250516072707.388332-1-quic_wenmliu@quicinc.com>
+ <0367d5bd-a42e-4b6c-b841-ba20190b3127@linaro.org>
+ <dc4720a8-2f15-44aa-9a52-8440c7518328@linaro.org>
+ <739bad1b-f26d-44a6-9cc1-eee28023474f@linaro.org>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <739bad1b-f26d-44a6-9cc1-eee28023474f@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Shuah,
+On 10/06/2025 13:49, Vladimir Zapolskiy wrote:
+>>
+>> List feedback from DT people is isp@ is the correct prefix.
+>>
+> 
+> My bad, but I don't understand this comment, it seems irrelevant...
+> 
+> The expressed concern is about the novel label name.
 
-On Tue, Jun 10, 2025 at 5:37=E2=80=AFPM Shuah Khan <skhan@linuxfoundation.o=
-rg> wrote:
->
-> Hi Rafael,
->
-> Please pull this cpupower urgent fix for Linux 6.16-rc2.
->
-> Add unitdir variable for specifying the location to install systemd
-> service units instead of installing under ${libdir}/systemd/system
-> which doesn't work on some distributions.
->
-> Note: I meant to send this during the merge window and ran into some
-> merge conflicts during the PR test. Decided to wait on it until rc1.
->
-> diff is attached.
->
-> thanks,
-> -- Shuah
->
-> ----------------------------------------------------------------
-> The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd13544=
-94:
->
->    Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
->
-> are available in the Git repository at:
->
->    git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux tags/linux-c=
-pupower-6.16-rc2-fixes
->
-> for you to fetch changes up to e044b8a9545cd8265c7110c179aeec2624c16455:
->
->    cpupower: split unitdir from libdir in Makefile (2025-06-09 10:17:46 -=
-0600)
->
-> ----------------------------------------------------------------
-> linux-cpupower-6.16-rc2-fixes
->
-> Add unitdir variable for specifying the location to install systemd
-> service units instead of installing under ${libdir}/systemd/system
-> which doesn't work on some distributions.
->
-> ----------------------------------------------------------------
-> Francesco Poli (wintermute) (1):
->        cpupower: split unitdir from libdir in Makefile
->
->   tools/power/cpupower/Makefile | 9 +++++----
->   1 file changed, 5 insertions(+), 4 deletions(-)
->
-> ----------------------------------------------------------------
+I mean to say the feedback from Krzysztof was that we should use isp@ 
+not camss@ and I agree.
 
-Pulled and added to linux-pm.git/fixes, thanks!
+---
+bod
