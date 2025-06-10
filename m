@@ -1,100 +1,229 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CB07243379;
-	Tue, 10 Jun 2025 17:11:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC947243379
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 17:13:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749575468; cv=none; b=lichv2TZfxptPNk0nl5IOBuCqZdzsV71gGLcLWhFQ2CJvZ/Ho7x7yoYXlSYD139VeCeqM4vXixF5hELuLJC5ZX6iIjxZAnXYpS5D9aN3fOlKIRe1+Iaw2ZggG/HqwR6kJvTR0BC2HKhlQWldEyk7KqGE1M3fCXuucmK1Ga2AGNA=
+	t=1749575640; cv=none; b=ciz35LIBl3hfxC6KVE/PA34izRJTSz1kqd4Z1bBNlGr0besT0JOXSo9nMVrEdEWmMn77QNqtfmOTjwv3suZoJ4ka0jMqa5S18/LRGHhCL7FOkHAlt2562IDwZydPGPneMFe5TBPwqzpUfqujGl3H6YTxtNiRK43gJx5B3Rdvk9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749575468; c=relaxed/simple;
-	bh=BL6SOK46zmLH0bIebppxl38nXnx0NGMfPP3BDP/W5T8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A8Sf1QoZJR9FVNwy0gJgX4yIs8K0jTU84le3ML7M241UPMY++Qy2JRKBBGziECosPR2x0GY4kTuOWNTZQ+3mLZD4Jwz3yXatp6OmzwowW5LYhWyMBPJZTJJCYpE1cF0Y1cEaK/7LuXjopshESVXE0abltD/05h2DofwFSFpgzVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SrFUx3Jb; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SrFUx3Jb"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-234ae2bf851so7981295ad.1;
-        Tue, 10 Jun 2025 10:11:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749575466; x=1750180266; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BL6SOK46zmLH0bIebppxl38nXnx0NGMfPP3BDP/W5T8=;
-        b=SrFUx3JbfaeuD12oO+84nuAoTJiruus8QBNu9c+m//jYFEbq1lePuaeoCINfurjIPy
-         sKjcFAxWzy6qVDA6cGHRzkbmWyU2CZa24/+pXXsFLW7JUNWZ1lAsd+T/xZo0Q1Gf78nQ
-         0zBvF1GPYTeiqNwLKdQB6phDYini35VIQK680nH9VTDSc5y3VrOzS9lFqEsKUjQBZydH
-         32R5Q4CTYLodLuqs04Cg27lAD2NXki5yNK/QuU3iUIwQCQ5IQzBrDptJ6no8KQhzcBvu
-         QvrPhQsMpeuQjAvH+AgegjtShYbSec0jN6YXRKGOUp6RQ7LUFvtAGeuwDQnlYcv+HQzF
-         1p9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749575466; x=1750180266;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BL6SOK46zmLH0bIebppxl38nXnx0NGMfPP3BDP/W5T8=;
-        b=KxfO5FVlXm0S+eXEGLolv82yIWNOE2NtsNkS9o1j8iJooYFdccGTe4+/mzLHucUWQi
-         aQlmYIi+fK0Ccvkhm+jL6Ckc512fHzsF1N6/cHDky71ywckA913P3WFOgl35yTVPnl6o
-         j970zKvpSnyeTTvn+ESD8w3fe4tizsSwNbMULgsI5pbKfw9t7/onbLxquwgZjx8S68gT
-         YWjEETi66KH4/ptmRADe2Vjg7Mk9oiVk9ZIg4MKBVhc433kVQ/3BvtBr36OKvWEmN85c
-         +nduuld0rDHEKr7aDqF7hw1oH7AUQt7FoBsYWq2qtzITDv5UeCvhIc1OFEB3wPaAz3dl
-         YReQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUCJX1e1iK2kLhtL0UlEG2pspv7yw6Bj5LSuSnqadqQmPfSymlEZPfpFpFC2RTbtfb7m8moreGQ0RMGsJg=@vger.kernel.org, AJvYcCX7B7Agm78Rr5eDHA+k0wQbEXiHSJ/Q4sm5oHaAUwzr3VidI2nxrMMD5F6M+uOKmZ5/Hsasnok+H1k=@vger.kernel.org, AJvYcCXvW7qde2skjHgaaFn1QDKj3kwAthlMN54dcj7VLej9Vm0YC5B5AKGQFMBZ3nNFrzz7urxTHtx1Ic6QuJT6t6Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4lYpcof9BNFCv3SQDkp+u+CHbkVCpQR5jSv0Bntp8Hy0yV9wM
-	Sa1SdKExXp4vFG+BafQRWKOWuw1HVp30T+7gp/NdH5TTca5EF8BmSd7QZd2WgoPE9m2/6XBXIRQ
-	kCab+JcmQY9wc3TB7AacocDXwZuoQM/U=
-X-Gm-Gg: ASbGnctVW+ZrNPzLV4okX1wFqeruk3YdPJJlot/dzM1s/LhULvZCGHLowAybctXmfce
-	5wr/4pUjxMwgA0imY46MDEZz1X1gqKKqiRN2CqkPE/7t56ygc4uyplZfPGXOe54ERUMQuLnzM1U
-	+j4hGi9Dwo4D0ZZZvhf9PiOks6KRmS9cTJ7l2Q8KkQghM=
-X-Google-Smtp-Source: AGHT+IGCpC33KDLfv6JP/DS+0RU01EZtVeXaXEKkFm2FNxf9RusDakqopG6+qr3pZRcUloOWRGua17inPPOnWf8DImo=
-X-Received: by 2002:a17:902:e544:b0:234:f200:5194 with SMTP id
- d9443c01a7336-23641a9ce87mr436185ad.1.1749575466277; Tue, 10 Jun 2025
- 10:11:06 -0700 (PDT)
+	s=arc-20240116; t=1749575640; c=relaxed/simple;
+	bh=IIbDWH/7uO8zCznUKnaWKZek4JT2VZ1NfMINJ1+lJ7Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EFAy1MRv5DfdEXYZgVRJ3KX2aBKF0WTKwzOrJqYHcU08HCByaOkEuluRcR5KFeghERVxdp7/V14OsYVZt+zvcF7jzyvgCTv4EaYRdW1EOTVfpvO5ZZ9E2TYjG3kXx6+gIoRsOCzbmEGeqRRfkpVEiOGoVscii+EWHpHuWh74lGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A03ED14BF;
+	Tue, 10 Jun 2025 10:13:37 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F6AF3F66E;
+	Tue, 10 Jun 2025 10:13:56 -0700 (PDT)
+Date: Tue, 10 Jun 2025 18:13:50 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Ada Couprie Diaz <ada.coupriediaz@arm.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 1/2] arm64/debug: Drop redundant DBG_MDSCR_* macros
+Message-ID: <aEhnzsXHfilVhJ1s@J2N7QTR9R3>
+References: <20250610053128.4118784-1-anshuman.khandual@arm.com>
+ <20250610053128.4118784-2-anshuman.khandual@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1749554685.git.viresh.kumar@linaro.org>
-In-Reply-To: <cover.1749554685.git.viresh.kumar@linaro.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 10 Jun 2025 19:10:54 +0200
-X-Gm-Features: AX0GCFu9enr57T2syom2yaCJakHi_u4gxMwsHHNlRV3jpMHEUC5p0-wQQ5BMelU
-Message-ID: <CANiq72mWAP5ZuOGTXZ1=zTOR_Y2YuqV2i8PberOeWOkx3VL0ew@mail.gmail.com>
-Subject: Re: [PATCH V3 0/3] rust: Introduce CpuId and fix cpumask doctest
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Alice Ryhl <aliceryhl@google.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Benno Lossin <lossin@kernel.org>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Danilo Krummrich <dakr@kernel.org>, Gary Guo <gary@garyguo.net>, Miguel Ojeda <ojeda@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Trevor Gross <tmgross@umich.edu>, Yury Norov <yury.norov@gmail.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250610053128.4118784-2-anshuman.khandual@arm.com>
 
-On Tue, Jun 10, 2025 at 3:22=E2=80=AFPM Viresh Kumar <viresh.kumar@linaro.o=
-rg> wrote:
->
-> Here is another attempt at fixing the cpumask doctest. This series create=
-s a new
-> abstraction `CpuId`, which is used to write a cleaner cpumask example whi=
-ch
-> doesn't fail in those corner cases.
->
-> Rebased over v6.16-rc1 + [1].
+On Tue, Jun 10, 2025 at 11:01:27AM +0530, Anshuman Khandual wrote:
+> MDSCR_EL1 has already been defined in tools sysreg format and hence can be
+> used in all debug monitor related call paths. Subsequently all DBG_MDSCR_*
+> macros become redundant and hence can be dropped off completely. While here
+> convert all variables handling MDSCR_EL1 register as u64 which reflects its
+> true width as well.
 
-Given this is growing, should we apply something trivial right away as
-a fix meanwhile? Or are you planning to send this as a fix during the
--rcs?
+I think that for now it'd be best to *only* change over to the
+generated MDSCR_EL1_* defintions, and leave the register sizes as-is.
 
-Thanks!
+Those are logically distinct changes, and AFAICT the latter is a
+requirement for using extended breakpoints, where it would be clearer to
+have that change as part of the series adding that support, with an
+explanation as to why we care.
 
-Cheers,
-Miguel
+Mark.
+
+> 
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Reviewed-by: Ada Couprie Diaz <ada.coupriediaz@arm.com>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+>  arch/arm64/include/asm/assembler.h      |  4 ++--
+>  arch/arm64/include/asm/debug-monitors.h |  6 ------
+>  arch/arm64/kernel/debug-monitors.c      | 22 +++++++++++-----------
+>  arch/arm64/kernel/entry-common.c        |  4 ++--
+>  4 files changed, 15 insertions(+), 21 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
+> index ad63457a05c5..f229d96616e5 100644
+> --- a/arch/arm64/include/asm/assembler.h
+> +++ b/arch/arm64/include/asm/assembler.h
+> @@ -53,7 +53,7 @@
+>  	.macro	disable_step_tsk, flgs, tmp
+>  	tbz	\flgs, #TIF_SINGLESTEP, 9990f
+>  	mrs	\tmp, mdscr_el1
+> -	bic	\tmp, \tmp, #DBG_MDSCR_SS
+> +	bic	\tmp, \tmp, #MDSCR_EL1_SS
+>  	msr	mdscr_el1, \tmp
+>  	isb	// Take effect before a subsequent clear of DAIF.D
+>  9990:
+> @@ -63,7 +63,7 @@
+>  	.macro	enable_step_tsk, flgs, tmp
+>  	tbz	\flgs, #TIF_SINGLESTEP, 9990f
+>  	mrs	\tmp, mdscr_el1
+> -	orr	\tmp, \tmp, #DBG_MDSCR_SS
+> +	orr	\tmp, \tmp, #MDSCR_EL1_SS
+>  	msr	mdscr_el1, \tmp
+>  9990:
+>  	.endm
+> diff --git a/arch/arm64/include/asm/debug-monitors.h b/arch/arm64/include/asm/debug-monitors.h
+> index 8f6ba31b8658..1f37dd01482b 100644
+> --- a/arch/arm64/include/asm/debug-monitors.h
+> +++ b/arch/arm64/include/asm/debug-monitors.h
+> @@ -13,14 +13,8 @@
+>  #include <asm/ptrace.h>
+>  
+>  /* Low-level stepping controls. */
+> -#define DBG_MDSCR_SS		(1 << 0)
+>  #define DBG_SPSR_SS		(1 << 21)
+>  
+> -/* MDSCR_EL1 enabling bits */
+> -#define DBG_MDSCR_KDE		(1 << 13)
+> -#define DBG_MDSCR_MDE		(1 << 15)
+> -#define DBG_MDSCR_MASK		~(DBG_MDSCR_KDE | DBG_MDSCR_MDE)
+> -
+>  #define	DBG_ESR_EVT(x)		(((x) >> 27) & 0x7)
+>  
+>  /* AArch64 */
+> diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
+> index 58f047de3e1c..08f1d02507cd 100644
+> --- a/arch/arm64/kernel/debug-monitors.c
+> +++ b/arch/arm64/kernel/debug-monitors.c
+> @@ -34,7 +34,7 @@ u8 debug_monitors_arch(void)
+>  /*
+>   * MDSCR access routines.
+>   */
+> -static void mdscr_write(u32 mdscr)
+> +static void mdscr_write(u64 mdscr)
+>  {
+>  	unsigned long flags;
+>  	flags = local_daif_save();
+> @@ -43,7 +43,7 @@ static void mdscr_write(u32 mdscr)
+>  }
+>  NOKPROBE_SYMBOL(mdscr_write);
+>  
+> -static u32 mdscr_read(void)
+> +static u64 mdscr_read(void)
+>  {
+>  	return read_sysreg(mdscr_el1);
+>  }
+> @@ -79,16 +79,16 @@ static DEFINE_PER_CPU(int, kde_ref_count);
+>  
+>  void enable_debug_monitors(enum dbg_active_el el)
+>  {
+> -	u32 mdscr, enable = 0;
+> +	u64 mdscr, enable = 0;
+>  
+>  	WARN_ON(preemptible());
+>  
+>  	if (this_cpu_inc_return(mde_ref_count) == 1)
+> -		enable = DBG_MDSCR_MDE;
+> +		enable = MDSCR_EL1_MDE;
+>  
+>  	if (el == DBG_ACTIVE_EL1 &&
+>  	    this_cpu_inc_return(kde_ref_count) == 1)
+> -		enable |= DBG_MDSCR_KDE;
+> +		enable |= MDSCR_EL1_KDE;
+>  
+>  	if (enable && debug_enabled) {
+>  		mdscr = mdscr_read();
+> @@ -100,16 +100,16 @@ NOKPROBE_SYMBOL(enable_debug_monitors);
+>  
+>  void disable_debug_monitors(enum dbg_active_el el)
+>  {
+> -	u32 mdscr, disable = 0;
+> +	u64 mdscr, disable = 0;
+>  
+>  	WARN_ON(preemptible());
+>  
+>  	if (this_cpu_dec_return(mde_ref_count) == 0)
+> -		disable = ~DBG_MDSCR_MDE;
+> +		disable = ~MDSCR_EL1_MDE;
+>  
+>  	if (el == DBG_ACTIVE_EL1 &&
+>  	    this_cpu_dec_return(kde_ref_count) == 0)
+> -		disable &= ~DBG_MDSCR_KDE;
+> +		disable &= ~MDSCR_EL1_KDE;
+>  
+>  	if (disable) {
+>  		mdscr = mdscr_read();
+> @@ -415,7 +415,7 @@ void kernel_enable_single_step(struct pt_regs *regs)
+>  {
+>  	WARN_ON(!irqs_disabled());
+>  	set_regs_spsr_ss(regs);
+> -	mdscr_write(mdscr_read() | DBG_MDSCR_SS);
+> +	mdscr_write(mdscr_read() | MDSCR_EL1_SS);
+>  	enable_debug_monitors(DBG_ACTIVE_EL1);
+>  }
+>  NOKPROBE_SYMBOL(kernel_enable_single_step);
+> @@ -423,7 +423,7 @@ NOKPROBE_SYMBOL(kernel_enable_single_step);
+>  void kernel_disable_single_step(void)
+>  {
+>  	WARN_ON(!irqs_disabled());
+> -	mdscr_write(mdscr_read() & ~DBG_MDSCR_SS);
+> +	mdscr_write(mdscr_read() & ~MDSCR_EL1_SS);
+>  	disable_debug_monitors(DBG_ACTIVE_EL1);
+>  }
+>  NOKPROBE_SYMBOL(kernel_disable_single_step);
+> @@ -431,7 +431,7 @@ NOKPROBE_SYMBOL(kernel_disable_single_step);
+>  int kernel_active_single_step(void)
+>  {
+>  	WARN_ON(!irqs_disabled());
+> -	return mdscr_read() & DBG_MDSCR_SS;
+> +	return mdscr_read() & MDSCR_EL1_SS;
+>  }
+>  NOKPROBE_SYMBOL(kernel_active_single_step);
+>  
+> diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
+> index 7c1970b341b8..171f93f2494b 100644
+> --- a/arch/arm64/kernel/entry-common.c
+> +++ b/arch/arm64/kernel/entry-common.c
+> @@ -344,7 +344,7 @@ static DEFINE_PER_CPU(int, __in_cortex_a76_erratum_1463225_wa);
+>  
+>  static void cortex_a76_erratum_1463225_svc_handler(void)
+>  {
+> -	u32 reg, val;
+> +	u64 reg, val;
+>  
+>  	if (!unlikely(test_thread_flag(TIF_SINGLESTEP)))
+>  		return;
+> @@ -354,7 +354,7 @@ static void cortex_a76_erratum_1463225_svc_handler(void)
+>  
+>  	__this_cpu_write(__in_cortex_a76_erratum_1463225_wa, 1);
+>  	reg = read_sysreg(mdscr_el1);
+> -	val = reg | DBG_MDSCR_SS | DBG_MDSCR_KDE;
+> +	val = reg | MDSCR_EL1_SS | MDSCR_EL1_KDE;
+>  	write_sysreg(val, mdscr_el1);
+>  	asm volatile("msr daifclr, #8");
+>  	isb();
+> -- 
+> 2.25.1
+> 
