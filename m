@@ -1,92 +1,93 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF6BB2D29CC
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:45:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 469252AF1E
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:46:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749559535; cv=none; b=DaYgVB/PCge5/ywnRgxDPhxlqqpkPGZ+WgD4eCfp4o+9i14yX6e/qXj2P8oKfcukn3m0FcWsVFo4qDxj8bRbPLnBJPIhwWnyyif61yb/ML9kwaefoVn2hUiUuX9iL6GkeSVFcZC/1pocwx+mnaax4lnkfDjUplGj13pv7kyWcG0=
+	t=1749559580; cv=none; b=hgM6uhWiCpn3lnVA+KjN9f3jTlFJJCWfoouTcQd5DW2vZB1j8+VLxcExE8z3qO3Rgbe8yuR00xhl0YMYKZWvDlEcYzoQEZXF+SeAbYniZy/VipwIyZiFCdUOquVlxCwYXSjmlPN0NcFVGH8+OWPBjsydKcLsmmspc4GdJnOxu8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749559535; c=relaxed/simple;
-	bh=sF3FchzuHdlUwCW3Mdst6w7S6yA7e0tQPeXt1aAxPg0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JdZ9mOWeNwyFyx27JKVD5C0UeSIpwR2am36HSUTmZwFZeP0fs1a9UgCkXPNrh9IrYQDzOwiMp5YTb3p7BgrdnoRJWaUmLP+1dt7uM5CCFEw2Drm7yEG+QmJ4dI7gfDMbuEI+WowPk5PP7CFDnu35q8ahi1Ceoa+UyjS7iQOyW1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cdWLT90K; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cdWLT90K"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-55324587a53so5982564e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 05:45:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749559532; x=1750164332; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sF3FchzuHdlUwCW3Mdst6w7S6yA7e0tQPeXt1aAxPg0=;
-        b=cdWLT90KdVDdw1FeZRif/kXP3wq3j1yji3n831jAbXEWZI9FtBXYnUk6v0OwkDghpQ
-         jeJjp9i/Ee1CdBTtS7sdRCEhRWsJWIcgg5naQlDPX5hzgiW/fB/6digZfrFcdnR7cdbW
-         15h44GQZOW4hiUNmAaQBWJibbypGQ2wfj1PSao1pB7ZIYy66QhpRTmxxNk6JuQid/B+F
-         dQDrwjib+jozs7g/T7Va1NE//MtpXrJj7Pn3xXMqKyNKsZXg6Qt9cAYkCFbIFYGYcuw4
-         Q8wKyMOH08CNApCsvZINcw9tAVJw2CmABqzCt2WhwtaOm+hXoBhg11lLhL2tsBhhCaD8
-         WNQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749559532; x=1750164332;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sF3FchzuHdlUwCW3Mdst6w7S6yA7e0tQPeXt1aAxPg0=;
-        b=KY7hZ7/w3jfQvQUp+F8rgjlq4395ApB2HItvSEasKttt4bMIyKmq8HN5QPMN8p30c7
-         oa8V8POkN+Q7o33aaXrPQxTay1Vhw3mVx+o6exqMySmgxvNrwTPMnhwsnGIMrhk/3Ohz
-         CnAw8o15Jx6sEgas09NpnyKl4/ZgyzbFvob45kU33ZVhkU9lHGOlPja6oSBpZRmzj3bT
-         pjV1H1PHYZgE6SkNUkuNCPHda2JC9B+SYGO2Dl6wtql62pZEnw4ZLJA6kcDBsJGmrO6F
-         NCnopEwcYI3RsZajABJMtR2PePVnKCQlik1L9GhgQ3L8DoZaUHLG0uA26oSNpgUrb+g8
-         lJnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWSwaWRXHF++zvcZbMbq6N049jZruF47yWAQ0XSDs7QffqOvvlIiCtupCyAfzXMVd4dYux4KPWhTbpYtTc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLDN0RQ7DwWNlUR5wiZ6VMGCQzEACd1sYYEjb6ejFHYKlvuhaJ
-	qZ8X92FQWWmgLDCI4ibiihxFiLUfcrUHkPxsp/jNsppB8pDbYA9T8vSg9n7glkdS3kGCIJNr4Zo
-	Qpv/kp8W7nL9Sqwem9WvcILp9ANyOoorMCvQknZUQqQ==
-X-Gm-Gg: ASbGncu0N6FnbKjLl2hsfnWjcR2X/2RJqjxpNUL6Rp83tVcaKlu7EfVI3noMlqF7LWP
-	+zdeloYQr46+fTfgZvZf8fO8f7r20gFpwia/o38xlQwYJtcfmGLdG70kN9laq3mQmoO+6GVQYIk
-	v9nEtxsoN0mkmChwc+kEXQHXpOOaImsto1VtPLTQVBxLuAEREHo4cpdg==
-X-Google-Smtp-Source: AGHT+IGeGbzOznS3BG0D0jszT5lHYaE7HjuqbP1wt0m4nT4Evnfz8bKcaQ8NdIRwiSEm4rryiTNmXeZgEAh41G1MX+I=
-X-Received: by 2002:a05:6512:12d2:b0:551:f166:bbb with SMTP id
- 2adb3069b0e04-553931fec79mr844508e87.13.1749559532010; Tue, 10 Jun 2025
- 05:45:32 -0700 (PDT)
+	s=arc-20240116; t=1749559580; c=relaxed/simple;
+	bh=unA5W+ItyflOyuJHHOVR/vJuGZskAiqVajFb4X+nV24=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hU5GJ3JybRFTeOrn2QWNSht53fzEZlaceTm+IVqatE/N1duPiK8SB4xEjj7z+6XXQLJS6M2P6UaJ0ElzCZmyxu9XYRcMQh13IsCQWm7jPQegRDgOmLtq0wgxoNfg1f/QtKwijEmZ848Ci1B8lt6gYz55KrqOJiAMi7d/mfbPjIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uOyMl-0001ub-Gg; Tue, 10 Jun 2025 14:46:11 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uOyMl-002mGS-0U;
+	Tue, 10 Jun 2025 14:46:11 +0200
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uOyMl-004pya-06;
+	Tue, 10 Jun 2025 14:46:11 +0200
+Date: Tue, 10 Jun 2025 14:46:11 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	kernel@pengutronix.de, linux-kernel@vger.kernel.org,
+	Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org
+Subject: Re: [PATCH net-next v1 1/3] net: phy: micrel: add MDI/MDI-X control
+ support for KSZ9477 switch-integrated PHYs
+Message-ID: <aEgpE7dZNT_GqhSV@pengutronix.de>
+References: <20250610091354.4060454-1-o.rempel@pengutronix.de>
+ <20250610091354.4060454-2-o.rempel@pengutronix.de>
+ <6597c2fd-077a-4eac-945f-97b43c130418@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250609-pinctrl-madera-devm-pinctrl-register-mappings-v1-1-ba2c2822cf6c@bootlin.com>
-In-Reply-To: <20250609-pinctrl-madera-devm-pinctrl-register-mappings-v1-1-ba2c2822cf6c@bootlin.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 10 Jun 2025 14:45:20 +0200
-X-Gm-Features: AX0GCFv8wM1qzK88fvC3YYxO09_iv1tchDQeyw0PYmsnKvpSJ44gK7Ltfx9W9bk
-Message-ID: <CACRpkdZZoO4QxgiBr06BkzByiCouMNiP8jhz+qzxg5fQAjWDfQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: cirrus: madera-core: Use devm_pinctrl_register_mappings()
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Charles Keepax <ckeepax@opensource.cirrus.com>, 
-	Richard Fitzgerald <rf@opensource.cirrus.com>, Lee Jones <lee@kernel.org>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-sound@vger.kernel.org, 
-	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <6597c2fd-077a-4eac-945f-97b43c130418@lunn.ch>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Mon, Jun 9, 2025 at 1:51=E2=80=AFPM Thomas Richard
-<thomas.richard@bootlin.com> wrote:
+On Tue, Jun 10, 2025 at 02:31:45PM +0200, Andrew Lunn wrote:
+> On Tue, Jun 10, 2025 at 11:13:52AM +0200, Oleksij Rempel wrote:
+> > Add MDI/MDI-X configuration support for PHYs integrated in the KSZ9477
+> > family of Ethernet switches.
+> > 
+> > All MDI/MDI-X configuration modes are supported:
+> >   - Automatic MDI/MDI-X (ETH_TP_MDI_AUTO)
+> >   - Forced MDI (ETH_TP_MDI)
+> >   - Forced MDI-X (ETH_TP_MDI_X)
+> > 
+> > However, when operating in automatic mode, the PHY does not expose the
+> > resolved crossover status (i.e., whether MDI or MDI-X is active).
+> > Therefore, in auto mode, the driver reports ETH_TP_MDI_INVALID as
+> > the current status.
+> 
+> I assume you also considered returning ETH_TP_MDI_AUTO? What makes
+> INVALID better than AUTO?
 
-> Use devm_pinctrl_register_mappings(), so the mappings are automatically
-> unregistered by the core. If pinctrl_enable() failed during the probe,
-> pinctrl_mappings were not freed. Now it is done by the core.
->
-> Fixes: 218d72a77b0b ("pinctrl: madera: Add driver for Cirrus Logic Madera=
- codecs")
-> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+The phydev->mdix_ctrl returns configuration state, which cant be set to
+ETH_TP_MDI_AUTO.
+The phydev->mdix should return actual crossover state, which is
+ETH_TP_MDI or ETH_TP_MDI_X. Setting it to ETH_TP_MDI_AUTO, would not
+provide any usable information.
 
-Patch applied as non-urgent for v6.17.
-
-Yours,
-Linus Walleij
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
