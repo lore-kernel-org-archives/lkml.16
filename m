@@ -1,78 +1,202 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300E82EB11;
-	Tue, 10 Jun 2025 06:58:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 882C62EB11;
+	Tue, 10 Jun 2025 06:59:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749538690; cv=none; b=cAn0nGqS/enULad6CCglzurtcMjtr6znWtLYOGvCdOp8OWL3imj1cS9OONdRvsOWDHZW9bMDhXhK1WnVq9dBKuXodS3hbhn0Duu09qDHZhC70RKuwLJywlkWbNBhvQUwW+UaKErgW36iPt+FHSaAMSzW2DPzx0f0kokqD6UJDaQ=
+	t=1749538799; cv=none; b=cTV6z9A9M5nB59l2nJSky+AQNgmz1zTd+P8DgHsrOVzTQ+C2H5e5vCSxMqQRGV4tlLbaRHNdbhUW+pghrVWSre1bStGJ0qWDRrZLwUefF78wojEJ8DNPnvNho2qHeFkiS+6f0Ktjf5oHg2SilAO4GKcqi5OjPeQZwi6i1gaTkXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749538690; c=relaxed/simple;
-	bh=S0dMvL4cHCUVN4I4bj1t9Zvhqa+7+nYmYS7RR+TWSE8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ca3y+RXIQloWo1RSUILgVOnGQCDXc47atV7nKpz9d27OvovpmDKzZYMn6jUdRlanLXawZeqbuNf3ZOoC/FtNemzVi1C3BcNh0CZaJnhFalOANVBNxc8k/ZnVbMB70pmqUnZmqfnk7Xd2rvj+n9uclxa8wsTp1RUjhkhgQqyCrxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RkKeo+2G; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749538799; c=relaxed/simple;
+	bh=nQXu7/qHIbG/mZfLTshtxBAdZxbuaewWvV6VL9QWdqY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bt6Zm0e4y4gRBElaAkYbPMJgd1Q2/Gkbuoiz/CK98wfOfQQ4KGanLi58OvIUBu203qZDOujGQUbjNzTe7JMzJD/BlqeOTQ/be0IhZ3qkXd+WyEt2g+61TG3mOpFTIav6sNPvh6z0O9KjHfq0ZLlfwIJPu4YZqb1Ci7//6Dat7sY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jk8cA5qi; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RkKeo+2G"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-742c035f2afso3579217b3a.2;
-        Mon, 09 Jun 2025 23:58:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749538688; x=1750143488; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=S0dMvL4cHCUVN4I4bj1t9Zvhqa+7+nYmYS7RR+TWSE8=;
-        b=RkKeo+2GqJDaazKOKgHjPvrZuf7wfshXNWoO/k9Innvaz/xk40hpPxDecx2fPCo9bv
-         x+7kcsYfFs93QZuNv7SoFBYBlVGfT9q+UQdpiKGS4tNWm6hWp5b+t5UHU4g+TdOePLyn
-         pa9yaXB2ZXGaEy7bJqrOsJMGPRkYorB6SW6Qb+l2+zEaOVaPNQiNtKsP8nPmrwYBXf0H
-         0mYlbIDMi66SDqAHYPGqw2nnhpglsj7UvxIQEzI6NrbU38FYG3hl2yRPcssJAIotpOuL
-         VtvTHAzWMnBgz7JiewfXBx2NNK3IgYg06uP+TmkJS9s1rw0FMx5q710NEm+Ss7/K0Ulk
-         uS9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749538688; x=1750143488;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=S0dMvL4cHCUVN4I4bj1t9Zvhqa+7+nYmYS7RR+TWSE8=;
-        b=WR643BMmSAQUZ2xw/91jlH9B5d4gULfKU6KQSDNzQKRgoNs3zoCWM87TZwxISFCnir
-         y7+ZjMVH9ol6fS+IVyZ6s1cAM8QVcKp6pkHIp+JPGN6Shs+vsWJwts/lf6o3BrC/kBIN
-         LG2XNLUY+xN70l8SOs/T8apBxBCyPs07f5Qa0qLv939apq9LosFySEI92Rmu2qr4O59e
-         5xLoqw38il5nlcIkSVBOxp4ciiW9wUQ+qnJKeDoZIKCHqoaQGukCbeRIpEsa/AABP7C0
-         DSjyVldd2MXZuJ5IutS6nUP6ECuj++Z66wJS9R7OVrSwHZ8KFczDk5Q5BKEuzXcK8p3L
-         qiNw==
-X-Forwarded-Encrypted: i=1; AJvYcCU40smfrUjJq7GcS801m7YrDTQgFdnCVO9uGSNacAvDEmk9c027RToWd3OC27/CCkY/VqRP19YYxq1aVIgHyLs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvltkI5fhd6NbhOR0tt8vkbHHAagkM+FIfVRMHi/lQJEwaALZk
-	SzPlcj8rTjmq5A9L5mPNeouTeDD6Nk4hMbqySNL6Z6MYAjshCyZNnUBuiEVtAMDUu9t8Lwl9fjd
-	lUhCkkXk4qQEcY+/gkwTAIC+WGdpYyA==
-X-Gm-Gg: ASbGnctnc/sVp6T1W6LO5sZhyGKS0Reb+YehPc7giZiv1J1N6xg1QjVctNBziTkkjWC
-	zMTV8scpXKQPUDCKnpkGnBipLBBf6FY9uTBWbC9uZHKvFcmGqciFoUEnuxvZgWWU1LBUlkwO8jB
-	PHEeseRELFCK6xoDh1OVQ3ELjTlElWtt+KjuuzJm7FN9LA2DX+PGoLZQ==
-X-Google-Smtp-Source: AGHT+IFvtzeVVIyCGu9hgD2Zpy7Kbr4cifNUZppXFTkQzFBoardh1hAqUCWSM70UQkc8jpvXhoOkqeookh+1Qrb/ymc=
-X-Received: by 2002:a05:6a00:986:b0:748:2fa4:14c0 with SMTP id
- d2e1a72fcca58-748616cae30mr2363710b3a.0.1749538688368; Mon, 09 Jun 2025
- 23:58:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jk8cA5qi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749538797; x=1781074797;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=nQXu7/qHIbG/mZfLTshtxBAdZxbuaewWvV6VL9QWdqY=;
+  b=jk8cA5qi2xUI2Q1KVsW8L6/cz5u9am+AnM7+sii8GNs4uRnhnvSfVkUK
+   fCZeGiXJnZT4G8Alpe7eXShY3qZPyllg7Zh+5jvq17NcBhxskWxpEtGxY
+   bztLBVipsAuJtjJSDT+1G2yy1LHlVp+d7Qw35y0TUgNzSfwks/P4VODSB
+   i2vEXhplbAlOjBEcUo2hZ5Iq1q6E+spk+UxxI1mvkgK9/0TRtWznSJHrl
+   /URIvayqWrYqsSWEqU+cUPwoclTnaCgIJ/RZ71GTm0hQ6dr+5SJR5fqJe
+   BkB1IZnRNySaKr0EH14Ugem52vusBDpRfbgD5j9Zhg/LnjytKVZgn4pzD
+   g==;
+X-CSE-ConnectionGUID: MrSB17LyQaCtj7p1eRWCgA==
+X-CSE-MsgGUID: czrlcdYRQqmXWzP8sypG4Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51778988"
+X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
+   d="scan'208";a="51778988"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 23:59:57 -0700
+X-CSE-ConnectionGUID: ZiXdYjsHRTe5w9XKMyrQaA==
+X-CSE-MsgGUID: pq2m0M7pTrWZ7k3/HXV1AQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
+   d="scan'208";a="169919096"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa002.fm.intel.com with ESMTP; 09 Jun 2025 23:59:52 -0700
+Date: Tue, 10 Jun 2025 14:53:00 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Alexey Kardashevskiy <aik@amd.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>, kvm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org, sumit.semwal@linaro.org,
+	christian.koenig@amd.com, pbonzini@redhat.com, seanjc@google.com,
+	alex.williamson@redhat.com, vivek.kasireddy@intel.com,
+	dan.j.williams@intel.com, yilun.xu@intel.com,
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
+	lukas@wunner.de, yan.y.zhao@intel.com, daniel.vetter@ffwll.ch,
+	leon@kernel.org, baolu.lu@linux.intel.com, zhenzhong.duan@intel.com,
+	tao1.su@intel.com
+Subject: Re: [RFC PATCH 00/12] Private MMIO support for private assigned dev
+Message-ID: <aEfWTEaQv2HhldWX@yilunxu-OptiPlex-7050>
+References: <aCRAHRCKP1s0Oi0c@yilunxu-OptiPlex-7050>
+ <20250514163339.GD382960@nvidia.com>
+ <aCYQdDrYYZRAgsen@yilunxu-OptiPlex-7050>
+ <9dea400f-a57b-43be-a2e4-24a9f51e6ba0@amd.com>
+ <aDE5SPzOAU0sNIt+@yilunxu-OptiPlex-7050>
+ <ae16db07-5fca-4369-aa67-cbe2e0fd60fd@amd.com>
+ <aDhyC73r149syMpc@yilunxu-OptiPlex-7050>
+ <79872224-4e81-446b-a451-28260f449ea9@amd.com>
+ <aDnbgBbxF8IkH/cq@yilunxu-OptiPlex-7050>
+ <bd0d8d69-78dd-44d8-9f32-d945bc6078c2@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250501163827.2598-1-ujwal.kundur@gmail.com> <20250531074625.478-1-ujwal.kundur@gmail.com>
-In-Reply-To: <20250531074625.478-1-ujwal.kundur@gmail.com>
-From: Ujwal Kundur <ujwal.kundur@gmail.com>
-Date: Tue, 10 Jun 2025 12:27:56 +0530
-X-Gm-Features: AX0GCFtCrMYImzmzDrbl4Cxr7ClCetMYzMQUdGPGCb0rS_0j_Yw3oCsA5BZn7Qk
-Message-ID: <CALkFLL+BDJyN-A9ZLF84saD48hany7G2B6sH41wUvCjzTVH6+w@mail.gmail.com>
-Subject: Re: [PATCH v4 1/1] selftests/mm/uffd: Refactor non-composite global
- vars into struct
-To: akpm@linux-foundation.org, peterx@redhat.com, shuah@kernel.org, 
-	jackmanb@google.com
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bd0d8d69-78dd-44d8-9f32-d945bc6078c2@amd.com>
 
-Hello! Pinging for review now that we are out of the quiet period.
+On Tue, Jun 10, 2025 at 02:20:03PM +1000, Alexey Kardashevskiy wrote:
+> 
+> 
+> On 31/5/25 02:23, Xu Yilun wrote:
+> > On Fri, May 30, 2025 at 12:29:30PM +1000, Alexey Kardashevskiy wrote:
+> > > 
+> > > 
+> > > On 30/5/25 00:41, Xu Yilun wrote:
+> > > > > > > > 
+> > > > > > > > FLR to a bound device is absolutely fine, just break the CC state.
+> > > > > > > > Sometimes it is exactly what host need to stop CC immediately.
+> > > > > > > > The problem is in VFIO's pre-FLR handling so we need to patch VFIO, not
+> > > > > > > > PCI core.
+> > > > > > > 
+> > > > > > > What is a problem here exactly?
+> > > > > > > FLR by the host which equals to any other PCI error? The guest may or may not be able to handle it, afaik it does not handle any errors now, QEMU just stops the guest.
+> > > > > > 
+> > > > > > It is about TDX Connect.
+> > > > > > 
+> > > > > > According to the dmabuf patchset, the dmabuf needs to be revoked before
+> > > > > > FLR. That means KVM unmaps MMIOs when the device is in LOCKED/RUN state.
+> > > > > > That is forbidden by TDX Module and will crash KVM.
+> > > > > 
+> > > > > 
+> > > > > FLR is something you tell the device to do, how/why would TDX know about it?
+> > > > 
+> > > > I'm talking about FLR in VFIO driver. The VFIO driver would zap bar
+> > > > before FLR. The zapping would trigger KVM unmap MMIOs. See
+> > > > vfio_pci_zap_bars() for legacy case, and see [1] for dmabuf case.
+> > > 
+> > > oh I did not know that we do this zapping, thanks for the pointer.
+> > > > [1] https://lore.kernel.org/kvm/20250307052248.405803-4-vivek.kasireddy@intel.com/
+> > > > 
+> > > > A pure FLR without zapping bar is absolutely OK.
+> > > > 
+> > > > > Or it check the TDI state on every map/unmap (unlikely)?
+> > > > 
+> > > > Yeah, TDX Module would check TDI state on every unmapping.
+> > > 
+> > > _every_? Reading the state from DOE mailbox is not cheap enough (imho) to do on every unmap.
+> > 
+> > Sorry for confusing. TDX firmware just checks if STOP TDI firmware call
+> > is executed, will not check the real device state via DOE. That means
+> > even if device has physically exited to UNLOCKED, TDX host should still
+> > call STOP TDI fwcall first, then MMIO unmap.
+> > 
+> > > 
+> > > > > 
+> > > > > > So the safer way is
+> > > > > > to unbind the TDI first, then revoke MMIOs, then do FLR.
+> > > > > > 
+> > > > > > I'm not sure when p2p dma is involved AMD will have the same issue.
+> > > > > 
+> > > > > On AMD, the host can "revoke" at any time, at worst it'll see RMP events from IOMMU. Thanks,
+> > > > 
+> > > > Is the RMP event firstly detected by host or guest? If by host,
+> > > 
+> > > Host.
+> > > 
+> > > > host could fool guest by just suppress the event. Guest thought the
+> > > > DMA writting is successful but it is not and may cause security issue.
+> > > 
+> > > An RMP event on the host is an indication that RMP check has failed and DMA to the guest did not complete so the guest won't see new data. Same as other PCI errors really. RMP acts like a firewall, things behind it do not need to know if something was dropped. Thanks,
+> > 
+> > Not really, guest thought the data is changed but it actually doesn't.
+> > I.e. data integrity is broken.
+> 
+> I am not following, sorry. Integrity is broken when something untrusted (== other than the SNP guest and the trusted device) manages to write to the guest encrypted memory successfully.
+
+Integrity is also broken when guest thought the content in some addr was
+written to A but it actually stays B.
+
+> If nothing is written - the guest can easily see this and do... nothing?
+
+The guest may not see this only by RMP event, or IOMMU fault, malicious
+host could surpress these events.  Yes, guest may later read the addr
+and see the trick, but this cannot be ensured. There is no general
+contract saying SW must read the addr to ensure DMA write successful.
+
+And DMA to MMIO is the worse case than DMA to memory. SW even cannot
+read back the content since MMIO registers may be Write Only.
+
+So you need ASID fence to make guest easily see the DMA Silent Drop.
+Intel & ARM also have there own way.
+
+The purpose here is to have a consensus that benigh VMM should avoid
+triggering these DMA Silent Drop protections, by "unbind TDI first,
+then invalidate MMIO".
 
 Thanks,
-Ujwal
+Yilun
+
+> Devices have bugs or spurious interrupts happen, the guest driver should be able to cope with that.
+> > Also please help check if the following relates to this issue:
+> > 
+> > SEV-TIO Firmware Interface SPEC, Section 2.11
+> > 
+> > If a bound TDI sends a request to the root complex, and the IOMMU detects a fault caused by host
+> > configuration, the root complex fences the ASID from all further I/O to or from that guest. A host
+> > fault is either a host page table fault or an RMP check violation. ASID fencing means that the
+> > IOMMU blocks all further I/O from the root complex to the guest that the TDI was bound, and the
+> > root complex blocks all MMIO accesses by the guest. When a guest writes to MMIO, the write is
+> > silently dropped. When a guest reads from MMIO, the guest reads 1s.
+> 
+> Right, this is about not letting bad data through, i.e. integrity. Thanks,
+> 
+> > 
+> > Thanks,
+> > Yilun
+> > 
+> > > 
+> > > > 
+> > > > Thanks,
+> > > > Yilun
+> > > 
+> > > -- 
+> > > Alexey
+> > > 
+> 
+> -- 
+> Alexey
+> 
