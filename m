@@ -1,117 +1,167 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2D478F34;
-	Tue, 10 Jun 2025 22:50:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5099C248F74
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:52:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749595815; cv=none; b=hPIf97UdCPAWP/vaI9KF2iqDDU7STysuL/QKtcmNmxJnj5IhIctDRi8TWYZOJY48BNz1D5tSOeH6NiZnrJi5zn0dfJhJqnsslzQ7LPRzr8+KcocF1o7okFfx0+4u2QS4AG3MLSEj8nEwbaj8J5b7aZ73DF7aSoM8lqYxAfr9m+c=
+	t=1749595954; cv=none; b=Kmtw4s3GuAVqbh4hTi+EjIr/WJErYqtHXLK3PmyXQUYMzN2H+Xog19XI6qPpJ5sEv9hsm5yNVLRwpyaZGGrG7W7Q9pJHQVCiEL3Jli4Es2wRUVWjf1q4uCIdNcOaKVBi1WOjPEEZ8Er6wUrdELQLJPibPsgqsfr6HfHrjIW5gkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749595815; c=relaxed/simple;
-	bh=fIZTCPSARKxpy7CGzYoZF6RYIr35LcsFBI2p7GEumAE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IrlTkJHMy5ph81d4zYO7HALNd7FPYNul1+iVvaHpjtiGP9B0F0ZRhlD6fnu5vo9Due16N7IBypK88B+EtA8CY9TZeAWCTcbn96JkwlSzMD0pH7LdD8MdydP9D98mcsi4L7x7TTnx1U91ysJxPp/mFrA5SpAlPqg/Ab3Q617PPUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nuwnk8MV; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749595954; c=relaxed/simple;
+	bh=dGvEL7VFQMEHyCl9uhKD2qLMJqcGj2fNl68zFI+CAcQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EfJ/NavhXOmfEH6m8S7ml2C0lkO7zeE3mt7uGeMCaNpYQWs17mfzvKEFd+7Yqgv/aSdYrbUFC31jY6IN7LCeA4XVtl5lEPkPMbtLU9PWjTLP8dF4QmrLz/Wjz1AUTZ6dgGVYcpuOGoas9l87gCCs8cpAhfm1SG1PL6zsfNttJjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DQ51gCR4; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nuwnk8MV"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-73c17c770a7so6653266b3a.2;
-        Tue, 10 Jun 2025 15:50:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DQ51gCR4"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-553230a9753so768998e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:52:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749595813; x=1750200613; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sMaN5CtVOZf+HFnSMc8Gruk/tIIqcD2xs0sOKADjgPg=;
-        b=Nuwnk8MVS84ntpYl5EdJrKorWTfCEkqPi9X8xUM0bTvW7/kZGPlluL0ACfwnHjsnQm
-         MxFmA3IP+6HwHrfxIbBNjeD5p67j2miAGyWVzPMH5gpR9UqtAP7Jx0Mjp6SH00/4r9I8
-         WJ5wYdGedu14quZJv50ymFP4sSrfWMdwxR+kLafUhiKLdHOEkLqLqXs3MNs3se5kVaEn
-         EU4tXVgPQOa1cfm06t9SVT08XukMvVdel02vZv4PQytRpMamLEnc1d1J3LkR82ItCdda
-         bPDCa4ps/baSrXL+YuAgyhypjXIYMuJxSXGWWBwSp5SICTQ4ihByOvJN3FRx65md5Wt7
-         lyuA==
+        d=linaro.org; s=google; t=1749595949; x=1750200749; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jDzIKnfoXKVxpTDnGzOlzzRBRZz/lpcLf4ffLk3rm3E=;
+        b=DQ51gCR4zyHBQsAO3THxmep1HOUDK+vpZCSjhA94cktIduNcodYUGsXUImm2utb1HR
+         lNi594PgRpr0EaFMAxAXtC5hnKB4rmFzprNLmK+/3QLWDdtVAItrMfEJQ97SpG8vtrSG
+         C5NRZ/QcOYRTX/FVO9JE3/3pNJJU8komB3YkQczkMF1ALSApqcvltWNYHAWDKu6Aybzd
+         HxBRiVLaOF+mbs+JqROqeICRXVF9javIo8MWyFBe2xQIt0wW0c955Vr6X+eRS0Kh3w5S
+         aoLP29XsVEdqM2yvJ2RqhrWMHW7XcKv3j0dfbx7CGRhhoFf6sq1t1dzl2kLAO/DJHvBr
+         gBaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749595813; x=1750200613;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sMaN5CtVOZf+HFnSMc8Gruk/tIIqcD2xs0sOKADjgPg=;
-        b=Hi2myWmCJ6OE7jt6iiz9o2+ek4JOzEcCwmz7PiUpZEote199WsSJnRCe4VZ1QjslNq
-         b13lFIastQjv/tVMK7dDqSVqK3dL0OfsRTLrobhznCFwAQMkde2sMoKB607sxotUSxsJ
-         TvVAzH0bYA0RAU9EguEOuKgo/yt1iNg4QJw7WUvaRId1EUBOtLbG6p6cZdpJ/giOA/+j
-         ao2FZXnBag1/dK7QBvlfQKXqXI2spaSXE8+k1oHdI6n3wNqB8Sx+vaglRzU58O/LyZuJ
-         CukPIIpgp+9Nb2OrB3Og71Ay2sWpvbSnGhZ4NK/5Va9H1gVrqOocmKJQAFP//j+Coohg
-         wpng==
-X-Forwarded-Encrypted: i=1; AJvYcCW8VVmWNSBGGSD9AKiyOTD3euhE3XavZ0wsSHEqTrOWimsHT6jQAHudsbqaPht0Fs7Bhw3dule4Ucc=@vger.kernel.org, AJvYcCWSffIioC/Lhva/1nLjSezklUaW01inFb8OHBBQo2hCrLg0XlRF8SiLWRQmtAzrlCQL2Arh9461dKev7NO/kA==@vger.kernel.org, AJvYcCWtyJ2fL5igUyuPJqdIy833nsAe6A5/suTHeAFwMEOcIbofbDGhxUSkIzWSuSRpI/6kvfnTRZ6fX0lArLw6@vger.kernel.org
-X-Gm-Message-State: AOJu0YztB4zeDyzCTpiLQfPLRnoySY7pbLUh/1ME+GVZuXu3QTj1Q3/3
-	NY/Rr2Wkm7QBOfugrCpuTn0L7IV54ONz3JvKIax0X8e5itQERNs2EPr26Gl3RQ==
-X-Gm-Gg: ASbGncs0UjTGsTL/UmrQrTuz6i039BeC56G9sGvpb1GYPx0OkeYlYUscinepYIlYubb
-	H7R88+obWDEednkm4w5LvIwxnKr0uNBLZA2uO6jT4U3XEkDYIgM+utL9Wxn8S3LYV0BT0VY/QZU
-	F7cgt3BfmOtBGCjwlmnpVs5rgn9qEDZV7KFtVyjInpaOZIYoOhhS5/NFKmrdyyajKKJGSLIrHZp
-	G1gC0xA7AL0WvNaIKLhRya+I+HfQ5rR2i8Na+mV9wAX8R/z0GeYiKUb1aoRUtVukgftoEyjm4VN
-	i+m/GBMP6+vHe+IKtwt1UHdgk4/V+Q6X+3K7wiAwziBuuEU+CG9G90DCzFOGEg==
-X-Google-Smtp-Source: AGHT+IE31JuZyP4Lqszx50ANjTakcQMRLueFIwYYJxebv8ZQtcAk5srkqZe+w6aDFy9a35XDsPfOxw==
-X-Received: by 2002:a05:6a21:6daa:b0:215:efe1:a680 with SMTP id adf61e73a8af0-21f8664772amr1668153637.16.1749595813059;
-        Tue, 10 Jun 2025 15:50:13 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2f5f67505asm7360525a12.45.2025.06.10.15.50.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 15:50:12 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 08301420AA82; Wed, 11 Jun 2025 05:50:08 +0700 (WIB)
-Date: Wed, 11 Jun 2025 05:50:08 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Chen Linxuan <chenlinxuan@uniontech.com>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: zhanjun@uniontech.com, niecheng1@uniontech.com,
-	Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND] doc: fuse: Add max_background and
- congestion_threshold
-Message-ID: <aEi2oPUdTUiRkzSl@archie.me>
-References: <20250610021124.2800951-2-chenlinxuan@uniontech.com>
+        d=1e100.net; s=20230601; t=1749595949; x=1750200749;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jDzIKnfoXKVxpTDnGzOlzzRBRZz/lpcLf4ffLk3rm3E=;
+        b=Il6Cf8xk/AZxwxalJba7wts9JEPk4WWwk7fAigMXc8uoMyKj/ecva/PHtwdOSVkapz
+         qTxvCbBCFNFKE0qjp5RLtUn5j5hqAYQpfaB19xvZuCmuGX6Rtr0LiOIzQjReE43V5H4P
+         rvEJk4KGdSWG60AJR5gvbab27nNIMJK74KwMX+Ozwk+OSqDcIV7tNK69qlvYs1CRXvuG
+         jTmuGGLJmtw/f3/NHCetqtu++xL0Qs8gL4h/j95YaoT3khBoWIcbi/7NB4fZWArwtfgD
+         gCLz71/1Zo1paIkACz+DYbePW2elLfiMerAPPoYMvI9J/7r+bITQlqzsA4BipZSijXrF
+         94DQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXeNbSPxvdC52R0N463zUiC5AfCQEbmN6P5leNxeI0P73HXbARfyCcXsqoMeN7+xRdrnLZqKw+EOGhb/08=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcuGY6i/yAIcElOsiutYJ0vHJ7lMAwxak4faCayCTeddDbVmx/
+	eyG7L4uaNUVPQsy6io4Kxj2KegkVyFfx9bu4vw/Bcu1Ftrdmucc50NGF6l6D2TQpfaM=
+X-Gm-Gg: ASbGncsq/B4Z46ezPxBP/9SG79U5PWaYKOjzvszcUlpxCLD0T3N7LYqzY89LcxKEoAa
+	+3yGndF7yuEcWnKQkvQONgvXWiKvjj2S40CaXTsr+yvNk1+1wZG/MbVOuBSEchFmvZYdQDIHtZG
+	VU3xi5+sqfdRJzEqEcPaFFc3GPOaFP7KsLeJVA/YZ3Nxg8UOFM9kiI8NZK30R6y7T9nTp4X1sig
+	8jHfREu0KiZK6Ed/mQWvrb+11yOUAvRrbnEZsMIygmcY2JjyjZiiPoHdE0ZAq+XWTjmHlkSkLGs
+	7kKSgszTjzHMwnPv/2MfxIIjmvz/I6jD0SIbHm0sRJsHbvkdY3CCZXFAlUv37oU6ZACMfmpu3Mv
+	EEOvwZohao7hHrpbAswTCHwUKCN8KQ80J1QrsN0Yy
+X-Google-Smtp-Source: AGHT+IEtuqJcRIG0E5fei0/F3drx/EifVxzaUFRy6V7mzVWAdahdyPi7wDfC9TSKmVZdcMYEaT5BQw==
+X-Received: by 2002:a05:6512:39c1:b0:553:2874:8efb with SMTP id 2adb3069b0e04-5539c2482femr113667e87.11.1749595949406;
+        Tue, 10 Jun 2025 15:52:29 -0700 (PDT)
+Received: from [192.168.1.4] (88-112-131-206.elisa-laajakaista.fi. [88.112.131.206])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553676d03acsm1722972e87.32.2025.06.10.15.52.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Jun 2025 15:52:27 -0700 (PDT)
+Message-ID: <13db6444-d9e9-4c37-a68d-7ed2c4d52ef6@linaro.org>
+Date: Wed, 11 Jun 2025 01:52:27 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="M/CU2qPWiXAOhvhs"
-Content-Disposition: inline
-In-Reply-To: <20250610021124.2800951-2-chenlinxuan@uniontech.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND] arm64: dts: qcom: sm8550: Add support for camss
+Content-Language: ru-RU
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Wenmeng Liu <quic_wenmliu@quicinc.com>, rfoss@kernel.org,
+ todor.too@gmail.com, andersson@kernel.org, konradybcio@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ quic_depengs@quicinc.com
+References: <20250516072707.388332-1-quic_wenmliu@quicinc.com>
+ <0367d5bd-a42e-4b6c-b841-ba20190b3127@linaro.org>
+ <dc4720a8-2f15-44aa-9a52-8440c7518328@linaro.org>
+ <739bad1b-f26d-44a6-9cc1-eee28023474f@linaro.org>
+ <dc82457e-de2b-43ec-a50c-08f7d8bdeff1@linaro.org>
+ <1883d9d7-26d4-40b1-9848-ae0477cf95c7@linaro.org>
+ <6bbd526c-3193-40c7-91be-e629949dca8a@oss.qualcomm.com>
+ <b4a7aed0-a05e-4d1b-965f-78e0c5e0709b@linaro.org>
+ <10f07a65-0549-443d-889b-d36b3515a237@linaro.org>
+From: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
+In-Reply-To: <10f07a65-0549-443d-889b-d36b3515a237@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
---M/CU2qPWiXAOhvhs
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 10, 2025 at 10:11:25AM +0800, Chen Linxuan wrote:
-> +        max_background
-> +          The maximum number of background requests that can be outstand=
-ing
-                                   outstanding background requests
-> +          at a time. When the number of background requests reaches this=
- limit,
-> +          further requests will be blocked until some are completed, pot=
-entially
-> +          causing I/O operations to stall.
+On 6/11/25 01:17, Bryan O'Donoghue wrote:
+> On 10/06/2025 22:13, Vladimir Zapolskiy wrote:
+>> Hi Konrad.
+>>
+>> On 6/11/25 00:04, Konrad Dybcio wrote:
+>>> On 6/10/25 11:02 PM, Vladimir Zapolskiy wrote:
+>>>> On 6/10/25 22:02, Bryan O'Donoghue wrote:
+>>>>> On 10/06/2025 13:49, Vladimir Zapolskiy wrote:
+>>>>>>>
+>>>>>>> List feedback from DT people is isp@ is the correct prefix.
+>>>>>>>
+>>>>>>
+>>>>>> My bad, but I don't understand this comment, it seems irrelevant...
+>>>>>>
+>>>>>> The expressed concern is about the novel label name.
+>>>>>
+>>>>> I mean to say the feedback from Krzysztof was that we should use isp@
+>>>>> not camss@ and I agree.
+>>>>>
+>>>>
+>>>> Let me repeat it thrice, it's okay...
+>>>>
+>>>> I don't object against the properly selected device tree node name
+>>>> "isp",
+>>>> here I object against a never used and very questionable label name
+>>>> "isp".
+>>>>
+>>>> Please feel free to ask more questions, if you still find it confusing.
+>>>>
+>>>> Again, I may missed a discussion about the need to get and use a novel
+>>>> label name, then please share a link to it, it'll be very much
+>>>> appreciated.
+>>>
+>>> To hopefully help out:
+>>>
+>>> label: node-name@unit-address {
+>>>      property = value;
+>>> };
+>>>
+>>
+>> Thank you, here is a link to the wanted section of the dt specification
+>> for Bryan's comprehension:
+>>
+>> * https://github.com/devicetree-org/devicetree-specification/blob/main/
+>> source/chapter6-source-language.rst.
+>>
+>> If for whatever reason a proposed "isp" label is preferred, then
+>> since a label rename is not an ABI change, it would make sense to
+>> do a massive change of renaming all camss labels. Otherwise there will
+>> be an outstanding incorrespondence/confusion of the label names in
+>> board .dts files, and that's bad.
+>>
+>> -- 
+>> Best wishes,
+>> Vladimir
+> 
+> Ah the label, I thought you meant node.
 
-Thanks.
+I'm trying to do my best in expressing myself by means of the second
+signaling system. As an example when I write "a label" repeatedly, I mean
+to transmit "a label" symbol, hence I hope it should not be overly
+complicated to understand me.
 
---=20
-An old man doll... just what I always wanted! - Clara
+It's great that the understanding is reached now, it would be better,
+if we can save some time in future.
 
---M/CU2qPWiXAOhvhs
-Content-Type: application/pgp-signature; name=signature.asc
+There is no bug introduced in this particular change, however it shall be
+fixed and be resubmitted.
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaEi2nQAKCRD2uYlJVVFO
-o/SbAP9n70Sh81jc5otTVcPOmm03/0gxJcu58hAnES7USTRPoAEAv/yiEqcSe/AZ
-gu/KY9E+FQPGaOGGhT3Uzi4jTyFJ3wE=
-=XnIT
------END PGP SIGNATURE-----
-
---M/CU2qPWiXAOhvhs--
+--
+Best wishes,
+Vladimir
