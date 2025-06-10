@@ -1,96 +1,176 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55E33184F;
-	Tue, 10 Jun 2025 11:46:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34ABF155322;
+	Tue, 10 Jun 2025 11:48:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749555979; cv=none; b=bIKoZ+klkCKGBfGHdOG9SmDapdEhM9x1OZ3IMaF7OerqUuxf2turYY7eR31YJx6NQ9rupQFBZ5jesPnxLQjIrgTVz2orQJUq8Cr4z3UmDg/Xw35Sf6fxYcVwtL/W2Q41Cs1vqzZPTzaAFChinPJUq48tiiBYbqvvVzRAercGjv0=
+	t=1749556103; cv=none; b=WV8Asf+KimXhgRT2ObWUfDx9dTnxOdrcdiIbzzfvWDFKpoUbBIGxrmNsjV1UQVJpUCYHFiRwmgJGlOORBmSfOw1yj9d7oJhlZSuby7GsNFlAYD3+LLgk9ppqdzh2iBkpmLgA8bC85o8EfWo3MOuRVotZZtM+4il054wQbBPcPds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749555979; c=relaxed/simple;
-	bh=YibikXW00JUDmSUtGKV75M+LUkgeqXyZelMhzVfCmDI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HZMrOX/7p91AH5vZef6aWa2VzOe/j4/tzF4CKzqGwWrCc25xw33zlMlfEojJEeHXeC22u1UQYrVkOT0spw0V/BsgmGk2WubMVl31ntA783ShZl/bZiH1JRaMKfOFe0tanhPnZt1cypRNYVWKdHmC+gRQGPRjs49ozUtMg6Qdtlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dq4G5RF7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749556103; c=relaxed/simple;
+	bh=OeGToYR8xZLuZGczfxVSGBhX3xOeRUbH2r4olBPQ0to=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=COt/lKVL2s1DqHF/ZgDIh5y82DaAuoX7VMIBmQeznqXdajtv8NmF+Wsv+VIVVIIvXj7CAkdf4fwgot2e1TTP4nysn+cWJRmHtH0yhVWxxHI1DNU4VOYYMVBVdO3JipNgkrAlYM/YopPIDSH7uddK/tmz/0cWqLP2QuugnK3AGXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QoSQwOzl; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dq4G5RF7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28407C4CEED;
-	Tue, 10 Jun 2025 11:46:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749555978;
-	bh=YibikXW00JUDmSUtGKV75M+LUkgeqXyZelMhzVfCmDI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dq4G5RF7Eu+/4EdP/i+nSGo4QP47NeIsw0NQT77QTHds0si3J2dpCd9ZiDwMrVjMr
-	 JgIYC/IycMwYHphJSCMv8/9lgst1D9qKNByLJoeIwzE+gX4BcgvS9wpSqVpdJ0M5Sz
-	 tpYYyyJ2QxaVkQa/69wRCDTps5J2SGRiHCg00N7lw8zbsbMdQgBiCUEcVmC1Pf7ZDo
-	 BQXUspMcWpT7UZMdWJykQTIy1cCKxNSTyJU00aRnbT9wjTYzy10NYaXTyCOM4yLQA/
-	 qC0zXvB84Ir6m9+t3zWXysAlvZLhtaNL00AtkiHuX0zzh4gxwdCESOGSFUYTjDQ4ZY
-	 FMBo7ixuE//7g==
-Date: Tue, 10 Jun 2025 12:46:12 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Waiman Long <longman@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Vicentiu Galanopulo <vicentiu.galanopulo@remote-tech.co.uk>,
-	Will Deacon <will@kernel.org>, Han Xu <han.xu@nxp.com>,
-	Haibo Chen <haibo.chen@nxp.com>,
-	Yogesh Gaur <yogeshgaur.83@gmail.com>, Lee Jones <lee@kernel.org>,
-	Pavel Machek <pavel@kernel.org>, Andrew Davis <afd@ti.com>,
-	linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-spi@vger.kernel.org, imx@lists.linux.dev,
-	linux-leds@vger.kernel.org
-Subject: Re: [PATCH v6 1/3] spi: spi-nxp-fspi: check return value of
- devm_mutex_init()
-Message-ID: <d8d1ee94-ee95-461f-a5d8-040bb2a1cfee@sirena.org.uk>
-References: <20250609-must_check-devm_mutex_init-v6-0-9540d5df9704@weissschuh.net>
- <20250609-must_check-devm_mutex_init-v6-1-9540d5df9704@weissschuh.net>
- <7afc214a-affd-4a99-8528-c58c31fbcc59@sirena.org.uk>
- <aEgBkROmEV2df4rA@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QoSQwOzl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749556099; x=1781092099;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=OeGToYR8xZLuZGczfxVSGBhX3xOeRUbH2r4olBPQ0to=;
+  b=QoSQwOzlTaDTjEip47P9x5BHEFTRGjcP992VeZb3HTMu9oaxRYgWLnQB
+   LIFwL4KTaAMltcXh76ipdkcg6Q76RkJpRD6mRxBaV/zRMHNgr2qEcOI1l
+   0a5WfK0aKMfemqrdi7qFGzB2nS/RIu5ZVFaMI7Lsn7J+GuRQWMKhWiaPK
+   56CjTe0n5gzMGlRMzfRPfLis36FXG2J+NqiZCKnMf0W1NPRt2lUO3HD16
+   BdSot1fs5Dm51uaZN10xCZMk5HUf2zCVJVR4NiHfD9yvvT/kfZNXJYOJ0
+   U+y1joo6tmttIY/ljkFAW0sSyuEdiIClaB4B+yRdcS0dSOFSQ5GcFZ+UW
+   g==;
+X-CSE-ConnectionGUID: qSSYKRIwRx619XS5NgNy8g==
+X-CSE-MsgGUID: ANvMQOQORQeAYe8EfEeJEg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51802454"
+X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
+   d="scan'208";a="51802454"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 04:48:18 -0700
+X-CSE-ConnectionGUID: yw92APc5QFaiSc4S3YA70w==
+X-CSE-MsgGUID: JS5djz8uQKGK0r6U7dbviQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
+   d="scan'208";a="177734029"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.196])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 04:48:10 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v3 1/1] PCI: Add Extended Tag + MRRS quirk for Xeon 6
+Date: Tue, 10 Jun 2025 14:48:02 +0300
+Message-Id: <20250610114802.7460-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="qlddIJtm5jpvAAgD"
-Content-Disposition: inline
-In-Reply-To: <aEgBkROmEV2df4rA@smile.fi.intel.com>
-X-Cookie: When in doubt, follow your heart.
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+When bifurcated to x2, Xeon 6 Root Port performance is sensitive to the
+configuration of Extended Tags, Max Read Request Size (MRRS), and 10-Bit
+Tag Requester (note: there is currently no 10-Bit Tag support in the
+kernel). While those can be configured to the recommended values by FW,
+kernel may decide to overwrite the initial values.
+
+Add a quirk that disallows enabling Extended Tags and setting MRRS
+larger than 128B for devices under Xeon 6 Root Ports if the Root Port
+is bifurcated to x2. Use the host bridge's enable_device hook to
+overwrite MRRS if it's set to >128B for the device to be enabled.
+
+The earlier attempts to implement this quirk polluted PCI core code
+with the checks necessary to support this quirk. Using the
+enable_device hook keeps the quirk well-contained, away from the PCI
+core code.
+
+Suggested-by: Lukas Wunner <lukas@wunner.de>
+Link: https://cdrdv2.intel.com/v1/dl/getContent/837176
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
+
+Ingo gave his Ack on v2 but since the used approach has once again
+changed, I didn't add his Ack.
+
+Mani did express his concern on using enable_device hook but suggested
+I send the patch anyway.
+
+We're also looking into using _HPX Type 3 (suggested by Bjorn) eventually
+for this class of problems where FW settings get overwritten by the
+kernel (but it will take time to make it the sanctioned solution). In
+the meantime, this is a real problem for Xeon 6 out there so it warrants
+adding the quirk (which is now pretty well-contained).
+
+v3:
+- Use enable_device hook to overwrite MRRS to 128B if needed. (Lukas)
+- Typo fix to comment (Ingo)
+
+v2:
+- Explain in changelog why FW cannot solve this on its own
+- Moved the quirk under arch/x86/pci/
+- Don't NULL check value from pci_find_host_bridge()
+- Added comment above the quirk about the performance degradation
+- Removed all setup chain 128B quirk overrides expect for MRRS write
+  itself (assumes a sane initial value is set by FW)
 
 
---qlddIJtm5jpvAAgD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+ arch/x86/pci/fixup.c | 40 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-On Tue, Jun 10, 2025 at 12:57:37PM +0300, Andy Shevchenko wrote:
-> On Mon, Jun 09, 2025 at 09:59:46PM +0100, Mark Brown wrote:
+diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
+index e7e71490bd25..38369124de45 100644
+--- a/arch/x86/pci/fixup.c
++++ b/arch/x86/pci/fixup.c
+@@ -294,6 +294,46 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_MCH_PB1,	pcie_r
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_MCH_PC,	pcie_rootport_aspm_quirk);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_MCH_PC1,	pcie_rootport_aspm_quirk);
+ 
++/*
++ * PCIe devices underneath Xeon6 PCIe Root Port bifurcated to 2x have slower
++ * performance with Extended Tags and MRRS > 128B. Work around the performance
++ * problems by disabling Extended Tags and limiting MRRS to 128B.
++ *
++ * https://cdrdv2.intel.com/v1/dl/getContent/837176
++ */
++static int limit_mrrs_to_128(struct pci_host_bridge *bridge, struct pci_dev *pdev)
++{
++	int readrq = pcie_get_readrq(pdev);
++
++	if (readrq > 128)
++		pcie_set_readrq(pdev, 128);
++
++	return 0;
++}
++
++static void quirk_pcie2x_no_tags_no_mrrs(struct pci_dev *pdev)
++{
++	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
++	u32 linkcap;
++
++	pcie_capability_read_dword(pdev, PCI_EXP_LNKCAP, &linkcap);
++	if (FIELD_GET(PCI_EXP_LNKCAP_MLW, linkcap) != 0x2)
++		return;
++
++	bridge->no_ext_tags = 1;
++	bridge->enable_device = limit_mrrs_to_128;
++	pci_info(pdev, "Disabling Extended Tags and limiting MRRS to 128B (performance reasons due to 2x PCIe link)\n");
++}
++
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db0, quirk_pcie2x_no_tags_no_mrrs);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db1, quirk_pcie2x_no_tags_no_mrrs);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db2, quirk_pcie2x_no_tags_no_mrrs);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db3, quirk_pcie2x_no_tags_no_mrrs);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db6, quirk_pcie2x_no_tags_no_mrrs);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db7, quirk_pcie2x_no_tags_no_mrrs);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db8, quirk_pcie2x_no_tags_no_mrrs);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db9, quirk_pcie2x_no_tags_no_mrrs);
++
+ /*
+  * Fixup to mark boot BIOS video selected by BIOS before it changes
+  *
 
-> > I don't understand the comment about leaking here?  We might end up with
-> > an unitialised mutex but how would we leak anything?
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+-- 
+2.39.5
 
-> In case if the mutex_init() allocates something that needs to be freed
-> (in the future).
-
-I don't see how checking the return value impacts that?  The management
-via devm is still there either way.
-
---qlddIJtm5jpvAAgD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhIGwMACgkQJNaLcl1U
-h9DndAf+IDszF0KDE41cdqFp7QzU28ehipRQZ/2ImAVdikU6XvsSlqXgulFgPanN
-lfk3V9B/9okKYjokFS+cc2d40vlbrE0UMsceGwnQfySoVqrdD62K43POtx1Jgo8/
-qMKE5FwtNzZnq6dkuy3bLDH/8I+v2jhWs1mozB+euPHs6F1AgpREbYeIBhv6h0d2
-Bd6o+qXpvuoxVEOmOS0cABcxvSHl+Tg6gZk7rM6VJKSEaxPlznwnJ+tJdK2Fv8WU
-QOtRl595cqKywMdRyWTuQcdI3iS8mTIu7twIl0Wm/+S1TleZqZZb3trTsTyzfSRr
-R3GugZLFMOZU8mXSwRxZltFqDKKMfg==
-=POCg
------END PGP SIGNATURE-----
-
---qlddIJtm5jpvAAgD--
