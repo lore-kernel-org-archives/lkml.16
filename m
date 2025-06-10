@@ -1,82 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF9B19A2A3;
-	Tue, 10 Jun 2025 20:27:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF4519A2A3;
+	Tue, 10 Jun 2025 20:27:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749587240; cv=none; b=AHYi7GksAAZ9QEQqSI0IZvPfXc+6aFvMbkO7skvhtdR6Z/SwJmoF3+0j08xwSrewvXoubbYsPwNL/Hv+otjm3l4H6uVjBaZMkeddD/sHuyWgxQIR/7GTdkKgAwuWYjvbCiaEvoUEx7hEvwIoG1xCuPQ9zvxD1crWixcEJSjPkDk=
+	t=1749587273; cv=none; b=pZiAEy+TyGKnltuIfyIsuBeyJet5IrQjeW3jwynopE0hleP+7JBpA7u1AuKdFxhGPe63lkNAeBQViQ5BbADRCkpCr415g6OIUlKfcZ8tIO8mcARIXVCmcIid6gy+pFvwNo3AiLktY3BBIemYTG7HYmkAmStpoWGK9wX2MMi8zSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749587240; c=relaxed/simple;
-	bh=a0fsVYzJm3+G88UxdB0B0y4YgNQAiF04/BzeC7n0bFM=;
+	s=arc-20240116; t=1749587273; c=relaxed/simple;
+	bh=OBATaljqe7OlYBaQ2tb4RndzBirGurBJZMppglRXGGs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oWd85FwAynetcYXEFFdDz1XPVABx8Wo/15O0uOPBLhC/fFN8r21lDGsBxQCiFOxRCuOmEgw6TdVrW34+6zOZ5kVOaknnf4kIWG2Kb6Whk3TSyLyfdPXUIUu7CGAajipk4/4LazzaemEIL0lDmu5zLuIhq/tdvA5QojGQB3+VruA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lPLsBrgK; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=t3TqTfD8g015KYwe1Z9i6L1V6JsUU+ai8d9979WJP3LpNaUCNbmmfkz4kRSBOl6oP0VkV5fxC43OSmy5UJwaatkcD3NEm0Xxtb5YeNINeyUqt5qeuX3+dfumwFolm4SPs9c1NqVOTMu+HqbPjECm/5TjUgA6F3ZSpAljQuX6ISE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cHpIE1Mk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lPLsBrgK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749587239; x=1781123239;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=a0fsVYzJm3+G88UxdB0B0y4YgNQAiF04/BzeC7n0bFM=;
-  b=lPLsBrgK2giaK16KT6+XMW34OhWLMvjQFV9bnUfxGgFCVtMvoTFwiCH3
-   UyxGEIyGuneLI1KbiXnviYxVHQlgWWN5s/ZwkK6i0RXQwwJcaJ3XF3AXk
-   tfuIJ4Km38a035s9r5VKuEIlCnYjvqpauT/4B/TrYM+mpRDrjTCxIpZBD
-   4bLgmUsUnhIs0WUQwUpjwKdSAATTwtV93bV4dOHsVFW33TZ97eY61Xlfu
-   bZKLINMXwR0Tb+5c5rHRzNfDH/9UJ7unzT3ZFPiyfBcyqRBeoibMWDYAp
-   5yPMmJLwGVrisrLAPmDWrWeHLGBXEVLsDc5ETLw8AhLe9ZYK4lsJGelgU
-   A==;
-X-CSE-ConnectionGUID: Noxo5AgHSsa+6KU9Sbq3zg==
-X-CSE-MsgGUID: t0upGzxuQlO+xrBIKXuKPw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51812187"
-X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
-   d="scan'208";a="51812187"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 13:27:15 -0700
-X-CSE-ConnectionGUID: P3dVhLlURDeKL62XEUj5QA==
-X-CSE-MsgGUID: hx91AJa8SgCOP+/SdpGtHg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
-   d="scan'208";a="146867111"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 13:27:13 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uP5Ys-00000005RbS-06B9;
-	Tue, 10 Jun 2025 23:27:10 +0300
-Date: Tue, 10 Jun 2025 23:27:09 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com, ikepanhc@gmail.com,
-	hmh@hmh.eng.br, W_Armin@gmx.de, platform-driver-x86@vger.kernel.org,
-	ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] platform/x86: Move Lenovo files into lenovo subdir
-Message-ID: <aEiVHXI4vS9BDOPW@smile.fi.intel.com>
-References: <mpearson-lenovo@squebb.ca>
- <20250610192830.1731454-1-mpearson-lenovo@squebb.ca>
- <20250610192830.1731454-2-mpearson-lenovo@squebb.ca>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cHpIE1Mk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30E42C4CEED;
+	Tue, 10 Jun 2025 20:27:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749587272;
+	bh=OBATaljqe7OlYBaQ2tb4RndzBirGurBJZMppglRXGGs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cHpIE1Mk2XFWtAhR2CZ3B92HfI5Xb1WfDD2LLtaNuGA2gDcEz+/49tknOmQ4ICiqA
+	 S3+R3umZXhrkfJD7x0ULtfERbdIZafUEniZlHr77xpBGEdOFKs+QVsylY9ClTXcNsW
+	 OBjaZX9NrWV70sZVLoqYMmjNaoqIVot+BbjlAyBuIuwqxo/iTS2QULxcBE+XJnclFe
+	 hiDY5Mxk3kwfNXdHv93LbyR77MH3Abd4vYwhnevfWttnh9ClTkb8biGHPoGHv+rlLf
+	 U9x0vQMKaTiPyaix3NG8+mFTdagugpJCKe8W2/VZkVFqx8z1DbOJD2SYPH/BqzDvJc
+	 3UJsr0zz7hUjQ==
+Date: Tue, 10 Jun 2025 17:27:49 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Leo Yan <leo.yan@arm.com>, Lorenz Bauer <lmb@isovalent.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: BTF loading failing on perf
+Message-ID: <aEiVRcpvllECCrwS@x1>
+References: <aEMLU2li1x2bAO4w@x1>
+ <20250606161406.GH8020@e132581.arm.com>
+ <CAEf4BzY2UEe9e53Ums=d-mMVgBdc5JnVAboKz1LLmvKRk5O=jA@mail.gmail.com>
+ <aENKD6yUCN9UXves@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250610192830.1731454-2-mpearson-lenovo@squebb.ca>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aENKD6yUCN9UXves@x1>
 
-On Tue, Jun 10, 2025 at 03:28:25PM -0400, Mark Pearson wrote:
-> Create lenovo subdirectory for holding Lenovo specific drivers.
+On Fri, Jun 06, 2025 at 05:05:35PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Fri, Jun 06, 2025 at 09:20:57AM -0700, Andrii Nakryiko wrote:
+> > On Fri, Jun 6, 2025 at 9:14 AM Leo Yan <leo.yan@arm.com> wrote:
+> > > On Fri, Jun 06, 2025 at 12:37:55PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > root@number:~# perf trace -e openat --max-events=1
+> > > > libbpf: failed to read kernel BTF from '/sys/kernel/btf/vmlinux': -ENODEV
+> > > > libbpf: failed to read kernel BTF from '/sys/kernel/btf/vmlinux': -ENODEV
+> > > >      0.000 ( 0.016 ms): ptyxis-agent/4375 openat(dfd: CWD, filename: "/proc/6593/cmdline", flags: RDONLY|CLOEXEC) = 13
+> > > > root@number:~#
+> > > >
+> > > > openat(AT_FDCWD, "/sys/kernel/btf/vmlinux", O_RDONLY) = 258
+> > > > mmap(NULL, 6519699, PROT_READ, MAP_PRIVATE, 258, 0) = -1 ENODEV (No such device)
+> > > > libbpf: failed to read kernel BTF from '/sys/kernel/btf/vmlinux': -ENODEV
+> > >
+> > > Have you included the commit below in the kernel side?
+> > 
+> > It doesn't matter, libbpf should silently fallback to non-mmap() way,
+> 
+> Right, it has to work with older kernels, etc.
+> 
+> > and it clearly doesn't.
+> 
+> > We need something like this:
+> > +++ b/tools/lib/bpf/btf.c
+> > @@ -1384,12 +1384,12 @@ static struct btf *btf_parse_raw_mmap(const
+> > char *path, struct btf *base_btf)
+> > 
+> >         fd = open(path, O_RDONLY);
+> >         if (fd < 0)
+> > -               return libbpf_err_ptr(-errno);
+> > +               return ERR_PTR(-errno);
+> > 
+> >         if (fstat(fd, &st) < 0) {
+> >                 err = -errno;
+> >                 close(fd);
+> > -               return libbpf_err_ptr(err);
+> > +               return ERR_PTR(err);
+> >         }
+> > 
+> >         data = mmap(NULL, st.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+> > @@ -1397,7 +1397,7 @@ static struct btf *btf_parse_raw_mmap(const char
+> > *path, struct btf *base_btf)
+> >         close(fd);
+> > 
+> >         if (data == MAP_FAILED)
+> > -               return libbpf_err_ptr(err);
+> > +               return ERR_PTR(err);
+> > 
+> >         btf = btf_new(data, st.st_size, base_btf, true);
+> >         if (IS_ERR(btf))
+> > 
+> > libbpf_err_ptr() should be used for user-facing API functions, they
+> > return NULL on error and set errno, so checking for IS_ERR() is wrong
+> > here.
+> 
+> And the only user of the above function is:
+> 
+>                 btf = btf_parse_raw_mmap(sysfs_btf_path, NULL);
+>                 if (IS_ERR(btf))
+>                         btf = btf__parse(sysfs_btf_path, NULL);
+> 
+> That expects ERR_PTR() to then use IS_ERR().
+> 
+> I think this could be automated with something like coccinnele(sp)?
+ 
+> Anyway, I tested the patch above and it seems to fix the issue, so:
+ 
+> Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Assuming Kconfig entries have mostly been copied'n'pasted, the rest LGTM,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Was this fixed/merged?
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+- Arnaldo
