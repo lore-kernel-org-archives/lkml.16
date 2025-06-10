@@ -1,107 +1,107 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD251EFFB0;
-	Tue, 10 Jun 2025 16:07:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A08023717C;
+	Tue, 10 Jun 2025 16:07:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749571643; cv=none; b=eR5Cm5dfkOLs/eQ0Jo0tS1jC23O4HZeq7meumTVVAHKBF/A1cK/eh4lTfLVYiYN8cl7YwdQun2KxIMMt0PVHyBDN65rkkrBexPQkzzqebhJFUvZqltkIeh6xebbBuLcwW5Ny+njzYlkvitf3NzT9GYNjZKE4WFo7lah3hWJ/pZo=
+	t=1749571662; cv=none; b=DceCrnuEE/7rxZwRRI6glSecGAIqn7FPGS8bF5yTv3kIe1t2fnnG9jPLAs+kSfpRZZJfezEVycILkBHjWwI+5k4OO+e+GSbGyCgndAG5O8VHCTzROOK3/iwaBA7kPJulvC5QFYZTIXwdDpXfbkm4jo5VdXTr26bQdLgIooF1N4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749571643; c=relaxed/simple;
-	bh=8zNGx+1TfyYD5oN1/GqIAxOb3rPE9mEmCyDVfCgaVus=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AWxeCFyV0EUj9NaCxLINV4dUHusbUPdeDKtSanO6YLy9I1koTEU40SV05qoTEHEaD8LwEb8m882MPY5ZyIodrA1rzE719csb7RN5GIGIsPs6txM4raOxOAhPPJPZJVe+1w6z7zETxcPaqA4O25EtXIfIY6aF+8iWR5MTGNytoxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MKrbBD4u; arc=none smtp.client-ip=209.85.128.42
+	s=arc-20240116; t=1749571662; c=relaxed/simple;
+	bh=HSn8K1pGrU2ROniCJak99jKwGsLdGfOVBBfXcOPx+xk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hy3bPntALiAsAEYmc/uSeIs30Q3ryn3exBs0WcvFwu2Oq/lTt8jG/PooFKCMYI93yjpCrSsjt9fXNxDZn/5rOwATnh84ZdZRYPMVMSMccDHdk35itTxd6GBStGWoZrADoDqy3Tdx44+o/lKJBpSa3G10mlsHdbOZTgHEhzQdmv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KDHDwlw0; arc=none smtp.client-ip=209.85.218.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MKrbBD4u"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-441d437cfaaso36045625e9.1;
-        Tue, 10 Jun 2025 09:07:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KDHDwlw0"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ade58f04fb2so330801166b.0;
+        Tue, 10 Jun 2025 09:07:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749571640; x=1750176440; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=z7ou2wgwMn8L50XyIhGS2KTQ/Rr3tzpT2R9E2FFdIyQ=;
-        b=MKrbBD4uyCM2MUoX/Yavg6BO3qCFz/YOVBAEs92hUxYwXjgOvSslegEi6KQW2qs64v
-         iJNKsa780BlKG+rh/ekLnjer7jkwlRSJPrAbAohbzPDBexKuMpG5PNSDQHSRez6QOVDK
-         oPo99Ce2cpT141rrpP4K1ucpP25pqz1tLAFr+kCMzmxtQgf6JdSMFvUKctnFqHZePHi3
-         JEq82fxSBZUJd3hU+f/CJhgQ6U5v6IGNqa0EYycFp24qgq3NsLzVKsYfpOxJeL0TkXeK
-         rUPmK2cHl4GVSRuGZB+f0/yd10yPXxm0Sd4FpGMrT6ysVE5L1+RRXO5l774XeFynNvRa
-         RlGA==
+        d=gmail.com; s=20230601; t=1749571659; x=1750176459; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HSn8K1pGrU2ROniCJak99jKwGsLdGfOVBBfXcOPx+xk=;
+        b=KDHDwlw0axN5TYDliRaN8L/XFV+Bw1IKADrmX73F2cdvD98TpTCNkoTU5/qFqbjgKT
+         pEu/o1HqQvue5abd6I1nlkeiJBaSKcUT8b8Svy4BsoS7Rpj++t0Lf4l+jAm6fMg8JOpK
+         g2wV2DnelJtXis9jH1glIVNgXt92i4jlj+TA9lJ6IfmQiEuktYfzlzTrGJRutgJ1ncbv
+         ES/tUktqezwpSkQtIogr6o90lmR92hjcFV9Jl/YgW7xXnAZBoFe2OW7ayCN7tXihOCxh
+         UYptwCyzzYgkfZgK+eC/xPiDOV37OxtAjiDF3z41jKGBVXC21tuNaUJYp7b60KRywSVO
+         gU9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749571640; x=1750176440;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=z7ou2wgwMn8L50XyIhGS2KTQ/Rr3tzpT2R9E2FFdIyQ=;
-        b=YfMq3kG3k44Eflc5peSPFRVrFay7530gZAzXT52eHggjmjS6m5RzCpr/DM982p3o4y
-         v+9SD9spabnAD1NBC1JCsMrf1pJpPVGD3pNxaREeGtRkR+AbjXlILT5aY225d1zePcxF
-         Y8AEEVALgsarL5Ras10XSSS99SwmkdZQhHqrgN/eHTy4LJyD8RQ1ISAIpZ8HgNzBq0SQ
-         YYzt4TUfz4Czl0RMVV4qAOa3QDQI8iHnkBrw0qhxD+ynKtOyqfJItM2Sor81tBg9UmF0
-         oCku32TzkeIhID+1ed5aCSGW+oOOVqrCrMSOH3W5wrHb/zthEmLZM4mCdDZkPCpdiZog
-         P4wg==
-X-Forwarded-Encrypted: i=1; AJvYcCULjyK+wvSG0ttL21akqrtizo1oANKyl8l0VNWt1JhoH2Ep2abO63RSosVTxrCs1WwwxfhqvDWZ@vger.kernel.org, AJvYcCXQT9PEgSJmA4QVOuzY8tyjPtniVJSU7TLQ/NDHWXjdJZ1lJBnOJ8N8mpKM6zst3s7LFewD8frouZ6z3M0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwaDCB1FK7sxeSdxK+BtFcmQsj5/5SV9eV+7+uXFmZVmx+km3E1
-	D9GC3HZcEMeRakfAV+u0fA+o5KMJ1g4P3gkoN3Hd87IxT6gTyU0KqNNtBtGVTrXD
-X-Gm-Gg: ASbGnct711dUyJaENTQRhfFb34iD5EAw4r2Cl+jcWmVwlSfpu1QEiGV7eVBbE3pQHNu
-	3qqF+n5pjxC6FNpZ5Qrk5o2yJyMS3zbrP40UYiRbuK1uN2pNwpZeueRfw9IXN6AknQvJ7DRYa4j
-	sIB3LqsW9fnM1oWDIJBKeXYAdVI1LmC/miJPgYHMihgwvpo8DplctElR93nxoqj/TkVXzf9aWeV
-	AiKc+dKCqC0INUQPJy8PU7+NlJFLaII3YMmJSMepBigNBbDxrw9wDR4DB8aaZuIVk8iEN6/y8/s
-	O1UFtz+cFl0A9Z+0D2QRNa0yafn5IKGHh2jk6gRHy8I7Y4gDiHZnI6jWm6QrjLNdG/NURLs/f10
-	c5NlPAEM=
-X-Google-Smtp-Source: AGHT+IG674JmgBiPcaB4UmFqjKGqkZ9XBcLDUGtubIQ1Xl+6o2MuAifxrpaudSCBVzIVfN2uHeDBtA==
-X-Received: by 2002:a05:600c:6207:b0:442:f4a3:b5ec with SMTP id 5b1f17b1804b1-452013fd6b5mr165358375e9.4.1749571639370;
-        Tue, 10 Jun 2025 09:07:19 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:3033:680:23f6:dd44:9038:c392:25a7])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452730b9b27sm141709185e9.23.2025.06.10.09.07.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 09:07:19 -0700 (PDT)
-From: RubenKelevra <rubenkelevra@gmail.com>
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net,
-	kuba@kernel.org,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	RubenKelevra <rubenkelevra@gmail.com>
-Subject: [PATCH] net: pfcp: fix typo in message_priority field name
-Date: Tue, 10 Jun 2025 18:06:12 +0200
-Message-ID: <20250610160612.268612-1-rubenkelevra@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1749571659; x=1750176459;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HSn8K1pGrU2ROniCJak99jKwGsLdGfOVBBfXcOPx+xk=;
+        b=X9lDbynIDilKop08GCjyn8Lvo2Ib7of8amXZN3g1CH1f6Wioz5W3hltaSjqxg/FaAz
+         ixZsjgvAZs711cw3FnWLXDEuW8nGoHzJF+4/a+qKWeCEJwlTDAF0MP+k3rNxf72KY8PC
+         CACKB20Y0EPqVI5/xJEfl/nOICZ/deoZWMvA2+AnrlDu9V6M+tethhO9PP0qxDsb6Otk
+         zaoQpkJDCagjLX5f1Lzmw1tR6IjXY4K49fdzwzNPgQhwbLPK5V6JRDyoF73Sf+5DV+FM
+         IVCTjUfkSzIfU1U0exHO3BLdQx0vix76qHadWoC66LUAtNPdOdu3vNlH8OfBDq1wCFLp
+         QCjA==
+X-Forwarded-Encrypted: i=1; AJvYcCWxczRU6msyXCiIoLOvo1glk8Q5QHvDHnWz57ZBnwUbMgAPrHKDhd5BgnHMlY/xu4JS0MZqPuTu532xfXMY@vger.kernel.org, AJvYcCX14lb/556s6r9JlRuD1AbCwEeV42Bi6KPhSfnFjxVKrDCHiBytf4+LrK409CLmZkKx+NeWEeYjfL/N@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1Mgn51myi+NCShpZ7O+aa73H7IZY5u7eOMoF+HsW0T/Nr0+Qw
+	VDDxIKsv3x/2wD6vOsc+bMLR8PkoeRv9c7QtESf4JYhiiNbzuY+Y8WcZ
+X-Gm-Gg: ASbGnctJusLKgF6NK3tmMg8EPiHHb9nsbu1oYCbpR8X/504imWzQAidIG25QWg8ff1y
+	BFw+LetFcTepuIr/v4KXnKmxjgRL33DFM7RJUZa/ZBoz/fAmEphtNqUAfq0771yYQdqi0vdMPLU
+	Sx8j/MLO6McPnU8zStpbVeezskAk2psDtzWb5PkfdDXsv/1vg589snV6cvWvZ6RBqIECXNU34c8
+	pvJsUpkOfSLCGr7DfmfNsFsN0lcjREazeetYlnKlmG5AhZrZVkHKMxxIRUr6J+YY6kRsFpT41aq
+	iJjMWgPJO9NPNfYvHN3TRjWf6lxbEugddnspZghAbd29NNfwsis3QAK4Gutk8yGskODwe8eGvw2
+	UzrUkv3bwAXrUScgYp17gZAKU
+X-Google-Smtp-Source: AGHT+IFBP4Ac0eMIqhVrxF6UOvlGCckI5Ip5teFsrW6N1rBQqfQi8L7Td5UuhoSZZjUStG87k5oXlw==
+X-Received: by 2002:a17:907:3da3:b0:ad9:db54:ba47 with SMTP id a640c23a62f3a-ade1a9c802emr1697209966b.43.1749571659205;
+        Tue, 10 Jun 2025 09:07:39 -0700 (PDT)
+Received: from [192.168.1.129] ([82.79.237.69])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60778376e48sm6305308a12.18.2025.06.10.09.07.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Jun 2025 09:07:38 -0700 (PDT)
+Message-ID: <c346fa54-41f1-4574-abea-a6fb2771bcad@gmail.com>
+Date: Tue, 10 Jun 2025 19:07:37 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/6] bus: add driver for IMX AIPSTZ bridge
+To: Shawn Guo <shawnguo2@yeah.net>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ Daniel Baluta <daniel.baluta@nxp.com>, Shengjiu Wang
+ <shengjiu.wang@nxp.com>, Frank Li <Frank.li@nxp.com>,
+ Marco Felsch <m.felsch@pengutronix.de>,
+ Marc Kleine-Budde <mkl@pengutronix.de>,
+ Alexander Stein <alexander.stein@ew.tq-group.com>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>, devicetree@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250415171919.5623-1-laurentiumihalcea111@gmail.com>
+ <20250415171919.5623-4-laurentiumihalcea111@gmail.com>
+ <aD0j3gXeD6Nn6L60@dragon>
+Content-Language: en-US
+From: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
+In-Reply-To: <aD0j3gXeD6Nn6L60@dragon>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Fix 'message_priprity' typo to 'message_priority' in big endian
-bitfield definition. This typo breaks compilation on big endian
-architectures.
 
-Fixes: 6dd514f48110 ("pfcp: always set pfcp metadata")
-Cc: stable@vger.kernel.org # commit 6dd514f48110 ("pfcp: always set pfcp metadata")
-Signed-off-by: RubenKelevra <rubenkelevra@gmail.com>
----
- include/net/pfcp.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/net/pfcp.h b/include/net/pfcp.h
-index af14f970b80e1..639553797d3e4 100644
---- a/include/net/pfcp.h
-+++ b/include/net/pfcp.h
-@@ -45,7 +45,7 @@ struct pfcphdr_session {
- 		reserved:4;
- #elif defined(__BIG_ENDIAN_BITFIELD)
- 	u8	reserved:4,
--		message_priprity:4;
-+		message_priority:4;
- #else
- #error "Please fix <asm/byteorder>"
- #endif
--- 
-2.49.0
+On 6/2/2025 7:09 AM, Shawn Guo wrote:
+> On Tue, Apr 15, 2025 at 01:19:16PM -0400, Laurentiu Mihalcea wrote:
+>> Add driver for this IP. Since there's currently no framework for
+>> access controllers (and since there's currently no need for having
+>> flexibility w.r.t the configurations) all this driver does is it
+>> applies a relaxed, "default" configuration, in which all masters
+>> are trusted for R/W.
+> Just out of curiosity, is there any ongoing/planned effort about creating
+> a framework for access controllers at all?
 
+no plan ATM. Though, I would be interested in knowing if anyone else would benefit
+from such an API? I know that STM also has some access controller-related drivers,
+but I wonder if STM's drivers and the AIPSTZ are just some isolated cases in which
+security-related configuration is done from EL1?
