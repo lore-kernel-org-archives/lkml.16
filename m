@@ -1,81 +1,78 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 695962874EA;
-	Tue, 10 Jun 2025 21:56:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 987A8218AAB;
+	Tue, 10 Jun 2025 21:59:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749592567; cv=none; b=r6nNy0PzlJ0x8PURTbHblr4qBJ1VtVCiK1rKW8HNQLrsh+gH9cqVTfxZn8sMPh+bsW0cMy+T/dw9Wv/4ibmIJWQa4y2Llaj9rSpGqzm9tydx4M6vy5ENN56KR8fXAYuCuD0CuTodEXcZ5sLbuSVFdNFZAizF/AStsAKWcCaKDN0=
+	t=1749592784; cv=none; b=BYd5wSU/t58cjjK3/m+wf4K8RItyqnkx25mtUUsL1IigwMy3WzDjvg3hn/5cTiqeitAs7H0PIwxFFs4S1J8rha5rq7rt9RY4bjjaKd0bfbC+EYUmcqBwX1csJXG8jInKiwy+pdoOTcmi6J5ADnp7K78jL02LC+zVRNVkf5tTsqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749592567; c=relaxed/simple;
-	bh=BcO/N3oLniwVCzGot81EJud0xDOAiwYCU0xsTlvrqoI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Roev8hdIxnhG8Eoj0YAU0ZxLWlO4iT9CT+hv6cHjsczwmDcRtNEELjdWvElpy8MYlz2M5CtyrwDOtzFQQ/c4/oX4U3C1mYqkkwUC6K8v7kJfvJ9/qKALuM+zLDa2RQa/9DXj1ZV8vEKWSJO6IPhkz3LscMFfqtIi2UnAzVjAY6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GtwohTrZ; arc=none smtp.client-ip=209.85.210.181
+	s=arc-20240116; t=1749592784; c=relaxed/simple;
+	bh=T1RG2dHGltgiK3WpIJDwW9Fd9WrgWZmkMz/O92jXKdg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hRzonmgPzr42MhJpuwsqXY43gkOIrC2wVo5qLyK392A4y9ZQ8Fgiz6SqDjDhDW2PgP4oEhvf18D2XJfyIsHdU7gddoW/+L7l81UPZFZOR6cZMKoraVLqTS5SEctnpHtLxy2/kWsCBM5K/Pu6PRuvY5idLleXHmnn8sMJrge0CkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MnMmgD/c; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GtwohTrZ"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso4910010b3a.2;
-        Tue, 10 Jun 2025 14:56:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MnMmgD/c"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a4e575db1aso777646f8f.2;
+        Tue, 10 Jun 2025 14:59:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749592566; x=1750197366; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Mh8dL2G7ps6auhPCbV2SxnoFMaxmQBWO6t4lRq5+ZGg=;
-        b=GtwohTrZJEWHeNo8T4XyRbfdMjetNE+2tvnQIHG3Bn6WxGBKIL8+efmZM6R1jeIK5o
-         oHOfp+gd0xMVbJsolR71hAizt8JyhL6NC4Kwq4oKVl2L/EMd7SKV3y9xvhJiHIvPHqUa
-         HAGOegSq8BPFuuQy9rpyzSFdzkeKV/42Ho+a2RgVff2yr31Yk1Rs1KYu99fLrIij0wUX
-         UNqoshrRGVXQ07YtL6SbIArDCe6Fp4ft4BMWbbMRvAkN2mZMvIQFX4H31UK1UAwpg+Vs
-         M/Z2u8YdbZqhIfmYc4zYtuncD7cREb+ChCOhwaGhHqFc+AIKAHTkkl7rsbPVsQrNFFOu
-         L07A==
+        d=gmail.com; s=20230601; t=1749592781; x=1750197581; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1b/tA/78vzSKx8bD0pcCFLvLidaruLr5dztNEqFUNSs=;
+        b=MnMmgD/cD0AdGa40kZZO21n3FXh34gAOW3TgvIV9zXb1U2erDJRcyNjSKd1mT+79ab
+         oqs3VrLGckRE1s9Wcn6qLRgNrQe3ZowoXzL2Y41+wMOFRtuH3FjPeZqnlUymnPKhPkD6
+         +85qY/TF+wE83eg5jgQSdV05zmdAgPXnvpkhOKDU81giiZfxppYwuzog69w5N4fgtp2p
+         HV0WHeAimMLFy435996iYcI/jgrIgUxIaIDsDUuvVLqm27ULmrwyHFJ39NWl8A3q1rxS
+         II2s/rOMsaz5JEDDVOoBjZb3/B7CPGOSWVdP7PquPkALcq8Im5mlzk6jqEiNvRHusX39
+         5F/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749592566; x=1750197366;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Mh8dL2G7ps6auhPCbV2SxnoFMaxmQBWO6t4lRq5+ZGg=;
-        b=DVyYe8vxro0zaGQZazQBX1bf48YaqSjQZCJtm0y4Uzw2o4QdLES9vCCyXcYyPMsAFT
-         msRPHc1dcyHuDYOjNAdmqPtfPhGsOBAiY8cKC4574nsAY+KrDCpdRsI13+NDaes0XZAS
-         T0tRIv2FuayORe1CxHBacKhPWlaE6x3GsqFMqyMp3KDoAzFb4CcX5Kzi+XbYIs+3gPxE
-         F7kVMVb/AEvO5UMinEEPEQl2i18ZZ5DME16hc+oniYNrhiEOtMSjt5+lt1/DYtxoSEmZ
-         MqV2P4fcYpL5eMhprBAmubq4QGkp/1xHS96m+X2o2qE9haQAOIMcnSCGhoNFVI9TI+II
-         72nA==
-X-Forwarded-Encrypted: i=1; AJvYcCVB36YQy0O/KpdPVLX/jOPTcIJ0SsBvtgnAXg92GIw/VUxC9CYEAAN4Hw8R9C5VhPlV9x4TI2W3@vger.kernel.org, AJvYcCVEHeQM41tN+ynmdPypglkL+Jgu+rY2LC//Dk9OzirpdiSuYCVU5XUHv/VlCeayE/kQ0LLdcnVoQe0X@vger.kernel.org, AJvYcCVL2CZ44aOeFgHSPXB8GKuWu2gmHoVWXJnwQ/rW0WxAW6Rwhh060RSpa0XXbnHgIUR8ZQDc6dGg6v9jntw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyhdsdo+aKKTxPZoO85lreUpBFsoyzb3RAHvHUiL3WggNCKvOXN
-	KKBoxFTN01BK1DXNjE8sojy9zq1YeYtbNgkrW7PSoj/i0LmksgUu54VX
-X-Gm-Gg: ASbGncvHtktUnI5YZD4BibN4psP175zRKY8kBnxLZJTjJsK+uKKX8Krv7r8ikj03mXW
-	kzR3xo8PkRufNFQLfUjAxvsa1KT1VgATn7TCGmfqTf9GhnstoXTajyDNMZ6e+4pcjuwZppBUetJ
-	jYrRCQTDM9QbTOL+j+DImlWZ/XzJuw5bppYeSDl0Al8Jr3Cu5PqEfVwPTx0uwzKOjnt2KPo3bBc
-	Gf88FvdQJhPwNf1A/PQHYiy935pqIrIkirrUL5skQO8ZKD68VqZR6MOiq06GN5MWHCrJXmp46HY
-	BVYqWt/j8MXNzblMeaZ2V3H+GJCT3Jj7HG0sLVQpNtVSP0pw/Kl08C6B8qZA0Hmx7BjTbqGnURW
-	dmFMIy59akN5LHVeNzMhJIwASJzs=
-X-Google-Smtp-Source: AGHT+IF50qUKlnQbr9poW8unnzpE8c0mhNlT5avVy2a6dY7Fsb+ssIhW5QF+vzmXtbCwaGQl4JUDKw==
-X-Received: by 2002:a05:6a00:17a4:b0:736:b101:aed3 with SMTP id d2e1a72fcca58-7486cb44948mr1406040b3a.1.1749592565674;
-        Tue, 10 Jun 2025 14:56:05 -0700 (PDT)
-Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482af3a165sm8173936b3a.11.2025.06.10.14.56.03
+        d=1e100.net; s=20230601; t=1749592781; x=1750197581;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1b/tA/78vzSKx8bD0pcCFLvLidaruLr5dztNEqFUNSs=;
+        b=Aszrifjpa0XYU1W2O8RxCXgXr5crmPa7e9dpt0l9YLEhWR9MuRD+5NndsTHBJ1Ojwk
+         eyNDf1UXI6/pWtXDZJG5T1FubDbJNozAnUK09cWXnxUCI0altnwWXsSpZCLaVxYQl7/h
+         Dd1c7V9YQhLcwEs4Cicx54mNOAqnEBKW2Trw1bW9jLZKCDiERCGeN07mVzJrwLGe9Bxs
+         BpEfXEUlXh41r2lEOLGeq/dyT+meRVfdcnPbjVRoOpDlHdyMjELKfyCAAqHg/VNKnV4e
+         fBtVgSfJ2uo68kv2e80JuFU0gt3DSbmIs7+p9HtVHoFQ3/2of2r9viKwLlmqaajTOdMR
+         4/fA==
+X-Forwarded-Encrypted: i=1; AJvYcCX8nRhaIoXelHkGg+ewroM/ERWb5XpCvUNvpAy+VaMLq3HRJjT1gZVxSjgTgQ/ywv2ok53OiGS0cjWsQKQu@vger.kernel.org, AJvYcCXzjs3VW0DybOW24d1DPJKKWYl1Q9N2u2BrTLqiS26sVjaFj8y9ZhrzqF8NNa+bVAKNMWXedoUFNoM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXRuoF2Z0WgMIz5+ALir+/Dd3YKrFIeIo+yeyJMrsWHrOQeTcB
+	PzD5wOVZLLS6jymoZNDmQLXxHZ/I3wdjoh42UXprwkT6/F7E0T0UmHwZ
+X-Gm-Gg: ASbGncuFJ3mAqO0emxuAueM4hnMecHECkQaARauobxc1kBef/vZ6h3lYXKTtK7CELwL
+	G4nGNgAcAnO5ChPwE3tOknyBhjUjrZtIq8MisLPOCy/9H3fyP+plwgjLp8xjDp2yGLPGoq6pXMf
+	nb1ll1T+r4Z3sApxqde0sem4jdSXyo558bS8BzOGhNE3XacI5cEiX5LvV8CjW0/SDMBnB3jbc7a
+	KsxAFkbBCM7IYhVCrotAKu/5n9tTb/lOsnn8j3iEN2iZfC+/hjGzTTmsjmGdh5rhiLh2Yg+8l7C
+	yV74ofMLZBqhl4bF3Lmsm5liE725qJzDWt/iNzCfWXbTIeV1uYX8CtfB68xVHi5cgCpV1W86X4s
+	vYCxUilQ9ohUQHN9i/Dix13hHsI5s3cwj
+X-Google-Smtp-Source: AGHT+IGjg/gPJHdEEzqSMuf/axfH6ETfuDeoTj3rgXGPhtimf78EeEan6RLHku/rvOx0n1IjiAPMWw==
+X-Received: by 2002:a05:6000:178a:b0:3a4:e0e1:8dc8 with SMTP id ffacd0b85a97d-3a558803128mr179618f8f.9.1749592780588;
+        Tue, 10 Jun 2025 14:59:40 -0700 (PDT)
+Received: from localhost.localdomain (84-72-156-211.dclient.hispeed.ch. [84.72.156.211])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53244f04dsm13312647f8f.73.2025.06.10.14.59.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 14:56:05 -0700 (PDT)
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: corbet@lwn.net,
-	colyli@kernel.org,
-	kent.overstreet@linux.dev,
-	akpm@linux-foundation.org,
-	robertpang@google.com
-Cc: linux-kernel@vger.kernel.org,
+        Tue, 10 Jun 2025 14:59:39 -0700 (PDT)
+From: Lothar Rubusch <l.rubusch@gmail.com>
+To: lars@metafoo.de,
+	Michael.Hennerich@analog.com,
+	jic23@kernel.org,
+	dlechner@baylibre.com,
+	nuno.sa@analog.com,
+	andy@kernel.org,
+	corbet@lwn.net
+Cc: linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
-	linux-bcache@vger.kernel.org,
-	jserv@ccns.ncku.edu.tw,
-	Kuan-Wei Chiu <visitorckw@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH 8/8] bcache: Fix the tail IO latency regression by using equality-aware min heap API
-Date: Wed, 11 Jun 2025 05:55:16 +0800
-Message-Id: <20250610215516.1513296-9-visitorckw@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250610215516.1513296-1-visitorckw@gmail.com>
-References: <20250610215516.1513296-1-visitorckw@gmail.com>
+	eraretuya@gmail.com,
+	l.rubusch@gmail.com
+Subject: [PATCH v9 00/11] iio: accel: adxl345: add interrupt based sensor events
+Date: Tue, 10 Jun 2025 21:59:22 +0000
+Message-Id: <20250610215933.84795-1-l.rubusch@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,73 +81,162 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Commit 866898efbb25 ("bcache: remove heap-related macros and switch to
-generic min_heap") replaced the original top-down heap macros in bcache
-with the generic min heap library, which uses a bottom-up heapify
-strategy. However, in scenarios like invalidate_buckets_lru() -
-especially before the cache is fully populated - many buckets remain
-unfilled. This causes new_bucket_prio() to frequently return zero,
-leading to a high rate of equal comparisons.
+Add several interrupt based sensor detection events:
+- refactoring and fixes
+- activity
+- inactivity
+- documentation
 
-Bottom-up sift_down performs up to 2 * log2(n) comparisons in such
-cases, resulting in a performance regression.
+In brief, this implementation uses the inactivity registers for inactivity
+events with a period >1s. For a configured period <1s the free-fall
+registers will be used. The related features, such as setting the link-bit,
+auto-sleep, the AC-coupling events, etc. are turned on/off accordingly. For
+instance, activity and inactivity enabled imply a link-bit set. Disabling
+one, removes the link-bit. Setting e.g. activity AC with inactivity DC, sets
+the link bit and so on.
 
-Switch to the _eqaware variants of the min heap API to restore the
-original top-down sift_down behavior, which requires only O(1)
-comparisons when many elements are equal.
+Due to several items found for the ADXL313, I tried to apply those refacs
+here as well. I'm still unsure, if I should rathe wrap them up in one big
+refac patch or keep them separated by the items as I tried here.
 
-Also use the inline versions of the heap functions to avoid performance
-degradation introduced by commit 92a8b224b833 ("lib/min_heap: introduce
-non-inline versions of min heap API functions"), as
-invalidate_buckets_lru() is on a performance-critical hot path.
+By the number of possible combinations of configurations and their
+verification, as additionally the refactorings - I implemented an automated
+verification by a labgrid/pytest setup with over 300 test steps and hardware
+in the loop. Hopefully the setup is mostly correct. Further I extended the
+codespell githook by an ispell check (which gave better results).
 
-Fixes: 866898efbb25 ("bcache: remove heap-related macros and switch to generic min_heap")
-Fixes: 92a8b224b833 ("lib/min_heap: introduce non-inline versions of min heap API functions")
-Reported-by: Robert Pang <robertpang@google.com>
-Closes: https://lore.kernel.org/linux-bcache/CAJhEC06F_AtrPgw2-7CvCqZgeStgCtitbD-ryuPpXQA-JG5XXw@mail.gmail.com
-Cc: stable@vger.kernel.org # 6.11+
-Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+Let's see how good that works out. Somehow I'm sure you guys will (still)
+find something...
+
+Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
 ---
- drivers/md/bcache/alloc.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+v8 -> v9:
+- githook: apply codespell checks, extend by spellcheck using ispell
+- refac: apply `regmap_assing_bits()` in several places
+- refac: remove ADXL345_POWER_CTL_STANDBY in adxl345.h not needed anymore
+- refac: rename `ADXL345_ACT_INACT_DC/AC` to `ADXL345_COUPLING_DC/AC`
+- refac: remove variable irq from `struct adxl345_state`
+- refac: apply expressions, such as MILLI or MICRO from linux/units.h
+- refac: apply (missing) scaling factor 62.5mg/LSB to tap detection
+- change `IIO_EV_TYPE_MAG_REFERENCED` to `IIO_EV_TYPE_MAG_ADAPTIVE`
+- `adxl345_fifo_transfer()`: eliminate variable for expression count / 2
+- `adxl345_is_act_inact_ac()`: make return boolean, or negative error
+- make activity enable cover x, y and z axis together, while signals come
+  on particular axis
+- `adxl345_read_mag_value()`: separate `MAG` and `MAG_ADAPTIVE` event
+  value read and write function to reduce redundant code
+- `adxl345_read_mag_config()`: separate `MAG` and `MAG_ADAPTIVE` event
+  config read and write functions to reduce redundant code
+- `adxl345_set_act_inact_en()`: move linkbit detection out to
+  `adxl345_set_act_inact_linkbit()`
+- `adxl345_set_act_inact_en()`: fix unsetting register INT ENABLE at
+  disabling feature(s)
+- apply scaling factor 62.5mg/LSB to activity/inactivity
+- apply scaling factor 62.5mg/LSB to activity AC/inactivity AC
+- drop dedicated freefall patch
+- add patch: fix missing scale factor for tap detection
+- add patch: make irq a function local variable
+- add patch: simplify measure enable
+- add patch: simplify interrupt mapping
+- add patch: simplify FIFO reading
+- add patch: replace magic numbers by unit expressions
+- rename `adxl345_set_inact_time_s()` to `adxl345_set_inact_time()`
+- `adxl345_set_inact_time()`: implement inactivity using inactivity
+  register (period 1s or higher), freefall register (below 1s) or let it
+  setup a period based on given ODR (0s provided)
+- doc: update documentation
 
-diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
-index 8998e61efa40..625c5c4eb962 100644
---- a/drivers/md/bcache/alloc.c
-+++ b/drivers/md/bcache/alloc.c
-@@ -207,15 +207,16 @@ static void invalidate_buckets_lru(struct cache *ca)
- 		if (!bch_can_invalidate_bucket(ca, b))
- 			continue;
- 
--		if (!min_heap_full(&ca->heap))
--			min_heap_push(&ca->heap, &b, &bucket_max_cmp_callback, ca);
--		else if (!new_bucket_max_cmp(&b, min_heap_peek(&ca->heap), ca)) {
-+		if (!min_heap_full_inline(&ca->heap))
-+			min_heap_push_inline(&ca->heap, &b, &bucket_max_cmp_callback, ca);
-+		else if (!new_bucket_max_cmp(&b, min_heap_peek_inline(&ca->heap), ca)) {
- 			ca->heap.data[0] = b;
--			min_heap_sift_down(&ca->heap, 0, &bucket_max_cmp_callback, ca);
-+			min_heap_sift_down_eqaware_inline(&ca->heap, 0, &bucket_max_cmp_callback,
-+							  ca);
- 		}
- 	}
- 
--	min_heapify_all(&ca->heap, &bucket_min_cmp_callback, ca);
-+	min_heapify_all_eqaware_inline(&ca->heap, &bucket_min_cmp_callback, ca);
- 
- 	while (!fifo_full(&ca->free_inc)) {
- 		if (!ca->heap.nr) {
-@@ -227,8 +228,8 @@ static void invalidate_buckets_lru(struct cache *ca)
- 			wake_up_gc(ca->set);
- 			return;
- 		}
--		b = min_heap_peek(&ca->heap)[0];
--		min_heap_pop(&ca->heap, &bucket_min_cmp_callback, ca);
-+		b = min_heap_peek_inline(&ca->heap)[0];
-+		min_heap_pop_eqaware_inline(&ca->heap, &bucket_min_cmp_callback, ca);
- 
- 		bch_invalidate_one_bucket(ca, b);
- 	}
+v7 -> v8:
+- activity/inactivity are MAG events
+- separate AC coupled activity/inactivity events as MAG_REFERENCED events,
+  since AC coupling introduces a (some kind of) reference relation
+- since freefall and inactivity (DC coupled) are then actually identical,
+  this results in a challenging situation for the freefall patch. Thus,
+  the freefall patch is moved to end of this series (before documentation)
+- freefall: provide separate sysfs handles to configure and enable freefall
+- documentation: update sections on activity/inactivity, freefall, event
+  names and examples
+
+v6 -> v7:
+- freefall: add a virtual channel, replace OR'ing the axis by AND'ing them
+- inactivity: add a virtual channel, replace OR'ing the axis by AND'ing them
+
+v5 -> v6:
+- replace bool axis_en for tap and activity/inactivity
+- apply freefall bit mask
+- change `measure_en` to use `regmap_update_bits()` for POWER_CTL register
+- fix comments and update documentation, particularly on inactivity time
+
+v4 -> v5:
+- read_config_value() and write_config_value() now use direct returns,
+  in case of a failure, measurement stays turned off
+- fifo evaluation returns 0 in case of success
+- axis enum turned into three different set of defines for tap, act and inact
+- turn the suppress bit into a separate define macro
+- variable naming, generally use axis_ctrl for similar variables
+
+v3 -> v4:
+- rename patch "add double tap suppress bit" to
+  "set the tap suppress bit permanently" to make it more comprehensive
+- added patch "cleanup regmap return values"
+- added patch "introduce adxl345_push_event function", as a solution
+  to the return value problem, group all int_stat evaluating pieces
+  in the same function
+- tap, act and inact axis enabling are using now regmap cache
+- activity enable depending on individual axis now, as the sensor offers
+  such feature
+- inactivity enable depending on individual axis now, as the sensor offers
+  such feature
+- fix bug in previous patch: separate axis direction in interrupt handler
+  sharing the same variable for tap and activity, if tap and activity
+  enabled together
+- refac of the direction identification of previous patch: only read
+  act/tap axis once now in interrupt handler if both is enabled
+- fix bug in previous patch: return value of pushed event in interrupt
+  handler
+- several cleanups
+
+v2 -> v3:
+- generally introduction of regmap cache for all directly stored 8-bit
+  values, specification of volatile regs and cleanup
+- moving thresholds, unchanged values and flags to regmap cache, in
+  consequence removal of corresponding member values of the state
+  instance
+- removal of intio and int_map member fields due to regmap cache, thus
+  split of set_interrupts() patches in two parts
+- rework documentation
+- rework of ac-bit comment
+
+v1 -> v2:
+- implementation of all events (but tap2 suppress bit) by means IIO ABI
+- add sample frequency / ODR configuration
+- add g ranges configuration
+- add activity/inactivity using auto-sleep and powersave
+- add dynamic adjustment of default values for
+  activity/inactivity thresholds and time for inactivity based on ODR
+  and g range (can be overwritten)
+- add sensor documentation
+---
+Lothar Rubusch (11):
+  iio: accel: adxl345: apply scale factor to tap threshold
+  iio: accel: adxl345: make data struct variable irq function local
+  iio: accel: adxl345: simplify measure enable
+  iio: accel: adxl345: simplify interrupt mapping
+  iio: accel: adxl345: simplify reading the FIFO
+  iio: accel: adxl345: replace magic numbers by unit expressions
+  iio: accel: adxl345: add activity event feature
+  iio: accel: adxl345: add inactivity feature
+  iio: accel: adxl345: add coupling detection for activity/inactivity
+  iio: accel: adxl345: extend inactivity time for less than 1s
+  docs: iio: add documentation for adxl345 driver
+
+ Documentation/iio/adxl345.rst    | 429 +++++++++++++++++
+ Documentation/iio/index.rst      |   1 +
+ drivers/iio/accel/adxl345.h      |   1 -
+ drivers/iio/accel/adxl345_core.c | 793 +++++++++++++++++++++++++++++--
+ 4 files changed, 1195 insertions(+), 29 deletions(-)
+ create mode 100644 Documentation/iio/adxl345.rst
+
 -- 
-2.34.1
+2.39.5
 
