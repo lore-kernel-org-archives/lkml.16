@@ -1,95 +1,138 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE9C21C18E
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 04:56:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5693A1442E8;
+	Tue, 10 Jun 2025 04:56:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749531368; cv=none; b=s30uHGW0seHrkjh0aq4gVdNiF7t3jJVpOR/4xDQ1hIWT2v9UIKN4OhUm0MBiOH1NHBE6Xglw/+1VXEJfRVcYY6DIk1L1j21g7Zt8WvtPEF4Ou60t0cLVkwpJ67X0JSCeHY70XUcEgh/W3Gc7/tMimOP9NMqu7xztVHa3aQ9JW+A=
+	t=1749531406; cv=none; b=Hf/9t0xl03K7ppeq2SWWYqZZum1SwW1d9SpOsskkRtvsXZbiB57kEiETV1A4TOP6lmyf1cErGR7qSZGuKFExXszdI7wzU6RWKAvRPAVaBSljBuNwDQ8NRSSWEXEv/tmK1E1OBJElPLCwC/0x392liPLFEmGKbAUUfrEiL3Eg+ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749531368; c=relaxed/simple;
-	bh=ACrPjCNMNkwFDXJy7gnBW2xPAwHaQ0JnySCEiCWvtMk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FfHkXiWLR7rjoDD/aVlh4bk916P6/ecKTm7r384AjZTBpxERShn2H5anp5hisrwAZSnHwe/4uaKN+70e+mRE2ODcbvReZJi5dhSg4KTU1cJTo0BhJDfbsKN1D5iIfyOgf2paByanQQ9HvX1rhU2EPFpbsduuT8AglrpmXgaB5Mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Aj8Rjr//; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1749531406; c=relaxed/simple;
+	bh=vTv7yXlya3K6c3/J2q6Y2XqhFJ6j2s6q/OfC3+yifd0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j64tjkvNmhucXOsY3WxDKkZPPHIULf0I4BRfKaAAmlgdjCmJrjHxHZYjUqnKydOhm4FgmcYIIXBQcU6UHQw1Rv2t20+Tvv+KXVszAB+BQNtCfHzk96e2WqxHKj2FgbDNUtDREmn85nA8X5kqbdThQPNTzuHjWfIJyLII4ju+dII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VDmVaDZc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Aj8Rjr//"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-74264d1832eso5778040b3a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 21:56:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1749531366; x=1750136166; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qki4u1ARte4A1FCY+DBjuYiE3kbSTbsi4JExJG2FT2E=;
-        b=Aj8Rjr//ohdp+oCP2hGvLID7LSE5WbbWWiZOQ/2ylF5AGNgr8QYAqCJe7DpZQvFpBH
-         U2RLw3grYXnvy196Z/kg/LdKMWa/gdYcyLENoACUiWYFMIAbYhaLdJXv1yugT+K5m4SG
-         tB6mUklR/pc//90QoDmKKuUoylbOgjlDKzJ/E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749531366; x=1750136166;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qki4u1ARte4A1FCY+DBjuYiE3kbSTbsi4JExJG2FT2E=;
-        b=SXTTNm3XbobTOTP+O+VC6GSxrff5X6Z/+4iaz3v/uu/Ao8mjOKIpz42oFhwBaj/Rda
-         FkBYI+6UVZXIKO2WYV1c5Ugahtu1kRJ+J26uixhbQaIojP76lBCd+zN+tBI7SaG+HuNL
-         ulUbwl4ImFJuptY5tb+7KgWiORG2H8Ax81sM187bdfD4FEU6nxT+x4T2EeEUDkf/of1T
-         hieEfFVJpoKnjPc1IByEv42Tv8wyYFeOLzHg3YPWLAGqQgV7t0+u7/E21Le/Wmi6EMPO
-         x++p0QLvBlQ9+fiE9lYJRthmpXc4+U3oh8WG3vMtjpfpgJIugGdKQdy2bM78ofq+gWx1
-         aLBg==
-X-Forwarded-Encrypted: i=1; AJvYcCU1d1MpbjdRjR1LPdWCRpJ9evfZn5nuChMed3WbjDsyd0OGOEHcb5+oOdy+1hEi0+I3SxR7ehyZkNPVxxI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx57oEn9ojHt8lMywwP4vXCbnGTD9DXWWhju1QPSdmsMJfIx6SC
-	jCXVeXCl529bhtCYP9BTEt4sPPBJLU58ujxFgrU93oHybpuZGPMTvY0OcT23VsLF3Q==
-X-Gm-Gg: ASbGncuo+2XbY9D6jRP27AU6JOF+upAm4TRJ0lEkhwRV791ubhZimiEtl1/ZVJ8Vmer
-	bs9Uorl/szj7zWYGtVRwAR+T3gpOBTj53uEa+9oClztpr5j4ugKZwoVFbaGDX6l2qyjWy3CaCJo
-	mBOisx6Uhpm1RQBh6/99EyL30Ve8nsTPK1J+IFuSHrfeQHUWkH6bGyb3hF5TyKcYOHWYfqbF4b7
-	LQtl0xRdAF0A6Y8L0q8eLcioFXF9ri5EjTXfHcxJPc2wCLzGr15puuy0EeB15rGTyk+AZU1IJM7
-	DJ9tU91gU8aaU3owKwuiAKxZawMpVRSkChD3et2dfbOuYntufisbXa+QRa3acJ6QiA==
-X-Google-Smtp-Source: AGHT+IFSDAss5UN+FP5CfZ0KjyYXiBlN9b2UJ6xKVd1D/6YzHaiPhv0TdnCukpQpMXZECc9dafUTWQ==
-X-Received: by 2002:a05:6a21:a616:b0:21f:5532:1e53 with SMTP id adf61e73a8af0-21f55321f30mr8226224637.33.1749531366270;
-        Mon, 09 Jun 2025 21:56:06 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:ca42:1883:8c66:702e])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b0847b9sm6815101b3a.104.2025.06.09.21.56.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 21:56:05 -0700 (PDT)
-Date: Tue, 10 Jun 2025 13:56:01 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: fuse: suspend blockers
-Message-ID: <chiicm5lwiok5ni6evrohkjvmt3upy5ikm7vdxz5ukops464kg@vf7hr2mprg3i>
-References: <jofz5aw5pd2ver3mkwjeljyqsy4htsg6peaezmax4vw4lhvyjp@jphornopqgmr>
- <CAJfpegtNB22Dpi=wX8nBDx=A9SeYZKpZGniJHBBxJBHB3o0nHQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VDmVaDZc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 890B2C4CEEF;
+	Tue, 10 Jun 2025 04:56:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749531404;
+	bh=vTv7yXlya3K6c3/J2q6Y2XqhFJ6j2s6q/OfC3+yifd0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=VDmVaDZc96c9Hk0Xp6dqOz31njxwEg6vXZZK5r6Tb+H0OVz/ogHTn0SA22kQvH5cg
+	 w9RscZLHwcM77fxVlh5ixd/G9ktVnQ0tkZ7vGotwQja6135W1E3kRAgn9m36QksgsU
+	 BsGVT8jffTEvgaIxLiGyND4jPxiwefWfhAlbG1ho3C8gCq8TSHlc+MyXIuTxRQ5sWL
+	 wqJh2i6brTvqxa0eKzcmv/hTbHiUKggJTtxRK09Ahi3ik+jfdamcDcCb27oHERBKOL
+	 E+icf6s4sc4+jjZAudQX8WCnHniBCONk+0RLgso6KeXSM/EOv8/QQJkuLYT2huPL9x
+	 y3sqrWKadz+dQ==
+Message-ID: <076c8792-8e9e-4809-aca3-18f64e79f53d@kernel.org>
+Date: Tue, 10 Jun 2025 06:56:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfpegtNB22Dpi=wX8nBDx=A9SeYZKpZGniJHBBxJBHB3o0nHQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] drivers/tty/moxa.c: Fix spelling mistake in comment
+To: shanmukh.iyer@gmail.com, hugo@hugovil.com
+Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+ linux-serial@vger.kernel.org, trivial@kernel.org
+References: <20250609083906.2612e881444ee04360715aed@hugovil.com>
+ <20250609233452.164722-1-shanmukh.iyer@gmail.com>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ xsFNBE6S54YBEACzzjLwDUbU5elY4GTg/NdotjA0jyyJtYI86wdKraekbNE0bC4zV+ryvH4j
+ rrcDwGs6tFVrAHvdHeIdI07s1iIx5R/ndcHwt4fvI8CL5PzPmn5J+h0WERR5rFprRh6axhOk
+ rSD5CwQl19fm4AJCS6A9GJtOoiLpWn2/IbogPc71jQVrupZYYx51rAaHZ0D2KYK/uhfc6neJ
+ i0WqPlbtIlIrpvWxckucNu6ZwXjFY0f3qIRg3Vqh5QxPkojGsq9tXVFVLEkSVz6FoqCHrUTx
+ wr+aw6qqQVgvT/McQtsI0S66uIkQjzPUrgAEtWUv76rM4ekqL9stHyvTGw0Fjsualwb0Gwdx
+ ReTZzMgheAyoy/umIOKrSEpWouVoBt5FFSZUyjuDdlPPYyPav+hpI6ggmCTld3u2hyiHji2H
+ cDpcLM2LMhlHBipu80s9anNeZhCANDhbC5E+NZmuwgzHBcan8WC7xsPXPaiZSIm7TKaVoOcL
+ 9tE5aN3jQmIlrT7ZUX52Ff/hSdx/JKDP3YMNtt4B0cH6ejIjtqTd+Ge8sSttsnNM0CQUkXps
+ w98jwz+Lxw/bKMr3NSnnFpUZaxwji3BC9vYyxKMAwNelBCHEgS/OAa3EJoTfuYOK6wT6nadm
+ YqYjwYbZE5V/SwzMbpWu7Jwlvuwyfo5mh7w5iMfnZE+vHFwp/wARAQABzSFKaXJpIFNsYWJ5
+ IDxqaXJpc2xhYnlAa2VybmVsLm9yZz7CwXcEEwEIACEFAlW3RUwCGwMFCwkIBwIGFQgJCgsC
+ BBYCAwECHgECF4AACgkQvSWxBAa0cEnVTg//TQpdIAr8Tn0VAeUjdVIH9XCFw+cPSU+zMSCH
+ eCZoA/N6gitEcnvHoFVVM7b3hK2HgoFUNbmYC0RdcSc80pOF5gCnACSP9XWHGWzeKCARRcQR
+ 4s5YD8I4VV5hqXcKo2DFAtIOVbHDW+0okOzcecdasCakUTr7s2fXz97uuoc2gIBB7bmHUGAH
+ XQXHvdnCLjDjR+eJN+zrtbqZKYSfj89s/ZHn5Slug6w8qOPT1sVNGG+eWPlc5s7XYhT9z66E
+ l5C0rG35JE4PhC+tl7BaE5IwjJlBMHf/cMJxNHAYoQ1hWQCKOfMDQ6bsEr++kGUCbHkrEFwD
+ UVA72iLnnnlZCMevwE4hc0zVhseWhPc/KMYObU1sDGqaCesRLkE3tiE7X2cikmj/qH0CoMWe
+ gjnwnQ2qVJcaPSzJ4QITvchEQ+tbuVAyvn9H+9MkdT7b7b2OaqYsUP8rn/2k1Td5zknUz7iF
+ oJ0Z9wPTl6tDfF8phaMIPISYrhceVOIoL+rWfaikhBulZTIT5ihieY9nQOw6vhOfWkYvv0Dl
+ o4GRnb2ybPQpfEs7WtetOsUgiUbfljTgILFw3CsPW8JESOGQc0Pv8ieznIighqPPFz9g+zSu
+ Ss/rpcsqag5n9rQp/H3WW5zKUpeYcKGaPDp/vSUovMcjp8USIhzBBrmI7UWAtuedG9prjqfO
+ wU0ETpLnhgEQAM+cDWLL+Wvc9cLhA2OXZ/gMmu7NbYKjfth1UyOuBd5emIO+d4RfFM02XFTI
+ t4MxwhAryhsKQQcA4iQNldkbyeviYrPKWjLTjRXT5cD2lpWzr+Jx7mX7InV5JOz1Qq+P+nJW
+ YIBjUKhI03ux89p58CYil24Zpyn2F5cX7U+inY8lJIBwLPBnc9Z0An/DVnUOD+0wIcYVnZAK
+ DiIXODkGqTg3fhZwbbi+KAhtHPFM2fGw2VTUf62IHzV+eBSnamzPOBc1XsJYKRo3FHNeLuS8
+ f4wUe7bWb9O66PPFK/RkeqNX6akkFBf9VfrZ1rTEKAyJ2uqf1EI1olYnENk4+00IBa+BavGQ
+ 8UW9dGW3nbPrfuOV5UUvbnsSQwj67pSdrBQqilr5N/5H9z7VCDQ0dhuJNtvDSlTf2iUFBqgk
+ 3smln31PUYiVPrMP0V4ja0i9qtO/TB01rTfTyXTRtqz53qO5dGsYiliJO5aUmh8swVpotgK4
+ /57h3zGsaXO9PGgnnAdqeKVITaFTLY1ISg+Ptb4KoliiOjrBMmQUSJVtkUXMrCMCeuPDGHo7
+ 39Xc75lcHlGuM3yEB//htKjyprbLeLf1y4xPyTeeF5zg/0ztRZNKZicgEmxyUNBHHnBKHQxz
+ 1j+mzH0HjZZtXjGu2KLJ18G07q0fpz2ZPk2D53Ww39VNI/J9ABEBAAHCwV8EGAECAAkFAk6S
+ 54YCGwwACgkQvSWxBAa0cEk3tRAAgO+DFpbyIa4RlnfpcW17AfnpZi9VR5+zr496n2jH/1ld
+ wRO/S+QNSA8qdABqMb9WI4BNaoANgcg0AS429Mq0taaWKkAjkkGAT7mD1Q5PiLr06Y/+Kzdr
+ 90eUVneqM2TUQQbK+Kh7JwmGVrRGNqQrDk+gRNvKnGwFNeTkTKtJ0P8jYd7P1gZb9Fwj9YLx
+ jhn/sVIhNmEBLBoI7PL+9fbILqJPHgAwW35rpnq4f/EYTykbk1sa13Tav6btJ+4QOgbcezWI
+ wZ5w/JVfEJW9JXp3BFAVzRQ5nVrrLDAJZ8Y5ioWcm99JtSIIxXxt9FJaGc1Bgsi5K/+dyTKL
+ wLMJgiBzbVx8G+fCJJ9YtlNOPWhbKPlrQ8+AY52Aagi9WNhe6XfJdh5g6ptiOILm330mkR4g
+ W6nEgZVyIyTq3ekOuruftWL99qpP5zi+eNrMmLRQx9iecDNgFr342R9bTDlb1TLuRb+/tJ98
+ f/bIWIr0cqQmqQ33FgRhrG1+Xml6UXyJ2jExmlO8JljuOGeXYh6ZkIEyzqzffzBLXZCujlYQ
+ DFXpyMNVJ2ZwPmX2mWEoYuaBU0JN7wM+/zWgOf2zRwhEuD3A2cO2PxoiIfyUEfB9SSmffaK/
+ S4xXoB6wvGENZ85Hg37C7WDNdaAt6Xh2uQIly5grkgvWppkNy4ZHxE+jeNsU7tg=
+In-Reply-To: <20250609233452.164722-1-shanmukh.iyer@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On (25/06/06 10:26), Miklos Szeredi wrote:
-> > @@ -241,7 +241,7 @@ static struct fuse_req *fuse_get_req(struct fuse_conn *fc, bool for_background)
-> >
-> >         if (fuse_block_alloc(fc, for_background)) {
-> >                 err = -EINTR;
-> > -               if (wait_event_killable_exclusive(fc->blocked_waitq,
-> > +               if (wait_event_freezable_killable_exclusive(fc->blocked_waitq,
-> >                                 !fuse_block_alloc(fc, for_background)))
-> >                         goto out;
-> >         }
+On 10. 06. 25, 1:34, shanmukh.iyer@gmail.com wrote:
+> From: Shanmukh Iyer <shanmukh.iyer@gmail.com>
 > 
-> This looks fine.  We can turn each wait into a freezable one inside
-> fuse.  But that still would leave core locks (inode lock, rename lock,
-> page lock, etc) unfreezable.  Turning those into freezable isn't
-> realistic...
+> Corrected some spelling and grammar in the comments, such as:
+> - Units (baud -> baud rate)
+> - Sentence flow
+> - typos
 > 
-> But a partial solution might still be better than no solution.
+> This is part of my first patch to get familiar with
+> the kernel's patch contribution workflow.
+> 
+> Signed-off-by: Shanmukh Iyer <shanmukh.iyer@gmail.com>
+> ---
 
-Thanks Miklos, I sent out a simple patch set [1]
+v2 changelog missing here now.
 
-[1] https://lore.kernel.org/linux-kernel/20250610045321.4030262-1-senozhatsky@chromium.org
+>   drivers/tty/moxa.c | 9 +++++----
+>   1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/tty/moxa.c b/drivers/tty/moxa.c
+> index 329b30fac8fc..bf86f24e5655 100644
+> --- a/drivers/tty/moxa.c
+> +++ b/drivers/tty/moxa.c
+> @@ -1627,10 +1627,11 @@ static void MoxaPortFlushData(struct moxa_port *port, int mode)
+>    *           long baud          : baud rate (50 - 115200)
+>    *
+>    *           return:    0       : this port is invalid or baud < 50
+> - *                      50 - 115200 : the real baud rate set to the port, if
+> - *                                    the argument baud is large than maximun
+> - *                                    available baud rate, the real setting
+> - *                                    baud rate will be the maximun baud rate.
+> + *                      50 - 115200 : the real baud rate is set to the port, if
+
+the new "is" looks superfluous.
+
+> + *                                    the argument baud rate is larger than
+> + *                                    the maximum available baud rate, the
+> + *                                    real setting baud rate will be the
+> + *                                    maximum baud rate.
+>    *
+>    *
+>    *      Function 12:    Configure the port.
+
+
+-- 
+js
+suse labs
