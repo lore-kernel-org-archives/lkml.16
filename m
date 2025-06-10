@@ -1,80 +1,62 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B1321D594;
-	Tue, 10 Jun 2025 07:11:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A29122DF9F
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 07:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749539484; cv=none; b=UjabY6ignjxDJ9LCmEYSwZna4jktpsO0xjhqz3u49ipKV2y3osH2P4qzDHdwQfLVhC2GYR2ehk7wzQL5nP7f8wIv1NufWi/Me/Vvvb+YArYJcrllPVEJxQhjB/CeCrhhhz1hsymBCtKcoOL8q8q35WDPv/1+QCtOM1piPi/6IGY=
+	t=1749539495; cv=none; b=CBsAxziwyJC9BPQdLc9ozml24R6SAJqpHgbJKMuTsk+F+u1aK1/sRPvmEH/DzsiH0W+ehvWswTg2hqAM5Z7dKL2b6WofMRJDWYXxF8mCj5S+aNH+XIgWts3YAtia/G5zTDDkTW3xockWKtUZ9Jt2pyx8xSV0RKGxKCNpnb2914c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749539484; c=relaxed/simple;
-	bh=neg1A76eaomaWdPPybsDSsKC2N8/KM8/tJFtzbUDeQI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=e4x/Ty/ibu9cPu/R19p4ykClwfLR8I95kbqVapiU4yfYaie+vzmO8dgZE948hS+8RhR4x4HPBTKL3ooIwO2GrTaAZuDWgt98r0ebKZLa55/R847+TrjKYNeU//rwZJI+ryawJ/5mVD5zbiJ+HUJ5spnxXoMixUwg/DDQfiulcu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lb1cbvFk; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lb1cbvFk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749539483; x=1781075483;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=neg1A76eaomaWdPPybsDSsKC2N8/KM8/tJFtzbUDeQI=;
-  b=Lb1cbvFkj/jcj7nbN859a2Kmst1e6SNtuffSFxpndhp9Nr8w3DWK5Nxb
-   qAjkPq4QyEYHGwXvBdmLU9955hsdXZBJJSCzdaG2NtnOZwimIHygxOyc2
-   A1my9p6jRxxrTLHfu4hXb3OuBzzXjosvurG9mjMaKwIebzLsOEcmeR9Y5
-   gFRTMyGWwzm1qrTh+ehQVhgLz7HrxDQXI4P6mJuKZl/Nw1Qt3M8vC4uDl
-   Y+kuGpK6Lh6QQjwoo8aCQBKJe5OJQOEsp+FRkJqo9Z01kXIWYdxhLGK6y
-   lGXwWD+d0RMt4/yuIRf0gEXY5dpC3gZQanr8wV+vx2KeiWoNDVZGy0XuA
-   Q==;
-X-CSE-ConnectionGUID: KiQmpX5qSv+e+rW6xvT4wg==
-X-CSE-MsgGUID: Veji9aVoStaiTp6Rt6vZ8g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="77035783"
-X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
-   d="scan'208";a="77035783"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 00:11:22 -0700
-X-CSE-ConnectionGUID: TEzqJQhwTUWSr90uhVp86w==
-X-CSE-MsgGUID: G9TJos/lQQm0epoSmo45Ww==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
-   d="scan'208";a="183932960"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 00:11:22 -0700
-Received: from [10.245.244.218] (unknown [10.245.244.218])
-	by linux.intel.com (Postfix) with ESMTP id BE41420B5736;
-	Tue, 10 Jun 2025 00:11:19 -0700 (PDT)
-Message-ID: <d8482e4cb4384fa02d61a6d80075be363598734b.camel@linux.intel.com>
-Subject: Re: [PATCH] intel_idle: Update arguments of mwait_idle_with_hints()
-From: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-To: Uros Bizjak <ubizjak@gmail.com>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>
-Date: Tue, 10 Jun 2025 10:11:18 +0300
-In-Reply-To: <20250609063528.48715-1-ubizjak@gmail.com>
-References: <20250609063528.48715-1-ubizjak@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	s=arc-20240116; t=1749539495; c=relaxed/simple;
+	bh=v4UCoYHQgciSxhmGWQEI8MgUwZtGqXSfrCRo9fn6EFQ=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=E+ET4E0jZ9in5G01rOx9cr3imwbA4J4ImPsknD4XRGuEmUGxl4lBrARU45Qy/KW9XrJ/492GgTEGEaYjWO/ZE+uM7fjYCGcUawT/tj6LODDTlFDqziYXvxXQZsH0+USs7t455YoCjmyR1ZgVJrNNgQyt/knkfjS2soHYaPlUEH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3ddcc14b794so27230275ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 00:11:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749539493; x=1750144293;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=v4UCoYHQgciSxhmGWQEI8MgUwZtGqXSfrCRo9fn6EFQ=;
+        b=hN7I0YUqc+kbUK5JQyRUj1JVgDWfQM/Y5iSjb/NN4hcdKKvZf15gO/1sZCX53h+ZI4
+         c6WCR8UNGSG1sXlOY7WxqmQwy9+HYULXSJR/lXIbu8+qHkgbJXhomyvKSXlquL5ESsO7
+         mL+pOmX/YwiyMDBo0Mj86bueXJb7OiRO+QPtu9r7eGRbfvumTrYrNIn9ZdizaaunkO00
+         V0NgkiG+AzL/6h0iaidBfv35SCkH5SBAjG9HNxW2d1I0yfmXfsLV//HBwfmOLpdkJqYG
+         G1TbQjWP5h1h/ioDL4/sTnvJrYqZdfLAnh/3v0r/e3pIFoblvu3LKZ3TZlJKWx3TTGG8
+         fd3Q==
+X-Gm-Message-State: AOJu0Yyf8tvA4Y4wOYQb9SoFYGb2hjsDKhbZTsepm9dcXAivWi/4wyxw
+	2IAtxL/FL6er5Ok3KU8UwGe/rr8F4dxyWUH8eIeLMSsz3ldLFPUNz4/bdcDHFxavEqOESNfThxa
+	Xyu3UHMz0Q2OyRBYuzpnB2TcKvApMQVbShlprXaEEXmeALGYAYYNZ2h4WLrs=
+X-Google-Smtp-Source: AGHT+IHNOxfSt7TzVWgdtRaOY5tyvjsZjBW3gQlV+mfMQqh/24c1eRE6F4YRWWXL93iChyiMaKESIwdEhd+Aj1O19ATK/iOj48H3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:330f:b0:3dd:d4fd:43c1 with SMTP id
+ e9e14a558f8ab-3ddedd661f7mr15419815ab.7.1749539493198; Tue, 10 Jun 2025
+ 00:11:33 -0700 (PDT)
+Date: Tue, 10 Jun 2025 00:11:33 -0700
+In-Reply-To: <68432451.a00a0220.29ac89.0047.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6847daa5.050a0220.33aa0e.031c.GAE@google.com>
+Subject: Re: [syzbot] #syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+ 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+From: syzbot <syzbot+0d8afba53e8fb2633217@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 2025-06-09 at 08:35 +0200, Uros Bizjak wrote:
-> Commit a17b37a3f416 ("x86/idle: Change arguments of mwait_idle_with_hints=
-() to u32")
-> changed the type of arguments of mwait_idle_with_hints() from unsigned
-> long to u32. Change the type of variables in the call to
-> mwait_idle_with_hints() to unsigned int to follow the change.
->=20
-> Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-> Cc: Len Brown <lenb@kernel.org>
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-Reviewed-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+***
+
+Subject: #syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+Author: dmantipov@yandex.ru
+
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
