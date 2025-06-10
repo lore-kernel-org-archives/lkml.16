@@ -1,142 +1,128 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77A4B242D7C;
-	Tue, 10 Jun 2025 17:04:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEDD524338F
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 17:04:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749575089; cv=none; b=RqDOsvPZr7KxJwEfSSI0huUgMYsBzWFsyPhAn7FAL8rvzHzkO6TD2LBQNhR7nWXiF/TyXmcBHrMzevn/05pf/ovXi3MKQna9J2wBYQWrXhHsGj0f1FqDEdkfuqvqZu1MrJOzF+x+u3D+EHtUn16EooC8ZRNBb7NDrX8vZe55C6c=
+	t=1749575091; cv=none; b=uKLUUIjctYN6QL11FjJm7nYGgXChpE2vSgV/JyjcApuRmcUZXpwMuub793vYKqwKKBd4LMGE2lAPK66g+bZdPQiFB5X9fP5a+Nk7auF1Dvtv5P4N18DV+OmCGAFpiE2yT1hhlC8315ZTN7E3ej1NDbT4+iDyP7FLP6VrVrLyTeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749575089; c=relaxed/simple;
-	bh=FeGGqTV3hMLvtuAUwQjWTQyZXr9HDJB5RrZEzdTh77s=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=N9MBCpgVgVTIIJ0zzlsjnQLFHLg+O9P2JXE8vgZiQ4Cfji9aZdBli1DxCKTzdt9cRjLd4+WGW9vQtcl34ZwVR3PjgpewDgwPi8aKi9/EL5i0LzUMBv8sDoUWZpI9cyivw7U4wYjTRQrTsy2afCSpBMJGrEFtW3B9THLR7kYPrzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W92UpArF; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749575091; c=relaxed/simple;
+	bh=HlSQboCqp0PnQ00GB+6CCKMVwWcrMXPm6kbrM95SHaA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=iDIUVsSClALjN0BME0JgPDC5gU4qB+KaPwxqJYzurBLsECrOWz6amFui+85/1fLzINHvhOfD2uSnhAqGLp4+cvN5Pe/OzAf2uRfWJMd4xdVADxYpBvpfnkMy15kwM3IHWw7YAdCjsnMlqkIaWcinqqjY70fWFN0Hl8AtlT73xAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SVbXxblB; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W92UpArF"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-234c5b57557so53443105ad.3;
-        Tue, 10 Jun 2025 10:04:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SVbXxblB"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-450d64026baso35479165e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 10:04:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749575088; x=1750179888; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=l1SAMsGs37SGD+chia/RQyRlWwAaxqTB5CEOsEmZAX0=;
-        b=W92UpArFJRh9sgQMpe/ysaNsasvC7Fwa/MprFd2w9/aUTaEpkOWGVBMP/cEH+uliH6
-         aTYVFPgVJNoFniVlOsa32P9OV+iuBtbPhnJppDuhxE7ZFF+ClK7NNKzY1+oXeBmNcXfs
-         +pL2gVpP2Wu8q+e7xvFBArM+eEv8Q9cjAzMvVsnpJ3YUtd5I+xhip1qKN4VCb59W7ziZ
-         T4MtL7OE2zKNL8pk19fv3hgLItX1i50y0PT5uAcjwoUrNB1RxWx4vSbe2Mj0+UJYhpie
-         24D3wqPXFM8uSvBsTk1AKYaDuuXvVc92rxx73FEWTSzdazpM9yPc67j7G/ATu+X+bmFR
-         78Rg==
+        d=google.com; s=20230601; t=1749575088; x=1750179888; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Fn3PhM+6LELPC5xE451c7krwbXmvn1wLfXtY2hbkuXk=;
+        b=SVbXxblBIqyRuydR4o6N4iLjEKdt7DPra47cQfq1vzeqCO6YtnSY9iiNodN4NOBLuu
+         S0N9Pp3Hqc5L9DMinY9MeWkxtvR8Od/plmEZboa5v+9acUFSsBeNMan8kIPlLYJ+d5xq
+         p6LKiUiWzrOMhfnFXbVTLd/oT48awtWtsKbiTebBnvau8cBak4TuCORRHGkRbXULTi3E
+         7fpiv2ndhWTv23sfqQkzW8GfrgcF93rQQ3XqbtRTVFjL+oxtU9n0ErYEBRi1VNLm5+Hm
+         0CdR8qm6W47gVbnr42gjb0MLelGq4vR4USK1a+TEI73VqwZALIfo7xqXT7V756pdE3So
+         BWyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1749575088; x=1750179888;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=l1SAMsGs37SGD+chia/RQyRlWwAaxqTB5CEOsEmZAX0=;
-        b=up1gy8zVThOfUxeegDlBG81S80PM3SIBThhNgtNa6+35k/DZGvKeOjrloQGmhuxN7r
-         fmsycqicBEjOwgFegQmqVk6WXPRlUKpEeaOtJEtyCaTqcAtUlykW13S8U0FqBf0nRdU1
-         00ZmGc74DF+CdXGDhUV9CyQw/cNnqICuh0Hhb5BYRC2hH3oJU6UG1f00Y3spJuOqiqj+
-         jjpVKo2S1MlfTYgWHol+4i5SUcQilaG3hhm7JR4xNzjAHT2/QqWkkRG+mtLkLNbBUhfF
-         xXwXoomDCLtWRlBhHTsB4TTMkk8y3sHzXpucC204O8Ivm19dJ+ZmhHxkgq2ZYNBDMT/6
-         c60g==
-X-Forwarded-Encrypted: i=1; AJvYcCWomffkN2EcH0iSr0Fw0Lyobi89fzScTm2+PW3jP6sUEu9Z0ARTkvLf+nDY4xuijwINLN3lPUWpa0CzcNk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzrsct8DQB+QyqqsWU4aFv79+p7tq5r1jZl9gFBD54/jkKSP/lm
-	GMKZN6VcnEatHT7EH6F+bmNCIpU/IY9N6YRtb4X24oZWQf40d5u5pEuj
-X-Gm-Gg: ASbGnctd/UKjjx7N9hxMzsnccGt55dLysNbnMUs5inuaU5ZaEa+A25Mq4DiufMZeTk2
-	DBy+8LCPYwJnOJ4xoqE6YlswzwgDhruX3SSEQHMN7GBBPaKhcBsNc0xL5dswT/FmwiSnujRPq8E
-	GGKfSHbpQMsJNR3p94kjpldxpw5k7K/kCwBqvYnv2U/gBcWremWFI7exUplWCCaHzm0ATjElBru
-	8dsXS8Xh5jz1vs+3vYj3wG2XJipf7v7Ay/q8e0fb7mAMdWiLCaJ7J3Sz7KcWEDv3hhtZCepVB+I
-	ZcEDx0HIChrDd897ZBbidFd5iO7Qa0Au5EOLbf3jIYDa6r1o5F2wt/J0dVY74QN6ScwkgI8NLmY
-	sG6jN5bMD8ZKMGzEqKwYLrEJN3C+dCBNRZF9KQ+4EiwydTJw9XQ==
-X-Google-Smtp-Source: AGHT+IGN8fWm1wd/rYS+vEB4RxNmREuCEW79sACTf92qnjh+StZfwWgh0XTKc+e8n8+kZsmS0X1KRQ==
-X-Received: by 2002:a17:902:c94c:b0:235:81c7:3c45 with SMTP id d9443c01a7336-23641b26eeamr523415ad.46.1749575086817;
-        Tue, 10 Jun 2025 10:04:46 -0700 (PDT)
-Received: from localhost.localdomain (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236034065edsm72958615ad.185.2025.06.10.10.04.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 10:04:46 -0700 (PDT)
-From: Potin Lai <potin.lai.pt@gmail.com>
-Date: Wed, 11 Jun 2025 01:02:09 +0800
-Subject: [PATCH] ARM: dts: aspeed: catalina: Enable MCTP for frontend NIC
- management
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Fn3PhM+6LELPC5xE451c7krwbXmvn1wLfXtY2hbkuXk=;
+        b=Lw81+pNLETCnPFDg+sZVH0LI4dCnT7FBCArhwROlGDH/m1NP8LZDEPBb2CXhq6javk
+         ChgCRDPEIWhJKtMxb6qNQXi72jPliNAcyNCZbTumUVGiSCIyizjvCbbIUny5pwrLgWWz
+         WYfvBpU6N8BZXY1WZZUxum834mcLfUDLXYPel9ZIEnZ9zreuMAvtS2eCgXWRWzCsL+Pq
+         +42HN+IrO16B0C4aNbq5rQkA5O0eehhtTUCvluJ+7+P9M4Mkt4TWKe2zIFs/qTRq9F+i
+         kQWqczNcG6fJ24O/NkkD/wKjmetRQYco99uTs0Vk+9GHofdZC2tlizVoxMeBMwz3mhpM
+         j5iQ==
+X-Gm-Message-State: AOJu0YwmnaKB8bjpRejHup8xNTfhaNweTIISJtTS0n0gvw33G7xnQFCw
+	ehAaxoQv4e+c/eka/pnxDr8B0nZoU1LWZmRIwq2HVCqvKoIl0NeqyBVz8CW2F6TIhrV/D2plUcw
+	QNo3I2lMx6y7R6w==
+X-Google-Smtp-Source: AGHT+IGuoHKyepOKuCopPSY2XL0HemV9xoMey65JxzRCECFk56/te0vuTyrZ59WQnTjaRIsbDfaWdtinm9UG+w==
+X-Received: from wmsr16.prod.google.com ([2002:a05:600c:8b10:b0:451:deba:e06f])
+ (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:1552:b0:442:e03b:58a9 with SMTP id 5b1f17b1804b1-4531de836c9mr33031645e9.25.1749575088123;
+ Tue, 10 Jun 2025 10:04:48 -0700 (PDT)
+Date: Tue, 10 Jun 2025 17:04:46 +0000
+In-Reply-To: <20250313-asi-page-alloc-v1-0-04972e046cea@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250611-catalina-mctp-i2c-10-15-v1-1-2a882e461ed9@gmail.com>
-X-B4-Tracking: v=1; b=H4sIABBlSGgC/x3MSwqAMAwA0atI1gaa4v8q4qLWqAGt0hYRxLtbX
- L7FzAOBvXCALnvA8yVBDpdAeQZ2NW5hlCkZtNKlqojQmmg2cQZ3G08UbZEUUontWHNbFJUa5wZ
- SfXqe5f7P/fC+H35ZZLBpAAAA
-To: Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, 
- Andrew Jeffery <andrew@codeconstruct.com.au>, 
- Patrick Williams <patrick@stwcx.xyz>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
- Cosmo Chou <cosmo.chou@quantatw.com>, Potin Lai <potin.lai@quantatw.com>, 
- Potin Lai <potin.lai.pt@gmail.com>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749575084; l=1422;
- i=potin.lai.pt@gmail.com; s=20240724; h=from:subject:message-id;
- bh=FeGGqTV3hMLvtuAUwQjWTQyZXr9HDJB5RrZEzdTh77s=;
- b=lRWcKzdCWOshs6fYek3iMrxbKcUD0Q0b2Tn4RqRTi0y+t19th2ZR1mJJ/o5nxpConHX4xZfj9
- M55WJ2w/KdyB4EiBoVxPni3QOtFCBWVk2dtVdkjJqPvrVw6cQn81u4y
-X-Developer-Key: i=potin.lai.pt@gmail.com; a=ed25519;
- pk=6Z4H4V4fJwLteH/WzIXSsx6TkuY5FOcBBP+4OflJ5gM=
+Mime-Version: 1.0
+References: <20250313-asi-page-alloc-v1-0-04972e046cea@google.com>
+X-Mailer: aerc 0.20.1
+Message-ID: <DAJ0LUX8F2IW.Q95PTFBNMFOI@google.com>
+Subject: Re: [PATCH RFC 00/11] mm: ASI integration for the page allocator
+From: Brendan Jackman <jackmanb@google.com>
+To: Brendan Jackman <jackmanb@google.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, <x86@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, David Rientjes <rientjes@google.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, David Hildenbrand <david@redhat.com>
+Cc: <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, 
+	Mike Rapoport <rppt@kernel.org>, Junaid Shahid <junaids@google.com>, 
+	Reiji Watanabe <reijiw@google.com>, Patrick Bellasi <derkling@google.com>, 
+	Yosry Ahmed <yosry.ahmed@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-Add the `mctp-controller` property and MCTP nodes to enable support for
-frontend NIC management via PLDM over MCTP.
+On Thu Mar 13, 2025 at 6:11 PM UTC, Brendan Jackman wrote:
+> .:: Patchset overview
 
-Signed-off-by: Potin Lai <potin.lai.pt@gmail.com>
----
-Add the mctp-controller property and MCTP nodes to enable support for
-frontend NIC management via PLDM over MCTP.
----
- arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-catalina.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Hey all, I have been down the pagetable mines lately trying to figure
+out a solution to the page cache issue (the 70% FIO degradatation [0]).
+I've got a prototype based on the idea I discussed at LSF/MM/BPF
+that's slowly coming together. My hope is that as soon as I can
+convincingly claim with a straight face that I know how to solve that
+problem, I can transition from <post an RFC every N months then
+disappear> mode into being a bit more visible with development
+iterations...
 
-diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-catalina.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-catalina.dts
-index 5fb67ad2d777..8d786510167f 100644
---- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-catalina.dts
-+++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-catalina.dts
-@@ -797,6 +797,12 @@ eeprom@56 {
- 
- &i2c10 {
- 	status = "okay";
-+	multi-master;
-+	mctp-controller;
-+	mctp@10 {
-+		compatible = "mctp-i2c-controller";
-+		reg = <(0x10 | I2C_OWN_SLAVE_ADDRESS)>;
-+	};
- 
- 	// OCP NIC0 TEMP
- 	temperature-sensor@1f {
-@@ -926,6 +932,12 @@ io_expander14: gpio@15 {
- 
- &i2c15 {
- 	status = "okay";
-+	multi-master;
-+	mctp-controller;
-+	mctp@10 {
-+		compatible = "mctp-i2c-controller";
-+		reg = <(0x10 | I2C_OWN_SLAVE_ADDRESS)>;
-+	};
- 
- 	// OCP NIC1 TEMP
- 	temperature-sensor@1f {
+[0] https://lore.kernel.org/linux-mm/20250129144320.2675822-1-jackmanb@google.com/
 
----
-base-commit: 4d75f5c664195b970e1cd2fd25b65b5eff257a0a
-change-id: 20250611-catalina-mctp-i2c-10-15-9b7e94460bf8
+In the meantime, I am still provisionally planning to make the topic
+of this RFC the first [PATCH] series for ASI. Obviously before I can
+seriously ask Andrew to merge I'll also need to establish some
+consensus on the x86 side, but in the meantime I think we're getting
+close enough to start discussing the mm code.
 
-Best regards,
--- 
-Potin Lai <potin.lai.pt@gmail.com>
+So.. does anyone have a bit of time to look over this and see if the
+implementation makes sense? Is the basic idea on the right lines?
+Also if there's anything I can do to make that easier (is it worth
+rebasing?) let me know.
+
+Also, I guess I should also note my aspirational plan for the next few
+months, it goes...
+
+1. Get a convincing PoC working that improves the FIO degradation.
+
+2. Gather it into a fairly messy but at least surveyable branch and push
+   that to Github or whatever.
+
+3. Show that to x86 folks and hopefully (!!) get some maintainers to
+   give a nod like "yep we want ASI and we're more or less sold that
+   the developers know how to make it performant".
+
+4. Turn this [RFC] into a [PATCH]. So start by trying to merge the stuff
+   that manages the restricted address space, leaving the logic of actually
+   _using_ it for a later series.
+
+5. [Maybe this can be partially paralellised with 4] start a new [PATCH]
+   series that starts adding in the x86 stuff to actually switch address
+   spaces etc. Basically this means respinning the patches that Boris
+   has reviewed in [1]. Since we already have the page_alloc stuff, it
+   should be possible to start testing this code end-to-end quickly.
+
+[1] https://lore.kernel.org/linux-mm/20250110-asi-rfc-v2-v2-0-8419288bc805@google.com/
+
+Anyone have any thoughts on that overall strategy?
+
+Cheers,
+Brendan
 
