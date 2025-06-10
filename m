@@ -1,84 +1,138 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82BAC246BA3
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122BA19A;
+	Tue, 10 Jun 2025 13:07:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749560737; cv=none; b=oVddsC7z8uRkUdXINlKbm5o5AXshzIubxa4yJUo39IbSpLhoqGJbDp5Xo2GlAGkPpYMcZiFDc+LWaAAYEYPe6Wud0mNVt+y5v4KZ32Dl22by/eWtquEwvXQ0RYrwsF18h9df849O2fuCRFFNgPK6ce0k5pNoSFoQ9DQVGqMvf1c=
+	t=1749560848; cv=none; b=D/iX2lhN3vxuK48m0i/taI5Ouv2qUMjzjX1O91ilmRH4asuGYxgZRUNJjeXq8AyUi8Ohcv9egrgoqscWHdbqdpoKpBtfF+yQzSyK+XjAnc2WwFkh0SPVDkCvzDGYNI2tdn/E1NVC6XLU4c6VZBWY8rRaM6zNFhYtBMNqOn/5p5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749560737; c=relaxed/simple;
-	bh=lefJthe9PtsxJvUeOlm7LLLyUttB9eQ4us0CrZAafB0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FE8cH9ydSqTZEf50EHGSaT4zSrIDXYEP6y93MxOhUb5YYXB4pIHeqCvD/6x6PZHFkK5A7nVZXuyKWAY8hwJ4PJUIo3PVAK37K5wvdIC5H2+qgtQ0OpSy2gZ1vh28TVmrwZhDyDr5gJMbFZgEsq7/PJq0WZvWVC7x4sFR9Qus1cM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CSlzBbxn; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749560848; c=relaxed/simple;
+	bh=JGBU6yuMcEu9jaDvH7qVhIiGmXq1vguIdg7PTe9Agks=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=D4kdeRFd2iYhtW5Sdu54IT+EsRVK8t5uXVIbJ+FvR9FjNvfGuyC1uX3OfM4Ze5+57MS2fD0MCfOek1MgbLJCKrlfq28fsidDklAz79EDOR0WTEXqYtIgFydoJZSC0Oq0tgCdrMQw+Yv6VqdedquAHZcKQblii4HJ6kGHqLRbNSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=do8T6Pio; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CSlzBbxn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749560731;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mFqyvQEwa97JFt+J+pEOPIDcP9PmBHBqevnVJtEDyJA=;
-	b=CSlzBbxnPuPmUNwqmCnnZYNl582C1YMpQdABxzFFPbpAUHu1+dyc1/nb0i9g8WN/bNIR4h
-	XgoUIPGzKaPuj3MvGZzRwUVubhSRt5FIbaCx6PIyjZncQV05sbVgYqGEZboWXvNAZBgHgt
-	KPjJ7LUDGwcwaZpbUCGR79/qBbSESQA=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-119-dPtf_XGoOoOxz_P9ag0qlg-1; Tue,
- 10 Jun 2025 09:05:30 -0400
-X-MC-Unique: dPtf_XGoOoOxz_P9ag0qlg-1
-X-Mimecast-MFC-AGG-ID: dPtf_XGoOoOxz_P9ag0qlg_1749560728
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1149B195606F;
-	Tue, 10 Jun 2025 13:05:28 +0000 (UTC)
-Received: from [192.168.37.1] (unknown [10.22.58.9])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EAAB9180045B;
-	Tue, 10 Jun 2025 13:05:26 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
- linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] nfs: client-side tracepoints for delegations and
- cache coherency
-Date: Tue, 10 Jun 2025 09:05:24 -0400
-Message-ID: <6575EBD6-AD8E-40DE-8778-E2D38963B9D5@redhat.com>
-In-Reply-To: <20250603-nfs-tracepoints-v1-0-d2615f3bbe6c@kernel.org>
-References: <20250603-nfs-tracepoints-v1-0-d2615f3bbe6c@kernel.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="do8T6Pio"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55A8XvAZ029862;
+	Tue, 10 Jun 2025 13:07:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	JGBU6yuMcEu9jaDvH7qVhIiGmXq1vguIdg7PTe9Agks=; b=do8T6Pio0Og8JEsZ
+	NzDdZCF3GcmsR6vOOXu+AWgAjNb7X72ddrCyIXwxBL2/uA9xUsxWGNuvFOk/RPGW
+	ssSxGCxNkHmV859nBfZ5xhUsXgmc8PnBnVIAJOcetu2ns6sZAAy7+5xECd4xggMO
+	cO+mhY8v4eIx/T+aQjr0V6hM/yFnLQqFGglgr5FoFC8sdx1SpisZf2TEdbAjX3gc
+	gQAuFbuBR1eCNbmtevX9ViGeDG2oFKOmdfkvTJGyVYELIATUf95J6Gw09/Fnml/c
+	xdNvowJiwLsLoel2p5JZx45bw5Zg83wfY66BwS/3ksCdPvofwOeYy/vU6fRmdCl1
+	JA99ZQ==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474eqchdb2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Jun 2025 13:07:21 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55AD7Ki1002349
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Jun 2025 13:07:20 GMT
+Received: from [10.217.216.18] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 10 Jun
+ 2025 06:07:15 -0700
+Message-ID: <3b75fe83-85c5-f0d3-c5db-481ef133d6de@quicinc.com>
+Date: Tue, 10 Jun 2025 18:37:12 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH V3 1/4] dt-bindings: mmc: Add dll-hsr-list for HS400 and
+ HS200 modes
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Sachin Gupta
+	<quic_sachgupt@quicinc.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>, "Rob
+ Herring" <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        "Conor
+ Dooley" <conor+dt@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Bhupesh Sharma <bhupesh.sharma@linaro.org>
+CC: <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <quic_cang@quicinc.com>, <quic_nguyenb@quicinc.com>,
+        <quic_bhaskarv@quicinc.com>, <quic_mapa@quicinc.com>,
+        <quic_nitirawa@quicinc.com>, <quic_sartgarg@quicinc.com>
+References: <20250122094707.24859-1-quic_sachgupt@quicinc.com>
+ <20250122094707.24859-2-quic_sachgupt@quicinc.com>
+ <72b02fd1-5195-4bb0-b01d-5481b49a5680@kernel.org>
+ <e0f43fc7-2f38-335d-1515-c97594a55566@quicinc.com>
+ <18053999-c337-47e5-b6df-72c2be6a72df@kernel.org>
+From: Ram Prakash Gupta <quic_rampraka@quicinc.com>
+In-Reply-To: <18053999-c337-47e5-b6df-72c2be6a72df@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDEwMiBTYWx0ZWRfX5o5lYcdz9Uj4
+ Kp5Om5Lvf4iRs6CFmtyztKCWZ8wrBai6SWCVWzuPTnYGGeFuZ/udDShCTTsv9LdYO4sDNxRauOM
+ E7Spn+cAsYkGcAVuGXfU/BEe1t6cKcymrPvew/PXnX/xi9r7KT5ZzWrQc7PAsCnmuNxT9I0A7Y8
+ wUJRAeqoOP0vxPDQXasOdD2yr4LWqwj7ajejDgUxTD31uzz8c87zH+SrzK3U8hWvj7+hl9ZXK2p
+ c9jasM1jf67aevnff4XYNvtwvEZxja04kvgzU/F4DfX2+1I5YPPucPAWqek8qmz70u7V+Zq6YjG
+ sgEeUQ7nlZi+WzdLcV3tvEs8Vm1ooGRuRlzrpjfTDGmIK/b6cZQZoRsgbBg0H+VCdVtJmrvvxqq
+ 7yGjgz/ptYPDIdpslArBj2QoMNFcdWWSj1LM7VdvuFMWfLO/PAOj6ibih3fsahNtkLOzT34a
+X-Authority-Analysis: v=2.4 cv=Q7TS452a c=1 sm=1 tr=0 ts=68482e09 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
+ a=tplrWfVxwPniNMw0LL4A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: 5-G7pzJu0YH_cMYSW9WaKP5MyQBHE-3V
+X-Proofpoint-ORIG-GUID: 5-G7pzJu0YH_cMYSW9WaKP5MyQBHE-3V
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-10_05,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 phishscore=0 mlxscore=0 spamscore=0 mlxlogscore=999
+ bulkscore=0 clxscore=1015 lowpriorityscore=0 adultscore=0 impostorscore=0
+ priorityscore=1501 malwarescore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506100102
 
-On 3 Jun 2025, at 7:42, Jeff Layton wrote:
 
-> These are some tracepoints that I rolled a while back when working on
-> the client-side pieces of the directory delegation patchset. I think
-> that these are useful in their own right, even without dir delegations.
+On 6/10/2025 6:23 PM, Krzysztof Kozlowski wrote:
+> On 10/06/2025 14:07, Ram Prakash Gupta wrote:
+>> Hi Krzysztof,
+>>
+>> Thanks for your comment, The Qualcomm Engineer who initiated this work,
+>> is no longer working on this and I am taking up the responsibility to continue
+>> on this work. I have started to check this and will start with addressing your
+>> comment next.
+>>
+>> Thanks,
+>> Ram
+>>
+>> On 1/22/2025 3:56 PM, Krzysztof Kozlowski wrote:
+>>> On 22/01/2025 10:47, Sachin Gupta wrote:
+> Above timeline is interesting:
+> 1. Patch sent on 22nd January.
+> 2. I provided comments few hours later, the same day.
+> 3. Silence.
+> 4. Employee changes job.
+> 5. Five months later...
 >
-> Please consider these for v6.17.
+> Not your fault Ram of course, but above timeline is not a responsible
+> way of upstreaming patches.
 >
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
-> Jeff Layton (4):
->       nfs: add cache_validity to the nfs_inode_event tracepoints
->       nfs: add a tracepoint to nfs_inode_detach_delegation_locked
->       nfs: new tracepoint in nfs_delegation_need_return
->       nfs: new tracepoint in match_stateid operation
+> Best regards,
+> Krzysztof
 
-For the series:
-
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
-
-Ben
+my apologies for this, I will give inputs internally to improve process
+for changing hands.
 
