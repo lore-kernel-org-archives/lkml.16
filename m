@@ -1,124 +1,102 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A3678F34;
-	Tue, 10 Jun 2025 23:03:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2FE2260562;
+	Tue, 10 Jun 2025 23:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749596596; cv=none; b=AfEdU2uIzJh955VBUwpuMEY0yhLKUTSl217sZFTylvk6Z90ePHJlIU7wz6IxExigphc1ekFZUMM/1gAwDsALik0VwdWWxGH9BrtqYyfoYvd+s+8zRp5U1w38mA3w3z+Aw4y59bBGw4pARBimzzHwIwhI03vzIvYLaCJc1Cw0c+E=
+	t=1749596665; cv=none; b=lb9bVRyBOfFAAa7FB3ck2zqMsRflIJAXmMbQZKmWiZZmo11PpnrbSEyjARhjl8Qx+9Te79o+5sxFV0FBLue8uMesppH9nz1Z5skCAP5uZ4X+/xjSCAMuKcAg/yFP2v3jrBjTSLAtG5Wo6xpCrjEVK8sMpFKf6c8ITxJzPKhLGn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749596596; c=relaxed/simple;
-	bh=RLovTVRd2tOcXcWiWkBIEoJRN0YDL8iKeDZGU2J9J0E=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IZBXblIpTKVo3AVApDnVVIDQRj/gn/DA5HCyUv3Mjtw98my5P9wyLdC4ulerrtRiEw98rinhQr4JIB8YeLNCZReQ6iZpZiqaNh7+t6IZYUZ5D/ARGPIthoWU0s6fp3oW1unroYtLudbyDFmmezKSEa+iJBgmEdCgqZB0TUDsnFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=PKYFzKxF; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1749596665; c=relaxed/simple;
+	bh=ZyM8Fj84cnr+0xuauLNrNUsImkrJpydwtJBb5Ua6enY=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=hNzmW2y2pUUZufDQb69m0tLTkTRXOfudTzwnKz8ttOxMD46mRxX4z2rWQltrOSGW392kLSBXwQ29Q8Akpm3zAr1FcFPz8Oh+F5CfMLlwsTtFcq232APiy/24L+hijm41efIMPrxb7AAUK1kN4slNdm0ASyhXp8QInuDnmIQi4Ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SY3FXxtr; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PKYFzKxF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1749596589;
-	bh=DdFi1+tyFX2nRKrzkRwtzI8WaU+eYXuY1nj4wp9rHv0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=PKYFzKxFxXsphOn4H12H8BT2fj6mtDI0LvaxlIAXBzW9xP68WwmolbiFzc/H9T/+n
-	 bnUpG1K5Cs3MtPdKlUG2GBaarAch2dQh4Y8Vn8cpssbvZd86FfjZ5o/BEfWGLOepCr
-	 Cihue3mE9Doo2KDTJnfzJ+TZQ1kQGujPFDl9IKpLemQMC7K1aXmhPf5p1vh51vfzcM
-	 Y0U1iZ9s4HXlukwgdZfDQM31ANNkTnb7wP0ByJEZmyQFjAxw3TtQY/WIf7gexOte3j
-	 xtar4wSbE0qxlIi3slGa/ap7jpsck8Rh4EEZDG8HKo0V7ZJv1KekbQq3d+RFSk8kLr
-	 NDtEQi6pYGOKA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bH48F0kzZz4wbW;
-	Wed, 11 Jun 2025 09:03:09 +1000 (AEST)
-Date: Wed, 11 Jun 2025 09:03:08 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang <wsa@the-dreams.de>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: duplicate patches in the i2c-host tree
-Message-ID: <20250611090308.1e40982e@canb.auug.org.au>
-In-Reply-To: <20250526114315.733b0728@canb.auug.org.au>
-References: <20250526114315.733b0728@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SY3FXxtr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749596664; x=1781132664;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ZyM8Fj84cnr+0xuauLNrNUsImkrJpydwtJBb5Ua6enY=;
+  b=SY3FXxtrjK/G37lZT1kiN3DfJCmBnXnz2+LbzbhF8vN9DjXsUO46qzLq
+   +hiR1V4RMrBe5+5hhMRpbMIHwQR0ftMVfUzCRrfHBmNxV/NvL7sfQ9Gjs
+   OMcmYSXXPIg+RM3e1d1K03M+3KtmmHsixEn/mXgFI9vk88ypZzkE4k6/C
+   9KGbwaudp83BujFQBAzDWFAs0bqXoRf/TmOzyCsPkyxUfj5+UP8GJmzMW
+   PVRpiFgdUxjcfTPyUHAOQ1wcCBj8te9nJp1a8fbcGGFCjqYFdsLPjbUzO
+   ytrdyblTSrUNyOI5U+Po42evmHt6mk2soM2qbKH9yDJpa2nXhmOraUEic
+   Q==;
+X-CSE-ConnectionGUID: XmUp/Ze3QGOz0bEUJ+3u/w==
+X-CSE-MsgGUID: x+LwYHoeTGW653GoF4Bjrg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="50952199"
+X-IronPort-AV: E=Sophos;i="6.16,226,1744095600"; 
+   d="scan'208";a="50952199"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 16:04:23 -0700
+X-CSE-ConnectionGUID: x/pYMbz4RU+ib3g1Xh9eqQ==
+X-CSE-MsgGUID: m757W9o5SQSKcUviAqhsqw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,226,1744095600"; 
+   d="scan'208";a="151965996"
+Received: from iweiny-desk3.amr.corp.intel.com (HELO xpardee-desk.lan) ([10.124.220.200])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 16:04:20 -0700
+From: Xi Pardee <xi.pardee@linux.intel.com>
+To: xi.pardee@linux.intel.com,
+	irenic.rajneesh@gmail.com,
+	david.e.box@linux.intel.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: [PATCH 1/2] platform/x86/intel/pmc: Add Lunar Lake support to Intel PMC SSRAM Telemetry
+Date: Tue, 10 Jun 2025 16:04:06 -0700
+Message-ID: <20250610230416.622970-1-xi.pardee@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/PjNzomps/JDIisuTbZNYl_z";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/PjNzomps/JDIisuTbZNYl_z
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Add Lunar Lake support to Intel PMC SSRAM Telemetry driver.
 
-Hi all,
+Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
+---
+ drivers/platform/x86/intel/pmc/core.h            | 3 +++
+ drivers/platform/x86/intel/pmc/ssram_telemetry.c | 1 +
+ 2 files changed, 4 insertions(+)
 
-On Mon, 26 May 2025 11:43:15 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> The following commits are also in the i2c tree as different commits
-> (but the same patches):
->=20
->   a088ce22c118 ("i2c: mlxbf: avoid 64-bit division")
->   50f317545149 ("i2c: viai2c-wmt: Replace dev_err() with dev_err_probe() =
-in probe function")
->   608e2d633096 ("i2c: designware: Don't warn about missing get_clk_rate_k=
-hz")
->   481391b537bb ("i2c: designware: Invoke runtime suspend on quick slave r=
-e-registration")
->   736f258f0a9b ("i2c-mlxbf: Improve I2C bus timing configuration")
->   a1a8ccd53458 ("i2c-mlxbf: Add repeated start condition support")
->   c43383e2ffa4 ("i2c: xgene-slimpro: Replace dev_err() with dev_err_probe=
-() in probe function")
->   3887d3f64260 ("dt-bindings: i2c: i2c-wmt: Convert to YAML")
->   66234d6c7157 ("i2c: microchip-corei2c: add smbus support")
->   55d144eaea36 ("i2c: mlxbf: Allow build with COMPILE_TEST")
->   52360f31e6ba ("i2c: I2C_DESIGNWARE_AMDISP should depend on DRM_AMD_ISP")
->=20
-> These are commits
->=20
->   2b2805404c92 ("i2c: mlxbf: avoid 64-bit division")
->   3b7d8d151a7e ("i2c: viai2c-wmt: Replace dev_err() with dev_err_probe() =
-in probe function")
->   bdf4442f4c7e ("i2c: designware: Don't warn about missing get_clk_rate_k=
-hz")
->   2fe2b969d911 ("i2c: designware: Invoke runtime suspend on quick slave r=
-e-registration")
->   e981364d89bf ("i2c-mlxbf: Improve I2C bus timing configuration")
->   6bdc662c05c5 ("i2c-mlxbf: Add repeated start condition support")
->   24d9f6050520 ("i2c: xgene-slimpro: Replace dev_err() with dev_err_probe=
-() in probe function")
->   29b0b4ce6417 ("dt-bindings: i2c: i2c-wmt: Convert to YAML")
->   d6ceb4053826 ("i2c: microchip-corei2c: add smbus support")
->   053859002c20 ("i2c: mlxbf: Allow build with COMPILE_TEST")
->   66e64b457c23 ("i2c: I2C_DESIGNWARE_AMDISP should depend on DRM_AMD_ISP")
->=20
-> in the i2c tree.
+diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
+index e136d18b1d38..c1db41cb8334 100644
+--- a/drivers/platform/x86/intel/pmc/core.h
++++ b/drivers/platform/x86/intel/pmc/core.h
+@@ -299,6 +299,9 @@ enum ppfear_regs {
+ #define PTL_PCD_PMC_MMIO_REG_LEN		0x31A8
+ 
+ /* SSRAM PMC Device ID */
++/* LNL */
++#define PMC_DEVID_LNL_SOCM	0xa87f
++
+ /* ARL */
+ #define PMC_DEVID_ARL_SOCM	0x777f
+ #define PMC_DEVID_ARL_SOCS	0xae7f
+diff --git a/drivers/platform/x86/intel/pmc/ssram_telemetry.c b/drivers/platform/x86/intel/pmc/ssram_telemetry.c
+index b207247eb5dd..24d5d01805c8 100644
+--- a/drivers/platform/x86/intel/pmc/ssram_telemetry.c
++++ b/drivers/platform/x86/intel/pmc/ssram_telemetry.c
+@@ -187,6 +187,7 @@ static const struct pci_device_id intel_pmc_ssram_telemetry_pci_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_MTL_SOCM) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_ARL_SOCS) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_ARL_SOCM) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_LNL_SOCM) },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(pci, intel_pmc_ssram_telemetry_pci_ids);
+-- 
+2.43.0
 
-Given that the above commits are the only ones in the i2c-host tree,
-can I please have that tree cleaned up.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/PjNzomps/JDIisuTbZNYl_z
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhIuawACgkQAVBC80lX
-0Gx7yQf/aQf82a4ubLjFQGwoLZ6BClK44okmzIIXvMdi3wLhQRprc8K2beDnXsZr
-ohYQYBIFJGCnEKjDU9PEuMuUaRPS6jhqTa/Dy3bUf95u03NP+bq4LdtaY2PXHVTw
-0wuv/IQC8yoFiRrTA1csStmfgQTpJndJq3+/wlX633qOLgUmO0DcdX7ullO/QEv8
-1d96mqCI3fiCy5CnUnsZBiJrGyAezysTt8/+ZLRALCC/9FijYOlYRvCos81TdSVg
-gPzWjfJJRk3XpzTt3/L5/hPhGOl4fjhOe9O3vlzOvTd2umHd72hnGYO+kdGhqPYp
-qRohXYyTU5CI/rH2532PNiJ0QvxNqQ==
-=sGrT
------END PGP SIGNATURE-----
-
---Sig_/PjNzomps/JDIisuTbZNYl_z--
