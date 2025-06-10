@@ -1,123 +1,127 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E59B128C864
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 09:48:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8929A28CF45
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 09:48:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749548892; cv=none; b=jALEyE2wANfsmMPBLDPrY1WPTo1jPREZRsrPXqZQtGnSdkH/M1GRCtBB7IM8XqAwL9HDN5avTRT+gssuLUcO7VxwsIa0ZD3BWUzZjrKBKkxcjbZWmrvgGjZ0A2iO3vfDI+Ir56tLxNaDldh417KB5RR99FExy2qS+FkQHpics8w=
+	t=1749548897; cv=none; b=la8HVhwE69gYhM38PvBsBlpkO8jxOa/Ea3V6IT16NcGVI3XVcIVeRQ74BLfwbH5iPP1y9tZFX/SC2mILro/iTAkNxBven/0RS1uiB+6m2D4E096FhUsAn1xcqBXR23q+D89iKSjSQOPPLLtO/3ZLX9ozDmxXsL9whea0WoLVBrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749548892; c=relaxed/simple;
-	bh=TTxxRa+f3UnqcCMRrf4H6liRDo8hs3NNhga3PVqNQvg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=R/EXjd7VM7WIf1ijtqwb55exvop8/+1Mf0OUCRvKYedcEjW4TKnJMcpmeRVfeqgICZcIupm8GWk2NdeCj7R6V7jZcyBp+kh4X9gm0UFSgSoSx9GjJonp50JBFN6rTZ/Jog5Ap/mYNaY0jQg/Q4HnMpYvdI9BQjP5rjpyUl/C+zA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=inventec.com; spf=pass smtp.mailfrom=inventec.com; dkim=pass (2048-bit key) header.d=inventec.com header.i=@inventec.com header.b=GLQqoUBz; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=inventec.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inventec.com
+	s=arc-20240116; t=1749548897; c=relaxed/simple;
+	bh=drtc7gbE8EVnagG9aoANO0Qzm9NCLkeYbn19VDrN7lk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EKDle8YJSu8XBGNoEANU+y56rZVCB9Nrpu+uJ8tYAE6UYaiUVwC0qFgzjMUKbGsXRxnJz4rjIYWHkRJmWnQSGU2Sa2YT3sBqwCMnhACgWfVcYh0d8nH6i5dd5jD84CeEWMfoNm5GQG8zbY9l0YApBI5Hl5EOuXl9Pv3rCLxc1TQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=scAx+Ssr; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=inventec.com header.i=@inventec.com header.b="GLQqoUBz"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-234d3261631so36625495ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 02:48:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="scAx+Ssr"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-32aad2ab31eso2109891fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 02:48:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=inventec.com; s=google; t=1749548888; x=1750153688; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3zQmyYaU/03+AJvFIA5fRBrVmM4eOz2li116ucuEnt8=;
-        b=GLQqoUBz0Jk86m0AqZ6Lyp3F5ESe6dKpMmUyA5ecP+6iVOVbUGtMwgD5BHeq9NgzdC
-         ifr7E43rA5ZmFITTUZ0cQjm6TWYbvKAjeBILQWULdrJTETQ4gjQtoZJykBdORCszdqvB
-         35vXbJtjgSHsBzOCLxOl+JtQHQrGNjyBv9U++uCG2kSEOtuva8Y5eAnJixWFftsPMOpQ
-         3+tbF3x6oq43Nq4zjDx+86BIyDBDRKgH84Rd5jmAdsaEU8hqp6yfD8h2uTD4geEJC5j6
-         Vpcuf+4IWcdhbS2f2ASgTx1exFCSvkOdbxY0NG47Gay5J+GOziQMN3YDQSBAX3m1bPFq
-         gG3Q==
+        d=linaro.org; s=google; t=1749548893; x=1750153693; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sgWX/fDU4kZifwwXOkRhcJUMm2OkuAYm3wpAj+nwwK8=;
+        b=scAx+SsrlfVuPuqcaMtTXapNGGrTB5aQau5mq50//ivDM8yO1CJcmReZzhMlsMy6vK
+         ftl3ZMclXD6FVwN2c2ZGJQsTnruNK4EW3kv/EpiG0zu1bkTqUlBS92VD/yNG41MXeWmz
+         WX/UgUkfMjGMwI/kMWg4sGaKLlH3tdlhLGy1XoWAArjwUFiAkPFyHugg6xZJcVA+raPK
+         W0Pa0P4WCdvQ9CIuj5B7RxYW0GLJ1Ahbz7SqMc7opdXZEp40LqCJ+sEkTyO/5jmLoOgp
+         mr1xPKawAjKUcs0DoTFx+5W/JNP/2+wtBzbpydrdVTbfTDDx0qk3+vVf9QeCNXwmpWEi
+         LP+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749548888; x=1750153688;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3zQmyYaU/03+AJvFIA5fRBrVmM4eOz2li116ucuEnt8=;
-        b=NxvajdPGfn5WmvJqkb/0BmKGmPIz4WagMkbjWIfFOvqOG4BgzhQcGhro4NOUPGrJ68
-         UXfn+rJxBCwtCZWkGiS4aKEryRvrjJZxCtUkA89enbBtJmawEj0cmCyklaWRWtKSFDk7
-         v/XGDp5x+zh32Zwe3c+kjKwiKIct49s1yJu/4P00+3bJYqRSnIJRA1XOtnYGy78058lN
-         wyTbUfDsZ6vzWsmOFuEXKPf8XDIOkuPTsgD0duGyeNbLwnqmOgg8FAxrH1/JSkm19Rm3
-         NV/NEhIi+7xpeTbJgObjyybWXJt0bbP1C3f4yhvw3LKds60Lo2h+FfvfJtsnOboNo8+D
-         OjzA==
-X-Forwarded-Encrypted: i=1; AJvYcCWzuuyyY8oCUDJ8FiXYxS2Ulu2K8xVce77Tv4Hk9Wc+L/JoqueAp86vl3xWLIGlRR26gKUBrHluEviC3EU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzf3aYsNe1HqKQAqMaVPRwPpOYSaGyTwVjqA3xM7CHfTiRna2oO
-	ZNTL5/Ct5QuipamOr7lYpov2HmvFEEX2M0mFfgiLM7n0K6jSgCEQ6ElSXB0/ka9jNSA=
-X-Gm-Gg: ASbGncuRDf0Yq+AFQlLUcLzKbrHe0XyKXZAJwRtJTUm7oz2qTe5ZsEHhXPZAUPG3SSX
-	AaU1cM4Dy2kJSx4gbOkaK9jstphzdvP3V7AtLWCRs7s9JTol6M3mKPMau38POWfC0WLvW3IYeLT
-	O3FiCRs3j1U1dwIFfFlOJNoWlA10+b9lB69bclFiDoeHxbJ/dczFFQy7b3yqIRZu6biKiFzcb8H
-	wlG0unL1Ez4n1k/eaELi68Xk5rbY5a1yU3jv5XB9j4KrxzZK+VGhsdYMhF2NxVrAiryfY6PnbRH
-	RwKAEWetmkZ5ocrV0xEkNEIumgwhPc7wtVcH4B6UVvZp0dvabZuoxmbJmFidCoXSOw6Sbh7u0hl
-	WBXfCThlfPFWjI67fkiVZkPqr008TSzM4QXxRDDyK
-X-Google-Smtp-Source: AGHT+IFTJerKI7nLBzkfbFwxLiCZ8/O3FBsLBWB2rHz59j5SLYJb1rjqSHl7mrROaYWtZGs6ZS1rZw==
-X-Received: by 2002:a17:903:41cf:b0:224:1eab:97b2 with SMTP id d9443c01a7336-23601df6a23mr244281155ad.53.1749548888066;
-        Tue, 10 Jun 2025 02:48:08 -0700 (PDT)
-Received: from localhost.localdomain (60-248-18-139.hinet-ip.hinet.net. [60.248.18.139])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603096949sm67293155ad.67.2025.06.10.02.48.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 02:48:07 -0700 (PDT)
-From: Chiang Brian <chiang.brian@inventec.com>
-To: linux@roeck-us.net
-Cc: alex@ghiti.fr,
-	aou@eecs.berkeley.edu,
-	chiang.brian@inventec.com,
-	corbet@lwn.net,
-	jdelvare@suse.com,
-	linux-doc@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	palmer@dabbelt.com,
-	paul.walmsley@sifive.com
-Subject: Re: [PATCH v8 2/2] hwmon: (pmbus/tps53679) Add support for TPS53685
-Date: Tue, 10 Jun 2025 17:38:12 +0800
-Message-Id: <20250610093812.164960-1-chiang.brian@inventec.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <156dc4d6-071b-4cc5-bea9-4579c140b2f9@roeck-us.net>
-References: <156dc4d6-071b-4cc5-bea9-4579c140b2f9@roeck-us.net>
+        d=1e100.net; s=20230601; t=1749548893; x=1750153693;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sgWX/fDU4kZifwwXOkRhcJUMm2OkuAYm3wpAj+nwwK8=;
+        b=BYYz6qZosBmQzZvhiDR8s3NrlLoOpI3CFXmV8at6ezLJpNFEmL7QlpsBsMYdvyfxAb
+         2j6Jcn7F00k0mTRJMoZvYZ+kWrCJJt5/Wqx0KtkyxO4ZF/OS3//QR+kxoIlauP0TOHeJ
+         e4X5ULW0uW5sYT7w5lrfFmutg7vyBom3S86KesN5W4nd+Edn9qaXDAqKuMHzo1grP+c/
+         OSV45NOanKM0kWWvOeNAMpvYQ08aj+U5P63lV1AOdQ8nRf+obhMW1ozis9zCiz/vDVOd
+         RUrpPvbkLdeXLZG4J/PghGsL0d6BT0A7wHqoUo9h3vpl9PxkjQDXaLq6Q9B7DstOpvno
+         KrCw==
+X-Forwarded-Encrypted: i=1; AJvYcCVY52T5HhnTtZgJOanNIrD1tETpbY5jp2WMifnNoHTHgotXvd/1FKItcbWr7U7UidtY45yGiYz5LIBAWmc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyonEtEfoVvpk6YMEW+HKXJauEQp5+xkPZuNwvojvvJmv2nX+oq
+	F37indaG4YabkuNBLMbwI9g4BwH6F0Puym7jQr0ee8ZTHPH9FexJ711fxcqxuL87G988unDO1w1
+	sHMyy
+X-Gm-Gg: ASbGncuj0YjM0AWLHlgNHNYr0X6yf7Alt/NfXIL+3jsKnDmX3UzVHPUesfnnGPp8Sxs
+	uSZ5LkZUE132j2Er96Gyt803uDuu+AZvhgXLGL0jYtqfDhRj29zvcn59xJVO+4aN/GFW0b02A3d
+	lqz6UpFanIA7PrjsQu8QBFDL9OLpfxnuZDW//pK00f9L2UBB0sx+Rg1iqbDw6QCgE3H3ZgvK5nW
+	JMkPeHUqNMAKvcbt+/2rYjUwctWuIGC67o6EiHMWLIsYIHzBb2lxfYKOdFuEoyxXofebebbBQSd
+	NmfL3qVgN44CviImzEOf21ghQiYbAqkLWJnPB8B1AowW97Kld/QTAYeaq2YFsNJ44hM8FbHWCg9
+	I44l5gFIj6hbSfmiyBbdsf040J37EhEqBBvuvPv1b
+X-Google-Smtp-Source: AGHT+IGe42fvbz6UNMq3WeYyozKULgQbXzEyVJQNlI32jNbCy2BtIg4bwXtTOyqOT4GzCdoEQ38Mew==
+X-Received: by 2002:a05:6512:3b96:b0:553:2e90:98c6 with SMTP id 2adb3069b0e04-553687982cemr1368395e87.11.1749548892235;
+        Tue, 10 Jun 2025 02:48:12 -0700 (PDT)
+Received: from [192.168.1.4] (88-112-131-206.elisa-laajakaista.fi. [88.112.131.206])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55367722392sm1471777e87.127.2025.06.10.02.48.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Jun 2025 02:48:11 -0700 (PDT)
+Message-ID: <0367d5bd-a42e-4b6c-b841-ba20190b3127@linaro.org>
+Date: Tue, 10 Jun 2025 12:48:10 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND] arm64: dts: qcom: sm8550: Add support for camss
+Content-Language: ru-RU
+To: Wenmeng Liu <quic_wenmliu@quicinc.com>, rfoss@kernel.org,
+ bryan.odonoghue@linaro.org, todor.too@gmail.com, andersson@kernel.org,
+ konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ quic_depengs@quicinc.com
+References: <20250516072707.388332-1-quic_wenmliu@quicinc.com>
+From: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
+In-Reply-To: <20250516072707.388332-1-quic_wenmliu@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 09, 2025 at 5:44PM +0800, Guenter Roeck wrote:
->
-> On Mon, Jun 02, 2025 at 12:24:54PM +0800, Chiang Brian wrote:
-> > The TPS53685 is a fully AMD SVI3 compliant step down
-> > controller with trans-inductor voltage regulator
-> > (TLVR) topology support, dual channels, built-in
-> > non-volatile memory (NVM), PMBus interface, and
-> > full compatible with TI NexFET smart power
-> > stages.
-> > Add support for it to the tps53679 driver.
-> > 
-> > Signed-off-by: Chiang Brian <chiang.brian@inventec.com>
-> 
-> I was not copied on the first patch os the series, so I guess the idea
-> is that it is applied through a devicetree branch.
-> Ok, with me, but I get
-> 
-> CHECK: Alignment should match open parenthesis
-> #260: FILE: drivers/hwmon/pmbus/tps53679.c:151:
-> +static int tps53685_identify(struct i2c_client *client,
-> +				 struct pmbus_driver_info *info)
-> 
-> WARNING: DT compatible string "ti,tps53685" appears un-documented -- check ./Documentation/devicetree/bindings/
-> #295: FILE: drivers/hwmon/pmbus/tps53679.c:316:
-> +	{.compatible = "ti,tps53685", .data = (void *)tps53685},
-> 
-> That means I'll have to wait until the deveicetree patch is available.
->
-> Other than that, please fix the alignment and, while at it, reduce the
-> number of lines in the description. Line breaks should be at ~75 columns,
-> not ~50 columns.
+Hello Wenmeng.
 
-Sure, thank you for the information, I'll fix these in v9.
+On 5/16/25 10:27, Wenmeng Liu wrote:
+> Add support for the camera subsystem on the SM8550 Qualcomm SoC. This
+> includes bringing up the CSIPHY, CSID, VFE/RDI interfaces.
+> 
+> SM8550 provides
+> - 3 x VFE, 3 RDI per VFE
+> - 2 x VFE Lite, 4 RDI per VFE
+> - 3 x CSID
+> - 2 x CSID Lite
+> - 8 x CSI PHY
+> 
+> Co-developed-by: Depeng Shao <quic_depengs@quicinc.com>
+> Signed-off-by: Depeng Shao <quic_depengs@quicinc.com>
+> Signed-off-by: Wenmeng Liu <quic_wenmliu@quicinc.com>
+> ---
+>   arch/arm64/boot/dts/qcom/sm8550.dtsi | 210 +++++++++++++++++++++++++++
+>   1 file changed, 210 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+> index e9bb077aa9f0..722521496a2d 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+> @@ -3326,6 +3326,216 @@ cci2_i2c1: i2c-bus@1 {
+>   			};
+>   		};
+>   
+> +		isp: isp@acb7000 {
+> +			compatible = "qcom,sm8550-camss";
+> +
 
-Thanks,
-Guenter
+This is the first time, when 'isp' label is used instead of 'camss', it might
+be I missed the context, is there any particular reason to do such a change?
+
+If the label name is changed to the regular 'camss', then
+
+Reviewed-by: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
+
+--
+Best wishes,
+Vladimir
