@@ -1,174 +1,72 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A697263F40
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 19:15:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C0B263C7F;
+	Tue, 10 Jun 2025 19:16:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749582936; cv=none; b=cWSeKjoGLUrQA/gUGpXVwoRGNhUdR/435USlhAG+wfkVQMMhX0Wj6tnBzK6lxCnfAlQfOYZ8/EjS3vMZ/6YjKxa3JUdXCmlTBfG8OoKDmB6vJx4CaDkX4A/+NBREO8xxFE2SMygEBC1SKW0plz3iJ8jfbxRBMFxtdMQExRazsS0=
+	t=1749582981; cv=none; b=QgGZhvntuwArSN+kpmI0a1cdhSiVKxQjCKq6rHJRZFR5lTBfT0JJkcZZMY8tMdfW48ScBiKnmAgVmiRuTb6+RSPcTGk+r/ffCOyg0xyGWjyjFc9L5otWS8Qbt+Oi1wr6kbPkdzxN1E2q0vfw9v4mK23B/C6UC4OOzzCPdp16S8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749582936; c=relaxed/simple;
-	bh=MnVd4doMubVcZCpRp3jvlXiTtAIy17BAJY+YbMXtniI=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=QP+oF4l+IQPphqQIX+PYd16pWCryCyD4enW2Qp6wwX8StFaJJi3dn90VE56JLNY2GKWVTNpwN1RKzrS0DFyBPQIt3T/5Pbl9nX8lzGoHhbwyOjDCUBgYxCJzxbnBjDfVcBf/GvGe404rnl4GLu56gnZNJvUuyA2UXZ07M5GpszY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3ddd02c8bffso74370325ab.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:15:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749582933; x=1750187733;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=rskWntauwjeEdVaZrhHTAPlRX1TrwQGFox2za0OdbUI=;
-        b=X6bCsj/DDdOdO3CaLkeuDb/UZ4c4e4MOd2X1tNun4T6blb8aX9FNJkMQ/UC+wKIRy/
-         imsv3NY7uCPvXx5FhY0fauqyKYnH2nqOd5dIkp+/R7V4FfXAWObm/nC712N0gLU5H2oK
-         2ZQLjeftrm8Rv9pHPrni7gk/va5wrj8dS5WBmsVo3XqxoB0AaEMvylIoCZPDOp5eLYpc
-         amofmO1ww24Zh0/qGVH+Tn763fpbOsius0Xbzp2bmS8YzLZUWbp6P4/FBtVRQmF6z+wU
-         QxOdiQX2mj3RlcL0ds+c1CVPlliRnq9kOddkPcmAH9FRs+mRPAgplsdueynWpMrl6joD
-         lkvw==
-X-Forwarded-Encrypted: i=1; AJvYcCXAyRypjbHDCjR3wRDkOZ7oL7x9dYl7rKGClRSJQxsma42B31ICPgKZJu9ll7Gnuj6bpFC3frZk6p6avq0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKFl8vzN3Q077Cz5o1x3FNosAQLwYApWXq+dKBM1KeMvGd2rq7
-	v04e0AQ7tXvUsisz2pHcGNxwxTRczy3cJtgJl5C71pJZPy+jhe1iTPRrTprYz8aMamTDgyyZW6T
-	/gQptEJ5oio/J/C+y9X9RfRoOwY2OQiQAYYDkrZ84Qx6Bqc44glXCFsGpMlU=
-X-Google-Smtp-Source: AGHT+IEzkcYcfJGFUGjZQV/Zb5IFoLIxDvPRBpF1RbJpyislhfcZzSXMs9e9HD+S/2oZWvX3sA6ZtXiFPuhKDODVSk1nl3jWm1er
+	s=arc-20240116; t=1749582981; c=relaxed/simple;
+	bh=mkKwahbE5Qvvx4u+CpirJQIlcNeEGC6NB9QujrczDhA=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=TTUofTxU611qf5hQTRbZSHzy9x5STkCzSwvOlXQD10a7lF1hODUIAcFYIXlvclVryN957Fb2A/Mj1TWvvcbCzqjyJw86gykCc6r6LLBaaerR4T5+ostVqFU6WMRp/h/3NPy1ZhtMoPe/FjU36W3ZOwFPJKvkd3a3oLBpvRa37+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UJ9PQpPf; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UJ9PQpPf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ABA7C4CEED;
+	Tue, 10 Jun 2025 19:16:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749582979;
+	bh=mkKwahbE5Qvvx4u+CpirJQIlcNeEGC6NB9QujrczDhA=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=UJ9PQpPfXLtKmIKOhDoHRUKnb5u5HGAmi9P6idJmdeHNtleK5RjCZk6W8Kyr29UFA
+	 AklKnS6h+hgZ/G0vL8dgVaXnVvNdTGcrxkHYH9D3MPhxXHLC+wrqPsvxYN3M8jz879
+	 +eRDqIV4IgMACN8LseHuiflhDjL7puuoosUjcrbe4MMBQb7PlrEdZpBeT/mVG249m/
+	 55n590Ror+BZcOj35mQFIfcK5cW1m9N8mmkOSKOb8a6/MOtmgo+V5cfUO4e7Gn1HWz
+	 q3eidz6jShyqEsP6PXSO6yc0il1q4+nUzNGGDhS1c6WJnSU0s5gd3e/5IYoXQC7xF6
+	 meypE8TGMY4Tg==
+Date: Tue, 10 Jun 2025 21:16:16 +0200 (CEST)
+From: Jiri Kosina <jikos@kernel.org>
+To: Even Xu <even.xu@intel.com>
+cc: bentiss@kernel.org, srinivas.pandruvada@linux.intel.com, 
+    linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+    linux-doc@vger.kernel.org
+Subject: Re: [PATCH v1 0/7] Add two new features for QuickI2C
+In-Reply-To: <20250514061944.125857-1-even.xu@intel.com>
+Message-ID: <39sr91o4-62ns-p7rn-4026-4o46q87878oq@xreary.bet>
+References: <20250514061944.125857-1-even.xu@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:ca4e:0:b0:3dc:7a9a:44d5 with SMTP id
- e9e14a558f8ab-3ddf431592dmr4916235ab.22.1749582931993; Tue, 10 Jun 2025
- 12:15:31 -0700 (PDT)
-Date: Tue, 10 Jun 2025 12:15:31 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68488453.a70a0220.27c366.0068.GAE@google.com>
-Subject: [syzbot] [bcachefs?] divide error in bch2_sb_members_v2_to_text
-From: syzbot <syzbot+7c8101d4d0ba2eb511d7@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 
-Hello,
+On Wed, 14 May 2025, Even Xu wrote:
 
-syzbot found the following issue on:
+> In order to improve THC compatibility with lagacy HIDI2C touch device,
+> on Panther lake (PTL) platform, THC hardware introduces two new features
+> for I2C subsystem:
+> - Input max input size control
+> - Input interrupt delay
+> 
+> This patch set adds APIs for above two features' setting and enabling
+> in THC hardware layer driver, and enable them in QuickI2C driver.
+> 
+> Even Xu (7):
+>   HID: Intel-thc-hid: Intel-thc: Add thc_dma_content into kernel doc
+>   HID: Intel-thc-hid: Intel-thc: Refine code comments
+>   HID: Intel-thc-hid: Intel-thc: Introduce max input size control
+>   HID: Intel-thc-hid: Intel-thc: Introduce interrupt delay control
+>   HID: Intel-thc-hid: Intel-quicki2c: Refine code comments
+>   HID: Intel-thc-hid: Intel-quicki2c: Add driver data support
+>   HID: Intel-thc-hid: Intel-quicki2c: Add two new features to PTL
 
-HEAD commit:    b27cc623e01b Add linux-next specific files for 20250610
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=169ac60c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=846e731334efc0f8
-dashboard link: https://syzkaller.appspot.com/bug?extid=7c8101d4d0ba2eb511d7
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+Now queued in hid.git#for-6.17/intel-thc. Thanks,
 
-Unfortunately, I don't have any reproducer for this issue yet.
+-- 
+Jiri Kosina
+SUSE Labs
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/1c0c417339c8/disk-b27cc623.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/fa29c0f3a1fa/vmlinux-b27cc623.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/b902a80b6e7e/bzImage-b27cc623.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+7c8101d4d0ba2eb511d7@syzkaller.appspotmail.com
-
-loop2: detected capacity change from 0 to 32768
-Oops: divide error: 0000 [#1] SMP KASAN PTI
-CPU: 0 UID: 0 PID: 6339 Comm: syz.2.181 Not tainted 6.16.0-rc1-next-20250610-syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:bch2_sb_members_v2_to_text+0x10a/0x3c0 fs/bcachefs/sb-members.c:347
-Code: 49 89 f4 49 c1 ec 03 43 0f b6 0c 34 84 c9 48 89 b4 24 a0 00 00 00 0f 85 67 02 00 00 0f b7 0e 48 89 c2 48 c1 ea 20 74 07 48 99 <48> f7 f9 eb 04 31 d2 f7 f1 48 89 84 24 b0 00 00 00 48 8b 84 24 c8
-RSP: 0000:ffffc90003e5ed40 EFLAGS: 00010a02
-RAX: ffff888029b58368 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: ffffffffffffffff RSI: ffff888029b58338 RDI: 0000000000001de6
-RBP: ffffc90003e5ef70 R08: 000000000000003a R09: 000000000000003a
-R10: dffffc0000000000 R11: ffffffff844fcfb0 R12: 1ffff1100536b067
-R13: 000000000000000b R14: dffffc0000000000 R15: 1ffff920007cbdc4
-FS:  00007f61376166c0(0000) GS:ffff888125c4b000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f5581bb5f78 CR3: 000000007e792000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- bch2_sb_field_validate+0x1c6/0x280 fs/bcachefs/super-io.c:1380
- bch2_sb_validate+0x14bd/0x1980 fs/bcachefs/super-io.c:552
- __bch2_read_super+0xba4/0x1040 fs/bcachefs/super-io.c:925
- bch2_fs_open+0x1fe/0x2570 fs/bcachefs/super.c:2382
- bch2_fs_get_tree+0x437/0x14f0 fs/bcachefs/fs.c:2473
- vfs_get_tree+0x8f/0x2b0 fs/super.c:1802
- do_new_mount+0x24a/0xa40 fs/namespace.c:3885
- do_mount fs/namespace.c:4222 [inline]
- __do_sys_mount fs/namespace.c:4433 [inline]
- __se_sys_mount+0x317/0x410 fs/namespace.c:4410
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f61367900ca
-Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 de 1a 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f6137615e68 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00007f6137615ef0 RCX: 00007f61367900ca
-RDX: 0000200000000000 RSI: 0000200000011a40 RDI: 00007f6137615eb0
-RBP: 0000200000000000 R08: 00007f6137615ef0 R09: 00000000028080c9
-R10: 00000000028080c9 R11: 0000000000000246 R12: 0000200000011a40
-R13: 00007f6137615eb0 R14: 00000000000119f9 R15: 0000200000013d00
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:bch2_sb_members_v2_to_text+0x10a/0x3c0 fs/bcachefs/sb-members.c:347
-Code: 49 89 f4 49 c1 ec 03 43 0f b6 0c 34 84 c9 48 89 b4 24 a0 00 00 00 0f 85 67 02 00 00 0f b7 0e 48 89 c2 48 c1 ea 20 74 07 48 99 <48> f7 f9 eb 04 31 d2 f7 f1 48 89 84 24 b0 00 00 00 48 8b 84 24 c8
-RSP: 0000:ffffc90003e5ed40 EFLAGS: 00010a02
-RAX: ffff888029b58368 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: ffffffffffffffff RSI: ffff888029b58338 RDI: 0000000000001de6
-RBP: ffffc90003e5ef70 R08: 000000000000003a R09: 000000000000003a
-R10: dffffc0000000000 R11: ffffffff844fcfb0 R12: 1ffff1100536b067
-R13: 000000000000000b R14: dffffc0000000000 R15: 1ffff920007cbdc4
-FS:  00007f61376166c0(0000) GS:ffff888125c4b000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f961d79c000 CR3: 000000007e792000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	49 89 f4             	mov    %rsi,%r12
-   3:	49 c1 ec 03          	shr    $0x3,%r12
-   7:	43 0f b6 0c 34       	movzbl (%r12,%r14,1),%ecx
-   c:	84 c9                	test   %cl,%cl
-   e:	48 89 b4 24 a0 00 00 	mov    %rsi,0xa0(%rsp)
-  15:	00
-  16:	0f 85 67 02 00 00    	jne    0x283
-  1c:	0f b7 0e             	movzwl (%rsi),%ecx
-  1f:	48 89 c2             	mov    %rax,%rdx
-  22:	48 c1 ea 20          	shr    $0x20,%rdx
-  26:	74 07                	je     0x2f
-  28:	48 99                	cqto
-* 2a:	48 f7 f9             	idiv   %rcx <-- trapping instruction
-  2d:	eb 04                	jmp    0x33
-  2f:	31 d2                	xor    %edx,%edx
-  31:	f7 f1                	div    %ecx
-  33:	48 89 84 24 b0 00 00 	mov    %rax,0xb0(%rsp)
-  3a:	00
-  3b:	48                   	rex.W
-  3c:	8b                   	.byte 0x8b
-  3d:	84 24 c8             	test   %ah,(%rax,%rcx,8)
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
