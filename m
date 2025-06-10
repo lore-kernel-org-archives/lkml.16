@@ -1,45 +1,45 @@
-Received: from esa3.hc555-34.eu.iphmx.com (esa3.hc555-34.eu.iphmx.com [207.54.77.50])
+Received: from esa2.hc555-34.eu.iphmx.com (esa2.hc555-34.eu.iphmx.com [23.90.104.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B280928BAB8;
-	Tue, 10 Jun 2025 10:06:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.77.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D5BB28A708;
+	Tue, 10 Jun 2025 10:06:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.90.104.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749550004; cv=none; b=AT/vkFpIOeTz8UdqDHfFZzHmkXZ0CBJ9R/tTJO2tMNQFKHXjEhrF8e6dFWatFJNG750u4wWnHgy86qCctPPE826VMtSJobUNN5+hW5U8Wi+Tctvd8D2Eb3hTaALWlY8dgz2k/9Sxr24s3IntprOWwRLCsqkhEybf/waYUXd2fiw=
+	t=1749550005; cv=none; b=H3CgGHs9BYqylt1LmJ5eRu5MW8bbExmnbec8fwjdd/P0cmhEDYYNrqj2dS9irQnDrxcJHRhlVK5Bb1ygeDmmLodSIe7yhCzXHZZUCkPstCQ/culeKiERoHNMMBGMGgoMxqlzfw+sGQ+dy2kjxxsw38sugx4WZ8ebwejMfLf1G4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749550004; c=relaxed/simple;
-	bh=yrAUwdd2dTnCDhtIRwLaXhkYCRfkmhb5FNwQyH1E6+k=;
+	s=arc-20240116; t=1749550005; c=relaxed/simple;
+	bh=S4SlciKZEDkvxxA53sOZjgI7BGGyzxMFgS4kqW029qc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=L8az24gQq22UfP5cZ1GSO6Mthdjylg+6ObGFu63WwDNduzi+u4GL+BzFWwb7vbiWwviUOa/tBLHDlEqsD0kkEgQnj8t20W25MZiX+Ucq7v4MwU1fX1hVj73Hc3emwOrIorpiqdMRspaCLexAPqeO5Y4ZN1PxAQlCxmnk7SpnBDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com; spf=pass smtp.mailfrom=mobileye.com; dkim=fail (0-bit key) header.d=mobileye.com header.i=@mobileye.com header.b=sAzYpHYv reason="key not found in DNS"; arc=none smtp.client-ip=207.54.77.50
+	 MIME-Version; b=Dd4mEFUWouzDPV7f3kT19/+4VUA8pyZvUQGFsLCdCLyaPPxZuM0JSUV0X6MszS5aR3MOur71tYwVJwgzffucjvvinOvi8+OmOh0uRwMG0ky6Eq9goPGoaY9lNq23TqjOM7Yt0z9JNX5HgcxZRhMDlu0JDm+UoOFo8TFV6M7/bIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com; spf=pass smtp.mailfrom=mobileye.com; dkim=fail (0-bit key) header.d=mobileye.com header.i=@mobileye.com header.b=D471VFPk reason="key not found in DNS"; arc=none smtp.client-ip=23.90.104.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mobileye.com header.i=@mobileye.com header.b="sAzYpHYv"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mobileye.com header.i=@mobileye.com header.b="D471VFPk"
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=mobileye.com; i=@mobileye.com; q=dns/txt; s=MoEyIP;
-  t=1749550003; x=1781086003;
+  t=1749550004; x=1781086004;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=yrAUwdd2dTnCDhtIRwLaXhkYCRfkmhb5FNwQyH1E6+k=;
-  b=sAzYpHYvDpwjEpddg5J0RJZZ4XE6HzPVsDur84vwLy5fqLbbVjWS6jfQ
-   YwQ+zZc4uvuHM8/lQlOByBZvY92hS1LnjSGaeFHhPOTek7IrdN2yraRcW
-   I4sT/QH7CkI0yX7XHf2VM4dHQ19IoLFT1sayzJNqmlJaz/VUuIjlCROlm
-   0xIKNP47dfa/7z8pYvge/1V5hrzZfvk83aRsECa1c238+6r8Q+NO1yk4T
-   oyRy0lQcvb4ZwAyDyhD83x3fIyGGxKTeAUmB6eFwhGXry/+n/R7GHEJvR
-   CFusY/o2oSP6gI7rLXD8YRleGl0TtOufZoFkNjMXc/Gf2ymN88U0gRu7N
-   w==;
-X-CSE-ConnectionGUID: K96KZstaSDax28xZBAQa8w==
-X-CSE-MsgGUID: 3t1RRN/LTgmSQNvZxosJ3A==
+  bh=S4SlciKZEDkvxxA53sOZjgI7BGGyzxMFgS4kqW029qc=;
+  b=D471VFPkZYynsRqheUyi5ZZqVSoP7KEtDrkvegQb+71XaAyZcFjWLP2U
+   /NfxnD+zGJ/b0iiAZM7ZwFALbmW7JwVPbDsChHo3GWrFuLSrL7KDcjoQk
+   +VISJeeFvnsAITut2V79zY5amd5BgY242TYPWfmh/6lG9dQWn4S6mV+9O
+   6gtwqIsvGk6mg9q5sNeapWADHFRKHdSPe1rvklL19sKJnJm0W9ZhU0ZsY
+   6neGoATnZY6eVkmI9CC3PiuBLYmIPR3W3KWP9ZUvclnQczoWpLwpFDC3u
+   9h5gzsTnHiBYO3jWYQXUUF8L9rB8tNUd6dN2NdLobR5q8qv8PmSitdcXE
+   A==;
+X-CSE-ConnectionGUID: 44TnxZt3SyeoYmRFmM3UJw==
+X-CSE-MsgGUID: he1bGLnJRzqdVEyeLeDcnA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from unknown (HELO ces04_data.me-crop.lan) ([146.255.191.134])
-  by esa3.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 13:06:40 +0300
-X-CSE-ConnectionGUID: kf7t9c2kS5OjhTjsVC/tJQ==
-X-CSE-MsgGUID: m1n8WQB0R5K04I6yn90eAw==
+Received: from unknown (HELO ces01_data.me-corp.lan) ([146.255.191.134])
+  by esa2.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 13:06:37 +0300
+X-CSE-ConnectionGUID: L/mYHuCUT9qp4TiIzR8Dlw==
+X-CSE-MsgGUID: hvG3VRHtSp+PyC8qsVTeAA==
 Received: from unknown (HELO epgd071.me-corp.lan) ([10.154.54.1])
-  by ces04_data.me-crop.lan with SMTP; 10 Jun 2025 13:06:39 +0300
-Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Tue, 10 Jun 2025 13:06:39 +0300
+  by ces01_data.me-corp.lan with SMTP; 10 Jun 2025 13:06:35 +0300
+Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Tue, 10 Jun 2025 13:06:36 +0300
 From: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Rob Herring <robh@kernel.org>,
@@ -60,9 +60,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-riscv@lists.infradead.org,
 	sophgo@lists.linux.dev,
 	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
-Subject: [PATCH v2 5/7] irqchip: aslint-sswi: resolve hart index
-Date: Tue, 10 Jun 2025 13:05:38 +0300
-Message-ID: <20250610100540.2834044-6-vladimir.kondratiev@mobileye.com>
+Subject: [PATCH v2 2/7] irqchip: riscv aplic: use riscv_get_hart_index()
+Date: Tue, 10 Jun 2025 13:05:35 +0300
+Message-ID: <20250610100540.2834044-3-vladimir.kondratiev@mobileye.com>
 In-Reply-To: <20250610100540.2834044-1-vladimir.kondratiev@mobileye.com>
 References: <20250609134749.1453835-1-vladimir.kondratiev@mobileye.com>
  <20250610100540.2834044-1-vladimir.kondratiev@mobileye.com>
@@ -74,39 +74,48 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Resolve hart index according to assignment in the
-"riscv,hart-indexes" property as defined in [1]
+Use global helper function instead of the local
+implementation
 
-Link: https://github.com/riscvarchive/riscv-aclint [1]
 Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
 ---
- drivers/irqchip/irq-aclint-sswi.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/irqchip/irq-riscv-aplic-direct.c | 16 +---------------
+ 1 file changed, 1 insertion(+), 15 deletions(-)
 
-diff --git a/drivers/irqchip/irq-aclint-sswi.c b/drivers/irqchip/irq-aclint-sswi.c
-index ec21785df518..186a021beaef 100644
---- a/drivers/irqchip/irq-aclint-sswi.c
-+++ b/drivers/irqchip/irq-aclint-sswi.c
-@@ -71,6 +71,7 @@ static int __init aclint_sswi_parse_irq(struct fwnode_handle *fwnode,
- 	unsigned long hartid;
- 	u32 contexts, i;
- 	int rc, cpu;
-+	u32 hart_index;
+diff --git a/drivers/irqchip/irq-riscv-aplic-direct.c b/drivers/irqchip/irq-riscv-aplic-direct.c
+index 205ad61d15e4..c2a75bf3d20c 100644
+--- a/drivers/irqchip/irq-riscv-aplic-direct.c
++++ b/drivers/irqchip/irq-riscv-aplic-direct.c
+@@ -219,20 +219,6 @@ static int aplic_direct_parse_parent_hwirq(struct device *dev, u32 index,
+ 	return 0;
+ }
  
- 	contexts = of_irq_count(to_of_node(fwnode));
- 	if (!(contexts)) {
-@@ -92,6 +93,11 @@ static int __init aclint_sswi_parse_irq(struct fwnode_handle *fwnode,
+-static int aplic_direct_get_hart_index(struct device *dev, u32 logical_index,
+-				       u32 *hart_index)
+-{
+-	const char *prop_hart_index = "riscv,hart-indexes";
+-	struct device_node *np = to_of_node(dev->fwnode);
+-
+-	if (!np || !of_property_present(np, prop_hart_index)) {
+-		*hart_index = logical_index;
+-		return 0;
+-	}
+-
+-	return of_property_read_u32_index(np, prop_hart_index, logical_index, hart_index);
+-}
+-
+ int aplic_direct_setup(struct device *dev, void __iomem *regs)
+ {
+ 	int i, j, rc, cpu, current_cpu, setup_count = 0;
+@@ -279,7 +265,7 @@ int aplic_direct_setup(struct device *dev, void __iomem *regs)
+ 		cpumask_set_cpu(cpu, &direct->lmask);
  
- 		cpu = riscv_hartid_to_cpuid(hartid);
- 
-+		rc = riscv_get_hart_index(fwnode, i, &hart_index);
-+		if (rc) {
-+			pr_warn("%pfwP: hart index [%d] not found\n", fwnode, i);
-+			return -EINVAL;
-+		}
- 		per_cpu(sswi_cpu_regs, cpu) = reg + hart_index * 4;
- 	}
- 
+ 		idc = per_cpu_ptr(&aplic_idcs, cpu);
+-		rc = aplic_direct_get_hart_index(dev, i, &idc->hart_index);
++		rc = riscv_get_hart_index(dev->fwnode, i, &idc->hart_index);
+ 		if (rc) {
+ 			dev_warn(dev, "hart index not found for IDC%d\n", i);
+ 			continue;
 -- 
 2.43.0
 
