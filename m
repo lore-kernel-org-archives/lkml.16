@@ -1,166 +1,156 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from fhigh-b6-smtp.messagingengine.com (fhigh-b6-smtp.messagingengine.com [202.12.124.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7CDE28CF4C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4F1628CF4B;
 	Tue, 10 Jun 2025 10:35:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749551739; cv=none; b=qBB9e+Z64F6oiof1OcpVDP5JcqJVf+0E+ZctEi10j3TOyl214RzVSnq2ZfBk3mKUoKO0dngHXd1AhUftDTgkLcw0fY4dl1YQGMjhah8EY9tiKYJwqFkIwoPtWgDIihRtbwAHRhFCN4366/BScE6bpnTB+EZFy4rpLRgDnZJbMAI=
+	t=1749551739; cv=none; b=r2HwHZMXs49m2IJ+zX4yYrxgDeJFbiT6McTGOvhT0xCNBGSHXQlkUxBOBxQDZpjwBXESvGutyEqH7C7Zw+sdNCIUeBILBXBGxfW6PZFhnbKnt3TZTMZ2TKkK+6LL8/NMn5OB8f4sD3HsnohakcyeXAbPI/KcMq3/dtzQBW7AOfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749551739; c=relaxed/simple;
-	bh=yKSYYG1hvQaCDDTDk/ZyHno5uu4Cbxpv4vynBlE0k6A=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=iB/7iQJSUaCYhQpOzKyTejsSFkpw1C/X5NMZpnmDTJctp4Ujee+7D/sUlq4JDYxgapqmT3TjA4Fv+Mdoinkv4jp5HN3w5R9YJTEkpZQ1xxDOz/lhPCrVl1mZEkCfx5Lis/5BZJimRYSQ4jv4dApfHYn5uJFSQrjylBCk2eAVNwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=CfqZg+pt; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	bh=CeQswRSD0Fu1GJhqXwPWw0zljZsyENP/fzUc2E8+hKQ=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=AgOFoWJqgUXIjEHH9LukX8Cf9PZnR0HmNVdAdYQArN/9rmHYEasoCwlEHammaxWTd8AIiTw/uJyT0o6+JwHL8JE7jiAMNHrbXmWDUQKlqW8qN1PK7+sZqhkDiXCqN+hl1B0roXc8Jdec6bdfH7mGc0GYqQXM2mW9t/AUgR/9SNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Dhg/CsQ3; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=NBonXYMv; arc=none smtp.client-ip=202.12.124.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="CfqZg+pt"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55A9FRO1029821;
-	Tue, 10 Jun 2025 10:35:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	l51cla9D1veQybqZHPeA/O0l6AcEUsL8jLVLgpI8TJQ=; b=CfqZg+ptyRrnzu+9
-	4c02sXWK37kpwO6c907xov7mqUW2RuQn5N7DKKETK6JqMM0A9Vaqp3vulN8id0IH
-	oWlZR2yYf/hb7sBTeRAlp3Z9Hq+3b3eul9mvtT12GfZAkH/s4thmcW0SdMiGEw4K
-	cUKTOmIc/72+ewzoHKIOixC6sD4DpcuYAUfb3DJGruL5Z/mCaXa/ZEEklSpYTw30
-	oP+DvrccY76+q3m49FnCT4ZXRyUplaCxFCSDNsr3nEeX6AHd96RipfQpBgYKZkvb
-	I87ZUR6ornreBjq1UVzYmY8UwiyQW1GHz5tJ8XC00J3t0Fr9P7O3ALMvncbmW35T
-	wa7SKw==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474d1216ej-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Jun 2025 10:35:34 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55AAZXuW028434
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Jun 2025 10:35:33 GMT
-Received: from nsssdc-sh01-lnx.ap.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 10 Jun 2025 03:35:29 -0700
-From: Luo Jie <quic_luoj@quicinc.com>
-Date: Tue, 10 Jun 2025 18:35:18 +0800
-Subject: [PATCH v3 1/4] dt-bindings: clock: qcom: Add CMN PLL support for
- IPQ5424 SoC
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Dhg/CsQ3";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NBonXYMv"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id C51A925400E7;
+	Tue, 10 Jun 2025 06:35:36 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Tue, 10 Jun 2025 06:35:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1749551736;
+	 x=1749638136; bh=wJ6K1Bg2EKOzCl4JP7wnZYiAEnsPSxJW7yzlyL9SDrY=; b=
+	Dhg/CsQ3lwukqyGwumJyoh8RAFfoAk74WSQ0txZSQsI4k4EkwceQnuR1O63lCr6B
+	YbZQx8FpKQPneYLaBDLrq09snuKmE36a+/puRsIVucSFD9tTnxS2TzBITsiUXKmh
+	UP7PoDqXdLv/SB2e0A+nDbxJOfJ9DO/MEvsxtRMofu4gtqGvvy/HGLuobSe8KBf1
+	nbpqPiw0K08htNZqXhdL+8TbFDeWyedMnWnLutGtiqqzVv/w+fYVxPNF422UYdy2
+	xUM0umTq4TAzrh3UnW0pGckyYqKfLgZZDCSj5ege/mF19Pgoyv4iBLDbIIMGdjPx
+	ZvnZ+VksqzRJepU9jQlXVw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749551736; x=
+	1749638136; bh=wJ6K1Bg2EKOzCl4JP7wnZYiAEnsPSxJW7yzlyL9SDrY=; b=N
+	BonXYMvvEst6qDS4cbOonC6/2Wl30tJbHNRUj6h9MDvKE/x7rgJ0cH2SUvHUgGlY
+	xHKaour2RolblsDPAH4MhsVnvZ+NRuk7Nb/GQJd9V3oZrKLVccwWslKS9oNkLgVr
+	ArcrDoSOeVf+bOQBvPrYt4zoIJXG9cO3Uagl4ZiKPJzbu1VCXijX3SLbuF7HNXgI
+	fqQG7jvc/DM1zFBrnWXwfDZrmbmPhQkb4z0Vtw/YkBzhNejKHv2gq0qx04zhv0hA
+	89p6xso/1PVh2/RxzUe5a8zPvl28IXsYh+8sEvQQcCtGLQvD+UXI5EYQjV6ZlH48
+	emfpKMLfMKt86cLN+50wA==
+X-ME-Sender: <xms:dwpIaBC5s0BdUMi9rIszRUs_uxU5IaVtsiYzeMsN0UTl9PrLE8fJkQ>
+    <xme:dwpIaPhHgMcMhnfxavaaUPPI9qNXF24yudbt0Xub1myL25S8GcRnReUvDIDZ2rTCR
+    qSbknmRYQxfDGAvTM0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddutdeivdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
+    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
+    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
+    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopedu
+    fedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprhhihigrnhguhhhimhgrnhduge
+    esghhmrghilhdrtghomhdprhgtphhtthhopeifihhllhihsehinhhfrhgruggvrggurdho
+    rhhgpdhrtghpthhtoheprghrnhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnh
+    gurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghp
+    thhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpth
+    htohepughrihdquggvvhgvlheslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrghdp
+    rhgtphhtthhopehlihhnuhigqdhsthgrghhinhhgsehlihhsthhsrdhlihhnuhigrdguvg
+    hvpdhrtghpthhtoheplhhorhgvnhiiohdrshhtohgrkhgvshesohhrrggtlhgvrdgtohhm
+    pdhrtghpthhtohepjhgvfhhfrdhjohhhnhhsohhnsehoshhsrdhquhgrlhgtohhmmhdrtg
+    homh
+X-ME-Proxy: <xmx:dwpIaMnMR5IEeoAfV7RdRsbM__rzDqhhPYk6CToFFEJAkb4IFYsTTw>
+    <xmx:dwpIaLwzviYxwPrNq2HPvQOCyhWI5vfYvN0QT43CZSeNvcZcaXcsJg>
+    <xmx:dwpIaGSzClcDHloai92YpmPG90Iwig9HauMVZdWpwyQ22tZFT4_x7Q>
+    <xmx:dwpIaObV0EV9TpgQ6ZwKz87VncvtDCPgnSZVjDT6mKV3LVU8fbnaNQ>
+    <xmx:eApIaD1ewy-S6aw_2-p9Tr4q9kMUoeXujPaEiz3NhmiOsEgC11XQs8Ca>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 92CDE700061; Tue, 10 Jun 2025 06:35:35 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+X-ThreadId: T57998a13661304d4
+Date: Tue, 10 Jun 2025 12:35:14 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+ "Arnd Bergmann" <arnd@kernel.org>
+Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Riyan Dhiman" <riyandhiman14@gmail.com>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>, "Paolo Perego" <pperego@suse.de>,
+ "Lorenzo Stoakes" <lorenzo.stoakes@oracle.com>,
+ "Matthew Wilcox" <willy@infradead.org>,
+ "Jeff Johnson" <jeff.johnson@oss.qualcomm.com>,
+ dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+ linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Message-Id: <088dc0a1-fc54-478c-b253-4ed5dd6d6bae@app.fastmail.com>
+In-Reply-To: <aEgIX221QIt5k0zY@smile.fi.intel.com>
+References: <20250610092445.2640575-1-arnd@kernel.org>
+ <aEgIX221QIt5k0zY@smile.fi.intel.com>
+Subject: Re: [PATCH] fbtft: reduce stack usage
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250610-qcom_ipq5424_cmnpll-v3-1-ceada8165645@quicinc.com>
-References: <20250610-qcom_ipq5424_cmnpll-v3-0-ceada8165645@quicinc.com>
-In-Reply-To: <20250610-qcom_ipq5424_cmnpll-v3-0-ceada8165645@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette
-	<mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_kkumarcs@quicinc.com>, <quic_suruchia@quicinc.com>,
-        <quic_pavir@quicinc.com>, <quic_linchen@quicinc.com>,
-        <quic_leiwei@quicinc.com>, Luo Jie <quic_luoj@quicinc.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749551725; l=2040;
- i=quic_luoj@quicinc.com; s=20250209; h=from:subject:message-id;
- bh=yKSYYG1hvQaCDDTDk/ZyHno5uu4Cbxpv4vynBlE0k6A=;
- b=/MIJdIXFWx9/GpuDVLgPfN/e74EmorLe2zwzqT+osUOi3zaFKFV4KEsb5LP+NhWdqI8EWAKDe
- 2tmpWZrektQDX8rIYzgD0lmuNuHaAUAt2qrRLHGzhSdyIgOqgQ/naKX
-X-Developer-Key: i=quic_luoj@quicinc.com; a=ed25519;
- pk=pzwy8bU5tJZ5UKGTv28n+QOuktaWuriznGmriA9Qkfc=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: S8MZJ98cBPVRxlZQizVxIw3wPkh1itJs
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDA4MiBTYWx0ZWRfX4fu46M6YZjpg
- ATwDi91IH5phlCPbFzdVNi7+lbsITdlMpcJJlxxUiTFdLAzFHk85WO26jv/+JqVt0YiwXWIfcDP
- 3B3kClqffOiMyzyFpkYjOxpsZpkqdEtZJTbQI/5wgDxprlNoi7iXfKeDTgPqpuQ6CB4L8ljnWSO
- lER/oF0r4E8hXipPq9p+MWVLDBVo5tB8QNj13aI7oT1XeW8SrZR3ZhmeSjqqox7IRpnI5y5xEro
- cZLvWie+1AGYJfFJ09XjVtLM+9FL/IwFEmp6DiT0rzpowYAxg3cjjtNS2L7NbfDBMIQMM9Q+oCc
- rsO/9TFS/FMNKOdFL5TLCoCCA0SCyQvvWqmEiaiEEJwfHenhjHyP/Z9Gpl4xRNE5F5RkUBnsdEC
- njsyIQFlAXfLyFcdfPPvlgRJi8cOap7ne8uEM3LYbA0sLbV4FUoiWzorxKliOQ1pg95KD0KR
-X-Authority-Analysis: v=2.4 cv=GYkXnRXL c=1 sm=1 tr=0 ts=68480a76 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
- a=COk6AnOGAAAA:8 a=leb7mbaFTONhKzR9nrMA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: S8MZJ98cBPVRxlZQizVxIw3wPkh1itJs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-10_04,2025-06-09_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 bulkscore=0
- impostorscore=0 clxscore=1015 malwarescore=0 priorityscore=1501 mlxscore=0
- adultscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506100082
 
-The CMN PLL block in the IPQ5424 SoC takes 48 MHZ as the reference
-input clock. The output clocks are the same as IPQ9574 SoC, except
-for the clock rate of output clocks to PPE and NSS.
+On Tue, Jun 10, 2025, at 12:26, Andy Shevchenko wrote:
+> On Tue, Jun 10, 2025 at 11:24:38AM +0200, Arnd Bergmann wrote:
+>> Move the varargs handling into a separate noinline function so each
+>> individual function stays below the limit. A better approach might be to
+>> replace the varargs function with one that takes an array of arguments,
+>> but that would be a much larger rework of the other callers.
+>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>
+> ...
 
-Also, add the new header file to export the CMN PLL output clock
-specifiers for IPQ5424 SoC.
+Thanks
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
-Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
----
- .../bindings/clock/qcom,ipq9574-cmn-pll.yaml       |  1 +
- include/dt-bindings/clock/qcom,ipq5424-cmn-pll.h   | 22 ++++++++++++++++++++++
- 2 files changed, 23 insertions(+)
+>> +static noinline_for_stack void fbtft_write_register_64(struct fbtft_par *par,
+>> +							int i, int buf[64])
+>
+> Perhaps int i, int buf[64] should be u32?
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,ipq9574-cmn-pll.yaml b/Documentation/devicetree/bindings/clock/qcom,ipq9574-cmn-pll.yaml
-index f869b3739be8..cb6e09f4247f 100644
---- a/Documentation/devicetree/bindings/clock/qcom,ipq9574-cmn-pll.yaml
-+++ b/Documentation/devicetree/bindings/clock/qcom,ipq9574-cmn-pll.yaml
-@@ -24,6 +24,7 @@ description:
- properties:
-   compatible:
-     enum:
-+      - qcom,ipq5424-cmn-pll
-       - qcom,ipq9574-cmn-pll
- 
-   reg:
-diff --git a/include/dt-bindings/clock/qcom,ipq5424-cmn-pll.h b/include/dt-bindings/clock/qcom,ipq5424-cmn-pll.h
-new file mode 100644
-index 000000000000..f643c2668c04
---- /dev/null
-+++ b/include/dt-bindings/clock/qcom,ipq5424-cmn-pll.h
-@@ -0,0 +1,22 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-+/*
-+ * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+
-+#ifndef _DT_BINDINGS_CLK_QCOM_IPQ5424_CMN_PLL_H
-+#define _DT_BINDINGS_CLK_QCOM_IPQ5424_CMN_PLL_H
-+
-+/* CMN PLL core clock. */
-+#define IPQ5424_CMN_PLL_CLK			0
-+
-+/* The output clocks from CMN PLL of IPQ5424. */
-+#define IPQ5424_XO_24MHZ_CLK			1
-+#define IPQ5424_SLEEP_32KHZ_CLK			2
-+#define IPQ5424_PCS_31P25MHZ_CLK		3
-+#define IPQ5424_NSS_300MHZ_CLK			4
-+#define IPQ5424_PPE_375MHZ_CLK			5
-+#define IPQ5424_ETH0_50MHZ_CLK			6
-+#define IPQ5424_ETH1_50MHZ_CLK			7
-+#define IPQ5424_ETH2_50MHZ_CLK			8
-+#define IPQ5424_ETH_25MHZ_CLK			9
-+#endif
+Right, I can send an updated patch, or this could be fixed up when applying
+the patch
 
--- 
-2.34.1
+>> +{
+>> +	par->fbtftops.write_register(par, i,
+>> +		buf[0], buf[1], buf[2], buf[3],
+>> +		buf[4], buf[5], buf[6], buf[7],
+>> +		buf[8], buf[9], buf[10], buf[11],
+>> +		buf[12], buf[13], buf[14], buf[15],
+>> +		buf[16], buf[17], buf[18], buf[19],
+>> +		buf[20], buf[21], buf[22], buf[23],
+>> +		buf[24], buf[25], buf[26], buf[27],
+>> +		buf[28], buf[29], buf[30], buf[31],
+>> +		buf[32], buf[33], buf[34], buf[35],
+>> +		buf[36], buf[37], buf[38], buf[39],
+>> +		buf[40], buf[41], buf[42], buf[43],
+>> +		buf[44], buf[45], buf[46], buf[47],
+>> +		buf[48], buf[49], buf[50], buf[51],
+>> +		buf[52], buf[53], buf[54], buf[55],
+>> +		buf[56], buf[57], buf[58], buf[59],
+>> +		buf[60], buf[61], buf[62], buf[63]);
+>> +}
+>
+> Wondering if we may reuse this in other cases (by providing the additional
+> length parameter). But it may be done later on.
 
+I tried this and that quickly became a mess. It is probably a good
+idea to rework the code to completely avoid the varargs function
+pointer and instead take an array here, but this is not something
+I could easily do myself as that takes more time and needs better
+testing.
+
+       Arnd
