@@ -1,229 +1,88 @@
-Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE89328CF5D;
-	Tue, 10 Jun 2025 12:48:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDED829ACEE;
+	Tue, 10 Jun 2025 12:48:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749559711; cv=none; b=n1vVgBm5AhObWobMjDXp84rm7LzsxRNdpxDjIzF4thdip9F8ks3x11RAGt1a2uFuE7ct6KqdpI9nfmJq2qYI6fHe8jRcd8q/ahSvqQnDI/Sw7FMDsOUMregJ4sBx2NN+demoKCvXhvoNtDOAbl2d0WiO3i5ZyORyQunnY306e4g=
+	t=1749559722; cv=none; b=erVDXSBzfggOQzOUsVF2MA1M23u0lBidrXkXK9rVohP8LiZoD0Z2DmixmOaXLlydXCFehECn8sYF0PSbVUTG31a/WCFCYJRiuYm+eRqnXn8GJL9z6fyAA16l8UXWqwf+hWr3kd7wBtMZAxdLYoWWbZgZ/GlVZwOmjoNOb5N6CZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749559711; c=relaxed/simple;
-	bh=4+lKuBWusMuD5aQll58u24JjCw59i5+HaxKROrmnh7w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=abKBkepgFEIBGUgh2WOrlbR6omrPfim7EfjrowkT0K9EoU7dhdFVA7Fnq9VABhyVsHKCg+UjQPpE3crdCxSsFGuC/f/nmT7Q3yik8xnGNX7ug5T7uDX7rzbBw8pVLJWxROIWDAiKQiOjK2tyEBY1JJ8iskX9Hg+QPIOFbV3li5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IDxW8kOJ; arc=none smtp.client-ip=209.85.160.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749559722; c=relaxed/simple;
+	bh=vAk9eOkdNiTKGzMcVqu8m02OEyc0CxqIjkuGX2ovFC0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mYNGwd77A1L1+b0Lw/HhEvJ3iQHWVuUDYxQNotd0E73DAgc3jZJCNvlktNQx8U5Vyv6mjtcl0tsTkIqrXFLso4tR/L+hC22Jk8m/xCcADIo7KOVdMMBSEh+FUOUalXN0j5P237RzcfZZN5F6E0X1lAP6k0Qt0J3jX+J6xDUPYOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZPYUevZW; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IDxW8kOJ"
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2cc82edcf49so1622837fac.1;
-        Tue, 10 Jun 2025 05:48:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749559709; x=1750164509; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wOjXPe8NVJxqY9cA3/rXFnzAlTaT0lIlpmhgjVsyJZM=;
-        b=IDxW8kOJhcWJiru15OrPLrkoeOQhcOgPB4yn9vU6IgJEybBUnZcQT8eQI5ZfVdAcj3
-         zVjZnf28lOMFMmfKZUmw/rLWWuQS9k07EAy57yPA2CVc0Mvkh1cBseQegESb4PNZWOR1
-         Ulgc4+8ss4czJJxLGqI0sRaPrBQEUcrbGWl/nq4LJnwhG/4zmmj4dAWx7sTO82fzYnQk
-         4EKW3qiExHCu802tMvCudGLFeD/YF6whx4A4mASaUyZQuleJ8E7wDWHK6Z/47jNXSdoK
-         NrJC3VbjSvVthK+pWjVzdwYh4PEPWIQLtcALeJrYvSFafViZ8R4HvTYzwi8OQSmXnLDe
-         +0nA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749559709; x=1750164509;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wOjXPe8NVJxqY9cA3/rXFnzAlTaT0lIlpmhgjVsyJZM=;
-        b=wb8KmneMPeWil8eKLvIRw24cNdJs7GnkTMVFuMs2ln3iOcaa8cBSGzeZluJ5yOR2a3
-         8BH5bGe6PU4rLESKRTPCgyYadJn7LAdHCYiUINltTh1FiT3qnJnIBAh3YWn9Cpi6Y+fb
-         uIxmAM/byGuiUPtcxcnKGd3hXC/FQQ4jwRgjqlw9zOtK41TfWJ05UzjAMxktE3Skz7wW
-         NFY8/Kfqt6FShjkUt9PRH3TAcR3Bk6huSYFzKTPSFb3ArbLWuOs7Pj8xUV9K7q8h/xA5
-         evUep2o7vBgNRAmigfnMlS5+M9YvRa04yzsgapOJ1CEhtW+ZcgjJ8mbmsBRf9gprU0yA
-         YS3A==
-X-Forwarded-Encrypted: i=1; AJvYcCVSMUZOvDE+H+NsC2NEmJnYj3Al/ZuZh1kUCmI5eskhoorS6tieBAqvHBxPhDFRxLBbmZXV2PvKP54hYA==@vger.kernel.org, AJvYcCWIWYnOOKA3XgDB1GcR4Tvn1ife1l/saIpXOIw4AN04xeAErNRS4VroMGrtj46uuJ2LN5ReuXwmZxYOBzrb@vger.kernel.org, AJvYcCWdD7KVz22TcYiWy721YZR8aDNDe+Wh40SDcvbCjgqpqIpwnh1LMingseQ1qqAl2Pg6jXpLHOLjJFqX@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOluZpEUgvO7mxpMg5VMhAZbaeU3FyeGuSB8xdXKdHujYkMwwd
-	RXSoDUyVM0E23YYyszAEXsE84H1+TxeOFGplDf+sRw7zoV33BLH3CJMejc0+eam4pHOTpoadAnv
-	XF6ejhXtImVtUUfS3To9uebClzlRMDQI=
-X-Gm-Gg: ASbGncvUvS5HrYLTEPGzIuAT2nB3KijkIzescaAlqdiyK2rwGQQlxa2Yi9VcAItU4b5
-	Cp7LBGx1fisdhXQacsgH1jYDW6C788C+pA1ggXuZpgbL+GUOq1Uzu1/tvi/qSYqWLm/20gL6fHx
-	9uHroDD7CN8AXZBkWzvs0K8ZNc3WaIbR6kSxGuX99j7GkLA13DgVCiwoQoPg==
-X-Google-Smtp-Source: AGHT+IEJkSHuAGQdalloHnhm/KPuTWMMm47KacsCwCjSaDxe3Ht+ktdr1ZxnlrLVEu4bU9Ld02X4PkCAm/YKMs7Fce0=
-X-Received: by 2002:a05:6870:164e:b0:2e9:b6:2edd with SMTP id
- 586e51a60fabf-2ea011dacb5mr10416784fac.32.1749559708578; Tue, 10 Jun 2025
- 05:48:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZPYUevZW"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 46336433B5;
+	Tue, 10 Jun 2025 12:48:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1749559712;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hBCPaYYOAsemees+fXLQJeUCZUeoXEQHz+o6sV7r0i4=;
+	b=ZPYUevZW5dCe0AjfwTQjF1wC4oMlC7cDUWHLJ+ufL+iJ9yhcl+qnoQd2mPMEwPXUqcXfne
+	vBqMJhafRVP+CB2ByC9Y54iLTfrsWTg0qc6lAJiX8pY9iBW+VsoZF7a0r8LGylnwGaRewz
+	a9WMZ/2Ea1RlNoSmJ5JnujU7yzv3YAoRQbRQg12zE8Mlob3Wr3SjtJ9ZIwy4UHhAPbRYQf
+	9lb2AbIUez2QBRV6k7W4I+aEUta5fUjq8R5NGTxlBUpnCikl25OFodwo2iPsNtOAqwz99i
+	4kmqMVAOEUb4QFBlSC2sCqM/FGVlo7SAWiiS4SV9V+4yMjCNR6jJv7F5+zIPIg==
+Message-ID: <ddbaa399-6bad-4c97-8456-b597442e5be6@bootlin.com>
+Date: Tue, 10 Jun 2025 14:48:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250609-bbg-v2-0-5278026b7498@bootlin.com> <20250609-bbg-v2-2-5278026b7498@bootlin.com>
- <20250609-hacking-corporate-d53531577680@spud>
-In-Reply-To: <20250609-hacking-corporate-d53531577680@spud>
-From: Jason Kridner <jkridner@gmail.com>
-Date: Tue, 10 Jun 2025 08:48:16 -0400
-X-Gm-Features: AX0GCFvR7zhEYzZzWjg_mjpYwaq3wTlIpZbFoKrzFhLnZGCZZpbjY0Ty6K2T5Io
-Message-ID: <CA+T6QPma+4DquH8wfY0gSdn9yaQvsK051tJrYiF6fUGBiMvQrQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] binding: omap: Add lots of missing omap AM33 compatibles
-To: Conor Dooley <conor@kernel.org>
-Cc: Kory Maincent <kory.maincent@bootlin.com>, Tony Lindgren <tony@atomide.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Aaro Koskinen <aaro.koskinen@iki.fi>, Andreas Kemnade <andreas@kemnade.info>, 
-	Kevin Hilman <khilman@baylibre.com>, Roger Quadros <rogerq@kernel.org>, 
-	Russell King <linux@armlinux.org.uk>, Bajjuri Praneeth <praneeth@ti.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-omap@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 00/10] Add pinctrl support for the AAEON UP board FPGA
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>,
+ Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>,
+ Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+ DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, linux-hardening@vger.kernel.org
+References: <20250609-aaeon-up-board-pinctrl-support-v7-0-1ab73ec0cb98@bootlin.com>
+ <CACRpkdZpn5xy+6yb-mQd6wDs05X0QqRCQo7QpL6=aEWtyU-zTg@mail.gmail.com>
+Content-Language: en-US
+From: Thomas Richard <thomas.richard@bootlin.com>
+In-Reply-To: <CACRpkdZpn5xy+6yb-mQd6wDs05X0QqRCQo7QpL6=aEWtyU-zTg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddutdejiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpefvhhhomhgrshcutfhitghhrghrugcuoehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepheduheduvdfgvdeftefggfelueevjefgjedtheekteehveehveegudejgfdvtdetnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemuggtkedumegrrggutdemfhgutggrmegttgdurgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemuggtkedumegrrggutdemfhgutggrmegttgdurgdphhgvlhhopeglkffrggeimedvrgdtudemtggsudegmeehheeimeejrgdttdemuggtkedumegrrggutdemfhgutggrmegttgdurggnpdhmrghilhhfrhhomhepthhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedufedprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnu
+ higrdhinhhtvghlrdgtohhmpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehgvggvrhhtodhrvghnvghsrghssehglhhiuggvrhdrsggvpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhguhieskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Sasl: thomas.richard@bootlin.com
 
-On Mon, Jun 9, 2025 at 1:03=E2=80=AFPM Conor Dooley <conor@kernel.org> wrot=
-e:
->
-> On Mon, Jun 09, 2025 at 05:43:52PM +0200, Kory Maincent wrote:
-> > Add several compatible strings that were missing from the binding
-> > documentation. Add description for Bone, BoneBlack and BoneGreen
-> > variants.
-> >
-> > Add several compatible that were missing from the binding.
-> >
-> > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
-> > ---
-> >
-> > Change in v2:
-> > - New patch
-> > ---
-> >  Documentation/devicetree/bindings/arm/ti/omap.yaml | 38 ++++++++++++++=
-++++++++
-> >  1 file changed, 38 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/ti/omap.yaml b/Docum=
-entation/devicetree/bindings/arm/ti/omap.yaml
-> > index 3603edd7361d..c43fa4f4af81 100644
-> > --- a/Documentation/devicetree/bindings/arm/ti/omap.yaml
-> > +++ b/Documentation/devicetree/bindings/arm/ti/omap.yaml
-> > @@ -104,12 +104,50 @@ properties:
-> >        - description: TI AM33 based platform
-> >          items:
-> >            - enum:
-> > +              - bosch,am335x-guardian
-> >                - compulab,cm-t335
-> > +              - grinn,am335x-chilisom
-> > +              - gumstix,am335x-pepper
-> > +              - moxa,uc-2101
-> >                - moxa,uc-8100-me-t
-> > +              - myir,myc-am335x
-> > +              - myir,myd-am335x
-> >                - novatech,am335x-lxm
-> > +              - oct,osd3358-sm-refdesign
-> > +              - tcl,am335x-sl50
-> >                - ti,am335x-bone
+On 6/10/25 14:42, Linus Walleij wrote:
+> On Mon, Jun 9, 2025 at 11:51 AM Thomas Richard
+> <thomas.richard@bootlin.com> wrote:
+> 
+>> This is the seventh version of this series. Only few changes, the series has
+>> been rebased on v6.16-rc1, the pinctrl patches were dropped as they were
+>> already merged and a fix was added in upboard_pinctrl_dbg_show() to handle
+>> the case upboard_pinctrl_pin_get_mode() returns an error.
+>>
+>> Best Regards,
+>>
+>> Thomas
+>>
+>> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+> 
+> Looks good to me, some testbot was complaining about something
+> but certainly we can merge the majority?
 
-What is the convention here? "beagle" is a vendor, so not sure why
-this continues to be "ti". The owner of the brand for this board is
-"The BeagleBoard.org Foundation". Not sure if it is reasonable to fix
-this.
+The export.h header file is missing in gpio-aggregator.
+I can send a new version today. Or I can send a fix later.
+What do you prefer ?
 
-> >                - ti,am335x-evm
-> > +              - ti,am335x-evmsk
-> > +              - ti,am335x-pocketbeagle
+Regards,
 
-This one is also "beagle", not "ti".
+Thomas
 
-> > +              - ti,am335x-shc
-> >                - ti,am3359-icev2
-> > +              - vscom,onrisc
-> > +          - const: ti,am33xx
-> > +
-> > +      - description: TI bone variants based on TI AM335
->
-> "bone variant" sounds like some shortand or nickname. Are the boards not
-> called "beaglebone green" and "beaglebone black"? Whatever about the
-> compatible, the description should use the full name I think.
-
-I'm not sure this is really needed. There is some desire to fall-back
-to a building block level of functionality around these derivatives of
-"BeagleBoard.org BeagleBone", including compatibility with the
-expansion headers, but I don't think that will happen at this level.
-In u-boot, it is possible to make the determination to utilize a
-less-complete devicetree, but it seems impractical here.
-
-What are the objections to just listing these all as TI AM33 based platform=
-s?
-
->
-> > +        items:
-> > +          - enum:
-> > +              - ti,am335x-bone-black
-
-"beagle"
-
-> > +              - ti,am335x-bone-green
-
-This is a Seeed Technology Co., Ltd. board that licenses the
-BeagleBone brand from the BeagleBoard.org Foundation, so "seeed", not
-"ti".
-
-> > +              - ti,am335x-pocketbeagle
-
-Not sure why this one is repeated. Also, it very much begs the
-definition of being a BeagleBone derivative outside of usage of the
-PMIC.
-
-> > +          - const: ti,am335x-bone
-> > +          - const: ti,am33xx
-> > +
-> > +      - description: TI bone black variants based on TI AM335
-
-There are lots of derivatives of BeagleBoard.org BeagleBone Black and
-falling back to a compatible makes some sense, but I don't think it is
-of practical benefit here the way things have worked out. The smarts
-have to be in the bootloader based off of the board IDs and the kernel
-is just going to do what it is told.
-
-Now, if we had some practical overlays performed by the kernel, this
-would all make some sense as patches between these variants provide
-useful fallback operation, but this is otherwise confusing. I
-appreciate the credit given to BeagleBoard.org for them being
-variants, but this really isn't the place.
-
-> > +        items:
-> > +          - enum:
-> > +              - sancloud,am335x-boneenhanced
-
-Note that this one is correct to be "sancloud", who licenses the
-BeagleBone brand from the BeagleBoard.org Foundation.
-
-> > +              - ti,am335x-bone-black-wireless
-
-"beagle"
-
-> > +          - const: ti,am335x-bone-black
-> > +          - const: ti,am335x-bone
-> > +          - const: ti,am33xx
-> > +
-> > +      - description: TI bone green variants based on TI AM335
-> > +        items:
-> > +          - enum:
-> > +              - ti,am335x-bone-green-wireless
-
-"seeed"
-
-> > +          - const: ti,am335x-bone-green
-> > +          - const: ti,am335x-bone
-> >            - const: ti,am33xx
-> >
-> >        - description: Compulab board variants based on TI AM33
-> >
-> > --
-> > 2.43.0
-> >
-
-
---=20
-Learn about me and setup a meeting at
-https://beagleboard.org/about/jkridner - a 501c3 non-profit educating
-around open hardware computing
