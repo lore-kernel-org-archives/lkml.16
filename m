@@ -1,157 +1,96 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E33928BA9B;
-	Tue, 10 Jun 2025 09:32:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C621A0BCD;
+	Tue, 10 Jun 2025 09:33:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749547934; cv=none; b=sJduCs5aYfirOg7P+vKStXzqUMHE1TzjBBMPrJYiRmEYwWvL+4dRPI4RCYqvEP+P4S2zMCrdr6xBcYijdLOL7VAR0MHosHU/HnvEtjBwg90AFaAL7BisQWTpYhCvdy8wTo9IDRrdWpOny1MTpho3VXK7kNXFLuhXuUpR2yCK728=
+	t=1749547981; cv=none; b=BvwTDvHy/cj/4TM0gysxX2qWyDWydx955CjBD6ymDDKqhaQUzVDXaZff40aOgr6YETwyFeQ6WB9f33RLs/ZiKEepVOmeBDx8v6hH0KuKwMfgTE47NL51LJjxHfajABsXdw6HpVJkVBDYyxo8/5MDepqbnHpssAM6lPiYEIcFJ+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749547934; c=relaxed/simple;
-	bh=1tLDbCKJrSqumtEDaqsJmvpX6BOpqJ7MW46PQFtyADw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=hFpnoTeQo60+MH/WGPAnBpo8Ss2zJkBojKigC1Ctb1e5I0z/zzk3weaJOp0ssOGq0gNoS8+SR4GvWzswsk/OE4qBCyffsYAWs9Zq01YNrjkOcx96BdASmp5OrN2/ubzLxVSh4ZVfV7gml/a41fUnOHDU3/8zUeqzi0uhwcDObGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=6AJV9/ij; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1749547981; c=relaxed/simple;
+	bh=fQ3YU3S3K3ivEsEdGjJAl8Hbmyr8jXeJ3oVd0bc1t4c=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lTPIis11m07SzEPGWQ1JuYF6sejdWKX0JNzZlAybIrx5PiecowyjDdanpLTzrS8+MlroCxnPlqNPHab7mQYhbDgTEXZONmX23WCekiOjCANA06CeIgx6FDikpe2hA/pKRGuxE8ALz62HuQds5L5XkauzGmna7cGjEaL3/CgE5O0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OOQ4t51x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="6AJV9/ij"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55A86AMP031764;
-	Tue, 10 Jun 2025 11:32:06 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	02a3n6IYRiGb9mEIL+GZf28LWw5poQHQl27Plwu3uao=; b=6AJV9/ijWcU4mUaI
-	P8B1gdgwQS6VFKqd5hj7s/nx2JOxb/YdOcAdWfZRWnYsg8vJZSZlqlIK4dni6aTi
-	Xgwe6MLVdMgEAMWu6Jvx6ZMluG+R6sZlUcTfxQvUscZobxqvrdbc0ydFU7+AepNU
-	dHjazO3lx3CYzvHQdkOkBaH4VmwCW/5CEuxNG/vmP0UnlvNoGkc1U08Jz3lJ4qoz
-	oCHZSAYWB+AC7ovkt2+wZvOoryljUiPHEoPA9ZSK+JW6tV5xSY3A/kGWgc1Y7e2c
-	2RD5Lio2/rUKaSOXUNNWh+U9zmegZ1TJohpEsYlmpnJpGsm8+WDV1UWt4+qYYqD7
-	pn35wQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474aumcckt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Jun 2025 11:32:05 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A3D2940049;
-	Tue, 10 Jun 2025 11:31:28 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1596C6D3821;
-	Tue, 10 Jun 2025 11:31:12 +0200 (CEST)
-Received: from [10.130.73.167] (10.130.73.167) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Jun
- 2025 11:31:11 +0200
-Message-ID: <396b3ee1-d737-49dd-a804-e07027c19fd9@foss.st.com>
-Date: Tue, 10 Jun 2025 11:31:11 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OOQ4t51x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0275C4CEF2;
+	Tue, 10 Jun 2025 09:32:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749547980;
+	bh=fQ3YU3S3K3ivEsEdGjJAl8Hbmyr8jXeJ3oVd0bc1t4c=;
+	h=From:To:Cc:Subject:Date:From;
+	b=OOQ4t51xOrl2MR9zgyKltjt8xczIDYR5Nszf6WA7xXdzs4uRcv6qQcpMD3+Hd/6Mq
+	 mToGH3k8Pscs8UM74vbCjPK38LWLhlOBYPyvHrKv2ZRsfx0QAD8VH3IitkoKXOUCCW
+	 909llaiuo5FQB35n1ZXLYra6ufiBoQfdWTktXSDRheltD4B0M3TeqYi7T4v3C6I1gA
+	 F88+rq7jNcEVgaVcfG1oK9rs55ZuN7OCSdxo4YuRRphGINTSojY8H8LaROGxvbtB8x
+	 wmK3WdJeHhYEKWl1iKMmvkeIwWuGGNDuzPmXg5kXoAEzRX36Qk9gJXKxbkPtYy+FwO
+	 ndLtwxuJf7riQ==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Russell King <linux@armlinux.org.uk>,
+	Ard Biesheuvel <ardb@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Eric Biggers <ebiggers@google.com>,
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+	linux-crypto@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: crypto: work around gcc-15 warning
+Date: Tue, 10 Jun 2025 11:32:52 +0200
+Message-Id: <20250610093256.2645686-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] media: i2c: vd55g1: Use first index of mbus codes
- array as default
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-CC: Sylvain Petinot <sylvain.petinot@foss.st.com>,
-        Mauro Carvalho Chehab
-	<mchehab@kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250609-fix_vd55g1-v1-0-594f1134e3fb@foss.st.com>
- <20250609-fix_vd55g1-v1-4-594f1134e3fb@foss.st.com>
- <aEf1KIRuP_DdSqJO@kekkonen.localdomain>
-Content-Language: en-US
-From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-In-Reply-To: <aEf1KIRuP_DdSqJO@kekkonen.localdomain>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-10_03,2025-06-09_02,2025-03-28_01
+Content-Transfer-Encoding: 8bit
 
-On 6/10/25 11:04, Sakari Ailus wrote:
-> Hi Benjamin,
-> 
-> On Mon, Jun 09, 2025 at 03:46:24PM +0200, Benjamin Mugnier wrote:
->> Factorize code and prevent future erros in case of media bus codes
->> change.
->> Rename VD55G1_DEFAULT_MODE to VD55G1_MODE_DEF to mimic other macros
->> while at it.
->>
->> Signed-off-by: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
->> ---
->>  drivers/media/i2c/vd55g1.c | 10 ++++++----
->>  1 file changed, 6 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/media/i2c/vd55g1.c b/drivers/media/i2c/vd55g1.c
->> index dec6e3e231d54a742bdd08ff2a506c152bb89429..177caa5470cfcf49e0ae2fb568d7872a5608a11f 100644
->> --- a/drivers/media/i2c/vd55g1.c
->> +++ b/drivers/media/i2c/vd55g1.c
->> @@ -111,9 +111,9 @@
->>  
->>  #define VD55G1_WIDTH					804
->>  #define VD55G1_HEIGHT					704
->> -#define VD55G1_DEFAULT_MODE				0
->> +#define VD55G1_MODE_DEF					0
->>  #define VD55G1_NB_GPIOS					4
->> -#define VD55G1_MEDIA_BUS_FMT_DEF			MEDIA_BUS_FMT_Y8_1X8
->> +#define VD55G1_MBUS_CODE_DEF				0
->>  #define VD55G1_DGAIN_DEF				256
->>  #define VD55G1_AGAIN_DEF				19
->>  #define VD55G1_EXPO_MAX_TERM				64
->> @@ -1260,7 +1260,8 @@ static int vd55g1_set_pad_fmt(struct v4l2_subdev *sd,
->>  static int vd55g1_init_state(struct v4l2_subdev *sd,
->>  			     struct v4l2_subdev_state *sd_state)
->>  {
->> -	unsigned int def_mode = VD55G1_DEFAULT_MODE;
->> +	unsigned int def_mode = VD55G1_MODE_DEF;
->> +	unsigned int def_mbus_code = VD55G1_MBUS_CODE_DEF;
-> 
-> Why the local variables?
-> 
->>  	struct vd55g1 *sensor = to_vd55g1(sd);
->>  	struct v4l2_subdev_format fmt = { 0 };
->>  	struct v4l2_subdev_route routes[] = {
->> @@ -1278,7 +1279,8 @@ static int vd55g1_init_state(struct v4l2_subdev *sd,
->>  		return ret;
->>  
->>  	vd55g1_update_img_pad_format(sensor, &vd55g1_supported_modes[def_mode],
->> -				     VD55G1_MEDIA_BUS_FMT_DEF, &fmt.format);
->> +				     vd55g1_mbus_codes[def_mbus_code].code,
->> +				     &fmt.format);
-> 
-> I'd remove def_mode, too, and just use VD55G1_DEFAULT_MODE. The 80
-> characters per line is preferred but I think in this case using local
-> variables just to use them once doens't make the code easier to read.
-> 
+From: Arnd Bergmann <arnd@arndb.de>
 
-You guessed correctly, local variables are here to avoid overflowing the
-80 characters per line.
-If I put VD55G1_DEFAULT_MODE directly then checkpatch will fail. As I
-understand this is a hard requirement ?
+I get a very rare -Wstringop-overread warning with gcc-15 for one function
+in aesbs_ctr_encrypt():
 
-I could do something like :
+arch/arm/crypto/aes-neonbs-glue.c: In function 'ctr_encrypt':
+arch/arm/crypto/aes-neonbs-glue.c:212:1446: error: '__builtin_memcpy' offset [17, 2147483647] is out of the bounds [0, 16] of object 'buf' with type 'u8[16]' {aka 'unsigned char[16]'} [-Werror=array-bounds=]
+  212 |                         src = dst = memcpy(buf + sizeof(buf) - bytes,
+arch/arm/crypto/aes-neonbs-glue.c: In function 'ctr_encrypt':
+arch/arm/crypto/aes-neonbs-glue.c:218:17: error: 'aesbs_ctr_encrypt' reading 1 byte from a region of size 0 [-Werror=stringop-overread]
+  218 |                 aesbs_ctr_encrypt(dst, src, ctx->rk, ctx->rounds, bytes, walk.iv);
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/arm/crypto/aes-neonbs-glue.c:218:17: note: referencing argument 2 of type 'const u8[0]' {aka 'const unsigned char[]'}
+arch/arm/crypto/aes-neonbs-glue.c:218:17: note: referencing argument 3 of type 'const u8[0]' {aka 'const unsigned char[]'}
+arch/arm/crypto/aes-neonbs-glue.c:218:17: note: referencing argument 6 of type 'u8[0]' {aka 'unsigned char[]'}
+arch/arm/crypto/aes-neonbs-glue.c:36:17: note: in a call to function 'aesbs_ctr_encrypt'
+   36 | asmlinkage void aesbs_ctr_encrypt(u8 out[], u8 const in[], u8 const rk[],
 
-const struct vd55g1_mode *mode =
-	&vd55g1_supported_modes[VD55G1_MODE_DEF];
-const struct vd55g1_fmt_desc *mbus_code =
-	&vd55g1_mbus_codes[VD55G1_MBUS_CODE_DEF];
-[...]
-vd55g1_update_img_pad_format(sensor, mode, mbus_code->code,
-			     &fmt.format);
+This could happen in theory if walk.nbytes is larger than INT_MAX and gets
+converted to a negative local variable.
 
-Which IMO improves readability, what do you think ?
+Keep the type unsigned like the orignal nbytes to be sure there is no
+integer overflow.
 
->>  
->>  	return vd55g1_set_pad_fmt(sd, sd_state, &fmt);
->>  }
->>
-> 
+Fixes: c8bf850e991a ("crypto: arm/aes-neonbs-ctr - deal with non-multiples of AES block size")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/arm/crypto/aes-neonbs-glue.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/arm/crypto/aes-neonbs-glue.c b/arch/arm/crypto/aes-neonbs-glue.c
+index c60104dc1585..df5afe601e4a 100644
+--- a/arch/arm/crypto/aes-neonbs-glue.c
++++ b/arch/arm/crypto/aes-neonbs-glue.c
+@@ -206,7 +206,7 @@ static int ctr_encrypt(struct skcipher_request *req)
+ 	while (walk.nbytes > 0) {
+ 		const u8 *src = walk.src.virt.addr;
+ 		u8 *dst = walk.dst.virt.addr;
+-		int bytes = walk.nbytes;
++		unsigned int bytes = walk.nbytes;
+ 
+ 		if (unlikely(bytes < AES_BLOCK_SIZE))
+ 			src = dst = memcpy(buf + sizeof(buf) - bytes,
 -- 
-Regards,
-Benjamin
+2.39.5
+
