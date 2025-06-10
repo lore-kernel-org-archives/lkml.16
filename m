@@ -1,109 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3552D5403;
-	Tue, 10 Jun 2025 23:08:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42E042D5402;
+	Tue, 10 Jun 2025 23:11:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749596901; cv=none; b=GXrJvOInJqXcegEKcPxNK/LqSASSrlLNFnvaTQnwTPaqrwCBtrfNlnNrIji945MxLmo52OI7olt7mjKPZaHcNO4eQx2ZYydZX2gZstblVdPGuz6ZBOZ7DSpm86r7qM74W4kz6IaD6s5O8Yfos6pSoDjixlDCk8SroX7SjUl6U+8=
+	t=1749597120; cv=none; b=gTONNgKTQP/wbN0JWvRCxRstcTED9zCyzInS5QEU16qfD0sdWrolaGZD9eTJbXswJh2aPHRFtb2R9YUTFoiV8EErSEa0qOFqo/KNMOstgK057G6ImZxLQa0BD32GtyzVcg1vp7OSVSGyfqqv4MSsN1/CVVrTJfTSxONSNg6jvmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749596901; c=relaxed/simple;
-	bh=vOAAvEx4E+8UjppT46gHSojDmxrWyNLo9cdzD7FA+rc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tiUBMoxRdmiWlrbACaDuEKcdPN+KBhgseA3C1MzQsXMk+6yGCWMminrTzS784aid2+gZX3s9qBRfl0uzbbL1NW+Cs+bh0oHPKRoZUGLDme32AIARjMEPblUUE9BwLt3Ea6Znjl/MTltpJBZazJVB82XSOurnYy5BpZqQZmTIAbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VmmtZeb2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749597120; c=relaxed/simple;
+	bh=qDJgBUcJfJgiZmP8rmKonm+Khzfd7QP8iKE+QK3IZhM=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=a8Fu/aQyHW+AKcqJ4fvQxtsiIdUg4/rmlzg6toe3YA0Krl61j6D9Cydp1AoYRbnz6TKlxmlqeMkToaEVds22WYqk5DKK+G5PWyQJuOiONd4hcYfKuJhBdIYfMNEGtYrLxsTuRwe/jpV0CMLcm/ciLFn7E8YrzSVs0z93iSpWo9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=U6FbT/UJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=KqzwWuv2; arc=none smtp.client-ip=202.12.124.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VmmtZeb2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F4E4C4CEF3;
-	Tue, 10 Jun 2025 23:08:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749596900;
-	bh=vOAAvEx4E+8UjppT46gHSojDmxrWyNLo9cdzD7FA+rc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=VmmtZeb2utDRFMCLcnI+EFjIb/ePZ95my4a6Yj5o8dvzSu8CKzuCsIsjsyYKCSzP4
-	 C/yPlvqqAqgpMqdOxWr3yOw/WxE5b2nbVKtJ8kiMNQiV+u6HfOultf1pxoGJgvPunu
-	 E1nQ+y2fg/SZtPcq/v6IPFppzZa+oQhimwTGRgnHXxp3ddZjPrgtdPTI/Cg1wvyTFH
-	 EUO9u9o6HrdExqGY0WBoAHzJwEL+ponltPd49UHDAohzv7l0P1BDeGptO8LSag9eOV
-	 h1mNbgQTvX0fEUymrmrHmhFqHpGgUwiiCYhUq4+B1MLTe6puTI+PWOj9T7v5stQ1l0
-	 RK9s/BSzdEnjw==
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6facba680a1so64133896d6.3;
-        Tue, 10 Jun 2025 16:08:20 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVpK65AR5lENARFbWAXWK7hiOhF6o5swPnQ4U3J1EP8dbKX3OjlOA+Olp5fj4fuHqnRCi7G50hjTEC91BZKyQ==@vger.kernel.org, AJvYcCWV49yNcfMcMh1uB1g5r1tIn0aUmiTKX0ifofTQr1s6Hg4jQYUVrtEtlIQNx5YdFY9quuWCb3CRo/i9NCoUdRfZLoOYNQst@vger.kernel.org, AJvYcCXCH0yCfFA2EkQfhoLI41CoONXY3UdOglvB6OdIum+p80dSr3FvxHylvj2c1r0jEweWEQw=@vger.kernel.org, AJvYcCXSryMujoKhPsA+1XGUZlO7xJ9prgliFRnO76Vsyb/NKH5ugCw8N5bQ6LbW3XMeeykmzQN4fMQxzcIkz6yS@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzt04GyBK6gMse60zDorxJwKHm65144fmk0tX6g3nWklzedvnnG
-	4REJFlDAafXHlLXgOna+zauMGEnANS/vwdS4YbPDzigVZHH/bKpxO8EDcMBynAzM9wN29Ha/ZgY
-	+vYOUAkKQWnl8w4SDeh+r7i7laUqiWb0=
-X-Google-Smtp-Source: AGHT+IGQwb7bLPJ7uaxum7qOUIy/8C94KF54pMNu1cwD2A2emExMuBIuVS0BNScxi1yUGqW5hw93a0PxpKiAZS9jT/k=
-X-Received: by 2002:ad4:5d46:0:b0:6fa:bb09:43d0 with SMTP id
- 6a1803df08f44-6fb2c3723bbmr22557596d6.32.1749596899582; Tue, 10 Jun 2025
- 16:08:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="U6FbT/UJ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KqzwWuv2"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 2706A2540106;
+	Tue, 10 Jun 2025 19:11:57 -0400 (EDT)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-12.internal (MEProxy); Tue, 10 Jun 2025 19:11:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1749597117;
+	 x=1749683517; bh=qDJgBUcJfJgiZmP8rmKonm+Khzfd7QP8iKE+QK3IZhM=; b=
+	U6FbT/UJuUuMDXHNSX0eu51+tL4jbkR/Bm4jQPck57+6LUf7nwbq+bbvr/9HkMaA
+	8DjmeR3bHQjc4pZrsVv4KuV5O12dlSxG3E0Iy99KDQ5H33dEDkhZvTGFrtxVjbN1
+	tHjaw797VEIU4++5w7HUBvckQzxizluG7pZo2QI7YizbHPA4fSpz6HT5oEvV1PFO
+	rvcYW9r39nUXa7oLxA5OGd7t1AVaY3Kn19qdXcx8QmqFf6g2xYuoMZXkqIU7sZ7o
+	aXLEEu9ieMggVV31/k1HisecHxMT5Z0JNiFPtgKofStKR1lSNtSo8zyOxQKGc0T/
+	3D83lGo8Z31ryAnhc6Y/cg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749597117; x=
+	1749683517; bh=qDJgBUcJfJgiZmP8rmKonm+Khzfd7QP8iKE+QK3IZhM=; b=K
+	qzwWuv2hSqt/vZp7TnqVk7LwcsCZRBSh4+L5k1Evetj5/oKGEeeVZ5aW5W7N+eH/
+	MAPGh53XdN3tbesaVZDejICVzYGL4AK7GrMu5Pgmnsx4DcyfA+pZEhF9VkD6SIwS
+	DsmJpv7y3z/ij8MiAt2NazNoVrd2RhFssVrBRZjKgiiMHgmYeHo16csX6ymlGDiV
+	35In2wwtE8p09OdBi1C29ByktGAUaqTVCkGpzzQ276xdp0UO1L+SERR/XIB2BFeH
+	2cvxfky1WRwAgTJnH753Cq2DIlAj4pUW2MeY/I+hYDHTYNgSLSbLdg0qKYoYkbBk
+	MHoV7PMFA09yvAkRm5QKQ==
+X-ME-Sender: <xms:vLtIaGq6ewm0E1eqvnyWM2VGeRp7Cxclod77bkUsI-CkQWWDoqKKwA>
+    <xme:vLtIaEq310CHc6cHGk2KFraFWWvtTpfwza_rY7gMITtxg-zqYfM5ODdl58ZHRkcGL
+    kKxnizBWjFyOi9_jY8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduudefkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
+    tdenucfhrhhomhepfdforghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvg
+    hnohhvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthhtvghrnhephfeuvdehteeghedt
+    hedtveehuddvjeejgffgieejvdegkefhfeelheekhedvffehnecuvehluhhsthgvrhfuih
+    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhv
+    ohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohepledpmhhouggvpehsmhhtphhouh
+    htpdhrtghpthhtohepihhkvghprghnhhgtsehgmhgrihhlrdgtohhmpdhrtghpthhtohep
+    figprghrmhhinhesghhmgidruggvpdhrtghpthhtohephhhmhheshhhmhhdrvghnghdrsg
+    hrpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhn
+    thgvlhdrtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrd
+    hinhhtvghlrdgtohhmpdhrtghpthhtohepihgsmhdqrggtphhiqdguvghvvghlsehlihhs
+    thhsrdhsohhurhgtvghfohhrghgvrdhnvghtpdhrtghpthhtohephhguvghgohgvuggvse
+    hrvgguhhgrthdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghr
+    rdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqd
+    igkeeisehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:vLtIaLPeHYaGpMIqiG6fhDRw5n6flB7bxdqkQ8VxSwCVb7Z9Aa8wvA>
+    <xmx:vLtIaF4QtLwbtmk6ejMcMSwn3pxiAYwHUYQ0VshppAbfRGT5S91_tQ>
+    <xmx:vLtIaF4wS_ZIIOEiqnRr_5dn1GfIXLmTW2P_Vh7CKgrSGhvN2HU25A>
+    <xmx:vLtIaFioBge3fL2CkhgxZkTON-9KyTclUTjuntBDmM9mC_NjswvmXA>
+    <xmx:vLtIaLHPG7Or6MiG3zjSc_VrnrPPMJKodRx_gpYdbwlqAYjU9ELH7FYv>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 5B12A2CE0063; Tue, 10 Jun 2025 19:11:56 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250606213015.255134-1-song@kernel.org> <20250606213015.255134-2-song@kernel.org>
- <20250610.rox7aeGhi7zi@digikod.net> <CAPhsuW5G0Th+9dRSmxDjo5E7CxV1E9N8AiKjw3cKyEhOBVWJFw@mail.gmail.com>
- <d7d755ea-5942-440b-8154-21198cb6a0f1@maowtm.org>
-In-Reply-To: <d7d755ea-5942-440b-8154-21198cb6a0f1@maowtm.org>
-From: Song Liu <song@kernel.org>
-Date: Tue, 10 Jun 2025 16:08:08 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW75h3efyXmCcYE_UEmZGXR5KMSEw8h-_vrZH82BYU=WVw@mail.gmail.com>
-X-Gm-Features: AX0GCFvLr6ZpvpJJmf_Db7fELs42Mf-Bt8O_6VwLs3YNEtG0tanEPc7gL84uHg8
-Message-ID: <CAPhsuW75h3efyXmCcYE_UEmZGXR5KMSEw8h-_vrZH82BYU=WVw@mail.gmail.com>
-Subject: Re: [PATCH v3 bpf-next 1/5] namei: Introduce new helper function path_walk_parent()
-To: Tingmao Wang <m@maowtm.org>
-Cc: =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, 
-	daniel@iogearbox.net, martin.lau@linux.dev, viro@zeniv.linux.org.uk, 
-	brauner@kernel.org, jack@suse.cz, kpsingh@kernel.org, 
-	mattbobrowski@google.com, amir73il@gmail.com, repnop@google.com, 
-	jlayton@kernel.org, josef@toxicpanda.com, gnoack@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-ThreadId: T107eb5199b18744c
+Date: Tue, 10 Jun 2025 19:11:36 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Hans de Goede" <hdegoede@redhat.com>, ikepanhc@gmail.com,
+ "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
+ "Armin Wolf" <W_Armin@gmx.de>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Message-Id: <002d39fe-44ed-45a4-9410-4fecf1c2163f@app.fastmail.com>
+In-Reply-To: <aEiVHXI4vS9BDOPW@smile.fi.intel.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20250610192830.1731454-1-mpearson-lenovo@squebb.ca>
+ <20250610192830.1731454-2-mpearson-lenovo@squebb.ca>
+ <aEiVHXI4vS9BDOPW@smile.fi.intel.com>
+Subject: Re: [PATCH v4 2/2] platform/x86: Move Lenovo files into lenovo subdir
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 10, 2025 at 3:26=E2=80=AFPM Tingmao Wang <m@maowtm.org> wrote:
-[..]
-> >
-> >                 if (!choose_mountpoint(real_mount(path->mnt), root, &p)=
-)
-> >                         return false;
-> >                 path_put(path);
-> >                 *path =3D p;
-> >                 ret =3D true;
-> >         }
-> >
-> >         if (unlikely(IS_ROOT(path->dentry)))
-> >                 return ret;
+On Tue, Jun 10, 2025, at 4:27 PM, Andy Shevchenko wrote:
+> On Tue, Jun 10, 2025 at 03:28:25PM -0400, Mark Pearson wrote:
+>> Create lenovo subdirectory for holding Lenovo specific drivers.
 >
-> Returning true here would be the wrong semantic right?  This whole thing
-> is only possible when some mount shadows "/".  Say if you have a landlock
-> rule on the old "/", but then we mount a new "/" and chroot into it (via
-> "/.."), the landlock rule on the old "/" should not apply, but if we
-> change *path and return true here then this will "expose" that old "/" to
-> landlock.
+> Assuming Kconfig entries have mostly been copied'n'pasted, the rest LGTM,
 
-Could you please provide more specific information about this case?
+Yes - no changes from what they were previously.
 
-Thanks,
-Song
-
-> A quick suggestion although I haven't tested anything - maybe we should d=
-o
-> a special case check for IS_ROOT inside the
->     if (unlikely(path->dentry =3D=3D path->mnt->mnt_root))
-> ? Before "path_put(path);", if IS_ROOT(p.dentry) then we just path_get(p)
-> and return false.
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 >
-> >
-> >         parent =3D dget_parent(path->dentry);
-> >         dput(path->dentry);
-> >         path->dentry =3D parent;
-> >         return true;
-> > }
-> >
-> > Thanks,
-> > Song
->
+Thanks for the reviews and help with both patches
+
+Mark
