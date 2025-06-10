@@ -1,172 +1,200 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88DF28F507;
-	Tue, 10 Jun 2025 12:21:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ECB828FFF6;
+	Tue, 10 Jun 2025 12:22:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749558089; cv=none; b=RIrnmzTQP56y992UtEkwvECDWH7jPksZuUXNFxUG9yFKBI+yFSGxjbyLpjM5Xln7bluVulHa11yXZ6hi23nkR8zQi4g5qwuRYxCdO73cKQSd2/dvSHPmrGbnlyQBZFC0BUpA9L6t3SXFXuyU8eWaFpy8odzxbhAk+1xa+9YU/G8=
+	t=1749558136; cv=none; b=Sd+un3qkGG9dVaUNFcgzgcrEH/vD8cTOto7fXwyMNVwMny5919OcDuJ1I7j/dbD6XSonR3MYWrFyQ97we2pzKZd46afQzLgogGzY7xWQDCkQPbE2e37u5xzSFBERD4l5FttHeJU3A7+ASwi0nOMDJhjkHEteVMC8A2aVcgR1TKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749558089; c=relaxed/simple;
-	bh=fuAXOuUm6fFJtBIJC25rC27qpQWeJjXNesUbOsfwxYg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I1X1+0IGxdegI2z15nwsq2N/TgxQA+IiWpowpJ+yom6zGyTDAoY+3raDKmF/LtQ7SUYSFrQBoZPGP/eu3ZMMgS1qtVXrsZt+3huC2T/w5RJuIS2weDeY7oKnhr5CxfGMdZLfqvfmQ9/RIhSnl/lePdFbsRm4JEnTRdLN3jUg1aI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MApbkGza; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uR929m69; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749558136; c=relaxed/simple;
+	bh=1GTnyJiPlySUW+sdF/eciLUoDRF+5HxLCmh9o8qNeeQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=LAByMx/d5FGQlLA3JuZEs0Su3Yx3B2nNXXAhUbZWux8nh3NzO7ghbBb0rYBnhLYg7Uh1fgNYSQUlXgScNaiiIm55HB2rNX4RRL4/vQKdpOayl0ugiwn0n2prRClf09h7I64lbey8a8QkXcuF6PwIbjlcc86p7GhJyK0VmQgGgRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HPILu5HQ; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MApbkGza";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uR929m69"
-Date: Tue, 10 Jun 2025 14:21:25 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749558085;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=S7XHwyMIvux7mHDycUbcxmSE3NX5d97oyLdcmCQZNOo=;
-	b=MApbkGzaNia4rcytfKGi496yLbsnZgNtl8TJ2QJQiZT2yhHV4ip9/Tdl6HM/XPI/i2xatF
-	Lcp29FoGPeU3i9dx5NRx5VnhX6RsP/GtnOBpJJS4UsSX5FI7fNQjON9uoaFZFi9ZFD06YW
-	h54AOg4i4jiZqYypJELtCpvQQuyygpezD350okq/rCDDZdkfXkphg9Cia9jh/AhXxagDJP
-	Qs1x8kfefA27NspOe+NfatuyHhSJhTpue29s2SJE2QpM/IpNyArkKrm+SiWuMuPvh+yG+Z
-	u4c09/rPPjPmsGcQJJu9lWlLboJd5GsJaLNwnMdlgPJRnKUzmt9HsKWdTyggVA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749558085;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=S7XHwyMIvux7mHDycUbcxmSE3NX5d97oyLdcmCQZNOo=;
-	b=uR929m69LoihHTip8d1IsYJO9C90dAsayC2j74Q1/j4ThsmenxpqxfttAovYmqB8P40QB2
-	GJ/15xc0lnKOibBw==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Willy Tarreau <w@1wt.eu>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Kees Cook <kees@kernel.org>, Andy Lutomirski <luto@amacapital.net>, 
-	Will Drewry <wad@chromium.org>, Mark Brown <broonie@kernel.org>, 
-	Muhammad Usama Anjum <usama.anjum@collabora.com>, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v4 12/14] selftests: harness: Stop using
- setjmp()/longjmp()
-Message-ID: <20250610141252-1ee7ae72-dbad-4a80-931c-5b4b14fb07ce@linutronix.de>
-References: <20250505-nolibc-kselftest-harness-v4-0-ee4dd5257135@linutronix.de>
- <20250505-nolibc-kselftest-harness-v4-12-ee4dd5257135@linutronix.de>
- <aEfTYkVdphiOhqPg@nvidia.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HPILu5HQ"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55A8N3gp016705;
+	Tue, 10 Jun 2025 12:22:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Z1zz2jZewslSYuANbkXE0TqNW0wgq3c4JFUBtPEF3as=; b=HPILu5HQowy2cKIf
+	+GY6VGuX8gJ8DAP3zjZHJ8cikklM0TJqOgHwubq4jo8RavQrel0rrpDBtB0Li60A
+	htkKtfIMf8MxezOvsd+M7aAaMcuySaTofE1oJuiPHqnPxACoCRXUew6A73Px23LL
+	0y82fwkXC96ZomR8v5947mMN36oBXrM+GAYXUBSQ0f0+cSMZoHlnTEB/mBrl+dZb
+	O4wc115htKHHBU4QX4bfiUh2lXkFqCnFFzh9MjnEzUgXCBPfscR3TEDyUEVIQPYP
+	rK3i0pHD1rlCde+WZXOmL80VSkuRIo+wut5fauLxhLuHnaSypo/oKjMgk0/utDV2
+	OcPklQ==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474dn69ac7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Jun 2025 12:22:10 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55ACMAe6028955
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Jun 2025 12:22:10 GMT
+Received: from [10.217.216.18] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 10 Jun
+ 2025 05:22:04 -0700
+Message-ID: <94f3e5e0-f04f-ca4a-6133-513223919c72@quicinc.com>
+Date: Tue, 10 Jun 2025 17:52:02 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aEfTYkVdphiOhqPg@nvidia.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH V3 4/4] mmc: sdhci-msm: Rectify DLL programming sequence
+ for SDCC
+Content-Language: en-US
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Sachin Gupta
+	<quic_sachgupt@quicinc.com>
+CC: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Bhupesh Sharma
+	<bhupesh.sharma@linaro.org>,
+        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <quic_cang@quicinc.com>, <quic_nguyenb@quicinc.com>,
+        <quic_bhaskarv@quicinc.com>, <quic_mapa@quicinc.com>,
+        <quic_nitirawa@quicinc.com>, <quic_sartgarg@quicinc.com>
+References: <20250122094707.24859-1-quic_sachgupt@quicinc.com>
+ <20250122094707.24859-5-quic_sachgupt@quicinc.com>
+ <nmsm6bb5biptmzruggs4f3mweq7d7hcmwqjdidf6bi7gyoliw2@x4yitguzz6zx>
+From: Ram Prakash Gupta <quic_rampraka@quicinc.com>
+In-Reply-To: <nmsm6bb5biptmzruggs4f3mweq7d7hcmwqjdidf6bi7gyoliw2@x4yitguzz6zx>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDA5NiBTYWx0ZWRfXzkCYqt+57Sn0
+ kVzvRFZnIMIZDC46bz5xNmr13PHZwM+shkcpft3LzLejPu29TX10Cgmu6u1I3l63PfX/+deZp2c
+ WTvYSysySllGWVY8AVBZH60hHPZAgkqO19dVYTd6469mzjXyTCGWdAc0Z2pPnvXOeSEe6SepTB6
+ Gs9ftJi6eWaEUkW2y0pvgUBXwFKVwP8kD5Mr1WIsEuWGafJC3Zc0QN1iXwWxhQSPBxV5fssw+bw
+ exL9P27CyzczWQiW5Nf3z2o4xD3FypHVfCu8yt0IN4HO3xjvX9cBKfNIf5PS6ItIn+DUqwUfKR1
+ G/KdeCBUQJqGTIAe0nk/bS/KCKWWARAa3WmC5bwCg3PTDZOj44Ztrkr/tYLEHuU52suwUEyIDaB
+ kS/zq63JvneAdAM1qBl1zb217GD46dAXsY2ujVa6gUZ5VmCiWsPW3trPQJPvvhfUskOeNB+f
+X-Proofpoint-GUID: _FV2bPgd6m-l5RTim6UL3YkGWEMKA-08
+X-Authority-Analysis: v=2.4 cv=FaQ3xI+6 c=1 sm=1 tr=0 ts=68482372 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
+ a=R1gvGUbQ5fRmNe7AyYsA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: _FV2bPgd6m-l5RTim6UL3YkGWEMKA-08
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-10_04,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 lowpriorityscore=0 bulkscore=0 phishscore=0 adultscore=0
+ mlxlogscore=999 mlxscore=0 spamscore=0 suspectscore=0 malwarescore=0
+ priorityscore=1501 clxscore=1015 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506100096
 
-Hi Nicolin,
+Hi Dmitry,
 
-On Mon, Jun 09, 2025 at 11:40:34PM -0700, Nicolin Chen wrote:
-> Hi Thomas,
-> 
-> CC += Jason
-> 
-> On Mon, May 05, 2025 at 05:15:30PM +0200, Thomas Weißschuh wrote:
-> > Usage of longjmp() was added to ensure that teardown is always run in
-> > commit 63e6b2a42342 ("selftests/harness: Run TEARDOWN for ASSERT failures")
-> > However instead of calling longjmp() to the teardown handler it is easier to
-> > just call the teardown handler directly from __bail().
-> > Any potential duplicate teardown invocations are harmless as the actual
-> > handler will only ever be executed once since
-> > commit fff37bd32c76 ("selftests/harness: Fix fixture teardown").
-> > 
-> > Additionally this removes a incompatibility with nolibc,
-> > which does not support setjmp()/longjmp().
-> > 
-> > Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-> 
-> The iommufd selftest (CONFIG_IOMMUFD_TEST) starts to give warnings
-> when building with v6.16-rc1, though the test code wasn't changed
-> at these two functions:
+I will start on this with addressing your comments in previous version as
+suggested.
 
-Thanks for the report.
+Thanks,
+Ram
 
-> ------------------------------------------------------------------
-> make: Entering directory '/nicolinc/linux-stable/tools/testing/selftests/iommu'
->   CC       iommufd
-> iommufd.c: In function ‘wrapper_iommufd_mock_domain_all_aligns’:
-> iommufd.c:1806:17: warning: ‘mfd’ may be used uninitialized in this function [-Wmaybe-uninitialized]
->  1806 |                 close(mfd);
->       |                 ^~~~~~~~~~
-> iommufd.c:1766:13: note: ‘mfd’ was declared here
->  1766 |         int mfd;
->       |             ^~~
-> iommufd.c: In function ‘wrapper_iommufd_mock_domain_all_aligns_copy’:
-> iommufd.c:1869:17: warning: ‘mfd’ may be used uninitialized in this function [-Wmaybe-uninitialized]
->  1869 |                 close(mfd);
->       |                 ^~~~~~~~~~
-> iommufd.c:1818:13: note: ‘mfd’ was declared here
->  1818 |         int mfd;
->       |             ^~~
->   CC       iommufd_fail_nth
-> make: Leaving directory '/nicolinc/linux-stable/tools/testing/selftests/iommu'
-> ------------------------------------------------------------------
-> 
-> Git bisect points to this patch, and reverting it fixes these.
-> 
-> Both mfds are under the same "if (variant->driver)" check, so the
-> warnings don't seem legit to me.
-> 
-> Do you have any idea why this happens?
-
-It does look very weird. I could understand if the compiler assumes that
-variant->file changes during the runtime of the function.
-But even if I work around this, by introducing a local variable "bool file =
-variant->file" the issue persists.
-However as soon as the value of of "bool file" is fixed to either "true" or
-"false" it goes away.
-
-
-The following diff *alone* also prevents the warning, but that doesn't
-make any sense either:
-
---- a/tools/testing/selftests/iommu/iommufd_utils.h
-+++ b/tools/testing/selftests/iommu/iommufd_utils.h
-@@ -65,7 +65,7 @@ static inline void *memfd_mmap(size_t length, int prot, int flags, int *mfd_p)
-                return MAP_FAILED;
-        if (ftruncate(mfd, length))
-                return MAP_FAILED;
--       *mfd_p = mfd;
-+       *mfd_p = 0;
-        return mmap(0, length, prot, flags, mfd, 0);
- }
-
-
-Maybe the logic became too complex for GCC?
-Case in point, when trying with an older GCC 13.2, the following warning appeared:
-
-In file included from iommufd_utils.h:14,
-                 from iommufd.c:12:
-In function 'iommufd_viommu_vdevice_alloc',
-    inlined from 'wrapper_iommufd_viommu_vdevice_alloc' at iommufd.c:2731:1:
-../kselftest_harness.h:760:12: warning: 'ret' may be used uninitialized [-Wmaybe-uninitialized]
-  760 |         if (!(__exp _t __seen)) { \
-      |            ^
-../kselftest_harness.h:513:9: note: in expansion of macro '__EXPECT'
-  513 |         __EXPECT(expected, #expected, seen, #seen, ==, 1)
-      |         ^~~~~~~~
-iommufd_utils.h:1005:9: note: in expansion of macro 'ASSERT_EQ'
- 1005 |         ASSERT_EQ(0, _test_cmd_trigger_vevents(self->fd, dev_id, nvevents))
-      |         ^~~~~~~~~
-iommufd.c:2766:17: note: in expansion of macro 'test_cmd_trigger_vevents'
- 2766 |                 test_cmd_trigger_vevents(dev_id, 3);
-      |                 ^~~~~~~~~~~~~~~~~~~~~~~~
-iommufd_utils.h: In function 'wrapper_iommufd_viommu_vdevice_alloc':
-iommufd_utils.h:993:13: note: 'ret' was declared here
-  993 |         int ret;
-      |             ^~~
-
-Which is also just a false-positive and fixed with newer GCCs.
-
-
-Thomas
+On 1/22/2025 3:30 PM, Dmitry Baryshkov wrote:
+> On Wed, Jan 22, 2025 at 03:17:07PM +0530, Sachin Gupta wrote:
+>> With the current DLL sequence stability issues for data
+>> transfer seen in HS400 and HS200 modes.
+>>
+>> "mmc0: cqhci: error IRQ status: 0x00000000 cmd error -84
+>> data error 0"
+>>
+>> Rectify the DLL programming sequence as per latest hardware
+>> programming guide
+>>
+>> Signed-off-by: Sachin Gupta <quic_sachgupt@quicinc.com>
+>> ---
+>>  drivers/mmc/host/sdhci-msm.c | 270 ++++++++++++++++++++++++++++++++---
+>>  1 file changed, 252 insertions(+), 18 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+>> index cc7756a59c55..17f17a635d83 100644
+>> --- a/drivers/mmc/host/sdhci-msm.c
+>> +++ b/drivers/mmc/host/sdhci-msm.c
+>> @@ -28,6 +28,7 @@
+>>  #define CORE_VERSION_MAJOR_SHIFT	28
+>>  #define CORE_VERSION_MAJOR_MASK		(0xf << CORE_VERSION_MAJOR_SHIFT)
+>>  #define CORE_VERSION_MINOR_MASK		0xff
+>> +#define SDHCI_MSM_MIN_V_7FF		0x6e
+>>  
+>>  #define CORE_MCI_GENERICS		0x70
+>>  #define SWITCHABLE_SIGNALING_VOLTAGE	BIT(29)
+>> @@ -118,7 +119,8 @@
+>>  #define CORE_PWRSAVE_DLL	BIT(3)
+>>  
+>>  #define DDR_CONFIG_POR_VAL	0x80040873
+>> -
+>> +#define DLL_CONFIG_3_POR_VAL	0x10
+>> +#define TCXO_FREQ               19200000
+>>  
+>>  #define INVALID_TUNING_PHASE	-1
+>>  #define SDHCI_MSM_MIN_CLOCK	400000
+>> @@ -309,6 +311,16 @@ struct sdhci_msm_host {
+>>  	bool artanis_dll;
+>>  };
+>>  
+>> +enum dll_init_context {
+>> +	DLL_INIT_NORMAL,
+>> +	DLL_INIT_FROM_CX_COLLAPSE_EXIT,
+>> +};
+>> +
+>> +enum mode {
+>> +	HS400, // equivalent to SDR104 mode for DLL.
+>> +	HS200, // equivalent to SDR50 mode for DLL.
+>> +};
+>> +
+>>  static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
+>>  {
+>>  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>> @@ -793,6 +805,211 @@ static int msm_init_cm_dll(struct sdhci_host *host)
+>>  	return 0;
+>>  }
+>>  
+>> +static unsigned int sdhci_msm_get_min_clock(struct sdhci_host *host)
+>> +{
+>> +	return SDHCI_MSM_MIN_CLOCK;
+>> +}
+>> +
+>> +static unsigned int sdhci_msm_get_clk_rate(struct sdhci_host *host, u32 req_clk)
+>> +{
+>> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+>> +	struct clk *core_clk = msm_host->bulk_clks[0].clk;
+>> +	unsigned int sup_clk;
+>> +
+>> +	if (req_clk < sdhci_msm_get_min_clock(host))
+>> +		return sdhci_msm_get_min_clock(host);
+>> +
+>> +	sup_clk = clk_get_rate(core_clk);
+>> +
+>> +	if (host->clock != msm_host->clk_rate)
+>> +		sup_clk = sup_clk / 2;
+> Please resolve previous discussions before sending new versions. Just
+> sending a response and then sending next iteration of the patchset is
+> not a proper way to communicate.
+>
+> NAK until the discussion is resolved in the previous thread.
+>
+>> +
+>> +	return sup_clk;
+>> +}
+>> +
