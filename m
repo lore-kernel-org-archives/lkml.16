@@ -1,33 +1,50 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C47F20766E;
-	Tue, 10 Jun 2025 14:55:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3248F20766E
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 14:55:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749567333; cv=none; b=W0BYVU+VsITKgHosIqHoO/yFa0/FiUFJEeIovKnWatFb5tJmAztrQT5GD2sNQI9qWZN5mp+QF+6H5K1t9fVYxptuME7tHEnO3hHyGZfCQMQbESyYaGSoRMRkOIYmFIJ3IFUmh/pSpbXbwFUxxnD0iAWaf2nIurhx2S4gmfS/PLs=
+	t=1749567339; cv=none; b=l3P/Uvow458ISToBLUhcbeYrz+ZBUF/vTZcbuRfvvi6wZYcmxpBZ4zCd+5QjvR3yQQ1vwTMYvGSf/pLgMupZOI1QKwnunMZp4PRNP4XFIjNaXlbsSOnlIN0+6H7dHSdQkopoTqkJoZmw/EgiZxbFwY+dmAwK0ZdCDr5qiyv/DsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749567333; c=relaxed/simple;
-	bh=o2qFIwCJqf1Owe8LoAFDkXI9Um7ln94fm/Lg5eVi6/s=;
+	s=arc-20240116; t=1749567339; c=relaxed/simple;
+	bh=Eh+iheJKwBVfOPh/9XPVIBHnKO/A10PgqY0AzI/9EZY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bx9EOMPQtbJQdtFI/G7pCkMzFjEsL34G+8Uasi+UCanKVNzerCkHVeCNPxUDyrvGEUEowCJ3wEAr55CA8opNl2CThOhzNhFc1NUR5s7OopLAvX2Ez0E/AqMcO4Dtjo/c2NAg2NX1pejnM4+r7bAdpV63VrQzY/x3gMb0HMQjdqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sl51QyIk; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=h5aVO0Bi6cfoLp1beHoNeBjnmS66FU7/qlY9VKz/bvVErN0KFnD8l2uHBPMjC17P7uCGbQXk2wzWHJLwVvPKKhTWlOcO7mVqkessRfoiDAHnVV1vinlLoJjv8BeXrQHW4lh2qN2EHap9NrmRUS3c0/rqiH6wqyZMT8hFJLGsllo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AK+Z14HQ; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sl51QyIk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04298C4CEED;
-	Tue, 10 Jun 2025 14:55:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749567333;
-	bh=o2qFIwCJqf1Owe8LoAFDkXI9Um7ln94fm/Lg5eVi6/s=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Sl51QyIkRvKqYv018SvVzJZZ1IvNREg1v8VuuTS4bBTEiwLbyujGGldADwF5xT8tN
-	 SwjGfmnT5myotfQhC5x4VXrpEz/YFGqll2BfRcnKFSia9CrNGOqdZ5x8ccvlz2uxVb
-	 UXW0bTsrTa7YiQxKBaApgGFE6hwBBrIwbbnkTigUEfAxqhrdMjJNMMpw5at6o0uOmd
-	 a7ZkgXr+IpLI3P2/qTFKDhtIHzvJ3lxNLJNv986w2tgeProeOj3fue8Hw3hXi0hjzq
-	 TLBCNnQNk8lokn5M4NexbgYJAE0pKDPb2DYn3/w5kdi8Mm2p3l5sg7FTewow6ayy4X
-	 HevTJcwJF1WjQ==
-Message-ID: <1e06c620-8f8e-4ddf-8356-0782bccd63a2@kernel.org>
-Date: Tue, 10 Jun 2025 16:55:26 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AK+Z14HQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749567338; x=1781103338;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Eh+iheJKwBVfOPh/9XPVIBHnKO/A10PgqY0AzI/9EZY=;
+  b=AK+Z14HQqRjNZHmsZVMuQ66ty8UHN1PynBZGbAH/pDz4tQyAG331xucc
+   I1dgNxcR9pRrqt5D+0UrGJMgmm5loYLxXEbziVYHd1xY7DZp7VktJHDAn
+   qhLmaXs7chNSGco7/fGN7k4Sq8A0EmsQkTJJPskvFj+gDqHOJ6RUHh5p2
+   VsLt7QbtAtJ2FNWVNAyq9OXwqywYxKViNbeRmYTz4T0C1iTPOrrh2D/29
+   /FU/LeNv9cyE8sFU51CExWaABFaSIH1bqW3tB5PmjJQLC/pQNF40a6iWT
+   34jI8JuvI97MrSKetbi2EYacL9y24mt0P3C8Qrr/99MwG8HxHKHzVfgjv
+   w==;
+X-CSE-ConnectionGUID: ONJvNFzdTpq3hQSgx82/TA==
+X-CSE-MsgGUID: GiwkzTQ2Q5mXOFvlOR8P1g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51536934"
+X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
+   d="scan'208";a="51536934"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 07:55:37 -0700
+X-CSE-ConnectionGUID: N7xJj846RwiiZjpFXhzCgQ==
+X-CSE-MsgGUID: riD1qMt0RnusQVNq59w/yQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
+   d="scan'208";a="146839722"
+Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.111.131]) ([10.125.111.131])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 07:55:37 -0700
+Message-ID: <22cd0fa8-d14d-4d37-a6a1-5e6827d6182b@intel.com>
+Date: Tue, 10 Jun 2025 07:55:36 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,96 +52,95 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/5] i2c: piix4: Depends on X86
-To: Mario Limonciello <superm1@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Borislav Petkov <bp@alien8.de>, Jean Delvare <jdelvare@suse.com>,
- Andi Shyti <andi.shyti@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
- "H . Peter Anvin" <hpa@zytor.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>,
- "open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>,
- Ingo Molnar <mingo@kernel.org>, linux-mips@vger.kernel.org,
- loongarch@lists.linux.dev
-References: <20250422234830.2840784-1-superm1@kernel.org>
- <20250422234830.2840784-3-superm1@kernel.org>
- <CAMuHMdVPQLjOox5sMp34Z5MTwKv2WOpHa=MpZr8hWG22fQKcjw@mail.gmail.com>
- <CAAhV-H70LXsDYMA7wz4x828rEFoJsNX0=m8F73Ge9=yfpzBpZQ@mail.gmail.com>
- <24febda9-6360-459f-82d3-6fba9ed9be83@kernel.org>
- <30a7f1a6-1e04-4fc5-9bea-e2b5956b28b7@kernel.org>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <30a7f1a6-1e04-4fc5-9bea-e2b5956b28b7@kernel.org>
+Subject: Re: [PATCH v3 1/2] x86/mm: Handle alloc failure in phys_*_init()
+To: Em Sharnoff <sharnoff@neon.tech>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-mm@kvack.org
+Cc: Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
+ <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+ "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+ Oleg Vasilev <oleg@neon.tech>, Arthur Petukhovsky <arthur@neon.tech>,
+ Stefan Radig <stefan@neon.tech>, Misha Sakhnov <misha@neon.tech>
+References: <a31e3b89-5040-4426-9ce8-d674b8554aa1@neon.tech>
+ <a404d023-e0bb-4dc8-8952-accba299ab50@neon.tech>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <a404d023-e0bb-4dc8-8952-accba299ab50@neon.tech>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 6/10/25 03:16, Em Sharnoff wrote:
+> +		if (!pmd)
+> +			return (unsigned long)ERR_PTR(-ENOMEM);
 
-On 10-Jun-25 16:53, Hans de Goede wrote:
-> Hi,
-> 
-> On 10-Jun-25 16:12, Mario Limonciello wrote:
->> On 6/10/2025 2:24 AM, Huacai Chen wrote:
->>> On Tue, Jun 10, 2025 at 5:16 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->>>>
->>>> Hi Mario,
->>>>
->>>> CC mips, loongarch
->>>>
->>>> On Wed, 23 Apr 2025 at 01:49, Mario Limonciello <superm1@kernel.org> wrote:
->>>>> From: Mario Limonciello <mario.limonciello@amd.com>
->>>>>
->>>>> PIIX4 and compatible controllers are only for X86. As some headers are
->>>>> being moved into x86 specific headers PIIX4 won't compile on non-x86.
->>>>>
->>>>> Suggested-by: Ingo Molnar <mingo@kernel.org>
->>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>>>
->>>> Thanks for your patch, which is now commit 7e173eb82ae97175
->>>> ("i2c: piix4: Make CONFIG_I2C_PIIX4 dependent on CONFIG_X86")
->>>> in v6.16-rc1.
->>>>
->>>>> --- a/drivers/i2c/busses/Kconfig
->>>>> +++ b/drivers/i2c/busses/Kconfig
->>>>> @@ -200,7 +200,7 @@ config I2C_ISMT
->>>>>
->>>>>   config I2C_PIIX4
->>>>>          tristate "Intel PIIX4 and compatible (ATI/AMD/Serverworks/Broadcom/SMSC)"
->>>>> -       depends on PCI && HAS_IOPORT
->>>>> +       depends on PCI && HAS_IOPORT && X86
->>>>
->>>> Are you sure this south-bridge is not used on non-x86 platforms?
->>>> It is enabled in several non-x86 defconfigs:
->>>>
->>>>      arch/loongarch/configs/loongson3_defconfig:CONFIG_I2C_PIIX4=y
->>>>      arch/mips/configs/ip27_defconfig:CONFIG_I2C_PIIX4=m
->>>>      arch/mips/configs/loongson2k_defconfig:CONFIG_I2C_PIIX4=y
->>>>      arch/mips/configs/loongson3_defconfig:CONFIG_I2C_PIIX4=y
->>>>
->>>> The loongarch and loongson entries are probably bogus, but I wouldn't
->>>> be surprised if the SGI Onyx and Origin do use Intel south-bridges.
->>> Loongson can use AMD SB700/SB800 south bridges, which have I2C_PIIX4.
->>
->> Well we could revert this patch, but it's going to be a compile failure because of 624b0d5696a89b138408d385899dd35372db324b and other patches that go on top of that.
->>
->> My current leaning is we make a dummy fch.h header for these archs with #defines for 0.
-> 
-> Move "fch.h" to include/linux/platform/x86/ so that it is available on all arches
-> and if necessary ifdef out anything x86 specific in the C-code referencing it ?
+All of this casting isn't great to look at. Just about every line of
+code that this patch touches also introduces has a cast.
 
-Correction that should be include/linux/platform_data/x86/
+Could you please find a way to reduce the number of casts?
 
-Regards,
+> +		/*
+> +		 * We might have IS_ERR(paddr_last) if allocation failed, but we should
+> +		 * still update pud before bailing, so that subsequent retries can pick
+> +		 * up on progress (here and in phys_pmd_init) without leaking pmd.
+> +		 */
 
-Hans
+Please write everything in imperative voice. No "we's", please.
+
+> -	for (i = 0; i < nr_range; i++)
+> +	for (i = 0; i < nr_range; i++) {
+>  		ret = kernel_physical_mapping_init(mr[i].start, mr[i].end,
+>  						   mr[i].page_size_mask,
+>  						   prot);
+> +		if (IS_ERR((void *)ret))
+> +			return ret;
+> +	}
+
+Are there any _actual_ users of 'paddr_last'? I see a lot of setting it
+and passing it around, but I _think_ this is the only place it actually
+gets used. Here, the fact that it's an address doesn't even matter.
 
 
