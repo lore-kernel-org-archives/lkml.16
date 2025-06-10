@@ -1,85 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472442951B1;
-	Tue, 10 Jun 2025 12:35:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC0FD295DAE
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:35:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749558924; cv=none; b=RmibWVPf+V5/3aP25FN83V3a4bC1DoMxou5gQnn0QBjS7ha1A+/dN4ISvVUSDiXBPgPVipxe9/HDK/cC3dkTss0S2FJVbPRxebRgxQk5pqjIBu/lfM6VfFpOcnYOcNanDaR9a8YX3uxcymwZh83C8zuqJdIDMBlkoE7H4FtSRp4=
+	t=1749558937; cv=none; b=FTyPkESeLSldIrMF4gCtqKY3R6SnZAzPdld1OSdLlJruTaLZexgpfoYHFSVeHwoKMmdXz4kq9dow4oW470nuoLepYjUxpjAvv0iuqNYz1Arxt7jBRklH5E/jr5iabOKcYwOZszVimnVVLur8/6qUdopZc00bhALTmfQMAlEJ6x0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749558924; c=relaxed/simple;
-	bh=CSmYS/pEFaVijBjHY+AHpQU5O1e+HZuwLLbg9pOH0U0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=URgwf8dXlSsBqKSGwRPOwc/KA6S31mOnV8umZEK8YAGmOm1v5TTqBTnM4g1Li3tWf2GSYb87Suo2TYiXupwloTCTBGRc4b9lcQL8kP8/DHN0Uvfv2S1/AmJ87vhXZznzoDz8HqDF3HTZs3N/hOiKpFs+a7ufVEtRK6eEUG2LhP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cLy814kH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749558937; c=relaxed/simple;
+	bh=PYVfr4MzdRcAc8GZZqfTO+4NnznKF5DM0Ha6GQ9ktrM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
+	 References; b=LTC3L2drQuv4bnf/JJ3dCCrmHNIUZV1eogLj5Qh8CxO01JaM/Uer7+fvvXcWRx8VFfm033lwt3ekhyq/pRf8iY+5qej6r+czUMBONo9AYZyjK0pJ8y9JH+0VipMSRJeg9nrupEX7Z9P0p3AG/etRKtDFWPiSe+upFQE9ZegY3k8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=qutaXPGd; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cLy814kH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84F17C4CEED;
-	Tue, 10 Jun 2025 12:35:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749558923;
-	bh=CSmYS/pEFaVijBjHY+AHpQU5O1e+HZuwLLbg9pOH0U0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cLy814kHt42+XDyorgdKuhyW4Kp9DnDA1Yj7xT5s0OTL8tQtGZCvJPaPuY+r3W3BD
-	 AlgG3tryBBHPYzAnqZTGCLIf+VKJ98RGPtseBnslkqZ8wh9NNBnwQjF5Wnc/MNAInH
-	 tstKUA+jlZo0X3EUr/A6M2gS5zWsJPyfPNvOLlODu8fNs5KuX/lXGM/YZvRehytEhI
-	 6AMRMIVO90DWDla+Jp6LbN48mJ17GDGMFl78vNI1+JS4dVmQ/oJFtvUx6tluRUsYtK
-	 L4c6GdcyjV7ncWDm0WDpoteQjZR3ObVBaIzpraIFybRL6BKKlhnC7lGuYpUI+U2jH/
-	 bAflbXLO0z0sA==
-Date: Tue, 10 Jun 2025 15:35:19 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: sudeep.holla@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
-	stuart.yoder@arm.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] fix failure of integration IMA with tpm_crb_ffa
-Message-ID: <aEgmhwu1RP27yBpw@kernel.org>
-References: <20250610060334.2149041-1-yeoreum.yun@arm.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qutaXPGd"
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250610123533epoutp040103177d44688a74147ae8b11034e874~HrpSmp9Y-1280212802epoutp04n
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:35:33 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250610123533epoutp040103177d44688a74147ae8b11034e874~HrpSmp9Y-1280212802epoutp04n
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1749558933;
+	bh=XzsliogzO86/Q79QWe6n/Aszt7NA4JFz1tCGiPbDBOk=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=qutaXPGdEHqt/GgmGj/NiCrs6ycjXHH3yTzImA5qHwYpq03q2s2fPNPsxMSzVqN+1
+	 ZPVVkP9TQ6SVuWKaFkcHfvYWG1dzJSq+1dYmFoZcGSMTY+F+fdgbKW9ThSjv91YyTy
+	 iz4QD4sj7RQbwNkdt37euhxJ0CNyTiuQWBjPB+50=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas1p3.samsung.com (KnoxPortal) with ESMTPS id
+	20250610123533epcas1p38e8c00cb62be58b704f0dd07a719af9a~HrpSNuU9T1866818668epcas1p3F;
+	Tue, 10 Jun 2025 12:35:33 +0000 (GMT)
+Received: from epcas1p4.samsung.com (unknown [182.195.36.227]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4bGpD46smCz2SSKb; Tue, 10 Jun
+	2025 12:35:32 +0000 (GMT)
+Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
+	epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250610123532epcas1p24565e694897b17a36ad04752b7dd8678~HrpRU5_y70203502035epcas1p2d;
+	Tue, 10 Jun 2025 12:35:32 +0000 (GMT)
+Received: from yjjuny-lee03.tn.corp.samsungelectronics.net (unknown
+	[10.252.68.99]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250610123532epsmtip17249719ac46a1ab5f28e8a496739d0ba~HrpRP3Jll0052400524epsmtip1V;
+	Tue, 10 Jun 2025 12:35:32 +0000 (GMT)
+From: Youngjun Lee <yjjuny.lee@samsung.com>
+To: ribalda@chromium.org
+Cc: laurent.pinchart@ideasonboard.com, hdegoede@redhat.com,
+	mchehab@kernel.org, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Youngjun Lee <yjjuny.lee@samsung.com>
+Subject: [PATCH 2/2] usb: uvc: Fix 1-byte out-of-bounds read in
+ uvc_parse_format()
+Date: Tue, 10 Jun 2025 21:35:26 +0900
+Message-ID: <20250610123526.37316-1-yjjuny.lee@samsung.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250610060334.2149041-1-yeoreum.yun@arm.com>
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20250610123532epcas1p24565e694897b17a36ad04752b7dd8678
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 101P
+cpgsPolicy: CPGSC10-711,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250610123532epcas1p24565e694897b17a36ad04752b7dd8678
+References: <CGME20250610123532epcas1p24565e694897b17a36ad04752b7dd8678@epcas1p2.samsung.com>
 
-On Tue, Jun 10, 2025 at 07:03:32AM +0100, Yeoreum Yun wrote:
-> To integrate a TPM device that uses CRB over FF-A with the IMA subsystem,
-> both the tpm_crb and tpm_crb_ffa drivers must be built as built-in
-> (i.e., ARM_FFA_TRANSPORT=y, CONFIG_TCG_CRB=y, and CONFIG_TCG_CRB_FFA=y),
-> because IMA itself is built-in and the TPM device must be probed
-> before ima_init() is invoked during IMA subsystem initialization.
+The buffer length check before calling uvc_parse_format() only ensured
+that the buffer has at least 3 bytes (buflen > 2), buf the function
+accesses buffer[3], requiring at least 4 bytes.
 
-The description of the problem and motivation to solve it should be
-first; not the actions taken.
+This can lead to an out-of-bounds read if the buffer has exactly 3 bytes.
 
-> 
-> To ensure this works correctly, the following initcalls must be executed in order:
-> 	1.	ffa_init()
-> 	2.	tpm_crb_ffa_driver_init()
-> 	3.	crb_acpi_driver_init()
-> 
-> Unfortunately, the order of these device initcalls cannot be strictly controlled.
-> As a result:
-> 	1.	ffa_init() may be called after tpm_crb_ffa_driver_init()
-> 	2.	tpm_crb_ffa_driver_init() may be called after crb_acpi_driver_init()
-> 
-> For example, the following initcall sequence may occur:
->   0000000000000888 l  .initcall6.init>  crb_acpi_driver_init
->   000000000000088c l  .initcall6.init>  tpm_crb_ffa_driver_init
+Fix it by checking that the buffer has at least 4 bytes in
+uvc_parse_format().
 
-This symbol does not exist.
+Signed-off-by: Youngjun Lee <yjjuny.lee@samsung.com>
+---
+ drivers/media/usb/uvc/uvc_driver.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
->   0000000000000a9c l  .initcall6.init>  ffa_init
-> 
-> In this situation, the IMA subsystem fails to integrate with the TPM device
-> because the TPM was not available at the time ima_init() was called.
-> As a result, you may see the following message in the kernel log:
-> 
->   | ima: No TPM chip found, activating TPM-bypass!
+diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+index da24a655ab68..1100469a83a2 100644
+--- a/drivers/media/usb/uvc/uvc_driver.c
++++ b/drivers/media/usb/uvc/uvc_driver.c
+@@ -344,6 +344,9 @@ static int uvc_parse_format(struct uvc_device *dev,
+ 	u8 ftype;
+ 	int ret;
+ 
++	if (buflen < 4)
++		return -EINVAL;
++
+ 	format->type = buffer[2];
+ 	format->index = buffer[3];
+ 	format->frames = frames;
+-- 
+2.43.0
 
-TPM initializes before IMA, so there should not be a problem.
-
-BR, Jarkko
