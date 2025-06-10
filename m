@@ -1,287 +1,251 @@
-Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011033.outbound.protection.outlook.com [52.101.65.33])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D81E27FD73;
-	Tue, 10 Jun 2025 21:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF8521FF5B;
+	Tue, 10 Jun 2025 21:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749592364; cv=fail; b=SksfCjWOYV0yK+NhTg0zpwt9aJbO+jM+I/jHtnJ67hHMtRhfgL9oyINoh3AnlblZc77CNGi+gCyDIc0rkGyde5jViGZTpZqx8v76ONX1i6ga7xZ2VcRvA7da6lihiPgJscOiuUafE2xLhZkaBWQeTgeQTlgD/52gqHot7xg97YI=
+	t=1749592416; cv=fail; b=DbCOlT06/6u8roKotrnstkBiVpylNvazAOuDBtkAwKYTcHA1FRRCSbFe1qIjKu8F6T341zjSPSznFizayqnotJ3iu3sXEBHHxzzQGfdxB6u7ncesqLxQB5LkhCCIsJjz67ELnR+p/wdKpVxPqQ2V35Pv2ZKIq1HJSeeQqrhXJvE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749592364; c=relaxed/simple;
-	bh=vvPUt6tL9rim4VdMyFm0r7YPAsUGT/Ui2EO5bLeUAEs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Zc5OQpBhWyP3CbY/R5U+uomFIyz3gUDif6HiNtsbjaMwLpOajq1GXwdnEaTWoUfoHJhd3/Y3PMA+42zm39T0Q96KSHvi1aubgFKYUV09r9rEGHamCwyKc6l8jJIT+yVNPaSBPlbSZ+6wDswyDM/1qmZakxEMAdJ8AEyKoLU4R+8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=gRNE50i6; arc=fail smtp.client-ip=52.101.65.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1749592416; c=relaxed/simple;
+	bh=k39kOF+ueSYLVLC/lVXD9p+zpwoPDdv7mXgVCGZtsbc=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=aIt3hAB/pIYq/4D2g18G3k5qM5qtL5rlzt9Gu307kj3ZugT9lVMgtDrR44SXVmI0GD31D8uXChDCmsRY//0YRlVXL5RCynVdEvynRp1X3h25EyimSD9HBFyprLhHJCvzjyEahZK0Ow5SkVdX05m44jyv0l+h2HxhKFaA7kz1IxY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bfo+Oyry; arc=fail smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="gRNE50i6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bfo+Oyry"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749592415; x=1781128415;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=k39kOF+ueSYLVLC/lVXD9p+zpwoPDdv7mXgVCGZtsbc=;
+  b=bfo+OyryJfzZryl0LK13w9FCEbSIHEOxshpWIXSuHzI/7eZCcJuojt+a
+   2svyhtEZI1QoTX9wfm6Sa4VRMa0lgMnqQBDGpARgW8iIjShnF48eJRYPC
+   3ANPBnmajWOrVBwX9GFnt9p/VlRzYrKokHENzcoq4L+D/hoIvkLOP5ox5
+   O9hFEtTZfAeR6XUrqQ5kG/lwsyjCw1WwUr5E+WUmIlSW9+v0ijauhkVBH
+   1N+C3wKiM7D5ZZfujJf96TdRaJSDLEtquLHNBJeZvb5TE9AmBuKcYqVYr
+   e2qgd3GfvsSyncB7Uo7J5rwDc/EYOP0JRvG/mn7Rr4rhYTVdY57WgLgoL
+   Q==;
+X-CSE-ConnectionGUID: EjBfbZdaTyKEemdTZz5/hA==
+X-CSE-MsgGUID: KcT2doTHRw6NIxHzpNBz0w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="69282897"
+X-IronPort-AV: E=Sophos;i="6.16,226,1744095600"; 
+   d="scan'208";a="69282897"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 14:53:26 -0700
+X-CSE-ConnectionGUID: mqGd0atJSuO/5/ve2quwIw==
+X-CSE-MsgGUID: LyOVNuwtQJmu2gCNPBHeVA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,226,1744095600"; 
+   d="scan'208";a="147904147"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 14:53:25 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Tue, 10 Jun 2025 14:53:24 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Tue, 10 Jun 2025 14:53:24 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (40.107.223.88)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.55; Tue, 10 Jun 2025 14:53:23 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wL1DDQo+2lymt//X1AJ8piDi9UZjRnZB0Feyoh26wi+jU+GWIclENC0CwDzudDL766382MQ2VMdI/KZ+rW5YXo/3QRZ2kywnc2yedUbzQOEOCOpj9TW/tjhVNkiJoBHLikleJwHbxk514drOHwy5bLGtn3F5I6sQuTMPsi9CXnUcHO/pSl6nZyZG/FkpGd5h5BLCK0i+63SLhtlCtMNpJ6hUK+rgM3DzB3kV6gpF5HwZvC+YzfoHnHyRa1KRQvOUTb4qqC7hK0MxGXCNAp65QTQCsGJ2jzGumr+3d3pv7SzeM8FVdj/Wtoc242ZwQs7ufp2UffWMz1PlvgIY/0LJag==
+ b=FdcHJ+WIjRkVsFFAOlkc8cXQFvLzu63ZOh2dTAwONRDBkzhZwHqiJENfz+jFJo7l9W5S7AGF2HZaSkFPiUE6boZdso6KpxXyKw4K+WXSMi3x1r1tim9SljgoA6YD4ZepEeG+cyQhTwWFihJl4xEfb+2L2PeTNCMp0IbHtwNncjHqHBdx38L7A1ec2mszKS28O2M118ZJY8z85FkLA+sd+PWZq0IRRi/f35C4HejIhQGJ4/6tsYtYFUYHW1AKRr+uxligen9LkemnOBIG9/s8AMf6whzs20YcM5SX6Oo7O7HGo/o9qvA6e+9hh6PV7VVKkQ7lIILE8jD4TnP3nSO0Cw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Z9Opefa4BANhPC7X1y25r8ijlP9dUutnz0Lt0k39cIA=;
- b=TcDhITVOO/ds6BMSvlpwq8YP36iQoLvg16icGQRRglAJeXtbJGOV86goMk3dLLzkYI2AS05p1K/hToYmQe1zzks4pPXnTMbZoUygF7MHmcHdyCX1s1JQC66BrEwb7/wGn04C6tCQAcv/7CyoeLGS33Z7Q/m+FPlNbb+dZH+/0/UmVRmbl4xvrsEvuF21uTNSdD8OwdRX0K+pI4E6OuKgPHNvKAvODCTCp7pyfIG3+RQMz4gW/KurA5sA4nL0+yGg5xcWkfhAsy5qe1YM//a1PsGEj4fbbkfdx2yAstU0T5eRndOD4F1WyB1UwyqKZY2hI4r3dCighHy9nY826EQUYw==
+ bh=k39kOF+ueSYLVLC/lVXD9p+zpwoPDdv7mXgVCGZtsbc=;
+ b=fomNinm8c9TLQruumtQYw2HIiH/U87zJO+z7h3ym2n2GtJg0G0OAXN5+xMctU1tHDy+K2VCV2OmaqXOqU/ltn1eaXV8Gdy7v68t30LXQlAPUaPHVjn6CxkFTs4vm+4K6vD+YOspqJo3yV95cfnHRXPivU1n8AjCz8XrWWLE+xwL1RbSsZqNu8Bp8+naxgJ4alzFOcbNZYhR986FN5k+XnKUZ3kmXV6o+cds7Njk4euVYWmQNQ6XYxEr4ZULNTeNct/k1HSWOK+3ARVCaD6Zwu5o4SgZ8tnsNRbRkeMZRpsWm9jpHBkbsvNnJSlKNdMwrpheZOYMO5FuY1eS3aoRmXw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Z9Opefa4BANhPC7X1y25r8ijlP9dUutnz0Lt0k39cIA=;
- b=gRNE50i6Plk1W27YDDUX4BiGH3yz/xDTxsS4YRDRxBtEw6pqWwnXQ71v3URMzQ41FxD7qg/6ujvs4mhY0p0cTC1+zMu7OinsO/CBiXORTMreYnohG5/ZOPxPHAWv1CxKtGwvSiGarAZjJ9HoqTRwJXss8yJEOJT0TUNdP4ue9sUWi5HipPJqFa5Cn62WZVfwTfiH686Hdd/4tPttmMgn9+ZKmbyD6vNscv5poamuwy1DvYk7sE+lDmRt1LWruwywOQsEvFmyWKToXwGBL/KZVvwMz3IuQ8Ej7QVkVBr2TIGa4VOpxK4Dw9WJYA9zddUQB4RNpYPsD0EEcpIkI4YQFA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM8PR04MB7779.eurprd04.prod.outlook.com (2603:10a6:20b:24b::14)
- by GVXPR04MB10071.eurprd04.prod.outlook.com (2603:10a6:150:11a::18) with
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from SJ1PR11MB6297.namprd11.prod.outlook.com (2603:10b6:a03:458::8)
+ by LV8PR11MB8488.namprd11.prod.outlook.com (2603:10b6:408:1e7::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Tue, 10 Jun
- 2025 21:52:36 +0000
-Received: from AM8PR04MB7779.eurprd04.prod.outlook.com
- ([fe80::7417:d17f:8d97:44d2]) by AM8PR04MB7779.eurprd04.prod.outlook.com
- ([fe80::7417:d17f:8d97:44d2%3]) with mapi id 15.20.8813.024; Tue, 10 Jun 2025
- 21:52:36 +0000
-Date: Wed, 11 Jun 2025 00:52:33 +0300
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
-To: James Clark <james.clark@linaro.org>
-Cc: Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>,
-	linux-spi@vger.kernel.org, imx@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] spi: spi-fsl-dspi: Report FIFO overflows as errors
-Message-ID: <20250610215233.35ikv4sslkyukgwr@skbuf>
-References: <20250609-james-nxp-spi-dma-v1-0-2b831e714be2@linaro.org>
- <20250609-james-nxp-spi-dma-v1-4-2b831e714be2@linaro.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250609-james-nxp-spi-dma-v1-4-2b831e714be2@linaro.org>
-X-ClientProxiedBy: VI1P194CA0044.EURP194.PROD.OUTLOOK.COM
- (2603:10a6:803:3c::33) To AM8PR04MB7779.eurprd04.prod.outlook.com
- (2603:10a6:20b:24b::14)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.29; Tue, 10 Jun
+ 2025 21:53:22 +0000
+Received: from SJ1PR11MB6297.namprd11.prod.outlook.com
+ ([fe80::dc50:edbf:3882:abf7]) by SJ1PR11MB6297.namprd11.prod.outlook.com
+ ([fe80::dc50:edbf:3882:abf7%5]) with mapi id 15.20.8813.024; Tue, 10 Jun 2025
+ 21:53:22 +0000
+From: "Salin, Samuel" <samuel.salin@intel.com>
+To: "Zaremba, Larysa" <larysa.zaremba@intel.com>,
+	"intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+	"Nguyen, Anthony L" <anthony.l.nguyen@intel.com>
+CC: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Jonathan Corbet
+	<corbet@lwn.net>, "Kitszel, Przemyslaw" <przemyslaw.kitszel@intel.com>, "Jiri
+ Pirko" <jiri@resnulli.us>, "Nikolova, Tatyana E"
+	<tatyana.e.nikolova@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"Lobakin, Aleksander" <aleksander.lobakin@intel.com>, Michael Ellerman
+	<mpe@ellerman.id.au>, "Fijalkowski, Maciej" <maciej.fijalkowski@intel.com>,
+	Lee Trager <lee@trager.us>, Madhavan Srinivasan <maddy@linux.ibm.com>,
+	"Zaremba, Larysa" <larysa.zaremba@intel.com>, "Samudrala, Sridhar"
+	<sridhar.samudrala@intel.com>, "Keller, Jacob E" <jacob.e.keller@intel.com>,
+	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>, "Polchlopek,
+ Mateusz" <mateusz.polchlopek@intel.com>, "Zaki, Ahmed"
+	<ahmed.zaki@intel.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Karlsson,
+ Magnus" <magnus.karlsson@intel.com>, "Tantilov, Emil S"
+	<emil.s.tantilov@intel.com>, "Chittim, Madhu" <madhu.chittim@intel.com>,
+	"Hay, Joshua A" <joshua.a.hay@intel.com>, "Olech, Milena"
+	<milena.olech@intel.com>, "Linga, Pavan Kumar" <pavan.kumar.linga@intel.com>,
+	"Singhai, Anjali" <anjali.singhai@intel.com>, "Kubiak, Michal"
+	<michal.kubiak@intel.com>
+Subject: RE: [Intel-wired-lan] [PATCH iwl-next v4 11/15] idpf: print a debug
+ message and bail in case of non-event ctlq message
+Thread-Topic: [Intel-wired-lan] [PATCH iwl-next v4 11/15] idpf: print a debug
+ message and bail in case of non-event ctlq message
+Thread-Index: AQHbxnMj14g/9Uv6n0aDvSfOk9QmILP9Fw9Q
+Date: Tue, 10 Jun 2025 21:53:21 +0000
+Message-ID: <SJ1PR11MB6297345F22F504AC2BD337969B6AA@SJ1PR11MB6297.namprd11.prod.outlook.com>
+References: <20250516145814.5422-1-larysa.zaremba@intel.com>
+ <20250516145814.5422-12-larysa.zaremba@intel.com>
+In-Reply-To: <20250516145814.5422-12-larysa.zaremba@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ1PR11MB6297:EE_|LV8PR11MB8488:EE_
+x-ms-office365-filtering-correlation-id: b2a09f01-6165-4a03-8873-08dda86937e8
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7053199007|38070700018;
+x-microsoft-antispam-message-info: =?us-ascii?Q?om0OT1KfJDwrEIZB2LVbj/VOR/yCXikh8hzrrmi2NHenT6QT1bGzfSFLEyR7?=
+ =?us-ascii?Q?iMgj11m+aGVWwfypkfrXvBJio266g2u7YTJ2UXLuFA36e+6+GQqHru1lVRrv?=
+ =?us-ascii?Q?d5Ge/h0M6T+8p/OKkH9KiEDLBmVz4FvBKgM8fl7M8shlROioVtsYbqJqmxC/?=
+ =?us-ascii?Q?b0FkSUjDqH9mftd8hflK/56V2je0LKskzUFHj++8UuJ65Zk8V63bg0fkNKQX?=
+ =?us-ascii?Q?gLjREgjhKJv54Hb40DuWakHSXcHRmqmEOTLp+IECfQibrH1y99tAd9AyRH+x?=
+ =?us-ascii?Q?n+RfUvAuBQvL6cXgKiptQioSmGqJ/Ne+8KApYC+xVBNi326Y9MNWQWSzOPNY?=
+ =?us-ascii?Q?/1wy9pliY3vXWLZo8yhrub+fTiqjPKsJ7Ipn5Ol2tiWf71i23M1qyCtLK7eF?=
+ =?us-ascii?Q?bqlTaRfj7KIqANBWLv9R+LIFQEw0GjsypVS8zHV1Fx69uT4QmVsRx8v4pd9y?=
+ =?us-ascii?Q?OGCX5yZWke7TBDsKjeE+GUeD+bBniCT2YPi8eaqsxtHtxx+T46dhVlQD/yzD?=
+ =?us-ascii?Q?FMu4x/nMQ+DiLB1fMcUV56OK6H8iE6lNSAxFu3amNlD8RFOVjS2o7D6+x/14?=
+ =?us-ascii?Q?/aTVGDRgZxkbq16g3EgTYdI05ngDInTlQJX3DmMqtgYB+4kYm1GqNFBGjafM?=
+ =?us-ascii?Q?ViGtQNSbvPBDlJ0/Wkr6+cYDYA1KkgOvpz1fZ2xcy77Xs+ZhnRznDGf8jHSf?=
+ =?us-ascii?Q?kWHYiei2WJJPSF0iT3Gwo/brYLOpYBaQkiYzbKsedSi1YM7wRzp/4Ddc2t/H?=
+ =?us-ascii?Q?+1t6FT8kbagyKIHU6D62J8FmlbQ0kzqNjEy4xBktl+J68mOOB7Li4sZYgZFt?=
+ =?us-ascii?Q?Vu9zEFxSfPbEuyiiOUsXuN73j+SDQxTW5KdIfQYLkmx8rm60MqVvAluQ3cso?=
+ =?us-ascii?Q?PERArkiu7Sx9jb3z7JX8pa9+NxQ0WTpAhMfHHrsdNlMBuFOtDwlyCrSoGuTT?=
+ =?us-ascii?Q?7fD1cA58OjR/dUfxlitmITlqXpZu+xJa4O4g2uWkLxxiu/VBq3LbfgdB7Aga?=
+ =?us-ascii?Q?CBvf1Si6yY4taU2eCCRDfclNdG6w2toJZhhvoG8VgPuXEaFE+wL4ZvRGbs9Y?=
+ =?us-ascii?Q?Hjbmaq/VhCrb9LnPhDGutO0CdP2PwGq1XyXt4gfRXOYBHUViyAXoQZu8eTfT?=
+ =?us-ascii?Q?fPkMBl3bkZKPv3DWcwuj4joudr5GV53OeSREZlFcRxKlfix83GBxz5V25AUI?=
+ =?us-ascii?Q?+KhZrCiPDv2vkqigRdihzEwRJqVqzqSZoFYTYWHLi+C4q/pfe0aSSyphC2gV?=
+ =?us-ascii?Q?4OoNQXObFhqBYXPCPzPqbdTwFDpeVZUxxHqd7m/kDrkEWUICzxPu6PY0yUm7?=
+ =?us-ascii?Q?ZROPNes9/OSR6TUOZ+UQ0Ed05makfzPwVyKNzhXa2aHke2TYhPCqJk8mMmHT?=
+ =?us-ascii?Q?fdRcAZ3NoP6X+zwD78uZWGc4Mp2CIAfku0REIuiPRuwJex4+s6bhC+19QHgT?=
+ =?us-ascii?Q?nSLl97PrGe7rxp5d0H7aAy9hHbS5ixcsEPQViyF2N5aRNMUKvQydBrXzMyrd?=
+ =?us-ascii?Q?EY5zVSbIa8d78Ig=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR11MB6297.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7053199007)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?mg+0Zasb+bAax3k9cSKDAY/PgKNwEDoXvGFVcF9qChRGCyhyGPcaHMKbEkUy?=
+ =?us-ascii?Q?d32liV0gegrWI380KJo8n88s5xK2OLlYAvlPWIuyM4KonhJAaxLjWy4F6nKV?=
+ =?us-ascii?Q?7zjY7KJmw4HF4SS3buARMxDk1vg9eB0MYWrubQHebg/gaiYdZpwATzxp9WG6?=
+ =?us-ascii?Q?kJraa+BKkXEuPwKn/9VVNmuBRPJwSh4tkwqa98SmqFNCsiHxffi1DQPEw5he?=
+ =?us-ascii?Q?kTlDh88PLE6QRhc/OVCV1Vxl3Ir1qZGa8GDkF738aVtjo9/6Mw7aDqB2sFLa?=
+ =?us-ascii?Q?msV+in+8/xECkaPPTmbAPPRL7zHQlze50D+FmuUV98sTXBxfLEzC+HOB39jo?=
+ =?us-ascii?Q?JRIZ9YexPn3oKbo8PvuMpUscyh8FAztwYKOSUnGlpy3egYfeIsVvVo8JGc2a?=
+ =?us-ascii?Q?r/SRnAs5/OUnsA5pIrCMHP2UfU+tCMPOD/R9aOkRNwBWhdAc+NyyVO440tQj?=
+ =?us-ascii?Q?aioEbdXodD2BJpFIWr9tfApPCRsKaBlRTGKfgL4xHLQgdToAdiG8JMrNlZiZ?=
+ =?us-ascii?Q?1VB7Pv3YiB0wLdyOcfjunVno6BIGTXakHedk7fS5USH67xW+NIiTNYjiz6ZZ?=
+ =?us-ascii?Q?pNhhHEN4LXV+5kzUca6Vh8xivzr2L5wvCKnubaRPQqIO9oi1N/+X5AenHgc0?=
+ =?us-ascii?Q?y2SwNIrgoxjJNDkEMSR1nsLLulhI9mA1QEU8tzSkSG4dDsCmfHUgkGxcxOIM?=
+ =?us-ascii?Q?55hJQo/Nyec+ocZkJKv8sU9daLc+YM6ocVgarOEt1TSoyrEznbK2Uox6vWif?=
+ =?us-ascii?Q?VNE2tP20z8Gns18xZ0KrqPA1rajFAy24M3/e2U62Hp69ZqlOubZQUbn4jml7?=
+ =?us-ascii?Q?TCRuYVri9muZUJ/ll4vlbCJetd6Vxw6otGGNLO4mPzJwgJDda3OfT+kBRl4Q?=
+ =?us-ascii?Q?nuaNLc/ySbILX3Df8TWnIW9/0m7dtlShobshF389PT9fDmebylqt324O8ZGh?=
+ =?us-ascii?Q?Vvb68kazwkgWAQfy3BEpVlWNNqRfr1FBA7AQNtG1MMfFIwXo6m98ViCLOH3S?=
+ =?us-ascii?Q?lJlHg3RhOVdG/5XBfkOQwBzokALRkaX/o0Ooou0vr8Di9XERKFh84m1v/WW6?=
+ =?us-ascii?Q?diOvbXFzIP3xUL5Cnckrm+D/VLPJbvMvoI4jxmcKGBKMrhb97bDU8kK5b/P+?=
+ =?us-ascii?Q?sn51cZ06wJoKPpH22YNr5dXYRn8PAdjl7TrA35oeANg9VNokCsguTbmkEgfD?=
+ =?us-ascii?Q?2pKwlRJmeLGNA9RoYgaFepHv7mtdlQpmE8xqHBB7YUh7N66MgiluQPtPs/RY?=
+ =?us-ascii?Q?6vK+CqdrT5ly3Wqr4p++kFu+/HFyxL4U0opyCDYrYKmbjJDQAgyVU3SE9mHl?=
+ =?us-ascii?Q?dXPMbCmv8CqSWvRBILEFj8WKGDAa3+D+r+NDE1UMM/xBLj0dFBsQ2/vDOih5?=
+ =?us-ascii?Q?AvS9e7wIMENn4S8GN6hL4GkZAD+ccDKuo8h0iHTtR5stBu4lJZayQjptiwia?=
+ =?us-ascii?Q?E5TnCQTfPwlvxUkdBhxlQjU1l8ewN2Z7F8qzGjNLOWdJB7mYSRqSugv5hIJP?=
+ =?us-ascii?Q?nR7sIGH5OrY8tGcxylsqlyurRfwBq+fJBpUqTI8OL3LM/LXxfHaxzQra13rO?=
+ =?us-ascii?Q?zrlungwV7ux5UM0yxtjlOLZja0p6vMXgSoG01XEd?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM8PR04MB7779:EE_|GVXPR04MB10071:EE_
-X-MS-Office365-Filtering-Correlation-Id: 37f98620-4ff1-4d41-7ace-08dda8691c7a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?5TTY/D3RCq6Htnt7UT9Un1CBZj3njA3NxlQ3Lx6gsFXbwqBj7UQtW+91zfuP?=
- =?us-ascii?Q?AANrUuATO2sCT56jPidwIg4qehjTr0BhvihWAPk85IkLsyky4dexH0HECkNJ?=
- =?us-ascii?Q?mOG1ft9UXV2jz6EpabgakV+vS9Ad+NBnMorP7pfFe5XU5Eimu6LQcTzXKw9A?=
- =?us-ascii?Q?GkYny+aAeFHOusKPzxvOheSbT3a28zpfGB2pcuVC3Zw9Qf191aMJeoJEowE7?=
- =?us-ascii?Q?98UVOL7ZCDj0FvkmjDu1ZuwXqD/TCkVU3ZWQhcN9mArgoMibQkqxoPG221oT?=
- =?us-ascii?Q?FLj9rlzc6i52VVbBK/q7t8p5wYeGcr8Q5iwDwlI7bLwFzSowDdpQVOh6acqy?=
- =?us-ascii?Q?WTDaiSzsfOeSFGUVl+1D7UZkOE+G5leRj2byX0K0yvhjFCaS4YfTWG+Lhkyh?=
- =?us-ascii?Q?XVARwGFMM4T25Lj3bodea2Dg6gLd9Ows2KOa7/8t4X6aD1e16lMcq7EuLlxX?=
- =?us-ascii?Q?mQbxE/BVE07nyaRE0FU+gIpFS3qLWehf4BtCI8EnlwXqcQaR7Ob3vSvOd5BT?=
- =?us-ascii?Q?AUBkR2vy2IXr7x9Eqm6u+vLhRD71nx7HJe9CmGmgQoUear5C6tol0EMFLoN8?=
- =?us-ascii?Q?Dmc8yLwLceqdXei257BfcylhtzM3pViGHV3Mk1H1HkkhGHyBXvooISsph7YC?=
- =?us-ascii?Q?HfIp8z7ZOp3Dqnq72io7MZXp1AXNtkgW5iyTmPxqOMRAP6KGhuyYxvODiyPX?=
- =?us-ascii?Q?cbbD1QRBdk+n6MEMAd1yQjsAV9Y1A2TwP34+A2ebCAGTjzSBfFDAguDaga0D?=
- =?us-ascii?Q?gHAGnZjnRB5Thk8j10aIeztO7GsLIvd6HRSvi5vEhm9kOY2aW+zixQR/ydVn?=
- =?us-ascii?Q?e1LHuhj0wmanHNvsMmLEqCQtbYtTA9TYFgIznd9M3TJ3o7eUJI7JDBv14FBe?=
- =?us-ascii?Q?qMEbFnWe1a1fc2PXgl6ctS4rUXbh1Q3fm4UWoXM6W4tNeGVCRtoHPUzuCuPd?=
- =?us-ascii?Q?5ml6zJ9mhyI45Xd6UfzdTqVxToZzs+k8d58twgDTjdjNZDrwDfYrkn6mX3oc?=
- =?us-ascii?Q?GFF+HqvNRbAgl+15WqlZkQtsSJtO0sZebOmVy/k4pVdwDDC8bBvJq3IC1IR7?=
- =?us-ascii?Q?72u64pIGuq96sH79mT7L9/b5ph35p3DIPqnsx3bP51wQVqJm9SiwxLm5fGaU?=
- =?us-ascii?Q?u/o5mJPYySkr+XQ1HwVCvy4G953Q2P7iMG04c7+XflWfFibBQpq5Pj9pW/ST?=
- =?us-ascii?Q?+Svnh2FgRbEcswYNcNIjEujaXiS+UGdamNvJxhryAUyOYWdZ9ggJwHtxO9wP?=
- =?us-ascii?Q?Jw1QXlPM4ZKSGuvFcPKnszoDkrm2J1pm8kF/ynZEbVbUueIRD3iK853HuPZd?=
- =?us-ascii?Q?WHfo5lF4woEQMlCBCaeHQfmPA6dYOYMc3Yq7w6d6wwnKkghWMEnVXPI9OqzC?=
- =?us-ascii?Q?ouk9Imc6Y06N5s0sc5veUxJRnFb0dP/hOwm6/YBHsf9tEd6HuSHJ4I+F8O6q?=
- =?us-ascii?Q?SMacdU/z3cQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7779.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?/UErteI6dphjeRwom/aephvh7GZo1hNAV99YVwTkkzXLXAb0BGArQJFFTGjI?=
- =?us-ascii?Q?jvm07SDhJZbj3PpTghNeNUCfVmO/4qrIkXuqf2quQrQfQFCCHYYXr4EgspkI?=
- =?us-ascii?Q?jHj0MCjp72Q6sGeOZARqTKfWUz2B5/GzPt4iL90jzl9bbW9HnHV9QE5L/j8i?=
- =?us-ascii?Q?0HvuvAPE75kjnhl/8J6as5DmGiDWT9pCThmIKKF1NJYekwrLbpmJoUZe2Vna?=
- =?us-ascii?Q?0g1+HLUVDK1vgrahjwtkkG9szEs2icEwHxgRrZRM9z8QhGze4MFe8HtFTYmL?=
- =?us-ascii?Q?AqcWATcH4V+CLx5goDHIuyhW4JwQ8tjQhYhbOV7bM4i07ShQaDaEDXlnAQv9?=
- =?us-ascii?Q?4klXwcDeZMzZXvGc35SR0k0lEiQGRbFJlXHJukE+ocK0zbdm8+DrIvOwC+fp?=
- =?us-ascii?Q?xq1Y2GsOezzp9ZwoZLVaLabdIbcYiw8/H8Vys5uS1z+kve7AIqYc8jpVApxV?=
- =?us-ascii?Q?rEpEiZbGsxy9A7Pp98/a4Ce95ivz30wgD7tp5WQP//5Y76nM+AnJesZnXiP8?=
- =?us-ascii?Q?VMklcqejUlfq5gJs8ehVmUaZ2rX3pmkk+Fq7znx8R5UhS01T2jHfZ55xYZh7?=
- =?us-ascii?Q?PVKYb6fEL/Iz60rpp3BQjayG2doArF0m1T9hbSLN89nU0KeymLh7uLHp3YSb?=
- =?us-ascii?Q?wJl3BXF2FVJLzCsrpGCGE6eBhM7JO16eoM55aFM/FnXHIwTKXR78xYwN6K06?=
- =?us-ascii?Q?qZVC9PqfYm7H1gJt3Q3fx+HfAMuNQlYbMOsTFkfJAEGMhPZM25/rCyLwEZw1?=
- =?us-ascii?Q?bjJJ4m+300thC+LQNcZiWTKjYCUmvZOJrIG7TdtyhcZ86KLKud4DptA4yGmL?=
- =?us-ascii?Q?v80R+JsIN4ErFj9ODCS45Ok30MzF+ru4Hjli7nvlnBF8/eblRJoUVdLfoI35?=
- =?us-ascii?Q?OYV9ihBK4CaJB67Ei5XbBhb2pzb0TxXzrgrXRQ2mX69ddJDNe1NZQ2TtP2PR?=
- =?us-ascii?Q?Lm2kwjuRDsUkMqJuE1ZaCe1asbTcrbigacIjQ4uJk+l/Y9EfH8Z4ernCbjxR?=
- =?us-ascii?Q?DD61kmwL7sl/nGZwaAfD+VPoiwvFfAUB/Bh/UDssAZimWHpuTYgO93ok88mv?=
- =?us-ascii?Q?kXLB+CmKtA3TO1oDkMLK9vGFHwYXrVJCG209FDhhRsX9wGLtNXOxxEbi5Cti?=
- =?us-ascii?Q?/vLMt25yl1vaiKf0cLxtIaEQdX3Znx+lJwbvqiYdmX4E3I601k/8OCA3UDTl?=
- =?us-ascii?Q?V0JB83Ab6hrTJyLNC/oRz9jpB2LbJEGMpCSr52OetLiZa3ybA1IpOwSNYyAA?=
- =?us-ascii?Q?GFjJXPMW3e0v1vDRI5tbj/534pkQ1iPLbCWTJNv2YirHhS7jfJS2z0ZTy3Vf?=
- =?us-ascii?Q?iipRFC5Xbgr2Xbl7V4SgbuRgFrtwkwoxgqWnqL5AZbfgEcMzolBb+h35GvWb?=
- =?us-ascii?Q?R9OP+v5WffZFjXJvXwAIs7rIC4iDO1XpsMeoRAKNSf2wYs1RPM/EZychgitv?=
- =?us-ascii?Q?YyQjnFvwqgTLO8+zFz8VD2QW7UQpxp+yRS1jKqJ2S1QURqM2j2wo7Qc5C32+?=
- =?us-ascii?Q?fwwt7sfV9WPfVheg+Ahgp+zDapFayfJibAtQhh/mX/S+dZMlfayhEU00EbZZ?=
- =?us-ascii?Q?zGoMeqI87VNzibCtkFM69S36WmlUe/WPx9xWcdacVcZQsmdUzrgYS6CKDtON?=
- =?us-ascii?Q?4A=3D=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 37f98620-4ff1-4d41-7ace-08dda8691c7a
-X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7779.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 21:52:36.0579
+X-MS-Exchange-CrossTenant-AuthSource: SJ1PR11MB6297.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b2a09f01-6165-4a03-8873-08dda86937e8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2025 21:53:21.9132
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GpoOxLg1Xnda28jtq8jyvL6iLNXSx/VjvdSKxj/WV19aMnVkd8G9hXkaMrLTptAxE0Hlp79fbDk2eOBtNocjIQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB10071
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xbU/0vsLJwM8S1VW3ku79LUFEjBnL4p/nL2gDY5lzC8CUPlUY3FCYQ5F0wgFpyWU8erPn83CaiqHkFzu+UGQGA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR11MB8488
+X-OriginatorOrg: intel.com
 
-On Mon, Jun 09, 2025 at 04:32:41PM +0100, James Clark wrote:
-> In target mode, the host sending more data than can be consumed would be
-> a common problem for any message exceeding the FIFO or DMA buffer size.
-> Cancel the whole message as soon as this condition is hit as the message
-> will be corrupted.
-> 
-> Only do this for target mode in a DMA transfer because we need to add a
-> register read. In IRQ and polling modes always do it because SPI_SR was
-> already read and it might catch some host mode programming/buffer
-> management errors too.
-> 
-> Signed-off-by: James Clark <james.clark@linaro.org>
+
+
+> -----Original Message-----
+> From: Intel-wired-lan <intel-wired-lan-bounces@osuosl.org> On Behalf Of
+> Larysa Zaremba
+> Sent: Friday, May 16, 2025 7:58 AM
+> To: intel-wired-lan@lists.osuosl.org; Nguyen, Anthony L
+> <anthony.l.nguyen@intel.com>
+> Cc: David S. Miller <davem@davemloft.net>; Eric Dumazet
+> <edumazet@google.com>; Jakub Kicinski <kuba@kernel.org>; Paolo Abeni
+> <pabeni@redhat.com>; Simon Horman <horms@kernel.org>; Jonathan
+> Corbet <corbet@lwn.net>; Kitszel, Przemyslaw
+> <przemyslaw.kitszel@intel.com>; Jiri Pirko <jiri@resnulli.us>; Nikolova, =
+Tatyana
+> E <tatyana.e.nikolova@intel.com>; Andrew Lunn <andrew+netdev@lunn.ch>;
+> Lobakin, Aleksander <aleksander.lobakin@intel.com>; Michael Ellerman
+> <mpe@ellerman.id.au>; Fijalkowski, Maciej <maciej.fijalkowski@intel.com>;
+> Lee Trager <lee@trager.us>; Madhavan Srinivasan <maddy@linux.ibm.com>;
+> Zaremba, Larysa <larysa.zaremba@intel.com>; Samudrala, Sridhar
+> <sridhar.samudrala@intel.com>; Keller, Jacob E <jacob.e.keller@intel.com>=
+;
+> Michal Swiatkowski <michal.swiatkowski@linux.intel.com>; Polchlopek,
+> Mateusz <mateusz.polchlopek@intel.com>; Zaki, Ahmed
+> <ahmed.zaki@intel.com>; netdev@vger.kernel.org; linux-
+> doc@vger.kernel.org; linux-kernel@vger.kernel.org; Karlsson, Magnus
+> <magnus.karlsson@intel.com>; Tantilov, Emil S <emil.s.tantilov@intel.com>=
+;
+> Chittim, Madhu <madhu.chittim@intel.com>; Hay, Joshua A
+> <joshua.a.hay@intel.com>; Olech, Milena <milena.olech@intel.com>; Linga,
+> Pavan Kumar <pavan.kumar.linga@intel.com>; Singhai, Anjali
+> <anjali.singhai@intel.com>; Kubiak, Michal <michal.kubiak@intel.com>
+> Subject: [Intel-wired-lan] [PATCH iwl-next v4 11/15] idpf: print a debug
+> message and bail in case of non-event ctlq message
+>=20
+> Unlike previous internal idpf ctlq implementation, idpf calls the default
+> message handler for all received messages that do not have a matching xn
+> transaction, not only for VIRTCHNL2_OP_EVENT. This leads to many error
+> messages printing garbage, because the parsing expected a valid event
+> message, but got e.g. a delayed response for a timed-out transaction.
+>=20
+> The information about timed-out transactions and otherwise unhandleable
+> messages can still be valuable for developers, so print the information w=
+ith
+> dynamic debug and exit the function, so the following functions can parse
+> valid events in peace.
+>=20
+> Reviewed-by: Michal Kubiak <michal.kubiak@intel.com>
+> Signed-off-by: Larysa Zaremba <larysa.zaremba@intel.com>
 > ---
->  drivers/spi/spi-fsl-dspi.c | 31 ++++++++++++++++++++++++++++---
->  1 file changed, 28 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-> index e211e44e977f..75767d756496 100644
-> --- a/drivers/spi/spi-fsl-dspi.c
-> +++ b/drivers/spi/spi-fsl-dspi.c
-> @@ -228,6 +228,7 @@ struct fsl_dspi {
->  	const struct fsl_dspi_devtype_data	*devtype_data;
->  
->  	struct completion			xfer_done;
-> +	int                                     xfer_status;
+> 2.47.0
 
-This is certainly simple, and simple is not bad.
-
-But based on the fact that you care about the xfer_status only when
-there's an associated dspi->cur_msg, have you considered to update
-dspi->cur_msg->status directly?
-
-You'd need to reset dspi->cur_msg to NULL at the end of
-dspi_transfer_one_message(), and then check for NULL when you update
-the transfer status.
-
->  
->  	struct fsl_dspi_dma			*dma;
->  
-> @@ -504,12 +505,22 @@ static int dspi_next_xfer_dma_submit(struct fsl_dspi *dspi)
->  
->  static void dspi_setup_accel(struct fsl_dspi *dspi);
->  
-> +static bool dspi_is_fifo_overflow(struct fsl_dspi *dspi, u32 spi_sr)
-
-Can you name this some way else, like dspi_fifo_error()? It's strange
-for a reader for this to return true on an underflow.
-
-> +{
-> +	if (spi_sr & (SPI_SR_TFUF | SPI_SR_RFOF)) {
-> +		dev_err(&dspi->pdev->dev, "FIFO under/overflow");
-
-Missing \n.
-
-And you should use dev_err_ratelimited(), as you don't want an external
-entity, when in target mode, to DoS you.
-
-Also, could there be individual error messages for TFUF and for RFOF?
-If you are concerned about the penalty for the error-free case, make the
-check two-level. First for all errors, then for individual errors.
-
-> +		return true;
-> +	}
-> +	return false;
-> +}
-> +
->  static int dspi_dma_xfer(struct fsl_dspi *dspi)
->  {
->  	struct spi_message *message = dspi->cur_msg;
->  	int max_words = dspi_dma_max_datawords(dspi);
->  	struct device *dev = &dspi->pdev->dev;
->  	int ret = 0;
-> +	u32 spi_sr;
->  
->  	/*
->  	 * dspi->len gets decremented by dspi_pop_tx_pushr in
-> @@ -531,6 +542,12 @@ static int dspi_dma_xfer(struct fsl_dspi *dspi)
->  			dev_err(dev, "DMA transfer failed\n");
->  			break;
->  		}
-> +
-> +		if (spi_controller_is_target(dspi->ctlr)) {
-> +			regmap_read(dspi->regmap, SPI_SR, &spi_sr);
-> +			if (dspi_is_fifo_overflow(dspi, spi_sr))
-> +				return -EIO;
-> +		}
->  	}
-
-Can this go within this block from dspi_next_xfer_dma_submit() instead?
-
-	if (spi_controller_is_target(dspi->ctlr)) {
-		wait_for_completion_interruptible(&dspi->dma->cmd_rx_complete);
-		// here
-		return 0;
-	}
-
->  
->  	return ret;
-> @@ -918,6 +935,8 @@ static int dspi_poll(struct fsl_dspi *dspi)
->  		regmap_read(dspi->regmap, SPI_SR, &spi_sr);
->  		regmap_write(dspi->regmap, SPI_SR, spi_sr);
->  
-> +		if (dspi_is_fifo_overflow(dspi, spi_sr))
-> +			return -EIO;
->  		if (spi_sr & SPI_SR_CMDTCF)
->  			break;
->  	} while (--tries);
-> @@ -939,8 +958,12 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
->  	if (!(spi_sr & SPI_SR_CMDTCF))
->  		return IRQ_NONE;
->  
-> -	if (dspi_rxtx(dspi) == 0)
-> +	if (dspi_is_fifo_overflow(dspi, spi_sr)) {
-> +		WRITE_ONCE(dspi->xfer_status, -EIO);
-> +		complete(&dspi->xfer_done);
-> +	} else if (dspi_rxtx(dspi) == 0) {
->  		complete(&dspi->xfer_done);
-> +	}
->  
->  	return IRQ_HANDLED;
->  }
-> @@ -1032,13 +1055,15 @@ static int dspi_transfer_one_message(struct spi_controller *ctlr,
->  		if (dspi->devtype_data->trans_mode == DSPI_DMA_MODE) {
->  			status = dspi_dma_xfer(dspi);
->  		} else {
-> -			if (dspi->irq)
-> +			if (dspi->irq) {
-> +				WRITE_ONCE(dspi->xfer_status, 0);
->  				reinit_completion(&dspi->xfer_done);
-> -
-
-Nitpick: The blank line was doing fine here.
-
-> +			}
->  			dspi_fifo_write(dspi);
->  
->  			if (dspi->irq) {
->  				wait_for_completion(&dspi->xfer_done);
-> +				status = READ_ONCE(dspi->xfer_status);
->  			} else {
->  				do {
->  					status = dspi_poll(dspi);
-> 
-> -- 
-> 2.34.1
->
+Tested-by: Samuel Salin <Samuel.salin@intel.com>
