@@ -1,23 +1,23 @@
-Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B61C292933;
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.229.168.213])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E128929292D;
 	Tue, 10 Jun 2025 12:31:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.21.223
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.229.168.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749558713; cv=none; b=h+y6mTHhOFrTDlWYevY5kH5z+RY/IEv1Zj5gtLb5SnnqDynb9G8TIXiDba+hqCC16RwFf/FJQddiL8Hk+5E6Ms3mdJ/sF9xnG39mtWn3NkNl7ExRN5W/cFABz1P0jZl5TcEH6wUYbbO7Qm2yyREvAzIBxQbzgMO4hjETxj9UpWw=
+	t=1749558715; cv=none; b=RvRJGXfHaz9U2V6tZGnnyZj8cOTe5afly7j8uibkAKm8+BvE5wnbaJ7dCXgrqgjwwwFAFxk2KYhb+kr23E5LzWRCze4Zj7QvVFdifwTMrX8etKU5xaljsVyNlat3GANMC0Z+DKkIONVRNyvpYz5LThxJUXVkrmF7raPCQCPmqQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749558713; c=relaxed/simple;
-	bh=UrhxQrMR7r1lFOhnld4WionzPvCFCoHIw1rdzKIyqDg=;
+	s=arc-20240116; t=1749558715; c=relaxed/simple;
+	bh=DfMZmPpxm8c+PoVae4yYnaM8SKklNxIdOLbeTQUzA9Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uJmxnL6cQ4clqnC22WTKlLE/5kPZ1EuxTudXhhgEYDB7+gQAOt1BH/udO46UfpY3FPhWeuPRmKtA1acUPHjiHV6SQg2gJGtEuhKu7vrfZeVY2TgrRBdVluz9MlNW2IpFJw3Cz2lgq3BqEpd9k6lQbjpuigch3uds1t9nzbYuNio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn; spf=pass smtp.mailfrom=hust.edu.cn; arc=none smtp.client-ip=206.189.21.223
+	 MIME-Version:Content-Type; b=uUfqciaiitnYbHC6LsnqBPSt2cKPF8e5o/0Mrrv+wXuPFWmMybMaFEAuI0eQsYt+WdyBxpGmcyYYEFh3K/zuHpf/J5xdpFtK/GlZSPPTrHQqFCnluhlP4Ug8BylnTaqisa20m6mm4AIrVIgzZ5VnO2w1YQZ3rylNmm2coodvcLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn; spf=pass smtp.mailfrom=hust.edu.cn; arc=none smtp.client-ip=52.229.168.213
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hust.edu.cn
 Received: from hust.edu.cn (unknown [172.16.0.52])
-	by app1 (Coremail) with SMTP id HgEQrABnSR59JUhoJWXICg--.22961S2;
-	Tue, 10 Jun 2025 20:30:53 +0800 (CST)
+	by app1 (Coremail) with SMTP id HgEQrACHjBSmJUhoZGfICg--.25494S2;
+	Tue, 10 Jun 2025 20:31:34 +0800 (CST)
 Received: from pride-PowerEdge-R740.. (unknown [222.20.126.129])
-	by gateway (Coremail) with SMTP id _____wB3Ykl1JUhobC0mAA--.19171S3;
-	Tue, 10 Jun 2025 20:30:52 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____wB3Ykl1JUhobC0mAA--.19171S7;
+	Tue, 10 Jun 2025 20:31:29 +0800 (CST)
 From: Dongliang Mu <dzm91@hust.edu.cn>
 To: alexs@kernel.org,
 	si.yanteng@linux.dev,
@@ -25,9 +25,9 @@ To: alexs@kernel.org,
 	Dongliang Mu <dzm91@hust.edu.cn>
 Cc: linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/5] docs/zh_CN: update the translation of process/1.Intro.rst
-Date: Tue, 10 Jun 2025 20:30:26 +0800
-Message-ID: <a9a9c7f57db10713c477fcb0398a43687f92213e.1749557444.git.dzm91@hust.edu.cn>
+Subject: [PATCH 5/5] docs/zh_CN: update the translation of process/5.Posting.rst
+Date: Tue, 10 Jun 2025 20:30:30 +0800
+Message-ID: <ce5603d746e1d64847f572660ea7bc38fcbf74ef.1749557444.git.dzm91@hust.edu.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1749557444.git.dzm91@hust.edu.cn>
 References: <cover.1749557444.git.dzm91@hust.edu.cn>
@@ -39,61 +39,68 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:HgEQrABnSR59JUhoJWXICg--.22961S2
+X-CM-TRANSID:HgEQrACHjBSmJUhoZGfICg--.25494S2
 Authentication-Results: app1; spf=neutral smtp.mail=dzm91@hust.edu.cn;
-X-Coremail-Antispam: 1UD129KBjvJXoWxur4DGr1UJrWfGFyrtF15CFg_yoW5Gryrpa
-	4q93yxW3WxW3Wjv3s5Kw1kJF1kGFW7C3y3Gr4xKa4rGrn3J3WYv3yUJw13XasxAa4xZayD
-	uFW0yrWDZr42yaDanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUm2b7Iv0xC_Cr1lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
+X-Coremail-Antispam: 1UD129KBjvJXoW7WryfZrykCryDtF4DCF17ZFb_yoW8tF4UpF
+	9FkrZ7JayxJ3W2kr1xKFW7X3WUG3ZrGay3Kr1xKa1fXrn5Kay0v3yYyasYgFZ0grySyayj
+	vrsIqrWUuryDZ37anT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmIb7Iv0xC_Cr1lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
 	cIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjx
-	v20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vE
-	x4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAaw2AFwI0_Jr
-	v_JF1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF
-	0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0EF7xvrVAajcxG14v26r
-	4UJVWxJr1lYx0E74AGY7Cv6cx26r4fZr1UJr1lYx0Ec7CjxVAajcxG14v26r4UJVWxJr1l
-	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxAIw2
-	8IcVCjz48v1sIEY20_GFW3Jr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AK
-	xVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
-	IF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVF
-	xhVjvjDU0xZFpf9x07jfpndUUUUU=
+	v20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK
+	6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1ln4kS14v26r
+	1Y6r17M2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI
+	12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj64x0Y40En7xvr7AKxV
+	W8Jr0_Cr1UMcIj6x8ErcxFaVAv8VW8uFyUJr1UMcIj6xkF7I0En7xvr7AKxVW8Jr0_Cr1U
+	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCF04
+	k20xvE74AGY7Cv6cx26r4fZr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAF
+	wI0_GFv_Wrylx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zV
+	AF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1l
+	IxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCw
+	CI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnI
+	WIevJa73UjIFyTuYvjxUVoGHUUUUU
 X-CM-SenderInfo: asqsiiirqrkko6kx23oohg3hdfq/
 
-Update to commit 43e9076a00b1 ("docs: Fix conflicting contributor
-identity info")
+Update to commit 4e6b7141d169 ("docs: clarify rules wrt tagging other
+people")
 
 scripts/checktransupdate.py reports:
-Documentation/translations/zh_CN/process/1.Intro.rst
-commit 43e9076a00b1 ("docs: Fix conflicting contributor identity info")
-1 commits needs resolving in total
+
+Documentation/translations/zh_CN/process/5.Posting.rst
+commit 4e6b7141d169 ("docs: clarify rules wrt tagging other people")
+commit 9734b3e753ad ("docs: 5.Posting: mentioned Suggested-by: tag")
+2 commits needs resolving in total
 
 Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
 ---
- Documentation/translations/zh_CN/process/1.Intro.rst | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ .../translations/zh_CN/process/5.Posting.rst          | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/Documentation/translations/zh_CN/process/1.Intro.rst b/Documentation/translations/zh_CN/process/1.Intro.rst
-index 4f9284cbe33b..e314cce49d27 100644
---- a/Documentation/translations/zh_CN/process/1.Intro.rst
-+++ b/Documentation/translations/zh_CN/process/1.Intro.rst
-@@ -182,11 +182,11 @@ Andrew Morton, Andrew Price, Tsugikazu Shibata 和 Jochen Voß 。
- 可以获得所有版权所有者的同意（或者从内核中删除他们的代码）。因此，尤其是在
- 可预见的将来，许可证不大可能迁移到GPL的版本3。
+diff --git a/Documentation/translations/zh_CN/process/5.Posting.rst b/Documentation/translations/zh_CN/process/5.Posting.rst
+index 6c83a8f40310..ce37cf6a60e2 100644
+--- a/Documentation/translations/zh_CN/process/5.Posting.rst
++++ b/Documentation/translations/zh_CN/process/5.Posting.rst
+@@ -177,10 +177,21 @@
  
--所有贡献给内核的代码都必须是合法的免费软件。因此，不接受匿名（或化名）贡献
--者的代码。所有贡献者都需要在他们的代码上“sign off（签发）”，声明代码可以
--在GPL下与内核一起分发。无法提供未被其所有者许可为免费软件的代码，或可能为
--内核造成版权相关问题的代码（例如，由缺乏适当保护的反向工程工作派生的代码）
--不能被接受。
-+所有贡献给内核的代码都必须是合法的免费软件。因此，出于这个原因，身份不明的
-+贡献者或匿名贡献者提交的代码将不予接受。所有贡献者都需要在他们的代码上
-+“sign off（签发）”，声明代码可以在GPL下与内核一起分发。无法提供未被其所有者
-+许可为免费软件的代码，或可能为内核造成版权相关问题的代码（例如，由缺乏适当
-+保护的反向工程工作派生的代码）不能被接受。
+  - Reported-by: 指定报告此补丁修复的问题的用户；此标记用于表示感谢。
  
- 有关版权问题的提问在Linux开发邮件列表中很常见。这样的问题通常会得到不少答案，
- 但请记住，回答这些问题的人不是律师，不能提供法律咨询。如果您有关于Linux源代码
++ - Suggested-by: 表示该补丁思路由所提及的人提出，确保其创意贡献获得认可。
++   这有望激励他们在未来继续提供帮助。
++
+  - Cc：指定某人收到了补丁的副本，并有机会对此发表评论。
+ 
+ 在补丁中添加标签时要小心：只有Cc:才适合在没有指定人员明确许可的情况下添加。
+ 
++在补丁中添加上述标签时需谨慎，因为除了 Cc:、Reported-by: 和 Suggested-by:，
++所有其他标签都需要被提及者的明确许可。对于这三个标签，若根据 lore 归档或提交
++历史记录，相关人员使用该姓名和电子邮件地址为 Linux 内核做出过贡献，则隐含许可
++已足够 -- 对于 Reported-by: 和 Suggested-by:，需确保报告或建议是公开进行的。
++请注意，从这个意义上讲，bugzilla.kernel.org 属于公开场合，但其使用的电子邮件地址
++属于私人信息；因此，除非相关人员曾在早期贡献中使用过这些邮箱，否则请勿在标签中
++公开它们。
++
+ 寄送补丁
+ --------
+ 
 -- 
 2.43.0
 
