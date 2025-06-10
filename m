@@ -1,244 +1,438 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2075.outbound.protection.outlook.com [40.107.223.75])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A5911F8AC5;
-	Tue, 10 Jun 2025 04:37:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.75
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749530240; cv=fail; b=hvLya3ndjMxVx/mMWOEYguWP3JHWdDILBRKb8abfWeh50ECop05jDefp6Epx0/bj7k4kfw55rtTHqS/JWXppo5391a5RDneEndRYiiWKmp1SEVajHgYoZXW5Qt2lGDiuhZnMSjaigkUaXk/sSf5FmyOBnO5NiPF+sfzVFCIX1R4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749530240; c=relaxed/simple;
-	bh=GHbKexcaVsIT7N4SgfklMmXf0WqQMRBjU1gXDN2Wx2M=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=PL6mlOH3QflomuTaPwvmx5FvQF0jNYEP+r2kgVs7d6See1rcqmn9t41uzavD90fQikxakRo7y5nYEtba+UGtI0Zpy9dh3cH2O4Dg6MS+WlUPL8v8dvzmycZrhCOY1qzb7w1uRJtE1SPM3N38m9YAHQ0q4xTF0msLNwm5LwnL81Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=CSSyd1Un; arc=fail smtp.client-ip=40.107.223.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B8A219A81
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 04:38:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749530290; cv=none; b=Zg1kVEerS44Fw4srYIHrx0tt02cCJrPzeKrQzXqavTiYXI6rrQlQi5Y/Gmd5TY+Mg5pAhaVWnBucUpJ8Yrs6G4YwzqcEhfbwf/fryiPFuG0cx4+fBPkYJow9jqqNoaG5C0ij9XbUOyVVfw+kqN5TIqtA+BSIto1NCAN8PJoiOiE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749530290; c=relaxed/simple;
+	bh=NmhdJ/ddA04MjThhtcZDld1AI0fRvypZGx6pPho3sSg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gEXyZ4kdrwdSdcGqqodt1qCTxAOjdWL6aPiNjANdfaHvnn+qBvYfmFngpNDmuldDnaCLA9TMZXvY/HFMgjhoASxVN0ZJpQu4oTm6vEH3A8oNq6bzhILEx0kR+wwPz6Rw+fMr6WHqzzHgBLHKSz+SW8LPZgHmaVYuGeUkEEBUbSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cIMqDYsW; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="CSSyd1Un"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=N9uApPtoV2mZjcav6qQUFnx9XtLCCmL3Iq6W6PjjeJ8Wp+WMWszAVn21pdZmFWdBlvrSfJ20LKYE2N+S72EAP/if0MUuJ2txSM+P0eKzNHdps0B8vCzOY/sP05i81ASBT6fGmtAgZjzxF82gRud2tdeWujJpThmCYyBCMObRyL6EKfgCFjPPNJq5jBQhhy276m1cAzzqCDLianGXQ72JCRoa11GGOBXIAlHXb1j3HBwe7d25sWCiMx6Zx6QI82x/pe06O7e/QGqM4WdCsKznct71g091Nx4WNrclHrjE4Vne8JFGqVDma3LfzUewFR1eGG4B1nXKocLHazwrqCAQHw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XXd5D6Tsf8p1hzV891eZu4k20IXtmNFfwkZMpMt8a04=;
- b=i2XlzXy346USNRG26pCvfoufFf0f6ybFChTWdZTQqcuGh68JIMeeR5btWDqxATz8Az03kp8Q5Q5SQRxCc8UYsobyLevN/c02ejJoqm/+wRo0jgnqMkZbAg4iq0Wy/E8Rq3HA0EmWSI7SE2EHY6Xyr+XSDL9NWY3G6dKYpuGDV8RjJaLCa5EqJuQozHp9aYRqKCOAoNr2v7BNn03RrTX718mZlSJErRjzweG1zkkYg0Vyv+Uoboh39OUV8gbpAgUDmFr3kIHJuPQyP9FgJWc3AHuvO2gPzOKk4QiRUn5JHTKQrzGs99N2heskaDjZZ468dblK3uP2mysmrs165WVvDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XXd5D6Tsf8p1hzV891eZu4k20IXtmNFfwkZMpMt8a04=;
- b=CSSyd1UnmngNzDWtcVtk2Z547VvFjZCvvQ4hixrJIwYNStyOTZBYyzIBmYeHF7NB5vbinhhzcwIeHqas0aY2bw3SGQ5OKu0Cm4C51j57e1CG6g3tPvJGwzbMYJFnTxERRJQwdItz8W9MnZVrJqjt08jbzAmr5vUhB9+Ke/EPtEQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
- by IA0PR12MB7602.namprd12.prod.outlook.com (2603:10b6:208:43a::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.39; Tue, 10 Jun
- 2025 04:37:14 +0000
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f]) by CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f%5]) with mapi id 15.20.8792.038; Tue, 10 Jun 2025
- 04:37:14 +0000
-Message-ID: <bbf47c33-5a34-4550-9af0-3b0a7df05afe@amd.com>
-Date: Tue, 10 Jun 2025 14:37:05 +1000
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [RFC PATCH 00/12] Private MMIO support for private assigned dev
-To: Xu Yilun <yilun.xu@linux.intel.com>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, kvm@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
- linaro-mm-sig@lists.linaro.org, sumit.semwal@linaro.org,
- christian.koenig@amd.com, pbonzini@redhat.com, seanjc@google.com,
- alex.williamson@redhat.com, vivek.kasireddy@intel.com,
- dan.j.williams@intel.com, yilun.xu@intel.com, linux-coco@lists.linux.dev,
- linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
- daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
- zhenzhong.duan@intel.com, tao1.su@intel.com
-References: <20250107142719.179636-1-yilun.xu@linux.intel.com>
- <371ab632-d167-4720-8f0d-57be1e3fee84@amd.com>
- <4b6dc759-86fd-47a7-a206-66b25a0ccc6d@amd.com>
- <c10bf9c2-e073-479d-ad1c-6796c592d333@amd.com>
- <aB3jLmlUKKziwdeG@yilunxu-OptiPlex-7050>
- <aB4tQHmHzHooDeTE@yilunxu-OptiPlex-7050> <20250509184318.GD5657@nvidia.com>
- <aB7Ma84WXATiu5O1@yilunxu-OptiPlex-7050>
- <2c4713b0-3d6c-4705-841b-1cb58cd9a0f5@amd.com>
- <aCQL+/HDYcxfWM4F@yilunxu-OptiPlex-7050>
-Content-Language: en-US
-From: Alexey Kardashevskiy <aik@amd.com>
-In-Reply-To: <aCQL+/HDYcxfWM4F@yilunxu-OptiPlex-7050>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SY5PR01CA0001.ausprd01.prod.outlook.com
- (2603:10c6:10:1fa::14) To CH3PR12MB9194.namprd12.prod.outlook.com
- (2603:10b6:610:19f::7)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cIMqDYsW"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-745fe311741so5531421b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 21:38:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749530287; x=1750135087; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EOmEa242izJ9/bhxzxxZ9yeRYv/F/pcNvQXgz4tu4ME=;
+        b=cIMqDYsW/MNnkUcAnjUMe48ozWdlkFWFYC6Q6aFVS8Ig/g+XiRrBP3NI/YR3svEx2M
+         ZRTr1/ol/gRxZKRPMDFfwsr3tSnCxYoBlkTDTb7ED+HJLVHegGiUKsyxnt5wCbIbrMEH
+         IxvIxwQqBIAY314UTS4lYB1DzkD9gYq6QhwLoA1Ik/YaXpk56ux9yBKKsT4VM0/FJCWA
+         00a7Jttt7eK90T/Fx4QwegIwylVCiT1/1OJxJ5fwKKVsHo1t0R/ToqQYIhV6ATWNsZXw
+         /U0tci3MDRixdyTchdDsrZKTp1COXmMYTV7CqY3927DhOma+0ddWp5OnF2kfyUJ2FHQi
+         x6OA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749530287; x=1750135087;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EOmEa242izJ9/bhxzxxZ9yeRYv/F/pcNvQXgz4tu4ME=;
+        b=tjxTFHuhMOxie+BnYz1DHAXoQnpEF4jf+FhVkOiOV4dpjjGWTrEtP5dYKMycigkn2l
+         lCp1w7g0pQ04nV1fScnUVGeD0MMvRssAnHt6LsM3X6OUVH/3RN2aTvEesWW6q0/hWdDL
+         MVLQoVGmNn2VSfCMbKd8cgXSfmab0jZsqj5rpqqSjBU16a5bbAxzSODopZ/PIONaSwIL
+         q31INbGrO6B4unoyWhFtFF33aJKstgoqOO3z9bNb/p5ZlHOTWGOsbVaNJCZ3JWBHxTA1
+         8VZO11zLdgHXWRWXx0U5K+G3RqrDM73GD8D2euhppcCH9sKuR4Qt1vqY6wpv6Xizhry2
+         m5kw==
+X-Forwarded-Encrypted: i=1; AJvYcCXsSGg6exxs2dhHsQugZBXGr7wCYaLa9EE4efapq9Cxt5FrEGNpQEaB4tvYHOnm0wgXiMD9Bd+XGEp4Wk8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyW40KcsVZjRFYjms7YC2E69jx8iWm7gkqvg2LTweW1UHv4l7Va
+	j9qaDb500/6XQEg/t7eAlpRGizPsS6bUgw1M+QYOALrExeNojFdfuEk2itul5y/4nsk=
+X-Gm-Gg: ASbGncv97gVjRNxKBy3D+A4t9qSCYnw5ZIi9xOt6cW+tn76IHCVjNi/PwM1ogMvYGLd
+	p3AxPt0y91DxHftCLN0iAMuAMVq0KuQ05nz1yNRAzGGGqJNAW0Y2H5wcpn//oIQzXOFJXJAILVh
+	CKJPTBAFIcXwMD47IOmny+f6+D+/LBXrxF8YsZs4o0CWutY9yPMnYVnbsGOa23CbEeer0lq6hWP
+	1l1Wa4ICH2oWeR16wrtRK4ToKV9q0oxJnAFtNFQjI3Gczzqw1TC9+LezsF9JvMPVg0X7MdmOJzS
+	wTxbWQEFN5nTVhLDeaZRpUSFHyHGwHcU4TSabn31vUYmToild4ekYaP95TOnzY8=
+X-Google-Smtp-Source: AGHT+IFnumFN5YrH9SMLJGmJpHdBIrELYFHIVkETeYy9y2eyxYkz9cRqU/nNBhslMEsPJdrH40v3PA==
+X-Received: by 2002:a05:6a00:228c:b0:746:31d1:f7d0 with SMTP id d2e1a72fcca58-74861845fabmr1441742b3a.9.1749530286574;
+        Mon, 09 Jun 2025 21:38:06 -0700 (PDT)
+Received: from localhost ([122.172.81.72])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b0c0635sm6520120b3a.123.2025.06.09.21.38.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jun 2025 21:38:05 -0700 (PDT)
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Andreas Hindborg <a.hindborg@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Breno Leitao <leitao@debian.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Yury Norov <yury.norov@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Russ Weight <russ.weight@linux.dev>,
+	Nishanth Menon <nm@ti.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>,
+	linux-block@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: [PATCH] rust: Use consistent "# Examples" heading style in rustdoc
+Date: Tue, 10 Jun 2025 10:07:46 +0530
+Message-Id: <70994d1b172b998aa83c9a87b81858806ddfa1bb.1749530212.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|IA0PR12MB7602:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1cb1bc09-9d30-4eda-703e-08dda7d8790a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aXpXL0tHWlg1bXRCSlZlQkVnWmlFa0JqblhXcjQ5U0MreHlFM1M0K2FJUTAr?=
- =?utf-8?B?MHh0Tktad3hzRTVWTjFERjdzUlNYS3hLaytNZnd2QjZmM0k3R1NneC9hU2RG?=
- =?utf-8?B?dkhpa1ZHN1R3ZEpGZGx5NUZBdDl1V296dUl3eXN0bW5DcjF4TWp0TUwyd1lB?=
- =?utf-8?B?Tk1GK084ZCttMHJtTWRqZ04ya0dsUlNxWjZPaDVrRFN3Qm9qZjhMTDRPcWZI?=
- =?utf-8?B?YitaNTNyOHcwSHlhS1N3VUdhZURUdzVGQXdmVDBvWTF3Njh5US94QTVJa05a?=
- =?utf-8?B?WHRDSGJvaGlJWDVFczZtbEdjZm4wdlBYbEo3UkQ0aWlJSzFGVG5TQk5HVEZy?=
- =?utf-8?B?OUxnTldITU5ocGFPZTNpd1ZOOHQyWHhaelVoa3pGeDE1OE42N2Q5TWtJUXJK?=
- =?utf-8?B?K2dUT2d5blM1NDRGcUd5cnYyNnhNWStubEU1UEd1ek44Y1Rad1h2aldzeWpa?=
- =?utf-8?B?a01wRjZJVGdJZE4zSkQ3SWVJc1d6YjBVczB4NzBtZUNCL290Ky9WYTRYY1BB?=
- =?utf-8?B?RXBWeWtkbWtMMzdqZTJsYzFSeFllY2s5UEd6d0UyRFFCTXBLU2Q0Z3RzSjVJ?=
- =?utf-8?B?R0IyYzJTTE9JbjdoeXpaK2JyWWJ4R2RVbHA4cWZiSVNjWFF5eHRRekIzV1M0?=
- =?utf-8?B?ZEhNOG50MUpKbHNPNzVQZmZyNkhmMzhkNm41SkZIdTRHUXU5RW1hTU8rbEZB?=
- =?utf-8?B?Z1gvSVNqRlN2c3JBZHR1QVUrWGVMdFJ6Ty9qQ1VRWkdyTHhud1hLd2prazJH?=
- =?utf-8?B?UjhESUVSVXJRRG1ET3RRWHhDdnFPMnBKY0RxY3hmc3pzM2xpV1pKb3d1VHlE?=
- =?utf-8?B?OEdSTndDaHRDSUZ1bDgvdVBZWWM0SVBmZ3ZJcDBJS1F1ay9aSVNMaG9RMThL?=
- =?utf-8?B?OHU2SHVCUTNVZzVkWFBCYWtnZy82aStGaUZQbjJ5UHdEejFSV0NPeUFUZ21n?=
- =?utf-8?B?L0JFZXFxWEFhdjVkdVNhazg1cFlQdHNleHRkTzIyM0xWL1BiNUNFdHFjOVdY?=
- =?utf-8?B?SGtuejlEOVFGTHVSdE9PN2ZzS1BuOEhSTnFnS2lZbnJLa1RINUlIOWN3U29Z?=
- =?utf-8?B?YWhPNCtuaFFORXJPajlWYUtnWkZuTFcrd3habTRNU3pGbXduVmlpVjdmSVQw?=
- =?utf-8?B?UE5OV25GMUoxU2xlek80cDB4bFpVTDNlYUF0VTBsbDJxNlhEQnNEVnJRSkVt?=
- =?utf-8?B?Q2hqSWloYlkzMk94NCt1WjhIU3dLM3RjNlRmNUZYajZDNnhSWFZiS0dTNUVa?=
- =?utf-8?B?SmVWalkvYklUWDdaZzZrc2Y5QjJtOUFqR0Rwbk8rYUtNWVFVa0JpdVJpbk92?=
- =?utf-8?B?bHBIQlhHdXF1bGpMU2ZnbStYblZpNzVYQjlYZGFqZ2xTbkh3Z04xaStnU1Ro?=
- =?utf-8?B?bkdjMmN3Sk9EdVVWQWkzeEFlM2REY0ZXejE1MGhmenE3ZjNGUnAyMTBuWVZH?=
- =?utf-8?B?MWV4SlB0a1A2LzRTOFhMZG1YY2x2MTMxMW9KWEV5RFcvQ0pydmozLzJhN2h0?=
- =?utf-8?B?NTZ0ZHlKck5naE5Sc3MrSUhDbWxxL1YvNVBIclphclBwd3pwd3ZESTQyRHBG?=
- =?utf-8?B?RTFlUzZTN05zaVk0RkNwRDc1SjIyZVNNVlBkZkVMaWdwU0ZsZkptVkt2R1Jp?=
- =?utf-8?B?MEVmbndlVGRTU3V4V0dEVzZMWFh2eTBocFpuRkw1akVjY2hDaTZmd012Lytk?=
- =?utf-8?B?YkdFSEVPVEFXZGZwbXFmRTFlS3JGRG0rR0YvOXpDcU5Vd0VseitCb1VvbWRv?=
- =?utf-8?B?Z2wzc0tIUVl4RU9QdUMyaUc2UTZvYVRsYjdVK1BuU2R2MlU1UjJmakwrQU5Q?=
- =?utf-8?B?SDJRZmJZQWY0Y0UxeTUxZnRzR1M5MGM2MVpKRE0wSGVKTVNNSElubTFPMHdn?=
- =?utf-8?B?cW1rdWhrWVZkVUM1R3ZnaFBDeVdzN2RieVVFaXkxRUpDTENqNlpBU1M5R0h0?=
- =?utf-8?Q?mJxMSKLQa2c=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?K1dFd1hwQk4raGMxWUsyTURYUVRCVENScGVGNUkycytCTG9adkxrODZ5MnJC?=
- =?utf-8?B?M2FrQUtSRFNlVVMvNEk0ejFiQU02aHI4ZUFSS0g2a1g5MEw1eURub3FoVmhr?=
- =?utf-8?B?bUVrc1MwOXNTNFZRa254b0hCb3FSZVpncG5qaVpzeVAwandITEhjSzR4ajhM?=
- =?utf-8?B?TWdZb00xN21ENkx5QnVLRlloNy9XZUx5ZGY2UC9NU1g3QW95d0RFdTZYZ2ZB?=
- =?utf-8?B?M0lGbjkxUUorWWpTSy94ckZkMDVhZzNFQVRMT1FNZEVSMksvODJ5YS9oQWhL?=
- =?utf-8?B?elBZbXJEa2dSS3ZYT3hMMm5yZkJzVW92MVB4Vm14ZVRQbHVIanUreFczRzVt?=
- =?utf-8?B?YnM0YU9DTm1ybnNzTjl2dUR0REFGNitKL3AxSW9Ma3ZEQ3F5UzduNkFuc0Z2?=
- =?utf-8?B?SjFHbk1HYzByV3VtcTBORGVhM1VpNWNYZk5IVGM5ZlB6bDdHSzJlTWxkK1Az?=
- =?utf-8?B?dmVBd1F0dFg2dWxTYmUvNG85b3ZyekQ3MG45VXhIeFNVTk5oK1VIWU5YWWxU?=
- =?utf-8?B?ZDhJWTh2TUlTSjdabEl5emhVZ1JBV1dtcDMxa0hmaWFCemdOTVN6QXdxekVt?=
- =?utf-8?B?YUttZlNzS2x1dEIvWDdhU3BzWHFUWlF0VFFsK2FnbnZRWkRWb0JoVFRUdVZU?=
- =?utf-8?B?V3U5VHdLU0hFSnVNNDVPaytHYkZwVUR3NVdsZGRsTUY5d3JzOUpjRUxCdVd4?=
- =?utf-8?B?T0lXL2lGNFpuWVdnL0xhd0tXR0RBenFYVGhWNkFzT3k4MmRuMmtrRmlkUHQ0?=
- =?utf-8?B?T1ZqZDVvUnJiSXJ3V0tscHdxTXpoUnFIaHJNWisvUmJsTS9DVGo1VWJKaHlJ?=
- =?utf-8?B?SmZIK2EySW04b2JkVHlWa2dXSXc1MnhodytnZUFPQkM3bmJONy94UGRjdWc0?=
- =?utf-8?B?YnRoTzFoN1JtYWM0Nk5qQ2pHSS9Ta1VkL1krTEVNd0dMcXNXOHBqOHpNRkc2?=
- =?utf-8?B?MHAycUZKY2swTVdnYUJUa1JQbzkyL1NwUW9kb3BzZFZWQk9SWlM3L3M3aEFM?=
- =?utf-8?B?Ykd3NS8wMEtGMVR3ZGJJSWNrclZLSFl4R1Q1cndiNHk3NVdtVkwxQzRFU3Bp?=
- =?utf-8?B?WURKMkREdHJGTCs2dGJuWVN1SmQzRk1wUU5oTjdhWGV6bDJoaHZRc2p2T3Ir?=
- =?utf-8?B?d0hUdk91UFlYWjFqMEJSRFhYejczNEJmYXB3SnFlVEIrOHp5RU16MXZFRC9l?=
- =?utf-8?B?N01MRXhKWGx4ZVkzdjJObS9RNzRMQUJKZ0Vhc1Y2WUhRTExpRktBNFN2YmxU?=
- =?utf-8?B?dEx0bk1TN2JaVFJUY3lQMFBSNmpreU9YYnByU2ZYdHMydHZUNENHQmhwRE1R?=
- =?utf-8?B?cEpnQUlYOExlcTZvWDBibGNBWG9ER21vWlFyWERtRFdyb0hGWmtacFphczhz?=
- =?utf-8?B?SnRjc1l5OFhZaFpMY3ZvbzZtVlI1VjdYelg1N3Bxbkl4R0hRNGphNWMzTFVz?=
- =?utf-8?B?dFExUjlRZ2JmeWkvV0VaeFozVkFWTUdaeDFXWkM0VVd6VTlmS0ZmLzVFVjF5?=
- =?utf-8?B?OTJXSkFQb1ZxTWp4TlFtNHRFMmNFNzNrV0IwdFpMcjVCempmZTdMSEVMdE02?=
- =?utf-8?B?bkhLS3JEYWhSNzVRcGhHMzJodnFneVREb05MSTBpQmxScTBNcXRRd1JQZTJv?=
- =?utf-8?B?RCt1QXVoYmtMMi9UUlRjbXhFeC8wUzJEQkpQa1ZKRTZqTmtCc2JUUjBwMkhN?=
- =?utf-8?B?TStKLytLZ0srbTJ1dERsZ21oaFowbTRKeUp0aWVKYjByRlhpSEZ3QlhsRGlX?=
- =?utf-8?B?N3I3NE1naUQxTm5SamNaSjhBWGNaQ0dsb3NBek1mQlQ1aE9BTm9randnSVRq?=
- =?utf-8?B?aWtHTVljdHhXZnVjMU9IWDRlVXEwV1VoVHFNblRTRjR3QnFRbTFLdE85MUNk?=
- =?utf-8?B?ZktLWVlUYms3cC9UU1Y4VlIwa1JCTVE4NnZWSnVFYys5SldQQm1iV2cyY3pS?=
- =?utf-8?B?V3JFZ0o1YSs5bVRGSDN5R3UzQWk3N0VNZGpGUThpZWordGt3YWFMM3U1SzdF?=
- =?utf-8?B?dms1NkhhVXVpY0I2UGlvTXFqVmZXVmVZMS82OFhkajdZS3VUNXJ5Yk8wRDho?=
- =?utf-8?B?cm1kd0Y3Q1NKL0ZuWW1wa0E4QW5zbnFyQ2dFRzNRVVlmRUd3KzgxUWR6bjlP?=
- =?utf-8?Q?cu+cnGTnPJEmvzmQoNDCoVAVO?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1cb1bc09-9d30-4eda-703e-08dda7d8790a
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 04:37:14.5708
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Yr4KWI9D0NntkGuJkK0ZPdt1Tt8Uv5viQJCOlR5OWdG6+v0mCLec2N4zsdnDJqtiGWQQIMozw5X7S7zHbIo4rQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7602
+Content-Transfer-Encoding: 8bit
 
+Use a consistent `# Examples` heading in rustdoc across the codebase.
 
+Some modules previously used `## Examples` or `# Example`, which deviates
+from the preferred `# Examples` style.
 
-On 14/5/25 13:20, Xu Yilun wrote:
-> On Mon, May 12, 2025 at 07:30:21PM +1000, Alexey Kardashevskiy wrote:
->>
->>
->> On 10/5/25 13:47, Xu Yilun wrote:
->>> On Fri, May 09, 2025 at 03:43:18PM -0300, Jason Gunthorpe wrote:
->>>> On Sat, May 10, 2025 at 12:28:48AM +0800, Xu Yilun wrote:
->>>>> On Fri, May 09, 2025 at 07:12:46PM +0800, Xu Yilun wrote:
->>>>>> On Fri, May 09, 2025 at 01:04:58PM +1000, Alexey Kardashevskiy wrote:
->>>>>>> Ping?
->>>>>>
->>>>>> Sorry for late reply from vacation.
->>>>>>
->>>>>>> Also, since there is pushback on 01/12 "dma-buf: Introduce dma_buf_get_pfn_unlocked() kAPI", what is the plan now? Thanks,
->>>>>>
->>>>>> As disscussed in the thread, this kAPI is not well considered but IIUC
->>>>>> the concept of "importer mapping" is still valid. We need more
->>>>>> investigation about all the needs - P2P, CC memory, private bus
->>>>>> channel, and work out a formal API.
->>>>>>
->>>>>> However in last few months I'm focusing on high level TIO flow - TSM
->>>>>> framework, IOMMUFD based bind/unbind, so no much progress here and is
->>>>>> still using this temporary kAPI. But as long as "importer mapping" is
->>>>>> alive, the dmabuf fd for KVM is still valid and we could enable TIO
->>>>>> based on that.
->>>>>
->>>>> Oh I forgot to mention I moved the dmabuf creation from VFIO to IOMMUFD
->>>>> recently, the IOCTL is against iommufd_device.
->>>>
->>>> I'm surprised by this.. iommufd shouldn't be doing PCI stuff, it is
->>>> just about managing the translation control of the device.
->>>
->>> I have a little difficulty to understand. Is TSM bind PCI stuff? To me
->>> it is. Host sends PCI TDISP messages via PCI DOE to put the device in
->>> TDISP LOCKED state, so that device behaves differently from before. Then
->>> why put it in IOMMUFD?
->>
->>
->> "TSM bind" sets up the CPU side of it, it binds a VM to a piece of IOMMU on the host CPU.
-> 
-> I didn't fully get your idea, are you defending for "TSM bind is NOT PCI
-> stuff"? To me it is not true.
+Suggested-by: Miguel Ojeda <ojeda@kernel.org>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ rust/kernel/block/mq.rs  |  2 +-
+ rust/kernel/clk.rs       |  6 +++---
+ rust/kernel/configfs.rs  |  2 +-
+ rust/kernel/cpufreq.rs   |  8 ++++----
+ rust/kernel/cpumask.rs   |  4 ++--
+ rust/kernel/devres.rs    |  4 ++--
+ rust/kernel/firmware.rs  |  4 ++--
+ rust/kernel/opp.rs       | 16 ++++++++--------
+ rust/kernel/pci.rs       |  4 ++--
+ rust/kernel/platform.rs  |  2 +-
+ rust/kernel/sync.rs      |  2 +-
+ rust/kernel/workqueue.rs |  2 +-
+ rust/pin-init/src/lib.rs |  2 +-
+ 13 files changed, 29 insertions(+), 29 deletions(-)
 
-It is more IOMMU stuff than PCI and for the PCI part VFIO has nothing to add to this.
-> TSM bind also sets up the device side. From your patch, it calls
-> tsm_tdi_bind(), which in turn calls spdm_forward(), I assume it is doing
-> TDISP LOCK. And TDISP LOCK changes device a lot.
-DMA runs, MMIO works, what is that "lot"? Config space access works a bit different but it traps into QEMU anyway and QEMU already knows about all this binding business and can act accordingly.
-
->> The device does not know about the VM, it just enables/disables encryption by a request from the CPU (those start/stop interface commands).
->> And IOMMUFD won't be doing DOE, the platform driver (such as AMD CCP) will. Nothing to do for VFIO here.
-> 
-> IOMMUFD calls tsm_tdi_bind(), which is an interface doing PCI stuff.
-
-Only forwards messages, no state change in page tables or anywhere in the host kernel really. Thanks,
-
-ps. hard to follow a million of (sub)threads but I am trying, sorry for the delays :)
-
-> 
-> Thanks,
-> Yilun
-> 
->>
->> We probably should notify VFIO about the state transition but I do not know VFIO would want to do in response.
->>
->>
-
+diff --git a/rust/kernel/block/mq.rs b/rust/kernel/block/mq.rs
+index fb0f393c1cea..831445d37181 100644
+--- a/rust/kernel/block/mq.rs
++++ b/rust/kernel/block/mq.rs
+@@ -53,7 +53,7 @@
+ //! [`GenDiskBuilder`]: gen_disk::GenDiskBuilder
+ //! [`GenDiskBuilder::build`]: gen_disk::GenDiskBuilder::build
+ //!
+-//! # Example
++//! # Examples
+ //!
+ //! ```rust
+ //! use kernel::{
+diff --git a/rust/kernel/clk.rs b/rust/kernel/clk.rs
+index 6041c6d07527..34a19bc99990 100644
+--- a/rust/kernel/clk.rs
++++ b/rust/kernel/clk.rs
+@@ -12,7 +12,7 @@
+ ///
+ /// Represents a frequency in hertz, wrapping a [`c_ulong`] value.
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// ```
+ /// use kernel::clk::Hertz;
+@@ -95,7 +95,7 @@ mod common_clk {
+     /// Instances of this type are reference-counted. Calling [`Clk::get`] ensures that the
+     /// allocation remains valid for the lifetime of the [`Clk`].
+     ///
+-    /// ## Examples
++    /// # Examples
+     ///
+     /// The following example demonstrates how to obtain and configure a clock for a device.
+     ///
+@@ -266,7 +266,7 @@ fn drop(&mut self) {
+     /// Instances of this type are reference-counted. Calling [`OptionalClk::get`] ensures that the
+     /// allocation remains valid for the lifetime of the [`OptionalClk`].
+     ///
+-    /// ## Examples
++    /// # Examples
+     ///
+     /// The following example demonstrates how to obtain and configure an optional clock for a
+     /// device. The code functions correctly whether or not the clock is available.
+diff --git a/rust/kernel/configfs.rs b/rust/kernel/configfs.rs
+index 34d0bea4f9a5..92cc39a2f7ca 100644
+--- a/rust/kernel/configfs.rs
++++ b/rust/kernel/configfs.rs
+@@ -17,7 +17,7 @@
+ //!
+ //! C header: [`include/linux/configfs.h`](srctree/include/linux/configfs.h)
+ //!
+-//! # Example
++//! # Examples
+ //!
+ //! ```ignore
+ //! use kernel::alloc::flags;
+diff --git a/rust/kernel/cpufreq.rs b/rust/kernel/cpufreq.rs
+index b0a9c6182aec..944814b1bd60 100644
+--- a/rust/kernel/cpufreq.rs
++++ b/rust/kernel/cpufreq.rs
+@@ -201,7 +201,7 @@ fn from(index: TableIndex) -> Self {
+ /// The callers must ensure that the `struct cpufreq_frequency_table` is valid for access and
+ /// remains valid for the lifetime of the returned reference.
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// The following example demonstrates how to read a frequency value from [`Table`].
+ ///
+@@ -317,7 +317,7 @@ fn deref(&self) -> &Self::Target {
+ ///
+ /// This is used by the CPU frequency drivers to build a frequency table dynamically.
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// The following example demonstrates how to create a CPU frequency table.
+ ///
+@@ -394,7 +394,7 @@ pub fn to_table(mut self) -> Result<TableBox> {
+ /// The callers must ensure that the `struct cpufreq_policy` is valid for access and remains valid
+ /// for the lifetime of the returned reference.
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// The following example demonstrates how to create a CPU frequency table.
+ ///
+@@ -832,7 +832,7 @@ fn register_em(_policy: &mut Policy) {
+ 
+ /// CPU frequency driver Registration.
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// The following example demonstrates how to register a cpufreq driver.
+ ///
+diff --git a/rust/kernel/cpumask.rs b/rust/kernel/cpumask.rs
+index c90bfac9346a..0f2dd11d8e6a 100644
+--- a/rust/kernel/cpumask.rs
++++ b/rust/kernel/cpumask.rs
+@@ -29,7 +29,7 @@
+ /// The callers must ensure that the `struct cpumask` is valid for access and
+ /// remains valid for the lifetime of the returned reference.
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// The following example demonstrates how to update a [`Cpumask`].
+ ///
+@@ -173,7 +173,7 @@ pub fn copy(&self, dstp: &mut Self) {
+ /// The callers must ensure that the `struct cpumask_var_t` is valid for access and remains valid
+ /// for the lifetime of [`CpumaskVar`].
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// The following example demonstrates how to create and update a [`CpumaskVar`].
+ ///
+diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
+index 0f79a2ec9474..3644c604d4a7 100644
+--- a/rust/kernel/devres.rs
++++ b/rust/kernel/devres.rs
+@@ -42,7 +42,7 @@ struct DevresInner<T> {
+ /// [`Devres`] users should make sure to simply free the corresponding backing resource in `T`'s
+ /// [`Drop`] implementation.
+ ///
+-/// # Example
++/// # Examples
+ ///
+ /// ```no_run
+ /// # use kernel::{bindings, c_str, device::{Bound, Device}, devres::Devres, io::{Io, IoRaw}};
+@@ -192,7 +192,7 @@ pub fn new_foreign_owned(dev: &Device<Bound>, data: T, flags: Flags) -> Result {
+     /// An error is returned if `dev` does not match the same [`Device`] this [`Devres`] instance
+     /// has been created with.
+     ///
+-    /// # Example
++    /// # Examples
+     ///
+     /// ```no_run
+     /// # #![cfg(CONFIG_PCI)]
+diff --git a/rust/kernel/firmware.rs b/rust/kernel/firmware.rs
+index 2494c96e105f..e209b5af297c 100644
+--- a/rust/kernel/firmware.rs
++++ b/rust/kernel/firmware.rs
+@@ -139,7 +139,7 @@ unsafe impl Sync for Firmware {}
+ /// Typically, such contracts would be enforced by a trait, however traits do not (yet) support
+ /// const functions.
+ ///
+-/// # Example
++/// # Examples
+ ///
+ /// ```
+ /// # mod module_firmware_test {
+@@ -261,7 +261,7 @@ const fn push_internal(mut self, bytes: &[u8]) -> Self {
+     /// Append path components to the [`ModInfoBuilder`] instance. Paths need to be separated
+     /// with [`ModInfoBuilder::new_entry`].
+     ///
+-    /// # Example
++    /// # Examples
+     ///
+     /// ```
+     /// use kernel::firmware::ModInfoBuilder;
+diff --git a/rust/kernel/opp.rs b/rust/kernel/opp.rs
+index a566fc3e7dcb..5f404c4181ad 100644
+--- a/rust/kernel/opp.rs
++++ b/rust/kernel/opp.rs
+@@ -103,7 +103,7 @@ fn to_c_str_array(names: &[CString]) -> Result<KVec<*const u8>> {
+ ///
+ /// Represents voltage in microvolts, wrapping a [`c_ulong`] value.
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// ```
+ /// use kernel::opp::MicroVolt;
+@@ -128,7 +128,7 @@ fn from(volt: MicroVolt) -> Self {
+ ///
+ /// Represents power in microwatts, wrapping a [`c_ulong`] value.
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// ```
+ /// use kernel::opp::MicroWatt;
+@@ -153,7 +153,7 @@ fn from(power: MicroWatt) -> Self {
+ ///
+ /// The associated [`OPP`] is automatically removed when the [`Token`] is dropped.
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// The following example demonstrates how to create an [`OPP`] dynamically.
+ ///
+@@ -202,7 +202,7 @@ fn drop(&mut self) {
+ /// Rust abstraction for the C `struct dev_pm_opp_data`, used to define operating performance
+ /// points (OPPs) dynamically.
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// The following example demonstrates how to create an [`OPP`] with [`Data`].
+ ///
+@@ -254,7 +254,7 @@ fn freq(&self) -> Hertz {
+ 
+ /// [`OPP`] search options.
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// Defines how to search for an [`OPP`] in a [`Table`] relative to a frequency.
+ ///
+@@ -326,7 +326,7 @@ fn drop(&mut self) {
+ ///
+ /// Rust abstraction for the C `struct dev_pm_opp_config`.
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// The following example demonstrates how to set OPP property-name configuration for a [`Device`].
+ ///
+@@ -569,7 +569,7 @@ extern "C" fn config_regulators(
+ ///
+ /// Instances of this type are reference-counted.
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// The following example demonstrates how to get OPP [`Table`] for a [`Cpumask`] and set its
+ /// frequency.
+@@ -1011,7 +1011,7 @@ fn drop(&mut self) {
+ ///
+ /// A reference to the [`OPP`], &[`OPP`], isn't refcounted by the Rust code.
+ ///
+-/// ## Examples
++/// # Examples
+ ///
+ /// The following example demonstrates how to get [`OPP`] corresponding to a frequency value and
+ /// configure the device with it.
+diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+index 8435f8132e38..2c2ed347c72a 100644
+--- a/rust/kernel/pci.rs
++++ b/rust/kernel/pci.rs
+@@ -100,7 +100,7 @@ extern "C" fn remove_callback(pdev: *mut bindings::pci_dev) {
+ 
+ /// Declares a kernel module that exposes a single PCI driver.
+ ///
+-/// # Example
++/// # Examples
+ ///
+ ///```ignore
+ /// kernel::module_pci_driver! {
+@@ -194,7 +194,7 @@ macro_rules! pci_device_table {
+ 
+ /// The PCI driver trait.
+ ///
+-/// # Example
++/// # Examples
+ ///
+ ///```
+ /// # use kernel::{bindings, device::Core, pci};
+diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
+index 5b21fa517e55..f8c0d79445fa 100644
+--- a/rust/kernel/platform.rs
++++ b/rust/kernel/platform.rs
+@@ -120,7 +120,7 @@ macro_rules! module_platform_driver {
+ ///
+ /// Drivers must implement this trait in order to get a platform driver registered.
+ ///
+-/// # Example
++/// # Examples
+ ///
+ ///```
+ /// # use kernel::{bindings, c_str, device::Core, of, platform};
+diff --git a/rust/kernel/sync.rs b/rust/kernel/sync.rs
+index 36a719015583..a38ea4419758 100644
+--- a/rust/kernel/sync.rs
++++ b/rust/kernel/sync.rs
+@@ -39,7 +39,7 @@ impl LockClassKey {
+     /// Initializes a dynamically allocated lock class key. In the common case of using a
+     /// statically allocated lock class key, the static_lock_class! macro should be used instead.
+     ///
+-    /// # Example
++    /// # Examples
+     /// ```
+     /// # use kernel::c_str;
+     /// # use kernel::alloc::KBox;
+diff --git a/rust/kernel/workqueue.rs b/rust/kernel/workqueue.rs
+index d092112d843f..8c27786dc8f0 100644
+--- a/rust/kernel/workqueue.rs
++++ b/rust/kernel/workqueue.rs
+@@ -26,7 +26,7 @@
+ //!  * The [`WorkItemPointer`] trait is implemented for the pointer type that points at a something
+ //!    that implements [`WorkItem`].
+ //!
+-//! ## Example
++//! # Examples
+ //!
+ //! This example defines a struct that holds an integer and can be scheduled on the workqueue. When
+ //! the struct is executed, it will print the integer. Since there is only one `work_struct` field,
+diff --git a/rust/pin-init/src/lib.rs b/rust/pin-init/src/lib.rs
+index 9ab34036e6bc..c5f395b44ec8 100644
+--- a/rust/pin-init/src/lib.rs
++++ b/rust/pin-init/src/lib.rs
+@@ -953,7 +953,7 @@ macro_rules! try_init {
+ /// Asserts that a field on a struct using `#[pin_data]` is marked with `#[pin]` ie. that it is
+ /// structurally pinned.
+ ///
+-/// # Example
++/// # Examples
+ ///
+ /// This will succeed:
+ /// ```
 -- 
-Alexey
+2.31.1.272.g89b43f80a514
 
