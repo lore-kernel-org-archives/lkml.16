@@ -1,122 +1,133 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8542283154
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:00:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A41A288C00;
+	Tue, 10 Jun 2025 22:00:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749592827; cv=none; b=pylQXBjMqiItDVzsNByfft5GsqDT7/qeqLGCbdL6XV8In6NQRNBBQiTtkKJ+tyh8KGi8qm4sWJ+WSfkYOapitSx6U4QR4o2X07+5xeNlrwtWc4kVnjoldJJ0+CfD6+fhJ9z4y5cDdzRMWkkfoNej3nxr8yDo6S1L8jaqqfDRJxY=
+	t=1749592840; cv=none; b=AL9+pcRCHsZoqFpXeiklo+sKre8SVFPdCSw4DvTf1bqQyU0f9fn2MCa1PKccGTRa/onjd3WlEMiQDWXnZffQ/4SdXadGVZszdXV2NcRlAkeMcognjKmiVQY3DbqAGk3dpLvbQWVxQVH42JCr93uq47QZ97ZZvH59jJub8sftAZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749592827; c=relaxed/simple;
-	bh=pTiM9bJvPjnlaFYkxrDbLpKWeiHciRh2fI7Hta0Crmo=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=Bl9IQ8KYVdGFs5GjlxAaaoIVVJw3zKwRQleX7lMrF2p8GgbCS0mQmABPPwk4nv0fSOuLZMYSBPxXFQ54xI9rS7sqgtxA4THTP8MQ780CQJziyESWOZeSv7RmFUszmqx3zmmGDWp68TtTIdZla5OOGUnKdEycvfm6r8dFHMF83f0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=Je7iSVtB; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	s=arc-20240116; t=1749592840; c=relaxed/simple;
+	bh=FnrGA5lxkPuqlYIs8QGMviRg4MaEfAXrtzR7YXE3u4g=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=E6cZvps4skWmUXUbr6DoSnCUXWFflsxF3zRW3roOJ8hxgC6He/0lRK5FCD2hlifGDZzZMPJfOqNuAMOYjOHS2NxK0sfJkxTHkKfrSvS7U3mmONgKIITdZIey1TdR4D/pEIu+0QjixcZhl3XO7W9Vl6COUfIy2DnEtY615xX2NtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BV2IIeDg; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BTcVTgil; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="Je7iSVtB"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-742c3d06de3so6858304b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:00:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1749592825; x=1750197625; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fbom0xG9ol+fr/AajJO7nHL/1uYibOAQ7MGdWD28twQ=;
-        b=Je7iSVtBq516YyUAh8zC4wSXYMUOveSCPJLEql4PPxZj+hWcVlSgXKdvEAHKN9Bgzn
-         mnxtoDeE+JupVws85vcQt4M/2X++sq+gAXdHEg0fGbGLUazBWOAIN0+vKH4MXMKYOPO6
-         6lQfQzykpEmoJ+jz9GAslSGKMNM82vYYbJd6ucUlwVYsw85ZcMv7738AUnk1GFFL+/Qx
-         1TlJmHYmQbtEwXEEu/sboFPWdGYyCgJG3Jlij7dCGMS4eXwlvdBSV7Lk1v0axpyWrNho
-         b+W2qm1vH841dUnSCjwvuP/u/t+BbaURUuRfb0A/93SOCzXMO9Xq0YyIUqDRVZbTJpbB
-         ft+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749592825; x=1750197625;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fbom0xG9ol+fr/AajJO7nHL/1uYibOAQ7MGdWD28twQ=;
-        b=OgnnB7/rOAm3C6COw4ajv3wH6WVq0qXn4s8o6r3XEwk1Y9d+EYWWmvKT/HqsnXtyNH
-         AO+3zhdvnfwOs9y3PqMHKPEGaYJRasHdP4GYdiHojs1LquOBSqcXLcOZKuUPTPkJ7NAJ
-         X6jOvJadLj5QztC45EgWU95GsYIJpFHSJgfYo0tyj6PUbFDZH9Hvx300vrtFw7bC11t5
-         OuCaQU6VApBmUPa9WRzXbqwRGbi3jBVPeV63J47mE1/Swyo3DIEsbtd5iX+4XokaaBJD
-         Er2ATcw7htRAqP2aGRmMEToEDg7c5dImmoZK/edCrfGmPIV9QNLMCIUb4z7EPwXzGOwl
-         TJsw==
-X-Forwarded-Encrypted: i=1; AJvYcCXADSKcWc90inmD/+Xc5HPQoHXxG+Yv7/kppS+4wZnEgA58LA1v0hjcdDE/oeVvRMyU21LqdsZCmbqOVXU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/8tZw6hkPHKwH1OZEaWjYxK9zhnFgK72/2JyMO6vA1EHOBGzr
-	5ES4fKSXrJUDS8/zWVOIB3C3URZLMAS90sZwkZCdfLjiIHmwglEphKVuSlTnESDmyu4=
-X-Gm-Gg: ASbGncvtr8pIvz3ry6AguHvo+H6I4j7emCU8xhFea54hvuwGI65yyidVhu0Em2/fEV/
-	PO1PJV0kT3wJFHsncfNyedS4eKYYR5QR+dvFDYnkHG8NF2sLfcbGlqMTDO3JXU1fISHIpq03rV5
-	9nuqe0BMJazqUre1TYmtyIxCUwaVo+9NVqXKc2T2M84KhCAkRIncqiwabhhbwGoAvbdyLmYCelk
-	/0/oumGO9taDN34AYque9D2WZE2/HbbPto/0TXbUI7HSrATVxkN67Dfdq0v1IopV4aYcJMNA7h7
-	kNnCmAlt4oIUwzaIMRlpbBAB8CuqjdksiFbfv2IWo3B72NXTTles48mbQb60
-X-Google-Smtp-Source: AGHT+IGD3U6t86T21li6GwG2NgEvYoKN8WsucswfC21Sdfl2qIBCx1kf6qW6YPkuGZVyS6OyrNQOlQ==
-X-Received: by 2002:a05:6a00:848:b0:73e:598:7e5b with SMTP id d2e1a72fcca58-7486facfb03mr502222b3a.1.1749592825023;
-        Tue, 10 Jun 2025 15:00:25 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:500::7:116a])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-7482b0ea2a7sm7897643b3a.156.2025.06.10.15.00.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 15:00:24 -0700 (PDT)
-Date: Tue, 10 Jun 2025 15:00:24 -0700 (PDT)
-X-Google-Original-Date: Tue, 10 Jun 2025 15:00:11 PDT (-0700)
-Subject:     Re: [PATCH 0/4] Fix a segmentation fault also add raid6test for RISC-V support
-In-Reply-To: <d052f010-410a-4405-9ae6-f679649851ea@ghiti.fr>
-CC: zhangchunyan@iscas.ac.cn, Paul Walmsley <paul.walmsley@sifive.com>,
-  aou@eecs.berkeley.edu, Charlie Jenkins <charlie@rivosinc.com>, song@kernel.org, yukuai3@huawei.com,
-  linux-riscv@lists.infradead.org, linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org, zhang.lyra@gmail.com
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: Alexandre Ghiti <alex@ghiti.fr>
-Message-ID: <mhng-D97D0B5D-7948-49C6-8F55-C0836E41DA3C@palmerdabbelt-mac>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BV2IIeDg";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BTcVTgil"
+Date: Tue, 10 Jun 2025 22:00:35 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749592836;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=ZdS3BZQLcu/5nmH72ukL8l+dA44/cwpXTCneWcSu5Lw=;
+	b=BV2IIeDgKiy5hB7RWkWwdotjjQ6ZIYryNRhl8KjB8oviNZNtwoDdZ0ETpY8DFQK+4jMVQz
+	AZl2SDeiAVkYMT2Q5gwaGkIc0xL/qBm8kM0Mnz+ndl5Vh22wc8p27v0SzU3oFchvrtoqxo
+	fqoNO0C3casIu9k8JA1+08yj5g7pG4k9kptr0MWzDjNKbqqrfznyTegxSHpyMtoBAhd93U
+	oTdvl48vQ5lro9JrF6Toyi/1tQraJ/F5M7V3Ya5S1x7Gz6oA53ftEc3wJv/59QBmWwihFv
+	B3J9CdPHfr7DDvh12lwdcPpx7BWdvb6qLy7auGn4jmlzPBCrTolGpH3xOY8xig==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749592836;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=ZdS3BZQLcu/5nmH72ukL8l+dA44/cwpXTCneWcSu5Lw=;
+	b=BTcVTgilFHi4/oVwQrfbn3FqA6Xy3KJIidHlUe7la7aOdxy43clEGao3TzlwEYWxA12MZ2
+	QwA4YARhSFuoEnCA==
+From: "tip-bot2 for Kai Huang" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/virt/tdx: Avoid indirect calls to TDX assembly
+ functions
+Cc: Kai Huang <kai.huang@intel.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ stable@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Message-ID: <174959283534.406.15846779981936679822.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Tue, 10 Jun 2025 12:23:18 PDT (-0700), Alexandre Ghiti wrote:
-> Hi Chunyan,
->
-> On 6/10/25 12:12, Chunyan Zhang wrote:
->> The first two patches are fixes.
->> The last two are for userspace raid6test support on RISC-V.
->>
->> The issue fixed in patch 2/4 was probably the same which was spotted by
->> Charlie [1], I couldn't reproduce it at that time.
->>
->> When running raid6test in userspace on RISC-V, I saw a segmentation fault,
->> I used gdb command to print pointer p, it was an unaccessible address.
->
->
-> Can you give me your config, kernel and toolchain versions? I can't
-> reproduce the segfault on my machine.
+The following commit has been merged into the x86/urgent branch of tip:
 
-It's probably going to be super fragile to reproduce.  The code is just 
-scrubbing over t0 without a clobber, so it's just going to break stuff 
-somewhat arbitrarily.
+Commit-ID:     0b3bc018e86afdc0cbfef61328c63d5c08f8b370
+Gitweb:        https://git.kernel.org/tip/0b3bc018e86afdc0cbfef61328c63d5c08f8b370
+Author:        Kai Huang <kai.huang@intel.com>
+AuthorDate:    Sat, 07 Jun 2025 01:07:37 +12:00
+Committer:     Dave Hansen <dave.hansen@linux.intel.com>
+CommitterDate: Tue, 10 Jun 2025 12:32:52 -07:00
 
->
-> Thanks for the fixes and the test, I'll take a look this week.
->
-> Alex
->
->
->>
->> With patch 2/4, the issue didn't appear anymore.
->>
->> [1] https://lore.kernel.org/lkml/Z5gJ35pXI2W41QDk@ghost/
->>
->> Chunyan Zhang (4):
->>    raid6: riscv: clean up unused header file inclusion
->>    raid6: riscv: Fix NULL pointer dereference issue
->>    raid6: riscv: Allow code to be compiled in userspace
->>    raid6: test: add support for RISC-V
->>
->>   lib/raid6/recov_rvv.c   |  9 +-----
->>   lib/raid6/rvv.c         | 62 +++++++++++++++++++++--------------------
->>   lib/raid6/rvv.h         | 15 ++++++++++
->>   lib/raid6/test/Makefile |  8 ++++++
->>   4 files changed, 56 insertions(+), 38 deletions(-)
->>
+x86/virt/tdx: Avoid indirect calls to TDX assembly functions
+
+Two 'static inline' TDX helper functions (sc_retry() and
+sc_retry_prerr()) take function pointer arguments which refer to
+assembly functions.  Normally, the compiler inlines the TDX helper,
+realizes that the function pointer targets are completely static --
+thus can be resolved at compile time -- and generates direct call
+instructions.
+
+But, other times (like when CONFIG_CC_OPTIMIZE_FOR_SIZE=y), the
+compiler declines to inline the helpers and will instead generate
+indirect call instructions.
+
+Indirect calls to assembly functions require special annotation (for
+various Control Flow Integrity mechanisms).  But TDX assembly
+functions lack the special annotations and can only be called
+directly.
+
+Annotate both the helpers as '__always_inline' to prod the compiler
+into maintaining the direct calls. There is no guarantee here, but
+Peter has volunteered to report the compiler bug if this assumption
+ever breaks[1].
+
+Fixes: 1e66a7e27539 ("x86/virt/tdx: Handle SEAMCALL no entropy error in common code")
+Fixes: df01f5ae07dd ("x86/virt/tdx: Add SEAMCALL error printing for module initialization")
+Signed-off-by: Kai Huang <kai.huang@intel.com>
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/lkml/20250605145914.GW39944@noisy.programming.kicks-ass.net/ [1]
+Link: https://lore.kernel.org/all/20250606130737.30713-1-kai.huang%40intel.com
+---
+ arch/x86/include/asm/tdx.h  | 2 +-
+ arch/x86/virt/vmx/tdx/tdx.c | 5 +++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/include/asm/tdx.h b/arch/x86/include/asm/tdx.h
+index 8b19294..7ddef3a 100644
+--- a/arch/x86/include/asm/tdx.h
++++ b/arch/x86/include/asm/tdx.h
+@@ -106,7 +106,7 @@ void tdx_init(void);
+ 
+ typedef u64 (*sc_func_t)(u64 fn, struct tdx_module_args *args);
+ 
+-static inline u64 sc_retry(sc_func_t func, u64 fn,
++static __always_inline u64 sc_retry(sc_func_t func, u64 fn,
+ 			   struct tdx_module_args *args)
+ {
+ 	int retry = RDRAND_RETRY_LOOPS;
+diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
+index 2457d13..c7a9a08 100644
+--- a/arch/x86/virt/vmx/tdx/tdx.c
++++ b/arch/x86/virt/vmx/tdx/tdx.c
+@@ -75,8 +75,9 @@ static inline void seamcall_err_ret(u64 fn, u64 err,
+ 			args->r9, args->r10, args->r11);
+ }
+ 
+-static inline int sc_retry_prerr(sc_func_t func, sc_err_func_t err_func,
+-				 u64 fn, struct tdx_module_args *args)
++static __always_inline int sc_retry_prerr(sc_func_t func,
++					  sc_err_func_t err_func,
++					  u64 fn, struct tdx_module_args *args)
+ {
+ 	u64 sret = sc_retry(func, fn, args);
+ 
