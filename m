@@ -1,53 +1,53 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAAE228C865;
-	Tue, 10 Jun 2025 09:44:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A633F28C2A8;
+	Tue, 10 Jun 2025 09:44:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749548651; cv=none; b=j0MkSaSrUWI+HvWI62Qg4IP3BJTAUccKn1qod6dzcBZ8lzTf9/cAUPxU8B2qWOhXqE8Z/aAQD9lYdxRNQFyebA5Yy5PWQCqrsHNG3r2xsdPgM/bq+QFhu8Xtt+GD/1HCjwdGW721jNLn5VYY2FLW+gyfdn6UVDMWt7IYbcrx2+k=
+	t=1749548649; cv=none; b=M5deDjmIi0EXAD4WKWWBpNMjlvfT10/0lgVS+C2D9BDmVnzVEYN/ZqtkbHZSXvr9/weY8bdnxVg5I9FMwJgIfWdrDBpzIBVeaLr3zP3gg0oeqwO8X2m8Pn7fnqM3mBHNYZ+H8rD2DEUvTNsRgPQywgTY3VZsTthSh/TWLaAZWb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749548651; c=relaxed/simple;
-	bh=t82zny2Ed6OXhv6cvITiBRDLw1iLX6ASA7AbCoCvA9g=;
+	s=arc-20240116; t=1749548649; c=relaxed/simple;
+	bh=6TbPHbmR5NW+rQw7fuIDBYSrrK+8+V0idQLzId05THo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FNSP9cdyXk+ZaS1hOTMgYQaOsvYEKcrHAp+RY/kU3NR9lzGgTIjUEJuUdvxLkdjS1Y8suqaOxxCjdTEI/VM+wJwYnqq2QgB+QgDdy73lpjNn5YG6qXZXaqYXVWeSooXN5ok3MeVV59Q2i3Tw9C7uF4roR9uuhU7SToXPFxwUnSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=frordbu7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/rb8DqLh; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=MrMb7Xi/QQbP9bj5ord8rOPAbUa7RXKSKuT/p4bEi1SbRnB6jldeKUV9Nt2hYX/Ndj2KYzF9ufZp+xuY9Cew3UlTyE5iRETy5sFpg7SnoidmOmqPCzz+b+w8LgpTqAdLWcDapVUtRLeyb6dxDDtMQMQ5YsBBvLh4dISSMNS4nGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Txh7NGol; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kLGu2M3z; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="frordbu7";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/rb8DqLh"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Txh7NGol";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kLGu2M3z"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749548647;
+	s=2020; t=1749548644;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JayrXzFbr5HmfP6EfLQeY5DKLoRK4pixZRQk6G9t+38=;
-	b=frordbu7slGooqvSLO6JNf+7EgaXsA3bLS/aSqb4GyeJ1qWjMsuhy6cl1sPW7NF8u65ehJ
-	23UgrJqXQI5uYSF81ul6foY98m7KHcVIWwbuMwNtDUDpnzBJeM2FQVQQBt3npfNe1t+vJ3
-	OuTsHUnXl87drJgAARbIOqJQg1LFCtuBkjLV0Z26EY911RfsPl6h74mpmDaW5jzqQ+hku8
-	cESGPCmBpSIUvrOrgNJP9pou0oOKfwEcyO0exVXLG7BHfW6BLi91gSv1S7Uck1RO5yydoN
-	iNq/+0nto5lKmJYeT2TeFq80UJSMj7RxfLLHdmUJqYOWCyZbglwQZUCOj2pGdw==
+	bh=mbniTTOAlj/0h5/gcSUvP+NJGvahmNVVQCb5I0fsc8U=;
+	b=Txh7NGolXQwdbWtiyiaOP9hMMfo3qcqcJ5AQaod22NlyA12DzWtf8kS/cgrua6ZaIVnEJs
+	TYCcZe9MEbEHRJ5MY22bBK8SW+ZpjuGMAvq9ieAw3zsjlPdprzLtR1PPjsKBPxxnD6Dh57
+	kKEz86cGUvzRZiLc0Crm4LqdTk03rZ2CaslGC+BDrzAoYO4VG0rpDxp0QWEbviFUJinkaS
+	JbD1XRxKJxh0xy5gtMKhBAmMcrbkdLRVAZCxmNCycBREHZRFyvEEV3KalcOKGtHQeQXcho
+	Polipu6YubVs6zFdprshhCAc4W4wHnt0mwaSuPHdPc3sBwh7i5LZDivokxRGpw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749548647;
+	s=2020e; t=1749548644;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JayrXzFbr5HmfP6EfLQeY5DKLoRK4pixZRQk6G9t+38=;
-	b=/rb8DqLh94/ig8IzH9/LPLHzhV+e8c818g7eRZggdGif4Jw5s+MLWPDvk47Nq7XjSUspPt
-	andUfqJfxATidRDw==
+	bh=mbniTTOAlj/0h5/gcSUvP+NJGvahmNVVQCb5I0fsc8U=;
+	b=kLGu2M3zbUiTTlXmr4jsZZ4Ip1QzSSDGKR2AehG9zHqOUntQ8Uw7DfSBkNFkhgxzFuMf0E
+	kOgpDkLCugxpcbCQ==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: john.ogness@linutronix.de,
 	Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v10 19/19] rv: Allow to configure the number of per-task monitor
-Date: Tue, 10 Jun 2025 11:43:44 +0200
-Message-Id: <0cf0ee5a271ff2609dcf8d516c45b615283f212e.1749547399.git.namcao@linutronix.de>
+Subject: [PATCH v10 11/19] verification/rvgen: Restructure the templates files
+Date: Tue, 10 Jun 2025 11:43:36 +0200
+Message-Id: <1d464ba5334f7b1dd7b82bbca942f76ec295d898.1749547399.git.namcao@linutronix.de>
 In-Reply-To: <cover.1749547399.git.namcao@linutronix.de>
 References: <cover.1749547399.git.namcao@linutronix.de>
 Precedence: bulk
@@ -58,130 +58,210 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Now that there are 2 monitors for real-time applications, users may want to
-enable both of them simultaneously. Make the number of per-task monitor
-configurable. Default it to 2 for now.
+To simply the scripts and to allow easy integration of new monitor types,
+restructure the template files as followed:
+
+1. Move the template files to be in the same directory as the rvgen
+   package. Furthermore, the installation will now only install the
+   templates to the package directory, not /usr/share/. This simplify
+   templates reading, as the scripts do not need to find the templates at
+   multiple places.
+
+2. Move dot2k_templates/* to:
+     - templates/dot2k/
+     - templates/container/
+
+   This allows sharing templates reading code between DA monitor generation
+   and container generation (and any future generation type).
+
+   For template files which can be shared between different generation
+   types, support putting them in templates/
+
+This restructure aligns with the recommendation from:
+https://python-packaging.readthedocs.io/en/latest/non-code-files.html
 
 Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- include/linux/rv.h                     | 9 +--------
- include/linux/sched.h                  | 8 +++-----
- kernel/trace/rv/Kconfig                | 9 +++++++++
- kernel/trace/rv/monitors/rtapp/Kconfig | 1 +
- kernel/trace/rv/rv.c                   | 8 ++++----
- 5 files changed, 18 insertions(+), 17 deletions(-)
+ tools/verification/rvgen/Makefile             |  5 +-
+ tools/verification/rvgen/rvgen/dot2k.py       | 47 ++++++++-----------
+ .../templates}/Kconfig                        |  0
+ .../templates/container/Kconfig}              |  0
+ .../templates/container/main.c}               |  0
+ .../templates/container/main.h}               |  0
+ .../templates/dot2k}/main.c                   |  0
+ .../templates/dot2k}/trace.h                  |  0
+ 8 files changed, 20 insertions(+), 32 deletions(-)
+ rename tools/verification/rvgen/{dot2k_templates =3D> rvgen/templates}/Kco=
+nfig (100%)
+ rename tools/verification/rvgen/{dot2k_templates/Kconfig_container =3D> rv=
+gen/templates/container/Kconfig} (100%)
+ rename tools/verification/rvgen/{dot2k_templates/main_container.c =3D> rvg=
+en/templates/container/main.c} (100%)
+ rename tools/verification/rvgen/{dot2k_templates/main_container.h =3D> rvg=
+en/templates/container/main.h} (100%)
+ rename tools/verification/rvgen/{dot2k_templates =3D> rvgen/templates/dot2=
+k}/main.c (100%)
+ rename tools/verification/rvgen/{dot2k_templates =3D> rvgen/templates/dot2=
+k}/trace.h (100%)
 
-diff --git a/include/linux/rv.h b/include/linux/rv.h
-index 2897aad168831..099b23c14e544 100644
---- a/include/linux/rv.h
-+++ b/include/linux/rv.h
-@@ -74,14 +74,7 @@ struct ltl_monitor {};
+diff --git a/tools/verification/rvgen/Makefile b/tools/verification/rvgen/M=
+akefile
+index cea9c21c3bced..8d08825e7e546 100644
+--- a/tools/verification/rvgen/Makefile
++++ b/tools/verification/rvgen/Makefile
+@@ -3,7 +3,6 @@ INSTALL=3Dinstall
+ prefix  ?=3D /usr
+ bindir  ?=3D $(prefix)/bin
+ mandir  ?=3D $(prefix)/share/man
+-miscdir ?=3D $(prefix)/share/rvgen
+ srcdir  ?=3D $(prefix)/src
 =20
- #endif /* CONFIG_RV_LTL_MONITOR */
+ PYLIB  ?=3D $(shell python3 -c 'import sysconfig;  print (sysconfig.get_pa=
+th("purelib"))')
+@@ -21,6 +20,4 @@ install:
+ 	$(INSTALL) dot2c -D -m 755 $(DESTDIR)$(bindir)/
+ 	$(INSTALL) rvgen/dot2k.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/dot2k.py
+ 	$(INSTALL) __main__.py -D -m 755 $(DESTDIR)$(bindir)/rvgen
+-
+-	mkdir -p ${miscdir}/
+-	cp -rp dot2k_templates $(DESTDIR)$(miscdir)/
++	cp -rp rvgen/templates $(DESTDIR)$(PYLIB)/rvgen/
+diff --git a/tools/verification/rvgen/rvgen/dot2k.py b/tools/verification/r=
+vgen/rvgen/dot2k.py
+index e294624131943..a9ed97d0b224b 100644
+--- a/tools/verification/rvgen/rvgen/dot2k.py
++++ b/tools/verification/rvgen/rvgen/dot2k.py
+@@ -14,14 +14,16 @@ import os
 =20
--/*
-- * Per-task RV monitors count. Nowadays fixed in RV_PER_TASK_MONITORS.
-- * If we find justification for more monitors, we can think about
-- * adding more or developing a dynamic method. So far, none of
-- * these are justified.
-- */
--#define RV_PER_TASK_MONITORS		1
--#define RV_PER_TASK_MONITOR_INIT	(RV_PER_TASK_MONITORS)
-+#define RV_PER_TASK_MONITOR_INIT	(CONFIG_RV_PER_TASK_MONITORS)
+ class dot2k(Dot2c):
+     monitor_types =3D { "global" : 1, "per_cpu" : 2, "per_task" : 3 }
+-    monitor_templates_dir =3D "rvgen/dot2k_templates/"
+     rv_dir =3D "kernel/trace/rv"
+     monitor_type =3D "per_cpu"
 =20
- union rv_task_monitor {
- 	struct da_monitor	da_mon;
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 4f78a64beb52c..fabd7fe1a07a5 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1642,12 +1642,10 @@ struct task_struct {
+     def __init__(self, file_path, MonitorType, extra_params=3D{}):
+         self.container =3D extra_params.get("subcmd") =3D=3D "container"
+         self.parent =3D extra_params.get("parent")
+-        self.__fill_rv_templates_dir()
++        if self.container:
++            self.abs_template_dir =3D os.path.join(os.path.dirname(__file_=
+_), "templates/container")
++        else:
++            self.abs_template_dir =3D os.path.join(os.path.dirname(__file_=
+_), "templates/dot2k")
 =20
- #ifdef CONFIG_RV
- 	/*
--	 * Per-task RV monitor. Nowadays fixed in RV_PER_TASK_MONITORS.
--	 * If we find justification for more monitors, we can think
--	 * about adding more or developing a dynamic method. So far,
--	 * none of these are justified.
-+	 * Per-task RV monitor, fixed in CONFIG_RV_PER_TASK_MONITORS.
-+	 * If memory becomes a concern, we can think about a dynamic method.
- 	 */
--	union rv_task_monitor		rv[RV_PER_TASK_MONITORS];
-+	union rv_task_monitor		rv[CONFIG_RV_PER_TASK_MONITORS];
- #endif
+         if self.container:
+             if file_path:
+@@ -33,9 +35,7 @@ class dot2k(Dot2c):
+             self.name =3D extra_params.get("model_name")
+             self.events =3D []
+             self.states =3D []
+-            self.main_c =3D self.__read_file(self.monitor_templates_dir + =
+"main_container.c")
+-            self.main_h =3D self.__read_file(self.monitor_templates_dir + =
+"main_container.h")
+-            self.kconfig =3D self.__read_file(self.monitor_templates_dir +=
+ "Kconfig_container")
++            self.main_h =3D self._read_template_file("main.h")
+         else:
+             super().__init__(file_path, extra_params.get("model_name"))
 =20
- #ifdef CONFIG_USER_EVENTS
-diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
-index 942d57575e67b..c11bf7e61ebf0 100644
---- a/kernel/trace/rv/Kconfig
-+++ b/kernel/trace/rv/Kconfig
-@@ -32,6 +32,15 @@ menuconfig RV
- 	  For further information, see:
- 	    Documentation/trace/rv/runtime-verification.rst
-=20
-+config RV_PER_TASK_MONITORS
-+	int "Maximum number of per-task monitor"
-+	depends on RV
-+	range 1 8
-+	default 2
-+	help
-+	  This option configures the maximum number of per-task RV monitors that =
-can run
-+	  simultaneously.
+@@ -43,35 +43,16 @@ class dot2k(Dot2c):
+             if self.monitor_type is None:
+                 raise ValueError("Unknown monitor type: %s" % MonitorType)
+             self.monitor_type =3D MonitorType
+-            self.main_c =3D self.__read_file(self.monitor_templates_dir + =
+"main.c")
+-            self.trace_h =3D self.__read_file(self.monitor_templates_dir +=
+ "trace.h")
+-            self.kconfig =3D self.__read_file(self.monitor_templates_dir +=
+ "Kconfig")
++            self.trace_h =3D self._read_template_file("trace.h")
 +
- source "kernel/trace/rv/monitors/wip/Kconfig"
- source "kernel/trace/rv/monitors/wwnr/Kconfig"
- source "kernel/trace/rv/monitors/sched/Kconfig"
-diff --git a/kernel/trace/rv/monitors/rtapp/Kconfig b/kernel/trace/rv/monit=
-ors/rtapp/Kconfig
-index 658bb78e733a0..2248390bac272 100644
---- a/kernel/trace/rv/monitors/rtapp/Kconfig
-+++ b/kernel/trace/rv/monitors/rtapp/Kconfig
-@@ -1,5 +1,6 @@
- config RV_MON_RTAPP
- 	depends on RV
-+	depends on RV_PER_TASK_MONITORS >=3D 2
- 	bool "rtapp monitor"
- 	help
- 	  Collection of monitors to check for common problems with real-time
-diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
-index e25d65fe432a6..108429d16ec12 100644
---- a/kernel/trace/rv/rv.c
-+++ b/kernel/trace/rv/rv.c
-@@ -165,7 +165,7 @@ struct dentry *get_monitors_root(void)
- LIST_HEAD(rv_monitors_list);
++        self.main_c =3D self._read_template_file("main.c")
++        self.kconfig =3D self._read_template_file("Kconfig")
+         self.enum_suffix =3D "_%s" % self.name
+         self.description =3D extra_params.get("description", self.name) or=
+ "auto-generated"
+         self.auto_patch =3D extra_params.get("auto_patch")
+         if self.auto_patch:
+             self.__fill_rv_kernel_dir()
 =20
- static int task_monitor_count;
--static bool task_monitor_slots[RV_PER_TASK_MONITORS];
-+static bool task_monitor_slots[CONFIG_RV_PER_TASK_MONITORS];
+-    def __fill_rv_templates_dir(self):
+-
+-        if os.path.exists(self.monitor_templates_dir):
+-            return
+-
+-        if platform.system() !=3D "Linux":
+-            raise OSError("I can only run on Linux.")
+-
+-        kernel_path =3D "/lib/modules/%s/build/tools/verification/rvgen/do=
+t2k_templates/" % (platform.release())
+-
+-        if os.path.exists(kernel_path):
+-            self.monitor_templates_dir =3D kernel_path
+-            return
+-
+-        if os.path.exists("/usr/share/rvgen/dot2k_templates/"):
+-            self.monitor_templates_dir =3D "/usr/share/rvgen/dot2k_templat=
+es/"
+-            return
+-
+-        raise FileNotFoundError("Could not find the template directory, do=
+ you have the kernel source installed?")
+-
+     def __fill_rv_kernel_dir(self):
 =20
- int rv_get_task_monitor_slot(void)
- {
-@@ -173,12 +173,12 @@ int rv_get_task_monitor_slot(void)
+         # first try if we are running in the kernel tree root
+@@ -109,6 +90,16 @@ class dot2k(Dot2c):
+         fd.close()
+         return content
 =20
- 	lockdep_assert_held(&rv_interface_lock);
++    def _read_template_file(self, file):
++        try:
++            path =3D os.path.join(self.abs_template_dir, file)
++            return self.__read_file(path)
++        except Exception:
++            # Specific template file not found. Try the generic template f=
+ile in the template/
++            # directory, which is one level up
++            path =3D os.path.join(self.abs_template_dir, "..", file)
++            return self.__read_file(path)
++
+     def fill_monitor_type(self):
+         return self.monitor_type.upper()
 =20
--	if (task_monitor_count =3D=3D RV_PER_TASK_MONITORS)
-+	if (task_monitor_count =3D=3D CONFIG_RV_PER_TASK_MONITORS)
- 		return -EBUSY;
-=20
- 	task_monitor_count++;
-=20
--	for (i =3D 0; i < RV_PER_TASK_MONITORS; i++) {
-+	for (i =3D 0; i < CONFIG_RV_PER_TASK_MONITORS; i++) {
- 		if (task_monitor_slots[i] =3D=3D false) {
- 			task_monitor_slots[i] =3D true;
- 			return i;
-@@ -194,7 +194,7 @@ void rv_put_task_monitor_slot(int slot)
- {
- 	lockdep_assert_held(&rv_interface_lock);
-=20
--	if (slot < 0 || slot >=3D RV_PER_TASK_MONITORS) {
-+	if (slot < 0 || slot >=3D CONFIG_RV_PER_TASK_MONITORS) {
- 		WARN_ONCE(1, "RV releasing an invalid slot!: %d\n", slot);
- 		return;
- 	}
+diff --git a/tools/verification/rvgen/dot2k_templates/Kconfig b/tools/verif=
+ication/rvgen/rvgen/templates/Kconfig
+similarity index 100%
+rename from tools/verification/rvgen/dot2k_templates/Kconfig
+rename to tools/verification/rvgen/rvgen/templates/Kconfig
+diff --git a/tools/verification/rvgen/dot2k_templates/Kconfig_container b/t=
+ools/verification/rvgen/rvgen/templates/container/Kconfig
+similarity index 100%
+rename from tools/verification/rvgen/dot2k_templates/Kconfig_container
+rename to tools/verification/rvgen/rvgen/templates/container/Kconfig
+diff --git a/tools/verification/rvgen/dot2k_templates/main_container.c b/to=
+ols/verification/rvgen/rvgen/templates/container/main.c
+similarity index 100%
+rename from tools/verification/rvgen/dot2k_templates/main_container.c
+rename to tools/verification/rvgen/rvgen/templates/container/main.c
+diff --git a/tools/verification/rvgen/dot2k_templates/main_container.h b/to=
+ols/verification/rvgen/rvgen/templates/container/main.h
+similarity index 100%
+rename from tools/verification/rvgen/dot2k_templates/main_container.h
+rename to tools/verification/rvgen/rvgen/templates/container/main.h
+diff --git a/tools/verification/rvgen/dot2k_templates/main.c b/tools/verifi=
+cation/rvgen/rvgen/templates/dot2k/main.c
+similarity index 100%
+rename from tools/verification/rvgen/dot2k_templates/main.c
+rename to tools/verification/rvgen/rvgen/templates/dot2k/main.c
+diff --git a/tools/verification/rvgen/dot2k_templates/trace.h b/tools/verif=
+ication/rvgen/rvgen/templates/dot2k/trace.h
+similarity index 100%
+rename from tools/verification/rvgen/dot2k_templates/trace.h
+rename to tools/verification/rvgen/rvgen/templates/dot2k/trace.h
 --=20
 2.39.5
 
