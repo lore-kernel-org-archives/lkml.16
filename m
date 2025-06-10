@@ -1,270 +1,230 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B606328CF60
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 09:14:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF44280A52
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 09:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749546862; cv=none; b=a0405dijHeyCS+yzLK+ToOfbpIWtKWiWLYx1dH/WYAg1TshHJfp+CoSZ3E4zq9bzLi3lUzKt+gLt2Gg6OghCBE8QX8grZw1LqIBpQjzY/BlyLpzVeCGydSxJwZsZEsWP8UWstrhi/va71SfpmjjCrUAhFrfvXS2v15WWUJ4GitA=
+	t=1749546905; cv=none; b=Gx6IV8pXXp1wtyedRaLkmKdz/wbNfMvStknVCV+z4sYwbnJHCyQ7IRQGcMPp7VAcE6QQyH+E7N++saB/6WzOdtulzeS1q+vua1I7ZxYHrgKZLMhAWowiCj/qJ5w8ZwGJ0N7egK8m/SEahZhVJW8HW5lNPym2odRGvGIeQWxMxVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749546862; c=relaxed/simple;
-	bh=euV+fbYXNTbYMl4eJVb4KK0RriCHNxifXVblrf9rQ20=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Pj0ZTRCbeNgGmztesYLuQvZd9AJwvyHhoB7KZuKQzcPxEd1CH1R/j5V6Xj0CL3S/Q6C/SF6eUI6+bDx7O2ORwRCbGavsfkAAWKqN7UsI3VwB6vealxDi6xH9SfyOsAjQh2oKzj9QPHXcQKuXZWYLtcRb/G/CvprQv71XgMWF8ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=O4ZgTby1; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="O4ZgTby1"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55A8fL1g017716
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 09:14:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=Nk+S4I0TlH2
-	z4qmWoHPeH+Psft3DzglIZdxip0XMeN4=; b=O4ZgTby1v4QYeaY5EhV/Dd34Wk1
-	js7nNev59Imtwd6iJxpmJ8o/tRsBPGai++SeTGVR3cRX/s+7ZZY+QL+r+yclVOZM
-	4AmS5Te677kWH8TEnpn42kVt8paOMzlGAzDpc5G+4z/5pX/uc2j+vX2irLhsVtub
-	NFzf+1E2wbqiQesZyZnQ8eYDaRyuYBKo8lT6791ZBd8t9WYkgIUciXSoxpxccjCq
-	4ZqtMur5b/w+Xf6sRjlGRwfFklPo8e5wY21xH97F6JvMQU+tA4oZo9IksN/cT0C0
-	55OnPUMgYmvYDaG98bR5fPGYI7uGUnHlDFjwITYSYwG84r11oWy/q8M8PjQ==
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4766mchjgg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 09:14:19 +0000 (GMT)
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-3122368d82bso8127705a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 02:14:19 -0700 (PDT)
+	s=arc-20240116; t=1749546905; c=relaxed/simple;
+	bh=P6LhM9/l0rs9DQVKYhhQ2tbIg6uzs/sL4IyI1kUMnKw=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=anohbf+Js5k3M1Up0bejJLzP4seNI2snZx7ymkNb8ag7NdATFnZI4HvEEJSZLzsuEaumq3Y6zSAv2/JNAH5nyjATg/uqh+Ui7RYlNCzDeHN74Q9mhtGOss3NCOHeCn0/47IcXWLmJVQwRwKsWGGQ5Ixzus/3TBOoN+DnYsYz+7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-86cff1087deso1044131739f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 02:15:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749546858; x=1750151658;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Nk+S4I0TlH2z4qmWoHPeH+Psft3DzglIZdxip0XMeN4=;
-        b=hZw+G/xf3v/kDzEQdlMhOASl+XPbuloIsVbMo+NTMGAk/Juf6SOEWFxWqcA6KVc3Xd
-         cy7ZBrhje36i605UVT9E1XTAefvmizepWaJkzEP6AHe6Clnj6rL1pyLThhLXPFZxyBZV
-         XcjFXji3IveCDweJlgr+SwP6WRlfBL2yoP39bviCEDv4BQwlKnf0S/B/jsvaYJoUjlBN
-         ZznsdVwA3cW9li2WUE+ZEKTVOy0hkKA2HcQqTd7ez6r0GQiXl+wQQploXzn83bbpYFyh
-         i7crXw1kp/Uiw/hhLK0P8kCieGJLUyS66A9/lensAc4kySb9Q0JUdJAUUgSE7DwGFM5P
-         FeRA==
-X-Forwarded-Encrypted: i=1; AJvYcCXzTLZKqVupVrqbFQ8kHGZ1wdCgxfEKjrURAJUj5xJtMCcYq5pIfq3Yx/WZnijdgyd3WX4dNUHSv/i3ksg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8yiUzvc/42Ul3u12Lt7lAowglvU0enQZVYX4nbEDMeCyAf/71
-	hoAenKk7kNqzrUWgGBOdKG642+BlMm7A738Nbm0Wil5JFd043AZDRefDQGPLaER6ZlT0AHoUG/m
-	TFwAGiEAuk4CTTH5f2d5nyCbK9P4aA1r0dTSJyQcrL3uwsCx2ah0VWjMwgIh36VWlnu4=
-X-Gm-Gg: ASbGncv5jWUFwo69WVa77gj/rC0MmStXnCMb8AUfe2DOMsiadlWbR8quiEWh002Cmmc
-	5zBln2wfBksdXp2m59Yd5U8QOaLYaEJKPr3r1Xvl/y8i4cHdxJCaSvRXVhR21aKV1e5kPhkbbjV
-	2mOF1XhQCE05lIJZg3xi3av20YzjxKkjgMf33UL9i8jwzRWwwXLFn9d7qMPgJEhlen8/O8/3JT2
-	i6/WmJLCda//HCpCB2Nra2BvqssgbQvNTNZaHFVtmgrlnhe8rkw6L63io/ZBQEHHSJOVGk6nvem
-	5yRlKAFgM9AUd3QsIl9/FdLVHHuPnMoSpGBJszSTYgyDwAv979RpVCnjO1Iz
-X-Received: by 2002:a17:90b:3b92:b0:311:a4d6:30f8 with SMTP id 98e67ed59e1d1-313472ec763mr22830132a91.13.1749546857950;
-        Tue, 10 Jun 2025 02:14:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IELox5dA0ziiallWsp271HuMBN3cbaKKMWH6TLzvTwcc9o/ILNrURvqAD8FhsIAGvrwut4eEw==
-X-Received: by 2002:a17:90b:3b92:b0:311:a4d6:30f8 with SMTP id 98e67ed59e1d1-313472ec763mr22830082a91.13.1749546857459;
-        Tue, 10 Jun 2025 02:14:17 -0700 (PDT)
-Received: from hu-kriskura-hyd.qualcomm.com ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31349fc3e72sm6913550a91.31.2025.06.10.02.14.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 02:14:17 -0700 (PDT)
-From: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
-Subject: [PATCH v2 4/4] usb: dwc3: qcom: Remove extcon functionality from glue
-Date: Tue, 10 Jun 2025 14:43:57 +0530
-Message-Id: <20250610091357.2983085-5-krishna.kurapati@oss.qualcomm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250610091357.2983085-1-krishna.kurapati@oss.qualcomm.com>
-References: <20250610091357.2983085-1-krishna.kurapati@oss.qualcomm.com>
+        d=1e100.net; s=20230601; t=1749546903; x=1750151703;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oQSk6w2yBl8lFt0UEzey/IqRcxZcVfuFyzMQckSyiYw=;
+        b=KKWk/iHV/ClZMCNAqyaAwCKWTuIqZn8WlEjtAhS6tIoTgutV1BHJbIfeguNj5/ifn+
+         VxTEuq7B+CE25PsnnCUbQ0EuT0pHoGGtYgdycmtYbA39sk4Qg4GVhs26tRLqSVutcrGz
+         ZNqF0TvxOwUL7J4jDdmGRM9GmBYCRp3+fZoIJsYIxiCFb9LUjLrrMbaN8YTiGa8FzD6l
+         jaCQZqbwnd0M5vSK8J9kWTqGE5WfSE/MuK83KebzSPkh5JsJOMYsBuLENrMF/3mf9Aw+
+         zwqbKAVxxZMqUQrJ6jjtxkKC8ppeJx4hKjIMNCUXO1YZSKb6hE6TbRMK9MDiwvEXy91L
+         NLYg==
+X-Forwarded-Encrypted: i=1; AJvYcCVHEHj9W9EEcXl2OxOwfeKK49AwlSTRCI5kg2sgCCqInUAaMTqnG57638Q7MekD7m8+Na9c1tz2xU422lA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjH1kzAfGF7upjayzvPqmvgDQ/XPI8WmTRr73tSbg7kY7JRD13
+	PlWfv4Uw2A9SZMRamq05wb5mZrWORVzDzMcd1HN5cg/bJ2or3Xwp9XgORhmunVNzm/eCOsAN9Th
+	luYRNipQ4LoY8oOOsftlia3SPCJ/mNmyYyywJI29VOJkUfbYboYaQd1OTNEI=
+X-Google-Smtp-Source: AGHT+IHZjWfbdccPS9aJrzEtv4WuRG9ttq28Gf3X+3iV8yTYC6318LP5y13VYe41Nla7vkpK/i9OWUVCvGSXaRfvbgr3MjdFfv5C
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=T8KMT+KQ c=1 sm=1 tr=0 ts=6847f76b cx=c_pps
- a=RP+M6JBNLl+fLTcSJhASfg==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=HsaRtseu1FE5unmruSMA:9
- a=iS9zxrgQBfv6-_F4QbHw:22
-X-Proofpoint-ORIG-GUID: f6K1FklQACTJ4l8dBUTGoRVu7RluC2Bp
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDA3MCBTYWx0ZWRfXwCkaRm1+0bYj
- WbSErJhjs5WzCpqvVJghYwNMu2sO5RgwJ1K5bk0GIcb1h0fjvnzy3dTM7LgijT7hU4c7cO/ntEX
- U8X93fZNhpd90hRuz8SGYCREc/YWNkUWlaReo5/zbEiOO72CUAOyLV0bxzkGNPSywt8190b6vJJ
- zZ+MNObBtvYtYPA2DUghxHlfBmWveL6XVgvAJAkFYA10xF97UY3d/A9P/z0ighZDCneFiVMHRwc
- LC7J8/m/XQcOpA5sGRfzBGTyE/+tD47AtQoeYhUign1srUiKVu0n7szpf0v9vNWOB/WYkVAc7g0
- o9RDtePU+HldbI8WBl27oCOYMI9sym6UZdSBHBvPZINx/zdGUxRvcHbTPnzyAszjzk/94icpeM+
- w9in136niBqowJ6c013I/+9opWrwEulfxKCMj1nmeP0wTgAYR7WYj8AYK30EN7UB6fWJlrY2
-X-Proofpoint-GUID: f6K1FklQACTJ4l8dBUTGoRVu7RluC2Bp
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-10_03,2025-06-09_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 bulkscore=0 clxscore=1015 malwarescore=0 impostorscore=0
- spamscore=0 priorityscore=1501 lowpriorityscore=0 mlxscore=0 phishscore=0
- mlxlogscore=999 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506100070
+X-Received: by 2002:a05:6e02:4513:b0:3dd:d746:25eb with SMTP id
+ e9e14a558f8ab-3ddd74626f0mr90927555ab.16.1749546903072; Tue, 10 Jun 2025
+ 02:15:03 -0700 (PDT)
+Date: Tue, 10 Jun 2025 02:15:03 -0700
+In-Reply-To: <20250610085513.1045-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6847f797.a70a0220.27c366.0062.GAE@google.com>
+Subject: Re: [syzbot] [hams?] possible deadlock in nr_rt_device_down (3)
+From: syzbot <syzbot+ccdfb85a561b973219c7@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Deprecate usage of extcon functionality from the glue driver. Now
-that the glue driver is a flattened implementation, all existing
-DTs would eventually move to new bindings. While doing so let them
-make use of role-switch/ typec frameworks to provide role data
-rather than using extcon.
+Hello,
 
-On upstream, summary of targets/platforms using extcon is as follows:
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+KASAN: slab-use-after-free Write in nr_neigh_put
 
-1. MSM8916 and MSM8939 use Chipidea controller, hence the changes have no
-effect on them.
+==================================================================
+BUG: KASAN: slab-use-after-free in instrument_atomic_read_write include/linux/instrumented.h:96 [inline]
+BUG: KASAN: slab-use-after-free in atomic_fetch_sub_release include/linux/atomic/atomic-instrumented.h:400 [inline]
+BUG: KASAN: slab-use-after-free in __refcount_sub_and_test include/linux/refcount.h:389 [inline]
+BUG: KASAN: slab-use-after-free in __refcount_dec_and_test include/linux/refcount.h:432 [inline]
+BUG: KASAN: slab-use-after-free in refcount_dec_and_test include/linux/refcount.h:450 [inline]
+BUG: KASAN: slab-use-after-free in nr_neigh_put+0x21/0x170 include/net/netrom.h:139
+Write of size 4 at addr ffff8880532bfdbc by task syz.2.169/6376
 
-2. Of the other extcon users, most of them use "linux,extcon-usb-gpio"
-driver which relies on id/vbus gpios to inform role changes. This can be
-transitioned to role switch based driver (usb-conn-gpio) while flattening
-those platforms to move away from extcon and rely on role
-switching.
+CPU: 0 UID: 0 PID: 6376 Comm: syz.2.169 Not tainted 6.16.0-rc1-syzkaller-gf09079bd04a9-dirty #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0xd2/0x2b0 mm/kasan/report.c:521
+ kasan_report+0x118/0x150 mm/kasan/report.c:634
+ check_region_inline mm/kasan/generic.c:-1 [inline]
+ kasan_check_range+0x2b0/0x2c0 mm/kasan/generic.c:189
+ instrument_atomic_read_write include/linux/instrumented.h:96 [inline]
+ atomic_fetch_sub_release include/linux/atomic/atomic-instrumented.h:400 [inline]
+ __refcount_sub_and_test include/linux/refcount.h:389 [inline]
+ __refcount_dec_and_test include/linux/refcount.h:432 [inline]
+ refcount_dec_and_test include/linux/refcount.h:450 [inline]
+ nr_neigh_put+0x21/0x170 include/net/netrom.h:139
+ nr_dec_obs net/netrom/nr_route.c:470 [inline]
+ nr_rt_ioctl+0x450/0xd50 net/netrom/nr_route.c:692
+ sock_do_ioctl+0xd9/0x300 net/socket.c:1190
+ sock_ioctl+0x576/0x790 net/socket.c:1311
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:907 [inline]
+ __se_sys_ioctl+0xf9/0x170 fs/ioctl.c:893
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f409d98e169
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f409e7ce038 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007f409dbb5fa0 RCX: 00007f409d98e169
+RDX: 0000000000000000 RSI: 00000000000089e2 RDI: 0000000000000004
+RBP: 00007f409da10a68 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007f409dbb5fa0 R15: 00007ffd35252ff8
+ </TASK>
 
-3. The one target that uses dwc3 controller and extcon and is not based
-on reading gpios is "arch/arm64/boot/dts/qcom/msm8996-xiaomi-common.dtsi".
-This platform uses TI chip to provide extcon. If usb on this platform is
-being flattneed, then effort should be put in to define a usb-c-connector
-device in DT and make use of role switch functionality in TUSB320L driver.
+Allocated by task 6376:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3e/0x80 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+ __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:394
+ kasan_kmalloc include/linux/kasan.h:260 [inline]
+ __kmalloc_cache_noprof+0x230/0x3d0 mm/slub.c:4359
+ kmalloc_noprof include/linux/slab.h:905 [inline]
+ nr_add_node+0x7f8/0x2570 net/netrom/nr_route.c:146
+ nr_rt_ioctl+0xc15/0xd50 net/netrom/nr_route.c:651
+ sock_do_ioctl+0xd9/0x300 net/socket.c:1190
+ sock_ioctl+0x576/0x790 net/socket.c:1311
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:907 [inline]
+ __se_sys_ioctl+0xf9/0x170 fs/ioctl.c:893
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-Signed-off-by: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
----
- drivers/usb/dwc3/dwc3-qcom.c | 91 ------------------------------------
- 1 file changed, 91 deletions(-)
+Freed by task 6376:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3e/0x80 mm/kasan/common.c:68
+ kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:576
+ poison_slab_object mm/kasan/common.c:247 [inline]
+ __kasan_slab_free+0x62/0x70 mm/kasan/common.c:264
+ kasan_slab_free include/linux/kasan.h:233 [inline]
+ slab_free_hook mm/slub.c:2381 [inline]
+ slab_free mm/slub.c:4643 [inline]
+ kfree+0x18e/0x440 mm/slub.c:4842
+ __nr_remove_neigh net/netrom/nr_route.c:299 [inline]
+ nr_remove_neigh net/netrom/nr_route.c:308 [inline]
+ nr_dec_obs net/netrom/nr_route.c:469 [inline]
+ nr_rt_ioctl+0x43c/0xd50 net/netrom/nr_route.c:692
+ sock_do_ioctl+0xd9/0x300 net/socket.c:1190
+ sock_ioctl+0x576/0x790 net/socket.c:1311
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:907 [inline]
+ __se_sys_ioctl+0xf9/0x170 fs/ioctl.c:893
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-index 17bbd5a06c08..1a73a7797d41 100644
---- a/drivers/usb/dwc3/dwc3-qcom.c
-+++ b/drivers/usb/dwc3/dwc3-qcom.c
-@@ -79,11 +79,6 @@ struct dwc3_qcom {
- 	struct dwc3_qcom_port	ports[DWC3_QCOM_MAX_PORTS];
- 	u8			num_ports;
- 
--	struct extcon_dev	*edev;
--	struct extcon_dev	*host_edev;
--	struct notifier_block	vbus_nb;
--	struct notifier_block	host_nb;
--
- 	enum usb_dr_mode	mode;
- 	bool			is_suspended;
- 	bool			pm_suspended;
-@@ -125,11 +120,6 @@ static inline void dwc3_qcom_clrbits(void __iomem *base, u32 offset, u32 val)
- 	readl(base + offset);
- }
- 
--/*
-- * TODO: Validate that the in-core extcon support is functional, and drop
-- * extcon handling from the glue. Make in-core extcon invoke
-- * dwc3_qcom_vbus_override_enable()
-- */
- static void dwc3_qcom_vbus_override_enable(struct dwc3_qcom *qcom, bool enable)
- {
- 	if (enable) {
-@@ -145,80 +135,6 @@ static void dwc3_qcom_vbus_override_enable(struct dwc3_qcom *qcom, bool enable)
- 	}
- }
- 
--static int dwc3_qcom_vbus_notifier(struct notifier_block *nb,
--				   unsigned long event, void *ptr)
--{
--	struct dwc3_qcom *qcom = container_of(nb, struct dwc3_qcom, vbus_nb);
--
--	/* enable vbus override for device mode */
--	dwc3_qcom_vbus_override_enable(qcom, event);
--	qcom->mode = event ? USB_DR_MODE_PERIPHERAL : USB_DR_MODE_HOST;
--
--	return NOTIFY_DONE;
--}
--
--static int dwc3_qcom_host_notifier(struct notifier_block *nb,
--				   unsigned long event, void *ptr)
--{
--	struct dwc3_qcom *qcom = container_of(nb, struct dwc3_qcom, host_nb);
--
--	/* disable vbus override in host mode */
--	dwc3_qcom_vbus_override_enable(qcom, !event);
--	qcom->mode = event ? USB_DR_MODE_HOST : USB_DR_MODE_PERIPHERAL;
--
--	return NOTIFY_DONE;
--}
--
--static int dwc3_qcom_register_extcon(struct dwc3_qcom *qcom)
--{
--	struct device		*dev = qcom->dev;
--	struct extcon_dev	*host_edev;
--	int			ret;
--
--	if (!of_property_present(dev->of_node, "extcon"))
--		return 0;
--
--	qcom->edev = extcon_get_edev_by_phandle(dev, 0);
--	if (IS_ERR(qcom->edev))
--		return dev_err_probe(dev, PTR_ERR(qcom->edev),
--				     "Failed to get extcon\n");
--
--	qcom->vbus_nb.notifier_call = dwc3_qcom_vbus_notifier;
--
--	qcom->host_edev = extcon_get_edev_by_phandle(dev, 1);
--	if (IS_ERR(qcom->host_edev))
--		qcom->host_edev = NULL;
--
--	ret = devm_extcon_register_notifier(dev, qcom->edev, EXTCON_USB,
--					    &qcom->vbus_nb);
--	if (ret < 0) {
--		dev_err(dev, "VBUS notifier register failed\n");
--		return ret;
--	}
--
--	if (qcom->host_edev)
--		host_edev = qcom->host_edev;
--	else
--		host_edev = qcom->edev;
--
--	qcom->host_nb.notifier_call = dwc3_qcom_host_notifier;
--	ret = devm_extcon_register_notifier(dev, host_edev, EXTCON_USB_HOST,
--					    &qcom->host_nb);
--	if (ret < 0) {
--		dev_err(dev, "Host notifier register failed\n");
--		return ret;
--	}
--
--	/* Update initial VBUS override based on extcon state */
--	if (extcon_get_state(qcom->edev, EXTCON_USB) ||
--	    !extcon_get_state(host_edev, EXTCON_USB_HOST))
--		dwc3_qcom_vbus_notifier(&qcom->vbus_nb, true, qcom->edev);
--	else
--		dwc3_qcom_vbus_notifier(&qcom->vbus_nb, false, qcom->edev);
--
--	return 0;
--}
--
- static int dwc3_qcom_interconnect_enable(struct dwc3_qcom *qcom)
- {
- 	int ret;
-@@ -848,11 +764,6 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto remove_core;
- 
--	/* register extcon to override sw_vbus on Vbus change later */
--	ret = dwc3_qcom_register_extcon(qcom);
--	if (ret)
--		goto interconnect_exit;
--
- 	wakeup_source = of_property_read_bool(dev->of_node, "wakeup-source");
- 	device_init_wakeup(&pdev->dev, wakeup_source);
- 
-@@ -860,8 +771,6 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
- 
- 	return 0;
- 
--interconnect_exit:
--	dwc3_qcom_interconnect_exit(qcom);
- remove_core:
- 	dwc3_core_remove(&qcom->dwc);
- unregister_notify:
--- 
-2.34.1
+The buggy address belongs to the object at ffff8880532bfd80
+ which belongs to the cache kmalloc-64 of size 64
+The buggy address is located 60 bytes inside of
+ freed 64-byte region [ffff8880532bfd80, ffff8880532bfdc0)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x532bf
+anon flags: 0x4fff00000000000(node=1|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 04fff00000000000 ffff88801a4418c0 0000000000000000 dead000000000001
+raw: 0000000000000000 0000000000200020 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x52c40(GFP_NOFS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP), pid 5661, tgid 5661 (udevd), ts 182084382126, free_ts 182082569600
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x240/0x2a0 mm/page_alloc.c:1704
+ prep_new_page mm/page_alloc.c:1712 [inline]
+ get_page_from_freelist+0x21e4/0x22c0 mm/page_alloc.c:3669
+ __alloc_frozen_pages_noprof+0x181/0x370 mm/page_alloc.c:4959
+ alloc_pages_mpol+0x232/0x4a0 mm/mempolicy.c:2419
+ alloc_slab_page mm/slub.c:2451 [inline]
+ allocate_slab+0x8a/0x3b0 mm/slub.c:2619
+ new_slab mm/slub.c:2673 [inline]
+ ___slab_alloc+0xbfc/0x1480 mm/slub.c:3859
+ __slab_alloc mm/slub.c:3949 [inline]
+ __slab_alloc_node mm/slub.c:4024 [inline]
+ slab_alloc_node mm/slub.c:4185 [inline]
+ __do_kmalloc_node mm/slub.c:4327 [inline]
+ __kmalloc_noprof+0x305/0x4f0 mm/slub.c:4340
+ kmalloc_noprof include/linux/slab.h:909 [inline]
+ kzalloc_noprof include/linux/slab.h:1039 [inline]
+ tomoyo_encode2 security/tomoyo/realpath.c:45 [inline]
+ tomoyo_encode+0x28b/0x550 security/tomoyo/realpath.c:80
+ tomoyo_realpath_from_path+0x58d/0x5d0 security/tomoyo/realpath.c:283
+ tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
+ tomoyo_path_perm+0x213/0x4b0 security/tomoyo/file.c:822
+ security_inode_getattr+0x12f/0x330 security/security.c:2377
+ vfs_getattr fs/stat.c:259 [inline]
+ vfs_fstat fs/stat.c:281 [inline]
+ __do_sys_newfstat fs/stat.c:555 [inline]
+ __se_sys_newfstat fs/stat.c:550 [inline]
+ __x64_sys_newfstat+0xfc/0x200 fs/stat.c:550
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+page last free pid 6053 tgid 6053 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1248 [inline]
+ __free_frozen_pages+0xc71/0xe70 mm/page_alloc.c:2706
+ tlb_batch_list_free mm/mmu_gather.c:159 [inline]
+ tlb_finish_mmu+0x112/0x1d0 mm/mmu_gather.c:500
+ exit_mmap+0x44c/0xb50 mm/mmap.c:1297
+ __mmput+0x118/0x420 kernel/fork.c:1121
+ exit_mm+0x1da/0x2c0 kernel/exit.c:581
+ do_exit+0x640/0x22e0 kernel/exit.c:943
+ do_group_exit+0x21c/0x2d0 kernel/exit.c:1104
+ __do_sys_exit_group kernel/exit.c:1115 [inline]
+ __se_sys_exit_group kernel/exit.c:1113 [inline]
+ __x64_sys_exit_group+0x3f/0x40 kernel/exit.c:1113
+ x64_sys_call+0x21ba/0x21c0 arch/x86/include/generated/asm/syscalls_64.h:232
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Memory state around the buggy address:
+ ffff8880532bfc80: 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc fc
+ ffff8880532bfd00: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+>ffff8880532bfd80: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+                                        ^
+ ffff8880532bfe00: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+ ffff8880532bfe80: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+==================================================================
+
+
+Tested on:
+
+commit:         f09079bd Merge tag 'powerpc-6.16-2' of git://git.kerne..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=146efa0c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5080a302f3378422
+dashboard link: https://syzkaller.appspot.com/bug?extid=ccdfb85a561b973219c7
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=102e69d4580000
 
