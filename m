@@ -1,129 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08E5D27FD56;
-	Tue, 10 Jun 2025 09:32:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2458C28B40D;
+	Tue, 10 Jun 2025 09:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749547926; cv=none; b=e/UNGl0JbiKuizNPzeqtDvjpWLOm26lFnBZK8WgRLRSy6ALjXpr5Ptf6yg159CnRzZbgPMM5hcSQHcZTEYnbRlI9qlICKdcMsaAZIYVbEkB0b+fhyI349Hq/ay02IYahodN9wNyG8mfTF800KmiEHqyjWiW2cJFt6lsLsVAiu74=
+	t=1749547929; cv=none; b=kk/Fy2ZK6n69Z1Q3/mrtqXlgKWp7p15hGnfmYke25ePMj8xB+DbceKHF+5lXKtGA+d6vNSjTVfui5XLfegVlm9veOTn3wZ04t3P+2q1+klv1V3hvczf5x0t8NfaciF3DcyVBfR+FqCrROnpkdjIGyRlqBJbcJNycERtSsLRH0UY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749547926; c=relaxed/simple;
-	bh=UIVDYVCfkXYdQKg+JzIWbx5aKZWOpeiPIbE1ZtnzTh0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=haqe/7ANCY/4hH7y+O9+2SqL4VCMdnJDwwyPqqrvarCo/XlP2TeChfchoi+/ksUz3v6cavheO3Ze1IqWYbNlCC4xVMzKT1pwMOZn4t7H1uCIhNF0krR6k6b0/FyoavlIRCAtHOWMR4GDJM20dPsydF8fBX7Rmgtj2pQDdXl+rag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ODPsLHWn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749547929; c=relaxed/simple;
+	bh=Mxu+F7oYs9rjhQqNFX6d81S4isBAqb9Rqh/JNc/9YqY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=rWhaebELnf3kZqYlj6CmMImOEMDWNnkm7OHsG9rPDDXah6TwBHi2pFV3KB3vZsRnE0h4DzxViUuK2bdrQN/+fxCy48VG6f2geauxxHvQeAfFk2smyqq6K4FaV/QxfEigi8d9Rqq3VBaXIxh3+Id/nxEDvi8aI2/NAihqNHRYOE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=wPwT8JYn; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ODPsLHWn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36A2DC4CEEF;
-	Tue, 10 Jun 2025 09:32:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749547925;
-	bh=UIVDYVCfkXYdQKg+JzIWbx5aKZWOpeiPIbE1ZtnzTh0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ODPsLHWnEGPj51M8X+WShetoHBGztO9IuHayMjIiqnA2/05Y8GZJrHm0J5htsVVgC
-	 rZ6kBVNz7NqYeHiZog9F5RZ2G56mKvM1Ey49nDO8+/x1Zq1PjeiXR6MSL6YzoYCRRF
-	 gqTs6W14flVOWO2prg69erRMmNajgMvxAL4W1vmNk0fm+0uN+BsNS+RowBG+4KGA7P
-	 aVYIsgIIgkZUCJr5dvK+afWgAnO8cBsiZkSDKHEMksAYCKaxuRQRxoDkQ4okrqewnk
-	 yhBEqy8WTy7C4nhpUHGNunRYxaqITPhl6kwYFsOACInMuRGYGdK/gr+SAeTl7bOZcI
-	 0PSrHLmoRTluw==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Hugues Fruchet <hugues.fruchet@foss.st.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Peter Griffin <peter.griffin@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] st-delta: avoid excessive stack usage
-Date: Tue, 10 Jun 2025 11:31:56 +0200
-Message-Id: <20250610093201.2645325-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="wPwT8JYn"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55A5eoUF029247;
+	Tue, 10 Jun 2025 11:32:00 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	QqzwGX7wP5jq59PpJTek9NUkOQyF6n6c9rZCQTs99RQ=; b=wPwT8JYnkRbt7i/x
+	LVBF5rNE4g2xIbOeTDHzDjFNdCg5BzxoxOwjNPBmllV0082rSzfd4ydG4Qfq/lIn
+	kA43jkuXQ0RFQQrc7eJ35WAK24Kn3fhIxz/gN9zEJTeV81lhj0xV42UBM45PqofS
+	tMQ6O1lDFzg7R+BmvIa6HbGSfVd+P7DtE51ij55wCcIu3Hxew2Oju+AgaiCYBUKp
+	KMbj36bXrmSdZChOfcxyhFbQ0RbCzo0teZ+CwSzx8SDWxbE2SjfavYXexiXEjc0U
+	x7dBt7zqnLzPmH4AShDEsk6CNWmAudnx5U5MeCJhltnOh6xMwcAgYWeLM5pubqce
+	rYTU0A==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474y051mw8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Jun 2025 11:32:00 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A8F4540047;
+	Tue, 10 Jun 2025 11:31:22 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 26A0EAC6D9D;
+	Tue, 10 Jun 2025 11:31:06 +0200 (CEST)
+Received: from [10.130.73.167] (10.130.73.167) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Jun
+ 2025 11:31:05 +0200
+Message-ID: <55fd5868-0481-42e1-b56b-80f59d724364@foss.st.com>
+Date: Tue, 10 Jun 2025 11:31:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] media: i2c: vd55g1: Miscellaneous fixes
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+CC: Sylvain Petinot <sylvain.petinot@foss.st.com>,
+        Mauro Carvalho Chehab
+	<mchehab@kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250609-fix_vd55g1-v1-0-594f1134e3fb@foss.st.com>
+ <aEf0KcapklkWpBFD@kekkonen.localdomain>
+Content-Language: en-US
+From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+In-Reply-To: <aEf0KcapklkWpBFD@kekkonen.localdomain>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-10_03,2025-06-09_02,2025-03-28_01
 
-From: Arnd Bergmann <arnd@arndb.de>
+Hi Sakari,
 
-Building with a reduced stack warning limit shows that delta_mjpeg_decode()
-copies a giant structure to the stack each time but only uses three of
-its members:
+Thank you for your review.
 
-drivers/media/platform/st/sti/delta/delta-mjpeg-dec.c: In function 'delta_mjpeg_decode':
-drivers/media/platform/st/sti/delta/delta-mjpeg-dec.c:427:1: error: the frame size of 1296 bytes is larger than 1280 bytes [-Werror=frame-larger-than=]
+On 6/10/25 11:00, Sakari Ailus wrote:
+> Hi Benjamin,
+> 
+> Thanks for the set.
+> 
+> On Mon, Jun 09, 2025 at 03:46:20PM +0200, Benjamin Mugnier wrote:
+>> This series provides small fixes and style improvements to the vd55g1
+>> driver.
+>> Nothing fancy really, just to keep everything up to date.
+> 
+> On all (or at least more than one) patches:
+> 
+> - please add a proper commit message beyond the subject line and
+> 
+> - properly wrap the commit paragraphs (up to 75 characters per line, e.g.
+>   the above paragraph would fit on two lines).
+> 
 
-Open-code the passing of the structure members that are actually used here.
+Yes, commit descriptions have been added in v2. Media-ci rightfully
+yelled at me for that ;)
 
-Fixes: 433ff5b4a29b ("[media] st-delta: add mjpeg support")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- .../platform/st/sti/delta/delta-mjpeg-dec.c   | 20 ++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+I don't see any commit paragraphs being above 75 characters, my vim
+seems to be properly configured.
+Do you mean the commit header too perhaps ? For example "media: i2c:
+vd55g1: Miscellaneous fixes".
 
-diff --git a/drivers/media/platform/st/sti/delta/delta-mjpeg-dec.c b/drivers/media/platform/st/sti/delta/delta-mjpeg-dec.c
-index 0533d4a083d2..a078f1107300 100644
---- a/drivers/media/platform/st/sti/delta/delta-mjpeg-dec.c
-+++ b/drivers/media/platform/st/sti/delta/delta-mjpeg-dec.c
-@@ -239,7 +239,7 @@ static int delta_mjpeg_ipc_open(struct delta_ctx *pctx)
- 	return 0;
- }
- 
--static int delta_mjpeg_ipc_decode(struct delta_ctx *pctx, struct delta_au *au)
-+static int delta_mjpeg_ipc_decode(struct delta_ctx *pctx, dma_addr_t pstart, dma_addr_t pend)
- {
- 	struct delta_dev *delta = pctx->dev;
- 	struct delta_mjpeg_ctx *ctx = to_ctx(pctx);
-@@ -256,8 +256,8 @@ static int delta_mjpeg_ipc_decode(struct delta_ctx *pctx, struct delta_au *au)
- 
- 	memset(params, 0, sizeof(*params));
- 
--	params->picture_start_addr_p = (u32)(au->paddr);
--	params->picture_end_addr_p = (u32)(au->paddr + au->size - 1);
-+	params->picture_start_addr_p = pstart;
-+	params->picture_end_addr_p = pend;
- 
- 	/*
- 	 * !WARNING!
-@@ -374,12 +374,14 @@ static int delta_mjpeg_decode(struct delta_ctx *pctx, struct delta_au *pau)
- 	struct delta_dev *delta = pctx->dev;
- 	struct delta_mjpeg_ctx *ctx = to_ctx(pctx);
- 	int ret;
--	struct delta_au au = *pau;
-+	void *au_vaddr = pau->vaddr;
-+	dma_addr_t au_dma = pau->paddr;
-+	size_t au_size = pau->size;
- 	unsigned int data_offset = 0;
- 	struct mjpeg_header *header = &ctx->header_struct;
- 
- 	if (!ctx->header) {
--		ret = delta_mjpeg_read_header(pctx, au.vaddr, au.size,
-+		ret = delta_mjpeg_read_header(pctx, au_vaddr, au_size,
- 					      header, &data_offset);
- 		if (ret) {
- 			pctx->stream_errors++;
-@@ -405,17 +407,17 @@ static int delta_mjpeg_decode(struct delta_ctx *pctx, struct delta_au *pau)
- 			goto err;
- 	}
- 
--	ret = delta_mjpeg_read_header(pctx, au.vaddr, au.size,
-+	ret = delta_mjpeg_read_header(pctx, au_vaddr, au_size,
- 				      ctx->header, &data_offset);
- 	if (ret) {
- 		pctx->stream_errors++;
- 		goto err;
- 	}
- 
--	au.paddr += data_offset;
--	au.vaddr += data_offset;
-+	au_dma += data_offset;
-+	au_vaddr += data_offset;
- 
--	ret = delta_mjpeg_ipc_decode(pctx, &au);
-+	ret = delta_mjpeg_ipc_decode(pctx, au_dma, au_dma + au_size - 1);
- 	if (ret)
- 		goto err;
- 
 -- 
-2.39.5
-
+Regards,
+Benjamin
