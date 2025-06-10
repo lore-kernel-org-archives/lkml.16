@@ -1,102 +1,141 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C97A1624E5;
-	Tue, 10 Jun 2025 02:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50ED419E82A
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 02:08:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749521319; cv=none; b=UAMx6Y4nukDY/BaI3FQtN8TPbxpYR1kAMIpRTHuPIouBFfD8CJQryfvJsVL6Tqdb978eKvwv5jjNTI6sUd0QbkBIRgfjCwwWSb1eH3ZrKS6+vOYDiB5vcxQ8bQzgmvMogjIRj5srMLpjIf3pVywmz//z19yDlhRmugIYsREzylc=
+	t=1749521334; cv=none; b=Y0Jttjv88Ux2kV5IIFil2Gn/WsFzPD5ewoVbwWBLXc2dRUdM/GabEotFLBpwqHRsIMSywjjrnTm3/D6v37u2og3vh3zWSqrb14bl8j4bVseh1yzMUTY0XZq2Tndvi1BW5QXQJkKyWDmsY5a/732jBNfu9k44wop7NFkOps0y3L4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749521319; c=relaxed/simple;
-	bh=pFK1rxrVlId8RG7xg4WdxocrCGY9gGEthLO82ScbDnk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EF0hCDeTgV+0MVANVgSgFllrIciREzoXGkvytOMXFQolxnO31V/Xm5Kfii8RqLEGIyDAM/UogLHcWyu+yLfL64WQr+OcQarQHwifUIAb4lwy8y78dKSVO4T8kAw/Vmy+cATG7puYHdvs6rfO3PLIT0bIzznflgD+BtJMx7rgWLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Iusrr9xo; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1749521334; c=relaxed/simple;
+	bh=sIXSPJxS+G5t42r2AbvUgAZhpvhnMGaM1OyQXh9rwbc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Iaav9Tqv339sL/RxiMRJW1z+MCLZ5RXUYapTMSryJsN7rlWLVQn0Lxa3S0vEyPx3mdtJoQ+gRUHyZoGOjnGq7vHqAIPbFt426OviYKAMGm8U0eUAmXwFfUuvR/XDPked5kVob8vYNDoyDpyFI0R4qhXoRiNGjF0r3kPJLJQx9mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b5Ja7FfO; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Iusrr9xo"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 559FYbDj006885;
-	Tue, 10 Jun 2025 02:08:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=JUyqZBAzWYlfXy6XMTgQSIQERQpzKbL5PVmI8AzaYes=; b=
-	Iusrr9xotH1Jpv/0t0rRODvIcKicZZLjDLTWe1TibUIEaabPkzg0jfArOZyE5Xl5
-	g2mZWfn1BWu9U79I9tzO45SMhP1XQDOm9XDuUOyuv49Y1OYlBCphORxkHtKSq9dG
-	2/jSm6n5V9mpB75jqMVVaiO7kvDOT5WVq8YHnHn5xmu8vThuSI7uIZPacRuzaFhJ
-	Kcfh5F2Yil6HI0eZ2kfWEqVT1ix2cfym+V6QtMI+T1yuOzOLVi/aO43nEf8Flp1V
-	I4sVxZpNsrRscgdiRWSevbNeuAvyM4cwRK50tk7XfcxM3tF30xMk2oU9t5ymCYfF
-	ioakGx3R0teJ8QR2fEaD4g==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4752xjtm6y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 10 Jun 2025 02:08:34 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55A1pR37007367;
-	Tue, 10 Jun 2025 02:08:33 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 474bv7vr06-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 10 Jun 2025 02:08:33 +0000
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55A26ugc001728;
-	Tue, 10 Jun 2025 02:08:31 GMT
-Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 474bv7vquh-1;
-	Tue, 10 Jun 2025 02:08:31 +0000
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-To: James.Bottomley@HansenPartnership.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, longli@microsoft.com,
-        linux-hyperv@vger.kernel.org, wei.liu@kernel.org,
-        haiyangz@microsoft.com, kys@microsoft.com,
-        Dexuan Cui <decui@microsoft.com>
-Cc: "Martin K . Petersen" <martin.petersen@oracle.com>, stable@kernel.org
-Subject: Re: [PATCH] scsi: storvsc: Increase the timeouts to storvsc_timeout
-Date: Mon,  9 Jun 2025 22:07:36 -0400
-Message-ID: <174952124901.1235337.4567244349908648438.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <1749243459-10419-1-git-send-email-decui@microsoft.com>
-References: <1749243459-10419-1-git-send-email-decui@microsoft.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b5Ja7FfO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749521332; x=1781057332;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=sIXSPJxS+G5t42r2AbvUgAZhpvhnMGaM1OyQXh9rwbc=;
+  b=b5Ja7FfOtZZ0taSzZhz/RO+bf+gssMW4O+qz1LrZTJW/tWxjY0WERJ5P
+   A9uLoWgvo/oIyjKcV7tfi+wI5bryhGNw67zk9C8uf8Skzx7nm3LwsBWcd
+   KtJBct3M0jYZCncpysjWhX/GMoZM1n2Md2MdCi/Q+GovL+uR75AX0WuGX
+   KqLZ9AYbpd5I7Ge4Kr22DkpLE4nk9flxmCODJ2GZTWa3aI2sgSKOjofMI
+   EFwK6p6kHTf3aPQRNDXiUfIcgWBBjYNTbiY1q/L+KEyBYs6wfutwhpHcq
+   ksAkeDa9xCnRVuG5IQ4KFTbgxNhErv8qt6XE0Hijb3h7n/FK1+etP8M08
+   w==;
+X-CSE-ConnectionGUID: EcYf9DiASQmYH3WsLGF56A==
+X-CSE-MsgGUID: xnFcV4JlTTqn9RZiHDnLSQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="55279838"
+X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
+   d="scan'208";a="55279838"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 19:08:52 -0700
+X-CSE-ConnectionGUID: Gmb/15xrRN+ExR13Kec0wQ==
+X-CSE-MsgGUID: xlUitEuuTEWdIOnJg1hRPg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
+   d="scan'208";a="147200204"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 09 Jun 2025 19:08:49 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uOoPu-0007d7-2y;
+	Tue, 10 Jun 2025 02:08:46 +0000
+Date: Tue, 10 Jun 2025 10:07:49 +0800
+From: kernel test robot <lkp@intel.com>
+To: Marco Crivellari <marco.crivellari@suse.com>,
+	linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Tejun Heo <tj@kernel.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Marco Crivellari <marco.crivellari@suse.com>,
+	Michal Hocko <mhocko@suse.com>
+Subject: Re: [PATCH v2 3/4] Workqueue: add WQ_PERCPU
+Message-ID: <202506100903.Ow7T6q5Q-lkp@intel.com>
+References: <20250609103535.780069-4-marco.crivellari@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-10_01,2025-06-09_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
- malwarescore=0 suspectscore=0 spamscore=0 mlxscore=0 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2505160000 definitions=main-2506100015
-X-Authority-Analysis: v=2.4 cv=K4AiHzWI c=1 sm=1 tr=0 ts=684793a2 cx=c_pps a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=2I0cK5IvEajveI9R3G8A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDAxNSBTYWx0ZWRfX3JqJ9GFINucp vOpy9yvleIRhmfZfGxfT2nUq1Bbjzj4YXmDArdOzZpmXI9KN8nEQx4/4h83H8+nkE1Oz9+kjrOm 720PjzMu1qolOqxZFB1lia1IBuWoH05/LYbU2JI7kp8makJL/TkvLnrrKdU0fsaTIm8yZYu/PNQ
- wSSVrJxrTAWW1jHk4q1cmuIiqghadwEbBLhYSoprMX3ECs7OFDcp0OZud05oNVix/UcKvTdftDC VUFQa7s2shTd5uYMzkQLipZwNvGhmDzXfh57o1s7NF5QYTlsHCbq3RkcLL51DU6ZQwFFh1e4RWC o/uTAenq81fyxOosVQPGMlOd9xXKfFWnaFhLLQP61A+4PL/GfAJdHdXzqmBQSO1cQLDPf+3GayQ
- wyjKfMT/nmYlsoYCgGit1k9OHM0AJeU+OOJnugdXg8W+Dxwuj4nHd2ZO0dxU4tVy4kt5HLAV
-X-Proofpoint-ORIG-GUID: jHFpknroR-ITkKir1hua2EKvow3vubfC
-X-Proofpoint-GUID: jHFpknroR-ITkKir1hua2EKvow3vubfC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250609103535.780069-4-marco.crivellari@suse.com>
 
-On Fri, 06 Jun 2025 13:57:39 -0700, Dexuan Cui wrote:
+Hi Marco,
 
-> Currently storvsc_timeout is only used in storvsc_sdev_configure(), and
-> 5s and 10s are used elsewhere. It turns out that rarely the 5s is not
-> enough on Azure, so let's use storvsc_timeout everywhere.
-> 
-> In case a timeout happens and storvsc_channel_init() returns an error,
-> close the VMBus channel so that any host-to-guest messages in the
-> channel's ringbuffer, which might come late, can be safely ignored.
-> 
-> [...]
+kernel test robot noticed the following build warnings:
 
-Applied to 6.16/scsi-fixes, thanks!
+[auto build test WARNING on mkp-scsi/for-next]
+[cannot apply to brauner-vfs/vfs.all wireless-next/main wireless/main linus/master v6.16-rc1 next-20250606]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-[1/1] scsi: storvsc: Increase the timeouts to storvsc_timeout
-      https://git.kernel.org/mkp/scsi/c/b2f966568faa
+url:    https://github.com/intel-lab-lkp/linux/commits/Marco-Crivellari/Workqueue-add-system_percpu_wq/20250609-183742
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/mkp/scsi.git for-next
+patch link:    https://lore.kernel.org/r/20250609103535.780069-4-marco.crivellari%40suse.com
+patch subject: [PATCH v2 3/4] Workqueue: add WQ_PERCPU
+config: s390-randconfig-002-20250610 (https://download.01.org/0day-ci/archive/20250610/202506100903.Ow7T6q5Q-lkp@intel.com/config)
+compiler: s390-linux-gcc (GCC) 14.3.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250610/202506100903.Ow7T6q5Q-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506100903.Ow7T6q5Q-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/nvme/host/tcp.c: In function 'nvme_tcp_init_module':
+>> drivers/nvme/host/tcp.c:3026:26: warning: statement with no effect [-Wunused-value]
+    3026 |                 wq_flags != WQ_PERCPU;
+         |                 ~~~~~~~~~^~~~~~~~~~~~
+
+
+vim +3026 drivers/nvme/host/tcp.c
+
+  3008	
+  3009	static int __init nvme_tcp_init_module(void)
+  3010	{
+  3011		unsigned int wq_flags = WQ_MEM_RECLAIM | WQ_HIGHPRI | WQ_SYSFS;
+  3012		int cpu;
+  3013	
+  3014		BUILD_BUG_ON(sizeof(struct nvme_tcp_hdr) != 8);
+  3015		BUILD_BUG_ON(sizeof(struct nvme_tcp_cmd_pdu) != 72);
+  3016		BUILD_BUG_ON(sizeof(struct nvme_tcp_data_pdu) != 24);
+  3017		BUILD_BUG_ON(sizeof(struct nvme_tcp_rsp_pdu) != 24);
+  3018		BUILD_BUG_ON(sizeof(struct nvme_tcp_r2t_pdu) != 24);
+  3019		BUILD_BUG_ON(sizeof(struct nvme_tcp_icreq_pdu) != 128);
+  3020		BUILD_BUG_ON(sizeof(struct nvme_tcp_icresp_pdu) != 128);
+  3021		BUILD_BUG_ON(sizeof(struct nvme_tcp_term_pdu) != 24);
+  3022	
+  3023		if (wq_unbound)
+  3024			wq_flags |= WQ_UNBOUND;
+  3025		else
+> 3026			wq_flags != WQ_PERCPU;
+  3027	
+  3028		nvme_tcp_wq = alloc_workqueue("nvme_tcp_wq", wq_flags, 0);
+  3029		if (!nvme_tcp_wq)
+  3030			return -ENOMEM;
+  3031	
+  3032		for_each_possible_cpu(cpu)
+  3033			atomic_set(&nvme_tcp_cpu_queues[cpu], 0);
+  3034	
+  3035		nvmf_register_transport(&nvme_tcp_transport);
+  3036		return 0;
+  3037	}
+  3038	
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
