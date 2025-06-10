@@ -1,134 +1,290 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010068.outbound.protection.outlook.com [52.101.84.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11145235079;
-	Tue, 10 Jun 2025 15:03:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749567784; cv=none; b=IxXuuFewH4eK9fE4U7+YSmYW6QQ3ogUHm9mORDxjZk4ay7YWQGbmAawGzz+MnhNW39gg3SvN8prFwhYrHhar3G44Uv9nj0uRqhSprQzEfEmVCuUmPApSDWCPDmx/1dbmGEmfMYX7waGygJktED87RTfrucLKjns8NSFHwOPwpZo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749567784; c=relaxed/simple;
-	bh=7Zt+/6c7CZRjyiWzcsQrIqa+kkyjNaHRdPwi3KVWhf0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WtVNp8oaj45FJCJ3KcXjJNLnqokX3WVBnlvhw0mYuIx418+4QoPJFOWlDL+jHg4VkZh8N9r1rKWmMfbo6P6cbjhAKUlhuJtHtBIOpY43qKYCnHT4OVmcuLCwPowczjCjjI3bmx30iKqK0DTQorrqoYerwgixE1Ask+lkf3UKyAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SFPF+qwq; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E63E221F0E;
+	Tue, 10 Jun 2025 15:02:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749567782; cv=fail; b=mFVudsItcQ9FUtkW1scHyN0ITDuL7gDgb268U59M9YsmC6UuFGM+v3eQ2Q4hs3+dn0ui7sjXhpH43/GbK0G/Q05C0OGzi6tmUoqPExIJk01pPTBgmQkcgUI5HuJS0LGSTdV2II4e2DsTwvjV7xINg1nw815RVqPq/crv2WJt4fc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749567782; c=relaxed/simple;
+	bh=YFZU7ClABZTc6KLzYWAuHzNZymriOgak7k8RWJsjC24=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=IBoEa1X/YgONV7ycxWnSFJu32vlC7wF4jrbGImhQBsX51UyoLQ3jp/p9JvtXdSPIR9bRvKibuQMkmsr9NSnfM0zMnrk7wZBq+qgcq7iN6+FTcVS7uTiL0/TPSKEPLtUGRddH8Fb2f4ZrsSE1dxF/yt1ENvFSNW7pRm0yz7gh92A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=TseKwsoE; arc=fail smtp.client-ip=52.101.84.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SFPF+qwq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749567783; x=1781103783;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=7Zt+/6c7CZRjyiWzcsQrIqa+kkyjNaHRdPwi3KVWhf0=;
-  b=SFPF+qwqx8Yd6kPKSsyqUZbYJYGFjqVX3erKiPeMLjzntVike0Ngh8T0
-   M/hZlzhQNDgO4Vgf8BPZPM0hco2EaUgQISJcTmeMMRIH8DtdFKS2e3f7K
-   G8q9Bn2xfayu3u1s+egcaEFFNS/cHh9c0W6RcwERv0wsIGp7yLUTjzYUe
-   uGW4JgwDhUwnJaV40/M6LyO4PXjEsEmXUdy+gYDU1otzlHNoQjtkACTVU
-   DpKeG/Qo+0pATcRdp8IB0XPqlPKUfZ9SjP8sfiVwQvbiSEfBP3NRGR7S1
-   4Shlqxlys8aNWuQA62mhPLelLSD9tv8EqR/0kWeaZ+LkbGxwUN578y5Vr
-   g==;
-X-CSE-ConnectionGUID: mVFfQstaRYGbF9KI0fjTgw==
-X-CSE-MsgGUID: oI/FfgzMRHeT+g0tCqXxEg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="62294955"
-X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
-   d="scan'208";a="62294955"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 08:03:02 -0700
-X-CSE-ConnectionGUID: fsOZ6dFVSgWP07BQofBiVg==
-X-CSE-MsgGUID: qoBIrKKBSIyeUdFoZbx9dA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
-   d="scan'208";a="151745342"
-Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.111.131]) ([10.125.111.131])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 08:03:00 -0700
-Message-ID: <d39e428e-9bba-4319-bd72-ece8e39012e1@intel.com>
-Date: Tue, 10 Jun 2025 08:02:59 -0700
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="TseKwsoE"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=A42V5L82LMRef34PnSj9axreM5vg37q0LKGw8gJvVrycmK+MbbkaFsDMZvsPTFCeJ5YvuO+fakPjIfkDkroItu5FkkqY5JQPysfzU6wMBlj7gB0CKmLcLJwqjIbDTjy4mLtzS0XZe7+0hJ6htgsnP/NFgwwpnNr25YtWd3xkadD+M/Na/etKAF65NAqq7j6l4OxV3d5qNjbGaG0SjxYWPy0H/IYp/WafFCxiD+lcG2hxXDoTeJ0x0CbYw057eFV3LD83iUGKxOpc/V8RXXy8BPm220TFaRpwE4+nbB8sEvplBekMccoysAuy510uXwmDCnSWEIZqNtckFkypSMQOhg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Dz998GHR0tccku5jKmLrNJMRAs8svI7cC4TCDtjLEKo=;
+ b=YjZSg7uuQM+jOLdJLG/iC/sr3NW+b4Rhk+Sx5f3+VTJRC94NPmzTO1/mXZb2sZO8G28pmOZLTghrzkkPsoyU9lY1CTsxzesJe1ywvlNymoEBLcezcnIYZ1gmBASbmyYkEF0ZMFi6CJMKyiXP7jl7TYUN3MvoUAPq8GpZr18Ktpvus57mkL/w6rawG6Xj5sxgBfzqEoztpNOATnT0kxf3QYyiVoJQdjyabqX165/uCxcgaWck/yZR+B7legL0UuGDumOoEMwt1gJP5YqJhYABgt+v+xtuhWhvCg//JGPRfWG1UVEaHs/8hfDMbHvhO3AcYC9BtuCnAF4cJP3N5uLVbA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Dz998GHR0tccku5jKmLrNJMRAs8svI7cC4TCDtjLEKo=;
+ b=TseKwsoEEfyBgayvNl4jDaqp4gB71s2qcXVTRPqCkW3Z4pZz3JqpnaSFrbr+KUJbhn91jmWNqgcK02Y6WRSQ9NjK6vgIth5j3bFeFTB8EDhL3ZsDTCl34xVOLgtXXa7mtqto5m1wT4kdT8ggResn9hGpKpSDY4vuVXzac1n1RFWEzD5nRLKCiLnOoVWQmTO+6u3JfuarLPoTJsnXlGLQo65lD7Hhf7ZpAju7C+adZrW79Kg2fgz6PiS6NUZeqhMN4qTQPirAhRab45eRVHD0dMvZMxqUc0T0Gicygutx6q0Zy33wXIu5mErYWGA1UuwALSedLI0tVNYYUSXQbphvng==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM8PR04MB7779.eurprd04.prod.outlook.com (2603:10a6:20b:24b::14)
+ by AM9PR04MB7554.eurprd04.prod.outlook.com (2603:10a6:20b:2da::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.27; Tue, 10 Jun
+ 2025 15:02:57 +0000
+Received: from AM8PR04MB7779.eurprd04.prod.outlook.com
+ ([fe80::7417:d17f:8d97:44d2]) by AM8PR04MB7779.eurprd04.prod.outlook.com
+ ([fe80::7417:d17f:8d97:44d2%3]) with mapi id 15.20.8813.024; Tue, 10 Jun 2025
+ 15:02:57 +0000
+Date: Tue, 10 Jun 2025 18:02:54 +0300
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
+To: MD Danish Anwar <danishanwar@ti.com>
+Cc: Meghana Malladi <m-malladi@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Simon Horman <horms@kernel.org>,
+	Guillaume La Roque <glaroque@baylibre.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Roger Quadros <rogerq@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, srk@ti.com,
+	Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH net-next v10] net: ti: icssg-prueth: add TAPRIO offload
+ support
+Message-ID: <20250610150254.w4gvmbsw6nrhb6k4@skbuf>
+References: <20250502104235.492896-1-danishanwar@ti.com>
+ <20250506154631.gvzt75gl2saqdpqj@skbuf>
+ <5e928ff0-e75b-4618-b84c-609138598801@ti.com>
+ <b05cc264-44f1-42e9-ba38-d2ef587763f5@ti.com>
+ <20250610085001.3upkj2wbmoasdcel@skbuf>
+ <1cee4cab-c88f-4bd8-bd71-62cd06901b3b@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1cee4cab-c88f-4bd8-bd71-62cd06901b3b@ti.com>
+X-ClientProxiedBy: VI1P191CA0014.EURP191.PROD.OUTLOOK.COM
+ (2603:10a6:800:1ba::14) To AM8PR04MB7779.eurprd04.prod.outlook.com
+ (2603:10a6:20b:24b::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 03/20] x86/virt/seamldr: Introduce a wrapper for
- P-SEAMLDR SEAMCALLs
-To: Nikolay Borisov <nik.borisov@suse.com>, Chao Gao <chao.gao@intel.com>
-Cc: linux-coco@lists.linux.dev, x86@kernel.org, kvm@vger.kernel.org,
- seanjc@google.com, pbonzini@redhat.com, eddie.dong@intel.com,
- kirill.shutemov@intel.com, dan.j.williams@intel.com, kai.huang@intel.com,
- isaku.yamahata@intel.com, elena.reshetova@intel.com,
- rick.p.edgecombe@intel.com, Farrah Chen <farrah.chen@intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- linux-kernel@vger.kernel.org
-References: <20250523095322.88774-1-chao.gao@intel.com>
- <20250523095322.88774-4-chao.gao@intel.com>
- <d1ec91ad-b368-4993-aadb-18af489ea87e@suse.com> <aEaS3i5JhgFX2MCh@intel.com>
- <175eedc5-d82a-4b3a-bce6-2caf625597ca@suse.com> <aEeEbXZglywwo1Rm@intel.com>
- <e969d071-1161-4323-89e1-8a358b3760b3@suse.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <e969d071-1161-4323-89e1-8a358b3760b3@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM8PR04MB7779:EE_|AM9PR04MB7554:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3301945a-5d2f-468d-eecf-08dda82fe274
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?VQMS4ZGgmZ6ZqYo3piK85BjIxwDpUKS7SDwreqE5Zx8X+5cpBtk5WVzNXVvX?=
+ =?us-ascii?Q?UOdjhyet1JOwnNYchQUXSPX11ZC2kqycqrZocZt4zHfS5pB9ev+ECn6Om9l+?=
+ =?us-ascii?Q?iFnDm9cN1fybBYVKrq/WRWW22508M+Pi2kZh5X8Wf+onRyD4G7SSVFRW8FnI?=
+ =?us-ascii?Q?hqX+1SIywmxd6lFNK4/F0eoRaWPWF0/cJRgJ6Y3Y1JKElFdTY4GD1XyiJtNt?=
+ =?us-ascii?Q?xHyHwTV3rOCSL0Zc6MEB9JOQQ9YKR7rSh11i1nfB2qewHC7CHKrTS6ruhrrF?=
+ =?us-ascii?Q?1s8Sar8V0yPeuoim7ylcLJnN2AiF5NVD3etOOSaBAsfWIJLgxwEu3dLdG6xG?=
+ =?us-ascii?Q?kFn6/vqe3kycbd6nDUzhhj/370nK2IB3yjPb23ZW0MkY2gC1PM92WfNwMV6U?=
+ =?us-ascii?Q?PyafUyd0aFN5afFIYLHqorS75GU34FtUCPj+sk44Sr3dQGIbYaLrcjkUkP5T?=
+ =?us-ascii?Q?gm0e4tU3ouJUlpSKqQhVCQDW1G5IqKZ4hzwW/p/YAlG57D9llE7z0H4dPWmM?=
+ =?us-ascii?Q?M6GB0F14QVTYXy2xq33eIvKuflNXpbuR1PKG9aPnesmzgOefLUiwqgnw15So?=
+ =?us-ascii?Q?QwPSWeaZioFgMZLFE9GUI+56/tvydXg/GhzVJXNA0riHkvROcBQaobLJeSbw?=
+ =?us-ascii?Q?TwfhTHkyyejBri5B0tlV7Sau1pF3GzvYe3mN4AF6ucpWXavZPRs5C7LoACUZ?=
+ =?us-ascii?Q?fEznBifWBmj/ms43BuyKi0lx3gQAnH+Vt9W3FDorm4be/6vkQI9OEXBJIe63?=
+ =?us-ascii?Q?WED6ZsZcStZ1CdQmNpbRxQQP3RE92o1noUNrgkHTSSBqCn1u94XhUCZ1OVak?=
+ =?us-ascii?Q?jemaIesIaucx/5YpPfLadH87qDf9iMxBToxogqzM1e/ApyVJ9roCZx9fV+FA?=
+ =?us-ascii?Q?I+bb8CAOybq/VaX/MfQxoK6BZ6JcvbDgICelXTd2q9iGs/55/bFvADECPtGW?=
+ =?us-ascii?Q?UGT7s6wo2CrXmjO2aXoY587dxxs6RIN8Oy7eBAFsX6Lyb5QWGVaWRyD+YpG+?=
+ =?us-ascii?Q?US2JUyRRZgnFhUqmOqWnFWGsBGQg2RUbPPypU2ERxpwVAhFKWeNYnknPgipS?=
+ =?us-ascii?Q?tgB7/T2Oo5vYmLnGiIOWc+/HrISNiQNqs4K6Bwf5G6sQp0teN29ZCtSFYfYH?=
+ =?us-ascii?Q?4KrjYx4iDJiiX390WbvrdFizhDveYO/OqyRyeaL9YIjBfnrZ5fuXptfKgRoS?=
+ =?us-ascii?Q?SJkpFlPXqd1GlBZkdTPAzaS+Dtur5jlOR1FLnWLr1FyLty2eEyLMTsiB95vo?=
+ =?us-ascii?Q?v9C/g1O5orsfNWdove+7DMCDdbiU+CdY266kuljDk8aQFULJjZmUPAKxvtmK?=
+ =?us-ascii?Q?c0Rz2Gq4grNTV9tXHHl19j1TmGRl/dXsiy6lL42bWTcz4o8ruYLRKjDRT72c?=
+ =?us-ascii?Q?kS01KHsQhf2RFHPrRzviBB2dw4Soqtjo/KRHSthfXXexVj+ILX3X5C7muMPf?=
+ =?us-ascii?Q?ikwLN42xAyU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7779.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?cBnh9oaobMkOJ61wtlmJTvEUb4qrQSJWdUqoLTZ48E0JD6HA/dBv5u5tQPXg?=
+ =?us-ascii?Q?7BqiNWK57/RO+KL5zClz3AYNKeDNVV7/KstX7VQux9y/qJOQkP9VGxhKG5qu?=
+ =?us-ascii?Q?Thu8nBJt8KW1XLN51k4uFkRjC2Mlr+E6jUNPGEA91SQuvpIeaueGGICe/nON?=
+ =?us-ascii?Q?ac7aoGbPO8ABQ5yWl2C6cwb1qhiNHDTU6VJzFStwafyu3koqLl6apk7FsXdJ?=
+ =?us-ascii?Q?oHyRDKgR25Chb9GfxKgKZfKMgmr+RZPh+V2lT4PqZWVZWDTYtZEs0hV9ikzK?=
+ =?us-ascii?Q?++hDjf7zY1jp2HQoV5bdsHT45A9h+lUEZnGpkdjBtWIBZ/v+2la86DcU0FRz?=
+ =?us-ascii?Q?NplJsh3ZoKkzRjs02+UIPH1XVOG091oBzn4nEVB3kZsDucmH34TBH2EY7MOC?=
+ =?us-ascii?Q?U0s95ehXs3d3qaRiWhiOWl7mJ54jEEWCPmOLWMzn029LlnvAS9ftXXt9In9M?=
+ =?us-ascii?Q?jZ0dYxpST0IKIepvfr1KeAj31HrBpdPt0FX9QVlAe2EVaXtuSy5dX6gag9Ye?=
+ =?us-ascii?Q?ZRNq9w4G6hIytQodbcbHBH6esyiO+ZD7vnxs1Tdzp8TX5tvD5/tUzm86bh34?=
+ =?us-ascii?Q?O9hBjenAlonOOWs/WXxKjda869G+lWp1GPtR56QO8i36t9UI5OzqmmwYJiFZ?=
+ =?us-ascii?Q?IeLesyRxmHjLUpB2HjcA42PBnr41L+eDD6PLAYeWCfHDAEFjAffAhptlbjSH?=
+ =?us-ascii?Q?tDHPGg9LsX2V3k9X2RUT+1cRC97oqNx+9fEGwSvLxUv2ioWC6P0vhnz1AsgH?=
+ =?us-ascii?Q?ScR46/MSAklCTzsAqkVFeMRhmMdcHrvjOVMtrOnDYtY2BHF48HJy9fgDnn//?=
+ =?us-ascii?Q?QTbodv26F4lcQFIzEpfvtaOQJTvr6+5lPF8irdNjRRIu5pZumDKmAN1bEQTI?=
+ =?us-ascii?Q?PTIzMv16PrEMfdgffGaRxO/h7vMxyc2mT2Ntj6nLeyAA5zPU+vXNMwoBpq5A?=
+ =?us-ascii?Q?qgZqhtF1LKEJzakwbAyTOSd/cDyxk+NyA69wy5xaG5JeE7jGMIwaJhUf6MmH?=
+ =?us-ascii?Q?JY+hmaQeBMHvPnyne667idPcIv9XVvrlcThbzCrZGPh6dNjxJ0j4+hm+fi+j?=
+ =?us-ascii?Q?Kzpk/RkmMFaBsqMV3L6/YcpLJfg5uE3BlCB2yKvlzNY2xVk4OEYveJlCqtzv?=
+ =?us-ascii?Q?62JVMQ9KSlBz1QrkyrLsf4GtOvRUCcPaHJjuZfaEeW6OBbtSN5nxTs6cDX1b?=
+ =?us-ascii?Q?NGtcBPBjSYvJgZNvc2xtPKRK2X+SdAQogZDr/G6cbueWvC2RwFjLQjcXCOPC?=
+ =?us-ascii?Q?21c2drq1OG9qLkDRlo5wQ+Cv7dYGNBoGyc+U8sPmPa7zLNgc2k/SvBj8ypRT?=
+ =?us-ascii?Q?MEgEh1Xjgmq8efheyJRItwbdyTPJ/udjbPLp97NCsAdWllpE2d+3QqMpV9m5?=
+ =?us-ascii?Q?FEzYNZtd6bailpoq2Owg/pKLVzwyfZU7tshMCu1UgkvrK7izfVSNV+AT/0UR?=
+ =?us-ascii?Q?rNNv1TckmqY/0+S90+DoxTPfmQcJ1UpQrE4dDfg2eSeuR/g5oRNxc6u0SY4f?=
+ =?us-ascii?Q?awjbyPWKYrHDESX13BUbDGsTFW+CMrEU83wOIO6KZfHyXUhu22Y8BzzXtGKd?=
+ =?us-ascii?Q?g0LeewWhbJeiwm8kAVerR4BpCvZgsQJ7gXSY7YvoKpQKd2fnF84kyxaouSOj?=
+ =?us-ascii?Q?RQ=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3301945a-5d2f-468d-eecf-08dda82fe274
+X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7779.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 15:02:57.4287
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: EQpLtwN6Q8mdDoSnHxOMgWrFhGVBdQgcW0zNIkc2RBFN4PcG8XGvlg4y9aCt631cK7K0ABIomygoAlLONm+oDg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB7554
 
-On 6/9/25 23:52, Nikolay Borisov wrote:
-> Then just have TDX select FW_UPLOAD/FW_LOADER and be done with it.
-> Still, let's hear other opinions but in this case I'd say size
-> considerations aren't major so let's make it simpler for the user.
+On Tue, Jun 10, 2025 at 04:14:29PM +0530, MD Danish Anwar wrote:
+> > 1. If there is no "existing" schedule, what does the "extend" variable
+> >    extend? The custom base-time mechanism has to work even for the first
+> >    taprio schedule. (this is an unanswered pre-existing question)
+> 
+> The firmware has a cycle-time of 1ms even if there is no schedule. Every
+> 1ms, firmware updates a counter. The curr_time is calculated as
+> CounterValue * 1ms.
+> 
+> Even if there are no schedule, the default cycle-time will remain 1ms.
+> Let's say the first schedule has a base-time of 20.5ms then the default
+> cycle will be extended by 0.5 ms and then the schedule will apply. This
+> is the reason, the extend feature is also impacting get/set_time
+> calculations.
 
-In general, those of us at hardware companies like to mint lots of
-Kconfig options. Folks like Nikolay at the distros have to deal with
-fallout from the piles of Kconfig options.
+So what is an ICSSG IEP cycle, then? I think this is another case where
+the firmware calls something X, taprio (and 802.1Q) also calls something
+X, and yet, they are talking about different things.
 
-I tend to be pretty deferential to the distro guys on matters like this.
+A schedule (in taprio terms) is an array of gate states and the
+respective time intervals for which those states apply. The schedule is
+periodic, and a cycle is the period of time after which the schedule
+repeats itself. By default, the cycle time (the duration of the cycle)
+is equal to the sum of the gate intervals, but it can also be longer or
+shorter (extended or truncated schedule).
 
-I haven't heard anything even remotely compelling that we need a
-user-visible Kconfig option for this.
+Whereas in the case of ICSSG, based on a code search for
+IEP_DEFAULT_CYCLE_TIME_NS, a cycle seems to be some elementary unit of
+timekeeping, used by the firmware API to express other information in
+terms of it, like packet timestamps and periodic output. Would that be a
+correct description?
+
+When you say that "even if there is no schedule, the default cycle time
+will remain 1ms", you are talking about the cycle time in the ICSSG
+sense, because in the taprio/802.1Q sense, it is absurd to talk about a
+cycle time in absense of a schedule. And implicitly, you are saying that
+when the firmware extends the next-to-last cycle in order for unaligned
+base times to work, this alters that timekeeping unit. Like stretching
+the ruler in order for a mouse and an elephant to measure the same.
+
+I think it needs to be explicitly pointed out that the taprio schedule
+is only supposed to affect packet scheduling at the egress of the port,
+but taprio is only a reader of the timekeeping process (and PTP time)
+and should not alter it. The timekeeping process should be independent
+and the taprio portion of the firmware should keep track of its own
+"cycles" which may not begin at the beginning of a timekeeping "cycle",
+may not end at the end of one, and may span multiple timekeeping
+"cycles", respectively.
+
+What if you also have a Qci (tc-gate) schedule on the ingress of the
+same port, and that is configured for a different cycle-time or a
+different base-time (requiring a different "extend" value)? It will be
+too inflexible to apply the restriction that the parameters have to be
+the same.
+
+> >>> That's what our first approach was. If it's okay with you I can drop all
+> >>> these changes and add below check in driver
+> >>>
+> >>> if (taprio->base_time % taprio->cycle_time) {
+> >>> 	NL_SET_ERR_MSG_MOD(taprio->extack, "Base-time should be multiple of cycle-time");
+> >>> 	return -EOPNOTSUPP;
+> >>> }
+> > 
+> > I don't want to make a definitive statement on this just yet, I don't
+> > fully understand what was implemented in the firmware and what was the
+> > thinking.
+> > 
+> 
+> The firmware always expects cycle-time of 1ms and base-time to multiple
+> of cycle-time i.e. base-time to be multiple of 1ms.
+> 
+> This way all the schedules will be aligned and that's what current
+> implementation is.
+> 
+> To add support for base-time that are not multiple of cycle-time we
+> added "extend". However that will also only work as long as cycle-time
+> is 1ms. cycle-time other than 1ms is not supported by firmware as of
+> now. This is something we discovered recently.
+> 
+> We have a check for TAS_MIN_CYCLE_TIME and TAS_MAX_CYCLE_TIME and they
+> are defined as,
+> 
+> /* Minimum cycle time supported by implementation (in ns) */
+> #define TAS_MIN_CYCLE_TIME  (1000000)
+> 
+> /* Minimum cycle time supported by implementation (in ns) */
+> #define TAS_MAX_CYCLE_TIME  (4000000000)
+> 
+> But it is wrong. As per current firmware implementation,
+> 	TAS_MIN_CYCLE_TIME = TAS_MAX_CYCLE_TIME = 1ms
+> 
+> 
+> The ideal use case will be to support,
+> 1. Different cycle times
+> 2. Different base times which may or may not be multiple of cycle-times.
+> 
+> With the current implementation, we are able to support #2 however #1 is
+> still a limitation. Once support for #1 is added, the implementation
+> will need to be changed.
+
+(...)
+
+> > As you can see, I still have trouble understanding the concepts proposed
+> > by the firmware.
+> 
+> I understand that. I hope this makes it a bit more clear. Let me know
+> what needs to be done now.
+
+Was the "extend" feature added to the ICSSG firmware as a result of the
+previous taprio review feedback? Because if it was, it's unfortunate
+that because of the lack of clarity of the firmware concepts, the way
+this feature was implemented is essentially DOA and cannot be used.
+
+I am not very positive that even if adding the extra restrictions
+discovered here (cycle-time cannot be != IEP_DEFAULT_CYCLE_TIME_NS),
+the implementation will work as expected. I am not sure that our image
+of "as expected" is the same.
+
+Given that these don't seem to be hardware limitations, but constraints
+imposed by the ICSSG firmware, I guess my suggestion would be to start
+with the selftest I mentioned earlier (which may need to be adapted),
+and use it to get a better picture of the gaps. Then make a plan to fix
+them in the firmware, and see what it takes. If it isn't going to be
+sufficient to fix the bugs unless major API changes are introduced, then
+maybe it doesn't make sense for Linux to support taprio offload on the
+buggy firmware versions.
+
+Or maybe it does (with the appropriate restrictions), but it would still
+inspire more trust to see that the developer at least got some version
+of the firmware to pass a selftest, and has a valid reference to follow.
+Not going to lie, it doesn't look great that we discover during v10 that
+taprio offload only works with a cycle time of 1 ms. The schedule is
+network-dependent and user-customizable, and maybe the users didn't get
+the memo that only 1 ms was tested :-/
