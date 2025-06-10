@@ -1,89 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE6F25D8F5;
-	Tue, 10 Jun 2025 10:12:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88F8025D8F5;
+	Tue, 10 Jun 2025 10:12:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749550334; cv=none; b=G1Xguc4HLIf3J9cazSmFbktuzeuHvnPBXorgS5g561nzU2Klqi2nn5hU2/JyiiygXUtoSX2CYpH9EeJOXtMSVTSpBh5Hy266wlWSCgSieWG5UHsz6r94dUFyY+n9A5fpx9o4yDdrTMAJYZMM5zB7PP+5KMHWnaXD3o3FLS4Xx2A=
+	t=1749550363; cv=none; b=Iz5UJ7pxhBcXJvBkdRwV8N3SAj2v1JDOllcnVUBKYtUydI6U7HCTHITUHPYEopDB9rrqJnMQIBbVmjXJCeYFiBZEsfZzmOYN3uyPJfwxX8N/c8qHZSbrBEXGlmGVnmpfi6qBpTKvodVvtbmodr9aaGNNO70jsefxrXdjYF3+5wQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749550334; c=relaxed/simple;
-	bh=jVUjjE3yMF53YSvxU2Mj1UYztPi7oHwNW3NrlZTr1gQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ic/wBZZsIOXA9ocGVIh/R9Jv3KjHZ9E1KjXiFXvOYlFzeZ74AMSE/zcYm3dW8QfPk/GlcwuWxrZ1xZZadb6W8s1pUPwq/UCExpMoSZ12Oa+unctc0vXQGBdRCtfmtLik/GJ16pBXmglzZt1ZABaDCO6zD+LkQMEBoMGOM8R/gtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=zAb5QAI7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749550363; c=relaxed/simple;
+	bh=ST5N4y7efa3WI81pyAb9EfnKKmnc6+2XM1s9J2ylets=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=NQz82sCuU6z8QgM5//XGLTdvPkpLhlGElZFctt6nUiCLxVNfYwREZfsAIrAOaBa/fYiS6JrQVRcicdfVnM8LFD8mb1nTnnym1nW+hjAfY8roEbhzlafna7g1T6elCBDnN0yGV4YNMFki+p51o5wU88Nd/OIGE58EDGDB8bU6TWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GNxX638I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="zAb5QAI7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4226CC4CEEF;
-	Tue, 10 Jun 2025 10:12:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1749550333;
-	bh=jVUjjE3yMF53YSvxU2Mj1UYztPi7oHwNW3NrlZTr1gQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=zAb5QAI740qKd4KoRot40vHcCH2uxHDgBX5ctCniDCxFVsOOZvM72SGuoSqb1Vfxs
-	 heVv2fF/oiigy0ybX/z3ysj44I3mCFqU2nfnhhQbzXlu41HP1QWnPiwx8xZzm7R+Dw
-	 L4DKQCsUrwHAYDRXeys7fXxKu21oodilfX0zZgMw=
-Date: Tue, 10 Jun 2025 12:12:11 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Dave Jiang <dave.jiang@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>, rafael.j.wysocki@intel.com,
-	linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ben Cheatham <Benjamin.Cheatham@amd.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 0/3] CXL: ACPI: faux: Fix cxl_core.ko module load
- regression
-Message-ID: <2025061002-reattach-sliced-0690@gregkh>
-References: <20250607033228.1475625-1-dan.j.williams@intel.com>
- <2af31ff8-eee0-4868-8f97-2a390910f9ed@intel.com>
- <CAJZ5v0j5+iB97rTqtOoFB0zpHzNOOHGOQVz51ZU--=4AcUPf-Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GNxX638I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5B36C4CEED;
+	Tue, 10 Jun 2025 10:12:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749550363;
+	bh=ST5N4y7efa3WI81pyAb9EfnKKmnc6+2XM1s9J2ylets=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=GNxX638ICb6jA3ELDYkyk1s7ytMLGeQ8sQ1q+WnmBdHE0FHZeqPPV30patlKk4h3W
+	 Q7La763WOAZo37Ae1wurznNwOd521J9iYShUqkx7boJ960f/U7Vcsr8x1UF4TsHtGX
+	 DpeV/5AH3Z8eQFuiv2AnZU6sdDqBEME3Q3Djt0SLtCvCWKCk6b8IABBhUxYStwdJCB
+	 5KZaf85Gd2aYMnXlrgxBaoPkQETCfw5Q2GDIkQEDp0OT01bDvQROABLvAvnfWpRipA
+	 I/Lh2T81rYpxt92Xq5FGmG0FPcWrqaTneDOpcKrpQOGxf15rVIH3Spk2ND9Hhp4rsh
+	 2aPg25kRyu4yQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0j5+iB97rTqtOoFB0zpHzNOOHGOQVz51ZU--=4AcUPf-Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 10 Jun 2025 12:12:35 +0200
+Message-Id: <DAIRU9INPO8A.1PLCLKFJJGODH@kernel.org>
+Cc: "Guilherme Giacomo Simoes" <trintaeoitogc@gmail.com>,
+ <rafael@kernel.org>, <viresh.kumar@linaro.org>, <dakr@kernel.org>,
+ <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+ <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
+ <mcgrof@kernel.org>, <russ.weight@linux.dev>, <ojeda@kernel.org>,
+ <alex.gaynor@gmail.com>, <boqun.feng@gmail.com>, <gary@garyguo.net>,
+ <bjorn3_gh@protonmail.com>, <a.hindborg@kernel.org>,
+ <aliceryhl@google.com>, <tmgross@umich.edu>, <leitao@debian.org>,
+ <gregkh@linuxfoundation.org>, <david.m.ertman@intel.com>,
+ <ira.weiny@intel.com>, <leon@kernel.org>, <fujita.tomonori@gmail.com>,
+ <tamird@gmail.com>, <igor.korotin.linux@gmail.com>,
+ <walmeida@microsoft.com>, <anisse@astier.eu>, <linux-pm@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
+ <dri-devel@lists.freedesktop.org>, <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH] rust: module: remove deprecated author key
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>
+X-Mailer: aerc 0.20.1
+References: <20250609122200.179307-1-trintaeoitogc@gmail.com>
+ <DAIQ9342ZFYD.3VQVI80A18HKX@kernel.org>
+ <CANiq72kC1j-kprAQ5WU0QVV_zhyKfDPJ_M5E9xZ+8+fxt4R6qQ@mail.gmail.com>
+In-Reply-To: <CANiq72kC1j-kprAQ5WU0QVV_zhyKfDPJ_M5E9xZ+8+fxt4R6qQ@mail.gmail.com>
 
-On Mon, Jun 09, 2025 at 08:58:26PM +0200, Rafael J. Wysocki wrote:
-> On Mon, Jun 9, 2025 at 5:04 PM Dave Jiang <dave.jiang@intel.com> wrote:
-> >
-> >
-> >
-> > On 6/6/25 8:32 PM, Dan Williams wrote:
-> > > git bisect flags:
-> > >
-> > > 6cb9441bfe8d ("ACPI: APEI: EINJ: Transition to the faux device interface")
-> > >
-> > > ...as the reason basic CXL unit tests are failing on latest mainline. In
-> > > addition to the fix to einj-core.c, this also needs some updates to
-> > > faux_device to make it behave more like platform_driver_probe(). Details
-> > > in the individual patches.
-> > >
-> > > Dan Williams (3):
-> > >   driver core: faux: Suppress bind attributes
-> > >   driver core: faux: Quiet probe failures
-> > >   ACPI: APEI: EINJ: Do not fail einj_init() on faux_device_create()
-> > >     failure
-> >
-> > LGTM
-> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> >
-> > >
-> > >  drivers/acpi/apei/einj-core.c | 9 +++------
-> > >  drivers/base/faux.c           | 3 ++-
-> > >  2 files changed, 5 insertions(+), 7 deletions(-)
-> 
-> Greg, I think it's better if I route this through the ACPI tree as the
-> issue being fixed was introduced through it.
-> 
-> Any concerns regarding this?
+On Tue Jun 10, 2025 at 12:03 PM CEST, Miguel Ojeda wrote:
+> On Tue, Jun 10, 2025 at 10:58=E2=80=AFAM Benno Lossin <lossin@kernel.org>=
+ wrote:
+>>
+>> Unrelated to this change, I think we should add email addresses to
+>> people in authors. Possibly enforce it by scanning each author element
+>> and checking if there is an email address.
+>
+> Sounds good to me, but I am not sure if it is possible in all cases.
+>
+> At least looking at C, there are company names too.
+>
+> I even saw a URL...
 
-None from me!
+Hmm, I guess a checkpatch lint fits better then?
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+Cheers,
+Benno
