@@ -1,46 +1,43 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D78282FA;
-	Tue, 10 Jun 2025 21:28:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61D862459C5;
+	Tue, 10 Jun 2025 21:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749590938; cv=none; b=qfkC4D0kF3JmZm2J6w6WhdcIkJ3SrgF2vPkAbBPGbdesKU1MVmns3ChwkFN32USD92XaSNFDqZITixHp8ZAk+yhVAnI1CnTSUN+gzyoRjdVNsdu6ucAkOvf8rqd8Csao39bkJB3RZNXsDkOzqwtqM1Z5CcVvqcc+wYJH1c/h/WE=
+	t=1749591075; cv=none; b=ONo4oqmklX2Bkyh1QvOTJWDoGPvciEAGpZ4qBI3MJKqsWd1FDoSMSzYnJeNfgWMjchzkSucbmH3Aa5yetjhg+QsQoQzpx4vFdEMTWcm/0hzW4XkDlbTnBoBNvb9qVhcstFgP2WZzy3xY4+MFMLDJKMizfl/A3NhVabk7y/JBB/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749590938; c=relaxed/simple;
-	bh=4jlHEBvCUIKK0y1nievx0icWbWSW6pRbq6+2yts7pig=;
+	s=arc-20240116; t=1749591075; c=relaxed/simple;
+	bh=m+IPDklJ6ZBJt0284tsk4m7+eoXQgRpTQRB8/GXnw4o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Olijoxgslu5ERvYBlLIhzR+neNvTG+hgiTbFlITqZ0ouo/CUxWKHXX1jHLViQQhAlDcwvvvFG5kQfP1qbjQFsWqE1FxBjfcgIZH//1uq8aiEyvdSMmz8TXNemPDVOlX11sT5Lcy2kz60BiWazDnl7d9aMrK4RN9z9ZfUxcggRtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=snJI6iMJ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hj0EU18VVpeS2A0y/LgSB2V29ZXIdGhskWhcFUQFDoVsW3JhByJ69bdqNaaRVj8+Cyl/rEknoboWFfP/qf8IF1HpLRoFPB6Zjv9O5INLqaUQ4gSiR1xw/TWbqiF1Gxp6yrSsVrbxJrD6Iur1cUKo7fA7SO7OmcMUTGVLIvrNhYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=CCXCdvx2; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="snJI6iMJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54B6BC4CEED;
-	Tue, 10 Jun 2025 21:28:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749590937;
-	bh=4jlHEBvCUIKK0y1nievx0icWbWSW6pRbq6+2yts7pig=;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="CCXCdvx2"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id E11C9E8A;
+	Tue, 10 Jun 2025 23:31:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1749591064;
+	bh=m+IPDklJ6ZBJt0284tsk4m7+eoXQgRpTQRB8/GXnw4o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=snJI6iMJDN4bQD8zSpaA4srJ/clNCmrQazao9Bi2klr8JjgDkRZwN1ZOaodZETn5T
-	 Q+NrCCTeRp7i7uIUncLNHmAYwI7DjlqtD3/nfylShiplY1jbkx9dlCNeNtNSZpzbud
-	 1XOddvXvmc+ss2xROvLjvtIrDFQXsySbj9TOuQSFfVMr5BSzBbXM2o+/4SvqyIIpzU
-	 82HRKB/udazzucyDOqQRd2uhNupFnef8fh7MhXzjE9WgeBLvzb5xBe9lF6E4sC3SYv
-	 Mn3NX38bXQvoMo+uSpcJmqOfWGG2NS7bTrZZDkPZKybsd/z0kDuyMBsEEac5NNHd2z
-	 q/F0J+HOCQHow==
-Date: Tue, 10 Jun 2025 14:28:55 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Julian Vetter <julian@outer-limits.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
-	Kan <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org,
+	b=CCXCdvx24YV8Kba9V27F28YyhKUebzbTHDx5DqwoODUvMoUCqfEFgVtGZlu8UWxAu
+	 tKnzWEY9W6aK7QD8SBtnU7qBl3rPDtJ1fJuAEEFaO37fnUqJKeLf++aGkMGtTR86Tl
+	 +aCQLQLjEKZZlOaQ+qRwgMqVwGeyukcytans86GY=
+Date: Wed, 11 Jun 2025 00:30:58 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Youngjun Lee <yjjuny.lee@samsung.com>, hdegoede@redhat.com,
+	mchehab@kernel.org, linux-media@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tools: Remove the check for packed_struct.h header
-Message-ID: <aEijl0Xdk9NRJhdN@google.com>
-References: <20250603133635.3685397-1-julian@outer-limits.org>
+Subject: Re: [PATCH] usb: uvc: Fix 1-byte out-of-bounds read in
+ uvc_parse_format()
+Message-ID: <20250610213058.GG24465@pendragon.ideasonboard.com>
+References: <CGME20250610124111epcas1p18fe9fd8ab47a424c2143d4e2912a8179@epcas1p1.samsung.com>
+ <20250610124107.37360-1-yjjuny.lee@samsung.com>
+ <CANiDSCsaQCJCzfjjnMvVRAde0ZrMZC753y7m2MPQJuK=dVqQBQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,39 +46,61 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250603133635.3685397-1-julian@outer-limits.org>
+In-Reply-To: <CANiDSCsaQCJCzfjjnMvVRAde0ZrMZC753y7m2MPQJuK=dVqQBQ@mail.gmail.com>
 
-Hello,
-
-On Tue, Jun 03, 2025 at 03:36:35PM +0200, Julian Vetter wrote:
-> The functions in the header 'unaligned/packed_struct.h' were deprecated,
-> and not used anymore, thus the header was removed. So, we can also
-> remove the check in 'check-headers.sh'.
-
-Can you please provide the commit ID that removed the header?
-
-Thanks,
-Namhyung
-
+On Tue, Jun 10, 2025 at 02:58:25PM +0200, Ricardo Ribalda wrote:
+> Hi Youngjun
 > 
-> Signed-off-by: Julian Vetter <julian@outer-limits.org>
-> ---
->  tools/perf/check-headers.sh | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> You still miss the v2 (v3 in this case). and the trailers.
 > 
-> diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-> index e9fab20e9330..cee372312974 100755
-> --- a/tools/perf/check-headers.sh
-> +++ b/tools/perf/check-headers.sh
-> @@ -188,7 +188,7 @@ check arch/x86/lib/memcpy_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/ex
->  check arch/x86/lib/memset_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/export.h>" -I"^SYM_FUNC_START\(_LOCAL\)*(memset_\(erms\|orig\))"'
->  check arch/x86/include/asm/amd/ibs.h  '-I "^#include [<\"]\(asm/\)*msr-index.h"'
->  check arch/arm64/include/asm/cputype.h '-I "^#include [<\"]\(asm/\)*sysreg.h"'
-> -check include/linux/unaligned.h '-I "^#include <linux/unaligned/packed_struct.h>" -I "^#include <asm/byteorder.h>" -I "^#pragma GCC diagnostic"'
-> +check include/linux/unaligned.h '-I "^#include <asm/byteorder.h>" -I "^#pragma GCC diagnostic"'
->  check include/uapi/asm-generic/mman.h '-I "^#include <\(uapi/\)*asm-generic/mman-common\(-tools\)*.h>"'
->  check include/uapi/linux/mman.h       '-I "^#include <\(uapi/\)*asm/mman.h>"'
->  check include/linux/build_bug.h       '-I "^#\(ifndef\|endif\)\( \/\/\)* static_assert$"'
-> -- 
-> 2.34.1
+> In the future you can use the b4 tool to take care of most of the details.
+> https://b4.docs.kernel.org/en/latest/contributor/overview.html
+> It has "dry-run" option that let you review the mails before you send
+> them to the mailing list
 > 
+> Please do not resubmit a new patch to fix this, only send a new patch
+> to fix more comments for other people.
+> 
+> Regards!
+> 
+> On Tue, 10 Jun 2025 at 14:41, Youngjun Lee <yjjuny.lee@samsung.com> wrote:
+> >
+> > The buffer length check before calling uvc_parse_format() only ensured
+> > that the buffer has at least 3 bytes (buflen > 2), buf the function
+> > accesses buffer[3], requiring at least 4 bytes.
+> >
+> > This can lead to an out-of-bounds read if the buffer has exactly 3 bytes.
+> >
+> > Fix it by checking that the buffer has at least 4 bytes in
+> > uvc_parse_format().
+>
+> Fixes: c0efd232929c ("V4L/DVB (8145a): USB Video Class driver")
+> Cc: stable@vger.kernel.org
+> Reviewed-by: Ricardo Ribalda <ribalda@chromium.org>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> > Signed-off-by: Youngjun Lee <yjjuny.lee@samsung.com>
+> > ---
+> >  drivers/media/usb/uvc/uvc_driver.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+> > index da24a655ab68..1100469a83a2 100644
+> > --- a/drivers/media/usb/uvc/uvc_driver.c
+> > +++ b/drivers/media/usb/uvc/uvc_driver.c
+> > @@ -344,6 +344,9 @@ static int uvc_parse_format(struct uvc_device *dev,
+> >         u8 ftype;
+> >         int ret;
+> >
+> > +       if (buflen < 4)
+> > +               return -EINVAL;
+> > +
+> >         format->type = buffer[2];
+> >         format->index = buffer[3];
+> >         format->frames = frames;
+
+-- 
+Regards,
+
+Laurent Pinchart
