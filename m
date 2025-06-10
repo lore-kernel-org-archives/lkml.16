@@ -1,55 +1,35 @@
-Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.166.231])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4909A218EA7;
-	Tue, 10 Jun 2025 17:49:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE71F21322F;
+	Tue, 10 Jun 2025 17:54:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749577800; cv=none; b=E8kvPDtxbOA8qWONsN2IZrfmCyg8yL/pUBid49nQkU0GU/8edqHdMOkOT/4qNcQmd8JmtpoXvYUM3NgVilqs1ESql0QiUVeJEfrq27W1OMkYS/Eb0aciBZ0WV75s3rzua1W4scrdf0Rsu3G5ImLy0dc89UrFeSSpy7k6JlLbyMs=
+	t=1749578051; cv=none; b=Tag753WT6AH1VLeynnimKW5DYwN0EiU+vZpnh44B2EPdyd7zr3jGARQUZvSjI275jHa0sps9hCOvKQfyVqwinUpt2maUGOj3tfM+OFZ+rhoCPCsTBMqUflWZIRVr2ux1LnFJC0IqYBtmoOv/uvBJ1EpXEHiawhd1YoCWtiB+6I4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749577800; c=relaxed/simple;
-	bh=pU2TVlS9NicsYGkGcp7LE0teQgsE61GXl4hYMMJ+Hso=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pW57sQtVknO4IK++Hqnc7dsgd5tQRc9irwOVnzhxFUhtBKWD0/ARu0IB3GemmlFApqfZIL5H4Nwvb6AVBrpp5evXBJd7zzrzr9i0nhF2SpHnlhM8xMHWmRFKbezwRNdhJIpG8lqqyrXT2Ydf0pPK3LnPTnj5rX3Yx5riqFxGy50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=AkXZAxeS; arc=none smtp.client-ip=192.19.166.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1749578051; c=relaxed/simple;
+	bh=g8srZIuC7DXP+YZfVbIrDXDZGP9WZWOx3s6txz1uaKc=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=OnbYQTyiXFIGm4y45JyuQNJ4KC/WaksI47YkZB1nshdHaBgKEB+6tcJWjh26xwU/RIOPoLbjV+2zShFCnd16mnzFug3J5xFWoksi+ZiEM8MKgxiP8/EqB7z4O9DXi8tlWgdqzaUA1L3WIzuOixHKXIZ6B0pePQkmfGcMa9NHHpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xtr7RKbo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="AkXZAxeS"
-Received: from mail-lvn-it-01.broadcom.com (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 92749C0000D0;
-	Tue, 10 Jun 2025 10:49:58 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 92749C0000D0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1749577798;
-	bh=pU2TVlS9NicsYGkGcp7LE0teQgsE61GXl4hYMMJ+Hso=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AkXZAxeSTF7vkZR2y2qGfiH1/j1xhYv3XH6G6PCpaiOwgXhtvDdLNNarmnqkvPYcP
-	 5R4IvqyCX/R0/DS/36bP4NMWzORddlzJQxxSWVeQDyGXkF5wfh818a09O1OkI75v/6
-	 kBXBqw7waXQTwL5EPZyrN+BHjYldOFEOsPatHggw=
-Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id 6DA2018000A5F;
-	Tue, 10 Jun 2025 10:49:58 -0700 (PDT)
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To: bcm-kernel-feedback-list@broadcom.com,
-	"Rob Herring (Arm)" <robh@kernel.org>,
-	Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: broadcom: northstar2: Drop GIC V2M "interrupt-parent"
-Date: Tue, 10 Jun 2025 10:49:57 -0700
-Message-ID: <20250610174958.3482215-1-florian.fainelli@broadcom.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250609203705.2852500-1-robh@kernel.org>
-References: <20250609203705.2852500-1-robh@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xtr7RKbo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AF82C4CEED;
+	Tue, 10 Jun 2025 17:54:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749578051;
+	bh=g8srZIuC7DXP+YZfVbIrDXDZGP9WZWOx3s6txz1uaKc=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Xtr7RKbo9Iyv/pE3+vc8EYLVMRcG+P66Ci+NPkKjgeQlRjqyJa9lgGvwppo/ZcLY3
+	 ZNiWzJWxvdzvrQPVTjpxzjnV0Kc4lRsICRB4PvwmbQc9RKoaoCDLk4ccTE/EHyV96S
+	 hkqp1wtZGKTLhk1hx7HfAxlEzGZ0ISfpoayDjIxYZ94QRLtsHe8u6P3K8T3dPonFuu
+	 VdSQCO64V59IYLLdZz5SGkXSPrnoSTtRXkk6/zksEKqQMbFAuqlugaBqTrBFzkGk4f
+	 nJRq4tvXMWbONbzm8nSgrMmvJnv2Df+WeOdJI3nnhZVVCWZjgX1nT4EXQzIZlI1POG
+	 sUnYE/RPwQNdg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB01E39D6540;
+	Tue, 10 Jun 2025 17:54:42 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,27 +37,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH bpf-next v2] bpf,
+ sockmap: Fix psock incorrectly pointing to sk
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174957808176.2523637.14786222447534572080.git-patchwork-notify@kernel.org>
+Date: Tue, 10 Jun 2025 17:54:41 +0000
+References: <20250609025908.79331-1-jiayuan.chen@linux.dev>
+In-Reply-To: <20250609025908.79331-1-jiayuan.chen@linux.dev>
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: bpf@vger.kernel.org, john.fastabend@gmail.com, jakub@cloudflare.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ horms@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+Hello:
 
-On Mon,  9 Jun 2025 15:37:04 -0500, "Rob Herring (Arm)" <robh@kernel.org> wrote:
-> The default interrupt parent is a parent node containing
-> "#interrupt-cells", so an explicit "interrupt-parent" is not necessary.
-> 
-> Fixes these dtschema warnings:
-> 
-> (arm,gic-400): v2m@70000: 'interrupt-parent' does not match any of the regexes: '^pinctrl-[0-9]+$'
-> (arm,gic-400): v2m@60000: 'interrupt-parent' does not match any of the regexes: '^pinctrl-[0-9]+$'
-> (arm,gic-400): v2m@50000: 'interrupt-parent' does not match any of the regexes: '^pinctrl-[0-9]+$'
-> (arm,gic-400): v2m@40000: 'interrupt-parent' does not match any of the regexes: '^pinctrl-[0-9]+$'
-> (arm,gic-400): v2m@30000: 'interrupt-parent' does not match any of the regexes: '^pinctrl-[0-9]+$'
-> (arm,gic-400): v2m@20000: 'interrupt-parent' does not match any of the regexes: '^pinctrl-[0-9]+$'
-> (arm,gic-400): v2m@10000: 'interrupt-parent' does not match any of the regexes: '^pinctrl-[0-9]+$'
-> (arm,gic-400): v2m@0: 'interrupt-parent' does not match any of the regexes: '^pinctrl-[0-9]+$'
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
+This patch was applied to bpf/bpf-next.git (net)
+by Daniel Borkmann <daniel@iogearbox.net>:
 
-Applied to https://github.com/Broadcom/stblinux/commits/devicetree-arm64/next, thanks!
---
-Florian
+On Mon,  9 Jun 2025 10:59:08 +0800 you wrote:
+> We observed an issue from the latest selftest: sockmap_redir where
+> sk_psock(psock->sk) != psock in the backlog. The root cause is the special
+> behavior in sockmap_redir - it frequently performs map_update() and
+> map_delete() on the same socket. During map_update(), we create a new
+> psock and during map_delete(), we eventually free the psock via rcu_work
+> in sk_psock_drop(). However, pending workqueues might still exist and not
+> be processed yet. If users immediately perform another map_update(), a new
+> psock will be allocated for the same sk, resulting in two psocks pointing
+> to the same sk.
+> 
+> [...]
+
+Here is the summary with links:
+  - [bpf-next,v2] bpf, sockmap: Fix psock incorrectly pointing to sk
+    https://git.kernel.org/bpf/bpf-next/c/76be5fae32fe
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
