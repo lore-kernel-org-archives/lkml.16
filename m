@@ -1,98 +1,79 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A24C517C21E;
-	Tue, 10 Jun 2025 15:33:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B0717C21E
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:34:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749569638; cv=none; b=LS2N1p61em3hgsb5dwab1iG7JdS0y4i7GccsUdQPT7fFP+JGlWfqe1wVnHxli4dGgxVn0TnQ7lEp5FXNl2pBpi7w9Sbv0Df1Skmsd0dIL9qRNPIpMSj83UG9zrJZNY7kXPVbfAFj3OxG4PUODUp3lqC8Aef+aKQPHIKfv6W10vU=
+	t=1749569673; cv=none; b=Mw9hW/gBYy4KDwQB/cYYCG8tHL+3eyPyKBwSE9QkaMQrbZZrDTt4QCWpKDOVPExMylqTj2aacjz/H87jhS+Y7HXLP7F3srrGWrrgPwBUZrYP17Eyhz9TarDb3geek33IlApV69uJLdZTeCAGqoSp2M2yssE1btHDauVPEuQw1vc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749569638; c=relaxed/simple;
-	bh=Z0tZqVZm0c0pdMekdv7cs5FM5cbYEF/ngEMiVAIKcok=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rOhLwU38LY6q5YBW2zoghz1ZHql9jQ2Nwr9lvqzg+oyomHj9b1z7UbrGasCpfTy5w7FiyrDQ4EFI62xrM4IuwerUcEXVECSgsrM42AzVuxmXO9E5xiEVGuGO8PDgi6E3VHp/eJ6Hf3RV7bN0umyNGzhbhJ//QxZEUlE0TsuNzbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=r22VQRuR; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1749569673; c=relaxed/simple;
+	bh=G+itHhShYmagmas0NbfK9nwx+40GG+jMM1BJtqr4puk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LbbYnsqdU1C/D/lA/kyKnzIw6GiSabRT8NBs8xWYpgqC0dHJCrepne2NuaXC3QY0yROKodzGQuaEB3OxmzlcTv93OT/0M0VfkWmdgB+PTZx2GJjltdWMKYlBnzB7u7uwPifHa4NFQYZYOQ4xE8Ty6YzKtY3ik4HDAri7bCzWoGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=V3rk7zfs; arc=none smtp.client-ip=95.215.58.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="r22VQRuR"
-Received: from romank-3650.corp.microsoft.com (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 184C72113A7A;
-	Tue, 10 Jun 2025 08:33:56 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 184C72113A7A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1749569636;
-	bh=EXF5QOvj3gLvyZ3xIYnh29AFDo83SVY+Soxt4pZHHNQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=r22VQRuRofvzYBhMQxeZbt4tOnDGGJJjNls5cYs0WMTmVuha6Njl+ivrnjfGOidqb
-	 LglGuAydHfvm88OFygB5nrlVYtVzDJkSCFCF296b15Sn2o7weVqv/Xn+ZA/v84gxmN
-	 f+YjrFtQuscToufIVhPFlUSoXrlZuqR8128DNlrY=
-From: Roman Kisel <romank@linux.microsoft.com>
-To: arnd@kernel.org
-Cc: arnd@arndb.de,
-	decui@microsoft.com,
-	haiyangz@microsoft.com,
-	kys@microsoft.com,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mhklinux@outlook.com,
-	nunodasneves@linux.microsoft.com,
-	romank@linux.microsoft.com,
-	ssengar@linux.microsoft.com,
-	wei.liu@kernel.org
-Subject: [PATCH] hv: add CONFIG_EFI dependency
-Date: Tue, 10 Jun 2025 08:33:54 -0700
-Message-ID: <20250610153354.2780-1-romank@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250610091810.2638058-1-arnd@kernel.org>
-References: <20250610091810.2638058-1-arnd@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="V3rk7zfs"
+Message-ID: <1c4ce7df-dd5e-43a7-a496-bf5b89086e25@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749569668;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ESTLDFwMbV/IeCjjdvemvD7MAUug9KqMA4+dsMhYRCk=;
+	b=V3rk7zfs3jm/OZLdukxu4+ROJrX4Hfz7TxvlNR31kGC7LdhtQ+E4N/BfARrH9N/6FyHioz
+	7gpJZWR8XITXvKe0mfMquqRoidRITEIkw1JXpRpQz0xa1OiMioJtraT+K7KdGOnIKWAfUp
+	Z7dR1ePN779vw7rGnxoM7clbSloOHcM=
+Date: Tue, 10 Jun 2025 11:32:35 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 1/1] net: fman_memac: Don't use of_property_read_bool on
+ non-boolean property managed
+To: Alexander Stein <alexander.stein@ew.tq-group.com>,
+ Madalin Bucur <madalin.bucur@nxp.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Russell King <linux@armlinux.org.uk>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250610114057.414791-1-alexander.stein@ew.tq-group.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <20250610114057.414791-1-alexander.stein@ew.tq-group.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-> Selecting SYSFB causes a link failure on arm64 kernels with EFI disabled:
->
-> ld.lld-21: error: undefined symbol: screen_info
-> >>> referenced by sysfb.c
-> >>>               drivers/firmware/sysfb.o:(sysfb_parent_dev) in archive vmlinux.a
-> >>> referenced by sysfb.c
->
-> The problem is that sysfb works on the global 'screen_info' structure, which
-> is provided by the firmware interface, either the generic EFI code or the
-> x86 BIOS startup.
->
-> Assuming that HV always boots Linux using UEFI, the dependency also makes
-> logical sense, since otherwise it is impossible to boot a guest.
->
-
-Hyper-V as of recent can boot off DeviceTree with the direct kernel boot, no UEFI
-is required (examples would be OpenVMM and the OpenHCL paravisor on arm64).
-
-Being no expert in Kconfig unfortunately... If another solution is possible to
-find given the timing constraints (link errors can't wait iiuc) that would be
-great :)
-
-Could something like "select EFI if SYSFB" work?
-
-> Fixes: 96959283a58d ("Drivers: hv: Always select CONFIG_SYSFB for Hyper-V guests")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On 6/10/25 07:40, Alexander Stein wrote:
+> 'managed' is a non-boolean property specified in ethernet-controller.yaml.
+> Since commit c141ecc3cecd7 ("of: Warn when of_property_read_bool() is
+> used on non-boolean properties") this raises a warning. Use the
+> replacement of_property_present() instead.
+> 
+> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 > ---
->  drivers/hv/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-> index 8622d0733723..07db5e9a00f9 100644
-> --- a/drivers/hv/Kconfig
-> +++ b/drivers/hv/Kconfig
-> @@ -6,6 +6,7 @@ config HYPERV
->  	tristate "Microsoft Hyper-V client drivers"
->  	depends on (X86 && X86_LOCAL_APIC && HYPERVISOR_GUEST) \
->  		|| (ARM64 && !CPU_BIG_ENDIAN && HAVE_ARM_SMCCC_DISCOVERY)
-> +	depends on EFI
->  	select PARAVIRT
->  	select X86_HV_CALLBACK_VECTOR if X86
->  	select OF_EARLY_FLATTREE if OF
-> --
-> 2.39.5
+>  drivers/net/ethernet/freescale/fman/fman_memac.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/freescale/fman/fman_memac.c b/drivers/net/ethernet/freescale/fman/fman_memac.c
+> index 3925441143fac..0291093f2e4e4 100644
+> --- a/drivers/net/ethernet/freescale/fman/fman_memac.c
+> +++ b/drivers/net/ethernet/freescale/fman/fman_memac.c
+> @@ -1225,7 +1225,7 @@ int memac_initialization(struct mac_device *mac_dev,
+>  	 * be careful and not enable this if we are using MII or RGMII, since
+>  	 * those configurations modes don't use in-band autonegotiation.
+>  	 */
+> -	if (!of_property_read_bool(mac_node, "managed") &&
+> +	if (!of_property_present(mac_node, "managed") &&
+>  	    mac_dev->phy_if != PHY_INTERFACE_MODE_MII &&
+>  	    !phy_interface_mode_is_rgmii(mac_dev->phy_if))
+>  		mac_dev->phylink_config.default_an_inband = true;
+
+Reviewed-by: Sean Anderson <sean.anderson@linux.dev>
