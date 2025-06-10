@@ -1,121 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3788E171CD;
-	Tue, 10 Jun 2025 00:17:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA73171CD;
+	Tue, 10 Jun 2025 00:17:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749514629; cv=none; b=EiUjJLSPDokYzHQqwtuMyFaf1RoozlaACVNKD1ry0S/+HMzG3eyEQGQKtbK6Eb6nen9eRZXJBTmNg8jloCOelqVGNeiNDaSRYceJlfuMPOaYw361H9e6c3F2KRPpH4lK6pPXWnxETMVY6mZRhC70Ye87dWJ9RYj1FlQ5UIqswdw=
+	t=1749514680; cv=none; b=a8VQgmeqA9aWYTkKWVnQEgq/5L7z1HWSqRvUzyi/KzyVo3zXiIsbbjAoUKD8FnxC8fo3G4K5Sc1ccAl+jwTQHSFRHWYaS7MN6Kim8tJGpcuSgBItcIvyGuN+d11eyaalsa15XFOihmRGf0ndtGeHPf37TbS6zumAKt9GHFV3Te0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749514629; c=relaxed/simple;
-	bh=TcK7wpbOO+Rouc2siLvE+OIFL+Jnwa3T6Apwy8d4Ppo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A9EdNW8kkd/7JLthT0YWHKDpkDknXgCgue44A6WFwVBgaxUY4lwujZoybXItbeNKi6VBJuJxSM3UvNXwRqu6NjMBIszaRMcCrlSmP8Hzx+LuiRkcIPnb3c7+3RqYDAKqRgwXk1NwqYsVNW14BsZNpz2dttFcSPu80lbHIfd3GOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W9QQcFpn; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749514680; c=relaxed/simple;
+	bh=otKscOGsiwswJAP2raTv6afdx7wYswde19W4gMqQ4qw=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=uBiYCquYVbG1Xt24tHyIxzOLzZerzX8HXRV0G9ZZPZdPi7xeUpZu4gPmNlIDSE/yCVIMBCMXmvm6AMRionhggK1qx5EemevAYcQVHO1s8obK5fc3FXVMIndb7SSHX7IWqOkSA+8MxuDuJr0bPqqbMI8haFmgNLo0TWsRo32fytY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=QaHON5fU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W9QQcFpn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749514628; x=1781050628;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=TcK7wpbOO+Rouc2siLvE+OIFL+Jnwa3T6Apwy8d4Ppo=;
-  b=W9QQcFpnBFLCr6uPb5weFZ6ZtqkkCFjYSnv0ZSoIL4UNMvvgp7ocNY1L
-   MngGoU5daXF0rP2tpJGNMeXJlrv8teQtdDXL4tJkYPcm/jUWZqnZE8GOA
-   PhdOFWOTwbb4huezs+54h0u3zMewya3aNfztlTzWleDL4brj36GATAh2A
-   nOXMyatTX2eFM4c97r0Xr49IspXdiH/4gE2ZXA5RrWxwZDe/VJhxi1fVo
-   W/J3oGEUvLs3S+P7B+23sVZTFCy6PipKL7GXJn24sbBWSuFMzmi3kq+jN
-   b7I49P2ZMdQPYPMEC+fnOdxPwFZh8I4N615J7zdZ905krg0Po3ydsYyG5
-   w==;
-X-CSE-ConnectionGUID: BYQBaoU0S5SQRuDnm8i6tA==
-X-CSE-MsgGUID: hDU2HX5wStyuJYjOGvJ+hg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="62265718"
-X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
-   d="scan'208";a="62265718"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 17:17:07 -0700
-X-CSE-ConnectionGUID: 9sRVPtChRi2F9h/cq3zDhw==
-X-CSE-MsgGUID: AjEJhfx5SW+N+y2KvZ/atA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
-   d="scan'208";a="146643364"
-Received: from pparames-mobl.gar.corp.intel.com (HELO cbae1-mobl.intel.com) ([10.247.96.79])
-  by orviesa009.jf.intel.com with ESMTP; 09 Jun 2025 17:17:03 -0700
-From: "Chang S. Bae" <chang.seok.bae@intel.com>
-To: mingo@redhat.com
-Cc: linux-kernel@vger.kernel.org,
-	x86@kernel.org,
-	tglx@linutronix.de,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	chang.seok.bae@intel.com,
-	Sean Christopherson <seanjc@google.com>,
-	Chao Gao <chao.gao@intel.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] x86/fpu: Ensure XFD state on signal delivery
-Date: Mon,  9 Jun 2025 17:16:59 -0700
-Message-ID: <20250610001700.4097-1-chang.seok.bae@intel.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="QaHON5fU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BDBEC4CEEB;
+	Tue, 10 Jun 2025 00:17:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1749514679;
+	bh=otKscOGsiwswJAP2raTv6afdx7wYswde19W4gMqQ4qw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=QaHON5fU8ZUwLLicgsjDySztS0Qr9fDJet8az4Kqx27A+rUQhPyaEX26oVuy/DOhE
+	 BwKCfrYiz5+IpbTqKVW4QoeMr8zmTm+RAr6I68IuFLThnS0Zr745A9tVfzhqm4njGE
+	 XF0hOptAcc8kKvM8y8fve8y/73P0Z3cNTKxjRnP4=
+Date: Mon, 9 Jun 2025 17:17:58 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, Baolin Wang
+ <baolin.wang@linux.alibaba.com>, Michal Hocko <mhocko@suse.com>,
+ david@redhat.com, shakeel.butt@linux.dev, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, rppt@kernel.org, surenb@google.com,
+ donettom@linux.ibm.com, aboorvad@linux.ibm.com, sj@kernel.org,
+ linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm: fix the inaccurate memory statistics issue for
+ users
+Message-Id: <20250609171758.afc946b81451e1ad5a8ce027@linux-foundation.org>
+In-Reply-To: <06d9981e-4a4a-4b99-9418-9dec0a3420e8@suse.cz>
+References: <f4586b17f66f97c174f7fd1f8647374fdb53de1c.1749119050.git.baolin.wang@linux.alibaba.com>
+	<87bjqx4h82.fsf@gmail.com>
+	<aEaOzpQElnG2I3Tz@tiehlicka>
+	<890b825e-b3b1-4d32-83ec-662495e35023@linux.alibaba.com>
+	<87a56h48ow.fsf@gmail.com>
+	<4c113d58-c858-4ef8-a7f1-bae05c293edf@suse.cz>
+	<06d9981e-4a4a-4b99-9418-9dec0a3420e8@suse.cz>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Sean reported [1] the following splat when running KVM tests:
+On Mon, 9 Jun 2025 10:56:46 +0200 Vlastimil Babka <vbabka@suse.cz> wrote:
 
-   WARNING: CPU: 232 PID: 15391 at xfd_validate_state+0x65/0x70
-   Call Trace:
-    <TASK>
-    fpu__clear_user_states+0x9c/0x100
-    arch_do_signal_or_restart+0x142/0x210
-    exit_to_user_mode_loop+0x55/0x100
-    do_syscall_64+0x205/0x2c0
-    entry_SYSCALL_64_after_hwframe+0x4b/0x53
+> On 6/9/25 10:52 AM, Vlastimil Babka wrote:
+> > On 6/9/25 10:31 AM, Ritesh Harjani (IBM) wrote:
+> >> Baolin Wang <baolin.wang@linux.alibaba.com> writes:
+> >>
+> >>> On 2025/6/9 15:35, Michal Hocko wrote:
+> >>>> On Mon 09-06-25 10:57:41, Ritesh Harjani wrote:
+> >>>>>
+> >>>>> Any reason why we dropped the Fixes tag? I see there were a series of
+> >>>>> discussion on v1 and it got concluded that the fix was correct, then why
+> >>>>> drop the fixes tag?
+> >>>>
+> >>>> This seems more like an improvement than a bug fix.
+> >>>
+> >>> Yes. I don't have a strong opinion on this, but we (Alibaba) will 
+> >>> backport it manually,
+> >>>
+> >>> because some of user-space monitoring tools depend 
+> >>> on these statistics.
+> >>
+> >> That sounds like a regression then, isn't it?
+> > 
+> > Hm if counters were accurate before f1a7941243c1 and not afterwards, and
+> > this is making them accurate again, and some userspace depends on it,
+> > then Fixes: and stable is probably warranted then. If this was just a
+> > perf improvement, then not. But AFAIU f1a7941243c1 was the perf
+> > improvement...
+> 
+> Dang, should have re-read the commit log of f1a7941243c1 first. It seems
+> like the error margin due to batching existed also before f1a7941243c1.
+> 
+> " This patch converts the rss_stats into percpu_counter to convert the
+> error  margin from (nr_threads * 64) to approximately (nr_cpus ^ 2)."
+> 
+> so if on some systems this means worse margin than before, the above
+> "if" chain of thought might still hold.
 
-Chao further identified [2] a reproducible scenarios involving signal
-delivery: a non-AMX task is preempted by an AMX-enabled task which
-modifies the XFD MSR.
+f1a7941243c1 seems like a good enough place to tell -stable
+maintainers where to insert the patch (why does this sound rude).
 
-When the non-AMX task resumes and reloads XSTATE with init values,
-a warning is triggered due to a mismatch between fpstate::xfd and the
-CPU's current XFD state. fpu__clear_user_states() does not currently
-re-synchronize the XFD state after such preemption.
-
-Invoke xfd_update_state() which detects and corrects the mismatch if the
-dynamic feature is enabled.
-
-This also benefits the sigreturn path, as fpu__restore_sig() may call
-fpu__clear_user_states() when the sigframe is inaccessible.
-
-Fixes: 672365477ae8a ("x86/fpu: Update XFD state where required")
-Reported-by: Sean Christopherson <seanjc@google.com>
-Closes: https://lore.kernel.org/lkml/aDCo_SczQOUaB2rS@google.com [1]
-Tested-by: Chao Gao <chao.gao@intel.com>
-Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/all/aDWbctO%2FRfTGiCg3@intel.com [2]
----
- arch/x86/kernel/fpu/core.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
-index ea138583dd92..5fa782a2ae7c 100644
---- a/arch/x86/kernel/fpu/core.c
-+++ b/arch/x86/kernel/fpu/core.c
-@@ -800,6 +800,9 @@ void fpu__clear_user_states(struct fpu *fpu)
- 	    !fpregs_state_valid(fpu, smp_processor_id()))
- 		os_xrstor_supervisor(fpu->fpstate);
- 
-+	/* Ensure XFD state is in sync before reloading XSTATE */
-+	xfd_update_state(fpu->fpstate);
-+
- 	/* Reset user states in registers. */
- 	restore_fpregs_from_init_fpstate(XFEATURE_MASK_USER_RESTORE);
- 
--- 
-2.48.1
-
+The patch is simple enough.  I'll add fixes:f1a7941243c1 and cc:stable
+and, as the problem has been there for years, I'll leave the patch in
+mm-unstable so it will eventually get into LTS, in a well tested state.
