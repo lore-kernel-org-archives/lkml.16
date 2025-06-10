@@ -1,99 +1,243 @@
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B8DA1A8401;
-	Tue, 10 Jun 2025 09:05:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 332B61A8401;
+	Tue, 10 Jun 2025 09:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749546358; cv=none; b=oR1Lsr2IiHf+BCOWulLy36o/2juHSXGpnLNfd9VT+kQVwoqFVIyruKD/Ng14H1/dddQKg3oCb5uqN7jt6As9jMRHuHvEhqoohELbh7suVt/CzDtubSRCmAk1Ng+tMywmaYc7nt1z/j9LK5OiN/bAhPozy5u/4ynTmy1KPpNpaU4=
+	t=1749546443; cv=none; b=rr0wTi8Faswhbc9H/uHHpSMU1/ixq4TI44LH10aeL32nTEOGdDdSuWAQ53048ycLonzee71106EdSnDXjtoIQhdWjbT/vvB3O75wTm5YdpBb8Dgx7z3K/eSqrdstI1t7akvy/1IVLiO/sWv0iU/UDBggQ1B8vSCyayG9PBUolwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749546358; c=relaxed/simple;
-	bh=68wNvFFW9QHKsYo8UNhuUNCZ216A1R6QggbTAdxOA7o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=soUU9/jXl9AbmiY5xjSSCcngrhC1eh91uFmyh+/33MBsMFkhdCC1BR/NIZiQzywtYbgKAlGLFqy39LIQpIgAuzqGyCyAifa5Arwafeop4awxTkLhLXA5mGpJZLIF6AWEBndVbNCk+lnWZM832WHKqqrv6idlKWbj4hh8l/g7JjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4e5a73028d2so1671833137.0;
-        Tue, 10 Jun 2025 02:05:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749546353; x=1750151153;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jd2GJlECAu20oBTXGZhQXIVoTDAJCGdRowATqi2S6DU=;
-        b=JC/nm/KIzYgcw/H1ZDKWcP3UGwyVdPTS+MpKu6BZ8Ff7wUfFcCwF5NAdaJQO8QAEVp
-         A1czZ/KlL0Kt4wDLhYF7+y7Cu6Fi1Q2JRy2btpIX05is7zd49qInfu8S/yS8VnzZuOH+
-         i4qIC8UFrc0mEHlqtxguicqn/NITiYuCajbcn/tUGTwpE6ZePT6ZPrOs3WbR2gmQrMVf
-         yl0rHOclN22bWHg1C/kfPXNh2dBi0YRf15ZiMrAqt37vDldcWynEXUIUrOHzTTRFkieC
-         /iNMYSTrdCumBkY/nfw1TkM5AikcsYmoFvlSfWnHDDu9ha4ztISfeSSpwpej06yX+7sk
-         hITw==
-X-Forwarded-Encrypted: i=1; AJvYcCUBhXfh8lTS+aNV3PEb6FvU6NhhbCgHifu6S/KJ5RdMJ3lox1ZrS2eLIGO9XwcFSoDqliCT0aWZUGFfTg==@vger.kernel.org, AJvYcCXezN8fhdchwH9wmK9KRkWpC1aRhrGkZB3zAy8GBOyqbqahNNZvGXx5qNEJ3dfG2z8j5xFgXQ3e4GrfBFg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmPZ/Dy1Sa2enAxO0Bd6RjdfBZ9NABpoJ8IhfhaIgm3Ov2c38q
-	AYRCcW2/OucvwfM22J0/oXwrZMuySgqDs3X6jRQNoy1744CyUuOizSlX6iyAGkv7
-X-Gm-Gg: ASbGnctINE1XVpmPfQOuaK4RfrRbA/Y5mtyTws+BcjZPfaDoRfD1nWVqzCVAeWg4S0r
-	txKl1dfQQk9vAencxqT9TLKKhbL14U6yPIECenoyS8dWHqdaslzwdbPGVUIW3kDEjbZMo0emeP0
-	n4E9aoJmcdPEiFUBkdp+fdvG9EwrAJc0GsqQj8qPUqkgoLSYSJsD1oSa2Ewttw+QktFLKARF9dr
-	MAad2j+Pn/0awdvHYUbgSy77Bw2p9jWGJPaQ39JA3l3Nds4U9TZ5V1wnW/duvoYmnW2D7oGs2Qv
-	PFjkGGK3Zmslsq5pI3LodFJUZ9HrBUi+CV2mMmYD0SlZuQRyRhi3gb+kX890YDX3czATGtEZ+w9
-	eDOF6ZM5xvre1jaFlmMbNsTkU
-X-Google-Smtp-Source: AGHT+IG6vqh7MhRYY2VnSQpd0CwGTXM+O9XMojSy/BkVHkpBhXQl/oER/Onlo/rTxagSwhRcdIhLhQ==
-X-Received: by 2002:a05:6102:3e8f:b0:4e7:596e:ec10 with SMTP id ada2fe7eead31-4e772880fd9mr12695071137.1.1749546353051;
-        Tue, 10 Jun 2025 02:05:53 -0700 (PDT)
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87eeae8791esm873901241.15.2025.06.10.02.05.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jun 2025 02:05:52 -0700 (PDT)
-Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4e75abe99b7so1746495137.3;
-        Tue, 10 Jun 2025 02:05:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXheH9l4TLI9hdsMGaO4K/5+W2u++LQWHT/S1kZlnzOxj99aVQ30SYy0NSfXwSCWGb35QDey5yjNHNkrVw=@vger.kernel.org, AJvYcCXrfg7Nt8T6wUd2amK7NY0GNzVnZkRv+1DzUO9CdaXTiMoDH3D++JqBMDCo8YSPCsf1vjXOKZLyrbQ0EQ==@vger.kernel.org
-X-Received: by 2002:a05:6102:3ed0:b0:4e5:a394:16cb with SMTP id
- ada2fe7eead31-4e7728ba4d0mr12079543137.7.1749546352494; Tue, 10 Jun 2025
- 02:05:52 -0700 (PDT)
+	s=arc-20240116; t=1749546443; c=relaxed/simple;
+	bh=ZM+zxGI1u4LejkqbNmMVUbYQhbNCdSBHsu5mm84RMCc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=gNHd2VrUF3S+2w/yGGPS03fl1zJDVMUy8kk1Juf6nefpjqW7/AulSN19ZmyLLg0gHsYHq8DQVWevqsp9Lnt/d6M3wRZVXZVAD/CU10+3trYayMvSY+jcBo5/YeZXkMBF4WOXD2Le81nkyIkPTZOQMY968It5EfaIDhekj4WLLDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Se/+7llQ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Se/+7llQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EE6FC4CEED;
+	Tue, 10 Jun 2025 09:07:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749546442;
+	bh=ZM+zxGI1u4LejkqbNmMVUbYQhbNCdSBHsu5mm84RMCc=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=Se/+7llQ0ATlcHDQPW8Un4LmPpQBtOpj/S+vklbEe9q30T1FRfq1kbOAC+s/Yw0+o
+	 3O2Cx+K36+7wH3bXy9JJEjMR4Dom12fJqucj6ZiNldNtTC6w3rutuj56gu6jAlvPyi
+	 NNFvrcqM24SVa2Ti/i8yEn4yaUUdWXBTH7N1iZjDwkQr2nCym9uGJOqEFjrYIXx1/z
+	 EfULQVfL+KBj2WNz1VEz+5+K+McvIRcMafcJvGJlhsx8Gu7tejk7f0Zno/eTm7j/7o
+	 j3bPt3hx90SNqy1U2Q/FdAob7qn0pf2LEfoYJZjE02MXKDJ1IrVQhIH1tmYKk3C6jb
+	 kHML1rWytJzDg==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250601151222.60ead71e7d8492a18c711a05@linux-foundation.org>
-In-Reply-To: <20250601151222.60ead71e7d8492a18c711a05@linux-foundation.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 10 Jun 2025 11:05:40 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdU1NdNjx3f1V9j2FACWwC5faPKCXChtW6Z=i2JyXquFuA@mail.gmail.com>
-X-Gm-Features: AX0GCFt1LL46Kri618f12QZQvjS1xahyg5UAuM3XvWnCqEwLP37r2X4sb5UOSYY
-Message-ID: <CAMuHMdU1NdNjx3f1V9j2FACWwC5faPKCXChtW6Z=i2JyXquFuA@mail.gmail.com>
-Subject: Re: [GIT PULL] Additional MM updates for 6.16-rc1
-To: Andrew Morton <akpm@linux-foundation.org>, SeongJae Park <sj@kernel.org>, 
-	Honggyu Kim <honggyu.kim@sk.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org, 
-	mm-commits@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 10 Jun 2025 11:07:16 +0200
+Message-Id: <DAIQG9ALK4QC.2P2C2MC4U9YVX@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
+ "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>,
+ "Will Deacon" <will@kernel.org>, "Peter Zijlstra" <peterz@infradead.org>,
+ "Mark Rutland" <mark.rutland@arm.com>, "Wedson Almeida Filho"
+ <wedsonaf@gmail.com>, "Viresh Kumar" <viresh.kumar@linaro.org>, "Lyude
+ Paul" <lyude@redhat.com>, "Ingo Molnar" <mingo@kernel.org>, "Mitchell Levy"
+ <levymitchell0@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Linus Torvalds"
+ <torvalds@linux-foundation.org>, "Thomas Gleixner" <tglx@linutronix.de>
+Subject: Re: [PATCH v4 03/10] rust: sync: atomic: Add ordering annotation
+ types
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Boqun Feng" <boqun.feng@gmail.com>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <lkmm@lists.linux.dev>,
+ <linux-arch@vger.kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250609224615.27061-1-boqun.feng@gmail.com>
+ <20250609224615.27061-4-boqun.feng@gmail.com>
+In-Reply-To: <20250609224615.27061-4-boqun.feng@gmail.com>
 
-Hi Andrew et al,
+On Tue Jun 10, 2025 at 12:46 AM CEST, Boqun Feng wrote:
+> Preparation for atomic primitives. Instead of a suffix like _acquire, a
+> method parameter along with the corresponding generic parameter will be
+> used to specify the ordering of an atomic operations. For example,
+> atomic load() can be defined as:
+>
+> 	impl<T: ...> Atomic<T> {
+> 	    pub fn load<O: AcquireOrRelaxed>(&self, _o: O) -> T { ... }
+> 	}
+>
+> and acquire users would do:
+>
+> 	let r =3D x.load(Acquire);
+>
+> relaxed users:
+>
+> 	let r =3D x.load(Relaxed);
+>
+> doing the following:
+>
+> 	let r =3D x.load(Release);
+>
+> will cause a compiler error.
+>
+> Compared to suffixes, it's easier to tell what ordering variants an
+> operation has, and it also make it easier to unify the implementation of
+> all ordering variants in one method via generic. The `IS_RELAXED` and
+> `ORDER` associate consts are for generic function to pick up the
+> particular implementation specified by an ordering annotation.
+>
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 
-On Mon, 2 Jun 2025 at 17:55, Andrew Morton <akpm@linux-foundation.org> wrote:
-> - The 2 patch series "mm/damon: build-enable essential DAMON components
->   by default" from SeongJae Park reworks DAMON Kconfig to make it easier
->   to enable CONFIG_DAMON.
+Looks good, I got a few comments on the details below.
 
-... or, make it harder to disable it?
+> ---
+>  rust/kernel/sync/atomic.rs          |  3 +
+>  rust/kernel/sync/atomic/ordering.rs | 94 +++++++++++++++++++++++++++++
+>  2 files changed, 97 insertions(+)
+>  create mode 100644 rust/kernel/sync/atomic/ordering.rs
+>
+> diff --git a/rust/kernel/sync/atomic.rs b/rust/kernel/sync/atomic.rs
+> index 65e41dba97b7..9fe5d81fc2a9 100644
+> --- a/rust/kernel/sync/atomic.rs
+> +++ b/rust/kernel/sync/atomic.rs
+> @@ -17,3 +17,6 @@
+>  //! [`LKMM`]: srctree/tools/memory-mode/
+> =20
+>  pub mod ops;
+> +pub mod ordering;
+> +
+> +pub use ordering::{Acquire, Full, Relaxed, Release};
+> diff --git a/rust/kernel/sync/atomic/ordering.rs b/rust/kernel/sync/atomi=
+c/ordering.rs
+> new file mode 100644
+> index 000000000000..14cda8c5d1b1
+> --- /dev/null
+> +++ b/rust/kernel/sync/atomic/ordering.rs
+> @@ -0,0 +1,94 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Memory orderings.
+> +//!
+> +//! The semantics of these orderings follows the [`LKMM`] definitions an=
+d rules.
+> +//!
+> +//! - [`Acquire`] and [`Release`] are similar to their counterpart in Ru=
+st memory model.
+> +//! - [`Full`] means "fully-ordered", that is:
+> +//!   - It provides ordering between all the preceding memory accesses a=
+nd the annotated operation.
+> +//!   - It provides ordering between the annotated operation and all the=
+ following memory accesses.
+> +//!   - It provides ordering between all the preceding memory accesses a=
+nd all the fllowing memory
+> +//!     accesses.
+> +//!   - All the orderings are the same strong as a full memory barrier (=
+i.e. `smp_mb()`).
 
-Given no single defconfig file in v6.15 enables CONFIG_DAMON, I find
-it hard to believe defaulting DAMON to "y" is the right thing to do...
-(Yes, I have read the rationale in commit 28615e6eed152f2f
-("mm/damon/Kconfig: enable CONFIG_DAMON by default")).
+s/strong/strength/ ?
 
-Thanks!
+> +//! - [`Relaxed`] is similar to the counterpart in Rust memory model, ex=
+cept that dependency
+> +//!   orderings are also honored in [`LKMM`]. Dependency orderings are d=
+escribed in "DEPENDENCY
+> +//!   RELATIONS" in [`LKMM`]'s [`explanation`].
+> +//!
+> +//! [`LKMM`]: srctree/tools/memory-model/
+> +//! [`explanation`]: srctree/tools/memory-model/Documentation/explanatio=
+n.txt
+> +
+> +/// The annotation type for relaxed memory ordering.
+> +pub struct Relaxed;
+> +
+> +/// The annotation type for acquire memory ordering.
+> +pub struct Acquire;
+> +
+> +/// The annotation type for release memory ordering.
+> +pub struct Release;
+> +
+> +/// The annotation type for fully-order memory ordering.
+> +pub struct Full;
 
-Gr{oetje,eeting}s,
+Is this ordering only ever used in combination with itself? (Since you
+don't have a `FullOrAcquire` trait)
 
-                        Geert
+> +
+> +/// The trait bound for operations that only support relaxed ordering.
+> +pub trait RelaxedOnly: AcquireOrRelaxed + ReleaseOrRelaxed + All {}
+> +
+> +impl RelaxedOnly for Relaxed {}
+> +
+> +/// The trait bound for operations that only support acquire or relaxed =
+ordering.
+> +pub trait AcquireOrRelaxed: All {
+> +    /// Describes whether an ordering is relaxed or not.
+> +    const IS_RELAXED: bool =3D false;
+> +}
+> +
+> +impl AcquireOrRelaxed for Acquire {}
+> +
+> +impl AcquireOrRelaxed for Relaxed {
+> +    const IS_RELAXED: bool =3D true;
+> +}
+> +
+> +/// The trait bound for operations that only support release or relaxed =
+ordering.
+> +pub trait ReleaseOrRelaxed: All {
+> +    /// Describes whether an ordering is relaxed or not.
+> +    const IS_RELAXED: bool =3D false;
+> +}
+> +
+> +impl ReleaseOrRelaxed for Release {}
+> +
+> +impl ReleaseOrRelaxed for Relaxed {
+> +    const IS_RELAXED: bool =3D true;
+> +}
+> +
+> +/// Describes the exact memory ordering of an `impl` [`All`].
+> +pub enum OrderingDesc {
 
+Why not name this `Ordering`?
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> +    /// Relaxed ordering.
+> +    Relaxed,
+> +    /// Acquire ordering.
+> +    Acquire,
+> +    /// Release ordering.
+> +    Release,
+> +    /// Fully-ordered.
+> +    Full,
+> +}
+> +
+> +/// The trait bound for annotating operations that should support all or=
+derings.
+> +pub trait All {
+> +    /// Describes the exact memory ordering.
+> +    const ORDER: OrderingDesc;
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+And then here: `ORDERING`.
+
+---
+Cheers,
+Benno
+
+> +}
+> +
+> +impl All for Relaxed {
+> +    const ORDER: OrderingDesc =3D OrderingDesc::Relaxed;
+> +}
+> +
+> +impl All for Acquire {
+> +    const ORDER: OrderingDesc =3D OrderingDesc::Acquire;
+> +}
+> +
+> +impl All for Release {
+> +    const ORDER: OrderingDesc =3D OrderingDesc::Release;
+> +}
+> +
+> +impl All for Full {
+> +    const ORDER: OrderingDesc =3D OrderingDesc::Full;
+> +}
+
