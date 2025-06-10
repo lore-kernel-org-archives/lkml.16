@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F7311712;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260171A2564;
 	Tue, 10 Jun 2025 10:46:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749552385; cv=none; b=EL0krxslYZEYy32J2h7VXrzde3BFh2aJKB2cRyMHStB+8AfkdmS+rf31+ORS2ZJarFkZYvJrqdxDDsX0bcik1peYqs1IrA/4vKw+nYcLxBpcs2srf+87S+oHR2Te8YPwkQ71dGDDIZULwD49AXqVh5AiZVfVwkwwDR9KDreMXsk=
+	t=1749552385; cv=none; b=WPFox42xc0jgjY+DtE6vGnXv1kimu3Qg60FKDD8xxzFo8sf7vmz9f2iq9s4DsG6HJogpBrXL+k6wmju1d6lWt+l7PG7UNKYE3OgcUhszB/Yf9B+QB2kqOSwIi2FXRorgnWWaDGOmLc1+7VLXmDupNrETUybixyxeSvRbvBqwtm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749552385; c=relaxed/simple;
-	bh=5GdVV6A8bXN64ovkNLx7Xdx5aR1iPXnV/yeu24lgmqI=;
+	bh=8JLj251EiGtS/E11n5n+267zLGC8qyxQhPvEcm7GqEQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bVKqEC26toGLwK5xo48zJxoRcox+PEW2avpcE6l8GO/bBV9XZdtsa2f0t7/mggCamoJsUycQKuG8HtYP8TynRQiSuFAMAD4zZxX27cgeEfzH556DG3++KWMoAFQbyqxooBFBtB61ia24ow/eTVbOCNbYU2KirgIF3WU0GLqIKBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TdnqWVGe; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=e+lykUmpq9UiSEUrGMikPiLk6sHJsYxiSyGD8YqGsx2BbQRgpCNI+DLfHKjvEmGvhNbVNmf1KHCbpjtAVC0X6vYYQZCPEeaIVekjefHStD2Ljn5VLCm+cHL1o2DUUKVZjErMJIxKlcElB/L9YubAY3coQFicLlIbRR4k81QA0Fw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RwsLZMRM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TdnqWVGe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C210BC4CEEF;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RwsLZMRM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1D61C4CEED;
 	Tue, 10 Jun 2025 10:46:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1749552384;
-	bh=5GdVV6A8bXN64ovkNLx7Xdx5aR1iPXnV/yeu24lgmqI=;
+	bh=8JLj251EiGtS/E11n5n+267zLGC8qyxQhPvEcm7GqEQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TdnqWVGevQtmr0KsXTjTfpno1skOkSyi6x1Hks2h6YU0aHrGAguVpDfqBw2W1Q+Dj
-	 pIwBi9urXY01/F2pNNKYPsAs6iXfGvQR1H8kedKiHSq0378ycI13RSNn3SoNfVGYzf
-	 VCiRrugcypTsecgqpY8zyacuw3Fuhl5+v80KHjmgTBqM2f5OTuwEAKaOgQZ36MEooC
-	 PeNvtcVrh2yeDZAZvHTXOb1Eh+sjtl1OVs5yq8GkZe/W6SmBfbYgFqAymWN97oGwtR
-	 3Lj6pPBc+nJcBme5YiLQ6RYTHdETipHqTPqtOMlunrndis24GFiiX/L9FtoPhwg5Bu
-	 EVB87LfQOt8CQ==
+	b=RwsLZMRMGrOKfxc83+DsbyVjsXXIaMTQmxXly3qq612w3OgHSNQ+rW6FqT6NIryTT
+	 JGohFd50AnEprkna77PPHqIzZLVFxMlNlJlOmHXNznLJx7hwPx7Dn9El99lPJURmrk
+	 wCWQRvVXmfIsPUJ8PeFePt36X8F+NBmgFB38O633c8dCC2wMIBbcnhkVQqi4Vwarzs
+	 YHmxLGUQI5gsRMvQ95qTDVoOqOv04PleljZksChmpq4e8ohEvyhiSBstW+FQ8ti+l8
+	 lMM3x8UGK7cxcrf8sBUWhftIEH9znV7Gxed/2FXe4CJPcwYSYR0IrkhJRs4jQnGpOM
+	 pWtbbiVoQ04Qg==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uOwUo-00000003juz-3zyW;
+	id 1uOwUo-00000003juv-3izT;
 	Tue, 10 Jun 2025 12:46:22 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
@@ -42,9 +42,12 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
 	"Paul E. McKenney" <mchehab+huawei@kernel.org>,
 	"Shuah Khan" <skhan@linuxfoundation.org>,
+	Donald Hunter <donald.hunter@gmail.com>,
 	Eric Dumazet <edumazet@google.com>,
 	Jakub Kicinski <mchehab+huawei@kernel.org>,
+	Jan Stancek <jstancek@redhat.com>,
 	Paolo Abeni <pabeni@redhat.com>,
+	Ruben Wauters <rubenru09@aol.com>,
 	Simon Horman <mchehab+huawei@kernel.org>,
 	joel@joelfernandes.org,
 	linux-kernel-mentees@lists.linux.dev,
@@ -53,9 +56,9 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	netdev@vger.kernel.org,
 	peterz@infradead.org,
 	stern@rowland.harvard.edu
-Subject: [PATCH 2/4] docs: netlink: netlink-raw.rst: use :ref: instead of :doc:
-Date: Tue, 10 Jun 2025 12:46:05 +0200
-Message-ID: <4d46b08e43e37403afc09412692cb5eb295019b6.1749551140.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 1/4] tools: ynl_gen_rst.py: create a top-level reference
+Date: Tue, 10 Jun 2025 12:46:04 +0200
+Message-ID: <ed66166bec8051df75465f9821671b21011fbda4.1749551140.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1749551140.git.mchehab+huawei@kernel.org>
 References: <cover.1749551140.git.mchehab+huawei@kernel.org>
@@ -68,39 +71,41 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Having :doc: references with relative paths doesn't always work,
-as it may have troubles when O= is used. So, replace them by
-Sphinx cross-reference tag that are now created by ynl_gen_rst.py.
+Currently, rt documents are referred with:
+
+Documentation/userspace-api/netlink/netlink-raw.rst: :doc:`rt-link<../../networking/netlink_spec/rt-link>`
+Documentation/userspace-api/netlink/netlink-raw.rst: :doc:`tc<../../networking/netlink_spec/tc>`
+Documentation/userspace-api/netlink/netlink-raw.rst: :doc:`tc<../../networking/netlink_spec/tc>`
+
+that's hard to maintain, and may break if we change the way
+rst files are generated from yaml. Better to use instead a
+reference for the netlink family.
+
+So, add a netlink-<foo> reference to all generated docs.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/userspace-api/netlink/netlink-raw.rst | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/net/ynl/pyynl/ynl_gen_rst.py | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/userspace-api/netlink/netlink-raw.rst b/Documentation/userspace-api/netlink/netlink-raw.rst
-index 31fc91020eb3..aae296c170c5 100644
---- a/Documentation/userspace-api/netlink/netlink-raw.rst
-+++ b/Documentation/userspace-api/netlink/netlink-raw.rst
-@@ -62,8 +62,8 @@ Sub-messages
- ------------
+diff --git a/tools/net/ynl/pyynl/ynl_gen_rst.py b/tools/net/ynl/pyynl/ynl_gen_rst.py
+index 0cb6348e28d3..7bfb8ceeeefc 100755
+--- a/tools/net/ynl/pyynl/ynl_gen_rst.py
++++ b/tools/net/ynl/pyynl/ynl_gen_rst.py
+@@ -314,10 +314,11 @@ def parse_yaml(obj: Dict[str, Any]) -> str:
  
- Several raw netlink families such as
--:doc:`rt-link<../../networking/netlink_spec/rt-link>` and
--:doc:`tc<../../networking/netlink_spec/tc>` use attribute nesting as an
-+:ref:`rt-link<netlink-rt-link>` and
-+:ref:`tc<netlink-tc>` use attribute nesting as an
- abstraction to carry module specific information.
+     # Main header
  
- Conceptually it looks as follows::
-@@ -162,7 +162,7 @@ then this is an error.
- Nested struct definitions
- -------------------------
+-    lines.append(rst_header())
+-
+     family = obj['name']
  
--Many raw netlink families such as :doc:`tc<../../networking/netlink_spec/tc>`
-+Many raw netlink families such as :ref:`tc<netlink-tc>`
- make use of nested struct definitions. The ``netlink-raw`` schema makes it
- possible to embed a struct within a struct definition using the ``struct``
- property. For example, the following struct definition embeds the
++    lines.append(rst_header())
++    lines.append(rst_label("netlink-" + family))
++
+     title = f"Family ``{family}`` netlink specification"
+     lines.append(rst_title(title))
+     lines.append(rst_paragraph(".. contents:: :depth: 3\n"))
 -- 
 2.49.0
 
