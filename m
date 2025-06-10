@@ -1,85 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8361728BAAC;
-	Tue, 10 Jun 2025 10:02:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676B628BAAC;
+	Tue, 10 Jun 2025 10:03:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749549769; cv=none; b=l/zS1gRT+oMG8tZe1AiX46djkjenUbqa61zrkOBf413RTZvVnLMwMWdGMaufr7wD1vnzK5z0J7EOGczxKzKFvBM21kgpYpmmZCP7RHEsWOBq7hd8kf8yZJ4igVk+x6RU7fVQFNqBExlv0Fv5PuxUAx3EAS8IvM++tQB4iZsHvFU=
+	t=1749549798; cv=none; b=T9u7+6rSlrMq+k/8SoGR5nukRe2qDJEig/l0jJfXn88Us/bUGlhUxPRyS6PEoHERAc1qdQzaEk0PVclZzTlTvvZkb0XTmniCTF8TB3sFIomquP/fA3eeZgSqwW44g20LtIOXuJ5WTFR1t2E2QRf9U09yZsI3o0DruDO+9jGuDxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749549769; c=relaxed/simple;
-	bh=10QgRGlAdUB6j196B6SS3g0F3Ydy3EG+vkL/4Ux7/yU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S0ZfdKC4Mh+riWhBpyyrbV1A3p6hgxvgMqx8JSPay4Fx0zTHowjpBjVM35Ba9VekoAj5bgegRMsuAf3DiKuqv0hjtHPYSJC8H3uzzw+FjCQ9qnkE/5vdGeP0nLcyzXH9g3OTKZ77wMBEnoA+ZMGof25vS/QgwDdNwY9211Cj6Tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=TyNXnWp/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749549798; c=relaxed/simple;
+	bh=HAvFHEOvispX8DPp6QtygWA8UYJ0ghJPEtONhp225LE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Hihv75dF9LF8j6Tq3QpjJih/+oa2fs6nMBt4lOfhcYtntqavItasr/nYWWOAwvq5Oc830d/oLBeSeIC//HuThOuNur1BrMsla7fGEeeQoL3ZhttW3WvRuYDe8L94K9oq2ouzUW8qPgy6rw0hRX2z8ZKOGrnLwoP1c/atbSHa9uU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F7YgoP1N; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="TyNXnWp/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4620C4CEED;
-	Tue, 10 Jun 2025 10:02:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1749549768;
-	bh=10QgRGlAdUB6j196B6SS3g0F3Ydy3EG+vkL/4Ux7/yU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TyNXnWp/XjQS6G0rz7cg62OU0fVgQI9t7GZyP3AL8lXjRSLvNNWVvo1Z+C1Px+G7C
-	 bfqql6lAhNvSWb97v6YVR9KqPc3dTHQ0C28RU9QR3dM9hWRLhKix+ccrwYeW3O2O5D
-	 aTb/expteWzTEbdnUl7Um7Q3L0vVug/814OLGsXE=
-Date: Tue, 10 Jun 2025 12:02:46 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>, rafael@kernel.org,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
-	mcgrof@kernel.org, russ.weight@linux.dev, ojeda@kernel.org,
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, lossin@kernel.org, aliceryhl@google.com,
-	tmgross@umich.edu, leitao@debian.org, david.m.ertman@intel.com,
-	ira.weiny@intel.com, leon@kernel.org, fujita.tomonori@gmail.com,
-	tamird@gmail.com, igor.korotin.linux@gmail.com, anisse@astier.eu,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH] rust: module: remove deprecated author key
-Message-ID: <2025061038-trash-clammy-6e49@gregkh>
-References: <20250609122200.179307-1-trintaeoitogc@gmail.com>
- <CANiq72==Xybm956Ete95e3YH7MTresNd3szxLg7GdzvhW1O+jg@mail.gmail.com>
- <826956a9-6a43-404a-8130-11a4a3dc663a@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F7YgoP1N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749549797; x=1781085797;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=HAvFHEOvispX8DPp6QtygWA8UYJ0ghJPEtONhp225LE=;
+  b=F7YgoP1N4GiFC9bLaWxImg83AabzOaJ2+nmQxluhzaZa0UWHV0JQwxCM
+   fd/dTKDPQ8stcuK2h312yTASZncUBUz4vVBoXB/0Aeq04ZTo8vNhRKoxZ
+   rf78+0uvqnmeaug2kmUhi64dK92q8dDRuoQQ+zVrOWMoDl5j8GiNheZoc
+   uApH1n1QGkCoBwINr3EHyJjPheyibgA0nHchjPYCm1pBZy6J/anGQP4CJ
+   Qsve5uQ5zXgvPt3zRLYgzUKzwxGPGk0si3Y8BHvKgv1LHIHOJbWCOajB5
+   Eso+Klpwq6LhWc0yd2KEydyT4vVpRG3x4S/ko89O3kovMTzzn3H8SUxWm
+   A==;
+X-CSE-ConnectionGUID: pJQsOXcgRCW2YTSAfqk+xg==
+X-CSE-MsgGUID: CkDKd4HmRxqUmP0D0m9HVw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="69094507"
+X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
+   d="scan'208";a="69094507"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 03:03:16 -0700
+X-CSE-ConnectionGUID: FTkkf9a7QRCvoGx9uHvArw==
+X-CSE-MsgGUID: QROu3LpsR8KY0r0eyt2ypQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
+   d="scan'208";a="147295260"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by fmviesa010.fm.intel.com with ESMTP; 10 Jun 2025 03:03:12 -0700
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Lucas De Marchi <lucas.demarchi@intel.com>,
+	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc: David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Jan Dabros <jsd@semihalf.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Raag Jadav <raag.jadav@intel.com>,
+	"Tauro, Riana" <riana.tauro@intel.com>,
+	"Adatrao, Srinivasa" <srinivasa.adatrao@intel.com>,
+	"Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+	intel-xe@lists.freedesktop.org,
+	linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/4] drm/xe: i2c support
+Date: Tue, 10 Jun 2025 13:03:06 +0300
+Message-ID: <20250610100311.2245871-1-heikki.krogerus@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <826956a9-6a43-404a-8130-11a4a3dc663a@kernel.org>
 
-On Mon, Jun 09, 2025 at 07:47:55PM +0200, Danilo Krummrich wrote:
-> On 09.06.2025 19:39, Miguel Ojeda wrote:
-> > On Mon, Jun 9, 2025 at 2:22 PM Guilherme Giacomo Simoes
-> > <trintaeoitogc@gmail.com> wrote:
-> >>
-> >> Now that all in-tree modules have migrated to `authors`, remove:
-> > 
-> > Nit: I would have said "most modules", since we have new/remaining
-> > ones (no need for a new version for this).
-> > 
-> > I think this patch is OK -- we could wait to do this more cycles, but
-> > if we are doing it, then probably the sooner we do it, the simpler.
-> > 
-> >>  drivers/cpufreq/rcpufreq_dt.rs        | 2 +-
-> >>  drivers/gpu/drm/nova/nova.rs          | 2 +-
-> >>  drivers/gpu/nova-core/nova_core.rs    | 2 +-
-> >>  rust/kernel/firmware.rs               | 2 +-
-> >>  samples/rust/rust_configfs.rs         | 2 +-
-> >>  samples/rust/rust_driver_auxiliary.rs | 2 +-
-> > 
-> > Andreas, Danilo, Greg, Viresh: if nobody is against it, I will apply
-> > it this cycle. Acked-by's for your bits appreciated, of course.
-> 
-> Acked-by: Danilo Krummrich <dakr@kernel.org>
+Hi,
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Changed since v1:
+- Now rebased on top of drm-tip.
+- No longer ignoring errors from xe_i2c_probe().
+- Cleanups pointed out by Lucas.
+
+I've also included followup patches from Raag and Riana to this
+series.
+
+Original cover letter:
+
+Some of the future GPUs will provide access to the on-board Synopsys
+DesignWare I2C host adapter. The i2c is used to connect various
+microcontrollers. The initially supported microcontroller unit is
+called Add-In Management Controller (AMC).
+
+Thanks,
+
+Heikki Krogerus (2):
+  i2c: designware: Add quirk for Intel Xe
+  drm/xe: Support for I2C attached MCUs
+
+Raag Jadav (1):
+  drm/xe/pm: Wire up suspend/resume for I2C controller
+
+Riana Tauro (1):
+  drm/xe/xe_i2c: Add support for i2c in survivability mode
+
+ drivers/gpu/drm/xe/Makefile                 |   1 +
+ drivers/gpu/drm/xe/regs/xe_i2c_regs.h       |  20 ++
+ drivers/gpu/drm/xe/regs/xe_irq_regs.h       |   1 +
+ drivers/gpu/drm/xe/regs/xe_pmt.h            |   2 +-
+ drivers/gpu/drm/xe/regs/xe_regs.h           |   2 +
+ drivers/gpu/drm/xe/xe_device.c              |   5 +
+ drivers/gpu/drm/xe/xe_device_types.h        |   4 +
+ drivers/gpu/drm/xe/xe_i2c.c                 | 299 ++++++++++++++++++++
+ drivers/gpu/drm/xe/xe_i2c.h                 |  62 ++++
+ drivers/gpu/drm/xe/xe_irq.c                 |   2 +
+ drivers/gpu/drm/xe/xe_pm.c                  |   9 +
+ drivers/gpu/drm/xe/xe_survivability_mode.c  |  23 +-
+ drivers/i2c/busses/i2c-designware-platdrv.c |  18 +-
+ 13 files changed, 433 insertions(+), 15 deletions(-)
+ create mode 100644 drivers/gpu/drm/xe/regs/xe_i2c_regs.h
+ create mode 100644 drivers/gpu/drm/xe/xe_i2c.c
+ create mode 100644 drivers/gpu/drm/xe/xe_i2c.h
+
+-- 
+2.47.2
+
