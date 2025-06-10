@@ -1,133 +1,292 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 171FE28A409;
-	Tue, 10 Jun 2025 09:24:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184AB28A717;
+	Tue, 10 Jun 2025 09:24:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749547485; cv=none; b=CF+3mim3+TI9zfLk4/5mRmN22TdtDqyJmX4L1Y0Hgr83+l8gbmVP8dKW6jtjDLe6zK5SX4UvxEWkjIEBTNWZ4l+ZekPv/KS/47GFjif8PnmhtiU9vISldLx9QqZnXBEZx7j1gA0fEd5GHewegIjODdClW96tKZNjn0TqvT2hVdU=
+	t=1749547491; cv=none; b=Ebx6p+lan9BCk5hE3daomOBFNRutcgrZfXM3AKvf/sM517EKqTkzUOO9D2oal/+9tveyJzk6Jlt9OKaj5y+1pz77nzzasmJLG9VmLT2UqmmNUWv6CV8cokRCNoIPCy8bNo1CF9zHOydcZ8eHNOpfyDEkdkajvpH5ZiWSUQw/h0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749547485; c=relaxed/simple;
-	bh=7O8pLwMtFMpTYlcRgT7szr1Viv9rchg8SjS1xi2PCaw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hGBdxDTzRwqbz8IM4hL43WkYT4apis84+UViskQjkr/rDSscwd8CHco5x36noHyexYQzH+q4tgVuAjQi7DjwUBIutvUoTMZjjD7W65T5UoxtC1DY0BlPymOWNHyuTcM0NWcVgwSgt9ojHaRW2lO8xFyJ9bVUo1TY8TebNkM0VNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h/ESNX8S; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749547491; c=relaxed/simple;
+	bh=UBk0O2NifEtSzMDABHTsAPAX1ZK2mbR0B7xvcIeNcf8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gZ9a9au3e7C2SnDxC0q8+FVsxb/ATtBPRpeoo2yR0CRzV7f21BTE3+Mngw2GJ/dcSmNjDa9PvVHAaxNAVWw+SP5y2XEaf1Zi+O4OLs9RW7+V5nR2xPaBhb85514QghrUGuVlf0SNskTnDSSSRPtOyh+JzRB0N86ItlcMjU0QB6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Myqq29bq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h/ESNX8S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CE4EC4CEF4;
-	Tue, 10 Jun 2025 09:24:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Myqq29bq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 204CCC4CEF2;
+	Tue, 10 Jun 2025 09:24:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749547484;
-	bh=7O8pLwMtFMpTYlcRgT7szr1Viv9rchg8SjS1xi2PCaw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=h/ESNX8SjqAIz/fIEsEV2YR9QfqZ97fQl6gbBK0Wqzd9CGz2I+2hGeYCGGNwKFF1q
-	 4GgUTzuEiwdZABnuRKxnCXdVv3KWEcsd6LXVMaY5KwJ+4VHNk/XlNHuC0h849sfxeP
-	 fDttr645y7K6OxNgsCRZvE3QMBEfm2U4xnbfPfvVj/4meDG9xO7I1dp6JXI5/Zc+Q6
-	 ReizgibSRPZSYJfww1QxdU6DiySj7el7R69zggX2xH/6KBkwWOtdnwEzgU6qiUXy41
-	 9XGHwaWfQm6hBaP9C4eIjz3eBcBQGFv9HWOCNhFOQ806wcuqL+eHrW/CIa3c86++5T
-	 2CpVzO1IsL5Uw==
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ad1b94382b8so905756966b.0;
-        Tue, 10 Jun 2025 02:24:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCURCEXMjtGT4TQH2FanKQ9gC4V+dvOql8N6eGqDkBMrJobcyE4NwkVGeQKU1w1a1c9vVdRw07cVrAYy4Q==@vger.kernel.org, AJvYcCVHp0TZtUSIML/Iq4QZfBZnl4yZOoy5KyQIQSy7FxVf8mQL7flcv0gYK9vOQOF6K6nmJr+abR2Bm6s=@vger.kernel.org, AJvYcCW3fiZH3bdLfUbVdjYW42XqUKFw2M8N4jprWd+TJSkPpy4PKDg5Kdl/DfQEdWQMmJrdQYrHpJgQQFNIa/YSC4+2TFuxQw==@vger.kernel.org, AJvYcCWYMaB339IEIX8Iz0doOq7aK5QOeO1eXD5LGLJUiUgElLqDYGxGIcHN5+MobFTgnQHglZAfv7t7SUi7@vger.kernel.org, AJvYcCX7vGqqJasEIFBmNm1polAZmgM6ufJxgsWW/HsQGd/iqhyfHZgnVmD9qR09DEf4QocNMWdHZ+NEIyNQyRBZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYv/ZzFiYUFedMZQfxxYvfv01R+OvmA2DQevizydUHp8ygAkXJ
-	ddc4A9DuqsQrL6XZfE1ht2MDe5MnYWJYjZG1XAS98uIYNluq3QLsd00+k1F+z7UEb+4T8bN/eeD
-	xewvpyhK2AxKYOrPxVPcAT/h5Bhfji9w=
-X-Google-Smtp-Source: AGHT+IHp9IrXPr6CUNbh1St5Hg3ial/rjt2FWdk+sYxhxJaYrSLty/M96Too05Y4+45YoU/INmTjI/uhZJoYsjtNpkM=
-X-Received: by 2002:a17:906:ef0d:b0:aca:d4f6:440d with SMTP id
- a640c23a62f3a-ade7ac572a4mr171877866b.17.1749547483079; Tue, 10 Jun 2025
- 02:24:43 -0700 (PDT)
+	s=k20201202; t=1749547490;
+	bh=UBk0O2NifEtSzMDABHTsAPAX1ZK2mbR0B7xvcIeNcf8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Myqq29bqNFixpWKhm/vniAjB5U014iroW5V6KSeHjzQGaWHj3SYAmrn0ZaD1YhweC
+	 /LGwo5D0eiLO0PiSTcfzBObyXlVVbPIlzfig7zqvpS8FxtWnCSnAjDBs8lvOOUyzhQ
+	 Ef3oUMVFOtc1erwpOTuMcBYCEXnCc5Go0+rzrP5ErieBD+pL1lbNhONK/BqYjXjUNE
+	 SiE8W9AtH27iDKHwhasFK88jCXuhuA+jVlxWBMUwliUGA/NP4EtYAMntjlg7QIja4b
+	 79wjTtrTO8Q6pjpbDKOgtNB27F23VMp/Wio3JXY9BJF6v+BOjJZymFb+7ryc3EgRVf
+	 JsEnvS3LeQZTw==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Andy Shevchenko <andy@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Riyan Dhiman <riyandhiman14@gmail.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Paolo Perego <pperego@suse.de>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-fbdev@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] fbtft: reduce stack usage
+Date: Tue, 10 Jun 2025 11:24:38 +0200
+Message-Id: <20250610092445.2640575-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422234830.2840784-1-superm1@kernel.org> <20250422234830.2840784-3-superm1@kernel.org>
- <CAMuHMdVPQLjOox5sMp34Z5MTwKv2WOpHa=MpZr8hWG22fQKcjw@mail.gmail.com>
-In-Reply-To: <CAMuHMdVPQLjOox5sMp34Z5MTwKv2WOpHa=MpZr8hWG22fQKcjw@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 10 Jun 2025 17:24:31 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H70LXsDYMA7wz4x828rEFoJsNX0=m8F73Ge9=yfpzBpZQ@mail.gmail.com>
-X-Gm-Features: AX0GCFvyd2N-spvgVUDQiEXjOROXJ4rt5ErLp4PE6STdQ0GN935XFU-Ao7ctaOk
-Message-ID: <CAAhV-H70LXsDYMA7wz4x828rEFoJsNX0=m8F73Ge9=yfpzBpZQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/5] i2c: piix4: Depends on X86
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Mario Limonciello <superm1@kernel.org>, Borislav Petkov <bp@alien8.de>, Jean Delvare <jdelvare@suse.com>, 
-	Andi Shyti <andi.shyti@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <mario.limonciello@amd.com>, 
-	Yazen Ghannam <yazen.ghannam@amd.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, 
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Hans de Goede <hdegoede@redhat.com>, 
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>, 
-	"open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>, 
-	linux-mips@vger.kernel.org, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 10, 2025 at 5:16=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi Mario,
->
-> CC mips, loongarch
->
-> On Wed, 23 Apr 2025 at 01:49, Mario Limonciello <superm1@kernel.org> wrot=
-e:
-> > From: Mario Limonciello <mario.limonciello@amd.com>
-> >
-> > PIIX4 and compatible controllers are only for X86. As some headers are
-> > being moved into x86 specific headers PIIX4 won't compile on non-x86.
-> >
-> > Suggested-by: Ingo Molnar <mingo@kernel.org>
-> > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->
-> Thanks for your patch, which is now commit 7e173eb82ae97175
-> ("i2c: piix4: Make CONFIG_I2C_PIIX4 dependent on CONFIG_X86")
-> in v6.16-rc1.
->
-> > --- a/drivers/i2c/busses/Kconfig
-> > +++ b/drivers/i2c/busses/Kconfig
-> > @@ -200,7 +200,7 @@ config I2C_ISMT
-> >
-> >  config I2C_PIIX4
-> >         tristate "Intel PIIX4 and compatible (ATI/AMD/Serverworks/Broad=
-com/SMSC)"
-> > -       depends on PCI && HAS_IOPORT
-> > +       depends on PCI && HAS_IOPORT && X86
->
-> Are you sure this south-bridge is not used on non-x86 platforms?
-> It is enabled in several non-x86 defconfigs:
->
->     arch/loongarch/configs/loongson3_defconfig:CONFIG_I2C_PIIX4=3Dy
->     arch/mips/configs/ip27_defconfig:CONFIG_I2C_PIIX4=3Dm
->     arch/mips/configs/loongson2k_defconfig:CONFIG_I2C_PIIX4=3Dy
->     arch/mips/configs/loongson3_defconfig:CONFIG_I2C_PIIX4=3Dy
->
-> The loongarch and loongson entries are probably bogus, but I wouldn't
-> be surprised if the SGI Onyx and Origin do use Intel south-bridges.
-Loongson can use AMD SB700/SB800 south bridges, which have I2C_PIIX4.
+From: Arnd Bergmann <arnd@arndb.de>
 
-Huacai
+The use of vararg function pointers combined with a huge number of
+arguments causes some configurations to exceed the stack size warning
+limit:
 
->
-> >         select I2C_SMBUS
-> >         help
-> >           If you say yes to this option, support will be included for t=
-he Intel
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
-8k.org
->
-> In personal conversations with technical people, I call myself a hacker. =
-But
-> when I'm talking to journalists I just say "programmer" or something like=
- that.
->                                 -- Linus Torvalds
->
+drivers/staging/fbtft/fbtft-core.c:863:12: error: stack frame size (1512) exceeds limit (1280) in 'fbtft_init_display_from_property' [-Werror,-Wframe-larger-than]
+
+drivers/staging/fbtft/fb_ssd1331.c:131:30: error: stack frame size (1392) exceeds limit (1280) in 'set_gamma' [-Werror,-Wframe-larger-than]
+                  ^
+drivers/staging/fbtft/fb_ssd1351.c:120:30: error: stack frame size (1392) exceeds limit (1280) in 'set_gamma' [-Werror,-Wframe-larger-than]
+
+Move the varargs handling into a separate noinline function so each
+individual function stays below the limit. A better approach might be to
+replace the varargs function with one that takes an array of arguments,
+but that would be a much larger rework of the other callers.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/staging/fbtft/fb_ssd1331.c | 36 ++++++++++++------
+ drivers/staging/fbtft/fb_ssd1351.c | 42 ++++++++++++---------
+ drivers/staging/fbtft/fbtft-core.c | 59 +++++++++++++-----------------
+ 3 files changed, 73 insertions(+), 64 deletions(-)
+
+diff --git a/drivers/staging/fbtft/fb_ssd1331.c b/drivers/staging/fbtft/fb_ssd1331.c
+index 06b7056d6c71..f43ee3249175 100644
+--- a/drivers/staging/fbtft/fb_ssd1331.c
++++ b/drivers/staging/fbtft/fb_ssd1331.c
+@@ -107,6 +107,28 @@ static void write_reg8_bus8(struct fbtft_par *par, int len, ...)
+ 	va_end(args);
+ }
+ 
++static noinline_for_stack void write_gamma_reg(struct fbtft_par *par,
++					       u32 gamma[63])
++{
++	write_reg(par, 0xB8,
++		  gamma[0],  gamma[1],  gamma[2],  gamma[3],
++		  gamma[4],  gamma[5],  gamma[6],  gamma[7],
++		  gamma[8],  gamma[9],  gamma[10], gamma[11],
++		  gamma[12], gamma[13], gamma[14], gamma[15],
++		  gamma[16], gamma[17], gamma[18], gamma[19],
++		  gamma[20], gamma[21], gamma[22], gamma[23],
++		  gamma[24], gamma[25], gamma[26], gamma[27],
++		  gamma[28], gamma[29], gamma[30], gamma[31],
++		  gamma[32], gamma[33], gamma[34], gamma[35],
++		  gamma[36], gamma[37], gamma[38], gamma[39],
++		  gamma[40], gamma[41], gamma[42], gamma[43],
++		  gamma[44], gamma[45], gamma[46], gamma[47],
++		  gamma[48], gamma[49], gamma[50], gamma[51],
++		  gamma[52], gamma[53], gamma[54], gamma[55],
++		  gamma[56], gamma[57], gamma[58], gamma[59],
++		  gamma[60], gamma[61], gamma[62]);
++}
++
+ /*
+  * Grayscale Lookup Table
+  * GS1 - GS63
+@@ -130,7 +152,7 @@ static void write_reg8_bus8(struct fbtft_par *par, int len, ...)
+  */
+ static int set_gamma(struct fbtft_par *par, u32 *curves)
+ {
+-	unsigned long tmp[GAMMA_NUM * GAMMA_LEN];
++	u32 tmp[GAMMA_NUM * GAMMA_LEN];
+ 	int i, acc = 0;
+ 
+ 	for (i = 0; i < 63; i++) {
+@@ -150,17 +172,7 @@ static int set_gamma(struct fbtft_par *par, u32 *curves)
+ 		}
+ 	}
+ 
+-	write_reg(par, 0xB8,
+-		  tmp[0], tmp[1], tmp[2], tmp[3], tmp[4], tmp[5], tmp[6],
+-		  tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], tmp[12], tmp[13],
+-		  tmp[14], tmp[15], tmp[16], tmp[17], tmp[18], tmp[19], tmp[20],
+-		  tmp[21], tmp[22], tmp[23], tmp[24], tmp[25], tmp[26],	tmp[27],
+-		  tmp[28], tmp[29], tmp[30], tmp[31], tmp[32], tmp[33], tmp[34],
+-		  tmp[35], tmp[36], tmp[37], tmp[38], tmp[39], tmp[40], tmp[41],
+-		  tmp[42], tmp[43], tmp[44], tmp[45], tmp[46], tmp[47], tmp[48],
+-		  tmp[49], tmp[50], tmp[51], tmp[52], tmp[53], tmp[54], tmp[55],
+-		  tmp[56], tmp[57], tmp[58], tmp[59], tmp[60], tmp[61],
+-		  tmp[62]);
++	write_gamma_reg(par, tmp);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/staging/fbtft/fb_ssd1351.c b/drivers/staging/fbtft/fb_ssd1351.c
+index 6736b09b2f45..eb8bee6993c3 100644
+--- a/drivers/staging/fbtft/fb_ssd1351.c
++++ b/drivers/staging/fbtft/fb_ssd1351.c
+@@ -96,6 +96,28 @@ static int set_var(struct fbtft_par *par)
+ 	return 0;
+ }
+ 
++static noinline_for_stack void write_gamma_reg(struct fbtft_par *par,
++					       u32 gamma[63])
++{
++	write_reg(par, 0xB8,
++		  gamma[0],  gamma[1],  gamma[2],  gamma[3],
++		  gamma[4],  gamma[5],  gamma[6],  gamma[7],
++		  gamma[8],  gamma[9],  gamma[10], gamma[11],
++		  gamma[12], gamma[13], gamma[14], gamma[15],
++		  gamma[16], gamma[17], gamma[18], gamma[19],
++		  gamma[20], gamma[21], gamma[22], gamma[23],
++		  gamma[24], gamma[25], gamma[26], gamma[27],
++		  gamma[28], gamma[29], gamma[30], gamma[31],
++		  gamma[32], gamma[33], gamma[34], gamma[35],
++		  gamma[36], gamma[37], gamma[38], gamma[39],
++		  gamma[40], gamma[41], gamma[42], gamma[43],
++		  gamma[44], gamma[45], gamma[46], gamma[47],
++		  gamma[48], gamma[49], gamma[50], gamma[51],
++		  gamma[52], gamma[53], gamma[54], gamma[55],
++		  gamma[56], gamma[57], gamma[58], gamma[59],
++		  gamma[60], gamma[61], gamma[62]);
++}
++
+ /*
+  * Grayscale Lookup Table
+  * GS1 - GS63
+@@ -119,7 +141,7 @@ static int set_var(struct fbtft_par *par)
+  */
+ static int set_gamma(struct fbtft_par *par, u32 *curves)
+ {
+-	unsigned long tmp[GAMMA_NUM * GAMMA_LEN];
++	u32 tmp[GAMMA_NUM * GAMMA_LEN];
+ 	int i, acc = 0;
+ 
+ 	for (i = 0; i < 63; i++) {
+@@ -139,23 +161,7 @@ static int set_gamma(struct fbtft_par *par, u32 *curves)
+ 		}
+ 	}
+ 
+-	write_reg(par, 0xB8,
+-		  tmp[0],  tmp[1],  tmp[2],  tmp[3],
+-		  tmp[4],  tmp[5],  tmp[6],  tmp[7],
+-		  tmp[8],  tmp[9],  tmp[10], tmp[11],
+-		  tmp[12], tmp[13], tmp[14], tmp[15],
+-		  tmp[16], tmp[17], tmp[18], tmp[19],
+-		  tmp[20], tmp[21], tmp[22], tmp[23],
+-		  tmp[24], tmp[25], tmp[26], tmp[27],
+-		  tmp[28], tmp[29], tmp[30], tmp[31],
+-		  tmp[32], tmp[33], tmp[34], tmp[35],
+-		  tmp[36], tmp[37], tmp[38], tmp[39],
+-		  tmp[40], tmp[41], tmp[42], tmp[43],
+-		  tmp[44], tmp[45], tmp[46], tmp[47],
+-		  tmp[48], tmp[49], tmp[50], tmp[51],
+-		  tmp[52], tmp[53], tmp[54], tmp[55],
+-		  tmp[56], tmp[57], tmp[58], tmp[59],
+-		  tmp[60], tmp[61], tmp[62]);
++	write_gamma_reg(par, tmp);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/staging/fbtft/fbtft-core.c b/drivers/staging/fbtft/fbtft-core.c
+index da9c64152a60..86c77f996f5b 100644
+--- a/drivers/staging/fbtft/fbtft-core.c
++++ b/drivers/staging/fbtft/fbtft-core.c
+@@ -833,6 +833,28 @@ int fbtft_unregister_framebuffer(struct fb_info *fb_info)
+ }
+ EXPORT_SYMBOL(fbtft_unregister_framebuffer);
+ 
++static noinline_for_stack void fbtft_write_register_64(struct fbtft_par *par,
++							int i, int buf[64])
++{
++	par->fbtftops.write_register(par, i,
++		buf[0], buf[1], buf[2], buf[3],
++		buf[4], buf[5], buf[6], buf[7],
++		buf[8], buf[9], buf[10], buf[11],
++		buf[12], buf[13], buf[14], buf[15],
++		buf[16], buf[17], buf[18], buf[19],
++		buf[20], buf[21], buf[22], buf[23],
++		buf[24], buf[25], buf[26], buf[27],
++		buf[28], buf[29], buf[30], buf[31],
++		buf[32], buf[33], buf[34], buf[35],
++		buf[36], buf[37], buf[38], buf[39],
++		buf[40], buf[41], buf[42], buf[43],
++		buf[44], buf[45], buf[46], buf[47],
++		buf[48], buf[49], buf[50], buf[51],
++		buf[52], buf[53], buf[54], buf[55],
++		buf[56], buf[57], buf[58], buf[59],
++		buf[60], buf[61], buf[62], buf[63]);
++}
++
+ /**
+  * fbtft_init_display_from_property() - Device Tree init_display() function
+  * @par: Driver data
+@@ -887,23 +909,8 @@ static int fbtft_init_display_from_property(struct fbtft_par *par)
+ 				fbtft_par_dbg(DEBUG_INIT_DISPLAY, par,
+ 					      "buf[%d] = %02X\n", j, buf[j]);
+ 
+-			par->fbtftops.write_register(par, i,
+-				buf[0], buf[1], buf[2], buf[3],
+-				buf[4], buf[5], buf[6], buf[7],
+-				buf[8], buf[9], buf[10], buf[11],
+-				buf[12], buf[13], buf[14], buf[15],
+-				buf[16], buf[17], buf[18], buf[19],
+-				buf[20], buf[21], buf[22], buf[23],
+-				buf[24], buf[25], buf[26], buf[27],
+-				buf[28], buf[29], buf[30], buf[31],
+-				buf[32], buf[33], buf[34], buf[35],
+-				buf[36], buf[37], buf[38], buf[39],
+-				buf[40], buf[41], buf[42], buf[43],
+-				buf[44], buf[45], buf[46], buf[47],
+-				buf[48], buf[49], buf[50], buf[51],
+-				buf[52], buf[53], buf[54], buf[55],
+-				buf[56], buf[57], buf[58], buf[59],
+-				buf[60], buf[61], buf[62], buf[63]);
++			fbtft_write_register_64(par, i, buf);
++
+ 		} else if (val & FBTFT_OF_INIT_DELAY) {
+ 			fbtft_par_dbg(DEBUG_INIT_DISPLAY, par,
+ 				      "init: msleep(%u)\n", val & 0xFFFF);
+@@ -996,23 +1003,7 @@ int fbtft_init_display(struct fbtft_par *par)
+ 				}
+ 				buf[j++] = par->init_sequence[i++];
+ 			}
+-			par->fbtftops.write_register(par, j,
+-				buf[0], buf[1], buf[2], buf[3],
+-				buf[4], buf[5], buf[6], buf[7],
+-				buf[8], buf[9], buf[10], buf[11],
+-				buf[12], buf[13], buf[14], buf[15],
+-				buf[16], buf[17], buf[18], buf[19],
+-				buf[20], buf[21], buf[22], buf[23],
+-				buf[24], buf[25], buf[26], buf[27],
+-				buf[28], buf[29], buf[30], buf[31],
+-				buf[32], buf[33], buf[34], buf[35],
+-				buf[36], buf[37], buf[38], buf[39],
+-				buf[40], buf[41], buf[42], buf[43],
+-				buf[44], buf[45], buf[46], buf[47],
+-				buf[48], buf[49], buf[50], buf[51],
+-				buf[52], buf[53], buf[54], buf[55],
+-				buf[56], buf[57], buf[58], buf[59],
+-				buf[60], buf[61], buf[62], buf[63]);
++			fbtft_write_register_64(par, j, buf);
+ 			break;
+ 		case -2:
+ 			i++;
+-- 
+2.39.5
+
