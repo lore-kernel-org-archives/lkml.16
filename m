@@ -1,65 +1,61 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA4921FF55;
-	Tue, 10 Jun 2025 10:15:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E15E433A8
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 10:16:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749550550; cv=none; b=ktBqngEFdI2CCRtC//CLAAQEBedvuhI+wcTvETEHTcdEiwH1WMTS5N9bmqyuHawBgZ9x9pk00G+GBubXV64dde+njYqLKrJI+SPuUHysez7vU3YhhgNuqPwVUz+8JTSV+wevT2822Q3pmQhPVpvp8tNXH0JOgNZjbW78HDe0uQA=
+	t=1749550602; cv=none; b=o7ZRIRQgITVzmuBL8juxIDZ+FNjUVjTiPOK7rBLxPSN7FCqhuCxDcZJO7Km1+L3/27HlWZghxdiVEubgaUrJ+OiYa/cZ1NXgOmMicw5hzR4/WoIUnAcbP1NAIIws7anfGdFqYYCfpFwzfZRzTBx1XsMbZuz/XKGAFA5G0wt7rTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749550550; c=relaxed/simple;
-	bh=Ikv5InvFUqaL7MbP3ouhpo3+c7y6BTMPBiByR0rsA8s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gFBagLlX9aBbLwUYA9k6ptnHhKhOjRKbnP7gahx8keIGU/KA0AXCaYWM2Q4Do3i7NbRuNb3gvJgLalgMqEDhBKBn3GaJqZN0R4/S5P0Z7c2MaSvcO2+K5VD73tzbuhE8CsvFm+FmGd1FEC7twEEl0fQlO7OZj1Xuy960s3YzQG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c6BskYG1; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749550602; c=relaxed/simple;
+	bh=BaIBR0cHoYf/WnAzfEDbBA+VcLZI5bdLmPzqEV1cGZw=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=haacIE3/02p8fV1nEmYESmm+F7jhLx6wQm1RRb3PQ+AP+J8NKFpq7ZKTL9TBL9/SuG9WVFzKn9be2vPNfMMZD1vOZAmckiIt3Wvkfi2uCwFliUtTEcZuVbvVM9YUCqdr4EUcYNWKyOKc1EzBshXvU0QZQocz/Bno7jDWvftFjkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=neon.tech; spf=pass smtp.mailfrom=neon.tech; dkim=pass (1024-bit key) header.d=neon.tech header.i=@neon.tech header.b=ld+BZd2T; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=neon.tech
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neon.tech
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c6BskYG1"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-adb2bb25105so838391766b.0;
-        Tue, 10 Jun 2025 03:15:47 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=neon.tech header.i=@neon.tech header.b="ld+BZd2T"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-607c5715ef2so4152190a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 03:16:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749550546; x=1750155346; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cWuWcVj95DVrEthc+5S3mPSfmODoym51F12oODVd7rA=;
-        b=c6BskYG1CSOpARgFO3E8sI4pjpbJGP2uTYOstNp97bC45226nuqUvKl3d2/93iYDVo
-         BMbvxfSvCx/0Yuaq7dzWi55nFi6sL51jJqF5qZHfajImp+xKjSJHg0stHYlmyH+VM6ke
-         dSI1u1PmD6j/lW31UvA3NkH4e27rTuZHq7QjHmxrXR05QMu3BFqycslIskII95QK25mZ
-         Kh4o6XwgBoaB9bhFaQyMTYAtbjjgLrUEhEd76terE919xbFUKpzyx1AOft+tBReLjEz1
-         FJ3XYc0aT0oy+O5UCjsVNKWaLfGtYYgWlu9YMRB0SLPgs9hukfr/hd4T5wYkSDbatYpd
-         80Dg==
+        d=neon.tech; s=google; t=1749550598; x=1750155398; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=5TLMZnOwp1EufsUc3IBlAEgAbVTmb9HuOUhD3AV1YmY=;
+        b=ld+BZd2T51FqeV+gpsev4xK93ZlmoRYkIzbIciMxfQPZ1TAlxvwCtsq10wSdHjT91O
+         TLbRC22V524AOHz27m0kiscQcTxfkYHctVuFv+IGeNiiMFiMZTFFO2VKh1Qgwab28Ik2
+         SCR1XijEL4FP/Jf7H7yUyle6D4jJhNSvVoNNE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749550546; x=1750155346;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1749550598; x=1750155398;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cWuWcVj95DVrEthc+5S3mPSfmODoym51F12oODVd7rA=;
-        b=lGooiz0ff0wHEgSj/oeVdDau6bHn7M0NTTwnrSe6+cpnjyolH6Mi2JHF6dlVe6x7rp
-         lvT+HLKoYUrqSCHio0yrj6kdAa77HaTDpgf16AnODauQ45x+MKFZLRwFtaRDxPaTVpyL
-         t59fhzedvj6SZM68rp0bDKc+v8TJ9LV0e7zX9x0kfgzyQ5iLh9Z/P5KuR/oEZ2NvZHip
-         B0ge3w5zXHdmcVIlNqjIbLlw/CoKRqOzluYJjxAmjud+U3bKk8MZ7zp16e4DnsFg6nul
-         efZKLlRGZlsKc3pj/rHmPIKlqyiaLj+phqumn/djQI4VFKl8wGGr0bK8tUZxjK6ZdKqW
-         Vi9A==
-X-Forwarded-Encrypted: i=1; AJvYcCUCJyEuOd1on8P8oFDAWTJUaNkFkfyGqhfjOvtFjO4rk3Fq5HcKIqYrHj0uz1AczPSHnP/dtgckT7ODeOI=@vger.kernel.org, AJvYcCWVUc3IFNji+5uxcE71s4dM3fmE4GtkkTPbf90Y2XI1wIk1iP4SN2ClapfMNYYuNoTZeI3KDV57V9tGOf8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhdpGkyOkxh7gYYl0sQL9XbtZF8SkLuwiNS2C27aZNBQocvH2F
-	vZLHoD8o3VqOFfkzJldkmPIL5u1YuN5/KCEXuil3sFaSMgbi0ENi8fXgrpNtVw==
-X-Gm-Gg: ASbGncsL9k//c3QZpaFnL6QmJbyOECa3yV1M2xyK/sw9UB3aMDjr3olxjRmjXVsGUT/
-	7MOZuYrkd9nXP1SjavJ+Q/TNT9p1+x42QfkPrwZtReWPsnFw06kdms8NSdptiWfa7CuIRlu1S5x
-	HapXnH7g3WNKVvZeJdZfGREztT7FnDIU8gxDw7qWVPbSCpDWLO9ehe7ypq9bW6tH0AFFVhPyf+J
-	wwWbzUva0K+xl9H3oeCx0yFccEFAZZ3aGa1fkzfKq5OknyqcjZmCmiDA5W0Zw+vnA4+ZLTQFNrR
-	Ww7kf0+4zbf9FL8qhtuO7nEZh8CMxXYsMbbFEUlCqiS6FWI9XHe1Fb56mYJ+TQ1NGB0qda3BT+z
-	uLA4=
-X-Google-Smtp-Source: AGHT+IEp3hJtHppNSirNocg+aJvrAhcCKKcXsQk3rvu0BJeq5i0xfpdXX7zuwLSTIsjisjCvogmnSg==
-X-Received: by 2002:a17:906:dc8b:b0:ad2:28be:9a16 with SMTP id a640c23a62f3a-ade1abc4055mr1509061366b.51.1749550546213;
-        Tue, 10 Jun 2025 03:15:46 -0700 (PDT)
-Received: from [192.168.0.100] ([188.27.131.45])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc3902csm691572166b.125.2025.06.10.03.15.45
+        bh=5TLMZnOwp1EufsUc3IBlAEgAbVTmb9HuOUhD3AV1YmY=;
+        b=FX7EBZlfaDa9TnLW6cNJo5PkrCuh/uDelPIouIq0HqdmHlFwsdKMrW8lcZ4as/A9Bp
+         NBnlmEIA4FP8W+Wm3LW3Fq9HpMAzN2xgB+txcjvEyxodN1DVLVeCbBoapS7V+66DRSGe
+         c8hsfSS7mLXa1cnETaczNge16ICqybHuGHXl0i2CD5BhiQcRzAJmuIkf10pbSX4yKZ7A
+         M+8ueYP/um15eBPaY9SU+t4pGRgD4LdAhzdON1XMV8nuwQU7G60v2ScWyigFzv/KyY38
+         W9Ip4OBtIfWtvN3Jz5RjlTkTB20xRQ3faPe6KRfO6vSXj+sZsDMDqeQdmt5ozqdhxjkL
+         RE5w==
+X-Gm-Message-State: AOJu0YyXseg03voM+BMikHr1vomTSiRjjXSaPS6OT7qpLDma0806Np1N
+	RbWrgG0DXWVRNyPU72W4FXylJgtaReGYwPrpJgHFZT6Hb2ZUbCqPpn9mNYvJplIcqCCVjeGYjGK
+	3rwzyqz+fxA==
+X-Gm-Gg: ASbGncuBO/piL+eWFqqidPw61IBF29neaCITmeuIxsS86GVwHAnoKOyh6G+c5ykbUiN
+	D7o7nw+43yC2gxStC2c/wj/4Y7mYAMyEHRlUA8f3kj6tPnEA52YsJBaDK4bkmC9KNXtGaU9t2dG
+	ON8XHfXQfIME76I4lyFp003X+MVfmXKP7p9iXBJNO2b8iN3Z4DSCG+QWN8WjkxuaEQ3Delhvai/
+	uwGJra6LU4PuhWAw6bsqxjglPQDuHvrqtZbdDOdOHSnWJNI+jcWXwLU23i950SV6F9jmZWgqKpQ
+	DvOoF9cheYQeKMSoSgXj9szSxRaqJi490WPUnR4N7Av0MVi+68TGS422ZQA47UjKaQ==
+X-Google-Smtp-Source: AGHT+IF3bXRwUOcNB/7Vgzzi7Oqw7d/+z7EkLbZ6h+MIcJik3RGx8NeiSc67WUrU/PAz4OZ9sYhWNw==
+X-Received: by 2002:a17:907:3e1e:b0:ade:4300:6c8f with SMTP id a640c23a62f3a-ade4300eb40mr1194776866b.57.1749550598026;
+        Tue, 10 Jun 2025 03:16:38 -0700 (PDT)
+Received: from [192.168.86.142] ([84.65.228.220])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc386f7sm686134066b.114.2025.06.10.03.16.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jun 2025 03:15:45 -0700 (PDT)
-Message-ID: <8efe62a8-2c90-4599-82f3-4e41d8d859aa@gmail.com>
-Date: Tue, 10 Jun 2025 13:15:32 +0300
+        Tue, 10 Jun 2025 03:16:37 -0700 (PDT)
+Message-ID: <a404d023-e0bb-4dc8-8952-accba299ab50@neon.tech>
+Date: Tue, 10 Jun 2025 11:16:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,153 +63,215 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] media: rc: ir-spi: allocate buffer dynamically
-To: Sean Young <sean@mess.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250609111715.2572138-1-demonsingur@gmail.com>
- <aEf9b17JU1a5q2hC@gofer.mess.org>
-From: Cosmin Tanislav <demonsingur@gmail.com>
+Subject: [PATCH v3 1/2] x86/mm: Handle alloc failure in phys_*_init()
+From: Em Sharnoff <sharnoff@neon.tech>
+To: linux-kernel@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org
+Cc: Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
+ <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+ "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+ Oleg Vasilev <oleg@neon.tech>, Arthur Petukhovsky <arthur@neon.tech>,
+ Stefan Radig <stefan@neon.tech>, Misha Sakhnov <misha@neon.tech>
+References: <a31e3b89-5040-4426-9ce8-d674b8554aa1@neon.tech>
 Content-Language: en-US
-In-Reply-To: <aEf9b17JU1a5q2hC@gofer.mess.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <a31e3b89-5040-4426-9ce8-d674b8554aa1@neon.tech>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+During memory hotplug, allocation failures in phys_*_init() aren't
+handled, which results in a null pointer dereference, if they occur.
 
+To handle that, change phys_pud_init() and similar functions to return
+allocation errors via ERR_PTR() and check for that in arch_add_memory().
 
-On 6/10/25 12:39 PM, Sean Young wrote:
-> On Mon, Jun 09, 2025 at 02:17:13PM +0300, Cosmin Tanislav wrote:
->> Replace the static transmit buffer with a dynamically allocated one,
->> removing the limit imposed on the number of pulses to transmit.
->>
->> Calculate the number of pulses for each duration in the received buffer
->> ahead of time, while also adding up the total pulses, to be able to
->> allocate a buffer that perfectly fits the total number of pulses, then
->> populate it.
->>
->> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
->> ---
->> V3:
->>   * move the allocation to be done per-TX operation
->>
->> V2:
->>   * use devm_krealloc_array
->>
->>   drivers/media/rc/ir-spi.c | 33 ++++++++++++++++++++-------------
->>   1 file changed, 20 insertions(+), 13 deletions(-)
->>
->> diff --git a/drivers/media/rc/ir-spi.c b/drivers/media/rc/ir-spi.c
->> index 8fc8e496e6aa..50e30e2fae22 100644
->> --- a/drivers/media/rc/ir-spi.c
->> +++ b/drivers/media/rc/ir-spi.c
->> @@ -21,13 +21,11 @@
->>   #define IR_SPI_DRIVER_NAME		"ir-spi"
->>   
->>   #define IR_SPI_DEFAULT_FREQUENCY	38000
->> -#define IR_SPI_MAX_BUFSIZE		 4096
->>   
->>   struct ir_spi_data {
->>   	u32 freq;
->>   	bool negated;
->>   
->> -	u16 tx_buf[IR_SPI_MAX_BUFSIZE];
->>   	u16 pulse;
->>   	u16 space;
->>   
->> @@ -43,37 +41,42 @@ static int ir_spi_tx(struct rc_dev *dev, unsigned int *buffer, unsigned int coun
->>   	unsigned int len = 0;
->>   	struct ir_spi_data *idata = dev->priv;
->>   	struct spi_transfer xfer;
->> +	u16 *tx_buf;
->>   
->>   	/* convert the pulse/space signal to raw binary signal */
->>   	for (i = 0; i < count; i++) {
->> -		unsigned int periods;
->> +		buffer[i] = DIV_ROUND_CLOSEST(buffer[i] * idata->freq, 1000000);
->> +		len += buffer[i];
->> +	}
-> 
-> This looks great, thank you.
-> 
-> I do have one concern though. If someone sets a carrier of U32_MAX - 1 then
-> this code could be doing largish allocations, spending too long in kernel
-> space filling them with data and spi can't send it anyway. Actually
-> the kmalloc might fail which doesn't look good in the logs.
-> 
-> We may have to constrain the carrier to something spi can handle.
-> 
+Signed-off-by: Em Sharnoff <sharnoff@neon.tech>
+---
+Changelog:
+- v2: switch from special-casing zero value to using ERR_PTR()
+- v3: Fix -Wint-conversion errors
+---
+ arch/x86/mm/init.c    |  6 ++++-
+ arch/x86/mm/init_64.c | 54 +++++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 55 insertions(+), 5 deletions(-)
 
-The SPI device has a max_speed_hz, maybe we should check that?
-
-It seems to be set based on the spi-max-frequency property in
-the device tree node of the SPI device, and uses the max_speed_hz
-of the SPI controller as a fallback.
-
-Should I add a separate patch that adds a check in
-ir_spi_set_tx_carrier?
-
-if (carrier * 16 > idata->spi->max_speed_hz)
-	return -EINVAL.
-
-Something along these lines.
-
-> 
-> Sean
-> 
->> +
->> +	tx_buf = kmalloc_array(len, sizeof(*tx_buf), GFP_KERNEL);
->> +	if (!tx_buf)
->> +		return -ENOMEM;
->> +
->> +	len = 0;
->> +	for (i = 0; i < count; i++) {
->>   		int j;
->>   		u16 val;
->>   
->> -		periods = DIV_ROUND_CLOSEST(buffer[i] * idata->freq, 1000000);
->> -
->> -		if (len + periods >= IR_SPI_MAX_BUFSIZE)
->> -			return -EINVAL;
->> -
->>   		/*
->>   		 * The first value in buffer is a pulse, so that 0, 2, 4, ...
->>   		 * contain a pulse duration. On the contrary, 1, 3, 5, ...
->>   		 * contain a space duration.
->>   		 */
->>   		val = (i % 2) ? idata->space : idata->pulse;
->> -		for (j = 0; j < periods; j++)
->> -			idata->tx_buf[len++] = val;
->> +		for (j = 0; j < buffer[i]; j++)
->> +			tx_buf[len++] = val;
->>   	}
->>   
->>   	memset(&xfer, 0, sizeof(xfer));
->>   
->>   	xfer.speed_hz = idata->freq * 16;
->> -	xfer.len = len * sizeof(*idata->tx_buf);
->> -	xfer.tx_buf = idata->tx_buf;
->> +	xfer.len = len * sizeof(*tx_buf);
->> +	xfer.tx_buf = tx_buf;
->>   
->>   	ret = regulator_enable(idata->regulator);
->>   	if (ret)
->> -		return ret;
->> +		goto err_free_tx_buf;
->>   
->>   	ret = spi_sync_transfer(idata->spi, &xfer, 1);
->>   	if (ret)
->> @@ -81,6 +84,10 @@ static int ir_spi_tx(struct rc_dev *dev, unsigned int *buffer, unsigned int coun
->>   
->>   	regulator_disable(idata->regulator);
->>   
->> +err_free_tx_buf:
->> +
->> +	kfree(tx_buf);
->> +
->>   	return ret ? ret : count;
->>   }
->>   
->> -- 
->> 2.49.0
->>
+diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+index bfa444a7dbb0..a2665b6fe376 100644
+--- a/arch/x86/mm/init.c
++++ b/arch/x86/mm/init.c
+@@ -533,6 +533,7 @@ bool pfn_range_is_mapped(unsigned long start_pfn, unsigned long end_pfn)
+  * Setup the direct mapping of the physical memory at PAGE_OFFSET.
+  * This runs before bootmem is initialized and gets pages directly from
+  * the physical memory. To access them they are temporarily mapped.
++ * Allocation errors are returned with ERR_PTR.
+  */
+ unsigned long __ref init_memory_mapping(unsigned long start,
+ 					unsigned long end, pgprot_t prot)
+@@ -547,10 +548,13 @@ unsigned long __ref init_memory_mapping(unsigned long start,
+ 	memset(mr, 0, sizeof(mr));
+ 	nr_range = split_mem_range(mr, 0, start, end);
+ 
+-	for (i = 0; i < nr_range; i++)
++	for (i = 0; i < nr_range; i++) {
+ 		ret = kernel_physical_mapping_init(mr[i].start, mr[i].end,
+ 						   mr[i].page_size_mask,
+ 						   prot);
++		if (IS_ERR((void *)ret))
++			return ret;
++	}
+ 
+ 	add_pfn_range_mapped(start >> PAGE_SHIFT, ret >> PAGE_SHIFT);
+ 
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index 7c4f6f591f2b..712006afcd6c 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -502,7 +502,8 @@ phys_pte_init(pte_t *pte_page, unsigned long paddr, unsigned long paddr_end,
+ /*
+  * Create PMD level page table mapping for physical addresses. The virtual
+  * and physical address have to be aligned at this level.
+- * It returns the last physical address mapped.
++ * It returns the last physical address mapped. Allocation errors are
++ * returned with ERR_PTR.
+  */
+ static unsigned long __meminit
+ phys_pmd_init(pmd_t *pmd_page, unsigned long paddr, unsigned long paddr_end,
+@@ -572,7 +573,14 @@ phys_pmd_init(pmd_t *pmd_page, unsigned long paddr, unsigned long paddr_end,
+ 		}
+ 
+ 		pte = alloc_low_page();
++		if (!pte)
++			return (unsigned long)ERR_PTR(-ENOMEM);
+ 		paddr_last = phys_pte_init(pte, paddr, paddr_end, new_prot, init);
++		/*
++		 * phys_{ppmd,pud,p4d}_init return allocation errors via ERR_PTR.
++		 * phys_pte_init makes no allocations, so should not error.
++		 */
++		BUG_ON(IS_ERR((void *)paddr_last));
+ 
+ 		spin_lock(&init_mm.page_table_lock);
+ 		pmd_populate_kernel_init(&init_mm, pmd, pte, init);
+@@ -586,7 +594,8 @@ phys_pmd_init(pmd_t *pmd_page, unsigned long paddr, unsigned long paddr_end,
+  * Create PUD level page table mapping for physical addresses. The virtual
+  * and physical address do not have to be aligned at this level. KASLR can
+  * randomize virtual addresses up to this level.
+- * It returns the last physical address mapped.
++ * It returns the last physical address mapped. Allocation errors are
++ * returned with ERR_PTR.
+  */
+ static unsigned long __meminit
+ phys_pud_init(pud_t *pud_page, unsigned long paddr, unsigned long paddr_end,
+@@ -623,6 +632,8 @@ phys_pud_init(pud_t *pud_page, unsigned long paddr, unsigned long paddr_end,
+ 							   paddr_end,
+ 							   page_size_mask,
+ 							   prot, init);
++				if (IS_ERR((void *)paddr_last))
++					return paddr_last;
+ 				continue;
+ 			}
+ 			/*
+@@ -658,12 +669,22 @@ phys_pud_init(pud_t *pud_page, unsigned long paddr, unsigned long paddr_end,
+ 		}
+ 
+ 		pmd = alloc_low_page();
++		if (!pmd)
++			return (unsigned long)ERR_PTR(-ENOMEM);
+ 		paddr_last = phys_pmd_init(pmd, paddr, paddr_end,
+ 					   page_size_mask, prot, init);
+ 
++		/*
++		 * We might have IS_ERR(paddr_last) if allocation failed, but we should
++		 * still update pud before bailing, so that subsequent retries can pick
++		 * up on progress (here and in phys_pmd_init) without leaking pmd.
++		 */
+ 		spin_lock(&init_mm.page_table_lock);
+ 		pud_populate_init(&init_mm, pud, pmd, init);
+ 		spin_unlock(&init_mm.page_table_lock);
++
++		if (IS_ERR((void *)paddr_last))
++			return paddr_last;
+ 	}
+ 
+ 	update_page_count(PG_LEVEL_1G, pages);
+@@ -707,16 +728,26 @@ phys_p4d_init(p4d_t *p4d_page, unsigned long paddr, unsigned long paddr_end,
+ 			pud = pud_offset(p4d, 0);
+ 			paddr_last = phys_pud_init(pud, paddr, __pa(vaddr_end),
+ 					page_size_mask, prot, init);
++			if (IS_ERR((void *)paddr_last))
++				return paddr_last;
+ 			continue;
+ 		}
+ 
+ 		pud = alloc_low_page();
++		if (!pud)
++			return (unsigned long)ERR_PTR(-ENOMEM);
+ 		paddr_last = phys_pud_init(pud, paddr, __pa(vaddr_end),
+ 					   page_size_mask, prot, init);
+ 
+ 		spin_lock(&init_mm.page_table_lock);
+ 		p4d_populate_init(&init_mm, p4d, pud, init);
+ 		spin_unlock(&init_mm.page_table_lock);
++
++		/*
++		 * Bail only after updating p4d to keep progress from pud across retries.
++		 */
++		if (IS_ERR((void *)paddr_last))
++			return paddr_last;
+ 	}
+ 
+ 	return paddr_last;
+@@ -748,10 +779,14 @@ __kernel_physical_mapping_init(unsigned long paddr_start,
+ 						   __pa(vaddr_end),
+ 						   page_size_mask,
+ 						   prot, init);
++			if (IS_ERR((void *)paddr_last))
++				return paddr_last;
+ 			continue;
+ 		}
+ 
+ 		p4d = alloc_low_page();
++		if (!p4d)
++			return (unsigned long)ERR_PTR(-ENOMEM);
+ 		paddr_last = phys_p4d_init(p4d, __pa(vaddr), __pa(vaddr_end),
+ 					   page_size_mask, prot, init);
+ 
+@@ -763,6 +798,13 @@ __kernel_physical_mapping_init(unsigned long paddr_start,
+ 					  (pud_t *) p4d, init);
+ 
+ 		spin_unlock(&init_mm.page_table_lock);
++
++		/*
++		 * Bail only after updating pgd/p4d to keep progress from p4d across retries.
++		 */
++		if (IS_ERR((void *)paddr_last))
++			return paddr_last;
++
+ 		pgd_changed = true;
+ 	}
+ 
+@@ -777,7 +819,8 @@ __kernel_physical_mapping_init(unsigned long paddr_start,
+  * Create page table mapping for the physical memory for specific physical
+  * addresses. Note that it can only be used to populate non-present entries.
+  * The virtual and physical addresses have to be aligned on PMD level
+- * down. It returns the last physical address mapped.
++ * down. It returns the last physical address mapped. Allocation errors are
++ * returned with ERR_PTR.
+  */
+ unsigned long __meminit
+ kernel_physical_mapping_init(unsigned long paddr_start,
+@@ -980,8 +1023,11 @@ int arch_add_memory(int nid, u64 start, u64 size,
+ {
+ 	unsigned long start_pfn = start >> PAGE_SHIFT;
+ 	unsigned long nr_pages = size >> PAGE_SHIFT;
++	unsigned long ret = 0;
+ 
+-	init_memory_mapping(start, start + size, params->pgprot);
++	ret = init_memory_mapping(start, start + size, params->pgprot);
++	if (IS_ERR((void *)ret))
++		return (int)PTR_ERR((void *)ret);
+ 
+ 	return add_pages(nid, start_pfn, nr_pages, params);
+ }
+-- 
+2.39.5
 
