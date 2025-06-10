@@ -1,52 +1,52 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44E6E22A4CC;
-	Tue, 10 Jun 2025 15:18:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277532417E0;
+	Tue, 10 Jun 2025 15:18:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749568709; cv=none; b=RISzVcegixf+AAduahThWhfOueVPMbuMqCHXuTvUJrLfkBPTzbZ4fjyk8As2l6ufwOB3Zx105x4VvcirEJeC48jBveQlrIDRz2ynYUEEdBoEGHda5JOJxYKmNV6DKgFlW9V6cg7RidC2sASLvJfRkaBZxZvQ1jeW23bCAyZKFA0=
+	t=1749568712; cv=none; b=qfU9XD3tB4Sd2u6iiHjpi+Q62rPNeiYYdyOiATCPXULEtvx6ftZH7Wpbc3ihVl5279JGg2HO5lxTzRW61yzopwcxH6b56DU1EoUdSiLuSmBqAV9BGQLN0KK+mUYM+0cwtGIinrYq8rJ/kVGnzSiBO1TJpgO083DoZP7dsxVzv78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749568709; c=relaxed/simple;
-	bh=kaPQVqJqh+eg2jcnJq+k42Jh9O4UIBng+B1OeZ2n8IE=;
+	s=arc-20240116; t=1749568712; c=relaxed/simple;
+	bh=ELE6/E7HccXbM89haD8jxqL/F0Q13DuUMNnMP95XilU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WZKgT1hDHW2lKggP5xiC9NADglJPUQO2LHhYESaRTXR/orq+DMENOsNIZ9WbGaTtHnFWvFOUxjXcUmb7ny4q5Kq8Rp1kSp4G+p+mEruaWUot8+CTrDWqYwepKrjaqyvjO3HgSczee4Rd3ZqXGjG6sxnw82vJJKPWGkokQf8dnpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.47
+	 In-Reply-To:To:Cc; b=e0KUiUe4qWkhq/aed1rpZMoureQhkAktH+CS4PLXUXy+YxJYc/vdIavXDDQnMb9TdvJGhDQDYppZ9M+fal9e2B9wZYdNhG05+p4oHDjuESBEg/8gvpjEQF1cNkeLtWCFeAusNEqrDnI7GKIYt1CwA9qfFeZezJlqxfCgPG7La2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-60700a745e5so8404632a12.3;
-        Tue, 10 Jun 2025 08:18:26 -0700 (PDT)
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ad88eb71eb5so767353666b.0;
+        Tue, 10 Jun 2025 08:18:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749568705; x=1750173505;
+        d=1e100.net; s=20230601; t=1749568708; x=1750173508;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DLOOJJpc60B0rv4JPb2Hwjyu0WdXvR5+iYJdvbJfP3Q=;
-        b=N0oHlt1I3O6/uogX/43sLGc9K/HOMyMQAH5kdv0P6AhybpCJpR5cUnIzvsMuOPA8Bm
-         OSXHXlNbrgShq7/gNGivuLEByVpjrLt3A+0gOk7+7iyfJokcuYNaByn8iEySEIhIbvFJ
-         SIylf9dUwwFLwKRuGEkc0YusXhtHitaxHQRepCohPYNrEMBjE1g3XqSBgYI2fuLOAgrb
-         kovywRkeqkjOQWXzWQsTZVWNBvWSazbzcX/sT43cTcii27cDqCqd36ZjrfyoourWMbPw
-         cZ9/ZDqLLQYiYmj8Olx6hPZpWA0uCLcXvuiUT7zFoUL8IVfDm37j84SDWaTQgFjWeE+I
-         ZmEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXuAmH+xJ7PP7sMklmrwgIBmtwKz+NEEtHXnusVYumdKkO9cPEzuU5+tzfeTuTv74iGLaqJvSiQyOgXlADoE9e/@vger.kernel.org, AJvYcCXvdfYkBkwFcrQsZkBEbzlfkYBNWfG9RJBGRGswH90yrqCFmZ/eioVyKP6/Q4Jw09LdIjfzTgk/gT4r2Ng=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnssViIFlfFIqXQj1iZjKNDAwYboAde3B7C6xyIfIXfuToqG5e
-	0Cg5FeLpvgVmNE8fBuYLpKlOPqavkREI7kD5YpKBhMTBxWCmsrna54xI
-X-Gm-Gg: ASbGncskBsMBsjFJwvRfH8Tve3jVHNitc784+FnzbxIvvkOBh8YQy/fpvBXJ1o98vjH
-	JYpTzLfNjwCfd6Ca9/n6W40H/dKtkjQ15XdLlZOOCAPUSptWJJgC2Di/e/qFHCxAbI2MR2AUnF6
-	/GWLtMVims4AYjD1b0NjpFjx/JYEmiEUnKtzsyewBXw976XfcME61nN6MQ3XdLbXdOqOejH4Hk6
-	ZlLsbTqhhLmwTfJQiRNHGulwQT8W1NWwrONBRKGyVDTVvPltJYRQF7PTWj9MirdMYq60evluywn
-	qCZOnOOCzplrleb/669+xJs3egNzuHdKxGtf++HQxEH8Pq6zua7q/cvgZZ6D
-X-Google-Smtp-Source: AGHT+IE9WVA+kbFrnmT1TlL+TV+6AcVIBawnAOeskXYVBGEHFwX/ukFBz4SHKuCvRS0A7itqPfPprw==
-X-Received: by 2002:a05:6402:2554:b0:605:878:3553 with SMTP id 4fb4d7f45d1cf-60773ecd524mr15584636a12.16.1749568705223;
-        Tue, 10 Jun 2025 08:18:25 -0700 (PDT)
-Received: from localhost ([2a03:2880:30ff::])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6077836fe51sm6312471a12.13.2025.06.10.08.18.24
+        bh=vNJBJN8ruAzkE4jdoJqoCEdFnnUo4AIPbizdSl6cvmo=;
+        b=Mn5mVGlWH9kkjMRdrUYBgrtct6Z2mtrygiWYZEt9qdNcs1wyxfWgZ1FdiwAmdpZ5Lx
+         2meceLEDp1QFiaXYiDVhG3AKfIORzHc6RIvFYnWlR9RJITnD//wG5cwo81acjFWdRAUu
+         M8Hd0ri/vb4mTEQnAUF/x5PzPKDNrvJUOgZIvMpIbZ1vCvSA4Lje0KFJWBhSJFTImuV0
+         rx1eCKswh5Af1QvwEeJe/uGW9eyixzPpnu8C6HNRu0X48DVbKVlZAHVlKSMkH/TsJ+HD
+         6UtswXI92fr1irYKKiPXHbeYg0X6V68FElxiSv7Frb8g8uye7Mjvc09R3w9tJirNz/Bv
+         ZRCw==
+X-Forwarded-Encrypted: i=1; AJvYcCU/moSMdixBLXxgcWOE5vqRNpJ7PgyXB9tYOhhn4BrC3cVgM+O44DMzrii90rTtjterJ+jn8PozIDEtrMI=@vger.kernel.org, AJvYcCUVVQlZ+6DwobGqDCSc6Meg5WK+KK3fyWa71EXIRmrEyVE27nVZDPlWh37Q7DZX5AalFUTEeSukL8WAN5k9EUYs@vger.kernel.org
+X-Gm-Message-State: AOJu0YymYQCsMA3MAnkyDpH5NEB/zg+HqAV+k45k+JNVmcGgaqolwB88
+	FeaHoPqEL/oR+7ysW8L8BanFjZfe2Y3HpIg0LB1ziLkfEICHruPf885S
+X-Gm-Gg: ASbGncsFvzbMPjOGVpmsTXhYXMvCrKn6HLImXNM6zS65jvJPfdvoCh/SFXEAkIy1v3n
+	Jd7usreNG1wEuWn8A7wraafhoWZQl2r1GWXjLx3jMkfB2///PHbSPeVD03tt/psCiLEIxwBCled
+	bUlJEiC3EzcR2Rg2Zc1tGzKMC62yMeAdtcTVnYaV3hBtQtUQuc1XWl8OpNWFiNCM/w3ot4LXxc9
+	7dTUND6akmToB3ZBmv0+r5nXfTLV9lMLG6EG1j05gYL6Q1ACMvnXxMfvuW181MXGTFT7MW/pAxM
+	4P4rBBT/QVK6gfRZxQV0Z7KJA/O6x5Iii6S5ub6Ed/HBiuUOmPHH
+X-Google-Smtp-Source: AGHT+IH/bV9DJxyKz5+T6dTRQy4Sn0VEPk5y+gTzwBJWQDTFhmSBF8uQ0vi3o5o+0c6GJSjJItqjUw==
+X-Received: by 2002:a17:906:dc95:b0:adb:469d:221f with SMTP id a640c23a62f3a-ade7acdf3b3mr309023766b.31.1749568708195;
+        Tue, 10 Jun 2025 08:18:28 -0700 (PDT)
+Received: from localhost ([2a03:2880:30ff:7::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc1c676sm747742666b.105.2025.06.10.08.18.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 08:18:24 -0700 (PDT)
+        Tue, 10 Jun 2025 08:18:27 -0700 (PDT)
 From: Breno Leitao <leitao@debian.org>
-Date: Tue, 10 Jun 2025 08:18:13 -0700
-Subject: [PATCH net-next 1/7] netpoll: remove __netpoll_cleanup from
- exported API
+Date: Tue, 10 Jun 2025 08:18:15 -0700
+Subject: [PATCH net-next 3/7] netpoll: relocate netconsole-specific
+ functions to netconsole module
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250610-rework-v1-1-7cfde283f246@debian.org>
+Message-Id: <20250610-rework-v1-3-7cfde283f246@debian.org>
 References: <20250610-rework-v1-0-7cfde283f246@debian.org>
 In-Reply-To: <20250610-rework-v1-0-7cfde283f246@debian.org>
 To: "David S. Miller" <davem@davemloft.net>, 
@@ -66,70 +66,310 @@ Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org, Breno Leitao <leitao@debian.org>, 
  kernel-team@meta.com
 X-Mailer: b4 0.15-dev-42535
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1685; i=leitao@debian.org;
- h=from:subject:message-id; bh=kaPQVqJqh+eg2jcnJq+k42Jh9O4UIBng+B1OeZ2n8IE=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBoSEy9cbamCtk1q+VC3hBblqcpJ/gZ0ql8ZGNKa
- j9+AkbUZ9mJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaEhMvQAKCRA1o5Of/Hh3
- bSGMD/wJT5gteXkme6oDQxMbBr2uzXcXsryawLuy+gz0A1w4UStNjLOPIb3TEZk9TezsVlaNxs6
- hRiSnwIXsxu5Oa/2VVwY6Fx/cZKVNfG+oAtFIQK60ys0Sq2cb8ipxdcwM69MX+KusXZmCAjsZ9Z
- gguQYq2Q5I7svysDoN9zyDAm7EkravGWiXJevP/tb6jX8WRHq+uhVUeVvkz/5+uQnJv5MjneqGa
- eRZJ+YRp/ukBRrdWrU/TXEcsVIDXGGdGXTFGkYw5c3SZrcTEciWxqq+aR2NjD+h/FtvjxV0kmta
- ooUGZR+HyH6mceVFxlkXFd32wJW0upysesQv9JEC+e1MejuwN0e8Xn0u0umvTC9KX7HpHZIQJyB
- eA5Q4EkQBr4XyzQC69QU2xAdRJ1TDMvwSm/QAOt9soi3DvjyJwsMJ7ZUd83EsPSwThgBGV76YhH
- ke6KwIpfx6ogyf/0g/NR/dSdfcAOrnIUBCsJJ1e7JG9UxFBWVbiJCG1xk7VGUkBGTjWPoVvM/tg
- 6wivFIp67CYzmgWp4lyOu0S/90IYuBrq0c4aYvzOa30NCjkj8RRTNqoZ+HzIxuXMeSpZjV3tmN9
- GRuI0fWPGXNL/OfHODnc/NGcxjkCYjxGrNUIxF3kJq4ayeGOm4y2ronObeJO6YvMe9lGjBsE9DQ
- FKPwI/VyoSz+Bpg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7728; i=leitao@debian.org;
+ h=from:subject:message-id; bh=ELE6/E7HccXbM89haD8jxqL/F0Q13DuUMNnMP95XilU=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBoSEy+MkOFwNSv1yN5uCINM0P8BOJ/1wbKCYvRq
+ lufpo0WBFKJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaEhMvgAKCRA1o5Of/Hh3
+ bZVeEACkftbYtve5Qa8RKaWKwGyfomqoPuGcKb9Zr065TkDg8msJ5F5/a9f3XdNaBLLLKBLbnOZ
+ CaV8JmFo2BBZv0t4sW7ilRC7vysJYUNm4VcLgIj3XKdLJz7jO/Zzyd6W9W5utgJOXpPd+ntk6eq
+ uMcDIqhnp/DfjjcZhBD4Y8qJakOEjUMy19bBXH1SSPsochCbD8e9RNjblNG1q3T8DvCUFHoXzHg
+ /OAUXzHjg+tEN+L3G/cPwTYCFq1p5h/cTIYsxRSLGElvZComk7YONpY0mZGNR5szP3kuROWOrE7
+ NCi2/GBXlmx/qmHcB5weQzrpwCe3mCOfPDYVAUU1rwtAMKmD58QHmZLi/PKv1B8n/rS0ZL/jed+
+ Yl4ik3zZ6Dx07JFwuXx5WrqLBl50MfEHHWpWjdiU+JCGxLSaxLbpzDfb9upyqOpQLk7aYg6G05d
+ qO7FuMlwe86SRFfm5CTXSSBx4uF8PuhdUAA++KI+wJE0GF2pR9nh02xnk8fP2JhRE6DtKjnQi9x
+ SGALidFLHgnd+iFrkenH8Fo27r2TdWqzdNMNfz+EwwxwqRorpabX4DB/IudjlPCdX7GMBPS1CW3
+ bKvz3LTchmw1yiEwU2QlXtBTR75KKBoIn+V6E1RtyC6+mS/1lIeFJXNyXTQESSiuyV6ua8hNCJ1
+ yrQbP2n9PbsFHKQ==
 X-Developer-Key: i=leitao@debian.org; a=openpgp;
  fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 
-Since commit 97714695ef90 ("net: netconsole: Defer netpoll cleanup to
-avoid lock release during list traversal"), netconsole no longer uses
-__netpoll_cleanup(). With no remaining users, remove this function
-from the exported netpoll API.
+Move netpoll_parse_ip_addr() and netpoll_parse_options() from the generic
+netpoll module to the netconsole module where they are actually used.
 
-The function remains available internally within netpoll for use by
-netpoll_cleanup().
+These functions were originally placed in netpoll but are only consumed by
+netconsole. This refactoring improves code organization by:
+
+ - Removing unnecessary exported symbols from netpoll
+ - Making netpoll_parse_options() static (no longer needs global visibility)
+ - Reducing coupling between netpoll and netconsole modules
+
+The functions remain functionally identical - this is purely a code
+reorganization to better reflect their actual usage patterns. Here are
+the changes:
+
+ 1) Move both functions from netpoll to netconsole
+ 2) Add static to netpoll_parse_options()
+ 3) Removed the EXPORT_SYMBOL()
+
+PS: This diff does not change the function format, so, it is easy to
+review, but, checkpatch will not be happy. A follow-up patch will
+address the current issues reported by checkpatch.
 
 Signed-off-by: Breno Leitao <leitao@debian.org>
 ---
- include/linux/netpoll.h | 1 -
- net/core/netpoll.c      | 3 +--
- 2 files changed, 1 insertion(+), 3 deletions(-)
+ drivers/net/netconsole.c | 108 ++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/netpoll.h  |   1 -
+ net/core/netpoll.c       | 109 -----------------------------------------------
+ 3 files changed, 108 insertions(+), 110 deletions(-)
 
+diff --git a/drivers/net/netconsole.c b/drivers/net/netconsole.c
+index 4289ccd3e41bf..07424ae4943d7 100644
+--- a/drivers/net/netconsole.c
++++ b/drivers/net/netconsole.c
+@@ -1614,6 +1614,114 @@ static void write_msg(struct console *con, const char *msg, unsigned int len)
+ 	spin_unlock_irqrestore(&target_list_lock, flags);
+ }
+ 
++static int netpoll_parse_ip_addr(const char *str, union inet_addr *addr)
++{
++	const char *end;
++
++	if (!strchr(str, ':') &&
++	    in4_pton(str, -1, (void *)addr, -1, &end) > 0) {
++		if (!*end)
++			return 0;
++	}
++	if (in6_pton(str, -1, addr->in6.s6_addr, -1, &end) > 0) {
++#if IS_ENABLED(CONFIG_IPV6)
++		if (!*end)
++			return 1;
++#else
++		return -1;
++#endif
++	}
++	return -1;
++}
++
++static int netpoll_parse_options(struct netpoll *np, char *opt)
++{
++	char *cur=opt, *delim;
++	int ipv6;
++	bool ipversion_set = false;
++
++	if (*cur != '@') {
++		if ((delim = strchr(cur, '@')) == NULL)
++			goto parse_failed;
++		*delim = 0;
++		if (kstrtou16(cur, 10, &np->local_port))
++			goto parse_failed;
++		cur = delim;
++	}
++	cur++;
++
++	if (*cur != '/') {
++		ipversion_set = true;
++		if ((delim = strchr(cur, '/')) == NULL)
++			goto parse_failed;
++		*delim = 0;
++		ipv6 = netpoll_parse_ip_addr(cur, &np->local_ip);
++		if (ipv6 < 0)
++			goto parse_failed;
++		else
++			np->ipv6 = (bool)ipv6;
++		cur = delim;
++	}
++	cur++;
++
++	if (*cur != ',') {
++		/* parse out dev_name or dev_mac */
++		if ((delim = strchr(cur, ',')) == NULL)
++			goto parse_failed;
++		*delim = 0;
++
++		np->dev_name[0] = '\0';
++		eth_broadcast_addr(np->dev_mac);
++		if (!strchr(cur, ':'))
++			strscpy(np->dev_name, cur, sizeof(np->dev_name));
++		else if (!mac_pton(cur, np->dev_mac))
++			goto parse_failed;
++
++		cur = delim;
++	}
++	cur++;
++
++	if (*cur != '@') {
++		/* dst port */
++		if ((delim = strchr(cur, '@')) == NULL)
++			goto parse_failed;
++		*delim = 0;
++		if (*cur == ' ' || *cur == '\t')
++			np_info(np, "warning: whitespace is not allowed\n");
++		if (kstrtou16(cur, 10, &np->remote_port))
++			goto parse_failed;
++		cur = delim;
++	}
++	cur++;
++
++	/* dst ip */
++	if ((delim = strchr(cur, '/')) == NULL)
++		goto parse_failed;
++	*delim = 0;
++	ipv6 = netpoll_parse_ip_addr(cur, &np->remote_ip);
++	if (ipv6 < 0)
++		goto parse_failed;
++	else if (ipversion_set && np->ipv6 != (bool)ipv6)
++		goto parse_failed;
++	else
++		np->ipv6 = (bool)ipv6;
++	cur = delim + 1;
++
++	if (*cur != 0) {
++		/* MAC address */
++		if (!mac_pton(cur, np->remote_mac))
++			goto parse_failed;
++	}
++
++	netpoll_print_options(np);
++
++	return 0;
++
++ parse_failed:
++	np_info(np, "couldn't parse config at '%s'!\n", cur);
++	return -1;
++}
++
+ /* Allocate new target (from boot/module param) and setup netpoll for it */
+ static struct netconsole_target *alloc_param_target(char *target_config,
+ 						    int cmdline_count)
 diff --git a/include/linux/netpoll.h b/include/linux/netpoll.h
-index 0477208ed9ffa..a637e51152544 100644
+index 72086b8a3decd..1b8000954e52a 100644
 --- a/include/linux/netpoll.h
 +++ b/include/linux/netpoll.h
-@@ -69,7 +69,6 @@ void netpoll_print_options(struct netpoll *np);
- int netpoll_parse_options(struct netpoll *np, char *opt);
+@@ -73,7 +73,6 @@ static inline void netpoll_poll_enable(struct net_device *dev) { return; }
+ 
+ int netpoll_send_udp(struct netpoll *np, const char *msg, int len);
+ void netpoll_print_options(struct netpoll *np);
+-int netpoll_parse_options(struct netpoll *np, char *opt);
  int __netpoll_setup(struct netpoll *np, struct net_device *ndev);
  int netpoll_setup(struct netpoll *np);
--void __netpoll_cleanup(struct netpoll *np);
  void __netpoll_free(struct netpoll *np);
- void netpoll_cleanup(struct netpoll *np);
- void do_netpoll_cleanup(struct netpoll *np);
 diff --git a/net/core/netpoll.c b/net/core/netpoll.c
-index 4ddb7490df4b8..a69c2773841a5 100644
+index 9e86026225a36..d2965c916130d 100644
 --- a/net/core/netpoll.c
 +++ b/net/core/netpoll.c
-@@ -863,7 +863,7 @@ static void rcu_cleanup_netpoll_info(struct rcu_head *rcu_head)
- 	kfree(npinfo);
+@@ -510,26 +510,6 @@ void netpoll_print_options(struct netpoll *np)
+ }
+ EXPORT_SYMBOL(netpoll_print_options);
+ 
+-static int netpoll_parse_ip_addr(const char *str, union inet_addr *addr)
+-{
+-	const char *end;
+-
+-	if (!strchr(str, ':') &&
+-	    in4_pton(str, -1, (void *)addr, -1, &end) > 0) {
+-		if (!*end)
+-			return 0;
+-	}
+-	if (in6_pton(str, -1, addr->in6.s6_addr, -1, &end) > 0) {
+-#if IS_ENABLED(CONFIG_IPV6)
+-		if (!*end)
+-			return 1;
+-#else
+-		return -1;
+-#endif
+-	}
+-	return -1;
+-}
+-
+ static void skb_pool_flush(struct netpoll *np)
+ {
+ 	struct sk_buff_head *skb_pool;
+@@ -539,95 +519,6 @@ static void skb_pool_flush(struct netpoll *np)
+ 	skb_queue_purge_reason(skb_pool, SKB_CONSUMED);
  }
  
--void __netpoll_cleanup(struct netpoll *np)
-+static void __netpoll_cleanup(struct netpoll *np)
+-int netpoll_parse_options(struct netpoll *np, char *opt)
+-{
+-	char *cur=opt, *delim;
+-	int ipv6;
+-	bool ipversion_set = false;
+-
+-	if (*cur != '@') {
+-		if ((delim = strchr(cur, '@')) == NULL)
+-			goto parse_failed;
+-		*delim = 0;
+-		if (kstrtou16(cur, 10, &np->local_port))
+-			goto parse_failed;
+-		cur = delim;
+-	}
+-	cur++;
+-
+-	if (*cur != '/') {
+-		ipversion_set = true;
+-		if ((delim = strchr(cur, '/')) == NULL)
+-			goto parse_failed;
+-		*delim = 0;
+-		ipv6 = netpoll_parse_ip_addr(cur, &np->local_ip);
+-		if (ipv6 < 0)
+-			goto parse_failed;
+-		else
+-			np->ipv6 = (bool)ipv6;
+-		cur = delim;
+-	}
+-	cur++;
+-
+-	if (*cur != ',') {
+-		/* parse out dev_name or dev_mac */
+-		if ((delim = strchr(cur, ',')) == NULL)
+-			goto parse_failed;
+-		*delim = 0;
+-
+-		np->dev_name[0] = '\0';
+-		eth_broadcast_addr(np->dev_mac);
+-		if (!strchr(cur, ':'))
+-			strscpy(np->dev_name, cur, sizeof(np->dev_name));
+-		else if (!mac_pton(cur, np->dev_mac))
+-			goto parse_failed;
+-
+-		cur = delim;
+-	}
+-	cur++;
+-
+-	if (*cur != '@') {
+-		/* dst port */
+-		if ((delim = strchr(cur, '@')) == NULL)
+-			goto parse_failed;
+-		*delim = 0;
+-		if (*cur == ' ' || *cur == '\t')
+-			np_info(np, "warning: whitespace is not allowed\n");
+-		if (kstrtou16(cur, 10, &np->remote_port))
+-			goto parse_failed;
+-		cur = delim;
+-	}
+-	cur++;
+-
+-	/* dst ip */
+-	if ((delim = strchr(cur, '/')) == NULL)
+-		goto parse_failed;
+-	*delim = 0;
+-	ipv6 = netpoll_parse_ip_addr(cur, &np->remote_ip);
+-	if (ipv6 < 0)
+-		goto parse_failed;
+-	else if (ipversion_set && np->ipv6 != (bool)ipv6)
+-		goto parse_failed;
+-	else
+-		np->ipv6 = (bool)ipv6;
+-	cur = delim + 1;
+-
+-	if (*cur != 0) {
+-		/* MAC address */
+-		if (!mac_pton(cur, np->remote_mac))
+-			goto parse_failed;
+-	}
+-
+-	netpoll_print_options(np);
+-
+-	return 0;
+-
+- parse_failed:
+-	np_info(np, "couldn't parse config at '%s'!\n", cur);
+-	return -1;
+-}
+-EXPORT_SYMBOL(netpoll_parse_options);
+-
+ static void refill_skbs_work_handler(struct work_struct *work)
  {
- 	struct netpoll_info *npinfo;
- 
-@@ -885,7 +885,6 @@ void __netpoll_cleanup(struct netpoll *np)
- 
- 	skb_pool_flush(np);
- }
--EXPORT_SYMBOL_GPL(__netpoll_cleanup);
- 
- void __netpoll_free(struct netpoll *np)
- {
+ 	struct netpoll *np =
 
 -- 
 2.47.1
