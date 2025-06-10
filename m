@@ -1,104 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CF0B17A301;
-	Tue, 10 Jun 2025 13:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F21246BD2;
+	Tue, 10 Jun 2025 13:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749562420; cv=none; b=aMbDtSrLWNbtNf2DDwwAh2po/7GfGO/ydkvZGRxzohYxRvMhd01aGZon/vOExl9y/IpNczHs9r3iDl847xmG5u1EVlsDWQx0xYtJq36FHgMn0jmkcadDp/iM/1CCZUWmsXse/kAy6rBjA6ceD1uEQmzseOrNFOfjhOVQZ8/J00s=
+	t=1749562441; cv=none; b=QXXMbsgne9kma+KRccTcCA99y2LxzP9eij2ROuwYWzxuxVzSO8Kkdm2GNC9WpYgez4scdHqNgK3/gdAQB2lbx1YNJ6UrfKn4npwuoQBbtJf9tSxGrFrbsbend6pn5D3VYWYndYi0GqmrFOLL3XEeSaOiY7dY5aWBcwo8d9nsZl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749562420; c=relaxed/simple;
-	bh=4eF9/CmotdESBddggte8FL/5iJIVylN8R74UX+xQaak=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bYJJfTSSfpSfDtFVvBYghlOS98ajGueq5ETnnv/auEzCraqkbJa7BmOeVCBe5cfJdtRCzwg4mDuEBvxeELvhOF2d+HiYjmIdjGGLmnY1BJ2rOT1Nkubv0UXQ7KxwaFo9y02GpIo8s5dKS1SRyYy4qapqG845hcRO9nR+5oW9Eqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A8qrUIzH; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749562441; c=relaxed/simple;
+	bh=KaHtuz6Jy0j4QGrttxWUw2TvpREuQsqVMUivA5X6Z7I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=JmQsauaciEfnJJ2cG95Uq6D9snrgQ32aGSYiSdqOSYbkdSDEFV4XqSHQFGmUfexH1k1/mN1AQn5Xy+mSCDGep1MDayvRCZRnQHm1owJRhf7KxipHl9g+vp5sjWMJJaimWPTwm/Kni6hbwiG0TYTJq937yxLZqqTF+dAZzvLtxow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=o+EB4CWt; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A8qrUIzH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749562418; x=1781098418;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=4eF9/CmotdESBddggte8FL/5iJIVylN8R74UX+xQaak=;
-  b=A8qrUIzHaXRRmYiEqY20P+GZO6RUiNAxDoBFcOywqp0TeTjPkiS38vWd
-   kA5kZZEVkBMcHSmqnH19FKqCCrTBsAzf6NNebKYAs5N2VNCHiBS1TcE6g
-   2LLvmdDrWzvNGsySH/9AP6MHOnkUB0Erw36/KQyeF8rvbbI1hbKojncF4
-   9pV40xP5eHdsk4PY9MsJbwyKMc5y7tvP8ojhIfkyZ7NSkt+F5QQkgjjea
-   MWTNN1kEdud8FRRTBWAzKgBEMiDcmJOtS69P9fvXJ60muGI5xHvZ//mAB
-   2zncrVHlEIYLAgg7itjTlvuxC8NDc+ffojEms9HyHxIcITZzeSgG5Wci6
-   Q==;
-X-CSE-ConnectionGUID: 3fXDgfZVSkCdmM0X69haiw==
-X-CSE-MsgGUID: MjHCugElSjOY3j9b9gLdqg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="55464395"
-X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
-   d="scan'208";a="55464395"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 06:33:37 -0700
-X-CSE-ConnectionGUID: 67tGi3H5SDaALS0eLrw+yg==
-X-CSE-MsgGUID: eWeYUNL+RHS8Glqniw5VYQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
-   d="scan'208";a="146712823"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 06:33:34 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uOz6Z-00000005MWZ-2ZGq;
-	Tue, 10 Jun 2025 16:33:31 +0300
-Date: Tue, 10 Jun 2025 16:33:31 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>, ikepanhc@gmail.com,
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-	Armin Wolf <W_Armin@gmx.de>, linux-doc@vger.kernel.org,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	ibm-acpi-devel@lists.sourceforge.net,
-	LKML <linux-kernel@vger.kernel.org>,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v3 2/2] platform/x86: thinklmi: improved DMI handling
-Message-ID: <aEg0K1OE6zhL97me@smile.fi.intel.com>
-References: <mpearson-lenovo@squebb.ca>
- <20250609122736.3373471-1-mpearson-lenovo@squebb.ca>
- <20250609122736.3373471-2-mpearson-lenovo@squebb.ca>
- <b792059e-44d2-82c0-574c-76c3f6a3129d@linux.intel.com>
- <f3b5c138-5576-4c01-b177-7450f1e91d24@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="o+EB4CWt"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55ACLDDB012936;
+	Tue, 10 Jun 2025 15:32:32 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	RCL3m+BGQL1ykNkUPx8ukHa4dw+bT4XFblDrGhiUwp8=; b=o+EB4CWtEwJNHNA9
+	47yfz4pD6ymBIVNAWLkRok+DgsQK+ETE9yatSF56TkUXp7QWC9xcoRnEbM5oZzol
+	FeICd0c9ZUAV/OaYvWb04+Hc2EMFNT6y/EpwYVs17+EfDSK5R0PoBKYxYal0x2LW
+	biIWKpgGJ31RnbDqU335sMOajdTd0W3fa+r0EThHmxIuq4fD1oihi0GIUm8gOV4w
+	nwNYupJp/Nnb2W+631HmNr4kJjExcBf4PGTd+aBZTCOOC8cAyf7yS08dL5ZWA5VI
+	0Uc6UJeVeJhPmf9FfDLMHTsckifctfgc5tdR7LZT8Nvl0XfM4K2GYCWcE++zasF8
+	T3sLqg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474aumdg7j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Jun 2025 15:32:32 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id C7C7F40055;
+	Tue, 10 Jun 2025 15:31:21 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5C13BB5D859;
+	Tue, 10 Jun 2025 15:30:09 +0200 (CEST)
+Received: from [10.48.87.141] (10.48.87.141) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Jun
+ 2025 15:30:08 +0200
+Message-ID: <24110be7-2a42-4283-8ca6-1c9a2c96043b@foss.st.com>
+Date: Tue, 10 Jun 2025 15:30:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f3b5c138-5576-4c01-b177-7450f1e91d24@app.fastmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/5] bus: stm32_firewall: Fix build warnings about
+ export.h
+To: Antonio Borneo <antonio.borneo@foss.st.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        David
+ Lechner <dlechner@baylibre.com>,
+        Fabrice Gasnier
+	<fabrice.gasnier@foss.st.com>,
+        Jonathan Cameron <jic23@kernel.org>, Lee Jones
+	<lee@kernel.org>,
+        <linux-iio@vger.kernel.org>,
+        =?UTF-8?Q?Nuno_S=C3=A1?=
+	<nuno.sa@analog.com>,
+        Olivier Moysan <olivier.moysan@foss.st.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>
+References: <20250610124855.269158-1-antonio.borneo@foss.st.com>
+ <20250610124855.269158-2-antonio.borneo@foss.st.com>
+Content-Language: en-US
+From: Gatien CHEVALLIER <gatien.chevallier@foss.st.com>
+In-Reply-To: <20250610124855.269158-2-antonio.borneo@foss.st.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-10_05,2025-06-10_01,2025-03-28_01
 
-On Tue, Jun 10, 2025 at 08:28:49AM -0400, Mark Pearson wrote:
-> On Tue, Jun 10, 2025, at 3:35 AM, Ilpo Järvinen wrote:
-> > On Mon, 9 Jun 2025, Mark Pearson wrote:
+Hello Antonio,
 
-...
-
-> >> +		serial = dmi_get_system_info(DMI_PRODUCT_SERIAL);
-> >> +		if (!serial)
-> >> +			return -EINVAL;
-> >
-> > This should not return -EINVAL as it is not a problem with the input 
-> > parameters. Perhaps -ENODEV would make sense instead?
+On 6/10/25 14:48, Antonio Borneo wrote:
+> After commit a934a57a42f6 ("scripts/misc-check: check missing #include
+> <linux/export.h> when W=1") and commit 7d95680d64ac ("scripts/misc-check:
+> check unnecessary #include <linux/export.h> when W=1") we get the build
+> warning with W=1:
 > 
-> Good point.
-> Unless Andy strongly thinks I should drop this bit, I'll fix in the next version
+> drivers/bus/stm32_firewall.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+> 
+> Fix it.
+> 
+> Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
+> ---
+>   drivers/bus/stm32_firewall.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/bus/stm32_firewall.c b/drivers/bus/stm32_firewall.c
+> index 2fc9761dadecf..3ff5b5b6add45 100644
+> --- a/drivers/bus/stm32_firewall.c
+> +++ b/drivers/bus/stm32_firewall.c
+> @@ -8,6 +8,7 @@
+>   #include <linux/bus/stm32_firewall_device.h>
+>   #include <linux/device.h>
+>   #include <linux/err.h>
+> +#include <linux/export.h>
+>   #include <linux/init.h>
+>   #include <linux/io.h>
+>   #include <linux/kernel.h>
 
-If maintainers are okay to take this approach (both Kconfig and C file
-changes), I am fine.
+Thank you,
 
--- 
-With Best Regards,
-Andy Shevchenko
+Acked-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
 
-
+BR,
+Gatien
