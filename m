@@ -1,99 +1,146 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8455C27AC4C
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F49425F974
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:14:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749543210; cv=none; b=M6e2/6zp0d8iHWPySR5xhTcxaZK/Q7rQ9E6xhAk/e7jGmQafF7KGxRPIxVEGgebO0E8Ud7c8q6UkN/XB4nIezCAKmBhgQYrCFjtnYUlioTtwaXlapGq3nSTZyDpjy1Upas5tO8PR+/gy0rd7AeSDzppZFE/GzvmSMAWSIPx3nlo=
+	t=1749543255; cv=none; b=VxzLRZI24lqIlH8oZ28yQj/dhaxcp6vFslRZby5hqS6+zIeZEZ+C68yJAxg2fhHgihF6glHebmbrqdOtMeOg97l+hNLUs3gCSc1gbEIRe3GqXXnsoR4Xb39eQZS8P57PKPpFIdSFrhNTGO+u7UGtFLVzlEPMW8tzvEBpaRKH+Gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749543210; c=relaxed/simple;
-	bh=AGrB1k2K4d+j7W5uHQba0DcCDvIDpeMB5mA7xW6HOjs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tApf+5St3E/6EMWpj06ncuKvzCBjlWxBVJGMZmYh0aBhWxyhLDtyQ1zOR+DdE+JiUgWvfAvPJoxGtfCiPattDDapH0kKZ8QdoT7Mrlgp0DqVMFktwJjBO6OrClB4DFxDRX40+iG3BHuEHjQUXLiKQpYtDR4FZ1IEt38lKLAZahQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=r44G/iT4; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1749543255; c=relaxed/simple;
+	bh=ymzu2QjDQrUOwObTG11pHLpVg3bsmIT384PWHd2YFwI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qu00PsUCWPKqYpcdqHV4vkGf6QCv6vY/N3MIERKM/1japeG+ou0ByfpXKkHJYF0tloq/s/KtMcZ1pfOtqo7iR8onQM9UtyzT4hE3bycDhJpOFqNgj70JCwK5JPitX+tVexUU2UBc9fsSo+TrDgsB5XN/yDQb7D0hWdVTSxuvrfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IhC33tLx; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="r44G/iT4"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a503d9ef59so4281582f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 01:13:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749543207; x=1750148007; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3DDdOm3PjmMZGWv7sfjoGBzae0xVF6b9amq2E2mQlBQ=;
-        b=r44G/iT4eUJB2vQYCBF9R6Rtq4Ki0QcTQkyVz5TYvM+v5xM88rUW7HzlI96+q1dsjj
-         5MM1a8aMZxfmAgEV+drD0TXE/KdkJClfGWG4b+Sxlct13BHZHasqDpIbLmG6ZKcnfVqA
-         IE7pHnpmBxv5GWN6MihtSuNZbVfu5Gf3BD8KWFo29vToEX9uVDSgjwnUJvkrQBBfVNIP
-         aRd/ReaVihJyMFBhPCEAFOHsRWAcn2VEwrKRe/nomU4K8gcGNl15qD8EN5uuCg6XuIKu
-         PN3laAUP5fTLSYZ+v6D0ahJJoi9EPM0CRutMAT+5DAkH9VlVapT5GVLPxBXMacDQ8TX0
-         RfhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749543207; x=1750148007;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3DDdOm3PjmMZGWv7sfjoGBzae0xVF6b9amq2E2mQlBQ=;
-        b=AadI1w0U0mNnhq0mTsNfAmDcO9+K492V2uyYw5paTRSgQ2D+lTdxcF8VUzTvcB/pKD
-         0ZFNI+jk71ysfdQIxCwbM83am/oEiKoWSv1HhW/xmVGeZxTOjqNMHykfIu+NZ+uGxdDK
-         IwmXvRQT9t9HIr6HT755FqnCriuHjWqQAPHPpae5j44pZjccT2YZ+uJD1TN5KXOeWzL4
-         ZGJjDOU1ihOAPvYShJDCAHC6vAyGT0cN99te9PIEbjZBTADtDNZObD0e/q05r0LPNRTt
-         1C/AUGgdS8dGbMqOWLKzWE0pnMRh2mhZWGawfyKWcHclUIsHp8ceBa961RXBfI2OJeCH
-         5ENw==
-X-Forwarded-Encrypted: i=1; AJvYcCU4Xe5tJJnj2Mn/yuukKfWzsTDicwiQDNPxL8X2jU3JJkjJFLtU4bH7k3df032xOZ0A2Vy2ts22gWHBF/Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8AliwgPF/1Y3Wu+Xo04pRvBmEwI6qHO3W88tXDAsZCZTzTAIC
-	mKE91D6cExnah91N7OY14lsHg18IZ4aZLQGuhovlURRKYi9ZXrZJC8pKtypoXQVF4zA=
-X-Gm-Gg: ASbGncuQ4jrnebd1f7iSdlMMA2VSMoEcpZc5f/bihP442jTHOHLJwQvTWfUKP/6Ydf0
-	6oyUlSRYEYZCnvRmvOrMRDVux7n+Dt6qUjYGNrNjvG1XBS+0X+KkGRqQihNGEz1wEUb5Uuj2PQf
-	K0YwsT9Fvti3nHD2m/8JnY92AqnpJKjGHCHWqlR7+ywZVO9yT7jv9yalYYqPjArfqgfOwi9+zuw
-	guX7ScTsSfwKUfPX630niIoo5bAwEiGWFoulWhm3pRH9YBBfgrtnOsNCQK6tARJNPGZgRZGaHjQ
-	2Gln2iO4YzRGmKOZwaYtRvA4pA7qWQ8jpMSvcfYgJjXgwhdVC355zbbI+vnX
-X-Google-Smtp-Source: AGHT+IGd0hRk+75zKFj4sdKdcpiZwWHStM03Gr7kQJsVjryb0vZsuhZQnQD8wN1guY6/FynJa1139Q==
-X-Received: by 2002:a05:6000:25c6:b0:3a3:7749:9783 with SMTP id ffacd0b85a97d-3a531ce7324mr11978738f8f.51.1749543206999;
-        Tue, 10 Jun 2025 01:13:26 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:4d:e52b:812d:eb7c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5323b5147sm11852958f8f.37.2025.06.10.01.13.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 01:13:26 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	f.fangjian@huawei.com,
-	Yang Shen <shenyang39@huawei.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: Update HiSilicon GPIO driver maintainer
-Date: Tue, 10 Jun 2025 10:13:19 +0200
-Message-ID: <174954319673.29199.11108527268991181680.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250529034023.3780376-1-shenyang39@huawei.com>
-References: <20250529034023.3780376-1-shenyang39@huawei.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IhC33tLx"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55A09sUg032702;
+	Tue, 10 Jun 2025 08:14:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=r8hdw9
+	Rw+PQqw6yzY+29b7k2yuPuh90hDJNW2Q1IHMo=; b=IhC33tLxO+dooNeWGK/vf6
+	pOvEyJxqxsMe3+21baki9WNUXyq8r3EtqBf26whr/FwCN4d8jGkryXwbNk/wEfwD
+	RoeCUm+xdTpLnQ55/G9nIxrwYos4aQLEInnoraqfAv/Mxh1LdyepaXDJ0RiYPNm5
+	NBjEUDOujFbaIX8WQkTEzO8OOpM9eiRBSQQ6KF7szTeSTNwF3Bz1k6DEE5Ul4qvn
+	TQt655Hdob8wEReDTp5dtJcVKyU949RnYcAaJeeoVMC31fDBGty1j4LwyczWNFjD
+	IANEY3sh+tnSo3YLraNPzbEcLATwfcqTpXFE6C9yUy11FtSmRXf7BFyjSprvzGsg
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4769wyhpfk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Jun 2025 08:14:06 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55A8E66m015831;
+	Tue, 10 Jun 2025 08:14:06 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4769wyhpff-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Jun 2025 08:14:06 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55A61l4E003463;
+	Tue, 10 Jun 2025 08:14:05 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4751ykh97w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Jun 2025 08:14:05 +0000
+Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
+	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55A8E4SI31261336
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 10 Jun 2025 08:14:04 GMT
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C3F9C58045;
+	Tue, 10 Jun 2025 08:14:04 +0000 (GMT)
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DF79D58054;
+	Tue, 10 Jun 2025 08:14:02 +0000 (GMT)
+Received: from [9.109.245.113] (unknown [9.109.245.113])
+	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 10 Jun 2025 08:14:02 +0000 (GMT)
+Message-ID: <0b9e1e55-f4c9-4e30-abe6-3b9765ba9ebf@linux.ibm.com>
+Date: Tue, 10 Jun 2025 13:44:01 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/memory-tier: Fix abstract distance calculation
+ overflow
+To: Li Zhijian <lizhijian@fujitsu.com>, linux-mm@kvack.org
+Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        Ying Huang <huang.ying.caritas@gmail.com>
+References: <20250610062751.2365436-1-lizhijian@fujitsu.com>
+Content-Language: en-US
+From: Donet Tom <donettom@linux.ibm.com>
+In-Reply-To: <20250610062751.2365436-1-lizhijian@fujitsu.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: xmceErOpFt8yCePtbSQsA-WmXVmkl-pq
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDA1OCBTYWx0ZWRfX1TK7gdleShsC ZlZL227d1dnBeXmMwCzS2BZrqqKeM+XQP9A/2KYiK6yJeQHfb6f9h3Qd2L29Smg1FG3oO/sLUi7 XdZgarrGFWP0CO7BZ0mLnVsmjYHH1VuXd0KsecD4KPoY4pBM6PtJNUq8LsiGopra3ZvWZme0SAA
+ pg/X4UE6gFIRhawMLExLl5XyHPnxmNFrEiLh+dXZGwHcMFwgkgVyi1Cb9J8GAp4YkThLoV1DzqD /XljKsKhI+MifNstt2oQmV/LpcwpbpUvQG/LfJuSS2TGK1lyuwULWxvb3KQcFy8UKRir0xtkZkY 6SiWRB1xJntae2+7d6HMjGzXitp356xZWfEovwh7U9uk7gVxXAqkSu62o1aUZCppeV8DIdFWhGS
+ 6emig6fwRqAMbtLKq1hGCp/dKzyHOvbw3xjnrROQ+AR7rusllOd6uvJoxSpCMfZI13vzFZ3k
+X-Authority-Analysis: v=2.4 cv=YKGfyQGx c=1 sm=1 tr=0 ts=6847e94e cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=pGLkceISAAAA:8 a=omOdbC7AAAAA:8 a=VnNF1IyMAAAA:8 a=MjiR9eHTnMDsPQ3Rr7EA:9
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: hLWlauVIk4vxWRo7QYfEL2eAP_IZVkSd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-10_02,2025-06-09_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1011
+ malwarescore=0 bulkscore=0 priorityscore=1501 phishscore=0 mlxscore=0
+ lowpriorityscore=0 impostorscore=0 adultscore=0 mlxlogscore=999
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506100058
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
+On 6/10/25 11:57 AM, Li Zhijian wrote:
+> In mt_perf_to_adistance(), the calculation of abstract distance (adist)
+> involves multiplying several int values including MEMTIER_ADISTANCE_DRAM.
+> ```
+> *adist = MEMTIER_ADISTANCE_DRAM *
+> 		(perf->read_latency + perf->write_latency) /
+> 		(default_dram_perf.read_latency + default_dram_perf.write_latency) *
+> 		(default_dram_perf.read_bandwidth + default_dram_perf.write_bandwidth) /
+> 		(perf->read_bandwidth + perf->write_bandwidth);
+> ```
+> Since these values can be large, the multiplication may exceed the maximum
+> value of an int (INT_MAX) and overflow (Our platform did), leading to an
+> incorrect adist.
+>
+> Change MEMTIER_ADISTANCE_DRAM to be a long constant by writing it with the
+> 'L' suffix. This prevents the overflow because the multiplication will then
+> be done in the long type which has a larger range.
+>
+> Fixes: 3718c02dbd4c ("acpi, hmat: calculate abstract distance with HMAT")
+> Cc: Ying Huang <huang.ying.caritas@gmail.com>
+> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
+> ---
+>   include/linux/memory-tiers.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.h
+> index 0dc0cf2863e2..7a805796fcfd 100644
+> --- a/include/linux/memory-tiers.h
+> +++ b/include/linux/memory-tiers.h
+> @@ -18,7 +18,7 @@
+>    * adistance value (slightly faster) than default DRAM adistance to be part of
+>    * the same memory tier.
+>    */
+> -#define MEMTIER_ADISTANCE_DRAM	((4 * MEMTIER_CHUNK_SIZE) + (MEMTIER_CHUNK_SIZE >> 1))
+> +#define MEMTIER_ADISTANCE_DRAM	((4L * MEMTIER_CHUNK_SIZE) + (MEMTIER_CHUNK_SIZE >> 1))
 
-On Thu, 29 May 2025 11:40:23 +0800, Yang Shen wrote:
-> Add Yang Shen as the maintainer of the HiSilicon GPIO driver,
-> replacing Jay Fang.
-> 
-> 
+Hi Li Zhijian
 
-Applied, thanks!
+This looks good to me. Feel free to add
 
-[1/1] MAINTAINERS: Update HiSilicon GPIO driver maintainer
-      https://git.kernel.org/brgl/linux/c/e0d4a0f1d066f14522049e827107a577444d9183
+Reviewed-byDonet Tom <donettom@linux.ibm.com>
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>   
+>   struct memory_tier;
+>   struct memory_dev_type {
