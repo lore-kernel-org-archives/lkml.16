@@ -1,133 +1,113 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A41A288C00;
-	Tue, 10 Jun 2025 22:00:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749592840; cv=none; b=AL9+pcRCHsZoqFpXeiklo+sKre8SVFPdCSw4DvTf1bqQyU0f9fn2MCa1PKccGTRa/onjd3WlEMiQDWXnZffQ/4SdXadGVZszdXV2NcRlAkeMcognjKmiVQY3DbqAGk3dpLvbQWVxQVH42JCr93uq47QZ97ZZvH59jJub8sftAZo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749592840; c=relaxed/simple;
-	bh=FnrGA5lxkPuqlYIs8QGMviRg4MaEfAXrtzR7YXE3u4g=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=E6cZvps4skWmUXUbr6DoSnCUXWFflsxF3zRW3roOJ8hxgC6He/0lRK5FCD2hlifGDZzZMPJfOqNuAMOYjOHS2NxK0sfJkxTHkKfrSvS7U3mmONgKIITdZIey1TdR4D/pEIu+0QjixcZhl3XO7W9Vl6COUfIy2DnEtY615xX2NtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BV2IIeDg; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BTcVTgil; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366B128469C;
+	Tue, 10 Jun 2025 22:00:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.209.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749592861; cv=pass; b=i306ZyATWdITha3AEbbI+XbLu9ChKoCdklYSapQumkNMAdi90k/Nqnec2Kal5wvcNEp4UZJiNkMvrYvkP/cIDbTtDZxaqGz4PFYvRczi+kAzMZnqGIQC4uN8Rxwb/O2mBQ+O0H5TB7nopoT6Md0gbfHFnO07NfyHUARi/sOpnJU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749592861; c=relaxed/simple;
+	bh=dIbNFft6CaYTMLr+91ryBglJuKP2jhFXmKg1aBJZ8vI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gCTrteZP7k7Nwfd6G4ZOPpiq1AHu7sYZnhNxee+4vL+CNTJDAGZF9CEst6AP/Y8rFwJ/w3CGYFLQs72/neHHV7GDGiuPoZm8DXIUvRKjap3RWPMMtMFNG9lDxmG2GvCrLAVN/r/NUEQ9r3yJ8VRJXZPWBococUaI5rE3M3EvrKI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=BUOlSahf; arc=pass smtp.client-ip=23.83.209.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BV2IIeDg";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BTcVTgil"
-Date: Tue, 10 Jun 2025 22:00:35 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749592836;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=ZdS3BZQLcu/5nmH72ukL8l+dA44/cwpXTCneWcSu5Lw=;
-	b=BV2IIeDgKiy5hB7RWkWwdotjjQ6ZIYryNRhl8KjB8oviNZNtwoDdZ0ETpY8DFQK+4jMVQz
-	AZl2SDeiAVkYMT2Q5gwaGkIc0xL/qBm8kM0Mnz+ndl5Vh22wc8p27v0SzU3oFchvrtoqxo
-	fqoNO0C3casIu9k8JA1+08yj5g7pG4k9kptr0MWzDjNKbqqrfznyTegxSHpyMtoBAhd93U
-	oTdvl48vQ5lro9JrF6Toyi/1tQraJ/F5M7V3Ya5S1x7Gz6oA53ftEc3wJv/59QBmWwihFv
-	B3J9CdPHfr7DDvh12lwdcPpx7BWdvb6qLy7auGn4jmlzPBCrTolGpH3xOY8xig==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749592836;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=ZdS3BZQLcu/5nmH72ukL8l+dA44/cwpXTCneWcSu5Lw=;
-	b=BTcVTgilFHi4/oVwQrfbn3FqA6Xy3KJIidHlUe7la7aOdxy43clEGao3TzlwEYWxA12MZ2
-	QwA4YARhSFuoEnCA==
-From: "tip-bot2 for Kai Huang" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/virt/tdx: Avoid indirect calls to TDX assembly
- functions
-Cc: Kai Huang <kai.huang@intel.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- stable@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="BUOlSahf"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 89AA62C4F3D;
+	Tue, 10 Jun 2025 16:25:02 +0000 (UTC)
+Received: from pdx1-sub0-mail-a231.dreamhost.com (trex-green-9.trex.outbound.svc.cluster.local [100.119.143.12])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id E50E72C5598;
+	Tue, 10 Jun 2025 16:25:01 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1749572702; a=rsa-sha256;
+	cv=none;
+	b=KB0W8msBHstNJ9oBJ9BFRev/hfSHTRlLy5Sa/i0534dU+lLw8xGLGPdibtBUn2Da2O6Imb
+	X7HDSE50ChLnoShxZLQaVyGGbnUI1wSUlAbKpwYXK8b5PNQWej2yhBs0rOfD/eV30BkXsd
+	4R1u2eZUXMoWw2J7RDxozIYwKCt4UmDg3MEqDH4jF1CDfmyucZKa1PD9dD1c/O87HoQUD4
+	Om3C9VFTCVzpLMi5bbGsdqo6KCMSLIb9IAFlLbSiCVhrrbt7pp5MIUlDAAK4T0GZrxfdTN
+	7tg9H0tqLRa/T8eqCXmAqyiacNL7CkCkpkLibMhpDe3DZ03enkXWYehxHgVi8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1749572702;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=dIbNFft6CaYTMLr+91ryBglJuKP2jhFXmKg1aBJZ8vI=;
+	b=RdaFcVFR1K5pEo6opZwgLv1akYVFpi8jfb1WcXKNqwqd7nxlAxU+GfMo3TJiXPR7s2JRhY
+	7o/IiLwaauVswDhXHJ4fLtrt0AFyxaD05q4o1UDJYFof1COeVS9/wdXIUO8bXnI1NgaZEU
+	NI91p2Bu02EHj1WoSPys5D2Js0XaxwapSrlXy/977jQUpB3QG6sfF0knLCDc8KgyrC9Fqs
+	Z2zWq71/Xc4iibwzN0sn17qofs+PxllVTcSQI0Wok7Ggge9ZSWDF5KSmFtpCJ9090mw6RR
+	tbW5h4bNwTLvK+uA17Xno2GvZrpUn6EZ39miKMJAxa8RaKkEQdhaKdv8IFdzPQ==
+ARC-Authentication-Results: i=1;
+	rspamd-5674bcf875-gcbmk;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Whistle-Society: 54d24218127b95f7_1749572702295_686142442
+X-MC-Loop-Signature: 1749572702295:142634956
+X-MC-Ingress-Time: 1749572702295
+Received: from pdx1-sub0-mail-a231.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.119.143.12 (trex/7.0.3);
+	Tue, 10 Jun 2025 16:25:02 +0000
+Received: from offworld (syn-076-167-199-067.res.spectrum.com [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a231.dreamhost.com (Postfix) with ESMTPSA id 4bGvJs1l23z4x;
+	Tue, 10 Jun 2025 09:25:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1749572701;
+	bh=dIbNFft6CaYTMLr+91ryBglJuKP2jhFXmKg1aBJZ8vI=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=BUOlSahfn2dlJpoN23ujgzyYTnEPXa2Q9+/1lWKciIhYHyBflU8CdErXNFy9RgbfU
+	 l9nTVYIAViuYzNejlkoaxVEV5XmaHdDU7WUK4egEuSQ1u6nDV059tUhgH+MAUdSGz9
+	 uu/OisbFV5jnRPd2nzI5toMEeG8Dg9paW1T0JtnT7vrUzj+TbJKRghGBbfleFMnBTg
+	 y/XACTSxTu3YudRmuhlKnUR201IWMNpnPRHo0nMw0V6P2kPPlUKJpVnUGj1yeK1f6O
+	 jyKRVSeUEnbSj9txcw6pBD9osrMcYaVRhjQi9Sr0iRrJm1lNiQt6cbhW2f9ffZ12x3
+	 cp3/Y65W0oLRQ==
+Date: Tue, 10 Jun 2025 09:24:57 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Li Ming <ming.li@zohomail.com>
+Cc: jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com,
+	shiju.jose@huawei.com, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/2] cxl/Documentation: Add more description about
+ min/max scrub cycle
+Message-ID: <20250610162457.suqmw3bawg4n4zmu@offworld>
+References: <20250603104314.25569-1-ming.li@zohomail.com>
+ <20250603104314.25569-2-ming.li@zohomail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174959283534.406.15846779981936679822.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250603104314.25569-2-ming.li@zohomail.com>
+User-Agent: NeoMutt/20220429
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Tue, 03 Jun 2025, Li Ming wrote:
 
-Commit-ID:     0b3bc018e86afdc0cbfef61328c63d5c08f8b370
-Gitweb:        https://git.kernel.org/tip/0b3bc018e86afdc0cbfef61328c63d5c08f8b370
-Author:        Kai Huang <kai.huang@intel.com>
-AuthorDate:    Sat, 07 Jun 2025 01:07:37 +12:00
-Committer:     Dave Hansen <dave.hansen@linux.intel.com>
-CommitterDate: Tue, 10 Jun 2025 12:32:52 -07:00
+>user can configurare scrub cycle for a region or a memory device via
+>sysfs interface. Currently, these interfaces have not enough description
+>for the return value. So adding return value description to these
+>interfaces.
+>
+>Suggested-by: Alison Schofield <alison.schofield@intel.com>
+>Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+>Signed-off-by: Li Ming <ming.li@zohomail.com>
 
-x86/virt/tdx: Avoid indirect calls to TDX assembly functions
-
-Two 'static inline' TDX helper functions (sc_retry() and
-sc_retry_prerr()) take function pointer arguments which refer to
-assembly functions.  Normally, the compiler inlines the TDX helper,
-realizes that the function pointer targets are completely static --
-thus can be resolved at compile time -- and generates direct call
-instructions.
-
-But, other times (like when CONFIG_CC_OPTIMIZE_FOR_SIZE=y), the
-compiler declines to inline the helpers and will instead generate
-indirect call instructions.
-
-Indirect calls to assembly functions require special annotation (for
-various Control Flow Integrity mechanisms).  But TDX assembly
-functions lack the special annotations and can only be called
-directly.
-
-Annotate both the helpers as '__always_inline' to prod the compiler
-into maintaining the direct calls. There is no guarantee here, but
-Peter has volunteered to report the compiler bug if this assumption
-ever breaks[1].
-
-Fixes: 1e66a7e27539 ("x86/virt/tdx: Handle SEAMCALL no entropy error in common code")
-Fixes: df01f5ae07dd ("x86/virt/tdx: Add SEAMCALL error printing for module initialization")
-Signed-off-by: Kai Huang <kai.huang@intel.com>
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/lkml/20250605145914.GW39944@noisy.programming.kicks-ass.net/ [1]
-Link: https://lore.kernel.org/all/20250606130737.30713-1-kai.huang%40intel.com
----
- arch/x86/include/asm/tdx.h  | 2 +-
- arch/x86/virt/vmx/tdx/tdx.c | 5 +++--
- 2 files changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/include/asm/tdx.h b/arch/x86/include/asm/tdx.h
-index 8b19294..7ddef3a 100644
---- a/arch/x86/include/asm/tdx.h
-+++ b/arch/x86/include/asm/tdx.h
-@@ -106,7 +106,7 @@ void tdx_init(void);
- 
- typedef u64 (*sc_func_t)(u64 fn, struct tdx_module_args *args);
- 
--static inline u64 sc_retry(sc_func_t func, u64 fn,
-+static __always_inline u64 sc_retry(sc_func_t func, u64 fn,
- 			   struct tdx_module_args *args)
- {
- 	int retry = RDRAND_RETRY_LOOPS;
-diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
-index 2457d13..c7a9a08 100644
---- a/arch/x86/virt/vmx/tdx/tdx.c
-+++ b/arch/x86/virt/vmx/tdx/tdx.c
-@@ -75,8 +75,9 @@ static inline void seamcall_err_ret(u64 fn, u64 err,
- 			args->r9, args->r10, args->r11);
- }
- 
--static inline int sc_retry_prerr(sc_func_t func, sc_err_func_t err_func,
--				 u64 fn, struct tdx_module_args *args)
-+static __always_inline int sc_retry_prerr(sc_func_t func,
-+					  sc_err_func_t err_func,
-+					  u64 fn, struct tdx_module_args *args)
- {
- 	u64 sret = sc_retry(func, fn, args);
- 
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
