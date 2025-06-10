@@ -1,72 +1,297 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-79.smtpout.orange.fr [80.12.242.79])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA86912D758;
-	Tue, 10 Jun 2025 21:07:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD00327472;
+	Tue, 10 Jun 2025 21:09:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749589647; cv=none; b=Ed4F9hGkZwU3nBh7bt90E0e33MDkBQbdDN4WwZamaFqHk9n9JHZgch2ARKhcQSUWhoGJezEMHMzzGp4n+nnHkEUiwDMxIdYgBrrEifliOwgtvMch7vG1X89hoLwaVhpghwmyDMw6CNcj8dODPdGBMsWvDi0uzOTYS6hX1dnPvPU=
+	t=1749589756; cv=none; b=SYGmkASYXBCIGxtWdDQ/MzFYShDM/9VF7HvWwXetjePcQg//OcXO784VBZ3gkRXfOI4atbgKWrABZ6bywSQBJxkpgzb5N0pE0Yh/zDqNriyAVTDBqnY4F2uMEpnqdz/B6xOESr+IXy3XBL6DnOGwm9UzbZdHdJpF/Lg7RvtDYj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749589647; c=relaxed/simple;
-	bh=te1FdrXugcXRYIBb9LoL9C21gyeVfuv4ldM2Dn6btwM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=F6ZMDLf+sDCHdGrtOz1fAkAiL7Zoe4Bbs6Du78r/U6/Ol9bycKeQttWVCzXlM7voTLTNLxIlk9XnPbOCdhtlmxyNAMkAPy8yvRBFa/7kyErznyAb2YBgz+DN44XTR8GjruBVox2qymg4C+a0x+HdemT9EC2XhIORJpEdDKEbgo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KbpklLoS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749589756; c=relaxed/simple;
+	bh=EZjkrxi6peS+7wpXuxQb34rIlFS/bTDwMsD9Ij1kHnw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aWuvWRnABRLC7LS0/oMiBCVJyZaP0SPLAOp1zR7OKceI4b7UNmtGh6JYbUEiTSvDbE9hHrkPJNwcWR+uajMFT+ObbEyM8b84gCZYqEPlOFnwbGlUB2tESqwXoOeZKAxZEkOqYTjLf2rKFn9vhuFbs8eFOhJ6Gq7mORIiMiH+TuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=I67KCJQQ; arc=none smtp.client-ip=80.12.242.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KbpklLoS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98E0FC4CEED;
-	Tue, 10 Jun 2025 21:07:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749589646;
-	bh=te1FdrXugcXRYIBb9LoL9C21gyeVfuv4ldM2Dn6btwM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=KbpklLoSTfodJA5IhC/nO8yMbqDmJmNT5/5PyH0f4cDgkQ0QXXHiTBsrVgaZW4LGf
-	 t9igAKwH0C3GglINz0EnseKzRBY1j5P8YvQAi4aJZZHP7tFbUd2RAE2zztgqyoDmpz
-	 gO32U0NpYnk4icx2pxPqh8o597YTzTuQqU/lCffP/Z4WFiwSVBvPOzWlS0i15O9+/R
-	 e7elXqzIRl5VCt6pwz9ccvGWYaWOFoglylnHNossHOJNq04Z5TKRnuy1+K5opXu0gs
-	 G4LHWHTMN8kHcRpXvVFPcRWUpOqo4p5cbRN7HYocsjoDy+CDg118vHw6X4FeZkEs2U
-	 QXQiZeXEuKl/Q==
-Date: Tue, 10 Jun 2025 14:07:24 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: Breno Leitao <leitao@debian.org>, Linux Doc Mailing List
- <linux-doc@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Akira
- Yokosawa <akiyks@gmail.com>, "David S. Miller" <davem@davemloft.net>,
- Ignacio Encinas Rubio <ignacio@iencinas.com>, Marco Elver
- <elver@google.com>, Shuah Khan <skhan@linuxfoundation.org>, Donald Hunter
- <donald.hunter@gmail.com>, Eric Dumazet <edumazet@google.com>, Jan Stancek
- <jstancek@redhat.com>, Paolo Abeni <pabeni@redhat.com>, Ruben Wauters
- <rubenru09@aol.com>, joel@joelfernandes.org,
- linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org,
- lkmm@lists.linux.dev, netdev@vger.kernel.org, peterz@infradead.org,
- stern@rowland.harvard.edu
-Subject: Re: [PATCH 4/4] docs: netlink: store generated .rst files at
- Documentation/output
-Message-ID: <20250610140724.5f183759@kernel.org>
-In-Reply-To: <20250610225911.09677024@foz.lan>
-References: <cover.1749551140.git.mchehab+huawei@kernel.org>
-	<5183ad8aacc1a56e2dce9cc125b62905b93e83ca.1749551140.git.mchehab+huawei@kernel.org>
-	<aEhSu56ePZ/QPHUW@gmail.com>
-	<20250610225911.09677024@foz.lan>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="I67KCJQQ"
+Received: from [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
+ ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
+	by smtp.orange.fr with ESMTPA
+	id P6CPuzDVTQ1a2P6CPunbgi; Tue, 10 Jun 2025 23:08:02 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1749589682;
+	bh=j/7iFzXsLAvMUXEaYKAeTYE5FeujyoCY/Mn89G6uMns=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=I67KCJQQL/+7gR+x/HS0J9W6tRTfZ5M4wCaumZynz0Fsr1APg6/3tYQsrL+BS2VWf
+	 4ubWYh4PjfytLG5zCMCJ/Ap1deu3P+vdUR87TCl11aWRXjNcmMF4X2xfqLMTUefXz3
+	 LKeYNbZ53sPd+47tq3E3m5/uGx+lWUbsoqAqxfdKGGlSjYhfqHklUkBYaeyhWwKVug
+	 GpigMaIbQikT/jUSXQzyL1xW+UokiLexkoDPwPY+dEEFbiB08WGqihSWV6V2BS/Y6r
+	 +BBJtkBY39iqu8UJ1+4WiZqusLvb0Ja14H0gYklfAMgHShpPMuPjiqnL8GhLK/0N3I
+	 vWvLIoAjbrLOw==
+X-ME-Helo: [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Tue, 10 Jun 2025 23:08:02 +0200
+X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
+Message-ID: <42676fe3-8758-42ea-8e21-9c3955468c78@wanadoo.fr>
+Date: Tue, 10 Jun 2025 23:07:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 2/4] leds: add TI/National Semiconductor LP5812 LED
+ Driver
+To: Nam Tran <trannamatk@gmail.com>, lee@kernel.org
+Cc: pavel@kernel.org, krzk+dt@kernel.org, robh@kernel.org,
+ conor+dt@kernel.org, corbet@lwn.net, linux-leds@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-doc@vger.kernel.org
+References: <20250610174319.183375-1-trannamatk@gmail.com>
+ <20250610174319.183375-4-trannamatk@gmail.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20250610174319.183375-4-trannamatk@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, 10 Jun 2025 22:59:11 +0200 Mauro Carvalho Chehab wrote:
-> > The question is, are we OK with the templates that need to be created
-> > for netlink specs?!   
-> 
-> If there's no other way, one might have a tool for maintainers to use
-> to update templates, but yeah, having one template per each yaml
-> is not ideal. I think we need to investigate it better and seek for
-> some alternatives to avoid it.
+Le 10/06/2025 à 19:43, Nam Tran a écrit :
+> The LP5812 is a 4×3 matrix RGB LED driver with an autonomous animation
+> engine and time-cross-multiplexing (TCM) support for up to 12 LEDs or
+> 4 RGB LEDs. Each LED can be configured through the related registers
+> to realize vivid and fancy lighting effects.
 
-FWIW we have tools/net/ynl/ynl-regen.sh, it regenerates the C code 
-we have committed in the tree (uAPI headers mostly).
-We could add it there. Which is not to distract from your main
-point that not having the templates would be ideal.
+Hi,
+
+...
+
+> +static struct lp5812_data *lp5812_of_populate_pdata(struct device *dev,
+> +						    struct device_node *np,
+> +						    struct lp5812_chip *chip)
+> +{
+> +	struct device_node *child;
+> +	struct lp5812_data *pdata;
+> +	struct lp5812_led_config *cfg;
+> +	int num_channels, i = 0, ret;
+> +
+> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	num_channels = of_get_available_child_count(np);
+> +	if (num_channels == 0) {
+> +		dev_err(dev, "no LED channels\n");
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	cfg = devm_kcalloc(dev, num_channels, sizeof(*cfg), GFP_KERNEL);
+> +	if (!cfg)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	pdata->led_config = &cfg[0];
+> +	pdata->num_channels = num_channels;
+> +
+> +	for_each_available_child_of_node(np, child) {
+
+Maybe for_each_available_child_of_node_scoped() to slihtly simplify the 
+code?
+
+> +		ret = lp5812_parse_logical_led(child, cfg, i);
+> +		if (ret) {
+> +			of_node_put(child);
+> +			return ERR_PTR(-EINVAL);
+> +		}
+> +		i++;
+> +	}
+> +
+> +	of_property_read_string(np, "label", &pdata->label);
+> +
+> +	return pdata;
+> +}
+
+...
+
+> +static ssize_t lp5812_aeu_slope_time(struct device *dev,
+> +				     struct device_attribute *attr,
+> +				     enum slope_time_num slope_chan,
+> +				     const char *buf, size_t len)
+> +{
+> +	struct lp5812_led *led;
+> +	struct lp5812_chip *chip;
+> +	struct lp5812_led_config *led_cfg;
+> +	const char *name = dev->platform_data;
+> +	int val[LED_COLOR_ID_MAX];
+> +	u8 chan_nr = 0;
+> +	char *sub_str, *str = (char *)buf;
+> +	int i, ret, aeu;
+> +	union slope_time slope_time_val;
+> +	u16 reg;
+> +
+> +	if (strcmp(name, LP5812_SC_LED) == 0)
+> +		led = dev_to_lp5812_led(dev);
+> +	else
+> +		led = dev_to_lp5812_led_mc(dev);
+> +
+> +	chan_nr = led->chan_nr;
+> +	chip = led->chip;
+> +	led_cfg = &chip->pdata->led_config[chan_nr];
+> +
+> +	sub_str = strsep(&str, ":");
+> +	if (!sub_str)
+> +		return -EINVAL;
+> +	if (kstrtoint(&sub_str[3], 0, &aeu))
+> +		return -EINVAL;
+> +
+> +	pr_info("AEU = %d", aeu);
+> +
+> +	guard(mutex)(&chip->lock);
+> +	for (i = 0; i < led_cfg->num_colors; i++) {
+> +		sub_str = strsep(&str, " ");
+> +		if (!sub_str)
+> +			return -EINVAL;
+> +		if (kstrtoint(sub_str, 0, &val[i]))
+> +			return -EINVAL;
+> +		if (val[i] < 0 || val[i] > 15)
+> +			return -EINVAL;
+> +
+> +		reg = LP5812_AEU_SLOPE_TIME_ADDR(led_cfg->led_id[i], aeu, slope_chan);
+> +
+> +		/* get original value of slope time */
+> +		ret = lp5812_read(chip, reg, &slope_time_val.time_val);
+> +		if (ret)
+> +			return ret;
+> +
+> +		/* Update new value for slope time*/
+> +		if (slope_chan == LP5812_SLOPE_TIME_T1 || slope_chan == LP5812_SLOPE_TIME_T3)
+> +			slope_time_val.s_time.first = val[i];
+> +		if (slope_chan == LP5812_SLOPE_TIME_T2 || slope_chan == LP5812_SLOPE_TIME_T4)
+> +			slope_time_val.s_time.second = val[i];
+> +
+> +		/* Save updated value to hardware */
+> +		ret = lp5812_write(chip, reg, slope_time_val.time_val);
+
+Should we do something if ret != 0?
+
+> +	}
+> +
+> +	return len;
+> +}
+
+...
+
+> +static struct attribute *lp5812_led_attrs[] = {
+> +	&dev_attr_led_current.attr,
+> +	&dev_attr_max_current.attr,
+> +	&dev_attr_mode.attr,
+> +	&dev_attr_activate.attr,
+> +	&dev_attr_pwm_dimming_scale.attr,
+> +	&dev_attr_pwm_phase_align.attr,
+> +	&dev_attr_auto_time_pause_at_start.attr,
+> +	&dev_attr_auto_time_pause_at_stop.attr,
+> +	&dev_attr_auto_playback_eau_number.attr,
+> +	&dev_attr_auto_playback_time.attr,
+> +	&dev_attr_aeu_playback_time.attr,
+> +	&dev_attr_aeu_pwm1.attr,
+> +	&dev_attr_aeu_pwm2.attr,
+> +	&dev_attr_aeu_pwm3.attr,
+> +	&dev_attr_aeu_pwm4.attr,
+> +	&dev_attr_aeu_pwm5.attr,
+> +	&dev_attr_aeu_slop_time_t1.attr,
+> +	&dev_attr_aeu_slop_time_t2.attr,
+> +	&dev_attr_aeu_slop_time_t3.attr,
+> +	&dev_attr_aeu_slop_time_t4.attr,
+> +	&dev_attr_lod_lsd.attr,
+> +	NULL,
+
+Unneeded trailing comma after a terminator.
+
+> +};
+> +ATTRIBUTE_GROUPS(lp5812_led);
+
+...
+
+> +static int lp5812_init_led(struct lp5812_led *led, struct lp5812_chip *chip, int chan)
+> +{
+> +	struct lp5812_data *pdata = chip->pdata;
+> +	struct device *dev = &chip->i2c_cl->dev;
+> +	struct mc_subled *mc_led_info;
+> +	struct led_classdev *led_cdev;
+> +	char name[32];
+> +	int i, ret = 0;
+> +
+> +	if (pdata->led_config[chan].name) {
+> +		led->cdev.name = pdata->led_config[chan].name;
+> +	} else {
+> +		snprintf(name, sizeof(name), "%s:channel%d",
+> +			 pdata->label ? : chip->i2c_cl->name, chan);
+> +		led->cdev.name = name;
+
+Is it fine below when 'name' is defined on the stack and is used...
+
+> +	}
+> +
+> +	if (pdata->led_config[chan].is_sc_led == 0) {
+> +		mc_led_info = devm_kcalloc(dev,
+> +					   pdata->led_config[chan].num_colors,
+> +					   sizeof(*mc_led_info), GFP_KERNEL);
+> +		if (!mc_led_info)
+> +			return -ENOMEM;
+> +
+> +		led_cdev = &led->mc_cdev.led_cdev;
+> +		led_cdev->name = led->cdev.name;
+
+...here?
+
+> +		led_cdev->brightness_set_blocking = lp5812_set_mc_brightness;
+> +		led->mc_cdev.num_colors = pdata->led_config[chan].num_colors;
+> +		for (i = 0; i < led->mc_cdev.num_colors; i++) {
+> +			mc_led_info[i].color_index =
+> +				pdata->led_config[chan].color_id[i];
+> +			mc_led_info[i].channel =
+> +					pdata->led_config[chan].led_id[i];
+> +		}
+> +
+> +		led->mc_cdev.subled_info = mc_led_info;
+> +	} else {
+> +		led->cdev.brightness_set_blocking = lp5812_set_brightness;
+> +	}
+> +
+> +	led->cdev.groups = lp5812_led_groups;
+> +	led->chan_nr = chan;
+> +
+> +	if (pdata->led_config[chan].is_sc_led) {
+> +		ret = devm_led_classdev_register(dev, &led->cdev);
+> +		if (ret == 0) {
+> +			led->cdev.dev->platform_data = devm_kstrdup(dev, LP5812_SC_LED, GFP_KERNEL);
+> +			if (!led->cdev.dev->platform_data)
+> +				return -ENOMEM;
+> +		}
+> +	} else {
+> +		ret = devm_led_classdev_multicolor_register(dev, &led->mc_cdev);
+> +		if (ret == 0) {
+> +			led->mc_cdev.led_cdev.dev->platform_data =
+> +				devm_kstrdup(dev, LP5812_MC_LED, GFP_KERNEL);
+> +			if (!led->mc_cdev.led_cdev.dev->platform_data)
+> +				return -ENOMEM;
+> +
+> +			ret = sysfs_create_groups(&led->mc_cdev.led_cdev.dev->kobj,
+> +						  lp5812_led_groups);
+> +			if (ret)
+> +				dev_err(dev, "sysfs_create_groups failed\n");
+> +		}
+> +	}
+> +
+> +	if (ret) {
+> +		dev_err(dev, "led register err: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+
+...
+
+CJ
