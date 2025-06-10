@@ -1,103 +1,115 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D16F1F0984;
-	Tue, 10 Jun 2025 09:58:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C44E28B4FD;
+	Tue, 10 Jun 2025 09:58:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749549488; cv=none; b=htn502nYTFi1h+UDxWarqXrqi0/FkFs73yzykDChQ6JqQ6wudR/2rbi6249j4iTPWfmluRJk87RRavX+qk89JEpWU/1Kn6FmXy/nm6pyaquwU+DgO04qGZQhfQfqmi1nGQNchG/+662u+k+HX3TCJd7hBiYQmNbeRpLawAwQVFc=
+	t=1749549493; cv=none; b=lmdPNz8Lqasz3YKDlh4hQszgRE7mMBbMuADyRTSrnj44Umo+u6hoL3FnfGFMcukZ/V7eTjBqYoHkNnyeNATenkKL6zA4cA1EFM/ICcViz65eb0ybpqbqA8uQ4OHewb/prTk8wc83GZ4kUdrXOAszlX+cYYB4/3E3O9w9RtBynAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749549488; c=relaxed/simple;
-	bh=RAxa8eTNx+BBiaQgCdS697j8LqDE6hZhl4PgNuwVzOM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cF2fx2i9AGziV/XxpApeSUR0oeHIJ/fP1tk511Ltqla0hQtMz7bRut1Bx6yWi4bI+jVBnEbVoGuBpqVk6ZHzGO7oQJD28Vtai7sbe2aDfJZu2f14m+j46BdzzKZ3d997mEefSGNyG7ee1htf5vwPMQNEKI9zM93RCbMoA3DMrzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=ZTFvFE/7; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1749549493; c=relaxed/simple;
+	bh=LvjZWTxkoJjdq6mNR3PqdVpVlqtMMxO1dSyjw1hqIEc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=SC1sbrIPm/hi6FD/Mw/boTOLIgMc/slQRtRU8iXvACpFvPY+HxaKjdi4O4kSEQv48ft4o5vd4vM8V55KGRApx2L5XalAuTN/04Q9NNQDGEeJtcaKHJQV1jNNNy/GEqTiMM+cZ6eHkvrGWRSEOGgamKu9haPMby+ujTuO1xBp3P8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FCglwtz2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ZTFvFE/7"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1514D169;
-	Tue, 10 Jun 2025 11:57:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1749549478;
-	bh=RAxa8eTNx+BBiaQgCdS697j8LqDE6hZhl4PgNuwVzOM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZTFvFE/7wv9Lt//6o9XPbsEd+rhIqdoLhYd/5g/icDwc5IbeywXteOg3XEZqPgQ9q
-	 XmNLlzLlknxcXHixykb+zLwGbBzl3mDXtjdwsccu4JD0ipttXyTAfaN98fmiiAw3V0
-	 APxGpwvGqnb64KA2v8NM806tRiBtaTng2NCW70fM=
-Date: Tue, 10 Jun 2025 12:57:53 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH] dt-bindings: display: renesas,rzg2l-du: Add support for
- RZ/V2N SoC
-Message-ID: <20250610095753.GD24465@pendragon.ideasonboard.com>
-References: <20250609231905.511904-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FCglwtz2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55D04C4CEEF;
+	Tue, 10 Jun 2025 09:58:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749549492;
+	bh=LvjZWTxkoJjdq6mNR3PqdVpVlqtMMxO1dSyjw1hqIEc=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=FCglwtz2hrf8dzbUZ8iQ9kWAncwhQ/PaJYnGSUAll7aI/78jgYWgUJt3+Pnn6+RD/
+	 oUqFmjn3ylB4L14cUtnVVn5HZnkXTr3CDOw60R2qMfIOtzTiZGKAs0+TbvuYMWCNJ6
+	 NqsPL8Xk2ochKmB3Jg5Ikm4Gyq7hEjOnWZfEWrsQXoa2mkRm3X2MaeaIxAeoWOorsx
+	 KlWSxtMoJKPZ0fKBnihQ/3giYj+jZ2O5l2A6qB1C5VXawJobp/lIcHjNRAAP+2t/kt
+	 RjUNR06X4x1qVDxBGl0yNbxDrxJDBGXn/eAmGC/QH0UijSppwY0bCDYm1Y+L9T8NZQ
+	 Pw6LnMQJVqMIw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250609231905.511904-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 10 Jun 2025 11:58:07 +0200
+Message-Id: <DAIRJ71UP655.2NF13FJSA0G68@kernel.org>
+Cc: "Danilo Krummrich" <dakr@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>,
+ "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>,
+ "Gary Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Alice Ryhl" <aliceryhl@google.com>, "Trevor
+ Gross" <tmgross@umich.edu>, "Bjorn Helgaas" <bhelgaas@google.com>,
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Tamir Duberstein" <tamird@gmail.com>, "Viresh Kumar"
+ <viresh.kumar@linaro.org>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+ =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
+Subject: Re: [PATCH] rust: types: add FOREIGN_ALIGN to ForeignOwnable
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Andreas Hindborg" <a.hindborg@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250605-pointed-to-v1-1-ee1e262912cc@kernel.org>
+ <WubHJPtx9Uu0qugeELZ2ooYWKq4KDj7r8P7k4i_QhgOP53MWk1V3XHH4Ztmzp42zMwHSntslAbfpLFY9AhjfxQ==@protonmail.internalid> <DAFB0GKSGPSF.24BE695LGC28Z@kernel.org> <87sek82bgf.fsf@kernel.org>
+In-Reply-To: <87sek82bgf.fsf@kernel.org>
 
-Hi Prabhakar,
+On Tue Jun 10, 2025 at 11:27 AM CEST, Andreas Hindborg wrote:
+> Hi Benno,
+>
+> "Benno Lossin" <lossin@kernel.org> writes:
+>
+>> The title should probably also mention that it removes `PointedTo`.
 
-Thank you for the patch.
+Just making sure that you saw this.
 
-On Tue, Jun 10, 2025 at 12:19:05AM +0100, Prabhakar wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> 
-> Document support for the DU IP found on the Renesas RZ/V2N (R9A09G056) SoC.
-> The DU IP is functionally identical to that on the RZ/V2H(P) SoC, so no
-> driver changes are needed. The existing `renesas,r9a09g057-du` compatible
-> will be used as a fallback for the RZ/V2N SoC.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>> On Thu Jun 5, 2025 at 9:55 PM CEST, Andreas Hindborg wrote:
+>>>  pub unsafe trait ForeignOwnable: Sized {
+>>> -    /// Type used when the value is foreign-owned. In practical terms =
+only defines the alignment of
+>>> -    /// the pointer.
+>>> -    type PointedTo;
+>>> +    /// The alignment of pointers returned by `into_foreign`.
+>>> +    const FOREIGN_ALIGN: usize;
+>>>
+>>>      /// Type used to immutably borrow a value that is currently foreig=
+n-owned.
+>>>      type Borrowed<'a>;
+>>> @@ -39,18 +35,17 @@ pub unsafe trait ForeignOwnable: Sized {
+>>>
+>>>      /// Converts a Rust-owned object to a foreign-owned one.
+>>>      ///
+>>> -    /// # Guarantees
+>>
+>> Why remove this section? I think we should streamline it, (make it use
+>> bullet points, shorten the sentences etc). We can keep the paragraph you
+>> wrote below as normal docs.
+>
+> Not sure exactly what you are going for here. How is this:
+>
+>
+>   Converts a Rust-owned object to a foreign-owned one.
+>
+>   The foreign representation is a pointer to void.
+>
+>   # Guarantees
+>
+>   - Minimum alignment of returned pointer is [`Self::FOREIGN_ALIGN`].
+>
+>   There are no other guarantees for this pointer. For example, it might b=
+e invalid, dangling
+>   or pointing to uninitialized memory. Using it in any way except for [`f=
+rom_foreign`],
+>   [`try_from_foreign`], [`borrow`], or [`borrow_mut`] can result in undef=
+ined behavior.
 
-Assuming this gets merged after
-https://lore.kernel.org/r/20250530165906.411144-2-prabhakar.mahadev-lad.rj@bp.renesas.com
-("[PATCH v6 01/12] dt-bindings: display: renesas, rzg2l-du: Add support
-for RZ/V2H(P) SoC"),
+Maybe even move this paragraph above the `Guarantees` section and change
+the beginning of it to "Aside from the guarantees listed below, there
+are no other..."?
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Otherwise looks good!
 
-> ---
->  .../devicetree/bindings/display/renesas,rzg2l-du.yaml          | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/renesas,rzg2l-du.yaml b/Documentation/devicetree/bindings/display/renesas,rzg2l-du.yaml
-> index 1e32d14b6edb..2cc66dcef870 100644
-> --- a/Documentation/devicetree/bindings/display/renesas,rzg2l-du.yaml
-> +++ b/Documentation/devicetree/bindings/display/renesas,rzg2l-du.yaml
-> @@ -25,6 +25,9 @@ properties:
->            - enum:
->                - renesas,r9a07g054-du    # RZ/V2L
->            - const: renesas,r9a07g044-du # RZ/G2L fallback
-> +      - items:
-> +          - const: renesas,r9a09g056-du # RZ/V2N
-> +          - const: renesas,r9a09g057-du # RZ/V2H(P) fallback
->  
->    reg:
->      maxItems: 1
-
--- 
-Regards,
-
-Laurent Pinchart
+---
+Cheers,
+Benno
