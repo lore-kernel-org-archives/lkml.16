@@ -1,127 +1,111 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DBB9283121
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 10:17:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF1428315C
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 10:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749550661; cv=none; b=qqleNAkHKyoSGnSBUBVi94PPw9wl+qtB2ebfHxiVu3siKZpa0KBFQYnunZdKCh5fGyUvshwnMs5IO90MCZ5034430ccVXuQxsmpy9w1IoKW+hjREwXM2BhXkKRvFGHeI0rkg/uGb2o1evNCCLTj8MPip9nclVcKDOryWK4m0B8k=
+	t=1749550734; cv=none; b=liSzuu0r2uYjS9HVObq+/C0677qmJsiRtKPCcr3HQMQ/klgr5bLsV7NfcVS6ekfAl+L4dxwXEui++0ajYKnX9Qcg2l1ocRXAbRN3xju0rSxUtYQYpO5BspyPv87HQIdilDU6AN+nYe3HtsF8T+m5pCUz0Fe6Ab9J/NR1z1WoRV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749550661; c=relaxed/simple;
-	bh=dDDNfBinN8PAMwqLA5OJNpKoERFQz6yp9KWAM79txZU=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Dw/sRilwA5taSUIU2N/ohUhoXZVCilCV9z9xG/x5DZKy7IUM50Pko/PwMYFAMDUf/tBepidj0eamXc/w7dzELGjAq7uZRJclu8K9mZuWOdgFBexmEUP/jgXGCU0GfrM2DnRCetR6ml7Y+9xkGoS/dqtk6GSOzFbr5tlhcdXmgBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=neon.tech; spf=pass smtp.mailfrom=neon.tech; dkim=pass (1024-bit key) header.d=neon.tech header.i=@neon.tech header.b=gsK4CrBa; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=neon.tech
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neon.tech
+	s=arc-20240116; t=1749550734; c=relaxed/simple;
+	bh=P+pX/aqYW/tn+7GsUtbwqwHh0UwfFNgdZ9EdR9PIOm4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rs2nWhn6moJZRs7ihzdvFft86E+PjAmlMnMUPuW2fJigUQA2t3ZeM8b1+e1Kot5WCGwGgUVMc869zj+t4GpjiQta55nGpZKSkI0MV4a8KVkpxfrwp33pKHa4sWT0/2PVm7pLbknY884v4NIEe0Gftd0ia/HkGrtf1tCJtsgcijM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Zxhxj4bi; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=neon.tech header.i=@neon.tech header.b="gsK4CrBa"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-607ea238c37so4723547a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 03:17:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zxhxj4bi"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-234b9dfb842so46584395ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 03:18:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=neon.tech; s=google; t=1749550658; x=1750155458; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=MdXAoe13GikYW3/JVVfkOpgxOfq/BMWnCOBM8bUopok=;
-        b=gsK4CrBaOwxFmvjJ+xZF/fT7RoXxPU+8x+RC9s+ZtzL+6afaq/CLYSreaJJ6topzXX
-         dzl8Kh6F24CwJJbMNZBAdoXr5Kzu5pocHspsg2cdjVH5+j/zkzlDV1jvOL6gR3M9D+bn
-         ECaT27Y8nrVhN+zL+c+cPiGsL2EH/Du5ofn3E=
+        d=linaro.org; s=google; t=1749550732; x=1750155532; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xd4yvKuwBDUgL3fi5ckGjS4L+klFHNpCPWQEORhaTVc=;
+        b=Zxhxj4bib0Yeu0S2aKVjyE9Yd8dUR2spgiYxARQ7Hyk37ktdzvYCIecDLwxICRC2/9
+         KZB9HM5fb8ulqah+Og+ja67DMV/JrCOvBeM1ddjzhhmgxoJMnUGxG4krKgjLD3aeI3SK
+         0pWnyVGIk2PWUV2HLXGrtAo6pZfTTRJHcsx1de8ApucGolcAqzjDFna5onnOb2DLacrX
+         PxapJ4+VzUiBCdH+EFUlZYEzVg+JSjTO7UIQPJM6+rqnsJCCcTdXeSFyc1i2YJeioMY/
+         Mu01v0ZV83SY1Jrr2k4qudY8Ve4fGgFvURWMxMyVdqJYXFPPt9BP4xYP8A1jyoyvCJOp
+         pxdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749550658; x=1750155458;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MdXAoe13GikYW3/JVVfkOpgxOfq/BMWnCOBM8bUopok=;
-        b=prOsavK8rR3qxFQRmJjRje80GDkpQTxXa+1eTX1vS7ptIHb+9dgFk3lZnzYh2p1vFt
-         tdBpaxagmUHX9LGavIVqIUonqFk7kNkGG2mXOZYDbpLSW+sfJ7pt1/Oh/zJKYlGBCRwj
-         pz+SKz+f7Z4/NeTdJq61uUhb53JpFhvt/kqGTafTSfojD3b2EUZUTEO8QIM181lh8CZ7
-         xC6qsavMIIX5cts93aOg12zaE7oTXaTRxA3Rrm3d9RCw3xia8DnH0vVXJ/RLkRqyXKsp
-         g0wv2yx52e3rwrFtCPOKXEHbo+l1kLw523CMMTIzOugu6ykEoppI7v8dGIkFjdPGEw+4
-         vZWg==
-X-Gm-Message-State: AOJu0YwKU85YR7gVEoJG6A0jJJ6RXZjnBjI3cqsOo0Hj7ldXA/tg8qJb
-	4vdCBv6w8vp7q8cyj2OCDtXfCtNny8i8Zm8Slwo5i06FkPHmBMDE9rAfLNYoUFvKM9opyYzetMN
-	3SzBqdFbGkw==
-X-Gm-Gg: ASbGncuJTT/pTaWBFfjwJvLhcKTQUAD4yP1d3FswaUfdVm4VABbBCG7ceKRBv9dNC3T
-	SLN4jVbsu4XQ/0XrgYmOUyUlP/w5mBkFY/bqT5HfGRJcL9Wu1zok1ZUtlB6dG0w0h4D7wqHDFk2
-	rk4hievHp1483f66n8t1JaXfKlUl4XD5EB1xCf4LHJ5RY7NJN0S5Ad3jK1OjKs0qDu52oeRh5y4
-	9jnnax/JwTgspUTXboluXU8LHl6mdr4h/hxtT61Z1dhQvuE/0dmiWJ/2vEI4EeoP16r9aG7l92Q
-	SyPrQVN4NeMPMd5VAPlsEysX+5bxW+/LHrznCIsWQ1MUkxQUyBhbYlnO2we4tmG73A==
-X-Google-Smtp-Source: AGHT+IEBICJlJWbKgkwUwtxDPeNS/LZyZLquBPse/trluqTy6pSNdxV8h8W68MABHGTpCpR+5A/3gQ==
-X-Received: by 2002:a05:6402:5249:b0:606:f37b:7ed1 with SMTP id 4fb4d7f45d1cf-607748987e0mr13057422a12.21.1749550658244;
-        Tue, 10 Jun 2025 03:17:38 -0700 (PDT)
-Received: from [192.168.86.142] ([84.65.228.220])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6077836fed7sm6043562a12.7.2025.06.10.03.17.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jun 2025 03:17:37 -0700 (PDT)
-Message-ID: <92894a9b-3088-4cf7-83bb-ea7382a35d82@neon.tech>
-Date: Tue, 10 Jun 2025 11:17:36 +0100
+        d=1e100.net; s=20230601; t=1749550732; x=1750155532;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Xd4yvKuwBDUgL3fi5ckGjS4L+klFHNpCPWQEORhaTVc=;
+        b=OekgaonfTFs+ix/NOw8RJXJQBQ7XjR7gfp9AZsE/l2ZOq3qmCO12haTjsYP40U7mKV
+         7ltFG/XXKGUvmoGOScq4IAtnfBrrXC6Ur3eGpxgEApx/glLEfW1S2oOW0Mk2DVVlAdfF
+         2GU1LvGYhv/2tqTdgPilAWX2bhBQyBaILv+YT5xRBoHnercgcZgCQxEZVFLqL62OrpZ2
+         bpx0+3pYLTr6IXR+KjW9/0rR+0yGxmCj1p4hFGJDTX5GHHnAmLp9Mp3nozS+tHKbtvDa
+         H1EO8kudcPVOHpo+M3XTRSu4rsOAVf0HKyM0FoKHj5PsobDf7GYXQxdU8QXeLeYTlcSG
+         q5wQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUnSP4oVEcbdJUBfiVq0TY2NGW+/nESAeQFveOXSltOQ41iwG9mhpu4yxX99xRNndZ9vbslKpdDnI5w+dA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyITzPlknpAZHoMky3DoB7MK3H4bzyuq7hGsOo94H3qsqZAYG0L
+	5WuN78XsEUjKbZ89eM63CP2nTXjt0tCAvRza5RIJDh4MCI94TW8ggj+PVccp0mCKqio=
+X-Gm-Gg: ASbGnctd/6VTsacViNmC2fZjTCMUbf/ZylG7urP6H6JCg0cp0PzG/LmftPiIjcSBjaP
+	uOjiOkgH+bk7rjXldjGExCy9EUcYEit6a+Jsv1yX5zQZv7ITpRI7RgQkw3JoXM2S0FgRKgfkN0s
+	NkQSr1CZO9yrChK7SOVyUCPyV/S/IIzVw3j99YJrzVOWlBkTFmUau8apMc/4PGRaG9SJYz8nRRs
+	MBtCv2YDiTq4Y6e3tdnIYie+0ESRP/QaJWVztDCFwMfDhWcWRa6/AefDgfk/I93EUOgAtWA+9b1
+	5taoNgyh2hhEYs5V0QhIRoUhr9VGQ3HmV/SOitWDZ0Pnvya1x6WJO6iKGt8xcI4=
+X-Google-Smtp-Source: AGHT+IF2ajXihlooCdYmJCHgGy6pGgCT4fNV+OZVa0XGOt0sKvsGARYbwa52gflRTEuMl1+UMJvbFQ==
+X-Received: by 2002:a17:902:d2c6:b0:235:efbb:9539 with SMTP id d9443c01a7336-23601cfebb3mr228429815ad.17.1749550731983;
+        Tue, 10 Jun 2025 03:18:51 -0700 (PDT)
+Received: from localhost ([122.172.81.72])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603077ee6sm68294295ad.32.2025.06.10.03.18.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 03:18:51 -0700 (PDT)
+Date: Tue, 10 Jun 2025 15:48:49 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Danilo Krummrich <dakr@kernel.org>,
+	FUJITA Tomonori <fujita.tomonori@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Yury Norov <yury.norov@gmail.com>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 1/2] rust: cpu: Introduce CpuId abstraction
+Message-ID: <20250610101849.ymuw4bmjsucsoblp@vireshk-i7>
+References: <cover.1749463570.git.viresh.kumar@linaro.org>
+ <f10910c7585f5556869ea6f34b64d4136b8d5581.1749463570.git.viresh.kumar@linaro.org>
+ <CANiq72=WpuGELzLbH-fxdOeJy9fiDFwatz6ynERDh=HP2z2MBw@mail.gmail.com>
+ <20250610060711.zp6lua4kcwi2z777@vireshk-i7>
+ <CANiq72kD9iQh6TPo3Rwk7AmPXEarogUrM2fmhkDn5XNfKrr_jw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH v3 2/2] x86/mm: Use GFP_KERNEL for alloc_low_pages() after
- boot
-From: Em Sharnoff <sharnoff@neon.tech>
-To: linux-kernel@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org
-Cc: Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
- <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
- "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
- Oleg Vasilev <oleg@neon.tech>, Arthur Petukhovsky <arthur@neon.tech>,
- Stefan Radig <stefan@neon.tech>, Misha Sakhnov <misha@neon.tech>
-References: <a31e3b89-5040-4426-9ce8-d674b8554aa1@neon.tech>
-Content-Language: en-US
-In-Reply-To: <a31e3b89-5040-4426-9ce8-d674b8554aa1@neon.tech>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANiq72kD9iQh6TPo3Rwk7AmPXEarogUrM2fmhkDn5XNfKrr_jw@mail.gmail.com>
 
-Currently it's GFP_ATOMIC. GFP_KERNEL seems more correct.
+On 10-06-25, 11:43, Miguel Ojeda wrote:
+> (By the way, as far as I understand there is no way we could wrap
+> going to `i32`, but it may not hurt to add a `debug_assert!` in the
+> `u32` constructors.)
 
-From Ingo M. [1]
+Something like this ?
 
-> There's no real reason why it should be GFP_ATOMIC AFAICS, other than
-> some historic inertia that nobody bothered to fix.
+@@ -79,6 +79,7 @@ pub fn from_i32(id: i32) -> Option<Self> {
+     #[inline]
+     pub unsafe fn from_u32_unchecked(id: u32) -> Self {
+         debug_assert!(id < nr_cpu_ids());
++        debug_assert!(id <= i32::MAX as u32);
 
-and previously Mike R. [2]
+         // INVARIANT: The function safety guarantees `id` is a valid CPU id.
+         Self(id)
 
-> The few callers that effectively use page allocator for the direct map
-> updates are gart_iommu_init() and memory hotplug. Neither of them
-> happen in an atomic context so there is no reason to use GFP_ATOMIC
-> for these allocations.
->
-> Replace GFP_ATOMIC with GFP_KERNEL to avoid using atomic reserves for
-> allocations that do not require that.
-
-[1]: https://lore.kernel.org/all/aEE6_S2a-1tk1dtI@gmail.com/
-[2]: https://lore.kernel.org/all/20211111110241.25968-5-rppt@kernel.org/
-
-Signed-off-by: Em Sharnoff <sharnoff@neon.tech>
----
-Changelog:
-- v2: Add this patch
-- v3: No changes
----
- arch/x86/mm/init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index a2665b6fe376..3a25cd9e9076 100644
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -131,7 +131,7 @@ __ref void *alloc_low_pages(unsigned int num)
- 		unsigned int order;
- 
- 		order = get_order((unsigned long)num << PAGE_SHIFT);
--		return (void *)__get_free_pages(GFP_ATOMIC | __GFP_ZERO, order);
-+		return (void *)__get_free_pages(GFP_KERNEL | __GFP_ZERO, order);
- 	}
- 
- 	if ((pgt_buf_end + num) > pgt_buf_top || !can_use_brk_pgt) {
 -- 
-2.39.5
-
+viresh
