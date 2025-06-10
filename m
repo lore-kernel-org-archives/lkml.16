@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C105B241670;
-	Tue, 10 Jun 2025 16:27:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4E324293F;
+	Tue, 10 Jun 2025 16:28:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749572879; cv=none; b=ITlcXgVfOlBb31ajHkRt8EVhEL1GNWw87M4NUgrlfedPlFF8huPhWvw2EG3Vt8g4cVEk4f6Q8VQNzjjMPNwPJVj/7SUCeAwogRZ7HxV8F+srFT0ad7rNKTQ+s/sPw5Aayxz4hMnjvtcBU3HLQ5ljR4yTrqA5m7CWMqmJajhibvc=
+	t=1749572881; cv=none; b=HPESLnjRUQ1T+hN4IuRCNyD/XzASV5ngp7GZByH4jX69ZqkLa/6Q1srLdiwOzO71p+4pQ+yP4fQ7lQgr02XhTDCZnoSj3iWAXkubc+Tv5cqBmgIFB6QVNEmGqhrcjU+7RfRNbBtsEf+0+jjow3Aq0Yi/BzzIwGGYzHr0BBH9pl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749572879; c=relaxed/simple;
-	bh=M7AR7P2Hp2v576w27gcBYA1QJAA51vBNSHPVxtZiM1s=;
+	s=arc-20240116; t=1749572881; c=relaxed/simple;
+	bh=UQg01saWHZ2SA/EHnfOE/P97kB6OOfXIeFxq0POFGoI=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=uyDe03wHJ1zGz97nMCwPFNsCGjD5WNFzTqC3nUSsiZ/zHY+D2TYzUSCAsUdLyNvTeiQk639Lld8WNyh46WhN0qaTqyQYmokC+lTE73v46jeGx9shlpuAYHTvVGNIFokQzVhOSz6RE5LZh+eacwa7EN9vOeEwwG85iALF6jZR4TI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KFMK9Qrg; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=hebZZqF/bHfdpAJt5ULjME8vg82zyagsuXbhQR1CMzpCraAzVLzFAUMu3MY4sRLcCsCOAQ0eXmE5cxxPct/Hmoue33DrNXHCz02w3ADYjeVhrzuHALJX+75OQ2vkhyml/i08Y910YxxA5/+8pruJ6Qx3Y3+gDg6FGFz55kTKYMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MAhxn2YI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KFMK9Qrg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40E8CC4CEED;
-	Tue, 10 Jun 2025 16:27:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MAhxn2YI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CE0DC4CEF0;
+	Tue, 10 Jun 2025 16:28:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749572879;
-	bh=M7AR7P2Hp2v576w27gcBYA1QJAA51vBNSHPVxtZiM1s=;
+	s=k20201202; t=1749572880;
+	bh=UQg01saWHZ2SA/EHnfOE/P97kB6OOfXIeFxq0POFGoI=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=KFMK9QrgISSTDvxGudz6a85hexiOz9fN02iUkdTutBUXfp7ygyrWlMCX3ccpZPK2W
-	 KyPJaujZxGXU/fxxfBo/GpgldljWm/oRCN+O6S47EHw+r0x70PqoUq9KAHaNbp2vgH
-	 QQoBfMnMCwXLwDBYn3M1n3up7KpBSFu/QvhRU5FRX/3xQbnu3H7cvecri1C+npthOt
-	 Su3nbFFwtWfwq+nxld3jUukygNRn8ezdtekIXeYAIcMcqDdHn8gI8LwuRS0QLfghMo
-	 5vSD15iZiyo1+4z9QrEtDAAgTvZ8fD8H+kyKRr0AKuKh+U5M+miqArQa7nYKoSpz6g
-	 +BSqSPYz8Jykg==
+	b=MAhxn2YI78qtGczPWBE83PlISURuIeOL+05W5FjQubzGvSi7EoCrhaQlwPloGgdbt
+	 m3KQqdhdZSPuMtJCkDrurouHSKc7fMYa7USoDs9rauIAVc2uignIg/8Sy4NlDhfGUL
+	 2ZzDxcXkt6DyW1Xswug8nfZIvyBR7fHBXbB/qj2Q+BTF+MxAdHQhNP7RlMkx5LiytS
+	 0l7bPsWJ6V911h0DIdyU6is3Rbv0e5J2y5zKehEDF/xbPd4d4KuIn43rtPPChcq/80
+	 O+WjTPhXswU5qYgeGIXQlX75e30BPG+ZBLM9h1aomo0GZSIHELeufuw+BEpU84uYoU
+	 HdoxaRU30SbfQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EADC139D6540;
-	Tue, 10 Jun 2025 16:28:30 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33C4339D6540;
+	Tue, 10 Jun 2025 16:28:32 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,59 +37,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v5 0/6] KVM: lockdep improvements
+Subject: Re: [PATCH v2 00/12] riscv: Add vendor extensions support for SiFive
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <174957290974.2454024.11071746229021073521.git-patchwork-notify@kernel.org>
-Date: Tue, 10 Jun 2025 16:28:29 +0000
-References: <20250512180407.659015-1-mlevitsk@redhat.com>
-In-Reply-To: <20250512180407.659015-1-mlevitsk@redhat.com>
-To: Maxim Levitsky <mlevitsk@redhat.com>
-Cc: linux-riscv@lists.infradead.org, kvm@vger.kernel.org,
- suzuki.poulose@arm.com, jingzhangos@google.com, hpa@zytor.com,
- sebott@redhat.com, lishusen2@huawei.com, longman@redhat.com,
- tglx@linutronix.de, linux-arm-kernel@lists.infradead.org,
- bhelgaas@google.com, bp@alien8.de, anup@brainfault.org, will@kernel.org,
- palmer@dabbelt.com, glider@google.com, kvmarm@lists.linux.dev,
- keisuke.nishimura@inria.fr, yuzenghui@huawei.com, peterz@infradead.org,
- atishp@atishpatra.org, joey.gouly@arm.com, x86@kernel.org, maz@kernel.org,
- seanjc@google.com, andre.przywara@arm.com, jiangkunkun@huawei.com,
- rdunlap@infradead.org, pbonzini@redhat.com, boqun.feng@gmail.com,
- catalin.marinas@arm.com, alex@ghiti.fr, linux-kernel@vger.kernel.org,
- dave.hansen@linux.intel.com, oliver.upton@linux.dev,
- kvm-riscv@lists.infradead.org, mingo@redhat.com, paul.walmsley@sifive.com,
- aou@eecs.berkeley.edu
+ <174957291100.2454024.4751197828124838504.git-patchwork-notify@kernel.org>
+Date: Tue, 10 Jun 2025 16:28:31 +0000
+References: <20250516030310.16950-1-cyan.yang@sifive.com>
+In-Reply-To: <20250516030310.16950-1-cyan.yang@sifive.com>
+To: Cyan Yang <cyan.yang@sifive.com>
+Cc: linux-riscv@lists.infradead.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, corbet@lwn.net, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+ samuel.holland@sifive.com, linux-doc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 
 Hello:
 
 This series was applied to riscv/linux.git (fixes)
-by Paolo Bonzini <pbonzini@redhat.com>:
+by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Mon, 12 May 2025 14:04:01 -0400 you wrote:
-> This is	a continuation of my 'extract lock_all_vcpus/unlock_all_vcpus'
-> patch series.
+On Fri, 16 May 2025 11:02:58 +0800 you wrote:
+> This patch set adds four vendor-specific ISA extensions from SiFive:
+> "xsfvqmaccdod", "xsfvqmaccqoq", "xsfvfnrclipxfqf", and "xsfvfwmaccqqq".
 > 
-> Implement the suggestion of using lockdep's "nest_lock" feature
-> when locking all KVM vCPUs by adding mutex_trylock_nest_lock() and
-> mutex_lock_killable_nest_lock() and use these functions	in the
-> implementation of the
-> kvm_trylock_all_vcpus()/kvm_lock_all_vcpus()/kvm_unlock_all_vcpus().
+> Additionally, a new hwprobe key, RISCV_HWPROBE_KEY_VENDOR_EXT_SIFIVE_0,
+> has been added to query which SiFive vendor extensions are supported on
+> the current platform.
 > 
 > [...]
 
 Here is the summary with links:
-  - [v5,1/6] locking/mutex: implement mutex_trylock_nested
-    https://git.kernel.org/riscv/c/c5b6ababd21a
-  - [v5,2/6] locking/mutex: implement mutex_lock_killable_nest_lock
-    https://git.kernel.org/riscv/c/fb49f07ba1d9
-  - [v5,3/6] KVM: add kvm_lock_all_vcpus and kvm_trylock_all_vcpus
-    https://git.kernel.org/riscv/c/e4a454ced74c
-  - [v5,4/6] x86: KVM: SVM: use kvm_lock_all_vcpus instead of a custom implementation
-    https://git.kernel.org/riscv/c/c560bc9286e6
-  - [v5,5/6] KVM: arm64: use kvm_trylock_all_vcpus when locking all vCPUs
-    https://git.kernel.org/riscv/c/b586c5d21954
-  - [v5,6/6] RISC-V: KVM: use kvm_trylock_all_vcpus when locking all vCPUs
-    https://git.kernel.org/riscv/c/8f56770d114b
+  - [v2,01/12] dt-bindings: riscv: Add xsfvqmaccdod and xsfvqmaccqoq ISA extension description
+    https://git.kernel.org/riscv/c/0f733b5be965
+  - [v2,02/12] riscv: Add SiFive xsfvqmaccdod and xsfvqmaccqoq vendor extensions
+    (no matching commit)
+  - [v2,03/12] riscv: hwprobe: Document SiFive xsfvqmaccdod and xsfvqmaccqoq vendor extensions
+    https://git.kernel.org/riscv/c/e8fd215ed0eb
+  - [v2,04/12] riscv: hwprobe: Add SiFive vendor extension support and probe for xsfqmaccdod and xsfqmaccqoq
+    https://git.kernel.org/riscv/c/1a6274f03534
+  - [v2,05/12] dt-bindings: riscv: Add xsfvfnrclipxfqf ISA extension description
+    https://git.kernel.org/riscv/c/a5a15e07cbb9
+  - [v2,06/12] riscv: Add SiFive xsfvfnrclipxfqf vendor extension
+    (no matching commit)
+  - [v2,07/12] riscv: hwprobe: Document SiFive xsfvfnrclipxfqf vendor extension
+    https://git.kernel.org/riscv/c/659d664f7df8
+  - [v2,08/12] riscv: hwprobe: Add SiFive xsfvfnrclipxfqf vendor extension
+    https://git.kernel.org/riscv/c/1d91224394c9
+  - [v2,09/12] dt-bindings: riscv: Add xsfvfwmaccqqq ISA extension description
+    https://git.kernel.org/riscv/c/d5ca02b25f5d
+  - [v2,10/12] riscv: Add SiFive xsfvfwmaccqqq vendor extension
+    (no matching commit)
+  - [v2,11/12] riscv: hwprobe: Document SiFive xsfvfwmaccqqq vendor extension
+    https://git.kernel.org/riscv/c/a3ca43dc5271
+  - [v2,12/12] riscv: hwprobe: Add SiFive xsfvfwmaccqqq vendor extension
+    https://git.kernel.org/riscv/c/d9669e33c8fa
 
 You are awesome, thank you!
 -- 
