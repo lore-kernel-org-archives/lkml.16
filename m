@@ -1,210 +1,235 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D9521B9FF
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:29:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988B3482EB
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749544144; cv=none; b=HkpMgcVwbGVLnpW2Su99+B46yBKHSkYEWBzzjAOHlH+ASfXT9IBYFX/xtrvJ1R6p0ZjpuM4BPVtLXvs+18u34RLnOX+11lPfm8CsbE4NWNy6mXnnbC57bLpXOH3xrPZD9xpPd+t+frsnXOxMIXe0WxQ3ehuC7rucpurZRa/Mw7k=
+	t=1749544190; cv=none; b=p8V5HuymrUtFlHZ+RiXLi80oYOjw6elHVttTzFs4K6L5eIKwIBxy0glRK+Qm4yjfNEAVAYSwILqxyJaHt5xys33LQMsvEFGgDXqXBJh34o4GQ4XnAlpaL60rLJ2IXA7UxxMeNzN4djOHUi04LJMdHMQeqZ3mxtK4PdJHcRbb4ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749544144; c=relaxed/simple;
-	bh=qyQMrstKtEdojLEVv3ULza0hkNOhUy+7prtXx4DsI9k=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=oRORF3nec+K0mYSDNuYBjWNUgdvyvh10lw8IaaXc58A1gfsNdaoYbEdyCToAiDxQL6D2hbZweKEwGyAq2X/moJV03vyFjXRM4l/JYyrdn9ldhKIDMG4Afzl7MK1LGQqO93QeYOyi0s5FQFfw+/ZUAFdDmvZJlnPnom/UVgiUyNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3ddc5137992so69768805ab.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 01:29:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749544142; x=1750148942;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0SpBoEFeQ/cPJ9ggbkYJRFNlVvB4EZzWbQyys7hB4qY=;
-        b=CpqJtMzYOsb9cmy/Wj5X8NlN8jRazPKgvQhIVqeVpgKjROQ/gbNRFus13Yp4+Ga1YS
-         lPKBrOtCZl8Pnvdygj2+5EGeXsSf6bPT9zVriJG+Goy83TPfP/54a0HRKh4uxVgKeZcL
-         IALOC16XFnvpxwU/HUI5KdgPAhpw8Kvoodu+ExrdE2160lJmlxygaUFWD2Q69DDTq/PQ
-         JqCX7oJEK/wwC5H716H6jlb20hNPlbK7vCR4S+3RFkRZfLDOmxn69ajTto5tQdNXw8Pi
-         3hJVIm//ptYbd7/aAInFcuw4KCw1ZvB+ILBcLrPMQIsIKpqCwP69VqwDAD0ZbwlsBEed
-         1vFg==
-X-Forwarded-Encrypted: i=1; AJvYcCVs7a/OEx0R+juzRnS8v8KQ4oVf/cUpNBQv+sggkMIMZlkvbMs0h6PSx+aTIix3lbq+MLhxFSvcfxfkDjk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEgm4uDVhc2Kpk1t+LmUKGinELHJoZNVR5Eff9yxyNESCZSXvI
-	qzSb5y4t+UHdqqxF8MX8B+hOxXVFkQPZINDoA28eZ/PgJFpDaYFZ0CoQ7h/JH5YhXf+RNaLoj8r
-	2KIXC4+O2dhjuxYBeAh8V1X6dookLDUUcj/FybHwJd8qhK5yT4hMh80+//FA=
-X-Google-Smtp-Source: AGHT+IEJSg/MGs1wwu9IIDGmOXe6jZohdmdgUkDefG0DVsYi1VkIQsebEuT2Jp+g7XlUoAYk24MxEXezRftxAOLcoQg4W+oJNYLH
+	s=arc-20240116; t=1749544190; c=relaxed/simple;
+	bh=Rfbd2AeOuynZLpm2mqn/rs/wraAqSIYANp04mVqZhw0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=D42UXPjR87b7BmuJAFu6EQZb3snTVMKbppxbxgNgxEkQDLrcG6ZFVBov8Oisnm4YHSdi9boNM8e1DUQBvx4huT15SZ58dLA5gqF4Zyrxm1nbuDtBZ6WVf9Icq2WvGxEhCCY9ZzBpksGjfLe0dGwGv/luG2ABYkJDLrmA7965muM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uOu4T-0006BH-Dh; Tue, 10 Jun 2025 10:11:01 +0200
+Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uOu4S-002jx5-0k;
+	Tue, 10 Jun 2025 10:11:00 +0200
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uOu4S-00G7ct-0S;
+	Tue, 10 Jun 2025 10:11:00 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: David Jander <david@protonic.nl>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH net-next v1 3/3] net: phy: dp83tg720: switch to adaptive polling and remove random delays
+Date: Tue, 10 Jun 2025 10:10:59 +0200
+Message-Id: <20250610081059.3842459-4-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250610081059.3842459-1-o.rempel@pengutronix.de>
+References: <20250610081059.3842459-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:cdad:0:b0:3dd:892d:b26d with SMTP id
- e9e14a558f8ab-3ddce4957bcmr166520625ab.17.1749544141825; Tue, 10 Jun 2025
- 01:29:01 -0700 (PDT)
-Date: Tue, 10 Jun 2025 01:29:01 -0700
-In-Reply-To: <20250610080907.998-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6847eccd.a70a0220.27c366.0060.GAE@google.com>
-Subject: Re: [syzbot] [hams?] possible deadlock in nr_rt_device_down (3)
-From: syzbot <syzbot+ccdfb85a561b973219c7@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hello,
+From: David Jander <david@protonic.nl>
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-KASAN: slab-use-after-free Read in nr_rt_ioctl
+Now that the PHY reset logic includes a role-specific asymmetric delay
+to avoid synchronized reset deadlocks, the previously used randomized
+polling intervals are no longer necessary.
 
-==================================================================
-BUG: KASAN: slab-use-after-free in nr_dec_obs net/netrom/nr_route.c:471 [inline]
-BUG: KASAN: slab-use-after-free in nr_rt_ioctl+0x594/0xd50 net/netrom/nr_route.c:694
-Read of size 2 at addr ffff888040d20132 by task syz.2.93/6316
+This patch removes the get_random_u32_below()-based logic and introduces
+an adaptive polling strategy:
+- Fast polling for a short time after link-down
+- Slow polling if the link remains down
+- Slower polling when the link is up
 
-CPU: 0 UID: 0 PID: 6316 Comm: syz.2.93 Not tainted 6.16.0-rc1-syzkaller-gf09079bd04a9-dirty #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0xd2/0x2b0 mm/kasan/report.c:521
- kasan_report+0x118/0x150 mm/kasan/report.c:634
- nr_dec_obs net/netrom/nr_route.c:471 [inline]
- nr_rt_ioctl+0x594/0xd50 net/netrom/nr_route.c:694
- sock_do_ioctl+0xd9/0x300 net/socket.c:1190
- sock_ioctl+0x576/0x790 net/socket.c:1311
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:907 [inline]
- __se_sys_ioctl+0xf9/0x170 fs/ioctl.c:893
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f9434b8e169
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f943596d038 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007f9434db5fa0 RCX: 00007f9434b8e169
-RDX: 0000000000000000 RSI: 00000000000089e2 RDI: 0000000000000004
-RBP: 00007f9434c10a68 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f9434db5fa0 R15: 00007fff7f6ce348
- </TASK>
+This balances CPU usage and responsiveness while avoiding reset
+collisions. Additionally, the driver still relies on polling for
+all link state changes, as interrupt support is not implemented,
+and link-up events are not reliably signaled by the PHY.
 
-Allocated by task 6316:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3e/0x80 mm/kasan/common.c:68
- poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
- __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:394
- kasan_kmalloc include/linux/kasan.h:260 [inline]
- __kmalloc_cache_noprof+0x230/0x3d0 mm/slub.c:4359
- kmalloc_noprof include/linux/slab.h:905 [inline]
- nr_add_node+0x7f8/0x2570 net/netrom/nr_route.c:146
- nr_rt_ioctl+0xc12/0xd50 net/netrom/nr_route.c:653
- sock_do_ioctl+0xd9/0x300 net/socket.c:1190
- sock_ioctl+0x576/0x790 net/socket.c:1311
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:907 [inline]
- __se_sys_ioctl+0xf9/0x170 fs/ioctl.c:893
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+The polling parameters are now documented in the updated top-of-file
+comment.
 
-Freed by task 6316:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3e/0x80 mm/kasan/common.c:68
- kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:576
- poison_slab_object mm/kasan/common.c:247 [inline]
- __kasan_slab_free+0x62/0x70 mm/kasan/common.c:264
- kasan_slab_free include/linux/kasan.h:233 [inline]
- slab_free_hook mm/slub.c:2381 [inline]
- slab_free mm/slub.c:4643 [inline]
- kfree+0x18e/0x440 mm/slub.c:4842
- nr_dec_obs net/netrom/nr_route.c:469 [inline]
- nr_rt_ioctl+0x2e7/0xd50 net/netrom/nr_route.c:694
- sock_do_ioctl+0xd9/0x300 net/socket.c:1190
- sock_ioctl+0x576/0x790 net/socket.c:1311
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:907 [inline]
- __se_sys_ioctl+0xf9/0x170 fs/ioctl.c:893
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Co-developed-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Signed-off-by: David Jander <david@protonic.nl>
+---
+ drivers/net/phy/dp83tg720.c | 94 ++++++++++++++++++++++---------------
+ 1 file changed, 55 insertions(+), 39 deletions(-)
 
-The buggy address belongs to the object at ffff888040d20100
- which belongs to the cache kmalloc-64 of size 64
-The buggy address is located 50 bytes inside of
- freed 64-byte region [ffff888040d20100, ffff888040d20140)
-
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x40d20
-flags: 0x4fff00000000000(node=1|zone=1|lastcpupid=0x7ff)
-page_type: f5(slab)
-raw: 04fff00000000000 ffff88801a4418c0 ffffea00014bc540 dead000000000002
-raw: 0000000000000000 0000000000200020 00000000f5000000 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 0, migratetype Unmovable, gfp_mask 0x52c40(GFP_NOFS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP), pid 6118, tgid 6118 (dhcpcd-run-hook), ts 179889213292, free_ts 179877692964
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x240/0x2a0 mm/page_alloc.c:1704
- prep_new_page mm/page_alloc.c:1712 [inline]
- get_page_from_freelist+0x21e4/0x22c0 mm/page_alloc.c:3669
- __alloc_frozen_pages_noprof+0x181/0x370 mm/page_alloc.c:4959
- alloc_pages_mpol+0x232/0x4a0 mm/mempolicy.c:2419
- alloc_slab_page mm/slub.c:2451 [inline]
- allocate_slab+0x8a/0x3b0 mm/slub.c:2619
- new_slab mm/slub.c:2673 [inline]
- ___slab_alloc+0xbfc/0x1480 mm/slub.c:3859
- __slab_alloc mm/slub.c:3949 [inline]
- __slab_alloc_node mm/slub.c:4024 [inline]
- slab_alloc_node mm/slub.c:4185 [inline]
- __do_kmalloc_node mm/slub.c:4327 [inline]
- __kmalloc_noprof+0x305/0x4f0 mm/slub.c:4340
- kmalloc_noprof include/linux/slab.h:909 [inline]
- kzalloc_noprof include/linux/slab.h:1039 [inline]
- tomoyo_encode2 security/tomoyo/realpath.c:45 [inline]
- tomoyo_encode+0x28b/0x550 security/tomoyo/realpath.c:80
- tomoyo_realpath_from_path+0x58d/0x5d0 security/tomoyo/realpath.c:283
- tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
- tomoyo_check_open_permission+0x1c1/0x3b0 security/tomoyo/file.c:771
- security_file_open+0xb1/0x270 security/security.c:3114
- do_dentry_open+0x35e/0x1970 fs/open.c:941
- vfs_open+0x3b/0x340 fs/open.c:1094
- do_open fs/namei.c:3887 [inline]
- path_openat+0x2ee5/0x3830 fs/namei.c:4046
- do_filp_open+0x1fa/0x410 fs/namei.c:4073
- do_sys_openat2+0x121/0x1c0 fs/open.c:1437
-page last free pid 6118 tgid 6118 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1248 [inline]
- __free_frozen_pages+0xc71/0xe70 mm/page_alloc.c:2706
- rcu_do_batch kernel/rcu/tree.c:2576 [inline]
- rcu_core+0xca5/0x1710 kernel/rcu/tree.c:2832
- handle_softirqs+0x286/0x870 kernel/softirq.c:579
- __do_softirq kernel/softirq.c:613 [inline]
- invoke_softirq kernel/softirq.c:453 [inline]
- __irq_exit_rcu+0xca/0x1f0 kernel/softirq.c:680
- irq_exit_rcu+0x9/0x30 kernel/softirq.c:696
- instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1050 [inline]
- sysvec_apic_timer_interrupt+0xa6/0xc0 arch/x86/kernel/apic/apic.c:1050
- asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
-
-Memory state around the buggy address:
- ffff888040d20000: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
- ffff888040d20080: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
->ffff888040d20100: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-                                     ^
- ffff888040d20180: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
- ffff888040d20200: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-==================================================================
-
-
-Tested on:
-
-commit:         f09079bd Merge tag 'powerpc-6.16-2' of git://git.kerne..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1746fa0c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5080a302f3378422
-dashboard link: https://syzkaller.appspot.com/bug?extid=ccdfb85a561b973219c7
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1102aa82580000
+diff --git a/drivers/net/phy/dp83tg720.c b/drivers/net/phy/dp83tg720.c
+index 00963ce0eb10..8c14b5a70cb7 100644
+--- a/drivers/net/phy/dp83tg720.c
++++ b/drivers/net/phy/dp83tg720.c
+@@ -46,15 +46,37 @@
+  * The functions that implement this logic are:
+  * - dp83tg720_soft_reset()
+  * - dp83tg720_get_next_update_time()
++ *
++ * 2. Polling-Based Link Detection and IRQ Support
++ * -----------------------------------------------
++ * Due to the PHY-specific limitation described in section 1, link-up events
++ * cannot be reliably detected via interrupts on the DP83TG720. Therefore,
++ * polling is required to detect transitions from link-down to link-up.
++ *
++ * While link-down events *can* be detected via IRQs on this PHY, this driver
++ * currently does **not** implement interrupt support. As a result, all link
++ * state changes must be detected using polling.
++ *
++ * Polling behavior:
++ * - When the link is up: slow polling (e.g. 1s).
++ * - When the link just went down: fast polling for a short time.
++ * - When the link stays down: fallback to slow polling.
++ *
++ * This design balances responsiveness and CPU usage. It sacrifices fast link-up
++ * times in cases where the link is expected to remain down for extended periods,
++ * assuming that such systems do not require immediate reactivity.
+  */
+ 
+ /*
+  * DP83TG720S_POLL_ACTIVE_LINK - Polling interval in milliseconds when the link
+  *				 is active.
+- * DP83TG720S_POLL_NO_LINK_MIN - Minimum polling interval in milliseconds when
+- *				 the link is down.
+- * DP83TG720S_POLL_NO_LINK_MAX - Maximum polling interval in milliseconds when
+- *				 the link is down.
++ * DP83TG720S_POLL_NO_LINK     - Polling interval in milliseconds when the
++ *				 link is down.
++ * DP83TG720S_FAST_POLL_DURATION_MS - Timeout in milliseconds for no-link
++ *				 polling after which polling interval is
++ *				 increased.
++ * DP83TG720S_POLL_SLOW	       - Slow polling interval when there is no
++ *				 link for a prolongued period.
+  * DP83TG720S_RESET_DELAY_MS_MASTER - Delay after a reset before attempting
+  *				 to establish a link again for master phy.
+  * DP83TG720S_RESET_DELAY_MS_SLAVE  - Delay after a reset before attempting
+@@ -65,9 +87,10 @@
+  * minimizing the number of reset retries while ensuring reliable link recovery
+  * within a reasonable timeframe.
+  */
+-#define DP83TG720S_POLL_ACTIVE_LINK		1000
+-#define DP83TG720S_POLL_NO_LINK_MIN		100
+-#define DP83TG720S_POLL_NO_LINK_MAX		1000
++#define DP83TG720S_POLL_ACTIVE_LINK		421
++#define DP83TG720S_POLL_NO_LINK			149
++#define DP83TG720S_FAST_POLL_DURATION_MS	6000
++#define DP83TG720S_POLL_SLOW			1117
+ #define DP83TG720S_RESET_DELAY_MS_MASTER	97
+ #define DP83TG720S_RESET_DELAY_MS_SLAVE		149
+ 
+@@ -166,6 +189,7 @@ struct dp83tg720_stats {
+ 
+ struct dp83tg720_priv {
+ 	struct dp83tg720_stats stats;
++	unsigned long last_link_down_jiffies;
+ };
+ 
+ /**
+@@ -569,50 +593,42 @@ static int dp83tg720_probe(struct phy_device *phydev)
+ }
+ 
+ /**
+- * dp83tg720_get_next_update_time - Determine the next update time for PHY
+- *                                  state
++ * dp83tg720_get_next_update_time - Return next polling interval for PHY state
+  * @phydev: Pointer to the phy_device structure
+  *
+- * This function addresses a limitation of the DP83TG720 PHY, which cannot
+- * reliably detect or report a stable link state. To recover from such
+- * scenarios, the PHY must be periodically reset when the link is down. However,
+- * if the link partner also runs Linux with the same driver, synchronized reset
+- * intervals can lead to a deadlock where the link never establishes due to
+- * simultaneous resets on both sides.
+- *
+- * To avoid this, the function implements randomized polling intervals when the
+- * link is down. It ensures that reset intervals are desynchronized by
+- * introducing a random delay between a configured minimum and maximum range.
+- * When the link is up, a fixed polling interval is used to minimize overhead.
+- *
+- * This mechanism guarantees that the link will reestablish within 10 seconds
+- * in the worst-case scenario.
++ * Implements adaptive polling interval logic depending on link state and
++ * downtime duration. See the "2. Polling-Based Link Detection and IRQ Support"
++ * section at the top of this file for details.
+  *
+- * Return: Time (in jiffies) until the next update event for the PHY state
+- * machine.
++ * Return: Time (in jiffies) until the next poll
+  */
+ static unsigned int dp83tg720_get_next_update_time(struct phy_device *phydev)
+ {
++	struct dp83tg720_priv *priv = phydev->priv;
+ 	unsigned int next_time_jiffies;
+ 
+ 	if (phydev->link) {
+-		/* When the link is up, use a fixed 1000ms interval
+-		 * (in jiffies)
+-		 */
++		priv->last_link_down_jiffies = 0;
++
++		/* When the link is up, use a slower interval (in jiffies) */
+ 		next_time_jiffies =
+ 			msecs_to_jiffies(DP83TG720S_POLL_ACTIVE_LINK);
+ 	} else {
+-		unsigned int min_jiffies, max_jiffies, rand_jiffies;
+-
+-		/* When the link is down, randomize interval between min/max
+-		 * (in jiffies)
+-		 */
+-		min_jiffies = msecs_to_jiffies(DP83TG720S_POLL_NO_LINK_MIN);
+-		max_jiffies = msecs_to_jiffies(DP83TG720S_POLL_NO_LINK_MAX);
+-
+-		rand_jiffies = min_jiffies +
+-			get_random_u32_below(max_jiffies - min_jiffies + 1);
+-		next_time_jiffies = rand_jiffies;
++		unsigned long now = jiffies;
++
++		if (!priv->last_link_down_jiffies)
++			priv->last_link_down_jiffies = now;
++
++		if (time_before(now, priv->last_link_down_jiffies +
++			  msecs_to_jiffies(DP83TG720S_FAST_POLL_DURATION_MS))) {
++			/* Link recently went down: fast polling */
++			next_time_jiffies =
++				msecs_to_jiffies(DP83TG720S_POLL_NO_LINK);
++		} else {
++			/* Link has been down for a while: slow polling */
++			next_time_jiffies =
++				msecs_to_jiffies(DP83TG720S_POLL_SLOW);
++		}
+ 	}
+ 
+ 	/* Ensure the polling time is at least one jiffy */
+-- 
+2.39.5
 
