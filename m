@@ -1,93 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC47481CD;
-	Tue, 10 Jun 2025 09:31:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA43A22172F;
+	Tue, 10 Jun 2025 09:31:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749547891; cv=none; b=bMDfTPSzWgURKuw7h0BeNs6uJAs/KLHQDUo+PMO3wKjRWUkl6a9lJfLV3oAqWUwdgXvTVyAIqYsBupg3uT6fDlVcTv0KXxUiF1YdRo/76MOfU3uQfLnARlp1P74zSeNlB2kdkY8BrTvpR3bpinhSLoBLYwOjTZasxxmMDxT07Jo=
+	t=1749547904; cv=none; b=e5wuAC0+PplL/jmGKiD7UD5C8c8Ae2GYVhsNy4q49aIJbdcMuzPSkqFWwofRfUYzT0RhEV/bSxmIkAdIORnf6AdvTXHUT6V3RhjezTunF/VgbrcVwSCz0pqFz+2q2SBUJji7v1aaWclYDI1d1sdwCLM3zw8r7v8i5QH1j9vrfJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749547891; c=relaxed/simple;
-	bh=BO97OAsXfqwgbvY0qB23trz3Pz5fZ7baV/z18Q+sb08=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=W2qrSaWoGeWOprXVIIH3Fo5EDXuBBCd0v2frlWPwxh9EDeNQEOn2ZeW3EOX18WQ+wJXOqbi332leT/iXuNkPzZhUGUkUXanbnDTSKOBzQKqdJtG7hUmwFQZaQoYmPT9DHOynBn7+JfWT7WoTn2OijY83B5qCdeKD3IvZqrpWfeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oDj5OPeL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749547904; c=relaxed/simple;
+	bh=nlxpi2PnQ5SZ9ogqAPF22K5CYjsnMtXK5uLglQbDjik=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=JrsDBtJyVyQSM8chpC7Mq3DM2r2yApgvwedpv8JRi4SQGV6ZEtn3LG3Huhc6Y4TdP7NzzaekNI5RkWUpkIPnRIuGASJybktSlS0QbhD/qV0qq3/hat+MsnmlI7VCAzbPLbyqXZtrTxRZQB8AD9zdRg/smA1ViUlAEg7W10w0Oso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=poUOP6Hr; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oDj5OPeL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48CD7C4CEED;
-	Tue, 10 Jun 2025 09:31:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749547891;
-	bh=BO97OAsXfqwgbvY0qB23trz3Pz5fZ7baV/z18Q+sb08=;
-	h=From:To:Cc:Subject:Date:From;
-	b=oDj5OPeLTOFcf0lt91d44gt25Q8AcRpd+Oo2/BmAXQb43RYIF4uNEcTO/0xyOd14q
-	 k/+5qVX72XAzp/PF9G5XWDmCydbl/O3Y4GQhyvKaJnYdSwVN6/q/zX+BJhQ69MIOBa
-	 gygex0aNnTwmLcCjJb/2K89AQouE6PZWuUFBErR1gD4G6O99Cn2v3bUobGtRs+aaYD
-	 so3eoflcorpSX7m+phyhHlWDm3/6AncLav0598+QJ/crj/KGaMVIY7G/23EV5e9H5I
-	 T8ayfw6e2DaY7nRCofVNM2tdsr+mUUrAaLA3xfsfmgoFoN4vqLDoAH7I7cutS4iGBd
-	 aT2VH3LnWqQDQ==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Nathan Chancellor <nathan@kernel.org>,
-	=?UTF-8?q?Marek=20Ol=C5=A1=C3=A1k?= <marek.olsak@amd.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Sunil Khatri <sunil.khatri@amd.com>,
-	Tvrtko Ursulin <tvrtko.ursulin@igalia.com>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH] drm/radeon: reduce stack frame size for radeon_cs_ioctl
-Date: Tue, 10 Jun 2025 11:31:20 +0200
-Message-Id: <20250610093125.2645138-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="poUOP6Hr"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 559LJJF1018309;
+	Tue, 10 Jun 2025 09:31:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	u6MCGBTFAlYeCDEcyikw3UbgJy3uFEnmfAeco5v0psQ=; b=poUOP6HrXkF+j25n
+	3mXrWQnsyksvSPuOHAEukq8vni33BYL1zUb+qqXJpI4L9CIW00HxLSabboWLpZxe
+	n7DL+3jlw9UypmhjgnZAwJ9bY6VCGAoSaF9pTvsrbRPtfX9ZdUrs3IOgUSnkm1kD
+	xVrTa0p3Hm6L1VbIB8T/jRuYga/94Dk762ZDNl+iodHg9qQ4kSnwHUqAR3poAHsn
+	z1Buj8omPdpVybkN3S92nUjBUl4qW7b8lAVjbnY0H6HYBOk0c4qDRwXziygUz/xe
+	3WTSPn4TLFQVEp7ZhPk7AH7Odi7W3EpJ6u8Qxq0fFhW8NRuCAQBGoG9FA4/B/Y7r
+	NvZWxA==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474ce9rx5h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Jun 2025 09:31:39 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55A9UcQZ031994
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Jun 2025 09:30:38 GMT
+Received: from [10.217.217.109] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 10 Jun
+ 2025 02:30:34 -0700
+Message-ID: <8bd87328-3e60-4f5a-b8ef-1825b0e94511@quicinc.com>
+Date: Tue, 10 Jun 2025 15:00:31 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: qcs615: Add CPU scaling clock
+ node
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>
+CC: Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik
+	<quic_imrashai@quicinc.com>,
+        Jagadeesh Kona <quic_jkona@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250119-qcs615-mm-v2-dt-nodes-v2-0-c46ab4080989@quicinc.com>
+ <20250119-qcs615-mm-v2-dt-nodes-v2-2-c46ab4080989@quicinc.com>
+ <d34051c2-7b6a-4b33-af12-4bc6380afba8@oss.qualcomm.com>
+Content-Language: en-US
+From: Taniya Das <quic_tdas@quicinc.com>
+In-Reply-To: <d34051c2-7b6a-4b33-af12-4bc6380afba8@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: RQqKFDTkdDPokuVX2DoyApLpyFky_c3d
+X-Authority-Analysis: v=2.4 cv=drjbC0g4 c=1 sm=1 tr=0 ts=6847fb7b cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
+ a=p62qhQRY5rUVsZnOx4kA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: RQqKFDTkdDPokuVX2DoyApLpyFky_c3d
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDA3MiBTYWx0ZWRfXw3OPb8gGhD8Z
+ LL2D9nO4SJhPudDpf63b8337c9Yo0a7+I4YHm9iydNrYlbM4V3222tyZXW9IGnJwi81UiFVJOGf
+ JTMjVYh/DnQ6NMuqmhZqjV11EmQlSc/4ISRTMb1YPERXpMoZaeLM28PRCr2/iVYQkMydC5eKdot
+ Zr+Q7j/dvBbdV4F1DJLY+wcNdzC5JdKeWdvHHhuVpzjDFzATVf2MEj53naFgK6C9Gu350LW2Boj
+ JW/OLXsLSW1zmKAZcKgy3OIcSarpgPOyl19E2pN8OOxm3RHlC/DgMiXdS1NWQ99NVGsKe0of8bb
+ O8q5FWCbfGuqz6F87ca/2hAVlvR/mxnT+zMbHQUIclARYW7FWoRHlLq2bfYBIGWtPfi5QdKHMAt
+ FO/ScGjbnQk4z2eWhvkToIdTH3ZHlAwjoLKkVz1Lv4DBEC7f9NN9mEouLVBrghMk+hbn18zc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-10_03,2025-06-09_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0 clxscore=1015
+ priorityscore=1501 suspectscore=0 bulkscore=0 mlxlogscore=807 adultscore=0
+ phishscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506100072
 
-From: Arnd Bergmann <arnd@arndb.de>
 
-Clang inlines radeon_cs_parser_relocs() into radeon_cs_ioctl(), and
-since both of these use a lot of stack space, the sum of them can
-make it exceed a limit of 1280 bytes:
 
-drivers/gpu/drm/radeon/radeon_cs.c:669:5: error: stack frame size (1328) exceeds limit (1280) in 'radeon_cs_ioctl' [-Werror,-Wframe-larger-than]
-  669 | int radeon_cs_ioctl(struct drm_device *dev, void *data, struct drm_file *filp)
-      |     ^
+On 2/10/2025 11:28 PM, Konrad Dybcio wrote:
+> On 19.01.2025 1:00 PM, Taniya Das wrote:
+>> Add cpufreq-hw node to support CPU frequency scaling.
+>>
+>> Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
+>> ---
+> 
+> [...]
+> 
+>> +	cpufreq_hw: cpufreq@18323000 {
+>> +		compatible = "qcom,sc7180-cpufreq-hw", qcom,cpufreq-hw";
+>> +		reg = <0 0x18323000 0 0x1400>, <0 0x18325800 0 0x1400>;
+>> +		reg-names = "freq-domain0", "freq-domain1";
+>> +
+>> +		clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
+>> +		clock-names = "xo", "alternate";
+>> +
+>> +		#freq-domain-cells = <1>;
+>> +		#clock-cells = <1>;
+>> +	};
+> 
+> This should be a child of the /soc node
+> 
 
-Mark radeon_cs_parser_relocs as noinline_for_stack, so clang and gcc
-both behave in a consistent way. Calling into radeon_cs_parser_relocs()
-still uses a lot of stack space here, but this is not any worse than it
-already was, and the other code paths are better now.
+My bad, I will move it under /soc.
 
-Fixes: c9b76548899c ("drm/radeon: validate relocations in the order determined by userspace v3")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/gpu/drm/radeon/radeon_cs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/radeon/radeon_cs.c b/drivers/gpu/drm/radeon/radeon_cs.c
-index b8e6202f1d5b..220a9b107b15 100644
---- a/drivers/gpu/drm/radeon/radeon_cs.c
-+++ b/drivers/gpu/drm/radeon/radeon_cs.c
-@@ -78,7 +78,7 @@ static void radeon_cs_buckets_get_list(struct radeon_cs_buckets *b,
- 	}
- }
- 
--static int radeon_cs_parser_relocs(struct radeon_cs_parser *p)
-+static noinline_for_stack int radeon_cs_parser_relocs(struct radeon_cs_parser *p)
- {
- 	struct radeon_cs_chunk *chunk;
- 	struct radeon_cs_buckets buckets;
--- 
-2.39.5
+> Konrad
 
