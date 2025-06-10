@@ -1,173 +1,316 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12E4C28033F;
-	Tue, 10 Jun 2025 08:15:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3D11E521B
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:16:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749543334; cv=none; b=T+Y7V2wg/ntNmTat1R1pZ3w3uaKTgG899c2oQU5D7+CWbTifzSymK+MwfAHnkdw8z5KKbIo535L0khypzOZHYDr456D0gXT4cS/ZQiZXrvY9cQlZ/Zsu2GAWXqHA1VS3f084R7qcmt8NEDq2yT07sfTUjDzoPNBbDMbhl81b9rU=
+	t=1749543408; cv=none; b=VOMjCZuPDdtBafhYwv9lDBrOTnqu6PEvrdSq1bKOcNnuLCtzNjSk0TXVRqCQjVTIQy95OFaGsJ6XefiYI1V8b6GBKV/Gl/DK3+9oaqQUlmeXfNJxenOuIIZHWNpfWr2HVeZvmHtfSEGYcqie6wBMJIWAIs2JN77ec+0Zdc4Vtg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749543334; c=relaxed/simple;
-	bh=8q60IfHsdFA1WbbUEEE/3BeR/HOQfZE1lLoqh03xmek=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=SZEf33u40Z2tkd6iSwDhmpixQYrRIAmOVP02Elj/+y+6TPJw+iyKo7E3LNIYF2HBZekohYkSYXz/baUjzadnhXXdO/T1/+2AXa1EA2cn/Lf2H1pVmLl9j1oQfqr151PFPXl4cEj/XCAUlwLNKkxU7WTY5oQGWRCCTC8Kdm2LlhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CCpjdMTi; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749543408; c=relaxed/simple;
+	bh=yLuTk1D3F+8fvhU0ILsHffISVNBXEXKhzaEuKpWC7nQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QKkDeG21iuWqGHxF5H0xXu9S6eDC05GmyquRrTPxLmHeQ2VASacApwrYKGHyd0cy5XGkOcj3D0GQDQZ/QEgiIhjM/bEkYJ5gaYZ/PB6Xtlx6bomaavv+XX1Dn7Yjf1j1oCKmVTZ2QU/SC/1ofSlSDl2FyoYcsw1JKBP2D4LI7YQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oVv8fw4O; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CCpjdMTi"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7376dd56f8fso6105203b3a.2;
-        Tue, 10 Jun 2025 01:15:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oVv8fw4O"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-6077dea37easo6024794a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 01:16:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749543332; x=1750148132; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=y3B8a4Fsb8BKyuSt4okFUkT2d0oBx0YNbn4bvTYKUOg=;
-        b=CCpjdMTiKK6DTXosy0cG7clhRwKBK8jkUK65rZ8IB/UwrcgjC1lffB9sJZmXfW9pso
-         1vp+0wHZ+meL4+OFLWtAhcIF1w36DoxjngZaF0P7ZT+mNW/1FtnwgSE5q4JdN3rZRYMG
-         jueFIl1sYD9Hp6MkntBTtq+a8riqEFJpi/cGZ6qWFcHPzCDzzQ4crdNL9q4fX9f6yz7l
-         ots/Yms27l6XBhDoPcG7T1OTmU06iulYf/ENXrQinVxRNItH3DfGQLlLkWtnBWFDsNvU
-         NeHITwAESTUpFSIgs4u0bvn0oaSDvcpoikQWLgkjljMy/+JpD2FHLZAJ2HvXiumD6Uyb
-         Z0MA==
+        d=linaro.org; s=google; t=1749543404; x=1750148204; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=cv44LS1sjh21HGfbYeFYKcPOsKyzLkV/r1e8mW8y0Os=;
+        b=oVv8fw4OcZH2hHsDspDDPb0Pt2Rqq4tVPHRGeOy9j3BMALzSuy7qg1G/IBpQjpNQK6
+         wAE4EYdGibRdm75V1PfcNhWsAdNXG9eZ7QOzPZGvjRBqur5tqd49iH0Va6i1RTKbt2Ii
+         lBZXbO3DJnWl5lk7VLOfB5LBLZogrEENFJsa5UlrvWr6IsksAn27WBH5s30dlwMJPDlE
+         5u0tx4JYplbDWDbticV+ybUSCZARd5LSzaWM2Mt7qipO7S5qow0D9aq9Oj4T0v6pVJj0
+         aw9lKxxXJ7shkO+tC8sF+B7nYe/3hp/GbDMNeOhAO8cOwmV0PArarPzWnoJHgDEwEFRF
+         Fsqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749543332; x=1750148132;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=y3B8a4Fsb8BKyuSt4okFUkT2d0oBx0YNbn4bvTYKUOg=;
-        b=fjf5oKEjfeNAf9tL2PvXziXXhHnedcuCw7afSwTnqiZImvHT+8+rnfajo0PbheEQD4
-         uv4PunyMC8pdHXNf9dEWh3Muxw4mi5ikOdKvkz8fIfCT3hLvNbSIHKqHLPFTyLrioZlj
-         4Tm9RjviA2uIWhVWj/ySFaP5N0TwwPYl09EnJQHaqXNwguC0Au7a/aqaDLMzf2UEj5DT
-         rBGXri+1vH5pbByM9tt4aE0VPJ8VhD4iKRqGidX3tsfoHMYdv3DnOBvVo/7mf4uQQhIL
-         1aHaNhjxpARof7NHmlyVooazKjECHZgsT9ieMxjgfblX9RmY/eiLpfhjGO2LvYicXBT5
-         ZpTA==
-X-Forwarded-Encrypted: i=1; AJvYcCV+8Q7ShcwmftWql7asKv9ZqU+n6oC1BeH7zHyqWs0yPSQkbVkJNN+c4MzjdbFWnogv+zQUxMM9RkNbMwg=@vger.kernel.org, AJvYcCVDntj1Z1GXYESvg7m6dB8Fc5rV13HM4hC46GwageARNzojFSXoanE68KdxgRJlUB9KqPm+uMvtLdTyuilLLq0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySjQM9sj8oAhsVIWJbdMfKXzJrVQjF3M3jZHcyWpl2c61ly2me
-	nUaQhu7W9ZlExD4GzNHTZwb35MQIs+Z08HXH3tsLNL4Cc0Kn+vQCfgQAx+CHLpKx
-X-Gm-Gg: ASbGncvrg8bvCl3Zl7UOG1JqWSJwSTJ9ZVYXRkBHfP6lbPkxEr+jzJMfk429qaulE0e
-	ayP5evPcOCxpyEz/OE+j0VV7gFEVgnycXFGxyHngZPdVN5jJKlod4Rkz5yWMHSHSYDoMR6y/4km
-	aksy78qYZf+qE2ckkMi0OycJkkIWPcSE3tYEef8mTtjrfVXsjK+7MCdoCKLC/XSUljq9knRioJm
-	8HCkiCNa6rc3FE9MTbgGAJEvfg4jF8LeoGFUz8ZFV4eGrITObfQp4WSdq1SCg5HsbcU+st+5hjv
-	b+Sf+6r3LMWM8Zj0joAL9eFPxVP0c1aaz+NSKQI0iMCqM7lNc//QhCQxYOUl1CPHufeUXOnnLxY
-	Xx2lYh6XFpMzai9tJNUQLtKI2uHC7gbyyOQqIlx2O
-X-Google-Smtp-Source: AGHT+IGsuPhvBxp9ieu7lUDRme9H5ZY4I7e/Mz3z/LqkXkYZtFqt3O2tOAADnzsAc3Dakd6Cw0qThw==
-X-Received: by 2002:a05:6a20:3d86:b0:21c:faa4:9abb with SMTP id adf61e73a8af0-21f78c49b90mr3311557637.20.1749543321852;
-        Tue, 10 Jun 2025 01:15:21 -0700 (PDT)
-Received: from localhost (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482af3859csm6960783b3a.36.2025.06.10.01.15.17
+        d=1e100.net; s=20230601; t=1749543404; x=1750148204;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cv44LS1sjh21HGfbYeFYKcPOsKyzLkV/r1e8mW8y0Os=;
+        b=prH0MQY54oqWsdUB/6B3LlCF8ZspRWBkr8042IdFSeGlPx9QKJl102/wnDQw+EBoY2
+         aoUMSjToD2no3T3qO2HF+sJpFZNJBv0O0haL2Ft705OGkXFc1gTZmybLcwEe7jnDbHvW
+         KIJtE3vFh+HKhsBrbrdSfGBPFk7BlBdndSwagQpB1YjnE0q6JZsPNOiWyd3fwcC9TCfn
+         pLf3Alat7N52G+a3Xpi2bGh63YQ6J+vbkp7lq1EMRqWZK1nlhaidIv7RT28VGZtWBqkS
+         fjkVsS/7EbhkK2wBaT2lzwMktNUZSSBH65JV3qULcr5xBO+SFI8kiIxE0molniTFTXcF
+         AZCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXmOkPDbeYVOu5iSAbz9y9OBlky200I2UNIXrknDyKXiVbGwrIxBsdw3T8eM2cvu65slLUi8neJAqbsgI0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpXEy2vuJSXrzUmYEy/SIZQTtaQ/fmXle97WBYFV/XDnseAToL
+	YoRqClf/q3EivpPs3mMjAtc75kGOi6bEjAp8Tbh45zr/YdBUFGuh8vvkB/UgcgAbEoc=
+X-Gm-Gg: ASbGncv4OmCWd2/nmm26knb452gKvY6iVCYq/Jq+qsc7Atmhurhx5mvFNcDUyZqFvA+
+	THc54j6h2/z6AxeC97bU8vsIkBSaccKayUay2y45PuAZd9WUoA2ovGmZgrTGq4lD44XLaZJW6R1
+	Fo10hiQvTW1CdvwgnJcD9WAe9iHffKTYeUFaKryf+MLjyfV/jdfmfQhD6Hr8gsZb7WmRFVHRIOt
+	TADax2HJ1I2+nDBXXiNd50bBweN44qF0kmb5AoKIsoM0NO/4ZpoXUjLM9U5LjiQ2BppoOQr7ow3
+	woVLCszFDPysnb5qS+PxCR7WwI85jNeM//LmQmIvii9Ab3Epitf3wZNJLcXnRSyeiKvdKA==
+X-Google-Smtp-Source: AGHT+IHpCrdRekIe0QYCDgcZtAAoXKuOovlRwWiNArYZwW7mCqUJLOpQ8BUhEtpViMRKEjRU6TLGIA==
+X-Received: by 2002:a17:907:1ca2:b0:add:fc26:c1c4 with SMTP id a640c23a62f3a-ade1a9ed855mr1546064966b.59.1749543403926;
+        Tue, 10 Jun 2025 01:16:43 -0700 (PDT)
+Received: from linaro.org ([62.231.96.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1db576basm689286766b.65.2025.06.10.01.16.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 01:15:21 -0700 (PDT)
-Date: Tue, 10 Jun 2025 17:15:06 +0900 (JST)
-Message-Id: <20250610.171506.1930082951902279512.fujita.tomonori@gmail.com>
-To: a.hindborg@kernel.org
-Cc: fujita.tomonori@gmail.com, alex.gaynor@gmail.com, ojeda@kernel.org,
- aliceryhl@google.com, anna-maria@linutronix.de, bjorn3_gh@protonmail.com,
- boqun.feng@gmail.com, dakr@kernel.org, frederic@kernel.org,
- gary@garyguo.net, jstultz@google.com, linux-kernel@vger.kernel.org,
- lossin@kernel.org, lyude@redhat.com, rust-for-linux@vger.kernel.org,
- sboyd@kernel.org, tglx@linutronix.de, tmgross@umich.edu
-Subject: Re: [PATCH v3 3/3] rust: time: Add ktime_get() to ClockSource trait
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-In-Reply-To: <874iwo3tze.fsf@kernel.org>
-References: <-OrPPXscT_4STsX2CDg5ki77Lz68HLwGbucr-EZuMsTXhLnEdyuDfskI5daZYIwNuMJN_CBXX-gW_RLrw_H-aA==@protonmail.internalid>
-	<20250609010415.3302835-4-fujita.tomonori@gmail.com>
-	<874iwo3tze.fsf@kernel.org>
+        Tue, 10 Jun 2025 01:16:41 -0700 (PDT)
+Date: Tue, 10 Jun 2025 11:16:40 +0300
+From: Abel Vesa <abel.vesa@linaro.org>
+To: bjorn.andersson@oss.qualcomm.com
+Cc: Jeff Johnson <jjohnson@kernel.org>,
+	Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>,
+	Mahendran P <quic_mahep@quicinc.com>,
+	Rameshkumar Sundaram <rameshkumar.sundaram@oss.qualcomm.com>,
+	linux-arm-msm@vger.kernel.org,
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+	linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] wifi: ath12k: Avoid CPU busy-wait by handling VDEV_STAT
+ and BCN_STAT
+Message-ID: <aEfp6B97gwAeeOs3@linaro.org>
+References: <20250609-ath12k-fw-stats-done-v1-1-2b3624656697@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250609-ath12k-fw-stats-done-v1-1-2b3624656697@oss.qualcomm.com>
 
-On Tue, 10 Jun 2025 10:01:57 +0200
-Andreas Hindborg <a.hindborg@kernel.org> wrote:
-
-> "FUJITA Tomonori" <fujita.tomonori@gmail.com> writes:
+On 25-06-09 22:06:22, Bjorn Andersson via B4 Relay wrote:
+> From: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
 > 
->> Introduce the ktime_get() associated function to the ClockSource
->> trait, allowing each clock source to specify how it retrieves the
->> current time. This enables Instant::now() to be implemented
->> generically using the type-level ClockSource abstraction.
->>
->> This change enhances the type safety and extensibility of timekeeping
->> by statically associating time retrieval mechanisms with their
->> respective clock types. It also reduces the reliance on hardcoded
->> clock logic within Instant.
->>
->> Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
->> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
->> ---
->>  rust/helpers/helpers.c |  1 +
->>  rust/helpers/time.c    | 18 ++++++++++++++++++
->>  rust/kernel/time.rs    | 32 ++++++++++++++++++++++++++++----
->>  3 files changed, 47 insertions(+), 4 deletions(-)
->>  create mode 100644 rust/helpers/time.c
->>
->> diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
->> index 0f1b5d115985..0613a849e05c 100644
->> --- a/rust/helpers/helpers.c
->> +++ b/rust/helpers/helpers.c
->> @@ -39,6 +39,7 @@
->>  #include "spinlock.c"
->>  #include "sync.c"
->>  #include "task.c"
->> +#include "time.c"
->>  #include "uaccess.c"
->>  #include "vmalloc.c"
->>  #include "wait.c"
->> diff --git a/rust/helpers/time.c b/rust/helpers/time.c
->> new file mode 100644
->> index 000000000000..9c296e93a560
->> --- /dev/null
->> +++ b/rust/helpers/time.c
->> @@ -0,0 +1,18 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +#include <linux/timekeeping.h>
->> +
->> +ktime_t rust_helper_ktime_get_real(void)
->> +{
->> +	return ktime_get_with_offset(TK_OFFS_REAL);
->> +}
->> +
->> +ktime_t rust_helper_ktime_get_boottime(void)
->> +{
->> +	return ktime_get_with_offset(TK_OFFS_BOOT);
->> +}
->> +
->> +ktime_t rust_helper_ktime_get_clocktai(void)
->> +{
->> +	return ktime_get_with_offset(TK_OFFS_TAI);
->> +}
+> When the ath12k driver is built without CONFIG_ATH12K_DEBUG, the
+> recently refactored stats code can cause any user space application
+> (such at NetworkManager) to consume 100% CPU for 3 seconds, every time
+> stats are read.
 > 
-> This just caught my eye. I think policy is to make helpers as much 1:1 as
-> possible. We should not inject arguments here. Instead, we should have
-> just one function that passes the argument along.
+> Commit 'b8a0d83fe4c7 ("wifi: ath12k: move firmware stats out of
+> debugfs")' moved ath12k_debugfs_fw_stats_request() out of debugfs, by
+> merging the additional logic into ath12k_mac_get_fw_stats().
+> 
+> Among the added responsibility of ath12k_mac_get_fw_stats() was the
+> busy-wait for `fw_stats_done`.
+> 
+> Signalling of `fw_stats_done` happens when one of the
+> WMI_REQUEST_PDEV_STAT, WMI_REQUEST_VDEV_STAT, and WMI_REQUEST_BCN_STAT
+> messages are received, but the handling of the latter two commands remained
+> in the debugfs code. As `fw_stats_done` isn't signalled, the calling
+> processes will spin until the timeout (3 seconds) is reached.
+> 
+> Moving the handling of these two additional responses out of debugfs
+> resolves the issue.
+> 
+> Fixes: b8a0d83fe4c7 ("wifi: ath12k: move firmware stats out of debugfs")
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
 
-Indeed, you're right. It should have been as follows:
+Tested on Dell XPS 13 9345.
 
-+++ b/rust/helpers/time.c
-@@ -0,0 +1,18 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/timekeeping.h>
-+
-+ktime_t rust_helper_ktime_get_real(void)
-+{
-+	return ktime_get_real();
-+}
-+
-+ktime_t rust_helper_ktime_get_boottime(void)
-+{
-+	return ktime_get_boottime();
-+}
-+
-+ktime_t rust_helper_ktime_get_clocktai(void)
-+{
-+	return ktime_get_clocktai();
-+}
+Tested-by: Abel Vesa <abel.vesa@linaro.org>
 
-I'll send v4 shortly.
+> ---
+>  drivers/net/wireless/ath/ath12k/debugfs.c | 58 --------------------------
+>  drivers/net/wireless/ath/ath12k/debugfs.h |  7 ----
+>  drivers/net/wireless/ath/ath12k/wmi.c     | 67 +++++++++++++++++++++++++++----
+>  3 files changed, 60 insertions(+), 72 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/ath/ath12k/debugfs.c b/drivers/net/wireless/ath/ath12k/debugfs.c
+> index dd624d73b8b2714e77c9d89b5a52f7b3fcb02951..23da93afaa5c25e806c9859dbbdd796afd23d78a 100644
+> --- a/drivers/net/wireless/ath/ath12k/debugfs.c
+> +++ b/drivers/net/wireless/ath/ath12k/debugfs.c
+> @@ -1251,64 +1251,6 @@ void ath12k_debugfs_soc_destroy(struct ath12k_base *ab)
+>  	 */
+>  }
+>  
+> -void
+> -ath12k_debugfs_fw_stats_process(struct ath12k *ar,
+> -				struct ath12k_fw_stats *stats)
+> -{
+> -	struct ath12k_base *ab = ar->ab;
+> -	struct ath12k_pdev *pdev;
+> -	bool is_end;
+> -	static unsigned int num_vdev, num_bcn;
+> -	size_t total_vdevs_started = 0;
+> -	int i;
+> -
+> -	if (stats->stats_id == WMI_REQUEST_VDEV_STAT) {
+> -		if (list_empty(&stats->vdevs)) {
+> -			ath12k_warn(ab, "empty vdev stats");
+> -			return;
+> -		}
+> -		/* FW sends all the active VDEV stats irrespective of PDEV,
+> -		 * hence limit until the count of all VDEVs started
+> -		 */
+> -		rcu_read_lock();
+> -		for (i = 0; i < ab->num_radios; i++) {
+> -			pdev = rcu_dereference(ab->pdevs_active[i]);
+> -			if (pdev && pdev->ar)
+> -				total_vdevs_started += pdev->ar->num_started_vdevs;
+> -		}
+> -		rcu_read_unlock();
+> -
+> -		is_end = ((++num_vdev) == total_vdevs_started);
+> -
+> -		list_splice_tail_init(&stats->vdevs,
+> -				      &ar->fw_stats.vdevs);
+> -
+> -		if (is_end) {
+> -			ar->fw_stats.fw_stats_done = true;
+> -			num_vdev = 0;
+> -		}
+> -		return;
+> -	}
+> -	if (stats->stats_id == WMI_REQUEST_BCN_STAT) {
+> -		if (list_empty(&stats->bcn)) {
+> -			ath12k_warn(ab, "empty beacon stats");
+> -			return;
+> -		}
+> -		/* Mark end until we reached the count of all started VDEVs
+> -		 * within the PDEV
+> -		 */
+> -		is_end = ((++num_bcn) == ar->num_started_vdevs);
+> -
+> -		list_splice_tail_init(&stats->bcn,
+> -				      &ar->fw_stats.bcn);
+> -
+> -		if (is_end) {
+> -			ar->fw_stats.fw_stats_done = true;
+> -			num_bcn = 0;
+> -		}
+> -	}
+> -}
+> -
+>  static int ath12k_open_vdev_stats(struct inode *inode, struct file *file)
+>  {
+>  	struct ath12k *ar = inode->i_private;
+> diff --git a/drivers/net/wireless/ath/ath12k/debugfs.h b/drivers/net/wireless/ath/ath12k/debugfs.h
+> index ebef7dace3448e4bdf2d6cb155d089267315172c..21641a8a03460c6cc1b34929a353e5605bb834ce 100644
+> --- a/drivers/net/wireless/ath/ath12k/debugfs.h
+> +++ b/drivers/net/wireless/ath/ath12k/debugfs.h
+> @@ -12,8 +12,6 @@ void ath12k_debugfs_soc_create(struct ath12k_base *ab);
+>  void ath12k_debugfs_soc_destroy(struct ath12k_base *ab);
+>  void ath12k_debugfs_register(struct ath12k *ar);
+>  void ath12k_debugfs_unregister(struct ath12k *ar);
+> -void ath12k_debugfs_fw_stats_process(struct ath12k *ar,
+> -				     struct ath12k_fw_stats *stats);
+>  void ath12k_debugfs_op_vif_add(struct ieee80211_hw *hw,
+>  			       struct ieee80211_vif *vif);
+>  void ath12k_debugfs_pdev_create(struct ath12k_base *ab);
+> @@ -126,11 +124,6 @@ static inline void ath12k_debugfs_unregister(struct ath12k *ar)
+>  {
+>  }
+>  
+> -static inline void ath12k_debugfs_fw_stats_process(struct ath12k *ar,
+> -						   struct ath12k_fw_stats *stats)
+> -{
+> -}
+> -
+>  static inline bool ath12k_debugfs_is_extd_rx_stats_enabled(struct ath12k *ar)
+>  {
+>  	return false;
+> diff --git a/drivers/net/wireless/ath/ath12k/wmi.c b/drivers/net/wireless/ath/ath12k/wmi.c
+> index 60e2444fe08cefa39ae218d07eb9736d2a0c982b..2d2444417e2b2d9281754d113f2b073034e27739 100644
+> --- a/drivers/net/wireless/ath/ath12k/wmi.c
+> +++ b/drivers/net/wireless/ath/ath12k/wmi.c
+> @@ -7626,6 +7626,63 @@ static int ath12k_wmi_pull_fw_stats(struct ath12k_base *ab, struct sk_buff *skb,
+>  				   &parse);
+>  }
+>  
+> +static void ath12k_wmi_fw_stats_process(struct ath12k *ar,
+> +					struct ath12k_fw_stats *stats)
+> +{
+> +	struct ath12k_base *ab = ar->ab;
+> +	struct ath12k_pdev *pdev;
+> +	bool is_end;
+> +	static unsigned int num_vdev, num_bcn;
+> +	size_t total_vdevs_started = 0;
+> +	int i;
+> +
+> +	if (stats->stats_id == WMI_REQUEST_VDEV_STAT) {
+> +		if (list_empty(&stats->vdevs)) {
+> +			ath12k_warn(ab, "empty vdev stats");
+> +			return;
+> +		}
+> +		/* FW sends all the active VDEV stats irrespective of PDEV,
+> +		 * hence limit until the count of all VDEVs started
+> +		 */
+> +		rcu_read_lock();
+> +		for (i = 0; i < ab->num_radios; i++) {
+> +			pdev = rcu_dereference(ab->pdevs_active[i]);
+> +			if (pdev && pdev->ar)
+> +				total_vdevs_started += pdev->ar->num_started_vdevs;
+> +		}
+> +		rcu_read_unlock();
+> +
+> +		is_end = ((++num_vdev) == total_vdevs_started);
+> +
+> +		list_splice_tail_init(&stats->vdevs,
+> +				      &ar->fw_stats.vdevs);
+> +
+> +		if (is_end) {
+> +			ar->fw_stats.fw_stats_done = true;
+> +			num_vdev = 0;
+> +		}
+> +		return;
+> +	}
+> +	if (stats->stats_id == WMI_REQUEST_BCN_STAT) {
+> +		if (list_empty(&stats->bcn)) {
+> +			ath12k_warn(ab, "empty beacon stats");
+> +			return;
+> +		}
+> +		/* Mark end until we reached the count of all started VDEVs
+> +		 * within the PDEV
+> +		 */
+> +		is_end = ((++num_bcn) == ar->num_started_vdevs);
+> +
+> +		list_splice_tail_init(&stats->bcn,
+> +				      &ar->fw_stats.bcn);
+> +
+> +		if (is_end) {
+> +			ar->fw_stats.fw_stats_done = true;
+> +			num_bcn = 0;
+> +		}
+> +	}
+> +}
+> +
+>  static void ath12k_update_stats_event(struct ath12k_base *ab, struct sk_buff *skb)
+>  {
+>  	struct ath12k_fw_stats stats = {};
+> @@ -7655,19 +7712,15 @@ static void ath12k_update_stats_event(struct ath12k_base *ab, struct sk_buff *sk
+>  
+>  	spin_lock_bh(&ar->data_lock);
+>  
+> -	/* WMI_REQUEST_PDEV_STAT can be requested via .get_txpower mac ops or via
+> -	 * debugfs fw stats. Therefore, processing it separately.
+> -	 */
+> +	/* Handle WMI_REQUEST_PDEV_STAT status update */
+>  	if (stats.stats_id == WMI_REQUEST_PDEV_STAT) {
+>  		list_splice_tail_init(&stats.pdevs, &ar->fw_stats.pdevs);
+>  		ar->fw_stats.fw_stats_done = true;
+>  		goto complete;
+>  	}
+>  
+> -	/* WMI_REQUEST_VDEV_STAT and WMI_REQUEST_BCN_STAT are currently requested only
+> -	 * via debugfs fw stats. Hence, processing these in debugfs context.
+> -	 */
+> -	ath12k_debugfs_fw_stats_process(ar, &stats);
+> +	/* Handle WMI_REQUEST_VDEV_STAT and WMI_REQUEST_BCN_STAT updates. */
+> +	ath12k_wmi_fw_stats_process(ar, &stats);
+>  
+>  complete:
+>  	complete(&ar->fw_stats_complete);
+> 
+> ---
+> base-commit: 4f27f06ec12190c7c62c722e99ab6243dea81a94
+> change-id: 20250609-ath12k-fw-stats-done-dca8bf77a7da
+> 
+> Best regards,
+> -- 
+> Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+> 
+> 
+> 
