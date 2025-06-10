@@ -1,153 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B40B25F797;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69FE728A708;
 	Tue, 10 Jun 2025 09:55:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749549350; cv=none; b=kE8bnT3nki7z5cA/r+MJGap1KYFmB0KxIokZv8KUTxWf/HmZWv8rujZ4CdwPmUygZ2fptPboXOs4Fk8gZGVXl9ZoOHYsLgBu0F31moCDMk2Tn1Hd09AI7tL41oN81ru4D5uQphVEmHT5hEyDh6833eLXZzDGt/ZU9mwPedbeGvo=
+	t=1749549352; cv=none; b=EYv4wGjUsdq9s7w6DVFkB9UkI0ySsnIVmvt1wVed32Vr0l7ZY31+kIhcvFKNxfOCP0GkooEfqb+VqOKsbFQa9zu60bEOziaEJYb0LTzgOT9XvHYY4CsJPAuqU0GaV9ipFHn6wy+VGFHfF5wCYMhGUT+O4eSzPp27RPSuCPcbl3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749549350; c=relaxed/simple;
-	bh=GqfnxPzPcKC6JM544VAwehfJVCxORTUdatZW3VeOt3o=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=K1IoMSozkOteyC3uuiN53FWwTmdySuvinV/pg2/Gf7IdumXVqFZZKWj4FhbxoBIiGalU4RXwaqaunM5a1j7cM3Rj0mZgm/EMNGlVAE5U8pG2EXkvsa1e9Sf0sRVENry3G3DOWKhQZ8UUCt535dPzg0TH60cpBlwD432Ub5ED8kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tgKap9aI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749549352; c=relaxed/simple;
+	bh=4qI7m/FiLSi8MTV953n9ML6PMwZQ9rp4zePGb84alio=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h852g6tW3q3ehQmEr3FQ58pgGbyof1aQQiXhMbaTjmaNE1FWhQW/vfodTBJCyt9z3dbkwYimeacF4FoNQNDntbSHNzlg83RO8w+Uw+L3q+MfU6dGsY0WngMcslp5zMfQ4QmoSMcNfU2dNqgHbspBAQ3weZtkgZPWox23ORCs7Tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HlflpKhY; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tgKap9aI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00EB3C4CEF2;
-	Tue, 10 Jun 2025 09:55:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749549350;
-	bh=GqfnxPzPcKC6JM544VAwehfJVCxORTUdatZW3VeOt3o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tgKap9aI2hGdFjN6WUUSKUHHZoUGyCh8mjzpcWGjuYvEhA6xPw68JB1V/3HaASgtH
-	 ija2jwIScaIQRR/e4Nd3EQ4KpVRqMHHlJXCiiwUdgS13XtoOjUF9Tzhw+dIqNOxHuq
-	 u6lFrweoCCa2k5ffAAISpD3BPjWw+lv+5zNmQEG29zpsithoCSn5bQeswUnBMa6uii
-	 RpjgGato4S6ybVW4Jloxom4UQxf4QMVS/mys7pbUA+KUgVqS/LXCzLzgYPWQxWA+nz
-	 wxItHQs6FoSbB5bhXvIV+xfmSaHpYRrZCM4wMIvdekf5jymzDl6atJm3GiinhA4zZy
-	 8Dd+XBP26h2fw==
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HlflpKhY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749549350; x=1781085350;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=4qI7m/FiLSi8MTV953n9ML6PMwZQ9rp4zePGb84alio=;
+  b=HlflpKhYiZtNbDHbd0fAzbCi6vJrIM/MUGJc94UPlHzn07lWf314LEAv
+   z9ni0BO8gQ7Xpg2KsD3jQhmD5UNFnitpsU8aEoWVlymtojZeDu05lljfE
+   HPJaiEpuKXhVMGQZzcFuBpIcuSn4uncjSoOm5mBvsl+TozG1EYlhwzPgT
+   CMmLBf5O+Ag3Tjrfce3Kfen/sQUHfnxXPC1GGnLwjdKvqXWQXEuZdgvxP
+   RHOAhle3z81u+IS1xk6xbn7DAJXQADTYawhihyK+Vu5DFDvFexXAnH9R8
+   5nn4hytrYpkXz76EETOP8RVExinyQmuM834IsjBKHVdh87zCG19WKMHZr
+   w==;
+X-CSE-ConnectionGUID: 0dzbAzF0QD6ULMvmOFiWYg==
+X-CSE-MsgGUID: hZGp5IssTJKfYNukdHxalg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51639948"
+X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
+   d="scan'208";a="51639948"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 02:55:49 -0700
+X-CSE-ConnectionGUID: W+qxXQ1qRAqkZlXrBUzizg==
+X-CSE-MsgGUID: bQSff4A1RU6QeO3HCG2aoQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
+   d="scan'208";a="146698329"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 02:55:44 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uOvhj-00000005JXP-0mpg;
+	Tue, 10 Jun 2025 12:55:39 +0300
+Date: Tue, 10 Jun 2025 12:55:38 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Anup Patel <apatel@ventanamicro.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
+	Rahul Pathak <rpathak@ventanamicro.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Atish Patra <atish.patra@linux.dev>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 07/23] mailbox: Add RISC-V SBI message proxy (MPXY)
+ based mailbox driver
+Message-ID: <aEgBGup553Pki98e@smile.fi.intel.com>
+References: <20250525084710.1665648-1-apatel@ventanamicro.com>
+ <20250525084710.1665648-8-apatel@ventanamicro.com>
+ <aDbrBFcgaJxgBRVZ@smile.fi.intel.com>
+ <CAK9=C2XJwgsC5AK-eVOHQqN1tPxtrsTjVoKdHgALbREv=sb8zQ@mail.gmail.com>
+ <aEc-SHvL187xdj-m@smile.fi.intel.com>
+ <CAK9=C2VjOZ22smYdxDg1bjnx-+wwjngEN3c-iOpdtaADFcQ0+w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 10 Jun 2025 11:55:47 +0200
-Message-Id: <DAIRHEFW2G16.2FHXB1PRM2HXC@kernel.org>
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Andreas Hindborg" <a.hindborg@kernel.org>
-Cc: "Stephen Rothwell" <sfr@canb.auug.org.au>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Linux Kernel Mailing List"
- <linux-kernel@vger.kernel.org>, "Linux Next Mailing List"
- <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the rust-pin-init tree
-X-Mailer: aerc 0.20.1
-References: <20250610142230.001af1d3@canb.auug.org.au>
- <DAIP0NGMMM90.11JRFL5O1NAW9@kernel.org>
- <e0lTxW1xgQfnXlaJP9bBC75nSMvzZEdAEAmkh1G41H1yJHHyg94Op2pxoQnOYTKtpKYyVQIJMZvjay8xS9yuuQ==@protonmail.internalid> <DAIPCCIHRLHW.1TDNY93G6UZM0@kernel.org> <87msag2b8r.fsf@kernel.org>
-In-Reply-To: <87msag2b8r.fsf@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK9=C2VjOZ22smYdxDg1bjnx-+wwjngEN3c-iOpdtaADFcQ0+w@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue Jun 10, 2025 at 11:32 AM CEST, Andreas Hindborg wrote:
-> "Benno Lossin" <lossin@kernel.org> writes:
->
->> On Tue Jun 10, 2025 at 9:59 AM CEST, Benno Lossin wrote:
->>> On Tue Jun 10, 2025 at 6:22 AM CEST, Stephen Rothwell wrote:
->>>> Hi all,
->>>>
->>>> After merging the rust-pin-init tree, today's linux-next build (x86_64
->>>> allmodconfig) failed like this:
->>>>
->>>> error[E0282]: type annotations needed
->>>>    --> rust/kernel/configfs.rs:154:26
->>>>     |
->>>> 154 |             subsystem <- pin_init::zeroed().chain(
->>>>     |                          ^^^^^^^^^^^^^^^^ cannot infer type of t=
-he type parameter `T` declared on the function `zeroed`
->>>>     |
->>>> help: consider specifying the generic argument
->>>>     |
->>>> 154 |             subsystem <- pin_init::zeroed::<T>().chain(
->>>>     |                                          +++++
->>>>
->>>> error[E0282]: type annotations needed
->>>>    --> rust/kernel/configfs.rs:264:22
->>>>     |
->>>> 264 |             group <- pin_init::zeroed().chain(|v: &mut Opaque<bi=
-ndings::config_group>| {
->>>>     |                      ^^^^^^^^^^^^^^^^ cannot infer type of the t=
-ype parameter `T` declared on the function `zeroed`
->>>>     |
->>>> help: consider specifying the generic argument
->>>>     |
->>>> 264 |             group <- pin_init::zeroed::<T>().chain(|v: &mut Opaq=
-ue<bindings::config_group>| {
->>>>     |                                      +++++
->>>>
->>>> error: aborting due to 2 previous errors
->>>>
->>>> For more information about this error, try `rustc --explain E0282`.
->>>>
->>>> Caused by commit
->>>>
->>>>   0bcaea04244b ("rust: pin-init: rename `zeroed` to `init_zeroed`")
->>>>
->>>> I have used the rust-pin-init tree from next-20250606 for today.
->>>
->>> Thanks for catching this! I didn't test with `CONFIG_CONFIGFS=3Dy`, so =
-the
->>> code was cfg'd out... I'll add it to my tests.
->>>
->>> @Andreas I'll send a new version of the commit above with configfs
->>> changed.
->>
->> (sorry forgot to add your emails and also some new info)
->>
->> Actually, the correct change would be this in commit 0bcaea04244b
->> ("rust: pin-init: rename `zeroed` to `init_zeroed`"):
->>
->> diff --git a/rust/kernel/configfs.rs b/rust/kernel/configfs.rs
->> index 34d0bea4f9a5..6d566a8bde74 100644
->> --- a/rust/kernel/configfs.rs
->> +++ b/rust/kernel/configfs.rs
->> @@ -151,7 +151,7 @@ pub fn new(
->>          data: impl PinInit<Data, Error>,
->>      ) -> impl PinInit<Self, Error> {
->>          try_pin_init!(Self {
->> -            subsystem <- pin_init::zeroed().chain(
->> +            subsystem <- pin_init::init_zeroed().chain(
->>                  |place: &mut Opaque<bindings::configfs_subsystem>| {
->>                      // SAFETY: We initialized the required fields of `p=
-lace.group` above.
->>                      unsafe {
->> @@ -261,7 +261,7 @@ pub fn new(
->>          data: impl PinInit<Data, Error>,
->>      ) -> impl PinInit<Self, Error> {
->>          try_pin_init!(Self {
->> -            group <- pin_init::zeroed().chain(|v: &mut Opaque<bindings:=
-:config_group>| {
->> +            group <- pin_init::init_zeroed().chain(|v: &mut Opaque<bind=
-ings::config_group>| {
->>                  let place =3D v.get();
->>                  let name =3D name.as_bytes_with_nul().as_ptr();
->>                  // SAFETY: It is safe to initialize a group once it has=
- been zeroed.
->>
->> @Miguel, @Andreas, how should I go about this? Send the commit above
->> augmented with the diff, or send a patch with just the diff to the list?
->> Or apply the diff directly to the commit in the pin-init-next branch &
->> rebasing (potentially adding an Acked-by from Andreas)? Or some other
->> way?
->
-> I think you should add this change directly in your tree. I think you
-> should just fold it into the breaking commit so we avoid commits that do
-> not build.
->
-> Acked-by: Andreas Hindborg <a.hindborg@kernel.org>
+On Tue, Jun 10, 2025 at 10:05:27AM +0530, Anup Patel wrote:
+> On Tue, Jun 10, 2025 at 1:34 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Mon, Jun 09, 2025 at 05:59:40PM +0530, Anup Patel wrote:
+> > > On Wed, May 28, 2025 at 4:23 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > On Sun, May 25, 2025 at 02:16:54PM +0530, Anup Patel wrote:
 
-Thanks and done!
+...
 
----
-Cheers,
-Benno
+> > > > > +     if (mbox->msi_count)
+> > > >
+> > > > Is this check really needed?
+> > >
+> > > MSIs are optional for the SBI MPXY mailbox so we should only use
+> > > platform_device_msi_xyz() APIs only when MSIs are available.
+> >
+> > > > > +             platform_device_msi_free_irqs_all(mbox->dev);
+> >
+> > Hmm... I am not sure why. Do you have any Oops or warnings if the check
+> > is not there and no MSI provided?
+> 
+> We don't see any oops or warnings. This check is to avoid unnecessary
+> work (such as acquiring lock, checking default domain, etc) in the
+> msi_domain_free_irqs_all() called by platform_device_msi_free_irqs_all().
+> 
+> I don't mind dropping the check so I will update in the next revision.
+
+Perhaps you can rather add this check into the callee? Seems to me that
+you have a justification for it. Usual pattern in the kernel that freeing
+resources should be aware of the NULL pointers or optional resources
+so we may call it unconditionally from the user(s).
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
