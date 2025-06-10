@@ -1,47 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A50F248861;
-	Tue, 10 Jun 2025 18:39:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9987824888F;
+	Tue, 10 Jun 2025 18:39:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749580741; cv=none; b=k77L6PbByDzMpNVKXdt9tFEoeAWMLQBDJ+BxlwF5AHeCwL/xQ7NceGyCv8qpHYiqlt9ew0E3s7FfdMXtaQdep9G0O77zwmP4A+vqL3acTWGx95BZzwe0sTqAwPxTGLXTyxC+2LNXFpXO/Z6ogyxpBrBCLZcwcj2NMG1cPamXLpA=
+	t=1749580741; cv=none; b=a3r5Wpwt+kit8RGh6xux0lexFQj84MePG9Nz3SvFMMjIYVsxk1XAyrJKuuPi3C/xfGgkZwNHH6H8jpefp0x2+SE4LDWl7oJGhjcDZypkNs/eUcOmIeV34BIBK2yQmZESHzrlpCrBhyVACUK955Z1B4d0+ISZmD8ufoL+guuazsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749580741; c=relaxed/simple;
-	bh=GVfj29xrQrCzqueEAOo8sbZYSlXB8tV84v6/TlLCBkE=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=RdlW0xO/xGl1yTVd1M3IoRBgn/gT7SKxQi2rMTukInZfq9C6Ff+gRoKAiCHpMfME2C7cNh/qFhCqeAupgoLb97Nndl6jyoJX8vDIjg85yG5U2srljyA+i1XPFoCoJSrQSs/XzdGu7YWp4Jvs4VtDxlPZjengmk5ujQ9w/RZdu/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A9CKi5UK; arc=none smtp.client-ip=10.30.226.201
+	bh=mUTIbVpokht7OiAGSsRDnNAvm4YPRzCcgweU/XfLtVs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=O7BruGruCOiBBegAjfj0NvaCHwZmtoYX2sjjzfHOgta9C+WwNaZT1Z8/LFcT+FEI15ZoL3wJvsOGP30QNc8h+V5nRja3ieceD8IHdQruPKwhZQ5iaR8t/UN4vC+1kE6IxmRebhBmHmqV/W7fiZGuQIUk1eSZo1m0EAjGgUIMm1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A46Kb8S0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A9CKi5UK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F539C4CEF0;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A46Kb8S0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDBC5C4CEED;
 	Tue, 10 Jun 2025 18:39:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749580740;
-	bh=GVfj29xrQrCzqueEAOo8sbZYSlXB8tV84v6/TlLCBkE=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=A9CKi5UKATuBoM0F267Jwdr79ENixbhNqJBnXiR4T6yK2ySHXYf97TZ8WLahXvV7o
-	 XNsHep7gYPTJogvRlN4wmd6MRjRdD8HZ1MdjMS7DY2PnRmxO+HBPWbljJmh48VYu4P
-	 n2A1Z7CFGiATkzbU8gSHw5utBXx7i5rGhz+YIDQ5f4pNMTMTiQvN7Hn/267I1AkiJJ
-	 y3Ofr7+2ixfAf0r+Jcz2s+0AN5ISYQTKg0a4YTXBeuNWAJ35wcLb0EaJIIAOgm5bvZ
-	 13FUBDr6lPUpcARtcWlSPbLzC9JbULHfp2D+Bn/gtaM2WIs7BgUudtsn9dka2eIqk9
-	 ARLTsVE45NEug==
+	s=k20201202; t=1749580741;
+	bh=mUTIbVpokht7OiAGSsRDnNAvm4YPRzCcgweU/XfLtVs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=A46Kb8S0JpJY9oF1sOWceU6sIEntQajmZf5+saymSR+emESDIOcJVb87/jOgIlD+W
+	 FWtoN9g4l1ONsf/8+5fL2/LPT0l0U5u2w+IE823NoRgY+hafoqB/Sj5JwXVVTF73ni
+	 6ahGtWcQOXuqLMnO14hjJH3H4tbOytT6jFkOl/6uSZk0WtQOjqEiBgWU7vORdBs93M
+	 OfHbDM2XfpE5/254D+VEKKiw1zoPI2nmOkXd0z+7F3mHBYwXgH53BSJYeVn8vLtttx
+	 q0qvLHOUPA2nDlUUnTmoPocdVRhAWEFmBDmhFTg5xVz4qx24L9WRWe4G+0+thKuSRK
+	 IE0p8RsLXsXWA==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@redhat.com>, 
- "Steven Rostedt (Google)" <rostedt@goodmis.org>, 
- Quentin Monnet <qmo@kernel.org>, James Clark <james.clark@linaro.org>, 
- Tomas Glozar <tglozar@redhat.com>, 
- "Steinar H. Gunderson" <sesse@google.com>, 
- Guilherme Amadio <amadio@gentoo.org>, Leo Yan <leo.yan@arm.com>, 
- Yang Jihong <yangjihong@bytedance.com>, 
- Charlie Jenkins <charlie@rivosinc.com>, Jiri Olsa <jolsa@kernel.org>, 
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
- Ian Rogers <irogers@google.com>
-In-Reply-To: <20250603221358.2562167-1-irogers@google.com>
-References: <20250603221358.2562167-1-irogers@google.com>
-Subject: Re: [PATCH v1] tools/build: Remove some unused libbpf pre-1.0
- feature test logic
-Message-Id: <174958074028.4039944.11387595303056622807.b4-ty@kernel.org>
+To: acme@kernel.org, Howard Chu <howardchu95@gmail.com>
+Cc: mingo@redhat.com, mark.rutland@arm.com, 
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+ adrian.hunter@intel.com, peterz@infradead.org, kan.liang@linux.intel.com, 
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250601173252.717780-1-howardchu95@gmail.com>
+References: <20250601173252.717780-1-howardchu95@gmail.com>
+Subject: Re: [PATCH v2] perf doc trace: Remove --map-dump documentation
+Message-Id: <174958074079.4039944.10522397903792984025.b4-ty@kernel.org>
 Date: Tue, 10 Jun 2025 11:39:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -53,13 +47,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Tue, 03 Jun 2025 15:13:58 -0700, Ian Rogers wrote:
-> Commit 76a97cf2e169 ("perf build: Remove libbpf pre-1.0 feature
-> tests") removed the libbpf feature test logic used by perf in favor of
-> using LIBBPF_MAJOR_VERSION. Remove some build targets that should have
-> been removed as part of that clean up.
+On Sun, 01 Jun 2025 10:32:52 -0700, Howard Chu wrote:
+> The --map-dump option was removed in 5e6da6be3082 ("perf trace: Migrate
+> BPF augmentation to use a skeleton"), this patch removes its remaining
+> documentation.
 > 
+> Change in v2:
+> - Correct the commit log format
 > 
+> [...]
 Applied to perf-tools-next, thanks!
 
 Best regards,
