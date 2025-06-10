@@ -1,205 +1,227 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78BD25D212
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 06:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156EB25D212;
+	Tue, 10 Jun 2025 06:11:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749535791; cv=none; b=cAt2gTl/BuRtQPK4b9FSMv2+SjryJr7iLOowVLBNm8GxN1d+Q00YTPqsHRQb0t4J7S8BJowRPYQHK84fM5b3ETxfSXldniAwojICRpkOh6EOssq/p5I+Wuv8nOOUNFEXmzfix+VTkkmBcM0+MyhPS4dqHUVzMydr7WChIFifaDY=
+	t=1749535866; cv=none; b=ahkFlXRf+YUVuIKc2zjPX3wANcfK0Is0joJTJGH/L+hntTjxsR8XGgs/fUsxE2jBoegVgT5jYHp/20Y8KLNspeQ+k1GyicN0C2U88vRAs2odXIVYOzC9nD/1q+jrztJJhJHm4gU+srFhL5AcAeJGF634jM5YSktWcu3hDyeCIh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749535791; c=relaxed/simple;
-	bh=deL0AORLTTGY5BQlHNdX7DRyFTNvXJD5bCgwvsWjOdQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cxJWwAwPKM6EgTyIChMerasTr0dypIsTXKh0/WfNcoS3zvXqHOVkxe1M9kcrwrsQe8jzlnMqRdSXMntJcBh23135CPES+b51NQe4yMpHVeUYfk4tTrn1uXpOn3c65aK/blqOLLEPtrNxrMmY1LumtumrkTRXq1arIRnnkGIlRM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=asStmQI+; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1749535866; c=relaxed/simple;
+	bh=rf+T6+OC0O9RD3xGkd23KZbcDu8hliBRooO65SPZ0qo=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ZmeUpu5kILMKwDRHEz896oM+5EykDqS7+mMl6TB/LobqtUd0WsykFNiXk5pHuFAImbRDV5Gvad3hBReIL7Nbhr+wsn2sXgx6s4x7ZjwePsIftRe8fwdEihggoD+fhAJTalD6msOb0seJ0ZMXjuKZOj5MuHKuBq7yJZcdLu0bxqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=J0D2imux; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="asStmQI+"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-553241d30b3so4670859e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 09 Jun 2025 23:09:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1749535787; x=1750140587; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=INX7+gU0Hnih0cIeBLJvT7vRQcQo+5vRos0OigVcuPk=;
-        b=asStmQI+gWGAHT6yjv5ieGkbDd/Z3pWnsiNvGwdGPxz2Snt1RJEWmMUpk0nbjcU3Yl
-         t5ZIul5ov8rVh2T6ew+trJc8WG5rBckLQlI44dU1k9JZgE2Ihn3bW3AwnDCRInONnl0A
-         +SLiLlbZlTzXKdrJGAqtXU4PNT5ymKYJaDkLqRoUNbQy428fcjdmg9rGQ1XXDBBEC7NB
-         f615GW4jYOkyjVFclgZwYxoqFQDxD/As7mw5GvMiNryi8zSN9QwbGmR4YCyDo+aIVkrB
-         sWwVNOBWGOAjJ7oH8W1f/LiLCr1xmbC5DvZdXjccovXPwWyRP6FyVqtLyj01d2IV/q5x
-         oB/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749535787; x=1750140587;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=INX7+gU0Hnih0cIeBLJvT7vRQcQo+5vRos0OigVcuPk=;
-        b=QCZqk3u8TT07TyAtGB/WHCBT6P/7KCqqpK+Awq5MtZIHFozMIZUK/HYV97gjRkobJT
-         x/6AR5Hb31ajwU+LySNNWskAGOTMD3doVAchgEUY1xb1MBxc5iGd/QqBwNWUa3VO13Fn
-         5jmM4Fx34h7rKpGBB3Sv9zvxy0PoBPF3HtnZHdik/zOa1FYDANO4cUEXmE44Kapb5yB6
-         BkRL2QhWq0IGyMTJ2MjZyAIsQBqha/efp1ofJy94cGmsWi5xEJX7kzT7ga/fTvuJyboQ
-         ba8wsBipNRoDCybCDPesXcajD0fyKVu8s17AChuwU2J/BG/I07FnQWkoyB1+yU0FNfze
-         t48g==
-X-Forwarded-Encrypted: i=1; AJvYcCUww8rAU+Ij40JzZBfQlXOtqTe5t9KfqT0kVS/qU+bWqF/ppJwDEF9aG8c84vSZyFhJ4HAVNPx5KhWbdgU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1R47WrprRX7+S2Fkb9bEC7y0WoP51P45vVrJ+1l0nLVGWPs8p
-	BmRDvol9keC2uXiOx3hEBFbbe+oT3FLi6QA8piOR8C9zs0WmYsM5A3fh7gspH8LJ9O5lEy1pEWl
-	oDYSPLmJg/tJ1F/6tx3vKsjZYnuN1cxV6JEHNH2kdsA==
-X-Gm-Gg: ASbGncsb8eRRCDqAG0ac4j8YCIjHzBvzodaGKrmn8LBvzGKFQrdIiJcpu4QGS+VCoGz
-	wChT2X2+YNBg9kmHCGPxRzbEp3InCKH8fLUaTwm45FBbY4bpdIY5UrIjqSjJJSgttfHbjUtczQH
-	+egR9I260GixGattDndq+QNW0B6KLayw5dcLoeMpZbT1eR
-X-Google-Smtp-Source: AGHT+IGkcoUE3xlnQMYl1o7j1hnkz7cT7TnZBE2tt+E9xu1wPE99h1iWmlxxu85+hyVu269VB3sueRiisqT0j70UOq8=
-X-Received: by 2002:a05:6512:1387:b0:553:2bf2:e30b with SMTP id
- 2adb3069b0e04-55366be6735mr3903750e87.18.1749535787322; Mon, 09 Jun 2025
- 23:09:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="J0D2imux"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1749535856; x=1750140656; i=markus.elfring@web.de;
+	bh=QtGmO32MWmv2oqQt77RtwekQKB2W8DvItptTZDgUe3c=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
+	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=J0D2imuxvWewcwUecaFheVVsE9H0rOLva2MNy01LnEMIGVIiritGDORnZqpG5Axb
+	 AwOFYLJ95ys6GhgRc05BanC2d7FXxD2LAxH0KuJ5jCxmyl8peCbmxWHHc2QMiy2Gr
+	 4LGTIQLakP+yVfUmPvDaJT++f26L86nBCqmP6bqirHW0+GtQ2OFDbeYgtHR+FPmp9
+	 DUtND2xidP8CxcsZuB+ai/aRZCCVCQMLyxBi7LsuFe2O9O/7CvIR5kcmAL6JFcwhB
+	 1ruEKMCIyCAH02+8fMMQrO8QpX23wuttCa0BMbR7VuMi4dw7chbu32wtLDOgf5y2U
+	 1WzSS4zIyya8LTT/FA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.69.183]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MpCmZ-1vBRx23Ai7-00fv95; Tue, 10
+ Jun 2025 08:10:55 +0200
+Message-ID: <8684e2ba-b644-44c8-adf7-9f1423a1251d@web.de>
+Date: Tue, 10 Jun 2025 08:10:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250525084710.1665648-1-apatel@ventanamicro.com>
- <20250525084710.1665648-12-apatel@ventanamicro.com> <b355406d-c79f-4d81-bc36-a8889b54aa03@linux.dev>
-In-Reply-To: <b355406d-c79f-4d81-bc36-a8889b54aa03@linux.dev>
-From: Anup Patel <apatel@ventanamicro.com>
-Date: Tue, 10 Jun 2025 11:39:35 +0530
-X-Gm-Features: AX0GCFt-V6DR7WSCvS_15t_rjYO_PCMDY_MmyOZ2P-IZ0Vijw-NrT_XPrxpCJ90
-Message-ID: <CAK9=C2V7E5dmJdMffadXOo839945XNRT_mMKcVfT7bTDz5fBZA@mail.gmail.com>
-Subject: Re: [PATCH v4 11/23] dt-bindings: Add RPMI system MSI message proxy bindings
-To: Atish Patra <atish.patra@linux.dev>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jassi Brar <jassisinghbrar@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, 
-	Rahul Pathak <rpathak@ventanamicro.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: [PATCH v3] drm/amd/display: Fix exception handling in
+ dm_validate_stream_and_context()
+From: Markus Elfring <Markus.Elfring@web.de>
+To: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ Alex Deucher <alexander.deucher@amd.com>, Alex Hung <alex.hung@amd.com>,
+ Aurabindo Pillai <aurabindo.pillai@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>,
+ Dominik Kaszewski <dominik.kaszewski@amd.com>,
+ Fangzhi Zuo <Jerry.Zuo@amd.com>, Harry Wentland <harry.wentland@amd.com>,
+ Leo Li <sunpeng.li@amd.com>, Mario Limonciello <mario.limonciello@amd.com>,
+ Roman Li <roman.li@amd.com>, Simona Vetter <simona@ffwll.ch>,
+ Tom Chung <chiahsuan.chung@amd.com>, Wayne Lin <Wayne.Lin@amd.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org,
+ lkp@intel.com, oe-kbuild-all@lists.linux.dev, llvm@lists.linux.dev,
+ cocci@inria.fr, Melissa Wen <mwen@igalia.com>
+References: <f9303bdc-b1a7-be5e-56c6-dfa8232b8b55@web.de>
+ <e6656c83-ee7a-a253-2028-109138779c94@web.de>
+ <ea0ff67b-3665-db82-9792-67a633ba07f5@web.de>
+ <32674bac-92c2-8fc7-0977-6d2d81b3257f@amd.com>
+ <da489521-7786-4716-8fb8-d79b3c08d93c@web.de>
+Content-Language: en-GB, de-DE
+In-Reply-To: <da489521-7786-4716-8fb8-d79b3c08d93c@web.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:80O+haoG28pLodlT+TgNmlm05U3XWpmk4KtOLEIQOSYnyPhhLn8
+ wyVp3nwi4WuqC9aKHEhr5Xp90vM+pk6RiWNYxiQmqJXFenBxq1AnKA4FwdcdApHeWPyKD8U
+ wIRTKwTaBHCE8mk3OcImE11iC4V5mvvs6MBtqYF0WzJ67BEgNw5oZakajX7kiqtPadslbcK
+ YmboKwjmxDmsXz1BK4b5A==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:zFF8mO0KoK0=;rr/lpWVNFVg7xG8a9GYPYrI5jmb
+ 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
 
-On Sat, Jun 7, 2025 at 4:29=E2=80=AFAM Atish Patra <atish.patra@linux.dev> =
-wrote:
->
->
-> On 5/25/25 1:46 AM, Anup Patel wrote:
-> > Add device tree bindings for the RPMI system MSI service group
-> > based message proxy implemented by the SBI implementation (machine
-> > mode firmware or hypervisor).
-> >
-> > The RPMI system MSI service group is defined by the RISC-V
-> > platform management interface (RPMI) specification.
-> >
-> > Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-> > ---
-> >   .../riscv,rpmi-mpxy-system-msi.yaml           | 67 ++++++++++++++++++=
-+
-> >   1 file changed, 67 insertions(+)
-> >   create mode 100644 Documentation/devicetree/bindings/interrupt-contro=
-ller/riscv,rpmi-mpxy-system-msi.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/ris=
-cv,rpmi-mpxy-system-msi.yaml b/Documentation/devicetree/bindings/interrupt-=
-controller/riscv,rpmi-mpxy-system-msi.yaml
-> > new file mode 100644
-> > index 000000000000..26dd13731350
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,rpmi=
--mpxy-system-msi.yaml
-> > @@ -0,0 +1,67 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/interrupt-controller/riscv,rpmi-mpx=
-y-system-msi.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: RISC-V RPMI system MSI service group based message proxy
-> > +
-> > +maintainers:
-> > +  - Anup Patel <anup@brainfault.org>
-> > +
-> > +description: |
-> > +  The RISC-V Platform Management Interface (RPMI) [1] defines a
-> > +  messaging protocol which is modular and extensible. The supervisor
-> > +  software can send/receive RPMI messages via SBI MPXY extension [2]
-> > +  or some dedicated supervisor-mode RPMI transport.
-> > +
-> > +  The RPMI specification [1] defines system MSI service group which
-> > +  allow application processors to receive MSIs upon system events
-> > +  such as P2A doorbell, graceful shutdown/reboot request, CPU hotplug
-> > +  event, memory hotplug event, etc from the platform microcontroller.
-> > +  The SBI implementation machine mode firmware or hypervisor) can
-> nit:
-> The SBI implementation in machine mode
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Tue, 10 Jun 2025 07:42:40 +0200
 
-Actually there should be a "(" just before "machine mode ...". I will
-update in the next revision.
+The label =E2=80=9Ccleanup=E2=80=9D was used to jump to another pointer ch=
+eck despite of
+the detail in the implementation of the function =E2=80=9Cdm_validate_stre=
+am_and_context=E2=80=9D
+that it was determined already that corresponding variables contained
+still null pointers.
 
-> > +  implement an SBI MPXY channel to allow RPMI system MSI service
-> > +  group access to the supervisor software.
-> > +
-> > +  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +  References
-> > +  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +  [1] RISC-V Platform Management Interface (RPMI)
-> > +      https://github.com/riscv-non-isa/riscv-rpmi/releases
-> > +
-> > +  [2] RISC-V Supervisor Binary Interface (SBI)
-> > +      https://github.com/riscv-non-isa/riscv-sbi-doc/releases
-> > +
-> nit: Refer the latest frozen version of the spec ?
+1. Thus return directly if
+   * a null pointer was passed for the function parameter =E2=80=9Cstream=
+=E2=80=9D
+     or
+   * a call of the function =E2=80=9Cdc_create_plane_state=E2=80=9D failed=
+.
 
-Actually, we should specify the spec version number in the text
-and avoid a specific link because the link of the final ratified version
-will be different.
+2. Use a more appropriate label instead.
 
-> > +properties:
-> > +  compatible:
-> > +    description:
-> > +      Intended for use by the SBI implementation.
-> > +    const: riscv,rpmi-mpxy-system-msi
-> > +
-> > +  mboxes:
-> > +    maxItems: 1
-> > +    description:
-> > +      Mailbox channel of the underlying RPMI transport.
-> > +
-> > +  riscv,sbi-mpxy-channel-id:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description:
-> > +      The SBI MPXY channel id to be used for providing RPMI access to
-> > +      the supervisor software.
-> > +
-> > +required:
-> > +  - compatible
-> > +  - mboxes
-> > +  - riscv,sbi-mpxy-channel-id
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    interrupt-controller {
-> > +        compatible =3D "riscv,rpmi-mpxy-system-msi";
-> > +        mboxes =3D <&rpmi_shmem_mbox 0x2>;
-> > +        riscv,sbi-mpxy-channel-id =3D <0x2000>;
-> > +    };
-> > +...
->
-> Otherwise, lgtm.
->
-> Reviewed-by: Atish Patra <atishp@rivosinc.com>
->
+3. Delete two questionable checks.
 
-Regards,
-Anup
+4. Omit extra initialisations (for the variables =E2=80=9Cdc_state=E2=80=
+=9D and =E2=80=9Cdc_plane_state=E2=80=9D)
+   which became unnecessary with this refactoring.
+
+
+This issue was detected by using the Coccinelle software.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202506100312.Ms4XgAzW-lkp@in=
+tel.com/
+Fixes: 5468c36d6285 ("drm/amd/display: Filter Invalid 420 Modes for HDMI T=
+MDS")
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+
+V3:
+* Another function call was renamed.
+
+* Recipient lists were adjusted once more.
+
+V2:
+* The change suggestion was rebased on source files of
+  the software =E2=80=9CLinux next-20250606=E2=80=9D.
+
+* Recipient lists were adjusted accordingly.
+
+
+ .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 20 ++++++++-----------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/g=
+pu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 78816712afbb..7dc80b2fbd30 100644
+=2D-- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -7473,19 +7473,19 @@ static enum dc_status dm_validate_stream_and_conte=
+xt(struct dc *dc,
+ 						struct dc_stream_state *stream)
+ {
+ 	enum dc_status dc_result =3D DC_ERROR_UNEXPECTED;
+-	struct dc_plane_state *dc_plane_state =3D NULL;
+-	struct dc_state *dc_state =3D NULL;
++	struct dc_plane_state *dc_plane_state;
++	struct dc_state *dc_state;
+=20
+ 	if (!stream)
+-		goto cleanup;
++		return dc_result;
+=20
+ 	dc_plane_state =3D dc_create_plane_state(dc);
+ 	if (!dc_plane_state)
+-		goto cleanup;
++		return dc_result;
+=20
+ 	dc_state =3D dc_state_create(dc, NULL);
+ 	if (!dc_state)
+-		goto cleanup;
++		goto release_plane_state;
+=20
+ 	/* populate stream to plane */
+ 	dc_plane_state->src_rect.height  =3D stream->src.height;
+@@ -7522,13 +7522,9 @@ static enum dc_status dm_validate_stream_and_contex=
+t(struct dc *dc,
+ 	if (dc_result =3D=3D DC_OK)
+ 		dc_result =3D dc_validate_global_state(dc, dc_state, DC_VALIDATE_MODE_O=
+NLY);
+=20
+-cleanup:
+-	if (dc_state)
+-		dc_state_release(dc_state);
+-
+-	if (dc_plane_state)
+-		dc_plane_state_release(dc_plane_state);
+-
++	dc_state_release(dc_state);
++release_plane_state:
++	dc_plane_state_release(dc_plane_state);
+ 	return dc_result;
+ }
+=20
+=2D-=20
+2.49.0
+
