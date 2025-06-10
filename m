@@ -1,181 +1,216 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015DC28DF0E;
-	Tue, 10 Jun 2025 11:07:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DC3528B3EF
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 11:09:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749553661; cv=none; b=qjmN0b2eDOc0b5kFkYcVIsslJIdl93le3wdZSiP0R6O0kUR/YIqxcmYAGdD+HVclQSlL9lJYeeG/77XqaPL9x8Nz6Vf5tdsCV+WRB3b38iW4D1mvM73PraXkmctqq8ZfXdx2/C7RApMVMChj0lhxJ4qHRI/mfVmLNK2bFfAqEDo=
+	t=1749553743; cv=none; b=g83XsNJL7pMbURL/wlIA7u+qk+9hpW4RNmUBWqwiLkIy8Zcin4obbYlu9tYLaWYT3mTukhLjjj1ZzG8uHahdkNDIA0xEZiGT0I8AUs0gPuxzD+8jnfYot2YCUJwWEn+kL6LKBu9g6Tj5pB2OP2MtsmaRI+c01API0LrqwQ1mg3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749553661; c=relaxed/simple;
-	bh=5WyJDjOsacc1tyrhglR5f00AB2huMpl9kWaITwLH2gs=;
+	s=arc-20240116; t=1749553743; c=relaxed/simple;
+	bh=OuxlYYpKRxD7usymkX2lfps+kKcWWYmdxYcWmu919Dg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uOa9DNu7g9yS7nRYN91fzLbFj69mR919Ok/mEhQ3fKI5sigeKY82ixczBXM0yudi+tHJ/+4f5K3E+yGUJFkpgkSHZsDZONj2QXtZaNHyvmKicwyJZeqqiCp9yJuTd2yWSdoyBh1qxwUsRmD5EwELesfr1xFmSxLwVibkaIc7iWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dre9Zpx8; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=IyyrY/Jo74WjZVvm/YBjjFPXxfjKcFRM2BFdt5BUTCh5lSHasKIQEZLTdmQm3HfzYbJTZTx9Ge1M62HG7/AwWXtEDP5UfSJLPkO0YeD5VkrBCpf8BNybse2rBdAoQ9AEqxN+j0/pKB5XrEcgaA+LXCawc13C7vHbY6MjOynReYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=TTvxENWB; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dre9Zpx8"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-450cfb6a794so34332035e9.1;
-        Tue, 10 Jun 2025 04:07:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749553658; x=1750158458; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lSDkUNg7pCMVGDi1JhrPkWKMxNcgCg8HawFBRzXOTrI=;
-        b=dre9Zpx8/rNdCYA1RW70X6SMxRNeaA8IaQWu7NUnG5CVbaW2fUGuWmxHyEPI3ExH+H
-         PX2GZuNcHtUp7dwRWUbY/Wp3dTLQWtMwZEQf+CX5qI+ZQxOMKHG1yMLB6GwI3lPOJoFg
-         KsNJp7KI29a3LtAKhm4u/l7jsFQ9nstNQygzEuSh7avf6KE2OM7S8GvFXYaF/MNa1Kh6
-         c2eqx8m/Xxb43fa2DwJK1sFOUMlxKOuZpzgFlBLCamDbhC+LassZxE6SAJfxJKEe94dC
-         Hi8qWn/Ej00lCQspDuH8fVZvk/zSfIAgMD9UnFtwEWUt9yK8yhvfyHpovXNbgXZ0oDmR
-         pbOw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="TTvxENWB"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55A9U8ob031343
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 11:09:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=RRO1LVjJx/5BoAejkQrBHrD0
+	HlTmpBzY0jUVoVo8gL4=; b=TTvxENWBt4wSO+/DbmHuJHde6djttEoNq+xx3FA5
+	P+QbNGaCN9hZJcQDdYuUXMJohNAZ/M3yKraGfltPGp4Wa1tW5vCL4CtXFTWS86gP
+	gG9vr58ZON6PNO55ym34wl2uQrGNQEkTfZ8XTqmHYmUtWX3UHYauflMsR5ItbTDF
+	TYeO3p99IozZkHWlC9WUwXRG1o4cw8iFGfWpsDjo/C5ivuLD8K30Th0+y/NPI6yj
+	a/gbq0c3TWWwX6qfvqjlzzKZsIlOFH4ggZ5WeOTPqdfR37rjD9bK1YSsSjU03iR+
+	GgpKE0PS0tAREJevLQshnrIiReVSboWdF4Lhnwql9nzHuQ==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474ekprwmm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 11:09:01 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5d608e6f5so1341192385a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 04:09:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749553658; x=1750158458;
+        d=1e100.net; s=20230601; t=1749553740; x=1750158540;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lSDkUNg7pCMVGDi1JhrPkWKMxNcgCg8HawFBRzXOTrI=;
-        b=D2x2GnJylpydS9RBnKc+5YA5d7R7Yb+ElpiSpyyTvAkLi3qNrUA10iiRbRxcG4dxFp
-         LAVOsuSwlNjw5F1m/nOI/HZ9DAItaJcuBjXkC7V1S2QFEjzNQ6SQxDBwFiXJTZHXy43q
-         kkhCL9Is4xbIthTdkFQP7pHpDqKQsu47Ne/gDn6BvChMRtkUx6UsNXgudPB+kz/MC7bt
-         FYZdsmqcirBonaNiWITGFaX3INImZOly4TAEPhPLMv13nPbw/b8FYE40iryPOFhka/2N
-         CMAgxubuqGcFKjPAxBsrMRET9eq41m+VvAlFci1wlU89PDMWFwtuOZzwA5xtgwY9zjS9
-         RLgg==
-X-Forwarded-Encrypted: i=1; AJvYcCUG1IRFzTVIUPfcM+VTMckrwRSrUmn+6VYFlfI4gLCXmSpbBEgAJuSURBYy8AuDmblrNsGFcsXOO+2Vlzur@vger.kernel.org, AJvYcCWUGdXsdDBFRUX1sAVT68nrnmGGv5Ff/iGvw6VqLIjnFGD/KFNAWwpuZZlWoVHdngLopdAUEypPdJE=@vger.kernel.org, AJvYcCWetYkFf3WaVr8ByMEh5RCxEXPaejVqjmgxmrPCqTyJ5EpNLBfUtELYebHLxtVASebfVFFo7LboO3gMqUc=@vger.kernel.org, AJvYcCXzyebREo2T2ZodbTO0xKITytIzGxymsw/uP/PPA9oFTgXGlq0mtwwo/t9r1Nq3dLwMlZ8P6MnlHxo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbOWCHolJJBi9v3OYReN59nZ/tRyX7ZBAoMbnbpqdgwte6nhQ1
-	dPasEyBjWj1LDdegwB3HP2nCF82yrPLl128y02Zen8COc8OWJxsAXPsS
-X-Gm-Gg: ASbGncs31PX2xwYsd2DCC0Y3TPuXXUdmT6njfLPoWKbAaZnp/L/+qS6Zs1pVtMI1N46
-	jnygpqia9f7Wj82iELVy3kqQThr3evpcyuEmsSYhMlFIUl32sLXCTebvtA8JJ96KzXzMDdG2rC8
-	m1pwNhrrQI3ZENA8bdlhcA78MplZ/dla1TDSqByewC+GXxOHCvmUSxivV5d+B26BrPEoOI2eaPW
-	SKpqD37g+q/aqR6t2QyfZ/7716UnG2TZQrugcly2WtLgAMYcnvwc53ym/Sxs+yEE0oWSR9WhOYN
-	U9webGFseRrc1yPn/BU3WuioJtXVbIIi6GFnvQnI/hPy4fLi8tDGTu7paLqpFxRNdegZWxwON8t
-	jIRx6u0G1Ut53BxEoCbWbA0rBPgV71Ban+DkSw5YFCU+JBSSo
-X-Google-Smtp-Source: AGHT+IGJLn68qlQRgM1RWjGLvgYWa/yZA0vynepgw1pm/prSBNurVotzXJWhrmwMI0/EhEopshwdMw==
-X-Received: by 2002:a05:600c:8b72:b0:43d:94:2d1e with SMTP id 5b1f17b1804b1-4531de00a15mr22080545e9.13.1749553658041;
-        Tue, 10 Jun 2025 04:07:38 -0700 (PDT)
-Received: from orome (p200300e41f281b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1b00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45307b4788fsm88637525e9.21.2025.06.10.04.07.36
+        bh=RRO1LVjJx/5BoAejkQrBHrD0HlTmpBzY0jUVoVo8gL4=;
+        b=JQ2V1ud59ep9N2dDb/H17Lf2icv1FJyEDuEwOkUvEzUX6XBxOGXHO3TjAunmXNKXYS
+         /bbPabliZzVKNBorelZJ/h3domjvLGIlhwYkYptyTZBl4kgnb1gH7/LzN/tp6lyNZQ+2
+         HNhIsOHjaI4CHJLlHkMxyYWCaoar8Ivd8wM1huU93zN7tMFT1MSP5nZW0jse0qPBL3qc
+         TD80kA/0Lw8h91J82IAXkXTyj/6ZUG1RdSi1FtSt2daY0TFMZDpREC5c7Ju5815T9g8L
+         pY42UYbX+EDbaim88cnjzsq40rQc1dLrlKWkq1OUYCJn3jmxHDB0uoLjonCeOpZeNqx/
+         nCDg==
+X-Forwarded-Encrypted: i=1; AJvYcCVVKMiFyMn0lKYRX80VWrHgjQO7KWAvjBk95MGHlqUkv9Plt/tCTupFMppqyJubNKVL7QFZ10mhSE2Qw1U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlwNaNELWUXU+xXizJBPniXeaI4LZF0dfw8vNhH0C34nAa12mb
+	sszLwFBHM8v53Ll/WnAbWl8u6yqnQqIqVoaEdr7mX/sTitfRuTtCK4CM/11Ujn2/SPvM/wpXXqH
+	WWwXpj0sTS195WhM0toLKJ8Wwvltx1Akt7hjL3fULtRDAOrqOnW8YXiQ/LH66xGWfNu0=
+X-Gm-Gg: ASbGncu2d9tUGSjGVoiGJJnINBnNYcrVehVLswv27Y0oy1N6hkVA/SwD4DUcsE+MORe
+	hzCWlR2JXQePI8Yzf5NQRTSYH7MxyDnRmvlNd6hb6d80z5Eyy08TuAOFa13a6A4X8CmJFk2idOJ
+	QncqzCNBEBQSjgKwvrc405aYk8BvqC/Df2dLU88AEHogDzeEOMwvim20S4pgWz2nKJpNcD/0nd+
+	tDinFc1TfQjo57b6evFv1LcyDvt7IGoyFHiK2POYcetq0BEeDtnyze3f4IBtRM9VefJepAD1YSl
+	jRn50p+gCn7V31YpDRB87QFMp+MvtYjm5pllZ0a6Ilf/QIF9Z+sL61jEwFk6LYgJ+w/ydER8hid
+	h2mNOCEHEu9wougaBsAGxDJDp12H94yUGBfY=
+X-Received: by 2002:a05:620a:1a03:b0:7d0:a243:d5c5 with SMTP id af79cd13be357-7d229863013mr2388359985a.5.1749553740403;
+        Tue, 10 Jun 2025 04:09:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFf2S/Xw7rHK+GuKet0+88mZ8uKvvupXT9KiOLqZgjzbbHszn9+Ms80XTWb/7xwX2+AEhOHdg==
+X-Received: by 2002:a05:620a:1a03:b0:7d0:a243:d5c5 with SMTP id af79cd13be357-7d229863013mr2388357385a.5.1749553740038;
+        Tue, 10 Jun 2025 04:09:00 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55367733280sm1516525e87.240.2025.06.10.04.08.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 04:07:36 -0700 (PDT)
-Date: Tue, 10 Jun 2025 13:07:34 +0200
-From: Thierry Reding <thierry.reding@gmail.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Svyatoslav Ryhel <clamor95@gmail.com>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, 
-	Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-pm@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] drivers: clk: tegra: add DFLL support for Tegra 4
-Message-ID: <g7kegtso3opafpwocvibhm3rym35oikxoyq2wmphqy3wjenzpa@m7extntwahau>
-References: <20250321095556.91425-1-clamor95@gmail.com>
- <20250321095556.91425-3-clamor95@gmail.com>
- <aef4574b-8167-4af3-a29c-8c962b396496@kernel.org>
+        Tue, 10 Jun 2025 04:08:59 -0700 (PDT)
+Date: Tue, 10 Jun 2025 14:08:56 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: sm8450-qrd: Flatten usb
+ controller node
+Message-ID: <20250610110856.g5lv3p6engqwc6jk@umbar.lan>
+References: <20250610091805.2997546-1-krishna.kurapati@oss.qualcomm.com>
+ <20250610091805.2997546-3-krishna.kurapati@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="mdr3yu4j4s5eicl5"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aef4574b-8167-4af3-a29c-8c962b396496@kernel.org>
+In-Reply-To: <20250610091805.2997546-3-krishna.kurapati@oss.qualcomm.com>
+X-Authority-Analysis: v=2.4 cv=JcO8rVKV c=1 sm=1 tr=0 ts=6848124d cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=07EEn82W8vC_Pu74Ip0A:9 a=CjuIK1q_8ugA:10
+ a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDA4NiBTYWx0ZWRfX4VENRyXXbOYi
+ vBSaNUrkDWTQkg6J7EsFevCFTmenyIUDGj62yyy50KVxTnif2GZnGlL6XIsBr7mRscy9pK4Exfj
+ VDuqneW8OrcaXuhDUt/c+NN38jG31YOWA7p3xrRqr3jYBAYeGNCwUYe4NAKx7kplZ1kl7It3K/c
+ az9gHKyeoIsv3+D0gLe2/NkZoVc5L2nolT8n9s+Cdu1yrmxUC1PoODOkO3QB2sVlztqkvRscNj8
+ BCqhgjgSDfTResxnJ0A9/B81+51riNqaZb7PfVKVU8NYjM6WB/yhgh22eTeZQXE1VSYc6fn7UHA
+ Y+wODa7Y0sXLLtJ4EYiXc5z6b2lfWd+rlJEF4QWH/9/DUALSQzXDkQXsJ4CEFikgbIsb4nLfmpT
+ hSqcMRgoqkOVWl+FtEHyf10BpPcHUPOUzrtPkLTElcbwl4dkNtaorhix0AKU489XkwLneSzj
+X-Proofpoint-GUID: JxdQt5esaUBoRRNWXD3RbeCbVvnFVuu5
+X-Proofpoint-ORIG-GUID: JxdQt5esaUBoRRNWXD3RbeCbVvnFVuu5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-10_04,2025-06-09_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=706 bulkscore=0 spamscore=0 impostorscore=0 phishscore=0
+ priorityscore=1501 mlxscore=0 adultscore=0 clxscore=1015 malwarescore=0
+ suspectscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506100086
 
+On Tue, Jun 10, 2025 at 02:48:05PM +0530, Krishna Kurapati wrote:
+> Flatten usb controller node and update to using latest bindings
+> and flattened driver approach.
+> 
+> Signed-off-by: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
+> ---
+>  arch/arm64/boot/dts/qcom/sm8450-qrd.dts | 60 +++++++++++++++++++++++--
+>  1 file changed, 57 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8450-qrd.dts b/arch/arm64/boot/dts/qcom/sm8450-qrd.dts
+> index 0580408485eb..bd6cb895b65b 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8450-qrd.dts
+> +++ b/arch/arm64/boot/dts/qcom/sm8450-qrd.dts
+> @@ -500,19 +500,73 @@ &ufs_mem_phy {
+>  	vdda-pll-supply = <&vreg_l6b_1p2>;
+>  };
+>  
+> +/delete-node/ &usb_1_dwc3;
+> +
+>  &usb_1 {
+> -	status = "okay";
+> -};
+> +	compatible = "qcom,sm8450-dwc3", "qcom,snps-dwc3";
+> +	reg = <0x0 0x0a600000 0x0 0x10000>;
 
---mdr3yu4j4s5eicl5
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v1 2/3] drivers: clk: tegra: add DFLL support for Tegra 4
-MIME-Version: 1.0
+All these properties should go to the sm8450.dtsi rather than rewriting
+them in the board file.
 
-On Fri, Mar 21, 2025 at 09:50:09PM +0100, Krzysztof Kozlowski wrote:
-> On 21/03/2025 10:55, Svyatoslav Ryhel wrote:
-> > Extend the Tegra124 driver to include DFLL configuration settings requi=
-red
-> > for Tegra114 compatibility.
-> >=20
-> > Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
->=20
-> <form letter>
-> Please use scripts/get_maintainers.pl to get a list of necessary people
-> and lists to CC (and consider --no-git-fallback argument, so you will
-> not CC people just because they made one commit years ago). It might
-> happen, that command when run on an older kernel, gives you outdated
-> entries. Therefore please be sure you base your patches on recent Linux
-> kernel.
->=20
-> Tools like b4 or scripts/get_maintainer.pl provide you proper list of
-> people, so fix your workflow. Tools might also fail if you work on some
-> ancient tree (don't, instead use mainline) or work on fork of kernel
-> (don't, instead use mainline). Just use b4 and everything should be
-> fine, although remember about `b4 prep --auto-to-cc` if you added new
-> patches to the patchset.
-> </form letter>
->=20
->=20
->=20
-> > +++ b/include/dt-bindings/reset/tegra114-car.h
->=20
-> Filename based on compatible.
->=20
-> > @@ -0,0 +1,13 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
-> > +/*
-> > + * This header provides Tegra114-specific constants for binding
-> > + * nvidia,tegra114-car.
-> > + */
-> > +
-> > +#ifndef _DT_BINDINGS_RESET_TEGRA114_CAR_H
-> > +#define _DT_BINDINGS_RESET_TEGRA114_CAR_H
-> > +
-> > +#define TEGRA114_RESET(x)		(5 * 32 + (x))
->=20
->=20
-> Does not look like a binding, but some sort of register. Binding IDs
-> start from 0 (or 1) and are incremented by 1.
+> +
+> +	/delete-property/ ranges;
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	interrupts-extended = <&intc GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>,
+> +			      <&intc GIC_SPI 130 IRQ_TYPE_LEVEL_HIGH>,
+> +			      <&intc GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
+> +			      <&pdc 14 IRQ_TYPE_LEVEL_HIGH>,
+> +			      <&pdc 15 IRQ_TYPE_EDGE_BOTH>,
+> +			      <&pdc 17 IRQ_TYPE_EDGE_BOTH>;
+> +	interrupt-names = "dwc_usb3",
+> +			  "pwr_event",
+> +			  "hs_phy_irq",
+> +			  "dp_hs_phy_irq",
+> +			  "dm_hs_phy_irq",
+> +			  "ss_phy_irq";
+> +
+> +	iommus = <&apps_smmu 0x0 0x0>;
+> +
+> +	maximum-speed = "super-speed-plus";
+> +
+> +	phys = <&usb_1_hsphy>, <&usb_1_qmpphy QMP_USB43DP_USB3_PHY>;
+> +	phy-names = "usb2-phy", "usb3-phy";
+> +
+> +	snps,dis_u2_susphy_quirk;
+> +	snps,dis_enblslpm_quirk;
+> +	snps,dis-u1-entry-quirk;
+> +	snps,dis-u2-entry-quirk;
+>  
+> -&usb_1_dwc3 {
+>  	dr_mode = "otg";
+>  	usb-role-switch;
+> +	wakeup-source;
+> +
+> +	status = "okay";
+> +
+> +	ports {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		port@0 {
+> +			reg = <0>;
+> +			usb_1_dwc3_hs: endpoint {
+> +			};
+> +		};
+> +
+> +		port@1 {
+> +			reg = <1>;
+> +			usb_1_dwc3_ss: endpoint {
+> +			};
+> +		};
+> +	};
+>  };
+>  
+>  &usb_1_dwc3_hs {
+>  	remote-endpoint = <&pmic_glink_hs_in>;
+>  };
+>  
+> +&usb_1_dwc3_ss {
+> +	remote-endpoint = <&usb_1_qmpphy_usb_ss_in>;
 
-I'll try and clear up some of the confusion around this. The way that
-resets are handled on these Tegra devices is that there is a set of
-peripheral clocks & resets which are paired up. This is because they
-are laid out in banks within the CAR (clock and reset) controller. In
-most cases we're referring to those resets, so you'll often see a clock
-ID used in conjection with the same reset ID for a given IP block.
+This is a part of the SoC routing, so it should go to sm8450.dtsi too.
 
-In addition to those peripheral resets, there are a number of extra
-resets that don't have a corresponding clock and which are exposed in
-registers outside of the peripheral banks, but still part of the CAR.
-To support those "special" registers, the TEGRA*_RESET() is used to
-denote resets outside of the regular peripheral resets. Essentially it
-defines the offset within the CAR at which special resets start. In the
-above case, Tegra114 has 5 banks with 32 peripheral resets each. The
-first special reset, TEGRA114_RESET(0), therefore gets ID 5 * 32 + 0.
+> +};
+> +
+>  &usb_1_hsphy {
+>  	status = "okay";
+>  
+> -- 
+> 2.34.1
+> 
 
-So to summarize: We cannot start enumerating these at 0 because that
-would fall into the range of peripheral reset IDs.
-
-Thierry
-
---mdr3yu4j4s5eicl5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmhIEfMACgkQ3SOs138+
-s6GhaRAAmd49Bi91xyPfMgzNKI861C3Y5GeN/U4iPxCnbuxP6d/aG+FGMZgfL6rt
-1oEh6iocRWI6eF3ydldX6NAQec3h8kbQUT2wxfybcfjpUVH4vwqfHnV4BcWdNmKO
-kDxZIxDWCzZxUAT9DsqKT0p4GKdWreJO5JEdsZBw/tc0szmMB2+5yQxA3eKgOLjG
-kvRAxBvt8dfb6Y+MiDFESKX3SwUVKzfSZYofLxZDo0HS74fJlNlP0MtTu47QN4H/
-C3HdExss0D9Z6T2FuFXeKXiTlDO2x4q6ZBuSyVsrYAlUGtWAoeQD5s59zL26Vfuu
-xQYo5a8iPSaE3LNyyiEavk5NPkaNo+2Y4f9JMls09n69uEeQIL6+bAGJ0fKKhZ/Z
-5DuTugrGpHFs6r8wKC4rGsKq40aprc7Q0eOZFL1bBQyh08yPsi72QgQM5edVYxcC
-xjsNPjAm3PhGsUE+5MMBMV8uArxQGrPJLghz9MzsVGimjePZg6KE35xNkOeYUhn9
-1UHksmOY0TYJEuxu3+o0IxuFwzHAqcO+v6B+gusqAxeHhPn5kaPSMK4wYeCwnhAk
-EOuvs1Wnqw3FPrSnahnuoodY8Muz7fSuXG9sGmxRJZtekSzRiZ4qvTBQZCgcUrUp
-WFNWYoNNf1N72sSPVZAfeOne9c+U37vTi83ieJGI6qQoXePP4Eg=
-=N9Uu
------END PGP SIGNATURE-----
-
---mdr3yu4j4s5eicl5--
+-- 
+With best wishes
+Dmitry
