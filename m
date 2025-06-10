@@ -1,176 +1,85 @@
-Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8931228F503;
-	Tue, 10 Jun 2025 12:29:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 524A51FAA;
+	Tue, 10 Jun 2025 12:31:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749558555; cv=none; b=Wi03Qaej8r7mQloqso7MmS7KxPssyQQab5+KURsuojdRgfeWkvnRn80+j6n000MzXQd62Edz1xaO520ezuysww+woZ7kDMYKuEBal4qPl23PYKI+2R9vC+4D/tnwtV4rSLS02gVsCEpEXrvT2SEUDKR5R6puL7aLy8giHrmboJM=
+	t=1749558684; cv=none; b=dAg6x+56+24p9IoRKItnzA8eL5pd9JUXpvF3FYRB1LNvat7NGirGJcIIR0GhMkzO1Ev5D6WF4HeYyb4AyJwJj+3uPL37Knkslf1NT/m8QJPsEeElqesUKb+varGwBnCacVr0lViLNVril7bZk0TzHHjGFzkQ4b0p5wQhO7VlWWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749558555; c=relaxed/simple;
-	bh=s/Mms/MwIMqVWLnjCgYLsX7RxmSQ4yf/IkuaD8FSw5s=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=pNoCA09l++Rp8Dxj8mHYiKOh8ISrJpjpGSngS8be2pHJRKD0vnCtQYr4WCRRIdUzzESSexUUrTBS+F+eAfVniyNctYXxaHVE5D23V2QaielfTB9if+5NLRg/k5OgZW5qdkPOfZCLBFI1mQ1RgWmKDeNaB1jOeicrRVxgV9+lUZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=SQHIPIgZ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=HzuuaZn9; arc=none smtp.client-ip=202.12.124.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1749558684; c=relaxed/simple;
+	bh=8BwZyUXjZ+u8UfJhyh4/cxvJDU9B3jL/iOjUeYpFVbI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jw0BvUXP+lCLlnEPpelT0b7ittK5H1pvtsdyZXhD4TprMwB8YtJWLhWAvSjDBl/wlLnFtBA8iPFy+RHNgfBACdq6qYUy8mQeqiEEvrJpnHcijOe7Tqnp0KgopU4Y30iHej3wNCFwoE1pL/AMAq0wXi+1shs+OVGywLcMzNkOzQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=szOg94Fk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="SQHIPIgZ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HzuuaZn9"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 3F4692540105;
-	Tue, 10 Jun 2025 08:29:11 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-12.internal (MEProxy); Tue, 10 Jun 2025 08:29:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1749558551;
-	 x=1749644951; bh=b0KTzhdLUwJk/RA13SFXN+xVrwh40xkCwJtg+vK9uD0=; b=
-	SQHIPIgZzfBrshp4cxz+AB5A778efV2gH0zQ2/lJ9RPmwKPasv3t/YtcYc8G+Mqh
-	ULw6AXTRxXrLL0R0eT0Y+PO3OX+Bu5msiAmyLY640iaXQW7gNqKjk9MdT26pkah6
-	8FaPOwmoiUHB84BqvGAFPX8ZdGT8jXh7dLA6Nzr5gVLHb1d/tmPwk1V4rSodEJoC
-	VBccAx1AYw6h8/p/LdL8DKVjjC3IhZuQlRFEohbwbk5rzhedtoXmzhZ3ViokvutE
-	HMryuSGG1x6x+Fpg9cC8aFIWTyGUHg1Ve2J3lkY32/ietD12FxfriHNRMuwSC1z9
-	E+/5IziFbmxUQR7JgHmqHQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749558551; x=
-	1749644951; bh=b0KTzhdLUwJk/RA13SFXN+xVrwh40xkCwJtg+vK9uD0=; b=H
-	zuuaZn9g6Q7jc7zlV7wtU/xVlh4ExQcCROsAxd5szo+vDar+59MY5uBIkm3lE8aD
-	vgYnDVKN0KDlmnbIXVVmsbuRFlbxjbTxDqsqhDaXuVQnn/v58GMKDzO7Hb4RMHs8
-	PWxOLz3T46MhzHyYBW94mlF88OtaH9GU9P39GRMyZ/3jphG5mhubjngFwcwB+Pzg
-	A0zAzfh1fFx+TjhF6FJgoBzUWbncJZ9EbaUtgxj6DnKR2R7u3Md0qafqqA7eUMo6
-	DeVmxIVoJebyMYzMv8cS0a0GMKqt7is3ZSHJ64RMq7uMHgs8A41Ljk8CG/wkrpwG
-	MDDV4TsVT8K+zImFI+Hyw==
-X-ME-Sender: <xms:FiVIaD1p4SHd_Ol7AIJrdF3aCDwxTwnOzEIeR-C0lCPLLQX5qUOEqQ>
-    <xme:FiVIaCG5uCPvHYYfdSIAp5AbFmhEI9uqQqxboi9Jrak6CVy9CNNpA35eHyERPTxFK
-    ZyEv6jdOOIwx1K4ECY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddutdejgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
-    jeenucfhrhhomhepfdforghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvg
-    hnohhvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthhtvghrnhepgedvgeeufffhtdel
-    iefgjefhgffgiedvjeegleeujeeutdduteehjeduhedtiedtnecuffhomhgrihhnpehkvg
-    hrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhnsggprh
-    gtphhtthhopeduvddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepihhkvghprghn
-    hhgtsehgmhgrihhlrdgtohhmpdhrtghpthhtohepfigprghrmhhinhesghhmgidruggvpd
-    hrtghpthhtohephhhmhheshhhmhhdrvghnghdrsghrpdhrtghpthhtoheplhhkphesihhn
-    thgvlhdrtghomhdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlih
-    hnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepihhlphhordhjrghrvhhinhgvnhes
-    lhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehisghmqdgrtghpihdquggvvh
-    gvlheslhhishhtshdrshhouhhrtggvfhhorhhgvgdrnhgvthdprhgtphhtthhopegtohhr
-    sggvtheslhifnhdrnhgvthdprhgtphhtthhopehhuggvghhovgguvgesrhgvughhrghtrd
-    gtohhm
-X-ME-Proxy: <xmx:FiVIaD7RxmtHxMynnUN8zHb7dflxNnYKtL1YzN2d5z3nArN4N6r5RQ>
-    <xmx:FiVIaI03sHHcoqn41xDZOXyD7KpDhGFmAPuFdUMlbPACTMpmGt_XIQ>
-    <xmx:FiVIaGEZMHKlc1Ma8crv7vr0ybroCqlOU4sVUmImkV0R3xkL9huROg>
-    <xmx:FiVIaJ-QmtmUwgm5Iosg0B3oz9qxAvmOe9bd0YyudIq4vywN8Nwr0w>
-    <xmx:FyVIaNUPQ_RaKZ61HuNj6fZFZuijvSnE6BDgT_fH-FZ0-iXL4YYD63WG>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 09BB62CE0063; Tue, 10 Jun 2025 08:29:10 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="szOg94Fk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25B56C4CEEF;
+	Tue, 10 Jun 2025 12:31:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749558684;
+	bh=8BwZyUXjZ+u8UfJhyh4/cxvJDU9B3jL/iOjUeYpFVbI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=szOg94FknpQD/p437CpZhtmGfuGU9iBCvIyiGyvAGjES/B5Bv1EtVk/cQKLiYpaqx
+	 HC8Ctv6FmFjROi/be3vYb43tRZcU65C2M0M3DFHgbRdshmH+W/rmYI6En2YcuYE33z
+	 PJpwvCHi3TYhSxxhhLv5n0z6dpubLjy5d5M+dgmNvvDliUOyCupqRZ3tBaZEtXfl33
+	 lrJf83u9W5s8B36/Da4m4KwjIFjl7ZjxGA1DcuTKkKT9mwkiB9HI02fdR2Xjqh0O+e
+	 hbaGF7JHK1tSf2UuMAIW2WvCL+Ng+dfqD7tLLh8Aoj+uwA0d4Jsf4GCx9YEH7aseij
+	 3jKXCV3bRq55w==
+Date: Tue, 10 Jun 2025 14:31:20 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Philipp Stanner <phasta@kernel.org>
+Cc: Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ata: macio: Use non-hybrid PCI devres API
+Message-ID: <aEglmHpvqZhbG_AX@ryzen>
+References: <20250604113423.138595-2-phasta@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T95b0e86a2866f664
-Date: Tue, 10 Jun 2025 08:28:49 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Hans de Goede" <hdegoede@redhat.com>, "Jonathan Corbet" <corbet@lwn.net>,
- ikepanhc@gmail.com, "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
- "Armin Wolf" <W_Armin@gmx.de>,
- "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
- linux-doc@vger.kernel.org,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- ibm-acpi-devel@lists.sourceforge.net, LKML <linux-kernel@vger.kernel.org>,
- "kernel test robot" <lkp@intel.com>
-Message-Id: <f3b5c138-5576-4c01-b177-7450f1e91d24@app.fastmail.com>
-In-Reply-To: <b792059e-44d2-82c0-574c-76c3f6a3129d@linux.intel.com>
-References: <mpearson-lenovo@squebb.ca>
- <20250609122736.3373471-1-mpearson-lenovo@squebb.ca>
- <20250609122736.3373471-2-mpearson-lenovo@squebb.ca>
- <b792059e-44d2-82c0-574c-76c3f6a3129d@linux.intel.com>
-Subject: Re: [PATCH v3 2/2] platform/x86: thinklmi: improved DMI handling
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250604113423.138595-2-phasta@kernel.org>
 
-Hi Ilpo,
+Hello Philipp,
 
-On Tue, Jun 10, 2025, at 3:35 AM, Ilpo J=C3=A4rvinen wrote:
-> On Mon, 9 Jun 2025, Mark Pearson wrote:
->
->> Fix issues reported by kernel test robot.
->>  - Require DMI for think-lmi.
->>  - Check return from getting serial string
->>=20
->> Reported-by: kernel test robot <lkp@intel.com>
->> Closes: https://lore.kernel.org/oe-kbuild-all/202506062319.F0IpDxF6-l=
-kp@intel.com/
->>=20
->> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
->> ---
->>  - New patch added to series.
->>=20
->>  drivers/platform/x86/lenovo/Kconfig     | 1 +
->>  drivers/platform/x86/lenovo/think-lmi.c | 8 +++++---
->>  2 files changed, 6 insertions(+), 3 deletions(-)
->>=20
->> diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x=
-86/lenovo/Kconfig
->> index a4b565283768..207dd7f88ed0 100644
->> --- a/drivers/platform/x86/lenovo/Kconfig
->> +++ b/drivers/platform/x86/lenovo/Kconfig
->> @@ -197,6 +197,7 @@ config THINKPAD_ACPI_HOTKEY_POLL
->>  config THINKPAD_LMI
->>  	tristate "Lenovo WMI-based systems management driver"
->>  	depends on ACPI_WMI
->> +	depends on DMI
->>  	select FW_ATTR_CLASS
->>  	help
->>  	  This driver allows changing BIOS settings on Lenovo machines whose
->> diff --git a/drivers/platform/x86/lenovo/think-lmi.c b/drivers/platfo=
-rm/x86/lenovo/think-lmi.c
->> index 143d9fdedb65..8f70c60f791f 100644
->> --- a/drivers/platform/x86/lenovo/think-lmi.c
->> +++ b/drivers/platform/x86/lenovo/think-lmi.c
->> @@ -772,6 +772,7 @@ static ssize_t certificate_store(struct kobject *=
-kobj,
->>  	struct tlmi_pwd_setting *setting =3D to_tlmi_pwd_setting(kobj);
->>  	enum cert_install_mode install_mode =3D TLMI_CERT_INSTALL;
->>  	char *auth_str, *new_cert;
->> +	const char *serial;
->>  	char *signature;
->>  	char *guid;
->>  	int ret;
->> @@ -789,9 +790,10 @@ static ssize_t certificate_store(struct kobject =
-*kobj,
->>  			return -EACCES;
->> =20
->>  		/* Format: 'serial#, signature' */
->> -		auth_str =3D cert_command(setting,
->> -					dmi_get_system_info(DMI_PRODUCT_SERIAL),
->> -					setting->signature);
->> +		serial =3D dmi_get_system_info(DMI_PRODUCT_SERIAL);
->> +		if (!serial)
->> +			return -EINVAL;
->
-> This should not return -EINVAL as it is not a problem with the input=20
-> parameters. Perhaps -ENODEV would make sense instead?
->
+On Wed, Jun 04, 2025 at 01:34:24PM +0200, Philipp Stanner wrote:
+> macio enables its PCI device with pcim_enable_device(). This,
+> implicitly, switches the function pci_request_regions() into managed
+> mode, where it becomes a devres function.
+> 
+> The PCI subsystem wants to remove this hybrid nature from its
+> interfaces. To do so, users of the aforementioned combination of
+> functions must be ported to non-hybrid functions.
+> 
+> Replace the call to sometimes-managed pci_request_regions() with one to
+> the always-managed pcim_request_all_regions().
+> 
+> Signed-off-by: Philipp Stanner <phasta@kernel.org>
+> ---
+> Hi,
+> seems I forgot sending this patch out a while ago. Mea culpa.
+> 
+> PCI has currently chained the changes mentioned above queued up for
 
-Good point.
-Unless Andy strongly thinks I should drop this bit, I'll fix in the next=
- version
+chained?
 
-Thanks
-Mark
+
+> Linus, so it's probably a good idea to get this into macio relatively
+> soonish. Otherwise the driver would likely fail to reload in v6.16,
+> because the device's PCI regions remain blocked.
+
+I can queue this up for 6.16, but then I think you need to rewrite the
+commit message to motivate why it is a fix (i.e. why it deserves to go
+in to 6.16-rc2).
+
+Or, I can just queue it up for 6.17.
+
+What do you prefer?
+
+
+Kind regards,
+Niklas
