@@ -1,151 +1,150 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD842951AB
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:33:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FB27294A0C;
+	Tue, 10 Jun 2025 12:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749558806; cv=none; b=LuF7/7ak30+p7Kt7+xpN584RkrRx+/NIjORRNhGKI3RmeM7IzwfhQJ6HEKWCA7viMmXJnjZou87AGUlavNGO35AxRoXI/hrclJCcYWdiySF5G2XZn6tqxsbJslbsJXBzOOw9jc5kktLuzlgPb+L/rMUQVOlWeyNOC6xMdAf0Ocs=
+	t=1749558807; cv=none; b=GT3nf9UMsh3Oe6zcLGucxVSYMRrJSM/GDR2LG/SBzUVkKZjS216zxXLRWD/ccfHkms7fruDOb+smAiB+bZRHo9Y3jBij5JX7TQ0JVMq8jSxAMXsWD0VFsHdxmFUg3E1im09yokW5wjn8zgikOkdaSDB0bAkS77QfyKfG1bV/MhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749558806; c=relaxed/simple;
-	bh=fWmHYF76bW96bFem7JRqwAgfxRBoy5ySHaPTeItooXg=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=o6bsLYQ/5LzvmHYlILVpiguhtVoiKJI20lRWijPGx4U0yTFy1x/JZsWuD84YYzSD/N692uz7F/yLrTz/VVH/7CW9yFkn7bRAm156yAMQae0v1qhchiOfUtOY3P1YetK877UkAB0cIi9MG9RrIF35j9nxPRmSlgDQNPjljyMMXnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=DdAuaY49; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1749558807; c=relaxed/simple;
+	bh=VBXxwUdvWl4c3ybjB11bxg1BGuuJf/PJMr+ZuovfPkU=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hkzjvHciAC4nkd5u9pMHi9uumZRhdjByJnCuRck0RcQerg3SEfJwO/NqiWNOhbFrJzkjTmkLrgM4WXHEEVhU4voscZwSkS49MYoqiK2/oM6YQkvB1wpFuFyEujfNMrjmDw96WxqPXXK7aeygr95uyDjeOis9agUgozzoSHqOcN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HL8gV4qm; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="DdAuaY49"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-450dd065828so36630085e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 05:33:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HL8gV4qm"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-553241d30b3so4969996e87.3;
+        Tue, 10 Jun 2025 05:33:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749558802; x=1750163602; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZhzmZkaOysW/GCSYD6XdHL+fOaPlZnqEL0PQsaxb3p8=;
-        b=DdAuaY49PgQ5JpsdlfU1TEzS8QOgwfoP4zczOlY3qFz/PMQhq2sTNxB5NzsSvJFzGj
-         M+juv/CxN/L0Ki5oyhfqu5ArL0uQ5/zP//XnT/Gqab239pGdyrZtucTQ4bYGkwhKWgZe
-         iE8suL1tyZIUReNQ20rlAM3oPdbv8rTY7LC0l3py/EB2OR8sVculv48RN6OJDYQxpJPJ
-         aqREJmcXzS44yOo6AASwVcugiERpnbeF8Z0tezSJtI8pccO2+am1qMJ+nLxL2IXTOF2p
-         qs2SKLER2LKCrSRya6BU9kEIgzOS8owVMojmd0FmO0zrTQZKyJ/PJ5d7sgJMbPcsxnNB
-         VcCg==
+        d=gmail.com; s=20230601; t=1749558803; x=1750163603; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JWtbQxxWt3t96n29V0cwm8P5yIMhIJ19w8iPYjVrbYI=;
+        b=HL8gV4qm/HaGihtMIofTCImDM7I0ns/asBe2DpK6S3yJlHsDmY5c5+XApPh7bkRgt2
+         J9BPQpAuIF39HwBmY+UrvpT+9M17OlvelUW7RvbKz/G2BQhsRDnhq+J6S1+qTe986zgx
+         sF0Kvt2SGV3KFcUvnJlQ4a681JpKyu1SrkEVuAsDjQ5icKlUYzqcMj3ISyr0uCFxN+yL
+         usCbWKSdDlq7+Lm62vh2cqpw0oiBnkKf9AViCYI6YqZhLOVJxY4Hs1A6hYECXPnHswtT
+         GbS2YXAQ3DEC87Qu9VJ1BAbOqY+580rAhNkKvmhePWhwykqgcjag4hnLMRA5zQGgWh1p
+         NGTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749558802; x=1750163602;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZhzmZkaOysW/GCSYD6XdHL+fOaPlZnqEL0PQsaxb3p8=;
-        b=BtG5fypQ68Bn6xJk3UinO/hL/ow+ZZacrusciwIsgiFcg2X4Anri2pkghb7ey6mKpC
-         V1V3T9HBrW27I5d1/Mj0y35Fy6dKtOHZV5spY3aB0JQndGoDDGW10iBsoXi1XccS5LR5
-         xDR7UaloGDAQJE6+QfuGDYYMuMb42yAQw58cLPR0x9vTUc+Nybb0/Mdl8xVnHT5iMAWJ
-         tuUliSNgG5FcSR8VPGGbmKxLETss7J6yuZghGOMKy5dsNJ6T8H1pxWfbeqRbNskn+Czm
-         2fmd/EEuGy6AI7SVjD90frn2gptyI5p58K8m8ntfFGEDY03NjEOXF+98IHeS669dgV+f
-         QjKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWhlc3Ece1gu1kZMrSD1yS1wHaW07qyP0mP/cGaTAAagJX6kZk2ekVOlUyyqAAMixVAadlsedCF+/D1rL4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4sRYrJbIBqHpnS20evEAAGltgqQP6KMsJN4FbLjZMUzU+nFdP
-	viMenuj0th58z3rUJrKuujbtuAM96rWRSzqt8aw3hcIZcs0Cd7KD/+3fO45oF0Hr8l4=
-X-Gm-Gg: ASbGncvrINRp4GDHFSTHcvKWWWlmmefwh+waxi/c441Z8a/IvFImxXLdwNj2Ez3YZNq
-	TmtIH4G7w8khM+2ziXeHbPHNSqS5AY2hNoBvsk/MFpl1ji2uvCm5LF4ZCvdjNaRPqAltIju01EL
-	u54tDervqhtO1X8p4591Fb28AGLHG7k12km/uF42HYnj5muh/GLSIS30zXlSUwMYWG6xPVU3/8t
-	ByGsl7cAKPXNjZVFr5+9CsfSkNuF3FjC7A0RmmVZoWSPzwdneb8zvd465VHdxrosoNgvIl2iJzl
-	WymPdqdshvgVfPytca1MwFjTkvgmnG9kfSYuNBYKM91Nh8D4o5t85w==
-X-Google-Smtp-Source: AGHT+IFlnKIx2sPK6MrXH51mtosjIEJBmZxPRvw+nyl9XpBpBAq4wOuT9n5DEtW3OFTtEqksbAo5Kw==
-X-Received: by 2002:a05:600c:1909:b0:450:d019:263 with SMTP id 5b1f17b1804b1-45201437502mr155154265e9.18.1749558802123;
+        d=1e100.net; s=20230601; t=1749558803; x=1750163603;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JWtbQxxWt3t96n29V0cwm8P5yIMhIJ19w8iPYjVrbYI=;
+        b=WzEUJOb0eTmU3oXpBDCnXIBzDOuTSKYqChdsPL1M1OXpIHkPggJgQ252j+YxaqmW9i
+         dygtdjY+Tndnvhh9IkgBEF+Vz85ZFiu2qtDRKActvqe7JdbGZg5aKP1jKdeH2LQLmexx
+         Ac/t+2hrA9pf6lDXwfhFQ/Ee/TSxXI0KEUVnypP5gbyqRRo6AQQJI4lI0TNzPOOFOzgv
+         6gSX5R0jqQwDN1rhhW1I1m4d/kqzcGGqiRcMjNEZ4y9Gm9w/h+FoT5ZHDTGOKMRIqwaV
+         OufsdnD8eXQT3b9+rrNKkbX8PLgzMoTNMMuPjX8kBw1zNy+Oo1ESu1rVmtFmLOo5cMkZ
+         4Fpg==
+X-Forwarded-Encrypted: i=1; AJvYcCUDIdykdY2ENi+MCRYxwB3G+NgrnXPN7X3hRq+KJJJo2mXeJ4ArYdl9x5q685fanWN0VKCe@vger.kernel.org, AJvYcCVN7XATyCFKBV+FHU96pLUGk99qpKuj7ys6BO/0iP8pkWXJrgCQ/uIz3YzNbmsgE7KDNzI7rvECPxmo+l2O@vger.kernel.org, AJvYcCX79WaXwTcQ7LdY25EaPoQfi26UT36BmJ/xlHri+WuOLGA5rR2gURnM+SPqs/VdcQ4IQCJadO6fsLalzBCspQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsXf6+FEwWHZOtoL4/HwTwylKYHUUciu8xXPsEd0vei+VMOQOI
+	8Jy9aeNxZ//SvyxmBMgTQ97PaTn5ALKPJ2Pyrp0Y0uAJAS8CpFPODCHt
+X-Gm-Gg: ASbGncuUnXUNL3z1+HQqW79S/L+Jqhx+hKaOuwzkecTnbnFN0lDmxtfjHNxkM7gNWIi
+	ajtKIK00dI/JuoKOUCB2D4NS5pgdKxA1vuJnIsxCHBiHmhxaXLzPIJaXoMAFKIg5plw9EF6aO+m
+	UKYwORQmbpWDrYRoUOZlXsetrT9E1qUV4Ky+JcT5TkDr8PXQ2IotCTvSNe3k5Jmry3KIs26p5VJ
+	wnOvI5ozV2+JvmQXhVJe4qsh7GbKvZB4VlOdXISu5rboaZz4LWujN6dTw531Gs096mDEu1v2Gff
+	sVNAp0azmZNO26YauvNdtrqKhgvAoFGA+9RzyqLwFw/5WdhUxoNd1YR+N+aVASnmYkuFEmicYrZ
+	snrM7se3IkR0=
+X-Google-Smtp-Source: AGHT+IGYxkHiIYIMoG1nj2TlsPmj/lNMnhDMR0HjbK7qS54Nga9uPN1rp4w8RNZdGM/yYk6KU7FAwA==
+X-Received: by 2002:a05:6512:3d86:b0:553:2fb1:cfe5 with SMTP id 2adb3069b0e04-55366bd40fdmr4720338e87.12.1749558802750;
         Tue, 10 Jun 2025 05:33:22 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:4d:e52b:812d:eb7c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53243661csm12290668f8f.53.2025.06.10.05.33.21
+Received: from pc636 (host-95-203-1-180.mobileonline.telia.com. [95.203.1.180])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32ae1b0cd98sm15742681fa.8.2025.06.10.05.33.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 05:33:21 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH 00/12] gpio: convert another round of GPIO drivers to using
- new line value setters
-Date: Tue, 10 Jun 2025 14:33:10 +0200
-Message-Id: <20250610-gpiochip-set-rv-gpio-v1-0-3a9a3c1472ff@linaro.org>
+        Tue, 10 Jun 2025 05:33:22 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Tue, 10 Jun 2025 14:33:19 +0200
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Uladzislau Rezki <urezki@gmail.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	syzbot <syzbot+80e5d6f453f14a53383a@syzkaller.appspotmail.com>,
+	akpm@linux-foundation.org, josh@joshtriplett.org,
+	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, rcu@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [rcu?] [bcachefs?] BUG: unable to handle kernel NULL
+ pointer dereference in rcu_core (3)
+Message-ID: <aEgmD6POgqn-jUH1@pc636>
+References: <67a2b20a.050a0220.50516.0003.GAE@google.com>
+ <9694d40a-072e-47c2-a950-3b258bbe04f5@paulmck-laptop>
+ <jzknqese5idob37wxgclq7ptxnsd66qbqkxtjpjormymsrwv2j@xjum5exljlh6>
+ <aEXVKNVLI3VQInSc@pc636>
+ <13d5ecd9-3e9f-4593-b300-9141941a29cb@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAYmSGgC/x3MQQqAIBBA0avErBvQAYm6SrSQnHQ2KhoShHdPW
- r7F/y9ULsIVtumFwk2qpDig5wnOYKNnFDcMpMgoQwv6LOkMkrHyjaX9RqMWbclZp2mFkebClzz
- /dj96/wDxMn9UZgAAAA==
-X-Change-ID: 20250527-gpiochip-set-rv-gpio-5071a2dad129
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- =?utf-8?q?Marek_Beh=C3=BAn?= <kabel@kernel.org>, 
- Conor Dooley <conor.dooley@microchip.com>, 
- Daire McNamara <daire.mcnamara@microchip.com>, 
- Daniel Palmer <daniel@thingy.jp>, Romain Perier <romain.perier@gmail.com>, 
- Avi Fishman <avifishman70@gmail.com>, Tomer Maimon <tmaimon77@gmail.com>, 
- Tali Perry <tali.perry1@gmail.com>, Patrick Venture <venture@google.com>, 
- Nancy Yuen <yuenn@google.com>, Benjamin Fair <benjaminfair@google.com>, 
- Grygorii Strashko <grygorii.strashko@ti.com>, 
- Santosh Shilimkar <ssantosh@kernel.org>, Kevin Hilman <khilman@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
- openbmc@lists.ozlabs.org, linux-omap@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2048;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=fWmHYF76bW96bFem7JRqwAgfxRBoy5ySHaPTeItooXg=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoSCYLDKKT/3+Muqt6vpoLhH2yAyeaiX8AvzjKc
- lz6bLAcJ8CJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaEgmCwAKCRARpy6gFHHX
- clG5EADX3eLse0M6879cp/rXFPzvNb0m0LUCg25b/7UyMAlntaEe6vfqpVdDnOymoShonFCkXzv
- UAW5igUaY4Qv+2V2lp3v0/nKaaYeJrOCDfUqrVQOxgrjQbfGFE5/gVuucblr0r0CSv06TL7XYn3
- 95jvOjxXJS1R46cvDsFOvc8iY/Ysk5EE2kaHqYX1Zez3Fxe0j+P+AhjsjUgxExgTaYkgj9X9zLp
- Iu+nAJxFgnOojFHrmzm9mK4lntAhEgFQO/F1JWyaM3iBwo9mt6sM1y9VSJTI7BPRFEKas0gge/c
- +WO+kKXAYEQ6wmlUILezREVVJGDIx+bRxn5AIWBFuOd/Z3PfayT5w1/Y9xACMAhzLxl9yx5XesP
- nrKUhNloMEin8f0em+DkP0y8cvuSlidQRetWsqPNH0toyKsndjNNLfj2la3e3jr7a+jT80cJPNI
- 1Avz+GrNf2pfgD4bWKTCV/os10gXRX886aWYB597vDmJtcg02a1ir2uHO7jVDLBeCnTA70tWjZI
- N5X9rUNrlBfLU0A2y3Fuu4E2H5BoAFR97vPSCLg63FIrfsm7vPc6BLdNICULsKJ1K+aw/vp9fWi
- KLUZjmJAwGPKjiCr8Wsw4Awh8QL0olPep0PXVM0IxA58xDrvoZkvlp/2/NT0SUetVd8mNoJ6G8j
- rmFYfB/NS4+mWZg==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <13d5ecd9-3e9f-4593-b300-9141941a29cb@suse.cz>
 
-Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
-values") added new line setter callbacks to struct gpio_chip. They allow
-to indicate failures to callers. We're in the process of converting all
-GPIO controllers to using them before removing the old ones. This series
-converts another round of GPIO drivers.
+On Mon, Jun 09, 2025 at 08:28:56PM +0200, Vlastimil Babka wrote:
+> On 6/8/25 20:23, Uladzislau Rezki wrote:
+> > On Sun, Jun 08, 2025 at 11:26:28AM -0400, Kent Overstreet wrote:
+> >> 
+> >> I don't think it's that - syzbot's .config already has that enabled.
+> >> KASAN, too.
+> >> 
+> >> And the only place we do call_rcu() is from rcu_pending.c, where we've
+> >> got a rearming rcu callback - but we track whether it's outstanding, and
+> >> we do all relevant operations with a lock held.
+> >> 
+> >> And we only use rcu_pending.c with SRCU, not regular RCU.
+> >> 
+> >> We do use kfree_rcu() in a few places (all boring, I expect), but that
+> >> doesn't (generally?) use the rcu callback list.
+> >>
+> > Right, kvfree_rcu() does not intersect with regular callbacks, it has
+> > its own path. 
+> 
+> You mean do to the batching? Maybe the batching should be disabled with
+> CONFIG_DEBUG_OBJECTS_RCU_HEAD=y if it prevents it from detecting issues?
+> Otherwise we now have kvfree_rcu_cb() so the special handling of
+> kvfree_rcu() is gone in in the non-batching case.
+> 
+Not really. I meant that in a call_rcu() API there is no any check if
+a passed callback which is executed after GP is NULL. If so, we get the
+bug about about dereferencing of NULL pointer.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
-Bartosz Golaszewski (12):
-      gpio: mmio: use new GPIO line value setter callbacks
-      gpio: mm-lantiq: use new GPIO line value setter callbacks
-      gpio: moxtet: use new GPIO line value setter callbacks
-      gpio: mpc5200: use new GPIO line value setter callbacks
-      gpio: mpfs: use new GPIO line value setter callbacks
-      gpio: mpsse: use new GPIO line value setter callbacks
-      gpio: msc313: use new GPIO line value setter callbacks
-      gpio: nomadik: use new GPIO line value setter callbacks
-      gpio: npcm-sgpio: use new GPIO line value setter callbacks
-      gpio: octeon: use new GPIO line value setter callbacks
-      gpio: omap: use new GPIO line value setter callbacks
-      gpio: palmas: use new GPIO line value setter callbacks
+Since it is invoked by the rcu_core() context, we can not identify the
+caller in order to blame someone :)
 
- drivers/gpio/gpio-mm-lantiq.c  | 12 +++++-----
- drivers/gpio/gpio-mmio.c       | 53 ++++++++++++++++++++++++++----------------
- drivers/gpio/gpio-moxtet.c     | 16 ++++++-------
- drivers/gpio/gpio-mpc5200.c    | 12 ++++++----
- drivers/gpio/gpio-mpfs.c       | 11 +++++----
- drivers/gpio/gpio-mpsse.c      | 22 ++++++++----------
- drivers/gpio/gpio-msc313.c     |  6 +++--
- drivers/gpio/gpio-nomadik.c    |  8 ++++---
- drivers/gpio/gpio-npcm-sgpio.c |  6 +++--
- drivers/gpio/gpio-octeon.c     |  7 ++++--
- drivers/gpio/gpio-omap.c       | 14 +++++++----
- drivers/gpio/gpio-palmas.c     | 15 ++++++------
- 12 files changed, 105 insertions(+), 77 deletions(-)
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250527-gpiochip-set-rv-gpio-5071a2dad129
+As for batching, we have a support of CONFIG_DEBUG_OBJECTS_RCU_HEAD. It
+helps to identify double-freeing and probably leaking.
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
+> > It looks like the problem is here:
+> > 
+> > <snip>
+> >   f = rhp->func;
+> >   debug_rcu_head_callback(rhp);
+> >   WRITE_ONCE(rhp->func, (rcu_callback_t)0L);
+> >   f(rhp);
+> > <snip>
+> > 
+> > we do not check if callback, "f", is a NULL. If it is, the kernel bug
+> > is triggered right away. For example:
+> > 
+> > call_rcu(&rh, NULL);
+> > 
+> > @Paul, do you think it makes sense to narrow callers which apparently
+> > pass NULL as a callback? To me it seems the case of this bug. But we
+> > do not know the source.
+> > 
+> > It would give at least a stack-trace of caller which passes a NULL.
+> 
+> Right, AFAIU this kind of check is now possible, previously NULL was being
+> interpreted as a valid __is_kvfree_rcu_offset() (i.e. rcu_head at offset 0).
+> 
+> > --
+> > Uladzislau Rezki
+> > 
+> 
