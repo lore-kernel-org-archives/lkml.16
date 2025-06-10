@@ -1,115 +1,78 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sendmail.purelymail.com (sendmail.purelymail.com [34.202.193.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1642D2FE4
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:58:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777A62D5432
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:59:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=34.202.193.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749596317; cv=none; b=hwCPO9sgRje3EsOKYPNzmP7fc2xPySd8SYivorZ4wMMKmZ+9efvIY0+fEKBTL2Qv9BbjWGadId0yrqPK4PQKnIfloOSBTzGqgyYlwTefuicoulVkoYftfD5ItuvFhQRquSXbPlZfzzXHzzECDBDYIK6prVmJvl1JWa7fW54S6nQ=
+	t=1749596351; cv=none; b=qaLChp43xLtnkvhdcvOKfeUR16BPhJLbpLT1o6AIXbbeOJbdNdx/xmOoy31WmmhC6FZHyflbnAr92Rq8H+Puh6M+WqqDmDXhGbCrDnRUpMuF/NzSuFpV2LaxdmOXI0YDSPHs+kNX0pZ9xrtn92EVgyBSqn8eDee1LVoZo/CVQ20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749596317; c=relaxed/simple;
-	bh=DWYkexeKvSu7I+q/pf14+u2gmgqyLF3ul0cydoTKzVc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Nct2hw4twGYQKTFtWwVR3Qd8tsktZ+tM0u6ameekMlWjiI9QYIkCATSyjb/nQ/q9hp76WMFJxLYPxeewBDrPmrzXnacZEGfa1sFqr6ZltBEdMUHzyzuS4zHyI7xTRW3pDFKZfHFDwtcVuPpBiA5GJYWZUhAbeac7u9zL70xXZyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gEjK2GZ7; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1749596351; c=relaxed/simple;
+	bh=f/VDHmbOT1oXljZqPn2oqb0nTFqkMhME3Nenhf3HdBA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ieE+OuWSoHbSDx2HWzhBwf6VB76waKMlM1upW4M5QjLioHKWLnJWY744ElKv6WbkLU9JTW5Q5aDMjpQyRevTgCa6im2zHZ1mleVy6rsMup/Aa1ijNlpSgXScAhlTriw0ZBam8JSbLIkcktcWJKn8lcCdHE1DzJrWbC6fQHoLvYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=elijahs.space; spf=pass smtp.mailfrom=elijahs.space; dkim=pass (2048-bit key) header.d=elijahs.space header.i=@elijahs.space header.b=m5YFtmCM; dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b=epuefpiu; arc=none smtp.client-ip=34.202.193.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=elijahs.space
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=elijahs.space
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gEjK2GZ7"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-235f77f86f6so40080285ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:58:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749596315; x=1750201115; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=3MRV7X/T/wn0+SAUz4kSzbvtBEQulMMmWQ/PWJl9FfE=;
-        b=gEjK2GZ7FBCVu4Z4r3wGgZgBvV67vph5bp9yZvmxwKIPHHr5fNKROr13ZOKsyL3XYO
-         OUiUHurP604rAfTmviJIvJGvfWZvzkUXugngaS3q1qKdZeKEPvx584pdqyZwy7FZyzeR
-         BhDZCH9eB6V0oll/lUL2fybq59IwHJkReMMldWVBK6F6hbZ4noFGIhRUw10bA5eAwddJ
-         8YXNuEGmCfG5jxiPxTPJbV5XydZ7J1hl3F2zjfEqkazSQ1TPHGJSbiH4RQRQGpi+RHip
-         gl6ylBQcrwdJsY+wXw4XMtdS1eSeA/dU6adwF1KppkHLovsqgIN24XSvtaBu/DCuXF87
-         3i3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749596315; x=1750201115;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3MRV7X/T/wn0+SAUz4kSzbvtBEQulMMmWQ/PWJl9FfE=;
-        b=TR5rgqXi70Q/o8NRbbJ9x+Vgdanc4Kh+oM2Yp3Z2EBOhJBqcIzvW0qDyNq70rsEhPC
-         OFKxhiTNwjOtK5nFgK9I+W5rtUT64eKTLWO6/pMBnOj+65hbCQY51uJlmAitk93kZrl7
-         jNli+GRK4Ui7k4TaSJPQoePBQGQO5+rPhHXB34IOaUX60PjdvqssWbqDfJ+Fz4BGleqt
-         yJB8ObekZmlfi/jnPBvGLfdMezTqWh1svl2Th67i70DpHsN0J6hMUi0ExncPwa0yxfPx
-         z8h2m3Er54a4WqeCJgXBUe5SiE9BLixiF5KyJVDiSTBDmQvEn+TiwpuhmXPgnf5kZkmS
-         rykg==
-X-Forwarded-Encrypted: i=1; AJvYcCX3TMvZEGc+s5iXuC5XUYcvKIFXakqnBf4meNjwz3Pmhn3h3JO4mnoK+y7gsZgWCfsWJ5mePkQPm+7WRpw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmPLr7EHKjCLQ/vBPM7oijNrz4QXPO9Qz6gBDgeDgA2g9UYtqB
-	WNQqryLuyBmLcQKXwI7DPeyn4dhvK4VVM2CxukBSK/6hNc/+fTHGmGqMyLALYfct2dM+O61oFE9
-	9bZArvw==
-X-Google-Smtp-Source: AGHT+IGiTLrz803hh++30xy8fSjN6gixKMJv7/AiyKAlh/XmQx+ffUbEPds8P01hoGQ+qsG4Qote79BJ1DE=
-X-Received: from pldg6.prod.google.com ([2002:a17:903:3a86:b0:235:6d5:688b])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ecc1:b0:234:ed31:fc98
- with SMTP id d9443c01a7336-23641b14d61mr11802615ad.37.1749596315046; Tue, 10
- Jun 2025 15:58:35 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Tue, 10 Jun 2025 15:57:37 -0700
-In-Reply-To: <20250610225737.156318-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=elijahs.space header.i=@elijahs.space header.b="m5YFtmCM";
+	dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b="epuefpiu"
+Authentication-Results: purelymail.com; auth=pass
+DKIM-Signature: a=rsa-sha256; b=m5YFtmCMo6bDCFO/4VZKWnNGL+7VnKs6+Bn0Bzi40VMndBTazErxROUeRcuYLosinpaJeRiWsjhwwVbZc2n6lEtoz43z/8jZCIzL/sefqcYDnczI/JVZSRHOhgQ62vC0bLMtqlgq6++HQROnPeZO1Hvq/9VbG4ZsGLFK/eCij47cOjQLYmMrGrEiJudNNreoLj2zO5MlOvZrwhqcMiz6FL83zsh+q7FT1mnf85G+lm/tL2nE5jw7qQoCeefI0RujYiZ6QwGeXXcz7eW54CbtY/SFCHIzcU2CeKnj52XuHdWv7M4uJ4Za3BOSYUskVZHj+cPaE3vhbkSD11DCdKOMSg==; s=purelymail2; d=elijahs.space; v=1; bh=f/VDHmbOT1oXljZqPn2oqb0nTFqkMhME3Nenhf3HdBA=; h=Received:From:To:Subject:Date;
+DKIM-Signature: a=rsa-sha256; b=epuefpiuIlOwbmcMSxEJaq5ynJ4zUSBPXM4jGOcfEzmtLxKDxyBcjwwYPP2mKCM6ga6XBILBReVWNFzMQp1dX+/cZVEvyC18hbBe4pIKSbsiNZYYX5Wxb1TOK7XMiwzwdfXrSCTvmZ/r2lLj6Wudnhvy1nLhsiqulmFlTPcxdVzHUgKli1RJeFTjEv05eCTaciJwlKlpxDw0+84+izwkhhs6vgN7yw1H0VUvTiJCUcBmSDylZsPql3c2F2kBLV2nVdfa+7i4dIdJGEQgWzD5i1oucTUKjmazrNw+MaTlfkZzG5v30xVBsJiKhSaBrycfoI440EwH3qHgadyEzk+T3w==; s=purelymail2; d=purelymail.com; v=1; bh=f/VDHmbOT1oXljZqPn2oqb0nTFqkMhME3Nenhf3HdBA=; h=Feedback-ID:Received:From:To:Subject:Date;
+Feedback-ID: 147366:4866:null:purelymail
+X-Pm-Original-To: linux-kernel@vger.kernel.org
+Received: by smtp.purelymail.com (Purelymail SMTP) with ESMTPSA id 235931968;
+          (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+          Tue, 10 Jun 2025 22:58:52 +0000 (UTC)
+From: Elijah Wright <git@elijahs.space>
+To: linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org
+Cc: Elijah Wright <git@elijahs.space>
+Subject: [PATCH] kernel: relay: use __GFP_ZERO in relay_alloc_buf
+Date: Tue, 10 Jun 2025 15:56:28 -0700
+Message-ID: <20250610225639.314970-3-git@elijahs.space>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250610225737.156318-1-seanjc@google.com>
-X-Mailer: git-send-email 2.50.0.rc0.642.g800a2b2222-goog
-Message-ID: <20250610225737.156318-33-seanjc@google.com>
-Subject: [PATCH v2 32/32] KVM: selftests: Verify KVM disable interception (for
- userspace) on filter change
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Chao Gao <chao.gao@intel.com>, Borislav Petkov <bp@alien8.de>, Xin Li <xin@zytor.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Francesco Lavra <francescolavra.fl@gmail.com>, 
-	Manali Shukla <Manali.Shukla@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-MIME-Autoconverted: from 8bit to quoted-printable by Purelymail
+Content-Type: text/plain; charset=UTF-8
 
-Re-read MSR_{FS,GS}_BASE after restoring the "allow everything" userspace
-MSR filter to verify that KVM stops forwarding exits to userspace.  This
-can also be used in conjunction with manual verification (e.g. printk) to
-ensure KVM is correctly updating the MSR bitmaps consumed by hardware.
+passing the __GFP_ZERO flag to alloc_page should result in less overhead th=
+an using memset()
 
-Tested-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Tested-by: Manali Shukla <Manali.Shukla@amd.com>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Elijah Wright <git@elijahs.space>
 ---
- tools/testing/selftests/kvm/x86/userspace_msr_exit_test.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ kernel/relay.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/x86/userspace_msr_exit_test.c b/tools/testing/selftests/kvm/x86/userspace_msr_exit_test.c
-index 32b2794b78fe..8463a9956410 100644
---- a/tools/testing/selftests/kvm/x86/userspace_msr_exit_test.c
-+++ b/tools/testing/selftests/kvm/x86/userspace_msr_exit_test.c
-@@ -343,6 +343,12 @@ static void guest_code_permission_bitmap(void)
- 	data = test_rdmsr(MSR_GS_BASE);
- 	GUEST_ASSERT(data == MSR_GS_BASE);
- 
-+	/* Access the MSRs again to ensure KVM has disabled interception.*/
-+	data = test_rdmsr(MSR_FS_BASE);
-+	GUEST_ASSERT(data != MSR_FS_BASE);
-+	data = test_rdmsr(MSR_GS_BASE);
-+	GUEST_ASSERT(data != MSR_GS_BASE);
-+
- 	GUEST_DONE();
- }
- 
-@@ -682,6 +688,8 @@ KVM_ONE_VCPU_TEST(user_msr, msr_permission_bitmap, guest_code_permission_bitmap)
- 		    "Expected ucall state to be UCALL_SYNC.");
- 	vm_ioctl(vm, KVM_X86_SET_MSR_FILTER, &filter_gs);
- 	run_guest_then_process_rdmsr(vcpu, MSR_GS_BASE);
-+
-+	vm_ioctl(vm, KVM_X86_SET_MSR_FILTER, &filter_allow);
- 	run_guest_then_process_ucall_done(vcpu);
- }
- 
--- 
-2.50.0.rc0.642.g800a2b2222-goog
+diff --git a/kernel/relay.c b/kernel/relay.c
+index c0c93a04d4ce..3ee5b038d0d9 100644
+--- a/kernel/relay.c
++++ b/kernel/relay.c
+@@ -118,7 +118,7 @@ static void *relay_alloc_buf(struct rchan_buf *buf, siz=
+e_t *size)
+ =09=09return NULL;
+=20
+ =09for (i =3D 0; i < n_pages; i++) {
+-=09=09buf->page_array[i] =3D alloc_page(GFP_KERNEL);
++=09=09buf->page_array[i] =3D alloc_page(GFP_KERNEL | __GFP_ZERO);
+ =09=09if (unlikely(!buf->page_array[i]))
+ =09=09=09goto depopulate;
+ =09=09set_page_private(buf->page_array[i], (unsigned long)buf);
+@@ -127,7 +127,6 @@ static void *relay_alloc_buf(struct rchan_buf *buf, siz=
+e_t *size)
+ =09if (!mem)
+ =09=09goto depopulate;
+=20
+-=09memset(mem, 0, *size);
+ =09buf->page_count =3D n_pages;
+ =09return mem;
+=20
+--=20
+2.43.0
 
