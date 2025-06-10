@@ -1,100 +1,153 @@
-Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E4E1EE7D5
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:39:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E96C238144;
+	Tue, 10 Jun 2025 15:39:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749569949; cv=none; b=DdeVS2XMaVBSO4pPX+yOjRnXYqx+FOcuR5YQRLT5RBiYfc/Qbj5BLWq/0rVBHXM+0U0GfF3Rvw6SrTDkraAlHULWfGxLdxy1z4oCeQcZo7QKmNGHHCGEekBMpZRm+q+U21sIqJzIu29LMQQG0wnGjQzSQWkQ9JWF9lbX9vkTJRQ=
+	t=1749569956; cv=none; b=rBpQ29L+a1FnF1+zVfMZcZbAwR/b4swkdKp990AWeEzzxFcr66ZnJ2dgJNSmackLdtYwjk3xiMDPPY5WxeRAxh+MgiseI7aQFl1MIwomUF660UWY/NNvSQI+EGuQh2kuujcuKr2EpkIgimgxmnILGvkbkLe3X+T28flErztUt/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749569949; c=relaxed/simple;
-	bh=X3FMNaH+gMkSWc6mxlddlgItT1JWMkGhMkmmBWRVpzU=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=c0J7A8Yd010H1ZOK8C+RmzUCK97bSNkoRP2y3qmP9R/8Sn1+ZZ89+UFUkKm2hASl2arcbPThOd/V8rBdwvuh+LvVe3ble4hGaPaUhcch3JffPnqqliL5e3WCP96PoLgr3mcI/KdYFcrFXs44KtGxO7DSr+jJAGnEdCR6vnGIIZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--tmichalec.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M1mk/JAp; arc=none smtp.client-ip=209.85.208.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--tmichalec.bounces.google.com
+	s=arc-20240116; t=1749569956; c=relaxed/simple;
+	bh=ww3O6SHOxH7oHNxUHv2f1aaqenG4GVcVNUqWSPotybU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BPNQrnBWa4C7AW0RH2yJ9mNJOlUGG6RBk/hElh8CVRBmfSSJdsLNnHsxRSWlQZnVv0zW2z3CvHN1QYhN+22fVorjRWggFsyhs6Iyegu1RLz8bHpC/KmYg2LdHtDFSU/VTpobXKbzU3p5SvxY0WizRJVTWbN+f6h2DTQmkVViXuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IWAFMyNI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M1mk/JAp"
-Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-60785397a37so3796578a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:39:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749569946; x=1750174746; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=K83VDCEaogYq8o+q4q2QDKkSbCK5mXjp54sio/cApS0=;
-        b=M1mk/JApK4uxLjy8/uhORGACo7+CSGZudCpJEXXO5jEx1xGzgjx0WyLkhGjvHUwNf4
-         /CFqJvqapImT7evGhX5J1rqq5C5bFYhZ43e+pHu/hgpIskFFjGQj8holVWy2fEp07f08
-         I2Cb9zqhL6tBmZAozoLX9/n1ZWkcTlJRcjg/IKkWWf797MW4R5+gnnroqhxqFjuoLcX1
-         yDJUL38ZhfLicQQtjPYC3s5I58akE02JuGcqP1lXFST+7tyvqIkMwWiMikKimUd5s3e+
-         O7rar/KBNytFTaXxwuHzxDvSbXY6zI+OlriDzz8nItpQ/6fpHf/+rmxAnFS3tpg032iz
-         Jm7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749569946; x=1750174746;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=K83VDCEaogYq8o+q4q2QDKkSbCK5mXjp54sio/cApS0=;
-        b=fKpuIi3rXyXmiLawoWQZJ7Hm2rWERVGlTCIwg6OUxM3xEWnFihiTUyLx3eIdD8rh+D
-         ub2MHa76IFn2yl/MXfRneJ6M29TwQzqOG60cbu1/tQHCEtaqGMiv1Um+U/Ls87+OsYfU
-         RpgesW93u2RDuecPLkMSgIzgsbcv7GJGIKy20vI97+RblJf0mnPzKXnI3ttlg/VyKwV2
-         YcWD2RLeFsfqcTnfLfRL86og7E6N3eFAi1NWgqM8keFQzRJAyr8PDO9PZ1fpO7OiwNkL
-         xgeNgawJa0eoqBC24xuyqVFpTOwbIDCu5fpJwvVUFyb+7GcpURMYx2Cn8J0Nf/uue2HD
-         yGQw==
-X-Forwarded-Encrypted: i=1; AJvYcCWDir/FaBA+tUYx2rOIG5PJmCqHT52mkslVVKQ9VxeN8ka1wz49xtl4MteyExeKzk3xhZL/ZA872p2Iues=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw55oXTh6XyWjNeFYC555PkUrraGoKKm8edLt/2NhnT9LVnzZs9
-	oAWlTz/dOixBQkyjnL5th8hnIO0EcvYQaamgYBtgK1shWhapDUo5PQN8H1pqp4n5bFSY4TybIYS
-	Xni3qHM0XRNypKjqFhw==
-X-Google-Smtp-Source: AGHT+IF0ZTAD1f0oKGQJq37uOuJo1nDnMzixE4HUDx2a7KPwnJbsLI8iBEKebG9jVNmmils6F028/Z0NOTH4V24=
-X-Received: from eddn5.prod.google.com ([2002:a05:6402:5145:b0:607:fd2c:1f11])
- (user=tmichalec job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6402:254b:b0:607:434d:bc2c with SMTP id 4fb4d7f45d1cf-6082dba7954mr2757439a12.23.1749569946760;
- Tue, 10 Jun 2025 08:39:06 -0700 (PDT)
-Date: Tue, 10 Jun 2025 17:37:47 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IWAFMyNI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D82E2C4CEED;
+	Tue, 10 Jun 2025 15:39:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749569955;
+	bh=ww3O6SHOxH7oHNxUHv2f1aaqenG4GVcVNUqWSPotybU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IWAFMyNIk4A7Gq2NdlJDX/5nkpbCSv8syLRECRyYlp/Vw0Y5zW/Cvh4csEk2E89nn
+	 Se79e1suxBFY72JrrRsS4F1RMBih0SDH6OJfhKGzsFEdGlUlyrbYqjmYzJ7VdIGxbs
+	 +oOYeRhbukDtijgmKUa6lfBOKPbhFq15QQ2ndhIW5SRTWnR0tz8LE1pb5N3hNi7P4M
+	 B8FUF+PlwVZxmXnjfNXTubaamh9wmh5TFyvdfXn+Io6ZdWGDSbbzmeVgjrFFe0Et4I
+	 a5N7NNLZXMdDVpKXm/eug0+De/CaZT5FR/xQhkndAdP+lEFjo45xSpFGhRBa3qN1+t
+	 UpUJLIVfkwrEw==
+Date: Tue, 10 Jun 2025 17:39:12 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Brian Masney <bmasney@redhat.com>
+Cc: Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
+	Thomas Gleixner <tglx@linutronix.de>, Michael Turquette <mturquette@baylibre.com>, 
+	Alberto Ruiz <aruiz@redhat.com>
+Subject: Re: [PATCH v2 05/10] clk: test: introduce test suite for sibling
+ rate changes on a divider
+Message-ID: <20250610-loose-quick-robin-e2ceae@houat>
+References: <20250528-clk-wip-v2-v2-0-0d2c2f220442@redhat.com>
+ <20250528-clk-wip-v2-v2-5-0d2c2f220442@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.50.0.rc0.604.gd4ff7b7c86-goog
-Message-ID: <20250610153748.1858519-1-tmichalec@google.com>
-Subject: [PATCH] platform/chrome: cros_ec_typec: Defer probe on missing EC parent
-From: Tomasz Michalec <tmichalec@google.com>
-To: Benson Leung <bleung@chromium.org>, 
-	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>, Jameson Thies <jthies@google.com>, 
-	Andrei Kuchynski <akuchynski@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>
-Cc: Guenter Roeck <groeck@chromium.org>, Konrad Adamczyk <konrada@google.com>, 
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	chromeos-krk-upstreaming@google.com, Tomasz Michalec <tmichalec@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="2mmbp4dpfehbqy7u"
+Content-Disposition: inline
+In-Reply-To: <20250528-clk-wip-v2-v2-5-0d2c2f220442@redhat.com>
 
-If cros_typec_probe is called before EC device is registered,
-cros_typec_probe will fail. It may happen when cros-ec-typec.ko is
-loaded before EC bus layer module (e.g. cros_ec_lpcs.ko,
-cros_ec_spi.ko).
 
-Return -EPROBE_DEFER when cros_typec_probe doesn't get EC device, so
-the probe function can be called again after EC device is registered.
+--2mmbp4dpfehbqy7u
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 05/10] clk: test: introduce test suite for sibling
+ rate changes on a divider
+MIME-Version: 1.0
 
-Signed-off-by: Tomasz Michalec <tmichalec@google.com>
----
- drivers/platform/chrome/cros_ec_typec.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Hi,
 
-diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-index 7678e3d05fd3..f437b594055c 100644
---- a/drivers/platform/chrome/cros_ec_typec.c
-+++ b/drivers/platform/chrome/cros_ec_typec.c
-@@ -1272,8 +1272,8 @@ static int cros_typec_probe(struct platform_device *pdev)
- 
- 	typec->ec = dev_get_drvdata(pdev->dev.parent);
- 	if (!typec->ec) {
--		dev_err(dev, "couldn't find parent EC device\n");
--		return -ENODEV;
-+		dev_warn(dev, "couldn't find parent EC device\n");
-+		return -EPROBE_DEFER;
- 	}
- 
- 	platform_set_drvdata(pdev, typec);
--- 
-2.50.0.rc0.604.gd4ff7b7c86-goog
+On Wed, May 28, 2025 at 07:16:51PM -0400, Brian Masney wrote:
+> Introduce a test suite that creates a parent with two divider-only
+> children, and ensure that changing the rate of one child does not
+> affect the rate of the sibling.
+>=20
+> Some of the tests are disabled until the relevant issue(s) are fixed in
+> the clk core.
+>=20
+> Signed-off-by: Brian Masney <bmasney@redhat.com>
+> ---
+>  drivers/clk/clk_test.c | 139 +++++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  1 file changed, 139 insertions(+)
+>=20
+> diff --git a/drivers/clk/clk_test.c b/drivers/clk/clk_test.c
+> index 4908fb9c0c46e34063ecf696e49b48510da44538..35f516fd71a2e33ca19a0512b=
+d2db02111ea644c 100644
+> --- a/drivers/clk/clk_test.c
+> +++ b/drivers/clk/clk_test.c
+> @@ -653,6 +653,144 @@ clk_multiple_parents_mux_test_suite =3D {
+>  	.test_cases =3D clk_multiple_parents_mux_test_cases,
+>  };
+> =20
+> +struct clk_rate_change_sibling_div_div_context {
+> +	struct clk_dummy_context parent;
+> +	struct clk_dummy_div child1, child2;
+> +	struct clk *parent_clk, *child1_clk, *child2_clk;
+> +};
+> +
+> +static int clk_rate_change_sibling_div_div_test_init(struct kunit *test)
+> +{
+> +	struct clk_rate_change_sibling_div_div_context *ctx;
+> +	int ret;
+> +
+> +	ctx =3D kunit_kzalloc(test, sizeof(*ctx), GFP_KERNEL);
+> +	if (!ctx)
+> +		return -ENOMEM;
+> +	test->priv =3D ctx;
+> +
+> +	ctx->parent.hw.init =3D CLK_HW_INIT_NO_PARENT("parent", &clk_dummy_rate=
+_ops, 0);
+> +	ctx->parent.rate =3D DUMMY_CLOCK_RATE_24_MHZ;
+> +	ret =3D clk_hw_register_kunit(test, NULL, &ctx->parent.hw);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ctx->child1.hw.init =3D CLK_HW_INIT_HW("child1", &ctx->parent.hw,
+> +					     &clk_dummy_div_ops,
+> +					     CLK_SET_RATE_PARENT);
+> +	ret =3D clk_hw_register_kunit(test, NULL, &ctx->child1.hw);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ctx->child2.hw.init =3D CLK_HW_INIT_HW("child2", &ctx->parent.hw,
+> +					     &clk_dummy_div_ops,
+> +					     CLK_SET_RATE_PARENT);
+> +	ret =3D clk_hw_register_kunit(test, NULL, &ctx->child2.hw);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ctx->parent_clk =3D clk_hw_get_clk(&ctx->parent.hw, NULL);
+> +	ctx->child1_clk =3D clk_hw_get_clk(&ctx->child1.hw, NULL);
+> +	ctx->child2_clk =3D clk_hw_get_clk(&ctx->child2.hw, NULL);
+> +
+> +	KUNIT_EXPECT_EQ(test, clk_get_rate(ctx->parent_clk), DUMMY_CLOCK_RATE_2=
+4_MHZ);
+> +
+> +	return 0;
+> +}
 
+We should probably document that we're using CLK_SET_RATE_PARENT on the
+dividers, because it'll affect the outcome of the tests.
+
+The rest looks good to me, but is still dependant on some earlier
+discussions being solved.
+
+Maxime
+
+--2mmbp4dpfehbqy7u
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaEhRlwAKCRAnX84Zoj2+
+dtU6AX0WkzTBP1qCQ/5j9Bucp3IZRzvYfQdU+w+Tg214k3pSkxl8HFOUjahRfO0V
+N3knl8kBfie0iXRVpTfNaFyqwWAWMVqNJNYn9wJhd2se3bXXi9Lqfgpb8lFhUdsu
+fXGjzsT2Tg==
+=RsCr
+-----END PGP SIGNATURE-----
+
+--2mmbp4dpfehbqy7u--
