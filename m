@@ -1,79 +1,193 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82D1C246BCA;
-	Tue, 10 Jun 2025 13:23:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD679246BA8
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:24:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749561840; cv=none; b=lHnk4GQzu8klqOCGbPZVxjaq4AmAwCYpcAiWU+7345GjgQe1rkPTldBuXujnBhWQTSd+QzuIqd/1PL+g19rua/S+hJbhs0BsPLlboMCQyVuJ9ryYY/SMSCvOOP4wsnbfsDBtupssxTb7smFuIpWd8xKSW7xBKySpnrRSV4Ajlk8=
+	t=1749561860; cv=none; b=EFKGa0bxexBFaD5QPOXXjqe9PN0B4EczPvpcZBxlhDC8XpnRxAP2Sle6Jt9re7joAC+OhDRTG3kU9B6rr7skLGNfLatgB9/PD5i8oGGP7DrZN3FF34vFFqUpAvWYrfFuZnLMKEkr789wBf1T3M3v/RLtWqwb6L4W4FpMDiy+uqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749561840; c=relaxed/simple;
-	bh=CaeYB2UPGRAWt9bGhDjrcL/C2j2B+8ir2cAE9BvW2Kk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y6XuWGqknmNUIdhcsRkpXYdh8RzYVNABDMPgyaVMx1lek2/LfGr5M7NgCfoGNyfI2X1cGL0dCEOv9ZTSRctAKuT41l87zkgEk4rF+Znx4sA8v9S4t2l1MJuwxvESXQAlGrOXuDLo59awOpBlNP3h51OYK2pYdyz2JtkyTaJibGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 3AB67C03AC;
-	Tue, 10 Jun 2025 13:23:56 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 40FEF1C;
-	Tue, 10 Jun 2025 13:23:53 +0000 (UTC)
-Date: Tue, 10 Jun 2025 09:25:23 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, open list
- <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, Stephen
- Rothwell <sfr@canb.auug.org.au>, Arnd Bergmann <arnd@arndb.de>, Dan
- Carpenter <dan.carpenter@linaro.org>, Anders Roxell
- <anders.roxell@linaro.org>, Peter Zijlstra <peterz@infradead.org>, Ingo
- Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org
-Subject: Re: next-20250605: Test regression: qemu-x86_64-compat mode ltp
- tracing Oops int3 kernel panic
-Message-ID: <20250610092523.7be86d1d@gandalf.local.home>
-In-Reply-To: <20250610174136.b88bd16959a4d7eff27cc3fa@kernel.org>
-References: <CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com>
-	<20250609220934.2c3ed98ba8c624fc7cb45172@kernel.org>
-	<20250610174136.b88bd16959a4d7eff27cc3fa@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749561860; c=relaxed/simple;
+	bh=ubmc0E3DElK29TkGdRofug1lLiuw8WMG0knLOztL8zo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U3WWiE2j291cei6ooCJD8+0LXpW9CS9dADzVsm1KmYi+JEQVZ5cF9V7Ew9I6JkLsp7n6r2xt57dzqHQHSkWq/PzWftX2NMbSu6neZJ0X6Pt5bNKfPvIZbRoEfAXRF18Mn3tIcp5MaNuGij/cpOBPun1chcZAgMhN3by/Lb2/G28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=dGlFFhx/; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="dGlFFhx/"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55A7eGs2014930
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:24:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Dn5KKzDTTIKXjL+XAC1RBo/O2bQaEOF3N/dUCupBtXw=; b=dGlFFhx/SjmX3aWl
+	M1cCZWvtd99PKsd5kjUbReRmNnzbMTzfnLOZOJfROaepOYFttscbKgjjKAwnWtrY
+	bWgnC0ARWQPv57xY2L2Hn9WFdIS3WZUrdOouFCHS4zuAisczDR7tlqJRLs5p5zBF
+	FY3l5wEPaX/O5rq5a1yJYujK2LTSa4JBJej1fSLop/fUQyueTBNhOzZscL31fXo8
+	jUd/QsqTGM0O4Rg6+lUjp62+XM78Ve9jMoImvFZsTrVjVF+vnGilHjr1dSerpo+H
+	WeiTxb0f4qtLd6BXZAqN6TKvIV+9EZVAY6hf4SbwpBop1auI8z8RNIPutWgTGYZo
+	TjA86g==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474dn69gbs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:24:17 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7d0979c176eso95506585a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 06:24:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749561856; x=1750166656;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Dn5KKzDTTIKXjL+XAC1RBo/O2bQaEOF3N/dUCupBtXw=;
+        b=C6S8SDY0kluurRzACBmlqC1aPbYb4m+bIzoJo40+VbbaecdAf7qAJ7FDpeg6BN+vfw
+         xzygZt1ti3sw8nmQRd5NldkAAHIk/Swq8pF1UlPwWmppSwRDONn+HsXyuEU8kOrEPf0n
+         KKCfCXGFBSOFucE/ncwE6cv11LuyiE+oh1n3DC45EjRqYI2ceRkBI6viyG7nmrJb+/Ik
+         xIqiLnCEBJrlIHUNcdwK6oCQ/7PRgdldTBhRneR4JhhuJQ/cLhbFJYHTMfQ3zrolqMA0
+         0dQRyHtMrz2idOZE9v/2yW7bqJvp4dLHkgZ3vxwzm5ukt/qwQ8lmcLnYTQF9pzCXAAn3
+         rajg==
+X-Forwarded-Encrypted: i=1; AJvYcCXucu9CwtXtbi0HYU3ahWvPTXAPgFGO31LRk6gIL1QVeaUAvJzt722K3EyVRVGUp+VPR+D44QW9Z9ROU4g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4HL83rbFiXdmnMK+NGhhUNQB6Iu8vURyftB0YjMVRsA+1Piup
+	FCwiVMEyQ25Z8obO+EV0+AS4bYBgjkUSwAwyJUutXaSiTrUIJIvUAGEfiV3RIRBwVdkkdqjGPC9
+	VJzlFtNenRlaoiLWXNQdQ58bOzrDaHznRgvfTGaEpj8Dh5n/ytJEEvUdyVVhIeWtRdmI=
+X-Gm-Gg: ASbGncth4C0dYVBuKDcGt3LrBc31S8Vbs5ZQBA0SIg2m8xsXjvUNchb1JCVkZPh1yiC
+	fhbXifbJxUh6yy2NfH814K0mEJWLNBzmyTwH2QhWu0BlEaPwO+rhbw4m8DPcS5PF4hQFM0EGLEq
+	E+I/6YEkqZNPcW02YAaJ82Tp7OIVJa5LZDtSIY5Ml6MKjncoMZWy2Fgj6bSKUBzkS/Zr3/Gqa/9
+	5QcxlkQoH+2x5giUPaMvzVzL03Dhr3ZThYIuouBBv1fbg+NU+VbO2YRITJI0zJO6QkuPsyRv3HO
+	xWXo4e4ZfaXjwQCz/6BlqJrzrHBiIXyo9MN9t5OnlqsDFqB1JN6x5tL299JskN4hhZ/2/vaiI6c
+	+
+X-Received: by 2002:a05:620a:2481:b0:7c0:b43c:b36c with SMTP id af79cd13be357-7d331c4ebbcmr897728385a.6.1749561856563;
+        Tue, 10 Jun 2025 06:24:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGZDQUf98Q4fdDvEHwFwKWgGVh807ziV/MvTQbORZEqmYL/UEFzh9cRBG5EYwiG4QVxnOk8RA==
+X-Received: by 2002:a05:620a:2481:b0:7c0:b43c:b36c with SMTP id af79cd13be357-7d331c4ebbcmr897726285a.6.1749561855990;
+        Tue, 10 Jun 2025 06:24:15 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1d754632sm722896866b.26.2025.06.10.06.24.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Jun 2025 06:24:15 -0700 (PDT)
+Message-ID: <a63ff3a7-c67b-4251-81f3-ce6cc3a3d068@oss.qualcomm.com>
+Date: Tue, 10 Jun 2025 15:24:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 40FEF1C
-X-Stat-Signature: yy3yp473z18cpryn9xiadcf6fj58akb9
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+X+C9JHk029v5O3Xw4RrIrgjwHbZbuJEU=
-X-HE-Tag: 1749561833-452745
-X-HE-Meta: U2FsdGVkX1+39sM9EJN/3QIu2ylaLJsYJH2Wvg0/zUF39/f8LuhQx5F49m+JXkzDhELqzPXQ5BVcI6dDtJGLNQqClc/KsAKTCCgvjFiPrRUq53K5iS5p20eQYKO8dnNtjnMiqxothTanZ0j7l/K2vhw2y8UBhmH25lQ7ywmTeRAjv4QG2M2+PacRf3T8bc5Ms8pUrN627kXGGEdpQQK087WXRVHVSW+SNDHcdc+3xRVt50K52M2SVmlPu7BUVvQ89vo9IvI8+wTPzGlsS56N9WDXwzBRI9Yx9ZDaGGNGX2jeQTauus8iUmfQZR9G3ZTIhqWrN1SyiGZu5gR4NAJG6qWYN7zachpW
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: qcom: qcs615: disable the CTI device of the
+ camera block
+To: Jie Gan <jie.gan@oss.qualcomm.com>, Jie Gan <quic_jiegan@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: Tingwei Zhang <quic_tingweiz@quicinc.com>,
+        Jinlong Mao <quic_jinlmao@quicinc.com>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250527015224.7343-1-jie.gan@oss.qualcomm.com>
+ <5fbb515a-c3d0-4bbe-a689-41e730ecd952@oss.qualcomm.com>
+ <9a156925-cf7b-4d2e-88a8-fdfed5528553@quicinc.com>
+ <1fef810c-47fe-4f6d-95bc-0d72dbd63bf0@oss.qualcomm.com>
+ <79f5e42f-f857-4247-abf9-d0f3f5c1a498@quicinc.com>
+ <f3f8f446-4f0d-482d-952d-35c80d7d7881@oss.qualcomm.com>
+ <405f0432-3f07-45be-8511-06235dcd84d0@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <405f0432-3f07-45be-8511-06235dcd84d0@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDEwNSBTYWx0ZWRfXxVw0RIDBbtI8
+ ATKQJKYYUTbkAi/4Ayg+PWQFmQ5UJ4rrUuyuv2wRGTvFSOkH1ndOE6jS9j6mh/nWDMZj8eI+3J/
+ hlz0Ggkq0HHo8IwHl22HcnCuvLOc7M31FrO9J89nlguXio/sinr3doREo1sRTZEz9Cvn7Tmbd5z
+ YJ1oKoJN08VaHihol0AIusTIoNbEUinaypPA3a/KLg4+lqi2NsU8pPIAiRHmIBczAq5FH4xygxL
+ YK9Q/pigPbY59l7pNG6owyWRtW0yvdLB3G30nSPAcDM6NBQqOLcAR8PR4L1qCw6PhXe7McEAPmj
+ 1Cc5xokZyHxqOmYJE9WNogeH7UL65XwPYwaQZbe4BjAfkJzbIH5F32nSMCHk7yx9Pxs+VBonRS6
+ tEjgDssiifnXxQEuOdTz7J8l+n4G2UIvjJv80tuGOm2ZSOpgxczGS/v7lpAPGO26O2rlWJSa
+X-Proofpoint-GUID: s71vAzo-9gEt250gSHdkbmULVqTQ40Q8
+X-Authority-Analysis: v=2.4 cv=FaQ3xI+6 c=1 sm=1 tr=0 ts=68483201 cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=P-IC7800AAAA:8 a=jKJs8sBhnlDJ8AvWEW4A:9
+ a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22 a=d3PnA9EDa4IxuAV0gXij:22
+X-Proofpoint-ORIG-GUID: s71vAzo-9gEt250gSHdkbmULVqTQ40Q8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-10_05,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 lowpriorityscore=0 bulkscore=0 phishscore=0 adultscore=0
+ mlxlogscore=973 mlxscore=0 spamscore=0 suspectscore=0 malwarescore=0
+ priorityscore=1501 clxscore=1015 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506100105
 
-On Tue, 10 Jun 2025 17:41:36 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On 6/3/25 5:17 AM, Jie Gan wrote:
+> 
+> 
+> On 5/31/2025 7:05 AM, Konrad Dybcio wrote:
+>> On 5/28/25 5:02 AM, Jie Gan wrote:
+>>>
+>>>
+>>> On 5/27/2025 6:41 PM, Konrad Dybcio wrote:
+>>>> On 5/27/25 12:32 PM, Jie Gan wrote:
+>>>>>
+>>>>>
+>>>>> On 5/27/2025 6:23 PM, Konrad Dybcio wrote:
+>>>>>> On 5/27/25 3:52 AM, Jie Gan wrote:
+>>>>>>> Disable the CTI device of the camera block to prevent potential NoC errors
+>>>>>>> during AMBA bus device matching.
+>>>>>>>
+>>>>>>> The clocks for the Qualcomm Debug Subsystem (QDSS) are managed by aoss_qmp
+>>>>>>> through a mailbox. However, the camera block resides outside the AP domain,
+>>>>>>> meaning its QDSS clock cannot be controlled via aoss_qmp.
+>>>>>>
+>>>>>> Which clock drives it then?
+>>>>>
+>>>>> It's qcom,aoss-qmp.
+>>>>>
+>>>>> clk_prepare->qmp_qdss_clk_prepare
+>>>>> https://elixir.bootlin.com/linux/v6.15-rc7/source/drivers/soc/qcom/qcom_aoss.c#L280
+>>>>
+>>>> I'm confused about this part:
+>>>>
+>>>>> However, the camera block resides outside the AP domain,
+>>>>> meaning its QDSS clock cannot be controlled via aoss_qmp.
+>>>>
+>>>> Do we need to poke the QMP of another DRV?
+>>>
+>>> The AOSS has a clock control register for all QDSS clocks. when we vote the qdss clock, the aoss_qmp driver will send a message to AOSS to enable the clock control register, then the clock control register will enable all QDSS clocks.
+>>>
+>>> The QDSS clock is not a single clock source, it is a term that representing all the clock sources utilized by the QDSS.
+>>
+>> What I'm trying to ask is, is there any way we could enable that
+>> clock from Linux? Can the camera hw turn these on? Maybe we could
+>> trick it into enabling them?
+> 
+> There is a power issue if we keep the debug clock on with a long time.
+> 
+> We had a discussion with AOP to check if possible to add the debug clock of titan to the QDSS clock list, but they need time to evaluate it.
 
-> SERIALIZE instruction may flash pipeline, thus the processor needs
-> to reload the instruction. But it is not ensured to reload it from
-> memory because SERIALIZE does not invalidate the cache.
+Changing the firmware is a band-aid solution, as the update will never
+reach millions of devices on the market. I'm curious in whether there's
+any way (or os-accessible debug register) to manage the necessary clocks
+from Linux, as a workaround.
 
-=46rom my understanding, an IPI on a CPU is equivalent to a smp_mb() on that
-CPU. There shouldn't be any need for flushing the cache.
+> From Coresight view, what we can do by now is disable it in DT to prevent the unexpected NoC error.
 
->=20
-> If that hypotheses is correct, we need to invalidate the cache
-> (flush TLB) in the third step, before the do_sync_core().
+How about something like this:
 
-I'm not sure how the TLB would be affected.
+diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
+index bb8b6c3ebd03..fc2ab750f2cd 100644
+--- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
+@@ -2461,6 +2461,9 @@ cti@6c13000 {
+ 
+                        clocks = <&aoss_qmp>;
+                        clock-names = "apb_pclk";
++
++                       /* Not all required clocks can be enabled from the OS */
++                       status = "fail";
+                };
+ 
+                cti@6c20000 {
 
--- Steve
-
->=20
-> Or, if it is unsure, we can just evacuate the kernel from die("int3")
-> by retrying the new instruction, when the INT3 is disappeared.
-
+Konrad
