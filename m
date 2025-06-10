@@ -1,60 +1,65 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF33433A8
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 10:15:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA4921FF55;
+	Tue, 10 Jun 2025 10:15:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749550539; cv=none; b=eJb8oDqH1FfPebiDYwR2JyXCw4qpiBS2svHygTnJjonP73cmGA24g1615Y7QubDrR4Xen2xRJM9QvKOUZpqgt7e2vDLXn8fINq3TTHoRi1I3oaHsaTEo0kuvEZ1QofEGo07S6alvCELchJt/cKIFeCm486FRNuksH5hBjiWWmWg=
+	t=1749550550; cv=none; b=ktBqngEFdI2CCRtC//CLAAQEBedvuhI+wcTvETEHTcdEiwH1WMTS5N9bmqyuHawBgZ9x9pk00G+GBubXV64dde+njYqLKrJI+SPuUHysez7vU3YhhgNuqPwVUz+8JTSV+wevT2822Q3pmQhPVpvp8tNXH0JOgNZjbW78HDe0uQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749550539; c=relaxed/simple;
-	bh=8Yeh0+DJ6gxhMGoS/cbQyv0l1v42s1BjoqRkQR24uXI=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=a/IQnnM0ZJART883HYTa8ypuLSn9IfhNDLIs49wR6x0fjGSKqpJRqU3d0UhWGY7g5mKYOioORToU5SFXvCL7+J+hokMESnozbD08ztLRWOidJJGaFgJQacuj9RyV1USPUeX9FTb6j4vQGzTse7abEkgCMhdV3sU7IKubRQ/YUxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=neon.tech; spf=pass smtp.mailfrom=neon.tech; dkim=pass (1024-bit key) header.d=neon.tech header.i=@neon.tech header.b=r402Husc; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=neon.tech
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neon.tech
+	s=arc-20240116; t=1749550550; c=relaxed/simple;
+	bh=Ikv5InvFUqaL7MbP3ouhpo3+c7y6BTMPBiByR0rsA8s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gFBagLlX9aBbLwUYA9k6ptnHhKhOjRKbnP7gahx8keIGU/KA0AXCaYWM2Q4Do3i7NbRuNb3gvJgLalgMqEDhBKBn3GaJqZN0R4/S5P0Z7c2MaSvcO2+K5VD73tzbuhE8CsvFm+FmGd1FEC7twEEl0fQlO7OZj1Xuy960s3YzQG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c6BskYG1; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=neon.tech header.i=@neon.tech header.b="r402Husc"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-6069d764980so11490577a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 03:15:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c6BskYG1"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-adb2bb25105so838391766b.0;
+        Tue, 10 Jun 2025 03:15:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=neon.tech; s=google; t=1749550536; x=1750155336; darn=vger.kernel.org;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nvfG20MQLYlKkF+o+WgnnDhDnQDbafUQgPnApR8FRuI=;
-        b=r402HuscsMMqf5XnM+PDbl/B1DzEEeyrqmzE7AUHbkATDqHASzqGzIdACDJV75jwpO
-         Im2e3zuvVOixHQx5DOC2EYJMfznT2ZfYbjchNsEqwO9NBOsjjmNPVUkpfR+/ii9BqKu1
-         yDaNYPYsL/I18t2VYlLYLbsYycI7Is7dK5ERU=
+        d=gmail.com; s=20230601; t=1749550546; x=1750155346; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cWuWcVj95DVrEthc+5S3mPSfmODoym51F12oODVd7rA=;
+        b=c6BskYG1CSOpARgFO3E8sI4pjpbJGP2uTYOstNp97bC45226nuqUvKl3d2/93iYDVo
+         BMbvxfSvCx/0Yuaq7dzWi55nFi6sL51jJqF5qZHfajImp+xKjSJHg0stHYlmyH+VM6ke
+         dSI1u1PmD6j/lW31UvA3NkH4e27rTuZHq7QjHmxrXR05QMu3BFqycslIskII95QK25mZ
+         Kh4o6XwgBoaB9bhFaQyMTYAtbjjgLrUEhEd76terE919xbFUKpzyx1AOft+tBReLjEz1
+         FJ3XYc0aT0oy+O5UCjsVNKWaLfGtYYgWlu9YMRB0SLPgs9hukfr/hd4T5wYkSDbatYpd
+         80Dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749550536; x=1750155336;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=nvfG20MQLYlKkF+o+WgnnDhDnQDbafUQgPnApR8FRuI=;
-        b=xS9cD+gW13/0CqmsjRstnXXsz7CiTEm71sVBH9EHsBdsCeOI76JT0A38+wqaC84MOK
-         3WqpfFKUg7VlAUMo9nJLQxU2BJhnMvtxnSgLffS2xesNpr5lHuQ/7O7BdVfVIZlznnsu
-         ZwqfuZ1VqjUSSfl7Ju0ISBIHXNfZDGeC4+9rveqO4gKdGuOHcjGXBlM1v62n/XDsWj86
-         Kw5TiVhkgLI05cACAa4LbD0n7fgYeqqK9NusXSkL0C1hgLw6niw3t/GeNHMXT4GfJCHg
-         VRs+ssA6aJA68cAF1qDp5EOFm96fM+tA8U7Pug1TzDPtFZrVndtb/Ni9vYC7iDaieLWx
-         IrBA==
-X-Gm-Message-State: AOJu0YznAFnfWwybl0gcu/FkvaRaQ8JLq78ZuiC0Ipt1AiIY9kDsoWXn
-	V9Bnnqgf4DFWOo/LvWDTuEuF6RS7/oLgk/kdDfjzsFEf29Vi//uts8xKrbStbAILYXthFKAJGg8
-	nfBxTanMtxg==
-X-Gm-Gg: ASbGncvHdKIXtvT+8pIecKd70wmR1uSrqPArnChQn49VqKeLGI1tRoRhIGYbD5TwP3J
-	Z0u3X8oAlRBc4ANawacZ1PCT3POLDamtr5f/nmGY8CEqH3Aqg+I9hb60pg+lBBJxLA/5Zd0ihBs
-	/5N0Gv0RB6mXtsz5x4ZPnqttllfiMaH1XOnM+zGJXY3aaL3oUMGPJCfblt0pookZE3q/f7DvRcI
-	vyqcFyINpKNMpw+BIFwa7o0RBy+RDDsKFTjY/9YG+pctMP1vHjC5ldXqIOElLbv/Fe0ByiwmX22
-	VLHG+gls0UIiSE7qlOtaIIpdizZJVeZa4gkAxXNQpHMfXPThFwrE60FeICAfEkp3kw==
-X-Google-Smtp-Source: AGHT+IF9jX0Gs6s3uI6ySvWxXbzgdwbHAVjqfgfgUtHPqTkNctsYqnHPKZewjwqixROxeuDD4J40ow==
-X-Received: by 2002:a17:906:6a16:b0:ad5:7649:b3f5 with SMTP id a640c23a62f3a-ade770fba75mr300445066b.3.1749550535545;
-        Tue, 10 Jun 2025 03:15:35 -0700 (PDT)
-Received: from [192.168.86.142] ([84.65.228.220])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade3c427cafsm547042766b.75.2025.06.10.03.15.34
+        d=1e100.net; s=20230601; t=1749550546; x=1750155346;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cWuWcVj95DVrEthc+5S3mPSfmODoym51F12oODVd7rA=;
+        b=lGooiz0ff0wHEgSj/oeVdDau6bHn7M0NTTwnrSe6+cpnjyolH6Mi2JHF6dlVe6x7rp
+         lvT+HLKoYUrqSCHio0yrj6kdAa77HaTDpgf16AnODauQ45x+MKFZLRwFtaRDxPaTVpyL
+         t59fhzedvj6SZM68rp0bDKc+v8TJ9LV0e7zX9x0kfgzyQ5iLh9Z/P5KuR/oEZ2NvZHip
+         B0ge3w5zXHdmcVIlNqjIbLlw/CoKRqOzluYJjxAmjud+U3bKk8MZ7zp16e4DnsFg6nul
+         efZKLlRGZlsKc3pj/rHmPIKlqyiaLj+phqumn/djQI4VFKl8wGGr0bK8tUZxjK6ZdKqW
+         Vi9A==
+X-Forwarded-Encrypted: i=1; AJvYcCUCJyEuOd1on8P8oFDAWTJUaNkFkfyGqhfjOvtFjO4rk3Fq5HcKIqYrHj0uz1AczPSHnP/dtgckT7ODeOI=@vger.kernel.org, AJvYcCWVUc3IFNji+5uxcE71s4dM3fmE4GtkkTPbf90Y2XI1wIk1iP4SN2ClapfMNYYuNoTZeI3KDV57V9tGOf8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhdpGkyOkxh7gYYl0sQL9XbtZF8SkLuwiNS2C27aZNBQocvH2F
+	vZLHoD8o3VqOFfkzJldkmPIL5u1YuN5/KCEXuil3sFaSMgbi0ENi8fXgrpNtVw==
+X-Gm-Gg: ASbGncsL9k//c3QZpaFnL6QmJbyOECa3yV1M2xyK/sw9UB3aMDjr3olxjRmjXVsGUT/
+	7MOZuYrkd9nXP1SjavJ+Q/TNT9p1+x42QfkPrwZtReWPsnFw06kdms8NSdptiWfa7CuIRlu1S5x
+	HapXnH7g3WNKVvZeJdZfGREztT7FnDIU8gxDw7qWVPbSCpDWLO9ehe7ypq9bW6tH0AFFVhPyf+J
+	wwWbzUva0K+xl9H3oeCx0yFccEFAZZ3aGa1fkzfKq5OknyqcjZmCmiDA5W0Zw+vnA4+ZLTQFNrR
+	Ww7kf0+4zbf9FL8qhtuO7nEZh8CMxXYsMbbFEUlCqiS6FWI9XHe1Fb56mYJ+TQ1NGB0qda3BT+z
+	uLA4=
+X-Google-Smtp-Source: AGHT+IEp3hJtHppNSirNocg+aJvrAhcCKKcXsQk3rvu0BJeq5i0xfpdXX7zuwLSTIsjisjCvogmnSg==
+X-Received: by 2002:a17:906:dc8b:b0:ad2:28be:9a16 with SMTP id a640c23a62f3a-ade1abc4055mr1509061366b.51.1749550546213;
+        Tue, 10 Jun 2025 03:15:46 -0700 (PDT)
+Received: from [192.168.0.100] ([188.27.131.45])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc3902csm691572166b.125.2025.06.10.03.15.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jun 2025 03:15:35 -0700 (PDT)
-Message-ID: <a31e3b89-5040-4426-9ce8-d674b8554aa1@neon.tech>
-Date: Tue, 10 Jun 2025 11:15:33 +0100
+        Tue, 10 Jun 2025 03:15:45 -0700 (PDT)
+Message-ID: <8efe62a8-2c90-4599-82f3-4e41d8d859aa@gmail.com>
+Date: Tue, 10 Jun 2025 13:15:32 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,157 +67,153 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] media: rc: ir-spi: allocate buffer dynamically
+To: Sean Young <sean@mess.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250609111715.2572138-1-demonsingur@gmail.com>
+ <aEf9b17JU1a5q2hC@gofer.mess.org>
+From: Cosmin Tanislav <demonsingur@gmail.com>
 Content-Language: en-US
-To: linux-kernel@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org
-Cc: Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
- <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
- "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
- Oleg Vasilev <oleg@neon.tech>, Arthur Petukhovsky <arthur@neon.tech>,
- Stefan Radig <stefan@neon.tech>, Misha Sakhnov <misha@neon.tech>
-From: Em Sharnoff <sharnoff@neon.tech>
-Subject: [PATCH v3 0/2] x86/mm: Improve alloc handling of phys_*_init()
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-Hi folks,
-
-See changelog + more context below.
-
-tl;dr:
-
-* Currently alloc_low_page() uses GFP_ATOMIC after boot, which may fail
-* Those failures aren't currently handled by phys_pud_init() and similar
-  functions.
-* Those failures can happen during memory hotplug
-
-So:
-
-1. Add handling for those allocation failures
-2. Use GFP_KERNEL instead of GFP_ATOMIC
-
-Previous version here:
-https://lore.kernel.org/all/0ce5e150-19e0-457f-bec3-ee031c0be7e7@neon.tech/
-
-=== Changelog ===
-
-v2:
-- Switch from special-casing zero values to ERR_PTR()
-- Add patch to move from GFP_ATOMIC -> GFP_KERNEL
-- Move commentary out of the patch message and into this cover letter
-v3:
-- Fix -Wint-conversion issues
-
-=== Background ===
-
-We recently started observing these null pointer dereferences happening
-in practice (albeit quite rarely), triggered by allocation failures
-during virtio-mem hotplug.
-
-We use virtio-mem quite heavily - adding/removing memory based on
-resource usage of customer workloads across a fleet of VMs - so it's
-somewhat expected that we have occasional allocation failures here, if
-we run out of memory before hotplug takes place.
-
-We started seeing this bug after upgrading from 6.6.64 to 6.12.26, but
-there didn't appear to be relevant changes in the codepaths involved, so
-we figured the upgrade was triggering a latent issue.
-
-The possibility for this issue was also pointed out a while back:
-
-> For alloc_low_pages(), I noticed the callers don’t check for allocation
-> failure. I'm a little surprised that there haven't been reports of the
-> allocation failing, because these operations could result in a lot more
-> pages getting allocated way past boot, and failure causes a NULL
-> pointer dereference.
-
-https://lore.kernel.org/all/5aee7bcdf49b1c6b8ee902dd2abd9220169c694b.camel@intel.com/
-
-For completeness, here's an example stack trace we saw (on 6.12.26):
-
-  BUG: kernel NULL pointer dereference, address: 0000000000000000
-  ....
-  Call Trace:
-   <TASK>
-   phys_pud_init+0xa0/0x390
-   phys_p4d_init+0x93/0x330
-   __kernel_physical_mapping_init+0xa1/0x370
-   kernel_physical_mapping_init+0xf/0x20
-   init_memory_mapping+0x1fa/0x430
-   arch_add_memory+0x2b/0x50
-   add_memory_resource+0xe6/0x260
-   add_memory_driver_managed+0x78/0xc0
-   virtio_mem_add_memory+0x46/0xc0
-   virtio_mem_sbm_plug_and_add_mb+0xa3/0x160
-   virtio_mem_run_wq+0x1035/0x16c0
-   process_one_work+0x17a/0x3c0
-   worker_thread+0x2c5/0x3f0
-   ? _raw_spin_unlock_irqrestore+0x9/0x30
-   ? __pfx_worker_thread+0x10/0x10
-   kthread+0xdc/0x110
-   ? __pfx_kthread+0x10/0x10
-   ret_from_fork+0x35/0x60
-   ? __pfx_kthread+0x10/0x10
-   ret_from_fork_asm+0x1a/0x30
-   </TASK>
-
-and the allocation failure preceding it:
-
-  kworker/0:2: page allocation failure: order:0, mode:0x920(GFP_ATOMIC|__GFP_ZERO), nodemask=(null),cpuset=/,mems_allowed=0
-  ...
-  Call Trace:
-   <TASK>
-   dump_stack_lvl+0x5b/0x70
-   dump_stack+0x10/0x20
-   warn_alloc+0x103/0x180
-   __alloc_pages_slowpath.constprop.0+0x738/0xf30
-   __alloc_pages_noprof+0x1e9/0x340
-   alloc_pages_mpol_noprof+0x47/0x100
-   alloc_pages_noprof+0x4b/0x80
-   get_free_pages_noprof+0xc/0x40
-   alloc_low_pages+0xc2/0x150
-   phys_pud_init+0x82/0x390
-  ...
-
-(everything from phys_pud_init and below was the same)
-
-There's some additional context in a github issue we opened on our side:
-https://github.com/neondatabase/autoscaling/issues/1391
-
-=== Reproducing / Testing ===
-
-I was able to partially reproduce the original issue we saw by
-modifying phys_pud_init() to simulate alloc_low_page() returning null
-after boot, and then doing memory hotplug to trigger the "failure".
-Something roughly like:
-
-  - pmd = alloc_low_page();
-  + if (!after_bootmem)
-  + 	pmd = alloc_low_page();
-  + else
-  + 	pmd = 0;
-
-To test recovery, I also tried simulating just one alloc_low_page()
-failure after boot. This change seemed to handle it at a basic level
-(virito-mem hotplug succeeded with the right amount, after retrying),
-but I didn't dig further.
-
-We also plan to test this in our production environment (where we should
-see the difference after a few days); as of 2025-06-10, we haven't yet
-rolled that out.
+In-Reply-To: <aEf9b17JU1a5q2hC@gofer.mess.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
-Em Sharnoff (2):
-  x86/mm: Handle alloc failure in phys_*_init()
-  x86/mm: Use GFP_KERNEL for alloc_low_pages() after boot
 
- arch/x86/mm/init.c    |  8 +++++--
- arch/x86/mm/init_64.c | 54 +++++++++++++++++++++++++++++++++++++++----
- 2 files changed, 56 insertions(+), 6 deletions(-)
+On 6/10/25 12:39 PM, Sean Young wrote:
+> On Mon, Jun 09, 2025 at 02:17:13PM +0300, Cosmin Tanislav wrote:
+>> Replace the static transmit buffer with a dynamically allocated one,
+>> removing the limit imposed on the number of pulses to transmit.
+>>
+>> Calculate the number of pulses for each duration in the received buffer
+>> ahead of time, while also adding up the total pulses, to be able to
+>> allocate a buffer that perfectly fits the total number of pulses, then
+>> populate it.
+>>
+>> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+>> ---
+>> V3:
+>>   * move the allocation to be done per-TX operation
+>>
+>> V2:
+>>   * use devm_krealloc_array
+>>
+>>   drivers/media/rc/ir-spi.c | 33 ++++++++++++++++++++-------------
+>>   1 file changed, 20 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/drivers/media/rc/ir-spi.c b/drivers/media/rc/ir-spi.c
+>> index 8fc8e496e6aa..50e30e2fae22 100644
+>> --- a/drivers/media/rc/ir-spi.c
+>> +++ b/drivers/media/rc/ir-spi.c
+>> @@ -21,13 +21,11 @@
+>>   #define IR_SPI_DRIVER_NAME		"ir-spi"
+>>   
+>>   #define IR_SPI_DEFAULT_FREQUENCY	38000
+>> -#define IR_SPI_MAX_BUFSIZE		 4096
+>>   
+>>   struct ir_spi_data {
+>>   	u32 freq;
+>>   	bool negated;
+>>   
+>> -	u16 tx_buf[IR_SPI_MAX_BUFSIZE];
+>>   	u16 pulse;
+>>   	u16 space;
+>>   
+>> @@ -43,37 +41,42 @@ static int ir_spi_tx(struct rc_dev *dev, unsigned int *buffer, unsigned int coun
+>>   	unsigned int len = 0;
+>>   	struct ir_spi_data *idata = dev->priv;
+>>   	struct spi_transfer xfer;
+>> +	u16 *tx_buf;
+>>   
+>>   	/* convert the pulse/space signal to raw binary signal */
+>>   	for (i = 0; i < count; i++) {
+>> -		unsigned int periods;
+>> +		buffer[i] = DIV_ROUND_CLOSEST(buffer[i] * idata->freq, 1000000);
+>> +		len += buffer[i];
+>> +	}
+> 
+> This looks great, thank you.
+> 
+> I do have one concern though. If someone sets a carrier of U32_MAX - 1 then
+> this code could be doing largish allocations, spending too long in kernel
+> space filling them with data and spi can't send it anyway. Actually
+> the kmalloc might fail which doesn't look good in the logs.
+> 
+> We may have to constrain the carrier to something spi can handle.
+> 
 
+The SPI device has a max_speed_hz, maybe we should check that?
 
-base-commit: 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3
--- 
-2.39.5
+It seems to be set based on the spi-max-frequency property in
+the device tree node of the SPI device, and uses the max_speed_hz
+of the SPI controller as a fallback.
+
+Should I add a separate patch that adds a check in
+ir_spi_set_tx_carrier?
+
+if (carrier * 16 > idata->spi->max_speed_hz)
+	return -EINVAL.
+
+Something along these lines.
+
+> 
+> Sean
+> 
+>> +
+>> +	tx_buf = kmalloc_array(len, sizeof(*tx_buf), GFP_KERNEL);
+>> +	if (!tx_buf)
+>> +		return -ENOMEM;
+>> +
+>> +	len = 0;
+>> +	for (i = 0; i < count; i++) {
+>>   		int j;
+>>   		u16 val;
+>>   
+>> -		periods = DIV_ROUND_CLOSEST(buffer[i] * idata->freq, 1000000);
+>> -
+>> -		if (len + periods >= IR_SPI_MAX_BUFSIZE)
+>> -			return -EINVAL;
+>> -
+>>   		/*
+>>   		 * The first value in buffer is a pulse, so that 0, 2, 4, ...
+>>   		 * contain a pulse duration. On the contrary, 1, 3, 5, ...
+>>   		 * contain a space duration.
+>>   		 */
+>>   		val = (i % 2) ? idata->space : idata->pulse;
+>> -		for (j = 0; j < periods; j++)
+>> -			idata->tx_buf[len++] = val;
+>> +		for (j = 0; j < buffer[i]; j++)
+>> +			tx_buf[len++] = val;
+>>   	}
+>>   
+>>   	memset(&xfer, 0, sizeof(xfer));
+>>   
+>>   	xfer.speed_hz = idata->freq * 16;
+>> -	xfer.len = len * sizeof(*idata->tx_buf);
+>> -	xfer.tx_buf = idata->tx_buf;
+>> +	xfer.len = len * sizeof(*tx_buf);
+>> +	xfer.tx_buf = tx_buf;
+>>   
+>>   	ret = regulator_enable(idata->regulator);
+>>   	if (ret)
+>> -		return ret;
+>> +		goto err_free_tx_buf;
+>>   
+>>   	ret = spi_sync_transfer(idata->spi, &xfer, 1);
+>>   	if (ret)
+>> @@ -81,6 +84,10 @@ static int ir_spi_tx(struct rc_dev *dev, unsigned int *buffer, unsigned int coun
+>>   
+>>   	regulator_disable(idata->regulator);
+>>   
+>> +err_free_tx_buf:
+>> +
+>> +	kfree(tx_buf);
+>> +
+>>   	return ret ? ret : count;
+>>   }
+>>   
+>> -- 
+>> 2.49.0
+>>
 
