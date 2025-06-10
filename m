@@ -1,166 +1,98 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0949246761
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 20:03:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D1E246761
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 20:03:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749585793; cv=none; b=U4D8AKGWCU9whXUH3RFKozoqsfVw5Ri6eqTRpOxal1tae85omf1hDWslAkqR9IbrbdmHc/IsrpcbwnazIRI8YXdMD+VE4HLsVVy11I8XS0hLz133oRTxOx9bOkNzcZro0/NCVJotpnTpGEVJVMx1yIx3dc8IA5PnBzVT3+lauzw=
+	t=1749585835; cv=none; b=pVhIl+gjLMpbrqddaScw6JI5jdeHpQBeJnaj8FY/y4U8uDvwQ0Y64qOGRT5ox0vVuVgcpR7NO4oCAxrpB2znQDdARXfiifeV9Tb0T32W2E7MM1T/LswPqXQd5EimR8fn82EJ874ifDbO+3ZyjGVt9hLGlqfrB0MDD0smo/5v/1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749585793; c=relaxed/simple;
-	bh=wGQrwjvbxP5TElWRzftoyq5VMQ1P3z0T9KV3nef+RkU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OgrpwYTmJwbMOa3SvFqBrZy0DRgziGGkUsPAQ34naWSwhgqYc6A9DkMth3oMniiE0VEgisdxv6nfUTTyr7lZAuXaBLySFpRE3LlMMVX+uPu68GN1aTbnsIEkAaPOPs3rigji5ma+HRJ59u0tSGdLs1sbrmy/JknewYYgRHD/USc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=JQ0BMac/; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="JQ0BMac/"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a4f71831abso5537756f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:03:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749585790; x=1750190590; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=wGQrwjvbxP5TElWRzftoyq5VMQ1P3z0T9KV3nef+RkU=;
-        b=JQ0BMac/myFnKgIVsEGjYdvKS8gJkfsLNkbReik3SqapjYxGO1NmjI4eYtbv2XaDyh
-         5PxvD5Gmp2iUvsXnTQPufDei61Hjfg+LbwcanIaSq/xvWWzXwYY0mkibwgh3vh9tDi64
-         0+y38ECtymXBT9JZw8qJAUuJUuzXiwUCAgiPGS7FLkwXL2PqfJgDO5/Iz4zMekXEhYo/
-         WJ40tlPmcCrQpSVUZSVU78tgw1AezAW5/BQ0GWszKyWBkxYKOU4CeiMCvWj5VKjmqsz4
-         Wa4VQosJZHIKCuYYKGoGh+d0VCuaY1nNSMF87a3r3MxLIL15urED+esXcXsziXlWV09N
-         KvNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749585790; x=1750190590;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wGQrwjvbxP5TElWRzftoyq5VMQ1P3z0T9KV3nef+RkU=;
-        b=UVZ+T0qSJCrxuo0dE3Wp59n8GZvRJA12GBH7BEtoGlkqGolOEOg0lmvgtjo+HkkfJ1
-         9adxmRKZZQ23WQi6l46KfxWJqSK/visgJH3J+FLz1iY3J4cu//bXFiwP/drAwe6jutcC
-         mApUrSn5VMcntytimPhqDffQlV/JN0Gjd01xkHyEQSoHst5wBNYyMlq1FsFmQOk4OZJ8
-         Dp3EGUqNUQ20PEQ/xpE/01tY+IK1AQbJwe/MoejeW9UQU4WKBZPmfJafY6sMsgKdIGt/
-         UN7PTyz4ptvGH6GneEeHkPtyNQu9YNDJOOoDc7ls9pWSrYU61VoOj4NH3xb90PA8LW5o
-         uyXA==
-X-Forwarded-Encrypted: i=1; AJvYcCXiKSPC71XDl5UcgRp/OLZm56hXozszbp+W6599HvqGEBGSJcZnLSTmE42rG1bFfacfsLgHwR69ybsLzpI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOdBFJmQTKUg3Oef1Hzev7Jb5yh3DMr/P3csInFVwFd9lv0wgT
-	p3aGEOcOwC5YUw9hPVZyKIdEzX/zCOcnTRteiG0B1Ha6mC9QghZ30C6HIa23/vyr8o0=
-X-Gm-Gg: ASbGnctaTdt5Zg59Tu2o3K6BErfpC7z8pUIY53Aq7AAUgXCjkJLI2ZnnHJTy9Cc+knQ
-	FZHLd84UjlehZZl9Nuet307mG7iiK+ocTrVy1q3rosYU5UUtMs2c5OLmw2BVd81beOMaZUmKG0d
-	NbHtPj/et97B5zevpqYY+ftniVKn4V2BA0PYYoxRUrFiESv4l0eDkClUImOB4HVKPjvrcW1TlCc
-	dTebl7tZQKBEoRbhcLG7YdNBJdFDXn5Jm2kfDULDFuXZEYPpSjZO5gdPzBf1S/v/szhY9AfplLm
-	h6tXZkOOE896S4KYpyBgpbq9fWppjbCvjvw2oSyBgHl6bAMxpuUxMZ+EgyGEcFbGX5zzdWqnogj
-	jHbcPhG/fCOIntKYt
-X-Google-Smtp-Source: AGHT+IEtm22Ya9JUV8ulYRQRT6vYHBjx+q7IOEDUr9BMoA+Edf/n/UDiFasL+UkKEL9+F1awgGEj8Q==
-X-Received: by 2002:a05:6000:40d9:b0:3a4:d31e:4af3 with SMTP id ffacd0b85a97d-3a558ad6e98mr181211f8f.37.1749585790019;
-        Tue, 10 Jun 2025 13:03:10 -0700 (PDT)
-Received: from [192.168.3.33] (115.39.160.45.gramnet.com.br. [45.160.39.115])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53229de48sm13364311f8f.10.2025.06.10.13.03.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 13:03:09 -0700 (PDT)
-Message-ID: <f962e9bab3dc8bf5cae1c7e187a54fb96a543d51.camel@suse.com>
-Subject: Re: [PATCH 4/7] drivers: serial: kgdboc: Check CON_SUSPENDED
- instead of CON_ENABLED
-From: Marcos Paulo de Souza <mpdesouza@suse.com>
-To: Doug Anderson <dianders@chromium.org>
-Cc: Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
- John Ogness <john.ogness@linutronix.de>, Sergey Senozhatsky
- <senozhatsky@chromium.org>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, Jason
- Wessel	 <jason.wessel@windriver.com>, Daniel Thompson <danielt@kernel.org>,
- Richard Weinberger <richard@nod.at>, Anton Ivanov
- <anton.ivanov@cambridgegreys.com>, Johannes Berg	
- <johannes@sipsolutions.net>, linux-kernel@vger.kernel.org, 
-	linux-serial@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net, 
-	linux-um@lists.infradead.org
-Date: Tue, 10 Jun 2025 17:03:02 -0300
-In-Reply-To: <CAD=FV=XXQyZLYKoszj68ZGFDY=9-cmEUp406WeOeSBVZOHyUHw@mail.gmail.com>
-References: <20250606-printk-cleanup-part2-v1-0-f427c743dda0@suse.com>
-	 <20250606-printk-cleanup-part2-v1-4-f427c743dda0@suse.com>
-	 <CAD=FV=XXQyZLYKoszj68ZGFDY=9-cmEUp406WeOeSBVZOHyUHw@mail.gmail.com>
-Autocrypt: addr=mpdesouza@suse.com; prefer-encrypt=mutual;
- keydata=mDMEZ/0YqhYJKwYBBAHaRw8BAQdA4JZz0FED+JD5eKlhkNyjDrp6lAGmgR3LPTduPYGPT
- Km0Kk1hcmNvcyBQYXVsbyBkZSBTb3V6YSA8bXBkZXNvdXphQHN1c2UuY29tPoiTBBMWCgA7FiEE2g
- gC66iLbhUsCBoBemssEuRpLLUFAmf9GKoCGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- QemssEuRpLLWGxwD/S1I0bjp462FlKb81DikrOfWbeJ0FOJP44eRzmn20HmEBALBZIMrfIH2dJ5eM
- GO8seNG8sYiP6JfRjl7Hyqca6YsE
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (by Flathub.org) 
+	s=arc-20240116; t=1749585835; c=relaxed/simple;
+	bh=BHQ1cxkHMBlurx28SDKq+1wlzSkDpAGSR6Bm/QCfYmc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Akz6Cxi+APUaudMoKc75Tskf2c2v1OVkkJcXZ0hkC0Wisfhpdhp3rIVpmw+iug0syBBfoIPidS1o8FtqhOQ0w19l1u6haeUancjD2NdUooD7YnzsxxBvmBr5mn1hVb+U1v2q2fC3weYEfY+t5Nr2it7AYluQe2yRZu+qi2Xc2O0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 8F69E120F01;
+	Tue, 10 Jun 2025 20:03:51 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id C887F2002B;
+	Tue, 10 Jun 2025 20:03:49 +0000 (UTC)
+Date: Tue, 10 Jun 2025 16:05:20 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Dan Carpenter <dan.carpenter@linaro.org>
+Subject: [for-linus][PATCH] tracing: Do not free "head" on error path of
+ filter_free_subsystem_filters()
+Message-ID: <20250610160520.09368df2@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: C887F2002B
+X-Stat-Signature: 9bg6s6ws9z3ju1no94ctkmq7zhabgsgr
+X-Rspamd-Server: rspamout07
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19rYp7i4w59CAh6gBETZdxV9pI8PCk+lZc=
+X-HE-Tag: 1749585829-692791
+X-HE-Meta: U2FsdGVkX1/aDMdE0KTx4C0aDwVvHZ6RApQNe54al5CcYd1IO7dBoK7G/12Q8CCN8YbCujXME4d3fNBpfVCZXvudwjHDSF0bwHSNmOLbGR1qh25kllg0bXN4GL26rzombZ1IDLE8XBwrxj0RyMGUzaJIyw+TsxBo3KPfydgE7dqX3CifjlZ+aHvS/qkzcGWQ+UmK/YGcNwFeO7X/5VV/tz/n2UwiK5Z2xu+xa6mkdCKiwOiteSivbDU/pwDTEqyCIhrNuyinQo1hEI20vVeKaiRHK1omVSgCVsAh19qKMOrtT0TDzbA3tH28uFLx3JEGXhNKWBEr2ZRRWP5cPjSn+bFtk817sxQF5iyuIs0xgXOpKZIV8iBaWvAFEWfkllhMtAasrrv5IGuUS1g8Xm8Ez965XGB7JgnF3TtBFgyH4pDaG2PZtVFdFlKt8Bx+1ulNczlE2EeD7N/mGQFDU5CWb67or+yniztNc0o6SgavyNAhd1kT2T8ifoT1sfUzeomoMNkjwQdDYnXsdzh7csLBuPGQ7DoaG4EF1P93MrZv7kJhiZlwiOu63GAvlTS4qEmU
 
-On Mon, 2025-06-09 at 13:13 -0700, Doug Anderson wrote:
-> Hi,
->=20
-> On Fri, Jun 6, 2025 at 7:54=E2=80=AFPM Marcos Paulo de Souza
-> <mpdesouza@suse.com> wrote:
-> >=20
-> > All consoles found on for_each_console are registered, meaning that
-> > all of
-> > them are CON_ENABLED. The code tries to find an active console, so
-> > check if the
-> > console is not suspended instead.
-> >=20
-> > Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
-> > ---
-> > =C2=A0drivers/tty/serial/kgdboc.c | 3 ++-
-> > =C2=A01 file changed, 2 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/tty/serial/kgdboc.c
-> > b/drivers/tty/serial/kgdboc.c
-> > index
-> > 85f6c5a76e0fff556f86f0d45ebc5aadf5b191e8..af6d2208b8ddb82d62f33292b
-> > 006b2923583a0d2 100644
-> > --- a/drivers/tty/serial/kgdboc.c
-> > +++ b/drivers/tty/serial/kgdboc.c
-> > @@ -577,7 +577,8 @@ static int __init kgdboc_earlycon_init(char
-> > *opt)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 console_list_lock();
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for_each_console(con) {
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 if (con->write && con->read &&
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (con->flags & (CON_BOOT | CON_ENABL=
-ED)) &&
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (con->flags & CON_BOOT) &&
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ((con->flags & CON_SUSPENDED) =3D=
-=3D 0) &&
->=20
-> I haven't tried running the code, so I could easily be mistaken,
-> but...
->=20
-> ...the above doesn't seem like the correct conversion. The old
-> expression was:
->=20
-> (con->flags & (CON_BOOT | CON_ENABLED))
->=20
-> That would evaluate to non-zero (true) if the console was _either_
-> "boot" or "enabled".
->=20
-> The new expression is is:
->=20
-> (con->flags & CON_BOOT) && ((con->flags & CON_SUSPENDED) =3D=3D 0)
->=20
-> That's only true if the console is _both_ "boot" and "not suspended".
 
-My idea here was that the users of for_each_console would find the
-first available console, and by available I would expect them to be
-usable. In this case, is there any value for kgdboc to use a console
-that is suspended? Would it work in this case?
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+trace/fixes
 
-I never really used kgdboc, but only checking if the console was
-enabled (which it's always the case here) was something that needed to
-be fixed.
+Head SHA1: 8a157d8a00e815cab4432653cb50c9cedbbb4931
 
-Maybe I'm missing something here as well, so please let me know if I
-should remove the new check.
 
->=20
-> -Doug
+Steven Rostedt (1):
+      tracing: Do not free "head" on error path of filter_free_subsystem_filters()
+
+----
+ kernel/trace/trace_events_filter.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+---------------------------
+commit 8a157d8a00e815cab4432653cb50c9cedbbb4931
+Author: Steven Rostedt <rostedt@goodmis.org>
+Date:   Tue Jun 10 09:33:48 2025 -0400
+
+    tracing: Do not free "head" on error path of filter_free_subsystem_filters()
+    
+    The variable "head" is allocated and initialized as a list before
+    allocating the first "item" for the list. If the allocation of "item"
+    fails, it frees "head" and then jumps to the label "free_now" which will
+    process head and free it.
+    
+    This will cause a UAF of "head", and it doesn't need to free it before
+    jumping to the "free_now" label as that code will free it.
+    
+    Cc: Masami Hiramatsu <mhiramat@kernel.org>
+    Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+    Link: https://lore.kernel.org/20250610093348.33c5643a@gandalf.local.home
+    Fixes: a9d0aab5eb33 ("tracing: Fix regression of filter waiting a long time on RCU synchronization")
+    Reported-by: kernel test robot <lkp@intel.com>
+    Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+    Closes: https://lore.kernel.org/r/202506070424.lCiNreTI-lkp@intel.com/
+    Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+index ea8b364b6818..08141f105c95 100644
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -1437,10 +1437,8 @@ static void filter_free_subsystem_filters(struct trace_subsystem_dir *dir,
+ 	INIT_LIST_HEAD(&head->list);
+ 
+ 	item = kmalloc(sizeof(*item), GFP_KERNEL);
+-	if (!item) {
+-		kfree(head);
++	if (!item)
+ 		goto free_now;
+-	}
+ 
+ 	item->filter = filter;
+ 	list_add_tail(&item->list, &head->list);
