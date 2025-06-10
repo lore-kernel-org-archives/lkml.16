@@ -1,112 +1,100 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295E7236424
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 17:00:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+Received: from trinity3.trinnet.net (trinity.trinnet.net [96.78.144.185])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E89BD1EBA09;
+	Tue, 10 Jun 2025 17:00:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.78.144.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749574825; cv=none; b=Ux4XlRB9zb/5w3mDNxFR5GQb7lZ93Xe/9CiftFo7xwQRR1hvTO/Mf8Mv37BoXYm+/XnB+blzdRXngleP5cxZH+xJ8cUr/IfCFbJ5P1pFXI3NqoX45nMYsJMNBb0enhY4Y4+uhj6aY/+1HTsVIQ05y9puWvvtBFuB4cWKg4Hglt0=
+	t=1749574843; cv=none; b=DSXmDoy+OyFi9dz5C4BY97/OEPTjIAI5sCHzJwieRKQM/wMM7C47v45Ty9f8QmjveOmK0Egpyjk9ZAUmOWUrX1Lm1vNkH5ZPJpJquhT5ClKoLHXM7b+rWt6Tyxv1atLet5rs7ZWFQUYKskTFjPKakLRcfOBwqU3C9Y3LtfXJxqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749574825; c=relaxed/simple;
-	bh=9hsZLaU75BjpRptkuBvMUF48vhmBMkkHos8UoQfVNSU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Bqhyl3l4UR+UnTTrRAOu2LTFVFREHYGiIPOsQhdyFg1iUasllbwiZCXScrUd67irGAEOyUN++hGnxgSj6TZwTfGBy+T5YqZx2rOHAf7gBIUP9daFiaUbfj8lS1Iro1+xV8Zi0fFoNCfAcF9EiUDAjFgFSJq03JB1ePpGwdiiku0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=GDdzoc8u; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GDdzoc8u"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-70a57a8ffc3so56276377b3.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 10:00:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1749574823; x=1750179623; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1CpWx/dhcYFHrMuRqfMn/uLf3NBOzEdKJ7PHmZdNdWs=;
-        b=GDdzoc8uhjLl6JwBSuN5YC3n9rQuDV6eetXL8fboZoAwwNU8v6RbI8tzjTHQbsgz6p
-         Rpw+wubCKLyybh34zofSSdocA27Qp1n2m8EfLx//uNaAHLmU1WY4+ebDVCy0pyfDmBvV
-         nCxhqrYpCjsABgRaKCq8vS4Tvw/FJFikPEEI4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749574823; x=1750179623;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1CpWx/dhcYFHrMuRqfMn/uLf3NBOzEdKJ7PHmZdNdWs=;
-        b=jatlpgly44gd5mKcW+Shbk/rWe9ujiVAhZiPiNLvfE8jW0LcGWJU3gzvcIxbxgbMCm
-         dZLQZN31hS9xAiTXcruhB7iScQgVX7COF69dtaEO39NCr1Dl/uVm40vL/bvUJIZZX/XE
-         zkt6e1nHWIbcldg3hU+enA4djfyZfzU5PkO/vwB3NxMPualQRs1OmTooGhNrjkcdkBEv
-         g2XDCr02IWEEGhzNK+/AONSXA6pE7nYKlSgWQU4wVQlhePgBFbI686Oom8YKSZZ/ojPQ
-         woc9Hg2G8DaNBEFIxGL7J9hK077LO3SJ1G2PurhWBaltw2ayqTf5Wt9N+9zhGFWRJLMD
-         9EZw==
-X-Forwarded-Encrypted: i=1; AJvYcCXi61QaE13A+0NPuos7Lq5zvX9971hbZIU8KpYMctNRUVn821F3TZgAjzzJ6fGsDPOlRD+TFWiYN0b1X0s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLd8w2y6JLNwOxBqgKYEk6nzM8g2bS4pLzGVdGfhRGYQ1yNgfH
-	dprd68ORYDJ3CJYoQ+ZdjK8lNqlJyTHZsyZF6SZ0sKUHxNWhpw9BP3xm1U0N2BDBBgBu8L1S4ha
-	S38d9LtO25WIQ7T4I54vrcj7OGg02kRmE7myrpKMx
-X-Gm-Gg: ASbGncuSiPgCDWqQsCCKkQgNOB2rlTDf4ySdwG7XSd5ZXiJmudPD4Z7itm4qaCNrXq3
-	CyjfKjdY2nLQeHHtZqlTNOZydK2l2WvIFtJwuOCZnbmkY6ycbE6ig2tbEWXU+cMhEN+NQJBiKnS
-	JS/c17ikQQ0s81wBQ6rrKWoF2LceFiTshWIdtlqgSMjY6EY8UmEqCf3Q==
-X-Google-Smtp-Source: AGHT+IE00ce8xDusfDQD3NtC4YowjQLIoj1ZSjHEA05wiN/p3V0Le4pgsgSFjs0cflbETy+V51Wu5cNchYcgN7AsnTw=
-X-Received: by 2002:a05:690c:4906:b0:70c:d322:872c with SMTP id
- 00721157ae682-711409e4d32mr2975947b3.1.1749574821564; Tue, 10 Jun 2025
- 10:00:21 -0700 (PDT)
+	s=arc-20240116; t=1749574843; c=relaxed/simple;
+	bh=Rwc4NuErVkFpHBkoUx3q2sPM3JKnIPVvz372v7HbkF4=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=FnnI+RMMmo/bPaPx0AE4ITj3VDsH26EXFjTBAWhSSouyH4HswX9RaS1C/+uQHV1L6IswhZrPAo5G/cNEDm5CeKjs8pdXYtdBhwQsKLFO8S3ZHdgBRogbRcZmHwXPgKrHWYdjLhE0aou3F1HY2QUIo2oZbdI7bzk7PeuVq3iBZ1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trinnet.net; spf=pass smtp.mailfrom=trinnet.net; arc=none smtp.client-ip=96.78.144.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trinnet.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trinnet.net
+Received: from trinity4.trinnet.net (trinity4.trinnet.net [192.168.0.11])
+	by trinity3.trinnet.net (TrinityOS hardened/TrinityOS Hardened) with ESMTP id 55AH05eh017638;
+	Tue, 10 Jun 2025 10:00:05 -0700
+Subject: Re: [PATCH net] netrom: fix possible deadlock in nr_rt_device_down
+To: Dan Cross <crossd@gmail.com>
+References: <20250605105449.12803-1-arefev@swemel.ru>
+ <20250609155729.7922836d@kernel.org>
+ <5f821879-6774-3dc2-e97d-e33b76513088@trinnet.net>
+ <20250609162642.7cb49915@kernel.org>
+ <4cfc85af-c13a-aa9c-a57c-bf4b6e0f2186@trinnet.net>
+ <CAEoi9W57D-BfpYUAe5M3zjJvTUQUL4UUB+iWkpRO_o8JWfS7FQ@mail.gmail.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, Denis Arefev <arefev@swemel.ru>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+        Simon Horman <horms@kernel.org>, Nikita Marushkin <hfggklm@gmail.com>,
+        Ilya Shchipletsov <rabbelkin@mail.ru>,
+        Hongbo Li <lihongbo22@huawei.com>, linux-hams@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lvc-project@linuxtesting.org, stable@vger.kernel.org,
+        syzbot+ccdfb85a561b973219c7@syzkaller.appspotmail.com
+From: David Ranch <linux-hams@trinnet.net>
+Message-ID: <50676604-b8c9-cc57-1ce0-a4db4758b190@trinnet.net>
+Date: Tue, 10 Jun 2025 10:00:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:45.0) Gecko/20100101
+ Thunderbird/45.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610153748.1858519-1-tmichalec@google.com>
-In-Reply-To: <20250610153748.1858519-1-tmichalec@google.com>
-From: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Date: Tue, 10 Jun 2025 10:00:10 -0700
-X-Gm-Features: AX0GCFuwttqkyiSf7Z-Y9KrGw93dCiqxmCXC4gASs51y4epRMY_H18lbkfSbcSA
-Message-ID: <CANFp7mXZXSJLYTO+2rkn+W6ki_hnzBPJ6s8MwtFFeyPqLbzQ1g@mail.gmail.com>
-Subject: Re: [PATCH] platform/chrome: cros_ec_typec: Defer probe on missing EC parent
-To: Tomasz Michalec <tmichalec@google.com>
-Cc: Benson Leung <bleung@chromium.org>, Jameson Thies <jthies@google.com>, 
-	Andrei Kuchynski <akuchynski@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>, 
-	Guenter Roeck <groeck@chromium.org>, Konrad Adamczyk <konrada@google.com>, 
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	chromeos-krk-upstreaming@google.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAEoi9W57D-BfpYUAe5M3zjJvTUQUL4UUB+iWkpRO_o8JWfS7FQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-3.0 (trinity3.trinnet.net [192.168.0.1]); Tue, 10 Jun 2025 10:00:07 -0700 (PDT)
 
-On Tue, Jun 10, 2025 at 8:39=E2=80=AFAM Tomasz Michalec <tmichalec@google.c=
-om> wrote:
->
-> If cros_typec_probe is called before EC device is registered,
-> cros_typec_probe will fail. It may happen when cros-ec-typec.ko is
-> loaded before EC bus layer module (e.g. cros_ec_lpcs.ko,
-> cros_ec_spi.ko).
->
-> Return -EPROBE_DEFER when cros_typec_probe doesn't get EC device, so
-> the probe function can be called again after EC device is registered.
->
-> Signed-off-by: Tomasz Michalec <tmichalec@google.com>
-> ---
->  drivers/platform/chrome/cros_ec_typec.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/c=
-hrome/cros_ec_typec.c
-> index 7678e3d05fd3..f437b594055c 100644
-> --- a/drivers/platform/chrome/cros_ec_typec.c
-> +++ b/drivers/platform/chrome/cros_ec_typec.c
-> @@ -1272,8 +1272,8 @@ static int cros_typec_probe(struct platform_device =
-*pdev)
->
->         typec->ec =3D dev_get_drvdata(pdev->dev.parent);
->         if (!typec->ec) {
-> -               dev_err(dev, "couldn't find parent EC device\n");
-> -               return -ENODEV;
-> +               dev_warn(dev, "couldn't find parent EC device\n");
-> +               return -EPROBE_DEFER;
->         }
->
->         platform_set_drvdata(pdev, typec);
-> --
-> 2.50.0.rc0.604.gd4ff7b7c86-goog
->
+Yes, this seems like a reasonable approach though I understand all this=20
+code is old, overly complicated, and when proposed changes are=20
+available, little to no proper testing is done before it's commited and=20
+it takes a very long time to get properly fixed.
 
-Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+I only bring this all up as the Linux AX.25 community has been badly=20
+bitten by similar commits in the last few years.  I've tried to help=20
+find a new maintainer and/or find somewhere to possibly create and run=20
+CI tests to catch issues but I've been unsuccessful so far.
+
+I am happy to try helping on the testing side once I know what the test=20
+harness is but I'm out of my league when it comes to the code side.
+
+--David
+KI6ZHD
+
+
+On 06/10/2025 06:36 AM, Dan Cross wrote:
+> On Mon, Jun 9, 2025 at 7:31=E2=80=AFPM David Ranch <linux-hams@trinnet.=
+net> wrote:
+>> That's unclear to me but maybe someone else knowing the code better th=
+an
+>> myself can chime in.  I have to assume having these locks present
+>> are for a reason.
+>
+> The suggestion was not to remove locking, but rather, to fold multiple
+> separate locks into one. That is, have a single lock that covers both
+> the neighbor list and the node list. Naturally, there would be more
+> contention around a single lock in contrast to multiple, more granular
+> locks. But given that NETROM has very low performance requirements,
+> and that the data that these locks protect doesn't change that often,
+> that's probably fine and would eliminate the possibility of deadlock
+> due to lock ordering issues.
+>
+>         - Dan C.
+>
+>> On 06/09/2025 04:26 PM, Jakub Kicinski wrote:
+>>> On Mon, 9 Jun 2025 16:16:32 -0700 David Ranch wrote:
+>>>> I'm not sure what you mean by "the only user of this code".  There a=
+re
+>>>> many people using the Linux AX.25 + NETROM stack but we unfortunatel=
+y
+>>>> don't have a active kernel maintainer for this code today.
+>>>
+>>> Alright, sorry. Either way - these locks are not performance critical=
+
+>>> for you, right?
+>>>
+>>
+
