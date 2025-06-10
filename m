@@ -1,64 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC5C1E1C1A;
-	Tue, 10 Jun 2025 10:46:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25FC38633F;
+	Tue, 10 Jun 2025 10:46:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749552385; cv=none; b=HkfYoWNTbx+fZ6AuOrCeirLl6L63IdzUolDTF1Jc7hmkcF52v3ajj4bGgGDaeM8cCynqxB8LwA+hB5NOeCS3JpoQGx7A5Sy9950O8IVyS1TM/XZ5Xk93UkfSpAOBx6ez/qs/eXljzGLqNh5IyRKvCxgNuTnR1NeQvddxq+yn/hA=
+	t=1749552385; cv=none; b=njpDuDceRfplE2x8ma/rclsFBW0UFb1dehTHUueL4Ms2zgZeQ6SmlQbDNjbHQMrVFTfMRuGzcbB+dFt0UxZUUA580qR872sn2oyw8GOofzQ8bnZv0H57sFh/LcyK1PjpN8y/6rN44Jvxa1RF58d4FDHOXGcY0HXCWzTm7VYCmzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749552385; c=relaxed/simple;
-	bh=nVMNn0VSngYDSLAUJezTR2b19OzJ86I1XkvSWoGjSbY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QoMFn5/ElIKExVSYzS36dU7uj0TZ/RvHCYeF2/12Hoy29i5Mj9eSgdCg7Uak5tQtrmgisy1AZNjtYwSulK7UmqB/KRf1OJ0CLLbhWdI6n8P/celEpCvF8u6mieC+17Gl4zAMp9S6WHIix1lBEiEDxWb4X1bwRgRDSx3YaiQ/VNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a2mM573p; arc=none smtp.client-ip=10.30.226.201
+	bh=F5ZJdtnuqszCHHCZyY87KKWQfWO3tidioj3+glAwUg4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gqmY/Zl5mJDeXKWLUE19vwwmCrT0C9G16v90VYclR9Va+mIn5Bz/WEzznT5lFMFo0Cria81dKCgorZitH8LsCh2J+SWFE72JmDWQnkpGhZRrYTasGLM3uPGLiSYm4OLD+TRhodI2uv3cucf3eb3ZX+uiUYvsBE3d/jMGD4/U8G0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jah7FvlS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a2mM573p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D07F6C4CEF2;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jah7FvlS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C280EC4AF0B;
 	Tue, 10 Jun 2025 10:46:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1749552384;
-	bh=nVMNn0VSngYDSLAUJezTR2b19OzJ86I1XkvSWoGjSbY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=a2mM573px73KHRx8sQXqbhIdJNRe3oVbZRNBz1N6TgLaGiBmkS+HVTR/Fyo2PHoe/
-	 d6tY/TxNxbqFFMvtIJyhiCbvPOdticz3ELLdebqIiCN/CtcGEaa2zNC+aZ0KL1dB0a
-	 FrrjQUcTRXx8lpUsI558zi0aQzpFN8EZn7o7dypOWNmtg9GSwXsXeCE305o4BRxCxg
-	 K9ecy+bgD2pRQmx2DItTKQo/DebZ1zYFlhBnjz6LHtCbuhoJ5AsbIZyX8u6EqnPtl3
-	 baq4cYqlgMohXdrnoXjr0eiBTGsJl8zObShPZR2Q2Er/nIqz6zEWEbnI/prDTKIDsO
-	 EfgLcC0fURJeA==
+	bh=F5ZJdtnuqszCHHCZyY87KKWQfWO3tidioj3+glAwUg4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=jah7FvlSBOEU1Tx/ubjiTY323LSIJaAKfLNoGWMOFPgT9K7pjiIhXLfNe12oROD1z
+	 JpE7jeV4b9DsUkjACSGM+OTDNRtRawfIyrMAthZDIpzyOSRZ+yGLVZLKttz63e6wzv
+	 wrmsrSv8Ytu3KwLCBoSkxwfPEYpZkmzi7Wqaja7Os6uu0lfivKGXs34JbHIbaVrHQM
+	 cZngmdErsqCRNYLJ/lOi4wfXp6dUonrLhvqGD+/T7kju8mgdgBLKyaqmIwMod97X3L
+	 b+QXZrkCqdVfgLZ9l2cI095eDGMyCIrHw5pZPnjfwl8P5HBsx2Pm2bAp1B+LeANXtj
+	 ZBIzvppriCKcA==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uOwUp-00000003jv3-04QX;
-	Tue, 10 Jun 2025 12:46:23 +0200
+	id 1uOwUo-00000003jur-3Qzh;
+	Tue, 10 Jun 2025 12:46:22 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 	"Jonathan Corbet" <corbet@lwn.net>
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	"Akira Yokosawa" <akiyks@gmail.com>,
-	"Breno Leitao" <leitao@debian.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	"Ignacio Encinas Rubio" <ignacio@iencinas.com>,
-	"Marco Elver" <elver@google.com>,
-	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	linux-kernel@vger.kernel.org,
 	"Paul E. McKenney" <mchehab+huawei@kernel.org>,
-	"Shuah Khan" <skhan@linuxfoundation.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <mchehab+huawei@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <mchehab+huawei@kernel.org>,
 	joel@joelfernandes.org,
 	linux-kernel-mentees@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	lkmm@lists.linux.dev,
-	netdev@vger.kernel.org,
 	peterz@infradead.org,
-	stern@rowland.harvard.edu
-Subject: [PATCH 3/4] docs: netlink: don't ignore generated rst files
-Date: Tue, 10 Jun 2025 12:46:06 +0200
-Message-ID: <1cf12ab4c027cf27decf70a40aafdd0e2f669299.1749551140.git.mchehab+huawei@kernel.org>
+	stern@rowland.harvard.edu,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Ignacio Encinas Rubio <ignacio@iencinas.com>,
+	lkmm@lists.linux.dev,
+	Marco Elver <elver@google.com>,
+	Breno Leitao <leitao@debian.org>,
+	Akira Yokosawa <akiyks@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <mchehab+huawei@kernel.org>,
+	Jan Stancek <jstancek@redhat.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Ruben Wauters <rubenru09@aol.com>,
+	Simon Horman <mchehab+huawei@kernel.org>,
+	netdev@vger.kernel.org
+Subject: [PATCH 0/4] Don't generate netlink .rst files inside $(srctree)
+Date: Tue, 10 Jun 2025 12:46:03 +0200
+Message-ID: <cover.1749551140.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1749551140.git.mchehab+huawei@kernel.org>
-References: <cover.1749551140.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,54 +68,112 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Currently, the build system generates ReST files inside the
-source directory. This is not a good idea, specially when
-we have renames, as make clean won't get rid of them.
+As discussed at:
+   https://lore.kernel.org/all/20250610101331.62ba466f@foz.lan/
 
-As the first step to address the issue, stop ignoring those
-files. This way, we can see exactly what has been produced
-at build time inside $(srctree):
+changeset f061c9f7d058 ("Documentation: Document each netlink family")
+added a logic which generates *.rst files inside $(srctree). This is bad when
+O=<BUILDDIR> is used.
 
-        Documentation/networking/netlink_spec/conntrack.rst
-        Documentation/networking/netlink_spec/devlink.rst
-        Documentation/networking/netlink_spec/dpll.rst
-        Documentation/networking/netlink_spec/ethtool.rst
-        Documentation/networking/netlink_spec/fou.rst
-        Documentation/networking/netlink_spec/handshake.rst
-        Documentation/networking/netlink_spec/index.rst
-        Documentation/networking/netlink_spec/lockd.rst
-        Documentation/networking/netlink_spec/mptcp_pm.rst
-        Documentation/networking/netlink_spec/net_shaper.rst
-        Documentation/networking/netlink_spec/netdev.rst
-        Documentation/networking/netlink_spec/nfsd.rst
-        Documentation/networking/netlink_spec/nftables.rst
-        Documentation/networking/netlink_spec/nl80211.rst
-        Documentation/networking/netlink_spec/nlctrl.rst
-        Documentation/networking/netlink_spec/ovs_datapath.rst
-        Documentation/networking/netlink_spec/ovs_flow.rst
-        Documentation/networking/netlink_spec/ovs_vport.rst
-        Documentation/networking/netlink_spec/rt_addr.rst
-        Documentation/networking/netlink_spec/rt_link.rst
-        Documentation/networking/netlink_spec/rt_neigh.rst
-        Documentation/networking/netlink_spec/rt_route.rst
-        Documentation/networking/netlink_spec/rt_rule.rst
-        Documentation/networking/netlink_spec/tc.rst
-        Documentation/networking/netlink_spec/tcp_metrics.rst
-        Documentation/networking/netlink_spec/team.rst
+A recent change renamed the yaml files used by Netlink, revealing a bad
+side effect: as "make cleandocs" don't clean the produced files, symbols 
+appear duplicated for people that don't build the kernel from scratch.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/networking/netlink_spec/.gitignore | 1 -
- 1 file changed, 1 deletion(-)
+There are some possible solutions for that. The simplest one, which is what
+this series address, places the build files inside Documentation/output. 
+The changes to do that are simple enough, but has one drawback,
+as it requires a (simple) template file for every netlink family file from
+netlink/specs. The template is simple enough:
+
+        .. kernel-include:: $BUILDDIR/networking/netlink_spec/<family>.rst
+
+Part of the issue is that sphinx-build only produces html files for sources
+inside the source tree (Documentation/).  Well, such requirement
+is already fulfilled, as we do have one *.yaml file per family inside
+Documentation/netlink, but those aren't currently processed by Sphinx,
+as Documentation/conf.py currently has only:
+
+	source_suffix = ['.rst']
+
+To address that, a long term solution is to add '.yaml' to source_suffix
+and add an extension at Documentation/sphinx that parses *.yaml files.
+Something similar to:
+
+	https://github.com/Jakski/sphinxcontrib-autoyaml
+
+This could internally call ynl_gen_rst.py, but some  care is needed, as 
+the yaml extension is also used by devicetree. 
+
+Mauro Carvalho Chehab (4):
+  tools: ynl_gen_rst.py: create a top-level reference
+  docs: netlink: netlink-raw.rst: use :ref: instead of :doc:
+  docs: netlink: don't ignore generated rst files
+  docs: netlink: store generated .rst files at Documentation/output
+
+ Documentation/Makefile                        |  8 +++----
+ .../networking/netlink_spec/.gitignore        |  1 -
+ .../networking/netlink_spec/conntrack.rst     |  3 +++
+ .../networking/netlink_spec/devlink.rst       |  3 +++
+ .../networking/netlink_spec/dpll.rst          |  3 +++
+ .../networking/netlink_spec/ethtool.rst       |  3 +++
+ Documentation/networking/netlink_spec/fou.rst |  3 +++
+ .../networking/netlink_spec/handshake.rst     |  3 +++
+ .../networking/netlink_spec/index.rst         |  6 +++++
+ .../networking/netlink_spec/lockd.rst         |  3 +++
+ .../networking/netlink_spec/mptcp_pm.rst      |  3 +++
+ .../networking/netlink_spec/net_shaper.rst    |  3 +++
+ .../networking/netlink_spec/netdev.rst        |  3 +++
+ .../networking/netlink_spec/nfsd.rst          |  3 +++
+ .../networking/netlink_spec/nftables.rst      |  3 +++
+ .../networking/netlink_spec/nl80211.rst       |  3 +++
+ .../networking/netlink_spec/nlctrl.rst        |  3 +++
+ .../networking/netlink_spec/ovpn.rst          |  3 +++
+ .../networking/netlink_spec/ovs_datapath.rst  |  3 +++
+ .../networking/netlink_spec/ovs_flow.rst      |  3 +++
+ .../networking/netlink_spec/ovs_vport.rst     |  3 +++
+ .../networking/netlink_spec/readme.txt        |  4 ----
+ .../networking/netlink_spec/rt-addr.rst       |  3 +++
+ .../networking/netlink_spec/rt-link.rst       |  3 +++
+ .../networking/netlink_spec/rt-neigh.rst      |  3 +++
+ .../networking/netlink_spec/rt-route.rst      |  3 +++
+ .../networking/netlink_spec/rt-rule.rst       |  3 +++
+ Documentation/networking/netlink_spec/tc.rst  |  3 +++
+ .../networking/netlink_spec/tcp_metrics.rst   |  3 +++
+ .../networking/netlink_spec/team.rst          |  3 +++
+ .../userspace-api/netlink/netlink-raw.rst     |  6 ++---
+ tools/net/ynl/pyynl/ynl_gen_rst.py            | 24 ++++++++++++-------
+ 32 files changed, 107 insertions(+), 20 deletions(-)
  delete mode 100644 Documentation/networking/netlink_spec/.gitignore
+ create mode 100644 Documentation/networking/netlink_spec/conntrack.rst
+ create mode 100644 Documentation/networking/netlink_spec/devlink.rst
+ create mode 100644 Documentation/networking/netlink_spec/dpll.rst
+ create mode 100644 Documentation/networking/netlink_spec/ethtool.rst
+ create mode 100644 Documentation/networking/netlink_spec/fou.rst
+ create mode 100644 Documentation/networking/netlink_spec/handshake.rst
+ create mode 100644 Documentation/networking/netlink_spec/index.rst
+ create mode 100644 Documentation/networking/netlink_spec/lockd.rst
+ create mode 100644 Documentation/networking/netlink_spec/mptcp_pm.rst
+ create mode 100644 Documentation/networking/netlink_spec/net_shaper.rst
+ create mode 100644 Documentation/networking/netlink_spec/netdev.rst
+ create mode 100644 Documentation/networking/netlink_spec/nfsd.rst
+ create mode 100644 Documentation/networking/netlink_spec/nftables.rst
+ create mode 100644 Documentation/networking/netlink_spec/nl80211.rst
+ create mode 100644 Documentation/networking/netlink_spec/nlctrl.rst
+ create mode 100644 Documentation/networking/netlink_spec/ovpn.rst
+ create mode 100644 Documentation/networking/netlink_spec/ovs_datapath.rst
+ create mode 100644 Documentation/networking/netlink_spec/ovs_flow.rst
+ create mode 100644 Documentation/networking/netlink_spec/ovs_vport.rst
+ delete mode 100644 Documentation/networking/netlink_spec/readme.txt
+ create mode 100644 Documentation/networking/netlink_spec/rt-addr.rst
+ create mode 100644 Documentation/networking/netlink_spec/rt-link.rst
+ create mode 100644 Documentation/networking/netlink_spec/rt-neigh.rst
+ create mode 100644 Documentation/networking/netlink_spec/rt-route.rst
+ create mode 100644 Documentation/networking/netlink_spec/rt-rule.rst
+ create mode 100644 Documentation/networking/netlink_spec/tc.rst
+ create mode 100644 Documentation/networking/netlink_spec/tcp_metrics.rst
+ create mode 100644 Documentation/networking/netlink_spec/team.rst
 
-diff --git a/Documentation/networking/netlink_spec/.gitignore b/Documentation/networking/netlink_spec/.gitignore
-deleted file mode 100644
-index 30d85567b592..000000000000
---- a/Documentation/networking/netlink_spec/.gitignore
-+++ /dev/null
-@@ -1 +0,0 @@
--*.rst
 -- 
 2.49.0
+
 
