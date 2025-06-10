@@ -1,83 +1,82 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8194E24889B;
-	Tue, 10 Jun 2025 20:22:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E59261390;
+	Tue, 10 Jun 2025 20:24:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749586971; cv=none; b=Wjr+aBMbSvqrGIh7s551eLr+VHvo3gkJQz+UQDXiit6FGYO8Q3JZvHhmUg5/+A0A/FgMomSuy9ceRvXCec19K+iNAARH5ZGctNnxzoW1iXiUPTRqDfI43wmnjkXMT4hc+mgcHpAoDPe5HRxVY0WGu/MnVnY9IIiYGMhWejwSWfU=
+	t=1749587088; cv=none; b=qcItDPq/PUChjdGwHFs4P1lcbnxfvOlm8sHMg2gvr7xLTqz4NcL8fvz7JSzDF6BviUbsp9HtLvXNkZd00wXEIiggLXhR+dwZdF4PCyOE3TpyH9ZHxVSyjdld00PBUWzEDiq0CiY8nlG5bVBC7Ir0B9UnN52baSs/Ar5rRfppYuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749586971; c=relaxed/simple;
-	bh=vbDwLegN4BUBvpYXglEaqbIzLIT07N8leHj3G127kVc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N5ENU4xt9QX3uSCSOQNZPIXjERDwZKGpDu4H7H7uYlCkVlsOBaeighcuxCYx2Y8IjfIFdEasIGdpdZMJJwgiIS6eGL/dhS5IKI6iM1aw1v1WKYUGDKvK1sso2u2m2mzkxcM68ATAnYjg0GMttAMIOeJI+dIeYhiwuBgBf5OJmTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k/HB6LFb; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749587088; c=relaxed/simple;
+	bh=sw3ZqSgKQCKhT56XlMQWwMH1gu9MA58LgMyebrIfZr8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=qnJ5Le6vVmip5PSLkj69F6v4Q+aK0inRY2dqmV8Fm8EJiJRK3w88KKKrL742PysmhQr2+U9soRpzfEdgi3qbVko9MlY2rmxwZ+p/WDtUJNKi2X7bTYdZFLfvG6M5EquCATbtJfsZd62ZgcdY1OLmhQYJgKAtfnF3cJdU9jKciRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sQ3MCAqm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k/HB6LFb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749586969; x=1781122969;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vbDwLegN4BUBvpYXglEaqbIzLIT07N8leHj3G127kVc=;
-  b=k/HB6LFbnmp5li6G6eUbxI/1Ljfg6RDBroNR7VbR1wGCq9hycuFmf9ez
-   avG0KwmrNGbYzH9jPl2jLL+IfjXKis+lsdGeokSwBqsIiUT4u4gH0tBoK
-   LDF5HkYpUceCMpWdh5JSNTzD4t4p3ReyIBr8h7VNpt4Gk3z0MH67qcjLb
-   S7C2FX1sDxWeomo4opsB/UYaUQHZ2YQ6XQnzSMp7FKE5yFd7+nP9vw43b
-   1gzAg5f3scTvm+ua+BHWbIVhUpEQCoFWAEHRarR+CtB2tAPHkBNfMJDXw
-   2Gp0viVO2r7VQ9U5hM5Ymww8fdqdZxSgRHzqU4R9/XR1+1zpBd3heyuxq
-   Q==;
-X-CSE-ConnectionGUID: KeO77pRlSfK1zHUFCQntHA==
-X-CSE-MsgGUID: 2mSAN0LpTzCBQUwV7cyh9A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="69276511"
-X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
-   d="scan'208";a="69276511"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 13:22:49 -0700
-X-CSE-ConnectionGUID: RvTyyALoRBC+3Tpj5sFVwA==
-X-CSE-MsgGUID: vjIlHbFnTEyci7HL5Yth0w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
-   d="scan'208";a="147516159"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 13:22:46 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uP5UY-00000005RYg-30TW;
-	Tue, 10 Jun 2025 23:22:42 +0300
-Date: Tue, 10 Jun 2025 23:22:42 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com, ikepanhc@gmail.com,
-	hmh@hmh.eng.br, W_Armin@gmx.de, platform-driver-x86@vger.kernel.org,
-	ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v4 1/2] platform/x86: thinklmi: improved DMI handling
-Message-ID: <aEiUEjI2ZoZlO8Vo@smile.fi.intel.com>
-References: <mpearson-lenovo@squebb.ca>
- <20250610192830.1731454-1-mpearson-lenovo@squebb.ca>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sQ3MCAqm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F22ECC4CEED;
+	Tue, 10 Jun 2025 20:24:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749587088;
+	bh=sw3ZqSgKQCKhT56XlMQWwMH1gu9MA58LgMyebrIfZr8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=sQ3MCAqmWOjqbGB6Z58dW3G4WVfCNy+VwBfhjPAX6hlnYyJ2OGX6NKlkLJJ5jPGli
+	 lEgpHJcbKmj6Ra+4GQvRw4zQqPpwx0uHPAO2RPz88GgqclHv0OrDh+pH5l3cteVogt
+	 1rDxMcK2hn9tsgAQHI8CYB3L/VUNiXAdd3C8JtIDgd6om7Dul7bQit6vEzVVhsd8QD
+	 +NpiffQep9vDP+KmNDCpk9FBxIPdE5g0WJRDrDUcD8nppEWDkpGasFPprTTsFtIzV2
+	 jSG3OpTcCxA/j9WXIIrzW8Pf6lL7XEiV1IYl7tN9/RRQxvqgCQvXxQUMPqCMmQxHyl
+	 LS3qNtt3w7M/A==
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+	id 873691AF6B6D; Tue, 10 Jun 2025 22:24:34 +0200 (CEST)
+From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@kernel.org>
+To: Ujwal Kundur <ujwal.kundur@gmail.com>, Alexander Lobakin
+ <aleksander.lobakin@intel.com>
+Cc: ast@kernel.org, daniel@iogearbox.net, davem@davemloft.net,
+ kuba@kernel.org, hawk@kernel.org, john.fastabend@gmail.com,
+ andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com,
+ song@kernel.org, yonghong.song@linux.dev, kpsingh@kernel.org,
+ sdf@fomichev.me, aoluo@google.com, jolsa@kernel.org,
+ netdev@vger.kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bpf: cpumap: report Rx queue index to xdp_rxq_info
+In-Reply-To: <CALkFLLJpz2MxRZ8r+mGayU_BZE=2=ukXTzXcnmyhXeHB7Q6v3g@mail.gmail.com>
+References: <20250609173851.778-1-ujwal.kundur@gmail.com>
+ <05305f84-37ff-4345-803a-85c2025dd67b@intel.com>
+ <CALkFLLJpz2MxRZ8r+mGayU_BZE=2=ukXTzXcnmyhXeHB7Q6v3g@mail.gmail.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date: Tue, 10 Jun 2025 22:24:34 +0200
+Message-ID: <87msafcpkt.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250610192830.1731454-1-mpearson-lenovo@squebb.ca>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain
 
-On Tue, Jun 10, 2025 at 03:28:24PM -0400, Mark Pearson wrote:
-> Fix issues reported by kernel test robot.
->  - Require DMI for think-lmi.
->  - Check return from getting serial string
+Ujwal Kundur <ujwal.kundur@gmail.com> writes:
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>> This looks wrong...
+>> I think this will always return index 0
+>
+>> So passing dev->_rx to that function will always return 0; which is what
+>> the field is already initialised to...
+>
+> I didn't realize that would always return 0, sorry I should've tried
+> to understand that statement better.
+>
+>> I'll just add that you may want to take a look at Lorenzo's series[0].
+>> Rx queue index is sorta HW hint, so it shouldn't be a problem to add the
+>> corresponding field to xdp_rx_meta.
+>> Then, you can expand cpumap's code to try reading that HW meta if present.
+>
+> Thank you! I also tried to work backwards to figure out how the
+> queue_index would be used if present in xdp_rxq_info but that wasn't
+> immediately apparent to me.
+> I'm keen on learning/contributing to the BPF part of the network stack
+> and this seemed like a good first patch to take up -- I'll understand
+> this better and try again.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Sounds good! Don't be discouraged by having to try again, that's
+perfectly normal :)
 
-
+-Toke
