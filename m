@@ -1,98 +1,132 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB0128C2C2
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 11:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C5B2253EB
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 11:12:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749553860; cv=none; b=NNFfSdvBDaC+bVZSiIcclXYgON12Wvle4/KPXz+SWl71Gd91LcTAUk9iyocm7FXv9b/a6v8W77TPra2OinMXrvIJJnDN458/+TPomJR3IhpLpxe0/aLOW5OqULx1891aAIx1u2UcdPa/OPKKYOi4Mqv+Tz20cSfPv/WL4jlPncY=
+	t=1749553934; cv=none; b=k3tFRU0xxMlbUjaWzwZHWwDxRgyVj8J5psBiAJpcwbylqiCKJL5hiI9aQcl19AdblADG1mv9CCkOCaSGUVPtzT/I99nwSoduAU2f/NZPIPljNhI9Ic0B36csDNZkEYYM+3z3YkpK++nQ91UwfC+XHcbQDtAZ9a8w+H4skDTNJDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749553860; c=relaxed/simple;
-	bh=moz2wim/rfV0N0Eam+BybWtmQPf4KPqMQ/vPGwKbkWQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JBUBGS1F8zAJObAJ1Em78+zYnQs6sqjue2X5acsrjNShixlFm+iFRIoZuYuAj3hVdHT0/ODwl/Txv1JePoVZW04TLtD86eTntEwcu0rUFUmIxKPImSXZR0qJCcStOPazsjJ7whuMXK+DhUOueop9FiVY8MdgVTmZWMxMG+HEaP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bZf5KJZL; arc=none smtp.client-ip=209.85.128.43
+	s=arc-20240116; t=1749553934; c=relaxed/simple;
+	bh=8Ot61PXl5kGzjjeEPSDiyR6snSZqeBq24oaab28mpFE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Cswk3EDBg46f8ttY5SRO/dtgRu05fERYbsXrOZxcluUrVNpHmUyjISpLainnS7rL9mAqviFA60KRcrKr8j5M6wbV/EjgarBqKUlRF+e941wn4ZsJQ55eDht6FyzFEVw1WpMHzUX0mMfXEtppsNf2I7TQHesAvDYCNeTNKHUwRac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vMyjGVvw; arc=none smtp.client-ip=209.85.128.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bZf5KJZL"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-442ea341570so34677055e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 04:10:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vMyjGVvw"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-70e5d953c0bso55200797b3.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 04:12:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749553857; x=1750158657; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/q/ZgTSjkrs+z+mH2vucvlcudnmZL89/lUFX5jLOims=;
-        b=bZf5KJZLAlvtQ6h3Hx+hicQ12578idIoM4pQTxaGuMofgNp+6qd4JgVgp1W41wVFnM
-         gmC+yVoo/u+tlh0lWhPjfyu5YdzRcHG0ePQiCDZUeolMoUEMY1fC7C/HZ1PhvKoas+qI
-         gC4CLreXQgGl7hn4jSHWBh25786usgQHdXq3ZlhXtL3DsTXDCtnkMav+xrB4DJ6erWP9
-         m6bI4LZE8YOXKy8wkDDQk7IVSQgEIUwNWdjevSkkdEsJqj4xq/dh9x35LeE9P3haEyFQ
-         D5Mm6rMkpcab0DURPUbFrkk5IxxqdTiROmcvqzm8j1LaZCbNgj07hQXBa2v42wRw3oYu
-         K2/g==
+        d=linaro.org; s=google; t=1749553930; x=1750158730; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LAasWsF+eqCK/f8XAQ+UlekFNlTdm6esn8JjFvKIvek=;
+        b=vMyjGVvwBEzqh17Qp5EZTGx6bH2Txuqs90sQMuM2Wilh1nsEDscklsVuVMwIGlM/oM
+         zdNkwXMoDW1oY2BWguA10kAfpc7pX0fxv9cB1zGjb5dImYi+n3Q8+5IuOWBD6Vek2wTP
+         cxhdSbsClMybDELMkMTLMhH0ugPGCEQZbTiSiDWR3I5EnF8NWuFu/TR539c5r4L5vjZf
+         6ccC1nER+Q8KF7N1IejidmLZl9/c6AR22Mu6VMg/g8JRneqU5Y62QwWyuvNs2Lm8w3xb
+         519IfL0KWHigCWqF4NjmL7jvRRNn3G109c9VmtGVA/0N69nK5fuDB2bAGus5kNR5JFrZ
+         y3hA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749553857; x=1750158657;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/q/ZgTSjkrs+z+mH2vucvlcudnmZL89/lUFX5jLOims=;
-        b=n7V9dVq+LPUh0g9uIW8fChBgJVKf4pX72B2uJsxIfsneqdKQbMGhMwBUeUO8gVuD0s
-         N6rylQI4Jsl6vKUFEAqNmcJ9YG04KMUYhS2cXtBzk7UQLjRhiOCCdowAL+jHhtTrUEYG
-         ehf8arpDbRJV7SnvIMyRoJ30Wmqcjp/DzS8McCAhUD2pwJYywy24ez4E9KnQrvTXQYhg
-         kED9CAbOrdHuhe3v67HEXfgOfh7GCfdu4Vf5eU0wRDd4o8nQr0mOt/AlT4bRXLeqIs3W
-         tZJjV/z8Ngli411AhnFgwrNZVXv5+i1UfjeNyaHSwspWywmoM9aMIpMYnwY0OFSDq4Io
-         SC8w==
-X-Forwarded-Encrypted: i=1; AJvYcCUM6q35+TWZHjAEJmJ0JPhLCuHwi3OnpO/WRmCwHZxPKGe1kOVtuQ2rIKQbjkoMA1A5kf3yu5ScZh54PrY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrE/08hCvN33MS+wQITm15y0V9KicFcqhyTLXa1lOfBu7TvS81
-	jCgKb/s36Ygte5mswyuvtmJp5vso6PdP+SEX7MmJt4NjcGmq7P9ND8l5JKxbFNtX7cw=
-X-Gm-Gg: ASbGncuH9fl0SBIsJCGRQNrNjEzw1uqYs6UAHmSHvEiBmxBbeP5QVntolKJWk/KmdF3
-	CrFrXkF2VAmrAV/nL8sNNSpX5cmlr9Yp80fmeVaKPRgvWvCkWzys/E/r12iOFTITb++XPWQ9BHi
-	8j02UhfQuzYt1J6SQTu4QpxNKP4KdPJGhzfXvX6rZPYKq+kURrcCJbVG7c6OUktwVVq6/RxGodG
-	9m8sGNRGcLrvkDREhQAnxi+XpQHp3Uon+5urB1ghFq4jFmX0G7oGa98KHPOBlUjpzFlJMODKC8M
-	dg4bmOpAnPQ1r0+sN0VZPSlyweoDY8xQnAwm331qOvUpqOpmXDW0iko1bFwQqOIvpCV/1Azs
-X-Google-Smtp-Source: AGHT+IH5Y3x1Ki501vRLyJm67k0wpvTB1sBYw1TI/SnhFi6z5THD53vwm2fVgUQX/KBtW47aDeeIdQ==
-X-Received: by 2002:a05:600c:5396:b0:441:b3eb:570a with SMTP id 5b1f17b1804b1-452013681efmr181694725e9.2.1749553856655;
-        Tue, 10 Jun 2025 04:10:56 -0700 (PDT)
-Received: from [192.168.0.251] ([79.115.63.158])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452f8f011c8sm134431845e9.3.2025.06.10.04.10.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jun 2025 04:10:56 -0700 (PDT)
-Message-ID: <2a6336cc-b5cc-4f8f-94a5-d0872a3c95fd@linaro.org>
-Date: Tue, 10 Jun 2025 12:10:54 +0100
+        d=1e100.net; s=20230601; t=1749553930; x=1750158730;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LAasWsF+eqCK/f8XAQ+UlekFNlTdm6esn8JjFvKIvek=;
+        b=SneX6UEfTXGp0M8OtBvFsctRjZJZNrhuLCIFrWtgl0vepW7GkgvokSbbyFvwaFOkhq
+         N/pCcTYrVoz8zrGRCIkmArzal9lszc+bskgKQbxkYCTrhakC7iCtfCI09vFp2jmC1stk
+         WOifjs+G6yQ1zWEcxuvcjqWPpRKIexFbTU91nYWPK5c3+XuKnFnkE86yzfV/UYCBdWQr
+         9kfC42pxNvzmtVbjxT8odyMXzQwmaTdQ5VsVp+Kon9f76235qOPj1pEmc0MSFjKW0lz7
+         YlmBQwewTNGWHg0cl32EP4DlNyrQp+QPvkCaL6s9dcJ+qBFDPQl500gMZLXimagEuk5u
+         tw/A==
+X-Forwarded-Encrypted: i=1; AJvYcCXqmrt/fqT7FXBrnumv+/e9o/0yvrAwSwQR6t2Not72pLQAZ0UHhwGb8OqEquMn69WCr5wAP3yst5/AaFc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymoYi240L0qYg3hkz6uVXt7pHMD52rF3DmiqkRU0B7t2ofOjVH
+	6PgqOKS8rTooDdychGlDOuMRT7qLlmUVuxPXRo2Xf7RdNBx0hlzwqzP2dvDHwuFf/ek4pGX3QSv
+	cwDybWfHw6lyAGwhtyOmUvZfunRa7JKCxIuEmmJMz0Q==
+X-Gm-Gg: ASbGncsbF2bGHKing9FGajKifVccT9xOaUmhH6kDWv1F9dmQFEVmzO9AS2f/GGfPIVl
+	NRjvmd5WzUyuo0T+tSxucewwq6LpRVx1W918zAuBWUqmBNiemKVdXR/LFdYYYM6gnKGxbBntWyz
+	oXt+8GkCMh+Tv4pYmt27uo1mjh8ig/ZqQtDyKANFZU1o0Q
+X-Google-Smtp-Source: AGHT+IEus4fAgfpA04VnzbpCBIk4pcLfZh1F4oLtFfc4L//yX8/NM2y06/TIMi8ieJhHRR9+7Ovs9MDTFh1COb9mV8I=
+X-Received: by 2002:a05:690c:700e:b0:702:52fb:4649 with SMTP id
+ 00721157ae682-710f770f580mr243841697b3.27.1749553930576; Tue, 10 Jun 2025
+ 04:12:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] PCI: Fix pdev_resources_assignable() disparity
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
- Rio <rio@r26.me>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
-References: <20250610102101.6496-1-ilpo.jarvinen@linux.intel.com>
- <20250610102101.6496-3-ilpo.jarvinen@linux.intel.com>
-Content-Language: en-US
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <20250610102101.6496-3-ilpo.jarvinen@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250609043225.77229-1-byungchul@sk.com> <20250609043225.77229-7-byungchul@sk.com>
+In-Reply-To: <20250609043225.77229-7-byungchul@sk.com>
+From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Date: Tue, 10 Jun 2025 14:11:34 +0300
+X-Gm-Features: AX0GCFuhc6OdkS5KHRqDnMJaP6aChThQllVzaiTd7yB-canYZ7c373Kcyan1HIw
+Message-ID: <CAC_iWjLbwkXTKfu27umzu4PmmxHAi7TN76t_VNHiS8WxCM0UQA@mail.gmail.com>
+Subject: Re: [PATCH net-next 6/9] netmem: remove __netmem_get_pp()
+To: Byungchul Park <byungchul@sk.com>
+Cc: willy@infradead.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org, 
+	almasrymina@google.com, harry.yoo@oracle.com, hawk@kernel.org, 
+	akpm@linux-foundation.org, davem@davemloft.net, john.fastabend@gmail.com, 
+	andrew+netdev@lunn.ch, asml.silence@gmail.com, toke@redhat.com, 
+	tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com, 
+	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net, david@redhat.com, 
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz, 
+	rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org, 
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, 9 Jun 2025 at 07:32, Byungchul Park <byungchul@sk.com> wrote:
+>
+> There are no users of __netmem_get_pp().  Remove it.
+>
+> Signed-off-by: Byungchul Park <byungchul@sk.com>
+> Reviewed-by: Mina Almasry <almasrymina@google.com>
+> Reviewed-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+> Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
+> ---
 
+Reviewed-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
 
-On 6/10/25 11:21 AM, Ilpo Järvinen wrote:
-> The reporter was perhaps not happy 
-
-No, no, very happy in fact. Thanks for all the help!
-I figured out that I need to get familiar with the resource fitting and
-assignment code, and PCI in general, before trying to fix the problem
-with the downstream drivers. Which is something that I can't allocate
-time for right now.
-
-So even if I couldn't fix what's going on downstream, I'd like to thank
-you for all the help and time!
-
-Cheers,
-ta
+>  include/net/netmem.h | 16 ----------------
+>  1 file changed, 16 deletions(-)
+>
+> diff --git a/include/net/netmem.h b/include/net/netmem.h
+> index 65bb87835664..d4066fcb1fee 100644
+> --- a/include/net/netmem.h
+> +++ b/include/net/netmem.h
+> @@ -234,22 +234,6 @@ static inline struct net_iov *__netmem_clear_lsb(net=
+mem_ref netmem)
+>         return (struct net_iov *)((__force unsigned long)netmem & ~NET_IO=
+V);
+>  }
+>
+> -/**
+> - * __netmem_get_pp - unsafely get pointer to the &page_pool backing @net=
+mem
+> - * @netmem: netmem reference to get the pointer from
+> - *
+> - * Unsafe version of netmem_get_pp(). When @netmem is always page-backed=
+,
+> - * e.g. when it's a header buffer, performs faster and generates smaller
+> - * object code (avoids clearing the LSB). When @netmem points to IOV,
+> - * provokes invalid memory access.
+> - *
+> - * Return: pointer to the &page_pool (garbage if @netmem is not page-bac=
+ked).
+> - */
+> -static inline struct page_pool *__netmem_get_pp(netmem_ref netmem)
+> -{
+> -       return __netmem_to_page(netmem)->pp;
+> -}
+> -
+>  static inline struct page_pool *netmem_get_pp(netmem_ref netmem)
+>  {
+>         return __netmem_clear_lsb(netmem)->pp;
+> --
+> 2.17.1
+>
