@@ -1,99 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888902B9BF
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 17:10:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CB07243379;
+	Tue, 10 Jun 2025 17:11:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749575445; cv=none; b=KGzpikBcdmpB1lQTkFzPqTu3ZbnFaNfPIFBjVMpii3VXYiA9dFFTfCi32fvlxQRX+fMNsCU5veR7vp/ik1j/zTb8tx7JG2I0g55oOpaJROM+3n6Nd7ux+EkBW1KMrIujThFcjZNeZuxEE6I6H6po5DUtSIHzIvwe7L4ur2IsN6c=
+	t=1749575468; cv=none; b=lichv2TZfxptPNk0nl5IOBuCqZdzsV71gGLcLWhFQ2CJvZ/Ho7x7yoYXlSYD139VeCeqM4vXixF5hELuLJC5ZX6iIjxZAnXYpS5D9aN3fOlKIRe1+Iaw2ZggG/HqwR6kJvTR0BC2HKhlQWldEyk7KqGE1M3fCXuucmK1Ga2AGNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749575445; c=relaxed/simple;
-	bh=py6jniNMzTUYmUO82pAk2qf353/Z3RpnVBAa4tdaVkI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jfhYlV3f553eDoDz+I/haJ8xIQF9MjA7QSaCpSfVznbFcJsfpHulBQIv0OMgoy3n+I583s9fzeT6qEuySjkcv1cyI+7L76FIf6WHv6PB+87mAHaX/dLaHExybZxTojXdHBCV/CfWYxG+e0h1VOe9Y0YHOAlAFrqc/TPE6ZOQ/w4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 554CDC4CEED;
-	Tue, 10 Jun 2025 17:10:43 +0000 (UTC)
-Date: Tue, 10 Jun 2025 18:10:40 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Feng Tang <feng.tang@linux.alibaba.com>
-Cc: Will Deacon <will@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Yang Shi <yang@os.amperecomputing.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Baruch Siach <baruch@tkos.co.il>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH RFC] arm64/mm: Lift the cma address limit when
- CONFIG_DMA_NUMA_CMA=y
-Message-ID: <aEhnELJQLw8S8Bho@arm.com>
-References: <20250521014701.73046-1-feng.tang@linux.alibaba.com>
+	s=arc-20240116; t=1749575468; c=relaxed/simple;
+	bh=BL6SOK46zmLH0bIebppxl38nXnx0NGMfPP3BDP/W5T8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=A8Sf1QoZJR9FVNwy0gJgX4yIs8K0jTU84le3ML7M241UPMY++Qy2JRKBBGziECosPR2x0GY4kTuOWNTZQ+3mLZD4Jwz3yXatp6OmzwowW5LYhWyMBPJZTJJCYpE1cF0Y1cEaK/7LuXjopshESVXE0abltD/05h2DofwFSFpgzVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SrFUx3Jb; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SrFUx3Jb"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-234ae2bf851so7981295ad.1;
+        Tue, 10 Jun 2025 10:11:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749575466; x=1750180266; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BL6SOK46zmLH0bIebppxl38nXnx0NGMfPP3BDP/W5T8=;
+        b=SrFUx3JbfaeuD12oO+84nuAoTJiruus8QBNu9c+m//jYFEbq1lePuaeoCINfurjIPy
+         sKjcFAxWzy6qVDA6cGHRzkbmWyU2CZa24/+pXXsFLW7JUNWZ1lAsd+T/xZo0Q1Gf78nQ
+         0zBvF1GPYTeiqNwLKdQB6phDYini35VIQK680nH9VTDSc5y3VrOzS9lFqEsKUjQBZydH
+         32R5Q4CTYLodLuqs04Cg27lAD2NXki5yNK/QuU3iUIwQCQ5IQzBrDptJ6no8KQhzcBvu
+         QvrPhQsMpeuQjAvH+AgegjtShYbSec0jN6YXRKGOUp6RQ7LUFvtAGeuwDQnlYcv+HQzF
+         1p9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749575466; x=1750180266;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BL6SOK46zmLH0bIebppxl38nXnx0NGMfPP3BDP/W5T8=;
+        b=KxfO5FVlXm0S+eXEGLolv82yIWNOE2NtsNkS9o1j8iJooYFdccGTe4+/mzLHucUWQi
+         aQlmYIi+fK0Ccvkhm+jL6Ckc512fHzsF1N6/cHDky71ywckA913P3WFOgl35yTVPnl6o
+         j970zKvpSnyeTTvn+ESD8w3fe4tizsSwNbMULgsI5pbKfw9t7/onbLxquwgZjx8S68gT
+         YWjEETi66KH4/ptmRADe2Vjg7Mk9oiVk9ZIg4MKBVhc433kVQ/3BvtBr36OKvWEmN85c
+         +nduuld0rDHEKr7aDqF7hw1oH7AUQt7FoBsYWq2qtzITDv5UeCvhIc1OFEB3wPaAz3dl
+         YReQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUCJX1e1iK2kLhtL0UlEG2pspv7yw6Bj5LSuSnqadqQmPfSymlEZPfpFpFC2RTbtfb7m8moreGQ0RMGsJg=@vger.kernel.org, AJvYcCX7B7Agm78Rr5eDHA+k0wQbEXiHSJ/Q4sm5oHaAUwzr3VidI2nxrMMD5F6M+uOKmZ5/Hsasnok+H1k=@vger.kernel.org, AJvYcCXvW7qde2skjHgaaFn1QDKj3kwAthlMN54dcj7VLej9Vm0YC5B5AKGQFMBZ3nNFrzz7urxTHtx1Ic6QuJT6t6Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4lYpcof9BNFCv3SQDkp+u+CHbkVCpQR5jSv0Bntp8Hy0yV9wM
+	Sa1SdKExXp4vFG+BafQRWKOWuw1HVp30T+7gp/NdH5TTca5EF8BmSd7QZd2WgoPE9m2/6XBXIRQ
+	kCab+JcmQY9wc3TB7AacocDXwZuoQM/U=
+X-Gm-Gg: ASbGnctVW+ZrNPzLV4okX1wFqeruk3YdPJJlot/dzM1s/LhULvZCGHLowAybctXmfce
+	5wr/4pUjxMwgA0imY46MDEZz1X1gqKKqiRN2CqkPE/7t56ygc4uyplZfPGXOe54ERUMQuLnzM1U
+	+j4hGi9Dwo4D0ZZZvhf9PiOks6KRmS9cTJ7l2Q8KkQghM=
+X-Google-Smtp-Source: AGHT+IGCpC33KDLfv6JP/DS+0RU01EZtVeXaXEKkFm2FNxf9RusDakqopG6+qr3pZRcUloOWRGua17inPPOnWf8DImo=
+X-Received: by 2002:a17:902:e544:b0:234:f200:5194 with SMTP id
+ d9443c01a7336-23641a9ce87mr436185ad.1.1749575466277; Tue, 10 Jun 2025
+ 10:11:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250521014701.73046-1-feng.tang@linux.alibaba.com>
+References: <cover.1749554685.git.viresh.kumar@linaro.org>
+In-Reply-To: <cover.1749554685.git.viresh.kumar@linaro.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 10 Jun 2025 19:10:54 +0200
+X-Gm-Features: AX0GCFu9enr57T2syom2yaCJakHi_u4gxMwsHHNlRV3jpMHEUC5p0-wQQ5BMelU
+Message-ID: <CANiq72mWAP5ZuOGTXZ1=zTOR_Y2YuqV2i8PberOeWOkx3VL0ew@mail.gmail.com>
+Subject: Re: [PATCH V3 0/3] rust: Introduce CpuId and fix cpumask doctest
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Alice Ryhl <aliceryhl@google.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Benno Lossin <lossin@kernel.org>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Gary Guo <gary@garyguo.net>, Miguel Ojeda <ojeda@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Trevor Gross <tmgross@umich.edu>, Yury Norov <yury.norov@gmail.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 21, 2025 at 09:47:01AM +0800, Feng Tang wrote:
-> When porting an cma related usage from x86_64 server to arm64 server,
-> the "cma=4G" setup failed on arm64, and the reason is arm64 has 4G (32bit)
-> address limit for cma reservation.
-> 
-> The limit is reasonable due to device DMA requirement, but for NUMA
-> servers which have CONFIG_DMA_NUMA_CMA enabled, the limit is not required
-> as that config already allows cma area to be reserved on different NUMA
-> nodes whose memory very likely goes beyond 4G limit.
-> 
-> Lift the cma limit for platform with such configuration.
+On Tue, Jun 10, 2025 at 3:22=E2=80=AFPM Viresh Kumar <viresh.kumar@linaro.o=
+rg> wrote:
+>
+> Here is another attempt at fixing the cpumask doctest. This series create=
+s a new
+> abstraction `CpuId`, which is used to write a cleaner cpumask example whi=
+ch
+> doesn't fail in those corner cases.
+>
+> Rebased over v6.16-rc1 + [1].
 
-I don't think that's the right fix. Those devices that have a NUMA node
-associated may be ok to address memory beyond 4GB. The default for
-NUMA_NO_NODE devices is still dma_contiguous_default_area. I also don't
-like to make such run-time decisions on the config option.
+Given this is growing, should we apply something trivial right away as
+a fix meanwhile? Or are you planning to send this as a fix during the
+-rcs?
 
-That said, maybe we should make the under-4G CMA allocation a best
-effort. In the arch code, if that failed, attempt the allocation again
-with a limit of 0 and maybe do a pr_notice() that CMA allocation in the
-DMA zone failed.
+Thanks!
 
-Adding Robin in case he has a different view.
-
-> Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
-> ---
->  arch/arm64/mm/init.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index b99bf3980fc6..661758678cc4 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-> @@ -312,6 +312,7 @@ void __init arm64_memblock_init(void)
->  void __init bootmem_init(void)
->  {
->  	unsigned long min, max;
-> +	phys_addr_t cma_limit;
->  
->  	min = PFN_UP(memblock_start_of_DRAM());
->  	max = PFN_DOWN(memblock_end_of_DRAM());
-> @@ -343,8 +344,14 @@ void __init bootmem_init(void)
->  
->  	/*
->  	 * Reserve the CMA area after arm64_dma_phys_limit was initialised.
-> +	 *
-> +	 * When CONFIG_DMA_NUMA_CMA is enabled, system may have CMA reserved
-> +	 * area in different NUMA nodes, which likely goes beyond the 32bit
-> +	 * limit, thus use (PHYS_MASK+1) as cma limit.
->  	 */
-> -	dma_contiguous_reserve(arm64_dma_phys_limit);
-> +	cma_limit = IS_ENABLED(CONFIG_DMA_NUMA_CMA) ?
-> +			(PHYS_MASK + 1) : arm64_dma_phys_limit;
-> +	dma_contiguous_reserve(cma_limit);
->  
->  	/*
->  	 * request_standard_resources() depends on crashkernel's memory being
-> -- 
-> 2.39.5 (Apple Git-154)
+Cheers,
+Miguel
