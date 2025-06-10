@@ -1,133 +1,108 @@
-Received: from bumble.maple.relay.mailchannels.net (bumble.maple.relay.mailchannels.net [23.83.214.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83CFA275846;
-	Tue, 10 Jun 2025 22:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.214.25
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749593466; cv=pass; b=RDmM5n5BLjn49lZnOBgXC1X980va07R2iy6xqMgBfCuMhtXj4YdQJnuGRCdC0Hgg6QYi071ezfo3HNUxv7OGNrYMHxYuCGEqhMW/tpT++LQ152tRpWCDpjWWMnW5YGSRdPVRLYLM13bbPuiU7sqdud96oPbc5MWxuCV41czj2eo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749593466; c=relaxed/simple;
-	bh=/n6BeKTA8IixklhoRtyjie7JUPMoUan7OziG2D+sRe0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BODKHe+dlAw32CTVq0tsaAV31qnLscUfuyqC3Y/JXqDfBwiAhpeeFC0LQlq+AVdbXNjC25nTtC02tCk+X1BinGxAlexzM1Zg+lfLWR2ofVmAKPiEIH48tRET3B7M/L4qiG5QZfWv7TRt4EfhYE+aqZFVm/b6z72dPtleC+MSbx0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=landley.net; spf=pass smtp.mailfrom=landley.net; dkim=pass (2048-bit key) header.d=landley.net header.i=@landley.net header.b=a5H0CQB8; arc=pass smtp.client-ip=23.83.214.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=landley.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=landley.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A207A23BCF8;
+	Tue, 10 Jun 2025 22:13:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749593582; cv=none; b=pkq+dtssBi/Snd3+ZEMJV2c2JzsRqfB8SpTebteo3CpwMqXDT3FjZa65llwH8R0ozY5k8262rQT2jsjtmNqzmViz/hIRLfDvDuSw2CN/wQqwf3F0RRVobtiXOvswYgT/MFNGbGb+ds+DhqaJF0FSI4dI9xMOZ06DM6wdKJPrb3s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749593582; c=relaxed/simple;
+	bh=dUnGnzC0B4vIJJw5xJW5XmpXYtO+8rFDcTfQdHaZxFQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PYV1dk1rmGuIl32MuIP5zQEDymogPhls8g+hXQoRaOG1rr/cc15jgx5TYZWPRge6waY2JsRL4VJjsSbXg+KCJJqvfcgpSeaVwJ3J6jm/ThMOB7klyB7eEehYEUeJn648w4b182R/K/Z6Nhn00a1W9yquvm6sZ1KCE4QLyHWMzgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dXScD7Af; arc=none smtp.client-ip=209.85.210.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley.net header.i=@landley.net header.b="a5H0CQB8"
-X-Sender-Id: dreamhost|x-authsender|rob@landley.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 790C8838D4;
-	Tue, 10 Jun 2025 20:22:54 +0000 (UTC)
-Received: from pdx1-sub0-mail-a311.dreamhost.com (trex-green-8.trex.outbound.svc.cluster.local [100.118.166.165])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 7B27383266;
-	Tue, 10 Jun 2025 20:22:53 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1749586973; a=rsa-sha256;
-	cv=none;
-	b=2cryEfftBkxBqGPRPfGzOIua0UQwI7ga8zrxxhucZ/dOssJCeojUdP0Di37iXHYHywBzcx
-	1N8Yk+k0Zu6OpdZHuJkU7UktGTjq7cwQ4zRK+UBT5Ai7GZqBrMWet9g4Wud6aCpLbnNZvq
-	ON7uyv+hBzxyTggCU4lI0WINHznU8w6a9PlTpgJOFSZE/bPhRGYJtK+YV3z6uz0agst7VO
-	JX87uCJ9blf9CHZlC3DHUQUuZ8UTNXOgo/ft1jb3bxVJJb+KBxAF8J5wfNKjKIZVUi3Ak1
-	L5bbcfKNsXo6GUOKU9TRKSKK7wkLJ7iEnWq5PTeopKYgf9HTM6Qqasy9LjCpUQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1749586973;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=GcmEzuAcrQcmeuvXZ7uM8B+AHDGDQPgvjsmIJEFZGL8=;
-	b=uBkpkM66QBzkuX58qX1OZ3wkzeet67sJkZRHVT4zA5/m//KvmWF+60XNEDd57+hCJC3WoE
-	t/dIgNOiODfyJyF0FNSLfcoh//47j9ncM+/+mYy17tFx6VYmqYf+ZVsSJyWa4yNeVoQyWV
-	2RAFuhBaI/x9FNK7I5tCoF7f7ejslAUyQcYXD30VB7oBezYe3PR4lcJbz5I+iRjaCvFZ5T
-	ykFSONnyAlXOwm3s9Dy7WeG9F9tskDZ89d8WxbwxQft9s1r80iuRkQ59pUlySmdY5HEXiR
-	12p4jiISjv82jZth2zYIcLIDFmGji1DqMxvHKu1PCxRk3ulu9Opub8yH+qGEZw==
-ARC-Authentication-Results: i=1;
-	rspamd-5674bcf875-ffkck;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=rob@landley.net
-X-Sender-Id: dreamhost|x-authsender|rob@landley.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|rob@landley.net
-X-MailChannels-Auth-Id: dreamhost
-X-Tank-Inform: 3d4ab5fc13f60a6d_1749586973820_1909461595
-X-MC-Loop-Signature: 1749586973820:2959690244
-X-MC-Ingress-Time: 1749586973819
-Received: from pdx1-sub0-mail-a311.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.118.166.165 (trex/7.0.3);
-	Tue, 10 Jun 2025 20:22:53 +0000
-Received: from [172.22.7.54] (unknown [198.232.126.195])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	(Authenticated sender: rob@landley.net)
-	by pdx1-sub0-mail-a311.dreamhost.com (Postfix) with ESMTPSA id 4bH0bJ0DyQz5h;
-	Tue, 10 Jun 2025 13:22:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=landley.net;
-	s=dreamhost; t=1749586973;
-	bh=GcmEzuAcrQcmeuvXZ7uM8B+AHDGDQPgvjsmIJEFZGL8=;
-	h=Date:Subject:To:Cc:From:Content-Type:Content-Transfer-Encoding;
-	b=a5H0CQB85rjhkk2AJwqCJh1aT6rWvY695/Bp57oae4Xbc0ovbj3A08M3qkwc8kM1s
-	 /9gBA17caRl9xbq9qe3j0K3bzGrY/y1+2UHWOCCWLYTAQBtfBz4MFsV8Vr31o59UL6
-	 TbtHk4boihh4g2TZ6kI3IuY9LPgY1mijqbdCLYRNk0N5hWCDP/2LiuPFS/kjYQ2/FM
-	 BsF78lnlLX5vrQfjIz9ru2yYoPoqko/Chjsh8WeP8tDGbIGLqq7xxmq3h9MxyBM1Y8
-	 7ypBVOCe3+xDBuA7wLxtSTi8eYHJP0jud2Dh+UrcxsLNtia6gViAbG9yI8j3CHETXQ
-	 pIJ8SUDQ0kiNw==
-Message-ID: <c343a6f0-0362-4344-a5fb-5a23e12f69eb@landley.net>
-Date: Tue, 10 Jun 2025 15:22:50 -0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dXScD7Af"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-72ecc0eeb8bso2069357a34.0;
+        Tue, 10 Jun 2025 15:13:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749593579; x=1750198379; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=miJIIaQXJwfBDVJT+vNgy7ymqu4g3omH3mBgLBTXCcc=;
+        b=dXScD7Af8+XPeP9v5PPm6oQtv4MTXEDY+4vYMLXSB1yu0DVfcaFD2UFL3sMlOXyj33
+         04r3z8OLlaZgp1HVXGHxIuQwpSqqQI5IIQM1m3pirLcuNFTanSsqgyniZ6XP24WXsIFH
+         bh3xZWiY4a6xjF6WMGhoEqeD9w0M1yQYrmwM1hwuwFkNVxq5EnPLMqmSQ5jbF/2jARUo
+         gos25nZ55HbZXebQMkpR9UHJNi6zPPC0CvVI6mmhVmAE7ByPW6Yvoe+yHFBNmFj9tO2p
+         /94ti3qmDPPv0zxNYsXvR7npQwekPJvXMolUc3Al0aIX8Umjy7BSDD8tYDgyqliqRDiV
+         4Qlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749593579; x=1750198379;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=miJIIaQXJwfBDVJT+vNgy7ymqu4g3omH3mBgLBTXCcc=;
+        b=JaSMDlE3INuasZF30VsIcdYl5Nv0Qf7yS4rnPpGU4JpnVMJVzCgNt+rHPa9avKPEQe
+         3tBxk7dwqC0H5plLG2+EcM5ITI1GRjcAbcvStzd1CFZfj8Y+K8IYQ/qtpuwRZFWkGVZ7
+         AlAdhUPBhVfRJ0fA8mp/P8Z/SNzgCEySTPyn4UC5le3y57s3LLfiElLBJZSal5YNnWlE
+         MXcHPwtmk7zOnB9si1sfVE//DdjJAGRKOq69bxOt3uVDAoFahU4GMSJb/vfPljZdQOA+
+         dvof4yrvE2VYbd6jtHs9MO/YS2xgWbgI+CGroSN+enTzeQBq1emnPXEnkawavlxGcnDM
+         5JKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX9UDoEZt/pdqNo8n/6HpMSq9W1s1pIoKhYrrqTTePQ9f/8O/PDBKCD0QAIbt8Tkqx5R/IaTvO1S3H6w/c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZYb1uR0wQjTqove/3vXpbwlsjiNpkkpmx6pSg+nHifPK6h2gm
+	U9l2RBYW7F2AwDXcNEiDEaX9pJ8YkvqCfxafitt/X2mtYjGdXmjxoUoOhltSaHwo
+X-Gm-Gg: ASbGncuiCf6lzzXHIwTQ52mlMaJ/UW6TVmrBnmfA5DVShhDEqOWyIAcoixqtFRBBror
+	pRin9fKm02dvcongtjo3A6qJsDJEc4B/XuJksfTKH0DYXSw3jhsXfwmLZP3iakcsSpMlvGRiJES
+	IsLowzNqk/VXzXSK44FmFwAzJRMjADOvdYHcpWg/Unx51QgRhEPi/fkMN9Su929XfY44t8watrh
+	iq7epq6sn0OiG77sFNTyhAacte27WgHwjMA63PU+NUV0so5ZhtVW7yYlu/T0xwSI0Ps6DYjyf42
+	e5Xb2yls9YEnd04AHhiMFVS617TN9DQwYA6OtBXCuJUXSrAaPliE
+X-Google-Smtp-Source: AGHT+IHd9+gRIy3z8xzI0EHTDv7lfRb/YIhkGWPWNcx+KYA60K7CbJiWsHeNA/cqqc7bkIZt1/PSug==
+X-Received: by 2002:a05:6830:800a:b0:72b:98d9:6b2d with SMTP id 46e09a7af769-73a05974374mr849676a34.8.1749593579352;
+        Tue, 10 Jun 2025 15:12:59 -0700 (PDT)
+Received: from localhost ([2a03:2880:11ff:9::])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73a06fdf538sm95334a34.26.2025.06.10.15.12.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 15:12:59 -0700 (PDT)
+From: Tianyi Cui <1997cui@gmail.com>
+To: shuah@kernel.org
+Cc: linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	Tianyi Cui <1997cui@gmail.com>
+Subject: [PATCH v2] selftests: Add version file to kselftest installation dir
+Date: Tue, 10 Jun 2025 15:12:07 -0700
+Message-ID: <20250610221248.819519-1-1997cui@gmail.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250610220319.405806-1-1997cui@gmail.com>
+References: <20250610220319.405806-1-1997cui@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] J2 Turtle Board fixes
-To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Artur Rojek <contact@artur-rojek.eu>,
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Thomas Gleixner <tglx@linutronix.de>, Uros Bizjak <ubizjak@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
- "D . Jeff Dionne" <jeff@coresemi.io>, linux-sh@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250216175545.35079-1-contact@artur-rojek.eu>
- <f574808500e2c5fb733c1e5d9b4d17c2884d1b9f.camel@physik.fu-berlin.de>
- <1551804b-fc78-4a3f-add8-af693f340a01@landley.net>
- <48881e2d8efa9d7df8156f5f81cd662c2286e597.camel@physik.fu-berlin.de>
- <9cf43bbe-898f-4b29-bd85-04f5320bce77@landley.net>
- <afec7233266c6c1fd1e70ac615ff129d9dc3f710.camel@physik.fu-berlin.de>
- <5656d614-c851-4600-a79c-92edebc9c55e@landley.net>
- <7f12f4e2ccdf1da4096e980923fd88203f0b1d49.camel@physik.fu-berlin.de>
-Content-Language: en-US
-From: Rob Landley <rob@landley.net>
-In-Reply-To: <7f12f4e2ccdf1da4096e980923fd88203f0b1d49.camel@physik.fu-berlin.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/9/25 05:01, John Paul Adrian Glaubitz wrote:
-> Hi Rob,
-> 
-> On Fri, 2025-04-11 at 06:25 -0500, Rob Landley wrote:
->>> I just gave it another try and it still hangs for me at:
->>>
->>> 	Run /init as init process
->>>
->>> with the latest toolchain, toybox and kernel (v6.15-rc-1).
->>
->> FYI I reproduced this but haven't tracked it down yet.
-> 
-> I have updated to the latest git revision now with the result that it
-> fails executing /init now. Can you confirm this error?
+As titled, adding version file to kselftest installation dir, so the user
+of the tarball can know which kernel version the tarball belongs to.
 
-6.15 works for me? How did I reproduce it last time... Ah right, I 
-always build turtle with my patch stack applied:
+Signed-off-by: Tianyi Cui <1997cui@gmail.com>
+---
+ tools/testing/selftests/Makefile | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-https://landley.net/bin/mkroot/latest/linux-patches/
+diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+index 339b31e6a6b5..9dae84a74e7f 100644
+--- a/tools/testing/selftests/Makefile
++++ b/tools/testing/selftests/Makefile
+@@ -293,6 +293,13 @@ ifdef INSTALL_PATH
+ 		$(MAKE) -s --no-print-directory OUTPUT=$$BUILD_TARGET COLLECTION=$$TARGET \
+ 			-C $$TARGET emit_tests >> $(TEST_LIST); \
+ 	done;
++	@VERSION=$$(git describe HEAD 2>/dev/null); \
++	if [ -n "$$VERSION" ]; then \
++		echo "$$VERSION" > $(INSTALL_PATH)/VERSION; \
++		printf "Version saved to $(INSTALL_PATH)/VERSION\n"; \
++	else \
++		printf "Unable to get version from git describe\n"; \
++	fi
+ else
+ 	$(error Error: set INSTALL_PATH to use install)
+ endif
+-- 
+2.47.1
 
-Sorry, fell off my todo list. I'll take another look. Thanks for the poke.
-
-Rob
