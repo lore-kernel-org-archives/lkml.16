@@ -1,111 +1,120 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA27283FD9
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:23:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C26280A37;
+	Tue, 10 Jun 2025 08:24:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749543839; cv=none; b=sYfo7FtT6Oh+1v4f8e1QCF/ZxRpCx/4C/39yHXKJfuKsC0wflDS/Sfiq0dQ37fcudYLLdoviUHEyonD3ZONKFnLyOp6QqzT46jrqdxly5kdFvQX+HlLvXunYpGIV/vvyKGNSLhzRVS7bjiChJ0e3hY2R9+4V3TOEwo+NVJNzRDA=
+	t=1749543860; cv=none; b=k+a2efe3FOqoim9hiGhu3TamkQyH/kO/uynwMKMWvRDJtFtOvNNXOx1h6RCpvF31v/+5K6O+SS+4nNOYUVqoZtfs92Lyo+Tk7eqBLWX3wg7U4oCOp/c5gl2oIU55hx36n1gUfysA/GphmHSOt4kVHW7qM1qveE0u3WUxydxZkXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749543839; c=relaxed/simple;
-	bh=yyhzPDdF8NeOOeZr2SZOX9HHHQ5D7bOqPKd37iQiSFs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=qyilbDhysdE1VnggXILN4D1OcTzS4NOliXcMEre7FvHPwRDj4DB401oUgz10Z7ToQkGfdp8LBYrXFlG327+27qMjGmUfQLwBO+YVK/n8CJXdHV0mkyT2S521vOaPw19PiEvordKSD9TxW5NaKEFi2/TcuwmyL/6gVr0g0i3gaM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hEZC9Q1T; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749543860; c=relaxed/simple;
+	bh=pAsKoCKXcR3vaJATLO0yUatret5jy2iUb6ibmnbLo24=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BITfoWl/tAw/juK3aqWs60QodIsskSQcdh8zA6K6xdAt80logT7OxcwIsfh9oCEuPwCkFIP3xi6C/yCjThuIjNVyoeydyr4iooj8jZVtbwFCeiTZ0VSyedoPYzOVI70JROJX2as3TPlUMZt1wFyXsbb1IN69G437Wo6/noUF714=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GU+gztvE; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hEZC9Q1T"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a4eb4acf29so648479f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 01:23:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GU+gztvE"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54b10594812so5687735e87.1;
+        Tue, 10 Jun 2025 01:24:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749543835; x=1750148635; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q9WGI4IbP//61XrnIlM+natAC7ecS9zG4vex6G78gZY=;
-        b=hEZC9Q1TgiXTu95oc+6NtCo1BRbnOHrDqPXM+MQe97jPplFgtUdf13p/+l/jivtpqn
-         AVEQjBzDe0FJXPE6Qt6a8uqrNr2fPd42ABmxo+Ea3b2F/O2bpgYVKdN+pbeS5ePPw1cm
-         akKeS/vsivEpT4A4OhOoE989960LD37RLNNrych+3AkFBsAUaYDYEI8fWIB+kyRCdOYs
-         LHNItha/qRFBQeNZEdhYjhtgiFYAGupfM9a1F8cMJL3gN3y8zWcjShQ6qS+/8UxWnLa0
-         WdUy5IvMd8OPHPs55WlLsoulOhhLt1FIAQwpR257JdBImWFyg/7ZWBilWCccOvj0herZ
-         M3CQ==
+        d=gmail.com; s=20230601; t=1749543857; x=1750148657; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=T9AMyxosltlXeE1Hh9H7o71Re+z6nz+UiGufyzU5brE=;
+        b=GU+gztvERnZ3ryMvivsxvTdjYHz4EoSTmAwCXKS/uOjFWZ/NGQFX6ezgTgyx9NV9ZK
+         FiyB0b2QK5Uj2KLE01FceGtUSRxRD8i5SrtLjvvwwjgq1Il5D7xq1vi5z38opcP7oWFB
+         YIXILj34O+5tX0s+FGZJJRSb2xhawfn0HAlGPwZOAzE0dyM0X5y/oKyzeEWADecZwUvD
+         28ceFb+P7cd1Ifp9sP7U9uJlBrlREaMa/RRGkdQMbueFYKKDp3lmWqGGt0Cwmj9zQ9AL
+         tdVM6kPXSYOq7b/y5eFQ+xm7Hh/DODd/pw8M9qqruRCC0aB11EhgGuCp2zrR/CaDzEqG
+         ZX5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749543835; x=1750148635;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=q9WGI4IbP//61XrnIlM+natAC7ecS9zG4vex6G78gZY=;
-        b=hcE1uy0L4VU0OPvs8xTdmZ2fj04Fg/Bf4fjMy3+oqaIz1un4atl0GOv/HDd/+QSK9A
-         /69aLTitmJMIqTsM8lh8RSEPCR524uQrSL62610IIOs+lsWuCJww9/zC1WW46wdJ03c1
-         /fr+rDjEk8akiAyOLh2Xe/zfIeTyJZa8lfwbunzZKwraIJHQi/UShCqoodniYUrj62bg
-         t82JFS29mijeNSr/Ievxln9t+0a43Omm8YQWdXbW/8WCz9Aw+2CC4IBNw7gK+WDPaNdx
-         2awm/dG4KU6oFJmpMb4VJxVkIVv9bR+JBQ/UFYemEwtKT8PAw5AGzyWM9397ozBi7Uvy
-         tDMw==
-X-Forwarded-Encrypted: i=1; AJvYcCUq7YC6DYDiipNIXrs9JUYU+VaegerTWXduQGj1fpFvZPpmNH1hVKa7eIi3xi7UzzQEIubT8H0Xo+5A5qQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy53AEerXcZVlDAYQhIRHif2kzIeJEspQEnd0PoNQJmjbpsjeCd
-	9TexqwbaF70uBsHKpxh3YUnPrM2VSlLsY8vR3KXmfMnZUMDmezV8m/xVKK/arH6wwxA=
-X-Gm-Gg: ASbGncsoIB59ShcEkBdQdEYsxAcl5/4VIQ2nwgEa0YDzrtC8KQXNoBO1wxZsIyz8+Md
-	IQxIZEMkSd4mL/oLj+OF+ZXqAzMdexeF5cLDcrEicdoHhirNYQWITVCN6MLAt+yNMdNJ/+8lf/x
-	zTkfH3Z736besNsR/+CC1JhR/Eo5PdwbinWq9HuX8OECnaXbLxej8wpvsVY9pg7UEx4FOm343rF
-	onXjlMkwTV+FNRZvDNlISuhYyxJNeFWWZ4XuUu1DIZE2cos83DjDUHEBnXBkSJZHNsDayt9cWbm
-	pUE2MKg/80xGrSq7DBANDS53Yn9ZKyIm64NpwHJ9Drl4Qx3ujP+ADVrhUBURC4vjlaP436AzUeG
-	7ygk+qQ==
-X-Google-Smtp-Source: AGHT+IF3umgoC1MXVewYqSd6NXb0BxRbXdgsSHg+n+0cmqeui+0FYUC+7otmqctsYZrl7Ig6A8Aq0g==
-X-Received: by 2002:a05:6000:2409:b0:3a0:782e:9185 with SMTP id ffacd0b85a97d-3a53313fa5emr4137414f8f.2.1749543835438;
-        Tue, 10 Jun 2025 01:23:55 -0700 (PDT)
-Received: from [192.168.1.28] ([178.197.223.125])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532450b08sm11378980f8f.80.2025.06.10.01.23.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 01:23:54 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Peter Griffin <peter.griffin@linaro.org>, 
- Tudor Ambarus <tudor.ambarus@linaro.org>, 
- Krzysztof Kozlowski <krzk@kernel.org>, 
- Sylwester Nawrocki <s.nawrocki@samsung.com>, 
- Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Sam Protsenko <semen.protsenko@linaro.org>, 
- =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
- linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
- stable@vger.kernel.org
-In-Reply-To: <20250603-samsung-clk-fixes-v1-0-49daf1ff4592@linaro.org>
-References: <20250603-samsung-clk-fixes-v1-0-49daf1ff4592@linaro.org>
-Subject: Re: [PATCH 0/3] clk: samsung: gs101 & exynos850 fixes
-Message-Id: <174954383375.117835.6950854237763688291.b4-ty@linaro.org>
-Date: Tue, 10 Jun 2025 10:23:53 +0200
+        d=1e100.net; s=20230601; t=1749543857; x=1750148657;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=T9AMyxosltlXeE1Hh9H7o71Re+z6nz+UiGufyzU5brE=;
+        b=nk0XR6di+6TyOEaW8aU3XY3dnyJC2aN3Dvb0uk4QeCg7noD59M4VHz8tw1sSh5d88C
+         d18lGqoDeSSBuzdSzm2IkJCxLjvDsLpmf/mfXTioaGx4FMk8/oLenjqoIo12QNeIzd5V
+         aMBCNu1x7wLNsf1N+RYUEpyg0vsLiaED1FmBeClbrj+uY5WXcsNdkam3p9nn+brSOX4I
+         CXZNhMVs6rlVe9XahZaK0wlPikhK0ZF3Ha7ztPt+0o3s6cUduNZ4P/sw0J67otfh/8Cf
+         WQHtybTp7ejppz7XOAqqWfSRgOYAYd0KrPs8eRwDaZl/IjgfhfMfODCe57AqF/Fk8Pnb
+         4Xww==
+X-Forwarded-Encrypted: i=1; AJvYcCXfNlEqHVfSoxSOYXjdtl9qyGRYaAey8AAJe4J/Z8UYZT8uQN3JNfxTbAgrwtvZOdwcHYp2lRbBf/TN9Mc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2S9D44fQCo6QjV1kfFBnJfO+EtzFPW7sY62ODBQ/fBm/3CndH
+	ZGpcyFyQ2edjkroxj4kWbkAbaNkV4kNgZqvKnszUQqEGrgMH3YuBU5pQ
+X-Gm-Gg: ASbGncvxteQEP317KUVs/PXrG9O9hXHurky7Leg4JnfH5dayUt/V2d2jcjGA/1LFdWa
+	sVOJZCwfriyDBo5+u6JJ5ropXW5SuQDQh//oQjwARWP1I0yNIZmcbfI8mwLQOJoAQdaSbZkgda8
+	Onz8TBT6c1DtyZvW43ML/D4TQ18ud5eIRcAOVOA7YUl9ST5LexWa7B9AxDTPP1IA2iHZlsZeFiD
+	g16WZZhWdDK52SXaa3goemZHJ0Z5Uzl3/5c+1OjaOMTNvBDJIhG9njZUiqj9YOR6JQNSvzzaqVG
+	MNFLXXDfrVLQj53IfNfCzrFRMBRSopaUTXDUY/7jWhUCHcjKbB4YqTEJoO810kf36pdC6bPNB7f
+	RjuZK5C0tdXWbNF0RRJHUz8QeoloQMtVCpvVkGDlqprH0TiDh32YC6Usap+TAYndG9XRzm2XFB3
+	bqqBb6dFeA7Dgb47TMQmZCD04=
+X-Google-Smtp-Source: AGHT+IGUqa7d/RWtxwnPy2+NvYt1LQ6wiXuu9PiIBBS0TGg/C+wR9GtyuBkitpRQ9RBLougt8hAvLw==
+X-Received: by 2002:a05:6512:401e:b0:553:2a0f:d3d4 with SMTP id 2adb3069b0e04-55366c1e102mr4244672e87.49.1749543856354;
+        Tue, 10 Jun 2025 01:24:16 -0700 (PDT)
+Received: from ?IPV6:2001:14ba:6e:3100:dbdf:2d4a:ad23:d037? (2001-14ba-6e-3100-dbdf-2d4a-ad23-d037.rev.dnainternet.fi. [2001:14ba:6e:3100:dbdf:2d4a:ad23:d037])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553676d7622sm1443650e87.58.2025.06.10.01.24.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Jun 2025 01:24:14 -0700 (PDT)
+Message-ID: <85f0fbb6-5574-47e4-9adf-89eb27fe9f62@gmail.com>
+Date: Tue, 10 Jun 2025 11:24:13 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] docs: Improve grammar in Userspace API/fwctl
+To: Jonathan Corbet <corbet@lwn.net>, mchehab@kernel.org,
+ ribalda@chromium.org, hverkuil@xs4all.nl, sebastian.fricke@collabora.com,
+ hljunggr@cisco.com, dave.jiang@intel.com, jgg@ziepe.ca, saeedm@nvidia.com,
+ Jonathan.Cameron@huawei.com, ilpo.jarvinen@linux.intel.com,
+ mario.limonciello@amd.com, W_Armin@gmx.de, mpearson-lenovo@squebb.ca,
+ skhan@linuxfoundation.org
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kernel-mentees@lists.linux.dev
+References: <20250522115255.137450-1-hannelotta@gmail.com>
+ <20250522115255.137450-3-hannelotta@gmail.com>
+ <878qm0aab5.fsf@trenco.lwn.net>
+Content-Language: en-US
+From: =?UTF-8?B?SGFubmUtTG90dGEgTcOkZW5ww6TDpA==?= <hannelotta@gmail.com>
+In-Reply-To: <878qm0aab5.fsf@trenco.lwn.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.14.2
 
-
-On Tue, 03 Jun 2025 16:43:18 +0100, André Draszik wrote:
-> The patches fix some errors in the gs101 clock driver as well as a
-> trivial comment typo in the Exynos E850 clock driver.
+On 6/10/25 00:12, Jonathan Corbet wrote:
+> Hanne-Lotta Mäenpää <hannelotta@gmail.com> writes:
 > 
-> Cheers,
-> Andre
+>> Fix typos and improve grammar in the documentation for
+>> fwctl subsystem.
+>>
+>> Use the word user space consistently, instead of having
+>> two variants (user space vs. userspace).
+>>
+>> Change wording of denied behaviour to be disallowed
+>> behaviour when describing the interface.
+>>
+>> Signed-off-by: Hanne-Lotta Mäenpää <hannelotta@gmail.com>
+>> ---
+>>
+>> Notes:
+>>      v1 -> v2: No changes
+>>
+>>   Documentation/userspace-api/fwctl/fwctl.rst | 30 ++++++++++-----------
+>>   1 file changed, 15 insertions(+), 15 deletions(-)
 > 
+> I've applied this one.
 > 
-> [...]
+> Thanks,
+> 
+> jon
 
-Applied, thanks!
-
-[1/3] clk: samsung: gs101: fix CLK_DOUT_CMU_G3D_BUSD
-      https://git.kernel.org/krzk/linux/c/29a9361f0b50be2b16d308695e30ee030fedea2c
-[2/3] clk: samsung: gs101: fix alternate mout_hsi0_usb20_ref parent clock
-      https://git.kernel.org/krzk/linux/c/ca243e653f71d8c4724a68c9033923f945b1084d
-[3/3] clk: samsung: exynos850: fix a comment
-      https://git.kernel.org/krzk/linux/c/320e7efce30e2613c2c7877acc46a8e71192cdcd
+Great, thank you!
 
 Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
+Hanne-Lotta Mäenpää
