@@ -1,57 +1,57 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7025C26E6FA
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:58:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFBCE26E716
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:58:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749596306; cv=none; b=D3R5CDPRrHRl0+F2bsZQWnxiagnOdYuvolDyo4OlE8TC8T7bi/JTG5bABbevZ5kYIr7iE5XD2fi+oGoMhYgICRUmfs1FO7iqHDo42TVbOpkIBRiWHnPiW7XH6ceUNwrpVRXVu3Ba/dOCgfaxzEIay3dm+BzTzkInbxNXAjOvi7Y=
+	t=1749596308; cv=none; b=IeApAygdDMEeMO7BdHBF9Jr9RcVxKu+hP89b8JoJjUJA9g3LR3krlqN58EXoLvCD4o/06w8poj0u6VDsozWO8QclCYHpMvUVFRclSA0LMcgFrWRN1SSEPC6kuTKGShF6ViZboEpFwd12uTLVpcSJi9GgxOAd6n7TPbC57IBeDGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749596306; c=relaxed/simple;
-	bh=ZMrkmpCRHBNEmqTXy2uAR5fh6WPPiHvvzXeNcQCC0eI=;
+	s=arc-20240116; t=1749596308; c=relaxed/simple;
+	bh=c5jtKerqKCl4XHYQy4zQoY0B/Fac2DEBJ4FzYctBNv0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=UWu0+j1G+o/haeq/bDLYOnQLex1gLR64xrkaM+N4UxKS3XLRSU/gqjNa3/NbhOeM1lqBEVCedXoN2g6jzT+ORW5ZuxEiQIKWPp2+o5VFmHs7/LbJ90rtTjZCnacszJJrbWKu+4FEjNhIcFJt4b/FnQr3lfzl7kW1hXsmvFOSsKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pJvmIVlT; arc=none smtp.client-ip=209.85.210.201
+	 To:Cc:Content-Type; b=HmWu5Tri/G62SdaX3uj2XWvWoWVKB/dPL8Hi1BJPS6AzqieDSspK0kJROEA0GL61/pj/JFG7lP8QRNlBGCm/wDUk+DMuHJlT7sRG9fXj2PnWv6NMZK4IsezHL5wLW04MNpmUPKymVghtBh+KNfMcN+Z83P/1XI/jqIehi0YLPM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WEC70Sw6; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pJvmIVlT"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-747adea6ddbso3907337b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:58:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WEC70Sw6"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-235089528a0so1985945ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:58:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749596305; x=1750201105; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749596306; x=1750201106; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=iMsn/XCpk3SvMnv5TdPAcg1wTJ8i5wLPr3bJ43LVwSc=;
-        b=pJvmIVlTFa5tVZm0GNyiMHxDSyqHoFCmkK4jNJ6VIK9fVuGbuy7mszd0p6ToK04fzc
-         dp5L44H0p2K/0Xx8UrYQQxWXhyKiXv0hE92FCAE8X2iWWPfams78Sm0fLxLGwEDskHLo
-         Ve8iw0TJRdoL6gyh/vVfSnO03M7aX0YfltRqUM4HvaXlGhPmn/X29ddXSBpEMBBtTvPh
-         lZPiyCGdRkmVMceTFC4fw2WDZ3SoQWiEsLrSEH+CQn6VQYrIK/XnxpJL32lEs7ni4HrN
-         9aC3JSHHcZLYlWOtXm+p1yzMrnspKmkJPv3ddihIMudqKIhzF1TGIwfI1lfTncmtAO7Y
-         XvUQ==
+        bh=ngowtUk0pmcEMi5JuRIJTHwRoFQ1ps0rBy51903B/GI=;
+        b=WEC70Sw6l2/trSw5KHeqyRbZXI05VN4Q4WCWggSf3r7fAxicEdDtyWUkiq6UzlPJBw
+         5NSdu3ptn1MRLK3VboDghQoMZdmcqAY6i6WoIrvjzb0p5Cr3Gd+0SClc1nbposU9e3sx
+         zMaqPCaI7OBM98MxbJEvIk3oqyEXjTGB0SBcxL0VtT9YZPFJL1Vmro0KqejTHbhEB8l1
+         g9BvbIAuOYb6M2y8uWnh1h/rrID8F3FfdV7q9rskQ6PWpzNRFRvfYH1JTaoD0YXaVPCA
+         pLEidnBHfinYSn294seyDfH0gkhH86IoEHEtdP5w6iuxjRmdxIwsWMZRnY2AltVC3Kwk
+         8Pmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749596305; x=1750201105;
+        d=1e100.net; s=20230601; t=1749596306; x=1750201106;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=iMsn/XCpk3SvMnv5TdPAcg1wTJ8i5wLPr3bJ43LVwSc=;
-        b=ZcWlNlznskobl8GmyUlJTl73Q4OPeJbycVNcBvJXMhq0NOBkQsN7K1tOWXDU/CUy38
-         lHyY4MdZU9L41/mNsrF3E4m9PZl/LJ3yTnftm6g+qAKoH6Ahjd3edNQ5QKoFgx/qDtrJ
-         lMxN5oqle7NzVq6ykPpWF/OuwX1ijtQrhP5lsob4LPE7py4qeOv+3WjbiXX0odTcQJcr
-         xuFSwla4wL8ht3DagpUIOsakcmNeBB5ibVhkyz22iOYzgaG7mGzA20M7IyaHg3vE6l3G
-         Trb+RjXb4TT6BwG0wwXXSBCHnk+eXr1VuW205iap4+yEzPsW8j5U7y9VtsuNJzQWITtG
-         LohQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXmI76U8X7Bw3RXCQeywN8kknlR9WSxKtoSI/1MPklULxtoFA6Eq6gN8+GrYhJGR9Y3F93v9ez94BAZHoY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWEXsdDB2G4gMZ8lNb1ewdhpieXsFMBKMBGye5Fqy7w2rPchE3
-	70LnM59mqe3ngXISNnUtWrFsxL81UAt/M0UpfolWStujI9Dc87GZpBiAgCYsCxM6+hdb/urnmD4
-	9CXBoFQ==
-X-Google-Smtp-Source: AGHT+IE0kK/JdurOn2YSGpKLeGkBXQuZuXlLOBNcSKRwobgbYBfija/k/FnwePHxSxLV3CrEwUySJM0qVwE=
-X-Received: from pgbda4.prod.google.com ([2002:a05:6a02:2384:b0:b2f:1e09:528b])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:7a46:b0:218:bcd3:6d2e
- with SMTP id adf61e73a8af0-21f867474e5mr1981438637.36.1749596304697; Tue, 10
- Jun 2025 15:58:24 -0700 (PDT)
+        bh=ngowtUk0pmcEMi5JuRIJTHwRoFQ1ps0rBy51903B/GI=;
+        b=lc75fWwrYaRwWUs/LwncwUNKM/M6G8A7ZZJpyY0eXuaN8ejEi5X+KkTmnjqETI4Lwz
+         LeKy0EZhdwWulO4on3JCSKZx0PeePIxLUm52PZy3SUQof/V0BmvYHIPZl0WWgA3+a+Zj
+         u68LeWcbYEdxcb/eO1+NPJ664+FttgkU+elj9+BhHWUoEmllqChwoofE5hSosUjGtV63
+         1RhAqMANYAD/hV3yqTir0PnH6rtA2GeardDlTqeR5cbH7h/yrgdAynXc/cEsQm2jCzcD
+         IH9iz1U7AfZ5G3U+ldT9drRiIrIQKHc5Nrt6WncaC4xpsUZJi9kPew7dzMT7QBvvptOa
+         uawg==
+X-Forwarded-Encrypted: i=1; AJvYcCXUPP/JXoKsE4DLLkva3EaQvVt1QqSXEzKK+c7aZf9T5DvsN2YMTpfUIJmc5eJf/EzAHY2SumbAbe4bktg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxy5t/aLrrRzCeNw62h2q9xlYxhD1desAqTqwMzphSBmbvkjhWA
+	xn3yB8DuYv3Ndi24+DGS9jJYMn3uZ3y0B5tcygOY/hMEMitapsvR3MFGGPFi1phheZDaHAnUltq
+	rFHtpUA==
+X-Google-Smtp-Source: AGHT+IE8f4mjqFSxcWHB/Sxh/pqjjROaBQQ9c1q90hSKtUQsBQheucaQE9iY6C+1XXLQyaspE5G0Cxh4kFM=
+X-Received: from pjbpx2.prod.google.com ([2002:a17:90b:2702:b0:313:230:89ed])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3908:b0:311:ab20:1591
+ with SMTP id 98e67ed59e1d1-313af9711a2mr1372038a91.15.1749596303034; Tue, 10
+ Jun 2025 15:58:23 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Tue, 10 Jun 2025 15:57:31 -0700
+Date: Tue, 10 Jun 2025 15:57:30 -0700
 In-Reply-To: <20250610225737.156318-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,9 +61,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250610225737.156318-1-seanjc@google.com>
 X-Mailer: git-send-email 2.50.0.rc0.642.g800a2b2222-goog
-Message-ID: <20250610225737.156318-27-seanjc@google.com>
-Subject: [PATCH v2 26/32] KVM: SVM: Store MSRPM pointer as "void *" instead of
- "u32 *"
+Message-ID: <20250610225737.156318-26-seanjc@google.com>
+Subject: [PATCH v2 25/32] KVM: SVM: Move svm_msrpm_offset() to nested.c
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
@@ -72,116 +71,98 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Manali Shukla <Manali.Shukla@amd.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Store KVM's MSRPM pointers as "void *" instead of "u32 *" to guard against
-directly accessing the bitmaps outside of code that is explicitly written
-to access the bitmaps with a specific type.
+Move svm_msrpm_offset() from svm.c to nested.c now that all usage of the
+u32-index offsets is nested virtualization specific.
 
-Opportunistically use svm_vcpu_free_msrpm() in svm_vcpu_free() instead of
-open coding an equivalent.
+No functional change intended.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/svm/nested.c |  4 +++-
- arch/x86/kvm/svm/svm.c    |  8 ++++----
- arch/x86/kvm/svm/svm.h    | 13 ++++++++-----
- 3 files changed, 15 insertions(+), 10 deletions(-)
+ arch/x86/kvm/svm/nested.c | 23 +++++++++++++++++++++++
+ arch/x86/kvm/svm/svm.c    | 23 -----------------------
+ arch/x86/kvm/svm/svm.h    |  1 -
+ 3 files changed, 23 insertions(+), 24 deletions(-)
 
 diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index 13de4f63a9c2..f9bda148273e 100644
+index cf148f7db887..13de4f63a9c2 100644
 --- a/arch/x86/kvm/svm/nested.c
 +++ b/arch/x86/kvm/svm/nested.c
-@@ -277,6 +277,8 @@ int __init nested_svm_init_msrpm_merge_offsets(void)
- static bool nested_svm_merge_msrpm(struct kvm_vcpu *vcpu)
+@@ -197,6 +197,29 @@ void recalc_intercepts(struct vcpu_svm *svm)
+ static int nested_svm_msrpm_merge_offsets[6] __ro_after_init;
+ static int nested_svm_nr_msrpm_merge_offsets __ro_after_init;
+ 
++static const u32 msrpm_ranges[] = {0, 0xc0000000, 0xc0010000};
++
++static u32 svm_msrpm_offset(u32 msr)
++{
++	u32 offset;
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(msrpm_ranges); i++) {
++		if (msr < msrpm_ranges[i] ||
++		    msr >= msrpm_ranges[i] + SVM_MSRS_PER_RANGE)
++			continue;
++
++		offset  = (msr - msrpm_ranges[i]) / SVM_MSRS_PER_BYTE;
++		offset += (i * SVM_MSRPM_BYTES_PER_RANGE);  /* add range offset */
++
++		/* Now we have the u8 offset - but need the u32 offset */
++		return offset / 4;
++	}
++
++	/* MSR not in any range */
++	return MSR_INVALID;
++}
++
+ int __init nested_svm_init_msrpm_merge_offsets(void)
  {
- 	struct vcpu_svm *svm = to_svm(vcpu);
-+	u32 *msrpm02 = svm->nested.msrpm;
-+	u32 *msrpm01 = svm->msrpm;
- 	int i;
- 
- 	/*
-@@ -311,7 +313,7 @@ static bool nested_svm_merge_msrpm(struct kvm_vcpu *vcpu)
- 		if (kvm_vcpu_read_guest(vcpu, offset, &value, 4))
- 			return false;
- 
--		svm->nested.msrpm[p] = svm->msrpm[p] | value;
-+		msrpm02[p] = msrpm01[p] | value;
- 	}
- 
- 	svm->nested.force_msr_bitmap_recalc = false;
+ 	static const u32 merge_msrs[] __initconst = {
 diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 5008e929b1a5..fc41ec70b6de 100644
+index 9e4d08dba5f8..5008e929b1a5 100644
 --- a/arch/x86/kvm/svm/svm.c
 +++ b/arch/x86/kvm/svm/svm.c
-@@ -728,11 +728,11 @@ void svm_enable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type)
- 	svm->nested.force_msr_bitmap_recalc = true;
- }
+@@ -195,29 +195,6 @@ static DEFINE_MUTEX(vmcb_dump_mutex);
+  */
+ static int tsc_aux_uret_slot __read_mostly = -1;
  
--u32 *svm_vcpu_alloc_msrpm(void)
-+void *svm_vcpu_alloc_msrpm(void)
+-static const u32 msrpm_ranges[] = {0, 0xc0000000, 0xc0010000};
+-
+-u32 svm_msrpm_offset(u32 msr)
+-{
+-	u32 offset;
+-	int i;
+-
+-	for (i = 0; i < ARRAY_SIZE(msrpm_ranges); i++) {
+-		if (msr < msrpm_ranges[i] ||
+-		    msr >= msrpm_ranges[i] + SVM_MSRS_PER_RANGE)
+-			continue;
+-
+-		offset  = (msr - msrpm_ranges[i]) / SVM_MSRS_PER_BYTE;
+-		offset += (i * SVM_MSRPM_BYTES_PER_RANGE);  /* add range offset */
+-
+-		/* Now we have the u8 offset - but need the u32 offset */
+-		return offset / 4;
+-	}
+-
+-	/* MSR not in any range */
+-	return MSR_INVALID;
+-}
+-
+ static int get_npt_level(void)
  {
- 	unsigned int order = get_order(MSRPM_SIZE);
- 	struct page *pages = alloc_pages(GFP_KERNEL_ACCOUNT, order);
--	u32 *msrpm;
-+	void *msrpm;
- 
- 	if (!pages)
- 		return NULL;
-@@ -805,7 +805,7 @@ void svm_set_x2apic_msr_interception(struct vcpu_svm *svm, bool intercept)
- 	svm->x2avic_msrs_intercepted = intercept;
- }
- 
--void svm_vcpu_free_msrpm(u32 *msrpm)
-+void svm_vcpu_free_msrpm(void *msrpm)
- {
- 	__free_pages(virt_to_page(msrpm), get_order(MSRPM_SIZE));
- }
-@@ -1353,7 +1353,7 @@ static void svm_vcpu_free(struct kvm_vcpu *vcpu)
- 	sev_free_vcpu(vcpu);
- 
- 	__free_page(__sme_pa_to_page(svm->vmcb01.pa));
--	__free_pages(virt_to_page(svm->msrpm), get_order(MSRPM_SIZE));
-+	svm_vcpu_free_msrpm(svm->msrpm);
- }
- 
- #ifdef CONFIG_CPU_MITIGATIONS
+ #ifdef CONFIG_X86_64
 diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index a0c14256cc56..e078df15f1d8 100644
+index 91c4eb2232e0..a0c14256cc56 100644
 --- a/arch/x86/kvm/svm/svm.h
 +++ b/arch/x86/kvm/svm/svm.h
-@@ -186,8 +186,11 @@ struct svm_nested_state {
- 	u64 vmcb12_gpa;
- 	u64 last_vmcb12_gpa;
- 
--	/* These are the merged vectors */
--	u32 *msrpm;
-+	/*
-+	 * The MSR permissions map used for vmcb02, which is the merge result
-+	 * of vmcb01 and vmcb12
-+	 */
-+	void *msrpm;
- 
- 	/* A VMRUN has started but has not yet been performed, so
- 	 * we cannot inject a nested vmexit yet.  */
-@@ -268,7 +271,7 @@ struct vcpu_svm {
- 	 */
- 	u64 virt_spec_ctrl;
- 
--	u32 *msrpm;
-+	void *msrpm;
- 
- 	ulong nmi_iret_rip;
- 
-@@ -666,8 +669,8 @@ BUILD_SVM_MSR_BITMAP_HELPERS(void, set, __set)
+@@ -666,7 +666,6 @@ BUILD_SVM_MSR_BITMAP_HELPERS(void, set, __set)
  /* svm.c */
  extern bool dump_invalid_vmcb;
  
--u32 *svm_vcpu_alloc_msrpm(void);
--void svm_vcpu_free_msrpm(u32 *msrpm);
-+void *svm_vcpu_alloc_msrpm(void);
-+void svm_vcpu_free_msrpm(void *msrpm);
+-u32 svm_msrpm_offset(u32 msr);
+ u32 *svm_vcpu_alloc_msrpm(void);
+ void svm_vcpu_free_msrpm(u32 *msrpm);
  void svm_copy_lbrs(struct vmcb *to_vmcb, struct vmcb *from_vmcb);
- void svm_enable_lbrv(struct kvm_vcpu *vcpu);
- void svm_update_lbrv(struct kvm_vcpu *vcpu);
 -- 
 2.50.0.rc0.642.g800a2b2222-goog
 
