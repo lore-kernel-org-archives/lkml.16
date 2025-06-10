@@ -1,122 +1,131 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F28A2D540A
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 23:20:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79120283CA0
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 23:20:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749597615; cv=none; b=f44mVi3ag4VpmaIdF+uGfYYSaKgDidLgfTYi8B5+jJluajOf2SYVfGrNgJ/qBQwTmOqQvZkztpRTHYxa9jWNI1Ip5UVf4Gkd8NqbLXyhd6dE+ld9LP8yFXHN3X+8A1OWyd7IVhj4nxPDG8Z97CqwYe5vGniAQcQ37qnYNYYT6M4=
+	t=1749597616; cv=none; b=em3RfW7R/doc2SN+z1HMIbzVqcrcyO3ALGUBRqrTVNMieiBbnYW4PXykxP318AzIk+jhmXbw59ZQBpFCNcv6jAITL2cmKemRGtA3GI5zb4Sx+tRY4XhINwyB6ak9NoOTR+Je2OwEZ4VbImr1k4Trqq5hAVSDRQ28ZfpjAJpj3N8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749597615; c=relaxed/simple;
-	bh=p9aKJqud9RPGUf6Wxhg6SVrztt6IbydiB5KcKa8G5Ro=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=m7vuDv7FvZWSHA08JlMutOoEeoj/G3c132X6HYhLvf0yTHJ9JoPuxaVVgPCayqI8/Ckl0OKpRciS1siHPyov7bsSRfm4zO0iHfZd89R0hpvvkRSg9BA8pnEUYB92HhUDK0IThQOL9LQvrPw74T9JauBaphlMgK0M9zzpKNQzveE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ocACGQd+; arc=none smtp.client-ip=209.85.216.74
+	s=arc-20240116; t=1749597616; c=relaxed/simple;
+	bh=MmISEUVAZkAYO+3tppVzE59BztQ7B47DiT8C5/3AK3I=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=giiiMfKFZQ4zOCLLh5rvsH6F/OoTuOHlBZwrW2n0kbUEVGwSdI33J0H74KNVYWWrrZvZvDLaEYh3IGMzVbMaGIzMrk/bLp1W1EckK/6tdTy8Vx9jRHZhXSTYze2xpiqvz4mzUMPE97dIhDA2xgFytyCjHxeDl1UNtLxOnVFR0Vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wAJhDQJG; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ocACGQd+"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-311f4f2e6baso6404360a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 16:20:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wAJhDQJG"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b0e0c573531so3632272a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 16:20:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749597613; x=1750202413; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SZPjLY2mM4L86u9ZjSVjk1YzN2wRc/83Yq2+tB5bYN0=;
-        b=ocACGQd+o8OzZeG7t4Us7EiriNHs/eFftpiGR8Ej/46czzuKbFvPMgxYi8xqHV5QQk
-         MtCsngFAlyZwanM9eP+gprsrXxUqoXTWSgtppT6G+pI7t+Xdg3lVxQ6LFG9KWnnB+Cd+
-         JYSYoUkApffdasCqpunxO/QRrAMzxAutksNOktPm483DOU2iiNHtG1g5ASTyOw8b+DKs
-         GrH44d3VwAWhEV2B6RmxeFtzue6L1GNMxmQK02xU2sT33Q7/zSf+b9If7rbDH7oXVEIi
-         NjodAgD45IsvmKm48ncaiZDAb2yfZ/1ZuUNHmRIge5LC5n8cw68W/zoqS/MdKc3rRDX7
-         TInA==
+        d=google.com; s=20230601; t=1749597615; x=1750202415; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ku4Jlo0vfxtFTgd99p+Ks+SleUGyUmQc0U3V1r1cPLo=;
+        b=wAJhDQJGBwDbE/mLGnLGJr2k7bjlRThyjy2hh1U/WTtSNHd8b7HVCxvsaLXt8Es7za
+         5CH1Ff9naNoOJpq1BLvI1LyN+RzryjyhKXj5LqDlrzPIMNoFJPpDcjZM4oWT+gYb9Bq2
+         3tGIrBxhHhJtB51V/s/iUnYuyz/RtYnZhL8Bf7qu56+miOmJhuRv0/UkRDDiENcqtm6y
+         r4+EPPPZqnEnIvSaHspgvzXjqbCqpUSqluuspkx8FIJy/FKEozBfYK+mO/MNJ1WWsmHe
+         0XhFZIL6Pl7+lv+ABwuAng8WstexBomyQpGgLP0sevA5jG8QhrICj63vIglQg8nEVKCG
+         ud+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749597613; x=1750202413;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SZPjLY2mM4L86u9ZjSVjk1YzN2wRc/83Yq2+tB5bYN0=;
-        b=hndFLvzXbsk8KsjWkAY5WyYgC4/jB+TYnFWRhEoDxWLPiJgV/Aksh2sHQpBIvX65ho
-         K4vYrqTS8Tl1s9s5DVyCunFpWzY9aA6KDoZ/X1E0dUQTUy+K5LOeZy7tlstIj+Qrkjc9
-         ixNrYKh1NCbWJr7hzFAqTpNw1hKfQ13ZDnNBL02xB7K3s/Hd+G/1Olv5MrY+Ev+WXuH7
-         p7yGZCodRnLB2ojKhvsw38Z2xIh05CFcSh0Hp/H1zFJK3eutpo2KZFdyeD+hriY74dFn
-         58PpzBkVBsxA689CvNdt5+ZJZ/Ly+aJS/EyOuRHA9rbYHZJZNpiBzfDg80cxi3i6QQ1L
-         5KJg==
-X-Forwarded-Encrypted: i=1; AJvYcCUb0CqMMxOS9bpzWjI/NF2K10+JNi6jqrWEGf6Jd8gnaeTwrfdY9sDJVfuKlJTCqBzJl0+mJpWADHx6CL4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJDFfcg2UGqkI8nVDShKZw5Z6WFPQOw0AKZiKvPqf+U8Gf8YAv
-	TbVy5b8GO4D5HKpUZdiRZ9h6HJIL8bVP2WIa7y+8ZJH2RsZLmbshJiJsFhFKIgcUqQckv1Xxobf
-	tjHhhpw==
-X-Google-Smtp-Source: AGHT+IHMsJP22tXC45lUB8bXPeYj5teOCFoLNUprGp6l4PmXTAgs0Ik/+qVXzVGfqBDDly8tAhipWg1QI+k=
-X-Received: from pjbsz14.prod.google.com ([2002:a17:90b:2d4e:b0:311:d264:6f5d])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:35d2:b0:312:e9d:4002
- with SMTP id 98e67ed59e1d1-313af1ddd30mr1583512a91.28.1749597613006; Tue, 10
- Jun 2025 16:20:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749597615; x=1750202415;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ku4Jlo0vfxtFTgd99p+Ks+SleUGyUmQc0U3V1r1cPLo=;
+        b=MFFigkYdPCSxdZ7c9QC6PRoKDbHq24RwVIiHk0aYnZsUXDUHeuD6icauW+iJXw44/u
+         /AQdIhzYt3K+HMYGevZEiNui3gf6CYb30frHFP07nmULHilZHysUrZ+KI5W4bQzoTym6
+         Li3BOY7WRUEVI9YTZBsKB2svr0gDBgXuA2jtg1xgnbfpcrbI7z6Z1YFv7bZwZFpzlvqg
+         9pT7QprDVcp4T6N2RKdrCxFcGy4UOMkrH/ao/YNN5z8/Ik0jwGff8e47pQYqozqH4K6C
+         JE0sm7qwKx/ZPLfgcizyFKciJ29i/+YW2LR+d2NtW/zhi1srhZ1hW68j476xQu96M+H1
+         C0pw==
+X-Forwarded-Encrypted: i=1; AJvYcCUpmyoWNU0mTxlPOFObUqIxFy7rc0qlkqmnWmMMWijdTSZ7ZrxkohZbt+ED1eiH+meK7CIyyP4RVUYK9iI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1GQwLE392TbULogtbQUkAKmVAHmcGea/pWo2/dcjb9ZQR8dTM
+	eitj3/nvLNYzJVYtnbLnVw/PpnCPT0VKnkJDC3jlOYRlaP04HxYq8CZX4oDGUVjWsCqwbKS4aLS
+	Ek3gbvQ==
+X-Google-Smtp-Source: AGHT+IHskFiLR9R0/+qB03P2oZJfiwIk2UJIC6FsIlh4oCPhGlI2xBclplA11XHeDq3Z7tAlav5E6cfk8vE=
+X-Received: from pjbos11.prod.google.com ([2002:a17:90b:1ccb:b0:311:4201:4021])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3c4f:b0:311:e8cc:425d
+ with SMTP id 98e67ed59e1d1-313af11cbb2mr1636619a91.10.1749597614808; Tue, 10
+ Jun 2025 16:20:14 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Tue, 10 Jun 2025 16:20:02 -0700
+Date: Tue, 10 Jun 2025 16:20:03 -0700
+In-Reply-To: <20250610232010.162191-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250610232010.162191-1-seanjc@google.com>
 X-Mailer: git-send-email 2.50.0.rc0.642.g800a2b2222-goog
-Message-ID: <20250610232010.162191-1-seanjc@google.com>
-Subject: [PATCH v6 0/8] KVM: VMX: Preserve host's DEBUGCTL.FREEZE_IN_SMM
+Message-ID: <20250610232010.162191-2-seanjc@google.com>
+Subject: [PATCH v6 1/8] KVM: TDX: Use kvm_arch_vcpu.host_debugctl to restore
+ the host's DEBUGCTL
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	Adrian Hunter <adrian.hunter@intel.com>, Maxim Levitsky <mlevitsk@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Preserve the host's FREEZE_IN_SMM setting by stuffing GUEST_DEBUGCTL, so that
-SMM activity doesn't bleed into PMU events while running the guest.
+Use the kvm_arch_vcpu.host_debugctl snapshot to restore DEBUGCTL after
+running a TD vCPU.  The final TDX series rebase was mishandled, likely due
+to commit fb71c7959356 ("KVM: x86: Snapshot the host's DEBUGCTL in common
+x86") deleting the same line of code from vmx.h, i.e. creating a semantic
+conflict of sorts, but no syntactic conflict.
 
-Along the way, enforce the supported set of DEBUGCTL bits when processing
-vmcs12.GUEST_DEBUGCTL, as KVM can't rely on hardware to reject an MSR value
-that is supported in hardware.
+Using the version in kvm_vcpu_arch picks up the ulong => u64 fix (which
+isn't relevant to TDX) as well as the IRQ fix from commit 189ecdb3e112
+("KVM: x86: Snapshot the host's DEBUGCTL after disabling IRQs").
 
-To minimize the probability of the nVMX fix breaking existing setups, allow
-the guest to use DEBUGCTL.RTM_DEBUG if RTM is exposed to the guest.
+Link: https://lore.kernel.org/all/20250307212053.2948340-10-pbonzini@redhat.com
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Fixes: 8af099037527 ("KVM: TDX: Save and restore IA32_DEBUGCTL")
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/kvm/vmx/common.h | 2 --
+ arch/x86/kvm/vmx/tdx.c    | 6 ++----
+ 2 files changed, 2 insertions(+), 6 deletions(-)
 
-v6:
- - WARN in tdx_vcpu_run() if KVM requests DR6 load.
- - Ignore unsupported-but-suppressed DEBUGCTL bits when doing consistency
-   check on vmcs12.
- - Add support for DEBUGCTL.RTM_DEBUG.
- - Use accessors in all paths.
- - Add a dedicated vmx_reload_guest_debugctl().
-
-v5: https://lore.kernel.org/all/20250522005555.55705-1-mlevitsk@redhat.com
-
-Maxim Levitsky (3):
-  KVM: nVMX: Check vmcs12->guest_ia32_debugctl on nested VM-Enter
-  KVM: VMX: Wrap all accesses to IA32_DEBUGCTL with getter/setter APIs
-  KVM: VMX: Preserve host's DEBUGCTLMSR_FREEZE_IN_SMM while running the
-    guest
-
-Sean Christopherson (5):
-  KVM: TDX: Use kvm_arch_vcpu.host_debugctl to restore the host's
-    DEBUGCTL
-  KVM: x86: Convert vcpu_run()'s immediate exit param into a generic
-    bitmap
-  KVM: x86: Drop kvm_x86_ops.set_dr6() in favor of a new KVM_RUN flag
-  KVM: VMX: Allow guest to set DEBUGCTL.RTM_DEBUG if RTM is supported
-  KVM: VMX: Extract checking of guest's DEBUGCTL into helper
-
- arch/x86/include/asm/kvm-x86-ops.h |  1 -
- arch/x86/include/asm/kvm_host.h    | 15 ++++++--
- arch/x86/include/asm/msr-index.h   |  1 +
- arch/x86/kvm/svm/svm.c             | 14 ++++----
- arch/x86/kvm/vmx/common.h          |  2 --
- arch/x86/kvm/vmx/main.c            | 17 +++------
- arch/x86/kvm/vmx/nested.c          | 21 ++++++++---
- arch/x86/kvm/vmx/pmu_intel.c       |  8 ++---
- arch/x86/kvm/vmx/tdx.c             | 24 ++++++-------
- arch/x86/kvm/vmx/vmx.c             | 57 ++++++++++++++++++------------
- arch/x86/kvm/vmx/vmx.h             | 26 ++++++++++++++
- arch/x86/kvm/vmx/x86_ops.h         |  4 +--
- arch/x86/kvm/x86.c                 | 25 ++++++++++---
- 13 files changed, 140 insertions(+), 75 deletions(-)
-
-
-base-commit: 61374cc145f4a56377eaf87c7409a97ec7a34041
+diff --git a/arch/x86/kvm/vmx/common.h b/arch/x86/kvm/vmx/common.h
+index a0c5e8781c33..bc5ece76533a 100644
+--- a/arch/x86/kvm/vmx/common.h
++++ b/arch/x86/kvm/vmx/common.h
+@@ -53,8 +53,6 @@ struct vcpu_vt {
+ #ifdef CONFIG_X86_64
+ 	u64		msr_host_kernel_gs_base;
+ #endif
+-
+-	unsigned long	host_debugctlmsr;
+ };
+ 
+ #ifdef CONFIG_KVM_INTEL_TDX
+diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+index b952bc673271..3cfe89aad68e 100644
+--- a/arch/x86/kvm/vmx/tdx.c
++++ b/arch/x86/kvm/vmx/tdx.c
+@@ -778,8 +778,6 @@ void tdx_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
+ 	else
+ 		vt->msr_host_kernel_gs_base = read_msr(MSR_KERNEL_GS_BASE);
+ 
+-	vt->host_debugctlmsr = get_debugctlmsr();
+-
+ 	vt->guest_state_loaded = true;
+ }
+ 
+@@ -1055,8 +1053,8 @@ fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu, bool force_immediate_exit)
+ 
+ 	tdx_vcpu_enter_exit(vcpu);
+ 
+-	if (vt->host_debugctlmsr & ~TDX_DEBUGCTL_PRESERVED)
+-		update_debugctlmsr(vt->host_debugctlmsr);
++	if (vcpu->arch.host_debugctl & ~TDX_DEBUGCTL_PRESERVED)
++		update_debugctlmsr(vcpu->arch.host_debugctl);
+ 
+ 	tdx_load_host_xsave_state(vcpu);
+ 	tdx->guest_entered = true;
 -- 
 2.50.0.rc0.642.g800a2b2222-goog
 
