@@ -1,61 +1,63 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F35E246BB8;
-	Tue, 10 Jun 2025 13:28:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F2C23AB8D;
+	Tue, 10 Jun 2025 13:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749562116; cv=none; b=jC4PpoqM/C1FzOTYTirBPdaZUo+Ug4E2IWQNeQj3WldUNjqw1pteNJPGHx56XgePsUiG2KYI/Ix2sy8849BeBkBEaTYGrqU9E7CK4DzgDHtS9XDjHTcQbaMZqkD30vFAHjBECdoCKE4SXH83U1nBeFvv4Ik7XXGfOfAbA9gtx0s=
+	t=1749562120; cv=none; b=NDa83U7sM2JVx3HJvIRdfkZhFPthgp6qWW30KMiGh24SlsEYWmI6Besvk7zz3MjlHnnGdmjuo714vFpH9uBMZJFsTXhTbRZ1fqZLyjks3ENPhiUp3A9O76NukCobpe3Sz9bmwtupqj2zYVNeOzfwDNGJYRuJLOtBEJH5OKZ7wMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749562116; c=relaxed/simple;
-	bh=ZnvW/ur2cRumoOW+Z41lcoKXGfI7D1zXFJb7rEZC/dg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kuIfQFfnfuQKcfZbj59erFpZDCbvM9FwypngZx50BCus6uBr6GlDovyWJBktXUJ34m3vQi+cRPZSjUNQrlT2g6FVVNu+I9Fv7ElVUewanSEmMScO2rL+tcFxV27nGg7gD8SNXaqDKWny97+qNrAoW9iFXt22GPe8wApL0qY2z8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XKfo8rz6; arc=none smtp.client-ip=209.85.216.52
+	s=arc-20240116; t=1749562120; c=relaxed/simple;
+	bh=4hyk0K8UbeOWdvX5D5fgy3eh4gAR9L/juUd7uhWoWKY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pZIn9hEi7K981Oolmp/J8TA062SFaJahsgXsSm2uvTSwfMsLIzk+KIGuuAvHaED1w3G/9cZeEWMhPNlRLgJTtXYvcOk08WKCK7FlXSTTQJ7W79vhMws2kfsTXn4qGosPjqY+3Sm7pa6a6lkpjAErWb1p7VlI6q/kCFh/p00wiKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qx7IqIEB; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XKfo8rz6"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-31329098ae8so4355882a91.1;
-        Tue, 10 Jun 2025 06:28:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qx7IqIEB"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-235e1d710d8so66581045ad.1;
+        Tue, 10 Jun 2025 06:28:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749562114; x=1750166914; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fpy0w6GneocGH76sUucfKrbNpBWjT4Y6KY3kCrIzHE0=;
-        b=XKfo8rz6gXoUQmbRnMci8+HApnzm/tUnInaUAwcb8bTib99lygmH/QA1LUtz6NPYwI
-         rh7NWSQg7IS7dQ53yRJ+Q8PCnQzqCJ5hItlmVghkEab0cLzeJ4fRpV9TaVkf9e/QZUMD
-         +v1RmN5f/CGqs8GQD2RetPdSnHG1RV10rFweF22DvYMF/zeKuNmHsA+Qq7zfeWzGtqT+
-         AvtA7OgLlnVH/qQdjUWTyRDMfOvOeSfYhHAmDW2voG5v6J2CUx/8SiDC5nS8PstSzTyF
-         empa0e6QjEs/jf66IPtYmVlOgHGezS34kSFXPxBOEnQeQ1/3m4+8QvsCJT5tRo5Lcvbx
-         In/g==
+        d=gmail.com; s=20230601; t=1749562118; x=1750166918; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=omwJ5JP66L/+9sD/AxglLPlZQ7EGc6XcrGECQtUSke0=;
+        b=Qx7IqIEBfRmSWTGbrrs8JvpnyT/gD9sh7vtyRVHK7GbpUTYJ+RwG7YfDOxbbd7Ne8u
+         /7FRZ4AOsqJc+eqxgOFMHlpwSXakewxyuxwkDVhG77S5TtlYe4Y2RuVP73uuOZQBvujH
+         X+M6n7hmccVIUSKL/x1baJvDFBhNuRsV/10wnn8u2cpJNOOmMZ5PMsOVpalxf8BvxMDA
+         MQWc5W+n89sLi1+25JQd/FsP2vkNHDBHDG5LcvBBGXYNAtYEFLiM2vMGz1Tgn3JRc5ov
+         ESY3eSteSokXSqK//M+LOrZwLTNnxali/lPLZBbbMpfj35hCqXdGF9BvlqYK2vJ5pjLl
+         0Ybg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749562114; x=1750166914;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fpy0w6GneocGH76sUucfKrbNpBWjT4Y6KY3kCrIzHE0=;
-        b=OQy+xYh8zNAT3l78zKAOQ3My8pJYWs+0qmR2napIBSwzoGtTQOS/6NLU23d3jUc3PP
-         KlIwkiXeienp5j+eoNnQdIa2BhBG0pDo2OJ8Z2UgSEwM7egQNoQO/+MJHw8TVkpM61QZ
-         za+9ECEy7wkXiGIKeU2s0po+tprrt9RqKxuP9ysDLy+26GFG/cOcNy7Osva7Zo6l/PAN
-         4jdszeCLT86IU5Y00UdXTH9TuaYiAtANNd3WDHFwrsaalBPkhFyQfVHEMnER9328J4FI
-         +hFAaxQeQcnS92kcMg0s9Roj0luQfDWx1cNV/1H4qOvBEs0AG7Q/YfiBIve2ZfWdRKee
-         ACMA==
-X-Forwarded-Encrypted: i=1; AJvYcCV9Fhcbp4FQmogyzN6oLl9zGhGgyL3TJX6DCAv3L9sQptBT2Eu5HD9WXylrJn3MBGekZjV/ErP3MI5j3Qt8mV0=@vger.kernel.org, AJvYcCWlWbGFo6aeHJL5PVccN7dOmt/wi2cwU4jIWDEuyJFfIB74MGJJeFf2PvdTEHV7qiHu3Y1xgyBFbVD2vgE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywa/G2IBNiKxW6LEAuIlrABlNE+DJh9htIfnfRE46jDYJ45gOI2
-	lpdDDnb80JDsUFbs6vfvYfONR18VoBQ1+uGRtCanK0PrDseElnJIgldQ
-X-Gm-Gg: ASbGncu2Y8Q/s2FxUR9MfIzzvp4hn8ZHH9gNfuwJkxKzH9HcAELcttQ6y594J8QWpxa
-	YJWQ3kxgJnrmzbZM7SZuAaHdaGuePNs0A86CoZBTTo429gL2PqIazVEmcFQ3TvQHi24y837LFOJ
-	B0hn1FV2zd2Do2raUMt6r1wz/q/UDwngVODfnZpkkL6ix7jbzDgij0MCDk1mdkoQFmqC1XD8rxD
-	dMg3wZQkzRQg0qsSgAgd3Y9d6jKy5dARbnKcXd1IUTMaYp7ahhy1oB6cN3xNVmtYwt2cLl4tAR/
-	kZLvXo5ma9Bualgw4/u2lni6eBO9PnX71FwXGA7mv2o864r9K05OqcUeB9OeI56DEB80peujhBW
-	g1hetKSMS+cwkrIYLcviyiAZtRjuW5zf0FeEub1x6tkDJDw==
-X-Google-Smtp-Source: AGHT+IG+2BvfQptVbBSlcvPomMbcjCUmgOLj297ddTY/Eofvew4SN9EdfAXX8CPExVbGOyLjJdPF+A==
-X-Received: by 2002:a17:90b:2dc6:b0:310:8d73:bb27 with SMTP id 98e67ed59e1d1-3139e055dd9mr4939257a91.13.1749562114114;
-        Tue, 10 Jun 2025 06:28:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749562118; x=1750166918;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=omwJ5JP66L/+9sD/AxglLPlZQ7EGc6XcrGECQtUSke0=;
+        b=uCPlBvcw65epdJBVTfoj0K36vJs/GJx6KUZWpO/iHTNQQl6iandn+yKdZ5jb4lbPeb
+         bmoRb/TjfpMw4WrONCMW9m7PoPlDPISAkgvvdTC/Vm52pNwkH5OIxCmDz9poVoldReQv
+         UhJsjFubSB/cPndfEcqKSJ2kEntpQHLJaPGkLN+jqKc01JllmEho4BmGjpGHgGvXORDC
+         CBStt83JV7YODGsamEbmyBXUdcGNwoM3+8FYI8TxkQFh0M6BXew7y2IT1KHOCekb7qJI
+         y+2Kc6ebNEVNFINP1o0xdhMXoSslbns9SX/wT4cJziMMN00Lz7UlqBdTRJJ1A3tE/h+j
+         IClA==
+X-Forwarded-Encrypted: i=1; AJvYcCUtDxtIVMgK7lJeGIWmLDkNuMYCUBxs46muDs883mlGum1RBDTz7MS7+0TAvpbd8pYmH8W/+OTPBd0WNYI=@vger.kernel.org, AJvYcCXm8e78F4GBcDJVISYh/S31CS8pFWealYXGbaQDf0mzNkDvB0+rkkJhvEDIWfcHQ5VUtRqk5qYnhh7MIxc229I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwaS2Ty/TFFStOUSjMk1ISx/Zm9fV8PSzTBgcP37Kz7SDJVaAgv
+	ygIw9aUknhN8ZCzYTghEnCgJgnu8N7EbGqfOKdi4fDra8O4+RFP3z6Lu
+X-Gm-Gg: ASbGncuxyW9z9kHUrxNtM7cXCs0a2mf+AIPSt1T4iBgsKHzq3SAt/kR8HNHQ+M9YdCj
+	X9p5vE8Ur3Tosql+70QyXnkKjbs6mFhTgwL+v113X58KX9YWt8JIwZrEXFdhT5W3bPKsT2jaAMK
+	9FJVaV2H4iaIqWliL9904ElAQl2ZQ6Bnb+aJdzphGgUFbTnfESoUkMCsS1AcL84iTaD1A73YNUe
+	0L7s8Eg1GGBwomgevyTo92IJzdv7/UkBuFzmOAjVPfSKQ/Vak1hSFXz1/rFlL2jlRsZdkUQJa+P
+	+3R1xgPRNUj6z30QDqOG75PW8ueH4P5D3fwvjoWrRrK+AGB5IyCamH7UnRBiCb4rKK9uv6VYl7d
+	ZEyCK69JBsw2mlWI2v7Kle35LPn4uDBRJgLo=
+X-Google-Smtp-Source: AGHT+IHFo4Hj568NXhmQHnRzk5hYOvgTrZaZ+Gt8La/fb87IINto/aqaIIaswE7l9do8CcalpsDslw==
+X-Received: by 2002:a17:902:ea04:b0:224:24d3:6103 with SMTP id d9443c01a7336-23638342d1cmr40756195ad.35.1749562118258;
+        Tue, 10 Jun 2025 06:28:38 -0700 (PDT)
 Received: from bee.. (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3134b128050sm7969276a91.25.2025.06.10.06.28.30
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3134b128050sm7969276a91.25.2025.06.10.06.28.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 06:28:33 -0700 (PDT)
+        Tue, 10 Jun 2025 06:28:37 -0700 (PDT)
 From: FUJITA Tomonori <fujita.tomonori@gmail.com>
 To: a.hindborg@kernel.org,
 	alex.gaynor@gmail.com,
@@ -75,10 +77,12 @@ Cc: aliceryhl@google.com,
 	sboyd@kernel.org,
 	tglx@linutronix.de,
 	tmgross@umich.edu
-Subject: [PATCH v3 0/5] rust: time: Convert hrtimer to use Instant and Delta
-Date: Tue, 10 Jun 2025 22:28:18 +0900
-Message-ID: <20250610132823.3457263-1-fujita.tomonori@gmail.com>
+Subject: [PATCH v3 1/5] rust: time: Rename Delta's methods from as_* to into_*
+Date: Tue, 10 Jun 2025 22:28:19 +0900
+Message-ID: <20250610132823.3457263-2-fujita.tomonori@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250610132823.3457263-1-fujita.tomonori@gmail.com>
+References: <20250610132823.3457263-1-fujita.tomonori@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,71 +91,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert hrtimer to use `Instant` and `Delta`; remove the use of
-`Ktime` from the hrtimer code, which was originally introduced as a
-temporary workaround.
+Rename Delta's methods that take self from as_* to into_* to align
+with Rust naming conventions.
 
-hrtimer uses either an `Instant` or a `Delta` as its expiration value,
-depending on the mode specified at creation time. This patchset
-replaces `HrTimerMode` enum with a trait-based abstraction and
-associates each mode with either an `Instant` or a `Delta`. By
-leveraging Rust's type system, this change enables `HrTimer` to be
-statically associated with a specific `HrTimerMode`, the corresponding
-`Instant` or `Delta`, and a `ClockSource`.
+Using `self` is more common Rust practice for small values that can be
+freely copied [1].
 
-The `impl_has_hr_timer` macro is extended to allow specifying the
-`HrTimerMode`. In the following example, it guarantees that the
-`start()` method for `Foo` only accepts `Instant<Monotonic>`. Using a
-`Delta` or an `Instant` with a different clock source will result in a
-compile-time error:
+Clippy warns against using as_* names for trait methods that take self
+as follows:
 
-struct Foo {
-    #[pin]
-    timer: HrTimer<Self>,
-}
+warning: methods called as_* usually take self by reference or self by mutable reference
+--> ~/linux/rust/kernel/time/hrtimer.rs:421:17
+|
+421 |     fn as_nanos(self) -> i64;
 
-impl_has_hr_timer! {
-    impl HasHrTimer<Self> for Foo {
-        mode : AbsoluteMode<Monotonic>,
-        field : self.timer
-    }
-}
+Rename the `Delta` struct's methods from as_nanos(), as_micros_ceil(),
+and as_millis() to into_nanos(), into_micros_ceil(), and
+into_millis(), respectively to maintain consistency with the other
+function names.
 
-This design eliminates runtime mismatches between expires types and
-clock sources, and enables stronger type-level guarantees throughout
-hrtimer.
+Link: https://lore.kernel.org/lkml/aD1fgizC4FPT07vt@google.com/ [1]
+Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+---
+ rust/kernel/time.rs | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-This patchset can be applied on top of the typed clock sources patchset (v4):
-
-https://lore.kernel.org/lkml/20250610093258.3435874-1-fujita.tomonori@gmail.com/
-
-v3
-- allow optional trailing comma for the field entry in impl_has_hr_timer! macro
-v2: https://lore.kernel.org/lkml/20250609102418.3345792-1-fujita.tomonori@gmail.com/
-- rebased on 6.16-rc1
-- change impl_has_hr_timer! macro format
-- remove define_hrtimer_mode! macro
-- drop patch to change Delta's methods to take &self instead of self
-- add patch to rename Delta's methods from as_* to into_*
-v1: https://lore.kernel.org/lkml/20250504045959.238068-1-fujita.tomonori@gmail.com/
-
-FUJITA Tomonori (5):
-  rust: time: Rename Delta's methods from as_* to into_*
-  rust: time: Replace HrTimerMode enum with trait-based mode types
-  rust: time: Add HrTimerExpires trait
-  rust: time: Make HasHrTimer generic over HrTimerMode
-  rust: time: Remove Ktime in hrtimer
-
- rust/kernel/time.rs                 |  19 +-
- rust/kernel/time/hrtimer.rs         | 281 ++++++++++++++++++----------
- rust/kernel/time/hrtimer/arc.rs     |   8 +-
- rust/kernel/time/hrtimer/pin.rs     |   8 +-
- rust/kernel/time/hrtimer/pin_mut.rs |   8 +-
- rust/kernel/time/hrtimer/tbox.rs    |   8 +-
- 6 files changed, 218 insertions(+), 114 deletions(-)
-
-
-base-commit: 8bffa361fb76742eb953ca024a9363c6e9357d65
+diff --git a/rust/kernel/time.rs b/rust/kernel/time.rs
+index 9fd487276457..2a231c321afa 100644
+--- a/rust/kernel/time.rs
++++ b/rust/kernel/time.rs
+@@ -261,31 +261,31 @@ pub const fn from_secs(secs: i64) -> Self {
+     /// Return `true` if the [`Delta`] spans no time.
+     #[inline]
+     pub fn is_zero(self) -> bool {
+-        self.as_nanos() == 0
++        self.into_nanos() == 0
+     }
+ 
+     /// Return `true` if the [`Delta`] spans a negative amount of time.
+     #[inline]
+     pub fn is_negative(self) -> bool {
+-        self.as_nanos() < 0
++        self.into_nanos() < 0
+     }
+ 
+     /// Return the number of nanoseconds in the [`Delta`].
+     #[inline]
+-    pub const fn as_nanos(self) -> i64 {
++    pub const fn into_nanos(self) -> i64 {
+         self.nanos
+     }
+ 
+     /// Return the smallest number of microseconds greater than or equal
+     /// to the value in the [`Delta`].
+     #[inline]
+-    pub const fn as_micros_ceil(self) -> i64 {
+-        self.as_nanos().saturating_add(NSEC_PER_USEC - 1) / NSEC_PER_USEC
++    pub const fn into_micros_ceil(self) -> i64 {
++        self.into_nanos().saturating_add(NSEC_PER_USEC - 1) / NSEC_PER_USEC
+     }
+ 
+     /// Return the number of milliseconds in the [`Delta`].
+     #[inline]
+-    pub const fn as_millis(self) -> i64 {
+-        self.as_nanos() / NSEC_PER_MSEC
++    pub const fn into_millis(self) -> i64 {
++        self.into_nanos() / NSEC_PER_MSEC
+     }
+ }
 -- 
 2.43.0
 
