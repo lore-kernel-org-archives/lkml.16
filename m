@@ -1,48 +1,48 @@
 Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81CBD24418D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B512441A6;
 	Tue, 10 Jun 2025 15:24:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749569098; cv=none; b=rJTrYzi2h11dlEVjlPw380hJKPYaIPX0dLfpGt5w/qZVsFw0tUfoUL7y4Iu+uTrY+FctISu+v1MW1CYIjcdVTpjQl7feV5dErblqF7Z6inlrHKtNbid60TPI5pmeRxMElURPA0kiEmfxkybfihBk1LwwKuUO6uVDGXoTIrP5wLE=
+	t=1749569098; cv=none; b=ep8LT+mWegF3DNJ9H9MHbx62TRJ+6npMTu2QZxaKC6hHKe1bPqRNSsB0Zi3Vz4bzsm7Tyx/gQrL0v+3zDUp1ubqY9DHm5pml0j0xu9r6a1gKDYJSo+AG1r7UJD4ao09Mloe+6f5BWugLsW0o1GU3YxGMU2so+KDZptowQJhVEBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749569098; c=relaxed/simple;
-	bh=lh6yUknaZvNc4C48s8G5w7LhWfffxBprO0PLz0v5C8U=;
+	bh=vEyxtOvvzT1x/0EKbCpZJLZCj3EO3eMEpcDvabIImyA=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LEJtHwInSLMXlgVPRmjGWeUOKXUSW2NAfbxs2dRKUT6s7Bae9W8BxQpV+o+tzsQcgG+lCoLo7OIndJsFn+8RB276Gp/doN8/KIqB8ZYWbm3UCPcmu8RpzLszXkNH2j7V177hW5vx5o8H8JKCKTC8ofPuaGOd63PuPHz/ZAI2NI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=fRIBy1Bx; arc=none smtp.client-ip=185.132.182.106
+	 MIME-Version:Content-Type; b=PDRYuV00Ib6oPFz2z7GQm8RcWkk9MuJcx4pZzUyInuHPhlIyDZhvZW+XxlJAVBIr57vgzK/YAzmZLQ5Z2OyY/Fu/j3MmXtPdRbu+f5DXmLOivGAxTIpVM4LPHaGH6ChGWepps4ZKN8qPb4HIdHWe5Ho5HWW4yCjHOCR307G5CxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=vOrEkKb/; arc=none smtp.client-ip=185.132.182.106
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="fRIBy1Bx"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55ACLFRk012963;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="vOrEkKb/"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55AF1VY0031553;
 	Tue, 10 Jun 2025 17:24:45 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	6jFgEWw4ARwHHobxDSziy501YUd5MUew54ky5yZYuxs=; b=fRIBy1BxcpFxUqXZ
-	zFzb+4hJFSEaZOpDRM+1lBrH+cRSNV1X52Jit1DkbvovitiXs6S4q5NAgdcI+nNI
-	/dv13hLMhWOkVSUUQxAvyAQtzZ13rbxKZyzudUcD/rJVzbGbVBxAlnsx/2BJtLl0
-	kEISu9Ow4LKrqXAS7xN2MBZ01GsDt9iOF+KNhmu8D+WxB/4wiYF1rHpuIpyrRNGA
-	AZ29Zl5vVTthSC1xV5sevT4ObOStkC9HQtrI//yzLL4wa4fuvL+bB69YMIVJJj2L
-	MMiVA3vT4nSvphcQn84rUh/bSA8r9+Nq4Y7cvnjcf0NDsfg+RLnRwkqbQNqK9a2Y
-	DGR3cw==
+	B+ZXpV4BuIsMc3QUoJ0VAAjnTmM9QAGHI8YQX/Zc9Mc=; b=vOrEkKb/p3NVqL6F
+	6jH1eya55lRO3KyQR+wQ27u5KZTW9PWzO8ifrfzUfnm4n9oaGVol3Jx0YLxxruO3
+	YanbSukWtX8lbpAhn2QnE8y2ovHqDmGyjMqmcTCyVbVNP8ovwXNn8AsTUDd1luO6
+	rU3ue/YiqjpMaxVcwZZKgrJsMi4M3WG/iuuDlBfrrd6Hqk+xZrXxGPEykdvq7smY
+	/+o0xnHn7kD5iHO7yRpl4Vn7nQsznuRcqKKOEnoB+2hdWkoFcXW587fdUucEvBlN
+	0R6rOSKSBffWRIAXd1SOlLWX+imdhX25rE4C2MZ2frbnNHcLyzZlfM4SGz41slAV
+	uSoUUw==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474aume5nh-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474y053dsn-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 10 Jun 2025 17:24:45 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id C9E4A40055;
-	Tue, 10 Jun 2025 17:23:55 +0200 (CEST)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 28BCC40044;
+	Tue, 10 Jun 2025 17:23:52 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1ED6DB79BAB;
-	Tue, 10 Jun 2025 17:23:15 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6844BB79BB9;
+	Tue, 10 Jun 2025 17:23:13 +0200 (CEST)
 Received: from localhost (10.48.86.132) by SHFDAG1NODE1.st.com (10.75.129.69)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Jun
- 2025 17:23:14 +0200
+ 2025 17:23:13 +0200
 From: Antonio Borneo <antonio.borneo@foss.st.com>
 To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -56,9 +56,9 @@ CC: Antonio Borneo <antonio.borneo@foss.st.com>,
         Fabien Dessenne <fabien.dessenne@foss.st.com>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>
-Subject: [RESEND PATCH v2 4/5] ARM: dts: stm32: Add leds for CM4 on stm32mp15xx-ed1 and stm32mp15xx-dkx
-Date: Tue, 10 Jun 2025 17:23:08 +0200
-Message-ID: <20250610152309.299438-5-antonio.borneo@foss.st.com>
+Subject: [RESEND PATCH v2 1/5] pinctrl: stm32: Handle RSVD pin configuration
+Date: Tue, 10 Jun 2025 17:23:05 +0200
+Message-ID: <20250610152309.299438-2-antonio.borneo@foss.st.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250610152309.299438-1-antonio.borneo@foss.st.com>
 References: <20250610152309.299438-1-antonio.borneo@foss.st.com>
@@ -76,43 +76,69 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-06-10_07,2025-06-10_01,2025-03-28_01
 
-Add to the node m4_rproc the pinctrl property corresponding to the
-orange LED.
-The GPIO is reserved for the coprocessor Cortex-M4 and will be
-ignored by Linux.
+From: Fabien Dessenne <fabien.dessenne@foss.st.com>
 
+When a pin is assigned to a coprocessor not running Linux, the pin
+should be flagged in the DT as reserved and not usable by Linux.
+
+Add pin configuration RSVD (Reserved) and instrument the driver to
+not update the mux setting.
+
+Signed-off-by: Fabien Dessenne <fabien.dessenne@foss.st.com>
 Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
 ---
- arch/arm/boot/dts/st/stm32mp157c-ed1.dts  | 2 ++
- arch/arm/boot/dts/st/stm32mp15xx-dkx.dtsi | 2 ++
- 2 files changed, 4 insertions(+)
+ drivers/pinctrl/stm32/pinctrl-stm32.c | 9 +++++++++
+ drivers/pinctrl/stm32/pinctrl-stm32.h | 3 ++-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/st/stm32mp157c-ed1.dts b/arch/arm/boot/dts/st/stm32mp157c-ed1.dts
-index 9cf5ed111b52e..f6c478dbd0418 100644
---- a/arch/arm/boot/dts/st/stm32mp157c-ed1.dts
-+++ b/arch/arm/boot/dts/st/stm32mp157c-ed1.dts
-@@ -328,6 +328,8 @@ &m4_rproc {
- 			<&vdev0vring1>, <&vdev0buffer>;
- 	mboxes = <&ipcc 0>, <&ipcc 1>, <&ipcc 2>, <&ipcc 3>;
- 	mbox-names = "vq0", "vq1", "shutdown", "detach";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&m4_leds_orange_pins_b>;
- 	interrupt-parent = <&exti>;
- 	interrupts = <68 1>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/st/stm32mp15xx-dkx.dtsi b/arch/arm/boot/dts/st/stm32mp15xx-dkx.dtsi
-index a5511b1f0ce30..26f36a232d42d 100644
---- a/arch/arm/boot/dts/st/stm32mp15xx-dkx.dtsi
-+++ b/arch/arm/boot/dts/st/stm32mp15xx-dkx.dtsi
-@@ -479,6 +479,8 @@ &m4_rproc {
- 			<&vdev0vring1>, <&vdev0buffer>;
- 	mboxes = <&ipcc 0>, <&ipcc 1>, <&ipcc 2>, <&ipcc 3>;
- 	mbox-names = "vq0", "vq1", "shutdown", "detach";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&m4_leds_orange_pins_a>;
- 	interrupt-parent = <&exti>;
- 	interrupts = <68 1>;
- 	status = "okay";
+diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
+index ba49d48c3a1d1..e0c85f55557af 100644
+--- a/drivers/pinctrl/stm32/pinctrl-stm32.c
++++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
+@@ -77,6 +77,7 @@ static const char * const stm32_gpio_functions[] = {
+ 	"af8", "af9", "af10",
+ 	"af11", "af12", "af13",
+ 	"af14", "af15", "analog",
++	"reserved",
+ };
+ 
+ struct stm32_pinctrl_group {
+@@ -541,6 +542,9 @@ static bool stm32_pctrl_is_function_valid(struct stm32_pinctrl *pctl,
+ 		if (pin->pin.number != pin_num)
+ 			continue;
+ 
++		if (fnum == STM32_PIN_RSVD)
++			return true;
++
+ 		for (k = 0; k < STM32_CONFIG_NUM; k++) {
+ 			if (func->num == fnum)
+ 				return true;
+@@ -841,6 +845,11 @@ static int stm32_pmx_set_mux(struct pinctrl_dev *pctldev,
+ 		return -EINVAL;
+ 	}
+ 
++	if (function == STM32_PIN_RSVD) {
++		dev_dbg(pctl->dev, "Reserved pins, skipping HW update.\n");
++		return 0;
++	}
++
+ 	bank = gpiochip_get_data(range->gc);
+ 	pin = stm32_gpio_pin(g->pin);
+ 
+diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.h b/drivers/pinctrl/stm32/pinctrl-stm32.h
+index 5e5de92ddd58c..8a1c9570b078f 100644
+--- a/drivers/pinctrl/stm32/pinctrl-stm32.h
++++ b/drivers/pinctrl/stm32/pinctrl-stm32.h
+@@ -17,7 +17,8 @@
+ #define STM32_PIN_GPIO		0
+ #define STM32_PIN_AF(x)		((x) + 1)
+ #define STM32_PIN_ANALOG	(STM32_PIN_AF(15) + 1)
+-#define STM32_CONFIG_NUM	(STM32_PIN_ANALOG + 1)
++#define STM32_PIN_RSVD		(STM32_PIN_ANALOG + 1)
++#define STM32_CONFIG_NUM	(STM32_PIN_RSVD + 1)
+ 
+ /*  package information */
+ #define STM32MP_PKG_AA		BIT(0)
 -- 
 2.34.1
 
