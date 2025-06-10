@@ -1,118 +1,138 @@
-Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B0F521D59F
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 10:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F3521CC71;
+	Tue, 10 Jun 2025 10:32:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749551531; cv=none; b=eJim0aJ+3fUl/kDdX9wlcQEQU32yfmxY24tTxPZX5Q5m4VAqf9PtCK2jK/3V4D3UGrc9I2KyxSqbvPqS5zO5bCV5Uk2J1McBlfBTJmPNbg3BIc9k397Y6Z9Q3M0VhGEqZ2vaaZQ2Ne3RbjkXOGfocpVmFtyLWNBdAQfZzHxy4WU=
+	t=1749551540; cv=none; b=L+V//jUM56RWqQDf7IynKMkg0lYi9d4Q4MHSwklyQuMU7g5A2CN2J3rFx+2e6KDJEHgy2/pT2I17dYJvcjlBkACNsQnZPyr3HnzZBf6blctUQe8k+zIBPxBf3HbXo/8eybOYU2KeafqoIvAN8fuFxSgbFObHfLex5vqtM4TDBiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749551531; c=relaxed/simple;
-	bh=MoQQVvQxFdG/8raL3pZU+XN7tPsl6Nf3fXBxf99VlCk=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=C1zvMk39l04GdQU3uxQE9gwRjCR4G21GyADjgJMMeEQ4sZMqh37ge7s6myXguTzYHJS3FhhpW8nUKygZr9HEMKV9mxGoCNu8xNds+IoUGqraB4knxPHv5XbmwsGehfykUI7iDyLrzF6K4v/G8A+Gq/TU7M28m+0csMuKNck7/Q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EU7JvLNi; arc=none smtp.client-ip=209.85.221.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1749551540; c=relaxed/simple;
+	bh=IPp90NO5h9XEYHLZy6ESP2Rd2kiZvvvgqq223uHkbGY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Z1XxmdiZHAiFWgnY9duAU110a7nCAM7QjaPWxjpdyS42ERBkFkuizGTr1nsEBLUK4OSdWdtjXIUh/Q1DbcXIvrXTVatP4QLC5CiuS+61SOjTAC7jibsPh9sXiU8L/yvL/TDkVia6IVT7Nj6zrA4b6XciKESxIyV+JFXZ9bcRkMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lkonb9Rk; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EU7JvLNi"
-Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-3a4e713e05bso2407429f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 03:32:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749551528; x=1750156328; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=VkxcygRD9VdcN+IOxsdUezwrR9i2IQJgav8A95YBiYU=;
-        b=EU7JvLNiUuFePMEsrfm9WaEYMRoB76KqRO1gTaZNvPqsIzZBoyz2DEeCkqMgFYbctR
-         j7E2AOhKf4nVr+dOhG2C3SAxW/3/6TRAgANQPM4d3UC3N6dP+A9/VVJ8jBkgKBW6FHYQ
-         aMYiZA8vOXObc2inljmYo6mTGrfDh+Rkxsyz1Ka2qy0uh9SvDq/v78YFcz5KfdxZR7kU
-         E4W/CqEXpeaPHKuIMG3PEfc/b9vB61UFfpZOfGVgUR2067Xh1zy3+R05yobKadAolVWt
-         pqr9KEAhUi6IeyFTzhNxCVeEPXrjvk5Qp0pTIk89ajx4z61LTHL2rewbaoj42Qg9alNG
-         bFtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749551528; x=1750156328;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VkxcygRD9VdcN+IOxsdUezwrR9i2IQJgav8A95YBiYU=;
-        b=Z/HURiYiWba3bv05GkTzXpVWS7/pOBOmiSKDbDi6062mDqe0oGcHr1Jj4PPVNGO5Dh
-         jF8dLa2spU0a+RxCflGuYCNQteig5EQAEjnmmA897Wu5t8JHEi0Y77YKMsh7A4mBDKsn
-         RZgDbgaumk+OCCrkuA8STv/Bq2ctiraumrXnJHTyF6aI0Sm8OrdLWA+MwvXkYnAPGRG8
-         6RYKJx7msdVfaP5yEb2Slp2S5RNq4V1pq5K2QqFyWJgv8y8VBrUmB+6s0El+MnUf/jW3
-         DRf8HcuRXNcJphafFFzHY276k3hz79j668luldaQrk/kBIrQMEhag2OEy66GtFjEYEh/
-         QzOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUOcbVL9v7eu8qcINBD8dZ/kHRnMxyckm40Wlqm0WpuFvdQTlX2pVDPzuAH30CmLKt0+6IpXUze4DySoqM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJOAX/3JMU/Q3wD9FM1IRrJxLQSYf/In7XKaXTUNHR6Nmy/lsx
-	kf+Ludw1wl/Z4Qek2vdHDNhXaNKega4JTZATK7STDZF9f40m1Y+IB6ifRaT5D7snKmPRehsG9d3
-	Hrh6uKmMaKs2Y8G03DQ==
-X-Google-Smtp-Source: AGHT+IE5X6foiyj82qBhHJXL07/+UW7C/YRARnJPnO7KBNZHnH9XXa+3JQ49GJd08zEmXwFCtKt/QpVFtp6UHkY=
-X-Received: from wrpt13.prod.google.com ([2002:adf:f60d:0:b0:3a4:ed10:1aa4])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:2511:b0:3a4:d0fe:429f with SMTP id ffacd0b85a97d-3a53178688bmr13822736f8f.14.1749551528502;
- Tue, 10 Jun 2025 03:32:08 -0700 (PDT)
-Date: Tue, 10 Jun 2025 10:31:56 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lkonb9Rk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749551538; x=1781087538;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=IPp90NO5h9XEYHLZy6ESP2Rd2kiZvvvgqq223uHkbGY=;
+  b=Lkonb9RkHjvYrEa5vWeoa7wB3Ojwbtp30wqC8R3HAvRIC4pwMFrqov1W
+   ZFE7fn88aV+Fl+hoiim75AZ1JEoQKTxHF4Zma9dkyI7TB9bsBUma5gwOK
+   ZKK4R5I5CXipHs0uxeSa+l+4fNa+bmIk/0pqP6q1nZkFxL1D7UoIs8vY3
+   5IpqYIfCcYC6AovElYkXjYUF9dWO1ItOhdeapHJ6YXWnV3Raa1Y3QEpEW
+   76v5jRkURgdRb6stOh0mEYZ3UMdVavHvC0cwZSkCtGuK+vQCvWUg+YMxB
+   zkWR/jeW6dB/8kWFACw6vnp8e/w8xz4t1QhQn8if36e29hRKvbtDqFeTD
+   Q==;
+X-CSE-ConnectionGUID: xvVcW1bDT9m6ShMCL0BfOg==
+X-CSE-MsgGUID: KRsjs51QRzGRmOCBE/d6kQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="55447204"
+X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
+   d="scan'208";a="55447204"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 03:32:16 -0700
+X-CSE-ConnectionGUID: bynyP4HYTX+P13MW4d/vJg==
+X-CSE-MsgGUID: R/v4VHa8Q5ieT8qln5fe4w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
+   d="scan'208";a="151670936"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.196])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 03:32:12 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: linux-pci@vger.kernel.org,
+	Potnuri Bharat Teja <bharat@chelsio.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 1/3] cxgb3: Replace PCI related literals with defines & correct variable
+Date: Tue, 10 Jun 2025 13:32:03 +0300
+Message-Id: <20250610103205.6750-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAJsJSGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDM0MD3bLUZN2U1LTE0pwSXZMkg2RTk8TElNSkZCWgjoKi1LTMCrBp0bG 1tQADsPZGXQAAAA==
-X-Change-Id: 20250610-vec-default-4b0c54aadebc
-X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1047; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=MoQQVvQxFdG/8raL3pZU+XN7tPsl6Nf3fXBxf99VlCk=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBoSAmfTIYos3bwmKoRvyzXbhVB/IJKwSlpo9GSZ
- ODU9I50oeiJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCaEgJnwAKCRAEWL7uWMY5
- Rlm4EACacLUFsmr1AwCr1DMl628TGjBrnhwNnB7SPuL6Coz8OSgR6XtK/qNMwZOq0rkiye+RthT
- UTKyCuQPWedK5HToe7QuiAWN+NshnOdy2YRH/C0d0Vg0AKcKZpgs/gWD8chn/m4p9up7AJYXu+K
- LcWaONz2AL8yiwsinRa2Li2yXbOINE/BbfgUDQDbltdZbVlBO5pGekhy8bhvrAANBEyX/eSeELv
- wz09nUiCtpjKD+abFYTwhy9SvYEwedEygoZhnygPucdXSgmP0JdsQWwfw/7ISnka6P4W/YCprHN
- OuHZmkEBeW4To5TacxfNVMKwxOcZqef0TPaA9xnXCGO5zy1HlI5El8zUO8ujr/JOB96AVvLw6yx
- ecOq4LTPxD/zoWrh9go9n2WmULcMaYJM1dHA8lju3+AtCRPt49GdjfdZLQUow15SKf7N5jS04yI
- XDH0HWFs7Rsy3mOjivKpNRBNk669d/yS9i5cBI1pnYr8t35u4RtM/hVbHmWfV5FL6Pgh5ixHPMt
- 2eLk/C27pYxlZLRB9dRlfibyBdoARuAqpFZAapyeH+4wIlLbiGPTF3vAMjZpq4m8xo4ginrTfJ4
- ZU6Wf4CAZt3j87uaam7zSxXkU0JblS7rbuQI3rN7M6EYHpcxSNNnOCeo87vMExow/SeY4hmeBFX KDjcL0vy94Pluqg==
-X-Mailer: b4 0.14.2
-Message-ID: <20250610-vec-default-v1-1-7bb2c97d75a0@google.com>
-Subject: [PATCH] rust: vec: impl Default for Vec with any allocator
-From: Alice Ryhl <aliceryhl@google.com>
-To: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Alice Ryhl <aliceryhl@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-The implementation of Default is restricted to only work with kmalloc
-vectors for no good reason. This means I have to use
+Replace literals 0, 2, 0x1425 with PCI_VENDOR_ID, PCI_DEVICE_ID,
+PCI_VENDOR_ID_CHELSIO, respectively. Rename devid variable to vendor_id
+to remove confusion.
 
-	mem::replace(&mut my_vec, KVVec::new())
-
-in Rust Binder instead of `mem::take(&mut my_vec)`. Thus, expand the
-impl of Default to work with any allocator including kvmalloc.
-
-Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- rust/kernel/alloc/kvec.rs | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/chelsio/cxgb3/t3_hw.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/rust/kernel/alloc/kvec.rs b/rust/kernel/alloc/kvec.rs
-index 1a0dd852a468ccda6ea1b521bc1e7dbc8d7fc79c..606616fc0e592f87264bf905c88ef44e19739c0e 100644
---- a/rust/kernel/alloc/kvec.rs
-+++ b/rust/kernel/alloc/kvec.rs
-@@ -851,7 +851,7 @@ fn drop(&mut self) {
-     }
- }
+diff --git a/drivers/net/ethernet/chelsio/cxgb3/t3_hw.c b/drivers/net/ethernet/chelsio/cxgb3/t3_hw.c
+index a06003bfa04b..4e917a578c77 100644
+--- a/drivers/net/ethernet/chelsio/cxgb3/t3_hw.c
++++ b/drivers/net/ethernet/chelsio/cxgb3/t3_hw.c
+@@ -30,6 +30,8 @@
+  * SOFTWARE.
+  */
+ #include <linux/etherdevice.h>
++#include <linux/pci.h>
++
+ #include "common.h"
+ #include "regs.h"
+ #include "sge_defs.h"
+@@ -3262,7 +3264,7 @@ static void config_pcie(struct adapter *adap)
+ 	pcie_capability_read_word(adap->pdev, PCI_EXP_DEVCTL, &val);
+ 	pldsize = (val & PCI_EXP_DEVCTL_PAYLOAD) >> 5;
  
--impl<T> Default for KVec<T> {
-+impl<T, A: Allocator> Default for Vec<T, A> {
-     #[inline]
-     fn default() -> Self {
-         Self::new()
+-	pci_read_config_word(adap->pdev, 0x2, &devid);
++	pci_read_config_word(adap->pdev, PCI_DEVICE_ID, &devid);
+ 	if (devid == 0x37) {
+ 		pcie_capability_write_word(adap->pdev, PCI_EXP_DEVCTL,
+ 					   val & ~PCI_EXP_DEVCTL_READRQ &
+@@ -3477,7 +3479,7 @@ static void mac_prep(struct cmac *mac, struct adapter *adapter, int index)
+ 	u16 devid;
+ 
+ 	mac->adapter = adapter;
+-	pci_read_config_word(adapter->pdev, 0x2, &devid);
++	pci_read_config_word(adapter->pdev, PCI_DEVICE_ID, &devid);
+ 
+ 	if (devid == 0x37 && !adapter->params.vpd.xauicfg[1])
+ 		index = 0;
+@@ -3528,7 +3530,7 @@ int t3_reset_adapter(struct adapter *adapter)
+ {
+ 	int i, save_and_restore_pcie =
+ 	    adapter->params.rev < T3_REV_B2 && is_pcie(adapter);
+-	uint16_t devid = 0;
++	u16 vendor_id = 0;
+ 
+ 	if (save_and_restore_pcie)
+ 		pci_save_state(adapter->pdev);
+@@ -3540,12 +3542,12 @@ int t3_reset_adapter(struct adapter *adapter)
+ 	 */
+ 	for (i = 0; i < 10; i++) {
+ 		msleep(50);
+-		pci_read_config_word(adapter->pdev, 0x00, &devid);
+-		if (devid == 0x1425)
++		pci_read_config_word(adapter->pdev, PCI_VENDOR_ID, &vendor_id);
++		if (vendor_id == PCI_VENDOR_ID_CHELSIO)
+ 			break;
+ 	}
+ 
+-	if (devid != 0x1425)
++	if (vendor_id != PCI_VENDOR_ID_CHELSIO)
+ 		return -1;
+ 
+ 	if (save_and_restore_pcie)
 
----
 base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250610-vec-default-4b0c54aadebc
-
-Best regards,
 -- 
-Alice Ryhl <aliceryhl@google.com>
+2.39.5
 
