@@ -1,141 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50ED419E82A
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 02:08:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B37419E97C;
+	Tue, 10 Jun 2025 02:09:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749521334; cv=none; b=Y0Jttjv88Ux2kV5IIFil2Gn/WsFzPD5ewoVbwWBLXc2dRUdM/GabEotFLBpwqHRsIMSywjjrnTm3/D6v37u2og3vh3zWSqrb14bl8j4bVseh1yzMUTY0XZq2Tndvi1BW5QXQJkKyWDmsY5a/732jBNfu9k44wop7NFkOps0y3L4=
+	t=1749521349; cv=none; b=Id7ZBTig9n2Te7ArLtAzNjqpA4g7wmGEbCzYPSlXfpyMLCzETziVr/PMqyLmh+DXZ7yJ6u3lQCSBBBLLLfoblmpxPwVrOiYnHDJq4pOuf1v72eQm2aGA8ZSyls0E304NZSZzmnSMYpOpg4lW7B+tFN8ggD94p9HYtHhNg/Mt+Pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749521334; c=relaxed/simple;
-	bh=sIXSPJxS+G5t42r2AbvUgAZhpvhnMGaM1OyQXh9rwbc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Iaav9Tqv339sL/RxiMRJW1z+MCLZ5RXUYapTMSryJsN7rlWLVQn0Lxa3S0vEyPx3mdtJoQ+gRUHyZoGOjnGq7vHqAIPbFt426OviYKAMGm8U0eUAmXwFfUuvR/XDPked5kVob8vYNDoyDpyFI0R4qhXoRiNGjF0r3kPJLJQx9mc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b5Ja7FfO; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b5Ja7FfO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749521332; x=1781057332;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=sIXSPJxS+G5t42r2AbvUgAZhpvhnMGaM1OyQXh9rwbc=;
-  b=b5Ja7FfOtZZ0taSzZhz/RO+bf+gssMW4O+qz1LrZTJW/tWxjY0WERJ5P
-   A9uLoWgvo/oIyjKcV7tfi+wI5bryhGNw67zk9C8uf8Skzx7nm3LwsBWcd
-   KtJBct3M0jYZCncpysjWhX/GMoZM1n2Md2MdCi/Q+GovL+uR75AX0WuGX
-   KqLZ9AYbpd5I7Ge4Kr22DkpLE4nk9flxmCODJ2GZTWa3aI2sgSKOjofMI
-   EFwK6p6kHTf3aPQRNDXiUfIcgWBBjYNTbiY1q/L+KEyBYs6wfutwhpHcq
-   ksAkeDa9xCnRVuG5IQ4KFTbgxNhErv8qt6XE0Hijb3h7n/FK1+etP8M08
-   w==;
-X-CSE-ConnectionGUID: EcYf9DiASQmYH3WsLGF56A==
-X-CSE-MsgGUID: xnFcV4JlTTqn9RZiHDnLSQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="55279838"
-X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
-   d="scan'208";a="55279838"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 19:08:52 -0700
-X-CSE-ConnectionGUID: Gmb/15xrRN+ExR13Kec0wQ==
-X-CSE-MsgGUID: xlUitEuuTEWdIOnJg1hRPg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
-   d="scan'208";a="147200204"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 09 Jun 2025 19:08:49 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uOoPu-0007d7-2y;
-	Tue, 10 Jun 2025 02:08:46 +0000
-Date: Tue, 10 Jun 2025 10:07:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Marco Crivellari <marco.crivellari@suse.com>,
-	linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Tejun Heo <tj@kernel.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Marco Crivellari <marco.crivellari@suse.com>,
-	Michal Hocko <mhocko@suse.com>
-Subject: Re: [PATCH v2 3/4] Workqueue: add WQ_PERCPU
-Message-ID: <202506100903.Ow7T6q5Q-lkp@intel.com>
-References: <20250609103535.780069-4-marco.crivellari@suse.com>
+	s=arc-20240116; t=1749521349; c=relaxed/simple;
+	bh=R6mmVgX/egzbHlhwR9y9hO9y5Huowy5XWmmI365cG5w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dNZDX9gyvhsgQFlx7ORom3VHYhebdAnTsS8JtSVI955Bc3hybMP7CPiACZKicTpqCencrHDFLkZhLispfJOsvhTkmATNVw8iJ40yTMUb0bbJi4kkq7uVggGdFK6FccmyBCkpxtOr6rBgrfHh2eGGOH3+DHqjViW5neo77mWoG84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7d38cfa9773so240139285a.2;
+        Mon, 09 Jun 2025 19:09:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749521346; x=1750126146;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EnC+Ue98VGwpV1vtakqaEuSsenEtL0aLmlbs58YHsHo=;
+        b=mU5WpwvWhR6wed2/rbCh+qcdOEcASE5VfrqA9xsS/tKFs62K/jDj0KCQrmIdWAJT48
+         l0gxW5nyCWCwatwDcpviPDmjsPcQTYQkaSeBMudxGEN6hn3ywgmeYk99AafUlkg4tOuH
+         Zd9jIteXOC5UagcyCro8IrfTTrRIMfJXZZ5DLt9bAS99e8UQCIe2uxu4DvdQ5O5YDmdq
+         e/+c9ceFrq2Qe3RZ2vbmzAOrAu4uHkMSqFA+/cvEgqdjalxgZpcquQLnaxHi2LNa1bs2
+         p3/jqeMWCRXO5S88uOPUZbxDZs9vdTkgkqtxRpJtM/mLvIR56BiJCChkJvBolqNeROwR
+         gJkg==
+X-Forwarded-Encrypted: i=1; AJvYcCVukgb4zGcmYj5Fn/lFBRtAbjB0U5zUONPeGBC0x/cn9JNLE/hWjNJJ7Tdck3/Ym0lyo4jq3XJB/AbarxnHzELD@vger.kernel.org, AJvYcCXwRhDTlwlvR99w0194BBfjOK6u5+Vg8GMuV8m+gKkOOwJxDdra1JKGT2qpmvh/sIUBPOSNmbkzDSDkBiw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3CbGYHA5GDq3jbJZ7+MRVnGOkRtXpMO8Cxw55bH9LqCl+2/GB
+	u+OGnhYoMKlrLn5OIrvVcGCVIWQ1cqymuAe4eV8aAuiZxvLdj5ASv3MTR8HRJczdPxE=
+X-Gm-Gg: ASbGncv0H8T4tjP4AypMBgmCuwAo8vZACm7y/sZMYvMaAtSG2dCi1y1vfnuNn89tXHy
+	fnx8DalTA6zo6j7hqkF8FrSJ4D/FgIdqmJrnoyI5CKzrDNZY6dxggrFCTN4dgVEqEUhx0M0awz+
+	p6swS40lKgLv51XLL4s7LH3mkJU+oxUuftnxgptWR0UN4ZiB1ZwX6UWL41rvKSOz2q7dbzgBMsC
+	T1AhzTBR2++wyQJbAzqRnkgcFmjCRvfxqhpw7q1qJ7Wh0Re9YgKk4Vd3zyOWUHWElBSbfVb/Zyn
+	7sUhdFnNRs8xNbYWr0kRUJn1ukqslanv2tMJD1BkhRh4Q3Q358khFMwOtie85T8n+SJamFh2F25
+	RY7fTJy9SEBdY2RehBKzJCYKwROTIF2RO
+X-Google-Smtp-Source: AGHT+IEpYM8ahTYjImVeejxYctTzQ7p3eG/kdEb36tgX6d7LZKmW7ECK+T3BxI49eTz/gjbe32Mf2Q==
+X-Received: by 2002:a05:620a:1d07:b0:7d0:9bd7:f9ae with SMTP id af79cd13be357-7d39f563ac5mr145491985a.2.1749521346094;
+        Mon, 09 Jun 2025 19:09:06 -0700 (PDT)
+Received: from localhost.localdomain (ip170.ip-51-81-44.us. [51.81.44.170])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d2513357dbsm626472385a.13.2025.06.09.19.09.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jun 2025 19:09:05 -0700 (PDT)
+From: Chen Linxuan <chenlinxuan@uniontech.com>
+To: Christian Brauner <brauner@kernel.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: zhanjun@uniontech.com,
+	niecheng1@uniontech.com,
+	Chen Linxuan <chenlinxuan@uniontech.com>,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH RESEND] selftests: add missing include
+Date: Tue, 10 Jun 2025 10:08:40 +0800
+Message-ID: <20250610020839.2799222-2-chenlinxuan@uniontech.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250609103535.780069-4-marco.crivellari@suse.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Marco,
+I failed to build this test on Ubuntu 24.04.
+Compiler complained about undefined functions mount, umount and some
+mount related flags.
 
-kernel test robot noticed the following build warnings:
+Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
+---
+ tools/testing/selftests/pid_namespace/pid_max.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-[auto build test WARNING on mkp-scsi/for-next]
-[cannot apply to brauner-vfs/vfs.all wireless-next/main wireless/main linus/master v6.16-rc1 next-20250606]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Marco-Crivellari/Workqueue-add-system_percpu_wq/20250609-183742
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/mkp/scsi.git for-next
-patch link:    https://lore.kernel.org/r/20250609103535.780069-4-marco.crivellari%40suse.com
-patch subject: [PATCH v2 3/4] Workqueue: add WQ_PERCPU
-config: s390-randconfig-002-20250610 (https://download.01.org/0day-ci/archive/20250610/202506100903.Ow7T6q5Q-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 14.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250610/202506100903.Ow7T6q5Q-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506100903.Ow7T6q5Q-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/nvme/host/tcp.c: In function 'nvme_tcp_init_module':
->> drivers/nvme/host/tcp.c:3026:26: warning: statement with no effect [-Wunused-value]
-    3026 |                 wq_flags != WQ_PERCPU;
-         |                 ~~~~~~~~~^~~~~~~~~~~~
-
-
-vim +3026 drivers/nvme/host/tcp.c
-
-  3008	
-  3009	static int __init nvme_tcp_init_module(void)
-  3010	{
-  3011		unsigned int wq_flags = WQ_MEM_RECLAIM | WQ_HIGHPRI | WQ_SYSFS;
-  3012		int cpu;
-  3013	
-  3014		BUILD_BUG_ON(sizeof(struct nvme_tcp_hdr) != 8);
-  3015		BUILD_BUG_ON(sizeof(struct nvme_tcp_cmd_pdu) != 72);
-  3016		BUILD_BUG_ON(sizeof(struct nvme_tcp_data_pdu) != 24);
-  3017		BUILD_BUG_ON(sizeof(struct nvme_tcp_rsp_pdu) != 24);
-  3018		BUILD_BUG_ON(sizeof(struct nvme_tcp_r2t_pdu) != 24);
-  3019		BUILD_BUG_ON(sizeof(struct nvme_tcp_icreq_pdu) != 128);
-  3020		BUILD_BUG_ON(sizeof(struct nvme_tcp_icresp_pdu) != 128);
-  3021		BUILD_BUG_ON(sizeof(struct nvme_tcp_term_pdu) != 24);
-  3022	
-  3023		if (wq_unbound)
-  3024			wq_flags |= WQ_UNBOUND;
-  3025		else
-> 3026			wq_flags != WQ_PERCPU;
-  3027	
-  3028		nvme_tcp_wq = alloc_workqueue("nvme_tcp_wq", wq_flags, 0);
-  3029		if (!nvme_tcp_wq)
-  3030			return -ENOMEM;
-  3031	
-  3032		for_each_possible_cpu(cpu)
-  3033			atomic_set(&nvme_tcp_cpu_queues[cpu], 0);
-  3034	
-  3035		nvmf_register_transport(&nvme_tcp_transport);
-  3036		return 0;
-  3037	}
-  3038	
-
+diff --git a/tools/testing/selftests/pid_namespace/pid_max.c b/tools/testing/selftests/pid_namespace/pid_max.c
+index 96f274f0582b6..c3ee8a2eff75b 100644
+--- a/tools/testing/selftests/pid_namespace/pid_max.c
++++ b/tools/testing/selftests/pid_namespace/pid_max.c
+@@ -12,6 +12,7 @@
+ #include <syscall.h>
+ #include <sys/mount.h>
+ #include <sys/wait.h>
++#include <sys/mount.h>
+ 
+ #include "../kselftest_harness.h"
+ #include "../pidfd/pidfd.h"
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
