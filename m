@@ -1,128 +1,182 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C6A241CB2
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 16:12:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F46A2116F5;
+	Tue, 10 Jun 2025 16:15:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749571948; cv=none; b=R8Q8cEx2nPmvl278WN6vVb8Sn5IOoRJ+SDCAS14zVYTElj5NEV4DRsvuy8qZLIQMcO4GvzFq4ohrKOeBybOCmpDH56TviUXoNuGFPy7SgvJpiyJhNXqBvLDGRiwV8O4x4vE00ZUAc1w9deoiTEyB9K9yaiwXl53rynqmcLW80iA=
+	t=1749572112; cv=none; b=dCW/yL5NnMEtVZJWhbkQqbCMZrmcsrlQFv7YAn/PfHGcEB5m3psOzhBW+zYrXv35FkjGv3/m6neNsqsOIgcJe/wQrwIKIoa7en/WZlIWp1o4Fno8kmgSD6tA3flT+Nmvu8p4F1lX/xGDFDJHP8ilaKOXNU+mSA7O3iqBfr76gB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749571948; c=relaxed/simple;
-	bh=5WJNEkDIjQQz2okt4KOF8T62rDFTSGAdY4cYKkBLKAM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=P/PQAP9w6idSzxRdWckLGdDAS8otHkg5qgZC0NerovgCI+XPtBd4jU2FMTs8slOOjfW7BnEYMVGMyGZdajzQnmAzI752WZj6gN0K+f4eoabKxZ7dgPbU+rKJK6ogRZCEuG+qYGjL12q9A22krmciX1O4PsfUkV9O212njhLzu6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VkYQlwcE; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1749572112; c=relaxed/simple;
+	bh=EnE3iCmdmPCrC78MsYphV4x/iTw7Ie5czyJvF6gMHXE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J6o76vvusAZ3kOsCysC0jhRc652HR+ZKGgYhEGVAD5zLpYew/OnwH/qHXWmhqY9yNGvs5O2HnMgcxCNO5mbbsTxyf7kyk2G0h8fPKgQjVo+a6pp6FvL/IoJoZpLFYjJ0IcldeN42dcBCtqtQkrFURhWprpoKjPimwWRra/fImD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R7ezQRyy; arc=none smtp.client-ip=209.85.161.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VkYQlwcE"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-31215090074so7821202a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 09:12:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R7ezQRyy"
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-60ef6bf2336so4224520eaf.0;
+        Tue, 10 Jun 2025 09:15:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749571946; x=1750176746; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Tdst2AXEI4Imm1N+8aUcHMsoZp01dEp7fOzDZf0fTqo=;
-        b=VkYQlwcE6Gabdm0Q7BNy4Sel4WedZgCTG3pCAIRXdkA6O0GwFNVvtEK8iaDfIxwcXg
-         a5+6PWIHy0gUmcG8ljDl95pPZ/yQ2BxPskUxxla6hNVwau2tpkYZ+vEGsbaADSHv8KR/
-         h6pxSBtXFv5OdeMyYuQC1oc3z15OLzEZ+QOwC3yEtkKgOL7eFFkb3jw1vcPNRMU8+Jmt
-         m8SKqFeVit/Tj9pXGQ13MuFeXaO0djRyJFU5jgDmVclghlcGA4FR51z+PU0MiRUGKZ3e
-         MQ+V+u1nUaEQuQ7/CoiBUB1SlO9+UFCWmXuY4U+ciU9JHKp6soH1uxPtjZJ6Ox7AbCGG
-         Nv/w==
+        d=gmail.com; s=20230601; t=1749572110; x=1750176910; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ta7maDhtSE3i5q5bUhjou/IV8ubkgGzHQ0R4B2/Mhjw=;
+        b=R7ezQRyyljMuLNX4La5zJmvGyoYGXZnrQ+kH4k6qDDoPmJWiYvqXBjTBlenuRZdvZ5
+         pj8IyB3B1e/hWFp9bYluF2KY/qQAaBXrY+8PrsWvBB9P4r0Y78W/lYTx11USq5qVkTFK
+         Mk7BOwpieeODC1BbBC/g904hqfGPBNZ5mZNvG3DVHbF6NzkU5j3yog1RVVWqi+x9Du/x
+         xrhff6G5NtISlk27B1ic7UDjZ65X6jYhDhR9WdhZpRhVE0ppGkvvQSA0CotCzV0cluii
+         caZ7iNaTjnsuteegnbVKo2tCrHogn+Og7BclP1SyIJdfdPhIuLI36MYN+XuC0cKO1HNG
+         FXiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749571946; x=1750176746;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Tdst2AXEI4Imm1N+8aUcHMsoZp01dEp7fOzDZf0fTqo=;
-        b=T9MB0I7gD5/ezJCGvNg/BxcJpiP2J7J4Pj9FWoH4ELKWUahlYtrAv0HGMqajuXrXwj
-         /2FhV5fArvky0SMmUAE85bxnTLjrqArtHIZc/0jcVqI8SUJCUGtorQt3MvyeZOYhJ2Zj
-         Givas4/wcNLTpcRSxF8uhTuBs21Jo4r2jO3gYl2S9hkvSRFekrcvYVom4SqGcqlLlN9p
-         J3UJl24NSg6R1y6UeKT4vHhyOaO/c2aa8bfAf2RBwwBlsZRUqJ6TWGoCZzKSXdDHJ6A/
-         RANFguhY85o050Kd06FuKCJZT54YCb2VYzDVc5O1Z+PFXhuTCV/SE1HB4+JmuG7Y/buT
-         2Qug==
-X-Gm-Message-State: AOJu0YzhJK7FoV5p7iFYTSmzUuQ06uZXUFmjrHQFQUxj/HjkA4jsbGqc
-	ClguuKJkz/+UCsqGNn2VUm/mV4Pun0yue4ui1rpwZTCHYwwTPQCPYVeXFe5c7g6odCCrbGb2mwU
-	dzoeb6A==
-X-Google-Smtp-Source: AGHT+IE71Jz/QhQNRZ8OzEh0DWxt/XrMZMCp0tDfjSa8QU6g08JvolhGnuLJkEQj3Yvonq7nqSu9ReSpHFU=
-X-Received: from pjbrr16.prod.google.com ([2002:a17:90b:2b50:b0:311:f699:df0a])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3887:b0:311:e9ac:f5ce
- with SMTP id 98e67ed59e1d1-313af23d84bmr171621a91.21.1749571946315; Tue, 10
- Jun 2025 09:12:26 -0700 (PDT)
-Date: Tue, 10 Jun 2025 09:12:24 -0700
-In-Reply-To: <cc3df866-9144-42f0-a24c-fbdcedd48315@amd.com>
+        d=1e100.net; s=20230601; t=1749572110; x=1750176910;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ta7maDhtSE3i5q5bUhjou/IV8ubkgGzHQ0R4B2/Mhjw=;
+        b=OV1FLg7tFCOmQtg4cHAutKFyhEajNDMyBbv1jIj3G0hJ55qNYHLY1l4ZcwOrqNXFNQ
+         1F2RsLX+RQNvxiTdtSmeHaTax9al2xRKKotUeUL73VXYaPlkJ6cs/he5yi3eBFPXKUDK
+         aUikcLQb9cFGNVhYG3aF1a+PR7MVziKQnRTvDMH0mtFxdaP/GAvpIqak94k5hPH9y1OL
+         gphMO7KvtbL9b3p3dKdo8LqY+sAjOuBJfUGEIxItpn6ayHkvZnX/fVRY7Thb/RsU5UA0
+         Zpv8BReJN0rFaG1vtq7xI/++Izv7V0+8IXCVQxF/9MHK2viVdbRupSfZkdB0CzKo8BpU
+         l9Nw==
+X-Forwarded-Encrypted: i=1; AJvYcCVnAxcnu29P0sQvOt0BOGQZAA/eOeYjonol6HxTvwb5DbtWz3sG+M4ew7gyheDnZOzLkd/KEDU42kJEeZwj@vger.kernel.org, AJvYcCWABCWEJhu7b5GF+8v+SMDSn0Ol30ZJ/XjSlLKrsCbvTyj6U+FOpP0xymLb8gOpysfX6KhXoO9uapA1@vger.kernel.org, AJvYcCWjm1Mb3Jnhh057M9yIs2RSdA4Pxi94AnjlWipKG5YCmcLKi5ET7LD24FLRv0HvnPbKxsA7NEMBiFXSTG6+hKU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyip+Pqg6ROZQX2IZdUrMg/fYGxvtqnuk7LqpQI03M+9JO4/1wZ
+	mMOMuInyHZBC31P8s1amjnbDM81nRUHoYE8D2e3EaPsVsU2PbxGZX7j04JW9BTdIkkYtfPR8jU1
+	wvOM/OLCmnKlsdpt4XgZOZQgjMMX2T1E=
+X-Gm-Gg: ASbGncsZjzywvF5xBqtABcH2e1PxzGdo9RkQ50sL6OGPAqi9P8G9Q6EG7FXU7as9jGa
+	szevpQ77gzO0khn5YZ72nKkG3pZ5+oU0zNZGYnAWyZTaMhtWh/YflSr33QHy56eA2q3HmvyUU+j
+	VJf0RcR50aYaOPrW74QfjGQJh1aVavcg+LD1ArcpbE
+X-Google-Smtp-Source: AGHT+IEEwO/CqHeyMnyHTRpRJ6eXvogyj930sk2AOCK0KsWI7FFDXTdN6K0KvTPsQKc1QtzQIycM5KZpcdjaiGrOfyU=
+X-Received: by 2002:a05:6820:2718:b0:60f:2051:6fbd with SMTP id
+ 006d021491bc7-60f3ce433abmr12106756eaf.1.1749572110129; Tue, 10 Jun 2025
+ 09:15:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250429061004.205839-1-Neeraj.Upadhyay@amd.com>
- <20250429061004.205839-2-Neeraj.Upadhyay@amd.com> <aBDlVF4qXeUltuju@google.com>
- <cc3df866-9144-42f0-a24c-fbdcedd48315@amd.com>
-Message-ID: <aEhZaMuipi2qePHX@google.com>
-Subject: Re: [PATCH v5 01/20] KVM: x86: Move find_highest_vector() to a common header
-From: Sean Christopherson <seanjc@google.com>
-To: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-Cc: linux-kernel@vger.kernel.org, bp@alien8.de, tglx@linutronix.de, 
-	mingo@redhat.com, dave.hansen@linux.intel.com, Thomas.Lendacky@amd.com, 
-	nikunj@amd.com, Santosh.Shukla@amd.com, Vasant.Hegde@amd.com, 
-	Suravee.Suthikulpanit@amd.com, David.Kaplan@amd.com, x86@kernel.org, 
-	hpa@zytor.com, peterz@infradead.org, pbonzini@redhat.com, kvm@vger.kernel.org, 
-	kirill.shutemov@linux.intel.com, huibo.wang@amd.com, naveen.rao@amd.com, 
-	francescolavra.fl@gmail.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+References: <20250610145234.235005-1-igor.korotin.linux@gmail.com>
+ <20250610150538.238007-1-igor.korotin.linux@gmail.com> <aEhMCVJG3c7zVbyU@cassiopeiae>
+In-Reply-To: <aEhMCVJG3c7zVbyU@cassiopeiae>
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+Date: Tue, 10 Jun 2025 17:14:59 +0100
+X-Gm-Features: AX0GCFtzpeo4A1lsjhJ7ZirXjU5U1qi_K1xwVCUmWKn3ASiV_UHgwOkDUJrXQdc
+Message-ID: <CAJxaTdN15vSGgserH+hnzxmhj_RkZ4gZwrg-DQwdeaoe=ttW6A@mail.gmail.com>
+Subject: Re: [PATCH v4 3/5] rust: driver: Consolidate `Adapter` methods using `#[cfg]`
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: ojeda@kernel.org, alex.gaynor@gmail.com, rafael@kernel.org, 
+	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
+	benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com, 
+	tmgross@umich.edu, lenb@kernel.org, wedsonaf@gmail.com, 
+	viresh.kumar@linaro.org, alex.hung@amd.com, dingxiangfei2009@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 10, 2025, Neeraj Upadhyay wrote:
-> On 4/29/2025 8:12 PM, Sean Christopherson wrote:
-> > Please slot the below in.  And if there is any more code in this series that is
-> > duplicating existing functionality, try to figure out a clean way to share code
-> > instead of open coding yet another version.
-> > 
-> > --
-> > From: Sean Christopherson <seanjc@google.com>
-> > Date: Tue, 29 Apr 2025 07:30:47 -0700
-> > Subject: [PATCH] x86/apic: KVM: Deduplicate APIC vector => register+bit math
-> > 
-> > Consolidate KVM's {REG,VEC}_POS() macros and lapic_vector_set_in_irr()'s
-> > open coded equivalent logic in anticipation of the kernel gaining more
-> > usage of vector => reg+bit lookups.
-> > 
-> > Use lapic_vector_set_in_irr()'s math as using divides for both the bit
-> > number and register offset makes it easier to connect the dots, and for at
-> > least one user, fixup_irqs(), "/ 32 * 0x10" generates ever so slightly
-> > better code with gcc-14 (shaves a whole 3 bytes from the code stream):
-> > 
-> > ((v) >> 5) << 4:
-> >   c1 ef 05           shr    $0x5,%edi
-> >   c1 e7 04           shl    $0x4,%edi
-> >   81 c7 00 02 00 00  add    $0x200,%edi
-> > 
-> > (v) / 32 * 0x10:
-> >   c1 ef 05           shr    $0x5,%edi
-> >   83 c7 20           add    $0x20,%edi
-> >   c1 e7 04           shl    $0x4,%edi
-> > 
-> > Keep KVM's tersely named macros as "wrappers" to avoid unnecessary churn
-> > in KVM, and because the shorter names yield more readable code overall in
-> > KVM.
-> > 
-> > No functional change intended (clang-19 and gcc-14 generate bit-for-bit
-> > identical code for all of kvm.ko).
-> > 
-> 
-> With this change, I am observing difference in generated assembly for VEC_POS
-> and REG_POS, as KVM code passes vector param with type "int" to these macros.
-> Type casting "v" param of APIC_VECTOR_TO_BIT_NUMBER and APIC_VECTOR_TO_REG_OFFSET
-> to "unsigned int" in the macro definition restores the original assembly. Can
-> you have a look at this once? Below is the updated patch for this. Can you please
-> share your feedback on this?
+On Tue, Jun 10, 2025 at 4:15=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
+wrote:
+>
+> On Tue, Jun 10, 2025 at 04:05:38PM +0100, Igor Korotin wrote:
+> > Refactor the `acpi_id_info` and `of_id_info` methods in the `Adapter` t=
+rait
+> > to reduce duplication. Previously, each method had two versions selecte=
+d
+> > via `#[cfg(...)]` and `#[cfg(not(...))]`. This change merges them into =
+a
+> > single method per case by using `#[cfg]` blocks within the method bodie=
+s.
+> >
+> > Suggested-by: Benno Lossin <lossin@kernel.org>
+> > Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
+> > ---
+> >  rust/kernel/driver.rs | 76 +++++++++++++++++++++----------------------
+> >  1 file changed, 38 insertions(+), 38 deletions(-)
+> >
+> > diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
+> > index 638f1d270af8..805f61bd4a50 100644
+> > --- a/rust/kernel/driver.rs
+> > +++ b/rust/kernel/driver.rs
+> > @@ -147,30 +147,30 @@ pub trait Adapter {
+> >      /// Returns the driver's private data from the matching entry in t=
+he [`acpi::IdTable`], if any.
+> >      ///
+> >      /// If this returns `None`, it means there is no match with an ent=
+ry in the [`acpi::IdTable`].
+> > -    #[cfg(CONFIG_ACPI)]
+> >      fn acpi_id_info(dev: &device::Device) -> Option<&'static Self::IdI=
+nfo> {
+> > -        let table =3D Self::acpi_id_table()?;
+> > +        #[cfg(not(CONFIG_ACPI))] {
+> > +            let _ =3D dev;
+> > +            return None;
+> > +        }
+> >
+> > -        // SAFETY:
+> > -        // - `table` has static lifetime, hence it's valid for read,
+> > -        // - `dev` is guaranteed to be valid while it's alive, and so =
+is `pdev.as_ref().as_raw()`.
+> > -        let raw_id =3D unsafe { bindings::acpi_match_device(table.as_p=
+tr(), dev.as_raw()) };
+> > +        #[cfg(CONFIG_ACPI)] {
+> > +            let table =3D Self::acpi_id_table()?;
+> >
+> > -        if raw_id.is_null() {
+> > -            None
+> > -        } else {
+> > -            // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper o=
+f `struct of_device_id` and
+> > -            // does not add additional invariants, so it's safe to tra=
+nsmute.
+> > -            let id =3D unsafe { &*raw_id.cast::<acpi::DeviceId>() };
+> > +            // SAFETY:
+> > +            // - `table` has static lifetime, hence it's valid for rea=
+d,
+> > +            // - `dev` is guaranteed to be valid while it's alive, and=
+ so is `pdev.as_ref().as_raw()`.
+> > +            let raw_id =3D unsafe { bindings::acpi_match_device(table.=
+as_ptr(), dev.as_raw()) };
+> >
+> > -            Some(table.info(<acpi::DeviceId as crate::device_id::RawDe=
+viceId>::index(id)))
+> > -        }
+> > -    }
+> > +            if raw_id.is_null() {
+> > +                None
+> > +            } else {
+> > +                // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapp=
+er of `struct of_device_id` and
+> > +                // does not add additional invariants, so it's safe to=
+ transmute.
+> > +                let id =3D unsafe { &*raw_id.cast::<acpi::DeviceId>() =
+};
+> >
+> > -    #[cfg(not(CONFIG_ACPI))]
+> > -    #[allow(missing_docs)]
+> > -    fn acpi_id_info(_dev: &device::Device) -> Option<&'static Self::Id=
+Info> {
+> > -        None
+> > +                Some(table.info(<acpi::DeviceId as crate::device_id::R=
+awDeviceId>::index(id)))
+> > +            }
+> > +        }
+> >      }
+>
+> It seems there has been a misunderstanding, the idea was to refactor
+> Adapter::of_id_info() in one patch and introduce Adapter::acpi_id_info() =
+in a
+> subsequent patch already being the suggested implementation by Benno.
+>
+> We try to avoid introducing code, just to change it again in a subsequent=
+ patch.
 
-LGTM.
+That does make perfect sense. My bad. I'll reorder changes in the v5.
 
-Ideally, KVM would probably pass around an "unsigned int", but some higher level
-APIs in KVM use -1 to indicate an invalid vector (e.g. no IRQ pending), and mixing
-and matching types would get a little weird and would require a decent amount of
-churn.  So casting in the macro where it matters seems like the best option, at
-least for now.
+Sorry for the mess. Thanks for the review.
 
-Thanks much for taking care of this!
+Best Regards
+Igor
