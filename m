@@ -1,101 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD39223F43C;
-	Tue, 10 Jun 2025 16:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8D823F43C;
+	Tue, 10 Jun 2025 16:37:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749573420; cv=none; b=mG4Z0CJVi+hR2W6TWOo2bxhhSWmkj4c+sZsguTNAGxBoQVEaWCI/DrBE8yPw1rkklVpjOxwfERvMJZlaL0Zajo8mAnjV0Vm9jfukk8dVitEEh2lz573Pdz9WaaGAKCKC/RowuXmYoiDmVxbzYGF1oM/Adq0erV1yVFr9wJ4Kl1k=
+	t=1749573426; cv=none; b=Ay8Xk0nUttxbLamnIX2d8rGDLZ/7b167OdLvfOSP0Dly+R8bTrOl3wX/CystyqbggJS/+axNbbLFmORM0xMXITLzyqnhT9og+nbIlkaHBsnvt3NSRIvpSOG5Iz9quv+NoNDvsUMsZgH9mD/yqeuZ6+Kzm505jpsa00sViji2u0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749573420; c=relaxed/simple;
-	bh=f1HEWtcz6cLIilhmgH3TVGeQxptqphtKL7MZkz99ysQ=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=O3oEWFQXoFLCqjZGsdWMBbtPFPZWle5vv+hZMhs/B3JR/C6zm8Ik2/xRfIF2WC54phuDbGllgfwYDy81biBaH8YWygv9BEFH9VwR1SFTnrax3LaZzIFS8clDdEk1KgjsF1mVCiNk8HcFZL+QipWhno8Ffoor0S5Ay/JGYUOFBFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aWi+CfLE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749573426; c=relaxed/simple;
+	bh=IDSOkUX9zDMF+Iu/bNW9Z+Ppjb5+bcDLYqZu0MLOhJU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=f/dfJc5mxz7QedeyF99pJQxkmprgGtR+Sl6j9lrbrtlUjqooMEklV21xHjDRRFn7RER8xB4R7aX2Uc5FybWaUWWPaufnD4AjkdhOMs+7yIEDF9t0+c0teOfxaIMRnJb6bF2GRE66KMlfKM12N8wZIq7jAXoFrbN5LUnK4UYoIDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wxqa6DW4; arc=none smtp.client-ip=209.85.222.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aWi+CfLE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D6F4C4CEF0;
-	Tue, 10 Jun 2025 16:36:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749573420;
-	bh=f1HEWtcz6cLIilhmgH3TVGeQxptqphtKL7MZkz99ysQ=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=aWi+CfLEl5K5iNCqoCBYZ5KWDHWKGDC15Uk9VS0+Wggag8I11yDf9Xv39rdFvn560
-	 iFrCQjibCbkoA2nVRbKOGBnRBNBhrFqCXtlVEIpxkZbTkD7Hd8jx55wHMOq8gn8rxy
-	 w33Ih6YvNOD0TR7VjqO8/tAyRbY3oLmHHScycbMCxq0a0+Elp7CwfbEOJPO2MtjOCi
-	 bE35bz0YpPgmaxTHc9XEy/Udj/RZz3T32tjWycw2B5MSFWE3jof5NHfbhbVQw8QgPy
-	 BlX2egkHoeLgOuGBHocVv7Pk/ZAHzinGdbhNzomrLS1ktfbzOPoW4JvWZ/xsURYTgv
-	 n0J2Fkblo95MA==
-Date: Tue, 10 Jun 2025 11:36:53 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wxqa6DW4"
+Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-86d587dbc15so6337241.1;
+        Tue, 10 Jun 2025 09:37:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749573423; x=1750178223; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+nqEkPlu56izKVRCcBxWQQRBgYviwPk2wR3cGWZ9+hA=;
+        b=Wxqa6DW4AwgBMHZBe+1n7zDXKR8qK1+QD0LuVLsytFMdvdZb132em2oGNAlkBifc8h
+         tgdMUpANBs9fQ2ZjdPDL2Jgcy4SqLa7yBd3jp8Hm4FB0NAfLteUerqRSFAdb0AKIRwq5
+         2dTkT0Q09l5vyXpNqIY3br8jzwU37sFAFV08OjxjJTLirU4ke/mR6ZRphKVu7VbhVdJA
+         iGt7PLYFoHtSPZZ91yqXcYrauaJN16xTvRmCCVg2eilslH1EtfqZVExE5P5+F8pHo/iI
+         typYqr1YJvQcb/iAIj6bfNnC0wT4ynnLWlMsdf5GFvQCxPxq4arMOq4R/w/HHH3gzTLq
+         5brA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749573423; x=1750178223;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+nqEkPlu56izKVRCcBxWQQRBgYviwPk2wR3cGWZ9+hA=;
+        b=m0vrqtEs9nJqC1DBmeSsC3Kh+iaDWWucYAQbHJomPYKtvqCr8ERUVAwQOrs+06xaDv
+         oWJkhDed77OdFI0VN2lxyuvAeOg0yXEKYmieUm54D8pUqtbdoQ+n+IvpDtvbTByTWUqL
+         5Z7N9BTnvteMcW+OiuAZGCp9d+h5fl8WBfUZVU6GwprU+mo0oadvddMtW16V1t0DFvK2
+         wCvRuDWwWujTgr1G+J13EcRg5T9Keau3EZ5oeSbwfwZRXQBurzYq2sPEoN0FwfLsMOTC
+         5eG25fWf8Z3ViCnAsw2D+WPOFi53SiQqJ/aMBwYV5ezpfmbdEDW9bsLRkY5oSvmxzxqL
+         SMBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUt0JgB4tZ4A/NDZcNyD1ifGYB1g0bmFwEoDDT3w3hyWoaiYIDkh8So/gDxZEDLrlJh0dXrj5n0Orfa@vger.kernel.org, AJvYcCXW79dikxFBEspdh0zNAeIgFT5kRpdXFkWhX8OBSOOpncjhDZqLYe1HZOI4+mc/sO5PQXFf9S/09AdO4hc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCQ+tgPzptjbdhLhvkYgAxX36Ulc8zWA9izHp14aKusZTY0yIR
+	bgxl1L2yRJaPxeSMiLH2twrRA7xPUmOxQJvAHBYG1GHyllBPAQBJo1SbafXvflSn
+X-Gm-Gg: ASbGncuDpB0bEckw5xdUNGSSnVCElVyyhzan5OkutUVCq5JaBrflvTjTLezSU931nvl
+	2+Y2Wi0S+mbf1JpSahffk2zlJ5p0trxpdzLa470jt7ieeHQgEGZUUHH5sOL3roPPjYEuXARlW1c
+	ZyIS/w2h2IM4bJhb9Svb4j6xgbfw/xQ7Fc7AaYzgPM+KqCVgrvib13abb1pgDjbBOAqQTH5R0ux
+	uFNjErbWqe/hlq/q3sHH0VoQ1+iGE8pheIJS7tx8EgW+2wkO95ZPjn+lemIC/ny/Xoi/ARvlHZ0
+	Uj0xX1k+Tgpelu1p000jxcv+JbWCi5Dwllbo/W/BjT7AFVXUO6mOXOEDuyne
+X-Google-Smtp-Source: AGHT+IGEWQ9kp7g1IHALe6XyZa16xeumaOw/ktccGJAoVzbIN5nr7Lb+92+/jcCF/Cfok6IL1EUV+Q==
+X-Received: by 2002:a05:6102:f9f:b0:4c5:2c3e:3841 with SMTP id ada2fe7eead31-4e7ba629798mr145476137.5.1749573423174;
+        Tue, 10 Jun 2025 09:37:03 -0700 (PDT)
+Received: from geday ([2804:7f2:800b:5a56::dead:c001])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4e7b5c7421esm801753137.13.2025.06.10.09.36.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 09:37:02 -0700 (PDT)
+Date: Tue, 10 Jun 2025 13:36:52 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: linux-rockchip@lists.infradead.org
+Cc: Hugh Cole-Baker <sigmaris@gmail.com>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v2 0/2] PCI: rockchip-host: Support quirky devices
+Message-ID: <cover.1749572238.git.geraldogabriel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Conor Dooley <conor+dt@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Wim Van Sebroeck <wim@linux-watchdog.org>, 
- Rajendra Nayak <quic_rjendra@quicinc.com>, linux-watchdog@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>
-To: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-In-Reply-To: <20250610-wdt_reset_reason-v5-3-2d2835160ab5@oss.qualcomm.com>
-References: <20250610-wdt_reset_reason-v5-0-2d2835160ab5@oss.qualcomm.com>
- <20250610-wdt_reset_reason-v5-3-2d2835160ab5@oss.qualcomm.com>
-Message-Id: <174957341305.1838109.10293724531904351374.robh@kernel.org>
-Subject: Re: [PATCH v5 3/5] dt-bindings: watchdog: qcom-wdt: Document sram
- property
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+Hi folks,
 
-On Tue, 10 Jun 2025 19:15:19 +0530, Kathiravan Thirumoorthy wrote:
-> Document the "sram" property for the watchdog device on Qualcomm
-> IPQ platforms. Use this property to extract the restart reason from
-> IMEM, which is updated by XBL. Populate the watchdog's bootstatus sysFS
-> entry with this information, when the system reboots due to a watchdog
-> timeout.
-> 
-> Describe this property for the IPQ5424 watchdog device and extend support
-> to other targets subsequently.
-> 
-> Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-> ---
-> Changes in v5:
-> 	- Rename the property 'qcom,imem' to 'sram'
-> Changes in v4:
-> 	- New patch
-> ---
->  .../devicetree/bindings/watchdog/qcom-wdt.yaml       | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
+while I understand there are lots of already-working PCIe devices
+on RK3399 there are also many quirky devices which fail link
+training and refuse to enumerate. This RFC series is meant to
+alleviate this problem and has been tested on my Rock Pi N10.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Note that with these patches, link will train for quirky devices
+but with Gen1 only and only one lane (x1). I have separate patches
+for improving to Gen2 and all four lanes (x4). They don't depend on
+this fix however and since I predict the present patches are bound
+to be controversial, I decided to send the quality improvements
+separately.
 
-yamllint warnings/errors:
+Hopefully this time the series will be threaded. Thanks Heiko!
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/dma/stericsson,dma40.example.dtb: dma-controller@801c0000 (stericsson,db8500-dma40): sram:0: [4294967295, 4294967295] is too long
-	from schema $id: http://devicetree.org/schemas/dma/stericsson,dma40.yaml#
+Geraldo Nascimento (2):
+  PCI: rockchip-host: Retry link training on failure without PERST#
+  arm64: dts: rockchip: drop PCIe 3v3 always-on and boot-on
 
-doc reference errors (make refcheckdocs):
+ .../dts/rockchip/rk3399pro-vmarc-som.dtsi     |   2 -
+ drivers/pci/controller/pcie-rockchip-host.c   | 141 +++++++++++-------
+ 2 files changed, 87 insertions(+), 56 deletions(-)
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250610-wdt_reset_reason-v5-3-2d2835160ab5@oss.qualcomm.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+-- 
+2.49.0
 
