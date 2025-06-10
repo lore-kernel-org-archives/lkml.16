@@ -1,196 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DDC828A411;
-	Tue, 10 Jun 2025 09:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67CB228AAE5;
+	Tue, 10 Jun 2025 09:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749546963; cv=none; b=fVwZLjfGIExvGfv1KxvgZX49ac3yYn6XhnnjfsOO7i2+1z8HvfyETG3JzmatwMx8y5vHnA6+CxclGMdApFwdLQJTd8ReG+IBBy8d+mMtvMNjCiHLFciRkHTTUBUpNR2/QE438cOJj5j2LIHkWA0zAvdOY46FW1lw64NfL6LqTSA=
+	t=1749547008; cv=none; b=pj5JlTOAboPXYcocT8KkaQhknfQL0wvA9WusePfBe/CJSafAcPaOMH7iGxX9HRJd0Fe9QXhuv2ImxRFzYSDVYfRNfkQK2Eg3SaaXqlUISM6nKzkvYWW1PucF7Glw3nixoXFy49QxidgsAg+F/gv+enaO6yrqaKlJoTiFWsW6gKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749546963; c=relaxed/simple;
-	bh=5g1KcNYEca2VVL7dmON+X68UhtZi5lp7Ojo9DBjQeXk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FfwGsZj5QchkS1ounK1HzOrZPT5vcjsqiQB7eraxsZHmEd171w1fK4oX4+CMHvwV2f7zzBNqjrBh/0+J4SICmzNKhUhb1WGZCAaoxIXawp0SKsVLJSh/ezYc4qkTS1/4zQU6esQyv+2IzC1JNRtVwFYmjZUbdr8JqXDe+QO9T6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OSONUS7O; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OSONUS7O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 247F2C4CEED;
-	Tue, 10 Jun 2025 09:16:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749546963;
-	bh=5g1KcNYEca2VVL7dmON+X68UhtZi5lp7Ojo9DBjQeXk=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=OSONUS7OPq11ZZNG+U6CwxWvLTjn+gFPeBfSVJgwpUVC9dxfk7KTAjvEKGinng19k
-	 3F8+1d5DIGcRKz326m7i+l2PlkZcR5/KKrEqz1VCYDm4Kw6NPsk6Vr/ixMZvtFy3NX
-	 a1und/cjLoxXh0p4IwjmznUWZvI9CwdtRs0liUJUpf/QfBLa6RcTCJtdRVR6p0phzd
-	 SoZNQ8ILWj1llgTI/oUHGbCweUNhtvG5Hf1TlmhpV+aZMHHr1PAEn1NSCYJLM5k5Jl
-	 zMJJsbxZD1BDZYBBfSTNJLTlMrn63L3A+Eg8tvgDXXZVaehqTGTHuG460sZ3vsv6bJ
-	 DZ8+ByjKXOqqw==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id AD2D4CE0928; Tue, 10 Jun 2025 02:16:02 -0700 (PDT)
-Date: Tue, 10 Jun 2025 02:16:02 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: kernel test robot <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org
-Subject: Re: [paulmck-rcu:dev.2025.06.04a] [rcutorture]  9605367000:
- WARNING:at_kernel/rcu/rcutorture.c:#rcu_sync_torture_init_trivial[rcutorture]
-Message-ID: <ad8d8a6d-1e81-4ce5-afe7-19cea07ef128@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <202506101435.e96fc5f7-lkp@intel.com>
+	s=arc-20240116; t=1749547008; c=relaxed/simple;
+	bh=T5SuRWpaGQwoZhvlpNpdBYid1/1wMrEkOat2uWnCvtI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AtDyjLkL3MOLRz/FM5VHyT3NVguuzeHnAnxwFlrXmIaebpHDW/V0t7SEvOPZ/zCfz2JPiw6nmJuPFybqlEOGOfDbgcyQcbI7wQYSZrro7pvPXK4Dy76va8Ayq6nKoS/6S5p2nZx9TlgRg9y4DHWNhJ20eMngh6bQbJ907UB6Ku0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-87ee0ba50bcso412056241.3;
+        Tue, 10 Jun 2025 02:16:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749547003; x=1750151803;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aXmJAjCM4QXrI8PFxZnnSaMVzam0rKL8btuAAYmyx5Y=;
+        b=eRDt/QaaLRIp7tFMjcp1IZXr3tmR1DmvK+nyDkVqXa7EmzxSR0BJi3OsbNuxu4rCze
+         ysweErCDDTHyMp2JqOwvcNeCVHXwwoBkkTgcE9pd0WVTP4VSCrN7LWc1mex+Tqu0DGLO
+         qcQu9+z/utaznTdY/qB5iu42rcrpdbc062SDIMIL+WkosgaDA+w0HuDyinoLFr80wDzv
+         Omx/VEl+GPqbVKCPUyGDTdFfpho3IZCy3FL3TLOdqDGfGB1lXLwpkXf69ohGsJgRyYhp
+         xduunpyEJ0mGY1lM0awO2E4MG4cVy2kGnaB3EGs3DFVRmxc+LOgwOO2Ozz6173D+MBRi
+         bi6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUNM5+WV+a1+vm/vfKu6Hod3uuxHBzm88dMw5hNWpUC8zUsF8LuMB6J7MxHxgAGJMQ/jEKi0TK4qq41dhw9deWHPQHzwQ==@vger.kernel.org, AJvYcCVMjz5vnDhba33d+3eNRU0pXTyCKPvs0LeNzBi7+NU2rDjaGk9QDQqWo4RsUVgPSjTDAN2kH9hnpjL4jQ==@vger.kernel.org, AJvYcCVVxPtcCU3EcjwnNEkd9k+ARrXjQp3k4wr1+WkBM3fqhjU7q8/5ViOCDQnmcu34cBwdtt9mRmFjxQrh@vger.kernel.org, AJvYcCVzO2Nv24xLp18QERRJiRmVMLPN1b9Tr3VODEEdTenUe3ppe95B4e1hQ3E51OdLborUCBOs2HVD1N4fT1l8@vger.kernel.org, AJvYcCXq4Bjh444THwWCoOLJXvkFzH32iA0Y/WgleMmfMy27k4gQCNc8SFxK6vqFH4sqxVFIK5ayo5rJxI8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6yeocL7quuhwZQVHJsJ6qSuLPwCjfGliXQ52Mx6UmUTOe5sZV
+	iDOPZWGwk5a0BYNyv/8OgmZzbizVZ+WGcY/ES03UxpLdX1H5hov2o38RvJ0mW6Wi
+X-Gm-Gg: ASbGnctlS/EmZsO03xfTR6I7UxrHstdzKFexf4wuGHJjiqZNAiIaXf7aMhVLd97YmzX
+	Z4jRhLOH9hNHQrImLgbEQTqLMAVVrLs+8BXpa+4TmjmbU0fRfqEYV1s9Wh4q/7NScR795tIXf9n
+	b5c5E7INRR/WY0ozD9sHi7jqGY5bVHbKkMsoZrawgM6DwXD6ZgVDp8Vzg4Sc9JjVUKpbRJqNbv3
+	uodA6fVdSeaaBV42N8y9UMi4CUBVPFGILVoLA5uVJ/KxZ6kVuq6s+GoEYg5RYPyaDsS9X5tYjoY
+	OKk6qnsZWvKUOgCpzbJMSTJEK/JMm5Kw8PuznEyaaQqPevOXjf+r69gBUkvo2btVXHnN7tJGhnm
+	lyXE426ryRHQWxTDxRbQY6um9
+X-Google-Smtp-Source: AGHT+IGjk7FFhQmtnDl7IVnNDq0YQrhxvalZUdYjdTl7Yk8yFclJTFNB4/F5T0bLCn44doMUvzDxhQ==
+X-Received: by 2002:a05:6102:5802:b0:4e7:596e:e029 with SMTP id ada2fe7eead31-4e772a30842mr12498831137.20.1749547003114;
+        Tue, 10 Jun 2025 02:16:43 -0700 (PDT)
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com. [209.85.222.44])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4e77394bd3bsm6139299137.23.2025.06.10.02.16.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Jun 2025 02:16:41 -0700 (PDT)
+Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-87ed98a23easo464772241.0;
+        Tue, 10 Jun 2025 02:16:41 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV0WpwwFPS17YAfEFOydbs32YGAV7Rs/9qBoqIyWDUbz0tdDkIrUOPNIRzn/oelNKdO8Ww5GQCYwLlX@vger.kernel.org, AJvYcCVNtmoGy+hcBquTeKh1Pa3PjJf13gN9gE8k/Tol6ZuK6Ch/DALoYprAdVNT+WUx7DFJD7ULtbqDW7E=@vger.kernel.org, AJvYcCVlwME51ZzgE5fA+l/kS42EuxfYr4O8qqcvSnURO3nm4MT+Z1tGB9+ZiMjB7s+99o3n+vuhrKNagt4r0vnS38EvqI118Q==@vger.kernel.org, AJvYcCWFThk45PPY1ttQmv8ZR0v/TvxO6WlbP6L4yc5AUBz58dSny+Pcs0kd6HK0iqtkVJCL3quiJAE/nG1lMw==@vger.kernel.org, AJvYcCXDmmiGipFbRHY8UybXKCpvUy0eUWJqxXN0tawP767PsqBNY9bUXFZBy0WGJI1dWsMR9qh4WIgmrlX2Ok7m@vger.kernel.org
+X-Received: by 2002:a05:6102:943:b0:4e6:ddd0:9702 with SMTP id
+ ada2fe7eead31-4e7729a3b75mr12821267137.15.1749547001193; Tue, 10 Jun 2025
+ 02:16:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202506101435.e96fc5f7-lkp@intel.com>
+References: <20250422234830.2840784-1-superm1@kernel.org> <20250422234830.2840784-3-superm1@kernel.org>
+In-Reply-To: <20250422234830.2840784-3-superm1@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 10 Jun 2025 11:16:29 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVPQLjOox5sMp34Z5MTwKv2WOpHa=MpZr8hWG22fQKcjw@mail.gmail.com>
+X-Gm-Features: AX0GCFv1stbSgApzqPSScCybuPZoPnTcTv0OURpXKeqUfK7lSULXavQbaabojaE
+Message-ID: <CAMuHMdVPQLjOox5sMp34Z5MTwKv2WOpHa=MpZr8hWG22fQKcjw@mail.gmail.com>
+Subject: Re: [PATCH v5 2/5] i2c: piix4: Depends on X86
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>, Jean Delvare <jdelvare@suse.com>, Andi Shyti <andi.shyti@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <mario.limonciello@amd.com>, 
+	Yazen Ghannam <yazen.ghannam@amd.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, 
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Hans de Goede <hdegoede@redhat.com>, 
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	"open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>, 
+	"open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>, 
+	linux-mips@vger.kernel.org, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jun 10, 2025 at 03:16:52PM +0800, kernel test robot wrote:
-> 
-> 
-> Hello,
-> 
-> kernel test robot noticed "WARNING:at_kernel/rcu/rcutorture.c:#rcu_sync_torture_init_trivial[rcutorture]" on:
-> 
-> commit: 96053670002f05c8aae39a668bddd54eb253dca7 ("rcutorture: Make Trivial RCU ignore onoff_interval and shuffle_interval")
-> https://git.kernel.org/cgit/linux/kernel/git/paulmck/linux-rcu.git dev.2025.06.04a
-> 
-> in testcase: rcutorture
-> version: 
-> with following parameters:
-> 
-> 	runtime: 300s
-> 	test: default
-> 	torture_type: trivial
-> 
-> 
-> 
-> config: x86_64-randconfig-071-20250605
-> compiler: gcc-12
-> test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
-> 
-> (please refer to attached dmesg/kmsg for entire log/backtrace)
-> 
-> 
-> +-------------------------------------------------------------------------------+------------+------------+
-> |                                                                               | 964687d8d4 | 9605367000 |
-> +-------------------------------------------------------------------------------+------------+------------+
-> | WARNING:at_kernel/rcu/rcutorture.c:#rcu_sync_torture_init_trivial[rcutorture] | 0          | 12         |
-> | RIP:rcu_sync_torture_init_trivial[rcutorture]                                 | 0          | 12         |
-> +-------------------------------------------------------------------------------+------------+------------+
-> 
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <oliver.sang@intel.com>
-> | Closes: https://lore.kernel.org/oe-lkp/202506101435.e96fc5f7-lkp@intel.com
-> 
-> 
-> The kernel config and materials to reproduce are available at:
-> https://download.01.org/0day-ci/archive/20250610/202506101435.e96fc5f7-lkp@intel.com
-> 
-> 
-> [ 1078.501737][ T1445] torture module --- trivial:  disable_onoff_at_boot=0 ftrace_dump_at_shutdown=0 verbose_sleep_frequency=0 verbose_sleep_duration=1 random_shuffle=0
-> [ 1078.531216][ T1445] ------------[ cut here ]------------
-> [ 1078.542757][ T1445] rcu_sync_torture_init_trivial: Non-zero onoff_interval (0) or shuffle_interval (3) breaks trivial RCU, resetting to zero
+Hi Mario,
 
-This is expected behavior.
+CC mips, loongarch
 
-You are specifying shuffle_interval=3, and this is not permitted for
-trivial RCU.  So rcutorture is complaining.  ;-)
+On Wed, 23 Apr 2025 at 01:49, Mario Limonciello <superm1@kernel.org> wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
+>
+> PIIX4 and compatible controllers are only for X86. As some headers are
+> being moved into x86 specific headers PIIX4 won't compile on non-x86.
+>
+> Suggested-by: Ingo Molnar <mingo@kernel.org>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-> [ 1078.543244][ T1445] WARNING: CPU: 0 PID: 1445 at kernel/rcu/rcutorture.c:990 rcu_sync_torture_init_trivial+0x42/0x5e [rcutorture]
-> [ 1078.589843][ T1445] Modules linked in: rcutorture(+) torture ipmi_devintf processor drm fuse drm_panel_orientation_quirks font stm_p_basic
-> [ 1078.614928][ T1445] CPU: 0 UID: 0 PID: 1445 Comm: modprobe Not tainted 6.15.0-rc1-00080-g96053670002f #1 PREEMPT(voluntary) 
-> [ 1078.636870][ T1445] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-> [ 1078.656604][ T1445] RIP: 0010:rcu_sync_torture_init_trivial+0x42/0x5e [rcutorture]
-> [ 1078.672737][ T1445] Code: 00 89 d0 09 c8 74 33 80 3d 66 03 17 00 00 75 1c 48 c7 c6 c0 0a 3f c0 48 c7 c7 20 ba 3e c0 c6 05 4f 03 17 00 01 e8 f2 dc 83 e6 <0f> 0b 31 c0 89 05 29 3b 17 00 89 05 e3 29 16 00 5d 31 c0 31 d2 31
-> [ 1078.708709][ T1445] RSP: 0018:ffff8881bb48f6a0 EFLAGS: 00210246
-> [ 1078.720639][ T1445] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-> [ 1078.736089][ T1445] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-> [ 1078.751748][ T1445] RBP: ffff8881bb48f6a0 R08: 0000000000000000 R09: 0000000000000000
-> [ 1078.768592][ T1445] R10: 0000000000000000 R11: 0000000000000000 R12: ffffffffc06382a0
-> [ 1078.784896][ T1445] R13: ffffffffc03f0f80 R14: ffff8881bb48f730 R15: dffffc0000000000
-> [ 1078.801843][ T1445] FS:  0000000000000000(0000) GS:0000000000000000(0063) knlGS:00000000f79f1700
-> [ 1078.820215][ T1445] CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-> [ 1078.833348][ T1445] CR2: 00000000f7e7e51c CR3: 00000001bb406000 CR4: 00000000000006b0
-> [ 1078.850385][ T1445] Call Trace:
-> [ 1078.858560][ T1445]  <TASK>
-> [ 1078.865009][ T1445]  rcu_torture_init+0x2ee/0x1c88 [rcutorture]
-> [ 1078.878454][ T1445]  ? rcu_torture_fwd_prog_init+0x378/0x378 [rcutorture]
-> [ 1078.892547][ T1445]  ? rcu_torture_fwd_prog_init+0x378/0x378 [rcutorture]
-> [ 1078.907288][ T1445]  do_one_initcall+0xfc/0x316
-> [ 1078.915264][ T1445]  ? kasan_save_alloc_info+0x3b/0x51
-> [ 1078.925474][ T1445]  ? trace_initcall_level+0x8d/0x8d
-> [ 1078.936365][ T1445]  ? kasan_poison+0x57/0x63
-> [ 1078.945140][ T1445]  ? kasan_unpoison+0x45/0x54
-> [ 1078.954319][ T1445]  ? kasan_poison+0x57/0x63
-> [ 1078.963549][ T1445]  ? __asan_register_globals+0x5e/0x73
-> [ 1078.973664][ T1445]  do_init_module+0x228/0x584
-> [ 1078.983443][ T1445]  load_module+0xf35/0x1332
-> [ 1079.041071][ T1445]  ? layout_and_allocate+0x4ec/0x4ec
-> [ 1079.053668][ T1445]  ? __kasan_check_write+0x18/0x22
-> [ 1079.063917][ T1445]  ? kernel_read_file+0x55a/0x59e
-> [ 1079.074280][ T1445]  ? mode_strip_umask+0xa0/0xa0
-> [ 1079.084161][ T1445]  init_module_from_file+0xf6/0x13c
-> [ 1079.094886][ T1445]  ? init_module_from_file+0xf6/0x13c
-> [ 1079.106003][ T1445]  ? __ia32_sys_init_module+0x90/0x90
-> [ 1079.117160][ T1445]  ? idempotent_init_module+0x2cb/0x5cd
-> [ 1079.128590][ T1445]  ? lock_release+0xaa/0xdb
-> [ 1079.137666][ T1445]  idempotent_init_module+0x2e9/0x5cd
-> [ 1079.148390][ T1445]  ? init_module_from_file+0x13c/0x13c
-> [ 1079.159804][ T1445]  ? __fget_light+0x89/0xe6
-> [ 1079.170011][ T1445]  __do_sys_finit_module+0x77/0x9e
-> [ 1079.181158][ T1445]  __ia32_sys_finit_module+0x83/0x90
-> [ 1079.200369][ T1445]  ia32_sys_call+0x22ae/0x26a2
-> [ 1079.210966][ T1445]  __do_fast_syscall_32+0xb0/0xdb
-> [ 1079.221826][ T1445]  ? vm_mmap_pgoff+0x18b/0x1de
-> [ 1079.231317][ T1445]  ? randomize_page+0x62/0x62
-> [ 1079.240493][ T1445]  ? rcu_read_unlock+0x5f/0x69
-> [ 1079.250537][ T1445]  ? __kasan_check_write+0x18/0x22
-> [ 1079.260322][ T1445]  ? fput+0x43/0x6e
-> [ 1079.268784][ T1445]  ? __kasan_check_read+0x15/0x1f
-> [ 1079.278856][ T1445]  ? lockdep_hardirqs_on_prepare+0x109/0x12c
-> [ 1079.291496][ T1445]  ? syscall_exit_to_user_mode+0xe6/0xf5
-> [ 1079.303131][ T1445]  ? __do_fast_syscall_32+0xca/0xdb
-> [ 1079.314090][ T1445]  ? lockdep_hardirqs_on_prepare+0x109/0x12c
-> [ 1079.331846][ T1445]  ? irqentry_exit_to_user_mode+0xdc/0xeb
-> [ 1079.343611][ T1445]  do_fast_syscall_32+0x36/0x6e
-> [ 1079.354071][ T1445]  do_SYSENTER_32+0x23/0x27
-> [ 1079.363734][ T1445]  entry_SYSENTER_compat_after_hwframe+0x58/0x5f
-> [ 1079.376376][ T1445] RIP: 0023:0xf7f05579
-> [ 1079.385512][ T1445] Code: b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 00 00 00 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d b4 26 00 00 00 00 8d b4 26 00 00 00 00
-> [ 1079.421603][ T1445] RSP: 002b:00000000ffa4760c EFLAGS: 00200296 ORIG_RAX: 000000000000015e
-> [ 1079.439014][ T1445] RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00000000584e6eb0
-> [ 1079.459721][ T1445] RDX: 0000000000000000 RSI: 00000000584e7220 RDI: 00000000584e6fa0
-> [ 1079.476023][ T1445] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-> [ 1079.492738][ T1445] R10: 0000000000000000 R11: 0000000000200246 R12: 0000000000000000
-> [ 1079.508981][ T1445] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-> [ 1079.525796][ T1445]  </TASK>
-> [ 1079.533122][ T1445] irq event stamp: 7135
-> [ 1079.542197][ T1445] hardirqs last  enabled at (7147): [<ffffffffa6dcb6a6>] __up_console_sem+0x54/0x5d
-> [ 1079.560760][ T1445] hardirqs last disabled at (7160): [<ffffffffa6dcb68b>] __up_console_sem+0x39/0x5d
-> [ 1079.580657][ T1445] softirqs last  enabled at (7088): [<ffffffffa6d210cd>] handle_softirqs+0x4a4/0x54c
-> [ 1079.603955][ T1445] softirqs last disabled at (7183): [<ffffffffa867059f>] __do_softirq+0xf/0x13
-> [ 1079.622009][ T1445] ---[ end trace 0000000000000000 ]---
-> [ 1079.633479][ T1445] trivial-torture:--- Start of test: nreaders=1 nfakewriters=4 stat_interval=60 verbose=1 test_no_idle_hz=1 shuffle_interval=0 stutter=5 irqreader=1 fqs_duration=0 fqs_holdoff=0 fqs_stutter=3 test_boost=1/0 test_boost_interval=7 test_boost_duration=4 test_boost_holdoff=0 shutdown_secs=0 stall_cpu=0 stall_cpu_holdoff=10 stall_cpu_irqsoff=0 stall_cpu_block=0 stall_cpu_repeat=0 n_barrier_cbs=0 onoff_interval=0 onoff_holdoff=0 read_exit_delay=13 read_exit_burst=16 reader_flavor=1 nocbs_nthreads=0 nocbs_toggle=1000 test_nmis=0 preempt_duration=0 preempt_interval=1000 n_up_down=32
+Thanks for your patch, which is now commit 7e173eb82ae97175
+("i2c: piix4: Make CONFIG_I2C_PIIX4 dependent on CONFIG_X86")
+in v6.16-rc1.
 
-It then resets shuffle_interval to zero, which allows the test to proceed
-without error.
+> --- a/drivers/i2c/busses/Kconfig
+> +++ b/drivers/i2c/busses/Kconfig
+> @@ -200,7 +200,7 @@ config I2C_ISMT
+>
+>  config I2C_PIIX4
+>         tristate "Intel PIIX4 and compatible (ATI/AMD/Serverworks/Broadcom/SMSC)"
+> -       depends on PCI && HAS_IOPORT
+> +       depends on PCI && HAS_IOPORT && X86
 
-The problem is that non-zero shuffle_interval can cause a task to be
-migrated twice in a row without actually executing on the specified CPU
-between the two migrations.  This means that readers on the skipped CPU
-can extend across the entire trivial-RCU grace period, which of course
-breaks trivial RCU.
+Are you sure this south-bridge is not used on non-x86 platforms?
+It is enabled in several non-x86 defconfigs:
 
-So please set shuffle_interval=0 when testing trivial RCU.
+    arch/loongarch/configs/loongson3_defconfig:CONFIG_I2C_PIIX4=y
+    arch/mips/configs/ip27_defconfig:CONFIG_I2C_PIIX4=m
+    arch/mips/configs/loongson2k_defconfig:CONFIG_I2C_PIIX4=y
+    arch/mips/configs/loongson3_defconfig:CONFIG_I2C_PIIX4=y
 
-							Thanx, Paul
+The loongarch and loongson entries are probably bogus, but I wouldn't
+be surprised if the SGI Onyx and Origin do use Intel south-bridges.
 
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
-> 
+>         select I2C_SMBUS
+>         help
+>           If you say yes to this option, support will be included for the Intel
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
