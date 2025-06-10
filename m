@@ -1,23 +1,23 @@
 Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AFFB293459;
-	Tue, 10 Jun 2025 12:31:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C92D1293B73;
+	Tue, 10 Jun 2025 12:31:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.21.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749558717; cv=none; b=jI1axYlzqGFO1/tCSxDahp3G4XTVNxEwtGaUCMcsOlympWPhZ1guXwSQQ0LbTwURxi0MIKPEbeI79JhiaW7+sTxAUw47vrEELU2dAKv776ynP6eOHPDid2PfcqBYYodSB4tCaZz0GW8eB6yOjtH6x1IJte0rSlXmAjHUPTGDBUs=
+	t=1749558720; cv=none; b=Y43etQbcuRGvS16EpAhAFeIx5H/KmDxKAIHKZ7lcDr+pj4R6rFSV1T3WlfT7UTdRV8IOZ8boUBmXDJeg7G1TLj+SlJHppBXV//8fyOlu2so75QizcRYKK2gi+cQTuexiSza/IiiBQmaw40vmg7Ac2/Ho0qyXbCP7Rd3xjLMkBaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749558717; c=relaxed/simple;
-	bh=OOoGJQ1I2+xNWK1tTNO1uSYH0VwbFE34AVVSWwOGDPw=;
+	s=arc-20240116; t=1749558720; c=relaxed/simple;
+	bh=7v/zlhp7+OGVQ+ZMGrXfSLvf+WdwyiNeJ7Bslhc74HM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CwMn7bEJTC9tV+bbav3nWqbc7bgIdrwxWw7UFaWC9nKijomEyUWBdnkanRt+iMhJLauPZnpf9QbeqQAv3BvNoiSDHQyVPbmLVAqPjpFTit+jwpN7OysvxjzHfFW+Sb4uBlUwcYolEtox65gxyRnlUyvvSKTVl5oHF8fh03niukg=
+	 MIME-Version:Content-Type; b=vB1o0eFT7odTaQqNIMju0tC0YW7qNy8y1JbM7XrUi4aMbPHdXgTOeiHm5YITJl+qR/tuD0MlZj/hhK7VzFlVkXmHYQFiC4Zk4AMDrmvF59/Z6hMOLQhiM+3KfXJnt3VFYeFm7Czl1UMCwbad0+VYDV6KVKlBL/6s7xw9zXJWDuw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn; spf=pass smtp.mailfrom=hust.edu.cn; arc=none smtp.client-ip=206.189.21.223
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hust.edu.cn
 Received: from hust.edu.cn (unknown [172.16.0.52])
-	by app1 (Coremail) with SMTP id HgEQrAA3P3+mJUhoX2fICg--.26920S2;
+	by app1 (Coremail) with SMTP id HgEQrAB3fBSmJUhoaGfICg--.23713S2;
 	Tue, 10 Jun 2025 20:31:34 +0800 (CST)
 Received: from pride-PowerEdge-R740.. (unknown [222.20.126.129])
-	by gateway (Coremail) with SMTP id _____wB3Ykl1JUhobC0mAA--.19171S5;
-	Tue, 10 Jun 2025 20:31:11 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____wB3Ykl1JUhobC0mAA--.19171S6;
+	Tue, 10 Jun 2025 20:31:15 +0800 (CST)
 From: Dongliang Mu <dzm91@hust.edu.cn>
 To: alexs@kernel.org,
 	si.yanteng@linux.dev,
@@ -25,9 +25,9 @@ To: alexs@kernel.org,
 	Dongliang Mu <dzm91@hust.edu.cn>
 Cc: linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/5] docs/zh_CN: update the translation of process/7.AdvancedTopics.rst
-Date: Tue, 10 Jun 2025 20:30:28 +0800
-Message-ID: <6cc2550da7ebfe597181d95b744abe22379f6fdb.1749557444.git.dzm91@hust.edu.cn>
+Subject: [PATCH 4/5] docs/zh_CN: update the translation of process/2.Process.rst
+Date: Tue, 10 Jun 2025 20:30:29 +0800
+Message-ID: <5e43fda6c7e3597e9e11192f959df65e9de57e7a.1749557444.git.dzm91@hust.edu.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1749557444.git.dzm91@hust.edu.cn>
 References: <cover.1749557444.git.dzm91@hust.edu.cn>
@@ -39,75 +39,61 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:HgEQrAA3P3+mJUhoX2fICg--.26920S2
+X-CM-TRANSID:HgEQrAB3fBSmJUhoaGfICg--.23713S2
 Authentication-Results: app1; spf=neutral smtp.mail=dzm91@hust.edu.cn;
-X-Coremail-Antispam: 1UD129KBjvJXoWxWrWkGFy8uw47tF4xXF15XFb_yoW5ur4Dpr
-	9rKr1xGan2k3W5t3s5G34xZ34rKa47GrWayFyjva4Sqr1fJrsF9rWak3sxJasag3s7AayU
-	WFWvqryfurWav37anT9S1TB71UUUUjJqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUQab7Iv0xC_Ar1lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
+X-Coremail-Antispam: 1UD129KBjvJXoW7WryDur45Ww1UAw45GFW5trb_yoW8CF4kpF
+	y7Krn7Ka1xt3Z5C3y7G3yxWF1UGayxCay3Kr47t3WvqF1ayws2qrsxtr9Yg3yaqr93Aayk
+	WF1ayrWI9ryIvw7anT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmIb7Iv0xC_Cr1lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
 	cIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjx
-	v20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vE
-	x4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAaw2AFwI0_JF
-	0_Jw1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF
-	0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0EF7xvrVAajcxG14v26r
-	4UJVWxJr1lYx0E74AGY7Cv6cx26r4fZr1UJr1lYx0Ec7CjxVAajcxG14v26r4UJVWxJr1l
-	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r126r1DMx
-	AIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_GFW3Jr1UJwCFx2IqxVCFs4IE7xkE
-	bVWUJVW8JwCFI7km07C267AKxVW8ZVWrXwC20s026c02F40E14v26r1j6r18MI8I3I0E74
-	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0
-	I7IYx2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04
-	k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7Cj
-	xVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0zRuVbgUUUUU=
+	v20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK
+	6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1ln4kS14v26r
+	1Y6r17M2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI
+	12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj64x0Y40En7xvr7AKxV
+	W8Jr0_Cr1UMcIj6x8ErcxFaVAv8VW8uFyUJr1UMcIj6xkF7I0En7xvr7AKxVW8Jr0_Cr1U
+	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCF04
+	k20xvE74AGY7Cv6cx26r4fZr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAF
+	wI0_GFv_Wrylx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zV
+	AF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1l
+	IxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCw
+	CI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnI
+	WIevJa73UjIFyTuYvjxUVoGHUUUUU
 X-CM-SenderInfo: asqsiiirqrkko6kx23oohg3hdfq/
 
-Update to the commit 6e55b1cbf05d ("docs: try to encourage (netdev?)
-reviewers")
+Update to commit 413e775efaec ("Documentation: fix links to mailing list
+services")
 
 scripts/checktransupdate.py reports:
 
-Documentation/translations/zh_CN/process/7.AdvancedTopics.rst
-commit 6e55b1cbf05d ("docs: try to encourage (netdev?) reviewers")
+Documentation/translations/zh_CN/process/2.Process.rst
+commit 413e775efaec ("Documentation: fix links to mailing list services")
 1 commits needs resolving in total
 
 Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
 ---
- .../zh_CN/process/7.AdvancedTopics.rst             | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ Documentation/translations/zh_CN/process/2.Process.rst | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/translations/zh_CN/process/7.AdvancedTopics.rst b/Documentation/translations/zh_CN/process/7.AdvancedTopics.rst
-index 57beca02181c..92cc06dd5f4e 100644
---- a/Documentation/translations/zh_CN/process/7.AdvancedTopics.rst
-+++ b/Documentation/translations/zh_CN/process/7.AdvancedTopics.rst
-@@ -113,6 +113,8 @@ Git提供了一些强大的工具，可以让您重写开发历史。一个不
- 更改。在这方面 git request-pull 命令非常有用；它将按照其他开发人员所期望的
- 格式化请求，并检查以确保您已记得将这些更改推送到公共服务器。
+diff --git a/Documentation/translations/zh_CN/process/2.Process.rst b/Documentation/translations/zh_CN/process/2.Process.rst
+index e68c9de0f7f8..31b0e2c994f6 100644
+--- a/Documentation/translations/zh_CN/process/2.Process.rst
++++ b/Documentation/translations/zh_CN/process/2.Process.rst
+@@ -292,12 +292,11 @@ Quilt 是一个补丁管理系统，而不是源代码管理系统。它不会
+ 一个潜在的危险，他们可能会被一堆电子邮件淹没、违反Linux列表上使用的约定，
+ 或者两者兼而有之。
  
-+.. _cn_development_advancedtopics_reviews:
-+
- 审阅补丁
- --------
+-大多数内核邮件列表都在vger.kernel.org上运行；主列表位于：
++大多数内核邮件列表都托管在 kernel.org；主列表位于：
  
-@@ -126,8 +128,20 @@ Git提供了一些强大的工具，可以让您重写开发历史。一个不
- 的建议是：把审阅评论当成问题而不是批评。询问“在这条路径中如何释放锁？”
- 总是比说“这里的锁是错误的”更好。
+-        http://vger.kernel.org/vger-lists.html
++        https://subspace.kernel.org
  
-+当出现分歧时，另一个有用的技巧是邀请他人参与讨论。如果交流数次后讨论陷入僵局，
-+可征求其他评审者或维护者的意见。通常，与某一评审者意见一致的人往往会保持沉默，
-+除非被主动询问。众人意见会产生成倍的影响力。
-+
- 不同的开发人员将从不同的角度审查代码。部分人会主要关注代码风格以及代码行是
- 否有尾随空格。其他人会主要关注补丁作为一个整体实现的变更是否对内核有好处。
- 同时也有人会检查是否存在锁问题、堆栈使用过度、可能的安全问题、在其他地方
- 发现的代码重复、足够的文档、对性能的不利影响、用户空间ABI更改等。所有类型
- 的检查，只要它们能引导更好的代码进入内核，都是受欢迎和值得的。
-+
-+使用诸如 ``Reviewed-by`` 这类特定标签并无严格要求。事实上，即便提供了标签，也
-+更鼓励用平实的英文撰写评审意见，因为这样的内容信息量更大，例如，“我查看了此次
-+提交中 A、B、C 等方面的内容，认为没有问题。”显然，以某种形式提供评审信息或回复
-+是必要的，否则维护者将完全无法知晓评审者是否已查看过补丁！
-+
-+最后但同样重要的是，补丁评审可能会变成一个聚焦于指出问题的负面过程。请偶尔给予
-+称赞，尤其是对新手贡献者！
+-不过，也有一些列表托管在别处；其中一些列表位于
+-redhat.com/mailman/listinfo。
++其他地方也有邮件列表；请查看 MAINTAINERS 文件，获取与特定子系统相关的列表。
+ 
+ 当然，内核开发的核心邮件列表是linux-kernel。这个列表是一个令人生畏的地方：
+ 每天的信息量可以达到500条，噪音很高，谈话技术性很强，且参与者并不总是表现出
 -- 
 2.43.0
 
