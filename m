@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 751A7245008;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752F82459E5;
 	Tue, 10 Jun 2025 17:25:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749576341; cv=none; b=hWedkKrjYzFG8qibwjM+UhftaFRKiwePT7TSv5m9XpO8skc2BC+RmUd3ArZy2CU5mVbefaHg6jjYzdVxJVaA2FxWklVFtwU2sVFg69D5T3bh1ZDNhU9P67ZVaSq/O5LEqGDqkwARbd63YrdRWkKK1ItW5ZDSpyVilS6HISUyi/w=
+	t=1749576341; cv=none; b=D1bGXy9ZwIz3MEOXQPYpesgQn4EBH9TfFOA+S6a9ab7VCVTf96tr3OA/iJmIKaYovxY2At2UH2xKpG5CnN9DBu7UwhYs5Q6AXu3vZ0zFBmUd44BPUAdjJQ419a0YlfkbWIs8lwdGFqyWn/on2zupWqv17KM5Jl8P2OhdbPZrEaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749576341; c=relaxed/simple;
-	bh=TLKKCys6ZP/hE1CmBzE5Q3b3bHy9Tht350M4Sa30kqI=;
+	bh=XZFYqAPTRxfAWf0CxR75Fb1Pa04VLzko/GDyREltleA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UTpH1Vl/FOuXkz9BCfhtxn6IpuvW00MSqK6Pkqwmyr+rfIya5Omj83PVyXC88g16jKaDfMrBO3iW2ycnG4Xa0CcJ1S2DW0C1cfpQZhn4Op2lqhsT8ZHGwsBvrHGCAdqLbG3LabkL4vlktGvhZTuWAsQlzjhQudZeJm4TJhfzBYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XrBXa/Ef; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=DtrlxpDO8VBC0zvJDn48/WR3PyZoE2rrusGgffJAqJRF711W16j7nIwrqYuFBBNAUSkljuMX48AMoS9HyMRPQ0D8SEFp5myLSPVfIOgQo2dgSBOukW7sOfJWO/T92ZbXA7BQVZ1kAxuB6vwaOZ1djtn6PjOnKJbmpSa1ETsP0NA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QJrhop6h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XrBXa/Ef"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 369CEC4CEF6;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QJrhop6h"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1E538C4CEF2;
 	Tue, 10 Jun 2025 17:25:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1749576341;
-	bh=TLKKCys6ZP/hE1CmBzE5Q3b3bHy9Tht350M4Sa30kqI=;
+	bh=XZFYqAPTRxfAWf0CxR75Fb1Pa04VLzko/GDyREltleA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=XrBXa/EfTr8Q2icKyHruWxvHvEfbmHGwN2vAnlxeO0vJ7Wh5GTyHplBjKweW+jWjf
-	 N5BvRE37gdcZk6jGo7WjErrwrBeVH5VpxmCvj3xYPZXudsAvSPcl5Y2AuRu1Xfy8v+
-	 +SruNBRLuvOKoGhVrQkKdXk5CrVwhiRZpvfthFYquQFPyzi/c1/NqFCy/3DpzE+NJr
-	 cHp4qXKld8uYF+52gkA21B2mEFS0LExPHhPBir07GcGQCLMlSytUhDLgcdOu9wbrv4
-	 WP1btyPQzvv+Qcz3dP37R2FxpBOwLeXJovhX/mdw85ugaVDK5qpUNpjEAgQmi3hKAx
-	 LWfAjEhsUh4qA==
+	b=QJrhop6hUf9fXUFqwSXN3AZIPgsps/eetL2cMY4NYhbC5jSNveGti/AUq5WOZWD7A
+	 SHNgxzccQGD60+Fil3GsQUGC+gZIFaVTbJJ9mswIlTLg7AzL5i/lsvyx/ke24Qh5Hq
+	 wGpl+BWDroGf2cpeBL9XP6bZ0MxxbYc3eHwkVctLM9mO0X9PFxuHwW8NYFiObp6qsW
+	 2ihxa/MRKKk9Ac5j+yJP2OIUfzyJuqYpwoQgT0q49ZHp6DnZFpTtIwBTsINTsBs9oA
+	 m0Cgi6b/z/abXeIfPR2jFz9IRJqB3u7W1INjb6EI3niu8al/9Bnx1HARP/4cn2eJ4V
+	 vMcL0diZglslg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B90C71131;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B295C5B552;
 	Tue, 10 Jun 2025 17:25:41 +0000 (UTC)
 From: Jens Glathe via B4 Relay <devnull+jens.glathe.oldschoolsolutions.biz@kernel.org>
-Date: Tue, 10 Jun 2025 19:25:41 +0200
-Subject: [PATCH v3 3/3] arm64: dts: qcom: x1e80100-hp-x14: amend order of
- nodes
+Date: Tue, 10 Jun 2025 19:25:39 +0200
+Subject: [PATCH v3 1/3] arm64: dts: qcom: x1e80100-hp-x14: add
+ usb-1-ss1-sbu-mux
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250610-hp-x14-v3-3-35d5b50efae0@oldschoolsolutions.biz>
+Message-Id: <20250610-hp-x14-v3-1-35d5b50efae0@oldschoolsolutions.biz>
 References: <20250610-hp-x14-v3-0-35d5b50efae0@oldschoolsolutions.biz>
 In-Reply-To: <20250610-hp-x14-v3-0-35d5b50efae0@oldschoolsolutions.biz>
 To: Bjorn Andersson <andersson@kernel.org>, 
@@ -52,12 +52,12 @@ Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, 
  Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749576339; l=1222;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749576339; l=2235;
  i=jens.glathe@oldschoolsolutions.biz; s=20240919;
  h=from:subject:message-id;
- bh=dzrW5h8pJ8/2hv2ut9pqkEtS5SFQ8Go1URDVD/Cy3k8=;
- b=hEBRh0gq01ab5O2lESzPy6g7gHcF4XGYGcJh8IpddSjdJZM5FLzbokfqvJjH3fO95iyFBOY0d
- WNjy823F8qOD1SwCWoQKHLjL6T/goaLa37x2N+8B7Y0CGEmBYI3A/Ml
+ bh=pdc20blDG5sUNrX0k/W0MY3lWOGShqm7G0oOTPuDTlQ=;
+ b=jFRoBvVxHb8WCW7Vdes4glmGKlfiYVtfg51/ZogsIo00p8cDbJoQkZ53GNxTV+Qo8iyM1Y5OK
+ ZUg7MyenvwtBxWjJHmoLmz+A+TUEUpgSn/cwKkE0ExneICuUwlFzpR6
 X-Developer-Key: i=jens.glathe@oldschoolsolutions.biz; a=ed25519;
  pk=JcRJqJc/y8LsxOlPakALD3juGfOKmFBWtO+GfELMJVg=
 X-Endpoint-Received: by B4 Relay for
@@ -67,53 +67,95 @@ Reply-To: jens.glathe@oldschoolsolutions.biz
 
 From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 
-amend the order of pmk8550_* nodes afte pmc8380_*
+The usb_1_1 port doesn't have the PS8830 repeater, but apparently some
+MUX for DP altmode control. After a suggestion from sgerhold on
+'#aarch64-laptops' I added gpio-sbu-mux nodes from the x1e80100-QCP
+tree, and this appears to work well. It is still guesswork, but
+working guesswork.
+
+Added and rewired for usb_1_1
 
 Signed-off-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 ---
- .../boot/dts/qcom/x1e80100-hp-omnibook-x14.dts     | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ .../boot/dts/qcom/x1e80100-hp-omnibook-x14.dts     | 51 ++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts b/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts
-index 3071ed8e192616be797d30d72c21d56b72afc608..8d2a9b7f4730783bbaa81e488a0e99cc195a195f 100644
+index 10b3af5e79fb6493cd6b6c661de6a801e40092f7..315987f2b62b818059cd1b5dbba28f908c58f00a 100644
 --- a/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts
 +++ b/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts
-@@ -1195,17 +1195,6 @@ edp_bl_reg_en: edp-bl-reg-en-state {
- 
- };
- 
--&pmk8550_gpios {
--	edp_bl_pwm: edp-bl-pwm-state {
--		pins = "gpio5";
--		function = "func3";
--	};
--};
--
--&pmk8550_pwm {
--	status = "okay";
--};
--
- &pmc8380_5_gpios {
- 	usb0_pwr_1p15_reg_en: usb0-pwr-1p15-reg-en-state {
- 		pins = "gpio8";
-@@ -1217,6 +1206,17 @@ usb0_pwr_1p15_reg_en: usb0-pwr-1p15-reg-en-state {
+@@ -153,6 +153,14 @@ pmic_glink_ss1_ss_in: endpoint {
+ 						remote-endpoint = <&usb_1_ss1_qmpphy_out>;
+ 					};
+ 				};
++
++				port@2 {
++					reg = <2>;
++
++					pmic_glink_ss1_sbu: endpoint {
++						remote-endpoint = <&usb_1_ss1_sbu_mux>;
++					};
++				};
+ 			};
+ 		};
  	};
+@@ -477,6 +485,25 @@ vreg_pmu_rfa_1p7: ldo9 {
+ 			};
+ 		};
+ 	};
++
++	usb-1-ss1-sbu-mux {
++		compatible = "onnn,fsusb42", "gpio-sbu-mux";
++
++		enable-gpios = <&tlmm 179 GPIO_ACTIVE_LOW>;
++		select-gpios = <&tlmm 178 GPIO_ACTIVE_HIGH>;
++
++		pinctrl-0 = <&usb_1_ss1_sbu_default>;
++		pinctrl-names = "default";
++
++		mode-switch;
++		orientation-switch;
++
++		port {
++			usb_1_ss1_sbu_mux: endpoint {
++				remote-endpoint = <&pmic_glink_ss1_sbu>;
++			};
++		};
++	};
  };
  
-+&pmk8550_gpios {
-+	edp_bl_pwm: edp-bl-pwm-state {
-+		pins = "gpio5";
-+		function = "func3";
+ &apps_rsc {
+@@ -1419,6 +1446,30 @@ reset-n-pins {
+ 		};
+ 	};
+ 
++	usb_1_ss1_sbu_default: usb-1-ss1-sbu-state {
++		mode-pins {
++			pins = "gpio177";
++			function = "gpio";
++			bias-disable;
++			drive-strength = <2>;
++			output-high;
++		};
++
++		oe-n-pins {
++			pins = "gpio179";
++			function = "gpio";
++			bias-disable;
++			drive-strength = <2>;
++		};
++
++		sel-pins {
++			pins = "gpio178";
++			function = "gpio";
++			bias-disable;
++			drive-strength = <2>;
++		};
 +	};
-+};
 +
-+&pmk8550_pwm {
-+	status = "okay";
-+};
-+
- &qupv3_0 {
- 	status = "okay";
- };
+ 	wcd_default: wcd-reset-n-active-state {
+ 		pins = "gpio191";
+ 		function = "gpio";
 
 -- 
 2.48.1
