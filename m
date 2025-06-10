@@ -1,105 +1,137 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFEE3126BF7
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 14:47:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81BFD54764;
+	Tue, 10 Jun 2025 14:47:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749566836; cv=none; b=ayfRCSAZWjEg/fqE6GIr/RpyPIfFfRVLBBzFlxG1Y1jGi1IsPZeQnf4NHt7vSq3/ldb5K3/3gJrfeZoU8QFVMaky7tZWtR5WtPhNKue7oCOSW3EUTFCdEj8FGs6tRYXPVQS0OmmKwDdSXlXpxT5JmD/PBjz6xXsaxJ/Rb23hz0Q=
+	t=1749566863; cv=none; b=DGaC+hnWn5Hyfjcr/0pTSnaxCULDcWT5ET4PktuQq++yBpFc49BCNza6sSERiCvx0WATpNuA5BNfgX6txdYksmUplgOwEk5Dh/gV9IIrK3RtopoVI0vP63whJl/e/leZPnLDV3r0FL3FfTAbVX3P1WM4JfgupG/d1Zpts1VfZuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749566836; c=relaxed/simple;
-	bh=FZPSJSobV+2clQAW57HhDQJrYIdKkViaMqsz2twW9aI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tNaZ4by19X2/edcEVkpNBNi7YtWiVs06tFiZ0uDsZMJXnX7C3vUiZdQ0tcg7YawNCshi6q5IqCfACcWNU1X6kOmZx3g8JolwjYsf45kefnqB9VPKzf8wOqdaThvX5b/O+GkFdxd4fVVZ7t6CClLyoYTMACvwBNfRJ6mQ2ldeM04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4nqarmpq; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749566863; c=relaxed/simple;
+	bh=iic1ABt9KyTTjm0Llg0Eh0qFg1jiqfTpJEbRjNXzdgs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tGvULK7SsL6RoxUbe7HRFr0gxqb3a8pRmOdHxcRNEUxHwZpl1lCh2SvouCz58XKGJE4cA7yW8AZ/lFqfh5abDmMaAL2yPt3VYTrZmfWGfBxO5dksD2IMuVq5RvKAHJiBzFHIR/mA4ReR1iJtJ7jalZi8SeXX4jf6kjxSsHp1DDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xhm+8hr2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4nqarmpq"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4a58ba6c945so92329891cf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 07:47:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749566833; x=1750171633; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FZPSJSobV+2clQAW57HhDQJrYIdKkViaMqsz2twW9aI=;
-        b=4nqarmpqlfmEFcgvVlKfyJBwAvhS1jQOf0ADiF8hdvhuUXw1zuC0do2is2lxemU4C5
-         7zxtavahwOXXcUAQexwSnw0GOri3DAKvEO11KxKuSkpF6/LexULqTaJYMyfAbbo7VNVl
-         D3BJGRXhaYIi08YJ2ltxIaHGnFFXuqBbY8hxQZZfqlkoGyXaaAgotVxUR4i42Fvfj/LB
-         mW2oFKem7+tUnh53PAsLWPEgsstQom4Z8KSD90hHADRUD8DrPo5sLBjY1AEK3J5UcNB1
-         3X07sQks/Q4UdaDUktlwJC4wvWshRU1C7xV6Y3BjBguVhK4S1Uq+eTQC1B8hzAdyROTS
-         /t6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749566833; x=1750171633;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FZPSJSobV+2clQAW57HhDQJrYIdKkViaMqsz2twW9aI=;
-        b=h79oy4oNKD1oBHTsGtm528zEeqcb24cbTNMtzJZqc4aj7e5UWJiAoHKbOK31O2R1BX
-         OChA4/XhnThElITVmK9GyG0inLLRJcUfiD4QQO/hiAqISBu8f5LrUcwOrWPdCveQkTCB
-         BhNVQvonHyF1DogV5i6tstjaBM83x7EfrMncW4h3+YOQ7LB4Q2fZgK0lL+FwiUuR6Pz2
-         OnN7JNPIaV0TtVMv+bnPZJfgnLgWKVEi+3gsnHu+ICBRx0L/5pL+0U+8/9dC4OiF/dLk
-         qLsdWJnH26T7mVHa1HkXBEzsmx4Ji8drqHYaK1E3zkopnmeulrxAaIESim1Hqjzgelle
-         I7Rg==
-X-Forwarded-Encrypted: i=1; AJvYcCXYUGgeZRpCKuWmFPixfxOuErdnu4nnjl5Dow3TsaRXIrp9STDrYfcvqmPxFqXBbptET/58abQVWX9B8Nw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywhc6T4TvuZqbLJizq98lSDnjnCjwNwa0eUv/xrCS1180DEtk4m
-	ZuzUN3j8VHUUE8GT44WYW3auMTBunYkCsBZQB4wIFWShn1GB+ApZ2GeV8IWM98GSbhQ+L3hZEel
-	XfgDzgHr32dVcJYLGgRNT43tsy9o9CuH6YGcCV/71
-X-Gm-Gg: ASbGncvJvWATjMCFx7h10dMV46tbPxEnW3MxbpAqSQUZj5Kfo7JnwbhAN+DUwrt3pDP
-	scY+GkvL/AQfsASXHOCC+BABG4BMWP5ps2jMpdahBqeFsen4wMLn2aeUHS0kg4dim5jVvWNiilU
-	6sYdksHOG8KliQ/uty894Wrl2HI3qHFKgC8JDFF/83pmA=
-X-Google-Smtp-Source: AGHT+IHXh/T7TQqCEkwyyhG2DFteUT8YXPJnsgh6HCzHALaXsQIqBwNAJeluGWjNRQa7dqIuBvp0KPGecicwp689F7M=
-X-Received: by 2002:a05:622a:114d:b0:4a2:719b:1238 with SMTP id
- d75a77b69052e-4a5b9a268f6mr308357231cf.12.1749566833287; Tue, 10 Jun 2025
- 07:47:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xhm+8hr2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25C8BC4CEED;
+	Tue, 10 Jun 2025 14:47:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749566863;
+	bh=iic1ABt9KyTTjm0Llg0Eh0qFg1jiqfTpJEbRjNXzdgs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Xhm+8hr2FG9j9dkt9Zvpog5qRK8b5/nzB0g3UyF9Dp1bbeZOhOLDR6DKwpfeGWiTh
+	 W3EzWQBn3FtuEJziWXj0l2x4HBAf2D6l8Y3jYZ6v2uJnmOHUSJN6YU4xAlIR0dfmJi
+	 UVBQD6zJOzpUasXqrXeOds+Sw4+PLr2Qt0K4858RPsiV3eB3Q7AwAFgnw1qYdTg3Ug
+	 jwRzRsBfPQQEKfuTURpnZQ1DRMj05jMQnkwD5OMwQXLWl3IEAKd1wmyxyiJXOC6t39
+	 7l9VsaAcLm9i7Ir5Cf+sc1Afls/ssQwAQDMPPn4WurzaNi4v0W/0aF0CRgvLkMRRfc
+	 ZtoLRZDSTIpWQ==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	x86@kernel.org,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+	lkft-triage@lists.linaro.org,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Anders Roxell <anders.roxell@linaro.org>
+Subject: [RFC PATCH 1/2] x86: Retry with new instruction if INT3 is disappaered
+Date: Tue, 10 Jun 2025 23:47:38 +0900
+Message-ID:  <174956685825.1494782.929110313017233978.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: git-send-email 2.50.0.rc0.604.gd4ff7b7c86-goog
+In-Reply-To: <20250610234307.c675969e83ce53bb856e94d7@kernel.org>
+References: <20250610234307.c675969e83ce53bb856e94d7@kernel.org>
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aEdIXQkxiORwc5v4@slm.duckdns.org>
-In-Reply-To: <aEdIXQkxiORwc5v4@slm.duckdns.org>
-From: Eric Dumazet <edumazet@google.com>
-Date: Tue, 10 Jun 2025 07:47:02 -0700
-X-Gm-Features: AX0GCFssQls_Gaij5ZeXP9fy9SKSORmaR_2shcb4agLN0_oDN8ItFdCW3VPHcfA
-Message-ID: <CANn89iLan0LsN2X9RA-PkaQk+6EQJiFL0eCqQ5VsCCyU2r5gFg@mail.gmail.com>
-Subject: Re: [PATCH RESEND net-next] net: tcp: tsq: Convert from tasklet to BH workqueue
-To: Tejun Heo <tj@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
-	David Ahern <dsahern@kernel.org>, Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Jason Xing <kerneljasonxing@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 9, 2025 at 1:47=E2=80=AFPM Tejun Heo <tj@kernel.org> wrote:
->
-> The only generic interface to execute asynchronously in the BH context is
-> tasklet; however, it's marked deprecated and has some design flaws. To
-> replace tasklets, BH workqueue support was recently added. A BH workqueue
-> behaves similarly to regular workqueues except that the queued work items
-> are executed in the BH context.
->
-> This patch converts TCP Small Queues implementation from tasklet to BH
-> workqueue.
->
-> Semantically, this is an equivalent conversion and there shouldn't be any
-> user-visible behavior changes. While workqueue's queueing and execution
-> paths are a bit heavier than tasklet's, unless the work item is being que=
-ued
-> every packet, the difference hopefully shouldn't matter.
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-On a 100Gbit NIC and 32 TX queues, I see about 170,000 calls to
-tcp_tsq_workfn() when the link is saturated.
+An Oops caused by a stray INT3 is reported by LKFT.
 
-Note that a tasklet could only be raised on the local cpu.
-Switching to a work queue allows us to start the work on the cpu who
-did the last xmit, thus reducing the load on the cpu servicing the NIC
-irqs,
-a bit like RFS does on the receive path.
+ ## Test log
+ ftrace-stress-test: <12>[   21.971153] /usr/local/bin/kirk[277]:
+ starting test ftrace-stress-test (ftrace_stress_test.sh 90)
+ <4>[   58.997439] Oops: int3: 0000 [#1] SMP PTI
+ <4>[   58.998089] CPU: 0 UID: 0 PID: 323 Comm: sh Not tainted
+ 6.15.0-next-20250605 #1 PREEMPT(voluntary)
+ <4>[   58.998152] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
+ BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+ <4>[   58.998260] RIP: 0010:_raw_spin_lock+0x5/0x50
+ <4>[   58.998563] Code: 5d e9 ff 12 00 00 66 66 2e 0f 1f 84 00 00 00
+ 00 00 0f 1f 40 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3
+ 0f 1e fa 0f <1f> 44 00 00 55 48 89 e5 53 48 89 fb bf 01 00 00 00 e8 15
+ 12 e4 fe
 
-I am tempted to say yes to your patch, hopefully we will not regress
-if highprio user threads are competing with this work queue.
+But INT3(cc) is not shown in the dumped code. This means there is a
+chance to handle an INT3 exception when the INT3 is replaecd with
+the original instruction.
 
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+To evacuate the kernel from this stuation, when the kernel failed to
+handle the INT3, check whether there is an INT3 at the trapped
+address. If there isn't, retry executing the new instruction.
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Closes: https://lore.kernel.org/all/CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com/
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ arch/x86/kernel/traps.c |   25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index c5c897a86418..f489e86c1b5e 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -880,6 +880,29 @@ static void do_int3_user(struct pt_regs *regs)
+ 	cond_local_irq_disable(regs);
+ }
+ 
++static int handle_disappeared_int3(struct pt_regs *regs)
++{
++	unsigned long addr = instruction_pointer(regs) - INT3_INSN_SIZE;
++	unsigned char opcode;
++	int ret;
++
++	/*
++	 * Evacuate the kernel from disappeared int3, which was there when
++	 * the exception happens, but it is removed now by another CPU.
++	 */
++	ret = copy_from_kernel_nofault(&opcode, (void *)addr, INT3_INSN_SIZE);
++	if (ret < 0)
++		return ret;
++	if (opcode == INT3_INSN_OPCODE)
++		return -EFAULT;
++
++	/* There is no INT3 here. Retry with the new instruction. */
++	WARN_ONCE(1, "A disappeared INT3 was handled at %pS.", (void *)addr);
++	instruction_pointer_set(regs, addr);
++
++	return 0;
++}
++
+ DEFINE_IDTENTRY_RAW(exc_int3)
+ {
+ 	/*
+@@ -907,7 +930,7 @@ DEFINE_IDTENTRY_RAW(exc_int3)
+ 		irqentry_state_t irq_state = irqentry_nmi_enter(regs);
+ 
+ 		instrumentation_begin();
+-		if (!do_int3(regs))
++		if (!do_int3(regs) && handle_disappeared_int3(regs) < 0)
+ 			die("int3", regs, 0);
+ 		instrumentation_end();
+ 		irqentry_nmi_exit(regs, irq_state);
+
