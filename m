@@ -1,140 +1,96 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B9924679D
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 18:59:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C842571BD;
+	Tue, 10 Jun 2025 19:00:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749581951; cv=none; b=BVVwHa6ZlcK2mA/376ZRlOSLQlI1k/u2n+dOcyn9omSOd2ivFAYbW36u+h4rkhCoTDMoBqM6ojithRm14bQ+pd3M/iMV2vfOgzfOc7ZDzJtl1R1XSQZYzaXpUBOnvt+pQHA4VQdIleqGKk5B/da7f10ukFdyvnhuwCx27YqGppw=
+	t=1749582002; cv=none; b=AAIl3dtbxmIHTRBGpxFi+Lwz9hnuZvtrWGGPwziX0zuyCwsFZ9hQMBjzhGCu6OUxWW3F52DjgeGNDBvSOdlCvIfIJr8+REXI5VBUgxnWHiIdF9nYbn69htuRQ2IG1bipfRg2DTbfFmhJdpBPve0EFBzw42Ow4AjqMrAeG1A27sU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749581951; c=relaxed/simple;
-	bh=KmAUf3dXXB0p66orx+B4ProFOgjmT1ub5RqekKbl/Bg=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hbj1rAZ1XW+CuiPhbz8kYIlWxz3wAZbc/zE8yrRAC2A84xmK8wCE88wrg6IMpkeCQNWtWmCkar1xoDFgHvo9hUIWidLOqNwgSnslGB/6QzdfsREZ5P1QgOhFiUAnu1eVCCsgb18qGSKSFWkicdnZnx13Lh3jligHsBulynfuGbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RMlIR81M; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749582002; c=relaxed/simple;
+	bh=s0c7Xmf12cfUyyoOFjeDnR/T9o/hmnWX0j4vP8nHfAQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TUFxXBHmXukYxG7FMDIrRoCAboBDIDWZE+YxtfVCar1xtZU1NCPn/k4RpZneYyjIn9HaUk4TPAsllypa4kZ40bSipDTgWzRTqUSELDGMT/Czv3KFpDHqyEbLQsxeivQOykz/NJfxabAAyZKv/Ep09e5xmIN4OFja0ZCMyrGeRBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N57LmcyE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RMlIR81M"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-234fcadde3eso68663505ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 11:59:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749581949; x=1750186749; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nuQyHIKwgfo8nIn1AH5ah64VfwYi3IlgMCaC2ZFDPgg=;
-        b=RMlIR81MWMLeikfXTHDf3WMGh06Yervkq+dXqzQrB2C3VNDdTDWH7dg0qKusfasUul
-         MpnCw7/EIkD/a60hFpEiIiA9mZtZDhS3NsRjvApdFGQ8Mba0RX79ob80y1YGvx1Xug5e
-         S68ns7oS8T4hrqawv8lAeocBWkHxV6NTz0+IdThtR9vXY2qn9JnMEYz4KS7/WtkkwnLi
-         2xLVmbgIe38cZSx4OgWeeMD2mT5v9HdAXWwR2JJ55kNKHSYMd3TIbKQzNa3CejUSQceK
-         Na/0sQqxFycfPDnU5QzInGpT+Gn90jK839PDlpHyVEQMu2Rs7Zlpt9/nx9aC1xhxKjMY
-         6xBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749581949; x=1750186749;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nuQyHIKwgfo8nIn1AH5ah64VfwYi3IlgMCaC2ZFDPgg=;
-        b=Iv1Ha3AUAO8jfwksQlQgImX4Dw+weTUu10HJ69fcosoHYr4l+JyPnT1DX3g0yP83hK
-         gCSbauAa7RUkg8z4l7Sw/bhSYwnjrXXosrEFhh1S5yFsboFoGawYt3/z3b9nM2ynMeKp
-         1CBCwzvuZpwhiIzC12fzePszVjr+fS8IeQev6j1UnNRk+bAiWfAZOoU4ynAihn7NFgZs
-         RRnjW9cY9U3p6fC6QF1uMVVlm2xcFQHWOKaEEHO21X/M0rgbPlrUJkKR0kl6LwgB9T90
-         u2Ko8CpmHtISipwqe5R1d53OYvRBswI7fIP1zqBOl6REk+W6U90JbIur9qCZ4cYsmSWE
-         BtQA==
-X-Forwarded-Encrypted: i=1; AJvYcCX5yFJP6BXCMRdIKrbEy0eluqgqm6xQvldQvVX4jYHj5dL2RVpCKY05bf6om3Wb0KHaotvbkqRvQFjzaTk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMMIVR8CnyNyxcAw+oNiGJQ+r1HqVMxrKJSUnKuctzVHP/Ddxg
-	a424l1RDh5AbIhztNuYynoolf8utFL8f5n+w7yoPdwRlJLPyfuBBWEW2
-X-Gm-Gg: ASbGncuHpUaITb8WRW7ShwrVzCxz103j+RIIVbZyo+O3m89NK/z6NVktqSDj2xlUY09
-	wfqO2qda0TiSPOlVydH8pHfzOmVt+PrggRSHbpuLToeA2rQyQaj8xxiHkJoroHsxROQ0vp3mbam
-	xXvXgcbxMGMHevVJoK8K/sr1Qmc1lsfBollcGTE1GOLEaT4ukomP7/uZtjUdyEm3gPHAvaT5qfQ
-	uk1NgI/9MbNi0A07DQrov54P2QtGY/kSqcZaOcY39L6lc5ZIrzb8F/oOtv1DA3zmoZ5uBJN0TUd
-	pTaie2F+j/JKm8sk2Di3Lwy87920RsKNpDwMRua4qpPuWlX3WgMVfIYIf15Gcg==
-X-Google-Smtp-Source: AGHT+IGzxym8gJ1yHWZbtoVZajUyc1+BH9ZtT0Z+sZ0X22uDfVAa1W1uYpWl5SzqPBMBVqF7RrQWCQ==
-X-Received: by 2002:a17:903:94c:b0:235:f078:4746 with SMTP id d9443c01a7336-23641b15626mr4825795ad.42.1749581949173;
-        Tue, 10 Jun 2025 11:59:09 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236032fcd13sm74553315ad.90.2025.06.10.11.59.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 11:59:08 -0700 (PDT)
-Date: Tue, 10 Jun 2025 14:59:06 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] smp: Defer check for local execution in
- smp_call_function_many_cond()
-Message-ID: <aEiAepW_zRYtC1Is@yury>
-References: <20250606202732.426551-1-yury.norov@gmail.com>
- <20250606202732.426551-5-yury.norov@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N57LmcyE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FE9AC4CEF2;
+	Tue, 10 Jun 2025 19:00:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749582002;
+	bh=s0c7Xmf12cfUyyoOFjeDnR/T9o/hmnWX0j4vP8nHfAQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=N57LmcyEBzXNExyKfwjCB23EwZQVtNP3HOAKuZEf9GEDBitw5xlNHmGBOcZKm0koZ
+	 KRbvKh5MUEZ+gcF7JzBmMRbEy7lADVrfrBEhr5ZC+u1rwTIuuauKuIrZFg39jwsdw1
+	 +EKde0yLHgWaHZDOTL0/nUEslta46G7JrltjgRJWSOnyTIFQ4/sNF338J/28jFL4pq
+	 rdsy2FpAxL2nNHN/tro/xxWavmB5xC2Go17KLLbJfA3OYtQQKOupMU28/1PGJbmeDQ
+	 yLf3NT3jOzzv8bvO2bOm6S0eu7TVoCsLzMgZNeil0qm4g2CBN5LhpvwPXqBEldBsfy
+	 ILn8SCersfnjw==
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-4074997ce2bso1486931b6e.3;
+        Tue, 10 Jun 2025 12:00:02 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWD8TPo88jax+M+N/2CmG6N2068t4nE9Om6Mlx69DOMDiBcC+AuUo3qKOdDtCxL4P7MXrcGcvpLv9BJ@vger.kernel.org, AJvYcCWpjNbRvsyGMcOuMuHlVgzh76U2cNlhc+3WkqVQ/PdfQYCUrc2+Jql0RY9xHYJFIVWeIvgBe6cnykuVpiPv@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzj2hiwUptDS/qPAhZjtIXb13x39iEKwEsHSvsqCpcERgWTPkBc
+	mxQjLyY1eXn/+my2Zv6Wp9jJ9K8cfOSNmwQSMIrl5TWuf54HbeK5mNJLDKHsjeSGrdZtBzJSofb
+	2CzhCcd6y3CmJGwogjMXUwlVxb96rEoU=
+X-Google-Smtp-Source: AGHT+IHudCxeN25CKYb9NEpQCun/0hcTV28vDA5tQPywem9CXtsDmZahyN3Ukndjr8f1kVJQufTKd5TXgWyFUmVGnHo=
+X-Received: by 2002:a05:6808:1b27:b0:403:3e86:ab4c with SMTP id
+ 5614622812f47-40a5d172cf1mr397617b6e.39.1749582001456; Tue, 10 Jun 2025
+ 12:00:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250606202732.426551-5-yury.norov@gmail.com>
+References: <20250603122059.1072790-1-guanwentao@uniontech.com>
+In-Reply-To: <20250603122059.1072790-1-guanwentao@uniontech.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 10 Jun 2025 20:59:50 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hUGYGZxht-XRRQeCYvDTLV=Ho4ywqW7cKFg0UFFHPDcA@mail.gmail.com>
+X-Gm-Features: AX0GCFu84KlSjp60a-rImM1wqAe-OazhQAamtQywjpaphPQ0FcuYOZre_VxDJA0
+Message-ID: <CAJZ5v0hUGYGZxht-XRRQeCYvDTLV=Ho4ywqW7cKFg0UFFHPDcA@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: resource: Use IRQ override on MACHENIKE 16P
+To: Wentao Guan <guanwentao@uniontech.com>
+Cc: rafael@kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, wangyuli@uniontech.com, zhanjun@uniontech.com, 
+	niecheng1@uniontech.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 06, 2025 at 04:27:31PM -0400, Yury Norov wrote:
-> From: "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
-> 
-> Defer check for local execution to the actual place where it is needed,
-> and save some stack on a useless local variable.
-> 
-> Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
+On Tue, Jun 3, 2025 at 2:23=E2=80=AFPM Wentao Guan <guanwentao@uniontech.co=
+m> wrote:
+>
+> Use ACPI IRQ override on MACHENIKE laptop to make the internal
+> keyboard work.
+>
+> Add a new entry to the irq1_edge_low_force_override structure, similar
+> to the existing ones.
+>
+> Link: https://bbs.deepin.org.cn/zh/post/287628
+> Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
 > ---
->  kernel/smp.c | 10 +++-------
->  1 file changed, 3 insertions(+), 7 deletions(-)
-> 
-> diff --git a/kernel/smp.c b/kernel/smp.c
-> index 715190669e94..867f79689684 100644
-> --- a/kernel/smp.c
-> +++ b/kernel/smp.c
-> @@ -779,7 +779,6 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
->  	bool wait = scf_flags & SCF_WAIT;
->  	int nr_cpus = 0;
->  	bool run_remote = false;
-> -	bool run_local = false;
->  
->  	lockdep_assert_preemption_disabled();
->  
-> @@ -801,11 +800,6 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
->  	 */
->  	WARN_ON_ONCE(!in_task());
->  
-> -	/* Check if we need local execution. */
-> -	if ((scf_flags & SCF_RUN_LOCAL) && cpumask_test_cpu(this_cpu, mask) &&
-> -	    (!cond_func || cond_func(this_cpu, info)))
-> -		run_local = true;
-> -
->  	/* Check if we need remote execution, i.e., any CPU excluding this one. */
->  	if (cpumask_any_and_but(mask, cpu_online_mask, this_cpu) < nr_cpu_ids) {
->  		run_remote = true;
-> @@ -853,7 +847,9 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
->  			run_remote = false;
->  	}
->  
-> -	if (run_local) {
-> +	/* Check if we need local execution. */
-> +	if ((scf_flags & SCF_RUN_LOCAL) & cpumask_test_cpu(this_cpu, mask) &&
-> +	    (!cond_func || cond_func(this_cpu, info))) {
+>  drivers/acpi/resource.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
+> index 531684a69c645..e12a318b38bec 100644
+> --- a/drivers/acpi/resource.c
+> +++ b/drivers/acpi/resource.c
+> @@ -653,6 +653,13 @@ static const struct dmi_system_id lg_laptop[] =3D {
+>                         DMI_MATCH(DMI_BOARD_NAME, "GMxHGxx"),
+>                 },
+>         },
+> +       {
+> +               /* MACHENIKE L16P/L16P */
+> +               .matches =3D {
+> +                       DMI_MATCH(DMI_SYS_VENDOR, "MACHENIKE"),
+> +                       DMI_MATCH(DMI_BOARD_NAME, "L16P"),
+> +               },
+> +       },
+>         {
+>                 /*
+>                  * TongFang GM5HG0A in case of the SKIKK Vanaheim relabel=
+ the
+> --
 
-Dan Carpenter's robot pointed the bug here: it should be:
-
-        (scf_flags & SCF_RUN_LOCAL) && cpumask_test_cpu(this_cpu, mask)
-
-I'll resend it shortly.
-
-Thanks, Dan!
-
->  		unsigned long flags;
->  
->  		local_irq_save(flags);
-> -- 
-> 2.43.0
+Applied as 6.16-rc material, thanks!
