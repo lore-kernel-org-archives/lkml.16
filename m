@@ -1,153 +1,130 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E8AB21B191
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:36:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CABD220F24
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:36:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749544569; cv=none; b=XVGtcmizAtDe2oyMzL49EWk7Vh0QKIs1XZwlNslADxe/B8uo9XgylTxSfnOh3fne/9rBNDh26ZUddLyulBcquRcGNuWPgL5xsNSCcchLubF3x7E95rkcX5u8knR1Es2bqAajvCYlsaVtwjmtAfZnpScAF3IF9C5WYSnTf/8pYbA=
+	t=1749544570; cv=none; b=GAvumEwGF3VARKfD8vceaeyeP2u/rPS/mOgKuQmZ0jJhf/eheQe5+cUBUwrIWa+C1xiCe3EIc+hRbeD/kiVNqWB52WvR8G1YdpVxCx1V/eikHy5cIEFrJKC15/h9qXLD0u0JVLqlpflpRw5gJMlBfNVamg5Qu8JvRFupTIFdgs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749544569; c=relaxed/simple;
-	bh=VefeL8UvNo27hF0y5cq0ZWoxdT+CX5fteuza6wXt5O0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FcwvJVzwGXxr2X6eadaSNSSA6bKXgjx7Q1oHhXcQzJ2gdVRtTGEAk6q70n9j5dJ19T/xVmCvPml/U1dyro1LqH086R4TywU0U546akHCTiPZKLcFXAENMzBrLfGERVatFmtKqCdLw6oWetUQE7hoyna89xSzr3GjtQjeCzS9z9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ibrQTmMt; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749544570; c=relaxed/simple;
+	bh=ZQz1tLG7kcWUwenzY9ZEbwsbyY9z1eYvjc4bgBPpWjU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cm2F/6VfddY3HQu0C2oN9YSmXgOtgNt19TZEngM0eINTkgGJOF50ED6uNx4KsFmtYMKU77hUKJN96/UNK8r7F/V0MuFm1s3PxixkRYA8M5q4PYs2icZYyjgu2U8QeKvo9hwWqfhtYk4NAitDWuMVrwIpDnvN7SaiTW00HhQinLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=OsXU/5uQ; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ibrQTmMt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749544566;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VefeL8UvNo27hF0y5cq0ZWoxdT+CX5fteuza6wXt5O0=;
-	b=ibrQTmMtk3M5foxu/Ky9PvDjH8b29cynno3Dmgf9buC3r3RDQi/7A3QwWZNPs5yj3ThyZn
-	ELyJMbD+FTN6//MIvhESL8O403XsWdlRHXjCNTEDvhdmbgO0d12feOAT8X4jYZM4zdnWs+
-	SBIsygS/W+hsHsoK72XJl5WVfQMNuQA=
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
- [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-581-VHuk0o00OtCShY9UgtJeDg-1; Tue, 10 Jun 2025 04:36:05 -0400
-X-MC-Unique: VHuk0o00OtCShY9UgtJeDg-1
-X-Mimecast-MFC-AGG-ID: VHuk0o00OtCShY9UgtJeDg_1749544564
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-31215090074so7242779a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 01:36:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="OsXU/5uQ"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a376ba6f08so2874264f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 01:36:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1749544567; x=1750149367; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nDL1VH2zgeGps6X0Zhyb1MxJka1vOhvb2PWMkFIaGrM=;
+        b=OsXU/5uQyuKxZY9UMxQHOEtKqlcj4a/ExbFJyl/xr9uRf6FADU/UN5z4IRG67FfyGL
+         JhrpGRUzYeV8C1fnoJp08DkKIyjuotao3ZkS5IRStxZXw8YuNRBocCqpa01mxgDktg5o
+         Qpo28Qmap/V+UqLOFZGh0G3/pSS/8dJgfmkEt9w5cTqyPZxF7j6N49AuJ2RCn5Dws08r
+         6BvV+EWDF4T3S6oED2WmlXAoNWk4a9UlnND9mBLwDWbzMx1lLKN7jWADvCKxtc+vaECW
+         ci/jzg1r0fnTIDjHRoC59/OubN6rAv2FEzt4Tj2Vz8hmP9gFeks6r64WG8/0PMGOMHHv
+         ksTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749544564; x=1750149364;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VefeL8UvNo27hF0y5cq0ZWoxdT+CX5fteuza6wXt5O0=;
-        b=PyXSsZeXl1x03WixA+lzjCIcAg9Et08rAcsDPhWfg8yim+yKcAhZpK9xmTJG3lzMxy
-         J0f7ZesTKPrwp2QKFUkMDxq3NMo9HHMH2dyolL9ZyCpnHoPUHskaAqf0EZQX9f3L4mcw
-         XRPG+DlDwBpXjslyIAOD0j0XrLMAd1Nvy4abUWzRWEZHdg7qpKIvU4Xvl5sG05R3wNtm
-         zH3WPav/RE4bIL+unr+gS38ZTYOwn+aw7wQVI9/jC7oJTM+/3FXS8Ej6HQhEny7NXKY7
-         OdoZbR+et2ICJc2k1xenoE1iCevoEZ8GyW+3RrJvV2hReDDfGHn++Uzl6z5UlTRQocHD
-         9+UA==
-X-Forwarded-Encrypted: i=1; AJvYcCXFuB3qNKQn6ogbzMvDt3NXjNyHGVZ1qNc2dAjr8m07SChv72N4bhDAw77SS7UVM9JqzPTBkz76eey4X70=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwA9f2YLK80wa4zKrfChe3wW48hgO0p7Ht4oy6vAbVL1cp62XJL
-	fVrtcutE2jY4xYmmMykCtVcsV0VoJOMVoP+t7Lh9vvCjMYP65GbZrLYXAl/c7Gth32Tnxcg2Nbi
-	W/UX3OmJU7DZfiPB4eoO5ed5v1usxSwOs8DCS5PiRs9ux4pxxgEIRPVXsWjvaByuV04ms5fg4a/
-	6Gtdz0Kj5Mmx6RIbnWv6E98mIcjJa+9mMPysN/GDRq
-X-Gm-Gg: ASbGncvOl00zbbHN0oANDatBbIY7Nxt+ns+4bSBqe//kASPry4e+XzSSgJM0iAhoBNq
-	TX61iuVy2fv8RiIJOn82CN5RLF8oepXj/K2jNYzlWeaFz7U/Rvd+LWE9Sm/T3+5dBb1Bq6IOFU2
-	cHybLo
-X-Received: by 2002:a17:90b:3c52:b0:311:ffe8:20e2 with SMTP id 98e67ed59e1d1-313472d4297mr23372950a91.4.1749544563413;
-        Tue, 10 Jun 2025 01:36:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEyRjmPW82hemp2fvewBDHQY7oy/7+OpxoQVKnjOKQ7RWf7UJnCJb7ETeE1WE5gEIg7PUb6KZi6iotqVC+KBWI=
-X-Received: by 2002:a17:90b:3c52:b0:311:ffe8:20e2 with SMTP id
- 98e67ed59e1d1-313472d4297mr23372919a91.4.1749544562994; Tue, 10 Jun 2025
- 01:36:02 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749544567; x=1750149367;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nDL1VH2zgeGps6X0Zhyb1MxJka1vOhvb2PWMkFIaGrM=;
+        b=tsRBduutx+Y9DYTYRfvlhJILm4dDRP5PgVBH+Pz8w8rtKpCv5GF0ksg4RAFy5CnCq7
+         xldMABVGm+UDFW04bZ6xRUikWQKHinJSUHotspl6oHHXIYlxmsuXntCiE7+oNpxSZrtN
+         yAg0jrNmxInVCdxzmZa0EXUPqUE1aT5IA2ZnKnw0vZRy0JZRXHA2cYqnAa3pKgUSgK39
+         2GPvnRBcP6WSJh8L5WhS++cUtoJEueoToR4slRmePh8+zDApz+kF+po2x/0NZ30/Cwcu
+         Oo07n7AZgIg4VMmNg4O+cSZNFG/N/eNPlXfLqwgRnS6DMEXb99vPD9Q7ISIxhFwTQiUT
+         R9RA==
+X-Forwarded-Encrypted: i=1; AJvYcCVAdYLxhEKKU70PwiwzJxLRqrMyzwiEA6Ii8XnUxKgrSX6n2iFyfTbGWJMDMPHHVQQvYPJywJ6GdMSeoFk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwzudAO2CoF/979JNV7NYYAaoGQXkzxm2BR6Sew1weeHBTQ41Y
+	JgzJMrGewTR2UEqCc+GKy+PKFc1t1B2PRYagkc/E7rTW6HC7yOANNPPV9hDkaduzFyM=
+X-Gm-Gg: ASbGncsjJNCLKybuqdm/4numx2lfrgoRP5xdkBjrUPv/1fSFZYEme/tzzj5GxAopY65
+	/E56XMjqZsUI3VwizrAS17NUShXr4vRuCUdA9OTfsFW9skbckx+3y0OrXjr2ovY/E+1aGm0XHEe
+	2ed5ryEpZDKRA//M9DT7whH/jZGS1lhFNKkxLDQfxu/9/c7qcvE1/IXq6mg78xqoC+GNfv2waJN
+	uqP9aHe1Omqu8Rz0gKVEbl9UFUA7Xn/GNtYaMU/HVp7Ry5+JrkE2BsMyK+beCvdrUklRZlw3QPN
+	qkT1kcZBiIQCDE8vY9pt6zqNqm/tGah122WEbehTCYnWFxuPLLT/Wt6MdPPXCj8D
+X-Google-Smtp-Source: AGHT+IE/nI85vSWlttVj+F3DLQC1penmgc3tIfP/1EOoFPr6y0TcG5WWvzoq1ne1V9qLxIrFBkrV9A==
+X-Received: by 2002:a05:6000:40c9:b0:3a4:f6ba:51da with SMTP id ffacd0b85a97d-3a531786845mr13169150f8f.15.1749544566711;
+        Tue, 10 Jun 2025 01:36:06 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482af38386sm7001718b3a.6.2025.06.10.01.35.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 01:36:05 -0700 (PDT)
+Date: Tue, 10 Jun 2025 10:35:34 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Sergio Perez Gonzalez <sperezglz@gmail.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	David Rientjes <rientjes@google.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+	linux-doc@vger.kernel.org, linux-mm@kvack.org,
+	Thomas Huth <thuth@redhat.com>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] slab: Decouple slab_debug and no_hash_pointers
+Message-ID: <aEfuVgR78G1YgRau@pathway.suse.cz>
+References: <20250415170232.it.467-kees@kernel.org>
+ <Z_-dPcdiGW0fo8Ji@pathway.suse.cz>
+ <202506051314.D6EDFA91D@keescook>
+ <aEbyHeG8qh8GChTh@pathway.suse.cz>
+ <202506090823.33ED63C@keescook>
+ <aEdANsGsQHqVQ9Wy@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250606115012.1331551-1-eperezma@redhat.com> <20250606115012.1331551-2-eperezma@redhat.com>
- <CACGkMEsw2taXgW11na2CFK6W03c=x=wMn3iwNZPypgPkeSU06Q@mail.gmail.com>
- <CACGkMEvinV7Zd+xddnxcerFbw_c+RZypkeD5HaN8=g6+peZvMQ@mail.gmail.com> <CAJaqyWeetDsdoDzVrN-n0+jr97MBPeHdTxeM3ttmNUeLK702VA@mail.gmail.com>
-In-Reply-To: <CAJaqyWeetDsdoDzVrN-n0+jr97MBPeHdTxeM3ttmNUeLK702VA@mail.gmail.com>
-From: Jason Wang <jasowang@redhat.com>
-Date: Tue, 10 Jun 2025 16:35:52 +0800
-X-Gm-Features: AX0GCFuawXYYWuy28X2V_BYwSq7bE1Tmlxm4lE_BVF2reMyJ9g-qSAngee-y6Wk
-Message-ID: <CACGkMEvbxZsmPPHgfst89FCbZamBPLt8V=K-eepa4s3muFuM4A@mail.gmail.com>
-Subject: Re: [RFC 1/6] vduse: add v1 API definition
-To: Eugenio Perez Martin <eperezma@redhat.com>
-Cc: Yongji Xie <xieyongji@bytedance.com>, Cindy Lu <lulu@redhat.com>, 
-	linux-kernel@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, Maxime Coquelin <mcoqueli@redhat.com>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, virtualization@lists.linux.dev, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Laurent Vivier <lvivier@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEdANsGsQHqVQ9Wy@smile.fi.intel.com>
 
-On Mon, Jun 9, 2025 at 2:11=E2=80=AFPM Eugenio Perez Martin <eperezma@redha=
-t.com> wrote:
->
-> On Mon, Jun 9, 2025 at 3:50=E2=80=AFAM Jason Wang <jasowang@redhat.com> w=
-rote:
-> >
-> > On Mon, Jun 9, 2025 at 9:41=E2=80=AFAM Jason Wang <jasowang@redhat.com>=
- wrote:
-> > >
-> > > On Fri, Jun 6, 2025 at 7:50=E2=80=AFPM Eugenio P=C3=A9rez <eperezma@r=
-edhat.com> wrote:
-> > > >
-> > > > This allows to define all functions checking the API version set by=
- the
-> > > > userland device.
-> > > >
-> > > > Signed-off-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
-> > >
-> > > It might be worth clarifying how it works.
-> > >
-> > > For example,
-> > >
-> > > 1) would VDUSE behave differently or if it's just some new ioctls
->
-> I'd like to test more in-depth, but a device can just bump the version
-> ID and then implement the replies to the vduse messages. No need to
-> implement new ioctls. If the VDUSE device sets 0 in either number of
-> ASID or vq groups, the kernel assumes 1.
+On Mon 2025-06-09 23:12:38, Andy Shevchenko wrote:
+> On Mon, Jun 09, 2025 at 08:24:47AM -0700, Kees Cook wrote:
+> > On Mon, Jun 09, 2025 at 04:39:25PM +0200, Petr Mladek wrote:
+> 
+> ...
+> 
+> > As long as it's in -next and scheduled to land, I'm happy. I'd always
+> > like it earlier, but the less workflow disruption the better! :)
+> 
+> Hmm... The __diag patch series were in Linux Next for a few weeks and did not
+> land in v6.16-rc1. Just saying that there is always chance to go into cracks.
 
-Right, this is the way we use now and I think maybe we can document
-this somewhere.
+Urgh, I am terribly sorry for this. I forgot to do it the other
+week. And I missed it in the merge window because it was in for-6.15*
+branch. I had a feeling that I have forgot something but I did
+not find it.
 
->
-> But you have a very good point here, I think it is wise to evaluate
-> the shortcut of these messages in the VDUSE kernel module. If a VDUSE
-> device only has one vq group and one ASID, it can always return group
-> 0 and asid 0 for everything, and fail every try to ser asid !=3D 0.
+OK, I guess that I am getting older or going through some more
+distracting times. And have to update my process.
 
-Yes, and vhost-vDPA needs to guard against the misconfiguration.
+I have just created a list of branches which I have to merge
+for 6.17. I hope that it will do the trick.
 
-> This
-> way, the update is transparent for the VDUSE device, and future
-> devices do not need to implement the reply of these. What do you
-> think?
-
-This should work.
-
->
-> > > 2) If VDUSE behave differently, do we need a ioctl to set the API
-> > > version for backward compatibility?
-> >
-> > Speak too fast, there's a VDUSE_SET_API_VERSION actually.
-> >
-> > I think we need to think if it complicates the migration compatibility =
-or not.
-> >
->
-> Do you mean migration as "increase the VDUSE version number", not "VM
-> live migration from vduse version 0 to vduse version 1", isn't it? The
-> second should not have any problem but I haven't tested it.
-
-I mean if we bump the version, we can't migrate from version 1 to
-version 0. Or we can offload this to the management (do we need to
-extend the vdpa tool for this)?
-
-Thanks
-
+Best Regards,
+Petr
