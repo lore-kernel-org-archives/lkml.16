@@ -1,149 +1,118 @@
-Received: from smtp-bc0b.mail.infomaniak.ch (smtp-bc0b.mail.infomaniak.ch [45.157.188.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAFB223C501;
-	Tue, 10 Jun 2025 17:27:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F4424677C
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 17:28:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749576445; cv=none; b=F0m4wtzAe8z6c1uZDplunaf2odI5m13X7VQamxJJWNFMfhX3QQSvfLukOwf+uBlHS95UDcbGbZjlGbgvkU8RICk5YnIdvV9Jtu/WAj2AeEjo31UzqjQih/7F7YR0rx837nDsRBiqBlXrh7Le0np1m9E3g+HLPmFpEIMEmztD2Xs=
+	t=1749576488; cv=none; b=nlO2rIFz/OokbWvFL6PP3PhEvDO0AMmKa587HIpWQYMEOslIbGteK97wQDD/+9JcnHOB7qWKKkMHQqETpCb0Fx+6PbViGk1K+JSpfiyYEZVIE9zRPeZnEssa4VjZp+Qy6+dix4QDQw07volltpIlbcgL7D4kZV2M8IMSFmNJQ0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749576445; c=relaxed/simple;
-	bh=Ur5dV8QKH80XZZ3n1/Lz8iLMGTqBPVVJWTX10PB5Ssc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H9lvEfuB2T1wNqb0mfMHILLpVTb0TKmHIYhiceZRiyS4HYGpztDwGE/UQYP6oKzsfy4NeDVYjxLxMCwJyEa0cb4DbNuR64cpAR37VDvanSp4VJr9TchD/Z2DPeyvLIONl9tMPNRJNR1Zexo75Pzkn6HYkeNQkXrCuL+1PjWiKMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=1E636ncN; arc=none smtp.client-ip=45.157.188.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1749576488; c=relaxed/simple;
+	bh=PVZyBqjGIVhV1fw7dIcdJqjMZ05mClHZkbxF2OooV18=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EDtEi4cTvxudHqq/oltLzw4DLz9Gj16EfPqcbL4I9ESmLxtfzsp9ePR6Iu0agmEUi0UM7IYYQC2EUQnjAXDXZD/tygYZc/JfRXR6lXcUMvmoAXS/OIjherqA16AaVslsccw4jgu/+cLxcCVWfRmkaqXYHRueqhsN8ZKq2ppMs9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=FNV2fJsm; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="1E636ncN"
-Received: from smtp-4-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10::a6c])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bGwW71MT6zltw;
-	Tue, 10 Jun 2025 19:18:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1749575939;
-	bh=N4poSoqHkFTaRXhQjec38Gy8OXs4VTV9129KaB1cSFU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=1E636ncNZwlaEm4q4CVWcB5uhlKB/7nQVHrRoGQsZxN+rX35ZlNeak99oLezrDhs3
-	 Au6GVp08oBSerwGGOvFuUtVKYrOZ9EEkhnxPlI0WN3Isik1Gr9mUva/Ewlq1zvonAi
-	 kcoekPkFHgQosvOHcRfjlA2Y7Yb4lsshBfuJs/oA=
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4bGwW60ZtKzNsQ;
-	Tue, 10 Jun 2025 19:18:58 +0200 (CEST)
-Date: Tue, 10 Jun 2025 19:18:57 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Song Liu <song@kernel.org>
-Cc: bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, kernel-team@meta.com, 
-	andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, daniel@iogearbox.net, 
-	martin.lau@linux.dev, viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
-	kpsingh@kernel.org, mattbobrowski@google.com, amir73il@gmail.com, repnop@google.com, 
-	jlayton@kernel.org, josef@toxicpanda.com, gnoack@google.com, m@maowtm.org
-Subject: Re: [PATCH v3 bpf-next 1/5] namei: Introduce new helper function
- path_walk_parent()
-Message-ID: <20250610.rox7aeGhi7zi@digikod.net>
-References: <20250606213015.255134-1-song@kernel.org>
- <20250606213015.255134-2-song@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="FNV2fJsm"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6071ac9dc3eso8662148a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 10:28:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1749576484; x=1750181284; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ggkXFJJM4tmqklVbhKHNnaysMh0I0jQ20WCMlBH6Csw=;
+        b=FNV2fJsmtE9kRlIfsqwRRA+0lXQVAw8X6FbLRBEXpGwAL9fr5X1iiCLuZSrg7pBtHU
+         qgt929zbYGx0MiMCFWljo09FmYBfm5iGHSvgSP9UEIHnc1TKzg01wv7TI91ZeS5gVpaw
+         LEMhttdfBt4QkZe/bBrjGcZS5riIPYodp8r8c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749576484; x=1750181284;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ggkXFJJM4tmqklVbhKHNnaysMh0I0jQ20WCMlBH6Csw=;
+        b=BxtXM46AxW6Yz3I17iEDspKoJdRE8vWi7ZoNCNqx/Nn0ERg5F716VadNnumwqbiHHX
+         2mazB1e2iamY9HVQIy54OWOzDrKxvbwDjkNS7ymxfcVgUfR1cFaOQ++lvW2j5SaWjNSp
+         Qg/RYkn1/MNXd0ALGx58iSDO1WyEebhPVVIldE5FB//6XogFEiG/4aCF42AA0GR+YSKJ
+         C/HrWbkB32YhVSCFoQ9/xZehIUaK7rzAqIBJoSk4yexnCs8WNHeyXmv8Bu/Py+GsTJ4R
+         nD+8B+Ewzi8Zh3gMii5wvpa9llrwND7WSiRg5ez2KPUT9vDVwj5kv7YYj9jJkcKmCJ3g
+         uocA==
+X-Forwarded-Encrypted: i=1; AJvYcCUFRbZE1p0Xil22E+18D1SkTarhNhx+QQ34/99RymU/5bae/ni7P19zyAd4Ba4QzwJ+h0zpv9kCJ/KyVJk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0Nl1M9neCSn65sY8JrjY4+RgLObc3sxHaE80Nz3N6kYs1JVrT
+	M/OtDHM+XpEx/HZnexG+xzuGEnDOmTmz71Y+ixpBt4d+T2r0RJgAcw8bED3RCAT3mX+ssL/xaVe
+	gLxeDhIM=
+X-Gm-Gg: ASbGncvsK4svjUh1AJJgf7KKy6W7X8o/kgbwvSyDaUHbyKC0BWRzT7Uo8a1Byb7DEZh
+	QqO05I9/n2COFAH/8FWlcyAa8ie4saD6Vc5FWTFzeN8Vcbk+cQWDvfV9SMjjEwFZ3fLZsHFnfQn
+	Fmr44NAiXVweapCAYo5VcNun4+msmGz1hVcOYy0HQRS7yZwDxsLDKm2wkumnv7Hn78Ves85b0FF
+	FOe2QNX44jfyyPyevTd/4aXHhDYrTYJdE+SKq/Dh2DDuoJ8UkBlzxjyd0HZQVJA4vTiskRHM4bM
+	cuYeygAe+xFAlhK4yUnBvm0Km+hnLrQfkwQ6sgDIuE4llxp98srhPQv92stC39g5YZCMK8lCNMz
+	rEw5DtPQwjTYnmfD9UArCgHylDUjKz2ZDttqW1/c9L1le1Nk=
+X-Google-Smtp-Source: AGHT+IGc/iS8QHD73lPcznP0iLUbXtvD+lwLY5Ge24x2UDmCq33kNBsEz5wWgTiqkUeRvVJzOWEliQ==
+X-Received: by 2002:a17:907:3d02:b0:ad8:8efe:31fb with SMTP id a640c23a62f3a-ade898a7133mr21547966b.54.1749576483917;
+        Tue, 10 Jun 2025 10:28:03 -0700 (PDT)
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com. [209.85.208.53])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1db55f3dsm757828666b.60.2025.06.10.10.28.02
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Jun 2025 10:28:03 -0700 (PDT)
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-6077d0b9bbeso7619112a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 10:28:02 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUzI8CqG9ULO2XBC0CxjiEg0FsVeJ29tfbv58M0mefMJAHb5kt9WkWCFiWb7e0ope1ErKplgUHCRMAaL+k=@vger.kernel.org
+X-Received: by 2002:a17:907:7f07:b0:ade:f72:435 with SMTP id
+ a640c23a62f3a-ade897cf7fbmr24618766b.36.1749576482668; Tue, 10 Jun 2025
+ 10:28:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250606213015.255134-2-song@kernel.org>
-X-Infomaniak-Routing: alpha
+References: <20250601151222.60ead71e7d8492a18c711a05@linux-foundation.org>
+ <CAMuHMdU1NdNjx3f1V9j2FACWwC5faPKCXChtW6Z=i2JyXquFuA@mail.gmail.com>
+ <20250610085416.062b4bc386dde2ea475369f5@linux-foundation.org> <CAMuHMdXyJhaFUbKX2Hhoa2y4hVK+0NhvL4hNL_8RnVOxaCkq=g@mail.gmail.com>
+In-Reply-To: <CAMuHMdXyJhaFUbKX2Hhoa2y4hVK+0NhvL4hNL_8RnVOxaCkq=g@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 10 Jun 2025 10:27:46 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgXTJo5G7e1cQxetFLbqbTUfP7Nfzt7-C89FjUHo1J9cA@mail.gmail.com>
+X-Gm-Features: AX0GCFuSBnImfaPnnRPaw-kRRNGK3RROtak9Ct6XSRJ9KKoJNMvO8fbVvKrYfaM
+Message-ID: <CAHk-=wgXTJo5G7e1cQxetFLbqbTUfP7Nfzt7-C89FjUHo1J9cA@mail.gmail.com>
+Subject: Re: [GIT PULL] Additional MM updates for 6.16-rc1
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, SeongJae Park <sj@kernel.org>, 
+	Honggyu Kim <honggyu.kim@sk.com>, linux-mm@kvack.org, mm-commits@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jun 06, 2025 at 02:30:11PM -0700, Song Liu wrote:
-> This helper walks an input path to its parent. Logic are added to handle
-> walking across mount tree.
-> 
-> This will be used by landlock, and BPF LSM.
-> 
-> Signed-off-by: Song Liu <song@kernel.org>
-> ---
->  fs/namei.c            | 51 +++++++++++++++++++++++++++++++++++++++++++
->  include/linux/namei.h |  2 ++
->  2 files changed, 53 insertions(+)
-> 
-> diff --git a/fs/namei.c b/fs/namei.c
-> index 4bb889fc980b..f02183e9c073 100644
-> --- a/fs/namei.c
-> +++ b/fs/namei.c
-> @@ -1424,6 +1424,57 @@ static bool choose_mountpoint(struct mount *m, const struct path *root,
->  	return found;
->  }
->  
-> +/**
-> + * path_walk_parent - Walk to the parent of path
-> + * @path: input and output path.
-> + * @root: root of the path walk, do not go beyond this root. If @root is
-> + *        zero'ed, walk all the way to real root.
-> + *
-> + * Given a path, find the parent path. Replace @path with the parent path.
-> + * If we were already at the real root or a disconnected root, @path is
-> + * not changed.
-> + *
-> + * The logic of path_walk_parent() is similar to follow_dotdot(), except
-> + * that path_walk_parent() will continue walking for !path_connected case.
-> + * This effectively means we are walking from disconnected bind mount to
-> + * the original mount. If this behavior is not desired, the caller can add
-> + * a check like:
-> + *
-> + *   if (path_walk_parent(&path) && !path_connected(path.mnt, path.dentry)
-> + *           // continue walking
-> + *   else
-> + *           // stop walking
-> + *
-> + * Returns:
-> + *  true  - if @path is updated to its parent.
-> + *  false - if @path is already the root (real root or @root).
-> + */
-> +bool path_walk_parent(struct path *path, const struct path *root)
-> +{
-> +	struct dentry *parent;
-> +
-> +	if (path_equal(path, root))
-> +		return false;
-> +
-> +	if (unlikely(path->dentry == path->mnt->mnt_root)) {
-> +		struct path p;
-> +
-> +		if (!choose_mountpoint(real_mount(path->mnt), root, &p))
-> +			return false;
-> +		path_put(path);
-> +		*path = p;
-> +	}
-> +
-> +	if (unlikely(IS_ROOT(path->dentry)))
+On Tue, 10 Jun 2025 at 09:41, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Just revert the commit?
 
-path would be updated while false is returned, which is not correct.
+Yes. We don't do "default y" for random features.
 
-> +		return false;
-> +
-> +	parent = dget_parent(path->dentry);
-> +	dput(path->dentry);
-> +	path->dentry = parent;
-> +	return true;
-> +}
-> +EXPORT_SYMBOL_GPL(path_walk_parent);
-> +
->  /*
->   * Perform an automount
->   * - return -EISDIR to tell follow_managed() to stop and return the path we
-> diff --git a/include/linux/namei.h b/include/linux/namei.h
-> index 5d085428e471..cba5373ecf86 100644
-> --- a/include/linux/namei.h
-> +++ b/include/linux/namei.h
-> @@ -85,6 +85,8 @@ extern int follow_down_one(struct path *);
->  extern int follow_down(struct path *path, unsigned int flags);
->  extern int follow_up(struct path *);
->  
-> +bool path_walk_parent(struct path *path, const struct path *root);
-> +
->  extern struct dentry *lock_rename(struct dentry *, struct dentry *);
->  extern struct dentry *lock_rename_child(struct dentry *, struct dentry *);
->  extern void unlock_rename(struct dentry *, struct dentry *);
-> -- 
-> 2.47.1
-> 
-> 
+EVERY SINGLE DEVELOPER thinks that *their* feature is so important
+that everybody else should enable it.
+
+And if that feature wasn't enabled before, they are completely wrong
+99% of the time.
+
+There is a very real reason why 'default' defaults to 'n'.
+
+So we do *not* use "default y" for features that aren't universal.
+
+The only time we should use 'default y' is if some old feature that
+used to be unconditional gets split up into a new Kconfig variable and
+not using 'default y' means that people *lose* functionality.
+
+Or if the feature is some critical security thing, or is some hardware
+thing that has become so universal that you find it on basically every
+single machine.
+
+Or if that feature cures cancer or brings world peace.
+
+Then you can enable it by default.
+
+I have reverted that 'default y' thing, because I see no reason to
+believe that DAEMON cures cancer.
+
+               Linus
