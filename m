@@ -1,66 +1,66 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C227221702
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 14:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA7322C355
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 14:38:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749566317; cv=none; b=c7YC2s1ejBP1m4/7++Uvfz4jLIrSYT1LzspQ3SEBJ2/+ydb9LEcO2vhW7r7xtDKGvj4JE4dPc0M+pv5gHn4iH8X6oR8eugyxvt5g2WJ3r7StqaPivzbTHxxBjt7agFdx8tdWuqs+EeIb9hS6xM/j6opUcJvXAbxcz9qK24+P6Kw=
+	t=1749566319; cv=none; b=Q9PVUrwltry+cAIPyPO6K9xjqNln416QQ2+xbaiap5WgJZhDy4EyjedJWVIcHyFbskiKJmOiuPdN2wCalqvpbkyVUjjy9XKQ7NT/0/1SKvxIFFajM5sOV09jyJ8Tm1mTbbm6XHlv9YSWqqrcoDfygdKxfo5t5QLRSI8Ppu7J/hM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749566317; c=relaxed/simple;
-	bh=SuhcWnQjnt1V0zaDkIpP3r+TFOAIWMDQ1nvmYS1xN+o=;
+	s=arc-20240116; t=1749566319; c=relaxed/simple;
+	bh=d+Bxl0NSiM7UA5F5Yp7jtiVxMzixcYH43BuoVTlUtbg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ksrYMNvQBohzQRGxAmhd9hKYOSpxYR7Q+joIWS8ioBsnv9YORrKZlKZ3buG9cOfBa8llyYR9EBGy4Bnuw+IXIpPa1c/wXm7pOYmKBI29+BGNeVEEHuZD6mbcAv7K3WtJLGyKfdmMW7Hx7nUN0n0fNa131kSD0QlUvjQ5n9N32UI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=vYk1+APO; arc=none smtp.client-ip=209.85.128.47
+	 In-Reply-To:To:Cc; b=pfKTtP6ZbIFkq/Bp+fr0Git1mTWzC1y+vwzrvq6YBuzj6uPoZBHKkkEb0D8R0THCl34YK0SFASGSgOPBj4BOCQHCuR3+0C9f9codfBAmodWEMHuc+ioZMGwaYupzzSO/jabTrsDJoO1azvpH6f1NVCEEzxm7rGr4sjQB6TbjyNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=LAaRMPM/; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="vYk1+APO"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-451dbe494d6so67518325e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 07:38:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="LAaRMPM/"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so46645845e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 07:38:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749566314; x=1750171114; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749566316; x=1750171116; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Shn2eyZ5fd8Sf9FUXjLdmt+2r+pNCPfrOT0YWQfJc1Y=;
-        b=vYk1+APOhL/JkXmtx77pRYXlmiB/wffHut3LT4UdqcajXcVePVUEdQnZTj3topAJZc
-         gPK9XczQt/fpoBiLjPgF06E+fh7ZTRyovaViFoDU/jBEqqFGVRNLYTKDVanxa4KMcC9i
-         Qli59hF3tEc5ueM3XewLe09CJijW9dkJhNvjaoDmJURV7ijth5CwwGmqLEnX8Jjlg8m3
-         jOdd2b8wou4G3dPFQHy5Rm5/lDJrmJIs6QdwirVy0WAjz/Ek0rZAS3gc1nqnTihA92qZ
-         7tQK3Lv4wrQcKW3FTPjRjJDqpwAMnP40j0obKFU+pgdMGixfTMPIichW27pYoPA0LjNp
-         cnSg==
+        bh=q7rYTyytP41wrzRonx/qeQvGqjmG0GLYCtZlfrWBrxo=;
+        b=LAaRMPM/J71m7lqGbl+BGSmqrCU672zGAtGqQhNbukLXkcnpex/CEEy3nWzTbHHnEN
+         Sn5+0Flumcojd/WLsQiON2qwAV7vf6HQmlOUx3ApuK5TylvrDdfpvRK8lg4/Ek4ZjsOY
+         B/uDVWf/RmnRyUqu4FzA3g64hQKRC5FIT96RlSm6yOYyhKBeZzMNsErpJ1nQR7Ukw0FK
+         3/LXKRhRw1sfYZO48re6zE+2qBR/YeDEel0HNp3Gr9OfryhKHQwcEUhSIjb/uEcReHYF
+         G1VkM7r1i0m66VfZYSpcX2+Cy+3/Ia56/vZdUj0vmYHeOMvJq1YJ3+wXeGa52z0Hdzw9
+         ojsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749566314; x=1750171114;
+        d=1e100.net; s=20230601; t=1749566316; x=1750171116;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Shn2eyZ5fd8Sf9FUXjLdmt+2r+pNCPfrOT0YWQfJc1Y=;
-        b=A3NGAITDJ5p9/+qVXOIKANGPcPxazqlTS55LC4OrTSggbaDqjh273QATKTDRFDQBre
-         n8Qgs85xqYGGD/AOp8HeB87eoHFl5h6tAnZ1vF3C/kL6DGuh6fwm1ot1RjMKjN/so9Ur
-         EE2cjUa5wiYayq4tybvaND2xjtr5Raa0kLBdBsmXjsLvVnTDnlO9u5nriiTOcyhvgcNG
-         bKoJq3DOtJ0Za7omn2FAlQNcMyoGTzl5cxPcwmhQChdB8PM4PY7L2Ej5ckmRedwOA2Ju
-         STOgp7xwSg75YF6NyfJmifQD85nLgOi/jcdtogjjNw3Oc/TmdefIrb5OIhXr9M3TDB7S
-         8QUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWHrjnqBx73yIShUO0ilc1MztoH4hSJJt61QM7DaC4i5zuGOeiG8o/HAc++5nNxXVMoUUL2+lMQ0SdoLjA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzrj6YHlZ7oHYqkRiwsMziT0dJsDFeHm1YmBqNBICZXn3hQU+NS
-	tMG5So63uPqKBl4cGOZWdNmp+WjvaHCoxEIrKO0vGJgHLKxvNjRLyaU2vgzWZO0bYEo=
-X-Gm-Gg: ASbGncuufsc5Wy4imlG5yU9YS8fHyaJ5r6ObT1oC2rvdtvZxyKN2kLZeui18dX/jCf1
-	GvItsyixri1k87+Bl518kfZNFnJcaYh4CId0EaG3E1H13c9GjsPzxpXJWuxj66U2wKBAqaasSUO
-	vTIkmTafzkEg0LektyggUk0MB0ZxMZFxy+yVwSHU+Aj/J0kupZryXz51emFVCKfhDEBxw3FcTq4
-	KrnwSkAeIRHT2x9I3K+OhnOdgBf/+X0yi/bPOVBW50LWZgbwPZ39qRoBJ+0/nCALrGyFyelwPdy
-	a0Irh/Y3/gNSZ/unX6Vwql3YbI+ihns7g4AvmAwcNpbKLHCeqf0Do1VEmK+0o7E=
-X-Google-Smtp-Source: AGHT+IFQxMr+KpfJbCsHx4fMzLU8Ewr+onA/3HvlnZLPIEF4Pbfk+QHCSRE8DIYbR5+FKFsmMZn9+Q==
-X-Received: by 2002:a05:600c:4e88:b0:442:f4d4:522 with SMTP id 5b1f17b1804b1-45201364b20mr151409425e9.5.1749566313774;
-        Tue, 10 Jun 2025 07:38:33 -0700 (PDT)
+        bh=q7rYTyytP41wrzRonx/qeQvGqjmG0GLYCtZlfrWBrxo=;
+        b=B0VRj9GsN+wbW1K/xlgBeNeYMqQoZabH9WoeaccsRC1b+P6YZyf9CwUhlQI0U3P17W
+         eRQbvpcCOAQbVT0SEPhlcFuLW8MKTLy+remj/vrXNl2kmL7eNb88Ub4IsxRjwT1o1Wbx
+         gQ1U1RJdGVTgbcKDx8N2vzBcAX0tcHgTlzng6btJwJdubLijcGZ2Ps3sQXszK07rDR83
+         rSO94iwuEsJn/vEGd/Tq2RH991bmbGj+sijHgbdrff1nyxYEMRucea+6Vrfan7+CsnzX
+         Fawmzo+20KqIgb/t9/y64rb4pFXgI/3jm3xVgxbbtc8utfYiF/0+ixNb5GSdk0fwyZuB
+         hjhA==
+X-Forwarded-Encrypted: i=1; AJvYcCWwetJWLUhaPDq9hzpCLhpLc2fYx6DYYL9FnTqGo7EbsglK9NJzptM6m56pm6yuOSVzDsbfDrioTAKmgVQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMbBDLmbY7Y/UkdbwmKk39MxCp1/LMn2GIav2cvDW7UGSYIsL8
+	LbU/uynHZ8Kp/TicCXIt5JvyzfHfRJDmljmjKgFVviVyNg+9s0T2l66tLOrjwIBebgA=
+X-Gm-Gg: ASbGncuWMx0FBpFmde4YtPqvuvivfLLknxmpa9GulWUldyD8gZa6LEMeaSqxjsNiPOI
+	WDMQ9QW9RSAEoM0Yk+gvZeDFp7TbWxv4ctcPafjStDx1m3JP9K3h/MhkIFC+DXEFnFt8J3Nio5W
+	KzkA31tgpFfMwVjJ+uH44ANiY2vIe3w6VcvBKFRyVCUzdx+QVuRxUttLwqRHEK21mSm398BGKnm
+	5zEFmLjvSeyx9vCJsoCQzqun3/SYI7sDwLl1obgRHXRMO3P8uHR7XSBorPgI19b0096/X282HEu
+	yLg/klOi9YwFdTEVgsdIsOpF/chfYRUKYIQ+sUERmE6p5uZTykgH
+X-Google-Smtp-Source: AGHT+IFqsL6AQNgjHvVYwct1knCOR3BWEgK6/JlDG1gE359gCrycIIxTwv7hXlhov+kj+IZkQ+EiqQ==
+X-Received: by 2002:a05:600c:5288:b0:450:d3b9:4b96 with SMTP id 5b1f17b1804b1-452013916bbmr165982055e9.13.1749566315808;
+        Tue, 10 Jun 2025 07:38:35 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:4d:e52b:812d:eb7c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4526e056138sm146001345e9.5.2025.06.10.07.38.32
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4526e056138sm146001345e9.5.2025.06.10.07.38.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 07:38:33 -0700 (PDT)
+        Tue, 10 Jun 2025 07:38:35 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 10 Jun 2025 16:38:21 +0200
-Subject: [PATCH RFC/RFT 06/15] gpio: sysfs: remove the mockdev pointer from
- struct gpio_device
+Date: Tue, 10 Jun 2025 16:38:23 +0200
+Subject: [PATCH RFC/RFT 08/15] gpio: sysfs: only get the dirent reference
+ for the value attr once
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250610-gpio-sysfs-chip-export-v1-6-a8c7aa4478b1@linaro.org>
+Message-Id: <20250610-gpio-sysfs-chip-export-v1-8-a8c7aa4478b1@linaro.org>
 References: <20250610-gpio-sysfs-chip-export-v1-0-a8c7aa4478b1@linaro.org>
 In-Reply-To: <20250610-gpio-sysfs-chip-export-v1-0-a8c7aa4478b1@linaro.org>
 To: Ahmad Fatoum <a.fatoum@pengutronix.de>, 
@@ -81,226 +81,122 @@ To: Ahmad Fatoum <a.fatoum@pengutronix.de>,
 Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6366;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3042;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=je470wIsOKjy+Wgh3vMCa95VKbv92LlyIwF4JpS1fa8=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoSENgMzYrTrIqo79b7bugZj00GqsKV3l++8Gvu
- Dgz89ZkFJeJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaEhDYAAKCRARpy6gFHHX
- ciedD/427LXr8cn0G7iqWrhFjM8Ewz+h+HQY5DVXsTqUfMe4R46IvTfJHW/JwJGT6DxflIice4r
- bRD1dMj6CyTLuYnc4aOCTw2mIJd006otLq+fV1z2uqwdf5MKE+O7VeHHuNyJtBejL0os/altIEh
- Wz5Iio0yp0VZ8yWTgGVs+15budcVQ8I8qdLzo53o7L9j6PeRNWzIPDC+CfyUdY2QUgFup786G2D
- Mr1q91sRH8VzkUyXAVawG07RTmOD7th1kTH0yEWodWQFpBuQrJG92YKcc+q0n363lzmhS39bXno
- iR8vdq674gUvGGQf/JFtey7iLeh/AQ1eBuj5HB+WCUFEXNS9ESmXCoRNe4Z2zG7K1RBR7hHa7W4
- DrjBqvqNvFRQJPjp1iNUvjpNwZqv2zmxMnY4qrcNdo+iHKpKphNgh+LRkTJj1ATPAEk902rwSn7
- QC7WJir6buQtT/oUgUzYUFb6IYy7HbuGV7k3n5420bm4rFHjKK66p8rTkB3PeGhW31bMci69GsK
- K/Vr0YZMuqbSkUnl1scq/4ux9xeBEDEKp+CXAfhwykfuoeMcGd2zCVYsGQuZD6y6xTIOCE1yo/L
- EXXrBb05K8pdId18H227bdT1Lok+4seuGzXHAbReOKDLbOlVqizlCRENqPxyNRwig0paxtF+RPV
- hOQJkk3e46ar/iA==
+ bh=TO3LbK7dPeG+FDRNFnBsVRIrM0Iiro3kG2oek3lX/7Y=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoSENhw51P2TaMhnBGwcf0wBuqFshm7H07M2gUq
+ wktCql8YLGJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaEhDYQAKCRARpy6gFHHX
+ cjlED/9HPFz5JqtJcL2ZD/+Ti6nEEqSLtmF4iWdyX4stOkurGwfrGeXibADRzBfPk/eO/xwznhL
+ vmD2PMNmkristKf1FXxV9YtsbCsJUcwXePaiqqkIh/o63een8sSWcLPHCuWLUHR0SwSoG5IvMJA
+ wckCkUnyKRoA3DTx/ARkJlgOqf0sPgJuwB2eq7mIcyaFS6NZdhjmt+fXuVuoNG6SvEfdzRhAVoG
+ DM5rklTx0t+Ifm7xDvs+m/xspdpgLDJPJpPXenX5VMs5HbhGXbdqiN5roDspIsVRyU9DIDhhAJ5
+ KJSz0X/YR1mFBejmx13dvJs74B3vSdYWYVGD154lGMJz0bLrjyjqMq9G0zGXnfL+0zKLWSr8Jcc
+ VuHMBMLKO0rpoYzSbMKU6fgIfbf7TVfWkHLlVr0L2tADV1QNCHtAU5hcrFAiZLtILngqyza3n19
+ IfdVZaema8GnDkJ9z0StGNeDFRTa4tfbHrO7mcJNLRSFDqppnqhpNORfuLQqNK0Rh6IOR3brliG
+ khqPPFODOU/G2GWl2Ymjts3DyF4OmZntvCSmLin4UMwaE2/Mv4KKpVOyeO4MuYo223L/VeSdwuU
+ vnRr80vwUgfmuyx7VdJ4mFB3N78nodwdySG/cXESClA9zm+ncAIt1lLzKKGqso6wTImX25aEIK8
+ flleW2TY850E6lQ==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-The usage of the mockdev pointer in struct gpio_device is limited to the
-GPIO sysfs code. There's no reason to keep it in this top-level
-structure. Create a separate structure containing the reference to the
-GPIO device and the dummy class device that will be passed to
-device_create_with_groups(). The !gdev->mockdev checks can be removed as
-long as we make sure that all operations on the GPIO class are protected
-with the sysfs lock.
+There's no reason to retrieve the reference to the sysfs dirent every
+time we request an interrupt, we can as well only do it once when
+exporting the GPIO.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/gpio/gpiolib-sysfs.c | 81 +++++++++++++++++++++++++++++---------------
- drivers/gpio/gpiolib.h       |  3 --
- 2 files changed, 53 insertions(+), 31 deletions(-)
+ drivers/gpio/gpiolib-sysfs.c | 23 +++++++++++++----------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
-index f23b4efea5905a9eab51ed9e50b5159135a8e26c..956411fc467a26a9827c616d8dc067c70f9244bf 100644
+index a3403b963d6488aad24e47e9e28e0439676de704..642635c9f84bbd869727755e72781fae31a9cca3 100644
 --- a/drivers/gpio/gpiolib-sysfs.c
 +++ b/drivers/gpio/gpiolib-sysfs.c
-@@ -43,6 +43,11 @@ struct gpiod_data {
- 	bool direction_can_change;
- };
- 
-+struct gpiodev_data {
-+	struct gpio_device *gdev;
-+	struct device *cdev_base; /* Class device by GPIO base */
-+};
-+
- /*
-  * Lock to serialise gpiod export and unexport, and prevent re-export of
-  * gpiod whose chip is being unregistered.
-@@ -399,27 +404,27 @@ static const struct attribute_group *gpio_groups[] = {
- static ssize_t base_show(struct device *dev, struct device_attribute *attr,
- 			 char *buf)
- {
--	const struct gpio_device *gdev = dev_get_drvdata(dev);
-+	const struct gpiodev_data *data = dev_get_drvdata(dev);
- 
--	return sysfs_emit(buf, "%u\n", gdev->base);
-+	return sysfs_emit(buf, "%u\n", data->gdev->base);
- }
- static DEVICE_ATTR_RO(base);
- 
- static ssize_t label_show(struct device *dev, struct device_attribute *attr,
- 			  char *buf)
- {
--	const struct gpio_device *gdev = dev_get_drvdata(dev);
-+	const struct gpiodev_data *data = dev_get_drvdata(dev);
- 
--	return sysfs_emit(buf, "%s\n", gdev->label);
-+	return sysfs_emit(buf, "%s\n", data->gdev->label);
- }
- static DEVICE_ATTR_RO(label);
- 
- static ssize_t ngpio_show(struct device *dev, struct device_attribute *attr,
- 			  char *buf)
- {
--	const struct gpio_device *gdev = dev_get_drvdata(dev);
-+	const struct gpiodev_data *data = dev_get_drvdata(dev);
- 
--	return sysfs_emit(buf, "%u\n", gdev->ngpio);
-+	return sysfs_emit(buf, "%u\n", data->gdev->ngpio);
- }
- static DEVICE_ATTR_RO(ngpio);
- 
-@@ -545,6 +550,26 @@ static const struct class gpio_class = {
- 	.class_groups =	gpio_class_groups,
- };
- 
-+static int match_gdev(struct device *dev, const void *desc)
-+{
-+	struct gpiodev_data *data = dev_get_drvdata(dev);
-+	const struct gpio_device *gdev = desc;
-+
-+	return data && data->gdev == gdev;
-+}
-+
-+static struct gpiodev_data *
-+gdev_get_data(struct gpio_device *gdev) __must_hold(&sysfs_lock)
-+{
-+	struct device *cdev __free(put_device) = class_find_device(&gpio_class,
-+								   NULL, gdev,
-+								   match_gdev);
-+	if (!cdev)
-+		return NULL;
-+
-+	return dev_get_drvdata(cdev);
-+};
-+
- /**
-  * gpiod_export - export a GPIO through sysfs
-  * @desc: GPIO to make available, already requested
-@@ -590,12 +615,6 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
- 
- 	guard(mutex)(&sysfs_lock);
- 
--	/* check if chip is being removed */
--	if (!gdev->mockdev) {
--		status = -ENODEV;
--		goto err_clear_bit;
--	}
--
- 	if (!test_bit(FLAG_REQUESTED, &desc->flags)) {
- 		gpiod_dbg(desc, "%s: unavailable (not requested)\n", __func__);
- 		status = -EPERM;
-@@ -719,9 +738,9 @@ EXPORT_SYMBOL_GPL(gpiod_unexport);
- 
- int gpiochip_sysfs_register(struct gpio_device *gdev)
- {
-+	struct gpiodev_data *data;
- 	struct gpio_chip *chip;
- 	struct device *parent;
--	struct device *dev;
- 
- 	/*
- 	 * Many systems add gpio chips for SOC support very early,
-@@ -747,32 +766,41 @@ int gpiochip_sysfs_register(struct gpio_device *gdev)
- 	else
- 		parent = &gdev->dev;
- 
--	/* use chip->base for the ID; it's already known to be unique */
--	dev = device_create_with_groups(&gpio_class, parent, MKDEV(0, 0), gdev,
--					gpiochip_groups, GPIOCHIP_NAME "%d",
--					chip->base);
--	if (IS_ERR(dev))
--		return PTR_ERR(dev);
-+	data = kmalloc(sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->gdev = gdev;
- 
- 	guard(mutex)(&sysfs_lock);
--	gdev->mockdev = dev;
-+
-+	/* use chip->base for the ID; it's already known to be unique */
-+	data->cdev_base = device_create_with_groups(&gpio_class, parent,
-+						    MKDEV(0, 0), data,
-+						    gpiochip_groups,
-+						    GPIOCHIP_NAME "%d",
-+						    chip->base);
-+	if (IS_ERR(data->cdev_base)) {
-+		kfree(data);
-+		return PTR_ERR(data->cdev_base);
-+	}
- 
- 	return 0;
- }
- 
- void gpiochip_sysfs_unregister(struct gpio_device *gdev)
- {
-+	struct gpiodev_data *data;
+@@ -36,7 +36,7 @@ struct gpiod_data {
  	struct gpio_desc *desc;
- 	struct gpio_chip *chip;
  
- 	scoped_guard(mutex, &sysfs_lock) {
--		if (!gdev->mockdev)
-+		data = gdev_get_data(gdev);
-+		if (!data)
- 			return;
+ 	struct mutex mutex;
+-	struct kernfs_node *value_kn;
++	struct kernfs_node *value_class_node;
+ 	int irq;
+ 	unsigned char irq_flags;
  
--		device_unregister(gdev->mockdev);
+@@ -156,7 +156,7 @@ static irqreturn_t gpio_sysfs_irq(int irq, void *priv)
+ {
+ 	struct gpiod_data *data = priv;
+ 
+-	sysfs_notify_dirent(data->value_kn);
++	sysfs_notify_dirent(data->value_class_node);
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -177,10 +177,6 @@ static int gpio_sysfs_request_irq(struct device *dev, unsigned char flags)
+ 	if (data->irq < 0)
+ 		return -EIO;
+ 
+-	data->value_kn = sysfs_get_dirent(dev->kobj.sd, "value");
+-	if (!data->value_kn)
+-		return -ENODEV;
 -
--		/* prevent further gpiod exports */
--		gdev->mockdev = NULL;
-+		device_unregister(data->cdev_base);
-+		kfree(data);
+ 	irq_flags = IRQF_SHARED;
+ 	if (flags & GPIO_IRQF_TRIGGER_FALLING) {
+ 		irq_flags |= test_bit(FLAG_ACTIVE_LOW, &desc->flags) ?
+@@ -203,7 +199,7 @@ static int gpio_sysfs_request_irq(struct device *dev, unsigned char flags)
+ 	 */
+ 	ret = gpiochip_lock_as_irq(guard.gc, gpio_chip_hwgpio(desc));
+ 	if (ret < 0)
+-		goto err_put_kn;
++		goto err_clr_bits;
+ 
+ 	ret = request_any_context_irq(data->irq, gpio_sysfs_irq, irq_flags,
+ 				"gpiolib", data);
+@@ -216,10 +212,9 @@ static int gpio_sysfs_request_irq(struct device *dev, unsigned char flags)
+ 
+ err_unlock:
+ 	gpiochip_unlock_as_irq(guard.gc, gpio_chip_hwgpio(desc));
+-err_put_kn:
++err_clr_bits:
+ 	clear_bit(FLAG_EDGE_RISING, &desc->flags);
+ 	clear_bit(FLAG_EDGE_FALLING, &desc->flags);
+-	sysfs_put(data->value_kn);
+ 
+ 	return ret;
+ }
+@@ -242,7 +237,6 @@ static void gpio_sysfs_free_irq(struct device *dev)
+ 	gpiochip_unlock_as_irq(guard.gc, gpio_chip_hwgpio(desc));
+ 	clear_bit(FLAG_EDGE_RISING, &desc->flags);
+ 	clear_bit(FLAG_EDGE_FALLING, &desc->flags);
+-	sysfs_put(data->value_kn);
+ }
+ 
+ static const char *const trigger_names[] = {
+@@ -726,8 +720,16 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
+ 		goto err_free_data;
  	}
  
- 	guard(srcu)(&gdev->srcu);
-@@ -798,9 +826,6 @@ static int gpiofind_sysfs_register(struct gpio_chip *gc, const void *data)
- 	struct gpio_device *gdev = gc->gpiodev;
- 	int ret;
++	data->value_class_node = sysfs_get_dirent(dev->kobj.sd, "value");
++	if (!data->value_class_node) {
++		status = -ENODEV;
++		goto err_unregister_device;
++	}
++
+ 	return 0;
  
--	if (gdev->mockdev)
--		return 0;
--
- 	ret = gpiochip_sysfs_register(gdev);
- 	if (ret)
- 		chip_err(gc, "failed to register the sysfs entry: %d\n", ret);
-diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-index 58f64056de77b05e8cbcb2395a55da793b1a52fa..9b74738a9ca5b1a4826c8d56d871f8a7cf6ea1e7 100644
---- a/drivers/gpio/gpiolib.h
-+++ b/drivers/gpio/gpiolib.h
-@@ -27,8 +27,6 @@
-  * @dev: the GPIO device struct
-  * @chrdev: character device for the GPIO device
-  * @id: numerical ID number for the GPIO chip
-- * @mockdev: class device used by the deprecated sysfs interface (may be
-- * NULL)
-  * @owner: helps prevent removal of modules exporting active GPIOs
-  * @chip: pointer to the corresponding gpiochip, holding static
-  * data for this device
-@@ -65,7 +63,6 @@ struct gpio_device {
- 	struct device		dev;
- 	struct cdev		chrdev;
- 	int			id;
--	struct device		*mockdev;
- 	struct module		*owner;
- 	struct gpio_chip __rcu	*chip;
- 	struct gpio_desc	*descs;
++err_unregister_device:
++	device_unregister(dev);
+ err_free_data:
+ 	kfree(data);
+ err_clear_bit:
+@@ -804,6 +806,7 @@ void gpiod_unexport(struct gpio_desc *desc)
+ 
+ 		data = dev_get_drvdata(dev);
+ 		clear_bit(FLAG_EXPORT, &desc->flags);
++		sysfs_put(data->value_class_node);
+ 		device_unregister(dev);
+ 
+ 		/*
 
 -- 
 2.48.1
