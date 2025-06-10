@@ -1,138 +1,129 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E02B5284B5F;
-	Tue, 10 Jun 2025 21:19:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34E228314C;
+	Tue, 10 Jun 2025 21:19:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749590386; cv=none; b=AcZCiafOvSeAC35FJ6hk/ixdKsMQMV6mn7MdVWIR5uEoMg7qTR0+KVipPNKaV5T+HMxOuzv6Bfge5lSL8Vd9bpHWUOWdmWnCL14a5UKsy0VIedp5fZtCfo6fqMWORfuXppB1QoFhYFn+XVKpuiWvaCSoxiQ7EQ1uJplb/VTPjKA=
+	t=1749590398; cv=none; b=NNP/eYTQu0Bh0hhDP5I7UM+//oWdU0sSCFcPOS/wF9rO9hYUX6A54yTcifaVr3WBUywphr3lR28uXgECGWujHbt6tQHyiM3nV9mJLqtqJ8BF2y2a5B765sdUt6/xq2sTPp8XXjsaGzyiXjigFPtahQMo18wFBvLEcb/VRMO/ie0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749590386; c=relaxed/simple;
-	bh=WH8RQf6bUZn016PysqDM75R3nB09GwE/tGFYUasp/ww=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Wc1p4/H4/zPU/nFmmHbbMHuYk1T4qJ+eK7ndukMA+imB2SX54cKuOT1t1kKd0qWwXyt/3y/WoURIfKrbzwPoH9uqRoRWJ/0Iel8Az5W0vL/gLM0raB33K+P3e4ioMlD/8JCn9J3fXLeWc6kLPIVDb0T7VKqxb+8xwx5GbIC81jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OidWgXIS; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1749590398; c=relaxed/simple;
+	bh=psl2yGFKwIeajZS8qg8mt/cUrID+Wsj3xhRh7GlCvFs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j3WPCI/W96DDx4oVHBVKakp0xNzk0bZ5+Vg4huVIiWoEfbYR1Y7SJ0N9zt9G9tmWB4I6nfKjwyVtckWqL8Je7+QKN8ro7q5aqmzxZrg2exwQSmcRgmsx2YxI0/UTogXcKU0Ifn75fMJvS7kMlOLSNeZnvKaIBwe3eaZh+7O5qBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JhJ2xPQJ; arc=none smtp.client-ip=209.85.217.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OidWgXIS"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55AGFtYw008154;
-	Tue, 10 Jun 2025 21:19:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=qwvXwgQXJIkG0QGSj
-	4RsHe537NK9WFzkfnyk5v2o2AI=; b=OidWgXIS7o+r7++GArplKJ7P6K+PIM2sK
-	UuRkz9EVD63L0Q9uM8JUfJ0SOJR1jJf3D8v0JF5ISc2t5NI54ymv/4hfk1lTm2ce
-	G8kZIiPWcZfPoi87TMrxwpGwgv3fvnVCeZuanlTxUSLRwfDwSJzfeoInkCVQK591
-	Wp4aqS/Je9WcAmyl//JJcm3DW/KJRHCLkr4PnCLG62FrYtT/0tn1yzbiTWVDcTSB
-	MqBtFBdq1ZTOTs43JLDyLrf5/D0osdWup7J+65AXhAUZ0vaRUBhyw2XkW7HMTz3M
-	Dbjh/7oOtRfZpAOPHJDz+NOFttTGCHWfMkdhcuWAOKpdEvNyIXbSg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 474x4m60pu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Jun 2025 21:19:26 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55ALDuet019150;
-	Tue, 10 Jun 2025 21:19:26 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 474x4m60pq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Jun 2025 21:19:26 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55AJnWJr015186;
-	Tue, 10 Jun 2025 21:19:25 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 474yrtcqbb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Jun 2025 21:19:25 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55ALJLFc29426324
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 10 Jun 2025 21:19:21 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BC91D2004E;
-	Tue, 10 Jun 2025 21:19:21 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DDA4520043;
-	Tue, 10 Jun 2025 21:19:18 +0000 (GMT)
-Received: from li-fc74f8cc-3279-11b2-a85c-ef5828687581.ibm.com.com (unknown [9.39.26.197])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 10 Jun 2025 21:19:18 +0000 (GMT)
-From: Srish Srinivasan <ssrish@linux.ibm.com>
-To: linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc: maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
-        christophe.leroy@csgroup.eu, naveen@kernel.org, ajd@linux.ibm.com,
-        zohar@linux.ibm.com, nayna@linux.ibm.com, rnsastry@linux.ibm.com,
-        msuchanek@suse.de, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 3/3] integrity/platform_certs: Allow loading of keys in the static key management mode
-Date: Wed, 11 Jun 2025 02:49:07 +0530
-Message-ID: <20250610211907.101384-4-ssrish@linux.ibm.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250610211907.101384-1-ssrish@linux.ibm.com>
-References: <20250610211907.101384-1-ssrish@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JhJ2xPQJ"
+Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-4e7b69c1efcso234870137.2;
+        Tue, 10 Jun 2025 14:19:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749590396; x=1750195196; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bW+KcteMx3KUNTcvwakQQLo/YUGvViEhrbAatOOYWoE=;
+        b=JhJ2xPQJYNq8gwxP9O2sCbI/jIGQ3SVGKLa6oKyhSZvR08CjZqjqa8mW2oOiSxBBAt
+         mP/vhYdh+bzdtjarQ5BgEsexq5+vY75uHz4AgMGlCN443Nzfhlsjzab+yVHN5t/ppcGN
+         qmPJXPaTVqf9yEwioCdwjJ/k4fBLyF054Gzd617MGdHJv6gNpRQ1YHOvF/T8x6uqHFjy
+         r6IqQQEgLD5LClB+XCpHOGFf3VsUPaAuLQiP9VqdqRMamYqz52x6q7yDKgjYFUYyF9c6
+         2ESgkpKhO+Cm6tzj7EnZTidiGhyEDo8J3yydGZl4QXUkmaw4APRagEiTYzAjxbwY+cX+
+         cp+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749590396; x=1750195196;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bW+KcteMx3KUNTcvwakQQLo/YUGvViEhrbAatOOYWoE=;
+        b=C0GHgxriSD2afUYvfMJIqIjCEMVJi8BWpWgsIwHKp4Sgajm44H26Boq0wSVRgAERFV
+         VSmj6yb5MtZ9JpCGDvlrJ2h806Lg9EMYmE1OMzVDQT9phHozipbnHXPwPy4O1EPxNOw8
+         Xb0p64377RilHMWhD+PoXlmrqALjqfcmf5KzAUxsOxtijSmJPk9qtX/wh0LI39+O9znO
+         G56lO7oyMD+Dmb4ZkxxSpMVZajHCuJWg6+4d5Q50yfWBzu0mVTIeTcFHXpuiPQYTex9W
+         uiC4ak4pCN/H8iob4XknsgUUd3zWAbyTkfDCfKtBVERHQe9BNE1M4K6Wjavs7kPyCqqS
+         sfBA==
+X-Forwarded-Encrypted: i=1; AJvYcCUtFw8cPARGbXh/JS3jcLM5jSFgvF3AbJA2nmjxQpZU8PwLNvrMonEkaTj7xwkplrnlIfeayjQ6Efxkk2k=@vger.kernel.org, AJvYcCWvGPYEPuzQ0yahJhO8+jKHkMR7rnQKn6JE5c/HeqVOEIwkv4jJ2uI13qC3Pw7VHjEs23kKEnPkM7h7@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9cyvv83MwpeF4k90HJLlSZKeBzK0FIhLKVbStx6adCzNOwrLh
+	SWOIb+1e5dmLQnFQmOepB5iVHNccvHDtd0w77VG4wC4Y7XI8k5vQM/Z9
+X-Gm-Gg: ASbGncsUKocrYumIXIdyQWDaPNI9zCtMfxj83EUBVAX9efaa4OsizZvWhRX/H3g+zPg
+	FF4yYE9UERAFmYCSpeieX/IKX7tVghRM4ZQJTMCeugH1nIQzyJHM1f1Ao9e5u5pAxfkujG+6vuW
+	LD9nHAA6zE8JOioqfvhDiwHdsqFTLt9CZF6NVxg9QSpMxGwTuaSpwqVFAqbpk9t8toUbBzPEca0
+	XxKAbigNutfYA6kA7+BV4bRJJOCwHtywyIeDkCyKBdqOg/+nxDT4wmG6NFHkqtEv7P/vSBWdVgg
+	gU2MK6AvN8nXEmQzvCGmSoq+PpGNHMxHRNjTdSlK6YIYbfoKVQ==
+X-Google-Smtp-Source: AGHT+IFUKOR2IsRTBdY8aOGnyv438Gl/440UbjAA3/JAat2G2nQmpyhEiA+RhR87ZqQsV+IyUokALA==
+X-Received: by 2002:a05:6102:4b1c:b0:4e5:918b:5321 with SMTP id ada2fe7eead31-4e7bafde5b6mr1050769137.25.1749590395586;
+        Tue, 10 Jun 2025 14:19:55 -0700 (PDT)
+Received: from geday ([2804:7f2:800b:5ce9::dead:c001])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4e7baeb6337sm382957137.3.2025.06.10.14.19.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 14:19:55 -0700 (PDT)
+Date: Tue, 10 Jun 2025 18:19:49 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: linux-rockchip@lists.infradead.org
+Cc: Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v2 1/4] PCI: pcie-rockchip: add Link Control and Status
+ Register 2
+Message-ID: <28ae3286f3217881ae6ea3aecad47ae4567d6ec7.1749588810.git.geraldogabriel@gmail.com>
+References: <cover.1749588810.git.geraldogabriel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Y4X4sgeN c=1 sm=1 tr=0 ts=6848a15e cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=AtMIOgTZpS777Q0Lz8kA:9
-X-Proofpoint-GUID: q4zdhWag_zhb8L3Jjsh8UOPm_I5jTCnc
-X-Proofpoint-ORIG-GUID: WBQR6cdcqVUld135lsKeaseqYHLNtSzL
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDE3NCBTYWx0ZWRfX7+ftWgf99YPY s2K6Uk+PpWPaMygwPvgeoCzzIXnkyurHiVVjmEwFS7moS/HSu4153k+AKN1GRNR8+tBQYtPwKrR jgs3l55QijI04p69N2XKzlfGTtjwSyCBxMbeiZtA+J+hfqvwM4vv+0+p9H4ow3VSZOL3K5Q6Iw2
- hbv+BE8O45e0I5rlk4/7/KSbaCcqcRUFv6U/4SiAoZute6BPojSi09czWmlNNks1nVVGLjeeHMa 5lAILmToOqBtA1b6kNEzwFnibV8lQVIu1z/5YqJY6pA1HVDm8Bndooc3PkBt5svotLN939pT8dZ OYSFkFuWm7xl46EtMx6/buRojMKfqF5KAqjVmH539//OVRGYzRxgFYDGIRyjLjd5Xxprg9BBgKt
- D03J3G9XZHhNzIEIECEJh5Pt5+hywxfCKVtrkXWVGoD9DIPHEWIXkE9i6QPU7ZDQCaIE2wTS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-10_10,2025-06-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
- clxscore=1015 lowpriorityscore=0 malwarescore=0 bulkscore=0 adultscore=0
- impostorscore=0 suspectscore=0 phishscore=0 mlxscore=0 priorityscore=1501
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506100174
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1749588810.git.geraldogabriel@gmail.com>
 
-On PLPKS enabled PowerVM LPAR, there is no provision to load signed
-third-party kernel modules when the key management mode is static. This
-is because keys from secure boot secvars are only loaded when the key
-management mode is dynamic.
+Link Control and Status Register 2 is not present in current
+pcie-rockchip.h definitions. Add it in preparation for
+setting it before Gen2 retraining.
 
-Allow loading of the trustedcadb and moduledb keys even in the static
-key management mode, where the secvar format string takes the form
-"ibm,plpks-sb-v0".
+While at it, also reference other registers from offset at
+Capabilities Register through standard PCI definitions. Only
+RC registers have been touched, although in principle there's
+no functional change.
 
-Signed-off-by: Srish Srinivasan <ssrish@linux.ibm.com>
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-Reviewed-by: Nayna Jain <nayna@linux.ibm.com>
-Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
 ---
- security/integrity/platform_certs/load_powerpc.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/pci/controller/pcie-rockchip.h | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/security/integrity/platform_certs/load_powerpc.c b/security/integrity/platform_certs/load_powerpc.c
-index c85febca3343..714c961a00f5 100644
---- a/security/integrity/platform_certs/load_powerpc.c
-+++ b/security/integrity/platform_certs/load_powerpc.c
-@@ -75,12 +75,13 @@ static int __init load_powerpc_certs(void)
- 		return -ENODEV;
- 
- 	// Check for known secure boot implementations from OPAL or PLPKS
--	if (strcmp("ibm,edk2-compat-v1", buf) && strcmp("ibm,plpks-sb-v1", buf)) {
-+	if (strcmp("ibm,edk2-compat-v1", buf) && strcmp("ibm,plpks-sb-v1", buf) &&
-+	    strcmp("ibm,plpks-sb-v0", buf)) {
- 		pr_err("Unsupported secvar implementation \"%s\", not loading certs\n", buf);
- 		return -ENODEV;
- 	}
- 
--	if (strcmp("ibm,plpks-sb-v1", buf) == 0)
-+	if (strcmp("ibm,plpks-sb-v1", buf) == 0 || strcmp("ibm,plpks-sb-v0", buf) == 0)
- 		/* PLPKS authenticated variables ESL data is prefixed with 8 bytes of timestamp */
- 		offset = 8;
- 
+diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
+index 5864a20323f2..90d98aa8830e 100644
+--- a/drivers/pci/controller/pcie-rockchip.h
++++ b/drivers/pci/controller/pcie-rockchip.h
+@@ -155,17 +155,19 @@
+ #define PCIE_EP_CONFIG_DID_VID		(PCIE_EP_CONFIG_BASE + 0x00)
+ #define PCIE_EP_CONFIG_LCS		(PCIE_EP_CONFIG_BASE + 0xd0)
+ #define PCIE_RC_CONFIG_RID_CCR		(PCIE_RC_CONFIG_BASE + 0x08)
+-#define PCIE_RC_CONFIG_DCR		(PCIE_RC_CONFIG_BASE + 0xc4)
++#define PCIE_RC_CONFIG_CR		(PCIE_RC_CONFIG_BASE + 0xc0)
++#define PCIE_RC_CONFIG_DCR		(PCIE_RC_CONFIG_CR + PCI_EXP_DEVCAP)
+ #define   PCIE_RC_CONFIG_DCR_CSPL_SHIFT		18
+ #define   PCIE_RC_CONFIG_DCR_CSPL_LIMIT		0xff
+ #define   PCIE_RC_CONFIG_DCR_CPLS_SHIFT		26
+-#define PCIE_RC_CONFIG_DCSR		(PCIE_RC_CONFIG_BASE + 0xc8)
++#define PCIE_RC_CONFIG_DCSR		(PCIE_RC_CONFIG_CR + PCI_EXP_DEVCTL)
+ #define   PCIE_RC_CONFIG_DCSR_MPS_MASK		GENMASK(7, 5)
+ #define   PCIE_RC_CONFIG_DCSR_MPS_256		(0x1 << 5)
+-#define PCIE_RC_CONFIG_LINK_CAP		(PCIE_RC_CONFIG_BASE + 0xcc)
++#define PCIE_RC_CONFIG_LINK_CAP		(PCIE_RC_CONFIG_CR + PCI_EXP_LNKCAP)
+ #define   PCIE_RC_CONFIG_LINK_CAP_L0S		BIT(10)
+-#define PCIE_RC_CONFIG_LCS		(PCIE_RC_CONFIG_BASE + 0xd0)
++#define PCIE_RC_CONFIG_LCS		(PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL)
+ #define PCIE_EP_CONFIG_LCS		(PCIE_EP_CONFIG_BASE + 0xd0)
++#define PCIE_RC_CONFIG_LCS_2		(PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL2)
+ #define PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2 (PCIE_RC_CONFIG_BASE + 0x90c)
+ #define PCIE_RC_CONFIG_THP_CAP		(PCIE_RC_CONFIG_BASE + 0x274)
+ #define   PCIE_RC_CONFIG_THP_CAP_NEXT_MASK	GENMASK(31, 20)
 -- 
-2.47.1
+2.49.0
 
