@@ -1,127 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6654929993B;
-	Tue, 10 Jun 2025 12:37:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6347A2BDC14
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:37:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749559071; cv=none; b=ZeAaRqf09nC7tXmR2MZ6VRzhzqMUruDkB6L4F8PUBOYayTNqIXNkww0XOVwINQVSGCfzZ7nezKM+K/qslfbvptbIc0ELhHitLsQYkyi9y2AXLoXf2o8SctObu8yMCkWWgIqMjnKtdRCkKsfC/PzQGQUm35a9L4jliIK8vk5svNc=
+	t=1749559078; cv=none; b=qoKlpV1HnYEJ0uwu6PoVugVUlgPp1W4/9yFkdf8L8J421v1A8AaZU2EcsK7txHp89QG/m7y/WKNAjgs5h3zuvIF2GUV7C0Pb39djpL13F7NR24REbJJ8utsQ1+HKHePXzf51aCGkwo+/8cUyxvYKzTXp5qN9AAFJTkP5xOpEIVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749559071; c=relaxed/simple;
-	bh=ArW2/cfjiYvgjVqObVhL4JL7syCfeOsoHCZCVAJhKW0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Oshnwk1kwG5eC2UtE5e6CZRm6wTeGIe4pfZl2rqObcntA18F1bTJJgIk0SSgVrYSBvhC6Q9e9Sw9c6543AP7u6cdiVme3olQhIoZd9l+lMVpH/dLNGNu70wnEnPO40gIAJWqaCDKxheIvIwR8fy8epQOaGXMLpnDSV9+7uozuVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FZxoyScq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749559078; c=relaxed/simple;
+	bh=VOzkxpypoaAOmED5Y3QuE5bGmiiKDU7pwO5eKvb2ZuM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=p9QT4ZfyplYS5SAj1da02EC2jCNYru/guB+PtUpx6Na9tez8Eqs5KJTElAA2goO+vDamygXVyn3NNwslKkNaeV8SwCi693MRoG2HEQrTwV8W+7RUTUOWEdjK5RRe3PFEsn9QQDkpYsRmg6Y+81FmZfCw1P3tW7WIj/+ZFcwzWE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=D76MU4v0; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FZxoyScq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FF07C2BCF5;
-	Tue, 10 Jun 2025 12:37:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749559071;
-	bh=ArW2/cfjiYvgjVqObVhL4JL7syCfeOsoHCZCVAJhKW0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FZxoyScq8bX45QEcKl3p5GJFAdqQW+EH8RJ5OaXuUPgCeqcLK5ohNb/mUF30klThu
-	 6Xwb9AvTawJdL5IBbNoEwX8f9CE5qH8Z940URNj7Ov+swW8fgi59W55pFLycjDxDuX
-	 Wwu+GY+oyIkEgAsnEBCNmDBDl0p3rQMFHIgMtkk6qXxv3P2uyF2DQelPai06zdTTm5
-	 7eUZaoAEa2oNTPsVeusnYif289ARMpx29C8OtOwtehv+1R7nsBZc3gY05/3Ixj69tr
-	 3xeZjOM/c40VkH6g5+drH98IgCUJD+bRTCQa6cLa7Z5oKLsc7fr6+3fnZATTOyi7Qg
-	 FthpJB/nf/fQA==
-Message-ID: <01b5a85d-05f5-4f39-9581-c6fed7123a31@kernel.org>
-Date: Tue, 10 Jun 2025 14:37:46 +0200
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D76MU4v0"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-55365c63fa5so4605093e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 05:37:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1749559071; x=1750163871; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=VErfzveBAbUjLmCpN+lf4azG2Ow/Gi7oziw0c95kQ9c=;
+        b=D76MU4v0x7KrvFIpmQoc15Ji/8GcEmESzluWpiVkOyZfK0bh1eds1JcvuhET3mAmHJ
+         Kb5bSVyqCeRQ/FpSzADOk9cpgJO7TTujuZxkVmqgHx3M3pp3HzklhIGEZE22iBWZJHon
+         PeKvTwvND4YJts4kPyMaB1qC678Ap7XN20LeA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749559071; x=1750163871;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VErfzveBAbUjLmCpN+lf4azG2Ow/Gi7oziw0c95kQ9c=;
+        b=Pg1VtQ8Pg0EZkBDsqAjkR80wKYaLG+Y8G+TrXnSu0OWk0qVQWactiTBJqd/Rjz4fGg
+         xlgc1DJkkYUkJoCOqra3LgscH/gwyDjEeOQ3hh2M83cEqm1y71DbCcX/u5tNgQN1hcMA
+         iKRqFZg4ie3TtzuOmqm7ktlldoJ+4rUAbQnM4HSX/sXxIqkpat6a8ISxhs+6nXeKpXty
+         oakK6gggegCwOMEIHoKIZqYZTP1hizKxcx2C5cMI0xc+w2osYcVD64su4tNBCj3XrJvX
+         OgSRBMtvnTH+uln2aAkB98/YfFzvZWzyhqCFzdO7mmNdNb6zwYmOrS+6R08OvEeuaw3Z
+         Mmyg==
+X-Forwarded-Encrypted: i=1; AJvYcCVWgnLntX8UWWS123Nn2w8GmtEm90yWeu3/R0CvH8/UNToRPIAAin/uYvrMTpvGzgYo8CwjT7U33B8DnVQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzk/e+yAfHjkVCLLOaJpMIkgcXWSkFFQtfWLmo9DjpXrYNpKVNX
+	qThREVyzHeD4S5AGpq2M+5ztMbvuOqOTgE2p/z9QJCDPOD1EdMTtfP0AxkqNUVUfYQpHG7ITjKn
+	M75Y=
+X-Gm-Gg: ASbGncs9tV/Jxk9B6ORHiVVO544PmlI5dWk/CW6KQTgVb0L6+606QESOQEX0dTuKRdF
+	rTx8eXISjfD3bSQKB1OkxeOtsz7HBS4dsX8tdxs8q/tYjtjV5Gje8HCTbaUYtg+Zw//+1J5S77R
+	LVOc1Q/3VtvDmPEG1KTh67PSQA+BVkqZbvtuC6I7TkrLvrP8J2eOoNx7CRIp1MaUv1FfSUP2Xf1
+	1biNqAz6gc1ea5RILW07nIpo/NWZWvYWiB+BnQ4ZOMmojQLTiMy6yCfRWE/H01PDUki7XuuJzAT
+	meDqBEN1BV7grmgOcaW4dj3eu7pbEzLlSfcizS/b8nLV6wREJiuv6xFxPxi+FazOI+0QsdpJgMm
+	PTyTnVAdwH+9dPUEFqFoLhUUn
+X-Google-Smtp-Source: AGHT+IEdyz5baFF+tP7pwz1yZVjq2mVr3rMKWewc9niTOjr/vOOgB0vp/bFU+nij/ve0/kcQpv4ksg==
+X-Received: by 2002:a05:6512:2242:b0:553:3892:5ec3 with SMTP id 2adb3069b0e04-55366c354f4mr4291820e87.46.1749559071016;
+        Tue, 10 Jun 2025 05:37:51 -0700 (PDT)
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55367731785sm1534773e87.216.2025.06.10.05.37.50
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Jun 2025 05:37:50 -0700 (PDT)
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-551fc6d4a76so5787411e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 05:37:50 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXK3Vsh7dQtPYDV8cGr0fMSBuOU4c0hNBG97Wr3GClShJ+CE1pghs8i+K9M224GKG0c6+FT2K5b3ELvHCU=@vger.kernel.org
+X-Received: by 2002:a05:6512:3c8b:b0:553:279b:c55d with SMTP id
+ 2adb3069b0e04-55366c2ff61mr4456065e87.45.1749559069957; Tue, 10 Jun 2025
+ 05:37:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/9] Introduce HDP support for STM32MP platforms
-To: Clement LE GOFFIC <clement.legoffic@foss.st.com>,
- Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20250528-hdp-upstream-v4-0-7e9b3ad2036d@foss.st.com>
- <CACRpkdZ2NUfcn7O7tKSFDyAr8Hni3pvpTN6QpOz7N3J+EsFdLg@mail.gmail.com>
- <3a9e5a1b-41fd-4ddf-938a-bed98551a024@foss.st.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <3a9e5a1b-41fd-4ddf-938a-bed98551a024@foss.st.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <CGME20250610123532epcas1p24565e694897b17a36ad04752b7dd8678@epcas1p2.samsung.com>
+ <20250610123526.37316-1-yjjuny.lee@samsung.com>
+In-Reply-To: <20250610123526.37316-1-yjjuny.lee@samsung.com>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Tue, 10 Jun 2025 14:37:37 +0200
+X-Gmail-Original-Message-ID: <CANiDSCsTm7-kxS0C6H_JY7NnC3z73Qg9L7d6M37p4Zao1+96EA@mail.gmail.com>
+X-Gm-Features: AX0GCFt5eSrh6Ot3mJNfS0FZ18dU3T5t8BB_D6IPh7jhlV2rISHnMB5fsHFWlWU
+Message-ID: <CANiDSCsTm7-kxS0C6H_JY7NnC3z73Qg9L7d6M37p4Zao1+96EA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] usb: uvc: Fix 1-byte out-of-bounds read in uvc_parse_format()
+To: Youngjun Lee <yjjuny.lee@samsung.com>
+Cc: laurent.pinchart@ideasonboard.com, hdegoede@redhat.com, mchehab@kernel.org, 
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 10/06/2025 14:20, Clement LE GOFFIC wrote:
-> On 6/5/25 15:03, Linus Walleij wrote:
->> On Wed, May 28, 2025 at 3:33 PM Clément Le Goffic
->> <clement.legoffic@foss.st.com> wrote:
->>
->>> Clément Le Goffic (9):
->>>        gpio: mmio: add BGPIOF_NO_INPUT flag for GPO gpiochip
->>>        dt-bindings: pinctrl: stm32: Introduce HDP
->>>        pinctrl: stm32: Introduce HDP driver
->>>        MAINTAINERS: add Clément Le Goffic as STM32 HDP maintainer
->>
->> Can I apply the driver and bindings patches 1-4 separately
->> from the rest of the series?
-> 
-> The MAINTAINERS file will need a fix in the future revision.
-> I'll wait Krzysztof answers before submitting a V5 with the fix.
-> 
-> Otherwise patch 1-3 can be merged, but I think you may need the 
+I think you mean v2 not 2/2
 
-No, they cannot be merged. They were unreviewed because they were never
-tested by the author and will obviously break the next.
+On Tue, 10 Jun 2025 at 14:35, Youngjun Lee <yjjuny.lee@samsung.com> wrote:
+>
+> The buffer length check before calling uvc_parse_format() only ensured
+> that the buffer has at least 3 bytes (buflen > 2), buf the function
+> accesses buffer[3], requiring at least 4 bytes.
+>
+> This can lead to an out-of-bounds read if the buffer has exactly 3 bytes.
+>
+> Fix it by checking that the buffer has at least 4 bytes in
+> uvc_parse_format().
+>
+Fixes: c0efd232929c ("V4L/DVB (8145a): USB Video Class driver")
+Cc: stable@vger.kernel.org
+Reviewed-by: Ricardo Ribalda <ribalda@chromium.org>
+> Signed-off-by: Youngjun Lee <yjjuny.lee@samsung.com>
+> ---
+>  drivers/media/usb/uvc/uvc_driver.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+> index da24a655ab68..1100469a83a2 100644
+> --- a/drivers/media/usb/uvc/uvc_driver.c
+> +++ b/drivers/media/usb/uvc/uvc_driver.c
+> @@ -344,6 +344,9 @@ static int uvc_parse_format(struct uvc_device *dev,
+>         u8 ftype;
+>         int ret;
+>
+> +       if (buflen < 4)
+> +               return -EINVAL;
+> +
+>         format->type = buffer[2];
+>         format->index = buffer[3];
+>         format->frames = frames;
+> --
+> 2.43.0
+>
 
-Don't apply.
 
-Best regards,
-Krzysztof
+-- 
+Ricardo Ribalda
