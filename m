@@ -1,74 +1,160 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F99239E9C
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 17:34:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8D62367CC;
+	Tue, 10 Jun 2025 17:34:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749576844; cv=none; b=tQsfvNSbGV7p5efVtRAomJokMW1YNZaYNoEMN3Bg1QhNmy92cA7WUfTVwnqekv8lFJ2/Jjfkf6Ec4B35aiMUNoXzC8wFH7TjwMFG4unachdNyUcZ+Oxp+WOhj01neZFVrY+VsNQ3Th+JWBAE8IyqNTY9UJpBp+KeFn499jhhhCo=
+	t=1749576860; cv=none; b=tvUQ9p9Ufvedf+T/hMIaDk3yXdtfU//HTQx60dDdTf4PWTTCuUsmaSzZ87gSQcSP2Wk8Mb+tSSzX+L5Go3GaztrxkSJV3SXs2H+/bzIAawI8cqpjN+rkbuuNgnDzKxG0kHWSqBBH8rqDEiNt7YsHmIOX8NrwqG9a4i6wrCF8Ilw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749576844; c=relaxed/simple;
-	bh=1B4bj1bKCWDx4kIdDX5qBX73gONB/Hts3pl9yTz+RAY=;
+	s=arc-20240116; t=1749576860; c=relaxed/simple;
+	bh=r0iZ2Pb8qBk4fg/2LTSgcyfMLeF15guSoN8V+6upqsg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GuWzVvo4D2aN5doV7ZSSPwp3KbhSwXzDL5u5Of9f+TDElniOZJHVDNafph7DQ635QGR4Jd8HNN+DUvFGdGLC/7Nu6O7kzvF7ZU77kiuau/pCoHyYViW+bJmrfHdy9erYGlzYy8m+NB2izKGn5k3u8fh7onC6GsIiS1PQS7z+F1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=azpYtPJJ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZIJoe7yi78qFgJc/w12RPu1/4HQAv6iqH1MJ7OjOV6b6qTdggTw0gLGFhwolPzRi5Wtn12prTy2XfiTizUrm6DKtByIbECnYfdGlJ4HNHREFdXeUZ3TuqJhgqWECTl/JsECAffaRKALd7SS2XoAFbPLCj/yHJ5JA3EQviNeoHU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f7mTbqcV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="azpYtPJJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA895C4CEED;
-	Tue, 10 Jun 2025 17:34:02 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="azpYtPJJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1749576841;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JluJY1ImLnnCY9XXjQmblvCgU4/bT/f4wBo1nGnTA6Q=;
-	b=azpYtPJJsgfQ28D/ZBGVNuX6xb7wjCzLPR221Apk9+tWAPixiLQmo/Rp8SoKEEa0PToxJV
-	IxAlr51CK++mfNLmXMh44gn4F48zqKbZ+Gm0UBeXPNpeg0363T4rIzvC9iTDSPLVY7wrNc
-	oa3QomrgEP9huJbAb6qSIJr1B1FBx+w=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 969cde82 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Tue, 10 Jun 2025 17:33:59 +0000 (UTC)
-Date: Tue, 10 Jun 2025 11:33:46 -0600
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Theodore Ts'o <tytso@mit.edu>, Arnd Bergmann <arnd@arndb.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>, Eric Biggers <ebiggers@google.com>,
-	Joel Granados <joel.granados@kernel.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] random: use offstack cpumask when necessary
-Message-ID: <aEhsekBWuP51sWRZ@zx2c4.com>
-References: <20250610092712.2641547-1-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f7mTbqcV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA3CCC4CEF2;
+	Tue, 10 Jun 2025 17:34:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749576859;
+	bh=r0iZ2Pb8qBk4fg/2LTSgcyfMLeF15guSoN8V+6upqsg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=f7mTbqcVRdxIdlDpEjH4CeKNmi/aSrdr/0FOGFF6oAT0oV0t1LATT9qZIpqlJrFcC
+	 QKRdoUAbP+pYbLX9a0Y7xzPTsNUmRzJlD58wzyiRnrf4d/5Yv+E1Qmh9suleqhf0Bu
+	 3OR98SOWseL0tj9EsXV2F2cRdfEUIFpJdWn1K7aGsOGzgAQSr5KIMf27FxqoT99VWV
+	 1K4NnZM8cMNjVeI3bVzi6mCLsdRaDA1dAKA9R91AlHxqf58ai10uTIQAKe2mDY/hdB
+	 eI5+Kh+AsAS0DW/RNQe/Swqm+SBqmOYlM0o9b+9a3AK3G6tdZR6SFhJS6MaqlhWIod
+	 XogS65rOgY/6g==
+Date: Tue, 10 Jun 2025 12:34:17 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Konrad Dybcio <konradybcio@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, patches@lists.linux.dev, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Benson Leung <bleung@chromium.org>, devicetree@vger.kernel.org, chrome-platform@lists.linux.dev, 
+	Pin-yen Lin <treapking@chromium.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: usb: Add binding for ChromeOS Pogo
+ pin keyboard connector
+Message-ID: <bskramnbdsoxdjuqmevt7mtcylottyd4jtwa5svz565ceqzflx@orivp6ypzksk>
+References: <20250225223038.879614-1-swboyd@chromium.org>
+ <20250225223038.879614-2-swboyd@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250610092712.2641547-1-arnd@kernel.org>
+In-Reply-To: <20250225223038.879614-2-swboyd@chromium.org>
 
-Hi Arnd,
-
-On Tue, Jun 10, 2025 at 11:27:08AM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On Tue, Feb 25, 2025 at 02:30:36PM -0800, Stephen Boyd wrote:
+> Describe the set of pins used to connect the detachable keyboard on
+> detachable ChromeOS devices. The set of pins is called the "pogo pins".
+> It's basically USB 2.0 with an extra pin for base detection. We expect
+> to find a keyboard on the other side of this connector with a specific
+> vid/pid, so describe that as a child device at the port of the usb
+> device connected upstream.
 > 
-> The entropy generation function keeps a local cpu mask on the stack, which
-> can trigger warnings in configurations with a large number of CPUs:
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
+> Cc: Conor Dooley <conor+dt@kernel.org>
+> Cc: Benson Leung <bleung@chromium.org>
+> Cc: <devicetree@vger.kernel.org>
+> Cc: <chrome-platform@lists.linux.dev>
+> Cc: Pin-yen Lin <treapking@chromium.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+
+Still waiting for the binding (patch 1) to be picked up in the USB
+subsystem, or an ack...so that I can pick the dts change.
+
+Binding looks good to me.
+
+Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+
+Regards,
+Bjorn
+
+> ---
+>  .../usb/google,usb-pogo-keyboard.yaml         | 68 +++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/google,usb-pogo-keyboard.yaml
 > 
-> drivers/char/random.c:1292:20: error: stack frame size (1288) exceeds limit (1280) in 'try_to_generate_entropy' [-Werror,-Wframe-larger-than]
+> diff --git a/Documentation/devicetree/bindings/usb/google,usb-pogo-keyboard.yaml b/Documentation/devicetree/bindings/usb/google,usb-pogo-keyboard.yaml
+> new file mode 100644
+> index 000000000000..053c1cfed6d4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/google,usb-pogo-keyboard.yaml
+> @@ -0,0 +1,68 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/usb/google,usb-pogo-keyboard.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Google USB Pogo Pin Keyboard
+> +
+> +maintainers:
+> +  - Stephen Boyd <swboyd@chromium.org>
+> +
+> +description:
+> +  ChromeOS devices with a detachable keyboard have a set of five pogo pins that
+> +  are the typical four pins for USB (D+/D-, VBUS, GND) and an extra pin for
+> +  base detection. The detachable keyboard is a USB device that connects to the
+> +  four USB pogo pins.
+> +
+> +properties:
+> +  compatible:
+> +    const: google,usb-pogo-keyboard
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +  port:
+> +    $ref: /schemas/graph.yaml#/properties/port
+> +    description: Connection to USB2 port providing USB HS signals
+> +    required:
+> +      - endpoint
+> +
+> +patternProperties:
+> +  '^keyboard@[0-9a-f]{1,2}$':
+> +    description: The detachable keyboard
+> +    type: object
+> +    $ref: /schemas/usb/usb-device.yaml
+> +    unevaluatedProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - '#address-cells'
+> +  - '#size-cells'
+> +  - port
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    connector {
+> +      compatible = "google,usb-pogo-keyboard";
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      keyboard@2 {
+> +        compatible = "usb18d1,504c";
+> +        reg = <2>;
+> +      };
+> +
+> +      port {
+> +        pogo_connector_in: endpoint {
+> +          remote-endpoint = <&usb_hub_dsp3_hs>;
+> +        };
+> +      };
+> +    };
+> +
+> +...
+> -- 
+> https://chromeos.dev
 > 
-> Use the cpumask interface to dynamically allocate it in those configurations.
-
-Thanks. I hadn't seen this interface before. Applied with one nit fixed:
-
-> +		goto out;;
-
-Double semi-colon changed to single semi-colon.
-
-Jason
