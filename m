@@ -1,193 +1,196 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2055.outbound.protection.outlook.com [40.107.93.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94D82D5412;
-	Tue, 10 Jun 2025 23:13:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749597214; cv=fail; b=SBW8dTnSx75Y8XHkFpki+ScDoDP2JeWpSkmgYVbFhrF/txe7K2Vu1DbkTp3L0bAHPvvBVDX+M3Mgc9jHoZMu4jKXrIcDbGkWbuioAqVEMtew8rvldiWdSdSzQrdM2MnZrFbzJvaMIV+H8Q6FYE8A+p+iOmuynYsLFhA4usXNUcQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749597214; c=relaxed/simple;
-	bh=xemFi/07jAlkOoNrnbCgceiJ8QJ6o7LcgXLeaYW5YrQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FkBxHflNnYi+Fg4oPk7pEP24Ak0r58ATO3S5yJbrZj67Zl5tSHa7VVv66Mwj7xL555DiBPQDbU4NUDnqquBoD3RB7ZsbsxFILbVUAcmJXqLhBrP0l4uydYE9vG2DsawfNQRtpNUx6Xir28bMK9DpquXubK3bygjAwaJIeaqaW/Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=fail (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=bpwcvtxf reason="signature verification failed"; arc=fail smtp.client-ip=40.107.93.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98F2F2D540A
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 23:18:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749597519; cv=none; b=dwUoS0S2KgT1DbweEfjLQc6i0gbs0wlSeJdppl43DQRc6LMknLmxCfEj7ihnVQ1WhyhCsAIgUFKgqis7IH2CF+pxX822/n2GdlJrjkB6UxatDdB88sdrPNA5ckxrRM/3q9vkdFJI+TUHLYmBFxqXK2uFHO1YvTMupQRuv/uGiyo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749597519; c=relaxed/simple;
+	bh=6wCR/wOF6mnpcOQvAKfddSkIw1hDl8dX/s/2AHpXUDU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aeCDhaID+EmqI/aQOQbVI4KYgUE7CVD7TiGOd51vrqYd2vxy7QGV2Sz9iAbNs8L2S5tJTPQZI48dUgTTsYqXeYOmqegU7854qoT3q7rxibma0e8m/wOv1dy7wLM9JCZ3dOglTb8sIRLjnXSvrj+wVlqp+rjOUu/mwKaWIsMKNko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=CUuPaI5K; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="bpwcvtxf"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Rb43b3wMQIK+NEQ/l/Bk7W/5NWobaj+tm1KaMI51w29Nw2+aKrDfP/ks0lpwVED19T7VyFNjkgqq2asQFivajwPEXjHZpO4HkwG1jZNXIdY92mXOLWgGdlnO5NvKbwmC96vkPYRLT2+ipXTbdBZGO09BFI8ofRaCh7UgMIPIF5BIs+mMR0d+ftr1PwnK32E2vj5RfzjWPGxpQuMKT41U4P4y52jnHCQMRZjJoKqAVJXWX8hzgzbj8wS8p2sq9j04i9g7sELtcC7citw7ARJ6zyH+vCVZLoP+jC+rNBZ4h7Gro1/Qg3HCa7WbVbllHRnhAtpaaDEz6+u88pDK8ZdBJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yPapIboJQ5ldmkjzIwStZ6Wwi0jY9/XaUqgOgVxwL4Q=;
- b=OUpmmS7+5dQ3gCeYjw9EL//SEF5vLqn2/DK6VhNsJPV5gO9BEfp0ojmgTdrABn4ei2Bs/fPAb5V/WkoLemUgg8bFunan2iWoWqpI5qao/D2b03EvJ2W8aylVk60k8LffgD2J06YGqk/XSOCb6ptLkzHwdsTESaNmric12XX/iAPnHSDuztWdfOCvhh97ClODZZdS/ytgOCO/4qac+N//JrnTlcG0txD+5eyMl29OVHM+sclfaQdM0fqxA2rRdaWy71sG+pY+MV3bNaz8eV6hKFBzA+4C/9roNCg3BSkQinMbDMQJ9mMAt8RO6DDQ/L62d77V2lh+FqH7ZTLxzceqAg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.232) smtp.rcpttodomain=linutronix.de smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yPapIboJQ5ldmkjzIwStZ6Wwi0jY9/XaUqgOgVxwL4Q=;
- b=bpwcvtxfxav1dfKs/NLvpiIYNDglCjhwtCjejLwzckxW8OjexObWrNX5Wl4duf9IRFVLGXWTAwXrOrjCIEbq+xkXDF4zfpDrM5y2GO1rZpq2MRIRHSm39qfVOa2uFNBOOY9crPltcLcOzbSkpW9biOyEa5qte9nybmSKq1Wbumhmx/23xv4UDK/o7rjgjox7Xp0s3GDb0f2XTvLpxG/migDwILqNo7CzfoKO2bwCI84uzvmexaGWU77NHV74G+gSzVd2pyDPNzAAbnR0n53ooneezcrAH6KNOJueXwzQP5YLOHUgbMAJkl+7X41ggPHXmh2+yudSJuvTOIC7e4HXQQ==
-Received: from SJ0PR13CA0183.namprd13.prod.outlook.com (2603:10b6:a03:2c3::8)
- by SA0PR12MB4494.namprd12.prod.outlook.com (2603:10b6:806:94::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Tue, 10 Jun
- 2025 23:13:30 +0000
-Received: from MWH0EPF000971E7.namprd02.prod.outlook.com
- (2603:10b6:a03:2c3:cafe::9) by SJ0PR13CA0183.outlook.office365.com
- (2603:10b6:a03:2c3::8) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.18 via Frontend Transport; Tue,
- 10 Jun 2025 23:13:29 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.232) by
- MWH0EPF000971E7.mail.protection.outlook.com (10.167.243.75) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8835.15 via Frontend Transport; Tue, 10 Jun 2025 23:13:29 +0000
-Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
- (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 10 Jun
- 2025 16:13:22 -0700
-Received: from drhqmail201.nvidia.com (10.126.190.180) by
- drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Tue, 10 Jun 2025 16:13:22 -0700
-Received: from nvidia.com (10.127.8.12) by mail.nvidia.com (10.126.190.180)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Tue, 10 Jun 2025 16:13:19 -0700
-Date: Tue, 10 Jun 2025 16:13:17 -0700
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-CC: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
-	Willy Tarreau <w@1wt.eu>, Thomas =?iso-8859-1?Q?Wei=DFschuh?=
-	<linux@weissschuh.net>, Kees Cook <kees@kernel.org>, Andy Lutomirski
-	<luto@amacapital.net>, Will Drewry <wad@chromium.org>, Mark Brown
-	<broonie@kernel.org>, Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	<linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>, "Jason
- Gunthorpe" <jgg@nvidia.com>
-Subject: Re: [PATCH v4 12/14] selftests: harness: Stop using
- setjmp()/longjmp()
-Message-ID: <aEi8DV+ReF3v3Rlf@nvidia.com>
-References: <20250505-nolibc-kselftest-harness-v4-0-ee4dd5257135@linutronix.de>
- <20250505-nolibc-kselftest-harness-v4-12-ee4dd5257135@linutronix.de>
- <aEfTYkVdphiOhqPg@nvidia.com>
- <20250610141252-1ee7ae72-dbad-4a80-931c-5b4b14fb07ce@linutronix.de>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CUuPaI5K"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-235ae05d224so2991815ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 16:18:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1749597517; x=1750202317; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mtgyGRFsx3W1moknyTRh8eklG3kKIqbE5e8lYnyeAfo=;
+        b=CUuPaI5KzUKyJkwoeekCL5Q17GL1lzHiLdCRldr/Bpu2hNzrt1YtPGiXhk7Uq2VGYc
+         vYkSu7dxUdcrxhn5cUjnxnvIMU8e15RplLqFzm+3WOWRnW2BRSKPXHePzIxCktrlv0gB
+         G53XMLAJby+FJjPFkwprsh8xJIKYWNWqpLrV4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749597517; x=1750202317;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mtgyGRFsx3W1moknyTRh8eklG3kKIqbE5e8lYnyeAfo=;
+        b=DTFbBnSSq3LkLyW7iw1ulNs28WRd3o11Tmj1yvll10xSDmkfz6Fz/zyXMcHSkJr8po
+         F83t1+lyqRrst32iLOX/zHyFwP6BV1Kzhow34YTOksvWQYD/+PFfmLxhQ+3Q5PeU6isZ
+         7YXA5Tie4pE/NyQ932ZbpUlS7gcfEybftObNexivIHI6rLV27F99aT3kj4iya5cOVeTS
+         SwEm/0Chkif1qot15VhDUjuhdZfTTc3A4tBq7O0Tf5CDCJg/MsUr6fPhhUfhGU1p3pCl
+         ihoziIdG8+9mnAYyWvcDosuz/2uD5KLvcxSzDNh16hFLh72Dx5mVv1UYnPfrh8cY0D4K
+         N4aQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXO+V27i834NARML7wVqbymsJxDTz5E3zXLWXMefzEQqbMtNy6P5J7EfBovnE/IxpkpTJBSfv8dBG4N334=@vger.kernel.org
+X-Gm-Message-State: AOJu0YylMoHBvOB4ttXeces5D7PWgnq5766oMo3aF/spUhJC+YanYPH3
+	4TVn7XV3qK91jFe0ojByQUuHFnixLkumYLb0h2dTD+GpNo7My59vGK7eu/vBvjdunybN//ur1MO
+	uaIY=
+X-Gm-Gg: ASbGncsscf2+MF6IZpscCn2yAnHIe2fhZPeyNAJy43RCVnkHCI4OIEXmDkBFJ05Watw
+	SxY7Vedc5zwshhgqLDXtdpkDpR2k+Jqa8/BOFANTI+d4gZptB8cm3LXYH1h/gVISJJbPiSchLPE
+	95Ot9JxoLbIPQ7rkHa+YRU7P3g/LAZB1gjP0JcAClxaSkV6b/TQNMIDvK5YD+sCCHj6TeObYFQp
+	30SSehXXmhG0BaCxAuhNsJ7T/UCO90Dx3/pg9svuzpDJdpx95bjV+3Cr7NIwpfG4W7HnohyKWeR
+	TV6XfjSUk26+pmF0mR3QEJeR4vALNwsLeFVn37WK15LAmrg1qZap3bOeV+OJgtWYg2BT7HurXEM
+	Jx06JFHJf0qbVuDG56wXiDc8Lww==
+X-Google-Smtp-Source: AGHT+IHGT7vLRugh8mv2vhKt7Xagw2EQqe2akVY6Nj4XqLrWW4rs0yLYZwoS0MQAUFLRxemZnEy3QQ==
+X-Received: by 2002:a17:902:cf10:b0:224:7a4:b31 with SMTP id d9443c01a7336-236416b838emr13753355ad.6.1749597516908;
+        Tue, 10 Jun 2025 16:18:36 -0700 (PDT)
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com. [209.85.216.41])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236034059b3sm75566705ad.175.2025.06.10.16.18.36
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Jun 2025 16:18:36 -0700 (PDT)
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-312e747d2d8so282765a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 16:18:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXcBcCcViF/zKInr5xaES8/oo5z070h88ShMQp1sw8k0b22qJlGtIR5u7t2NFP4KcAw3qRjdEzbnOkcrwk=@vger.kernel.org
+X-Received: by 2002:a17:90b:3908:b0:311:ab20:1591 with SMTP id
+ 98e67ed59e1d1-313af9711a2mr1450240a91.15.1749597515737; Tue, 10 Jun 2025
+ 16:18:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250610141252-1ee7ae72-dbad-4a80-931c-5b4b14fb07ce@linutronix.de>
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000971E7:EE_|SA0PR12MB4494:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4e1938a6-9e45-4fba-730b-08dda874698b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|7416014|36860700013|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?iso-8859-1?Q?yBxUz91G2oTDGuP4dTYN3ZpFfTRSKkIWIm6VADfEikXAau4llkzT+pi827?=
- =?iso-8859-1?Q?LfbhasRUWbogqSCFo3E/Czq2yzQpnLHFqv/7ejW3UFgQQdpklvTWxKG5nz?=
- =?iso-8859-1?Q?6GyK+p8BAqq1nfNbGhslHULLGN98fzXXKBaBJ4Cx5c1s4wn2wuhY79qgp+?=
- =?iso-8859-1?Q?3MU11vXl1YpSJ53XqFhutBnZwcTtskrVtIPI+Gi6z8bOHw7Li2+oS30RyD?=
- =?iso-8859-1?Q?vtWI71lhcHAYasjein4KyKjqNY0Qt5E9JdZVxlo5/iHTkLjnHaksM1eTA0?=
- =?iso-8859-1?Q?6jA2vsmnTFjUtbKSl8aez72h9bctZtYF+ta119wdvFpRJvwVI4Ukxudxdh?=
- =?iso-8859-1?Q?ZakURB1aoN13b5wxLDkmPfF0DlzfEu5TlEdZe3svTIkll764ZE0UlJAbDT?=
- =?iso-8859-1?Q?MxlqxtnMt0RAiE5o1YvyjwI4jP6HFYCr+YGgSlDDNTX2bLjFxdzEt8jiCy?=
- =?iso-8859-1?Q?T1z4F1AYo0CvueRERjwHrOzVpzYQPki9IHMoy94ruiTWM206AMo+Q4sYui?=
- =?iso-8859-1?Q?uFSb2YsNZDYqWoXweUC1n0QmcO2Vkxdr/p464gwTRl44wIxcD7zBDP5cTK?=
- =?iso-8859-1?Q?epOObmPXOuqguDc1fTwAVuAAQgo+vrkcnVMZy1JTGaLfg4l6CMVGehHxWO?=
- =?iso-8859-1?Q?R0EqHpXEwAzDrRJzovgiiQN9m8Z3m6LmVhR8uj6m+jGadJM5P/149HeKjp?=
- =?iso-8859-1?Q?E/soywzjCP4WAUqRkd0IYDa0cs10p1IHdQd+ZKyposM1vsTBcFMCRm6zcs?=
- =?iso-8859-1?Q?rJ9pbFbR2ly/aWCBkOZNIjtPzqn5J43vMLKloetdQn9u4v+zRFEzx5eXOt?=
- =?iso-8859-1?Q?slkVEzMDPEEWpAMDfruN/xYfAwVrmfraOYou1DpjpymkqeHJDSK6L+88wi?=
- =?iso-8859-1?Q?VtjrWvTGQqLbOeTl1UgZo1dQKgzPeyj3bbj5eQpf6ybabD2pLBIy9RUJiE?=
- =?iso-8859-1?Q?ABwbmrwvh0gSaT6AOI9Z5myEJIZuMDbzf7mASuYOWir8525n6bl6OHogAJ?=
- =?iso-8859-1?Q?MX3Q59JG6x5n0JHuMdVzeOXpavC6T9aLrNpVOn0MKys0uB9FWjFaZdWHtL?=
- =?iso-8859-1?Q?oS0c7zXctKazKEGSpYqT5ZVujvbA8nJittHybHhUyo3DvqCq/uUiPkaJ4d?=
- =?iso-8859-1?Q?fJy8p3JIeO0TWVFVmwNDos0qu87j8cTi2aYYVWatmeoO0ofPntHnjZ8F/Q?=
- =?iso-8859-1?Q?/riyOcDwlzN64QPeSDk3KGLCbW+Id7G7u1GUZIlBzDqX9878+tYDuaom9G?=
- =?iso-8859-1?Q?KSLDxRdmwodRNN9OtZkG3NiQftZxeuOK8tHG1JkHUJ75JCu4nFxhGpgzWn?=
- =?iso-8859-1?Q?2VM6NQJPyNq45YiCWzK/AqVO+EMVOIFK2zwEQHC7zxBBknQlOxOloowU6l?=
- =?iso-8859-1?Q?iaVe97Q8U5u0nROaHMn2fTYBHeDz8iJiwW8KRwcjncSE/H/IeoyVONysQG?=
- =?iso-8859-1?Q?ONbqhh2MCvnu66JgXQhIJWyW8ZXuiCVTdQMTrSLuIa13A3QQRViJy8amLM?=
- =?iso-8859-1?Q?Vu56u1Yjfel4DMlJie2tXmmLtER3l7Eh/iRiJTzjlUMC41u7YqSxayHjYf?=
- =?iso-8859-1?Q?t1eGXY+CfY7JltMaOzAChnFolMYW?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(7416014)(36860700013)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 23:13:29.6060
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4e1938a6-9e45-4fba-730b-08dda874698b
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000971E7.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4494
+References: <20250606-printk-cleanup-part2-v1-0-f427c743dda0@suse.com>
+ <20250606-printk-cleanup-part2-v1-4-f427c743dda0@suse.com>
+ <CAD=FV=XXQyZLYKoszj68ZGFDY=9-cmEUp406WeOeSBVZOHyUHw@mail.gmail.com> <f962e9bab3dc8bf5cae1c7e187a54fb96a543d51.camel@suse.com>
+In-Reply-To: <f962e9bab3dc8bf5cae1c7e187a54fb96a543d51.camel@suse.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Tue, 10 Jun 2025 16:18:22 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XFeokpbMUFjAc0OkwJ97vR8aB+4GbnFxRKymvpEY3gnA@mail.gmail.com>
+X-Gm-Features: AX0GCFt6n77pbmil8IDH9ETyvVBk9GLYcHe7RwT91u86Q2sJf5v-ZMY6TwpptAA
+Message-ID: <CAD=FV=XFeokpbMUFjAc0OkwJ97vR8aB+4GbnFxRKymvpEY3gnA@mail.gmail.com>
+Subject: Re: [PATCH 4/7] drivers: serial: kgdboc: Check CON_SUSPENDED instead
+ of CON_ENABLED
+To: Marcos Paulo de Souza <mpdesouza@suse.com>
+Cc: Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	John Ogness <john.ogness@linutronix.de>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Jason Wessel <jason.wessel@windriver.com>, Daniel Thompson <danielt@kernel.org>, 
+	Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, linux-kernel@vger.kernel.org, 
+	linux-serial@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net, 
+	linux-um@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 10, 2025 at 02:21:25PM +0200, Thomas Weißschuh wrote:
-> The following diff *alone* also prevents the warning, but that doesn't
-> make any sense either:
-> 
-> --- a/tools/testing/selftests/iommu/iommufd_utils.h
-> +++ b/tools/testing/selftests/iommu/iommufd_utils.h
-> @@ -65,7 +65,7 @@ static inline void *memfd_mmap(size_t length, int prot, int flags, int *mfd_p)
->                 return MAP_FAILED;
->         if (ftruncate(mfd, length))
->                 return MAP_FAILED;
-> -       *mfd_p = mfd;
-> +       *mfd_p = 0;
->         return mmap(0, length, prot, flags, mfd, 0);
->  }
-> 
-> 
-> Maybe the logic became too complex for GCC?
+Hi,
 
-Maybe. Those warnings are gone using a dummy setjmp() without a
-longjmp() :-/
+On Tue, Jun 10, 2025 at 1:03=E2=80=AFPM Marcos Paulo de Souza
+<mpdesouza@suse.com> wrote:
+>
+> On Mon, 2025-06-09 at 13:13 -0700, Doug Anderson wrote:
+> > Hi,
+> >
+> > On Fri, Jun 6, 2025 at 7:54=E2=80=AFPM Marcos Paulo de Souza
+> > <mpdesouza@suse.com> wrote:
+> > >
+> > > All consoles found on for_each_console are registered, meaning that
+> > > all of
+> > > them are CON_ENABLED. The code tries to find an active console, so
+> > > check if the
+> > > console is not suspended instead.
+> > >
+> > > Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+> > > ---
+> > >  drivers/tty/serial/kgdboc.c | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/tty/serial/kgdboc.c
+> > > b/drivers/tty/serial/kgdboc.c
+> > > index
+> > > 85f6c5a76e0fff556f86f0d45ebc5aadf5b191e8..af6d2208b8ddb82d62f33292b
+> > > 006b2923583a0d2 100644
+> > > --- a/drivers/tty/serial/kgdboc.c
+> > > +++ b/drivers/tty/serial/kgdboc.c
+> > > @@ -577,7 +577,8 @@ static int __init kgdboc_earlycon_init(char
+> > > *opt)
+> > >         console_list_lock();
+> > >         for_each_console(con) {
+> > >                 if (con->write && con->read &&
+> > > -                   (con->flags & (CON_BOOT | CON_ENABLED)) &&
+> > > +                   (con->flags & CON_BOOT) &&
+> > > +                   ((con->flags & CON_SUSPENDED) =3D=3D 0) &&
+> >
+> > I haven't tried running the code, so I could easily be mistaken,
+> > but...
+> >
+> > ...the above doesn't seem like the correct conversion. The old
+> > expression was:
+> >
+> > (con->flags & (CON_BOOT | CON_ENABLED))
+> >
+> > That would evaluate to non-zero (true) if the console was _either_
+> > "boot" or "enabled".
+> >
+> > The new expression is is:
+> >
+> > (con->flags & CON_BOOT) && ((con->flags & CON_SUSPENDED) =3D=3D 0)
+> >
+> > That's only true if the console is _both_ "boot" and "not suspended".
+>
+> My idea here was that the users of for_each_console would find the
+> first available console, and by available I would expect them to be
+> usable. In this case, is there any value for kgdboc to use a console
+> that is suspended? Would it work in this case?
+>
+> I never really used kgdboc, but only checking if the console was
+> enabled (which it's always the case here) was something that needed to
+> be fixed.
+>
+> Maybe I'm missing something here as well, so please let me know if I
+> should remove the new check.
 
-diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
-index 2925e47db995..2dc288413fc7 100644
---- a/tools/testing/selftests/kselftest_harness.h
-+++ b/tools/testing/selftests/kselftest_harness.h
-@@ -67,6 +67,7 @@
- #include <sys/types.h>
- #include <sys/wait.h>
- #include <unistd.h>
-+#include <setjmp.h>
+So it's been 5 years since I wrote the code, but reading that I was
+checking for:
 
- #include "kselftest.h"
+  (con->flags & (CON_BOOT | CON_ENABLED))
 
-@@ -407,6 +408,7 @@
-                FIXTURE_DATA(fixture_name) self_private, *self = NULL; \
-                pid_t child = 1; \
-                int status = 0; \
-+               jmp_buf test = {}; \
-                /* Makes sure there is only one teardown, even when child forks again. */ \
-                _metadata->no_teardown = mmap(NULL, sizeof(*_metadata->no_teardown), \
-                        PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0); \
-@@ -422,6 +424,7 @@
-                } \
-                _metadata->variant = variant->data; \
-                _metadata->self = self; \
-+               setjmp(test); \
-                /* _metadata and potentially self are shared with all forks. */ \
-                child = fork(); \
-                if (child == 0) { \
+Makes me believe that this was the case when I wrote the code:
+1. Early boot consoles (earlycon) were not marked as CON_ENABLED but
+were instead marked as CON_BOOT.
+2. Once consoles became non-early they were moved to CON_ENABLED.
+
+...and the code was basically looking for any consoles with a matching
+name that were either boot consoles or normal/enabled consoles.
+
+Is that a plausible theory? It's also possible that I just was
+confused when I code things up and that I really meant to write:
+
+((con->flags & (CON_BOOT | CON_ENABLED)) =3D=3D (CON_BOOT | CON_ENABLED))
+
+...AKA that I wanted consoles that were BOOT _and_ ENABLED.
+
+In any case, I booted up the current mainline and I put a printout here. I =
+saw:
+
+[    0.000000] kgdboc: DOUG: console qcom_geni has flags 0x0000000f
+
+So that means that both BOOT and ENABLED were set. That makes me feel
+like it's plausible that I was confused and really meant BOOT _and_
+ENABLED. I didn't spend time trying to figure out how to build/boot an
+old kernel to check, though.
+
+In any case, given my test then I think your change should be fine.
+Given that it does change the boolean logic, it seems like that
+deserves a mention in the commit message.
+
+-Doug
