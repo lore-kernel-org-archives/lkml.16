@@ -1,256 +1,253 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2080.outbound.protection.outlook.com [40.107.243.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300FA2BCF7B
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 23:20:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749597629; cv=none; b=leFqT2c+Rx4hqb/yFDqUR99oGMB7O2nagPm6PcgbAkZKJX46eEEPTtstowF2maSPgTNbvD3sqFcY3LG2Gs69jPuVSe/EJLIRgiEGsREERdJSkBZIZrEx009UCavsVqgD44IEe1jrw7uXz9jIANMH+yP2SqgPFOI1eUJgrnBpIwk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749597629; c=relaxed/simple;
-	bh=U9TdJ5dnV3lclh4QAIAOWqjQBTJpB4tN7q1ZxPdJyEs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=T5ZIqFkDzwx+t3rCXQFVKwgR0/uWxvLKRLTakvFO/GF7LHVmV8vyplfMqmi8a0UXwvjJJqn23QBuVsappURMIiFuUftdcNljH9B+Rhf84GpUo3OOsr6WRW+KVh0iiq8L1PDy6+xE1eIfzLOUptYNX7Gh1bRZTX3zcE2w4Zk76Eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=c+RHbD5I; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C3CA2D5401;
+	Tue, 10 Jun 2025 23:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.80
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749597763; cv=fail; b=NQHx0iZpQrpG67h2uVZ0DHtXCx1rew62zalocR7epE857D/V14nQfw78VD6rXWLDadQ4oEMBVWFwAy7K9qJ/CVD9nRyI9ZXMMCLPz3qATkJI5CzKfNicbAS0SF8y9eZ9NaocFVVbw4AedSGbXtrn3QNfuVqb1kD+Ry1ZGrvDx9w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749597763; c=relaxed/simple;
+	bh=jjOuNNl68GJ4fBeYoSHFQpNOW4CAU3YOp5odG9u42Dk=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=nn02NN0bp3oHGZhvXlyic8bOYoL0g/GcRCZ6oxHjTINzqDtXLLzBUOAjgkNDOGTSm+R0mqlvgdWWcT6Z10P+YhSI02Jr4Tsi/ufORNMzPRpz1doYovcl/Wm4hOvJDVHu9bru6gEpDIdKNa5VInLQCWJtu3vQc8NVPhEByUd1Khs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com; spf=pass smtp.mailfrom=altera.com; dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b=Ge5pIdCe; arc=fail smtp.client-ip=40.107.243.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altera.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c+RHbD5I"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30a59538b17so5741999a91.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 16:20:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749597626; x=1750202426; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=dnkynuEbsoZ6x128ufwAbrtOFl8ZXNBXsNIoNBRMd1M=;
-        b=c+RHbD5IYtalgjYyveE/ysaE/RIMkaZg773AT0cUJaFg2fNcBjAU96Ue0hBpRpNRR4
-         dY6KZAbIjWg0m3w7e1T/6rJiIueL9uhDHh0a/qgj6blwXtFu48gKkM8PE7HOfgDd++b0
-         SMTf7H+jSuvRldFy19dRqIYhJ8BrEGA6XI+/6mCP5yQffSpQXI+6xWkPBTUfZzjjWeZM
-         beIgTrcGsKnfEUWwfPf9RDYdOn4S9KbK/qJxPKyBeXsAhlSw9myXBK+Hjnh28k6VuR9/
-         CEXAaW8MiBCjrDBBrmG3CFf6tqAM3ivXO+vYCwl1sdZ07ES+LxO0GZToE7oGDAPk6cue
-         RuuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749597626; x=1750202426;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dnkynuEbsoZ6x128ufwAbrtOFl8ZXNBXsNIoNBRMd1M=;
-        b=sCbdQpupUy0xsGchHDxbdj8RaN/eK97TiGr3OZEZKytXbbhgl0PNX+HX0lcnlAkocb
-         +LXEga/BOHyv+1BJ4ckJD6RMlfs7H6C4XJ779DZoZdc2mhdQSFERmgU0NjSSuSrLCWwH
-         j6ccFdY8RkpS1YjhCWbjREkfr6kj7gsJO23VPRLzJZd2i4ZBHnNTbUOu0th38FVri9aq
-         19G5zInYZkuIy6qsJInVSf46NAefLIixUKGplNssXm07KTbkO30IRkGgkoEIrXa6m5o5
-         O8wPx1mbNrcy9MHaQQFkoeHlhOTKJy48i3Z/SYzkWrckbPS9qIt/mab3nh6p14njzsxZ
-         60/g==
-X-Forwarded-Encrypted: i=1; AJvYcCXnE6U7xaIprWATamVSco7HOb8r8m8r1Y7A69A+r4lVP6AzcHmDpgelJDoMxkOUYFkUE8L0WYoUASrQJX4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrfX2cMcR98pJt39mZE4L7t/k3zinR8Iq47DE1c6nntWBhIrDl
-	X/pBoyhFlt5z3yRAsQDet/1+23u5W7V9Q0HLwQgPUe1VMkX8ng85ET0MIq0FHyfdhh7u9Ps5CIe
-	8yKiDbg==
-X-Google-Smtp-Source: AGHT+IE5oVQjlW9T1nTalOL0Mk3cl72oHyuKu7TFlX0faUEZxNSKKMlJpL1ygA1CbXgjeNjcYgIw40YqexM=
-X-Received: from pjbsu12.prod.google.com ([2002:a17:90b:534c:b0:313:246f:8d54])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3510:b0:313:176b:7384
- with SMTP id 98e67ed59e1d1-313af12b099mr1782572a91.11.1749597626599; Tue, 10
- Jun 2025 16:20:26 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Tue, 10 Jun 2025 16:20:10 -0700
-In-Reply-To: <20250610232010.162191-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b="Ge5pIdCe"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=lUknGayWg12L+4pYSeofx0zJPGp0zLZGWW5L5OAcE354ErrBm3YguyURl5A4gJ5FTIB0zHiUApXjgHGkaPNxEtsru7BN2vuBT3UudvcNJ1SAVl0uHk6RbsvUtsyBrFgtxr4ZjHhgmp9nAAXX4//FGYd2cU1wi3dROq/8IkONb/z+ADdhsT715H9PVB+ELyZ8IEUj/YmUvGVngiKLGRdwidfJ9XGXUNkpMacfjgA9kPmYxKrVpG57mPJlrFcNnNm+tKaCWHOOFOUQ4tSf2jUA7iL6Khzy4Anry5Ynq6HrdkxuDq0cTStQ8gPacrweNOQGS33TeMHI3tgbPwCEOt/e1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=klvpqcwyXau2l+IgUgPFCotYArRphaJECVnPMDtTs2U=;
+ b=FP8MzPGX9hEEMvr/oJ8Rshh/+fmzWZVGu8CmTVs/baOW1pQL2HwJv9m+oc7nt+MY3NlxLwfl+dyMXgLQsx0nunh/AZ+PxDJGJctM0u0fkPkjg43N6Nkm/OOPkWi+SozbfkAOcbVU5cFxz9AmcMBMF2xY3lBuY7uVZuHvZw1bdrZwsZfvYE2UsNUdEik44KSdYF4lpFNyIxMXVKrrgvfE8cJtmrD+H8SFs7BnZWp69aL5/MMlXRKjb3jWYp+gzKJX2XTH3odrJR0N7VnWZZ55QTbgpeQDImcEbGQI/lO51Wv5s2h9l/+GKg5YcvcM3q5Odtpj5RdWH8CZn4qHcM5nIQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=altera.com; dmarc=pass action=none header.from=altera.com;
+ dkim=pass header.d=altera.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=altera.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=klvpqcwyXau2l+IgUgPFCotYArRphaJECVnPMDtTs2U=;
+ b=Ge5pIdCeo42OvniuHg8zz9UcRvyiFDjrFf0jqKWoKdxuaAvwqjoDeOTE+gwl4YCBVioifEtfgtZ/x/DNR7LI6FcUUqB+7MmNWAqkTh+zSdgcjwwcAX5jGRp2PY31GfT8EP0dWlbDK84vvEt7xhwJCuUISyGc95qGgiWQWExCR7RI9hQV18yB6rbM7im3kxYc6PDnbmnovn7s/3IBEc2jmJAB5FCmT90+mpEhd4qbeVaSSw/Zt8/YhMQMENHVSvnwbzW8Iyxcdc6SUAce1/2cW/johVaY+M40xl7i5X7atGDPIVkDAFNDHolHt4msu1bJOkPaoIo3hDqaS6SOOD/CKQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=altera.com;
+Received: from BYAPR03MB3461.namprd03.prod.outlook.com (2603:10b6:a02:b4::23)
+ by SA2PR03MB5707.namprd03.prod.outlook.com (2603:10b6:806:11f::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.40; Tue, 10 Jun
+ 2025 23:22:39 +0000
+Received: from BYAPR03MB3461.namprd03.prod.outlook.com
+ ([fe80::706b:dd15:bc81:313c]) by BYAPR03MB3461.namprd03.prod.outlook.com
+ ([fe80::706b:dd15:bc81:313c%5]) with mapi id 15.20.8792.040; Tue, 10 Jun 2025
+ 23:22:39 +0000
+Message-ID: <65124dfd-3f52-45b4-b514-222f47ec8baf@altera.com>
+Date: Tue, 10 Jun 2025 16:22:37 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/1] spi: spi-cadence-quadspi: Fix pm runtime unbalance
+To: khairul.anuar.romli@altera.com, Mark Brown <broonie@kernel.org>,
+ "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ Khairul Anuar Romli <khairulanuar.romli@altera.com>
+References: <cover.1749516352.git.khairul.anuar.romli@altera.com>
+ <e1ecafc55f7fc1b2450f7c7ce0c11b9efa68844f.1749516352.git.khairul.anuar.romli@altera.com>
+Content-Language: en-US
+From: Matthew Gerlach <matthew.gerlach@altera.com>
+In-Reply-To: <e1ecafc55f7fc1b2450f7c7ce0c11b9efa68844f.1749516352.git.khairul.anuar.romli@altera.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SJ0PR03CA0095.namprd03.prod.outlook.com
+ (2603:10b6:a03:333::10) To BYAPR03MB3461.namprd03.prod.outlook.com
+ (2603:10b6:a02:b4::23)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250610232010.162191-1-seanjc@google.com>
-X-Mailer: git-send-email 2.50.0.rc0.642.g800a2b2222-goog
-Message-ID: <20250610232010.162191-9-seanjc@google.com>
-Subject: [PATCH v6 8/8] KVM: VMX: Preserve host's DEBUGCTLMSR_FREEZE_IN_SMM
- while running the guest
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Adrian Hunter <adrian.hunter@intel.com>, Maxim Levitsky <mlevitsk@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR03MB3461:EE_|SA2PR03MB5707:EE_
+X-MS-Office365-Filtering-Correlation-Id: 43209245-a5d1-420f-4eaa-08dda875b0f7
+X-MS-Exchange-AtpMessageProperties: SA
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?L3dXV3pxUHJtS09CZ2ZLMUpSdWFPM2dWZTFTQVhST3lvUEVRUDdDdWZMZ3dm?=
+ =?utf-8?B?UnFRUVdjQnMxWWQ5R0tKWmZEU0dwT0dkemR4TDVKeFkvdndGTDlGMGQyS3Bk?=
+ =?utf-8?B?NTUxdFJXOVlMZUtXaVdnMm5BS09sOGthUHZTMEF1SEVBTkptT3l4TGhoYzhL?=
+ =?utf-8?B?VVRBK1lUcUwraC9WTE0xaVN5VlQ3TThaWE05QysxczByUjVzUDREMEt6Z0Zk?=
+ =?utf-8?B?blIrdnZOZnFwRWxZUXlMN0JZKzJINWU0YVJkdFV3TXl0cmMyL0I0SUFodDVa?=
+ =?utf-8?B?czRvSGluaGMybTJjUlJPbExBLzdvZmVKc3NLOWc0K2R1ZnVmL0w0a0lhMGdH?=
+ =?utf-8?B?UFlsd3BuWWFiWndtN0c3YmlCRzhVajJ5VUl1eU1YZVl1aVA2bXl5LzZRSHBm?=
+ =?utf-8?B?MFRZaStHanIrRzJKS0lHeU4wdVh3RWpWMkhTbTY4V1pzZGUvYkxmZnJVN0lG?=
+ =?utf-8?B?amxFSHJueFRpYVRmeWFuRzNIemg5dSttRy9JUml5WTEzREtDZzZDSitxMFp1?=
+ =?utf-8?B?ODRONEdaWnV2Z2NxOHM4aXczNzZtVUlwMUlmYmlkYmVzc1lGR2R3NUVTQkVu?=
+ =?utf-8?B?QUdyY1JXd2RKL2czTDBZVU8xQjJPYzh5L2s1NjlQZE4xbVhEeWlTZldWakk2?=
+ =?utf-8?B?RGlXSldGcDRkejFKTTVWL2dHbE1veE1EK1dxbklTREpoMkxTUjBTVTFRSW02?=
+ =?utf-8?B?ak9CSENaYW5jZk1Xd0NFY082UkFEUnBIRklKbkpCMnNxanZyVkY4bHhEZmpa?=
+ =?utf-8?B?V1A3NDJZeUp1MHhad0t6MTg1eXVDWEJkN3hZUVY0ajVCOWgzZ0RjNk9iMGdJ?=
+ =?utf-8?B?OFJzYWxNdWYvazY2TTlySHJKN2Y0UVdRc2pnbEg1bk90empsVnVvZ3FrM2Uz?=
+ =?utf-8?B?VytoMDdwNGxVSWVxUU5pdWZMVnNyT1F3S1o4QmRFZDlYNE12VHl3VFZadDRH?=
+ =?utf-8?B?MnFYZHZ4S1pGMjJ5cE1mNGpjQ3lHUlpoR2xwcHhrRGFPdGN6MDM2M1M3Uk9x?=
+ =?utf-8?B?dytyRnBraFVpS0p5NWJuRi9GdjZqRFhSRDFWZ21DaGFRTXVYNlFYTzFhSnZJ?=
+ =?utf-8?B?MEdEK0VnQTB5Snd5VSt2QTJ1THlQd2tESXNyYmduVkM5SmZNZVRZQ1NJVVR5?=
+ =?utf-8?B?YVREY3FNdXdXTFZCdmcyVHRiOGZUbGFrMzY1aEVuSUIzMjhrdjZKNGtWcFpz?=
+ =?utf-8?B?Z2lDVzlLdzZQVnRNeHd0RGFkM3FJM3RMeXNDaWo3Y1FYZUY3NGtVTUgvc08v?=
+ =?utf-8?B?YUUzUk0yVEZlVlpyU3FuZkw0bmtVUmROMUFOSnhtcjV0SnExeFdicmtLazR4?=
+ =?utf-8?B?RWx1NTBMcWJaUnFzV0R2WTM4ZWZyNU8xTDVoYjBrdjNPdzRlRHUvMEtNOWZw?=
+ =?utf-8?B?QUttMit3a2VBTmFhTGlzQjV5VWxRaTRGZzUxbUhrTGhqUTBUQkw5S2dmRXFv?=
+ =?utf-8?B?NmJLanE2TmNZY3AzalRGbEFmSlNOOUhBQ1NzNWMzejlUR0FuWjBZd25ZSzM4?=
+ =?utf-8?B?aGVCaUd3MmhDV0g1VVBIclc1RHpKY09HaFhZSGlWa0M4bUpXa296dzg3cU9r?=
+ =?utf-8?B?eUtXOEUxK05DOFp1UHRid2o1QjRnYXhmUGYzV3QwV01XbUl5K3F0NmJTazlz?=
+ =?utf-8?B?MGVmMlJtRUo4MUVLTjZNMWZQRzVaYjlaYlJQT0FHdzMyK1hEeXIxZktMSE9N?=
+ =?utf-8?B?aVhleDk3U1pIa2Fqb1VhN1IydTJoRllUZEM3WE1TREd4MG1BWFpUdlVmTE9t?=
+ =?utf-8?B?dFkvZUFqdVJFTDdvSW9USVNEdEQyYVNVeXBvRFRsd2tzN1RBaXFLTDh6Vm16?=
+ =?utf-8?B?YSt0dXozUWlWTTM5eEo3a1ArbitVUHVkSk51WDlUVWRWdnNvcFg2ZFpCaWYx?=
+ =?utf-8?B?QVpLbjBJSVBGamYrYlA4LzVDejBNVENxSGlFNDQ2TTVLRzlNcHBITFJjZVVQ?=
+ =?utf-8?Q?6l/d09mu2A8=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3461.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UlQwVVhFU1oyY0h3clVZUENQeDlaWEFwN1BYd3BpYkRFUTIwNVhzdk9ZVkhV?=
+ =?utf-8?B?UjRZaHVmY1Iza1JRNmd1TjllTUc0ZmFqMEQ4QlF2K2ZEa0ZSdkRTYVpmRXpp?=
+ =?utf-8?B?NGNnQUM2aDNtZXhJdjJmeWdLSmk0WHkwbFNycGg1eUVBVW91TGYxL3dnRDdS?=
+ =?utf-8?B?TmJwekJQUzBzN3luN0hXRDBPaXlHTk5HcHlDVFJJSE9NdnNORnV2STZpYkRD?=
+ =?utf-8?B?LzQ0QmJIZXpPWmFUaTZKcTUrMmlyZ0RIVzNsM2tqK1FpWmFkek40cnVYVmFS?=
+ =?utf-8?B?STdWbHAwZXV0SkkwVU40ZVp3ZVhBbFhZNGJjcVJ3ZjVmbFhQZEdoNHNLL1Ro?=
+ =?utf-8?B?U1gwOFJDWTZZUEVlS3JqUHBUdThvWVdWa0l0VmNISWtaOUpUQm0xeHVZeG1r?=
+ =?utf-8?B?VVd4QkxEVEsyNEtqR3AzMk5uTHc3dm5rd1RaVThYRlZYWkJQTzFvaFRqbHlQ?=
+ =?utf-8?B?SElFL1U3SVRiRzJXcStwT0tFRzJHZ0hqaVdRcUo3WHBZdnV6RmdCOHh0TkFX?=
+ =?utf-8?B?bWN4cTRIeXIrdFNLNzQrZHJaWkxQN3NCZjVjRFc0OEFETWQvV2ttVjU5bytB?=
+ =?utf-8?B?T2pBNkdPaTVMaTk0MEZLdExpNVJBc3VtRHZjYUhTU2hPbTg2RHczNE9aWEhG?=
+ =?utf-8?B?Qk85WnZvckhzMXBUM0plajYzTEYweFhldzBHUk1WbHNWR3JuR2MvWUtKcHN4?=
+ =?utf-8?B?SDdhMHBWYkVSWjl2bVNmblRyMjl1Q3dPT2swQUgxcGd5N1hyWDEwSENYTXVY?=
+ =?utf-8?B?M3VIdkJQY1c4N3hXR24vQnlxUE1mSnFTeFYxbUhWMWhnZXNuNWJBTUZJVlpK?=
+ =?utf-8?B?dnpKTlNUMmNjQ1F1YUNzTThkb29BUHI0QU9jZkRVUWhJVVpVWlNGelF0bG1i?=
+ =?utf-8?B?NVlXY09Rd25tTEgyK0dCRFpreHNBZC9UQjBKVkU4MTgza2dhbmFxcHZ2NzZs?=
+ =?utf-8?B?WllOQXQ2eVdiejhFczNvL2NsYm1YVlk1Z3lYUmZyT2xaVEdNTXRkZ1dYa0dM?=
+ =?utf-8?B?ZGdlRnJFYlhxY0RpV2pDMEE3eHNBbzRaS3JNM1hnWFN2K0RDeExTdS9FQ1Zp?=
+ =?utf-8?B?MGNXMU1mNmRVcWdOaUsxbkt5QU1VelZRSlpyd2JHcGs4N0xCZHQvaVV0R3VM?=
+ =?utf-8?B?bk5wSzZ1SHBkNFdPbWtiSVdCNWN0TU44Q2xKazZzYWxHYlV2dkljWm9OS0pC?=
+ =?utf-8?B?SDJnWWE4ZE1LS1J4MndQRy80bGxqT0wvQ0ZHdFhlZnNhQVd6ZURIaUFOQ0tn?=
+ =?utf-8?B?dnYxd3RBOUs2NTBUL1N0djlUZ3VmVzZ6cW8zODE2aDFYc3lqYXlCN2lIMWVp?=
+ =?utf-8?B?MXdaYzNYUDNrV0FJZ2RRTmpCSXh6ZVlBTGVSYzRxbms0T0VpS29tR2lLVzFO?=
+ =?utf-8?B?TjZYWDhMRUk3eDB1Wks3ZUpJV2xPcEFtOVl3VGVxMUs4elhhdlR3VEY5YXpP?=
+ =?utf-8?B?K1pjN3UwOWhKbmVSRERTcXFFUHZYcFd5bUFSdXBHL2M2OXVuV1NNY3ZXWWJQ?=
+ =?utf-8?B?eXZ2OFdwWkxoS1lJWHFFVHcvRWxxNnEvd2VvUE5WeG9jN05UcCtOTFFkSTJC?=
+ =?utf-8?B?S3pYNjhyVlRqREgwK3BrTmlQN0lvOHArWkdDeWJhd2xrQVo1WWhheVlKVk9P?=
+ =?utf-8?B?MWk3b3YraGdDUFRnNWFBOUdQdS9VREkrZnVlN2dwSTZPYlMzY1lFNnF5SW5u?=
+ =?utf-8?B?b3p6Z0daNkdJa04wcnBHZmZxbmFDYkQ0aUZSb3Y5ZXdxeVB2Tng3VzBKRFdm?=
+ =?utf-8?B?em9vc0hIaXlVdzl2YzMvQWZaTXN0ekhmZGZrcEk5WDZtbmNQZlZFNUxIcWJs?=
+ =?utf-8?B?MDEwYjNQeHNDNnRkNEtkQWs4ME9KNVJCWlNIRTMrNHVjcnV1Q3c5dGJSZFM2?=
+ =?utf-8?B?bXcxODQwTEFaWGZnenoxT0hoWFVKQUU3RUkvOFF4UGZUTHFXZ3NPT081bm1p?=
+ =?utf-8?B?WjJxYUNMTGxoTHQ0eUtkSUkydmhyY3Q1WGx2L0laam9ZR3QzUW8xVE9GMDdI?=
+ =?utf-8?B?SkJNNVNOaFJDZEhXNmZRT0h4eUNac1d3YVlkbkZBVXRHbkl4bTI5Wlp1bzZu?=
+ =?utf-8?B?WTIrVm1ra3NYa1Jzam1ZekErejI1YVRCT0pDTjFva1FSWTZXcGNyNkVvUnNo?=
+ =?utf-8?B?QW05dzNoamFkSlgvdk5vb3FDYzJORXlGNmwwYysxdUd0enNOKzRpVDF2QXBP?=
+ =?utf-8?B?Snc9PQ==?=
+X-OriginatorOrg: altera.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 43209245-a5d1-420f-4eaa-08dda875b0f7
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR03MB3461.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 23:22:39.1823
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fbd72e03-d4a5-4110-adce-614d51f2077a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kcMNDRgGKIVgGG7+y0R0CPVU7vL/AZFKu6+GGHGvsKcyu5+ED7koxRs46eKfPeXn447HkO4u1w0KLD8LNOhVJGrI4/29QCT2/872HYzR8qI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR03MB5707
 
-From: Maxim Levitsky <mlevitsk@redhat.com>
 
-Set/clear DEBUGCTLMSR_FREEZE_IN_SMM in GUEST_IA32_DEBUGCTL based on the
-host's pre-VM-Enter value, i.e. preserve the host's FREEZE_IN_SMM setting
-while running the guest.  When running with the "default treatment of SMIs"
-in effect (the only mode KVM supports), SMIs do not generate a VM-Exit that
-is visible to host (non-SMM) software, and instead transitions directly
-from VMX non-root to SMM.  And critically, DEBUGCTL isn't context switched
-by hardware on SMI or RSM, i.e. SMM will run with whatever value was
-resident in hardware at the time of the SMI.
 
-Failure to preserve FREEZE_IN_SMM results in the PMU unexpectedly counting
-events while the CPU is executing in SMM, which can pollute profiling and
-potentially leak information into the guest.
+On 6/10/25 3:30 PM, khairul.anuar.romli@altera.com wrote:
+> From: Khairul Anuar Romli <khairul.anuar.romli@altera.com>
+>
+> Having PM put sync in remove function is causing PM underflow during
+> remove operation. This is caused by the function, runtime_pm_get_sync,
+> not being called anywhere during the op. Ensure that calls to
+> pm_runtime_enable()/pm_runtime_disable() and
+> pm_runtime_get_sync()/pm_runtime_put_sync() match.
+>
+> echo 108d2000.spi > /sys/bus/platform/drivers/cadence-qspi/unbind
+> [   49.644256] Deleting MTD partitions on "108d2000.spi.0":
+> [   49.649575] Deleting u-boot MTD partition
+> [   49.684087] Deleting root MTD partition
+> [   49.724188] cadence-qspi 108d2000.spi: Runtime PM usage count underflow!
+>
+> Continuous bind/unbind will throw Unbalanced pm_runtime_enable error.
+> Subsequent unbind will return No such device error while bind attempt
+> will return Resource temporarily unavailable error.
+>
+> [   47.592434] cadence-qspi 108d2000.spi: Runtime PM usage count underflow!
+> [   49.592233] cadence-qspi 108d2000.spi: detected FIFO depth (1024) different from config (128)
+> [   53.232309] cadence-qspi 108d2000.spi: Runtime PM usage count underflow!
+> [   55.828550] cadence-qspi 108d2000.spi: detected FIFO depth (1024) different from config (128)
+> [   57.940627] cadence-qspi 108d2000.spi: Runtime PM usage count underflow!
+> [   59.912490] cadence-qspi 108d2000.spi: detected FIFO depth (1024) different from config (128)
+> [   61.876243] cadence-qspi 108d2000.spi: Runtime PM usage count underflow!
+> [   61.883000] platform 108d2000.spi: Unbalanced pm_runtime_enable!
+> [  532.012270] cadence-qspi 108d2000.spi: probe with driver cadence-qspi failed1
+>
+> Also change the clk_disable_unprepare() to clk_disable() as continuous
+> bind and unbind will cause warning being thrown with inidication that
+> the clock is already unprepared.
+>
+> Fixes: 4892b374c9b7 ("mtd: spi-nor: cadence-quadspi: Add runtime PM support")
+> cc: stable@vger.kernel.org # 6.6+
+> Signed-off-by: Khairul Anuar Romli <khairul.anuar.romli@altera.com>
+> Reviewed-by: Matthew Gerlach <matthew.gerlach@altera.com>
+> ---
+Hi Khairul,
+It helps the reviewers, if a revision list highlighting the changes 
+between is provided under the ---.
+Something like the following:
 
-Check for changes in FREEZE_IN_SMM prior to every entry into KVM's inner
-run loop, as the bit can be toggled in IRQ context via IPI callback (SMP
-function call), by way of /sys/devices/cpu/freeze_on_smi.
+v2:
+  - Description of first change since v1.
+  - Description of second change since v1.
 
-Add a field in kvm_x86_ops to communicate which DEBUGCTL bits need to be
-preserved, as FREEZE_IN_SMM is only supported and defined for Intel CPUs,
-i.e. explicitly checking FREEZE_IN_SMM in common x86 is at best weird, and
-at worst could lead to undesirable behavior in the future if AMD CPUs ever
-happened to pick up a collision with the bit.
-
-Exempt TDX vCPUs, i.e. protected guests, from the check, as the TDX Module
-owns and controls GUEST_IA32_DEBUGCTL.
-
-WARN in SVM if KVM_RUN_LOAD_DEBUGCTL is set, mostly to document that the
-lack of handling isn't a KVM bug (TDX already WARNs on any run_flag).
-
-Lastly, explicitly reload GUEST_IA32_DEBUGCTL on a VM-Fail that is missed
-by KVM but detected by hardware, i.e. in nested_vmx_restore_host_state().
-Doing so avoids the need to track host_debugctl on a per-VMCS basis, as
-GUEST_IA32_DEBUGCTL is unconditionally written by prepare_vmcs02() and
-load_vmcs12_host_state().  For the VM-Fail case, even though KVM won't
-have actually entered the guest, vcpu_enter_guest() will have run with
-vmcs02 active and thus could result in vmcs01 being run with a stale value.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
-Co-developed-by: Sean Christopherson <seanjc@google.com>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/include/asm/kvm_host.h |  7 +++++++
- arch/x86/kvm/vmx/main.c         |  2 ++
- arch/x86/kvm/vmx/nested.c       |  3 +++
- arch/x86/kvm/vmx/vmx.c          |  3 +++
- arch/x86/kvm/vmx/vmx.h          | 15 ++++++++++++++-
- arch/x86/kvm/x86.c              | 14 ++++++++++++--
- 6 files changed, 41 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 3d6325369a4b..e59527dd5a0b 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1676,6 +1676,7 @@ static inline u16 kvm_lapic_irq_dest_mode(bool dest_mode_logical)
- enum kvm_x86_run_flags {
- 	KVM_RUN_FORCE_IMMEDIATE_EXIT	= BIT(0),
- 	KVM_RUN_LOAD_GUEST_DR6		= BIT(1),
-+	KVM_RUN_LOAD_DEBUGCTL		= BIT(2),
- };
- 
- struct kvm_x86_ops {
-@@ -1706,6 +1707,12 @@ struct kvm_x86_ops {
- 	void (*vcpu_load)(struct kvm_vcpu *vcpu, int cpu);
- 	void (*vcpu_put)(struct kvm_vcpu *vcpu);
- 
-+	/*
-+	 * Mask of DEBUGCTL bits that are owned by the host, i.e. that need to
-+	 * match the host's value even while the guest is active.
-+	 */
-+	const u64 HOST_OWNED_DEBUGCTL;
-+
- 	void (*update_exception_bitmap)(struct kvm_vcpu *vcpu);
- 	int (*get_msr)(struct kvm_vcpu *vcpu, struct msr_data *msr);
- 	int (*set_msr)(struct kvm_vcpu *vcpu, struct msr_data *msr);
-diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
-index c85cbce6d2f6..4a6d4460f947 100644
---- a/arch/x86/kvm/vmx/main.c
-+++ b/arch/x86/kvm/vmx/main.c
-@@ -915,6 +915,8 @@ struct kvm_x86_ops vt_x86_ops __initdata = {
- 	.vcpu_load = vt_op(vcpu_load),
- 	.vcpu_put = vt_op(vcpu_put),
- 
-+	.HOST_OWNED_DEBUGCTL = DEBUGCTLMSR_FREEZE_IN_SMM,
-+
- 	.update_exception_bitmap = vt_op(update_exception_bitmap),
- 	.get_feature_msr = vmx_get_feature_msr,
- 	.get_msr = vt_op(get_msr),
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 9edce9f411a3..756c42e2d038 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -4860,6 +4860,9 @@ static void nested_vmx_restore_host_state(struct kvm_vcpu *vcpu)
- 			WARN_ON(kvm_set_dr(vcpu, 7, vmcs_readl(GUEST_DR7)));
- 	}
- 
-+	/* Reload DEBUGCTL to ensure vmcs01 has a fresh FREEZE_IN_SMM value. */
-+	vmx_reload_guest_debugctl(vcpu);
-+
- 	/*
- 	 * Note that calling vmx_set_{efer,cr0,cr4} is important as they
- 	 * handle a variety of side effects to KVM's software model.
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 196f33d934d3..70a115d99530 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7371,6 +7371,9 @@ fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu, u64 run_flags)
- 	if (run_flags & KVM_RUN_LOAD_GUEST_DR6)
- 		set_debugreg(vcpu->arch.dr6, 6);
- 
-+	if (run_flags & KVM_RUN_LOAD_DEBUGCTL)
-+		vmx_reload_guest_debugctl(vcpu);
-+
- 	/*
- 	 * Refresh vmcs.HOST_CR3 if necessary.  This must be done immediately
- 	 * prior to VM-Enter, as the kernel may load a new ASID (PCID) any time
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index c20a4185d10a..076af78af151 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -419,12 +419,25 @@ bool vmx_is_valid_debugctl(struct kvm_vcpu *vcpu, u64 data, bool host_initiated)
- 
- static inline void vmx_guest_debugctl_write(struct kvm_vcpu *vcpu, u64 val)
- {
-+	WARN_ON_ONCE(val & DEBUGCTLMSR_FREEZE_IN_SMM);
-+
-+	val |= vcpu->arch.host_debugctl & DEBUGCTLMSR_FREEZE_IN_SMM;
- 	vmcs_write64(GUEST_IA32_DEBUGCTL, val);
- }
- 
- static inline u64 vmx_guest_debugctl_read(void)
- {
--	return vmcs_read64(GUEST_IA32_DEBUGCTL);
-+	return vmcs_read64(GUEST_IA32_DEBUGCTL) & ~DEBUGCTLMSR_FREEZE_IN_SMM;
-+}
-+
-+static inline void vmx_reload_guest_debugctl(struct kvm_vcpu *vcpu)
-+{
-+	u64 val = vmcs_read64(GUEST_IA32_DEBUGCTL);
-+
-+	if (!((val ^ vcpu->arch.host_debugctl) & DEBUGCTLMSR_FREEZE_IN_SMM))
-+		return;
-+
-+	vmx_guest_debugctl_write(vcpu, val & ~DEBUGCTLMSR_FREEZE_IN_SMM);
- }
- 
- /*
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 6742eb556d91..811f4db824ab 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -10779,7 +10779,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 		dm_request_for_irq_injection(vcpu) &&
- 		kvm_cpu_accept_dm_intr(vcpu);
- 	fastpath_t exit_fastpath;
--	u64 run_flags;
-+	u64 run_flags, debug_ctl;
- 
- 	bool req_immediate_exit = false;
- 
-@@ -11051,7 +11051,17 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 		set_debugreg(0, 7);
- 	}
- 
--	vcpu->arch.host_debugctl = get_debugctlmsr();
-+	/*
-+	 * Refresh the host DEBUGCTL snapshot after disabling IRQs, as DEBUGCTL
-+	 * can be modified in IRQ context, e.g. via SMP function calls.  Inform
-+	 * vendor code if any host-owned bits were changed, e.g. so that the
-+	 * value loaded into hardware while running the guest can be updated.
-+	 */
-+	debug_ctl = get_debugctlmsr();
-+	if ((debug_ctl ^ vcpu->arch.host_debugctl) & kvm_x86_ops.HOST_OWNED_DEBUGCTL &&
-+	    !vcpu->arch.guest_state_protected)
-+		run_flags |= KVM_RUN_LOAD_DEBUGCTL;
-+	vcpu->arch.host_debugctl = debug_ctl;
- 
- 	guest_timing_enter_irqoff();
- 
--- 
-2.50.0.rc0.642.g800a2b2222-goog
+Matthew Gerlach
+>   drivers/spi/spi-cadence-quadspi.c | 12 +++++++-----
+>   1 file changed, 7 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/spi/spi-cadence-quadspi.c b/drivers/spi/spi-cadence-quadspi.c
+> index c90462783b3f..506a139fbd2c 100644
+> --- a/drivers/spi/spi-cadence-quadspi.c
+> +++ b/drivers/spi/spi-cadence-quadspi.c
+> @@ -1958,10 +1958,10 @@ static int cqspi_probe(struct platform_device *pdev)
+>   			goto probe_setup_failed;
+>   	}
+>   
+> -	ret = devm_pm_runtime_enable(dev);
+> -	if (ret) {
+> -		if (cqspi->rx_chan)
+> -			dma_release_channel(cqspi->rx_chan);
+> +	pm_runtime_enable(dev);
+> +
+> +	if (cqspi->rx_chan) {
+> +		dma_release_channel(cqspi->rx_chan);
+>   		goto probe_setup_failed;
+>   	}
+>   
+> @@ -1981,6 +1981,7 @@ static int cqspi_probe(struct platform_device *pdev)
+>   	return 0;
+>   probe_setup_failed:
+>   	cqspi_controller_enable(cqspi, 0);
+> +	pm_runtime_disable(dev);
+>   probe_reset_failed:
+>   	if (cqspi->is_jh7110)
+>   		cqspi_jh7110_disable_clk(pdev, cqspi);
+> @@ -1999,7 +2000,8 @@ static void cqspi_remove(struct platform_device *pdev)
+>   	if (cqspi->rx_chan)
+>   		dma_release_channel(cqspi->rx_chan);
+>   
+> -	clk_disable_unprepare(cqspi->clk);
+> +	if (pm_runtime_get_sync(&pdev->dev) >= 0)
+> +		clk_disable(cqspi->clk);
+>   
+>   	if (cqspi->is_jh7110)
+>   		cqspi_jh7110_disable_clk(pdev, cqspi);
 
