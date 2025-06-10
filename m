@@ -1,68 +1,45 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mail-8160.188.com (mail-8160.188.com [60.191.81.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE12525A62B;
-	Tue, 10 Jun 2025 10:26:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D8E25A62B;
+	Tue, 10 Jun 2025 10:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.191.81.60
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749551209; cv=none; b=djrAG5MLDJ4O2lg9iSgq1lkswCQkqMZQhnBrxfOUOGIIZXBdsKO20D0sUAehEpK6tDwA3tH62JACzJHDNgn+NQndvY30Nr7FHm2gGw0xX7feyVym0/mNNqXvV1L/gZ/npjeV8ye/yHbTovYmVvr+9/eyzSxodBl2pQTsueYSUB4=
+	t=1749551322; cv=none; b=uoyWW3Xubyi9iSvDVahHVPbmgE9Fn8MPM8SebvXXxH29HuluNaldaf/vwIfU3i7iJja1UMMZKBm3mAL1+2+3B/OYGnbhAI1u9Qbot9vznElE8/wxFZpj0P8oicyO09krvZCfLIN668SCz4KinVtdX6fMozr8wdxGh0j6rL7ixLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749551209; c=relaxed/simple;
-	bh=xj4Bk+QtP4Xe69OFwGbfLYunFjAhUgQvako1o9IrDtw=;
+	s=arc-20240116; t=1749551322; c=relaxed/simple;
+	bh=zPVnp1uFz6ezXexDiXFt/QExs+FjII/ZQVdaoHxweBY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tu8J6pgQ6kH2jjoZO+TAFSZsQG0YOtFMDXBLQwvlx5ufa0xY2iMF8q8vkMnVxavO+cnoPs5IOK3LOTGrHweeDfs1crsUKQWHYcAwEjbrZCZ8BcSSNeW3+Z0gQizQfOjDtk9+VPZMoQWUC6R9Twxis/ErJXBm8nrUlc9tEIYcQh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L9V4Sd/B; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=N79Y+QP6RhVd4xxTi1rNwORie//OdYPdUEIlI8Zs4ZjMe/OBa22HYRb8daRd4+asPC2iXVjqiLfqEauMhGLXJGzHSc2KsX3Pp3KXMJVNuXBYo02Np7j+PGryLiBHqanK6731ZBqmAnCG9NHI68uCQU5uIllFHaeOHffclCILEKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=jG12wcnh; arc=none smtp.client-ip=60.191.81.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L9V4Sd/B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749551208; x=1781087208;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xj4Bk+QtP4Xe69OFwGbfLYunFjAhUgQvako1o9IrDtw=;
-  b=L9V4Sd/B5lZVEM5lvinRVs6nb3hM5nkC2YWnAwXq7gP21mQ7bfAIEihK
-   1zjdE7k+hmU32R5QYQnxk+o2rp+l3IBcD3fz4uPjzbVPYekAw+ChNqh4J
-   xs1uDXb5aHE9zJKayXwLLHX4uqBTY3CdzZyN6zyEWlfBJjgyGuR5GY0Na
-   DYqxBkpDFhO+n5xIPXhAw+RDA2FVRoWiY6r2Ly8iSP3O0LyvkjjiGdgLN
-   yuTRs6rFMDcYsm9zgKG9vVFQ6ivrtzlLdgkNaL4bQqWDr50QuSJzCV6An
-   sEqE12mrbbRUjdxmUfVmxaDe4/J3/PhjcA5K5fhxWbJjNbr9LIQPndJMm
-   w==;
-X-CSE-ConnectionGUID: G+484nyLTZK94yFWJKdv8g==
-X-CSE-MsgGUID: 7fY7cQn5TAWIDNiGX1mZFQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="39271737"
-X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
-   d="scan'208";a="39271737"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 03:26:47 -0700
-X-CSE-ConnectionGUID: T+GOp6Q7Ta66D4mv0ATegA==
-X-CSE-MsgGUID: ODHchsrkR7WUYMpiy6C/2w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
-   d="scan'208";a="183977231"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 03:26:44 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uOwBj-00000005Jum-2oTR;
-	Tue, 10 Jun 2025 13:26:39 +0300
-Date: Tue, 10 Jun 2025 13:26:39 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Riyan Dhiman <riyandhiman14@gmail.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Paolo Perego <pperego@suse.de>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fbtft: reduce stack usage
-Message-ID: <aEgIX221QIt5k0zY@smile.fi.intel.com>
-References: <20250610092445.2640575-1-arnd@kernel.org>
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="jG12wcnh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=Pgg2mLehIG4sW1T+6g2YquviHKO39IVuKuCo2yGa6ec=;
+	b=jG12wcnhget0oYtzN2fj4tLvRJetIqjOpBoGVKmuIbqv8rcHUCsfvHsqh9zDyO
+	tXh5wa75Egbi9zPJFsL3SN8TZ5c6SXffLIWMIruvnmn8ni7LjSRCKekefFo0GAJp
+	SENzwVIxKPLZLaWicytt7ptq20dmOOj0A3PsFr3EVqA9U=
+Received: from dragon (unknown [])
+	by gzsmtp1 (Coremail) with SMTP id Mc8vCgAHnk8wBkhoU2NXAA--.14402S3;
+	Tue, 10 Jun 2025 18:17:22 +0800 (CST)
+Date: Tue, 10 Jun 2025 18:17:20 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: "Peter Chen (CIX)" <peter.chen@kernel.org>
+Cc: John Ernberg <john.ernberg@actia.se>, Xu Yang <xu.yang_2@nxp.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: i.MX kernel hangup caused by chipidea USB gadget driver
+Message-ID: <aEgGMCCdO3rc6Dkg@dragon>
+References: <aEZxmlHmjeWcXiF3@dragon>
+ <c56pgxmfscg6tpqxjayu4mvxc2g5kgmfitpvp36lxulpq4jxmg@ces5l7ofab6s>
+ <aEbstxkQmji4tfjf@w447anl.localdomain>
+ <20250610021243.GA1610560@nchen-desktop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,61 +48,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250610092445.2640575-1-arnd@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250610021243.GA1610560@nchen-desktop>
+X-CM-TRANSID:Mc8vCgAHnk8wBkhoU2NXAA--.14402S3
+X-Coremail-Antispam: 1Uf129KBjvJXoW7uFWfXFWfury8Xw47Cr45ZFb_yoW8Ww1fpa
+	yakw4fKw4DtrWYyFnF9r1xta4jkan8tr45CrZrJ345Za43u34Sqr4xKry5K3WUGr13uw1q
+	vr4jqw18CrnruaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07Um_M3UUUUU=
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiNBK5H2hIBjIyvQAA3b
 
-On Tue, Jun 10, 2025 at 11:24:38AM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On Tue, Jun 10, 2025 at 10:12:43AM +0800, Peter Chen (CIX) wrote:
+> Like Alan and Xu's suggestion, there are probably two problems here:
+> - When the system enters the suspend, the USB bus may neither at suspend
+> nor disconnect state if USB controller/phy's power is not off and VBUS
+> is there. So, the host still considers the device is active, it could
+> trigger transfer any time. If the transfer occurs during system resume,
+> the USB controller triggers interrupt to CPU, and USB's interrupt handler
+> is triggered. If the USB's hardware is still at low power mode (or clock
+> is gated off), it may cause system hang (CPU gets error response from USB)
+> after access register.
 > 
-> The use of vararg function pointers combined with a huge number of
-> arguments causes some configurations to exceed the stack size warning
-> limit:
-> 
-> drivers/staging/fbtft/fbtft-core.c:863:12: error: stack frame size (1512) exceeds limit (1280) in 'fbtft_init_display_from_property' [-Werror,-Wframe-larger-than]
-> 
-> drivers/staging/fbtft/fb_ssd1331.c:131:30: error: stack frame size (1392) exceeds limit (1280) in 'set_gamma' [-Werror,-Wframe-larger-than]
->                   ^
-> drivers/staging/fbtft/fb_ssd1351.c:120:30: error: stack frame size (1392) exceeds limit (1280) in 'set_gamma' [-Werror,-Wframe-larger-than]
-> 
-> Move the varargs handling into a separate noinline function so each
-> individual function stays below the limit. A better approach might be to
-> replace the varargs function with one that takes an array of arguments,
-> but that would be a much larger rework of the other callers.
+> With Shawn's change, it pulls D+ down during the suspend, and the host
+> is notified of disconnection, so the host will not trigger transfer
+> until D+ is pulled up by calling usb_gadget_connect. The USB leaves
+> low power mode (and turn clock on) before that, the access register
+> will not cause system hang.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Thanks for the input, Peter!  It's very helpful and well explaining what
+I'm seeing here.
 
-...
+> - The current chipidea driver doesn't notify gadget driver when it
+> enters system suspend routine. In fact, during system suspend/resume,
+> the controller driver may not respond middle layer's (network) request 
+> well due to it enters low power mode, so calling usb_gadget_driver->
+> disconnect (composite_disconnect) is needed during controller's suspend
+> routine, it calls function->disable for USB function driver and
+> ends/stop middle layer process.
 
-> +static noinline_for_stack void fbtft_write_register_64(struct fbtft_par *par,
-> +							int i, int buf[64])
+This problem can also be addressed by Xu's suggestion, i.e. calling
+gadget driver's suspend hook from udc_suspend()?
 
-Perhaps int i, int buf[64] should be u32?
-
-> +{
-> +	par->fbtftops.write_register(par, i,
-> +		buf[0], buf[1], buf[2], buf[3],
-> +		buf[4], buf[5], buf[6], buf[7],
-> +		buf[8], buf[9], buf[10], buf[11],
-> +		buf[12], buf[13], buf[14], buf[15],
-> +		buf[16], buf[17], buf[18], buf[19],
-> +		buf[20], buf[21], buf[22], buf[23],
-> +		buf[24], buf[25], buf[26], buf[27],
-> +		buf[28], buf[29], buf[30], buf[31],
-> +		buf[32], buf[33], buf[34], buf[35],
-> +		buf[36], buf[37], buf[38], buf[39],
-> +		buf[40], buf[41], buf[42], buf[43],
-> +		buf[44], buf[45], buf[46], buf[47],
-> +		buf[48], buf[49], buf[50], buf[51],
-> +		buf[52], buf[53], buf[54], buf[55],
-> +		buf[56], buf[57], buf[58], buf[59],
-> +		buf[60], buf[61], buf[62], buf[63]);
-> +}
-
-Wondering if we may reuse this in other cases (by providing the additional
-length parameter). But it may be done later on.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Shawn
 
