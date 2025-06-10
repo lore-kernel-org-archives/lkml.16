@@ -1,185 +1,170 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00EFD244665
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 17:17:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F5492B9BF;
+	Tue, 10 Jun 2025 17:17:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749575827; cv=none; b=BeOjGN7cCCubP1mUJ/QkxwfYhe5sjpcc3UlreAvPHdkOYyu6AwJ14cUnO3iuIgs6DAzaBxAEHwSZ5vntE7j9GGekFH8KHeCME1Xpxt8vY97k3XP5Y0yGshQv7YMT2jOUOCLtLVYPcjQF8Ao46tmR+Fk2XSugPBxC54yr976AFEY=
+	t=1749575861; cv=none; b=dyQSC2+Jcdhy+rEylfqwL7EYoe07QZCZIr8qJ9PvPQfRVSrYldE70kQuAhhcfj2otINmy8mByDJjkJIy1FGnQpAjLDsPDH53vOW0xfCW3W/L6Yu/Bbfsv2POs/A92S8b6ohxDsGsfu5zycV4tyz4EvwEyswKp/l656Rz9HaFPAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749575827; c=relaxed/simple;
-	bh=7qWvqWj2EPLfEU+9olEuqM3aOuZT6KWZE0lgk7JeiA8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jDxT8SId7lqCgO6rd0JZXF0uhKrmGrf5Ms56lG8SggldRTU4cUmdjOdTauhNHb303WgBByh+pTBEACIIWEC1IYdDNSqovWI2z7QZXXZtLtG2ereHRxt5hZJeg4jm6355tvXexftnLohJvVBOUfvsPZK5wsQ5TpPdtHsggq9eMEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=liGWDznj; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1749575861; c=relaxed/simple;
+	bh=/oOOPnbIZun7zpCdcWpErbK1hHRhmjF7RqBExrZ88vw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=lT0rnYNDimg23GNbAaWfenFq8Owt/ufTTH4b010M/NN9wc2KBvDsVrkLck3rWvqOPdPd6Cl8iCtP5aJMEeGC1jtfKOFevaw3+VT92iAOqTlVcQaAOzKHJbrWdI+KuZQmdn1A4gCsxZI50b+CrSNDstD3zxBriuMn4bLVEHrbVzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kq6pLf3C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="liGWDznj"
-Message-ID: <32cb1c74-4a15-491b-90b0-6c2fdf07dbb9@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749575821;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+6TLYW+X+ICRdTEemlhyxVV2i9XawqfMflRijJ5ErnI=;
-	b=liGWDznjsQnZfLpkxO80cgofTbJIluw5YkqYn3LOMjUkDS6Cc/lgdz5QYubeluHK1gfl1w
-	OYvcnObecHhkbw6WXGUTf1sW+AbmjjUyD0utX3oi2mwJhcRnnu6RTDzQkumwVHtGgwaEC1
-	QuaXoip0XSi1hYKg1Z89iFSZyX+h47w=
-Date: Tue, 10 Jun 2025 10:16:55 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kq6pLf3C"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8AA47C4CEED;
+	Tue, 10 Jun 2025 17:17:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749575860;
+	bh=/oOOPnbIZun7zpCdcWpErbK1hHRhmjF7RqBExrZ88vw=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=Kq6pLf3CXVh7TZHtX+jlnsOJq/MjD+DiVqPe85XWy+oED7SFnT5diodjhAxOzcZ7K
+	 prcB0IwbfoWJr2g/Akv1et4lG6U3H/exuls+7BxZeW9+UStdc+2VsB8rlFmlHBUhjO
+	 fvbQdhwOGJb1qML7JSgI8YLyaiOymeyXUzSyfml0YCNZBXDgwboDVaVXsPlVgdRNGa
+	 8614LYExgDCDxUOz/YSQWCeskd/k55Qb6rvK1FebhosRZ+gQm1mF5YZ+48jwT9xTA/
+	 HmiXmKeB5ev93ooD1pNu1kEw905vuUURQhpWqv3Q3QExRT7nbVz+STb1dMRZJ9R5/7
+	 1jIyCEF6U61IA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C350C71132;
+	Tue, 10 Jun 2025 17:17:40 +0000 (UTC)
+From: Sven Peter <sven@kernel.org>
+Date: Tue, 10 Jun 2025 17:17:35 +0000
+Subject: [PATCH 2/2] arm64: dts: apple: Add bit offset to PMIC NVMEM node
+ names
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 2/2] selftests/bpf: Convert test_sysctl to prog_tests
-Content-Language: en-GB
-To: Jerome Marchand <jmarchan@redhat.com>, bpf@vger.kernel.org
-Cc: Martin KaFai Lau <martin.lau@linux.dev>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
- Eduard Zingerman <eddyz87@gmail.com>
-References: <20250527165412.533335-1-jmarchan@redhat.com>
- <20250610091933.717824-1-jmarchan@redhat.com>
- <20250610091933.717824-3-jmarchan@redhat.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yonghong Song <yonghong.song@linux.dev>
-In-Reply-To: <20250610091933.717824-3-jmarchan@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Message-Id: <20250610-nvmem-bit-pattern-v1-2-55ed5c1b369c@kernel.org>
+References: <20250610-nvmem-bit-pattern-v1-0-55ed5c1b369c@kernel.org>
+In-Reply-To: <20250610-nvmem-bit-pattern-v1-0-55ed5c1b369c@kernel.org>
+To: Srinivas Kandagatla <srini@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Janne Grunau <j@jannau.net>, 
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, 
+ Hector Martin <marcan@marcan.st>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Sasha Finkelstein <fnkl.kernel@gmail.com>, asahi@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, Sven Peter <sven@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3530; i=sven@kernel.org;
+ h=from:subject:message-id;
+ bh=/oOOPnbIZun7zpCdcWpErbK1hHRhmjF7RqBExrZ88vw=;
+ b=owGbwMvMwCHmIlirolUq95LxtFoSQ4ZHxkauiXzqc+TuxG9Y+u/i3ydbn4he/GKjfTL0xdydy
+ 6tO77G82lHKwiDGwSArpsiyfb+96ZOHbwSXbrr0HmYOKxPIEAYuTgGYyNT7jAwfPr+SKNtcZnCF
+ ReX+VWv2nyLvOxqdHpbvlTDtqtL995aFkWGKv8ujpB5dodI/Nm1P2jmb/y3fOaujIDuh78AGq0c
+ CiXwA
+X-Developer-Key: i=sven@kernel.org; a=openpgp;
+ fpr=A1E3E34A2B3C820DBC4955E5993B08092F131F93
+X-Endpoint-Received: by B4 Relay for sven@kernel.org/default with
+ auth_id=407
+
+Now that the dt-binding has been extended to allow indicating the bit
+position the following warning about a duplicate unit address with W=1
+can be fixed:
+
+arch/arm64/boot/dts/apple/t8103.dtsi:764.46-767.8: Warning (unique_unit_address_if_enabled): /soc/spmi@23d0d9300/pmic@f/nvmem-layout/boot-error-count@9f02: duplicate unit-address (also used in node /soc/spmi@23d0d9300/pmic@f/nvmem-layout/panic-count@9f02)
+
+Fixes: 14b7178a76e2 ("arm64: dts: apple: Add PMIC NVMEM")
+Signed-off-by: Sven Peter <sven@kernel.org>
+---
+ arch/arm64/boot/dts/apple/t600x-die0.dtsi | 6 +++---
+ arch/arm64/boot/dts/apple/t8103.dtsi      | 6 +++---
+ arch/arm64/boot/dts/apple/t8112.dtsi      | 6 +++---
+ 3 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/apple/t600x-die0.dtsi b/arch/arm64/boot/dts/apple/t600x-die0.dtsi
+index 110bc6719512e334e04b496fb157cb4368679957..17ad9328baa14de66ff0f0fdf9e26b3f4a80524a 100644
+--- a/arch/arm64/boot/dts/apple/t600x-die0.dtsi
++++ b/arch/arm64/boot/dts/apple/t600x-die0.dtsi
+@@ -72,12 +72,12 @@ boot_stage: boot-stage@6001 {
+ 					reg = <0x6001 0x1>;
+ 				};
+ 
+-				boot_error_count: boot-error-count@6002 {
++				boot_error_count: boot-error-count@6002,0 {
+ 					reg = <0x6002 0x1>;
+ 					bits = <0 4>;
+ 				};
+ 
+-				panic_count: panic-count@6002 {
++				panic_count: panic-count@6002,4 {
+ 					reg = <0x6002 0x1>;
+ 					bits = <4 4>;
+ 				};
+@@ -86,7 +86,7 @@ boot_error_stage: boot-error-stage@6003 {
+ 					reg = <0x6003 0x1>;
+ 				};
+ 
+-				shutdown_flag: shutdown-flag@600f {
++				shutdown_flag: shutdown-flag@600f,3 {
+ 					reg = <0x600f 0x1>;
+ 					bits = <3 1>;
+ 				};
+diff --git a/arch/arm64/boot/dts/apple/t8103.dtsi b/arch/arm64/boot/dts/apple/t8103.dtsi
+index 20faf0c0d80927b2e18dd966a61b5507b322c72f..76bab19f99c89d5c0a025fb313b53bac1f703bc9 100644
+--- a/arch/arm64/boot/dts/apple/t8103.dtsi
++++ b/arch/arm64/boot/dts/apple/t8103.dtsi
+@@ -761,12 +761,12 @@ boot_stage: boot-stage@9f01 {
+ 						reg = <0x9f01 0x1>;
+ 					};
+ 
+-					boot_error_count: boot-error-count@9f02 {
++					boot_error_count: boot-error-count@9f02,0 {
+ 						reg = <0x9f02 0x1>;
+ 						bits = <0 4>;
+ 					};
+ 
+-					panic_count: panic-count@9f02 {
++					panic_count: panic-count@9f02,4 {
+ 						reg = <0x9f02 0x1>;
+ 						bits = <4 4>;
+ 					};
+@@ -775,7 +775,7 @@ boot_error_stage: boot-error-stage@9f03 {
+ 						reg = <0x9f03 0x1>;
+ 					};
+ 
+-					shutdown_flag: shutdown-flag@9f0f {
++					shutdown_flag: shutdown-flag@9f0f,3 {
+ 						reg = <0x9f0f 0x1>;
+ 						bits = <3 1>;
+ 					};
+diff --git a/arch/arm64/boot/dts/apple/t8112.dtsi b/arch/arm64/boot/dts/apple/t8112.dtsi
+index e95711d8337f6cea898e88a3d564caf2c4f94404..a27e2312b0c73d5352a80dd050c7b314786add4a 100644
+--- a/arch/arm64/boot/dts/apple/t8112.dtsi
++++ b/arch/arm64/boot/dts/apple/t8112.dtsi
+@@ -809,12 +809,12 @@ boot_stage: boot-stage@f701 {
+ 						reg = <0xf701 0x1>;
+ 					};
+ 
+-					boot_error_count: boot-error-count@f702 {
++					boot_error_count: boot-error-count@f702,0 {
+ 						reg = <0xf702 0x1>;
+ 						bits = <0 4>;
+ 					};
+ 
+-					panic_count: panic-count@f702 {
++					panic_count: panic-count@f702,4 {
+ 						reg = <0xf702 0x1>;
+ 						bits = <4 4>;
+ 					};
+@@ -823,7 +823,7 @@ boot_error_stage: boot-error-stage@f703 {
+ 						reg = <0xf703 0x1>;
+ 					};
+ 
+-					shutdown_flag: shutdown-flag@f70f {
++					shutdown_flag: shutdown-flag@f70f,3 {
+ 						reg = <0xf70f 0x1>;
+ 						bits = <3 1>;
+ 					};
+
+-- 
+2.34.1
 
 
-
-On 6/10/25 2:19 AM, Jerome Marchand wrote:
-> Convert test_sysctl test to prog_tests with minimal change to the
-> tests themselves.
->
-> Signed-off-by: Jerome Marchand <jmarchan@redhat.com>
-> ---
->   tools/testing/selftests/bpf/.gitignore        |  1 -
->   tools/testing/selftests/bpf/Makefile          |  5 ++-
->   .../bpf/{ => prog_tests}/test_sysctl.c        | 32 ++++---------------
->   3 files changed, 9 insertions(+), 29 deletions(-)
->   rename tools/testing/selftests/bpf/{ => prog_tests}/test_sysctl.c (98%)
->
-> diff --git a/tools/testing/selftests/bpf/.gitignore b/tools/testing/selftests/bpf/.gitignore
-> index e2a2c46c008b1..3d8378972d26c 100644
-> --- a/tools/testing/selftests/bpf/.gitignore
-> +++ b/tools/testing/selftests/bpf/.gitignore
-> @@ -21,7 +21,6 @@ test_lirc_mode2_user
->   flow_dissector_load
->   test_tcpnotify_user
->   test_libbpf
-> -test_sysctl
->   xdping
->   test_cpp
->   *.d
-> diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-> index 66bb50356be08..53dc08d905bd1 100644
-> --- a/tools/testing/selftests/bpf/Makefile
-> +++ b/tools/testing/selftests/bpf/Makefile
-> @@ -70,7 +70,7 @@ endif
->   # Order correspond to 'make run_tests' order
->   TEST_GEN_PROGS = test_verifier test_tag test_maps test_lru_map test_progs \
->   	test_sockmap \
-> -	test_tcpnotify_user test_sysctl \
-> +	test_tcpnotify_user \
->   	test_progs-no_alu32
->   TEST_INST_SUBDIRS := no_alu32
->   
-> @@ -215,7 +215,7 @@ ifeq ($(VMLINUX_BTF),)
->   $(error Cannot find a vmlinux for VMLINUX_BTF at any of "$(VMLINUX_BTF_PATHS)")
->   endif
->   
-> -# Define simple and short `make test_progs`, `make test_sysctl`, etc targets
-> +# Define simple and short `make test_progs`, `make test_maps`, etc targets
->   # to build individual tests.
->   # NOTE: Semicolon at the end is critical to override lib.mk's default static
->   # rule for binaries.
-> @@ -324,7 +324,6 @@ NETWORK_HELPERS := $(OUTPUT)/network_helpers.o
->   $(OUTPUT)/test_sockmap: $(CGROUP_HELPERS) $(TESTING_HELPERS)
->   $(OUTPUT)/test_tcpnotify_user: $(CGROUP_HELPERS) $(TESTING_HELPERS) $(TRACE_HELPERS)
->   $(OUTPUT)/test_sock_fields: $(CGROUP_HELPERS) $(TESTING_HELPERS)
-> -$(OUTPUT)/test_sysctl: $(CGROUP_HELPERS) $(TESTING_HELPERS)
->   $(OUTPUT)/test_tag: $(TESTING_HELPERS)
->   $(OUTPUT)/test_lirc_mode2_user: $(TESTING_HELPERS)
->   $(OUTPUT)/xdping: $(TESTING_HELPERS)
-> diff --git a/tools/testing/selftests/bpf/test_sysctl.c b/tools/testing/selftests/bpf/prog_tests/test_sysctl.c
-> similarity index 98%
-> rename from tools/testing/selftests/bpf/test_sysctl.c
-> rename to tools/testing/selftests/bpf/prog_tests/test_sysctl.c
-> index bcdbd27f22f08..049671361f8fa 100644
-> --- a/tools/testing/selftests/bpf/test_sysctl.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/test_sysctl.c
-> @@ -1,22 +1,8 @@
->   // SPDX-License-Identifier: GPL-2.0
->   // Copyright (c) 2019 Facebook
->   
-> -#include <fcntl.h>
-> -#include <stdint.h>
-> -#include <stdio.h>
-> -#include <stdlib.h>
-> -#include <string.h>
-> -#include <unistd.h>
-> -
-> -#include <linux/filter.h>
-> -
-> -#include <bpf/bpf.h>
-> -#include <bpf/libbpf.h>
-> -
-> -#include <bpf/bpf_endian.h>
-> -#include "bpf_util.h"
-> +#include "test_progs.h"
->   #include "cgroup_helpers.h"
-> -#include "testing_helpers.h"
->   
->   #define CG_PATH			"/foo"
->   #define MAX_INSNS		512
-> @@ -1608,26 +1594,22 @@ static int run_tests(int cgfd)
->   	return fails ? -1 : 0;
->   }
->   
-> -int main(int argc, char **argv)
-> +void test_sysctl(void)
->   {
->   	int cgfd = -1;
-
--1 is not needed.
-
-> -	int err = 0;
->   
->   	cgfd = cgroup_setup_and_join(CG_PATH);
-> -	if (cgfd < 0)
-> -		goto err;
-> +	if (CHECK_FAIL(cgfd < 0))
-
-Use ASSERT* macros. For example, if (!ASSERT_OK_FD(cgfd, "create cgroup"))
-
-> +		goto out;
->   
->   	/* Use libbpf 1.0 API mode */
->   	libbpf_set_strict_mode(LIBBPF_STRICT_ALL);
-
-This is not needed.
-
->   
-> -	if (run_tests(cgfd))
-> -		goto err;
-> +	if (CHECK_FAIL(run_tests(cgfd)))
-
-if (!ASSERT_OK(run_tests(cgfd), "run_tests"))
-
-> +		goto out;
->   
-> -	goto out;
-> -err:
-> -	err = -1;
->   out:
->   	close(cgfd);
->   	cleanup_cgroup_environment();
-> -	return err;
-> +	return;
->   }
