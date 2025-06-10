@@ -1,265 +1,262 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA2928CF7F
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:07:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 746F228CF7F;
+	Tue, 10 Jun 2025 12:07:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749557253; cv=none; b=rtMYPjkd+/WteEsBW4BPgyutVXzz1NxaoxuQlaTF8EyuYDg7WQ++ZT9gjoJwXiQ35oBvTjN59BBSnxv8bAkF2+DhlBd2emh5yquUstsgk/s/x7y3qJdf/aVvwQ/wh5FzMhwDbgWSVjuhJWKivyzdivdfcBoNOWETNpqnnTmFI8M=
+	t=1749557260; cv=none; b=tymfhVk/hALvztb6D0tLrD9fe1bIU5DEa7ad334aEwLS4MoTLJdK6S784ll41vn/3dlOGYrAr6JutTdokEEgX7Ag6XmnLaJPR2pJIVnYJh9GQJvxVsmTCvUXMYxVVONXfmQIYMResAeKwqILMgIsIiooFhcSmS8NXsSI0QOx4+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749557253; c=relaxed/simple;
-	bh=ouyzXuBF+fVbp+yOqabfIpHEJ6bpxZbs6bw2CP6uQL0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A5J1I8ioh1fTojfMArhYQ8IsiNrkS3bDF3M3PHQCNwJdpOO7XaijW0LPuM/Q/matSa8h9cSYeqQio7Q3FggIQPJiWWaHwqHOxHQgo9emACKaqN0beTYkkI3XepCs1ukDcpQbLoubwzHM7do2nd06ehw+YMDpjRc0TnSbfWIT/dY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jOi6nFDt; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749557260; c=relaxed/simple;
+	bh=aA4A8xLS+ECd1w0wWi+hwJEtG5/NUV8SdihKO6ly2nM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tj2k6k4usGcyC7XqvIziO/4CW6koKVHk3dPhs4VnmPb8B0XO9VWWMzfgNa/USPTJDs7UZUwFymMvAyhC6iieauC01++vL74BkQqiZcmrFDI5CTPbhZ4ZCUtcr4c+3DeFNnWBQTR3rj46scZq8DNAB41WJl1HVA+nvByahdnT14o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=jlLDQDez; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jOi6nFDt"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-32ac52f78c1so54256651fa.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 05:07:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749557250; x=1750162050; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=80j8xEIjFLLgM50tb0hHAecK03VFnu4CWMtVgyhnh6w=;
-        b=jOi6nFDtp2HLOjjgfO4QQDtmLhDS/v21s6Ot8ESV3CWY1wF2GHWsI0hZYvIiK8pABQ
-         xPN+3Yksq+x6Ufo9eqSKi7sG70/XP0CDve9zGqCGvNzHkjtqqymXKO8HFtDHG7YLVQjd
-         r7tlbGVAam1lz+/QO9wVKO0/2YP9970jbI2FJWudb3x9Fub0okBCPJ9HOZq9D20THSMm
-         po1UVowOXZFxapHtehRyTl1FZwud0n2Tx98ii7Wrl3J7dv2JyVPOsKDzCo8PUCo8hYFW
-         89NaISq6DwnF9YzjIornO/mUF4U5reqpz5lvMCklGOm/6I37qDl4f+sfEiuw9bWRutAi
-         nB0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749557250; x=1750162050;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=80j8xEIjFLLgM50tb0hHAecK03VFnu4CWMtVgyhnh6w=;
-        b=S8T8oo0m26j+Gs/cRVB1jbMwhLjQjEsX7T/DAs1AmCxeomcNTW3iz14e1f8fTA3ieG
-         lcR1x7QMAYJsxLlzWUe4o61flm09e8R0loiQ4NTPoTvXIN00CDgEkkv9SdFqkaFd1wQT
-         ZMrIQnbk6CbcDNyXZg1mcu+3p+NRc4LkVQ51oxGAzz9FfejryrUfeWKCrzoerhLhV2/2
-         kKoqVWsjLQjTnUZypbyyXGLB3Ldtkv0elOLscOYIfVX3dcN/bYyer2jiRWvbkogDDRhU
-         MMkiQOJhPBR4o59HpDqCLwyt7ZPY0bxC/n4bWEtWywh9ibcP2hx6c5Lpl8LqG6qaTGri
-         5fWA==
-X-Forwarded-Encrypted: i=1; AJvYcCUfsYP0y76L37jWrhfGyzxwGfSDPpK/AGRnpj6p+dVsFT3Utc2NtMcNB0OihXOZ2qnpBLo4V++ch7aX6Y4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeW0l2czdW1HDHYJkctnwkEbgWbLQfA81MlYVlaH0RUInmAAH7
-	vAaECuxCqxUUKdoMhE272LxRps+swP3rK+HUcwZMFv8pd7q8Her6AgFXYw34tpd88EZlXJGfoGd
-	GGFn3UL0Qxi4p3ZqyhkplbQMbIAyqVdw=
-X-Gm-Gg: ASbGnct+uhFWDDeX2bYz0xwn4YS2+DbjRRKzR7RlUNrc/kDaAxN5tEYjjE4ca7t/GCs
-	kJgJLoxxcvyexFc47/YoANeGxvce+Sg6i5WrhhOLm8wdRWliihi/wUkgnl8AJwrsPcTONfPQeEw
-	j9rljaLXPxPa/xSvfvs1DGUwQqr1UwXbZs2/4ZVOKRqlQ=
-X-Google-Smtp-Source: AGHT+IHdzD2n5YjHYhzbVVkX3fKJUE+A2OkJ4mjr5AkBQUC8WdSHmJZHPK//RHgUOKLItQTzNye2FqMINr82G7CYBko=
-X-Received: by 2002:a2e:be9e:0:b0:30c:aae:6d61 with SMTP id
- 38308e7fff4ca-32adfdebf59mr50516841fa.30.1749557249169; Tue, 10 Jun 2025
- 05:07:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jlLDQDez"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55A8uje8029692;
+	Tue, 10 Jun 2025 12:07:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=Jey4AS
+	himmOWh5g7EgTau/abqMZNEL12r+V2Fqr7Y0s=; b=jlLDQDezZ3HaJIzu0IJmqU
+	7aIJIUwkzoHWzAUBljnEpzIhKh00pM9/l4lCHgwywpn5vw9J49iZ6Cz7QvXCl0JF
+	BUWXIhodqX7Dlcz80iTYEuIoKoEOwpuFO27TZTpoN4oG36wiZES6WFdWDHvHl/sI
+	vkRyZwkWgHc/SXRzam11gZXbAm3vk/zCZuXPgrqiFvGX7qDddus0Z8wev59Xaa4h
+	l8pBp1HtezfXNwNupcOWQOHPDP6kibiUIoKoK0Y4ik+qon5tUrt7lKkDany1/XZg
+	4SlQURIWbjh2Ot86gN5KNoMEEkBEI+dD0usTl+UY5RrUMyLDGIcE4BVquPiIURPw
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 474cxj658p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Jun 2025 12:07:16 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55AAkSA8019565;
+	Tue, 10 Jun 2025 12:07:15 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4752f29x0g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Jun 2025 12:07:15 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55AC7Dwa48431594
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 10 Jun 2025 12:07:13 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 53FA020063;
+	Tue, 10 Jun 2025 12:07:13 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 337182004E;
+	Tue, 10 Jun 2025 12:07:11 +0000 (GMT)
+Received: from li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com (unknown [9.109.219.249])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 10 Jun 2025 12:07:10 +0000 (GMT)
+Date: Tue, 10 Jun 2025 17:37:08 +0530
+From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+To: Baokun Li <libaokun1@huawei.com>
+Cc: linux-ext4@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
+        jack@suse.cz, linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
+        yangerkun@huawei.com, libaokun@huaweicloud.com
+Subject: Re: [PATCH 1/4] ext4: add ext4_try_lock_group() to skip busy groups
+Message-ID: <aEgf7Jf9x5BXSwbz@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+References: <20250523085821.1329392-1-libaokun@huaweicloud.com>
+ <20250523085821.1329392-2-libaokun@huaweicloud.com>
+ <aDcmRdOrWatcBJWc@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+ <d5d840c5-d030-48de-84df-3891f498cfc7@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250609171751.36305-1-ryncsn@gmail.com> <CAKEwX=Pz7kbvvgfBmspS8L5XKHv6cQ3B1Yvx=Tm1metQXEEW+A@mail.gmail.com>
-In-Reply-To: <CAKEwX=Pz7kbvvgfBmspS8L5XKHv6cQ3B1Yvx=Tm1metQXEEW+A@mail.gmail.com>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Tue, 10 Jun 2025 20:07:11 +0800
-X-Gm-Features: AX0GCFuWYIwav4rBaHsjrNi9kdwf54qgTpqYzrPnbbTLYKH9o3hXXphGU3Ij5ME
-Message-ID: <CAMgjq7Akg4HOOPNamgMw+3cNc9-oFzT8Jv9r25Sk0EdGcR3SrA@mail.gmail.com>
-Subject: Re: [PATCH v2] mm/shmem, swap: fix softlockup with mTHP swapin
-To: Nhat Pham <nphamcs@gmail.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Hugh Dickins <hughd@google.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Kemeng Shi <shikemeng@huaweicloud.com>, Chris Li <chrisl@kernel.org>, 
-	Baoquan He <bhe@redhat.com>, Barry Song <baohua@kernel.org>, Usama Arif <usamaarif642@gmail.com>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d5d840c5-d030-48de-84df-3891f498cfc7@huawei.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: nLrjnl_Wf3tJfZMdtDpCI1TXoyggHrsL
+X-Proofpoint-GUID: nLrjnl_Wf3tJfZMdtDpCI1TXoyggHrsL
+X-Authority-Analysis: v=2.4 cv=fZWty1QF c=1 sm=1 tr=0 ts=68481ff4 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=AiHppB-aAAAA:8 a=i0EeH86SAAAA:8 a=KFyfeOmcnQpl-OtaCRAA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDA5MiBTYWx0ZWRfX81NE7Oyjjko1 1FcuAWHKHT9B8TelW2x6D13O1dVdwZXecyKnjrv03KYDNnEr1KUCni+/qskW+yjBPX8aUjNiCFi MRX4mrSW6MLpRTydHDmigPJ4nAg+Q5SSTmjD3KqxcUoAI40/ZNrD2z0WrKGUFdhbEPL1fmsDqtg
+ UDObHkJPDAiymmy/JgscqBaOb6rue1aT1kG+39mrItXjv57Dl7US6i8237LDqHLkz2rVxwtNLl1 kfe8DgaQUbBM3zP12RocLxfyQ/u+ESifbZ6KRIuJOz6LG5SaykLL5mmkp2Bi0zkqhU8SlxD0VFT raAzr0k0cSBWWIOZrQ5ANyX6V2cMlQBXh5RJHYxGtN1sWGeEYvZ7T9nnGQ6Z1J3QV3rJnlrQHtX
+ +Z851btd8INh/ZFzPmxmTTJNEBn4sjcktNFyNpKCok+1uYBtOrzlCfDatJg7XyhIQ9CCS8/0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-10_04,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ priorityscore=1501 spamscore=0 bulkscore=0 phishscore=0 suspectscore=0
+ adultscore=0 mlxscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506100092
 
-On Tue, Jun 10, 2025 at 2:16=E2=80=AFAM Nhat Pham <nphamcs@gmail.com> wrote=
-:
->
-> On Mon, Jun 9, 2025 at 10:18=E2=80=AFAM Kairui Song <ryncsn@gmail.com> wr=
-ote:
-> >
-> > From: Kairui Song <kasong@tencent.com>
-> >
-> > Following softlockup can be easily reproduced on my test machine with:
-> >
-> > echo always > /sys/kernel/mm/transparent_hugepage/hugepages-64kB/enable=
-d
-> > swapon /dev/zram0 # zram0 is a 48G swap device
-> > mkdir -p /sys/fs/cgroup/memory/test
-> > echo 1G > /sys/fs/cgroup/test/memory.max
-> > echo $BASHPID > /sys/fs/cgroup/test/cgroup.procs
-> > while true; do
-> >     dd if=3D/dev/zero of=3D/tmp/test.img bs=3D1M count=3D5120
-> >     cat /tmp/test.img > /dev/null
-> >     rm /tmp/test.img
-> > done
-> >
-> > Then after a while:
-> > watchdog: BUG: soft lockup - CPU#0 stuck for 763s! [cat:5787]
-> > Modules linked in: zram virtiofs
-> > CPU: 0 UID: 0 PID: 5787 Comm: cat Kdump: loaded Tainted: G             =
-L      6.15.0.orig-gf3021d9246bc-dirty #118 PREEMPT(voluntary)=C2=B7
-> > Tainted: [L]=3DSOFTLOCKUP
-> > Hardware name: Red Hat KVM/RHEL-AV, BIOS 0.0.0 02/06/2015
-> > RIP: 0010:mpol_shared_policy_lookup+0xd/0x70
-> > Code: e9 b8 b4 ff ff 31 c0 c3 cc cc cc cc 90 90 90 90 90 90 90 90 90 90=
- 90 90 90 90 90 90 90 66 0f 1f 00 0f 1f 44 00 00 41 54 55 53 <48> 8b 1f 48 =
-85 db 74 41 4c 8d 67 08 48 89 fb 48 89 f5 4c 89 e7 e8
-> > RSP: 0018:ffffc90002b1fc28 EFLAGS: 00000202
-> > RAX: 00000000001c20ca RBX: 0000000000724e1e RCX: 0000000000000001
-> > RDX: ffff888118e214c8 RSI: 0000000000057d42 RDI: ffff888118e21518
-> > RBP: 000000000002bec8 R08: 0000000000000001 R09: 0000000000000000
-> > R10: 0000000000000bf4 R11: 0000000000000000 R12: 0000000000000001
-> > R13: 00000000001c20ca R14: 00000000001c20ca R15: 0000000000000000
-> > FS:  00007f03f995c740(0000) GS:ffff88a07ad9a000(0000) knlGS:00000000000=
-00000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 00007f03f98f1000 CR3: 0000000144626004 CR4: 0000000000770eb0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > PKRU: 55555554
-> > Call Trace:
-> >  <TASK>
-> >  shmem_alloc_folio+0x31/0xc0
-> >  shmem_swapin_folio+0x309/0xcf0
-> >  ? filemap_get_entry+0x117/0x1e0
-> >  ? xas_load+0xd/0xb0
-> >  ? filemap_get_entry+0x101/0x1e0
-> >  shmem_get_folio_gfp+0x2ed/0x5b0
-> >  shmem_file_read_iter+0x7f/0x2e0
-> >  vfs_read+0x252/0x330
-> >  ksys_read+0x68/0xf0
-> >  do_syscall_64+0x4c/0x1c0
-> >  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> > RIP: 0033:0x7f03f9a46991
-> > Code: 00 48 8b 15 81 14 10 00 f7 d8 64 89 02 b8 ff ff ff ff eb bd e8 20=
- ad 01 00 f3 0f 1e fa 80 3d 35 97 10 00 00 74 13 31 c0 0f 05 <48> 3d 00 f0 =
-ff ff 77 4f c3 66 0f 1f 44 00 00 55 48 89 e5 48 83 ec
-> > RSP: 002b:00007fff3c52bd28 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-> > RAX: ffffffffffffffda RBX: 0000000000040000 RCX: 00007f03f9a46991
-> > RDX: 0000000000040000 RSI: 00007f03f98ba000 RDI: 0000000000000003
-> > RBP: 00007fff3c52bd50 R08: 0000000000000000 R09: 00007f03f9b9a380
-> > R10: 0000000000000022 R11: 0000000000000246 R12: 0000000000040000
-> > R13: 00007f03f98ba000 R14: 0000000000000003 R15: 0000000000000000
-> >  </TASK>
-> >
-> > The reason is simple, readahead brought some order 0 folio in swap
-> > cache, and the swapin mTHP folio being allocated is in confict with it,
-> > so swapcache_prepare fails and causes shmem_swap_alloc_folio to return
-> > -EEXIST, and shmem simply retries again and again causing this loop.
-> >
-> > Fix it by applying a similar fix for anon mTHP swapin.
-> >
-> > The performance change is very slight, time of swapin 10g zero folios
-> > with shmem (test for 12 times):
-> > Before:  2.47s
-> > After:   2.48s
-> >
-> > Fixes: 1dd44c0af4fa1 ("mm: shmem: skip swapcache for swapin of synchron=
-ous swap device")
-> > Signed-off-by: Kairui Song <kasong@tencent.com>
->
-> LGTM.
-> Acked-by: Nhat Pham <nphamcs@gmail.com>
->
-> >
-> > ---
-> >
-> > V1: https://lore.kernel.org/linux-mm/20250608192713.95875-1-ryncsn@gmai=
-l.com/
-> > Updates:
-> > - Move non_swapcache_batch check before swapcache_prepare, I was
-> >   expecting this could improve the performance, turns out it barely
-> >   helps and may even cause more overhead in some cases. [ Barry Song ]
-> > - Remove zero map check, no need to do that for shmem [ Barry Song,
-> >   Baolin Wang ]
-> > - Fix build bot error.
-> >
-> >  mm/memory.c | 20 --------------------
-> >  mm/shmem.c  |  4 +++-
-> >  mm/swap.h   | 23 +++++++++++++++++++++++
-> >  3 files changed, 26 insertions(+), 21 deletions(-)
-> >
-> > diff --git a/mm/memory.c b/mm/memory.c
-> > index 9ead7ab07e8e..3845ed068d74 100644
-> > --- a/mm/memory.c
-> > +++ b/mm/memory.c
-> > @@ -4313,26 +4313,6 @@ static struct folio *__alloc_swap_folio(struct v=
-m_fault *vmf)
-> >  }
-> >
-> >  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> > -static inline int non_swapcache_batch(swp_entry_t entry, int max_nr)
-> > -{
-> > -       struct swap_info_struct *si =3D swp_swap_info(entry);
-> > -       pgoff_t offset =3D swp_offset(entry);
-> > -       int i;
-> > -
-> > -       /*
-> > -        * While allocating a large folio and doing swap_read_folio, wh=
-ich is
-> > -        * the case the being faulted pte doesn't have swapcache. We ne=
-ed to
-> > -        * ensure all PTEs have no cache as well, otherwise, we might g=
-o to
-> > -        * swap devices while the content is in swapcache.
-> > -        */
-> > -       for (i =3D 0; i < max_nr; i++) {
-> > -               if ((si->swap_map[offset + i] & SWAP_HAS_CACHE))
-> > -                       return i;
-> > -       }
-> > -
-> > -       return i;
-> > -}
-> > -
-> >  /*
-> >   * Check if the PTEs within a range are contiguous swap entries
-> >   * and have consistent swapcache, zeromap.
-> > diff --git a/mm/shmem.c b/mm/shmem.c
-> > index 73182e904f9c..a4fdfbd086f1 100644
-> > --- a/mm/shmem.c
-> > +++ b/mm/shmem.c
-> > @@ -2256,6 +2256,7 @@ static int shmem_swapin_folio(struct inode *inode=
-, pgoff_t index,
-> >         folio =3D swap_cache_get_folio(swap, NULL, 0);
-> >         order =3D xa_get_order(&mapping->i_pages, index);
-> >         if (!folio) {
-> > +               int nr_pages =3D 1 << order;
-> >                 bool fallback_order0 =3D false;
-> >
-> >                 /* Or update major stats only when swapin succeeds?? */
-> > @@ -2271,7 +2272,8 @@ static int shmem_swapin_folio(struct inode *inode=
-, pgoff_t index,
-> >                  * to swapin order-0 folio, as well as for zswap case.
->
-> nit: maybe update the above comment?
+On Fri, May 30, 2025 at 04:20:44PM +0800, Baokun Li wrote:
+> On 2025/5/28 23:05, Ojaswin Mujoo wrote:
+> > On Fri, May 23, 2025 at 04:58:18PM +0800, libaokun@huaweicloud.com wrote:
+> > > From: Baokun Li <libaokun1@huawei.com>
+> > > 
+> > > When ext4 allocates blocks, we used to just go through the block groups
+> > > one by one to find a good one. But when there are tons of block groups
+> > > (like hundreds of thousands or even millions) and not many have free space
+> > > (meaning they're mostly full), it takes a really long time to check them
+> > > all, and performance gets bad. So, we added the "mb_optimize_scan" mount
+> > > option (which is on by default now). It keeps track of some group lists,
+> > > so when we need a free block, we can just grab a likely group from the
+> > > right list. This saves time and makes block allocation much faster.
+> > > 
+> > > But when multiple processes or containers are doing similar things, like
+> > > constantly allocating 8k blocks, they all try to use the same block group
+> > > in the same list. Even just two processes doing this can cut the IOPS in
+> > > half. For example, one container might do 300,000 IOPS, but if you run two
+> > > at the same time, the total is only 150,000.
+> > > 
+> > > Since we can already look at block groups in a non-linear way, the first
+> > > and last groups in the same list are basically the same for finding a block
+> > > right now. Therefore, add an ext4_try_lock_group() helper function to skip
+> > > the current group when it is locked by another process, thereby avoiding
+> > > contention with other processes. This helps ext4 make better use of having
+> > > multiple block groups.
+> > > 
+> > > Also, to make sure we don't skip all the groups that have free space
+> > > when allocating blocks, we won't try to skip busy groups anymore when
+> > > ac_criteria is CR_ANY_FREE.
+> > > 
+> > > Performance test data follows:
+> > > 
+> > > CPU: HUAWEI Kunpeng 920
+> > > Memory: 480GB
+> > > Disk: 480GB SSD SATA 3.2
+> > > Test: Running will-it-scale/fallocate2 on 64 CPU-bound containers.
+> > > Observation: Average fallocate operations per container per second.
+> > > 
+> > >                        base    patched
+> > > mb_optimize_scan=0    3588    6755 (+88.2%)
+> > > mb_optimize_scan=1    3588    4302 (+19.8%)
+> > The patch looks mostly good. Same observations about mb_optimize_scan=1
+> > improving less. We can continue this discussion in my reply to the cover
+> > letter. That being said, I have some minor suggestions:
+> Thanks for the review!
+> > 
+> > > Signed-off-by: Baokun Li <libaokun1@huawei.com>
+> > > ---
+> > >   fs/ext4/ext4.h    | 23 ++++++++++++++---------
+> > >   fs/ext4/mballoc.c | 14 +++++++++++---
+> > >   2 files changed, 25 insertions(+), 12 deletions(-)
+> > > 
+> > > diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+> > > index 5a20e9cd7184..9c665a620a46 100644
+> > > --- a/fs/ext4/ext4.h
+> > > +++ b/fs/ext4/ext4.h
+> > > @@ -3494,23 +3494,28 @@ static inline int ext4_fs_is_busy(struct ext4_sb_info *sbi)
+> > >   	return (atomic_read(&sbi->s_lock_busy) > EXT4_CONTENTION_THRESHOLD);
+> > >   }
+> > > +static inline bool ext4_try_lock_group(struct super_block *sb, ext4_group_t group)
+> > > +{
+> > > +	if (!spin_trylock(ext4_group_lock_ptr(sb, group)))
+> > > +		return false;
+> > > +	/*
+> > > +	 * We're able to grab the lock right away, so drop the lock
+> > > +	 * contention counter.
+> > > +	 */
+> > > +	atomic_add_unless(&EXT4_SB(sb)->s_lock_busy, -1, 0);
+> > > +	return true;
+> > > +}
+> > > +
+> > >   static inline void ext4_lock_group(struct super_block *sb, ext4_group_t group)
+> > >   {
+> > > -	spinlock_t *lock = ext4_group_lock_ptr(sb, group);
+> > > -	if (spin_trylock(lock))
+> > > -		/*
+> > > -		 * We're able to grab the lock right away, so drop the
+> > > -		 * lock contention counter.
+> > > -		 */
+> > > -		atomic_add_unless(&EXT4_SB(sb)->s_lock_busy, -1, 0);
+> > > -	else {
+> > > +	if (!ext4_try_lock_group(sb, group)) {
+> > >   		/*
+> > >   		 * The lock is busy, so bump the contention counter,
+> > >   		 * and then wait on the spin lock.
+> > >   		 */
+> > >   		atomic_add_unless(&EXT4_SB(sb)->s_lock_busy, 1,
+> > >   				  EXT4_MAX_CONTENTION);
+> > > -		spin_lock(lock);
+> > > +		spin_lock(ext4_group_lock_ptr(sb, group));
+> > >   	}
+> > >   }
+> > > diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+> > > index 1e98c5be4e0a..5c13d9f8a1cc 100644
+> > > --- a/fs/ext4/mballoc.c
+> > > +++ b/fs/ext4/mballoc.c
+> > > @@ -896,7 +896,8 @@ static void ext4_mb_choose_next_group_p2_aligned(struct ext4_allocation_context
+> > >   				    bb_largest_free_order_node) {
+> > >   			if (sbi->s_mb_stats)
+> > >   				atomic64_inc(&sbi->s_bal_cX_groups_considered[CR_POWER2_ALIGNED]);
+> > > -			if (likely(ext4_mb_good_group(ac, iter->bb_group, CR_POWER2_ALIGNED))) {
+> > > +			if (likely(ext4_mb_good_group(ac, iter->bb_group, CR_POWER2_ALIGNED)) &&
+> > > +			    !spin_is_locked(ext4_group_lock_ptr(ac->ac_sb, iter->bb_group))) {
+> > Maybe reversing the && order to be (!spin_is_locked() && ext4_mb_good_group()) would be better?
+> Yeah.
+> > >   				*group = iter->bb_group;
+> > >   				ac->ac_flags |= EXT4_MB_CR_POWER2_ALIGNED_OPTIMIZED;
+> > >   				read_unlock(&sbi->s_mb_largest_free_orders_locks[i]);
+> > > @@ -932,7 +933,8 @@ ext4_mb_find_good_group_avg_frag_lists(struct ext4_allocation_context *ac, int o
+> > >   	list_for_each_entry(iter, frag_list, bb_avg_fragment_size_node) {
+> > >   		if (sbi->s_mb_stats)
+> > >   			atomic64_inc(&sbi->s_bal_cX_groups_considered[cr]);
+> > > -		if (likely(ext4_mb_good_group(ac, iter->bb_group, cr))) {
+> > > +		if (likely(ext4_mb_good_group(ac, iter->bb_group, cr)) &&
+> > > +		    !spin_is_locked(ext4_group_lock_ptr(ac->ac_sb, iter->bb_group))) {
+> > same as above
+> Okay.
+> > >   			grp = iter;
+> > >   			break;
+> > >   		}
+> > > @@ -2911,7 +2913,13 @@ ext4_mb_regular_allocator(struct ext4_allocation_context *ac)
+> > >   			if (err)
+> > >   				goto out;
+> > > -			ext4_lock_group(sb, group);
+> > > +			/* skip busy group */
+> > > +			if (cr >= CR_ANY_FREE) {
+> > > +				ext4_lock_group(sb, group);
+> > > +			} else if (!ext4_try_lock_group(sb, group)) {
+> > > +				ext4_mb_unload_buddy(&e4b);
+> > > +				continue;
+> > > +			}
+> > This in itself looks good. I am just thinking that now that we are
+> > deciding to skip locked groups, in the code above this one, shall we do
+> > something like:
+> > 
+> >        if (spin_is_locked(group_lock))
+> >          continue;
+> >        err = ext4_mb_load_buddy(sb, group, &e4b);
+> >        if (err)
+> >          goto out;
+> > 
+> >        /* skip busy group */
+> >        if (cr >= CR_ANY_FREE) {
+> >          ext4_lock_group(sb, group);
+> >        } else if (!ext4_try_lock_group(sb, group)) {
+> >          ext4_mb_unload_buddy(&e4b);
+> >          continue;
+> >        }
+> > 
+> > With this we can even avoid loading the folio as well.
+> I previously assumed that for busy groups, the buddy was already loaded,
+> so reloading it would incur minimal overhead. However, I was mistaken.
+> 
+> After implementing a change, the proportion of time spent in
+> ext4_mb_load_buddy() decreased from 3.6% to 1.7%, resulting in
+> approximately a 2% performance improvement.
 
-Good idea. There are already some comments in non_swapcache_batch and
-I've updated it for this commit, but mentioning it here definitely
-helps more.
+Nice :) 
 
-
->
-> >                  */
-> >                 if (order > 0 && ((vma && unlikely(userfaultfd_armed(vm=
-a))) ||
-> > -                                 !zswap_never_enabled()))
-> > +                                 !zswap_never_enabled() ||
-> > +                                 non_swapcache_batch(swap, nr_pages) !=
-=3D nr_pages))
-> >                         fallback_order0 =3D true;
-> >
-> >                 /* Skip swapcache for synchronous device. */
-> > diff --git a/mm/swap.h b/mm/swap.h
-> > index e87a0f19a0ee..911ad5ff0f89 100644
-> > --- a/mm/swap.h
-> > +++ b/mm/swap.h
-> > @@ -108,6 +108,25 @@ static inline int swap_zeromap_batch(swp_entry_t e=
-ntry, int max_nr,
-> >                 return find_next_bit(sis->zeromap, end, start) - start;
-> >  }
-> >
->
+> 
+> Thank you for your suggestion！
+> I will prevent unnecessary buddy loading in the next version.
+> 
+> Cheers,
+> Baokun
+> 
