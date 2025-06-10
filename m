@@ -1,150 +1,103 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DDC428B501;
-	Tue, 10 Jun 2025 09:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64EA2280327
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 09:53:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749549175; cv=none; b=lCJPiuFpf+207FPaXSNwP4Mc/P5CXGznWI7HQJr74M2K3UlN9nf83yyzOTpnxwAoA0YW6S5kCKpUsfEf7u1yQ/9Vkc9ugDldbjDsunc0K3siTVk/KHnX/2tCkzhjTvlyfx3naeyQhon1bYO5JfbRCNvbF+G+8OKWQBE1BJR5T18=
+	t=1749549202; cv=none; b=B3OTmz7L/tztFZ1PdqbKMRw31FA5MJzPNR1TEoxJF+JysZhjdmvZTkF+10hWvImv2b0lOzHuPhRprhzdidpJ0kQXZ0c7CBHduOORccXJLNch6agyOrP62tm1P+SsjoyClRGl5WW9IpjB9cDfCdNjd08CrblbvPaPKOAaZlDkAUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749549175; c=relaxed/simple;
-	bh=Im5GYUCb1sxEGckIaOnAeshf/338KvZJ59zmYw//6eA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m7sa3u+Y6/607ZqJnIF7/TabN0huglyP9qpT1ORT+VHhSYbScLHf/oW2H7nUXt6YrlRljER92F1TKoEwxTV2n8kijPn3Aj9a5k0p+sMjMDPVEhlKM0Ix5CldXvsruiF/If+eVqEMLg3LiZ8pwhoOZKwsmrzDV2ptTG5S1Y7aEBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=VYcfkAMM; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1749549202; c=relaxed/simple;
+	bh=lf/Q0CP0+3JGF8skn4vJN8mCuS9rEjV0RqPQBwzodGc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cQmyathWlMhDpmkZptI1Na68YGzMUQq8guZc08ONB5U1FJY5bjd39EJx2WEsCy6FyQyXbe++rti46bMsOgQuuLiiMWzHvbrRJnG9qXYwYKPwA6reTnboNOtEgGgOOfIjohbEMtLPVnZ+vOmwZ0prPW/kYY74zq/hHTuMozvvrvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Pkud2SEv; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="VYcfkAMM"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 214AF169;
-	Tue, 10 Jun 2025 11:52:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1749549163;
-	bh=Im5GYUCb1sxEGckIaOnAeshf/338KvZJ59zmYw//6eA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VYcfkAMMn6K+mvIMMfKStHcleEwEsMpB7hzK4Uas/m9rLyIes7YU38x0/mJedVKBb
-	 caB2NaQvYMsZEPK6xmrYorLMaXFrM06ojzRyDabW+HtlAOOCyaWl7YOSDgbGyGGDRW
-	 JUC8Rlqi98psv8LRKo/fJIvtHFGGNjRIl9u7t2jY=
-Date: Tue, 10 Jun 2025 12:52:38 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Cc: Maxime Ripard <mripard@kernel.org>,
-	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>,
-	Naushir Patuck <naush@raspberrypi.com>, linux-media@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: bcm2835-unicam: Remove RGB24 support
-Message-ID: <20250610095238.GA28428@pendragon.ideasonboard.com>
-References: <20250606-rpi-unicam-rgb-bgr-fix-v1-1-9930b963f3eb@kernel.org>
- <20250609003751.GD14545@pendragon.ideasonboard.com>
- <CAPY8ntCnz6nkJSredd-sgMr87=0vuZ0OtfiMoPOfCZisKkzTHg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Pkud2SEv"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so65889585e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 02:53:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1749549198; x=1750153998; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9IEkGDFBIs7IrBtufGEQ1UvIq45B77cgWp5iZKKgIpk=;
+        b=Pkud2SEv4d5Zd8qEFxIsJJyS650FzgonHEnjoeteyOCLnwMNXSRVlxKjWX785MUMpd
+         ISwCy07c2Xyt+xs2SKBEEBUXnSVsPFYI7QMzwMvP1hoDyWgDIDTSTXsgvj2vHiKkzleE
+         6NYiFsKvp8XmTcSDh8RII1yggx0PS0yJ9tSlfOI1dmHE6UhO7VCYQ5yB72CJZZmQ/BFx
+         dwi7ZZOtTRTNU5P8XdKAXRDPJvJEb8vnlPmLoTvj2TXv07o2BA+i/q1VQ2fvYVid3loJ
+         exsJETJ1B+e6wctTjXtPfHGUv6Gm9NiTOe97p8WaLIBFxBvaGaQgABKn+nRHz71tgGdf
+         N2GQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749549198; x=1750153998;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9IEkGDFBIs7IrBtufGEQ1UvIq45B77cgWp5iZKKgIpk=;
+        b=t7iJZWKZBIzu6WBr/onqW7Wf4P6+HrK/k4Z/XEY+uLgoaTOsV4HPvk5Is44e5rdTu/
+         PDDqmJHBDM79YvltfEpGlBeOlmB5dq3BdmOAGUYTy9tiJdBGdt+/AWfp3imS71wc6HgP
+         37JOhseyDTqSR0oA6qH2QF+rOX2+4GoeN7l2gUTg3hyuDfVRLp3QUY4DsUQWKC22/bOF
+         mzGhMxtPuI04k3dt7aoS67rJdcHqFgAaBtQ+ctkAujibtGvC/0RSX34bDRyiKl6cCJvk
+         HQxPFvp0T5A2P69hZDg2YXsCffgYXCAAhPzNKv++NI6gri2oM4iHylXSWmHd9xr2zrJB
+         r46A==
+X-Forwarded-Encrypted: i=1; AJvYcCV6zNw7nKtKbl4Mu0TP1xWOqfjZT0fQ8akbp4zBY12sYqw/DxjGxckDZ1cJmwV+1N9RL5HVUrx/615VN28=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxt6Ku4cLIU81WzgG0FgISr5WFCe25To0v6lkzb9aXhKcn22E5f
+	z6c9tdud5nneWc1nEtpBfE3er5GBBz93AP28UywbzC0iCMqcjp91keEPALIgDkxbgnk=
+X-Gm-Gg: ASbGncuzamMYywvto5xrShirJWxA+MuWuWrZAAG4EdaIuZH359BueomjRVGOnfyCQvy
+	PJA93UjUCc8DAh/8ugb6Yigs9mPBYXA5/fXySZGUlkTb4keJUsy3kKmnQjGlq9GUL3dmopXtwk3
+	NUrwjEo/M0oXdSB7XKqY+wNWwfc15fTZNsqDlGi4pBYcNlfPhVOPGH5l173JltblPs6qFN4G0W3
+	grRLBj618PBifziVe8/lnAJ2yp6M2yj2gyDKyLVeQCW9Jfh85raGL87+eZiiirW3+8E8f9AdWU8
+	jcs8Z5yTGjrj63Gk4l6SFPYPbQFhe1tuhNpHsawpNAINkOv0MMjWwtbJWUzwLI/tMnJBiCF+mGe
+	AbHOKJRFdqopHl14cVblxdrB6Whyr
+X-Google-Smtp-Source: AGHT+IF43HoF+ckI+JNZf8sM8mBLEsIZIzrQldZAYBnhq+ZWk+6w2oq6oTjq3frqJQUO14CjjL46AQ==
+X-Received: by 2002:a05:6000:40c7:b0:3a4:f430:2547 with SMTP id ffacd0b85a97d-3a55226cd6amr1466032f8f.6.1749549197729;
+        Tue, 10 Jun 2025 02:53:17 -0700 (PDT)
+Received: from ?IPV6:2001:a61:1316:3301:be75:b4b4:7520:e2e4? ([2001:a61:1316:3301:be75:b4b4:7520:e2e4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532131df6sm11612214f8f.0.2025.06.10.02.53.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Jun 2025 02:53:17 -0700 (PDT)
+Message-ID: <dc4e3500-b5fb-4aa1-b74c-c37708146c3c@suse.com>
+Date: Tue, 10 Jun 2025 11:53:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAPY8ntCnz6nkJSredd-sgMr87=0vuZ0OtfiMoPOfCZisKkzTHg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] net: usb: Convert tasklet API to new bottom half
+ workqueue mechanism
+To: "Miao, Jun" <jun.miao@intel.com>, Subbaraya Sundeep <sbhatta@marvell.com>
+Cc: "oneukum@suse.com" <oneukum@suse.com>,
+ "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+ "davem@davemloft.net" <davem@davemloft.net>,
+ "edumazet@google.com" <edumazet@google.com>,
+ "kuba@kernel.org" <kuba@kernel.org>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250609072610.2024729-1-jun.miao@intel.com>
+ <aEajxQxP_aWhqHHB@82bae11342dd>
+ <PH7PR11MB84552A6D3723B68D5B83E4BE9A6BA@PH7PR11MB8455.namprd11.prod.outlook.com>
+Content-Language: en-US
+From: Oliver Neukum <oneukum@suse.com>
+In-Reply-To: <PH7PR11MB84552A6D3723B68D5B83E4BE9A6BA@PH7PR11MB8455.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 09, 2025 at 03:33:29PM +0100, Dave Stevenson wrote:
-> On Mon, 9 Jun 2025 at 01:38, Laurent Pinchart wrote:
-> > On Fri, Jun 06, 2025 at 04:53:03PM +0200, Maxime Ripard wrote:
-> > > The RGB24 V4L2 format is defined as a pixel format with 8 bits per
-> > > components, with the components being in the red, green, and blue order
-> > > from left to right.
-> > >
-> > > The RGB MIPI-CSI2 is defined in the specification (Section 11.3.1,
-> > > RGB888) with blue coming first, then green, then red. So the opposite of
-> > > what V4L2 means by RGB.
-> > >
-> > > Since the hardware cannot reorder the components, this means that when
-> > > selecting the RGB24 format, you get inverted red and blue components
-> > > compared to what you'd expect.
-> > >
-> > > The driver already supports BGR24, so we can simply remove the RGB24
-> > > format from the driver.
-> >
-> > The only reason I could think of to explain why the driver exposes
-> > V4L2_PIX_FMT_RGB24 is to support CSI-2 sources that transfer RGB888 data
-> > with a non-standard order. I don't know what hardware would do that.
-> > Dave, Naush, do you recall why this pixel format is supported by the
-> > unicam driver ?
-> 
-> I've lost track of exactly what gets validated along the pipeline.
-> unicam_video_link_validate [1] looks to ensure that the V4L2 pixel
-> format and media bus codes match as listed in the table.
-> 
-> tc358743, adv7604, adv7511, and adv748x are all saying they produce
-> MEDIA_BUS_FMT_RGB888_1X24
-> ov5640 says it produces MEDIA_BUS_FMT_BGR888_1X24.
-> 
-> Is that an error in the ov5640 driver? If not, then both entries have
-> to be in the table to support all those drivers.
+On 09.06.25 11:53, Miao, Jun wrote:
 
-We haven't standardized which media bus code to use for 24-bit RGB on
-CSI-2, so I'm not surprised drivers didn't get it right :-( The adv7604
-and adv7511 shouldn't be relevant here though, as they're not CSI-2
-devices. tc358743 and adv748x are relevant.
-
-Sakari, which media bus code would you expect ?
-
-> Looking at alvium-csi2.c and st-mipid02.c, both mappings are included
-> there (and RBG888 in the case of alvium).
-> Unicam's hardware doesn't care about the ordering as it just writes
-> the incoming data to memory, so having all the sensible mappings
-> between MEDIA_BUS_FMT_* and V4L2_PIX_FMT_* values makes sense.
+>> You can change it to GFP_KERNEL since this is not atomic context now.
+>>
 > 
-> My initial reaction though is that simply removing the entry won't
-> solve the problem anyway. You won't get a match between the
-> MEDIA_BUS_FMT_RGB888_1X24 requested by tc358743 and a supported V4L2
-> pixel format, so the link_validate will fail.
-> Swapping either fourcc or code between the two entries would be the
-> fix I was expecting.
-> 
-> [1] https://github.com/torvalds/linux/blob/master/drivers/media/platform/broadcom/bcm2835-unicam.c#L2151-L2169
-> 
-> > > Fixes: 392cd78d495f ("media: bcm2835-unicam: Add support for CCP2/CSI2 camera interface")
-> > > Signed-off-by: Maxime Ripard <mripard@kernel.org>
-> > > ---
-> > >  drivers/media/platform/broadcom/bcm2835-unicam.c | 5 -----
-> > >  1 file changed, 5 deletions(-)
-> > >
-> > > diff --git a/drivers/media/platform/broadcom/bcm2835-unicam.c b/drivers/media/platform/broadcom/bcm2835-unicam.c
-> > > index f10064107d543caf867249d0566a0f42d6d8c4c6..1f549019efd53c9aae83193e74f1a3601ebf274d 100644
-> > > --- a/drivers/media/platform/broadcom/bcm2835-unicam.c
-> > > +++ b/drivers/media/platform/broadcom/bcm2835-unicam.c
-> > > @@ -338,15 +338,10 @@ static const struct unicam_format_info unicam_image_formats[] = {
-> > >       /* RGB Formats */
-> > >               .fourcc         = V4L2_PIX_FMT_RGB565, /* gggbbbbb rrrrrggg */
-> > >               .code           = MEDIA_BUS_FMT_RGB565_1X16,
-> > >               .depth          = 16,
-> > >               .csi_dt         = MIPI_CSI2_DT_RGB565,
-> > > -     }, {
-> > > -             .fourcc         = V4L2_PIX_FMT_RGB24, /* rgb */
-> > > -             .code           = MEDIA_BUS_FMT_RGB888_1X24,
-> > > -             .depth          = 24,
-> > > -             .csi_dt         = MIPI_CSI2_DT_RGB888,
-> > >       }, {
-> > >               .fourcc         = V4L2_PIX_FMT_BGR24, /* bgr */
-> > >               .code           = MEDIA_BUS_FMT_BGR888_1X24,
-> > >               .depth          = 24,
-> > >               .csi_dt         = MIPI_CSI2_DT_RGB888,
-> > >
-> > > ---
-> > > base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
-> > > change-id: 20250606-rpi-unicam-rgb-bgr-fix-d1b6f46a75ad
+> Thanks,  the usbnet_bh() function only be called by usbnet_bh_workqueue which is sleepable.
 
--- 
-Regards,
+Yes, but it can be waited on in usbnet_stop(), which in turn can
+be called for a device reset. Hence this must be GFP_NOIO, not
+GFP_KERNEL.
 
-Laurent Pinchart
+	Regards
+		Oliver
+
