@@ -1,202 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 882C62EB11;
-	Tue, 10 Jun 2025 06:59:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C61FAD21
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 07:00:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749538799; cv=none; b=cTV6z9A9M5nB59l2nJSky+AQNgmz1zTd+P8DgHsrOVzTQ+C2H5e5vCSxMqQRGV4tlLbaRHNdbhUW+pghrVWSre1bStGJ0qWDRrZLwUefF78wojEJ8DNPnvNho2qHeFkiS+6f0Ktjf5oHg2SilAO4GKcqi5OjPeQZwi6i1gaTkXI=
+	t=1749538851; cv=none; b=WgRSn+Jb6uASmhUFkincD6YTGTiYVIelXg4063pLs4jJb1LUsHYHqaGPK0mICKFD27Y4F+0q4ZUxX2f5KkjpmB/23oP2udc5t6UgRlUP+DgXyofbKeaz+NjIEuKIYnWmPp3mB0szvowngkUVnUc44nCYDEx1g/icGUuWulBaG+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749538799; c=relaxed/simple;
-	bh=nQXu7/qHIbG/mZfLTshtxBAdZxbuaewWvV6VL9QWdqY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bt6Zm0e4y4gRBElaAkYbPMJgd1Q2/Gkbuoiz/CK98wfOfQQ4KGanLi58OvIUBu203qZDOujGQUbjNzTe7JMzJD/BlqeOTQ/be0IhZ3qkXd+WyEt2g+61TG3mOpFTIav6sNPvh6z0O9KjHfq0ZLlfwIJPu4YZqb1Ci7//6Dat7sY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jk8cA5qi; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749538851; c=relaxed/simple;
+	bh=nxzPfqmfptUSQtLazHsiK0dcb5LFkkFm+nAYN/C+p7s=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=tKaOG0vS/9lh6UF5HhXg06IMNjLb9/Qm8D7HA/RD0BVGrutx+lSl9Dzh2fwb+2tach9o0PTOq5px740fuHY/MW4dtpD8+lJNyifSp9LoBrR1jniM9Q32dLKXCWP/VlOF7Qoa+TssGQBpStChIzBhZam5xQMgWvKu27QG/NoP8/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=dtGcd7wR; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jk8cA5qi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749538797; x=1781074797;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nQXu7/qHIbG/mZfLTshtxBAdZxbuaewWvV6VL9QWdqY=;
-  b=jk8cA5qi2xUI2Q1KVsW8L6/cz5u9am+AnM7+sii8GNs4uRnhnvSfVkUK
-   fCZeGiXJnZT4G8Alpe7eXShY3qZPyllg7Zh+5jvq17NcBhxskWxpEtGxY
-   bztLBVipsAuJtjJSDT+1G2yy1LHlVp+d7Qw35y0TUgNzSfwks/P4VODSB
-   i2vEXhplbAlOjBEcUo2hZ5Iq1q6E+spk+UxxI1mvkgK9/0TRtWznSJHrl
-   /URIvayqWrYqsSWEqU+cUPwoclTnaCgIJ/RZ71GTm0hQ6dr+5SJR5fqJe
-   BkB1IZnRNySaKr0EH14Ugem52vusBDpRfbgD5j9Zhg/LnjytKVZgn4pzD
-   g==;
-X-CSE-ConnectionGUID: MrSB17LyQaCtj7p1eRWCgA==
-X-CSE-MsgGUID: czrlcdYRQqmXWzP8sypG4Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51778988"
-X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
-   d="scan'208";a="51778988"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 23:59:57 -0700
-X-CSE-ConnectionGUID: ZiXdYjsHRTe5w9XKMyrQaA==
-X-CSE-MsgGUID: pq2m0M7pTrWZ7k3/HXV1AQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
-   d="scan'208";a="169919096"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa002.fm.intel.com with ESMTP; 09 Jun 2025 23:59:52 -0700
-Date: Tue, 10 Jun 2025 14:53:00 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Alexey Kardashevskiy <aik@amd.com>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, kvm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org, sumit.semwal@linaro.org,
-	christian.koenig@amd.com, pbonzini@redhat.com, seanjc@google.com,
-	alex.williamson@redhat.com, vivek.kasireddy@intel.com,
-	dan.j.williams@intel.com, yilun.xu@intel.com,
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
-	lukas@wunner.de, yan.y.zhao@intel.com, daniel.vetter@ffwll.ch,
-	leon@kernel.org, baolu.lu@linux.intel.com, zhenzhong.duan@intel.com,
-	tao1.su@intel.com
-Subject: Re: [RFC PATCH 00/12] Private MMIO support for private assigned dev
-Message-ID: <aEfWTEaQv2HhldWX@yilunxu-OptiPlex-7050>
-References: <aCRAHRCKP1s0Oi0c@yilunxu-OptiPlex-7050>
- <20250514163339.GD382960@nvidia.com>
- <aCYQdDrYYZRAgsen@yilunxu-OptiPlex-7050>
- <9dea400f-a57b-43be-a2e4-24a9f51e6ba0@amd.com>
- <aDE5SPzOAU0sNIt+@yilunxu-OptiPlex-7050>
- <ae16db07-5fca-4369-aa67-cbe2e0fd60fd@amd.com>
- <aDhyC73r149syMpc@yilunxu-OptiPlex-7050>
- <79872224-4e81-446b-a451-28260f449ea9@amd.com>
- <aDnbgBbxF8IkH/cq@yilunxu-OptiPlex-7050>
- <bd0d8d69-78dd-44d8-9f32-d945bc6078c2@amd.com>
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="dtGcd7wR"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-742c035f2afso3580856b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 00:00:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1749538849; x=1750143649; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JUJitp02dLbwyW6XXbPMt7kAqtrb2lpqnpotbucX9CA=;
+        b=dtGcd7wRQWbYXVW4cPdjrFKOIBrbFi3WDWaK7NW2K73TdOc4KAlxMd2EVnHR22IX3H
+         nkJUmm2LohJQzU8ZT9d3DqS0+HPANe0dMuy5WDAIgVlRLtu7JHS/LPOisEIF1s+vKMh6
+         +MAxwRlMf1HO6mSCZJffHi+1YqBjSrNnoeMxkykBPZvZvBxtjkcLq36m1RsaQfUpcc3i
+         H+Znmjj8POkJWaKy4KoEokiYSrC3su5AWljkfHoC/axQ0xVjyvOPDGMxTF44XvKlcgE8
+         iud94qfA9k7FXCKOXvZBDlO0mtHnP3DhcXLNFAOe/w65cCnm6JJvMipnjdKK49steX5s
+         KRAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749538849; x=1750143649;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JUJitp02dLbwyW6XXbPMt7kAqtrb2lpqnpotbucX9CA=;
+        b=r69QkCgkXvEgZvK/L82FeS5oZxKaflnonnrMqEYxZu2afIihe+w6xkAcVv+ThAxRR5
+         tfX30pDSrZTHQgAtJZH8veRvkAZMD7Uzpbu9rtv5jgJraN9WYL2I3RlyS9O09UmKbWdu
+         kQaqYrlhc/ETpqv3KobedJ3I+LOUhGXaxxD2cT8V+BR9iz0dlV4dSev4LBJKg7LZHFHc
+         qkQigq3BDq/+BWje75gZobF1uftk36Ih8orY+Lcd3ntwo24CqIUZmx9nQ/vtYzuqNBxD
+         xnFAFYdPyjplSgCOxEgzGR6M2qceqvkZe0YXrFIt1wCuxK3POcSGVTff1XktWB0X4aWZ
+         ihSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXYLH9d7SZhLu01lqG3NEOSYN5A2G6875iQ5LoQc2eRE//nx3jbdzIIaWtvbsYVcgCdBT/yUQ1OML4W5vM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvOWnsO8rCNh6G2P0OAEbeeFfiIr5Q5b2SCGLbQSC4G7bip3/C
+	OFLzbik/2hganlnuxnDLMRLKC7Yyn/VIeLv2XGvx+g6vV9I2ivRkDhltgUpPkUs78nI=
+X-Gm-Gg: ASbGncuiKzXV0hkC58i67pAoaf+2HaeIAIb+c57dAlMiVa2Dkz7P/7ck3fzdQXcny1p
+	BmafTmRlfgdPkLARL2lQaI8VV2syz7/hMMyMOPQTHVM+d8bZR0RWhgzoB/icRnjOwGld39fNctM
+	3lkgLTrGxEOGABYrE1PslrOlxG0WTsiD8CwbLXlYstP79OeWXLVLguqXBK5zDfsnsQ112PEAQoa
+	tWq75+XA/8eFJGU87eHBqVSaq4imfDbtcxVEQci2YJGeIpYIY78qbJwwERZ+l1NZuTwUynaKJvs
+	m/rt7CtuT7y/silCmNToex3Rbe/8Shi7pW0/PbGN5oub549ZlhK32gQgsRv3RTw0PTKOgN3qZui
+	gJ2H1nZ3ArDRp7RaXF65DeIw=
+X-Google-Smtp-Source: AGHT+IF8uzdNqEI314pocfYYQWBeowDkb4F+LwQ50ySlNHswx1qiGOLWHPFnpEwYjMluBjhKg3WXFg==
+X-Received: by 2002:aa7:88c1:0:b0:748:1bac:aff9 with SMTP id d2e1a72fcca58-74861888babmr2307166b3a.18.1749538849387;
+        Tue, 10 Jun 2025 00:00:49 -0700 (PDT)
+Received: from mattc--Mac15.purestorage.com ([165.225.242.245])
+        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-7482af7af0csm7038483b3a.62.2025.06.10.00.00.47
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 10 Jun 2025 00:00:48 -0700 (PDT)
+From: Matthew W Carlis <mattc@purestorage.com>
+To: macro@orcam.me.uk
+Cc: alex.williamson@redhat.com,
+	bhelgaas@google.com,
+	davem@davemloft.net,
+	david.abdurachmanov@gmail.com,
+	edumazet@google.com,
+	helgaas@kernel.org,
+	kuba@kernel.org,
+	leon@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	lukas@wunner.de,
+	mahesh@linux.ibm.com,
+	mattc@purestorage.com,
+	mika.westerberg@linux.intel.com,
+	netdev@vger.kernel.org,
+	npiggin@gmail.com,
+	oohall@gmail.com,
+	pabeni@redhat.com,
+	pali@kernel.org,
+	saeedm@nvidia.com,
+	sr@denx.de,
+	wilson@tuliptree.org
+Subject: PCI: Work around PCIe link training failures
+Date: Tue, 10 Jun 2025 00:00:44 -0700
+Message-Id: <20250610070044.92057-1-mattc@purestorage.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <alpine.DEB.2.21.2410031135250.45128@angie.orcam.me.uk>
+References: <alpine.DEB.2.21.2410031135250.45128@angie.orcam.me.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bd0d8d69-78dd-44d8-9f32-d945bc6078c2@amd.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 10, 2025 at 02:20:03PM +1000, Alexey Kardashevskiy wrote:
-> 
-> 
-> On 31/5/25 02:23, Xu Yilun wrote:
-> > On Fri, May 30, 2025 at 12:29:30PM +1000, Alexey Kardashevskiy wrote:
-> > > 
-> > > 
-> > > On 30/5/25 00:41, Xu Yilun wrote:
-> > > > > > > > 
-> > > > > > > > FLR to a bound device is absolutely fine, just break the CC state.
-> > > > > > > > Sometimes it is exactly what host need to stop CC immediately.
-> > > > > > > > The problem is in VFIO's pre-FLR handling so we need to patch VFIO, not
-> > > > > > > > PCI core.
-> > > > > > > 
-> > > > > > > What is a problem here exactly?
-> > > > > > > FLR by the host which equals to any other PCI error? The guest may or may not be able to handle it, afaik it does not handle any errors now, QEMU just stops the guest.
-> > > > > > 
-> > > > > > It is about TDX Connect.
-> > > > > > 
-> > > > > > According to the dmabuf patchset, the dmabuf needs to be revoked before
-> > > > > > FLR. That means KVM unmaps MMIOs when the device is in LOCKED/RUN state.
-> > > > > > That is forbidden by TDX Module and will crash KVM.
-> > > > > 
-> > > > > 
-> > > > > FLR is something you tell the device to do, how/why would TDX know about it?
-> > > > 
-> > > > I'm talking about FLR in VFIO driver. The VFIO driver would zap bar
-> > > > before FLR. The zapping would trigger KVM unmap MMIOs. See
-> > > > vfio_pci_zap_bars() for legacy case, and see [1] for dmabuf case.
-> > > 
-> > > oh I did not know that we do this zapping, thanks for the pointer.
-> > > > [1] https://lore.kernel.org/kvm/20250307052248.405803-4-vivek.kasireddy@intel.com/
-> > > > 
-> > > > A pure FLR without zapping bar is absolutely OK.
-> > > > 
-> > > > > Or it check the TDI state on every map/unmap (unlikely)?
-> > > > 
-> > > > Yeah, TDX Module would check TDI state on every unmapping.
-> > > 
-> > > _every_? Reading the state from DOE mailbox is not cheap enough (imho) to do on every unmap.
-> > 
-> > Sorry for confusing. TDX firmware just checks if STOP TDI firmware call
-> > is executed, will not check the real device state via DOE. That means
-> > even if device has physically exited to UNLOCKED, TDX host should still
-> > call STOP TDI fwcall first, then MMIO unmap.
-> > 
-> > > 
-> > > > > 
-> > > > > > So the safer way is
-> > > > > > to unbind the TDI first, then revoke MMIOs, then do FLR.
-> > > > > > 
-> > > > > > I'm not sure when p2p dma is involved AMD will have the same issue.
-> > > > > 
-> > > > > On AMD, the host can "revoke" at any time, at worst it'll see RMP events from IOMMU. Thanks,
-> > > > 
-> > > > Is the RMP event firstly detected by host or guest? If by host,
-> > > 
-> > > Host.
-> > > 
-> > > > host could fool guest by just suppress the event. Guest thought the
-> > > > DMA writting is successful but it is not and may cause security issue.
-> > > 
-> > > An RMP event on the host is an indication that RMP check has failed and DMA to the guest did not complete so the guest won't see new data. Same as other PCI errors really. RMP acts like a firewall, things behind it do not need to know if something was dropped. Thanks,
-> > 
-> > Not really, guest thought the data is changed but it actually doesn't.
-> > I.e. data integrity is broken.
-> 
-> I am not following, sorry. Integrity is broken when something untrusted (== other than the SNP guest and the trusted device) manages to write to the guest encrypted memory successfully.
+Hello again.. It looks like there are specific system configurations that are
+extremely likely to have issues with this patch & result in undesirable
+system behavior..
 
-Integrity is also broken when guest thought the content in some addr was
-written to A but it actually stays B.
-
-> If nothing is written - the guest can easily see this and do... nothing?
-
-The guest may not see this only by RMP event, or IOMMU fault, malicious
-host could surpress these events.  Yes, guest may later read the addr
-and see the trick, but this cannot be ensured. There is no general
-contract saying SW must read the addr to ensure DMA write successful.
-
-And DMA to MMIO is the worse case than DMA to memory. SW even cannot
-read back the content since MMIO registers may be Write Only.
-
-So you need ASID fence to make guest easily see the DMA Silent Drop.
-Intel & ARM also have there own way.
-
-The purpose here is to have a consensus that benigh VMM should avoid
-triggering these DMA Silent Drop protections, by "unbind TDI first,
-then invalidate MMIO".
+  Specifically hot-plug systems with side-band presence detection & without
+Power Controls (i.e PwrCtrl-) given to config space. It may also be related
+to presence on U.2 connectors being first-to-mate/last-to-break, but
+I don't have much experience with the different connectors. The main
+issue is that the quirk is invoked in at least two common cases when
+it is not expected that the link would train. 
+  For example, if I power off the slot via an out-of-band vendor specific
+mechanism we see the kernel decide that the link should be training,
+presumable because it will see PresDet+ in Slot Status. In this case it
+decides the link failed to train, writes the Gen1 speed value into TLS
+(target link speed) & returns after waiting for the link one more time.
+The next time the slot is powered on the link will train to Gen1 due to TLS.
+  Another problematic case is when we physically insert a device. In my case
+I am using nvme drives with U.2 connectors from several different vendors.
+The presence event is often generated before the device is fully powered on
+due to U.2 assigning presence as a first-to-mate & power being last-to-mate.
+I believe in this case that the kernel is expecting the link to train too
+soon & therefore we find that the quirk often applies the Gen1 TLS speed.
+Later, when the link comes up it is frequently observed at Gen1. I tried
+to unset bit 3 in Slot Control (Presence Detect Changed Enable), but we
+still hit the first case I described with powering off slots.
+  I should be clear and say that we are able to see devices forced to Gen1
+extremely often in the side-band presence configuration. We would really like
+to see this "quirk" removed or put behind an opt-in config since it causes
+significant regression in common configurations of pcie-hotplug. I have tried
+to come up with ideas to modify/improve the quirk, but I am not very
+confident that there is a good solution if the kernel cannot know for certain
+whether the link is expected to train.
 
 Thanks,
-Yilun
-
-> Devices have bugs or spurious interrupts happen, the guest driver should be able to cope with that.
-> > Also please help check if the following relates to this issue:
-> > 
-> > SEV-TIO Firmware Interface SPEC, Section 2.11
-> > 
-> > If a bound TDI sends a request to the root complex, and the IOMMU detects a fault caused by host
-> > configuration, the root complex fences the ASID from all further I/O to or from that guest. A host
-> > fault is either a host page table fault or an RMP check violation. ASID fencing means that the
-> > IOMMU blocks all further I/O from the root complex to the guest that the TDI was bound, and the
-> > root complex blocks all MMIO accesses by the guest. When a guest writes to MMIO, the write is
-> > silently dropped. When a guest reads from MMIO, the guest reads 1s.
-> 
-> Right, this is about not letting bad data through, i.e. integrity. Thanks,
-> 
-> > 
-> > Thanks,
-> > Yilun
-> > 
-> > > 
-> > > > 
-> > > > Thanks,
-> > > > Yilun
-> > > 
-> > > -- 
-> > > Alexey
-> > > 
-> 
-> -- 
-> Alexey
-> 
+-Matt
