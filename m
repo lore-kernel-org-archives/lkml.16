@@ -1,147 +1,208 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2133.outbound.protection.outlook.com [40.107.92.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F8A22A4CC;
-	Tue, 10 Jun 2025 15:34:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749569691; cv=none; b=ZHuFmM6LrtSmaLhP4k0s8fyOS86N4kC/zBcYez/CtS1aZA6jZSAZ1VAvu3zDtkNzHhi+1GiYRB4X6sB2OOn6RWcNXT+3Oml4WfRJEUYkHGMJNJjTdVzmLbETRy6wy1Cxy/WhUHm8k/jz1pf5BkpeBE6X8ZOl0kzhA1KT91B8TmU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749569691; c=relaxed/simple;
-	bh=MqIeJ3Z/v9s5PB39f8ATtxRcPHFnymAolwGEhww+kAw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=usPIpWpQZ1/nlX6/OuNk7ZZfnWJFFN236WKIwyekO2U5sVhJtjpCbUfcsO7U9Gcux8tt9TBPNB+gMz4ZVuD5v2UeZ86JM4rUE5b6c3Qg7u3H6WDoN4GKQ7tuwNICDgDVikzNMG9nlgKgRaRW0E1EI5oXQprSI6XEp4gjCZ+CRVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bUdRhzdR; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bUdRhzdR"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-551ed563740so6935453e87.2;
-        Tue, 10 Jun 2025 08:34:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749569687; x=1750174487; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MqIeJ3Z/v9s5PB39f8ATtxRcPHFnymAolwGEhww+kAw=;
-        b=bUdRhzdRSIG7PiIhtzBR+B3559hGuRAIhLZtlPV7RoZ/mWWyOwGVLLg71RbgeECBwC
-         QRb53niQ0/JEMSb8V/f/MgP+E47MFLYthXMTr42gBeJ45BLKzCVZt1s2f5XsqyW+30rE
-         9SdNZTku1orNJ6o+s4TS0XJv9l4OoAM0kVmkAYIYz26sxEGiwxs5cM5RfRFqeYLszCGM
-         IfAhtKBNARxVC2FTkwesNSVLX6GJQMa/n6Lw6FCmpVhVFwH3LuchCZw7y77sCf0ttupb
-         CZQzOBi5jnxKtaegdmEhVxCXKiK/IlkoqrYOI+akY7VytM9wsidLeWcZ4OEEO6JCpM9C
-         I3XQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749569687; x=1750174487;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MqIeJ3Z/v9s5PB39f8ATtxRcPHFnymAolwGEhww+kAw=;
-        b=eMtEep6wf4CnXxlb6CBz3t2fITfhpWmkVsiAF19MdipT2Rh039bTS5ZhchEqmQw/ps
-         z1qj8LfgL+tzbGxzKLwqXru664xcTR7VagZms+UI1yZ9JPCyBHeRUeANuXkXpMRMh52D
-         zhl3vhi6td+utPT1KlhoPD5O0MDmnu3JCepnI5YAl4qi8qhCNYWhVY8PB5P0mg96rgy7
-         JpHiZbdBkVJ+xXdX3l2PhN0xv09Xy/nnWq5eL7VqbeUytaKWGbfZOBB9fSvwZZMR3/hV
-         +GoBD9RRImHE8tkOUJv3h+dxMSsK5czxkW842VL5wCu4V6hBGInfaMFxbgIbzeBjliLx
-         IHsA==
-X-Forwarded-Encrypted: i=1; AJvYcCUBQhy1QAdXINgHZxvl8wkWAU2fLKpEldr1nqeWzeNIP+BTpWFLQDTJRzbjQlpYXnEze3B7wLHI1nQz@vger.kernel.org, AJvYcCV3aCT6yIMufr1I6gVgAaqzSho1Toswf1FcWwkaRXKii/OCe/VSvteh+Ze4JhnyGyTVdSAHCVqIDzs5xw==@vger.kernel.org, AJvYcCVuQH8/p8XKY3wEG+KxFEXrTFsk6XmJf5U736Kvs5AESfzwiPNKeLwE/GCQ/A9aBpwj+4vaW6qN0rz1uoaj@vger.kernel.org, AJvYcCW8/oXf4nKigmKuAo4HGaapoP+OVvn/CqToejC7kM91SF8p9anLgs9na+VKH5Ut1oPmXwcGhyuYuXFigNA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7rSBHkRzMeFwPM1ElZ6G4f5Jh5rX0Fmpb0ItLQWiYq+f/S/Ld
-	u7dz2Zgv44zxJ6WjDkCq5gSmjNTCGUwuq1ceuR/zXqONZ9H9IwL3fP/Lqxz2M3fuktpmvWTzywr
-	UXOACQIwk3gjSJ88i8zM3up4HldwlcHM=
-X-Gm-Gg: ASbGncvRIC9qUB5q1KurYOWKLMf+gdHK+aXpkHkNl8wx/Mhq3QJlUEUObEVF5xKH9uZ
-	UKp1hWwadyRTBY4MBuL1eMF9nLA7GZHNdCZfpUK7hhMZaBWYVkW34WWEk+eNKNtzWSOxf+ZuOJc
-	6E73wLhsFRkQzhKwOlERuxkbkv0QkWT7MUd9tRsCiDhmc=
-X-Google-Smtp-Source: AGHT+IEJ1ZmrGjCVMSTlbre49ihcrED5/bqIPNHDU9iGhqG87iTWzIVwBOxMYwIwqyAgvBsr9yQYrbRSg02Hs0mulTM=
-X-Received: by 2002:a05:6512:12ca:b0:549:8a44:493e with SMTP id
- 2adb3069b0e04-5539c0a32a6mr14812e87.5.1749569687142; Tue, 10 Jun 2025
- 08:34:47 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AFF9211A1E;
+	Tue, 10 Jun 2025 15:36:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.133
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749569807; cv=fail; b=fZ7iZOvzDDUziCazpE5lx0GH2J5nwV7FcjPKWjjCJeHZ2W/ubqowLVj1ZJGTbq6APbeCAvSjydWi/VZ0PF6jJiZPxt7U/jk85aInipKF60BOd6vrWDt579/ohWvebIeAStZIjXtrcfq+ouw7VNVDPx53WzlfPwGI6XOXf/H/0J8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749569807; c=relaxed/simple;
+	bh=U0kELZWXqs+fgByrs91IBLEheLonhUh4ghSR7G1NJa8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Z0FLGzCZshfEvXFZKEI1t8yTWnDl+ul2EW/Fq8klmVLZ8fRgrJ4E2oAkcMU6Sw4Pn2QlxQpXzD6lMs++fg4uxMM2ScT7tt0Ff+5+DhOwbkAlpZrmajtFhfuuD02dL0OmHd5xL/rCIVWDn/zOry5g7wRnVkTSboeJ2oEUaPA3U9A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com; spf=pass smtp.mailfrom=talpey.com; arc=fail smtp.client-ip=40.107.92.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=talpey.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iKDUAXvSI7WQxbNIV6CZPf4QRhM26w2tJFVbKPDdb1CbmmElHoGQM/MQEifISsYB72XoNxeDfgwHb9eWk4TWM7vowdYOO6dHOw1Xa5p0I7gRQdlaEqBryTnGwUTRQP1P7B9d/+79TUVjopSPCfzUnxKZ8BsiVYw/y7Fo+yH/c5BlWi6eKpZ9EB1+6QY9dp/WEv0yND/8XcX0nY1KWCkdFl3NQzxpHqW31m3RsgbvD5S+mvkIfMzTcgg8iLCZlHUAVSeWqK6dbAYCwI+XY4fUthTJctaMflLPQv1MeB1b9Jl5+TFiDfeGJFZpNi8+ck/ujxzuFG642bp2gzExjfP8dA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=x2ktkkXzCmcDkGI19WD0yymTyWVguarMpNAzc3LNCrs=;
+ b=i89DHxJe33M5NTPR673DWyxc24pkNeHXGufjJAZUOVGFxC4RQFM+JUhOD21m85yJYCTwz8aV0Xq01Q0YQHAIK2/XzCPHlzeAe4remfYDRKLyAiCVAff/yKuKAoJWBdJfghLirBzeH2zdn1I3dk/0+sjWn85R+bK7g0XLCCFvDh2l7edQAn2fw+mjfng7HxFkoTv2r4TWf2ESAM9+p06JYT49AhrRxHLV2qgFw496bMixeZrYwDFro2+LO6X9Mlisq3N6vtXuESPIRjR1sHwWYw0hQrumZ9rbpjfDuwNiCxTau0theknMZb9YSQnT7+mPE8eNSLcUNH5aNeS9Iia5Fw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=talpey.com; dmarc=pass action=none header.from=talpey.com;
+ dkim=pass header.d=talpey.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=talpey.com;
+Received: from SN6PR01MB3854.prod.exchangelabs.com (2603:10b6:805:19::20) by
+ LV8PR01MB9356.prod.exchangelabs.com (2603:10b6:408:2a0::19) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8813.29; Tue, 10 Jun 2025 15:36:39 +0000
+Received: from SN6PR01MB3854.prod.exchangelabs.com
+ ([fe80::66af:6788:adc5:f856]) by SN6PR01MB3854.prod.exchangelabs.com
+ ([fe80::66af:6788:adc5:f856%6]) with mapi id 15.20.8813.024; Tue, 10 Jun 2025
+ 15:36:32 +0000
+Message-ID: <ac80cb46-5787-4fc9-a405-fd38a505c613@talpey.com>
+Date: Tue, 10 Jun 2025 11:36:30 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cifs: Show reason why autodisabling serverino support
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+ Steve French <smfrench@gmail.com>
+Cc: Paulo Alcantara <pc@manguebit.org>, Steve French <sfrench@samba.org>,
+ linux-cifs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250608164453.6699-1-pali@kernel.org>
+ <3d644c3f8acb3dbcef395bd96e7e957c@manguebit.org>
+ <CAH2r5muuanOgjzQ8wgd+QoyrU_ZM4tATrfYYQj=b7MapGLMh5A@mail.gmail.com>
+ <20250609073650.kj6lxrykguhb7nuo@pali>
+Content-Language: en-US
+From: Tom Talpey <tom@talpey.com>
+In-Reply-To: <20250609073650.kj6lxrykguhb7nuo@pali>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BL1PR13CA0209.namprd13.prod.outlook.com
+ (2603:10b6:208:2be::34) To SN6PR01MB3854.prod.exchangelabs.com
+ (2603:10b6:805:19::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250608-tegra186-pinctrl-v2-0-502d41f3eedd@gmail.com>
- <20250608-tegra186-pinctrl-v2-2-502d41f3eedd@gmail.com> <yw2uglyxxx22d3lwyezy34wdniouu32zppfgwqs5omny3ge5zd@iuqo4qmi55a2>
-In-Reply-To: <yw2uglyxxx22d3lwyezy34wdniouu32zppfgwqs5omny3ge5zd@iuqo4qmi55a2>
-From: Aaron Kling <webgeek1234@gmail.com>
-Date: Tue, 10 Jun 2025 10:34:35 -0500
-X-Gm-Features: AX0GCFsd7xdIB9QWQua1RQ4pRCI39zZoWW2thwkZ7CPS9rox8nnF-LfaH58f7aE
-Message-ID: <CALHNRZ_gy_wJxAW85d0EnpY4Qa2h+tuR=CM2AE26r0UEdYz8ag@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] pinctrl: tegra: Add Tegra186 pinmux driver
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN6PR01MB3854:EE_|LV8PR01MB9356:EE_
+X-MS-Office365-Filtering-Correlation-Id: d78d1bfa-2589-486a-6c44-08dda83493ab
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?cmJtSUZnUU9CRFBWWFk4NnBZZGpJaGJBdk9Ja01KcHB5ckdST1FrQllWakxO?=
+ =?utf-8?B?K2xLeVFJZHVXeVFYZlgvRGRhaVYrTnIvemtHdEs0a0dxSUJPcmdreFUxdHQy?=
+ =?utf-8?B?NEZObmRWc3FTcE9xZW5xVUxIMXhXdGdCbW1Xc2UvT0lqdko1ckZsajk2enBi?=
+ =?utf-8?B?dnhRUFhWVXpSUUh3cGk0K09XaVZ3UFF2K2tEYUpwN3YzN1VqS0VQZlpVZTVT?=
+ =?utf-8?B?QkhqSld1OURyZWxaTW1VeldLaUV5Y2lRRVZkZ1h3d1NUV2NzellkbE1sTlZm?=
+ =?utf-8?B?cVRFMzlXSzhGcjdibzU2RStDanNmZG1qU0pUOEpGT3VvNk13YUttNGVKWjdJ?=
+ =?utf-8?B?blg5NnNCS3B1Q2tjMjM2TU5mRnZScGNlQ3diMTk0dmZZRG8yTVROMmRGTW8z?=
+ =?utf-8?B?Qm5iZU15SXJaTms5SmZVS0FTSXhzZEM4aERGSEVhd01ZSmxYV2RtOFk5SHFY?=
+ =?utf-8?B?bXhDSmFVL1E3bFdCTHcxZmJsdUxnM2tXMElQUnhicG1jbmJ0UnNYUjhrb1Vm?=
+ =?utf-8?B?TVA2VWNWaUdKTTNqOUFxRVdlNHdUVngwREEzY1paOGhQTHU3czJDRFRxV3BJ?=
+ =?utf-8?B?bkp6TEQ3SG1vcWRnUER5N1VtUHN3Zk5tcHhTUGk3cWtucnY2VUhIck16Rk1j?=
+ =?utf-8?B?S3dlSWtXRFFYQmhCWm5FVHlsb0M4MWxTaWo1bEhKaEphc2dPN0xwd1EzQnA5?=
+ =?utf-8?B?aCtiNjl4KzluSFpwY1o2cWNoUzJCYnNNWFF5VFZrLy90OHgzNjl2Ny95OCtU?=
+ =?utf-8?B?OUhrTDBKc0s0dUZFKzN1dmdPL2xoU1R6Z2NtNy9mdjJzTlNFOG5hRmhNTFZp?=
+ =?utf-8?B?ZVkvdktkdzFuSWJPandsdFJUdDdDL2pSUDJVVUIwM3lhTDlhQ2pUbnJlQURR?=
+ =?utf-8?B?NFl0VWQ1a0pzWEE3YjBoc0lNVmFGbkxkMjhxWllFZGh0Sm4rS2lxN2NLS3F3?=
+ =?utf-8?B?U1BEVytycHhYMzhXUjZ6TUVQVk9YNjhqRUV5NDJvTjFjb0FTZk51L3pXOE9o?=
+ =?utf-8?B?Wm03UnJIN2szZDFxNElZTUFYd0Y3NnBuUjBLeHdiTmlRbStDUXBZaWdHd3Vh?=
+ =?utf-8?B?RjFaZ2RnYTdrSHp0UENHZDZXWCtQUHQzNmVBTjJBajcrelpJMGhMeUtXRWx5?=
+ =?utf-8?B?TVYxdEJRS3QwekhGRi9WL216b0g5V2VacWZFWG1KenVjYWdHRWRSSExvSUl3?=
+ =?utf-8?B?Q0VCVDhSQmxIN3lPVExjME9yTVRKd1o1THhaVzRmYVJUZ3h3RytLSW16RE13?=
+ =?utf-8?B?c1Y0alY5Q1RPeGNsTHVadDYrTktOS1Rvd2RBZzhTMXZFbVNBNnJOcmpPYUZz?=
+ =?utf-8?B?ZDBSSUVqRnRKRGo0WXg5QlU5YUIwR2taUWJEMHlpZ1N0OU9rcmdWQ051U3p1?=
+ =?utf-8?B?OCs4U0JrVkxxcGNpMUUwZ0tlZ2RoRFFiZ1A4YU5mdzE1ejNhWEpaK0pKaUhn?=
+ =?utf-8?B?N1JseExDRmU4Mm4xZjlWS3Q5eDIwaWszckF2MlAwWktyQktOTlk0TGdUOHly?=
+ =?utf-8?B?amFvT0daSXZOdHFTRmFoM2xDWlpYSE9ZTk9HOVk0WFY4bDl6aGtFcE1PamlI?=
+ =?utf-8?B?bk84SUEwNWo4aEpwQ3dVaUxwQnVPeVdhRTErQlZaWlU0bkpVRlI3Z1hGMmdJ?=
+ =?utf-8?B?bVRWczcrR1RXaFhvaDluaW9oZllQVHQvL2djc0pUeHhRTE13d3UrdFkzY0VY?=
+ =?utf-8?B?V3I3MGVwbjM1VDRYVko2ckdJeFRQc0xrS3owSVVqaU5YUEEzVzhPejF3NXRX?=
+ =?utf-8?B?OEpHMHRFMC9hK1dzczVCUXI4b3RCN2lNVG12VzZMVlJSeUZzeGtSOGk2UlVM?=
+ =?utf-8?B?RDZoUnVRZ25uOTgrLytydmN1OS9oRFdjbVVJNzBKSHVvT0lObnJ4NW94UXIw?=
+ =?utf-8?B?RUJRTzlFMTllWjd2b2VraVNXVE00RThGOEFiVDF0Q3RBRVo2TlBSbU8wY0k0?=
+ =?utf-8?Q?FEFkr/EbZBc=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR01MB3854.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RVpiNXhVVGNGUXFHRmptdGpudnhraWxlVjhhR0k0RkVhREI2cVJPbUNLVHha?=
+ =?utf-8?B?Y1YzcktyUWNOUGljUzVPdk96aWZrbEdwcEtmVzFKRW94eUp2eE1hOGZGdy9Y?=
+ =?utf-8?B?Q3dJMU4rMXgwNUpVcG9OV3dQcU15S1VtUGFER2ZNUU12MnVVMzczckw4Sk5O?=
+ =?utf-8?B?MGl5TURCeTBwZ1B4VFlBVFpmRk1QWmVuWWZXUUZNRTBPQUxlNGZjVVFEQ2VC?=
+ =?utf-8?B?Z0xsNnRMNk5kYVhrczZGNnRvcGNUMzB2RkEwbG80eDhvalFzT2VXUW9RTzQr?=
+ =?utf-8?B?VndJR0FtdWpXdnhocXBUZTEvekg1SmRqcEZpd3F4Y1luL24xSHArcjBkMmZ3?=
+ =?utf-8?B?ZW9kWVhJS0xUalNMOHJqK0pmTlFrV042cXpsU2trQ0NidXh2Q0hDdnBPUVdR?=
+ =?utf-8?B?V2JEbkY1OTBzbW9aOTdycjcwMHhnM2t5Q0wwWEJLVm1ibkNqTll3TzRyWVJD?=
+ =?utf-8?B?NHRoVW9DdWVkM3l3elpkbEJaWGMyUnBVZk1XU1dSOGN3cEJqWHRpaktYZC9p?=
+ =?utf-8?B?MUVEQTNxVG5WaEVnWHlmdVRUVjBzRFVTYkRxWjZObDFjWEtZRE0vb0ppK0po?=
+ =?utf-8?B?YkRYTHBva3J1dGovd0taRjJjNUZDWjhRUnN2bWZSaFZPSzdYeHVTaFZYbzJC?=
+ =?utf-8?B?YWdVODZxSFJtamRHODY4ejBKcWpCYUZid3ROOFZEcWFTd1h2c2FoMGdvZm1u?=
+ =?utf-8?B?OVUxVW4xeHgrSjUyQXk1Q0lOb3JoSTA1bldYZFhpME5TNjdYVUhtNjZudDZE?=
+ =?utf-8?B?bTdGV1JmTUhWRUJRakJoZVNlMHVIdkVQczI2ZUJRM0ZvSDdGZmRmVUFwejJW?=
+ =?utf-8?B?REczd3lHdWozelBhekJhbFdOUE1tUGhKMG14OC9tUnkycUc0N1JaNnVQSHRp?=
+ =?utf-8?B?cWc0V2VuSzdyZy8yTTlKa0t4cERhcUw4bFJ3b29tb2xmRWFqSy9GaUlaeEkv?=
+ =?utf-8?B?aklSTzJDa052MHRWSCs3dElWUXArVnpMbkI5QVBwTVhXT0hnZFVjenhybUpv?=
+ =?utf-8?B?TUZkN0xXSENCRlpFY09UOE9oWGg0VnJsQ3Q3OHJ4N1Z4RFZ4cDRDMHJQSS9W?=
+ =?utf-8?B?aHJQM0crMm1LZkVSVUppVGh2czRtdE9ldUdwNG0wejgzczl1KzZyZzk0YkJK?=
+ =?utf-8?B?bFdFL09NNy9nZFhjOFFGMTVpUENVRWszdkhhKzJFcTRtaEVuM1M3Q21PWm5G?=
+ =?utf-8?B?RVp0MVRLczhEM0paYmxYNSsrakFhM3gzekYxVXQ0Y3dicGhneW9RSTJLcUpL?=
+ =?utf-8?B?ZmxPK3lzZ2MveVNXdGtBUFNlNC9IdDl4NzRZdWYrWjQrRkJsamZERkxNOFQr?=
+ =?utf-8?B?Y2ZVUVpVUnJHcHc4Rm1tQ3FpQUdUQTA2SU5PYmcyQXVpVnRpOWRISFRpVVpl?=
+ =?utf-8?B?UlFGSWVzc0ZMckdmQTRVR3p6eHp4NTY2a3Z4dkJWV3NrUGNDL2RSZ3l1QnA5?=
+ =?utf-8?B?Sm5NV1ZtVlpJYkV4ekwwQUZNVTg3TGNCL1dTL0cwOFVkOWIzdUR4cGRHcEZu?=
+ =?utf-8?B?Nzdqc3R2QXpEeXdZTVlWSmJUYkdDTng4SnFER0hLZC9xcnR6SnhDc0Jhc1Bv?=
+ =?utf-8?B?L0Zxdlc1WkFaVmxTVWV3RE9zQktaRHh5Q0VvR2Y2WkhWSmN3WURrSTR5VEFp?=
+ =?utf-8?B?SG9NSXNzNk8vcjhzUVM2MHVpUFg1SDVoOXp4bFg5UlNpa0IvbWJqM3pZeWtv?=
+ =?utf-8?B?YWRwNXZnTWZzUm9VT3hpUEduM3lsVjBCS2l2T0tKbEFIWWtMaDdYM3NyWGNa?=
+ =?utf-8?B?bUxWRUhzL1VhODFyaUhTT09RcnVMbVNyK0VtWFhkQTJIZzRYUjlFTWdWVVJ0?=
+ =?utf-8?B?RVNkcHVuSzBlbUxNUy9SeFkwWmhWYmd2aVFIL05icWtGdWw2WkQ2SHBnRUVM?=
+ =?utf-8?B?anR2QlpxM0xiQnJ6amFGblI1ano1Ui9Rem9DekRIU3BmalFPczg1M0hTTUl2?=
+ =?utf-8?B?MjRQa3JLclBFaTh1dTYxS1dEamdXbm9QeFg1V21ZaWNBaGpkL1lJaGgzU3pr?=
+ =?utf-8?B?a2ZTNDI1TGZPU2M2NjhaaDZHaU5CaG13MkV5aDVreDM5cm01TjhPVWswbTgr?=
+ =?utf-8?B?bWpVQzc3cmdRdUV1Ty9OWWg1aGxvbEV2VW1ua2VncEszVk1oWTNVRldCT0o0?=
+ =?utf-8?Q?ZKXQ=3D?=
+X-OriginatorOrg: talpey.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d78d1bfa-2589-486a-6c44-08dda83493ab
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR01MB3854.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 15:36:32.7572
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 2b2dcae7-2555-4add-bc80-48756da031d5
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1CkiqCJFkcLQm38BsWzJbmAvBOYA+5UGhOdt2wDYaI7jRYimU7HzJXRC+sISmuc9
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR01MB9356
 
-On Tue, Jun 10, 2025 at 4:40=E2=80=AFAM Thierry Reding <thierry.reding@gmai=
-l.com> wrote:
->
-> On Sun, Jun 08, 2025 at 09:13:14PM -0500, Aaron Kling via B4 Relay wrote:
-> > From: Aaron Kling <webgeek1234@gmail.com>
-> >
-> > This is based on Nvidia's downstream 5.10 driver, rewritten to match th=
-e
-> > mainline Tegra194 pinmux driver.
->
-> A few words upfront, to justify why I'm being pedantic. Originally the
+The message text is pretty cryptic: "inode numbers won't match anymore".
+Can this be stated in a more actionable way? The primary consumer of
+the log is the sysadmin, after all.
 
-I don't mind pedantic. Get it right the first time, save later pain.
+At a minimum, stating that hardlink detection won't work, as noted in
+the commit. Perhaps more helpfully, state that it's not a client issue.
 
-> pinmux drivers were generated using the tegra-pinmux-scripts[0]. This
-> project was later archived because Tegra210 was deemed to be the last
-> chip to need a pin controller. It then turned out that Tegra194 needed
-> pinmuxing for certain pins, and then more, so we ended up with a full
-> pinmux driver for it. However, we also deemed Tegra194 to be an
-> exception, so that's why that pinctrl driver was a one-off job.
+Tom.
 
-Tegra234 also has a pinctrl driver, which makes tegra186 the
-exception, when looking at the driver list without any other context.
+On 6/9/2025 3:36 AM, Pali Rohár wrote:
+> cifs_autodisable_serverino() is already printing at the VFS level
+> information that it is disabling the serverino. It is one time thing as
+> once it is disabled, it is not printing it second time. So it does not
+> flood logs.
+> 
+> In this change I have just extended this existing logging to print also reason.
+> 
+> On Sunday 08 June 2025 22:40:21 Steve French wrote:
+>> Since this could flood logs (e.g. in some DFS cases), probably better
+>> to do these via the usual dynamic trace points (and can document a
+>> simple "trace-cmd -e smb3_disable_serverino" script to avoid risk of
+>> flooding logs.    cifsFYI is an alternative but the world has moved to
+>> the dynamic tracing (eBPF etc.)
+>>
+>> On Sun, Jun 8, 2025 at 3:57 PM Paulo Alcantara <pc@manguebit.org> wrote:
+>>>
+>>> Pali Rohár <pali@kernel.org> writes:
+>>>
+>>>> Before calling cifs_autodisable_serverino() function, show reason why it
+>>>> has to be called.
+>>>>
+>>>> This change allows to debug issues why cifs.ko decide to turn off server
+>>>> inode number support and hence disable support for detection of hardlinks.
+>>>>
+>>>> Signed-off-by: Pali Rohár <pali@kernel.org>
+>>>> Cc: stable@vger.kernel.org
+>>>> ---
+>>>>   fs/smb/client/connect.c   | 2 ++
+>>>>   fs/smb/client/dfs_cache.c | 2 ++
+>>>>   fs/smb/client/inode.c     | 3 +++
+>>>>   fs/smb/client/readdir.c   | 3 +++
+>>>>   4 files changed, 10 insertions(+)
+>>>
+>>> NACK.
+>>>
+>>
+>>
+>> -- 
+>> Thanks,
+>>
+>> Steve
+> 
+> 
 
->
-> I now regret these decisions because the same formatting mistakes are
-> now proliferating, which is exactly what the scripts were meant to
-> avoid.
->
-> One thing that's not clear from this patch set is whether we actually
-> need the Tegra186 pinmux driver, or you're only adding it because it
-> happens to be present in a 5.10 downstream driver. Do you actually have
-> a requirement for setting pins dynamically at runtime? Do you need to be
-> able to set a static configuration at boot that can't be set using some
-> earlier bootloader/firmware mechanism?
-
-I have a device that's based on p3509+p3636 with an audio codec,
-originally targeting l4t r32. The odm provided instructions to use the
-codec was to first run the jetson pinmux python script after boot... I
-made that less bad by putting the pinmux in the kernel dt. But I see
-similar recommendations all over the nvidia dev forums, even for t194
-and t234. Solely for that reason, I'd think it reasonable to support
-the kernel pinmux driver on all tegra platforms: to allow easier
-porting of l4t devices. And a secondary argument could be made for the
-devkits: they have expansion headers with mux-able pins, prototyping /
-experimenting with those at runtime via sysfs is a valid use case.
-
-Taking a look through the public cboot sources for t186, I'm not
-seeing that it handles pinmux at all. With one or two exceptions like
-the t194 pcie stuff. How is it expected to configure pinmux at the
-bootloader level? Using the auto-generated mb1 flash config? I'm
-unaware of this being publicly documented anywhere, not just for t186
-but for any tegra arch. And the format of those aren't particularly
-easy to read and hand modify.
-
->
-> If we really need this pinctrl driver it may be worth resurrecting the
-> tegra-pinmux-scripts so that we can add these drivers based on the
-> generated files as originally intended.
-
-Imo, this would be ideal. That will require some updates to the
-scripts to handle the main/aon split. I don't think it's something
-that can be done externally either as it depends on the internal only
-pinmux spreadsheets as the starting point for a soc or device. But if
-that's done, all the format issues will be sidestepped and this series
-will be superseded.
-
-Sincerely,
-Aaron Kling
