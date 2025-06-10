@@ -1,160 +1,115 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B5C323BCFD
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 16:09:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB4D23A99D;
+	Tue, 10 Jun 2025 16:10:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749571799; cv=none; b=iuqW1Ua52OulOEFSTwqz6BIS8g0pC6bq95gN7wtR8MQbANuXPY/y4XXSKntlKcPro1eTZAoMmR8TipZg8Wr95ulCiqoavYrleCsYWIP+gyXqSJCeqidSi7VavzlhWqCgImj1SkqXQLUDd3+7/peLjMUeLLEu66lqJ5sPnG37kV4=
+	t=1749571822; cv=none; b=rixSvqgSfBqvICiN1pzqF7fNECc2Mx2YWjnVB0ZEpEZ9zWfnIw2zRsI1LA9hyJBOboUzzCiNG7/J3fcQXnOimbzgefx1d3+bZjjmuQPO3OGXrSzwbuoEDyFFfJHUODTF87uLVzuv0kDUq43WV+NWNyrKDIvW4j/c2r/PmR8R8XU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749571799; c=relaxed/simple;
-	bh=0AbnPkGGR2YnWbYMVXmQH/1IitycG/586CgBD51fF04=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mlqJVmsBUtGSCpxZj0UZYf1C+xF80xNRag7ptov11+w9tZ7JHgPQSAUUEfHaTx+0gy9JTCyB/I/Bm5h6ZDk+Tv41cheqwd91NfYyiOWabRtP6lbsYCKbyod4rT85lYwhvUFYa9Ele94iiRnL4bGCLk8MieHZi1UZk7CfqRteFp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZsUiAr28; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749571822; c=relaxed/simple;
+	bh=SrjumL+rBGwAE+luWw3qe8CwCfGvsjehDnOPtM8IRvM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nIjRZ49i8ZO0K7SfwnaN7XPNdHyNNtDfDwSqyWBEQNQPqrB4sHFkM7kOEWoGCZEneVs9IVGl1+8ZOwfToQKm9CLLKlXR6Vt5Zo2+aqDVS/FQ19S40uhq6OOicwY3qaDAJ/e29c7d4yRVAdlN/px5KkqsNpa28pqyp1oxeQlicig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GLvxXhI2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZsUiAr28"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a4fea34e07so3269145f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 09:09:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749571795; x=1750176595; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6/lkv9RH6MlsuVvstDKxmObrju7rsyAjQHI/g+B+6ik=;
-        b=ZsUiAr28gAnUgWKgUyAQAnbxNoRxtbWVSIWrD2xW7m/g8QCxHB1fg1HNH6ErBo4TWy
-         3ed5uEcyLZ2pEnph4KL9nXueNncSXOXaeXVHE7Ym5JTlv88/ri2pnrO+iFXxvgHsD2Rk
-         ipO4QJJuIgw0RnKCCpOrvB4DJP15A7ThdDkHXoJkEWpWVIk59B1o6CaNotKu4p9Wq9cd
-         q/JATSDwVxZIENlUORCgPNScbn1TfHi736Za3CAMJUCQ2A9EaPapjxzLlwcPTSAF8J7P
-         oP/TUrYTVENdIeo3ap5IRygA8+oBJ8ULV2/tVaftBvHpE75prUU/jLhwmO6HUM44dSWX
-         j+Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749571795; x=1750176595;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6/lkv9RH6MlsuVvstDKxmObrju7rsyAjQHI/g+B+6ik=;
-        b=EV9Ci7WLltTOu47oTcMHN0f0abR9bPiuGuapEX62hb62SXRjl8vqVkxn84Fnh+J5eK
-         JSxF1kqCa6wyltnZHzgadlsP23uVl7fhrKOxjHB3cetLiHtnNaRUpnU5mmthe4uM+cCL
-         kQdmW+bONnCDkNoJ3wyyFpFGhJ9mN8/0exRRe4FbSoz/Izi/PBiIHShGMEvJnBQtrZjK
-         QZYajLP+Z1MjtDd0H7dlJuDxUyhFX4+Mvu2zcfa/4EbmNwaTPlgexKrbukuAcpR8nrtb
-         t/CPhM9cfWz8Hfx9u55KzsBKpLMLUyU8gnY9+WNFAXsrhG/wrU0PHw8Kdw2ODew3UlqS
-         BxuA==
-X-Forwarded-Encrypted: i=1; AJvYcCVuSaNHAK1L+9TLHEEvmc28tQ0K+RdKdZFkFcwICxqXfWfQzxwUsF7497CRAhpSB/Gi5QV6aB2xvsumcWM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGGpqdhiPu8hKweLjDae5BNPqwrhgYbfcqJ7mGiTGtEaZ38a+q
-	PNyFt5sEcsJJliwmIrTI/DT/dgzNK014veaAMrwYWdWwuDXrT5wGV9Ci40y+VMQY/q1A654Ur0D
-	J6fYDVAxWghSfYLfRN1K2c8JcfQsI0DjgIHJ6
-X-Gm-Gg: ASbGnctcXdcPooEMrHgwFo5VBvO/dHp+hvHUfxL5LWHmBT55jCJM0X0ErI/eweryY6g
-	7pw7QDKgMZl9HJDGyAS8P501kV0RFTEiPSNYh5fytQS1VX7Dc5St5JSrmIxbvCCG13xiwSzs3NQ
-	EzrWi1yM4k/wGsGQuqYARPODgh7i+UQ66vgaIqQJwbMV6Y
-X-Google-Smtp-Source: AGHT+IExCH91F+uWkvO0zCNWlox2+QHGDnB0V7fGRtRxuuJaX4/C7nXpN1b1TtDv4W5ItkngDEdC7CDZm5r2s2rFyBc=
-X-Received: by 2002:a05:6000:4387:b0:3a1:fcd9:f2ff with SMTP id
- ffacd0b85a97d-3a53188a6camr13792631f8f.12.1749571795352; Tue, 10 Jun 2025
- 09:09:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GLvxXhI2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 738E1C4CEED;
+	Tue, 10 Jun 2025 16:10:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749571822;
+	bh=SrjumL+rBGwAE+luWw3qe8CwCfGvsjehDnOPtM8IRvM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GLvxXhI2zmlx/Hr/6/tq9q6g3qvmR62oHxq76gLXdtR5ilCjw/8V3zU46Mtj6TR1h
+	 vFk0saiIIDBBGGKLp3Fp4OPLnDA94ahZ6D8JY8Er95ZrIM3nJ1TI05ZPSUe9Pro3qD
+	 4ncJ//lENeXJfG5x8oYyYBbY7hHzs0U4zDRO+kH6+m5nTDwUl2UDMn0nPtVcju7PtZ
+	 mibZ94gDkk8XvYjRRzghc5R+AvCpgHNbWMc7GS/7DIGg8k+fO6KL34EHHbqXbWbJfc
+	 p18vj/l2FdcuVdvJW/h/byYIZVP7UegKZWyrmQg76TfqoA7HjYF6xK9XzTyKMBDOQz
+	 8KKkJH7U/N4CA==
+Date: Tue, 10 Jun 2025 09:10:19 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Joe Lawrence <joe.lawrence@redhat.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>, live-patching@vger.kernel.org, 
+	Song Liu <song@kernel.org>, laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>, 
+	Marcos Paulo de Souza <mpdesouza@suse.com>, Weinan Liu <wnliu@google.com>, 
+	Fazla Mehrab <a.mehrab@bytedance.com>, Chen Zhongjin <chenzhongjin@huawei.com>, 
+	Puranjay Mohan <puranjay@kernel.org>
+Subject: Re: [PATCH v2 59/62] livepatch/klp-build: Introduce klp-build script
+ for generating livepatch modules
+Message-ID: <sfzy2ojfzsjya24pbxw7fb77ua6smjixqjk7qrbt2i3q7wh25b@3kzz22tairgr>
+References: <cover.1746821544.git.jpoimboe@kernel.org>
+ <10ccbeb0f4bcd7d0a10cc9b9bd12fdc4894f83ee.1746821544.git.jpoimboe@kernel.org>
+ <aEeZw4PTeOIe-u_d@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610111559.1667156-1-matt@readmodwrite.com>
-In-Reply-To: <20250610111559.1667156-1-matt@readmodwrite.com>
-From: Andrey Konovalov <andreyknvl@gmail.com>
-Date: Tue, 10 Jun 2025 18:09:43 +0200
-X-Gm-Features: AX0GCFso-E-9aKfRV2m5yfhkLBFDhOYutTuqLbdAIEoR0xYES7h848mXXJPzRAM
-Message-ID: <CA+fCnZdR3qC-mDKSb9wWnA3-2qQxMvgArCPd3Cd_h=psjBx+vA@mail.gmail.com>
-Subject: Re: [PATCH] stackdepot: Make max number of pools build-time configurable
-To: Matt Fleming <matt@readmodwrite.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-	kernel-team@cloudflare.com, Marco Elver <elver@google.com>, 
-	Alexander Potapenko <glider@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Oscar Salvador <osalvador@suse.de>, Vlastimil Babka <vbabka@suse.cz>, 
-	Matt Fleming <mfleming@cloudflare.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aEeZw4PTeOIe-u_d@redhat.com>
 
-On Tue, Jun 10, 2025 at 1:16=E2=80=AFPM Matt Fleming <matt@readmodwrite.com=
-> wrote:
->
-> From: Matt Fleming <mfleming@cloudflare.com>
->
-> We're hitting the WARN in depot_init_pool() about reaching the stack
-> depot limit. My assumption is because we have long stacks that don't
-> dedup very well.
+On Mon, Jun 09, 2025 at 10:34:43PM -0400, Joe Lawrence wrote:
+> On Fri, May 09, 2025 at 01:17:23PM -0700, Josh Poimboeuf wrote:
+> > +revert_patch() {
+> > +	local patch="$1"
+> > +	shift
+> > +	local extra_args=("$@")
+> > +	local tmp=()
+> > +
+> > +	( cd "$SRC" && git apply --reverse "${extra_args[@]}" "$patch" )
+> > +	git_refresh "$patch"
+> > +
+> > +	for p in "${APPLIED_PATCHES[@]}"; do
+> > +		[[ "$p" == "$patch" ]] && continue
+> > +		tmp+=("$p")
+> > +	done
+> > +
+> > +	APPLIED_PATCHES=("${tmp[@]}")
+> > +}
+> 
+> You may consider a slight adjustment to revert_patch() to handle git
+> format-patch generated .patches?  The reversal trips up on the git
+> version trailer:
+> 
+>   warning: recount: unexpected line: 2.47.1
 
-Note that this might happen if filter_irq_stacks() somehow fails in your se=
-tup.
+Thanks.  Looks like the normal apply with --recount also trips it up.  I
+have the below:
 
-See e.g. this:
-
-https://lore.kernel.org/all/CA+fCnZdWgAD1pu4yyjON0ph9ae1B6iaWas0CbET+MXLNNX=
-t5Hg@mail.gmail.com/
-https://lore.kernel.org/all/44140c34-e2bd-4f6e-892c-51469edc8dfb@redhat.com=
-/
-
->
-> Introduce a new config to allow users to set the number of maximum stack
-> depot pools at build time. Also, turn the silent capping into a
-> build-time assert to provide more obvious feedback when users set this
-> value too high.
->
-> Signed-off-by: Matt Fleming <mfleming@cloudflare.com>
-> ---
->  lib/Kconfig      | 6 ++++++
->  lib/stackdepot.c | 9 ++++-----
->  2 files changed, 10 insertions(+), 5 deletions(-)
->
-> diff --git a/lib/Kconfig b/lib/Kconfig
-> index b38849af6f13..2c5af89daff9 100644
-> --- a/lib/Kconfig
-> +++ b/lib/Kconfig
-> @@ -720,6 +720,12 @@ config STACKDEPOT_MAX_FRAMES
->         default 64
->         depends on STACKDEPOT
->
-> +config STACKDEPOT_MAX_POOLS
-> +       int "Maximum number of stack depot pools to store stack traces"
-> +       range 1024 131071
-> +       default 8192
-> +       depends on STACKDEPOT
-> +
->  config REF_TRACKER
->         bool
->         depends on STACKTRACE_SUPPORT
-> diff --git a/lib/stackdepot.c b/lib/stackdepot.c
-> index 245d5b416699..1c24230b4a37 100644
-> --- a/lib/stackdepot.c
-> +++ b/lib/stackdepot.c
-> @@ -36,11 +36,7 @@
->  #include <linux/memblock.h>
->  #include <linux/kasan-enabled.h>
->
-> -#define DEPOT_POOLS_CAP 8192
-> -/* The pool_index is offset by 1 so the first record does not have a 0 h=
-andle. */
-> -#define DEPOT_MAX_POOLS \
-> -       (((1LL << (DEPOT_POOL_INDEX_BITS)) - 1 < DEPOT_POOLS_CAP) ? \
-> -        (1LL << (DEPOT_POOL_INDEX_BITS)) - 1 : DEPOT_POOLS_CAP)
-> +#define DEPOT_MAX_POOLS CONFIG_STACKDEPOT_MAX_POOLS
->
->  static bool stack_depot_disabled;
->  static bool __stack_depot_early_init_requested __initdata =3D IS_ENABLED=
-(CONFIG_STACKDEPOT_ALWAYS_INIT);
-> @@ -245,6 +241,9 @@ static bool depot_init_pool(void **prealloc)
->  {
->         lockdep_assert_held(&pool_lock);
->
-> +       /* The pool_index is offset by 1 so the first record does not hav=
-e a 0 handle. */
-> +       BUILD_BUG_ON((1LL << (DEPOT_POOL_INDEX_BITS)) - 1 < DEPOT_MAX_POO=
-LS);
-> +
->         if (unlikely(pools_num >=3D DEPOT_MAX_POOLS)) {
->                 /* Bail out if we reached the pool limit. */
->                 WARN_ON_ONCE(pools_num > DEPOT_MAX_POOLS); /* should neve=
-r happen */
-> --
-> 2.34.1
->
+diff --git a/scripts/livepatch/klp-build b/scripts/livepatch/klp-build
+index f689a4d143c6..1ff5e66f4c53 100755
+--- a/scripts/livepatch/klp-build
++++ b/scripts/livepatch/klp-build
+@@ -337,7 +337,14 @@ apply_patch() {
+ 
+ 	[[ ! -f "$patch" ]] && die "$patch doesn't exist"
+ 
+-	( cd "$SRC" && git apply "${extra_args[@]}" "$patch" )
++	(
++		cd "$SRC"
++
++		# The sed removes the version signature from 'git format-patch',
++		# otherwise 'git apply --recount' warns.
++		sed -n '/^-- /q;p' "$patch" |
++			git apply "${extra_args[@]}"
++	)
+ 
+ 	APPLIED_PATCHES+=("$patch")
+ }
+@@ -348,7 +355,12 @@ revert_patch() {
+ 	local extra_args=("$@")
+ 	local tmp=()
+ 
+-	( cd "$SRC" && git apply --reverse "${extra_args[@]}" "$patch" )
++	(
++		cd "$SRC"
++
++		sed -n '/^-- /q;p' "$patch" |
++			git apply --reverse "${extra_args[@]}"
++	)
+ 	git_refresh "$patch"
+ 
+ 	for p in "${APPLIED_PATCHES[@]}"; do
