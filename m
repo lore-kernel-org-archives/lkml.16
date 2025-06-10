@@ -1,92 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD5A2343C9;
-	Tue, 10 Jun 2025 20:26:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF9B19A2A3;
+	Tue, 10 Jun 2025 20:27:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749587166; cv=none; b=r7OOG8nQl7e2R0X0NGU/pw4hLpciXHykBwJRzj/GSExxXrC0+6+u3EgnVfHIbheaiVoTKPw8PeEj0i0ot4F1pWpcV6+vLA7mlOxjG4r7xyH99XgYtOHRU5hmKgKyXSeVe9PLOJPltK6Tos27j3kMSGx6FmF1fRYl9lTa4tV/Ta0=
+	t=1749587240; cv=none; b=AHYi7GksAAZ9QEQqSI0IZvPfXc+6aFvMbkO7skvhtdR6Z/SwJmoF3+0j08xwSrewvXoubbYsPwNL/Hv+otjm3l4H6uVjBaZMkeddD/sHuyWgxQIR/7GTdkKgAwuWYjvbCiaEvoUEx7hEvwIoG1xCuPQ9zvxD1crWixcEJSjPkDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749587166; c=relaxed/simple;
-	bh=i3xUcE4fdZGKDOP58lBw3BpW2oKS2ltdgZiiQYUta/w=;
+	s=arc-20240116; t=1749587240; c=relaxed/simple;
+	bh=a0fsVYzJm3+G88UxdB0B0y4YgNQAiF04/BzeC7n0bFM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X9tE2rXWL8s0c+eY5vcYuFk/167shZUToTRvjTCT14rFIKl7GbXBo/arlVE4BFWEl9pfGsBE4vTRCV7po6BwRLz6y5O6aqK3veFqUSXfyG0rVZZlJuY70CFXep2sLxuTPvCuzJG0JFm82Zq6vw1UNKpMYWnhnXSxalqU/JEkIkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eSlAbSNl; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=oWd85FwAynetcYXEFFdDz1XPVABx8Wo/15O0uOPBLhC/fFN8r21lDGsBxQCiFOxRCuOmEgw6TdVrW34+6zOZ5kVOaknnf4kIWG2Kb6Whk3TSyLyfdPXUIUu7CGAajipk4/4LazzaemEIL0lDmu5zLuIhq/tdvA5QojGQB3+VruA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lPLsBrgK; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eSlAbSNl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 090E0C4CEED;
-	Tue, 10 Jun 2025 20:26:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749587166;
-	bh=i3xUcE4fdZGKDOP58lBw3BpW2oKS2ltdgZiiQYUta/w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eSlAbSNldfQPts2zj2j6xQv5+cZ6micM6ApZDx5b0Bu9c+h3MYT35UCGFDrpaOsFp
-	 +a529eXBgUMkaKqnZB2ADouOGsrM1Up3xonjSzDyF3FwEbHjnADlDcuXK5lXiPDG91
-	 BGZSF/lS2ZWh3K5wkHWrhr315jlrla+9WS6pv85xLBI/RaxJUE1fFxaFKgyjd3KN2G
-	 cVE5q/rdIe1eyWkGt7J+dpg8XoPG88J7CotMnvQD8a6SvEjiWBJKgsPyaOzmxhW7OW
-	 Xm6EVmAKBWB4B5K/eTgcu2KJLxauV56fsnjhAhq+ooBaBNXvfBtMQXz8OQmCdu7waS
-	 Zj7HJHwe7fg1A==
-Date: Tue, 10 Jun 2025 13:26:03 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Joe Lawrence <joe.lawrence@redhat.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>, live-patching@vger.kernel.org, 
-	Song Liu <song@kernel.org>, laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>, 
-	Marcos Paulo de Souza <mpdesouza@suse.com>, Weinan Liu <wnliu@google.com>, 
-	Fazla Mehrab <a.mehrab@bytedance.com>, Chen Zhongjin <chenzhongjin@huawei.com>, 
-	Puranjay Mohan <puranjay@kernel.org>
-Subject: Re: [PATCH v2 52/62] objtool/klp: Introduce klp diff subcommand for
- diffing object files
-Message-ID: <6bzrbh6sotmdh2426iky6s74yqfwiiooe5k3wif72pdvrpi322@23gntwfq7n7z>
-References: <cover.1746821544.git.jpoimboe@kernel.org>
- <f6ffe58daf771670a6732fd0f741ca83b19ee253.1746821544.git.jpoimboe@kernel.org>
- <aEcos4fig5KVDQSp@redhat.com>
- <2oublab5wrfzneispi4sqb6feiw2abc3mzxozmx53btuvseljh@3qsmyluomyir>
- <6f93bb5c-43da-4a88-a8b3-7b7ea992b0e6@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lPLsBrgK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749587239; x=1781123239;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=a0fsVYzJm3+G88UxdB0B0y4YgNQAiF04/BzeC7n0bFM=;
+  b=lPLsBrgK2giaK16KT6+XMW34OhWLMvjQFV9bnUfxGgFCVtMvoTFwiCH3
+   UyxGEIyGuneLI1KbiXnviYxVHQlgWWN5s/ZwkK6i0RXQwwJcaJ3XF3AXk
+   tfuIJ4Km38a035s9r5VKuEIlCnYjvqpauT/4B/TrYM+mpRDrjTCxIpZBD
+   4bLgmUsUnhIs0WUQwUpjwKdSAATTwtV93bV4dOHsVFW33TZ97eY61Xlfu
+   bZKLINMXwR0Tb+5c5rHRzNfDH/9UJ7unzT3ZFPiyfBcyqRBeoibMWDYAp
+   5yPMmJLwGVrisrLAPmDWrWeHLGBXEVLsDc5ETLw8AhLe9ZYK4lsJGelgU
+   A==;
+X-CSE-ConnectionGUID: Noxo5AgHSsa+6KU9Sbq3zg==
+X-CSE-MsgGUID: t0upGzxuQlO+xrBIKXuKPw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51812187"
+X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
+   d="scan'208";a="51812187"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 13:27:15 -0700
+X-CSE-ConnectionGUID: P3dVhLlURDeKL62XEUj5QA==
+X-CSE-MsgGUID: hx91AJa8SgCOP+/SdpGtHg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
+   d="scan'208";a="146867111"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 13:27:13 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uP5Ys-00000005RbS-06B9;
+	Tue, 10 Jun 2025 23:27:10 +0300
+Date: Tue, 10 Jun 2025 23:27:09 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com, ikepanhc@gmail.com,
+	hmh@hmh.eng.br, W_Armin@gmx.de, platform-driver-x86@vger.kernel.org,
+	ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] platform/x86: Move Lenovo files into lenovo subdir
+Message-ID: <aEiVHXI4vS9BDOPW@smile.fi.intel.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20250610192830.1731454-1-mpearson-lenovo@squebb.ca>
+ <20250610192830.1731454-2-mpearson-lenovo@squebb.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6f93bb5c-43da-4a88-a8b3-7b7ea992b0e6@redhat.com>
+In-Reply-To: <20250610192830.1731454-2-mpearson-lenovo@squebb.ca>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Jun 10, 2025 at 08:39:10AM -0400, Joe Lawrence wrote:
-> >> Should we check for other data section prefixes here, like:
-> >>
-> >> 			else {
-> >> 				snprintf(sec_name, SEC_NAME_LEN, ".rodata.%s", sym->name);
-> >> 				if (!strcmp(sym->sec->name, sec_name))
-> >> 					found_data = true;
-> >> 			}
-> > 
-> > Indeed.  And also .bss.*.
-> > 
-> >> At the same time, while we're here, what about other .text.* section
-> >> prefixes?
-> > 
-> > AFAIK, .text.* is the only one.
-> > 
-> 
-> What about .text.unlikely, .text.hot (not sure if these can come alone
-> or are only optimization copies) ?
+On Tue, Jun 10, 2025 at 03:28:25PM -0400, Mark Pearson wrote:
+> Create lenovo subdirectory for holding Lenovo specific drivers.
 
-Hm, I think .text.unlikely.foo is at least theoretically possible
-without .text.foo.  Seems "unlikely" though.
-
-IIRC, .text.hot is used for profile-guided optimization, probably not a
-concern here.
-
-There are actually several edge cases that would cause this validation
-to fail.  If a module only had init/exit then it wouldn't have any
-.text.foo.  Or if it didn't have global data then there'd be no
-.[ro]data.foo.
-
-This function could get pretty fiddly, and honestly I'm not sure this
-validation buys us much anyway.  I'm thinking about just removing it
-altogether...
+Assuming Kconfig entries have mostly been copied'n'pasted, the rest LGTM,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 -- 
-Josh
+With Best Regards,
+Andy Shevchenko
+
+
