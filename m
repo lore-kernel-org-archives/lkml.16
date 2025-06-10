@@ -1,86 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD01282FA;
-	Tue, 10 Jun 2025 21:26:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 774B0282FA
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 21:28:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749590798; cv=none; b=ifVC1CE9ScaPOYk89wIR/fvIx4xVvZ1pJG7vhlYZi+dddYaKOqhdr1H6lwEBl70hsT9YKh/wF7sw7AB/9KpGOcoIJD6Q0GXH5nvm4Fwob1s4Zc9Ojl67VOYOnkyHFwaYeO2ycVvxqmSwXCp3CoIy5DIKKDs6xu4t0jsNJfTm5oI=
+	t=1749590919; cv=none; b=W0tkZsptdsplkt6cvVr5gIGMnTKsW/HLXRNBAGb/mNe3KOldYkia50Erz8tN/60BdX3QMZvZ/VlllIaEB+m/qOA2RbUO2qWJn09xlHXz/4LgJV5BJEHeeVx9W8uIPoAsXgrxqZt89vrx6eYj6omRBiElfX5gwBMEVeVZtNjjxIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749590798; c=relaxed/simple;
-	bh=V3sF/svjtmJ8AfC4ZuaHUSixySfbbr0zn+GGwL8oMac=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K5SMHJ5wEJVUj47Y36QrF5wbwh/+GLAiSq/RlUlbGXoyIdJvXvgV+YpRpXSVrj4xrgLDU5zQyXbMzZw6eMciPsViqD+ElDsDUv6EL/iIeJ1SSMXi5ciH+1PTj5fmP4JIOkbOX2OnRCkxsnpU+qPvGItCIt9uvhdSGnSfnUMBplM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GAPqIRX6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749590919; c=relaxed/simple;
+	bh=C2zctQp0aYvJjRGYTmpWS778bIthItUYsYerUUajbSk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Y3nuGhOX4QFUnFa8AWYM265xIeA5MHnF84vKv19dJdAKPCfujOwo5Dl16C71mz0dG5lorMCZ147Yb03XOzwyeNxA8cmLD8Ci0tT2D8HBOTebNEFEdN9ODmEMIEBnKd/SmXMm/IiR94h0EvNkCKRK9qJy8cZOsYCnGJR7HqETvpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=tkGM+2MY; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GAPqIRX6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EDA4C4CEED;
-	Tue, 10 Jun 2025 21:26:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749590797;
-	bh=V3sF/svjtmJ8AfC4ZuaHUSixySfbbr0zn+GGwL8oMac=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GAPqIRX6+Y8GydwV/+d7TU7oitzkde26YFmNB31a4y6RwVNVttHxBF5t+QlMiHK4P
-	 aQIYPwS2Fq4pjmIiQ1V2I8a6+p9gVND0W05Z1xJUw8NS2Vubh1qkfCA2mxb7I0tx+u
-	 4Woi0l1kDODHVxwpwtlikCknFyISa2Itb1UjiNi0l72S2lndZ2GAexlvKWQbqbcshz
-	 qBYmaABJ8Fvb4xqnizMnNnbqOEYPPveAV08Q+UkSwK1ClzIqkoU5Ik+ebf5/eXnjK3
-	 Ul0mRIT5EXLRPxa6K8R/WjWEpmeQURMyZwjH+v4AgNBKh63yuKzNkVFmsdPfyoUspB
-	 hQ3Ucof/sHayw==
-Date: Tue, 10 Jun 2025 11:26:35 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>, bpf@vger.kernel.org,
-	linux-mm@kvack.org, cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH 2/3] cgroup: make css_rstat_updated nmi safe
-Message-ID: <aEijC1iHehAxdsfi@slm.duckdns.org>
-References: <20250609225611.3967338-1-shakeel.butt@linux.dev>
- <20250609225611.3967338-3-shakeel.butt@linux.dev>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="tkGM+2MY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:
+	Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References;
+	bh=Awpi5GpyOLDB1Nt8+DeBTohsa+vKyjBC3GHy2DGNNYE=; b=tkGM+2MYM6zqsua3VbEBs0B9wM
+	5yEPvrg8fK5rC8+Iu7nwoxeeeZXMCK6l1FbkO37Xkgb1ZUeBNjb4rnkFzmCz021lQpjvix1P/9pe+
+	M7p4rE4S1XcPRjEXvFyOXNRULT44QYOKgNVJLjHWDJ6jNOJV4Ky99iKlbpf5QpZve0YpjbCVUOrAl
+	d6Pm3FpKFvDTZtgEENTvVIMjNxi5EmnaPxaQGKDP6tcqmjvlInTAZYDy64TCYrEqS5B0sLxP/BLQG
+	m8yjYN6YgibOTHMyxrlbaobIXinZSkMeyV78F5h6yvFTOrT6G1tMb91NkkEkGQ1mnEAOkjT309lBL
+	LhanHnDw==;
+Received: from i53875b1c.versanet.de ([83.135.91.28] helo=localhost.localdomain)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uP6Vs-0007Jb-My; Tue, 10 Jun 2025 23:28:08 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: hjc@rock-chips.com,
+	heiko@sntech.de,
+	andy.yan@rock-chips.com
+Cc: maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/rockchip: vop2: fail cleanly if missing a primary plane for a video-port
+Date: Tue, 10 Jun 2025 23:27:48 +0200
+Message-ID: <20250610212748.1062375-1-heiko@sntech.de>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250609225611.3967338-3-shakeel.butt@linux.dev>
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Each window of a vop2 is usable by a specific set of video ports, so while
+binding the vop2, we look through the list of available windows trying to
+find one designated as primary-plane and usable by that specific port.
 
-On Mon, Jun 09, 2025 at 03:56:10PM -0700, Shakeel Butt wrote:
-...
-> +	self = &rstatc->lnode;
-> +	if (!try_cmpxchg(&(rstatc->lnode.next), &self, NULL))
->  		return;
->  
-> +	llist_add(&rstatc->lnode, lhead);
+The code later wants to use drm_crtc_init_with_planes with that found
+primary plane, but nothing has checked so far if a primary plane was
+actually found.
 
-I may be missing something but when you say multiple inserters, you mean the
-function being re-entered from stacked contexts - ie. process context, BH,
-irq, nmi? If so, would it make sense to make the nmi and non-nmi paths use
-separate lnode? In non-nmi path, we can just disable irq and test whether
-lnode is empty and add it. nmi path can just test whether its lnode is empty
-and add it. I suppose nmi's don't nest, right? If they do, we can do
-try_cmpxchg() there I suppose.
+For whatever reason, the rk3576 vp2 does not have a usable primary window
+(if vp0 is also in use) which brought the issue to light and ended in a
+null-pointer dereference further down.
 
-While the actual addition to the list would be relatively low frequency,
-css_rstat_updated() itself can be called pretty frequently. Before, the hot
-path was early exit after data_race(css_rstat_cpu(css, cpu)->updated_next).
-After, the hot path is now !try_cmpxchg() which doesn't seem great.
+As we expect a primary-plane to exist for a video-port, add a check at
+the end of the window-iteration and fail probing if none was found.
 
-Thanks.
+Fixes: 604be85547ce ("drm/rockchip: Add VOP2 driver")
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+ drivers/gpu/drm/rockchip/rockchip_drm_vop2.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+index 7ddf311b38c6..a8dc2e55812a 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+@@ -2425,6 +2425,10 @@ static int vop2_create_crtcs(struct vop2 *vop2)
+ 				break;
+ 			}
+ 		}
++
++		if (!vp->primary_plane)
++			return dev_err_probe(drm->dev, -ENOENT,
++					     "no primary plane for vp %d\n", i);
+ 	}
+ 
+ 	/* Register all unused window as overlay plane */
 -- 
-tejun
+2.47.2
+
