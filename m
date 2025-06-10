@@ -1,100 +1,125 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D90FD256C6A
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 18:56:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05A1256C73;
+	Tue, 10 Jun 2025 18:56:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749581797; cv=none; b=Onxqrmi2Pdn0FmBQnkfBirefxDB1No6hhZ9lQrdwvUhBozYrNcYsmricxX62oSdDd7DKY32ZG3LtErkI2LCFwCyi4P3HKbasXkr6NlkbP8EDztz2SbU6GWglC17yeDIQ1O4IRsgXHGheMlFPsQvkau9hcDwtk5U5yTMVQPrzidc=
+	t=1749581811; cv=none; b=ZQ3UTy0PTtXl2fskSugvVkfleAsq0D1lwhUNB5xNU4QYySBINaPogsGEjAtn3USKrt/1r7ioCxq89ypT2RGpbIqFAcGhLnjaQFCJrqEVgMFfoyUy7yqn4KibUs/53Jh36RjjWcOdESPhpiQ47fVTenpAZNrF4I7qg7S2G1c2v3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749581797; c=relaxed/simple;
-	bh=Gjf7MJgtoowVX5GjyxKfHrfyG/iuTCDkZxXqDKA8T4c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bm5jq1AEq6Vfz9KFiH8vkTuBifJLoKYQlzGcne/VVhLpX8tTZdNWl7XG02IpCydomN2/CuYH4rXKAiEf282KobpbvmzHEDnL/GTH544U4KD0pjmq3/qKOS9B0jUwB1saiY85aaSVA0N2yl3mRUgeQLrM+Uqo2w7+bTP8LyerHK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=KtRJSyHn; arc=none smtp.client-ip=209.85.166.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1749581811; c=relaxed/simple;
+	bh=pryyr1i31pIjJR6VwtjXcpq4HuW0SJmdaFXt2MAmv1c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=a0dXwBTTcKrEuOKXqLHcVjXAPVyLrWl4ceXQJO7tlReWZVqj62HtjrnP3QuwBmDvDT1f7EWEYc0syNs8PtqQiwujP8sFy4iY63e9zPZ3KX9YA3GCCBrvgKkigTHTXjPukAve0qPqsxOL6lFiKqoU5CMM8cVYWHKKVSumAxVbQdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dyasEQut; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="KtRJSyHn"
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-86d00726631so126731539f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 11:56:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1749581793; x=1750186593; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=i/hEVzGZOHW0F1bE6WnTuLQwtY9o2+fUFVVXN65KjKU=;
-        b=KtRJSyHn96TInDB3HzBYfP2cum3MMgph6vO1cgNuPZFngghPBuHs9rPWKwk4YjUbQ/
-         gMccFG9KiZDLHk9kHeDm0GLkWDfb7LgzCwGnVqhTce/tUtENj/yUSfF28hueRLISzix2
-         mziuom4db1QQoPcb/B1yLCWgTFJ1ISz2S3PLFaeADrJHiM7UDbzi4RogZxe/xvQF5ZAd
-         RvMm/X5a1BJQiM1LdH4BtpG5ZF97wZdPoHIiu+MVlMhFH1y0itmh63XKvQs4bfRk3qzo
-         Aammq1kJeGdrQFvxbaFsQikNbRNgTdcCRoUDUMYxVSQizAIPsohCMzPnn1AxX/CpvjV+
-         cPpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749581793; x=1750186593;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=i/hEVzGZOHW0F1bE6WnTuLQwtY9o2+fUFVVXN65KjKU=;
-        b=YRIw9HLYVp8OmtJ/b/Rwuq5ZWPoDrYtXsnppJ8HCv8Dj/+ftjYJrbjuXHsErni6eOW
-         HtjSaRIhpJg99ckuHbuBNTa6ynFhbmvzncvDHT4ysC5w7AQXULTRUQRQkhFzh+rS5ebm
-         OCxNjyXV2l2L7ZcOd28yXITJ5FH7tgYmTqEmiK8C90X/PtDAAq0xFoiybQtRN25mC7O/
-         sUrmT3QqzD2CBofb3o7nJjvVgMMysY+O01zOisughpQWc08mmkRRLUfCh0LMK2k+WvCE
-         u0E1vdkAUyo44OIqhK7xAkZ6ZUBHcNA6WuDI0ZF1jWFSaavwcZp56Sc8Sly4QeXqmWRJ
-         uReg==
-X-Forwarded-Encrypted: i=1; AJvYcCXRqMag/8hDtzyWIv32xjibF3ms0NSecZQomJu/94o6nWWr3vJ1HbkGKK6oG6LVMYkihDTrJpO7t00ULi4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxEkmpH9GrZuKPj5cfYAhj2As7CNbIt3nAj54bskokOFjXXFIL
-	+ejZRq44oD7rW41h0E1hs4WgFyqTpBLzk2iWXSNePk/clb7zJixyXYR3lk1nFarxkrxhi49MEtN
-	L6x6C
-X-Gm-Gg: ASbGncu+W33qyGnre/fdOMLcFawAAf+cM4/IHP97d2srL1v9LBuVDyk8xShiWlpfaQ4
-	irZclNdP90p5Wex2LBzjaiQWQ0k5bfU34/PVhWB4br6oaQ1vrNG7dD7pDxAQyQLsq5TdgpMeYW4
-	WFIYITtvJ7IQeOCwwnA7uUYfUbdHwb8VP/hOMTCU3WijRiA4g6Bfo5OcgkQq073sAqyZbwuwWIF
-	bwGSzGwunghIK0wWn1HIhNDmZ64NtTacAb+YqvuExrcPi72CdqnxtUSBuLiljaemrdpuRrYee1O
-	RRyjgrUS0fgBPDVDAGb0JTxOGKfprjJussymhTDcc2YOSSDlHKyOVThkxQ4=
-X-Google-Smtp-Source: AGHT+IGslyx0wN5AwCzp0VhTy4YPbwswY2jFAV33oi+CcIONtrvt6dFy77ZL0hwJrEMh+yuktXQhLA==
-X-Received: by 2002:a05:6602:360c:b0:86c:f3aa:8199 with SMTP id ca18e2360f4ac-875bc4359acmr66688239f.11.1749581792972;
-        Tue, 10 Jun 2025 11:56:32 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-875bc699510sm3141539f.37.2025.06.10.11.56.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jun 2025 11:56:31 -0700 (PDT)
-Message-ID: <48f61e8e-1de6-4737-9e58-145d4599b0c0@kernel.dk>
-Date: Tue, 10 Jun 2025 12:56:31 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dyasEQut"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D26BC4CEED;
+	Tue, 10 Jun 2025 18:56:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749581811;
+	bh=pryyr1i31pIjJR6VwtjXcpq4HuW0SJmdaFXt2MAmv1c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=dyasEQutnFNsEmCY6adDQlSZkSb6OjTjnTKxJ0h4MGWrtKUX6Cu8IVfWzNbW18bkC
+	 HWxNUFhf+lGTdXTLV6ptAc+2mXAPlkc/0ofhT4RDvLh+B99eTCtlZH5gxYKZtgibsa
+	 lvFJyTzRAQbXcXqWw0Udkl+8OYC9Ji/Stnm4zNi/F++VsrW+cMPB0n/bA0Pc9vyNMK
+	 F+UrX/I7tqsbINQ1J7jG4aB8PmYonengdwv1UdmfZceJLLEHlT921etli0TVFcnC88
+	 L6f0UmXhxrnzFXIZH6Y1LCMNeM0Qo5Bq5Ru7exBEkSQRQXBdxE18yUeMEfijG4WLK9
+	 LvfuIbcVw3OSg==
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2e9071e3706so2944615fac.0;
+        Tue, 10 Jun 2025 11:56:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV/lj6IvifAXohyQfGnX43DhwSP6bkktYUICBm7UJq+YA6K4gdKE5/vNXh8A1uM3nEmVGJxp1FLpvUk@vger.kernel.org, AJvYcCXXOTDnD+xKAGGOe4dKoaGu/EWT4suGxtZleycWn9kZaQhu/vWH1nnSX35vmzz0CzYpoLyU5a2qxyln+/OF@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFA5ZffFGUWWaSGyzQ1VJPS0xAVDLgKKeAqQs7Xdt8ugnE1PwB
+	s0qtB7nMkeavfsPv8I4zApe6gpnCMPDOfrIE9Tx6/QzkR3BHcpwc6XinNbkBY7IoQsbGKHf9NCO
+	Yca3b2cXoNi+kLUJOPWPfKY2oxQzJVmA=
+X-Google-Smtp-Source: AGHT+IEiqMAs3VwBo4z5rbrJ77CuOTpPixo7IesmIBEY9g9gMK/j0uqLTF5wWCFJW4wUxt+rxTVjBwh3+CHxEGEYw8o=
+X-Received: by 2002:a05:6871:2d06:b0:2bc:7d6f:fa85 with SMTP id
+ 586e51a60fabf-2ea96cc229emr307395fac.16.1749581810329; Tue, 10 Jun 2025
+ 11:56:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] io_uring: fix use-after-free of sq->thread in
- __io_uring_show_fdinfo()
-To: Keith Busch <kbusch@kernel.org>, Penglei Jiang <superman.xpt@gmail.com>
-Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
- syzbot+531502bbbe51d2f769f4@syzkaller.appspotmail.com
-References: <20250610171801.70960-1-superman.xpt@gmail.com>
- <aEh9DxZ0AQSSranB@kbusch-mbp>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <aEh9DxZ0AQSSranB@kbusch-mbp>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250529235310.540530-1-W_Armin@gmx.de>
+In-Reply-To: <20250529235310.540530-1-W_Armin@gmx.de>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 10 Jun 2025 20:56:38 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iWS=tHAuauHNHb+N9_GjJTX2-RY01eAS8-sjS_2UZaoA@mail.gmail.com>
+X-Gm-Features: AX0GCFudS5db3IvFItOfoZb8IDBDd4WIt62v3pF3Er-HjcfbRdESTlpHy76SWTY
+Message-ID: <CAJZ5v0iWS=tHAuauHNHb+N9_GjJTX2-RY01eAS8-sjS_2UZaoA@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: EC: Ignore ECDT tables with an invalid ID string
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: rafael@kernel.org, lenb@kernel.org, glpnk@proton.me, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/10/25 12:44 PM, Keith Busch wrote:
-> On Tue, Jun 10, 2025 at 10:18:01AM -0700, Penglei Jiang wrote:
->> @@ -379,7 +380,8 @@ static int io_sq_thread(void *data)
->>  		io_sq_tw(&retry_list, UINT_MAX);
->>  
->>  	io_uring_cancel_generic(true, sqd);
->> -	sqd->thread = NULL;
->> +	rcu_assign_pointer(sqd->thread, NULL);
-> 
-> I believe this will fail a sparse check without adding the "__rcu" type
-> annotation on the struct's "thread" member.
+On Fri, May 30, 2025 at 1:53=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wrote:
+>
+> On the MSI Modern 14 C5M the ECDT table contains invalid data:
+>
+>         UID : 00000000
+>  GPE Number : 00        /* Invalid, 03 would be correct */
+>    Namepath : ""        /* Invalid, "\_SB.PCI0.SBRG.EC" would
+>                          * be correct
+>                          */
+>
+> This slows down the EC access as the wrong GPE event is used for
+> communication. Additionally the ID string is invalid.
+>
+> Ignore such faulty ECDT tables by verifying that the ID string has
+> a valid format.
+>
+> Tested-by: glpnk@proton.me
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+>  drivers/acpi/ec.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>
+> diff --git a/drivers/acpi/ec.c b/drivers/acpi/ec.c
+> index 6f4203716b53..75c7db8b156a 100644
+> --- a/drivers/acpi/ec.c
+> +++ b/drivers/acpi/ec.c
+> @@ -23,8 +23,10 @@
+>  #include <linux/delay.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/list.h>
+> +#include <linux/printk.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/slab.h>
+> +#include <linux/string.h>
+>  #include <linux/suspend.h>
+>  #include <linux/acpi.h>
+>  #include <linux/dmi.h>
+> @@ -2031,6 +2033,21 @@ void __init acpi_ec_ecdt_probe(void)
+>                 goto out;
+>         }
+>
+> +       if (!strstarts(ecdt_ptr->id, "\\")) {
+> +               /*
+> +                * The ECDT table on some MSI notebooks contains invalid =
+data, together
+> +                * with an empty ID string ("").
+> +                *
+> +                * Section 5.2.15 of the ACPI specification requires the =
+ID string to be
+> +                * a "fully qualified reference to the (...) embedded con=
+troller device",
+> +                * so this string always has to start with a backslash.
+> +                *
+> +                * By verifying this we can avoid such faulty ECDT tables=
+ in a safe way.
+> +                */
+> +               pr_err(FW_BUG "Ignoring ECDT due to invalid ID string \"%=
+s\"\n", ecdt_ptr->id);
+> +               goto out;
+> +       }
+> +
+>         ec =3D acpi_ec_alloc();
+>         if (!ec)
+>                 goto out;
+> --
 
-I think that only happens the other way around, eg accessing them directly
-when marked with __rcu. I could be entirely wrong, though...
-
--- 
-Jens Axboe
-
+Applied as 6.16-rc material, thanks!
