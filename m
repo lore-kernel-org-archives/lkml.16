@@ -1,139 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8E228D846;
-	Tue, 10 Jun 2025 10:03:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4166928D846;
+	Tue, 10 Jun 2025 10:03:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749549817; cv=none; b=PittlfBmzRfCoq+Ee/71brIxOWg4scQ7pJ5wSSF/khv8pGGdUvoFjd/ezJ9n5q9GhK0wzpjrLluuic8LkKZWPT3Z1f4jFPC9RnUQQZhj3GaWXCDKmZejEmeqGaY3XyX0kxtfMiQS/xxVCxY+rYHDxF8mnGmwiGKkgJ+TN51lPw4=
+	t=1749549829; cv=none; b=lIBSQ6b9drLQOOh+y9+kFJHSlHoW0Lrq95JJSQlSFAeOEgknw5EDZSbcujMaYDc8/QZKqkMIqmfLV7MMEpXOgqGaUATcnW+gQ/TpLcYRE0VlA7Xn55LBDYlGnO7BAe3y5b5yh+TUEvmkKQh+50TRhSinEBOqrRMB5h0apbEYTDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749549817; c=relaxed/simple;
-	bh=FSCdKuBZu83ZlNuhWTKve1fHQ1SiZ+gddU/oetdw40o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Fb3+4KyxjW/oBqlGlhz9Yi9xPYvt2ABnO8ko0AWn6+lLbXpqnKtqopgDZGcH1VYAMg2ucG6jaGjbEt+izktWuW9W1RCy/B3hJgUwJBGKPxei4ZyVnUVQMESmXDIqIsOgyK9GuSvQncsbpbqE9wjvlO721b0Sd0pH59qQQR626hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k5uaUIwL; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749549829; c=relaxed/simple;
+	bh=tTJU7HrJ6ej1SJiEBa65fcjJmrmv7m2MmkFfBg64efA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fROtrsRhlQaewhO77SG5nTUqUWUtlyYUdt5FTAIXP83JUycTgrb+g5DeRXgXgs0uIMbsaiWW1Pyxd+xwtSefV7bsPGoDr3P2UyeOH3gQmPxvUOMiZ5NKoQMno8ySwAxi3vb672ktiD58Joged6gyn/FqrFzCJ0kLWop91Y0E3fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iuYN9NRO; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k5uaUIwL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749549815; x=1781085815;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=FSCdKuBZu83ZlNuhWTKve1fHQ1SiZ+gddU/oetdw40o=;
-  b=k5uaUIwLyJazZwrHSCYJ0cLwh2sT9ib9xnlJp4iHTl59OUTiSzXcflcr
-   ljLb2Dh7fmo+h206QofN7SBWz1q6r4pumkc5U/8NKJodOi7gM1h2NyBFw
-   VKtciDCrcy5RMwkF5oYqQbmvxzYg4R+/qFLP3uMbCZC0OjHh5WuGbof8f
-   HBJ/2WxroJ3NrDu0Gd9PEVSqz+YirGD05GFYw1qcYntH8pFDxaD8i4vhq
-   05LbE6O3Bh8eT9E66Ye00q1g11dXTxMdtqSaI2j2+U08q0XZyc39xoTYj
-   ryrWvdgPd6VBSx7xcp/p4+vpZmhisYUuw5AwejmDyiDC3wi00ZjWcJixd
-   Q==;
-X-CSE-ConnectionGUID: a6D39pM1QhWcjGe5zq10Zw==
-X-CSE-MsgGUID: vc38FoA7QyujiOXH2EbYfQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="69094651"
-X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
-   d="scan'208";a="69094651"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 03:03:35 -0700
-X-CSE-ConnectionGUID: 6jJQ/l85T+OKFWQZAfSeAQ==
-X-CSE-MsgGUID: TK+U5QtSQhua4kmfhu7vzQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
-   d="scan'208";a="147295434"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmviesa010.fm.intel.com with ESMTP; 10 Jun 2025 03:03:31 -0700
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: Lucas De Marchi <lucas.demarchi@intel.com>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Cc: David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Jan Dabros <jsd@semihalf.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Raag Jadav <raag.jadav@intel.com>,
-	"Tauro, Riana" <riana.tauro@intel.com>,
-	"Adatrao, Srinivasa" <srinivasa.adatrao@intel.com>,
-	"Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-	intel-xe@lists.freedesktop.org,
-	linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] drm/xe/xe_i2c: Add support for i2c in survivability mode
-Date: Tue, 10 Jun 2025 13:03:10 +0300
-Message-ID: <20250610100311.2245871-5-heikki.krogerus@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250610100311.2245871-1-heikki.krogerus@linux.intel.com>
-References: <20250610100311.2245871-1-heikki.krogerus@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iuYN9NRO"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-312efc384fcso859471a91.3;
+        Tue, 10 Jun 2025 03:03:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749549827; x=1750154627; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tTJU7HrJ6ej1SJiEBa65fcjJmrmv7m2MmkFfBg64efA=;
+        b=iuYN9NROnkrvqiukRaLZzmMGw3SG8EpoZx7/2xMajexsK081IAVyvpMONa4yDeRAuJ
+         xuM16zcgAv2KKl36Mz56IHVJQKhf2/uDssK+8AKtRz+FSikjo87oK0KkNd6ByhGZoztA
+         n7+egwwQcxnfNATmz0j/7ARZLI1PtJnguVAW8nzHhYONdfSRKNGoZTd31FfQjinljT9X
+         BKCXRP3ZpjibX06JuFDh3yEQB2qS8IfmCw8oG0B9OdDzN+2n+9tkjhcLrRRtV79pkDC7
+         d7PYOafd7BkaAEZhV/75xfMIMZVvLfns0Krbon0E0XvQ2wEnA5XCc06qIItS6/Yuu+j9
+         kJVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749549827; x=1750154627;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tTJU7HrJ6ej1SJiEBa65fcjJmrmv7m2MmkFfBg64efA=;
+        b=wsBrPFOaZly8nsE3Gb6YmX24Au2W0QZ5Qs4pTCWk42ZXsyqUHYqaDPjU+mWGfsC2u1
+         OjOWzVUAgKDhAt7jN6LfaC9tjy/QOulppVKpo600y52fgqtWdMGu19VcEyksyvdyQHyQ
+         SpE6dUHpZypKAzpal2naGfP6baBvpRFoQ/LHqvylkld4HGpSH3KF0mg0PywRVZcFPq9x
+         TDy6RBirz5hQthB7Aqww5JHMX8MdV4Iol3Z+2JPFeXwvTbF5YXkbNaaQ//ZQSKqzvvtU
+         CuCoKlNBW+H9rvGG8/wl/C9iuydX0Lq/BQmAuGXO9Y0tUEeeMJADZJaRETfw7MVSFhwW
+         6VlA==
+X-Forwarded-Encrypted: i=1; AJvYcCUIrzDwIC45/IRIoCr907Yhi1um6ohyrbdJUOGKwfARlQ3/CQmDvLf2nG4oJtpJb9IV04mdutvVV2U=@vger.kernel.org, AJvYcCWaBgta+NXxfzytGGWnXHU1uFt8WXKic1qS+zOWHoC5LtxS0YJv7s1wcqGuCeQZ21R6t3mEtpzwJif5cBM=@vger.kernel.org, AJvYcCX0/Du+kBc1r55C0VqEXZ6altywtx5xCjpjhmWBoiGXlruPk01qOB6SrpV7qdRG9mDhAypFPUrweKysXBklWNI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUKpwcs6jAUsDOFqgdvxqd0oYFbdiL5xZrBrMckMH44jJUEVgq
+	Txcrnf0+UobyMmUsMWC9XWxX5ld6bB9mfkhJZbbqCUxXdHa4Vt0EgSpBp/OSH/VoQYAeSrlS0Pw
+	HD7RH2C3uIUPGv/m8rbnFPv65rbI5FGI=
+X-Gm-Gg: ASbGncs2NeKss3AjO7Nbut1Z74XUmpr3I1NKf7soEPEK0rQCYdR0oHGZ3YqniIDqmwR
+	OyfBSDvbQ06DwgPR7r37ta7s6yPuzJ7IuFssuBtopuoSKE6DGfKplJr+Kvmbn4DimMVTjznMbR3
+	WGV9IUipjoR4DRZG+DF2x6Xxjnmme5PAs+09+v/VLTeYM=
+X-Google-Smtp-Source: AGHT+IFl3QRS1ASxD5Nom/WmbJxg88zSGy1MBXMnBBS0GH7xlD4TWPEw8AfHbd8l7rkvR87H+MsMI8FvbSOGlFGFsG8=
+X-Received: by 2002:a17:90b:4f8f:b0:311:488:f506 with SMTP id
+ 98e67ed59e1d1-3134753c5d1mr8776699a91.6.1749549827474; Tue, 10 Jun 2025
+ 03:03:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250609122200.179307-1-trintaeoitogc@gmail.com> <DAIQ9342ZFYD.3VQVI80A18HKX@kernel.org>
+In-Reply-To: <DAIQ9342ZFYD.3VQVI80A18HKX@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 10 Jun 2025 12:03:35 +0200
+X-Gm-Features: AX0GCFsqB3V8oX6wtHSUpzU2MNL8wo_FwhFMAyLhaEv4LKWmFGOaZ6ak2XtPuK0
+Message-ID: <CANiq72kC1j-kprAQ5WU0QVV_zhyKfDPJ_M5E9xZ+8+fxt4R6qQ@mail.gmail.com>
+Subject: Re: [PATCH] rust: module: remove deprecated author key
+To: Benno Lossin <lossin@kernel.org>
+Cc: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>, rafael@kernel.org, viresh.kumar@linaro.org, 
+	dakr@kernel.org, maarten.lankhorst@linux.intel.com, mripard@kernel.org, 
+	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, mcgrof@kernel.org, 
+	russ.weight@linux.dev, ojeda@kernel.org, alex.gaynor@gmail.com, 
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, 
+	leitao@debian.org, gregkh@linuxfoundation.org, david.m.ertman@intel.com, 
+	ira.weiny@intel.com, leon@kernel.org, fujita.tomonori@gmail.com, 
+	tamird@gmail.com, igor.korotin.linux@gmail.com, walmeida@microsoft.com, 
+	anisse@astier.eu, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Riana Tauro <riana.tauro@intel.com>
+On Tue, Jun 10, 2025 at 10:58=E2=80=AFAM Benno Lossin <lossin@kernel.org> w=
+rote:
+>
+> Unrelated to this change, I think we should add email addresses to
+> people in authors. Possibly enforce it by scanning each author element
+> and checking if there is an email address.
 
-Initialize i2c in survivability mode to allow firmware
-update of Add-In Management Controller (AMC) in survivability mode
+Sounds good to me, but I am not sure if it is possible in all cases.
 
-Signed-off-by: Riana Tauro <riana.tauro@intel.com>
-Reviewed-by: Raag Jadav <raag.jadav@intel.com>
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
----
- drivers/gpu/drm/xe/xe_survivability_mode.c | 23 ++++++++++++++--------
- 1 file changed, 15 insertions(+), 8 deletions(-)
+At least looking at C, there are company names too.
 
-diff --git a/drivers/gpu/drm/xe/xe_survivability_mode.c b/drivers/gpu/drm/xe/xe_survivability_mode.c
-index 1f710b3fc599..3800cc855c22 100644
---- a/drivers/gpu/drm/xe/xe_survivability_mode.c
-+++ b/drivers/gpu/drm/xe/xe_survivability_mode.c
-@@ -14,6 +14,7 @@
- #include "xe_device.h"
- #include "xe_gt.h"
- #include "xe_heci_gsc.h"
-+#include "xe_i2c.h"
- #include "xe_mmio.h"
- #include "xe_pcode_api.h"
- #include "xe_vsec.h"
-@@ -173,20 +174,26 @@ static int enable_survivability_mode(struct pci_dev *pdev)
- 	survivability->mode = true;
- 
- 	ret = xe_heci_gsc_init(xe);
--	if (ret) {
--		/*
--		 * But if it fails, device can't enter survivability
--		 * so move it back for correct error handling
--		 */
--		survivability->mode = false;
--		return ret;
--	}
-+	if (ret)
-+		goto err;
- 
- 	xe_vsec_init(xe);
- 
-+	ret = xe_i2c_probe(xe);
-+	if (ret)
-+		goto err;
-+
- 	dev_err(dev, "In Survivability Mode\n");
- 
- 	return 0;
-+
-+err:
-+	/*
-+	 * But if it fails, device can't enter survivability
-+	 * so move it back for correct error handling
-+	 */
-+	survivability->mode = false;
-+	return ret;
- }
- 
- /**
--- 
-2.47.2
+I even saw a URL...
 
+Cheers,
+Miguel
