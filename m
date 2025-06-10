@@ -1,44 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2DF21F0984;
-	Tue, 10 Jun 2025 09:31:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC47481CD;
+	Tue, 10 Jun 2025 09:31:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749547862; cv=none; b=DpxAcAbb8SAOr3NirQRr6pRFodMtLBeO0oYnGZk+nLLd2G8XU5GK10SYHnlwc422pXMp+NdX09Lx/mq6Q3HIOGrCDf5kHRu9x2rDgXqwRuXRF1q+kZFQn669VJT3wKY9+VUjljdE5CnDYqCXvBd6roOvaKprn4avAo9e79XwxvE=
+	t=1749547891; cv=none; b=bMDfTPSzWgURKuw7h0BeNs6uJAs/KLHQDUo+PMO3wKjRWUkl6a9lJfLV3oAqWUwdgXvTVyAIqYsBupg3uT6fDlVcTv0KXxUiF1YdRo/76MOfU3uQfLnARlp1P74zSeNlB2kdkY8BrTvpR3bpinhSLoBLYwOjTZasxxmMDxT07Jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749547862; c=relaxed/simple;
-	bh=YKy/3amZLqH2nzrlfIaM1pmEoEybpgu45G58wMSbjrA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Rrb4ua1qOuYXPzGlLFY6+2JLz3mar+3k4iQVUo24QBGed4ru+qt4fLDNdH9L4MBW430YsU6LzYczA6r1WWN7GkY7pGM/fsB9nUe8MfyeQYKH9kdE4kpGvj32Fa/IEVLlf0Nrm3ZcokwM2S23h+GqSCr9oKJ4oOjAzKnjA+h4/4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t4iwjV2O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749547891; c=relaxed/simple;
+	bh=BO97OAsXfqwgbvY0qB23trz3Pz5fZ7baV/z18Q+sb08=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=W2qrSaWoGeWOprXVIIH3Fo5EDXuBBCd0v2frlWPwxh9EDeNQEOn2ZeW3EOX18WQ+wJXOqbi332leT/iXuNkPzZhUGUkUXanbnDTSKOBzQKqdJtG7hUmwFQZaQoYmPT9DHOynBn7+JfWT7WoTn2OijY83B5qCdeKD3IvZqrpWfeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oDj5OPeL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t4iwjV2O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49FB2C4CEED;
-	Tue, 10 Jun 2025 09:31:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oDj5OPeL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48CD7C4CEED;
+	Tue, 10 Jun 2025 09:31:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749547862;
-	bh=YKy/3amZLqH2nzrlfIaM1pmEoEybpgu45G58wMSbjrA=;
+	s=k20201202; t=1749547891;
+	bh=BO97OAsXfqwgbvY0qB23trz3Pz5fZ7baV/z18Q+sb08=;
 	h=From:To:Cc:Subject:Date:From;
-	b=t4iwjV2OYGDxQJffBC6xTdOgJ2c9WJkN7PG/I3NMe5yYWCi2fCsdEV1NuPwPwi8LE
-	 hzN0/p0rMJPg0IPOnVnjgvyIfJIKXEmLZBpfKK2PaZJxPx85EQMq0YBjefS4WWvH5w
-	 5twWc7Jm8T43zs8sYGhzTJjQ3NTYDmt2V7rdJo6FScPeEUFtGoJzgf0iI5lpn+O1gq
-	 zQ3hhEhfNzmkQ/rGv5hirKaNLMHWRa5GtcYnP+5PNuVYRjYZ/Y8mTPharvBmH03CT+
-	 ctGDJEC5cq0nGgXDgYPPHHHENrOpOcwDdnyYHQOiLAzI/tAEMkpvIhzrXaK12zLMSS
-	 BVQall8+QAb7A==
+	b=oDj5OPeLTOFcf0lt91d44gt25Q8AcRpd+Oo2/BmAXQb43RYIF4uNEcTO/0xyOd14q
+	 k/+5qVX72XAzp/PF9G5XWDmCydbl/O3Y4GQhyvKaJnYdSwVN6/q/zX+BJhQ69MIOBa
+	 gygex0aNnTwmLcCjJb/2K89AQouE6PZWuUFBErR1gD4G6O99Cn2v3bUobGtRs+aaYD
+	 so3eoflcorpSX7m+phyhHlWDm3/6AncLav0598+QJ/crj/KGaMVIY7G/23EV5e9H5I
+	 T8ayfw6e2DaY7nRCofVNM2tdsr+mUUrAaLA3xfsfmgoFoN4vqLDoAH7I7cutS4iGBd
+	 aT2VH3LnWqQDQ==
 From: Arnd Bergmann <arnd@kernel.org>
-To: Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	=?UTF-8?q?Martin=20Povi=C5=A1er?= <povik+lin@cutebit.org>
+To: Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Nathan Chancellor <nathan@kernel.org>,
+	=?UTF-8?q?Marek=20Ol=C5=A1=C3=A1k?= <marek.olsak@amd.com>
 Cc: Arnd Bergmann <arnd@arndb.de>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
-	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: ops: dynamically allocate struct snd_ctl_elem_value
-Date: Tue, 10 Jun 2025 11:30:53 +0200
-Message-Id: <20250610093057.2643233-1-arnd@kernel.org>
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Sunil Khatri <sunil.khatri@amd.com>,
+	Tvrtko Ursulin <tvrtko.ursulin@igalia.com>,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH] drm/radeon: reduce stack frame size for radeon_cs_ioctl
+Date: Tue, 10 Jun 2025 11:31:20 +0200
+Message-Id: <20250610093125.2645138-1-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -50,70 +56,38 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-This structure is really too larget to be allocated on the stack:
+Clang inlines radeon_cs_parser_relocs() into radeon_cs_ioctl(), and
+since both of these use a lot of stack space, the sum of them can
+make it exceed a limit of 1280 bytes:
 
-sound/soc/soc-ops.c:435:5: error: stack frame size (1296) exceeds limit (1280) in 'snd_soc_limit_volume' [-Werror,-Wframe-larger-than]
+drivers/gpu/drm/radeon/radeon_cs.c:669:5: error: stack frame size (1328) exceeds limit (1280) in 'radeon_cs_ioctl' [-Werror,-Wframe-larger-than]
+  669 | int radeon_cs_ioctl(struct drm_device *dev, void *data, struct drm_file *filp)
+      |     ^
 
-Change the function to dynamically allocate it instead.
+Mark radeon_cs_parser_relocs as noinline_for_stack, so clang and gcc
+both behave in a consistent way. Calling into radeon_cs_parser_relocs()
+still uses a lot of stack space here, but this is not any worse than it
+already was, and the other code paths are better now.
 
-There is probably a better way to do it since only two integer fields
-inside of that structure are actually used, but this is the simplest
-rework for the moment.
-
-Fixes: 783db6851c18 ("ASoC: ops: Enforce platform maximum on initial value")
+Fixes: c9b76548899c ("drm/radeon: validate relocations in the order determined by userspace v3")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- sound/soc/soc-ops.c | 26 +++++++++++++++-----------
- 1 file changed, 15 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/radeon/radeon_cs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/soc-ops.c b/sound/soc/soc-ops.c
-index a1a011e6b17c..00c6f1ce7474 100644
---- a/sound/soc/soc-ops.c
-+++ b/sound/soc/soc-ops.c
-@@ -399,28 +399,32 @@ EXPORT_SYMBOL_GPL(snd_soc_put_volsw_sx);
- static int snd_soc_clip_to_platform_max(struct snd_kcontrol *kctl)
- {
- 	struct soc_mixer_control *mc = (struct soc_mixer_control *)kctl->private_value;
--	struct snd_ctl_elem_value uctl;
-+	struct snd_ctl_elem_value *uctl;
- 	int ret;
- 
- 	if (!mc->platform_max)
- 		return 0;
- 
--	ret = kctl->get(kctl, &uctl);
-+	uctl = kzalloc(sizeof(*uctl), GFP_KERNEL);
-+	if (!uctl)
-+		return -ENOMEM;
-+
-+	ret = kctl->get(kctl, uctl);
- 	if (ret < 0)
--		return ret;
-+		goto out;
- 
--	if (uctl.value.integer.value[0] > mc->platform_max)
--		uctl.value.integer.value[0] = mc->platform_max;
-+	if (uctl->value.integer.value[0] > mc->platform_max)
-+		uctl->value.integer.value[0] = mc->platform_max;
- 
- 	if (snd_soc_volsw_is_stereo(mc) &&
--	    uctl.value.integer.value[1] > mc->platform_max)
--		uctl.value.integer.value[1] = mc->platform_max;
-+	    uctl->value.integer.value[1] > mc->platform_max)
-+		uctl->value.integer.value[1] = mc->platform_max;
- 
--	ret = kctl->put(kctl, &uctl);
--	if (ret < 0)
--		return ret;
-+	ret = kctl->put(kctl, uctl);
- 
--	return 0;
-+out:
-+	kfree(uctl);
-+	return ret;
+diff --git a/drivers/gpu/drm/radeon/radeon_cs.c b/drivers/gpu/drm/radeon/radeon_cs.c
+index b8e6202f1d5b..220a9b107b15 100644
+--- a/drivers/gpu/drm/radeon/radeon_cs.c
++++ b/drivers/gpu/drm/radeon/radeon_cs.c
+@@ -78,7 +78,7 @@ static void radeon_cs_buckets_get_list(struct radeon_cs_buckets *b,
+ 	}
  }
  
- /**
+-static int radeon_cs_parser_relocs(struct radeon_cs_parser *p)
++static noinline_for_stack int radeon_cs_parser_relocs(struct radeon_cs_parser *p)
+ {
+ 	struct radeon_cs_chunk *chunk;
+ 	struct radeon_cs_buckets buckets;
 -- 
 2.39.5
 
