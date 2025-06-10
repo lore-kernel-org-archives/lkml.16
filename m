@@ -1,224 +1,205 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B109325334B
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 17:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB1324397A
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 17:24:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749576210; cv=none; b=hmha/EQfD4j9Xcmg6KQUCzliQJ17y8lWN+QT4gTOnlYjZfuwbU+bLwLsq8VCtizvKf44PxYbMj9EFL4VKfukZkBMTe6JuJLb1PPukxFWd6Qat9sECs0Mb8dt8qz7SuChxml5MfI9FzSZ7XTIh61AT1bsNFZHnsqFNCoRO5tvd3A=
+	t=1749576267; cv=none; b=Wzi52DmUNOG7v2YjlI5RoeuJPRUxVNURFUpUIRQbHVE+llaN0EPnVh2edPrkL6j7gcEyjlC8gLrD2j+ANpGNe+nUY3/+0zaX0AfuVkzGKn4HFXogMHYVwntMuZLueJ06InGWXc4j2oZE7LQ6G6ZLQHCFnz5i55fECoi3I8QpTkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749576210; c=relaxed/simple;
-	bh=kRkAcePNPx6B6qpYiCu2+Rnyo5tQTlwg9U8nK+kBPkQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=ST8JxTl1HWadDlQJlBEamkteMrbqBiSHRDrM2TC2CVrkw9hcpkxZFxPNf7C9KiR45r1NQd8NhJLJtFvZiAP1cxp5TrUG6DX2qx4V67HcF0bd7n4C9rgsZvBDJpX0mxKd361qZ8xjwR6nYntpPQ0WdejYielLdoch+JRJH4mz9Rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=ylFyyhtq; arc=none smtp.client-ip=209.85.166.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1749576267; c=relaxed/simple;
+	bh=vZ/qHJY5SYbx69O6TGT6pJN0oltt/Iwo/nwAfXXgjo8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gtk2/TYSb3K/O2OWD61pVi6vCwy+Mmp3EZqbhKkAskDOtXnvk7J9JwDMgQJg5FZZtfTXY4f65pZ5vAXPRwaRVJeTkdAtpqKfYVS81I2v45slQ4g4ppKnSPy124WFj6Vs9cBeqsWnOVe/eJ79FR6E4f6UJz5hRlYd84lLGFcAEU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=cR26CCm7; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="ylFyyhtq"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3ddda14b56cso10479515ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 10:23:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1749576207; x=1750181007; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GgQQVuRtKE3jAXbKM+l0+1YF9/lRi89dLzlILxcJj9g=;
-        b=ylFyyhtqTJtN8hm0hYL7KwOvTRce9oH1VM/lI8JP9oertgVKcumCbdDOvm96XMi62D
-         gnomSjttTZi00QQPAqz7LnaWzWmAgypZBVTAU3hfPrgaMD+sfJF6SzPnq86H/OnOGWxd
-         Z2jlIQcLwwxPdI3eltjRFrZ16p8/NX/DeQm27jdUuR9Y4L582nieT0btV5aCzF43jZYX
-         uP5VYnu8IGg3QQq6s5kfg9aVFUs/brj9ck8ieAnznVrIpTbvW7BkNIAt//fTSdGEIOnt
-         gNg60jchbyYia1OmaivRv2usQRxXeVdCvkRfwwbNCy6D803QszMbW5eSPFcg0SRZD/tp
-         F4VQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="cR26CCm7"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55AGtHRB017891
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 17:24:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=/EgCdyUGamjcRnI5Pix4QyBB
+	IiE0+ID5FfFUhMmjiF4=; b=cR26CCm7BHCRgyaBrtjlhw72O2tcLzAg7zeNrvSw
+	7rf59uF/gNJJ06WPbea6Q+VFkDj0pHcRKaCWyVo/wdoWSs27nTpP67JwUAz+ZgPM
+	TwmwnvV+gJNFFZj2o9+zDIzx/hQry+CbYDCKU/G/fm0UxikQEjzxJATUHlXZ+FWF
+	2kyV6XtYKtbKoPETiygC03CEOFkFi/1vdxUEJ+MVx5MNm3VPrGgAzlgN6hdlAj4M
+	WRzauIusS85csVP/pr3oRVZcAGS2Qy/1TX2KYm3fBFJnG2M9ycMhxm2XhfJuCSrN
+	nfYJh4oqz3KItwSwGLgikVHwmk2qn8hXbj02+71wFjYApw==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4766mck0j6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 17:24:23 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c955be751aso904466585a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 10:24:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749576207; x=1750181007;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GgQQVuRtKE3jAXbKM+l0+1YF9/lRi89dLzlILxcJj9g=;
-        b=FJpLSHS4CmWKBIigE4xzN8+aCM1+RWrU88OKUhfkZaZp/XKQuk5J9MKG4zDGAbKoTJ
-         vn3AotlPofxC1QeXuwluZoPKOex279EF/pXThMVckOZFOXVSBurrojB6qQVx3taSvUPh
-         Xd6y9m2k+dHHZ/7ixkd22gFCBN0jWumyIxtuozdUQChqlPYuNa1HFmpZl6B/eOLZy91D
-         4A7ZpvUHvsrL3w5OjaNds7N5qnDgd5mGlpj8xcHEbKjz36UfsWo8sz1DHxMjLjlKUnso
-         FTe53WCuJHdjkFMNVFapTfmnVt7cnvWl9QENFY8NFzVApazU4lZNZr5JuY6P9s1ydD0T
-         8hsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWpi+8gxt6W7MKYamh8ArUvHrgvZ/XATn/a/U8sNYDdrjklkJr1Jxk35cQB4ret8sGQaooXw9UU+gWs/5g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDWCfZOtBsJXMiFlzgYtzjjz+NeQnv6fQokYqK6mmKHqBRylzn
-	HrBfZ6H3+nSQRCxFZ6y3/wqkNqvNWCSjPgW6blooWveeWMDflqcuvDz88cZ+m75Y38/KsKsntld
-	MY5Yz
-X-Gm-Gg: ASbGncvr9hTOo+MmNX1JE99p/XX6Aj/R+ctHAI9ymH92aPuGsj6YZ7w0gVRDRxpI4JZ
-	LLZWEFliqKcPVposGCRo7NrqlB84QyYohluoFYjpcSgMDOcLRy71fkrYCaARe7Z9BEHoC5f94dB
-	8Tw33/hCOrI1MDjrPr+r2clq1fgUhV1gZfeBSAWCxYJYcC1eOHdz9dvEKQNEM85afB2x3c5dC4Y
-	uck7EH9lfTBVXZS/9Ae66LrWdEaUiAogjwWe62kGOGKhnTH1jyhGmQrAaXv3YqjPYOvjX1OwiMP
-	seUfcD3f0GOB5Y4alnU0Xq1nlejdkMcKOpsNtT44MDJwzr15uheoQQ==
-X-Google-Smtp-Source: AGHT+IE0/Ye4lkQfGLJvYl/ZLOYdK2FFEZ4cRpe/KimRXtDj2jyft0p8wwGMYncOvaevW0r4Xq/leA==
-X-Received: by 2002:a05:6e02:2587:b0:3dc:7df8:c830 with SMTP id e9e14a558f8ab-3ddf423919emr652905ab.7.1749576206634;
-        Tue, 10 Jun 2025 10:23:26 -0700 (PDT)
-Received: from [127.0.0.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5012a90bb22sm1946173.15.2025.06.10.10.23.25
+        d=1e100.net; s=20230601; t=1749576262; x=1750181062;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/EgCdyUGamjcRnI5Pix4QyBBIiE0+ID5FfFUhMmjiF4=;
+        b=M+gRrbsmskonFDFGswQpGDDabLzOHzJq3bp2gvdYySlxJG8pYt67u1+6MaAyhXau3h
+         8IiLcXb5QSysTIgKqQE4RS3YXmPjUZacjsvu1R4JXUJJEzEw0h3Lpq3njCGf+wGRs6H+
+         lK0KUjpyOHTWrzGaNkWhKF9X9TNctl9eJfNhvuv2VZNNbb0TfjPvXGTwXI5hf0icxcs2
+         8pZEz9tSO4vqjOisFyxJPfjHRcmbosuaE7KhyFcICDox2ErmUhrJCEk8vC1jTg4+hTkH
+         OQm/UUJBnUpwKMtbK1vdruqYNIKiIHcLExEWjvAJkwqrNCptbfLx3JckFYdwXH5GWZ31
+         mgdg==
+X-Forwarded-Encrypted: i=1; AJvYcCUPHOJHJovXrC4Ev84vUsJXxmiw3tUqT1apsF8p1wCtLqCL/N0pfcUKK/SjYl1gdCBFQynPtDsaktvP7pk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWRROa8ePOjTh2aKgqGIm+OeOs5coHt+bgf+8kyOdya7Atawmz
+	bv0iDUDrXI5j9YHhGueQpYgrJdfyoOwyhq2/Diji/f/tNyQaywMrfMpoEwDe9NWM4PFO8IzYiZY
+	DEzEkqW05Zry5hVxELsYfSMfHyg3YjWpytci1M0A0AJYwfCyLct7EcL89sXoXjvy7/Ug=
+X-Gm-Gg: ASbGnct+vhKMoISxA6MSEvlpNJX0IVI5W3SKkAlhFhOgFf7JoUafSOwuXI3zaXNj0nH
+	GPhPiqI3eA9OcVsFXFXTyePMLHDJ/s2WGPnXNKVQzM07rPXywlOx1F/w3vZBi/83TvKFsC5ncML
+	y7ggCOoRFzn+zwduRypfAEwUZfKDIIuivgmeGRp5bt8a2QN1y2LLjuOnSF1EX1D3suYT3B4d0ip
+	slhVd3s2kk/J4OJFHpmGh0gtaHiUQzMLFOhf/kLbB7j89v2ztCrMjP+CKNjlBfPsIHK6b+8cHzp
+	rCPm5klQeiop9gfLeqVfIr42Xksn6PhjhPCbgMqSgrAU/9ffesOFyvxc2HGHQE+5XNvkpX0XoNi
+	sCAESvaFc2tzR5dg8tD3dnWQCwlLxusguEBM=
+X-Received: by 2002:a05:620a:3192:b0:7d3:9482:b21c with SMTP id af79cd13be357-7d3a8819d38mr34794785a.13.1749576262229;
+        Tue, 10 Jun 2025 10:24:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEJwAL23sxfBB/KttW8whRTTbhx5/KJQNW3ngwPR3f5kgUdwtLnj09kuUoauwaIYW7FJDmPZw==
+X-Received: by 2002:a05:620a:3192:b0:7d3:9482:b21c with SMTP id af79cd13be357-7d3a8819d38mr34791585a.13.1749576261848;
+        Tue, 10 Jun 2025 10:24:21 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55367733156sm1622634e87.243.2025.06.10.10.24.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 10:23:26 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: Penglei Jiang <superman.xpt@gmail.com>
-Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org, 
- syzbot+531502bbbe51d2f769f4@syzkaller.appspotmail.com
-In-Reply-To: <20250610171801.70960-1-superman.xpt@gmail.com>
-References: <20250610171801.70960-1-superman.xpt@gmail.com>
-Subject: Re: [PATCH v2] io_uring: fix use-after-free of sq->thread in
- __io_uring_show_fdinfo()
-Message-Id: <174957620590.185003.13986443341794227523.b4-ty@kernel.dk>
-Date: Tue, 10 Jun 2025 11:23:25 -0600
+        Tue, 10 Jun 2025 10:24:20 -0700 (PDT)
+Date: Tue, 10 Jun 2025 20:24:19 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
+Cc: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] usb: dwc3: qcom: Facilitate autosuspend during
+ host mode
+Message-ID: <5pbdk3xo6jkj7gwxlgvzdz4nxehjm6izgejjvwafxitvn6lm5p@qhjfezk3dvdh>
+References: <20250610091357.2983085-1-krishna.kurapati@oss.qualcomm.com>
+ <20250610091357.2983085-4-krishna.kurapati@oss.qualcomm.com>
+ <20250610110047.4yc6zjcvkobxerml@umbar.lan>
+ <02bfd468-5f92-4d06-bc90-f138c5153ee0@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3-dev-7b9b9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <02bfd468-5f92-4d06-bc90-f138c5153ee0@oss.qualcomm.com>
+X-Authority-Analysis: v=2.4 cv=T8KMT+KQ c=1 sm=1 tr=0 ts=68486a47 cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=yhNm8lLqjQGDdp7WpVgA:9 a=CjuIK1q_8ugA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-ORIG-GUID: bKvtnCOHUODOl3Rtr3rGBic7H5457FDp
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDE0MSBTYWx0ZWRfX/etDCJiEQEO1
+ uHTID0dEVrJoV3XiIMW8kXvwBCVFReQyHiK4fexjy+cNbNUrA6MoZG12nFa16DYZJkQoD12ZVOB
+ Z7uSb0b3MQtyNSTCEpzswdIQKSlCk9Acm6TlBsvEck17GbOVwUlQweu9PIYlvUQypS7Ju3Lt0/k
+ W0l8wGSTPW5jTp7UKEgvqChXDWstny3+ApJGGY5H3+Kla+lt20sYSOuEdzfvPbSEdZxSFTXjArh
+ 45hWwsSd8TIEsEVztO6ZvPddk59ER6JCCW9yPESNolE6Ciapz4hDddX9pbf0X7NP08ecUTk5w7I
+ 1AZu7qsWKc/wL+XH1FJWlEjb3lfthp0YB8r8Xdi1a3ZV7kQnbKIshQpJnJaxbOt412E2ZQPMspA
+ H7+9/zkepEe2ILNwd3xDN4H+md5OdCyIAbzrHYgUstbg4+z1F1p5jJJ767oxWsR7+Mw+Ug8p
+X-Proofpoint-GUID: bKvtnCOHUODOl3Rtr3rGBic7H5457FDp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-10_08,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 bulkscore=0 clxscore=1015 malwarescore=0 impostorscore=0
+ spamscore=0 priorityscore=1501 lowpriorityscore=0 mlxscore=0 phishscore=0
+ mlxlogscore=999 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506100141
 
-
-On Tue, 10 Jun 2025 10:18:01 -0700, Penglei Jiang wrote:
-> [BUG]
+On Tue, Jun 10, 2025 at 10:10:33PM +0530, Krishna Kurapati wrote:
 > 
-> [   84.375406] ==================================================================
-> [   84.378543] BUG: KASAN: slab-use-after-free in getrusage+0x1109/0x1a60
-> [   84.381058] Read of size 8 at addr ffff88810de2d2c8 by task a.out/304
-> [   84.382977]
-> [   84.383767] CPU: 0 UID: 0 PID: 304 Comm: a.out Not tainted 6.16.0-rc1 #1 PREEMPT(voluntary)
-> [   84.383788] Hardware name: QEMU Ubuntu 24.04 PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-> [   84.383819] Call Trace:
-> [   84.383841]  <TASK>
-> [   84.383842]  dump_stack_lvl+0x53/0x70
-> [   84.383957]  print_report+0xd0/0x670
-> [   84.384008]  ? __pfx__raw_spin_lock_irqsave+0x10/0x10
-> [   84.384057]  ? getrusage+0x1109/0x1a60
-> [   84.384060]  kasan_report+0xce/0x100
-> [   84.384063]  ? getrusage+0x1109/0x1a60
-> [   84.384066]  getrusage+0x1109/0x1a60
-> [   84.384070]  ? __pfx_getrusage+0x10/0x10
-> [   84.384073]  __io_uring_show_fdinfo+0x9fe/0x1790
-> [   84.384117]  ? ksys_read+0xf7/0x1c0
-> [   84.384133]  ? do_syscall_64+0xa4/0x260
-> [   84.384144]  ? vsnprintf+0x591/0x1100
-> [   84.384155]  ? __pfx___io_uring_show_fdinfo+0x10/0x10
-> [   84.384157]  ? __pfx_vsnprintf+0x10/0x10
-> [   84.384175]  ? mutex_trylock+0xcf/0x130
-> [   84.384185]  ? __pfx_mutex_trylock+0x10/0x10
-> [   84.384198]  ? __pfx_show_fd_locks+0x10/0x10
-> [   84.384219]  ? io_uring_show_fdinfo+0x57/0x80
-> [   84.384222]  io_uring_show_fdinfo+0x57/0x80
-> [   84.384224]  seq_show+0x38c/0x690
-> [   84.384257]  seq_read_iter+0x3f7/0x1180
-> [   84.384279]  ? inode_set_ctime_current+0x160/0x4b0
-> [   84.384296]  seq_read+0x271/0x3e0
-> [   84.384298]  ? __pfx_seq_read+0x10/0x10
-> [   84.384300]  ? __pfx__raw_spin_lock+0x10/0x10
-> [   84.384303]  ? __mark_inode_dirty+0x402/0x810
-> [   84.384313]  ? selinux_file_permission+0x368/0x500
-> [   84.384385]  ? file_update_time+0x10f/0x160
-> [   84.384388]  vfs_read+0x177/0xa40
-> [   84.384393]  ? __pfx___handle_mm_fault+0x10/0x10
-> [   84.384440]  ? __pfx_vfs_read+0x10/0x10
-> [   84.384443]  ? mutex_lock+0x81/0xe0
-> [   84.384446]  ? __pfx_mutex_lock+0x10/0x10
-> [   84.384449]  ? fdget_pos+0x24d/0x4b0
-> [   84.384452]  ksys_read+0xf7/0x1c0
-> [   84.384455]  ? __pfx_ksys_read+0x10/0x10
-> [   84.384458]  ? do_user_addr_fault+0x43b/0x9c0
-> [   84.384486]  do_syscall_64+0xa4/0x260
-> [   84.384489]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> [   84.384528] RIP: 0033:0x7f0f74170fc9
-> [   84.384560] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 8
-> [   84.384563] RSP: 002b:00007fffece049e8 EFLAGS: 00000206 ORIG_RAX: 0000000000000000
-> [   84.384588] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f0f74170fc9
-> [   84.384611] RDX: 0000000000001000 RSI: 00007fffece049f0 RDI: 0000000000000004
-> [   84.384613] RBP: 00007fffece05ad0 R08: 0000000000000000 R09: 00007fffece04d90
-> [   84.384615] R10: 0000000000000000 R11: 0000000000000206 R12: 00005651720a1100
-> [   84.384617] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-> [   84.384619]  </TASK>
-> [   84.384620]
-> [   84.461314] Allocated by task 298:
-> [   84.462019]  kasan_save_stack+0x33/0x60
-> [   84.462598]  kasan_save_track+0x14/0x30
-> [   84.463213]  __kasan_slab_alloc+0x6e/0x70
-> [   84.463853]  kmem_cache_alloc_node_noprof+0xe8/0x330
-> [   84.465483]  copy_process+0x376/0x5e00
-> [   84.466798]  create_io_thread+0xab/0xf0
-> [   84.468355]  io_sq_offload_create+0x9ed/0xf20
-> [   84.470323]  io_uring_setup+0x12b0/0x1cc0
-> [   84.471830]  do_syscall_64+0xa4/0x260
-> [   84.473255]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> [   84.474952]
-> [   84.475758] Freed by task 22:
-> [   84.476878]  kasan_save_stack+0x33/0x60
-> [   84.478400]  kasan_save_track+0x14/0x30
-> [   84.479709]  kasan_save_free_info+0x3b/0x60
-> [   84.480777]  __kasan_slab_free+0x37/0x50
-> [   84.481299]  kmem_cache_free+0xc4/0x360
-> [   84.481945]  rcu_core+0x5ff/0x19f0
-> [   84.483038]  handle_softirqs+0x18c/0x530
-> [   84.485407]  run_ksoftirqd+0x20/0x30
-> [   84.487146]  smpboot_thread_fn+0x287/0x6c0
-> [   84.488552]  kthread+0x30d/0x630
-> [   84.489856]  ret_from_fork+0xef/0x1a0
-> [   84.491239]  ret_from_fork_asm+0x1a/0x30
-> [   84.492366]
-> [   84.493099] Last potentially related work creation:
-> [   84.495175]  kasan_save_stack+0x33/0x60
-> [   84.496416]  kasan_record_aux_stack+0x8c/0xa0
-> [   84.498060]  __call_rcu_common.constprop.0+0x68/0x940
-> [   84.499326]  __schedule+0xff2/0x2930
-> [   84.499970]  __cond_resched+0x4c/0x80
-> [   84.501305]  mutex_lock+0x5c/0xe0
-> [   84.502374]  io_uring_del_tctx_node+0xe1/0x2b0
-> [   84.504251]  io_uring_clean_tctx+0xb7/0x160
-> [   84.505377]  io_uring_cancel_generic+0x34e/0x760
-> [   84.507126]  do_exit+0x240/0x2350
-> [   84.508667]  do_group_exit+0xab/0x220
-> [   84.509927]  __x64_sys_exit_group+0x39/0x40
-> [   84.511223]  x64_sys_call+0x1243/0x1840
-> [   84.512795]  do_syscall_64+0xa4/0x260
-> [   84.514044]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> [   84.515792]
-> [   84.516374] The buggy address belongs to the object at ffff88810de2cb00
-> [   84.516374]  which belongs to the cache task_struct of size 3712
-> [   84.521449] The buggy address is located 1992 bytes inside of
-> [   84.521449]  freed 3712-byte region [ffff88810de2cb00, ffff88810de2d980)
-> [   84.524996]
-> [   84.525514] The buggy address belongs to the physical page:
-> [   84.527383] page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x10de28
-> [   84.530907] head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-> [   84.533573] flags: 0x200000000000040(head|node=0|zone=2)
-> [   84.535366] page_type: f5(slab)
-> [   84.536410] raw: 0200000000000040 ffff8881001acdc0 dead000000000122 0000000000000000
-> [   84.538807] raw: 0000000000000000 0000000000080008 00000000f5000000 0000000000000000
-> [   84.542033] head: 0200000000000040 ffff8881001acdc0 dead000000000122 0000000000000000
-> [   84.545121] head: 0000000000000000 0000000000080008 00000000f5000000 0000000000000000
-> [   84.547663] head: 0200000000000003 ffffea0004378a01 00000000ffffffff 00000000ffffffff
-> [   84.549959] head: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
-> [   84.552180] page dumped because: kasan: bad access detected
-> [   84.554098]
-> [   84.554798] Memory state around the buggy address:
-> [   84.556798]  ffff88810de2d180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> [   84.559258]  ffff88810de2d200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> [   84.562112] >ffff88810de2d280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> [   84.564710]                                               ^
-> [   84.567076]  ffff88810de2d300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> [   84.569900]  ffff88810de2d380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> [   84.573018] ==================================================================
 > 
-> [...]
+> On 6/10/2025 4:30 PM, Dmitry Baryshkov wrote:
+> > On Tue, Jun 10, 2025 at 02:43:56PM +0530, Krishna Kurapati wrote:
+> > > When in host mode, it is intended that the controller goes to suspend
+> > > state to save power and wait for interrupts from connected peripheral
+> > > to wake it up. This is particularly used in cases where a HID or Audio
+> > > device is connected. In such scenarios, the usb controller can enter
+> > > auto suspend and resume action after getting interrupts from the
+> > > connected device.
+> > > 
+> > > Allow autosuspend for and xhci device and allow userspace to decide
+> > > whether to enable this functionality.
+> > > 
+> > > a) Register to usb-core notifications in set_role vendor callback to
+> > > identify when root hubs are being created. Configure them to
+> > > use_autosuspend.
+> > > 
+> > > b) Identify usb core notifications where the HCD is being added and
+> > > enable autosuspend for that particular xhci device.
+> > > 
+> > > Signed-off-by: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
+> > > ---
+> > >   drivers/usb/dwc3/dwc3-qcom.c | 62 ++++++++++++++++++++++++++++++++----
+> > >   1 file changed, 56 insertions(+), 6 deletions(-)
+> > > 
+> > > diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+> > > index d40b52e2ba01..17bbd5a06c08 100644
+> > > --- a/drivers/usb/dwc3/dwc3-qcom.c
+> > > +++ b/drivers/usb/dwc3/dwc3-qcom.c
+> > > @@ -95,6 +95,8 @@ struct dwc3_qcom {
+> > >   	 * internally by mutex lock.
+> > >   	 */
+> > >   	enum usb_role		current_role;
+> > > +
+> > > +	struct notifier_block	xhci_nb;
+> > >   };
+> > >   #define to_dwc3_qcom(d) container_of((d), struct dwc3_qcom, dwc)
+> > > @@ -647,6 +649,39 @@ static int dwc3_qcom_setup_irq(struct dwc3_qcom *qcom, struct platform_device *p
+> > >   	return 0;
+> > >   }
+> > > +static int dwc3_xhci_event_notifier(struct notifier_block *nb,
+> > > +				    unsigned long event, void *ptr)
+> > > +{
+> > > +	struct dwc3_qcom  *qcom	= container_of(nb, struct dwc3_qcom, xhci_nb);
+> > > +	struct dwc3	  *dwc	= &qcom->dwc;
+> > > +	struct usb_bus	  *ubus	= ptr;
+> > > +	struct usb_hcd	  *hcd;
+> > > +
+> > > +	if (!dwc->xhci)
+> > > +		goto done;
+> > > +
+> > > +	hcd = platform_get_drvdata(dwc->xhci);
+> > > +	if (!hcd)
+> > > +		goto done;
+> > > +
+> > > +	if (event != USB_BUS_ADD)
+> > > +		goto done;
+> > > +
+> > > +	if (strcmp(dev_name(ubus->sysdev), dev_name(dwc->sysdev)) != 0)
+> > > +		goto done;
+> > > +
+> > > +	if (event == USB_BUS_ADD) {
+> > > +		/*
+> > > +		 * Identify instant of creation of primary hcd and
+> > > +		 * mark xhci as autosuspend capable at this point.
+> > > +		 */
+> > > +		pm_runtime_use_autosuspend(&dwc->xhci->dev);
+> > 
+> > This feels like an overkill, using notifiers to set autosuspend flag.
+> > Please extend platform data and/or other static code in order to set the
+> > flag on the created xHCI devices.
+> > 
+> 
+> Do you mean modifying pdev of xhci from dwc3/host.c ? Or adding the
+> use_autosuspend call in xhci-plat.c ?
 
-Applied, thanks!
+The latter one.
 
-[1/1] io_uring: fix use-after-free of sq->thread in __io_uring_show_fdinfo()
-      commit: ac0b8b327a5677dc6fecdf353d808161525b1ff0
+> 
+> I thought adding this notifier would be a better way to identify when the
+> xhci probe is in progress instead of touching pdev of xhci device from dwc3
+> layer.
+> 
+> Regards,
+> Krishna,
 
-Best regards,
 -- 
-Jens Axboe
-
-
-
+With best wishes
+Dmitry
