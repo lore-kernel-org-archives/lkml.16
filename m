@@ -1,127 +1,82 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A80323A99D;
-	Tue, 10 Jun 2025 15:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EB211386C9;
+	Tue, 10 Jun 2025 15:50:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749570548; cv=none; b=MJ262U52KskTPQ58N7VewWQXYkFHD1/g7tUAjOwpV8NKtQ8XqG9Rv63Mv0S1m7JpU3XyGPgToFgvsQ1W/FZJk3RXNvkefIUrR90pTjANqmyesK/uoMPz8frodZ80NFiwy6Dq8yplk4TdRNY4Ayi/+2V4j9ElDL1ZOs1JfZwOp88=
+	t=1749570647; cv=none; b=Tq8RtrJV2iV4L6tUVYuPQWg1YOUNcuioFcO/ehIa6eQM+grewc0PWQx0VhPYHEhLe5Xd4qjNRcjZ34wWE8o4ReV7ewa6nUGIUaQr9DtOZaYq257/y35vwVh/4JSOnQpdRNDPP1oU6Ay896Lsm9ufXTDNj6mVUNh03U97+emhAbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749570548; c=relaxed/simple;
-	bh=V4tHes/IIVg1jqX+Ct0xk1PjTUOkWhWVAb1ShBKNSXc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bz6ZycOsvvgzvdH0kjmxK8GayN1hhBnOWeJgao0IhYYvGLzqRJUymXQmhQmCJUtJOBXmTgJlnVdZemO/27gFjCJ7XmU/Qe3HAH+ng+fDXBIf/48i1wlFxhZzjlv3KAkzlqcwZ4VaENNhFpj/h1gFdVZGpN/q2e1bDLpdKEHYzcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 0C7CCE3A82;
-	Tue, 10 Jun 2025 15:49:04 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id A3E8B8000F;
-	Tue, 10 Jun 2025 15:49:00 +0000 (UTC)
-Date: Tue, 10 Jun 2025 11:50:30 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Naresh Kamboju
- <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>,
- Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
- lkft-triage@lists.linaro.org, Stephen Rothwell <sfr@canb.auug.org.au>, Arnd
- Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, Anders
- Roxell <anders.roxell@linaro.org>
-Subject: Re: [RFC PATCH 2/2] x86: alternative: Invalidate the cache for
- updated instructions
-Message-ID: <20250610115030.0d60da65@gandalf.local.home>
-In-Reply-To: <174956686826.1494782.11512582667456262594.stgit@mhiramat.tok.corp.google.com>
-References: <20250610234307.c675969e83ce53bb856e94d7@kernel.org>
-	<174956686826.1494782.11512582667456262594.stgit@mhiramat.tok.corp.google.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749570647; c=relaxed/simple;
+	bh=tYhj+n5Ybop0fiSluV5BrynfIx/rnEzGAHUHgayjLMI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SBl/fDfTIox7t3NyUbRRJ6ssdnEeM4bYflPcbjCva1c00CxPDRC/TUo6tSa1GhXlFU/awlEoioWhhV+Tv3amnWPFmX1c0t3URerLWW/KZEYdrjOBLBkakqHnSaQHtwlqiehOGEsvtqeJR8cCtZr12cKSEIbTeSNcA9a8TvcWiWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QZ2VJSfh; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QZ2VJSfh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749570645; x=1781106645;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=tYhj+n5Ybop0fiSluV5BrynfIx/rnEzGAHUHgayjLMI=;
+  b=QZ2VJSfhxUGGCB0q/qh5FoWF3j7Z2qlrHJU3fmjNt1uKkhjsbll9zQ9v
+   LbSVke3F6SkOlin3Ro2+t2vpqFEarpvnmRxoeNZqs0xHhO7Asoa4CR392
+   4pIKw7QS4kmEb8UcTx9BDe6FCSt6RtnV5r47vRIIbGS+wpPaVSUvt3sue
+   +CtvKulrtW6uV5fQkH3x6AMlufJMfagExD8MQqIFArRHk/NwB+wLe1zZc
+   viaDPS8tEbBHk4FoYPKzgudwg2uML7Q9eSQK5BgstKeLU/bKccyvbSTk7
+   qtazsoJBAb81ftd9k/cCwOUVLJqO1MCN6Hw4C5PK0kEPocPXObMmvqRci
+   g==;
+X-CSE-ConnectionGUID: maJXSAfoRX6i2tEg4BvaXQ==
+X-CSE-MsgGUID: bRLSopnHTtuVvksavLXXQQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51784131"
+X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
+   d="scan'208";a="51784131"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 08:50:44 -0700
+X-CSE-ConnectionGUID: Yq1lQJ8/SX6G2MbTmDC75Q==
+X-CSE-MsgGUID: DiO0Vc6HTruU4cfko48nXg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
+   d="scan'208";a="170070351"
+Received: from lstrano-mobl6.amr.corp.intel.com (HELO [10.125.111.135]) ([10.125.111.135])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 08:50:44 -0700
+Message-ID: <623e93ea-245d-44fd-9909-b74ec1e150a2@intel.com>
+Date: Tue, 10 Jun 2025 08:50:43 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: build warning after merge of the cxl tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Dan Williams <dan.j.williams@intel.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <20250610142612.130714a7@canb.auug.org.au>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250610142612.130714a7@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: A3E8B8000F
-X-Stat-Signature: btc1whwobcsppfxog961a7zz8aund8cf
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+66znbe2HhnZqCoZnA2V3tB1XX0Vz9A78=
-X-HE-Tag: 1749570540-55510
-X-HE-Meta: U2FsdGVkX1/F2SJyN4sNJx3EpcJ6DBc4FcT1KbCSoIFXGTb28Nwg6vzEFOrBaxY+l6kWl/iV/P8WBiztKeHX+3N433I6bpQKr7d1nLPKlFBM3ONKIyff3sOVsKEVqphVEktl4bMSEnDZGDZrarrbsUpDOcbwrQ2LBEYNp+ZIWcn4lZtR5T3Zjub0ld8hM2hBhobAz1ZGASqokTeqBdjsB+zKjp9oeXlPGuWIMRUh4Wdnz5LDJpFeEyJBaGNE+G/FmSPY/vXFv/N71sXZK5Vt19bV+lqs1iX1XO02doj4lcKTJ7tnORwww/yBrn4v+jMicExeoa5yzfxq8P+6bPAMW4pf8ulOP/ZSQaIR+SEnsgiyD3FroahWG6J4ZSR3ObPIra4QaJ0AUmOoXqX7RtY1cZvAUWatR6kns1R3ZUVecf8=
 
-On Tue, 10 Jun 2025 23:47:48 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> Maybe one possible scenario is to hit the int3 after the third step
-> somehow (on I-cache).
+
+On 6/9/25 9:26 PM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> ------
-> <CPU0>					<CPU1>
-> 					Start smp_text_poke_batch_finish().
-> 					Start the third step. (remove INT3)
-> 					on_each_cpu(do_sync_core)
-> do_sync_core(do SERIALIZE)
-> 					Finish the third step.
-> Hit INT3 (from I-cache)
-> 					Clear text_poke_array_refs[cpu0]
-> Start smp_text_poke_int3_handler()
-
-I believe your analysis is the issue here. The commit that changed the ref
-counter from a global to per cpu didn't cause the issue, it just made the
-race window bigger.
-
-> Failed to get text_poke_array_refs[cpu0]
-> Oops: int3
-> ------
+> After merging the cxl tree, today's linux-next build (htmldocs) produced
+> this warning:
 > 
-> SERIALIZE instruction flashes pipeline, thus the processor needs
-> to reload the instruction. But it is not ensured to reload it from
-> memory because SERIALIZE does not invalidate the cache.
+> Documentation/driver-api/cxl/index.rst:11: WARNING: toctree contains reference to nonexisting document 'driver-api/cxl/conventions' [toc.not_readable]
 > 
-> To prevent reloading replaced INT3, we need to invalidate the cache
-> (flush TLB) in the third step, before the do_sync_core().
+> Introduced by commit
 > 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> Closes: https://lore.kernel.org/all/CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com/
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  arch/x86/kernel/alternative.c |   10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
+>   11f401444201 ("Documentation/driver-api/cxl: Introduce conventions.rst")
 > 
-> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-> index ecfe7b497cad..1b606db48017 100644
-> --- a/arch/x86/kernel/alternative.c
-> +++ b/arch/x86/kernel/alternative.c
-> @@ -2949,8 +2949,16 @@ void smp_text_poke_batch_finish(void)
->  		do_sync++;
->  	}
->  
-> -	if (do_sync)
-> +	if (do_sync) {
-> +		/*
-> +		 * Flush the instructions on the cache, then serialize the
-> +		 * pipeline of each CPU.
 
-The IPI interrupt should flush the cache. And the TLB should not be an
-issue here. If anything, this may work just because it will make the race
-smaller. 
-
-I'm thinking this may be a QEMU bug. If QEMU doesn't flush the icache on an
-IPI then this would indeed be an problem.
-
--- Steve
-
-
-> +		 */
-> +		flush_tlb_kernel_range((unsigned long)text_poke_addr(&text_poke_array.vec[0]),
-> +				       (unsigned long)text_poke_addr(text_poke_array.vec +
-> +								text_poke_array.nr_entries - 1));
->  		smp_text_poke_sync_each_cpu();
-> +	}
->  
->  	/*
->  	 * Remove and wait for refs to be zero.
+s/conventions/conventions.rst/ for the file. I'll fix and re-push. 
