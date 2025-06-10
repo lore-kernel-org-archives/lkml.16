@@ -1,210 +1,188 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4534D28DF4E;
-	Tue, 10 Jun 2025 12:19:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 250AF28FA9B
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:20:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749557993; cv=none; b=IhR0/LY5w/jlHeRheqV+Qx9XiFa/wYeBGy8DtZ9MQPxxo0embKRStYE9Qqp4gENZwlGpkzHjfUQx3OQi+6/uT3bEhsH+XixwsMuJVIbzCleRShB4EJ3OoB01o4qfn9OTA3xagPqnUztaVhWVm34Juxx/wBS1jOX946Q9pJiQB/s=
+	t=1749558005; cv=none; b=utDM96SCq3eY6k/y3rtzQnP89VrPz10VutXTzNwrCTvhR9sZL64PQuJt1DhlDc4OjbiCyLsVjvgLYdpkjWH1OpcmG6P3pdmuy3wI08LeDy0Qp/wIJqSDvzkmwb5qmXZF4aWMNhkTXgBZ0uEy3JTJrOE/OBHb8q4C3MZst1KMYd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749557993; c=relaxed/simple;
-	bh=Rnu9CTNBGzpHnVvOua9LbCX8fRyVu5ECQhvPkxgSVl8=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u06uJxAuHtwNSysWUKKa5huw0kj1sNBjbitfyKZNpbTJYn6eoTgMU5hfx2ol8F10CZLl4mRB8jlRPAJ43SdzOFqrTHOuRuvr8ktNkUIl+6yFuj9z8KQqsab1sLgp+VOQzpGw1w+0h1xQMlqK5yRDdAkQy2gKaeIjMMFwYvHLvik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UiRBmzPZ; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749558005; c=relaxed/simple;
+	bh=GnMINJ+rcQerWjj/m73j4gOd+J0Oo877g1bdajEn74A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=K6dp1oVvHQfFSw5tyIuSCwSBJFbt6HWW4vQ6TWkBJf3hXVL4nSur+Bl5whrexh+/cgGjiLNnpebefEhyPtyjFqZ5pRs6Urag7W1snpzVhhm/HeK6RQYsLfKqpKByprf0fUkyWVGKjzyzNMHMy1mFzmAVu2frR4X36Xrb25VU7qA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Gb5f+v3w; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UiRBmzPZ"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5532a30ac41so5490883e87.0;
-        Tue, 10 Jun 2025 05:19:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749557989; x=1750162789; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=eQAN1VoZVMU0LFg5gjayj+lCmiFTFvo/2om6CUAJUKA=;
-        b=UiRBmzPZ/s72WQgbMsmyF4AF4rUqNH1xJVHGG2Kxb1JtEBaNXGhFhfuC4JhYrTz/UN
-         efDK9zgp73JJuODCYeKWJgCUlTrB6BOqP/sbG6Sj2vp1lCPp8nuJxxJCEff0WSnQ1qEc
-         u9sZx0RqRS+9d4Z8Kszru0Pja1aMesAh0vt/C8vE86pIvA5ztBA7ZphzR2aMGvhOxLw8
-         qily0D8K2c66payXvhPzV86+6tohUfygnwtIdBt9LfwXdkreEOL2Z0+ToTP29BGLFQDy
-         h0A522dzoB1JZAmdiUB0/11hEP2L0d/X/oXiTdqPhJkmA6mEGTIfdiwDz2oawSWm/bAb
-         9XTg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Gb5f+v3w"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55A9t6j7021751
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:20:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Vhau6mD0BxB2kfcVfZ6o+4OrKjXeXzy3kAMgYfwD+6c=; b=Gb5f+v3wiAXBOjWm
+	U3/Z+qc1ffSG11W0f7W/Quc4XETq5jiRUQb1TG1U7qV8tsfoQdsjZzTMywHCFIPi
+	dKiK52++dhjN90+tHo9F2Z6e+TaW3b0LkZmc/R1B7GFfdUjaFcuMt7E5z+fmVKA8
+	wvShmWzIdVcAohoyLuxxzBZCHcvlKGEDOKMqU9sSZncRLA0sq5SlyaWJ9bcv7da7
+	7vmS5r34ZIQFrgV8AITons19LyYvgjMwLuj9M9I+b87NOoj9RWgxi6Iy5Oayq72G
+	d3mR4DSp4Xg53G18kSTsq9XiEPWqzu+HSuFzN1b/UAnPYB1Jg48MzDfJ5yqMf8jp
+	4B6/Mw==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474ce9sejy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:20:02 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7d0a9d20c2eso107777385a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 05:20:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749557989; x=1750162789;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eQAN1VoZVMU0LFg5gjayj+lCmiFTFvo/2om6CUAJUKA=;
-        b=XPH+wi/E7Ny6eC5T4Gy77Bqa7pYtTaJb68KfcOovuCbHLrvrdxQpnn1BhZGcQ2Yl9B
-         LCcu7aMnayKtqKDCbr7w3Yxv6n1NFyCX2gyIfCwuTzbGxsBVFB1DcgpP3isYOGjChK+y
-         KKhDI0T6Brerk6hJddDUQA7Bzu2JVrdJeE8lB7oHRwAJzASn8dVZ+nfKZHiyRRhgnHzl
-         EshemOk9j+OVVGEEm4gLZtlwiXrKFj9982FAOCzx+Jp7LvnzAKcHNdk/qpANMGSOA4Sh
-         dYlWtVFhp//5YCdUddrQEXVBvTta3WCbVsM3WBugJOQUfjxP1QEsmkBDGX6Gh4cKZ9Wp
-         CaFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV5LvWRN2gs4oLlAqzUL1WWfBiO1OF756iK8CaoHhnoE7uTlimKGD0FqpNhjdr2TiNEEeWm1mzLHbMHULGmmg==@vger.kernel.org, AJvYcCVYCHkcV1GeCqFish26u2gzcexwHywvaP1kmY1CRJSxv38J/c7q9CPEB2WzulBH3+UQYgbd@vger.kernel.org, AJvYcCXHdT3vTsThdloZqeET8sOVV1gN8WORtiWkf3tLQ8ZeC1evCNQygyGI8kaGdT5NgrDihWfsWFFsyzwa0L/Z@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLX+2ATfpXH5gXa0YqHGEREcW8GEm3TYBju2D4eMgSB4WKTYeA
-	6+YGPd+L2mGgz/XLcXrq++uXLTiBBa9WEfU/bPoM25YqlpWSZG/uChkt8iMXIQoX
-X-Gm-Gg: ASbGnctApRDUUKZRlYxiGq9sDkkqZsIL/xbdLoBR+VfumRmTtXcZM7gY+i73A/nKL8D
-	BvuUF1U8MCulkwZfpCTzAj59eENsiI+ra/sBcQXeIrwM88Zlb4i2yG8877tf0nR+aGu6fT9cWtl
-	4lNgFWgqRsWK/D06OYqMjMVm1LHokG9TvYUFdvWpa1J3X3TBq3V8h2hFSsixAxf/YGUe1MhAYK9
-	tArnRF0FaJ4PzYzORrxM7/9w669yow+/NHgy2uyyVlAm9Jm6pcLeJ2of0895SYdrSoJKH76RlPe
-	EzwMzTUBMaBKRdc3kM4XT+X+9A8A9nX8pOU1srZIiSsynM5DtSi9K/tct3sv9eb8GUCk4HFF2nc
-	Hc6x/5LktpsQ=
-X-Google-Smtp-Source: AGHT+IEOAiThqyr/g3IbOy9bU1mIQFiH29X+QkzD7LOn1vfWuf50BiAf8qQ83WrZqQTXXFrnlRL34Q==
-X-Received: by 2002:a05:6512:ba9:b0:553:29a6:3398 with SMTP id 2adb3069b0e04-55366e349b3mr4481056e87.55.1749557988857;
-        Tue, 10 Jun 2025 05:19:48 -0700 (PDT)
-Received: from pc636 (host-95-203-1-180.mobileonline.telia.com. [95.203.1.180])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55367722516sm1497993e87.106.2025.06.10.05.19.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 05:19:48 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Tue, 10 Jun 2025 14:19:45 +0200
-To: Joel Fernandes <joelagnelf@nvidia.com>
-Cc: paulmck@kernel.org, Uladzislau Rezki <urezki@gmail.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	syzbot <syzbot+80e5d6f453f14a53383a@syzkaller.appspotmail.com>,
-	akpm@linux-foundation.org, josh@joshtriplett.org,
-	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, rcu@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [rcu?] [bcachefs?] BUG: unable to handle kernel NULL
- pointer dereference in rcu_core (3)
-Message-ID: <aEgi4cHN_Mg31F-y@pc636>
-References: <67a2b20a.050a0220.50516.0003.GAE@google.com>
- <9694d40a-072e-47c2-a950-3b258bbe04f5@paulmck-laptop>
- <jzknqese5idob37wxgclq7ptxnsd66qbqkxtjpjormymsrwv2j@xjum5exljlh6>
- <aEXVKNVLI3VQInSc@pc636>
- <602bb1be-f4a4-4194-803f-856e95711870@paulmck-laptop>
- <aEac1veMLffwOdv8@pc636>
- <e3187e7a-cac2-46c4-9c56-3a649e122353@paulmck-laptop>
- <2f762834-d143-4b84-9ab2-8bff4688ae66@nvidia.com>
+        d=1e100.net; s=20230601; t=1749558002; x=1750162802;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vhau6mD0BxB2kfcVfZ6o+4OrKjXeXzy3kAMgYfwD+6c=;
+        b=w/YEV73acCgA95+mElRUqwFsCJit+/YslsDaVHnpvYOb39lt84gy3klXlaBBJvemd6
+         uSBet6ghKf8qF03MHi2GX2L85vWXQRQ0ZzAFfR7VksFNnMvfvGA8wY/pjos9cPH7QeeS
+         v3MAUemvZa/pCHcEYqQ+pmovUyAO8WQgnGO+eP2PYwtEy2J6JzaOcCHwK5IvgPd3ZsFK
+         Ezt60+i7sN2/e3W8W2YO4cRYxfoWSplOn8483fCnRj5ZaEZ3vA7i0YdrBJMykoaXmsZl
+         mywpg04aW97onf/ciPL5zhUPzXSA6+7VZB/TUBc+6v4ofiY9OYQ6R4LiaN+nIT716gFF
+         RQew==
+X-Forwarded-Encrypted: i=1; AJvYcCUXMxMGG68SRXWdgbrtM5QaEznGEKLnJgxGmVKeZjjniaSBp8feoco0NSC4B9iTAfF7C62PYqkOGRTVPLQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5b4dMaBPJnRY3U5DDbdoklGVj2aiDo2Ea8u+AWsw2UVEcFrFT
+	87M/bUYFZTE1Uduo6LivV+F95ZtXBpuAJUbzJ7ZT7SmpMkaTjn04Uxcu99xZxf/aohpQlrGuOi4
+	OhMQKfWr/f0QDeDCSE3BILR3Bja+fcXC7gchU50vQA2HYidmjZG3N0YH9JCRw4CzQSVM=
+X-Gm-Gg: ASbGnctjLiviw3rLIdmW/CMC5GsHvxuGnDFdy2tKAdy3KSteLW7yHosv4+UQuR45fUl
+	C/4Dq7ywrXoBrpVYUwQpHcUil/0n2HhrufhXj94qTDyp99qEgVRjocjXWTMRx+DoB92TXJPOAAF
+	XuohTjw92B3PWpBo2tdasPqvSjvODhPdbWrund36ha+IkSFJv0O+mpAyjIWmdrPH6KYsoUD1hP2
+	M8lx/9XApk9GTGwWMJlsa6984iM4Bcc0gSn7hjSrxBqGOxCLPYHIZGEiwmZfiu6kIme7x5hiyoM
+	QZkc+AiE7PaILnBYl0NLdvdY63SYk0bvuX1t3WPtpYK1xNpnuKzsXQyf1gIkNNKFws/ByMJtxL0
+	s
+X-Received: by 2002:a05:620a:4494:b0:7c3:d3a0:578d with SMTP id af79cd13be357-7d33df21327mr843520985a.14.1749558001931;
+        Tue, 10 Jun 2025 05:20:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFf2HmxcJv0wsb0YZ7xLVm6b6ibXcsPzLTTHoRArwARqQqeSPVzstDTUy8hZeAaa52emy+X7w==
+X-Received: by 2002:a05:620a:4494:b0:7c3:d3a0:578d with SMTP id af79cd13be357-7d33df21327mr843519085a.14.1749558001494;
+        Tue, 10 Jun 2025 05:20:01 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-607783c05a0sm6225865a12.44.2025.06.10.05.19.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Jun 2025 05:20:00 -0700 (PDT)
+Message-ID: <bc1daec6-9198-43af-b5a6-c1057d7f2392@oss.qualcomm.com>
+Date: Tue, 10 Jun 2025 14:19:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2f762834-d143-4b84-9ab2-8bff4688ae66@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/8] power: supply: qcom_battmgr: Add charge control
+ support
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Fenglin Wu <fenglin.wu@oss.qualcomm.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: =?UTF-8?Q?Gy=C3=B6rgy_Kurucz?= <me@kuruczgy.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Subbaraman Narayanamurthy <subbaraman.narayanamurthy@oss.qualcomm.com>,
+        David Collins <david.collins@oss.qualcomm.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, kernel@oss.qualcomm.com,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org
+References: <20250530-qcom_battmgr_update-v2-0-9e377193a656@oss.qualcomm.com>
+ <20250530-qcom_battmgr_update-v2-5-9e377193a656@oss.qualcomm.com>
+ <f2e0f1da-c626-4cf0-8158-8a5805138871@kuruczgy.com>
+ <8bb3a056-c00f-4ae0-a790-d742d31f229a@oss.qualcomm.com>
+ <5knsdgk7o5zifkvzlrqiplmhztnsyhlxnqiuikqf4l7wkx2qvh@s3vzkiezw2bc>
+ <219a46d0-446c-4eed-8809-4f2400de0ef9@oss.qualcomm.com>
+ <cf3479b4-5f02-4d19-8164-306214966248@oss.qualcomm.com>
+ <b938b358-301a-4842-bdf6-93ec3c459d41@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <b938b358-301a-4842-bdf6-93ec3c459d41@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: -xHe6qM1DjdRBRQDSK8aWnuCz5gnJqjE
+X-Authority-Analysis: v=2.4 cv=drjbC0g4 c=1 sm=1 tr=0 ts=684822f3 cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=ZeCA1ImQhjoAQTjEC58A:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22
+X-Proofpoint-ORIG-GUID: -xHe6qM1DjdRBRQDSK8aWnuCz5gnJqjE
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDA5NiBTYWx0ZWRfX77BGnPCoHgrp
+ gGa6NmtgDKGl3w9BTrB++3GYmICrbLCQPFuVyhIMjY/SLSvdMTc+o9jksen1/VLGf698o5yO0Zd
+ sOQT8/Xo6g7fQc/m4CZE0yQ7zpIjvGClO40Qe4EmhAcOLrKcPiawuxzjlQ+O7cteIyf0hOe3XaC
+ mDDXUpqaLGxwopKqwNsVdXAcVyHsPtoStvcwefxJ998rxQaGK7bVEoQE666IRrvtXiL300IzLqL
+ uML0u85R9i2umbChYtpo4rNP0p4IzyC3iULGVZkaBbuM6vQndXg2accrk2PgDRUeqdxTcIkuL49
+ yAM5izuQzipM1gxLKIQdnvqKOZCSHK+B9O6vorJq3x7nSg7ewXJFXGNhqH+lBkxxXuU6OED8hpf
+ iCZYat4ptxlqp+hWw8T3SxtT5UjYQ8Atagcr6Yc97Fe/bxjFyz3tiPBX5LGDRBrdkVP+FSZA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-10_04,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0 clxscore=1015
+ priorityscore=1501 suspectscore=0 bulkscore=0 mlxlogscore=999 adultscore=0
+ phishscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506100096
 
-On Mon, Jun 09, 2025 at 10:20:58AM -0400, Joel Fernandes wrote:
+On 6/9/25 9:17 AM, Dmitry Baryshkov wrote:
+> On 09/06/2025 05:39, Fenglin Wu wrote:
+>>
+>> On 6/7/2025 5:46 PM, Konrad Dybcio wrote:
+>>> On 6/3/25 12:37 PM, Dmitry Baryshkov wrote:
+>>>> On Tue, Jun 03, 2025 at 01:48:11PM +0800, Fenglin Wu wrote:
+>>>>> On 5/31/2025 6:36 PM, György Kurucz wrote:
+>>>>>>> Add charge control support for SM8550 and X1E80100.
+>>>>>> Thank you for this, tested on my Lenovo Yoga Slim 7x, the limiting works
+>>>>>> well, I finally don't have to worry about leaving my laptop plugged in
+>>>>>> for too long.
+>>>>>>
+>>>>>> One small thing I noticed is that after setting the sysfs values and
+>>>>>> rebooting, they report 0 again. The limiting appears to stay in effect
+>>>>>> though, so it seems that the firmware does keep the values, but Linux
+>>>>>> does not read them back. Indeed, looking at the code, it seems that
+>>>>>> actually reading back the values is only implemented for the SM8550.
+>>>>> Right.
+>>>>>
+>>>>> Based on offline information, X1E80100 doesn't support reading back those
+>>>>> threshold values in battery management firmware, so I can only use the
+>>>>> cached values for sysfs read.
+>>>> Which limits usablity of the attribute, it is now impossible to identify
+>>>> whether it is enabled or disabled. Is there a chance of fixing that for
+>>>> the X1E80100 platform?
+>>> Is there a chance we store that value in SDAM and can read it back?
+>>>
+>>> Konrad
+>>
+>> The thresholds are stored in PMIC SDAM registers by ADSP after receiving the set requests, and ADSP reads them back during initialization. This is why ADSP retains them upon device reboot.
+>>
+>> I spoke with the battery management firmware team, and they have no plans to update the battery management firmware for X1E80100 further. Consequently, they cannot provide any interfaces to read these thresholds through PMIC Glink.
+>>
+>> Reading them from the existing SDAM registers requires adding "nvmem- cells" DT properties to specify the SDAM registers. However, the "pmic_glink.power-supply" device is an auxiliary device created by the pmic_glink driver and does not have an associated DT node. Is there any method to create a DT node and add DT properties for an auxiliary device?
 > 
-> 
-> On 6/9/2025 5:47 AM, Paul E. McKenney wrote:
-> > On Mon, Jun 09, 2025 at 10:35:34AM +0200, Uladzislau Rezki wrote:
-> >> On Sun, Jun 08, 2025 at 05:25:05PM -0700, Paul E. McKenney wrote:
-> >>> On Sun, Jun 08, 2025 at 08:23:36PM +0200, Uladzislau Rezki wrote:
-> >>>> On Sun, Jun 08, 2025 at 11:26:28AM -0400, Kent Overstreet wrote:
-> >>>>> On Wed, Feb 05, 2025 at 06:56:19AM -0800, Paul E. McKenney wrote:
-> >>>>>> On Tue, Feb 04, 2025 at 04:34:18PM -0800, syzbot wrote:
-> >>>>>>> Hello,
-> >>>>>>>
-> >>>>>>> syzbot found the following issue on:
-> >>>>>>>
-> >>>>>>> HEAD commit:    0de63bb7d919 Merge tag 'pull-fix' of git://git.kernel.org/..
-> >>>>>>> git tree:       upstream
-> >>>>>>> console output: https://syzkaller.appspot.com/x/log.txt?x=10faf5f8580000
-> >>>>>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=1909f2f0d8e641ce
-> >>>>>>> dashboard link: https://syzkaller.appspot.com/bug?extid=80e5d6f453f14a53383a
-> >>>>>>> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> >>>>>>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16b69d18580000
-> >>>>>>>
-> >>>>>>> Downloadable assets:
-> >>>>>>> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-0de63bb7.raw.xz
-> >>>>>>> vmlinux: https://storage.googleapis.com/syzbot-assets/1142009a30a7/vmlinux-0de63bb7.xz
-> >>>>>>> kernel image: https://storage.googleapis.com/syzbot-assets/5d9e46a8998d/bzImage-0de63bb7.xz
-> >>>>>>> mounted in repro: https://storage.googleapis.com/syzbot-assets/526692501242/mount_0.gz
-> >>>>>>>
-> >>>>>>> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> >>>>>>> Reported-by: syzbot+80e5d6f453f14a53383a@syzkaller.appspotmail.com
-> >>>>>>>
-> >>>>>>>  slab radix_tree_node start ffff88803bf382c0 pointer offset 24 size 576
-> >>>>>>> BUG: kernel NULL pointer dereference, address: 0000000000000000
-> >>>>>>> #PF: supervisor instruction fetch in kernel mode
-> >>>>>>> #PF: error_code(0x0010) - not-present page
-> >>>>>>> PGD 0 P4D 0 
-> >>>>>>> Oops: Oops: 0010 [#1] PREEMPT SMP KASAN NOPTI
-> >>>>>>> CPU: 0 UID: 0 PID: 5705 Comm: syz-executor Not tainted 6.14.0-rc1-syzkaller-00020-g0de63bb7d919 #0
-> >>>>>>> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-> >>>>>>> RIP: 0010:0x0
-> >>>>>>> Code: Unable to access opcode bytes at 0xffffffffffffffd6.
-> >>>>>>> RSP: 0018:ffffc90000007bd8 EFLAGS: 00010246
-> >>>>>>> RAX: dffffc0000000000 RBX: 1ffff110077e705c RCX: 23438dd059a4b100
-> >>>>>>> RDX: 0000000000000100 RSI: 0000000000000000 RDI: ffff88803bf382d8
-> >>>>>>> RBP: ffffc90000007e10 R08: ffffffff819f146c R09: 1ffff11003f8519a
-> >>>>>>> R10: dffffc0000000000 R11: 0000000000000000 R12: ffffffff81a6d507
-> >>>>>>> R13: ffff88803bf382e0 R14: 0000000000000000 R15: ffff88803bf382d8
-> >>>>>>> FS:  0000555567992500(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
-> >>>>>>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >>>>>>> CR2: ffffffffffffffd6 CR3: 000000004da38000 CR4: 0000000000352ef0
-> >>>>>>> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> >>>>>>> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> >>>>>>> Call Trace:
-> >>>>>>>  <IRQ>
-> >>>>>>>  rcu_do_batch kernel/rcu/tree.c:2546 [inline]
-> >>>>>>
-> >>>>>> The usual way that this happens is that someone clobbers the rcu_head
-> >>>>>> structure of something that has been passed to call_rcu().  The most
-> >>>>>> popular way of clobbering this structure is to pass the same something to
-> >>>>>> call_rcu() twice in a row, but other creative arrangements are possible.
-> >>>>>>
-> >>>>>> Building your kernel with CONFIG_DEBUG_OBJECTS_RCU_HEAD=y can usually
-> >>>>>> spot invoking call_rcu() twice in a row.
-> >>>>>
-> >>>>> I don't think it's that - syzbot's .config already has that enabled.
-> >>>>> KASAN, too.
-> >>>>>
-> >>>>> And the only place we do call_rcu() is from rcu_pending.c, where we've
-> >>>>> got a rearming rcu callback - but we track whether it's outstanding, and
-> >>>>> we do all relevant operations with a lock held.
-> >>>>>
-> >>>>> And we only use rcu_pending.c with SRCU, not regular RCU.
-> >>>>>
-> >>>>> We do use kfree_rcu() in a few places (all boring, I expect), but that
-> >>>>> doesn't (generally?) use the rcu callback list.
-> >>>>>
-> >>>> Right, kvfree_rcu() does not intersect with regular callbacks, it has
-> >>>> its own path. 
-> >>>>
-> >>>> It looks like the problem is here:
-> >>>>
-> >>>> <snip>
-> >>>>   f = rhp->func;
-> >>>>   debug_rcu_head_callback(rhp);
-> >>>>   WRITE_ONCE(rhp->func, (rcu_callback_t)0L);
-> >>>>   f(rhp);
-> >>>> <snip>
-> >>>>
-> >>>> we do not check if callback, "f", is a NULL. If it is, the kernel bug
-> >>>> is triggered right away. For example:
-> >>>>
-> >>>> call_rcu(&rh, NULL);
-> >>>>
-> >>>> @Paul, do you think it makes sense to narrow callers which apparently
-> >>>> pass NULL as a callback? To me it seems the case of this bug. But we
-> >>>> do not know the source.
-> >>>>
-> >>>> It would give at least a stack-trace of caller which passes a NULL.
-> >>>
-> >>> Adding a check for NULL func passed to __call_rcu_common(), you mean?
-> >>>
-> >> Yes. Currently there is no any check. So passing a NULL just triggers
-> >> kernel panic.
-> >>
-> >>>
-> >>> That wouldn't hurt, and would either (as you say) catch the culprit
-> >>> or show that the problem is elsewhere.
-> >>>
-> >> I can add it then and send out the patch if no objections.
-> > 
-> > No objections from me!
-> 
-> Me neither! And I can push that into an -rc release as well once I have it
-> (since it is related to a potential bug).
-> 
-I will prepare it and send out today.
+> Auxiliary-bus devices don't have their OF nodes. Instead they use the main device's of node thanks to the call to device_set_of_node_from_dev().
 
---
-Uladzislau Rezki
+i.e. something like this is what we want:
+
+---- socname.dtsi ----
+
+pmic-glink {
+	compatible = ...;
+	[...]
+
+	nvmem-cells = <&charge_limit_lower>, <&charge_limit_upper>;
+	nvmem-cell-names = "charge-limit-lower", "charge-limit-upper";
+}
+
+---------------------
+
+if you have better names for these cells than what i put here as
+placeholders, go for it - just make sure to also add the -names
+counterpart, as we won't be able to rely on just indices in the long run
+
+Konrad
