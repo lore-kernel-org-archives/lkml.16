@@ -1,48 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D602D218E9F;
-	Tue, 10 Jun 2025 19:12:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD7617597;
+	Tue, 10 Jun 2025 19:12:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749582753; cv=none; b=Y9d2AOnjpwkR3Ix4TRd7fzgyUqliv2eVB1Y8TNcPiCMjO9ngEfGGkRHPqyQoVrLSSK0JyXMZoK4Qeewr7RWMxr9O6VJ9U6ZLDZ86qSsbnauB++WCR7OYEpMA0Rn0spbbrBl3y4Orh5RbMBDdsJ15Uf61XNx9wkug5x7S/Fs55Hg=
+	t=1749582774; cv=none; b=REtNbVh5in66Vofe8bSQOEZWZVI5RP6CwOTFUTW9ZxIO6KqPvMRTMWpYfJJSla8k9J4kb23KrGKcCHErI3tr4iFptqayWxhnz6gtjex+fzy1NMp6vc3hKOPTHgFuwaJiBCxQnb63Rmzdu9FqjXP0xRn6pOPC93fbGmU9eOaAHbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749582753; c=relaxed/simple;
-	bh=eJzXTcGjqeHES133w/mCLelMBBcBENx890a5ygHX1H0=;
+	s=arc-20240116; t=1749582774; c=relaxed/simple;
+	bh=wz++l1yaux2JnXexyUIdq0mIG5nKuIU+1yPGLalEFBE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GHaF+aoyjaDEUgviO+ViaLFYIjW1ccVLgCGid33HWm5HPCE1FdWYH/8fpGEE1roEol8pE42FfmCznR76nWwWbh0BL6mTU/effjRQ7BcyKUEc/Yt1Zn7k/PmnExZHo9YDcAb4M5zMq1oDIn9TSvsQ4dSkDlf5KMR7NzIF/pZNuEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VaI2+LQh; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=C8gDV+PdfqjKXzDYahWu9H0RFn85RDGYbcRmGSsSbY+Clwa+comwkqWBvAti4JkRjAaALknBMQdoJ8f/tdbupTt2CZa2aqBVb5HE2lhQ/ni1nnsq7y6r7xftjL0UOmTJyYbO9RrdBmmVbyrQ2fogwTNxzbP3kMaKldLyRyjAmcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pyH3fla5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VaI2+LQh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18FAEC4CEED;
-	Tue, 10 Jun 2025 19:12:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pyH3fla5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53F97C4CEED;
+	Tue, 10 Jun 2025 19:12:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749582752;
-	bh=eJzXTcGjqeHES133w/mCLelMBBcBENx890a5ygHX1H0=;
+	s=k20201202; t=1749582773;
+	bh=wz++l1yaux2JnXexyUIdq0mIG5nKuIU+1yPGLalEFBE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VaI2+LQhuUUCHinnXIKNJGDX1SFqmIEkgM49ZG9mFtgdSJtyidxE5kSPaTUdtIRoe
-	 x8gwG8h5JFpcv2x49bFujV90PS+vJ0dv/ZdkpuflWTUErcb97YgGQv2W6l9qVPbl16
-	 v8SyhbEe0m3HO6534SqykjGShxll+Ne/4t8f1iJYheRExnhSX55A4hNPQKnkRcYq5L
-	 hc0Tmlxcb6hRLqfqF7Unr6UlRwwPll4NW5PiZ7zHf35KF4TOdiyOcT86XrweAAiuH8
-	 NHMgbbCpwoQbMy2vS7ZoKum77mLaoScoDb3mUTDNNDNTl+qp1ZRyBmI7CkispOKzd9
-	 LnPbDInTrzhvw==
-Date: Tue, 10 Jun 2025 12:12:08 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org, x86@kernel.org,
-	linux-arch@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 00/12] lib/crc: improve how arch-optimized code is
- integrated
-Message-ID: <20250610191208.GD1649@sol>
-References: <20250607200454.73587-1-ebiggers@kernel.org>
- <aETPdvg8qXv18MDu@zx2c4.com>
- <20250608234817.GG1259@sol>
- <aEhtyvBajGE80_2Z@zx2c4.com>
+	b=pyH3fla5fwi/sdBTPciXVxga/2QyRQlf4Ux0EVcJcQWbZysOGgGSh7WCuV58sOTRa
+	 sigjvkhe0Ev44L+PfetMGbtIAkXoUiN1hujD4eDQWGM3D2qZ+qnGLS9ptTx0f9dGiA
+	 VFbpPPGQPNdvh/k3X40hEvyIuTZOXEOYfplmpPLDT72aTev1LmAAfX0CztkQ+lBGyW
+	 iV5AmDrcrelep707E5jEhovEU9wIIlGZi8Qc4AX2Ym+7Axn8PrGnmrv94v22BX/Yi0
+	 z9FkJrII4BR6mWx+9cajZEsr46FS1iLKbTwuG2BbH9EGkD8d38hoCYBkL0KH6GX5/q
+	 Zk4qaZT/ymgEg==
+Date: Tue, 10 Jun 2025 13:12:51 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Penglei Jiang <superman.xpt@gmail.com>, io-uring@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzbot+531502bbbe51d2f769f4@syzkaller.appspotmail.com
+Subject: Re: [PATCH v2] io_uring: fix use-after-free of sq->thread in
+ __io_uring_show_fdinfo()
+Message-ID: <aEiDs5J3Uy3NSK3m@kbusch-mbp>
+References: <20250610171801.70960-1-superman.xpt@gmail.com>
+ <aEh9DxZ0AQSSranB@kbusch-mbp>
+ <48f61e8e-1de6-4737-9e58-145d4599b0c0@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,76 +46,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aEhtyvBajGE80_2Z@zx2c4.com>
+In-Reply-To: <48f61e8e-1de6-4737-9e58-145d4599b0c0@kernel.dk>
 
-On Tue, Jun 10, 2025 at 11:39:22AM -0600, Jason A. Donenfeld wrote:
-> On Sun, Jun 08, 2025 at 04:48:17PM -0700, Eric Biggers wrote:
-> > On Sat, Jun 07, 2025 at 05:47:02PM -0600, Jason A. Donenfeld wrote:
-> > > On Sat, Jun 07, 2025 at 01:04:42PM -0700, Eric Biggers wrote:
-> > > > Having arch-specific code outside arch/ was somewhat controversial when
-> > > > Zinc proposed it back in 2018.  But I don't think the concerns are
-> > > > warranted.  It's better from a technical perspective, as it enables the
-> > > > improvements mentioned above.  This model is already successfully used
-> > > > in other places in the kernel such as lib/raid6/.  The community of each
-> > > > architecture still remains free to work on the code, even if it's not in
-> > > > arch/.  At the time there was also a desire to put the library code in
-> > > > the same files as the old-school crypto API, but that was a mistake; now
-> > > > that the library is separate, that's no longer a constraint either.
-> > > 
-> > > I can't express how happy I am to see this revived. It's clearly the
-> > > right way forward and makes it a lot simpler for us to dispatch to
-> > > various arch implementations and also is organizationally simpler.
-> > > 
-> > > Jason
+On Tue, Jun 10, 2025 at 12:56:31PM -0600, Jens Axboe wrote:
+> On 6/10/25 12:44 PM, Keith Busch wrote:
+> > On Tue, Jun 10, 2025 at 10:18:01AM -0700, Penglei Jiang wrote:
+> >> @@ -379,7 +380,8 @@ static int io_sq_thread(void *data)
+> >>  		io_sq_tw(&retry_list, UINT_MAX);
+> >>  
+> >>  	io_uring_cancel_generic(true, sqd);
+> >> -	sqd->thread = NULL;
+> >> +	rcu_assign_pointer(sqd->thread, NULL);
 > > 
-> > Thanks!  Can I turn that into an Acked-by?
+> > I believe this will fail a sparse check without adding the "__rcu" type
+> > annotation on the struct's "thread" member.
 > 
-> Took me a little while longer to fully review it. Sure,
-> 
->     Acked-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> 
-> Side note: I wonder about eventually turning some of the static branches
-> into static calls.
+> I think that only happens the other way around, eg accessing them directly
+> when marked with __rcu. I could be entirely wrong, though...
 
-Yes, Linus was wondering the same thing earlier.  It does run into a couple
-issues.  First, only x86 and powerpc implement static_call properly; everywhere
-else it's just an indirect call.  Second, there's often some code shared above
-the level at which we'd like to do the dispatch.  For example, consider crc32_le
-on x86.  If we expand the CRC_PCLMUL macro and inline crc32_le_arch and
-crc32_le_base as the compiler does, crc32_le ends up as:
+I was just looking at rcu_assign_pointer():
 
-    u32 crc32_le(u32 crc, const u8 *p, size_t len)
-    {
-            if (len >= 16 && static_branch_likely(&have_pclmulqdq) &&
-                crypto_simd_usable()) {
-                    const void *consts_ptr;
+  #define rcu_assign_pointer(p, v)                                              \
+  do {                                                                          \
+          uintptr_t _r_a_p__v = (uintptr_t)(v);                                 \
+          rcu_check_sparse(p, __rcu);                                           \
 
-                    consts_ptr = crc32_lsb_0xedb88320_consts.fold_across_128_bits_consts;
-                    kernel_fpu_begin();
-                    crc = static_call(crc32_lsb_pclmul)(crc, p, len, consts_ptr);
-                    kernel_fpu_end();
-                    return crc;
-            }
-            while (len--)
-                    crc = (crc >> 8) ^ crc32table_le[(crc & 255) ^ *p++];
-            return crc;
-    }
+And rcu_check_sparse expands to this when __CHECKER__ is enabled:
 
-The existing static_call selects between 3 different assembly functions, all of
-which require a kernel-mode FPU section and only support len >= 16.
+  #define rcu_check_sparse(p, space) \
+          ((void)(((typeof(*p) space *)p) == p))
 
-We could instead unconditionally do a static_call upon entry to the function,
-with 4 possible targets.  But then we'd have to duplicate the kernel FPU
-begin/end sequence in 3 different functions.  Also, it would add an extra
-function call for the case where 'len < 16', which is a common case and is
-exactly the case where per-call overhead matters the most.
+So whatever "p" is, rcu_assign_pointer's checker appears to want it to
+be of a type annotated with "__rcu".
 
-However, if we could actually inline the static call into the *callers* of
-crc32_le(), that would make it more worthwhile.  I'm not sure that's possible,
-though, especially considering that this code is tristate.
+But I don't know for sure, so let's just try it and see!
 
-Anyway, this is tangential to this patchset.  Though the new way the code is
-organized does make it more feasible to have e.g. a centralized static_call in
-the future if we choose to go in that direction.
-
-- Eric
+  # make C=1 io_uring/sqpoll.o
+  io_uring/sqpoll.c:273:17: error: incompatible types in comparison expression (different address spaces):
+  io_uring/sqpoll.c:273:17:    struct task_struct [noderef] __rcu *
+  io_uring/sqpoll.c:273:17:    struct task_struct *
+  io_uring/sqpoll.c:383:9: error: incompatible types in comparison expression (different address spaces):
+  io_uring/sqpoll.c:383:9:    struct task_struct [noderef] __rcu *
+  io_uring/sqpoll.c:383:9:    struct task_struct *
