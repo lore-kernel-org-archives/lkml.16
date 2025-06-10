@@ -1,182 +1,134 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36009224B13
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:51:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06261234970
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:54:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749570700; cv=none; b=H98dxjho+zHFXwBKqPPsyy0lOGonn2bwH08ohcQqA1CT0TlKU6YMygENtCQju1XbJzKL8bjAdEgxE5WUmN3+QkKo/dC4BtimuARMA0VDq3ISDIS2IYKcQnZzWq3Tpu+dBWmXwItAIadTDUkQLX9FxxuTx0W0Y7FkcllO8z4gt8c=
+	t=1749570845; cv=none; b=RajxxKX8MQinPhlsVy8OEpS7YOCvQKkjgwKwlD01Ggw948PhWhZV+xtbPHhAZXwLmGsHMkttnOMSex+SHMp5E+dsytsPIet5+sWjP3cVSV4jrd6pPBFcy0HrIxnWXE24+Pw8xf1ztBc71+UbWM4FA+1WvCY+g+PrW22XoehzPlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749570700; c=relaxed/simple;
-	bh=N5bzsVPZ4HgGRnUY8AqgbXkIodLpbg7XJrFNxtMMTNk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ftzGh1MnBa53XRSg1Lxuc6a2uo7LFdT34kEKvnGrXW8RRJFu8b8Y/fbeGihErIqIT59t2YU0dxH78eChpvLjPaRJsz9iGmoIc1dCwJs82V/ZNJzUgYSlVLGc1vkP86JthdbbSrgrPwEH4NbKzDUxXuC9Ph1Db5dQd/3i0oaLfrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (3072-bit key) header.d=posteo.net header.i=@posteo.net header.b=YjxV+QGx; arc=none smtp.client-ip=185.67.36.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	s=arc-20240116; t=1749570845; c=relaxed/simple;
+	bh=7zpIauZi2y3KxkbRsPtn6tj1vuZMF5W3CDAg7x6Tm9s=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lBBWGXQ+au9aL3p2Eo8zSIPphQO694Dr03eZZkgguDKH6oSUwlimuAO61evKD5tZiTYzJC49BhTDb/mb+Zu0aciCoKKiGgWo33r6SoWcRpY+YToAsh3ZCgJo6THsP0OkitL+8ocVLMdFAB0+IUFYCl1Z6cbW2PCQnKKeSdLnkDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=T6Pgjj24; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=IJFfJnOq; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=aNtiIjZJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=HjCpOOrA; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (3072-bit key) header.d=posteo.net header.i=@posteo.net header.b="YjxV+QGx"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id 91860240108
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 17:51:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net;
-	s=1984.ea087b; t=1749570696;
-	bh=N5bzsVPZ4HgGRnUY8AqgbXkIodLpbg7XJrFNxtMMTNk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:From;
-	b=YjxV+QGx20H7yCqc8wC4bs8W9LF1WaMm+Ht8KPIpVASjJtxUV/kDSBJ1iQ6ijlQPV
-	 UX2sF67Yuv6F6y1zHNKH+fRND0JYCtGH/a2RMtalZ0XrZlCSupH6rtQxqZF3kricSh
-	 ov9ch27X1DxaHGqyQiQcO7sItMTSIxNmnjT9HnStFgn9mXQWRRlrXPB14GGhQ3oYGH
-	 bBDyyDttkCCdNTNPkSm2pewwqsJs0dFNPpxuOTH+shgmjbRjYKDxB9MffJqzjyedKM
-	 Uh5153C83Xk9y1XoSWLaJx8Rwtq86L/1WPefRi0N+DgALhU/UF3Nph+S6JNrMvjBg5
-	 pdBjoJu50y/wU/smhD0jDOG9QpjkbHdgMPESHxmzVmOToV5kmJdmlyfOExJOGkz4Oh
-	 WKgsE+Lxx3o2hy7m0y/5iZLhj4VS0JOjdBuGsHRGLp5ld343lpX6ANM7aDWD3kUw9+
-	 3QpZhEa+Kn3SUAP8N4uPuG3FZrhjPJzjzH8dmu1cIwEreol02bn
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4bGtZ72s8Kz6tlh;
-	Tue, 10 Jun 2025 17:51:27 +0200 (CEST)
-From: Charalampos Mitrodimas <charmitro@posteo.net>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>,  "David S. Miller"
- <davem@davemloft.net>,  Eric Dumazet <edumazet@google.com>,  Jakub
- Kicinski <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>,  Simon
- Horman <horms@kernel.org>,  Martin KaFai Lau <martin.lau@linux.dev>,  John
- Fastabend <john.fastabend@gmail.com>,  Alexei Starovoitov
- <ast@kernel.org>,  Andrii Nakryiko <andrii@kernel.org>,  Eduard Zingerman
- <eddyz87@gmail.com>,  Song Liu <song@kernel.org>,  Yonghong Song
- <yonghong.song@linux.dev>,  KP Singh <kpsingh@kernel.org>,  Stanislav
- Fomichev <sdf@fomichev.me>,  Hao Luo <haoluo@google.com>,  Jiri Olsa
- <jolsa@kernel.org>,  Feng Yang <yangfeng@kylinos.cn>,  Tejun Heo
- <tj@kernel.org>,  Network Development <netdev@vger.kernel.org>,  LKML
- <linux-kernel@vger.kernel.org>,  bpf <bpf@vger.kernel.org>,
-  syzbot+b4169a1cfb945d2ed0ec@syzkaller.appspotmail.com
-Subject: Re: [PATCH bpf-next] bpf: Fix RCU usage in
- bpf_get_cgroup_classid_curr helper
-In-Reply-To: <CAADnVQ+mzrDH+8S=ddDCtyo6YUO4dUUsAS88Jza93pDQ2K3Bng@mail.gmail.com>
-References: <20250608-rcu-fix-task_cls_state-v1-1-2a2025b4603b@posteo.net>
-	<CAADnVQLxaxVpCaK90FfePOKMLpH=axaK3gDwVZLp0L1+fNxgtA@mail.gmail.com>
-	<9eae82be-0900-44ea-b105-67fadc7d480d@iogearbox.net>
-	<CAADnVQK_k4ReDwS_urGtJPQ1SXaHdrGWYxJGd-QK=tAn60p4vw@mail.gmail.com>
-	<87wm9jy623.fsf@posteo.net>
-	<CAADnVQ+mzrDH+8S=ddDCtyo6YUO4dUUsAS88Jza93pDQ2K3Bng@mail.gmail.com>
-Date: Tue, 10 Jun 2025 15:51:05 +0000
-Message-ID: <87tt4nzjbq.fsf@posteo.net>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="T6Pgjj24";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="IJFfJnOq";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="aNtiIjZJ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="HjCpOOrA"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 3B6D81F79E;
+	Tue, 10 Jun 2025 15:54:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749570842; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xWCeRdGzABEyBlWgT5L7nsAwVMuulDsRU+gqM3E7azU=;
+	b=T6Pgjj246hguhskRv/qQtVPiK61EUoDuolumiP0OC2Icu89NWYVdeMQardrIGeo8b0N+IR
+	ic75yyiCFcxKySOVWWDwnOaL8PBbq0lwwWwZN+CLOtvGU1W1dbgINF7K3USNuryXWJ3DaL
+	LuD/JE2gPbgcYLz1gaY/yC4UeRJ9UKA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749570842;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xWCeRdGzABEyBlWgT5L7nsAwVMuulDsRU+gqM3E7azU=;
+	b=IJFfJnOqTUYBl0FwRKlNtvAHAfhbczZDqSy18JWRZY5QHd8CS8h5NQDYU6mrz81rvkP6Nv
+	z8ssh7MCxKS2OXBA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=aNtiIjZJ;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=HjCpOOrA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749570841; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xWCeRdGzABEyBlWgT5L7nsAwVMuulDsRU+gqM3E7azU=;
+	b=aNtiIjZJpo6OR1AzSwYcTUsr5vDY9iLna/B2gg4varX4NdX+pNEhF7PFTONa5yUuR3XCPJ
+	HE9CfJoxw+mqm1DEFTRxyravj5HuEmpQj+rjKwBE/zGWJ0BM0Bsm8MwuD01OHHPr2ivolq
+	sYdDK8bO9kkfpyihvNrtycEP8A9+jSg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749570841;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xWCeRdGzABEyBlWgT5L7nsAwVMuulDsRU+gqM3E7azU=;
+	b=HjCpOOrAYQG6H7+yX5orb1pgf5WWnPNTHQe07a+5rVB0hvTpFOXwXGhcdoXFc13YKFyv1q
+	hM8V7p8lTdor0iAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 026DC13964;
+	Tue, 10 Jun 2025 15:54:00 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 8ROXOhhVSGh8WAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Tue, 10 Jun 2025 15:54:00 +0000
+Date: Tue, 10 Jun 2025 17:54:00 +0200
+Message-ID: <87cybby4mf.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Jaroslav Kysela <perex@perex.cz>,	Takashi Iwai <tiwai@suse.com>,	Uwe
+ =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,	Takashi
+ Iwai <tiwai@suse.de>,	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ALSA: mips/sgio2audio: Replace deprecated strcpy() with strscpy()
+In-Reply-To: <20250610121835.2908-2-thorsten.blum@linux.dev>
+References: <20250610121835.2908-2-thorsten.blum@linux.dev>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 3B6D81F79E
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -3.51
 
-Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
+On Tue, 10 Jun 2025 14:18:33 +0200,
+Thorsten Blum wrote:
+> 
+> strcpy() is deprecated; use strscpy() instead.
+> 
+> No functional changes intended.
+> 
+> Link: https://github.com/KSPP/linux/issues/88
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 
-> On Tue, Jun 10, 2025 at 8:23=E2=80=AFAM Charalampos Mitrodimas
-> <charmitro@posteo.net> wrote:
->>
->> Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
->>
->> > On Tue, Jun 10, 2025 at 5:58=E2=80=AFAM Daniel Borkmann <daniel@iogear=
-box.net> wrote:
->> >>
->> >> On 6/9/25 5:51 PM, Alexei Starovoitov wrote:
->> >> > On Sun, Jun 8, 2025 at 8:35=E2=80=AFAM Charalampos Mitrodimas
->> >> > <charmitro@posteo.net> wrote:
->> >> >>
->> >> >> The commit ee971630f20f ("bpf: Allow some trace helpers for all pr=
-og
->> >> >> types") made bpf_get_cgroup_classid_curr helper available to all B=
-PF
->> >> >> program types.  This helper used __task_get_classid() which calls
->> >> >> task_cls_state() that requires rcu_read_lock_bh_held().
->> >> >>
->> >> >> This triggers an RCU warning when called from BPF syscall programs
->> >> >> which run under rcu_read_lock_trace():
->> >> >>
->> >> >>    WARNING: suspicious RCU usage
->> >> >>    6.15.0-rc4-syzkaller-g079e5c56a5c4 #0 Not tainted
->> >> >>    -----------------------------
->> >> >>    net/core/netclassid_cgroup.c:24 suspicious rcu_dereference_chec=
-k() usage!
->> >> >>
->> >> >> Fix this by replacing __task_get_classid() with task_cls_classid()
->> >> >> which handles RCU locking internally using regular rcu_read_lock()=
- and
->> >> >> is safe to call from any context.
->> >> >>
->> >> >> Reported-by: syzbot+b4169a1cfb945d2ed0ec@syzkaller.appspotmail.com
->> >> >> Closes: https://syzkaller.appspot.com/bug?extid=3Db4169a1cfb945d2e=
-d0ec
->> >> >> Fixes: ee971630f20f ("bpf: Allow some trace helpers for all prog t=
-ypes")
->> >> >> Signed-off-by: Charalampos Mitrodimas <charmitro@posteo.net>
->> >> >> ---
->> >> >>   net/core/filter.c | 2 +-
->> >> >>   1 file changed, 1 insertion(+), 1 deletion(-)
->> >> >>
->> >> >> diff --git a/net/core/filter.c b/net/core/filter.c
->> >> >> index 30e7d36790883b29174654315738e93237e21dd0..3b3f81cf674dde7d2b=
-d83488450edad4e129bdac 100644
->> >> >> --- a/net/core/filter.c
->> >> >> +++ b/net/core/filter.c
->> >> >> @@ -3083,7 +3083,7 @@ static const struct bpf_func_proto bpf_msg_p=
-op_data_proto =3D {
->> >> >>   #ifdef CONFIG_CGROUP_NET_CLASSID
->> >> >>   BPF_CALL_0(bpf_get_cgroup_classid_curr)
->> >> >>   {
->> >> >> -       return __task_get_classid(current);
->> >> >> +       return task_cls_classid(current);
->> >> >>   }
->> >> >
->> >> > Daniel added this helper in
->> >> > commit 5a52ae4e32a6 ("bpf: Allow to retrieve cgroup v1 classid from=
- v2 hooks")
->> >> > with intention to use it from networking hooks.
->> >> >
->> >> > But task_cls_classid() has
->> >> >          if (in_interrupt())
->> >> >                  return 0;
->> >> >
->> >> > which will trigger in softirq and tc hooks.
->> >> > So this might break Daniel's use case.
->> >>
->> >> Yeap, we cannot break tc(x) BPF programs. It probably makes sense to =
-have
->> >> a new helper implementation for the more generic, non-networking case=
- which
->> >> then internally uses task_cls_classid().
->> >
->> > Instead of forking the helper I think we can :
->> > rcu_read_lock_bh_held() || rcu_read_lock_held()
->> > in task_cls_state().
->>
->> I tested your suggestion with,
->>
->>   rcu_read_lock_bh_held() || rcu_read_lock_held()
->>
->> but it still triggers the RCU warning because BPF syscall programs use
->> rcu_read_lock_trace().
->>
->> Adding rcu_read_lock_trace_held() fixes it functionally but triggers a
->> checkpatch warning:
->>
->>   WARNING: use of RCU tasks trace is incorrect outside BPF or core RCU c=
-ode
->
-> It's safe to ignore checkpatch in this case.
+Applied now to for-next branch.  Thanks.
 
-If that is the case I'll move forward with this. It was my initial fix
-for this[1] anyway, but checkpatch made me change it.
 
-[1]: https://github.com/charmitro/linux/commit/e5c42d49bfb967c3c35f536971f3=
-97492d2f46bf
-
->
->> I think the best solution here would be to add
->> local_bh_disable()/enable() protection directly in the BPF helper. This
->> keeps the fix localized to where the problem exists, and avoids
->> modifying core cgroup RCU.
->
-> That works, but it will add runtime overhead.
-> I doubt the helper is in a critical path, so I don't mind.
+Takashi
