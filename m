@@ -1,106 +1,145 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2458C28B40D;
-	Tue, 10 Jun 2025 09:32:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 342D2280CCF;
+	Tue, 10 Jun 2025 09:32:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749547929; cv=none; b=kk/Fy2ZK6n69Z1Q3/mrtqXlgKWp7p15hGnfmYke25ePMj8xB+DbceKHF+5lXKtGA+d6vNSjTVfui5XLfegVlm9veOTn3wZ04t3P+2q1+klv1V3hvczf5x0t8NfaciF3DcyVBfR+FqCrROnpkdjIGyRlqBJbcJNycERtSsLRH0UY=
+	t=1749547931; cv=none; b=aoidCJArpbIDt7i19jE6KVkYiFRM4xfsvcD+g0zIovLFUO6t8MA0tQ0nQWewuaDMU8FbsnKSrdToFaU/Hal/IBNYoUAn+xJrEvGVuiQKywBJJYPwZLl6hO1ILhqW3sQxAQtwlal1I+V7zd/wAgLU6m3CiaFKxaB3APe/oNUaETg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749547929; c=relaxed/simple;
-	bh=Mxu+F7oYs9rjhQqNFX6d81S4isBAqb9Rqh/JNc/9YqY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=rWhaebELnf3kZqYlj6CmMImOEMDWNnkm7OHsG9rPDDXah6TwBHi2pFV3KB3vZsRnE0h4DzxViUuK2bdrQN/+fxCy48VG6f2geauxxHvQeAfFk2smyqq6K4FaV/QxfEigi8d9Rqq3VBaXIxh3+Id/nxEDvi8aI2/NAihqNHRYOE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=wPwT8JYn; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1749547931; c=relaxed/simple;
+	bh=eKiRb6L6Ozc73XkfGbKGoMTgpuDK6lUHSqXXX/O1PDo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=KPtYBnErpq1m0GwYY7EfqC2zbbBpbNAM4iGxbDr96kh/U0KMvMlZaWA+08LcL631jNLbz3qt69U037f4MyIgkMW17G3TOpU/ZP4mg73Q6zNEL8fPTB5tKiSmT+qM5ZJ88Xg2eDpD5SOG4c93g4gpVsPPA0NL9B+98GxTEH6vqqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VAZNH/Nk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="wPwT8JYn"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55A5eoUF029247;
-	Tue, 10 Jun 2025 11:32:00 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	QqzwGX7wP5jq59PpJTek9NUkOQyF6n6c9rZCQTs99RQ=; b=wPwT8JYnkRbt7i/x
-	LVBF5rNE4g2xIbOeTDHzDjFNdCg5BzxoxOwjNPBmllV0082rSzfd4ydG4Qfq/lIn
-	kA43jkuXQ0RFQQrc7eJ35WAK24Kn3fhIxz/gN9zEJTeV81lhj0xV42UBM45PqofS
-	tMQ6O1lDFzg7R+BmvIa6HbGSfVd+P7DtE51ij55wCcIu3Hxew2Oju+AgaiCYBUKp
-	KMbj36bXrmSdZChOfcxyhFbQ0RbCzo0teZ+CwSzx8SDWxbE2SjfavYXexiXEjc0U
-	x7dBt7zqnLzPmH4AShDEsk6CNWmAudnx5U5MeCJhltnOh6xMwcAgYWeLM5pubqce
-	rYTU0A==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474y051mw8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Jun 2025 11:32:00 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A8F4540047;
-	Tue, 10 Jun 2025 11:31:22 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 26A0EAC6D9D;
-	Tue, 10 Jun 2025 11:31:06 +0200 (CEST)
-Received: from [10.130.73.167] (10.130.73.167) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Jun
- 2025 11:31:05 +0200
-Message-ID: <55fd5868-0481-42e1-b56b-80f59d724364@foss.st.com>
-Date: Tue, 10 Jun 2025 11:31:05 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VAZNH/Nk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACD3EC4CEEF;
+	Tue, 10 Jun 2025 09:32:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749547930;
+	bh=eKiRb6L6Ozc73XkfGbKGoMTgpuDK6lUHSqXXX/O1PDo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=VAZNH/NkZPzdBmeAQDQTeOPtAAuyDnJ8WnuLrFAY5M3oM3ig/xvBtOs/Zrp2ljSYg
+	 NfYEV/WyCldnbyhEFIVBipcucNzXH0GBny75X5JxMdeqP+HmRME8XEXN16Gfi3U2MQ
+	 aO+QZaKKzZV1PO+2alO6LAkAu0LQUqKjGwf5HEyiFvy2GPE/jRnZw4diMHLQ9ji5bq
+	 xwlq9oB1bj9Bi5oNL5V0ckM8WZKNGHeGuptkZVg7hRVFc4BQRK2zf6UURv3/abV9kW
+	 nmLZOrAhxnNbLSXAucdKtmer0uscHr6a7lcxkrXyjx4U+Eg/ZeiXl0Hz9bbuT97Dpt
+	 BcLKhBDAdVLZg==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Benno Lossin" <lossin@kernel.org>
+Cc: "Stephen Rothwell" <sfr@canb.auug.org.au>,  "Miguel Ojeda"
+ <ojeda@kernel.org>,  "Linux Kernel Mailing List"
+ <linux-kernel@vger.kernel.org>,  "Linux Next Mailing List"
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the rust-pin-init tree
+In-Reply-To: <DAIPCCIHRLHW.1TDNY93G6UZM0@kernel.org> (Benno Lossin's message
+	of "Tue, 10 Jun 2025 10:15:08 +0200")
+References: <20250610142230.001af1d3@canb.auug.org.au>
+	<DAIP0NGMMM90.11JRFL5O1NAW9@kernel.org>
+	<e0lTxW1xgQfnXlaJP9bBC75nSMvzZEdAEAmkh1G41H1yJHHyg94Op2pxoQnOYTKtpKYyVQIJMZvjay8xS9yuuQ==@protonmail.internalid>
+	<DAIPCCIHRLHW.1TDNY93G6UZM0@kernel.org>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Tue, 10 Jun 2025 11:32:04 +0200
+Message-ID: <87msag2b8r.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] media: i2c: vd55g1: Miscellaneous fixes
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-CC: Sylvain Petinot <sylvain.petinot@foss.st.com>,
-        Mauro Carvalho Chehab
-	<mchehab@kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250609-fix_vd55g1-v1-0-594f1134e3fb@foss.st.com>
- <aEf0KcapklkWpBFD@kekkonen.localdomain>
-Content-Language: en-US
-From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-In-Reply-To: <aEf0KcapklkWpBFD@kekkonen.localdomain>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-10_03,2025-06-09_02,2025-03-28_01
+Content-Type: text/plain
 
-Hi Sakari,
+"Benno Lossin" <lossin@kernel.org> writes:
 
-Thank you for your review.
+> On Tue Jun 10, 2025 at 9:59 AM CEST, Benno Lossin wrote:
+>> On Tue Jun 10, 2025 at 6:22 AM CEST, Stephen Rothwell wrote:
+>>> Hi all,
+>>>
+>>> After merging the rust-pin-init tree, today's linux-next build (x86_64
+>>> allmodconfig) failed like this:
+>>>
+>>> error[E0282]: type annotations needed
+>>>    --> rust/kernel/configfs.rs:154:26
+>>>     |
+>>> 154 |             subsystem <- pin_init::zeroed().chain(
+>>>     |                          ^^^^^^^^^^^^^^^^ cannot infer type of the type parameter `T` declared on the function `zeroed`
+>>>     |
+>>> help: consider specifying the generic argument
+>>>     |
+>>> 154 |             subsystem <- pin_init::zeroed::<T>().chain(
+>>>     |                                          +++++
+>>>
+>>> error[E0282]: type annotations needed
+>>>    --> rust/kernel/configfs.rs:264:22
+>>>     |
+>>> 264 |             group <- pin_init::zeroed().chain(|v: &mut Opaque<bindings::config_group>| {
+>>>     |                      ^^^^^^^^^^^^^^^^ cannot infer type of the type parameter `T` declared on the function `zeroed`
+>>>     |
+>>> help: consider specifying the generic argument
+>>>     |
+>>> 264 |             group <- pin_init::zeroed::<T>().chain(|v: &mut Opaque<bindings::config_group>| {
+>>>     |                                      +++++
+>>>
+>>> error: aborting due to 2 previous errors
+>>>
+>>> For more information about this error, try `rustc --explain E0282`.
+>>>
+>>> Caused by commit
+>>>
+>>>   0bcaea04244b ("rust: pin-init: rename `zeroed` to `init_zeroed`")
+>>>
+>>> I have used the rust-pin-init tree from next-20250606 for today.
+>>
+>> Thanks for catching this! I didn't test with `CONFIG_CONFIGFS=y`, so the
+>> code was cfg'd out... I'll add it to my tests.
+>>
+>> @Andreas I'll send a new version of the commit above with configfs
+>> changed.
+>
+> (sorry forgot to add your emails and also some new info)
+>
+> Actually, the correct change would be this in commit 0bcaea04244b
+> ("rust: pin-init: rename `zeroed` to `init_zeroed`"):
+>
+> diff --git a/rust/kernel/configfs.rs b/rust/kernel/configfs.rs
+> index 34d0bea4f9a5..6d566a8bde74 100644
+> --- a/rust/kernel/configfs.rs
+> +++ b/rust/kernel/configfs.rs
+> @@ -151,7 +151,7 @@ pub fn new(
+>          data: impl PinInit<Data, Error>,
+>      ) -> impl PinInit<Self, Error> {
+>          try_pin_init!(Self {
+> -            subsystem <- pin_init::zeroed().chain(
+> +            subsystem <- pin_init::init_zeroed().chain(
+>                  |place: &mut Opaque<bindings::configfs_subsystem>| {
+>                      // SAFETY: We initialized the required fields of `place.group` above.
+>                      unsafe {
+> @@ -261,7 +261,7 @@ pub fn new(
+>          data: impl PinInit<Data, Error>,
+>      ) -> impl PinInit<Self, Error> {
+>          try_pin_init!(Self {
+> -            group <- pin_init::zeroed().chain(|v: &mut Opaque<bindings::config_group>| {
+> +            group <- pin_init::init_zeroed().chain(|v: &mut Opaque<bindings::config_group>| {
+>                  let place = v.get();
+>                  let name = name.as_bytes_with_nul().as_ptr();
+>                  // SAFETY: It is safe to initialize a group once it has been zeroed.
+>
+> @Miguel, @Andreas, how should I go about this? Send the commit above
+> augmented with the diff, or send a patch with just the diff to the list?
+> Or apply the diff directly to the commit in the pin-init-next branch &
+> rebasing (potentially adding an Acked-by from Andreas)? Or some other
+> way?
 
-On 6/10/25 11:00, Sakari Ailus wrote:
-> Hi Benjamin,
-> 
-> Thanks for the set.
-> 
-> On Mon, Jun 09, 2025 at 03:46:20PM +0200, Benjamin Mugnier wrote:
->> This series provides small fixes and style improvements to the vd55g1
->> driver.
->> Nothing fancy really, just to keep everything up to date.
-> 
-> On all (or at least more than one) patches:
-> 
-> - please add a proper commit message beyond the subject line and
-> 
-> - properly wrap the commit paragraphs (up to 75 characters per line, e.g.
->   the above paragraph would fit on two lines).
-> 
+I think you should add this change directly in your tree. I think you
+should just fold it into the breaking commit so we avoid commits that do
+not build.
 
-Yes, commit descriptions have been added in v2. Media-ci rightfully
-yelled at me for that ;)
+Acked-by: Andreas Hindborg <a.hindborg@kernel.org>
 
-I don't see any commit paragraphs being above 75 characters, my vim
-seems to be properly configured.
-Do you mean the commit header too perhaps ? For example "media: i2c:
-vd55g1: Miscellaneous fixes".
 
--- 
-Regards,
-Benjamin
+Best regards,
+Andreas Hindborg
+
+
+
