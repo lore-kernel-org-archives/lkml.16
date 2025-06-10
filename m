@@ -1,201 +1,107 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549AE1D555;
-	Tue, 10 Jun 2025 08:32:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44CD61D555;
+	Tue, 10 Jun 2025 08:32:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749544338; cv=none; b=P+9icXUhlYMn9oW8zKcwV2gUjR9mQOOGX6qsnN38G9aaCiHfuiCHTBmwDGQ8QakgfzNW0ZK7FkZDvk8awz+qC945EQLgK8Rhv5q/DH3KwHIet5ayVPV5NHcTukpe+tWg4wY2jl8IwYq9CdTWvlQWpgiVBn8T3fw0C3x1kP+JcNY=
+	t=1749544377; cv=none; b=WSJyQj6o3GeY2sw83lscGsK5Ud/uZuEg6hOQqsMua1VPJaX1mtO6UuhzSNV3FCbIp8tsEEemPVmAR0UB3STY87XpXxnrD82MZ4YC6AlJBfnyJ8EHvXLeaGRQngmdzER8fpj6bxH0iGeddC8SSVkC/KHqUQid7KLTer7l1f4rEO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749544338; c=relaxed/simple;
-	bh=Yp+B483bGr5JsxmbsBMlSY4r4Owg2LtMYr+J3QjmBEE=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=Ta3BsKfpIDpmOJz4hAXnNT37Z0Fs7rupKtlKgpSSIoc18d3tPPrrY6jNOzHKPTJmyuAGvhzbHGRptowQ4GIvSAaK7kqal5GAJhxKwYABqGsKu1z+ZSzJgHns3PGmXQXjJ8Dy2si5rnSpZ3XdDRHUrPk5RuAt/gzNv/tuFTXpAAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y/ybdNK1; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749544377; c=relaxed/simple;
+	bh=SeM2fX3V7rJHEICuoUesxqz8Z/Gb6XXlCMnMM8yJjo4=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=LzyNRNp0d9ABMWoimqOC1hZCqQvhHCri7HnKGfsdumfe+KrbPn3M3NtJXlVKCN2xbJBj2UqyVXwTJ6RPw6ZuZ1pVUIAsAB+EyNDvY2yL2GRhfvgdq0ElmN/01ILKSKc690e3+4UFr/ngJP24UwcyW0gmluA+2zs1BPXwCF22L2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oNUnm/0d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y/ybdNK1"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-234fcadde3eso61273345ad.0;
-        Tue, 10 Jun 2025 01:32:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749544337; x=1750149137; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7Zsy+hT9I5m8iP9tXJhRUDsN9FbpKL0q9AU8+LK8cJo=;
-        b=Y/ybdNK1LrzI4BmCu60KFi7vouJYTMB3tpXGrLRK2jP9wh6jSlTAuTv83Q5wh/3d6O
-         h05JU0us2LaQnKilhVhst3Wu1jfFxIq/LkuydUapShZh3eu3iu9iz7Me4ZRWG7YtLP9h
-         Br+ArZ0K6ro7yUUVqPHv6x0JRZbeUYgNu6lYvNTg2xXPpItHUKh/X8X3MNZA7P7lXbpq
-         MKVGlLNN4fg8n9c/0vEUkpx66Mg/czeq4JfBU4l1GPPkWziOY0wc3Km+EuncfsFOTbzK
-         4QCCDSXFY4lbLeYXdBbP3mrqHE3UFKTd9hGQpOwbMS7sWqnPuj6ck+HLqQCoj1dJ0ICX
-         x/zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749544337; x=1750149137;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7Zsy+hT9I5m8iP9tXJhRUDsN9FbpKL0q9AU8+LK8cJo=;
-        b=s52diwMs0Ar2dCIOtOSDBr7AcG/IU4X0ZlVXe4kmEyh7yCujcUPLJuFru0dnR4OQzj
-         Y/X+bS6siz2432P4ToI5N5fqCPFvIeVh08b0zg7FTOEkhPMNsakqwwYifDEF4mFT3puQ
-         jXnZsUGxL91DQYpe35Gmn7gwKk5dKru/nMENZ/N6bAQyAMedIngQ1RzhFReYxqOqN8+d
-         rcTM/QveKr+CRtJZKsZZ+F9nnSrvPrQHT5SPqvlGl5fSFK7INH2jOet7gPkULzMw01mT
-         KnM5HIduTqX5SJtsE3vF3QFdJlbUyL8X8ms4iXEmd+7yi8i8ZJ9MuaDehqXv1ulpfiXo
-         1S0g==
-X-Forwarded-Encrypted: i=1; AJvYcCUz+T4hLmsvQAAbtOqn7hrxn7FJFZ5v6MUVgSHelgKbkCsiPoLEjev/6KWMn5OyyUVamWA2SMY5hK0g@vger.kernel.org, AJvYcCW37eXkPuyl3zb0RlGlBsIzl/AfvqqwY1z78BrSj7oEsW7MeCpKenCrlxNuGeGlWV4+I1K5RmO53jw6kxg=@vger.kernel.org, AJvYcCWCMoz437Ukg73ezSgnoMxkOoyqe5QXBQkXNaKHXCfr4Al7/96DKewXq+nAsBlQTY3N3bgG6E1s@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrzOF0b4SDsigZ25l3T1Z5c7eZZd3oQEPCyQYk0rsgcxPa6WM8
-	SbmdDQFjP6Y0gAa6yhzQrxzNlcGaL8wOOLp1SzQM+zPDcqYNwppgGpSrD7PNu6FfaBDv6Q==
-X-Gm-Gg: ASbGncuRNmhm09AApJtuVXpUhV/+QS0RBVyHy+IaCb0xDVcdB4ZRZArXcsFcAh72W0V
-	pgQMuu+xHMO08CgwKd/z2ai26Hnmtbyh8kfdgt9VeLOdw3/TP/CqNUO3WXNYnPYeJHcHogtgJs3
-	Oj8G0Wd6WiC5ZrDlRejJdPd0mvn11yqKujvYXPyl4Yt+TDY/5Hh/z+3pP+VoKvXtorwQzJRHa9r
-	6HWEh6cupy34WZAPpmy549VblLIWz/JSTbw49GaQBb0uGScZ8ooWsChXIdAOWeoRtuCttRPvb/U
-	OGa6FtfZ1DwKh7rEa9oLUlxkznbYMxZ4Z3e6hvuaeJS6rBH479ZMWsSZ
-X-Google-Smtp-Source: AGHT+IHToBkeQKLwjseAoh6XUM8IfJ5n0alUhBlbLyVmgOB/3nbfZQ9g0uCbffWaw8f6KQ5i7OiNdA==
-X-Received: by 2002:a17:902:dace:b0:234:8ec1:4aea with SMTP id d9443c01a7336-23601deb4bemr230726405ad.52.1749544336540;
-        Tue, 10 Jun 2025 01:32:16 -0700 (PDT)
-Received: from gmail.com ([116.237.168.226])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236032fc9ebsm66175635ad.106.2025.06.10.01.32.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 01:32:16 -0700 (PDT)
-From: Qingfang Deng <dqfext@gmail.com>
-To: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-ppp@vger.kernel.org
-Subject: [PATCH RESEND net-next] ppp: convert to percpu netstats
-Date: Tue, 10 Jun 2025 16:32:10 +0800
-Message-ID: <20250610083211.909015-1-dqfext@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oNUnm/0d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0218C4CEF0;
+	Tue, 10 Jun 2025 08:32:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749544376;
+	bh=SeM2fX3V7rJHEICuoUesxqz8Z/Gb6XXlCMnMM8yJjo4=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=oNUnm/0d0NSyV1KpxCElUMuB7NV/RWA1VylR1xJD38v2VZ4vXD3fAj7l+Purr3T+G
+	 /w/H19u1gmrtKw+9nu9ac/G594YLZ75qXNFE+b+9H7NQ8M5tX3xVKDyBXDZFw7Q3Lu
+	 S9j+gsEf1XeyyIHIGHQ8A2SIsJS+/tNlxu2XN6KS2GwnkIEYEMId6Vacjj8ONvLmxi
+	 oqAVfxRELEdUbuR9ifYUEhSNJooDSuS75RT2mDhOsV6yQ+d5wYsHDZlKjKjshtNQgi
+	 OOHBu58tOtWzhqK7ce88/rmpeD+7hiMN2A1s6BUpimb+E2FhHARmuVa9gP9VgRmosL
+	 WZverJznxiS6w==
+Date: Tue, 10 Jun 2025 03:32:55 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, michal.simek@xilinx.com, 
+ monstr@monstr.eu, 
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, 
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, 
+ "moderated list:ARM/ZYNQ ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
+ linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Conor Dooley <conor+dt@kernel.org>, Srinivas Neeli <srinivas.neeli@amd.com>, 
+ git@xilinx.com
+To: Michal Simek <michal.simek@amd.com>
+In-Reply-To: <dba4f2c39a25b54010c292c36e349cb289d6cd98.1749540869.git.michal.simek@amd.com>
+References: <dba4f2c39a25b54010c292c36e349cb289d6cd98.1749540869.git.michal.simek@amd.com>
+Message-Id: <174954437576.4177094.15371626866789542129.robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: gpio: gpio-xilinx: Mark clocks as
+ required property
 
-Convert to percpu netstats to avoid lock contention when reading them.
 
-Signed-off-by: Qingfang Deng <dqfext@gmail.com>
----
- drivers/net/ppp/ppp_generic.c | 52 +++++++++++++----------------------
- 1 file changed, 19 insertions(+), 33 deletions(-)
+On Tue, 10 Jun 2025 09:34:31 +0200, Michal Simek wrote:
+> On Microblaze platforms there is no need to handle clocks because the
+> system is starting with clocks enabled (can be described via fixed clock
+> node or clock-frequency property or not described at all).
+> With using soft IPs with SOC platforms there is mandatory to handle clocks
+> as is explained in commit 60dbdc6e08d6 ("dt-bindings: net: emaclite: Add
+> clock support").
+> That's why make clock as required in dt binding because it is present in
+> both configurations and should be described even there is no way how to
+> handle it on Microblaze systems.
+> 
+> Signed-off-by: Michal Simek <michal.simek@amd.com>
+> ---
+> 
+> Based on discussion at
+> https://lore.kernel.org/lkml/20241002-revivable-crummy-f780adec538c@spud/
+> 
+> Actually this shouldn't be only targetting GPIO but also for example
+> xlnx,xps-timebase-wdt-1.00.a but I would like to check it first on gpio
+> before starting to check other bindings.
+> 
+> ---
+>  Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-diff --git a/drivers/net/ppp/ppp_generic.c b/drivers/net/ppp/ppp_generic.c
-index a27357bd674e..330c0cd89c15 100644
---- a/drivers/net/ppp/ppp_generic.c
-+++ b/drivers/net/ppp/ppp_generic.c
-@@ -107,18 +107,6 @@ struct ppp_file {
- #define PF_TO_PPP(pf)		PF_TO_X(pf, struct ppp)
- #define PF_TO_CHANNEL(pf)	PF_TO_X(pf, struct channel)
- 
--/*
-- * Data structure to hold primary network stats for which
-- * we want to use 64 bit storage.  Other network stats
-- * are stored in dev->stats of the ppp strucute.
-- */
--struct ppp_link_stats {
--	u64 rx_packets;
--	u64 tx_packets;
--	u64 rx_bytes;
--	u64 tx_bytes;
--};
--
- /*
-  * Data structure describing one ppp unit.
-  * A ppp unit corresponds to a ppp network interface device
-@@ -162,7 +150,6 @@ struct ppp {
- 	struct bpf_prog *active_filter; /* filter for pkts to reset idle */
- #endif /* CONFIG_PPP_FILTER */
- 	struct net	*ppp_net;	/* the net we belong to */
--	struct ppp_link_stats stats64;	/* 64 bit network stats */
- };
- 
- /*
-@@ -1539,23 +1526,12 @@ ppp_net_siocdevprivate(struct net_device *dev, struct ifreq *ifr,
- static void
- ppp_get_stats64(struct net_device *dev, struct rtnl_link_stats64 *stats64)
- {
--	struct ppp *ppp = netdev_priv(dev);
--
--	ppp_recv_lock(ppp);
--	stats64->rx_packets = ppp->stats64.rx_packets;
--	stats64->rx_bytes   = ppp->stats64.rx_bytes;
--	ppp_recv_unlock(ppp);
--
--	ppp_xmit_lock(ppp);
--	stats64->tx_packets = ppp->stats64.tx_packets;
--	stats64->tx_bytes   = ppp->stats64.tx_bytes;
--	ppp_xmit_unlock(ppp);
--
- 	stats64->rx_errors        = dev->stats.rx_errors;
- 	stats64->tx_errors        = dev->stats.tx_errors;
- 	stats64->rx_dropped       = dev->stats.rx_dropped;
- 	stats64->tx_dropped       = dev->stats.tx_dropped;
- 	stats64->rx_length_errors = dev->stats.rx_length_errors;
-+	dev_fetch_sw_netstats(stats64, dev->tstats);
- }
- 
- static int ppp_dev_init(struct net_device *dev)
-@@ -1650,6 +1626,7 @@ static void ppp_setup(struct net_device *dev)
- 	dev->type = ARPHRD_PPP;
- 	dev->flags = IFF_POINTOPOINT | IFF_NOARP | IFF_MULTICAST;
- 	dev->priv_destructor = ppp_dev_priv_destructor;
-+	dev->pcpu_stat_type = NETDEV_PCPU_STAT_TSTATS;
- 	netif_keep_dst(dev);
- }
- 
-@@ -1796,8 +1773,7 @@ ppp_send_frame(struct ppp *ppp, struct sk_buff *skb)
- #endif /* CONFIG_PPP_FILTER */
- 	}
- 
--	++ppp->stats64.tx_packets;
--	ppp->stats64.tx_bytes += skb->len - PPP_PROTO_LEN;
-+	dev_sw_netstats_tx_add(ppp->dev, 1, skb->len - PPP_PROTO_LEN);
- 
- 	switch (proto) {
- 	case PPP_IP:
-@@ -2474,8 +2450,7 @@ ppp_receive_nonmp_frame(struct ppp *ppp, struct sk_buff *skb)
- 		break;
- 	}
- 
--	++ppp->stats64.rx_packets;
--	ppp->stats64.rx_bytes += skb->len - 2;
-+	dev_sw_netstats_rx_add(ppp->dev, skb->len - PPP_PROTO_LEN);
- 
- 	npi = proto_to_npindex(proto);
- 	if (npi < 0) {
-@@ -3303,14 +3278,25 @@ static void
- ppp_get_stats(struct ppp *ppp, struct ppp_stats *st)
- {
- 	struct slcompress *vj = ppp->vj;
-+	int cpu;
- 
- 	memset(st, 0, sizeof(*st));
--	st->p.ppp_ipackets = ppp->stats64.rx_packets;
-+	for_each_possible_cpu(cpu) {
-+		struct pcpu_sw_netstats *p = per_cpu_ptr(ppp->dev->tstats, cpu);
-+		u64 rx_packets, rx_bytes, tx_packets, tx_bytes;
-+
-+		rx_packets = u64_stats_read(&p->rx_packets);
-+		rx_bytes = u64_stats_read(&p->rx_bytes);
-+		tx_packets = u64_stats_read(&p->tx_packets);
-+		tx_bytes = u64_stats_read(&p->tx_bytes);
-+
-+		st->p.ppp_ipackets += rx_packets;
-+		st->p.ppp_ibytes += rx_bytes;
-+		st->p.ppp_opackets += tx_packets;
-+		st->p.ppp_obytes += tx_bytes;
-+	}
- 	st->p.ppp_ierrors = ppp->dev->stats.rx_errors;
--	st->p.ppp_ibytes = ppp->stats64.rx_bytes;
--	st->p.ppp_opackets = ppp->stats64.tx_packets;
- 	st->p.ppp_oerrors = ppp->dev->stats.tx_errors;
--	st->p.ppp_obytes = ppp->stats64.tx_bytes;
- 	if (!vj)
- 		return;
- 	st->vj.vjs_packets = vj->sls_o_compressed + vj->sls_o_uncompressed;
--- 
-2.43.0
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/fpga/fpga-region.example.dtb: gpio@40000000 (xlnx,xps-gpio-1.00.a): 'clocks' is a required property
+	from schema $id: http://devicetree.org/schemas/gpio/xlnx,gpio-xilinx.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/dba4f2c39a25b54010c292c36e349cb289d6cd98.1749540869.git.michal.simek@amd.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
