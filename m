@@ -1,120 +1,117 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43DDF27FD49;
-	Tue, 10 Jun 2025 07:53:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB95522DF9F
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 07:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749542001; cv=none; b=UkTXPps5zUaxZTptMWvxGdyrzYgjE72GIWH4R9nTduUd0TTglOoJAKFdHw8XtFrlniYBK604OU5XWJqQtt6/YLOj8LDUg9/daKn7bZxEGBpWKcYao/4Z8ZkGdXcPJRjgMs7+IbA3FUBKjaKkXmxhjmCmMHFRyCHV50SdJuSYnMg=
+	t=1749542064; cv=none; b=Ba4N2pTgcsPqMjQwqXo9G3hXvj3OM5/5asWjzE0HzqsxBqmiMV4z4OLnbyzJEI0YXtl+shhhYrl9r8A6ncBc5ZPR1Qs+FAJ4t+4V5r0PUtzN7oQC0sf3JoDzSnRRR0eUgVeVqy871S39NUF0lLcktuXMclLeq8+s9r9GzU8Qdfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749542001; c=relaxed/simple;
-	bh=D93wrwrug+T7phvKNJP76KESEMVNJ0xHk87qxJW+p58=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RtOErsfnf1IoI6I7NKcVxor4FI4bR9PmW/TfqhHc9Q4qE+wEb/EHC9cW8WlVOT7aRhwD+LfvZ7UJFIexJ0+Xd4PYOvHqFkRE8PiFFHEuXZ6566Ys2vZ9O6U17x4b3F0Qu0j8S6yrWz71j8cb5SyPCSQAN+0F8AUc7SZHlMpo2dU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jhPOg7zO; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749542064; c=relaxed/simple;
+	bh=mIEKRI0apLmPAPbbXja8YD3Mf1mZuved7FxMZGp6m8w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dBMJMGWOfw0kb05fVvnYJYNRojovB/zWR/ynfWA8luhWNIYDbb8LdL88M4dBDoju03PGg/Y/0aiHBjprqTjeBXdgM0kXuO0p4mHNIzQwkoFnWd0IJ305z+xeovbFT+7EyV12HyKvERGp0xWJWGWcngDwjpgUzCFT1TMA3fNsC1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=NtcNAb9i; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jhPOg7zO"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-442e9c00bf4so41953695e9.3;
-        Tue, 10 Jun 2025 00:53:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749541999; x=1750146799; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=D93wrwrug+T7phvKNJP76KESEMVNJ0xHk87qxJW+p58=;
-        b=jhPOg7zO/p81vdnqNl6+0txTYwf38xXS5VfhA0pDvyDCI2g8eDGzRpHog3x5P5DOwY
-         JR1xzSCZK4rMuK4htmI7SM8IyiJC7FofdDGFQjvZr4dF3lTMquXuy4Y9udHhplkzMF/9
-         Yp58Af3mKJbpzoq8RePRVOwOEcYkP3mcXe4jNltYmACTWq24qojgVcbeEg6QSO5LXpki
-         PX9PU+Fg8U/HHtSxS2pktanKKYN7qJnmDuJB0DyhAMdHleGYNYW2Kal2tvU6XfKdvZzp
-         d9wRtd6WgFcKI1AMXd7vfbxEQfhgT+xpTwu0Bg1Db6K9G0sHRdsZ0GRDUjK/oHPHr7kQ
-         /Ghw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749541999; x=1750146799;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D93wrwrug+T7phvKNJP76KESEMVNJ0xHk87qxJW+p58=;
-        b=vD8esIW8ZKT1SNH4+LjBohULRGTOjjl3P/h4D1yjwJUnTWZAsrNKm/Tiw7SZoaAX9R
-         SCgXUael7OTgqwaMpeVkKh75SF2jhyEcg4ja60VOUTijp+Cm1VE47k1FXoLSGFsiKk/m
-         GlN1Ai4aTh+uX41vFZIdwC2ka6uk8OshNmyyjfDr4LZ7vCAZyQ614CrS67P/HfSK0bjY
-         ilblfrks/hJSKpJya1zHVK5u3LhPYuwcgvw5idZ73V7UDSVMToNEIa56l295QIP/NWyh
-         oRdHGEmHZ1U1NeOswQ6lnlRaKTcsbsjwQSSTRhw4JWVY4q/lKjuONejE5HrBbqgpQu+/
-         HCbg==
-X-Forwarded-Encrypted: i=1; AJvYcCUd17q/+1txeoM7K9S0ftglh9JLZicHz9QVElce8jMWXXsKvHNRNIOcrFXk11Yad04ZNPX7kyogee/aeWjt@vger.kernel.org, AJvYcCV/2wMLisUqs83FaMgDI9KWrBy7Nna2ePMzYqx9GMwICIvHA5H2cMs6pYN3h1Tadf41m4E5Vco+k6qXda8=@vger.kernel.org, AJvYcCW5bsTqhFgE9H0kULnEUYX/NKUH3Te1g9ggB4R6CZOJNZCn2l7h7YCLfGXwbP6sT119SDhOyydDvone@vger.kernel.org, AJvYcCXhXdljLoxXszwMNrmLvG2cq9Dd93vnS/cWevH/HllZYJv2tS/+qlL+Y5o9/8cli1iFLNEF496Oro64@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwuFU3rHgGNzNfR0PJgEQeqVAgvcG8GuiDxmnnpy657bvxWQjv
-	nUWWd8KnjEvbqd7BgeybYj/bUXrs78LK4wHbvw6L7nvxDyH8WEQav05F9lczrg==
-X-Gm-Gg: ASbGncvuMHwcC6Se/B3GGrX0PdofkRPlTiQ1AVJ5id6VRZiDuMtnr5LvRTw9wfjvtQR
-	tFNqpk3k+er20n1Uw0Vfx7pLWXt39r1stvApgnSytKA6FcfGj0ZrLipoSWLtoi4ahFMZ20YrYfp
-	jdgvSRlvIjDSf8cXC9RUBMae5CEjwmwlv9g6y7QeS2AuGUsUa/IEDdBRGlm53jyiHwybQVSyKp0
-	8gtfX4IgHQ+Y8//YLFHOczTNr0myHuP/DnQ4CpHxZOO3rYJTvw4/A/zGw5ZNkxrB6uu6SkBZIbC
-	NQgcF059y3DqJuU61NNGHXx3LGcONMB0ha6Y1Ygd0nDPuokzx57kwV2uh0aeWjF4UxzwGVWEYc3
-	0Hm4lFn85PiEBrsm6NSG71oxMVUe0FU5oGVo+xfhrB6eJ/K2N
-X-Google-Smtp-Source: AGHT+IFh9YhJnqhWDkVmmvuw004LvuNmD2yeN3hYhtP9reA+plSwptUHsmV7EJfZF3m7Whz33ZBByA==
-X-Received: by 2002:a05:600c:8b48:b0:43d:9d5:474d with SMTP id 5b1f17b1804b1-452013141b3mr160712685e9.0.1749541998248;
-        Tue, 10 Jun 2025 00:53:18 -0700 (PDT)
-Received: from orome (p200300e41f281b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1b00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45307b4788fsm83220535e9.21.2025.06.10.00.53.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 00:53:17 -0700 (PDT)
-Date: Tue, 10 Jun 2025 09:53:15 +0200
-From: Thierry Reding <thierry.reding@gmail.com>
-To: Kartik Rajput <kkartik@nvidia.com>
-Cc: akhilrajeev@nvidia.com, andi.shyti@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, jonathanh@nvidia.com, ldewangan@nvidia.com, 
-	digetx@gmail.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 5/5] i2c: tegra: Add Tegra264 support
-Message-ID: <kbfl4ye72chc4avrpjzirh73belp6waue22sa4qypuljjaus44@hpxr5dkthezd>
-References: <20250609093420.3050641-1-kkartik@nvidia.com>
- <20250609093420.3050641-6-kkartik@nvidia.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NtcNAb9i"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55A0tsC9022393;
+	Tue, 10 Jun 2025 07:53:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=nWI2vyz4t9Hm1uJBAIFqKh7zBZp8XHdjbxbhJ0GHS
+	N8=; b=NtcNAb9iGMlLdIFJB6q9fBbueqFYRFuPUs0kmFYiJaIuQG1yRMSfBjQWh
+	QPQ3UAMPIwJeCcfOOIBUAOXp3WjgFctgOFXQmlv1rMZZi4cAQZLctFzi/jeQzlvI
+	6nEo/j59rQyy/61FkLWLUXfobkSqq3RfV/pwzNVr6NRDVfgyL7bz81W4quLCbzWf
+	Enc8oTcebZ7U6pKakAFmndUjymF7/1Xw6k7LgllXVodr7IUWXdC713JTMfKExxPI
+	jc/UUyf7z9ivlKw5f9NpBOUhi3vK/mloWwM7TNdCwNKqdXWuu2raHmQWhSEFJw0r
+	AcgNtAGIrYvUT9WOVEtGimzYN7apg==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4769wyhk2a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Jun 2025 07:53:58 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55A5AHcd028076;
+	Tue, 10 Jun 2025 07:53:57 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47518m9a1d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Jun 2025 07:53:57 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55A7rrWU43254156
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 10 Jun 2025 07:53:53 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8C23F2004D;
+	Tue, 10 Jun 2025 07:53:53 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 49BDC20040;
+	Tue, 10 Jun 2025 07:53:50 +0000 (GMT)
+Received: from li-7bb28a4c-2dab-11b2-a85c-887b5c60d769.ibm.com.com (unknown [9.39.27.113])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 10 Jun 2025 07:53:50 +0000 (GMT)
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+To: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, maddy@linux.ibm.com
+Cc: sshegde@linux.ibm.com, tglx@linutronix.de, bigeasy@linutronix.de,
+        vschneid@redhat.com, dietmar.eggemann@arm.com, rostedt@goodmis.org,
+        linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com
+Subject: [PATCH 0/1] powerpc, arm64: move preempt dynamic key into kernel/sched
+Date: Tue, 10 Jun 2025 13:23:43 +0530
+Message-ID: <20250610075344.1379597-1-sshegde@linux.ibm.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hfqhgukshndrcmfj"
-Content-Disposition: inline
-In-Reply-To: <20250609093420.3050641-6-kkartik@nvidia.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: D934p1EPpeZLVRP5Kqwl-WPSBpTaPzGX
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDA1OCBTYWx0ZWRfX+q998gK2+o81 EvfmeDKzstb0L4QBibqa8pkC6Q/5OXOlWvQbezZSz7okUDsULCW2K0F53law64XzcC3WUkasouK nkDIMPvu6O+C0WNuG0lImhVrE9BFqihwIymnGp/I8ycCWrM+yqZk+HnbVs8WwQ43lXrObRYAV3P
+ EP09TggIBjfmCLHO4HPqxi7NVRBO53cjCleF3Z09Y3k7VdH/FCkE02ex0ENJAENTzp9kluYM6s4 dBvlglvq97nYciWfN1YgGBTgrD25JuR8Ho8rouaGtnfIWq6LbwONGp7fcxs0+bS5lLA8Bdw/u6E STtkV997MgOeanwIRj7FVFQiaoL1miVVQq2t7JTAJrkZJSMS7FX+6kubbBtLlHrVoryuamvm2DZ
+ 71jG+qpgxB/WVz/hzqG0t0U0RPpsPDXJnkajYzvs7W5yUkNtpnh/RQawpF4quxxjqNZCNrJA
+X-Authority-Analysis: v=2.4 cv=YKGfyQGx c=1 sm=1 tr=0 ts=6847e497 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=6IFa9wvqVegA:10 a=cMfPdojDCaELe1LC6y0A:9
+X-Proofpoint-GUID: D934p1EPpeZLVRP5Kqwl-WPSBpTaPzGX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-10_02,2025-06-09_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1011
+ malwarescore=0 bulkscore=0 priorityscore=1501 phishscore=0 mlxscore=0
+ lowpriorityscore=0 impostorscore=0 adultscore=0 mlxlogscore=616
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506100058
 
+Current usage of preempt dynamic key is not specific to architecture and
+can be moved into sched/core instead. Most of the code around it looks
+similar. (same code for powerpc, arm64). 
 
---hfqhgukshndrcmfj
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH v3 5/5] i2c: tegra: Add Tegra264 support
-MIME-Version: 1.0
+Since preemption is more associated with scheduler rather than
+entry/exit, it is probably better that they should be moved. 
 
-On Mon, Jun 09, 2025 at 03:04:20PM +0530, Kartik Rajput wrote:
-> Add support for Tegra264 SoC which supports 17 generic I2C controllers,
-> two of which are in the AON (always-on) partition of the SoC. Tegra264
-> I2C supports all the features supported by Tegra194 I2C controllers.
+This is tested on powerVM PREEMPT_DYNAMIC=y/n. 
 
-Maybe mention here as well that there's an additional SW mutex feature?
-It's not that big a deal, but since you already mention that it's
-similar to Tegra194, might as well be as accurate as possible.
+Only Compile tested on arm64. It would be great if someone can test both 
+PREEMPT_DYNAMIC=y/n configs there.
 
-Thierry
+Shrikanth Hegde (1):
+  sched: preempt: Move dynamic keys into kernel/sched
 
---hfqhgukshndrcmfj
-Content-Type: application/pgp-signature; name="signature.asc"
+ arch/arm64/include/asm/preempt.h   |  1 -
+ arch/arm64/kernel/entry-common.c   |  8 --------
+ arch/powerpc/include/asm/preempt.h | 16 ----------------
+ arch/powerpc/kernel/interrupt.c    |  4 ----
+ include/linux/entry-common.h       |  1 -
+ include/linux/sched.h              |  8 ++++++++
+ kernel/entry/common.c              |  1 -
+ kernel/sched/core.c                |  4 ++++
+ 8 files changed, 12 insertions(+), 31 deletions(-)
+ delete mode 100644 arch/powerpc/include/asm/preempt.h
 
------BEGIN PGP SIGNATURE-----
+-- 
+2.43.0
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmhH5GsACgkQ3SOs138+
-s6EspQ/+PB6DNO8iUCugszKnl/8J65y10Nd+TPJXhkeLJrDX17RbSzbLQc6iBLZx
-GT+RxN3uLVU+bCcun1b5OnG5yH4wK3zKb6WBVga36vlhYPhei83qwzQt3c4w6W6w
-EcgZR9WVSUCjxuEYwqbO66QNwG20CoO+3n6IV34fhaOMLvvekZtvvdQeT8+rQnB8
-WIErkxJHmyphc0i5oPwmPyAdKYLVzs41Vyyod1e5UEEF+xQoMiew9fuaq2eGo9eT
-j9AXFXgCR6y/elW8id3OB+N5V/K5WD0cv9rWusRctXxMBUL/oXXHk8p3HLnU8fOl
-qGPRzweeOiRx+U0+85xgp4E4RGWomKNeifJ9o8h5zieaG5+2P/plAWzPGOVXzfIu
-c1T6vVtAkTwZjLRC2ZmueAytR7sSkOwtJ+uiPRAFD4+6jLc2OGk9kSiuqK+sj2sx
-soeilJLLG3ixHlJCVtNfl9nwG32Vq3roIAjNKNr4LQcS2sospX0PaOmsLH+pbNYL
-35PrCTWHiRy9utj1PY7a7tgj8btPEsazI5a956Evj5o9FLum6oz4FQuKg5CsVGji
-OICNxW5Ij5GHpSN1DrBQiK1XqY2jBA0AuMBV9jAwpj/cbTm758b4OsVt9DI2zwbf
-25a85IkmzVeS1qUNiu0LrkiUinvAOTcvHANfBnOsQwZ1D1eEh4c=
-=7cXs
------END PGP SIGNATURE-----
-
---hfqhgukshndrcmfj--
