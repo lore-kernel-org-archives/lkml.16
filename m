@@ -1,45 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C621A0BCD;
-	Tue, 10 Jun 2025 09:33:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5352327932B;
+	Tue, 10 Jun 2025 09:33:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749547981; cv=none; b=BvwTDvHy/cj/4TM0gysxX2qWyDWydx955CjBD6ymDDKqhaQUzVDXaZff40aOgr6YETwyFeQ6WB9f33RLs/ZiKEepVOmeBDx8v6hH0KuKwMfgTE47NL51LJjxHfajABsXdw6HpVJkVBDYyxo8/5MDepqbnHpssAM6lPiYEIcFJ+Y=
+	t=1749548004; cv=none; b=ZlK6VIwIm3HgAlx55jyLBNtXfIfRDJwtYD2+ifvpmJtLVh26ByaISX8wbWmjHWCag0NlrFvAjri7p4ofkVV7G71F+VpP9FJivoFkWvRfKPjxHUgea6hpGFHyn63yDbN6sGATeLtWIySfSDr5XbHZaKomSI3g6DJzJFNi2vTAnmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749547981; c=relaxed/simple;
-	bh=fQ3YU3S3K3ivEsEdGjJAl8Hbmyr8jXeJ3oVd0bc1t4c=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lTPIis11m07SzEPGWQ1JuYF6sejdWKX0JNzZlAybIrx5PiecowyjDdanpLTzrS8+MlroCxnPlqNPHab7mQYhbDgTEXZONmX23WCekiOjCANA06CeIgx6FDikpe2hA/pKRGuxE8ALz62HuQds5L5XkauzGmna7cGjEaL3/CgE5O0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OOQ4t51x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749548004; c=relaxed/simple;
+	bh=zNN0eejY+X+7qAhM6CbxXgiYLfuOJd8ve4l7TZYflQk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RsFhA5qQoy6jLxvA5gtwg8YtlBZoW3HJ5s7eEO8uzw/n48xWc/sRpAzB1JoXohGdFVrZAEHKYuph/ZqvMb3p8N0DHuVA5813I9JqcAeJWAfSZJCdC/QwWn2TH4OHbzxaDvMzx23QwlOlqmgAELKbFbbDEC9iLZwh7G9a/StZVnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fG5GlWI6; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OOQ4t51x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0275C4CEF2;
-	Tue, 10 Jun 2025 09:32:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749547980;
-	bh=fQ3YU3S3K3ivEsEdGjJAl8Hbmyr8jXeJ3oVd0bc1t4c=;
-	h=From:To:Cc:Subject:Date:From;
-	b=OOQ4t51xOrl2MR9zgyKltjt8xczIDYR5Nszf6WA7xXdzs4uRcv6qQcpMD3+Hd/6Mq
-	 mToGH3k8Pscs8UM74vbCjPK38LWLhlOBYPyvHrKv2ZRsfx0QAD8VH3IitkoKXOUCCW
-	 909llaiuo5FQB35n1ZXLYra6ufiBoQfdWTktXSDRheltD4B0M3TeqYi7T4v3C6I1gA
-	 F88+rq7jNcEVgaVcfG1oK9rs55ZuN7OCSdxo4YuRRphGINTSojY8H8LaROGxvbtB8x
-	 wmK3WdJeHhYEKWl1iKMmvkeIwWuGGNDuzPmXg5kXoAEzRX36Qk9gJXKxbkPtYy+FwO
-	 ndLtwxuJf7riQ==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Russell King <linux@armlinux.org.uk>,
-	Ard Biesheuvel <ardb@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Eric Biggers <ebiggers@google.com>,
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-	linux-crypto@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: crypto: work around gcc-15 warning
-Date: Tue, 10 Jun 2025 11:32:52 +0200
-Message-Id: <20250610093256.2645686-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fG5GlWI6"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-74801bc6dc5so3915237b3a.1;
+        Tue, 10 Jun 2025 02:33:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749548002; x=1750152802; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CNSudlG3ysxSQUKi9DeeYCziT/mmBj7TTed2wWkCGzU=;
+        b=fG5GlWI6lGYw3t9wlX5A9j8Vj8QOl9oXd0o9YBOQaA6T8vTwKN/+3lYQ/Sqc7E+UTL
+         PaKasSt9PxbWykfXhiKCxv2G32m4Ru+A4cg+/rD2RFC/aoGPbH/HiYchrRnnAqgFclgy
+         tQf1kAzXxSOdSrXQssSpjz2pvc5r3JKxuNZlRwcpKFLFOGfAAac/duMAVAqcEzkovVPc
+         4DGVbIbBFNXEYI+igoapmHGR8srtghNPxrWpEd+zJ/UgoNWezhoE0WWlH+doPmllQyyy
+         +S9uFKhipP72tiEieBSVy9YrL/RvTZArXmKJd29DAltfFJ3SM3vqCLQyy6d4c0qlRogk
+         3MgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749548002; x=1750152802;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CNSudlG3ysxSQUKi9DeeYCziT/mmBj7TTed2wWkCGzU=;
+        b=Gild7iFbapYvzQ7selw53Dq3N1n1xmDx0YvndPmw8g6Zv2Jp8YBpirhR687l6TkB0Y
+         nDBFXCFUMrbQpntI6/KTgzR7iC+L97XVj9Nx6d3HMbBNKa2jnUpph7Wb78e7SC0gSIBo
+         6sgxIEpbiJuk81Rlza6ya5pSgaDO0bTL8ACl1AQ6aW6iFLFsCu1d/kfZ9OcA15loB4L/
+         +53qLY/73clx/TY92YnYkl97jzCT4ZKCbBeib2VZ+dUNwkqxa2gm64Z/mjeosdrdCBeE
+         4P34vlOAFiK62AIUxhUPqY8/q6fZPMiwiluew6f9HZWUy7wEnMZW+/Bi1acoFe3KooHv
+         oHYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV6cnMRBCSsjJpb+0ueDKlNQ7HgOFVaHn57iyiwobENDnvmfc0oO84HyuzQKyRtY5Us0JH7Nbhdf4VEttc=@vger.kernel.org, AJvYcCXa7ydtdrObgVmWsomDDffLdQXB8AS08ZmiCnadrAcyEIE3Z4zmXcx5CT4P6EsOMmG5Q5u0Xv/CejrerNHZG2M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmuieEQVBvUuabM+d3L6+NTBVIzaFspG/Les3iYa7YJuToX0b4
+	wD1p5yEWYWSl122fe0juKi1voJOZiAgKLiZKQJ5i7gJMIMjvzV8X9MBc/xptUQAk
+X-Gm-Gg: ASbGncvSdOpXz3xtg57YAKdlxszVUtZ+wxuE01DRb0Nzd9VJfZ93tCc6rEulY1eaMXJ
+	pM8LcQqX+SUoaDDKWngaeOFUhQiVH747dDTooMyyeS3CUYpbKQNhCY/EP0+OriETK06D1hYKuBp
+	IBt7zPGbE5IEV+R84G5XPIZWm6i2Bh2shBZWbtx+pe5MtP72MMxE6wAUlaBSE1LnDIKTFL7OfV7
+	SO6ycWmM3B7br6PMqTkqnlNziCDpJUJG3vnuX21nLQ4Fa/5BlCap1becOh/aaaHO5aAcfCRisQv
+	S2KljKwcFjyNK0gwtVndoJgsV6vsKO+4mUQuPC25UvwtEIqjhfhSRYZAKulOql8aa92jfN7Hpof
+	u2NEUuTytidkeBsmF8NrwJYfVerxwNo2Uoyg=
+X-Google-Smtp-Source: AGHT+IG1bZlm4T8Afh30fG2yXwbVPeNW6YXs7IeGaHbunHkpddYKs7K3GbYuF/PP+6pB74HtRqI4BQ==
+X-Received: by 2002:a05:6a00:4647:b0:73d:f9d2:9c64 with SMTP id d2e1a72fcca58-7485ea7eff9mr4106404b3a.10.1749548002442;
+        Tue, 10 Jun 2025 02:33:22 -0700 (PDT)
+Received: from bee.. (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b0847e9sm7037684b3a.87.2025.06.10.02.33.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 02:33:22 -0700 (PDT)
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+To: a.hindborg@kernel.org,
+	alex.gaynor@gmail.com,
+	ojeda@kernel.org
+Cc: aliceryhl@google.com,
+	anna-maria@linutronix.de,
+	bjorn3_gh@protonmail.com,
+	boqun.feng@gmail.com,
+	dakr@kernel.org,
+	frederic@kernel.org,
+	gary@garyguo.net,
+	jstultz@google.com,
+	linux-kernel@vger.kernel.org,
+	lossin@kernel.org,
+	lyude@redhat.com,
+	rust-for-linux@vger.kernel.org,
+	sboyd@kernel.org,
+	tglx@linutronix.de,
+	tmgross@umich.edu
+Subject: [PATCH v4 0/3] rust: time: Introduce typed clock sources and generalize Instant
+Date: Tue, 10 Jun 2025 18:32:53 +0900
+Message-ID: <20250610093258.3435874-1-fujita.tomonori@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,49 +87,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+This patch series introduces a type-safe abstraction over clock
+sources. The goal is to remove the need for runtime clock selection
+(via ClockId) and instead leverage Rust's type system to statically
+associate the Instant type with a specific clock.
 
-I get a very rare -Wstringop-overread warning with gcc-15 for one function
-in aesbs_ctr_encrypt():
+This approach enables compile-time enforcement of clock correctness
+across the APIs of Instant type.
 
-arch/arm/crypto/aes-neonbs-glue.c: In function 'ctr_encrypt':
-arch/arm/crypto/aes-neonbs-glue.c:212:1446: error: '__builtin_memcpy' offset [17, 2147483647] is out of the bounds [0, 16] of object 'buf' with type 'u8[16]' {aka 'unsigned char[16]'} [-Werror=array-bounds=]
-  212 |                         src = dst = memcpy(buf + sizeof(buf) - bytes,
-arch/arm/crypto/aes-neonbs-glue.c: In function 'ctr_encrypt':
-arch/arm/crypto/aes-neonbs-glue.c:218:17: error: 'aesbs_ctr_encrypt' reading 1 byte from a region of size 0 [-Werror=stringop-overread]
-  218 |                 aesbs_ctr_encrypt(dst, src, ctx->rk, ctx->rounds, bytes, walk.iv);
-      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-arch/arm/crypto/aes-neonbs-glue.c:218:17: note: referencing argument 2 of type 'const u8[0]' {aka 'const unsigned char[]'}
-arch/arm/crypto/aes-neonbs-glue.c:218:17: note: referencing argument 3 of type 'const u8[0]' {aka 'const unsigned char[]'}
-arch/arm/crypto/aes-neonbs-glue.c:218:17: note: referencing argument 6 of type 'u8[0]' {aka 'unsigned char[]'}
-arch/arm/crypto/aes-neonbs-glue.c:36:17: note: in a call to function 'aesbs_ctr_encrypt'
-   36 | asmlinkage void aesbs_ctr_encrypt(u8 out[], u8 const in[], u8 const rk[],
+v4:
+- make a one-to-one mapping between Rust helper functions and their C counterparts
+v3: https://lore.kernel.org/rust-for-linux/20250609010415.3302835-1-fujita.tomonori@gmail.com/
+- rebased on 6.16-rc1
+v2: https://lore.kernel.org/rust-for-linux/20250504042436.237756-1-fujita.tomonori@gmail.com/
+- removed most of changes to hrtimer code 
+v1: https://lore.kernel.org/rust-for-linux/20250413105629.162349-1-fujita.tomonori@gmail.com/
 
-This could happen in theory if walk.nbytes is larger than INT_MAX and gets
-converted to a negative local variable.
 
-Keep the type unsigned like the orignal nbytes to be sure there is no
-integer overflow.
+FUJITA Tomonori (3):
+  rust: time: Replace ClockId enum with ClockSource trait
+  rust: time: Make Instant generic over ClockSource
+  rust: time: Add ktime_get() to ClockSource trait
 
-Fixes: c8bf850e991a ("crypto: arm/aes-neonbs-ctr - deal with non-multiples of AES block size")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/crypto/aes-neonbs-glue.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ rust/helpers/helpers.c      |   1 +
+ rust/helpers/time.c         |  18 ++++
+ rust/kernel/time.rs         | 201 ++++++++++++++++++++++--------------
+ rust/kernel/time/hrtimer.rs |   6 +-
+ 4 files changed, 148 insertions(+), 78 deletions(-)
+ create mode 100644 rust/helpers/time.c
 
-diff --git a/arch/arm/crypto/aes-neonbs-glue.c b/arch/arm/crypto/aes-neonbs-glue.c
-index c60104dc1585..df5afe601e4a 100644
---- a/arch/arm/crypto/aes-neonbs-glue.c
-+++ b/arch/arm/crypto/aes-neonbs-glue.c
-@@ -206,7 +206,7 @@ static int ctr_encrypt(struct skcipher_request *req)
- 	while (walk.nbytes > 0) {
- 		const u8 *src = walk.src.virt.addr;
- 		u8 *dst = walk.dst.virt.addr;
--		int bytes = walk.nbytes;
-+		unsigned int bytes = walk.nbytes;
- 
- 		if (unlikely(bytes < AES_BLOCK_SIZE))
- 			src = dst = memcpy(buf + sizeof(buf) - bytes,
+
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
 -- 
-2.39.5
+2.43.0
 
