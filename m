@@ -1,316 +1,238 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3D11E521B
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:16:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 245DF21578D;
+	Tue, 10 Jun 2025 08:18:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749543408; cv=none; b=VOMjCZuPDdtBafhYwv9lDBrOTnqu6PEvrdSq1bKOcNnuLCtzNjSk0TXVRqCQjVTIQy95OFaGsJ6XefiYI1V8b6GBKV/Gl/DK3+9oaqQUlmeXfNJxenOuIIZHWNpfWr2HVeZvmHtfSEGYcqie6wBMJIWAIs2JN77ec+0Zdc4Vtg0=
+	t=1749543520; cv=none; b=Iav9A7NZ4s2k2QRsmQWO52ew1/OU9acb0VpDd0DpAlKt2JPFb5GbL78VjFCtqqbx4SHLKqaHnGlyl5lsZgk4AB49pGLbDQf5yq0nHJNFalFqyLD8mtAoUMrhEneprRz8S1z4tA6LUlIJSMuGxPPTzlPBCd/efGMB4gS2Ciba/Ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749543408; c=relaxed/simple;
-	bh=yLuTk1D3F+8fvhU0ILsHffISVNBXEXKhzaEuKpWC7nQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QKkDeG21iuWqGHxF5H0xXu9S6eDC05GmyquRrTPxLmHeQ2VASacApwrYKGHyd0cy5XGkOcj3D0GQDQZ/QEgiIhjM/bEkYJ5gaYZ/PB6Xtlx6bomaavv+XX1Dn7Yjf1j1oCKmVTZ2QU/SC/1ofSlSDl2FyoYcsw1JKBP2D4LI7YQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oVv8fw4O; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749543520; c=relaxed/simple;
+	bh=0O8yujLEJLMJ3hUgzFfiYx8X6y8n0uKkiblzYtmGvtw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Skv6e4+unATqlVJKoypkA8GMT6wbvGHV9k33N2tXQKUr5h15xiNSdZWJvsvXgDCfpLs/Rwzt5vQxoJdNtk76gQFkTHhpxp+ixnlbREEjT7fWi+SNoV3AGjn1vpt2sMH9nPWiwX3XLBtAUxNNvqc4FCSQymi5E3gZ+NKRCFIEYkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jO4QuuS+; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oVv8fw4O"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-6077dea37easo6024794a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 01:16:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749543404; x=1750148204; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cv44LS1sjh21HGfbYeFYKcPOsKyzLkV/r1e8mW8y0Os=;
-        b=oVv8fw4OcZH2hHsDspDDPb0Pt2Rqq4tVPHRGeOy9j3BMALzSuy7qg1G/IBpQjpNQK6
-         wAE4EYdGibRdm75V1PfcNhWsAdNXG9eZ7QOzPZGvjRBqur5tqd49iH0Va6i1RTKbt2Ii
-         lBZXbO3DJnWl5lk7VLOfB5LBLZogrEENFJsa5UlrvWr6IsksAn27WBH5s30dlwMJPDlE
-         5u0tx4JYplbDWDbticV+ybUSCZARd5LSzaWM2Mt7qipO7S5qow0D9aq9Oj4T0v6pVJj0
-         aw9lKxxXJ7shkO+tC8sF+B7nYe/3hp/GbDMNeOhAO8cOwmV0PArarPzWnoJHgDEwEFRF
-         Fsqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749543404; x=1750148204;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cv44LS1sjh21HGfbYeFYKcPOsKyzLkV/r1e8mW8y0Os=;
-        b=prH0MQY54oqWsdUB/6B3LlCF8ZspRWBkr8042IdFSeGlPx9QKJl102/wnDQw+EBoY2
-         aoUMSjToD2no3T3qO2HF+sJpFZNJBv0O0haL2Ft705OGkXFc1gTZmybLcwEe7jnDbHvW
-         KIJtE3vFh+HKhsBrbrdSfGBPFk7BlBdndSwagQpB1YjnE0q6JZsPNOiWyd3fwcC9TCfn
-         pLf3Alat7N52G+a3Xpi2bGh63YQ6J+vbkp7lq1EMRqWZK1nlhaidIv7RT28VGZtWBqkS
-         fjkVsS/7EbhkK2wBaT2lzwMktNUZSSBH65JV3qULcr5xBO+SFI8kiIxE0molniTFTXcF
-         AZCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXmOkPDbeYVOu5iSAbz9y9OBlky200I2UNIXrknDyKXiVbGwrIxBsdw3T8eM2cvu65slLUi8neJAqbsgI0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpXEy2vuJSXrzUmYEy/SIZQTtaQ/fmXle97WBYFV/XDnseAToL
-	YoRqClf/q3EivpPs3mMjAtc75kGOi6bEjAp8Tbh45zr/YdBUFGuh8vvkB/UgcgAbEoc=
-X-Gm-Gg: ASbGncv4OmCWd2/nmm26knb452gKvY6iVCYq/Jq+qsc7Atmhurhx5mvFNcDUyZqFvA+
-	THc54j6h2/z6AxeC97bU8vsIkBSaccKayUay2y45PuAZd9WUoA2ovGmZgrTGq4lD44XLaZJW6R1
-	Fo10hiQvTW1CdvwgnJcD9WAe9iHffKTYeUFaKryf+MLjyfV/jdfmfQhD6Hr8gsZb7WmRFVHRIOt
-	TADax2HJ1I2+nDBXXiNd50bBweN44qF0kmb5AoKIsoM0NO/4ZpoXUjLM9U5LjiQ2BppoOQr7ow3
-	woVLCszFDPysnb5qS+PxCR7WwI85jNeM//LmQmIvii9Ab3Epitf3wZNJLcXnRSyeiKvdKA==
-X-Google-Smtp-Source: AGHT+IHpCrdRekIe0QYCDgcZtAAoXKuOovlRwWiNArYZwW7mCqUJLOpQ8BUhEtpViMRKEjRU6TLGIA==
-X-Received: by 2002:a17:907:1ca2:b0:add:fc26:c1c4 with SMTP id a640c23a62f3a-ade1a9ed855mr1546064966b.59.1749543403926;
-        Tue, 10 Jun 2025 01:16:43 -0700 (PDT)
-Received: from linaro.org ([62.231.96.41])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1db576basm689286766b.65.2025.06.10.01.16.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 01:16:41 -0700 (PDT)
-Date: Tue, 10 Jun 2025 11:16:40 +0300
-From: Abel Vesa <abel.vesa@linaro.org>
-To: bjorn.andersson@oss.qualcomm.com
-Cc: Jeff Johnson <jjohnson@kernel.org>,
-	Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>,
-	Mahendran P <quic_mahep@quicinc.com>,
-	Rameshkumar Sundaram <rameshkumar.sundaram@oss.qualcomm.com>,
-	linux-arm-msm@vger.kernel.org,
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-	linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] wifi: ath12k: Avoid CPU busy-wait by handling VDEV_STAT
- and BCN_STAT
-Message-ID: <aEfp6B97gwAeeOs3@linaro.org>
-References: <20250609-ath12k-fw-stats-done-v1-1-2b3624656697@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jO4QuuS+"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 57B464426E;
+	Tue, 10 Jun 2025 08:18:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1749543515;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=0LzaDuer9xNWjAddXjLU6iPOUE3PiHIk5+pn0I9K6wQ=;
+	b=jO4QuuS+a5O24WThoIYuFwA9x+6PkLFXHYythzHObGmD7fdH3sIFh5+8NRdT62+P6fqdsQ
+	DPKBQk7aozNSwYh0LQnOMckCSYj7rPMno9cIHtCfjgn6hbF/8sAtuxGZagdMuiDghiNw96
+	jqYmvbTqn8eDw+Cf4wn4Rb4/kNNG6d1PhHGm1bi2+zaWJ91f83hfavM5AvD9qadnfe8H87
+	WSM4pb7UxwNDsnVlGzOs42vahY3EH7870uDH2WCcRrHeLSdvfDXLwXguRHFfdIEJp+CPEw
+	/J5Q4twYyfZ7E73jT9y4SVko2umiptJGV727zr5lgmsMHotTJv7a/XiImPc1pg==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Subject: [PATCH net-next v13 00/13] Add support for PSE budget evaluation
+ strategy
+Date: Tue, 10 Jun 2025 10:11:34 +0200
+Message-Id: <20250610-feature_poe_port_prio-v13-0-c5edc16b9ee2@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250609-ath12k-fw-stats-done-v1-1-2b3624656697@oss.qualcomm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIALfoR2gC/3XSzW7DIAwA4FepOC8T5s+w095jmioCZkXakirJo
+ k5V330k0tRoKQcOYPFhY1/ZSEOmkb0crmygOY+578oG5NOBhZPvPqjJsRwwwYXiDmSTyE/fAx3
+ P/bKG6Xgect94DZ4iSikosHL3PFDKlxV+Yx1NTUeXib2XyCmPUz/8rC/OsMYXGzgXFXuGhjdok
+ WuVUFHUr23fT5+5ew7912rOYuNIXnNEcZzWzghBpNDvHXl3QEDNkcWxUjiXvHEGw95Rf47mJaG
+ ao4oTgwMvAw9gce/ouyPA1hxdHBm9soZ0ikbtHbw7ilcdXP4n6RQclepC3Dt244CpObY4SpkgX
+ QwSpd07buOIat/d4gCmwDlqFA/yAX6HNK8mBLxIWht05ZOcTu6BBBtJVEcIlllsW5+UQoJWPKg
+ NxFZSVWmZxmiWhkFM6P91/3a7/QJC9sZYnQMAAA==
+To: Andrew Lunn <andrew@lunn.ch>, Oleksij Rempel <o.rempel@pengutronix.de>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Jonathan Corbet <corbet@lwn.net>, Donald Hunter <donald.hunter@gmail.com>, 
+ Rob Herring <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+ Simon Horman <horms@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
+ linux-doc@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>, 
+ Dent Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de, 
+ Maxime Chevallier <maxime.chevallier@bootlin.com>, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "Kory Maincent (Dent Project)" <kory.maincent@bootlin.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.15-dev-8cb71
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddutdeglecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffufffkgggtgffvvefosehtkeertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepudfhveduteffgfekvdfhveehgeehtdelgefhffduiefffedvheefgeeiiedvkeetnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvkedprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepuggvnhhtphhrohhjvggttheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhli
+ hhnrdgtohhmpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepohdrrhgvmhhpvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggv
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On 25-06-09 22:06:22, Bjorn Andersson via B4 Relay wrote:
-> From: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-> 
-> When the ath12k driver is built without CONFIG_ATH12K_DEBUG, the
-> recently refactored stats code can cause any user space application
-> (such at NetworkManager) to consume 100% CPU for 3 seconds, every time
-> stats are read.
-> 
-> Commit 'b8a0d83fe4c7 ("wifi: ath12k: move firmware stats out of
-> debugfs")' moved ath12k_debugfs_fw_stats_request() out of debugfs, by
-> merging the additional logic into ath12k_mac_get_fw_stats().
-> 
-> Among the added responsibility of ath12k_mac_get_fw_stats() was the
-> busy-wait for `fw_stats_done`.
-> 
-> Signalling of `fw_stats_done` happens when one of the
-> WMI_REQUEST_PDEV_STAT, WMI_REQUEST_VDEV_STAT, and WMI_REQUEST_BCN_STAT
-> messages are received, but the handling of the latter two commands remained
-> in the debugfs code. As `fw_stats_done` isn't signalled, the calling
-> processes will spin until the timeout (3 seconds) is reached.
-> 
-> Moving the handling of these two additional responses out of debugfs
-> resolves the issue.
-> 
-> Fixes: b8a0d83fe4c7 ("wifi: ath12k: move firmware stats out of debugfs")
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 
-Tested on Dell XPS 13 9345.
+This series brings support for budget evaluation strategy in the PSE
+subsystem. PSE controllers can set priorities to decide which ports should
+be turned off in case of special events like over-current.
 
-Tested-by: Abel Vesa <abel.vesa@linaro.org>
+This patch series adds support for two budget evaluation strategy.
+1. Static Method:
 
-> ---
->  drivers/net/wireless/ath/ath12k/debugfs.c | 58 --------------------------
->  drivers/net/wireless/ath/ath12k/debugfs.h |  7 ----
->  drivers/net/wireless/ath/ath12k/wmi.c     | 67 +++++++++++++++++++++++++++----
->  3 files changed, 60 insertions(+), 72 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/ath/ath12k/debugfs.c b/drivers/net/wireless/ath/ath12k/debugfs.c
-> index dd624d73b8b2714e77c9d89b5a52f7b3fcb02951..23da93afaa5c25e806c9859dbbdd796afd23d78a 100644
-> --- a/drivers/net/wireless/ath/ath12k/debugfs.c
-> +++ b/drivers/net/wireless/ath/ath12k/debugfs.c
-> @@ -1251,64 +1251,6 @@ void ath12k_debugfs_soc_destroy(struct ath12k_base *ab)
->  	 */
->  }
->  
-> -void
-> -ath12k_debugfs_fw_stats_process(struct ath12k *ar,
-> -				struct ath12k_fw_stats *stats)
-> -{
-> -	struct ath12k_base *ab = ar->ab;
-> -	struct ath12k_pdev *pdev;
-> -	bool is_end;
-> -	static unsigned int num_vdev, num_bcn;
-> -	size_t total_vdevs_started = 0;
-> -	int i;
-> -
-> -	if (stats->stats_id == WMI_REQUEST_VDEV_STAT) {
-> -		if (list_empty(&stats->vdevs)) {
-> -			ath12k_warn(ab, "empty vdev stats");
-> -			return;
-> -		}
-> -		/* FW sends all the active VDEV stats irrespective of PDEV,
-> -		 * hence limit until the count of all VDEVs started
-> -		 */
-> -		rcu_read_lock();
-> -		for (i = 0; i < ab->num_radios; i++) {
-> -			pdev = rcu_dereference(ab->pdevs_active[i]);
-> -			if (pdev && pdev->ar)
-> -				total_vdevs_started += pdev->ar->num_started_vdevs;
-> -		}
-> -		rcu_read_unlock();
-> -
-> -		is_end = ((++num_vdev) == total_vdevs_started);
-> -
-> -		list_splice_tail_init(&stats->vdevs,
-> -				      &ar->fw_stats.vdevs);
-> -
-> -		if (is_end) {
-> -			ar->fw_stats.fw_stats_done = true;
-> -			num_vdev = 0;
-> -		}
-> -		return;
-> -	}
-> -	if (stats->stats_id == WMI_REQUEST_BCN_STAT) {
-> -		if (list_empty(&stats->bcn)) {
-> -			ath12k_warn(ab, "empty beacon stats");
-> -			return;
-> -		}
-> -		/* Mark end until we reached the count of all started VDEVs
-> -		 * within the PDEV
-> -		 */
-> -		is_end = ((++num_bcn) == ar->num_started_vdevs);
-> -
-> -		list_splice_tail_init(&stats->bcn,
-> -				      &ar->fw_stats.bcn);
-> -
-> -		if (is_end) {
-> -			ar->fw_stats.fw_stats_done = true;
-> -			num_bcn = 0;
-> -		}
-> -	}
-> -}
-> -
->  static int ath12k_open_vdev_stats(struct inode *inode, struct file *file)
->  {
->  	struct ath12k *ar = inode->i_private;
-> diff --git a/drivers/net/wireless/ath/ath12k/debugfs.h b/drivers/net/wireless/ath/ath12k/debugfs.h
-> index ebef7dace3448e4bdf2d6cb155d089267315172c..21641a8a03460c6cc1b34929a353e5605bb834ce 100644
-> --- a/drivers/net/wireless/ath/ath12k/debugfs.h
-> +++ b/drivers/net/wireless/ath/ath12k/debugfs.h
-> @@ -12,8 +12,6 @@ void ath12k_debugfs_soc_create(struct ath12k_base *ab);
->  void ath12k_debugfs_soc_destroy(struct ath12k_base *ab);
->  void ath12k_debugfs_register(struct ath12k *ar);
->  void ath12k_debugfs_unregister(struct ath12k *ar);
-> -void ath12k_debugfs_fw_stats_process(struct ath12k *ar,
-> -				     struct ath12k_fw_stats *stats);
->  void ath12k_debugfs_op_vif_add(struct ieee80211_hw *hw,
->  			       struct ieee80211_vif *vif);
->  void ath12k_debugfs_pdev_create(struct ath12k_base *ab);
-> @@ -126,11 +124,6 @@ static inline void ath12k_debugfs_unregister(struct ath12k *ar)
->  {
->  }
->  
-> -static inline void ath12k_debugfs_fw_stats_process(struct ath12k *ar,
-> -						   struct ath12k_fw_stats *stats)
-> -{
-> -}
-> -
->  static inline bool ath12k_debugfs_is_extd_rx_stats_enabled(struct ath12k *ar)
->  {
->  	return false;
-> diff --git a/drivers/net/wireless/ath/ath12k/wmi.c b/drivers/net/wireless/ath/ath12k/wmi.c
-> index 60e2444fe08cefa39ae218d07eb9736d2a0c982b..2d2444417e2b2d9281754d113f2b073034e27739 100644
-> --- a/drivers/net/wireless/ath/ath12k/wmi.c
-> +++ b/drivers/net/wireless/ath/ath12k/wmi.c
-> @@ -7626,6 +7626,63 @@ static int ath12k_wmi_pull_fw_stats(struct ath12k_base *ab, struct sk_buff *skb,
->  				   &parse);
->  }
->  
-> +static void ath12k_wmi_fw_stats_process(struct ath12k *ar,
-> +					struct ath12k_fw_stats *stats)
-> +{
-> +	struct ath12k_base *ab = ar->ab;
-> +	struct ath12k_pdev *pdev;
-> +	bool is_end;
-> +	static unsigned int num_vdev, num_bcn;
-> +	size_t total_vdevs_started = 0;
-> +	int i;
-> +
-> +	if (stats->stats_id == WMI_REQUEST_VDEV_STAT) {
-> +		if (list_empty(&stats->vdevs)) {
-> +			ath12k_warn(ab, "empty vdev stats");
-> +			return;
-> +		}
-> +		/* FW sends all the active VDEV stats irrespective of PDEV,
-> +		 * hence limit until the count of all VDEVs started
-> +		 */
-> +		rcu_read_lock();
-> +		for (i = 0; i < ab->num_radios; i++) {
-> +			pdev = rcu_dereference(ab->pdevs_active[i]);
-> +			if (pdev && pdev->ar)
-> +				total_vdevs_started += pdev->ar->num_started_vdevs;
-> +		}
-> +		rcu_read_unlock();
-> +
-> +		is_end = ((++num_vdev) == total_vdevs_started);
-> +
-> +		list_splice_tail_init(&stats->vdevs,
-> +				      &ar->fw_stats.vdevs);
-> +
-> +		if (is_end) {
-> +			ar->fw_stats.fw_stats_done = true;
-> +			num_vdev = 0;
-> +		}
-> +		return;
-> +	}
-> +	if (stats->stats_id == WMI_REQUEST_BCN_STAT) {
-> +		if (list_empty(&stats->bcn)) {
-> +			ath12k_warn(ab, "empty beacon stats");
-> +			return;
-> +		}
-> +		/* Mark end until we reached the count of all started VDEVs
-> +		 * within the PDEV
-> +		 */
-> +		is_end = ((++num_bcn) == ar->num_started_vdevs);
-> +
-> +		list_splice_tail_init(&stats->bcn,
-> +				      &ar->fw_stats.bcn);
-> +
-> +		if (is_end) {
-> +			ar->fw_stats.fw_stats_done = true;
-> +			num_bcn = 0;
-> +		}
-> +	}
-> +}
-> +
->  static void ath12k_update_stats_event(struct ath12k_base *ab, struct sk_buff *skb)
->  {
->  	struct ath12k_fw_stats stats = {};
-> @@ -7655,19 +7712,15 @@ static void ath12k_update_stats_event(struct ath12k_base *ab, struct sk_buff *sk
->  
->  	spin_lock_bh(&ar->data_lock);
->  
-> -	/* WMI_REQUEST_PDEV_STAT can be requested via .get_txpower mac ops or via
-> -	 * debugfs fw stats. Therefore, processing it separately.
-> -	 */
-> +	/* Handle WMI_REQUEST_PDEV_STAT status update */
->  	if (stats.stats_id == WMI_REQUEST_PDEV_STAT) {
->  		list_splice_tail_init(&stats.pdevs, &ar->fw_stats.pdevs);
->  		ar->fw_stats.fw_stats_done = true;
->  		goto complete;
->  	}
->  
-> -	/* WMI_REQUEST_VDEV_STAT and WMI_REQUEST_BCN_STAT are currently requested only
-> -	 * via debugfs fw stats. Hence, processing these in debugfs context.
-> -	 */
-> -	ath12k_debugfs_fw_stats_process(ar, &stats);
-> +	/* Handle WMI_REQUEST_VDEV_STAT and WMI_REQUEST_BCN_STAT updates. */
-> +	ath12k_wmi_fw_stats_process(ar, &stats);
->  
->  complete:
->  	complete(&ar->fw_stats_complete);
-> 
-> ---
-> base-commit: 4f27f06ec12190c7c62c722e99ab6243dea81a94
-> change-id: 20250609-ath12k-fw-stats-done-dca8bf77a7da
-> 
-> Best regards,
-> -- 
-> Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-> 
-> 
-> 
+   This method involves distributing power based on PD classification.
+   It’s straightforward and stable, the PSE core keeping track of the
+   budget and subtracting the power requested by each PD’s class.
+
+   Advantages: Every PD gets its promised power at any time, which
+   guarantees reliability.
+
+   Disadvantages: PD classification steps are large, meaning devices
+   request much more power than they actually need. As a result, the power
+   supply may only operate at, say, 50% capacity, which is inefficient and
+   wastes money.
+
+2. Dynamic Method:
+
+   To address the inefficiencies of the static method, vendors like
+   Microchip have introduced dynamic power budgeting, as seen in the
+   PD692x0 firmware. This method monitors the current consumption per port
+   and subtracts it from the available power budget. When the budget is
+   exceeded, lower-priority ports are shut down.
+
+   Advantages: This method optimizes resource utilization, saving costs.
+
+   Disadvantages: Low-priority devices may experience instability.
+
+The UAPI allows adding support for software port priority mode managed from
+userspace later if needed.
+
+Patches 1-2: Add support for interrupt event report in PSE core, ethtool
+	     and ethtool specs.
+Patch 3: Adds support for interrupt and event report in TPS23881 driver.
+Patches 4,5: Add support for PSE power domain in PSE core and ethtool.
+Patches 6-8: Add support for budget evaluation strategy in PSE core,
+	     ethtool and ethtool specs.
+Patches 9-11: Add support for port priority and power supplies in PD692x0
+	      drivers.
+Patches 12,13: Add support for port priority in TPS23881 drivers.
+
+Signed-off-by: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+---
+Changes in v13:
+- Small change, no need for >0 condition check for unsigned variables.
+- Link to v12: https://lore.kernel.org/r/20250524-feature_poe_port_prio-v12-0-d65fd61df7a7@bootlin.com
+
+Changes in v12:
+- Rebase on net-next.
+- Link to v11: https://lore.kernel.org/r/20250520-feature_poe_port_prio-v11-0-bbaf447e1b28@bootlin.com
+
+Changes in v11:
+- Move the PSE events enum description fully in the ethtool spec.
+- Remove the first patch which was useless as not used.
+- Split the second patch to separate the attached_phydev introduction to
+  the PSE interrupt support.
+- Link to v10: https://lore.kernel.org/r/20250506-feature_poe_port_prio-v10-0-55679a4895f9@bootlin.com
+
+Changes in v10:
+- Change patch 2 and 7 due to possible used after free scenario or
+  deadlock scenario. Move the PSE notification send management to a
+  workqueue to protect it from the deadlock scenario.
+- Link to v9: https://lore.kernel.org/r/20250422-feature_poe_port_prio-v9-0-417fc007572d@bootlin.com
+
+Changes in v9:
+- Add a missing check after skb creation.
+- Link to v8: https://lore.kernel.org/r/20250416-feature_poe_port_prio-v8-0-446c39dc3738@bootlin.com
+
+Changes in v8:
+- Rename a few functions for better clarity.
+- Add missing kref_init in PSE power domain support and a wrong error
+  check condition.
+- Link to v7: https://lore.kernel.org/r/20250408-feature_poe_port_prio-v7-0-9f5fc9e329cd@bootlin.com
+
+Changes in v7:
+- Add reference count and mutex lock for PSE power domain.
+- Add support to retry enabling port that failed to be powered in case of
+  port disconnection or priority change.
+- Use flags definition for pse events in ethtool specs.
+- Small changes in the TPS23881 driver.
+- Link to v6: https://lore.kernel.org/r/20250304-feature_poe_port_prio-v6-0-3dc0c5ebaf32@bootlin.com
+
+Changes in v6:
+- Few typos.
+- Use uint instead of bitset for PSE_EVENT.
+- Remove report of budget evaluation strategy in the uAPI.
+- Link to v5: https://lore.kernel.org/r/20250218-feature_poe_port_prio-v5-0-3da486e5fd64@bootlin.com
+
+Changes in v5:
+- Remove the first part of the patch series which tackled PSE
+  improvement and already gets merged:
+  https://lore.kernel.org/netdev/20250110-b4-feature_poe_arrange-v3-0-142279aedb94@bootlin.com/
+- Remove the PSE index support which is useless for now. The PSE power
+  domain ID is sufficient.
+- Add support for PD692x0 power supplies other than Vmain which was already
+  in the patch series.
+- Few other small fixes.
+- Link to v4: https://lore.kernel.org/r/20250103-feature_poe_port_prio-v4-0-dc91a3c0c187@bootlin.com
+
+Changes in v4:
+- Remove disconnection policy.
+- Rename port priority mode to budget evaluation strategy.
+- Add cosmetic changes in PSE core.
+- Add support for port priority in PD692x0 driver.
+- Link to v3: https://lore.kernel.org/r/20241121-feature_poe_port_prio-v3-0-83299fa6967c@bootlin.com
+
+Changes in v3:
+- Move power budget to regulator core.
+- Add disconnection policies with PIs using the same priority.
+- Several fixes on the TPS23881 drivers.
+- Several new cosmetic patches.
+- Link to v2: https://lore.kernel.org/r/20241030-feature_poe_port_prio-v2-0-9559622ee47a@bootlin.com
+
+Changes in v2:
+- Rethink the port priority management.
+- Add PSE id.
+- Add support for PSE power domains.
+- Add get power budget regulator constraint.
+- Link to v1: https://lore.kernel.org/r/20241002-feature_poe_port_prio-v1-0-787054f74ed5@bootlin.com
+
+---
+Kory Maincent (13):
+      net: pse-pd: Introduce attached_phydev to pse control
+      net: pse-pd: Add support for reporting events
+      net: pse-pd: tps23881: Add support for PSE events and interrupts
+      net: pse-pd: Add support for PSE power domains
+      net: ethtool: Add support for new power domains index description
+      net: pse-pd: Add helper to report hardware enable status of the PI
+      net: pse-pd: Add support for budget evaluation strategies
+      net: ethtool: Add PSE port priority support feature
+      net: pse-pd: pd692x0: Add support for PSE PI priority feature
+      net: pse-pd: pd692x0: Add support for controller and manager power supplies
+      dt-bindings: net: pse-pd: microchip,pd692x0: Add manager regulator supply
+      net: pse-pd: tps23881: Add support for static port priority feature
+      dt-bindings: net: pse-pd: ti,tps23881: Add interrupt description
+
+ .../bindings/net/pse-pd/microchip,pd692x0.yaml     |   22 +-
+ .../bindings/net/pse-pd/ti,tps23881.yaml           |    8 +
+ Documentation/netlink/specs/ethtool.yaml           |   76 ++
+ Documentation/networking/ethtool-netlink.rst       |   49 +
+ drivers/net/mdio/fwnode_mdio.c                     |   26 +-
+ drivers/net/pse-pd/pd692x0.c                       |  225 +++++
+ drivers/net/pse-pd/pse_core.c                      | 1068 +++++++++++++++++++-
+ drivers/net/pse-pd/tps23881.c                      |  403 +++++++-
+ include/linux/ethtool_netlink.h                    |    9 +
+ include/linux/pse-pd/pse.h                         |  108 +-
+ include/uapi/linux/ethtool_netlink_generated.h     |   40 +
+ net/ethtool/pse-pd.c                               |   63 ++
+ 12 files changed, 2043 insertions(+), 54 deletions(-)
+---
+base-commit: 62937b656898ae9039071a41f6e06e8bea9cb67c
+change-id: 20240913-feature_poe_port_prio-a51aed7332ec
+
+Best regards,
+-- 
+Köry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
