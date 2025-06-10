@@ -1,73 +1,60 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45A3293469;
-	Tue, 10 Jun 2025 12:47:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB66B28DF3D
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 12:48:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749559644; cv=none; b=DC4G+B5OlQ6SVPJfy5qWdDmt291lFWFeolPsqw1BikupVTWmRNRcdboFcKrAOqOpyRN2QnfZphZd4zmk+HJ4BbuNzZ2n5PMbOgK0+ACDIV7ox3fks/l9aFuEpOX39GRsA65wBjJr8M3sAk0CK2uAQKaanAJv92z+SN89J35lB3g=
+	t=1749559693; cv=none; b=jR5XrZwwXquwAC8gHqdJSMZngfeOEVoGRFFeXc6AXOw3RSxgbY2+IIpnLlrzgdVgELV7nycEz1rHFRKlN+bzwqLFl1lA7+hj0CLICL5VxSNtVL5ZCicVsMH7wX/KPJIbgCBt7flSRZM/ltOg0DBJ6I4yOhb39xGKhi36Bp51Gc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749559644; c=relaxed/simple;
-	bh=Q9YIQ730GHAcOU4O1jEnaS7atkULzfK70EqJ4k2AIrQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XIcIwzgUYBTmyXF+jvBMlbK7Yv/pHvyXTh5pIJiQ4h21WOxc7XEnsbSxGmSKFilPYlCYjehWU7D1hTEY3LnSKKJc4AaBotcvI3gnsXktBC/pRaXhphE3wTTywONhHoFQ0V8ENPYPJ9DWpao4ynMegHzU4H47dsls0MVFnk7eEMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jWBVq6vB; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749559693; c=relaxed/simple;
+	bh=CQyg78Qds92jFpTV0etojONguvbST9WWDToRUjZPbho=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=bFkUOF3Qy1YZKBPyTCbnCB3ymdNOcKo6vstYe0cKYfUjwsaQYx/RQEI4Ob9zhoBUZT/aWC1vOtrEBehRXTepLWH6iQYBVxCBfCDpBvCTmi0iaGSB9EnBiPJhTHmx5dX2xPpkPY0C3EyO8FomcnnhlWzhJ5hl7aPOYqNx0+xdrrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LMP7lmrK; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jWBVq6vB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LMP7lmrK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749559643; x=1781095643;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Q9YIQ730GHAcOU4O1jEnaS7atkULzfK70EqJ4k2AIrQ=;
-  b=jWBVq6vBkOZoffGVHfzfKIOtnXnj90xK0lCsqFDq2TFgwz411qN16an8
-   ofxPFJWRDvf/tGErpJVaGgcvH7hwq6F27S4okDrw5Euu08cNvQjKGW8oN
-   Oj4EOdOmYZb3glYrshqC4Zbi/RtIXSqjQvNsJnFYZMaU1Tt+GuWNl6DqJ
-   64taew93XmwNzfLrrMWOqVXTeuGb1ets+Qlsy7xTgJPsK6WD2u1nla/EZ
-   vOExv4zNBJE9JpwzMSj7hwOwVnviTtS7SMg52SW20mbo0qXqlNfZKg41F
-   hp3HWXP3sFv047T9HdlSV1xIj9DrGrB62GLW/erwGIDQnJUno1XDUxiI8
-   A==;
-X-CSE-ConnectionGUID: RK3tpsNdRQe0b81l6lTElA==
-X-CSE-MsgGUID: iOVNVYU+SqqH9t9lqhygVw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="55458312"
+  t=1749559691; x=1781095691;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=CQyg78Qds92jFpTV0etojONguvbST9WWDToRUjZPbho=;
+  b=LMP7lmrKeSwAfA22NRH0WFyJxxqdp6nujdwJp4LgUJyDNLT9celzJ4cM
+   lP7bEHELlgJYjgJVJ09b9/mSe0FsbU13I0WBEnzF8gj6ItlWNSN+Y396M
+   eTByioMiIFvtkxpmVmzCHinF2Pf9V1UEJcfCPWxPWKaVCKFcJ9ePrNH6B
+   OAtGCFA4F83JpQ18QyNzhQf52rcxQ+gpgYVrHe+Vm8oAlo5moOqdsLhKx
+   6bTkIBI87RPY8B3icyyWz9x6iOjhmpAt5os9vjP80THFbIUhzL60HBh5k
+   ZvTXH5VrioYKmny9zh19LSWCe3ZmpT0MHwWrWFcoEEWC9RyRKNjIJYPI6
+   Q==;
+X-CSE-ConnectionGUID: SxQBdrlDQgmS5Jv/pEyVOA==
+X-CSE-MsgGUID: z1u7O0aETV+o06s/lEuSaA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51577726"
 X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
-   d="scan'208";a="55458312"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 05:47:22 -0700
-X-CSE-ConnectionGUID: 4Cziqe11QyubbBtGWExN/A==
-X-CSE-MsgGUID: 5JQpjcB0Qjym4IDP1f45tA==
+   d="scan'208";a="51577726"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 05:48:10 -0700
+X-CSE-ConnectionGUID: UE1WMwO5Stidr6XAa6mzsA==
+X-CSE-MsgGUID: 6Z14DMBaShONx/UqpEFyhQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
-   d="scan'208";a="151700327"
-Received: from bergbenj-mobl1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.55])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 05:47:18 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 8F7F011FB81;
-	Tue, 10 Jun 2025 15:47:15 +0300 (EEST)
-Date: Tue, 10 Jun 2025 12:47:15 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>,
-	Naushir Patuck <naush@raspberrypi.com>, linux-media@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: bcm2835-unicam: Remove RGB24 support
-Message-ID: <aEgpU9VUGZuSHpC0@kekkonen.localdomain>
-References: <20250606-rpi-unicam-rgb-bgr-fix-v1-1-9930b963f3eb@kernel.org>
- <20250609003751.GD14545@pendragon.ideasonboard.com>
- <CAPY8ntCnz6nkJSredd-sgMr87=0vuZ0OtfiMoPOfCZisKkzTHg@mail.gmail.com>
- <20250610095238.GA28428@pendragon.ideasonboard.com>
+   d="scan'208";a="147339589"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 10 Jun 2025 05:48:09 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uOyOc-0008Dx-11;
+	Tue, 10 Jun 2025 12:48:06 +0000
+Date: Tue, 10 Jun 2025 20:47:14 +0800
+From: kernel test robot <lkp@intel.com>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: drivers/thermal/thermal_debugfs.c:252:59: warning: '%d' directive
+ output may be truncated writing between 1 and 5 bytes into a region of size
+ between 3 and 8
+Message-ID: <202506102037.N7IGnA5z-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,110 +63,246 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250610095238.GA28428@pendragon.ideasonboard.com>
 
-Hi Laurent, others,
+Hi Daniel,
 
-On Tue, Jun 10, 2025 at 12:52:38PM +0300, Laurent Pinchart wrote:
-> On Mon, Jun 09, 2025 at 03:33:29PM +0100, Dave Stevenson wrote:
-> > On Mon, 9 Jun 2025 at 01:38, Laurent Pinchart wrote:
-> > > On Fri, Jun 06, 2025 at 04:53:03PM +0200, Maxime Ripard wrote:
-> > > > The RGB24 V4L2 format is defined as a pixel format with 8 bits per
-> > > > components, with the components being in the red, green, and blue order
-> > > > from left to right.
-> > > >
-> > > > The RGB MIPI-CSI2 is defined in the specification (Section 11.3.1,
-> > > > RGB888) with blue coming first, then green, then red. So the opposite of
-> > > > what V4L2 means by RGB.
-> > > >
-> > > > Since the hardware cannot reorder the components, this means that when
-> > > > selecting the RGB24 format, you get inverted red and blue components
-> > > > compared to what you'd expect.
-> > > >
-> > > > The driver already supports BGR24, so we can simply remove the RGB24
-> > > > format from the driver.
-> > >
-> > > The only reason I could think of to explain why the driver exposes
-> > > V4L2_PIX_FMT_RGB24 is to support CSI-2 sources that transfer RGB888 data
-> > > with a non-standard order. I don't know what hardware would do that.
-> > > Dave, Naush, do you recall why this pixel format is supported by the
-> > > unicam driver ?
-> > 
-> > I've lost track of exactly what gets validated along the pipeline.
-> > unicam_video_link_validate [1] looks to ensure that the V4L2 pixel
-> > format and media bus codes match as listed in the table.
-> > 
-> > tc358743, adv7604, adv7511, and adv748x are all saying they produce
-> > MEDIA_BUS_FMT_RGB888_1X24
-> > ov5640 says it produces MEDIA_BUS_FMT_BGR888_1X24.
-> > 
-> > Is that an error in the ov5640 driver? If not, then both entries have
-> > to be in the table to support all those drivers.
-> 
-> We haven't standardized which media bus code to use for 24-bit RGB on
-> CSI-2, so I'm not surprised drivers didn't get it right :-( The adv7604
-> and adv7511 shouldn't be relevant here though, as they're not CSI-2
-> devices. tc358743 and adv748x are relevant.
+FYI, the error/warning still remains.
 
-My understanding is the order indeed is BGR. But let's say that if there's
-a device that generates RGB (as in pixel order) pixel data, then it should
-be reflected in V4L2 pixelformat as well.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   f09079bd04a924c72d555cd97942d5f8d7eca98c
+commit: 755113d7678681a137c330f7997ceb680adb644e thermal/debugfs: Add thermal cooling device debugfs information
+date:   1 year, 5 months ago
+config: csky-randconfig-002-20250106 (https://download.01.org/0day-ci/archive/20250610/202506102037.N7IGnA5z-lkp@intel.com/config)
+compiler: csky-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250610/202506102037.N7IGnA5z-lkp@intel.com/reproduce)
 
-> 
-> Sakari, which media bus code would you expect ?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506102037.N7IGnA5z-lkp@intel.com/
 
-MEDIA_BUS_FMT_BGR888_1X24. That's actually used in the example as well:
-<URL:https://hverkuil.home.xs4all.nl/spec/userspace-api/v4l/subdev-formats.html#v4l2-mbus-pixelcode>.
+All warnings (new ones prefixed by >>):
 
-> 
-> > Looking at alvium-csi2.c and st-mipid02.c, both mappings are included
-> > there (and RBG888 in the case of alvium).
-> > Unicam's hardware doesn't care about the ordering as it just writes
-> > the incoming data to memory, so having all the sensible mappings
-> > between MEDIA_BUS_FMT_* and V4L2_PIX_FMT_* values makes sense.
-> > 
-> > My initial reaction though is that simply removing the entry won't
-> > solve the problem anyway. You won't get a match between the
-> > MEDIA_BUS_FMT_RGB888_1X24 requested by tc358743 and a supported V4L2
-> > pixel format, so the link_validate will fail.
-> > Swapping either fourcc or code between the two entries would be the
-> > fix I was expecting.
-> > 
-> > [1] https://github.com/torvalds/linux/blob/master/drivers/media/platform/broadcom/bcm2835-unicam.c#L2151-L2169
-> > 
-> > > > Fixes: 392cd78d495f ("media: bcm2835-unicam: Add support for CCP2/CSI2 camera interface")
-> > > > Signed-off-by: Maxime Ripard <mripard@kernel.org>
-> > > > ---
-> > > >  drivers/media/platform/broadcom/bcm2835-unicam.c | 5 -----
-> > > >  1 file changed, 5 deletions(-)
-> > > >
-> > > > diff --git a/drivers/media/platform/broadcom/bcm2835-unicam.c b/drivers/media/platform/broadcom/bcm2835-unicam.c
-> > > > index f10064107d543caf867249d0566a0f42d6d8c4c6..1f549019efd53c9aae83193e74f1a3601ebf274d 100644
-> > > > --- a/drivers/media/platform/broadcom/bcm2835-unicam.c
-> > > > +++ b/drivers/media/platform/broadcom/bcm2835-unicam.c
-> > > > @@ -338,15 +338,10 @@ static const struct unicam_format_info unicam_image_formats[] = {
-> > > >       /* RGB Formats */
-> > > >               .fourcc         = V4L2_PIX_FMT_RGB565, /* gggbbbbb rrrrrggg */
-> > > >               .code           = MEDIA_BUS_FMT_RGB565_1X16,
-> > > >               .depth          = 16,
-> > > >               .csi_dt         = MIPI_CSI2_DT_RGB565,
-> > > > -     }, {
-> > > > -             .fourcc         = V4L2_PIX_FMT_RGB24, /* rgb */
-> > > > -             .code           = MEDIA_BUS_FMT_RGB888_1X24,
-> > > > -             .depth          = 24,
-> > > > -             .csi_dt         = MIPI_CSI2_DT_RGB888,
-> > > >       }, {
-> > > >               .fourcc         = V4L2_PIX_FMT_BGR24, /* bgr */
-> > > >               .code           = MEDIA_BUS_FMT_BGR888_1X24,
-> > > >               .depth          = 24,
-> > > >               .csi_dt         = MIPI_CSI2_DT_RGB888,
-> > > >
-> > > > ---
-> > > > base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
-> > > > change-id: 20250606-rpi-unicam-rgb-bgr-fix-d1b6f46a75ad
-> 
+   drivers/thermal/thermal_debugfs.c:103:6: warning: no previous prototype for 'thermal_debug_init' [-Wmissing-prototypes]
+     103 | void thermal_debug_init(void)
+         |      ^~~~~~~~~~~~~~~~~~
+   drivers/thermal/thermal_debugfs.c:329:6: warning: no previous prototype for 'thermal_debug_cdev_state_update' [-Wmissing-prototypes]
+     329 | void thermal_debug_cdev_state_update(const struct thermal_cooling_device *cdev,
+         |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/thermal/thermal_debugfs.c:389:6: warning: no previous prototype for 'thermal_debug_cdev_add' [-Wmissing-prototypes]
+     389 | void thermal_debug_cdev_add(struct thermal_cooling_device *cdev)
+         |      ^~~~~~~~~~~~~~~~~~~~~~
+   drivers/thermal/thermal_debugfs.c:431:6: warning: no previous prototype for 'thermal_debug_cdev_remove' [-Wmissing-prototypes]
+     431 | void thermal_debug_cdev_remove(struct thermal_cooling_device *cdev)
+         |      ^~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/thermal/thermal_debugfs.c: In function 'cdev_tt_seq_show':
+>> drivers/thermal/thermal_debugfs.c:252:59: warning: '%d' directive output may be truncated writing between 1 and 5 bytes into a region of size between 3 and 8 [-Wformat-truncation=]
+     252 |                 snprintf(buffer, ARRAY_SIZE(buffer), "%d->%d",
+         |                                                           ^~
+   drivers/thermal/thermal_debugfs.c:252:54: note: directive argument in the range [0, 65535]
+     252 |                 snprintf(buffer, ARRAY_SIZE(buffer), "%d->%d",
+         |                                                      ^~~~~~~~
+   drivers/thermal/thermal_debugfs.c:252:17: note: 'snprintf' output between 5 and 14 bytes into a destination of size 11
+     252 |                 snprintf(buffer, ARRAY_SIZE(buffer), "%d->%d",
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     253 |                          entry->id >> 16, entry->id & 0xFFFF);
+         |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +252 drivers/thermal/thermal_debugfs.c
+
+   233	
+   234	static int cdev_tt_seq_show(struct seq_file *s, void *v)
+   235	{
+   236		struct thermal_debugfs *thermal_dbg = s->private;
+   237		struct cdev_debugfs *cdev_dbg = &thermal_dbg->cdev_dbg;
+   238		struct list_head *transitions = cdev_dbg->transitions;
+   239		struct cdev_record *entry;
+   240		int i = *(loff_t *)v;
+   241	
+   242		if (!i)
+   243			seq_puts(s, "Transition\tOccurences\n");
+   244	
+   245		list_for_each_entry(entry, &transitions[i], node) {
+   246			/*
+   247			 * Assuming maximum cdev states is 1024, the longer
+   248			 * string for a transition would be "1024->1024\0"
+   249			 */
+   250			char buffer[11];
+   251	
+ > 252			snprintf(buffer, ARRAY_SIZE(buffer), "%d->%d",
+   253				 entry->id >> 16, entry->id & 0xFFFF);
+   254	
+   255			seq_printf(s, "%-10s\t%-10llu\n", buffer, entry->count);
+   256		}
+   257	
+   258		return 0;
+   259	}
+   260	
+   261	static const struct seq_operations tt_sops = {
+   262		.start = cdev_seq_start,
+   263		.next = cdev_seq_next,
+   264		.stop = cdev_seq_stop,
+   265		.show = cdev_tt_seq_show,
+   266	};
+   267	
+   268	DEFINE_SEQ_ATTRIBUTE(tt);
+   269	
+   270	static int cdev_dt_seq_show(struct seq_file *s, void *v)
+   271	{
+   272		struct thermal_debugfs *thermal_dbg = s->private;
+   273		struct cdev_debugfs *cdev_dbg = &thermal_dbg->cdev_dbg;
+   274		struct list_head *durations = cdev_dbg->durations;
+   275		struct cdev_record *entry;
+   276		int i = *(loff_t *)v;
+   277	
+   278		if (!i)
+   279			seq_puts(s, "State\tResidency\n");
+   280	
+   281		list_for_each_entry(entry, &durations[i], node) {
+   282			s64 duration = ktime_to_ms(entry->residency);
+   283	
+   284			if (entry->id == cdev_dbg->current_state)
+   285				duration += ktime_ms_delta(ktime_get(),
+   286							   cdev_dbg->timestamp);
+   287	
+   288			seq_printf(s, "%-5d\t%-10llu\n", entry->id, duration);
+   289		}
+   290	
+   291		return 0;
+   292	}
+   293	
+   294	static const struct seq_operations dt_sops = {
+   295		.start = cdev_seq_start,
+   296		.next = cdev_seq_next,
+   297		.stop = cdev_seq_stop,
+   298		.show = cdev_dt_seq_show,
+   299	};
+   300	
+   301	DEFINE_SEQ_ATTRIBUTE(dt);
+   302	
+   303	static int cdev_clear_set(void *data, u64 val)
+   304	{
+   305		struct thermal_debugfs *thermal_dbg = data;
+   306	
+   307		if (!val)
+   308			return -EINVAL;
+   309	
+   310		mutex_lock(&thermal_dbg->lock);
+   311	
+   312		thermal_debugfs_cdev_clear(&thermal_dbg->cdev_dbg);
+   313	
+   314		mutex_unlock(&thermal_dbg->lock);
+   315	
+   316		return 0;
+   317	}
+   318	
+   319	DEFINE_DEBUGFS_ATTRIBUTE(cdev_clear_fops, NULL, cdev_clear_set, "%llu\n");
+   320	
+   321	/**
+   322	 * thermal_debug_cdev_state_update - Update a cooling device state change
+   323	 *
+   324	 * Computes a transition and the duration of the previous state residency.
+   325	 *
+   326	 * @cdev : a pointer to a cooling device
+   327	 * @new_state: an integer corresponding to the new cooling device state
+   328	 */
+   329	void thermal_debug_cdev_state_update(const struct thermal_cooling_device *cdev,
+   330					     int new_state)
+   331	{
+   332		struct thermal_debugfs *thermal_dbg = cdev->debugfs;
+   333		struct cdev_debugfs *cdev_dbg;
+   334		struct cdev_record *cdev_record;
+   335		int transition, old_state;
+   336	
+   337		if (!thermal_dbg || (thermal_dbg->cdev_dbg.current_state == new_state))
+   338			return;
+   339	
+   340		mutex_lock(&thermal_dbg->lock);
+   341	
+   342		cdev_dbg = &thermal_dbg->cdev_dbg;
+   343	
+   344		old_state = cdev_dbg->current_state;
+   345	
+   346		/*
+   347		 * Get the old state information in the durations list. If
+   348		 * this one does not exist, a new allocated one will be
+   349		 * returned. Recompute the total duration in the old state and
+   350		 * get a new timestamp for the new state.
+   351		 */
+   352		cdev_record = thermal_debugfs_cdev_record_get(thermal_dbg,
+   353							      cdev_dbg->durations,
+   354							      old_state);
+   355		if (cdev_record) {
+   356			ktime_t now = ktime_get();
+   357			ktime_t delta = ktime_sub(now, cdev_dbg->timestamp);
+   358			cdev_record->residency = ktime_add(cdev_record->residency, delta);
+   359			cdev_dbg->timestamp = now;
+   360		}
+   361	
+   362		cdev_dbg->current_state = new_state;
+   363		transition = (old_state << 16) | new_state;
+   364	
+   365		/*
+   366		 * Get the transition in the transitions list. If this one
+   367		 * does not exist, a new allocated one will be returned.
+   368		 * Increment the occurrence of this transition which is stored
+   369		 * in the value field.
+   370		 */
+   371		cdev_record = thermal_debugfs_cdev_record_get(thermal_dbg,
+   372							      cdev_dbg->transitions,
+   373							      transition);
+   374		if (cdev_record)
+   375			cdev_record->count++;
+   376	
+   377		cdev_dbg->total++;
+   378	
+   379		mutex_unlock(&thermal_dbg->lock);
+   380	}
+   381	
+   382	/**
+   383	 * thermal_debug_cdev_add - Add a cooling device debugfs entry
+   384	 *
+   385	 * Allocates a cooling device object for debug, initializes the
+   386	 * statistics and create the entries in sysfs.
+   387	 * @cdev: a pointer to a cooling device
+   388	 */
+ > 389	void thermal_debug_cdev_add(struct thermal_cooling_device *cdev)
+   390	{
+   391		struct thermal_debugfs *thermal_dbg;
+   392		struct cdev_debugfs *cdev_dbg;
+   393		int i;
+   394	
+   395		thermal_dbg = thermal_debugfs_add_id(d_cdev, cdev->id);
+   396		if (!thermal_dbg)
+   397			return;
+   398	
+   399		cdev_dbg = &thermal_dbg->cdev_dbg;
+   400	
+   401		for (i = 0; i < CDEVSTATS_HASH_SIZE; i++) {
+   402			INIT_LIST_HEAD(&cdev_dbg->transitions[i]);
+   403			INIT_LIST_HEAD(&cdev_dbg->durations[i]);
+   404		}
+   405	
+   406		cdev_dbg->current_state = 0;
+   407		cdev_dbg->timestamp = ktime_get();
+   408	
+   409		debugfs_create_file("trans_table", 0400, thermal_dbg->d_top,
+   410				    thermal_dbg, &tt_fops);
+   411	
+   412		debugfs_create_file("time_in_state_ms", 0400, thermal_dbg->d_top,
+   413				    thermal_dbg, &dt_fops);
+   414	
+   415		debugfs_create_file("clear", 0200, thermal_dbg->d_top,
+   416				    thermal_dbg, &cdev_clear_fops);
+   417	
+   418		debugfs_create_u32("total_trans", 0400, thermal_dbg->d_top,
+   419				   &cdev_dbg->total);
+   420	
+   421		cdev->debugfs = thermal_dbg;
+   422	}
+   423	
 
 -- 
-Regards,
-
-Sakari Ailus
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
