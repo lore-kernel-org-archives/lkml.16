@@ -1,38 +1,33 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0DA029B8F0;
-	Tue, 10 Jun 2025 12:50:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8989E2D3A8D;
+	Tue, 10 Jun 2025 12:50:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749559814; cv=none; b=fpasnMm5oFk7RSS5DgWUQigAaJKjsEzaR29EZnzCCUe5tK9KnUA5ZZ2ztBtyZ+u6ZpFdH7+Jdaqkr4+EOl7jWx3CcfWedo/XlKa2GmS2jm6eM22yux34IPhCULpShe1tgIrky1Dsjy0x7mcWz6fksWF/LSO+kWqcWx0cNWd4IIE=
+	t=1749559817; cv=none; b=itUfc+ObRA+92A14R07rAPfowzBax8PsNRP71WlB6RChhiiJah14QvP3OI2frHc4jAOQUYmW4+VNsCLK+pCYz5r2txvDd5Wc+gYoGmiV0Oam9j25Rwo5MMm1xvd/largAbeWr7Pi4FPzxHmg+4PMcIOMywFVpBBtiRQiBMa2jLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749559814; c=relaxed/simple;
-	bh=hSXQAL/XYDhVoGXc2TfWBd6ly2i9wLtIu2FFpqXGOqI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To; b=RuP7PIOA5Py8skq5fqPFbX4cVPnmrHW+MCx0o++MX6FJkuk8CkM6L/vVrJGzzUWf+GdskcvSgHSBdqir3tFnEhqbZeAu4e6shYx/f1UjOkq41OUH/vrYRKmoL/9+OuEbiCBjzO/W6queOJV1bMKJVpu0hhMiOdh4M+8DEfOPSuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TgUHf5+1; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1749559817; c=relaxed/simple;
+	bh=7QpkMQMXtn6bcXn+GLCixu8zGcxbjjq8un/lPEBMnVI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=A0bnHLyUB+WHOVNc718lhIeCJI7SSrtn94UrqwO94kbIDuTXlKG3BzxDc+z+EJKAXbhpcGAfZ1WgRzhSMu1z0DS/sU2D1PoDDrM/5ttOchx7nHueNWy5IMDLCkaXQ/b7865IfVLoT4GkvTUnjiCr32u77nK9UCS1LP5ZHGSHd1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F7GQc7RQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TgUHf5+1"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C629C439F5;
-	Tue, 10 Jun 2025 12:50:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1749559804;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WX69fvV8Iim/TSycnvKfKVMX/kLs1V7zftTFLEqf1Kc=;
-	b=TgUHf5+1N4WnDePx4pztNYq7+Bg+q6TTtLPTY+rz88O3Fw06Fw+/iMMImMiWee2T5trt82
-	RaK0ynLcQjEtDWInMv8LH9L44+3iUL9a3b+RpnNG8Nt/jz9jtcJQ0S33/o4MN04RclGdj5
-	flGP5+X3YZQYQ5GgCgfx1OaI6vUc0FhQdHS7XVAsOw4wixSDBQSRPnR5d3OJjcpovB4xp5
-	L04tSr7Hp1Cfu30V19rWaX2HaHcatw46dtq/my/uJLm/Gv6MCp2P+zAxgUPvGV8vzE3kDW
-	idjpx9QKrnmDqzfEfTCWboakopOAQQkeu3fmy8Uu8Ds0Gk28RNq5+mRy1XiVVA==
-From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Tue, 10 Jun 2025 14:50:01 +0200
-Subject: [PATCH ethtool 1/2] update UAPI header copies
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F7GQc7RQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35285C4CEF1;
+	Tue, 10 Jun 2025 12:50:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749559817;
+	bh=7QpkMQMXtn6bcXn+GLCixu8zGcxbjjq8un/lPEBMnVI=;
+	h=From:Date:Subject:To:Cc:From;
+	b=F7GQc7RQ+F0IJCdqY94Kv4ovWFYpciWBNBN3n3ToM1BxxreW8XTNXdwe+ckHm8Xww
+	 T7IJkYouR8gd+16bN9SOt+mFg/BBfT4RiDAhEeJrtuCeRc7/QUiourBnp4xWvFn4mj
+	 QE0VQ1vxJq9lezeoj3KXQEC4HzFlX1vK6wFKOX4Z6nIpURA5lILlEYUc1WN/r08hn8
+	 6d4ha6j40uuJhkS7zG0Z+7s77vuR+Cyd33mjYGPIV2Hs1Vfq8pnvtngi6IVPcxXIVu
+	 ZJ54mptB0ckWWz9y9wvnbFmXxlFB0kLmjqkBcwNlcZQEsULOX8+CtPH/FQ+vUaEJqV
+	 /WzEIkVzWTOvg==
+From: Konrad Dybcio <konradybcio@kernel.org>
+Date: Tue, 10 Jun 2025 14:50:03 +0200
+Subject: [PATCH] drm/msm/dpu: Fill in min_prefill_lines for SC8180X
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,246 +36,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250610-feature_phc_source-v1-1-cbd1adef12aa@bootlin.com>
-References: <20250610-feature_phc_source-v1-0-cbd1adef12aa@bootlin.com>
-In-Reply-To: <20250610-feature_phc_source-v1-0-cbd1adef12aa@bootlin.com>
-To: Michal Kubecek <mkubecek@suse.cz>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Andrew Lunn <andrew@lunn.ch>, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
- Jason Xing <kernelxing@tencent.com>, Russell King <linux@armlinux.org.uk>, 
- Maxime Chevallier <maxime.chevallier@bootlin.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Kory Maincent <kory.maincent@bootlin.com>
-X-Mailer: b4 0.15-dev-8cb71
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddutdejhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvofesthejredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeefteeifeefheevheefhffgveduffeltdeivdethedtieegveehuefgffduheektdenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedufedprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepfihilhhlvghmuggvsghruhhijhhnrdhkvghrnhgvlhesghhmrghilhdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehmkhhusggvtggvkhesshhushgvrdgtiidprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtp
- hhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhk
-X-GND-Sasl: kory.maincent@bootlin.com
+Message-Id: <20250610-topic-dpu_8180_mpl-v1-1-f480cd22f11c@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIAPopSGgC/x3M3QpAQBBA4VfRXNuatdHyKpIwgyk/2y5S8u42l
+ 9/FOQ8E9sIBquQBz5cE2bcInSYwzN02sRKKhgyzHAuN6tidDIrc2VptsV3dokpjjLXcIxFBDJ3
+ nUe5/Wjfv+wEw8pW8ZAAAAA==
+X-Change-ID: 20250610-topic-dpu_8180_mpl-933388eb0ddd
+To: Rob Clark <robin.clark@oss.qualcomm.com>, 
+ Dmitry Baryshkov <lumag@kernel.org>, 
+ Abhinav Kumar <abhinav.kumar@linux.dev>, 
+ Jessica Zhang <jessica.zhang@oss.qualcomm.com>, Sean Paul <sean@poorly.run>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
+ linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749559812; l=1066;
+ i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
+ bh=iE/yOryfr8u/J14k5vdj37MOoWRLYDlk7LCl9lLaqKE=;
+ b=/3ym+TuMMf6qgrZEIiGeqXTPB8s739mqTCyW2nxcn3cXJjZHUCFEee6La/zDxv7RuGt7gJz63
+ 8iBtDMZZ6PEADjErF4GBzqzz8j7nVQW1dwSyHNPfIOEMYE/ncI4qhkn
+X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-Update to kernel commit 2c7e4a2663a1.
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+Based on the downstream release, predictably same value as for SM8150.
+
+Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 ---
- uapi/linux/ethtool.h                   | 134 +++++++++++++++++----------------
- uapi/linux/ethtool_netlink_generated.h |  19 +++--
- uapi/linux/if_link.h                   |  15 ++++
- 3 files changed, 98 insertions(+), 70 deletions(-)
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/uapi/linux/ethtool.h b/uapi/linux/ethtool.h
-index 506e086..253df22 100644
---- a/uapi/linux/ethtool.h
-+++ b/uapi/linux/ethtool.h
-@@ -2293,71 +2293,75 @@ static __inline__ int ethtool_validate_duplex(__u8 duplex)
- #define	RXH_XFRM_SYM_OR_XOR	(1 << 1)
- #define	RXH_XFRM_NO_CHANGE	0xff
- 
--/* L2-L4 network traffic flow types */
--#define	TCP_V4_FLOW	0x01	/* hash or spec (tcp_ip4_spec) */
--#define	UDP_V4_FLOW	0x02	/* hash or spec (udp_ip4_spec) */
--#define	SCTP_V4_FLOW	0x03	/* hash or spec (sctp_ip4_spec) */
--#define	AH_ESP_V4_FLOW	0x04	/* hash only */
--#define	TCP_V6_FLOW	0x05	/* hash or spec (tcp_ip6_spec; nfc only) */
--#define	UDP_V6_FLOW	0x06	/* hash or spec (udp_ip6_spec; nfc only) */
--#define	SCTP_V6_FLOW	0x07	/* hash or spec (sctp_ip6_spec; nfc only) */
--#define	AH_ESP_V6_FLOW	0x08	/* hash only */
--#define	AH_V4_FLOW	0x09	/* hash or spec (ah_ip4_spec) */
--#define	ESP_V4_FLOW	0x0a	/* hash or spec (esp_ip4_spec) */
--#define	AH_V6_FLOW	0x0b	/* hash or spec (ah_ip6_spec; nfc only) */
--#define	ESP_V6_FLOW	0x0c	/* hash or spec (esp_ip6_spec; nfc only) */
--#define	IPV4_USER_FLOW	0x0d	/* spec only (usr_ip4_spec) */
--#define	IP_USER_FLOW	IPV4_USER_FLOW
--#define	IPV6_USER_FLOW	0x0e	/* spec only (usr_ip6_spec; nfc only) */
--#define	IPV4_FLOW	0x10	/* hash only */
--#define	IPV6_FLOW	0x11	/* hash only */
--#define	ETHER_FLOW	0x12	/* spec only (ether_spec) */
--
--/* Used for GTP-U IPv4 and IPv6.
-- * The format of GTP packets only includes
-- * elements such as TEID and GTP version.
-- * It is primarily intended for data communication of the UE.
-- */
--#define GTPU_V4_FLOW 0x13	/* hash only */
--#define GTPU_V6_FLOW 0x14	/* hash only */
--
--/* Use for GTP-C IPv4 and v6.
-- * The format of these GTP packets does not include TEID.
-- * Primarily expected to be used for communication
-- * to create sessions for UE data communication,
-- * commonly referred to as CSR (Create Session Request).
-- */
--#define GTPC_V4_FLOW 0x15	/* hash only */
--#define GTPC_V6_FLOW 0x16	/* hash only */
--
--/* Use for GTP-C IPv4 and v6.
-- * Unlike GTPC_V4_FLOW, the format of these GTP packets includes TEID.
-- * After session creation, it becomes this packet.
-- * This is mainly used for requests to realize UE handover.
-- */
--#define GTPC_TEID_V4_FLOW 0x17	/* hash only */
--#define GTPC_TEID_V6_FLOW 0x18	/* hash only */
--
--/* Use for GTP-U and extended headers for the PSC (PDU Session Container).
-- * The format of these GTP packets includes TEID and QFI.
-- * In 5G communication using UPF (User Plane Function),
-- * data communication with this extended header is performed.
-- */
--#define GTPU_EH_V4_FLOW 0x19	/* hash only */
--#define GTPU_EH_V6_FLOW 0x1a	/* hash only */
--
--/* Use for GTP-U IPv4 and v6 PSC (PDU Session Container) extended headers.
-- * This differs from GTPU_EH_V(4|6)_FLOW in that it is distinguished by
-- * UL/DL included in the PSC.
-- * There are differences in the data included based on Downlink/Uplink,
-- * and can be used to distinguish packets.
-- * The functions described so far are useful when you want to
-- * handle communication from the mobile network in UPF, PGW, etc.
-- */
--#define GTPU_UL_V4_FLOW 0x1b	/* hash only */
--#define GTPU_UL_V6_FLOW 0x1c	/* hash only */
--#define GTPU_DL_V4_FLOW 0x1d	/* hash only */
--#define GTPU_DL_V6_FLOW 0x1e	/* hash only */
-+enum {
-+	/* L2-L4 network traffic flow types */
-+	TCP_V4_FLOW	= 0x01,	/* hash or spec (tcp_ip4_spec) */
-+	UDP_V4_FLOW	= 0x02,	/* hash or spec (udp_ip4_spec) */
-+	SCTP_V4_FLOW	= 0x03,	/* hash or spec (sctp_ip4_spec) */
-+	AH_ESP_V4_FLOW	= 0x04,	/* hash only */
-+	TCP_V6_FLOW	= 0x05,	/* hash or spec (tcp_ip6_spec; nfc only) */
-+	UDP_V6_FLOW	= 0x06,	/* hash or spec (udp_ip6_spec; nfc only) */
-+	SCTP_V6_FLOW	= 0x07,	/* hash or spec (sctp_ip6_spec; nfc only) */
-+	AH_ESP_V6_FLOW	= 0x08,	/* hash only */
-+	AH_V4_FLOW	= 0x09,	/* hash or spec (ah_ip4_spec) */
-+	ESP_V4_FLOW	= 0x0a,	/* hash or spec (esp_ip4_spec) */
-+	AH_V6_FLOW	= 0x0b,	/* hash or spec (ah_ip6_spec; nfc only) */
-+	ESP_V6_FLOW	= 0x0c,	/* hash or spec (esp_ip6_spec; nfc only) */
-+	IPV4_USER_FLOW	= 0x0d,	/* spec only (usr_ip4_spec) */
-+	IP_USER_FLOW	= IPV4_USER_FLOW,
-+	IPV6_USER_FLOW	= 0x0e, /* spec only (usr_ip6_spec; nfc only) */
-+	IPV4_FLOW	= 0x10, /* hash only */
-+	IPV6_FLOW	= 0x11, /* hash only */
-+	ETHER_FLOW	= 0x12, /* spec only (ether_spec) */
-+
-+	/* Used for GTP-U IPv4 and IPv6.
-+	 * The format of GTP packets only includes
-+	 * elements such as TEID and GTP version.
-+	 * It is primarily intended for data communication of the UE.
-+	 */
-+	GTPU_V4_FLOW	= 0x13,	/* hash only */
-+	GTPU_V6_FLOW	= 0x14,	/* hash only */
-+
-+	/* Use for GTP-C IPv4 and v6.
-+	 * The format of these GTP packets does not include TEID.
-+	 * Primarily expected to be used for communication
-+	 * to create sessions for UE data communication,
-+	 * commonly referred to as CSR (Create Session Request).
-+	 */
-+	GTPC_V4_FLOW	= 0x15,	/* hash only */
-+	GTPC_V6_FLOW	= 0x16,	/* hash only */
-+
-+	/* Use for GTP-C IPv4 and v6.
-+	 * Unlike GTPC_V4_FLOW, the format of these GTP packets includes TEID.
-+	 * After session creation, it becomes this packet.
-+	 * This is mainly used for requests to realize UE handover.
-+	 */
-+	GTPC_TEID_V4_FLOW	= 0x17,	/* hash only */
-+	GTPC_TEID_V6_FLOW	= 0x18,	/* hash only */
-+
-+	/* Use for GTP-U and extended headers for the PSC (PDU Session Container).
-+	 * The format of these GTP packets includes TEID and QFI.
-+	 * In 5G communication using UPF (User Plane Function),
-+	 * data communication with this extended header is performed.
-+	 */
-+	GTPU_EH_V4_FLOW	= 0x19,	/* hash only */
-+	GTPU_EH_V6_FLOW	= 0x1a,	/* hash only */
-+
-+	/* Use for GTP-U IPv4 and v6 PSC (PDU Session Container) extended headers.
-+	 * This differs from GTPU_EH_V(4|6)_FLOW in that it is distinguished by
-+	 * UL/DL included in the PSC.
-+	 * There are differences in the data included based on Downlink/Uplink,
-+	 * and can be used to distinguish packets.
-+	 * The functions described so far are useful when you want to
-+	 * handle communication from the mobile network in UPF, PGW, etc.
-+	 */
-+	GTPU_UL_V4_FLOW	= 0x1b,	/* hash only */
-+	GTPU_UL_V6_FLOW	= 0x1c,	/* hash only */
-+	GTPU_DL_V4_FLOW	= 0x1d,	/* hash only */
-+	GTPU_DL_V6_FLOW	= 0x1e,	/* hash only */
-+
-+	__FLOW_TYPE_COUNT,
-+};
- 
- /* Flag to enable additional fields in struct ethtool_rx_flow_spec */
- #define	FLOW_EXT	0x80000000
-diff --git a/uapi/linux/ethtool_netlink_generated.h b/uapi/linux/ethtool_netlink_generated.h
-index fa0522b..fb973c3 100644
---- a/uapi/linux/ethtool_netlink_generated.h
-+++ b/uapi/linux/ethtool_netlink_generated.h
-@@ -31,17 +31,24 @@ enum ethtool_header_flags {
- 	ETHTOOL_FLAG_STATS = 4,
- };
- 
--enum {
--	ETHTOOL_PHY_UPSTREAM_TYPE_MAC,
--	ETHTOOL_PHY_UPSTREAM_TYPE_PHY,
--};
--
- enum ethtool_tcp_data_split {
- 	ETHTOOL_TCP_DATA_SPLIT_UNKNOWN,
- 	ETHTOOL_TCP_DATA_SPLIT_DISABLED,
- 	ETHTOOL_TCP_DATA_SPLIT_ENABLED,
- };
- 
-+/**
-+ * enum hwtstamp_source - Source of the hardware timestamp
-+ * @HWTSTAMP_SOURCE_NETDEV: Hardware timestamp comes from a MAC or a device
-+ *   which has MAC and PHY integrated
-+ * @HWTSTAMP_SOURCE_PHYLIB: Hardware timestamp comes from one PHY device of the
-+ *   network topology
-+ */
-+enum hwtstamp_source {
-+	HWTSTAMP_SOURCE_NETDEV = 1,
-+	HWTSTAMP_SOURCE_PHYLIB,
-+};
-+
- enum {
- 	ETHTOOL_A_HEADER_UNSPEC,
- 	ETHTOOL_A_HEADER_DEV_INDEX,
-@@ -406,6 +413,8 @@ enum {
- 	ETHTOOL_A_TSINFO_PHC_INDEX,
- 	ETHTOOL_A_TSINFO_STATS,
- 	ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER,
-+	ETHTOOL_A_TSINFO_HWTSTAMP_SOURCE,
-+	ETHTOOL_A_TSINFO_HWTSTAMP_PHYINDEX,
- 
- 	__ETHTOOL_A_TSINFO_CNT,
- 	ETHTOOL_A_TSINFO_MAX = (__ETHTOOL_A_TSINFO_CNT - 1)
-diff --git a/uapi/linux/if_link.h b/uapi/linux/if_link.h
-index ceff2f2..bb94d88 100644
---- a/uapi/linux/if_link.h
-+++ b/uapi/linux/if_link.h
-@@ -1984,4 +1984,19 @@ enum {
- 
- #define IFLA_DSA_MAX	(__IFLA_DSA_MAX - 1)
- 
-+/* OVPN section */
-+
-+enum ovpn_mode {
-+	OVPN_MODE_P2P,
-+	OVPN_MODE_MP,
-+};
-+
-+enum {
-+	IFLA_OVPN_UNSPEC,
-+	IFLA_OVPN_MODE,
-+	__IFLA_OVPN_MAX,
-+};
-+
-+#define IFLA_OVPN_MAX	(__IFLA_OVPN_MAX - 1)
-+
- #endif /* _LINUX_IF_LINK_H */
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h
+index d6f8b1030c68a428a144428b422b63b960c2fdba..6c04f41f9bacc3be2d2259d3b3e2099934f473f7 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h
+@@ -383,6 +383,7 @@ static const struct dpu_perf_cfg sc8180x_perf_data = {
+ 	.min_core_ib = 2400000,
+ 	.min_llcc_ib = 800000,
+ 	.min_dram_ib = 800000,
++	.min_prefill_lines = 24,
+ 	.danger_lut_tbl = {0xf, 0xffff, 0x0},
+ 	.safe_lut_tbl = {0xfff0, 0xf000, 0xffff},
+ 	.qos_lut_tbl = {
 
+---
+base-commit: b27cc623e01be9de1580eaa913508b237a7a9673
+change-id: 20250610-topic-dpu_8180_mpl-933388eb0ddd
+
+Best regards,
 -- 
-2.43.0
+Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
