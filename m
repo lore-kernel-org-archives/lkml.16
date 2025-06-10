@@ -1,157 +1,230 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9607112B71;
-	Tue, 10 Jun 2025 01:02:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749517329; cv=none; b=oA7B+jJTvap9d3UTNUmt2TUUQdQpMlAAwS0EN1Ss0oFAaB4YLZ1zZYHp9ZeIHDL9SRCq+oor6n06IjnsaxtSao9R7a+q9aktSYXiAh8pDK1Pp1AHyO8j4KM3K5GOwL73WHHe85wOjzDac4eVN9wrv0kJmJJkqvjwpf3+SquelIQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749517329; c=relaxed/simple;
-	bh=EbuBy0E5ZafugyjYTKvCcXhyucSCaS/HtXQs04B82hc=;
-	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Uc7MFpXusDtjfQwtD+5KF9OAQFDrrEpMsf94761y53b8+XRUQnFXRa63+jqKmpeGAuWhsRTLMkgVOTlUOv3GxdmAOc2mpyAoM9oXS5t1IQ/icArr68OcZXfHyXwk9kA2RS3tyGdlN3CdjJCePHu3WbBOgGZCl9NB646QJkD2QEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bGVqv6QGPzYQvLT;
-	Tue, 10 Jun 2025 09:02:03 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id E26351A0DF9;
-	Tue, 10 Jun 2025 09:02:02 +0800 (CST)
-Received: from [10.174.99.169] (unknown [10.174.99.169])
-	by APP4 (Coremail) with SMTP id gCh0CgDnSF0JhEdo4IIqPA--.56772S2;
-	Tue, 10 Jun 2025 09:02:02 +0800 (CST)
-Subject: Re: [PATCH 1/7] mm: shmem: correctly pass alloced parameter to
- shmem_recalc_inode() to avoid WARN_ON()
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-To: Baolin Wang <baolin.wang@linux.alibaba.com>, hughd@google.com,
- willy@infradead.org, akpm@linux-foundation.org
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org
-References: <20250605221037.7872-1-shikemeng@huaweicloud.com>
- <20250605221037.7872-2-shikemeng@huaweicloud.com>
- <3d07c68f-da11-43d8-a2da-6b200b2fa40a@linux.alibaba.com>
- <994283d9-2dc4-6887-5d46-247b834879b5@huaweicloud.com>
-Message-ID: <9e59f1f0-db3b-2182-4485-887ac7036bfd@huaweicloud.com>
-Date: Tue, 10 Jun 2025 09:02:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B024A06;
+	Tue, 10 Jun 2025 01:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749517443; cv=fail; b=lW/GNaW009ocsc6IZJcuH5Gp/fa0iJYoIXFLVic2wa4x1D3r0ydQUAfOIvdu18gdSrfb1OYo7n4iD8DuR03zOB0zMA4Wb8ZTKzohwijbkfiHF5z7BDBVEZ7EAGEmwvnt/PztnqtUzU93XwogapABmIQ1JhoSutBj7EQlEPs2LjY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749517443; c=relaxed/simple;
+	bh=Oj4vXqbXhyY3o/I1EWpQ60nRPvgTghkIBLVpQmuS1bo=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=JisbVJAB/VOyER1zla2qEIzKi4smbk+8KYU0NUg0WMxb/tGMA48wIuwDmMuS4BKDyRP10XCEOL2WEHQTnmWJtTYXYq+AZnkI8N7B8n1STr5ju3Uk1UnvUAlnSBhW+UStFu0o2S8HFl0XV1SBApMhx6s9rzz2dyYlu2uWo1WVocs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FROizZbr; arc=fail smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FROizZbr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749517442; x=1781053442;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=Oj4vXqbXhyY3o/I1EWpQ60nRPvgTghkIBLVpQmuS1bo=;
+  b=FROizZbrl8QDqDSCo0X4scanVk9p4MZ8ffVVlOM7E8LEHZnjZ+lq6cEW
+   D2sqonc2w20t9XhZ0Oz0r9rQkpn6Ry1lfYmPJMyvqi+hTGl4FS979sg2F
+   tYUINzxOE6HE0E8+rgdYJUdP7/S3IzIxcnrQeWWvLSKCu2bwDUYj8YhKg
+   d4cgkItiQyrQTWQVcgrDk+zYQ946Xb77rV1VKFp+A4TmIv6OVOSPIsC8M
+   Q+fqAfJynSOc0fpWJed7oEF+sn151n2xgrhKJC44rpnVowFYER4pCiJ6i
+   /jczjWcQ5IM8RTwIT0SBUdFLRnL49Aqo0Q5frXOUADx0E8r4Rf1jLplYm
+   Q==;
+X-CSE-ConnectionGUID: 0L9GCjSzQSe3NGA5kcElyA==
+X-CSE-MsgGUID: DUcYNJmlTWGTpdPZiVPRVQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51603368"
+X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
+   d="scan'208";a="51603368"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 18:04:01 -0700
+X-CSE-ConnectionGUID: Y2bo6dpyQsy497d9tA50vg==
+X-CSE-MsgGUID: Z36D3eLWSkGLCQLJQ3Z7Xw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,223,1744095600"; 
+   d="scan'208";a="151555870"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2025 18:03:58 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Mon, 9 Jun 2025 18:03:57 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Mon, 9 Jun 2025 18:03:57 -0700
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (40.107.212.50)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.55; Mon, 9 Jun 2025 18:03:57 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=eCQnuaGDaqT+CNH/NVOFoV13MGpryp/hph6lCevHkh1MV54XfAc0uPW3/wEgzSwNb6t6H4nz7HaSPKH0I1c95r7X0A6fuhezfHDomf2Yud2J0lJnNnHXb3Q1S8y/BNZ/SORTwhS6G2oRXjb3+2jyVjO8Ur06NBrn09mHwupu1LEmrzf31gLb4i+z+EXyvJqp60WiLzQDn9AlTw5AmihMZ4Nwqe7VOhQGIuUGdQvJeweifT+3D3j17k2bdBwwWldkV6J5HqqWWauvYs20tgCPzILyut+ZpXMXcefRE76HliYOcoi331u6gI/5EuZ0aVwFpmjJmWN2ynk0fccAFJmpdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=M52HvZojnRq9Z7+CcEk1G76wlm28PcN65OFKjOdkFXk=;
+ b=kBNZ5vGiUwuB5PCHpaZF81lug8iMOVWdV60ibOzuU5JwW9JrZDKK0PxWgMgKhLlAw7tAdlwMZek3pQX9WmZh4x99nWODA9lyDWdVlYMbAhiftVUWC9rUSloant16T+HfQ1f1SKbldtJueZFledSaA5FkpEPQXg8HYKh7DvBS2OaKs+iRiBlJpTj9Y+YyLUeFlcZK1v062whcRy93Qkh/WP+iRBz+0ETPD3LAP52815UH4ZY4x5mzjTfG4I1FXrHY5EqiAEMNCRMzFmnC+J8uwiqjkqEjVI3cW0fHm2hA6/gIGVyQxa7v/lGcX66B3Jjxo88+xxNxzkRPIHcvxY4LkQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CH3PR11MB8660.namprd11.prod.outlook.com (2603:10b6:610:1ce::13)
+ by PH7PR11MB8059.namprd11.prod.outlook.com (2603:10b6:510:24e::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.23; Tue, 10 Jun
+ 2025 01:03:55 +0000
+Received: from CH3PR11MB8660.namprd11.prod.outlook.com
+ ([fe80::cfad:add4:daad:fb9b]) by CH3PR11MB8660.namprd11.prod.outlook.com
+ ([fe80::cfad:add4:daad:fb9b%5]) with mapi id 15.20.8813.020; Tue, 10 Jun 2025
+ 01:03:54 +0000
+Date: Tue, 10 Jun 2025 09:03:41 +0800
+From: Chao Gao <chao.gao@intel.com>
+To: Nikolay Borisov <nik.borisov@suse.com>
+CC: <linux-coco@lists.linux.dev>, <x86@kernel.org>, <kvm@vger.kernel.org>,
+	<seanjc@google.com>, <pbonzini@redhat.com>, <eddie.dong@intel.com>,
+	<kirill.shutemov@intel.com>, <dave.hansen@intel.com>,
+	<dan.j.williams@intel.com>, <kai.huang@intel.com>,
+	<isaku.yamahata@intel.com>, <elena.reshetova@intel.com>,
+	<rick.p.edgecombe@intel.com>, Farrah Chen <farrah.chen@intel.com>, "Thomas
+ Gleixner" <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "Borislav
+ Petkov" <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter
+ Anvin" <hpa@zytor.com>, "Kirill A. Shutemov"
+	<kirill.shutemov@linux.intel.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 03/20] x86/virt/seamldr: Introduce a wrapper for
+ P-SEAMLDR SEAMCALLs
+Message-ID: <aEeEbXZglywwo1Rm@intel.com>
+References: <20250523095322.88774-1-chao.gao@intel.com>
+ <20250523095322.88774-4-chao.gao@intel.com>
+ <d1ec91ad-b368-4993-aadb-18af489ea87e@suse.com>
+ <aEaS3i5JhgFX2MCh@intel.com>
+ <175eedc5-d82a-4b3a-bce6-2caf625597ca@suse.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <175eedc5-d82a-4b3a-bce6-2caf625597ca@suse.com>
+X-ClientProxiedBy: KU2P306CA0016.MYSP306.PROD.OUTLOOK.COM
+ (2603:1096:d10:3b::14) To CH3PR11MB8660.namprd11.prod.outlook.com
+ (2603:10b6:610:1ce::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <994283d9-2dc4-6887-5d46-247b834879b5@huaweicloud.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDnSF0JhEdo4IIqPA--.56772S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxAw4xuw4rWw1kWw45uw1Utrb_yoWrKF1rpr
-	n5GFyDGr48JrZ7GF1xtr4kXry0qF4fAa1UJrnxAFyxKF47Gw18Kr13JrnFgr1DA34kAry7
-	tw1kK34IvayDCaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
-	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UK2N
-	tUUUUU=
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR11MB8660:EE_|PH7PR11MB8059:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1bcb1445-df42-4fe0-3fd1-08dda7baab8a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?f6A1n8KuFEeWxsAgHSIo7PVZKIv+98Mvr0DqzfWQIa111qslN00LvO/JczSE?=
+ =?us-ascii?Q?UrikiNA6X9+waOQGvO2tcDeGWFsVFCcj1O8FD9xQ4joVCR2NG45/0lB4DH9S?=
+ =?us-ascii?Q?yoTdvpk8bXbFP0F/5SMcB7qSz0n7lCuFH1TL8XYmvXRT3E4u88w7YDCIQaFd?=
+ =?us-ascii?Q?20W6P4JhYmRPzKQFYF8e9PCLOAZJvFdQdi6ln2R4aSHnNlZ3hXKE3PW0FErp?=
+ =?us-ascii?Q?ErTpU4iUzqPDPCgMKVZplWCwy7cV5kodKNRmfsauwZACWcmrkYnSdInmsFmt?=
+ =?us-ascii?Q?STZxsBkRuC7OadgAm+z0HbDit7du60HnoM1MU8GrN3I+cy2WGv7uksehND8r?=
+ =?us-ascii?Q?byM1wyGFqIJC+BmbDgFpLBibQ9mN+tk3cZeI/etPIfEGu/YJ7eU2m7CE70Rm?=
+ =?us-ascii?Q?j58fQaJXPhzzQz2N3VeNxIhjl2tWtO5AAD1MqKdSquE/YNEF+wPH6D/iRwis?=
+ =?us-ascii?Q?+jfujFKOMTvcRAfelcBglY1XoSaTAF35VqD8P8AOCyMe1ZvgLTqcMiJj98SK?=
+ =?us-ascii?Q?YMy1Q26zob1WkIX6F3d/zqZSZb8z3uPFULOuL0nGmvQFUZny0Sw63M99G6Kc?=
+ =?us-ascii?Q?hh/PRQxLmWb3w0Tilhm2cAiO/gx8F71HY/8cvQCEP2mvx52T56nEVgqTimy8?=
+ =?us-ascii?Q?Pg9kdCbVP5qO+3x4FPSknp0eoVgHXwEFNmskAhnp6c6qHbEWWIh+AWqkkXxL?=
+ =?us-ascii?Q?qfpBr9iysB8lqqN5IomJwLiQ6trsf3NEbhExfi3m6Di+71ibXvTIjelUssRv?=
+ =?us-ascii?Q?FJ1VAP3U39THNUOHRH+4HHTUPV0f21e7Sa40mJiKSFQLCnqDAeOPHDAPRBk2?=
+ =?us-ascii?Q?gnlQQrgD0T7UqzIkme8Nc76D/g805S0DHjSSVndEO/JjFYwE7jYpU9Ksn4pc?=
+ =?us-ascii?Q?7dksVgyhE5W5lrUgecZu5l+yDaFKcgML1SiT3IQ7lc+KlDdngZ79BGH1uD88?=
+ =?us-ascii?Q?K4Po/Xbsd2c5lVb3xm0pbYUEsuQtljhX1q+eHqF/0vYMtB9B/YXSS0qGwHOJ?=
+ =?us-ascii?Q?ENzXPSfqanyVAXicGg6CokxQxTWGvQp4eiFhHF55Ur/MPZRsmF/VYduzVmg7?=
+ =?us-ascii?Q?Nakx4Pqmaiyu25tlWj2vjWiIBz7TIFcpGTVr/6DKQnnyQjJj/fRgpmOWUkbQ?=
+ =?us-ascii?Q?FcMGQvJuvsApFX14Nnocg23xR5QAMlinEIqR5MKeBMVj/J1j7JUEbBzbAGxw?=
+ =?us-ascii?Q?4iDgT2jZT3GzdbEIi7MMEkCDaOqpp0nqpWz+p0oUCKvtSP/bc9+50gugj1ww?=
+ =?us-ascii?Q?LMU4hzDoK3a2GxbzdU2/4UFgXcZxelcxGfdHO0c0jjaXvxWApHUyyxpmeakw?=
+ =?us-ascii?Q?pdGoteygcazNlCoBYibo6EEvPcd7txy5VfBEX6AYIlWxq8kNyQzdQZJVZj48?=
+ =?us-ascii?Q?oCye89+547tUXHpxpb/StxEB26V2l5e1ePzXb+CrCgG+KIYBdG3dsUUKv066?=
+ =?us-ascii?Q?hUd+voKQJYM=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8660.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?guw5AlT/DTmwLxDtfHbw2iE/72Vsi0TzD/xE7PSvt918mZz0tGZ6xAl52jKD?=
+ =?us-ascii?Q?0j8p76Xau/gAD9phMVCkgZLhAA434eVFseCX9ut8CxJdkQmf6PTDtnj+T8od?=
+ =?us-ascii?Q?vsouEJrJzsluaZMYtwMy5PXuT9wpSe4G3XoR/cRRE71+HojvXBOg0uLyOXGR?=
+ =?us-ascii?Q?c25W0jjNWXG5Usbhf8jRcv+IlAuUfeTqJqSrf51aZWOiDZO/bVuYGHZi61Kf?=
+ =?us-ascii?Q?rZNEq1dGmmsdBsXOJwNJ2EHFQff7M8BlW6KcBSLcJA42FDfWOHV5dMUonVmW?=
+ =?us-ascii?Q?q9c8QJx5f39MKMcgFCxB2+ZVyP0xKAhpfgL9Y7iZhYOXSPwuRa4C5jH3dS6a?=
+ =?us-ascii?Q?QWtoOwjtAfx1yXAk5RPaI/xRc/FW//jTJ0CiRbDYb0evseyrShLsOzQxQ/ii?=
+ =?us-ascii?Q?mB5C8fkuJFoIft3CwgxZutLLIlbBqQku2+k44IThNs8oVQMaIgpI0cPnWwDa?=
+ =?us-ascii?Q?l+W4RrF9Y/bSQ+Cswq5n5hmjTDMQwRW8oEKgGL1zZOF/x/D6HhDLAbYHnris?=
+ =?us-ascii?Q?xPw62++PJa4Vn2kOKfYkzxg7UgU2xUbn2h3D7vtLb0AEkzN4r9mawrNu5pEM?=
+ =?us-ascii?Q?/fuu7HhH8djkvg92V9v7mUNxODk1QEMjSidM4er7wSQ9MQL0m2RjdZLEuHHJ?=
+ =?us-ascii?Q?HTHfbzSb612XJz8xXb2538ObuFIgxnSMKiorKC5Qg16WZJ4L8SYsCzYkkFEc?=
+ =?us-ascii?Q?KWPHd0LTpzQir8h/JX6fSyx1uwnkY9vs0r5wHtxYzEZJq0K+ubCgL7xYkuuP?=
+ =?us-ascii?Q?xlP7P7fWLpKsSmwBUCbNfZN31vXrL8WrVRA1Hc2gFSSqYhOOEHiwzSm3Tfyc?=
+ =?us-ascii?Q?awplgeTXL1fDF/Vm2io4grOVPZXLIemJNraR8qO/2TbR5v5JvQ9k0ZaeWY+7?=
+ =?us-ascii?Q?nA+Na7G/Ri1fVde6ZuiFLP3YrVkIS9pyXZngOgEjOtNt9s6Vg2fXVmBS8oFC?=
+ =?us-ascii?Q?/EDEveX59qreLyIBSKUkJeJLXkLE+AIpoGrUhS1zs8ADo0rniQSODuPuu82q?=
+ =?us-ascii?Q?7PdPe6AA/+TJ9tDoG4jnPz/TC2Q8VkzcfJE3opPMERQ1R+0FUXcMfTxmeyFj?=
+ =?us-ascii?Q?Bqd1SYF/Qy40qOzrYrvzdP4RthBcZ/IKgfgem9VDMSkFxzSgSC2W1zpCI4lG?=
+ =?us-ascii?Q?ioji/sT0WVP4XCaRdHqjjZ/ehCVdmOZdC8sFqlUUZ6BcIvo48UxoxvgmvfKm?=
+ =?us-ascii?Q?vj8C9/cy43x4scidpVimpJD8ww2FPFMXnBDcMjQUocI4bgtkMI3bn0OICs07?=
+ =?us-ascii?Q?XJ4HDl29WnCVgCoBHEHAeq16oEFWhF3yZapfCm0QHGH7t4jaq794A79RWIoD?=
+ =?us-ascii?Q?qBqaqIxjt3M0y93j5F/JAYkpeKCDwUNKBdD5x2MQtLr//7+DHaNEm2+qZONY?=
+ =?us-ascii?Q?haFl4NSLdSHhCW2Tr5QCFSIF1yvZzHT6N25n3clzwp5dnyfqoMVXFVXzKQNR?=
+ =?us-ascii?Q?V0tt5uUrU0Ho+GltPNTrexK82Jnz7USbpnP8f88nkcB9sjIS+5VOYRfLpvWD?=
+ =?us-ascii?Q?Q/I4WJyOLwIGoNasRfXEE3juxbTxfQ66zrpJ/RdgbihJgBrtZuS+zRhcMfyK?=
+ =?us-ascii?Q?UUSz/qkRTOdLrO/tRApGzuTP7T0BFg2aIve5YD3U?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1bcb1445-df42-4fe0-3fd1-08dda7baab8a
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8660.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 01:03:54.5352
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ilr2RQ5UEgkJAzXDqUl/iaqV+9yN6db3vFGnrx2WTq3DyJPAPwD6Bkfr0DBdL4e+CX+qdhNASLdRHwPQxbgvJw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB8059
+X-OriginatorOrg: intel.com
 
+On Mon, Jun 09, 2025 at 11:02:49AM +0300, Nikolay Borisov wrote:
+>
+>
+>On 6/9/25 10:53, Chao Gao wrote:
+>> > > +config INTEL_TDX_MODULE_UPDATE
+>> > > +	bool "Intel TDX module runtime update"
+>> > > +	depends on INTEL_TDX_HOST
+>> > > +	help
+>> > > +	  This enables the kernel to support TDX module runtime update. This allows
+>> > > +	  the admin to upgrade the TDX module to a newer one without the need to
+>> > > +	  terminate running TDX guests.
+>> > > +
+>> > > +	  If unsure, say N.
+>> > > +
+>> > 
+>> > WHy should this be conditional?
+>> > 
+>> 
+>> Good question. I don't have a strong reason, but here are my considerations:
+>> 
+>> 1. Runtime updates aren't strictly necessary for TDX functionalities. Users can
+>>     update the TDX module via BIOS updates and reboot if service downtime isn't
+>>     a concern.
+>> 
+>> 2. Selecting TDX module updates requires selecting FW_UPLOAD and FW_LOADER,
+>>     which I think will significantly increase the kernel size if FW_UPLOAD/LOADER
+>>     won't otherwise be selected.
+>
+>If size is a consideration (but given the size of machines that are likely to
+>run CoCo guests I'd say it's not) then don't make this a user-configurable
+>option but rather make it depend on TDX being selected and
+>FW_UPLOAD/FW_LOADER being selected.
 
+But in almost all existing cases, 'select FW_UPLOAD/LOADER' is used rather than
+'depends on FW_UPLOAD/LOADER'. You can verify this by running
 
-on 6/9/2025 8:46 AM, Kemeng Shi wrote:
-> 
-> 
-> on 6/7/2025 2:11 PM, Baolin Wang wrote:
->>
->>
->> On 2025/6/6 06:10, Kemeng Shi wrote:
->>> As noted in the comments, we need to release block usage for swap entry
->>> which was replaced with poisoned swap entry. However, no block usage is
->>> actually freed by calling shmem_recalc_inode(inode, -nr_pages, -nr_pages).
->>> Instead, call shmem_recalc_inode(inode, 0, -nr_pages) can correctly release
->>> the block usage.
->>>
->>> Fixes: 6cec2b95dadf7 ("mm/shmem: fix infinite loop when swap in shmem error at swapoff time")
->>> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
->>> ---
->>>   mm/shmem.c | 2 +-
->>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/mm/shmem.c b/mm/shmem.c
->>> index 4b42419ce6b2..e27d19867e03 100644
->>> --- a/mm/shmem.c
->>> +++ b/mm/shmem.c
->>> @@ -2145,7 +2145,7 @@ static void shmem_set_folio_swapin_error(struct inode *inode, pgoff_t index,
->>>        * won't be 0 when inode is released and thus trigger WARN_ON(i_blocks)
->>>        * in shmem_evict_inode().
->>>        */
->>> -    shmem_recalc_inode(inode, -nr_pages, -nr_pages);
->>> +    shmem_recalc_inode(inode, 0, -nr_pages);
->>>       swap_free_nr(swap, nr_pages);
->>>   }
->>
->> Have you tested your patch? When I inject an error to test your patch, the following issue will be triggered:As all issues are hard to trigger, I only run some simple test to ensure normal
-> process is fine. Could you share how to inject the error to trigger following
-> issue. I will have a deep look. Thanks
-Sorry that the message is truncated. I mean I only test normal process is fine.
-Besides, I think there is another long-standing issue which could trigger the
-following issue. Here is the issue which is possible to blame:
-When swap entry is replaced with error entry in shmem_set_folio_swapin_error(),
-we will reduce info->swapped. Afterwards, error entry could be deleted in
-shmem_undo_range() and the info->swapped is reduced again. As a result, we
-reduce info->swapped twice for a single swap entry.
-A simple way to confirm this is injecting error to original code. Could you
-share how to trigger the issue or could you do the same test to original code?
-Thanks.
+	find . -name 'Kconfig' -exec grep -E 'FW_UPLOAD|FW_LOADER$' {} +
 
->>
->> [  127.173330] ------------[ cut here ]------------
->> [  127.173331] WARNING: CPU: 13 PID: 6860 at mm/shmem.c:1388 shmem_evict_inode+0xf0/0x348
->> [  127.173920] CPU: 13 UID: 0 PID: 6860 Comm: shmem_swapin_er Kdump: loaded Tainted: G            E       6.15.0-rc6+ #54 VOLUNTARY
->> [  127.173925] pstate: 63401005 (nZCv daif +PAN -UAO +TCO +DIT +SSBS BTYPE=--)
->> [  127.173927] pc : shmem_evict_inode+0xf0/0x348
->> [  127.173929] lr : shmem_evict_inode+0x68/0x348
->> [  127.173931] sp : ffff8000895639e0
->> [  127.173932] x29: ffff8000895639e0 x28: 0000000000000006 x27: ffff00013754bfc0
->> [  127.173935] x26: ffff800080d8f160 x25: 0000000000000006 x24: ffff0000c0aab440
->> [  127.173937] x23: ffff00013754b780 x22: ffff00013754b780 x21: ffff0000cbc9c6b0
->> [  127.173940] x20: ffff0000c0aab440 x19: ffff0000cbc9c700 x18: 0000000000000030
->> [  127.173942] x17: 0000ffffa1f4cfff x16: 0000000000000003 x15: 0000000000001000
->> [  127.173945] x14: 00000000ffffffff x13: 0000000000000004 x12: ffff800089563108
->> [  127.173947] x11: 0000000000000000 x10: 0000000000000002 x9 : ffff800080352080
->> [  127.173949] x8 : fffffffffffffffe x7 : ffff800089563700 x6 : 0000000000000001
->> [  127.173952] x5 : 0000000000000004 x4 : 0000000000000002 x3 : 0000000000000002
->> [  127.173954] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffffffffffffff80
->> [  127.173957] Call trace:
->> [  127.173958]  shmem_evict_inode+0xf0/0x348 (P)
->> [  127.173961]  evict+0x1c8/0x2c8
->> [  127.173964]  iput_final+0x84/0x1a0
->> [  127.173966]  iput.part.0+0xd0/0xf0
->> [  127.173968]  iput+0x20/0x38
->> [  127.173971]  dentry_unlink_inode+0xc0/0x158
->> [  127.173973]  __dentry_kill+0x80/0x248
->> [  127.173974]  dput+0xf0/0x240
->> [  127.173976]  __fput+0x120/0x2f0
->> [  127.173978]  ____fput+0x18/0x28
->> [  127.173980]  task_work_run+0x88/0x120
->> [  127.173983]  do_exit+0x198/0x3c0
->> [  127.173986]  do_group_exit+0x38/0xa0
->> [  127.173987]  get_signal+0x6ac/0x6b8
->> [  127.173990]  do_signal+0x100/0x208
->> [  127.173991]  do_notify_resume+0xc8/0x158
->> [  127.173994]  el0_da+0xbc/0xc0
->> [  127.173997]  el0t_64_sync_handler+0x70/0xc8
->> [  127.173999]  el0t_64_sync+0x154/0x158
->> [  127.174001] ---[ end trace 0000000000000000 ]---
->>
+>
+>I'd rather keep the user visible options to a minimum, especially something
+>such as this update functionality.
+>
+>But in any case I'd like to hear other opinions as well.
 
+Yeah, let's see what others think.
+
+<snip>
