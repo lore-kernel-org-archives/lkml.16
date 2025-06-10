@@ -1,215 +1,320 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6991D23A993;
-	Tue, 10 Jun 2025 18:15:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C7C236429;
+	Tue, 10 Jun 2025 18:15:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749579311; cv=none; b=fiFakbd6QNRgkfra6qdgcwahGBntRPnp718uKJBWhBiNR5e6n1jDpnJLjKWtnEfPp5Sm3y1+q/1f3u3c3dS6w0I/h6AA6uxG2r0vPKvYXIpU1TyBZXRfyEG2BY6Lc8Bz6sFPRPSZM6FXnWd61j3sFDfAw0P6Js7ERVGNXSWRFB0=
+	t=1749579344; cv=none; b=rkEIwnOpeJeGSALdBzpo0tc1W/KG3LZqSbta2vIi3xrEBL+nKnESOfDnDt3K5Z0nvneOFCsAn39R7xnMxWLSQpSvXwKLXPTrKkcSB6chzbqk+FqXlRsJ3Mw/DRLr1ubaLMGIP7NrLMPuPB5cN0SeqShA2fL87v8vpEVwHIEi2CY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749579311; c=relaxed/simple;
-	bh=mL4bjzx4+LiYoVCmPebXQFcmiHtDaruNtlb215BQcb0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L0gQDGDTxFCoBlaXjqSI6sdP9kzyKHYIaG2607lystfdAZEhTcIYL6cc83N7CvI/KfDYghSMr6Z15IklZHBSp8iK9+p5Gz508AjQ5ypBGTPSzsTF83S7zBCdDbfrg9ek/CD7ggLw8fWGjwZ0+8rhaNDmdGih42XdxSKi2eGoPTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ir7AKMgd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749579344; c=relaxed/simple;
+	bh=5zhnt1c0lZT3OLH7CzVt7TZ9CQ82Lt78WV/RF/ijulU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rtb2yAvfZbE0w/KN7ijo4TCG6tZ8qHGSvLQjjZPW+uQoD3OjhvQKPCUvT/62LT1FhcNMNrxsWjfZP3kgllplPbucl82w2JxHw03uEd3im5op0RjMVrH0M5nHB0lHAXS5kIwPld8t/Tl2NLhV8d5+PVGsi67zFm+Fkc3irtT0ju0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tcQCf/A8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ir7AKMgd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A45BC4CEED;
-	Tue, 10 Jun 2025 18:15:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tcQCf/A8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9F16C4CEED;
+	Tue, 10 Jun 2025 18:15:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749579309;
-	bh=mL4bjzx4+LiYoVCmPebXQFcmiHtDaruNtlb215BQcb0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ir7AKMgdfT7Ag0B78irRVqOgGX9tfN2NxzxTrifLgUH4aHa6zBo7Ezhbu9JhZd9fi
-	 3C6eoFAYDaJbSj77j0jslXWr2sz1OuapecwE97i7lGtEfqbkIoTnsloPPKsQflKWqK
-	 VE1NpN99wQgJtbRS013S9UeKdfiMu2dR16Ve9MK4YBN+B+ESUdHSNNXCYFGXKA7cHU
-	 zBLiFfpDUDqBQ5ENkcInvai1OhRQorJbNoOo12sPSFR4SZOLW6ANaUbQMqBKpPLy3Q
-	 xE7X/OYNTuScllG3UnktakTaNr/lOSyWtnC4j+qRyDG0vsTUtpz2Ht5IAfUHp4VgdO
-	 0/PeqriqUsgYQ==
-Received: by pali.im (Postfix)
-	id 457C84F1; Tue, 10 Jun 2025 20:15:07 +0200 (CEST)
-From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To: Steve French <sfrench@samba.org>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Tom Talpey <tom@talpey.com>
-Cc: linux-cifs@vger.kernel.org,
+	s=k20201202; t=1749579343;
+	bh=5zhnt1c0lZT3OLH7CzVt7TZ9CQ82Lt78WV/RF/ijulU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tcQCf/A8aRdQcOkf9YgLLFbg0vq14IlRcZyxzsxaFgdIqC3cWb8++rEN/gyHvLZtm
+	 mpysfcNEiDr4Gq/+1a1yJe+aGTC+cfYpEwhZ7+zCj29NKeRTUq1j6a7+SJUEFQ1hSW
+	 X/vnfmEmVi9hRIl2A3AQmYev4iBoTwt4fSSz56taUjqG+EWZ8ipkx4wnQCR3eiAMZS
+	 G4Po/STLKg24RmmuUfPTngUhRxwwxk7XoDKqa4U/AAA30KUCsTJtGLqTPnXdBikBCZ
+	 at+BQwW2WsQUb5AGyWOMoexnChYPlxTEQ0gg1zfSu0bD6ov1q2JP3Y98AJiryzh6m9
+	 MuzB0mBdfOUIg==
+Date: Tue, 10 Jun 2025 13:15:42 -0500
+From: Rob Herring <robh@kernel.org>
+To: =?utf-8?B?VG9tw6HFoSBKdcWZZW5h?= <jurenatomas@gmail.com>
+Cc: dmitry.torokhov@gmail.com, krzk+dt@kernel.org, conor+dt@kernel.org,
+	linux-input@vger.kernel.org, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] cifs: Show reason why autodisabling serverino support
-Date: Tue, 10 Jun 2025 20:15:02 +0200
-Message-Id: <20250610181502.15839-1-pali@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250610172221.ihsrjrikbiijyb4n@pali>
-References: <20250610172221.ihsrjrikbiijyb4n@pali>
+Subject: Re: [PATCH] Input: tca6416-keypad - Add OF support for driver
+ instantiation
+Message-ID: <20250610181542.GA2396962-robh@kernel.org>
+References: <20250610154609.1382818-1-jurenatomas@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250610154609.1382818-1-jurenatomas@gmail.com>
 
-Extend cifs_autodisable_serverino() function to print also text message why
-the function was called.
+On Tue, Jun 10, 2025 at 05:46:10PM +0200, Tomáš Juřena wrote:
+> From: Tomas Jurena <jurenatomas@gmail.com>
+> 
+> Adds support for instantiating the tca6416-keypad driver via
+> Device Tree. If no platform data is present, the driver can now be
+> probed based on OF bindings.
+> 
+> A corresponding Device Tree binding document is added at:
+>   Documentation/devicetree/bindings/input/tca6416-keypad.yaml
+> 
+> This allows the driver to be used in systems that rely solely on the
+> Device Tree for hardware description, such as embedded ARM platforms.
+> 
+> Tested on Toradex Ixora 1.3A board and Apalis imx8 SOM.
 
-The text message is printed just once for mount then autodisabling
-serverino support. Once the serverino support is disabled for mount it will
-not be re-enabled. So those text messages do not cause flooding logs.
+We already have a GPIO driver for this chip. Would the 
+gpio-keys driver work here instead? Seems to work for 
+arch/arm/boot/dts/ti/omap/am3517-evm-ui.dtsi.
 
-This change allows to debug issues why cifs.ko decide to turn off server
-inode number support and hence disable support for detection of hardlinks.
+> 
+> Signed-off-by: Tomas Jurena <jurenatomas@gmail.com>
+> ---
+>  .../bindings/input/tca6416-keypad.yaml        | 87 ++++++++++++++++++
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
----
-Paulo and Tom, could you check if this change is better now for you?
-It should address problems with logs flooding and also information about
-harlinks (it is already printed as can be seen also in this diff).
-I would like to get your ACK, so I'm trying to improve it.
----
- fs/smb/client/cifsproto.h | 2 +-
- fs/smb/client/connect.c   | 2 +-
- fs/smb/client/dfs_cache.c | 2 +-
- fs/smb/client/inode.c     | 6 +++---
- fs/smb/client/misc.c      | 6 +++++-
- fs/smb/client/readdir.c   | 4 ++--
- 6 files changed, 13 insertions(+), 9 deletions(-)
+Bindings should be a separate patch.
 
-diff --git a/fs/smb/client/cifsproto.h b/fs/smb/client/cifsproto.h
-index d550662b4e72..07a67c8c37ce 100644
---- a/fs/smb/client/cifsproto.h
-+++ b/fs/smb/client/cifsproto.h
-@@ -586,9 +586,9 @@ extern int cifs_do_set_acl(const unsigned int xid, struct cifs_tcon *tcon,
- 			   const struct nls_table *nls_codepage, int remap);
- extern int CIFSGetExtAttr(const unsigned int xid, struct cifs_tcon *tcon,
- 			const int netfid, __u64 *pExtAttrBits, __u64 *pMask);
- #endif /* CIFS_ALLOW_INSECURE_LEGACY */
--extern void cifs_autodisable_serverino(struct cifs_sb_info *cifs_sb);
-+extern void cifs_autodisable_serverino(struct cifs_sb_info *cifs_sb, const char *reason, int rc);
- extern bool couldbe_mf_symlink(const struct cifs_fattr *fattr);
- extern int check_mf_symlink(unsigned int xid, struct cifs_tcon *tcon,
- 			      struct cifs_sb_info *cifs_sb,
- 			      struct cifs_fattr *fattr,
-diff --git a/fs/smb/client/connect.c b/fs/smb/client/connect.c
-index 6bf04d9a5491..819721dfd5bb 100644
---- a/fs/smb/client/connect.c
-+++ b/fs/smb/client/connect.c
-@@ -3907,9 +3907,9 @@ int cifs_mount(struct cifs_sb_info *cifs_sb, struct smb3_fs_context *ctx)
- 	/*
- 	 * After reconnecting to a different server, unique ids won't match anymore, so we disable
- 	 * serverino. This prevents dentry revalidation to think the dentry are stale (ESTALE).
- 	 */
--	cifs_autodisable_serverino(cifs_sb);
-+	cifs_autodisable_serverino(cifs_sb, "Reconnecting to different server, inode numbers won't match anymore", 0);
- 	/*
- 	 * Force the use of prefix path to support failover on DFS paths that resolve to targets
- 	 * that have different prefix paths.
- 	 */
-diff --git a/fs/smb/client/dfs_cache.c b/fs/smb/client/dfs_cache.c
-index 4dada26d56b5..c3fe85c31e2b 100644
---- a/fs/smb/client/dfs_cache.c
-+++ b/fs/smb/client/dfs_cache.c
-@@ -1288,9 +1288,9 @@ int dfs_cache_remount_fs(struct cifs_sb_info *cifs_sb)
- 	/*
- 	 * After reconnecting to a different server, unique ids won't match anymore, so we disable
- 	 * serverino. This prevents dentry revalidation to think the dentry are stale (ESTALE).
- 	 */
--	cifs_autodisable_serverino(cifs_sb);
-+	cifs_autodisable_serverino(cifs_sb, "Reconnecting to different server, inode numbers won't match anymore", 0);
- 	/*
- 	 * Force the use of prefix path to support failover on DFS paths that resolve to targets
- 	 * that have different prefix paths.
- 	 */
-diff --git a/fs/smb/client/inode.c b/fs/smb/client/inode.c
-index cd06598eacbd..b1c6e3986278 100644
---- a/fs/smb/client/inode.c
-+++ b/fs/smb/client/inode.c
-@@ -1076,9 +1076,9 @@ static void cifs_set_fattr_ino(int xid, struct cifs_tcon *tcon, struct super_blo
- 		if (*inode)
- 			fattr->cf_uniqueid = CIFS_I(*inode)->uniqueid;
- 		else {
- 			fattr->cf_uniqueid = iunique(sb, ROOT_I);
--			cifs_autodisable_serverino(cifs_sb);
-+			cifs_autodisable_serverino(cifs_sb, "Cannot retrieve inode number via get_srv_inum", rc);
- 		}
- 		return;
- 	}
- 
-@@ -1529,9 +1529,9 @@ cifs_iget(struct super_block *sb, struct cifs_fattr *fattr)
- 		if (fattr->cf_flags & CIFS_FATTR_INO_COLLISION) {
- 			fattr->cf_flags &= ~CIFS_FATTR_INO_COLLISION;
- 
- 			if (inode_has_hashed_dentries(inode)) {
--				cifs_autodisable_serverino(CIFS_SB(sb));
-+				cifs_autodisable_serverino(CIFS_SB(sb), "Inode number collision detected", 0);
- 				iput(inode);
- 				fattr->cf_uniqueid = iunique(sb, ROOT_I);
- 				goto retry_iget5_locked;
- 			}
-@@ -1596,9 +1596,9 @@ struct inode *cifs_root_iget(struct super_block *sb)
- iget_root:
- 	if (!rc) {
- 		if (fattr.cf_flags & CIFS_FATTR_JUNCTION) {
- 			fattr.cf_flags &= ~CIFS_FATTR_JUNCTION;
--			cifs_autodisable_serverino(cifs_sb);
-+			cifs_autodisable_serverino(cifs_sb, "Cannot retrieve attributes for junction point", rc);
- 		}
- 		inode = cifs_iget(sb, &fattr);
- 	}
- 
-diff --git a/fs/smb/client/misc.c b/fs/smb/client/misc.c
-index e77017f47084..409277883e8a 100644
---- a/fs/smb/client/misc.c
-+++ b/fs/smb/client/misc.c
-@@ -551,9 +551,9 @@ dump_smb(void *buf, int smb_buf_length)
- 		       smb_buf_length, true);
- }
- 
- void
--cifs_autodisable_serverino(struct cifs_sb_info *cifs_sb)
-+cifs_autodisable_serverino(struct cifs_sb_info *cifs_sb, const char *reason, int rc)
- {
- 	if (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM) {
- 		struct cifs_tcon *tcon = NULL;
- 
-@@ -561,8 +561,12 @@ cifs_autodisable_serverino(struct cifs_sb_info *cifs_sb)
- 			tcon = cifs_sb_master_tcon(cifs_sb);
- 
- 		cifs_sb->mnt_cifs_flags &= ~CIFS_MOUNT_SERVER_INUM;
- 		cifs_sb->mnt_cifs_serverino_autodisabled = true;
-+		if (rc)
-+			cifs_dbg(VFS, "%s: %d\n", reason, rc);
-+		else
-+			cifs_dbg(VFS, "%s\n", reason);
- 		cifs_dbg(VFS, "Autodisabling the use of server inode numbers on %s\n",
- 			 tcon ? tcon->tree_name : "new server");
- 		cifs_dbg(VFS, "The server doesn't seem to support them properly or the files might be on different servers (DFS)\n");
- 		cifs_dbg(VFS, "Hardlinks will not be recognized on this mount. Consider mounting with the \"noserverino\" option to silence this message.\n");
-diff --git a/fs/smb/client/readdir.c b/fs/smb/client/readdir.c
-index 787d6bcb5d1d..06e90921f751 100644
---- a/fs/smb/client/readdir.c
-+++ b/fs/smb/client/readdir.c
-@@ -412,9 +412,9 @@ _initiate_cifs_search(const unsigned int xid, struct file *file,
- 	if (rc == 0) {
- 		cifsFile->invalidHandle = false;
- 	} else if ((rc == -EOPNOTSUPP) &&
- 		   (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM)) {
--		cifs_autodisable_serverino(cifs_sb);
-+		cifs_autodisable_serverino(cifs_sb, "Cannot retrieve inode number via query_dir_first", rc);
- 		goto ffirst_retry;
- 	}
- error_exit:
- 	cifs_put_tlink(tlink);
-@@ -1006,9 +1006,9 @@ static int cifs_filldir(char *find_entry, struct file *file,
- 	if (de.ino && (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM)) {
- 		fattr.cf_uniqueid = de.ino;
- 	} else {
- 		fattr.cf_uniqueid = iunique(sb, ROOT_I);
--		cifs_autodisable_serverino(cifs_sb);
-+		cifs_autodisable_serverino(cifs_sb, "Cannot retrieve inode number", 0);
- 	}
- 
- 	if ((cifs_sb->mnt_cifs_flags & CIFS_MOUNT_MF_SYMLINKS) &&
- 	    couldbe_mf_symlink(&fattr))
--- 
-2.20.1
+>  drivers/input/keyboard/tca6416-keypad.c       | 88 +++++++++++++++++--
+>  2 files changed, 170 insertions(+), 5 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/input/tca6416-keypad.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/input/tca6416-keypad.yaml b/Documentation/devicetree/bindings/input/tca6416-keypad.yaml
+> new file mode 100644
+> index 000000000000..f050403c4dbe
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/tca6416-keypad.yaml
+> @@ -0,0 +1,87 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/input/tca6416-keypad.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: TI TCA6416 keypad
+> +
+> +maintainers:
+> +
+> +description: |
 
+Don't need '|'
+
+> +  Texas Instruments TCA6416 IO expander as a keypad input device.
+> +
+> +allOf:
+> +  - $ref: input.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,tca6416_keys
+> +      - ti,tca6408_keys
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  linux,gpio-keymap:
+
+linux,keymap
+
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    description: |
+> +      Array of gpio keys provided by the driver instance. Each entry is a
+> +      bitfield holding configuration of the input key. The bitfield looks like
+> +      this:
+> +      +------------------------------------------------------------+
+> +      | Bits     | 31:18    |         17 | 16:14 | 13:10    | 9:0  |
+> +      | Function | reserved | active_low | type  | reserved | code |
+> +      +------------------------------------------------------------+
+> +      code - Linux key code
+> +      type - EV_KEY or EV_SW
+> +      active_low - Key is active in low state
+> +
+> +  linux,keycodes:
+> +    minItems: 1
+> +    maxItems: 16
+> +
+> +  autorepeat:
+> +    type: boolean
+> +    description: |
+> +      Enables the Linux input system's autorepeat feature on the input device.
+> +
+> +  polling:
+> +    type: boolean
+> +    description: |
+> +      Forces driver to use polling mode instead of IRQ.
+> +
+> +  pinmask:
+> +    description: |
+> +      Allows to disable certain keys. By default are all inputs enabled.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    i2c {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      keypad@21 {
+> +        compatible = "ti,tca6416_keys";
+> +        reg = <0x21>;
+> +        interrupt-parent = <&gpio>;
+> +        interrupts = <26 IRQ_TYPE_EDGE_FALLING>;
+> +        linux,gpio-keymap = <
+> +                            0x24290, // active low, EV_KEY, 0, KEY_MACRO1
+> +                            0x24291, // active low, EV_KEY, 1, KEY_MACRO2
+> +                            0x24292, // active low, EV_KEY, 2, KEY_MACRO3
+> +        >;
+> +      };
+> +    };
+> +
+> +...
+> diff --git a/drivers/input/keyboard/tca6416-keypad.c b/drivers/input/keyboard/tca6416-keypad.c
+> index fbc674d7b9f0..8910498cf266 100644
+> --- a/drivers/input/keyboard/tca6416-keypad.c
+> +++ b/drivers/input/keyboard/tca6416-keypad.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/i2c.h>
+>  #include <linux/input.h>
+>  #include <linux/tca6416_keypad.h>
+> +#include <linux/bitfield.h>
+>  
+>  #define TCA6416_INPUT          0
+>  #define TCA6416_OUTPUT         1
+> @@ -24,6 +25,7 @@
+>  #define TCA6416_DIRECTION      3
+>  
+>  #define TCA6416_POLL_INTERVAL	100 /* msec */
+> +#define TCA6416_MAX_IO_SIZE 16 /* maximum number of inputs */
+>  
+>  static const struct i2c_device_id tca6416_id[] = {
+>  	{ "tca6416-keys", 16, },
+> @@ -173,9 +175,67 @@ static int tca6416_setup_registers(struct tca6416_keypad_chip *chip)
+>  	return 0;
+>  }
+>  
+> +/* Configuration bitmap
+> + * | 31:18    |         17 | 16:14 | 13:10    | 9:0  |
+> + * | reserved | active_low | type  | reserved | code |
+> + */
+> +#define CFG_CODE GENMASK(9, 0)
+> +#define CFG_TYPE GENMASK(16, 14)
+> +#define CFG_ACTIVE_LOW BIT(17)
+> +
+> +static struct tca6416_keys_platform_data *
+> +tca6416_parse_properties(struct device *dev, uint8_t io_size)
+> +{
+> +	static const char keymap_property[] = "linux,gpio-keymap";
+> +	struct tca6416_keys_platform_data *pdata;
+> +	u32 keymap[TCA6416_MAX_IO_SIZE];
+> +	struct tca6416_button *buttons;
+> +	int ret, i;
+> +	u8 pin;
+> +
+> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata)
+> +		return NULL;
+> +
+> +	ret = device_property_count_u32(dev, keymap_property);
+> +	if (ret <= 0)
+> +		return NULL;
+> +
+> +	pdata->nbuttons = ret;
+> +	if (pdata->nbuttons > io_size)
+> +		pdata->nbuttons = io_size;
+> +
+> +	ret = device_property_read_u32_array(dev, keymap_property, keymap,
+> +					     pdata->nbuttons);
+> +	if (ret)
+> +		return NULL;
+> +
+> +	buttons = devm_kcalloc(dev, pdata->nbuttons, sizeof(*buttons),
+> +			       GFP_KERNEL);
+> +	if (!buttons)
+> +		return NULL;
+> +
+> +	for (i = 0; i < pdata->nbuttons; i++) {
+> +		buttons[i].code = FIELD_GET(CFG_CODE, keymap[i]);
+> +		buttons[i].type = FIELD_GET(CFG_TYPE, keymap[i]);
+> +		buttons[i].active_low = FIELD_GET(CFG_ACTIVE_LOW, keymap[i]);
+> +		/* enable all inputs by default */
+> +		pdata->pinmask |= BIT(i);
+> +	}
+> +
+> +	pdata->buttons = buttons;
+> +
+> +	pdata->rep = device_property_read_bool(dev, "autorepeat");
+> +	/* we can ignore the result as by default all inputs are enabled */
+> +	device_property_read_u16(dev, "pinmask", &pdata->pinmask);
+> +	pdata->use_polling = device_property_read_bool(dev, "polling");
+> +
+> +	return pdata;
+> +}
+> +
+>  static int tca6416_keypad_probe(struct i2c_client *client)
+>  {
+> -	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+> +	uint8_t io_size = (uintptr_t)i2c_get_match_data(client);
+>  	struct tca6416_keys_platform_data *pdata;
+>  	struct tca6416_keypad_chip *chip;
+>  	struct input_dev *input;
+> @@ -190,9 +250,13 @@ static int tca6416_keypad_probe(struct i2c_client *client)
+>  	}
+>  
+>  	pdata = dev_get_platdata(&client->dev);
+> -	if (!pdata) {
+> -		dev_dbg(&client->dev, "no platform data\n");
+> -		return -EINVAL;
+> +	if (!pdata && dev_fwnode(&client->dev)) {
+> +		pdata = tca6416_parse_properties(&client->dev, io_size);
+> +		if (!pdata) {
+> +			dev_err(&client->dev,
+> +				"Failed to parse device configuration from properties\n");
+> +			return -EINVAL;
+> +		}
+>  	}
+>  
+>  	chip = devm_kzalloc(&client->dev,
+> @@ -207,7 +271,7 @@ static int tca6416_keypad_probe(struct i2c_client *client)
+>  
+>  	chip->client = client;
+>  	chip->input = input;
+> -	chip->io_size = id->driver_data;
+> +	chip->io_size = io_size;
+>  	chip->pinmask = pdata->pinmask;
+>  	chip->use_polling = pdata->use_polling;
+>  
+> @@ -279,9 +343,23 @@ static int tca6416_keypad_probe(struct i2c_client *client)
+>  	return 0;
+>  }
+>  
+> +static const struct of_device_id tca6416_of_match[] = {
+> +	{
+> +		.compatible = "ti,tca6416_keys",
+> +		.data = (void *)16,
+> +	},
+> +	{
+> +		.compatible = "ti,tca6408_keys",
+> +		.data = (void *)8,
+> +	},
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, tca6416_of_match);
+> +
+>  static struct i2c_driver tca6416_keypad_driver = {
+>  	.driver = {
+>  		.name	= "tca6416-keypad",
+> +		.of_match_table = tca6416_of_match,
+>  	},
+>  	.probe		= tca6416_keypad_probe,
+>  	.id_table	= tca6416_id,
+> -- 
+> 2.34.1
+> 
