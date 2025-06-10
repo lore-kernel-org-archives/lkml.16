@@ -1,71 +1,72 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C5B2253EB
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 11:12:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6BF128B7C5
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 11:12:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749553934; cv=none; b=k3tFRU0xxMlbUjaWzwZHWwDxRgyVj8J5psBiAJpcwbylqiCKJL5hiI9aQcl19AdblADG1mv9CCkOCaSGUVPtzT/I99nwSoduAU2f/NZPIPljNhI9Ic0B36csDNZkEYYM+3z3YkpK++nQ91UwfC+XHcbQDtAZ9a8w+H4skDTNJDA=
+	t=1749553953; cv=none; b=iy493ecizsuHckraxeyvjh1zEgGyInha8ITgnvymlY03oS79i11cfJNb+wM73SoZtJ1/uDBuOFfRRKhkcTCsDesppcaGDnzy0BDvHpz4X2axJumgBgvS0NO6XpXSk1nqbOhb7A5Ll7ccSjLDaalBlMSUpfFzpg2iNfAIxQnHE18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749553934; c=relaxed/simple;
-	bh=8Ot61PXl5kGzjjeEPSDiyR6snSZqeBq24oaab28mpFE=;
+	s=arc-20240116; t=1749553953; c=relaxed/simple;
+	bh=bVBYTD4v+/Ier+Ih6qhzzgjDmtl/7PTYTLiH0yhjTJY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Cswk3EDBg46f8ttY5SRO/dtgRu05fERYbsXrOZxcluUrVNpHmUyjISpLainnS7rL9mAqviFA60KRcrKr8j5M6wbV/EjgarBqKUlRF+e941wn4ZsJQ55eDht6FyzFEVw1WpMHzUX0mMfXEtppsNf2I7TQHesAvDYCNeTNKHUwRac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vMyjGVvw; arc=none smtp.client-ip=209.85.128.182
+	 To:Cc:Content-Type; b=la5Qt1/YTlu9zHDQdL9QhLAylgwKqhu00P7FPFWwfVL0TcPX8qHfH3S3CLjzryY4NNGFOVy6RZLpKEX7/ReQEb6wrm9LqnhSB6vP3wtlPk2ugWcHladqlKO9yQhdlizOTe4qRdjIrOQyXM/xVEL2PyRwDUhfYAgLAZqAiolfG60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Sf9ftl8t; arc=none smtp.client-ip=209.85.128.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vMyjGVvw"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-70e5d953c0bso55200797b3.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 04:12:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Sf9ftl8t"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-70e447507a0so42353417b3.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 04:12:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749553930; x=1750158730; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1749553950; x=1750158750; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LAasWsF+eqCK/f8XAQ+UlekFNlTdm6esn8JjFvKIvek=;
-        b=vMyjGVvwBEzqh17Qp5EZTGx6bH2Txuqs90sQMuM2Wilh1nsEDscklsVuVMwIGlM/oM
-         zdNkwXMoDW1oY2BWguA10kAfpc7pX0fxv9cB1zGjb5dImYi+n3Q8+5IuOWBD6Vek2wTP
-         cxhdSbsClMybDELMkMTLMhH0ugPGCEQZbTiSiDWR3I5EnF8NWuFu/TR539c5r4L5vjZf
-         6ccC1nER+Q8KF7N1IejidmLZl9/c6AR22Mu6VMg/g8JRneqU5Y62QwWyuvNs2Lm8w3xb
-         519IfL0KWHigCWqF4NjmL7jvRRNn3G109c9VmtGVA/0N69nK5fuDB2bAGus5kNR5JFrZ
-         y3hA==
+        bh=oGJoap/WPosW06fDBcr7SQqlOi1DYaMmMX1oaY7kRo8=;
+        b=Sf9ftl8tNkdDyvMWCnAzzm/hw+2pgqq6esUgXlU6Be6xD3AnLrrD3k+1rkNZ9iIZBG
+         /O+wyaDOjO8Az8v1JZd8IWbB4P3B2CS/hGVvtg9IM3nSWr8jtBw5FezH1njk4cPnyB0j
+         iWMXbl7NAlVbuvjlTlLGnTdHXwW9E1rUflKEWH7V/Nkf3yTx+bVWIUscccKFY/FCwrGL
+         non1QN3ApzQQpfELVeEhKEgxel75BejUWtc5yF3jasPUyHU73ua/W5betIcfBAo19haI
+         d/xzBZ0oMqJCKhM1/x6GyUvtLXiV+Wr6R43xwKtDsB1ynfM7rUDPMn8hzXFKq+nioCki
+         YM3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749553930; x=1750158730;
+        d=1e100.net; s=20230601; t=1749553950; x=1750158750;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LAasWsF+eqCK/f8XAQ+UlekFNlTdm6esn8JjFvKIvek=;
-        b=SneX6UEfTXGp0M8OtBvFsctRjZJZNrhuLCIFrWtgl0vepW7GkgvokSbbyFvwaFOkhq
-         N/pCcTYrVoz8zrGRCIkmArzal9lszc+bskgKQbxkYCTrhakC7iCtfCI09vFp2jmC1stk
-         WOifjs+G6yQ1zWEcxuvcjqWPpRKIexFbTU91nYWPK5c3+XuKnFnkE86yzfV/UYCBdWQr
-         9kfC42pxNvzmtVbjxT8odyMXzQwmaTdQ5VsVp+Kon9f76235qOPj1pEmc0MSFjKW0lz7
-         YlmBQwewTNGWHg0cl32EP4DlNyrQp+QPvkCaL6s9dcJ+qBFDPQl500gMZLXimagEuk5u
-         tw/A==
-X-Forwarded-Encrypted: i=1; AJvYcCXqmrt/fqT7FXBrnumv+/e9o/0yvrAwSwQR6t2Not72pLQAZ0UHhwGb8OqEquMn69WCr5wAP3yst5/AaFc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YymoYi240L0qYg3hkz6uVXt7pHMD52rF3DmiqkRU0B7t2ofOjVH
-	6PgqOKS8rTooDdychGlDOuMRT7qLlmUVuxPXRo2Xf7RdNBx0hlzwqzP2dvDHwuFf/ek4pGX3QSv
-	cwDybWfHw6lyAGwhtyOmUvZfunRa7JKCxIuEmmJMz0Q==
-X-Gm-Gg: ASbGncsbF2bGHKing9FGajKifVccT9xOaUmhH6kDWv1F9dmQFEVmzO9AS2f/GGfPIVl
-	NRjvmd5WzUyuo0T+tSxucewwq6LpRVx1W918zAuBWUqmBNiemKVdXR/LFdYYYM6gnKGxbBntWyz
-	oXt+8GkCMh+Tv4pYmt27uo1mjh8ig/ZqQtDyKANFZU1o0Q
-X-Google-Smtp-Source: AGHT+IEus4fAgfpA04VnzbpCBIk4pcLfZh1F4oLtFfc4L//yX8/NM2y06/TIMi8ieJhHRR9+7Ovs9MDTFh1COb9mV8I=
-X-Received: by 2002:a05:690c:700e:b0:702:52fb:4649 with SMTP id
- 00721157ae682-710f770f580mr243841697b3.27.1749553930576; Tue, 10 Jun 2025
- 04:12:10 -0700 (PDT)
+        bh=oGJoap/WPosW06fDBcr7SQqlOi1DYaMmMX1oaY7kRo8=;
+        b=i5VIPAIyfE3o1FYJ/jMG425FLIKGp3XcYFypD4qqST5T5uRGWxITyv9sScNp+53wg7
+         EBJDPpir983Gdf2BByR75MkO7e0lxAdPLI0G6TCutuF3rLx+LjDWUJtx0FvBi42opr2Q
+         Fxk7w3etNi39LXA++Oz2nHq+L2JDHWbHEc1EuBgpLj4kFeC3WwKHQR9oZd4BE/+K7LGg
+         woLcX6lCSlPYs4kW9SmwrdY95lNMK2SamIb40y+FV7SjmTnDLVggi6kMoDg5KXmZFudV
+         aAlotZD7M1AGobAiX1jDQzk0oT2Lwqthksw6PX3Uz/5pwmNvztvNnRPgEIUn7V54KM4v
+         gFdA==
+X-Forwarded-Encrypted: i=1; AJvYcCUpU7X0kWJI02m1Clrb4PjTRjjJoiwXOmPZyQYlDiOvcDbGuUeFpIqPTYx0yTclVew1JXTA5HFh2S/EIN4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzua7BWocrH8twcza5fSiW3hzq7R8BlPhmJJOcYSM+jzfjJGlX7
+	jOPllbaAypQ16LhNh/OkvCezStTAHFCU5KHW2peldGieabVKMGBD27he7qlJpepRASkHEb/a3Hp
+	ncSRZRtD8MU8ibg3TqLurGZnWUVcGlqnjSgn7PFGjvQ==
+X-Gm-Gg: ASbGncsIElSyNi4s3VWvbbDj0x6Zc8/1BnFjV9/2YN/zyTSdAWw/LLzj21oXOXPETYL
+	Lzi5+O8CuFJRm+qw23xUImexeBKhdZifbTQGU+P+0UQb77zlrMqT0AxGYbs4vqKUy1WaC+N66G6
+	//m2ZqmTLGhxJi6GE35id6TRt24PWiWBXGWK47GtbetzwA
+X-Google-Smtp-Source: AGHT+IG8zsawN3xDkIiHoqtoDeuKT1Bq9JS9Q1xXDw1TdS7PPhQJHt3vukBAJDXQ5rpuyqj39qP+g+huLdHgKtWsHJA=
+X-Received: by 2002:a05:690c:6d12:b0:70e:2d1a:82b8 with SMTP id
+ 00721157ae682-710f772b158mr238734027b3.34.1749553950407; Tue, 10 Jun 2025
+ 04:12:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250609043225.77229-1-byungchul@sk.com> <20250609043225.77229-7-byungchul@sk.com>
-In-Reply-To: <20250609043225.77229-7-byungchul@sk.com>
+References: <20250609043225.77229-1-byungchul@sk.com> <20250609043225.77229-4-byungchul@sk.com>
+In-Reply-To: <20250609043225.77229-4-byungchul@sk.com>
 From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Date: Tue, 10 Jun 2025 14:11:34 +0300
-X-Gm-Features: AX0GCFuhc6OdkS5KHRqDnMJaP6aChThQllVzaiTd7yB-canYZ7c373Kcyan1HIw
-Message-ID: <CAC_iWjLbwkXTKfu27umzu4PmmxHAi7TN76t_VNHiS8WxCM0UQA@mail.gmail.com>
-Subject: Re: [PATCH net-next 6/9] netmem: remove __netmem_get_pp()
+Date: Tue, 10 Jun 2025 14:11:54 +0300
+X-Gm-Features: AX0GCFsoN4Lw-oBn0iS9Ed66FhTtsA-gk57hCRDoaANAiIafqJARqdL3Be-QVJk
+Message-ID: <CAC_iWjJQ7k2drnPZh8bjaLvVa9rd2mLw7_=L3hV3scnWBQBvRQ@mail.gmail.com>
+Subject: Re: [PATCH net-next 3/9] page_pool: rename __page_pool_release_page_dma()
+ to __page_pool_release_netmem_dma()
 To: Byungchul Park <byungchul@sk.com>
 Cc: willy@infradead.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org, 
@@ -82,7 +83,9 @@ Content-Transfer-Encoding: quoted-printable
 
 On Mon, 9 Jun 2025 at 07:32, Byungchul Park <byungchul@sk.com> wrote:
 >
-> There are no users of __netmem_get_pp().  Remove it.
+> Now that __page_pool_release_page_dma() is for releasing netmem, not
+> struct page, rename it to __page_pool_release_netmem_dma() to reflect
+> what it does.
 >
 > Signed-off-by: Byungchul Park <byungchul@sk.com>
 > Reviewed-by: Mina Almasry <almasrymina@google.com>
@@ -92,41 +95,50 @@ On Mon, 9 Jun 2025 at 07:32, Byungchul Park <byungchul@sk.com> wrote:
 
 Reviewed-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
 
->  include/net/netmem.h | 16 ----------------
->  1 file changed, 16 deletions(-)
+>  net/core/page_pool.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 >
-> diff --git a/include/net/netmem.h b/include/net/netmem.h
-> index 65bb87835664..d4066fcb1fee 100644
-> --- a/include/net/netmem.h
-> +++ b/include/net/netmem.h
-> @@ -234,22 +234,6 @@ static inline struct net_iov *__netmem_clear_lsb(net=
-mem_ref netmem)
->         return (struct net_iov *)((__force unsigned long)netmem & ~NET_IO=
-V);
+> diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+> index 460d11a31fbc..8d44d1abfaef 100644
+> --- a/net/core/page_pool.c
+> +++ b/net/core/page_pool.c
+> @@ -673,8 +673,8 @@ void page_pool_clear_pp_info(netmem_ref netmem)
+>         netmem_set_pp(netmem, NULL);
 >  }
 >
-> -/**
-> - * __netmem_get_pp - unsafely get pointer to the &page_pool backing @net=
-mem
-> - * @netmem: netmem reference to get the pointer from
-> - *
-> - * Unsafe version of netmem_get_pp(). When @netmem is always page-backed=
-,
-> - * e.g. when it's a header buffer, performs faster and generates smaller
-> - * object code (avoids clearing the LSB). When @netmem points to IOV,
-> - * provokes invalid memory access.
-> - *
-> - * Return: pointer to the &page_pool (garbage if @netmem is not page-bac=
-ked).
-> - */
-> -static inline struct page_pool *__netmem_get_pp(netmem_ref netmem)
-> -{
-> -       return __netmem_to_page(netmem)->pp;
-> -}
-> -
->  static inline struct page_pool *netmem_get_pp(netmem_ref netmem)
+> -static __always_inline void __page_pool_release_page_dma(struct page_poo=
+l *pool,
+> -                                                        netmem_ref netme=
+m)
+> +static __always_inline void __page_pool_release_netmem_dma(struct page_p=
+ool *pool,
+> +                                                          netmem_ref net=
+mem)
 >  {
->         return __netmem_clear_lsb(netmem)->pp;
+>         struct page *old, *page =3D netmem_to_page(netmem);
+>         unsigned long id;
+> @@ -721,7 +721,7 @@ static void page_pool_return_netmem(struct page_pool =
+*pool, netmem_ref netmem)
+>         if (static_branch_unlikely(&page_pool_mem_providers) && pool->mp_=
+ops)
+>                 put =3D pool->mp_ops->release_netmem(pool, netmem);
+>         else
+> -               __page_pool_release_page_dma(pool, netmem);
+> +               __page_pool_release_netmem_dma(pool, netmem);
+>
+>         /* This may be the last page returned, releasing the pool, so
+>          * it is not safe to reference pool afterwards.
+> @@ -1139,7 +1139,7 @@ static void page_pool_scrub(struct page_pool *pool)
+>                 }
+>
+>                 xa_for_each(&pool->dma_mapped, id, ptr)
+> -                       __page_pool_release_page_dma(pool, page_to_netmem=
+(ptr));
+> +                       __page_pool_release_netmem_dma(pool, page_to_netm=
+em((struct page *)ptr));
+>         }
+>
+>         /* No more consumers should exist, but producers could still
 > --
 > 2.17.1
 >
