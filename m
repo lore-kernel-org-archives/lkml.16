@@ -1,102 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04705286D6E;
-	Tue, 10 Jun 2025 09:21:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86434286D6E;
+	Tue, 10 Jun 2025 09:21:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749547282; cv=none; b=ndVDdtw+rX99GOOfLBEH9m2ELos5w6A3ULhmEPBF9nFZRnlLKY0xPEmaH9K71V1IZqhSeGorJPSWKc+HuFWz+vWxxUgj5OJYTd/gixi/0az3Ur0Fq1BtW9hGw6sQc/E9+hhqacjFGWyLiFFAonusp/UHrRgoGCBRjxhvdRpnd9E=
+	t=1749547321; cv=none; b=iVKj25FJz2HstKpwnwZsPgufW9ebQrdr+dKhndQxq7Sc/tJoQ//sTxIRzVgOTG2QrTMidqE/r0LzeAJitmTYMI0U7sEDP3icTHY0T8yI8k64mWIf3FN/P78loYCE/D54KdB6CwwNd0uFUyl/qoJaPlOERW9Uta8eWHMbk34DDD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749547282; c=relaxed/simple;
-	bh=9qX58byGaVE5TC80pB4FkJH3w0rPGDf+jM6tTKUJldY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RAXFRf60w0nhSgFCD0+Fd9EtOoxCAxWXM0vS39YU9qsOxPFywhCZLOzMcBKMVhn+bBYK2ut5TYYnluXXHixfuG7c6lAvgWMZOt05wMoV3REH82xkge1swct7FOAVjABi/87jk/T02gSHp6RAzLLakw6GOA1j1fdFUN6MTvdG1Bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L/eAfWB0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749547321; c=relaxed/simple;
+	bh=y1mzetlCTQRwwVQd0XCZePhA+fRudsnAmGM3LW4Q1OI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZF9taqHiEQPLtybl5nu7vjmLtXC6iticnL3Kaf7qbnc8XQK3Am2C1Gf/JBMekwTosctZ1sFS2GCysAONvVGW5GykPS1bTbBQ+CW7rtAK3vAW8cZ18p41UBMXX4zBl58iLztWZrwjgXabMek9fzttvubyPnS71ET68dNiLj6bPP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ft+oExzz; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L/eAfWB0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40538C4CEED;
-	Tue, 10 Jun 2025 09:21:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749547279;
-	bh=9qX58byGaVE5TC80pB4FkJH3w0rPGDf+jM6tTKUJldY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=L/eAfWB0eiRAmbS3wXT2vU2KmwcsIhM1MuF1N4cZVUXDf72c6lIicvkPS0Rdh9bWW
-	 S5VmGigbz8B9wEAte/xShaaTGzTGLtHD3y/ZAnbMoLjW25ysoduGgs6hSHIgJhV7G2
-	 awJ9KcECj3l0tFASanyH1XFUoQ35IJsImFl7Zrf6YBq37E+FS85tkebGWdrRsE1WLZ
-	 IHHNhgeZFWk32vNIO94muUvNmkPl63jhvsctg3SqSooAJCZjht5VKB0dHwXuf8xfwZ
-	 qNx8+2GINV81n0BwFQRik3pZdiOuWqz0LgSGN9fHPeAd9t3VOFkiNiwh+wGVei/Swl
-	 71OanMRRNiFXw==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Jian Shen <shenjian15@huawei.com>,
-	Salil Mehta <salil.mehta@huawei.com>,
-	Jijie Shao <shaojijie@huawei.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Nathan Chancellor <nathan@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Hao Lan <lanhao@huawei.com>,
-	Guangwei Zhang <zhangwangwei6@huawei.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH] hns3: work around stack size warning
-Date: Tue, 10 Jun 2025 11:21:08 +0200
-Message-Id: <20250610092113.2639248-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ft+oExzz"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-235f9e87f78so47384945ad.2;
+        Tue, 10 Jun 2025 02:21:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749547319; x=1750152119; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=OKdiPD8LPOSWcxJtXxV50FsYXO8RX5/fbpx4WTe18gg=;
+        b=Ft+oExzzrK9Dlw2m7oy9Eikf0+BNBRdl0Gkh6ZyNtH2yuEK6WQR2HY9lTYQYhfbnq7
+         jQq9tpi/kcDdHDXnnxRSkkeHYwAoDGyOWfi4+eoNrSYvmxDOiHBpmm68qtbm4cHUsz9g
+         qqb/+M2Omzafc6ICUL2e4VlqIiIpsLO0OhRq9pfvDBEvRLGBWv8CTOO+9nmxj8pqDV6r
+         bRduedbXJs/Mf5Z2FZKKy6Rbe1gBCww3KC81zwDhHYF33KYmrTiokzuCNqt8AcADtGjX
+         4/muU+q8bQRAn/QJb6Vxdb2bayrtP9Zx0I/rP7LffmEXsROpxBH951L1Ib7yo6Rmd10h
+         VFVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749547319; x=1750152119;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OKdiPD8LPOSWcxJtXxV50FsYXO8RX5/fbpx4WTe18gg=;
+        b=pp6FHMqZgcA+wEgqRkvCHFJ5fmqnhcvEf0l46Xar4Aze+UJthXP/Yn3pXBjVp7nHVp
+         3owotfYP6VhqEaw35dzAcya9M5/AjMIKHDdW0CReTDpDRvPVAu77UKltal4AG3bxx1Mg
+         USh55FTWQwXcu/m2UiGdw2rvnYodjsLu0MrvMIApFqdd6CKm3iQPJuGDPkw7qJPbnGsM
+         qHG1mX2EnEzO+cDc8xE5R/5mbSb6iKayZoTl2p/yJhqST/U27Y7sqI9k/qJjSpa1Yn28
+         Dx17D5qf5hXodS17ND+g0pieuZuiT2iTE1TOjkr94zxZ99Gg8UjDwSvniXcU5Psh8TI6
+         dNyA==
+X-Forwarded-Encrypted: i=1; AJvYcCVlUerWVmq65zrJSFHJ+jJIVnr+CG3T5EjKEx9yvBOV2M+t7CjTazU62J1xUOIMaQY6jdtKvU1P6nA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjmKBdv2bQ3iccTpAaNnd6KhlCP428mMwymYYmEnvlNzSEm1sV
+	7zNP3QXdbbBBtQfkwM8R/P9RZT9xFKDc64rMmB9By9erAJkygDAShpHy
+X-Gm-Gg: ASbGnctmcXuwC8EynuLi5n83JbxHA9VjF19VPUyGjb5fBWihaiBDWKhFlyQndPFdvJs
+	Mz7KtcXNp1beDFn7hSn2o8H7rUtIcMF4Vidu3URxf+JZ2U4YGkAsggDD1UIqPQL3Cxies4jGeI6
+	+RzWFWxUUWmCmhGuCykT5pMahrkA9a1fv4eNpikJ38Wi5a3bval4y3jUe1kIqBAJuG+4jShKYS7
+	/ZCrwxJJ4XBOHxtSxXKvKLskT7Tzr7ytddMW2DPWCCHhQ7Q3ctzqKlzSAALATrHGIqOYqXLWxiw
+	zVMcj1gQHAt/eCoL4WxrJLoGNjdjL3Hr5asX1LL3+fLxEB91YRtTRYofb2uNWH9RjGN6hgri
+X-Google-Smtp-Source: AGHT+IF8W/u2pc9dXw02ODQ85GE5l7TzGkPD+fTzj71XXSkR/6My/iTxaFj+tl0NDcLeascIkNg8Ww==
+X-Received: by 2002:a17:902:ec87:b0:235:2403:77b6 with SMTP id d9443c01a7336-23601d702afmr223840085ad.37.1749547318680;
+        Tue, 10 Jun 2025 02:21:58 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236032fcd1fsm66749495ad.118.2025.06.10.02.21.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 02:21:58 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 8A39F4209E8C; Tue, 10 Jun 2025 16:21:55 +0700 (WIB)
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Documentation <linux-doc@vger.kernel.org>,
+	Linux Memory Management List <linux-mm@kvack.org>
+Cc: Feng Tang <feng.tang@intel.com>,
+	Christoph Lameter <cl@gentwo.org>,
+	David Rientjes <rientjes@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: [PATCH] mm: slub: Wrap krealloc() __GFP_ZERO semantics diagram in literal code block
+Date: Tue, 10 Jun 2025 16:21:53 +0700
+Message-ID: <20250610092153.55093-1-bagasdotme@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1586; i=bagasdotme@gmail.com; h=from:subject; bh=y1mzetlCTQRwwVQd0XCZePhA+fRudsnAmGM3LW4Q1OI=; b=owGbwMvMwCX2bWenZ2ig32LG02pJDBnuP55sm3t/otz94PsBV6S4ysSEFrmy9s2QWvNjgtiW1 Du7OGT8O0pZGMS4GGTFFFkmJfI1nd5lJHKhfa0jzBxWJpAhDFycAjARu7+MDK8/KgqIufmUfUxU YdvTM6lXs5fvrcSXWf9+m7bend20fBPD//xJUzs/t7Dwej49vmj3v4P6NybJte8+4fVxyZRX8T2 vn7ABAA==
+X-Developer-Key: i=bagasdotme@gmail.com; a=openpgp; fpr=701B806FDCA5D3A58FFB8F7D7C276C64A5E44A1D
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+Sphinx reports htmldocs warnings:
 
-The hns3 debugfs functions all use an extra on-stack buffer to store
-temporary text output before copying that to the debugfs file.
+Documentation/core-api/mm-api:40: ./mm/slub.c:4936: WARNING: Block quote ends without a blank line; unexpected unindent. [docutils]
+Documentation/core-api/mm-api:40: ./mm/slub.c:4936: ERROR: Undefined substitution referenced: "--------". [docutils]
 
-In some configurations with clang, this can trigger the warning limit
-for the total stack size:
+Fix the warning by wrapping krealloc() semantics diagram for __GFP_ZERO
+in literal code block.
 
- drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c:788:12: error: stack frame size (1456) exceeds limit (1280) in 'hns3_dbg_tx_queue_info' [-Werror,-Wframe-larger-than]
-
-The problem here is that both hns3_dbg_tx_spare_info() and
-hns3_dbg_tx_queue_info() have a large on-stack buffer, and clang decides
-to inline them into a single function.
-
-Annotate hns3_dbg_tx_spare_info() as noinline_for_stack to force the
-behavior that gcc has, regardless of the compiler.
-
-Ideally all the functions in here would be changed to avoid on-stack
-output buffers.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: 489a744e5fb1 ("mm: krealloc: clarify valid usage of __GFP_ZERO")
+Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ mm/slub.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
-index 4e5d8bc39a1b..97dc47eeb44c 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
-@@ -580,8 +580,9 @@ static const struct hns3_dbg_item tx_spare_info_items[] = {
- 	{ "DMA", 17 },
- };
- 
--static void hns3_dbg_tx_spare_info(struct hns3_enet_ring *ring, char *buf,
--				   int len, u32 ring_num, int *pos)
-+static noinline_for_stack void
-+hns3_dbg_tx_spare_info(struct hns3_enet_ring *ring, char *buf,
-+			int len, u32 ring_num, int *pos)
- {
- 	char data_str[ARRAY_SIZE(tx_spare_info_items)][HNS3_DBG_DATA_STR_LEN];
- 	struct hns3_tx_spare *tx_spare = ring->tx_spare;
+diff --git a/mm/slub.c b/mm/slub.c
+index 31e11ef256f90a..45a963e363d32b 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -4930,12 +4930,12 @@ __do_krealloc(const void *p, size_t new_size, gfp_t flags)
+  * When slub_debug_orig_size() is off, krealloc() only knows about the bucket
+  * size of an allocation (but not the exact size it was allocated with) and
+  * hence implements the following semantics for shrinking and growing buffers
+- * with __GFP_ZERO.
++ * with __GFP_ZERO::
+  *
+- *         new             bucket
+- * 0       size             size
+- * |--------|----------------|
+- * |  keep  |      zero      |
++ *           new             bucket
++ *   0       size             size
++ *   |--------|----------------|
++ *   |  keep  |      zero      |
+  *
+  * Otherwise, the original allocation size 'orig_size' could be used to
+  * precisely clear the requested size, and the new size will also be stored
 -- 
-2.39.5
+An old man doll... just what I always wanted! - Clara
 
