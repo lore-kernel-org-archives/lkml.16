@@ -1,73 +1,72 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD679246BA8
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:24:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E5823AB87
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:24:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749561860; cv=none; b=EFKGa0bxexBFaD5QPOXXjqe9PN0B4EczPvpcZBxlhDC8XpnRxAP2Sle6Jt9re7joAC+OhDRTG3kU9B6rr7skLGNfLatgB9/PD5i8oGGP7DrZN3FF34vFFqUpAvWYrfFuZnLMKEkr789wBf1T3M3v/RLtWqwb6L4W4FpMDiy+uqI=
+	t=1749561863; cv=none; b=Q9iePeMrGLRA4tOWo15hf272EAJAE+a04welE/fx/AFcCdruQs8bx//+X494oWiJcIXaURrIlNMdIlu3VEnAXDP/EJvI3aZ6F0UT3To4LQ/KAGOWyVnoPdExPLctsOLLgCOMTa4gl4UOy8RRAQSz92xNEPKoeeR3Uu2flIY/DTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749561860; c=relaxed/simple;
-	bh=ubmc0E3DElK29TkGdRofug1lLiuw8WMG0knLOztL8zo=;
+	s=arc-20240116; t=1749561863; c=relaxed/simple;
+	bh=Y1fgPzUv8h39dp69/WUYYxokEIXB93jM3/yMqGkqEEs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U3WWiE2j291cei6ooCJD8+0LXpW9CS9dADzVsm1KmYi+JEQVZ5cF9V7Ew9I6JkLsp7n6r2xt57dzqHQHSkWq/PzWftX2NMbSu6neZJ0X6Pt5bNKfPvIZbRoEfAXRF18Mn3tIcp5MaNuGij/cpOBPun1chcZAgMhN3by/Lb2/G28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=dGlFFhx/; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=OysGB76cQsBadKJObRrokx55ZZHCXoKPaoTjMedkoHNHzg8VqAbgiYtoIA8BjLzo9+at6upap1aY1192R7KytXlIS4D4IRCVEqIHGLFvbs3dV9ZwNMJavcftdpmt6KDp2es+11G+ngyXtBNilew1M9GIT8hLA4c99MjkdW5huyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gyCLN0r6; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="dGlFFhx/"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55A7eGs2014930
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:24:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Dn5KKzDTTIKXjL+XAC1RBo/O2bQaEOF3N/dUCupBtXw=; b=dGlFFhx/SjmX3aWl
-	M1cCZWvtd99PKsd5kjUbReRmNnzbMTzfnLOZOJfROaepOYFttscbKgjjKAwnWtrY
-	bWgnC0ARWQPv57xY2L2Hn9WFdIS3WZUrdOouFCHS4zuAisczDR7tlqJRLs5p5zBF
-	FY3l5wEPaX/O5rq5a1yJYujK2LTSa4JBJej1fSLop/fUQyueTBNhOzZscL31fXo8
-	jUd/QsqTGM0O4Rg6+lUjp62+XM78Ve9jMoImvFZsTrVjVF+vnGilHjr1dSerpo+H
-	WeiTxb0f4qtLd6BXZAqN6TKvIV+9EZVAY6hf4SbwpBop1auI8z8RNIPutWgTGYZo
-	TjA86g==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474dn69gbs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:24:17 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7d0979c176eso95506585a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 06:24:17 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gyCLN0r6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749561860;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=O56+Bk5TTeN4jh9BZRlx3XR/3UjST+pbt1ppyD+2/rA=;
+	b=gyCLN0r6kscrSU2b2mBVP+AP/RuDhjq9oxPf3VfBayLB9+yJJrRTuTZvFuUVp55mbiVCoc
+	b2qD7ezvE2BPPq3DGOQtrmz9iKmnBG6/l8N5A0WVOI6AZxKceU1NGkboTXrAKUUi6fRDBz
+	4r0rGjn5ET+28h1xSqqryddPGEeuQak=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-465-2wimTlyXOCa8sLRO9Js0HQ-1; Tue, 10 Jun 2025 09:24:19 -0400
+X-MC-Unique: 2wimTlyXOCa8sLRO9Js0HQ-1
+X-Mimecast-MFC-AGG-ID: 2wimTlyXOCa8sLRO9Js0HQ_1749561858
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a503f28b09so2637677f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 06:24:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749561856; x=1750166656;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Dn5KKzDTTIKXjL+XAC1RBo/O2bQaEOF3N/dUCupBtXw=;
-        b=C6S8SDY0kluurRzACBmlqC1aPbYb4m+bIzoJo40+VbbaecdAf7qAJ7FDpeg6BN+vfw
-         xzygZt1ti3sw8nmQRd5NldkAAHIk/Swq8pF1UlPwWmppSwRDONn+HsXyuEU8kOrEPf0n
-         KKCfCXGFBSOFucE/ncwE6cv11LuyiE+oh1n3DC45EjRqYI2ceRkBI6viyG7nmrJb+/Ik
-         xIqiLnCEBJrlIHUNcdwK6oCQ/7PRgdldTBhRneR4JhhuJQ/cLhbFJYHTMfQ3zrolqMA0
-         0dQRyHtMrz2idOZE9v/2yW7bqJvp4dLHkgZ3vxwzm5ukt/qwQ8lmcLnYTQF9pzCXAAn3
-         rajg==
-X-Forwarded-Encrypted: i=1; AJvYcCXucu9CwtXtbi0HYU3ahWvPTXAPgFGO31LRk6gIL1QVeaUAvJzt722K3EyVRVGUp+VPR+D44QW9Z9ROU4g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4HL83rbFiXdmnMK+NGhhUNQB6Iu8vURyftB0YjMVRsA+1Piup
-	FCwiVMEyQ25Z8obO+EV0+AS4bYBgjkUSwAwyJUutXaSiTrUIJIvUAGEfiV3RIRBwVdkkdqjGPC9
-	VJzlFtNenRlaoiLWXNQdQ58bOzrDaHznRgvfTGaEpj8Dh5n/ytJEEvUdyVVhIeWtRdmI=
-X-Gm-Gg: ASbGncth4C0dYVBuKDcGt3LrBc31S8Vbs5ZQBA0SIg2m8xsXjvUNchb1JCVkZPh1yiC
-	fhbXifbJxUh6yy2NfH814K0mEJWLNBzmyTwH2QhWu0BlEaPwO+rhbw4m8DPcS5PF4hQFM0EGLEq
-	E+I/6YEkqZNPcW02YAaJ82Tp7OIVJa5LZDtSIY5Ml6MKjncoMZWy2Fgj6bSKUBzkS/Zr3/Gqa/9
-	5QcxlkQoH+2x5giUPaMvzVzL03Dhr3ZThYIuouBBv1fbg+NU+VbO2YRITJI0zJO6QkuPsyRv3HO
-	xWXo4e4ZfaXjwQCz/6BlqJrzrHBiIXyo9MN9t5OnlqsDFqB1JN6x5tL299JskN4hhZ/2/vaiI6c
-	+
-X-Received: by 2002:a05:620a:2481:b0:7c0:b43c:b36c with SMTP id af79cd13be357-7d331c4ebbcmr897728385a.6.1749561856563;
-        Tue, 10 Jun 2025 06:24:16 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGZDQUf98Q4fdDvEHwFwKWgGVh807ziV/MvTQbORZEqmYL/UEFzh9cRBG5EYwiG4QVxnOk8RA==
-X-Received: by 2002:a05:620a:2481:b0:7c0:b43c:b36c with SMTP id af79cd13be357-7d331c4ebbcmr897726285a.6.1749561855990;
-        Tue, 10 Jun 2025 06:24:15 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1d754632sm722896866b.26.2025.06.10.06.24.14
+        d=1e100.net; s=20230601; t=1749561858; x=1750166658;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=O56+Bk5TTeN4jh9BZRlx3XR/3UjST+pbt1ppyD+2/rA=;
+        b=QjHRJMjm5/8C9xKzJp9eVhkFbKTZMMfOV8CaYHOCY3eIIbo/jlmLnq7BpGcygItZWv
+         m1sjvhiOln5HRYFtJvxkOv624CXgugstejckHOzjFj+QMF3ViGuKbi8SkSQZab7cir1q
+         0JnE4FXTIbQyjqCi67eFM5vrQjBDwdohZfUj2eE4gwYPk6unPshS6Idk4JlLb44tWGXL
+         tKxIkLpCJ39UTx7A3l7vReRmkuVOCZNsddmp2g23P46qqbh9M+BbHVFsZ70w3V5CvsJR
+         4BQMtwZ+btjKzO69a66hM4nE9MCXC11lX5wCrvtHVRoWUpsYeN0cG43J6MZskgN13CZS
+         In0w==
+X-Forwarded-Encrypted: i=1; AJvYcCV5DMiBMgzmixLTQ3Y8RBS+dz9tIRWFuvDuDvKP7HGeL7X7wfTTXv2qizlrulc92pp5eYZFBIau9xIpKco=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeubPlifN+zXW8PwhbQbH6ofpkbGy9bmqsSY8Rp3je9ORvcUI3
+	ycicgv+zzPr0bMxS9HK4UzPpwx0o1ssNLG2vS+ith0mfG8fvJA4fjbp5Cp3v9YJvnjONs8ST2t2
+	KRho6od8fSI/Wil5PZbUANPIKsF4lCzCk5DAt1OqwTov08EzDgq56ulfZg8gTcXND+g==
+X-Gm-Gg: ASbGncv8tzsAyrrj0R94m1yZRl7WNcj6TS/hjY2zBwAQ9FnyjryTN5X9PP90cRl28bC
+	4x+/Kh2zQsKT8PuQeUavsunZHrIKIy8CyZ0SoI3M1UhuOEOaQEwvPqBRURhNDDD8nWSUvnSUGi/
+	zwtSBvudCb9Q+0HZfNP71E3D0T0z55BT5EcJDYR8DsV6n2iGJN24WP+LmXsdQGnWS4zeAQkkEB9
+	/yDjyGgRfhQU3Z9rmeMwwWWdKqhFD16NbEd1Gf3NEnCcpoCyV0Pn4muSzMmS7TxNbPwXlSFpMGA
+	hwoPy+GSCBpSW6z31BioeHzG2oCdSWu75RYG3t4WH5wLrFnz2aihops=
+X-Received: by 2002:a05:6000:26c9:b0:3a4:d038:cb9b with SMTP id ffacd0b85a97d-3a5513ed8d4mr3093462f8f.7.1749561858162;
+        Tue, 10 Jun 2025 06:24:18 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFIjG8T8Ag3R7QOLa5ItFg/2QHHk64OEOfrvBwlSgh1cnBAwjRxZQ7gmQotkGG7aevOtcg6rQ==
+X-Received: by 2002:a05:6000:26c9:b0:3a4:d038:cb9b with SMTP id ffacd0b85a97d-3a5513ed8d4mr3093434f8f.7.1749561857709;
+        Tue, 10 Jun 2025 06:24:17 -0700 (PDT)
+Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53244f516sm12244725f8f.74.2025.06.10.06.24.16
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jun 2025 06:24:15 -0700 (PDT)
-Message-ID: <a63ff3a7-c67b-4251-81f3-ce6cc3a3d068@oss.qualcomm.com>
-Date: Tue, 10 Jun 2025 15:24:13 +0200
+        Tue, 10 Jun 2025 06:24:17 -0700 (PDT)
+Message-ID: <970e1b84-7f47-4a51-ad99-4df9026b8f7d@redhat.com>
+Date: Tue, 10 Jun 2025 15:24:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,119 +74,101 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: qcs615: disable the CTI device of the
- camera block
-To: Jie Gan <jie.gan@oss.qualcomm.com>, Jie Gan <quic_jiegan@quicinc.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: Tingwei Zhang <quic_tingweiz@quicinc.com>,
-        Jinlong Mao <quic_jinlmao@quicinc.com>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250527015224.7343-1-jie.gan@oss.qualcomm.com>
- <5fbb515a-c3d0-4bbe-a689-41e730ecd952@oss.qualcomm.com>
- <9a156925-cf7b-4d2e-88a8-fdfed5528553@quicinc.com>
- <1fef810c-47fe-4f6d-95bc-0d72dbd63bf0@oss.qualcomm.com>
- <79f5e42f-f857-4247-abf9-d0f3f5c1a498@quicinc.com>
- <f3f8f446-4f0d-482d-952d-35c80d7d7881@oss.qualcomm.com>
- <405f0432-3f07-45be-8511-06235dcd84d0@oss.qualcomm.com>
+Subject: Re: [PATCH v2 1/2] mm: Allow lockless kernel pagetable walking
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Dev Jain <dev.jain@arm.com>
+Cc: akpm@linux-foundation.org, catalin.marinas@arm.com, will@kernel.org,
+ Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
+ mhocko@suse.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ suzuki.poulose@arm.com, steven.price@arm.com, gshan@redhat.com,
+ linux-arm-kernel@lists.infradead.org, yang@os.amperecomputing.com,
+ ryan.roberts@arm.com, anshuman.khandual@arm.com
+References: <20250610114401.7097-1-dev.jain@arm.com>
+ <20250610114401.7097-2-dev.jain@arm.com>
+ <db04bd02-0090-4aff-bb2e-0d1e023757a5@lucifer.local>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <405f0432-3f07-45be-8511-06235dcd84d0@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <db04bd02-0090-4aff-bb2e-0d1e023757a5@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDEwNSBTYWx0ZWRfXxVw0RIDBbtI8
- ATKQJKYYUTbkAi/4Ayg+PWQFmQ5UJ4rrUuyuv2wRGTvFSOkH1ndOE6jS9j6mh/nWDMZj8eI+3J/
- hlz0Ggkq0HHo8IwHl22HcnCuvLOc7M31FrO9J89nlguXio/sinr3doREo1sRTZEz9Cvn7Tmbd5z
- YJ1oKoJN08VaHihol0AIusTIoNbEUinaypPA3a/KLg4+lqi2NsU8pPIAiRHmIBczAq5FH4xygxL
- YK9Q/pigPbY59l7pNG6owyWRtW0yvdLB3G30nSPAcDM6NBQqOLcAR8PR4L1qCw6PhXe7McEAPmj
- 1Cc5xokZyHxqOmYJE9WNogeH7UL65XwPYwaQZbe4BjAfkJzbIH5F32nSMCHk7yx9Pxs+VBonRS6
- tEjgDssiifnXxQEuOdTz7J8l+n4G2UIvjJv80tuGOm2ZSOpgxczGS/v7lpAPGO26O2rlWJSa
-X-Proofpoint-GUID: s71vAzo-9gEt250gSHdkbmULVqTQ40Q8
-X-Authority-Analysis: v=2.4 cv=FaQ3xI+6 c=1 sm=1 tr=0 ts=68483201 cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=P-IC7800AAAA:8 a=jKJs8sBhnlDJ8AvWEW4A:9
- a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22 a=d3PnA9EDa4IxuAV0gXij:22
-X-Proofpoint-ORIG-GUID: s71vAzo-9gEt250gSHdkbmULVqTQ40Q8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-10_05,2025-06-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 lowpriorityscore=0 bulkscore=0 phishscore=0 adultscore=0
- mlxlogscore=973 mlxscore=0 spamscore=0 suspectscore=0 malwarescore=0
- priorityscore=1501 clxscore=1015 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506100105
 
-On 6/3/25 5:17 AM, Jie Gan wrote:
+On 10.06.25 14:07, Lorenzo Stoakes wrote:
+> OK so I think the best solution here is to just update check_ops_valid(), which
+> was kind of sucky anyway (we check everywhere but walk_page_range_mm() to
+> enforce the install pte thing).
 > 
+> Let's do something like:
 > 
-> On 5/31/2025 7:05 AM, Konrad Dybcio wrote:
->> On 5/28/25 5:02 AM, Jie Gan wrote:
->>>
->>>
->>> On 5/27/2025 6:41 PM, Konrad Dybcio wrote:
->>>> On 5/27/25 12:32 PM, Jie Gan wrote:
->>>>>
->>>>>
->>>>> On 5/27/2025 6:23 PM, Konrad Dybcio wrote:
->>>>>> On 5/27/25 3:52 AM, Jie Gan wrote:
->>>>>>> Disable the CTI device of the camera block to prevent potential NoC errors
->>>>>>> during AMBA bus device matching.
->>>>>>>
->>>>>>> The clocks for the Qualcomm Debug Subsystem (QDSS) are managed by aoss_qmp
->>>>>>> through a mailbox. However, the camera block resides outside the AP domain,
->>>>>>> meaning its QDSS clock cannot be controlled via aoss_qmp.
->>>>>>
->>>>>> Which clock drives it then?
->>>>>
->>>>> It's qcom,aoss-qmp.
->>>>>
->>>>> clk_prepare->qmp_qdss_clk_prepare
->>>>> https://elixir.bootlin.com/linux/v6.15-rc7/source/drivers/soc/qcom/qcom_aoss.c#L280
->>>>
->>>> I'm confused about this part:
->>>>
->>>>> However, the camera block resides outside the AP domain,
->>>>> meaning its QDSS clock cannot be controlled via aoss_qmp.
->>>>
->>>> Do we need to poke the QMP of another DRV?
->>>
->>> The AOSS has a clock control register for all QDSS clocks. when we vote the qdss clock, the aoss_qmp driver will send a message to AOSS to enable the clock control register, then the clock control register will enable all QDSS clocks.
->>>
->>> The QDSS clock is not a single clock source, it is a term that representing all the clock sources utilized by the QDSS.
->>
->> What I'm trying to ask is, is there any way we could enable that
->> clock from Linux? Can the camera hw turn these on? Maybe we could
->> trick it into enabling them?
+> #define OPS_MAY_INSTALL_PTE	(1<<0)
+> #define OPS_MAY_AVOID_LOCK	(1<<1)
 > 
-> There is a power issue if we keep the debug clock on with a long time.
+> and update check_ops_valid() to take a flags or maybe 'capabilities' field.
 > 
-> We had a discussion with AOP to check if possible to add the debug clock of titan to the QDSS clock list, but they need time to evaluate it.
+> Then check based on this e.g.:
+> 
+> if (ops->install_pte && !(capabilities & OPS_MAY_INSTALL_PTE))
+> 	return false;
+> 
+> if (ops->walk_lock == PGWALK_NOLOCK && !(capabilities & OPS_MAY_AVOID_LOCK))
+> 	return false;
+> 
 
-Changing the firmware is a band-aid solution, as the update will never
-reach millions of devices on the market. I'm curious in whether there's
-any way (or os-accessible debug register) to manage the necessary clocks
-from Linux, as a workaround.
+Hm. I mean, we really only want to allow this lockless check for 
+walk_kernel_page_table_range(), right?
 
-> From Coresight view, what we can do by now is disable it in DT to prevent the unexpected NoC error.
+Having a walk_kernel_page_table_range_lockeless() might (or might not) 
+be better, to really only special-case this specific path.
 
-How about something like this:
+So, I am wondering if we should further start splitting the 
+kernel-page-table walker up from the mm walker, at least on the "entry" 
+function for now.
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-index bb8b6c3ebd03..fc2ab750f2cd 100644
---- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-@@ -2461,6 +2461,9 @@ cti@6c13000 {
- 
-                        clocks = <&aoss_qmp>;
-                        clock-names = "apb_pclk";
-+
-+                       /* Not all required clocks can be enabled from the OS */
-+                       status = "fail";
-                };
- 
-                cti@6c20000 {
+-- 
+Cheers,
 
-Konrad
+David / dhildenb
+
