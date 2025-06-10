@@ -1,147 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90FFF23BCF8
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:40:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB77178F34
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:45:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749595246; cv=none; b=QKCB87XCYX+/ixm1/IE8hcPT4GzCeNupWBv2BXHZWhb0aMVeKuDdzMKZ8NsD4HjSsvcUwoZCd8Aq+skaBgQdnrpU6Xr44uLYy3QfBt1cIvkeVJSVwkAPr+rgOjaFzEX7qciuLMCShV7f8Y23aPjm9Zjr6NESKcurKYYc8x5C984=
+	t=1749595520; cv=none; b=XLxZLrlYqZNy5i8txPvLUJyHRWHWS0+LeWHnliSlNFxuckUab/gKj+qo45SLmKk+Rd0EvX3e/W98tTuMCu+gln+EjpHasN4iCEh1js6SWQZePMlnNctfBHZp8wDJLb+Hl1upqbvTYbK+LJ7hqT0qQ8lCg+aJ1JNkA9VcYKJ9KE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749595246; c=relaxed/simple;
-	bh=AMCXeZCE4mv1iIMBRl6FN9N8ESNeBQSn43C1XZV8EM8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JUJ+YKw9Gvw5wtP/SDryIWqkhj9yegzwHQqlRPQ92nKAoGYWoLPb+c7o+0CZTVeLEoO5avPq8ZLkC8NQ9q+BexOlgJq+f6+fqqasH1e/Shkkt2ZxH6RiJq3rZbfZdoUhXYsKEIoS+vpnx9coX6RaI1gJVfg064u4R5y0fG+Fsvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hWyNNRsd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749595520; c=relaxed/simple;
+	bh=P3Kb68R1Z70usEnSE/SHL7A0xnBfjEoj+PnoUkVhR1Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Sk/YKcVcSCUn8YZ1YAaKB6GWwTkvr1L9GBf3bj7MtPegWwHxakLnv3r4Saf1+Nh9HFeIoB7ScZwdTGZGsVGC3bK47YwMvgO3QUsNZ1vLhAi0fMzypYo1yKrCEGf25aduHgHeXDAlnY8p9Togp/mdaH0MeNQGfPHxnFBQPC+VwAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=0ConQXYz; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hWyNNRsd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70532C4CEED;
-	Tue, 10 Jun 2025 22:40:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749595246;
-	bh=AMCXeZCE4mv1iIMBRl6FN9N8ESNeBQSn43C1XZV8EM8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hWyNNRsdGrs1q/UaPGcQJK2Bm0DN06ee0o/qXGj90RSpnyGYH/gNGhglW4akybsRL
-	 gumXHMqrJeKXpTvE4fbrHxm1Gb4buxMyu5ByM0JmydEAcQASJXsp/6B7XSHS0iVM06
-	 TU6Damk031liYf2hXucp0T3/q7GPyStHUXknhdmF8jadF9p/UYPw+5Ex8+Pr9Mhj8J
-	 OkCi9NZ8594e7AVqNG0Q2Bv4TcKG6siItIU58BH3BkGdled2adviMc5FpGX0DI5MKi
-	 OGNovxWsEM+rgojjqknawFno6PHvRoy5D9xBAto+phtFkK+A+D9l0V0P2mErlDEu2t
-	 a+47ljeYW9UCA==
-Date: Tue, 10 Jun 2025 15:40:43 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Alexandre Chartre <alexandre.chartre@oracle.com>
-Cc: linux-kernel@vger.kernel.org, mingo@kernel.org, peterz@infradead.org
-Subject: Re: [RFC 05/13] objtool: Store instruction disassembly result
-Message-ID: <h6a3m4kt5qucesxrjq2kdg63hph6zxjfpkodgykifq4ii7iyoa@gziflw3kfe7y>
-References: <20250606153440.865808-1-alexandre.chartre@oracle.com>
- <20250606153440.865808-6-alexandre.chartre@oracle.com>
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="0ConQXYz"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4a5ae2fdf4eso3683481cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:45:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1749595516; x=1750200316; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P3Kb68R1Z70usEnSE/SHL7A0xnBfjEoj+PnoUkVhR1Q=;
+        b=0ConQXYz9vgabrP/h0wNseLrNGhjBlER7i0j7l81wn7PvoGs5GfjJ9ZD8iGvoigdXw
+         mEprP3sYjqmn/fCcluipg2aSotCQDX83XXUk8dEjs+DnEU0aYCcuisix34sciqs9882S
+         nalLFv/kF0dDnmfytEQZTswI46JMSsF/luNJDDoLV23L4d9zfOIOPMOM9n1mYk4BmZ2t
+         hoKytzRMfWsu40GHY61XoWueL7Z3wRj31C+EyY2tK1DFOgTjy966vSSG7/xM/OiR8M1K
+         pkFb4v5f+2k2QmD01HBXr1lFihRkdnyIkrUOxgaAbo/VaiZHFlIjTaOBzgE6TZuFXFEQ
+         M3fQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749595516; x=1750200316;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=P3Kb68R1Z70usEnSE/SHL7A0xnBfjEoj+PnoUkVhR1Q=;
+        b=mXphjeGSwbkO1YfChel6thNlpxnv290GS6644MyE5khglCxVgzXFfIDVmSzNBdpgdp
+         L6BUMshqSSFDyIlFDtLumxxJRvCNENp1eXvJyC4TxF+z20GodhnMtm2NuU9cHYE5GJ6J
+         WJBhMXET7FsJhbGjOAOhMXijpYkMXDzUEQlvu1N9aiVbyPMX91TDHM3kKhcBvqu2uwxR
+         VXwekPzkZG/nM0R2Et46U1+a6vG2whVI1VUCZNxZSydkY9Vi449N8WNUpzdP/mrnY7XO
+         ZWcdleF9Dlx1zRXK7wNUvTO8N/oKOr0dqFFRHBWzKeZt5ngwg/XC75Y0rRBXHItKnx7e
+         lSKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUeFH4VzQ6rmXD2wPwxLJLoElBBLORA94TulSGDZb3x7VWLJCxqK2DiafEsa2GsBO8rbcpEJq7XBWIt7TU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxf08fVyisE5DqWSgfmRefcPPcaziIXNVfMyZmJfQrXJloUIHqz
+	h7imcFw8Tok485wd060IgYFtSqMDWBt7CCRridhotoPnLGjGOw/CMkMebyMZJIH1+SI6TBTZVfy
+	SsrP7vRMze6kq1crl7gfd/Ig+7ggVuMwc4gu8Ow0QtA==
+X-Gm-Gg: ASbGncukEReoC6+oz6WPG+mdmgneXARA8rOS0DDw7uduD/nmYbsrGrf2hD0t2MGg21B
+	eP1p0O6I7ruJB8/ENBdMDCn/nbtOfg+drhAB5kpRNFvlI+E+ym+2tZA/C2xZizF/WytsvozBD1k
+	2xb4sOrurcaYeu++QF0Esfb1bG+wSZKvmYdIxhlzQt
+X-Google-Smtp-Source: AGHT+IGJBCoY2BSTgZVJ9PJPU9ONDD7Heq2g8GGzNzWCWXXG69HepYVSefbdNRPd5nytDpdM+XQwjF4VCWLZ42gOlww=
+X-Received: by 2002:a05:622a:1f09:b0:494:b1f9:d699 with SMTP id
+ d75a77b69052e-4a713ca3022mr22642371cf.23.1749595515969; Tue, 10 Jun 2025
+ 15:45:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250606153440.865808-6-alexandre.chartre@oracle.com>
+References: <20250610214140.2775339-1-mclapinski@google.com>
+In-Reply-To: <20250610214140.2775339-1-mclapinski@google.com>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Tue, 10 Jun 2025 18:44:38 -0400
+X-Gm-Features: AX0GCFtNzdj1Q_Sh0PElEUysz7r0FEmwXQtH5NSQLtcg3vWsni8v23ZtIRM1yPY
+Message-ID: <CA+CK2bA_HpaZCeRgrBMWE+_1XCnu+Of7OEMg59CDBZHtaNGTsg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] x86/boot/compressed: Fix avoiding memmap in physical KASLR
+To: Michal Clapinski <mclapinski@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>, Dan Williams <dan.j.williams@intel.com>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 06, 2025 at 05:34:32PM +0200, Alexandre Chartre wrote:
-> +static int dbuffer_init(struct dbuffer *dbuf, size_t size)
-> +{
-> +	dbuf->used = 0;
-> +	dbuf->size = size;
-> +
-> +	if (!size) {
-> +		dbuf->addr = NULL;
-> +		return 0;
-> +	}
-> +
-> +	dbuf->addr = malloc(size);
-> +	if (!dbuf->addr)
-> +		return -1;
-> +
-> +	return 0;
-> +}
-> +
-> +static void dbuffer_fini(struct dbuffer *dbuf)
-> +{
-> +	free(dbuf->addr);
-> +	dbuf->size = 0;
-> +	dbuf->used = 0;
-> +}
-> +
-> +static void dbuffer_reset(struct dbuffer *dbuf)
-> +{
-> +	dbuf->used = 0;
-> +}
-> +
-> +static char *dbuffer_data(struct dbuffer *dbuf)
-> +{
-> +	return dbuf->addr;
-> +}
-> +
-> +static int dbuffer_expand(struct dbuffer *dbuf, size_t space)
-> +{
-> +	size_t size;
-> +	char *addr;
-> +
-> +	size = dbuf->size + space;
-> +	addr = realloc(dbuf->addr, size);
-> +	if (!addr)
-> +		return -1;
-> +
-> +	dbuf->addr = addr;
-> +	dbuf->size = size;
-> +
-> +	return 0;
-> +}
-> +
-> +static int dbuffer_vappendf_noexpand(struct dbuffer *dbuf, const char *fmt, va_list ap)
-> +{
-> +	int free, len;
-> +
-> +	free = dbuf->size - dbuf->used;
-> +
-> +	len = vsnprintf(dbuf->addr + dbuf->used, free, fmt, ap);
-> +
-> +	if (len < 0)
-> +		return -1;
-> +
-> +	if (len < free) {
-> +		dbuf->used += len;
-> +		return 0;
-> +	}
-> +
-> +	return (len - free) + 1;
-> +}
-> +
-> +static int dbuffer_vappendf(struct dbuffer *dbuf, const char *fmt, va_list ap)
-> +{
-> +	int space_needed, err;
-> +
-> +	space_needed = dbuffer_vappendf_noexpand(dbuf, fmt, ap);
-> +	if (space_needed <= 0)
-> +		return space_needed;
-> +
-> +	/*
-> +	 * The buffer is not large enough to store all data. Expand
-> +	 * the buffer and retry. The buffer is expanded with enough
-> +	 * space to store all data.
-> +	 */
-> +	err = dbuffer_expand(dbuf, space_needed * 2);
-> +	if (err) {
-> +		WARN("failed to expand buffer\n");
-> +		return -1;
-> +	}
-> +
-> +	return dbuffer_vappendf_noexpand(dbuf, fmt, ap);
-> +}
+On Tue, Jun 10, 2025 at 5:42=E2=80=AFPM Michal Clapinski <mclapinski@google=
+.com> wrote:
+>
+> The intent of the code was to cancel KASLR if there are more than 4
+> memmap args. Unfortunately, it was only doing that if the memmap args
+> were comma delimited, not if they were entirely separate.
+> This change fixes it.
 
-I don't quite get the need for all this dbuffer stuff.
+Fixes: d52e7d5a952c ("x86/KASLR: Parse all 'memmap=3D' boot option entries"=
+)
 
-The buffer only needs to contain the output for a single instruction,
-right?  Is there any reason not to just make it a 1k char array which
-gets appended via strncat()?  If it exceeds that, it could just print a
-warning and truncate the string.
+> Signed-off-by: Michal Clapinski <mclapinski@google.com>
 
--- 
-Josh
+Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
