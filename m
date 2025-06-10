@@ -1,202 +1,294 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586DE22172F;
-	Tue, 10 Jun 2025 08:10:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892B528001D
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:11:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749543040; cv=none; b=mzIla6PWvjRFNcA1l6vozzDxmn8LoLUpWVTHCf/SxKLDye5sMTQC4DEmiJWa4GXAgoKDl+n/kp5tkO7Szk0LH65JeqvGjoXKcX+a/1ywP75HZSN5Lrq7A87osUnJhO8vX4WdBlV4e42TsodjVBhoAl+nz+z+lI1VXmFEJ4xLxM8=
+	t=1749543105; cv=none; b=blXcbRn3z7j0hF1UuSxg49xdgw1IEsDU6fcafq3zRuJNtvHiv6NqG0aL/hjZ80wHz0mRYysAXFMBYRVvTosay11e8gJCREuF8CkC3SJFiFfBqnfwF+8VUTjSknXnwZc56pnADAvpBl1iomJjf+Gwggz3WZjaay8EbjQ//iQ1N6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749543040; c=relaxed/simple;
-	bh=pxQqTLeJGrzRcba35v6Sv8J7W+lYfStZ+/qrHNswdu8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=TUC6300h09M7cVsmTu3oBWipqZwbbJLjTQe+Q50iYgA53avrx5e9a8xjC9TBipXB0qddgYlk9LXCs0BPrJltBLQLCd3PmljZz88+sLKVJdS9lGXt8BDclUVy2N9H+M6L0+dDrpLGq6oh9H5yiuoSpVET3Ce0jqC8s+AGOfh3RZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Z8fOOhUs; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1749543105; c=relaxed/simple;
+	bh=j6uHppOZRIiGHJjS980e7EsQXN6AMcGV6U3JMTlj7II=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Xye8RdlsilnVsWjt30ukGQ5qWy4YWAlMt+GMj5zX+MH6GVha92Ddnrtc7UB25bF1gsjRkcu/GwcH/9KQFLn5+LYmdBiolyrEiSGKAInmzirA2UN6XVlX/kLAfBx46XE12qoXfpg4D9LAvXJJ8EZixOjKi/8Blbex91BLq4rDqsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eVrgK5yv; arc=none smtp.client-ip=209.85.221.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Z8fOOhUs"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 559KOrqf017669;
-	Tue, 10 Jun 2025 08:10:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	PyVKbeyNtvyCYpKab0D2gGv0Ts2lWek+MIyPqd7++uA=; b=Z8fOOhUs2OA+V4Zs
-	sPSYC/PvKZknaAL61rAArdH75Oo3pzXwuLEo/lXwa8b/U9WNFBjEbliiiZD6W7yu
-	GDrOmBJYK7J5uXOGw2Lxa0+Tziwhi5SBcZHVPIJRSRaP74hNG8ampSUS8FhOtZFU
-	Iu6yWdDVv2yd2ZgMGtUlxY3gvl18eRJfF62/lKOeXdoRBHBhk1b4jL1+cBD1fdWV
-	7nRK6kY94G06vUOxgbOnoml2aJ4g/WiiVVJX/f/RUTXb8aBX1xevNjn0N04z1aqu
-	bX9UeQwlQCMukd2KZwQSblUWNupd+ldvoDkxOIfjaIMe3NQTt2QnR75Zi5eGXl9H
-	RRFTzg==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4766mchcdt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Jun 2025 08:10:29 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55A8ASAj020415
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Jun 2025 08:10:28 GMT
-Received: from [10.218.32.171] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 10 Jun
- 2025 01:10:23 -0700
-Message-ID: <d744b518-2ae9-4ca0-86ce-11cf74c945e6@quicinc.com>
-Date: Tue, 10 Jun 2025 13:40:20 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eVrgK5yv"
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-530f9edd032so1644683e0c.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 01:11:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749543102; x=1750147902; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Hn0wbc6lEUEago4mKd8U5pWPg4kTjjsOa+9yDlNZsgQ=;
+        b=eVrgK5yvnCZAdJB3054NRuUcXR+DmVY1cI6Cj9UmRNMzm8/X0PBam4caaaf/fzL/nN
+         sqRUYir+Y1M9sqkavozIYiybbfkGp+TiXeinkxsA9HbXeMqdDZfeUgPwzvrn+QmoVsAW
+         6zuW1dIqDYms4SNuYDb3pUCJXNdsypXJJqJmiIp8oWB18aGx7GAwGvYMUBvLLLxqPkW7
+         htpsXiCsDjx9rTAGC7eOnLoyQZxrkEoQl8hNAGasbItANN/h3I6BGqeRcfiZCU4rO0vl
+         mVFO2mH2hlT0J2fF2sVrdNipRRHxrQyhF0O2kTb+m1Exv3B/8LHOTZN0DvwNmOGlglXm
+         q22A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749543102; x=1750147902;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Hn0wbc6lEUEago4mKd8U5pWPg4kTjjsOa+9yDlNZsgQ=;
+        b=KPxBC1NCQ98KC+oANDpB0ed9KX1MQ2JpwXAQiifzJsWlgNXIa41H2F1e6ghNcmuiiq
+         HTRGeQ21tRopzY+ij2Suxaf4ishfzfiYXSeSPhv1MYj7T+NETUtwrQo8Rhs2wAIPRcOm
+         77CUiQnrN3DlPcSuYLhCa/MP6bD5WeOmlQ/gyahp7/pS1LfxCMWHhN0FWwUuctK+0RIO
+         X0Gss7t82jWooqkbgl366PFizIQROgaLE/Lbc7CtLY5ZuojG1mHBoOYWqrtWUS0gpSEk
+         mX9JKjkhoySbmCW5dqsVdaWbo6UsEqDdpq4+bpY7myjvdbXV9CKsbF4rP9INonvcVkW5
+         Uy9A==
+X-Forwarded-Encrypted: i=1; AJvYcCWgZvdvfgSKtxvuG/vJNPQmKj54KXL47fAvcJOvKNj/tRupC/soPx601m/0bl5Slmhv++Bbdue1d8Q974Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJdLSD14zy4BaodWUUkuEHpYyR8/JrfvTRbH/g+mAHY7NgKXZ2
+	yAGHQpFttviE63DQ56p80oQk8ApmPbCkmpXC94YlsW8lBZ41qCcT5kJ6uSNwbwwGnd6a9x594l1
+	fTjs0E8hqm+nxC81vz1/7LVEaOheAPz0=
+X-Gm-Gg: ASbGncsJ5bZLzbk+jUu+/c/8MsA6ozJOFm2Y2SELOOPAawrfhQZh3fzl+CXsYLQHdEF
+	QfO4mBiOIQ+TQdJmw5RyJy/+wiUxUK+qHc2a08uZtplakQWBy7G8vH9I2s/rSnivV1a7TV4dZ4U
+	chlBOEfPVe2FIBqUjia9zDmzl2PBpWEUBbkRjEaFHGXY+o
+X-Google-Smtp-Source: AGHT+IEGEzAEtu+csMPWQWNFbl6NTrSKQH12N5HlKYz4Yle+6IUBkcQBSSs5CYZOqK6bq7ZiDaDQbfD/sAZmujBm5Sg=
+X-Received: by 2002:a05:6122:640c:10b0:527:67d9:100d with SMTP id
+ 71dfb90a1353d-53113144d99mr1287762e0c.4.1749543102357; Tue, 10 Jun 2025
+ 01:11:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/8] dt-bindings: serial: describe SA8255p
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby
-	<jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <psodagud@quicinc.com>, <djaggi@quicinc.com>,
-        <quic_msavaliy@quicinc.com>, <quic_vtanuku@quicinc.com>,
-        <quic_arandive@quicinc.com>, <quic_mnaresh@quicinc.com>,
-        <quic_shazhuss@quicinc.com>, Nikunj Kela
-	<quic_nkela@quicinc.com>
-References: <20250606172114.6618-1-quic_ptalari@quicinc.com>
- <20250606172114.6618-2-quic_ptalari@quicinc.com>
- <20250610-tested-lilac-raccoon-6c59c4@kuoka>
-Content-Language: en-US
-From: Praveen Talari <quic_ptalari@quicinc.com>
-In-Reply-To: <20250610-tested-lilac-raccoon-6c59c4@kuoka>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=T8KMT+KQ c=1 sm=1 tr=0 ts=6847e875 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=gEfo2CItAAAA:8
- a=COk6AnOGAAAA:8 a=7yBbA8StSmaZYdc8j60A:9 a=QEXdDO2ut3YA:10
- a=sptkURWiP4Gy88Gu7hUp:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: HoZ9RDAgzfOybucuaFDqukYoeTGxroit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDA2MSBTYWx0ZWRfX03wNyGDMBgwe
- QgAeBgOnfhf0FXcn1EzcbSOc//rjExxsfYiKiv/w1YYiSJUViueb/CzLuPDNYlUpPX51TqF4JcZ
- ElxdaA1ONXJXD4FTbXpHJl3KcuzU5/f4MSAHsSh/7/yFaoKQNnYklDmhdZGCPu6H/hS5fub5H6w
- ooBtzYzJqWqp6Tzprf4PX8x8qQDde3JoA3BtHTy1NDWmvtZw/hxS68o6rISgdSinrVy3Yp+XLkC
- n2YC9AfHY2yHH2M3tSoNSmWjMX4Rbo/1KzppgC98Gmded3qQWJls5jW+LGBsqL+9spX6Q1XvneL
- bSTOcCc0HcdeC1wbS3o8MdnZOw8LwJ0rIt0ieAEJ49St9NUi1XHTdcjHCGD93HGYssfHlza+amV
- iZ/ecPqJhZ9Wmj+BERt86EDoPcHsRKd8pFevnV2dfYnTp4vWNwSqLrHgW9ouHoWXjUh5ORu8
-X-Proofpoint-GUID: HoZ9RDAgzfOybucuaFDqukYoeTGxroit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-10_03,2025-06-09_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 bulkscore=0 clxscore=1015 malwarescore=0 impostorscore=0
- spamscore=0 priorityscore=1501 lowpriorityscore=0 mlxscore=0 phishscore=0
- mlxlogscore=999 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506100061
+References: <20250610035043.75448-1-dev.jain@arm.com> <20250610035043.75448-3-dev.jain@arm.com>
+ <CAGsJ_4xPq-eJ7JE-SFhhO2TboH8HKGifaYCwKw8cqd_2K=uD4w@mail.gmail.com> <bf185ecc-8310-48ad-b9cc-5c78e3da6d0b@arm.com>
+In-Reply-To: <bf185ecc-8310-48ad-b9cc-5c78e3da6d0b@arm.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Tue, 10 Jun 2025 20:11:31 +1200
+X-Gm-Features: AX0GCFvDGDuDSnfkPf-NWYVXTiddf4fI4DcZ1MZ9I4Kd1QbrYWe3BlRqTTWLwRs
+Message-ID: <CAGsJ_4yEJLoxuH=tTJLxgsS5Hu6pPhJfwXAttoFrHNUwJL6=YA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] mm: Optimize mremap() by PTE batching
+To: Dev Jain <dev.jain@arm.com>
+Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com, 
+	lorenzo.stoakes@oracle.com, vbabka@suse.cz, jannh@google.com, 
+	pfalcato@suse.de, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	david@redhat.com, peterx@redhat.com, ryan.roberts@arm.com, mingo@kernel.org, 
+	libang.li@antgroup.com, maobibo@loongson.cn, zhengqi.arch@bytedance.com, 
+	anshuman.khandual@arm.com, willy@infradead.org, ioworker0@gmail.com, 
+	yang@os.amperecomputing.com, baolin.wang@linux.alibaba.com, ziy@nvidia.com, 
+	hughd@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Krzysztof
+On Tue, Jun 10, 2025 at 7:45=E2=80=AFPM Dev Jain <dev.jain@arm.com> wrote:
+>
+>
+> On 10/06/25 12:33 pm, Barry Song wrote:
+> > Hi Dev,
+> >
+> > On Tue, Jun 10, 2025 at 3:51=E2=80=AFPM Dev Jain <dev.jain@arm.com> wro=
+te:
+> >> Use folio_pte_batch() to optimize move_ptes(). On arm64, if the ptes
+> >> are painted with the contig bit, then ptep_get() will iterate through =
+all 16
+> >> entries to collect a/d bits. Hence this optimization will result in a =
+16x
+> >> reduction in the number of ptep_get() calls. Next, ptep_get_and_clear(=
+)
+> >> will eventually call contpte_try_unfold() on every contig block, thus
+> >> flushing the TLB for the complete large folio range. Instead, use
+> >> get_and_clear_full_ptes() so as to elide TLBIs on each contig block, a=
+nd only
+> >> do them on the starting and ending contig block.
+> >>
+> >> For split folios, there will be no pte batching; nr_ptes will be 1. Fo=
+r
+> >> pagetable splitting, the ptes will still point to the same large folio=
+;
+> >> for arm64, this results in the optimization described above, and for o=
+ther
+> >> arches (including the general case), a minor improvement is expected d=
+ue to
+> >> a reduction in the number of function calls.
+> >>
+> >> Signed-off-by: Dev Jain <dev.jain@arm.com>
+> >> ---
+> >>   mm/mremap.c | 39 ++++++++++++++++++++++++++++++++-------
+> >>   1 file changed, 32 insertions(+), 7 deletions(-)
+> >>
+> >> diff --git a/mm/mremap.c b/mm/mremap.c
+> >> index 180b12225368..18b215521ada 100644
+> >> --- a/mm/mremap.c
+> >> +++ b/mm/mremap.c
+> >> @@ -170,6 +170,23 @@ static pte_t move_soft_dirty_pte(pte_t pte)
+> >>          return pte;
+> >>   }
+> >>
+> >> +static int mremap_folio_pte_batch(struct vm_area_struct *vma, unsigne=
+d long addr,
+> >> +               pte_t *ptep, pte_t pte, int max_nr)
+> >> +{
+> >> +       const fpb_t flags =3D FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY=
+;
+> >> +       struct folio *folio;
+> >> +
+> >> +       if (max_nr =3D=3D 1)
+> >> +               return 1;
+> >> +
+> >> +       folio =3D vm_normal_folio(vma, addr, pte);
+> >> +       if (!folio || !folio_test_large(folio))
+> > I'm curious about the following case:
+> > If the addr/ptep is not the first subpage of the folio=E2=80=94for exam=
+ple, the
+> > 14th subpage=E2=80=94will mremap_folio_pte_batch() return 3?
+>
+> It will return the number of PTEs, starting from the PTE pointing to the =
+14th
+> subpage, that point to consecutive pages of the same large folio, up till=
+ max_nr.
+> For an example, if we are operating on a single large folio of order 4, t=
+hen max_nr
+> will be 16 - 14 + 1 =3D 3. So in this case we will return 3, since the 14=
+th, 15th and
+> 16th PTE point to consec pages of the same large folio.
+>
+> > If so, get_and_clear_full_ptes() would operate on 3 subpages of the fol=
+io.
+> > In that case, can unfold still work correctly?
+>
+> Yes, first we unfold as in, we do a BBM sequence: cont -> clear -> non-co=
+nt.
+> Then, on this non-contig block, we will clear only the PTEs which were as=
+ked
+> for us to do.
 
-Thank you for review.
+While going through the code,
 
-On 6/10/2025 12:34 PM, Krzysztof Kozlowski wrote:
-> On Fri, Jun 06, 2025 at 10:51:07PM GMT, Praveen Talari wrote:
->> From: Nikunj Kela <quic_nkela@quicinc.com>
->>
->> SA8255p platform abstracts resources such as clocks, interconnect and
->> GPIO pins configuration in Firmware. SCMI power and perf protocols are
->> used to send request for resource configurations.
->>
->> Add DT bindings for the QUP GENI UART controller on sa8255p platform.
->>
->> The wakeup interrupt (IRQ) is treated as optional, as not all UART
->> instances have a wakeup-capable interrupt routed via the PDC.
->>
->> Signed-off-by: Nikunj Kela <quic_nkela@quicinc.com>
->> Co-developed-by: Praveen Talari <quic_ptalari@quicinc.com>
->> Signed-off-by: Praveen Talari <quic_ptalari@quicinc.com>
->> ---
->> v5 -> v6
->> - added description for interrupt-names
->> - added wakeup irq as optional information in commit text and
->>    property description.
->> - removed wake irq form example node.
->>
->> v4 -> v5
->> - added wake irq in example node
->>
->> v3 -> v4
->> - added version log after ---
->>
->> v2 -> v3
->> - dropped description for interrupt-names
->> - rebased reg property order in required option
->>
->> v1 -> v2
->> - reorder sequence of tags in commit text
->> - moved reg property after compatible field
->> - added interrupt-names property
->> ---
->>   .../serial/qcom,sa8255p-geni-uart.yaml        | 68 +++++++++++++++++++
->>   1 file changed, 68 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/serial/qcom,sa8255p-geni-uart.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/serial/qcom,sa8255p-geni-uart.yaml b/Documentation/devicetree/bindings/serial/qcom,sa8255p-geni-uart.yaml
->> new file mode 100644
->> index 000000000000..c2e11ddcc0f6
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/serial/qcom,sa8255p-geni-uart.yaml
->> @@ -0,0 +1,68 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/serial/qcom,sa8255p-geni-uart.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm Geni based QUP UART interface
->> +
->> +maintainers:
->> +  - Praveen Talari <quic_ptalari@quicinc.com>
->> +
->> +allOf:
->> +  - $ref: /schemas/serial/serial.yaml#
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - qcom,sa8255p-geni-uart
->> +      - qcom,sa8255p-geni-debug-uart
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  interrupts:
->> +    minItems: 1
-> 
-> Drop, this is not in sync with interrupt-names. You already received
-> comments on this. We talk about this since v4!
-I hope you have reviewed the commit message and the description under 
-interrupt-name regarding the optional wakeup IRQ. I believe that address 
-your query.
+static inline pte_t get_and_clear_full_ptes(struct mm_struct *mm,
+                                unsigned long addr, pte_t *ptep,
+                                unsigned int nr, int full)
+{
+        pte_t pte;
+        if (likely(nr =3D=3D 1)) {
+                contpte_try_unfold(mm, addr, ptep, __ptep_get(ptep));
+                pte =3D __get_and_clear_full_ptes(mm, addr, ptep, nr, full)=
+;
+        } else {
+                pte =3D contpte_get_and_clear_full_ptes(mm, addr, ptep, nr,=
+ full);
+        }
 
-I can include minItems:1 in the interrupt-name property in the next 
-patch set to align/sync with interrupts property.
+        return pte;
+}
 
-Thanks,
-Praveen Talari
-> 
-> I am not reviewing the rest. Implement complete feedback given to you in
-> v4 and v5.
-> 
-> Best regards,
-> Krzysztof
-> 
+Initially, I thought it only unfolded when nr =3D=3D 1, but after reading
+contpte_get_and_clear_full_ptes more closely, I realized we do
+support partial unfolding=E2=80=94that's what I had missed.
+
+pte_t contpte_get_and_clear_full_ptes(struct mm_struct *mm,
+                                unsigned long addr, pte_t *ptep,
+                                unsigned int nr, int full)
+{
+        contpte_try_unfold_partial(mm, addr, ptep, nr);
+        return __get_and_clear_full_ptes(mm, addr, ptep, nr, full);
+}
+
+I think you are right.
+
+>
+> >
+> > Similarly, if the addr/ptep points to the first subpage, but max_nr is
+> > less than CONT_PTES, what will happen in that case?
+> >
+> >
+> >> +               return 1;
+> >> +
+> >> +       return folio_pte_batch(folio, addr, ptep, pte, max_nr, flags, =
+NULL,
+> >> +                              NULL, NULL);
+> >> +}
+> >> +
+> >>   static int move_ptes(struct pagetable_move_control *pmc,
+> >>                  unsigned long extent, pmd_t *old_pmd, pmd_t *new_pmd)
+> >>   {
+> >> @@ -177,7 +194,7 @@ static int move_ptes(struct pagetable_move_control=
+ *pmc,
+> >>          bool need_clear_uffd_wp =3D vma_has_uffd_without_event_remap(=
+vma);
+> >>          struct mm_struct *mm =3D vma->vm_mm;
+> >>          pte_t *old_ptep, *new_ptep;
+> >> -       pte_t pte;
+> >> +       pte_t old_pte, pte;
+> >>          pmd_t dummy_pmdval;
+> >>          spinlock_t *old_ptl, *new_ptl;
+> >>          bool force_flush =3D false;
+> >> @@ -185,6 +202,8 @@ static int move_ptes(struct pagetable_move_control=
+ *pmc,
+> >>          unsigned long new_addr =3D pmc->new_addr;
+> >>          unsigned long old_end =3D old_addr + extent;
+> >>          unsigned long len =3D old_end - old_addr;
+> >> +       int max_nr_ptes;
+> >> +       int nr_ptes;
+> >>          int err =3D 0;
+> >>
+> >>          /*
+> >> @@ -236,14 +255,16 @@ static int move_ptes(struct pagetable_move_contr=
+ol *pmc,
+> >>          flush_tlb_batched_pending(vma->vm_mm);
+> >>          arch_enter_lazy_mmu_mode();
+> >>
+> >> -       for (; old_addr < old_end; old_ptep++, old_addr +=3D PAGE_SIZE=
+,
+> >> -                                  new_ptep++, new_addr +=3D PAGE_SIZE=
+) {
+> >> +       for (; old_addr < old_end; old_ptep +=3D nr_ptes, old_addr +=
+=3D nr_ptes * PAGE_SIZE,
+> >> +               new_ptep +=3D nr_ptes, new_addr +=3D nr_ptes * PAGE_SI=
+ZE) {
+> >>                  VM_WARN_ON_ONCE(!pte_none(*new_ptep));
+> >>
+> >> -               if (pte_none(ptep_get(old_ptep)))
+> >> +               nr_ptes =3D 1;
+> >> +               max_nr_ptes =3D (old_end - old_addr) >> PAGE_SHIFT;
+> >> +               old_pte =3D ptep_get(old_ptep);
+> >> +               if (pte_none(old_pte))
+> >>                          continue;
+> >>
+> >> -               pte =3D ptep_get_and_clear(mm, old_addr, old_ptep);
+> >>                  /*
+> >>                   * If we are remapping a valid PTE, make sure
+> >>                   * to flush TLB before we drop the PTL for the
+> >> @@ -255,8 +276,12 @@ static int move_ptes(struct pagetable_move_contro=
+l *pmc,
+> >>                   * the TLB entry for the old mapping has been
+> >>                   * flushed.
+> >>                   */
+> >> -               if (pte_present(pte))
+> >> +               if (pte_present(old_pte)) {
+> >> +                       nr_ptes =3D mremap_folio_pte_batch(vma, old_ad=
+dr, old_ptep,
+> >> +                                                        old_pte, max_=
+nr_ptes);
+> >>                          force_flush =3D true;
+> >> +               }
+> >> +               pte =3D get_and_clear_full_ptes(mm, old_addr, old_ptep=
+, nr_ptes, 0);
+> >>                  pte =3D move_pte(pte, old_addr, new_addr);
+> >>                  pte =3D move_soft_dirty_pte(pte);
+> >>
+> >> @@ -269,7 +294,7 @@ static int move_ptes(struct pagetable_move_control=
+ *pmc,
+> >>                                  else if (is_swap_pte(pte))
+> >>                                          pte =3D pte_swp_clear_uffd_wp=
+(pte);
+> >>                          }
+> >> -                       set_pte_at(mm, new_addr, new_ptep, pte);
+> >> +                       set_ptes(mm, new_addr, new_ptep, pte, nr_ptes)=
+;
+> >>                  }
+> >>          }
+> >>
+> >> --
+> >> 2.30.2
+
+Thanks
+Barry
