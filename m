@@ -1,101 +1,103 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4879199FB0;
-	Tue, 10 Jun 2025 02:07:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D669C29A0;
+	Tue, 10 Jun 2025 02:08:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749521247; cv=none; b=nx3D0OJBI2C4h0GLk4reS8NMmudoG99R1UZAnNgOXlgv2IvkT3qEwHMKiUOUU4oIk2pt2dTR7iuzt2vYfrYL/SMCxjP/GsIlijDqpxItQcijK3C9754OixYPDXULdpImV0A1WUToJq9tg1KVROwAyxICMJlPDua4itH+DbiIhuc=
+	t=1749521309; cv=none; b=FXzPrOyH32QpTS8fQzmEYHVO7+QMAdxVUpP6QDtPRi8jdRKtZn+KzC7gF7AwIsVWFU4VSpWSYc8GsEtIV0RthtOFyC5GrRMTNm+dr9jRYHjG7dxj9uLuC+kwsv3tGIASva91mUlGcFDWyi2+S/2yqtremJSxOgCvEIJEGlR/qDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749521247; c=relaxed/simple;
-	bh=Khl0Gg08PltbgoVPqbTT3Z97rJkwsl2X1WNPBoLia6Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o/HYh3Y8PijrTkNAiawS7bMRqaPOi27afnyXcJzGwaYn23eGFx7hOar2gfqp4B0/XItsJrBSivJDXeTjzrgiHUuGY+5biDljAp5mSBdwufeDauavpYdYxmwVJ9wF+6HRoC7w9mrQfNwJmRdeMiC+0gl0GyamFVRSYTYgLSh5ph0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=IUmJFtM1; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IUmJFtM1"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 559FcrTI017589;
-	Tue, 10 Jun 2025 02:07:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=Jm4iZhusmRIAIRK6bbhztOQOKbIJTVCtBKJZMx420iM=; b=
-	IUmJFtM1jQa/vi9cfNZG3gpbGKx3Yq5AUe882tCp4pSWVQ0kbaQBaO1h+SOPbY+f
-	3n8vwiRXbSZ5nbvuNBmF/CJaUqETJ7o5UNMUx3YqeWo6+MebTzT1sg+yeRizvQ2M
-	Py84fTwn3WT8lWk/XFz2dr34O4XsOCp1bt2xRNnW1CNh+uz0UFXJjWu8HUrMex1S
-	3Ox/obzQsXiEHtCC+l2X8/vWisHiaYW5BSVgjD+foqw4SRdmD5i6Lq0DVfDFGYPQ
-	5C8yqIUg0O2GyCnfMeIW1VDmBvj1BFV6EhVyFxRnd5mOkgk8JK03d/1yb+RYDeFc
-	EhYRsyVNwC6cAzXlfwNl/Q==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 474c74u9mu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 10 Jun 2025 02:07:21 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55A1A7eb031370;
-	Tue, 10 Jun 2025 02:07:20 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 474bv84jff-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 10 Jun 2025 02:07:20 +0000
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55A27Kqu016523;
-	Tue, 10 Jun 2025 02:07:20 GMT
-Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 474bv84jet-1;
-	Tue, 10 Jun 2025 02:07:20 +0000
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-To: lduncan@suse.com, cleech@redhat.com, michael.christie@oracle.com,
-        James.Bottomley@HansenPartnership.com, open-iscsi@googlegroups.com,
-        linux-scsi@vger.kernel.org, Alok Tiwari <alok.a.tiwari@oracle.com>
-Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org, darren.kenny@oracle.com
-Subject: Re: [PATCH] scsi: iscsi: fix incorrect error path labels for flashnode operations
-Date: Mon,  9 Jun 2025 22:06:45 -0400
-Message-ID: <174951883633.1141801.4572248277182090285.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250530193012.3312911-1-alok.a.tiwari@oracle.com>
-References: <20250530193012.3312911-1-alok.a.tiwari@oracle.com>
+	s=arc-20240116; t=1749521309; c=relaxed/simple;
+	bh=PyVS5Ca/GiCDjbyHz8ZFyNBYLTm39fGuhScpF+ABEW0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oFQkiQER9QuzPkf8TY2f/C6SMPqYTNvluA3w/oiXIAhD4bZJBOv5yPlcRZs3Gac6t0GSDDRkEfQ4y5+PSlTHlSmeLBlyzV+G1P2wcCilkoS4mLuJNiuxMNn1xSQKd8rbzbPOkfkbFVRuJey/jkXx3O2yU3BJ5xlLSpb8AgG9a3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6faf66905adso31003396d6.2;
+        Mon, 09 Jun 2025 19:08:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749521307; x=1750126107;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=a5l7crO49tehMluY+s3MQ7KZSQ7naCKKBXJdEzrIe1w=;
+        b=UHkuo/6RBWz6bBeh9om4EXzLuXLOwk+5BDlYrk5XoRIxVR7KkuUSLrvYugLum5NuLY
+         BeyNZvi0aIwCp4ZnzTwiYF04fHMEJD6fCskBdrHskiqNV8WWhcJChteqaWMXd1MWkmEs
+         V6MQhOchN57Zidx2qoktgEiVJAR2QG8jXDIzrbswY6rHAEXFxx4NkfuGj2Q8Vzmf8IYA
+         nWG0bpL4XBj1AoKD055WTnWSYM4diPg3BJzZvRqXlzXJyTE5YLnEzn4MlBCUfkuLwkBI
+         Rxc46OFmYbLRgqEmliieuVe1cF0cyfdHa8nBW/m9qCBy9Dt04li1RjEOx/aC3BSAD0sv
+         96Pw==
+X-Forwarded-Encrypted: i=1; AJvYcCU9OXb80lgL2Hx9yHgYnYBFDzd3Y+HOAp9dfizAcpZ1KiMhOFvQwVxIKM3tBoDZ+bzA8D61RZu69LdFaHq2gR2D@vger.kernel.org, AJvYcCWukedVIyZqs+87Ea6DFhVrkpDKXp8P8qcM7WQ65JVglK6ZkgFoc3JEGhDsjaKx90PF+VPjMN6lQLapf0E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlvaBy4NO5hcxUvN6cwYsNNaLZpp9lRloH2HMBWvQzyLpEsYNY
+	UEIyqaNDJfclGqDEcPwZ1KcIukH9wEEfjHpkjyTw5sDtdZSeb5oJkv9cd/eIC+KMNMo=
+X-Gm-Gg: ASbGncvI4niELIVVcTMkX4/WRLkcgB51PRaCQZnR1QBiFt1XANucHswUTUstBSwBgIT
+	Y38nhXEJXFQu6Os8wdsyFR24UVzEJIYoByUOZtluyYVbgDW6JHsOF2RtWtz3aOikUV5tCV2Dij9
+	YfAz7C4XG1rU9JzNlcEpvOOQkuwTej7CDCKfOiRenb5hGoX5T3ZMtn3StecSM8zyV+ZKbY+mxT3
+	Jdik616zx4CSOPZvWk8cj5A+NfMxK8jq+DigvK71dUaU4Ej/rezYqx0z/Swt96PuTPK+GU9A6rZ
+	IOqXyvH74xtYYdBqNoBAio3WEGk3bgrEQOT30VjiSRMZWHhpVbdoTqXcY33/hp9zIxS9pqG/a1D
+	lLnPXBOJE5s60LRtDcy9OTw==
+X-Google-Smtp-Source: AGHT+IHnuIE8PHQbLq+4boGMp7B1osfy71c9ZqsPZsrjBrra+rmbDHqteKOSUy+BJmkLvwT1ldZVSg==
+X-Received: by 2002:ad4:5f0c:0:b0:6fb:16a:da41 with SMTP id 6a1803df08f44-6fb08edeed2mr258166956d6.0.1749521306683;
+        Mon, 09 Jun 2025 19:08:26 -0700 (PDT)
+Received: from localhost.localdomain (ip170.ip-51-81-44.us. [51.81.44.170])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb09ac83besm59803656d6.28.2025.06.09.19.08.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jun 2025 19:08:26 -0700 (PDT)
+From: Chen Linxuan <chenlinxuan@uniontech.com>
+To: Shuah Khan <shuah@kernel.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Miklos Szeredi <mszeredi@redhat.com>,
+	Jan Kara <jack@suse.cz>,
+	Chen Linxuan <chenlinxuan@uniontech.com>
+Cc: zhanjun@uniontech.com,
+	niecheng1@uniontech.com,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH RESEND] selftests: Suppress unused variable warning
+Date: Tue, 10 Jun 2025 10:07:45 +0800
+Message-ID: <20250610020758.2798787-2-chenlinxuan@uniontech.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-10_01,2025-06-09_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 suspectscore=0
- phishscore=0 malwarescore=0 mlxlogscore=932 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2506100014
-X-Authority-Analysis: v=2.4 cv=LIpmQIW9 c=1 sm=1 tr=0 ts=68479359 cx=c_pps a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=ZFjwF5Gz_3r7dmuddG4A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: _7ALXlVP53ua1-rp-P5BFxVJoc9viP7i
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDAxNCBTYWx0ZWRfXznH9xBxmX5Vg W/+c0sx4YQOgQwQWeVUz7aCYRY2JhGpY64C+fe0H7pPDW3xyLUbTF6/Bxqe24h4nzTBbyDZEdu1 J/Eq6lHF90K3g4vnTx66XWXuJkt2UevV03VgW3CCMCLWW3m/4EnqHl7rB4JG8vF1p4dIKxhjlaj
- nxAIdpYJaSNYyioat9G1ImqCrYvA01tpmpsj3gdjCAwrxOrcb2gpNx1S7+wnMxdg+O1Nnfpf9kl zxOx1nMCfKRLUAD7lAw2V7MQ1DxTgDruZkzCXlJOkmJaUwcaMJ2DavxCK2z+Hvw95NH5go5P+uv 8rkYSZR1WllltKMZgqQR4HrSv+Ss7JO+5FayKBTi84IN2zWKyn4IaYmJ1EhRIRXfK/SbzikyEX3
- nxKtRhY0hogBliUvbBRdfweKQmNUPWlgE5hkqlTK8ITeSr0cy/S+VRU2FVFLTVkfBg+1E2JY
-X-Proofpoint-GUID: _7ALXlVP53ua1-rp-P5BFxVJoc9viP7i
 
-On Fri, 30 May 2025 12:29:35 -0700, Alok Tiwari wrote:
+When running `make kselftest`, the following compilation warning was encountered:
 
-> Correct the error handling goto labels used when host lookup fails in
-> various flashnode-related event handlers:
-> - iscsi_new_flashnode()
-> - iscsi_del_flashnode()
-> - iscsi_login_flashnode()
-> - iscsi_logout_flashnode()
-> - iscsi_logout_flashnode_sid()
-> 
-> [...]
+mount-notify_test.c: In function ‘fanotify_rmdir’:
+mount-notify_test.c:490:17: warning: ignoring return value of ‘chdir’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  490 |                 chdir("/");
+      |                 ^~~~~~~~~~
 
-Applied to 6.16/scsi-fixes, thanks!
+This patch addresses the warning by
+explicitly suppressing the unused result of the `chdir` function.
 
-[1/1] scsi: iscsi: fix incorrect error path labels for flashnode operations
-      https://git.kernel.org/mkp/scsi/c/9b17621366d2
+Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
+---
+ .../selftests/filesystems/mount-notify/mount-notify_test.c    | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
+diff --git a/tools/testing/selftests/filesystems/mount-notify/mount-notify_test.c b/tools/testing/selftests/filesystems/mount-notify/mount-notify_test.c
+index 63ce708d93ed0..34afe27b7978f 100644
+--- a/tools/testing/selftests/filesystems/mount-notify/mount-notify_test.c
++++ b/tools/testing/selftests/filesystems/mount-notify/mount-notify_test.c
+@@ -465,7 +465,9 @@ TEST_F(fanotify, rmdir)
+ 	ASSERT_GE(ret, 0);
+ 
+ 	if (ret == 0) {
+-		chdir("/");
++		// Suppress -Wunused-result
++		// Ref: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=66425#c34
++		(void) !chdir("/");
+ 		unshare(CLONE_NEWNS);
+ 		mount("", "/", NULL, MS_REC|MS_PRIVATE, NULL);
+ 		umount2("/a", MNT_DETACH);
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.43.0
+
