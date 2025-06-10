@@ -1,125 +1,134 @@
-Received: from gofer.mess.org (gofer.mess.org [88.97.38.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41CB0226533;
-	Tue, 10 Jun 2025 13:21:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.97.38.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92022246BC9
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749561675; cv=none; b=Hrh0sQfhXcfPEQSLV6S8+R8efgYNksFKjE6X8Agtvuj3vcieSSsoj3jQ8ZyTg8eQhsLwKQGKQCYUrIgSgWMcs2CUks2jR1AnY+bNva/IZvMfse4P3T400kwbyMkkrpOIgk2vBShGLEpmt0RivQ18bPMP8nBxO/GBxOo0YqcilIw=
+	t=1749561727; cv=none; b=XRgDx6luOIq24n7JrBZVsashzoHJhefeiGRTUkIBn1R4cLWQO2Yp39XFFJ11xbN4bxSdshqvNQEmfxHcOFUFSdTDknBHiNqmN8ZBkz7RDS83PV8qHo7ctj5WlM7tV/fLJUzOoN36IGVoEH+/R2IZ6ANoyty9cGaD0yelQTd2exQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749561675; c=relaxed/simple;
-	bh=kOr0tkG3PuVS+TTaILnLIQBnipKUm+QpY+o9dkJKWW8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pQumLL3kQk3nFiKqlW2J4LKdUuUZmDVquaEmFN4zeohpYKdn/uelm9UonqzWj1zbPXVmZ77wJOqrFn8b4Gl7otscFqAZXVLy2pp5F4N89YaVlxV+HyVWxu+5IYQY0dSr57wrln0jkbFIjYo+PVg0YPrU/z2DvTtjjN1lErMwGTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org; spf=pass smtp.mailfrom=mess.org; dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b=BCKRCFwl; arc=none smtp.client-ip=88.97.38.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mess.org
+	s=arc-20240116; t=1749561727; c=relaxed/simple;
+	bh=ZbpgeYrVuAYbhNHnQFhuKH95YnD9yc07elTjyZVn4yI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=b2vp8WvVuScgCM24ei/zTvZbKEyHtmqIyORRmjRxeV2jlXiwjlNhCGwJKXjoZIvBEucWv26vuWEOV4fjk28N0Tfw6lLPD1htLHbAZ9N7yqfLS2cg5rUeNpUXtpNIk77zW3D8DzYb3+fka/w8CvjhBkfOrREf1Y2m52bnijMlOPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eRrEY2rP; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="BCKRCFwl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
-	t=1749561670; bh=kOr0tkG3PuVS+TTaILnLIQBnipKUm+QpY+o9dkJKWW8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BCKRCFwloMOvMeJl2UYwbk/c6svmS0NA9xTKnQVbxmfBeoOZcdCq0ayf+ZEl+geKf
-	 Kx3H3OYDJaMm2l38MzMDib+HB5iupfr9oWycpfEFdb/8Iakd/RpgTeiHGu9Mi3Ahfu
-	 zJRncVMoS4Bbgmea9urtUV9YwM9tbBbSZVLDd2suoX+oE3BnMIv+ivG1rOt+7A8j01
-	 MmfUcF38TTmEQojAG/QQVwvn7n+RW6b7HPEZKIsswDyk9AP2LYN3BLrPOjJhypL4U4
-	 pqJ4dXkYilp//TXzkA9GvxsKAM5ejMDpnzrO2NZDl3me3R83e3tITGCBUOAQjTCtnv
-	 QQrMCPLPUZ7uw==
-Received: by gofer.mess.org (Postfix, from userid 1000)
-	id E95C6100069; Tue, 10 Jun 2025 14:21:10 +0100 (BST)
-Date: Tue, 10 Jun 2025 14:21:10 +0100
-From: Sean Young <sean@mess.org>
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] media: rc: ir-spi: allocate buffer dynamically
-Message-ID: <aEgxRrR0DqNwpdbP@gofer.mess.org>
-References: <20250609111715.2572138-1-demonsingur@gmail.com>
- <aEf9b17JU1a5q2hC@gofer.mess.org>
- <8efe62a8-2c90-4599-82f3-4e41d8d859aa@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eRrEY2rP"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-747d59045a0so3765586b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 06:22:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749561725; x=1750166525; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5evA1zkRlXvY4KWokBRtcOOniHWMY26cBM07CIpPNKA=;
+        b=eRrEY2rPgLLHxaN+MWbAJY099E6AumbVvrdWUPUM+F5sLPmHXGWyX1G+degkqmD/WC
+         oVuszPsKqQniZrk2GrUV5ZydK4UWxv1HjfUvTZNCVRcKwSLUgDho5EdfhvjYCZHUBCI4
+         QWytu5WJQS/GfOnyyvntIlgxHwvYX8+tWc9y3SEXliwCD20+kxCbCVj5eR8fZgSpa8QO
+         axZ+/pFxIPs2f0MoNy+AVGCUrNlm/gleuiVv4f3REbVE1GB54cL8vbDAblxErAZGqFXJ
+         6hrZvtqsvnjYrsAYpQpjLNcchfyOIJ0iQ6c9jUJNpZ2v4vtjr7O29VuKtH6TF9xv4OdG
+         JF4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749561725; x=1750166525;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5evA1zkRlXvY4KWokBRtcOOniHWMY26cBM07CIpPNKA=;
+        b=ZvDz0ZvAm2OpLAI1gfoR5hHiaEjNlcizD/NP/dKIm6/gEzDBAOZJHHU0SE5yGQfEEm
+         aCZB5iSU+onDZXBY51iXYv+VSxa2jcoy+T2wzFgpvmxbl63pL/uLshl2wjmvfeg8kOut
+         7xPnnAuRyVQuqIFm/l/Mji+sWV8WiE6cWKMtCDOPKFs6Qf4adtpVMYW4yEgToDTgCDop
+         TYsbCM0R0lKIr+72KNXGz9a3G4Xu1XcCpDxAQMaf47DuDasRoqgHsB1zpjzN/SChJD32
+         RjXwyH4VmvdE5fs/VxZgRw0MX2IINtrpBxyDBL6qmk4tvZYYYVeT0/legwN1G5WLvSrf
+         ZWBA==
+X-Forwarded-Encrypted: i=1; AJvYcCUj3jndeG2qk3WtQ75AnzGnre+JQxt7cLDmUQwhEjMaAlcD4eojx+WjCZYjDqzDpJ8OSQ+SYmHdxpd0Wjw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRHgpTXOHO01LKtLs5c9IQ5gbEldoj/gmopq89NDa8LMgdJlS4
+	eJAL/1L7t0+yzIxU23V++AkEhgSpNcuSxtYd3sjCDilzYSeiw59WCH+6JRtPQk+Z9Uc=
+X-Gm-Gg: ASbGncs4dPfRk6Mh8velNc/PuiHPNI3CNl+LrfT+RLNDs2pdXNef1I+wjfYZyfmS23c
+	Odc2+FEZm4o4fXHhbAgWP+Es0PSLXI8341+f7b/CYqRlMkAsCV65LGhHEAglXp2/K9FVivG5rAe
+	Pu9v6DI0uL0EZHzZKa1xMQSp7vjLZzMNDAtjUU7Iv8heG823Ax8rlHfdeg3FFxsAhpBIyUT3gta
+	3UeK4FZm/0pafKKgh3L0DfxR4VFkf5Wxm74FaJCKbJtzvlH57GaFNZpUoifa0V3odJJYTVAdnzW
+	//9Kh75IplnD1EEhJYjnSzjf545QHdDjSM+JLIBEaxeh0KErvZryJ9ge90qK0LE=
+X-Google-Smtp-Source: AGHT+IF0pxGC5ku+v34hFKnUOuTECTUe2ClpZ+fIK73rQMcI3yEkP2695ZO26uA1FjEKIfmzHL7xdg==
+X-Received: by 2002:a05:6a00:4390:b0:740:a52f:a126 with SMTP id d2e1a72fcca58-74827e8060dmr20474817b3a.9.1749561724752;
+        Tue, 10 Jun 2025 06:22:04 -0700 (PDT)
+Received: from localhost ([122.172.81.72])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b0ea430sm7366201b3a.150.2025.06.10.06.22.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 06:22:04 -0700 (PDT)
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Boqun Feng <boqun.feng@gmail.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Benno Lossin <lossin@kernel.org>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Gary Guo <gary@garyguo.net>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Trevor Gross <tmgross@umich.edu>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Yury Norov <yury.norov@gmail.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: [PATCH V3 0/3] rust: Introduce CpuId and fix cpumask doctest
+Date: Tue, 10 Jun 2025 18:51:55 +0530
+Message-Id: <cover.1749554685.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8efe62a8-2c90-4599-82f3-4e41d8d859aa@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 10, 2025 at 01:15:32PM +0300, Cosmin Tanislav wrote:
-> On 6/10/25 12:39 PM, Sean Young wrote:
-> > On Mon, Jun 09, 2025 at 02:17:13PM +0300, Cosmin Tanislav wrote:
-> > > Replace the static transmit buffer with a dynamically allocated one,
-> > > removing the limit imposed on the number of pulses to transmit.
-> > > 
-> > > Calculate the number of pulses for each duration in the received buffer
-> > > ahead of time, while also adding up the total pulses, to be able to
-> > > allocate a buffer that perfectly fits the total number of pulses, then
-> > > populate it.
-> > > 
-> > > Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-> > > ---
-> > > V3:
-> > >   * move the allocation to be done per-TX operation
-> > > 
-> > > V2:
-> > >   * use devm_krealloc_array
-> > > 
-> > >   drivers/media/rc/ir-spi.c | 33 ++++++++++++++++++++-------------
-> > >   1 file changed, 20 insertions(+), 13 deletions(-)
-> > > 
-> > > diff --git a/drivers/media/rc/ir-spi.c b/drivers/media/rc/ir-spi.c
-> > > index 8fc8e496e6aa..50e30e2fae22 100644
-> > > --- a/drivers/media/rc/ir-spi.c
-> > > +++ b/drivers/media/rc/ir-spi.c
-> > > @@ -21,13 +21,11 @@
-> > >   #define IR_SPI_DRIVER_NAME		"ir-spi"
-> > >   #define IR_SPI_DEFAULT_FREQUENCY	38000
-> > > -#define IR_SPI_MAX_BUFSIZE		 4096
-> > >   struct ir_spi_data {
-> > >   	u32 freq;
-> > >   	bool negated;
-> > > -	u16 tx_buf[IR_SPI_MAX_BUFSIZE];
-> > >   	u16 pulse;
-> > >   	u16 space;
-> > > @@ -43,37 +41,42 @@ static int ir_spi_tx(struct rc_dev *dev, unsigned int *buffer, unsigned int coun
-> > >   	unsigned int len = 0;
-> > >   	struct ir_spi_data *idata = dev->priv;
-> > >   	struct spi_transfer xfer;
-> > > +	u16 *tx_buf;
-> > >   	/* convert the pulse/space signal to raw binary signal */
-> > >   	for (i = 0; i < count; i++) {
-> > > -		unsigned int periods;
-> > > +		buffer[i] = DIV_ROUND_CLOSEST(buffer[i] * idata->freq, 1000000);
-> > > +		len += buffer[i];
-> > > +	}
-> > 
-> > This looks great, thank you.
-> > 
-> > I do have one concern though. If someone sets a carrier of U32_MAX - 1 then
-> > this code could be doing largish allocations, spending too long in kernel
-> > space filling them with data and spi can't send it anyway. Actually
-> > the kmalloc might fail which doesn't look good in the logs.
-> > 
-> > We may have to constrain the carrier to something spi can handle.
-> > 
-> 
-> The SPI device has a max_speed_hz, maybe we should check that?
-> 
-> It seems to be set based on the spi-max-frequency property in
-> the device tree node of the SPI device, and uses the max_speed_hz
-> of the SPI controller as a fallback.
-> 
-> Should I add a separate patch that adds a check in
-> ir_spi_set_tx_carrier?
-> 
-> if (carrier * 16 > idata->spi->max_speed_hz)
-> 	return -EINVAL.
-> 
-> Something along these lines.
+Hello,
 
-That's perfect. The 16 will need a comment or a #define
+Here is another attempt at fixing the cpumask doctest. This series creates a new
+abstraction `CpuId`, which is used to write a cleaner cpumask example which
+doesn't fail in those corner cases.
+
+Rebased over v6.16-rc1 + [1].
+
+V2->V3:
+- Include the separately sent patch as 3/3 and clarify about `unstable` CpuId.
+- Add few debug_assert!().
+- Improved comments, commit log.
+
+V1->V2:
+- Introduce CpuId.
+- Use CpuId in cpufreq, opp, cpumask abstractions.
+- Fix cpumask example.
+
+--
+Viresh
+
+[1] https://lore.kernel.org/all/4823a58093c6dfa20df62b5c18da613621b9716e.1749554599.git.viresh.kumar@linaro.org/
+
+Viresh Kumar (3):
+  rust: cpu: Introduce CpuId abstraction
+  rust: Use CpuId in place of raw CPU numbers
+  rust: cpu: Add CpuId::current() to retrieve current CPU ID
+
+ MAINTAINERS                    |   1 +
+ drivers/cpufreq/rcpufreq_dt.rs |   4 +-
+ rust/helpers/cpu.c             |   8 +++
+ rust/helpers/helpers.c         |   1 +
+ rust/kernel/cpu.rs             | 124 ++++++++++++++++++++++++++++++++-
+ rust/kernel/cpufreq.rs         |  27 ++++---
+ rust/kernel/cpumask.rs         |  51 ++++++++++----
+ 7 files changed, 189 insertions(+), 27 deletions(-)
+ create mode 100644 rust/helpers/cpu.c
 
 
-Sean
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+prerequisite-patch-id: 1917103231ee798c4217f6da8bafa603b00e554c
+-- 
+2.31.1.272.g89b43f80a514
+
