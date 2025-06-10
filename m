@@ -1,101 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED5921D59F;
-	Tue, 10 Jun 2025 10:32:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73DA921D59F
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 10:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749551557; cv=none; b=vE9wuNO7Tvso9Wddw8vzo/l0Mn+HzcIfOwXMOHzNwAtofahsv+oULx/hhn2iWArn0X0zztH+sJrkr+f3Z0hnpo3xZHqSIbCmm10sWgdNDnkRuh2fo/peUy7K3H6oDnnkiklvTdciJ/FZDuKC5PXORqKOHDBa/3KpAw/C5yNFhzI=
+	t=1749551607; cv=none; b=cuw3UJkBiiBLT4TxP7QAsqWgE5o56/hrssM+n7IsbqTk+JhsrXKepXaKt0cRqET5Gwf/lXcuzW9+riClF7JXIeRmRUVgtzv2VGU169LoeuXpHm7hg+6AizKZGV3EERNb1VkttkI57ninuPToYn6KzLw+lBTZ7VCgdpYPsIxiFYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749551557; c=relaxed/simple;
-	bh=FpBSC2xVTPB5Ko/OrzcBChzht3GRAD298DcZnb89s98=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kZUWmAkP+Bh3sytHCE9KEUJ7eLSEwyLXddjoethiMxB8ctSGI1M90n2z5vtcpP9aEdSHt0CADYVzIxTnlYorJ2M6zBXXpW/h12lPldWlMWcqbRkUHS2Ot4BGMQA9rjO8VYNIaHw9ItV4Zz6kG9YDcVPwPLcL6SreNV+TCurwzk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IhHdX2Qv; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749551607; c=relaxed/simple;
+	bh=fjW0jXCfd6en/Aoe0j4hbOJItolJuWR1YjTBIvpS+Gg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XbWIyH9kbgtbcO8LE+Dgh20pu6mF9DyCg0qHtx/T833bhQxVnFrouMm5WNrt2W7Sj76xgKPpmze2hK5lA6V9f5jZeFGlNg+lns4opJDetKVlcLTHIp5LZ4wPWrOJkExb+5HfgGC3WHR/UTb4T7Z4W8NXOCAMTUqVE3OYtrZc+rQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iI7TSjo9; arc=none smtp.client-ip=95.215.58.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IhHdX2Qv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749551556; x=1781087556;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=FpBSC2xVTPB5Ko/OrzcBChzht3GRAD298DcZnb89s98=;
-  b=IhHdX2Qvg1Alou/fvtli3LcsBYiF2egnEc8G0YVQL/H21bWsaW65O7O7
-   IT6Mr/HKAIluC/bE3gs3k01L+EVOgy4gIyQhNLSjX9GP0orRjGSihstgm
-   UAywAWtXHi3nky7PkZFHk3XdGU7VK01M2wkDnblYtA4SMpSi0flskmKey
-   4AvrzeFvlWTQNW/+JXC1wg8csv/neBUiMZ/NcvLS9EW1G/ktlAMjbDd0H
-   3M5EENL2VXHzbXGQmmOTC+5V/rP2bSuSbcV/5bkDOeh0pMuLgh4zDDGgu
-   yYdydCw6z0kt9T35+6uyqR8lX8Ib0jTvt2PNDjJcPKBl4yTaX/LOo3YpN
-   w==;
-X-CSE-ConnectionGUID: dLEBSYOERfe5cH00juuKwA==
-X-CSE-MsgGUID: WDTOiF8nRRWSue6V7ww0iQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51362683"
-X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
-   d="scan'208";a="51362683"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 03:32:35 -0700
-X-CSE-ConnectionGUID: i4huHt0qQiam06ejMiMQaA==
-X-CSE-MsgGUID: mLbvw7MwRGy97naDlMpxUQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,224,1744095600"; 
-   d="scan'208";a="146720033"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.196])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 03:32:31 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-pci@vger.kernel.org,
-	Potnuri Bharat Teja <bharat@chelsio.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iI7TSjo9"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749551591;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=k4cpsN1ugtg9kXyYb6LbiRd5jMU/jLsFcbsMgFqpRDY=;
+	b=iI7TSjo9Aaiz/4ey6yBuIy8S1hCJOBJwcUbQj4DdiCg0TA4qLy8ET7bm78qHlm6jAWyv6v
+	G8y2UM34I9+5eYXFGMfrRjrIJevSrCI13tO+oaw1ASr3C7vvChkVVkC5uTcEBoEiVX9lcd
+	kf306k8/ss+uXwcnEUsa6HyIYLQVQ48=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+	Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+	=?UTF-8?q?P=C3=A9ter=20Ujfalusi?= <peter.ujfalusi@linux.intel.com>,
+	Charles Keepax <ckeepax@opensource.cirrus.com>,
+	Richard Fitzgerald <rf@opensource.cirrus.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	stable@vger.kernel.org,
+	Liam Girdwood <liam.r.girdwood@intel.com>,
+	linux-sound@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 3/3] cxgb3: Split complex PCI write statement into logic + write
-Date: Tue, 10 Jun 2025 13:32:05 +0300
-Message-Id: <20250610103205.6750-3-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250610103205.6750-1-ilpo.jarvinen@linux.intel.com>
-References: <20250610103205.6750-1-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH] ASoC: sdw_utils: Fix potential NULL pointer deref in is_sdca_endpoint_present()
+Date: Tue, 10 Jun 2025 12:32:16 +0200
+Message-ID: <20250610103225.1475-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Instead of trying to complex logic within the PCI capability write
-statement, split the logic onto separate lines for better readability.
-Also, don't pretend just clearing the fields, but set the fields to
-what 0 means (128 bytes).
+Check the return value of kzalloc() and exit early to avoid a potential
+NULL pointer dereference.
 
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Cc: stable@vger.kernel.org
+Fixes: 4f8ef33dd44a ("ASoC: soc_sdw_utils: skip the endpoint that doesn't present")
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 ---
- drivers/net/ethernet/chelsio/cxgb3/t3_hw.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ sound/soc/sdw_utils/soc_sdw_utils.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb3/t3_hw.c b/drivers/net/ethernet/chelsio/cxgb3/t3_hw.c
-index 171bf6cf1abf..b9327d8c6893 100644
---- a/drivers/net/ethernet/chelsio/cxgb3/t3_hw.c
-+++ b/drivers/net/ethernet/chelsio/cxgb3/t3_hw.c
-@@ -3267,9 +3267,9 @@ static void config_pcie(struct adapter *adap)
+diff --git a/sound/soc/sdw_utils/soc_sdw_utils.c b/sound/soc/sdw_utils/soc_sdw_utils.c
+index 30f84f4e7637..b70cb3793d8f 100644
+--- a/sound/soc/sdw_utils/soc_sdw_utils.c
++++ b/sound/soc/sdw_utils/soc_sdw_utils.c
+@@ -1180,6 +1180,8 @@ static int is_sdca_endpoint_present(struct device *dev,
+ 	int i;
  
- 	pci_read_config_word(adap->pdev, PCI_DEVICE_ID, &devid);
- 	if (devid == 0x37) {
--		pcie_capability_write_word(adap->pdev, PCI_EXP_DEVCTL,
--					   val & ~PCI_EXP_DEVCTL_READRQ &
--					   ~PCI_EXP_DEVCTL_PAYLOAD);
-+		val &= ~(PCI_EXP_DEVCTL_PAYLOAD|PCI_EXP_DEVCTL_READRQ);
-+		val |= PCI_EXP_DEVCTL_PAYLOAD_128B|PCI_EXP_DEVCTL_READRQ_128B;
-+		pcie_capability_write_word(adap->pdev, PCI_EXP_DEVCTL, val);
- 		pldsize = 0;
- 	}
+ 	dlc = kzalloc(sizeof(*dlc), GFP_KERNEL);
++	if (!dlc)
++		return -ENOMEM;
  
+ 	adr_end = &adr_dev->endpoints[end_index];
+ 	dai_info = &codec_info->dais[adr_end->num];
 -- 
-2.39.5
+2.49.0
 
