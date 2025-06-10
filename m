@@ -1,90 +1,122 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB757E9;
-	Tue, 10 Jun 2025 08:06:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28E322172F;
+	Tue, 10 Jun 2025 08:09:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749542790; cv=none; b=BkeR7J2huLucPCLxqml2/Hhm4mpEX6I7Ci1MoOxwkdbAVqFjUMxF8TCd6S/F3ZaXcrTDV95biTOgRzAWcn4aFj6d2DBPi7MwV5sJQSHOufB+5bxeQzdxt8xUgKQ1WWokmv8Yr4YfFCLR1MmRfE/J/RxbgEVHKZYQOxQ4/E2I1us=
+	t=1749542977; cv=none; b=RUL6dJAQRVIlpjuW1tQN2GzSNgEEYmhmOH4+JDzp0m9vpv4UsKuCADxYmwO2bnDhQ8g3Fvgn4Xaxfb/sQz6TrFZRxYW3SWhhIl170sqBlXkjE6ISopgICuJTlyX5UJ6sHvCjoIESj5tnqkxX3jKNIPoHdq5ouJaTAEXvecrm2yU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749542790; c=relaxed/simple;
-	bh=oofEe6usbj+qKOpysPdU+fJP4MUaYO5/A/AQXFZCWa8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sFn9b2RdWww0fYU4OU6S/6SkM6JuUw8aYkfPWxIUgmY41nrEPKTzXcWcbiwbkDD7N6PRgM5bj3yo2Cp8JI2y3mtlHmc4hjXDGNtpxM4r3pp42Us5At4DGjrH16pWZgj8SWMQCtK7krzfzL3+cYMPWryZVtCuhq1c9u9Q/EQfXBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ade76b8356cso141460566b.2;
-        Tue, 10 Jun 2025 01:06:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749542787; x=1750147587;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BU+jtFAxsbmD1oSGWe/PHbt+kKKNnnYvXpq5CdpQ3QA=;
-        b=qFndv5P7G8KW3UArPuF2FinAUIQFOUL8g7mHzVvPoNa9WNLLqPWAos2azaHpuYtpBx
-         krtmkt0wA8VMlbpvhP856OylLK1sTCHBIT5oz+QHYSgQt3GprmcQDeKFK2qlzHnoaE+v
-         Hbq5CsAWIstG62deZDe/YaOIgAo5iysnD17gOsQa9dNcXUWb7Unx2/MdO7ZDYi1U/0Sl
-         X8+uA0UP6iYdovBPKZTDWWNPXPbZd50cxNZCwvCkzGe1UxqXch+rZ0aY0spNbAD8KgYr
-         sGxyBnSZ00fp7X7TpBwzvbtDCfyHhCK2d/twqxuVXPa+HvLiZJPKjxQoTZOrjWrT2rwQ
-         Ly4w==
-X-Forwarded-Encrypted: i=1; AJvYcCVfdTYRHwoE/9gNx9nnRYZTT7kW2rIr+P6UM8ciVV2TpOIrhAfp4UVjUb4HbrzoHFjrjml8ryam@vger.kernel.org, AJvYcCViykZKAyfdj9A0I2hyxqnA4ES50Y0Z0wU6YZLrWVl5YI2f7xc5n5As45Gdo37dNXxdiACV9ZgVnEOyh/o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvYqnO141fjfIcJlP7RzKxdpsjWKVNIWGhaUoYoOQotIIj7ha1
-	wRgoKuxNe0zAuVCc7WXPMzKjREKnqYglNc4kCxxkXb9vG7GQDQrHifzP
-X-Gm-Gg: ASbGnctjnyujE4PrKYoxU1OBbqXdGen/h9xA/8EbFROSvTTU0R+kPogIDGMB6suYbbh
-	guRot3ZZ5UTjRI1bmacU0CNAjfBeF5tg3h2eaeXgjGExoFMIARys/+v7AdCDBCf92CnagmQMvNP
-	EHkTLm6SV/3otsAfjCrYtXyjuZgytSaQ63LlaAjeFZMGtfC2gi4InEFJU7DopvcvNbq9YBDIvTW
-	WoAtrdvQz9LacVFKoXm4nEEXlBmoJnSLjeYTOPyNmYkLtxvgn4PK7BNyyJwZ4+H0FjEMH+MqT7p
-	4lBPBdmizUUUCtmUjjismsnoiL0qzpkb4EGvLFJFopOBJG8uPtfO
-X-Google-Smtp-Source: AGHT+IHvp9ssXqL+sQbF0Pqu3m/lzBCQFqu7LbWBTPnLJ9OumSC65Ukoyd3wQye+bHoOL3D/2IKl3g==
-X-Received: by 2002:a17:906:3e0d:b0:ade:3eb6:3b0 with SMTP id a640c23a62f3a-ade3eb609ffmr791351566b.31.1749542787282;
-        Tue, 10 Jun 2025 01:06:27 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:5::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1e361462sm672758066b.184.2025.06.10.01.06.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 01:06:26 -0700 (PDT)
-Date: Tue, 10 Jun 2025 01:06:24 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Gustavo Luiz Duarte <gustavold@gmail.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] netconsole: fix appending sysdata when
- sysdata_fields == SYSDATA_RELEASE
-Message-ID: <aEfngKdDKgQH2yZq@gmail.com>
-References: <20250609-netconsole-fix-v1-1-17543611ae31@gmail.com>
+	s=arc-20240116; t=1749542977; c=relaxed/simple;
+	bh=wog5ODe4eh+cmPzvRdkxZrYrSXA9MiXw0UkMruDR7PI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=H9J6lmo5x1mWb76fgdF200052a8WYX1IybxpsIE7dEZins1P2LudzYw++X2dO4eO9vxP73lc2GhHmBeUvgxfKUSJWzmW95fKlJeI/R9u/8zZeOBePzR2YTe/ZW0tSdYT3KbowKWYOvFpfbwMqt1ml0veALYbqT0auR24MGspdAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ded4H/wv; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ded4H/wv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A438FC4CEF0;
+	Tue, 10 Jun 2025 08:09:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749542976;
+	bh=wog5ODe4eh+cmPzvRdkxZrYrSXA9MiXw0UkMruDR7PI=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=ded4H/wvMG9GadoQ7RXtE4KDqSWPiuMqy73CT4elYUpo3kjgCM9m1po23+MWatYn6
+	 uXl86M6lq30ysc3Xg/ezUwgAtzlUv6VzUd0w5H0guK876RHA4OE6xuiYLGzPawH453
+	 h65HBXVeo4ulA+iU1n0jKAFTCDYWVtbS40ftTKgL8clCIb8gl5WmeH9FvV401Vbq3h
+	 xqVZSjrCZQSNgSwys466xLEcFOfSnH1dFAey7+AJieWPC4MgycHyDcnHADKtfrX0vu
+	 4jKsam+1RCjAuhS77VuBrxgHNFl6QHoX/1kCTzRzMcFGdZ/ALWMbYZQYHK6wwRLDZ8
+	 4oiWiLPU4c20A==
+Message-ID: <9101806c-61ce-4897-be85-603dc4a07870@kernel.org>
+Date: Tue, 10 Jun 2025 10:09:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250609-netconsole-fix-v1-1-17543611ae31@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/3] dt-bindings: i2c: nvidia,tegra20-i2c: Specify the
+ required properties
+To: Akhil R <akhilrajeev@nvidia.com>, andi.shyti@kernel.org, wsa@kernel.org,
+ conor+dt@kernel.org, devicetree@vger.kernel.org, digetx@gmail.com,
+ jonathanh@nvidia.com, krzk+dt@kernel.org, ldewangan@nvidia.com,
+ linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-tegra@vger.kernel.org, p.zabel@pengutronix.de, robh@kernel.org,
+ thierry.reding@gmail.com
+References: <9803c165-fa2f-44ba-a6fb-f11852c319e1@kernel.org>
+ <20250609090212.48820-1-akhilrajeev@nvidia.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250609090212.48820-1-akhilrajeev@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 09, 2025 at 11:24:20AM -0700, Gustavo Luiz Duarte wrote:
-> Before appending sysdata, prepare_extradata() checks if any feature is
-> enabled in sysdata_fields (and exits early if none is enabled).
+On 09/06/2025 11:02, Akhil R wrote:
+>>> Specify the properties which are essential and which are not for the
+>>> Tegra I2C driver to function correctly. This was not added correctly when
+>>> the TXT binding was converted to yaml. All the existing DT nodes have
+>>> these properties already and hence this does not break the ABI.
+>>>
+>>> dmas and dma-names which were specified as a must in the TXT binding
+>>> is now made optional since the driver can work in PIO mode if dmas are
+>>> missing.
+>>>
+>>> Fixes: f10a9b722f80 ("dt-bindings: i2c: tegra: Convert to json-schema”)
+>>> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
+>>
+>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > 
-> When SYSDATA_RELEASE was introduced, we missed adding it to the list of
-> features being checked against sysdata_fields in prepare_extradata().
-> The result was that, if only SYSDATA_RELEASE is enabled in
-> sysdata_fields, we incorreclty exit early and fail to append the
-> release.
+> Thanks Krzysztof for the review.
 > 
-> Instead of checking specific bits in sysdata_fields, check if
-> sysdata_fields has ALL bit zeroed and exit early if true. This fixes
-> case when only SYSDATA_RELEASE enabled and makes the code more general /
-> less error prone in future feature implementation.
+> Hi Andi and Wolfram,
 > 
-> Signed-off-by: Gustavo Luiz Duarte <gustavold@gmail.com>
+> Could you share if you see any more concerns with these patches?
+You sent it during merge window and a week later you ping? Considering
+the quiet time, you sent it basically yesterday, so you gave people only
+1 day... Don't ping after one day. Two weeks.
 
-Fixes: dd30ae533242 ("netconsole: append release to sysdata")
-
-Reviewed-by: Breno Leitao <leitao@debian.org>
-
-Thanks for the fix,
---breno
+Best regards,
+Krzysztof
