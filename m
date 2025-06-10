@@ -1,53 +1,53 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A633F28C2A8;
-	Tue, 10 Jun 2025 09:44:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD4728C854;
+	Tue, 10 Jun 2025 09:44:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749548649; cv=none; b=M5deDjmIi0EXAD4WKWWBpNMjlvfT10/0lgVS+C2D9BDmVnzVEYN/ZqtkbHZSXvr9/weY8bdnxVg5I9FMwJgIfWdrDBpzIBVeaLr3zP3gg0oeqwO8X2m8Pn7fnqM3mBHNYZ+H8rD2DEUvTNsRgPQywgTY3VZsTthSh/TWLaAZWb0=
+	t=1749548651; cv=none; b=S8eVN/iDGb3dczY/Wn+X+954g6Czo/JKQ5QPUtFZQmZerPMUELgIPk30Ae93uJUMDx8gUdEeyg0C2R/YCeoDlKx4GumHt0EdK53A/+3EJlFLR7QyuHIcwbdNFD+uKsN3pFMCnZbSkOOMuYv6fttzPjMQry4bE1JmEydUYjDkOFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749548649; c=relaxed/simple;
-	bh=6TbPHbmR5NW+rQw7fuIDBYSrrK+8+V0idQLzId05THo=;
+	s=arc-20240116; t=1749548651; c=relaxed/simple;
+	bh=cEuC1K6EixvT7LIqzostezihyqTyIiuOuIIvnOetarY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MrMb7Xi/QQbP9bj5ord8rOPAbUa7RXKSKuT/p4bEi1SbRnB6jldeKUV9Nt2hYX/Ndj2KYzF9ufZp+xuY9Cew3UlTyE5iRETy5sFpg7SnoidmOmqPCzz+b+w8LgpTqAdLWcDapVUtRLeyb6dxDDtMQMQ5YsBBvLh4dISSMNS4nGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Txh7NGol; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kLGu2M3z; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=NzJ1BFhUsdKz1kLW8McKvfeteLg3CJ/DCtNJfXexhaheSIvpjK51iz69rkU3AUs0U6D34oiaDzVYRoedeyeoKb2i6NcQe46+5zrQtwJXatVJkJeHtKlKixAy98LUdllLntd/7bOHBxXWGxSWHXFf1dYeSZObIq0KpK9VNbMVpws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0PJFak8P; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uq0xrIfi; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Txh7NGol";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kLGu2M3z"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0PJFak8P";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uq0xrIfi"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749548644;
+	s=2020; t=1749548646;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=mbniTTOAlj/0h5/gcSUvP+NJGvahmNVVQCb5I0fsc8U=;
-	b=Txh7NGolXQwdbWtiyiaOP9hMMfo3qcqcJ5AQaod22NlyA12DzWtf8kS/cgrua6ZaIVnEJs
-	TYCcZe9MEbEHRJ5MY22bBK8SW+ZpjuGMAvq9ieAw3zsjlPdprzLtR1PPjsKBPxxnD6Dh57
-	kKEz86cGUvzRZiLc0Crm4LqdTk03rZ2CaslGC+BDrzAoYO4VG0rpDxp0QWEbviFUJinkaS
-	JbD1XRxKJxh0xy5gtMKhBAmMcrbkdLRVAZCxmNCycBREHZRFyvEEV3KalcOKGtHQeQXcho
-	Polipu6YubVs6zFdprshhCAc4W4wHnt0mwaSuPHdPc3sBwh7i5LZDivokxRGpw==
+	bh=E1zjEvnHAs9+4kxJDT5IMCDwy1KwGNinhNkC2jPV/5U=;
+	b=0PJFak8PuUaj7FvazYuvLN6qWARKwqsdtyXN64FZ1VYqLpMAhsmDOCQQBxY51tXSTzzPn5
+	5v5NPAuOGALEBYjVmffZRF9bzPV+URosAuCmyYqSt991NgbagZZZc99f5WOxFqT8n/9LnO
+	k+1PAfMFR2YohisvBcTFpxERnVuSHqZVxReZDZEXV2D50XkDbpsiU9xlgchz+8Fs19T4w0
+	5zAkCvPOa+c/kRiWBq/5XW1h+GtA9Jz5QMBsXgcWSwZ3jw2m2aU7BBr+jSvbnscHKPEdjj
+	SdzAPP5w2nE4zFVo6DeBIhS4lhLC7ZQ4RhqUe9u7GgLE0aI1F4FGetsSRWzsIA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749548644;
+	s=2020e; t=1749548646;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=mbniTTOAlj/0h5/gcSUvP+NJGvahmNVVQCb5I0fsc8U=;
-	b=kLGu2M3zbUiTTlXmr4jsZZ4Ip1QzSSDGKR2AehG9zHqOUntQ8Uw7DfSBkNFkhgxzFuMf0E
-	kOgpDkLCugxpcbCQ==
+	bh=E1zjEvnHAs9+4kxJDT5IMCDwy1KwGNinhNkC2jPV/5U=;
+	b=uq0xrIfiadXDmdMQWRPhbeBvcb21gFDUnap2p3a+6jTSGAOIfQ4aE9N2yprqrC5rr/1xdx
+	jmz/dN3Tl6sQOCAA==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: john.ogness@linutronix.de,
 	Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v10 11/19] verification/rvgen: Restructure the templates files
-Date: Tue, 10 Jun 2025 11:43:36 +0200
-Message-Id: <1d464ba5334f7b1dd7b82bbca942f76ec295d898.1749547399.git.namcao@linutronix.de>
+Subject: [PATCH v10 18/19] rv: Add documentation for rtapp monitor
+Date: Tue, 10 Jun 2025 11:43:43 +0200
+Message-Id: <18984a62a214d18793b04cce98a4498a4813ff85.1749547399.git.namcao@linutronix.de>
 In-Reply-To: <cover.1749547399.git.namcao@linutronix.de>
 References: <cover.1749547399.git.namcao@linutronix.de>
 Precedence: bulk
@@ -58,210 +58,195 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-To simply the scripts and to allow easy integration of new monitor types,
-restructure the template files as followed:
-
-1. Move the template files to be in the same directory as the rvgen
-   package. Furthermore, the installation will now only install the
-   templates to the package directory, not /usr/share/. This simplify
-   templates reading, as the scripts do not need to find the templates at
-   multiple places.
-
-2. Move dot2k_templates/* to:
-     - templates/dot2k/
-     - templates/container/
-
-   This allows sharing templates reading code between DA monitor generation
-   and container generation (and any future generation type).
-
-   For template files which can be shared between different generation
-   types, support putting them in templates/
-
-This restructure aligns with the recommendation from:
-https://python-packaging.readthedocs.io/en/latest/non-code-files.html
+Add documentation describing the rtapp monitor.
 
 Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- tools/verification/rvgen/Makefile             |  5 +-
- tools/verification/rvgen/rvgen/dot2k.py       | 47 ++++++++-----------
- .../templates}/Kconfig                        |  0
- .../templates/container/Kconfig}              |  0
- .../templates/container/main.c}               |  0
- .../templates/container/main.h}               |  0
- .../templates/dot2k}/main.c                   |  0
- .../templates/dot2k}/trace.h                  |  0
- 8 files changed, 20 insertions(+), 32 deletions(-)
- rename tools/verification/rvgen/{dot2k_templates =3D> rvgen/templates}/Kco=
-nfig (100%)
- rename tools/verification/rvgen/{dot2k_templates/Kconfig_container =3D> rv=
-gen/templates/container/Kconfig} (100%)
- rename tools/verification/rvgen/{dot2k_templates/main_container.c =3D> rvg=
-en/templates/container/main.c} (100%)
- rename tools/verification/rvgen/{dot2k_templates/main_container.h =3D> rvg=
-en/templates/container/main.h} (100%)
- rename tools/verification/rvgen/{dot2k_templates =3D> rvgen/templates/dot2=
-k}/main.c (100%)
- rename tools/verification/rvgen/{dot2k_templates =3D> rvgen/templates/dot2=
-k}/trace.h (100%)
+ Documentation/trace/rv/index.rst         |   1 +
+ Documentation/trace/rv/monitor_rtapp.rst | 116 +++++++++++++++++++++++
+ 2 files changed, 117 insertions(+)
+ create mode 100644 Documentation/trace/rv/monitor_rtapp.rst
 
-diff --git a/tools/verification/rvgen/Makefile b/tools/verification/rvgen/M=
-akefile
-index cea9c21c3bced..8d08825e7e546 100644
---- a/tools/verification/rvgen/Makefile
-+++ b/tools/verification/rvgen/Makefile
-@@ -3,7 +3,6 @@ INSTALL=3Dinstall
- prefix  ?=3D /usr
- bindir  ?=3D $(prefix)/bin
- mandir  ?=3D $(prefix)/share/man
--miscdir ?=3D $(prefix)/share/rvgen
- srcdir  ?=3D $(prefix)/src
-=20
- PYLIB  ?=3D $(shell python3 -c 'import sysconfig;  print (sysconfig.get_pa=
-th("purelib"))')
-@@ -21,6 +20,4 @@ install:
- 	$(INSTALL) dot2c -D -m 755 $(DESTDIR)$(bindir)/
- 	$(INSTALL) rvgen/dot2k.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/dot2k.py
- 	$(INSTALL) __main__.py -D -m 755 $(DESTDIR)$(bindir)/rvgen
--
--	mkdir -p ${miscdir}/
--	cp -rp dot2k_templates $(DESTDIR)$(miscdir)/
-+	cp -rp rvgen/templates $(DESTDIR)$(PYLIB)/rvgen/
-diff --git a/tools/verification/rvgen/rvgen/dot2k.py b/tools/verification/r=
-vgen/rvgen/dot2k.py
-index e294624131943..a9ed97d0b224b 100644
---- a/tools/verification/rvgen/rvgen/dot2k.py
-+++ b/tools/verification/rvgen/rvgen/dot2k.py
-@@ -14,14 +14,16 @@ import os
-=20
- class dot2k(Dot2c):
-     monitor_types =3D { "global" : 1, "per_cpu" : 2, "per_task" : 3 }
--    monitor_templates_dir =3D "rvgen/dot2k_templates/"
-     rv_dir =3D "kernel/trace/rv"
-     monitor_type =3D "per_cpu"
-=20
-     def __init__(self, file_path, MonitorType, extra_params=3D{}):
-         self.container =3D extra_params.get("subcmd") =3D=3D "container"
-         self.parent =3D extra_params.get("parent")
--        self.__fill_rv_templates_dir()
-+        if self.container:
-+            self.abs_template_dir =3D os.path.join(os.path.dirname(__file_=
-_), "templates/container")
-+        else:
-+            self.abs_template_dir =3D os.path.join(os.path.dirname(__file_=
-_), "templates/dot2k")
-=20
-         if self.container:
-             if file_path:
-@@ -33,9 +35,7 @@ class dot2k(Dot2c):
-             self.name =3D extra_params.get("model_name")
-             self.events =3D []
-             self.states =3D []
--            self.main_c =3D self.__read_file(self.monitor_templates_dir + =
-"main_container.c")
--            self.main_h =3D self.__read_file(self.monitor_templates_dir + =
-"main_container.h")
--            self.kconfig =3D self.__read_file(self.monitor_templates_dir +=
- "Kconfig_container")
-+            self.main_h =3D self._read_template_file("main.h")
-         else:
-             super().__init__(file_path, extra_params.get("model_name"))
-=20
-@@ -43,35 +43,16 @@ class dot2k(Dot2c):
-             if self.monitor_type is None:
-                 raise ValueError("Unknown monitor type: %s" % MonitorType)
-             self.monitor_type =3D MonitorType
--            self.main_c =3D self.__read_file(self.monitor_templates_dir + =
-"main.c")
--            self.trace_h =3D self.__read_file(self.monitor_templates_dir +=
- "trace.h")
--            self.kconfig =3D self.__read_file(self.monitor_templates_dir +=
- "Kconfig")
-+            self.trace_h =3D self._read_template_file("trace.h")
+diff --git a/Documentation/trace/rv/index.rst b/Documentation/trace/rv/inde=
+x.rst
+index 2a27f6bc94294..a2812ac5cfeb6 100644
+--- a/Documentation/trace/rv/index.rst
++++ b/Documentation/trace/rv/index.rst
+@@ -14,3 +14,4 @@ Runtime Verification
+    monitor_wip.rst
+    monitor_wwnr.rst
+    monitor_sched.rst
++   monitor_rtapp.rst
+diff --git a/Documentation/trace/rv/monitor_rtapp.rst b/Documentation/trace=
+/rv/monitor_rtapp.rst
+new file mode 100644
+index 0000000000000..fb0ca0bf33a16
+--- /dev/null
++++ b/Documentation/trace/rv/monitor_rtapp.rst
+@@ -0,0 +1,116 @@
++Real-time application monitors
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
 +
-+        self.main_c =3D self._read_template_file("main.c")
-+        self.kconfig =3D self._read_template_file("Kconfig")
-         self.enum_suffix =3D "_%s" % self.name
-         self.description =3D extra_params.get("description", self.name) or=
- "auto-generated"
-         self.auto_patch =3D extra_params.get("auto_patch")
-         if self.auto_patch:
-             self.__fill_rv_kernel_dir()
-=20
--    def __fill_rv_templates_dir(self):
--
--        if os.path.exists(self.monitor_templates_dir):
--            return
--
--        if platform.system() !=3D "Linux":
--            raise OSError("I can only run on Linux.")
--
--        kernel_path =3D "/lib/modules/%s/build/tools/verification/rvgen/do=
-t2k_templates/" % (platform.release())
--
--        if os.path.exists(kernel_path):
--            self.monitor_templates_dir =3D kernel_path
--            return
--
--        if os.path.exists("/usr/share/rvgen/dot2k_templates/"):
--            self.monitor_templates_dir =3D "/usr/share/rvgen/dot2k_templat=
-es/"
--            return
--
--        raise FileNotFoundError("Could not find the template directory, do=
- you have the kernel source installed?")
--
-     def __fill_rv_kernel_dir(self):
-=20
-         # first try if we are running in the kernel tree root
-@@ -109,6 +90,16 @@ class dot2k(Dot2c):
-         fd.close()
-         return content
-=20
-+    def _read_template_file(self, file):
-+        try:
-+            path =3D os.path.join(self.abs_template_dir, file)
-+            return self.__read_file(path)
-+        except Exception:
-+            # Specific template file not found. Try the generic template f=
-ile in the template/
-+            # directory, which is one level up
-+            path =3D os.path.join(self.abs_template_dir, "..", file)
-+            return self.__read_file(path)
++- Name: rtapp
++- Type: container for multiple monitors
++- Author: Nam Cao <namcao@linutronix.de>
 +
-     def fill_monitor_type(self):
-         return self.monitor_type.upper()
-=20
-diff --git a/tools/verification/rvgen/dot2k_templates/Kconfig b/tools/verif=
-ication/rvgen/rvgen/templates/Kconfig
-similarity index 100%
-rename from tools/verification/rvgen/dot2k_templates/Kconfig
-rename to tools/verification/rvgen/rvgen/templates/Kconfig
-diff --git a/tools/verification/rvgen/dot2k_templates/Kconfig_container b/t=
-ools/verification/rvgen/rvgen/templates/container/Kconfig
-similarity index 100%
-rename from tools/verification/rvgen/dot2k_templates/Kconfig_container
-rename to tools/verification/rvgen/rvgen/templates/container/Kconfig
-diff --git a/tools/verification/rvgen/dot2k_templates/main_container.c b/to=
-ols/verification/rvgen/rvgen/templates/container/main.c
-similarity index 100%
-rename from tools/verification/rvgen/dot2k_templates/main_container.c
-rename to tools/verification/rvgen/rvgen/templates/container/main.c
-diff --git a/tools/verification/rvgen/dot2k_templates/main_container.h b/to=
-ols/verification/rvgen/rvgen/templates/container/main.h
-similarity index 100%
-rename from tools/verification/rvgen/dot2k_templates/main_container.h
-rename to tools/verification/rvgen/rvgen/templates/container/main.h
-diff --git a/tools/verification/rvgen/dot2k_templates/main.c b/tools/verifi=
-cation/rvgen/rvgen/templates/dot2k/main.c
-similarity index 100%
-rename from tools/verification/rvgen/dot2k_templates/main.c
-rename to tools/verification/rvgen/rvgen/templates/dot2k/main.c
-diff --git a/tools/verification/rvgen/dot2k_templates/trace.h b/tools/verif=
-ication/rvgen/rvgen/templates/dot2k/trace.h
-similarity index 100%
-rename from tools/verification/rvgen/dot2k_templates/trace.h
-rename to tools/verification/rvgen/rvgen/templates/dot2k/trace.h
++Description
++-----------
++
++Real-time applications may have design flaws such that they experience une=
+xpected latency and fail
++to meet their time requirements. Often, these flaws follow a few patterns:
++
++  - Page faults: A real-time thread may access memory that does not have a=
+ mapped physical backing
++    or must first be copied (such as for copy-on-write). Thus a page fault=
+ is raised and the kernel
++    must first perform the expensive action. This causes significant delay=
+s to the real-time thread
++  - Priority inversion: A real-time thread blocks waiting for a lower-prio=
+rity thread. This causes
++    the real-time thread to effectively take on the scheduling priority of=
+ the lower-priority
++    thread. For example, the real-time thread needs to access a shared res=
+ource that is protected by
++    a non-pi-mutex, but the mutex is currently owned by a non-real-time th=
+read.
++
++The `rtapp` monitor detects these patterns. It aids developers to identify=
+ reasons for unexpected
++latency with real-time applications. It is a container of multiple sub-mon=
+itors described in the
++following sections.
++
++Monitor pagefault
+++++++++++++++++++
++
++The `pagefault` monitor reports real-time tasks raising page faults. Its s=
+pecification is::
++
++  RULE =3D always (RT imply not PAGEFAULT)
++
++To fix warnings reported by this monitor, `mlockall()` or `mlock()` can be=
+ used to ensure physical
++backing for memory.
++
++This monitor may have false negatives because the pages used by the real-t=
+ime threads may just
++happen to be directly available during testing. To minimize this, the syst=
+em can be put under memory
++pressure (e.g. invoking the OOM killer using a program that does `ptr =3D =
+malloc(SIZE_OF_RAM);
++memset(ptr, 0, SIZE_OF_RAM);`) so that the kernel executes aggressive stra=
+tegies to recycle as much
++physical memory as possible.
++
++Monitor sleep
+++++++++++++++
++
++The `sleep` monitor reports real-time threads sleeping in a manner that ma=
+y cause undesirable
++latency. Real-time applications should only put a real-time thread to slee=
+p for one of the following
++reasons:
++
++  - Cyclic work: real-time thread sleeps waiting for the next cycle. For t=
+his case, only the
++    `clock_nanosleep` syscall should be used with `TIMER_ABSTIME` (to avoi=
+d time drift) and
++    `CLOCK_MONOTONIC` (to avoid the clock being changed). No other method =
+is safe for real-time. For
++    example, threads waiting for timerfd can be woken by softirq which pro=
+vides no real-time
++    guarantee.
++  - Real-time thread waiting for something to happen (e.g. another thread =
+releasing shared
++    resources, or a completion signal from another thread). In this case, =
+only futexes
++    (FUTEX_LOCK_PI, FUTEX_LOCK_PI2 or one of FUTEX_WAIT_*) should be used.=
+  Applications usually do
++    not use futexes directly, but use PI mutexes and PI condition variable=
+s which are built on top
++    of futexes. Be aware that the C library might not implement conditiona=
+l variables as safe for
++    real-time. As an alternative, the librtpi library exists to provide a =
+conditional variable
++    implementation that is correct for real-time applications in Linux.
++
++Beside the reason for sleeping, the eventual waker should also be real-tim=
+e-safe. Namely, one of:
++
++  - An equal-or-higher-priority thread
++  - Hard interrupt handler
++  - Non-maskable interrupt handler
++
++This monitor's warning usually means one of the following:
++
++  - Real-time thread is blocked by a non-real-time thread (e.g. due to con=
+tention on a mutex without
++    priority inheritance). This is priority inversion.
++  - Time-critical work waits for something which is not safe for real-time=
+ (e.g. timerfd).
++  - The work executed by the real-time thread does not need to run at real=
+-time priority at all.
++    This is not a problem for the real-time thread itself, but it is poten=
+tially taking the CPU away
++    from other important real-time work.
++
++Application developers may purposely choose to have their real-time applic=
+ation sleep in a way that
++is not safe for real-time. It is debatable whether that is a problem. Appl=
+ication developers must
++analyze the warnings to make a proper assessment.
++
++The monitor's specification is::
++
++  RULE =3D always ((RT and SLEEP) imply (RT_FRIENDLY_SLEEP or ALLOWLIST))
++
++  RT_FRIENDLY_SLEEP =3D (RT_VALID_SLEEP_REASON or KERNEL_THREAD)
++                  and ((not WAKE) until RT_FRIENDLY_WAKE)
++
++  RT_VALID_SLEEP_REASON =3D FUTEX_WAIT
++                       or RT_FRIENDLY_NANOSLEEP
++
++  RT_FRIENDLY_NANOSLEEP =3D CLOCK_NANOSLEEP
++                      and NANOSLEEP_TIMER_ABSTIME
++                      and NANOSLEEP_CLOCK_MONOTONIC
++
++  RT_FRIENDLY_WAKE =3D WOKEN_BY_EQUAL_OR_HIGHER_PRIO
++                  or WOKEN_BY_HARDIRQ
++                  or WOKEN_BY_NMI
++                  or KTHREAD_SHOULD_STOP
++
++  ALLOWLIST =3D BLOCK_ON_RT_MUTEX
++           or FUTEX_LOCK_PI
++           or TASK_IS_RCU
++           or TASK_IS_MIGRATION
++
++Beside the scenarios described above, this specification also handle some =
+special cases:
++
++  - `KERNEL_THREAD`: kernel tasks do not have any pattern that can be reco=
+gnized as valid real-time
++    sleeping reasons. Therefore sleeping reason is not checked for kernel =
+tasks.
++  - `KTHREAD_SHOULD_STOP`: a non-real-time thread may stop a real-time ker=
+nel thread by waking it
++    and waiting for it to exit (`kthread_stop()`). This wakeup is safe for=
+ real-time.
++  - `ALLOWLIST`: to handle known false positives with the kernel.
++  - `BLOCK_ON_RT_MUTEX` is included in the allowlist due to its implementa=
+tion. In the release path
++    of rt_mutex, a boosted task is de-boosted before waking the rt_mutex's=
+ waiter. Consequently, the
++    monitor may see a real-time-unsafe wakeup (e.g. non-real-time task wak=
+ing real-time task). This
++    is actually real-time-safe because preemption is disabled for the dura=
+tion.
++  - `FUTEX_LOCK_PI` is included in the allowlist for the same reason as `B=
+LOCK_ON_RT_MUTEX`.
 --=20
 2.39.5
 
