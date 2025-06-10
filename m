@@ -1,47 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C6C28BA8A;
-	Tue, 10 Jun 2025 09:22:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF8CB28A3E1
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 09:22:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749547365; cv=none; b=DHDVjgIGH77EQ1vVBSLCcJW0KoSFd7q6YLnEVxC3F/rGv7GC2sEt9BQOruqfKI3jpj/3djI2fn2/naHDuwAUFgICYmJBYJlDuHiPRwJkohLb869DHE8EIHaQaSUxcygnJGFzZ5vnvdKgMs2d4lVqOcNTKVMMgBZMt1O0OxI/6RY=
+	t=1749547370; cv=none; b=S3k5Ihjtpjv8Yb8/id+5bC8qC8D+jZfDbz3oK2OJaXwr2emrU8h45oL1ouTi5XY/7uNk1GO/kYmr3qQDel4gItcy5iq2XvFL1qWBzFl5OhOQUMPwoZ+cLZIjnIqAzZeSjMv2+SlvYqax9d4KisGRQ0zou2w6oppAxqFz+Xn9B04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749547365; c=relaxed/simple;
-	bh=GGWJX/CY8ZcfVf5nxDMlSkEjgxBWRwIXN/J9cI7AzLQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SpGz5RnlHJcEQ6NlVehZAYjf3FcblIz1j8lTLsYMInZJ0YUu5wxw9QwdOS9YX55eFo9l95/MKr08uee/zMYkK1pZ3XH+MKBrUbM4Z1l5v9xtWkUea7Rp7C8H3uSeC5TvtAvAF3hhbb7d1D9CHhQspSrZoMzaEkiwy7u4NHCWyeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EuNhUTci; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749547370; c=relaxed/simple;
+	bh=DzbUGvSEz9fXtmlVmzQnGoE1SPjPgfLt2lNAwCzzejU=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=AYb3c1dghG6/uDBKAuDUIbrh6dTbrB0bGpFE8J87YjYUqbllMn25erIsIga6BA1fwUrIhycbpva9lGxvgr1xLIgtWAvcUsIH1F/hF8dxHnBNqwKv/ztq/Ve/5ueEWAKjvWAX0RhGzT/RR/LkrdhexsQ1YR1Orkycoqa13pIsaZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=MNC37Ilv; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EuNhUTci"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1CA6C4CEF4;
-	Tue, 10 Jun 2025 09:22:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749547365;
-	bh=GGWJX/CY8ZcfVf5nxDMlSkEjgxBWRwIXN/J9cI7AzLQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=EuNhUTciueW3kiJXHmvipGRrTOmrfjAQsd7UYwr6MKVhCIfWliFI6z+Gv2ui6OpOo
-	 honYtOlD1FSf0URAjnfBHGYciP62Xb23IoTE7vynrYS+kNQXPAwgitxASVHwpkPYiT
-	 QdL5GBGfqD+HWMk2n2B4xe2QgvGhfsEsnkR17ZoqP8gmECqJcDdHotz1LjxNVZ1sw1
-	 LGFCL55oQ7BLlpa+5tnlW6tpkBRbe0fMgCyns0HWJUKwhrdFc6tDUyjYB31sOL3twm
-	 1gysbNymqouUXYeZcqPnb7KZOZMqXxWdFetlqtjvP3/GUmaISrFfUAOfTE0scuKE/F
-	 Y5ZnUvNJ4g/3g==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Ping-Ke Shih <pkshih@realtek.com>,
-	Nathan Chancellor <nathan@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	linux-wireless@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="MNC37Ilv"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-311e2cc157bso3766479a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 02:22:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1749547368; x=1750152168; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eIl3jd/zdjxk0DCEyY2ZK8PBBrmx2B/ph5KlqW1T7PA=;
+        b=MNC37IlvYU6eRoRLZ3arnZ6GlpV6oXraHAenZG4laW8R96idorpAit8LEPgVpQOnrT
+         0BRnUPQsVWvV3+pHIQvvXr+Js96tGHZhxO2b/6y2YOzJrg0JkW97oTNaeHxLrp0bOquc
+         6W0UxuN8ZWYkA4evXWcMimlu39ITPbqeSkjH1PrLBi774JYXGK1X6xQmLj2x3RxZD/fz
+         pgQpRk185M/FDR9p1P/fYgijCy+ikztZzfUKhGQdBCm5GU2qZv75lsanFm+Z/H/hSPaq
+         FV628Sjsa12xVmjt1ikbfSQB+VQ+slPguDxXE5m7GyOrWP924fxJkLq8CQdAxOnlfpIQ
+         PLuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749547368; x=1750152168;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eIl3jd/zdjxk0DCEyY2ZK8PBBrmx2B/ph5KlqW1T7PA=;
+        b=slBA0C812IwnMXYiuu0gZQQ++M+c3McZeTiGjXTxeZp5+jCYNsHGtqVdO/mUlmFtAt
+         MOHUn7S8s5UymGDLbmqxqEuVOYcpc3ruvYdZvsxIno9kvyop8GRnrrGWwednJZ98h25q
+         G6lvnsa93bQazKqCR2VTumgPlJah+FwNpEfVPA3Ij9rG60G60yItWDR8uYFXgRZgJPbR
+         CNFhNCtMVeIpjyYSnXeIjbbrXeHuJ3PX59k64lWL5LnK/qTIUTfaIiF/VNx0OqhZrBeb
+         UIsl7Mx3ae9Y9fpZzWE1dWQDX2EwPBgM3T2cB4ownjmMnWzF28blnrMZ6sG6m0TItzNW
+         nQrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUhV1Q2CGGGwYPJwQOKCWUfq6e1fWq4QDPNYygKJ6KWffGDBJsInFSLzCP1/0ohbpcJTqhWMxYffRNu2DA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzROkqpYLsBiRphdFjEdiXUFnVBL3PR/qETcXk01tRJRiaOjRAi
+	6H27XNZ0hO2KItp5QmtlNcb2yTVy1dz153xCRciM90yT+Ghvtq9bDIgWNDcGm0z19Ig=
+X-Gm-Gg: ASbGnctBqrfrSrQ+0qvKcX0XmhI1RGFY5rDu1FrThfteIjaHtnweHyd6JnRk4RjN5C6
+	7JsgqA7td9b991ILP4gTsJVY9KnJyZT4l+NfrWB2/wlL88EQfANRZegw9la/ukz+bXO5id08QvV
+	Rlb1qBGyrL1zU3mgcWVwxsEbdMCmKDY1dHZSFVWOHZeqXyZ92Ygfrj0lnRraKDfOXqIG/0r1JCB
+	5BmXdWN/79E43ynxjuCbbhB8Mk7U2mCr6Z/mOwcPPsprewFioqbsHYzzdsCrfFuXWZ49aKlg9VQ
+	WWxo5pN6vAXSSkMH0Fq6bu+AE29kjXElb1bBkA4gFcWq5E9GBDeGNmUyUX/5UEv+JSF2WdRxYyX
+	Z3WPUF0zZ/IK4Lh36LAkBpFUS+Uk3XcFdiwB9Ws7iIg==
+X-Google-Smtp-Source: AGHT+IE7oP5018f+7id9MCmnywhwE2pvWciy02cmVcTCGl4f70NgKZt5UeEuXcYAHe0aQ6mb0oXMyg==
+X-Received: by 2002:a17:90b:538d:b0:311:f99e:7f51 with SMTP id 98e67ed59e1d1-313a16cf863mr3112140a91.18.1749547367955;
+        Tue, 10 Jun 2025 02:22:47 -0700 (PDT)
+Received: from L6YN4KR4K9.bytedance.net ([61.213.176.56])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236032fc9ebsm66968605ad.106.2025.06.10.02.22.41
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 10 Jun 2025 02:22:47 -0700 (PDT)
+From: Yunhui Cui <cuiyunhui@bytedance.com>
+To: arnd@arndb.de,
+	andriy.shevchenko@linux.intel.com,
+	benjamin.larsson@genexis.eu,
+	cuiyunhui@bytedance.com,
+	gregkh@linuxfoundation.org,
+	heikki.krogerus@linux.intel.com,
+	ilpo.jarvinen@linux.intel.com,
+	jirislaby@kernel.org,
+	jkeeping@inmusicbrands.com,
+	john.ogness@linutronix.de,
 	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH] wifi: rtlwifi: avoid stack size warning for _read_eeprom_info
-Date: Tue, 10 Jun 2025 11:22:23 +0200
-Message-Id: <20250610092240.2639751-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	linux-serial@vger.kernel.org,
+	markus.mayer@linaro.org,
+	matt.porter@linaro.org,
+	namcao@linutronix.de,
+	paulmck@kernel.org,
+	pmladek@suse.com,
+	schnelle@linux.ibm.com,
+	sunilvl@ventanamicro.com,
+	tim.kryger@linaro.org
+Subject: [PATCH v9 4/4] serial: 8250_dw: assert port->lock is held in dw8250_force_idle()
+Date: Tue, 10 Jun 2025 17:21:35 +0800
+Message-Id: <20250610092135.28738-5-cuiyunhui@bytedance.com>
+X-Mailer: git-send-email 2.39.2 (Apple Git-143)
+In-Reply-To: <20250610092135.28738-1-cuiyunhui@bytedance.com>
+References: <20250610092135.28738-1-cuiyunhui@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,163 +93,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+Reading UART_RX and checking whether UART_LSR_DR is set should be
+atomic. Ensure the caller of dw8250_force_idle() holds port->lock.
 
-txpower_info_{2g,5g} are too big to fit on the stack, but in most of the
-rtlwifi variants this stays below the warning limit for stack frames.
-In rtl8192ee and a few others, I see a case where clang decides to fully
-inline this into rtl92ee_read_eeprom_info, triggering this warning:
-
-drivers/net/wireless/realtek/rtlwifi/rtl8192ee/hw.c:2178:6: error: stack frame size (1312) exceeds limit (1280) in 'rtl92ee_read_eeprom_info' [-Werror,-Wframe-larger-than]
-
-Mark _rtl92ee_read_txpower_info_from_hwpg() as noinline_for_stack to
-and mark _rtl92ee_get_chnl_group() as __always_inline to make clang
-behave the same way as gcc. Inlining _rtl92ee_get_chnl_group helps
-let the compiler see that the index is always in range. The same
-change appears to be necessary in all rtlwifi variants.
-
-A more thorough approach would be to avoid the use of the two structures
-on the stack entirely and combine them with the struct rtl_efuse
-data that is dynamically allocated and holds the same information.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
 ---
- drivers/net/wireless/realtek/rtlwifi/rtl8188ee/hw.c | 6 +++---
- drivers/net/wireless/realtek/rtlwifi/rtl8192ce/hw.c | 6 +++---
- drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c | 6 +++---
- drivers/net/wireless/realtek/rtlwifi/rtl8192ee/hw.c | 7 ++++---
- drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c | 6 +++---
- drivers/net/wireless/realtek/rtlwifi/rtl8723be/hw.c | 6 +++---
- drivers/net/wireless/realtek/rtlwifi/rtl8821ae/hw.c | 6 +++---
- 7 files changed, 22 insertions(+), 21 deletions(-)
+ drivers/tty/serial/8250/8250_dw.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/hw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/hw.c
-index d122f1eb345e..53c32e1de7e4 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/hw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/hw.c
-@@ -1738,9 +1738,9 @@ static void read_power_value_fromprom(struct ieee80211_hw *hw,
- 	}
- }
+diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
+index 082b7fcf251db..686f9117a3339 100644
+--- a/drivers/tty/serial/8250/8250_dw.c
++++ b/drivers/tty/serial/8250/8250_dw.c
+@@ -13,6 +13,7 @@
+ #include <linux/delay.h>
+ #include <linux/device.h>
+ #include <linux/io.h>
++#include <linux/lockdep.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/module.h>
+ #include <linux/notifier.h>
+@@ -117,6 +118,9 @@ static void dw8250_force_idle(struct uart_port *p)
+ 	struct uart_8250_port *up = up_to_u8250p(p);
+ 	unsigned int lsr;
  
--static void _rtl88ee_read_txpower_info_from_hwpg(struct ieee80211_hw *hw,
--						 bool autoload_fail,
--						 u8 *hwinfo)
-+static noinline_for_stack void
-+_rtl88ee_read_txpower_info_from_hwpg(struct ieee80211_hw *hw,
-+				     bool autoload_fail, u8 *hwinfo)
- {
- 	struct rtl_priv *rtlpriv = rtl_priv(hw);
- 	struct rtl_efuse *rtlefuse = rtl_efuse(rtl_priv(hw));
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192ce/hw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192ce/hw.c
-index 0bc915723b93..5ca6b49e73c7 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192ce/hw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192ce/hw.c
-@@ -1412,9 +1412,9 @@ void rtl92ce_update_interrupt_mask(struct ieee80211_hw *hw,
- 	rtl92ce_enable_interrupt(hw);
- }
- 
--static void _rtl92ce_read_txpower_info_from_hwpg(struct ieee80211_hw *hw,
--						 bool autoload_fail,
--						 u8 *hwinfo)
-+static noinline_for_stack void
-+_rtl92ce_read_txpower_info_from_hwpg(struct ieee80211_hw *hw,
-+				     bool autoload_fail, u8 *hwinfo)
- {
- 	struct rtl_priv *rtlpriv = rtl_priv(hw);
- 	struct rtl_efuse *rtlefuse = rtl_efuse(rtl_priv(hw));
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c
-index 0195c9a3e9e8..ec5d558609fe 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c
-@@ -95,9 +95,9 @@ static void _rtl92cu_phy_param_tab_init(struct ieee80211_hw *hw)
- 	}
- }
- 
--static void _rtl92cu_read_txpower_info_from_hwpg(struct ieee80211_hw *hw,
--						 bool autoload_fail,
--						 u8 *hwinfo)
-+static noinline_for_stack void
-+_rtl92cu_read_txpower_info_from_hwpg(struct ieee80211_hw *hw,
-+				     bool autoload_fail, u8 *hwinfo)
- {
- 	struct rtl_priv *rtlpriv = rtl_priv(hw);
- 	struct rtl_efuse *rtlefuse = rtl_efuse(rtl_priv(hw));
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192ee/hw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192ee/hw.c
-index d4da5cdc8414..48a3c94606be 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192ee/hw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192ee/hw.c
-@@ -1731,7 +1731,7 @@ void rtl92ee_update_interrupt_mask(struct ieee80211_hw *hw,
- 	rtl92ee_enable_interrupt(hw);
- }
- 
--static u8 _rtl92ee_get_chnl_group(u8 chnl)
-+static __always_inline u8 _rtl92ee_get_chnl_group(u8 chnl)
- {
- 	u8 group = 0;
- 
-@@ -2009,8 +2009,9 @@ static void _rtl8192ee_read_power_value_fromprom(struct ieee80211_hw *hw,
- 	}
- }
- 
--static void _rtl92ee_read_txpower_info_from_hwpg(struct ieee80211_hw *hw,
--						 bool autoload_fail, u8 *hwinfo)
-+static noinline_for_stack void
-+_rtl92ee_read_txpower_info_from_hwpg(struct ieee80211_hw *hw,
-+				     bool autoload_fail, u8 *hwinfo)
- {
- 	struct rtl_priv *rtlpriv = rtl_priv(hw);
- 	struct rtl_efuse *efu = rtl_efuse(rtl_priv(hw));
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c
-index 6991713a66d0..21b827f519b6 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c
-@@ -1381,9 +1381,9 @@ static u8 _rtl8723e_get_chnl_group(u8 chnl)
- 	return group;
- }
- 
--static void _rtl8723e_read_txpower_info_from_hwpg(struct ieee80211_hw *hw,
--						  bool autoload_fail,
--						  u8 *hwinfo)
-+static noinline_for_stack void
-+_rtl8723e_read_txpower_info_from_hwpg(struct ieee80211_hw *hw,
-+				      bool autoload_fail, u8 *hwinfo)
- {
- 	struct rtl_priv *rtlpriv = rtl_priv(hw);
- 	struct rtl_efuse *rtlefuse = rtl_efuse(rtl_priv(hw));
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8723be/hw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8723be/hw.c
-index bcfc53af4c1a..e1f811218894 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8723be/hw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723be/hw.c
-@@ -1935,9 +1935,9 @@ static void _rtl8723be_read_power_value_fromprom(struct ieee80211_hw *hw,
- 	}
- }
- 
--static void _rtl8723be_read_txpower_info_from_hwpg(struct ieee80211_hw *hw,
--						   bool autoload_fail,
--						   u8 *hwinfo)
-+static noinline_for_stack void
-+_rtl8723be_read_txpower_info_from_hwpg(struct ieee80211_hw *hw,
-+				       bool autoload_fail, u8 *hwinfo)
- {
- 	struct rtl_priv *rtlpriv = rtl_priv(hw);
- 	struct rtl_efuse *rtlefuse = rtl_efuse(rtl_priv(hw));
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/hw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/hw.c
-index f4b232f038a9..8c51f4d36820 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/hw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/hw.c
-@@ -2782,9 +2782,9 @@ static void _rtl8812ae_read_txpower_info_from_hwpg(struct ieee80211_hw *hw,
- 	"eeprom_regulatory = 0x%x\n", rtlefuse->eeprom_regulatory);
- }
- #endif
--static void _rtl8821ae_read_txpower_info_from_hwpg(struct ieee80211_hw *hw,
--						 bool autoload_fail,
--						 u8 *hwinfo)
-+static noinline_for_stack void
-+_rtl8821ae_read_txpower_info_from_hwpg(struct ieee80211_hw *hw,
-+				       bool autoload_fail, u8 *hwinfo)
- {
- 	struct rtl_priv *rtlpriv = rtl_priv(hw);
- 	struct rtl_efuse *rtlefuse = rtl_efuse(rtl_priv(hw));
++	/* Reading UART_LSR and UART_RX should be atomic. */
++	lockdep_assert_held_once(&p->lock);
++
+ 	/*
+ 	 * The following call currently performs serial_out()
+ 	 * against the FCR register. Because it differs to LCR
 -- 
 2.39.5
 
