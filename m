@@ -1,93 +1,133 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9377328AAFF;
-	Tue, 10 Jun 2025 09:24:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 171FE28A409;
+	Tue, 10 Jun 2025 09:24:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749547457; cv=none; b=Nu45fNTgMlJKz8SWGM5YQDEorxmSDJe85Gp2RIBEmEE7bBS1jVijT+qY5OmyVXArccK1Kw/+ebV+IqlP78IL/tIFJz1MPu64NJUH3IR0aLnTuj+mNmG+pV7Y2267e70G6SXQsEa+Dg0eTfZVgo3Hp8vfIR6I/AvuJY1vwHNZLBE=
+	t=1749547485; cv=none; b=CF+3mim3+TI9zfLk4/5mRmN22TdtDqyJmX4L1Y0Hgr83+l8gbmVP8dKW6jtjDLe6zK5SX4UvxEWkjIEBTNWZ4l+ZekPv/KS/47GFjif8PnmhtiU9vISldLx9QqZnXBEZx7j1gA0fEd5GHewegIjODdClW96tKZNjn0TqvT2hVdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749547457; c=relaxed/simple;
-	bh=DXnxrZCKNCbvmNqckFGO7yqFhyxX1F28F7u/tRCZUCE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uYtLoizyRl29dfPaBdxDJAKjJ+qPRhiVAckaUWzACHcxhPzVvLfKz6zZrAReWxt2Sr9fhW6xSSYiWFZx9QCRMDguybbwSX06qBIwFpD45tUkuMk7NDkzRuFd26obSgBzNQAiQnCZ7ncqMWl7g5M4Ri3Q5djEoWnTs6D1Ej5G9nY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AEbp9dZb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749547485; c=relaxed/simple;
+	bh=7O8pLwMtFMpTYlcRgT7szr1Viv9rchg8SjS1xi2PCaw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hGBdxDTzRwqbz8IM4hL43WkYT4apis84+UViskQjkr/rDSscwd8CHco5x36noHyexYQzH+q4tgVuAjQi7DjwUBIutvUoTMZjjD7W65T5UoxtC1DY0BlPymOWNHyuTcM0NWcVgwSgt9ojHaRW2lO8xFyJ9bVUo1TY8TebNkM0VNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h/ESNX8S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AEbp9dZb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84E2CC4CEED;
-	Tue, 10 Jun 2025 09:24:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h/ESNX8S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CE4EC4CEF4;
+	Tue, 10 Jun 2025 09:24:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749547457;
-	bh=DXnxrZCKNCbvmNqckFGO7yqFhyxX1F28F7u/tRCZUCE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=AEbp9dZb8IWFBmoWA6giJjGXvzs6CbRsjZgQLpkdE8IPFTQVz0FrKmTcxgy8zJRWU
-	 RxVoLyzDomXui+aiFcLNAk8mF8CERJInhxrjUDzD+n48BOHc/R3K1C9nEzW4X4lUxU
-	 h6oHu/UGRrHM+IMhc76VEWsCWny3x78WIeu68Lmt5myp9BW7RV6TPhpYl/QUnFk2Pp
-	 XfvsRm3ZjFxC4766MQMfcA72mcl9Bqq0nk+VGuzIsdSSFzC0tZEndwf9jDagI5htMd
-	 Pzw4oiolaYx97vLFS5yRuS03pygMuTFWPjKiWOjde6SPW5xGwjYL050jT0ZqtnvWYE
-	 Kxl+zacuaxp/Q==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Kent Overstreet <kent.overstreet@linux.dev>,
-	Nathan Chancellor <nathan@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Thomas Bertschinger <tahbertschinger@gmail.com>,
-	linux-bcachefs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH] bcachefs: ioctl: avoid stack overflow warning
-Date: Tue, 10 Jun 2025 11:24:04 +0200
-Message-Id: <20250610092413.2640349-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=k20201202; t=1749547484;
+	bh=7O8pLwMtFMpTYlcRgT7szr1Viv9rchg8SjS1xi2PCaw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=h/ESNX8SjqAIz/fIEsEV2YR9QfqZ97fQl6gbBK0Wqzd9CGz2I+2hGeYCGGNwKFF1q
+	 4GgUTzuEiwdZABnuRKxnCXdVv3KWEcsd6LXVMaY5KwJ+4VHNk/XlNHuC0h849sfxeP
+	 fDttr645y7K6OxNgsCRZvE3QMBEfm2U4xnbfPfvVj/4meDG9xO7I1dp6JXI5/Zc+Q6
+	 ReizgibSRPZSYJfww1QxdU6DiySj7el7R69zggX2xH/6KBkwWOtdnwEzgU6qiUXy41
+	 9XGHwaWfQm6hBaP9C4eIjz3eBcBQGFv9HWOCNhFOQ806wcuqL+eHrW/CIa3c86++5T
+	 2CpVzO1IsL5Uw==
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ad1b94382b8so905756966b.0;
+        Tue, 10 Jun 2025 02:24:44 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCURCEXMjtGT4TQH2FanKQ9gC4V+dvOql8N6eGqDkBMrJobcyE4NwkVGeQKU1w1a1c9vVdRw07cVrAYy4Q==@vger.kernel.org, AJvYcCVHp0TZtUSIML/Iq4QZfBZnl4yZOoy5KyQIQSy7FxVf8mQL7flcv0gYK9vOQOF6K6nmJr+abR2Bm6s=@vger.kernel.org, AJvYcCW3fiZH3bdLfUbVdjYW42XqUKFw2M8N4jprWd+TJSkPpy4PKDg5Kdl/DfQEdWQMmJrdQYrHpJgQQFNIa/YSC4+2TFuxQw==@vger.kernel.org, AJvYcCWYMaB339IEIX8Iz0doOq7aK5QOeO1eXD5LGLJUiUgElLqDYGxGIcHN5+MobFTgnQHglZAfv7t7SUi7@vger.kernel.org, AJvYcCX7vGqqJasEIFBmNm1polAZmgM6ufJxgsWW/HsQGd/iqhyfHZgnVmD9qR09DEf4QocNMWdHZ+NEIyNQyRBZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYv/ZzFiYUFedMZQfxxYvfv01R+OvmA2DQevizydUHp8ygAkXJ
+	ddc4A9DuqsQrL6XZfE1ht2MDe5MnYWJYjZG1XAS98uIYNluq3QLsd00+k1F+z7UEb+4T8bN/eeD
+	xewvpyhK2AxKYOrPxVPcAT/h5Bhfji9w=
+X-Google-Smtp-Source: AGHT+IHp9IrXPr6CUNbh1St5Hg3ial/rjt2FWdk+sYxhxJaYrSLty/M96Too05Y4+45YoU/INmTjI/uhZJoYsjtNpkM=
+X-Received: by 2002:a17:906:ef0d:b0:aca:d4f6:440d with SMTP id
+ a640c23a62f3a-ade7ac572a4mr171877866b.17.1749547483079; Tue, 10 Jun 2025
+ 02:24:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250422234830.2840784-1-superm1@kernel.org> <20250422234830.2840784-3-superm1@kernel.org>
+ <CAMuHMdVPQLjOox5sMp34Z5MTwKv2WOpHa=MpZr8hWG22fQKcjw@mail.gmail.com>
+In-Reply-To: <CAMuHMdVPQLjOox5sMp34Z5MTwKv2WOpHa=MpZr8hWG22fQKcjw@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 10 Jun 2025 17:24:31 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H70LXsDYMA7wz4x828rEFoJsNX0=m8F73Ge9=yfpzBpZQ@mail.gmail.com>
+X-Gm-Features: AX0GCFvyd2N-spvgVUDQiEXjOROXJ4rt5ErLp4PE6STdQ0GN935XFU-Ao7ctaOk
+Message-ID: <CAAhV-H70LXsDYMA7wz4x828rEFoJsNX0=m8F73Ge9=yfpzBpZQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/5] i2c: piix4: Depends on X86
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mario Limonciello <superm1@kernel.org>, Borislav Petkov <bp@alien8.de>, Jean Delvare <jdelvare@suse.com>, 
+	Andi Shyti <andi.shyti@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <mario.limonciello@amd.com>, 
+	Yazen Ghannam <yazen.ghannam@amd.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, 
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Hans de Goede <hdegoede@redhat.com>, 
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	"open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>, 
+	"open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>, 
+	linux-mips@vger.kernel.org, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Tue, Jun 10, 2025 at 5:16=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+>
+> Hi Mario,
+>
+> CC mips, loongarch
+>
+> On Wed, 23 Apr 2025 at 01:49, Mario Limonciello <superm1@kernel.org> wrot=
+e:
+> > From: Mario Limonciello <mario.limonciello@amd.com>
+> >
+> > PIIX4 and compatible controllers are only for X86. As some headers are
+> > being moved into x86 specific headers PIIX4 won't compile on non-x86.
+> >
+> > Suggested-by: Ingo Molnar <mingo@kernel.org>
+> > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>
+> Thanks for your patch, which is now commit 7e173eb82ae97175
+> ("i2c: piix4: Make CONFIG_I2C_PIIX4 dependent on CONFIG_X86")
+> in v6.16-rc1.
+>
+> > --- a/drivers/i2c/busses/Kconfig
+> > +++ b/drivers/i2c/busses/Kconfig
+> > @@ -200,7 +200,7 @@ config I2C_ISMT
+> >
+> >  config I2C_PIIX4
+> >         tristate "Intel PIIX4 and compatible (ATI/AMD/Serverworks/Broad=
+com/SMSC)"
+> > -       depends on PCI && HAS_IOPORT
+> > +       depends on PCI && HAS_IOPORT && X86
+>
+> Are you sure this south-bridge is not used on non-x86 platforms?
+> It is enabled in several non-x86 defconfigs:
+>
+>     arch/loongarch/configs/loongson3_defconfig:CONFIG_I2C_PIIX4=3Dy
+>     arch/mips/configs/ip27_defconfig:CONFIG_I2C_PIIX4=3Dm
+>     arch/mips/configs/loongson2k_defconfig:CONFIG_I2C_PIIX4=3Dy
+>     arch/mips/configs/loongson3_defconfig:CONFIG_I2C_PIIX4=3Dy
+>
+> The loongarch and loongson entries are probably bogus, but I wouldn't
+> be surprised if the SGI Onyx and Origin do use Intel south-bridges.
+Loongson can use AMD SB700/SB800 south bridges, which have I2C_PIIX4.
 
-Multiple ioctl handlers individually use a lot of stack space, and clang chooses
-to inline them into the bch2_fs_ioctl() function, blowing through the warning
-limit:
+Huacai
 
-fs/bcachefs/chardev.c:655:6: error: stack frame size (1032) exceeds limit (1024) in 'bch2_fs_ioctl' [-Werror,-Wframe-larger-than]
-  655 | long bch2_fs_ioctl(struct bch_fs *c, unsigned cmd, void __user *arg)
-
-By marking the largest two of them as noinline_for_stack, no indidual code path
-ends up using this much, which avoids the warning and reduces the possible
-total stack usage in the ioctl handler.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- fs/bcachefs/chardev.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/fs/bcachefs/chardev.c b/fs/bcachefs/chardev.c
-index 2d38466eddfd..fde3c2380e28 100644
---- a/fs/bcachefs/chardev.c
-+++ b/fs/bcachefs/chardev.c
-@@ -399,7 +399,7 @@ static long bch2_ioctl_data(struct bch_fs *c,
- 	return ret;
- }
- 
--static long bch2_ioctl_fs_usage(struct bch_fs *c,
-+static noinline_for_stack long bch2_ioctl_fs_usage(struct bch_fs *c,
- 				struct bch_ioctl_fs_usage __user *user_arg)
- {
- 	struct bch_ioctl_fs_usage arg = {};
-@@ -469,7 +469,7 @@ static long bch2_ioctl_query_accounting(struct bch_fs *c,
- }
- 
- /* obsolete, didn't allow for new data types: */
--static long bch2_ioctl_dev_usage(struct bch_fs *c,
-+static noinline_for_stack long bch2_ioctl_dev_usage(struct bch_fs *c,
- 				 struct bch_ioctl_dev_usage __user *user_arg)
- {
- 	struct bch_ioctl_dev_usage arg;
--- 
-2.39.5
-
+>
+> >         select I2C_SMBUS
+> >         help
+> >           If you say yes to this option, support will be included for t=
+he Intel
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
+8k.org
+>
+> In personal conversations with technical people, I call myself a hacker. =
+But
+> when I'm talking to journalists I just say "programmer" or something like=
+ that.
+>                                 -- Linus Torvalds
+>
