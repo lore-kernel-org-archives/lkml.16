@@ -1,120 +1,133 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 003BC29A30A
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:28:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDE2B29A308;
+	Tue, 10 Jun 2025 13:28:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749562138; cv=none; b=kUzjZbiIxyNa/asxXVGDcf96Y7EbHtG+phFd7jw9imHSXut4bu5r1Qmc6fvJhGwsfuJ01OCQQ+RvUA7L1aEyHIcExzNmCSb8sa7eYau+tGXII1cCPVCRltf/MkCpIcmDNCVmUFlZSnr73GdmJ0a9uLXOtIZEs3wsDRE3Lro9OsI=
+	t=1749562137; cv=none; b=NwQXY1MyLNkPvlDAgFsuTd6ASBuTdBr4AR4WpVd2xBRFkpnMSOLszSyG+bjgnsPy5T77czfcXVtz/9sD3nPjYFPsmmjTaUPPcwerIwmahul+4XbZGs2L0hZ3VeEJKPm6ppGzaSDb8ci5Eq8M56opk2AbZ/NedDKvVYmZsaDuHxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749562138; c=relaxed/simple;
-	bh=Lh2L3vIShi1maOWcubh6TPTHxkAO2QCIIdksxelNb6I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=AG0rmCHFEcEimPS/oz/L4cCuJZREHUAiu5VIssV5iHYoI6DRIgm3MLU67DPVqGlSfdEgXW7uuA3wVkePfOOeWVp941iGdlNZ9KH1a+YFYxyXY0dsp1ceB9FqqRDc30aE1W4flB2C+OktWdY3XkMu60I7iyx238yh5zVhYJyPHUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4bGqK51sSKz2Cf4M;
-	Tue, 10 Jun 2025 21:24:57 +0800 (CST)
-Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id 26918140155;
-	Tue, 10 Jun 2025 21:28:48 +0800 (CST)
-Received: from kwepemq100007.china.huawei.com (7.202.195.175) by
- dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 10 Jun 2025 21:28:47 +0800
-Received: from [10.159.166.136] (10.159.166.136) by
- kwepemq100007.china.huawei.com (7.202.195.175) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 10 Jun 2025 21:28:47 +0800
-Message-ID: <37b5bf6a-d3d1-48b3-9052-0bdcf0803fe3@huawei.com>
-Date: Tue, 10 Jun 2025 21:28:43 +0800
+	s=arc-20240116; t=1749562137; c=relaxed/simple;
+	bh=Pbs46PP7pCs0MPmMt4GjuzpYwD4EEpd9XRag3zkhwz4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=kWCxCIH/PawYXqrG80xThsuwhjRSm1bRNSt7XVhtR/wMsbNZ18CKtitHjO7ec71x6JOGCgrGUwHffSVxKMgeUd2fOHuvaD4IuSsJMkgbabcXfS1p4HUbeqJATomxxecTK+74P9s/u+kjjYPsDCpHb8urmu62juyai/9ls/v9AOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IHkasFH8; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IHkasFH8"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-311ef4fb43dso4091982a91.3;
+        Tue, 10 Jun 2025 06:28:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749562135; x=1750166935; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Rc7nHsumEdn2KQbBdNMRcYljio2yurEvUWZ/Mli9glE=;
+        b=IHkasFH8EeqMqaMk9qtkC8fFMRek7KSbLdLFPSbhoOmyHub+WFDToi02bZGKxiLH2j
+         xQZv36QpgkITrOmrrkdWjhKGNjb21M5NkAiU25+rQi/YrVVixDZDnaqD+jUzKSZtnggs
+         LfCcd6muj8nHqr9iSa2S67rcCDN1hEpAFxDomKOHT9Mv5f8rV7vvhXx7N2qompXDob0r
+         td7iV24xLcbiqKK7wT13XAIOLbnz9m1e2Q/f9iyaO38C+HWwU43oWdnChE2ABtAo+wqF
+         PT50Whrw5QZBOqo6GWul4lTnZSxwnXvIXrJ9yOzwHkljzEdFjzWSpyyv+RtJnK3hER6h
+         Gnag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749562135; x=1750166935;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Rc7nHsumEdn2KQbBdNMRcYljio2yurEvUWZ/Mli9glE=;
+        b=iWUbJpb7/ksvMXh8yTuCMHOqjxkXdVAVbfT0K7aM55WDoicB+UhskoCEF4tljT1ldt
+         UAwnWL4+n9CRsuf/P4mMt4oO5q7OodFBU1fv6Gv9+Qg/6vhN88Q3VABBhFsKNDJ2Ke59
+         qVlg8QaYIUkfSxl3EJCDB5kF8L/vYTbVNmx4zV+FezXLWzOkmR5Lg1iIazIQoO/yjs0y
+         qItpY4Ee5XViWtGuFUHy36+HV2Fe9pUsSlnmwSbWYFNHbv46dzQiFOK5N++0/4PaIWNX
+         vikdWiT3SvyZHM8Gifby+owoGyHbz97hWLw3CiQBWGomXgjbuinlqF0i1q9kAg7fitV4
+         /EPw==
+X-Forwarded-Encrypted: i=1; AJvYcCVubI/PQqVTHHlv4/RFb97ln1xA5+FjmZkQivqWMTOfJ2mBa2aK05PdKviS5B0eg64J9Y+TUy3rQyRjAR7RjDQ=@vger.kernel.org, AJvYcCW0L26esseLGlnMNNV3OreMK0Xx0gaa3XvfXRsnJptwj5mLhIQe2zISiBrx+1j61GYC3/vE4z/NU1LgLzA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzE6PXrQgll4YeZIoUeSGph8JUvmOMcLNmCLNBE3RozqkORoSxl
+	SS+QvCcpq06d/Ed7S5zFO5VYAlzDatG6Li/+4E1Z5SQJ8Nu56Hnlqw/E
+X-Gm-Gg: ASbGncvcpY7QjZEGSVIOn2W/6/nZRwGR8kQTfVn8LDtRydRWu1t68ammxNTOG8VVgP0
+	R2XskMwruSR0hdWscEaEHR6q5elROfsDquzSle9CzRV2OaCKR9o++yb1vHq3FD7h8GkWp9aNF46
+	yT0zs7AXdD49wlNvHGfYlOmrPzV/DpOMvK/0DVMhNFzOCiCUXZJ44I+Y30UNoHYPUK7oXX/NCbt
+	bT7DtkwnPvopu5zEyB1gaOFgjPL9KoU3mUuOkeo0DK6m8SMuEXGTITz5v2Zg2xLbc1DccyfPw/H
+	japmnWzbN7oRXCF9gEw87nVRUUCajSFTIy8jFcugzeLx44SCoJWHQc4lOfESnakwa03yPfIkqoa
+	19ySUbmcRBpIuH8hRAKyRpaeYmYCVBgsfM8E=
+X-Google-Smtp-Source: AGHT+IH05u7IrcuH6+zYZ6wKHxWG1GUKhxIN/0VozpeD8CoD4qo2bsTIZEoKXL8TztGrvj2P8iY7Zw==
+X-Received: by 2002:a17:90b:3d90:b0:312:ffdc:42b2 with SMTP id 98e67ed59e1d1-3134767f220mr20724915a91.23.1749562135168;
+        Tue, 10 Jun 2025 06:28:55 -0700 (PDT)
+Received: from bee.. (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3134b128050sm7969276a91.25.2025.06.10.06.28.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 06:28:54 -0700 (PDT)
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+To: a.hindborg@kernel.org,
+	alex.gaynor@gmail.com,
+	ojeda@kernel.org
+Cc: aliceryhl@google.com,
+	anna-maria@linutronix.de,
+	bjorn3_gh@protonmail.com,
+	boqun.feng@gmail.com,
+	dakr@kernel.org,
+	frederic@kernel.org,
+	gary@garyguo.net,
+	jstultz@google.com,
+	linux-kernel@vger.kernel.org,
+	lossin@kernel.org,
+	lyude@redhat.com,
+	rust-for-linux@vger.kernel.org,
+	sboyd@kernel.org,
+	tglx@linutronix.de,
+	tmgross@umich.edu
+Subject: [PATCH v3 5/5] rust: time: Remove Ktime in hrtimer
+Date: Tue, 10 Jun 2025 22:28:23 +0900
+Message-ID: <20250610132823.3457263-6-fujita.tomonori@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250610132823.3457263-1-fujita.tomonori@gmail.com>
+References: <20250610132823.3457263-1-fujita.tomonori@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH drm-dp 03/10] drm/hisilicon/hibmc: fix irq_request()'s irq
- name variable is local
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-CC: <xinliang.liu@linaro.org>, <tiantao6@hisilicon.com>,
-	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
-	<kong.kongxinwei@hisilicon.com>, <liangjian010@huawei.com>,
-	<chenjianmin@huawei.com>, <lidongming5@huawei.com>, <libaihan@huawei.com>,
-	<shenjian15@huawei.com>, <shaojijie@huawei.com>,
-	<jani.nikula@linux.intel.com>, <dri-devel@lists.freedesktop.org>,
-	<linux-kernel@vger.kernel.org>, <shiyongbang@huawei.com>
-References: <20250530095432.1206966-1-shiyongbang@huawei.com>
- <20250530095432.1206966-4-shiyongbang@huawei.com>
- <oof3yrny3x5vglnjvcsz6brpn2a4l2nkmpepnykojqquytfj56@vz5sk7coojhw>
- <c59b893c-dca4-4c7f-a57e-99e60401ebc0@huawei.com>
- <a88f479b-e022-4ed7-8286-5d546423bfcf@oss.qualcomm.com>
-From: Yongbang Shi <shiyongbang@huawei.com>
-In-Reply-To: <a88f479b-e022-4ed7-8286-5d546423bfcf@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- kwepemq100007.china.huawei.com (7.202.195.175)
 
+Remove the use of `Ktime` from the hrtimer code, which was originally
+introduced as a temporary workaround. The hrtimer has now been fully
+converted to use the `Instant` and `Delta` types instead.
 
-> On 09/06/2025 17:50, Yongbang Shi wrote:
->>
->>> On Fri, May 30, 2025 at 05:54:25PM +0800, Yongbang Shi wrote:
->>>> From: Baihan Li <libaihan@huawei.com>
->>>>
->>>> The local variable of irq name is passed to 
->>>> devm_request_threaded_irq(),
->>>> which will make request_irq failed. Using the global irq name instead
->>>> of it to fix.
->>> This doesn't explain, why does it fail and which IRQ name is actually
->>> expected.
->>
->> The local variable is passed in request_irq (), and there will be use 
->> after free problem.
->
-> This needs to be explained (in details) in the commit message.
+Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+---
+ rust/kernel/time/hrtimer.rs | 16 ----------------
+ 1 file changed, 16 deletions(-)
 
-Okay.
+diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
+index 4ca153f8fce6..3980a7c5f7db 100644
+--- a/rust/kernel/time/hrtimer.rs
++++ b/rust/kernel/time/hrtimer.rs
+@@ -72,22 +72,6 @@
+ use core::marker::PhantomData;
+ use pin_init::PinInit;
+ 
+-/// A Rust wrapper around a `ktime_t`.
+-// NOTE: Ktime is going to be removed when hrtimer is converted to Instant/Delta.
+-#[repr(transparent)]
+-#[derive(Copy, Clone, PartialEq, PartialOrd, Eq, Ord)]
+-pub struct Ktime {
+-    inner: bindings::ktime_t,
+-}
+-
+-impl Ktime {
+-    /// Returns the number of nanoseconds.
+-    #[inline]
+-    pub fn to_ns(self) -> i64 {
+-        self.inner
+-    }
+-}
+-
+ /// A timer backed by a C `struct hrtimer`.
+ ///
+ /// # Invariants
+-- 
+2.43.0
 
->
->>
->>
->>>> Fixes: b11bc1ae4658 ("drm/hisilicon/hibmc: Add MSI irq getting and 
->>>> requesting for HPD")
->>>> Signed-off-by: Baihan Li <libaihan@huawei.com>
->>>> ---
->>>>   drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 10 +++-------
->>>>   1 file changed, 3 insertions(+), 7 deletions(-)
->>>>
->>>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/ 
->>>> drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
->>>> index 768b97f9e74a..4cdcc34070ee 100644
->>>> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
->>>> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
->>>> @@ -32,7 +32,7 @@
->>>>   DEFINE_DRM_GEM_FOPS(hibmc_fops);
->>>> -static const char *g_irqs_names_map[HIBMC_MAX_VECTORS] = { 
->>>> "vblank", "hpd" };
->>>> +static const char *g_irqs_names_map[HIBMC_MAX_VECTORS] = { "hibmc- 
->>>> vblank", "hibmc-hpd" };
->>> Please point to the corresponding IRQ names as currently implemented in
->>> the upstream kernel.
->>
->> Ok.
->
-> I was thinking in terms of IRQ lookup. You can ignore this comment (it 
-> makes me wonder, how did you understand it, if you responded with Ok).
->
-I thought you were suggesting naming the irq referring to the previous name.
-
-
->>
->>
->>>>   static irqreturn_t hibmc_interrupt(int irq, void *arg)
->>>>   {
->
->
