@@ -1,131 +1,176 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA9026461F
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 20:07:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 212FE264A9C
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 20:07:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749586046; cv=none; b=ZJ4TiIZ4F4IIgH6cQHrMIaqKFsDAVb4WMoNLLey+NqZQqLzofkBbDn2x4J0kjzcBfMfwnCJzEiav22JZ/mqVUwCbgdH0a9+5RLLfi7+pNnFfnH3HFZilNc4UZcH0W6SiOJOgxP8/lDXVNFhAcBivJTGkWzueda6JVvuP7e+JUBo=
+	t=1749586064; cv=none; b=u2MbWY/cRqBUHKYeQV53KG7grAy1IIKRRE1SlhqyMUQqAZ+9PfSQZgqjJJAx5jicNTfrkBX9sX31Yznafks+pNNguk9y0RbwqcE+3OXEx41cKmYY2rspvQcfFJmJsF0abkTIg0NTPJmgXucmEGjLO7ILE7jSEZJQyg//s8YXA40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749586046; c=relaxed/simple;
-	bh=cyniiTjRd17/axtqY1LXsVxllwk2gLonVeQz+TEtSOI=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=ZNxlN3w+roY3YNEEJ93DAgV6DwuoHYQ7FRwaLSD/7bczC0Ndf80sh1mm39qQ9JhEHt+EmzJTIku9VtY5n7NbqPiHS4Xz1RNGJLJ0Bpco1NZ4pJGeSwixnIx1nWtV2YQoCG0O55EC2/uNwkoewEKIaqqBHU7ix5Mj4AwY2A8Um5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=bPeuTlWo; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	s=arc-20240116; t=1749586064; c=relaxed/simple;
+	bh=lw5HEHQ7lGuFiyYarsVYoKgyzHF7R9dcveua1GyOrbs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R4JUTp/FEq2Od+6VfCVMhn8mGs4me7AAwOrU/fh7ZglhQpMHGjpuOvEIgk4zlRZjTmy1gx9USjrwLTUIO1wic6JB+9NsyosEYz1ZdsAONzxmZOjGzJOUlTEn6bVmc4ctgLwxBAOIahaSrgFH+Z09swA8Bl9PpEAwbtL5X7w0XGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ftd3yZwa; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="bPeuTlWo"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-23539a1a421so51236895ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:07:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ftd3yZwa"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22c33677183so48463175ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 13:07:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1749586044; x=1750190844; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=d9ivsrx9S86u8HBiaynDXVu9vEEgacXBDB8VknWbxl8=;
-        b=bPeuTlWofxxJXKNAFtRfAMuHutSiiOOT7ZTZrS03YFwWXmcWeaTTTH92758HFzr6dZ
-         v9Np3wJhkm1/fGwCelp537ksqWHMt4vQuApqaLwFz3KaIyxjelFbE080bZxATEJeI5Pu
-         Iw2e3CGj28UM+d/5gjG5QRxp08VPPlEyysh3ZY7sLlgRATHBr5mdYE9yTaStbj/WeDNn
-         GsX8fBkoolMNu+Glwodt5wsTlTRa5HGTHgxhv5y1Cbgpz67a4Sa+uMp1PX4yKQFLS+8t
-         Ecju3DobIivl9e6YKSQ/P7QSkJBy3kN/Hxj8Nra5r/9r631JJLV1VDceAUJYJrUioPqV
-         bthw==
+        d=chromium.org; s=google; t=1749586062; x=1750190862; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4ZG3S+MiGawwwA+EnXpnSVrGI6zVYs0cCjC+AyGKw/E=;
+        b=Ftd3yZwaWVg6xhuqmO83j7kv5154Rbxsjk/59BTXhv61LLivofwwvQW2BiR6ovARPz
+         4Gu8cidgIU0hT/6HpY+kIj6SLBuFPxynHQWekBH/E4AeoZkQj42Bq5c2ks8pXnMxB/fv
+         FizMKLkqy2vJRgXnP4JiXzrvCYKGF0CTWd7u4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749586044; x=1750190844;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1749586062; x=1750190862;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=d9ivsrx9S86u8HBiaynDXVu9vEEgacXBDB8VknWbxl8=;
-        b=nb9j77lThZS1Hq3fNYOKBxbfaJScP3ZMDw39Oazc5KM7q+oscBWa0ZZEkkDAu5aofX
-         7Y2x+xCSRbaxigKV+c3wcawsokL659h4kqbS5mLZfSUayiJrY6EFWwxR0NA0QnLBDkBU
-         TzfkyZZZ169kO5Gk2kL1nZw0kyXYb38aiBf7aJuUfroNXvStQPQqwVjJiv749HVPrSwU
-         I3lXA63iCw37uMPz0LuPtl+rBIKU489THXnwdq+1P/UMRDPpeybOlbbw4UG6uBPGb38e
-         2KlJ14D+feD85Uz21kGrAm66Yh8ICFWBCLCS8FDGMO4efe8oVc21Td0lb1uHc11h15cI
-         qVsg==
-X-Forwarded-Encrypted: i=1; AJvYcCVhzVuaZhYDN1besqRak7Ydv47QWhhBOxqfxON+lTHzARwnWsPwGjQeMvyqCk+C4MFuQ/QuYfosijMmmkc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMZWEimVk0QgDCVZF+YhqwGMgWOBnMplNAEAHP6vcqSvSWbCMZ
-	1+hzXW8Tp4fNIxS8s96C8SGWYvc62SrxtcguHv3qZ1ovfQNgQ3aJZluaLjxLcyFTaXU=
-X-Gm-Gg: ASbGncvE0J9cReXWEmh1lLo6WQ54NJJAmM/nsjhZWAqsvY0/fibKrnkj98rtpneASMY
-	KRrf119C5LuZhkP7oKBhT1U+TS6f2oUGNiObyqq4386qWvfVB2AdWXM2N6tqx2RGNtBuYIdjofS
-	kze0gAt6xqBlP9WzkzX2mQicYmpp1IS+iaXRAHoh/k3f+o72pBcBO6yEN3rh0++VN+F3pKoIl4G
-	2seGPO4i6dn8QcEg63hhcR2iozTDXJvS1NJ4PQTJ9MPQulKEt9ua/lOToBZ4Ji8ZPbFt5O7ruvE
-	HDst46s4lnQSuU8kl6Occx8kLy9mu+3otmHATRZ6DkLnbQQACjbgL55ObRFE
-X-Google-Smtp-Source: AGHT+IHEbTLkjhkPgVR7LBY0WE0PQew4VX94TRVLTFzVkKHWIErfOlXv0qU9OV/7D6BdyLmWtWCVwA==
-X-Received: by 2002:a17:902:cf11:b0:234:8a4a:adac with SMTP id d9443c01a7336-23641a99f5fmr7343495ad.20.1749586043748;
-        Tue, 10 Jun 2025 13:07:23 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:500::7:116a])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-23603078121sm75380565ad.27.2025.06.10.13.07.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 13:07:23 -0700 (PDT)
-Date: Tue, 10 Jun 2025 13:07:23 -0700 (PDT)
-X-Google-Original-Date: Tue, 10 Jun 2025 13:07:21 PDT (-0700)
-Subject:     Re: [PATCH] riscv: vdso: Exclude .rodata from the PT_DYNAMIC segment
-In-Reply-To: <20250603215218.GA3631276@ax162>
-CC: i@maskray.me, Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-  Alexandre Ghiti <alex@ghiti.fr>, nick.desaulniers+lkml@gmail.com, morbo@google.com, justinstitt@google.com,
-  linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: nathan@kernel.org
-Message-ID: <mhng-417C3662-1666-4A7D-9800-0F68016C1D9C@palmerdabbelt-mac>
+        bh=4ZG3S+MiGawwwA+EnXpnSVrGI6zVYs0cCjC+AyGKw/E=;
+        b=tTFUrG8pD0y6JAawn+jHfs0gqgl87LBW9dPMF/FyW9SUU362er1+x91EqA/VuIqQsC
+         3OM7LUfKOKpk/Us3hN1MY1ne3aFDWs3wFz3vqhvhvfOs4DRtS336x3CGxhqNBkb/XUYJ
+         AIiL1WwxOW2VD/KiyOFpuHxdvreTfU5xwaUKLGT7NgMwAsbDE2QT69BZQfmIeD2alr2e
+         7GlMFniC+rDTBjynNMY7I+KFRP3NmmfnDx8rli2YyxZFHXC5/WX+PmZZo+k8ASRlmaB8
+         UPGWdOQkPR4RC6pgG4E5XivF2ndxyZyMaQqQTD0BKUQIOsLJZa870QnG7ELcmSWgFkVs
+         +xkg==
+X-Forwarded-Encrypted: i=1; AJvYcCV+dVKg5kR3U6u8PHLsakbUeUYvF8KNiiXkteZyNCUXWf6NBLOxJSY9ol6nSKkpaLqx5MqPEu/iyH/+8Ik=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzU+hOlgrV+IxirA3gl9ruNjYy7Mw59F6frafUcNocZH1Ji2MLC
+	dH8/2BoKnjY2E5Va6y49F11Zg7QUgwwTRfFX1jNaibz1HUe3z/jO7QluGI4+iCQ9S/JjpOsrigk
+	Gyr0=
+X-Gm-Gg: ASbGncsmdXHwhr4ujPL5H/frxnyaY3EuNFHEtrgCSzf5f381+zbE/rqOOvOrOOPmb60
+	J41e16UUdUVZyplqfWjG1x9I9rJf2Q70l+cyNGofxZCXIscyLIILCH3NuGYErIYg2ZwyvzNYalW
+	0UdqdJ43HhtXtAyT1TM1Qh56E4QRb1DFaen65inBk9Q28j31A238Wlbv+ZkjdnuXJBtW3cYC9KD
+	B04rTrXwKXNaHN/oVzebsBUWe7r1+OX1qtJ6WBiZVLUIiqkMqglhpUDWxKvNEd4IxDN4qUIce4z
+	r8QVfmdtCoQAG5yFA04xvUcXtObqE2T300qyLqkwe9ecZ/mfVBaR0c4bHW3+qLtd5cbnzdVoHeT
+	4UqIwdF9t6HNHRC7dfCPcMReO
+X-Google-Smtp-Source: AGHT+IE3/uMlYM5eemdscOcyG/F9YgtLX8i4MkAFM/pK1oc3p+qFFnk90HoYOouQZBIRu0Gc3DCRTQ==
+X-Received: by 2002:a17:902:ce0f:b0:234:8c64:7878 with SMTP id d9443c01a7336-2364260d248mr2018715ad.11.1749586062263;
+        Tue, 10 Jun 2025 13:07:42 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e14:7:4ad1:78dc:7f25:dde3])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-23603092635sm74561885ad.81.2025.06.10.13.07.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Jun 2025 13:07:41 -0700 (PDT)
+Date: Tue, 10 Jun 2025 13:07:38 -0700
+From: Brian Norris <briannorris@chromium.org>
+To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Tsai Sung-Fu <danielsftsai@google.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v2 1/2] genirq: Retain depth for managed IRQs across CPU
+ hotplug
+Message-ID: <aEiQitCsXq9XSBcZ@google.com>
+References: <20250514201353.3481400-1-briannorris@chromium.org>
+ <20250514201353.3481400-2-briannorris@chromium.org>
+ <24ec4adc-7c80-49e9-93ee-19908a97ab84@gmail.com>
+ <aEcWTM3Y1roOf4Ph@google.com>
+ <CAMcHhXqq9DHgip3rr0=24Y-LEBq5n4rDrE6AsWyjyBmsS7s+-A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMcHhXqq9DHgip3rr0=24Y-LEBq5n4rDrE6AsWyjyBmsS7s+-A@mail.gmail.com>
 
-On Tue, 03 Jun 2025 14:52:18 PDT (-0700), nathan@kernel.org wrote:
-> On Mon, Jun 02, 2025 at 08:48:44PM -0700, Fangrui Song wrote:
->> .rodata is implicitly included in the PT_DYNAMIC segment due to
->> inheriting the segment of the preceding .dynamic section (in both GNU ld
->> and LLD).  When the .rodata section's size is not a multiple of 16
->> bytes on riscv64, llvm-readelf will report a "PT_DYNAMIC dynamic table
->> is invalid" warning.  Note: in the presence of the .dynamic section, GNU
->> readelf and llvm-readelf's -d option decodes the dynamic section using
->> the section.
->>
->> This issue arose after commit 8f8c1ff879fab60f80f3a7aec3000f47e5b03ba9
->> ("riscv: vdso.lds.S: remove hardcoded 0x800 .text start addr"), which
->> placed .rodata directly after .dynamic by removing .eh_frame.
->>
->> This patch resolves the implicit inclusion into PT_DYNAMIC by explicitly
->> specifying the :text output section phdr.
->>
->> Reported-by: Nathan Chancellor <nathan@kernel.org>
->> Closes: https://github.com/ClangBuiltLinux/linux/issues/2093
->> Signed-off-by: Fangrui Song <i@maskray.me>
->
-> Tested-by: Nathan Chancellor <nathan@kernel.org>
+Hi Alex,
 
-Thanks, I'll pick it up (might take a bit to show up on fixes, I'm 
-trying to sort out another amdgpu stack warning...)
+On Mon, Jun 09, 2025 at 08:19:58PM +0200, Aleksandrs Vinarskis wrote:
+> On Mon, 9 Jun 2025 at 19:13, Brian Norris <briannorris@chromium.org> wrote:
+> > On Fri, Jun 06, 2025 at 02:21:54PM +0200, Aleksandrs Vinarskis wrote:
+> > > It appears that this commit introduces a critical bug observed on at least
+> > > some Qualcomm Snapdragon X1E/X1P laptops, rendering the suspend function
+> > > unusable.
 
->
->> ---
->>  arch/riscv/kernel/vdso/vdso.lds.S | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/riscv/kernel/vdso/vdso.lds.S b/arch/riscv/kernel/vdso/vdso.lds.S
->> index abc69cda0445b1f500a89b47deefa31349103f08..62e0410f69f09e2bbf27101c000d604193f525cb 100644
->> --- a/arch/riscv/kernel/vdso/vdso.lds.S
->> +++ b/arch/riscv/kernel/vdso/vdso.lds.S
->> @@ -30,7 +30,7 @@ SECTIONS
->>  		*(.data .data.* .gnu.linkonce.d.*)
->>  		*(.dynbss)
->>  		*(.bss .bss.* .gnu.linkonce.b.*)
->> -	}
->> +	}						:text
->>
->>  	.note		: { *(.note.*) }		:text	:note
->>
->>
->> ---
->> base-commit: 1a3f6980889df3fc90ad3e4a525061d2c138adba
->> change-id: 20250602-riscv-vdso-13efdee34a24
->>
->> Best regards,
->> --
->> Fangrui Song <i@maskray.me>
->>
+For my reference, are these laptops represented by the
+arch/arm64/boot/dts/qcom/x1e80100.dtsi family of device trees? I'm just
+trying to reason through what sorts of driver(s) are in use here, in
+case there's something I'm overlooking, as I don't have the laptop in
+question to test.
+
+> > > With this change in place, after successful suspend the device either:
+> > > 1. Cannot wake up at all. Screen stays black, even though PM has existed
+> > > suspend (observed by external LEDs controlled by PM)
+> > >
+> > > 2. Wakes up eventually after minutes (instead of seconds) with SSD related
+> > > errors in dmesg. System still exhibits errors eg. UI icons are not properly
+> > > loaded, WiFi does not (always) connect.
+
+FYI, my assumption here based on the log snippets and the patch in
+question is that "only" the NVMe driver's IRQs are getting b0rked by my
+change. I could imagine that would produce the above symptoms in most
+laptop configurations, because failing disk I/O will likely block most
+wakeup-related activity, and cause all sorts of UI and system daemon
+(e.g., WiFi supplicant) misbehavior.
+
+> > I'm sorry to hear this has caused regressions. I don't yet know why your
+> > particular problems have occurred, but I did notice last week that there
+> > were some issues with the patch in question. I wrote a patch which I'll
+> > append, and have started (but not completely finished) testing it.
+> > Perhaps you could try it out and let me know how it goes?
+> 
+> Hi Brian,
+> 
+> I have tested your attached patch in addition to the original one, and
+> unfortunately it did not resolve the problem on either of the two
+> laptops: neither managed to wake up, just like before.
+> Will be happy to promptly test other proposed solutions.
+
+Thanks for the testing. I've found a few problems with my proposed
+patch, and I've come up with the appended alternative that solves them.
+Could you give it a try?
+
+Also, if it's not too much trouble (and especially if my patch still
+doesn't help you), could you also provide a more complete kernel log and
+kernel .config file? (Attachment is fine with me. Or a direct email, if
+somehow the lists don't like it.) It's possible that would give me more
+hints as to what's going wrong for you.
+
+Thanks,
+Brian
+
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index b0e0a7332993..3e873c5ce623 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -205,12 +205,15 @@ __irq_startup_managed(struct irq_desc *desc, const struct cpumask *aff,
+ 
+ void irq_startup_managed(struct irq_desc *desc)
+ {
++	struct irq_data *d = irq_desc_get_irq_data(desc);
++
+ 	/*
+ 	 * Only start it up when the disable depth is 1, so that a disable,
+ 	 * hotunplug, hotplug sequence does not end up enabling it during
+ 	 * hotplug unconditionally.
+ 	 */
+ 	desc->depth--;
++	irqd_clr_managed_shutdown(d);
+ 	if (!desc->depth)
+ 		irq_startup(desc, IRQ_RESEND, IRQ_START_COND);
+ }
+diff --git a/kernel/irq/cpuhotplug.c b/kernel/irq/cpuhotplug.c
+index f07529ae4895..755346ea9819 100644
+--- a/kernel/irq/cpuhotplug.c
++++ b/kernel/irq/cpuhotplug.c
+@@ -210,13 +210,6 @@ static void irq_restore_affinity_of_irq(struct irq_desc *desc, unsigned int cpu)
+ 	    !irq_data_get_irq_chip(data) || !cpumask_test_cpu(cpu, affinity))
+ 		return;
+ 
+-	/*
+-	 * Don't restore suspended interrupts here when a system comes back
+-	 * from S3. They are reenabled via resume_device_irqs().
+-	 */
+-	if (desc->istate & IRQS_SUSPENDED)
+-		return;
+-
+ 	if (irqd_is_managed_and_shutdown(data))
+ 		irq_startup_managed(desc);
+ 
