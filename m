@@ -1,114 +1,174 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2078.outbound.protection.outlook.com [40.107.94.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54D227AC44;
-	Tue, 10 Jun 2025 07:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749540858; cv=none; b=fWJX9TwYoWmBxcRP4UDsUHkzAjJ+gp3oS58K7cu8srnekHCs1sg8D5cG9dbRI2yxlKRjzn4WQOUM4It/2cLCto/caIf3AHG5aRyjMWrhZx9/JzoSRWfRMlPn08GMTziN5I7O3HUUe7T/7wCdn3bX+QgWfRU5wILb7aV+rf2nPFI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749540858; c=relaxed/simple;
-	bh=pcZ6mWf3X8LtEzYCwp8wh+McVlEIHvFtccfqPVGVS1U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QiMWMY58abSnUI8wn/SeKj52C0341nLUjst0t0PQXQU9wmGxb+eCKxt25H2sk0OnrELFfQk+uHCufZcoLVlPPNK9/UfytWW5qel1aCkqQXW4LK/VDj1GinNLxLe9WyCwBkMgj0Gyg9dCUYi6xjE3Rp61nN063DVXU2AkIrBrHKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=j0njGC3U; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 063AD279346;
+	Tue, 10 Jun 2025 07:34:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749540885; cv=fail; b=iaRNt2sl/948l1tCkrCqoWogOib4Wx+aM/gmhUpRukVk9+NQrcYfQl3mvpzdlMm4Ad3QMaVqJmxenEMKkGbuF7b8JNRocqtY4LszTftRzyAeNHV8e+jsy7y7VrGspzvhQwScFli4NknIZ5ZBH6ZTIF9PhiCZO8q503IJbRiCgcA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749540885; c=relaxed/simple;
+	bh=MMcDQ01bLSUATUGDhbUHh+QSfPLgHb5EhVRX3EgyVYA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=R7H2m8TomRAtUy09pslwzqspFYkMlnG+APpoMgMXwExHPYK2p983/SgCsmobNDH6c7x2enmVoNiW/FRi4s1QVZ251OCrsA2blPm8QbGSHu4vfag+aQKozUEH2xlTqm7uEedUvE5R+jOfqLrje7hloGedqDW3br/P3UWInlRdPb4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=iFAOY6Sx; arc=fail smtp.client-ip=40.107.94.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j0njGC3U"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=VkI4nXK+TS/9EeUuqPQ0SR/T+jH8FR1py6Gdua1yCt4=; b=j0njGC3UPXcWm0z3vckW4pMCjt
-	nkvunDF+OMq3AA7GF73Y/5O/P+cNVS6vGBHOuACD6FpVFT9UQK+Td4auN86ig2fIs8fsmw/axWEvu
-	0zaZdRaM0cWhvESthyGy3wcmgG9GvNMN+WzlKZSLkBg/GkbMacJICTm/3GUfyqgZwDOuQjpV/Ib7e
-	Yp5ENxv04Ut/+uTseM4aPhaNu8MtaT2kxqYNHGeHV9hnVuFMRJHIbGkUHmKbQx2pCuOzNWSffSSff
-	OQxSJW4qyB2U5fX9ZZR0asetT4W551WCyTvSNitSt1waxnpuP5hWLbv2H7osuQx5qm3DaVrye/ZSl
-	fcJrueYA==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uOtUp-00000001kLw-3mFR;
-	Tue, 10 Jun 2025 07:34:12 +0000
-Message-ID: <b17709fd-7ca6-40dc-8d9c-7d3a98d9d305@infradead.org>
-Date: Tue, 10 Jun 2025 00:34:06 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="iFAOY6Sx"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bInQnWDIz1V72hWPYrR5MFm6AsA4ObHdABOtP6lGIZ8PvjKg8diTZff+fCZNQYDxN54UBeV5YsEEQNBGYXs/NateI4agnqiRpiPdF5NSIeGOKY8b7wn243HTtnaxctwou/pdoE1Kzl3Ke7N0T54ROOCHHXzN+khk120qfDOxvRdu91o2x++0+qPvmS80BUFgZMToCmO5Ufu7Kcr7F7Qdne8DmtUgyn0v2+6igaI99T3TbVubCTp8ItrMnjHZ8nxkWSBk0Fkcu1OmBhmpZUCrg/I/cPDx50zKAN3HIXhY9uMw8BDaSFb6/5t6RONqLtqKcYshTMTxRYxjkE4jwjbbUg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yAcPWhJOD2uC+8nD7DYGGpOcWzqUQnKUKJG27J3Ym1M=;
+ b=xIXQ9jkh4ia39OsWb+RUYY5DFBIFc3SETMD4jeGXTcAGobzU17z8h7khWrnnPNuH41pUqNA+9DNBjfdtuhzphcVxkGFI5ErkLvaWL3OJPLrC16/z3euow9Tk/KqqbePzmbbvGMiWB48vDEewdBmiWKK9ib5ksVDSrLy2FpURNtW9Qw9vn2/RD4sKxf9C6KTJKGh4i5/Hh85vwR+/HmMUIoQBEieyxMYpFmVGR8FFKECEN7ql4Ha7CcJ/fof17N3ErZOUz/ztUTWSMggNE2fvdcT5cx0cuXp+lnpljolC5K1PgvjCY0IdiX9+laEazfY8V0w6FeVhcizhBAu5zkNIQg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yAcPWhJOD2uC+8nD7DYGGpOcWzqUQnKUKJG27J3Ym1M=;
+ b=iFAOY6SxyieqLQbrW08ehJaX0t2doNWQ35t9lTx8ZuMhz9K4aalSLptGErRZsK38e/fUfWvAUQzX/YubBIVp0sg5crRGgYRQveb6XfJ8qBmOG5ikJVgQ0gqInZeOenz9XmO4JTifjab4E7OEvR0hFXmGf7wGOX7688lk6wWQV7U=
+Received: from MW4PR02CA0003.namprd02.prod.outlook.com (2603:10b6:303:16d::30)
+ by MW5PR12MB5623.namprd12.prod.outlook.com (2603:10b6:303:199::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Tue, 10 Jun
+ 2025 07:34:40 +0000
+Received: from SJ1PEPF000023CB.namprd02.prod.outlook.com
+ (2603:10b6:303:16d:cafe::39) by MW4PR02CA0003.outlook.office365.com
+ (2603:10b6:303:16d::30) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.19 via Frontend Transport; Tue,
+ 10 Jun 2025 07:34:40 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ1PEPF000023CB.mail.protection.outlook.com (10.167.244.5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8835.15 via Frontend Transport; Tue, 10 Jun 2025 07:34:40 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Jun
+ 2025 02:34:38 -0500
+Received: from localhost (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39 via Frontend
+ Transport; Tue, 10 Jun 2025 02:34:37 -0500
+From: Michal Simek <michal.simek@amd.com>
+To: <linux-kernel@vger.kernel.org>, <monstr@monstr.eu>,
+	<michal.simek@xilinx.com>, <git@xilinx.com>
+CC: Bartosz Golaszewski <brgl@bgdev.pl>, Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Linus Walleij
+	<linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, Shubhrajyoti Datta
+	<shubhrajyoti.datta@amd.com>, Srinivas Neeli <srinivas.neeli@amd.com>, "open
+ list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+	<devicetree@vger.kernel.org>, "moderated list:ARM/ZYNQ ARCHITECTURE"
+	<linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM"
+	<linux-gpio@vger.kernel.org>
+Subject: [PATCH] dt-bindings: gpio: gpio-xilinx: Mark clocks as required property
+Date: Tue, 10 Jun 2025 09:34:31 +0200
+Message-ID: <dba4f2c39a25b54010c292c36e349cb289d6cd98.1749540869.git.michal.simek@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Documentation: nouveau: Update GSP message queue
- kernel-doc reference
-To: Bagas Sanjaya <bagasdotme@gmail.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Documentation <linux-doc@vger.kernel.org>,
- Linux DRI Development <dri-devel@lists.freedesktop.org>,
- Linux Nouveau <nouveau@lists.freedesktop.org>
-Cc: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Jonathan Corbet <corbet@lwn.net>, Dave Airlie <airlied@redhat.com>,
- Timur Tabi <ttabi@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>
-References: <20250610065258.41467-1-bagasdotme@gmail.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250610065258.41467-1-bagasdotme@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1470; i=michal.simek@amd.com; h=from:subject:message-id; bh=MMcDQ01bLSUATUGDhbUHh+QSfPLgHb5EhVRX3EgyVYA=; b=owGbwMvMwCG2mv3fB7+vgl8ZT6slMWS4P+AwnqeqblsZ57Sx0EH026v7X6ZPSZw8xSCGiWMW9 3rxXF6FjlIWBjEOBlkxRZbpTDoOa75dWyq2PDIfZg4rE8gQBi5OAZjI5b8M/zQiYlk7PML35CWd ZnjdIdHiPTv2N/uT+IcOU3PWlVydZMnwT3PrgYWz1imsDvLNSylRuiy6R3/Z+ZtvGVRvLM/6xWI uzQYA
+X-Developer-Key: i=michal.simek@amd.com; a=openpgp; fpr=67350C9BF5CCEE9B5364356A377C7F21FE3D1F91
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB04.amd.com: michal.simek@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF000023CB:EE_|MW5PR12MB5623:EE_
+X-MS-Office365-Filtering-Correlation-Id: ef8ca43e-fbb2-4634-d517-08dda7f1429b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|1800799024|36860700013|376014|82310400026|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?37YNhr7wbfCCRWORyYjxQQJWGUlLGMTiPnqw7/jwj1vx1G/yN1hTffu+fdgZ?=
+ =?us-ascii?Q?ZOJYACb8lM4dv80TEPdM14SnI1NdTa4LbwUZC2WAqwbdg7v/PVXMfmmylhBI?=
+ =?us-ascii?Q?ap5iVUOqe9/19YN5dINxo1RccT1b6D4rbOrMsl3Cgb0XnhlrwvhZGt9y/Uup?=
+ =?us-ascii?Q?9yhiqetQN5B+2+FzT1phrQ1hYrRV7FTtjrA+RWuUz4mHwrBOfnXGj0/UVlvE?=
+ =?us-ascii?Q?Tj3f6gyNpZcqm0YfT4RNg4FxT3KaKBsYJ1YmcSLoIVLLFJCkvfTxuowSnU0m?=
+ =?us-ascii?Q?3ioVnXpPavdJeAinJjdGnZEf7gkaYCg0GD/PLJu5aqF/lbGG9I5NEkbzk/aO?=
+ =?us-ascii?Q?JQSz2AL8IvCafZ6RzLpcsqeinEX93z6lwKTO324gPboq9tb5wkYbj+Yt67mY?=
+ =?us-ascii?Q?1Ln5g+IAayVqbJXrRSZyJb6/WHYU+mDWU7iSNmg10/Gy7UJTMk7ZFtaeKX/W?=
+ =?us-ascii?Q?1DVjAf4fO8UNTnQDrwM2mLOb/StwcAHDB9/J3d+CbHwu7/tWJQsPrE33FEP1?=
+ =?us-ascii?Q?E84Na6BB+0kVdKGYUfjbuGkNUhwSxpIOHuhl7DetkZIbqY4ii4QI4ZpYIkcV?=
+ =?us-ascii?Q?6DqaS9X8i9FCCeU+HzEQ7jaja/fT1clQo915LCynpsbZlgPxyQy0PLdIo420?=
+ =?us-ascii?Q?KYP5YI4OWTtE07dcS+XaEZ7+HSFGb5uGsA4UsWYPtX7fqzcb/ZZT8hLFpa0Q?=
+ =?us-ascii?Q?K+K4OVyuSKjy0tWlTItmZ0zJa5Z/BmTkhzZzXFDg4TIEygly5aL3x64pLMXm?=
+ =?us-ascii?Q?634FZo0ol4P4u3SAccYFZjOghZzNQj3vLJHmB+aSp107QkhDyc84TzbM5eFZ?=
+ =?us-ascii?Q?ENJjrsg/2L64HTC9xXv+rQJuyIscoSUzZr9LtUgHd+oqQEp+FTmDpxyYktBK?=
+ =?us-ascii?Q?v1q8tFxfNX6cMHTSTLmjYwwNg3tVPjpLB2Qcg0eLwrFCoH6JGfhPwK9wnbym?=
+ =?us-ascii?Q?R8qjioFRb6k1jUSwuI8rFsScqk5dfwYqMAwJnNdcv/BjRiZXhDyD0bn0pq23?=
+ =?us-ascii?Q?1wxgIsc6NWElEFWNnraKd6JtWXo9OVk2bH7KosWovOAnbDdt/Peri9Aw2i+8?=
+ =?us-ascii?Q?ZgdDKHHWPJ5uJ+2W3rqcy5UvMS3seSq1oNkMsjI4FHA+rChjw+A7rpW5dWZR?=
+ =?us-ascii?Q?Ixn50M0FHiqkE4L0OM8hvXVt0iUtby5gX+a9ziZfaBgPU2d4eXNAWi/AOlSX?=
+ =?us-ascii?Q?vT68o2Yt0SHomEgZ7cAbEeZueERIpcV9SMBWDp7c5qx3TvBJDgrpS/xBT7Io?=
+ =?us-ascii?Q?1J9scigGVJeCRrN0mk8fu3VweI5CAA/IGdkE15CrsvxOq8Q8yYVjaeTM0V/B?=
+ =?us-ascii?Q?LaVkjeiBgRxO2+XBpIooCKaWfOcvmnusNZJohkkeyJekp7l5RbS6ZuijP3ku?=
+ =?us-ascii?Q?+l4NuKl1TO2RNVPYyPpSTo9NWl5Td9x1teMvRJJfXn+YplsGZCkoUf1T2b5w?=
+ =?us-ascii?Q?Vta6AUjN8cZ4/+xDvHhokK2pVzqiqm+Sgtyu2JZGGuM24RLGjXcSIA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(36860700013)(376014)(82310400026)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 07:34:40.1607
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ef8ca43e-fbb2-4634-d517-08dda7f1429b
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF000023CB.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR12MB5623
 
+On Microblaze platforms there is no need to handle clocks because the
+system is starting with clocks enabled (can be described via fixed clock
+node or clock-frequency property or not described at all).
+With using soft IPs with SOC platforms there is mandatory to handle clocks
+as is explained in commit 60dbdc6e08d6 ("dt-bindings: net: emaclite: Add
+clock support").
+That's why make clock as required in dt binding because it is present in
+both configurations and should be described even there is no way how to
+handle it on Microblaze systems.
 
+Signed-off-by: Michal Simek <michal.simek@amd.com>
+---
 
-On 6/9/25 11:52 PM, Bagas Sanjaya wrote:
-> Commit c472d828348caf ("drm/nouveau/gsp: move subdev/engine impls to
-> subdev/gsp/rm/r535/") moves GSP-RM message queue implementation in
-> drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c to versioned path in
-> drivers/gpu/drm/nouveau/nvkm/subdev/gsp/rm/r535/gsp.c, but forgets to
-> update kernel-doc reference in nouveau docs, hence triggers htmldocs
-> warnings:
-> 
-> ERROR: Cannot find file ./drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
-> WARNING: No kernel-doc for file ./drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
-> 
-> Update the reference.
-> 
-> Fixes: c472d828348c ("drm/nouveau/gsp: move subdev/engine impls to subdev/gsp/rm/r535/")
-> Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
-> ---
->  Documentation/gpu/nouveau.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/gpu/nouveau.rst b/Documentation/gpu/nouveau.rst
-> index b8c801e0068cb0..878fb1ade31e4c 100644
-> --- a/Documentation/gpu/nouveau.rst
-> +++ b/Documentation/gpu/nouveau.rst
-> @@ -25,7 +25,7 @@ providing a consistent API to upper layers of the driver stack.
->  GSP Support
->  ------------------------
->  
-> -.. kernel-doc:: drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
-> +.. kernel-doc:: drivers/gpu/drm/nouveau/nvkm/subdev/gsp/rm/r535/gsp.c
+Based on discussion at
+https://lore.kernel.org/lkml/20241002-revivable-crummy-f780adec538c@spud/
 
-Are you sure?  Did that work for you?
+Actually this shouldn't be only targetting GPIO but also for example
+xlnx,xps-timebase-wdt-1.00.a but I would like to check it first on gpio
+before starting to check other bindings.
 
-I see
-/**
- * DOC: GSP message queue element
+---
+ Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-in drivers/gpu/drm/nouveau/nvkm/subdev/gsp/rm/r535/rpc.c but not in the
-file that you referenced.  Maybe it just keeps moving around...
-
-
-This works for me. Please send a v2 if you see the need to.
-
-
->     :doc: GSP message queue element
->  
->  .. kernel-doc:: drivers/gpu/drm/nouveau/include/nvkm/subdev/gsp.h
-> 
-> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-
+diff --git a/Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml b/Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml
+index 8fbf12ca067e..7af4eb2d1858 100644
+--- a/Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml
++++ b/Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml
+@@ -117,6 +117,7 @@ properties:
+ required:
+   - reg
+   - compatible
++  - clocks
+   - gpio-controller
+   - "#gpio-cells"
+ 
 -- 
-~Randy
+2.43.0
 
