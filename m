@@ -1,132 +1,216 @@
-Received: from mail.actia.se (mail.actia.se [212.181.117.226])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43069225A5B;
-	Tue, 10 Jun 2025 15:05:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.181.117.226
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D2B1A38E1;
+	Tue, 10 Jun 2025 15:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749567919; cv=none; b=CpNWt5LNif7d4IcEvWySIfH30V0NZPx1q+QdWMiMC4bWjOKM0c5ffLWMVbsoV1TpqZBDk3c9e33sDhaJNKrEazcpPje65MBVPSLRnUwRZ0b8+CxHk+sl1n5igtvX0OZPlOuOBhwxJ7uIfdp0AYMriFYDuHuWxOFi+mg6EceE9ow=
+	t=1749567924; cv=none; b=dmUomc65Jvmf2Z9Caa2XAKAbZEtU2I5uh5jxwSlrBke1cdfbuFDbMnIMWtuXuwieCbeWwy77lrT0Q3RSRj3k+jDvATS35nIG0Id/I9oc2FOy7cE2tWewvtKSG6mwLgInylb4oIrL8GefahH+M6yO87oMzvcGLAXxfoChVJO3hoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749567919; c=relaxed/simple;
-	bh=fgyqr2VSwZft01wwmePX/9fb8MG0zuAyG3Xa6crGPW8=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ffGCBSD3n0P2UBnjn6Xb1JQpo/t5BPlAQxZMD7gJCR0NgaA0SQ/D/moX89+sCd41vvjPao/TkiIBK67+r5KsLG3/wzFguDhDhbkd5dPpmwpEK1S5AEjKzLUVNEKNFnDqMbj0OkWbDO9dtgmjxDNgJYQlh/7vGvoOPtpBqN/iQYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=actia.se; spf=pass smtp.mailfrom=actia.se; arc=none smtp.client-ip=212.181.117.226
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=actia.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=actia.se
-Received: from S036ANL.actianordic.se (10.12.31.117) by S036ANL.actianordic.se
- (10.12.31.117) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 10 Jun
- 2025 17:05:15 +0200
-Received: from S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69]) by
- S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69%3]) with mapi id
- 15.01.2507.039; Tue, 10 Jun 2025 17:05:15 +0200
-From: John Ernberg <john.ernberg@actia.se>
-To: Xu Yang <xu.yang_2@nxp.com>
-CC: Shawn Guo <shawnguo2@yeah.net>, Peter Chen <peter.chen@kernel.org>, "Shawn
- Guo" <shawnguo@kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: i.MX kernel hangup caused by chipidea USB gadget driver
-Thread-Topic: i.MX kernel hangup caused by chipidea USB gadget driver
-Thread-Index: AQHb2Uk8r5zPXewyY0SsDNZZa8wLobP8IguAgAA7/4A=
-Date: Tue, 10 Jun 2025 15:05:15 +0000
-Message-ID: <4fc6ec7a-ab2d-4b2c-b1f7-7902010c8682@actia.se>
-References: <aEZxmlHmjeWcXiF3@dragon>
- <c56pgxmfscg6tpqxjayu4mvxc2g5kgmfitpvp36lxulpq4jxmg@ces5l7ofab6s>
- <aEbstxkQmji4tfjf@w447anl.localdomain>
- <k6j2za47cp4ccyfkevwpx2x5s4bjrxxqhqvteyspbf2n7yxcff@ccztqeuhn2di>
-In-Reply-To: <k6j2za47cp4ccyfkevwpx2x5s4bjrxxqhqvteyspbf2n7yxcff@ccztqeuhn2di>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-esetresult: clean, is OK
-x-esetid: 37303A2955B14453627660
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6142381A428FC447986A4F4CDC66E534@actia.se>
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1749567924; c=relaxed/simple;
+	bh=flqCuN1LFxKMYrK52rWr1/uWTHaSEMwBTPmhJUrxg+o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=O+663DZxwo2yJoi8fAT3RRX9mSDCK50OOmsSziiWEeEBXgyo0hu6020dwBga1a0E2GgBS8Rm6NvdGv/twkcPT2JFZfqKr3oz+MtWq7WcH+pDR5O+GWtcMvRCw0HKBisTQRGDHIz+mMMEyFKZ1KMSGErTVzYEv7HM1uJFPmEaEXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cqKmKKXJ; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cqKmKKXJ"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-450cf214200so51901455e9.1;
+        Tue, 10 Jun 2025 08:05:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749567921; x=1750172721; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DYST0Wq5UCvFFk+G2xi/lkliKbwC7IeQBkNPHcpoKFQ=;
+        b=cqKmKKXJm3+5paYuvHDxn7ZaFdxQDmVH5IvbTuiP0eR8jotIZNageiwovF46+gHUCM
+         r67uTWK/zj4gALUpZ14GRc4mKMnDNpPSISX8OTBcp3C6fX4Y6xPUvvEUg8w23Rc4lUmz
+         VucLEOK3JELYJgdvH3dC3DoHtj3WlNeBGZ0BrYsBMqKc+njsubNuJsL+GnJb0hZRtfBk
+         pDX6x8V8Vxaj3bhE3lR6DUs2rp8TE9c4umpRu4dT4zBu64R6MkjrtxdCx9lAr9Uy3byJ
+         XfxLr0vftHZndsD6RRigQnBHirWxqVfR6fbKu97Xckf+yecLIepu0/n20/dX2lOAYWO7
+         zbsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749567921; x=1750172721;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=DYST0Wq5UCvFFk+G2xi/lkliKbwC7IeQBkNPHcpoKFQ=;
+        b=ilniaFnGORUMpIAZhBhkQTwU/5bcQMTjC6q/g9vMCdn0TMeR0Xorm2LuH2ZpVYlAeD
+         pTXWB3vopxBn8Qg4f59LRgIgm75fgcGFyhNw+shGGjjzKRb6+etUu+77uwIPVVdi8RKu
+         1iO0HCTH9xwnUAOpwva0gHgf+S8FBkEkemWpaMdNo17QRouVp2zhJvaBzrgVTFULR7o3
+         cVTkUdxQn79Nt8ZMJXuEop6tEgpqBdq3tpBM6fjjxUz1wei+G0Mqq2kTlGC5O29bpObg
+         1F5khIKpWt92mX4xDx15k0tqM6jlPsX6hSo/nNJ0Pak+wiJ+xtDgsYXC2NFPYA4qc4QZ
+         TC+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUWef56ZOitJnBZcDPTurltS/PlWEw5+yAxqc9cLKyRLTidvXmT/UxVtqAjU3f0MX5czsT5+5Zvo5T2kVIvfE0=@vger.kernel.org, AJvYcCVVXQVsmEDSbHlqLFPvo+c9FFUoBVqL3edmm7x2bBMlo92JDPGKC0gwaK3W6idtwwnZw9Z+FEdaOFwW@vger.kernel.org, AJvYcCWfLED02hi60y9STWgfHBB5TMWSG2cWiM7c5fF03Z4yPRzWFdgvmTP8yZ3HMud3lfpwQA2X9qjp5BcykGsc@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGTKTtwARhgYkhABFV8tgFQ0mbh88tqFhBg3dhj7ByGqrIQbwk
+	UD/39iWZ0al2fbpRNehd9iVfaEF0P8Ew/UAyMNs9qguCzaqMwtUS98m2IP00zT6CoJ8=
+X-Gm-Gg: ASbGncsuNjFwH8aUuL1hEOQ6J0f5o281/1J++kwQssFPNNAR4wYKjnP8mx8CkTME2tG
+	NJODctqvZ609d7ZQqEQtSzC+NwqL7dAjBmTiwjMlJqHj+orGUVS6thEI9QZZxA/e4TDEhOI3oSs
+	zXIEvYuwBX8d9FZDhagGvt/SaEMBwm1l8oqpvZvnXLAgjOkaBqsVUAaFofA7yI8DFTNoQSVIXxT
+	7ZD0K5AnPjiBLGqbJXs3ZhDt8RbMaveXpM5Cj0G5iIx5zGhyU8Dg1hELdwr2JveY06DeD1fGuAo
+	hLqwjCfvj20kDKP7VV+pkviYHyffRMcJPU1zApvSIr0IU110zSr9X8jXDYjVI5PB7ZfmPkWtmKv
+	pnTZxlJTkxJUY1qVs+l2u3HWnCruZmWRdEeKR
+X-Google-Smtp-Source: AGHT+IFN9u2t/Wp8LhDB0gA0/W33WOWPayonuzXz/G4wLLYTAVQ6KWIGAINYjOJ1X1qxPMzreZHj1w==
+X-Received: by 2002:a05:6000:420f:b0:3a4:f6ed:767a with SMTP id ffacd0b85a97d-3a531abcca7mr15162775f8f.38.1749567920129;
+        Tue, 10 Jun 2025 08:05:20 -0700 (PDT)
+Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532464f20sm12559408f8f.98.2025.06.10.08.05.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 08:05:19 -0700 (PDT)
+Sender: Igor Korotin <igorkor.3vium@gmail.com>
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+To: ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	rafael@kernel.org,
+	gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Cc: boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	dakr@kernel.org,
+	lenb@kernel.org,
+	wedsonaf@gmail.com,
+	viresh.kumar@linaro.org,
+	alex.hung@amd.com,
+	dingxiangfei2009@gmail.com
+Subject: [PATCH v4 2/5] rust: driver: Add ACPI id table support to Adapter trait
+Date: Tue, 10 Jun 2025 16:03:12 +0100
+Message-ID: <20250610150312.237649-1-igor.korotin.linux@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250610145234.235005-1-igor.korotin.linux@gmail.com>
+References: <20250610145234.235005-1-igor.korotin.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-SGkgWHUsDQoNCk9uIDYvMTAvMjUgMTozMCBQTSwgWHUgWWFuZyB3cm90ZToNCj4gSGkgSm9obiwN
-Cj4gDQo+IE9uIE1vbiwgSnVuIDA5LCAyMDI1IGF0IDAyOjE3OjMwUE0gKzAwMDAsIEpvaG4gRXJu
-YmVyZyB3cm90ZToNCj4+IEhpIFNoYXduLCBYdSwNCj4+DQo+PiBPbiBNb24sIEp1biAwOSwgMjAy
-NSBhdCAwNzo1MzoyMlBNICswODAwLCBYdSBZYW5nIHdyb3RlOg0KPj4+IEhpIFNoYXduLA0KPj4+
-DQo+Pj4gVGhhbmtzIGZvciB5b3VyIHJlcG9ydHMhDQo+Pj4NCj4+PiBPbiBNb24sIEp1biAwOSwg
-MjAyNSBhdCAwMTozMTowNlBNICswODAwLCBTaGF3biBHdW8gd3JvdGU6DQo+Pj4+IEhpIFh1LCBQ
-ZXRlciwNCj4+Pj4NCj4+Pj4gSSdtIHNlZWluZyBhIGtlcm5lbCBoYW5ndXAgb24gaW14OG1tLWV2
-ayBib2FyZC4gIEl0IGhhcHBlbnMgd2hlbjoNCj4+Pj4NCj4+Pj4gICAtIFVTQiBnYWRnZXQgaXMg
-ZW5hYmxlZCBhcyBFdGhlcm5ldA0KPj4+PiAgIC0gVGhlcmUgaXMgZGF0YSB0cmFuc2ZlciBvdmVy
-IFVTQiBFdGhlcm5ldA0KPj4+PiAgIC0gRGV2aWNlIGlzIGdvaW5nIGluL291dCBzdXNwZW5kDQo+
-Pj4+DQo+Pj4+IEEgc2ltcGxlIHdheSB0byByZXByb2R1Y2UgdGhlIGlzc3VlIGNvdWxkIGJlOg0K
-Pj4+Pg0KPj4+PiAgIDEuIENvcHkgYSBiaWcgZmlsZSAobGlrZSA1MDBNQikgZnJvbSBob3N0IFBD
-IHRvIGRldmljZSB3aXRoIHNjcA0KPj4+Pg0KPj4+PiAgIDIuIFdoaWxlIHRoZSBmaWxlIGNvcHkg
-aXMgb25nb2luZywgc3VzcGVuZCAmIHJlc3VtZSB0aGUgZGV2aWNlIGxpa2U6DQo+Pj4+DQo+Pj4+
-ICAgICAgJCBlY2hvICszID4gL3N5cy9jbGFzcy9ydGMvcnRjMC93YWtlYWxhcm07IGVjaG8gbWVt
-ID4gL3N5cy9wb3dlci9zdGF0ZQ0KPj4+Pg0KPj4+PiAgIDMuIFRoZSBkZXZpY2Ugd2lsbCBoYW5n
-IHVwIHRoZXJlDQo+Pj4+DQo+Pj4+IEkgcmVwcm9kdWNlZCBvbiB0aGUgZm9sbG93aW5nIGtlcm5l
-bHM6DQo+Pj4+DQo+Pj4+ICAgLSBNYWlubGluZSBrZXJuZWwNCj4+Pj4gICAtIE5YUCBrZXJuZWwg
-bGYtNi42LnkNCj4+Pj4gICAtIE5YUCBrZXJuZWwgbGYtNi4xMi55DQo+Pj4+DQo+Pj4+IEJ1dCBO
-WFAga2VybmVsIGxmLTYuMS55IGRvZXNuJ3QgaGF2ZSB0aGlzIHByb2JsZW0uICBJIHRyYWNrZWQg
-aXQgZG93biB0bw0KPj4+PiBQZXRlcidzIGNvbW1pdCBbMV0gb24gbGYtNi4xLnksIGFuZCBmb3Vu
-ZCB0aGF0IHRoZSBnYWRnZXQgZGlzY29ubmVjdCAmDQo+Pj4+IGNvbm5lY3QgY2FsbHMgZ290IGxv
-c3QgZnJvbSBzdXNwZW5kICYgcmVzdW1lIGhvb2tzLCB3aGVuIHRoZSBjb21taXQgd2VyZQ0KPj4+
-PiBzcGxpdCBhbmQgcHVzaGVkIHVwc3RyZWFtLiAgSSBjb25maXJtIHRoYXQgYWRkaW5nIHRoZSBj
-YWxscyBiYWNrIGZpeGVzDQo+Pj4+IHRoZSBoYW5ndXAuDQo+Pg0KPj4gV2UgcHJvYmFibHkgcmFu
-IGludG8gdGhlIHNhbWUgcHJvYmxlbSB0cnlpbmcgdG8gYnJpbmcgb25ib2FyZCA2LjEyLCBnb2lu
-Zw0KPj4gZnJvbSA2LjEsIG9uIGlNWDhRWFAuIEkgbWFuYWdlZCB0byB0cmFjZSB0aGUgaGFuZyB0
-byBFUCBwcmltaW5nIHRocm91Z2ggYQ0KPj4gY29tYmluYXRpb24gb2YgZGVidWcgdHJhY2luZyBh
-bmQgQlVHX09OIGV4cGVyaW1lbnRzLiBTZWUgaWYgaXQgc3RhcnRzDQo+PiBzcGxhdGluIHdpdGgg
-dGhlIGJlbG93IGNoYW5nZS4NCj4+DQo+PiAtLS0tLS0tLS0tLS0tLS0tLT44LS0tLS0tLS0tLS0t
-LS0tLS0tDQo+Pg0KPj4gPkZyb20gMDkyNTk5YWI2ZjllMjA0MTJhN2NhMWViMTE4ZGQyYmU4MGNk
-MThmZiBNb24gU2VwIDE3IDAwOjAwOjAwIDIwMDENCj4+IEZyb206IEpvaG4gRXJuYmVyZyA8am9o
-bi5lcm5iZXJnQGFjdGlhLnNlPg0KPj4gRGF0ZTogTW9uLCA1IE1heSAyMDI1IDA5OjA5OjAxICsw
-MjAwDQo+PiBTdWJqZWN0OiBbUEFUQ0hdIFVTQjogY2k6IGdhZGdldDogUGFuaWMgaWYgcHJpbWlu
-ZyB3aGVuIGdhZGdldCBvZmYNCj4+DQo+PiAtLS0NCj4+ICAgZHJpdmVycy91c2IvY2hpcGlkZWEv
-dWRjLmMgfCA0ICsrKy0NCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBk
-ZWxldGlvbigtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9jaGlwaWRlYS91ZGMu
-YyBiL2RyaXZlcnMvdXNiL2NoaXBpZGVhL3VkYy5jDQo+PiBpbmRleCAyZmVhMjYzYTVlMzAuLjU0
-NGFhNGZhMmQxZCAxMDA2NDQNCj4+IC0tLSBhL2RyaXZlcnMvdXNiL2NoaXBpZGVhL3VkYy5jDQo+
-PiArKysgYi9kcml2ZXJzL3VzYi9jaGlwaWRlYS91ZGMuYw0KPj4gQEAgLTIwMyw4ICsyMDMsMTAg
-QEAgc3RhdGljIGludCBod19lcF9wcmltZShzdHJ1Y3QgY2lfaGRyYyAqY2ksIGludCBudW0sIGlu
-dCBkaXIsIGludCBpc19jdHJsKQ0KPj4NCj4+ICAgICAgaHdfd3JpdGUoY2ksIE9QX0VORFBUUFJJ
-TUUsIH4wLCBCSVQobikpOw0KPj4NCj4+IC0gICB3aGlsZSAoaHdfcmVhZChjaSwgT1BfRU5EUFRQ
-UklNRSwgQklUKG4pKSkNCj4+ICsgICB3aGlsZSAoaHdfcmVhZChjaSwgT1BfRU5EUFRQUklNRSwg
-QklUKG4pKSkgew0KPj4gICAgICAgICAgY3B1X3JlbGF4KCk7DQo+PiArICAgICAgIEJVR19PTihk
-aXIgPT0gVFggJiYgIWh3X3JlYWQoY2ksIE9QX0VORFBUQ1RSTCArIG51bSwgRU5EUFRDVFJMX1RY
-RSkpOw0KPj4gKyAgIH0NCj4+ICAgICAgaWYgKGlzX2N0cmwgJiYgZGlyID09IFJYICYmIGh3X3Jl
-YWQoY2ksIE9QX0VORFBUU0VUVVBTVEFULCBCSVQobnVtKSkpDQo+PiAgICAgICAgICByZXR1cm4g
-LUVBR0FJTjsNCj4+DQo+PiAtLS0tLS0tLS0tLS0tLS0tLT44LS0tLS0tLS0tLS0tLS0tLS0tDQo+
-Pg0KPj4gT24gdGhlIGlNWDhRWFAgeW91IG1heSBhZGRpdGlvbmFsbHkgcnVuIGludG8gYXN5Y2hy
-b25vdXMgYWJvcnRzIGFuZCBTRXJyb3INCj4+IGR1ZSB0byByZXNvdXJjZSBiZWluZyBkaXNhYmxl
-ZC4NCj4+DQo+Pj4+DQo+Pj4+IC0tLTg8LS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4+Pj4NCj4+Pj4g
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL2NoaXBpZGVhL3VkYy5jIGIvZHJpdmVycy91c2IvY2hp
-cGlkZWEvdWRjLmMNCj4+Pj4gaW5kZXggOGE5YjMxZmQ1Yzg5Li43MjMyOWE3ZWFjNGQgMTAwNjQ0
-DQo+Pj4+IC0tLSBhL2RyaXZlcnMvdXNiL2NoaXBpZGVhL3VkYy5jDQo+Pj4+ICsrKyBiL2RyaXZl
-cnMvdXNiL2NoaXBpZGVhL3VkYy5jDQo+Pj4+IEBAIC0yMzc0LDYgKzIzNzQsOSBAQCBzdGF0aWMg
-dm9pZCB1ZGNfc3VzcGVuZChzdHJ1Y3QgY2lfaGRyYyAqY2kpDQo+Pj4+ICAgICAgICAgICAqLw0K
-Pj4+PiAgICAgICAgICBpZiAoaHdfcmVhZChjaSwgT1BfRU5EUFRMSVNUQUREUiwgfjApID09IDAp
-DQo+Pj4+ICAgICAgICAgICAgICAgICAgaHdfd3JpdGUoY2ksIE9QX0VORFBUTElTVEFERFIsIH4w
-LCB+MCk7DQo+Pj4+ICsNCj4+Pj4gKyAgICAgICBpZiAoY2ktPmRyaXZlciAmJiBjaS0+dmJ1c19h
-Y3RpdmUgJiYgKGNpLT5nYWRnZXQuc3RhdGUgIT0gVVNCX1NUQVRFX1NVU1BFTkRFRCkpDQo+Pj4+
-ICsgICAgICAgICAgICAgICB1c2JfZ2FkZ2V0X2Rpc2Nvbm5lY3QoJmNpLT5nYWRnZXQpOw0KPj4+
-PiAgIH0NCj4+Pj4NCj4+Pj4gICBzdGF0aWMgdm9pZCB1ZGNfcmVzdW1lKHN0cnVjdCBjaV9oZHJj
-ICpjaSwgYm9vbCBwb3dlcl9sb3N0KQ0KPj4+PiBAQCAtMjM4NCw2ICsyMzg3LDkgQEAgc3RhdGlj
-IHZvaWQgdWRjX3Jlc3VtZShzdHJ1Y3QgY2lfaGRyYyAqY2ksIGJvb2wgcG93ZXJfbG9zdCkNCj4+
-Pj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBPVEdTQ19CU1ZJUyB8
-IE9UR1NDX0JTVklFKTsNCj4+Pj4gICAgICAgICAgICAgICAgICBpZiAoY2ktPnZidXNfYWN0aXZl
-KQ0KPj4+PiAgICAgICAgICAgICAgICAgICAgICAgICAgdXNiX2dhZGdldF92YnVzX2Rpc2Nvbm5l
-Y3QoJmNpLT5nYWRnZXQpOw0KPj4+PiArICAgICAgIH0gZWxzZSB7DQo+Pj4+ICsgICAgICAgICAg
-ICAgICBpZiAoY2ktPmRyaXZlciAmJiBjaS0+dmJ1c19hY3RpdmUpDQo+Pj4+ICsgICAgICAgICAg
-ICAgICAgICAgICAgIHVzYl9nYWRnZXRfY29ubmVjdCgmY2ktPmdhZGdldCk7DQo+Pj4+ICAgICAg
-ICAgIH0NCj4+Pj4NCj4+Pj4gICAgICAgICAgLyogUmVzdG9yZSB2YWx1ZSAwIGlmIGl0IHdhcyBz
-ZXQgZm9yIHBvd2VyIGxvc3QgY2hlY2sgKi8NCj4+Pj4NCj4+Pj4gLS0tLT44LS0tLS0tLS0tLS0t
-LS0tLS0tDQo+IA0KPiBEb2VzIGFib3ZlIGNoYW5nZSB3b3JrIGZvciB5b3U/DQoNCkkgaG9wZSB0
-byBhbGxvY2F0ZSBzb21lIHRpbWUgdG8gdGVzdCB0aGlzIGluIHRoZSBuZXh0IGZldyBkYXlzLg0K
-DQpCZXN0IHJlZ2FyZHMgLy8gSm9obiBFcm5iZXJn
+Extend the `Adapter` trait to support ACPI device identification.
+
+This mirrors the existing Open Firmware (OF) support (`of_id_table`) and
+enables Rust drivers to match and retrieve ACPI-specific device data
+when `CONFIG_ACPI` is enabled.
+
+To avoid breaking compilation, a stub implementation of `acpi_id_table()`
+is added to the Platform adapter; the full implementation will be provided
+in a subsequent patch.
+
+Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
+---
+ rust/bindings/bindings_helper.h |  1 +
+ rust/kernel/driver.rs           | 39 ++++++++++++++++++++++++++++++++-
+ rust/kernel/platform.rs         |  6 ++++-
+ 3 files changed, 44 insertions(+), 2 deletions(-)
+
+diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
+index bc494745f67b..dfb2dd500ef6 100644
+--- a/rust/bindings/bindings_helper.h
++++ b/rust/bindings/bindings_helper.h
+@@ -28,6 +28,7 @@
+  */
+ #include <linux/hrtimer_types.h>
+ 
++#include <linux/acpi.h>
+ #include <drm/drm_device.h>
+ #include <drm/drm_drv.h>
+ #include <drm/drm_file.h>
+diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
+index ec9166cedfa7..638f1d270af8 100644
+--- a/rust/kernel/driver.rs
++++ b/rust/kernel/driver.rs
+@@ -6,7 +6,7 @@
+ //! register using the [`Registration`] class.
+ 
+ use crate::error::{Error, Result};
+-use crate::{device, of, str::CStr, try_pin_init, types::Opaque, ThisModule};
++use crate::{acpi, device, of, str::CStr, try_pin_init, types::Opaque, ThisModule};
+ use core::pin::Pin;
+ use pin_init::{pin_data, pinned_drop, PinInit};
+ 
+@@ -141,6 +141,38 @@ pub trait Adapter {
+     /// The type holding driver private data about each device id supported by the driver.
+     type IdInfo: 'static;
+ 
++    /// The [`acpi::IdTable`] of the corresponding driver
++    fn acpi_id_table() -> Option<acpi::IdTable<Self::IdInfo>>;
++
++    /// Returns the driver's private data from the matching entry in the [`acpi::IdTable`], if any.
++    ///
++    /// If this returns `None`, it means there is no match with an entry in the [`acpi::IdTable`].
++    #[cfg(CONFIG_ACPI)]
++    fn acpi_id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
++        let table = Self::acpi_id_table()?;
++
++        // SAFETY:
++        // - `table` has static lifetime, hence it's valid for read,
++        // - `dev` is guaranteed to be valid while it's alive, and so is `pdev.as_ref().as_raw()`.
++        let raw_id = unsafe { bindings::acpi_match_device(table.as_ptr(), dev.as_raw()) };
++
++        if raw_id.is_null() {
++            None
++        } else {
++            // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper of `struct of_device_id` and
++            // does not add additional invariants, so it's safe to transmute.
++            let id = unsafe { &*raw_id.cast::<acpi::DeviceId>() };
++
++            Some(table.info(<acpi::DeviceId as crate::device_id::RawDeviceId>::index(id)))
++        }
++    }
++
++    #[cfg(not(CONFIG_ACPI))]
++    #[allow(missing_docs)]
++    fn acpi_id_info(_dev: &device::Device) -> Option<&'static Self::IdInfo> {
++        None
++    }
++
+     /// The [`of::IdTable`] of the corresponding driver.
+     fn of_id_table() -> Option<of::IdTable<Self::IdInfo>>;
+ 
+@@ -178,6 +210,11 @@ fn of_id_info(_dev: &device::Device) -> Option<&'static Self::IdInfo> {
+     /// If this returns `None`, it means that there is no match in any of the ID tables directly
+     /// associated with a [`device::Device`].
+     fn id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
++        let id = Self::acpi_id_info(dev);
++        if id.is_some() {
++            return id;
++        }
++
+         let id = Self::of_id_info(dev);
+         if id.is_some() {
+             return id;
+diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
+index 5b21fa517e55..5923d29a0511 100644
+--- a/rust/kernel/platform.rs
++++ b/rust/kernel/platform.rs
+@@ -5,7 +5,7 @@
+ //! C header: [`include/linux/platform_device.h`](srctree/include/linux/platform_device.h)
+ 
+ use crate::{
+-    bindings, container_of, device, driver,
++    acpi, bindings, container_of, device, driver,
+     error::{to_result, Result},
+     of,
+     prelude::*,
+@@ -94,6 +94,10 @@ impl<T: Driver + 'static> driver::Adapter for Adapter<T> {
+     fn of_id_table() -> Option<of::IdTable<Self::IdInfo>> {
+         T::OF_ID_TABLE
+     }
++
++    fn acpi_id_table() -> Option<acpi::IdTable<Self::IdInfo>> {
++        None
++    }
+ }
+ 
+ /// Declares a kernel module that exposes a single platform driver.
+-- 
+2.43.0
+
