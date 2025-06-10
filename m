@@ -1,95 +1,98 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FEF239E9B
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 15:33:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A24C517C21E;
+	Tue, 10 Jun 2025 15:33:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749569590; cv=none; b=LvFk8P7omNVcizxqFmokI5xXD1svjmFeMR7IE3wOk85GnoekZUJJYEU/1jqJkfvaxZhZVlECK1qSFn8NB1IfSSrNwvrQS/8xyJwfzNXwO2nNc9bUDW3lIkzd7GN1fWF2YSnO8sSPXA99Y9srBgrhKnqpiOAEvoFvbOtWRYvPwas=
+	t=1749569638; cv=none; b=LS2N1p61em3hgsb5dwab1iG7JdS0y4i7GccsUdQPT7fFP+JGlWfqe1wVnHxli4dGgxVn0TnQ7lEp5FXNl2pBpi7w9Sbv0Df1Skmsd0dIL9qRNPIpMSj83UG9zrJZNY7kXPVbfAFj3OxG4PUODUp3lqC8Aef+aKQPHIKfv6W10vU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749569590; c=relaxed/simple;
-	bh=bp6yjjTLV7IPhWsZQeYxGqlOtogpgQvGIcdZj1dlExU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D9UCTDewYoST9Ejv0U2ZuSdQadZTibbMyUj/RyWtQ0mK2hb+TuwCIQG/Ljl78kWXQGFUwiPmmC6n1oEd7apWb1drs2MHvKDG5B9sJ79OrbuRcJcWkkuXdtLheP0FaiKURsYn4xJLQL1x5UBG8QlfNi2OdSYdxh7eGyK5+8zoZko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=emkml6A4; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1749569638; c=relaxed/simple;
+	bh=Z0tZqVZm0c0pdMekdv7cs5FM5cbYEF/ngEMiVAIKcok=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rOhLwU38LY6q5YBW2zoghz1ZHql9jQ2Nwr9lvqzg+oyomHj9b1z7UbrGasCpfTy5w7FiyrDQ4EFI62xrM4IuwerUcEXVECSgsrM42AzVuxmXO9E5xiEVGuGO8PDgi6E3VHp/eJ6Hf3RV7bN0umyNGzhbhJ//QxZEUlE0TsuNzbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=r22VQRuR; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="emkml6A4"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5533c562608so5477224e87.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 08:33:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749569587; x=1750174387; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bp6yjjTLV7IPhWsZQeYxGqlOtogpgQvGIcdZj1dlExU=;
-        b=emkml6A4scKtYToH2UfRwmtkomcJA92cboDZo5Wbf2QUBl192QiChEA2OksFv5Uzwh
-         lyGzfbgxsJnSljo7itb3IRTHZoFbZFasBcRwuzLeVMb3KCJW4Xs2UU92aTrK7VCV2bE+
-         3qvqoINlpbyoSzKxbNbltaoJPpeedmXr6hkwLLc3PeVds3Ne63gx6vvkvIZWROKDQKFJ
-         dvhUC6h0l5XMSeD7x5PcBlt3BnfBpr5r6YEzufTmUzpA8MbkYLXYyms96r8nd4nGGe7W
-         yMrAXbhlOz3dxV9JKHx//xV7MyHtg5njqzbralDxqbKhKdw4i7TaLEKR1J/IAdISUbo1
-         V33Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749569587; x=1750174387;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bp6yjjTLV7IPhWsZQeYxGqlOtogpgQvGIcdZj1dlExU=;
-        b=VWcxb/RstFXvwSa0lG6qvEs8Lj1cpNnvbYnkxJr2+NrKJJ+3SU1g8NHXdOXVbbx+kv
-         RF8NXxbLJDGsK2CRngi9aGTOfZZeOcFOa46FxcR4K/IcCiRX3MUHEN4KLIc4cK0Ke1HN
-         XeOy3+4MRH55QHt2uOX7IJgjqQYoy3iON2JRs4H4zbFDQbsUqDclHUqcu9Bj7hR6MdEk
-         s4zQsR78zZIAg+9mV7ug6QT4S67FGA0WcUPMSeP4PjUOE6ezvQBVrAI5toMOx0CEkomK
-         Ull+SWbv4BVe1bjiV1gxUTqt3qsYR3LAQ7TkXP9JQ5x4TyHqduGDntYs9WGXToKlwNiJ
-         qoGw==
-X-Forwarded-Encrypted: i=1; AJvYcCXarUHt/nA0zmgEgyycxtKzvu/D6DgQWRXfbwjmKWpJmlQBhlbwndyKsHkVrJZQ2fY9i3gWCnfGXMC0dRA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhuvEFcwJoMsCSGGojdB/BuPVYqzqJ3K6tfHZsUq+SQAYC/EjL
-	3QNZAjQWruu8L1BV0MwpIURPjKYg1o5M7Jz0sNE3uqKFhboWjqd25RWQFnA/ltJ7NmvL0Of+neA
-	DiERjlM6ShS+Q3qQdqjDW9QUZRuhCkkK+sI395vAo4w==
-X-Gm-Gg: ASbGnct50JfMq7BAN9reJad0hstwBsAdKn35J/qQ9adPaOk5qU+9Gf4f4ME0HnpnbSq
-	MWbHmJ9Byca+1Ibi29BBen90tBWF2+BrxZfrXRGuq8CLbdJ40fAGUncgNHYVZEILGY3vYy3t4tz
-	ACt0egAMQB4gLUiLuWt0Qw5oeGkrhPH/XERXVe1iJO/Xj70Y4HX6u/6Bp7g62gq04Hpp2EEwk3
-X-Google-Smtp-Source: AGHT+IHGiKRnkaIlNk4u6LKClD4MxD98f9NAtcNzrwse7wwO6WLcbYkMf2R+94+P+5WFQq+X5DJHtk2xMP667cpSuUc=
-X-Received: by 2002:a05:6512:1320:b0:553:51db:69c3 with SMTP id
- 2adb3069b0e04-5539c1f9ebcmr6861e87.48.1749569586725; Tue, 10 Jun 2025
- 08:33:06 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="r22VQRuR"
+Received: from romank-3650.corp.microsoft.com (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 184C72113A7A;
+	Tue, 10 Jun 2025 08:33:56 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 184C72113A7A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1749569636;
+	bh=EXF5QOvj3gLvyZ3xIYnh29AFDo83SVY+Soxt4pZHHNQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=r22VQRuRofvzYBhMQxeZbt4tOnDGGJJjNls5cYs0WMTmVuha6Njl+ivrnjfGOidqb
+	 LglGuAydHfvm88OFygB5nrlVYtVzDJkSCFCF296b15Sn2o7weVqv/Xn+ZA/v84gxmN
+	 f+YjrFtQuscToufIVhPFlUSoXrlZuqR8128DNlrY=
+From: Roman Kisel <romank@linux.microsoft.com>
+To: arnd@kernel.org
+Cc: arnd@arndb.de,
+	decui@microsoft.com,
+	haiyangz@microsoft.com,
+	kys@microsoft.com,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	mhklinux@outlook.com,
+	nunodasneves@linux.microsoft.com,
+	romank@linux.microsoft.com,
+	ssengar@linux.microsoft.com,
+	wei.liu@kernel.org
+Subject: [PATCH] hv: add CONFIG_EFI dependency
+Date: Tue, 10 Jun 2025 08:33:54 -0700
+Message-ID: <20250610153354.2780-1-romank@linux.microsoft.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250610091810.2638058-1-arnd@kernel.org>
+References: <20250610091810.2638058-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610-gpiochip-set-rv-pinctrl-intel-v1-0-d7a773ff864e@linaro.org>
- <PH7PR11MB845555F9AA0823B53EFD48BF9A6AA@PH7PR11MB8455.namprd11.prod.outlook.com>
-In-Reply-To: <PH7PR11MB845555F9AA0823B53EFD48BF9A6AA@PH7PR11MB8455.namprd11.prod.outlook.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 10 Jun 2025 17:32:53 +0200
-X-Gm-Features: AX0GCFs4hmh1CGl7MqLsRMX92XhvhaRT6oxbXwW1TT6_s3aNJC4HGWUWBfcKYDk
-Message-ID: <CAMRc=MepPni55s9mpCkZ_XrWtT3hOhSTN_QTzpNr_Qzk-YKP7Q@mail.gmail.com>
-Subject: Re: [PATCH 0/4] pinctrl: intel: use new GPIO line value setter callbacks
-To: "Miao, Jun" <jun.miao@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 10, 2025 at 5:30=E2=80=AFPM Miao, Jun <jun.miao@intel.com> wrot=
-e:
+> Selecting SYSFB causes a link failure on arm64 kernels with EFI disabled:
 >
+> ld.lld-21: error: undefined symbol: screen_info
+> >>> referenced by sysfb.c
+> >>>               drivers/firmware/sysfb.o:(sysfb_parent_dev) in archive vmlinux.a
+> >>> referenced by sysfb.c
 >
-> Excuse me,
-> I have a problem
-> echo 631 > /sys/class/gpio/export
-> echo rising > /sys/class/gpio/gpio631/edge
-> [18090.472396] emmitsburg-pinctrl INTC1071:00: pin 119 cannot be used as =
-IRQ
-> [18090.472408] genirq: Setting trigger mode 1 for irq 245 failed (intel_g=
-pio_irq_type+0x0/0x130)
+> The problem is that sysfb works on the global 'screen_info' structure, which
+> is provided by the firmware interface, either the generic EFI code or the
+> x86 BIOS startup.
 >
-> How to set the gpio631 as IRQ mode ?
+> Assuming that HV always boots Linux using UEFI, the dependency also makes
+> logical sense, since otherwise it is impossible to boot a guest.
 >
 
-Is this a regression caused by this series?
+Hyper-V as of recent can boot off DeviceTree with the direct kernel boot, no UEFI
+is required (examples would be OpenVMM and the OpenHCL paravisor on arm64).
 
-Bart
+Being no expert in Kconfig unfortunately... If another solution is possible to
+find given the timing constraints (link errors can't wait iiuc) that would be
+great :)
+
+Could something like "select EFI if SYSFB" work?
+
+> Fixes: 96959283a58d ("Drivers: hv: Always select CONFIG_SYSFB for Hyper-V guests")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/hv/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+> index 8622d0733723..07db5e9a00f9 100644
+> --- a/drivers/hv/Kconfig
+> +++ b/drivers/hv/Kconfig
+> @@ -6,6 +6,7 @@ config HYPERV
+>  	tristate "Microsoft Hyper-V client drivers"
+>  	depends on (X86 && X86_LOCAL_APIC && HYPERVISOR_GUEST) \
+>  		|| (ARM64 && !CPU_BIG_ENDIAN && HAVE_ARM_SMCCC_DISCOVERY)
+> +	depends on EFI
+>  	select PARAVIRT
+>  	select X86_HV_CALLBACK_VECTOR if X86
+>  	select OF_EARLY_FLATTREE if OF
+> --
+> 2.39.5
