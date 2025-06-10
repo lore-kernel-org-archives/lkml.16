@@ -1,95 +1,87 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 774B0282FA
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 21:28:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D78282FA;
+	Tue, 10 Jun 2025 21:28:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749590919; cv=none; b=W0tkZsptdsplkt6cvVr5gIGMnTKsW/HLXRNBAGb/mNe3KOldYkia50Erz8tN/60BdX3QMZvZ/VlllIaEB+m/qOA2RbUO2qWJn09xlHXz/4LgJV5BJEHeeVx9W8uIPoAsXgrxqZt89vrx6eYj6omRBiElfX5gwBMEVeVZtNjjxIc=
+	t=1749590938; cv=none; b=qfkC4D0kF3JmZm2J6w6WhdcIkJ3SrgF2vPkAbBPGbdesKU1MVmns3ChwkFN32USD92XaSNFDqZITixHp8ZAk+yhVAnI1CnTSUN+gzyoRjdVNsdu6ucAkOvf8rqd8Csao39bkJB3RZNXsDkOzqwtqM1Z5CcVvqcc+wYJH1c/h/WE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749590919; c=relaxed/simple;
-	bh=C2zctQp0aYvJjRGYTmpWS778bIthItUYsYerUUajbSk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Y3nuGhOX4QFUnFa8AWYM265xIeA5MHnF84vKv19dJdAKPCfujOwo5Dl16C71mz0dG5lorMCZ147Yb03XOzwyeNxA8cmLD8Ci0tT2D8HBOTebNEFEdN9ODmEMIEBnKd/SmXMm/IiR94h0EvNkCKRK9qJy8cZOsYCnGJR7HqETvpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=tkGM+2MY; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1749590938; c=relaxed/simple;
+	bh=4jlHEBvCUIKK0y1nievx0icWbWSW6pRbq6+2yts7pig=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Olijoxgslu5ERvYBlLIhzR+neNvTG+hgiTbFlITqZ0ouo/CUxWKHXX1jHLViQQhAlDcwvvvFG5kQfP1qbjQFsWqE1FxBjfcgIZH//1uq8aiEyvdSMmz8TXNemPDVOlX11sT5Lcy2kz60BiWazDnl7d9aMrK4RN9z9ZfUxcggRtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=snJI6iMJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="tkGM+2MY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:
-	Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References;
-	bh=Awpi5GpyOLDB1Nt8+DeBTohsa+vKyjBC3GHy2DGNNYE=; b=tkGM+2MYM6zqsua3VbEBs0B9wM
-	5yEPvrg8fK5rC8+Iu7nwoxeeeZXMCK6l1FbkO37Xkgb1ZUeBNjb4rnkFzmCz021lQpjvix1P/9pe+
-	M7p4rE4S1XcPRjEXvFyOXNRULT44QYOKgNVJLjHWDJ6jNOJV4Ky99iKlbpf5QpZve0YpjbCVUOrAl
-	d6Pm3FpKFvDTZtgEENTvVIMjNxi5EmnaPxaQGKDP6tcqmjvlInTAZYDy64TCYrEqS5B0sLxP/BLQG
-	m8yjYN6YgibOTHMyxrlbaobIXinZSkMeyV78F5h6yvFTOrT6G1tMb91NkkEkGQ1mnEAOkjT309lBL
-	LhanHnDw==;
-Received: from i53875b1c.versanet.de ([83.135.91.28] helo=localhost.localdomain)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uP6Vs-0007Jb-My; Tue, 10 Jun 2025 23:28:08 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: hjc@rock-chips.com,
-	heiko@sntech.de,
-	andy.yan@rock-chips.com
-Cc: maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="snJI6iMJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54B6BC4CEED;
+	Tue, 10 Jun 2025 21:28:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749590937;
+	bh=4jlHEBvCUIKK0y1nievx0icWbWSW6pRbq6+2yts7pig=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=snJI6iMJDN4bQD8zSpaA4srJ/clNCmrQazao9Bi2klr8JjgDkRZwN1ZOaodZETn5T
+	 Q+NrCCTeRp7i7uIUncLNHmAYwI7DjlqtD3/nfylShiplY1jbkx9dlCNeNtNSZpzbud
+	 1XOddvXvmc+ss2xROvLjvtIrDFQXsySbj9TOuQSFfVMr5BSzBbXM2o+/4SvqyIIpzU
+	 82HRKB/udazzucyDOqQRd2uhNupFnef8fh7MhXzjE9WgeBLvzb5xBe9lF6E4sC3SYv
+	 Mn3NX38bXQvoMo+uSpcJmqOfWGG2NS7bTrZZDkPZKybsd/z0kDuyMBsEEac5NNHd2z
+	 q/F0J+HOCQHow==
+Date: Tue, 10 Jun 2025 14:28:55 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Julian Vetter <julian@outer-limits.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
+	Kan <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/rockchip: vop2: fail cleanly if missing a primary plane for a video-port
-Date: Tue, 10 Jun 2025 23:27:48 +0200
-Message-ID: <20250610212748.1062375-1-heiko@sntech.de>
-X-Mailer: git-send-email 2.47.2
+Subject: Re: [PATCH] tools: Remove the check for packed_struct.h header
+Message-ID: <aEijl0Xdk9NRJhdN@google.com>
+References: <20250603133635.3685397-1-julian@outer-limits.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250603133635.3685397-1-julian@outer-limits.org>
 
-Each window of a vop2 is usable by a specific set of video ports, so while
-binding the vop2, we look through the list of available windows trying to
-find one designated as primary-plane and usable by that specific port.
+Hello,
 
-The code later wants to use drm_crtc_init_with_planes with that found
-primary plane, but nothing has checked so far if a primary plane was
-actually found.
+On Tue, Jun 03, 2025 at 03:36:35PM +0200, Julian Vetter wrote:
+> The functions in the header 'unaligned/packed_struct.h' were deprecated,
+> and not used anymore, thus the header was removed. So, we can also
+> remove the check in 'check-headers.sh'.
 
-For whatever reason, the rk3576 vp2 does not have a usable primary window
-(if vp0 is also in use) which brought the issue to light and ended in a
-null-pointer dereference further down.
+Can you please provide the commit ID that removed the header?
 
-As we expect a primary-plane to exist for a video-port, add a check at
-the end of the window-iteration and fail probing if none was found.
+Thanks,
+Namhyung
 
-Fixes: 604be85547ce ("drm/rockchip: Add VOP2 driver")
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
----
- drivers/gpu/drm/rockchip/rockchip_drm_vop2.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
-index 7ddf311b38c6..a8dc2e55812a 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
-@@ -2425,6 +2425,10 @@ static int vop2_create_crtcs(struct vop2 *vop2)
- 				break;
- 			}
- 		}
-+
-+		if (!vp->primary_plane)
-+			return dev_err_probe(drm->dev, -ENOENT,
-+					     "no primary plane for vp %d\n", i);
- 	}
- 
- 	/* Register all unused window as overlay plane */
--- 
-2.47.2
-
+> 
+> Signed-off-by: Julian Vetter <julian@outer-limits.org>
+> ---
+>  tools/perf/check-headers.sh | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+> index e9fab20e9330..cee372312974 100755
+> --- a/tools/perf/check-headers.sh
+> +++ b/tools/perf/check-headers.sh
+> @@ -188,7 +188,7 @@ check arch/x86/lib/memcpy_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/ex
+>  check arch/x86/lib/memset_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/export.h>" -I"^SYM_FUNC_START\(_LOCAL\)*(memset_\(erms\|orig\))"'
+>  check arch/x86/include/asm/amd/ibs.h  '-I "^#include [<\"]\(asm/\)*msr-index.h"'
+>  check arch/arm64/include/asm/cputype.h '-I "^#include [<\"]\(asm/\)*sysreg.h"'
+> -check include/linux/unaligned.h '-I "^#include <linux/unaligned/packed_struct.h>" -I "^#include <asm/byteorder.h>" -I "^#pragma GCC diagnostic"'
+> +check include/linux/unaligned.h '-I "^#include <asm/byteorder.h>" -I "^#pragma GCC diagnostic"'
+>  check include/uapi/asm-generic/mman.h '-I "^#include <\(uapi/\)*asm-generic/mman-common\(-tools\)*.h>"'
+>  check include/uapi/linux/mman.h       '-I "^#include <\(uapi/\)*asm/mman.h>"'
+>  check include/linux/build_bug.h       '-I "^#\(ifndef\|endif\)\( \/\/\)* static_assert$"'
+> -- 
+> 2.34.1
+> 
