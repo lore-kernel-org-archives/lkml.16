@@ -1,187 +1,348 @@
-Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazon11010064.outbound.protection.outlook.com [52.101.229.64])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B30EC4;
-	Tue, 10 Jun 2025 07:46:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.229.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749541597; cv=fail; b=WHVNnmR8AT+0qva+UXddsZzcs2BvHWw1BrLkQFJtc0OAoQ0nnfTLvo05bPxu6Z25UPdPU3pko4eqXU1Xyjq4320wEJyoLxV09Mj+zq4uNALypCliAaPO45QToiz0xY526lBJvR4rk7WS7kPlb7K1fbSCyJtO6P1SD+c1+gNe1gk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749541597; c=relaxed/simple;
-	bh=DDhQrrF90E3dxjN+1Cd8Y5oZrWAh/e0fSR6BMmke6SA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=MuwIV4a9jGKj9Fhisykaclvix9Yo6lc/vqNGPLVwPBJsh1X/wXHZuqFYzSoUP9xg1Hn9Px4ZdGS7eNVjFJMCTCjjj8KDcEavsXDb2j4h8pdLe61dh8wdjefwa+PRj6sRT3JK/I8KkT/gM2fV6MR+Xb0GXhtrlgitGRNaNs6VX24=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=Dlp4z0Oi; arc=fail smtp.client-ip=52.101.229.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C214627FD7E
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 07:46:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749541601; cv=none; b=K5HHWfOETAmkbCct5VhBPu9ICciZxZZw7aOPFj2LeUMCmNHsiqEwR6/XBS0CXgOwtH4pLvV8c/NThRSrD1QA0Nk+8rTsbDPrWbIYB7mwH8bZWOXNvuxT1e+dxh5ukMfJU/mP1xUEA1dXL5mogEU9uXPKDm5EfDlQohdORKTnsfw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749541601; c=relaxed/simple;
+	bh=6/THYvgLbES0YhhJZPQnRn7c/QwZTodoYVo1PYBsJvE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LuoocwrWwXocr3492nfhle01TKBLFNtcyq8/ohwMcwD2WbrYgmazgNsfSpf1POGDMlIkcdd6ZAr7EH+Y3RNqpLcUtYC5eBbBkWmx0hbGFFEth04F6XAB23W8pPiPSl0k8zmSthnp9cJuPZRF7tHlTjZ7BpVHPcOVC8glp20H6UE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GnEHwjy4; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="Dlp4z0Oi"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Mhz2KzmKeNaliNUYMPGwr4fkuGbtSDx7BrE6rfKBVNBgh0HnjxJrhX6TKZhCNhAwwdkY4hGYPvWkNSw6MBWqDV9vTx8eAtS5x+PUrpBnScoiU3QlshjzqyqlhWtQGknqPaAuHA/9x5fhBCN1HkJZYTCKewzu6OO/ClVzw+DqqVN4DFIfr08REztO3B6S4G8EN9bdZUvYW+bbcSNwp1JEThE569OF2iD0UhMEVGQtjx+yodeljsHYRHj5kgtVCUaN5HkLOh+6bevhDi+mNCGkuu6Yk2LnpRt9SHos0PIHB3vYMSbFWoYQuaRR3aTu6/MNWxoUaYT/GKOfBlBkg5XS0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wmOYmH5RQHLL+jjqgOZU45/J1PAzzpNxbtDksaV2UXk=;
- b=DGwaruIObQAaHvIBL9FTUdD5WjexRaKkO3LOHSfNv0p6Mft9mkllsS8wbIGnAl4kg2TZAXrSHjR35rLikKX366V0EKzn5oktdPfJMk7IMHuz1nGBW0a9RsCSDm4xZVx57mjOPJ7cNlDcVMBVQeITvhu6B7reaes343L6oOVWOI9qrUpsDGUCrXbz14MiCZkz8sifEYBh5qfW56xtpKnzOdTtrCjqryTQPKFjakqsQ2Wo/S35f2/znBWwzPnTSVNNyuev9/hb5FPaVD5zJL2Kz4lcf97aMGIiB2AuPPS2XfPvuSsxZCEbUMnIGLTpUXAI4hrWSVQGhGcTg/ZZl8Lhlg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wmOYmH5RQHLL+jjqgOZU45/J1PAzzpNxbtDksaV2UXk=;
- b=Dlp4z0Oia0IvCbPST5HdFsebWPRJc5dwxwjTaZSskAoYEF9cectMS6kbhG0d5nJR5nLrIjOClNnJnNY3BepeP8h1NJv7bNVtbt0Vo9CaEpaEN8yapML1UrmFR0eTJczxayIoMF+AV/Xb2wzgnJRKrhKRJW7DystNpCsldKHYTNM=
-Received: from OSCPR01MB14647.jpnprd01.prod.outlook.com (2603:1096:604:3a0::6)
- by TYCPR01MB10808.jpnprd01.prod.outlook.com (2603:1096:400:295::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.30; Tue, 10 Jun
- 2025 07:46:29 +0000
-Received: from OSCPR01MB14647.jpnprd01.prod.outlook.com
- ([fe80::40e:e798:1aea:ca82]) by OSCPR01MB14647.jpnprd01.prod.outlook.com
- ([fe80::40e:e798:1aea:ca82%4]) with mapi id 15.20.8813.022; Tue, 10 Jun 2025
- 07:46:23 +0000
-From: John Madieu <john.madieu.xa@bp.renesas.com>
-To: Jakub Kicinski <kuba@kernel.org>
-CC: Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>, "davem@davemloft.net"
-	<davem@davemloft.net>, "edumazet@google.com" <edumazet@google.com>,
-	"pabeni@redhat.com" <pabeni@redhat.com>, "robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
-	<conor+dt@kernel.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>,
-	"magnus.damm@gmail.com" <magnus.damm@gmail.com>, Biju Das
-	<biju.das.jz@bp.renesas.com>, "john.madieu@gmail.com"
-	<john.madieu@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 2/4] dt-bindings: net: renesas-gbeth: Add support for
- RZ/G3E (R9A09G047) SoC
-Thread-Topic: [PATCH 2/4] dt-bindings: net: renesas-gbeth: Add support for
- RZ/G3E (R9A09G047) SoC
-Thread-Index: AQHb1R1BfHFcHLJi6UmVzaLkmUeX27P6/IgAgAEQTPA=
-Date: Tue, 10 Jun 2025 07:46:23 +0000
-Message-ID:
- <OSCPR01MB146478CA8317CDBC8BFE5077DFF6AA@OSCPR01MB14647.jpnprd01.prod.outlook.com>
-References: <20250604065200.163778-1-john.madieu.xa@bp.renesas.com>
-	<20250604065200.163778-3-john.madieu.xa@bp.renesas.com>
- <20250609083008.0157fe47@kernel.org>
-In-Reply-To: <20250609083008.0157fe47@kernel.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: OSCPR01MB14647:EE_|TYCPR01MB10808:EE_
-x-ms-office365-filtering-correlation-id: 90b5a89b-1b77-4050-e655-08dda7f2e5db
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|376014|7416014|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?kTRlhKNdtzea5/7uVesBTjSuLQLqoEO+0qMdgsgkXCdN5I9cTdn2gNGEzu/Q?=
- =?us-ascii?Q?mpu4scJVvZGfC92TdQlnyeHEBo6nmd6djZwyQbu7ht676+YB0BKlCxa9BI2x?=
- =?us-ascii?Q?XSZfE19x6FclTYQB5mGvVBpZ/fhHpSP5Fw1hRMR230zA7RL/HVeTYagLnYcA?=
- =?us-ascii?Q?meyQ0A+9z11DULj6/G5LFLFtSMB2LSpMd21h2yfWFM0n41cVga3ZWuUmZnSv?=
- =?us-ascii?Q?op/Lxgr3C2JXMJJijMdoa4MfmWNbiXxB20xOSHkLH6O72rjsOLd1Esnsynro?=
- =?us-ascii?Q?o4K06jHnwAUbn1c4Dq+9PKKGiYiD+mQR2qX3SzodpuljdkfdaBsWmbSzRo9F?=
- =?us-ascii?Q?aUNBywVJbI5B5pdGo995ObiiMSxXm3Jf7JtSgpHHpO9x5t5KGvEvBLzyt0a7?=
- =?us-ascii?Q?VSklIESuCjCPXgB6k8CLcBmTziNk2PtS+iy2IDYkmbAsTi0nyAfRqjUfziuo?=
- =?us-ascii?Q?3gFf0CbyH9ugXBunHcacYt7LQYni8Ehcc9/QoStywzXl7vUBdfa74lwWxogZ?=
- =?us-ascii?Q?GHH7K7wXbexjRPSYMWXkQeRaKjsjVsJF3Em9e6A7tIbjEteCofoXYSkZH2SZ?=
- =?us-ascii?Q?88yJlAR76j4m7OXc3QdfPy7DIJl7I2Ss2IA46o6XmXK4dQDJo+adDNwFjLi+?=
- =?us-ascii?Q?72vgO3nk882bGRqJYB+PJjaGx+uiYJVffA/S1o3EfZZDjCj4UFr8S2MS8ByS?=
- =?us-ascii?Q?weB9rzqSEGxNdCD6AJQHPCXbnoewQa/0SYK36M+LLxu7lA/+Bj0GwahQTzKG?=
- =?us-ascii?Q?JsKPn5516TzOH+B7+TQgp+Rh+38JOL57pKvoi/95D8gXG+8VUvV1EokkXsT+?=
- =?us-ascii?Q?cf1qfvbGLyF8gXs2QuNXoDi2xyufMPacZZb7woY+2WLpAK3CHq1N7/T2c4T3?=
- =?us-ascii?Q?YRJfm+BpIiAmSp5sM9G8druz1pDSNaYr+UHlU4rHqTCGum8qolsFJ7HGpHkC?=
- =?us-ascii?Q?pcyJrEnF3KsoElNv9UvKBudfJr2FnodCmprN2jsa9u/yqGcBS+OJ5TSMafnQ?=
- =?us-ascii?Q?gBaeTzscTMkgCTLSV7cz1dkPIuUy3HgOzqXA6U2XqC8QnamubqktsDTFvu3q?=
- =?us-ascii?Q?9BiO6qrIMIL1QUzqdXpsZvEW8TgsCqpx+qVW2v5FDcTPs8BrMdVNYByQ28tJ?=
- =?us-ascii?Q?HA49tGWy2GOqiX1JBV/6foOyLzS2rviU4xrWnQr1tyMaVl6ABLhUC6hjAjpU?=
- =?us-ascii?Q?5p8PJPBTdHVCloq+qROFrrT2iOKZuFjLww4JooTxnrWQljWcDlkt9IgO0Z2Q?=
- =?us-ascii?Q?//cg1uXbE/aJYDy39cgyYreuNV5kaH3NIkCWoY5qGJIRUg0u0Hoc6Ckq8I1l?=
- =?us-ascii?Q?GHIPQFunP9blDnSWrHi/V8NS1GbKZ7/pM1wMf2BUIfrvgIgCjSEJbqcYmzY1?=
- =?us-ascii?Q?3vhhuEWBATmHPXj/Bqzv90uW6HR5tz/IDENfzZLsK9OAkQ2rMXcFQfAo++uV?=
- =?us-ascii?Q?gdHrCgXCzz0wkrhEkL4vmkQdZxsrLNTVMwTVJd3rTEOTNWgaM40k8YZCV0kt?=
- =?us-ascii?Q?RO1nkTQGgWpyVdw=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSCPR01MB14647.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?RGQYa+UymkIGEi5MqrIssGwi23UGPp3coYxyMs8LdSm1WSAggRN9DKvLXiIz?=
- =?us-ascii?Q?zKCSTUwIePtO73xUmDs58Y+G5dHxZWdBGg4AIxzKPhA3j2R4nF/pGNkwkeZq?=
- =?us-ascii?Q?k0fG4E60Ln4fQeCKKQrJxF2uoSrKwJW6z0jdZ8/MlTKXtF569BrSNRPsFRNj?=
- =?us-ascii?Q?XyIl+NYbGDKcRExhVZjkPLnToFdGK05hwnrtlaIm/ArzsbKpgpg6txXX7GaA?=
- =?us-ascii?Q?l/A5vvxhYMFqMspShz07A3HxDZxmEXoQXgQJJb4Sp4CTh4Uf536vPgqTh8l2?=
- =?us-ascii?Q?ybX/M137DedWzzvpEEeqzdV+32XHZkKhFkLhcB4Yg/0ZnqNi3nOga2OjJAP9?=
- =?us-ascii?Q?BNRLr6k/euXQZv0Tbnu+qTCmESB5oJLvwZ+vPx7AQGii70B7Ayu0bK0kAMMU?=
- =?us-ascii?Q?IZKu/heP82VtYJFaGNJiS+e2uLK7+UpqLsGZF3GaoUpJ9Iyud4MoY/bAeVeM?=
- =?us-ascii?Q?fXStNdCTJ/WR+HwM61HAD2j2GZ3gNLH6twFFqUXSNty4FWQ1r5OhbSGiNiAq?=
- =?us-ascii?Q?lescCEI8ENCnzByyKZwYLa8iQlJsPNKQUXh2wY+/VSV87X5rU+GH5jjGiq9M?=
- =?us-ascii?Q?VOzoah4IM6cri4HvRMWGCGITcc6rV5n0wD2TRbZAnE5uJku2ssXthbWcl+HN?=
- =?us-ascii?Q?wt5UMBde0PZKc+T+AuT2Qmi8o2h4jEe78biIrqqtwowRBOPKyoMa8RlFwU22?=
- =?us-ascii?Q?zSgYFQ3/b3TJPHyXSCSEpWiduaRIrVsLzdABPLhZfOQt5uWjRe61V3QcYCDa?=
- =?us-ascii?Q?l9R7m3INVyU2od8rSzn/XPG61l8wkMEbeagZblqh+TvMX3IHGsThf8e3wDiU?=
- =?us-ascii?Q?cNDOtiW8XsJvS+azG3QoB0ZO+X3cCCRQypL/XmCdNO3uNF2kEJxDVHtceT/8?=
- =?us-ascii?Q?DI3rIJPw7cUx1x8JI/PhXRo79TtrjZmtTY8Zrwg0Ohim1I9GD9+GPe00UmDY?=
- =?us-ascii?Q?/S8aTrujh1jBA4kZdN+9by1MJICguzCHUkXetAvggb0eOxW5T7Bke1r6gaff?=
- =?us-ascii?Q?/Gat4RNUYUuj4dSoJaGg3Dcz+erSoqUi+nL11c29H+FB3pInGfu+4aqasK59?=
- =?us-ascii?Q?GLhgkgbj5Xkx1VF7JZQ7RYrF1Omqph2H5TO8sJ6aWXzMOmf8EhrJhmiiiyar?=
- =?us-ascii?Q?Za/3eJ62fNMN1WmiXayyg4ZYs4b4byUi/17xtZDLDYRYuqWxZVkGp+M5YbLb?=
- =?us-ascii?Q?0Zsviu/WAzTlH2A7Ilz0qQpfG4dmTf8GykhpqDFfjzv0AcVn7rs2Iz7e5EaL?=
- =?us-ascii?Q?GpsngjOAmWrZxQeMiudhCICEgEYrKtZSSeFpJIcSgKiNmf/pYsXWH9NjJn71?=
- =?us-ascii?Q?MXnUc0VZ+tSQUsm/gO+K3st8v8qkALzfaHqIS9UiixtkCNr6Eao0O7fFNqgR?=
- =?us-ascii?Q?uN1mdHFOtRm/7sbE4PFJ4oEs1g6ddnyrn4D1n9f2eJy8ICNw/+XnaiYaOJ2+?=
- =?us-ascii?Q?yVAz8YPLCCC5402hSC43x97/Lcks9lUqmlDIBCiWcfstWKyyqONkQ8zl/7rb?=
- =?us-ascii?Q?nRtzfNuzi2B6+3O/uTXnq3Fa4YRlN3Rjhfcng+fo/pqSEyTScri7JRuPXVAw?=
- =?us-ascii?Q?YceLN3Gr8n7aIMsnQjyQW8NciClN9wu627EUiTQaUMtQS2P/3CUyBsgMP3bl?=
- =?us-ascii?Q?xA=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GnEHwjy4"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 559LpGNK009897
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 07:46:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	LkmLQstAxmaDWYQl0rijYwctWd0n5xL/jDxvnCy/h8w=; b=GnEHwjy42NF6FOZO
+	A/qWXFNCjG6zuEJF5XimW/InL2sV6f4qvX3x4oBCn12sJsjVzA6GMPQmVVhRoDxn
+	8/YOSUtRucmUfXVTQ/+c0QH/EHh0rubDQ+8214WVoFXiMe37mefrCE1cGarAaC/v
+	p2aCiWtWTaLKuxXiZmF13jw06X+xR7diuKS2fiW+zWZpgFmGvCiX78Yao1cNVAfB
+	fY+dfjSIVdBijTnXsxbiuYFbgfHrVacfilR699yZ3QPX5IRMplwX5PnzzWpn1R0h
+	1Jj7HqEYPenwwyG5H+o236VpXYW/UD3qODzx6C0g9V1CEqR5pIGb3cYGafZ1eEbu
+	HB1a6A==
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474d120nmb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 07:46:37 +0000 (GMT)
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-235842baba4so44083545ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 00:46:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749541596; x=1750146396;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LkmLQstAxmaDWYQl0rijYwctWd0n5xL/jDxvnCy/h8w=;
+        b=pvFv0/k0nP1ctPiKrXuf/iOXLZrkyFJ65ctLkD5El0TPQgTw/DDnySw5sz5OqXa90v
+         ic/lrRBDotJWNO+h7oRkikMWB3ifDERBAOqbEFTLkS4eb5EeAptOb1oulCiub+lFFT8L
+         E3mgxGJlep8pDy3Ixnz/ftW4z9tjN7uhhbv9Mrg5AwjGteazsiu1P5a6LO1E1HS0LjcA
+         vadnnhGTwf4G/J1vyqiam7yxYNzVzYAKm7GfjhQitvIPv/mzqb5FKMWbaKwN9bA7H4eh
+         VxdQJyEH9erig9x/HWzyWn2ldDKCaAL4WXCLpCOcdeWgXnLbbQfn1Hb0uRXrkFvzqm6R
+         iMFA==
+X-Forwarded-Encrypted: i=1; AJvYcCUB6yEb4XKvYg1j1pqkmoQ9JRLQYsb6ehiAeTO09Pc82eChWe1bJlBUEVgsWYZPJkoWQjRhqJ0pjCM1Pnw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3RTD7Gt5/99QRIazKN4u9QKzpyPMcUaS8Aw3i1E0j3DUgJJC4
+	DChAC7MTMPfbySGlmyz8lxf2jWVkZ7HeW0PENfvD90mOcYRzZ5S0+ly2UEJBzvmNzSfSu7uYPW0
+	QSBYou3BSADnW7Z4kvoAkD+jC1YJexj7m+xFkTZnFyh4jCz+8+8DfYque2pJf+FLdUl8=
+X-Gm-Gg: ASbGncsIYfvmCvxhiHOQojwrfpUq/JYXkbQWU2vWroSSGJGF6syAaIs/1epUpvKVjhB
+	qcwhmzufTvZ/ZUlfQkpMe/p5JUip3j4NXsnW803MUOsqWWZCR0/Z5T2o0f39L/p+eg0Z808wP0q
+	MBfScRbKs0A81h58eKnh1hE0z867wPgQ3hq2B72ER53jOgcYSOmBa+Sgyj63n8P3eKAszZjbGZK
+	PqPTHgjRkJgllIii/ZTkd7H3hDmAT1rlQBbVbf+hORIymYr7tCE48rQdbfoBNzLvfc4oexj0dHL
+	dPvIM7Y5bgLYZ4axTkfrA3MrUcz3+8WW744vl2wMeM97w5wzLCY7UrAtL8iEohc=
+X-Received: by 2002:a17:902:ce88:b0:235:f45f:ed49 with SMTP id d9443c01a7336-236383677camr24638435ad.33.1749541596492;
+        Tue, 10 Jun 2025 00:46:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF9ioJqWJjAW3OBxKY8Q3keXw9lPemyCTPatvYkEI9nkTwJZxVY8u4zpkiMNnh4ZOWVzQ758w==
+X-Received: by 2002:a17:902:ce88:b0:235:f45f:ed49 with SMTP id d9443c01a7336-236383677camr24638175ad.33.1749541596052;
+        Tue, 10 Jun 2025 00:46:36 -0700 (PDT)
+Received: from [10.152.199.23] ([202.46.23.19])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603078116sm65678165ad.19.2025.06.10.00.46.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Jun 2025 00:46:35 -0700 (PDT)
+Message-ID: <c2d138ba-5b08-4daa-95b3-e1f95f05938d@oss.qualcomm.com>
+Date: Tue, 10 Jun 2025 13:16:30 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OSCPR01MB14647.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 90b5a89b-1b77-4050-e655-08dda7f2e5db
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jun 2025 07:46:23.6666
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lmOXRS2FRQ17Vus5ebaHGdqZ0EHM6ilxdQttRRQ60qUhnBcEOPoDxvNeLhqEZE2ed+1OUNv8EwMEqtUS0mcs1tmrQ/haJpm4NCQ915XxFd8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB10808
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] wifi: ath12k: Avoid CPU busy-wait by handling VDEV_STAT
+ and BCN_STAT
+To: bjorn.andersson@oss.qualcomm.com, Jeff Johnson <jjohnson@kernel.org>,
+        Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>,
+        Mahendran P <quic_mahep@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org,
+        Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+        linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20250609-ath12k-fw-stats-done-v1-1-2b3624656697@oss.qualcomm.com>
+Content-Language: en-US
+From: Rameshkumar Sundaram <rameshkumar.sundaram@oss.qualcomm.com>
+In-Reply-To: <20250609-ath12k-fw-stats-done-v1-1-2b3624656697@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: jD_ZbsUn2zNUbIr24nXCXPpzytJPHro4
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEwMDA1OCBTYWx0ZWRfX95Q2HX0M3kfS
+ Qx5rDs4EizIU9ONINVm78VZC8qRSHpyUNz6gwLuazwJS99QsmoVm8daCSuJVUiqNsUYYXWBXia4
+ uTuLAc7DBU0T80bb3VwMjmxWyyO9Vj2VIQM7S9B9vjbLUKrYydAVv2RjflfpNrRTzzwQXW2nwkL
+ odm5HSmhc2QKR0lqOrNHeP/tWsjVkbClmAlNhWxxQABE+h7UOAto6mL0zt9HJPm7ATEIo/U/Kci
+ lUiPArGNOK3I5XDwXwV7Meem/q/COpJP6qX8P9ZFzBXzjFDGv9nDTfRhNC078O0/7GynEx5aRus
+ 6/b2ChLqDBQEpx44FIkEdXHaHqKP+UV8k3tzzbSTclCRouGnXDmShAKEaqIqyhfYa6xIteWabsP
+ 58NYEhcridDwK/lFFi39VMCuIXONheCpq64WIL2TQJfnCG+uGLOOOsweROsm9IkmOMz1UduY
+X-Authority-Analysis: v=2.4 cv=GYkXnRXL c=1 sm=1 tr=0 ts=6847e2dd cx=c_pps
+ a=IZJwPbhc+fLeJZngyXXI0A==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=6rQvm6eimZqQVVFLZJ0A:9
+ a=QEXdDO2ut3YA:10 a=uG9DUKGECoFWVXl0Dc02:22
+X-Proofpoint-ORIG-GUID: jD_ZbsUn2zNUbIr24nXCXPpzytJPHro4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-10_02,2025-06-09_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 bulkscore=0
+ impostorscore=0 clxscore=1011 malwarescore=0 priorityscore=1501 mlxscore=0
+ adultscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506100058
 
-Hi Jakub,
 
-Thanks for the feedback.
 
-> -----Original Message-----
-> From: Jakub Kicinski <kuba@kernel.org>
-> Sent: Monday, June 9, 2025 5:30 PM
-> To: John Madieu <john.madieu.xa@bp.renesas.com>
-> Subject: Re: [PATCH 2/4] dt-bindings: net: renesas-gbeth: Add support for
-> RZ/G3E (R9A09G047) SoC
->=20
-> On Wed,  4 Jun 2025 08:51:58 +0200 John Madieu wrote:
-> > Document support for the GBETH IP found on the Renesas RZ/G3E
-> (R9A09G047) SoC.
-> > The GBETH block on RZ/G3E is equivalent in functionality to the GBETH
-> > found on
-> > RZ/V2H(P) (R9A09G057).
->=20
-> Could you repost this as a stand-alone patch with [PATCH net-next] in the
-> subject? I believe the patches in this series need to go to 3 different
-> trees, /Documentation/devicetree/bindings/net
-> to networking.
+On 6/10/2025 8:36 AM, Bjorn Andersson via B4 Relay wrote:
+> From: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+> 
+> When the ath12k driver is built without CONFIG_ATH12K_DEBUG, the
+> recently refactored stats code can cause any user space application
+> (such at NetworkManager) to consume 100% CPU for 3 seconds, every time
+> stats are read.
+> 
+> Commit 'b8a0d83fe4c7 ("wifi: ath12k: move firmware stats out of
+> debugfs")' moved ath12k_debugfs_fw_stats_request() out of debugfs, by
+> merging the additional logic into ath12k_mac_get_fw_stats().
+> 
+> Among the added responsibility of ath12k_mac_get_fw_stats() was the
+> busy-wait for `fw_stats_done`.
+> 
+> Signalling of `fw_stats_done` happens when one of the
+> WMI_REQUEST_PDEV_STAT, WMI_REQUEST_VDEV_STAT, and WMI_REQUEST_BCN_STAT
+> messages are received, but the handling of the latter two commands remained
+> in the debugfs code. As `fw_stats_done` isn't signalled, the calling
+> processes will spin until the timeout (3 seconds) is reached.
+> 
+> Moving the handling of these two additional responses out of debugfs
+> resolves the issue.
+> 
+> Fixes: b8a0d83fe4c7 ("wifi: ath12k: move firmware stats out of debugfs")
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+> ---
+>   drivers/net/wireless/ath/ath12k/debugfs.c | 58 --------------------------
+>   drivers/net/wireless/ath/ath12k/debugfs.h |  7 ----
+>   drivers/net/wireless/ath/ath12k/wmi.c     | 67 +++++++++++++++++++++++++++----
+>   3 files changed, 60 insertions(+), 72 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/ath/ath12k/debugfs.c b/drivers/net/wireless/ath/ath12k/debugfs.c
+> index dd624d73b8b2714e77c9d89b5a52f7b3fcb02951..23da93afaa5c25e806c9859dbbdd796afd23d78a 100644
+> --- a/drivers/net/wireless/ath/ath12k/debugfs.c
+> +++ b/drivers/net/wireless/ath/ath12k/debugfs.c
+> @@ -1251,64 +1251,6 @@ void ath12k_debugfs_soc_destroy(struct ath12k_base *ab)
+>   	 */
+>   }
+>   
+> -void
+> -ath12k_debugfs_fw_stats_process(struct ath12k *ar,
+> -				struct ath12k_fw_stats *stats)
+> -{
+> -	struct ath12k_base *ab = ar->ab;
+> -	struct ath12k_pdev *pdev;
+> -	bool is_end;
+> -	static unsigned int num_vdev, num_bcn;
+> -	size_t total_vdevs_started = 0;
+> -	int i;
+> -
+> -	if (stats->stats_id == WMI_REQUEST_VDEV_STAT) {
+> -		if (list_empty(&stats->vdevs)) {
+> -			ath12k_warn(ab, "empty vdev stats");
+> -			return;
+> -		}
+> -		/* FW sends all the active VDEV stats irrespective of PDEV,
+> -		 * hence limit until the count of all VDEVs started
+> -		 */
+> -		rcu_read_lock();
+> -		for (i = 0; i < ab->num_radios; i++) {
+> -			pdev = rcu_dereference(ab->pdevs_active[i]);
+> -			if (pdev && pdev->ar)
+> -				total_vdevs_started += pdev->ar->num_started_vdevs;
+> -		}
+> -		rcu_read_unlock();
+> -
+> -		is_end = ((++num_vdev) == total_vdevs_started);
+> -
+> -		list_splice_tail_init(&stats->vdevs,
+> -				      &ar->fw_stats.vdevs);
+> -
+> -		if (is_end) {
+> -			ar->fw_stats.fw_stats_done = true;
+> -			num_vdev = 0;
+> -		}
+> -		return;
+> -	}
+> -	if (stats->stats_id == WMI_REQUEST_BCN_STAT) {
+> -		if (list_empty(&stats->bcn)) {
+> -			ath12k_warn(ab, "empty beacon stats");
+> -			return;
+> -		}
+> -		/* Mark end until we reached the count of all started VDEVs
+> -		 * within the PDEV
+> -		 */
+> -		is_end = ((++num_bcn) == ar->num_started_vdevs);
+> -
+> -		list_splice_tail_init(&stats->bcn,
+> -				      &ar->fw_stats.bcn);
+> -
+> -		if (is_end) {
+> -			ar->fw_stats.fw_stats_done = true;
+> -			num_bcn = 0;
+> -		}
+> -	}
+> -}
+> -
+>   static int ath12k_open_vdev_stats(struct inode *inode, struct file *file)
+>   {
+>   	struct ath12k *ar = inode->i_private;
+> diff --git a/drivers/net/wireless/ath/ath12k/debugfs.h b/drivers/net/wireless/ath/ath12k/debugfs.h
+> index ebef7dace3448e4bdf2d6cb155d089267315172c..21641a8a03460c6cc1b34929a353e5605bb834ce 100644
+> --- a/drivers/net/wireless/ath/ath12k/debugfs.h
+> +++ b/drivers/net/wireless/ath/ath12k/debugfs.h
+> @@ -12,8 +12,6 @@ void ath12k_debugfs_soc_create(struct ath12k_base *ab);
+>   void ath12k_debugfs_soc_destroy(struct ath12k_base *ab);
+>   void ath12k_debugfs_register(struct ath12k *ar);
+>   void ath12k_debugfs_unregister(struct ath12k *ar);
+> -void ath12k_debugfs_fw_stats_process(struct ath12k *ar,
+> -				     struct ath12k_fw_stats *stats);
+>   void ath12k_debugfs_op_vif_add(struct ieee80211_hw *hw,
+>   			       struct ieee80211_vif *vif);
+>   void ath12k_debugfs_pdev_create(struct ath12k_base *ab);
+> @@ -126,11 +124,6 @@ static inline void ath12k_debugfs_unregister(struct ath12k *ar)
+>   {
+>   }
+>   
+> -static inline void ath12k_debugfs_fw_stats_process(struct ath12k *ar,
+> -						   struct ath12k_fw_stats *stats)
+> -{
+> -}
+> -
+>   static inline bool ath12k_debugfs_is_extd_rx_stats_enabled(struct ath12k *ar)
+>   {
+>   	return false;
+> diff --git a/drivers/net/wireless/ath/ath12k/wmi.c b/drivers/net/wireless/ath/ath12k/wmi.c
+> index 60e2444fe08cefa39ae218d07eb9736d2a0c982b..2d2444417e2b2d9281754d113f2b073034e27739 100644
+> --- a/drivers/net/wireless/ath/ath12k/wmi.c
+> +++ b/drivers/net/wireless/ath/ath12k/wmi.c
+> @@ -7626,6 +7626,63 @@ static int ath12k_wmi_pull_fw_stats(struct ath12k_base *ab, struct sk_buff *skb,
+>   				   &parse);
+>   }
+>   
+> +static void ath12k_wmi_fw_stats_process(struct ath12k *ar,
+> +					struct ath12k_fw_stats *stats)
+> +{
+> +	struct ath12k_base *ab = ar->ab;
+> +	struct ath12k_pdev *pdev;
+> +	bool is_end;
+> +	static unsigned int num_vdev, num_bcn;
+> +	size_t total_vdevs_started = 0;
+> +	int i;
+> +
+> +	if (stats->stats_id == WMI_REQUEST_VDEV_STAT) {
+> +		if (list_empty(&stats->vdevs)) {
+> +			ath12k_warn(ab, "empty vdev stats");
+> +			return;
+> +		}
+> +		/* FW sends all the active VDEV stats irrespective of PDEV,
+> +		 * hence limit until the count of all VDEVs started
+> +		 */
+> +		rcu_read_lock();
+> +		for (i = 0; i < ab->num_radios; i++) {
+> +			pdev = rcu_dereference(ab->pdevs_active[i]);
+> +			if (pdev && pdev->ar)
+> +				total_vdevs_started += pdev->ar->num_started_vdevs;
+> +		}
+> +		rcu_read_unlock();
+> +
+> +		is_end = ((++num_vdev) == total_vdevs_started);
+> +
+> +		list_splice_tail_init(&stats->vdevs,
+> +				      &ar->fw_stats.vdevs);
+> +
+> +		if (is_end) {
+> +			ar->fw_stats.fw_stats_done = true;
+> +			num_vdev = 0;
+> +		}
+> +		return;
+> +	}
+> +	if (stats->stats_id == WMI_REQUEST_BCN_STAT) {
+> +		if (list_empty(&stats->bcn)) {
+> +			ath12k_warn(ab, "empty beacon stats");
+> +			return;
+> +		}
+> +		/* Mark end until we reached the count of all started VDEVs
+> +		 * within the PDEV
+> +		 */
+> +		is_end = ((++num_bcn) == ar->num_started_vdevs);
+> +
+> +		list_splice_tail_init(&stats->bcn,
+> +				      &ar->fw_stats.bcn);
+> +
+> +		if (is_end) {
+> +			ar->fw_stats.fw_stats_done = true;
+> +			num_bcn = 0;
+> +		}
+> +	}
+> +}
+> +
+>   static void ath12k_update_stats_event(struct ath12k_base *ab, struct sk_buff *skb)
+>   {
+>   	struct ath12k_fw_stats stats = {};
+> @@ -7655,19 +7712,15 @@ static void ath12k_update_stats_event(struct ath12k_base *ab, struct sk_buff *sk
+>   
+>   	spin_lock_bh(&ar->data_lock);
+>   
+> -	/* WMI_REQUEST_PDEV_STAT can be requested via .get_txpower mac ops or via
+> -	 * debugfs fw stats. Therefore, processing it separately.
+> -	 */
+> +	/* Handle WMI_REQUEST_PDEV_STAT status update */
+>   	if (stats.stats_id == WMI_REQUEST_PDEV_STAT) {
+>   		list_splice_tail_init(&stats.pdevs, &ar->fw_stats.pdevs);
+>   		ar->fw_stats.fw_stats_done = true;
+>   		goto complete;
+>   	}
+>   
+> -	/* WMI_REQUEST_VDEV_STAT and WMI_REQUEST_BCN_STAT are currently requested only
+> -	 * via debugfs fw stats. Hence, processing these in debugfs context.
+> -	 */
+> -	ath12k_debugfs_fw_stats_process(ar, &stats);
+> +	/* Handle WMI_REQUEST_VDEV_STAT and WMI_REQUEST_BCN_STAT updates. */
+> +	ath12k_wmi_fw_stats_process(ar, &stats);
+>   
+>   complete:
+>   	complete(&ar->fw_stats_complete);
+> 
 
-Got it. I'll send a v2 with a standalone patch for the binding.
 
-Regards,
-John
+This look fine to me, Thanks for fixing this.
+
+Apart from this we may also have to free up the stats buffer list 
+maintained when the stats is requested out of debugfs (like 
+ath12k_mac_op_get_txpower() and ath12k_mac_op_sta_statistics()) once its 
+scope of usage is done, else the memory will be held untill next fw 
+stats request or module unload.
+
+-- 
+--
+Ramesh
+
