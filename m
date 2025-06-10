@@ -1,85 +1,147 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D40C281357;
-	Tue, 10 Jun 2025 22:39:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90FFF23BCF8
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:40:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749595161; cv=none; b=fvsNqmjcTeHb/+7NTIzjxJz7lBdscUywgFN7zokNEI4LRd2KrW95n7gALRVYL/iXmO+79UXyP2Y7ZaykCwEGXFovnus3cVVFbGwyteJPrrr8am+SSUptE3u/X7ZxFOxmOZpkas+m4ellhJSHCLScYcYhjOi93dQ/Q8TWkFKCIFI=
+	t=1749595246; cv=none; b=QKCB87XCYX+/ixm1/IE8hcPT4GzCeNupWBv2BXHZWhb0aMVeKuDdzMKZ8NsD4HjSsvcUwoZCd8Aq+skaBgQdnrpU6Xr44uLYy3QfBt1cIvkeVJSVwkAPr+rgOjaFzEX7qciuLMCShV7f8Y23aPjm9Zjr6NESKcurKYYc8x5C984=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749595161; c=relaxed/simple;
-	bh=+IqBi5TvZDiOz6C2BvPBxPsgAN4p4qlLrgsfuFspjGo=;
+	s=arc-20240116; t=1749595246; c=relaxed/simple;
+	bh=AMCXeZCE4mv1iIMBRl6FN9N8ESNeBQSn43C1XZV8EM8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NxajI8yUzgODQY3FOekFsiPd1QTBEegu/qbLdK3ZOeIk0RPRqwZrL+Bjyvn73PAioA1SSmiV516leAQZCmU+LOlnxxFx1k+7GXpi4fdz6vGeXvanb7WU5rV1UbQTHcRmnFbL04TCA7zjxblrqy8LVsXCSWibmOv34lMKI9O0X24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iA45rXjf; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=JUJ+YKw9Gvw5wtP/SDryIWqkhj9yegzwHQqlRPQ92nKAoGYWoLPb+c7o+0CZTVeLEoO5avPq8ZLkC8NQ9q+BexOlgJq+f6+fqqasH1e/Shkkt2ZxH6RiJq3rZbfZdoUhXYsKEIoS+vpnx9coX6RaI1gJVfg064u4R5y0fG+Fsvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hWyNNRsd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iA45rXjf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A9FBC4CEED;
-	Tue, 10 Jun 2025 22:39:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hWyNNRsd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70532C4CEED;
+	Tue, 10 Jun 2025 22:40:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749595159;
-	bh=+IqBi5TvZDiOz6C2BvPBxPsgAN4p4qlLrgsfuFspjGo=;
+	s=k20201202; t=1749595246;
+	bh=AMCXeZCE4mv1iIMBRl6FN9N8ESNeBQSn43C1XZV8EM8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iA45rXjfts3BL4hUeIUxxe+byrtKWMod75y24CPGNN9SvmqJ6rqAd+CqWKZW3yG6w
-	 kaDyCJ4wjLA+FqXK7EkN76If5n4Hj0k4ILNtarEO1jq/st6cUjbPwTKFtKsoajE9H2
-	 HecPOJr4de83Yml+8tI9KJuPPpw+eCcGSKt615dRrpaiE77SGPxk608iLyZdDCfRGT
-	 q+VmnC2mbqeyj6GZGUQT/iG1PVQrFDvNNQsteEeadKnFyDy9EEVYYoOI94hbkRiys5
-	 +PgqlvtSk9XDM/zk8Qd/9GQu1+WeLghEI4ZH3sUSslOZTwEhaM87BBg6QfjElWcET7
-	 QZm5qvYbr0JtA==
-Date: Tue, 10 Jun 2025 12:39:18 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>, bpf@vger.kernel.org,
-	linux-mm@kvack.org, cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH 2/3] cgroup: make css_rstat_updated nmi safe
-Message-ID: <aEi0FplA6eZUHF01@slm.duckdns.org>
-References: <20250609225611.3967338-1-shakeel.butt@linux.dev>
- <20250609225611.3967338-3-shakeel.butt@linux.dev>
- <aEijC1iHehAxdsfi@slm.duckdns.org>
- <35ppn2muk4bsyosca4nxnbv5l6qv4ov2cxg5ksypst5ldf5zc4@vwrpziws4wjy>
+	b=hWyNNRsdGrs1q/UaPGcQJK2Bm0DN06ee0o/qXGj90RSpnyGYH/gNGhglW4akybsRL
+	 gumXHMqrJeKXpTvE4fbrHxm1Gb4buxMyu5ByM0JmydEAcQASJXsp/6B7XSHS0iVM06
+	 TU6Damk031liYf2hXucp0T3/q7GPyStHUXknhdmF8jadF9p/UYPw+5Ex8+Pr9Mhj8J
+	 OkCi9NZ8594e7AVqNG0Q2Bv4TcKG6siItIU58BH3BkGdled2adviMc5FpGX0DI5MKi
+	 OGNovxWsEM+rgojjqknawFno6PHvRoy5D9xBAto+phtFkK+A+D9l0V0P2mErlDEu2t
+	 a+47ljeYW9UCA==
+Date: Tue, 10 Jun 2025 15:40:43 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Alexandre Chartre <alexandre.chartre@oracle.com>
+Cc: linux-kernel@vger.kernel.org, mingo@kernel.org, peterz@infradead.org
+Subject: Re: [RFC 05/13] objtool: Store instruction disassembly result
+Message-ID: <h6a3m4kt5qucesxrjq2kdg63hph6zxjfpkodgykifq4ii7iyoa@gziflw3kfe7y>
+References: <20250606153440.865808-1-alexandre.chartre@oracle.com>
+ <20250606153440.865808-6-alexandre.chartre@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <35ppn2muk4bsyosca4nxnbv5l6qv4ov2cxg5ksypst5ldf5zc4@vwrpziws4wjy>
+In-Reply-To: <20250606153440.865808-6-alexandre.chartre@oracle.com>
 
-Hello,
+On Fri, Jun 06, 2025 at 05:34:32PM +0200, Alexandre Chartre wrote:
+> +static int dbuffer_init(struct dbuffer *dbuf, size_t size)
+> +{
+> +	dbuf->used = 0;
+> +	dbuf->size = size;
+> +
+> +	if (!size) {
+> +		dbuf->addr = NULL;
+> +		return 0;
+> +	}
+> +
+> +	dbuf->addr = malloc(size);
+> +	if (!dbuf->addr)
+> +		return -1;
+> +
+> +	return 0;
+> +}
+> +
+> +static void dbuffer_fini(struct dbuffer *dbuf)
+> +{
+> +	free(dbuf->addr);
+> +	dbuf->size = 0;
+> +	dbuf->used = 0;
+> +}
+> +
+> +static void dbuffer_reset(struct dbuffer *dbuf)
+> +{
+> +	dbuf->used = 0;
+> +}
+> +
+> +static char *dbuffer_data(struct dbuffer *dbuf)
+> +{
+> +	return dbuf->addr;
+> +}
+> +
+> +static int dbuffer_expand(struct dbuffer *dbuf, size_t space)
+> +{
+> +	size_t size;
+> +	char *addr;
+> +
+> +	size = dbuf->size + space;
+> +	addr = realloc(dbuf->addr, size);
+> +	if (!addr)
+> +		return -1;
+> +
+> +	dbuf->addr = addr;
+> +	dbuf->size = size;
+> +
+> +	return 0;
+> +}
+> +
+> +static int dbuffer_vappendf_noexpand(struct dbuffer *dbuf, const char *fmt, va_list ap)
+> +{
+> +	int free, len;
+> +
+> +	free = dbuf->size - dbuf->used;
+> +
+> +	len = vsnprintf(dbuf->addr + dbuf->used, free, fmt, ap);
+> +
+> +	if (len < 0)
+> +		return -1;
+> +
+> +	if (len < free) {
+> +		dbuf->used += len;
+> +		return 0;
+> +	}
+> +
+> +	return (len - free) + 1;
+> +}
+> +
+> +static int dbuffer_vappendf(struct dbuffer *dbuf, const char *fmt, va_list ap)
+> +{
+> +	int space_needed, err;
+> +
+> +	space_needed = dbuffer_vappendf_noexpand(dbuf, fmt, ap);
+> +	if (space_needed <= 0)
+> +		return space_needed;
+> +
+> +	/*
+> +	 * The buffer is not large enough to store all data. Expand
+> +	 * the buffer and retry. The buffer is expanded with enough
+> +	 * space to store all data.
+> +	 */
+> +	err = dbuffer_expand(dbuf, space_needed * 2);
+> +	if (err) {
+> +		WARN("failed to expand buffer\n");
+> +		return -1;
+> +	}
+> +
+> +	return dbuffer_vappendf_noexpand(dbuf, fmt, ap);
+> +}
 
-On Tue, Jun 10, 2025 at 03:31:03PM -0700, Shakeel Butt wrote:
-...
-> Couple of lines above I have llist_on_list(&rstatc->lnode) check which
-> should be as cheap as data_race(css_rstat_cpu(css, cpu)->updated_next). 
+I don't quite get the need for all this dbuffer stuff.
 
-Ah, I missed that.
-
-> So, I can add lnode for nmi and non-nmi contexts (with irqs disabled)
-> but I think that is not needed. Actually I ran the netperf benchmark (36
-> parallel instances) and I see no significant differences with and
-> without the patch.
-
-Yeah, as long as the hot path doesn't hit the extra cmpxchg, I think it
-should be fine. Can you fortify the comments a bit that the synchronization
-is against the stacking contexts on the same CPU. The use of cmpxchg for
-something like this is a bit unusual and it'd be nice to have explanation on
-why it's done this way and why the overhead doesn't matter.
-
-Thanks.
+The buffer only needs to contain the output for a single instruction,
+right?  Is there any reason not to just make it a 1k char array which
+gets appended via strncat()?  If it exceeds that, it could just print a
+warning and truncate the string.
 
 -- 
-tejun
+Josh
