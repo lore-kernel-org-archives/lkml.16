@@ -1,82 +1,154 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6757C2253F8;
-	Tue, 10 Jun 2025 11:36:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86AB82253F8
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 11:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749555365; cv=none; b=ARr4uKsVkMLQLtVMMrYGeXb6IAcuHAchE+MLMAb8SnW092QX4w6fDItyVkNWzNzFqvXrjSCdVUQqolrMK4Ci5CBNYn65V7BEZw3KicLCk+Cade/vyuiPc/NUwJOcf1QzcY7YAO4F/Om3qWSymXjPZeXmHNBnDA1NA9cDjTxtQFg=
+	t=1749555385; cv=none; b=lgnKz545UzabSKQMBKoqZipaFlNP0L7wME3U4Utv4slTV6V4xnD+BAwcK0IPAQtzqhvkGWQvs7U/ARcr1nsVDCiC6MKQMs27Xfuu26eBDwSOCSC1mb5xeu439TAr2VE6mQ33P5MxBMyeEJ9mHGW+iojBDK5a7qDVTzIu9fNsKBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749555365; c=relaxed/simple;
-	bh=wSo4fbCYtc2b8U3BtZtgyroxgV8tXbcvtEFPrGZnt/0=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=D/XQk4YGj1utJ5ykWSXomWw7S3BOxwoT34aBoi6zxVqp9m5CN5p4fGOcyqmjDQDNLieaU8bjboeUQbNMVdctds15k+MiXp6Bwcn9VqLn5xhGQcHW+0ulJ3JdLH14EfpzXYjQo+lOi3mGkFbSYm+7XRtSxgDnPPSioad9AOoRqq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lPttBMOQ; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749555385; c=relaxed/simple;
+	bh=zBlm+ov1YdPOK+eo/xgzpL/Az+rYHrupYQlhswUJOtA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DymwMCHIMejLEu7kO6aYIYjx45vwIxPkVYpsm+HEPkVn8tBQcD7eXRrs8KVsVd5HL3FsQ6aUOJYZBhRFc3IEBblkC80oFum5Ugn41fcx73uare4KC9zLQ9UNiN37Fi1lUC8tf9OL9+5/+aJ6TdZ5L9EY+KLWaDkzdX9aE/hxHv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gckAeiQE; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lPttBMOQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749555364; x=1781091364;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=wSo4fbCYtc2b8U3BtZtgyroxgV8tXbcvtEFPrGZnt/0=;
-  b=lPttBMOQVObk8AwnidwGxrEnGhh7pNas1mX30+E1xfDu620ehrfxFuiQ
-   /qoRmO7mvyl8ZiW4Tvu4Edsfvkv3AAuYvO6plLJAULIimMKZvskuwDizc
-   cmOaHMOBE/OJ/WjP+eqY/2alV3dJ3IlahFtBoErAokowW8n2qywdk38Z+
-   eWOxY/k+8upF0uzdpphH+tcx79cResrsfOpLkImQdoAHU9o+hQ1ObZjDv
-   kJmfceVxS0al6I9E+ZAz6At2abWpkU6QCpZmfwmMocKVzZQjj3i67qq7k
-   GVUOeJi4B7ZxRS290qE2gYd8kDdWbRd+sBRS3HuWqSRWifywlRC1Fxk9M
-   g==;
-X-CSE-ConnectionGUID: WN1rZlmUTh638B6SBgh4ww==
-X-CSE-MsgGUID: 2l+A0M++Qe28NWLYvaZN3A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11459"; a="51801180"
-X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
-   d="scan'208";a="51801180"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 04:36:03 -0700
-X-CSE-ConnectionGUID: 7Km5ImlnTRuktlHDJ/cZOw==
-X-CSE-MsgGUID: zxfwpSx6SPSuTj/nMq6ZQw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
-   d="scan'208";a="177730322"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.196])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 04:36:01 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 10 Jun 2025 14:35:56 +0300 (EEST)
-To: Rio Liu <rio@r26.me>
-cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-    Tudor Ambarus <tudor.ambarus@linaro.org>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
-    LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] PCI: Relaxed tail alignment should never increase
- min_align
-In-Reply-To: <7bbcee36-4891-4b8e-8485-54f960f73580@r26.me>
-Message-ID: <4a30d092-9ab6-3d61-8f3d-fab2965111e0@linux.intel.com>
-References: <20250610102101.6496-1-ilpo.jarvinen@linux.intel.com> <20250610102101.6496-2-ilpo.jarvinen@linux.intel.com> <7bbcee36-4891-4b8e-8485-54f960f73580@r26.me>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gckAeiQE"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-3138e64b42aso1729149a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 04:36:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749555383; x=1750160183; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=/X080miYLYNnIb/KqgwO3FJea0593LzGodrcP0cmSBk=;
+        b=gckAeiQEK6p7EdMZ9DW5Nfb6bEbfW/hh2JMNqVp1dLp2xaaZDBGx5ev6TWUHOS94v6
+         yvT6pxFLgusMDgwj2CPzSov0JsKH238cVyScElB+XtXfjoMY7CAztjQb+v1y/QxdIpk6
+         CvR6KSlQTSvR4gycQOtz/fPdM7ZLh2fB6O55FUWkJGXR6xVyDfWkH9COEJRk0l4eEGvV
+         0EYf8VKiAaZsoWI7YfVnYTJBZaRoW5WPkjH0mIfx3fqws5Skmq/dUDAMMPn50z7cdu5v
+         HrYyGo8vHqIhZXekVw5vmr23+HWrtH6S2HdQjHU4EO2ZfMTf8j5Ui3quEDZv/lfY+dP6
+         G0CA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749555383; x=1750160183;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/X080miYLYNnIb/KqgwO3FJea0593LzGodrcP0cmSBk=;
+        b=qONM3iZHLwUnvGeh1UXk13TjkivG1ppzuq3ksIEsleKcX/DdnJRLCKysxOphQIBZpx
+         T29WVc3d2AEWEMJTSqQbdN/0V7hYa7uniAo1+bP6lvkC2rqLYt/Zt0PhNSY2Z6ppYali
+         aIo8j7Eu804fHazGbHHJW2AyCW9JtuXhfObAaVq3q96mpyWKQ/hh7CkjTH6qFQzEmT4S
+         sQV//+VM+I+TQgvSgLy2UYPm2+MqW0xFQloiEd+FvtTnBzb5BFlLhfmhkK53SHz66+zF
+         9jzomv7528CPzvYqMzVivn14utzAMoar8c/JC9HdLpJA3RcEvkHj2a2zNidLjSL3rHcQ
+         OcIA==
+X-Forwarded-Encrypted: i=1; AJvYcCWRgI4BexWtWQCMV/KpNIhPD84sj6DJIYI7SwdRHbL6sNH6xTgOPX267o+EasundHrEUfHp0B3th4pYv/M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywmm5tleTdM7mLF38gS07GEkwfexSLZlv2g23zAA7r6XEYtsGeu
+	tT71yXwXc9Vb0FIefRlb98sWIRko5P51O2C2iW7k6+ISB5Wg/JI/yfxaS3QYd/Wz2FIbnpyetYZ
+	6Bwblfd3VAGhlmGSMYQc8gNSTQkeNnCpvwqWnnngV
+X-Gm-Gg: ASbGnctvY7K4WNSzQogYAZGM1nDMeLqHNUKofIlOxyn0NxK6PKHzpflYSYcXhiw867O
+	82t5oy+UABT5JBjRu0k6UjBsl4EQBfnrEsMmeVt14j9bQvGZ/yUO3yfRUoA5pcV9p219y3M7o+n
+	Ak4juJ7IUi3ea+83MD/fAt2H3BMDwqVEizd6InCNL3gsiNd2vUsd9LbaaOl41tlX6vsXDJfO7B
+X-Google-Smtp-Source: AGHT+IEwCAvIsXym5DldP9LOU03dANKhI7iiGAjGK8vDeAOOjBWjSCWQznQqPPXeNPhc91g4jQb2wx42ypb9h9ekuWo=
+X-Received: by 2002:a17:90b:3d0a:b0:311:abba:53d2 with SMTP id
+ 98e67ed59e1d1-313a1695651mr3853031a91.17.1749555382592; Tue, 10 Jun 2025
+ 04:36:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20250610111559.1667156-1-matt@readmodwrite.com>
+In-Reply-To: <20250610111559.1667156-1-matt@readmodwrite.com>
+From: Marco Elver <elver@google.com>
+Date: Tue, 10 Jun 2025 13:35:44 +0200
+X-Gm-Features: AX0GCFvr9SRXT7rpoCzd8enf5Vhs7VR8MrQOwlNAo7Y3z6-SB7lEBEyUj25Qfmo
+Message-ID: <CANpmjNMkVGVnmeKK5QmwDPZv9QrF0omNz-TmgY0Dqqg-=uAN4Q@mail.gmail.com>
+Subject: Re: [PATCH] stackdepot: Make max number of pools build-time configurable
+To: Matt Fleming <matt@readmodwrite.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+	kernel-team@cloudflare.com, Alexander Potapenko <glider@google.com>, 
+	Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Oscar Salvador <osalvador@suse.de>, Vlastimil Babka <vbabka@suse.cz>, 
+	Matt Fleming <mfleming@cloudflare.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 10 Jun 2025, Rio Liu wrote:
-
-> Thanks for fixing the problem so quick!
+On Tue, 10 Jun 2025 at 13:16, Matt Fleming <matt@readmodwrite.com> wrote:
 >
-> > Reported-by: Rio <rio@r26.me>
-> > Tested-by: Rio <rio@r26.me>
-> 
-> 
-> My full name is Rio Liu if you want to include it, sorry for not 
-> mentioning it earlier. 
+> From: Matt Fleming <mfleming@cloudflare.com>
+>
+> We're hitting the WARN in depot_init_pool() about reaching the stack
+> depot limit. My assumption is because we have long stacks that don't
+> dedup very well.
+>
+> Introduce a new config to allow users to set the number of maximum stack
+> depot pools at build time. Also, turn the silent capping into a
+> build-time assert to provide more obvious feedback when users set this
+> value too high.
+>
+> Signed-off-by: Matt Fleming <mfleming@cloudflare.com>
+> ---
+>  lib/Kconfig      | 6 ++++++
+>  lib/stackdepot.c | 9 ++++-----
+>  2 files changed, 10 insertions(+), 5 deletions(-)
+>
+> diff --git a/lib/Kconfig b/lib/Kconfig
+> index b38849af6f13..2c5af89daff9 100644
+> --- a/lib/Kconfig
+> +++ b/lib/Kconfig
+> @@ -720,6 +720,12 @@ config STACKDEPOT_MAX_FRAMES
+>         default 64
+>         depends on STACKDEPOT
+>
+> +config STACKDEPOT_MAX_POOLS
+> +       int "Maximum number of stack depot pools to store stack traces"
 
-Ah, sorry. I missed it was fully shown by the later emails on the From 
-line.
+I wouldn't want most kernel configs change this. Can we make it an
+expert option? I.e.
 
--- 
- i.
+  int "Maximum number of stack depot pools to store stack traces" if EXPERT
 
+> +       range 1024 131071
+> +       default 8192
+> +       depends on STACKDEPOT
+> +
+>  config REF_TRACKER
+>         bool
+>         depends on STACKTRACE_SUPPORT
+> diff --git a/lib/stackdepot.c b/lib/stackdepot.c
+> index 245d5b416699..1c24230b4a37 100644
+> --- a/lib/stackdepot.c
+> +++ b/lib/stackdepot.c
+> @@ -36,11 +36,7 @@
+>  #include <linux/memblock.h>
+>  #include <linux/kasan-enabled.h>
+>
+> -#define DEPOT_POOLS_CAP 8192
+> -/* The pool_index is offset by 1 so the first record does not have a 0 handle. */
+> -#define DEPOT_MAX_POOLS \
+> -       (((1LL << (DEPOT_POOL_INDEX_BITS)) - 1 < DEPOT_POOLS_CAP) ? \
+> -        (1LL << (DEPOT_POOL_INDEX_BITS)) - 1 : DEPOT_POOLS_CAP)
+> +#define DEPOT_MAX_POOLS CONFIG_STACKDEPOT_MAX_POOLS
+>
+>  static bool stack_depot_disabled;
+>  static bool __stack_depot_early_init_requested __initdata = IS_ENABLED(CONFIG_STACKDEPOT_ALWAYS_INIT);
+> @@ -245,6 +241,9 @@ static bool depot_init_pool(void **prealloc)
+>  {
+>         lockdep_assert_held(&pool_lock);
+>
+> +       /* The pool_index is offset by 1 so the first record does not have a 0 handle. */
+> +       BUILD_BUG_ON((1LL << (DEPOT_POOL_INDEX_BITS)) - 1 < DEPOT_MAX_POOLS);
+
+This is a constant expression, and could be a static_assert() (with
+inverted condition) next to the '#define DEPOT_MAX_POOLS'.
+BUILD_BUG_ON() is a bit less efficient (compile-time wise), and cannot
+be substituted with static_assert() only if part of the expression is
+a non-constant expression yet we rely on the compiler to optimize the
+condition into a constant if there's a bug.
+
+>         if (unlikely(pools_num >= DEPOT_MAX_POOLS)) {
+>                 /* Bail out if we reached the pool limit. */
+>                 WARN_ON_ONCE(pools_num > DEPOT_MAX_POOLS); /* should never happen */
+> --
+> 2.34.1
+>
