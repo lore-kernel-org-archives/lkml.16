@@ -1,336 +1,284 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA31B23372E
-	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 14:38:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749566325; cv=none; b=aaJDaEgegkUxoFff25MFCN1N1u0EHhqsguHHGPgx3oSw1c5a8g1T22lDg3ucZKAranQbbw6dALKCJ+XvEmlay6GtsXmSpB/MlwWyIZK75niEMGIqW6ipBRNKgiBnjSpkijWR6FKn84Ep4kd1w/PisXzS8g3sObNNh6bCbUCVPjw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749566325; c=relaxed/simple;
-	bh=Watgch6AAnT5evlx1x6CAOk8UpJc8xtNO01XfNMuI2o=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hJSSyuAFJoRkQ/bXF1wPLL9EPQGHLQkn+jp8Cy7Qh6tmPzrDGZWfTc/w3VlREqGyGbNk0y3g8Vz7GzAGvIFBfyCDL/qhS4+DJyaSWQqmfLDT9siKzqGYdeFvSSycXXpJ0vZEaeBPKHgzktBejk0l8iXZp6voG4trqqmF/hKZQQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=VihMOk96; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9915D20102D
+	for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 14:39:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749566350; cv=fail; b=KWwD5gvjcvXqfV/ue206nBhBWYsf78AUGyJDLq20ET+EQ3+T2PbFmnn91nHW90QRyABbBVDaqCoJybmwn3e94xQVfftRpJsq1C/qSSYeoeH2t4PKFX/KWP5aVPyhvApEywlF40yCVzr757JqwHVpTNv31zA+BNlwJf3X9szGvoc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749566350; c=relaxed/simple;
+	bh=5OqfRgnn0SYx+aqywX4YKRHmwujpllN8okeUQfJWXCc=;
+	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
+	 Content-Disposition:MIME-Version; b=Oajh+ok3Tk3C6qDVvJR94TRWrtX6VpVlJvD5picaQwx1WcWbwMPPZJsS017wL5H8KWrHnHo9hwOOHmCe7N0xkD0EDabxl56xC5iSBU/ktnxdq/49MDRCeNyi1B4P+OoVldMOG6wL4PUwsbCqbkNaHUO72k2esD6I19diHuxTIbY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e54iMsOz; arc=fail smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="VihMOk96"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-450ce3a2dd5so49509365e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 07:38:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749566322; x=1750171122; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wsQ5a66nxiBrUyJ22LI2OZPoXALxCX/O1hriuyr43zw=;
-        b=VihMOk96mrjf/RRojZKr6C9raGvv3g9WDoXEAbIaYDp6CxOD8xs3gHnTUCljRC7mdU
-         MPtqmvAv30uq9DrrG79fXVge+wYhu3fqJdT6t1TX/NDlcGvqzFM3oAJwfneluMEVwnrH
-         0Iw1ZNI9MurqgobOTlzCEqBVfcm9pnu35jvEKjw9VA8O38pVfUsAFcrGr/At0fpiZ0FL
-         YFzckfPsUOuggRLz5OkYa66AkhvWh/M1wqgPD94Rp6Iv76uihaatSUBWWiimQAbRtcBp
-         jFgDb692HuCdOLqikOj0rJxkAq9v/KwRCtLKxE24BbuDkoylXCpUHwaYTptsHKbellZy
-         i4uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749566322; x=1750171122;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wsQ5a66nxiBrUyJ22LI2OZPoXALxCX/O1hriuyr43zw=;
-        b=YkkDUDfhS4d8nCo/2h4OiZVBD2Ww+q37fCvGGps9JgIp8TnjsLV4lnz+/bTOD4p9mn
-         KnMGBeHhwRNf9r96Brx4/fSZww8ThYlMr1w5hTF78Fedu5QmGQtz33ls4BNLYKRjQcAZ
-         3qbxMpS+VYCdJmpiujarVhmgjHbQz1Z+0SlOeUiAwCpFjQr7jMR9k/dL3pjDKlwQHWW0
-         9NsQhlBfsJraFi3dhdrTMr/qzMNviFV6AQgFnxmIG+I9VVkHm9S9fm1ElNzQ/5uyXIN6
-         f2GVKURHQE/CfX6jvnoGSG2Yfl1ghPghN8J1uWUEM6C37Dt81jcpyuNEbzGFh/MeJekM
-         LowA==
-X-Forwarded-Encrypted: i=1; AJvYcCWtFiqdIgmacHki/LunhcJ5Ec56dFNrajAwVum3X8Gp/Net7ZL/NcxHINhvGZ8nZ6dpFwtyAPE7jg35bMY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzwavp4c24fbBhOQ2aLbJj3jikXg9lfJegGLb7weK1NFXO2gbVj
-	eg47CDodKpJJDBX0Ur6Lxi2m2ngnGVbVTMPtaYrk2mqV+w5xmcIxIw+C9+afcakKuyI=
-X-Gm-Gg: ASbGncvmAWSC9vgCsJE6dHNf0lWVIN78PXXNlqMUHTGapzR6ebOM+RRZIVp3V7+/5PJ
-	8af2gDyWfhVk/f3rkDxzMUiX2so3IBilq/JXrAFi/lqd2PVAqncv0/CwewFU0QwfDHd1kPXQ+So
-	IUwbzT1d8ZXqvFOPnQQNfBMlEvO9NHiAKctE2B/9l/hl1kEV2IB3UZ+EQbKlwGELaKpzrZ01dIy
-	0zV1TuW8VpHVo+h9w944/SZtWMkd+wdJSDWW7Ml87N0Lw/SRhrtQK+4QECemrL4wcbpwjCFl9IY
-	fUHS9PbjHS7NslEQSBBZH2zrDL03A3e3Xa3OQaMdWTEVB0D3Ech6
-X-Google-Smtp-Source: AGHT+IE8haVUbgBb1o6F7r1dAx2SJi/5/9lwUTGlQZmtpVP6Ody9yjja3A446e36G5k7v/fRBb1Nuw==
-X-Received: by 2002:a05:600c:6304:b0:43c:fe15:41cb with SMTP id 5b1f17b1804b1-4520137bacdmr169574645e9.15.1749566321996;
-        Tue, 10 Jun 2025 07:38:41 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:4d:e52b:812d:eb7c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4526e056138sm146001345e9.5.2025.06.10.07.38.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 07:38:41 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 10 Jun 2025 16:38:29 +0200
-Subject: [PATCH RFC/RFT 14/15] gpio: sysfs: allow disabling the legacy
- parts of the GPIO sysfs interface
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e54iMsOz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749566349; x=1781102349;
+  h=date:from:to:cc:subject:message-id:
+   content-transfer-encoding:mime-version;
+  bh=5OqfRgnn0SYx+aqywX4YKRHmwujpllN8okeUQfJWXCc=;
+  b=e54iMsOzhS2q8dFXN3keQJFdunHcSehPtkiFfQMLtdv7wSz56WaBKOqZ
+   bSEy6bif5UKFElUFG7+pMHyElpwvfeKsxHnL3JCMrQqQT1RYxJGAFfUOb
+   SceqnV/N41OUZOLZht+yos7HoFNwg9z2WfLsEOOKNJgQoJPZFX91GNeBK
+   CKlsezt1jQRzznK0Dku5rBKzic67mI8DDOuNO17d8OpVLMdDi7ZQuBM/M
+   8RC7OeXU3wTXJSXSHrAmZONFPuxlgHIeyGUxbR2gbmD26jZG+11kcvtoZ
+   3lCeRqhC27rdEgszEynodaEWqJbpz9t9u9qHQ9tUfSdjPCpWmX8U158i2
+   g==;
+X-CSE-ConnectionGUID: VCjZ2lGnT3mBysOt0mTaAA==
+X-CSE-MsgGUID: t2Ux88B2RWq7fEgHuN2pqg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="74217101"
+X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
+   d="scan'208";a="74217101"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 07:39:08 -0700
+X-CSE-ConnectionGUID: lU/sgBW0QwW1I93Izst5ow==
+X-CSE-MsgGUID: 58Wi4pT8RzupELNu+iB/dA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,225,1744095600"; 
+   d="scan'208";a="147818678"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 07:39:07 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Tue, 10 Jun 2025 07:39:06 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Tue, 10 Jun 2025 07:39:06 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (40.107.94.73) by
+ edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Tue, 10 Jun 2025 07:39:06 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NP3bsKBdWcemSS/mhNZNe/SarWqhRdOWu4FnTiNrkJGI8i5OIlpL2ij0oV085E4HmOutuWen8qdHOcRVNQx2kjBdZ5ooZ1y68chAhwWJDBs7lmd/dQsPiUclkByagbQuXP+G3ZUoP8S6NtSV063fJjHYvFiYd72lIms30grNFN+RdqCuQ9GBJO4mZ9lnkAksu5k1gWTYLfygWny1kl+5RzSslOdChS2IMl/KaaLBQhzHSoxCQCum9a8elgcyVjGAYRqIESuKKI9cPzr6Diw5OMc/I9wTX/7UYf1dFT+cZxdzB+Mko4l4d/bAqj1fxv5Iu4IU20Kz6ORn1usD6Tqvqg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/ywrZLc7wTKhpaE93O06nBn9bR0bSLJbu1XP0iNk4Fc=;
+ b=Tc1D17UdEZF9hDuLVE1AGL1sST6k5v8jO2oGUmi9eZHgYZS7ec7bjHFz7RTJV1utVOUifN+FQLAVzE8OAvyJ5jR4972FUkLo7ijauh7WnmkVyTwx+BNZ0IFpxMtSUIOf8vy6ocHsjb0oF8ScG83fRTLRDTzBg0OSAuSt61Oh7OohTNtomdQYgwjMUe1gMD1kDSItsCnyquwiluIHtamIVrmLHCASjScnDlg4eCL4os56E9mfX4A/18BEFg8YM90QH7vjh5K6ig52AUcn/1eCTcysQVbeNSw1J+sGjJOV1WIjYCVu6siHA3rwXTV3lGMurKC0s4IYZXx8VgoDI6Qk+w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
+ by DS0PR11MB8082.namprd11.prod.outlook.com (2603:10b6:8:157::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.18; Tue, 10 Jun
+ 2025 14:39:03 +0000
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c%3]) with mapi id 15.20.8792.034; Tue, 10 Jun 2025
+ 14:39:03 +0000
+Date: Tue, 10 Jun 2025 22:38:45 +0800
+From: kernel test robot <oliver.sang@intel.com>
+To: Suren Baghdasaryan <surenb@google.com>
+CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>, Lorenzo Stoakes
+	<lorenzo.stoakes@oracle.com>, Shivank Garg <shivankg@amd.com>, "Vlastimil
+ Babka" <vbabka@suse.cz>, Christian Brauner <brauner@kernel.org>, "David
+ Hildenbrand" <david@redhat.com>, David Howells <dhowells@redhat.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, Hugh Dickins <hughd@google.com>, "Jann
+ Horn" <jannh@google.com>, Johannes Weiner <hannes@cmpxchg.org>, "Jonathan
+ Corbet" <corbet@lwn.net>, Klara Modin <klarasmodin@gmail.com>, "Liam R.
+ Howlett" <Liam.Howlett@oracle.com>, Lokesh Gidra <lokeshgidra@google.com>,
+	Mateusz Guzik <mjguzik@gmail.com>, Matthew Wilcox <willy@infradead.org>, "Mel
+ Gorman" <mgorman@techsingularity.net>, Michal Hocko <mhocko@suse.com>,
+	"Minchan Kim" <minchan@google.com>, Oleg Nesterov <oleg@redhat.com>, Pasha
+ Tatashin <pasha.tatashin@soleen.com>, "Paul E . McKenney"
+	<paulmck@kernel.org>, "Peter Xu" <peterx@redhat.com>, Peter Zijlstra
+	<peterz@infradead.org>, Shakeel Butt <shakeel.butt@linux.dev>, Sourav Panda
+	<souravpanda@google.com>, Wei Yang <richard.weiyang@gmail.com>, Will Deacon
+	<will@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, Stephen Rothwell
+	<sfr@canb.auug.org.au>, <linux-mm@kvack.org>, <oliver.sang@intel.com>
+Subject: [linus:master] [mm]  6bef4c2f97:  stress-ng.mlockmany.ops_per_sec
+ 5.2% improvement
+Message-ID: <202506102254.13cda0af-lkp@intel.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SI1PR02CA0037.apcprd02.prod.outlook.com
+ (2603:1096:4:1f6::13) To LV3PR11MB8603.namprd11.prod.outlook.com
+ (2603:10b6:408:1b6::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250610-gpio-sysfs-chip-export-v1-14-a8c7aa4478b1@linaro.org>
-References: <20250610-gpio-sysfs-chip-export-v1-0-a8c7aa4478b1@linaro.org>
-In-Reply-To: <20250610-gpio-sysfs-chip-export-v1-0-a8c7aa4478b1@linaro.org>
-To: Ahmad Fatoum <a.fatoum@pengutronix.de>, 
- Kent Gibson <warthog618@gmail.com>, 
- =?utf-8?q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, 
- Marek Vasut <marex@denx.de>, Geert Uytterhoeven <geert+renesas@glider.be>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7983;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=SOXWhuriIiQ5+4UQM++qtdPxdjT23ycVoM7KxniJtek=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoSENi9jG+Vqt3t77PpikSk1CMstUoKh4xaAp5F
- iZQ7B/cGdyJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaEhDYgAKCRARpy6gFHHX
- cioND/wM+j4euzloEqj7ceozEge48L5oRPc/ziCgn1H90E9ibzSCl6GCHm5k9YcQ1ZR/E8AHsmP
- rFXjR18XYCbnZiLjcuKDRryo8Jy8xmcy/HZxo054W0YHaAKe8lSyF1xvKYwToKADgBJnSFbhfUV
- ZC44YZHxGITR2dR9PIZ7LHGSH4QBMddPocgaxv7QwvMMSwU32ZcFr2mc9Pazlz6yJrQ8+aNtAxn
- 9zalmqVKNbWah33rRJHQ0tGFQyZbgFHQxGTxOEFBa4SgkOCBqb8yVtGoUOqXZIflsh5cOtveys0
- M8y6AE1yAYe53inK7CczGBV8t5FIfaB22/DLhGeWlgokCNd7oNA5irid64MMxhznsce7+2MmzBj
- AXWWR6h6EMj4blmwwtGHSZWyTRadu3+QK+1F60+2oVXItkwuvWn9R0hJEIJhHc2m0faMhTEVhZU
- ++QeU65ar2Y1dx7AVPg76mr8n4aVnJLzcL3hWbeIR3m9qG6V9by5POMn2Aho90t6xy37v3Sdyt1
- 4yZDv+03+Eu8zrXAdNnaAA6wVgAfHQIbl6/J1s671aE9/xOuuAJpBJvyrFDI7EjJQl6reShCbpy
- oPCG99woe3gQYSpOS0typ9HJ0uGVQac2iMrd8LaZ09w8kIJj7oxZu/80IWHrU+N0vcqPAVy+/4+
- TGaazalx4vE3k6g==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|DS0PR11MB8082:EE_
+X-MS-Office365-Filtering-Correlation-Id: 17643e4f-595c-4cfb-c81b-08dda82c8b84
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?z29xIsNRC4jGPJ48SXIXpeyPzSSDsU16k8opcGT27/gFEsWBawcRI7jT21?=
+ =?iso-8859-1?Q?HJ1J6o1I63mlWDIzbUudFes4/F2SK5mistCCts7uzEUoZrGiQrV5ghrs7z?=
+ =?iso-8859-1?Q?5AMXO8cKi8A2sA5nVcGpuF6aUAxYinJZe6iRqFmhLxBxN6yH6veucKS9jS?=
+ =?iso-8859-1?Q?iEAUbUFQMhqAM+S2ujmuy89qhrBe6UUKm4mUfsL5/wTTJX02OB4PPaS+t4?=
+ =?iso-8859-1?Q?HncbaDHHQO0M54ZPcH8xbd1oeCAAIfjOk91lWxvbr5n8mXFg/sxvvixkDZ?=
+ =?iso-8859-1?Q?ljzd5149y9feDRVvkFEwJhrkO09UJHZpEDl5oYTz47wmYWm0lRJaaYy/45?=
+ =?iso-8859-1?Q?s4xPV+G3Sv53ig+8oveZehlMbzayHoo/Ltmuv6D0vEBQOsrBo9HLHqSAGE?=
+ =?iso-8859-1?Q?xZw9TdKzfqUOwlpDS3xdvAH9pWEUOq35mqVUS9opqBwOeLQAuPsvDn8scr?=
+ =?iso-8859-1?Q?vkC/l1/WIT7DmtftlqqPFSKaXZAxbHGRL/8Cn7lL52SysgYel7y2AtYdTW?=
+ =?iso-8859-1?Q?i9TJjtR1DdCYzB7CglIeNlqX9u+2dYDMa7UBouCcFtT8Dw0rzrqEGkCuT4?=
+ =?iso-8859-1?Q?3fiLiwwh8pClYWIqbCYeiMWOJ7yMDIifnrSsyDgkRV7AFSs12aZbmviogi?=
+ =?iso-8859-1?Q?3ejLd4CPWfzWtSFYdTUKomOGZgC1a5vw0R9vI42MhcqjQTvwKLbEuzix//?=
+ =?iso-8859-1?Q?b1oxvSWelhAv4or04/o1AH0QTvx+HY4o6rbYLd3IY9tz0FkfiOstPc3ygl?=
+ =?iso-8859-1?Q?o0KOkpG0HV3Esm3hbkYbzMEDE24T5kMteQy+0baeO6Aj/a4Lea+LtCONE9?=
+ =?iso-8859-1?Q?V06y78ZVijyQAm/lzmAzZ+nxWepzWa9YmaVWjF0gFj0lK+5O2viCsfXtIr?=
+ =?iso-8859-1?Q?qV9dPEoEORAYwl9Sta8kbxbHfZiwzG/ypq1SKBFUZuIvNuCwqSBDyp2WUZ?=
+ =?iso-8859-1?Q?P/+I39ZiXwp8Ro2tNjdmGjb89pLyIg/wGK6MzTT2CcRwqMsCS9KW/+hAQG?=
+ =?iso-8859-1?Q?UfF2y78o0FdKSjjo69DRiKSYPO3ay6fRYIpHfFWpKIB8HETxqCWDOHmW7Z?=
+ =?iso-8859-1?Q?xXQxnroBwwGy1diEKk453S2gIqdFRgh4Fojw0tAeZA+nRIwHqY5kaixpcq?=
+ =?iso-8859-1?Q?pap4Se1UnWjBUum1smY0vTCq9dF3UY0kRoSE8GEdxBq3pYWNQ/rAeVt6+g?=
+ =?iso-8859-1?Q?UVmNAP4YFL8crKJ3cuwTSvb1rD27spp38sJgT38YhzPh9U7OEvL7A103M6?=
+ =?iso-8859-1?Q?Zn/PBpHeBKcGqPlqEDICT4mKx2wxM/qzx/LhAn3X48bbCSHUw/GBydLa7n?=
+ =?iso-8859-1?Q?DxU0ZsYbDUpIc2+1NgjtzjxuPW5cNZ4yq7Zi8TWd1N9m18Dd1m9X6hBybm?=
+ =?iso-8859-1?Q?NTb2MLRo8djXnV15xnrVHF31hs4rB7CW1/fNuqRklgTNg66qzPrCBMnZMs?=
+ =?iso-8859-1?Q?zXsn1Ulzk0AGxGga?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?oESCqfyvFDnj892wLigvtaBoAYZYyhb8/fViYqfCaiP+kH7FW06ArGCHui?=
+ =?iso-8859-1?Q?3PtKdioCBZ4FbSSINY99viNCSyDAIn7F/XX6/EE5uiXKsGojSppaNs1RdX?=
+ =?iso-8859-1?Q?YcT1A5PCtN+4kDHOOh5XulrrcBwnBDjzPmhfUQNS3KF8CiDIyAVAQ4bylq?=
+ =?iso-8859-1?Q?zSrWSitNZ7ISrDEf56Gn8njAJiHIHW/3njrzxaV5gDK5y0OUaG7zClpIZi?=
+ =?iso-8859-1?Q?S99kYPROgTZ5RS09sbjGWkaaYsEZvTHO0Ge/ohCLtxXTGclqLyTv1RHUOl?=
+ =?iso-8859-1?Q?lyVj5njx6bK5q1ZPVcCo5QnyK+BH9U3aNS5k2hPNqiCPlazP/rwU61o9C9?=
+ =?iso-8859-1?Q?8hkeToo+ZYUecqFvZwTHy8s6FFJVwm6q4ObEr0y3H7nS0QpVHXlrPlmzaZ?=
+ =?iso-8859-1?Q?iTaV9wGPsc+qwGd2yscJrA5gbT7A7jGXAm2Xxq2j46K3lk443H9tos+jL9?=
+ =?iso-8859-1?Q?YKIdUFuCbj3Dy+k1XQ5bE7qh7QQK1WkOk4Ay1/Pa3HSuMPnHaFPLJ2JUiy?=
+ =?iso-8859-1?Q?gYoM+qAhSvaBM0DfpkSGa755gO0CXK2XblikG9N5VTmpDuKujgrx13l80X?=
+ =?iso-8859-1?Q?2Z+enw39W1HxJBWTGeSLwqKxINIbxh/sGzbmJ+MD3Wba1M/5bh2Rpwp2gV?=
+ =?iso-8859-1?Q?ETMlth0s3T7m3rwZ8USZTbdEPN9RkbI9diRa0NFgY8yOJVPz+8PPIophne?=
+ =?iso-8859-1?Q?KPIRioSsNE8foBFFYGiOjs2llQ019FSCHrwbQIJ/mt+iDk6MoR0hnWmU5+?=
+ =?iso-8859-1?Q?WPYZjAY4bd8nspYcz1gg2QqzmW8m3z/oxhPNOjN/JYRSZMyec9klkce71J?=
+ =?iso-8859-1?Q?ttorJ9LzIunUZ8RcxR0P/Ds/ta3DqGjDG8qr8Y2siHsGD7185ppw4oUae9?=
+ =?iso-8859-1?Q?UxrU7fzjFTjCrKcH6VUXqgVvVsbIhBGRSZSIjSCfl8XyFLQDkD0SAV+blc?=
+ =?iso-8859-1?Q?uGBDbk/BgmaBF1zcP/5Oq1z4Bs0O4KD9Elja38qLkJjgvqHtgqZkV/UtAc?=
+ =?iso-8859-1?Q?W3+Hx9qvh+5VJkcoCORBf478WrYXf18u5r3D1C4mkgD1/MMuqduIumsUY7?=
+ =?iso-8859-1?Q?QMvY5AZ+IqDmh9C4WTcg5R+0RiawSr/Yke3cA+YtIp9xY1Ky9MCMFi4MC9?=
+ =?iso-8859-1?Q?hjqSc8UZ0KnX5Xb4jkwSv5UXEiktjfb4UR5IubYbHla8hMQpAbvIwZR8zL?=
+ =?iso-8859-1?Q?r7RjYUsf2cXbAShLXO/owORA5txbMb0efaUi3EuZi38sOF09DIQjxj766A?=
+ =?iso-8859-1?Q?JK17D5RBrM6nP1PsEjvShB/wn8s8XG3+iBZLKSZ3FUMG9N/94laREYul1/?=
+ =?iso-8859-1?Q?T0mYAG3TkkY4gQYWQFcwIUl4DEmZq04uPF/RWpsdCUHO7/Y995EgiolSYp?=
+ =?iso-8859-1?Q?rBNaPMFFcmLejQYAFLrurRtmeor7Us9PvxFWFbxOOO28WFztjjW/znfotI?=
+ =?iso-8859-1?Q?AihoRYwxuAbWooJcHGPp4v9cPVKMsvnDRnPTmyIYqXEZTpD0kLX57/kM/b?=
+ =?iso-8859-1?Q?vwKFYeXe8TC+Chy4GKA/+a9rzY+5SD4QccYm/d9mLuXT5S+Y1DSdLAj4fv?=
+ =?iso-8859-1?Q?tXevLZmdkG499j0ckJNZUK8kkTCRzYG6dtq0XB5hwQupMJRAwQfKXNSlfH?=
+ =?iso-8859-1?Q?iWZBXSfL7AAl1l/RJ3r+BP1/LlcaRBZicWsaPLG68EoD26xFb9KFGGEw?=
+ =?iso-8859-1?Q?=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 17643e4f-595c-4cfb-c81b-08dda82c8b84
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2025 14:39:03.0790
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ICIAgb6oSSec660n4c7WHtKU3sAr2Pw18SkZgEB5I0TZ4DcHfkEM0b76VDgiqcuFSWCxeEpc+IeIU07821TaLQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB8082
+X-OriginatorOrg: intel.com
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Add a Kconfig switch allowing to disable the legacy parts of the GPIO
-sysfs interface. This means that even though we keep the
-/sys/class/gpio/ directory, it no longer contains the global
-export/unexport attribute pair (instead, the user should use the
-per-chip export/unpexport) nor the gpiochip$BASE entries. This option
-default to y if GPIO sysfs is enabled but we'll default it to n at some
-point in the future.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/Kconfig         |  8 ++++++++
- drivers/gpio/gpiolib-sysfs.c | 32 ++++++++++++++++++++++++++++++++
- 2 files changed, 40 insertions(+)
+Hello,
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 44f922e10db2f8dcbdacf79ccd27b0fd9cd93564..d040fdd95ee4b19851057fbedbb023f277149c9c 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -69,6 +69,14 @@ config GPIO_SYSFS
- 	  use the character device /dev/gpiochipN with the appropriate
- 	  ioctl() operations instead.
- 
-+config GPIO_SYSFS_LEGACY
-+	bool "Enable legacy functionalities of the sysfs interface"
-+	depends on GPIO_SYSFS
-+	default y if GPIO_SYSFS
-+	help
-+	  Say Y here if you want to enable the legacy, global GPIO
-+	  numberspace-based functionalities of the sysfs interface.
-+
- config GPIO_CDEV
- 	bool "Character device (/dev/gpiochipN) support" if EXPERT
- 	default y
-diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
-index d8c17d71d5458011d15bc4239bd4c041244da3fd..48e1353f966837d46f00b552f870440097ecfe18 100644
---- a/drivers/gpio/gpiolib-sysfs.c
-+++ b/drivers/gpio/gpiolib-sysfs.c
-@@ -46,7 +46,9 @@ struct gpiod_data {
- 	struct device *dev;
- 
- 	struct mutex mutex;
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- 	struct kernfs_node *value_class_node;
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- 	struct kernfs_node *value_chip_node;
- 	int irq;
- 	unsigned char irq_flags;
-@@ -67,7 +69,9 @@ struct gpiod_data {
- 
- struct gpiodev_data {
- 	struct gpio_device *gdev;
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- 	struct device *cdev_base; /* Class device by GPIO base */
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- 	struct device *cdev_id; /* Class device by GPIO device ID */
- 	struct list_head exported_lines;
- };
-@@ -181,7 +185,9 @@ static irqreturn_t gpio_sysfs_irq(int irq, void *priv)
- {
- 	struct gpiod_data *data = priv;
- 
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- 	sysfs_notify_dirent(data->value_class_node);
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- 	kernfs_notify(data->value_chip_node);
- 
- 	return IRQ_HANDLED;
-@@ -416,6 +422,7 @@ static umode_t gpio_is_visible(struct kobject *kobj, struct attribute *attr,
-  *   /ngpio ... matching gpio_chip.ngpio
-  */
- 
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- static ssize_t base_show(struct device *dev, struct device_attribute *attr,
- 			 char *buf)
- {
-@@ -424,6 +431,7 @@ static ssize_t base_show(struct device *dev, struct device_attribute *attr,
- 	return sysfs_emit(buf, "%u\n", data->gdev->base);
- }
- static DEVICE_ATTR_RO(base);
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- 
- static ssize_t label_show(struct device *dev, struct device_attribute *attr,
- 			  char *buf)
-@@ -548,6 +556,7 @@ static struct device_attribute dev_attr_unexport = __ATTR(unexport, 0200,
- 							  NULL,
- 							  chip_unexport_store);
- 
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- static struct attribute *gpiochip_attrs[] = {
- 	&dev_attr_base.attr,
- 	&dev_attr_label.attr,
-@@ -555,6 +564,7 @@ static struct attribute *gpiochip_attrs[] = {
- 	NULL,
- };
- ATTRIBUTE_GROUPS(gpiochip);
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- 
- static struct attribute *gpiochip_ext_attrs[] = {
- 	&dev_attr_label.attr,
-@@ -565,6 +575,7 @@ static struct attribute *gpiochip_ext_attrs[] = {
- };
- ATTRIBUTE_GROUPS(gpiochip_ext);
- 
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- /*
-  * /sys/class/gpio/export ... write-only
-  *	integer N ... number of GPIO to export (full access)
-@@ -629,10 +640,13 @@ static struct attribute *gpio_class_attrs[] = {
- 	NULL,
- };
- ATTRIBUTE_GROUPS(gpio_class);
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- 
- static const struct class gpio_class = {
- 	.name =		"gpio",
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- 	.class_groups =	gpio_class_groups,
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- };
- 
- static int match_gdev(struct device *dev, const void *desc)
-@@ -763,6 +777,7 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
- 	 * at least one known user of gpiod_export_link() in the tree. This
- 	 * function still uses class_find_device() internally.
- 	 */
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- 	desc_data->dev = device_create_with_groups(&gpio_class, &gdev->dev,
- 						   MKDEV(0, 0), desc_data,
- 						   desc_data->attr_groups,
-@@ -779,6 +794,7 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
- 		status = -ENODEV;
- 		goto err_unregister_device;
- 	}
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- 
- 	gdev_data = gdev_get_data(gdev);
- 	if (!gdev_data) {
-@@ -822,10 +838,12 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
- err_free_name:
- 	kfree(desc_data->attr_group.name);
- err_put_dirent:
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- 	sysfs_put(desc_data->value_class_node);
- err_unregister_device:
- 	device_unregister(desc_data->dev);
- err_free_data:
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- 	kfree(desc_data);
- err_clear_bit:
- 	clear_bit(FLAG_EXPORT, &desc->flags);
-@@ -834,12 +852,14 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
- }
- EXPORT_SYMBOL_GPL(gpiod_export);
- 
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- static int match_export(struct device *dev, const void *desc)
- {
- 	struct gpiod_data *data = dev_get_drvdata(dev);
- 
- 	return data->desc == desc;
- }
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- 
- /**
-  * gpiod_export_link - create a sysfs link to an exported GPIO node
-@@ -856,6 +876,7 @@ static int match_export(struct device *dev, const void *desc)
- int gpiod_export_link(struct device *dev, const char *name,
- 		      struct gpio_desc *desc)
- {
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- 	struct device *cdev;
- 	int ret;
- 
-@@ -872,6 +893,9 @@ int gpiod_export_link(struct device *dev, const char *name,
- 	put_device(cdev);
- 
- 	return ret;
-+#else
-+	return -EOPNOTSUPP;
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- }
- EXPORT_SYMBOL_GPL(gpiod_export_link);
- 
-@@ -910,8 +934,10 @@ void gpiod_unexport(struct gpio_desc *desc)
- 
- 		list_del(&desc_data->list);
- 		clear_bit(FLAG_EXPORT, &desc->flags);
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- 		sysfs_put(desc_data->value_class_node);
- 		device_unregister(desc_data->dev);
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- 		kernfs_put(desc_data->value_chip_node);
- 
- 		/*
-@@ -966,6 +992,7 @@ int gpiochip_sysfs_register(struct gpio_device *gdev)
- 
- 	guard(mutex)(&sysfs_lock);
- 
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- 	/* use chip->base for the ID; it's already known to be unique */
- 	data->cdev_base = device_create_with_groups(&gpio_class, parent,
- 						    MKDEV(0, 0), data,
-@@ -976,13 +1003,16 @@ int gpiochip_sysfs_register(struct gpio_device *gdev)
- 		kfree(data);
- 		return PTR_ERR(data->cdev_base);
- 	}
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- 
- 	data->cdev_id = device_create_with_groups(&gpio_class, parent,
- 						  MKDEV(0, 0), data,
- 						  gpiochip_ext_groups,
- 						  "chip%d", gdev->id);
- 	if (IS_ERR(data->cdev_id)) {
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- 		device_unregister(data->cdev_base);
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- 		kfree(data);
- 		return PTR_ERR(data->cdev_id);
- 	}
-@@ -1001,7 +1031,9 @@ void gpiochip_sysfs_unregister(struct gpio_device *gdev)
- 		if (!data)
- 			return;
- 
-+#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
- 		device_unregister(data->cdev_base);
-+#endif /* CONFIG_GPIO_SYSFS_LEGACY */
- 		device_unregister(data->cdev_id);
- 		kfree(data);
- 	}
+kernel test robot noticed a 5.2% improvement of stress-ng.mlockmany.ops_per_sec on:
+
+
+commit: 6bef4c2f97221f3b595d08c8656eb5845ef80fe9 ("mm: move lesser used vma_area_struct members into the last cacheline")
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+
+
+testcase: stress-ng
+config: x86_64-rhel-9.4
+compiler: gcc-12
+test machine: 64 threads 2 sockets Intel(R) Xeon(R) Gold 6346 CPU @ 3.10GHz (Ice Lake) with 256G memory
+parameters:
+
+	nr_threads: 100%
+	testtime: 60s
+	test: mlockmany
+	cpufreq_governor: performance
+
+
+
+Details are as below:
+-------------------------------------------------------------------------------------------------->
+
+
+The kernel config and materials to reproduce are available at:
+https://download.01.org/0day-ci/archive/20250610/202506102254.13cda0af-lkp@intel.com
+
+=========================================================================================
+compiler/cpufreq_governor/kconfig/nr_threads/rootfs/tbox_group/test/testcase/testtime:
+  gcc-12/performance/x86_64-rhel-9.4/100%/debian-12-x86_64-20240206.cgz/lkp-icl-2sp7/mlockmany/stress-ng/60s
+
+commit: 
+  f35ab95ca0 ("mm: replace vm_lock and detached flag with a reference count")
+  6bef4c2f97 ("mm: move lesser used vma_area_struct members into the last cacheline")
+
+f35ab95ca0af7a27 6bef4c2f97221f3b595d08c8656 
+---------------- --------------------------- 
+         %stddev     %change         %stddev
+             \          |                \  
+      0.66 ±  5%      -0.1        0.57 ±  9%  mpstat.cpu.all.soft%
+     27183            +1.9%      27708        vmstat.system.cs
+    264643            +5.2%     278326        stress-ng.mlockmany.ops
+      4406            +5.2%       4634        stress-ng.mlockmany.ops_per_sec
+    314509            +4.9%     329874        stress-ng.time.voluntary_context_switches
+    343582            -3.7%     330742 ±  2%  proc-vmstat.nr_active_anon
+    454064            -2.7%     441886        proc-vmstat.nr_anon_pages
+     54743            -3.5%      52828        proc-vmstat.nr_slab_unreclaimable
+    343583            -3.7%     330741 ±  2%  proc-vmstat.nr_zone_active_anon
+      1.99 ±  8%     -14.0%       1.72 ± 12%  sched_debug.cfs_rq:/.h_nr_queued.stddev
+      1.98 ±  8%     -13.9%       1.71 ± 12%  sched_debug.cfs_rq:/.h_nr_runnable.stddev
+      0.00 ± 18%     -24.8%       0.00 ± 20%  sched_debug.cpu.next_balance.stddev
+      1.99 ±  8%     -13.8%       1.72 ± 12%  sched_debug.cpu.nr_running.stddev
+      0.25            +0.0        0.25        perf-stat.i.branch-miss-rate%
+  21663531            +1.7%   22033919        perf-stat.i.branch-misses
+     27855            +1.8%      28352        perf-stat.i.context-switches
+      0.25            +0.0        0.25        perf-stat.overall.branch-miss-rate%
+  21319615            +1.7%   21691011        perf-stat.ps.branch-misses
+     27388            +1.7%      27866        perf-stat.ps.context-switches
+     19.64 ±  7%     -18.7%      15.97 ± 11%  perf-sched.sch_delay.avg.ms.__cond_resched.__vmalloc_area_node.__vmalloc_node_range_noprof.alloc_thread_stack_node.dup_task_struct
+     11.34 ±  8%     -13.5%       9.80 ±  6%  perf-sched.sch_delay.avg.ms.__cond_resched.down_read.__mm_populate.do_mlock.__x64_sys_mlock
+     17.11 ±  4%      -8.2%      15.70 ±  5%  perf-sched.sch_delay.avg.ms.__cond_resched.mlock_pte_range.walk_pmd_range.isra.0
+     10.51 ± 10%     +35.6%      14.26 ± 15%  perf-sched.sch_delay.avg.ms.__cond_resched.wp_page_copy.__handle_mm_fault.handle_mm_fault.do_user_addr_fault
+     52.76 ± 22%     -31.2%      36.28 ± 18%  perf-sched.sch_delay.max.ms.irqentry_exit_to_user_mode.asm_exc_page_fault.[unknown].[unknown]
+     50.19 ±  7%     -26.9%      36.68 ± 45%  perf-sched.wait_and_delay.avg.ms.__cond_resched.__vmalloc_area_node.__vmalloc_node_range_noprof.alloc_thread_stack_node.dup_task_struct
+     23.36 ±  9%     -14.2%      20.03 ±  6%  perf-sched.wait_and_delay.avg.ms.__cond_resched.down_read.__mm_populate.do_mlock.__x64_sys_mlock
+     51.05 ± 10%     -34.3%      33.53 ± 45%  perf-sched.wait_and_delay.avg.ms.__cond_resched.kmem_cache_alloc_noprof.prepare_creds.copy_creds.copy_process
+    245.67 ±  6%     -47.6%     128.83 ±  4%  perf-sched.wait_and_delay.count.__cond_resched.copy_page_range.dup_mmap.dup_mm.constprop
+    286.83 ±  7%     -21.0%     226.67 ±  5%  perf-sched.wait_and_delay.count.__cond_resched.down_write.anon_vma_clone.anon_vma_fork.dup_mmap
+    120.67 ±  9%     +32.6%     160.00 ±  8%  perf-sched.wait_and_delay.count.schedule_preempt_disabled.rwsem_down_write_slowpath.down_write.anon_vma_fork
+    225.41 ± 31%     -33.7%     149.44 ±  7%  perf-sched.wait_and_delay.max.ms.__cond_resched.copy_page_range.dup_mmap.dup_mm.constprop
+     77.77 ± 73%     +79.0%     139.22 ± 15%  perf-sched.wait_and_delay.max.ms.__cond_resched.uprobe_start_dup_mmap.dup_mm.constprop.0
+     12.02 ± 11%     -14.9%      10.23 ±  6%  perf-sched.wait_time.avg.ms.__cond_resched.down_read.__mm_populate.do_mlock.__x64_sys_mlock
+     31.78 ± 18%     -31.9%      21.63 ± 11%  perf-sched.wait_time.avg.ms.__cond_resched.kmem_cache_alloc_noprof.prepare_creds.copy_creds.copy_process
+     16.57 ±  5%      -9.3%      15.03 ±  5%  perf-sched.wait_time.avg.ms.__cond_resched.mlock_pte_range.walk_pmd_range.isra.0
+     25.21 ±  7%     +12.4%      28.34 ±  6%  perf-sched.wait_time.avg.ms.__cond_resched.mutex_lock_killable.pcpu_alloc_noprof.mm_init.dup_mm
+     24.68 ± 29%     +39.0%      34.31 ± 15%  perf-sched.wait_time.avg.ms.__cond_resched.uprobe_start_dup_mmap.dup_mm.constprop.0
+    207.48 ± 35%     -32.5%     140.02 ±  6%  perf-sched.wait_time.max.ms.__cond_resched.copy_page_range.dup_mmap.dup_mm.constprop
+     70.62 ± 41%     +75.6%     124.03 ± 15%  perf-sched.wait_time.max.ms.__cond_resched.uprobe_start_dup_mmap.dup_mm.constprop.0
+
+
+
+
+Disclaimer:
+Results have been estimated based on internal Intel analysis and are provided
+for informational purposes only. Any difference in system hardware or software
+design or configuration may affect actual performance.
+
 
 -- 
-2.48.1
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
