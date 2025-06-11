@@ -1,116 +1,199 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E85234964;
-	Wed, 11 Jun 2025 08:30:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC98D221262;
+	Wed, 11 Jun 2025 08:30:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749630619; cv=none; b=REDNDT2I4GmLm+y5cfninUXBcZjSyyK30cRC7OTxAle0uJVHt2p2UX9RRQ3/eVSwVu8KJNdnfZtft3W5vlaFHW/Di1SERq6Q7Mjfkm+fTWDY3Jq+t+RHyQ/vBZ8bd5clWTaQ/axIpgBi7Hl709U5gKGAI5Lmn65GdU6wBFauHm4=
+	t=1749630642; cv=none; b=MBg/C2S8gxLfeOnfkt3SsixWkfPQm2gztfc56G3z2I+S7+rpLIcx29WhbMYVTa74LbhHHJHnZZDzuEatO5z2o3T9e3Mh2arplNoz2soy3wVbNqBrmPwrUB5a18DNdKbPJ9wNUEEYMwgt0s8LGs6l1HNXzQgLrJLsWJMwcGwHtKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749630619; c=relaxed/simple;
-	bh=jZ9Hv45HUZkteVQv6ya9VOMC0pxuG2odAMafRrZj2qI=;
+	s=arc-20240116; t=1749630642; c=relaxed/simple;
+	bh=nG4MAcdamN7DYqmVn2ZlJNXQKWZHpSsi/rSOtqPEcyY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t0Lb1eg6E+RKuBDENvB0oWP8Zzhxuw6z7hOC2JAjxlC4XiWFNPP7LP/TzvC2tSUJtzES0sUQOLE8cjSoUfEVFKt86l2bKfmOjyOKWWLdwzorY0HzYh6Je5zu0z1XpoBOkAeLE21w7d6rz0miisLmnELax4BafWT4ZGU1f5n2mzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HfqRcl/D; arc=none smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=MBX21LIuDcyoEECJ2AohHAPjuq1OiqlOTzSfg185IjdOrqCJ7mQQ3hK9Xegci+L841FxnAzk9KS3iYvTH3nHUjsbPqSEMUT2M2R0odrl43MRix8/JrlsVMNP5zV2NpMVDHK/JEJjwQvfx1tsjMFiCXlPFSp+/ryUp4suHSQsa5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jfwCpNrC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HfqRcl/D"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7d3862646eeso220134685a.2;
-        Wed, 11 Jun 2025 01:30:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749630616; x=1750235416; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qcSP2lVjFJ/bu0C3VkfzSJDndgidRs2bj0/IW68A3/k=;
-        b=HfqRcl/DIq0pEUqS+MFGATn8ec+U1Y+bKQiSbrJu7oHVQExgo/lMXlmpIEfxrgIuEB
-         V3VxFLApqvJgv1wfGof9mXeVK3gY/YhzBj8cWCffp+XEUwalaOLci0mUuBT3uroxYvKJ
-         0bhEAQwGs6+NxEyFISxAX2772plxzh6XKtSO28B9KOqhqT7RI0P5fiNWR40ZSFbAhVQJ
-         FvOEOQMZdFlYCsDdHzhxx9p+oAIuOB1HNqDDgHbEV/uioRy1lMSPsZ01B6h5Qrc6neRd
-         7Uw7EoHpvWEwQbuQcHAFLgZDWX5mSgqBZSuEbp/NqovMvxM2XdiPk7IfDRLJdVpPsXBA
-         hrhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749630616; x=1750235416;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qcSP2lVjFJ/bu0C3VkfzSJDndgidRs2bj0/IW68A3/k=;
-        b=U+54/Bttd6CagRgqtfUJZY7c4AmBdnsIAVQ/WEuQRcNJVFY18o6LiFtLWW2cMGv61J
-         Wn1h9tpZy1cTf6xiiL5JDJcPi4KvvhFnlRSbq3J0JwCK7LFc0LGYb75MrAb0iejk6wz+
-         VOSTkchiKgWxOscg6zn1E2+xBNOJNfpeYfRKoVhjNXMTH0nwllkoZRYVrn/0mE04kEUV
-         TxgWBZb8Gq1CHKsX17PbNFsxab7altRjh7PZvGtJy6wiTyMk6+BStfBGKGb6KubOCkDP
-         FCdsVUM0zyzwl+aigasr3Gx2x8LUfQqodbmD+0CQc0aeLBq9TvilNjrtYpuxebGMUTCh
-         gGbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVK11/wROIWXFIcSSu3zx1Zg5ShhvTFFlsNpLDWAFNLJCuElnZBmg2UmAKJwRrONpkdYjpywZB2QOF04ksh@vger.kernel.org, AJvYcCXRs4kSRSsFIUz7F9ONn//+qBLItaIfzalbV3vP8pwJrcxXr8ZTwiBn8xIe128Lhk0BIRZcGOQ9H69V@vger.kernel.org, AJvYcCXoYCcRsNDDIVs1V2lfTaxKqhKhUoRg3YJ4a5vDDX1uaMfNwwAiCiQtiQWSEWtiID49qT6VXs8spXQ8@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyay4kU51ZsSRU1jxHMbB0LRsytRneGMRjBpKsxfhaETSsE7qfF
-	wgHiIJM4xqzfoTqavsJe0YCce23B6zU0KR2VKRFBA2ZFRJSYv7JwMIyr
-X-Gm-Gg: ASbGncu7gcUn43TgNnEjP0lfMDmQe/mR2TIelgt1IGeGDWyUFHRmbuCcLtmDHC2Pf+t
-	jukcg0xnYv5DxHmAAzWcFDubJnxA9NAPdndDHSi3w4nICt1qJwtYFtYo6hQPCGwuhBfNrFWnmX2
-	h27BjxWJAYcBgtiOXIGnm2RQEchQOT1wrrzNrg/n5x13maYdhtaZoH+9IlCOLFSvWLjkcboUMPx
-	OxDB1Ousqv87+q4j5US0yJU1hglDFpXxxJW8Crdtqs3Dx5MwyRAI8zwBVkYub7wbVIZPE1/gNOI
-	vQivOVrUyBoogltNfvzFK0L3uOvbfcy2/n1re1jgFEicBKJC
-X-Google-Smtp-Source: AGHT+IGCumupGFYJr2miTmB5pZGshAqhyq5KGLzPXAmspYahxEndxqWSVq6p8juUyI8Wq6JrkTAl1w==
-X-Received: by 2002:a05:620a:2489:b0:7d3:99db:c4c with SMTP id af79cd13be357-7d3a8805820mr382875185a.6.1749630615951;
-        Wed, 11 Jun 2025 01:30:15 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6fb09b2a085sm78890866d6.82.2025.06.11.01.30.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 01:30:15 -0700 (PDT)
-Date: Wed, 11 Jun 2025 16:29:07 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
-	Inochi Amaoto <inochiama@gmail.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chen Wang <unicorn_wang@outlook.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Vinod Koul <vkoul@kernel.org>, 
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>, Yu Yuan <yu.yuan@sjtu.edu.cn>, Ze Huang <huangze@whut.edu.cn>, 
-	Thomas Bonnefille <thomas.bonnefille@bootlin.com>, Junhui Liu <junhui.liu@pigmoral.tech>, 
-	devicetree@vger.kernel.org, sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, dmaengine@vger.kernel.org, Yixun Lan <dlan@gentoo.org>, 
-	Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH v3 1/4] dt-bindings: reset: sophgo: Add CV1800B support
-Message-ID: <2v4hfzqgz22k6s776onexnhd5cnhfr7s7ggvcmh4mfiviigq66@a2ehkwbv7oll>
-References: <20250611075321.1160973-1-inochiama@gmail.com>
- <20250611075321.1160973-2-inochiama@gmail.com>
- <20250611-brown-turtle-of-election-87c324@kuoka>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jfwCpNrC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB381C4CEEE;
+	Wed, 11 Jun 2025 08:30:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749630641;
+	bh=nG4MAcdamN7DYqmVn2ZlJNXQKWZHpSsi/rSOtqPEcyY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jfwCpNrCcxqvPhKBaCbhYFsRFLlO18PPVHXLvw2HY9kVggJurf6gzE4REuwGtmzvm
+	 ePt0eNwshe+wg4RUY6rMyiyDL7HAJLXGIN+hYutgjnbUvU2tSX4+QZRiJIQ9HiMkRG
+	 Orv6XjeJ7JucWelpLZpaBUJ0GAN3IwPf6JyHXk0UaKtmP+QuEpyADkYEJ4jPGLobU0
+	 925QkioSUiGC4JrKUws8vTjjvO9hHUR1mnG9aO2ZOp6AWegJHVzYd8u9SM/f5QPBB8
+	 hnydKj2l4s9y/RJtJdjOBo1QJyT7ODPF4/rwj7YdZqhUP+4pcN4xe+a7HwOvucQSnJ
+	 RQILoZkx/XSRQ==
+Date: Wed, 11 Jun 2025 10:30:35 +0200
+From: Alejandro Colomar <alx@kernel.org>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org, Song Liu <songliubraving@fb.com>, 
+	Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, 
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, 
+	David Laight <David.Laight@aculab.com>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCHv3 22/22] man2: Add uprobe syscall page
+Message-ID: <k32xtpz5y4qdxe43fd6pgjypm3dvtn5lkokjkj7palxcqtxf5a@6crskezmzcch>
+References: <20250605132350.1488129-1-jolsa@kernel.org>
+ <20250605132350.1488129-23-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="adcwlsquorqhz652"
 Content-Disposition: inline
-In-Reply-To: <20250611-brown-turtle-of-election-87c324@kuoka>
+In-Reply-To: <20250605132350.1488129-23-jolsa@kernel.org>
 
-On Wed, Jun 11, 2025 at 10:19:49AM +0200, Krzysztof Kozlowski wrote:
-> On Wed, Jun 11, 2025 at 03:53:15PM GMT, Inochi Amaoto wrote:
-> > Add bindings for the reset generator on the SOPHGO CV1800B
-> > RISC-V SoC.
-> > 
-> > Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-> > Acked-by: Rob Herring (Arm) <robh@kernel.org>
-> > ---
-> >  Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml b/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml
-> > index 1d1b84575960..bd8dfa998939 100644
-> > --- a/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml
-> > +++ b/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml
-> > @@ -17,6 +17,7 @@ properties:
-> >                - sophgo,sg2044-reset
-> >            - const: sophgo,sg2042-reset
-> >        - const: sophgo,sg2042-reset
-> > +      - const: sophgo,cv1800b-reset
-> 
-> Keep alphabetical order. That's enum with previous entry, btw.
-> 
 
-There is a small question for this: should I move this before the entry
-"const: sophgo,sg2042-reset", or before the first item entry?
+--adcwlsquorqhz652
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx@kernel.org>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org, Song Liu <songliubraving@fb.com>, 
+	Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, 
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, 
+	David Laight <David.Laight@aculab.com>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCHv3 22/22] man2: Add uprobe syscall page
+References: <20250605132350.1488129-1-jolsa@kernel.org>
+ <20250605132350.1488129-23-jolsa@kernel.org>
+MIME-Version: 1.0
+In-Reply-To: <20250605132350.1488129-23-jolsa@kernel.org>
 
-Regards,
-Inochi
+On Thu, Jun 05, 2025 at 03:23:49PM +0200, Jiri Olsa wrote:
+> Changing uretprobe syscall man page to be shared with new
+> uprobe syscall man page.
+>=20
+> Cc: Alejandro Colomar <alx@kernel.org>
+
+Reviewed-by: Alejandro Colomar <alx@kernel.org>
+
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  man/man2/uprobe.2    |  1 +
+>  man/man2/uretprobe.2 | 36 ++++++++++++++++++++++++------------
+>  2 files changed, 25 insertions(+), 12 deletions(-)
+>  create mode 100644 man/man2/uprobe.2
+>=20
+> diff --git a/man/man2/uprobe.2 b/man/man2/uprobe.2
+> new file mode 100644
+> index 000000000000..ea5ccf901591
+> --- /dev/null
+> +++ b/man/man2/uprobe.2
+> @@ -0,0 +1 @@
+> +.so man2/uretprobe.2
+> diff --git a/man/man2/uretprobe.2 b/man/man2/uretprobe.2
+> index bbbfb0c59335..df0e5d92e5ed 100644
+> --- a/man/man2/uretprobe.2
+> +++ b/man/man2/uretprobe.2
+> @@ -2,22 +2,28 @@
+>  .\"
+>  .\" SPDX-License-Identifier: Linux-man-pages-copyleft
+>  .\"
+> -.TH uretprobe 2 (date) "Linux man-pages (unreleased)"
+> +.TH uprobe 2 (date) "Linux man-pages (unreleased)"
+>  .SH NAME
+> +uprobe,
+>  uretprobe
+>  \-
+> -execute pending return uprobes
+> +execute pending entry or return uprobes
+>  .SH SYNOPSIS
+>  .nf
+> +.B int uprobe(void);
+>  .B int uretprobe(void);
+>  .fi
+>  .SH DESCRIPTION
+> +.BR uprobe ()
+> +is an alternative to breakpoint instructions
+> +for triggering entry uprobe consumers.
+> +.P
+>  .BR uretprobe ()
+>  is an alternative to breakpoint instructions
+>  for triggering return uprobe consumers.
+>  .P
+>  Calls to
+> -.BR uretprobe ()
+> +these system calls
+>  are only made from the user-space trampoline provided by the kernel.
+>  Calls from any other place result in a
+>  .BR SIGILL .
+> @@ -26,22 +32,28 @@ The return value is architecture-specific.
+>  .SH ERRORS
+>  .TP
+>  .B SIGILL
+> -.BR uretprobe ()
+> -was called by a user-space program.
+> +These system calls
+> +were called by a user-space program.
+>  .SH VERSIONS
+>  The behavior varies across systems.
+>  .SH STANDARDS
+>  None.
+>  .SH HISTORY
+> +.TP
+> +.BR uprobe ()
+> +TBD
+> +.TP
+> +.BR uretprobe ()
+>  Linux 6.11.
+>  .P
+> -.BR uretprobe ()
+> -was initially introduced for the x86_64 architecture
+> -where it was shown to be faster than breakpoint traps.
+> -It might be extended to other architectures.
+> +These system calls
+> +were initially introduced for the x86_64 architecture
+> +where they were shown to be faster than breakpoint traps.
+> +They might be extended to other architectures.
+>  .SH CAVEATS
+> -.BR uretprobe ()
+> -exists only to allow the invocation of return uprobe consumers.
+> -It should
+> +These system calls
+> +exist only to allow the invocation of
+> +entry or return uprobe consumers.
+> +They should
+>  .B never
+>  be called directly.
+> --=20
+> 2.49.0
+>=20
+
+--=20
+<https://www.alejandro-colomar.es/>
+
+--adcwlsquorqhz652
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmhJPqsACgkQ64mZXMKQ
+wqm0/Q//W3YHaJa/TGiGlsMiUbKmmkHg/5ZAffu3BKgS+7NgyowntxwY5DAaC7Os
+B3qeBQhmKwSrc/sJ1AqfV1TnIt/zjj0Ye9pKx4QE08JRCafo+lew5F4v/Op4mKhD
+9LmiTUsPyojlXp+h/slFR+i58CWrrv4cltmiHgEkB9aj0UgjXrLr8SyMM5bT2WoF
+YnG1QaxiZj0gWX1/05gMfu0GEJmqI/TXLbZ1I0JRQCo4Q2k76PdFTomNyAtnYh1w
+SDICEh8zQhFqkDAC6pWp01gP+9L5LsSGpGxrtNtewrK62GBnWNECHJZcoTCHItlp
+htZLgnyWMnjO3XWFH2d+bveD8+c0OinvF3RSAxb0BagoyH9OnOLa6tf2raAYkDkC
+s3+1QHPbgLSlWlWfdJx8+wrYUlhR+eofikK/o5p8FtY6S8QhXEBalb+Tm+2/VJNP
+0vEFBr0G53TjDG1rM/4xD633GxbCssRbiifHH04erwC/YVmu6ygb8DBwN76hWfRF
+XXpFfDASRM9nFPWzCUTqRX1lcqQlAvqPSTyKpHCxF8eGyStOa7MooVClFYDvU94i
+07jmvGiT4xRa3BeISdvubY4o/DG5HSkiDcjAyCwsITYliRIDfZhydu2icnRJZa3k
+Wk4yqGz9sVv1G98JhoBvZ+G4CJS8aGjKolPzV3IAVTO0DaXogFg=
+=6rmh
+-----END PGP SIGNATURE-----
+
+--adcwlsquorqhz652--
