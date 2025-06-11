@@ -1,103 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16027199FB2;
-	Wed, 11 Jun 2025 16:36:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A85021018F;
+	Wed, 11 Jun 2025 16:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749659783; cv=none; b=tE0EFgBISUcVDm0MU3sFXqDY4IHOFSrqEhfQx68zFeC/AE/4HlJ0yeTTFbF1suRpFYka6j4+Pe0x5CYJLbte4o3FpS0BrMwK6rnhlWsMpm9Y+l4fK8lxZegC8bCaEhSOVPNAJ7zl4ad0T56mwPdxf22TXlja7m+Vb8dPfgDaDMM=
+	t=1749659802; cv=none; b=fG/4P29r0cTEsIeJl6qcPgsGAnOu6dERHOSQJXpmCMkCMfBcZCY08v+fZbTdekVLd0wk/eSIwXzU89Qz2zRy6SZplDUknxpTIn2kNwYhgFuBPgj/pSvtX2pllPmvRjl+B8nnMNqp7QHvlkvDiO92W/hEa4bOHrr9RZZbH32qWzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749659783; c=relaxed/simple;
-	bh=sclz4982E4WzBN3+77UXueLPKjZaQ8E9dIo5KXXJhDU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bVZkq38ch0WWZfIgwP219u98OJFEOITnK6KoWk4QO/3PeeKVM37AZ1HeUtUZpimUZW7W6v84rKIHgtJp29H3I79E5J7fhA6dG27mjQXRYC/830OynUQ6pUv5P60RRUyXexTclHbIkc4S2/snJ3/ukkc8bg3K1fz1L7P4gd0evTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gr9Tkr4C; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749659802; c=relaxed/simple;
+	bh=OKyY1Suf9wd0Roqmv3s7f7pR23uXYiojLlo7XhjLd8U=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=iZYScux7v1CicdqbEFTf+NMTq45neZNOrfYdc9hpXMYTzbDwCQLRg3muAuQ3W+CBRk3XZZc1ks85WgSQ0XiIUhh1AYV0W2LGw7KEomzv0UyY+ghQBo1uHqlblbHxh6n+yhXE8iHq3SdzEw/q6qpSDWSGUItZZvf4crhbDt0iZKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=waUTjhqM; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=N1WapofN; arc=none smtp.client-ip=202.12.124.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gr9Tkr4C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09B13C4CEE3;
-	Wed, 11 Jun 2025 16:36:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749659782;
-	bh=sclz4982E4WzBN3+77UXueLPKjZaQ8E9dIo5KXXJhDU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=gr9Tkr4C3a+q0tp1tV/MbnrtfnQ54lTT+lFIVz+Um9u/CfxGTiBksQGPeaBSNpcuL
-	 QHf0m6u+Qkq1y3uabTQOAYtq50kt77CYoQI6606AjD2jLqXpQvuQ+tk91sH2VX1CQt
-	 ZOmg2O4qjTc3U7fYpeqcwn2hSBZlXknZbFI/goyKaXuYMuxAggboykF7fVxYjeJcEU
-	 WqAtS2FEyKpRHvME+bIzdi5fQBPft3FHAPo6yrSlzutch9g582P1FA7SKuUupHK9pH
-	 4n4oFIQaYt0dmEW1yQWah7Lse9ooe1Iyax/nnJBQ4nFIwiM76SLS9nBJr/M+rofH64
-	 Daez8pQNQSlgw==
-Date: Wed, 11 Jun 2025 17:36:13 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-Cc: Antonio Borneo <antonio.borneo@foss.st.com>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, Andy Shevchenko <andy@kernel.org>, "David
- Lechner" <dlechner@baylibre.com>, Gatien Chevallier
- <gatien.chevallier@foss.st.com>, "Lee Jones" <lee@kernel.org>,
- <linux-iio@vger.kernel.org>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
- Olivier Moysan <olivier.moysan@foss.st.com>,
- <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
- <linux-stm32@st-md-mailman.stormreply.com>, Maxime Coquelin
- <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH 3/5] iio: trigger: stm32-timer: Fix build warnings about
- export.h
-Message-ID: <20250611173613.492b7fc5@jic23-huawei>
-In-Reply-To: <f8b1adef-10f3-4cff-9e11-10c1a16f6ec5@foss.st.com>
-References: <20250610124855.269158-1-antonio.borneo@foss.st.com>
-	<20250610124855.269158-4-antonio.borneo@foss.st.com>
-	<f8b1adef-10f3-4cff-9e11-10c1a16f6ec5@foss.st.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="waUTjhqM";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="N1WapofN"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id 5F80A11400AC;
+	Wed, 11 Jun 2025 12:36:37 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Wed, 11 Jun 2025 12:36:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1749659797;
+	 x=1749746197; bh=9FCUNYIvHK4qsxp0p8mUgko4Fhuy42loTyUOdB71d6s=; b=
+	waUTjhqMbiVv6HEcx7WkyUTfia2KbYPCy14Z88rSp5+1PEeWza1LNpcD0K6QXunK
+	34P5Q0EpGwYz1wFgNh4js30xaEk+7QJcZxnTzGtYqX6MRuDH9vPMcawPnNR1t4eB
+	kx2tTiY68TpGJhoFUbELONB+o2Adu0u3mmUfKwoZVKW1GiG3aLL+HU2rPVZX5g2U
+	l7koqIp9k4UoPa/IlUQyvob7MHRXSH1O3eUuvpWCkyfoLrJE220xELgl7rGYbQl0
+	uJhzpYuAsHTnOmmnGPQa49fRGjxHmgQIvkeCdrGl8yO5lG1dow8IonD9/WwQnfYN
+	PCFnQoTibAjeH17MU7Qcng==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749659797; x=
+	1749746197; bh=9FCUNYIvHK4qsxp0p8mUgko4Fhuy42loTyUOdB71d6s=; b=N
+	1WapofNhfWAxuNbSX0ot3rEtdNVkbk9qemZhTA2X6dNi4HdZYQmQUsp0S5PN5vK5
+	gLhV+zE/ue6Lr/shSfPWXXO2qQSevDUsUC5fCm2tKqF2izZCS4kk3184NIfZAR/Q
+	kkHFCZvLejwkRYMJwbkDnCW3i8RNe7+iTnPGySpGRyqd0LknjsxpX0nzn67ivKcj
+	afN7KLa1R17SLaz+QPOEpmiD05wi9U7uWNqIuCwVcg+n0pnpDsxbJyTQgQDdmDXW
+	cH4FlmPJZPTiGih1KhExmYG8LybQkBiyR4JPpMnTVmX+R0S74BNLODpIW9JrBjv2
+	dHCA7qTh42yw+pqGigiog==
+X-ME-Sender: <xms:k7BJaJgvBjksxBXjAydFB_w4cVTW6pibBQB0wJIcwzk0Zoz5nY0Q6Q>
+    <xme:k7BJaODves4hQIiFhIgFDif9pgToNY0gfh1XgdycsO6hiX7RU2KtX67zl_lThrNNY
+    wlCNDb_5K4noss4MZ8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduvdeikecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
+    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
+    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
+    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopedu
+    kedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhloh
+    hfthdrnhgvthdprhgtphhtthhopehnihgtkhdruggvshgruhhlnhhivghrshdolhhkmhhl
+    sehgmhgrihhlrdgtohhmpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtg
+    homhdprhgtphhtthhopehjuhhsthhinhhsthhithhtsehgohhoghhlvgdrtghomhdprhgt
+    phhtthhopehmohhrsghosehgohhoghhlvgdrtghomhdprhgtphhtthhopehlrghnhhgroh
+    eshhhurgifvghirdgtohhmpdhrtghpthhtohepshgrlhhilhdrmhgvhhhtrgeshhhurgif
+    vghirdgtohhmpdhrtghpthhtohepshhhrghojhhijhhivgeshhhurgifvghirdgtohhmpd
+    hrtghpthhtohepshhhvghnjhhirghnudehsehhuhgrfigvihdrtghomh
+X-ME-Proxy: <xmx:k7BJaJG6u7ca1fY94-WLXP18oePvV6ugFR312poY3ovkFOgngNVfxA>
+    <xmx:k7BJaOQhHOUpAkB1ljKfgHmIxTRej67mARUCSa-9maOM6g6t9NllXw>
+    <xmx:k7BJaGwK4QWLV2QCgiqlyrH7z9xYn_tzkrMlcCakygC7Zdb3yZpU0w>
+    <xmx:k7BJaE4UpXRYljFlV9eCGDVpcOJmB5c2gS1WanWP2YKCDrha0vdA9Q>
+    <xmx:lbBJaBtyBs-cO06obO03QmClHijB1-DOZl3MPbuwpk-HYCzwl9MUfBNN>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id D0D39700062; Wed, 11 Jun 2025 12:36:35 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-ThreadId: T0988381ff57d4bb7
+Date: Wed, 11 Jun 2025 18:36:15 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Jijie Shao" <shaojijie@huawei.com>, "Arnd Bergmann" <arnd@kernel.org>,
+ "Jian Shen" <shenjian15@huawei.com>, "Salil Mehta" <salil.mehta@huawei.com>,
+ "Andrew Lunn" <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>, "Nathan Chancellor" <nathan@kernel.org>
+Cc: "Nick Desaulniers" <nick.desaulniers+lkml@gmail.com>,
+ "Bill Wendling" <morbo@google.com>, "Justin Stitt" <justinstitt@google.com>,
+ "Hao Lan" <lanhao@huawei.com>, "Guangwei Zhang" <zhangwangwei6@huawei.com>,
+ Netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev
+Message-Id: <a029763b-6a5c-48ed-b135-daf1d359ac24@app.fastmail.com>
+In-Reply-To: <41f14b66-f301-45cb-bdfd-0192afe588ec@huawei.com>
+References: <20250610092113.2639248-1-arnd@kernel.org>
+ <41f14b66-f301-45cb-bdfd-0192afe588ec@huawei.com>
+Subject: Re: [PATCH] hns3: work around stack size warning
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
-On Tue, 10 Jun 2025 15:05:36 +0200
-Fabrice Gasnier <fabrice.gasnier@foss.st.com> wrote:
+On Wed, Jun 11, 2025, at 04:10, Jijie Shao wrote:
+> on 2025/6/10 17:21, Arnd Bergmann wrote:
+>> From: Arnd Bergmann <arnd@arndb.de>
+>>>>
+>> Annotate hns3_dbg_tx_spare_info() as noinline_for_stack to force the
+>> behavior that gcc has, regardless of the compiler.
+>>
+>> Ideally all the functions in here would be changed to avoid on-stack
+>> output buffers.
+>
+> Would you please help test whether the following changes have solved 
+> your problem,
+> And I'm not sure if this patch should be sent to net or net-next...
 
-> On 6/10/25 14:48, Antonio Borneo wrote:
-> > After commit a934a57a42f6 ("scripts/misc-check: check missing #include
-> > <linux/export.h> when W=1") and commit 7d95680d64ac ("scripts/misc-check:
-> > check unnecessary #include <linux/export.h> when W=1") we get the build
-> > warning with W=1:
-> > 
-> > drivers/iio/trigger/stm32-timer-trigger.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
-> > 
-> > Fix it.
-> > 
-> > Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>  
-> 
-> Hi Antonio,
-> 
-> You can add my:
-> Acked-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-Applied to the togreg branch of iio.git - initially pushed out as testing
-as I have some other stuff queued today that needs 0-day to look at it.
+Your patch arrived with whitespace corruption here, so I could not
+try it, but I'm sure it would help avoid the warning.
 
-Thanks,
+However, this is not what meant with my suggestion: you already
+allocate a temporary buffer in hns3_dbg_open() and I would
+expect it to be possible to read into that buffer directly
+without a second temporary buffer (on stack or kmalloc).
 
-J
-> 
-> Thanks,
-> Fabrice
-> 
-> > ---
-> >  drivers/iio/trigger/stm32-timer-trigger.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/iio/trigger/stm32-timer-trigger.c b/drivers/iio/trigger/stm32-timer-trigger.c
-> > index 925b864facca1..3b9a3a6cbb25c 100644
-> > --- a/drivers/iio/trigger/stm32-timer-trigger.c
-> > +++ b/drivers/iio/trigger/stm32-timer-trigger.c
-> > @@ -6,6 +6,7 @@
-> >   *
-> >   */
-> >  
-> > +#include <linux/export.h>
-> >  #include <linux/iio/iio.h>
-> >  #include <linux/iio/sysfs.h>
-> >  #include <linux/iio/timer/stm32-timer-trigger.h>  
+The normal way of doing this would be to use the infrastructure
+from seq_file and then seq_printf() and not have any extra buffers
+on top of that.
 
+      Arnd
