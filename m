@@ -1,103 +1,139 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8474289E19
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 13:55:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF6628C2C1
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 13:55:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749650102; cv=none; b=JCvrjIKunaAZ57vQ7Sc5u4HrPN8TSG69ebjtCBsZtDPP07x+jsLRonafq4JEw2vs3bRR7bfDCa7Q++Yy/dWanqnFAq8oFoFn5jgopRnIkt46wI26WW22ZGOnxGL23Iy5h7AWZ7mqIobfhUKK8W46VOBs0eO4lhkdXixVNxcYgUc=
+	t=1749650105; cv=none; b=FWX2UV7aTsJoy8Tt973+3PNe59N9k/jwpVK8FiQSVJBFkdtxwXBI5qvVCW7i+wKZEthZVun4yGA2dgqZYyD9Z8vikRuKpzwJNIfU/qbcVze00PDI/hwJLgXEq07Vo17MMZbJwPTMyj0DvnFbZ663IWQnOYT5scZ2HEfW/kauPUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749650102; c=relaxed/simple;
-	bh=4S/8XFifK+yslSu1vzucpvyrJRF9zLOqC5TSPFHxhbQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mIu3QGIeQM0Pq0BnNCDr11bFnmGSEtBg6iiR/lP3PugSKd4vFnqWEaPKrAqS5xs9+ufFolgbKTgWB/fYmKPrvpE13rspz3USVieeSN0cm8Ygr0brFfMX/qqcR4by7Tyrc77bc/faWymcFNfUxNs0wmAdAsBk8gikUDa3aN/ZWtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aS19zhAX; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749650105; c=relaxed/simple;
+	bh=SVo3B24OwlGB4MegvwJiCx+gPz1XAKK8W690GqvITAQ=;
+	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=NCRC084funA5xHZUmcL15Y1yKVs8CgKlLI4Lxhvv8SmFz8rk4Jp3FaVFYiqqo39r2nD65YFbqPotNwbX5cNYuikJmvdZ7ljP/OtAwN5qsxkvXsCQS6UwotLBLaUnPNkQ0Zm/8Wz1Qd5RGM8UHP/xJwKQ4SoqIA8MtfiFkRGNxJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=a3CiH6h0; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aS19zhAX"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so77277995e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:55:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749650099; x=1750254899; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4S/8XFifK+yslSu1vzucpvyrJRF9zLOqC5TSPFHxhbQ=;
-        b=aS19zhAXhqVPSQSLjuaqCg/U+flmVfsZtOw3eHx9kQ5yJdPNiuTMds041WtJIitqLS
-         qslVtR7BETjRHOmfiwvZs0sFWAEpTVff0yeoHs87y1nUy5Juep3IFDpUKxI5lkkndkAU
-         EwH9hZzNe1i5TIuHJFrg8HJuLZqOgl1dZTxdlGTBQt0lXshiO3AhkPQ3KBP9SA5vKZur
-         FvrYRj0VY7cc+LpdcofzcwliiOqCd+d1TO/hd2yhyVSvx8Or+/GAa3nwUudxOarbaZ1B
-         yniBMf2aOsRwCnE42+3Y7mWozf8qo7/NEO0+7/CJLQZycypeIVlvdN2mGI2KWZHwMn+t
-         stQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749650099; x=1750254899;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4S/8XFifK+yslSu1vzucpvyrJRF9zLOqC5TSPFHxhbQ=;
-        b=TL/NPo2mZOhJWuNBBht3TsWLMNXiUXGzNIxoyMUaqooD6yDRP/XPgROyP/jSdc8b/C
-         EOz+CUs11BrXJkiHctiSyk8hRtbsS1Kg9gDlq6I0sqGNgNnZhGv8pu1ngjKd5rZ9OQes
-         CMyiTloVZuuuVFhaHnQeLd5uw4vXxcUuoGhaa/woxNrECzNAembjVxgcQveoXvr0tIj8
-         jsfWwo022Wz0UKGzcDxzXNq5jTYcBIN7LpmrAQKqfovH9GS+ewlzME5lW++wEkAheA+a
-         MG3ZLgZegEjmfCYDcGhAVWh5N9HpoKphsDuhrIrR+9/I2hz0gpmbqq/SJq6/DTeV4BNI
-         jLuw==
-X-Forwarded-Encrypted: i=1; AJvYcCUlRceGj7c6BvtLTk7LqcLYkCM5rNsgW/rbxVObxPSYBo5VYDlknl0sP7SmJJrXbV+n6Lvcmj88BhpF530=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQJVKTZwOTC4gZz4cC7cVBmxJhUN+GUiz1zqLM1gG4GXwTsxjH
-	565izhaffVEH+Ym4tzcRRwt4yE2HIMvyJJFUANRzOvqVA+8BfmD41VFb/a9TbD2/
-X-Gm-Gg: ASbGncv4kYGWfh1G0XQIL/ifbNJ9gO/lERVyqdrZC0/evw/JnVVmyhQkdKrdtCGkK9S
-	XOQOpP8jBnUqoKU1FlCeUIrC1fmcuwWx11J64s7+g/ce1zmZMxRT9hKn8lVQ1/vcXUQqPuJAkag
-	NEAllTpHKV0IUXtVI6z+pjq2KIE8DINhOJKJQgdZJlktqbJyRfPPue1oIdnyCKf2pOhpmS/aCSY
-	2ECsiKiQeLhYUBh7gn0vbmZEhdsPs6DlVGsiHRqBdKyz7++n8RMUF/PB69omz3nSvIHIhBkMs46
-	6q+0Yep2eMrqnh/IfL8ZT9hkKwl4+BapBaQ5Tw3NIVzicgPPIjKFnTpyasFWdpijUUObGv0WtkY
-	9aQyaK3xBINiluViutESmRQMNcmTP
-X-Google-Smtp-Source: AGHT+IEfx5lcTAjpTKVYkVtz68rvsOX8fuO/lfe7x9bwH+UGnw8o8qGo8QSaJahQ86m80iS1g/9oWA==
-X-Received: by 2002:a05:600d:13:b0:43a:b0ac:b10c with SMTP id 5b1f17b1804b1-4532493d13dmr25411525e9.26.1749650099089;
-        Wed, 11 Jun 2025 06:54:59 -0700 (PDT)
-Received: from yuri-laptop.sca.unipi.it (opnsense-fib.sca.unipi.it. [131.114.30.34])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532515cc42sm22042005e9.12.2025.06.11.06.54.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 06:54:58 -0700 (PDT)
-From: Yuri Andriaccio <yurand2000@gmail.com>
-To: juri.lelli@redhat.com
-Cc: bsegall@google.com,
-	dietmar.eggemann@arm.com,
-	linux-kernel@vger.kernel.org,
-	luca.abeni@santannapisa.it,
-	mgorman@suse.de,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	rostedt@goodmis.org,
-	vincent.guittot@linaro.org,
-	vschneid@redhat.com,
-	yuri.andriaccio@santannapisa.it
-Subject: Re: [RFC PATCH 5/9] sched/deadline: Hierarchical scheduling with DL on top of RT
-Date: Wed, 11 Jun 2025 15:54:56 +0200
-Message-ID: <20250611135456.61493-1-yurand2000@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <aEfwxUyu54Y1EXJI@jlelli-thinkpadt14gen4.remote.csb>
-References: <aEfwxUyu54Y1EXJI@jlelli-thinkpadt14gen4.remote.csb>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="a3CiH6h0"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55BCFOAP014824;
+	Wed, 11 Jun 2025 15:54:28 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	SVo3B24OwlGB4MegvwJiCx+gPz1XAKK8W690GqvITAQ=; b=a3CiH6h0cxGgTkgA
+	Aqee/5M/6dNuYYLxJdIVA+T0Im2/E65K7ptBXpADH0V+zNyZa3b8Qpv3rxV67eGR
+	mCO87tx4+jGIAHUiwJAeThs04F7Rk8GF35De9xoq1+ECrpydeANzzpD4pbY2b0IN
+	mjcwVS6eDOPTQTwd/DPfLJjwkRQHtWepwPiX3iEUt+aWUcTdrDO/ePYyEHnHwtwi
+	SIGHKSiRI8e2KB+VUWXYJhr67wWD47NYR7Nvd3a++wt9u0odcRes/VkTwpaU09ms
+	H+YeJmq+CCRjU53+AKY4FQYwNQYjiCBDMMi4DCSWkNqSa0VLl8dETa6DU7j8Nkqj
+	u3NJbA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474ajaa6d5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 11 Jun 2025 15:54:28 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id CE8EE40048;
+	Wed, 11 Jun 2025 15:52:56 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 00A94B12446;
+	Wed, 11 Jun 2025 15:51:46 +0200 (CEST)
+Received: from [192.168.8.15] (10.252.18.240) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 11 Jun
+ 2025 15:51:44 +0200
+Message-ID: <a5e25ab7c595936f93198c9ac0b2e048a83f5b57.camel@foss.st.com>
+Subject: Re: [Linux-stm32] [PATCH] irqchip: Use dev_fwnode()
+From: Antonio Borneo <antonio.borneo@foss.st.com>
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Nishanth Menon <nm@ti.com>, Andrew Lunn <andrew@lunn.ch>,
+        "Maxime
+ Coquelin" <mcoquelin.stm32@gmail.com>, <imx@lists.linux.dev>,
+        Fabio Estevam
+	<festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Tero Kristo <kristo@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Santosh Shilimkar
+	<ssantosh@kernel.org>, <tglx@linutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Sebastian Hesselbarth
+	<sebastian.hesselbarth@gmail.com>
+Date: Wed, 11 Jun 2025 15:51:42 +0200
+In-Reply-To: <20250611104348.192092-10-jirislaby@kernel.org>
+References: <20250611104348.192092-1-jirislaby@kernel.org>
+	 <20250611104348.192092-10-jirislaby@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-11_05,2025-06-10_01,2025-03-28_01
 
-Hi,
+On Wed, 2025-06-11 at 12:43 +0200, Jiri Slaby (SUSE) wrote:
+> irq_domain_create_simple() takes fwnode as the first argument. It can be
+> extracted from the struct device using dev_fwnode() helper instead of
+> using of_node with of_fwnode_handle().
+>=20
+> So use the dev_fwnode() helper.
+>=20
+> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+>=20
+> ---
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <s.hauer@pengutronix.de>
+> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Gregory Clement <gregory.clement@bootlin.com>
+> Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
+> Cc: Nishanth Menon <nm@ti.com>
+> Cc: Tero Kristo <kristo@kernel.org>
+> Cc: Santosh Shilimkar <ssantosh@kernel.org>
+> Cc: imx@lists.linux.dev
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-stm32@st-md-mailman.stormreply.com
+> ---
+> =C2=A0drivers/irqchip/irq-imgpdc.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 2 +-
+> =C2=A0drivers/irqchip/irq-imx-irqsteer.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 | 2 +-
+> =C2=A0drivers/irqchip/irq-keystone.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 4 ++--
+> =C2=A0drivers/irqchip/irq-mvebu-pic.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 | 2 +-
+> =C2=A0drivers/irqchip/irq-pruss-intc.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 | 2 +-
+> =C2=A0drivers/irqchip/irq-renesas-intc-irqpin.c | 6 ++----
+> =C2=A0drivers/irqchip/irq-renesas-irqc.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 | 2 +-
+> =C2=A0drivers/irqchip/irq-renesas-rza1.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 | 5 ++---
+> =C2=A0drivers/irqchip/irq-renesas-rzg2l.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 | 5 ++---
+> =C2=A0drivers/irqchip/irq-renesas-rzv2h.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 | 2 +-
+> =C2=A0drivers/irqchip/irq-stm32mp-exti.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 | 4 +---
 
-thanks for your feedback.
+For drivers/irqchip/irq-stm32mp-exti.c
+Reviewed-by: Antonio Borneo <antonio.borneo@foss.st.com>
 
-> From changelog (and confirmed by changed lines), this patch might be doing too
-> many things at once and so it might be harder to review. Do you think it can
-> be split in smaller chunks?
+Thanks
+Antonio
 
-I'm currently working on splitting this patch (and the patch 8) in smaller
-chunks as you suggested, adding changes bit by bit.
-
-I'll submit the updated version of the patchset for a RFC v2 as soon as I have
-it done.
-
-Have a nice day,
-Yuri
