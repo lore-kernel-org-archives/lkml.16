@@ -1,166 +1,86 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48FB12222BF;
-	Wed, 11 Jun 2025 17:48:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A93152253E0;
+	Wed, 11 Jun 2025 17:48:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749664110; cv=none; b=po57G+7hhnyxO+1edlvuDN5jJfjvrQoZGESksa+/aAqKQd+YFAxFqOtEjTOYsDQ3gN3UPeW9H0EYmPCv2NYS+/vDr/AoZip5AOnpOxEuXt62b/eLFZef5yFS4jx7gfKzKq+CJfCv/D3BpoxSguWDSHfbzfAXFKjAqn0QIIZoaWc=
+	t=1749664118; cv=none; b=fyVfmSvy8zW54GG7EQKYkpbbX83jxnIwkYWB/hfzXrbFT/gAxdbrNy2aJzNfhLnV0Czm+KmqY5jhG6xr8RexwFNGqnU3lJZLOa4uKy4NSrdASSaYQxJMtrHQUH93DOrvV/UxBZgRMKUW496lUFOactZtndA9+zXHqPiyfN5bZ8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749664110; c=relaxed/simple;
-	bh=kdiPdMh5+sRzNgtYRKj/S0sAtUte5v+zpvWVg0DO3wo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mv4wyTSPNILOqSNPxZ1PmLgyendbjmIVa97yp0yf94erd+W9rFmgRgs8wrVuCJj0/iWplB+qRO4KOdGek1sZ7tIq/j+iuDskyAp8AXWU/NxHVp/2F/zckzSggGHVmkaVNiCeHTbumB3v2haGYPgH8LNXsVPV1xGFAT7GYaEkm8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OWzVMf6s; arc=none smtp.client-ip=209.85.221.44
+	s=arc-20240116; t=1749664118; c=relaxed/simple;
+	bh=PpvQih8tMJUPnoS+0lHOgNjam/wL5Ni1Nop7KyDY858=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VYRp9t0sY805FNfkVTqOcWSRcPWpEQeIRg09FBiwWiNkAaMiLXdYib7l5yQ66OVrClNlidhHlPj7mcFkTpVcNFgLqVu4w7ljEUPfafL7fuv5Y+EZCFikeSU3dF+xddDV1TAFP7XJ/O3S0sc2UBi34veZ1lXQt3jbGoRy80Zxbgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IuTbjOnU; arc=none smtp.client-ip=209.85.219.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OWzVMf6s"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a503d9ef59so128832f8f.3;
-        Wed, 11 Jun 2025 10:48:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IuTbjOnU"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e73e9e18556so115760276.0;
+        Wed, 11 Jun 2025 10:48:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749664106; x=1750268906; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/5X6IDTVHTHpEsUSABa7MSKK8TKkDRNQdpFJlmd5FHY=;
-        b=OWzVMf6s6ieIQYLHaHb6ghg7Xx8IL2sFjoZGw798cylsvbkontJo7bpzQVrFEu4Yuq
-         iTOT/c2TIUt4xopwrqKsSA/oWVFA7D/4FGth21PIq2mDpzWfjdbZatc5dda/Q+KZQ/zK
-         r4kapflS0SPVyP2rn55Ki32gFjFcPAqYPnOH/Cy3LGATKlNxM+2LCU2/0Q+yQQJ/bfAm
-         x8YGJ/gy+Mnm3VidenQ9BgX12kRBpkJUcb8u+Gng6KL/QpH3Q6C3w19FiOIle2/f+OfW
-         PAQA2a88e/0ox4kX4XUrN84pLHq8NYxgubVDFizKWUAsbwj9iRpfbCRz9RYK6Y2O1lwO
-         rZYA==
+        d=gmail.com; s=20230601; t=1749664115; x=1750268915; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=PpvQih8tMJUPnoS+0lHOgNjam/wL5Ni1Nop7KyDY858=;
+        b=IuTbjOnU2KYoQboUXU9n9vdfLhkduOlLOG2tzGVaDOSUc2iPKB+/GWWUBpElSqG3g+
+         pNS8nexW48RBfqsXI8xdLkkD5Mq7pSmvu3ubxI4QQzUXKDnRK9sMH+7kTVBnsCZEaKaq
+         QJ3x+sMBL25nd1dHtihxedYDf7Gx8xujaxYNG5Bjm8v0dQfEsrLIttcxnueQRzI0OIcN
+         JsUUKpUjISG8uTvHaka/Gns8IyaHfgzi9y/lKnQ4UhZtYRmquyYHrSRygjDIJjQKHJ1y
+         qAY6fBQIe5k0BjuHGtD/yzs3vFDEyy0b6LGETlV949mQwO+uyQ8l+pQbxYXxzp3XU3b3
+         +M4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749664106; x=1750268906;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=/5X6IDTVHTHpEsUSABa7MSKK8TKkDRNQdpFJlmd5FHY=;
-        b=YyZKE8/duq5Ok8fAQSy0YXB/WkBtcpJFtV35/64JiWv2oIb/PB/J41HeqenyLf/xiF
-         SpS9rs4OWHKXbRBxl2hZhsiS0mJlBJ0cv8t1W6xoFZ/YNNhNiAKQo8dzMMFWILsLBzUe
-         GDTyRLYXvOCmIeColvvKuUmQX046nTlH2dMQkvV3vLWLXOttHd2ZoWFXbo3SXbziIGUe
-         7FMnkq0XWGUiDJlLy5yjIT1wQyIZQQ3v2K+9TeczYLhV0KZkiAhZQcd6DT9fOIAD4WvH
-         +V0mddy3eJm4zOpaOBl2/F2Ksrt7ShQAoldGMrYIPXRBtltjNXHC32/KrGRKf+jqW46C
-         AKrg==
-X-Forwarded-Encrypted: i=1; AJvYcCVK4+34hZQUGvJmneRwXv9FBnZiBpBoJDctJhGhFRkT5xl0AlK2a6x+b6kmzZwkPhyO8BSsQzR6y0y/@vger.kernel.org, AJvYcCWCbYsyzcbBKWh4VEKShGTNE3gxa48CMCR5HsQKU93CPBle70oWfdBG7NXW1ObG7AoV1yg/wZeEiMdOGx/5PoQ=@vger.kernel.org, AJvYcCXK6NtMT+L48jUDnWJ6UQ/ILzALnMiziVrNbHuoXn0R4G3tRD1uZ6rHNB94rFYrUm2o8FkKZz5lNq5iO9n1@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGDo4yqCngu++yQKtuzL8PH8TpySugk7bX4twkvd5f3p36cyh0
-	HD3eOJ0fYwPDYtbBqcca4Kg1xspxPHOHS/SL9mQvZX5Sn9f4ek56w4pv
-X-Gm-Gg: ASbGncssNsoINbtMNvNRcNp0B8QZUrAafeVBXzOP6MJIHWdWlxeIU3lLtdwp0qVBk0Y
-	hIp5pmcFzdNMNYo4e2rI8Fp0Jf4OH96rToCQXGQKofckH+UbxHqlFfi5X/uEnNkiW7feORHKUkt
-	rSrgSFOn53w7AP7SFyBiacuX8BUdMLU0g8DLKPwq5xJtPPH8iHZAvYMT4ZNSTH+gxMfrSAVdb0f
-	X+GFhWY9US2ZYjmVKd2yNbo9i90VtogdqaGOxVufF64z1bgiDI903QTmUacGMr7FJh464nDjUNQ
-	InqCTGKe2FAcnZ9GGf+Vlh+aLiyoTaF+aBqbiwqylBAK0Dge6YPNjQS2ky7aaz77U0531mgvUbd
-	PaBM0ExYNGHQJkkRiGEK2YcVavlaK84S//jRF
-X-Google-Smtp-Source: AGHT+IEWahY4VTUQyB9OJcRC6ofG32cyzKi87gxJN/O8EUIgzlNL+d8o1qKXe//gLU6r8J4BUQxjGg==
-X-Received: by 2002:a5d:5f8b:0:b0:3a4:dd16:b287 with SMTP id ffacd0b85a97d-3a5586c9e06mr3087427f8f.19.1749664106429;
-        Wed, 11 Jun 2025 10:48:26 -0700 (PDT)
-Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532522a5f3sm29567945e9.38.2025.06.11.10.48.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 10:48:25 -0700 (PDT)
-Sender: Igor Korotin <igorkor.3vium@gmail.com>
-From: Igor Korotin <igor.korotin.linux@gmail.com>
-To: ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	rafael@kernel.org,
-	gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Cc: boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	dakr@kernel.org,
-	lenb@kernel.org,
-	wedsonaf@gmail.com,
-	viresh.kumar@linaro.org,
-	alex.hung@amd.com,
-	dingxiangfei2009@gmail.com
-Subject: [PATCH v5 2/6] rust: driver: Consolidate `Adapter::of_id_info` methods using `#[cfg]`
-Date: Wed, 11 Jun 2025 18:46:18 +0100
-Message-ID: <20250611174618.802570-1-igor.korotin.linux@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250611174034.801460-1-igor.korotin.linux@gmail.com>
-References: <20250611174034.801460-1-igor.korotin.linux@gmail.com>
+        d=1e100.net; s=20230601; t=1749664115; x=1750268915;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PpvQih8tMJUPnoS+0lHOgNjam/wL5Ni1Nop7KyDY858=;
+        b=el6NgghyQRGHvrOY44P0UBbYwfTyH0Qi8vb/gUvBsWvBl8enm6Btow8eN7uen2I1Yc
+         BUNUiVmjPji7zt5/l2XGlFGBpuym9vBhDMGdGyyvxsB7I7fPKLljcEWgnZXeHYQ4n0B7
+         6RmNh2K2gkzCHGWu57XqX6z2A4w4u79evBRwtjrd277kJRu/fjBzPjkSZbYDfBtdHBvi
+         rxVog2Z8coMowUvWxPTzhe0eSlP9/L6IyBcSOwMhvMTwARkBeiFVGHHI5zJSdHtsRN8A
+         mG3kfQF3xoHuIetXuqIN3zNZ842A23rMGFeiOGBED6Q2xisO2pA6eZNxmJJqkmkjpvWh
+         wvaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW1D2berBsLff59evX++HhZpHtGISAwWPHgiAgf13FS+6ofYLKcr5f+exaqW/Z17HZ/gwtTiH5h9Pjm@vger.kernel.org, AJvYcCWye3xVl+qy7Kv5BnzRxjcewkgBvuE0xv0VoHXX6hs51WfV9GwijqhjneBjMZDZEH4im5xhuQVRPzmlSRJs@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5XXJx3SZ1vyGzK5C07StLrQZlEZlsyskY8MQGgxyUjBKQE4KI
+	iOEHkEFg9thQ9UD6bOyHDugRFFChKYNE4RZMwsXZil3yeCfckUPp89KOOYGi+3Os6JR3XcE8jaY
+	1u4MpmrrVuSyy6OMooyazt8fD5K9HCBI=
+X-Gm-Gg: ASbGncte+ilcLg0d4G6W4tu8NfaB8WUOYWnM2fX6OcVoGoNabCNTRx9zUl7JSNGBST7
+	R9AwvHZevCLhfc4HYgrEhpXvFJ2m/DeRIEokwFEDeZI+4DmjBsLPs9VCM1H1/8TeU07SNdlsfmX
+	VWTJstSKNoTsxcUAbNKjgMD9pJUnZgFhJaoS8mf8mNlSLT
+X-Google-Smtp-Source: AGHT+IH9DABL4wlDn/GdD9XoHB+8QanMkWBj0pjVvFYJ/W1MuhG7BWxLo4YCnNzNiDDh2Shj91H32KBlXFkEPsp6D3I=
+X-Received: by 2002:a05:6902:2501:b0:e81:7e20:d737 with SMTP id
+ 3f1490d57ef6-e820baf7827mr480844276.18.1749664115677; Wed, 11 Jun 2025
+ 10:48:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250611-sgx-dt-v1-0-7a11f3885c60@gmail.com> <aEm_7NECSykMX5cs@blossom>
+In-Reply-To: <aEm_7NECSykMX5cs@blossom>
+From: Sasha Finkelstein <fnkl.kernel@gmail.com>
+Date: Wed, 11 Jun 2025 19:48:24 +0200
+X-Gm-Features: AX0GCFsfxtx0nWUUwofAcCujP5Iz-6oqoAbr15qgAOq6KTl9zDhKhhwtvESKTto
+Message-ID: <CAMT+MTQ=oxfdq+tqjxLXqDUPEAHzLtJe1qy1vDBf_SA6wQ+tkA@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Bindings and DTS for Apple SoC GPUs
+To: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Cc: Sven Peter <sven@kernel.org>, Janne Grunau <j@jannau.net>, Neal Gompa <neal@gompa.dev>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, asahi@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Refactor the `of_id_info` methods in the `Adapter` trait to reduce
-duplication. Previously, the method had two versions selected
-via `#[cfg(...)]` and `#[cfg(not(...))]`. This change merges them into a
-single method by using `#[cfg]` blocks within the method body.
+On Wed, 11 Jun 2025 at 19:42, Alyssa Rosenzweig <alyssa@rosenzweig.io> wrote:
+>
+> It would be good to include links to the kernel + m1n1 branches that
+> support this binding, since it's not what downstream ships.
 
-Suggested-by: Benno Lossin <lossin@kernel.org>
-Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
----
- rust/kernel/driver.rs | 40 +++++++++++++++++++++-------------------
- 1 file changed, 21 insertions(+), 19 deletions(-)
-
-diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
-index ec9166cedfa7..cb62b75a0c0e 100644
---- a/rust/kernel/driver.rs
-+++ b/rust/kernel/driver.rs
-@@ -147,30 +147,32 @@ pub trait Adapter {
-     /// Returns the driver's private data from the matching entry in the [`of::IdTable`], if any.
-     ///
-     /// If this returns `None`, it means there is no match with an entry in the [`of::IdTable`].
--    #[cfg(CONFIG_OF)]
-     fn of_id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
--        let table = Self::of_id_table()?;
-+        #[cfg(not(CONFIG_OF))]
-+        {
-+            let _ = dev;
-+            return None;
-+        }
- 
--        // SAFETY:
--        // - `table` has static lifetime, hence it's valid for read,
--        // - `dev` is guaranteed to be valid while it's alive, and so is `pdev.as_ref().as_raw()`.
--        let raw_id = unsafe { bindings::of_match_device(table.as_ptr(), dev.as_raw()) };
-+        #[cfg(CONFIG_OF)]
-+        {
-+            let table = Self::of_id_table()?;
- 
--        if raw_id.is_null() {
--            None
--        } else {
--            // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper of `struct of_device_id` and
--            // does not add additional invariants, so it's safe to transmute.
--            let id = unsafe { &*raw_id.cast::<of::DeviceId>() };
-+            // SAFETY:
-+            // - `table` has static lifetime, hence it's valid for read,
-+            // - `dev` is guaranteed to be valid while it's alive, and so is `pdev.as_ref().as_raw()`.
-+            let raw_id = unsafe { bindings::of_match_device(table.as_ptr(), dev.as_raw()) };
- 
--            Some(table.info(<of::DeviceId as crate::device_id::RawDeviceId>::index(id)))
--        }
--    }
-+            if raw_id.is_null() {
-+                None
-+            } else {
-+                // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper of `struct of_device_id` and
-+                // does not add additional invariants, so it's safe to transmute.
-+                let id = unsafe { &*raw_id.cast::<of::DeviceId>() };
- 
--    #[cfg(not(CONFIG_OF))]
--    #[allow(missing_docs)]
--    fn of_id_info(_dev: &device::Device) -> Option<&'static Self::IdInfo> {
--        None
-+                Some(table.info(<of::DeviceId as crate::device_id::RawDeviceId>::index(id)))
-+            }
-+        }
-     }
- 
-     /// Returns the driver's private data from the matching entry of any of the ID tables, if any.
--- 
-2.43.0
-
+Right, will add to cover message on v2.
+Kernel: https://github.com/WhatAmISupposedToPutHere/linux/tree/starlight
+m1n1 (the bootloader):
+https://github.com/WhatAmISupposedToPutHere/m1n1/tree/bootloader-cal-blobs
