@@ -1,38 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3971C8632;
-	Wed, 11 Jun 2025 16:40:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3A081FE45A;
+	Wed, 11 Jun 2025 16:40:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749660045; cv=none; b=OVqQHbTo9qtNvbHvZJoBeCrCwPb/L6OJEkXhXU8cs3O4bca2wWtVb0Upz0M6OYEMSUB51WdVEygoGJLWRvQhtBi6V6j53UYiIn42wUEKSsKRnqitilITDs50b13yZtlxl+qzP5eteEt6TuTVMxAYgSzvCQu8OpKu914w0zIXghc=
+	t=1749660049; cv=none; b=OsX6pkPAJST9dNQoe5osJt741nuupsdqcncnu1iD9aEwqIG0J2wxumq0Ly7QDW28qzulM2Jeb4cmVUP84RD4aNKPvks9PecEyWHt+RGxSMcoK+1z1DVfzBjg6LxZtFpamGRhjc06Nxc19zw/XWoT7YL104anzFeyHTq7cxNafbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749660045; c=relaxed/simple;
-	bh=tdoCZ5WhTTd1H3icgbRTRkNnOgUeWkbsQeuTsnJniVg=;
+	s=arc-20240116; t=1749660049; c=relaxed/simple;
+	bh=yV4JktqvQTygx7IwJSqnpH4MNC8ygUGuE0X8CQrDdzs=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=P26YXR6POFgfByGFOHaLk/CkuSqTxxtQm/lp40uok+V61MUTxy/FiWOrKbs6C6dwR+qJ8nV+KmRWE3fbW4fNpCc18+QDDNMkfaq7wsEHFSRckL9NxxBQeMkIdfak3+PwZh+Hv6c4H7gZlI1zKVFXmJ5pk1f4Dpf7v7WGLns25ts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oJR/8fYN; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=u4NUH9qX9ffaPuNeUZivGlMnlRSBlkv3Sk0P1v4+eFmWYT/iNf0RpfQoPcrBNqWwScShupMQJzFWttAmHPCa6H3z9hzEeLNMQx18gyANbgCvZOOPrIt8nWhTw9PnmJhcGUhOG8bk2tw7PeJioGcV1ac10yY8ibgpgmONGLh+9o0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=evOT4nSF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oJR/8fYN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF65AC4CEE3;
-	Wed, 11 Jun 2025 16:40:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="evOT4nSF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30D70C4CEEA;
+	Wed, 11 Jun 2025 16:40:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749660045;
-	bh=tdoCZ5WhTTd1H3icgbRTRkNnOgUeWkbsQeuTsnJniVg=;
-	h=Date:From:To:Cc:Subject:From;
-	b=oJR/8fYNHipE2xIaaWv92JuLsUciOnZjEF5d1JffwBH7rAxfibQ7xDRJT/ELdnWOM
-	 LbkyIaQKgosGFPgeh/rz0X4hjpWp2qi7WEkJCb2IviqxvaM7zwzzTwz1wuEorv2Yum
-	 iPNPKRJQ95Qc8zluyeLKFrts0OlZpzreI7sXOvzPzOmQCHd9eo/dGnrQLPpm+4Cu4m
-	 jEYjzw8GBf/crS1wfp1uFHDXASMi4ZgFkuQ/J9YU5SLkeWOPdn0sr8DWDjobYS52Gn
-	 GJfdaW1QWk+Pm+58v3lp0P3CPANdDtzovRV9dwlrVQl5WatALpxLYo+jYAChtCJvMU
-	 vqrHYgtywqMow==
-Date: Wed, 11 Jun 2025 09:40:44 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, jack@suse.cz,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] fs: unlock the superblock during iterate_supers_type
-Message-ID: <20250611164044.GF6138@frogsfrogsfrogs>
+	s=k20201202; t=1749660049;
+	bh=yV4JktqvQTygx7IwJSqnpH4MNC8ygUGuE0X8CQrDdzs=;
+	h=Date:From:To:Cc:Subject:Reply-To:From;
+	b=evOT4nSFqkN4qnNCy8xWFPWtDqeNgGqM8IvKq5q2SooA3CnsT+LqKG9uH2RQapxrV
+	 NnIR3W/5gdeiOHKe1DwyJe4juGFa+XWpPUkemkU/kv/NkNzYEFMTU/Hs9TdcO2SRP0
+	 Kx8oyGWcb+TVpSYLdix3adDg4fRPgiwlr/chE5zDw/9eQhi7XgMZBr04FAU7V6whXu
+	 /SS4bJpXY5O6pi28iMTEwht9W4jSdtSqjFrhOLosD/9dMlcW+0XzSlDkgXJcfFBXFR
+	 BhmSyvzNFTLjUEG6nBzNcMgY27llGr6ZFbcweiKuEAlQQgwIyRmJBAoxaUGfvfjX35
+	 hltmV7WH+o3ZA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id C186ACE077D; Wed, 11 Jun 2025 09:40:48 -0700 (PDT)
+Date: Wed, 11 Jun 2025 09:40:48 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Christian Brauner <christian@brauner.io>
+Cc: linux-kernel@vger.kernel.org, rcu@vger.kernel.org
+Subject: Warnings in allmodconfig builds in
+ samples/vfs/test-list-all-mounts.c?
+Message-ID: <927f7547-ae55-474c-b211-24854bd988c9@paulmck-laptop>
+Reply-To: paulmck@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,31 +45,53 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hello, Christian!
 
-This function takes super_lock in shared mode, so it should release the
-same lock.
+Imagine my surprise to learn that "make allmodconfig" builds
+of the kernel also build userspace components, including
+samples/vfs/test-list-all-mounts.c.  ;-)
 
-Cc: <stable@vger.kernel.org> # v6.16-rc1
-Fixes: af7551cf13cf7f ("super: remove pointless s_root checks")
-Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
----
- fs/super.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+On CentOS, "make allmodconfig" gives a zero exit code, but gets the
+following warnings:
 
-diff --git a/fs/super.c b/fs/super.c
-index 21799e213fd747..80418ca8e215bb 100644
---- a/fs/super.c
-+++ b/fs/super.c
-@@ -964,8 +964,10 @@ void iterate_supers_type(struct file_system_type *type,
- 		spin_unlock(&sb_lock);
- 
- 		locked = super_lock_shared(sb);
--		if (locked)
-+		if (locked) {
- 			f(sb, arg);
-+			super_unlock_shared(sb);
-+		}
- 
- 		spin_lock(&sb_lock);
- 		if (p)
+In file included from samples/vfs/../../tools/testing/selftests/pidfd/../clone3/clone3_selftests.h:8,
+                 from samples/vfs/../../tools/testing/selftests/pidfd/pidfd.h:20,
+                 from samples/vfs/test-list-all-mounts.c:11:
+usr/include/linux/sched.h:114: warning: "SCHED_NORMAL" redefined
+  114 | #define SCHED_NORMAL            0
+      |
+In file included from /usr/include/sched.h:43,
+                 from samples/vfs/../../tools/testing/selftests/pidfd/pidfd.h:9,
+                 from samples/vfs/test-list-all-mounts.c:11:
+/usr/include/bits/sched.h:32: note: this is the location of the previous definition
+   32 | # define SCHED_NORMAL           SCHED_OTHER
+      |
+In file included from samples/vfs/../../tools/testing/selftests/pidfd/../clone3/clone3_selftests.h:8,
+                 from samples/vfs/../../tools/testing/selftests/pidfd/pidfd.h:20,
+                 from samples/vfs/test-list-all-mounts.c:11:
+usr/include/linux/sched.h:137: warning: "SCHED_FLAG_KEEP_ALL" redefined
+  137 | #define SCHED_FLAG_KEEP_ALL     (SCHED_FLAG_KEEP_POLICY | \
+      |
+In file included from /usr/include/sched.h:43,
+                 from samples/vfs/../../tools/testing/selftests/pidfd/pidfd.h:9,
+                 from samples/vfs/test-list-all-mounts.c:11:
+/usr/include/bits/sched.h:51: note: this is the location of the previous definition
+   51 | #define SCHED_FLAG_KEEP_ALL             0x18
+      |
+In file included from samples/vfs/../../tools/testing/selftests/pidfd/../clone3/clone3_selftests.h:8,
+                 from samples/vfs/../../tools/testing/selftests/pidfd/pidfd.h:20,
+                 from samples/vfs/test-list-all-mounts.c:11:
+usr/include/linux/sched.h:140: warning: "SCHED_FLAG_UTIL_CLAMP" redefined
+  140 | #define SCHED_FLAG_UTIL_CLAMP   (SCHED_FLAG_UTIL_CLAMP_MIN | \
+      |
+In file included from /usr/include/sched.h:43,
+                 from samples/vfs/../../tools/testing/selftests/pidfd/pidfd.h:9,
+                 from samples/vfs/test-list-all-mounts.c:11:
+/usr/include/bits/sched.h:52: note: this is the location of the previous definition
+
+But on older Ubuntu, it builds without any warnings.
+
+Is this the sort of problem you would like reported, or should we go
+back to looking only at the build's exit code for allmodconfig builds?
+
+							Thanx, Paul
