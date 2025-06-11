@@ -1,101 +1,85 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913E525BEEF
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 12:21:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F42F22CBD0
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 12:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749644507; cv=none; b=fskcIFunVIyAGAjGnknHPxcOUhZ5lsb71U18cUOYTJeB+AgRErZ6oclTLwEEdKP19/wTAH7yIf6RQz0H+UxQWVTwOLaxxVEDVAA84syWjIwyY7NGM+Tk5BOj7ckqOy2yN1ArSVdTn6vzOjZl4JfY9jp1sjXj6ITO6e5tTJfdFiI=
+	t=1749644603; cv=none; b=MANBAONjKWcp4jlPplT0O8vJkfQnxDxWFpRd4c6TLUbKQZlwzRGcXMPMMwECaGNITxvlC/saQRStLdvJqaMpN8kKbHLcnMGbEKqFdIFdsyppkmHmFMpnl4j5nnKgpOTHe5rxNdr54uLtch6DrpfSgidJLT5qZrnsTzlBdLx7FsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749644507; c=relaxed/simple;
-	bh=N6AwoaQ8JOMbGY9qqlJYeVZCOwSny51eFYcWlv/tM1g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZY+qe5dnamB9Az9p/WYTlSC52NqHHqJ37rilCz79pxwQMoW4BE0YaymMtfV5MskfBdqa2v50GWHb/u4eCOYZpy7XFgij7NQtLxp+C7JCMGdfHTqMDadmfRwreGn1YnkA8I9uaH13HekWCcRf8GdHJMtihB550OogNxX4l2+xreU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=readmodwrite.com; spf=none smtp.mailfrom=readmodwrite.com; dkim=pass (2048-bit key) header.d=readmodwrite-com.20230601.gappssmtp.com header.i=@readmodwrite-com.20230601.gappssmtp.com header.b=e9A3VMnS; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=readmodwrite.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=readmodwrite.com
+	s=arc-20240116; t=1749644603; c=relaxed/simple;
+	bh=qAIBoTbU/lac517I9f0eMnENz2xp/0peBDS5tMCiPa8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bFlNOsCCz82LUvTVG687uOK9Ncg3ef9/1CivF4yv0LMUk4uQ0D58kKtBgK4gRmkkQHOd7Nzgg2fGqag1RNkq5IMvoA+EsWWm1sqj28L7i6DkWeU3pxtaohI5tVy3RDIOQPtGDJkEWxMdIMACjsDy3xe90tGll8yyk97qsaJcdjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gdrhmnIs; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=readmodwrite-com.20230601.gappssmtp.com header.i=@readmodwrite-com.20230601.gappssmtp.com header.b="e9A3VMnS"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-235ea292956so62446195ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 05:21:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=readmodwrite-com.20230601.gappssmtp.com; s=20230601; t=1749644505; x=1750249305; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N6AwoaQ8JOMbGY9qqlJYeVZCOwSny51eFYcWlv/tM1g=;
-        b=e9A3VMnSDd5UrGFqeXgxbxe7IOdcbtKMnU1L7ws5O8bU0Ezk6FjUnUxlb586pvW0/f
-         WdDk5nG7RBWj8VRQT/jRynyPXkVMtTuGXz1RiqA0FRQuKps5YJLusjhFxL76LT6i8erM
-         PLCCgjkTba5ftWiJwTnZdlU6SV++s3YhI1IlA4aTiYpIz3KD8IiB+lIlOCMWIx5Ou6VA
-         gfF/3aWj8JnF9TeYDs6xoDrZSOUVTA4IvBHl5siUTRwXnwGbIIELdrs1uegcYV6buGZ2
-         3GapD7bWKu9QYcgIwfNOwqbteivvC6CMzYNIUjj5F4ZIkSOfBgcfekUfZGmSJJT/AG8G
-         YX5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749644505; x=1750249305;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=N6AwoaQ8JOMbGY9qqlJYeVZCOwSny51eFYcWlv/tM1g=;
-        b=iAqAwqG8RNqDrXSdIHwmKEWz9vZyQ643zHdshN1y6tRjz+VLl78l5yBrzKgVDHLAJF
-         g03ML2b8EDZ+FC5aW1S0ng7mFGdhMziL1Zd8XgiTICvcX43YV+r08mvjMAyfITQo+p+Y
-         xLE+BtK135RJWsYWNc7KtRIqNRf5bs+sdlunhQUBOpnG6ogvyh+2rMs7hfbIXYAD2XIJ
-         Kr9mI6ItxFHn0v721M1MpzPfnv+6bOhE3Im/YWkEUYO7+i2rH4QCSkxLJVNv+YOP3+Ho
-         mQKmZ/u3aXkbBWtNQfyKxN4rAoC9twPppYvlK3gj19l/CVVMaYazZvSU2OT45CsunsBh
-         jxJw==
-X-Forwarded-Encrypted: i=1; AJvYcCXGqikO9gZRIKDRoX8EJ9TV1FHv7FipIDYa6Uadc3LRWSkacvv6FCmCxpm9WKeypmvvzahvVAaviyp+0K4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXzw7fO2PZajK5apgmYpp8VKNjhZ+o6rA6TzJGtRo4loozy/GI
-	hzcTjr3+nQvHWShkyT9N+KoJO6hYvcl+SGPgbFktkCzDS5q2msJiTb/1BqHZ5fMAjVlXX+AXc9u
-	pmsVBFoN3q04rgdu05YEztE9FwERjGOvhBIKaHfJtqQ==
-X-Gm-Gg: ASbGnctrI/4Da55dqFIRWL/tnE8UWW4A6Ynwp2wiCsctcQJ+ZynHJ1WoBqqx16zQO4R
-	1zoYNsXaU/Uw4mdOw+2sSeP7QSwDyQKKVu43BxK1PFdvTtOG957CbwiICrEBfnt+jmONL62xowU
-	eyYvQXJ2hrkhlx0uSx6C2P2+S2as/QvpO6Gg/d1ZW833smYCc+0p3KUJ7FV/ak+RV4GK3S6A==
-X-Google-Smtp-Source: AGHT+IHnwLBGFspJ8nKuqDkcPB8jk6LlTb220Au/O2D82q9VjxSFycPW/vtBu5VJsLHKYngkw7uiilRnXE6iAcFWw0Y=
-X-Received: by 2002:a17:903:2286:b0:234:909b:3dba with SMTP id
- d9443c01a7336-23641a9a2c1mr43760005ad.20.1749644504683; Wed, 11 Jun 2025
- 05:21:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gdrhmnIs"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=H3ise0VFG8pfLlwhh4aDRYm/oyQ+lfeQt6Rofx90ivg=; b=gdrhmnIsyC8BRbmMYK105bCcx2
+	0bxTfrt7cObwbW2wOoGgXjLSD/NfFS8g1G4chdbO/IdzPmmp5zRaU9wvrQFdIfK0kdbgwvxmfFR6A
+	arfoq729S4omQ5nOFZqNwzqmngvAc8mx+JIez02iUF90u3J4xj8JmJZVYLBzAoTFsu1hH2p5+QUlc
+	1WymyW6bAYwB2k/jwZ/bhIZ20g5YxeaPDDkBWUyzVHZN26paUZpZwjDoqeeF2tB4n6XW/pOorzJOP
+	1l4Y+MezkJeKrUmBXDhzZEfHIGgI90vSRIMmJ9L4fogD92hNOO8sbZ9D/LpnDmSGnHzer6ev60Vq5
+	ETSJRPAA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uPKUA-00000002O5z-3zmC;
+	Wed, 11 Jun 2025 12:23:19 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 238EC302F8E; Wed, 11 Jun 2025 14:23:17 +0200 (CEST)
+Date: Wed, 11 Jun 2025 14:23:17 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Alexandre Chartre <alexandre.chartre@oracle.com>
+Cc: linux-kernel@vger.kernel.org, mingo@kernel.org, jpoimboe@kernel.org
+Subject: Re: [RFC 03/13] objtool: Disassemble code with libopcodes instead of
+ running objdump
+Message-ID: <20250611122317.GA2278213@noisy.programming.kicks-ass.net>
+References: <20250606153440.865808-1-alexandre.chartre@oracle.com>
+ <20250606153440.865808-4-alexandre.chartre@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610111559.1667156-1-matt@readmodwrite.com> <CA+fCnZdR3qC-mDKSb9wWnA3-2qQxMvgArCPd3Cd_h=psjBx+vA@mail.gmail.com>
-In-Reply-To: <CA+fCnZdR3qC-mDKSb9wWnA3-2qQxMvgArCPd3Cd_h=psjBx+vA@mail.gmail.com>
-From: Matt Fleming <matt@readmodwrite.com>
-Date: Wed, 11 Jun 2025 13:21:33 +0100
-X-Gm-Features: AX0GCFu_jTEwCdkZcGm6D1sHsPXpx-UHj01v6sz-NQh-d7BUknsZ_royBNUTmzE
-Message-ID: <CAENh_SQXoMDmHw2K3p4VLC4iG_-Lx=CK-dVrqRm2m5Yv2anTbw@mail.gmail.com>
-Subject: Re: [PATCH] stackdepot: Make max number of pools build-time configurable
-To: Andrey Konovalov <andreyknvl@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-	kernel-team@cloudflare.com, Marco Elver <elver@google.com>, 
-	Alexander Potapenko <glider@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Oscar Salvador <osalvador@suse.de>, Vlastimil Babka <vbabka@suse.cz>, 
-	Matt Fleming <mfleming@cloudflare.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250606153440.865808-4-alexandre.chartre@oracle.com>
 
-On Tue, Jun 10, 2025 at 5:09=E2=80=AFPM Andrey Konovalov <andreyknvl@gmail.=
-com> wrote:
->
-> On Tue, Jun 10, 2025 at 1:16=E2=80=AFPM Matt Fleming <matt@readmodwrite.c=
-om> wrote:
-> >
-> > From: Matt Fleming <mfleming@cloudflare.com>
-> >
-> > We're hitting the WARN in depot_init_pool() about reaching the stack
-> > depot limit. My assumption is because we have long stacks that don't
-> > dedup very well.
->
-> Note that this might happen if filter_irq_stacks() somehow fails in your =
-setup.
->
-> See e.g. this:
->
-> https://lore.kernel.org/all/CA+fCnZdWgAD1pu4yyjON0ph9ae1B6iaWas0CbET+MXLN=
-NXt5Hg@mail.gmail.com/
-> https://lore.kernel.org/all/44140c34-e2bd-4f6e-892c-51469edc8dfb@redhat.c=
-om/
+On Fri, Jun 06, 2025 at 05:34:30PM +0200, Alexandre Chartre wrote:
+> objtool executes the objdump command to disassemble code. Use libopcodes
+> instead to have more control about the disassembly scope and output.
+> 
+> Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+> ---
+>  tools/objtool/Makefile                  |   2 +-
+>  tools/objtool/arch/loongarch/decode.c   |   6 +
+>  tools/objtool/arch/powerpc/decode.c     |   6 +
+>  tools/objtool/arch/x86/decode.c         |   7 +
+>  tools/objtool/check.c                   |   4 +-
+>  tools/objtool/disas.c                   | 186 +++++++++++++++---------
+>  tools/objtool/include/objtool/arch.h    |   5 +
+>  tools/objtool/include/objtool/check.h   |   5 +
+>  tools/objtool/include/objtool/objtool.h |   4 +
+>  9 files changed, 154 insertions(+), 71 deletions(-)
+> 
+> diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
+> index 8c20361dd100..00350fc7c662 100644
+> --- a/tools/objtool/Makefile
+> +++ b/tools/objtool/Makefile
+> @@ -34,7 +34,7 @@ INCLUDES := -I$(srctree)/tools/include \
+>  # is passed here to match a legacy behavior.
+>  WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed -Wno-nested-externs
+>  OBJTOOL_CFLAGS := -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
+> -OBJTOOL_LDFLAGS := $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
+> +OBJTOOL_LDFLAGS := $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS) -lopcodes
 
-Thanks for the tip. I'll double-check if we're hitting a similar issue
-before sending a v2.
+Would it be possible to make this optional? Such that when people do not
+have libopcodes installed they can still build the kernel.
+
+Or is libopcodes a mandatory part of any binutils installation?
