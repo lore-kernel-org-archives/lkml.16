@@ -1,145 +1,194 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7CA41494A8;
-	Wed, 11 Jun 2025 06:56:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238921494A8
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:56:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749624962; cv=none; b=huMdwxmCrxdPdxezzj4m20c6htDGAWoy/R+I+VpRRQPFeF+Xn2htvWoDlhISzgsOUnH35iaLqcXG72PPC785DHobnQB52wJUQqs51fcwMoAeASDPxLmLDjVBwnulQAjVFKCWhshlS3jrAbhRuRVZsK1YvRN2T66Ws26W5g+NWjs=
+	t=1749625015; cv=none; b=pHEQC6E1kbD7yw0/ZovbMhaepllWkCo0VGrDnLhhl/7Ryi5duEJPaQei6R1yTU4EpCDjLHNpq7q5oWhDVzYhxxMGom9viGG1uRgZqywATSITf5JVdywyJ8jImLF2jz5RaayTeTY/kQWWkreiHcxKL/WYSlVViJZlb+hHbXeNL2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749624962; c=relaxed/simple;
-	bh=9xu7F9Un18ntXhzfrFPvaeitxgsg5unScCrEL0+lNHI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SDmeVEkA11EeZndqcjKIQFsR/eRuEvn+338BvO1yqpNDVceM0/Kd4bBN19QiVKNNmUKLkapFfHmmBgeU+wdosYlva+kXQa8jXoPXa1JoeNgHKlChQQmIcmjJQnnjBGd/JgmKWvqU/GIvVUULiE5XYK6/3096sdfj3sUObns+pQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BPLZWO2k; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749625015; c=relaxed/simple;
+	bh=lP+bNKVxduu0qCykytSn/HHrtfWfG9nIKavlBiRnWkY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gFO+Xiw4hpQcCoT7yaMKx9DbHTtJrG3I4/+nMBCqWvPmMElD/SMdEn0gNHozc5qYsw+pBxLZ77Mz2dW8oKCMtN2oiKwa01OTpt8lOpc2YEWaDaviaW59u8Sr9xweSAQ6CgEnnX9p3Vh9jwncvuelSNSz2uPoVeW2EAwCkeIUvl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cDBQCsvj; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BPLZWO2k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69F24C4CEEE;
-	Wed, 11 Jun 2025 06:55:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749624962;
-	bh=9xu7F9Un18ntXhzfrFPvaeitxgsg5unScCrEL0+lNHI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BPLZWO2kq6hlqgVRNgP+wqFojvW28PmmcDYJyyx4ImqnL72ul43Y3XavbR231dR4F
-	 bUEdmacN+/yktDkLwn0cs/6ZYKn6KTmAdGn8/XBWLiHhAHxqaFip2LqmORnj/l0dGV
-	 6lU76fEeBkhZRNXUFXh8RjWzpYo2LZu0tyC5ZCs2BJKiVgMSN8bZOiRHflz7qAA6nG
-	 bRgjusHNshMmHsMH6fcoOVqkCplM401bRtccJ+9PorVr9WjcnDn1EeAAA2HgBfnU0E
-	 q8NHDD/W4+SMltnCOpu3aLbUhwL2Wzca02wYMsScdM4QFBWD69bNQD8mhDicNhb3EK
-	 ZKMlcKW+REU4A==
-Message-ID: <046810d9-c2f5-47b3-91c7-bdaceb4c6fc0@kernel.org>
-Date: Wed, 11 Jun 2025 08:55:57 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cDBQCsvj"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-451ebd3d149so40134085e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 23:56:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749625012; x=1750229812; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=zUComgDeBiw1wUlIeJH9rIxh+wLfls2ffvRuDXZeWIc=;
+        b=cDBQCsvjTIJWRyoAm6L4K8yKzR00Kr5nCvw/8WR/NgmTIOdbNJurXzr0YWeu6HtUEo
+         gL4z9H2ZWEQeWJPU7tGj5uPc91DCgwrzfzShIUDZQFlpH4M9bpaeOI42LsUtFtfXn+Wt
+         ysg35prVy1Yxewx8TjfxhIDwGOhk3mGPKjNxdK83PmGQ8a9knx5fvq+TURYYTR04R7Q3
+         8HMKwLyUbq1nY06zsk3B1VRuRkhPUkQETtAlO8T6Jn9bJdvaMI+IeBNB+mcEqFkPSP53
+         rFAczxhoZ0Ru9T/zDFNOoGwFLdsvvafulJdQFFc2fVLk4MbrJm9lXHXlsyCxj/f3SVpI
+         S0JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749625012; x=1750229812;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zUComgDeBiw1wUlIeJH9rIxh+wLfls2ffvRuDXZeWIc=;
+        b=A6PzM9FZ65J3uGeGn+atGBPVjDg0f6cGbJeg4T4HHl4gne9BCBjEaQ+oagq+eNbYfk
+         IvPmfiZf3KWN5LIPGjYnqJ1GeDeF0JIh026Ir0NbN5VqHA8w5XuhFuvbFODpY83jMf0m
+         8AaCV8qwzRf0YJUt8kgAdMNLBiQnxuvIdfakFJW7dWjC20cf3W1m74qpHWNgTEbEeuqI
+         vcQRPpLDe+JpKv/zZ5uVG1/AOBVKz4wAxfp6TmVXcD7FKQ+uu7w9mnl9KfINOmPi9drM
+         qIA/UatiyXnXvSzhhgeK7HVbjb9PGMP368BPmwFVqUuosnMZQWIOUnCqBG1YQMVM/fQh
+         uMmA==
+X-Forwarded-Encrypted: i=1; AJvYcCX4aPdWTdV4/wdR5xa9QVbQpIUsnLdzhwwp1KIYnlGWt+XxxTlbmNQW2kLuRs0MEDngJvUngDzUeOP8Aso=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwT/632CRGstZIa9wXDL3YHN12N9JdntN77LhSYUtUzC9S04ypa
+	qhZ59SYq2aM2lP5rbDRbb+CpOcCIYFW+WJWOUjgm5utyjWv8vDWDDoyV5dH2XgmKDu3D3Oujd7a
+	fsQ26imSC0MMoAO/9QMDdM5wNmgOtow==
+X-Gm-Gg: ASbGncsR808fxN185xcdGzILiWg8Kh0EmoNWS5kZfUTucOqvF0lHLWCatxP2haoVrkT
+	laAn/ygPxCLpN6vLwOcW7r6ywjQWWG5m9HJcqyT2lAKtSFRGTBAHtYfHkAWabRV9GRVK21I3NeI
+	MpAn3ac+CzHbumbynyfs3LQ/nY7C3wnS2aNriT3HzWybg=
+X-Google-Smtp-Source: AGHT+IG6VoyhLKcq6An5FXMA5IwOHiUMCFmFTH5hGxODx60jl4OMq0T5fvjBknm9BxpN5+xWRsaDTWbJER9irbSiecA=
+X-Received: by 2002:a05:6000:2382:b0:3a4:eae1:a79f with SMTP id
+ ffacd0b85a97d-3a558a325e3mr1492386f8f.33.1749625011802; Tue, 10 Jun 2025
+ 23:56:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/1] ARM: dts: aspeed: Add device tree for Nvidia's
- GB200 UT3.0b platform BMC
-To: Donald Shannon <donalds@nvidia.com>, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org
-Cc: joel@jms.id.au, andrew@codeconstruct.com.au, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
- linux-kernel@vger.kernel.org, etanous@nvidia.com
-References: <20250611013025.2898412-1-donalds@nvidia.com>
- <20250611013025.2898412-2-donalds@nvidia.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250611013025.2898412-2-donalds@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250514201353.3481400-1-briannorris@chromium.org>
+ <20250514201353.3481400-2-briannorris@chromium.org> <24ec4adc-7c80-49e9-93ee-19908a97ab84@gmail.com>
+ <aEcWTM3Y1roOf4Ph@google.com> <CAMcHhXqq9DHgip3rr0=24Y-LEBq5n4rDrE6AsWyjyBmsS7s+-A@mail.gmail.com>
+ <aEiQitCsXq9XSBcZ@google.com>
+In-Reply-To: <aEiQitCsXq9XSBcZ@google.com>
+From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Date: Wed, 11 Jun 2025 08:56:40 +0200
+X-Gm-Features: AX0GCFsxL5ZNcC5clGAWp7J5xNe-JRmoWB5pVCdQczsXzfYqkAbC52uL6KqTmk8
+Message-ID: <CAMcHhXrT-y3EotxrcCZ0Pj8Sic6wsPSmRiW7NSzdG=9iH8xqKg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] genirq: Retain depth for managed IRQs across CPU hotplug
+To: Brian Norris <briannorris@chromium.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Tsai Sung-Fu <danielsftsai@google.com>, 
+	Douglas Anderson <dianders@chromium.org>, linux-kernel@vger.kernel.org, 
+	Johan Hovold <johan@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 11/06/2025 03:30, Donald Shannon wrote:
-> The GB200NVL UT3.0b BMC is an Aspeed Ast2600 based BMC
-> for Nvidia Blackwell GB200NVL platform.
-> Reference to Ast2600 SOC [1].
-> Reference to Blackwell GB200NVL Platform [2].
-> 
-> Link: https://www.aspeedtech.com/server_ast2600/ [1]
-> Link: https://nvdam.widen.net/s/wwnsxrhm2w/blackwell-datasheet-3384703 [2]
-> 
-> Signed-off-by: Donald Shannon <donalds@nvidia.com>
-> ---
-> Changes v1 -> v2:
->   - Changed phy-mode to rgmii-id [Lunn]
->   - Removed redundant max-speed for mac0 [Lunn]
->   - Fixed typo from gb200nvl to gb200 in Makefile
-> Changes v2 -> v3:
->   - Fixed whitespace issues [Krzysztof]
->   - Fixed schema validation issues from my end ( there are still issues with the aspeed dtsi file that are not related to this new dts) [Herring]
->   - Reordered to follow style guide [Krzysztof]
->   - Removed redundant status okays
->   - Changed vcc to vdd for the power gating on the gpio expanders
-> Changes v3 -> v4:
->   - Added changelog [Krzysztof]
->   - Added nvidia,gb200-ut30b board binding [Krzysztof]
->   - Removed unused imports
->   - Reordered a couple other style guide violations
->   - Added back in a couple needed "status okay"s
-> ---
->  .../bindings/arm/aspeed/aspeed.yaml           |    1 +
->  arch/arm/boot/dts/aspeed/Makefile             |    1 +
->  .../aspeed/aspeed-bmc-nvidia-gb200-ut30b.dts  | 1154 +++++++++++++++++
->  3 files changed, 1156 insertions(+)
->  create mode 100644 arch/arm/boot/dts/aspeed/aspeed-bmc-nvidia-gb200-ut30b.dts
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml b/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
-> index a3736f134130..420fabf05b24 100644
-> --- a/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
-> +++ b/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
+On Tue, 10 Jun 2025 at 22:07, Brian Norris <briannorris@chromium.org> wrote:
+>
+> Hi Alex,
+>
+> On Mon, Jun 09, 2025 at 08:19:58PM +0200, Aleksandrs Vinarskis wrote:
+> > On Mon, 9 Jun 2025 at 19:13, Brian Norris <briannorris@chromium.org> wrote:
+> > > On Fri, Jun 06, 2025 at 02:21:54PM +0200, Aleksandrs Vinarskis wrote:
+> > > > It appears that this commit introduces a critical bug observed on at least
+> > > > some Qualcomm Snapdragon X1E/X1P laptops, rendering the suspend function
+> > > > unusable.
+>
+> For my reference, are these laptops represented by the
+> arch/arm64/boot/dts/qcom/x1e80100.dtsi family of device trees? I'm just
+> trying to reason through what sorts of driver(s) are in use here, in
+> case there's something I'm overlooking, as I don't have the laptop in
+> question to test.
+
+Hi,
+
+Yes. Dell XPS 9345 is arch/arm64/boot/dts/qcom/x1e80100.dtsi based,
+and Asus Zenbook A14 is arch/arm64/boot/dts/qcom/x1p42100.dtsi based,
+which is a derivative but has a slightly different PCIe setup. So far
+both laptops would behave in the same ways.
+
+>
+> > > > With this change in place, after successful suspend the device either:
+> > > > 1. Cannot wake up at all. Screen stays black, even though PM has existed
+> > > > suspend (observed by external LEDs controlled by PM)
+> > > >
+> > > > 2. Wakes up eventually after minutes (instead of seconds) with SSD related
+> > > > errors in dmesg. System still exhibits errors eg. UI icons are not properly
+> > > > loaded, WiFi does not (always) connect.
+>
+> FYI, my assumption here based on the log snippets and the patch in
+> question is that "only" the NVMe driver's IRQs are getting b0rked by my
+> change. I could imagine that would produce the above symptoms in most
+> laptop configurations, because failing disk I/O will likely block most
+> wakeup-related activity, and cause all sorts of UI and system daemon
+> (e.g., WiFi supplicant) misbehavior.
+>
+> > > I'm sorry to hear this has caused regressions. I don't yet know why your
+> > > particular problems have occurred, but I did notice last week that there
+> > > were some issues with the patch in question. I wrote a patch which I'll
+> > > append, and have started (but not completely finished) testing it.
+> > > Perhaps you could try it out and let me know how it goes?
+> >
+> > Hi Brian,
+> >
+> > I have tested your attached patch in addition to the original one, and
+> > unfortunately it did not resolve the problem on either of the two
+> > laptops: neither managed to wake up, just like before.
+> > Will be happy to promptly test other proposed solutions.
+>
+> Thanks for the testing. I've found a few problems with my proposed
+> patch, and I've come up with the appended alternative that solves them.
+> Could you give it a try?
+
+Just tested, and it appears to solve it, though I see some errors on
+wakeup that I don't remember seeing before. I will test-drive this
+setup for a day to provide better feedback and confirm if it is
+related to the fixup or not.
+
+>
+> Also, if it's not too much trouble (and especially if my patch still
+> doesn't help you), could you also provide a more complete kernel log and
+> kernel .config file? (Attachment is fine with me. Or a direct email, if
+> somehow the lists don't like it.) It's possible that would give me more
+> hints as to what's going wrong for you.
+
+I will share the logs with and without the fixup by private email
+attachment in a bit.
+
+Thanks for looking into this,
+Alex
 
 
-Please run scripts/checkpatch.pl on the patches and fix reported
-warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
-patches and (probably) fix more warnings. Some warnings can be ignored,
-especially from --strict run, but the code here looks like it needs a
-fix. Feel free to get in touch if the warning is not clear.
-
-You already got this comment, didn't you?
-
-Best regards,
-Krzysztof
+>
+> Thanks,
+> Brian
+>
+> diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+> index b0e0a7332993..3e873c5ce623 100644
+> --- a/kernel/irq/chip.c
+> +++ b/kernel/irq/chip.c
+> @@ -205,12 +205,15 @@ __irq_startup_managed(struct irq_desc *desc, const struct cpumask *aff,
+>
+>  void irq_startup_managed(struct irq_desc *desc)
+>  {
+> +       struct irq_data *d = irq_desc_get_irq_data(desc);
+> +
+>         /*
+>          * Only start it up when the disable depth is 1, so that a disable,
+>          * hotunplug, hotplug sequence does not end up enabling it during
+>          * hotplug unconditionally.
+>          */
+>         desc->depth--;
+> +       irqd_clr_managed_shutdown(d);
+>         if (!desc->depth)
+>                 irq_startup(desc, IRQ_RESEND, IRQ_START_COND);
+>  }
+> diff --git a/kernel/irq/cpuhotplug.c b/kernel/irq/cpuhotplug.c
+> index f07529ae4895..755346ea9819 100644
+> --- a/kernel/irq/cpuhotplug.c
+> +++ b/kernel/irq/cpuhotplug.c
+> @@ -210,13 +210,6 @@ static void irq_restore_affinity_of_irq(struct irq_desc *desc, unsigned int cpu)
+>             !irq_data_get_irq_chip(data) || !cpumask_test_cpu(cpu, affinity))
+>                 return;
+>
+> -       /*
+> -        * Don't restore suspended interrupts here when a system comes back
+> -        * from S3. They are reenabled via resume_device_irqs().
+> -        */
+> -       if (desc->istate & IRQS_SUSPENDED)
+> -               return;
+> -
+>         if (irqd_is_managed_and_shutdown(data))
+>                 irq_startup_managed(desc);
+>
