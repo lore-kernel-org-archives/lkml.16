@@ -1,177 +1,129 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F8825BF1F;
-	Wed, 11 Jun 2025 11:29:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FDA5227E87;
+	Wed, 11 Jun 2025 11:30:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749641385; cv=none; b=cchK0SvTAUIdNeBZt4+oZzApPzp4XZoxMZIxgKr3MAYRcDptYOfjBS78yrQnCjv+UkKu3C5wXdCUSfUDgnZw8h7y6CMzDltSy3uSUnlX7D5y9Ns8LN5iixjJfLWBMl3CVe0iInZ1HqWGY8Z1jBode4QaM2fWcNtE3oERmFel6Ok=
+	t=1749641417; cv=none; b=abksqOMWlkJpAQOWBqLthQK2wYyFWuK8cTg/A4eD0UZ0bd2QCCSc1BadVXNPLVahHD6+g9YH+O4Gh6DDn19CV4zyIBgxQSKcAncwAAVr284qSXouGLdEkJipturNHJS9fY321jpIoiXTM1isaFHavSjLHQzkR8flx561I+n82yM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749641385; c=relaxed/simple;
-	bh=IV36qXYR1r6Yzg131vx3tGM/NHJrjbq6W7QxVFzIZKY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=In0affXT82sz2jJok51YEtsT2/XdVyLiScMA64uJvtEM7vMZEA7Tx7JWeJkqAEth1LoiihXShxagQRRhW9pj04WG6CqZDCdursN/jHiUYC75Ey2CAJ9ydZcNE7VkPpTfxudYzlcGkAtJ22wySz5cC02sZAPqSURpVZYQdXZyhvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bHNjf5bxtzKHNPG;
-	Wed, 11 Jun 2025 19:29:42 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 259831A1883;
-	Wed, 11 Jun 2025 19:29:41 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.112.188])
-	by APP3 (Coremail) with SMTP id _Ch0CgAXacOXaElofvDPOw--.32023S9;
-	Wed, 11 Jun 2025 19:29:40 +0800 (CST)
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-To: linux-ext4@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	tytso@mit.edu,
-	adilger.kernel@dilger.ca,
-	jack@suse.cz,
-	ojaswin@linux.ibm.com,
-	yi.zhang@huawei.com,
-	yi.zhang@huaweicloud.com,
-	libaokun1@huawei.com,
-	yukuai3@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH v2 5/6] ext4/jbd2: reintroduce jbd2_journal_blocks_per_page()
-Date: Wed, 11 Jun 2025 19:16:24 +0800
-Message-ID: <20250611111625.1668035-6-yi.zhang@huaweicloud.com>
-X-Mailer: git-send-email 2.46.1
-In-Reply-To: <20250611111625.1668035-1-yi.zhang@huaweicloud.com>
-References: <20250611111625.1668035-1-yi.zhang@huaweicloud.com>
+	s=arc-20240116; t=1749641417; c=relaxed/simple;
+	bh=m6blkxtSiFevkn9+SEbUvI5bgj1njuddm9OXkMQ48Tk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eIG8dkU8coirj2xTHD0j5qUwoi9BFv/JivD0hfir00+3jCvbyX9TUXFwINLxVYS0619VYfFO5aJFbKQvOd+cow++FfiOpYZ8lZBeI4nOgmfGKJFp2tue2GSIXqH4uWTn61vGfyq7wI5iY4tLkJl9atQqD1JQJICRoSoD3StTjME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Cr85IuBV; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Cr85IuBV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=zbZtV+ASXG/xMvGIVDeJhxlEcfyIM+8fV7E63+SUj7Q=; b=Cr85IuBVTCeAC+RH1C5XYpgQhO
+	gxD4B+I8JzVnANm3DHp9zp9NYJNt+qRsHD05OLpU7KuFjrQpWHBCFYdKn+TxRihnZdX5jw+rDUeOt
+	RPin8Qq9kj9aNOKVq3fGBY00di26U1iylDh6vmTRAOJyVgNI7jezIcOTlPbeX27s1ctai69TLQdwC
+	6dAouMmbwaifqwdp88AZKWmApOGq0cOGgLs/B/4Fz0SRHqhi0k/azinqwMasTco8ajdMbhrXPXbsx
+	jghQ1/DT4pCzfTKSKvxgNDlJWpnK5jpBHXosjMKtVLa5bQcGYtbzrL6MX2Me2Aaa+GXarMLTnZgSj
+	OtnJsoHQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uPJeb-0000000Aa8i-3umN;
+	Wed, 11 Jun 2025 11:30:02 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 3121F30863B; Wed, 11 Jun 2025 13:30:01 +0200 (CEST)
+Date: Wed, 11 Jun 2025 13:30:01 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Steven Rostedt <rostedt@goodmis.org>, x86@kernel.org,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+	lkft-triage@lists.linaro.org,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: [RFC PATCH 2/2] x86: alternative: Invalidate the cache for
+ updated instructions
+Message-ID: <20250611113001.GC2273038@noisy.programming.kicks-ass.net>
+References: <20250610234307.c675969e83ce53bb856e94d7@kernel.org>
+ <174956686826.1494782.11512582667456262594.stgit@mhiramat.tok.corp.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgAXacOXaElofvDPOw--.32023S9
-X-Coremail-Antispam: 1UD129KBjvJXoWxCFW3uFW3ZFy8Gry7KrWDXFb_yoWrXry7pF
-	ZrCFyrCr95uryDuFs7Wr4UZry2ga40kFWUWr9a9FnYqa9Fq34xtFnrtw1ayFy5trWDGa10
-	vF45G3yDGw4Dt37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUmI14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-	IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
-	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
-	kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
-	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCw
-	CI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnI
-	WIevJa73UjIFyTuYvjfUo73vUUUUU
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <174956686826.1494782.11512582667456262594.stgit@mhiramat.tok.corp.google.com>
 
-From: Zhang Yi <yi.zhang@huawei.com>
+On Tue, Jun 10, 2025 at 11:47:48PM +0900, Masami Hiramatsu (Google) wrote:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Invalidate the cache after replacing INT3 with the new instruction.
+> This will prevent the other CPUs seeing the removed INT3 in their
+> cache after serializing the pipeline.
+> 
+> LKFT reported an oops by INT3 but there is no INT3 shown in the
+> dumped code. This means the INT3 is removed after the CPU hits
+> INT3.
+> 
+>  ## Test log
+>  ftrace-stress-test: <12>[   21.971153] /usr/local/bin/kirk[277]:
+>  starting test ftrace-stress-test (ftrace_stress_test.sh 90)
+>  <4>[   58.997439] Oops: int3: 0000 [#1] SMP PTI
+>  <4>[   58.998089] CPU: 0 UID: 0 PID: 323 Comm: sh Not tainted
+>  6.15.0-next-20250605 #1 PREEMPT(voluntary)
+>  <4>[   58.998152] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
+>  BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+>  <4>[   58.998260] RIP: 0010:_raw_spin_lock+0x5/0x50
+>  <4>[   58.998563] Code: 5d e9 ff 12 00 00 66 66 2e 0f 1f 84 00 00 00
+>  00 00 0f 1f 40 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3
+>  0f 1e fa 0f <1f> 44 00 00 55 48 89 e5 53 48 89 fb bf 01 00 00 00 e8 15
+>  12 e4 fe
+> 
+> Maybe one possible scenario is to hit the int3 after the third step
+> somehow (on I-cache).
+> 
+> ------
+> <CPU0>					<CPU1>
+> 					Start smp_text_poke_batch_finish().
+> 					Start the third step. (remove INT3)
+> 					on_each_cpu(do_sync_core)
+> do_sync_core(do SERIALIZE)
+> 					Finish the third step.
+> Hit INT3 (from I-cache)
+> 					Clear text_poke_array_refs[cpu0]
+> Start smp_text_poke_int3_handler()
+> Failed to get text_poke_array_refs[cpu0]
+> Oops: int3
+> ------
+> 
+> SERIALIZE instruction flashes pipeline, thus the processor needs
+> to reload the instruction. But it is not ensured to reload it from
+> memory because SERIALIZE does not invalidate the cache.
+> 
+> To prevent reloading replaced INT3, we need to invalidate the cache
+> (flush TLB) in the third step, before the do_sync_core().
 
-This partially reverts commit d6bf294773a4 ("ext4/jbd2: convert
-jbd2_journal_blocks_per_page() to support large folio"). This
-jbd2_journal_blocks_per_folio() will lead to a significant
-overestimation of journal credits. Since we still reserve credits for
-one page and attempt to extend and restart handles during large folio
-writebacks, so we should convert this helper back to
-ext4_journal_blocks_per_page().
+This sounds all sorts of wrong. x86 is supposed to be cache-coherent. A
+store should cause the invalidation per MESI and all that. This means
+the only place where the old instruction can stick around is in the
+uarch micro-ops cache and all that, and SERIALIZE will very much flush
+those.
 
-Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
----
- fs/ext4/ext4_jbd2.h  | 7 +++++++
- fs/ext4/inode.c      | 6 +++---
- fs/jbd2/journal.c    | 6 ++++++
- include/linux/jbd2.h | 1 +
- 4 files changed, 17 insertions(+), 3 deletions(-)
+Also, TLB flush != I$ flush. There is clflush_cache_range() for this.
+But still, this really should not be needed.
 
-diff --git a/fs/ext4/ext4_jbd2.h b/fs/ext4/ext4_jbd2.h
-index 63d17c5201b5..c0ee756cb34c 100644
---- a/fs/ext4/ext4_jbd2.h
-+++ b/fs/ext4/ext4_jbd2.h
-@@ -326,6 +326,13 @@ static inline int ext4_journal_blocks_per_folio(struct inode *inode)
- 	return 0;
- }
- 
-+static inline int ext4_journal_blocks_per_page(struct inode *inode)
-+{
-+	if (EXT4_JOURNAL(inode) != NULL)
-+		return jbd2_journal_blocks_per_page(inode);
-+	return 0;
-+}
-+
- static inline int ext4_journal_force_commit(journal_t *journal)
- {
- 	if (journal)
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 67e37dd546eb..9835145b1b27 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -2556,7 +2556,7 @@ static int mpage_map_and_submit_extent(handle_t *handle,
-  */
- static int ext4_da_writepages_trans_blocks(struct inode *inode)
- {
--	int bpp = ext4_journal_blocks_per_folio(inode);
-+	int bpp = ext4_journal_blocks_per_page(inode);
- 
- 	return ext4_meta_trans_blocks(inode,
- 				MAX_WRITEPAGES_EXTENT_LEN + bpp - 1, bpp);
-@@ -2634,7 +2634,7 @@ static int mpage_prepare_extent_to_map(struct mpage_da_data *mpd)
- 	ext4_lblk_t lblk;
- 	struct buffer_head *head;
- 	handle_t *handle = NULL;
--	int bpp = ext4_journal_blocks_per_folio(mpd->inode);
-+	int bpp = ext4_journal_blocks_per_page(mpd->inode);
- 
- 	if (mpd->wbc->sync_mode == WB_SYNC_ALL || mpd->wbc->tagged_writepages)
- 		tag = PAGECACHE_TAG_TOWRITE;
-@@ -6255,7 +6255,7 @@ int ext4_meta_trans_blocks(struct inode *inode, int lblocks, int pextents)
-  */
- int ext4_writepage_trans_blocks(struct inode *inode)
- {
--	int bpp = ext4_journal_blocks_per_folio(inode);
-+	int bpp = ext4_journal_blocks_per_page(inode);
- 	int ret;
- 
- 	ret = ext4_meta_trans_blocks(inode, bpp, bpp);
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index d480b94117cd..7fccb425907f 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -84,6 +84,7 @@ EXPORT_SYMBOL(jbd2_journal_start_commit);
- EXPORT_SYMBOL(jbd2_journal_force_commit_nested);
- EXPORT_SYMBOL(jbd2_journal_wipe);
- EXPORT_SYMBOL(jbd2_journal_blocks_per_folio);
-+EXPORT_SYMBOL(jbd2_journal_blocks_per_page);
- EXPORT_SYMBOL(jbd2_journal_invalidate_folio);
- EXPORT_SYMBOL(jbd2_journal_try_to_free_buffers);
- EXPORT_SYMBOL(jbd2_journal_force_commit);
-@@ -2661,6 +2662,11 @@ int jbd2_journal_blocks_per_folio(struct inode *inode)
- 		     inode->i_sb->s_blocksize_bits);
- }
- 
-+int jbd2_journal_blocks_per_page(struct inode *inode)
-+{
-+	return 1 << (PAGE_SHIFT - inode->i_sb->s_blocksize_bits);
-+}
-+
- /*
-  * helper functions to deal with 32 or 64bit block numbers.
-  */
-diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
-index 43b9297fe8a7..f35369c104ba 100644
---- a/include/linux/jbd2.h
-+++ b/include/linux/jbd2.h
-@@ -1724,6 +1724,7 @@ static inline int tid_geq(tid_t x, tid_t y)
- }
- 
- extern int jbd2_journal_blocks_per_folio(struct inode *inode);
-+extern int jbd2_journal_blocks_per_page(struct inode *inode);
- extern size_t journal_tag_bytes(journal_t *journal);
- 
- static inline int jbd2_journal_has_csum_v2or3(journal_t *journal)
--- 
-2.46.1
+Also, this is all qemu, and qemu is known to have gotten this terribly
+wrong in the past.
+
+If you all cannot reproduce on real hardware, I'm considering this a
+qemu bug.
+
 
