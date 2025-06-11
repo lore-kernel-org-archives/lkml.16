@@ -1,67 +1,96 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3907422540B;
-	Wed, 11 Jun 2025 06:09:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C981A28D;
+	Wed, 11 Jun 2025 06:09:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749622153; cv=none; b=VNe1XxzYvXdvx2taFP/PGDuPlYRYgvQtHOqf25+7C7zg0LyOkVn0L8m86DN78MunM2/9Ai5czotP1d6lOjY8f+tVLyW7eOBKwkoGAGtiiH6zSxXc2CptztzgdsiHiUuFnfs7T8a0HR4wW9ypZQBq5f//Y5RAAPq2Ng+sjlatQn8=
+	t=1749622165; cv=none; b=kDnG4v4MnlpcCRpLwF2cNuuAam0twjX3e/C2e08uoYRG9Izh2HHmPhwuLUAYjqzV5DQBShH9eQX9GSFGZSMzZZE+0mF832GsaLbsIuY2LRC0qNOo6jmghs2uXhW/PrAoaU93CUumxk3z4iv89E6Wk/JzM0W2fneCuTur+Rp7yJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749622153; c=relaxed/simple;
-	bh=8sMku4WxahX1FuZlVCqNoL8+EPGRsyZn1w622Xjs6Cw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=czj4f2cTlh5981QD9TZHgySGtEntK/5LgE3GmX9Jm4B/67/3agdYjnP8ltMW0XI7Jly8zFrF5UfTK0hDKFhRTNyeEPTFldmRIpbl0I9rCltGfI20MOQy5EYHt57U5h8prdVGMvFXtwKO5pWi8PSzkuBwCC2ZrY2JKwAl0Tv8IX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 9CE2368AA6; Wed, 11 Jun 2025 08:09:00 +0200 (CEST)
-Date: Wed, 11 Jun 2025 08:09:00 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Zhang Yi <yi.zhang@huaweicloud.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-	linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
-	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de,
-	tytso@mit.edu, djwong@kernel.org, john.g.garry@oracle.com,
-	bmarzins@redhat.com, chaitanyak@nvidia.com,
-	shinichiro.kawasaki@wdc.com, brauner@kernel.org,
-	martin.petersen@oracle.com, yi.zhang@huawei.com,
-	chengzhihao1@huawei.com, yukuai3@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH 01/10] block: introduce BLK_FEAT_WRITE_ZEROES_UNMAP to
- queue limits features
-Message-ID: <20250611060900.GA4613@lst.de>
-References: <20250604020850.1304633-1-yi.zhang@huaweicloud.com> <20250604020850.1304633-2-yi.zhang@huaweicloud.com>
+	s=arc-20240116; t=1749622165; c=relaxed/simple;
+	bh=n0ZxMwmhwsKHF2cIHL9Z+6l4Zol/h2uEpfxP0yi4JK4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mhYIYmY3mmnHgwSrVg08p++n2av553MZ4qA5ElF4sEaQKQKb0Kgc64U2cT7RdHvIfSDYcMiMs+v3LjOlnR3iJdwSj9FdQjL6uCb5ZcH/c4GGWoyiqOnW9LBDLARolYIsrME74sgWjM02QlypiyubFlqySV14TiBG/xQ3vp/1g5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XTDY9byW; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XTDY9byW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749622164; x=1781158164;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=n0ZxMwmhwsKHF2cIHL9Z+6l4Zol/h2uEpfxP0yi4JK4=;
+  b=XTDY9byW0r0/tK1SRr243oedykBe2SSfbU4ughkjbBzprY0arZNtVCt2
+   rnYWWAOn5KNs6V8zlOa7tN9vqXydLUgoxm8QDBIjLtvz+1mU6wRYfzQV+
+   mwY6xK6vuUNdkn8UF4glip2HaxTQ00ySTHwdsWJrP9c3jRXKwg4YImnUF
+   sq1q2jZvTUFWduyOVqYHrCMZQvQwUP3mbitY5EJOKQgSEXLhd8AATT91o
+   F7aka8TcOzr02oelZ20tibWe6sHh1LVlccleuxe1VOxJf4mNfqjermPa1
+   CnLmkYFCs4NWPDyHYTNHlpLPcK46sh9otkQQP2PBlHmw/kyVMrCjSgA3o
+   g==;
+X-CSE-ConnectionGUID: E+ySlteGQf+N7OyuBp+R1g==
+X-CSE-MsgGUID: 79mC6T95R/S2sCdG0H05CA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="55556047"
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="55556047"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 23:09:24 -0700
+X-CSE-ConnectionGUID: FX+BVXrxSM6gCI4xQQaIMw==
+X-CSE-MsgGUID: ilIp4+hMRb6kV8GEKbZbdQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="147037961"
+Received: from unknown (HELO [10.238.0.239]) ([10.238.0.239])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 23:09:21 -0700
+Message-ID: <5a80916b-1572-479b-a502-8b2d79c1dec3@linux.intel.com>
+Date: Wed, 11 Jun 2025 14:09:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250604020850.1304633-2-yi.zhang@huaweicloud.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-
-On Wed, Jun 04, 2025 at 10:08:41AM +0800, Zhang Yi wrote:
-> +static ssize_t queue_write_zeroes_unmap_show(struct gendisk *disk, char *page)
-
-..
-
-> +static int queue_write_zeroes_unmap_store(struct gendisk *disk,
-> +		const char *page, size_t count, struct queue_limits *lim)
-
-We're probably getting close to wanting macros for the sysfs
-flags, similar to the one for the features (QUEUE_SYSFS_FEATURE).
-
-No need to do this now, just thinking along.
-
-> +/* supports unmap write zeroes command */
-> +#define BLK_FEAT_WRITE_ZEROES_UNMAP	((__force blk_features_t)(1u << 17))
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 09/32] KVM: SVM: Clean up macros related to
+ architectural MSRPM definitions
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Chao Gao <chao.gao@intel.com>,
+ Borislav Petkov <bp@alien8.de>, Xin Li <xin@zytor.com>,
+ Dapeng Mi <dapeng1.mi@linux.intel.com>,
+ Francesco Lavra <francescolavra.fl@gmail.com>,
+ Manali Shukla <Manali.Shukla@amd.com>
+References: <20250610225737.156318-1-seanjc@google.com>
+ <20250610225737.156318-10-seanjc@google.com>
+Content-Language: en-US
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <20250610225737.156318-10-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
-Should this be exposed through sysfs as a read-only value?
 
-Otherwise looks good:
+On 6/11/2025 6:57 AM, Sean Christopherson wrote:
+> Move SVM's MSR Permissions Map macros to svm.h in antipication of adding
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+antipication -> anticipation?
+
+
+> helpers that are available to SVM code, and opportunistically replace a
+> variety of open-coded literals with (hopefully) informative macros.
+>
+> Opportunistically open code ARRAY_SIZE(msrpm_ranges) instead of wrapping
+> it as NUM_MSR_MAPS, which is an ambiguous name even if it were qualified
+> with "SVM_MSRPM".
+>
+> Deliberately leave the ranges as open coded literals, as using macros to
+> define the ranges actually introduces more potential failure points, since
+> both the definitions and the usage have to be careful to use the correct
+> index.  The lack of clear intent behind the ranges will be addressed in
+> future patches.
+>
+> No functional change intended.
+>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+[...]
