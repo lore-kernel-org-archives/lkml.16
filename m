@@ -1,65 +1,43 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B891AAA11
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 462CA1AAA11;
+	Wed, 11 Jun 2025 15:11:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749654658; cv=none; b=ZaUXGqd6tS5nM9+E1b1f44Ite8vDeq+Gy31TRj8qfJYj2BXSKN9NTkz3w8nnH30lrG3N7UknwwMBlXe0+JQstlWzcvC7P8PxR+YtGyluF/BrByUGcfDMpm0f3c8i614vlLl59c16RukwMMfWeCDePUqPhN+c3rPX8a9pSFG8JYE=
+	t=1749654662; cv=none; b=tnKrTHaIbG+zf2Q4JUItCezoqUZeu+u9aPXxI/xIdM3dsLwqGWgFBQZreC1mhvmWNyB7y9IhF2nFKcINH9po4RU8GobrV9wGSAOcBhc+7ZiACEi81gSDzCzTdbtYKELoBowjDzVDl7jOC1r/6KOEIGamSHkbXLM+Tkdokvqa6ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749654658; c=relaxed/simple;
-	bh=J+Cb82L7O/BiPrcKvhRJcV6B/aNRdSmFiESgx/lMDDQ=;
+	s=arc-20240116; t=1749654662; c=relaxed/simple;
+	bh=0eNt8o6GRVqaVnWen5UM1J8DZaaLXXFgahGl8ogtMRo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WAtVp4G2w6cI4e6/lHCLRwC6J9QARLFcOSe8taxI8Qlq3PSzW2CDHUu0L7M6brQljTMzQ9pyE9fG3aLgmsv86fVYu2SiiQ0udN3d6pdCkGuP5Fwsegn0O4X+7++O6KylYLkHn6pMyy24/IHXar4CPknp9fcshiRUu+nwKoOFmM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JScsLV/K; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=EHbbpxes2MGk/+dKTUhgdsVITAT702SLp+P3O9YMlXmzspw+5vqyUS0BgOhs42bPVWAKRRAHUce00bBXwGNuGk0jRwl5DL90rCSkvJNAtHgY/qV8zPdNSW7itSumaSQ7pZ4Gx+ta/yf24XkmpBmJpjq4g3QBPBcQeayNOsqY/+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cromLVAR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JScsLV/K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749654656;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lWkNewhRJ4wpEDm7PPC52E6cJKu2Um4iV+x8uvVQe/M=;
-	b=JScsLV/KtUrpiA0pnXR2BkEBSFZT7NmWqy+BJGT26Zg17L2fv8Tx3Rz/yLMwcgOQ+fOAeE
-	Zh5FGxkct/lSc1+7Jlisow85HN8IhPP3RkrnuYXNm6FpyU00lLIXNHT2cPRSWxk6rKBxhr
-	7bsPNkpxczW91F0VWBUaGTkouZI3PXU=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-94-zveqg8ABN8KQBI07Ze_SoA-1; Wed,
- 11 Jun 2025 11:10:49 -0400
-X-MC-Unique: zveqg8ABN8KQBI07Ze_SoA-1
-X-Mimecast-MFC-AGG-ID: zveqg8ABN8KQBI07Ze_SoA_1749654647
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 69F09195604F;
-	Wed, 11 Jun 2025 15:10:46 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.18])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4AFD11956087;
-	Wed, 11 Jun 2025 15:10:33 +0000 (UTC)
-Date: Wed, 11 Jun 2025 23:10:28 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Hazem Mohamed Abuelfotoh <abuehaze@amazon.com>
-Cc: stable@vger.kernel.org, kernel test robot <oliver.sang@intel.com>,
-	Hagar Hemdan <hagarhem@amazon.com>, Shaoying Xu <shaoyi@amazon.com>,
-	Jens Axboe <axboe@kernel.dk>, "Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] Revert "block: don't reorder requests in
- blk_add_rq_to_plug"
-Message-ID: <aEmcZLGtQFWMDDXZ@fedora>
-References: <20250611121626.7252-1-abuehaze@amazon.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cromLVAR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41F4FC4CEEA;
+	Wed, 11 Jun 2025 15:11:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749654661;
+	bh=0eNt8o6GRVqaVnWen5UM1J8DZaaLXXFgahGl8ogtMRo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cromLVAR1qxFyMoCOKE5oGSPqzKSaqGn+9NBMQA6qTg7T8pHuwQCCLno78vgsAVAh
+	 QZ7M9OtKBrMG173XinNt65nBlYcCWJIyxPNaamu9jFAvKKIsNVjVLt08GylSjxE3Bx
+	 q4ZCxABFuiq7xIMRr3m925QHFVjmL5/tQZoMxdFyTh9sCGyZcEuEGk9BQE0N+FKQqQ
+	 avQMmF8k8JKWsZ0rhi7yKaNz/0H0qL7TlU0Xmbu8mVkzxdsP3pGaawrJJd3AfYbnvp
+	 FYbBNPvqKutjrjG6nfa/mZ4jIeMi5hmfvIiYXd2G3aIYtmMjU9q/AnO94D1O+vRsIi
+	 DXEZJj5pjwSNg==
+Date: Wed, 11 Jun 2025 10:10:59 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] clk: qcom: sm8450: Enable retention for usb controller
+ gdsc
+Message-ID: <ufhknluapvb24r7p6sykxmj34gtjp6s4mejitj7d67uf6hobdq@4braukg5loxr>
+References: <20250610092253.2998351-1-krishna.kurapati@oss.qualcomm.com>
+ <sy33khkakjxi66amjbuugnypjnegvd4z4dyfzvrp72qkuv3roh@dxaymdc6cfad>
+ <9b8ad81f-28e1-471e-a8fc-9e64578aaf4f@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,40 +46,97 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250611121626.7252-1-abuehaze@amazon.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+In-Reply-To: <9b8ad81f-28e1-471e-a8fc-9e64578aaf4f@oss.qualcomm.com>
 
-On Wed, Jun 11, 2025 at 12:14:54PM +0000, Hazem Mohamed Abuelfotoh wrote:
-> This reverts commit e70c301faece15b618e54b613b1fd6ece3dd05b4.
+On Wed, Jun 11, 2025 at 10:35:36AM +0530, Krishna Kurapati wrote:
 > 
-> Commit <e70c301faece> ("block: don't reorder requests in
-> blk_add_rq_to_plug") reversed how requests are stored in the blk_plug
-> list, this had significant impact on bio merging with requests exist on
-> the plug list. This impact has been reported in [1] and could easily be
-> reproducible using 4k randwrite fio benchmark on an NVME based SSD without
-> having any filesystem on the disk.
 > 
-> My benchmark is:
+> On 6/11/2025 9:12 AM, Bjorn Andersson wrote:
+> > On Tue, Jun 10, 2025 at 02:52:53PM +0530, Krishna Kurapati wrote:
+> > > When USB controller enters runtime suspend while operating in host
+> > > mode, then wakeup because of cable disconnect or a button press of
+> > > a headset causes the following kind of errors:
+> > > 
+> > > Error after button press on a connected headset :
+> > > 
+> > > [  355.309260] usb 1-1: reset full-speed USB device number 2 using xhci-hcd
+> > > [  355.725844] usb 1-1: device not accepting address 2, error -108
+> > > 
+> > > Error on removal of headset device from usb port:
+> > > 
+> > > [  157.563136] arm-smmu 15000000.iommu: Unhandled context fault: fsr=0x402
+> > > ,iova=0xd65504710, fsynr=0x100011, cbfrsynra=0x0, cb=6
+> > > [  157.574842] arm-smmu 15000000.iommu: FSR    = 00000402 [Format=2 TF],
+> > > SID=0x0
+> > > [  157.582181] arm-smmu 15000000.iommu: FSYNR0 = 00100011 [S1CBNDX=16 WNR
+> > > PLVL=1]
+> > > [  157.589610] xhci-hcd xhci-hcd.0.auto: WARNING: Host Controller Error
+> > > [  157.596197] xhci-hcd xhci-hcd.0.auto: WARNING: Host Controller Error
+> > > 
+> > > Enabling retention on usb controller GDSC fixes the above issues.
+> > > 
+> > > Signed-off-by: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
+> > > ---
+> > > 
+> > > Note:
+> > > The above mentioned issues pop up after I enabled runtime suspend after
+> > > applying [1].
+> > > [1]: https://lore.kernel.org/all/20250610091357.2983085-1-krishna.kurapati@oss.qualcomm.com/
+> > > 
+> > 
+> > It makes sense that the BCR issue appears after the flattening of dwc3,
+> > but why would the suspend issue pop up?
+> > 
+> > The change matches what we do on many other platforms, but I've been
+> > hoping we either could drop the retention or clearly document why it's
+> > needed - so that we know if this should be on all or none of the SoCs.
+> > 
 > 
->     fio --time_based --name=benchmark --size=50G --rw=randwrite \
-> 	--runtime=60 --filename="/dev/nvme1n1" --ioengine=psync \
-> 	--randrepeat=0 --iodepth=1 --fsync=64 --invalidate=1 \
-> 	--verify=0 --verify_fatal=0 --blocksize=4k --numjobs=4 \
-> 	--group_reporting
+> Sure, will try to root cause why we are seeing issues during suspend (on
+> sm8450) and come up with another patch.
 > 
-> On 1.9TiB SSD(180K Max IOPS) attached to i3.16xlarge AWS EC2 instance.
+> But I remember on sc7280-herobrine (and IIRC while testing multiport on
+> sa8295), when gdsc was not in retention, after entering suspend, we would
+> see a disconnect and reconnect of connected peripherals during resume
+> (probably because controller was in off state during suspend). When I tested
+> with RET_ON in sc7280, I see the re-enumeration after resume never popped
+> up.
 > 
-> Kernel        |  fio (B.W MiB/sec)  | I/O size (iostat)
-> --------------+---------------------+--------------------
-> 6.15.1        |   362               |  2KiB
-> 6.15.1+revert |   660 (+82%)        |  4KiB
-> --------------+---------------------+--------------------
 
-I just run one quick test in my test VM, but can't reproduce it.
+Sounds very reasonable that we'd need to keep the IP block in retention
+for such use case. But if that's the case, then it sounds like we need
+this for every SoC that supports host mode (I presume host or OTG).
 
-Also be curious, why does writeback produce so many 2KiB bios?
+It would also likely imply that we ultimately would want a mechanism to
+toggle this behavior from dwc3-qcom to limit it to the times when we're
+in host mode, or perhaps even only when something is connected?
 
+If there are any power savings of turning the GDSC off, that is...
 
-Thanks,
-Ming
+Regards,
+Bjorn
 
+> Regards,
+> Krishna,
+> 
+> > Regards,
+> > Bjorn
+> > 
+> > >   drivers/clk/qcom/gcc-sm8450.c | 2 +-
+> > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/clk/qcom/gcc-sm8450.c b/drivers/clk/qcom/gcc-sm8450.c
+> > > index 65d7d52bce03..f94da4a1c921 100644
+> > > --- a/drivers/clk/qcom/gcc-sm8450.c
+> > > +++ b/drivers/clk/qcom/gcc-sm8450.c
+> > > @@ -3141,7 +3141,7 @@ static struct gdsc usb30_prim_gdsc = {
+> > >   	.pd = {
+> > >   		.name = "usb30_prim_gdsc",
+> > >   	},
+> > > -	.pwrsts = PWRSTS_OFF_ON,
+> > > +	.pwrsts = PWRSTS_RET_ON,
+> > >   };
+> > >   static struct clk_regmap *gcc_sm8450_clocks[] = {
+> > > -- 
+> > > 2.34.1
+> > > 
