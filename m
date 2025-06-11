@@ -1,102 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3EB18A6AD;
-	Wed, 11 Jun 2025 21:46:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82B121CC5D;
+	Wed, 11 Jun 2025 21:48:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749678397; cv=none; b=hX+L94jpAO3qEHebbkmlJ/oiTwfEX6t73HYYyOVPmo/VSY+aFTre+pmy8eVJGFocuu6ZmfmDBq7qmexjYzCDQ0+Natz6zcydA7A+bkjgc2c/eEHcf2/p7h2myzEhdp7UF7/0ZQc+ALvT0ukFsXXmPvg0ByGO10s9DGAYHDCmOcQ=
+	t=1749678505; cv=none; b=Ci9Nrb3/ZQgmGOHD0XnhCvtfI8w0AOCmfbS68EGCTPA6X1++J9K3bDD+hqU3kKZX6LAAF9DcE5a1TuEpzMARf9hSapJgOoMkrzY4S9VolRkewFhKytSC5QKvHstlNrMa18U+Lgx4kaCTSUfGWaYukWkqN5OV83ohuxQfePfuG80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749678397; c=relaxed/simple;
-	bh=pBwBKrSA6Q1Th81r6c9urru5D5rWEbXIy3CKQgIAEZs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hNmSU66ulcB9N8Qj5rSZ7Ey1ZQjsF3y/dmbZlO+Jv/CkEYnpCE7dL0KgIpoRdX7wp7eHY7rempnCIcOyR9877dHbFf/XNzSTiWg3FGH1IlDNvYmxDZmDEbxhZdrxtEqQXCpMWrfrOaozRTJS1aAiNiNruxeXhsp00XUgLqysfRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fA/VcPaY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749678505; c=relaxed/simple;
+	bh=XihviUvmfcFQm07eUKUNvugeka6fyRlZ1FLIMhqZAbg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hoeA+DuKD5D8WJDm6I3ChN7skYrtHTXj786QzS12ZdiVED+fc6JVotxa8cODp1KZIlkSCrg/1iKR3qaPDsb+DbI6JAxEGgseoxbGLXYdFH3xkJZ0pnrhEsPy5nO8hFM0UX1jUpWpIMC5aJU/sE7zPzdJ+AVZQ77WvEJuXMlEBgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=CoUP9bxb; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fA/VcPaY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29F8FC4CEE3;
-	Wed, 11 Jun 2025 21:46:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749678396;
-	bh=pBwBKrSA6Q1Th81r6c9urru5D5rWEbXIy3CKQgIAEZs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=fA/VcPaYBOMovMMmuuhvToI/BO10byqlZPxci9AS+gJOWSvysDaejdbza8At9BPgG
-	 pcfgV026K/i31JOqJS8axtbzUAz29LByZ6pdCulcaIfangH7FfawMpD5CoDvCLTPTj
-	 +O2d89Kwfi0NnH9ruVB9pZMS2afrAo05Ypkjd1omKEqnRpOrEc90FDCNQKsiT+ZMPl
-	 gJOjHlDODWctxSo4hVbkjVYMZ9Z1+Zf9xV+zgEQjdy8tRJmI0jlf+7wbgCh9UH+28r
-	 HDnW4ZZoOe8LOs9Kk8Sw7qemMFTSN/BYVK2eyKr0DHzI4bEgxafaeKluzXXdmfHcwP
-	 IFJZt2iMNZH1A==
-Date: Wed, 11 Jun 2025 14:46:35 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6?= Rojas <noltari@gmail.com>
-Cc: jonas.gorski@gmail.com, florian.fainelli@broadcom.com, andrew@lunn.ch,
- olteanv@gmail.com, davem@davemloft.net, edumazet@google.com,
- pabeni@redhat.com, horms@kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, dgcbueu@gmail.com
-Subject: Re: [PATCH net-next v2 2/3] net: dsa: tag_brcm: add support for
- legacy FCS tags
-Message-ID: <20250611144635.37207d22@kernel.org>
-In-Reply-To: <20250610163154.281454-3-noltari@gmail.com>
-References: <20250610163154.281454-1-noltari@gmail.com>
-	<20250610163154.281454-3-noltari@gmail.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="CoUP9bxb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1749678495;
+	bh=XihviUvmfcFQm07eUKUNvugeka6fyRlZ1FLIMhqZAbg=;
+	h=From:Subject:Date:To:Cc:From;
+	b=CoUP9bxbwIrsYYV8XpPTayPg46oAQOhYgeuguZ/ZtGVms0GRmBL/iLyp7KuilDde7
+	 4HfJL+F9TDG4yDzlWguz0QIUNESYA48TLa+4WeClgC07DkejVxpvvZfnDvlMASjzY1
+	 y5X7SiO3PTB8/wHPbTXmk182McDOp37uTQSxqAl2hb1VgYld3eQppSVXfgnKbkhLdq
+	 O1RKpo4fIyXsAKVpex6u3QVaV9d015BRTkzOhL9ApuQgBj5OADU91FR25fvsrCxdqu
+	 hmwrWssy9IWAoHj2t4nKLITJpEuSW6NcGszcHXoXp4puXOb8qJisw6KZlxDzDBhmb3
+	 P94iu4FiRPY0A==
+Received: from localhost (unknown [212.93.144.165])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by bali.collaboradmins.com (Postfix) with UTF8SMTPSA id 6E74F17E105E;
+	Wed, 11 Jun 2025 23:48:15 +0200 (CEST)
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Subject: [PATCH 0/3] arm64: dts: rockchip: Fix HDMI output on RK3576
+Date: Thu, 12 Jun 2025 00:47:46 +0300
+Message-Id: <20250612-rk3576-hdmitx-fix-v1-0-4b11007d8675@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIL5SWgC/x2MQQqAIBAAvxJ7bmEtUugr0aFyzSWy0Igg/HvSc
+ QZmXkgchRP01QuRb0lyhAKqrmDxU1gZxRaGhpqOtFIYt7YzGr3d5XrQyYNMLbnZzmSVgdKdkYv
+ +n8OY8wekTPnQYwAAAA==
+X-Change-ID: 20250611-rk3576-hdmitx-fix-e030fbdb0d17
+To: Sandy Huang <hjc@rock-chips.com>, 
+ =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
+ Andy Yan <andy.yan@rock-chips.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: kernel@collabora.com, Andy Yan <andyshrk@163.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+X-Mailer: b4 0.14.2
 
-On Tue, 10 Jun 2025 18:31:53 +0200 =C3=81lvaro Fern=C3=A1ndez Rojas wrote:
-> +	struct dsa_port *dp =3D dsa_user_to_port(dev);
-> +	unsigned int fcs_len;
-> +	u32 fcs_val;
-> +	u8 *brcm_tag;
+Since commit c871a311edf0 ("phy: rockchip: samsung-hdptx: Setup TMDS
+char rate via phy_configure_opts_hdmi"), the workaround of passing the
+PHY rate from DW HDMI QP bridge driver via phy_set_bus_width() became
+partially broken, unless the rate adjustment is done as with RK3588,
+i.e. by CCF from VOP2.
 
-nit: please reorder the variable declaration lines longest to shortest
+Attempting to fix this up at PHY level would not only introduce
+additional hacks, but it would also fail to adequately resolve the
+display issues that are a consequence of the system CRU limitations.
 
-> +	/* The Ethernet switch we are interfaced with needs packets to be at
-> +	 * least 64 bytes (including FCS) otherwise they will be discarded when
-> +	 * they enter the switch port logic. When Broadcom tags are enabled, we
-> +	 * need to make sure that packets are at least 70 bytes
-> +	 * (including FCS and tag) because the length verification is done after
-> +	 * the Broadcom tag is stripped off the ingress packet.
-> +	 *
-> +	 * Let dsa_user_xmit() free the SKB
-> +	 */
-> +	if (__skb_put_padto(skb, ETH_ZLEN + BRCM_LEG_TAG_LEN, false))
-> +		return NULL;
-> +
-> +	fcs_len =3D skb->len;
-> +	fcs_val =3D cpu_to_le32(crc32(~0, skb->data, fcs_len) ^ ~0);
+Therefore, let's proceed with the solution already implemented for
+RK3588, that is to make use of the HDMI PHY PLL as a more accurate DCLK
+source in VOP2.
 
-sparse (C=3D1 build flag) complains about the loss of type annotation:
+It's worth noting a follow-up patch is going to drop the hack from the
+bridge driver altogether, while switching to HDMI PHY configuration API
+for setting up the TMDS character rate.
 
-net/dsa/tag_brcm.c:327:17: warning: incorrect type in assignment (different=
- base types)
-net/dsa/tag_brcm.c:327:17:    expected unsigned int [usertype] fcs_val
-net/dsa/tag_brcm.c:327:17:    got restricted __le32 [usertype]
+Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+---
+Cristian Ciocaltea (3):
+      dt-bindings: display: vop2: Add optional PLL clock property for rk3576
+      arm64: dts: rockchip: Enable HDMI PHY clk provider on rk3576
+      arm64: dts: rockchip: Add HDMI PHY PLL clock source to VOP2 on rk3576
 
-> +	skb_push(skb, BRCM_LEG_TAG_LEN);
-> +
-> +	dsa_alloc_etype_header(skb, BRCM_LEG_TAG_LEN);
-> +
-> +	brcm_tag =3D skb->data + 2 * ETH_ALEN;
-> +
-> +	/* Broadcom tag type */
-> +	brcm_tag[0] =3D BRCM_LEG_TYPE_HI;
-> +	brcm_tag[1] =3D BRCM_LEG_TYPE_LO;
-> +
-> +	/* Broadcom tag value */
-> +	brcm_tag[2] =3D BRCM_LEG_EGRESS | BRCM_LEG_LEN_HI(fcs_len);
-> +	brcm_tag[3] =3D BRCM_LEG_LEN_LO(fcs_len);
-> +	brcm_tag[4] =3D 0;
-> +	brcm_tag[5] =3D dp->index & BRCM_LEG_PORT_ID;
-> +
-> +	/* Original FCS value */
-> +	if (__skb_pad(skb, ETH_FCS_LEN, false))
-> +		return NULL;
-> +	skb_put_data(skb, &fcs_val, ETH_FCS_LEN);
---=20
-pw-bot: cr
+ .../bindings/display/rockchip/rockchip-vop2.yaml   | 56 +++++++++++++++++-----
+ arch/arm64/boot/dts/rockchip/rk3576.dtsi           |  7 ++-
+ 2 files changed, 49 insertions(+), 14 deletions(-)
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250611-rk3576-hdmitx-fix-e030fbdb0d17
+
