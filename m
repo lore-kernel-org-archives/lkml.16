@@ -1,113 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEBD0266588;
-	Wed, 11 Jun 2025 23:11:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9072701B3;
+	Wed, 11 Jun 2025 23:12:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749683509; cv=none; b=DR/0ByRbuFTzPH//DUVX/xgAZQ7dGkIaAf2Oa/T0a2Va2oNeNWz85DqVyrbPJ/nK4qjIcuxovqVz67ueCJ6lSxgSEvMCq4dm4uOJMZzozNptYZyx0NAIDne06TVK6WCPxOvPBDtKuo3bO5A6n2AcVoB4gkQXNuMRBHD6pXdWCJ4=
+	t=1749683540; cv=none; b=Ms65gra6RzHtyZSavqwtAOKtAwSJfcG/QJtj5FdcFUcFLtyM+vJjNSUhZ753xLGXOW8h2/uYHSVcwBGyqBRqr6o7RedYBszzSfTXhegNkKh5QHG1fu0TKbTxH87px3+Q77Dheo4JOUuwqUUsrvbfyLoClbsK1Pq0648i+BgR3IM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749683509; c=relaxed/simple;
-	bh=Xi7Bn8Dl4dzWWpiOeR/DTKrcXEYcYeIJC7prsjMVDnk=;
+	s=arc-20240116; t=1749683540; c=relaxed/simple;
+	bh=YlVscud+DHYOdj0woFplsZHA3xfxQyKot3ngoy1iubc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=urEoh0Swp+f5uZ5zhV+HZyH8EZi4elhkL65ThF8R57G1JOclD0WEo+tzOB6cmLb30JjsNidQ/hFirNrhO3M7lEE9jXtoFwNBnE8qsS4dAm8GMNL2SGNarGbuXPi84RzjrH/DyjemQIOIEA6kHqwVwygaS6Rqz1oBNL9T8ajuFfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aq7OfoyP; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=atqBxWJgb74r7IJq+wedS2gIF3LT9uAVyOhI6F1oi059QdJIDyaNrowVlKgtWKJhgdIn3W/0JQ2kWaEUBSIOdyV8H82IXwONTwZvcdwYg3jiRGE+jkobZww9QwTgNPRL4EFb89G0o/4L+CuhJBgORIGkIV14N1UAfzfaV5uWvQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cCJvU3A6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aq7OfoyP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749683508; x=1781219508;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Xi7Bn8Dl4dzWWpiOeR/DTKrcXEYcYeIJC7prsjMVDnk=;
-  b=aq7OfoyPryAYOwh+xcGnofJuEsfLy5kTNBOxfAHnjiT2+aEvmdNNlHI8
-   sDvzNHmSATEL+X/SCSA42rBHnK8wyJdEDi2x2VRlQ9WKkjT2d8eKljTRc
-   c5WD4GzK4KeF7g+YPXEccqfd9rKUV8G5gC+2AaSnAroWL0CpxrL5i/o7Z
-   L68KjXAokt2h0GXy8xbgLsIGJ6pghoQqA1mzMysuDQOG37pKHPjDEpDMz
-   dKOhkIiV8tBrlbosp1WprIJscishmuYZ3x4vbC4dqzSm+BbWFaXsy69KK
-   PaiCjibWk9gnEknddr+cNh+kUat/GmZR7RraKCT1bhd9ss2RbLvDRR/41
-   w==;
-X-CSE-ConnectionGUID: KsIHq3oqTrG5M2SFIS061w==
-X-CSE-MsgGUID: g3x1LF1QTAO3L2BUDojOJg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="51063181"
-X-IronPort-AV: E=Sophos;i="6.16,229,1744095600"; 
-   d="scan'208";a="51063181"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 16:11:47 -0700
-X-CSE-ConnectionGUID: WCKpKM7NRfePmN8CCfTQuw==
-X-CSE-MsgGUID: jVTruJE9RbKw+bqDvkvdzg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,229,1744095600"; 
-   d="scan'208";a="178245955"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 11 Jun 2025 16:11:43 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uPUbc-000Av4-1y;
-	Wed, 11 Jun 2025 23:11:40 +0000
-Date: Thu, 12 Jun 2025 07:11:17 +0800
-From: kernel test robot <lkp@intel.com>
-To: Nick Hu <nick.hu@sifive.com>, conor+dt@kernel.org, krzk+dt@kernel.org,
-	Alexandre Ghiti <alex@ghiti.fr>, linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, Nick Hu <nick.hu@sifive.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Samuel Holland <samuel.holland@sifive.com>
-Subject: Re: [PATCH v2 3/3] cpuidle: Add SiFive power provider
-Message-ID: <202506120735.Ek7I6Nze-lkp@intel.com>
-References: <20250611031023.28769-4-nick.hu@sifive.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cCJvU3A6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A939C4CEE3;
+	Wed, 11 Jun 2025 23:12:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749683538;
+	bh=YlVscud+DHYOdj0woFplsZHA3xfxQyKot3ngoy1iubc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cCJvU3A6AsToKfF27xCXKe2jokg95/pMewWR0XRblt9Ws+uBLaDvsh+Q0LR2LBg/L
+	 f7cMw4Oi38juqhGo1qzQwmve41gLiyYa0F90ebSLNghrHCaIck3c2hrOIq/FSYzrNf
+	 vvRCEGZLWKdQf4SqFiF3zrtEGT9K9CuWVM3s7vBkkUE0WDiNLdx6bDmZG7d/6g4xvP
+	 qbMVS73KZqH60cDBZ0mPag5USeAGWvPJH+s9SQlB1KtZ2V6KOVbNbzFx4dPjdix+Me
+	 jC7JX/G3+Qd85wIul95VUp9jc8tAtL2yUNb5OwAFUlh4jSismePi7cxTE9Vdy2qYda
+	 3gI77Bjz9NWMQ==
+Date: Wed, 11 Jun 2025 16:12:14 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Joe Lawrence <joe.lawrence@redhat.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>, live-patching@vger.kernel.org, 
+	Song Liu <song@kernel.org>, laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>, 
+	Marcos Paulo de Souza <mpdesouza@suse.com>, Weinan Liu <wnliu@google.com>, 
+	Fazla Mehrab <a.mehrab@bytedance.com>, Chen Zhongjin <chenzhongjin@huawei.com>, 
+	Puranjay Mohan <puranjay@kernel.org>
+Subject: Re: [PATCH v2 59/62] livepatch/klp-build: Introduce klp-build script
+ for generating livepatch modules
+Message-ID: <3nloqn2gjfn7rkaqsebb5wp4zikgwa7tfslvmv53bt4unuvu7d@p3q6qfskvhmo>
+References: <cover.1746821544.git.jpoimboe@kernel.org>
+ <10ccbeb0f4bcd7d0a10cc9b9bd12fdc4894f83ee.1746821544.git.jpoimboe@kernel.org>
+ <305c6d06-ae85-4595-ba05-9aa7b93739bd@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250611031023.28769-4-nick.hu@sifive.com>
+In-Reply-To: <305c6d06-ae85-4595-ba05-9aa7b93739bd@redhat.com>
 
-Hi Nick,
+On Wed, Jun 11, 2025 at 05:44:23PM -0400, Joe Lawrence wrote:
+> On 5/9/25 4:17 PM, Josh Poimboeuf wrote:
+> > +revert_patches() {
+> > +	local extra_args=("$@")
+> > +	local patches=("${APPLIED_PATCHES[@]}")
+> > +
+> > +	for (( i=${#patches[@]}-1 ; i>=0 ; i-- )) ; do
+> > +		revert_patch "${patches[$i]}" "${extra_args[@]}"
+> > +	done
+> > +
+> > +	APPLIED_PATCHES=()
+> > +
+> > +	# Make sure git actually sees the patches have been reverted.
+> > +	[[ -d "$SRC/.git" ]] && (cd "$SRC" && git update-index -q --refresh)
+> > +}
+> 
+> < warning: testing entropy field fully engaged :D >
+> 
+> Minor usability nit: I had run `klp-build --help` while inside a VM that
+> didn't seem to have r/w access to .git/.  Since the cleanup code is
+> called unconditionally, it gave me a strange error when running this
+> `git update-index` when I never supplied any patches to operate on. I
+> just wanted to see the usage.
+> 
+> Could this git update-index be made conditional?
+> 
+>   if (( ${#APPLIED_PATCHES[@]} > 0 )); then
+>       ([[ -d "$SRC/.git" ]] && cd "$SRC" && git update-index -q --refresh)
+>       APPLIED_PATCHES=()
+>   fi
+> 
+> Another way to find yourself in this function is to move .git/ out of
+> the way.  In that case, since it's the last line of revert_patches(), I
+> think the failure of [[ -d "$SRC/.git" ]] causes the script to
+> immediately exit:
+> 
+>   - for foo.patch, at the validate_patches() -> revert_patches() call
+>   - for --help, at the cleanup() -> revert_patches() call
+> 
+> So if you don't like the conditional change above, should
+> revert_patches() end with `true` to eat the [[ -d "$SRC/.git" ]] status?
+>  Or does that interfere with other calls to that function throughout the
+> script?
+> 
+> FWIW, with either adjustment, the script seems happy to operate on a
+> plain ol' kernel source tree without git.
 
-kernel test robot noticed the following build warnings:
+Hm, revert_patch() already has a call to git_refresh(), so there doesn't
+appear to be any point to that extra refresh in revert_patches().
 
-[auto build test WARNING on rafael-pm/linux-next]
-[also build test WARNING on rafael-pm/bleeding-edge robh/for-next linus/master v6.16-rc1 next-20250611]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Does this fix?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Nick-Hu/cpuidle-riscv-sbi-Work-with-the-external-pmdomain-driver/20250611-121115
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
-patch link:    https://lore.kernel.org/r/20250611031023.28769-4-nick.hu%40sifive.com
-patch subject: [PATCH v2 3/3] cpuidle: Add SiFive power provider
-config: riscv-kismet-CONFIG_RISCV_SBI_CPUIDLE-CONFIG_SIFIVE_DMC_PD_CPUIDLE-0-0 (https://download.01.org/0day-ci/archive/20250612/202506120735.Ek7I6Nze-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20250612/202506120735.Ek7I6Nze-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506120735.Ek7I6Nze-lkp@intel.com/
-
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for RISCV_SBI_CPUIDLE when selected by SIFIVE_DMC_PD_CPUIDLE
-   WARNING: unmet direct dependencies detected for PM_GENERIC_DOMAINS_OF
-     Depends on [n]: PM_GENERIC_DOMAINS [=n] && OF [=y]
-     Selected by [y]:
-     - SIFIVE_DMC_PD_CPUIDLE [=y] && CPU_IDLE [=y] && RISCV [=y] && ARCH_SIFIVE [=y]
-   
-   WARNING: unmet direct dependencies detected for RISCV_SBI_CPUIDLE
-     Depends on [n]: CPU_IDLE [=y] && RISCV [=y] && RISCV_SBI [=n]
-     Selected by [y]:
-     - SIFIVE_DMC_PD_CPUIDLE [=y] && CPU_IDLE [=y] && RISCV [=y] && ARCH_SIFIVE [=y]
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+diff --git a/scripts/livepatch/klp-build b/scripts/livepatch/klp-build
+index 7ec07c4079f7..e6dbac89ab03 100755
+--- a/scripts/livepatch/klp-build
++++ b/scripts/livepatch/klp-build
+@@ -388,9 +388,6 @@ revert_patches() {
+ 	done
+ 
+ 	APPLIED_PATCHES=()
+-
+-	# Make sure git actually sees the patches have been reverted.
+-	[[ -d "$SRC/.git" ]] && (cd "$SRC" && git update-index -q --refresh)
+ }
+ 
+ validate_patches() {
