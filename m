@@ -1,118 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8D51B0411;
-	Wed, 11 Jun 2025 04:38:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C12D417E;
+	Wed, 11 Jun 2025 04:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749616705; cv=none; b=GhzAESjWGDo7ApqYg8scbCzyW9kz1wPJEQSv0noZn3chGsdzKD9Hl9DMrX1fSX4yq0XZ+bFcgoPlboMrYKuE0CBhRk5nS+JSwWU0GDeTpvsxALKrbATPkveW9byWJhQdSTz/8ga2A4Tamb/oWuENPzlXBCe1CgwTrOAp3bbwMYM=
+	t=1749616745; cv=none; b=rRM1Gba9SnMRFnmHDB5Lo+t0k25gwzPTIoOccxS/BUCUhE9UN4VMA+88t4u7lSNQuWnUrOWv8I/UOGanD/GD6HmdoTinuAH3Atv9xjOwnGed2hEERMolYZ6N+Ep9YeQ+leQu3x5KyAIU0LbLeM2dC6hjuFyHyseDw47/jsNEi60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749616705; c=relaxed/simple;
-	bh=KbXg0HmLXdWM4zba+PsRTH5m51SW5Hsv6pxMUcnQ9o0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hzjJPD249Mu6A3xbeKmPs8qN/plFa3vpaCOdmwQZj+wyaeXI8L1W/SVpItykUXnZsfO4QTo9wdomvsJ0/zA9Uc/bXRY+uUK+k+2fpDhMt18TuVbRLs8wrovxrkS16zop6UbtX5P8MyTG+7yi4lYrlJjjEcO8oIevtB0dJrXqx2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cJzUcKiF; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cJzUcKiF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749616703; x=1781152703;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=KbXg0HmLXdWM4zba+PsRTH5m51SW5Hsv6pxMUcnQ9o0=;
-  b=cJzUcKiFGuL2hl0QZF4Od/USSFBgrIiqfxPy0leIXIlsRE424vxUbS4I
-   EcI7cD9uA1yPX6b44xgENGTQshyEuSw8EbVhgoT9WYuR8OHmzKX67vLLa
-   QMQJDDmUTapClrGK7t07mdpCEy0zBTXaJkL0GbGYfwBYlA2eT6bQEceHD
-   gx0eFiTe15jaoPtY/5hDJ+l0hv4zrI9I7bi7qOi73136XTWnJa65KBqcg
-   nMhwhXc94W5x5vPFuPCoSIXMD15XqmnPVbJr0sIi5HKrYGRleD7zQpGkS
-   n7MEuu265J2L9mQueEY1W+Xetcyuf37LQb5apBJ8xvYW/nYmvlsLnpMb1
-   g==;
-X-CSE-ConnectionGUID: trMvHVKJTiq1iyh8LDZIVg==
-X-CSE-MsgGUID: uPaEP4FkSlm79uXB+YLWbA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="62783169"
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="62783169"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 21:38:23 -0700
-X-CSE-ConnectionGUID: l8HYpvXbRQKXDyxRt2LbEw==
-X-CSE-MsgGUID: p0kOdQ4iQf2sNB4pZGSuBw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="147619193"
-Received: from unknown (HELO [10.238.0.239]) ([10.238.0.239])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 21:38:20 -0700
-Message-ID: <629e0dc3-49b4-45f5-aeaa-8a9109e81d14@linux.intel.com>
-Date: Wed, 11 Jun 2025 12:38:17 +0800
+	s=arc-20240116; t=1749616745; c=relaxed/simple;
+	bh=DZA6rpZMGkpvSVloY9xR5fbblgafaczRjmes4Ie6mKM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=byBGj6oyVKkLUrVkirzpBuiaOtIua42B5HzwKdIfOD3q+dKAaZHUgkEJBDshuJPMUgWaQ6vHNvcAk6CV8iLHd6apGMYd9owYcBS55Q++UgQLLsO3uC0aRBrnnYI6L74qNAL3osDhc2wsooxPo2PNrAK8zK8u2pup9feZ0sxFgM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 268772C02510;
+	Wed, 11 Jun 2025 06:38:54 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 0DE541FB9E; Wed, 11 Jun 2025 06:38:54 +0200 (CEST)
+Date: Wed, 11 Jun 2025 06:38:54 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: "Bowman, Terry" <terry.bowman@amd.com>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com, bhelgaas@google.com,
+	bp@alien8.de, ming.li@zohomail.com, shiju.jose@huawei.com,
+	dan.carpenter@linaro.org, Smita.KoralahalliChannabasappa@amd.com,
+	kobayashi.da-06@fujitsu.com, rrichter@amd.com, peterz@infradead.org,
+	fabio.m.de.francesco@linux.intel.com, ilpo.jarvinen@linux.intel.com,
+	yazen.ghannam@amd.com, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v9 04/16] PCI/AER: Dequeue forwarded CXL error
+Message-ID: <aEkIXiM3jaCvKw3o@wunner.de>
+References: <20250603172239.159260-1-terry.bowman@amd.com>
+ <20250603172239.159260-5-terry.bowman@amd.com>
+ <aEexYj8uImRt0kr9@wunner.de>
+ <aad4372e-d73b-47f9-9736-31dc1e6e03b0@amd.com>
+ <a602603b-e075-46a1-a4bf-3653954faa08@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 01/32] KVM: SVM: Disable interception of SPEC_CTRL iff
- the MSR exists for the guest
-To: Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- Chao Gao <chao.gao@intel.com>, Borislav Petkov <bp@alien8.de>,
- Xin Li <xin@zytor.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>,
- Francesco Lavra <francescolavra.fl@gmail.com>,
- Manali Shukla <Manali.Shukla@amd.com>
-References: <20250610225737.156318-1-seanjc@google.com>
- <20250610225737.156318-2-seanjc@google.com>
-Content-Language: en-US
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <20250610225737.156318-2-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a602603b-e075-46a1-a4bf-3653954faa08@amd.com>
 
+On Tue, Jun 10, 2025 at 04:20:53PM -0500, Bowman, Terry wrote:
+> On 6/10/2025 1:07 PM, Bowman, Terry wrote:
+> > On 6/9/2025 11:15 PM, Lukas Wunner wrote:
+> >> On Tue, Jun 03, 2025 at 12:22:27PM -0500, Terry Bowman wrote:
+> >>> --- a/drivers/cxl/core/ras.c
+> >>> +++ b/drivers/cxl/core/ras.c
+> >>> +static int cxl_rch_handle_error_iter(struct pci_dev *pdev, void *data)
+> >>> +{
+> >>> +	struct cxl_prot_error_info *err_info = data;
+> >>> +	struct pci_dev *pdev_ref __free(pci_dev_put) = pci_dev_get(pdev);
+> >>> +	struct cxl_dev_state *cxlds;
+> >>> +
+> >>> +	/*
+> >>> +	 * The capability, status, and control fields in Device 0,
+> >>> +	 * Function 0 DVSEC control the CXL functionality of the
+> >>> +	 * entire device (CXL 3.0, 8.1.3).
+> >>> +	 */
+> >>> +	if (pdev->devfn != PCI_DEVFN(0, 0))
+> >>> +		return 0;
+> >>> +
+> >>> +	/*
+> >>> +	 * CXL Memory Devices must have the 502h class code set (CXL
+> >>> +	 * 3.0, 8.1.12.1).
+> >>> +	 */
+> >>> +	if ((pdev->class >> 8) != PCI_CLASS_MEMORY_CXL)
+> >>> +		return 0;
+> >>> +
+> >>> +	if (!is_cxl_memdev(&pdev->dev) || !pdev->dev.driver)
+> >>> +		return 0;
+> >>
+> >> Is the point of the "!pdev->dev.driver" check to ascertain that
+> >> pdev is bound to cxl_pci_driver?
+> >>
+> >> If so, you need to check "if (pdev->driver != &cxl_pci_driver)"
+> >> directly (like cxl_handle_cper_event() does).
+> >>
+> >> That's because there are drivers which may bind to *any* PCI device,
+> >> e.g. vfio_pci_driver.
+> 
+> Looking closer to implement this change I find the cxl_pci_driver is
+> defined static in cxl/pci.c and is unavailable to reference in
+> cxl/core/ras.c as-is. Would you like me to export cxl_pci_driver to
+> make available for this check?
 
+I'm not sure you need an export.  The consumer you're introducing
+is located in core/ras.c, which is always built-in, never modular,
+hence just making it non-static and adding a declaration to cxlpci.h
+may be sufficient.
 
-On 6/11/2025 6:57 AM, Sean Christopherson wrote:
-> Disable interception of SPEC_CTRL when the CPU virtualizes (i.e. context
-> switches) SPEC_CTRL if and only if the MSR exists according to the vCPU's
-> CPUID model.  Letting the guest access SPEC_CTRL is generally benign, but
-> the guest would see inconsistent behavior if KVM happened to emulate an
-> access to the MSR.
->
-> Fixes: d00b99c514b3 ("KVM: SVM: Add support for Virtual SPEC_CTRL")
-> Reported-by: Chao Gao <chao.gao@intel.com>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->   arch/x86/kvm/svm/svm.c | 9 ++++++---
->   1 file changed, 6 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 0ad1a6d4fb6d..21e745acebc3 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -1362,11 +1362,14 @@ static void init_vmcb(struct kvm_vcpu *vcpu)
->   	svm_recalc_instruction_intercepts(vcpu, svm);
->   
->   	/*
-> -	 * If the host supports V_SPEC_CTRL then disable the interception
-> -	 * of MSR_IA32_SPEC_CTRL.
-> +	 * If the CPU virtualizes MSR_IA32_SPEC_CTRL, i.e. KVM doesn't need to
-> +	 * manually context switch the MSR, immediately configure interception
-> +	 * of SPEC_CTRL, without waiting for the guest to access the MSR.
->   	 */
->   	if (boot_cpu_has(X86_FEATURE_V_SPEC_CTRL))
-> -		set_msr_interception(vcpu, svm->msrpm, MSR_IA32_SPEC_CTRL, 1, 1);
-> +		set_msr_interception(vcpu, svm->msrpm, MSR_IA32_SPEC_CTRL,
-> +				     guest_has_spec_ctrl_msr(vcpu),
-> +				     guest_has_spec_ctrl_msr(vcpu));
-Side topic, not related to this patch directly.
+An alternative would be to keep it static, but add a non-static helper
+cxl_pci_drv_bound() or something like that.
 
-Setting to 1 for set_msr_interception() means to disable interception.
-The name of the function seems a bit counterintuitive to me.
-Maybe some description for the function can help people not familiar with
-SVM code without further checking the implementation?
+I'm passing the buck to CXL maintainers for this. :)
 
+> The existing class code check guarantees it is a CXL EP. Is it not
+> safe to expect it is bound to a the CXL driver?
 
->   
->   	if (kvm_vcpu_apicv_active(vcpu))
->   		avic_init_vmcb(svm, vmcb);
+Just checking for the pci_dev being bound seems insufficient to me
+because of the vfio_pci_driver case and potentially others.
 
+HTH,
+
+Lukas
