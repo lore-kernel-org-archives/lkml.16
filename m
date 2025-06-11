@@ -1,204 +1,116 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0235222D79B;
-	Wed, 11 Jun 2025 08:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD6BE231839;
+	Wed, 11 Jun 2025 08:05:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749629080; cv=none; b=SYWGV52stetCzBMZw8qZ37UHwlZZ2vIC+vMn4lJIitpypvz5OfuCrUelomycuBQalu+9r2hVqjlq05f6orBypyqgdo8HHUo86Ekz/9IIFeACx/vAtchx2XEM49LwOUzrfDih+ULsLh0AQoRGAGRCPkg3xt5jd1xtBLqsWUpvChU=
+	t=1749629121; cv=none; b=TEPokdcQ/B4/ZpJV3Hk7XRIFA+q6HQ/upowM2dBQ6MPhn9k6fDx/bwphQ2GtVFfovUFzKHx5J4g9ds8TvMOAXqgbpqE3DI62KdihVnfjmB8N1xpIbea3pDAr8DfW71g1BDDWz+4HktlYQOwL8UUJSqxxFMkXBuc2hMaZLmyuZgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749629080; c=relaxed/simple;
-	bh=3/Efkva65yPVo5qOxC3lVrHAJLXm7UCzGtHmQ4KXEhQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e7A8TsEah4GZqMFBgEqGq/NyGqM6d+PdlfyHDIrZLBP5zTByucmJbL1Eo64o5by4lcVpCwYN8e0VBlTZxmO5Gp3aZCwAkVQ3i2/vBh1NplYG9S6UcmI+kggPLKuxsgEHddD9W5Hdqa5VXeSg/flaEBF2vo6em/LIbi7KMpDHWsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Z/2HXK8q; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=con6Hdug; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749629121; c=relaxed/simple;
+	bh=SQl2eyv6jLz5JeUPDZu+f0mJ2UZL6D4bC62grEciy60=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PEXlPBCEHn1rqDG72S795n1Aja8GOdadphK6iNNsQTGGgocNyUwnR8kqL3cpHgTDHMl1cCQPOfDQ6DsB4jgGB6/dZ5WE0iNgXZ+P8yDwhsc+433Ne+/XMpTXnk6NoWZUCLEshYCVeT+S32xCWoO1w+Sfxt9u+vnBFbtBwIhCUpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YchtfF3j; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Z/2HXK8q";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="con6Hdug"
-Date: Wed, 11 Jun 2025 10:04:35 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749629076;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j2SKKUdPrZUXJA24/Q7m79DvirdquN66Z/YUL7hCSVY=;
-	b=Z/2HXK8qrXAErz0whT4G+v7b2AsxF/jbF8ZBGwtAPR4Rtvzj5bOKkweFBwqzhuXYe1DfyC
-	xR19ojZixIsNy/XrvoL8TT03yW1j/mFdnODEfWqxovfQz+5G3qgY61p4r39mHs6j+kWTpq
-	t3ylT38Yv6G4sC5z0jIB2+Q68cSFCa7afcm/uKANd7kVgY40iidiPp38XdcV0R0D9msY/x
-	FFA2xu3uOp4KAx5BkCMPkzblM3oC6sWQPc2kEYg1T5VTq5t6Dg2MbwbwevTFoA2CH/WlSN
-	fYNXAIc5yFzd35KxpWdJ/EmDIWMD7CxT240hIoIZUtdzmAYsrskcyfkqZ4fjWg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749629076;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j2SKKUdPrZUXJA24/Q7m79DvirdquN66Z/YUL7hCSVY=;
-	b=con6HdugG6CXlKqO4IUFGqu2feEReKr7XM9huuYhJk3Oo8kGoFjmhuc8hZVrP7ssTLu6/d
-	jQ/rTkKMZ0A+s4Aw==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, Shuah Khan <shuah@kernel.org>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Willy Tarreau <w@1wt.eu>, 
-	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, Kees Cook <kees@kernel.org>, 
-	Andy Lutomirski <luto@amacapital.net>, Will Drewry <wad@chromium.org>, Mark Brown <broonie@kernel.org>, 
-	Muhammad Usama Anjum <usama.anjum@collabora.com>, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v4 09/14] selftests: harness: Move teardown conditional
- into test metadata
-Message-ID: <20250611093942-f6c65a06-c72a-4451-aa1e-8cb8de0d69cb@linutronix.de>
-References: <20250505-nolibc-kselftest-harness-v4-0-ee4dd5257135@linutronix.de>
- <20250505-nolibc-kselftest-harness-v4-9-ee4dd5257135@linutronix.de>
- <aEfVYQaid5uOHB+Y@nvidia.com>
- <20250610130817-253d2b2d-030a-4eda-91fc-3edb58a4f549@linutronix.de>
- <20250610120902.GB543171@nvidia.com>
- <aEh+DNmbZrqg6rHR@nvidia.com>
- <20250610234657.GO543171@nvidia.com>
- <aEkqtfcOJDrxAAcs@nvidia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YchtfF3j"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2345c60507bso44824155ad.0;
+        Wed, 11 Jun 2025 01:05:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749629119; x=1750233919; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lXPMVnUwf3/EoxHQfzIlGfhIh7pfwuueI5x8/O9yKtc=;
+        b=YchtfF3jmNYIn6WDFwlJ/ae4L932Jtk9Z0+tbHQdTA+fBXtI5S091UXXJ7bzM0VpMa
+         wvR6REbAttQ/0YRkP+rnP79AvQZfWM+ChQPsfKvbzPbnmJZu4HDl4trtNpAWU2wGHtXN
+         1bL5np1VuHPfiSh05cyJyyeA3rPL+FhxRdzjlkBbBbmqZMQYJfqWQTb7GwUhJZh3wrlD
+         igFrp7o68uaH0r0WHcA4gy9sYzfcLJuZIb3X6JmjA68Wu5fEkyC0fdJ/ogkc5P/WlvUC
+         8JhK9gzdVmeS5ceO5M2ivwDLS10Jvs3HYvPg5enqJXrR/08blP5LPikvTLD9fo1T0kh5
+         W0QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749629119; x=1750233919;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lXPMVnUwf3/EoxHQfzIlGfhIh7pfwuueI5x8/O9yKtc=;
+        b=LwRsYHXPGlqwj24ZZ6mhx66TQkA4m8KCepCushylvC6a0V2V7Z0fbawMXmbTrdtk5H
+         psMqe0ex+FkY+SqUCekqQnufdMfEw9GDrPM5AiuFCCO1L2Nj6vWrcfQbi6zrm8mReqwb
+         VCrdrP39xdUQyB/3t0+tUJ0sVbOS+s7P85X3gzMWAgOBBrUH30iiP9tlIodjIMkMv5dg
+         LCYwqfYZLcBNTW/TxCoZvYOEA8T1omIAGxLFJKAPCvZhD892IBimBEbmmZ8fN1Yki7bu
+         UE5O+lGC/RXC6xI+6XTdkWnMhwOO/PzBahp3GiX2yAu3HQdIKm59ekW3X+ytH5bLOtYz
+         kBsg==
+X-Forwarded-Encrypted: i=1; AJvYcCUejfQcY+Fpyef52Hzs0JbZLkr0WFcvl2mPntrdM7xZ88gtGTRJeJeWR6vTLKvZmAPjCHP6C/aN5Ha77utn@vger.kernel.org, AJvYcCV8QQvo0CZs27f6dEJ0GeyajLqDLkCnbTHgM6sx6ikAcPWqlgBJqKY1EDO5gaPW6IdgE2tGvf9adQaM@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9c7zVE4HjfVqi2gzfEyHix/+/JH6J46jHuIUVG37SHfRIKGc0
+	bVA7M+9pBXTzxCoOh8POj0/yEMdt5DafL2p/iBSzSobEk2XPO7FVAVKn
+X-Gm-Gg: ASbGncvm6vd2QYTAwcVAVx86s4pNsfK5vJvgbuTqH+o9FrvYcQiTRUwTm2JmjZeBYso
+	i7J/udFtIWf58djv5Fcrcp0RcU64qU3nSNBCfUjaFLf7v+lx2XKYz2S8P9NxwoBdMVTXJkX1NnB
+	0MEvOP0W1darcggcPcOPpLEC+2FEV002Ug9zZ2mCzDrWp08dxbvkiYkt3elRBzSirYufoTv80M9
+	XKv/iK5Es1M0xfqOTxq5uWftDh+z6N0/VOcouFqAvf45aUk/HeZ8GvGuDSIuNTEigK2/Vk81INv
+	i2qSIGk6I/Hh2fu8OrWRH7CImmRfF+SzwlhbpOevbBjj0wIfmvZ8XUm6MWu9k2Kd8XkmT7T8FMx
+	RfPSC6BJZoWa3/fNRAn1JOZYvCXkBgycvlWLmv/dxpvzeBkarJtPsQ6eLgQmSAJJ/ror5EtnzTC
+	2M9jb++JqUfWniTLPb
+X-Google-Smtp-Source: AGHT+IHeguJ9PfRvFO2Sr8bPSpOlwMx9Qn9l4lODdIxgT6Z8X+BhIHgTKrD1PU4ZUCit2Tge/jE+KA==
+X-Received: by 2002:a17:902:ecc1:b0:234:ed31:fc98 with SMTP id d9443c01a7336-23641b14d61mr29238475ad.37.1749629118911;
+        Wed, 11 Jun 2025 01:05:18 -0700 (PDT)
+Received: from localhost.localdomain (2001-b400-e357-b8a8-7759-271d-6134-9aa3.emome-ip6.hinet.net. [2001:b400:e357:b8a8:7759:271d:6134:9aa3])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2363ad90982sm21283835ad.220.2025.06.11.01.05.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 01:05:18 -0700 (PDT)
+From: Peter Yin <peteryin.openbmc@gmail.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+Cc: peteryin.openbmc@gmail.com
+Subject: [PATCH v2 0/5] Revise Meta(Facebook) Harma BMC(AST2600)
+Date: Wed, 11 Jun 2025 16:05:09 +0800
+Message-Id: <20250611080514.3123335-1-peteryin.openbmc@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aEkqtfcOJDrxAAcs@nvidia.com>
 
-On Wed, Jun 11, 2025 at 12:05:25AM -0700, Nicolin Chen wrote:
-> On Tue, Jun 10, 2025 at 08:46:57PM -0300, Jason Gunthorpe wrote:
-> > On Tue, Jun 10, 2025 at 11:48:44AM -0700, Nicolin Chen wrote:
-> > > On Tue, Jun 10, 2025 at 09:09:02AM -0300, Jason Gunthorpe wrote:
-> > > > On Tue, Jun 10, 2025 at 01:38:22PM +0200, Thomas Weißschuh wrote:
-> > > > > > ------------------------------------------------------------------
-> > > > > > #  RUN           iommufd_dirty_tracking.domain_dirty128M_huge.enforce_dirty ...
-> > > > > > # enforce_dirty: Test terminated unexpectedly by signal 11
-> > > > 
-> > > > Sig 11 is weird..
-> > > 
-> > > > > On another note, the selftest should use the kselftest_harness' ASSERT_*()
-> > > > > macros instead of plain assert().
-> > > > 
-> > > > IIRC the kselftest stuff explodes if you try to use it's assert
-> > > > functions within a fixture setup/teardown context.
-> > > > 
-> > > > I also wasn't able to reproduce this (x86 ubuntu 24 LTS OS) Maybe
-> > > > it is ARM specific, I think Nicolin is running on ARM..
-> > > 
-> > > Yes. And I was running with 64KB page size. I just quickly retried
-> > > with 4KB page size (matching x86), and all failed tests pass now.
-> > 
-> > That's a weird thing to be sensitive too. Can you get a backtrace from
-> > the crash, what function/line is crashing?
-> 
-> I think I am getting what's going on. Here the harness code has a
-> parent process and a child process:
-> 
-> --------------------------------------------------------------
-> 428-            /* _metadata and potentially self are shared with all forks. */ \
-> 429:            child = fork(); \
-> 430:            if (child == 0) { \
-> 431-                    fixture_name##_setup(_metadata, self, variant->data); \
-> 432-                    /* Let setup failure terminate early. */ \
-> 433-                    if (_metadata->exit_code) \
-> 434-                            _exit(0); \
-> 435-                    *_metadata->no_teardown = false; \
-> 436-                    fixture_name##_##test_name(_metadata, self, variant->data); \
-> 437-                    _metadata->teardown_fn(false, _metadata, self, variant->data); \
-> 438-                    _exit(0); \
-> 439:            } else if (child < 0 || child != waitpid(child, &status, 0)) { \
-> 440-                    ksft_print_msg("ERROR SPAWNING TEST GRANDCHILD\n"); \
-> 441-                    _metadata->exit_code = KSFT_FAIL; \
-> 442-            } \
-> 443-            _metadata->teardown_fn(true, _metadata, self, variant->data); \
-> 444-            munmap(_metadata->no_teardown, sizeof(*_metadata->no_teardown)); \
-> 445-            _metadata->no_teardown = NULL; \
-> 446-            if (self && fixture_name##_teardown_parent) \
-> 447-                    munmap(self, sizeof(*self)); \
-> 448-            if (WIFEXITED(status)) { \
-> 449-                    if (WEXITSTATUS(status)) \
-> 450-                            _metadata->exit_code = WEXITSTATUS(status); \
-> 451-            } else if (WIFSIGNALED(status)) { \
-> 452-                    /* Forward signal to __wait_for_test(). */ \
-> 453-                    kill(getpid(), WTERMSIG(status)); \
-> 454-            } \
-> ....
-> 456-    static void wrapper_##fixture_name##_##test_name##_teardown( \
-> 457-            bool in_parent, struct __test_metadata *_metadata, \
-> 458-            void *self, const void *variant) \
-> 459-    { \
-> 460-            if (fixture_name##_teardown_parent == in_parent && \
-> 461-                            !__atomic_test_and_set(_metadata->no_teardown, __ATOMIC_RELAXED)) \
-> 462-                    fixture_name##_teardown(_metadata, self, variant); \
-> 463-    } \
-> --------------------------------------------------------------
-> 
-> I found there is a race between those two processes, resulting in
-> the teardown() not getting invoked: I added some ksft_print_msg()
-> calls in-between the lines to debug, those tests can pass mostly,
-> as teardown() got invoked.
-> 
-> I think the reason why those huge page cases fail is just because 
-> the huge version of setup() takes longer time..
+Summary:
+Revise linux device tree entry related to Meta(Facebook) Harma
+specific devices connected to BMC(AST2600) SoC.
 
-Can you try to recreate this issue with changes to
-tools/testing/selftests/kselftest_harness/harness-selftest.c ?
+Based on:
+https://github.com/torvalds/linux/blob/master/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-harma.dts
+commit-id: cb3f397b17bbda3f2998eff9e54b040c8fa85cc9
 
-> I haven't figured out a proper fix yet, but something smells bad:
-> 1) *no_teardown is set non-atomically, while both processes calls
->    __atomic_test_and_set()
+v1 -> v2
+  - Patch 0001: ARM: dts: aspeed: harma: add E1.S power monitor
+  - Patch 0002: ARM: dts: aspeed: harma: add fan board I/O expander
+  - Patch 0003: ARM: dts: aspeed: harma: add ADC128D818 for voltage monitoring
+  - Patch 0004: ARM: dts: aspeed: Harma: revise gpio bride pin for battery
+  - Patch 0005: ARM: dts: aspeed: harma: add mmc health
+v1
+  - Patch 0001 - Harma: Revise node name
+  - Patch 0002 - Harma: Add retimer device
+  - Patch 0003 - Harma: Revise GPIO line name
+  - Patch 0004 - Harma: add e1s power monitor
+  - Patch 0005 - Harma: fan board io-expander
 
-Does this make a difference?
+Peter Yin (5):
+  ARM: dts: aspeed: harma: add E1.S power monitor
+  ARM: dts: aspeed: harma: add fan board I/O expander
+  ARM: dts: aspeed: harma: add ADC128D818 for voltage monitoring
+  ARM: dts: aspeed: Harma: revise gpio bride pin for battery
+  ARM: dts: aspeed: harma: add mmc health
 
-diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
-index 2925e47db995..89fb37a21d9d 100644
---- a/tools/testing/selftests/kselftest_harness.h
-+++ b/tools/testing/selftests/kselftest_harness.h
-@@ -410,7 +410,7 @@
-                /* Makes sure there is only one teardown, even when child forks again. */ \
-                _metadata->no_teardown = mmap(NULL, sizeof(*_metadata->no_teardown), \
-                        PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0); \
--               *_metadata->no_teardown = true; \
-+               __atomic_store_n(_metadata->no_teardown, true, __ATOMIC_SEQ_CST); \
-                if (sizeof(*self) > 0) { \
-                        if (fixture_name##_teardown_parent) { \
-                                self = mmap(NULL, sizeof(*self), PROT_READ | PROT_WRITE, \
-@@ -429,7 +429,7 @@
-                        /* Let setup failure terminate early. */ \
-                        if (_metadata->exit_code) \
-                                _exit(0); \
--                       *_metadata->no_teardown = false; \
-+                       __atomic_store_n(_metadata->no_teardown, false, __ATOMIC_SEQ_CST); \
-                        fixture_name##_##test_name(_metadata, self, variant->data); \
-                        _metadata->teardown_fn(false, _metadata, self, variant->data); \
-                        _exit(0); \
-@@ -455,7 +455,7 @@
-                void *self, const void *variant) \
-        { \
-                if (fixture_name##_teardown_parent == in_parent && \
--                               !__atomic_test_and_set(_metadata->no_teardown, __ATOMIC_RELAXED)) \
-+                               !__atomic_test_and_set(_metadata->no_teardown, __ATOMIC_SEQ_CST)) \
-                        fixture_name##_teardown(_metadata, self, variant); \
-        } \
-        static struct __test_metadata *_##fixture_name##_##test_name##_object; \
+ .../dts/aspeed/aspeed-bmc-facebook-harma.dts  | 85 ++++++++++++++++++-
+ 1 file changed, 83 insertions(+), 2 deletions(-)
 
-> 2) parent doesn't seem to wait for the setup() to complete..
+-- 
+2.25.1
 
-setup() is called in the child (L431) right before the testcase itself is
-called (L436). The parent waits for the child to exit (L439) before unmapping.
-
-> 3) when parent runs faster than the child that is still running
->    setup(), the parent unmaps the no_teardown and set it to NULL,
->    then UAF in the child, i.e. signal 11?
-
-That should never happen as the waitpid() will block until the child running
-setup() and the testcase itself have exited.
-
-Does the issue also happen when you only execute a single testcase?
-$ ./iommufd -r iommufd_dirty_tracking.domain_dirty128M_huge.enforce_dirty
-
-
-Thomas
