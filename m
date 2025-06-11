@@ -1,65 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C82254C79;
-	Wed, 11 Jun 2025 09:30:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF6F253340;
+	Wed, 11 Jun 2025 09:30:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749634233; cv=none; b=Pusa0ANN/qA5Cbs6ywF54njs3YsLyBHXPyXxeRMOd9xMGhfrSik3+UGeHdAjfdAVQ96N2uxJtzpvx9yeoF2PSCSJga93ADU22nt6/WfhnReU2a3BlvNdFGmaQ6w9cW4MmBQ4LA4OhoaRml9IywIzDwBR0vNc0MN8fbnqCe07IN0=
+	t=1749634234; cv=none; b=LBdEfRqY8FT6Jq+/JVbvZtiOB4dtZdLb73cFM1S5fP9BNQc3N4T0kq5mwRgj4F5vwG2IMNzjC2Antl1Cf79PdT0q9YQlqMuEIAXw9b5fwLqHUR1a4JtOycL/TSrlF/r4paMwgAY0PJOV/4pDGLmMuAx+Wt533qVgXiu3F5j24tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749634233; c=relaxed/simple;
-	bh=Sgb/DgIaSs3qVbyMpEegddQSYa9SUTmUPj0bH1Up/8M=;
+	s=arc-20240116; t=1749634234; c=relaxed/simple;
+	bh=cyfUg3UCeS4VmboH9A7HvIM9GYPGxEZ71wzK5D+pysY=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=RxaFgc0lGZEA9K52EAfSBYpUAnsdgQ2hyoM1LxMuVSsBZOS3QWl0dvg1hFamzCL4+slzQHbL7MBZKj0AV7j2BGKtXl+UVGty8oisDufnA+5TWq0ayjqKPkizWYLg5Zop7NsUjTpGQ+M4WxlWLP3eOEC+csMCnhRHQsPXIB67Sxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=N5tUY51I; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DYo6GNxn; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=spIARiq0REjkJbH5mv+60K+xG2s8Y68iBLZDua4gfju+4DPjVR7dcj8eX207/g7X3Kc5Xv34FBjEFUJ5C1rTcAlxzXN5OY3yZk+fLqaNDKMrw21LrBXETYpMDPeOcQVjkUBEx4QryRKOvrsL7lHs2vUNFW9xKM/GsvLgs3QXnJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MTplX32p; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iTPw0q50; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="N5tUY51I";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DYo6GNxn"
-Date: Wed, 11 Jun 2025 09:30:29 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MTplX32p";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iTPw0q50"
+Date: Wed, 11 Jun 2025 09:30:30 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749634230;
+	s=2020; t=1749634231;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wpX3t/47z7P0zY5EBLfYH7y73VToEnsrPps/AcXptXs=;
-	b=N5tUY51ICNg65plG3Zh6M4vpUOJ+IdDyR458NvIg9p3CGZ93uGxRAS7AaxrB1q1828RXvJ
-	3dZ3xUFJG84E8i2GOy0nShkIlnH6cAnyZaBEKqmJvWhTBjl5vk2haBIx5qcy3TNgNr17Fy
-	QHqwe3rxIVtT/iPWgyHXikJr6RpwB3JYP835lQqh3aaxcfw6qYz2Tc+vr3QSig1dvQNNwN
-	gmONp+KBTYzIwCeHiDHfEGnf1sZvSZH9mvaMsLQKsIxMH+nPiw7pKjvvixk1vPe4viicR9
-	e6vWo9Aok8F+tBveYTerBzvlCxyAfVnewrEqPDsm1srUuHMGadt2V4eos713fQ==
+	bh=YOicoXXP8zGw5+DPmgbLmsRPXOYqBys+XV9xC5ubN/E=;
+	b=MTplX32pplDMsLquRScbA6g917fSHUh8dpa9m47eAaJxVF7CiG95L+O7i/X9XemgxuWWzr
+	iEHBRuC/2ywf2EIuf9rscAsSv2Zkg18EFIA06YBr5o+6Kz8NPGv60GB6uQU7hDkfZzqeLM
+	ddje+pqWbLMN/K0dPq6r+x79pD0CvkJdYMMHuVyJ6rvPlOg5PANXDnPyRjEXWmqfCUUoLj
+	vEf0LA2sdguR81wpQ0QiZW+EzpKQNLN91tDfsp0BFNJTgnd5bR8g0FeoWagyiwdoxMAwq2
+	9mPGdmXljAtNH5iTeZ2l1uHDIZhmaNskM9u3uidt8bHW993HQ5Xrmka96q77eA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749634230;
+	s=2020e; t=1749634231;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wpX3t/47z7P0zY5EBLfYH7y73VToEnsrPps/AcXptXs=;
-	b=DYo6GNxn3+oO2vU14uz6Oq6SXlbHAsSx3S8lw3AwuILeVMWvkgiOZ1NRUyXAx5cKAepxHk
-	Bk9qhsL2Mb0D2FBQ==
-From: "tip-bot2 for Peter Zijlstra (Intel)" <tip-bot2@linutronix.de>
+	bh=YOicoXXP8zGw5+DPmgbLmsRPXOYqBys+XV9xC5ubN/E=;
+	b=iTPw0q50EkGxF5TBfg1ksfZXNuR0MD7rwXf9Rw1J5JFYk+7TE3jSCik/sU2vdIIZiwL5kP
+	sa4Af8dJmg2guwAw==
+From: "tip-bot2 for Mike Rapoport (Microsoft)" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
 Subject:
- [tip: x86/urgent] x86/its: explicitly manage permissions for ITS pages
+ [tip: x86/urgent] x86/its: move its_pages array to struct mod_arch_specific
 Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- Nikolay Borisov <nik.borisov@suse.com>, stable@vger.kernel.org,
+ "Mike Rapoport (Microsoft)" <rppt@kernel.org>, stable@vger.kernel.org,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250603111446.2609381-5-rppt@kernel.org>
-References: <20250603111446.2609381-5-rppt@kernel.org>
+In-Reply-To: <20250603111446.2609381-4-rppt@kernel.org>
+References: <20250603111446.2609381-4-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174963422924.406.14483786184878538014.tip-bot2@tip-bot2>
+Message-ID: <174963423007.406.3585953198148089593.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,157 +68,123 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/urgent branch of tip:
 
-Commit-ID:     a82b26451de126a5ae130361081986bc459afe9b
-Gitweb:        https://git.kernel.org/tip/a82b26451de126a5ae130361081986bc459afe9b
-Author:        Peter Zijlstra (Intel) <peterz@infradead.org>
-AuthorDate:    Tue, 03 Jun 2025 14:14:44 +03:00
+Commit-ID:     0b0cae7119a0ec9449d7261b5e672a5fed765068
+Gitweb:        https://git.kernel.org/tip/0b0cae7119a0ec9449d7261b5e672a5fed765068
+Author:        Mike Rapoport (Microsoft) <rppt@kernel.org>
+AuthorDate:    Tue, 03 Jun 2025 14:14:43 +03:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 11 Jun 2025 11:20:52 +02:00
+CommitterDate: Wed, 11 Jun 2025 11:20:51 +02:00
 
-x86/its: explicitly manage permissions for ITS pages
+x86/its: move its_pages array to struct mod_arch_specific
 
-execmem_alloc() sets permissions differently depending on the kernel
-configuration, CPU support for PSE and whether a page is allocated
-before or after mark_rodata_ro().
+The of pages with ITS thunks allocated for modules are tracked by an
+array in 'struct module'.
 
-Add tracking for pages allocated for ITS when patching the core kernel
-and make sure the permissions for ITS pages are explicitly managed for
-both kernel and module allocations.
+Since this is very architecture specific data structure, move it to
+'struct mod_arch_specific'.
+
+No functional changes.
 
 Fixes: 872df34d7c51 ("x86/its: Use dynamic thunks for indirect branches")
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20250603111446.2609381-5-rppt@kernel.org
+Link: https://lkml.kernel.org/r/20250603111446.2609381-4-rppt@kernel.org
 ---
- arch/x86/kernel/alternative.c | 74 +++++++++++++++++++++++-----------
- 1 file changed, 52 insertions(+), 22 deletions(-)
+ arch/x86/include/asm/module.h |  8 ++++++++
+ arch/x86/kernel/alternative.c | 19 ++++++++++---------
+ include/linux/module.h        |  5 -----
+ 3 files changed, 18 insertions(+), 14 deletions(-)
 
+diff --git a/arch/x86/include/asm/module.h b/arch/x86/include/asm/module.h
+index e988bac..3c2de4c 100644
+--- a/arch/x86/include/asm/module.h
++++ b/arch/x86/include/asm/module.h
+@@ -5,12 +5,20 @@
+ #include <asm-generic/module.h>
+ #include <asm/orc_types.h>
+ 
++struct its_array {
++#ifdef CONFIG_MITIGATION_ITS
++	void **pages;
++	int num;
++#endif
++};
++
+ struct mod_arch_specific {
+ #ifdef CONFIG_UNWINDER_ORC
+ 	unsigned int num_orcs;
+ 	int *orc_unwind_ip;
+ 	struct orc_entry *orc_unwind;
+ #endif
++	struct its_array its_pages;
+ };
+ 
+ #endif /* _ASM_X86_MODULE_H */
 diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index b50fe6c..6455f7f 100644
+index ecfe7b4..b50fe6c 100644
 --- a/arch/x86/kernel/alternative.c
 +++ b/arch/x86/kernel/alternative.c
-@@ -116,6 +116,24 @@ static struct module *its_mod;
- #endif
- static void *its_page;
- static unsigned int its_offset;
-+struct its_array its_pages;
-+
-+static void *__its_alloc(struct its_array *pages)
-+{
-+	void *page __free(execmem) = execmem_alloc(EXECMEM_MODULE_TEXT, PAGE_SIZE);
-+	if (!page)
-+		return NULL;
-+
-+	void *tmp = krealloc(pages->pages, (pages->num+1) * sizeof(void *),
-+			     GFP_KERNEL);
-+	if (!tmp)
-+		return NULL;
-+
-+	pages->pages = tmp;
-+	pages->pages[pages->num++] = page;
-+
-+	return no_free_ptr(page);
-+}
- 
- /* Initialize a thunk with the "jmp *reg; int3" instructions. */
- static void *its_init_thunk(void *thunk, int reg)
-@@ -151,6 +169,21 @@ static void *its_init_thunk(void *thunk, int reg)
- 	return thunk + offset;
- }
- 
-+static void its_pages_protect(struct its_array *pages)
-+{
-+	for (int i = 0; i < pages->num; i++) {
-+		void *page = pages->pages[i];
-+		execmem_restore_rox(page, PAGE_SIZE);
-+	}
-+}
-+
-+static void its_fini_core(void)
-+{
-+	if (IS_ENABLED(CONFIG_STRICT_KERNEL_RWX))
-+		its_pages_protect(&its_pages);
-+	kfree(its_pages.pages);
-+}
-+
- #ifdef CONFIG_MODULES
- void its_init_mod(struct module *mod)
- {
-@@ -173,10 +206,8 @@ void its_fini_mod(struct module *mod)
+@@ -173,8 +173,8 @@ void its_fini_mod(struct module *mod)
  	its_page = NULL;
  	mutex_unlock(&text_mutex);
  
--	for (int i = 0; i < mod->arch.its_pages.num; i++) {
--		void *page = mod->arch.its_pages.pages[i];
--		execmem_restore_rox(page, PAGE_SIZE);
--	}
-+	if (IS_ENABLED(CONFIG_STRICT_MODULE_RWX))
-+		its_pages_protect(&mod->arch.its_pages);
+-	for (int i = 0; i < mod->its_num_pages; i++) {
+-		void *page = mod->its_page_array[i];
++	for (int i = 0; i < mod->arch.its_pages.num; i++) {
++		void *page = mod->arch.its_pages.pages[i];
+ 		execmem_restore_rox(page, PAGE_SIZE);
+ 	}
  }
+@@ -184,11 +184,11 @@ void its_free_mod(struct module *mod)
+ 	if (!cpu_feature_enabled(X86_FEATURE_INDIRECT_THUNK_ITS))
+ 		return;
  
- void its_free_mod(struct module *mod)
-@@ -194,28 +225,23 @@ void its_free_mod(struct module *mod)
- 
- static void *its_alloc(void)
- {
--	void *page __free(execmem) = execmem_alloc(EXECMEM_MODULE_TEXT, PAGE_SIZE);
-+	struct its_array *pages = &its_pages;
-+	void *page;
- 
-+#ifdef CONFIG_MODULE
-+	if (its_mod)
-+		pages = &its_mod->arch.its_pages;
-+#endif
-+
-+	page = __its_alloc(pages);
- 	if (!page)
- 		return NULL;
- 
--#ifdef CONFIG_MODULES
--	if (its_mod) {
--		struct its_array *pages = &its_mod->arch.its_pages;
--		void *tmp = krealloc(pages->pages,
--				     (pages->num+1) * sizeof(void *),
--				     GFP_KERNEL);
--		if (!tmp)
--			return NULL;
--
--		pages->pages = tmp;
--		pages->pages[pages->num++] = page;
-+	execmem_make_temp_rw(page, PAGE_SIZE);
-+	if (pages == &its_pages)
-+		set_memory_x((unsigned long)page, 1);
- 
--		execmem_make_temp_rw(page, PAGE_SIZE);
--	}
--#endif /* CONFIG_MODULES */
--
--	return no_free_ptr(page);
-+	return page;
+-	for (int i = 0; i < mod->its_num_pages; i++) {
+-		void *page = mod->its_page_array[i];
++	for (int i = 0; i < mod->arch.its_pages.num; i++) {
++		void *page = mod->arch.its_pages.pages[i];
+ 		execmem_free(page);
+ 	}
+-	kfree(mod->its_page_array);
++	kfree(mod->arch.its_pages.pages);
  }
+ #endif /* CONFIG_MODULES */
  
- static void *its_allocate_thunk(int reg)
-@@ -269,7 +295,9 @@ u8 *its_static_thunk(int reg)
- 	return thunk;
- }
+@@ -201,14 +201,15 @@ static void *its_alloc(void)
  
+ #ifdef CONFIG_MODULES
+ 	if (its_mod) {
+-		void *tmp = krealloc(its_mod->its_page_array,
+-				     (its_mod->its_num_pages+1) * sizeof(void *),
++		struct its_array *pages = &its_mod->arch.its_pages;
++		void *tmp = krealloc(pages->pages,
++				     (pages->num+1) * sizeof(void *),
+ 				     GFP_KERNEL);
+ 		if (!tmp)
+ 			return NULL;
+ 
+-		its_mod->its_page_array = tmp;
+-		its_mod->its_page_array[its_mod->its_num_pages++] = page;
++		pages->pages = tmp;
++		pages->pages[pages->num++] = page;
+ 
+ 		execmem_make_temp_rw(page, PAGE_SIZE);
+ 	}
+diff --git a/include/linux/module.h b/include/linux/module.h
+index 92e1420..5faa1fb 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -586,11 +586,6 @@ struct module {
+ 	atomic_t refcnt;
+ #endif
+ 
+-#ifdef CONFIG_MITIGATION_ITS
+-	int its_num_pages;
+-	void **its_page_array;
 -#endif
-+#else
-+static inline void its_fini_core(void) {}
-+#endif /* CONFIG_MITIGATION_ITS */
- 
- /*
-  * Nomenclature for variable names to simplify and clarify this code and ease
-@@ -2339,6 +2367,8 @@ void __init alternative_instructions(void)
- 	apply_retpolines(__retpoline_sites, __retpoline_sites_end);
- 	apply_returns(__return_sites, __return_sites_end);
- 
-+	its_fini_core();
-+
- 	/*
- 	 * Adjust all CALL instructions to point to func()-10, including
- 	 * those in .altinstr_replacement.
+-
+ #ifdef CONFIG_CONSTRUCTORS
+ 	/* Constructor functions. */
+ 	ctor_fn_t *ctors;
