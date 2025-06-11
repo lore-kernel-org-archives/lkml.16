@@ -1,121 +1,115 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4A2231825;
-	Wed, 11 Jun 2025 08:24:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E0D239090;
+	Wed, 11 Jun 2025 08:25:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749630296; cv=none; b=FuuQ13y5Qxw/xz+WuaPMOdzEF9/gQ9RhvEgbeE1j4YziruAx3mOxrqAEY+ItlvnDUVdDfiS6GqHIb7bcdv51XeblPQ5oFWVCv7+5QbcnG48NuU/4EH0wZrGXfW0hix+njkAsUDzeoRX/D32t90fsOAnw8BwO1wCNO2srAnOY55s=
+	t=1749630308; cv=none; b=YGbCCLh8gORsGKWs99uxIhHpCFkozTMf2AOLR5HAjg5K3RYk9TiElWhuYMhPcTyVE9nLmAt5yiIZ8smWw6kEbBBJECgN9W96lsu5LYXFByQxoxYYQN2bRZkJiO1pFzpe4479ZS2GdDbq0S6aTFvuMqPNYO7cF1ZcACe8yAc3d14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749630296; c=relaxed/simple;
-	bh=B1Tfjt80+dGutPeeGdC8bxfRXEk2YUaC3CwohjsKd50=;
+	s=arc-20240116; t=1749630308; c=relaxed/simple;
+	bh=q+9KzBFgMxlH3wVoWy5ulc7FYJUMsWouhRYi24kW+mE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W8w9vjJ1xGdGYLg2Xz/1XHkwNyBIoyGsGuk2EHsWdcgPTvt6bhRSPzJNiOS4Vr/ScsZDP5jzbxn0v7PzIBepNx6Bl6yr24QO12vZuL15ZlLVCAbuUjwIftvyXqyXKBWGUByR+jcvBL+Q25juIbiErNRAghSqre/SDcTPpeFlB4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZNeZNUmp; arc=none smtp.client-ip=209.85.222.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=OnZPBfNLeLe3kJXhJGF4ElmcT+Q2cRkiMPEbRiAZN7Vj/jkaprbRXZO+z9cukB7PMVvmlF67IlkKhatMGLx4YNwfKfOGYsmO3P5HPM4RmlDHiQHdcxxYdw2ib31EkvU6KvoibTnYcG+GpfTFXFBZyb8W82Ma/qPH430SBpwPbQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eGILYGta; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZNeZNUmp"
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7d09b0a5050so385245885a.3;
-        Wed, 11 Jun 2025 01:24:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749630294; x=1750235094; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BidLvrmOmqABz8QFweaiXGgnxn0STrjzzVlTkfXyV+8=;
-        b=ZNeZNUmpPTohzLfX4UwEEFAFGTbJunkhKbfugUQtNR2fJQeZHRun7JIX3wL+tPQ/dr
-         xr+2B1HqEKGuqC1Ni5+Qg+XqZhpHfOi6a7bhnjQHDvLQB14xcKmEtWOuzizJhwjicLB0
-         jJBy81UZJg/Wncok6WHgLZSPw5EP9PY5sizpHghNK9rE/QaJ14nBSDa6vKgMK0b5GHrh
-         VLmNfUEvZfMcMmJyEHHrVnFRP6YuYY5g+igZtPDU45L6axtnMjAU+Xb9uE4rZ+hJWVAl
-         6w6nTZoUDdZIK4YDg2ViJvyrf0zH1TsptK7zahUpkgumBwuQwjy0qycVsO77ehjvTj1A
-         YSLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749630294; x=1750235094;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BidLvrmOmqABz8QFweaiXGgnxn0STrjzzVlTkfXyV+8=;
-        b=dC+0AWot/wPru22VioV+QB8ilIutHgEqEZ7QRwpsQN2MSljmGRD1rVGbrZafrVJnyR
-         l1aiwXR1u3txyWScFUEPawi5TfzV+7JZkBGUwPhv5xoyd8qxx0COeUsilqulgqiq4WN4
-         0e31xwOjw3vsR/a6+p6Ap4dAfYKM2Qi/b2xNEZN3zrtWHpcWjkgvU79U6WtOdpaOgVY4
-         AWPdMjtJn3s6WYT0oTUs6fztXbPeQgfWsV2MQMOrodRNjWbY3W0D1zfA4/mS4Fh1jqbk
-         OIsgFhlkpDZqAK5pWk+z44XsfabjjXmVIDH+Kfo1iP9Xz6XwVAKl0qUR851hos7DxFHY
-         yKfg==
-X-Forwarded-Encrypted: i=1; AJvYcCW+Oa1GHQDgvy1qwOJdLGuN+XFqRNXlsDI/db0YX4ivVctcrqaTn0nU3k5fLgjUDgpLKf7lQj2zvdbr@vger.kernel.org, AJvYcCX12P1oOaMZhqqaDGjosykqWU9BwoWxF4H0EDd090AAN32Klvj6rZj4dUZF0E4BMr3Cb4ULTweY6myD4noL@vger.kernel.org, AJvYcCXjRki5IkQdNPvJj44yDd9go/Wc5Aw2U5zq2Gl9DFnFpPazFzs4GBM1/5NlCK9YAx8gMBoBEjvM+ina@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywp4XzVHWPvhZutWsktVPUHICWCQNuqrbxGIwTck68g+hJ8lWCf
-	JEaE02QSOt3DVfq6pwW5JEQp0LCndXLp+4ELTmyy5J7CjqaMlK78/wRY
-X-Gm-Gg: ASbGncs9/Dkj23kz2vyAVV67M7nJHkYkNojlSm6ShtsqwDL3F8gvZWw+fCtjTIQ/wZf
-	kd7FpxzkmVSp09pOdpcD0Sj98zCtUBdd1o1xvvCGv+iGtdFLEPWT6GIehJh85IN/4GVQ5nmBzHP
-	8aX13qV0sDTQuW6qJn6ZkXXOAswg0HuHiOLIvEiMh4wVmnL9JiqxpURD+0ZGRZe3BqtbQUm0+kM
-	2kAZ0XeOBKO9glg0aJvq/GlN5PwsEMf9f5hkOnNGMgBwf7fuolUtPuFAJhMsIGlX0GBDJty0YRb
-	oAL8Rw40fmqmMOlKoQBs7yihSBRnNNYHMdmFPA==
-X-Google-Smtp-Source: AGHT+IHb2MLjUBYv7CB4OtR5rJJhMMfCSImfLyf7zcPSqR4AyQunE+RrQVFB6oFjHFdz9IskAQDceQ==
-X-Received: by 2002:a05:620a:2955:b0:7ca:f09d:1473 with SMTP id af79cd13be357-7d3a88ae947mr345558185a.28.1749630294098;
-        Wed, 11 Jun 2025 01:24:54 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6fb09ab8a31sm79287166d6.7.2025.06.11.01.24.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 01:24:53 -0700 (PDT)
-Date: Wed, 11 Jun 2025 16:23:45 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
-	Inochi Amaoto <inochiama@gmail.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chen Wang <unicorn_wang@outlook.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Vinod Koul <vkoul@kernel.org>, 
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>, Yu Yuan <yu.yuan@sjtu.edu.cn>, Ze Huang <huangze@whut.edu.cn>, 
-	Thomas Bonnefille <thomas.bonnefille@bootlin.com>, Junhui Liu <junhui.liu@pigmoral.tech>, 
-	devicetree@vger.kernel.org, sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, dmaengine@vger.kernel.org, Yixun Lan <dlan@gentoo.org>, 
-	Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH v3 1/4] dt-bindings: reset: sophgo: Add CV1800B support
-Message-ID: <ycnj5ke42kpqjwgsjoo3vs4gibyr2i3yr63jfwbeajo5unqqmx@xdt4xwhcjbna>
-References: <20250611075321.1160973-1-inochiama@gmail.com>
- <20250611075321.1160973-2-inochiama@gmail.com>
- <20250611-brown-turtle-of-election-87c324@kuoka>
- <f74e217e-4a6e-4ba8-a89f-9518e2f74fda@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eGILYGta"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749630307; x=1781166307;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=q+9KzBFgMxlH3wVoWy5ulc7FYJUMsWouhRYi24kW+mE=;
+  b=eGILYGtaf8S8Tee3OLHkVKCXgF4Ki/5r5IOY0Sab00+U5JXcRng7OPTT
+   TFm7Mf5dC0cbA2ebsSyCWl3IRuW4xBNAAQQnnkDMT++vv1ncBGaK934KZ
+   vlUqXE/F5cQo0yDbvwtdbUrem6eIaiIX72MJ2N2bIT3cGdB/1C/a0JC7G
+   akYJsFHcjwvaDu0m2PLP9L8DBGWv3p8DSYZYRXVObbVl8q1685VNhpWK6
+   iO/XzIVYTEfao/0HX9rsWONMw2OkMrh0NS4u53ZMFl4HHSUhLGZD9Iac8
+   ENF67iqSlQlwC2DRxcF+V2KvF+4NZ7wkAIPCcgG3rhOzQumDyW5qhVBdd
+   Q==;
+X-CSE-ConnectionGUID: LMYURQReRLauTItnOQmemw==
+X-CSE-MsgGUID: iJSfzpGqTT62UxShfhLubg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="54393246"
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="54393246"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 01:25:06 -0700
+X-CSE-ConnectionGUID: kcHoIWDfS5qiqKqUef/d9A==
+X-CSE-MsgGUID: CGqt+bAeQ2m89Ini1HA5/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="178036550"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 01:22:28 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uPGj2-00000005aES-435h;
+	Wed, 11 Jun 2025 11:22:24 +0300
+Date: Wed, 11 Jun 2025 11:22:24 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Anup Patel <apatel@ventanamicro.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
+	Rahul Pathak <rpathak@ventanamicro.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Atish Patra <atish.patra@linux.dev>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 13/23] irqchip: Add driver for the RPMI system MSI
+ service group
+Message-ID: <aEk8wNtMT6azM_30@smile.fi.intel.com>
+References: <20250525084710.1665648-1-apatel@ventanamicro.com>
+ <20250525084710.1665648-14-apatel@ventanamicro.com>
+ <aDWjG9jAJ7kSaC9b@smile.fi.intel.com>
+ <CAK9=C2VYCSkMV5zoyVEKHTY30Y0KpUr_M8FELm37M8=WYi+4HQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <f74e217e-4a6e-4ba8-a89f-9518e2f74fda@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK9=C2VYCSkMV5zoyVEKHTY30Y0KpUr_M8FELm37M8=WYi+4HQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Jun 11, 2025 at 10:21:07AM +0200, Krzysztof Kozlowski wrote:
-> On 11/06/2025 10:19, Krzysztof Kozlowski wrote:
-> > On Wed, Jun 11, 2025 at 03:53:15PM GMT, Inochi Amaoto wrote:
-> >> Add bindings for the reset generator on the SOPHGO CV1800B
-> >> RISC-V SoC.
-> >>
-> >> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-> >> Acked-by: Rob Herring (Arm) <robh@kernel.org>
-> >> ---
-> >>  Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml | 1 +
-> >>  1 file changed, 1 insertion(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml b/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml
-> >> index 1d1b84575960..bd8dfa998939 100644
-> >> --- a/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml
-> >> +++ b/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml
-> >> @@ -17,6 +17,7 @@ properties:
-> >>                - sophgo,sg2044-reset
-> >>            - const: sophgo,sg2042-reset
-> >>        - const: sophgo,sg2042-reset
-> >> +      - const: sophgo,cv1800b-reset
-> > 
-> > Keep alphabetical order. That's enum with previous entry, btw.
-> > 
+On Tue, Jun 10, 2025 at 04:33:46PM +0530, Anup Patel wrote:
+> On Tue, May 27, 2025 at 5:03 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Sun, May 25, 2025 at 02:17:00PM +0530, Anup Patel wrote:
+
+...
+
+> > > +#include <linux/device.h>
+> >
+> > Perhaps I missed something, but devm_kzalloc() is in device/devres.h. Do you
+> > need it for something else?
 > 
-> Heh, it was an enum when this was acked.
-> 
+> dev_get_msi_domain() is part of linux/device.h hence it should
+> be included.
 
-It seems that I have made a mistake when rebase. I will fix this in
-the next version. Thanks for reminder.
+Ah, that's what I missed. Thanks for pointing out.
 
-Regards,
-Inochi
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
