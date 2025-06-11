@@ -1,114 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 992512E6108;
-	Wed, 11 Jun 2025 11:25:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A902E6108;
+	Wed, 11 Jun 2025 11:26:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749641150; cv=none; b=SgeUfI2u4mgiBGhHpp2VzXB0tfBYiObZjGKV6h2beuE1u+OotYYdMd1g8CPn1tPYrgFzwwwFIfj3BkCVa0MFFTM040Rj1kEOKcDeRAL/Y46wTyQLlhcGbSleBsCAs5Z8XyLl1GtsGSb0+d9SpqlUiW8jfIsrPLvsIrvkjdRqac8=
+	t=1749641168; cv=none; b=rBdFBsUf/3HcGIlB15KwSFTWPqgdhLj8JL4nULRzYYsawNM+pyKLiM5YYLy5815ogID/dmbIb6bzoJUr6qWthiXLjQzYkJfpGUXasVNVKdnjWBgN+izjComHBB+VGsreZ2FZxAv8pRIs+9d9EaYdB0gAXgl+dIiCv2LD1rH8800=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749641150; c=relaxed/simple;
-	bh=1fZ+iceq3RPjXWpAsNdBQALGaGO5Tot/BSmkCc/YjWM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Wd2Wv1bvfvXgEgVIJKbgMugekZmI7jOU0ywuJ6SD+OSA/RHxliibP2xIz8CTgki+7KYd7Qoze8o3QNXJTH7C0FJq3InIvON62UKsSw2/vpH69pRvzOZr/p3y2+MfITg6lc8pav62+YPACGU/2Xm0dhvLZgBTwJvaVDkrPbUqVzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RQzubqUj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749641168; c=relaxed/simple;
+	bh=2GfVP3Z9YcDigzZONt06cS6x+4ldhMcMNo3koUPT450=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=jrELEcMcZE8uK+qo3vlzvQbOvoUwQQ1fkhJCDlsvGs3iBD4zlF5+/7QQRVzVLE7uVlcFOOjUfjo5xsGz7DI0JtOSYfo5GlI8SwxImyTxYyCNVXHdOxTLUdb7+HQRSwGBd7be4GCi0O5QA0Q41uHTZzouhJfOddK+keRJ0LGtwGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CTnPQHIR; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RQzubqUj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B14BFC4CEEE;
-	Wed, 11 Jun 2025 11:25:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749641150;
-	bh=1fZ+iceq3RPjXWpAsNdBQALGaGO5Tot/BSmkCc/YjWM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RQzubqUj7ApoX0vizvn2DXbNxCOpNjDNCC3JNSjLHPGxM9KYccS7o/lKlZmNy4/B6
-	 DTEgGXTvAkRJ3uPAaB0C1WYOdLtqFyDDbB+XABhfvEu4nW6x7RkWVC7c7bH3f6LiOi
-	 zJZnEmM1YiWo0V4xjrk7NsMDIiBn8o1J2nIT1UaG/ONtW7x4L1VRBeCwlVu7Kvxvid
-	 WmN9vWQQNoRXqQJZDhrb8knyPprdNvCeayD7I4iGGDyx+Uh0G0KPAV7DAYMvE7InnZ
-	 JvUVTOpJn0AtAHWo1OLttS3hdlRVGElw38m228Ze3Clfl9u7kJaVLFl3n5vImMhtD2
-	 pF+INMBkrmVOA==
-Message-ID: <810f7614-ed73-471e-bc5b-3305816737da@kernel.org>
-Date: Wed, 11 Jun 2025 13:25:42 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CTnPQHIR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749641167; x=1781177167;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=2GfVP3Z9YcDigzZONt06cS6x+4ldhMcMNo3koUPT450=;
+  b=CTnPQHIR8YJ2MNRJHuAHzOGk3AksCB2aj/r361V6PY4nVuyXVh5dTsP7
+   mrMLPsYG1YB/UjhDVOo/Kf1pZ0u3WUWvHIavbI8B5n/frbmbm2dJPrEi+
+   jKqNdKHT+VGkAc77pFfKOsDmeXSQ7xHgJ6FDJSicqXlVpjexdYatyjd21
+   GuwwR+XssPjRy5z321jT0WJFrf7MSZ3C/mfjnpZAGwQ7jmSb2r6saj1dl
+   gQy56/BuigU97tDP9+EpoOmyBn48Fc/PCBy605WJ5j+JbYihpZg+ruAMr
+   EACOx2StGNOIqp7fSoa1QLMGwwbgsFKunloLYv0++SRtcKr15IX/2EoLM
+   A==;
+X-CSE-ConnectionGUID: 95yIAYKFQR6COTWX1XyqcA==
+X-CSE-MsgGUID: kGqALrGAQEGIG07RgawYaQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51772672"
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="51772672"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 04:26:07 -0700
+X-CSE-ConnectionGUID: WDQ9oEjJQESrmQ9f+xgpmg==
+X-CSE-MsgGUID: SgwegByST9mmtk0IF6lBKA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="151950817"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.183])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 04:26:03 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 11 Jun 2025 14:25:59 +0300 (EEST)
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    linux-serial <linux-serial@vger.kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    Madhavan Srinivasan <maddy@linux.ibm.com>, 
+    Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+    Christophe Leroy <christophe.leroy@csgroup.eu>, 
+    linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 05/33] powerpc/powermac: remove unneeded tty includes
+In-Reply-To: <20250611100319.186924-6-jirislaby@kernel.org>
+Message-ID: <3bd8996c-b463-4b1d-cc45-2a84d47f6cd0@linux.intel.com>
+References: <20250611100319.186924-1-jirislaby@kernel.org> <20250611100319.186924-6-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] arm64: defconfig: Enable X1P42100_GPUCC driver
-To: Akhil P Oommen <akhilpo@oss.qualcomm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Rob Clark <robin.clark@oss.qualcomm.com>, Sean Paul <sean@poorly.run>,
- Konrad Dybcio <konradybcio@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>,
- Abhinav Kumar <abhinav.kumar@linux.dev>,
- Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
- Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-pm@vger.kernel.org
-References: <20250611-x1p-adreno-v2-0-5074907bebbd@oss.qualcomm.com>
- <20250611-x1p-adreno-v2-2-5074907bebbd@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250611-x1p-adreno-v2-2-5074907bebbd@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="8323328-291572204-1749641159=:957"
 
-On 11/06/2025 13:15, Akhil P Oommen wrote:
-> In order to enable GPU support in Snapdragon X1P42100
-> (8 CPU core version found on Asus Zenbook A14 and other
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-There is no A14 upstream board DTS in next. Your commit msg should
-provide rationale for this, e.g. which upstream boards use this driver.
+--8323328-291572204-1749641159=:957
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Best regards,
-Krzysztof
+On Wed, 11 Jun 2025, Jiri Slaby (SUSE) wrote:
+
+> All these includes must have been cut & pasted. The code does not use
+> any tty or vt functionality at all.
+>=20
+> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> ---
+>  arch/powerpc/platforms/powermac/setup.c | 2 --
+>  1 file changed, 2 deletions(-)
+>=20
+> diff --git a/arch/powerpc/platforms/powermac/setup.c b/arch/powerpc/platf=
+orms/powermac/setup.c
+> index e119ced05d10..eb092f293113 100644
+> --- a/arch/powerpc/platforms/powermac/setup.c
+> +++ b/arch/powerpc/platforms/powermac/setup.c
+> @@ -28,13 +28,11 @@
+>  #include <linux/ptrace.h>
+>  #include <linux/export.h>
+>  #include <linux/user.h>
+> -#include <linux/tty.h>
+>  #include <linux/string.h>
+>  #include <linux/delay.h>
+>  #include <linux/ioport.h>
+>  #include <linux/major.h>
+>  #include <linux/initrd.h>
+> -#include <linux/vt_kern.h>
+>  #include <linux/console.h>
+>  #include <linux/pci.h>
+>  #include <linux/adb.h>
+
+Seems true. I had to actually scan through the file as it does have some=20
+console related setup.
+
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
+--=20
+ i.
+
+--8323328-291572204-1749641159=:957--
