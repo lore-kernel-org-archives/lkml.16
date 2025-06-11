@@ -1,258 +1,224 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961A12BDC31
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:40:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749652846; cv=none; b=rfHZcU782oRmRUYdbSlRBd7itMpPPfyvsQGqhqMYDrQDryB9ZjPFH11RaN0GWS4HuW5Iq20kAdlO3c579qvyAfkYcsztjlNb/MOgpjmt8JV/GcFrxWuUBBQl2qSrvG9Ev8U/QmqTD77fdZh4hcoHQDsyo7hBCk/04JVpTHDaOgI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749652846; c=relaxed/simple;
-	bh=LPFa+9psyfZ/kUWmfuHembHpxCJT9UYctI5V70BrYhc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Jp/GwjL+7lb1edgocBAIUijSxJqrjhfNtRPHEcmlbggjFFz6WXgxYwQgMOxjUU/n0tEYsvnsNFks0uMXDX/agXe72xixN0qb+BpXulDn2AtNbKPjuEAwTATzu/ZJ0zgufKxWA5qX/QhlHieUCfRF8k6qzOxkaPBP3RsKdgEc7Qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Gh0ipziO; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A6661E485;
+	Wed, 11 Jun 2025 14:41:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749652920; cv=fail; b=eRiogoAfdEmKUos3lnRWQg4bRAhXUUQ9jq0qJ+eGZ03zV8ZgLv7AEL2DfioBElhFDWJrPpJtmGBqhbYNHQ2OQ6oGn0M3AmK3U3F3uxmaIqpr2BEt+hBdC+Ott4Dqw+9UgDYHjDUr4JsQe0sqVY//ews/dbwJ16Fz+NhRvA0UeAo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749652920; c=relaxed/simple;
+	bh=lcHOM3clIjMTW/+eLkd/NC698834up28cG7dfFWCpug=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=jJi6KDSRkoWxC9kJXH3z9mZo2ZaL3xONWjvPH7bETpnV73PReHMAu4L7TdCeX+m4Yb0nU30J/PrDuJ0dYpH39yxXzNKNLvEBihVdZPhZL2njDrGfe47OPOlDj8EfeYXnViIgr3cWVav5+eEfyg5sxk2oTrLGxGYFuBEN0d5mlbA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XFJTQRFo; arc=fail smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gh0ipziO"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a528243636so4084493f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:40:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749652842; x=1750257642; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=g3oNjI0+fE5a1sp5ezyw/B8kijMIdxGNtB5JPW69Z4Q=;
-        b=Gh0ipziOZi20t6YJzZhqhRMRlex2RYvTJLMeR+YVsY2VkP8cnBD+nY6lzhvpz4+Yft
-         sl/S+s8OkdqEY85cd+68V0PWkqT4SHGgTj5uarcOhvAnxAITjK01VbqpFx2qP7ne0YXF
-         QI8affQyLeid/nMPLwwTsjTMGT+qj66bXaBcDhRKzEn5rpObsYpH7eGQmKxtEiwXfQcL
-         v3LSlSX/YFRtUqT93Rms0Dnc+nHGLOT076SBB5+meoKprlk6Bwir0HgUbEthuL558uIi
-         Q6UxlfexPRNobLuwZUEH2dBI8ZUuP5J989n7Mz1R3o2AHfKOvI5FtlTUN+7RcFB6uysk
-         6BRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749652842; x=1750257642;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g3oNjI0+fE5a1sp5ezyw/B8kijMIdxGNtB5JPW69Z4Q=;
-        b=h8sie7z/q4Wzfsfi6We/FA6jy3fBpSP08h9XV5rKnva9+rurHR2SFZ+/iQ9Pd8RF32
-         lbTYEWIDUksXsQr0nQIzhdB+RiglqLJbFVncLbK5fSHXjaafFNn2XXHUomySdICck1iM
-         KwO9TdDFtT0fQZB2uGuz7LDa7VqnFP7c1RvlWnSj+HXw7bDDB6yN4XstVbT+BO/UoZeT
-         spCGNi1Hhu8R2dvl7jU5wm8BkSfUFi9W/CgCz56NjED6fTPINGBooGnu17MAvEAjUe+k
-         JoLXzKHBjmDmOyCzgXlol9RfyJ5e0CEm8OcMwcBGpNf2ZpJs25oF81diQFhFqINJMYiK
-         MZmw==
-X-Forwarded-Encrypted: i=1; AJvYcCX6WgH0I2wG8xDxX1NEnKaeauUHnfqfCbb55ToiW2AafdzM5UfJAteQwCCQWxhftQPPZhmVleKN3W8ebQk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAkCqwMOrY1rSXP38DPljIVrZbjfgB90ZAiBhNLONdRLfHQz7P
-	SDXsoItfwLBxjaoyl07B/lOff4t+VeTLYoIjyxBTbfNx1xwfEis0L3yWmZIHEw+c3Ho=
-X-Gm-Gg: ASbGncvrv66gPui9FwokBCTM3TRCAo8wHJpZO996MWZO5d9FW8/kSGf2jzPeBxVhrZo
-	YQ76VBwI6/I/11JspXmgLXZGZEvPIQB8cIlUzHC3bDW2+dGDYBrjIO/R8RDGKfXjZJMhhZvfiNq
-	thMgBV2pyiNcfMus1q90CIiqEbM73hSYafTeBbB2L9pDMMc/aob9nSf5cNnpclEJvvROYZYair2
-	emW5crnW3U870oS95r8SIH8X5/632FSwu9iM4P5qr3P3VnH/LT431ahVusD9mPROClN8Xe6b49+
-	AjCRVAOct/DF2RYFTYdQY4vGvsUrQRtH7ruyP1KlsXlmOor1NuzoTYLrE+8g7igCGQY=
-X-Google-Smtp-Source: AGHT+IHHQOnypMfj2r2sUTTE3yi43SalVUjfXgPbPaXOLleRnpOnnpVeqGUKny8eXtf60DNIIRrgmg==
-X-Received: by 2002:a05:6000:430a:b0:3a4:e665:ca5 with SMTP id ffacd0b85a97d-3a558aa5739mr2648236f8f.23.1749652841923;
-        Wed, 11 Jun 2025 07:40:41 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53244e0e3sm15790400f8f.68.2025.06.11.07.40.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jun 2025 07:40:41 -0700 (PDT)
-Message-ID: <d95fbd83-995e-48ca-bf23-147caa80b9e1@linaro.org>
-Date: Wed, 11 Jun 2025 15:40:40 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XFJTQRFo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749652918; x=1781188918;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=lcHOM3clIjMTW/+eLkd/NC698834up28cG7dfFWCpug=;
+  b=XFJTQRFoTB8fuKM9L3kKbX8nHi6v/T2R5yeut6eCmBjUmbCCfn/bakPn
+   sRmEMiUcmxPY3bJUIyDE/ARuh74poVPG14wNazugEh5EDUyKJHsN/SuDw
+   I0qS0ILunISKitE8w2Ffp129SESToasBDotM3WK80mo4X6gudvqtQYu7E
+   f9h3i859ZN2wpVqLyVnhtIWDvqNn7+sECiEhPwgh7pi4ns0+mPR/xUtpf
+   osfGjlgd6FGQg6DWFa2WNcadrMCz1+cU5jda6a0yst4CKbJkVeJEi0cex
+   1DphSps0p9UrNF+4aNXclUE4aJprTob4if83jImFbQzYIMYv6fzeiSIWO
+   g==;
+X-CSE-ConnectionGUID: IAdR56zzSii3vjy32yfKGw==
+X-CSE-MsgGUID: 7iTuPz0gRQaaj7cxyF89Sg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="51899510"
+X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
+   d="scan'208";a="51899510"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 07:41:58 -0700
+X-CSE-ConnectionGUID: qhSPKA/GQUOJdDZ+/efEiA==
+X-CSE-MsgGUID: agPFAMZXRICcLr4JKOazxA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
+   d="scan'208";a="148119947"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 07:41:58 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 11 Jun 2025 07:41:57 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Wed, 11 Jun 2025 07:41:57 -0700
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (40.107.101.65)
+ by edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 11 Jun 2025 07:41:57 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=d0plmyhrQuME2QHQ3PxiGIHRI1BRVwG5Ir5F+J96MGBmBTyPUlHMU1fxHkU9Tb+2jgpdXLxDZt48A9D8/g5KnrCeRs12u/Bs17zenp6Vw6RGcoagCER2jiHTU1T+oWdIuq+hy+p7IvyL9mJmsTb/tOB29mydIrhPFG8SkiUC0Q7yW26ZiSY8F4WvQnuF8iz5OAp18eXu7s0p0ALydc+yARnYAwc0GM6KSIOJarsEHKE8Y/an1XCzKNn1uAwS///lii7NpVxa1P7XRuQAEZ+ZHVqm1gn2eArWHR0+ZUwZTwJJWVSHtHU61FAllrH6TCtLAeRBYCthN+ueTbIHCO6ghw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lcHOM3clIjMTW/+eLkd/NC698834up28cG7dfFWCpug=;
+ b=DpkT8f/MG4SeXBKrP/k0YqG+0nDcktO88+tyMHkfc4/LJVNPr5tyzXtqNTlZrJ5tno/erLBWKLa40JRJuPvDoAnHtxLE7XL3w2OvZ5htWlGzN/LK+A2uvOhM8fscc4pZaqESCRzMqJOYVZAIwOHlV9SxuWu4ZVJZ1tmB/axXEOsPa1MeMbI9VtQMef5e6/fHvGvb2/oOA+M1ewTxL3rF6ASfbksnzP5RpF8ZgABaJug8GVu91JNZANRrE99QsM4fViev03FG6CpG8XowLvJGtjJ0RpATSFD9/fFu3d8o7ULUDsyv+waY+zdFH5+foMBelEeFaZQWNRxYtUNTvQJwJQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from MN0PR11MB5963.namprd11.prod.outlook.com (2603:10b6:208:372::10)
+ by DS0PR11MB7481.namprd11.prod.outlook.com (2603:10b6:8:14b::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.27; Wed, 11 Jun
+ 2025 14:41:41 +0000
+Received: from MN0PR11MB5963.namprd11.prod.outlook.com
+ ([fe80::edb2:a242:e0b8:5ac9]) by MN0PR11MB5963.namprd11.prod.outlook.com
+ ([fe80::edb2:a242:e0b8:5ac9%4]) with mapi id 15.20.8813.024; Wed, 11 Jun 2025
+ 14:41:41 +0000
+From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+To: "Li, Xiaoyao" <xiaoyao.li@intel.com>, "kvm@vger.kernel.org"
+	<kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>,
+	"seanjc@google.com" <seanjc@google.com>, "binbin.wu@linux.intel.com"
+	<binbin.wu@linux.intel.com>
+CC: "mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>, "Huang,
+ Kai" <kai.huang@intel.com>, "Yao, Jiewen" <jiewen.yao@intel.com>, "Chatre,
+ Reinette" <reinette.chatre@intel.com>, "Lindgren, Tony"
+	<tony.lindgren@intel.com>, "Zhao, Yan Y" <yan.y.zhao@intel.com>, "Shutemov,
+ Kirill" <kirill.shutemov@intel.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "Hunter, Adrian" <adrian.hunter@intel.com>,
+	"Yamahata, Isaku" <isaku.yamahata@intel.com>
+Subject: Re: [RFC PATCH 3/4] KVM: TDX: Exit to userspace for GetTdVmCallInfo
+Thread-Topic: [RFC PATCH 3/4] KVM: TDX: Exit to userspace for GetTdVmCallInfo
+Thread-Index: AQHb2a1TbQakduG6E0K+sX62VG3CXrP8HXSAgAB+0YCAAAEdAIAAmbcAgAAI/wCAAMOrgIAABNkAgAAB6wA=
+Date: Wed, 11 Jun 2025 14:41:41 +0000
+Message-ID: <f24b69851a0565ed6d5b284df0e7d8399e65ff69.camel@intel.com>
+References: <20250610021422.1214715-1-binbin.wu@linux.intel.com>
+	 <20250610021422.1214715-4-binbin.wu@linux.intel.com>
+	 <ff5fd57a-9522-448c-9ab6-e0006cb6b2ee@intel.com>
+	 <9421ffccdc40fb5a75921e758626354996abb8a9.camel@intel.com>
+	 <d4285aa9adb60b774ca1491e2a0be573e6c82c07.camel@intel.com>
+	 <e2e7f3d0-1077-44c6-8a1d-add4e1640d32@linux.intel.com>
+	 <d53d6131-bf99-4bb0-8d25-00834864402d@intel.com>
+	 <1676dd89cb71218195b52f3d8cf5982597120fc4.camel@intel.com>
+	 <d1f70f8c-032e-4467-940c-18cf09c67eb2@intel.com>
+In-Reply-To: <d1f70f8c-032e-4467-940c-18cf09c67eb2@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.44.4-0ubuntu2 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MN0PR11MB5963:EE_|DS0PR11MB7481:EE_
+x-ms-office365-filtering-correlation-id: b6d66d81-b6e7-4ca3-4fc0-08dda8f6143d
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?azN3UUtoZ0RIWW5NTHVLRWdJQ1BPekdvbzRKa3JNNDBSblpQYUxXNFgwKzZr?=
+ =?utf-8?B?RHBGZjBraGl3V2hyNlZhcVhxb1czU1Q2Y3FxcXAyb3hQWTRuRDI0Z09VZVZI?=
+ =?utf-8?B?YVZhYTlPdGo2Q0N4M2prMFRpek82K2ZhMFNmZ3huL0k3Y2Z2MWFiUzl4SDdi?=
+ =?utf-8?B?MWVleUpUUXNHZUJvTjRwZ1U1eUZSRlpLcXgydy9pYTYyeWFpUUlXRlBzMHp0?=
+ =?utf-8?B?bVl0UjJJb2k5R0V4aVJHZ3hHVHZsbkhxOXVDZS95U1ova2NWMDQ2ZVdPUXFD?=
+ =?utf-8?B?WnJrM1pSR2ZXUkxUQmdFeW1zZmFPRkZiSWRrVk9ObmtCT2N3ekc4UGNVbklK?=
+ =?utf-8?B?dDBrNHV5dFR0MTBDK0h2T2pKWHhRaTU3eTNMSFRLUHRTM3VYdVZQU3BwMkpp?=
+ =?utf-8?B?VHFrSE9VUWkxdVpIL0xzV0NOWjFUbmRLaE0rdDhySDVFTFBGWHJNSVgvY0g0?=
+ =?utf-8?B?ZW94ajV1eE9POGpJd2pOQlVUOGptRFpvbWcyd0lhN1hHZmV0YkcxTW5RSXlO?=
+ =?utf-8?B?YkIvQW1pQkhaWVBTV0tvdkY4MjJCczdNdjVyYk1adjJiZy9EaForSWdwOHcv?=
+ =?utf-8?B?S3hVVVVpSjBMUDQrb0VOYVpCdHVzRVp5UW0vV0FFWDFkajQ5bDVQRFBheGtu?=
+ =?utf-8?B?L0pabDVoQWY3Zi9JSDdLbWhvQVNUMjl1TnN4Nkc0Zm1pMzdOUnlkNWdXRTZR?=
+ =?utf-8?B?NG5sT1huWmNVU2RlYjBhZGdoK1RTWjMyMkJuQ3ZXTmFqWmx6YVltZzlKbEhC?=
+ =?utf-8?B?Q0Jicy8zQUJ0cHhJZ2MydmVJQjlqelQ4MUR4YzZTVzZmYWVQR3J6YzhBVDMz?=
+ =?utf-8?B?QmhlU0w3ZENHU0ROdml0NVJXVnlmd0xqRGRQY0x4R3F6TEdLdDRjYVVKalpL?=
+ =?utf-8?B?OFBKcWdnSDJ1L2ZFUW9IVTVocU5LLzdheXA1eDdnRU5HNzd2Ly9SVDVWLzlV?=
+ =?utf-8?B?SUQveWM2amFLYUU5UHpaS2VjdVBjdm4wNVVVY0srRVpLMFZFVk5VY3NqTjlJ?=
+ =?utf-8?B?cTFkZ09KSzhUWEZvZnp5S0FXVU5XREdyeXVnZkFFNzRtc1FLdDBNS24yeWJP?=
+ =?utf-8?B?bDcyTHdzOHdRVHZDZkZFOTN2a3UzR0dGWUh2OXpJZmkrZ2VJSjB4SmI2RE0y?=
+ =?utf-8?B?RDJjM0tTTEQxQU9obmN5dFZZWkU0amtmbHZEMjVCNjRQekZvazgwb0dCamJB?=
+ =?utf-8?B?OGI3dEh3QlY5TTF0UG5SSDdHaXpBbTBIK1FnUU8vK2tNY08yd0JwV3kxeE03?=
+ =?utf-8?B?TEo3WlRzYURvRThoZ2VNSXB5OFhhQ0hxYzI2SWhjTWgrdXhmUW1mOGRQb1Ni?=
+ =?utf-8?B?L25jdVN6UHNJcTlrc0E4NEM0dE9hczg0NEg0aXpkYjZFTENkNWc2Yjc2UCtR?=
+ =?utf-8?B?WWJ2cHJuSmkxT04vVFhpcUR0MUxhWCtkQmFWNDFMOXdESUhDNGVHT1p2SDJZ?=
+ =?utf-8?B?V1VSY3o4TzVNbDN0SG82eG5LbUQxUkJIR1ozdVRUdjB3WWtPSWpmYUxIZ1R4?=
+ =?utf-8?B?YzYrcnJLY2twRjJjN1lWUTFiZW1aeVhKajZ1dE9IWnNycWtFRXM2d1RzT0tY?=
+ =?utf-8?B?NWt3WjFQWDVEazNQSDhYQVpWQmsrMVpJUTNtTVVrakNhUElkVUVCcEJoaTNG?=
+ =?utf-8?B?eTNzN0hqT0dVZ0pyaVNSNUdLc2V1ZE9hc1VwMWRKQm16RFdiSjJOMHpRaFBq?=
+ =?utf-8?B?NUp0cU42SDVxU2FQaFpzamo3cWZ3aExBQlZmUHNON0tvZCtORFF1NEQ4Vmk2?=
+ =?utf-8?B?UjlBa09FRDI5bnA2WUFlaldMc3d5L3NoRHo5eEx3YzFFSHExRnVDQXgrSitO?=
+ =?utf-8?B?aTBBOUx3b0dNQWQ5dHFuUWxyWDdZbklPRHBFM3FBM2h0UEdLOW9VU1ZvN1Zp?=
+ =?utf-8?B?MkhPRWlCbWhSNDdNbUtKYVRsaUlsZFcrQ3B5cjF6Z0YxbnEyLzlhdHBWUHlN?=
+ =?utf-8?B?eWZHODdudmFnMElMbmtlK3prKzA1MW93OUtzSWloSEpoelJBajNXUWh4VnZn?=
+ =?utf-8?B?WVY3THpWN3hBPT0=?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB5963.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?OVZqZUpiVm43QUFDU1MwK2hOSGswaVBRbmdOTWRTTnB3Qy9XSlkvUWpkdGxQ?=
+ =?utf-8?B?bER4V280V2FvN051MlNmYnpwUzVVSjY0ZnZZbis2cWt5UkcrN3lTRnFlOHB1?=
+ =?utf-8?B?M0FZSHRNQXdYVXFaSU94TnBVUzVkU29aRm9PS2JhM0t5UTdZZEZoSE5ESDFr?=
+ =?utf-8?B?c09uMk8wYVZ5TkUyWG0xN2RacFExOWd1bXE0YUhCbUM1MGdtUkJ1aEVIWjJ4?=
+ =?utf-8?B?VDBLUURiZEh6Q1h4c1pVOU9DREZ0R1pOR3RMdWgvRTJMUzdXYWdZb1c2OCtT?=
+ =?utf-8?B?SWR6UlpnRldzS1FYbUIvTVJ6YzVidkRpK1p6VFVEY2pqL2FvTmd2d1hlOFNQ?=
+ =?utf-8?B?b0NlTlJFR2NxWnFkb0dnT21JVkpWMUhBU0dJN28yWXNGeE1nV0VpRjI4UTMy?=
+ =?utf-8?B?T3l4b1BFL0NZTnNod0wrd0x5V2x2bG1sNlh5cXhjTzFYUERiZFVHeG5xbElR?=
+ =?utf-8?B?emhyMW9DTFoxaFlNR2FVZDFxSW9pb3pmd2IwTEY5M1l1RmVXSFJSQVduZDNM?=
+ =?utf-8?B?cFRBMlBTRzZnM3pmU01PbkxxNmFGOEZaNUdINTlaQ21SZzVDY0xpWERjTG5C?=
+ =?utf-8?B?TXlFVThmaXdaYUZveDdtOVpFZWl0Z21LaUQxSWNVaGR2MlBXYnZXaVJoTGdQ?=
+ =?utf-8?B?ckJxMDhwQ2RvK1FHNHlSOWovM0F6V2syRDdFR0Q3ZU9DdzNmMzI3Yk9BQXVJ?=
+ =?utf-8?B?bmhsc2VMSEMxYmlvODk3WFFhbER5QnBodTVUQUZZbXloQi9VRm0xTFJsNW1R?=
+ =?utf-8?B?aldnMkpDa1A3aFVCV0FJZi9KTDFjWVVlYm55Y1hDUldyQno1UFVvektwRHUr?=
+ =?utf-8?B?aTZ6czNDS0RoWDZMRFJjazNFaFZVOHdMUFdqb0hOQk1ZbXA3MEFLdTYvQm9i?=
+ =?utf-8?B?ek11VjhHTEZyaVZDMG1hVWNxbHhaVVJFQW5Hd05EREsrTmxiaVgrZFE4dDJO?=
+ =?utf-8?B?SmJyRU1VbEc3ODBsaGNJNDFaR08zUG1Sdm1OMjFwYkdjMFk3bktrcjErMlk3?=
+ =?utf-8?B?VzNnWmh0V0FFbnNUQ3F2Y0V6Mi9BSE1RMmZySXltZjJBWm9Ga1B1elRDK3M4?=
+ =?utf-8?B?TmJQS3dDV1llTEtTWlhpY04xRVk5aWwyQlBPSVh2ZFN2b1Rqa3ZIOExOTTVm?=
+ =?utf-8?B?YjBYUHJ5NXo5S2V0QTg0Y014UUxvVUtlTnZYY0wzREZkMTBFMDN4SU1yWnZ2?=
+ =?utf-8?B?clBKaHFaRkpReG5aNDduTnFHYVRBb3hMbXpNalFreXpWQTMrUlJpdEpSS0w0?=
+ =?utf-8?B?Tkd4dXcvZ3RsYktMNTFZRUZrTGZEdzFBNkJJb0N3bmZ6dVQyZ3o2eUVGblNx?=
+ =?utf-8?B?OXpKWE9EN3ZrQWI5Njc2ZW5MTEF5Y2lORjNGN21DMzcxV0ZmMGFJTy9oWXUx?=
+ =?utf-8?B?N1dBbWV5YzRmVC9sNXltL3Z2OXkzVGhPbzJFWmNxdFgwK2daT0hocUUzMGp4?=
+ =?utf-8?B?UWRjZDRiVTJBblNGUGc5YzJibW5vMTdUNGl3YndBN1IrMVBuRWZoOHM2Rldy?=
+ =?utf-8?B?YkhBQ2MvZHhyUTRPd3U5aGU0T05aeFdxMnZWbkNaNnV6THdRMWg2b1hUSEV6?=
+ =?utf-8?B?aG5peXo4M3R4d3RDVHFXZVlBeDFPR0xrUXQvSmhXM1BnL0MrTjgwVGhtdDhq?=
+ =?utf-8?B?NktibDVUNkxLYXhNanhEMktxUWpKUktzamZwcWlmeVhsVzlUcXNjNWV5MmJH?=
+ =?utf-8?B?di8yS0M3TjRtdFJFNjR0dkZ4a0dsUkl1NzEwYm5qSmM5NWJFbGJyMENXbUdZ?=
+ =?utf-8?B?L2N2QWFDWXBVUEFrMDRmc2Y0OXN5OW82R21tN3orWlp2U3ZtR0QreWwvUldI?=
+ =?utf-8?B?YTh2Z2VLMXE0L2grNmlvSWQwdzB2WXoxNnQ0OUZPM0xoai9pRFlYK0V5Z0xP?=
+ =?utf-8?B?L0JwOEFycnpJUXUyT1JZS2s5citNWnhyV3dIWCtSYkxMQThFSFVCeFpOWHZH?=
+ =?utf-8?B?d09PYmVmekhCcldNelR2VW9PVjd3QlFVOFlVZXV1LzVDUWdGbzVXeEhlUUhV?=
+ =?utf-8?B?WlA4cnF1Q01Gc1NjbnRsN0FFY0twMnhQRTdpTlo5dUxHOWV5ajY1TExFMEhp?=
+ =?utf-8?B?UDgrR29PYkNGREhEbWlhbHZua1VnL2V6S0w0VzVPbDhIZGY5eGhkeWZTWjRD?=
+ =?utf-8?B?cWF3eDNxNmc3OHpBajJnQkRLdEtSaUo4RUl5UFpOTmdSNHhzSnVXSXlnYjYv?=
+ =?utf-8?Q?/njIv95TyZrxtWXxAEH1j+U=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1D883AFEE2BA91458047309892CFE8F9@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] spi: spi-fsl-dspi: Report FIFO overflows as errors
-To: Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc: Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>,
- linux-spi@vger.kernel.org, imx@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250609-james-nxp-spi-dma-v1-0-2b831e714be2@linaro.org>
- <20250609-james-nxp-spi-dma-v1-4-2b831e714be2@linaro.org>
- <20250610215233.35ikv4sslkyukgwr@skbuf>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250610215233.35ikv4sslkyukgwr@skbuf>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB5963.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b6d66d81-b6e7-4ca3-4fc0-08dda8f6143d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2025 14:41:41.1146
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6G0scJuQuT6MjO+bn/7ID4tZqeX7aj+uNoOz0rXkhrhoUnVQd+Cun221hZX5ca38kgG0urtd3S6AlNv3IJALE3nfEatF7ydNSAFXSvhtllw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7481
+X-OriginatorOrg: intel.com
 
-
-
-On 10/06/2025 10:52 pm, Vladimir Oltean wrote:
-> On Mon, Jun 09, 2025 at 04:32:41PM +0100, James Clark wrote:
->> In target mode, the host sending more data than can be consumed would be
->> a common problem for any message exceeding the FIFO or DMA buffer size.
->> Cancel the whole message as soon as this condition is hit as the message
->> will be corrupted.
->>
->> Only do this for target mode in a DMA transfer because we need to add a
->> register read. In IRQ and polling modes always do it because SPI_SR was
->> already read and it might catch some host mode programming/buffer
->> management errors too.
->>
->> Signed-off-by: James Clark <james.clark@linaro.org>
->> ---
->>   drivers/spi/spi-fsl-dspi.c | 31 ++++++++++++++++++++++++++++---
->>   1 file changed, 28 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
->> index e211e44e977f..75767d756496 100644
->> --- a/drivers/spi/spi-fsl-dspi.c
->> +++ b/drivers/spi/spi-fsl-dspi.c
->> @@ -228,6 +228,7 @@ struct fsl_dspi {
->>   	const struct fsl_dspi_devtype_data	*devtype_data;
->>   
->>   	struct completion			xfer_done;
->> +	int                                     xfer_status;
-> 
-> This is certainly simple, and simple is not bad.
-> 
-> But based on the fact that you care about the xfer_status only when
-> there's an associated dspi->cur_msg, have you considered to update
-> dspi->cur_msg->status directly?
-> 
-> You'd need to reset dspi->cur_msg to NULL at the end of
-> dspi_transfer_one_message(), and then check for NULL when you update
-> the transfer status.
-> 
-
-That will work. I can use it for polling and DMA modes too and I think 
-it looks a bit better after a refactor.
-
->>   
->>   	struct fsl_dspi_dma			*dma;
->>   
->> @@ -504,12 +505,22 @@ static int dspi_next_xfer_dma_submit(struct fsl_dspi *dspi)
->>   
->>   static void dspi_setup_accel(struct fsl_dspi *dspi);
->>   
->> +static bool dspi_is_fifo_overflow(struct fsl_dspi *dspi, u32 spi_sr)
-> 
-> Can you name this some way else, like dspi_fifo_error()? It's strange
-> for a reader for this to return true on an underflow.
-> 
-
-Will do
-
->> +{
->> +	if (spi_sr & (SPI_SR_TFUF | SPI_SR_RFOF)) {
->> +		dev_err(&dspi->pdev->dev, "FIFO under/overflow");
-> 
-> Missing \n.
-> 
-> And you should use dev_err_ratelimited(), as you don't want an external
-> entity, when in target mode, to DoS you.
->
-
-Ack
-
-> Also, could there be individual error messages for TFUF and for RFOF?
-> If you are concerned about the penalty for the error-free case, make the
-> check two-level. First for all errors, then for individual errors.
-> 
-
-If I was going to split them I would probably let the compiler optimize 
-it whichever way was best. The real reason for combining them is because 
-usually you get them both together. As long as the message and fifos are 
-configured correctly you'd always get TFUF and RFOF at the same time and 
-I wanted to avoid printing twice for one event.
-
-We could have 3 different warnings, TFUF/RFOF, TFUF and RFOF but I don't 
-think that's useful to an end user. At that level of debugging you'd 
-probably have a load of other debug printfs added anyway.
-
->> +		return true;
->> +	}
->> +	return false;
->> +}
->> +
->>   static int dspi_dma_xfer(struct fsl_dspi *dspi)
->>   {
->>   	struct spi_message *message = dspi->cur_msg;
->>   	int max_words = dspi_dma_max_datawords(dspi);
->>   	struct device *dev = &dspi->pdev->dev;
->>   	int ret = 0;
->> +	u32 spi_sr;
->>   
->>   	/*
->>   	 * dspi->len gets decremented by dspi_pop_tx_pushr in
->> @@ -531,6 +542,12 @@ static int dspi_dma_xfer(struct fsl_dspi *dspi)
->>   			dev_err(dev, "DMA transfer failed\n");
->>   			break;
->>   		}
->> +
->> +		if (spi_controller_is_target(dspi->ctlr)) {
->> +			regmap_read(dspi->regmap, SPI_SR, &spi_sr);
->> +			if (dspi_is_fifo_overflow(dspi, spi_sr))
->> +				return -EIO;
->> +		}
->>   	}
-> 
-> Can this go within this block from dspi_next_xfer_dma_submit() instead?
-> 
-> 	if (spi_controller_is_target(dspi->ctlr)) {
-> 		wait_for_completion_interruptible(&dspi->dma->cmd_rx_complete);
-> 		// here
-> 		return 0;
-> 	}
-> 
-
-Makes sense yeah
-
->>   
->>   	return ret;
->> @@ -918,6 +935,8 @@ static int dspi_poll(struct fsl_dspi *dspi)
->>   		regmap_read(dspi->regmap, SPI_SR, &spi_sr);
->>   		regmap_write(dspi->regmap, SPI_SR, spi_sr);
->>   
->> +		if (dspi_is_fifo_overflow(dspi, spi_sr))
->> +			return -EIO;
->>   		if (spi_sr & SPI_SR_CMDTCF)
->>   			break;
->>   	} while (--tries);
->> @@ -939,8 +958,12 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
->>   	if (!(spi_sr & SPI_SR_CMDTCF))
->>   		return IRQ_NONE;
->>   
->> -	if (dspi_rxtx(dspi) == 0)
->> +	if (dspi_is_fifo_overflow(dspi, spi_sr)) {
->> +		WRITE_ONCE(dspi->xfer_status, -EIO);
->> +		complete(&dspi->xfer_done);
->> +	} else if (dspi_rxtx(dspi) == 0) {
->>   		complete(&dspi->xfer_done);
->> +	}
->>   
->>   	return IRQ_HANDLED;
->>   }
->> @@ -1032,13 +1055,15 @@ static int dspi_transfer_one_message(struct spi_controller *ctlr,
->>   		if (dspi->devtype_data->trans_mode == DSPI_DMA_MODE) {
->>   			status = dspi_dma_xfer(dspi);
->>   		} else {
->> -			if (dspi->irq)
->> +			if (dspi->irq) {
->> +				WRITE_ONCE(dspi->xfer_status, 0);
->>   				reinit_completion(&dspi->xfer_done);
->> -
-> 
-> Nitpick: The blank line was doing fine here.
-> 
-
-Ack
-
->> +			}
->>   			dspi_fifo_write(dspi);
->>   
->>   			if (dspi->irq) {
->>   				wait_for_completion(&dspi->xfer_done);
->> +				status = READ_ONCE(dspi->xfer_status);
->>   			} else {
->>   				do {
->>   					status = dspi_poll(dspi);
->>
->> -- 
->> 2.34.1
->>
-
+T24gV2VkLCAyMDI1LTA2LTExIGF0IDIyOjM0ICswODAwLCBYaWFveWFvIExpIHdyb3RlOg0KPiA+
+IFdoYXQgaXMgdGhlIHByb2JsZW0gd2l0aCB1c2luZyB0aGUgZXhpc3RpbmcgZXhpdCBvcHQtaW4g
+aW50ZXJmYWNlPw0KPiANCj4gSXQgbWl4ZXMgdXAgY29tbW9uIEtWTSBkZWZpbmVkIGh5cGVyY2Fs
+bCBsZWFmcyAoS1ZNX0hDXyopIHdpdGggVERYIA0KPiBzcGVjaWZpYyBURFZNQ0FMTCBsZWFmcy4g
+U3VyZWx5IGl0IGNhbiB3b3JrIGJ1dCBpdCBqdXN0IGRvZXNuJ3QgbG9vayANCj4gY2xlYW4gdG8g
+bWUuDQoNCiAtIFREVk1DYWxsSW5mbyBpcyB1c2VkIHRvIGV4cG9zZSB3aGljaCBURFZNQ2FsbHMg
+YXJlIGV4cG9zZSB0byB0aGUgZ3Vlc3QNCihjbGVhbikNCiAtIEtWTSBIQyBvcHQtaW4gaXMgdXNl
+ZCB0byBleHBvc2Ugd2hpY2ggZXhpdHMgS1ZNIHNob3VsZCBmd2QgdG8gdXNlcnNwYWNlDQooc2Vl
+bXMgY2xlYW4gdG8gbWUpDQoNClRoZXJlIGlzIGFuIGFzeW1tZXRyeSBpbiB0aGF0IHdoYXQgaXMg
+cmV0dXJuZWQgaW4gVERWTUNhbGxJbmZvIGNhbid0IGJlIGJsaW5kbHkNCmR1bXBlZCBpbnRvIGEg
+S1ZNIG9wdC1pbiBpbnRlcmZhY2UuIEJ1dCB0aGUgbG9naWMgbWF0Y2hpbmcgVERWTUNhbGxJbmZv
+IGxlYWYgPC0+DQpLVk0gSEMgbmVlZHMgdG8gYmUgc29tZXdoZXJlLiBUaGUgZGVmYXVsdCBwbGFj
+ZSBzaG91bGQgYmUgdXNlcnNwYWNlLg0KDQpEaWQgSSBtaXNzIGFueXRoaW5nPw0K
