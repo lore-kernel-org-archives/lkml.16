@@ -1,111 +1,109 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14DF25C83E;
-	Wed, 11 Jun 2025 09:25:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDF913A3F2;
+	Wed, 11 Jun 2025 09:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749633947; cv=none; b=KdHJda4tUDnnJRVHuUHJkKJ+e26uf9i/rfA+3vk0iWRDFeBIBV7A9eDRnuxfpFwUlx47FyvlUd5qKet2bf2LHQiV05uXvuE2rx4FFbvN/BLPjEdh8mhLVCPIBeRxxAsw3W89t5AvJV8Aml/JQTvin5Zf98jTUFl+sXshn6l6Zm4=
+	t=1749633995; cv=none; b=mk8FxAsacCeE8cImGEES25uIlYZ3Toj+o9t5OlAN0JBo479hlImPzAsHozHhb5U090wlAk8nGBI1Osn3rdTY6OIOHnVKJ2pC+gCAWln3BOrlwOBRDvSWLJz/8NxfgYuP4PtOJzn6Y34X6TvGkqROiYPBA5tv1X1TLr6RU5jtTfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749633947; c=relaxed/simple;
-	bh=C2eY2wgLZDRyRHC2BZzzTnEymlDbxP4PU6gFORhZ98Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tFm88pdVLAyHxtZmiq+Kuwgf8DaCGgHXsr/iAMMfBQs1wVlAJAu+wwRS//DphOukvyl55kweU6UR7a+heDC2tMbtN1mij30NXRjpaa2JhBSebN4SieXukuEC3/JTRDBmgQfhKgJJUuNUIN+4kriH7uzCD6ssBr7P+hpuy6dU5DM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VuEuQbAk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=slDVcyq5; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749633995; c=relaxed/simple;
+	bh=JcH4q7bvmR/iiEjQtCDbBYoJ+a4mZWMpSZ4WzoNbXwI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=EaY0wuv78s+zdXE3JWHiMUqDwLAs/kzeLBKE2oEEAuVohQc8HoWC7102xUN3rlbvqpN/BuYXjuhIrD40UQ8zJHb0hiRoDlED9WNf/fBrB5sOZohTVs3nOAPslnwx4k1HHG9cVUKjGKhAnpk82CjknlECJ3pIM/+fOk7f0/Bkdno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lSCElZ9c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VuEuQbAk";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="slDVcyq5"
-Date: Wed, 11 Jun 2025 11:25:42 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749633944;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/OrJEKAMLQzuR12xpBYqySl3lqI/7yOMuJ3BDm7j4Fw=;
-	b=VuEuQbAkM2Pev2WXVKRGZ8nL0SMZncS1T3tSJFSAXUdTPfmyBseHyRdv8T5BnmgcEukgwz
-	n6V1icHd+yh+Oi5Z5/R9AZz5skpDAyr+VknQ23JPFRz0caPgv0+kknvR2f9rN2XB77swwf
-	rl3ceu57HfNHkF409Rm0GqSP/zAsUQ1fP9NKKVmkHOuACKrO94nqpKgrFTBE6xW2FLlKvv
-	HYtII/2O83EnTfHpRFEwE+jaUAUz/PP/FJ5uRtUhpB6UpzRGxzR1oAUfg8aDrKeao8P4bV
-	+J86rcU+6bcVQsCLsdQ1GHXS5EdPxutjld4TJzDsoPwkTaCJAufz3kzc+Xz3+A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749633944;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/OrJEKAMLQzuR12xpBYqySl3lqI/7yOMuJ3BDm7j4Fw=;
-	b=slDVcyq53Fh4hrqej/McVRQG0UUzVu9mc7d0c0UQxow2Hj7FwNdpZJWdS3BG0EA8oyV1ky
-	L5DQwbmH3fRDgRCg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	acme@kernel.org
-Subject: Re: [BUG] perf tools: Build failure in v6.16-rc1
-Message-ID: <20250611092542.F4ooE2FL@linutronix.de>
-References: <aEh6xO14wDSCFUDr@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lSCElZ9c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96868C4CEEE;
+	Wed, 11 Jun 2025 09:26:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749633995;
+	bh=JcH4q7bvmR/iiEjQtCDbBYoJ+a4mZWMpSZ4WzoNbXwI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=lSCElZ9cPGdTjtxfyETX3X3+2aCyQnssewuchC9Tw0wBs07iCgOk/m1a59hP4yd+I
+	 BNbo6hiVmsFt1KQYk6BoR4gBBwPWxCzXUwmxJqf28I3FtOVDLKT29KcQLi3WnNUy5m
+	 SftVFf2A2uXvam8iXeyyw6tqQ6ZcuuPqkCU/umA5i1o49Gor9+1Cnoeo7VLxUU9o0x
+	 AJgDtHjfG4kN906ScF7p9a9O8oWDCRJyEK6PNtoEPnMCuBcFmAnncD8J26GFc9jumA
+	 AjespapGqtfnPzGUPdZk/gCIvqKFShiS/N/fmLPRugQUDMvMrWwPoiuf14NbAh8XTg
+	 idp6AatIuiD9w==
+Date: Wed, 11 Jun 2025 11:26:32 +0200 (CEST)
+From: Jiri Kosina <jikos@kernel.org>
+To: Aditya Garg <gargaditya08@live.com>
+cc: Benjamin Tissoires <bentiss@kernel.org>, Kerem Karabay <kekrby@gmail.com>, 
+    Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+    Linux Input Mailing List <linux-input@vger.kernel.org>
+Subject: Re: [PATCH v3 0/5] HID: multitouch: Add support for Touch Bars on
+ x86 MacBook Pros
+In-Reply-To: <PN3PR01MB959768813D548FD4A91CDD11B864A@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Message-ID: <8r1757q9-7qqq-n6p8-0no1-040rssnsn260@xreary.bet>
+References: <PN3PR01MB959768813D548FD4A91CDD11B864A@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aEh6xO14wDSCFUDr@google.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On 2025-06-10 11:34:44 [-0700], Namhyung Kim wrote:
-> Hello,
-Hi,
+On Tue, 27 May 2025, Aditya Garg wrote:
 
-> I've updated the perf-tools-next to v6.16-rc1 and found a build error
-> like below on alpine linux 3.18.
+> This patch series aims to improve the Touch Bar support for x86 Macs.
 > 
->   In file included from bench/futex.c:6:
->   /usr/include/sys/prctl.h:88:8: error: redefinition of 'struct prctl_mm_map'
->      88 | struct prctl_mm_map {
->         |        ^~~~~~~~~~~~
->   In file included from bench/futex.c:5:
->   /linux/tools/include/uapi/linux/prctl.h:134:8: note: originally defined here
->     134 | struct prctl_mm_map {
->         |        ^~~~~~~~~~~~
->   make[4]: *** [/linux/tools/build/Makefile.build:86: /build/bench/futex.o] Error 1
+> The `hid-appletb-kbd` and `hid-appletb-bl` drivers were upstreamed into
+> the Linux kernel and are available since version 6.15. They enable the
+> Touch Bar to display a predefined set of media and function keys, exactly
+> the same it does on Windows Bootcamp.
 > 
-> git bisect says it's the first commit introduced the failure.
+> Alongwith that, support for the DRM mode of the driver has also been
+> upstreamed in kernel 6.15.
+> 
+> The DRM mode enables the Touch Bar to act as a second display, just like
+> macOS. So now you can add a widget, put a clock or anything else on the
+> Touch Bar as long as you can develop a daemon.
+> 
+> For this mode, we needed two patchsets. One went to the DRM tree as the
+> `appletbdrm` driver, and other is this.
+> 
+> The DRM driver is responsible for displaying whatever the OS wants on
+> the Touch Bar.
+> 
+> Now via these patches, in the DRM mode, we can use the Touch Bar as a
+> touch screen. The Touch Bar seems to be not compliant with the HID spec,
+> thus via these patches several tweaks have been done under the cover of
+> a single quirk, MT_QUIRK_APPLE_TOUCHBAR. Originally expected to be
+> upstreamed alongwith the DRM driver on 6.15, these patches seem to have
+> remained in a backlog.
+> 
+> For the case of T2 Macs, apple-bce [1], the driver for the T2 Security
+> Chip is also needed for all the peripherals, including the Touch Bar
+> to work. It is still WIP, and will be subsequently sent later to the
+> appropriate tree. Till then, I'll suggest testers to get the driver
+> from [1], or more preferably, get Linux support from https://t2linux.org/.
+> 
+> Cheers
+> Aditya
+> 
+> [1]: https://github.com/t2linux/apple-bce-drv
+> 
+> Changelog:
+> 
+> v2: keep parse at original location in patch 5 as suggested by Benjamin
+> v3: Reword the cover letter to update the maintainers with the latest
+>     situation, and re-prepare the patches on 6.15.
+> 
+> Kerem Karabay (5):
+>   HID: multitouch: Get the contact ID from HID_DG_TRANSDUCER_INDEX
+>     fields in case of Apple Touch Bar
+>   HID: multitouch: support getting the tip state from HID_DG_TOUCH
+>     fields in Apple Touch Bar
+>   HID: multitouch: take cls->maxcontacts into account for Apple Touch
+>     Bar even without a HID_DG_CONTACTMAX field
+>   HID: multitouch: specify that Apple Touch Bar is direct
+>   HID: multitouch: add device ID for Apple Touch Bar
 
-Hmm. So your /usr/include/sys/prctl.h and
-/linux/tools/include/uapi/linux/prctl.h both provide struct
-prctl_mm_map but their include guard must be different.
+Now queued in hid.git#for-6.17/multitouch, thanks.
 
-My /usr/include/sys/prctl.h is provided by glibc and contains the
-prctl() declaration. It includes also linux/prctl.h.
-The tools/include/uapi/linux/prctl.h is the same as
-/usr/include/linux/prctl.h.
+-- 
+Jiri Kosina
+SUSE Labs
 
-The /usr/include/sys/prctl.h on alpine linux is different. This is
-probably coming from musl. It contains the PR_* definition and the
-prctl() declaration. So it clashes here because now the one struct is
-available twice.
-
-The man page for prctl(2) says:
-|       #include <linux/prctl.h>  /* Definition of PR_* constants */
-|       #include <sys/prctl.h>
-
-so musl doesn't follow this.
-
-To align with the other builds, I guess the following help:
-
-diff --git a/tools/perf/bench/futex.c b/tools/perf/bench/futex.c
-index 26382e4d8d4ce..540261f299b1d 100644
---- a/tools/perf/bench/futex.c
-+++ b/tools/perf/bench/futex.c
-@@ -2,7 +2,6 @@
- #include <err.h>
- #include <stdio.h>
- #include <stdlib.h>
--#include <linux/prctl.h>
- #include <sys/prctl.h>
- 
- #include "futex.h"
-
-Sebastian
