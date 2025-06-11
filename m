@@ -1,113 +1,86 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D62F2580F9;
-	Wed, 11 Jun 2025 23:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 495C21EDA02
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 23:38:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749684987; cv=none; b=p3IfJQPRaWSKlW/yQM0cqBw/NhJoAPKtOOGtjqhBs4NThcjM+ehdzq6DIZo75xIPOGyV3uFskLY0w7cAE6TY5svmacIzHbZf/lGRTjbANNYVNUwbhbgdMHgetRfg9m/bZTOLk+YxFVEh95FA68tmbfHrXm28rAkmbYy3K17ZR3Q=
+	t=1749685112; cv=none; b=k4SE+CcrdyyuUaiDH+ZowOy9hxZfjnKfyNXU4sCxmZm22xw2aAOXoja2QUL8aYYRYthixO6LvrHfBkD8ypop2UbTMaKCCr82WtgoA9VrAb2orsGzGBTDl5WRvQmQPYm0+8aNa2MjXYELlCNuZstHfiw/omv4XzszabZChodGNmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749684987; c=relaxed/simple;
-	bh=0ezuTcWRuV87/NrpSBg1ipbPs8UNJkLPjKdmfj7dhsU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dRCqgToS2nL2S6PQKbR8aTD6IC3Ilj9ZjTut/InCutUaF6j49YC4fNAPjaE1lPVeg+fC6gWEUZe8w3Y6zReHO+J1OSlmIK2XMhlppDZGk6/1PrrmdhzQ98724aj9FmnsBcdOKOQvbokmv8LsAAq+ea5JKDvswxqB0MrLJEyo7bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=oUXVVRyR; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1749685112; c=relaxed/simple;
+	bh=jdgI0KZRVnoRNshOhB4TGbgG8eutBkxBwTz5EiOQio0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=m8doYn7RylMol33KKxqV9L6a2HfLCN880d2/Y2nRCXCo5NolNk2SwBgb/wMMubI1SmsuX0t8siJy3OGxnvxp0g38nvZMZT/BAQElxYGhRoRFutlUKi6AdA16QvlDouDbC5030yMbGGJj/9YvqcAOZ2RF3gbizXfhLOaQ3vdr5+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--chullee.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=z6rNna+8; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--chullee.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="oUXVVRyR"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id B58F8D52;
-	Thu, 12 Jun 2025 01:36:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1749684975;
-	bh=0ezuTcWRuV87/NrpSBg1ipbPs8UNJkLPjKdmfj7dhsU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oUXVVRyRSdJP57KSpwh9aoP3xMfKx5IaLeWKgkQYloXMM+ywn6vmsMX0SZj6YQL0O
-	 zSFYgP0fdXo9x6/phN8YgZ411MlKDtsK6j5Mg++1uTFjw/hZ3cEnllHQEZDg2WT4NQ
-	 qeMNJoWQkXxiEMjN2KNMaNputiSBM0ir6MhZGFEQ=
-Date: Thu, 12 Jun 2025 02:36:11 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] media: vsp1: Reset FCP for VSPX
-Message-ID: <20250611233611.GR24465@pendragon.ideasonboard.com>
-References: <20250609-vspx-reset-v1-0-9f17277ff1e2@ideasonboard.com>
- <20250609-vspx-reset-v1-3-9f17277ff1e2@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="z6rNna+8"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-311e7337f26so267532a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 16:38:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749685110; x=1750289910; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=8F2eTmM0CFaL0WejT35gjVg6cCl6giv4q15D+/NODLY=;
+        b=z6rNna+8FcqkBtD9OjqomQ+MxErf1N6LvqZP1zEftqDQwTAMJW7AWqFXxK2alYQEqN
+         W94PBn/NDZyIy4qcn671+WGuEzPr62Dsy65nFOw0lFMIDqokiZ1hvjSdn6QscEvB4UWT
+         sHeyUgz+ykjfzGYfzjtInuTJFpLCe6e9wjvokpbPYsxDQOphRSN6XRcEgjSzWvb/1rTb
+         /dOwmsAUCXDhveFSqpgQpueOPeshz6NoXuEVNKDmwJekXUqPUt9Ceypx20zy+C3btt5V
+         PVFtt+cv1EIAS9tosDo9Bn0sFe+j7ozSqEuqtWDqRQ2wGP/7Pv2eAVOGfb2yamftxJj5
+         x+9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749685110; x=1750289910;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8F2eTmM0CFaL0WejT35gjVg6cCl6giv4q15D+/NODLY=;
+        b=eSQAUNDbDDY6OYgnF1wK2iJsFPI3sVAMeoRapqnBf8cVu940StXSBVrI3GZQ87A71F
+         gHgbNHQGDL7W2qRseTZFNvp+PlMgAreAeAQ7L2Gn6DVLJmM9OnZv76mj7YIMZ9haOgfQ
+         +fAMXx2Zkp3akjhVzSgX9f4bm7eaF5kwhFzBzgRd8R1OLdcAlfLsn6VYzEck0aKGP7FT
+         ME8Xby7iObsNoF5yAXhCxumc4NY8QQVaM7tc6LWc5J7LMl1ZYXS0pUf5264RS4dHvKXe
+         hqMdcnC39A9qwCI3w+7NkPc1BMq8T4JDAJXqd3e4ut1U56ifozJhEPb5OhctRb3w5Fqx
+         53Jg==
+X-Forwarded-Encrypted: i=1; AJvYcCVVTrSszumVlYY8E/hUW5DPON0uruojRJ4gpjVR8hiz/maytC1hy6ICOufbBFYDM2HmzTmlbJuISBKS9l8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwR765Q+GTHBQP3jnVrX7uWgBq/MxOHt6b4VfcrAyqf2uaSTyqW
+	ItlYdYOa9cL+F6We8VL7abDqdZazn8tyBIRsaWeIMyiBUWwJsPL0ylbNxJvy535fhKL6mBoRptJ
+	LwWFjWzWR9A==
+X-Google-Smtp-Source: AGHT+IE2P96bQ8qW6lzT7npZCX2BJTTa35jKcQemEzhPtoqN4Wx+tsO3GF/ofgV3JItkCYvq7q3XVdnRpv7n
+X-Received: from pjbpq18.prod.google.com ([2002:a17:90b:3d92:b0:2e0:915d:d594])
+ (user=chullee job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d64f:b0:311:f99e:7f51
+ with SMTP id 98e67ed59e1d1-313af1ac76bmr7951669a91.18.1749685110646; Wed, 11
+ Jun 2025 16:38:30 -0700 (PDT)
+Date: Wed, 11 Jun 2025 16:37:04 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250609-vspx-reset-v1-3-9f17277ff1e2@ideasonboard.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
+Message-ID: <20250611233706.572784-1-chullee@google.com>
+Subject: [PATCH 0/2] f2fs: Fix DIO flags and add ioprio hint
+From: Daniel Lee <chullee@google.com>
+To: Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>
+Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
+	Daniel Lee <chullee@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Jacopo,
+The first patch corrects an issue where Direct I/O (DIO) writes ignore
+bio flag hints (e.g., F2FS_IOPRIO_WRITE for REQ_PRIO),
+making them inconsistent with buffered I/O.
 
-Thank you for the patch.
+The second patch is to set an I/O priority hint for hot files on creation
+and pinned files by default.
 
-On Mon, Jun 09, 2025 at 09:01:44PM +0200, Jacopo Mondi wrote:
-> According section "62.3.7.1 "Operation Control Setting
+Daniel Lee (2):
+  f2fs: Apply bio flags to direct I/O
+  f2fs: use ioprio hint for hot and pinned files
 
-"According to"
-
-> IP set VSPX+FCPVX" of the R-Car Gen4 Hardware Manual, FCPX has to
-> be reset when stopping the image processing.
-
-That's only when stopping "image process of VSPX+FCPVX immediately".
-Note the "immediately", which involves resetting the VSP too. The code
-below waits for the pipeline to stop at the end of the frame. Resetting
-the FCP doesn't seem to be required in that case.
-
-> Softawre reset the FCPX after the vsp1 pipe has stopped.
-
-s/Softawre/Software/
-
-> Signed-off-by: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
-> ---
->  drivers/media/platform/renesas/vsp1/vsp1_pipe.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/platform/renesas/vsp1/vsp1_pipe.c b/drivers/media/platform/renesas/vsp1/vsp1_pipe.c
-> index a6e5e10f3ef275c1b081c3d957e6cf356332afce..c6f2417aabc479384012ab8ab99556029ede1f44 100644
-> --- a/drivers/media/platform/renesas/vsp1/vsp1_pipe.c
-> +++ b/drivers/media/platform/renesas/vsp1/vsp1_pipe.c
-> @@ -499,6 +499,7 @@ bool vsp1_pipeline_stopped(struct vsp1_pipeline *pipe)
->  int vsp1_pipeline_stop(struct vsp1_pipeline *pipe)
->  {
->  	struct vsp1_device *vsp1 = pipe->output->entity.vsp1;
-> +	u32 version = vsp1->version & VI6_IP_VERSION_MODEL_MASK;
->  	struct vsp1_entity *entity;
->  	unsigned long flags;
->  	int ret;
-> @@ -515,8 +516,7 @@ int vsp1_pipeline_stop(struct vsp1_pipeline *pipe)
->  			spin_unlock_irqrestore(&pipe->irqlock, flags);
->  		}
->  
-> -		if ((vsp1->version & VI6_IP_VERSION_MODEL_MASK) ==
-> -		    VI6_IP_VERSION_MODEL_VSPD_GEN3)
-> +		if (version == VI6_IP_VERSION_MODEL_VSPD_GEN3)
->  			ret |= rcar_fcp_soft_reset(vsp1->fcp);
->  
->  	} else {
-> @@ -529,6 +529,9 @@ int vsp1_pipeline_stop(struct vsp1_pipeline *pipe)
->  		ret = wait_event_timeout(pipe->wq, vsp1_pipeline_stopped(pipe),
->  					 msecs_to_jiffies(500));
->  		ret = ret == 0 ? -ETIMEDOUT : 0;
-> +
-> +		if (version == VI6_IP_VERSION_MODEL_VSPX_GEN4)
-> +			ret |= rcar_fcp_soft_reset(vsp1->fcp);
->  	}
->  
->  	list_for_each_entry(entity, &pipe->entities, list_pipe) {
+ fs/f2fs/data.c  |  8 ++++----
+ fs/f2fs/f2fs.h  | 23 +++++++++++++++++++++++
+ fs/f2fs/file.c  | 15 +++++++++++++++
+ fs/f2fs/namei.c | 11 +++++++----
+ 4 files changed, 49 insertions(+), 8 deletions(-)
 
 -- 
-Regards,
+2.50.0.rc1.591.g9c95f17f64-goog
 
-Laurent Pinchart
