@@ -1,84 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BAAE2367C0;
-	Wed, 11 Jun 2025 08:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 912502405F6;
+	Wed, 11 Jun 2025 08:37:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749630856; cv=none; b=qK5utb+Y26LazQyXuakjBwCgCXK0QrSzSQk7k2oMKgKFH1fNjIMKPT0/HkRmsX3ifjDXRXNtRxhdr10phli421L3SbXphfe7C5LwfS5f3Dc1Z7DEiw09hgCvszfMlyeOLdWxwy2HYRcIRwOT7NkGoSn9lqCcXTTXDPEkHSZ7bLU=
+	t=1749631058; cv=none; b=Pp4rzjBXoO57IJUz9+CIRgkhnW8iPmw7eJ3+22kgLLpqR4pqIueGkeJVwphton3riTqwBFO8cUHgwgUT2v4a4vnMAeYDUlNc1Wrt0Zfq1ppj0DPHqDlyCQcIpiyNubEpAZISEEmz111lM40NlalAIOp3u9DzQIYtKshzX9qVxQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749630856; c=relaxed/simple;
-	bh=YjUuaMXRjj3yUKM1oXzB5tryE1JdcUrQb6CsDD4lW7o=;
+	s=arc-20240116; t=1749631058; c=relaxed/simple;
+	bh=2kinzhlmz4ZC51GgMVeRamrxVg5pzwaLxW8qfc0MaDM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fu9VFRJgYw+FdM00O+qcUF2KpRBjoz9yxKRo0ebQiAoO3tE7G4Tt4vAM6hWnOpzqkwhnuehdLfVtY00HBsQyFpSaUhzS07u22Qjj9sZ4KTXILIZbxSVF9XHAwPN7nwZVKj9qxQU93jncPfM+hDvfJM0tIImzZK4q6T6GEevzSfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y3ULcI9I; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ukHxikAlwHAT81oV/wE3WnT58oQBEg0tZReBgZ+pDhCGfCnVnv8nzlP9pFBTuS8fSUc8wAh+5zkPI+gLntSErLE5ej1UBw4jXHq638hq/OvzxrrK7pYfY/FJghp08oUNEuJ1ZcbB1L00DXSw0mE8IbYLKXGPSSEXeH/KB9GV+bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PyCmOX+9; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y3ULcI9I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5311AC4CEEE;
-	Wed, 11 Jun 2025 08:34:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749630855;
-	bh=YjUuaMXRjj3yUKM1oXzB5tryE1JdcUrQb6CsDD4lW7o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y3ULcI9IJyU/3l5FNnF21dookZoXpT0aM6QPxdT5KR4dj5+MwmuBef05fRcY7CvZK
-	 UeBU/WbML8g8V2ZL2h+sTSB8laoO7PDxiX6kvecKeUcl2IAD8GbCSkN9SavXl6WuY1
-	 4MeUMVGBJiaY3jt32AJp0OJWQoVnQ6JEEdcJiQXz2RsWlMl+HyL8g3Otn+G0/gdz/e
-	 eKJOq//e/kg3jeadV8QCPHBdmUKKIUSVGrkK1ULlLjfVMh6zbV28tPRlyVBMBK2u6V
-	 L7MgsqJc0Pbe0lggsEFkW89fWPIeryKYmGkJTIrzKXP7Vk2hBiIfNccbDW/7SsIYEg
-	 IaiTDLO+Cf+uQ==
-Date: Wed, 11 Jun 2025 10:34:13 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Jammy Huang <jammy_huang@aspeedtech.com>
-Cc: jassisinghbrar@gmail.com, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] dt-bindings: mailbox: Add ASPEED AST2700 series
- SoC
-Message-ID: <20250611-serval-of-immortal-novelty-055c93@kuoka>
-References: <20250610091026.49724-1-jammy_huang@aspeedtech.com>
- <20250610091026.49724-2-jammy_huang@aspeedtech.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PyCmOX+9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749631057; x=1781167057;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2kinzhlmz4ZC51GgMVeRamrxVg5pzwaLxW8qfc0MaDM=;
+  b=PyCmOX+93ixbM+3PqMUpdRv9AneK0Ra9AM5zNbNFi+Ty38dHYBuqDX+T
+   l2AKU+N2HbHv+6hRlhY97nKEkj4hfDQ45A3aaKCGPPOSsWJHVr7ut/LGt
+   tBRV3TzQjBbG8ACq/gFirW3CkcwIurL6OKHyqSXe61TLDQKhuakujARye
+   V3c1P0tyjC2wBAQydJFT0asDzudhJ2/UHYgogYKBqv04KgeCgIwUcLUQ8
+   996YnUquvifoiTqNMjB6kR/R24+PBDdaOpnR3fBncxkDZioEjK5HTzqgA
+   /eLiU7rLsCQ/33Vvc0JsYfdLQRXd3T0UB4s7ge9it4NZu1J1rHc9hgtxy
+   A==;
+X-CSE-ConnectionGUID: BgGCNocrTdy6rMB3cxnBDw==
+X-CSE-MsgGUID: 5+WG0UHXRsCaLc2T8SYH4Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="62418520"
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="62418520"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 01:37:36 -0700
+X-CSE-ConnectionGUID: WUkEGOYpTlWF1DvX0mYXGA==
+X-CSE-MsgGUID: FopgQGVwQVO8ZzHiCd1LqA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="184332570"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 01:33:18 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uPGtX-00000005aOn-1tE9;
+	Wed, 11 Jun 2025 11:33:15 +0300
+Date: Wed, 11 Jun 2025 11:33:15 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Waiman Long <longman@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Vicentiu Galanopulo <vicentiu.galanopulo@remote-tech.co.uk>,
+	Will Deacon <will@kernel.org>, Han Xu <han.xu@nxp.com>,
+	Haibo Chen <haibo.chen@nxp.com>,
+	Yogesh Gaur <yogeshgaur.83@gmail.com>, Lee Jones <lee@kernel.org>,
+	Pavel Machek <pavel@kernel.org>, Andrew Davis <afd@ti.com>,
+	linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-spi@vger.kernel.org, imx@lists.linux.dev,
+	linux-leds@vger.kernel.org
+Subject: Re: [PATCH v6 1/3] spi: spi-nxp-fspi: check return value of
+ devm_mutex_init()
+Message-ID: <aEk_Sx2qht6WK6yQ@smile.fi.intel.com>
+References: <20250609-must_check-devm_mutex_init-v6-0-9540d5df9704@weissschuh.net>
+ <20250609-must_check-devm_mutex_init-v6-1-9540d5df9704@weissschuh.net>
+ <7afc214a-affd-4a99-8528-c58c31fbcc59@sirena.org.uk>
+ <aEgBkROmEV2df4rA@smile.fi.intel.com>
+ <d8d1ee94-ee95-461f-a5d8-040bb2a1cfee@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250610091026.49724-2-jammy_huang@aspeedtech.com>
+In-Reply-To: <d8d1ee94-ee95-461f-a5d8-040bb2a1cfee@sirena.org.uk>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Jun 10, 2025 at 05:10:25PM GMT, Jammy Huang wrote:
-> Introduce the mailbox module for AST27XX series SoC, which is responsible
-> for interchanging messages between asymmetric processors.
+On Tue, Jun 10, 2025 at 12:46:12PM +0100, Mark Brown wrote:
+> On Tue, Jun 10, 2025 at 12:57:37PM +0300, Andy Shevchenko wrote:
+> > On Mon, Jun 09, 2025 at 09:59:46PM +0100, Mark Brown wrote:
 > 
-> Signed-off-by: Jammy Huang <jammy_huang@aspeedtech.com>
-> ---
->  .../mailbox/aspeed,ast2700-mailbox.yaml       | 57 +++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/aspeed,ast2700-mailbox.yaml
+> > > I don't understand the comment about leaking here?  We might end up with
+> > > an unitialised mutex but how would we leak anything?
+> 
+> > In case if the mutex_init() allocates something that needs to be freed
+> > (in the future).
+> 
+> I don't see how checking the return value impacts that?  The management
+> via devm is still there either way.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+I see now what you mean. Yes, this is more likely applicable to non-devm case.
+Thomas, can you adjust the commit message(s), please, for v7?
 
-<form letter>
-This is an automated instruction, just in case, because many review
-tags are being ignored. If you know the process, just skip it entirely
-(please do not feel offended by me posting it here - no bad intentions
-intended, no patronizing, I just want to avoid wasted efforts). If you
-do not know the process, here is a short explanation:
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-versions of patchset, under or above your Signed-off-by tag, unless
-patch changed significantly (e.g. new properties added to the DT
-bindings). Tag is "received", when provided in a message replied to you
-on the mailing list. Tools like b4 can help here ('b4 trailers -u ...').
-However, there's no need to repost patches *only* to add the tags. The
-upstream maintainer will do that for tags received on the version they
-apply.
-
-https://elixir.bootlin.com/linux/v6.15/source/Documentation/process/submitting-patches.rst#L591
-</form letter>
-
-Best regards,
-Krzysztof
 
