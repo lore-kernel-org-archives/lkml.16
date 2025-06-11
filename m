@@ -1,72 +1,71 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31FCF3B280
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 10:30:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B41269CE4;
+	Wed, 11 Jun 2025 10:31:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749637834; cv=none; b=fNWVb6ZVHE10jOlSTdQALQNO9MAXKCvMiu5iOnkwF3rNZ5IOItzvntwLN3uhxbm1W+m3R/42Unv1+tfxTlZwM8sztiQakmJYNMYF88/EnGtrVyFWiE6QGpBFk8bwNgTjjGZEQYgUllnjGoH8xiu2yEQ9PTIdmNljJNJEktTW5xg=
+	t=1749637879; cv=none; b=uYUkduwsNaRhN9UO/I7JHBy0x7xPhbHVpllbc99/6hdj4iwY2odNV0+hPMa+zgdpTUUdwMxdtvpkij9qVfeTbV8mdwEl9gYk9c1hv57WzgPI6QZDDaI3JShOeiayo1FAeMMRd95Q7GrkjePwwR9yc/d3mxfODDvycXLvtJsWkJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749637834; c=relaxed/simple;
-	bh=USka3TDKhs7gGZ6XsFbj3JDn+DE/JHdWVzj5QEio0mU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gN2BHzz7v/Hf1iOqqbXCGLKXfxXsVZIYyrR5rv3E1M79F03iXKuw1GAqGqkuZAQEHPBjpGG0Cf4BOVfT5MaW+Sb6DmYlz7ip94+FbcIrQDufQs+QDFfaPmwBELWWh5J/QjdXqmRoImERPm2h+/JldkDGw4+mlQHBMlftzl1w9q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF94315A1;
-	Wed, 11 Jun 2025 03:30:11 -0700 (PDT)
-Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 08A723F673;
-	Wed, 11 Jun 2025 03:30:29 -0700 (PDT)
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: suzuki.poulose@arm.com,
-	mike.leach@linaro.org,
-	james.clark@linaro.org,
-	alexander.shishkin@linux.intel.com,
-	leo.yan@arm.com
-Cc: coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Yeoreum Yun <yeoreum.yun@arm.com>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH v2] coresight: fix indentation error in cscfg_remove_owned_csdev_configs()
-Date: Wed, 11 Jun 2025 11:30:25 +0100
-Message-Id: <20250611103025.939020-1-yeoreum.yun@arm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1749637879; c=relaxed/simple;
+	bh=rOGSDuo602dxiGluRCUxmINW3AtCkdReRdX1F6GdxmI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=pzpyxi7ER/2xtyrnzOLAEEr+Xj8lCPWVROa1uYGRl3aau8G+orahQAtC9EcIROpwO2ob4+Q6KVucQlO3CeekQnl2czf7QY5eTIY9nfhS3R18WSEIEWiyjKBiqv9LzAHMuB6uVmQgkyEZs5bnTIwhGkyZtIBXnwCgnZycLHpOtKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PZQgieEt; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PZQgieEt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12811C4CEEE;
+	Wed, 11 Jun 2025 10:31:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749637877;
+	bh=rOGSDuo602dxiGluRCUxmINW3AtCkdReRdX1F6GdxmI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=PZQgieEtDjx5oJh7vHgt29+M45nfiGEsZVpj5GvYhtKvOuZbi2A7gklhKYcZNZ52i
+	 vkxo0kJ7ztqELE/ZhhehuChrkEuZpIr4Gnp756je61EnC56Hrc+0omuljHdaKTmquf
+	 rsPMi5tqS3+cm8Ku1TF2SPFWV4vj6FlJV+/vY3Oce/dXfjtztAlyfzTNPZtXRfYxH3
+	 EJ6CeshRSNoeKtGCMZEz75VP+gxeLgQF3wyAtrCsXZ2s9pcPn6UoVNZ1mjg0uHlTYa
+	 /Ziif5rJx0sD+89EUz2yAwwuvpQ92lEDP9TL9biM+EHXSkc4M539DvWPCRqIYBr429
+	 NEhlSKcIuTNgA==
+From: Niklas Cassel <cassel@kernel.org>
+To: Damien Le Moal <dlemoal@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+ Philipp Stanner <phasta@kernel.org>
+Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250610135413.35930-2-phasta@kernel.org>
+References: <20250610135413.35930-2-phasta@kernel.org>
+Subject: Re: [PATCH v2] ata: pata_macio: Fix PCI region leak
+Message-Id: <174963787580.1635114.9212678796816994637.b4-ty@kernel.org>
+Date: Wed, 11 Jun 2025 12:31:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-Fix wrong indentation in cscfg_remove_owned_csdev_configs()
+On Tue, 10 Jun 2025 15:54:14 +0200, Philipp Stanner wrote:
+> pci_request_regions() became a managed devres functions if the PCI
+> device was enabled with pcim_enable_device(), which is the case for
+> pata_macio.
+> 
+> The PCI subsystem recently removed this hybrid feature from
+> pci_request_region(). When doing so, pata_macio was forgotten to be
+> ported to use pcim_request_all_regions(). If that function is not used,
+> pata_macio will fail on driver-reload because the PCI regions will
+> remain blocked.
+> 
+> [...]
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202506102238.XQfScl5x-lkp@intel.com/
-Fixes: 53b9e2659719 ("coresight: holding cscfg_csdev_lock while removing cscfg from csdev")
-Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
----
+Applied to libata/linux.git (for-6.16-fixes), thanks!
 
-Sorry for my bad forgetting to run checkpatch.pl...
+[1/1] ata: pata_macio: Fix PCI region leak
+      https://git.kernel.org/libata/linux/c/3e537877
 
----
- drivers/hwtracing/coresight/coresight-syscfg.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/hwtracing/coresight/coresight-syscfg.c b/drivers/hwtracing/coresight/coresight-syscfg.c
-index 83dad24e0116..6836b05986e8 100644
---- a/drivers/hwtracing/coresight/coresight-syscfg.c
-+++ b/drivers/hwtracing/coresight/coresight-syscfg.c
-@@ -395,7 +395,7 @@ static void cscfg_remove_owned_csdev_configs(struct coresight_device *csdev, voi
- 	if (list_empty(&csdev->config_csdev_list))
- 		return;
-
--  guard(raw_spinlock_irqsave)(&csdev->cscfg_csdev_lock);
-+	guard(raw_spinlock_irqsave)(&csdev->cscfg_csdev_lock);
-
- 	list_for_each_entry_safe(config_csdev, tmp, &csdev->config_csdev_list, node) {
- 		if (config_csdev->config_desc->load_owner == load_owner)
---
-LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+Kind regards,
+Niklas
 
