@@ -1,99 +1,85 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 020F426529B;
-	Wed, 11 Jun 2025 09:36:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1803226533
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 09:39:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749634610; cv=none; b=N+qmMTBfeJxjej+dzVEvdY/Ks069n3HWaKMvflHlNeIyonU2gxO6pndMHeEQu0G+ByvcTdxr3zTNo8xVGVUZHq8b42GH6w+kSGJcgZNgGg4+8BQkd0FBl1Lt+utzU8AJKd3zSsNL1x0U4t1npJ0dwm/iH/T6vPxjuFZ4XVp04r0=
+	t=1749634783; cv=none; b=rXYa3FsicZqZgh8hyfvBnTM+o4gG3mXXLEHmK8EZU/yoLKsWrjsn4FMpW/HijJuref16LlOWEz/Se6t5ooba9JFhEj7HC7Nvn4pwJCbrO8/u3mBzRALX/0hbwHzzaiKS9fawq60n8x1ryvbrmJ/0Dq3EfDfFqAqVXEX0yx6zI/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749634610; c=relaxed/simple;
-	bh=mVfyXIP9JLUrBFl7GsD5f1SXSqA4+C74McYsvCIxMFg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=VsT7o4tEbVgNxHB5FUGmWPJlkckn8zmHQa7CQEFaoqlog10eTOcMiOGBKQMAuoI7gJfSukA1QhIfigZbE+VLrI5Q7dbwpvHVHxP7VHfT2poH/4Ri5y7xVE/kihfdtuSujWlIk9Uf0wL0P8+m/CJRcDRfB9HSDjOMWc6oZ3MuRaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FdeFSPUb; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XEs1E128; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749634783; c=relaxed/simple;
+	bh=n58LCx0Q6HSsy3FLeeVAfZTIIHYr5jD+rxbWKbBG9rw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M0zcn05rJ20ZQ3RU3l1fnzCDTH35p5fBPA8cV45d1bnQRW/Y1HfyRjxTvBlMKCaNPhSG96XKhQeocGKo6RbZ/6LhOkvRy7NDLJ5AA23+bqF4Wcbp1JbU18r98ze75DGEqKDU520m5Tx2kS11nI4tS3AWrk4/r8xePMwK9FZnbsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dgYvIUAJ; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FdeFSPUb";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XEs1E128"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749634607;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=GFksH9LPMmP7bYyfX4IW1QhQb97MRGe7VJvXQH5Qf8E=;
-	b=FdeFSPUbQlIjY88c25kRBegK96msaEAPvepPEoyamCBClJGY9Oycct/bzJGK6BmgLVkYM0
-	LyE/Q7wHK+5ICZwADHqv7FQ1crjnD3M+eWbGlh9AQcB61C1ptdS6QTvnV3TePXi4E4jo3+
-	xWFKmaDksVQQ65uqqc1/5Dg47cexbY0vjJm5mU0eTd+WW/kcR1Bzs/tPbZaw8byIsgOYgE
-	X+nfiWMO/EhZHpdPfTjeYeSYPiIn6UWG0X+kP9k2E5d5ZJyypv7Ow/WMR6ZQ9MUyeFyCd9
-	vmF5uj8Ij4RC7oG9eNiDtYN5+lOI/bxc1DqT1o/D6qI2H+tK8FWY3F9moqK4lA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749634607;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=GFksH9LPMmP7bYyfX4IW1QhQb97MRGe7VJvXQH5Qf8E=;
-	b=XEs1E128R+ew11J/9X4/Dg7rMJNr6Mga4qU9oa91HKqgncmbaeIrB7zt+2mtr+l4V5Jyqj
-	OAY1ey/tJipwEPCQ==
-Date: Wed, 11 Jun 2025 11:36:35 +0200
-Subject: [PATCH] Documentation: kunit: fix argument of MODULE_IMPORT_NS()
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dgYvIUAJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Cxjr9KUCKMPOyF7AgQiT3i6Sz3Z2R7PLH7NkrcCxjKA=; b=dgYvIUAJObUSgZWCIiTrbnV8dC
+	vIBddDeHiXzBHK1rvjw4IRl4MLKy572HwtFSs1O59/+CXwZ4lure8KtqMIhCUar0dO6i/I7LdpiC3
+	OA6N9b8cf8RW341uFVa507aLgZIqgaC4gZoXnfFwWslqJoPBQka3eiMjYGPcCGFGf4Gg87QL93JyP
+	m2gfK+22WlzVY+irDIQt+gLO2n8QYuI11nDNq5aTjqCinBYh4gYRYcsEN1AyF0N9esRUmxOjMOsZB
+	DVCQYwIGhY7wZHyeq9pSWHNYaPO9ft0vP0Mxw4uHYet9tH5/+xpclWNZh+mM1TGr0lZL0jVTSijfs
+	ttvMSglg==;
+Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uPHvj-00000002EvT-1pzg;
+	Wed, 11 Jun 2025 09:39:35 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 123673021EF; Wed, 11 Jun 2025 11:39:34 +0200 (CEST)
+Date: Wed, 11 Jun 2025 11:39:34 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: mingo@redhat.com, juri.lelli@redhat.com, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	vschneid@redhat.com, clm@meta.com, linux-kernel@vger.kernel.org
+Subject: Re: [RFC][PATCH 5/5] sched: Add ttwu_queue support for delayed tasks
+Message-ID: <20250611093934.GB2273038@noisy.programming.kicks-ass.net>
+References: <20250520094538.086709102@infradead.org>
+ <20250520101727.984171377@infradead.org>
+ <CAKfTPtDOQVEMRWaK9xEVqSDKcvUfai4CUck6G=oOdaeRBhZQUw@mail.gmail.com>
+ <20250606153800.GB39944@noisy.programming.kicks-ass.net>
+ <CAKfTPtDhC3nCcWcWSz08nadZDJ0OtbgZ0r3Usjcu6AagGqYcRA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250611-kunit-example-v1-1-cf2a1a80518f@linutronix.de>
-X-B4-Tracking: v=1; b=H4sIACJOSWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDM0ND3ezSvMwS3dSKxNyCnFTdFENL01QTw2SDJGMTJaCegqLUtMwKsHn
- RsbW1AGflkKhfAAAA
-X-Change-ID: 20250611-kunit-example-d195e41c0b34
-To: Brendan Higgins <brendan.higgins@linux.dev>, 
- David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>
-Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
- workflows@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749634606; l=1138;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=mVfyXIP9JLUrBFl7GsD5f1SXSqA4+C74McYsvCIxMFg=;
- b=VPkKhJXccGFHvBS/kfawZMHVmi0l4KnKzIRjNgp8MsiNCqbezdx9nHFfBFaHE+m2nMW0wzW4F
- zK1q8ktwjAACw60SLIrhyPnWJdze9N82/a858uSM0yWefP4Pyed4okv
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtDhC3nCcWcWSz08nadZDJ0OtbgZ0r3Usjcu6AagGqYcRA@mail.gmail.com>
 
-The argument to MODULE_IMPORT_NS() should be a string literal.
-See commit cdd30ebb1b9f ("module: Convert symbol namespace to string literal")
+On Fri, Jun 06, 2025 at 06:55:37PM +0200, Vincent Guittot wrote:
+> > > > @@ -3830,12 +3859,41 @@ void sched_ttwu_pending(void *arg)
+> > > >         update_rq_clock(rq);
+> > > >
+> > > >         llist_for_each_entry_safe(p, t, llist, wake_entry.llist) {
+> > > > +               struct rq *p_rq = task_rq(p);
+> > > > +               int ret;
+> > > > +
+> > > > +               /*
+> > > > +                * This is the ttwu_runnable() case. Notably it is possible for
+> > > > +                * on-rq entities to get migrated -- even sched_delayed ones.
+> > >
+> > > I haven't found where the sched_delayed task could migrate on another cpu.
+> >
+> > Doesn't happen often, but it can happen. Nothing really stops it from
+> > happening. Eg weight based balancing can do it. As can numa balancing
+> > and affinity changes.
+> 
+> Yes, I agree that delayed tasks can migrate because of load balancing
+> but not at wake up.
 
-Fixes: d208025db6d6 ("Documentation: kunit: improve example on testing static functions")
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
----
- Documentation/dev-tools/kunit/usage.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Right, but this here is the case where wakeup races with load-balancing.
+Specifically, due to the wake_list, the wakeup can happen while the task
+is on CPU N, and by the time the IPI gets processed the task has moved
+to CPU M.
 
-diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
-index 038f480074fd7aaa1f8e1b344bc74bf3426cc173..066ecda1dd98e73a01d50545e79c38a99a3e05a2 100644
---- a/Documentation/dev-tools/kunit/usage.rst
-+++ b/Documentation/dev-tools/kunit/usage.rst
-@@ -699,7 +699,7 @@ the template below.
- 	#include <kunit/visibility.h>
- 	#include <my_file.h>
- 	...
--	MODULE_IMPORT_NS(EXPORTED_FOR_KUNIT_TESTING);
-+	MODULE_IMPORT_NS("EXPORTED_FOR_KUNIT_TESTING");
- 	...
- 	// Use do_interesting_thing() in tests
- 
-
----
-base-commit: f09079bd04a924c72d555cd97942d5f8d7eca98c
-change-id: 20250611-kunit-example-d195e41c0b34
-
-Best regards,
--- 
-Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-
+It doesn't happen often, but it was 'fun' chasing that fail around for a
+day :/
