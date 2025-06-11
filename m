@@ -1,100 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026672571A0;
-	Wed, 11 Jun 2025 11:43:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AAF726A0B3;
+	Wed, 11 Jun 2025 11:43:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749642204; cv=none; b=blGbV/5DImXiu4KoLtwdu4/80ZoTzxZGQwuwlacazUAV5YdCyL0DJT8a1+C032Bxrh23dWvnv01lYle2HSgNxPZZeNRA/KJD0ku//bwoxU0RUbe769dxdoSeL9dZmj2CN5EXG2QW6D3OyR/jJvSdF3tqfqFiMKlGZiQeB05M7/A=
+	t=1749642233; cv=none; b=qt8Z4HCpINXB6VPCjqrgjBISB6alNkoy2RmpS+B36vXF5HwwHbzrthkfDWK5Nc1K4LaCV4tb9iK8HUQ7F0lXH1xNuf6TxZZAvQraG324GHuEHoA1VEvR9a6NZfdipYrF6C4jpiOpqlv1s+UDa8uf4VbtK3DOEXIhZs3XFzsLPDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749642204; c=relaxed/simple;
-	bh=VtORa9gULIIxSrmzYE2nKZ6lSqCXmbEADc6P99tw9QA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ILNEl848nS2aGuQCAZ+f7+CfZgbuL1I+TzT3ZcXwoJ215XOBsL9tUr7S0bfq+R6P0AEC4tUr13E1krd1rlTKgeVk/Y+f+hjAi16M+/5Ngsz1loWjiuuENudbZUrGB/2fZJgS9BLdLbFpkBC/IW2AKnBWItphhAeO7V8lrYx3Ks8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VBlo25Bv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749642233; c=relaxed/simple;
+	bh=MPR2cNqIzV4zNMkRkjqykLHeeN+/bXK5N6sydvZqJGA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tCbGWi7rqRXhZ5DkZ3JInWKETA+Tw22Jl5dk398WxJaQYuDN6QlXXdPOaOsyQn3onfl98V0MwsPlvtWC8q7y+xErqRaCn3p938Oe+ll/zh83gVNTFGjBpZ+L9cCztWmXlCo0avbt8Nse0K4fpOBYQFOzen+L8qZyt/iBX6+t3B8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=gCB3VUE2; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VBlo25Bv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3479C4CEEE;
-	Wed, 11 Jun 2025 11:43:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749642203;
-	bh=VtORa9gULIIxSrmzYE2nKZ6lSqCXmbEADc6P99tw9QA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VBlo25BvgjCTtX2YzIkubtVomP3UFvIlPOni6KAT2iaqyw0+rNOOgM/ZPl/fuHBvJ
-	 6RUhLoAuNInQr/FBMX+RWik7oyFJ4KwkDbIMdqFWDfaPGcfFNs6vqlMdc5geOp1Ujl
-	 FCrHNQtUTTvUg8occ3jpxoAIVnGwsjmbIPHHEIjSsMh6tsNYLL33XyJWgH9mPukgYK
-	 hCYm0bezRR5bM1XDKENk3gDVdcM6xmivdsOEg/XJ+wiMB/PkzCPytMmHvseo0dSsne
-	 uuGrlx1zIJ69ZAdr98knudftyVAnbpHr+F3oPh7UTtxBz4kbE8usaFABwhqFj1mliq
-	 fumB5us0LDq2g==
-Date: Wed, 11 Jun 2025 12:43:18 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: catalin.marinas@arm.com, pcc@google.com, will@kernel.org,
-	anshuman.khandual@arm.com, joey.gouly@arm.com,
-	yury.khrustalev@arm.com, maz@kernel.org, oliver.upton@linux.dev,
-	frederic@kernel.org, akpm@linux-foundation.org, surenb@google.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v6 2/9] arm64: report address tag when
- FEAT_MTE_TAGGED_FAR is supported
-Message-ID: <c0b4dc8a-b37c-4e8e-be2e-bc8906615702@sirena.org.uk>
-References: <20250611094107.928457-1-yeoreum.yun@arm.com>
- <20250611094107.928457-3-yeoreum.yun@arm.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gCB3VUE2"
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55BBhiH62587909;
+	Wed, 11 Jun 2025 06:43:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1749642224;
+	bh=01SkIyYDrdKEhOlWGDqsXApkLwVFyXWIyMF6ULwGqHs=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=gCB3VUE2UDJk9t2yzhYHSaNuCmqUM6p8AAuZKAYpnIvZzSXLrBmFsFXEuDM4KFhq0
+	 rtyoshPwL8nF+P2ddZuz+Ht+hyReJoLhYqeGcpYRaecnA752CWTXwLccNBI6t3l/vS
+	 pKXtauIb4oihrom8uTCtXdBZbus1PUT1q+h4A1DE=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55BBhib11108922
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Wed, 11 Jun 2025 06:43:44 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Wed, 11
+ Jun 2025 06:43:43 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 11 Jun 2025 06:43:44 -0500
+Received: from uda0492258.dhcp.ti.com (dhcp-172-24-227-169.dhcp.ti.com [172.24.227.169])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55BBhavE270460;
+	Wed, 11 Jun 2025 06:43:41 -0500
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        <s-vadapalli@ti.com>
+Subject: [PATCH v2 1/5] arm64: dts: ti: k3-am62: disable "cpsw3g" in SoC file and enable in board files
+Date: Wed, 11 Jun 2025 17:13:32 +0530
+Message-ID: <20250611114336.2392320-2-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250611114336.2392320-1-s-vadapalli@ti.com>
+References: <20250611114336.2392320-1-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Gb6T1JetxHXIds4r"
-Content-Disposition: inline
-In-Reply-To: <20250611094107.928457-3-yeoreum.yun@arm.com>
-X-Cookie: No skis take rocks like rental skis!
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
+Following the existing convention of disabling nodes in the SoC file and
+enabling only the required ones in the board file, disable "cpsw3g" node
+in the SoC file "k3-am62-main.dtsi" and enable it in the board files:
+a) k3-am62-lp-sk.dts
+b) k3-am625-beagleplay.dts
+c) k3-am525-sk.dts
 
---Gb6T1JetxHXIds4r
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+---
 
-On Wed, Jun 11, 2025 at 10:41:00AM +0100, Yeoreum Yun wrote:
+v1 of this patch was 4 different patches which have currently been
+squashed:
+ https://lore.kernel.org/r/20250529133443.1252293-2-s-vadapalli@ti.com/
+ https://lore.kernel.org/r/20250529133443.1252293-3-s-vadapalli@ti.com/
+ https://lore.kernel.org/r/20250529133443.1252293-4-s-vadapalli@ti.com/
+ https://lore.kernel.org/r/20250529133443.1252293-5-s-vadapalli@ti.com/
 
-> +HWCAP3_MTE_FAR
-> +    Functionality implied by ID_AA64PFR2_EL1.MTEFAR == 0b0001.
+Squashing the patches is the only change since the v1 series, in
+addition to updating the commit message accordingly.
 
-> +Applications should interpret the values of these bits based on
-> +the support for the 'mte_far' hwcap. If the support is not present,
-> +the values of these bits should be considered as undefined otherwise valid.
+Regards,
+Siddharth.
 
-The constant is HWCAP3_MTE_FAR and the cpuinfo is mtefar:
+ arch/arm64/boot/dts/ti/k3-am62-lp-sk.dts       | 4 ++++
+ arch/arm64/boot/dts/ti/k3-am62-main.dtsi       | 2 ++
+ arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts | 1 +
+ arch/arm64/boot/dts/ti/k3-am625-sk.dts         | 1 +
+ 4 files changed, 8 insertions(+)
 
-> +	[KERNEL_HWCAP_MTE_FAR]		= "mtefar",
+diff --git a/arch/arm64/boot/dts/ti/k3-am62-lp-sk.dts b/arch/arm64/boot/dts/ti/k3-am62-lp-sk.dts
+index aafdb90c0eb7..cec77fba24e6 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62-lp-sk.dts
++++ b/arch/arm64/boot/dts/ti/k3-am62-lp-sk.dts
+@@ -149,6 +149,10 @@ &sdhci1 {
+ 	vqmmc-supply = <&vddshv_sdio>;
+ };
+ 
++&cpsw3g {
++	status = "okay";
++};
++
+ &cpsw_port2 {
+ 	status = "disabled";
+ };
+diff --git a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+index 9e0b6eee9ac7..3d8650e7c80b 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+@@ -724,6 +724,8 @@ cpsw3g: ethernet@8000000 {
+ 		dma-names = "tx0", "tx1", "tx2", "tx3", "tx4", "tx5", "tx6",
+ 			    "tx7", "rx";
+ 
++		status = "disabled";
++
+ 		ethernet-ports {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+diff --git a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
+index 72b09f9c69d8..999f5baaba1a 100644
+--- a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
++++ b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
+@@ -585,6 +585,7 @@ &usb1 {
+ };
+ 
+ &cpsw3g {
++	status = "okay";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&rgmii1_pins_default>, <&spe_pins_default>,
+ 		    <&gbe_pmx_obsclk>;
+diff --git a/arch/arm64/boot/dts/ti/k3-am625-sk.dts b/arch/arm64/boot/dts/ti/k3-am625-sk.dts
+index 2fbfa3719345..9c2258dfd08d 100644
+--- a/arch/arm64/boot/dts/ti/k3-am625-sk.dts
++++ b/arch/arm64/boot/dts/ti/k3-am625-sk.dts
+@@ -201,6 +201,7 @@ &sdhci1 {
+ };
+ 
+ &cpsw3g {
++	status = "okay";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&main_rgmii1_pins_default>, <&main_rgmii2_pins_default>;
+ };
+-- 
+2.34.1
 
-The reference to the hwcap should probably be one of these, I'd go for
-HWCAP3_MTE_FAR since it says hwcap.
-
->  	/*
->  	 * The architecture specifies that bits 63:60 of FAR_EL1 are UNKNOWN
->  	 * for tag check faults. Set them to corresponding bits in the untagged
-> -	 * address.
-> +	 * address if ARM64_MTE_FAR isn't supported.
-> +	 * Otherwise, bits 63:60 of FAR_EL1 are KNOWN.
-
-Should this say UNKNOWN?
-
---Gb6T1JetxHXIds4r
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhJa9UACgkQJNaLcl1U
-h9CZqQf8C9c9a1CQGL/nyb8MDCIEwm3jBTstFRtDJlSPcoMRL/KcLTbk01sP2PWr
-A/qdmt5qMlQKPwtnIUrzSIqmn96TTzCbJZWsn4C7fzrLh7jT+eD8GjXKCjF/Mkq0
-uXfzVKY5Mcyn0H73gtKrRdOC9ng/Xn0xFolNvXYDZplN0VUHBn+Fj51XYzR1lMKL
-9zNZry8Dc9mpHUgORCFt5gxud4Wph4lPnWPsCDI9zyXHw91xzzZAxqByLZ8d8vsH
-Z5Rpe5jD6kMkoS2umJr5ZyENjqaPagxWY1IZa+C5/7xx7l8czKLWXy+jj7OG9lAr
-G+4u3UauAv/tfBdOWi2iq6ptu58suQ==
-=dyyt
------END PGP SIGNATURE-----
-
---Gb6T1JetxHXIds4r--
