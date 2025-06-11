@@ -1,55 +1,55 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E1D624E4A8
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:17:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8C4257440
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:17:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749676631; cv=none; b=K268cDkO9weC9LHdfnWlwzWEeSnppUiyv9NjvP5d3Fo95a9JphlYHkz4RpGJrAf/9W3mURlS0M5wzfJxumECkytUnMShweUIjeGnTezokx3tf4Dv5EqiBOBo3q6C/fBKUujWRWK4InjvcsLugkVr+DOrVCYIzEMMRIfUTWIZOu4=
+	t=1749676634; cv=none; b=bASoFsmL+DXA91WcaNx06c9sHKMrDWcq0V5np1tHHSVwn6KHaZgMcAFYPkBMVQDtMh4ZJqXLtU66/zY21906A0y76FECERiP7aGF7pXBBbKRZ9pHbxkBi90l/lyCzVIaZJVH+IaMTZQW0mLQ+YM6mXoHjXlwPo1ptmRQOCPyiaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749676631; c=relaxed/simple;
-	bh=9bHODc+L3jY8CU4AGA0f9Uj2uodDYKTbx2LQsdLuFe8=;
+	s=arc-20240116; t=1749676634; c=relaxed/simple;
+	bh=lE6nUOIrKb4G9fRr4Fu+box3ulN6PQJB0SdDXJ5axmc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=dup8Ihed6FsBPIoLCha9zQPpfIpgaOJzLtg6x7aEczECqfrSLCYH1Ua/rpodQ+K5IiH7YaBIUsUX2xc+WxHs8v69Edvx4qyvAmu2cV4pIG3+Z+5+7Uf02jNMwCkBnMmY9+3UpeeywYhFzGy/X9TaPcDTgxWJmKdz8qfw4p8irwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--afranji.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yW4OwMA5; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=Zf3ym243r9Vy8aPuw0juPhDdvo65H7ycCsLo83UPtjMVr0YXqzlcAPiC3YdGwUmtb1qyXKOJNiTfZH3PAW/7EadHXwA6EzCUqUlrkIQTeaxyb/hmQQrUQfQruy0TGmD9xOVMi+vSBSfVnr+cWOmLlUlA1yUGrfLgla01RNFdyag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--afranji.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=clHW15g6; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--afranji.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yW4OwMA5"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7462aff55bfso204735b3a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:17:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="clHW15g6"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b26db9af463so199554a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:17:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749676629; x=1750281429; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749676632; x=1750281432; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ssjnbQ4kJflk7fXBHBaf7ALVkd5j+ovjxWVLHw4vo40=;
-        b=yW4OwMA5+E3hWIoxPhcBzfrFkWa/ZxvxscuiJyItpBbf32NStZuTgoNAket1hu0HCN
-         RNTOg6fWhNGCtoMKBt9MvSWs3Bht0wsj8KGvGBPY8BiWyrtrnfzC0iRG7fKOLmGUalVm
-         5OaSu4i7OIE91w8ILEbFbXzKSSfWDSQX3PHijTAjLurasKbzC2D0vkvXL6Du9WFBhs/x
-         H22bKbu2IjNZzP6HQRFC7dED+uD+7bxucl3nM5J06l+FKzhWYmPkvkFzXgpJAHNrkAZ/
-         OXBbQ3bgenhidqd7qFJOVVag7ptjyke2Mpzh+MTH3boyjXIOiPR9s0kOjUFqxbooCvyp
-         nSvA==
+        bh=J6jtteubntBQN2p3kF5NvnYpZ0T18nDw91+DVALzqP8=;
+        b=clHW15g6nMAIEe05bx4UKcajDHkPzhzaLIH8m1Lm3JVQKS8sNI3HtPuOqAHJ2q6lez
+         rexYKQfTofnvda8gQCrwhgpqE+e7mv+TVAaGpAgKbYl/ImUv8m1xDNRCLqya2+BaFqJG
+         fvNCLzhE1dVeUNbr+AZcHZuNijms3Z06GkDDk8YU4mfzQfZzT+b8jfHptiAZ/agPC2Qj
+         b/GzOkzlE87s62fozUN6ZQjIoOO1peBlw7rHoRo1H0tw5gNafCRFVMqGX3S+XNW2LLzx
+         q+xgnbzrb661auxG5942JE8jJKQ+HZpFGTLtvK25Xbshr0bqhTCqZ30Qmu+k7fNLfypU
+         RRUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749676629; x=1750281429;
+        d=1e100.net; s=20230601; t=1749676632; x=1750281432;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ssjnbQ4kJflk7fXBHBaf7ALVkd5j+ovjxWVLHw4vo40=;
-        b=oCaqoj4PW34uWq5tjtogP6Ro0u4+dpfCFM0U1XaF4uhgszp7H5LMh+Zwxo3pUxCcok
-         yp8r5FmGQada46QIBlCc5zi7k5vic8eKSyO9+LOdYwFE1JnscsnZeFnjxAfIXwGJS11Q
-         SrBTVS3yKO3n3LDEq/PLiARO8GY92K8vr8VxbzVRocjJBrWLzURqY86IBYPNxXNVnSqR
-         AuY0gSjgrHlrsIFuIdcE9Oez/V2naGxcdjB8TYaKUETPU+nBH2On9L+DQJGTF/e/sDEy
-         otG11od+f81+uJFKUrp1JZ4d1uXYD/LS8hr5h0oXWBUWZQIo1MOHGM05Huffa+TaUWZP
-         jejw==
-X-Forwarded-Encrypted: i=1; AJvYcCUk3nekGcd9IsIbvWCWjR8OMNg7t+ZpG7AxtTUCh23YE0kwyUCV/UrX2kwqZS2QjT8iUtaY9OnvpPqB7+U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygoIX/SJrEK2F3U2ywzXj+fAbCVD83xCPgD+y0rcaNc9CyC7CM
-	O/LuZ7tHAPIc04acgJ8nj9L40b9PYiHjOlaJhsnvkBFFzItberqoG9007k7pOB3ZnQ2vMmCbTOE
-	hiiJV5sniog==
-X-Google-Smtp-Source: AGHT+IGt8itXpNhAIFBj62DiJ64U9JmDFLzjGyRqSV6OdShtMpiACjneNt3RcQvG2dGMamb53/SKPyXvNeW+
-X-Received: from pfbfr17.prod.google.com ([2002:a05:6a00:8111:b0:73e:665:360])
- (user=afranji job=prod-delivery.src-stubby-dispatcher) by 2002:aa7:8882:0:b0:73d:ff02:8d83
- with SMTP id d2e1a72fcca58-7486cb21c08mr7425055b3a.3.1749676628808; Wed, 11
- Jun 2025 14:17:08 -0700 (PDT)
-Date: Wed, 11 Jun 2025 21:16:35 +0000
+        bh=J6jtteubntBQN2p3kF5NvnYpZ0T18nDw91+DVALzqP8=;
+        b=MGQWRYVRN5Qr/zIGnRo7eGXUTcnntMopcN04fU5tTNcxGvyJpRhFH02siUnNjoT6yb
+         vF1gu3Y7kNxk7JFqUxuK3iay0BmoTVjgIcq6Yqd8f1JTeW1U7IpPn0nHqpM1I3ZbZk/2
+         VDLkviebgvqS58l31EBLWejcbXFLhPmMIwUTUUGgyWJUJS+O1E2xsUyuOUpi08yI0w9e
+         O6p9x2XKuNyMTSWR0vJvGjTzisQpQt9hod9Yz5aBizTubOzuTetPkjbna+WhSlxFLS1W
+         GsfTN5QQxROKOiemkmkOYq4Ziy4BGO98ZvQKFb2/+qGz5czNIiH03Eh3SWT+eYLuobXb
+         bCZw==
+X-Forwarded-Encrypted: i=1; AJvYcCU+OP8fS9iK2+hCSloBvNFU8NP1YoJ37VBMZxN7xhSF56/peNQxQrd9rh9BKcN9eRS5QhuUHA6/icWJFwQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwT+Q7uhao1ULbZgwKoco2YUom99a1SRp6wq+x+8KYp4tPzT/9R
+	OYZ40CcJYIOX52xqp0fi5vm+QFpc1QSe+Ginq76bYBDyjcpJaxM+Zb144ZlySMSI/J2RJ0ZbnG/
+	PqU8brUi6nA==
+X-Google-Smtp-Source: AGHT+IEr8iX/cIgcvsGYjAWSEZKLzLBYLe9qYqD9d7H++gZpo2ukhpqL6kw+SW8ooyNprJAB1kFZlg6/m6pQ
+X-Received: from pgdu24.prod.google.com ([2002:a05:6a02:2f58:b0:b2f:b096:8b5a])
+ (user=afranji job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:431c:b0:201:85f4:ade6
+ with SMTP id adf61e73a8af0-21f9b8f4694mr394232637.27.1749676632082; Wed, 11
+ Jun 2025 14:17:12 -0700 (PDT)
+Date: Wed, 11 Jun 2025 21:16:37 +0000
 In-Reply-To: <cover.1749672978.git.afranji@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1749672978.git.afranji@google.com>
 X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-Message-ID: <92f22ace98238b79c25bd8759c75a1143d82a741.1749672978.git.afranji@google.com>
-Subject: [RFC PATCH v2 08/10] KVM: selftests: TDX: Add tests for TDX in-place migration
+Message-ID: <c95acb18a40593e398747395cf7e92877a1805b7.1749672978.git.afranji@google.com>
+Subject: [RFC PATCH v2 10/10] KVM: selftests: Add irqfd/interrupts test for
+ TDX with migration
 From: Ryan Afranji <afranji@google.com>
 To: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
 Cc: sagis@google.com, bp@alien8.de, chao.p.peng@linux.intel.com, 
@@ -74,199 +75,158 @@ Cc: sagis@google.com, bp@alien8.de, chao.p.peng@linux.intel.com,
 	Ryan Afranji <afranji@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-From: Sagi Shahar <sagis@google.com>
+From: Ackerley Tng <ackerleytng@google.com>
 
-Adds selftests for TDX in-place migration.
+Adds a selftest to verify interrupts sent to a TDX VM before migration
+are successfully handled by the migrated VM.
 
+Co-developed-by: Ryan Afranji <afranji@google.com>
 Signed-off-by: Ryan Afranji <afranji@google.com>
-Signed-off-by: Sagi Shahar <sagis@google.com>
+Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
  tools/testing/selftests/kvm/Makefile.kvm      |   1 +
- .../testing/selftests/kvm/include/kvm_util.h  |  20 +
- .../selftests/kvm/include/x86/tdx/tdx_util.h  |   1 +
- tools/testing/selftests/kvm/lib/kvm_util.c    |  50 ++-
- .../selftests/kvm/lib/x86/tdx/tdx_util.c      |   3 +-
- .../selftests/kvm/x86/tdx_migrate_tests.c     | 358 ++++++++++++++++++
- 6 files changed, 429 insertions(+), 4 deletions(-)
- create mode 100644 tools/testing/selftests/kvm/x86/tdx_migrate_tests.c
+ .../testing/selftests/kvm/include/kvm_util.h  |   4 +
+ .../selftests/kvm/include/x86/tdx/tdx_util.h  |   2 +
+ .../selftests/kvm/include/x86/tdx/test_util.h |   5 +
+ tools/testing/selftests/kvm/lib/kvm_util.c    |  35 ++-
+ .../selftests/kvm/lib/x86/tdx/tdx_util.c      |  20 ++
+ .../selftests/kvm/lib/x86/tdx/test_util.c     |  17 ++
+ .../kvm/x86/tdx_irqfd_migrate_test.c          | 264 ++++++++++++++++++
+ .../selftests/kvm/x86/tdx_migrate_tests.c     |  21 --
+ 9 files changed, 343 insertions(+), 26 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/x86/tdx_irqfd_migrate_test.c
 
 diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
-index 1c7ea61e9031..d4c8cfb5910f 100644
+index d4c8cfb5910f..4ae0d105c2a7 100644
 --- a/tools/testing/selftests/kvm/Makefile.kvm
 +++ b/tools/testing/selftests/kvm/Makefile.kvm
-@@ -155,6 +155,7 @@ TEST_GEN_PROGS_x86 += pre_fault_memory_test
- TEST_GEN_PROGS_x86 += x86/tdx_vm_test
+@@ -156,6 +156,7 @@ TEST_GEN_PROGS_x86 += x86/tdx_vm_test
  TEST_GEN_PROGS_x86 += x86/tdx_shared_mem_test
  TEST_GEN_PROGS_x86 += x86/tdx_upm_test
-+TEST_GEN_PROGS_x86 += x86/tdx_migrate_tests
+ TEST_GEN_PROGS_x86 += x86/tdx_migrate_tests
++TEST_GEN_PROGS_x86 += x86/tdx_irqfd_migrate_test
  
  # Compiled outputs used by test targets
  TEST_GEN_PROGS_EXTENDED_x86 += x86/nx_huge_pages_test
 diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-index 267f78f3f16f..1b6489081e74 100644
+index 8b252a668c78..f93ac2b9b0ff 100644
 --- a/tools/testing/selftests/kvm/include/kvm_util.h
 +++ b/tools/testing/selftests/kvm/include/kvm_util.h
-@@ -110,6 +110,9 @@ struct kvm_vm {
- 
- 	struct kvm_binary_stats stats;
- 
-+	/* VM was migrated using KVM_CAP_VM_MOVE_ENC_CONTEXT_FROM */
-+	bool enc_migrated;
-+
- 	/*
- 	 * KVM region slots. These are the default memslots used by page
- 	 * allocators, e.g., lib/elf uses the memslots[MEM_REGION_CODE]
-@@ -673,6 +676,7 @@ static inline bool vm_arch_has_protected_memory(struct kvm_vm *vm)
- 
- void vm_mem_region_set_flags(struct kvm_vm *vm, uint32_t slot, uint32_t flags);
- void vm_mem_region_move(struct kvm_vm *vm, uint32_t slot, uint64_t new_gpa);
-+void vm_migrate_mem_regions(struct kvm_vm *dst_vm, struct kvm_vm *src_vm);
- void vm_mem_region_delete(struct kvm_vm *vm, uint32_t slot);
- struct kvm_vcpu *__vm_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id);
- void vm_populate_vaddr_bitmap(struct kvm_vm *vm);
-@@ -1132,6 +1136,22 @@ static inline struct kvm_vcpu *vm_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id,
- 	return vcpu;
- }
- 
-+/*
-+ * Adds a vCPU with no defaults. This vcpu will be used for migration
-+ *
-+ * Input Args:
-+ *   vm - Virtual Machine
-+ *   vcpu_id - The id of the VCPU to add to the VM.
-+ */
-+struct kvm_vcpu *vm_arch_vcpu_add_for_migration(struct kvm_vm *vm,
-+						uint32_t vcpu_id);
-+
-+static inline struct kvm_vcpu *vm_vcpu_add_for_migration(struct kvm_vm *vm,
-+							 uint32_t vcpu_id)
-+{
-+	return vm_arch_vcpu_add_for_migration(vm, vcpu_id);
-+}
-+
- /* Re-create a vCPU after restarting a VM, e.g. for state save/restore tests. */
- struct kvm_vcpu *vm_arch_vcpu_recreate(struct kvm_vm *vm, uint32_t vcpu_id);
+@@ -80,6 +80,7 @@ enum kvm_mem_region_type {
+ 	MEM_REGION_PT,
+ 	MEM_REGION_TEST_DATA,
+ 	MEM_REGION_TDX_BOOT_PARAMS,
++	MEM_REGION_TDX_SHARED_DATA,
+ 	MEM_REGION_UCALL,
+ 	NR_MEM_REGIONS,
+ };
+@@ -958,6 +959,9 @@ int _kvm_irq_line(struct kvm_vm *vm, uint32_t irq, int level);
+ struct kvm_irq_routing *kvm_gsi_routing_create(void);
+ void kvm_gsi_routing_irqchip_add(struct kvm_irq_routing *routing,
+ 		uint32_t gsi, uint32_t pin);
++void kvm_gsi_routing_msi_add(struct kvm_irq_routing *routing, uint32_t gsi,
++			     uint32_t address_lo, uint32_t address_hi,
++			     uint32_t data);
+ int _kvm_gsi_routing_write(struct kvm_vm *vm, struct kvm_irq_routing *routing);
+ void kvm_gsi_routing_write(struct kvm_vm *vm, struct kvm_irq_routing *routing);
  
 diff --git a/tools/testing/selftests/kvm/include/x86/tdx/tdx_util.h b/tools/testing/selftests/kvm/include/x86/tdx/tdx_util.h
-index ae39b78aa4af..9b495e621225 100644
+index 9b495e621225..4393c8649718 100644
 --- a/tools/testing/selftests/kvm/include/x86/tdx/tdx_util.h
 +++ b/tools/testing/selftests/kvm/include/x86/tdx/tdx_util.h
-@@ -9,6 +9,7 @@
- extern uint64_t tdx_s_bit;
+@@ -10,6 +10,8 @@ extern uint64_t tdx_s_bit;
  void tdx_filter_cpuid(struct kvm_vm *vm, struct kvm_cpuid2 *cpuid_data);
  void __tdx_mask_cpuid_features(struct kvm_cpuid_entry2 *entry);
-+void tdx_enable_capabilities(struct kvm_vm *vm);
+ void tdx_enable_capabilities(struct kvm_vm *vm);
++int __tdx_migrate_from(int dst_fd, int src_fd);
++void tdx_migrate_from(struct kvm_vm *dst_vm, struct kvm_vm *src_vm);
  
  struct kvm_vcpu *td_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id, void *guest_code);
  
+diff --git a/tools/testing/selftests/kvm/include/x86/tdx/test_util.h b/tools/testing/selftests/kvm/include/x86/tdx/test_util.h
+index 3330d5a54698..0dd859974cb3 100644
+--- a/tools/testing/selftests/kvm/include/x86/tdx/test_util.h
++++ b/tools/testing/selftests/kvm/include/x86/tdx/test_util.h
+@@ -130,4 +130,9 @@ uint64_t tdx_test_read_64bit(struct kvm_vcpu *vcpu, uint64_t port);
+  */
+ uint64_t tdx_test_read_64bit_report_from_guest(struct kvm_vcpu *vcpu);
+ 
++/*
++ * Enables X2APIC for TDX guests.
++ */
++void tdx_guest_x2apic_enable(void);
++
+ #endif // SELFTEST_TDX_TEST_UTIL_H
 diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index 3c131718b81a..9dc3c7bf0443 100644
+index 9dc3c7bf0443..bbb489635064 100644
 --- a/tools/testing/selftests/kvm/lib/kvm_util.c
 +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -805,8 +805,10 @@ static void __vm_mem_region_delete(struct kvm_vm *vm,
+@@ -1293,10 +1293,12 @@ static void vm_migrate_mem_region(struct kvm_vm *dst_vm, struct kvm_vm *src_vm,
+ 				  struct userspace_mem_region *src_region)
+ {
+ 	struct userspace_mem_region *dst_region;
+-	int dst_guest_memfd;
++	int dst_guest_memfd = -1;
  
- 	sparsebit_free(&region->unused_phy_pages);
- 	sparsebit_free(&region->protected_phy_pages);
--	ret = munmap(region->mmap_start, region->mmap_size);
--	TEST_ASSERT(!ret, __KVM_SYSCALL_ERROR("munmap()", ret));
-+	if (!vm->enc_migrated) {
-+		ret = munmap(region->mmap_start, region->mmap_size);
-+		TEST_ASSERT(!ret, __KVM_SYSCALL_ERROR("munmap()", ret));
+-	dst_guest_memfd =
+-		vm_link_guest_memfd(dst_vm, src_region->region.guest_memfd, 0);
++	if (src_region->region.guest_memfd != -1)
++		dst_guest_memfd = vm_link_guest_memfd(dst_vm,
++						      src_region->region.guest_memfd,
++						      0);
+ 
+ 	dst_region = vm_mem_region_alloc(
+ 			dst_vm, src_region->region.guest_phys_addr,
+@@ -1312,8 +1314,12 @@ static void vm_migrate_mem_region(struct kvm_vm *dst_vm, struct kvm_vm *src_vm,
+ 	src_region->host_mem = 0;
+ 
+ 	dst_region->region.guest_memfd = dst_guest_memfd;
+-	dst_region->region.guest_memfd_offset =
+-		src_region->region.guest_memfd_offset;
++	if (src_region->region.guest_memfd == -1) {
++		dst_region->fd = src_region->fd;
++	} else {
++		dst_region->region.guest_memfd_offset =
++			src_region->region.guest_memfd_offset;
 +	}
- 	if (region->fd >= 0) {
- 		/* There's an extra map when using shared memory. */
- 		ret = munmap(region->mmap_alias, region->mmap_size);
-@@ -1287,6 +1289,50 @@ void vm_mem_region_move(struct kvm_vm *vm, uint32_t slot, uint64_t new_gpa)
- 		    ret, errno, slot, new_gpa);
+ 
+ 	userspace_mem_region_commit(dst_vm, dst_region);
+ }
+@@ -2057,6 +2063,25 @@ void kvm_gsi_routing_irqchip_add(struct kvm_irq_routing *routing,
+ 	routing->nr++;
  }
  
-+static void vm_migrate_mem_region(struct kvm_vm *dst_vm, struct kvm_vm *src_vm,
-+				  struct userspace_mem_region *src_region)
++void kvm_gsi_routing_msi_add(struct kvm_irq_routing *routing, uint32_t gsi,
++			     uint32_t address_lo, uint32_t address_hi,
++			     uint32_t data)
 +{
-+	struct userspace_mem_region *dst_region;
-+	int dst_guest_memfd;
++	int i;
 +
-+	dst_guest_memfd =
-+		vm_link_guest_memfd(dst_vm, src_region->region.guest_memfd, 0);
++	assert(routing);
++	assert(routing->nr < KVM_MAX_IRQ_ROUTES);
 +
-+	dst_region = vm_mem_region_alloc(
-+			dst_vm, src_region->region.guest_phys_addr,
-+			src_region->region.slot,
-+			src_region->region.memory_size / src_vm->page_size,
-+			src_region->region.flags);
-+
-+	dst_region->mmap_size = src_region->mmap_size;
-+	dst_region->mmap_start = src_region->mmap_start;
-+	dst_region->host_mem = src_region->host_mem;
-+
-+	src_region->mmap_start = 0;
-+	src_region->host_mem = 0;
-+
-+	dst_region->region.guest_memfd = dst_guest_memfd;
-+	dst_region->region.guest_memfd_offset =
-+		src_region->region.guest_memfd_offset;
-+
-+	userspace_mem_region_commit(dst_vm, dst_region);
++	i = routing->nr;
++	routing->entries[i].gsi = gsi;
++	routing->entries[i].type = KVM_IRQ_ROUTING_MSI;
++	routing->entries[i].flags = 0;
++	routing->entries[i].u.msi.address_lo = address_lo;
++	routing->entries[i].u.msi.address_hi = address_hi;
++	routing->entries[i].u.msi.data = data;
++	routing->nr++;
 +}
 +
-+void vm_migrate_mem_regions(struct kvm_vm *dst_vm, struct kvm_vm *src_vm)
-+{
-+	int bkt;
-+	struct hlist_node *node;
-+	struct userspace_mem_region *region;
-+
-+	hash_for_each_safe(src_vm->regions.slot_hash, bkt, node, region,
-+			   slot_node) {
-+		TEST_ASSERT(region->region.guest_memfd >= 0,
-+			    "Migrating mem regions is only supported for GUEST_MEMFD");
-+
-+		vm_migrate_mem_region(dst_vm, src_vm, region);
-+	}
-+}
-+
- /*
-  * VM Memory Region Delete
-  *
+ int _kvm_gsi_routing_write(struct kvm_vm *vm, struct kvm_irq_routing *routing)
+ {
+ 	int ret;
 diff --git a/tools/testing/selftests/kvm/lib/x86/tdx/tdx_util.c b/tools/testing/selftests/kvm/lib/x86/tdx/tdx_util.c
-index c5bee67099c5..ef03d42f58d0 100644
+index a3612bf187a0..8216a778474a 100644
 --- a/tools/testing/selftests/kvm/lib/x86/tdx/tdx_util.c
 +++ b/tools/testing/selftests/kvm/lib/x86/tdx/tdx_util.c
-@@ -344,7 +344,7 @@ static void register_encrypted_memory_region(struct kvm_vm *vm,
-  * TD creation/setup/finalization
-  */
+@@ -372,6 +372,26 @@ static void tdx_apply_cr4_restrictions(struct kvm_sregs *sregs)
+ 	sregs->cr4 &= ~(X86_CR4_VMXE | X86_CR4_SMXE);
+ }
  
--static void tdx_enable_capabilities(struct kvm_vm *vm)
-+void tdx_enable_capabilities(struct kvm_vm *vm)
- {
- 	int rc;
- 
-@@ -574,7 +574,6 @@ void td_initialize(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
- 	uint64_t nr_pages_required;
- 
- 	tdx_enable_capabilities(vm);
--
- 	tdx_td_init(vm, attributes);
- 
- 	nr_pages_required = vm_nr_pages_required(VM_MODE_DEFAULT, 1, 0);
-diff --git a/tools/testing/selftests/kvm/x86/tdx_migrate_tests.c b/tools/testing/selftests/kvm/x86/tdx_migrate_tests.c
-new file mode 100644
-index 000000000000..e15da2aa0437
---- /dev/null
-+++ b/tools/testing/selftests/kvm/x86/tdx_migrate_tests.c
-@@ -0,0 +1,358 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include "tdx/tdcall.h"
-+#include "tdx/tdx.h"
-+#include "tdx/tdx_util.h"
-+#include "tdx/test_util.h"
-+#include <processor.h>
-+#include <sys/wait.h>
-+
-+#define NR_MIGRATE_TEST_VMS 10
-+#define TDX_IOEXIT_TEST_PORT 0x50
-+
-+static int __tdx_migrate_from(int dst_fd, int src_fd)
++int __tdx_migrate_from(int dst_fd, int src_fd)
 +{
 +	struct kvm_enable_cap cap = {
 +		.cap = KVM_CAP_VM_MOVE_ENC_CONTEXT_FROM,
@@ -276,8 +236,7 @@ index 000000000000..e15da2aa0437
 +	return ioctl(dst_fd, KVM_ENABLE_CAP, &cap);
 +}
 +
-+
-+static void tdx_migrate_from(struct kvm_vm *dst_vm, struct kvm_vm *src_vm)
++void tdx_migrate_from(struct kvm_vm *dst_vm, struct kvm_vm *src_vm)
 +{
 +	int ret;
 +
@@ -287,331 +246,343 @@ index 000000000000..e15da2aa0437
 +	src_vm->enc_migrated = true;
 +}
 +
-+void guest_code(void)
+ static void load_td_boot_code(struct kvm_vm *vm)
+ {
+ 	void *boot_code_hva = addr_gpa2hva(vm, FOUR_GIGABYTES_GPA - TD_BOOT_CODE_SIZE);
+diff --git a/tools/testing/selftests/kvm/lib/x86/tdx/test_util.c b/tools/testing/selftests/kvm/lib/x86/tdx/test_util.c
+index f92ddda2d1ac..7b622ccb2433 100644
+--- a/tools/testing/selftests/kvm/lib/x86/tdx/test_util.c
++++ b/tools/testing/selftests/kvm/lib/x86/tdx/test_util.c
+@@ -6,6 +6,7 @@
+ #include <sys/wait.h>
+ #include <unistd.h>
+ 
++#include "apic.h"
+ #include "kvm_util.h"
+ #include "tdx/tdcall.h"
+ #include "tdx/tdx.h"
+@@ -185,3 +186,19 @@ uint64_t tdx_test_read_64bit_report_from_guest(struct kvm_vcpu *vcpu)
+ {
+ 	return tdx_test_read_64bit(vcpu, TDX_TEST_REPORT_PORT);
+ }
++
++void tdx_guest_x2apic_enable(void)
 +{
-+	int ret;
-+	uint64_t data;
-+
-+	data = 1;
-+	ret = tdg_vp_vmcall_instruction_io(TDX_IOEXIT_TEST_PORT, 1,
-+					   PORT_WRITE,
-+					   &data);
-+	if (ret)
-+		tdx_test_fatal_with_data(ret, __LINE__);
-+
-+	data++;
-+	ret = tdg_vp_vmcall_instruction_io(TDX_IOEXIT_TEST_PORT, 1,
-+					   PORT_WRITE,
-+					   &data);
-+	if (ret)
-+		tdx_test_fatal_with_data(ret, __LINE__);
-+
-+	tdx_test_success();
-+}
-+
-+static void test_tdx_migrate_vm_with_private_memory(void)
-+{
-+	struct kvm_vm *src_vm;
-+	struct kvm_vm *dst_vm;
-+	struct kvm_vcpu *dst_vcpu;
-+	uint32_t data;
-+
-+	printf("Verifying migration of VM with private memory:\n");
-+
-+	src_vm = td_create();
-+	td_initialize(src_vm, VM_MEM_SRC_ANONYMOUS, 0);
-+	td_vcpu_add(src_vm, 0, guest_code);
-+	td_finalize(src_vm);
-+
-+	dst_vm = td_create();
-+	tdx_enable_capabilities(dst_vm);
-+	dst_vcpu = vm_vcpu_recreate(dst_vm, 0);
-+
-+	tdx_migrate_from(dst_vm, src_vm);
-+
-+	kvm_vm_free(src_vm);
-+
-+	tdx_run(dst_vcpu);
-+	tdx_test_assert_io(dst_vcpu, TDX_IOEXIT_TEST_PORT, 1,
-+			   PORT_WRITE);
-+	data = *(uint8_t *)((void *)dst_vcpu->run +
-+			    dst_vcpu->run->io.data_offset);
-+	TEST_ASSERT_EQ(data, 1);
-+
-+	tdx_run(dst_vcpu);
-+	tdx_test_assert_io(dst_vcpu, TDX_IOEXIT_TEST_PORT, 1,
-+			   PORT_WRITE);
-+	data = *(uint8_t *)((void *)dst_vcpu->run +
-+			    dst_vcpu->run->io.data_offset);
-+	TEST_ASSERT_EQ(data, 2);
-+
-+	tdx_run(dst_vcpu);
-+	tdx_test_assert_success(dst_vcpu);
-+
-+	kvm_vm_free(dst_vm);
-+
-+	printf("\t ... PASSED\n");
-+}
-+
-+static void test_tdx_migrate_running_vm(void)
-+{
-+	struct kvm_vm *src_vm;
-+	struct kvm_vm *dst_vm;
-+	struct kvm_vcpu *src_vcpu;
-+	struct kvm_vcpu *dst_vcpu;
-+	uint32_t data;
-+
-+	printf("Verifying migration of a running VM:\n");
-+
-+	src_vm = td_create();
-+	td_initialize(src_vm, VM_MEM_SRC_ANONYMOUS, 0);
-+	src_vcpu = td_vcpu_add(src_vm, 0, guest_code);
-+	td_finalize(src_vm);
-+
-+	dst_vm = td_create();
-+	tdx_enable_capabilities(dst_vm);
-+	dst_vcpu = vm_vcpu_recreate(dst_vm, 0);
-+
-+	tdx_run(src_vcpu);
-+	tdx_test_assert_io(src_vcpu, TDX_IOEXIT_TEST_PORT, 1,
-+			   PORT_WRITE);
-+	data = *(uint8_t *)((void *)src_vcpu->run +
-+			    src_vcpu->run->io.data_offset);
-+	TEST_ASSERT_EQ(data, 1);
-+
-+	tdx_migrate_from(dst_vm, src_vm);
-+
-+	kvm_vm_free(src_vm);
-+
-+	tdx_run(dst_vcpu);
-+	tdx_test_assert_io(dst_vcpu, TDX_IOEXIT_TEST_PORT, 1,
-+			   PORT_WRITE);
-+	data = *(uint8_t *)((void *)dst_vcpu->run +
-+			    dst_vcpu->run->io.data_offset);
-+	TEST_ASSERT_EQ(data, 2);
-+
-+	tdx_run(dst_vcpu);
-+	tdx_test_assert_success(dst_vcpu);
-+
-+	kvm_vm_free(dst_vm);
-+
-+	printf("\t ... PASSED\n");
-+}
-+
-+#define TDX_SHARED_MEM_TEST_PRIVATE_GVA (0x80000000)
-+#define TDX_SHARED_MEM_TEST_VADDR_SHARED_MASK BIT_ULL(30)
-+#define TDX_SHARED_MEM_TEST_SHARED_GVA     \
-+	(TDX_SHARED_MEM_TEST_PRIVATE_GVA | \
-+	 TDX_SHARED_MEM_TEST_VADDR_SHARED_MASK)
-+
-+#define TDX_SHARED_MEM_TEST_PRIVATE_VALUE (100)
-+#define TDX_SHARED_MEM_TEST_SHARED_VALUE (200)
-+#define TDX_SHARED_MEM_TEST_DIFF_VALUE (1)
-+
-+
-+static uint64_t test_mem_private_gpa;
-+static uint64_t test_mem_shared_gpa;
-+
-+void guest_with_shared_mem(void)
-+{
-+	uint64_t *test_mem_shared_gva =
-+		(uint64_t *)TDX_SHARED_MEM_TEST_SHARED_GVA;
-+
-+	uint64_t *private_data, *shared_data;
-+	uint64_t placeholder;
-+	uint64_t failed_gpa;
-+	uint64_t data;
-+	int ret;
-+
-+	/* Map gpa as shared */
-+	tdg_vp_vmcall_map_gpa(test_mem_shared_gpa, PAGE_SIZE,
-+			      &failed_gpa);
-+
-+	shared_data = test_mem_shared_gva;
-+	private_data = &data;
-+
-+	*private_data = TDX_SHARED_MEM_TEST_PRIVATE_VALUE;
-+	*shared_data = TDX_SHARED_MEM_TEST_SHARED_VALUE;
-+
-+	ret = tdg_vp_vmcall_instruction_io(TDX_IOEXIT_TEST_PORT, 4,
-+					   PORT_WRITE,
-+					   private_data);
-+	if (ret)
-+		tdx_test_fatal_with_data(ret, __LINE__);
-+
-+	/* Exit so host can read shared value */
-+	ret = tdg_vp_vmcall_instruction_io(TDX_IOEXIT_TEST_PORT, 4,
-+					   PORT_WRITE,
-+					   &placeholder);
-+	if (ret)
-+		tdx_test_fatal_with_data(ret, __LINE__);
-+
-+	*private_data += TDX_SHARED_MEM_TEST_DIFF_VALUE;
-+	*shared_data += TDX_SHARED_MEM_TEST_DIFF_VALUE;
-+
-+	ret = tdg_vp_vmcall_instruction_io(TDX_IOEXIT_TEST_PORT, 4,
-+					   PORT_WRITE,
-+					   private_data);
-+	if (ret)
-+		tdx_test_fatal_with_data(ret, __LINE__);
-+
-+	/* Exit so host can read shared value */
-+	ret = tdg_vp_vmcall_instruction_io(TDX_IOEXIT_TEST_PORT, 4,
-+					   PORT_WRITE,
-+					   &placeholder);
-+	if (ret)
-+		tdx_test_fatal_with_data(ret, __LINE__);
-+
-+	tdx_test_success();
-+}
-+
-+static void test_tdx_migrate_vm_with_shared_mem(void)
-+{
-+	uint32_t private_data;
-+	vm_vaddr_t test_mem_private_gva;
-+	uint32_t *test_mem_hva;
-+	struct kvm_vm *src_vm;
-+	struct kvm_vm *dst_vm;
-+	struct kvm_vcpu *src_vcpu;
-+	struct kvm_vcpu *dst_vcpu;
-+
-+	printf("Verifying migration of a VM with shared memory:\n");
-+
-+	src_vm = td_create();
-+	td_initialize(src_vm, VM_MEM_SRC_ANONYMOUS, 0);
-+	src_vcpu = td_vcpu_add(src_vm, 0, guest_with_shared_mem);
++	uint64_t x2apic_spiv = APIC_BASE_MSR + (APIC_SPIV >> 4);
++	uint64_t value, ret;
 +
 +	/*
-+	 * Set up shared memory page for testing by first allocating as private
-+	 * and then mapping the same GPA again as shared. This way, the TD does
-+	 * not have to remap its page tables at runtime.
++	 * x2apic does not have to be enabled for TDs, TDs already have x2apic
++	 * enabled, and must use x2apic. Hence, we just soft-enable APIC.
 +	 */
-+	test_mem_private_gva = vm_vaddr_alloc(src_vm, src_vm->page_size,
-+					      TDX_SHARED_MEM_TEST_PRIVATE_GVA);
-+	TEST_ASSERT_EQ(test_mem_private_gva, TDX_SHARED_MEM_TEST_PRIVATE_GVA);
++	ret = tdg_vp_vmcall_instruction_rdmsr(x2apic_spiv, &value);
++	GUEST_ASSERT_EQ(ret, 0);
++	ret = tdg_vp_vmcall_instruction_wrmsr(x2apic_spiv,
++					      value | APIC_SPIV_APIC_ENABLED);
++	GUEST_ASSERT_EQ(ret, 0);
++}
+diff --git a/tools/testing/selftests/kvm/x86/tdx_irqfd_migrate_test.c b/tools/testing/selftests/kvm/x86/tdx_irqfd_migrate_test.c
+new file mode 100644
+index 000000000000..d80cc204bd67
+--- /dev/null
++++ b/tools/testing/selftests/kvm/x86/tdx_irqfd_migrate_test.c
+@@ -0,0 +1,264 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +
-+	test_mem_hva = addr_gva2hva(src_vm, test_mem_private_gva);
-+	TEST_ASSERT(test_mem_hva != NULL,
-+		    "Guest address not found in guest memory regions\n");
++#include <stdint.h>
++#include <stdio.h>
++#include <linux/kvm.h>
++#include <string.h>
++#include <sys/eventfd.h>
 +
-+	test_mem_private_gpa = addr_gva2gpa(src_vm, test_mem_private_gva);
-+	virt_map_shared(src_vm, TDX_SHARED_MEM_TEST_SHARED_GVA,
-+			test_mem_private_gpa, 1);
++#include "apic.h"
++#include "kvm_util.h"
++#include "processor.h"
++#include "tdx/tdcall.h"
++#include "tdx/tdx.h"
++#include "tdx/tdx_util.h"
++#include "tdx/test_util.h"
++#include "test_util.h"
++#include "ucall_common.h"
 +
-+	test_mem_shared_gpa = test_mem_private_gpa | src_vm->arch.s_bit;
-+	sync_global_to_guest(src_vm, test_mem_shared_gpa);
++#define TEST_IRQ_PIN 24
 +
-+	td_finalize(src_vm);
++#define NUM_INTERRUPTS 256
++#define INTERRUPT_COUNT_GPA 0x100000000ULL
++#define INTERRUPT_COUNT_MEMSLOT 5
 +
-+	dst_vm = td_create();
-+	tdx_enable_capabilities(dst_vm);
-+	dst_vcpu = vm_vcpu_recreate(dst_vm, 0);
++#define MIGRATION_LOOPS 10
 +
-+	vm_enable_cap(src_vm, KVM_CAP_EXIT_HYPERCALL,
-+		      BIT_ULL(KVM_HC_MAP_GPA_RANGE));
++static uint32_t (*interrupt_count_per_vector)[NUM_INTERRUPTS];
 +
-+	printf("Verifying shared memory accesses for TDX\n");
-+
-+	/* Begin guest execution; guest writes to shared memory. */
-+	printf("\t ... Starting guest execution\n");
-+
-+	/* Handle map gpa as shared */
-+	tdx_run(src_vcpu);
-+
-+	tdx_run(src_vcpu);
-+	tdx_test_assert_io(src_vcpu, TDX_IOEXIT_TEST_PORT, 4, PORT_WRITE);
-+	TEST_ASSERT_EQ(*(uint32_t *)((void *)src_vcpu->run +
-+				     src_vcpu->run->io.data_offset),
-+		       TDX_SHARED_MEM_TEST_PRIVATE_VALUE);
-+
-+	tdx_run(src_vcpu);
-+	tdx_test_assert_io(src_vcpu, TDX_IOEXIT_TEST_PORT, 4, PORT_WRITE);
-+	TEST_ASSERT_EQ(*test_mem_hva, TDX_SHARED_MEM_TEST_SHARED_VALUE);
-+
-+	tdx_migrate_from(dst_vm, src_vm);
-+
-+	kvm_vm_free(src_vm);
-+
-+	tdx_run(dst_vcpu);
-+	tdx_test_assert_io(dst_vcpu, TDX_IOEXIT_TEST_PORT, 4,
-+			   PORT_WRITE);
-+	private_data = *(uint32_t *)((void *)dst_vcpu->run +
-+				     dst_vcpu->run->io.data_offset);
-+	TEST_ASSERT_EQ(private_data, TDX_SHARED_MEM_TEST_PRIVATE_VALUE +
-+		       TDX_SHARED_MEM_TEST_DIFF_VALUE);
-+
-+	tdx_run(dst_vcpu);
-+	tdx_test_assert_io(dst_vcpu, TDX_IOEXIT_TEST_PORT, 4,
-+			   PORT_WRITE);
-+	TEST_ASSERT_EQ(*test_mem_hva, TDX_SHARED_MEM_TEST_SHARED_VALUE +
-+		       TDX_SHARED_MEM_TEST_DIFF_VALUE);
-+
-+	tdx_run(dst_vcpu);
-+	tdx_test_assert_success(dst_vcpu);
-+
-+	kvm_vm_free(dst_vm);
-+
-+	printf("\t ... PASSED\n");
++static void interrupt_handler_increment_count(struct ex_regs *regs)
++{
++	(*interrupt_count_per_vector)[regs->vector]++;
++	x2apic_write_reg(APIC_EOI, 0);
 +}
 +
-+void guest_code_empty(void)
++static void guest_code(void)
 +{
-+	tdx_test_success();
++	uint32_t sync_count = 0;
++
++	tdx_guest_x2apic_enable();
++
++	/* Enable interrupts which are disabled by default. */
++	asm volatile("sti");
++
++	/* Keep guest runnable by continuously looping. */
++	while (true)
++		GUEST_SYNC(++sync_count);
 +}
 +
-+static void test_tdx_migrate_multiple_vms(void)
++/**
++ * gsi_route_add - Used to add a GSI route.
++ *
++ * @msi_redir_hint: Look up "Message Address Register Format" in Intel SDM
++ * @dest_mode: Look up "Message Address Register Format" in Intel SDM
++ *             Use false for DM=0 and true for DM=1
++ * @trig_mode: Look up "Message Data Register Format" in Intel SDM
++ *             Use false for edge sensitive and true for level sensitive
++ * @delivery_mode: A 3 bit code: look up "Message Data Register Format"
++ *
++ * Add a route by building up the routing information in address_hi, address_lo
++ * and data according to how it is used in struct kvm_lapic_irq. For full
++ * details, look up how fields in struct kvm_lapic_irq are used.
++ *
++ * Return: None
++ */
++static void gsi_route_add(struct kvm_irq_routing *table, uint32_t gsi,
++			  bool use_x2apic_format, uint32_t dest_id,
++			  uint8_t vector, bool msi_redir_hint, bool dest_mode,
++			  bool trig_mode, uint8_t delivery_mode)
 +{
-+	struct kvm_vm *src_vm;
-+	struct kvm_vm *dst_vms[NR_MIGRATE_TEST_VMS];
-+	int i, ret;
++	union {
++		struct {
++			u32 vector : 8, delivery_mode : 3,
++			dest_mode_logical : 1, reserved : 2,
++			active_low : 1, is_level : 1;
++		};
++		uint32_t as_uint32;
++	} data = { 0 };
++	union {
++		struct {
++			u32 reserved_0 : 2, dest_mode_logical : 1,
++			    redirect_hint : 1, reserved_1 : 1,
++			    virt_destid_8_14 : 7, destid_0_7 : 8,
++			    base_address : 12;
++		};
++		uint32_t as_uint32;
++	} address_lo = { 0 };
++	union {
++		struct {
++			u32 reserved : 8, destid_8_31 : 24;
++		};
++		uint32_t as_uint32;
++	} address_hi = { 0 };
 +
-+	printf("Verifying migration between multiple VMs:\n");
++	/* Fixed 0xfee (see Intel SDM "Message Address Register Format") */
++	address_lo.base_address = 0xfee;
 +
-+	src_vm = td_create();
-+	td_initialize(src_vm, VM_MEM_SRC_ANONYMOUS, 0);
-+	td_vcpu_add(src_vm, 0, guest_code_empty);
-+	td_finalize(src_vm);
++	address_lo.destid_0_7 = dest_id & 0xff;
++	if (use_x2apic_format)
++		address_hi.destid_8_31 = (dest_id & 0xffffff00) >> 8;
 +
-+	for (i = 0; i < NR_MIGRATE_TEST_VMS; ++i) {
-+		dst_vms[i] = td_create();
-+		tdx_enable_capabilities(dst_vms[i]);
-+		vm_vcpu_recreate(dst_vms[i], 0);
++	data.vector = vector;
++	address_lo.dest_mode_logical = dest_mode;
++	data.is_level = trig_mode;
++	data.delivery_mode = delivery_mode & 0b111;
++	address_lo.redirect_hint = msi_redir_hint;
++
++	kvm_gsi_routing_msi_add(table, gsi, address_lo.as_uint32,
++				address_hi.as_uint32, data.as_uint32);
++}
++
++/**
++ * Sets up KVM irqfd in @vm
++ *
++ * @gsi: irqchip pin toggled by this event
++ */
++static void set_irqfd(struct kvm_vm *vm, int fd, uint32_t gsi, bool assign)
++{
++	struct kvm_irqfd ifd = {
++		.fd = fd,
++		.gsi = gsi,
++		.flags = assign ? 0 : KVM_IRQFD_FLAG_DEASSIGN,
++		.resamplefd = 0,
++	};
++
++	vm_ioctl(vm, KVM_IRQFD, &ifd);
++}
++
++static void setup_interrupt_count_per_vector(struct kvm_vm *vm)
++{
++	vm_vaddr_t gva;
++	int npages;
++
++	npages = round_up(sizeof(*interrupt_count_per_vector), PAGE_SIZE);
++	vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS,
++				    INTERRUPT_COUNT_GPA,
++				    INTERRUPT_COUNT_MEMSLOT, npages, 0);
++	vm->memslots[MEM_REGION_TDX_SHARED_DATA] = INTERRUPT_COUNT_MEMSLOT;
++
++	gva = vm_vaddr_alloc_shared(vm, sizeof(*interrupt_count_per_vector),
++				    KVM_UTIL_MIN_VADDR,
++				    MEM_REGION_TDX_SHARED_DATA);
++
++	interrupt_count_per_vector = addr_gva2hva(vm, gva);
++	memset(interrupt_count_per_vector, 0,
++	       sizeof(*interrupt_count_per_vector));
++
++	write_guest_global(vm, interrupt_count_per_vector,
++			   (uint32_t(*)[NUM_INTERRUPTS])gva);
++}
++
++static void handle_vcpu_exit(struct kvm_vcpu *vcpu)
++{
++	struct ucall uc;
++
++	switch (get_ucall(vcpu, &uc)) {
++	case UCALL_SYNC:
++		break;
++	case UCALL_ABORT:
++		REPORT_GUEST_ASSERT(uc);
++	default:
++		TEST_FAIL("Unexpected exit: %s",
++			  exit_reason_str(vcpu->run->exit_reason));
++	}
++}
++
++void map_gsis_to_vectors(struct kvm_vm *vm, struct kvm_vcpu *vcpu, int *eventfds)
++{
++	struct kvm_irq_routing *table;
++	uint32_t vector_and_gsi;
++	int efd;
++
++	/* Flush table first. */
++	table = kvm_gsi_routing_create();
++	kvm_gsi_routing_write(vm, table);
++
++	/* Writing frees table, so we have to create another one. */
++	table = kvm_gsi_routing_create();
++
++	/* Map vectors to gsis 1 to 1 */
++	for (vector_and_gsi = 32; vector_and_gsi < NUM_INTERRUPTS;
++	     ++vector_and_gsi) {
++		gsi_route_add(table, vector_and_gsi,
++			      /*use_x2apic_format=*/true,
++			      /*dest_id=*/vcpu->id,
++			      /*vector=*/vector_and_gsi,
++			      /*msi_redir_hint=*/false,
++			      /*dest_mode=*/false,
++			      /*trig_mode=*/false,
++			      /*delivery_mode=*/0b000);
++
++		efd = eventfd(0, EFD_NONBLOCK);
++		set_irqfd(vm, efd, vector_and_gsi, true);
++
++		eventfds[vector_and_gsi] = efd;
 +	}
 +
-+	/* Initial migration from the src to the first dst. */
-+	tdx_migrate_from(dst_vms[0], src_vm);
++	/* Configure KVM. Writing frees table. */
++	kvm_gsi_routing_write(vm, table);
 +
-+	for (i = 1; i < NR_MIGRATE_TEST_VMS; i++)
-+		tdx_migrate_from(dst_vms[i], dst_vms[i - 1]);
-+
-+	/* Migrate the guest back to the original VM. */
-+	ret = __tdx_migrate_from(src_vm->fd,
-+				 dst_vms[NR_MIGRATE_TEST_VMS - 1]->fd);
-+	TEST_ASSERT(ret == -1 && errno == EIO,
-+		    "VM that was migrated from should be dead. ret %d, errno: %d\n",
-+		    ret, errno);
-+
-+	kvm_vm_free(src_vm);
-+	for (i = 0; i < NR_MIGRATE_TEST_VMS; ++i)
-+		kvm_vm_free(dst_vms[i]);
-+
-+	printf("\t ... PASSED\n");
 +}
 +
 +int main(int argc, char *argv[])
 +{
-+	if (!is_tdx_enabled()) {
-+		print_skip("TDX is not supported by the KVM");
-+		exit(KSFT_SKIP);
++	int eventfds[NUM_INTERRUPTS] = { 0 };
++	struct kvm_vcpu *vcpu;
++	struct kvm_vm *vm;
++	int vector, migration;
++
++	TEST_REQUIRE(kvm_check_cap(KVM_CAP_SPLIT_IRQCHIP));
++
++	setbuf(stdout, NULL);
++
++	vm = td_create();
++	td_initialize(vm, VM_MEM_SRC_ANONYMOUS, 0);
++
++	vcpu = td_vcpu_add(vm, 0, guest_code);
++
++	for (vector = 0; vector < NUM_INTERRUPTS; ++vector) {
++		vm_install_exception_handler(vm, vector,
++					     interrupt_handler_increment_count);
 +	}
 +
-+	run_in_new_process(&test_tdx_migrate_vm_with_private_memory);
-+	run_in_new_process(&test_tdx_migrate_running_vm);
-+	run_in_new_process(&test_tdx_migrate_vm_with_shared_mem);
-+	run_in_new_process(&test_tdx_migrate_multiple_vms);
++	setup_interrupt_count_per_vector(vm);
 +
++	td_finalize(vm);
++
++	map_gsis_to_vectors(vm, vcpu, eventfds);
++
++	tdx_run(vcpu);
++	handle_vcpu_exit(vcpu);
++
++	for (migration = 0; migration < MIGRATION_LOOPS; ++migration) {
++		struct kvm_vcpu *next_vcpu;
++		struct kvm_vm *next_vm;
++
++		next_vm = td_create();
++		tdx_enable_capabilities(next_vm);
++		next_vcpu = vm_vcpu_recreate(next_vm, 0);
++
++		/* Inject on source VM. */
++		for (vector = 32; vector < NUM_INTERRUPTS; ++vector)
++			TEST_ASSERT_EQ(eventfd_write(eventfds[vector], 1), 0);
++
++		map_gsis_to_vectors(next_vm, next_vcpu, eventfds);
++
++		vcpu = next_vcpu;
++
++		tdx_migrate_from(next_vm, vm);
++		kvm_vm_free(vm);
++		vm = next_vm;
++
++		tdx_run(vcpu);
++		handle_vcpu_exit(vcpu);
++
++		for (vector = 32; vector < NUM_INTERRUPTS; ++vector)
++			TEST_ASSERT_EQ((*interrupt_count_per_vector)[vector],
++				       migration + 1);
++	}
++
++	kvm_vm_free(vm);
++	for (vector = 32; vector < NUM_INTERRUPTS; ++vector)
++		close(eventfds[vector]);
 +	return 0;
 +}
+diff --git a/tools/testing/selftests/kvm/x86/tdx_migrate_tests.c b/tools/testing/selftests/kvm/x86/tdx_migrate_tests.c
+index e15da2aa0437..498e42f37697 100644
+--- a/tools/testing/selftests/kvm/x86/tdx_migrate_tests.c
++++ b/tools/testing/selftests/kvm/x86/tdx_migrate_tests.c
+@@ -10,27 +10,6 @@
+ #define NR_MIGRATE_TEST_VMS 10
+ #define TDX_IOEXIT_TEST_PORT 0x50
+ 
+-static int __tdx_migrate_from(int dst_fd, int src_fd)
+-{
+-	struct kvm_enable_cap cap = {
+-		.cap = KVM_CAP_VM_MOVE_ENC_CONTEXT_FROM,
+-		.args = { src_fd }
+-	};
+-
+-	return ioctl(dst_fd, KVM_ENABLE_CAP, &cap);
+-}
+-
+-
+-static void tdx_migrate_from(struct kvm_vm *dst_vm, struct kvm_vm *src_vm)
+-{
+-	int ret;
+-
+-	vm_migrate_mem_regions(dst_vm, src_vm);
+-	ret = __tdx_migrate_from(dst_vm->fd, src_vm->fd);
+-	TEST_ASSERT(!ret, "Migration failed, ret: %d, errno: %d\n", ret, errno);
+-	src_vm->enc_migrated = true;
+-}
+-
+ void guest_code(void)
+ {
+ 	int ret;
 -- 
 2.50.0.rc1.591.g9c95f17f64-goog
 
