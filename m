@@ -1,152 +1,169 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA35273D68
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 12:11:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749643889; cv=none; b=uqAThxM+CH5+KmK5JF7GI9rEyvMQuPlj0d6Jg0kwO7PfeEFWERDUQ6RYz5kHuN6DHsY+3GFm/5bL1Py4GseSdDDtbizHJhU/Y2M1t7TikyLpy/80R0Eqarafj9ew0/LnQrXu9jY/SuFNLxsXPsUKDrZmfNHQ7t3DL7iBR0iQzeE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749643889; c=relaxed/simple;
-	bh=wj+Lp1JIKeXO6eLYNmD4JrguUF/hcBihPWj9REmfNk4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lQW7EUGv0dKWn8KZ+G6fy18KNusIiTwhPjgf7NZshtEdkN7ucO2nWcRk/YIpv4B3R9ZuBbkTtqD5AKgOwdv4N/tSoigRv3pc4X/BGQld7IyYHt88hCii2mIG5FqqW4dkLz4P/0Cl7AAO1fKNIBQUYILlmwih2owkJSkzVPwdFS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PtchNwoM; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF26E27A12B;
+	Wed, 11 Jun 2025 12:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749643931; cv=pass; b=XEe0EavM6ILXJmKu+DCdXvqkFgu6IvggmIRHPZab1sCOeT1ENRJQWyBxLUKt8r8oGwNdX2xav/M6z1Mv1A9z2OXrnfzx4zbCfJQsVfw9lhvCZV20iuHBvq/d3E+vAbd3ZgeUJdzhYniLj7otRmHCuUpWLg+9ROwksotV9dpfcqU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749643931; c=relaxed/simple;
+	bh=MUQIuXRfDl4RcuDYVB8bOPsQcL3xPBAHH23OTMB03Dk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=KJPDncCxvc4sWV6gS8wZFp0w1/NI3ISzzUMAT5UBSnibrWrcDux7iJY3EpIy31PIXP48vG8u0RbywAAaISlY5tdz4JSVsyPqcM9CaulwkqWfFzFFUkXVEmciBBwLL4tgKa56i980M1asMNaBGYkQmZQzrqouDymwO5fbiYUsSX4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=KmYJVR/G; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PtchNwoM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749643886;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=94fGjpgENkGfz8xm/0/MvEIE16LMoVi1/Ag2K5nPavY=;
-	b=PtchNwoMxxSf37mmQkGDcTul0BjYjLl4nlP3jqTtDw1jN2IkoW7pr3CWBTIsDCaZdeewcl
-	P+xJ28j/QUKOKzZ3nLQkJW5//EG6cAr5Zmip6Hh2B3ZckszzUaKXZTWAVjbfMMi0X9Bc2C
-	T7aT/vncRmgE7rx4TtCiCmk+8O/uAVw=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-70-AbTr5uFPMN-ycS8CHIcBhw-1; Wed, 11 Jun 2025 08:11:26 -0400
-X-MC-Unique: AbTr5uFPMN-ycS8CHIcBhw-1
-X-Mimecast-MFC-AGG-ID: AbTr5uFPMN-ycS8CHIcBhw_1749643885
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6fad9167e4cso136384046d6.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 05:11:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749643885; x=1750248685;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=94fGjpgENkGfz8xm/0/MvEIE16LMoVi1/Ag2K5nPavY=;
-        b=COQYkcWBHuiEq13rn96ucLxgJBUCw9bW/ulecLvQIlPJX/N9+CnHqBxMtATCFM0lJ2
-         wie9q18a/czjmVTXAlWtk2IlhcKptzCnAwMBn3+2InvdcVzW+x3Cj0hT7PUQJaTDJH1R
-         gN8JmWo0+HVfLS3ujkU++vsbB8our5Vh0IT6kbOpOKLxQoleEI46mtsk5Qwh95Y53LCs
-         S4K14mjG78xPumuV3n3U8USjq9RZsqxi92KYMNkob1k1zsrA0ugSihPl5jMY+6hc0dC5
-         3m2OL8hrreJdF6uRC5qlXxEVWHRhNBEgjKUBnGrzGhkoxlMovnsj2ThM86ZgkdKClMTG
-         543Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV8TrYI9dUMzuf2XI/H6rzl3hu2lXWOBaGIjY/8QZqXXhVkwyFOCW444gK/Te7XTfa5/1MjktoGA0j1hLo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHd/SE93Ox6AbQaBgTaD+GBOAeVDyJOgsEJRlu0aIjlbCQvICw
-	4h1nPlhUqLLGjIN+Ss2OZ2WbFTqvVU0pSPv9D9g91TpBLukzlNrbK2G8TDKfh6o+iybDVFGHsTu
-	HGZ+AyZi3jzm4JRpygE6ATbR+IXt/xFyCfqqkewCyZq8WxAYDfoQkInzi2shsDLOstw==
-X-Gm-Gg: ASbGncuvQryq6OStRegriaw+G6aEXxcqzZo0RG+KmnSefu0vcxfK+o/yl+TKMvvsXO9
-	OoyhgkZt42i/b59lHs54DBNSgaX9+146NIghV2in28KvDxxNOwpUdL/SY5TWwpYZrfmZQDIi0MX
-	5OC+7HtveMGFtRwTf8Uiqa3I2cVGKJyqmYmxyUN6zMhYGJpyxmanY17bPoLL/VEM5HZNhjjPKMF
-	TQ41yyL99S1Z4DOSEYUEOfycj3rtGFIa12BImTZ2bttrmeJSOw44bVdaEize3o5S51rM+QZ+eAV
-	6HQ3Z5qWCcabXhvdIP7t1tJBWr4/IcuYyZEFuS5z8h/D
-X-Received: by 2002:a05:6214:76d:b0:6fa:cb72:955a with SMTP id 6a1803df08f44-6fb2d12a834mr42742476d6.4.1749643885338;
-        Wed, 11 Jun 2025 05:11:25 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGHphM2A40eqISPXj3+oqaa57yngTVVZHDTfJeB5+KzJ+lXgUMEjIOP5dF/qLwW0Zst1IP4Yw==
-X-Received: by 2002:a05:6214:76d:b0:6fa:cb72:955a with SMTP id 6a1803df08f44-6fb2d12a834mr42742096d6.4.1749643884976;
-        Wed, 11 Jun 2025 05:11:24 -0700 (PDT)
-Received: from [10.32.64.156] (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d38f4cc6e3sm556234185a.42.2025.06.11.05.11.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jun 2025 05:11:24 -0700 (PDT)
-Message-ID: <34a650a6-6885-4d86-8162-567ddf98fd02@redhat.com>
-Date: Wed, 11 Jun 2025 14:11:22 +0200
+	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="KmYJVR/G"
+ARC-Seal: i=1; a=rsa-sha256; t=1749643898; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=KAKS2d25mKM+c3gQJaSDpijQ6lBIC/PooR62+Nyt1sMtPknLcb8EpK69IMKmoxR7YGd3wyJpOhGYdy0RKTYakv3kVUfbYlz8RmHhFo8DKuN/xadwgBO1VFROvBrIc/IdyA7vtcnCtHnEkVm+MXr5LafKqPH/e3mpNf8Gw5mj+bQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1749643898; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=MUQIuXRfDl4RcuDYVB8bOPsQcL3xPBAHH23OTMB03Dk=; 
+	b=S3aqBXL9IkTTac9qExicp1WjO4c1sMQgwqedC3bKe6vVfHX8rryNO3ECeauVsIhxwdAqteoqTojGhDmdkaDf6jBuWNnx4RqdQu7sclawXopZ8z9kTKX1H5Va1b+yl8bulqP/cA9bqV+cqkW3r8LGz0LHF27cYLkfGpAfO++Jr9c=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=icenowy.me;
+	spf=pass  smtp.mailfrom=uwu@icenowy.me;
+	dmarc=pass header.from=<uwu@icenowy.me>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749643898;
+	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
+	bh=MUQIuXRfDl4RcuDYVB8bOPsQcL3xPBAHH23OTMB03Dk=;
+	b=KmYJVR/GJDNOAg3ysa/7iANuO/cg0bi2jebZA5pLshppm6DYT0igSpWfisx+iVaG
+	mUZRCch8ytO11vC/MYGYP4/RrzpsVkTI0Ls1o5Jdsvy+UmERPX/NU0o5gLN6gSIFnhp
+	B1/EMorJ8oZsOGh1PpuyvgCr+CEVkcAqSjpyeSCZT5/sTtVuAiYhYVq+kL8rpvIE15s
+	do9FTzOPn38QwLecjqj5ZvMw6+TTUrmUF5Ny/U2wjtc6DXiKZlHDIV0lAkzhqgzCZwi
+	Zbw87nZj7wE01xGJpjv1z6DLPA6xSw7C2EyDkwdGq8+x7PWBJ7xyUfmPsanUIN8vVou
+	S39YO26cgw==
+Received: by mx.zohomail.com with SMTPS id 1749643895949130.74543462284248;
+	Wed, 11 Jun 2025 05:11:35 -0700 (PDT)
+Message-ID: <fc7ad44b922ec931e935adb96dcc33b89e9293b0.camel@icenowy.me>
+Subject: Re: [PATCH net v2] dt-bindings: net: ethernet-controller: Add
+ informative text about RGMII delays
+From: Icenowy Zheng <uwu@icenowy.me>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>, Andrew Lunn
+ <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Chaoyi Chen <chaoyi.chen@rock-chips.com>,
+ Matthias Schiffer <matthias.schiffer@ew.tq-group.com>, Heiner Kallweit
+ <hkallweit1@gmail.com>,  netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 11 Jun 2025 20:11:27 +0800
+In-Reply-To: <aElArNHIwm1--GUn@shell.armlinux.org.uk>
+References: <20250430-v6-15-rc3-net-rgmii-delays-v2-1-099ae651d5e5@lunn.ch>
+	 <e4db4e6f0a5a42ceacacc925adbe13747a6f948e.camel@icenowy.me>
+	 <debcb2e1-b7ef-493b-a4c4-e13d4aaf0223@lunn.ch>
+	 <2e42f2f7985fb036bec6ab085432a49961c8dc42.camel@icenowy.me>
+	 <aEFmNMSvffMvNA8I@shell.armlinux.org.uk>
+	 <84c534f9dbfa7c82300863cd40e5a9b6e6e29411.camel@icenowy.me>
+	 <ba7b290d-0cd1-4809-822a-bfe902684d7e@lunn.ch>
+	 <9ebe16a8d33e00c39c142748a1ea6fff96b9565a.camel@icenowy.me>
+	 <aElArNHIwm1--GUn@shell.armlinux.org.uk>
+Organization: Anthon Open-Source Community
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] selftests/mm: Add messages about test errors to the
- cow tests
-To: Mark Brown <broonie@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>
-Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250610-selftest-mm-cow-tweaks-v1-0-43cd7457500f@kernel.org>
- <20250610-selftest-mm-cow-tweaks-v1-4-43cd7457500f@kernel.org>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250610-selftest-mm-cow-tweaks-v1-4-43cd7457500f@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-On 10.06.25 16:13, Mark Brown wrote:
-> It is not sufficiently clear what the individual tests in the cow test
-> program are checking so add messages for the failure cases.
-> 
-> Suggested-by: David Hildenbrand <david@redhat.com>
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> ---
+=E5=9C=A8 2025-06-11=E6=98=9F=E6=9C=9F=E4=B8=89=E7=9A=84 09:39 +0100=EF=BC=
+=8CRussell King (Oracle)=E5=86=99=E9=81=93=EF=BC=9A
+> On Wed, Jun 11, 2025 at 04:03:11PM +0800, Icenowy Zheng wrote:
+> > =E5=9C=A8 2025-06-05=E6=98=9F=E6=9C=9F=E5=9B=9B=E7=9A=84 15:48 +0200=EF=
+=BC=8CAndrew Lunn=E5=86=99=E9=81=93=EF=BC=9A
+> > > Which is theoretically fine. I've not looked at this driver in
+> > > particular, but there are some MACs were you cannot disable the
+> > > delay.
+> > > The MAC always imposes 2ns delay. That would mean a PCB which
+> > > also
+> > > has
+> > > extra long clock lines is simply FUBAR, cannot work, and 'rgmii'
+> > > is
+> > > invalid, so reject it.
+> >=20
+> > BTW I found that in some case the assumption of PHY-side delay
+> > being
+> > always better than MAC-side one is wrong -- modern MACs usually
+> > have
+> > adjustable delay line, but Realtek 8211-series PHYs have only
+> > on/off
+> > delay with a fixed 2ns value.
+>=20
+> The only time that MACs may implement delays based on the
+> PHY_INTERFACE_MODE_RGMII* is if they also include code to pass
+> PHY_INTERFACE_MODE_RGMII (no suffixes) to phylink / phylib to ensure
+> that the PHY doesn't _also_ add delays. This isn't something we
+> encourage because it's more code, more review, and a different way
+> of implementing it - thus adding to maintainers workloads that are
+> already high enough.
 
-Thanks!
+Well in fact I have an additional question: when the MAC has any extra
+[tr]x-internal-delay-ps property, what's the threshold of MAC
+triggering patching phy mode? (The property might be only used for a
+slight a few hundred ps delay for tweak instead of the full 2ns one)
 
-Acked-by: David Hildenbrand <david@redhat.com>
+>=20
+> > > Just for a minute, consider your interpretation of the old text
+> > > is
+> > > wrong. Read the old text again and again, and see if you can find
+> > > an
+> > > interpretation which is the same as the new text. If you do:
+> > >=20
+> > > * It proves our point that describing what this means is hard,
+> > > and
+> > > =C2=A0 developers will get it wrong.
+> > >=20
+> > > * There is an interpretation of both the old and new where
+> > > nothing
+> > > =C2=A0 changed.
+> > >=20
+> > > * You have to be careful looking at drivers, because some percent
+> > > of
+> > > =C2=A0 developers also interpreted it wrongly, and have broken
+> > > =C2=A0 implementations as a result.=C2=A0 You cannot say the binding =
+means
+> > > X,
+> > > =C2=A0 not Y, because there is a driver using meaning X.
+> > >=20
+> > > My hope with the new text is that it focuses on hardware, which
+> > > is
+> > > what DT is about. You can look at the schematic, see if there is
+> > > extra
+> > > long clock lines or not, and then decided on 'rgmii-id' if there
+> > > are
+> > > not, and 'rgmii' is there are. The rest then follows from that.
+> >=20
+> > Well I think "rgmii-*" shouldn't exist at all, if focusing on
+> > hardware.
+> > I prefer only "rgmii" with properties describing the delay numbers.
+>=20
+> Yes, I think we as phylib maintainers have also come to the same
+> conclusion with all the hassle this causes, but we can't get rid
+> of this without breaking the kernel and breaking device-tree
+> compatibility. So, we're stuck with it.
+>=20
+> > > You are not reading it carefully enough. The binding describes
+> > > hardware, the board. phy.rst describes the phylib interface. They
+> > > are
+> > > different.
+> >=20
+> > Well I can't find the reason of phy-mode being so designed except
+> > for
+> > leaky abstraction from phylib.
+>=20
+> I have no idea what that sentence means, sorry.
 
--- 
-Cheers,
+Well, I mean the existence of rgmii-* modes is coupled with the
+internal of phylib, did I get it right?
 
-David / dhildenb
+>=20
 
