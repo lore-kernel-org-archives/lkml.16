@@ -1,213 +1,136 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5400C8FE;
-	Wed, 11 Jun 2025 18:11:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3388625E45A
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 18:11:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749665493; cv=none; b=EISor/rgLUhnHzlNpZZHCUvUPmyuI4QR1QK9198BwsPbFSeRMhEPcTll4oWCikqvSNddIZwIu2YRi4Bfe+eWYd0a8soDDwBWfi39+1FkSEyacm/ZVvJA6ONb17rlEkmh7+JUWAnfifTdwp+jC+o8kuU+gu19W5huXDQWVwIbc6c=
+	t=1749665512; cv=none; b=FDz1M9YFBDu99t3UoKO+pNa0JNI73SRmkL6s8GwVjhEwAe6rii3y8P1Otu4s5YQks1jRNqMRikFmXDY4mSG+PWEGSIGGArVogrrv2sxNXVQOxQEhOdNjSGB9k6oWiHfJvZwovD2GjhjQO9aAeduF8BXjsvfrHkhpwIt9frRHazo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749665493; c=relaxed/simple;
-	bh=q0lsnchDljt8gnXfY6Q0eKP8Hkd+BZvrb4UfpWQHz5g=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VPQTnNMw9wHcSSRIMnXjty1+snWbdvb1XBgJ4EVD6pcnxyPSHV/IhUgXznO36VzQ9oxYji1TMmSbmecN9eufKwUXLiVdkzfe4U0JR6ooUrPQZlSaPe7BTlU+JTMXZ2+A7tNuLyBikkro/RDr5NA7iHCff8dfdhQ9rmfdtpGrero=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PF5Gid47; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749665512; c=relaxed/simple;
+	bh=x2LAshC4TaowOHTTAfdCSxFpB1VG0IOM05NdXRo/GcQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Jcwz0pmwFvO/vpu1SEVO/I3P/NFj6c4JnMLuP1jMzymlM6S2M92b78i774r8PxaMfLVV0uc/dut1HSK9w5EfGMbwRtrtRGICuXd2lrsc1TSP9xQ40R/90FTCgp9t4iHW6O3v6TT+gYXd+JJmouOXB0w/kcWwUtLKJ0jLwQpLD64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=La17B5WS; arc=none smtp.client-ip=209.85.167.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PF5Gid47"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-73c17c770a7so242654b3a.2;
-        Wed, 11 Jun 2025 11:11:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="La17B5WS"
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-40791b696a2so37235b6e.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:11:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749665491; x=1750270291; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ZPOZ6sJ2JCvmZJVnpnH5NP8n+2Ze7Gt4TkB1oDTQYj0=;
-        b=PF5Gid47ffMIq3paguM4inecW9KOTggvPLwm5Yyrs0Ui3Qk9z6aJdI9gcDFTO1MFuZ
-         yJq/oRif3zPtdO/z/67ydPIDfYjb740kvyS2JAbB0y644wHBYsBGGjDRZo3ZyV44y3fa
-         QPHemcPobWaeSXkLO2jqAl6qrEE4w3u9ZVU749A2lQgo4Wvw0PMb+goA6321uiw3IvNW
-         bsmlxnq+IpJxJ7Mcqv/fyQo3KARgVS22gAwBYCY+Bh7u7RQ/4ZXza98ytrt4oFF237Vt
-         HKuvN8KyV1AJd5CeJe/azybeRX0+mwi0tEvRlLC1NOP6qRTWwD5ENgc9jOpTplji8Jbn
-         Lazg==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749665509; x=1750270309; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xix0JxJ/wHDD577WOa2daCtZJP2bD7JoNgtk2Dh0B/s=;
+        b=La17B5WSB892ulsxuu8IWfqt3gvwiGX6vLPles3ejgFUhPDo1rSwqicwNsvNGkNeY5
+         va4Yen8KLLQWCg0RIEhZlaPjB5qWKhqzdaUrbRbTnGz0ggZv6bfewQqT5AhAPnlklCNc
+         MkGKDM9vjU4PXibjjkXPdhyk9tsx6idcR3VxmDV3WLfCcQRGJEHqWgG4dHqwLX1Cc060
+         Rtc8OxdebYwOP9kbu+rZ2bkjXeEHP+Kc0DgbnNHApP/OjG3Barg7/exfbtWa6J0X2Om/
+         S2XDBWzfnrob8e0p9r2l/eozR4AKJNNY0E2rxWzpmGDrwvuT4aaq42+wg2mRu+yExKcd
+         gP3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749665491; x=1750270291;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZPOZ6sJ2JCvmZJVnpnH5NP8n+2Ze7Gt4TkB1oDTQYj0=;
-        b=JpKa2ZYCu7rONJGbfszhFt+yHjoJLYv04VHNsujwVMTN1OGLh47/OZW140kyx7P1gD
-         BrsWJW8tAFSb/PW8BC4PrIXovKDB/I4Nr6/+1NoxNhbrzsPQEfcujB5fGeqze/+Qw5GB
-         8JslpmKxBgxaaXMZN2d8Jb3DR6m9WdkrNAmOC/WxH5mOIQ5XGnMGuHdv1yy5l684WVd8
-         gnQu1W2zVAoNMZT4Az6e+16HtM0uE/odCNMxHNrD4Phvm2AYRAA2cM7aCwYV9qhhYW8P
-         tjxpPaosC8zMGTug9g/jVxce2jOCgkaeS7oRauJ/VbjGGfmnoGGbxOQFDHFLqmzoMVKN
-         CDAw==
-X-Forwarded-Encrypted: i=1; AJvYcCWR/EmQ41C8RcfzC8BkixX89v+phJsp4g+MoCsZmOFgYfMIArtXwPpU5pZuTNyeqWZUErc=@vger.kernel.org, AJvYcCXMtZtm4qAE4RzRrIgT4UdS+nbgJ0mjmc2bPht4jmtiTM2ohalw84c5bwD32Vfbkw8ThiL+nIQu2Oy2KXBF@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6ZPylLHW1rCyPiNxGq0JNElB1E7Pf3dfC6CytoPP6NnHSv5Od
-	qR/CRvn9AHxHfTGU+3AIU+FxpDPIpEH512Mif0gYAbch0e457b4Wanca
-X-Gm-Gg: ASbGncvyZeE9e5MJYPWRN2cW9HmYIkerkAxCNNFv3ffK9uKFwmqtcwj/h3bRB6AXbBt
-	dfOo+UJMpt1tPtLNr1A56QD71KqR51yG9Nm6QSOYTBPKG3fzo5c5+6TYK5/o0hAaxprWp4R9nXR
-	rFfy8JvClqcdvJecYF1ggmYzoMnunXbCEKAxcBUiLLP+RYkmj+1VYhvNiKs0z3sVKTqCB2FTzDU
-	o1jhvLeCndpYzKWVA2EYVH5zOgExPqJLjGluIprtmDgWr4qzv8I0f4v7cC+7F6fK6yztRbsZBt9
-	tNLaojW/6wfYziUfLO9tQoJ5xqXqp3GGUy99K9QzcvLW79P1kV/iIM9ASEJE4ASFfy4xDCG2WOR
-	hChmtyNHCi+zU/yNwppJ3
-X-Google-Smtp-Source: AGHT+IH3k5dvrTUz2/ALnQwF8EtBJmtajrGWHaF4qawZUYqpcqKqamU1sQf963afTQFW+2W9fsJKgA==
-X-Received: by 2002:a05:6a00:ac4:b0:737:678d:fb66 with SMTP id d2e1a72fcca58-7487e082857mr34077b3a.5.1749665491129;
-        Wed, 11 Jun 2025 11:11:31 -0700 (PDT)
-Received: from ?IPv6:2a03:83e0:115c:1:b1d2:545:de25:d977? ([2620:10d:c090:500::7:d234])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482af7ab1fsm9801917b3a.54.2025.06.11.11.11.29
+        d=1e100.net; s=20230601; t=1749665509; x=1750270309;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xix0JxJ/wHDD577WOa2daCtZJP2bD7JoNgtk2Dh0B/s=;
+        b=eeITZtQHvzoMPhb4fV/8V2Q/dxX3g06gRNYI8aUUaPJjyovF3NQvcTD5arzafa1IY8
+         M05jZxq0VG7Q3HqjinS1jQ9HCDJ6xXn8Dkens7SaQTP0QuA5OlMIkqXuifqH1z1NxFZf
+         KWa2YUkLiKNQOfT3sFs7jwH9eXOeeFYqfs/Ro8INbpeHyw7vbWE5sk2w8H/gyuYFrEyL
+         MVYrFkTLuMlNtVU5hC3gbCD7ZjkYXz19poxGNlSDP4447aWtfYtSAmVZp/vbuu57eLvr
+         S8+c3BDI5RkZgrEv3l/L9qoGIvOJECNvEg0TLBM/11qkdn7Nj8KF/sx2HQQ35PXK/1Z/
+         BmkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXJVVuU8jBEB0IKcl2/lTNuO+5Nt8VMB4Jvrba6Bbt/LIMkA+gCQehoCEeZXyu889klEMMtfsFn4DMfOLg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0mFtnHUMT+cwwUm/iTOcZXel0TcQ78XrcgtX2D0XjFWjkssqA
+	dgupSnaT+dWar9d24XBr1qIEqZ31gpTf6VZjwLWudPJwHmYQk/OGXT9bUhlP522pzWM=
+X-Gm-Gg: ASbGnct/QXOSodjOk9PxJwNyFswp8JsLXkkCQ7dIFOwc8HU4lCd85PadlPutIFtVKP0
+	9En5hrxqOqdh0lMRFuIRJ8n3GBsiFQVk8X1FqT2xqaYvSkR6dloyBewb53egs3dvrJWZoC2hmWN
+	G6Z5ChpmrO5EcX4JY1jOik56N2ULF+kNh7NsuOzBpUkgP8R8+I+JWqbFTQQgTjBEmWhOuvssEE+
+	2GCiZnrpUtTn1tZ8ytCmQKGBsZcoloS8ugNDWzWGRVnleEmAtwgAFzR/ta9ztv6Drw2gJWCKIa+
+	TemUczZ2YBBco70W0lNlsLh1QDOA0cniuyxFRdXNUXpCeZSLAwMoovhFRjdnY4de313YSMd1cRC
+	NfKo=
+X-Google-Smtp-Source: AGHT+IHf9DVkWmbX6t+akoi4x+O8WSA+NWzTIrXuhlLrnn7dTD81mWETTKau86Jvi85i8SCQm9Zr1A==
+X-Received: by 2002:a05:6808:23cd:b0:403:25bd:ca71 with SMTP id 5614622812f47-40a6611ea15mr300602b6e.15.1749665509066;
+        Wed, 11 Jun 2025 11:11:49 -0700 (PDT)
+Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:4753:719f:673f:547c])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40a5d94147esm424719b6e.28.2025.06.11.11.11.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 11:11:30 -0700 (PDT)
-Message-ID: <a39e1ed2db4121b690796c347f1259da09e23e13.camel@gmail.com>
-Subject: Re: [PATCH] bpf, verifier: Improve precision for BPF_ADD and BPF_SUB
-From: Eduard Zingerman <eddyz87@gmail.com>
-To: Harishankar Vishwanathan <harishankar.vishwanathan@gmail.com>, 
-	ast@kernel.org
-Cc: Matan Shachnai <m.shachnai@rutgers.edu>, Srinivas Narayana	
- <srinivas.narayana@rutgers.edu>, Santosh Nagarakatte	
- <santosh.nagarakatte@rutgers.edu>, Daniel Borkmann <daniel@iogearbox.net>, 
- John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko
- <andrii@kernel.org>, Martin KaFai Lau	 <martin.lau@linux.dev>, Song Liu
- <song@kernel.org>, Yonghong Song	 <yonghong.song@linux.dev>, KP Singh
- <kpsingh@kernel.org>, Stanislav Fomichev	 <sdf@fomichev.me>, Hao Luo
- <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 	bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Date: Wed, 11 Jun 2025 11:11:28 -0700
-In-Reply-To: <20250610221356.2663491-1-harishankar.vishwanathan@gmail.com>
-References: <20250610221356.2663491-1-harishankar.vishwanathan@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+        Wed, 11 Jun 2025 11:11:48 -0700 (PDT)
+From: David Lechner <dlechner@baylibre.com>
+Date: Wed, 11 Jun 2025 13:11:36 -0500
+Subject: [PATCH RESEND] net: mdio: mux-gpio: use
+ gpiod_multi_set_value_cansleep
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250611-net-mdio-mux-gpio-use-gpiod_multi_set_value_cansleep-v1-1-6eb5281f1b41@baylibre.com>
+X-B4-Tracking: v=1; b=H4sIANfGSWgC/x2NPQvCMBQA/0p5s4GkGG2d7eqgo0gIzbM+SNKQj
+ 1Io/e+GbnfL3QYJI2GCW7NBxIUSzb6KODUw/rSfkJGpDi1vJb8IwTxm5gzNzJWVTaFCSXiAUa7
+ YTCphVou2BdWofbKIgSHv5Vl2vdHXDmo6RPzSemzf8Bxew+MOn33/AwhwSfaOAAAA
+X-Change-ID: 20250611-net-mdio-mux-gpio-use-gpiod_multi_set_value_cansleep-e0954589da78
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ David Lechner <dlechner@baylibre.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1495; i=dlechner@baylibre.com;
+ h=from:subject:message-id; bh=x2LAshC4TaowOHTTAfdCSxFpB1VG0IOM05NdXRo/GcQ=;
+ b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoScbdHEvJMh49ii8PaXm06NcRK+4G6Qji4mc3I
+ 3TUxFf2n1GJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaEnG3QAKCRDCzCAB/wGP
+ wLmRB/wJEQPXAFte0Br8P+SmauFUXC8UTnHAKRXPpH8BojKuIfDgrC1wNdEwKMZh46vbXvAHpXG
+ X/CnEN+ox+eAjVXNSc3UacvLPk8qycSRXKYCTpvGxvYQkHYWK1R7UCtvBOxpz2DjjEU644pGmT3
+ LfnepErKd3uHDNeJ05Ty+/BTVBcEd2GnSv39G5O8k6S3yR8fngUlviT24vd3aa0DXYYemQdpxo+
+ JyW6QbNyTBIukj/wjctMDaHcqEIUpA4c1TR0hAcbZ1bMIMVsnU9IqySeJ62zgg92ufZGjWASUXL
+ fuMLT31VN/6z6//tazIRidTeyEwxwsL7Oyo/ksv/fkdPY9UD
+X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
+ fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
 
-On Tue, 2025-06-10 at 18:13 -0400, Harishankar Vishwanathan wrote:
-> This patch improves the precison of the scalar(32)_min_max_add and
-> scalar(32)_min_max_sub functions, which update the u(32)min/u(32)_max
-> ranges for the BPF_ADD and BPF_SUB instructions. We discovered this more
-> precise operator using a technique we are developing for automatically
-> synthesizing functions for updating tnums and ranges.
->=20
-> According to the BPF ISA [1], "Underflow and overflow are allowed during
-> arithmetic operations, meaning the 64-bit or 32-bit value will wrap".
-> Our patch leverages the wrap-around semantics of unsigned overflow and
-> underflow to improve precision.
->=20
-> Below is an example of our patch for scalar_min_max_add; the idea is
-> analogous for all four functions.
->=20
-> There are three cases to consider when adding two u64 ranges [dst_umin,
-> dst_umax] and [src_umin, src_umax]. Consider a value x in the range
-> [dst_umin, dst_umax] and another value y in the range [src_umin,
-> src_umax].
->=20
-> (a) No overflow: No addition x + y overflows. This occurs when even the
-> largest possible sum, i.e., dst_umax + src_umax <=3D U64_MAX.
->=20
-> (b) Partial overflow: Some additions x + y overflow. This occurs when
-> the largest possible sum overflows (dst_umax + src_umax > U64_MAX), but
-> the smallest possible sum does not overflow (dst_umin + src_umin <=3D
-> U64_MAX).
->=20
-> (c) Full overflow: All additions x + y overflow. This occurs when both
-> the smallest possible sum and the largest possible sum overflow, i.e.,
-> both (dst_umin + src_umin) and (dst_umax + src_umax) are > U64_MAX.
->=20
-> The current implementation conservatively sets the output bounds to
-> unbounded, i.e, [umin=3D0, umax=3DU64_MAX], whenever there is *any*
-> possibility of overflow, i.e, in cases (b) and (c). Otherwise it
-> computes tight bounds as [dst_umin + src_umin, dst_umax + src_umax]:
->=20
-> if (check_add_overflow(*dst_umin, src_reg->umin_value, dst_umin) ||
->     check_add_overflow(*dst_umax, src_reg->umax_value, dst_umax)) {
-> 	*dst_umin =3D 0;
-> 	*dst_umax =3D U64_MAX;
-> }
->=20
-> Our synthesis-based technique discovered a more precise operator.
-> Particularly, in case (c), all possible additions x + y overflow and
-> wrap around according to eBPF semantics, and the computation of the
-> output range as [dst_umin + src_umin, dst_umax + src_umax] continues to
-> work. Only in case (b), do we need to set the output bounds to
-> unbounded, i.e., [0, U64_MAX].
->=20
-> Case (b) can be checked by seeing if the minimum possible sum does *not*
-> overflow and the maximum possible sum *does* overflow, and when that
-> happens, we set the output to unbounded:
->=20
-> min_overflow =3D check_add_overflow(*dst_umin, src_reg->umin_value, dst_u=
-min);
-> max_overflow =3D check_add_overflow(*dst_umax, src_reg->umax_value, dst_u=
-max);
->=20
-> if (!min_overflow && max_overflow) {
-> 	*dst_umin =3D 0;
-> 	*dst_umax =3D U64_MAX;
-> }
->=20
-> Below is an example eBPF program and the corresponding log from the
-> verifier. Before instruction 6, register r3 has bounds
-> [0x8000000000000000, U64_MAX].
->=20
-> The current implementation sets r3's bounds to [0, U64_MAX] after
-> instruction r3 +=3D r3, due to conservative overflow handling.
->=20
-> 0: R1=3Dctx() R10=3Dfp0
-> 0: (18) r3 =3D 0x8000000000000000       ; R3_w=3D0x8000000000000000
-> 2: (18) r4 =3D 0x0                      ; R4_w=3D0
-> 4: (87) r4 =3D -r4                      ; R4_w=3Dscalar()
-> 5: (4f) r3 |=3D r4                      ; R3_w=3Dscalar(smax=3D-1,umin=3D=
-0x8000000000000000,var_off=3D(0x8000000000000000; 0x7fffffffffffffff)) R4_w=
-=3Dscalar()
-> 6: (0f) r3 +=3D r3                      ; R3_w=3Dscalar()
-> 7: (b7) r0 =3D 1                        ; R0_w=3D1
-> 8: (95) exit
->=20
-> With our patch, r3's bounds after instruction 6 are set to a more precise
-> [0, 0xfffffffffffffffe].
->=20
-> ...
-> 6: (0f) r3 +=3D r3                      ; R3_w=3Dscalar(umax=3D0xffffffff=
-fffffffe)
-> 7: (b7) r0 =3D 1                        ; R0_w=3D1
-> 8: (95) exit
->=20
-> The logic for scalar32_min_max_add is analogous. For the
-> scalar(32)_min_max_sub functions, the reasoning is similar but applied
-> to detecting underflow instead of overflow.
->=20
-> We verified the correctness of the new implementations using Agni [3,4].
->=20
-> We since also discovered that a similar technique has been used to
-> calculate output ranges for unsigned interval addition and subtraction
-> in Hacker's Delight [2].
->=20
-> [1] https://docs.kernel.org/bpf/standardization/instruction-set.html
-> [2] Hacker's Delight Ch.4-2, Propagating Bounds through Add=E2=80=99s and=
- Subtract=E2=80=99s
-> [3] https://github.com/bpfverif/agni
-> [4] https://people.cs.rutgers.edu/~sn349/papers/sas24-preprint.pdf
->=20
-> Co-developed-by: Matan Shachnai <m.shachnai@rutgers.edu>
-> Signed-off-by: Matan Shachnai <m.shachnai@rutgers.edu>
-> Co-developed-by: Srinivas Narayana <srinivas.narayana@rutgers.edu>
-> Signed-off-by: Srinivas Narayana <srinivas.narayana@rutgers.edu>
-> Co-developed-by: Santosh Nagarakatte <santosh.nagarakatte@rutgers.edu>
-> Signed-off-by: Santosh Nagarakatte <santosh.nagarakatte@rutgers.edu>
-> Signed-off-by: Harishankar Vishwanathan <harishankar.vishwanathan@gmail.c=
-om>
-> ---
+Reduce verbosity by using gpiod_multi_set_value_cansleep() instead of
+gpiod_set_array_value_cansleep().
 
-Is this patch dictated by mere possibility of improvement or you
-observed some C programs that can benefit from the change?
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: David Lechner <dlechner@baylibre.com>
+---
+This is a resend of a patch from the series "[PATCH v3 00/15] gpiolib:
+add gpiod_multi_set_value_cansleep" [1].
 
-Could you please add selftests covering each overflow / underflow
-combination?
-Please use same framework as tools/testing/selftests/bpf/progs/verifier_and=
-.c.
+This patch never got acked so didn't go picked up with the rest of that
+series. The dependency has been in mainline since v6.15-rc1 so this
+patch can now be applied independently.
 
-[...]
+[1]: https://lore.kernel.org/all/20250210-gpio-set-array-helper-v3-0-d6a673674da8@baylibre.com/
+---
+ drivers/net/mdio/mdio-mux-gpio.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/net/mdio/mdio-mux-gpio.c b/drivers/net/mdio/mdio-mux-gpio.c
+index ef77bd1abae984e5b1e51315de39cae33e0d063d..fefa40ea5227c5a35d89ec2c6f95c6668a2470f6 100644
+--- a/drivers/net/mdio/mdio-mux-gpio.c
++++ b/drivers/net/mdio/mdio-mux-gpio.c
+@@ -30,8 +30,7 @@ static int mdio_mux_gpio_switch_fn(int current_child, int desired_child,
+ 
+ 	values[0] = desired_child;
+ 
+-	gpiod_set_array_value_cansleep(s->gpios->ndescs, s->gpios->desc,
+-				       s->gpios->info, values);
++	gpiod_multi_set_value_cansleep(s->gpios, values);
+ 
+ 	return 0;
+ }
+
+---
+base-commit: 19a60293b9925080d97f22f122aca3fc46dadaf9
+change-id: 20250611-net-mdio-mux-gpio-use-gpiod_multi_set_value_cansleep-e0954589da78
+
+Best regards,
+-- 
+David Lechner <dlechner@baylibre.com>
+
