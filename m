@@ -1,163 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B352AD2C;
-	Wed, 11 Jun 2025 09:50:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35EB123AB9C;
+	Wed, 11 Jun 2025 09:51:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749635436; cv=none; b=CHt42v4WLLlSg1hJ6/JR/sUCr0AwbvaGE0Onn6YqEpSIhRsDCguhaxSggLzmd0iIG5sH7dBVqKaVpZ0m8Y3g660l6QHJTU/mT+1OYHnmR2faP6oUyX/eR7tc6WIK6q+eTjo0usd+g1Ji2Aozlly8P9CmX7PZoZLI+FUAA0oMrHA=
+	t=1749635477; cv=none; b=m+UBp71LlthcVE/cbmlNGXXHTAiXlOmGeFrfInA+sewkt84507+gYrn/FQ2jT2akNxpeYWGsCSv5GRu9Cr0TJb7IAsvk07QedymhlExGK2KLny0d4sGVCuDjD7bR6uUQRJ145OUvdlo9FHm4My6i4Kq+wKS51ik1fSg9DDP9U84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749635436; c=relaxed/simple;
-	bh=d2odlYWuohn9vOz/r2rICK+nYWZ3BRx7kUUlYEimQdI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l+Rr2bTH+obDBg1MhhzbxvshcbwL6vR2b/ieX037pHrmuXwP7o6/zFrXd8HdwSrNWZiFqim5sY9aX6/Y2C2GOdIfKPKKpbcsW1fR/X41eKDIHkTQ3Aq9BHKm7lvunT9IalfYvEAkDSeCrlQPfXlr9H9v2EeVFoDIGglYvbLeTzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HH9HkSN7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749635477; c=relaxed/simple;
+	bh=U4jGWHaIaMXuRCicMbs1PcoLZQJpE3+kZRirVXC12Bw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=RH69dA6ghpzhGKfbY6HOGMP3jVnUyjLQ4k7t3oQnYGdTaHaNq8yqY/i2nm452vivR2y8Y7HJEBZhYYrrFxQ9URqply9gceNHFK9ChdzbG3UIjCOG7xiG6CPhE75SU1Hqbo25tCUbG5JOUKg1PP9ywbCxjDFwe/KWU1IR0Mk0Yu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=tqRRcgw5; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HH9HkSN7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13C62C4CEEE;
-	Wed, 11 Jun 2025 09:50:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749635436;
-	bh=d2odlYWuohn9vOz/r2rICK+nYWZ3BRx7kUUlYEimQdI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HH9HkSN7TdpRcuMfGp59qshneRzWUIuw/W7dm+Xi7gVIVsaJM2BcHTt0sG6bh/TLi
-	 TjjBSuCddjJufT9XJPl2o5rHD5w9OkipxWrVTrt3ymBtDhsXjLVZC95x7UMGLClCzE
-	 6tq7xPSbFFPgdvlL+Hv74b9pTHp6JTcKTpBaLej8wAUQQjzxRAE/edl8ahFulgD3Ye
-	 YFHpf/pxJAbvLCH/d6ejePF70oDVAveRdiXG7B4rASpzLL6qcqogYtZGyGhIUJ4EDO
-	 bPi3bnq1s7aFFkO1mwJCKYZynH8ExbkVJH25V+RoleS2X/a209FjGwNhoEXLG5WOua
-	 XsovYh6j4J/PQ==
-Date: Wed, 11 Jun 2025 11:50:31 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-man@vger.kernel.org, 
-	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>, Darren Hart <dvhart@infradead.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Valentin Schneider <vschneid@redhat.com>, 
-	Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v4 1/4] man/man2/prctl.2,
- man/man2const/PR_FUTEX_HASH.2const: Document PR_FUTEX_HASH
-Message-ID: <hnghlt2dekdjb34vitzdu3w6zfkrlq64vetaqaj37rk5g4hu4h@m4cmds43h6av>
-References: <20250602140104.2769223-1-bigeasy@linutronix.de>
- <20250602140104.2769223-2-bigeasy@linutronix.de>
- <qgp2ueiyfwfd6t3fpwvnryrhnpy6rro5npsqjqzvkovhyawiyb@kl6igspxexqn>
- <20250611084716.xboKOTHN@linutronix.de>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="tqRRcgw5"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55B6Iv5f012912;
+	Wed, 11 Jun 2025 10:49:38 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	TV0Ykqz+yMv+EUoGBcc//ckZ5rwVDZ0YS3LKw7DDNAs=; b=tqRRcgw5gq6Na7K2
+	dWJ2gFSn7A40zkOd+PY4FM86BgEAUU0QGq3zvCf2mrn9d9ATFxh9YJZpPKQExB6f
+	XETvYXAfy7+3uJ2MYT0on9gBuyBxtSeafwid/VpKIT88iotZJs9esbT1xbng1eTw
+	xyqF5Owq2T0zutwa6RJW+3a5WqbGMIGs1Nclt18xUXmA6VxxCiZCejuSKaFDBODL
+	/KDOYWWfAtLGwBVaA14ppfFT94RORbpEU/LZW54owDcl8oY0Bh2pQVLe1GWFxmeN
+	PIjxG7yKmnqApa0mZFPp5VoWND45Us13Dl7UzhaoPiPYcVuDe8Djh172fOgpWTTw
+	wNYs7A==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474aumhngn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 11 Jun 2025 10:49:38 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id DB89840088;
+	Wed, 11 Jun 2025 10:48:51 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6ADD2AFE7D7;
+	Wed, 11 Jun 2025 10:48:40 +0200 (CEST)
+Received: from localhost (10.252.5.102) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 11 Jun
+ 2025 10:48:40 +0200
+From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+Date: Wed, 11 Jun 2025 10:48:32 +0200
+Subject: [PATCH v3 3/4] media: i2c: vd55g1: Setup sensor external clock
+ before patching
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3oqy7dsarzc6vyet"
-Content-Disposition: inline
-In-Reply-To: <20250611084716.xboKOTHN@linutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250611-fix_vd55g1-v3-3-ef4ecf15ddbc@foss.st.com>
+References: <20250611-fix_vd55g1-v3-0-ef4ecf15ddbc@foss.st.com>
+In-Reply-To: <20250611-fix_vd55g1-v3-0-ef4ecf15ddbc@foss.st.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Sylvain Petinot
+	<sylvain.petinot@foss.st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+CC: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Benjamin
+ Mugnier <benjamin.mugnier@foss.st.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-11_03,2025-06-10_01,2025-03-28_01
 
+Proper clock configuration is required to advance through FSM states.
+Prior than this having a different clock value than default sensor's
+value was used (12 MHz) could prevent the sensor from booting.
 
---3oqy7dsarzc6vyet
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-man@vger.kernel.org, 
-	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>, Darren Hart <dvhart@infradead.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Valentin Schneider <vschneid@redhat.com>, 
-	Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v4 1/4] man/man2/prctl.2,
- man/man2const/PR_FUTEX_HASH.2const: Document PR_FUTEX_HASH
-References: <20250602140104.2769223-1-bigeasy@linutronix.de>
- <20250602140104.2769223-2-bigeasy@linutronix.de>
- <qgp2ueiyfwfd6t3fpwvnryrhnpy6rro5npsqjqzvkovhyawiyb@kl6igspxexqn>
- <20250611084716.xboKOTHN@linutronix.de>
-MIME-Version: 1.0
-In-Reply-To: <20250611084716.xboKOTHN@linutronix.de>
+Signed-off-by: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+---
+ drivers/media/i2c/vd55g1.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Hi Sebastian,
+diff --git a/drivers/media/i2c/vd55g1.c b/drivers/media/i2c/vd55g1.c
+index 336dc3c85ac9e695f22aa524e0df6138dc76e45c..dec6e3e231d54a742bdd08ff2a506c152bb89429 100644
+--- a/drivers/media/i2c/vd55g1.c
++++ b/drivers/media/i2c/vd55g1.c
+@@ -1038,8 +1038,6 @@ static int vd55g1_enable_streams(struct v4l2_subdev *sd,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	vd55g1_write(sensor, VD55G1_REG_EXT_CLOCK, sensor->xclk_freq, &ret);
+-
+ 	/* Configure output */
+ 	vd55g1_write(sensor, VD55G1_REG_MIPI_DATA_RATE,
+ 		     sensor->mipi_rate, &ret);
+@@ -1613,6 +1611,9 @@ static int vd55g1_power_on(struct device *dev)
+ 		goto disable_clock;
+ 	}
+ 
++	/* Setup clock now to advance through system FSM states */
++	vd55g1_write(sensor, VD55G1_REG_EXT_CLOCK, sensor->xclk_freq, &ret);
++
+ 	ret = vd55g1_patch(sensor);
+ 	if (ret) {
+ 		dev_err(dev, "Sensor patch failed %d\n", ret);
 
-On Wed, Jun 11, 2025 at 10:47:16AM +0200, Sebastian Andrzej Siewior wrote:
-> On 2025-06-11 10:43:07 [+0200], Alejandro Colomar wrote:
-> > Hi Sebastian,
-> Hi,
->=20
-> > On Mon, Jun 02, 2025 at 04:01:01PM +0200, Sebastian Andrzej Siewior wro=
-te:
-> > > The prctl(PR_FUTEX_HASH) is queued for the v6.16 merge window.
-> > > Add some documentation of the interface.
-> > >=20
-> > > Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> >=20
-> > LGTM, thanks!  Please let me know when this is merged into Linus's tree.
->=20
-> This is in v6.16-rc1 since last Monday. We do regression handling now
-> but I think it will stay. I can poke you once v6.16 is out in case we
-> need a last minute revert of this.
+-- 
+2.25.1
 
-Thanks!
-
-I've applied patch 1/4, with the following amendments:
-
-	diff --git i/man/man2const/PR_FUTEX_HASH.2const w/man/man2const/PR_FUTEX_H=
-ASH.2const
-	index 08511b183..b500c943b 100644
-	--- i/man/man2const/PR_FUTEX_HASH.2const
-	+++ w/man/man2const/PR_FUTEX_HASH.2const
-	@@ -53,14 +53,16 @@ .SH DESCRIPTION
-	 the kernel will allocate 16 hash slots
-	 once the first thread has been created.
-	 If the process continues to create threads,
-	-the kernel will try to resize the private hash based on the number of thr=
-eads
-	+the kernel will try to resize the private hash
-	+based on the number of threads
-	 and available CPUs in the system.
-	-The kernel will only increase the size and will make sure it does not exc=
-eed
-	-the size of the global hash.
-	+The kernel will only increase the size
-	+and will make sure
-	+it does not exceed the size of the global hash.
-	 .P
-	-The user can configure the size of the private
-	-hash which will also disable the
-	-automatic resize provided by the kernel.
-	+The user can configure the size of the private hash
-	+which will also
-	+disable the automatic resize provided by the kernel.
-	 .P
-	 The value in
-	 .I op
-
-<https://www.alejandro-colomar.es/src/alx/linux/man-pages/man-pages.git/com=
-mit/?h=3Dcontrib&id=3D243de1dbc9cf818fa71c97856cbaf88b9d255b44>
-
-
-Cheers,
-Alex
-
---=20
-<https://www.alejandro-colomar.es/>
-
---3oqy7dsarzc6vyet
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmhJUWcACgkQ64mZXMKQ
-wqn8rA//dN6Sl+Qyjd5/9qDPrig4jxxKrBPBHk4lY39dYa2M6DPQpBP3TFO5rWXg
-lT4wA1mhUB65y2syN9rc/8N/biZiWvgygHsfisV4pbK0nBP34hv8JlFy2wbWxzbD
-fVmz0xhG6VblJKDU57w7b0PKG8FfgNld/gmvPG5l3OHqw/gU9Rmomd1ktd6m3ldl
-5C2gp3ZZbzyYNEYmhoGgFKb/dau9UQ9snNd66mYU9ybgAmqyKaBs/8iCQgyGUZyb
-Rq5aQxXnE1FpdSMXyzrqCjgZVR0Q+jg3A7b4hr0ee2Zu4zUeL+NB7yV4nMDDfkBX
-Iqitk4YYvsRgx6n45s79aHX8MRdJ7k0yRq4fRVFdilQcfii68n7lrGQIYYu/BWrt
-7HxTEGpE0MX56PDSganZpABnKgELh3KJQTCVZUBym2zheKQh5AtMgU+sqAlgOqAv
-YwAY4vB9nlV47GKYcFYN8ckKb3bDqFzC/BDy1BhRdIeu8lSpEevMBHSNeDXPleiP
-9mnsyl9liFHvwSbuG4FbXZPShLY6Jd9OW56OW39OvJuwwWfMTtjcPqVhJEbFfp6a
-/mRqv/8kKtgBoFTLjsYyh06NmhKTPqUIhzaYryE3X8VgMuBnEerbjH7TDCsc+0Sh
-zGG093WY4kHaIL7uG/W0UfbyJb4BPuYyKoXoqnfXP44liXQGK8g=
-=/cnx
------END PGP SIGNATURE-----
-
---3oqy7dsarzc6vyet--
