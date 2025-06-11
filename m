@@ -1,120 +1,77 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from unicom146.biz-email.net (unicom146.biz-email.net [210.51.26.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D3D25E806;
-	Wed, 11 Jun 2025 09:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FBC525EFB7;
+	Wed, 11 Jun 2025 09:00:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.26.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749632423; cv=none; b=tLMdPLHWfODPAoEkVE1UEclHutRxYxgFmkCg138kvdfM1pzOt5oRPMZiIwlfOZnlVj8erKKjZSgpNzBKQ59PzjiThEQiMbHM8bqq4EvFywX1P36D5HdpP4KwssVKi8nF8Emi2T9FQglEco2j8t+3wBiA419BfgllgJ4wEuqz1H0=
+	t=1749632425; cv=none; b=rgii4xFtCkjeJfqqNT7JpdmLIrOWzstXpH2agWV+63Eyo2qE3Q2iMhy7hYfNHhh8O+V5eWXQ4C/V3HLao1zYijQYSqhSC1js4V6iBf/jCtvJ43rNPtJ17y8xbmZZNe4NFGMUSuNkAWAXeOQ02GAAORe5ooieFh4jC2z5YHmr73Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749632423; c=relaxed/simple;
-	bh=xePdCpGUw/dupcdXjBwUdPYEfVRH1uIkUMo8amvW3Gs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rgDUz0N8NiTW2RTqAx7XYFavZQ8fhLAds+eU0Ir3vR7Jlycqu/kJaRmwm0al2fwdMXOOx4DO9+aOvNTEW5LCCMz08wv7Uu4yUQAp7D7QuszIihfykcrsLlDMBxX642AWtY/SDVo8xKae7Poe65ATtddTV4LxV5+ufSi0ZjZhAhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CWOVmyV4; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CWOVmyV4"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2C681439EC;
-	Wed, 11 Jun 2025 09:00:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1749632418;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iOUaArEGsRcJcBEJqASG5UFqwnkvCe4U51LXcIbmX2U=;
-	b=CWOVmyV4KNjmbssMdAM4dg9Vae3J+KDvhzjkYLrevmpuwtrKJjAISxsZ3QkOUDJ3eNgfTr
-	5totY57xPZMjVr1X1ToJSdrpk5GE2YE/LJIfuUidv06RrX5+VYj35M6FXbTzzVMfhRVuRX
-	wMmVwmo1tjcoW0/Vfrzt/j+qU1OIrS7to+C2nJfPwwF9sSQWJ7j2M4rRA9SB8chxzwLh5w
-	N2hkqjKKuqFuZ441p06sXDKLQNGVs96z6xf5rDYsq/c82Dot4pMe5MMfbj7SIfOI+9p+VW
-	DYq8zZOU3V1pW+24//WBXre/mEhX3GNDuwvp6f9XGfVgmTJvoqV2pLEMJTUnhg==
-From: Thomas Richard <thomas.richard@bootlin.com>
-Date: Wed, 11 Jun 2025 11:00:09 +0200
-Subject: [PATCH v8 04/10] gpio: aggregator: refactor the forwarder
- registration part
+	s=arc-20240116; t=1749632425; c=relaxed/simple;
+	bh=a89/HWk26JsP/OkXtj4TeeGsaSJmnp0S87artYYyg7g=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=q4dvZ3Vd3qoS02xsNVm+lWBQm5HYcItnOgFdHX75xR6HTaE7yTerbiXY6YA28WzdWxvxStjdEn92RDUurg2OHqHQQecknGUALi+i31UVLN8n4CxRIX/nDMViKPx7MrOQq5j+4U/xeRQG++Kq1rlhH8Ip7fC9rbJQZMORW9vNHYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.26.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
+Received: from jtjnmail201605.home.langchao.com
+        by unicom146.biz-email.net ((D)) with ASMTP (SSL) id 202506111659062061;
+        Wed, 11 Jun 2025 16:59:06 +0800
+Received: from jtjnmail201607.home.langchao.com (10.100.2.7) by
+ jtjnmail201605.home.langchao.com (10.100.2.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Wed, 11 Jun 2025 16:59:05 +0800
+Received: from localhost.localdomain.com (10.94.12.179) by
+ jtjnmail201607.home.langchao.com (10.100.2.7) with Microsoft SMTP Server id
+ 15.1.2507.39; Wed, 11 Jun 2025 16:59:05 +0800
+From: chuguangqing <chuguangqing@inspur.com>
+To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>, Jean-Baptiste Maneyrol
+	<jmaneyrol@invensense.com>
+CC: <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>, chuguangqing
+	<chuguangqing@inspur.com>
+Subject: [PATCH 08/10] iio: light: isl29028: convert to use maple tree register cache
+Date: Wed, 11 Jun 2025 16:58:36 +0800
+Message-ID: <20250611085838.4761-9-chuguangqing@inspur.com>
+X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20250611085838.4761-1-chuguangqing@inspur.com>
+References: <20250611085838.4761-1-chuguangqing@inspur.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250611-aaeon-up-board-pinctrl-support-v8-4-3693115599fe@bootlin.com>
-References: <20250611-aaeon-up-board-pinctrl-support-v8-0-3693115599fe@bootlin.com>
-In-Reply-To: <20250611-aaeon-up-board-pinctrl-support-v8-0-3693115599fe@bootlin.com>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
- Andy Shevchenko <andy@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
- linux-hardening@vger.kernel.org, 
- Thomas Richard <thomas.richard@bootlin.com>
-X-Mailer: b4 0.14.1
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduudeljecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpefvhhhomhgrshcutfhitghhrghrugcuoehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkedthedvieethedtleetffehudevleegledvteegvdeujeeghffhkeeggfefudevnecukfhppedvrgdtudemtggsudegmehfgedtmegsfhdttdemfhdtheegmegtlegtvdemvddutgefmeduheeiieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmehfgedtmegsfhdttdemfhdtheegmegtlegtvdemvddutgefmeduheeiiedphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepthhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedufedprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheprghnugihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrt
- ghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvggvsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehgvggvrhhtodhrvghnvghsrghssehglhhiuggvrhdrsggvpdhrtghpthhtoheplhhinhhugidqhhgrrhguvghnihhnghesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: thomas.richard@bootlin.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+tUid: 202561116590618cd26c374da5421bc4e811ef719d038
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 
-Add a new function gpiochip_fwd_register(), which finalizes the
-initialization of the forwarder and registers the corresponding gpiochip.
+The maple tree register cache is based on a much more modern data structure
+than the rbtree cache and makes optimisation choices which are probably
+more appropriate for modern systems than those made by the rbtree cache.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+Signed-off-by: chuguangqing <chuguangqing@inspur.com>
 ---
- drivers/gpio/gpio-aggregator.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ drivers/iio/light/isl29028.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
-index 6285c3e8f6b8..028ac79758d2 100644
---- a/drivers/gpio/gpio-aggregator.c
-+++ b/drivers/gpio/gpio-aggregator.c
-@@ -538,6 +538,18 @@ static int gpiochip_fwd_desc_add(struct gpiochip_fwd *fwd,
- 	return 0;
- }
+diff --git a/drivers/iio/light/isl29028.c b/drivers/iio/light/isl29028.c
+index 609ebf0f7313..0e4284823d44 100644
+--- a/drivers/iio/light/isl29028.c
++++ b/drivers/iio/light/isl29028.c
+@@ -562,7 +562,7 @@ static const struct regmap_config isl29028_regmap_config = {
+ 	.volatile_reg = isl29028_is_volatile_reg,
+ 	.max_register = ISL29028_NUM_REGS - 1,
+ 	.num_reg_defaults_raw = ISL29028_NUM_REGS,
+-	.cache_type = REGCACHE_RBTREE,
++	.cache_type = REGCACHE_MAPLE,
+ };
  
-+static int gpiochip_fwd_register(struct gpiochip_fwd *fwd)
-+{
-+	struct gpio_chip *chip = &fwd->chip;
-+
-+	if (chip->can_sleep)
-+		mutex_init(&fwd->mlock);
-+	else
-+		spin_lock_init(&fwd->slock);
-+
-+	return devm_gpiochip_add_data(chip->parent, chip, fwd);
-+}
-+
- /**
-  * gpiochip_fwd_create() - Create a new GPIO forwarder
-  * @dev: Parent device pointer
-@@ -575,18 +587,13 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
- 			return ERR_PTR(error);
- 	}
- 
--	if (chip->can_sleep)
--		mutex_init(&fwd->mlock);
--	else
--		spin_lock_init(&fwd->slock);
--
- 	if (features & FWD_FEATURE_DELAY) {
- 		error = gpiochip_fwd_setup_delay_line(dev, chip, fwd);
- 		if (error)
- 			return ERR_PTR(error);
- 	}
- 
--	error = devm_gpiochip_add_data(dev, chip, fwd);
-+	error = gpiochip_fwd_register(fwd);
- 	if (error)
- 		return ERR_PTR(error);
- 
-
+ static int isl29028_probe(struct i2c_client *client)
 -- 
-2.39.5
+2.31.1
 
