@@ -1,96 +1,228 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11240218591;
-	Wed, 11 Jun 2025 21:50:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214FF213224;
+	Wed, 11 Jun 2025 21:50:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749678608; cv=none; b=ajN24+wTVyaAY8MiSKM0ypd01LYySkkQfZN2qOE8E1QNFKcLK7ENkD0i8Jvgtz3XktXMB2Li+vRsWIDdkgZEYCjLTbFzUw842s0cDl4ZyXlRWn67B2Ww9eJj/LTSK7lfXl6Hb8Qg8oy1syoTyiO/AuxXh9dEoRPBeqeSi5lBB40=
+	t=1749678646; cv=none; b=m9DJAFhODjHvmBFfs1IkcJXVXpgQ0Lrk2hrgJ1aZI9tsjV4sDrutVKbdNqDoSy8ihq5lLAgEqiqianLnCQUQbheCGRAYPVh95EetyJKKhS/CAIUlkDgxfahe/u7qQcSbmSKVlRUS4js7hunuvknI0AYbu6QY0qpyBggA3qfDUqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749678608; c=relaxed/simple;
-	bh=t7g7nDWGInSfgmZbN0xOrHOEo4ASBz/pYBaLiletTrY=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=LPIvyaLlgpQ33/tkO5JSFOTQmP4PPOtLiMtLoemUKO4EdRM0e2aw9PY5jFBW2NyfqXk9d4+NhG11Y3eTHbN55evZOFp0urlxppar9OVK5ZeSjnIjiE4LAf/DOwFVYuxEq4CuK5g/n5273hwD7Xs9bVtgsFNawKFK493KGjTUXGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aIhOLYFE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749678646; c=relaxed/simple;
+	bh=RWVYRiPZVmtgySePvK9Fgk/us/xzILqK49c9tQBEmKc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IdoVgtmYBOgtkP1iLHWLp36WREh01Dr7AtultV91PMxTwmE8Y9ij8VPZgjJDi9gfLDzuHqIW6uaegM5G4dY4izhNbaY5W1WV+P05zLiaKW6BqBLijI3RTeFc5aWnZClPkuHIfdpza+t1Jj+KnFxW8cYMc17dpTRgKCpeGkxbAkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dcnJ7GRH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aIhOLYFE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC95FC4CEEE;
-	Wed, 11 Jun 2025 21:50:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dcnJ7GRH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A8EAC4CEE3;
+	Wed, 11 Jun 2025 21:50:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749678607;
-	bh=t7g7nDWGInSfgmZbN0xOrHOEo4ASBz/pYBaLiletTrY=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=aIhOLYFEKe+qk2YVj08IfRhzzvcdXR7sX1AVx2qR0C3bjo8ALEO/QTWq62kHTIaSf
-	 LwxlCNYG3e0qZP1eOrIyKpRBSHt0HYl+WCqeAyOpmjjH6REHDJSJOeZZI/PWcSV1wO
-	 CLIRJvk3Udh4k6YxNn/OXqxBogfgHkLUhafPtN1vGTuvw/eeGwBsNlb0yq6gTD7BQP
-	 TKtg2im351+CZIDrFhY7DMf+IFOWtvwrDrfFSG4wV9Bkjgnl5nj9a1EMfK4lkR3xfF
-	 iJ1Cri+Wyl3+GxgJwVNV9xIgzxSgXZqYv4njIhL0KmwGpIdYE0jriHUjZ7eRmUAMGU
-	 89Hq/gniZ6rdQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D05380DBE9;
-	Wed, 11 Jun 2025 21:50:39 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1749678645;
+	bh=RWVYRiPZVmtgySePvK9Fgk/us/xzILqK49c9tQBEmKc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dcnJ7GRHk/Kwn8dcnC5nqRlP0OflMqeJ1nrPjz2f4GyiXhngjxoLt6f9DOnkeYnLQ
+	 usw51rZIB0VUV6CO+0LmnkfJuNZx7mJ7BkJKHJP/7aLn7xa2XKurgYQN/fpek4EraY
+	 6//0wsrEyfFn7eBmEw5Ng2VM5TDqHt1XXLc0HTaw2HKQrL9E/180ED4ZJ9GVCBghwx
+	 2GgHZTAiPcWvoyTkh5fVEvFdlVISrsxTJrDUyaqWThYGBCYr9LRhseRLVJq2xDXRPR
+	 VGiVatkdQVjOMK3NgPRWSqIlbHMp37jQnDhYszTB0sGE3f91h6SehWNCc2hKakkwDD
+	 fkKQJBuRSDZAg==
+Date: Wed, 11 Jun 2025 14:50:43 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [BUG] perf tools: Build failure in v6.16-rc1
+Message-ID: <aEn6M_DTUHx9_hMS@google.com>
+References: <aEh6xO14wDSCFUDr@google.com>
+ <20250611092542.F4ooE2FL@linutronix.de>
+ <aEmBOO0bSJYSvX2i@x1>
+ <aEmY259Mx92D60KG@x1>
+ <20250611150615.FcVIIhgA@linutronix.de>
+ <aEnSbBaFYgd4Gr9u@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/9] mlx5 misc fixes 2025-06-10
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174967863800.3499598.6852687009576458740.git-patchwork-notify@kernel.org>
-Date: Wed, 11 Jun 2025 21:50:38 +0000
-References: <20250610151514.1094735-1-mbloch@nvidia.com>
-In-Reply-To: <20250610151514.1094735-1-mbloch@nvidia.com>
-To: Mark Bloch <mbloch@nvidia.com>
-Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
- edumazet@google.com, andrew+netdev@lunn.ch, horms@kernel.org,
- saeedm@nvidia.com, gal@nvidia.com, leonro@nvidia.com, tariqt@nvidia.com,
- leon@kernel.org, netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
- linux-kernel@vger.kernel.org
+In-Reply-To: <aEnSbBaFYgd4Gr9u@x1>
 
-Hello:
-
-This series was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Tue, 10 Jun 2025 18:15:05 +0300 you wrote:
-> This patchset includes misc fixes from the team for the mlx5 core
-> and Ethernet drivers.
+On Wed, Jun 11, 2025 at 04:01:00PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Wed, Jun 11, 2025 at 05:06:15PM +0200, Sebastian Andrzej Siewior wrote:
+> > On 2025-06-11 11:55:23 [-0300], Arnaldo Carvalho de Melo wrote:
+> > > commit 8386dc356158fc50c55831c96b1248e01d112ebc
+> > > Author: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> > > Date:   Wed Jun 11 11:25:42 2025 +0200
+> > > 
+> > >     perf bench futex: Fix prctl include in musl libc
+> > >     
+> > >     Namhyung Kim reported:
+> > >     
+> > >       I've updated the perf-tools-next to v6.16-rc1 and found a build error
+> > >       like below on alpine linux 3.18.
+> > >     
+> > >         In file included from bench/futex.c:6:
+> > >         /usr/include/sys/prctl.h:88:8: error: redefinition of 'struct prctl_mm_map'
+> > >            88 | struct prctl_mm_map {
+> > >               |        ^~~~~~~~~~~~
+> > >         In file included from bench/futex.c:5:
+> > >         /linux/tools/include/uapi/linux/prctl.h:134:8: note: originally defined here
+> > >           134 | struct prctl_mm_map {
+> > >               |        ^~~~~~~~~~~~
+> > >         make[4]: *** [/linux/tools/build/Makefile.build:86: /build/bench/futex.o] Error 1
+> > >     
+> > >       git bisect says it's the first commit introduced the failure.
+> > >     
+> > >     So your /usr/include/sys/prctl.h and
+> > >     /linux/tools/include/uapi/linux/prctl.h both provide struct prctl_mm_map
+> > >     but their include guard must be different.
+> > >     
+> > >     My /usr/include/sys/prctl.h is provided by glibc and contains the
+> > >     prctl() declaration. It includes also linux/prctl.h.  The
+> > >     tools/include/uapi/linux/prctl.h is the same as
+> > >     /usr/include/linux/prctl.h.
+> > >     
+> > >     The /usr/include/sys/prctl.h on alpine linux is different. This is
+> > >     probably coming from musl. It contains the PR_* definition and the
+> > >     prctl() declaration.  So it clashes here because now the one struct is
+> > >     available twice.
+> > >     
+> > >     The man page for prctl(2) says:
+> > >     
+> > >     |       #include <linux/prctl.h>  /* Definition of PR_* constants */
+> > >     |       #include <sys/prctl.h>
+> > >     
+> > >     so musl doesn't follow this.
+> > >     
+> > >     So align with the other builds.
+> > >     
+> > >     Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> > >     Reported-by: Namhyung Kim <namhyung@kernel.org>
+> > >     Link: https://lore.kernel.org/r/20250611092542.F4ooE2FL@linutronix.de
+>  
+> > s/Link/Closes/
 > 
-> Thanks,
-> Mark
+> ok
+>  
+> > >     [ Remove one more in tools/perf/bench/futex-hash.c and conditionally define PR_FUTEX_HASH and friends ]
+> > >     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > > 
+> > > diff --git a/tools/perf/bench/futex-hash.c b/tools/perf/bench/futex-hash.c
+> > > index fdf133c9520f73a4..d2d6d7f3ea331c84 100644
+> > > --- a/tools/perf/bench/futex-hash.c
+> > > +++ b/tools/perf/bench/futex-hash.c
+> > > @@ -18,7 +18,6 @@
+> > >  #include <stdlib.h>
+> > >  #include <linux/compiler.h>
+> > >  #include <linux/kernel.h>
+> > > -#include <linux/prctl.h>
+> > >  #include <linux/zalloc.h>
+> > >  #include <sys/time.h>
+> > >  #include <sys/mman.h>
+> > > diff --git a/tools/perf/bench/futex.c b/tools/perf/bench/futex.c
+> > > index 26382e4d8d4ce2ff..4c4fee107e5912d5 100644
+> > > --- a/tools/perf/bench/futex.c
+> > > +++ b/tools/perf/bench/futex.c
+> > > @@ -2,11 +2,18 @@
+> > >  #include <err.h>
+> > >  #include <stdio.h>
+> > >  #include <stdlib.h>
+> > > -#include <linux/prctl.h>
+> > >  #include <sys/prctl.h>
+> > >  
+> > This is what I had locally and was waiting for confirmation.
+> > 
+> > >  #include "futex.h"
+> > >  
+> > > +#ifndef PR_FUTEX_HASH
+> > > +#define PR_FUTEX_HASH                   78
+> > > +# define PR_FUTEX_HASH_SET_SLOTS        1
+> > > +# define FH_FLAG_IMMUTABLE              (1ULL << 0)
+> > > +# define PR_FUTEX_HASH_GET_SLOTS        2
+> > > +# define PR_FUTEX_HASH_GET_IMMUTABLE    3
+> > > +#endif // PR_FUTEX_HASH
+> > 
+> > Is this needed? Aren't these defines coming from that local copy?
 > 
-> Amir Tzin (1):
->   net/mlx5: Fix ECVF vports unload on shutdown flow
+> So, these are, as you say, in the copied linux/prctl.h, but in musl libc
+> we have:
 > 
-> [...]
+> /tmp/perf-6.16.0-rc1 $ grep 'struct prctl_mm_map {' /usr/include/linux/prctl.h 
+> struct prctl_mm_map {
+> /tmp/perf-6.16.0-rc1 $ grep 'struct prctl_mm_map {' /usr/include/sys/prctl.h 
+> struct prctl_mm_map {
+> /tmp/perf-6.16.0-rc1 $
+> 
+> And sys/prctl.h doesn't include linux/prctl.h, if we do it, we get
+> multiple definitions for 'struct prctl_mm_map'.
+> 
+> While in fedora (probably in all the others, haven't checked, but no
+> failure on them from my last container set build tests):
+> 
+> ⬢ [acme@toolbx perf-tools]$ grep 'struct prctl_mm_map {' /usr/include/linux/prctl.h
+> struct prctl_mm_map {
+> ⬢ [acme@toolbx perf-tools]$ grep 'struct prctl_mm_map {' /usr/include/sys/prctl.h
+> ⬢ [acme@toolbx perf-tools]$
+> 
+> furthermore fedora's sys/prctl.h includes linux/prctl.h, while musl libc
+> doesn't.
+> 
+> I thought this would be something fixed in newer alpine versions, but
+> no:
+> 
+> toolsbuilder@five:~$ grep FAIL dm.log.old/summary 
+>    5    19.53 alpine:3.16                   : FAIL gcc version 11.2.1 20220219 (Alpine 11.2.1_git20220219) 
+>    6    20.83 alpine:3.17                   : FAIL gcc version 12.2.1 20220924 (Alpine 12.2.1_git20220924-r4) 
+>    7    13.94 alpine:3.18                   : FAIL gcc version 12.2.1 20220924 (Alpine 12.2.1_git20220924-r10) 
+>    8    16.60 alpine:3.19                   : FAIL gcc version 13.2.1 20231014 (Alpine 13.2.1_git20231014) 
+>    9    15.72 alpine:3.20                   : FAIL gcc version 13.2.1 20240309 (Alpine 13.2.1_git20240309) 
+>   10    16.38 alpine:3.22                   : FAIL gcc version 14.2.0 (Alpine 14.2.0) 
+>   11    15.09 alpine:edge                   : FAIL gcc version 14.2.0 (Alpine 14.2.0) 
+> toolsbuilder@five:~$
+> 
+> So the easiest way out of this seems to be not to explicitely include
+> linux/prctl.h and define the new stuff conditionally, as I did, right?
 
-Here is the summary with links:
-  - [net,1/9] net/mlx5: Ensure fw pages are always allocated on same NUMA
-    https://git.kernel.org/netdev/net/c/f37258133c1e
-  - [net,2/9] net/mlx5: Fix ECVF vports unload on shutdown flow
-    https://git.kernel.org/netdev/net/c/687560d8a9a2
-  - [net,3/9] net/mlx5: Fix return value when searching for existing flow group
-    https://git.kernel.org/netdev/net/c/8ec40e3f1f72
-  - [net,4/9] net/mlx5: HWS, Init mutex on the correct path
-    https://git.kernel.org/netdev/net/c/a002602676cd
-  - [net,5/9] net/mlx5: HWS, fix missing ip_version handling in definer
-    https://git.kernel.org/netdev/net/c/b5e3c76f35ee
-  - [net,6/9] net/mlx5: HWS, make sure the uplink is the last destination
-    https://git.kernel.org/netdev/net/c/b8335829518e
-  - [net,7/9] net/mlx5e: Properly access RCU protected qdisc_sleeping variable
-    (no matching commit)
-  - [net,8/9] net/mlx5e: Fix leak of Geneve TLV option object
-    https://git.kernel.org/netdev/net/c/aa9c44b84209
-  - [net,9/9] net/mlx5e: Fix number of lanes to UNKNOWN when using data_rate_oper
-    https://git.kernel.org/netdev/net/c/875d7c160d60
+Yep, it fixes my build too.  Without the defines, I see
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+  bench/futex.c: In function 'futex_set_nbuckets_param':
+  bench/futex.c:25:45: error: 'FH_FLAG_IMMUTABLE' undeclared (first use in this function)
+     25 |         flags = params->buckets_immutable ? FH_FLAG_IMMUTABLE : 0;
+        |                                             ^~~~~~~~~~~~~~~~~
+  bench/futex.c:25:45: note: each undeclared identifier is reported only once for each function it appears in
+  bench/futex.c:26:21: error: 'PR_FUTEX_HASH' undeclared (first use in this function)
+     26 |         ret = prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_SET_SLOTS, params->nbuckets, flags);
+        |                     ^~~~~~~~~~~~~
+    CC      /build/ui/browsers/annotate-data.o
+  bench/futex.c:26:36: error: 'PR_FUTEX_HASH_SET_SLOTS' undeclared (first use in this function)
+     26 |         ret = prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_SET_SLOTS, params->nbuckets, flags);
+        |                                    ^~~~~~~~~~~~~~~~~~~~~~~
+  bench/futex.c: In function 'futex_print_nbuckets':
+  bench/futex.c:39:21: error: 'PR_FUTEX_HASH' undeclared (first use in this function)
+     39 |         ret = prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_GET_SLOTS);
+        |                     ^~~~~~~~~~~~~
+  bench/futex.c:39:36: error: 'PR_FUTEX_HASH_GET_SLOTS' undeclared (first use in this function)
+     39 |         ret = prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_GET_SLOTS);
+        |                                    ^~~~~~~~~~~~~~~~~~~~~~~
+  bench/futex.c:53:52: error: 'PR_FUTEX_HASH_GET_IMMUTABLE' undeclared (first use in this function)
+     53 |                         ret = prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_GET_IMMUTABLE);
+        |                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+  make[4]: *** [/linux/tools/build/Makefile.build:86: /build/bench/futex.o] Error 1
+
+Tested-by: Namhyung Kim <namhyung@kernel.org>
+
+Thanks,
+Namhyung
 
 
+> 
+> - Arnaldo
+>  
+> > >  void futex_set_nbuckets_param(struct bench_futex_parameters *params)
+> > >  {
+> > >  	unsigned long flags;
+> > 
+> > Sebastian
