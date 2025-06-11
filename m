@@ -1,204 +1,99 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0181898E9
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 00:10:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5869522F
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 00:13:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749600661; cv=none; b=T924ctJ94omm9Ezfy7BLRN6jUQ5JOkqx+JL43d+OMM40dnhHUbyfdnRHmZQ9f0vLvL48cStCSJA3/2xcPz3i5RXPwabo3izksq/ncv8sRkkYzyfRnd3HAlHxe5Hx5t5ujTOHbhPGkrvhJP4/5/ABteRwsNNJjRDTuk1rG+/B/zQ=
+	t=1749600805; cv=none; b=cGt7+Ku6MrWcWcnGDQS60/U3wiHKkr9X8cWyjcDR0IVYYl5r/t+pna6rmmYQw2Nl+oe4Ui/V/myOBUudWWoP1e4hVllgH1itYwwhe0FSOrL5hdE6+6FEqQ779PR9mBtkQNePikbUfbXbamu0oVpZvOCTMD0rQaqHwgIHJ6dSArg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749600661; c=relaxed/simple;
-	bh=AcY3H8bGfIWZWHawREnW4VSuG2ZvHv2SK1gbpEk3yi4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=AwaRFHcGcP0VEwfTso6bDXgIc6I1G7+L/Nb7thrChf05V992yjbkpvSm6x8oCtVCY/fQkaSgpM+vro5jxDSJD0f4twBSsxCiq7bXK4tgRT/ZIn3y5vzwF8Qq2U3/aWdypmJjPWGxeFRy8My+D08z5C3xjZx/1rGPPIojl5KTfcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mtw7h/hu; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1749600805; c=relaxed/simple;
+	bh=Zr5kJXOd0E61qhqZcjK4JuesW5RctkKk1iK7a73axYc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JHRzjiKUi2iHpAXSmU8EB1IbJUeRkS4cPQtCNRysowhPn4nU/UnimxbNhOZIoeUObnx2r648PpmvMxG4KKwpdA+CQoksJ2Z1IBSECDqpUtA3lgBOIyj9+QmK0gdVRxM35Tc5qcutnHL23CMifDNO6uCQj+T5Nj7+y+Xk82/Rj4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nE8QMIOP; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mtw7h/hu"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-74834bc5d37so6092228b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 17:10:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nE8QMIOP"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-747fc77bb2aso4734855b3a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 17:13:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749600659; x=1750205459; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=t+Mj+r8r7UAjF4+0LNUZhsvI8NJHwfinPsCt24LIifo=;
-        b=mtw7h/huIuU+Dojq7oaTp5DnWiKxzyUxE+gBVHjv85aTL3ZducZyuLoUYAUgdFFU9b
-         Qn7ObnA/iJVFX5uKWlzdeujXMgt03FmD880lK3hB98uATPY68rCw8AgqaK0xWqBVsbX5
-         r1DM/oa8283rjsgINUS21bNMAzrrGSipU2Lj2+vlDqNB+TBdLtTu4dOEpg+ZdsICUFFK
-         RBhfYzh/tBQTOHQ2uYjOXz3R3jM5KSuHvJOV14QTSSabiPWDNX97vBlCct+3s+yuaY4A
-         O7O+8nLfWWS3kkWdJ10e/wKIkYusjF5qcEDhk3JT7e/o6SZy3bj73g6uYill5335sM5Y
-         tsfA==
+        d=gmail.com; s=20230601; t=1749600803; x=1750205603; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TzGokTHWaqpctTJmaaX7l1tJgh1TuHPjKfl0NST8upg=;
+        b=nE8QMIOPBaUERj5O8CU2LWn5d/QNJxqLji6bbXHKpIlbxE5pdmKKMj5ez4mbSYSBZz
+         eCBHG6ZkQF8DHqbr5j3RdPrDuR9kONCv4GXfuJvLwUULOSjz5Ti2sBTXF4SV6IKlSWlw
+         /iui6Qcl9OqjdC2MYpEJ8Gk7qRmkgZW7+O0Cmunft9Mz31J0ghqJhHJp2W8g9CN0AeOU
+         Z4dFdcG7mJmA4W63hiLAzSNC4Dk6/5wMiLuVmjbS8Rq1j+GnWvLugO6dVaLr3ivtQ7/0
+         d72+W8Za88LVFP+OM6ZZxFiOt5DI1rPQ9yHln17u1ZI2ryFwNwP9rf4JjviM9zZLDDoq
+         Waeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749600659; x=1750205459;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1749600803; x=1750205603;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=t+Mj+r8r7UAjF4+0LNUZhsvI8NJHwfinPsCt24LIifo=;
-        b=ennpYuIAqQnR4+3+hlm9JWq7FblImLUtRQhnBGubujm+CKLju1pxzzDO9sbAQPH0x0
-         fOa65gTFi0xL2B6yeVfx4rDp7KcVZfbdj1EfCtPj4R7vGUhluwzQyI+3hAlRx2g+uaow
-         50hHNO2KmHSGvtGt9dE3m6FHVjpD6bD+rK7f5tZJ6KVOAYmJ/G68aXyFD7NmoK9mF0d6
-         4pUHO2GmzNtMUMUqVBKAZeVSEa1efGyJUevxcxWNV4mWfXxHYqErNOB3YBMkgygzvHFX
-         nrTt6o2YiNqJltU82ZhqLLT3eviMEYFekeY2QvE7/z2o4PoV3lpyPoh4vQuTjHw/6FUD
-         RA4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVKBQyxHuNrGZid0vyfoNTE4C+0wCnS+iKUmSl39deOfYoQaG3Nu3zQNJXkHoYS36B+yeE/B4NzpMV72Kk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxm3JveI+Zebzkwmzt2iKrTULd+KB1ncNqZ6QPwg3qCrqh39VI/
-	/g624oVoerGa3reMUuijp7biRECzXqoHKqCTfiKwx6tm+rzW1gHRqc5AYtYGdJCes5MGqDiqbn3
-	yg1iJjg==
-X-Google-Smtp-Source: AGHT+IHdKstC+XlYUus8Wdm0HR7HPxHMBlUy5ahB8xm3L+Y1hmecIZTBPJ5vhN4Gi0qdwz1eVbXtQ9xfH68=
-X-Received: from pgam16.prod.google.com ([2002:a05:6a02:2b50:b0:b2f:6348:f715])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:9012:b0:1f5:8f7f:8f19
- with SMTP id adf61e73a8af0-21f8663f76dmr1960513637.10.1749600659002; Tue, 10
- Jun 2025 17:10:59 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Tue, 10 Jun 2025 17:10:42 -0700
-In-Reply-To: <20250611001042.170501-1-seanjc@google.com>
+        bh=TzGokTHWaqpctTJmaaX7l1tJgh1TuHPjKfl0NST8upg=;
+        b=IQcOiB0POAcU0mg4NY2efUsUGNryxvtEMtod1NifT9SSxy5vPQ5oaQC6swyVCt2tCf
+         3t9lnZqoNgJG/WqPU0sOgXcIGk1C4KqfLqZp9ODty9rkIKNYU6x98vXdp80YdrgGQEPU
+         aIKGQIq5zKRNyLzjROWhZ+9LjEq4y8IYqcTE+WZK9Wor7i8TTMNiaYA9a+/ui8sBWKG/
+         +txCyD2XrlW2cRF9ZXpC0YwhsQgwL7sPZZuTtVd0WSvhZpSI5jf1Hw/EwKzX2WK7oFeu
+         krdr+x9UXIsNE7ae37AlWSONAgm1Xi0xrHwuBfWuVqhWprHiZddRwgWwI9yVg1yA6jF4
+         UP/g==
+X-Forwarded-Encrypted: i=1; AJvYcCWg8NIaPcQhBkPHAfyHLVEEQKiNaIIatWaKS4x57har84P9SrU6VPcaRRK/oH/dWpBxEfx5+HuUR3J32WU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFRinYueyVn0C2qvC6jKsGgOn7thGeYn/V7u1OCOYHtA1+28ow
+	4r7GzZxBPiL6hHe3jZ5SWFdhL5r1fSwSGvEZAAQcb2fo+XOO7aMlQy45
+X-Gm-Gg: ASbGnctWBGAOcH8PK8IoFfiGJtmfG68G1XND5q5bVE8CfCS2doLkY+xO6Ddjce3pe9o
+	m42ttK6rEgv279sBU1Mdc+p9QId/a+VDRvEIfPdZ3QFmdN/xOi9E7GmPh3tLw3L/NYnZjyu8Mkk
+	Vj0Cm66rMjjP9rKrhrpI7yHkPmZ7J2xaAzOvF9WerZhR13rjuZ1fz+VxLXgyKDbRyomUAbTxBwN
+	CqeehFCRCK/jails40a8XRudTjBdSLvJSqGRoJQzRXQ2IQnuwFLYBJ0J58vl42Vm1137DZB1MuT
+	Ak4JfFQsosRTaHbjJT0a3BabrVLqI6iwD+wrNdi4tgF9zA7LbB3s4Bk12VRH1uZNjrcpH7B4us2
+	fCeLpGlijia4lbxtypv6aVz7Ivtux9y4=
+X-Google-Smtp-Source: AGHT+IFgEtHJxBLgI+jT81eBlMA+EU05hPKkSjYudhy5V5fcfuuIgxncTbMqid7sNNmukcqK2M9LYA==
+X-Received: by 2002:a17:90b:3c11:b0:311:fde5:c4be with SMTP id 98e67ed59e1d1-313b20072e3mr846808a91.35.1749600802854;
+        Tue, 10 Jun 2025 17:13:22 -0700 (PDT)
+Received: from fedora.. (c-67-164-59-41.hsd1.ca.comcast.net. [67.164.59.41])
+        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-313b2137b77sm161367a91.34.2025.06.10.17.13.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 17:13:22 -0700 (PDT)
+From: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-m68k@lists.linux-m68k.org,
+	linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+Subject: [PATCH 0/4] Convert motorola to use ptdescs
+Date: Tue, 10 Jun 2025 17:12:51 -0700
+Message-ID: <20250611001255.527952-1-vishal.moola@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250611001042.170501-1-seanjc@google.com>
-X-Mailer: git-send-email 2.50.0.rc0.642.g800a2b2222-goog
-Message-ID: <20250611001042.170501-9-seanjc@google.com>
-Subject: [PATCH 8/8] KVM: Standardize include paths across all architectures
-From: Sean Christopherson <seanjc@google.com>
-To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Sean Christopherson <seanjc@google.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Anish Ghulati <aghulati@google.com>, Colton Lewis <coltonlewis@google.com>, 
-	Thomas Huth <thuth@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Standardize KVM's include paths across all architectures by declaring
-the KVM-specific includes in the common Makefile.kvm.  Having common KVM
-"own" the included paths reduces the temptation to unnecessarily add
-virt/kvm to arch include paths, and conversely if allowing arch code to
-grab headers from virt/kvm becomes desirable, virt/kvm can be added to
-all architecture's include path with a single line update.
+m68k's Motorola still uses struct page (it's pointer tables) to track
+page tables. This patchset converts it to use ptdescs, to help prepare
+for allocating memory descriptors independently of struct page.
 
-Having the common KVM makefile append to ccflags also provides a
-convenient location to append other things, e.g. KVM-specific #defines.
+It also includes some minor cleanups to make the code more readable. 
 
-Note, this changes the behavior of s390 and PPC, as s390 and PPC
-previously overwrote ccflags-y instead of adding on.  There is no evidence
-that overwriting ccflags-y was necessary or even deliberate, as both s390
-and PPC switched to the overwrite behavior without so much as a passing
-mention when EXTRA_CFLAGS was replaced with ccflags-y (commit c73028a02887
-("s390: change to new flag variable") and commit 4108d9ba9091
-("powerpc/Makefiles: Change to new flag variables")).
+----
 
-Acked-by: Anup Patel <anup@brainfault.org>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/arm64/kvm/Makefile   | 2 --
- arch/mips/kvm/Makefile    | 2 --
- arch/powerpc/kvm/Makefile | 2 --
- arch/riscv/kvm/Makefile   | 2 --
- arch/s390/kvm/Makefile    | 2 --
- arch/x86/kvm/Makefile     | 1 -
- virt/kvm/Makefile.kvm     | 2 ++
- 7 files changed, 2 insertions(+), 11 deletions(-)
+Based on mm-new. This has only been compile tested, but there are
+no expected runtime changes.
 
-diff --git a/arch/arm64/kvm/Makefile b/arch/arm64/kvm/Makefile
-index 7c329e01c557..86035b311269 100644
---- a/arch/arm64/kvm/Makefile
-+++ b/arch/arm64/kvm/Makefile
-@@ -3,8 +3,6 @@
- # Makefile for Kernel-based Virtual Machine module
- #
- 
--ccflags-y += -I $(src)
--
- include $(srctree)/virt/kvm/Makefile.kvm
- 
- obj-$(CONFIG_KVM) += kvm.o
-diff --git a/arch/mips/kvm/Makefile b/arch/mips/kvm/Makefile
-index 96a7cd21b140..d198e1addea7 100644
---- a/arch/mips/kvm/Makefile
-+++ b/arch/mips/kvm/Makefile
-@@ -4,8 +4,6 @@
- 
- include $(srctree)/virt/kvm/Makefile.kvm
- 
--ccflags-y += -Iarch/mips/kvm
--
- kvm-$(CONFIG_CPU_HAS_MSA) += msa.o
- 
- kvm-y +=    mips.o emulate.o entry.o \
-diff --git a/arch/powerpc/kvm/Makefile b/arch/powerpc/kvm/Makefile
-index 1a575db2666e..6f12edd465df 100644
---- a/arch/powerpc/kvm/Makefile
-+++ b/arch/powerpc/kvm/Makefile
-@@ -3,8 +3,6 @@
- # Makefile for Kernel-based Virtual Machine module
- #
- 
--ccflags-y := -Iarch/powerpc/kvm
--
- include $(srctree)/virt/kvm/Makefile.kvm
- 
- common-objs-y += powerpc.o emulate_loadstore.o
-diff --git a/arch/riscv/kvm/Makefile b/arch/riscv/kvm/Makefile
-index 4e0bba91d284..dbe61a398cc8 100644
---- a/arch/riscv/kvm/Makefile
-+++ b/arch/riscv/kvm/Makefile
-@@ -3,8 +3,6 @@
- # Makefile for RISC-V KVM support
- #
- 
--ccflags-y += -I $(src)
--
- include $(srctree)/virt/kvm/Makefile.kvm
- 
- obj-$(CONFIG_KVM) += kvm.o
-diff --git a/arch/s390/kvm/Makefile b/arch/s390/kvm/Makefile
-index b742e08c036b..5cbcaa7f241a 100644
---- a/arch/s390/kvm/Makefile
-+++ b/arch/s390/kvm/Makefile
-@@ -5,8 +5,6 @@
- 
- include $(srctree)/virt/kvm/Makefile.kvm
- 
--ccflags-y := -Iarch/s390/kvm
--
- kvm-y += kvm-s390.o intercept.o interrupt.o priv.o sigp.o
- kvm-y += diag.o gaccess.o guestdbg.o vsie.o pv.o gmap-vsie.o
- 
-diff --git a/arch/x86/kvm/Makefile b/arch/x86/kvm/Makefile
-index a5d362c7b504..f78f11b582d2 100644
---- a/arch/x86/kvm/Makefile
-+++ b/arch/x86/kvm/Makefile
-@@ -1,6 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
- 
--ccflags-y += -I $(srctree)/arch/x86/kvm
- ccflags-$(CONFIG_KVM_WERROR) += -Werror
- 
- include $(srctree)/virt/kvm/Makefile.kvm
-diff --git a/virt/kvm/Makefile.kvm b/virt/kvm/Makefile.kvm
-index 724c89af78af..0e7ba49026fc 100644
---- a/virt/kvm/Makefile.kvm
-+++ b/virt/kvm/Makefile.kvm
-@@ -3,6 +3,8 @@
- # Makefile for Kernel-based Virtual Machine module
- #
- 
-+ccflags-y += -I$(src)
-+
- KVM ?= ../../../virt/kvm
- 
- kvm-y := $(KVM)/kvm_main.o $(KVM)/eventfd.o $(KVM)/binary_stats.o
+Vishal Moola (Oracle) (4):
+  m68k: mm: Convert get_pointer_table() to use ptdescs
+  m68k: mm: Convert free_pointer_table() to use ptdescs
+  m68k: mm: Convert init_pointer_table() to use ptdescs
+  m68k: mm: Convert pointer table macros to use ptdescs
+
+ arch/m68k/mm/motorola.c | 54 ++++++++++++++++++++---------------------
+ 1 file changed, 27 insertions(+), 27 deletions(-)
+
 -- 
-2.50.0.rc0.642.g800a2b2222-goog
+2.49.0
 
