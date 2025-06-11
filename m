@@ -1,154 +1,195 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lx20.hoststar.hosting (lx20.hoststar.hosting [168.119.41.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07C027C144;
-	Wed, 11 Jun 2025 12:14:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8B0C2E6102;
+	Wed, 11 Jun 2025 12:15:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.41.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749644078; cv=none; b=j/CaWHhSq4AHnijxufar/wpdMfsBV7o91D77sNlbIRDSHI7JBTIe5Fu4h4FIxICNq3wsPKi71ByfPTweg23gC5XZWrR70mg5y6bHnhYB7KPx2adBBlJlauTEVWK70AhbnVRV4OJvnuwzmKTuFqkPngjuxmc+ZnXQNwO7UEdbYZA=
+	t=1749644123; cv=none; b=VHgG3bhpYx1qs7a4b3jysLAKzzlxIokHUb2Gq29fNrcvnTDAjWiQK+yHdsIpQzHE4T/n0aQOHgdZ/ikzdSV3577iZQwf4z3Tnx2FFZiSSv+fa2gLUWzJkBs/KTYRFeKirwQUSYMWNQqME9Z5hnO7rQEfT7JI44fcxgettxivdE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749644078; c=relaxed/simple;
-	bh=FJ1AHEgMmhRXu6CGnQHlc/GRmFKNYpmO4gT7upoqODo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=X1oWY2vZDV33IuZ6GL6EgUXm9aPIGY+2jIYZy647t3AaKu3/EQGOyTI0rthHTLooHpKuy78Kuhmbmgnd4RyjQRRIHifVKoMqicJSlExD9jTlrE+Fg9KyFuA0HPL2nuRhhxnUF9lHABzNtS+j0jiHvKKTBouN6tf1Ub30/kI2IU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Edv1PjRq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749644123; c=relaxed/simple;
+	bh=FQrqMWHcqOYSzV0uJEVqzpxAbDwWYRMY89idJmr1ruM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mzo9NRq0/xE8PJzy3G4gRJRgYTbagNQ2tztMANi7Is0zD/1fU/TICJk1sg6mPMUIp0+1UH215/tAWJV1qozE2V18XbPak4pxZUIqaIiwatBQZNC3nSPLEGePcOeCMQguikrUs+BsDB4IBqYIOBvvaKNVqBjLuQqVrbYTPyS7u8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at; spf=pass smtp.mailfrom=emfend.at; dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b=fxKAQ6lx; arc=none smtp.client-ip=168.119.41.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emfend.at
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Edv1PjRq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5CA4C4CEEE;
-	Wed, 11 Jun 2025 12:14:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749644078;
-	bh=FJ1AHEgMmhRXu6CGnQHlc/GRmFKNYpmO4gT7upoqODo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Edv1PjRqitKqfWC53D9UEbG5O7XatWHfY7eu+CVCezYUjI3iBlpiUxBWy9hpBq1Hi
-	 O1ZCBbV56G1rRrHGu22LJh5nGSOp5lyHWsjC6T287wv7lwRVjbRyjPOfLiZXH1LltK
-	 cARMxYQmV/wbB3nmtlqA9Akubigyrr7gNIu1LFSWDfi+mvit8EIB0rCMQgGta+L5Hn
-	 r43JxzN/IgcIkVdtPJnrFYuDYgwzqrMhshnPiaFdKb3jZSFZITCXcER5VXNDIVr1A/
-	 qeJrKq6C14kg1z1G0WmqEcuqy4UISfjKibFRO1t6myCj0+5+fZJcZS7YS616khN/Ak
-	 4vv72X4cGTt5g==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Benno Lossin" <lossin@kernel.org>
-Cc: "Alice Ryhl" <aliceryhl@google.com>,  "Danilo Krummrich"
- <dakr@kernel.org>,  "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
- <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
- <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Trevor
- Gross" <tmgross@umich.edu>,  "Bjorn Helgaas" <bhelgaas@google.com>,
-  Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,  "Greg
- Kroah-Hartman"
- <gregkh@linuxfoundation.org>,  "Rafael J. Wysocki" <rafael@kernel.org>,
-  "Tamir Duberstein" <tamird@gmail.com>,  "Viresh Kumar"
- <viresh.kumar@linaro.org>,  <rust-for-linux@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>,  <linux-pci@vger.kernel.org>,
-  =?utf-8?Q?Ma=C3=ADra?=
- Canal <mcanal@igalia.com>
-Subject: Re: [PATCH v2] rust: types: add FOREIGN_ALIGN to ForeignOwnable
-In-Reply-To: <DAJOKFHW96XZ.2ANYSSFQO03ZL@kernel.org> (Benno Lossin's message
-	of "Wed, 11 Jun 2025 13:51:21 +0200")
-References: <20250610-pointed-to-v2-1-fad8f92cf1e5@kernel.org>
-	<HCd56HpzAlpsTZWbmM8R3IN8MCXWW-kpIjIt_K1D8ZFN6DLqIGmpNRJdle94PGpHYS86rmmhCPci9TajHZCCrw==@protonmail.internalid>
-	<DAIV6MJAJ5R0.3TZ4IC2KO9MOL@kernel.org> <87v7p3znz6.fsf@kernel.org>
-	<CAH5fLgi3B_Wyz2OzBLhHHgWrg7hboyFUcQe-+GUrrvXiX9di=w@mail.gmail.com>
-	<GHUD6hpYDty0s_oTLGC6owDPKqrNepeGOL9F-XlvY6G50K8Zptjp4f8kVVnyoTjf-E_0QVeHfmUUvcN-p1i24Q==@protonmail.internalid>
-	<DAJHVMM9DND0.2FM0FJYN0XEFV@kernel.org> <87jz5izhg3.fsf@kernel.org>
-	<WXoNAlTJvpteJEAZ3TkYKk2QWHBC0oID8Dy3AHGxLEwiZwBPdSLZB4MpdbObLtFvqiN9re3q6OQpiua2uiv1Hw==@protonmail.internalid>
-	<DAJOKFHW96XZ.2ANYSSFQO03ZL@kernel.org>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Wed, 11 Jun 2025 14:14:25 +0200
-Message-ID: <878qlyzd9a.fsf@kernel.org>
+	dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b="fxKAQ6lx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=emfend.at;
+	 s=mail; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References
+	:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=xq24d1PFQ1Om8DHKsu9Y7WJ8vjCj2XxMm2DJZnzLc2I=; b=fxKAQ6lxrh1rLRfimuQ7BwYziF
+	mGufIwkUqLEKEYohk0a2/a1MWY0cOcs0WTtyCfgXAP3rl6B+UWPrxoXRMxlWqA1Jg+UCQlMH1DsVd
+	t5QhJCUURgvfTSx/MJkwP1IHljOekVNbSrVPyn6/XW/GXVOfB3hsDXRoHmofQi5cklH8=;
+Received: from 194-208-208-245.tele.net ([194.208.208.245]:53988 helo=[192.168.0.218])
+	by lx20.hoststar.hosting with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
+	(Exim 4.93)
+	(envelope-from <matthias.fend@emfend.at>)
+	id 1uPKMJ-003Rdv-9u; Wed, 11 Jun 2025 14:15:11 +0200
+Message-ID: <f4ebc809-f30e-46aa-9f36-db98370ebe6e@emfend.at>
+Date: Wed, 11 Jun 2025 14:15:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] media: dw9714: add support for powerdown pin
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bsp-development.geo@leica-geosystems.com
+References: <20250611-dw9714-sd-v1-1-fb47ef5e736c@emfend.at>
+ <aElNcDTLEJTcJs2s@kekkonen.localdomain>
+Content-Language: de-DE
+From: Matthias Fend <matthias.fend@emfend.at>
+In-Reply-To: <aElNcDTLEJTcJs2s@kekkonen.localdomain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Score: 
+X-Spam-Bar: 
+X-Spam-Report: 
 
-"Benno Lossin" <lossin@kernel.org> writes:
+Hi Sakari,
 
-> On Wed Jun 11, 2025 at 12:43 PM CEST, Andreas Hindborg wrote:
->> "Benno Lossin" <lossin@kernel.org> writes:
+thanks for your comments.
+
+Am 11.06.2025 um 11:33 schrieb Sakari Ailus:
+> Hi Matthias,
+> 
+> Thanks for the patch.
+> 
+> On Wed, Jun 11, 2025 at 09:13:33AM +0200, Matthias Fend wrote:
+>> Add support for the powerdown pin (xSD), which can be used to put the VCM
+>> driver into power down mode. This is useful, for example, if the VCM
+>> driver's power supply cannot be controlled.
+>> The use of the powerdown pin is optional.
+> 
+> Please rewrap. Most editors can do it for you.
+
+To me the message body looks line wrapped at 75 columns. The last 
+sentence on a new line. At least that is what was intended.
+So I think I'm missing something here. Can you please tell me what 
+exactly I should change?
+
+> 
 >>
->>> On Tue Jun 10, 2025 at 4:15 PM CEST, Alice Ryhl wrote:
->>>> On Tue, Jun 10, 2025 at 4:10=E2=80=AFPM Andreas Hindborg <a.hindborg@k=
-ernel.org> wrote:
->>>>>
->>>>> "Benno Lossin" <lossin@kernel.org> writes:
->>>>>
->>>>> > On Tue Jun 10, 2025 at 1:30 PM CEST, Andreas Hindborg wrote:
->>>>> >> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
->>>>> >> index 22985b6f6982..0ccef6b5a20a 100644
->>>>> >> --- a/rust/kernel/types.rs
->>>>> >> +++ b/rust/kernel/types.rs
->>>>> >> @@ -21,15 +21,11 @@
->>>>> >>  ///
->>>>> >>  /// # Safety
->>>>> >>  ///
->>>>> >> -/// Implementers must ensure that [`into_foreign`] returns a poin=
-ter which meets the alignment
->>>>> >> -/// requirements of [`PointedTo`].
->>>>> >> -///
->>>>> >> -/// [`into_foreign`]: Self::into_foreign
->>>>> >> -/// [`PointedTo`]: Self::PointedTo
->>>>> >> +/// Implementers must ensure that [`Self::into_foreign`] returns =
-pointers aligned to
->>>>> >> +/// [`Self::FOREIGN_ALIGN`].
->>>>> >>  pub unsafe trait ForeignOwnable: Sized {
->>>>> >> -    /// Type used when the value is foreign-owned. In practical t=
-erms only defines the alignment of
->>>>> >> -    /// the pointer.
->>>>> >> -    type PointedTo;
->>>>> >> +    /// The alignment of pointers returned by `into_foreign`.
->>>>> >> +    const FOREIGN_ALIGN: usize;
->>>>> >>
->>>>> >>      /// Type used to immutably borrow a value that is currently f=
-oreign-owned.
->>>>> >>      type Borrowed<'a>;
->>>>> >> @@ -39,18 +35,20 @@ pub unsafe trait ForeignOwnable: Sized {
->>>>> >>
->>>>> >>      /// Converts a Rust-owned object to a foreign-owned one.
->>>>> >>      ///
->>>>> >> +    /// The foreign representation is a pointer to void. Aside fr=
-om the guarantees listed below,
->>>>> >
->>>>> > I feel like this reads better:
->>>>> >
->>>>> > s/guarantees/ones/
->>>>> >
->>>>> >> +    /// there are no other guarantees for this pointer. For examp=
-le, it might be invalid, dangling
->>>>> >
->>>>> > We should also mention that it could be null. (or is that assumption
->>>>> > wrong?)
->>>>>
->>>>> It is probably not going to be null, but it is allowed to. I can add =
-it.
->>>>>
->>>>> The list does not claim to be exhaustive, and a null pointer is just a
->>>>> special case of an invalid pointer.
->>>>
->>>> We probably should not allow null pointers. If we do, then
->>>> try_from_foreign does not make sense.
->>>
->>> That's a good point. Then let's add that as a safety requirement for the
->>> trait.
+>> Signed-off-by: Matthias Fend <matthias.fend@emfend.at>
+>> ---
+>>   drivers/media/i2c/Kconfig  |  2 +-
+>>   drivers/media/i2c/dw9714.c | 16 ++++++++++++++++
+>>   2 files changed, 17 insertions(+), 1 deletion(-)
 >>
->> I disagree. It does not matter for the safety of the trait.
+>> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+>> index e45ba127069fc0848f1a06ceb789efd3c222c008..e923daeec9c574c5b8c7014b9e83fcbad47866c0 100644
+>> --- a/drivers/media/i2c/Kconfig
+>> +++ b/drivers/media/i2c/Kconfig
+>> @@ -748,7 +748,7 @@ config VIDEO_AK7375
+>>   
+>>   config VIDEO_DW9714
+>>   	tristate "DW9714 lens voice coil support"
+>> -	depends on I2C && VIDEO_DEV
+>> +	depends on GPIOLIB && I2C && VIDEO_DEV
+>>   	select MEDIA_CONTROLLER
+>>   	select VIDEO_V4L2_SUBDEV_API
+>>   	select V4L2_ASYNC
+>> diff --git a/drivers/media/i2c/dw9714.c b/drivers/media/i2c/dw9714.c
+>> index 2ddd7daa79e28a2cde915b4173fa27e60d5a2b57..5b78c1848f80bc3e32df13d149f3865ff8defe6e 100644
+>> --- a/drivers/media/i2c/dw9714.c
+>> +++ b/drivers/media/i2c/dw9714.c
+>> @@ -2,6 +2,7 @@
+>>   // Copyright (c) 2015--2017 Intel Corporation.
+>>   
+>>   #include <linux/delay.h>
+>> +#include <linux/gpio/consumer.h>
+>>   #include <linux/i2c.h>
+>>   #include <linux/module.h>
+>>   #include <linux/pm_runtime.h>
+>> @@ -38,6 +39,7 @@ struct dw9714_device {
+>>   	struct v4l2_subdev sd;
+>>   	u16 current_val;
+>>   	struct regulator *vcc;
+>> +	struct gpio_desc *powerdown_gpio;
+>>   };
+>>   
+>>   static inline struct dw9714_device *to_dw9714_vcm(struct v4l2_ctrl *ctrl)
+>> @@ -151,11 +153,20 @@ static int dw9714_probe(struct i2c_client *client)
+>>   	if (IS_ERR(dw9714_dev->vcc))
+>>   		return PTR_ERR(dw9714_dev->vcc);
+>>   
+>> +	dw9714_dev->powerdown_gpio = devm_gpiod_get_optional(&client->dev,
+>> +							     "powerdown",
+>> +							     GPIOD_OUT_LOW);
+>> +	if (IS_ERR(dw9714_dev->powerdown_gpio))
+>> +		return dev_err_probe(&client->dev,
+>> +				     PTR_ERR(dw9714_dev->powerdown_gpio),
+>> +				     "could not get powerdown gpio\n");
+>> +
+>>   	rval = regulator_enable(dw9714_dev->vcc);
+>>   	if (rval < 0) {
+>>   		dev_err(&client->dev, "failed to enable vcc: %d\n", rval);
+>>   		return rval;
+>>   	}
+>> +	gpiod_set_value_cansleep(dw9714_dev->powerdown_gpio, 0);
+> 
+> This seems to be redundant, you're already setting the GPIO low when
+> acquiring it. Typically the order is different, though: the regulator is
+> enabled first. Also related to the following comment.
+
+Yes, that's right. I'll set the pin during initialization so that 
+power-down mode is active. So at least the sequence is always the same.
+
+> 
+>>   
+>>   	usleep_range(1000, 2000);
+>>   
+>> @@ -185,6 +196,7 @@ static int dw9714_probe(struct i2c_client *client)
+>>   	return 0;
+>>   
+>>   err_cleanup:
+>> +	gpiod_set_value_cansleep(dw9714_dev->powerdown_gpio, 1);
+>>   	regulator_disable(dw9714_dev->vcc);
+> 
+> It'd be nice to have a single implementation of the power-on and power-off
+> sequences. Now there are two.
+
+Okay, will do so.
+
+Thanks,
+  ~Matthias
+
+> 
+>>   	v4l2_ctrl_handler_free(&dw9714_dev->ctrls_vcm);
+>>   	media_entity_cleanup(&dw9714_dev->sd.entity);
+>> @@ -200,6 +212,7 @@ static void dw9714_remove(struct i2c_client *client)
+>>   
+>>   	pm_runtime_disable(&client->dev);
+>>   	if (!pm_runtime_status_suspended(&client->dev)) {
+>> +		gpiod_set_value_cansleep(dw9714_dev->powerdown_gpio, 1);
+>>   		ret = regulator_disable(dw9714_dev->vcc);
+>>   		if (ret) {
+>>   			dev_err(&client->dev,
+>> @@ -234,6 +247,7 @@ static int __maybe_unused dw9714_vcm_suspend(struct device *dev)
+>>   		usleep_range(DW9714_CTRL_DELAY_US, DW9714_CTRL_DELAY_US + 10);
+>>   	}
+>>   
+>> +	gpiod_set_value_cansleep(dw9714_dev->powerdown_gpio, 1);
+>>   	ret = regulator_disable(dw9714_dev->vcc);
+>>   	if (ret)
+>>   		dev_err(dev, "Failed to disable vcc: %d\n", ret);
+>> @@ -262,6 +276,8 @@ static int  __maybe_unused dw9714_vcm_resume(struct device *dev)
+>>   		dev_err(dev, "Failed to enable vcc: %d\n", ret);
+>>   		return ret;
+>>   	}
+>> +	gpiod_set_value_cansleep(dw9714_dev->powerdown_gpio, 0);
+>> +
+>>   	usleep_range(1000, 2000);
+>>   
+>>   	for (val = dw9714_dev->current_val % DW9714_CTRL_STEPS;
 >>
->> From the point of the user, the pointer is opaque and can be any value.
->> In fact, one could do a safe implementation where the returned value is
->> a key into some mapping structure. Probably not super fast, but the user
->> should not care.
->
-> Then we'll have to remove `try_from_foreign`.
-
-Oh, I see. OK, it is a safety requirement. Should I just add it to this pat=
-ch?
-
-
-Best regards,
-Andreas Hindborg
-
-
+> 
 
