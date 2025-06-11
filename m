@@ -1,57 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950F2246BD5;
-	Wed, 11 Jun 2025 21:43:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A94923C39A;
+	Wed, 11 Jun 2025 21:44:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749678194; cv=none; b=gDhJjso50tRFfffZpz2O3EQ1MlTA4+qHk6Q2p1aBUbeXylje4NzGrDyEbL3r3hB0vh3HV2tCxafLr5Xa+uo2j7A3Rrt0vYaDjHaHGmMrXgOoTB2IgwcwjeAW9xNm50T2Q8dbhvt3bH0gZPzr1mgcWEmqXZcLlkG8vYWQanFD8YU=
+	t=1749678251; cv=none; b=sND0xnl5gQuNeGppKyFOye6XVFcDdQrdJtwzSfLHKZBoBEMAT4Rf+JDMLDXqREmABdj4/aIXEh4uAVekv+tUTxUkmDj2P2Ms+guFyyBjL8r9TS5MFXixAEMP0TlZoZaDy/5WcH8GjTErdcUR3IJQpBF0VGEY8R27iPpyZ/vrFZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749678194; c=relaxed/simple;
-	bh=InCi4uyqM7ljrwy7jzwa0FLc7x89wcJyuX+nURtQgko=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KVAhwuQWger3UZqp/9gTMz/IM02clWwvKo5O3pNValRBexdLbvOp69c4r2BxxuFFeHAyWf3KipxKkms7mwxg+b8c34Z3T8UkuFDvJYKREzKDpQEw6JRvBTHG5usrrgy2OYwQEC6GKnAuaON+TMOxqwjE1tlWSUDU3ecskdkp23Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RsJ1X0T/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749678251; c=relaxed/simple;
+	bh=AYVPRvkZXEtsP2eg8lry3PUoQLuajb1C244F88lG6vs=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=hVHk1+YcVqOh21zSQwuVNznU5R8VugAGoYHFgnaSANlhciEJiDeHGayCKs3jQZNUdZdwUUjPAvo5Dda68Em/xKkCf6K0S/kRx57RIOMIsWy8oo9Srzgaqd+TKhlTPKXoUd0LhQAIajXJ3l16JFlWGflLswkmY0eQIHwv+DESIBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qzaiC/AU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RsJ1X0T/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9815EC4CEE3;
-	Wed, 11 Jun 2025 21:43:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qzaiC/AU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8146C4CEE3;
+	Wed, 11 Jun 2025 21:44:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749678194;
-	bh=InCi4uyqM7ljrwy7jzwa0FLc7x89wcJyuX+nURtQgko=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=RsJ1X0T/2SFxJG7twmsamolxYScalqPLLIxtXoeQfHAUDaIIWtzgnC2EYv4VqzXlE
-	 ukckMtzg9tg2SfaEYE7iT8l8mkq9rol5imfaed1EsBR4ig5H7mZg2WnGUp2imRorpn
-	 BcIwUysUnjt0ZpLtv4sfZUNjQpj2a74vtPlzOXfEJMw3zvKqB9N5brxHP23gw7lhnm
-	 CtKH7NlBjXv1Bc18RmDfJzASLUf6BHwg++JfEer8dWoWX+jBEYPYRUodYnbXBXv+qb
-	 V4mR/Cz1/KONWaIeU6m7jDGRXoPI9vA2trzpzzCepo9WBZ7MLMEfImprSRCCGodbLz
-	 pK0JGqTfTZJAg==
-Date: Wed, 11 Jun 2025 14:43:12 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Mark Bloch <mbloch@nvidia.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Paolo Abeni
- <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "Andrew Lunn"
- <andrew+netdev@lunn.ch>, Simon Horman <horms@kernel.org>,
- <saeedm@nvidia.com>, <gal@nvidia.com>, <leonro@nvidia.com>,
- <tariqt@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
- <netdev@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net 0/9] mlx5 misc fixes 2025-06-10
-Message-ID: <20250611144312.5baaa786@kernel.org>
-In-Reply-To: <20250610151514.1094735-1-mbloch@nvidia.com>
-References: <20250610151514.1094735-1-mbloch@nvidia.com>
+	s=k20201202; t=1749678249;
+	bh=AYVPRvkZXEtsP2eg8lry3PUoQLuajb1C244F88lG6vs=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=qzaiC/AU6Kj+IN92xcLWt5vatOKsi2kAhiceKwRorTuaJ269A2w4BYNwz/FLbFCz/
+	 3Cjs7C1gOSwZIAom4hHkwPy1uWUE4mkmFNj/lXXUGgtuSUWsBZSJWfxeGN8VYC6G8O
+	 Jq5636qQiySVxV2pCYeYenAcEF1yglDVyyA+7cWXpzYLQ5FjnKcwuxOPS3YfWvzyIu
+	 emVpWmK7+ckn42VubGIGj7SZKYS7n3zeagxdL8umkmdciRe6QDIusWUzF2SzTy/2Xn
+	 MLvI3a8nArHy24zRnBsM8mLMwEEtD/JrRUFsiSvEjxFZPQ0T8MJZsvjVfZpDSpIhyx
+	 mZQvaZM7uqS2w==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+ Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+ Howard Chu <howardchu95@gmail.com>, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>
+In-Reply-To: <20250529192206.971199-1-irogers@google.com>
+References: <20250529192206.971199-1-irogers@google.com>
+Subject: Re: [PATCH v1] perf thread: Ensure comm_lock held for comm_list
+Message-Id: <174967824864.435639.16301685333442078712.b4-ty@kernel.org>
+Date: Wed, 11 Jun 2025 14:44:08 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c04d2
 
-On Tue, 10 Jun 2025 18:15:05 +0300 Mark Bloch wrote:
-> This patchset includes misc fixes from the team for the mlx5 core
-> and Ethernet drivers.
+On Thu, 29 May 2025 12:22:06 -0700, Ian Rogers wrote:
+> Add thread safety annotations for comm_list and add locking for two
+> instances where the list is accessed without the lock held (in
+> contradiction to ____thread__set_comm()).
+> 
+> 
+Applied to perf-tools-next, thanks!
 
-I'll apply the good patches, the one that should go to net-next looks
-completely unrelated to the rest.
+Best regards,
+Namhyung
+
+
