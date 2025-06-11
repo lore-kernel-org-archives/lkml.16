@@ -1,125 +1,203 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DBB7229B38;
-	Wed, 11 Jun 2025 07:35:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F19E229B38
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:36:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749627331; cv=none; b=NM5qqWUckzVBLtmSm3A0/ajX4tfuhyj0AbVpXzeXoNJe9ic5eSG7v6hl0UnmRiRVwxAFZPiMV5iNkPf1kpkCw/oxKQX0c4kdqNU8fUClzCeN4D6p76kCzdMLeDhINKdkjZcBARGF2TYb+CKcXSSgr+t9OBmczC5W97Zyv5jXbNM=
+	t=1749627381; cv=none; b=Sln5I7IWBO8EFgOdvxjNcKfCN5Vb/EFR8lCoYE/QXzCgm0swDFovpY7rcsisc0VDpvfNR3yRHTsHGw+LA4RBVerKDIMueQUhQn6xP2PCxGlFUejV4Ijn6uvI/kElF0WanDQZeUjXrsE319b8eHtDi0CTXitCNv8jBRS3Ob8IzHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749627331; c=relaxed/simple;
-	bh=NmUB89glos6asOSTmWibIDn1aNbS9flC3wOiPjY7pAk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V/nuLA3cJ1HSjXnQ9ZO/hssn4a39uvZT4h+YU+/4ao4y1xNJQ/U3MER+jCLOecO+xqT+D84dZs+fKJExA1/Xy8rESdLXB+7nxSKPrPsrq572zWDGaZcI1OBjjKCaxytU0MHxQtyX6rixn1zuIFLmvw1yhGo3U5olE0Unm6sSgmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ExHWWoEY; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1749627381; c=relaxed/simple;
+	bh=XfopYv8ohE728Xi2gCeSUZEs6u6N1lsc0va5XJdhNd4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bzByZ0XKZJQde37Omr0j578+CgfA0qO9x64wxsbJ2JHuwYfaiHW5lO5xXKqcYdQTo7ubHjOGYXr3J4FjQf8L5fdvr1lg6ZiXFfirA7cHhAehkT7EHMcEahbexRPeVtf2D035a4miVVW6T+aHfLyLGUvidP8YVbawkpiIk8sZIpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OQZIfjGz; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ExHWWoEY"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E7773443D3;
-	Wed, 11 Jun 2025 07:35:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1749627326;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KiyDyclqecsk9BIhJPotcA86DvJLdYwDNphU2h/Syvs=;
-	b=ExHWWoEY7rGIzBH2hTP41+dRx7QD45h9+GCRlhMqsGjxIUva5rl/uu6M7C0UepYUk7Y9I4
-	y0QCs58j7ZYuyIoZCiOsT7vAdRmdkfa4EtnvTsBT1pAMdwtmXmYU7NRLjlgz/AogBmT9gq
-	2US+W4HBVTtpEw73AVkrR8bxCiZTAOQiYLy4Yt0KuNdklqu4q7Okv0y1OK+A26vcxX6zqf
-	6wsxpsI6vtrPBsIEOGd0J/N5QdPcZ5QjoQqEX5Kxy9Ra7Jwt2ZmzTwU5dJMbq7HNgHQQcr
-	ISRQwIoW5kmXWeccGDoDXEyzEJpJB9DPCj8MHSy8O/THILFtsRDHsDLiDWTTvg==
-Date: Wed, 11 Jun 2025 09:35:21 +0200
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Joel Stanley <joel@jms.id.au>, Avi Fishman <avifishman70@gmail.com>,
-	Tomer Maimon <tmaimon77@gmail.com>,
-	Tali Perry <tali.perry1@gmail.com>,
-	Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>,
-	Benjamin Fair <benjaminfair@google.com>,
-	Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
-	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	David Rhodes <david.rhodes@cirrus.com>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Jesper Nilsson <jesper.nilsson@axis.com>,
-	Lars Persson <lars.persson@axis.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Vladimir Zapolskiy <vz@mleia.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Emil Renner Berthing <kernel@esmil.dk>,
-	Jianlong Huang <jianlong.huang@starfivetech.com>,
-	Hal Feng <hal.feng@starfivetech.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Manivannan Sadhasivam <mani@kernel.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-	openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org, linux-sound@vger.kernel.org,
-	patches@opensource.cirrus.com, linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@axis.com, linux-riscv@lists.infradead.org,
-	linux-rtc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v2 17/17] rtc: stm32: Constify static 'pinctrl_desc'
-Message-ID: <20250611073521eaf70434@mail.local>
-References: <20250611-pinctrl-const-desc-v2-0-b11c1d650384@linaro.org>
- <20250611-pinctrl-const-desc-v2-17-b11c1d650384@linaro.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OQZIfjGz"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-23508d30142so79811465ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 00:36:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749627378; x=1750232178; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lP9LxI7qONcXoTdRe9p4EMny84r1sepaW6Yqj2XZ3xs=;
+        b=OQZIfjGzIHAeH5qy5Yhy4fXsUb+29Hpg8Bofneqa12ytGnzj/fKNt8eOpohpcmKUq6
+         0vqEMCdQpOvGzbwuWsspeGN5AEgek57mXUnKKuz6NM9pzMevCEAfabU50iSBPL35O5KX
+         gUUHo+Syn/+WxR6pxvIOAWZQWMl6Qkcx3U0aWunxBk6kTu7D42wYg/x4IVmpT61FR04H
+         NT/WqOQlKo4XwthjxauHhOmv2gAqhc1S0N+FPN9yIYZWAGhUX6Jou4d4TiM+Z9XHi6po
+         E0uustQD6gj48tRVuPOI+pYpU/qWZCsh0kvAwBKr6XzzxBs2COUPa9AfLCbEMRKDCkW4
+         pJXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749627378; x=1750232178;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lP9LxI7qONcXoTdRe9p4EMny84r1sepaW6Yqj2XZ3xs=;
+        b=VJE8yyFuo8KFIuf1/QlraPlhhK9hzcbeXh5kjTvlVUGjv9ooQ7x9mzH/qDu6E9syBu
+         P+q06TlMXX8bfMBuW04fykyiRzwewDDE3bNkHT6ANMtlIBtVzuN/tWuWzdslOpsJsdQP
+         uOdVfroxHomXxbQ/XWhUyn/6QT6k5onnBbafg1T+nvHtc3Oc72Dgz66g59C6BL/KCLdJ
+         OvRKIZf7lmMHGrWO4BNjE3zniBdvYD9AN3RG38Tw4TffKUj/RESRpu4YW9BlR4JL30UM
+         NdkWu/7OyWZq+qnzWhLE6GftsMV2qpykrYzUEelAqsrBAhgQwSgSBU9DgCJxVHxey50m
+         Wuaw==
+X-Forwarded-Encrypted: i=1; AJvYcCW4I4EgDrg/oyjiwxS6LCcCVdacrSLbctuuh+fxeFsQf+FsSeFDtf4q8uunsjv0vg+s8xYxqBFIpDp9vY8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsdSZEv3q1cfftn+73dFw7An8BBWSKQu7hKkv7nvpVlWo+C3FI
+	igpH+url0lYuTtX4Aqn32xOTo4dmn/dYX1xlVkPuVVuhdFiT9TkdUJsJ
+X-Gm-Gg: ASbGncuM2xG/Qja7Nnq6PYevegAwyyr41JuuEMmh155g2n4WHSf3Ae/XKpjCm0jlrFX
+	vRPnYEpMMMH/oDMpdOkwaMGsw+VByxl/hKoUNMYX8Z6PCrJxGTUsd7Nu0+/wDV5m1Zh7YEFJmlC
+	UwjEEAKmn9GD/q+fQ1S/g6vd5zql4g+lFl4seOR/yIAGXW0PDt5FNVSKwCGWbSNOA29ZSZQMRHl
+	tyOF3SNvD//KUhy/jgMMMhnoI+4/tp24E0W+ef9f1Mj2XgZqMpLjaM+J5rIduAE1zNzFjgtFl0q
+	JNCE/j9l7KiNFbFuzB1rFuPntpWk1h4YOgoJucZJG5O1a+0cknPajEKy1bJtF/Ja/iyIOAXTC70
+	dk8H6FYtu2yRZPnZV
+X-Google-Smtp-Source: AGHT+IFNNhUjT+1QGSmPE5NgvvbvJ89c2dVTR659nK9UjRNnj478EreDAn07W7AdN0zsj4rdNl59mg==
+X-Received: by 2002:a17:903:22ce:b0:234:d679:72e9 with SMTP id d9443c01a7336-2364261fa43mr28896165ad.12.1749627377692;
+        Wed, 11 Jun 2025 00:36:17 -0700 (PDT)
+Received: from vaxr-ASUSPRO-D840MB-M840MB.. ([2001:288:7001:2703:52f2:ddbc:f858:ca43])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2360340fbffsm81526305ad.197.2025.06.11.00.36.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 00:36:17 -0700 (PDT)
+From: I Hsin Cheng <richard120310@gmail.com>
+To: jstultz@google.com
+Cc: tglx@linutronix.de,
+	sboyd@kernel.org,
+	linux-kernel@vger.kernel.org,
+	yurynorov@gmail.com,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev,
+	jserv@ccns.ncku.edu.tw,
+	I Hsin Cheng <richard120310@gmail.com>
+Subject: [PATCH v3] clocksource: Replace loop within clocks_calc_mult_shift() with find_last_bit() for calculation of "sftacc"
+Date: Wed, 11 Jun 2025 15:36:08 +0800
+Message-ID: <20250611073608.2049793-1-richard120310@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611-pinctrl-const-desc-v2-17-b11c1d650384@linaro.org>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduudeklecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomheptehlvgigrghnughrvgcuuegvlhhlohhnihcuoegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeiieevfeekgeevgfegudeuuedtfffgiefffedtudeftdehkeelieettdffhffftdenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmedvugdutdemkeejugehmedvsgguieemvdehjeejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmedvugdutdemkeejugehmedvsgguieemvdehjeejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeegledprhgtphhtthhopehkrhiihihsiihtohhfrdhkohiilhhofihskhhisehlihhnrghrohdrohhrghdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopeeurghsrghvrghrrghjrdfpr
- ghtihhkrghrsegrmhgurdgtohhmpdhrtghpthhtohepufhhhigrmhdqshhunhgurghrrdfuqdhksegrmhgurdgtohhmpdhrtghpthhtoheprghnughrvgifsegtohguvggtohhnshhtrhhutghtrdgtohhmrdgruhdprhgtphhtthhopehjohgvlhesjhhmshdrihgurdgruhdprhgtphhtthhopegrvhhifhhishhhmhgrnhejtdesghhmrghilhdrtghomhdprhgtphhtthhopehtmhgrihhmohhnjeejsehgmhgrihhlrdgtohhm
-X-GND-Sasl: alexandre.belloni@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-On 11/06/2025 08:13:49+0200, Krzysztof Kozlowski wrote:
-> The local static 'struct pinctrl_desc' is not modified, so can be made
-> const for code safety.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Utilize "find_last_bit()" in replacement of while loop counting
+for the decremenet of "sftacc". They're equivalent in computation result
+but the former is more effective.
 
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+"find_last_bit()" will return the bit number of the last set bit of
+"tmp", which is 0-based index. Plus 1 to convert it into bit width as
+desired.
 
-> 
-> ---
-> 
-> Patch depends on this series - const in pinctrl core. Please ack and
-> this should go via pinctrl tree.
-> ---
->  drivers/rtc/rtc-stm32.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/rtc/rtc-stm32.c b/drivers/rtc/rtc-stm32.c
-> index ef8fb88aab48a0edad19ae5872421815aa04fe46..d4ebf3eb54aa9e91c8e9f8254f571c53794192fd 100644
-> --- a/drivers/rtc/rtc-stm32.c
-> +++ b/drivers/rtc/rtc-stm32.c
-> @@ -393,7 +393,7 @@ static const struct pinmux_ops stm32_rtc_pinmux_ops = {
->  	.strict			= true,
->  };
->  
-> -static struct pinctrl_desc stm32_rtc_pdesc = {
-> +static const struct pinctrl_desc stm32_rtc_pdesc = {
->  	.name = DRIVER_NAME,
->  	.pins = stm32_rtc_pinctrl_pins,
->  	.npins = ARRAY_SIZE(stm32_rtc_pinctrl_pins),
-> 
-> -- 
-> 2.45.2
-> 
+Note that only the lowest 32 bits of "tmp" is taken into consideration
+of the operation, since it was already shifted right by 32 bits, the
+topmost 32 bits should remain 0, only the lowest 32 bits are possible to
+be non-zero.
+
+This change is tested against a test script [1].
+Run the test 10 times for each version of implementation and take the
+average. The result shown that with this change, the operation overhead
+of "clocks_calc_mult_shift()" can be reduced around 99.7% .
+
+-----------------------------
+| old version | new version |
+-----------------------------
+|  11500.6 ns |       44 ns |
+-----------------------------
+
+Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+---
+Changelog:
+
+v1 -> v2:
+	- Refine commit message to explain more about "why"
+	- Check the frequency of "clocks_calc_mult_shift()" get called,
+	  it's not in hotpath on my machine, refine the commit message
+to avoid overselling it
+	- Add comments for the code to explain the implementation in
+	  more detail
+	- Handle case for "tmp == 0" to avoid undefined behavior
+v2 -> v3:
+	- Use "find_last_bit()" instead of "__builtin_clz()"
+	- Convert the type of "tmp" to "const unsigned long *" when
+	  sending into the function
+	- Highlight in the comment that only the lowest 32 bits part
+	  of "tmp" is taken into consideration
+
+[1]:
+static int __init test_init(void)
+{
+    u32 mult, shift;
+    u32 from, to, maxsec;
+    ktime_t start_time, end_time, total_time;
+    pr_info("Starting clocks_calc_mult_shift simple test\n");
+
+    start_time = ktime_get();
+    // Test with parameters from 1 to 1000
+    for (from = 1; from <= 1000; from += 100) {
+        for (to = 1; to <= 1000; to += 100) {
+            for (maxsec = 1; maxsec <= 10; maxsec++) {
+
+                clocks_calc_mult_shift(&mult, &shift, from, to, maxsec);
+            }
+        }
+    }
+
+    end_time = ktime_get();
+    total_time = ktime_to_ns(ktime_sub(end_time, start_time));
+
+    pr_info("Test completed\n");
+    pr_info("Total execution time: %lld ns \n", total_time);
+    return 0;
+}
+
+The test is running in the form of kernel module.
+The test machine is running ubuntu 24.04 on x86_64 machine with kernel
+version of v6.14.0, CPU type is AMD Ryzen 7 5700X3D 8-Core Processor.
+
+Hi John, Yury,
+
+Would you be so kind to give some suggestion/comments on how should the
+usage of "find_last_bit()" be here ? I'm not sure about whether the type
+conversion of "tmp" is appropriate, though compiler will pop out warnings
+if not doing so.
+
+Plus I'm thinking converting to another pointer type might might be correct
+when the endianess isn't guaranteed ? (or this endianess problem should be
+address and solved in filesystem layer ?)
+
+Best regards,
+I Hsin Cheng.
+---
+ kernel/time/clocksource.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
+index 2a7802ec480c..651bed1a53e7 100644
+--- a/kernel/time/clocksource.c
++++ b/kernel/time/clocksource.c
+@@ -66,10 +66,20 @@ clocks_calc_mult_shift(u32 *mult, u32 *shift, u32 from, u32 to, u32 maxsec)
+ 	 * range:
+ 	 */
+ 	tmp = ((u64)maxsec * from) >> 32;
+-	while (tmp) {
+-		tmp >>=1;
+-		sftacc--;
+-	}
++
++	/*
++	 * Decrement "sftacc" by the number of bits needed to represent "tmp".
++	 * Using "find_last_bit(&tmp, 32) + 1" to get the bit width:
++	 * - find_last_bit(&tmp, 32) returns the bit number of the last set bit
++	 * - Plus 1 to convert 0-based index into bit width as desired
++	 *
++	 * Note: Only the lowest 32 bits of "tmp" is taken into consideration,
++	 *		 since it was already shifted right by 32 bits, the topmost 32
++	 *		 bits are guaranteed to be 0.
++	 *
++	 */
++	if (sftacc)
++		sftacc -= (find_last_bit((const unsigned long *)&tmp, 32) + 1);
+ 
+ 	/*
+ 	 * Find the conversion shift/mult pair which has the best
+-- 
+2.43.0
+
