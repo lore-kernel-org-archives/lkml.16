@@ -1,248 +1,273 @@
 Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2324248F64
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 22:10:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE8B22CBD5
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 22:15:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749679847; cv=none; b=KSCvy9tEU7smm1ECZ+qlTF/q+F6Cv7CXwOurrk5N+QvbU6KriJyh8nhAPxULMZ2R4Ciovkp2tnsMqS0BZHzAHZIqMMk9T7mMOauAUXXdtaxBJ0tEHceDtlG0qE2X52XubIJRkbPaub9BFFuQlT33i+wLA4SawUpzgiqAE2rIRi4=
+	t=1749680127; cv=none; b=HM3W6n+rHNvIasRSm54DAlOVwPbLThC1oX6m00t/z/ojeh9sS18FAw8uAaWmBuX/rClNXUtopW0njFxcOhmZnxrweXWWlkqeAwmunSqJPa29L7Q9eUpqRnb01vK5CuOQocKrreKs4ZnykIGKDOKh/WzKMt0TPH3/Zrqg8eaS/sA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749679847; c=relaxed/simple;
-	bh=fJlLfJlljhy2uz7a+9EWTi7+90pXlTDADppvxEHxEoI=;
-	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=h2ME1fJ3h31P5SokkGPOpqBIre8rkw1s/xzgutDumhAF8kyAXILWG8+JXRrYbjTEonhqprYLyBjPAIyl26O23YoL8k5Wp9v6AYULgFs5ppe3fDCYKzwa7VWVIHlkS6Scu7hm6DKFZeHHyVIAa0ZboV3TuaiZ3OP3NvHTJY7PxO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1WUbSSLE; arc=none smtp.client-ip=209.85.210.202
+	s=arc-20240116; t=1749680127; c=relaxed/simple;
+	bh=NDHUMEVtpT8BBqHlqxN8t5Rwk4C3RoH4vobOKCzjG+8=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=r52SHJ1AKhKHiX5X2OUgM13csHvvfhfrjmFRXzxJ1SrtI/XFkA7J6DReNi0BIQCbv7oCiUPQC9nVSvI4o2zKXSFWKHU4RJpGZsKho8kRWnutQ6SAFSH2JDIq6e9cUmvWKdMrF2aCR67ElWSv41EgOPspoiwT/ldbCEINIAUyFb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VYvJ+5ry; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1WUbSSLE"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-747dd44048cso267141b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:10:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VYvJ+5ry"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-74880a02689so58230b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:15:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749679845; x=1750284645; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=H6zqQTmUzvZAJemTZAf+mRTjr1EfUfxJu4CNbewIY38=;
-        b=1WUbSSLELnXRVChMo7U0RalH0+8HLOu9b/Clfrx+CF4PhEOzb08kJ6C+LhLgqIc41M
-         cP6XfgR4wNmCC0GrgBeduniKbOCm+RJa0v4JxmfyQRfGFUNQyZ2eDNCndNFMca6eJshR
-         B0P9CfyV4ThcvqmDbKc6VphyRlUDOkXQ226I0rdBdUr4T8vJ2IqtKIZToD6NNdI31xCW
-         klJ8NYaOwZJd3bS4jtLL7ZNdv/pb2Fuk1WWunws8TqRn/1Fdo4yTwZS8ePnu3jKV6oZH
-         t/1d2lqP0COtFdMYBuHsVhJoBbE8zfZ2ZILFqEB1bX0Vkw3Oionr3xlTf+KIEOvhzfTR
-         J4jg==
+        d=google.com; s=20230601; t=1749680125; x=1750284925; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PK+kHs9R+YEyDeaq/iOtt1yi0JG1jfvYaQ+pZdNqmUc=;
+        b=VYvJ+5ryzCpYE08JNQpsmyxhbf7ljA1voUxugK0zjEywI6vy1hbZpTvG1Qqh166lOt
+         ErfA6Ww9s+2RJdqU5dNEAAgm2rUh04cKCSTjDyzrSWluwqLKz9XLW3M0iuxArYSolKyp
+         wkN4Ym7PI/vMi+wc5i5fpHRpdvf8FREnZs4fGZx9prP/Yzd/C1r/SfbJs5kUVOifHdWX
+         DMH33DQupFN4U8nY5wje0lzyTNmL4zsv0JkdOzPmxVkMFJS/Wk96qcFkcLZOtDmzMTyo
+         c6KzOP6OVIapZmGdPxU9IWiZe+OvjfUxi8VUpeCALcXfaJEIY6cGhxOOFJNvUtLjFs2y
+         7j4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749679845; x=1750284645;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=H6zqQTmUzvZAJemTZAf+mRTjr1EfUfxJu4CNbewIY38=;
-        b=iQIMn7q/Z4xxZV/SYAe9eq2W6bQ1vzYaArwazju6IJckmfF6eIIu8IPy8kzrRgj6Xi
-         wI9SB9el/KDTuthu5z1XKPhh80TzNH+2Q2gAlxSLMlnh4HPsmfW4e18OR9JRBhbSd2Qs
-         M1VATvPauXdCYQKr3lvFyUKkkEVgFNa9FWvt3YWyg3MRgjHWb2N+KDrQIQSiygLJiP3a
-         SWxNkK6eHeCYRoICXxEWV5jGNa+VgPLw3txUMsPHDLDii3hLPOxmZ4W6kBsKlCJEjY6s
-         uhJfk1vbJkI1Qa4rpb76BVNvZN8+mclHE7PaxAA+v4DhJ9x5USQpVqAW04CKfnF59RGl
-         VIZw==
-X-Forwarded-Encrypted: i=1; AJvYcCUl05I4i78FloW+vnrrBHutdHZmp3x3XB4TopFIGRYVAuleaJzY5qji0dEkLkSVHQDayHlcm8LJjV99tBs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkbiUUY7U2WRk0hFhvSsLdItJhGoirja32oLby0bTY9CYTmzJm
-	xKzuXJrY58vLIkFN9jq0N5WVihiRFiQaOqWQtIJ2hdiojmxnaPqG+Aos/nZ5w/XfUA2zFbVBrn8
-	Ce6rLsZeRTKvLpa6rBXnECgwIQg==
-X-Google-Smtp-Source: AGHT+IG8KruwiUMvb+ATJBOZLNay31OV+ptC3k/zywhlmKWLbMkv7bf57V8cnC+4Oz/vdx8qXs/OaaWPkktFHE2Tng==
-X-Received: from pfbna4.prod.google.com ([2002:a05:6a00:3e04:b0:746:2ae9:24a])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a21:483:b0:21a:df04:3285 with SMTP id adf61e73a8af0-21f97870b51mr1918983637.22.1749679844831;
- Wed, 11 Jun 2025 15:10:44 -0700 (PDT)
-Date: Wed, 11 Jun 2025 15:10:43 -0700
-In-Reply-To: <20250529054227.hh2f4jmyqf6igd3i@amd.com> (message from Michael
- Roth on Thu, 29 May 2025 00:42:27 -0500)
+        d=1e100.net; s=20230601; t=1749680125; x=1750284925;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PK+kHs9R+YEyDeaq/iOtt1yi0JG1jfvYaQ+pZdNqmUc=;
+        b=inf40Y8c+rxfygbb1QRbocHTpi2F91yJMfNqkoA3/RJ2ufZmil9MXXrTPSOA/mNcNT
+         /JCfKQcN58zZgXhbcG1wz7HjFxIjOclUmwz03pFg0BfxvcpYArV9pQ99DSlpNEhd20un
+         w9lqWc36nXR3luHtg3yfkt1xFRADcGFWTxQwBALLHbD1sh2CMttEpmV7zVh1T3uO1hZ4
+         P9RYkoFaRSVEo/yXgrsE4JJQYg+z5P9kT6Hool5gme4rl2QwWp0RIh8nVxRy99Jw/jPX
+         W4yb5HSLmVlMKVaLKDDSSECTY8CoiZMd9IZD/e3OzbW25N0+bTrRRxl/7j6B7QGYBCDE
+         MTpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX2bB7Eyq1QtK3SZoYTiJ5Rl43yY6HBAKEp2R4EZJWwX5LQI3I/3tpF6iY6lQqZCP6ZvZzsfR6/kfZ+Na8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqbRb6WiURcFN0YXdvlBkfphtYXjW94wbQWwpT8iYZcwwudOF/
+	BVKDymLVMi4Jsc9gXcfGU35bRHr+tBg5zLklxSCwDCEnXVasipDMde/LakQZD7n07Tytp9U9Aif
+	oP+hkghqmTQ==
+X-Google-Smtp-Source: AGHT+IE9tzEHAMiNyuTwW377rgcB9bsvzp1uKKQSjK3foDoLgEGlRVU8n4sUzGc8Ye3JTVjB6ogwLs0mckA0
+X-Received: from pgh13.prod.google.com ([2002:a05:6a02:4e0d:b0:b2f:5aa2:87c])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:9186:b0:218:96ad:720d
+ with SMTP id adf61e73a8af0-21f865bd1bamr8018774637.1.1749680124980; Wed, 11
+ Jun 2025 15:15:24 -0700 (PDT)
+Date: Wed, 11 Jun 2025 15:15:21 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Message-ID: <diqzy0tyudy4.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [RFC PATCH v2 02/51] KVM: guest_memfd: Introduce and use
- shareability to guard faulting
-From: Ackerley Tng <ackerleytng@google.com>
-To: Michael Roth <michael.roth@amd.com>
-Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com, 
-	ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com, 
-	anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu, 
-	bfoster@redhat.com, binbin.wu@linux.intel.com, brauner@kernel.org, 
-	catalin.marinas@arm.com, chao.p.peng@intel.com, chenhuacai@kernel.org, 
-	dave.hansen@intel.com, david@redhat.com, dmatlack@google.com, 
-	dwmw@amazon.co.uk, erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, 
-	graf@amazon.com, haibo1.xu@intel.com, hch@infradead.org, hughd@google.com, 
-	ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz, 
-	james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, 
-	jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com, 
-	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com, 
-	kent.overstreet@linux.dev, kirill.shutemov@intel.com, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
-	mic@digikod.net, mpe@ellerman.id.au, muchun.song@linux.dev, nikunj@amd.com, 
-	nsaenz@amazon.es, oliver.upton@linux.dev, palmer@dabbelt.com, 
-	pankaj.gupta@amd.com, paul.walmsley@sifive.com, pbonzini@redhat.com, 
-	pdurrant@amazon.co.uk, peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, 
-	qperret@google.com, quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
-	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
-	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
-	thomas.lendacky@amd.com, usama.arif@bytedance.com, vannapurve@google.com, 
-	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com, 
-	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org, 
-	xiaoyao.li@intel.com, yan.y.zhao@intel.com, yilun.xu@intel.com, 
-	yuzenghui@huawei.com, zhiquan1.li@intel.com
+X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
+Message-ID: <20250611221521.722045-1-irogers@google.com>
+Subject: [PATCH v3] perf debug: Add function symbols to dump_stack
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Howard Chu <howardchu95@gmail.com>, Yicong Yang <yangyicong@hisilicon.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Michael Roth <michael.roth@amd.com> writes:
+Symbolize stack traces by creating a live machine. Add this
+functionality to dump_stack and switch dump_stack users to use
+it. Switch TUI to use it. Add stack traces to the child test function
+which can be useful to diagnose blocked code.
 
-> On Wed, May 14, 2025 at 04:41:41PM -0700, Ackerley Tng wrote:
+Example output:
+```
+  8: PERF_RECORD_* events & perf_sample fields                       : Running (1 active)
+^C
+Signal (2) while running tests.
+Terminating tests with the same signal
+Internal test harness failure. Completing any started tests:
+:  8: PERF_RECORD_* events & perf_sample fields:
 
-Missed out responses on the second two comments!
+---- unexpected signal (2) ----
+    #0 0x5590fb6209b6 in child_test_sig_handler builtin-test.c:243
+    #1 0x7f4a91e49e20 in __restore_rt libc_sigaction.c:0
+    #2 0x7f4a91ee4f33 in clock_nanosleep@GLIBC_2.2.5 clock_nanosleep.c:71
+    #3 0x7f4a91ef0333 in __nanosleep nanosleep.c:26
+    #4 0x7f4a91f01f68 in __sleep sleep.c:55
+    #5 0x5590fb638c63 in test__PERF_RECORD perf-record.c:295
+    #6 0x5590fb620b43 in run_test_child builtin-test.c:269
+    #7 0x5590fb5b83ab in start_command run-command.c:127
+    #8 0x5590fb621572 in start_test builtin-test.c:467
+    #9 0x5590fb621a47 in __cmd_test builtin-test.c:573
+    #10 0x5590fb6225ea in cmd_test builtin-test.c:775
+    #11 0x5590fb5a9099 in run_builtin perf.c:351
+    #12 0x5590fb5a9340 in handle_internal_command perf.c:404
+    #13 0x5590fb5a9499 in run_argv perf.c:451
+    #14 0x5590fb5a97e2 in main perf.c:558
+    #15 0x7f4a91e33d68 in __libc_start_call_main libc_start_call_main.h:74
+    #16 0x7f4a91e33e25 in __libc_start_main@@GLIBC_2.34 libc-start.c:128
+    #17 0x5590fb4fd6d1 in _start perf[436d1]
+```
 
-[...]
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/builtin-test.c | 15 +++++++-
+ tools/perf/ui/tui/setup.c       |  2 +-
+ tools/perf/util/debug.c         | 64 +++++++++++++++++++++++++++------
+ tools/perf/util/debug.h         |  1 +
+ 4 files changed, 69 insertions(+), 13 deletions(-)
 
->> +#ifdef CONFIG_KVM_GMEM_SHARED_MEM
->> +
->> +static int kvm_gmem_shareability_setup(struct kvm_gmem_inode_private *private,
->> +				      loff_t size, u64 flags)
->> +{
->> +	enum shareability m;
->> +	pgoff_t last;
->> +
->> +	last = (size >> PAGE_SHIFT) - 1;
->> +	m = flags & GUEST_MEMFD_FLAG_INIT_PRIVATE ? SHAREABILITY_GUEST :
->> +						    SHAREABILITY_ALL;
->> +	return mtree_store_range(&private->shareability, 0, last, xa_mk_value(m),
->> +				 GFP_KERNEL);
->
-> One really nice thing about using a maple tree is that it should get rid
-> of a fairly significant startup delay for SNP/TDX when the entire xarray gets
-> initialized with private attribute entries via KVM_SET_MEMORY_ATTRIBUTES
-> (which is the current QEMU default behavior).
->
-> I'd originally advocated for sticking with the xarray implementation Fuad was
-> using until we'd determined we really need it for HugeTLB support, but I'm
-> sort of thinking it's already justified just based on the above.
->
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index 45d3d8b3317a..80375ca39a37 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -6,6 +6,9 @@
+  */
+ #include <fcntl.h>
+ #include <errno.h>
++#ifdef HAVE_BACKTRACE_SUPPORT
++#include <execinfo.h>
++#endif
+ #include <poll.h>
+ #include <unistd.h>
+ #include <setjmp.h>
+@@ -231,6 +234,16 @@ static jmp_buf run_test_jmp_buf;
+ 
+ static void child_test_sig_handler(int sig)
+ {
++#ifdef HAVE_BACKTRACE_SUPPORT
++	void *stackdump[32];
++	size_t stackdump_size;
++#endif
++
++	fprintf(stderr, "\n---- unexpected signal (%d) ----\n", sig);
++#ifdef HAVE_BACKTRACE_SUPPORT
++	stackdump_size = backtrace(stackdump, ARRAY_SIZE(stackdump));
++	__dump_stack(stderr, stackdump, stackdump_size);
++#endif
+ 	siglongjmp(run_test_jmp_buf, sig);
+ }
+ 
+@@ -244,7 +257,7 @@ static int run_test_child(struct child_process *process)
+ 
+ 	err = sigsetjmp(run_test_jmp_buf, 1);
+ 	if (err) {
+-		fprintf(stderr, "\n---- unexpected signal (%d) ----\n", err);
++		/* Received signal. */
+ 		err = err > 0 ? -err : -1;
+ 		goto err_out;
+ 	}
+diff --git a/tools/perf/ui/tui/setup.c b/tools/perf/ui/tui/setup.c
+index 16c6eff4d241..022534eed68c 100644
+--- a/tools/perf/ui/tui/setup.c
++++ b/tools/perf/ui/tui/setup.c
+@@ -108,7 +108,7 @@ static void ui__signal_backtrace(int sig)
+ 
+ 	printf("-------- backtrace --------\n");
+ 	size = backtrace(stackdump, ARRAY_SIZE(stackdump));
+-	backtrace_symbols_fd(stackdump, size, STDOUT_FILENO);
++	__dump_stack(stdout, stackdump, size);
+ 
+ 	exit(0);
+ }
+diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
+index f9ef7d045c92..8987ac250079 100644
+--- a/tools/perf/util/debug.c
++++ b/tools/perf/util/debug.c
+@@ -14,11 +14,18 @@
+ #ifdef HAVE_BACKTRACE_SUPPORT
+ #include <execinfo.h>
+ #endif
++#include "addr_location.h"
+ #include "color.h"
+-#include "event.h"
+ #include "debug.h"
++#include "event.h"
++#include "machine.h"
++#include "map.h"
+ #include "print_binary.h"
++#include "srcline.h"
++#include "symbol.h"
++#include "synthetic-events.h"
+ #include "target.h"
++#include "thread.h"
+ #include "trace-event.h"
+ #include "ui/helpline.h"
+ #include "ui/ui.h"
+@@ -298,21 +305,56 @@ void perf_debug_setup(void)
+ 	libapi_set_print(pr_warning_wrapper, pr_warning_wrapper, pr_debug_wrapper);
+ }
+ 
++void __dump_stack(FILE *file, void **stackdump, size_t stackdump_size)
++{
++	/* TODO: async safety. printf, malloc, etc. aren't safe inside a signal handler. */
++	pid_t pid = getpid();
++	struct machine *machine = machine__new_live(/*kernel_maps=*/false, pid);
++	struct thread *thread = NULL;
++
++	if (machine)
++		thread = machine__find_thread(machine, pid, pid);
++
++	if (!machine || !thread) {
++		/*
++		 * Backtrace functions are async signal safe. Fall back on them
++		 * if machine/thread creation fails.
++		 */
++		backtrace_symbols_fd(stackdump, stackdump_size, fileno(file));
++		machine__delete(machine);
++		return;
++	}
++
++	for (size_t i = 0; i < stackdump_size; i++) {
++		struct addr_location al;
++		u64 addr = (u64)stackdump[i];
++
++		addr_location__init(&al);
++		if (!thread__find_map(thread, PERF_RECORD_MISC_USER, addr, &al))
++			continue;
++
++		al.sym = map__find_symbol(al.map, al.addr);
++		if (al.sym)
++			fprintf(file, "    #%zd %p in %s ", i, stackdump[i], al.sym->name);
++		else
++			fprintf(file, "    #%zd %p ", i, stackdump[i]);
++
++		map__fprintf_srcline(al.map, al.addr, "", file);
++		fprintf(file, "\n");
++		addr_location__exit(&al);
++	}
++	thread__put(thread);
++	machine__delete(machine);
++}
++
+ /* Obtain a backtrace and print it to stdout. */
+ #ifdef HAVE_BACKTRACE_SUPPORT
+ void dump_stack(void)
+ {
+-	void *array[16];
+-	size_t size = backtrace(array, ARRAY_SIZE(array));
+-	char **strings = backtrace_symbols(array, size);
+-	size_t i;
+-
+-	printf("Obtained %zd stack frames.\n", size);
+-
+-	for (i = 0; i < size; i++)
+-		printf("%s\n", strings[i]);
++	void *stackdump[32];
++	size_t size = backtrace(stackdump, ARRAY_SIZE(stackdump));
+ 
+-	free(strings);
++	__dump_stack(stdout, stackdump, size);
+ }
+ #else
+ void dump_stack(void) {}
+diff --git a/tools/perf/util/debug.h b/tools/perf/util/debug.h
+index a4026d1fd6a3..6b737e195ce1 100644
+--- a/tools/perf/util/debug.h
++++ b/tools/perf/util/debug.h
+@@ -85,6 +85,7 @@ void debug_set_display_time(bool set);
+ void perf_debug_setup(void);
+ int perf_quiet_option(void);
+ 
++void __dump_stack(FILE *file, void **stackdump, size_t stackdump_size);
+ void dump_stack(void);
+ void sighandler_dump_stack(int sig);
+ 
+-- 
+2.50.0.rc1.591.g9c95f17f64-goog
 
-We discussed this at the guest_memfd upstream call, and I believe the
-current position is to go with maple_trees. Thanks for bringing this up!
-
-> Maybe it would make sense for KVM memory attributes too?
->
-
-I think so, but I haven't had the chance to work on that.
-
->> +}
->> +
-
-[...]
-
->> @@ -842,6 +960,8 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
->>  	if (!file)
->>  		return -EFAULT;
->>  
->> +	filemap_invalidate_lock_shared(file_inode(file)->i_mapping);
->> +
-
-In this RFC, the filemap_invalidate_lock() was basically used to
-serialize everything that could modify shareability.
-
->
-> I like the idea of using a write-lock/read-lock to protect write/read access
-> to shareability state (though maybe not necessarily re-using filemap's
-> invalidate lock), it's simple and still allows concurrent faulting in of gmem
-> pages. One issue on the SNP side (which also came up in one of the gmem calls)
-> is if we introduce support for tracking preparedness as discussed (e.g. via a
-> new SHAREABILITY_GUEST_PREPARED state) the
-> SHAREABILITY_GUEST->SHAREABILITY_GUEST_PREPARED transition would occur at
-> fault-time, and so would need to take the write-lock and no longer allow for
-> concurrent fault-handling.
->
-> I was originally planning on introducing a new rw_semaphore with similar
-> semantics to the rw_lock that Fuad previously had in his restricted mmap
-> series[1] (and simiar semantics to filemap invalidate lock here). The main
-> difference, to handle setting SHAREABILITY_GUEST_PREPARED within fault paths,
-> was that in the case of a folio being present for an index, the folio lock would
-> also need to be held in order to update the shareability state. Because
-> of that, fault paths (which will always either have or allocate folio
-> basically) can rely on the folio lock to guard shareability state in a more
-> granular way and so can avoid a global write lock.
->
-> They would still need to hold the read lock to access the tree however.
-> Or more specifically, any paths that could allocate a folio need to take
-> a read lock so there isn't a TOCTOU situation where shareability is
-> being updated for an index for which a folio hasn't been allocated, but
-> then just afterward the folio gets faulted in/allocated while the
-> shareability state is already being updated which the understand that
-> there was no folio around that needed locking.
->
-> I had a branch with in-place conversion support for SNP[2] that added this
-> lock reworking on top of Fuad's series along with preparation tracking,
-> but I'm now planning to rebase that on top of the patches from this
-> series that Sean mentioned[3] earlier:
->
->   KVM: guest_memfd: Add CAP KVM_CAP_GMEM_CONVERSION
->   KVM: Query guest_memfd for private/shared status
->   KVM: guest_memfd: Skip LRU for guest_memfd folios
->   KVM: guest_memfd: Introduce KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
->   KVM: guest_memfd: Introduce and use shareability to guard faulting
->   KVM: guest_memfd: Make guest mem use guest mem inodes instead of anonymous inodes
->
-> but figured I'd mention it here in case there are other things to consider on
-> the locking front.
-
-We discussed this a little at the last guest_memfd call: I'll summarize
-the question I raised during the call here in text. :)
-
-Today in guest_memfd the "prepared" and "zeroed" concepts are tracked
-with the folio's uptodate flag.
-
-Preparation is only used by SNP today and TDX does the somewhat
-equivalent "preparation" at time of mapping into the guest page table.
-
-Can we do SNP's preparation at some other point in time and not let the
-"prepared" state be handled by guest_memfd at all?
-
-This might simplify locking too, so preparedness would be locked
-whenever SNP needs to, independently of shareability tracking.
-
-Also, this might simplify the routines that use kvm_gmem_populate(),
-perhaps remove the need for kvm_gmem_populate()? The current callers are
-basically using kvm_gmem_populate() to allocate pages, why not call
-kvm_gmem_get_folio() to do the allocation?
-
-Another tangential point: it's hard to use the uptodate flag for
-tracking preparedness, since when there are huge pages, the uptodate
-flag can only indicate if the entire folio is prepared, but a user of
-the memory might only have part of the folio prepared.
-
->
-> Definitely agree with Sean though that it would be nice to start identifying a
-> common base of patches for the in-place conversion enablement for SNP, TDX, and
-> pKVM so the APIs/interfaces for hugepages can be handled separately.
->
-> -Mike
->
-> [1] https://lore.kernel.org/kvm/20250328153133.3504118-1-tabba@google.com/
-> [2] https://github.com/mdroth/linux/commits/mmap-swprot-v10-snp0-wip2/
-> [3] https://lore.kernel.org/kvm/aC86OsU2HSFZkJP6@google.com/
->
->>  	folio = __kvm_gmem_get_pfn(file, slot, index, pfn, &is_prepared, max_order);
->>  	if (IS_ERR(folio)) {
->>  		r = PTR_ERR(folio);
->> @@ -857,8 +977,8 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
->>  		*page = folio_file_page(folio, index);
->>  	else
->>  		folio_put(folio);
->> -
->>  out:
->> +	filemap_invalidate_unlock_shared(file_inode(file)->i_mapping);
->>  	fput(file);
->>  	return r;
->>  }
->> -- 
->> 2.49.0.1045.g170613ef41-goog
->> 
