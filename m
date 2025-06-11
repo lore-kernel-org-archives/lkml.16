@@ -1,187 +1,131 @@
-Received: from mta21.hihonor.com (mta21.hihonor.com [81.70.160.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2215A923
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:18:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.160.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 908402144A2
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:18:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749626282; cv=none; b=OpSS7KWlsGjP4T2uPVa3EWvd0EOwDyzTpNuF23zmBRpeKkLFZc+Z7CK73cUK/FGZFEbfgSfPUw3bmp0pIcj6+AtchbPJgSA+pbE7poSAvmDYooGPbSEeiHZYo/diMSFHrGo0XZcR2ABvNtIL/IttE1M2wGxnMp9hoDO+3tF8F3s=
+	t=1749626283; cv=none; b=Vv3rYzdNsGAF5yJ9kkIZxdX/M8g+luew23b5isILFqy8V3ZzAfcbOQ2w28t/dSG9BY4VbFu7UGV6ynTrEo8GdiqLWTNxPGWlvy7hK20sGS/LDjz+mEo6Rm7EDvd0Uo5W9JiMaivpJOZWlJzuWdVLL5oURN2qmz6sbb3FihdyBwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749626282; c=relaxed/simple;
-	bh=HJsP7ADj8csgR3J7GogH9hoFV9ymJ0d0pPmCGkXcIa0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=UO/74ujFGrUr/QGuadjCx5ky4lIrlAcEasfGvN329vQW5mEbPApKFi5qhgYXGl/Z+Z8ixBP9reMxIpuX1aXCjY98OAJouP8D1Dtmd+xgwe0srFPrI/x4r3e0t859WAi9Cpvi5LJ7DU6pmIw+T1oQGTHZrDVXHKT3KIXPjtk8Yl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.160.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
-Received: from w011.hihonor.com (unknown [10.68.20.122])
-	by mta21.hihonor.com (SkyGuard) with ESMTPS id 4bHH4j6GWFzYmHcj;
-	Wed, 11 Jun 2025 15:15:49 +0800 (CST)
-Received: from a006.hihonor.com (10.68.23.242) by w011.hihonor.com
- (10.68.20.122) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 11 Jun
- 2025 15:17:57 +0800
-Received: from a007.hihonor.com (10.68.22.31) by a006.hihonor.com
- (10.68.23.242) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 11 Jun
- 2025 15:17:57 +0800
-Received: from a007.hihonor.com ([fe80::e866:83ac:f23b:c25c]) by
- a007.hihonor.com ([fe80::e866:83ac:f23b:c25c%10]) with mapi id
- 15.02.1544.011; Wed, 11 Jun 2025 15:17:57 +0800
-From: liuwenfang <liuwenfang@honor.com>
-To: 'Andrea Righi' <arighi@nvidia.com>
-CC: 'Tejun Heo' <tj@kernel.org>, 'David Vernet' <void@manifault.com>,
-	'Changwoo Min' <changwoo@igalia.com>, 'Ingo Molnar' <mingo@redhat.com>,
-	'Peter Zijlstra' <peterz@infradead.org>, 'Juri Lelli'
-	<juri.lelli@redhat.com>, 'Vincent Guittot' <vincent.guittot@linaro.org>,
-	'Dietmar Eggemann' <dietmar.eggemann@arm.com>, 'Steven Rostedt'
-	<rostedt@goodmis.org>, 'Ben Segall' <bsegall@google.com>, 'Mel Gorman'
-	<mgorman@suse.de>, 'Valentin Schneider' <vschneid@redhat.com>,
-	"'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] sched_ext: Fix NULL pointer dereferences in
- put_prev_task_scx
-Thread-Topic: [PATCH] sched_ext: Fix NULL pointer dereferences in
- put_prev_task_scx
-Thread-Index: AQHb2qD0e5nB9n8NLUKmUsA/aeb7GQ==
-Date: Wed, 11 Jun 2025 07:17:57 +0000
-Message-ID: <a04892df1ad94df2bbddd7378c39342a@honor.com>
-References: <dc2d908cd429473a9d46255272231f38@honor.com>
- <aEbO3DmwY4Tg6HT1@gpd4> <4f5b6cf9dca0492aad16472cbd49a528@honor.com>
- <aEkkPNKtS9tRnkgR@gpd4>
-In-Reply-To: <aEkkPNKtS9tRnkgR@gpd4>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1749626283; c=relaxed/simple;
+	bh=QNeImmfSFEHcHoVT5BWJstzzNsO907LECLn5apjX4dw=;
+	h=From:Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:
+	 References:In-Reply-To; b=i2VUeARz27NOoptBGjx+HgT/Uy8n1uYjKyIwOavqEXqSU9MWQ+8mkP6yqHYEf/IGWsrF91JOXDyDraUMfaTDRp4q4MAXMGeqlVAR+itE0TmZCqLY6ENr77PEU+8juovLusqTO+64Tl7ZzIya3NNCdzjhOTbE3mT45qhkXLAbL+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DK8+GNVC; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DK8+GNVC"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-450cfb790f7so44049595e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 00:18:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749626280; x=1750231080; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2UV16KNGvk2B5yuORUC0PMOaWLyG4ZWITjVZAENXr0k=;
+        b=DK8+GNVCctgCOT3R8znvJ0egCudv/7L1EeMCt2B3Qa9nd99GeRoLWpn0GcTnu7yGZx
+         ZaDHLcQv4t54r1evoncJMbPPfX0QBiLTlpNkqgXHyOBHWgbxNPhweBxIDxq0007x8gIx
+         vSgKg3es/TKsiBy7tZjTK1vYqSmniCnS6ySYHgpRzckBmIct0QddYfulHgalvZjksk7F
+         nNKy3Z3Cqkyi/7EYsGctGuzLp+rKN5Ov8phSeHd2Ad7XccfeHSIkK92BrFZ183AOnLqf
+         GwtqnFfKO/Idclm/x7ga7HwPuEiil23cMT8IV2uT60fWPxLeY10/baLZYlE72y5FXqgt
+         4nMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749626280; x=1750231080;
+        h=in-reply-to:references:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=2UV16KNGvk2B5yuORUC0PMOaWLyG4ZWITjVZAENXr0k=;
+        b=u0k5pBM/A41vPhejcM4efwMbpsMz6z4pciX0X2R6umDj1L+4Ia3o14fYYY4oPNjQlH
+         oQNgrdDlR12h7MIGCxsu/kWHukOyO0oRgin1iWbLRW9GTMR6jqkV4w+amT3MaTHXUE6E
+         Eam4g/tBK7q5t2BkbkRJ5VugGdobCYqCjfk13q2Qn3rtqQaocOJv2JY/dv4u2w4pcHjV
+         5qCw9cBLQA3q+n9RKEHrXo3zuqaG9rvTGqOR4DqqnFI5oFeFYQ7kd4R7Vcwr98N4wZPQ
+         KcT7FtDyMaM4PAG6CpncCnMCyWX3XYXA8qJJ4qhyse4Rispqse1eMzb3lSsnknzLWDbU
+         dA/w==
+X-Forwarded-Encrypted: i=1; AJvYcCX5u49EV+99AAaqWvCWb+kTgdceFDB0quht7dO4JBuGUg0vRadyZXgY0aHI6q0EoPLWoF1s/4S9e1qh+nw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMY6lWkkXm3LnYN8Ya6v+H0A8LEOqYRviJAooq1RWxkPz6xvsT
+	MXOSKr7E/9i5gNZXAoW2uvvn88jHwmt9EpQkWAl0skOK0rbPehNBVF3z
+X-Gm-Gg: ASbGncsyeQZ6D3qrjQ1PMicj163fd0HIxYzE0Oama7HdwGKNv1m5EjyB49E1Baxirie
+	6yk5s/L4d8d2gx+U05DOF54qk1FhgD/4H6BtlwvQt6i5zFrmYtYqYmL7QCijRZNEbB0Vcuo5hf6
+	gGKtnSm0oCx25N5JAledUcUAIzdRjJJi6x7rN2ZaxcCXkTDNRsdw+T6Q5Nsp5OPD5iu9ha8oWE7
+	NG2OiXuCiDUHFTJJesGwoR9zo2qqWEGrvj2sP4GhKmZ5meMy0s88fwaXNrjC9jHlV1l/tvhKewy
+	ps4MgJWcYuLubJF8e7AesR5kDsZHkG9kd5BGHc1/dyPkl0xKRZIfPcZ9ND/gmdwWhn16r46fHVx
+	JAjKo8eVILjGYeQ==
+X-Google-Smtp-Source: AGHT+IFT1pbBYNbS/cZPSP4PTxvgVaj3pNGhmXxZlh1AkFam1XP972B4SbHd1fccSvHvvnUVHTpBrQ==
+X-Received: by 2002:a05:600c:3d13:b0:450:ddb7:ee4d with SMTP id 5b1f17b1804b1-453248cb4c2mr16102345e9.24.1749626279675;
+        Wed, 11 Jun 2025 00:17:59 -0700 (PDT)
+Received: from localhost (a95-94-245-170.cpe.netcabo.pt. [95.94.245.170])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-45325176cf5sm12154925e9.21.2025.06.11.00.17.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 00:17:58 -0700 (PDT)
+From: Rui Miguel Silva <rmfrfs@gmail.com>
+X-Google-Original-From: "Rui Miguel Silva" <rui.silva@linaro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 11 Jun 2025 08:17:58 +0100
+Message-Id: <DAJIR40MBKSP.11QTS156Y7NH2@linaro.com>
+To: "Bartosz Golaszewski" <brgl@bgdev.pl>, "Rui Miguel Silva"
+ <rmfrfs@gmail.com>, "Johan Hovold" <johan@kernel.org>, "Alex Elder"
+ <elder@kernel.org>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Cc: <greybus-dev@lists.linaro.org>, <linux-staging@lists.linux.dev>,
+ <linux-kernel@vger.kernel.org>, "Bartosz Golaszewski"
+ <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] staging: greybus: remove unnecessary GPIO line
+ direction check
+References: <20250610152036.86099-1-brgl@bgdev.pl>
+In-Reply-To: <20250610152036.86099-1-brgl@bgdev.pl>
 
->=20
-> Hi liuwenfang,
->=20
-> On Tue, Jun 10, 2025 at 06:22:22AM +0000, liuwenfang wrote:
-> > Thanks for your feedback.
-> > This is triggered in kernel modules developed In the mobile scenario:
-> > tasks on rq are migrated while the current cpu should be halted for pow=
-er
-> saving policy.
-> > Its migration logic:
-> > drain_rq_cpu_stop -- migrate_all_tasks :
-> > for (;;) {
-> > 	if (rq->nr_running =3D=3D 1)
-> > 		break;
-> > 	for_each_class(class) {
-> > 		next =3D class->pick_next_task(rq);
-> > 		if (next) {
-> > 			next->sched_class->put_prev_task(rq, next, NULL);
->=20
-> Can you do something like this instead?
->=20
->   next->sched_class->put_prev_task(rq, next, next);
->=20
-> this should give you the same behavior you're relying on, without requiri=
-ng the
-> extra check in ext.c.
+Hey Bartosz,
+Thanks for the patch.
 
-Yes, this can help me.
+On Tue Jun 10, 2025 at 4:20 PM WEST, Bartosz Golaszewski wrote:
 
->=20
-> > 			break;
-> > 		}
-> > 	}
-> > 	if (is_idle_task(next))
-> > 		break;
-> > 	dest_cpu =3D select_task_rq(next...);
-> > 	move_queued_task(rq, rf, next, dest_cpu);
-> > 	...
-> > }
-> >
-> > put_prev_task in this function is selected to update util and
-> > statistics info for each runnable tasks, here they are not dequeued yet=
-.
->=20
-> I see, so it's an optimization/workaround to update utilization info with=
-out fully
-> dequeuing the tasks. Is this out-of-tree code, I guess?
->=20
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> As of commit 92ac7de3175e3 ("gpiolib: don't allow setting values on input
+> lines"), the GPIO core makes sure values cannot be set on input lines.
+> Remove the unnecessary check.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Yes, this is out-of-tree code.=20
+LGTM.
 
-> When you say the CPU is halted, we're not talking about CPU hotplugging, =
-right?
-> We're just migrating tasks off the CPU?
->=20
+Reviewed-by: Rui Miguel Silva <rui.silva@linaro.org>
 
-Yes, this is one power-saving method to control tasks placement by bypassin=
-g
-Certain CPUs in software, simply letting the halted CPU enter an idle state=
-.
-It replaces CPU hotplugging to reduce costs in mobile gaming scenario.=20
+Cheers,
+     Rui
 
-> Also, if you're running sched_ext there are ways to exclude certain CPUs =
-at the
-> scheduler's level via ops.select_cpu() / ops.dispatch(). Do you think thi=
-s could be
-> a viable solution for your specific use case?
->=20
+> ---
+>  drivers/staging/greybus/gpio.c | 6 ------
+>  1 file changed, 6 deletions(-)
+>
+> diff --git a/drivers/staging/greybus/gpio.c b/drivers/staging/greybus/gpi=
+o.c
+> index f81c34160f720..1280530c8987a 100644
+> --- a/drivers/staging/greybus/gpio.c
+> +++ b/drivers/staging/greybus/gpio.c
+> @@ -192,12 +192,6 @@ static int gb_gpio_set_value_operation(struct gb_gpi=
+o_controller *ggc,
+>  	struct gb_gpio_set_value_request request;
+>  	int ret;
+> =20
+> -	if (ggc->lines[which].direction =3D=3D 1) {
+> -		dev_warn(dev, "refusing to set value of input gpio %u\n",
+> -			 which);
+> -		return -EPERM;
+> -	}
+> -
+>  	request.which =3D which;
+>  	request.value =3D value_high ? 1 : 0;
+>  	ret =3D gb_operation_sync(ggc->connection, GB_GPIO_TYPE_SET_VALUE,
+> --=20
+> 2.48.1
 
-Yes, Thanks very much, This is exactly the approach we have implemented.
 
-Best regards
 
-> Thanks,
-> -Andrea
->=20
-> PS https://subspace.kernel.org/etiquette.html#do-not-top-post-when-replyi=
-ng
->=20
-> >
-> > Best regards,
-> >
-> > > On Mon, Jun 09, 2025 at 11:36:15AM +0000, liuwenfang wrote:
-> > > > As put_prev_task can be used in other kernel modules which can
-> > > > lead to a NULL pointer. Fix this by checking for a valid next.
-> > >
-> > > Actually, put_prev_task() should be used only within kernel/sched/
-> > > and, in theory, you should have done a dequeue_task() before
-> > > put_prev_task() in this scenario, so SCX_TASK_QUEUED shouldn't be set=
- in
-> p->scx.flags.
-> > >
-> > > The change might still make sense, but can you clarify how you
-> > > triggered the NULL pointer dereference?
-> > >
-> > > Thanks,
-> > > -Andrea
-> > >
-> > > >
-> > > > Signed-off-by: l00013971 <l00013971@hihonor.com>
-> > > > ---
-> > > >  kernel/sched/ext.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c index
-> > > > f5133249f..6a579babd 100644
-> > > > --- a/kernel/sched/ext.c
-> > > > +++ b/kernel/sched/ext.c
-> > > > @@ -3262,7 +3262,7 @@ static void put_prev_task_scx(struct rq *rq,
-> > > > struct
-> > > task_struct *p,
-> > > >  		 * ops.enqueue() that @p is the only one available for this cpu,
-> > > >  		 * which should trigger an explicit follow-up scheduling event.
-> > > >  		 */
-> > > > -		if (sched_class_above(&ext_sched_class, next->sched_class)) {
-> > > > +		if (next && sched_class_above(&ext_sched_class,
-> > > > +next->sched_class)) {
-> > > >
-> 	WARN_ON_ONCE(!static_branch_unlikely(&scx_ops_enq_last));
-> > > >  			do_enqueue_task(rq, p, SCX_ENQ_LAST, -1);
-> > > >  		} else {
-> > > > --
-> > > > 2.17.1
