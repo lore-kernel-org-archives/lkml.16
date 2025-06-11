@@ -1,135 +1,187 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83529242D90;
-	Wed, 11 Jun 2025 09:39:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 220AA25C804;
+	Wed, 11 Jun 2025 09:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749634800; cv=none; b=UvnVuTSfJahwxHPj3gXJKudMUu9H9RQXoseFtTAF+Wkff4gqdulX/xnD+fqzoZ6UDmGqgbzco6OupdgmOShgZ+kHIKW/x7gcQP9c+oovQ0l3T3GxSpmQNahYaJcnrPWC/737ukmF4AjtZNAneab4TAVUCjRJQPY+OHuWjkibLv8=
+	t=1749634816; cv=none; b=PbZRvdx/gdpgE8qsLqKwbFHMGqEP5V1sKoRKErFHoIzbNqruDgZsNyso+qUwzA5GTHWedzpSDxtpsfwAFaCeWnIKIZwpaLDX6xlWkUqWIuvCOpGdpGMr4ABvaLYVEXV8kSCWiOX596vJWI0r4K5hl7wsGBhlwvZbjQrxtO1f+cU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749634800; c=relaxed/simple;
-	bh=WqoGafln+7FperWTCGCHOW05uCz41nHkE1cz45ZlgtA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=bXl85EiWj4ybNJye7nHs0sQDLYZqsrUo65iB5vUQn/0toUB66gcTVnGfDBD+eZuarMkVBB26wI7qOtyr9sY0s92xfsBPrVwYeel3TshFxJORmtrOzQftoL4vkm0udqAibZiJC7v5ELXaw1LHR/fw0nFiGZI3S7QcfPtEJtR50JU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=E5ZhuLox; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="E5ZhuLox"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55B9DD82023919;
-	Wed, 11 Jun 2025 09:39:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	XwQM9qqqoO7U5Z+l4qQLkY9bopanOmB0vao/Vd7bkag=; b=E5ZhuLox5J5ocwv6
-	RC7jhwu5a+TvnimRGo+ZJdnAmVx2tlmbJDynk5AbCn3JGPNP0fzVFtUfdIqjAN6M
-	wXXV265ZbTBmvHFmz32QPMOOiq/jok+aS48BSFUootHj3szdUSVCboFnc1Nj9rWZ
-	Ix1KUypV7BVOF0d9c4/deWz2Hqj0Ia1HmO/URFD6/6arhzj54MmtBbHzo97BbrCR
-	KRx8IXuZfrY5OZbPXYLs0KUIIPGcN2W9ZuQhYNuuS6Isx/v2WVeL/tb7Aie9Q4e4
-	B7Ta3wRC3KhuXXkF5DQq98YauUYF+4nvyqj6jlakAkbQxR5DI8ujj9eAA+NZlcmh
-	TgL0ag==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 475v2tf2vf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 11 Jun 2025 09:39:52 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55B9dp00010846
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 11 Jun 2025 09:39:51 GMT
-Received: from [10.50.30.75] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 11 Jun
- 2025 02:39:49 -0700
-Message-ID: <9485fe7a-49f3-8cd0-5085-76a9d133045a@quicinc.com>
-Date: Wed, 11 Jun 2025 15:09:46 +0530
+	s=arc-20240116; t=1749634816; c=relaxed/simple;
+	bh=8hUlTIQNAj0gqG5vnv85+7JdRXA5z58O80lN1QBl+Q4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Edm/UAJdte/bqxYc4wP0+SFY7lKz65/QW6Ff3GYDE4m/enIhL4+FC+gJIDyjKGRUBc+5HjSJxvHAF/6bPKVZKr146ichAjZjpCTRRLyMor1itUJwciv/5RgvPljlOFkg7k1/fxjim1Hzo3iNixM88D3+o1nb5rppT4v5butTZ18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bHLHF2V5pzYQvrM;
+	Wed, 11 Jun 2025 17:40:09 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 5526D1A0840;
+	Wed, 11 Jun 2025 17:40:08 +0800 (CST)
+Received: from [10.67.109.184] (unknown [10.67.109.184])
+	by APP2 (Coremail) with SMTP id Syh0CgC3v2L2TkloS0I6PA--.12284S2;
+	Wed, 11 Jun 2025 17:40:08 +0800 (CST)
+Message-ID: <097fa60d-cb5c-4f0b-a2b1-db22b26cc49b@huaweicloud.com>
+Date: Wed, 11 Jun 2025 17:40:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] media: iris: Fix opp scaling of power domains
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests/mm: Use generic read_sysfs in thuge-gen test
 Content-Language: en-US
-To: Akhil P Oommen <akhilpo@oss.qualcomm.com>,
-        Vikash Garodia
-	<quic_vgarodia@quicinc.com>,
-        Abhinav Kumar <abhinav.kumar@linux.dev>,
-        "Bryan
- O'Donoghue" <bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab
-	<mchehab@kernel.org>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250611-iris-opp-fix-v1-1-424caec41158@oss.qualcomm.com>
-From: Dikshita Agarwal <quic_dikshita@quicinc.com>
-In-Reply-To: <20250611-iris-opp-fix-v1-1-424caec41158@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: akpm@linux-foundation.org, shuah@kernel.org, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ pulehui@huawei.com
+References: <20250611084011.1047132-1-pulehui@huaweicloud.com>
+ <caad6357-a4a3-469f-a824-4d7a36a0e629@lucifer.local>
+From: Pu Lehui <pulehui@huaweicloud.com>
+In-Reply-To: <caad6357-a4a3-469f-a824-4d7a36a0e629@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: -GuxHknpWWUj4nVCDumxsou2mEWezlmz
-X-Authority-Analysis: v=2.4 cv=GoxC+l1C c=1 sm=1 tr=0 ts=68494ee8 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8
- a=COk6AnOGAAAA:8 a=cnNNxmBRD2D--d2aX-gA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: -GuxHknpWWUj4nVCDumxsou2mEWezlmz
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjExMDA4MiBTYWx0ZWRfXx89wAVd+NBgb
- Uf0a4qNZf8EdsmXAmZPNK225+eL1Nwev8Ud5Pk8UbJUBm2INWbYq403F0b8tyTxIwIPjEQ6LWGP
- v9fsxqrcjhuepUseyeohtEr+LVSDq9h5fQRy4fuHSbA5zMbnlUAyRttwPvMsXjAlYeTHeTo7wL9
- SP0vIq/blx5VeIPkTc8mY/LJihtMZz8MnjljzGZK0ATf9Mf6yV1ibsEdzvx5XklEoUIusWg5/j2
- 0TYDd9MdRRkIO9OUYM3ZUcHULt2C450mCZQx8TG/cHU0NOHS9zEjflNxR8HeCyzl1wF+e+psqCQ
- 2iiqMRHufIeDfpNv4CFfWI5TR8H5Q0uVIYW6juKsLCIerQY2ilgelrhz+xJ65z7EwqDn1h0U0G+
- S6Yw46DNKwD2qsMrC/kG/2fd1xJ2lDuXy7H80vb/O9hGdrAZPFEKiWom+DdCmBfJJUmKu6uq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-11_04,2025-06-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=999 adultscore=0 impostorscore=0 malwarescore=0 mlxscore=0
- suspectscore=0 phishscore=0 priorityscore=1501 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506110082
+X-CM-TRANSID:Syh0CgC3v2L2TkloS0I6PA--.12284S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxXFy8Gw45Xr1Uur1rZrWrKrg_yoW5KryxpF
+	s3ta4jkF4IqryUCryUXFs09ryYyr4Dtay8A3yxA345Zr15JF9agrWIk34UJ3WkurZ7Wr4S
+	v3y3Grsavr1DXaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUylb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
+	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUwxhLUUUUU
+X-CM-SenderInfo: psxovxtxl6x35dzhxuhorxvhhfrp/
 
 
 
-On 6/11/2025 11:13 AM, Akhil P Oommen wrote:
-> Pass PD_FLAG_REQUIRED_OPP flag to allow opp framework to scale the rpmpd
-> power domains.
+On 2025/6/11 17:18, Lorenzo Stoakes wrote:
+> On Wed, Jun 11, 2025 at 08:40:11AM +0000, Pu Lehui wrote:
+>> From: Pu Lehui <pulehui@huawei.com>
+>>
+>> As generic read_sysfs is available in vm_utils, let's
+>> use is in thuge-gen test.
+>>
+>> Signed-off-by: Pu Lehui <pulehui@huawei.com>
 > 
-> Signed-off-by: Akhil P Oommen <akhilpo@oss.qualcomm.com>
+> It generally looks good, just one point about a warning below to address.
+> 
+>> ---
+>>   tools/testing/selftests/mm/thuge-gen.c | 37 +++++++-------------------
+>>   1 file changed, 9 insertions(+), 28 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/mm/thuge-gen.c b/tools/testing/selftests/mm/thuge-gen.c
+>> index 95b6f043a3cb..e11dfbfa661b 100644
+>> --- a/tools/testing/selftests/mm/thuge-gen.c
+>> +++ b/tools/testing/selftests/mm/thuge-gen.c
+>> @@ -77,40 +77,19 @@ void show(unsigned long ps)
+>>   	system(buf);
+>>   }
+>>
+>> -unsigned long thuge_read_sysfs(int warn, char *fmt, ...)
+>> +unsigned long read_free(unsigned long ps)
+>>   {
+>> -	char *line = NULL;
+>> -	size_t linelen = 0;
+>> -	char buf[100];
+>> -	FILE *f;
+>> -	va_list ap;
+>>   	unsigned long val = 0;
+>> +	char buf[100];
+>>
+>> -	va_start(ap, fmt);
+>> -	vsnprintf(buf, sizeof buf, fmt, ap);
+>> -	va_end(ap);
+>> +	snprintf(buf, sizeof(buf),
+>> +		 "/sys/kernel/mm/hugepages/hugepages-%lukB/free_hugepages",
+>> +		 ps >> 10);
+>> +	read_sysfs(buf, &val);
+> 
+> We're losing all of the 'warn' logic here so if we can't find
+> /sys/kernel/mm/hugepages/hugepages-%lukB/free_hugepages when ps != getpagesize()
+> we no longer print a message about it.
 
-Reviewed-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
 
-Thanks,
-Dikshita
-> ---
-> Found this issue while reviewing the Iris source and only compile tested.
-> ---
->  drivers/media/platform/qcom/iris/iris_probe.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Lorenzo,
+
+Thanks for review. Right, we should explicit that warning when ps != 
+getpagesize(). How about the following modify?
+
+diff --git a/tools/testing/selftests/mm/thuge-gen.c 
+b/tools/testing/selftests/mm/thuge-gen.c
+index e11dfbfa661b..8e2b08dc5762 100644
+--- a/tools/testing/selftests/mm/thuge-gen.c
++++ b/tools/testing/selftests/mm/thuge-gen.c
+@@ -85,7 +85,8 @@ unsigned long read_free(unsigned long ps)
+         snprintf(buf, sizeof(buf),
+                  "/sys/kernel/mm/hugepages/hugepages-%lukB/free_hugepages",
+                  ps >> 10);
+-       read_sysfs(buf, &val);
++       if (read_sysfs(buf, &val) && ps != getpagesize())
++               ksft_print_msg("missing %s\n", buf);
+
+         return val;
+  }
+
 > 
-> diff --git a/drivers/media/platform/qcom/iris/iris_probe.c b/drivers/media/platform/qcom/iris/iris_probe.c
-> index 9a7ce142f7007ffcda0bd422c1983f2374bb0d92..4e6e92357968d7419f114cc0ffa9b571bad19e46 100644
-> --- a/drivers/media/platform/qcom/iris/iris_probe.c
-> +++ b/drivers/media/platform/qcom/iris/iris_probe.c
-> @@ -53,7 +53,7 @@ static int iris_init_power_domains(struct iris_core *core)
->  	struct dev_pm_domain_attach_data iris_opp_pd_data = {
->  		.pd_names = core->iris_platform_data->opp_pd_tbl,
->  		.num_pd_names = core->iris_platform_data->opp_pd_tbl_size,
-> -		.pd_flags = PD_FLAG_DEV_LINK_ON,
-> +		.pd_flags = PD_FLAG_DEV_LINK_ON | PD_FLAG_REQUIRED_OPP,
->  	};
->  
->  	ret = devm_pm_domain_attach_list(core->dev, &iris_pd_data, &core->pmdomain_tbl);
+> Should we reinstate that?
 > 
-> ---
-> base-commit: d9946fe286439c2aeaa7953b8c316efe5b83d515
-> change-id: 20250527-iris-opp-fix-3ef2591c032a
+> Other than this, we're ignoring errors, which by default means we return 0, but
+> this is what we were doing anyway. It's only this case I think that matters.
 > 
-> Best regards,
+>>
+>> -	f = fopen(buf, "r");
+>> -	if (!f) {
+>> -		if (warn)
+>> -			ksft_print_msg("missing %s\n", buf);
+>> -		return 0;
+>> -	}
+>> -	if (getline(&line, &linelen, f) > 0) {
+>> -		sscanf(line, "%lu", &val);
+>> -	}
+>> -	fclose(f);
+>> -	free(line);
+>>   	return val;
+>>   }
+>>
+>> -unsigned long read_free(unsigned long ps)
+>> -{
+>> -	return thuge_read_sysfs(ps != getpagesize(),
+>> -			  "/sys/kernel/mm/hugepages/hugepages-%lukB/free_hugepages",
+>> -			  ps >> 10);
+>> -}
+>> -
+>>   void test_mmap(unsigned long size, unsigned flags)
+>>   {
+>>   	char *map;
+>> @@ -173,6 +152,7 @@ void test_shmget(unsigned long size, unsigned flags)
+>>   void find_pagesizes(void)
+>>   {
+>>   	unsigned long largest = getpagesize();
+>> +	unsigned long shmmax_val = 0;
+>>   	int i;
+>>   	glob_t g;
+>>
+>> @@ -195,7 +175,8 @@ void find_pagesizes(void)
+>>   	}
+>>   	globfree(&g);
+>>
+>> -	if (thuge_read_sysfs(0, "/proc/sys/kernel/shmmax") < NUM_PAGES * largest)
+>> +	read_sysfs("/proc/sys/kernel/shmmax", &shmmax_val);
+>> +	if (shmmax_val < NUM_PAGES * largest)
+>>   		ksft_exit_fail_msg("Please do echo %lu > /proc/sys/kernel/shmmax",
+>>   				   largest * NUM_PAGES);
+>>
+>> --
+>> 2.34.1
+>>
+
