@@ -1,245 +1,100 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 636F32253FB
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:52:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3473114B07A;
+	Wed, 11 Jun 2025 06:53:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749624779; cv=none; b=NY72B+Pfud6ECECfOKjYVVsMSoE+DJtvfhSgN5LRlJiXj8MtCmBFQ1+w9blqTN8YFFGH3QZF6FAC5SW+q8+/lOEjqaeSLOHfUIaxWsewd08gWzC9fa/oKGLG6sGEcstxypC9/flSOEBlbA09vgYppDByVY8FzyQg6VtBPplVCWQ=
+	t=1749624807; cv=none; b=tpFldqvYn97mRZf66F4QUosoPUnRCsDWxy9bqUlr/O8jQAzKAAs6hXKaiJOqa2SibqUhZfWhIgA90uWKJXA1gpMhPfTZvJWiARJ7QJM+zNkSEFHDMdrHTDb1IVzviQHbdYPuHoTgXzoi46oV1gkb1Fo+HcjTw+4zO0vTC55KFLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749624779; c=relaxed/simple;
-	bh=/CLLrIW5aQMUJNR9aLvDWLib2WpGEzBt04bGlUBvQpI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WKsYw1vN7PBHSltUfOox7a6MOud8QdOjg/so5Cbd93QDuBTHvbECMjAsz2y6R0/TwjLfK0CToiDCk6+WzgnFi/2OLEKxT8eDONcC+WGPyHItqPpYHTOKG29eQLAZEUahn6xSUhcNCK3dheZlPj15ZnQ6ORLWXUgWm7IVIV0sZZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YKPaZy2s; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749624807; c=relaxed/simple;
+	bh=2brzaQdI5K2BRfT9bqvgdFVDaKnfP2G7GR+inuAUFrQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZXNxmF1Ohtto4846YRI3HX8N4n+iP2ee6i+xPnUdEHtoQF7B4eE+sYkK7D5xmfrm0GdmpS6MwYSHV2mLYj3Sz2TpEEPcBtsUSxALspGTsTe6BsUJyBLaS4ufJ7FXSZxw0G9+kvwe67mJhuQK3Nktk0ZeDDMZT8YuefoNM7dr4bw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qsvLbKLJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WarEaKmc; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YKPaZy2s"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a528e301b0so31120f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 23:52:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749624776; x=1750229576; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6ZcoFkVAiTRFqiOiNNWpiZEngLNxlokcj95V82V3k6w=;
-        b=YKPaZy2sGYDuokZ2viUJxW75BaPTK6L3XGkMe7z0vuxO07wJqZkZTIebOYP9Is2Z4o
-         ANc806h1CIftTdG0r4AkFVqXvNn0ksOYbWo4tT0bS+ovybFzTLSdwOA1VG1l8dY/7ZgF
-         h+nJSWTKr4qQ4pK/vM/S3/NJF7wdLSJhIFoMpE/outza35N6SFK4swfPiR3tXDxnMulW
-         +PzNNJz/syYnLSDFSNaqk0VdA8jZtupwkOQPho63OiNmZa7yHrZGqfw4fcAu5fAkJuy+
-         hJPAF1T5JkEUXRHR6smNlVcA/ZkCdUWCJCzwrwJ7hzcDCB+9zhWDXZ4c/tujicmRcSHb
-         /Ujg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749624776; x=1750229576;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6ZcoFkVAiTRFqiOiNNWpiZEngLNxlokcj95V82V3k6w=;
-        b=V91o0OegcM+wk5ZYhDOCWsaI4Ce3cosd13fsfdlwipFsUN3SEes+spOHZUHcJhvrp9
-         YZVWCcjHME6b1UIsVKDW9iAqXrFT5DJngc47B6ZCYBLAkxKXiijjRW7gcl27gr3nnXK7
-         QvbXd9X8wOKjCsYa0VnefRpY2w4D2+sNMTtdntWgsnSdOjT/gvhztRtyK48+4y/x7HA9
-         f55D8Oxr+lpCD/wa7lTQMwz6FphD2c8x9RrHHcWB3GFgRZ9nhh+jVTiNTPsUvuNawYcx
-         FcH7UBNDXiS/g9cG3Cz5K8nwcYFBqnvvmEQlZKOLRhfG7T4oPgmfQsyLOn7ckQVHiMwa
-         rM0w==
-X-Forwarded-Encrypted: i=1; AJvYcCXb6iM7VmE8mEmcsjqR0CRi7LKHNUp5YwmXl0651iX8vrJd4++IgXjhcYNtjqoGos5AqV6+pDpfBLogiVI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTwhQgB2IpFQ+4Jp6haIf9Q6B9PTuYlkhzeV6zrMUPQlaervNE
-	+Xi7kXbUzXBWNsead3sIfyPjt0QWY5tDG1YEAo6vbp/04I7LUzcKgOee/4BtrAZr2wKLcKaERPx
-	pf7Aw0W3JPzRTgr3QhfQWz/KO4Z3292U=
-X-Gm-Gg: ASbGncufpGwpPMNVq1a55JrYrOsjac27vsJS4gpI2+i54gwHkcUrp6YGyLe7OFOM+Yc
-	p/w2w8EEFmRiBRb3gV1tFoCPcWxNvTsvQLwDknBDO+TBCzkjw5onUBESt0eyhF75da+C5R3a4nW
-	prJZfshUzreAoe/RfB4i3YvARM5OnG9shumhPs2oQByWpO
-X-Google-Smtp-Source: AGHT+IFZh6owmX7HkiRyf7we5O3Nj8AI3dd6DQRu2hcC5wXD5rSpVUk53mGX3UXq06FsnBnovOBbHjJ++ogCfyvGCfQ=
-X-Received: by 2002:a05:6000:2082:b0:3a4:da29:d13f with SMTP id
- ffacd0b85a97d-3a5586b89d0mr531578f8f.3.1749624775564; Tue, 10 Jun 2025
- 23:52:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qsvLbKLJ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WarEaKmc"
+Date: Wed, 11 Jun 2025 08:53:23 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749624804;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Y93XEFwBv7AiJZNlzn/5hdQGj+mu2itce8t1/fii/Kw=;
+	b=qsvLbKLJ2GuF71ZMVepjRRclTjiuWvouRH3ObVQhMr1P+rntmHGpg8qiSKZbKe6NWP/edA
+	cLwFTK+gxgyevL+MEKPOHIefD5KpJF42QfGjB9IAk4o4RqgMLZXDeV9t0xmHb60FYiPeeE
+	9R0jlK0VX1Wuw65ITjqY4O9CX76BCtPXVDTfJKRkWzv2fiKhfI36sjIsDf/Ce4gnPIG0Um
+	XkgrUsWLdwQGDCepozKq0V2hObekhxaDeMtFRwWoZG0Yv5FVZQzVQTvORF90pb1VhZIKTE
+	+uutkSOE2Iiz2+e41Q28HY3+TsSzEZck595kyYpUsIE3ReHr/peCJaBO20T9JA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749624804;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Y93XEFwBv7AiJZNlzn/5hdQGj+mu2itce8t1/fii/Kw=;
+	b=WarEaKmcPCsakYLPxMnJQddxt0TBqAmGwqZZZ2S3/8oPKDzgZz0vxiflIHmopSZ0Hnr9Ui
+	CCYGPiBdTXmKHsAg==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>, Shuah Khan <shuah@kernel.org>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Willy Tarreau <w@1wt.eu>, 
+	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, Kees Cook <kees@kernel.org>, 
+	Andy Lutomirski <luto@amacapital.net>, Will Drewry <wad@chromium.org>, Mark Brown <broonie@kernel.org>, 
+	Muhammad Usama Anjum <usama.anjum@collabora.com>, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v4 09/14] selftests: harness: Move teardown conditional
+ into test metadata
+Message-ID: <20250611084548-a6bd87a7-6f35-490a-b613-5718250acf67@linutronix.de>
+References: <20250505-nolibc-kselftest-harness-v4-0-ee4dd5257135@linutronix.de>
+ <20250505-nolibc-kselftest-harness-v4-9-ee4dd5257135@linutronix.de>
+ <aEfVYQaid5uOHB+Y@nvidia.com>
+ <20250610130817-253d2b2d-030a-4eda-91fc-3edb58a4f549@linutronix.de>
+ <20250610120902.GB543171@nvidia.com>
+ <aEh+DNmbZrqg6rHR@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1749107920-17958-1-git-send-email-zhiguo.niu@unisoc.com>
- <aEhYfYrknbNzT8Or@google.com> <5c1da066-0c76-42f4-8c46-a99f60a900bf@kernel.org>
- <CAHJ8P3LNrSRT8hfbr=x5HvkQRGBSTpftPbd7NrfUdO-2LgSLfg@mail.gmail.com> <c36ab955-c8db-4a8b-a9d0-f07b5f426c3f@kernel.org>
-In-Reply-To: <c36ab955-c8db-4a8b-a9d0-f07b5f426c3f@kernel.org>
-From: Zhiguo Niu <niuzhiguo84@gmail.com>
-Date: Wed, 11 Jun 2025 14:52:44 +0800
-X-Gm-Features: AX0GCFsgQsBYEedhmjPxxYOEFa7Lezd6IZoo4NA3srqISU4K_ypR7qGlMdQgg-g
-Message-ID: <CAHJ8P3+=LEbbj8bzh0N3HbPu=jVkRfkowbxqoT0PfCZtWbuRbg@mail.gmail.com>
-Subject: Re: [PATCH v3] f2fs: compress: fix UAF of f2fs_inode_info in f2fs_free_dic
-To: Chao Yu <chao@kernel.org>
-Cc: Jaegeuk Kim <jaegeuk@kernel.org>, Zhiguo Niu <zhiguo.niu@unisoc.com>, 
-	linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
-	ke.wang@unisoc.com, Hao_hao.Wang@unisoc.com, baocong.liu@unisoc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aEh+DNmbZrqg6rHR@nvidia.com>
 
-Chao Yu <chao@kernel.org> =E4=BA=8E2025=E5=B9=B46=E6=9C=8811=E6=97=A5=E5=91=
-=A8=E4=B8=89 14:47=E5=86=99=E9=81=93=EF=BC=9A
->
-> On 6/11/25 14:41, Zhiguo Niu wrote:
-> > Chao Yu <chao@kernel.org> =E4=BA=8E2025=E5=B9=B46=E6=9C=8811=E6=97=A5=
-=E5=91=A8=E4=B8=89 14:07=E5=86=99=E9=81=93=EF=BC=9A
-> >>
-> >> On 6/11/25 00:08, Jaegeuk Kim wrote:
-> >>> Hi Zhiguo,
-> >>>
-> >>> This patch causes CPU hang when running fsstress on compressed/non-co=
-mpressed
-> >>> files. Please check.
-> >>
-> >> Oh, seems it may cause below deadlock:
-> >>
-> >> CPU0
-> >> process A
-> >> - spin_lock(i_lock)
-> >> software IRQ
-> >> - end_io
-> >>  - igrab
-> >>   - spin_lock(i_lock)
-> >>
-> >> Thanks,
-> > Hi Chao,
-> > Thanks for pointing this out.
-> > I have tested this patch locally about some basic cases before submissi=
-on.
-> > So it seems that should use the following method  to solve this problem=
-?
-> > " store i_compress_algorithm/sbi in dic to avoid inode access?"
->
-> Zhiguo,
->
-> Yeah, I guess so.
-Hi Chao,
-OK, I will prepare it .
-Thanks a lot.
->
-> Thanks,
->
-> > thanks=EF=BC=81
-> >
-> >
-> >>
-> >>>
-> >>> On 06/05, Zhiguo Niu wrote:
-> >>>> The decompress_io_ctx may be released asynchronously after
-> >>>> I/O completion. If this file is deleted immediately after read,
-> >>>> and the kworker of processing post_read_wq has not been executed yet
-> >>>> due to high workloads, It is possible that the inode(f2fs_inode_info=
-)
-> >>>> is evicted and freed before it is used f2fs_free_dic.
-> >>>>
-> >>>>     The UAF case as below:
-> >>>>     Thread A                                      Thread B
-> >>>>     - f2fs_decompress_end_io
-> >>>>      - f2fs_put_dic
-> >>>>       - queue_work
-> >>>>         add free_dic work to post_read_wq
-> >>>>                                                    - do_unlink
-> >>>>                                                     - iput
-> >>>>                                                      - evict
-> >>>>                                                       - call_rcu
-> >>>>     This file is deleted after read.
-> >>>>
-> >>>>     Thread C                                 kworker to process post=
-_read_wq
-> >>>>     - rcu_do_batch
-> >>>>      - f2fs_free_inode
-> >>>>       - kmem_cache_free
-> >>>>      inode is freed by rcu
-> >>>>                                              - process_scheduled_wor=
-ks
-> >>>>                                               - f2fs_late_free_dic
-> >>>>                                                - f2fs_free_dic
-> >>>>                                                 - f2fs_release_decom=
-p_mem
-> >>>>                                       read (dic->inode)->i_compress_=
-algorithm
-> >>>>
-> >>>> This patch use igrab before f2fs_free_dic and iput after free the di=
-c when dic free
-> >>>> action is done by kworker.
-> >>>>
-> >>>> Cc: Daeho Jeong <daehojeong@google.com>
-> >>>> Fixes: bff139b49d9f ("f2fs: handle decompress only post processing i=
-n softirq")
-> >>>> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
-> >>>> Signed-off-by: Baocong Liu <baocong.liu@unisoc.com>
-> >>>> ---
-> >>>> v3: use igrab to replace __iget
-> >>>> v2: use __iget/iput function
-> >>>> ---
-> >>>>  fs/f2fs/compress.c | 14 +++++++++-----
-> >>>>  1 file changed, 9 insertions(+), 5 deletions(-)
-> >>>>
-> >>>> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-> >>>> index b3c1df9..729ad16 100644
-> >>>> --- a/fs/f2fs/compress.c
-> >>>> +++ b/fs/f2fs/compress.c
-> >>>> @@ -1687,7 +1687,7 @@ static void f2fs_release_decomp_mem(struct dec=
-ompress_io_ctx *dic,
-> >>>>  }
-> >>>>
-> >>>>  static void f2fs_free_dic(struct decompress_io_ctx *dic,
-> >>>> -            bool bypass_destroy_callback);
-> >>>> +            bool bypass_destroy_callback, bool late_free);
-> >>>>
-> >>>>  struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc)
-> >>>>  {
-> >>>> @@ -1743,12 +1743,12 @@ struct decompress_io_ctx *f2fs_alloc_dic(str=
-uct compress_ctx *cc)
-> >>>>      return dic;
-> >>>>
-> >>>>  out_free:
-> >>>> -    f2fs_free_dic(dic, true);
-> >>>> +    f2fs_free_dic(dic, true, false);
-> >>>>      return ERR_PTR(ret);
-> >>>>  }
-> >>>>
-> >>>>  static void f2fs_free_dic(struct decompress_io_ctx *dic,
-> >>>> -            bool bypass_destroy_callback)
-> >>>> +            bool bypass_destroy_callback, bool late_free)
-> >>>>  {
-> >>>>      int i;
-> >>>>
-> >>>> @@ -1775,6 +1775,8 @@ static void f2fs_free_dic(struct decompress_io=
-_ctx *dic,
-> >>>>      }
-> >>>>
-> >>>>      page_array_free(dic->inode, dic->rpages, dic->nr_rpages);
-> >>>> +    if (late_free)
-> >>>> +            iput(dic->inode);
-> >>>>      kmem_cache_free(dic_entry_slab, dic);
-> >>>>  }
-> >>>>
-> >>>> @@ -1783,16 +1785,18 @@ static void f2fs_late_free_dic(struct work_s=
-truct *work)
-> >>>>      struct decompress_io_ctx *dic =3D
-> >>>>              container_of(work, struct decompress_io_ctx, free_work)=
-;
-> >>>>
-> >>>> -    f2fs_free_dic(dic, false);
-> >>>> +    f2fs_free_dic(dic, false, true);
-> >>>>  }
-> >>>>
-> >>>>  static void f2fs_put_dic(struct decompress_io_ctx *dic, bool in_tas=
-k)
-> >>>>  {
-> >>>>      if (refcount_dec_and_test(&dic->refcnt)) {
-> >>>>              if (in_task) {
-> >>>> -                    f2fs_free_dic(dic, false);
-> >>>> +                    f2fs_free_dic(dic, false, false);
-> >>>>              } else {
-> >>>>                      INIT_WORK(&dic->free_work, f2fs_late_free_dic);
-> >>>> +                    /* use igrab to avoid inode is evicted simultan=
-eously */
-> >>>> +                    f2fs_bug_on(F2FS_I_SB(dic->inode), !igrab(dic->=
-inode));
-> >>>>                      queue_work(F2FS_I_SB(dic->inode)->post_read_wq,
-> >>>>                                      &dic->free_work);
-> >>>>              }
-> >>>> --
-> >>>> 1.9.1
-> >>
->
+On Tue, Jun 10, 2025 at 11:48:44AM -0700, Nicolin Chen wrote:
+> On Tue, Jun 10, 2025 at 09:09:02AM -0300, Jason Gunthorpe wrote:
+> > On Tue, Jun 10, 2025 at 01:38:22PM +0200, Thomas Weißschuh wrote:
+> > > > ------------------------------------------------------------------
+> > > > #  RUN           iommufd_dirty_tracking.domain_dirty128M_huge.enforce_dirty ...
+> > > > # enforce_dirty: Test terminated unexpectedly by signal 11
+> > 
+> > Sig 11 is weird..
+> 
+> > > On another note, the selftest should use the kselftest_harness' ASSERT_*()
+> > > macros instead of plain assert().
+> > 
+> > IIRC the kselftest stuff explodes if you try to use it's assert
+> > functions within a fixture setup/teardown context.
+> > 
+> > I also wasn't able to reproduce this (x86 ubuntu 24 LTS OS) Maybe
+> > it is ARM specific, I think Nicolin is running on ARM..
+> 
+> Yes. And I was running with 64KB page size. I just quickly retried
+> with 4KB page size (matching x86), and all failed tests pass now.
+
+That is very important to know. It should be mentioned in the report.
+
+So I tried to reproduce it. To get even the mmap() in the test to succeed I
+needed to also pass default_hugepagesz=2MiB.
+Also 1GiB of memory was not enough. 30GiB was however.
+But then the tests succeeds fine for me.
+
+So I'll need reproduction steps.
+
+
+Thomas
