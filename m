@@ -1,160 +1,369 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9093028751C
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 13:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56889287519;
+	Wed, 11 Jun 2025 13:21:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749648079; cv=none; b=ocW3e5/9tD2nxueKmw3XtxjcUrl+KfxUAMsOKudAoLSIW1D9PgE2BsTB2LMYWPoN6Rho3DrhdrHcE37W8QIgyei+tXMCNo1ilkkD0JtQaAUu29Jv9K8PS2XUzvvwtCvhU0KQ9QIePji2AIJAGDKdLVgMfVRbdS+q/o3yoyVuFgw=
+	t=1749648089; cv=none; b=o5L0PtpCSbQACwtwQY/mftW6uXt4ElYCLrMyqWVb22sLU3F7J9Uo+stjyOHkLpDoxkFsUfaYgbvWrQs4gwZr6Xs6XW8HLTEOHSA7ZvLbK/NbFbfebeINQAR7PehPrz9jsP05hdCxzyTWpDTiq46GBPJmlxTosCCRVOVWx+ItUKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749648079; c=relaxed/simple;
-	bh=C4hxsxe0fLBrBotaEoFZDYCLmEECNhldsO7lXFI9foc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LN9o0hESD8oIlUZrasVm+xGUFthBQJ4hxyEPGPBvJpiOqE7H04Z3ZNCauXhISzadOqjykpORNplVN+3jvQZmgffHCTHlGokW31+4HF8qLgr4RjBmixJAw0Ou0zsCO+XjtKSEwXSgIl+r+lBBPab0hK/mw0CjyXXj9TtHr+8LQ1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NoUVNg2q; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749648089; c=relaxed/simple;
+	bh=63Ypwf8QBn8D7Q7UwXfVEEfH5zk40Vxo36OO1424U68=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=tnZY7dFosP+M3wBh03kwYS1bTinqiGrCAAE+RyCktEn+JO/kWxsiuvjlYnMg3aoS8EvOqtdPJK07InvDJoZi/TGxvcXHGiZMJP66pUiq85useQkW5AdjH7oS7SaxbwtWZS8v5v7pMD51kjJDbHk1UGP4Gw0lEVTrbsKOCH9JyB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mCydYCY5; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NoUVNg2q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749648076;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=BgaQSbJjCXfhBaWKuPSsh/e0eXuCE8ryvRzwpdMmhNk=;
-	b=NoUVNg2q00amdfIsdD6A8EXB4HLBti15ZFZ+9hpNXI4uVPjJf1s8oZwlbWRIT1SU0cD8ZH
-	rSJLSE/6y7XewNhEIhpLSH8M3FahHTc1o01wEkuKn6U/DaFUQuXvptZ0Z8eeFIAP6t6BZs
-	K3IzepoMgZ7ST4C6t7ZeEDyHueFLr90=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-370-X5Wk39IAMPCLqcDNeItN4w-1; Wed, 11 Jun 2025 09:21:15 -0400
-X-MC-Unique: X5Wk39IAMPCLqcDNeItN4w-1
-X-Mimecast-MFC-AGG-ID: X5Wk39IAMPCLqcDNeItN4w_1749648075
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4a584d0669fso124032651cf.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:21:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749648075; x=1750252875;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=BgaQSbJjCXfhBaWKuPSsh/e0eXuCE8ryvRzwpdMmhNk=;
-        b=fpQjcn5V48IBY9ehgVmVMt9dlQyj4OpNGdKd22xeZck9DJUHPHoB0RVAXiRDCjPSqF
-         qEd1d3nNCREc+fD9jjWpiAgGdI+iA6Go9+2QjR27fxTl0/H04Jv++tusm7Pgsh04Np39
-         dE53oPADh7zBgaiLeLHv2/ZrAZEbzcZbLavayecR9W9OfyAXqPEa9zkQOu9mWpF11OLv
-         6Y2PyWN0cf2kM/bH083PUym/gVUeUl5zrSjzfD7PMcjiW69Yj3Vdz7Cc7b1YDlhGnaHo
-         GLKNXK/A3k0KHzS/6YVAVlxywkvGmqgtxS4wrEVIgwcyhf7ewOKS5v0dBdS1MF5A7aid
-         RlzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXYSDohGWs9Gfmmr9Oqf5Aa0HhJ7eWKp/HiYkrtSdCDmTY8UY3TRgnCAtdvD0rJmEQPl0WlJlDToHzV9ZQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7B7/ygJwYsD3e4udpNuhk8YluqfFvHYEMr2wcebe/QReEVFtC
-	X8IFrKz6usgBUR7U9F5NC6Wye0/MOJPD7wOE+fjLAufwjJL9BWj2iiyCx/vnoGfHYT/2gE6YOX+
-	Jzkyc74ux/wbRyJ9j0eaWTvWz2JeLbxmpeHV0mlAEO0F4bbVVd4VxNStBrGRsh7yI8A==
-X-Gm-Gg: ASbGncsQnL1nH+G8+vCq1ahlC67jzpn83Zh5lGreXEOjm40ITf4sXQA7BlaOwYy2VPO
-	+Gx/UP2Y8dtzu2O0bBIyRZMWAqV8BJwaiCvK89zuEty3nYyaUVcC2wqqndfNULrKYKGxGd05YF7
-	mfKbQDo65CIdqzv//kSeuK9uxhZuJ3wwjgibLKHxb9zuvzqO/J6LDNgBrWr1fdm38Q5SRYjkCXO
-	goVprBL5O3rB5wvc5Y/UfOr7unt4GlUAU3yRI188PqHvvRJuwOloq89q9pMumJ/HwqsMNKhGehY
-	DP8pQQrZjiCecWBJVWo5dPG/WHHBBA5LF+0yetrTlTy/
-X-Received: by 2002:a05:622a:5c17:b0:4a6:c5ee:6ced with SMTP id d75a77b69052e-4a713b8ba7dmr56471101cf.4.1749648068371;
-        Wed, 11 Jun 2025 06:21:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH1ArCnkm2Czjve19sYRLRVRmIA4chf1R1aoKdRXRTJmJlpegiSPkj7PSA7rA024CD57QwdaQ==
-X-Received: by 2002:a05:622a:5c17:b0:4a6:c5ee:6ced with SMTP id d75a77b69052e-4a713b8ba7dmr56464691cf.4.1749648059408;
-        Wed, 11 Jun 2025 06:20:59 -0700 (PDT)
-Received: from [10.32.64.156] (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a61116c02asm86858761cf.32.2025.06.11.06.20.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jun 2025 06:20:59 -0700 (PDT)
-Message-ID: <a020ab91-2da7-4c47-b88e-4639b8b0bd37@redhat.com>
-Date: Wed, 11 Jun 2025 15:20:57 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mCydYCY5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749648088; x=1781184088;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=63Ypwf8QBn8D7Q7UwXfVEEfH5zk40Vxo36OO1424U68=;
+  b=mCydYCY5AuKMoYGTwfa2dlcYRHLvjgiBJ1/x5Fl+VPe8Wjq8poa3GSnO
+   SO2VeN795BEQdjS68AEtS15s9mKh3/hczzqWQS1uN9GhzQdzEjSzHo/oZ
+   mAyj3zVjAHVL1wT+in1F0dLgm8mXN6b3MYhGDVgCKVn/t9lZQElDTh5yW
+   xd9nKsIgkmaksGThA6SvSgBlIX6YnMecA74gJFbcOrZ5kl9S7MewX4rB6
+   C9Vyov3jroG8V80XQrbDElESxNzpXbwUeRyA/572TGlQqtYN0t2kALy1a
+   1hICDoJX7j9qanJOv3Z9G3ERZmhPYRViSlCRqEbBFwfNrH87X9vdW0b9h
+   Q==;
+X-CSE-ConnectionGUID: eSAa1Lk2Tq2tJFQKg1At8A==
+X-CSE-MsgGUID: 4KyvxRdXQ1CBjX+phIxlbg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="51928100"
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="51928100"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 06:21:27 -0700
+X-CSE-ConnectionGUID: qoOkOkclT2WQ9yhIwCD9dw==
+X-CSE-MsgGUID: mv2QX6GGTOmVrUFNthzZzg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="152474038"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.183])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 06:21:24 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 11 Jun 2025 16:21:20 +0300 (EEST)
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+cc: gregkh@linuxfoundation.org, linux-serial@vger.kernel.org, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 30/33] serial: 8250: invert serial8250_register_8250_port()
+ CIR condition
+In-Reply-To: <20250611100319.186924-31-jirislaby@kernel.org>
+Message-ID: <d95339c7-92d5-5f71-f159-e45f4c273a7e@linux.intel.com>
+References: <20250611100319.186924-1-jirislaby@kernel.org> <20250611100319.186924-31-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/mm: Check for YAMA ptrace_scope configuraiton
- before modifying it
-To: Mark Brown <broonie@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>,
- Mike Rapoport <rppt@kernel.org>
-Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250610-selftest-mm-enable-yama-v1-1-0097b6713116@kernel.org>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250610-selftest-mm-enable-yama-v1-1-0097b6713116@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="8323328-122357125-1749648080=:957"
 
-On 10.06.25 16:07, Mark Brown wrote:
-> When running the memfd_secret test run_vmtests.sh unconditionally tries
-> to confgiure the YAMA LSM's ptrace_scope configuration, leading to an error
-> if YAMA is not in the running kernel:
-> 
-> # ./run_vmtests.sh: line 432: /proc/sys/kernel/yama/ptrace_scope: No such file or directory
-> # # ----------------------
-> # # running ./memfd_secret
-> # # ----------------------
-> 
-> Check that this file is present before trying to write to it.
-> 
-> The indentation here is a bit odd, and it doesn't seem great that we
-> configure but don't restore ptrace_scope.
-> 
-> Signed-off-by: Mark Brown <broonie@kernel.org>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-122357125-1749648080=:957
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Wed, 11 Jun 2025, Jiri Slaby (SUSE) wrote:
+
+> There is no point in a long 'if' in serial8250_register_8250_port() to
+> just return ENOSPC for PORT_8250_CIR ports. Invert the condition and
+> return immediately.
+>=20
+> 'gpios' variable was moved to its set location.
+>=20
+> And return ENODEV instead of ENOSPC. The latter is a leftover from the
+> previous find-uart 'if'. The former makes a lot more sense in this case.
+>=20
+> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
 > ---
+>  drivers/tty/serial/8250/8250_core.c | 253 ++++++++++++++--------------
+>  1 file changed, 127 insertions(+), 126 deletions(-)
+>=20
+> diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/825=
+0/8250_core.c
+> index 2bac9c7827de..10f25bae9f46 100644
+> --- a/drivers/tty/serial/8250/8250_core.c
+> +++ b/drivers/tty/serial/8250/8250_core.c
+> @@ -725,139 +725,140 @@ int serial8250_register_8250_port(const struct ua=
+rt_8250_port *up)
+>  =09=09nr_uarts++;
+>  =09}
+> =20
+> -=09if (uart->port.type !=3D PORT_8250_CIR) {
+> -=09=09struct mctrl_gpios *gpios;
+> -
+> -=09=09if (uart->port.dev)
+> -=09=09=09uart_remove_one_port(&serial8250_reg, &uart->port);
+> -
+> -=09=09uart->port.ctrl_id=09=3D up->port.ctrl_id;
+> -=09=09uart->port.port_id=09=3D up->port.port_id;
+> -=09=09uart->port.iobase       =3D up->port.iobase;
+> -=09=09uart->port.membase      =3D up->port.membase;
+> -=09=09uart->port.irq          =3D up->port.irq;
+> -=09=09uart->port.irqflags     =3D up->port.irqflags;
+> -=09=09uart->port.uartclk      =3D up->port.uartclk;
+> -=09=09uart->port.fifosize     =3D up->port.fifosize;
+> -=09=09uart->port.regshift     =3D up->port.regshift;
+> -=09=09uart->port.iotype       =3D up->port.iotype;
+> -=09=09uart->port.flags        =3D up->port.flags | UPF_BOOT_AUTOCONF;
+> -=09=09uart->bugs=09=09=3D up->bugs;
+> -=09=09uart->port.mapbase      =3D up->port.mapbase;
+> -=09=09uart->port.mapsize      =3D up->port.mapsize;
+> -=09=09uart->port.private_data =3D up->port.private_data;
+> -=09=09uart->tx_loadsz=09=09=3D up->tx_loadsz;
+> -=09=09uart->capabilities=09=3D up->capabilities;
+> -=09=09uart->port.throttle=09=3D up->port.throttle;
+> -=09=09uart->port.unthrottle=09=3D up->port.unthrottle;
+> -=09=09uart->port.rs485_config=09=3D up->port.rs485_config;
+> -=09=09uart->port.rs485_supported =3D up->port.rs485_supported;
+> -=09=09uart->port.rs485=09=3D up->port.rs485;
+> -=09=09uart->rs485_start_tx=09=3D up->rs485_start_tx;
+> -=09=09uart->rs485_stop_tx=09=3D up->rs485_stop_tx;
+> -=09=09uart->lsr_save_mask=09=3D up->lsr_save_mask;
+> -=09=09uart->dma=09=09=3D up->dma;
+> -
+> -=09=09/* Take tx_loadsz from fifosize if it wasn't set separately */
+> -=09=09if (uart->port.fifosize && !uart->tx_loadsz)
+> -=09=09=09uart->tx_loadsz =3D uart->port.fifosize;
+> -
+> -=09=09if (up->port.dev) {
+> -=09=09=09uart->port.dev =3D up->port.dev;
+> -=09=09=09ret =3D uart_get_rs485_mode(&uart->port);
+> -=09=09=09if (ret)
+> -=09=09=09=09goto err;
+> -=09=09}
+> +=09if (uart->port.type =3D=3D PORT_8250_CIR) {
+> +=09=09ret =3D -ENODEV;
+> +=09=09goto unlock;
+> +=09}
+> =20
+> -=09=09if (up->port.flags & UPF_FIXED_TYPE)
+> -=09=09=09uart->port.type =3D up->port.type;
+> +=09if (uart->port.dev)
+> +=09=09uart_remove_one_port(&serial8250_reg, &uart->port);
+> +
+> +=09uart->port.ctrl_id=09=3D up->port.ctrl_id;
+> +=09uart->port.port_id=09=3D up->port.port_id;
+> +=09uart->port.iobase       =3D up->port.iobase;
+> +=09uart->port.membase      =3D up->port.membase;
+> +=09uart->port.irq          =3D up->port.irq;
+> +=09uart->port.irqflags     =3D up->port.irqflags;
+> +=09uart->port.uartclk      =3D up->port.uartclk;
+> +=09uart->port.fifosize     =3D up->port.fifosize;
+> +=09uart->port.regshift     =3D up->port.regshift;
+> +=09uart->port.iotype       =3D up->port.iotype;
+> +=09uart->port.flags        =3D up->port.flags | UPF_BOOT_AUTOCONF;
+> +=09uart->bugs=09=09=3D up->bugs;
+> +=09uart->port.mapbase      =3D up->port.mapbase;
+> +=09uart->port.mapsize      =3D up->port.mapsize;
+> +=09uart->port.private_data =3D up->port.private_data;
+> +=09uart->tx_loadsz=09=09=3D up->tx_loadsz;
+> +=09uart->capabilities=09=3D up->capabilities;
+> +=09uart->port.throttle=09=3D up->port.throttle;
+> +=09uart->port.unthrottle=09=3D up->port.unthrottle;
+> +=09uart->port.rs485_config=09=3D up->port.rs485_config;
+> +=09uart->port.rs485_supported =3D up->port.rs485_supported;
+> +=09uart->port.rs485=09=3D up->port.rs485;
+> +=09uart->rs485_start_tx=09=3D up->rs485_start_tx;
+> +=09uart->rs485_stop_tx=09=3D up->rs485_stop_tx;
+> +=09uart->lsr_save_mask=09=3D up->lsr_save_mask;
+> +=09uart->dma=09=09=3D up->dma;
+> +
+> +=09/* Take tx_loadsz from fifosize if it wasn't set separately */
+> +=09if (uart->port.fifosize && !uart->tx_loadsz)
+> +=09=09uart->tx_loadsz =3D uart->port.fifosize;
+> +
+> +=09if (up->port.dev) {
+> +=09=09uart->port.dev =3D up->port.dev;
+> +=09=09ret =3D uart_get_rs485_mode(&uart->port);
+> +=09=09if (ret)
+> +=09=09=09goto err;
+> +=09}
+> =20
+> -=09=09/*
+> -=09=09 * Only call mctrl_gpio_init(), if the device has no ACPI
+> -=09=09 * companion device
+> -=09=09 */
+> -=09=09if (!has_acpi_companion(uart->port.dev)) {
+> -=09=09=09gpios =3D mctrl_gpio_init(&uart->port, 0);
+> -=09=09=09if (IS_ERR(gpios)) {
+> -=09=09=09=09ret =3D PTR_ERR(gpios);
+> -=09=09=09=09goto err;
+> -=09=09=09} else {
+> -=09=09=09=09uart->gpios =3D gpios;
+> -=09=09=09}
+> -=09=09}
+> +=09if (up->port.flags & UPF_FIXED_TYPE)
+> +=09=09uart->port.type =3D up->port.type;
+> =20
+> -=09=09serial8250_set_defaults(uart);
+> -
+> -=09=09/* Possibly override default I/O functions.  */
+> -=09=09if (up->port.serial_in)
+> -=09=09=09uart->port.serial_in =3D up->port.serial_in;
+> -=09=09if (up->port.serial_out)
+> -=09=09=09uart->port.serial_out =3D up->port.serial_out;
+> -=09=09if (up->port.handle_irq)
+> -=09=09=09uart->port.handle_irq =3D up->port.handle_irq;
+> -=09=09/*  Possibly override set_termios call */
+> -=09=09if (up->port.set_termios)
+> -=09=09=09uart->port.set_termios =3D up->port.set_termios;
+> -=09=09if (up->port.set_ldisc)
+> -=09=09=09uart->port.set_ldisc =3D up->port.set_ldisc;
+> -=09=09if (up->port.get_mctrl)
+> -=09=09=09uart->port.get_mctrl =3D up->port.get_mctrl;
+> -=09=09if (up->port.set_mctrl)
+> -=09=09=09uart->port.set_mctrl =3D up->port.set_mctrl;
+> -=09=09if (up->port.get_divisor)
+> -=09=09=09uart->port.get_divisor =3D up->port.get_divisor;
+> -=09=09if (up->port.set_divisor)
+> -=09=09=09uart->port.set_divisor =3D up->port.set_divisor;
+> -=09=09if (up->port.startup)
+> -=09=09=09uart->port.startup =3D up->port.startup;
+> -=09=09if (up->port.shutdown)
+> -=09=09=09uart->port.shutdown =3D up->port.shutdown;
+> -=09=09if (up->port.pm)
+> -=09=09=09uart->port.pm =3D up->port.pm;
+> -=09=09if (up->port.handle_break)
+> -=09=09=09uart->port.handle_break =3D up->port.handle_break;
+> -=09=09if (up->dl_read)
+> -=09=09=09uart->dl_read =3D up->dl_read;
+> -=09=09if (up->dl_write)
+> -=09=09=09uart->dl_write =3D up->dl_write;
+> -
+> -=09=09if (uart->port.type !=3D PORT_8250_CIR) {
+> -=09=09=09if (uart_console_registered(&uart->port))
+> -=09=09=09=09pm_runtime_get_sync(uart->port.dev);
+> -
+> -=09=09=09if (serial8250_isa_config !=3D NULL)
+> -=09=09=09=09serial8250_isa_config(0, &uart->port,
+> -=09=09=09=09=09=09&uart->capabilities);
+> -
+> -=09=09=09serial8250_apply_quirks(uart);
+> -=09=09=09ret =3D uart_add_one_port(&serial8250_reg,
+> -=09=09=09=09=09=09&uart->port);
+> -=09=09=09if (ret)
+> -=09=09=09=09goto err;
+> -
+> -=09=09=09ret =3D uart->port.line;
+> +=09/*
+> +=09 * Only call mctrl_gpio_init(), if the device has no ACPI
+> +=09 * companion device
+> +=09 */
+> +=09if (!has_acpi_companion(uart->port.dev)) {
+> +=09=09struct mctrl_gpios *gpios =3D mctrl_gpio_init(&uart->port, 0);
+> +=09=09if (IS_ERR(gpios)) {
+> +=09=09=09ret =3D PTR_ERR(gpios);
+> +=09=09=09goto err;
+>  =09=09} else {
+> -=09=09=09dev_info(uart->port.dev,
+> -=09=09=09=09"skipping CIR port at 0x%lx / 0x%llx, IRQ %d\n",
+> -=09=09=09=09uart->port.iobase,
+> -=09=09=09=09(unsigned long long)uart->port.mapbase,
+> -=09=09=09=09uart->port.irq);
+> -
+> -=09=09=09ret =3D 0;
+> +=09=09=09uart->gpios =3D gpios;
+>  =09=09}
+> +=09}
+> =20
+> -=09=09if (!uart->lsr_save_mask)
+> -=09=09=09uart->lsr_save_mask =3D LSR_SAVE_FLAGS;=09/* Use default LSR ma=
+sk */
+> +=09serial8250_set_defaults(uart);
+> +
+> +=09/* Possibly override default I/O functions.  */
+> +=09if (up->port.serial_in)
+> +=09=09uart->port.serial_in =3D up->port.serial_in;
+> +=09if (up->port.serial_out)
+> +=09=09uart->port.serial_out =3D up->port.serial_out;
+> +=09if (up->port.handle_irq)
+> +=09=09uart->port.handle_irq =3D up->port.handle_irq;
+> +=09/*  Possibly override set_termios call */
+> +=09if (up->port.set_termios)
+> +=09=09uart->port.set_termios =3D up->port.set_termios;
+> +=09if (up->port.set_ldisc)
+> +=09=09uart->port.set_ldisc =3D up->port.set_ldisc;
+> +=09if (up->port.get_mctrl)
+> +=09=09uart->port.get_mctrl =3D up->port.get_mctrl;
+> +=09if (up->port.set_mctrl)
+> +=09=09uart->port.set_mctrl =3D up->port.set_mctrl;
+> +=09if (up->port.get_divisor)
+> +=09=09uart->port.get_divisor =3D up->port.get_divisor;
+> +=09if (up->port.set_divisor)
+> +=09=09uart->port.set_divisor =3D up->port.set_divisor;
+> +=09if (up->port.startup)
+> +=09=09uart->port.startup =3D up->port.startup;
+> +=09if (up->port.shutdown)
+> +=09=09uart->port.shutdown =3D up->port.shutdown;
+> +=09if (up->port.pm)
+> +=09=09uart->port.pm =3D up->port.pm;
+> +=09if (up->port.handle_break)
+> +=09=09uart->port.handle_break =3D up->port.handle_break;
+> +=09if (up->dl_read)
+> +=09=09uart->dl_read =3D up->dl_read;
+> +=09if (up->dl_write)
+> +=09=09uart->dl_write =3D up->dl_write;
+> =20
+> -=09=09/* Initialise interrupt backoff work if required */
+> -=09=09if (up->overrun_backoff_time_ms > 0) {
+> -=09=09=09uart->overrun_backoff_time_ms =3D
+> -=09=09=09=09up->overrun_backoff_time_ms;
+> -=09=09=09INIT_DELAYED_WORK(&uart->overrun_backoff,
+> -=09=09=09=09=09serial_8250_overrun_backoff_work);
+> -=09=09} else {
+> -=09=09=09uart->overrun_backoff_time_ms =3D 0;
+> -=09=09}
+> +=09if (uart->port.type !=3D PORT_8250_CIR) {
+> +=09=09if (uart_console_registered(&uart->port))
+> +=09=09=09pm_runtime_get_sync(uart->port.dev);
+> +
+> +=09=09if (serial8250_isa_config !=3D NULL)
+> +=09=09=09serial8250_isa_config(0, &uart->port,
+> +=09=09=09=09=09&uart->capabilities);
+> +
+> +=09=09serial8250_apply_quirks(uart);
+> +=09=09ret =3D uart_add_one_port(&serial8250_reg,
+> +=09=09=09=09=09&uart->port);
+> +=09=09if (ret)
+> +=09=09=09goto err;
+> +
+> +=09=09ret =3D uart->port.line;
+> +=09} else {
+> +=09=09dev_info(uart->port.dev,
+> +=09=09=09"skipping CIR port at 0x%lx / 0x%llx, IRQ %d\n",
+> +=09=09=09uart->port.iobase,
+> +=09=09=09(unsigned long long)uart->port.mapbase,
+> +=09=09=09uart->port.irq);
+> +
+> +=09=09ret =3D 0;
+> +=09}
+> +
+> +=09if (!uart->lsr_save_mask)
+> +=09=09uart->lsr_save_mask =3D LSR_SAVE_FLAGS;=09/* Use default LSR mask =
+*/
+> +
+> +=09/* Initialise interrupt backoff work if required */
+> +=09if (up->overrun_backoff_time_ms > 0) {
+> +=09=09uart->overrun_backoff_time_ms =3D
+> +=09=09=09up->overrun_backoff_time_ms;
+> +=09=09INIT_DELAYED_WORK(&uart->overrun_backoff,
+> +=09=09=09=09serial_8250_overrun_backoff_work);
+> +=09} else {
+> +=09=09uart->overrun_backoff_time_ms =3D 0;
+>  =09}
+> =20
+>  unlock:
+>=20
 
-Acked-by: David Hildenbrand <david@redhat.com>
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
--- 
-Cheers,
+--=20
+ i.
 
-David / dhildenb
-
+--8323328-122357125-1749648080=:957--
