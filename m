@@ -1,190 +1,313 @@
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013002.outbound.protection.outlook.com [40.107.159.2])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2046.outbound.protection.outlook.com [40.107.243.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADCBE24679B;
-	Wed, 11 Jun 2025 21:24:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055AD244674;
+	Wed, 11 Jun 2025 21:24:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.46
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749677074; cv=fail; b=EtjFRvf/p90YzhUVm1Zt9fszkB4wXYW+2Uyx1wp5aFCkMLg7wJGsJBj3FA7UhHijpqXhHv6JdAzyWIB8hfgb1drJ3ursyatQFAGJPQuo3i6iXhTXHexNxOU1h6OiNEi/QYkp3e2EK/pOVfuL++wsua+mcCvsFMBQAiRpSFksW+w=
+	t=1749677075; cv=fail; b=K0FZBkYV0f5hHq10B3mrJhN5q51d2WsmLWhWl7SE5hcNbwzEfkHHWBGkBsABokz2iAJtwl/EENqqpMMcHFFvrY5Pg+vmd4lo1bVSDMFEbDqanqjs7PgvGzT5N0U3t5ER/zw6lTiQ2pdFsK6M0h8xF1kIIxQoG15Nf/sQh7Ibggc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749677074; c=relaxed/simple;
-	bh=YXSnT5opWuywlQWVx8T5AXK8WUyHX8zsMdRpkHvGsCI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=t78BiIc5EhujVcRG/mTYi3rK1qmjBLetGrF/dE8B9hK5BRusjaMCMys26RMl+VL88NxAtOOQfnL4USD8Og3L85kkxSqsk7FwAJTTkCwONbeLv9rsh3Ia9pvU/M4jlsofZX6KIYOSF4WsZkFR5cDVVxsbEQhiZw+ApxnKtwH/Yoc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Lk0QP5zB; arc=fail smtp.client-ip=40.107.159.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1749677075; c=relaxed/simple;
+	bh=zeTfgCcBlCZASP9dH44ugFKhq+EcaQiUHB1OtV/gFVs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tRmbPGt3NtjQTeizX4e8mYyXXolWLPaORm0myP8C9JJoAt96J/DWfKw8QrJS0ZqE3RSsDol/jDX2gR/+dbEHwUrSRDuoWJ4ihwJbs+RuHSlZzfhxTR9RZCpTafXiyMCMpMxez6g+GV4sGLXiGgSYF/a84UGsTpdeJGpxnLbZeyk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Os7kGKnK; arc=fail smtp.client-ip=40.107.243.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Lk0QP5zB"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Os7kGKnK"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Feu203LTgdt6D8u4SYyoouf8xmq1JFcxo6W1tIkPyhG5b0FB1kC1pfWIZ74qR9WBIj/ZAw2QmslA6SXvEA6m21+qyqCwQrVuKUlEFnMTdvFDX6wY8dbbmNMywMt7qQdIcJJaS/6n82Wz9wfSybSDTrOdFSnfCE0/DifJVmN7gZorJtlpdpIJOJ21Rfd/U9Q4Y8+z+ce7h0fwNyNWnf9quRtF5Z9LzcxCUzgeHMiXHVuE5f82jsQjmfhD07P3+QlH7Xp5d0nmmeVLmJYVUVdFJbJjUa0ZPNf4PwC0Ifyjrj63sa5gLoWfsAzgmcIMO9SxsDELMCYMM2/UokvB8zh3UA==
+ b=mWK0KfYlChVYamTHGwN3S64Q3tC6dppgEd28bxuUJIr9gMfrI+Sxs8geRMUp0uJ7jLr8FRSjp21hDJB563JCYZSlOnyKiJR4Sq1aL5YIuCbaOari8U3LnAimcyF06FPi1QYgs0GtGq1xLuDLSl0IAyOMQt98AuevJzxieLY49ZZD77cPnNP+6vx+JjFBN1OpgmLOCkFXvlCYxDP/DAU3F+ZuVHPYFXQPYMXzvU2QOETmZfPOBfe+xb3dqsk8DLoCuVgxIX4p9eF+jmb6UXyHXtmQJz8m6p3GXkuGt4HOO3G+sdaIzmha6j/28lO1gVxFs3oiJmUlOxUk/TnagNxQJg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Tqi09b/mzV3bGWJbUHqORvhEgQ/II1fjLgaEIOJ3kbk=;
- b=qwAtH3rc3wY8PIECOIiJjq3/QdjqAERaUbLXCLCRCWybC/Jm24UIvHCBLoHzZgEmE9agGnSnWU/27ky7saIF6DtsP94f+MXYSjfTJ0q0Oq5VuGy79Bicqoi95FQM0rhC5U4KW6o7c7JcRSqrHFfIGo24PtadcIIOf01Qg8+zRcGqExdB/YMDbh6Wa5ILgkmJDqvo+F5h7B+dPsn/Gj6QQHFpCigq6cTyxhkmBZSuzOCil/PojPSDmGyAypl/zwKPeMjMCq8vhxYdvbvCdSGDLNDidLRWquAimEixIO8geZzd1Y1mwxdYXv83t7yx9jgSshn4oABlafhvR7Q48dWIMw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ bh=9zVWCFNmU//CttTxPHIjI51Zv4hegM63lyqq0FcL/mw=;
+ b=FRGNIrmrrdAL4TitxfU2CjiYRLVrZbg/WKBxlt3W0tKwVV5SUdf7UyeQIP1JhrB3qdme+UHhpvjxh38mOd1DsyeiG6K/RL/l3gBc4Aac7tT8K2UUtU/Qhq+l0MbD1Xkn+2vI338Em+mvsphuELaON7yqvYLgJRO4KzlEFdwQ4Uc9SMUQYa0adKqu+Dd9POWfmiOovXoAsa2AqQ+t4ws5cDN4xhLeLzU6J5e6yNv1aRCNi1zkH0JMQNRBkTYqRDq/SMOenXyawMihwy+uC+g0if1vp38OE8YBrQEgO7cE+RDMATreafqFit1aCPGzh9CgQuFgnYLMJz/oVv0jgeCL/g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=lwn.net smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Tqi09b/mzV3bGWJbUHqORvhEgQ/II1fjLgaEIOJ3kbk=;
- b=Lk0QP5zBvUC4L8pSWJ8zIy6GCEsIIOARqpLp7x0kCdcd7oNRKQ483l4Bpem5roPxAKyk0A6UBMGHeyCFEfsaFXK3+lMZwB23lviDFVpPrZPk4hnaVUsHWUB14g4svs4daqX3Mwjw2hlJGpV0GMJC3eqiKzwOlfiWqB+h62uiqsakOzffV80zmDH6hOp/eTg+z/mElO7CTjeLGre7npGGd6OHZLSLreqsQlScXqL6NfhOMtNSR4ykG5mO2PbvV1ZLQZMb6XtnIOjFw7bAK+jcKQRji20yWA1c2MgZKq9KmfE2PMmdkZismqJXujjHCh+uxjCSLDco3pQEyhWtdK1LBA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AS8PR04MB7608.eurprd04.prod.outlook.com (2603:10a6:20b:293::19) with
+ bh=9zVWCFNmU//CttTxPHIjI51Zv4hegM63lyqq0FcL/mw=;
+ b=Os7kGKnKszMCzLMTpMImjzktPcn6/TFhtlQGoAyJfzSXA2VuAxz7c7QsB/RnxwwQMVd4FpUV8EX0YIuchPT37AuWi25Ek79+1yZgPtTgWLefDhTW93Of9F1Uz9jAyI0cg9O4Qnez6povV1oVY9oatOVWxyc2Hm4lCmUYQ9enzb0=
+Received: from SJ0PR03CA0354.namprd03.prod.outlook.com (2603:10b6:a03:39c::29)
+ by CY5PR12MB6574.namprd12.prod.outlook.com (2603:10b6:930:42::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.30; Wed, 11 Jun
- 2025 21:24:29 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8813.024; Wed, 11 Jun 2025
- 21:24:29 +0000
-Date: Wed, 11 Jun 2025 17:24:21 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Peter Chen <peter.chen@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, linux-usb@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>, s32@nxp.com,
-	linaro-s32@linaro.org
-Subject: Re: [PATCH 4/4] usb: chipidea: s32g: Add usb support for s32g3
-Message-ID: <aEn0BXlnXlNI3YTQ@lizhi-Precision-Tower-5810>
-References: <cover.1748453565.git.dan.carpenter@linaro.org>
- <c7c9319793b439cb35909621381ca2d4a78699dd.1748461536.git.dan.carpenter@linaro.org>
- <aDeCwUsYTh7z7uuo@lizhi-Precision-Tower-5810>
- <aEnWWPgXseRGdSz1@stanley.mountain>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEnWWPgXseRGdSz1@stanley.mountain>
-X-ClientProxiedBy: PH7P220CA0022.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:510:326::23) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.36; Wed, 11 Jun
+ 2025 21:24:28 +0000
+Received: from SJ1PEPF0000231E.namprd03.prod.outlook.com
+ (2603:10b6:a03:39c:cafe::76) by SJ0PR03CA0354.outlook.office365.com
+ (2603:10b6:a03:39c::29) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.35 via Frontend Transport; Wed,
+ 11 Jun 2025 21:24:28 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ1PEPF0000231E.mail.protection.outlook.com (10.167.242.230) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8835.15 via Frontend Transport; Wed, 11 Jun 2025 21:24:28 +0000
+Received: from bmoger-ubuntu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 11 Jun
+ 2025 16:24:24 -0500
+From: Babu Moger <babu.moger@amd.com>
+To: <babu.moger@amd.com>, <corbet@lwn.net>, <tony.luck@intel.com>,
+	<reinette.chatre@intel.com>, <Dave.Martin@arm.com>, <james.morse@arm.com>,
+	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>
+CC: <x86@kernel.org>, <hpa@zytor.com>, <akpm@linux-foundation.org>,
+	<paulmck@kernel.org>, <rostedt@goodmis.org>, <thuth@redhat.com>,
+	<ardb@kernel.org>, <gregkh@linuxfoundation.org>, <seanjc@google.com>,
+	<thomas.lendacky@amd.com>, <pawan.kumar.gupta@linux.intel.com>,
+	<perry.yuan@amd.com>, <yosry.ahmed@linux.dev>, <kai.huang@intel.com>,
+	<xiaoyao.li@intel.com>, <peterz@infradead.org>, <kan.liang@linux.intel.com>,
+	<mario.limonciello@amd.com>, <xin3.li@intel.com>, <sohil.mehta@intel.com>,
+	<chang.seok.bae@intel.com>, <andrew.cooper3@citrix.com>,
+	<ebiggers@google.com>, <ak@linux.intel.com>, <xin@zytor.com>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v6 4/8] x86/resctrl: Implement "io_alloc" enable/disable handlers
+Date: Wed, 11 Jun 2025 16:23:29 -0500
+Message-ID: <548b542ff537936cc8a20f721f6f2472189c536d.1749677012.git.babu.moger@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1749677012.git.babu.moger@amd.com>
+References: <cover.1749677012.git.babu.moger@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB7608:EE_
-X-MS-Office365-Filtering-Correlation-Id: f4e42e3f-aa41-4862-6b16-08dda92e5956
+X-MS-TrafficTypeDiagnostic: SJ1PEPF0000231E:EE_|CY5PR12MB6574:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7eef140c-0d2a-4aba-088e-08dda92e58e8
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|52116014|7053199007|38350700014;
+	BCL:0;ARA:13230040|82310400026|1800799024|7416014|36860700013|376014|921020|13003099007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?SsVfZ2kDQUsbPSE3U6UcbITqO9wZO/HPXL3poahFaw3naiOyVf4Gg5hUFZwn?=
- =?us-ascii?Q?FB6ruW/2qA2X6r7cChr6NoDh8b4Uajqu4Rbnt8IhPU0DDLmOAQfYN5hVh5St?=
- =?us-ascii?Q?qD7HHw6o9JukwfiTqU3luT0CREH7ousdT7CoktWxl7EXnAVSrE8b+2r0qEVr?=
- =?us-ascii?Q?Hc34HlsNXSr4i8GRl2ZqAuay4Lx7mbKY0XAxraM0oi13AdSOyT5qwnDzAVV7?=
- =?us-ascii?Q?EYJHaRZfd4SoHDUmkpC7VoOAkAgXfSspqimp58eFMhZX2KhaizJPpLHGoHGH?=
- =?us-ascii?Q?wmW3uPnP64c0vU6/aqx5cU4Q1zk/0H6vAz2K1tesX+eHxGJUk+s9WetNB8Zb?=
- =?us-ascii?Q?wfeIsmiQ5rnBl47IN0RwSBczqn2N7F1ZwGq+bZ6WJn5zA9MqsSl9kAQi6vff?=
- =?us-ascii?Q?EmaNCWNgu4fGDJWnCrZADI35iUENOjsH66leQTB1j0AwMos7AaryWy+b1z3J?=
- =?us-ascii?Q?pcxaT2fC2mIj2MKTtxmVBDc0a0B8rmBcRHgCnJIwpy6OfBvRY3uphpQd9XAl?=
- =?us-ascii?Q?iUQHsGY5b0CnHzwnKYG+JCOa6mfsLOiVXg81z1AFkShgs31Pix00yP5h8RzT?=
- =?us-ascii?Q?JX/fUYrA9Ct1/phgLl/3/txmfNGeGF+V/SGUreE2Z+ZYnKJe9vtUt1auvRd6?=
- =?us-ascii?Q?ixLJFRJw9pjp/b580sUptx0DdLNjnZm6j7HGhyvDdrel1wusvPMmLemTfmBl?=
- =?us-ascii?Q?1nHWrZk8LQD17Y8NYdvVM/NbCrPWhDbHXNGVu6oRlSGL8w5M4lHdiG4N2pYV?=
- =?us-ascii?Q?Dl7qwLTTMzjNytviG2YEQGdSVIdFxLexck27MuhbQhqo0KAnYjpj0Pz6fi3Y?=
- =?us-ascii?Q?qGvZ80amenHuyB67Vak3aNgKNIZFUy4du9/11YbU0upgIkGYOQNcdPIBr8gg?=
- =?us-ascii?Q?sb5bTUSKiHJkTq/IjnF1x+MLSg+Vbm0r6ClyFyUuU+OxoKMC+nQeK/8uLSAl?=
- =?us-ascii?Q?H5m9xYIZz5tDEHCGK3c/QM03XHlMGDe8fQZDbyVu0HI8yVv1ChCMp4JeehiZ?=
- =?us-ascii?Q?hWQTbL77LgAhelxtfRyuOtjwUqr3LfW0GAz5gFUaC+ANA6xVqKAl8flK4to4?=
- =?us-ascii?Q?nJ5vSxcetRAVtPU1mKqoX3M5NsTpSwt8LDYmlPyCoZ6P/7rC8ASHdMe9+or4?=
- =?us-ascii?Q?klj2NsYppYg4FeHodRqHLCxkosGQ3ixR1R4Gzkoz0+4jThTEtJYiUSS06O7T?=
- =?us-ascii?Q?JBayFsyuZ7nZpeqmH4BxZL/0QnZiuXIFUbgichfHu8fmp14J0qRp6dXpx2Cl?=
- =?us-ascii?Q?JGSh3v5pgxSTC5P8qpjjuZRm13Rk1k37WlyCOgdM7Rr5eJDvLxJilXDsqf9X?=
- =?us-ascii?Q?SJ2WHgaks+PTQzE9anBA3KCau7oRcNDWhOIJWeSwnhIi0SFVeJ9ltKW+0IsH?=
- =?us-ascii?Q?/YbTptj65PKa4NNX9OVf9mk0HvyzZ+GNX3PXJEhyHkq+Ize/quyB0I5pAhS8?=
- =?us-ascii?Q?YNOUtMcHxUfWOekv2NOBCqlS+yXfJ5jUrJTyKhZ7wKLvHqGxcVorJg=3D=3D?=
+	=?us-ascii?Q?OUpj+kDIqw8caybAgcMKR8OG1Gly8WUfWoHLwvPsstbBWPAFTZDwdGHKSSLe?=
+ =?us-ascii?Q?8cCmaj0/Ui4xxFdiZT5tBukIde9BHh9J3rDJfO5T155n7tnWdrWqyT8zAOFw?=
+ =?us-ascii?Q?/F5OmPN1iq0VgBzQ5YOrqIq6i96+SjFlZ8xdqOZbYVUxakMlGVbhr7Wk/Utv?=
+ =?us-ascii?Q?1r6Fm5sjWgCO8xEq7XgPHG+FuqHyzR6gIazNEkKEM15gXzANR+t3xqiBcQBy?=
+ =?us-ascii?Q?1P00E7cmTCXWtb/KxjEc99LiYaEbam3oV1SqMWL7+pgE6RcaWeGuErNVB1Eu?=
+ =?us-ascii?Q?2+VPX32lC0YpKcmACI1dSvR/q8Qr0owNA0WvwTniEXuly9aIL6nBZ1k0rbrM?=
+ =?us-ascii?Q?iIo50t1f3STd51qC3mFCxT5Pd2w7icmd126lkALY2Ibivt9LKYHwUf9guqhA?=
+ =?us-ascii?Q?xC3PbE4NptRRMpo9oj28OEDS88hUuIM0r/as+feRwVHlT2113Wm94Cb8JH9D?=
+ =?us-ascii?Q?GhcVhCr0+2WTLGUQkqh8z/fH+YoRYX2XGK2o3m6Ne6V9WU+gZd6Z0MXBSzhy?=
+ =?us-ascii?Q?IKd9mav4AqH86f6BEeq8ip1LIqOi4LRldK3HHcE8SVyVD67DWYhS93QKigi/?=
+ =?us-ascii?Q?JtGu904PO4UeiZcWaccAQ4LeErDCSSqUjB2tmQLETtySIYJLeAxz1XwHCzSj?=
+ =?us-ascii?Q?ebL7mbEe6eDV9rNXVMRkqJhqVR4NHXOxTcmSGmjNOOyh9gLdrfU2ux5yhkCE?=
+ =?us-ascii?Q?Xo+N0m1fv6uNl0C9Lyn4cQZ6b6a5kuJd6eFygIByrLGu0oJoFwQG7L9IMAC/?=
+ =?us-ascii?Q?ecLW0z9QwglUD1JDFQXBcNc1CIzrvgEuP4/R+BbONNP6IvE4LlY++pTVWIyR?=
+ =?us-ascii?Q?GmsyphWrP5qXiNdrM7LDctgCABzanl8TzzHURcMLMI+c13kGGeWU4PW92Bb6?=
+ =?us-ascii?Q?Rxbtexailsj1eI5OV/rYK/M0quG3fIBCrh1HxpTymzyVvA8D+FVvoAMnSwQE?=
+ =?us-ascii?Q?tgY/k/htfiZKofcSrrXj6ncu+TDqbT+8occoSSmiwawxL/O00psjddnKfg4q?=
+ =?us-ascii?Q?LAly4jUWhjxZf5dInNLkILa1Z5slwaAJk4z5llQ3kudc3bTb3777cwelVa/E?=
+ =?us-ascii?Q?F0ZVWPO3VONz5puiAQ8+DSCXjvaup66C5hUeCH1mISKLuB2y74a/szsP4mC7?=
+ =?us-ascii?Q?rT9kK/SNq6vOv14lrVgN213YYYFd1IJ0G+BWwIkGyKPuM2PlBiBBex6euDY0?=
+ =?us-ascii?Q?fzWiMIevHfMjqF3Jyqt4GZb+YJSpKA7ixENOJLwct4yqDWN8ZvU3iUW0ed76?=
+ =?us-ascii?Q?FWFFl0ovx9Dsgrk4gUhECs4X+5hZTA3Xn4SUzx0D6i+AN/uOQmLcfqD9cU+d?=
+ =?us-ascii?Q?do9lWTqNimXvvGAxOV3cBNncnydvwSX9roTpEQ3lN9u3YkxzRTcE0n9gvAGq?=
+ =?us-ascii?Q?aLpcEJewuZrLVkV1G3TR07ZtXRfiITY2VHTaHnq/oydf+zxkmi1PFerX/k0y?=
+ =?us-ascii?Q?qvDXuqOvsFiaBD6Gsy0Sm8ltqxboV/4Gp5GsPv3Y0nBpAcf+1Jv5SCelP3Nr?=
+ =?us-ascii?Q?z6depU92KJklcUkgb+Dk33i3ajEjAjDIErZhw6yJe0tZgPm31iFVvGUVRw?=
+ =?us-ascii?Q?=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(52116014)(7053199007)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?OK9ujX4RDkzxSYcu7mWhHsmRWkr9EZUQzLMcLA8tNb8QBqqQh9rz51s42Yn6?=
- =?us-ascii?Q?O/T77I9TntD+xM6aAzSg7XSMhxmBKCp0qLpevcOSwhnPB1lT30T8CY4AZovd?=
- =?us-ascii?Q?H7Zzs00Y7CgRH6WpseElolEex5xB0jGOvovl7ojdynguAx6kvMgZ7EFqVSTg?=
- =?us-ascii?Q?WvoRWajCfZOR2bK2t8uiHyCRbkzSEg55oV9dyO8EjSv0T8ZQK8tb9teWhpim?=
- =?us-ascii?Q?IR35VVFr+HNbZLLxna15lxZ8wRk6u+nvKtmuk1bYlQJEhWgaDe7EUsXzvS+F?=
- =?us-ascii?Q?8qhDv0NLzBqeYbOkKNy+XuToP6JxHFjPTGOqfA8OdtJxw5XYmyxvO+q2S/ve?=
- =?us-ascii?Q?x1q7llLmFtQ+7MJn+JL+tPe2wTp6QXBESEwDBGja+KKMAnSJcQkhQfH4Kdrs?=
- =?us-ascii?Q?qCKYwhwDmHs735tcWH6F9ePAEfxFFVEs4gZrznuZMdjsKWYzGTB8eN+ADrpG?=
- =?us-ascii?Q?fUIxZBYA+LMu001DRzy9slggYSWkHHi7ZSFzUDMnlSBH48UFqdEeFNTSrLQF?=
- =?us-ascii?Q?jrResA08E5/9Xe3Gr1tnbIgmmxtvYy6FZ1EV3qoakweG6KXowEYMDKUcovcQ?=
- =?us-ascii?Q?1Z/KQhXSuZkeGSA749cjsG4K4CXYOyYSS/e+pNwqQAnJyuWJI4Avd2bC/kKJ?=
- =?us-ascii?Q?bKEDjaxYG3ySIPabAy+l5n/aw6mYMTk0347PojIZZZnzs3OSvEKbwHl2xlh9?=
- =?us-ascii?Q?5mgUXG4ic1KvHHvl8jRgZlaFuMqxriF6CG4LJ3T3HEqC/yw9G3CCvIMkzHY3?=
- =?us-ascii?Q?oIxx84hbytcLkMY0RE12z+onSde0C8I8qDEGKNoW5FFXczBYYQE5gThSRsQs?=
- =?us-ascii?Q?6QMkCBg4ixrY7lJoITUcR/3H/7sfN+rEk22/tp2SulJLUka9A7DG5UBSCoWJ?=
- =?us-ascii?Q?Nu5+I8v4/EeY6FK7EiDRh6OQhOfjdBdzuwkKoXFiwGc5bI55OSLdor0eeph4?=
- =?us-ascii?Q?/+o9GYGsuICFcn4qS47Q68AwWTZ1fzbdcGewtQIJOV7j5QwEW/z1iQItQtro?=
- =?us-ascii?Q?iepNy6BE7Vy3K3LvL3tSh9TwE+K6mtON+addfj6I0iBcF8DAPn57AauOUyff?=
- =?us-ascii?Q?yb4WS1SU8agBlFw/pUbmRPv8vaGZU7JLLq2VIItuhMCFUn0saIYkU7//Zamm?=
- =?us-ascii?Q?boweBQ5O3hyoDj53w70klriK9Z3K9cwFctrWvXGeQhnt5eRL4Xb4nbdLed4B?=
- =?us-ascii?Q?ROc4p8arJkxm21s+VZYOkEvFEusGDcTChLaOaYNiwNzLgz2OtZ6kEqwm9CtK?=
- =?us-ascii?Q?uNkw3FwPt7fyopzp9BAQvz78rOuhsHvD1d96AHzOZ6bTRONQcCmm+KwlYwbY?=
- =?us-ascii?Q?B5ngzHi9d3y0yvak2Pk/tT0DVX5299Jj+xOGlbqco4grnH067EFtiJinUmqj?=
- =?us-ascii?Q?cDM+AW4+rUB9MQsOj8DAFwWODD68G4E8B+ex8WHvgPZ5oY6+xs2+9Tdk/u5X?=
- =?us-ascii?Q?86NLcqmm/kRa3gPpgR7LsL+/qfJrwGx7DM93sNSR09IvzKxpNkilJ3qmWICZ?=
- =?us-ascii?Q?ibUAMLAJvDCWwGWa4g3B9RfR4e7q0QviI2NtR8Avy/6XH9fQkEvAg0yHlWnx?=
- =?us-ascii?Q?KTP0kj0SXmwr58mKMoA=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f4e42e3f-aa41-4862-6b16-08dda92e5956
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2025 21:24:29.0530
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(7416014)(36860700013)(376014)(921020)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2025 21:24:28.0395
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KzhhjyjhYoltMeEH4gtFj8YcXT7G8qwoLKUKFmTDRJCFelR5nRQ7VaW8yeyFHCkx8aEI9tSeWLj8t5/B68caWg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7608
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7eef140c-0d2a-4aba-088e-08dda92e58e8
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF0000231E.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6574
 
-On Wed, Jun 11, 2025 at 10:17:44PM +0300, Dan Carpenter wrote:
-> On Wed, May 28, 2025 at 05:40:17PM -0400, Frank Li wrote:
-> > On Wed, May 28, 2025 at 10:57:39PM +0300, Dan Carpenter wrote:
-> > > From: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
-> > >
-> > > Enable USB driver for the s32g3 USB device.
-> > >
-> > > Signed-off-by: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
-> > > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > > ---
-> > >  drivers/usb/chipidea/ci_hdrc_imx.c |  1 +
-> > >  drivers/usb/chipidea/usbmisc_imx.c | 15 +++++++++++++++
-> > >  2 files changed, 16 insertions(+)
-> > >
-> > > diff --git a/drivers/usb/chipidea/ci_hdrc_imx.c b/drivers/usb/chipidea/ci_hdrc_imx.c
-> > > index ce207f8566d5..d062399ce15e 100644
-> > > --- a/drivers/usb/chipidea/ci_hdrc_imx.c
-> > > +++ b/drivers/usb/chipidea/ci_hdrc_imx.c
-> > > @@ -95,6 +95,7 @@ static const struct of_device_id ci_hdrc_imx_dt_ids[] = {
-> > >  	{ .compatible = "fsl,imx7ulp-usb", .data = &imx7ulp_usb_data},
-> > >  	{ .compatible = "fsl,imx8ulp-usb", .data = &imx8ulp_usb_data},
-> > >  	{ .compatible = "nxp,s32g2-usb", .data = &s32g_usb_data},
-> > > +	{ .compatible = "nxp,s32g3-usb", .data = &s32g_usb_data},
-> >
-> > If it is same, suggest compatible string fallback to nxp,s32g2-usb
-> >
-> > compatible = "nxp,s32g3-usb", "nxp,s32g2-usb".
-> >
->
-> These are the same, yeah.  I'm not sure I understand.  Did you mean just
-> add the "nxp,s32g2-usb" string to the driver, and put both the g2 and g3
-> in the devicetree file?
+"io_alloc" enables direct insertion of data from I/O devices into the L3
+cache.
 
-Yes,
+On AMD, "io_alloc" feature is backed by L3 Smart Data Cache Injection
+Allocation Enforcement (SDCIAE). Change SDCIAE state by setting (to enable)
+or clearing (to disable) bit 1 of MSR L3_QOS_EXT_CFG on all logical
+processors within the cache domain.
 
-Frank
->
-> regards,
-> dan carpenter
->
+Introduce architecture-specific handlers to enable and disable the feature.
+
+The SDCIAE feature details are available in APM listed below [1].
+[1] AMD64 Architecture Programmer's Manual Volume 2: System Programming
+Publication # 24593 Revision 3.41 section 19.4.7 L3 Smart Data Cache
+Injection Allocation Enforcement (SDCIAE)
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
+Signed-off-by: Babu Moger <babu.moger@amd.com>
+---
+v6: Added lockdep_assert_cpus_held() in _resctrl_sdciae_enable() to protect
+    r->ctrl_domains.
+    Added more comments in include/linux/resctrl.h.
+
+v5: Resolved conflicts due to recent resctrl FS/ARCH code restructure.
+    The files monitor.c/rdtgroup.c have been split between FS and ARCH directories.
+    Moved prototypes of resctrl_arch_io_alloc_enable() and
+    resctrl_arch_get_io_alloc_enabled() to include/linux/resctrl.h.
+
+v4: Updated the commit log to address the feedback.
+
+v3: Passed the struct rdt_resource to resctrl_arch_get_io_alloc_enabled() instead of resource id.
+    Renamed the _resctrl_io_alloc_enable() to _resctrl_sdciae_enable() as it is arch specific.
+    Changed the return to void in _resctrl_sdciae_enable() instead of int.
+    Added more context in commit log and fixed few typos.
+
+v2: Renamed the functions to simplify the code.
+    Renamed sdciae_capable to io_alloc_capable.
+
+    Changed the name of few arch functions similar to ABMC series.
+    resctrl_arch_get_io_alloc_enabled()
+    resctrl_arch_io_alloc_enable()
+---
+ arch/x86/include/asm/msr-index.h       |  1 +
+ arch/x86/kernel/cpu/resctrl/internal.h |  5 ++++
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 40 ++++++++++++++++++++++++++
+ include/linux/resctrl.h                | 21 ++++++++++++++
+ 4 files changed, 67 insertions(+)
+
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index b7dded3c8113..b92b04fa9888 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -1215,6 +1215,7 @@
+ /* - AMD: */
+ #define MSR_IA32_MBA_BW_BASE		0xc0000200
+ #define MSR_IA32_SMBA_BW_BASE		0xc0000280
++#define MSR_IA32_L3_QOS_EXT_CFG		0xc00003ff
+ #define MSR_IA32_EVT_CFG_BASE		0xc0000400
+ 
+ /* AMD-V MSRs */
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index 5e3c41b36437..cfa519ea2875 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -37,6 +37,9 @@ struct arch_mbm_state {
+ 	u64	prev_msr;
+ };
+ 
++/* Setting bit 1 in L3_QOS_EXT_CFG enables the SDCIAE feature. */
++#define SDCIAE_ENABLE_BIT		1
++
+ /**
+  * struct rdt_hw_ctrl_domain - Arch private attributes of a set of CPUs that share
+  *			       a resource for a control function
+@@ -102,6 +105,7 @@ struct msr_param {
+  * @mon_scale:		cqm counter * mon_scale = occupancy in bytes
+  * @mbm_width:		Monitor width, to detect and correct for overflow.
+  * @cdp_enabled:	CDP state of this resource
++ * @sdciae_enabled:	SDCIAE feature is enabled
+  *
+  * Members of this structure are either private to the architecture
+  * e.g. mbm_width, or accessed via helpers that provide abstraction. e.g.
+@@ -115,6 +119,7 @@ struct rdt_hw_resource {
+ 	unsigned int		mon_scale;
+ 	unsigned int		mbm_width;
+ 	bool			cdp_enabled;
++	bool			sdciae_enabled;
+ };
+ 
+ static inline struct rdt_hw_resource *resctrl_to_arch_res(struct rdt_resource *r)
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 885026468440..3bdcd53b3ce3 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -229,6 +229,46 @@ bool resctrl_arch_get_cdp_enabled(enum resctrl_res_level l)
+ 	return rdt_resources_all[l].cdp_enabled;
+ }
+ 
++inline bool resctrl_arch_get_io_alloc_enabled(struct rdt_resource *r)
++{
++	return resctrl_to_arch_res(r)->sdciae_enabled;
++}
++
++static void resctrl_sdciae_set_one_amd(void *arg)
++{
++	bool *enable = arg;
++
++	if (*enable)
++		msr_set_bit(MSR_IA32_L3_QOS_EXT_CFG, SDCIAE_ENABLE_BIT);
++	else
++		msr_clear_bit(MSR_IA32_L3_QOS_EXT_CFG, SDCIAE_ENABLE_BIT);
++}
++
++static void _resctrl_sdciae_enable(struct rdt_resource *r, bool enable)
++{
++	struct rdt_ctrl_domain *d;
++
++	/* Walking r->ctrl_domains, ensure it can't race with cpuhp */
++	lockdep_assert_cpus_held();
++
++	/* Update L3_QOS_EXT_CFG MSR on all the CPUs in all domains */
++	list_for_each_entry(d, &r->ctrl_domains, hdr.list)
++		on_each_cpu_mask(&d->hdr.cpu_mask, resctrl_sdciae_set_one_amd, &enable, 1);
++}
++
++int resctrl_arch_io_alloc_enable(struct rdt_resource *r, bool enable)
++{
++	struct rdt_hw_resource *hw_res = resctrl_to_arch_res(r);
++
++	if (hw_res->r_resctrl.cache.io_alloc_capable &&
++	    hw_res->sdciae_enabled != enable) {
++		_resctrl_sdciae_enable(r, enable);
++		hw_res->sdciae_enabled = enable;
++	}
++
++	return 0;
++}
++
+ void resctrl_arch_reset_all_ctrls(struct rdt_resource *r)
+ {
+ 	struct rdt_hw_resource *hw_res = resctrl_to_arch_res(r);
+diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
+index 0e8641e41100..06e8a1821702 100644
+--- a/include/linux/resctrl.h
++++ b/include/linux/resctrl.h
+@@ -531,6 +531,27 @@ void resctrl_arch_reset_rmid_all(struct rdt_resource *r, struct rdt_mon_domain *
+  */
+ void resctrl_arch_reset_all_ctrls(struct rdt_resource *r);
+ 
++/**
++ * resctrl_arch_io_alloc_enable() - Enable/disable io_alloc feature.
++ * @r:		The resctrl resource.
++ * @enable:	Enable (true) or disable (false) io_alloc on resource @r.
++ *
++ * This can be called from any CPU.
++ *
++ * Return:
++ * 0 on success, or non-zero on error.
++ */
++int resctrl_arch_io_alloc_enable(struct rdt_resource *r, bool enable);
++
++/**
++ * resctrl_arch_get_io_alloc_enabled() - Get io_alloc feature state.
++ * @r:		The resctrl resource.
++ *
++ * Return:
++ * true if io_alloc is enabled or false if disabled.
++ */
++inline bool resctrl_arch_get_io_alloc_enabled(struct rdt_resource *r);
++
+ extern unsigned int resctrl_rmid_realloc_threshold;
+ extern unsigned int resctrl_rmid_realloc_limit;
+ 
+-- 
+2.34.1
+
