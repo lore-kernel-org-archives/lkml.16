@@ -1,49 +1,40 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8AE11DFF7;
-	Wed, 11 Jun 2025 20:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104C71DFF7;
+	Wed, 11 Jun 2025 20:40:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749674321; cv=none; b=nAJE1ed8Ez4By8iYUWrMrWq3CxmkuJuaQVWN5cEjUQkVVBDOtnygd8dH9eSeaq6HJtbeYtjWEkI9UxExUPeBiF/UuKmwlrJu13U08v/TgP/D1pdVYg0T13TeTndJZdOayHlcfQgzFahPT7eVPTC7EN68ldXdYGUr+kZTPjG66h4=
+	t=1749674414; cv=none; b=qwfyiaQo8YcKCoBu4XGdJcBKP+hJqHgBUORMvAnwInsg+okuMROoX/r2CZ9M2VGw2rj7lM+ztgPAkflNK4Eiv7ttHKucDnwP94nw1SfIwaAz/fzQTX9FZZg5a6MwaU/K7X0340b4Kcp+4Q4I7MVJFRKF2+jIzHnpy3J9m6GgvSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749674321; c=relaxed/simple;
-	bh=Fq8ELmuibnelHYrzd1Mzwt71QMVSkNfHVRs9SHbwKbU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W9LKcBL+8Puc3UDwJfLoMqooOo7/IwYf05SxT6Y6zt8/E22s7e3s7INwcWJQ7bSqkKuiV12/R5ywqpElo9N+lauFT+Na5MEW/QeBRZ9tWBFf74waLSYsMobPcDLopg+zKCOJcKBQTTOrNnkhB/y811iAEZxlEvTI30JL9Gvz3cE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=EoUvEmL6; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1749674414; c=relaxed/simple;
+	bh=mQLKS30Z6vR6WwMjMGflKrh9mxDkr15j29E5YXjDj1w=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=B8zmAzLw/UX2ckInkQDZrcaere/m2/VCIB8RLd5VX359wwR66+3pT4uzzqLzzyVIyhGH0f8/m/A5VJcUoNXVnSPCQ2TLR9jlVTFG9vvYp1BuD5doFNAcPiG0NLxVoXgttdQ6PVbK6ZLzzjCBwtw4y0cbn1Hewl7IY9osyyBOwbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZIR4E2sB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="EoUvEmL6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=xA+/2rvyHlvLh6sMEKRsJ8AH3tUN9/JJhk5cfiv7zYA=; b=EoUvEmL6WVTMg96LSOD4HzjyyK
-	GpXRfcZJcRohRPWjWHdUAUYxev0kE4Z4mvgdj95Cjf0VVg6A7khkgJjpEeEa2+Fo3xGQ1V1wM5uin
-	QZu1CUW8bTWsiA5ytC0Z4URZ0JSIRTzuMSf8W3l8fa50tHPU7BUJbdv5s5XN87tCDFATwIDFz9Xvz
-	pPFwWcjBBDzt1gL6wAcGfLkdRs/0C5b8hOgn1Hob7x1JnCH9YZfkrwh/Jcn3qdFphnle1i9FoZPWf
-	k9jOjVOgnKzF4q9uVJfHKKH6wsT7WTQlOxrQdx9sLi3m8hEX6g1wFaTdhab2XpnPkmfa0chhRWl/F
-	p8KGJVug==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uPSDS-000000066Qx-3B6L;
-	Wed, 11 Jun 2025 20:38:35 +0000
-Date: Wed, 11 Jun 2025 21:38:34 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: David Howells <dhowells@redhat.com>, Paul Moore <paul@paul-moore.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Jarkko Sakkinen <jarkko@kernel.org>, keyrings@vger.kernel.org,
-	linux-security-module@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KEYS: Invert FINAL_PUT bit
-Message-ID: <20250611203834.GR299672@ZenIV>
-References: <301015.1748434697@warthog.procyon.org.uk>
- <CAHC9VhRn=EGu4+0fYup1bGdgkzWvZYpMPXKoARJf2N+4sy9g2w@mail.gmail.com>
- <CAHk-=wjY7b0gDcXiecsimfmOgs0q+aUp_ZxPHvMfdmAG_Ex_1Q@mail.gmail.com>
- <382106.1749667515@warthog.procyon.org.uk>
- <CAHk-=wgBt2=pnDVvH9qnKjxBgm87Q_th4SLzkv9YkcRAp7Bj2A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZIR4E2sB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 361C2C4CEE3;
+	Wed, 11 Jun 2025 20:40:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749674413;
+	bh=mQLKS30Z6vR6WwMjMGflKrh9mxDkr15j29E5YXjDj1w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=ZIR4E2sBlFOtizgD9NhhRSzSMnCCv5U7vZSPz9d63UN2UUoQVFcgRg87wB5WWwATu
+	 NAF+8ekqy1N0i7Dy0Zqb/FFuS8FPiR6Dvj7+VcjV6rByQeMKnyiRhh450uvFvpl18C
+	 ks4vfD6t7bX5QHW8yAva+w7y8ja94g2u922G2LrggzpyJ9GoXN9IfMVZFsk+q1UZsZ
+	 cJdkaM1o8u7bvZeqXo6dmeWLJBsMMTwkKHGoxTLZCjwQxaoinoAhy54DRcX+TbFhsy
+	 eN7yiKCfLZGFGpExTmvSoyJbgwtGg1rIEoOyYcVim6caysk9lqdZl7+G8iL+T0O2oy
+	 kPIAKRCOW0lbA==
+Date: Wed, 11 Jun 2025 15:40:11 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, bhelgaas@google.com, mani@kernel.org,
+	kwilczynski@kernel.org, robh@kernel.org, jingoohan1@gmail.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/13] PCI: dwc: Refactor register access with
+ dw_pcie_clear_and_set_dword helper
+Message-ID: <20250611204011.GA868320@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,21 +43,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wgBt2=pnDVvH9qnKjxBgm87Q_th4SLzkv9YkcRAp7Bj2A@mail.gmail.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+In-Reply-To: <20250611163047.860247-1-18255117159@163.com>
 
-On Wed, Jun 11, 2025 at 11:59:19AM -0700, Linus Torvalds wrote:
-> On Wed, 11 Jun 2025 at 11:45, David Howells <dhowells@redhat.com> wrote:
-> >
-> > Do you want a signed tag and git pull for it?
-> 
-> Particularly during the merge window that makes sense just to make it
-> trigger my usual "git pull" pattern, but now that I'm more aware of it
-> I can just take the patch directly.
-> 
-> Anyway - done just to get this behind us. But for next time, just do
-> it as a signed tag pull request, _particularly_ during the merge
-> window when most other emails get much lower priority.
+On Thu, Jun 12, 2025 at 12:30:47AM +0800, Hans Zhang wrote:
+> Register bit manipulation in DesignWare PCIe controllers currently
+> uses repetitive read-modify-write sequences across multiple drivers.
+> This pattern leads to code duplication and increases maintenance
+> complexity as each driver implements similar logic with minor variations.
 
-Speaking of the stuff fallen through the cracks - could you take another
-look at https://lore.kernel.org/all/20250602041118.GA2675383@ZenIV/?
+When you repost this, can you fix whatever is keeping this series from
+being threaded?  All the patches should be responses to the 00/13
+cover letter.  Don't repost until at least a couple of days have
+elapsed and you make non-trivial changes.
+
+My preference is to make the subject lines like:
+
+  PCI: dra7xx: Refactor ...
+  PCI: imx6: Refactor ...
+
+etc.  I think including both dwc and dra7xx is overkill.
+
+You can find the prevailing style with:
+
+  git log --no-merges --oneline --pretty=format:"%h (\"%s\")" drivers/pci/controller/dwc
+
+Whoever applies this series can trivially squash patches together if
+that seems better.
