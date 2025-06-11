@@ -1,66 +1,67 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73AEF283141
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 12:54:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CBBF28369D
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 12:54:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749646460; cv=none; b=tQem8CvBL5jZUq6QyQk8kZ1hu2hc0/p9pbe4703i0CfbLRs7d3PtgkMsHAgZTyI28spJke7srTZh4+WDefvu9y8Qsq4APcZuHqs/+VgdzcgVC9kelqOP01mEzAb2+OpozzlpMau7fpyUaRZu3nOGKZEk0MmTEkFtnJ5EpzTiPho=
+	t=1749646462; cv=none; b=TG1QcFFIQsnmawZVp4+zPY/yW1Ts8DyK+YCJQAw2bm5V/TLNy9hU35eD+dneXVlOQtinzWfJLnPeLkP7qWZVbd8eiUWubTUBIvJ6KPEXiXLUB1jz875RmA/tIVCAkG3muooqCLx8esmqZf5mRLjqjTg3jrv9AcGE9i4jJdL+2NU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749646460; c=relaxed/simple;
-	bh=911xKOJApKviZC+11zfPOxyXIb2TukqSX6c3EVx5nkQ=;
+	s=arc-20240116; t=1749646462; c=relaxed/simple;
+	bh=huEY8ThqIGGefkr+NwFuL0lRYACFVhJDRBYG4OTx8VY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=G4G0hEDc7P3k1EQ4y6jdz2+qwmBrL5W2x44ZXwFjFgupJ9Mp1t47+lp2jRO7N9sBN9pgJCOxowYf5pLnvA/NEfhU39RcF9UVJUbIsS2DO5yTDJi4YrZzb+yZ3nkeScTW+sXBMcplPuD9iwKu005iRaCZeLrhJVhMBD7dgJcf6dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=zZypCxPm; arc=none smtp.client-ip=209.85.128.41
+	 In-Reply-To:To:Cc; b=VcvdqcRrIkxaSWfUTRQHUOmZfxwTAbQ+wXjpjmGYKwblk2VSfPj8iuFEVKsL0CeavF8C5pb88JykXaZJPf9NCchhz6tzOPzKIetGY0jgpWjyrsgy5UWva9nKggCtIfxbmF96N0Zu8bbKvxuEgi1NFfjnVG3Ls9PZmKFbjX+ogSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=JL0yfBlE; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="zZypCxPm"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-442ea341570so44051785e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 05:54:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="JL0yfBlE"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-450ce3a2dd5so59130635e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 05:54:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749646456; x=1750251256; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749646459; x=1750251259; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=q1Cool/KkGodX8Z3AKXl7cQge0BzoVtk/glY1zU+OpQ=;
-        b=zZypCxPmbOj+AYdhYZaTBdz1yzlk63Y5cw0pP1/IcJBfrU9gKZLrhL2Ka1G9d9ZQia
-         ohzkt+EAwz4rujF9WGN2V+QTUUh0yR8/NuRWkngzFiseaGgSoa8hBufBlJ6X+SMcby2Q
-         w5NJt6oxPXhGIEnuPq2HUHgFK6/gjdkkMTuhkVTnKfJ3iXP4L6xd3kLb8ajDikqvUQVY
-         IwZuucMo/WdNKXXcavQSTTOn8k4enHsT7laRG/HzQzstYVx/SdVXCJZAuQ+HCcZI5fDe
-         i8IezpOajE/5TDUg8N6AdFsPGVeLiO+ZHxi9jz+tPrkZ3lyd8P8gUaTGbI67JQncK2am
-         f4Gg==
+        bh=KdZFjl2fccvj0QADc8xzOcmXiXilDJiFfw1wc4K1F9g=;
+        b=JL0yfBlE8SFZkGTxO9+B5b02EO2HNe+V2TM+L02MzMqeE3jx8XUD8iK8W7iYspt+Tc
+         B7ri9gRSs93wiM4plxIkmdfqRvERhWYBCpFP4W7PfD1XrNL8Ma3tTuEFKhLO9Z/5cO9d
+         PEwMImk2DtDCW9+wrd0/gz8CtKvl8Yl0Vq1pbbdkOEipg5llHrasO8iwYILA+43iXC9S
+         F+4C2yNbdeBi54oIVqxcoWBY68zUJ1yN2GlfrKEoMfcCRPdpO7jGRCc2j3Lc82lGcgNy
+         HkSe0S3mtrHH4t+N6Gnmf8g+rvN3XcOwWw8Q0b0QjedVg7JBHf10ZRk2xozM+bVFe8rM
+         9U4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749646456; x=1750251256;
+        d=1e100.net; s=20230601; t=1749646459; x=1750251259;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=q1Cool/KkGodX8Z3AKXl7cQge0BzoVtk/glY1zU+OpQ=;
-        b=bYtRcZGTyqozFca0B2ygWqgkUVprUj7LKraYmK6O2ummGkkl10WDy7G7a4ieRD0WQg
-         PcStjW+9SdoOD5wikb4EskNGkd0GIf7pW+O87fkhNIeY/VQRwB78gh6/c28BxctLSO8/
-         bSBtqri+bAsvUOMh8MVvme5flPuQFhvH/5jo2hPPAecM/x+AporgDBcAzFjQB7Pxr3SD
-         I8d+5fapkls0quXvf4HvuNOa1b+7DBcQEnn2IgsTpYMEHguWLy9Hiuv+wnL6mhAdmOFA
-         X9DMYKSCY0ekvtkWJjBLYPQlJbo+EFQUkhTeYHBgpiMoGe2DeNqr4GFaTooeaBwbe9Zw
-         fdtA==
-X-Forwarded-Encrypted: i=1; AJvYcCWxt7ZJuUsY4STkaebU684uML57F2NArT8m2sPUzBL62Jmxk2YcqnaxZUJME2/SEafiedVsT+pQmXvKdbI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCsQVG9yOqvrSJoFPgpTYAWnUZryeLEPJP0iUJpyy3jK6+aw2d
-	w8pl8M92fOjSSWecrVpldSySOjcFYxmtBFbHbKdCrI7oWReXdmFDR411UoXSX5e/Gx8=
-X-Gm-Gg: ASbGnctSsGZqBn+crun/9yi12oeRW/pHeURkUQU8hnXjEiyOHe7HE5WSu64xQ/+fOwm
-	QRjzY3Qta7butMf31NNIsxn5qzCXJzy7T3OY6ECiJsHynh03nKl4Fp7B5+W7e3YFoqf0X1T8wvO
-	zwYvbExzv7XWw6ZtII6djcj0I7cNgpWShcK/5XkejThat/mwVtUguUMzH97NnE0FdCIAlylTlka
-	tVABgNOkhLUwwfohCVbUWTu15APVgzHndahmP0bw16qqZE51iFWhv9Rg3uTCazCKTrNwVDM0Nmx
-	BDqh6+YQXFpu1LlUWpn6gFIGCqPYhrCEh51GdLN5lzaKBRWyKW3PLBqUfkFI3UsqJ482xsmIbyc
-	+gnbRQ89UFuA=
-X-Google-Smtp-Source: AGHT+IEndovK5i60dXofmzfCQEmqHj9LiO/Bu6tcHs2EUY63JiHkYLaL474UbWr6R/p7cwzGJjwkKA==
-X-Received: by 2002:a05:6000:4202:b0:3a4:c9d4:2fb2 with SMTP id ffacd0b85a97d-3a558aff029mr2487239f8f.46.1749646455662;
-        Wed, 11 Jun 2025 05:54:15 -0700 (PDT)
+        bh=KdZFjl2fccvj0QADc8xzOcmXiXilDJiFfw1wc4K1F9g=;
+        b=HWWXp1rw9Ya4fZhNLZYKCUP+gE+D+4AfavTi52n/neFDAJza6iOEt7J7GepGTfrbub
+         P8JVqAMi1oqFQ5tMzGbTNLbcJpFxGnmKESNsF+AK/Gn1bhuYdEkmjhUBwwMWLMRjbSjH
+         aq5tLog49gUicW1ur/AHgx+TDB2P9JDlBSe5tPhytOxzP+GU196xi8+h77DLM80DOg6p
+         rxI0IWCkqX/KnMBzdI7e4+24kLKGaGILMwjnEAYJ0+o4NIMdXg65XxzvgVStCYOEFzeM
+         DMfnf2reCj8fbHpiiTttXy3sNDKzS758rJSLPPyH8fwXay+w8bODTN34mjieRu/xLqPh
+         1w2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXK9iWMzqzRWl0yCymfpCYlU/wndUmHCE+7dsryrI+FcHJnXQJT69lR0cdmt2K7Lu9rBXoP0G17tvJHHC8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkIGp5Qk/ZDiGXPiEK42MbigGONSP9Hd9Izlr1u7fqGBfbvEht
+	/FJI/EDNo1DHdC2oBaFcTJgp4SPOWjqhCwFtzKu6FWBQx+Et6fe1/uwYA19hM9Hboi0=
+X-Gm-Gg: ASbGncsU7wpDOvw9BCTFlDazk7pGtjBg/9H361rM/zHMn2HXzOJMFwxcFx6IMp3SjHq
+	3Hbd92v+B/bwTjc/q1bfwCmodV5XXapv3NCQm8wjWe0izisq9vFzwn7cFWxoChdcW+QiCwTKhFe
+	3cxRSv+UD6Qs06viUbOSt/lvjtIq5xzuOGVETu2L/vChc9NvpsrC/hkDEJ0rA9cdo1Hu6rwDVes
+	5DQq+RUL1lXdPWeOAf+iqGvoFRK9m7/L7Tgw72T3DKeSpXexje6d/OI+d9o+mMJPSbt54LyE8l3
+	HXQGLF4ggf7uo2PR5cQP2lx7MAFi3lmlBIa87+LCO4KfZTwFufKfyCdNuAHlP8ER8Itmf2oz9ss
+	l
+X-Google-Smtp-Source: AGHT+IFwVwM1VBdaMyjnvhb9KUvhpjuoSTMLyxFLI5Ds1mjnS+Tvk4Fdx9g7hYxsolgprYuijG/Grg==
+X-Received: by 2002:a05:600c:83c6:b0:442:ccf0:41e6 with SMTP id 5b1f17b1804b1-45324879755mr33205135e9.3.1749646458645;
+        Wed, 11 Jun 2025 05:54:18 -0700 (PDT)
 Received: from toaster.baylibre.com ([2a01:e0a:3c5:5fb1:8ef3:a82f:ccaa:91b5])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a53245275esm15225486f8f.76.2025.06.11.05.54.14
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a53245275esm15225486f8f.76.2025.06.11.05.54.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 05:54:15 -0700 (PDT)
+        Wed, 11 Jun 2025 05:54:18 -0700 (PDT)
 From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Wed, 11 Jun 2025 14:53:56 +0200
-Subject: [PATCH 1/4] clk: eyeq: use the auxiliary device creation helper
+Date: Wed, 11 Jun 2025 14:53:59 +0200
+Subject: [PATCH 4/4] clk: amlogic: axg-audio: use the auxiliary reset
+ driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,8 +69,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250611-clk-aux-v1-1-fb6575ed86a7@baylibre.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250611-clk-aux-v1-4-fb6575ed86a7@baylibre.com>
 References: <20250611-clk-aux-v1-0-fb6575ed86a7@baylibre.com>
 In-Reply-To: <20250611-clk-aux-v1-0-fb6575ed86a7@baylibre.com>
 To: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
@@ -89,119 +90,222 @@ Cc: linux-mips@vger.kernel.org, linux-clk@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
  Jerome Brunet <jbrunet@baylibre.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3080; i=jbrunet@baylibre.com;
- h=from:subject:message-id; bh=911xKOJApKviZC+11zfPOxyXIb2TukqSX6c3EVx5nkQ=;
- b=owEBbQKS/ZANAwAKAeb8Dxw38tqFAcsmYgBoSXxyS4LF2NgHh6lDt4HtpPg68/w9OJYyIIHRQ
- pbd31+wpYGJAjMEAAEKAB0WIQT04VmuGPP1bV8btxvm/A8cN/LahQUCaEl8cgAKCRDm/A8cN/La
- ha5hD/wLniXN/Wdk0lE+moFPoRY5SqMESsaeB9W5MEi4ILxdPOGqiWLOjtZpsU9xfWIUaT0GO8I
- 402HkOAnI8/gcBsBz7Xo663TN8FIChB/+plsclM8Yx4h0wjbZGA7O8FWT5mqDZkJ6QAKCtxftz8
- Y9JTHm7P2e4hGrVO+P6xiUkSQj8QZx9CRlcqpXA2JLlWA8t0WY6f3/5Q5ikgkK9AQpxmg3d/SbI
- F4eykgdy83+m7Sar8XsrSvwnbQMQ/eJU5PQewYVOOnkDHjss7jsdCU7aTxJHcD8WrrcnjzrqlSX
- pNybSBpRETU1JpLH9FOuV+dXTP5hBw3WB9whiYRoSWNjOdGuyk52zeSbNbmR1KK4Kp0Qx7kJ4hx
- CNFIDJ8/oBf3MMRjVa8TWO6zYa4ZvuH854db0sOivyrMS6Xxml3if+HpTAqQ6R+McVG0j4sBxec
- OzQ+QOTvaGsyZ/vuvnIT9ymNpzYNW2X4eqZOim4IFhXWs03rm+/9BKSMAj+WpwQT1SKIB2+/BHM
- Z1syPc2I4UnlAheE2uHP1Tkuo6SBUbfIvs3+43BU/e72C0UdNSQ+Ec2aGSdqiR/+Epsi0IZhKcE
- sMWbJC6gfc1WYr4Ua9VFkaoa+EOU2aYylmYQpq0CRPCmNfYsfOKs0KfHY/2e7Z7TAAGyb59FQ36
- LgtNe3dkZbYLE/w==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5930; i=jbrunet@baylibre.com;
+ h=from:subject:message-id; bh=huEY8ThqIGGefkr+NwFuL0lRYACFVhJDRBYG4OTx8VY=;
+ b=owEBbQKS/ZANAwAKAeb8Dxw38tqFAcsmYgBoSXx0TIJvPb4pFL/m7UQSR8q8Mbmnm6OXPs6eY
+ BlR75emBm6JAjMEAAEKAB0WIQT04VmuGPP1bV8btxvm/A8cN/LahQUCaEl8dAAKCRDm/A8cN/La
+ hYBdD/4q4nR6sR3pGrG2npIFVDhtrUeD2xlhg3MU+t88JlBrPmoOz41y1Wf/bedDpP/faKO/bBr
+ TOoSV5jth7KOZPGgyHqDPHAsKRsHJbhqNCunHDD2lrgPZ1G5sFpWda3g4iTBjdRcQA/hejB/ms+
+ k5kKyGyh2k5q+aslEn26t+PeUGNpnURdMTXra3MoWA5iNFxnRyBwh/kYcv/SxH7xOvYdjSuuQ8E
+ 3O/rX23FNPho4XyEsvHCxK6eNI8G/drzYrSTR7x0ho6tYHGXQyO8kiVyz6X4VNpDaxSjhFZgtVs
+ 27d3xyfPLL9D3gANvpytNJ2TDCZsxI/bnxBzvX3PWBNnqFEsMtzQL3AbbDXmszrQ7KZoWmYGgIr
+ kol4jbVM1bYwt1uW7lFipMrRLaPUOBp0ZgU8cEXKBdjBEbvBTNPYPiONQgGcjLC5wORPH0Tx/bX
+ EOgo9478Bt3rTMhrDtnvInIoRkS/hWafp/2eyaerWzpsG2CT7gPmDEgGPCFYpEeDbmxUgFSDaPu
+ gaPRwD8xreYmjOVrY8ouBs8ZP5hRfRPj99j8QNqli0LMOWUgollWYlxxCg176YGEd1Ahlod6wdZ
+ VlYbRSa049s3x8nrmijC9a0qHqGHNlDHhkm9JTN8P+uDvgj4y+wuGe+UNy3WC/9xpve12kAEbiW
+ Zd2BjFIZ3ZYGjVA==
 X-Developer-Key: i=jbrunet@baylibre.com; a=openpgp;
  fpr=F29F26CF27BAE1A9719AE6BDC3C92AAF3E60AED9
 
-The auxiliary device creation of this driver is simple enough to
-use the available auxiliary device creation helper.
+Remove the implementation of the reset driver in axg audio
+clock driver and migrate to the one provided by reset framework
+on the auxiliary bus.
 
-Use it and remove some boilerplate code.
-
-Tested-by: Théo Lebrun <theo.lebrun@bootlin.com>  # On Mobileye EyeQ5
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- drivers/clk/clk-eyeq.c | 57 +++++++++++---------------------------------------
- 1 file changed, 12 insertions(+), 45 deletions(-)
+ drivers/clk/meson/Kconfig     |   3 +-
+ drivers/clk/meson/axg-audio.c | 114 +++++-------------------------------------
+ 2 files changed, 15 insertions(+), 102 deletions(-)
 
-diff --git a/drivers/clk/clk-eyeq.c b/drivers/clk/clk-eyeq.c
-index 640c25788487f8cf6fb4431ed6fb612cf099f114..4094f34af05b488545cc87043fb3352968515a78 100644
---- a/drivers/clk/clk-eyeq.c
-+++ b/drivers/clk/clk-eyeq.c
-@@ -322,38 +322,18 @@ static void eqc_probe_init_fixed_factors(struct device *dev,
- 	}
- }
+diff --git a/drivers/clk/meson/Kconfig b/drivers/clk/meson/Kconfig
+index ff003dc5ab20d904c91fc34c701ba499a11d0b63..5c669b2e2f268c7608c8d9c64bba3c5b54da39b2 100644
+--- a/drivers/clk/meson/Kconfig
++++ b/drivers/clk/meson/Kconfig
+@@ -106,7 +106,8 @@ config COMMON_CLK_AXG_AUDIO
+ 	select COMMON_CLK_MESON_SCLK_DIV
+ 	select COMMON_CLK_MESON_CLKC_UTILS
+ 	select REGMAP_MMIO
+-	select RESET_CONTROLLER
++	select AUXILIARY_BUS
++	imply RESET_MESON_AUX
+ 	help
+ 	  Support for the audio clock controller on AmLogic A113D devices,
+ 	  aka axg, Say Y if you want audio subsystem to work.
+diff --git a/drivers/clk/meson/axg-audio.c b/drivers/clk/meson/axg-audio.c
+index 9df627b142f89788966ede0262aaaf39e13f0b49..3948f5d0faca372dd5cc4ed6dc95f9c89fe5bae8 100644
+--- a/drivers/clk/meson/axg-audio.c
++++ b/drivers/clk/meson/axg-audio.c
+@@ -4,6 +4,7 @@
+  * Author: Jerome Brunet <jbrunet@baylibre.com>
+  */
  
--static void eqc_auxdev_release(struct device *dev)
--{
--	struct auxiliary_device *adev = to_auxiliary_dev(dev);
++#include <linux/auxiliary_bus.h>
+ #include <linux/clk.h>
+ #include <linux/clk-provider.h>
+ #include <linux/init.h>
+@@ -12,7 +13,6 @@
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
+ #include <linux/reset.h>
+-#include <linux/reset-controller.h>
+ #include <linux/slab.h>
+ 
+ #include "meson-clkc-utils.h"
+@@ -1678,84 +1678,6 @@ static struct clk_regmap *const sm1_clk_regmaps[] = {
+ 	&sm1_earcrx_dmac_clk,
+ };
+ 
+-struct axg_audio_reset_data {
+-	struct reset_controller_dev rstc;
+-	struct regmap *map;
+-	unsigned int offset;
+-};
 -
--	kfree(adev);
+-static void axg_audio_reset_reg_and_bit(struct axg_audio_reset_data *rst,
+-					unsigned long id,
+-					unsigned int *reg,
+-					unsigned int *bit)
+-{
+-	unsigned int stride = regmap_get_reg_stride(rst->map);
+-
+-	*reg = (id / (stride * BITS_PER_BYTE)) * stride;
+-	*reg += rst->offset;
+-	*bit = id % (stride * BITS_PER_BYTE);
 -}
 -
--static int eqc_auxdev_create(struct device *dev, void __iomem *base,
--			     const char *name, u32 id)
-+static void eqc_auxdev_create_optional(struct device *dev, void __iomem *base,
-+				       const char *name)
- {
- 	struct auxiliary_device *adev;
+-static int axg_audio_reset_update(struct reset_controller_dev *rcdev,
+-				unsigned long id, bool assert)
+-{
+-	struct axg_audio_reset_data *rst =
+-		container_of(rcdev, struct axg_audio_reset_data, rstc);
+-	unsigned int offset, bit;
+-
+-	axg_audio_reset_reg_and_bit(rst, id, &offset, &bit);
+-
+-	regmap_update_bits(rst->map, offset, BIT(bit),
+-			assert ? BIT(bit) : 0);
+-
+-	return 0;
+-}
+-
+-static int axg_audio_reset_status(struct reset_controller_dev *rcdev,
+-				unsigned long id)
+-{
+-	struct axg_audio_reset_data *rst =
+-		container_of(rcdev, struct axg_audio_reset_data, rstc);
+-	unsigned int val, offset, bit;
+-
+-	axg_audio_reset_reg_and_bit(rst, id, &offset, &bit);
+-
+-	regmap_read(rst->map, offset, &val);
+-
+-	return !!(val & BIT(bit));
+-}
+-
+-static int axg_audio_reset_assert(struct reset_controller_dev *rcdev,
+-				unsigned long id)
+-{
+-	return axg_audio_reset_update(rcdev, id, true);
+-}
+-
+-static int axg_audio_reset_deassert(struct reset_controller_dev *rcdev,
+-				unsigned long id)
+-{
+-	return axg_audio_reset_update(rcdev, id, false);
+-}
+-
+-static int axg_audio_reset_toggle(struct reset_controller_dev *rcdev,
+-				unsigned long id)
+-{
 -	int ret;
 -
--	adev = kzalloc(sizeof(*adev), GFP_KERNEL);
--	if (!adev)
--		return -ENOMEM;
--
--	adev->name = name;
--	adev->dev.parent = dev;
--	adev->dev.platform_data = (void __force *)base;
--	adev->dev.release = eqc_auxdev_release;
--	adev->id = id;
- 
--	ret = auxiliary_device_init(adev);
+-	ret = axg_audio_reset_assert(rcdev, id);
 -	if (ret)
 -		return ret;
 -
--	ret = auxiliary_device_add(adev);
--	if (ret)
--		auxiliary_device_uninit(adev);
+-	return axg_audio_reset_deassert(rcdev, id);
+-}
 -
--	return ret;
-+	if (name) {
-+		adev = devm_auxiliary_device_create(dev, name,
-+						    (void __force *)base);
-+		if (!adev)
-+			dev_warn(dev, "failed creating auxiliary device %s.%s\n",
-+				 KBUILD_MODNAME, name);
+-static const struct reset_control_ops axg_audio_rstc_ops = {
+-	.assert = axg_audio_reset_assert,
+-	.deassert = axg_audio_reset_deassert,
+-	.reset = axg_audio_reset_toggle,
+-	.status = axg_audio_reset_status,
+-};
+-
+ static struct regmap_config axg_audio_regmap_cfg = {
+ 	.reg_bits	= 32,
+ 	.val_bits	= 32,
+@@ -1766,8 +1688,7 @@ struct audioclk_data {
+ 	struct clk_regmap *const *regmap_clks;
+ 	unsigned int regmap_clk_num;
+ 	struct meson_clk_hw_data hw_clks;
+-	unsigned int reset_offset;
+-	unsigned int reset_num;
++	const char *rst_drvname;
+ 	unsigned int max_register;
+ };
+ 
+@@ -1775,7 +1696,7 @@ static int axg_audio_clkc_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	const struct audioclk_data *data;
+-	struct axg_audio_reset_data *rst;
++	struct auxiliary_device *auxdev;
+ 	struct regmap *map;
+ 	void __iomem *regs;
+ 	struct clk_hw *hw;
+@@ -1834,22 +1755,15 @@ static int axg_audio_clkc_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	/* Stop here if there is no reset */
+-	if (!data->reset_num)
+-		return 0;
+-
+-	rst = devm_kzalloc(dev, sizeof(*rst), GFP_KERNEL);
+-	if (!rst)
+-		return -ENOMEM;
+-
+-	rst->map = map;
+-	rst->offset = data->reset_offset;
+-	rst->rstc.nr_resets = data->reset_num;
+-	rst->rstc.ops = &axg_audio_rstc_ops;
+-	rst->rstc.of_node = dev->of_node;
+-	rst->rstc.owner = THIS_MODULE;
++	/* Register auxiliary reset driver when applicable */
++	if (data->rst_drvname) {
++		auxdev = __devm_auxiliary_device_create(dev, dev->driver->name,
++							data->rst_drvname, NULL, 0);
++		if (!auxdev)
++			return -ENODEV;
 +	}
+ 
+-	return devm_reset_controller_register(dev, &rst->rstc);
++	return 0;
  }
  
- static int eqc_probe(struct platform_device *pdev)
-@@ -365,7 +345,6 @@ static int eqc_probe(struct platform_device *pdev)
- 	unsigned int i, clk_count;
- 	struct resource *res;
- 	void __iomem *base;
--	int ret;
+ static const struct audioclk_data axg_audioclk_data = {
+@@ -1869,8 +1783,7 @@ static const struct audioclk_data g12a_audioclk_data = {
+ 		.hws = g12a_audio_hw_clks,
+ 		.num = ARRAY_SIZE(g12a_audio_hw_clks),
+ 	},
+-	.reset_offset = AUDIO_SW_RESET,
+-	.reset_num = 26,
++	.rst_drvname = "rst-g12a",
+ 	.max_register = AUDIO_CLK_SPDIFOUT_B_CTRL,
+ };
  
- 	data = device_get_match_data(dev);
- 	if (!data)
-@@ -379,21 +358,9 @@ static int eqc_probe(struct platform_device *pdev)
- 	if (!base)
- 		return -ENOMEM;
+@@ -1881,8 +1794,7 @@ static const struct audioclk_data sm1_audioclk_data = {
+ 		.hws = sm1_audio_hw_clks,
+ 		.num = ARRAY_SIZE(sm1_audio_hw_clks),
+ 	},
+-	.reset_offset = AUDIO_SM1_SW_RESET0,
+-	.reset_num = 39,
++	.rst_drvname = "rst-sm1",
+ 	.max_register = AUDIO_EARCRX_DMAC_CLK_CTRL,
+ };
  
--	/* Init optional reset auxiliary device. */
--	if (data->reset_auxdev_name) {
--		ret = eqc_auxdev_create(dev, base, data->reset_auxdev_name, 0);
--		if (ret)
--			dev_warn(dev, "failed creating auxiliary device %s.%s: %d\n",
--				 KBUILD_MODNAME, data->reset_auxdev_name, ret);
--	}
--
--	/* Init optional pinctrl auxiliary device. */
--	if (data->pinctrl_auxdev_name) {
--		ret = eqc_auxdev_create(dev, base, data->pinctrl_auxdev_name, 0);
--		if (ret)
--			dev_warn(dev, "failed creating auxiliary device %s.%s: %d\n",
--				 KBUILD_MODNAME, data->pinctrl_auxdev_name, ret);
--	}
-+	/* Init optional auxiliary devices. */
-+	eqc_auxdev_create_optional(dev, base, data->reset_auxdev_name);
-+	eqc_auxdev_create_optional(dev, base, data->pinctrl_auxdev_name);
- 
- 	if (data->pll_count + data->div_count + data->fixed_factor_count == 0)
- 		return 0; /* Zero clocks, we are done. */
 
 -- 
 2.47.2
