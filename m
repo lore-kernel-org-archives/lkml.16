@@ -1,68 +1,289 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76B824EAAF;
-	Wed, 11 Jun 2025 21:17:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D1024CEE8
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:17:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749676629; cv=none; b=euINOYFPKbLaOFbvWYuV15dt1ae9UOP8L8QNFQ0SimBm7tibMKXAFuK6y5alVTDbm41QH55cYNc0k5/tGfEIgdoUcHyVN8mZ00idLsFqoMhLGUc0lqDQH1lhe2zafUldeWI8FXjVhHQ/6d5haQLesmEZ1yGlKnHHc7LSycUvXMk=
+	t=1749676629; cv=none; b=FS3IAPFn5csTpBpt+8JDxgzN4vaIWP2g14J4ahLNScbtL8A00Gb8uNKTI4iES7+cQI5AvTuBl0kTyyzloxo3ETRobyibM9gEBXKB9R5ZFAjZQ3GeXYeLRXCJWb0qEkXmpsIniVnB5RU5+bWU/DpHvmsbXINNGVOIDUgK+TH6sjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749676629; c=relaxed/simple;
-	bh=jm6YAMEI2w2bPtK1+XGUCqX2+AtqBcb2XwmANQwlY04=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kjhRO573DVwhui8ZNfU+10juTV6QPgnYDack0c0nQtezI9rch6cZFphuu8uhjiGGOQZjfcefng235SgDGe/mTKCt+r1Fbr35uRxWFV62erjvq2kN+Y/RaaRcTCEuSiHR2z72jA3UlI/CL9gnOAF7rbq0nphyG7t8a46t4p1nLAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=crn5xSiM; arc=none smtp.client-ip=10.30.226.201
+	bh=E1J5NvWvWAj9PK8Bj/QCV4SungXm4iyN66KAsLSKFdw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=d9Ww7FFY3Co3sQT/oUqSgq4DfbiCXVDLNO+az8/qfCTcXYzOrfPkjJMKWEGaG87lmA1s6LteIwnLHClqbhuDA34RrVkbrqaVOPbsOPUdNJ2T0UYbqCyKwWV/I2np8o0iFUfazkb0JGZkXhrxI45l2YBmb1LoiW9CIb36htDCDrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--afranji.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RRR0bdHH; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--afranji.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="crn5xSiM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C2A7C4CEEA;
-	Wed, 11 Jun 2025 21:17:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749676629;
-	bh=jm6YAMEI2w2bPtK1+XGUCqX2+AtqBcb2XwmANQwlY04=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=crn5xSiMLRNCcCSCkkUgfe/DxNxgFUJK+XC0dZ4txcnO9MA64W44YX6b98zOd/tIS
-	 lrqLEAZyt+2f9FLZgqj9aHfW64mWEZL+bvvfxKEbxP85eFQ/nH3mIFo0jLBajqr6qY
-	 Wgdun6FOLVICUxKiyIb0PMsgR+15qkvfhtmB/o9M3C2lxQMrd/Q5iNMJFR2EPeA2LH
-	 azP09qsX6hKsa64CSztLRvoQwlfbgnol9XRPHMmC2DRTbt3eJIhPwJcUsBhSaQwnMP
-	 kFoveuLXe5ivnbyCRbf55BxW7qCR2DzmUcYKQTUK/APzp9QMzNy3pP8o1U9Y4Aq2PS
-	 3lTn53jlv4akA==
-Date: Wed, 11 Jun 2025 14:17:07 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: George Moussalem via B4 Relay
- <devnull+george.moussalem.outlook.com@kernel.org>
-Cc: george.moussalem@outlook.com, Andrew Lunn <andrew@lunn.ch>, Heiner
- Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Philipp
- Zabel <p.zabel@pengutronix.de>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Michael Turquette
- <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
- netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-clk@vger.kernel.org, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v5 0/5] Add support for the IPQ5018 Internal GE PHY
-Message-ID: <20250611141707.7f4371a1@kernel.org>
-In-Reply-To: <20250610-ipq5018-ge-phy-v5-0-daa9694bdbd1@outlook.com>
-References: <20250610-ipq5018-ge-phy-v5-0-daa9694bdbd1@outlook.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RRR0bdHH"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-234906c5e29so2985345ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:17:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749676627; x=1750281427; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QRxvuTFismoVMH6kpT5Sxdu0Bq/4xhAKlCPWJnUhYZA=;
+        b=RRR0bdHHF6eDnTUFrWPl04OZfdCXYpLxNz4Nd+3TbL2dyZZ5k9iv1uBJvnVZk04q+M
+         2M9tKoVhSTcHhGYgWn41jI8AmN1AUssmutEtp4Cj7qvYzI8K0Te/68aI2qjfHt7JziBs
+         hDsO8zr5AiAo5UDAncgM0DpZAq8EoiT+BIOoU0anA7duhZdyadEOJK2nOhh3khXPjXqM
+         LezVO3ikWz87q1BRpArrBuLvk363hxKNPjv85lYFHyTEN2V3FhcOm1bZkN8iUxZvw1Fj
+         cJsAAGJJHZ+rJ2hMQmyqfEtG/K3j6TwsdsYeTY1gzEPS/r9lKsoKZfgyLWnXPIaefYvP
+         toGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749676627; x=1750281427;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QRxvuTFismoVMH6kpT5Sxdu0Bq/4xhAKlCPWJnUhYZA=;
+        b=n5GlRfp6VnMhSJClYGItKPk+6Y1uta1OYNk1rb+Bytwgk7KhOlU0yd9UnHpa9P1Dk5
+         OP5/p9Dz0fRFppdV4q4IQolzs2XPmFSOI1fCp7vUIbqjdPgTrOJ5CrZfBCAd0DAbifsI
+         hL9DrgxQYP1HmJ1r30Lh5fG3QmA3vQutolEzovWD78D7jFrQXJtHLFJCImGXxerF5J5G
+         4Deg2N/w70RXfQ+Bw6PqXrxn0IA0n12QwypieZQteCGaqX8Otca7x+Bbd7DNrIDXRb6H
+         7Y6AZnvOmjUj0QxXkUZUHSLyYDb6dvqE3NsRwDnzQVc8zKmNkRnf3p/qxZ9bBzx4E0ho
+         oQ+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWpzz383oXic3l1iiYzkRN5cPNzszDxY07+bIsq3S+MRgVnKUo6cl0UVhTURu8nkGVlf75iTnbANieMNmo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywlxd20CqDcTx3u3K8v9vmni+MVfrcfcfzxdyJ4rBt01Sx5/pag
+	rSSGotz8uluy+0GR29BH0V8p2WGv3RaQ6P/GJT2Dw0Ohl5erL0RxdR93sS90qMqs4E8VXrvlwE+
+	sQQcyfGTE5A==
+X-Google-Smtp-Source: AGHT+IGH5noWtFNaTsbN875vKa4LJH+6nipS2I+HvnDRFXrBbmRj/sTqaIhQjDr9GIyLPz+Si3nAHutYaq+4
+X-Received: from pldg6.prod.google.com ([2002:a17:903:3a86:b0:235:6d5:688b])
+ (user=afranji job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d4d0:b0:235:27b6:a891
+ with SMTP id d9443c01a7336-2364ca469aamr16477225ad.28.1749676627115; Wed, 11
+ Jun 2025 14:17:07 -0700 (PDT)
+Date: Wed, 11 Jun 2025 21:16:34 +0000
+In-Reply-To: <cover.1749672978.git.afranji@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <cover.1749672978.git.afranji@google.com>
+X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
+Message-ID: <75edc2c08a63316135ddf59d0961f1fadbe2e264.1749672978.git.afranji@google.com>
+Subject: [RFC PATCH v2 07/10] KVM: selftests: Refactor userspace_mem_region
+ creation out of vm_mem_add
+From: Ryan Afranji <afranji@google.com>
+To: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
+Cc: sagis@google.com, bp@alien8.de, chao.p.peng@linux.intel.com, 
+	dave.hansen@linux.intel.com, dmatlack@google.com, erdemaktas@google.com, 
+	isaku.yamahata@intel.com, kai.huang@intel.com, mingo@redhat.com, 
+	pbonzini@redhat.com, seanjc@google.com, tglx@linutronix.de, 
+	zhi.wang.linux@gmail.com, ackerleytng@google.com, andrew.jones@linux.dev, 
+	david@redhat.com, hpa@zytor.com, kirill.shutemov@linux.intel.com, 
+	linux-kselftest@vger.kernel.org, tabba@google.com, vannapurve@google.com, 
+	yan.y.zhao@intel.com, rick.p.edgecombe@intel.com, 
+	Ryan Afranji <afranji@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 10 Jun 2025 12:37:54 +0400 George Moussalem via B4 Relay wrote:
-> The IPQ5018 SoC contains an internal Gigabit Ethernet PHY with its
-> output pins that provide an MDI interface to either an external switch
-> in a PHY to PHY link architecture or directly to an attached RJ45
-> connector.
+Refactor the creation and committing of userspace_mem_region to their
+own functions so that they can reused by future TDX migration functions.
 
-Please repost just patches 2 and 3 for networking to merge (with 
-[PATCH net-next] in the subject). The other patches will be merged
-by other trees.
+Signed-off-by: Ryan Afranji <afranji@google.com>
+---
+ tools/testing/selftests/kvm/lib/kvm_util.c | 147 +++++++++++++--------
+ 1 file changed, 89 insertions(+), 58 deletions(-)
+
+diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+index 2b442639ee2d..3c131718b81a 100644
+--- a/tools/testing/selftests/kvm/lib/kvm_util.c
++++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+@@ -974,50 +974,47 @@ void vm_set_user_memory_region2(struct kvm_vm *vm, uint32_t slot, uint32_t flags
+ 		    errno, strerror(errno));
+ }
+ 
+-
+-/* FIXME: This thing needs to be ripped apart and rewritten. */
+-void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
+-		uint64_t guest_paddr, uint32_t slot, uint64_t npages,
+-		uint32_t flags, int guest_memfd, uint64_t guest_memfd_offset)
++static struct userspace_mem_region *vm_mem_region_alloc(struct kvm_vm *vm,
++								uint64_t guest_paddr,
++								uint32_t slot,
++								size_t npages,
++								uint32_t flags)
+ {
+-	int ret;
+ 	struct userspace_mem_region *region;
+-	size_t backing_src_pagesz = get_backing_src_pagesz(src_type);
+-	size_t mem_size = npages * vm->page_size;
+-	size_t alignment;
+ 
+ 	TEST_REQUIRE_SET_USER_MEMORY_REGION2();
+ 
+ 	TEST_ASSERT(vm_adjust_num_guest_pages(vm->mode, npages) == npages,
+-		"Number of guest pages is not compatible with the host. "
+-		"Try npages=%d", vm_adjust_num_guest_pages(vm->mode, npages));
++		    "Number of guest pages is not compatible with the host. "
++		    "Try npages=%d", vm_adjust_num_guest_pages(vm->mode, npages));
+ 
+ 	TEST_ASSERT((guest_paddr % vm->page_size) == 0, "Guest physical "
+-		"address not on a page boundary.\n"
+-		"  guest_paddr: 0x%lx vm->page_size: 0x%x",
+-		guest_paddr, vm->page_size);
++		    "address not on a page boundary.\n"
++		    "  guest_paddr: 0x%lx vm->page_size: 0x%x",
++		    guest_paddr, vm->page_size);
+ 	TEST_ASSERT((((guest_paddr >> vm->page_shift) + npages) - 1)
+-		<= vm->max_gfn, "Physical range beyond maximum "
+-		"supported physical address,\n"
+-		"  guest_paddr: 0x%lx npages: 0x%lx\n"
+-		"  vm->max_gfn: 0x%lx vm->page_size: 0x%x",
+-		guest_paddr, npages, vm->max_gfn, vm->page_size);
++		    <= vm->max_gfn, "Physical range beyond maximum "
++		    "supported physical address,\n"
++		    "  guest_paddr: 0x%lx npages: 0x%lx\n"
++		    "  vm->max_gfn: 0x%lx vm->page_size: 0x%x",
++		    guest_paddr, npages, vm->max_gfn, vm->page_size);
+ 
+ 	/*
+ 	 * Confirm a mem region with an overlapping address doesn't
+ 	 * already exist.
+ 	 */
+ 	region = (struct userspace_mem_region *) userspace_mem_region_find(
+-		vm, guest_paddr, (guest_paddr + npages * vm->page_size) - 1);
++			vm, guest_paddr,
++			(guest_paddr + npages * vm->page_size) - 1);
+ 	if (region != NULL)
+ 		TEST_FAIL("overlapping userspace_mem_region already "
+-			"exists\n"
+-			"  requested guest_paddr: 0x%lx npages: 0x%lx "
+-			"page_size: 0x%x\n"
+-			"  existing guest_paddr: 0x%lx size: 0x%lx",
+-			guest_paddr, npages, vm->page_size,
+-			(uint64_t) region->region.guest_phys_addr,
+-			(uint64_t) region->region.memory_size);
++			  "exists\n"
++			  "  requested guest_paddr: 0x%lx npages: 0x%lx "
++			  "page_size: 0x%x\n"
++			  "  existing guest_paddr: 0x%lx size: 0x%lx",
++			  guest_paddr, npages, vm->page_size,
++			  (uint64_t) region->region.guest_phys_addr,
++			  (uint64_t) region->region.memory_size);
+ 
+ 	/* Confirm no region with the requested slot already exists. */
+ 	hash_for_each_possible(vm->regions.slot_hash, region, slot_node,
+@@ -1026,19 +1023,73 @@ void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
+ 			continue;
+ 
+ 		TEST_FAIL("A mem region with the requested slot "
+-			"already exists.\n"
+-			"  requested slot: %u paddr: 0x%lx npages: 0x%lx\n"
+-			"  existing slot: %u paddr: 0x%lx size: 0x%lx",
+-			slot, guest_paddr, npages,
+-			region->region.slot,
+-			(uint64_t) region->region.guest_phys_addr,
+-			(uint64_t) region->region.memory_size);
++			  "already exists.\n"
++			  "  requested slot: %u paddr: 0x%lx npages: 0x%lx\n"
++			  "  existing slot: %u paddr: 0x%lx size: 0x%lx",
++			  slot, guest_paddr, npages,
++			  region->region.slot,
++			  (uint64_t) region->region.guest_phys_addr,
++			  (uint64_t) region->region.memory_size);
+ 	}
+ 
+ 	/* Allocate and initialize new mem region structure. */
+ 	region = calloc(1, sizeof(*region));
+ 	TEST_ASSERT(region != NULL, "Insufficient Memory");
+-	region->mmap_size = mem_size;
++
++	region->unused_phy_pages = sparsebit_alloc();
++	if (vm_arch_has_protected_memory(vm))
++		region->protected_phy_pages = sparsebit_alloc();
++	sparsebit_set_num(region->unused_phy_pages,
++			  guest_paddr >> vm->page_shift, npages);
++	region->region.slot = slot;
++	region->region.flags = flags;
++	region->region.guest_phys_addr = guest_paddr;
++	region->region.memory_size = npages * vm->page_size;
++
++	region->mmap_start = NULL;
++	region->mmap_size = 0;
++	region->host_mem = NULL;
++	region->fd = -1;
++
++	return region;
++}
++
++static void userspace_mem_region_commit(struct kvm_vm *vm,
++					struct userspace_mem_region *region)
++{
++	int ret;
++
++	region->region.userspace_addr = (uintptr_t) region->host_mem;
++	ret = __vm_ioctl(vm, KVM_SET_USER_MEMORY_REGION2, &region->region);
++	TEST_ASSERT(ret == 0, "KVM_SET_USER_MEMORY_REGION2 IOCTL failed,\n"
++		    "  rc: %i errno: %i\n"
++		    "  slot: %u flags: 0x%x\n"
++		    "  guest_phys_addr: 0x%lx size: 0x%lx guest_memfd: %d",
++		    ret, errno, region->region.slot, region->region.flags,
++		    (uint64_t) region->region.guest_phys_addr,
++		    (uint64_t) region->region.memory_size,
++		    region->region.guest_memfd);
++
++	/* Add to quick lookup data structures */
++	vm_userspace_mem_region_gpa_insert(&vm->regions.gpa_tree, region);
++	vm_userspace_mem_region_hva_insert(&vm->regions.hva_tree, region);
++	hash_add(vm->regions.slot_hash, &region->slot_node,
++		 region->region.slot);
++}
++
++/* FIXME: This thing needs to be ripped apart and rewritten. */
++void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
++		uint64_t guest_paddr, uint32_t slot, uint64_t npages,
++		uint32_t flags, int guest_memfd, uint64_t guest_memfd_offset)
++{
++	int ret;
++	struct userspace_mem_region *region;
++	size_t backing_src_pagesz = get_backing_src_pagesz(src_type);
++	size_t mem_size = npages * vm->page_size;
++	size_t alignment;
++
++	region = vm_mem_region_alloc(vm, guest_paddr, slot, npages,
++					     flags);
+ 
+ #ifdef __s390x__
+ 	/* On s390x, the host address must be aligned to 1M (due to PGSTEs) */
+@@ -1058,6 +1109,8 @@ void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
+ 
+ 	TEST_ASSERT_EQ(guest_paddr, align_up(guest_paddr, backing_src_pagesz));
+ 
++	region->mmap_size = mem_size;
++
+ 	/* Add enough memory to align up if necessary */
+ 	if (alignment > 1)
+ 		region->mmap_size += alignment;
+@@ -1117,29 +1170,7 @@ void vm_mem_add(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
+ 		region->region.guest_memfd = -1;
+ 	}
+ 
+-	region->unused_phy_pages = sparsebit_alloc();
+-	if (vm_arch_has_protected_memory(vm))
+-		region->protected_phy_pages = sparsebit_alloc();
+-	sparsebit_set_num(region->unused_phy_pages,
+-		guest_paddr >> vm->page_shift, npages);
+-	region->region.slot = slot;
+-	region->region.flags = flags;
+-	region->region.guest_phys_addr = guest_paddr;
+-	region->region.memory_size = npages * vm->page_size;
+-	region->region.userspace_addr = (uintptr_t) region->host_mem;
+-	ret = __vm_ioctl(vm, KVM_SET_USER_MEMORY_REGION2, &region->region);
+-	TEST_ASSERT(ret == 0, "KVM_SET_USER_MEMORY_REGION2 IOCTL failed,\n"
+-		"  rc: %i errno: %i\n"
+-		"  slot: %u flags: 0x%x\n"
+-		"  guest_phys_addr: 0x%lx size: 0x%lx guest_memfd: %d",
+-		ret, errno, slot, flags,
+-		guest_paddr, (uint64_t) region->region.memory_size,
+-		region->region.guest_memfd);
+-
+-	/* Add to quick lookup data structures */
+-	vm_userspace_mem_region_gpa_insert(&vm->regions.gpa_tree, region);
+-	vm_userspace_mem_region_hva_insert(&vm->regions.hva_tree, region);
+-	hash_add(vm->regions.slot_hash, &region->slot_node, slot);
++	userspace_mem_region_commit(vm, region);
+ 
+ 	/* If shared memory, create an alias. */
+ 	if (region->fd >= 0) {
 -- 
-pw-bot: cr
+2.50.0.rc1.591.g9c95f17f64-goog
+
