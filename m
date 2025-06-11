@@ -1,85 +1,64 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CBC62045B5;
-	Wed, 11 Jun 2025 05:08:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498632045B5;
+	Wed, 11 Jun 2025 05:08:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749618529; cv=none; b=H2H2jIBjGyMmYPbglsAE+7lSHGkO3SHPvpfFfCHHCTEAwqIUcJd7y6u/1v9uLnqUgRwshn28qMy7JFUdoU3FolTMeX3ep+Ufxujwa3RWV0DdSSfrcnqB7aOASh4XBcGI8afbanu1GHMvY6+6f7VmKLEHA5A6Pt9ENvGMM0QFxsQ=
+	t=1749618537; cv=none; b=H+48nv2wpN7mBWJOe/ObEA7FvOI5gq29t6HGFmWO1U8YTV9/85xRSC5YlVn2YQmQ0iNjn1bEncnmyhazbeLpoGM8gE8d4eA9EkqcOIOyYcI+yOaK+GzPfM/n8PuCyguJNBzE5rG9wdUtLt+siYCKhXjWgwv3BLjoHXR3mayfoMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749618529; c=relaxed/simple;
-	bh=ayaMEU/Ch5YOHTkvvKRCj+w/PTv2ZLP+L7N+vECgU7c=;
+	s=arc-20240116; t=1749618537; c=relaxed/simple;
+	bh=6nuA4xEX7lOYOpAa4aR6XpGyHElF5bswh33ac9+B1OI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DflK0Kj0zGdJNtfHGV941KhIsxIw2ERYf3cC0MDZWFap6HZcEpRQ68ZoVsXv/wFqJI/53Q+6ibTr8xHB453rhGwxEVim+zuvpBPccmlY5dhdcBb+A/yeMt7y6JP9qAidc3DoK42cavHlnNDyHEAtg0/ae2GKDy6mFrnRsq/QsXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mMXtuiZw; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=AeElfkYzXplMNheY/jQLNsAgl+1NAR20yXSzLkYTEN1xcBJ9+DJv6eIPo3p3yYLE6r0WCsXLQ4Ir0HaOAnNGZc/zwJIpqeK1a9ENEsM6U1/nDVMtKq0xlv1NnD7q8Cr4+78+Np3fbvAEZ3BY8tkde8RNs3AXkNEaMk1dO7iKB+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HzOJfsEx; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mMXtuiZw"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2363616a1a6so15575505ad.3;
-        Tue, 10 Jun 2025 22:08:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749618526; x=1750223326; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jwiLk2bUgnnXObqCMxhj7bAHaeNINQCjvFcpBiWLLv0=;
-        b=mMXtuiZw4oF2yL2P6XJHBoU5TJhUr+zRYb5CoL3dIfsr2T0F/4HA8gmpOOWZN2lOID
-         LHETHr7QaSAtA10ua2hleOS+6nQyWYl6pQw/kkuwlpcVDEQ2KwI5AinIWV+xXnB4FFwB
-         awbIc7MvC7SD8tpJ0F2206dUGUzXKPsu19iln4Lz8qBfxY/IPYrSTMBddmlDZ215ppd4
-         Gqblw5SJCkddR+39/KC4Ejls2sCuSgoh15hbTQkKomn1iXyH+mgmJ6zvv17IyJYeBMxy
-         /ysPWKMXsEJ8OBYwieeA04xBoufiVvg4y2OOxt8N5ZZN4fUsJXSkoYrw/6cumGJGqKoF
-         lidA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749618526; x=1750223326;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jwiLk2bUgnnXObqCMxhj7bAHaeNINQCjvFcpBiWLLv0=;
-        b=S+vjMmFIGXkZ77eAgyOUStd8wMI9OIMS7z3/cu8yD+q1Wojy5HEIvDZ/wj/MR4j84v
-         eLSFV7oCOU6Hg+3CFXJcLSQvI0WDEKxh/0vZSc+2EWOD8ezguXZaFfEDkdJxXTKg4yoH
-         2szAskTQwMSkoCsII2yhLX89WjkQSQQEce11BisSoNiTl6H7VSSfMvETYJOSM+WdogWo
-         PCGMXGfxI9Hm0LImS9s4CWfKDPmjPkCtX6xNQh40Psl8VgPcDqCEgmvtiNMaRbH5ycaQ
-         4Mlz3QroQ4q1uxtWLPfWByr9hS5YJ+vH6TPXxTfxxuv3rydTnnyCD1iAvSB/uTOvIu62
-         vIcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV2BwBcGebNjCquWNMIUTHmVwZmZefMZCcNJQALdJpf5BmGmswQZjcRaoXVlm6sEaWMoirraU+h5dV0ctw=@vger.kernel.org, AJvYcCVNWhPR7pBiPSH8je6uvYkiIMYyLt3LhFSkWni+HHsZKnxgKHpu1enjBBLDtV32PhSdocO3Iqanf+Xoo4b4TWhi@vger.kernel.org, AJvYcCXnwJBxsJkpZ/EKvU4VGP42J4xURj283GPU2ZLLBtsDGodh0PwsfdJPF5GCavF5Sh5WzqFTl/V8@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZLP7MDgD+/IoWF9bSUw/Zx0FrI92xkiDGZytz7mjZ2JqeJO59
-	W66DmffnszMSPwYeLsxxGuMj8P7K5OC7X3cDs1CUCxMtTwD4/Ud61MQz
-X-Gm-Gg: ASbGncvqDikgpCSWoo2Es2DL9uJv3dueaDxM53dBpn0R5YoT7k08fSATeDpxNjpK4C2
-	AHZWU6zNTmQx86F362xGntK1Ywx1+1fMdAifZNH7owcEK/PFpWker7N+sIRxnw6iFvagVbtfCzQ
-	RPdFJhkcFdSBv+XOUrKZiSs6/cwLnjCLu2NjqUSrEMPKFPn9MfsCvxWxwgF5I3ONFkZADNo/HE+
-	jQEfrfTaEuEFDQJf6omotwsMHLinzyWSnhh3bGXjGfKEdttTD3EAN26FstlAFIlRwgHdiGeRS9H
-	7/rkKzwuYoppFDNnrjw+CrVAMCbmZDSv2ERw4BDX47001WTkMMhgypDYacjkPK8=
-X-Google-Smtp-Source: AGHT+IGFM8Xvo2UN55UsTBkO320mepaStb5pz10Jir+u7mWjTOBuxTEy2kBpib0AZ9LWVKswMmg+FQ==
-X-Received: by 2002:a17:902:f548:b0:234:b41e:37a4 with SMTP id d9443c01a7336-23641a8ab3cmr19101185ad.6.1749618525494;
-        Tue, 10 Jun 2025 22:08:45 -0700 (PDT)
-Received: from gmail.com ([98.97.39.122])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313b21393d7sm447552a91.37.2025.06.10.22.08.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 22:08:45 -0700 (PDT)
-Date: Tue, 10 Jun 2025 22:08:33 -0700
-From: John Fastabend <john.fastabend@gmail.com>
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: bpf@vger.kernel.org, Boris Pismenny <borisp@nvidia.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
-	Ihor Solodrai <isolodrai@meta.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH bpf-next v2 2/2] selftests/bpf: Add test to cover ktls
- with bpf_msg_pop_data
-Message-ID: <20250611050833.lhyymoung6rpo5zo@gmail.com>
-References: <20250609020910.397930-1-jiayuan.chen@linux.dev>
- <20250609020910.397930-3-jiayuan.chen@linux.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HzOJfsEx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749618536; x=1781154536;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6nuA4xEX7lOYOpAa4aR6XpGyHElF5bswh33ac9+B1OI=;
+  b=HzOJfsExL8jv1UMRDVlYts8B1Ba4Wm7ZWZRrlwsA9GPrnHQXQaFFHUmv
+   lgmCm+Jc6Mia1srivg5hRzgOkuxd115nShyrcl2rCwKRX+6PQmzdgvtZE
+   Skya0Z39MJpbCS/8wQpwCxGpoqHpNGIMHI+OyG/cr87WW3G6j81yvV9Pd
+   fmwIEzdzCzGjAayQHemJbDy863lBtPaUzOy+ThHhG1NZAJcmUCmSPVnAq
+   DaH8P3WyZsOTtqiGOO187ehYYT1TtARkVJScoTNCnaLk7PqIHJqhrkhpr
+   nKl3tlJchRDTQMrTghEAEy8XCqOgOVgrrMVZJXTFchwvnoaRzE9D4kXc6
+   A==;
+X-CSE-ConnectionGUID: MO13LiIhQI2w5B1ytZRh2w==
+X-CSE-MsgGUID: lAFPgC0/S1qkZ3a93blp6A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51459311"
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="51459311"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 22:08:55 -0700
+X-CSE-ConnectionGUID: 5KUD7XQaS7+3OlBQTv1j5Q==
+X-CSE-MsgGUID: AcDGY8xxS9i5baqZmzg1dA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="151943277"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 10 Jun 2025 22:08:51 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uPDhg-000A1E-1l;
+	Wed, 11 Jun 2025 05:08:48 +0000
+Date: Wed, 11 Jun 2025 13:07:56 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] platform/x86: silicom: remove unnecessary GPIO line
+ direction check
+Message-ID: <202506111214.mbG7aOVD-lkp@intel.com>
+References: <20250610144935.84375-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -88,95 +67,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250609020910.397930-3-jiayuan.chen@linux.dev>
+In-Reply-To: <20250610144935.84375-1-brgl@bgdev.pl>
 
-On 2025-06-09 10:08:53, Jiayuan Chen wrote:
-> The selftest can reproduce an issue where using bpf_msg_pop_data() in
-> ktls causes errors on the receiving end.
-> 
-> Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
-> ---
+Hi Bartosz,
 
-Reviewed-by: John Fastabend <john.fastabend@gmail.com>
+kernel test robot noticed the following build warnings:
 
->  .../selftests/bpf/prog_tests/sockmap_ktls.c   | 91 +++++++++++++++++++
->  .../selftests/bpf/progs/test_sockmap_ktls.c   |  4 +
->  2 files changed, 95 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/bpf/prog_tests/sockmap_ktls.c b/tools/testing/selftests/bpf/prog_tests/sockmap_ktls.c
-> index b6c471da5c28..b87e7f39e15a 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/sockmap_ktls.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/sockmap_ktls.c
-> @@ -314,6 +314,95 @@ static void test_sockmap_ktls_tx_no_buf(int family, int sotype, bool push)
->  	test_sockmap_ktls__destroy(skel);
->  }
->  
-> +static void test_sockmap_ktls_tx_pop(int family, int sotype)
-> +{
-> +	char msg[37] = "0123456789abcdefghijklmnopqrstuvwxyz\0";
-> +	int c = 0, p = 0, one = 1, sent, recvd;
-> +	struct test_sockmap_ktls *skel;
-> +	int prog_fd, map_fd;
-> +	char rcv[50] = {0};
-> +	int err;
-> +	int i, m, r;
-> +
-> +	skel = test_sockmap_ktls__open_and_load();
-> +	if (!ASSERT_TRUE(skel, "open ktls skel"))
-> +		return;
-> +
-> +	err = create_pair(family, sotype, &c, &p);
-> +	if (!ASSERT_OK(err, "create_pair()"))
-> +		goto out;
-> +
-> +	prog_fd = bpf_program__fd(skel->progs.prog_sk_policy);
-> +	map_fd = bpf_map__fd(skel->maps.sock_map);
-> +
-> +	err = bpf_prog_attach(prog_fd, map_fd, BPF_SK_MSG_VERDICT, 0);
-> +	if (!ASSERT_OK(err, "bpf_prog_attach sk msg"))
-> +		goto out;
-> +
-> +	err = bpf_map_update_elem(map_fd, &one, &c, BPF_NOEXIST);
-> +	if (!ASSERT_OK(err, "bpf_map_update_elem(c)"))
-> +		goto out;
-> +
-> +	err = init_ktls_pairs(c, p);
-> +	if (!ASSERT_OK(err, "init_ktls_pairs(c, p)"))
-> +		goto out;
-> +
-> +	struct {
-> +		int	pop_start;
-> +		int	pop_len;
-> +	} pop_policy[] = {
-> +		/* trim the start */
-> +		{0, 2},
-> +		{0, 10},
-> +		{1, 2},
-> +		{1, 10},
-> +		/* trim the end */
-> +		{35, 2},
-> +		/* New entries should be added before this line */
-> +		{-1, -1},
-> +	};
-> +
-> +	i = 0;
-> +	while (pop_policy[i].pop_start >= 0) {
-> +		skel->bss->pop_start = pop_policy[i].pop_start;
-> +		skel->bss->pop_end =  pop_policy[i].pop_len;
-> +
-> +		sent = send(c, msg, sizeof(msg), 0);
-> +		if (!ASSERT_EQ(sent, sizeof(msg), "send(msg)"))
-> +			goto out;
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.16-rc1 next-20250610]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Its possible this could actually not send 38B (sent < 38), but then again
-it is only 38B so I guess it should never fail? Anyways we have this
-case in a few places already I think and its not tripping CI so lets go
-for it.
+url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/platform-x86-silicom-remove-unnecessary-GPIO-line-direction-check/20250610-225049
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250610144935.84375-1-brgl%40bgdev.pl
+patch subject: [PATCH] platform/x86: silicom: remove unnecessary GPIO line direction check
+config: x86_64-buildonly-randconfig-001-20250611 (https://download.01.org/0day-ci/archive/20250611/202506111214.mbG7aOVD-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250611/202506111214.mbG7aOVD-lkp@intel.com/reproduce)
 
-Thanks,
-John
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506111214.mbG7aOVD-lkp@intel.com/
 
-> +
-> +		recvd = recv_timeout(p, rcv, sizeof(rcv), MSG_DONTWAIT, 1);
-> +		if (!ASSERT_EQ(recvd, sizeof(msg) - pop_policy[i].pop_len, "pop len mismatch"))
-> +			goto out;
+All warnings (new ones prefixed by >>):
+
+   drivers/platform/x86/silicom-platform.c: In function 'silicom_gpio_set':
+>> drivers/platform/x86/silicom-platform.c:251:13: warning: unused variable 'direction' [-Wunused-variable]
+     251 |         int direction = silicom_gpio_get_direction(gc, offset);
+         |             ^~~~~~~~~
+
+
+vim +/direction +251 drivers/platform/x86/silicom-platform.c
+
+d9cd21d441c8c7 Henry Shi           2023-11-24  247  
+88f67f2a99f061 Bartosz Golaszewski 2025-04-08  248  static int silicom_gpio_set(struct gpio_chip *gc, unsigned int offset,
+d9cd21d441c8c7 Henry Shi           2023-11-24  249  			    int value)
+d9cd21d441c8c7 Henry Shi           2023-11-24  250  {
+d9cd21d441c8c7 Henry Shi           2023-11-24 @251  	int direction = silicom_gpio_get_direction(gc, offset);
+d9cd21d441c8c7 Henry Shi           2023-11-24  252  	u8 *channels = gpiochip_get_data(gc);
+d9cd21d441c8c7 Henry Shi           2023-11-24  253  	int channel = channels[offset];
+d9cd21d441c8c7 Henry Shi           2023-11-24  254  
+890a48ca7b0540 Dan Carpenter       2024-01-12  255  	silicom_mec_port_set(channel, !value);
+88f67f2a99f061 Bartosz Golaszewski 2025-04-08  256  
+88f67f2a99f061 Bartosz Golaszewski 2025-04-08  257  	return 0;
+d9cd21d441c8c7 Henry Shi           2023-11-24  258  }
+d9cd21d441c8c7 Henry Shi           2023-11-24  259  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
