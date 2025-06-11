@@ -1,145 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA2E82E6123;
-	Wed, 11 Jun 2025 12:35:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A409271446;
+	Wed, 11 Jun 2025 12:35:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749645322; cv=none; b=cAjk0UFGhZlP0EyKdOqPKKAyaNSL9ITNYmhL8yMOTLMGBwUf6XUqIv8u57A5Cl+QDO32XCB6If4pQA6VPxEXIIdTJ9Blz9m8410IGpodcFrPDFoYvrFumOUm56OLi+Zx5xrIWHr9pzwxwGCx7u1mKfSeAJybNXwmbTx4C5Z3hzs=
+	t=1749645328; cv=none; b=SJXDwJ6wQzeXrpdMWSTgP4FCyStDwoQ1XRnhc3runrCDLm3ui8VGLO9nAOe3zukiZekp2WyUj4h/ZgD3Kz2NCoqyZ+vBSdAfRXUK4EnYt3IyNM2i+4FPzrNummSplD8w8KHZ7DcTDwuI0A8ub4LcsoNbE23NPO1LpAeHuVT+3H4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749645322; c=relaxed/simple;
-	bh=Lfb02Jo+43qW8H3V2NfIVq3vmU0B/6G6Chg7P0ENtk8=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=rusYy3Go6HKWlTFTWcrc40Wb29Or2DMCwWhkDT2kaFrZ6igsnqfzXCtj5MoXGSprhjGh3WudvxgEO5OfmufqVWLoJYX3c7qLqCzJsYZDPhs0bJZQzAfBGapQSptuDp8iVMULAOCPpG0CcgWCi8S5r9LrKHlDt1iVntwl/KWpwL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J/JfMTYF; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749645328; c=relaxed/simple;
+	bh=t0nCjZrrmOIdzEI3W2H6cAFIv9YH1hiXrokv4lZSkFg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bq+BXB27KDZfCykVGb0ZSgJI3R1Ebbd7mYQjfegp9HeHU81Db/SkskjObQTj6SYmcI4erHlAlkVwWODplx/5AM8la+duMl7JQMn1XsZHDGPPaR9YN7Auiu0dXB2jLL4GWLFK3X9WDfh+dMp/xIige4eKQIgtZU3BUx3NoMAw9MY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GN/pw1HN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J/JfMTYF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749645321; x=1781181321;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Lfb02Jo+43qW8H3V2NfIVq3vmU0B/6G6Chg7P0ENtk8=;
-  b=J/JfMTYFe1TwaVQ0D3tYGu3jWekvqGtGlztkNlORupZCCvv1rUKqmKSz
-   hsGbUrq9v5vFbABm6s38jmRirpKuPIGuLai3jOaLabbSrUhHLxtybmYlB
-   Fh1uoF1PJj/JhR02a4/kxknaaQhbrmXprxcis8Yc6RwKrcT7iu8zz631H
-   IMD6m7MbL3FmFHVPxEGx+MDdnRFRp/UAYc7JpQe7fOtvKQoD3FnysMj4U
-   Lmj4CQfXSHE6fJWDiPxB0jbi6O7YaaIqyjfvFisvi0kCN0qWVnOZhxmsG
-   ksFZTkPkNahjByoFsxjYXMsimk30YEx6IP7hFYIWZSehZ23xb8BzEW7Gj
-   w==;
-X-CSE-ConnectionGUID: gaA03MsuRD2hE23yTgm0+w==
-X-CSE-MsgGUID: AwUgpQBMStCHhTq+hqIGvQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="62065572"
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="62065572"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 05:35:11 -0700
-X-CSE-ConnectionGUID: F74wZCpyS4yna4uwWe2bsQ==
-X-CSE-MsgGUID: ChXHrNjIQxe3FpnjfN/8VA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="147743268"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.183])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 05:35:08 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 11 Jun 2025 15:35:04 +0300 (EEST)
-To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-cc: gregkh@linuxfoundation.org, linux-serial@vger.kernel.org, 
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 20/33] serial: 8250: extract serial8250_set_afe()
-In-Reply-To: <20250611100319.186924-21-jirislaby@kernel.org>
-Message-ID: <1de58a33-b2f2-3425-752c-cabd2eda89bf@linux.intel.com>
-References: <20250611100319.186924-1-jirislaby@kernel.org> <20250611100319.186924-21-jirislaby@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GN/pw1HN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3386CC4CEF0;
+	Wed, 11 Jun 2025 12:35:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749645328;
+	bh=t0nCjZrrmOIdzEI3W2H6cAFIv9YH1hiXrokv4lZSkFg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GN/pw1HNIuoVI5ORPatzV4jaFbkWGGwDHxVVvyN6astR7cmEP37fBsX2qbxc2kJB/
+	 Bc5a9xPX9r/VjFjUZsLw1sf/vK3aHtLbF9OdopsUq/0MxrPqroS6+A3NUUI48x/6sH
+	 bbUS0gCNmvteUpBaErX0xTI9UCZh4qSMPLjSnZRgThFF759DzsFQiLeR5vFyA+0cYQ
+	 Eo05IMSIyr4A7VhXCxWvczpk1fYUovMY7dRc5eSGYgkoZZCzmIeBxsYZMKJtz1ik4q
+	 DiFe+g5JzTs4f8KJzksceou0TSlizhRuXOwz//CwYQSHtugzgeMBWh/8IdzYeGMVUU
+	 4Z6L96rUltdJA==
+Date: Wed, 11 Jun 2025 13:35:22 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Yeo Reum Yun <YeoReum.Yun@arm.com>
+Cc: Catalin Marinas <Catalin.Marinas@arm.com>,
+	"pcc@google.com" <pcc@google.com>,
+	"will@kernel.org" <will@kernel.org>,
+	Anshuman Khandual <Anshuman.Khandual@arm.com>,
+	Joey Gouly <Joey.Gouly@arm.com>,
+	Yury Khrustalev <Yury.Khrustalev@arm.com>,
+	"maz@kernel.org" <maz@kernel.org>,
+	"oliver.upton@linux.dev" <oliver.upton@linux.dev>,
+	"frederic@kernel.org" <frederic@kernel.org>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"surenb@google.com" <surenb@google.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH v6 2/9] arm64: report address tag when
+ FEAT_MTE_TAGGED_FAR is supported
+Message-ID: <a11fc436-9952-4391-a3ec-ad359fabe8bc@sirena.org.uk>
+References: <20250611094107.928457-1-yeoreum.yun@arm.com>
+ <20250611094107.928457-3-yeoreum.yun@arm.com>
+ <c0b4dc8a-b37c-4e8e-be2e-bc8906615702@sirena.org.uk>
+ <GV1PR08MB105213A44E40741700202F7CFFB75A@GV1PR08MB10521.eurprd08.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-2056429544-1749645304=:957"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Wke583eSUDniqYV3"
+Content-Disposition: inline
+In-Reply-To: <GV1PR08MB105213A44E40741700202F7CFFB75A@GV1PR08MB10521.eurprd08.prod.outlook.com>
+X-Cookie: No skis take rocks like rental skis!
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-2056429544-1749645304=:957
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+--Wke583eSUDniqYV3
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 11 Jun 2025, Jiri Slaby (SUSE) wrote:
-
-> serial8250_do_set_termios() consists of many registers and up flags
-> settings. Extract all these into separate functions. This time, setting
-> of MCR for UART_CAP_AFE ports.
+On Wed, Jun 11, 2025 at 12:19:57PM +0000, Yeo Reum Yun wrote:
+> Hi Mark,
 >=20
-> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-> ---
->  drivers/tty/serial/8250/8250_port.c | 32 +++++++++++++++--------------
->  1 file changed, 17 insertions(+), 15 deletions(-)
->=20
-> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/825=
-0/8250_port.c
-> index 52385314c426..b15371838366 100644
-> --- a/drivers/tty/serial/8250/8250_port.c
-> +++ b/drivers/tty/serial/8250/8250_port.c
-> @@ -2704,6 +2704,22 @@ static void serial8250_set_trigger_for_slow_speed(=
-struct uart_port *port, struct
->  =09up->fcr |=3D UART_FCR_TRIGGER_1;
->  }
-> =20
-> +/*
-> + * MCR-based auto flow control. When AFE is enabled, RTS will be deasser=
-ted when the receive FIFO
-> + * contains more characters than the trigger, or the MCR RTS bit is clea=
-red.
-> + */
-> +static void serial8250_set_afe(struct uart_port *port, struct ktermios *=
-termios)
-> +{
-> +=09struct uart_8250_port *up =3D up_to_u8250p(port);
-> +
-> +=09if (!(up->capabilities & UART_CAP_AFE))
-> +=09=09return;
-> +
-> +=09up->mcr &=3D ~UART_MCR_AFE;
-> +=09if (termios->c_cflag & CRTSCTS)
-> +=09=09up->mcr |=3D UART_MCR_AFE;
-> +}
-> +
->  void
->  serial8250_do_set_termios(struct uart_port *port, struct ktermios *termi=
-os,
->  =09=09          const struct ktermios *old)
-> @@ -2729,21 +2745,7 @@ serial8250_do_set_termios(struct uart_port *port, =
-struct ktermios *termios,
-> =20
->  =09up->lcr =3D cval;=09=09=09=09=09/* Save computed LCR */
->  =09serial8250_set_trigger_for_slow_speed(port, termios, baud);
-> -
-> -=09/*
-> -=09 * MCR-based auto flow control.  When AFE is enabled, RTS will be
-> -=09 * deasserted when the receive FIFO contains more characters than
-> -=09 * the trigger, or the MCR RTS bit is cleared.
-> -=09 */
-> -=09if (up->capabilities & UART_CAP_AFE) {
-> -=09=09up->mcr &=3D ~UART_MCR_AFE;
-> -=09=09if (termios->c_cflag & CRTSCTS)
-> -=09=09=09up->mcr |=3D UART_MCR_AFE;
-> -=09}
-> -
-> -=09/*
-> -=09 * Update the per-port timeout.
-> -=09 */
-> +=09serial8250_set_afe(port, termios);
->  =09uart_update_timeout(port, termios->c_cflag, baud);
-> =20
->  =09/*
->=20
+> > > +HWCAP3_MTE_FAR
+> >
+> > > +=A0=A0=A0 Functionality implied by ID_AA64PFR2_EL1.MTEFAR =3D=3D 0b0=
+001.
+> > > +Applications should interpret the values of these bits based on
+> > > +the support for the 'mte_far' hwcap. If the support is not present,
+> > > +the values of these bits should be considered as undefined otherwise=
+ valid.
+> >
+> > The constant is HWCAP3_MTE_FAR and the cpuinfo is mtefar:
+> >
+> > +=A0=A0=A0=A0 [KERNEL_HWCAP_MTE_FAR]=A0=A0=A0=A0=A0=A0=A0=A0=A0 =3D "mt=
+efar",
+> >
+> > The reference to the hwcap should probably be one of these, I'd go for
+> > HWCAP3_MTE_FAR since it says hwcap.
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+> Just for confirmation. so change to "mtefar" -> "mte_far"
+> Am I missing?
 
---=20
- i.
+I'd write it as HWCAP3_MTE_FAR since that's the thing you're
+referencing.
 
---8323328-2056429544-1749645304=:957--
+--Wke583eSUDniqYV3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhJeAkACgkQJNaLcl1U
+h9Asggf9G74jgYIOfkHDfNK3jrKW+VMhCh5Ay4gcXOgt1/02Gus2G7gi7djklPJW
+0F6eQXMc+QSYnd1re4GTHY8qHhrxlWxH2ezn43kW429LRMgzRtcOFxL4q/hz5kPN
+KzygsgukAC/KgcU1BBGn4LwB3XDlW3df+Njo6fPA5c40yRANLAvU2khOiDYCeo5g
++lRzUfUWn6q4quqdd1S/sworrxM7Wx2tqNvdF+Ut5cbTpK37eBG3vVSRxFVlQ9nw
+OYsLRMQCndarDD0iNne+XYOFAeSZGaNwUnG+I0i5PIFo0xirpVa8znXXaOK03c3d
+uy+kBE31nWlQ3aUpCtwDAtwzkkNw9w==
+=72/w
+-----END PGP SIGNATURE-----
+
+--Wke583eSUDniqYV3--
