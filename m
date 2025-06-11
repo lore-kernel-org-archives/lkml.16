@@ -1,117 +1,86 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654E21A317A;
-	Wed, 11 Jun 2025 15:28:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6872D1BD9CE;
+	Wed, 11 Jun 2025 15:29:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749655734; cv=none; b=klIVhlKAvEUn+U7smuJ4y+kfmceOpfxluSFhvIzE0kSMIiejbz+/MqtdkmVZ4D8aUwU9b+tb/Qg0V4375nncDvq8j1l0f7tIZEngjRql+OBDIDWc4ldDGLPlZ6mntQMwvT/cqD76bVsuxsAjdo8jz8Mfn0ieoK0x2Fn43IRPaMc=
+	t=1749655780; cv=none; b=Df7boUBvBigvG1WsmJjIqGmz2OGiDYTBP0cnt4UC5NFAVXQqwrNuUtei4lyfmJwNo+WkUJU/f3WyXP97C7nWzDqOlBbwebNSO6bfT13m2QG77FuN/u1uSZVHcz0ij0B2EdpRVuDnSFkuXwHVINzfUc9rm/dMvQVRs3jotstxuc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749655734; c=relaxed/simple;
-	bh=yuwScAGctOlp0niszogMAEbB0PR4iR2+jwikJypvgQU=;
+	s=arc-20240116; t=1749655780; c=relaxed/simple;
+	bh=n8VN7KS5iGSvBwzdJdE/AaBiH44qZJzVl4sIq9CD4MQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lgkM2xZRC1BFFEc7hcRQCQ5WlVrxZl2PJ9JMMrAES+ZtT32rsZs6jVNBXqk0Lbkz6CBSqt9TRY0ELVjEzB+Zf4VxKVDq+qN0RDb89Ca5ZcboXu6wTSdpbspmMOENxa21Yj/c8Giz2rUIQyjizxHz+cm9+PFnB1dovykZUELg8kA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=kaybggE1; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=LBUIFHUIN1G4qnIgKOwULJ/JXu0bbRBTxub6CDN8NMqMvl+8Z89+V1NjECI3BaoxqVYB0PTWvFNkqNB1H83FbDYrDe0CnJcckyVcYLCJkOXjLpB7m97hQ9NIYmVxDVE1ppGM592MX1fC0c03BcGugB2FNiP84tg3cYkmHqFaD5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gz1O+OKO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="kaybggE1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=rB+IDZViBhVUmd7CnVGvTKDAaSMJSZkOj3zCM83yO+U=; b=kaybggE1EO6H0Z389UOZ+tStbq
-	2UtSf9qU8IoOILCqXrCu9SAJhVQyoLF00FMti6ytyuc/eb/cYpAQb9FRD7waT17+dRCUvPAMgWL+X
-	+ZVYU/svnOkPeEAjgIydHI+63a75FP7x3wEVQMajs80ftMv5hMbvXkz6BBR4elABmPEw=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uPNNX-00FPyB-66; Wed, 11 Jun 2025 17:28:39 +0200
-Date: Wed, 11 Jun 2025 17:28:39 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Icenowy Zheng <uwu@icenowy.me>
-Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>,
-	Rob Herring <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chaoyi Chen <chaoyi.chen@rock-chips.com>,
-	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v2] dt-bindings: net: ethernet-controller: Add
- informative text about RGMII delays
-Message-ID: <f82a86d3-6e06-4f24-beb5-68231383e635@lunn.ch>
-References: <20250430-v6-15-rc3-net-rgmii-delays-v2-1-099ae651d5e5@lunn.ch>
- <e4db4e6f0a5a42ceacacc925adbe13747a6f948e.camel@icenowy.me>
- <debcb2e1-b7ef-493b-a4c4-e13d4aaf0223@lunn.ch>
- <2e42f2f7985fb036bec6ab085432a49961c8dc42.camel@icenowy.me>
- <aEFmNMSvffMvNA8I@shell.armlinux.org.uk>
- <84c534f9dbfa7c82300863cd40e5a9b6e6e29411.camel@icenowy.me>
- <ba7b290d-0cd1-4809-822a-bfe902684d7e@lunn.ch>
- <9ebe16a8d33e00c39c142748a1ea6fff96b9565a.camel@icenowy.me>
- <aElArNHIwm1--GUn@shell.armlinux.org.uk>
- <fc7ad44b922ec931e935adb96dcc33b89e9293b0.camel@icenowy.me>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gz1O+OKO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 030F0C4CEE3;
+	Wed, 11 Jun 2025 15:29:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749655779;
+	bh=n8VN7KS5iGSvBwzdJdE/AaBiH44qZJzVl4sIq9CD4MQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gz1O+OKOkBNhiT66HRpiwpzAnv0/E2cRN0kSYC+fuGrpmuafe5hz/0VNewitFUd8o
+	 fDmwpZ7iZUa7SCUp59NqamhiDON4pS1gQeIFEdC5wQWcdiGev6ZkJgE8+LTDdd8FoX
+	 5Jv3kdNU44YtzuHWrfOYFCjEikM1d1hye0nwtg3pzn8dF7/4KCD1kc7M7em4gyBoLU
+	 nycc9h2Ls1Q1kr8alF2X+0qVSZxXc4nEUNqMJ1gbXtdYDui3gGTN0GaNuPJeYEt77T
+	 DYhDtUYOMsTFWZQfKMHcaNvtLqxtqc2jNUh2xcVcLR2vAfUVzW3XwQTy6PH1x46f2D
+	 2cXLFTk9VRcVQ==
+Date: Wed, 11 Jun 2025 16:29:34 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: catalin.marinas@arm.com, pcc@google.com, will@kernel.org,
+	anshuman.khandual@arm.com, joey.gouly@arm.com,
+	yury.khrustalev@arm.com, maz@kernel.org, oliver.upton@linux.dev,
+	frederic@kernel.org, akpm@linux-foundation.org, surenb@google.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v7 9/9] kselftest/arm64/mte: add mtefar tests on
+ check_mmap_options
+Message-ID: <22c43b81-9e7b-4e49-96bf-ff242ea0cb6e@sirena.org.uk>
+References: <20250611135818.31070-1-yeoreum.yun@arm.com>
+ <20250611135818.31070-10-yeoreum.yun@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Qyujq2+uQI7uLhxI"
+Content-Disposition: inline
+In-Reply-To: <20250611135818.31070-10-yeoreum.yun@arm.com>
+X-Cookie: No skis take rocks like rental skis!
+
+
+--Qyujq2+uQI7uLhxI
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fc7ad44b922ec931e935adb96dcc33b89e9293b0.camel@icenowy.me>
+Content-Transfer-Encoding: quoted-printable
 
-> Well in fact I have an additional question: when the MAC has any extra
-> [tr]x-internal-delay-ps property, what's the threshold of MAC
-> triggering patching phy mode? (The property might be only used for a
-> slight a few hundred ps delay for tweak instead of the full 2ns one)
+On Wed, Jun 11, 2025 at 02:58:18PM +0100, Yeoreum Yun wrote:
+> If FEAT_MTE_TAGGED_FAR (Armv8.9) is supported, bits 63:60 of the fault ad=
+dress
+> are preserved in response to synchronous tag check faults (SEGV_MTESERR).
+>=20
+> This patch adds new test cases using address tags (bits 63:60),
+> corresponding to each existing test in check_mmap_option.
 
-Maybe you should read the text.
+Reviewed-by: Mark Brown <broonie@kernel.org>
 
-The text says:
+--Qyujq2+uQI7uLhxI
+Content-Type: application/pgp-signature; name="signature.asc"
 
-  In the MAC node, the Device Tree properties 'rx-internal-delay-ps'
-  and 'tx-internal-delay-ps' should be used to indicate fine tuning
-  performed by the MAC. The values expected here are small. A value of
-  2000ps, i.e 2ns, and a phy-mode of 'rgmii' will not be accepted by
-  Reviewers.
+-----BEGIN PGP SIGNATURE-----
 
-So a few hundred ps delay is fine. The MAC is not providing the 2ns
-delay, the PHY needs to do that, so you don't mask the value.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhJoN0ACgkQJNaLcl1U
+h9AFUgf9FX/DvUnHGLW/uorzyHhr+bDqnu4nGYEZpT00NYUHOVAorHI+6MjbgKll
+GnAugE2VFVKxWDy4+s2qIJDuOXGcJQmn96SwAv1vrHSzQdGXS39uDhS2UH64AuvR
+XCEvjFuATQ6ijpE5ynuhHLdVex+Ra0dxzLazfWukXMtNuHoIENKd+JMsr4dAw8Lp
+rYyU/k+OUML9huovKbjloW8joyelbNYtePbIq/rcOWVFpVfHcIAi7jL4a/NZSQhi
+fK87bl2zOzalNiW4ENPW3VFMEPiXOCkp/WQ6sZhJKVI4h+USDF/ymwfYa6gnWy1K
+D8ENSzMrMq1Uafw5IgvHtIp1W70YHA==
+=dcR8
+-----END PGP SIGNATURE-----
 
-> > > Well I can't find the reason of phy-mode being so designed except
-> > > for
-> > > leaky abstraction from phylib.
-> > 
-> > I have no idea what that sentence means, sorry.
-> 
-> Well, I mean the existence of rgmii-* modes is coupled with the
-> internal of phylib, did I get it right?
-
-This is the external API of phylib, it has nothing to do with the
-internals of phylib.
-
-/**
- * phy_attach - attach a network device to a particular PHY device
- * @dev: network device to attach
- * @bus_id: Bus ID of PHY device to attach
- * @interface: PHY device's interface
- *
- * Description: Same as phy_attach_direct() except that a PHY bus_id
- *     string is passed instead of a pointer to a struct phy_device.
- */
-struct phy_device *phy_attach(struct net_device *dev, const char *bus_id,
-			      phy_interface_t interface)
-
-interface tells the PHY how it should configure its interface.
-
-If you follow the guidelines, the PHY adds the delay if needed, you
-get interface == phy-mode. However, interface and phy-mode are
-different things. phy-mode describes the hardware, the PCB. interface
-tells the PHY what to do. There are legitimate cases where
-interface != phy-mode.
-
-	Andrew
+--Qyujq2+uQI7uLhxI--
