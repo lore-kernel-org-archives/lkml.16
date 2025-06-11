@@ -1,53 +1,56 @@
-Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE624C80;
-	Wed, 11 Jun 2025 03:35:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749612924; cv=none; b=jK1G72NbWxepyLTC/6iicT2jyAoYCnTBTKfKw181wapsBXE1MJ4Zx1D6hsKhjq8OuE51SliAj/bMR7Tlx/kjwUsQo7H2SMEIyhu3t4yu6gzafgWZZ6/5U0o0cSWFgr5PD081gixrOKm8HlBsyEgZByNxWfso8dQENWBCTv7KJ0s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749612924; c=relaxed/simple;
-	bh=GIOvAdONo3giuCuiYYOgYOdZvqQ4pqznEg2OF2nbEj0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nJJ5V7XgkFY66LmNflMdvn+jtDfk6QoG5F0ZWsCvoql3KDn0WPsHXkPFPLLdNf6JQK9fnAgiLgu1rHIg1+VLy+SO2RYsZ8nYxTDDqo9Ia6xGgAFPJLftHmfdMa7+r/NuqnTeI4zBZfxCMmS+ubGste6vrGfv22HdSPki6pVQiaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=k4kVxt0T; arc=none smtp.client-ip=18.194.254.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08A613A3F2;
+	Wed, 11 Jun 2025 03:37:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749613064; cv=pass; b=cilZFT8M17vHZi3maanbWyBe3eOLuyN4pzAFUURSqoQ8nQuU/6NfCj+UwyiM5X6hrTRtQ49iJ5Vbj6lIq60tK04vy2yAkM9u2G899cIlbNnMf/e3ZFaIJFDO/4P08FPczSuSNdMufu6yDzgpzeQxNwwhSloFv8M+F4WjY2bHP4c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749613064; c=relaxed/simple;
+	bh=WBYZJNpKxuiJOBYXbR+TQh0cq5L9uaE7NAB6VnlearM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AzzaspXmV4ZMZV2lasXeebnNYKS6qz6b2EQGeWxT3tItvmldWK4jUEP5xNNjXyWklt/dO924lYZmIc1V7af8N8K9iUXrgUQl44TBq56UqJ2Ual/Ijj7Z1LGsaSb18BIcm3TAAwyB55huCLRKvDx3uTf7iSfNq57ha9X5vdYl+E8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=B+Xbi1c4; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="k4kVxt0T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1749612835;
-	bh=GIOvAdONo3giuCuiYYOgYOdZvqQ4pqznEg2OF2nbEj0=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=k4kVxt0T0prmNuo756U9l/qt2bpLPZQFKMLCpdJiro1FTf6i/kjAfqXNWDpHKL9Um
-	 ealRCFk4FqqWy9IIBAbkqrwsj/rRZFkqqp+v6uQM+FW8Z4/HzTKaPhYg1ncMZ4he2x
-	 3hZXa8I5BglkFvQ9VomP8snDz6Ww+yCBUV6LWIwM=
-X-QQ-mid: zesmtpip4t1749612809t4e55caaf
-X-QQ-Originating-IP: ON06+p2z7ajBsHtTdhKKjRdfk+LHHEEfwBn+jfm4cx0=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 11 Jun 2025 11:33:27 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 9867551432162374771
-EX-QQ-RecipientCnt: 12
-From: =?UTF-8?q?=E2=80=9CChengZhenghan=E2=80=9D?= <chengzhenghan@uniontech.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S . Miller" <davem@davemloft.net>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86 <x86@kernel.org>,
-	linux-crypto <linux-crypto@vger.kernel.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>
-Cc: "H . Peter Anvin" <hpa@zytor.com>,
-	ChengZhenghan <chengzhenghan@uniontech.com>,
-	WangYuli <wangyuli@uniontech.com>
-Subject: Re: [PATCH] x86_crypto: Fix build warnings about export.h
-Date: Wed, 11 Jun 2025 11:33:27 +0800
-Message-Id: <20250611033327.27640-1-chengzhenghan@uniontech.com>
-X-Mailer: git-send-email 2.20.1
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="B+Xbi1c4"
+ARC-Seal: i=1; a=rsa-sha256; t=1749613046; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=h2HgZfUvVxnMbpFC3jyOX2cKHFCJPINOMZE7CgeHOSNOg6/PjdZ+hwfWryek1o7AjmhVGUYS+9hksWH3WguW+SNsOL2AqgALqbwQyZUpFXHMJwmnkzAzcyzQlZf+vsHu51jV4iqSf4AhYvm48xhziSoLihJND8i5oHAElZe2Y2g=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1749613046; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=faHRvR+SGHmxzSv7cHI84PGrtEsnJDo9oDvQ6DBDa2A=; 
+	b=Wg56mmLhoeKFAe28KoUTcqxEIxSs+oDI7jrH03Frd/+IMs1XoCQaQ8lsUeZcb8rEoO1spuUJrN1dddCbnPIErVcdZKvuutROGCuWrfhW1DAUse/1rCcN/jjf0g2apS+aM8Wu81r79Fo+VSzOh+0lxF26SZUBd0EMhXblhR2j5yE=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749613046;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
+	bh=faHRvR+SGHmxzSv7cHI84PGrtEsnJDo9oDvQ6DBDa2A=;
+	b=B+Xbi1c4KU0Wv/RnuPEFwyGGm/PsPL0VAgi3cRmsxvdWfJrWBK0GgfeZKjoCres7
+	729Z0pcEAP9BRLYurR15VAzjPhys9wxvZl5GdN9GzpvYvMX1HkkQAn9JpIYxSPR1OW9
+	rTTYNh4p8gKDXSBN4t2Pj9FSR4VFHgHM2p9EgGIc=
+Received: by mx.zohomail.com with SMTPS id 1749613044314624.6785588017032;
+	Tue, 10 Jun 2025 20:37:24 -0700 (PDT)
+From: Li Ming <ming.li@zohomail.com>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com,
+	shiju.jose@huawei.com
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Li Ming <ming.li@zohomail.com>
+Subject: [PATCH 1/1] cxl/edac: Fix potential memory leak issues
+Date: Wed, 11 Jun 2025 11:35:42 +0800
+Message-Id: <20250611033542.96184-1-ming.li@zohomail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,38 +58,74 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
-X-QQ-XMAILINFO: MNC03nSNDndtqbhrF/xfPTjHcaoP8/xKMYYzVrYAAebqMS+e9Esb8hKH
-	n0fn4SVL+xgrEVsuN6q9aqBuxJKJ8NYqMendh8FCEsy1cDQurdYKSvJy6B33qNpP1twAkhv
-	pKRjs+bkVqoQ/0/MCIT0cyWak4fLAxLfON6EtHE4F48WHeFC0f/8NE2srOjGBgvwA0FrB/m
-	UoCj4Ewu4OgKmJKHBKVJpEMoUd2i2ajN1T1IlnHWmREkGCQX7jAj0+bceSmRtzw7o79aQLA
-	zXCWQSsiG7LCGvQmmO6J9iTPd+R5aUNHLAmsaMlSZPPld6+u5E3zjLSNmKvVXV9WWO+JroI
-	EB6fjdcfx6F7yAk2UqhWSN83E2JpFAbgLg2Umc99bkykL5DXJc4NTQGDtyucwDhoWYCEryS
-	fp/aRXFuVe+bphs3Tgas0YRT6rl1s3uklyR9J1/E7yHbukQ/sapKDGm49WTdhFbdNs6Fnry
-	Kk1pQX4jOpXtyZkyaEeALgqwDvVCM88ULXehyE5WGb1jWGUqRRD0Eeoe+Xu1M3J5goAiHRA
-	k42yylwtMlYU74SkGK2OYFaadrMdlmrhzGOl3QHhdyeiN56laUHJQes/z+cLCitXCZikxZw
-	8tOatMieNsslNRCiIw27yXlu7zwVQlwTe2Js4AI5VgD/2j5B00bfYFFqLRrj0MssHnT6pP6
-	7T/l+xqDaJIXz54LAnns7RXT09hq1S22dVBbXjvT2YOUWC1askZ5TPDtbM0eZbCqgxCc3nq
-	2TXk4yldgVF9HGeD0fkw0n7pCOw4SBumRNm7qK16DmVMdvTtQyhx2wTBLtRDum0RB8T3qzA
-	Y5HNzG2uh9jz0S2RgM5/Hb+F3cAidDfIC0pUinXzCHRddl6L490G6+r29ktq1QrPxbhgvtQ
-	38WaUsPzUr1SFUnqhgBU+nzgMbKtNsW41edlE+WGTNWIaM1ye41enpOJ8s7nGJGsKdcXrfn
-	2bWE/zDmOGTYHaq4V8IMV7Acc/U73AYtH+i5gQXDa7wo+/4QOpo/ouGVdOqEaAGcVXPYGdh
-	ggwpdKRyM1FrycT3LmVVr6VlgJbsA5E7Bmj4Qx0CUhNAcS/YTLRtEYduupfoMolvg2JTq5z
-	w==
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-X-QQ-RECHKSPAM: 0
+Feedback-ID: rr08011227d2a18e541872dd899b08b2780000ef9113495e4c5a724022f8f4c8e44db4221c7aba003b0413a7:zu080112276e7654b12c07aa55d2c5f5cc0000fbb3770a9a91b5c2455bf3c8fbdc8947ce237166555cdb479d:rf0801122d1cc9bff403e174513f9128b40000900505c44c2c6c26ab15d56e00452bc821e69e23e7997452209261b63b08e5:ZohoMail
+X-ZohoMailClient: External
 
-Dear Herbert Xu,
+In cxl_store_rec_gen_media() and cxl_store_rec_dram(), use kmemdup() to
+duplicate a cxl gen_media/dram event to store the event in a xarray by
+xa_store(). The cxl gen_media/dram event allocated by kmemdup() should
+be freed in the case that the xa_store() fails.
 
-I hope this email finds you well.
+Fixes: 0b5ccb0de1e2 ("cxl/edac: Support for finding memory operation attributes from the current boot")
+Signed-off-by: Li Ming <ming.li@zohomail.com>
+---
+base-commit: 87b42c114cdda76c8ad3002f2096699ad5146cb3 cxl/fixes
+---
+ drivers/cxl/core/edac.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-My patch aims to resolve the issue where indirect header inclusion fails to work when the compiler warning level is set to W=1. Under W=1, this warning appears.
+diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
+index 2cbc664e5d62..b4c5c23a45d4 100644
+--- a/drivers/cxl/core/edac.c
++++ b/drivers/cxl/core/edac.c
+@@ -1086,13 +1086,13 @@ static void cxl_del_overflow_old_recs(struct xarray *rec_xarray)
+ int cxl_store_rec_gen_media(struct cxl_memdev *cxlmd, union cxl_event *evt)
+ {
+ 	struct cxl_mem_err_rec *array_rec = cxlmd->err_rec_array;
+-	struct cxl_event_gen_media *rec;
+ 	void *old_rec;
+ 
+ 	if (!IS_ENABLED(CONFIG_CXL_EDAC_MEM_REPAIR) || !array_rec)
+ 		return 0;
+ 
+-	rec = kmemdup(&evt->gen_media, sizeof(*rec), GFP_KERNEL);
++	struct cxl_event_gen_media *rec __free(kfree) =
++		kmemdup(&evt->gen_media, sizeof(*rec), GFP_KERNEL);
+ 	if (!rec)
+ 		return -ENOMEM;
+ 
+@@ -1106,6 +1106,7 @@ int cxl_store_rec_gen_media(struct cxl_memdev *cxlmd, union cxl_event *evt)
+ 
+ 	cxl_del_expired_gmedia_recs(&array_rec->rec_gen_media, rec);
+ 	cxl_del_overflow_old_recs(&array_rec->rec_gen_media);
++	retain_and_null_ptr(rec);
+ 
+ 	return 0;
+ }
+@@ -1114,13 +1115,13 @@ EXPORT_SYMBOL_NS_GPL(cxl_store_rec_gen_media, "CXL");
+ int cxl_store_rec_dram(struct cxl_memdev *cxlmd, union cxl_event *evt)
+ {
+ 	struct cxl_mem_err_rec *array_rec = cxlmd->err_rec_array;
+-	struct cxl_event_dram *rec;
+ 	void *old_rec;
+ 
+ 	if (!IS_ENABLED(CONFIG_CXL_EDAC_MEM_REPAIR) || !array_rec)
+ 		return 0;
+ 
+-	rec = kmemdup(&evt->dram, sizeof(*rec), GFP_KERNEL);
++	struct cxl_event_dram *rec __free(kfree) =
++		kmemdup(&evt->dram, sizeof(*rec), GFP_KERNEL);
+ 	if (!rec)
+ 		return -ENOMEM;
+ 
+@@ -1134,6 +1135,7 @@ int cxl_store_rec_dram(struct cxl_memdev *cxlmd, union cxl_event *evt)
+ 
+ 	cxl_del_expired_dram_recs(&array_rec->rec_dram, rec);
+ 	cxl_del_overflow_old_recs(&array_rec->rec_dram);
++	retain_and_null_ptr(rec);
+ 
+ 	return 0;
+ }
+-- 
+2.34.1
 
-A similar patch addressing a related issue can be found here:
-https://lore.kernel.org/linux-kbuild/CAK7LNARQFBuUY2YzUnPuyEdTAVy=B91L5NyYGzhY-kAr3SYsRQ@mail.gmail.com/T/#mbc002a0dcd1607c273295caedecfd827fb2da54e
-
-Thank you for your time and consideration!
-
-Best regards,
-Cheng Zhenghan
