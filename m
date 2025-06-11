@@ -1,150 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C22155342;
-	Wed, 11 Jun 2025 06:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB8C0155342
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:39:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749623945; cv=none; b=Lnt7ZhZoGYmtrSN1Let6sebnO4sRXYXdW2PCZfgvw1J52vh/PyaDqqi8K/5V4hSOfJV76bOyryypHo2wCi5Q0Lkvavqa5YjhpqgYt7cG4W77cfwOvoKZtn7YnBzMkFVMB9JdqX2ozYVYLhXZOhIkWq07tztuEwpY2Eioy4eClzA=
+	t=1749623968; cv=none; b=s02P5JIHkjXYZoYs7qNz4/kcrtnMu1hdZNK0mDZwEyr10OQQDVOqm1orctGoOtCeD75nglJdSK+YTY5TqicGWC++478OxezIja/zYzz31+ZmlllP7jMru552zqJnDi4uk+RU9y3kaXTOmtFrYJk2fjcXjvsAzK6kjgC1kVji1ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749623945; c=relaxed/simple;
-	bh=1IYbHj4tdUvUVcZCReCBbcjzyo+xZaS1N9jhOBqwUUg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TbUOliV10daHTE99YBR1wd21QINEubsiUxe0jio+CpsEkjWX2VgPvMMAHIjLC47Hf9HN2+x02n1X9N0TZLmvh7iAF17/aTXqz7l21quZt7ZVZ/o/u7pl4tvynw8qv+PymnhXP19KDqsl5jkWp17fiWnA6w9FRbqMWZEJvSW/UTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GURpz9Zn; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749623968; c=relaxed/simple;
+	bh=ZCkQ5jc8nN5gOnGk1wsB5aHmx2mdqZc8/qiHmzxXw3s=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=tgMqBLjRBiMxn51Q7AaPdJari9D9nKRIsljG7y2HWh+oX6FGmvRiyo9obEZkm29AMqMJL4uZxtP2ryCSbkR53QepE6HEagiwEKY8EY9fOSjQHdFRVR/8ageFKC9xOu9X3zmKuLkp1Jco0rjogNjWxpqpt1zVwRKjCXl7fmmBsj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ct65xo4w; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3QV3MXQF; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GURpz9Zn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749623944; x=1781159944;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=1IYbHj4tdUvUVcZCReCBbcjzyo+xZaS1N9jhOBqwUUg=;
-  b=GURpz9Zn7McXgQ8ZyTCADbHPGk447+0b3hO3q6ASn0yIy2vPWD0u78bX
-   FjzECpxAGrkHFQJskxmPbkvlRjdOcbrjJscgDzs/aOOpk/TSN9QolQCZw
-   M+1uYf3KZ8P5FXy92G5HU1XZ8ZQ8bjtQCWgoedgq/IIpyt1r5I/Nnff8h
-   sYR3h6ar8qumrJVw8VJ4uJ95HFVDgo0miQUvW+E/tpi+Zy2yyzrv/nc+B
-   Y0Jpz30dnS/2eSd5EYk45cofqifXxRflTgnpY6frSus+f7TnP6/vKG1CX
-   w++yQqTl8Gy7kC2WP1fhZYwk02PhmJzErpkTluexiqyeLxltitdX+mXHD
-   g==;
-X-CSE-ConnectionGUID: XrZ4ofxuTBu7WWeRP3PdDw==
-X-CSE-MsgGUID: rJARdT0VRCu1s76C2Z947A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="62369831"
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="62369831"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 23:39:03 -0700
-X-CSE-ConnectionGUID: DsQHjbLuSO648jA2TLRxig==
-X-CSE-MsgGUID: MDdkl/NoTtOo2vUEa0P1gQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="150921102"
-Received: from unknown (HELO [10.238.0.239]) ([10.238.0.239])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 23:39:01 -0700
-Message-ID: <ace63fad-647d-48ff-88bd-9029f9fe0adb@linux.intel.com>
-Date: Wed, 11 Jun 2025 14:38:58 +0800
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ct65xo4w";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3QV3MXQF"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749623964;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aypoXTLE+TevtBzBXpYmLZ0LfIQbeXZh5v8vktdHqDs=;
+	b=Ct65xo4w73nouLwyOmJTKVYTwcCioaFsyjLIZSxj4voV+iHl/9jCIhzYV/CbmjMiilzjuh
+	6Rcbmi7A1wyhs5rpvTOp2XKJbIpGH+O6iKKytHQEHt2E5feidqztGGpbyUalaMUyIcQMVg
+	qqYbAJOHorQr3wvC5ql6NXSPpL9VxP318hGEc/hTQLJ7FkOtF91USHfJ9yv7crtAMT8B2w
+	LBDYSEvFsI3j17JD2xmZ2jqyB6e0PJBKDWEEXSdNDMB8+Tj6qJc20LBYSbqrgORGij0xDm
+	pDSuZl/HII6eXviVnsIW92K25HKFQZyVFWlIqbSbAVDBXTm41dm/e+A5Kk5+Tw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749623964;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aypoXTLE+TevtBzBXpYmLZ0LfIQbeXZh5v8vktdHqDs=;
+	b=3QV3MXQFOGAthxz2Qbrd7b5RhgSeZZr06miVFE9YtXFv+lAINU4dMWi6WmATPm2BSyqFX6
+	V77Tfnb8DOZKhHAQ==
+To: Gyeyoung Baek <gye976@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Gyeyoung Baek <gye976@gmail.com>
+Subject: Re: [PATCH] irq: Fix uninitialized pointers
+In-Reply-To: <20250527093530.958801-1-gye976@gmail.com>
+References: <20250527093530.958801-1-gye976@gmail.com>
+Date: Wed, 11 Jun 2025 08:39:23 +0200
+Message-ID: <87tt4mok84.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 07/32] KVM: x86: Use non-atomic bit ops to manipulate
- "shadow" MSR intercepts
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org, Chao Gao <chao.gao@intel.com>,
- Borislav Petkov <bp@alien8.de>, Xin Li <xin@zytor.com>,
- Dapeng Mi <dapeng1.mi@linux.intel.com>,
- Francesco Lavra <francescolavra.fl@gmail.com>,
- Manali Shukla <Manali.Shukla@amd.com>
-References: <20250610225737.156318-1-seanjc@google.com>
- <20250610225737.156318-8-seanjc@google.com>
-Content-Language: en-US
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <20250610225737.156318-8-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
+On Tue, May 27 2025 at 18:35, Gyeyoung Baek wrote:
 
+The subject line prefix is wrong. See
 
-On 6/11/2025 6:57 AM, Sean Christopherson wrote:
-> Manipulate the MSR bitmaps using non-atomic bit ops APIs (two underscores),
-> as the bitmaps are per-vCPU and are only ever accessed while vcpu->mutex is
-> held.
->
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#patch-subject
 
-Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
+> Fix uninitialized `ops` member's pointers to avoid kernel Oops in
 
-> ---
->   arch/x86/kvm/svm/svm.c | 12 ++++++------
->   arch/x86/kvm/vmx/vmx.c |  8 ++++----
->   2 files changed, 10 insertions(+), 10 deletions(-)
->
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 7e39b9df61f1..ec97ea1d7b38 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -789,14 +789,14 @@ static void set_shadow_msr_intercept(struct kvm_vcpu *vcpu, u32 msr, int read,
->   
->   	/* Set the shadow bitmaps to the desired intercept states */
->   	if (read)
-> -		set_bit(slot, svm->shadow_msr_intercept.read);
-> +		__set_bit(slot, svm->shadow_msr_intercept.read);
->   	else
-> -		clear_bit(slot, svm->shadow_msr_intercept.read);
-> +		__clear_bit(slot, svm->shadow_msr_intercept.read);
->   
->   	if (write)
-> -		set_bit(slot, svm->shadow_msr_intercept.write);
-> +		__set_bit(slot, svm->shadow_msr_intercept.write);
->   	else
-> -		clear_bit(slot, svm->shadow_msr_intercept.write);
-> +		__clear_bit(slot, svm->shadow_msr_intercept.write);
->   }
->   
->   static bool valid_msr_intercept(u32 index)
-> @@ -862,8 +862,8 @@ static void set_msr_interception_bitmap(struct kvm_vcpu *vcpu, u32 *msrpm,
->   	bit_write = 2 * (msr & 0x0f) + 1;
->   	tmp       = msrpm[offset];
->   
-> -	read  ? clear_bit(bit_read,  &tmp) : set_bit(bit_read,  &tmp);
-> -	write ? clear_bit(bit_write, &tmp) : set_bit(bit_write, &tmp);
-> +	read  ? __clear_bit(bit_read,  &tmp) : __set_bit(bit_read,  &tmp);
-> +	write ? __clear_bit(bit_write, &tmp) : __set_bit(bit_write, &tmp);
->   
->   	msrpm[offset] = tmp;
->   
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 9ff00ae9f05a..8f7fe04a1998 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -4029,9 +4029,9 @@ void vmx_disable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type)
->   	idx = vmx_get_passthrough_msr_slot(msr);
->   	if (idx >= 0) {
->   		if (type & MSR_TYPE_R)
-> -			clear_bit(idx, vmx->shadow_msr_intercept.read);
-> +			__clear_bit(idx, vmx->shadow_msr_intercept.read);
->   		if (type & MSR_TYPE_W)
-> -			clear_bit(idx, vmx->shadow_msr_intercept.write);
-> +			__clear_bit(idx, vmx->shadow_msr_intercept.write);
->   	}
->   
->   	if ((type & MSR_TYPE_R) &&
-> @@ -4071,9 +4071,9 @@ void vmx_enable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type)
->   	idx = vmx_get_passthrough_msr_slot(msr);
->   	if (idx >= 0) {
->   		if (type & MSR_TYPE_R)
-> -			set_bit(idx, vmx->shadow_msr_intercept.read);
-> +			__set_bit(idx, vmx->shadow_msr_intercept.read);
->   		if (type & MSR_TYPE_W)
-> -			set_bit(idx, vmx->shadow_msr_intercept.write);
-> +			__set_bit(idx, vmx->shadow_msr_intercept.write);
->   	}
->   
->   	if (type & MSR_TYPE_R)
+You cannot fix an uninitialized pointer. You only can initialize it
+properly.
 
+> `irq_sim_request_resources()`.
+
+No backticks required. fun() is clear on it's own.
+
+Also please describe how this ends up with an oops in
+irq_sim_request_resources(). The point is that any dereference of an
+uninitialized pointer is resulting in a problem and it does not matter
+where.
+
+Dereferencing an uninitialized pointer can cause an Ooops or worse it
+can call into some random code when the uninitialized memory contained a
+valid pointer, which is way harder to debug than a plain crash.
+
+> index 1a3d483548e2..67fd1de5d197 100644
+> --- a/kernel/irq/irq_sim.c
+> +++ b/kernel/irq/irq_sim.c
+> @@ -222,8 +222,12 @@ struct irq_domain *irq_domain_create_sim_full(struct fwnode_handle *fwnode,
+>  	work_ctx->pending = no_free_ptr(pending);
+>  	work_ctx->user_data = data;
+>  
+> -	if (ops)
+> +	if (ops) {
+>  		memcpy(&work_ctx->ops, ops, sizeof(*ops));
+> +	} else {
+> +		work_ctx->ops.irq_sim_irq_released = NULL;
+> +		work_ctx->ops.irq_sim_irq_requested = NULL;
+> +	}
+
+The obvious fix is way more simple. Just allocate work_ctx with
+kzalloc() instead of kmalloc(), no?
+
+Thanks,
+
+        tglx
