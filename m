@@ -1,128 +1,70 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 941771E9B28
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 20:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C962367A6;
+	Wed, 11 Jun 2025 20:52:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749674932; cv=none; b=BfRkqrPzYm2ViD0wlj4tBNaLWcnf611m9Eoz54RjjnRhtR5FFpYqD5wrjv1lPQOCm5iTAFsmdXohOpJeDTJyIEqBULwVj39M2F5AZE94ER4rKIrbvFD1i/tMfeAgggP3ayGE8ghdTzc6kdXsL7OF3FcSOsYGFZlVGJRSpEqDgCQ=
+	t=1749675171; cv=none; b=onixadVnpjZhqg7iriU9hf2nCrl6+MBOj8z4Pov7MKdzmr+p6kWDco8MOmyzIhvMQw58Efe1NESCa26Eu52h/rkz9KpeBVUG/4ETGc/V3UUQNOwR8ORSdR8wmfTLCDcLbxubeAfGEmz+JF2HKPBlMp7o5yvDt9X5wgFzj7R/Sto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749674932; c=relaxed/simple;
-	bh=dy/Bwb6Thnom4khEjtNBkceEkdwxV066C0Be2MDTp9A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kWLXiMGg9tA5fcG+Y5aCxemL6KvpgEM2Xved09X6Xikf+2nkUqyPccpJ/5IF9s+CqDc/lpjcCQwBED8IvD/paETc657C9VEtPprIoxThdQt0O8o2cp5dRpCr4cSACZdilyMybCctqgyfxAvZBIiD19BjTwRZ73hZMh7eRZyJk1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tT4KmrVq; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749675171; c=relaxed/simple;
+	bh=NKTPwkJUs4T8pFNoNiIG6fvQG1EElgaLi5p2/yQ7VCU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YxbYzBVnzOqGDSGaVJRS0ZBiax1NqxxwF8UUkVXEbzFW3b1NwP3ilBYlFBJ39/lvu6Gki1fYB/E2EqoRxVqj17fPdlPuy/sdL0bBaIQRGEYXkU2G/a7zj0B7t8aUuCKT6qjSgarqeqkkDe2+A9GyZ4FTliswr4UMYJ13pbKfJ7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O/eeaTWy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tT4KmrVq"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2357c61cda7so12825ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 13:48:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749674930; x=1750279730; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MUvCi02xABTrop0OD7rFaiszrr+jU6INxefWYNqLLI8=;
-        b=tT4KmrVqknjLs8qzr6UWSjt5mo+eef31F2aM9nz5IspAqwF7Aa1JIungUKk8h1qzQg
-         uaPVaTBDZ5Y0Mr5HtmLN+w5CwseQTY1cal77Njj43cE8VM44xAQbglfBILtphlcZIF/5
-         sqOkrVvLIqiL54+Fbqua2BvovxTIIjikNV4ei8OGaFG6XZyDqibGz1N3u8Ycz3OH4Msk
-         HLjexu8cSIrp9WRrCgmpNm2GmCY+YLk5766s8X5M4Vkd4tVB1eJea51xcMQvK7Ugr7uI
-         tByho5TjJaDxnZtLY9LuLVDSGJYRwXPm4H5hp7KO4zt2pT7LBD8OV4rS7is6YU8ysHHl
-         SNqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749674930; x=1750279730;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MUvCi02xABTrop0OD7rFaiszrr+jU6INxefWYNqLLI8=;
-        b=i0pMHvouzchmdMfXQhOIs4KOxCnJAcwURvncOix6RezzpJUW10eb1MJ0p48XcuPUvH
-         uWsmdh4CYSeEq31Iy1QW/pBs5UGx8xUG4ZWuTNnS/JlR5lXOQV4/o8sxKPOMxWGtCskH
-         csfVBp7LqZ3xvK1gytwkYqd9cXaio5g0qKUAmdaTh0rtH2kOq8i+sFyJYXzWFT1M6GW7
-         XF755KlwkhJnBK5pMoEdNpahF650EOpw7VoTxOK5AKAiBPkXiNyeiQnOPfzcQ62ru5JK
-         fSaqmJ0/UD0zCZSCotYe8qeCWNB+m8c6dkMct8KAbl/UtJ9F3jjeD5hTucQvI+xxwOEG
-         LCRw==
-X-Forwarded-Encrypted: i=1; AJvYcCXnbDSX9deugT2VL+HyQ956eTujPwYSbBsoSzD3j2+0r9L9XLtjJe5+me355T78pUdRjuXve4BK/aH7DkA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzX42OBM1A3GJZ871Y+MtAsxdawXuluxTfN3usGs2c6DkYBKbnG
-	U+zFmytlxqX50yak/diQxKSSzqP9FJnde2fRbmvSb2mUi9lPF0gpIBmOg2oxI/yfi7+8mWCYD7a
-	Gf9LiJKDPKaBNqwDmwG62gg2GiBKONEbv8zHEflmb
-X-Gm-Gg: ASbGnctu5uU8mpFGjND74EjHUYJcqV+FnfO7UNim37149mC9B23dlicqGGcgmJISABm
-	IH0mbsSca9VbJ74lWiwtga4XlpLBkcWNIw3u3e2HKekzs00MIjjPptXaXJS8dDjJrOIQAmcwCDu
-	6cKSd8XbJAoLgGdZaQee56VnssxFnWxc3+d9kfFDfcylagEMF6UyrTSAPKGtxEzXVVhTNteQlZ
-X-Google-Smtp-Source: AGHT+IHPOhN+2kRO/ieW+5bXzKNpmLOWrF7VTuuMHfPxMqYhDS9sFU10fG4M5zXkX7CwS4WlSGyc/8tNtPMJ+fMmqfA=
-X-Received: by 2002:a17:903:2ac3:b0:231:d0ef:e8ff with SMTP id
- d9443c01a7336-2364dc4e38fmr398195ad.8.1749674929600; Wed, 11 Jun 2025
- 13:48:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O/eeaTWy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6428CC4CEE3;
+	Wed, 11 Jun 2025 20:52:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749675170;
+	bh=NKTPwkJUs4T8pFNoNiIG6fvQG1EElgaLi5p2/yQ7VCU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=O/eeaTWyc8rX4ZjDCSF/MaPLRF+2jge933ax1G+cF8D2hFYihyuugoR2ExGPsjTKd
+	 nOm+WPXYYeOTpHh+yzUAVbtUgSrT5OGktPrS+fqgE1UQB00cxruxz0XiCO6qmaKYti
+	 zqvsiXZI1CbxfYelPA+MYb95RayOAgOBmc6LEOQuf20B4P9gMJQgHL12jVtBB36yId
+	 wqh+OP569avqm6VFT8QJx+Uljey9Wc3lvWBfSs7P4oDnKlNw0TYuZAc1KLhMbdFu1K
+	 R1A5h1eF6Sl5X+3t50aP4WSBHNkOCnpN/2qMd3YoZglehW5+eEfFuyCzZhHJK4/ZFJ
+	 4Esq4cBLUGfdA==
+Date: Wed, 11 Jun 2025 13:52:49 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+ Russell King <linux@armlinux.org.uk>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH RESEND] net: mdio: mux-gpio: use
+ gpiod_multi_set_value_cansleep
+Message-ID: <20250611135249.69c88f5d@kernel.org>
+In-Reply-To: <55bba029-9243-439d-9f1c-985f48ad2ec8@baylibre.com>
+References: <20250611-net-mdio-mux-gpio-use-gpiod_multi_set_value_cansleep-v1-1-6eb5281f1b41@baylibre.com>
+	<d4899393-f465-4139-ac3d-8e652c4dd1dc@lunn.ch>
+	<55bba029-9243-439d-9f1c-985f48ad2ec8@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250609043225.77229-1-byungchul@sk.com> <8c7c1039-5b9c-4060-8292-87047dfd9845@gmail.com>
-In-Reply-To: <8c7c1039-5b9c-4060-8292-87047dfd9845@gmail.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Wed, 11 Jun 2025 13:48:36 -0700
-X-Gm-Features: AX0GCFsiObw-5gr4V36jOF5DxyaQMi5Vz9ZSIsC4_vLQ1YuMrAJGB2FI0rG1Qcg
-Message-ID: <CAHS8izNiFA71bbLd1fq3sFh1CuC5Zh19f53XMPYk2Dj8iOfkOA@mail.gmail.com>
-Subject: Re: [PATCH net-next 0/9] Split netmem from struct page
-To: Pavel Begunkov <asml.silence@gmail.com>
-Cc: Byungchul Park <byungchul@sk.com>, willy@infradead.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, kernel_team@skhynix.com, 
-	kuba@kernel.org, ilias.apalodimas@linaro.org, harry.yoo@oracle.com, 
-	hawk@kernel.org, akpm@linux-foundation.org, davem@davemloft.net, 
-	john.fastabend@gmail.com, andrew+netdev@lunn.ch, toke@redhat.com, 
-	tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com, 
-	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net, david@redhat.com, 
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz, 
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org, 
-	linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 11, 2025 at 7:24=E2=80=AFAM Pavel Begunkov <asml.silence@gmail.=
-com> wrote:
+On Wed, 11 Jun 2025 13:40:25 -0500 David Lechner wrote:
+> > It is not surprising it did not get picked up when it is mixed in with
+> > a lot of other subsystems. Please always post a patchset per
+> > subsystem.
+> > 
+> > This also appears to be version 4.
+> > 
+> > Since you did not annotate the Subject: line with the tree this is
+> > for, i'm not sure the CI system will accept it an run the tests.
+> > 
+> > https://patchwork.kernel.org/project/netdevbpf/patch/20250611-net-mdio-mux-gpio-use-gpiod_multi_set_value_cansleep-v1-1-6eb5281f1b41@baylibre.com/
+> > 
+> > https://www.kernel.org/doc/html/latest/process/maintainer-netdev.html
 >
-> On 6/9/25 05:32, Byungchul Park wrote:
-> > Hi all,
-> >
-> > In this version, I'm posting non-controversial patches first.  I will
-> > post the rest more carefully later.  In this version, no update has bee=
-n
-> > applied except excluding some patches from the previous version.  See
-> > the changes below.
->
-> fwiw, I tried it with net_iov (zcrx), it didn't blow up during a
-> short test.
->
+> OK, I will try again tomorrow with [PATCH net-next v5].
 
-FWIW, I ran my devmem TCP tests, and pp benchmark regression tests.
-Both look good to me. For the pp benchmark:
-
-Before:
-
-Fast path results:
-no-softirq-page_pool01 Per elem: 11 cycles(tsc) 4.337 ns
-
-ptr_ring results:
-no-softirq-page_pool02 Per elem: 529 cycles(tsc) 196.073 ns
-
-slow path results:
-no-softirq-page_pool03 Per elem: 554 cycles(tsc) 205.195 ns
-
-After:
-
-Fast path results:
-no-softirq-page_pool01 Per elem: 11 cycles(tsc) 4.401 ns
-
-ptr_ring results:
-no-softirq-page_pool02 Per elem: 530 cycles(tsc) 196.443 ns
-
-slow path results:
-no-softirq-page_pool03 Per elem: 551 cycles(tsc) 204.287 ns
-
-
-
---=20
-Thanks,
-Mina
+No need, just keep it in mind for the future (CI managed to guess
+correctly).
