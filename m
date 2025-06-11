@@ -1,173 +1,98 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2049.outbound.protection.outlook.com [40.107.220.49])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8317A2F4318
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 22:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749682634; cv=fail; b=szpMvnih7hyN/4ptyRzhDYRSr2z7RhDzGM2Fi8ziUOUifOz7KZyWIuldd5qM2YA1J47KXGtq45t+WXoNNsdFc6mUX7Xv/DzcLZ3ggq0JOwHPUXounmVLHrK2Tz2EroxSh4qPXNpNwk8OYFDC+9bP9unWBScKo1qQTqryBZjRskk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749682634; c=relaxed/simple;
-	bh=fljO76R8eGMQXtOhSrPbFnFaDg5/9wlKQNyB3W/ZqBo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QViwXAcQDD28E+cVjB7ULGn9cuplw/uvUecZ+EInK1sjJGm2y22hjvXPKL/UTRTpiehLWBGtySe1ZvlxXMaBdPSUCZC5wuzBnSXABrFJvv9PQ1Cue9u/GgVl0bKs42hwIXopXpOfrNs1TGKrTDABqIA4VRM8nUuPfjQ8SK79j50=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=HdtFOkaE; arc=fail smtp.client-ip=40.107.220.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB742517AF
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 22:57:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749682638; cv=none; b=VypXO3YCaD/yKSlhs+MFQ5z6nuvTHbu2HbvNiyjo/x6cEQJlib1tDHhPC0o36ah2aHL93SwrTQ/e5r4CtCyYwRH2+vhDtPj40v1WqrjXvcyZveE7NSoCtB69VCpqb97W7M5z850fNOr+JuIF8I0Bg3etxseQT/y6v64FJPa9AAU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749682638; c=relaxed/simple;
+	bh=BPznrVf2IehxVbb0FFTWzg/8ye7EFESVgQEaW7o912k=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=pkH8wxalX2AtcW2OmpEyU0V2keP8rj68/7PUe75E2aAIrw6MXmt1vxJeFVZCMVeTfM/alKLkTzsWlU42DG/UOetxyUBHtqVnFMSgho47Q1aQqn/b+lTeNhLqWhavkZCj1sw4vJMNP+4ANeWiiewGtoIB2eV68fozGR69l6UboEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=O4MhcUDg; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="HdtFOkaE"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gqd/GDd2xxHof2lAiNN7VQEamRZV8Ub6iCt/H35Ak1ZNkyP+a4KcLSCT59V2Lbtoj4H3EKXH48NInbIjlGyx2kKeZrdsWhB/77Zi7hV1JbwDf2+1+VdbGhZSV8VYxqPHszptaDyRwczaVc16M7FZM7ByFO9N+NKCAVR1QcLQd2xXCETGrtq/+RrFOQm/f0vC5jKioELDtJ015IEs/GE9J3bgzf4QvTQ4gm+GgmCWCSJvxpIuROCiKGgS1ENy3anTSzYDFGPClvVCdtYQVoBqgann8i4Ql/q6aPzJTVHfzOG/wUFi98KxAOzakN3L9Uobj6HaAltcKCWsoMP1r0JlnQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=P4RoGOt5iWlcoGwbtIzUMt5SJ8l+X1bFqezD5G4CMVc=;
- b=HyJum+Xy63hI3xKF1uhyeoKhbPQxi+w6T++pamYT1kxj91hXfDQ5y8Dkka2F38S34z7Wm+nRiqzI1v9nbi1cH8tCARJWPWPhSVeTu5jUBVWShv5XlohhKnTfrJywTFWcC2QAt8I9OcJRTgvJgftfijBAvIM3ifCO3OkStO89EKXBI9KdXqQCocJxxMXfb/8AhWLOzNoKC5n0emT9YZ26AYdqWBSJrF1dDRG5NV3SEWLCl8K/moMkU7zZMNceOyLg6t+tVIYQiTPdReZ+Rt0fBJHelJyeLOaapT1sHqY5/A3n9Gv48l+Miahumpb6qE7DuIPft3rcpU5JLJwd2XFrYw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P4RoGOt5iWlcoGwbtIzUMt5SJ8l+X1bFqezD5G4CMVc=;
- b=HdtFOkaEvXRP5NRzYXQU2xWOXGIDYgiLEhAdaBgL6T3SrletyG6TG3JAecQw1h0MceAFFhuj/P2zLRzi2bTbJNkLLt0IZsbo62QbdOx7pDKDnUHmcrkEwU7CF5NA5d8BhMgDhJCWrU8UEabjQWd1nLpDmoVqSXyUsU/LSXQ5pRQ=
-Received: from BL1PR13CA0232.namprd13.prod.outlook.com (2603:10b6:208:2bf::27)
- by CY5PR12MB9055.namprd12.prod.outlook.com (2603:10b6:930:35::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.40; Wed, 11 Jun
- 2025 22:57:06 +0000
-Received: from BL02EPF0002992A.namprd02.prod.outlook.com
- (2603:10b6:208:2bf:cafe::d8) by BL1PR13CA0232.outlook.office365.com
- (2603:10b6:208:2bf::27) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.18 via Frontend Transport; Wed,
- 11 Jun 2025 22:57:06 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL02EPF0002992A.mail.protection.outlook.com (10.167.249.55) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8835.15 via Frontend Transport; Wed, 11 Jun 2025 22:57:06 +0000
-Received: from maple-stxh-linux-10.amd.com (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Wed, 11 Jun 2025 17:57:05 -0500
-From: Pratap Nirujogi <pratap.nirujogi@amd.com>
-To: <lee@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <benjamin.chan@amd.com>, <bin.du@amd.com>,
-	<grosikop@amd.com>, <king.li@amd.com>, <dantony@amd.com>,
-	<phil.jawich@amd.com>, Pratap Nirujogi <pratap.nirujogi@amd.com>
-Subject: [PATCH] mfd: core: Fix MFD swnode and fwnode conflict
-Date: Wed, 11 Jun 2025 18:56:14 -0400
-Message-ID: <20250611225642.266069-1-pratap.nirujogi@amd.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="O4MhcUDg"
+Received: from [127.0.0.1] (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55BMuI4E3130383
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Wed, 11 Jun 2025 15:56:19 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55BMuI4E3130383
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025052101; t=1749682580;
+	bh=HRZvuFvmDl7vUxLKEf/1Ga4q3J4NdeqxPqtstFvTi9o=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=O4MhcUDgP8tNHapkN69TPtoQXJFL32L5k9ia4JEv5Uw7E9TFQUjZDnkFkCb1um1Y3
+	 BPAUFx1Sp+XJsMHZThHE4/PaYN3S/MCnBbS/ymPoKseuSFXJl4dLjTIKDEdk7NQ1FB
+	 qMOt2e1PEx/0a0X5ipLy46iiLGtHU9orAqiGw/tAL6idxkUfTZFSq/kXQtLdUXgOkE
+	 jiZZTdtZlq9E/+hZlRSIeoU4AM9XjB3en0CbzdEjJ4uUHcT0IC0xAO5wmO6GtY3YSM
+	 3NV66mOrUBE006svKYfR1zfQf6jyCY2uRexYNRlCuxyEYSgMfXA0OEyP1PJxKzQixm
+	 yaCByH2GhGjEg==
+Date: Wed, 11 Jun 2025 15:56:17 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Dave Hansen <dave.hansen@intel.com>, Em Sharnoff <sharnoff@neon.tech>,
+        linux-kernel@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org
+CC: Ingo Molnar <mingo@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        Oleg Vasilev <oleg@neon.tech>, Arthur Petukhovsky <arthur@neon.tech>,
+        Stefan Radig <stefan@neon.tech>, Misha Sakhnov <misha@neon.tech>
+Subject: Re: [PATCH v3 1/2] x86/mm: Handle alloc failure in phys_*_init()
+User-Agent: K-9 Mail for Android
+In-Reply-To: <22cd0fa8-d14d-4d37-a6a1-5e6827d6182b@intel.com>
+References: <a31e3b89-5040-4426-9ce8-d674b8554aa1@neon.tech> <a404d023-e0bb-4dc8-8952-accba299ab50@neon.tech> <22cd0fa8-d14d-4d37-a6a1-5e6827d6182b@intel.com>
+Message-ID: <8DA842BD-929D-4CB2-88D8-405F33C9B559@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF0002992A:EE_|CY5PR12MB9055:EE_
-X-MS-Office365-Filtering-Correlation-Id: 053aa9ad-bfc0-4f97-5da5-08dda93b49bd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|376014|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?k4pYhgyObKHc0RbZv49z+W8a8m20g1Vx6NwK5pjoRPXAsHgiZhh3zRvOK/Pt?=
- =?us-ascii?Q?r73VCMGuXbS5wHKxXvJhHST80XP6ZRqv7NsBhZu8s2W+HO+qyKAqoitkLnmR?=
- =?us-ascii?Q?woNhNTIuMaFdA7uE1/VHMSDTi6JpgrxLN5DoZ+asXLQrO1mfsoF+65Ybi2ho?=
- =?us-ascii?Q?bfwUMGowojJ5TO+CIuhyvWOox6WS1cCJldkxUq+o/mbMN8R74vgR/1YkS0la?=
- =?us-ascii?Q?FEOsCBcl1ojAIoKzdfiNcekIXI3Okukr4rkaB/8IzHjHDHcMh/Cexy0aIh7S?=
- =?us-ascii?Q?KWxlmBmHtzIbcfmwJmjqCSkzhmz0E64SCSlfivMsA0fseyMfZ8XVp4/Yuarm?=
- =?us-ascii?Q?2/S1NU0IESqCYpQEbgLL3tbReBOVTPZWtTTGOIE6VycqZ/VeTAlwlCxGREDe?=
- =?us-ascii?Q?z5h1vJwDAMKOOb6Db8SIOHyq9O48UF2UhMZuuxqGFHp8TTCLuXauDSlQ+9r9?=
- =?us-ascii?Q?uh7BQX/k7l2K1mblO0WHn4DhnIs62D5xOzukeiD7bTPDs4jjwBekxr7Fr6wj?=
- =?us-ascii?Q?f9kBqcdmeYlxVJM2hOyKlh7XXkEE0ZGvkyOZsuLYljq7KgfpkguCM5BYmVi6?=
- =?us-ascii?Q?co5zsbz4RoUoqElVRxuTK4D8zdhKgN9BNLw+vqBfQrVpKq6bK1CK63vFlLw8?=
- =?us-ascii?Q?IqVfCw/+qppAvEgR71TlvC3qXk+golAyUxVmCiryA8C7a+YC0ItlMyF2iMfA?=
- =?us-ascii?Q?hEfNNV1lZBB5JNughvIXrQFKrgi9XLmVQAnrm4cM7nFNmJiZrsCdct+0U1wl?=
- =?us-ascii?Q?/vYdHWKcGVcOsxbQtECcjbJWMAWbqV6QmmnBAyVJzqmFi5LIJ4+9AuPUBruh?=
- =?us-ascii?Q?lYF2uox/DjFosSqciexVKMtahOxX4Aeum/jLlrwhWWHHQq8BpHPGkb+cNgrq?=
- =?us-ascii?Q?HwwXqUPWHUrzFBvQN5SfHSOnpGIexOFbd5gtngcSxwbNlEvgxBHuxaDZVrNB?=
- =?us-ascii?Q?xurir6rZxqg1N36o0WSdE7nup9PG/2+0CctXwHiPcrZBu66JeUwLeXPBMCin?=
- =?us-ascii?Q?cGSIaQ4H6kCE5I27K/z6tFpTGLwqWHwZlbEOS+iP8VXGHhKFahKl+MPKDy0e?=
- =?us-ascii?Q?VH9FJWj0e62fTFR9ZutWmti3naMSA0dU2q5m6x9hU279MRpIXpyAvTgZMk3n?=
- =?us-ascii?Q?MFP/poCwhByvshArby816VYQSw6T8PMcFszwMIi/HCX5+S3trP/QpxiiLw+o?=
- =?us-ascii?Q?lXBTpkC5s8PrsKZMHSw1hItaJIyvgPdpdahSuizKZ/kihVyHmhxR03sw/I0i?=
- =?us-ascii?Q?XRtjAZPxxJMoOYDtwKtVf+U8dEAn0/GT3kQ7iXbdRmEOjMWUSuxRgW9D2UO7?=
- =?us-ascii?Q?NuJJ4khjOf6d52+1LwSYaibQiTGX8WjUHM0YXgbSjcgFWSMyhqxr2iXFQbyU?=
- =?us-ascii?Q?5Q98ap/uTpqOMXNGi+ozeRtyUX0T3AsLHHaaqBLHCYmI2aDllrydF0+dwgbk?=
- =?us-ascii?Q?XOR1ydsC6cKmpdlshr+1OFsli7L8Qa5Mi/7kafiXfjPMz41mvwUFnyVXGhwb?=
- =?us-ascii?Q?8ZMCmpTzBX4e6DxScJ3ahH3T6NpvsyBqlWer?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2025 22:57:06.1322
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 053aa9ad-bfc0-4f97-5da5-08dda93b49bd
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL02EPF0002992A.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB9055
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Initializing the MFD child device's fwnode with the parent
-or matching ACPI device's fwnode is causing conflict when
-software_node (mfd_cell->swnode) is explicitly assigned during
-device creation.
+On June 10, 2025 7:55:36 AM PDT, Dave Hansen <dave=2Ehansen@intel=2Ecom> wr=
+ote:
+>On 6/10/25 03:16, Em Sharnoff wrote:
+>> +		if (!pmd)
+>> +			return (unsigned long)ERR_PTR(-ENOMEM);
+>
+>All of this casting isn't great to look at=2E Just about every line of
+>code that this patch touches also introduces has a cast=2E
+>
+>Could you please find a way to reduce the number of casts?
+>
+>> +		/*
+>> +		 * We might have IS_ERR(paddr_last) if allocation failed, but we sho=
+uld
+>> +		 * still update pud before bailing, so that subsequent retries can p=
+ick
+>> +		 * up on progress (here and in phys_pmd_init) without leaking pmd=2E
+>> +		 */
+>
+>Please write everything in imperative voice=2E No "we's", please=2E
+>
+>> -	for (i =3D 0; i < nr_range; i++)
+>> +	for (i =3D 0; i < nr_range; i++) {
+>>  		ret =3D kernel_physical_mapping_init(mr[i]=2Estart, mr[i]=2Eend,
+>>  						   mr[i]=2Epage_size_mask,
+>>  						   prot);
+>> +		if (IS_ERR((void *)ret))
+>> +			return ret;
+>> +	}
+>
+>Are there any _actual_ users of 'paddr_last'? I see a lot of setting it
+>and passing it around, but I _think_ this is the only place it actually
+>gets used=2E Here, the fact that it's an address doesn't even matter=2E
+>
+>
 
-Since a device is not expected to have both fwnode and swnode,
-this conflict is leading to mfd_add_hotplug_devices() failure.
-
-To fix this issue, skip initializing the fwnode from the parent
-or matching ACPI device when a swnode is already present for the
-MFD child.
-
-Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
----
- drivers/mfd/mfd-core.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-index 76bd316a50af..d5680132ed21 100644
---- a/drivers/mfd/mfd-core.c
-+++ b/drivers/mfd/mfd-core.c
-@@ -212,17 +212,17 @@ static int mfd_add_device(struct device *parent, int id,
- 				cell->name, platform_id);
- 	}
- 
--	mfd_acpi_add_device(cell, pdev);
--
--	if (cell->pdata_size) {
--		ret = platform_device_add_data(pdev,
--					cell->platform_data, cell->pdata_size);
-+	if (cell->swnode) {
-+		ret = device_add_software_node(&pdev->dev, cell->swnode);
- 		if (ret)
- 			goto fail_of_entry;
-+	} else {
-+		/* add parent dev fwnode only when swnode is not present */
-+		mfd_acpi_add_device(cell, pdev);
- 	}
- 
--	if (cell->swnode) {
--		ret = device_add_software_node(&pdev->dev, cell->swnode);
-+	if (cell->pdata_size) {
-+		ret = platform_device_add_data(pdev, cell->platform_data, cell->pdata_size);
- 		if (ret)
- 			goto fail_of_entry;
- 	}
--- 
-2.43.0
-
+Given that ERR_PTR and IS_ERR are basically just casts to and from pointer=
+s, why have them at all?
