@@ -1,192 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509BD2BD11;
-	Wed, 11 Jun 2025 08:55:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3EC32405E4;
+	Wed, 11 Jun 2025 08:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749632147; cv=none; b=kDCw1TAHsK8gOqPq+q7r6X1Bliq9RUeLBCI1EGLnIQYF1Fmff8dD3CbsTmROMlDlFVTAKcmPgsVR+moGhBoIW53fXrvQCci4wPDrDlaUipWf9vFN/KcxHWRMIHO5mwj7I+mdtPvISzw3LNYd3CK8jKkWSN2YpUy3QVOyYutwVjw=
+	t=1749632165; cv=none; b=q72Ft5LYgJ9M+BhwtPOb3uf7FS5jMKGUsb8Uy3cGWZBqV8OQZkqv+jMTEpsOjSn3JiY4NAeYZc4kwAFbEK74IR3ZsE+rKTm/XFZFUgEZ/eivs6LgBoUiBGOxy1snkK0SsWiQqcQ9WCcITENZ8EqPqRvN3Ms9w7ga7m0hb7sm6TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749632147; c=relaxed/simple;
-	bh=6d/kwVtsJUb6UGpgzU7hhzpSd4al/5RJeq1TyB54wSE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ROO/OkfohahKc3tRn0hLndIobUhqYWoYstuJfKIiC25hLGVVsuas0u/4u74WcLWPzvBo94B0xsyu1qBMb4+nRwBEnvpRXXPpg3m1LAtqI0zNm+Wm3jxUEHIgpe5/WMPsOOba4ih6S//aRK2k/jOI4sw7PFzhk2jQXrniVPgdAjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BTAE3pxw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749632165; c=relaxed/simple;
+	bh=0fXEzlKGR7uRK1gsrzE4/HNTgAhDwUJtxaGb1K0SYYs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LQH8YtclwKVte484RUp5rtYGPXUkzPK975a9pdCcuu9XRy5PYO3F9olAfw7z5mn9saKKoIDlCHcupiRV0CJrMajN8r4SIRg/Jz8t6axjo/l5uvdP9APkVPPcQBLl6hLCGtTS0Pv8cT+zY47bBfZuKv04pzt2OIyvsXm/CUrFjHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ypb5VC8M; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BTAE3pxw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56DD7C4CEEE;
-	Wed, 11 Jun 2025 08:55:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749632146;
-	bh=6d/kwVtsJUb6UGpgzU7hhzpSd4al/5RJeq1TyB54wSE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BTAE3pxwvtwy4i4IfJxVZjwbEaCrCicfY+3E4hcOMddWrD/mECITAyNfVudOaIo30
-	 mP86ea8Hnv4ej7dXA08zjzos8wcnfJnGokEHDkXBzZh3foMZDPbMXlY774t7uP462u
-	 rDSwEv/YyF4xTeAMyiEuzywjLWxjzDxZ3z0KqWh9AhgMS4S6gdmVFsm2aCBGtqtZxZ
-	 yYMmYX89RKUOfhtFOeE+Fncm6xn4Kp3qVH57cDlaPrCfzEI5AgHytdzunab0YYNAqt
-	 +tdwjy9Jwz1q9qEMcZWJmF36fmpPnR+LHmHAQ4ImitSvIJ7R7DEZv3ABx6LURGcNkK
-	 Su7rRLQrw5Cfw==
-Date: Wed, 11 Jun 2025 10:55:44 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: =?utf-8?B?QW5kcsOp?= Draszik <andre.draszik@linaro.org>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Lee Jones <lee@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Peter Griffin <peter.griffin@linaro.org>, Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 02/17] regulator: dt-bindings: add s2mpg10-pmic
- regulators
-Message-ID: <20250611-statuesque-dolphin-of-felicity-6fbf54@kuoka>
-References: <20250606-s2mpg1x-regulators-v2-0-b03feffd2621@linaro.org>
- <20250606-s2mpg1x-regulators-v2-2-b03feffd2621@linaro.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ypb5VC8M"
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-70cb9ae5479so353287b3.2;
+        Wed, 11 Jun 2025 01:56:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749632162; x=1750236962; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jr7af8u/djfaVEFtDVz1sFAL1KZvVfAMjhhIxlcv8Us=;
+        b=Ypb5VC8MH95LAJz+WBdTW7hG2jDC3fjePE3L/tQL8mzp0lo7KPSy/98Ddpgnx8z7hA
+         acNxxfvEvOwkwppYEYNUriGNddB+wx0tDqVxQ9mOFCJ4lcI1+CxCwHsoSy7qQAjvC56T
+         EJz41U85IeSwWcV5y0qDYLMmEuxMWUoyGWr4rsxPV7B6ciogSVJxg3+IC8FFXWqKvOZP
+         G5GXAmH5C5YA+OVaBMw+NXi1RM/cQZNOSC3KPo1MS9vX2dW6HuowBJ6POgivLyNy/0A+
+         ygYCqzeEJlRggI1vb/vKs5Dvd3QIxzJ+zQye3sdb/0O95wlzBaFmXMFGVbIJCo4nmPS1
+         ERpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749632162; x=1750236962;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jr7af8u/djfaVEFtDVz1sFAL1KZvVfAMjhhIxlcv8Us=;
+        b=GMFGk8N6CPVJDcl1Tact/L2IUBu07POzJ78pIr+T7+nGTJJvZuc3DnJQMFEc8CrQit
+         WQUUuKKkHrjKVRi4UNFmKEtVzKmgjG9Wbw5ZSjPnefYlmNZPXEP5pDjewj8NO22kIogN
+         XdyxBQwyiIv+CqMTb7lODo+ITdKXAIDSnJABoOCXird/OuuRPFaEigEn14Y7FzIBlBx2
+         SO30W0H8r1FDpwEw5YWSZkBgFb5p5eDSfQnzvVNCfqQmDur2oIMxh4bsFLUY1e0wVMK0
+         kND2eKqln153kVsEAB5mIHTliX93hcFCu7cio8zx20PH/zdXKEdxuvhuC5NGy/XAgw7D
+         RuRg==
+X-Forwarded-Encrypted: i=1; AJvYcCUarD5coAMMQyu8KQpJETBkUTI/gGbgP8ALhr527Gy5HE7mrf2v+EKVyXkEs0BAKAOZIyAhnvs7kmVxTrY2@vger.kernel.org, AJvYcCUpF43ORCIC6l8JAljNbbOXI2nhIizmT6MyNclybGgR92NKgIf6ErkzazwkTtZ/7Un+0ZmYwOOuu5c=@vger.kernel.org, AJvYcCXEjRIwrm+d6nCgPwxmtXyrtKsj6llKf2uEy9tVgrtBGfpcWizIOLTOfuVSuBsu0F2iEDI1xWkp1vDC@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbN3c2X84u6upRfvjF/Ok0cMjOvMPsCfHAtbZC3sqkpipjIW0A
+	88kgo5C7M5oIw+SnbIqlGmXeq8N5nerqf9UalD50IV28uxt8w4TM27owwo4RuWFocuKa0SfxH23
+	ZSa7knaprgvTgog6lzK3Ye1qw9TxkmXU=
+X-Gm-Gg: ASbGncuvCrG9gXOB5tO33j4HBjtM21sI/d12mJacV+4KIdjhngAjv4rpEbQexJ9tVfU
+	YJaReNsgall1r/wfX9ePn94yrP0C9GyWGMpulV2B27NNsmWI678SFDa51ck+wrJ9i6Rp2rbxddK
+	19KgfYSVLQXOQN5fbUHNen8xBx+J1FnfB7exfHHuMKVk8=
+X-Google-Smtp-Source: AGHT+IHQshvzaNfy3bNjdRFH2yuU1qV8IQJUoInmY8JcSy/11DFg74rdFUbgCEsdVvOxd36y+j03qwTnrUKK/Llr8YA=
+X-Received: by 2002:a05:690c:620a:b0:70f:7bea:5dd with SMTP id
+ 00721157ae682-71140b18ed9mr14745547b3.9.1749632162358; Wed, 11 Jun 2025
+ 01:56:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20250601172139.59156-1-l.rubusch@gmail.com> <20250601172139.59156-5-l.rubusch@gmail.com>
+ <20250608162738.407c7d20@jic23-huawei>
+In-Reply-To: <20250608162738.407c7d20@jic23-huawei>
+From: Lothar Rubusch <l.rubusch@gmail.com>
+Date: Wed, 11 Jun 2025 10:55:26 +0200
+X-Gm-Features: AX0GCFtErc9t4ORFe67lg4US4jiRG_9OYZGh8UYacK5QGDW6gTjheKx4y-gYpF4
+Message-ID: <CAFXKEHZgvoHVigGcDOchkAsYcs_cpYzfXstRBa_OzS_LEkvNXg@mail.gmail.com>
+Subject: Re: [PATCH v4 04/11] iio: accel: adxl313: add function to enable measurement
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net, 
+	lucas.p.stankus@gmail.com, lars@metafoo.de, Michael.Hennerich@analog.com, 
+	bagasdotme@gmail.com, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250606-s2mpg1x-regulators-v2-2-b03feffd2621@linaro.org>
 
-On Fri, Jun 06, 2025 at 04:02:58PM GMT, Andr=C3=A9 Draszik wrote:
-> The S2MPG10 PMIC is a Power Management IC for mobile applications with
-> buck converters, various LDOs, power meters, RTC, clock outputs, and
-> additional GPIO interfaces.
->=20
-> It has 10 buck and 31 LDO rails. Several of these can either be
-> controlled via software or via external signals, e.g. input pins
-> connected to a main processor's GPIO pins.
->=20
-> Add documentation related to the regulator (buck & ldo) parts like
-> devicetree definitions, regulator naming patterns, and additional
-> properties.
->=20
-> S2MPG10 is typically used as the main-PMIC together with an S2MPG11
-> PMIC in a main/sub configuration, hence the datasheet and the binding
-> both suffix the rails with an 'm'.
->=20
-> Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
->=20
-> ---
-> v2:
-> - drop | (literal style mark) from samsung,ext-control-gpios
->   description
-> ---
->  .../regulator/samsung,s2mpg10-regulator.yaml       | 147 +++++++++++++++=
-++++++
->  MAINTAINERS                                        |   1 +
->  .../regulator/samsung,s2mpg10-regulator.h          |  48 +++++++
->  3 files changed, 196 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/regulator/samsung,s2mpg10-=
-regulator.yaml b/Documentation/devicetree/bindings/regulator/samsung,s2mpg1=
-0-regulator.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..82f2b06205e9bdb15cf90b1e8=
-96fe52c335c52c4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/samsung,s2mpg10-regulat=
-or.yaml
-> @@ -0,0 +1,147 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/regulator/samsung,s2mpg10-regulator.y=
-aml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Samsung S2MPG10 Power Management IC regulators
-> +
-> +maintainers:
-> +  - Andr=C3=A9 Draszik <andre.draszik@linaro.org>
-> +
-> +description: |
-> +  This is part of the device tree bindings for the S2MG10 Power Manageme=
-nt IC
-> +  (PMIC).
-> +
-> +  The S2MPG10 PMIC provides 10 buck and 31 LDO regulators.
-> +
-> +  See also Documentation/devicetree/bindings/mfd/samsung,s2mps11.yaml for
-> +  additional information and example.
-> +
-> +definitions:
-> +  s2mpg10-ext-control:
-> +    properties:
-> +      samsung,ext-control:
-> +        description: |
-> +          These rails can be controlled via one of several possible exte=
-rnal
-> +          (hardware) signals. If so, this property configures the signal=
- the PMIC
-> +          should monitor. For S2MPG10 rails where external control is po=
-ssible other
-> +          than ldo20m, the following values generally corresponding to t=
-he
-> +          respective on-chip pin are valid:
-> +            - 0 # S2MPG10_PCTRLSEL_ON - always on
-> +            - 1 # S2MPG10_PCTRLSEL_PWREN - PWREN pin
-> +            - 2 # S2MPG10_PCTRLSEL_PWREN_TRG - PWREN_TRG bit in MIMICKIN=
-G_CTRL
-> +            - 3 # S2MPG10_PCTRLSEL_PWREN_MIF - PWREN_MIF pin
-> +            - 4 # S2MPG10_PCTRLSEL_PWREN_MIF_TRG - PWREN_MIF_TRG bit in =
-MIMICKING_CTRL
-> +            - 5 # S2MPG10_PCTRLSEL_AP_ACTIVE_N - ~AP_ACTIVE_N pin
-> +            - 6 # S2MPG10_PCTRLSEL_AP_ACTIVE_N_TRG - ~AP_ACTIVE_N_TRG bi=
-t in MIMICKING_CTRL
-> +            - 7 # S2MPG10_PCTRLSEL_CPUCL1_EN - CPUCL1_EN pin
-> +            - 8 # S2MPG10_PCTRLSEL_CPUCL1_EN2 - CPUCL1_EN & PWREN pins
-> +            - 9 # S2MPG10_PCTRLSEL_CPUCL2_EN - CPUCL2_EN pin
-> +            - 10 # S2MPG10_PCTRLSEL_CPUCL2_EN2 - CPUCL2_E2 & PWREN pins
-> +            - 11 # S2MPG10_PCTRLSEL_TPU_EN - TPU_EN pin
-> +            - 12 # S2MPG10_PCTRLSEL_TPU_EN2 - TPU_EN & ~AP_ACTIVE_N pins
-> +            - 13 # S2MPG10_PCTRLSEL_TCXO_ON - TCXO_ON pin
-> +            - 14 # S2MPG10_PCTRLSEL_TCXO_ON2 - TCXO_ON & ~AP_ACTIVE_N pi=
-ns
-> +
-> +          For S2MPG10 ldo20m, the following values are valid
-> +            - 0 # S2MPG10_PCTRLSEL_LDO20M_ON - always on
+On Sun, Jun 8, 2025 at 5:27=E2=80=AFPM Jonathan Cameron <jic23@kernel.org> =
+wrote:
+>
+> On Sun,  1 Jun 2025 17:21:32 +0000
+> Lothar Rubusch <l.rubusch@gmail.com> wrote:
+>
+> > Rework controlling measurement and standby of the sensor. Therefore,
+> > replace writing the register directly by encapsulating this and dealing
+> > with the return value in a separte function to enable and disable
+> > measurement. This will help to avoid redundant code in all locations
+> > where the sensor configuration needs to be adjusted, thus measurement w=
+ill
+> > be set to standby, in follow up patches.
+> >
+> > Further, reduce the control mask to only the measurement bit. The sleep=
+ bit
+> > actually controls a different behavior (not just putting the sensor to
+> > standby for configuration, but turning it into sleep mode) and it is no=
+t
+> > used so far. In consequence, there is no need to cover sleep bit and
+> > measurement with the same mask.
+> >
+> > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+> This is a good bit to have as a precursor patch (as you have done)
+> because it is refactoring the existing code.  It doesn't stand on it's
+> own though given for now there is only one caller, so I won't pick it up
+> until the patch that uses it is ready to go.
+>
 
-No, use standard regulator properties - regulator-always-on
+So, I'll leave this patch (in case I might refrase the commit message,
+and I hope this is ok). I'm going to merge [v4 02/11] [v4 05/11] and
+[v4 06/11] for a v5. Let me know if I got this wrong.
 
-
-> +            - 1 # S2MPG10_PCTRLSEL_LDO20M_EN_SFR - VLDO20M_EN & LDO20M_S=
-FR
-> +            - 2 # S2MPG10_PCTRLSEL_LDO20M_EN - VLDO20M_EN pin
-> +            - 3 # S2MPG10_PCTRLSEL_LDO20M_SFR - LDO20M_SFR in LDO_CTRL1 =
-register
-> +            - 4 # S2MPG10_PCTRLSEL_LDO20M_OFF - disable
-
-I don't think we allowed such property in the past. I don't get what is
-here the actual signal - you described registers in multiple places, not
-signals. Few of these duplicate standard properties, so this looks like
-exact copy of downstream which was doing exactly that way and that was
-exactly never upstreamed.
-
-
-> +
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        minimum: 0
-> +        maximum: 14
-> +
-> +      samsung,ext-control-gpios:
-
-enable-gpios
-
-
-> +        description:
-> +          For rails where external control is done via a GPIO, this opti=
-onal
-> +          property describes the GPIO line used.
-> +
-> +        maxItems: 1
-
-And this can be dropped.
-
-Best regards,
-Krzysztof
-
+> Jonathan
+>
+> > ---
+> >  drivers/iio/accel/adxl313.h      |  3 +--
+> >  drivers/iio/accel/adxl313_core.c | 10 +++++++---
+> >  2 files changed, 8 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/iio/accel/adxl313.h b/drivers/iio/accel/adxl313.h
+> > index fc937bdf83b6..9bf2facdbf87 100644
+> > --- a/drivers/iio/accel/adxl313.h
+> > +++ b/drivers/iio/accel/adxl313.h
+> > @@ -36,8 +36,7 @@
+> >  #define ADXL313_RATE_MSK             GENMASK(3, 0)
+> >  #define ADXL313_RATE_BASE            6
+> >
+> > -#define ADXL313_POWER_CTL_MSK                GENMASK(3, 2)
+> > -#define ADXL313_MEASUREMENT_MODE     BIT(3)
+> > +#define ADXL313_POWER_CTL_MSK                BIT(3)
+> >
+> >  #define ADXL313_RANGE_MSK            GENMASK(1, 0)
+> >  #define ADXL313_RANGE_MAX            3
+> > diff --git a/drivers/iio/accel/adxl313_core.c b/drivers/iio/accel/adxl3=
+13_core.c
+> > index 0c893c286017..6170c9daa30f 100644
+> > --- a/drivers/iio/accel/adxl313_core.c
+> > +++ b/drivers/iio/accel/adxl313_core.c
+> > @@ -63,6 +63,12 @@ bool adxl313_is_volatile_reg(struct device *dev, uns=
+igned int reg)
+> >  }
+> >  EXPORT_SYMBOL_NS_GPL(adxl313_is_volatile_reg, "IIO_ADXL313");
+> >
+> > +static int adxl313_set_measure_en(struct adxl313_data *data, bool en)
+> > +{
+> > +     return regmap_assign_bits(data->regmap, ADXL313_REG_POWER_CTL,
+> > +                               ADXL313_POWER_CTL_MSK, en);
+> > +}
+> > +
+> >  static int adxl312_check_id(struct device *dev,
+> >                           struct adxl313_data *data)
+> >  {
+> > @@ -410,9 +416,7 @@ static int adxl313_setup(struct device *dev, struct=
+ adxl313_data *data,
+> >       }
+> >
+> >       /* Enables measurement mode */
+> > -     return regmap_update_bits(data->regmap, ADXL313_REG_POWER_CTL,
+> > -                               ADXL313_POWER_CTL_MSK,
+> > -                               ADXL313_MEASUREMENT_MODE);
+> > +     return adxl313_set_measure_en(data, true);
+> >  }
+> >
+> >  /**
+>
