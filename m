@@ -1,76 +1,197 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731C6C133
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:47:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D861AAC9
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:47:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749624423; cv=none; b=DJGmMSYPKcLPeZCbijn7FbhU4lh+nfccY/0rtWpQQ4pyOK3gFh8SGjbTyZsDxycxiuH2hB509dnPS8FvHs7RU2q+XU2eycom+IMyhwDHXpF5W1InU0gofeF7hXM09me1lf7O6a0vHNb2Mv26FBMGqh9WuRx9Z95KdMd90s+oSVE=
+	t=1749624442; cv=none; b=PawQH1pWZKJ6xFavniazScy3V56Zla/daR9bCso460FL+weHGKkgdj0PtAFKsdQ+Lep+hUOaRHoDaHl/xIVR8352hI6KtVMiNzwwszcBYNduiFNKTvUSCzB42JtPORrzGjKLNioGVapjbzmD+cifvr8b6MroRPy65JZ8EB+2JQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749624423; c=relaxed/simple;
-	bh=PwJ8H9eZhuNLJmD0SmVtkG+wVoyXdS2gv+ziwXoJL+4=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=mJQ1tm2UpMnvw08UC6XGmhK0Y8tk5jjmbXVWXZt07NQwaSX41HDXhEguC3Hx4k2PdAY/DZ579MG0+F7DtHaEZJoPaJZFKc3asgpW+dWxLEYiPqkKLqKEKOTtAUb2eJgLtD4JXQHqZ42aWGYfcsuAv0AD2DL4pUPpeDgmjsmVqEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3ddc65f95b8so137670175ab.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 23:47:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749624421; x=1750229221;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MewqcPGn/QokpfcEkkNeQEgd0jbUGHA58K19z6AhSKM=;
-        b=vBzOV8OXrGcj3b5UxDy04oJQnCV+VEK1H+/0sAp+ckR3P2Llxh/PLpHJmY34gsG53z
-         DaTQ4TlW3wnAno0OoltnfJWMxs7IZiPno+3T5CMa/TarisYuD9X8dJ69dU6Su5eusKMJ
-         FRuYaubc6sTHeVytAl5wHmQ0rczpQgzlw39GaloQ4opH5WDLIfnffzyBcPT5NPk36H1V
-         b39dGkZ9SGJcr+omrB91QagREYTyb15JDzgs6Qyoqt+q5YWN8+wQH8wmuaS/eNmk9Jde
-         SUpgn2YKkUDL5uDwsnVOarXY5dgve6zNYzRpQFwtY1VpGHQS+m9g9GPhmZFKOaWyUAom
-         UrKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW1lLVRaHMzM/9gYlnvz25Z4OuAcM12qQBjID+easNZCHWzdZXiFF2Jx9d1OqY4VoALKa1WVB4PdVW6jBY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwspvWmBFdAeodqTYJl/iD9e76FCOIPnHEuFbW+pRbOUEBjVYJc
-	Y8RArAKQs5301yWrszET9p4yu2ptBTdY7D9S/3lPG1kilMsnK4wTCKRGuGi1skMxnH76ceYgkbH
-	JGEHvlwUGIPW8trkP87NLVy2JF4ashVo9Wfc0QCcKYogfHTSueimICxBcoj0=
-X-Google-Smtp-Source: AGHT+IEU0X6hgxJuMlbG52LfRb7xkLAfxhgoWO2FaYvbH2006dQ0XfZLHXNKlTM6m7pa1LMgOPpaWC0xHZvEdX/HposVl04bZF/P
+	s=arc-20240116; t=1749624442; c=relaxed/simple;
+	bh=Y7drl0N8DpxbEGHn/GNhO4IXTOkaEABM7Sc5vcplQJc=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=EYuyOaHKHk6K1x+8IP0oiiC9fxgCp6eHqp8XEodsT/+PY6hLDgj6dZB7d9wuxcgqWpZ1fLiDkYOoLlgP5tzxCgytRie3rgmP8iaabQ82WU8YhClatO4CKYwHGBMAZjdAwHsPJ1PgOrvP3rbsTAn+Ob3hDiuuSMbtwsH0+0WHpek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mmpf0N/j; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mmpf0N/j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1645C4CEEE;
+	Wed, 11 Jun 2025 06:47:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749624440;
+	bh=Y7drl0N8DpxbEGHn/GNhO4IXTOkaEABM7Sc5vcplQJc=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=Mmpf0N/jNItTtSVV77cphUJ/VJl9iiHKOY9t1mlUoEpfBGhZ6qc2f1NcxprXCXQWH
+	 Uxitl070VC7uObSKvmZD/AEOEHLnpJVjplpq1CqzRlf0/chl9ubs0lWxp47D1Cyzss
+	 ly/OcVZJOM8yLN8Y15Aqxx0qNCNxFRgp+4jXSghZybMS1JaT8F7cFTbEaOtrPAXuUT
+	 eBZsA7/MdZop6TmaK9MlMik7tWMVU1l3u2hYdc4Eyp6yGowi2dCv6dunvNKm3CvNF+
+	 xVqfhi4CZqqc3zPM96F7u4uxc2ExkGc6KNkiixQH5hnyAeQ5RztRYEn35r+WVRT4S1
+	 Fja9ZOqLe1IBw==
+Message-ID: <c36ab955-c8db-4a8b-a9d0-f07b5f426c3f@kernel.org>
+Date: Wed, 11 Jun 2025 14:47:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1807:b0:3dd:cdea:8f85 with SMTP id
- e9e14a558f8ab-3ddf4300c5cmr22610735ab.20.1749624421733; Tue, 10 Jun 2025
- 23:47:01 -0700 (PDT)
-Date: Tue, 10 Jun 2025 23:47:01 -0700
-In-Reply-To: <68488453.a70a0220.27c366.0068.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68492665.050a0220.33aa0e.0366.GAE@google.com>
-Subject: Re: [syzbot] [bcachefs?] divide error in bch2_sb_members_v2_to_text
-From: syzbot <syzbot+7c8101d4d0ba2eb511d7@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Cc: chao@kernel.org, Jaegeuk Kim <jaegeuk@kernel.org>,
+ Zhiguo Niu <zhiguo.niu@unisoc.com>, linux-f2fs-devel@lists.sourceforge.net,
+ linux-kernel@vger.kernel.org, ke.wang@unisoc.com, Hao_hao.Wang@unisoc.com,
+ baocong.liu@unisoc.com
+Subject: Re: [PATCH v3] f2fs: compress: fix UAF of f2fs_inode_info in
+ f2fs_free_dic
+To: Zhiguo Niu <niuzhiguo84@gmail.com>
+References: <1749107920-17958-1-git-send-email-zhiguo.niu@unisoc.com>
+ <aEhYfYrknbNzT8Or@google.com>
+ <5c1da066-0c76-42f4-8c46-a99f60a900bf@kernel.org>
+ <CAHJ8P3LNrSRT8hfbr=x5HvkQRGBSTpftPbd7NrfUdO-2LgSLfg@mail.gmail.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <CAHJ8P3LNrSRT8hfbr=x5HvkQRGBSTpftPbd7NrfUdO-2LgSLfg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-syzbot has bisected this issue to:
+On 6/11/25 14:41, Zhiguo Niu wrote:
+> Chao Yu <chao@kernel.org> 于2025年6月11日周三 14:07写道：
+>>
+>> On 6/11/25 00:08, Jaegeuk Kim wrote:
+>>> Hi Zhiguo,
+>>>
+>>> This patch causes CPU hang when running fsstress on compressed/non-compressed
+>>> files. Please check.
+>>
+>> Oh, seems it may cause below deadlock:
+>>
+>> CPU0
+>> process A
+>> - spin_lock(i_lock)
+>> software IRQ
+>> - end_io
+>>  - igrab
+>>   - spin_lock(i_lock)
+>>
+>> Thanks,
+> Hi Chao,
+> Thanks for pointing this out.
+> I have tested this patch locally about some basic cases before submission.
+> So it seems that should use the following method  to solve this problem?
+> " store i_compress_algorithm/sbi in dic to avoid inode access?"
 
-commit c5ae261c8095a37174e17eb13c5485cbd1b3bb20
-Author: Kent Overstreet <kent.overstreet@linux.dev>
-Date:   Sun Jun 8 15:31:23 2025 +0000
+Zhiguo,
 
-    bcachefs: Don't trust sb->nr_devices in members_to_text()
+Yeah, I guess so.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10c319d4580000
-start commit:   b27cc623e01b Add linux-next specific files for 20250610
-git tree:       linux-next
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=12c319d4580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=14c319d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=846e731334efc0f8
-dashboard link: https://syzkaller.appspot.com/bug?extid=7c8101d4d0ba2eb511d7
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=175a260c580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1129e9d4580000
+Thanks,
 
-Reported-by: syzbot+7c8101d4d0ba2eb511d7@syzkaller.appspotmail.com
-Fixes: c5ae261c8095 ("bcachefs: Don't trust sb->nr_devices in members_to_text()")
+> thanks！
+> 
+> 
+>>
+>>>
+>>> On 06/05, Zhiguo Niu wrote:
+>>>> The decompress_io_ctx may be released asynchronously after
+>>>> I/O completion. If this file is deleted immediately after read,
+>>>> and the kworker of processing post_read_wq has not been executed yet
+>>>> due to high workloads, It is possible that the inode(f2fs_inode_info)
+>>>> is evicted and freed before it is used f2fs_free_dic.
+>>>>
+>>>>     The UAF case as below:
+>>>>     Thread A                                      Thread B
+>>>>     - f2fs_decompress_end_io
+>>>>      - f2fs_put_dic
+>>>>       - queue_work
+>>>>         add free_dic work to post_read_wq
+>>>>                                                    - do_unlink
+>>>>                                                     - iput
+>>>>                                                      - evict
+>>>>                                                       - call_rcu
+>>>>     This file is deleted after read.
+>>>>
+>>>>     Thread C                                 kworker to process post_read_wq
+>>>>     - rcu_do_batch
+>>>>      - f2fs_free_inode
+>>>>       - kmem_cache_free
+>>>>      inode is freed by rcu
+>>>>                                              - process_scheduled_works
+>>>>                                               - f2fs_late_free_dic
+>>>>                                                - f2fs_free_dic
+>>>>                                                 - f2fs_release_decomp_mem
+>>>>                                       read (dic->inode)->i_compress_algorithm
+>>>>
+>>>> This patch use igrab before f2fs_free_dic and iput after free the dic when dic free
+>>>> action is done by kworker.
+>>>>
+>>>> Cc: Daeho Jeong <daehojeong@google.com>
+>>>> Fixes: bff139b49d9f ("f2fs: handle decompress only post processing in softirq")
+>>>> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+>>>> Signed-off-by: Baocong Liu <baocong.liu@unisoc.com>
+>>>> ---
+>>>> v3: use igrab to replace __iget
+>>>> v2: use __iget/iput function
+>>>> ---
+>>>>  fs/f2fs/compress.c | 14 +++++++++-----
+>>>>  1 file changed, 9 insertions(+), 5 deletions(-)
+>>>>
+>>>> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+>>>> index b3c1df9..729ad16 100644
+>>>> --- a/fs/f2fs/compress.c
+>>>> +++ b/fs/f2fs/compress.c
+>>>> @@ -1687,7 +1687,7 @@ static void f2fs_release_decomp_mem(struct decompress_io_ctx *dic,
+>>>>  }
+>>>>
+>>>>  static void f2fs_free_dic(struct decompress_io_ctx *dic,
+>>>> -            bool bypass_destroy_callback);
+>>>> +            bool bypass_destroy_callback, bool late_free);
+>>>>
+>>>>  struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc)
+>>>>  {
+>>>> @@ -1743,12 +1743,12 @@ struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc)
+>>>>      return dic;
+>>>>
+>>>>  out_free:
+>>>> -    f2fs_free_dic(dic, true);
+>>>> +    f2fs_free_dic(dic, true, false);
+>>>>      return ERR_PTR(ret);
+>>>>  }
+>>>>
+>>>>  static void f2fs_free_dic(struct decompress_io_ctx *dic,
+>>>> -            bool bypass_destroy_callback)
+>>>> +            bool bypass_destroy_callback, bool late_free)
+>>>>  {
+>>>>      int i;
+>>>>
+>>>> @@ -1775,6 +1775,8 @@ static void f2fs_free_dic(struct decompress_io_ctx *dic,
+>>>>      }
+>>>>
+>>>>      page_array_free(dic->inode, dic->rpages, dic->nr_rpages);
+>>>> +    if (late_free)
+>>>> +            iput(dic->inode);
+>>>>      kmem_cache_free(dic_entry_slab, dic);
+>>>>  }
+>>>>
+>>>> @@ -1783,16 +1785,18 @@ static void f2fs_late_free_dic(struct work_struct *work)
+>>>>      struct decompress_io_ctx *dic =
+>>>>              container_of(work, struct decompress_io_ctx, free_work);
+>>>>
+>>>> -    f2fs_free_dic(dic, false);
+>>>> +    f2fs_free_dic(dic, false, true);
+>>>>  }
+>>>>
+>>>>  static void f2fs_put_dic(struct decompress_io_ctx *dic, bool in_task)
+>>>>  {
+>>>>      if (refcount_dec_and_test(&dic->refcnt)) {
+>>>>              if (in_task) {
+>>>> -                    f2fs_free_dic(dic, false);
+>>>> +                    f2fs_free_dic(dic, false, false);
+>>>>              } else {
+>>>>                      INIT_WORK(&dic->free_work, f2fs_late_free_dic);
+>>>> +                    /* use igrab to avoid inode is evicted simultaneously */
+>>>> +                    f2fs_bug_on(F2FS_I_SB(dic->inode), !igrab(dic->inode));
+>>>>                      queue_work(F2FS_I_SB(dic->inode)->post_read_wq,
+>>>>                                      &dic->free_work);
+>>>>              }
+>>>> --
+>>>> 1.9.1
+>>
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
