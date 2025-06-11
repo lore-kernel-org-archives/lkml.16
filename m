@@ -1,273 +1,93 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from sonic307-4.consmr.mail.sg3.yahoo.com (sonic307-4.consmr.mail.sg3.yahoo.com [106.10.241.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE8B22CBD5
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 22:15:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2529024A06E
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 22:15:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=106.10.241.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749680127; cv=none; b=HM3W6n+rHNvIasRSm54DAlOVwPbLThC1oX6m00t/z/ojeh9sS18FAw8uAaWmBuX/rClNXUtopW0njFxcOhmZnxrweXWWlkqeAwmunSqJPa29L7Q9eUpqRnb01vK5CuOQocKrreKs4ZnykIGKDOKh/WzKMt0TPH3/Zrqg8eaS/sA=
+	t=1749680134; cv=none; b=E1A7t+d6DdKiq4KypGIRWPf07bAdo0fKDH6Ssy07R/ihu9B1mKIC3aquj/jxEdCRPCsW4zOP9W5+dxM14pGHD1VB+r3MzAaq4DKu02BzmC3UHZMifTPvVF3+YP3TRfQOkPpbXuMOkEXlSJJ8krNLddz/JQM3FiWnPycfJHbPOxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749680127; c=relaxed/simple;
-	bh=NDHUMEVtpT8BBqHlqxN8t5Rwk4C3RoH4vobOKCzjG+8=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=r52SHJ1AKhKHiX5X2OUgM13csHvvfhfrjmFRXzxJ1SrtI/XFkA7J6DReNi0BIQCbv7oCiUPQC9nVSvI4o2zKXSFWKHU4RJpGZsKho8kRWnutQ6SAFSH2JDIq6e9cUmvWKdMrF2aCR67ElWSv41EgOPspoiwT/ldbCEINIAUyFb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VYvJ+5ry; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1749680134; c=relaxed/simple;
+	bh=/0Vdo2n4vBWv00iFSktmhK52XeKrbW6rz6XK2gUH1Ws=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=OccR6cASx8+k564qVapf1fjEXZQkEMCiFiNRJ2O2wzBuiJJVrOGThpcGx8OWl802KoQmkhqZzeKhXjkKDmgzqM5ZH4/Gnx1OgNlpu5dQXRJwPXK7M0Yp33QxYdZirziQB6gQJnBtJXWFJGmTxQ35EhinfvkLVDrpXi/yFxGBQIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=Riee2BbW; arc=none smtp.client-ip=106.10.241.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VYvJ+5ry"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-74880a02689so58230b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:15:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749680125; x=1750284925; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=PK+kHs9R+YEyDeaq/iOtt1yi0JG1jfvYaQ+pZdNqmUc=;
-        b=VYvJ+5ryzCpYE08JNQpsmyxhbf7ljA1voUxugK0zjEywI6vy1hbZpTvG1Qqh166lOt
-         ErfA6Ww9s+2RJdqU5dNEAAgm2rUh04cKCSTjDyzrSWluwqLKz9XLW3M0iuxArYSolKyp
-         wkN4Ym7PI/vMi+wc5i5fpHRpdvf8FREnZs4fGZx9prP/Yzd/C1r/SfbJs5kUVOifHdWX
-         DMH33DQupFN4U8nY5wje0lzyTNmL4zsv0JkdOzPmxVkMFJS/Wk96qcFkcLZOtDmzMTyo
-         c6KzOP6OVIapZmGdPxU9IWiZe+OvjfUxi8VUpeCALcXfaJEIY6cGhxOOFJNvUtLjFs2y
-         7j4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749680125; x=1750284925;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PK+kHs9R+YEyDeaq/iOtt1yi0JG1jfvYaQ+pZdNqmUc=;
-        b=inf40Y8c+rxfygbb1QRbocHTpi2F91yJMfNqkoA3/RJ2ufZmil9MXXrTPSOA/mNcNT
-         /JCfKQcN58zZgXhbcG1wz7HjFxIjOclUmwz03pFg0BfxvcpYArV9pQ99DSlpNEhd20un
-         w9lqWc36nXR3luHtg3yfkt1xFRADcGFWTxQwBALLHbD1sh2CMttEpmV7zVh1T3uO1hZ4
-         P9RYkoFaRSVEo/yXgrsE4JJQYg+z5P9kT6Hool5gme4rl2QwWp0RIh8nVxRy99Jw/jPX
-         W4yb5HSLmVlMKVaLKDDSSECTY8CoiZMd9IZD/e3OzbW25N0+bTrRRxl/7j6B7QGYBCDE
-         MTpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX2bB7Eyq1QtK3SZoYTiJ5Rl43yY6HBAKEp2R4EZJWwX5LQI3I/3tpF6iY6lQqZCP6ZvZzsfR6/kfZ+Na8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqbRb6WiURcFN0YXdvlBkfphtYXjW94wbQWwpT8iYZcwwudOF/
-	BVKDymLVMi4Jsc9gXcfGU35bRHr+tBg5zLklxSCwDCEnXVasipDMde/LakQZD7n07Tytp9U9Aif
-	oP+hkghqmTQ==
-X-Google-Smtp-Source: AGHT+IE9tzEHAMiNyuTwW377rgcB9bsvzp1uKKQSjK3foDoLgEGlRVU8n4sUzGc8Ye3JTVjB6ogwLs0mckA0
-X-Received: from pgh13.prod.google.com ([2002:a05:6a02:4e0d:b0:b2f:5aa2:87c])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:9186:b0:218:96ad:720d
- with SMTP id adf61e73a8af0-21f865bd1bamr8018774637.1.1749680124980; Wed, 11
- Jun 2025 15:15:24 -0700 (PDT)
-Date: Wed, 11 Jun 2025 15:15:21 -0700
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="Riee2BbW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1749680131; bh=Rn5w/P+M1tuc2960ReqD3yHmxZwhUR9NzbcqGhHPW7M=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=Riee2BbWYU88sdouwcgo3FSFNQzx8/AXn60d3WRUe6AThtVZxcihM/L6j7VjardPW6kPrjfFcTkJWwfGyLBkG+o5cxMTjpGkWEz1ru/ammcr4sWkW3zZ4//yeds90v/yctl/aALBscH2CGz+3jumBPwJVyGrsbZagiULY445MWsJ/Ohy4LQg3CA8dSljEKteV/i24VErpWvFNxegD1YTKe55FVcJr9rDS2g3CpINNyz6nR5TT5b7v/Q5llMVuBXeZx/b2D1MfEBka9WEvGS0MVx47kjxLyAnR6KOWVLmELW6L/pb9CKXiGEhGz2X3zWSqsphsQoEIGR0GTngf7suyA==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1749680131; bh=GTJ2tCSICHqtJpc2B4sx31IAsKSfnDkkMnALKhDeV0H=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=qw+sQpoNccd9Rl3hkhaK0tRk+t7MfWDXMC4+3Y/OovCVBInH3Hussr18nvmcd7JZjNBOA1b2vv8Ei8w7vKN9LJn4pIHH9h6Bl9Odrwq0rY+UgPZ5bvlkxImc/IQmfhK4Bz9Zl9Mr32bnpiEY2BQmWw+5qbJGqlJbmHU5c/yjZ96CGkA4a7c8DOq+cyEaYk+yJ3FBjFoO5U/xuRGju78ROQ+J5P9Ohx3wRQgMZHHa8PYxOdfcoO901HFRy0jrueX4CxARPdXNF2zcgDspuMXggp5gEa2eC0elW6q11IFEgTT3gkedeml/drbbBUIM86OD5RZqyPxk6kfBhJRGJobkcQ==
+X-YMail-OSG: a.2tuGwVM1kfTLH6cec8WQUaPjVAFMdGc_qj0obGbzt8ygiI76p6JNr6G_t7TNU
+ xGuN5cd9OoP7wXqGpGsp9X9ZpLcBbjDfzYqVBz_QHh9IE.29GFtDVbvjEnCdmMCkK6Z_LV1M9lY7
+ Cm1dWqolJibkZSHRbGeqWxPJNL.6m2zdGykka4rcqAlejOlA3IPABXmixc_Ea0BIMYUgWINPBok7
+ Fcm_ugku.30z8XXilYtUqN4J7cDq0dTBPS8QomNEfi5GupqZmQmQJGxUin2BD5RKQYKo7G3hsd7g
+ IAldcfyTWeNTQWAorNfklhHBAx8jASU7j0.JmmJyUd35cpiJNjx06DnLBVtPCrnx.xfz5b2GnaYO
+ VOAhw955azmutM.vZJmUA99CUDIE_Oa6FdFGgcuRviNQH4wx.HBZCXAHV7QUNArgzC4NEV6vbvT6
+ upOpgG_iT4.g8VhnAsXpyEDAcM8Ml3ua0qlSyifZRJCEheSYAoB2V8f8LLpoO9iVxOzwJNd6i3WN
+ oqQNq6Cm9C.7x8bSseYohwx4FEx6tf0ZPEr2G3Hra.QHeMpxBzDKa1VsskgsDjW9oPY46y3dysxq
+ TQWRzYC_mh3PX._ac7a3LqI2bn1zsI.0uuHC9ZupasHF_PGCcROdrcfXGqvgvDapl_7z9J7Jka0h
+ 30YCshIZCE2_88vQ4cri5LLBnKE8FB3S6ck0vlmk0NlFqB3mdGFdyLrUrZFJaHH_llf91s3MiI6h
+ i1BpwNaZXpZvHJ2pI8wncO_cSHcSloQFeYSO2JD3Vp6OGZGtMWFA._mMxMUOLNlTN3Cv7bkNpvmI
+ GdolRtY0kBO723j.995iZpv7h4FTmlTYL8.I5MlI8zs_RoToFlxG4cr_zvfqZze6plhPHOpiOY90
+ Lv_gaJgvKj7IxBir8kSh5hcSweRV8V5Niq8Y1x08.Yp7C1D0YUTMNhDKFHxKmQbEFM1d6emeNRm6
+ d51o2rlSNmd0afFhiFzq8nQH62blgpT2gYU.I7IRvxW3npQLWPrI6NmKwuJbBwx.bzAQAIureylV
+ ptwFv1ziUygDfS001u4EU9UiqCp6rqCYRB4epJ4hPm0.DXBksKGhvsGj9vcv76lJo_.HjwXswVON
+ lTYM6tXkDvK0PEnLH1OjFcUOAjMav6hMN1eMp25y_C89inUF2WNAIOLz7EBG87IzWBtp8CHqMiiF
+ UriGno6HFimBoQ5VTnX9PtJhFoiNVD8TY.NJeAF73WxRoEgSDW8_PJCvhvi8jw.eg.e0629Zj1Yq
+ 4OJt7g8tmVqytzi0kc1tN9gstyWPI3Z8MNTIqI6seWCu66AWgmSnwk42YOzs.ryZ5FFhhlVc9WTc
+ 6BUHY3jALbge7ezobBp60qb1oZS2CnBDYHAsyA_UgWd5LHf7L2gGU_875oFZRm8qDLKhKJ_4qsQ4
+ bVvnM0Etzinzlqjixt2YjHfrNPNJjb68gFoIpyrI6Bp71pra9P9afraiYnkR5mjuwF9chVErmN7y
+ uGDV7nQ6U.bZmbqurg1Dtwh9jBswdrDx7Kua0IFGqUGYKmAA2OezdA.8whW5TaD85SI058LICV.A
+ 6tloNepag8tY4m9VAvOCm9QP08JSYGacFwlvbXbyxdvdz18vNF6zAcMV.kYaoCDPyZeCQHO0Dvbb
+ mK1R0dyhDGsBd7Wpqt0mC1.T1RqAWfnK05ulpVi3j6u8hB5PFuMMrWbIA73p8lczP5sdkC.oXueI
+ kYZeHAYiVsPAPUkWRJscLs3sdUhm2nj_EfV5hrPSsjLZqwVjMXvRVZb1UJAj6S10U4VTBIniv76c
+ 7xC5VUtYn0wfHKq8P1T5sPa6BDFjoJ_YHgFJrY5Xn4dFuIphUmF00ZcexwuxJ.uLK4EwE3PQ22Q0
+ VUM2Lm7n8Sr75gmSkrpFw5yKA7Tyi2go4dysvxqvqFLaN7tywT5v9zub3OXfFrxL4SvL5ixv0kBW
+ Ss5guBVKB8w_wxHsrJRA6Hhzky1Z7_LMlcHHEg2NRw33jPxt2O3vrQwV7mR7epJwfXAI..d80x8c
+ CqPoh06oKAcpiLQvpcBwambQJGiSN3SNGVGsBrJmlvtTai2OFbc720uadlZC.u2qwOWPiWKTOBBX
+ WQgE.DZb_.KMDL0vOKRduPadta6G9QAIuj1ImOqFrmJZsOdJCRfE_L.CiwZR9z91TZKklo3LI_Vn
+ WqEanhCjtAZwkRGAN1mV0ACe6bVodKf97_FU4DydmxTI8rodceS.A.30HsqG79WmQTW6EP4l0Xho
+ jBR0ry4.R9tv2_VjeSgwIGDNZJq_lr3Yziv_mhHn15vZiLUoo_fxgSVU9h176mEgnoQUIjB4IPxk
+ 0aEP80XEW8CLsfoRTCFwjnn48kji2yUvip.MZ_oQvz9pcIoxWNdU-
+X-Sonic-MF: <sumanth.gavini@yahoo.com>
+X-Sonic-ID: d3e8ac7e-f1a1-4672-bbca-d7271f1c36cb
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic307.consmr.mail.sg3.yahoo.com with HTTP; Wed, 11 Jun 2025 22:15:31 +0000
+Received: by hermes--production-ne1-9495dc4d7-psbrp (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 2ed6d631eec321540bbe8aaca754edee;
+          Wed, 11 Jun 2025 21:53:10 +0000 (UTC)
+From: Sumanth Gavini <sumanth.gavini@yahoo.com>
+To: sumanth.gavini@yahoo.com
+Cc: arjan@linux.intel.com,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux@dominikbrodowski.net,
+	rjw@rjwysocki.net,
+	skhan@linuxfoundation.org,
+	stern@rowland.harvard.edu
+Subject: [PATCH v2] docs: ABI: Fix "diasble" to "disable"
+Date: Wed, 11 Jun 2025 16:53:06 -0500
+Message-ID: <20250611215306.2989590-1-sumanth.gavini@yahoo.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250523220238.455718-1-sumanth.gavini@yahoo.com>
+References: <20250523220238.455718-1-sumanth.gavini@yahoo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-Message-ID: <20250611221521.722045-1-irogers@google.com>
-Subject: [PATCH v3] perf debug: Add function symbols to dump_stack
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Howard Chu <howardchu95@gmail.com>, Yicong Yang <yangyicong@hisilicon.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Symbolize stack traces by creating a live machine. Add this
-functionality to dump_stack and switch dump_stack users to use
-it. Switch TUI to use it. Add stack traces to the child test function
-which can be useful to diagnose blocked code.
+Hi Shuah,
 
-Example output:
-```
-  8: PERF_RECORD_* events & perf_sample fields                       : Running (1 active)
-^C
-Signal (2) while running tests.
-Terminating tests with the same signal
-Internal test harness failure. Completing any started tests:
-:  8: PERF_RECORD_* events & perf_sample fields:
+Just following up on my patch submitted on 2025-05-23 22:02  with subject "[[PATCH v2] docs: ABI: Fix "diasble" to "disable"]".
 
----- unexpected signal (2) ----
-    #0 0x5590fb6209b6 in child_test_sig_handler builtin-test.c:243
-    #1 0x7f4a91e49e20 in __restore_rt libc_sigaction.c:0
-    #2 0x7f4a91ee4f33 in clock_nanosleep@GLIBC_2.2.5 clock_nanosleep.c:71
-    #3 0x7f4a91ef0333 in __nanosleep nanosleep.c:26
-    #4 0x7f4a91f01f68 in __sleep sleep.c:55
-    #5 0x5590fb638c63 in test__PERF_RECORD perf-record.c:295
-    #6 0x5590fb620b43 in run_test_child builtin-test.c:269
-    #7 0x5590fb5b83ab in start_command run-command.c:127
-    #8 0x5590fb621572 in start_test builtin-test.c:467
-    #9 0x5590fb621a47 in __cmd_test builtin-test.c:573
-    #10 0x5590fb6225ea in cmd_test builtin-test.c:775
-    #11 0x5590fb5a9099 in run_builtin perf.c:351
-    #12 0x5590fb5a9340 in handle_internal_command perf.c:404
-    #13 0x5590fb5a9499 in run_argv perf.c:451
-    #14 0x5590fb5a97e2 in main perf.c:558
-    #15 0x7f4a91e33d68 in __libc_start_call_main libc_start_call_main.h:74
-    #16 0x7f4a91e33e25 in __libc_start_main@@GLIBC_2.34 libc-start.c:128
-    #17 0x5590fb4fd6d1 in _start perf[436d1]
-```
+Original message: https://lore.kernel.org/all/20250523220238.455718-1-sumanth.gavini@yahoo.com/
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/builtin-test.c | 15 +++++++-
- tools/perf/ui/tui/setup.c       |  2 +-
- tools/perf/util/debug.c         | 64 +++++++++++++++++++++++++++------
- tools/perf/util/debug.h         |  1 +
- 4 files changed, 69 insertions(+), 13 deletions(-)
+Would you have any feedback on this change? I'd be happy to address any comments or concerns.
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 45d3d8b3317a..80375ca39a37 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -6,6 +6,9 @@
-  */
- #include <fcntl.h>
- #include <errno.h>
-+#ifdef HAVE_BACKTRACE_SUPPORT
-+#include <execinfo.h>
-+#endif
- #include <poll.h>
- #include <unistd.h>
- #include <setjmp.h>
-@@ -231,6 +234,16 @@ static jmp_buf run_test_jmp_buf;
- 
- static void child_test_sig_handler(int sig)
- {
-+#ifdef HAVE_BACKTRACE_SUPPORT
-+	void *stackdump[32];
-+	size_t stackdump_size;
-+#endif
-+
-+	fprintf(stderr, "\n---- unexpected signal (%d) ----\n", sig);
-+#ifdef HAVE_BACKTRACE_SUPPORT
-+	stackdump_size = backtrace(stackdump, ARRAY_SIZE(stackdump));
-+	__dump_stack(stderr, stackdump, stackdump_size);
-+#endif
- 	siglongjmp(run_test_jmp_buf, sig);
- }
- 
-@@ -244,7 +257,7 @@ static int run_test_child(struct child_process *process)
- 
- 	err = sigsetjmp(run_test_jmp_buf, 1);
- 	if (err) {
--		fprintf(stderr, "\n---- unexpected signal (%d) ----\n", err);
-+		/* Received signal. */
- 		err = err > 0 ? -err : -1;
- 		goto err_out;
- 	}
-diff --git a/tools/perf/ui/tui/setup.c b/tools/perf/ui/tui/setup.c
-index 16c6eff4d241..022534eed68c 100644
---- a/tools/perf/ui/tui/setup.c
-+++ b/tools/perf/ui/tui/setup.c
-@@ -108,7 +108,7 @@ static void ui__signal_backtrace(int sig)
- 
- 	printf("-------- backtrace --------\n");
- 	size = backtrace(stackdump, ARRAY_SIZE(stackdump));
--	backtrace_symbols_fd(stackdump, size, STDOUT_FILENO);
-+	__dump_stack(stdout, stackdump, size);
- 
- 	exit(0);
- }
-diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
-index f9ef7d045c92..8987ac250079 100644
---- a/tools/perf/util/debug.c
-+++ b/tools/perf/util/debug.c
-@@ -14,11 +14,18 @@
- #ifdef HAVE_BACKTRACE_SUPPORT
- #include <execinfo.h>
- #endif
-+#include "addr_location.h"
- #include "color.h"
--#include "event.h"
- #include "debug.h"
-+#include "event.h"
-+#include "machine.h"
-+#include "map.h"
- #include "print_binary.h"
-+#include "srcline.h"
-+#include "symbol.h"
-+#include "synthetic-events.h"
- #include "target.h"
-+#include "thread.h"
- #include "trace-event.h"
- #include "ui/helpline.h"
- #include "ui/ui.h"
-@@ -298,21 +305,56 @@ void perf_debug_setup(void)
- 	libapi_set_print(pr_warning_wrapper, pr_warning_wrapper, pr_debug_wrapper);
- }
- 
-+void __dump_stack(FILE *file, void **stackdump, size_t stackdump_size)
-+{
-+	/* TODO: async safety. printf, malloc, etc. aren't safe inside a signal handler. */
-+	pid_t pid = getpid();
-+	struct machine *machine = machine__new_live(/*kernel_maps=*/false, pid);
-+	struct thread *thread = NULL;
-+
-+	if (machine)
-+		thread = machine__find_thread(machine, pid, pid);
-+
-+	if (!machine || !thread) {
-+		/*
-+		 * Backtrace functions are async signal safe. Fall back on them
-+		 * if machine/thread creation fails.
-+		 */
-+		backtrace_symbols_fd(stackdump, stackdump_size, fileno(file));
-+		machine__delete(machine);
-+		return;
-+	}
-+
-+	for (size_t i = 0; i < stackdump_size; i++) {
-+		struct addr_location al;
-+		u64 addr = (u64)stackdump[i];
-+
-+		addr_location__init(&al);
-+		if (!thread__find_map(thread, PERF_RECORD_MISC_USER, addr, &al))
-+			continue;
-+
-+		al.sym = map__find_symbol(al.map, al.addr);
-+		if (al.sym)
-+			fprintf(file, "    #%zd %p in %s ", i, stackdump[i], al.sym->name);
-+		else
-+			fprintf(file, "    #%zd %p ", i, stackdump[i]);
-+
-+		map__fprintf_srcline(al.map, al.addr, "", file);
-+		fprintf(file, "\n");
-+		addr_location__exit(&al);
-+	}
-+	thread__put(thread);
-+	machine__delete(machine);
-+}
-+
- /* Obtain a backtrace and print it to stdout. */
- #ifdef HAVE_BACKTRACE_SUPPORT
- void dump_stack(void)
- {
--	void *array[16];
--	size_t size = backtrace(array, ARRAY_SIZE(array));
--	char **strings = backtrace_symbols(array, size);
--	size_t i;
--
--	printf("Obtained %zd stack frames.\n", size);
--
--	for (i = 0; i < size; i++)
--		printf("%s\n", strings[i]);
-+	void *stackdump[32];
-+	size_t size = backtrace(stackdump, ARRAY_SIZE(stackdump));
- 
--	free(strings);
-+	__dump_stack(stdout, stackdump, size);
- }
- #else
- void dump_stack(void) {}
-diff --git a/tools/perf/util/debug.h b/tools/perf/util/debug.h
-index a4026d1fd6a3..6b737e195ce1 100644
---- a/tools/perf/util/debug.h
-+++ b/tools/perf/util/debug.h
-@@ -85,6 +85,7 @@ void debug_set_display_time(bool set);
- void perf_debug_setup(void);
- int perf_quiet_option(void);
- 
-+void __dump_stack(FILE *file, void **stackdump, size_t stackdump_size);
- void dump_stack(void);
- void sighandler_dump_stack(int sig);
- 
--- 
-2.50.0.rc1.591.g9c95f17f64-goog
+Thank you for your time and consideration.
 
+Best regards,
+Sumanth Gavini
