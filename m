@@ -1,128 +1,338 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB7A71DF970;
-	Wed, 11 Jun 2025 18:53:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB41622B8AB
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 18:53:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749668010; cv=none; b=A8Ts9zllufVgEAFPgxE3mImhCnZTzRLnyGAStQ7FNZfFa/QjuSzMtZex10FoAj683lQPHEO+cBJ3YWHfzOFOlW60EdpnHdJc1p8zqki2ooUuaXa3sVD9av8+/N09yP4bIPvLCHhA/0k753Cs+qRxqYOa39mIZN9EGngvH41clCk=
+	t=1749668020; cv=none; b=EpNnowrc5/QdV16FnK4LXGw3IcXfLITwTrrkFkjeAFxcgyyvQM+IofhlSydZDnv5KKOgDKmjga0FulctKMShPltn40gEh7H9Vr7YCvdL98X3dJV9oUB+sBor8FZL/hGpPusSSyrilBHEWTkwMbZvbUOuxSiOHoUxsBDCw/0bt/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749668010; c=relaxed/simple;
-	bh=K7MhSkF7SxF7ufllQxHFuRdtuvoj4RRa+0bILj4Fgf8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j5MKqOvzPGRTxsU1asQI1nec05tsUxfZtsUpbdzUAYv1a/rnbp8Bk3JRj+ivWML19Ww8GY+IZGh2y18NCRnPO/ujRouOxEqxNoQa7aoMyMKy5WsHX6GBvQMbhw45MBXuR/JK+x78G2oKiCLl6cVda8ADBpvDrkR96nc+vc3gZk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Sa+BkxyI; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749668020; c=relaxed/simple;
+	bh=6PhEVxny/pNtFQ59Y3RQZ7Fspzsg+hSD3GfWX/lMYGE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=GoilNZ3xq1AY60xiI0wp3E2qto0haHztTVnjX+JgEwJwVcQnFrgffsKUI6NTmNtha6SdKslExWA/5UrmJ/8fdkBdDcosFn8XGUh6WzPHLx7xcqm3ht19SfFArQhfyYIaxeUZEWjhBDB0ghHb68Hc6CWE3ncpHayfQG1F7NZO7fI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=XA7w2nDL; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sa+BkxyI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749668009; x=1781204009;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=K7MhSkF7SxF7ufllQxHFuRdtuvoj4RRa+0bILj4Fgf8=;
-  b=Sa+BkxyIvQkkGCI+pgKMS9PvZONrPcaDS8blFLHGICa7XgORdRGrFVcK
-   4keDZZualHmV56SIuUQD6DpIXr9rrVrvfhcj5sYIL3H6qcA9C/6nlBD6B
-   9E3MyCXMQW/p26zajQai9vPSo6oB7rxmBRZo22tOGRpA4xa9kF0FURKqv
-   QOLRMJt2knj4NT8r3eFBFu9LxY1kgBWQKXU2CoIwY0wxJh66SdfmZlLcQ
-   IB8RsoZJINpYgK6tcSMCjSGDSWJnlyvnjlH7w2Pe6qskaYnSR26mgJWKg
-   CQ2RJ2rz1u/33HzWHCBE+SFGgmvqe1Xg3RVDfgZQ/hsaaKyuXRehlHUe7
-   w==;
-X-CSE-ConnectionGUID: B8R67JbYS+yruamsA6hhnA==
-X-CSE-MsgGUID: elz9/HaJSU2lP4g7cH/RRg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="51922699"
-X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
-   d="scan'208";a="51922699"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 11:53:26 -0700
-X-CSE-ConnectionGUID: PYxOXzNfTgqTZiUkuPjeCQ==
-X-CSE-MsgGUID: hRtrYbu6RxGkWIfQ0FGYLA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
-   d="scan'208";a="147159241"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 11:53:26 -0700
-Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 9A45C20B5736;
-	Wed, 11 Jun 2025 11:53:24 -0700 (PDT)
-Message-ID: <d8c64a21-ed4e-4d37-8d4b-9d3a9857b7fd@linux.intel.com>
-Date: Wed, 11 Jun 2025 14:53:23 -0400
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="XA7w2nDL"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [perf] crashing bug in icl_update_topdown_event
-To: Vince Weaver <vincent.weaver@maine.edu>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>
-References: <352f0709-f026-cd45-e60c-60dfd97f73f3@maine.edu>
- <080706b6-ed21-540d-dfae-ae27d130d796@maine.edu>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <080706b6-ed21-540d-dfae-ae27d130d796@maine.edu>
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1749668005;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=z9Ngc8BFLZcajbvkbgoSnpknnsO3kDOod4k2hOKAQ5I=;
+	b=XA7w2nDLbTvEx2DxApU0fK4nBiU8wSbr+hOWKcheZi+I5vL2p1tRMzmQ4zETvZarA30gX9
+	A7nxAFeKZUHAegbKYh65W3CkhfCs5WkzYBbseRoWNJOXFtl0UENPifpx4MIzxju4WptBDV
+	EjC3t+hQfz4+Rbi7ml/qrb3IlLwssRRcNfOiDXiWoZgDELyVZ8+dtYuDfsFeaJLs4MfPi9
+	o+AqRrq36nZpBznuXub2sp4sMGTSe6EtAljk7xZi5U2RzZUuMS4FkpgB528/Gxlk/Rc/QO
+	Cg8T/L1ZkcfKUHKQL0EhF8b/XB4lfoKqhsho4z1wdp94O/VwLBTPuhtuFokDnQ==
+Content-Type: multipart/signed;
+ boundary=a2b9797885f3d11a998329b426c25f7c213f5b963f86d455ce2a3ec162a6;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Wed, 11 Jun 2025 20:53:17 +0200
+Message-Id: <DAJXJHLY2ITB.3IBN23DX0RO4Z@cknow.org>
+Cc: <linux-kernel@vger.kernel.org>, "Ingo Franzki" <ifranzki@linux.ibm.com>
+Subject: Re: [PATCH] crypto: testmgr - reinstate kconfig support for fast
+ tests only
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Diederik de Haas" <didi.debian@cknow.org>
+To: "Eric Biggers" <ebiggers@kernel.org>, <linux-crypto@vger.kernel.org>,
+ "Herbert Xu" <herbert@gondor.apana.org.au>
+References: <20250611175525.42516-1-ebiggers@kernel.org>
+In-Reply-To: <20250611175525.42516-1-ebiggers@kernel.org>
+X-Migadu-Flow: FLOW_OUT
+
+--a2b9797885f3d11a998329b426c25f7c213f5b963f86d455ce2a3ec162a6
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+
+I was about to respond to your reply, but I guess this may be a better
+fit for it. The TL;DR: version is this:
+
+If you think distros shouldn't enable it, as you initially clearly
+described and it seems to me you still think so, the right thing for
+distros to do, is to disable those test. Which in turn means the fast
+tests should not be reinstated (?).
+
+On Wed Jun 11, 2025 at 7:55 PM CEST, Eric Biggers wrote:
+> From: Eric Biggers <ebiggers@google.com>
+>
+> Commit 698de822780f ("crypto: testmgr - make it easier to enable the
+> full set of tests") removed support for building kernels that run only
+> the "fast" set of crypto self-tests by default.  This assumed that
+> nearly everyone actually wanted the full set of tests, *if* they had
+> already chosen to enable the tests at all.
+>
+> Unfortunately, it turns out that both Debian and Fedora have the crypto
+> self-tests enabled in their production kernels, and they seem to want to
+
+I explicitly referenced https://bugs.debian.org/599441 as that was the
+only justification I found for enabling it.
+In it, on 2010-10-07 "Mario 'BitKoenig' Holbe" said:
+
+  I personally think (re)enabling these tests would be a way safer
+  default for a distribution kernel which runs on lots of different
+  hardware setups
+
+Before I looked up that bug, I had not heard of that person, so I don't
+know if they're a crypto expert or just a random person on the internet.
+It also doesn't say *why* they thought it would be a good idea to enable
+those tests.
+I have no idea what Fedora's reasoning was for enabling it. Maybe their
+reasons were sound; I think Debian's are rather thin (that I could
+find). And from ~ 15 years ago.
+
+> keep them enabled.  The full set of tests isn't great for that, since
+
+I think the 'new' description is(/was) great. A subject matter expert
+says/said "don't enable this on production kernels". I wish all Kconfig
+help texts were this clear :-)
+So based on the previous description, it seems wise that Debian (and
+Fedora) would update their kernel config and disable those test.
+
+In *my* update to 6.16-rc1, I only 'converted' to new names.
+A change to my kernel config (ie disable the tests) would be in a
+separate commit (with an appropriate commit msg).
+I hadn't done that yet as I was curious what the results would be.
+
+So "they seem to want to keep them enabled" seems a premature
+conclusion; at least wrt Debian and AFAICT.
+It's also possible that if/when people see the kernel warning, they'd
+file a new Debian bug to have it disabled.
+
+(I've made some contributions in the past, but) I am not part of
+Debian's kernel team, so I don't know what they will decide.
+=20
+I'll gladly leave it up to you if you still think reinstating the fast
+tests is worth it, but I felt a bit more context was warranted.
+
+Cheers,
+  Diederik
+
+> they take significantly longer to run and slow down the boot.
+>
+> One issue is that the crypto self-tests are being (mis)used to meet FIPS
+> 140-3 pre-operational testing requirements.  But actually the more
+> fundamental issue is that the crypto/ subsystem has many buggy and
+> untested drivers for off-CPU hardware accelerators on rare platforms.
+> As a result, apparently in some cases the tests are actually being
+> relied on *in production kernels* to stop buggy drivers from being used.
+> I think this is kind of crazy (untested drivers should just not be
+> enabled at all), but that seems to be how things work currently.
+>
+> Thus, reintroduce a kconfig option that controls the level of testing.
+> Instead of the original CRYPTO_MANAGER_EXTRA_TESTS which was confusing
+> and disabled by default, go with CRYPTO_SELFTESTS_FULL which is enabled
+> by default (but dependent on CRYPTO_SELFTESTS, of course).
+>
+> Given the "production kernel" use cases, also remove the dependency on
+> DEBUG_KERNEL from CRYPTO_SELFTESTS.  It was introduced by
+> commit 40b9969796bf ("crypto: testmgr - replace
+> CRYPTO_MANAGER_DISABLE_TESTS with CRYPTO_SELFTESTS") and wasn't present
+> on the original option.
+>
+> I also haven't reinstated all the #ifdefs in crypto/testmgr.c.  Instead,
+> just rely on the compiler to optimize out unused code.
+>
+> Fixes: 40b9969796bf ("crypto: testmgr - replace CRYPTO_MANAGER_DISABLE_TE=
+STS with CRYPTO_SELFTESTS")
+> Fixes: 698de822780f ("crypto: testmgr - make it easier to enable the full=
+ set of tests")
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> ---
+>
+> This patch is targeting the crypto tree for 6.16.
+>
+>  crypto/Kconfig                 | 18 ++++++++++++++----
+>  crypto/testmgr.c               | 15 ++++++++++++---
+>  include/crypto/internal/simd.h |  6 ++++--
+>  lib/crypto/Makefile            |  2 +-
+>  4 files changed, 31 insertions(+), 10 deletions(-)
+>
+> diff --git a/crypto/Kconfig b/crypto/Kconfig
+> index e9fee7818e270..8612ebf655647 100644
+> --- a/crypto/Kconfig
+> +++ b/crypto/Kconfig
+> @@ -174,20 +174,30 @@ config CRYPTO_USER
+>  	  Userspace configuration for cryptographic instantiations such as
+>  	  cbc(aes).
+> =20
+>  config CRYPTO_SELFTESTS
+>  	bool "Enable cryptographic self-tests"
+> -	depends on DEBUG_KERNEL
+>  	help
+>  	  Enable the cryptographic self-tests.
+> =20
+>  	  The cryptographic self-tests run at boot time, or at algorithm
+>  	  registration time if algorithms are dynamically loaded later.
+> =20
+> -	  This is primarily intended for developer use.  It should not be
+> -	  enabled in production kernels, unless you are trying to use these
+> -	  tests to fulfill a FIPS testing requirement.
+> +config CRYPTO_SELFTESTS_FULL
+> +	bool "Enable the full set of cryptographic self-tests"
+> +	depends on CRYPTO_SELFTESTS
+> +	default y
+> +	help
+> +	  Enable the full set of cryptographic self-tests for each algorithm.
+> +
+> +	  For development and pre-release testing, leave this as 'y'.
+> +
+> +	  If you're keeping the crypto self-tests enabled in a production
+> +	  kernel, you likely want to set this to 'n' to speed up the boot.  Thi=
+s
+> +	  will cause the "slow" tests to be skipped.  This may suffice for a
+> +	  quick sanity check of drivers and for FIPS 140-3 pre-operational self=
+-
+> +	  testing, but some issues can be found only by the full set of tests.
+> =20
+>  config CRYPTO_NULL
+>  	tristate "Null algorithms"
+>  	select CRYPTO_ALGAPI
+>  	select CRYPTO_SKCIPHER
+> diff --git a/crypto/testmgr.c b/crypto/testmgr.c
+> index 72005074a5c26..32f753d6c4302 100644
+> --- a/crypto/testmgr.c
+> +++ b/crypto/testmgr.c
+> @@ -43,17 +43,22 @@ MODULE_IMPORT_NS("CRYPTO_INTERNAL");
+> =20
+>  static bool notests;
+>  module_param(notests, bool, 0644);
+>  MODULE_PARM_DESC(notests, "disable all crypto self-tests");
+> =20
+> +#ifdef CONFIG_CRYPTO_SELFTESTS_FULL
+>  static bool noslowtests;
+>  module_param(noslowtests, bool, 0644);
+>  MODULE_PARM_DESC(noslowtests, "disable slow crypto self-tests");
+> =20
+>  static unsigned int fuzz_iterations =3D 100;
+>  module_param(fuzz_iterations, uint, 0644);
+>  MODULE_PARM_DESC(fuzz_iterations, "number of fuzz test iterations");
+> +#else
+> +#define noslowtests 1
+> +#define fuzz_iterations 0
+> +#endif
+> =20
+>  #ifndef CONFIG_CRYPTO_SELFTESTS
+> =20
+>  /* a perfect nop */
+>  int alg_test(const char *driver, const char *alg, u32 type, u32 mask)
+> @@ -317,13 +322,13 @@ struct testvec_config {
+> =20
+>  #define TESTVEC_CONFIG_NAMELEN	192
+> =20
+>  /*
+>   * The following are the lists of testvec_configs to test for each algor=
+ithm
+> - * type when the fast crypto self-tests are enabled.  They aim to provid=
+e good
+> - * test coverage, while keeping the test time much shorter than the full=
+ tests
+> - * so that the fast tests can be used to fulfill FIPS 140 testing requir=
+ements.
+> + * type when the "fast" crypto self-tests are enabled.  They aim to prov=
+ide good
+> + * test coverage, while keeping the test time much shorter than the "ful=
+l" tests
+> + * so that the "fast" tests can be enabled in a wider range of circumsta=
+nces.
+>   */
+> =20
+>  /* Configs for skciphers and aeads */
+>  static const struct testvec_config default_cipher_testvec_configs[] =3D =
+{
+>  	{
+> @@ -1181,18 +1186,22 @@ static void generate_random_testvec_config(struct=
+ rnd_state *rng,
+>  	WARN_ON_ONCE(!valid_testvec_config(cfg));
+>  }
+> =20
+>  static void crypto_disable_simd_for_test(void)
+>  {
+> +#ifdef CONFIG_CRYPTO_SELFTESTS_FULL
+>  	migrate_disable();
+>  	__this_cpu_write(crypto_simd_disabled_for_test, true);
+> +#endif
+>  }
+> =20
+>  static void crypto_reenable_simd_for_test(void)
+>  {
+> +#ifdef CONFIG_CRYPTO_SELFTESTS_FULL
+>  	__this_cpu_write(crypto_simd_disabled_for_test, false);
+>  	migrate_enable();
+> +#endif
+>  }
+> =20
+>  /*
+>   * Given an algorithm name, build the name of the generic implementation=
+ of that
+>   * algorithm, assuming the usual naming convention.  Specifically, this =
+appends
+> diff --git a/include/crypto/internal/simd.h b/include/crypto/internal/sim=
+d.h
+> index 7e7f1ac3b7fda..9e338e7aafbd9 100644
+> --- a/include/crypto/internal/simd.h
+> +++ b/include/crypto/internal/simd.h
+> @@ -42,13 +42,15 @@ void simd_unregister_aeads(struct aead_alg *algs, int=
+ count,
+>   * crypto_simd_usable() - is it allowed at this time to use SIMD instruc=
+tions or
+>   *			  access the SIMD register file?
+>   *
+>   * This delegates to may_use_simd(), except that this also returns false=
+ if SIMD
+>   * in crypto code has been temporarily disabled on this CPU by the crypt=
+o
+> - * self-tests, in order to test the no-SIMD fallback code.
+> + * self-tests, in order to test the no-SIMD fallback code.  This overrid=
+e is
+> + * currently limited to configurations where the "full" self-tests are e=
+nabled,
+> + * because it might be a bit too invasive to be part of the "fast" self-=
+tests.
+>   */
+> -#ifdef CONFIG_CRYPTO_SELFTESTS
+> +#ifdef CONFIG_CRYPTO_SELFTESTS_FULL
+>  DECLARE_PER_CPU(bool, crypto_simd_disabled_for_test);
+>  #define crypto_simd_usable() \
+>  	(may_use_simd() && !this_cpu_read(crypto_simd_disabled_for_test))
+>  #else
+>  #define crypto_simd_usable() may_use_simd()
+> diff --git a/lib/crypto/Makefile b/lib/crypto/Makefile
+> index 3e79283b617d9..f9e44aac6619b 100644
+> --- a/lib/crypto/Makefile
+> +++ b/lib/crypto/Makefile
+> @@ -60,9 +60,9 @@ libsha256-y					:=3D sha256.o
+>  obj-$(CONFIG_CRYPTO_LIB_SHA256_GENERIC)		+=3D libsha256-generic.o
+>  libsha256-generic-y				:=3D sha256-generic.o
+> =20
+>  obj-$(CONFIG_MPILIB) +=3D mpi/
+> =20
+> -obj-$(CONFIG_CRYPTO_SELFTESTS)			+=3D simd.o
+> +obj-$(CONFIG_CRYPTO_SELFTESTS_FULL)		+=3D simd.o
+> =20
+>  obj-$(CONFIG_CRYPTO_LIB_SM3)			+=3D libsm3.o
+>  libsm3-y					:=3D sm3.o
+>
+> base-commit: aef17cb3d3c43854002956f24c24ec8e1a0e3546
 
 
+--a2b9797885f3d11a998329b426c25f7c213f5b963f86d455ce2a3ec162a6
+Content-Type: application/pgp-signature; name="signature.asc"
 
-On 2025-06-11 10:57 a.m., Vince Weaver wrote:
-> On Wed, 11 Jun 2025, Vince Weaver wrote:
-> 
->> Oops: general protection fault, maybe for address 0xffff89aeceab400: 0000
->> CPU: 23 UID: 0 PID: 0 Comm: swapper/23
->> Tainted: [W]=WARN
->> Hardware name: Dell Inc. Precision 9660/0VJ762
->> RIP: 0010:native_read_pmc+0x7/0x40
->> Code: cc e8 8d a9 01 00 48 89 03 5b cd cc cc cc cc 0f 1f ...
->> RSP: 000:fffb03100273de8 EFLAGS: 00010046
-> 
-> one additional note that's probably relevant, this is on a hybrid CPU 
-> machine, so CPUs 16-23 are atom cores that don't support topdown.
-> 
-> So the crash is probably because for whatever reason the kernel is trying 
-> to read topdown events on an unsupported core and triggering a GPF.
-> 
+-----BEGIN PGP SIGNATURE-----
 
-It seems an regression from the f9bdf1f95339 ("perf/x86/intel: Avoid
-disable PMU if !cpuc->enabled in sample read").
-The commit merged the intel_pmu_auto_reload_read() and
-intel_pmu_read_topdown_event(). It's possible that a PEBS event 0x0400
-runs on a ATOM CPU. So the PERF_X86_EVENT_AUTO_RELOAD is set for the
-event. The is_topdown_event() also returns true.
+iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaEnQnwAKCRDXblvOeH7b
+bj9mAP98h7N1N7UhiG7N/oWUjkZAFnUeL4ZDV1EjWptXXp12zQEA5CpLBrl9zQ70
+f2LcDH+l+KfOk78W1yjoGGMqCBPM/A8=
+=XUmy
+-----END PGP SIGNATURE-----
 
-Does the below patch help?
-It checks the PERF_X86_EVENT_TOPDOWN flag as well before invoking the
-topdown functions.
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index c60b6f199f51..67f80a683234 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -2826,7 +2826,8 @@ static void intel_pmu_read_event(struct perf_event
-*event)
- 		 * If the PEBS counters snapshotting is enabled,
- 		 * the topdown event is available in PEBS records.
- 		 */
--		if (is_topdown_event(event) && !is_pebs_counter_event_group(event))
-+		if (is_topdown_count(event) && is_topdown_event(event) &&
-+		    !is_pebs_counter_event_group(event))
- 			static_call(intel_pmu_update_topdown_event)(event, NULL);
- 		else
- 			intel_pmu_drain_pebs_buffer();
-
-
-Thanks,
-Kan
-
+--a2b9797885f3d11a998329b426c25f7c213f5b963f86d455ce2a3ec162a6--
