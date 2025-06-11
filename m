@@ -1,63 +1,63 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B32ED22A1F1
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:23:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AAAA22A7EA
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:23:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749623020; cv=none; b=D5dE37K0rUyVJ2QuHgDq7rkZAtNcD8qfsyaWLVj828C2cU2WT5lyefDaq/lg49KVJ94tWHVQRf+NUcA5o+5iZS1fRUhpQAAZsE0qLFzlS8A9Wq49EaCE1B24iXSoKh05+XvQ+X06d3280MTi7/Df2cUunA//a6GVkrdw64jPE+w=
+	t=1749623036; cv=none; b=DPftHp6rgVgusXQXX2CyGd7zm8ty1mFADmqkm4lR4EEPd1n/M71yQiCpT7ygc49lmV+mTYZvMmlRS3hhZbY0ULYxbuaBF+Dkt0LhtSNvQxHjk+NbKWqHu2LecbGibqY3jNdkTpo+WkAEK+nEMJDpGBnj6+aacZ3sFooGH+cp+Ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749623020; c=relaxed/simple;
-	bh=st3O+ijFgGFNKVMxzm55tlaSGPlHlP9D9YyRi1Zj5U4=;
+	s=arc-20240116; t=1749623036; c=relaxed/simple;
+	bh=ixtMiU2D4CI1HtrYrYpElhcrFaz7rwFs2Q8kTElmxqw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OteeXoKVjUAdWrIYoNud8wN0HEUL7ep/tHO7TiOFlgGb8WMKda5L0PYRCGAYd/HwOV2+pMI4KROV1dE26C/dLQNdfZp6chfeIHUX3vpOww68zguAN+INiGpckukTP3cLFaQ4cA88J0huiJ6sPTKwX0pc7vsGzzBM9GatSjGuM1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=ESV6NoGh; arc=none smtp.client-ip=209.85.214.173
+	 MIME-Version; b=q8TOMxfwRyyk5BcE+VojIv2RxJnGLKoqzimt8eVtR7sSjhsECj8WbEm4zxEFR4cgGiHvvElo4oxidETF4/ZZxxQOD1tV+cpBhS5O1vafpCLcLjKCve0OtHBN3kxK7h9f/lDRWttf9HhQeg8uZHGyHN5tHcJqQr62xBbb3YkbRhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=kwD1nFQl; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="ESV6NoGh"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-236192f8770so4360905ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 23:23:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="kwD1nFQl"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2360ff7ac1bso29899975ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 23:23:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1749623017; x=1750227817; darn=vger.kernel.org;
+        d=ventanamicro.com; s=google; t=1749623035; x=1750227835; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Oq58nUDRWeIOl1x38zmkh2+ZPHCgo0OptvyvyNxudhg=;
-        b=ESV6NoGh1En3AvF5RK5spQArA54hQPkqbYJX8P562w2rQzb91s3qEeIUTUwwecSTiR
-         eD6qLRmG8VQrLInkMlp1bq+mc8YZVsIUyk0au3JzToDGN98a1a2/TAVs3qrHJguAK4Q8
-         SbE6iFGMWedgnOanHLb+bf8sr8m3PjgZN7q9lmCjYx9bPL8PXbgddE/oKanMClv1hzEl
-         MSAZNABU0wi6KOMZpXYDUUY36u/T+JCh6P/5fCIuzjPwEhZ6zXVDrPAWx0LDQY5MCP0U
-         syOw0QBi5dGcMJxG1kjgKfwRaDXTTudu4uqXiJxd4jctNdPFfZ0oB0War+lQfFexLdB+
-         mxrg==
+        bh=cwcoSzaHJb2ZCurp/5PmtA9kG6Ysfjka/p/8DDzX1ZM=;
+        b=kwD1nFQlke8qAryYMGsggQ3VsGwfpOZ0QD1iUSx+cs5djaanqnCpWtVdnlMhgGQgDE
+         K4qcaEE20UiAAs641m/KDHhPDIZeOsoRGTcUNNey5kyYAniFjn/n6vqiri+w2wXYcqiY
+         LtuBQ/rftbuG+r9r7qQpEKvORj4nTJcxUI+F7bsxEI/BQXaUehqZa7FP+NcZHL4Og5jg
+         Jl2BO6aaglx0hROdfb6qeZKZpy3OKf6ijz3k6P3rexeb6YOHpfFsPu4vk8l9k5I+zCc6
+         4XCoufjMVEiB2eVk+I2udVeqnMdfPfNUbWMmUxiEpZW1XjDvUM3RplJ0ljgFuzv1aAXV
+         LfuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749623017; x=1750227817;
+        d=1e100.net; s=20230601; t=1749623035; x=1750227835;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Oq58nUDRWeIOl1x38zmkh2+ZPHCgo0OptvyvyNxudhg=;
-        b=pZvUnPz6xwbiiExXELsaW0uzK5rKcbtp36fKX+jLxUKDBSUn9ZTetbGvASk1F5fZF+
-         lAt63EatjTlSYU7Fm80AlnHQjPfxePyo5ks50qqKeFddESQQhO2p+wsn8xG8u79lLC2f
-         4iOwY2RECWcEaoj7B5UFkrOqon9f+fC7zDjCg3mTp88/fTfrjnHK01Q+q/nB5FUknaSA
-         nX5L6+dkTDrgYa0eMxc8IaxfOw/0s8ogDVFfyemQnsx+hWYYpjcPUCORbCgbAvZRqOM8
-         Bi4P8J+K+qJiy9SBe9hNe1ZLHAGjl6f7hVtMmFODJYv1SnP8l1t+nw1tRASbHnAi84r1
-         ldyA==
-X-Forwarded-Encrypted: i=1; AJvYcCX4M68oB+Zi4ulbVe2uAACfprClFqmeCfRNrgzWWCVbgsfGtMcYJdP9qL7sqz0RdRnFNw2ZsUGIrng89kk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/PluuAcZzE/LUdeXXQU/A36yaoFfdUA0+h60Q/VTXpdPhSOzF
-	XBs+fGdFAr8YMEFG1ggNXn3ouF4dEuU8aeFqkzgcIKmt4M4rk9HyEbweB4EdTv0iUS0=
-X-Gm-Gg: ASbGncvGkM+vK4d/EbUIjUJMHtGVp/XN05pN3tQvO2jHVo9o46Pyh0XcAYpnxBHPpM8
-	5YMM0l+F6QlNoXYuTW4OceuQGNYFESiRVU0BL7aUGCtJrmMfLt2OtJo+s1f9Jx4KOneMaeI5BBP
-	8LVTHiOymOwUNcQPPaakwRsK0Wt3nOZW/sHIl4i7a7lhnAObnyhH20CsUwS+fPy07iwjuj441jh
-	TPlHaeaPtSVCHIh+rtesyavLILm3TzO3RaxV3qhIqTy9tvuLdTGBoGqFAz5n3YweTxpGVSrHJ7R
-	HRzFrSYhz/UIF9cMnofDlgHqTofidkNd1y6W7bOI/qZ7UutHi2NBShrG2z4dH2uhFa1i+Z14gLK
-	O2zYuuJLBJ+lWGi/8ORyPr/rD/k3zc+IYQXzW
-X-Google-Smtp-Source: AGHT+IHtGB2PUpXqZ9bfGLD+kJcw/Vmqw/rX+F5NwlfdOTouRiwUdlxzNr+s19qiVuX1b57i0EotKQ==
-X-Received: by 2002:a17:903:3203:b0:21f:5063:d3ca with SMTP id d9443c01a7336-236418343e6mr33134145ad.16.1749623016901;
-        Tue, 10 Jun 2025 23:23:36 -0700 (PDT)
+        bh=cwcoSzaHJb2ZCurp/5PmtA9kG6Ysfjka/p/8DDzX1ZM=;
+        b=VEEPLm1l/5HIyz60PKNdMLbny4SM3g0tRQibUg8iBD6u9cL7TlhUTo2PfSpxP8ojy8
+         HFubD0QC/Neef/lNVtjxMtejUs4DUAdoqi4L8lMP+vZShkzCBlvtzJ8crQwfNVrRPU3q
+         PnvOqxggacHtLDQWLE1Qq9sG6ECc+yRwly7UGW0Yazuz9Ac5TzECEx11bDS3DAPejsEf
+         nOA0vtrKF/BVwGb2rsd8SULYCxcGbzBlUK2hG86XxWcr99AZaQwkL5AXZ3bNe6Wgv0tX
+         D+axxeE5/3bFVEE80cTRa4aw/qT0Ubf71pV5Z+fLCsNKHwPQBjPfCzCMXFw+O4D/Kh28
+         XP1A==
+X-Forwarded-Encrypted: i=1; AJvYcCWvSjJniGPqsPi6AIUe1yzOkTFrZAwxCsgrzbpy9v/YFqpniZsswYZOa3YiZubz873IG67Vf6AVvBh5Iwc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9ZUswuUAtCh0yokW+dm80i+c1Afky5R6Zb8DeNXd+1cJiICAX
+	ZCgKeEnJDdbwfaHJpV5bjJwlEM5nhxcwAJLobI9VtAwhfPfb0/dD8bnhCnJKzosLn1w=
+X-Gm-Gg: ASbGncsk2JkQFSeIe4/i2ATkribPh4hUNpIhUPNe7aACQgaNzpSnuiiEclsjTSTFOu4
+	3w6dDDh7cCl24bMF/bLnOBzswSmL/oNu3s0q90rETJ1O+vzlqowSwfqkVTeZOwwYdjFpv5H2tz7
+	z46dDeIDdWUQPkwk3SRS01p52XiUsEyMyXnataO3KL0aJlbBvx0Dur2YnrWHO0OUgSjhuaj70lN
+	3IdxKjiLxcWO35B2LINMhXQ8dTi6Iep7L/5tyerzf8y/rpryrtVoyDJAQC3YLwnllgZbkQDw05a
+	W0mXcPpo7z0dhisKIQWNSGQWsPHhUiUZIkYLZrsV+g0iTmoKQ+e3+oHXHWRWpOeDy5zbjfZeBet
+	xYXdrcEBosTzg4LINRl8XUvhcAvBlApLW4pmP
+X-Google-Smtp-Source: AGHT+IG9id6m8Zy9UeNhLHSX7++7xXKKHDlsuc22eIa03d0VgxiugN4v4fTC06zY+RU03tXIbah2jg==
+X-Received: by 2002:a17:902:d552:b0:224:1af1:87f4 with SMTP id d9443c01a7336-23641abe7c2mr35316405ad.22.1749623034551;
+        Tue, 10 Jun 2025 23:23:54 -0700 (PDT)
 Received: from anup-ubuntu-vm.localdomain ([103.97.166.196])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603092677sm79976295ad.64.2025.06.10.23.23.28
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603092677sm79976295ad.64.2025.06.10.23.23.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 23:23:36 -0700 (PDT)
+        Tue, 10 Jun 2025 23:23:54 -0700 (PDT)
 From: Anup Patel <apatel@ventanamicro.com>
 To: Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>,
@@ -87,9 +87,9 @@ Cc: Palmer Dabbelt <palmer@dabbelt.com>,
 	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Anup Patel <apatel@ventanamicro.com>
-Subject: [PATCH v5 05/23] mailbox: Allow controller specific mapping using fwnode
-Date: Wed, 11 Jun 2025 11:52:20 +0530
-Message-ID: <20250611062238.636753-6-apatel@ventanamicro.com>
+Subject: [PATCH v5 07/23] dt-bindings: clock: Add RPMI clock service message proxy bindings
+Date: Wed, 11 Jun 2025 11:52:22 +0530
+Message-ID: <20250611062238.636753-8-apatel@ventanamicro.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250611062238.636753-1-apatel@ventanamicro.com>
 References: <20250611062238.636753-1-apatel@ventanamicro.com>
@@ -101,146 +101,89 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce optional fw_node() callback which allows a mailbox controller
-driver to provide controller specific mapping using fwnode.
+Add device tree bindings for the RPMI clock service group based
+message proxy implemented by the SBI implementation (machine mode
+firmware or hypervisor).
 
-The Linux OF framework already implements fwnode operations for the
-Linux DD framework so the fw_xlate() callback works fine with device
-tree as well.
+The RPMI clock service group is defined by the RISC-V platform
+management interface (RPMI) specification.
 
 Signed-off-by: Anup Patel <apatel@ventanamicro.com>
 ---
- drivers/mailbox/mailbox.c          | 45 +++++++++++++++++-------------
- include/linux/mailbox_controller.h |  3 ++
- 2 files changed, 28 insertions(+), 20 deletions(-)
+ .../bindings/clock/riscv,rpmi-mpxy-clock.yaml | 64 +++++++++++++++++++
+ 1 file changed, 64 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/riscv,rpmi-mpxy-clock.yaml
 
-diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
-index 5cd8ae222073..d1840eace725 100644
---- a/drivers/mailbox/mailbox.c
-+++ b/drivers/mailbox/mailbox.c
-@@ -15,6 +15,7 @@
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/of.h>
-+#include <linux/property.h>
- #include <linux/spinlock.h>
- 
- #include "mailbox.h"
-@@ -383,34 +384,46 @@ EXPORT_SYMBOL_GPL(mbox_bind_client);
-  */
- struct mbox_chan *mbox_request_channel(struct mbox_client *cl, int index)
- {
-+	struct fwnode_reference_args fwspec;
- 	struct device *dev = cl->dev;
- 	struct mbox_controller *mbox;
- 	struct of_phandle_args spec;
- 	struct mbox_chan *chan;
-+	unsigned int i;
- 	int ret;
- 
--	if (!dev || !dev->of_node) {
--		pr_debug("%s: No owner device node\n", __func__);
-+	if (!dev || !dev_fwnode(dev)) {
-+		pr_debug("No owner %s\n", dev ? "fwnode" : "device");
- 		return ERR_PTR(-ENODEV);
- 	}
- 
--	ret = of_parse_phandle_with_args(dev->of_node, "mboxes", "#mbox-cells",
--					 index, &spec);
-+	ret = fwnode_property_get_reference_args(dev_fwnode(dev), "mboxes",
-+						 "#mbox-cells", 0, index, &fwspec);
- 	if (ret) {
- 		dev_err(dev, "%s: can't parse \"mboxes\" property\n", __func__);
- 		return ERR_PTR(ret);
- 	}
- 
-+	spec.np = to_of_node(fwspec.fwnode);
-+	spec.args_count = fwspec.nargs;
-+	for (i = 0; i < spec.args_count; i++)
-+		spec.args[i] = fwspec.args[i];
+diff --git a/Documentation/devicetree/bindings/clock/riscv,rpmi-mpxy-clock.yaml b/Documentation/devicetree/bindings/clock/riscv,rpmi-mpxy-clock.yaml
+new file mode 100644
+index 000000000000..70ffc88d0110
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/riscv,rpmi-mpxy-clock.yaml
+@@ -0,0 +1,64 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/riscv,rpmi-mpxy-clock.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	scoped_guard(mutex, &con_mutex) {
- 		chan = ERR_PTR(-EPROBE_DEFER);
--		list_for_each_entry(mbox, &mbox_cons, node)
--			if (mbox->dev->of_node == spec.np) {
-+		list_for_each_entry(mbox, &mbox_cons, node) {
-+			if (mbox->fw_xlate && dev_fwnode(mbox->dev) == fwspec.fwnode) {
-+				chan = mbox->fw_xlate(mbox, &fwspec);
-+				if (!IS_ERR(chan))
-+					break;
-+			} else if (mbox->of_xlate && mbox->dev->of_node == spec.np) {
- 				chan = mbox->of_xlate(mbox, &spec);
- 				if (!IS_ERR(chan))
- 					break;
- 			}
-+		}
- 
--		of_node_put(spec.np);
-+		fwnode_handle_put(fwspec.fwnode);
- 
- 		if (IS_ERR(chan))
- 			return chan;
-@@ -427,15 +440,8 @@ EXPORT_SYMBOL_GPL(mbox_request_channel);
- struct mbox_chan *mbox_request_channel_byname(struct mbox_client *cl,
- 					      const char *name)
- {
--	struct device_node *np = cl->dev->of_node;
--	int index;
--
--	if (!np) {
--		dev_err(cl->dev, "%s() currently only supports DT\n", __func__);
--		return ERR_PTR(-EINVAL);
--	}
-+	int index = device_property_match_string(cl->dev, "mbox-names", name);
- 
--	index = of_property_match_string(np, "mbox-names", name);
- 	if (index < 0) {
- 		dev_err(cl->dev, "%s() could not locate channel named \"%s\"\n",
- 			__func__, name);
-@@ -470,9 +476,8 @@ void mbox_free_channel(struct mbox_chan *chan)
- }
- EXPORT_SYMBOL_GPL(mbox_free_channel);
- 
--static struct mbox_chan *
--of_mbox_index_xlate(struct mbox_controller *mbox,
--		    const struct of_phandle_args *sp)
-+static struct mbox_chan *fw_mbox_index_xlate(struct mbox_controller *mbox,
-+					     const struct fwnode_reference_args *sp)
- {
- 	int ind = sp->args[0];
- 
-@@ -523,8 +528,8 @@ int mbox_controller_register(struct mbox_controller *mbox)
- 		spin_lock_init(&chan->lock);
- 	}
- 
--	if (!mbox->of_xlate)
--		mbox->of_xlate = of_mbox_index_xlate;
-+	if (!mbox->fw_xlate && !mbox->of_xlate)
-+		mbox->fw_xlate = fw_mbox_index_xlate;
- 
- 	scoped_guard(mutex, &con_mutex)
- 		list_add_tail(&mbox->node, &mbox_cons);
-diff --git a/include/linux/mailbox_controller.h b/include/linux/mailbox_controller.h
-index ad01c4082358..80a427c7ca29 100644
---- a/include/linux/mailbox_controller.h
-+++ b/include/linux/mailbox_controller.h
-@@ -66,6 +66,7 @@ struct mbox_chan_ops {
-  *			no interrupt rises. Ignored if 'txdone_irq' is set.
-  * @txpoll_period:	If 'txdone_poll' is in effect, the API polls for
-  *			last TX's status after these many millisecs
-+ * @fw_xlate:		Controller driver specific mapping of channel via fwnode
-  * @of_xlate:		Controller driver specific mapping of channel via DT
-  * @poll_hrt:		API private. hrtimer used to poll for TXDONE on all
-  *			channels.
-@@ -79,6 +80,8 @@ struct mbox_controller {
- 	bool txdone_irq;
- 	bool txdone_poll;
- 	unsigned txpoll_period;
-+	struct mbox_chan *(*fw_xlate)(struct mbox_controller *mbox,
-+				      const struct fwnode_reference_args *sp);
- 	struct mbox_chan *(*of_xlate)(struct mbox_controller *mbox,
- 				      const struct of_phandle_args *sp);
- 	/* Internal to API */
++title: RISC-V RPMI clock service group based message proxy
++
++maintainers:
++  - Anup Patel <anup@brainfault.org>
++
++description: |
++  The RISC-V Platform Management Interface (RPMI) [1] defines a
++  messaging protocol which is modular and extensible. The supervisor
++  software can send/receive RPMI messages via SBI MPXY extension [2]
++  or some dedicated supervisor-mode RPMI transport.
++
++  The RPMI specification [1] defines clock service group for accessing
++  system clocks managed by a platform microcontroller. The SBI implementation
++  (machine mode firmware or hypervisor) can implement an SBI MPXY channel
++  to allow RPMI clock service group access to the supervisor software.
++
++  ===========================================
++  References
++  ===========================================
++
++  [1] RISC-V Platform Management Interface (RPMI) v1.0 (or higher)
++      https://github.com/riscv-non-isa/riscv-rpmi/releases
++
++  [2] RISC-V Supervisor Binary Interface (SBI) v3.0 (or higher)
++      https://github.com/riscv-non-isa/riscv-sbi-doc/releases
++
++properties:
++  compatible:
++    description:
++      Intended for use by the SBI implementation.
++    const: riscv,rpmi-mpxy-clock
++
++  mboxes:
++    maxItems: 1
++    description:
++      Mailbox channel of the underlying RPMI transport.
++
++  riscv,sbi-mpxy-channel-id:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      The SBI MPXY channel id to be used for providing RPMI access to
++      the supervisor software.
++
++required:
++  - compatible
++  - mboxes
++  - riscv,sbi-mpxy-channel-id
++
++additionalProperties: false
++
++examples:
++  - |
++    clock-controller {
++        compatible = "riscv,rpmi-mpxy-clock";
++        mboxes = <&rpmi_shmem_mbox 0x8>;
++        riscv,sbi-mpxy-channel-id = <0x1000>;
++    };
++...
 -- 
 2.43.0
 
