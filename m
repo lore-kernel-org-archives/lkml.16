@@ -1,147 +1,122 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 475F3233D88
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:28:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DFEF8479;
+	Wed, 11 Jun 2025 07:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749626887; cv=none; b=s2gnTq40DgQb0CVpQw5x8Ac7h9B7+SWWNSUuIguh7FnEHajYo3xIlbfF86opwV2rpM3Vr4oRHzHwRVyzXtInYxJz1CnC32ZTZkCXojba7NV6vQB6l57cVGCfWZcJa2GIDIT3QxdO+AOUnuqaE29TZIOaLN7l05RVBSMpfuXbixg=
+	t=1749626992; cv=none; b=gsQwyd8qXjgZ8p1xg1VR5DZk0lbLiIBPs2CrHx12JH/eNMVlMxdvfVGI+1IlTO0asUbFlrVjeKWSF/FV/AKr5qRCS1F47reDU4ETM0YSr1AxckXr2/oVgYu7V984D8bQHRoYUjx9kLWjDCpTky/gu+jx2baRXBF8DTbiwEOaYSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749626887; c=relaxed/simple;
-	bh=yVmzGgYzPpsvarSqDW2/PP372tTPQpqVJ+GOc/oGKWM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=PuQ6IClMPGIGUFzQOHkgm70cKDp3jgxGgTiEgYPzNKXXKmIhrLG4eD6j6S6kprCL+9rqQAqz8Q5OwAr98kNOz7uYEyc5SZBzjIrn+aqPye33CPUokCg/BAI+bWriW98p6MkItmQUXV9CD2q03uBCy4FcBKhQnLuOOcysx8mbKs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=t2tscF6Q; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1749626992; c=relaxed/simple;
+	bh=mYZBsJ6GYh1XewL407567u+P//gORNwjo3hShaPaf2A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TubXlIFbZ337hX/jFW5Fl1wV2ZhdNuwDBcumF4vKEbSdAPYU33wYNb2cpXtrocHcEAkOLw/ScX4bbypbAiU/Uhms02RTZZahzB6AsLgUA3rUHVGzFIunm97DnTwHbOxfVair7Lcu0ov0vDBVuJOIApHUc6jZ7R3jHTqObRMwYA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=xiQZmBbK; arc=none smtp.client-ip=115.124.30.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="t2tscF6Q"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a503d9ef59so5291428f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 00:28:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749626883; x=1750231683; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Y3EhQp70qH3zaX+UEuYmCaMSBeRCwsSI90EFC2bDZhw=;
-        b=t2tscF6QXgaah1kmFa5Gaitt/k4Zuv3HHVjFwfIbRtISTnLEUHUFMrprgkI1MGZpBM
-         Iw7RDDj7X98S21XHN2cTpi8vRV9gAkUvXZJLkOfyfVh2+491R3ysX+vIJrYKAB1Jp6xy
-         0TJHCCzc9dQnBeT4b6uBFbGNRs/+55Bq0H9hsQcRGfBjC1eKxBXdkZdUwknC5OF3OJCS
-         xTQuNILqKbOGOPY4uIO+kzgs+u9m1YLuFgoAU7gNH3yMJL1+6Mdkj81iYjrJ0h4rCZYS
-         yrCzNry22rQu21Pzp0o4QNdluxS0QRI/JomArMm11rVlnhvILfGBCEu/CS5PQzekdnyJ
-         8KwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749626883; x=1750231683;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Y3EhQp70qH3zaX+UEuYmCaMSBeRCwsSI90EFC2bDZhw=;
-        b=nhe4Iedx3cCKqoQBG7/Uq8Sdnr4t9opeSe69tTCZoDTaKXTnCjfhhrOmwGD7aswgFW
-         nrK0IZgGPc/HrjxoZQLnvRGzq5S7lzIieXodLUAdMQfPCTjCz4rOSHsC5vPwnI1Cv1bI
-         7EJ5WjCMn81EG/D0elc3LpVd3i/tL1nUtmiENLYIxYOrwe95hpAdfvPI6/tVJYTt0hPt
-         1hasvztSgb4tKF3VjzLG/TYLkPv6uIxnkA9UJ3/lEskgDrRyAp76XJctuvGpS8N40SNj
-         DDHMR+mlZAKgkRaHL/1JDbdON7CInuAHTeUvSnVXxUXhkEexCoNqrULhqCl93K67OHb2
-         Ss7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUgXaIfzEmG1o16B8giXjfoNijOARaRaAkTmA0worNZia1FKgBr6KLkm7G4BgZ1XQnFgkRNSm4dYeL3tiA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPaX7HiWGvmMsRtJiae+l1S3sJ3Km+WA+X/c2xUEaQ9hjvqdvJ
-	oGBSxeUjkrcHeW/6OpgFh9xUePDJul9sixeOIsuajT7o4fBBnDqxf6OrZCoyBOQyhQo=
-X-Gm-Gg: ASbGncuLwjyBy+juXflgEioVYfC8ezsCL1CgIyOaEF7cf7JLrMkHm294amVVqxfe42R
-	9zZxMQAEScBK8kuxQSZIFcDmmQvBdmqE+C10sAr5IzwA82+nm74QtpzUEXJiqA6wv9C4tne/UN2
-	Bnzct3x1N/h3AGWt6wnnJcoAhNkLo2mQTqopAHc41migAxuwkDnoikfWrQde2IDiAAc47NgxCJA
-	RCMlYztAcP4+CReTQsY9VTriiE/6OfKWfOTTuHE0/ghecOLvSBfPqfsDB+V0080/x/34jl5jdYO
-	zk75DUscW/W1iDo7q5TFfoacOU5s9YnxzjQ/GqMj4KOj+0W/8q1zKhSsW3AMr3lEGss=
-X-Google-Smtp-Source: AGHT+IGCOfI9OsABR6ZwJzn5YCmjzJfCM3HRsAqGAD69hOl0O0+GwNKUhrrHE4WyoxHmo7aiXOLXCw==
-X-Received: by 2002:a5d:64ca:0:b0:3a4:d0dc:184f with SMTP id ffacd0b85a97d-3a558a1a8b4mr1463911f8f.39.1749626883562;
-        Wed, 11 Jun 2025 00:28:03 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:3994:acce:fbc8:2f34])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532463e11sm14572552f8f.90.2025.06.11.00.28.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 00:28:03 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 11 Jun 2025 09:27:56 +0200
-Subject: [PATCH 5/5] pinctrl: rza2: use new GPIO line value setter
- callbacks
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="xiQZmBbK"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1749626981; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=d1U2XgNdXb5cHFagCjGiPIir0dmxEla+OjfhqgR0jG8=;
+	b=xiQZmBbKEp+ZRz9fWzIcsi4ikmg+Ju4Cx51wdYP7EYy9A8+LesQz7wk2aiErhSVU/Ex/TP1GboeQv3RGoyGmXUfx/Sua4SBfWlOzhj1d1HgZx3bzu3NytUwzDBFBm080gF/IXTAo/ENIC+fW7q5/Sa0zsamTc0fOnC5pJSszp4o=
+Received: from 30.74.144.128(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WdcCEnV_1749626980 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 11 Jun 2025 15:29:40 +0800
+Message-ID: <cf70cde3-b4a4-4596-aefa-a510e082e129@linux.alibaba.com>
+Date: Wed, 11 Jun 2025 15:29:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250611-gpiochip-set-rv-pinctrl-renesas-v1-5-ad169a794ef0@linaro.org>
-References: <20250611-gpiochip-set-rv-pinctrl-renesas-v1-0-ad169a794ef0@linaro.org>
-In-Reply-To: <20250611-gpiochip-set-rv-pinctrl-renesas-v1-0-ad169a794ef0@linaro.org>
-To: Geert Uytterhoeven <geert+renesas@glider.be>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1644;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=W1QNIGjpDMxA0+ez52KTCBTigMpTmRu9JngqOUaR2S4=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoSS/9gl/0jI3xDL7vGI3DKAGtiuipeoZWlFZtN
- fATdyQNL6+JAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaEkv/QAKCRARpy6gFHHX
- chxwD/0QhzQJG6sxgN5aq0MeNzSbGXVbei54QA12GRaXDpZVuZJGjmsgVbjSM+gOXSYy1WxiGru
- sKq5AlY54se7FKoosLZBKtsyMZoV4a41c3XSKTBTWx3N9vZ/jJHVD4LSVVSuFtAGiyv37wnLlsI
- ze6JXWKUfOEDiNCRO0KewzsodL9XVjn9Ac1S4nhlW+ZagfOWe+Znt+Mokvjgk41+7MBHh2JVVLq
- CFpDDrlZOcip1Q7eB8eeNaqU63k6lGas/SIQ0WTAX42GN+GWFM8ZmNdDmaXWKyk8Yv1GCC6LiS5
- ZxicBUBQsYxl1BUx8xHU31/P+ZvzF4lo40VYpXzt/9UM0Gdj2w3GCNN2j/rm95R+lmx5B2xUAwd
- AOCsWIpXzewy/rKMeBrb3p6FGWDvULwRMSRWRc2M/guKRqZGhWgUVaIktSpOyyge6qrBn8Ob+0H
- lPmxDg81ZWiCE2dy8Y8jDnLizERV8FLXZ2EcQKk/yOaUcNB11ZKUp8xNFMysvO5Py+3OVIKypH7
- s+tCYPBsqrda9D3HTPGXhLi+6Hcjvw2Qb85reD4hhckQG95m0szQlUnbjcX+WY5csizvSamiCZU
- 5oPJzly0uq345zi8uML+VzVMKjBhtLEAQqEOia266czsbA15mxbLjbPBK9TraviasNUtRuR/atG
- D6RIJz0zBD0KUlQ==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/7] mm: shmem: correctly pass alloced parameter to
+ shmem_recalc_inode() to avoid WARN_ON()
+To: Kemeng Shi <shikemeng@huaweicloud.com>, hughd@google.com,
+ willy@infradead.org, akpm@linux-foundation.org
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org
+References: <20250605221037.7872-1-shikemeng@huaweicloud.com>
+ <20250605221037.7872-2-shikemeng@huaweicloud.com>
+ <3d07c68f-da11-43d8-a2da-6b200b2fa40a@linux.alibaba.com>
+ <994283d9-2dc4-6887-5d46-247b834879b5@huaweicloud.com>
+ <9e59f1f0-db3b-2182-4485-887ac7036bfd@huaweicloud.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <9e59f1f0-db3b-2182-4485-887ac7036bfd@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-struct gpio_chip now has callbacks for setting line values that return
-an integer, allowing to indicate failures. Convert the driver to using
-them.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/pinctrl/renesas/pinctrl-rza2.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+On 2025/6/10 09:02, Kemeng Shi wrote:
+> 
+> 
+> on 6/9/2025 8:46 AM, Kemeng Shi wrote:
+>>
+>>
+>> on 6/7/2025 2:11 PM, Baolin Wang wrote:
+>>>
+>>>
+>>> On 2025/6/6 06:10, Kemeng Shi wrote:
+>>>> As noted in the comments, we need to release block usage for swap entry
+>>>> which was replaced with poisoned swap entry. However, no block usage is
+>>>> actually freed by calling shmem_recalc_inode(inode, -nr_pages, -nr_pages).
+>>>> Instead, call shmem_recalc_inode(inode, 0, -nr_pages) can correctly release
+>>>> the block usage.
+>>>>
+>>>> Fixes: 6cec2b95dadf7 ("mm/shmem: fix infinite loop when swap in shmem error at swapoff time")
+>>>> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+>>>> ---
+>>>>    mm/shmem.c | 2 +-
+>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/mm/shmem.c b/mm/shmem.c
+>>>> index 4b42419ce6b2..e27d19867e03 100644
+>>>> --- a/mm/shmem.c
+>>>> +++ b/mm/shmem.c
+>>>> @@ -2145,7 +2145,7 @@ static void shmem_set_folio_swapin_error(struct inode *inode, pgoff_t index,
+>>>>         * won't be 0 when inode is released and thus trigger WARN_ON(i_blocks)
+>>>>         * in shmem_evict_inode().
+>>>>         */
+>>>> -    shmem_recalc_inode(inode, -nr_pages, -nr_pages);
+>>>> +    shmem_recalc_inode(inode, 0, -nr_pages);
+>>>>        swap_free_nr(swap, nr_pages);
+>>>>    }
+>>>
+>>> Have you tested your patch? When I inject an error to test your patch, the following issue will be triggered:As all issues are hard to trigger, I only run some simple test to ensure normal
+>> process is fine. Could you share how to inject the error to trigger following
+>> issue. I will have a deep look. Thanks
+> Sorry that the message is truncated. I mean I only test normal process is fine.
 
-diff --git a/drivers/pinctrl/renesas/pinctrl-rza2.c b/drivers/pinctrl/renesas/pinctrl-rza2.c
-index 3b58129638500eef61058e43e49e6f39fde3cb4e..1ada8852d4f1258bc955acb044e99c748d250c41 100644
---- a/drivers/pinctrl/renesas/pinctrl-rza2.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rza2.c
-@@ -172,8 +172,8 @@ static int rza2_chip_get(struct gpio_chip *chip, unsigned int offset)
- 	return !!(readb(priv->base + RZA2_PIDR(port)) & BIT(pin));
- }
- 
--static void rza2_chip_set(struct gpio_chip *chip, unsigned int offset,
--			  int value)
-+static int rza2_chip_set(struct gpio_chip *chip, unsigned int offset,
-+			 int value)
- {
- 	struct rza2_pinctrl_priv *priv = gpiochip_get_data(chip);
- 	u8 port = RZA2_PIN_ID_TO_PORT(offset);
-@@ -188,6 +188,8 @@ static void rza2_chip_set(struct gpio_chip *chip, unsigned int offset,
- 		new_value &= ~BIT(pin);
- 
- 	writeb(new_value, priv->base + RZA2_PODR(port));
-+
-+	return 0;
- }
- 
- static int rza2_chip_direction_output(struct gpio_chip *chip,
-@@ -236,7 +238,7 @@ static struct gpio_chip chip = {
- 	.direction_input = rza2_chip_direction_input,
- 	.direction_output = rza2_chip_direction_output,
- 	.get = rza2_chip_get,
--	.set = rza2_chip_set,
-+	.set_rv = rza2_chip_set,
- };
- 
- static int rza2_gpio_register(struct rza2_pinctrl_priv *priv)
+Please also test the swapin error case you try to fix. Obviously your 
+current patch is incorrect.
 
--- 
-2.48.1
+> Besides, I think there is another long-standing issue which could trigger the
+> following issue. Here is the issue which is possible to blame:
+> When swap entry is replaced with error entry in shmem_set_folio_swapin_error(),
+> we will reduce info->swapped. Afterwards, error entry could be deleted in
+> shmem_undo_range() and the info->swapped is reduced again. As a result, we
+> reduce info->swapped twice for a single swap entry.
 
+OK. So you should do something like in shmem_find_swap_entries() to 
+avoid decreasing info->swapped again.
+
+entry = radix_to_swp_entry(folio);
+/*
+* swapin error entries can be found in the mapping. But they're
+* deliberately ignored here as we've done everything we can do.
+*/
+if (swp_type(entry) != type)
+	continue;
+
+> A simple way to confirm this is injecting error to original code. Could you
+> share how to trigger the issue or could you do the same test to original code?
+
+Yes, original code is good.
+
+A simple test procedure is to allocate some shmem memory and swap them 
+out, then swap in the shmem while injecting an error to trigger the 
+swap-in error case, and finally unmap the program.
