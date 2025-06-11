@@ -1,175 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17462E610F;
-	Wed, 11 Jun 2025 16:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78A6F198851;
+	Wed, 11 Jun 2025 16:46:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749660345; cv=none; b=JtqoujcH5+cmfbcJuj9TBoM3iKOjeXYPLArwVT4Kp5qvHvLd8eKu43k+nH0eQrStPtB1TbMkQuIkyWuogiJ7OCzXu+SbEVt6XTCDXv3CeNjhgEQaeiuKLJDTWG9v5I3k2jC2HG/dMFaF1uIjnN8YzQZmAwRCc7t3y1zWM9akN5w=
+	t=1749660375; cv=none; b=WZPEjMjFxeEufEYWcxMH0BMLv5DdV8YzeWzcMaf5L1Pt4u79vbZPyQYQIX6c+GZda96dvsn5+WE0Ba9UImTBK6RkjUVH5erQCWt85I0z078SxDvyLuz5mlwdamk70ZyMzQZB1QgMc5+ZWqoQx4TwCt1xk0GDdwHz7T6m0A4qc2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749660345; c=relaxed/simple;
-	bh=6YiYld9w2Hx+Iaj5LQHXe+nPaanJ0QWZp6uRgHqygvg=;
+	s=arc-20240116; t=1749660375; c=relaxed/simple;
+	bh=pKsYBtZSzJFBNl3Ug9YmBQ3IUiKtUuYSnIdF26bHabc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lqbPo8pK9woMxkbpi0auu+ivMHxP5rcbsS9a46Q7SPl7IRFS0Qry278MoRpkhZ8Z7Ifj8Ek7SysV6iIgiQMI7vu/6wXOtuIvgkR1Ak8LGkcRcJ33XSqh2luwsNXFTpp5maNaLUuXIOCdo4mF3ybVuuLCRlLN2C6oVaRqoxDpj/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uMVTcWwy; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=PXwzmHr9R3UdReRLFFVfbHbhkqG5ICImTf/rv4snF2ddOO29qoPXYG8BPu8GRS9lW6+SZWbhlz60zgBd0MlKksCieA3Rm/1Kde9stkLe4TN/g+MAapyLCocOWxLv/i0Q0aC6K7cPT1LFeovY4pVUTQkQf3V4sG8BkGBAcXQ12es=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=irpbFja7; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uMVTcWwy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEC1BC4CEE3;
-	Wed, 11 Jun 2025 16:45:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749660344;
-	bh=6YiYld9w2Hx+Iaj5LQHXe+nPaanJ0QWZp6uRgHqygvg=;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="irpbFja7"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id CBBC140E0184;
+	Wed, 11 Jun 2025 16:40:21 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id HV_N0c_jC9Zt; Wed, 11 Jun 2025 16:40:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1749660018; bh=pKsYBtZSzJFBNl3Ug9YmBQ3IUiKtUuYSnIdF26bHabc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uMVTcWwy/s+ucZwaGP8pT9hxCeH3a3YxGDrchK3bts5ut5zRaDXovnEb0zDVpFYKJ
-	 YsTzZkpM0FK4qVF17OSvkGoXCqtdhzL0UNv0fGyqjtnwJP9Z+oLR54ZxtTvIc8BXSh
-	 XhEclKcOLqwZ//oqKFdVlwv5o6zfKyDU38LvX6LQ9q9MTecVWLx5iTv5YWKpbhXnVu
-	 PxWJCt3li6cKlcMv6clfO+y76bHU8jckGWcdM8psSNFRL713EH8q4PBHoZU3ZlTo9x
-	 TJSgxbup7/bumeblBTC8UZyySOEJ0H1SY3mohqGSRBTtd9cEodSUoGrbOy+syWBjHu
-	 Wl5gjiZ2AiAdA==
-Date: Wed, 11 Jun 2025 19:45:39 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Prachotan Bathi <prachotan.bathi@arm.com>
-Cc: Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Stuart Yoder <stuart.yoder@arm.com>,
-	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] tpm_crb_ffa: handle tpm busy return code
-Message-ID: <aEmys305qGjxa7G2@kernel.org>
-References: <20250610213505.3881352-1-prachotan.bathi@arm.com>
- <20250610213505.3881352-2-prachotan.bathi@arm.com>
+	b=irpbFja7+nN5gvyS2dBJNnfdQwL4IoXZgjiKGGLCkJcpE9TxYIL5z0b7+08iJ7eyj
+	 U/RY7VNhGdx5pEbgv83Wezoniq6njA4/lg0ZSoOHGDjSc7MdQrhO3WeyfKZ95X5ccn
+	 ay2GHcf1IybVIuITZX35HLf8vBgYP9x5QkM9B/qTc7P9w9lq5d+UdzSDDsaRd6qkWR
+	 Dmsl/UeBkNbK7TEO1moiiINyst5slk/xHu795Qimo36MVG9yhyJ1heQ74GKT5zv05a
+	 Bl7GlviUC46ps3U+hTIJY+MUExTzg/3W1w3OGeSaqUc4ydckQNyfBgEE9DfXGLSSYM
+	 LNRks5cZ8S0mO8zFqGvWvTB7X/tfcX1/qDPCgidj1tauZ9IYYsfyYZepMJ6E1YzjNp
+	 E7d4iHuJSct9d7X91541CGB3xc74edzbKBcNRj/i3m8pDUSdcQ8u85MtPuxjB9cv/3
+	 g6ve3DI33PAcKME41rVwxCexyfANfY/yJD/J2E8zEDXxieV9l+Y5zpTSujPNpuX1kb
+	 NpY0IKffg3WvUdjAW9fasuRfN3gKsb5/Eh+F4nXnS8tO1H1aXCs9V4G4+K+WHRtIJs
+	 p2yCgzzZVc/CGT+yGLqmD8KEJTdzF6nShFXACuFIMRtvE9Ar34D7f1fLhl7o7UUvBK
+	 vwnNgKv3igW3O2XQ2M1XQrNo=
+Received: by mail.alien8.de (SuperMail on ZX Spectrum 128k, from userid 1005)
+	id ADED340E019C; Wed, 11 Jun 2025 16:40:18 +0000 (UTC)
+Date: Wed, 11 Jun 2025 16:40:18 +0000
+From: Borislav Petkov <bp@alien8.de>
+To: "Datta, Shubhrajyoti" <shubhrajyoti.datta@amd.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"git (AMD-Xilinx)" <git@amd.com>,
+	"Simek, Michal" <michal.simek@amd.com>,
+	Tony Luck <tony.luck@intel.com>, James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>
+Subject: Re: [PATCH] EDAC/synopsys: Clear the ecc counters at init
+Message-ID: <20250611164018.GAaEmxctC+ESUCvBNT@fat_crate.local>
+References: <20250528065650.27646-1-shubhrajyoti.datta@amd.com>
+ <20250603090536.GCaD664IbJB5IoR06g@fat_crate.local>
+ <SA1PR12MB894764756C6538EE985BDE24816CA@SA1PR12MB8947.namprd12.prod.outlook.com>
+ <20250604093735.GAaEAT39KGW1KJDrjD@fat_crate.local>
+ <SA1PR12MB89471067967E0A5F46CEE1DF8175A@SA1PR12MB8947.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250610213505.3881352-2-prachotan.bathi@arm.com>
+In-Reply-To: <SA1PR12MB89471067967E0A5F46CEE1DF8175A@SA1PR12MB8947.namprd12.prod.outlook.com>
 
-On Tue, Jun 10, 2025 at 04:35:05PM -0500, Prachotan Bathi wrote:
-> Platforms supporting direct message request v2 can
-> support SPs that support multiple services.
-> If the TPM service is sharing the SP with another service,
-> it could get an error code of BUSY if the other service is
-> in process.
-> This adds a parameterized variable (default 2000ms)
->  that indicates the maximum time to keep retrying for.
-> When the TPM service returns a BUSY error code, we sleep
->  50-100us before retrying again, until we are over the
-> busy timeout.
-> 
-> Signed-off-by: Prachotan Bathi <prachotan.bathi@arm.com>
-> ---
->  drivers/char/tpm/tpm_crb_ffa.c | 78 +++++++++++++++++++++++-----------
->  1 file changed, 54 insertions(+), 24 deletions(-)
-> 
-> diff --git a/drivers/char/tpm/tpm_crb_ffa.c b/drivers/char/tpm/tpm_crb_ffa.c
-> index 4ead61f01299..122984e15971 100644
-> --- a/drivers/char/tpm/tpm_crb_ffa.c
-> +++ b/drivers/char/tpm/tpm_crb_ffa.c
-> @@ -10,6 +10,8 @@
->  #define pr_fmt(fmt) "CRB_FFA: " fmt
->  
->  #include <linux/arm_ffa.h>
-> +#include <linux/delay.h>
-> +#include <linux/moduleparam.h>
->  #include "tpm_crb_ffa.h"
->  
->  /* TPM service function status codes */
-> @@ -178,6 +180,17 @@ int tpm_crb_ffa_init(void)
->  }
->  EXPORT_SYMBOL_GPL(tpm_crb_ffa_init);
->  
-> +static unsigned int busy_timeout = 2000;
-> +/**
-> + * busy_timeout - Maximum time to retry before giving up on busy
-> + *
-> + * This parameter defines the maximum time in milliseconds to retry
-> + * sending a message to the TPM service before giving up.
-> + */
-> +module_param(busy_timeout, uint, 0644);
-> +MODULE_PARM_DESC(busy_timeout,
-> +		 "Maximum time to retry before giving up on busy");
-> +
->  static int __tpm_crb_ffa_send_recieve(unsigned long func_id,
->  				      unsigned long a0,
->  				      unsigned long a1,
-> @@ -191,34 +204,51 @@ static int __tpm_crb_ffa_send_recieve(unsigned long func_id,
->  
->  	msg_ops = tpm_crb_ffa->ffa_dev->ops->msg_ops;
->  
-> -	if (ffa_partition_supports_direct_req2_recv(tpm_crb_ffa->ffa_dev)) {
-> -		memset(&tpm_crb_ffa->direct_msg_data2, 0x00,
-> -		       sizeof(struct ffa_send_direct_data2));
-> +	ktime_t start;
-> +	ktime_t stop;
-> +
-> +	start = ktime_get();
-> +	stop = ktime_add(start, ms_to_ktime(busy_timeout));
-> +
-> +	do {
-> +		if (ffa_partition_supports_direct_req2_recv(tpm_crb_ffa->ffa_dev)) {
-> +			memset(&tpm_crb_ffa->direct_msg_data2, 0x00,
-> +			       sizeof(struct ffa_send_direct_data2));
->  
-> -		tpm_crb_ffa->direct_msg_data2.data[0] = func_id;
-> -		tpm_crb_ffa->direct_msg_data2.data[1] = a0;
-> -		tpm_crb_ffa->direct_msg_data2.data[2] = a1;
-> -		tpm_crb_ffa->direct_msg_data2.data[3] = a2;
-> +			tpm_crb_ffa->direct_msg_data2.data[0] = func_id;
-> +			tpm_crb_ffa->direct_msg_data2.data[1] = a0;
-> +			tpm_crb_ffa->direct_msg_data2.data[2] = a1;
-> +			tpm_crb_ffa->direct_msg_data2.data[3] = a2;
->  
-> -		ret = msg_ops->sync_send_receive2(tpm_crb_ffa->ffa_dev,
-> +			ret = msg_ops->sync_send_receive2(tpm_crb_ffa->ffa_dev,
->  				&tpm_crb_ffa->direct_msg_data2);
-> -		if (!ret)
-> -			ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data2.data[0]);
-> -	} else {
-> -		memset(&tpm_crb_ffa->direct_msg_data, 0x00,
-> -		       sizeof(struct ffa_send_direct_data));
-> -
-> -		tpm_crb_ffa->direct_msg_data.data1 = func_id;
-> -		tpm_crb_ffa->direct_msg_data.data2 = a0;
-> -		tpm_crb_ffa->direct_msg_data.data3 = a1;
-> -		tpm_crb_ffa->direct_msg_data.data4 = a2;
-> -
-> -		ret = msg_ops->sync_send_receive(tpm_crb_ffa->ffa_dev,
-> -				&tpm_crb_ffa->direct_msg_data);
-> -		if (!ret)
-> -			ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data.data1);
-> -	}
-> +			if (!ret)
-> +				ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data2.data[0]);
-> +		} else {
-> +			memset(&tpm_crb_ffa->direct_msg_data, 0x00,
-> +			       sizeof(struct ffa_send_direct_data));
->  
-> +			tpm_crb_ffa->direct_msg_data.data1 = func_id;
-> +			tpm_crb_ffa->direct_msg_data.data2 = a0;
-> +			tpm_crb_ffa->direct_msg_data.data3 = a1;
-> +			tpm_crb_ffa->direct_msg_data.data4 = a2;
-> +
-> +			ret = msg_ops->sync_send_receive(tpm_crb_ffa->ffa_dev,
-> +				&tpm_crb_ffa->direct_msg_data);
-> +			if (!ret)
-> +				ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data.data1);
-> +		}
-> +		// Check if the TPM service returned busy
-> +		if (ret == -EBUSY)
-> +			pr_err("TPM says busy, trying again, value, ret: %d\n",
-> +			       ret);
-> +		else
-> +			// If TPM did not return busy, we are done, exit the loop
-> +			break;
-> +		// Sleep for a short time before retrying to avoid busy looping
-> +		usleep_range(50, 100);
-> +	} while (ktime_before(ktime_get(), stop));
-> +	// If we are here, we either got a valid response or we are over the busy timeout
+On Wed, Jun 11, 2025 at 11:42:33AM +0000, Datta, Shubhrajyoti wrote:
+> However the registers for Zynqmp and Zynq is different to differentiate
+> Should the usage of quirk be fine code snippet below
 
-Please use "/* */". We don't use C++ comment style:
+Right, please send a proper diff - it doesn't have to be tested yet and I'll
+finish massaging it.
 
-https://www.kernel.org/doc/html/v6.14/process/coding-style.html#commenting
-
-BR, Jarkko
+Thx.
