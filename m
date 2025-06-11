@@ -1,77 +1,177 @@
-Received: from unicom145.biz-email.net (unicom145.biz-email.net [210.51.26.145])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E38B25DAF4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD5D225A357;
 	Wed, 11 Jun 2025 09:00:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.26.145
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749632422; cv=none; b=LX38Ce0kCzeNI0m+6L/hVrkNfqfDNtO1WqU/azinljuQwa10h0XxED3czrvE3yvNXy88lyMzDFTaiLU9+DPgYaLIRseSqlvvHlNV4GKBFzZw1mz03UZi/s86eZc9KTg/LtbVlPBhYLuZ8+p0DpqUEVa6Y/RFpqtrphRCuX/xIvE=
+	t=1749632422; cv=none; b=WhcknQCQ6LuSWiTH7KC4/IskGKfty+919IIeicSUg7aruwjrWN/QR7pAnlL1dt6PphavMLBNVFlZF73mVldoP12Wkqaru/iPULXmMuIpCk/hyGN23afmu0C1m9mLoMzMANjc/uDn2eFhYtAcgFd6HP7RlT/bW5jXhNmnAjVOk+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749632422; c=relaxed/simple;
-	bh=qdHdY0mYomgUUuP25pEtrs9RUkr6YQXepCL4Tm8nytA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=C26FhkngqPdxC30gV92dW4eoNKCe1I205eGXDHQlx3cqcmdJHvZow6XaPteMPdUxQ/ittSIxh+0eECJyvd7MXvWnUWtCQYqwcJtMFZiQaKauG+R33xormzm6Af1y/je7CJ214+WQnDDuyNUx2i05bsM2clZ/en/5RGIVS9hfXOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.26.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
-Received: from jtjnmail201612.home.langchao.com
-        by unicom145.biz-email.net ((D)) with ASMTP (SSL) id 202506111659051048;
-        Wed, 11 Jun 2025 16:59:05 +0800
-Received: from jtjnmail201607.home.langchao.com (10.100.2.7) by
- jtjnmail201612.home.langchao.com (10.100.2.12) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Wed, 11 Jun 2025 16:59:04 +0800
-Received: from localhost.localdomain.com (10.94.12.179) by
- jtjnmail201607.home.langchao.com (10.100.2.7) with Microsoft SMTP Server id
- 15.1.2507.39; Wed, 11 Jun 2025 16:59:04 +0800
-From: chuguangqing <chuguangqing@inspur.com>
-To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>, Jean-Baptiste Maneyrol
-	<jmaneyrol@invensense.com>
-CC: <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>, chuguangqing
-	<chuguangqing@inspur.com>
-Subject: [PATCH 05/10] iio: health: afe4404: convert to use maple tree register cache
-Date: Wed, 11 Jun 2025 16:58:33 +0800
-Message-ID: <20250611085838.4761-6-chuguangqing@inspur.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250611085838.4761-1-chuguangqing@inspur.com>
-References: <20250611085838.4761-1-chuguangqing@inspur.com>
+	bh=hvvEJnY37tRdbZi05MXx+RghcNgxQldkNULaKTnghls=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=DLy0S4sva4UDvITd8fcgAUCRXqGc4hqYYlouN/UXpKvJ9fjfKKXJQjqvd1s/3EB2N84XZpcrR68rcOoBFBWUISvBicucJss1NSuqbhlHwmkN7HmqXeVzDiLpNlwKH8njV5HsFOakzoIcvVpCxc1Am7En5oQQhKMnDJfn8Ca7F4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IO92zb3w; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IO92zb3w"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6E5A2432F4;
+	Wed, 11 Jun 2025 09:00:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1749632418;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2xewKhOp0mBPwnkiZS/NAIbre5TjVJqSCzZ2dfZW/xU=;
+	b=IO92zb3wp7N4bROF7nxD4OiSldk6yOVfZreYNQZi5MO705XxFP+wJrSEhHtw2whShnI/vI
+	sOOFk/4nCUPf+lvpdhIn2kV5wom4TgD4miGSh5x4zTTEUPNbT9xHXDzNvf+Z+MjOwQtF3A
+	gRTrcfPeZC4WFKuMb1ylliPycBN1uihqurIt6onJfPGOoEZcvGHZoyK8bTJut2F0x1U9Kr
+	+x+g+g5pbhWbUsoFs5G0kDPMN5fLQdvX3SZ8ympMLb2DeIQnPb7MuyO37/Gx/kh1ZF9tux
+	D/+ChKvF/0BhLJg99+vxAPR/WoDUkvjlUXIhySqeOUg9enPLGGAEFoXD3AuPWw==
+From: Thomas Richard <thomas.richard@bootlin.com>
+Date: Wed, 11 Jun 2025 11:00:08 +0200
+Subject: [PATCH v8 03/10] gpio: aggregator: refactor the code to add GPIO
+ desc in the forwarder
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-tUid: 2025611165905828bf27d5be692cabd28fa2b0c2e37f1
-X-Abuse-Reports-To: service@corp-email.com
-Abuse-Reports-To: service@corp-email.com
-X-Complaints-To: service@corp-email.com
-X-Report-Abuse-To: service@corp-email.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250611-aaeon-up-board-pinctrl-support-v8-3-3693115599fe@bootlin.com>
+References: <20250611-aaeon-up-board-pinctrl-support-v8-0-3693115599fe@bootlin.com>
+In-Reply-To: <20250611-aaeon-up-board-pinctrl-support-v8-0-3693115599fe@bootlin.com>
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
+ Andy Shevchenko <andy@kernel.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
+ linux-hardening@vger.kernel.org, 
+ Thomas Richard <thomas.richard@bootlin.com>
+X-Mailer: b4 0.14.1
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduudeljecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpefvhhhomhgrshcutfhitghhrghrugcuoehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkedthedvieethedtleetffehudevleegledvteegvdeujeeghffhkeeggfefudevnecukfhppedvrgdtudemtggsudegmehfgedtmegsfhdttdemfhdtheegmegtlegtvdemvddutgefmeduheeiieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmehfgedtmegsfhdttdemfhdtheegmegtlegtvdemvddutgefmeduheeiiedphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepthhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedufedprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheprghnugihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrt
+ ghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvggvsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehgvggvrhhtodhrvghnvghsrghssehglhhiuggvrhdrsggvpdhrtghpthhtoheplhhinhhugidqhhgrrhguvghnihhnghesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: thomas.richard@bootlin.com
 
-The maple tree register cache is based on a much more modern data structure
-than the rbtree cache and makes optimisation choices which are probably
-more appropriate for modern systems than those made by the rbtree cache.
+Create a dedicated function to add a GPIO desc in the forwarder. Instead of
+saving a GPIO descs array pointer, now the GPIO descs are passed one by one
+to the forwarder which registers them in its own array. So after the call
+of gpiochip_fwd_create(), the passed array can be free.
 
-Signed-off-by: chuguangqing <chuguangqing@inspur.com>
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
+Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 ---
- drivers/iio/health/afe4404.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpio/gpio-aggregator.c | 59 ++++++++++++++++++++++++++++--------------
+ 1 file changed, 40 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/iio/health/afe4404.c b/drivers/iio/health/afe4404.c
-index 99ff68aed27c..b2727effecaa 100644
---- a/drivers/iio/health/afe4404.c
-+++ b/drivers/iio/health/afe4404.c
-@@ -413,7 +413,7 @@ static const struct regmap_config afe4404_regmap_config = {
- 	.val_bits = 24,
+diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
+index f79bb4e12b20..6285c3e8f6b8 100644
+--- a/drivers/gpio/gpio-aggregator.c
++++ b/drivers/gpio/gpio-aggregator.c
+@@ -485,6 +485,10 @@ devm_gpiochip_fwd_alloc(struct device *dev, unsigned int ngpios)
+ 	if (!fwd)
+ 		return ERR_PTR(-ENOMEM);
  
- 	.max_register = AFE4404_AVG_LED1_ALED1VAL,
--	.cache_type = REGCACHE_RBTREE,
-+	.cache_type = REGCACHE_MAPLE,
- 	.volatile_table = &afe4404_volatile_table,
- };
++	fwd->descs = devm_kcalloc(dev, ngpios, sizeof(*fwd->descs), GFP_KERNEL);
++	if (!fwd->descs)
++		return ERR_PTR(-ENOMEM);
++
+ 	chip = &fwd->chip;
  
+ 	chip->label = dev_name(dev);
+@@ -504,13 +508,43 @@ devm_gpiochip_fwd_alloc(struct device *dev, unsigned int ngpios)
+ 	return fwd;
+ }
+ 
++static int gpiochip_fwd_desc_add(struct gpiochip_fwd *fwd,
++				 struct gpio_desc *desc,
++				 unsigned int offset)
++{
++	struct gpio_chip *parent = gpiod_to_chip(desc);
++	struct gpio_chip *chip = &fwd->chip;
++
++	if (offset > chip->ngpio)
++		return -EINVAL;
++
++	/*
++	 * If any of the GPIO lines are sleeping, then the entire forwarder
++	 * will be sleeping.
++	 * If any of the chips support .set_config(), then the forwarder will
++	 * support setting configs.
++	 */
++	if (gpiod_cansleep(desc))
++		chip->can_sleep = true;
++
++	if (parent && parent->set_config)
++		chip->set_config = gpio_fwd_set_config;
++
++	fwd->descs[offset] = desc;
++
++	dev_dbg(chip->parent, "%u => gpio %d irq %d\n", offset,
++		desc_to_gpio(desc), gpiod_to_irq(desc));
++
++	return 0;
++}
++
+ /**
+  * gpiochip_fwd_create() - Create a new GPIO forwarder
+  * @dev: Parent device pointer
+  * @ngpios: Number of GPIOs in the forwarder.
+  * @descs: Array containing the GPIO descriptors to forward to.
+- *         This array must contain @ngpios entries, and must not be deallocated
+- *         before the forwarder has been destroyed again.
++ *         This array must contain @ngpios entries, and can be deallocated
++ *         as the forwarder has its own array.
+  * @features: Bitwise ORed features as defined with FWD_FEATURE_*.
+  *
+  * This function creates a new gpiochip, which forwards all GPIO operations to
+@@ -535,26 +569,12 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
+ 
+ 	chip = &fwd->chip;
+ 
+-	/*
+-	 * If any of the GPIO lines are sleeping, then the entire forwarder
+-	 * will be sleeping.
+-	 * If any of the chips support .set_config(), then the forwarder will
+-	 * support setting configs.
+-	 */
+ 	for (i = 0; i < ngpios; i++) {
+-		struct gpio_chip *parent = gpiod_to_chip(descs[i]);
+-
+-		dev_dbg(dev, "%u => gpio %d irq %d\n", i,
+-			desc_to_gpio(descs[i]), gpiod_to_irq(descs[i]));
+-
+-		if (gpiod_cansleep(descs[i]))
+-			chip->can_sleep = true;
+-		if (parent && parent->set_config)
+-			chip->set_config = gpio_fwd_set_config;
++		error = gpiochip_fwd_desc_add(fwd, descs[i], i);
++		if (error)
++			return ERR_PTR(error);
+ 	}
+ 
+-	fwd->descs = descs;
+-
+ 	if (chip->can_sleep)
+ 		mutex_init(&fwd->mlock);
+ 	else
+@@ -1348,6 +1368,7 @@ static int gpio_aggregator_probe(struct platform_device *pdev)
+ 		return PTR_ERR(fwd);
+ 
+ 	platform_set_drvdata(pdev, fwd);
++	devm_kfree(dev, descs);
+ 	return 0;
+ }
+ 
+
 -- 
-2.31.1
+2.39.5
 
