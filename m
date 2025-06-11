@@ -1,102 +1,112 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0382E29D19;
-	Wed, 11 Jun 2025 07:55:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE4AC2356C7;
+	Wed, 11 Jun 2025 07:55:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749628547; cv=none; b=CrgG8Kk+Yog/hwIC6B1UWvi+9+ZI7PBJPG0TxKWPN3h7xRM1T0ZfkWWSljuR9CQeKVtB3yLjsvuJOT0+JtO1iJKAmNyyL1G2MpW5/U5Ej/2dipWFsh+f2kokSfyLnMEQgaQMRJwxnrY1FLfbajaKdHqHNxBPPQNG8dTb2xq6UfI=
+	t=1749628550; cv=none; b=a9FAwpfh5W9UxbiagKN7NLsrhtINLv/gdf9H0/y+tu7fWSDqvqR9ZJOab7BEqOog6xWh/7txRIYcyxOIZP0S3+GKiMPtChG/oCmskbCuCWdassijXpDseADWXX6CGptbLjZzFsfyaS5i+dL7v1Mr2wHPM4K6WjiIPkUzsVBJVXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749628547; c=relaxed/simple;
-	bh=7klCgbHcdnpc/FRIacQPzSTO7zTDa1Elo06y8mgwqAM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XisCV8yq+9v4imuAxlxVDdpQIKAgp29JSs5wTW2kO7CJbxl3v9HJ/5Kh3wcuDK5alOOVqU6akWDxt+u2Yz8kzulEAO2sVWUdDV5tzgPJNDbuEbd3GJ1oB34GGZg4pjUnPfC5/GT7yzvPMziroiS6Ja4ad1OpTMQ5MXqY2QV9Prg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Z90ms/Ok; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1749628550; c=relaxed/simple;
+	bh=4uFcfbX4N79oywxH3f10w8cbGt3GEjQ8hikeWJcknoM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uVuNpukZQdTqnP3cJrS33w03uIHIOfeXlCWUjf2FlZE2ililGWh3vjPseSj8yQ7qbOZ44HUzVTq2yyZ4Q9LpNCzClsVE1aJG3jaw0Rm8FRCvcmkcThi146vDawXBU2B/F34O+l03DHHlkM0DBQqkdzmyttl0nvpfe8hnOgHsxlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=g7rMibP0; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Z90ms/Ok"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1749628546; x=1781164546;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=7klCgbHcdnpc/FRIacQPzSTO7zTDa1Elo06y8mgwqAM=;
-  b=Z90ms/Oklus59q3uhQX/Syf/gaZcbR0SdiXtGHaoB8mkLG5jlIp0TpH/
-   XcpDeHJYx+LpBvLMzCYUFvQjOZVlskkIaDm0GJ37ISXXoM4olFRobJYrc
-   +ka1UXEvHEoY3hvSxQB9fSQ6K++RZi3a8UMErBei3L/lBMCa2bzHWpxol
-   yyHJEXmTkN6sT2FZuWO2fNnPUSVr7dwFp1dSS94DojX5H+jwnSmmV7KBl
-   2Py+R6EL7VnbzET3qg/JCQgIBfKx4laFRZr2qdaZL9NtgtoJe779T3qW3
-   emkAwLH2E3Quh5VtoXGq8urWB5FILOZIQSgxIct1CQ6T47spd/xIbyJRo
-   A==;
-X-CSE-ConnectionGUID: SyFxjzU6S2+ui+bvqltq4w==
-X-CSE-MsgGUID: 9ORByZ58QxymSLdZMDcnuA==
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="43238999"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 11 Jun 2025 00:55:45 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Wed, 11 Jun 2025 00:55:05 -0700
-Received: from archlinux.mchp-main.com (10.10.85.11) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.2507.44 via Frontend Transport; Wed, 11 Jun 2025 00:55:03 -0700
-From: Mihai Sain <mihai.sain@microchip.com>
-To: <stern@rowland.harvard.edu>, <gregkh@linuxfoundation.org>,
-	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>, <linux-usb@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-CC: Mihai Sain <mihai.sain@microchip.com>
-Subject: [PATCH] usb: ohci-at91: Use dynamic device name for OHCI HCD creation
-Date: Wed, 11 Jun 2025 10:54:15 +0300
-Message-ID: <20250611075414.4239-2-mihai.sain@microchip.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="g7rMibP0"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55B52J04009764;
+	Wed, 11 Jun 2025 07:55:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=s/xeX/ZHC2YFdCQvG289q3fjkClIi9
+	AGgxg09fdLCVg=; b=g7rMibP0MZ3FVdlNW3b2ZQseid6EtWfmh64lHnamWLN1/l
+	+XeQSDqCV9FKbJYjj3YIycKGJJiVSTXGpAJe5buIt79PSkG2vRe3PHpRkbaLHTGo
+	wtlMn36qJ886tcaLdoG4v7nd1XlEb4y66FocTh4qu3PM6KkHtEoW1D3t2Td8wMNM
+	5k/VeBkPSkyQEoxUWZBhVw3e+ytoa0I7UjWuMVmF8N1bYzQJQcE4SnWEFa/+p287
+	Iu/0xovM2eYv3R4d5PJhRbHAn7rR6XnFoR4AYs/7LLUiTkvodPU4kBFJUOE3Lb1B
+	Qy9cggmdVY0IMW0LAip5+whbpu3Z6Kjb2jZlG7aA==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 474dv7k1cw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 11 Jun 2025 07:55:37 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55B4NCsU021908;
+	Wed, 11 Jun 2025 07:55:36 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47504yxstm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 11 Jun 2025 07:55:36 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55B7tYvY54132994
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 11 Jun 2025 07:55:34 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A84E82004F;
+	Wed, 11 Jun 2025 07:55:34 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7698D2004E;
+	Wed, 11 Jun 2025 07:55:34 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.133])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 11 Jun 2025 07:55:34 +0000 (GMT)
+Date: Wed, 11 Jun 2025 09:55:33 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [GIT PULL] Kbuild updates for v6.16-rc1
+Message-ID: <20250611075533.8102A57-hca@linux.ibm.com>
+References: <CAK7LNAQunzxOHR+vMZLf8kqxyRtLx-Z2G2VZquJmndrT9TZjiQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNAQunzxOHR+vMZLf8kqxyRtLx-Z2G2VZquJmndrT9TZjiQ@mail.gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: iqjTWxYcFco5o65jSEyFjkTVSdRcA3mh
+X-Proofpoint-GUID: iqjTWxYcFco5o65jSEyFjkTVSdRcA3mh
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjExMDA2OCBTYWx0ZWRfX8eEF7+xFBqVR N90QTYiFjwpTByJTI0dawiV8yF+xD7JP1yJayZwWpZscV0qiWkEDPvsWk2yfs977SwFKxmKy+Qp lxScm5TPHyORJrfGtDYmNxKrsQ/MOvIhk6hVHNGB/tMGqa2I/NDnvXYvYdAD31+8d8Pj1wo2cld
+ Xn8aktyHspmMs/VcdrIqa1CMVWLkG3RbS9bDL0iee08/8/zeOKpAuTE+jbOsRl3W8+q0gNINs81 hpuqDWqnlFKIgD2J0oMf0zzfCJhT+ddUWEdxAcpXNZ+4guas1bgEInuIwkMO+L8IRFnkIdhMU3C FdE5U2zrhENL+5veiPCMHuqwA31jLKOn9h03+GvPJD5v2orRJHizxKHh+gxSfb5yrWG6rqgGDrb
+ pGi9OqekCvF/QuwTi/XWusSUCV6EdmIZu2XGq/bJu8G8DMQmCmeh5Vkif/0Fi8MTbdx5YN0y
+X-Authority-Analysis: v=2.4 cv=CfMI5Krl c=1 sm=1 tr=0 ts=6849367a cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=qGWf7Qon23mMiXRqvLsA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-11_03,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
+ phishscore=0 priorityscore=1501 clxscore=1015 impostorscore=0 mlxscore=0
+ suspectscore=0 mlxlogscore=878 adultscore=0 malwarescore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506110068
 
-Use the dynamic device name instead of the hardcoded string "at91"
-when creating the OHCI host controller driver.
-This ensures that the device name is more flexible
-and correctly reflects the actual device in the system.
-This will be in sync with ehci at91 driver.
+On Sun, Jun 08, 2025 at 01:41:18AM +0900, Masahiro Yamada wrote:
+> Kbuild updates for v6.16
+> 
+>  - Add support for the EXPORT_SYMBOL_GPL_FOR_MODULES() macro, which exports a
+>    symbol only to specified modules
+> 
+>  - Improve ABI handling in gendwarfksyms
+> 
+>  - Forcibly link lib-y objects to vmlinux even if CONFIG_MODULES=n
+> 
+>  - Add checkers for redundant or missing <linux/export.h> inclusion
 
-[root@sam9x75eb ~]$ dmesg | grep usb
-[    1.464487] usb usb1: Manufacturer: Linux 6.16.0-rc1 ehci_hcd
-[    1.470210] usb usb1: SerialNumber: 700000.usb-ehci
-[    1.595683] usb usb2: Manufacturer: Linux 6.16.0-rc1 ohci_hcd
-[    1.601406] usb usb2: SerialNumber: 600000.usb-ohci
+As you write in commit a934a57a42f6 ("scripts/misc-check: check missing
+#include <linux/export.h> when W=1") this adds now 4000+ extra warnings
+for W=1 builds, which makes such builds more or less useless for me.
 
-[root@sam9x75eb ~]$ cat /proc/iomem | grep usb
-00600000-006fffff : 600000.usb-ohci usb-ohci@600000
-00700000-007fffff : 700000.usb-ehci usb-ehci@700000
+Also the commit only describes what you want to achieve, but not why.
+I can only guess that you want to reduce header dependencies(?).
 
-Signed-off-by: Mihai Sain <mihai.sain@microchip.com>
----
- drivers/usb/host/ohci-at91.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/usb/host/ohci-at91.c b/drivers/usb/host/ohci-at91.c
-index 5df793dcb25d..12fdb18934cf 100644
---- a/drivers/usb/host/ohci-at91.c
-+++ b/drivers/usb/host/ohci-at91.c
-@@ -193,7 +193,7 @@ static int usb_hcd_at91_probe(const struct hc_driver *driver,
- 	if (irq < 0)
- 		return irq;
- 
--	hcd = usb_create_hcd(driver, dev, "at91");
-+	hcd = usb_create_hcd(driver, dev, dev_name(dev));
- 	if (!hcd)
- 		return -ENOMEM;
- 	ohci_at91 = hcd_to_ohci_at91_priv(hcd);
-
-base-commit: aef17cb3d3c43854002956f24c24ec8e1a0e3546
--- 
-2.49.0
-
+Don't get me wrong, I can address all of this trivial churn for s390, however
+enforcing so many extra warnings to everyone with W=1 builds doesn't look like
+the right approach to me.
