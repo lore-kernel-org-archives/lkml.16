@@ -1,84 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7969B2874EB
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A015D29ACED
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749651292; cv=none; b=e4RP6IR4ezLLurjWq17Fqji9zwwLv62X8sGjRmghUwB+jHg7JVUabz11pGzzBpJYomOAjlvCuFw4i9pOJegrfiq/EZGSMa4oF+rQtzbAxyVZR1i5WL8ARSN4836lyPuyxMXxp90cRgRo86bc2j4a5TibA9CG/BqI0mGrJ41mSXY=
+	t=1749651305; cv=none; b=PDx3Kv1M8KxmNMLgEn57eJy646s/K5uEh1ExWjyovRqPOMozkjR9lZDcxQ63pIUxAP5U1aG4+K8Iu4lnBlpUS6MAYxHHOY+S2OgC6cJkuZnRo9n3NDj9iG0JjpS+9mXtnoERqCDghf5nNoBrhZqT4QcdTMQxw+uKbWep1axeA7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749651292; c=relaxed/simple;
-	bh=cRDHd0SMxDu8sH1wYotu8sGdz7yzIzox5QZKJm1LQHw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dTo3cPJgzsEy14OjyjIH8yUAJhryqUsTFLpbZjPIUUpqnKBLcbAoZ+I4yX+R/2RMJgVF8AWdhrakmqCAXhvCekGiaPQlBNqAknG/oRazW6PXaMeduY7jYNrhsxjbe4Hc3EWSKy9Gb1a8lyOYM8g3Kg241BU0dsE8iiKqv9x3Bhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mCmuawCh; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mCmuawCh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B27B6C4CEE3;
-	Wed, 11 Jun 2025 14:14:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749651292;
-	bh=cRDHd0SMxDu8sH1wYotu8sGdz7yzIzox5QZKJm1LQHw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mCmuawChcdqRdwAkPm4jhPIy665Rxx6TdREd5RlZDR5ccoBbKUFGQpPO/Hgzy2J7+
-	 c1lwCZn9Ui/z0p+lFGcoDCxz9xmrsPIPPqDfUF4rzRRckdn0y9UKI1EwrR7aDa/+8/
-	 EtwxYhO27sfSo+he1rtJQNCuxu7bj9mWM1Oi+CDOxyOV2Z20SX1T0E3XafYUAi026y
-	 aEqteOH2s3eT/TYnHVUK3mifK+CD1DXRVmJ6Ik86vz5vP7mRZdnzHsWBWsflpgdjox
-	 H92WsTBhkMWzGQZVun7SIQ+kmv0GwF6xL/eJeer8bC24qfF1xIgi0OqsESU++2TsIF
-	 Sq82BLwmrIiRA==
-Date: Wed, 11 Jun 2025 15:14:44 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: catalin.marinas@arm.com, pcc@google.com, will@kernel.org,
-	anshuman.khandual@arm.com, joey.gouly@arm.com, maz@kernel.org,
-	oliver.upton@linux.dev, frederic@kernel.org,
-	hardevsinh.palaniya@siliconsignals.io, samuel.holland@sifive.com,
-	palmer@rivosinc.com, charlie@rivosinc.com,
-	thiago.bauermann@linaro.org, bgray@linux.ibm.com,
-	tglx@linutronix.de, puranjay@kernel.org, david@redhat.com,
-	yang@os.amperecomputing.com, mbenes@suse.cz,
-	joel.granados@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/7] prtcl: introduce PR_MTE_STORE_ONLY
-Message-ID: <7f9d8b40-3e01-4d83-b6e8-0cb2cdeb8fd6@sirena.org.uk>
-References: <20250611094802.929332-1-yeoreum.yun@arm.com>
- <20250611094802.929332-3-yeoreum.yun@arm.com>
+	s=arc-20240116; t=1749651305; c=relaxed/simple;
+	bh=pFxx+C/5QWV40QbrKzTdzefhgo5GIRyytsEQA9i/6/Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=s4FHEy+XZwSH9lI8Jc1bPBmeYf8YWFly3OKo01cy5CqPu58mQzhSkzr8HDbs8DuCRIkYgEpTE9b7GBtWCJ5eVMX2dntFYCE7a48Pbz6YcvZq3mgB/j4i76KspkPG3qon+d1KCHI0FGqug3nLQh9gS2F1ula6t+gj4zgkXmbczVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id ABE241D7240;
+	Wed, 11 Jun 2025 14:15:00 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 5C6D920033;
+	Wed, 11 Jun 2025 14:14:58 +0000 (UTC)
+Date: Wed, 11 Jun 2025 10:14:57 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ linux-kernel@vger.kernel.org, Ben Segall <bsegall@google.com>, Dietmar
+ Eggemann <dietmar.eggemann@arm.com>, Ingo Molnar <mingo@redhat.com>, Juri
+ Lelli <juri.lelli@redhat.com>, Mel Gorman <mgorman@suse.de>, Thomas
+ Gleinxer <tglx@linutronix.de>, Valentin Schneider <vschneid@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH v2] sched: Remove a preempt-disable section in
+ rt_mutex_setprio()
+Message-ID: <20250611101457.13ea44f5@batman.local.home>
+In-Reply-To: <20250611090306.GA2273038@noisy.programming.kicks-ass.net>
+References: <20250610144700.uBK6RS95@linutronix.de>
+	<20250611090306.GA2273038@noisy.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="WLkaznFp6D9YkjJU"
-Content-Disposition: inline
-In-Reply-To: <20250611094802.929332-3-yeoreum.yun@arm.com>
-X-Cookie: No skis take rocks like rental skis!
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: 5C6D920033
+X-Stat-Signature: jfpkggf699s5uq3t8z8iukopfwho48gx
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/WvrBFQsv3gRwMyZGvufRM72PtMU2aDtY=
+X-HE-Tag: 1749651298-720991
+X-HE-Meta: U2FsdGVkX18MuulUrPufGWjBco2mf9EefcB2MFUtAED5qZCkZckI1+jdoixvFikw+D9j4rhy+pZAeE0Osm9OzscW+0mEoVxG3ZW/44EBCVBhNTRnx76SU8EDBidHUU/y/T/oCkfb0Y8vEL3gPp8Rq0mBxG8vbH7o6y7YISHIsWxjmNAu4oCEsjvrOIlBcIC+gHJ2n9AKKX+LBeIBCZ4bECKivTQNfnjvRNj6jN68a1IYnHUBKjdVM+3u1XUwUKBp1Yz6e2XkyLUGpRQ2Xr8HENiv96uOzIl0Bp981i0bGNcjh33uFXLmWgu3ArFpTHCb13yu3XgJ4kVJGAN1TL5kCh649f0AjS9hXRvOJEJYG/lo9MUox1YwQjJ0JfZqkxIGoXS0E9Vt+kIFOd8V43wfog==
 
+On Wed, 11 Jun 2025 11:03:06 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
---WLkaznFp6D9YkjJU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> > --- a/kernel/sched/core.c
+> > +++ b/kernel/sched/core.c
+> > @@ -7292,14 +7292,10 @@ void rt_mutex_setprio(struct task_struct *p, struct task_struct *pi_task)
+> >  
+> >  	check_class_changed(rq, p, prev_class, oldprio);
+> >  out_unlock:
+> > -	/* Avoid rq from going away on us: */
+> > -	preempt_disable();  
+> 
+> Perhaps add:
+> 
+> 	/* IRQs are still disabled */
+> 
+> or something to that effect such that it is obvious from reading the
+> code that dropping the lock will not enable preemption?
 
-On Wed, Jun 11, 2025 at 10:47:57AM +0100, Yeoreum Yun wrote:
-> PR_MTE_STORE_ONLY is used to restrict the MTE tag check for store
-> opeartion only.
+Hmm, wouldn't lockdep_assert_irqs_disabled() be better than a comment.
+It lets people know that interrupts are disabled and when lockdep is
+enabled it also makes sure they are.
 
-Tested-by: Mark Brown <broonie@kernel.org>
-
---WLkaznFp6D9YkjJU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhJj1QACgkQJNaLcl1U
-h9Bw5Af/XdFp939N2wucEqYWmTgJRZo67n99s5HUufuQy9VuRp8hvczjeAs6Kkx4
-GxXiaPopZ8T4BbO4Dcg1jX/NcHqJn7JATKxyQqYXsxOZHD08QzPJhdNNakfX4DjO
-4/YbkM9X8uM+cI1kcyFsTHSpmkx5gppfZS9ZfKUoAPHEg8xlQVrWYjn9z+5bw/Q6
-5IWN57yGPSalnTxCOwC9w9tPRNpiDpoy4/1odxFGTmH6UsYABrfaprcBJjGm2t6O
-5SLrAW8VNJrnDbIezM92Zq3GEa2cLUUUJLs4mld5Z0gGbgL/XfJglpPzrfX0p7rl
-oN0TrmhTKHyH+xS48CG//DZ5mvzVqQ==
-=1ld8
------END PGP SIGNATURE-----
-
---WLkaznFp6D9YkjJU--
+-- Steve
