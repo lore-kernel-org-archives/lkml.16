@@ -1,111 +1,135 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3031A283142
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 12:52:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77628283136;
+	Wed, 11 Jun 2025 12:52:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749646363; cv=none; b=A8oRWsuzyqio4KKyDckC48kN6rOqNotddFiQzg/jINa9UN9RXpMFO1u22nOs0wBCV5orL8BeqNNGVU9hMdVqEkYztdxtx31NynZwhsCaH1Gy0AnysfjPgZlG5YV8Pa/L33ECg0jDzAqxEGapOwr+ZO5j7F/vOGJ4Jonw/4LOjOc=
+	t=1749646366; cv=none; b=iVJFqc3wvMSCU/ZeKnK7jYMFXPiIUlRTDgXt5xJ+DzouLr9CMhbXJ8azbRW8440kRpPXNTLg1cPjuACtlD4k76/ICDUG6+oXQmb6t3viqMh9wHZbZCXYaO7v9r+IeMYrE/DsEPXqnvdzMjlyEB5HWz1/jXoUk6xKqJi+NubdPBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749646363; c=relaxed/simple;
-	bh=p8EprR3dFzs7gZuXiSfEzwqS/zZdqhzcIe+QokfK/ZI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=gkIpFO336A8nDzGjLB1UMR7vULdKl/lW7Dj7xlfVZS/eNefb5+pMZvPLgPE2kGnp4IN0rgj44wchtU/O+xaN45Mm9fd+lIB0MiMO9DlR9AWFvkKPIp/GiYJfWuBuOFZ8huR0/k9ZI1uXtbtdPsoqvTDe/gDtnFfx06yovnmoLf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4bHQSM0KvHzRk2j;
-	Wed, 11 Jun 2025 20:48:19 +0800 (CST)
-Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id 549E11402ED;
-	Wed, 11 Jun 2025 20:52:32 +0800 (CST)
-Received: from kwepemq100007.china.huawei.com (7.202.195.175) by
- dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 11 Jun 2025 20:52:32 +0800
-Received: from [10.159.166.136] (10.159.166.136) by
- kwepemq100007.china.huawei.com (7.202.195.175) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 11 Jun 2025 20:52:31 +0800
-Message-ID: <426246e9-ccfe-40a7-81b6-a15ac1ee32e9@huawei.com>
-Date: Wed, 11 Jun 2025 20:52:29 +0800
+	s=arc-20240116; t=1749646366; c=relaxed/simple;
+	bh=xS5CjjPOWei09By745+NFla9rsFISSD/pc+6jDHaYFc=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nauqoEAIavqI7VGe5QkiSq+NLYyi/nP4KL10ROcb6VqIIarPnKFfnXAAyKyZdS/3Wd1TbguFYEPYLxGtTMbxnSkYrgb1bg8oTGpN74DlxBaWpbJBlud/m5dBHsNd8yhMDFi5Wznicsln7kwYlWzZrXLzcyaIjaUUUmFefnl3O10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SzxtGcgj; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SzxtGcgj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 069EEC4CEF5;
+	Wed, 11 Jun 2025 12:52:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749646365;
+	bh=xS5CjjPOWei09By745+NFla9rsFISSD/pc+6jDHaYFc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=SzxtGcgjtlqJTLeJJj91O7ONtIXqWBzum2CK7b8fc734uTwS/L0Zf0mKIVTOccSzL
+	 JdQtSzMqQoMgbKJBdoxIy76e8rb1iOfHr8I4hnAH4f+U4v1OwR7b3vddxiQagtLau0
+	 zr7mZY5sEIrdRYuVWjjLc9kYBN0zX13eHdUjYIbPJEvIQinHKxJg6aoHLQQuctZiRK
+	 Q/pF6itXmvvCicWAKSCZL/ChYpNfC6Ep8VKxq+mkkVg6UPn3JgEPNPXZ/t3y1E0JwM
+	 RJPhJHQ0j1t3ldqHeRZ5Izu+P6yiyaPvuLLarxg9pRTMRlEYdkF/DowSni9B5USMGs
+	 RHokKKcxx1rXQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uPKwc-005rNW-Jo;
+	Wed, 11 Jun 2025 13:52:42 +0100
+Date: Wed, 11 Jun 2025 13:52:41 +0100
+Message-ID: <8634c6e8yu.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Ada Couprie Diaz <ada.coupriediaz@arm.com>,
+	linux-kernel@vger.kernel.org,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	kvm@vger.kernel.org,
+	kvmarm@lists.linux.dev,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH V3 2/2] KVM: selftests: Change MDSCR_EL1 register holding variables as uint64_t
+In-Reply-To: <9b378582-44eb-4fbb-a03a-40eb317daebd@arm.com>
+References: <20250610053128.4118784-1-anshuman.khandual@arm.com>
+	<20250610053128.4118784-3-anshuman.khandual@arm.com>
+	<864iwnedjk.wl-maz@kernel.org>
+	<9b378582-44eb-4fbb-a03a-40eb317daebd@arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH drm-dp 10/10] drm/hisilicon/hibmc: fix no showing problem
- with loading hibmc manually
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-CC: <xinliang.liu@linaro.org>, <tiantao6@hisilicon.com>,
-	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
-	<kong.kongxinwei@hisilicon.com>, <liangjian010@huawei.com>,
-	<chenjianmin@huawei.com>, <lidongming5@huawei.com>, <libaihan@huawei.com>,
-	<shenjian15@huawei.com>, <shaojijie@huawei.com>,
-	<jani.nikula@linux.intel.com>, <dri-devel@lists.freedesktop.org>,
-	<linux-kernel@vger.kernel.org>, <shiyongbang@huawei.com>
-References: <20250530095432.1206966-1-shiyongbang@huawei.com>
- <20250530095432.1206966-11-shiyongbang@huawei.com>
- <czs4ingsrnuaqlbn3f7ko65pzhydcuuiglyh5ksrpfcz5zur74@vzgzyjkcae63>
-From: Yongbang Shi <shiyongbang@huawei.com>
-In-Reply-To: <czs4ingsrnuaqlbn3f7ko65pzhydcuuiglyh5ksrpfcz5zur74@vzgzyjkcae63>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemq100007.china.huawei.com (7.202.195.175)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, ada.coupriediaz@arm.com, linux-kernel@vger.kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, kvm@vger.kernel.org, kvmarm@lists.linux.dev, linux-kselftest@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
+On Wed, 11 Jun 2025 04:45:10 +0100,
+Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+> 
+> 
+> 
+> On 10/06/25 10:31 PM, Marc Zyngier wrote:
+> > On Tue, 10 Jun 2025 06:31:28 +0100,
+> > Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+> >>
+> >> Change MDSCR_EL1 register holding local variables as uint64_t that reflects
+> >> its true register width as well.
+> >>
+> >> Cc: Marc Zyngier <maz@kernel.org>
+> >> Cc: Oliver Upton <oliver.upton@linux.dev>
+> >> Cc: Joey Gouly <joey.gouly@arm.com>
+> >> Cc: kvm@vger.kernel.org
+> >> Cc: kvmarm@lists.linux.dev
+> >> Cc: linux-kernel@vger.kernel.org
+> >> Cc: linux-kselftest@vger.kernel.org
+> >> Cc: linux-arm-kernel@lists.infradead.org
+> >> Reviewed-by: Ada Couprie Diaz <ada.coupriediaz@arm.com>
+> >> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> >> ---
+> >>  tools/testing/selftests/kvm/arm64/debug-exceptions.c | 4 ++--
+> >>  1 file changed, 2 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/tools/testing/selftests/kvm/arm64/debug-exceptions.c b/tools/testing/selftests/kvm/arm64/debug-exceptions.c
+> >> index c7fb55c9135b..e34963956fbc 100644
+> >> --- a/tools/testing/selftests/kvm/arm64/debug-exceptions.c
+> >> +++ b/tools/testing/selftests/kvm/arm64/debug-exceptions.c
+> >> @@ -140,7 +140,7 @@ static void enable_os_lock(void)
+> >>  
+> >>  static void enable_monitor_debug_exceptions(void)
+> >>  {
+> >> -	uint32_t mdscr;
+> >> +	uint64_t mdscr;
+> >>  
+> >>  	asm volatile("msr daifclr, #8");
+> >>  
+> >> @@ -223,7 +223,7 @@ void install_hw_bp_ctx(uint8_t addr_bp, uint8_t ctx_bp, uint64_t addr,
+> >>  
+> >>  static void install_ss(void)
+> >>  {
+> >> -	uint32_t mdscr;
+> >> +	uint64_t mdscr;
+> >>  
+> >>  	asm volatile("msr daifclr, #8");
+> >>  
+> > 
+> > Why change this in the place that matters *the least*?
+> > 
+> > arch/arm64/kernel/debug-monitors.c is full of 32bit manipulation of
+> > this register, and that's only one example of it. So if you are going
+> > to change this, please do it fully, not as a random change in a random
+> > file.
+> 
+> The first patch in this series changes mdscr system register to 64 bit
+> in the mentioned file (i.e arch/arm64/kernel/debug-monitors.c).
 
-> On Fri, May 30, 2025 at 05:54:32PM +0800, Yongbang Shi wrote:
->> From: Baihan Li <libaihan@huawei.com>
->>
->> When using command rmmod and insmod, there is no showing in second time
->> insmoding. Because DP controller won't send HPD signals, if connection
->> doesn't change or controller isn't reset. So add reset before unreset
->> in hibmc_dp_hw_init().
->>
->> Fixes: 94ee73ee3020 ("drm/hisilicon/hibmc: add dp hw moduel in hibmc driver")
-> Technically... yes and no. The function was written this way in that
-> commit, however HPD signals were not handled until the latter commit.
+Then please Cc me on the series, and not patches at random. Context matters.
 
-Alright, can I put 2 commits here?
+	M.
 
-
->> Signed-off-by: Baihan Li <libaihan@huawei.com>
->> ---
->>   drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c | 6 ++++--
->>   1 file changed, 4 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
->> index 4f93d60b932b..e1b9589ce639 100644
->> --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
->> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
->> @@ -172,13 +172,15 @@ int hibmc_dp_hw_init(struct hibmc_dp *dp)
->>   	dp_dev->link.cap.lanes = 0x2;
->>   	dp_dev->link.cap.link_rate = DP_LINK_BW_8_1;
->>   
->> -	/* hdcp data */
->> -	writel(HIBMC_DP_HDCP, dp_dev->base + HIBMC_DP_HDCP_CFG);
->>   	/* int init */
->>   	writel(0, dp_dev->base + HIBMC_DP_INTR_ENABLE);
->>   	writel(HIBMC_DP_INT_RST, dp_dev->base + HIBMC_DP_INTR_ORIGINAL_STATUS);
->>   	/* rst */
->> +	writel(0, dp_dev->base + HIBMC_DP_DPTX_RST_CTRL);
->> +	usleep_range(30, 50);
->>   	writel(HIBMC_DP_DPTX_RST, dp_dev->base + HIBMC_DP_DPTX_RST_CTRL);
->> +	/* hdcp data */
->> +	writel(HIBMC_DP_HDCP, dp_dev->base + HIBMC_DP_HDCP_CFG);
-> There are two independent changes here. Split them into two commits.
-
-Okay!
-
-
->>   	/* clock enable */
->>   	writel(HIBMC_DP_CLK_EN, dp_dev->base + HIBMC_DP_DPTX_CLK_CTRL);
->>   
->> -- 
->> 2.33.0
->>
+-- 
+Without deviation from the norm, progress is not possible.
