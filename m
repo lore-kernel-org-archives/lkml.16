@@ -1,102 +1,86 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D6A1DBB2E;
-	Wed, 11 Jun 2025 15:42:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B57C1AE875
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:43:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749656573; cv=none; b=R8fYorno3jLEPu6gt3e4qXnA12GfiN9O5OG/PoEO8JrsiaHDP1gtw5hCfDuCun7Ekg/LKF+buAj9AOrigyFW/ck6najPAJcmB42DHrCIgm93e3LYm0lHGyKWP3Mw55UXBkhyLetcSXfJtTAxWyZL5tBVZe7ltGcomfpsIpViyoI=
+	t=1749656607; cv=none; b=t3nWKAIdeApHgAIGjs57qZaUoiEuHTWRvcWZDQmnpddu+uj8aOCzita0CfnafH/YYfvkK6LaqRgJuzDxvrVBy5KazNXMozMCEUWA9Am60TP/vrJdV7T8xXpKkThE6GayerlZimkNRHbvLGundqpEvMK2chOTjGwn7QgWVb+gHjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749656573; c=relaxed/simple;
-	bh=oo0SuwwGExHFaOJFlP5OUqwnZC6rcdmMw2ydNsXzKVM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZM8iyBi8y6JSI4GLoT2S3ElO8bNGBRQMs9ZFObeMwcEDyPoyhpGgO6B3ev3ebTI2C0ECuAPyl8+4/HHIv/zDhX3/VBCKacFGd8uqc0UY1xIvqzBju32mXMEdoXqi7gVgAmAcfTTNf5cA1ykDwnahxijQABipWHulvArFGVoYMSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 54A4D1D7490;
-	Wed, 11 Jun 2025 15:42:48 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id EBAE344;
-	Wed, 11 Jun 2025 15:42:44 +0000 (UTC)
-Date: Wed, 11 Jun 2025 11:42:43 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Naresh Kamboju
- <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>,
- Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
- lkft-triage@lists.linaro.org, Stephen Rothwell <sfr@canb.auug.org.au>, Arnd
- Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, Anders
- Roxell <anders.roxell@linaro.org>
-Subject: Re: [RFC PATCH 2/2] x86: alternative: Invalidate the cache for
- updated instructions
-Message-ID: <20250611114243.43a9e3e2@batman.local.home>
-In-Reply-To: <20250611102010.1bf7c264@batman.local.home>
-References: <20250610234307.c675969e83ce53bb856e94d7@kernel.org>
-	<174956686826.1494782.11512582667456262594.stgit@mhiramat.tok.corp.google.com>
-	<20250610115030.0d60da65@gandalf.local.home>
-	<20250611192610.6edf9713f6ee84c26f653ea5@kernel.org>
-	<20250611102010.1bf7c264@batman.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749656607; c=relaxed/simple;
+	bh=emBOoEWKBN8htRregeLn2eSG23SOh7+dJ1vRBz4wJiM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Wlrwp7WQFAbCrgsuy0G/1BNYRT1mzUWa/FsbdgD33XpPG9uwmvO0tOXxNcgdb0R2ofNQRBFe8WD4Ju1YXiCJ0W2pSMIKCpveoGsYlKvZnA+Jh0ZvNdPGKMoDBAJIsBl4LqIwGgJYKXcFSP8VXc5FY63PgzZrAvdx69XY5mn5jT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IeaXe0pZ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IeaXe0pZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBCC0C4CEE3;
+	Wed, 11 Jun 2025 15:43:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749656606;
+	bh=emBOoEWKBN8htRregeLn2eSG23SOh7+dJ1vRBz4wJiM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=IeaXe0pZ8C4fNrQe+VNH0FF5VfZqyLQ+Jn2RPG+zFYvAvFHyzw1Y6iw4m2D96IEJA
+	 90CicqITmKooIGCA4VUhaRPyQUg6g9t0Qx7GVLU5itOnb01N4yhKOWL5QC+3XbdizM
+	 R8KD48APcF0s3hhJpRKYNGaAkq8Afl46izxtBVERBmUNf83LsTAExu9RtyTusCVaC9
+	 1VnfuTF3BNh+KEGynUf6xlKRGRzPcFr30alo9uqi9yN6pi2Rh78aoKN8xwha8EGWcZ
+	 mFVoo7WAeKaQh3il9E0kG0jI9hLm0PS9VSVN8OBOzPZUmw23YcbuEbXZ3yRxYGWOQS
+	 QJ5d2HPYUBZ1Q==
+From: Mark Brown <broonie@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>, 
+ Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org
+In-Reply-To: <a90cb77e66a253f4055bbb99672dc81c7457de66.1749533040.git.mazziesaccount@gmail.com>
+References: <a90cb77e66a253f4055bbb99672dc81c7457de66.1749533040.git.mazziesaccount@gmail.com>
+Subject: Re: [PATCH] regulator: bd718x7: Clarify comment by moving it
+Message-Id: <174965660569.52384.4243364071140563212.b4-ty@kernel.org>
+Date: Wed, 11 Jun 2025 16:43:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: EBAE344
-X-Stat-Signature: nbi5zcj69fqxhb99qxhyur8yityfrkzi
-X-Rspamd-Server: rspamout06
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/FS9wqtWZfxAKVfAwEw2qh9QPtWdgwg40=
-X-HE-Tag: 1749656564-458231
-X-HE-Meta: U2FsdGVkX19LET8LxWpGGUA9FMmmpcBZD9S5sG+hwI90c36aS8MFYsmjJ4B9sh2uLCuOaYCzZGH5eiBhgxPUDsUcCVKBBeXh0rV0NixwrIoQJWbOMXYuEExaWDmcygtRoeUczYq4diKHa3r8xt6NdmQ417e4YcYs6WzGzwpYQ6GwiYEwnxcJsSAWDwWf0oLi3X9JL4tzMwLkCfZIP8NaH06bROV+gxsv9AeXpNG4ZCixzL5ucKjigeNJ+27ANeRXpTUOPDz4WKAJzDoC7rTBEe94mnv4ITYpJSt45xYF/Wdq29U0IKumVkVoA53ejduExzy76UJYbz8/1HWN4G5ew3bTuYTOEOiNvYKzzPvixVwZSgYhYDQoRqjnUKF+A+Rz
+X-Mailer: b4 0.15-dev-c25d1
 
-On Wed, 11 Jun 2025 10:20:10 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Tue, 10 Jun 2025 08:32:06 +0300, Matti Vaittinen wrote:
+> The BD718x7 needs to disable voltage monitoring for a duration of
+> certain voltage changes.
+> 
+> The comment explaining use of msleep(1) instead of a more accurate
+> delay(), was placed to a function which disabled the protection. The
+> actual sleeping is done in a different place of the code, after the
+> voltage has been changed.
+> 
+> [...]
 
-> If interrupts are enabled when the break point hits and just enters the
-> int3 handler, does that also mean it can schedule?
+Applied to
 
-I added this:
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index c5c897a86418..0f3153322ad2 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -854,6 +854,8 @@ static bool do_int3(struct pt_regs *regs)
- {
- 	int res;
- 
-+	if (!irqs_disabled())
-+		printk("IRQS NOT DISABLED\n");
- #ifdef CONFIG_KGDB_LOW_LEVEL_TRAP
- 	if (kgdb_ll_trap(DIE_INT3, "int3", regs, 0, X86_TRAP_BP,
- 			 SIGTRAP) == NOTIFY_STOP)
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index ecfe7b497cad..2856805d9ed1 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -2728,6 +2728,12 @@ noinstr int smp_text_poke_int3_handler(struct pt_regs *regs)
- 	int ret = 0;
- 	void *ip;
- 
-+	if (!irqs_disabled()) {
-+		instrumentation_begin();
-+		printk("IRQS NOT DISABLED\n");
-+		instrumentation_end();
-+	}
-+
- 	if (user_mode(regs))
- 		return 0;
- 
+Thanks!
 
+[1/1] regulator: bd718x7: Clarify comment by moving it
+      commit: 55d9fd9819de09e70401b3b5262ff46d5de951b7
 
-And it didn't trigger when enabling function tracing. Are you sure
-interrupts are enabled here?
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
--- Steve
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
