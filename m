@@ -1,208 +1,243 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CFBB2E613D
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:50:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05AD2E613D;
+	Wed, 11 Jun 2025 11:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749642609; cv=none; b=j5tH7IJC0AGcdJM9uzF63FUQ30LYLCrZy8pM/m9OAa8EN33/NKohs16JdfqV64ktsu96qKd7oR6N/16WDsBZYB4HKgGQTFXNwzvreBFGULT+U3JiBYSJ/ANNidIsVzmDWQoMMqRVoiCHoigVMjXaYnjeLjm88IqvIa0NGM9a9Es=
+	t=1749642615; cv=none; b=X5PgpKhKgXxer14pibF8WnnugX3GhDa4v3LG2iH59acVhd1X6Bbro+7bFntj7j0oD7LCi7AYDhpkdaPjXTWSlg30Qye3JTnGyGQtXkyYmrZsoiSVr8oqb55l+ZpHLAb+PbuMd83RgKGVlvORtUc+8GDxRxlifHe0SEIpao8Ru4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749642609; c=relaxed/simple;
-	bh=CWu6A+I1LjwFmAU+PAVS8KxvwoMO5RZ75mLuP8WTIVU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JqtBGAonkd3eBpGYy4Dl1jAkfcXOVSExnc3+R0IOx0+53zTpCENqYK0OtYDFQAlWgxlUdD6iQHBB2oo21cHzuSnZOClYITJK6CcfqIMGuAOZl2zX2hjeR/L1CtDAMg/R6OCNT64Jjv67g235lgkRukuO8o7bWuZ7+nqjCKYngtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sb37f9LJ; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749642615; c=relaxed/simple;
+	bh=ZShzju29YN9SUyiZ60OQnyOx1z0ZZxHtfDf2/9/ohsM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HyK2nzfomhFwBzz81QSxQGpqUhlkSnzWi0fx5II1hmrdwLYc5hmhZHq//Vs4ijrb7CN8i0pcmq9uaUsJGlKU4w0vIsFBrkKqluKJ2T9T2mFN8Vg0vjy7TBKqp4GpmI6gZxkAtzaPDTO/aGUVf5UHLQkMCGEyiz/sgqugehryF5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=oI99eXMA; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sb37f9LJ"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-23649faf69fso83075ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 04:50:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749642607; x=1750247407; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Yr1jR2n/3+iHKJOEuEz4EzcjD/8G3U4J0+bvzR27Ds4=;
-        b=Sb37f9LJlSx+VSo1tUG6kGvgPCAXzq3eauDw/pcaZ3+RLB+pJWMj9umz7EiaUXkAp0
-         sVQv1P5XIoAUvKSfv6J10v1lrg3p5grMzoyJ5wbCE74Cvqv0MPrYxtZPj3oxcNbv+lQB
-         G9TX8JcNOq87ENKZXJsFAhOBNCoidpap3nofnM1a8AVQsW0/Eujgfj+FFZOs2SwyfOXX
-         DbZ54WbxEOGyjdRonq/n/9jvO3Kn+XTXQLl1FFAdcwdIJM7AX6LZCVecr0bL1iA9LDIt
-         HnkwKMkRBp3ePGkUNxXLQpztdHsyFPygWt0WzFPYb/094pP1J4+SJtwjU2XiGBBG5mtF
-         c7wQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749642607; x=1750247407;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Yr1jR2n/3+iHKJOEuEz4EzcjD/8G3U4J0+bvzR27Ds4=;
-        b=G4AnUTOrJXFqD0DSSIDw6FNNTknkIUqcjIfaF4xAUMHFfIlKTuaUlZPWJ1BpUMRN5C
-         7mP/MiYiKFVa12B9WnudEe2E1LpiM1O1ljNgc/uVjNtyhIeoqv7FsWvlWPUoSS5VG1Q+
-         oRGP3AlVG0BgX7sOarlxboQK+gcbfCKlR7BV5p0+GjekEdAkD7lWsytySzpLTQxuS7C+
-         SNvCcAASR2uiNcCg75hA/N7fnjDTyxQ+dxrrwCgt32tTnODrUQ1UR4hURNjv4EKaVm9c
-         hZc7Wo//JcaaQtMesUx2yphzX6BOt+jtFUlhtijAEALhCN8i7tjq8QVsrbBVzE+JCaIM
-         OvJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW5vD+zL4a55zOdOyQyzqwZk+RYKMT/KLi/3wY/WsdYzMNgd8nVjmbjzI4Nb3rMd5Z0lcWpOdE/bobnzYk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4yYqmrfTv/3MVZqokje9ZW2FFdU7Vre+2VyGL1Qag1PKZqFVM
-	U+l3uAhpgy1/DZVKU3ObdgkvsYVE6izrjZPbux9d+0eInjGPwpugVXgT
-X-Gm-Gg: ASbGnctqL7Mt2izbIbKJDa7qZ2Jf3NSqNwcWNQqWtweHVAv3yQbYarD/det59gn3TaU
-	FJ1Xvm+lIb8K5eeJngzVre0ZAE5cEbaHrA/nm7wKc04PDyua9zCQJtlQCi3Wzp/Z7By8wQwYM5J
-	gwUnaAbO1QteVFl2+di0+h/LPFA0GuahnF+T/OgbV2GqFtFUEAPI9aZu57gZwcx6y1Lsfamaece
-	VpnNuBujIciu4Kn8CvnD3Bpiex9+mYGTtpfnY8h4y1n+YNMWf2NNA3tj06xbl4EQteQmOPdBoL4
-	S26taKDDduzvQBEAzK/ozv/OxYb/7kKSlbufoqqQ1Sn76ooYqblkuT762Ks06Q==
-X-Google-Smtp-Source: AGHT+IH0mXPNVgqbjYeHRojtDfwaw37TfHsCnjGPZ7Ak5dI5UXEfPx4VvV1LNaJqLCESUv+gq00Mdw==
-X-Received: by 2002:a17:903:1b10:b0:235:f143:9b07 with SMTP id d9443c01a7336-23641a8ac0emr42538815ad.5.1749642607279;
-        Wed, 11 Jun 2025 04:50:07 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236032fceb2sm85893185ad.96.2025.06.11.04.50.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 04:50:06 -0700 (PDT)
-Date: Wed, 11 Jun 2025 07:50:04 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: I Hsin Cheng <richard120310@gmail.com>
-Cc: jstultz@google.com, tglx@linutronix.de, sboyd@kernel.org,
-	linux-kernel@vger.kernel.org, yurynorov@gmail.com,
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev,
-	jserv@ccns.ncku.edu.tw
-Subject: Re: [PATCH v3] clocksource: Replace loop within
- clocks_calc_mult_shift() with find_last_bit() for calculation of "sftacc"
-Message-ID: <aEltbEpA7US9h8qN@yury>
-References: <20250611073608.2049793-1-richard120310@gmail.com>
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="oI99eXMA"
+Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55B8vZPI018146;
+	Wed, 11 Jun 2025 07:49:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=NJQLOWrL1D4EcnOFjwJRIcQ1uPs
+	f+cwkybB8KtbpyvE=; b=oI99eXMAcSNb796YgNj2hh8eRva99bpYopMRXjvEL2T
+	JCkpct7Fg9K8NlonXHGGTdMpDvp5/XKML+noOLRnTVTmx9q0hwfV1gzx5P0cV+oN
+	8kRt45DkL7R7N3GayF6endE/p3AZK+Wjptpg+IcZxQ+V39JABG5S8+x21zGLqpGa
+	iIJXVC4RYIpF7JCZoFA/Ej7unjpU8qbdomATs19YNHXOlLHCefclknQq2i06ekYI
+	KfWbtM0B19n4/3RF8ICO7KZmfUpvTYVJQzoDiEa+cS71gS1vB/9grgtnbTaqtgll
+	aI4zEX3iIOhnwGXxgK/oOorApZU54nbpsUJj9TlIgjg==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 4776r9rvt9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 11 Jun 2025 07:49:54 -0400 (EDT)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 55BBnrT4031401
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 11 Jun 2025 07:49:53 -0400
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Wed, 11 Jun 2025 07:49:53 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Wed, 11 Jun 2025 07:49:53 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
+ Transport; Wed, 11 Jun 2025 07:49:53 -0400
+Received: from JSANTO12-L01.ad.analog.com ([10.65.60.206])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 55BBnab5008856;
+	Wed, 11 Jun 2025 07:49:39 -0400
+From: Jonathan Santos <Jonathan.Santos@analog.com>
+To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+CC: Jonathan Santos <Jonathan.Santos@analog.com>, <andy@kernel.org>,
+        <nuno.sa@analog.com>, <Michael.Hennerich@analog.com>,
+        <marcelo.schmitt@analog.com>, <jic23@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <marcelo.schmitt1@gmail.com>, <linus.walleij@linaro.org>,
+        <brgl@bgdev.pl>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
+        <jonath4nns@gmail.com>, <dlechner@baylibre.com>
+Subject: [PATCH v11 00/11] iio: adc: ad7768-1: Add features, improvements, and fixes
+Date: Wed, 11 Jun 2025 08:49:34 -0300
+Message-ID: <cover.1749569957.git.Jonathan.Santos@analog.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611073608.2049793-1-richard120310@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-ORIG-GUID: 2CNyhaeZEpEfOu-ef8mXyoYIKknOamMF
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjExMDEwMCBTYWx0ZWRfXy8phO/5l1WmW
+ VlapSmKI3xL+kvdVxXP46QLL8jO1SQQ8wLlyBBnRWPvE+bBu1kfPBWCaJM1fnVQvu7ajhlKg8wp
+ Mlw95LK/8LEGD/ow0hRtISi9+KtabsKG7h6bIo2u+SlZj3m+samJrNVWFu3UcSIUQN6C3qkCHqB
+ 87BoauqlBX6zZYbngVdwSN8xD1njIKHiVB+5a4iScVHpdosmJO007Xq0ZdOL17hPH900tAgayL7
+ uygRLJNzNaFc1SrUb7d7cWlTvxcZ7SkEF6toC1LuPPmACjsvhAarEqlTpVjEkUxVEHJhDSpmJCZ
+ Ems+SpQQJrUYG76nfq11dyMfMKk3vfqAZhQENPabmnit6kXn7sLnk/+BAn/8vJYE51bJbMWQI28
+ Qo1w5O9iMbScgk/ywfrXXOTvi6DuTTCabGMjEectR9bxcVx6Rk3or7gH3EcR05J46zm4jCl/
+X-Authority-Analysis: v=2.4 cv=CKMqXQrD c=1 sm=1 tr=0 ts=68496d62 cx=c_pps
+ a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17
+ a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=gAnH3GRIAAAA:8 a=6mXrWtWfNG3HPuFurDMA:9
+X-Proofpoint-GUID: 2CNyhaeZEpEfOu-ef8mXyoYIKknOamMF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-11_05,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 mlxlogscore=999 impostorscore=0 adultscore=0 bulkscore=0
+ malwarescore=0 mlxscore=0 spamscore=0 clxscore=1015 suspectscore=0
+ lowpriorityscore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506110100
 
-On Wed, Jun 11, 2025 at 03:36:08PM +0800, I Hsin Cheng wrote:
-> Utilize "find_last_bit()" in replacement of while loop counting
-> for the decremenet of "sftacc". They're equivalent in computation result
-> but the former is more effective.
-> 
-> "find_last_bit()" will return the bit number of the last set bit of
-> "tmp", which is 0-based index. Plus 1 to convert it into bit width as
-> desired.
-> 
-> Note that only the lowest 32 bits of "tmp" is taken into consideration
-> of the operation, since it was already shifted right by 32 bits, the
-> topmost 32 bits should remain 0, only the lowest 32 bits are possible to
-> be non-zero.
-> 
-> This change is tested against a test script [1].
-> Run the test 10 times for each version of implementation and take the
-> average. The result shown that with this change, the operation overhead
-> of "clocks_calc_mult_shift()" can be reduced around 99.7% .
-> 
-> -----------------------------
-> | old version | new version |
-> -----------------------------
-> |  11500.6 ns |       44 ns |
-> -----------------------------
-> 
-> Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
-> ---
-> Changelog:
-> 
-> v1 -> v2:
-> 	- Refine commit message to explain more about "why"
-> 	- Check the frequency of "clocks_calc_mult_shift()" get called,
-> 	  it's not in hotpath on my machine, refine the commit message
-> to avoid overselling it
-> 	- Add comments for the code to explain the implementation in
-> 	  more detail
-> 	- Handle case for "tmp == 0" to avoid undefined behavior
-> v2 -> v3:
-> 	- Use "find_last_bit()" instead of "__builtin_clz()"
-> 	- Convert the type of "tmp" to "const unsigned long *" when
-> 	  sending into the function
-> 	- Highlight in the comment that only the lowest 32 bits part
-> 	  of "tmp" is taken into consideration
-> 
-> [1]:
-> static int __init test_init(void)
-> {
->     u32 mult, shift;
->     u32 from, to, maxsec;
->     ktime_t start_time, end_time, total_time;
->     pr_info("Starting clocks_calc_mult_shift simple test\n");
-> 
->     start_time = ktime_get();
->     // Test with parameters from 1 to 1000
->     for (from = 1; from <= 1000; from += 100) {
->         for (to = 1; to <= 1000; to += 100) {
->             for (maxsec = 1; maxsec <= 10; maxsec++) {
-> 
->                 clocks_calc_mult_shift(&mult, &shift, from, to, maxsec);
->             }
->         }
->     }
-> 
->     end_time = ktime_get();
->     total_time = ktime_to_ns(ktime_sub(end_time, start_time));
-> 
->     pr_info("Test completed\n");
->     pr_info("Total execution time: %lld ns \n", total_time);
->     return 0;
-> }
-> 
-> The test is running in the form of kernel module.
-> The test machine is running ubuntu 24.04 on x86_64 machine with kernel
-> version of v6.14.0, CPU type is AMD Ryzen 7 5700X3D 8-Core Processor.
-> 
-> Hi John, Yury,
-> 
-> Would you be so kind to give some suggestion/comments on how should the
-> usage of "find_last_bit()" be here ? I'm not sure about whether the type
-> conversion of "tmp" is appropriate, though compiler will pop out warnings
-> if not doing so.
-> 
-> Plus I'm thinking converting to another pointer type might might be correct
-> when the endianess isn't guaranteed ? (or this endianess problem should be
-> address and solved in filesystem layer ?)
-> 
-> Best regards,
-> I Hsin Cheng.
-> ---
->  kernel/time/clocksource.c | 18 ++++++++++++++----
->  1 file changed, 14 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-> index 2a7802ec480c..651bed1a53e7 100644
-> --- a/kernel/time/clocksource.c
-> +++ b/kernel/time/clocksource.c
-> @@ -66,10 +66,20 @@ clocks_calc_mult_shift(u32 *mult, u32 *shift, u32 from, u32 to, u32 maxsec)
->  	 * range:
->  	 */
->  	tmp = ((u64)maxsec * from) >> 32;
-> -	while (tmp) {
-> -		tmp >>=1;
-> -		sftacc--;
-> -	}
-> +
-> +	/*
-> +	 * Decrement "sftacc" by the number of bits needed to represent "tmp".
-> +	 * Using "find_last_bit(&tmp, 32) + 1" to get the bit width:
-> +	 * - find_last_bit(&tmp, 32) returns the bit number of the last set bit
-> +	 * - Plus 1 to convert 0-based index into bit width as desired
-> +	 *
-> +	 * Note: Only the lowest 32 bits of "tmp" is taken into consideration,
-> +	 *		 since it was already shifted right by 32 bits, the topmost 32
-> +	 *		 bits are guaranteed to be 0.
-> +	 *
-> +	 */
-> +	if (sftacc)
-> +		sftacc -= (find_last_bit((const unsigned long *)&tmp, 32) + 1);
 
-1. sftacc is known to be 32. Comparing against 0 is useless.
-2. Just use __fls():
-        if (tmp)
-                sftacc -=__fls(tmp) + 1;
+This patch series introduces some new features, improvements,
+and fixes for the AD7768-1 ADC driver.
 
->  
->  	/*
->  	 * Find the conversion shift/mult pair which has the best
-> -- 
-> 2.43.0
+The goal is to support all key functionalities listed in the device
+datasheet, including filter mode selection, common mode voltage output
+configuration and GPIO support. Additionally, this includes fixes
+for SPI communication and for IIO interface, and also code improvements
+to enhance maintainability and readability.
+---
+Changes in v11:
+* Rearranged dt-bindings commits in the order they are used, in case something 
+  goes wrong with this new version.
+* Opted to use a local version of the fwnode_find_reference_args() function
+  created in v9 for now to comply with the cleanup.h requirements.
+* Addressed review comments, see individual patches.
+* Link to v10: https://lore.kernel.org/linux-iio/cover.1749063024.git.Jonathan.Santos@analog.com/T/#t
+
+Changes in v10:
+* Removed fwnode_find_reference_args() wrapper patch.
+* Added SYNC_IN pulse timing requirement patch.
+* Replaced fwnode_find_reference_args() back for the
+  fwnode_property_get_reference_args(), but now with the cleanup.
+* Link to v9: https://lore.kernel.org/linux-iio/cover.1748447035.git.Jonathan.Santos@analog.com/T/#t
+
+Changes in v9:
+* added fwnode_find_reference_args() patch.
+* Refactored ad7768_trigger_sources_get_sync() to avoid jumps and used
+  fwnode_find_reference_args() to get the trigger-sources property with
+  proper cleanup.
+* Fixed oversampling_ratio_available attribute. Previous ranges did not
+  follow a standard. Now we mix range (for sinc3) with list
+  (for sinc5 and wideband).
+* Addressed review comments, see individual patches.
+* Link to v8: https://lore.kernel.org/linux-iio/cover.1747175187.git.Jonathan.Santos@analog.com/T/#t
+
+Changes in v8:
+* Removed "reorganize driver headers patch", since Jonathan said he picked
+  it.
+* refactored ad7768_trigger_sources_get_sync() function.
+* Addressed review comments, see individual patches.
+* Link to v7: https://lore.kernel.org/linux-iio/cover.1746662899.git.Jonathan.Santos@analog.com/T/#t
+
+
+Changes in v7:
+* Added a new patch to reorganize driver headers.
+* Added the new files to MAINTAINERS.
+* Added dependencies to constrain the use of trigger-sources and
+  adi,sync-in-gpios properties at the same time.
+* Self triggering is enabled only when the trigger-sources property is
+  not defined. Added TODO to support other trigger sources when the subsystem
+  is available.
+* Refactor code to avoid forward declarations.
+* Mentioned that sampling frequency changes is not allowed in
+  buffered mode.
+* Addressed review comments, see individual patches.
+* Link to v6: https://lore.kernel.org/linux-iio/cover.1745605382.git.Jonathan.Santos@analog.com/T/#t
+
+Changes in v6:
+* Changed description and addressed other nits in the gpio-trigger patch.
+* Rewrote the #trigger-sources-cells description and removed mentions
+  to offload engine.
+* Added adi,ad7768-1.h header with macros for the trigger source cells.
+* removed of_match_ptr() from regulator_desc.
+* Replaced deprecated .set callback with .set_rv in the gpio controller
+  patch.
+* Use `trigger-sources` as an alternative to `adi,sync-in-gpios`
+  (now optional), instead of replacing it.
+* Check trigger source by the compatible string (and the dev node for the
+  self triggering).
+* Addressed review comments, see individual patches.
+* Link to v5: https://lore.kernel.org/linux-iio/cover.1744325346.git.Jonathan.Santos@analog.com/T/#t
+
+Changes in v5:
+* Added gpio-trigger binding patch.
+* Include START pin and DRDY in the trigger-sources description.
+* increased trigger-source-cells to 1: this cell will define the trigger
+  source type.
+* Fixed the holes in the regmap ranges.
+* replace old iio_device_claim_direct_mode() for the new
+  iio_device_claim/release_direct() functions.
+* Changed some commit messages.
+* Link to v4: https://lore.kernel.org/linux-iio/cover.1741268122.git.Jonathan.Santos@analog.com/T/#t
+
+Changes in v4:
+* Added missing `select REGMAP_SPI` and `select REGULATOR` to the device's Kconfig.
+* VCM output regulator property renamed.
+* Added direct mode conditional locks to regulator controller callbacks.
+* Renamed regulator controller.
+* Created helper function to precalculate the sampling frequency table and avoid
+  race conditions.
+* Link to v3: https://lore.kernel.org/linux-iio/cover.1739368121.git.Jonathan.Santos@analog.com/T/#t
+
+Changes in v3:
+* Fixed irregular or missing SoBs.
+* Moved MOSI idle state patch to the start of the patch, as the other fix.
+* fixed dt-binding errors.
+* Trigger-sources is handled in a different way, as an alternative to sync-in-gpio.
+  (this way we avoid breaking old applications).
+* VCM output is controlled by the regulator framework.
+* Added a second regmap for 24-bit register values.
+* Add new preparatory patch replacing the manual attribute declarations for
+  the read_avail from struct iio_info.
+* included sinc3+rej60 filter type.
+* Addressed review comments, see individual pacthes.
+* Link to v2: https://lore.kernel.org/linux-iio/cover.1737985435.git.Jonathan.Santos@analog.com/T/#u
+
+Changes in v2:
+* Removed synchronization over SPI property and replaced it for trigger-sources.
+* Added GPIO controller documentation.
+* VCM output control changed from an IIO attribute to a devicetree property (static value).
+* Converted driver to use regmap and dropped spi_read_reg and spi_write_reg pacthes.
+* replaced decimation_rate attribute for oversampling_ratio and dropped device specific documentation patch.
+* Added low pass -3dB cutoff attribute.
+* Addressed review comments, see individual pacthes.
+* Link to v1: https://lore.kernel.org/linux-iio/cover.1736201898.git.Jonathan.Santos@analog.com/T/#t
+
+Jonathan Santos (10):
+  dt-bindings: trigger-source: add generic GPIO trigger source
+  dt-bindings: iio: adc: ad7768-1: document regulator provider property
+  dt-bindings: iio: adc: ad7768-1: Document GPIO controller
+  dt-bindings: iio: adc: ad7768-1: add trigger-sources property
+  iio: adc: ad7768-1: add regulator to control VCM output
+  iio: adc: ad7768-1: add multiple scan types to support 16-bits mode
+  iio: adc: ad7768-1: add support for Synchronization over SPI
+  iio: adc: ad7768-1: replace manual attribute declaration
+  iio: adc: ad7768-1: add filter type and oversampling ratio attributes
+  iio: adc: ad7768-1: add low pass -3dB cutoff attribute
+
+Sergiu Cuciurean (1):
+  iio: adc: ad7768-1: Add GPIO controller support
+
+ .../bindings/iio/adc/adi,ad7768-1.yaml        |  68 +-
+ .../bindings/trigger-source/gpio-trigger.yaml |  40 +
+ MAINTAINERS                                   |   4 +-
+ drivers/iio/adc/Kconfig                       |   1 +
+ drivers/iio/adc/ad7768-1.c                    | 900 +++++++++++++++---
+ include/dt-bindings/iio/adc/adi,ad7768-1.h    |  10 +
+ 6 files changed, 909 insertions(+), 114 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/trigger-source/gpio-trigger.yaml
+ create mode 100644 include/dt-bindings/iio/adc/adi,ad7768-1.h
+
+
+base-commit: 4c6073fec2fee4827fa0dd8a4ab4e6f7bbc05ee6
+-- 
+2.34.1
+
