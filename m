@@ -1,63 +1,63 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9D0281357
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 13:00:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D9328136C
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 13:01:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749646851; cv=none; b=u1E3G+i0u/uCfEtvlyvFnHEIWiDOqygEtFcGK8zRf8v2NpMPkSp8khD/v6obQZ0bYiF3yrI6DugbYvZCQvjgBU4oWgGo+FQhKXalGfT1KH8ntVsr/vEtW3iWo7tkFj3FJvd5Ez601R0r0FBQIRLmyT5f0zBRa+h7SgbAVT5MZ1c=
+	t=1749646865; cv=none; b=mQGIuUSmyZ/htzRs6lqMJC6SvQeIVNu7IZ4BgoL6DeZM/NbhmmQjR8mPm+i4Phawl3cQ7Tc/MBQRQ8DKDk0ILNA9c9OUa7ILJy/Ve2kxpjVMsp/K5FehhmVKajJ8hLPMVD4YqTE0hG5DT5Ljjv7xseO3Em/ms5p0DjPDAUB0Gws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749646851; c=relaxed/simple;
-	bh=BsrvoibobNdRj5bx2FV7FFPriwpl6oIPTWKF+TJb8js=;
+	s=arc-20240116; t=1749646865; c=relaxed/simple;
+	bh=OUo46ask5zEdNnxgtDRLYOxKjqeZYpKbIvKQrOHiQr4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IUMcaaFjtX8Mmrr+iKAAtufvFhyLibefHuPM8zkKd7BWdnoatjc9Uepdy+sA8pNq46n3HJVQ/k5oGB42EbFZaFac3VDAkKnsLffeCCw6b6+kaLHSRKKGK9pTxSr9/qkOXAIy/+HVVFY1NC5UhzoRiHY7jcAapzx6FNks4rJHirE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=eS4L6Oud; arc=none smtp.client-ip=209.85.214.175
+	 MIME-Version; b=Ra3lp8BQ39yLAZoHigX9yk/M6esZGshyxMK3I0YTXckaB5zeeWyhr/bb0a7f9nkQtbcuWK3FYCOc7sxvf5WTbErsZc+hc8szJztuL3ApRKhQb3H75GoGuMztAUVZ9TW/anasq3DR2FUMFeoUQx3eIQ2ASLEw35iuDw4cZbXLlxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=QbPMM9gW; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="eS4L6Oud"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-234d3261631so46468805ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:00:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="QbPMM9gW"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-235ea292956so62935285ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:01:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1749646849; x=1750251649; darn=vger.kernel.org;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1749646864; x=1750251664; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=l3Hj23NsfOD62jCqYZdTyo05Iy3n4LV0OoIjBt95NQs=;
-        b=eS4L6Oud2XZqymAcK9cWsBA58MUdJwHnOAKjUBMAHBedEb/rJsHMyAqwAfCZYxGCbw
-         ohON8Qudxhb4TmZVqYjp6hjl7GBOvILNAq1kOgSpMPlubG9zbr466afYz0IVzV6vb3Ge
-         Nc5deyJkuuARgIuoOlErfV9TSAxQ/sBfLJHVcF3G9GmaP+egEhtPEe3BDj6MaejoCTbI
-         DU26bIZ05CwEU6XjocTZgjGP8by9JeSWbOHsgMA9j3WbXPKoqi5WGWhtxoP+tjhDOk5u
-         cX31cpD3oHAbSqq2aR7gCB4Vk7G2YEJ6w1LtmC/Kxf10QFv2a5QvF/l/6HsNKxrCyB8+
-         kgMg==
+        bh=CSKx+jiwSQ8DJGzzvr3skZPVBhTTim+uSj665SiqoD0=;
+        b=QbPMM9gWoczJsDC0oLzWD3iFJK53GT6JRMtpLCBIDg+Ub+xFO9Jif9egm9lljW8vtR
+         rWcjApI4GscBPCBAOcRJ8G2HP0YMlc5tCZ6RBzf/SD7XRdiwQbiaGNdX+vNcUv+UwVYM
+         nnbFUE0yK8TjEh4/8+HlIDZjs+XVJsdOvYOf/JlO2Dk0aYZhUDpcia3u8+eUcNyubEdQ
+         lNLHYmg5zsXzQh7NeJS1MBPhJIJHuasHIiVBTxN2mzoImm4t6Mm0GAF6qFsdN4FCk5gl
+         KsMp1SOndgeKTghBNQKTTh0fiWiJcgFdkfekkyzZXiVZUP8gqbFJ4DWOvzhTx7IrVjRZ
+         HRng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749646849; x=1750251649;
+        d=1e100.net; s=20230601; t=1749646864; x=1750251664;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=l3Hj23NsfOD62jCqYZdTyo05Iy3n4LV0OoIjBt95NQs=;
-        b=QNy203NEYHJN55fZbw4I6d2RnSVRiL3ad6Fo7tF46b5vGrCyzMRyRGR77a0FaNs2R8
-         3LolNvFYgNUZMMQG/R6ucc+j2eVDF4MjrdZuaulGmfXAZzGfnRz6L6FdbUVnmtKMiH+0
-         Rlsg4XsgyBVO2UBMn0+AYFpYy6j5RSoug10x7LV2bsI63W3B3AMf9duaRKRTdmVEVS92
-         LTkge57yevGQpqxN0BWZXcBfj0ey7uR8QvM/V585lIBtMzg2ZhH6SF9WA6b2qiROn4tV
-         bJYMfXdtiF5LawByEA1MIolxPLA6+kKvDExx92TKEuNVuDgXpABl1r6737SRuwoiv87h
-         ZFQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVgpB072PkqSgKJyaNVKlMDT2+nIgrtfOoD6EXoFK8yp9FtNTyUD8ycVqbQaKuZGOvVYNJJE5z397iBtk0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgsA7mtuYjbY5JeRsxlsLcm3KlKtc2dou5DTAS2MpDQnxBG8zf
-	ov8ZsDrap0txZg1OUoS04oLk9Hmz4dSjV2dd1dEZTH/U37BNhx93mk46MFSG4KO+lbs=
-X-Gm-Gg: ASbGncvcwXToPgmWZ4So5TClwAbtxDe/qpZPUrsEZhCahQ49E+LK6beEKzodr8ZmDMy
-	0g20qxSUf3S6fBx309rc7wOBnMJBeLUCldSoEJbgXIBcxRN+jYST1QmZPqU/9MdNNs+WZfKNijD
-	2H30qPTrJvQo4FiraZe0ABwOFvF4tronxz/u3zaMPFxxFe4soatitIns+1BobdzC/rgqNd2+mo0
-	m9cwUL/CWiPSrp9P/ZZR6kAxbj9AMQPrGko7koijWLTiejXKc7FaA09rWcauFbohSDy7b7MpRcF
-	rQrEzbk6j1KhbJBNoUj7qtGnDB6eu0g9xi0IeTGobU8+wpIjZ4H+Oguy/eNca0xegSG3VhldIIW
-	09Q0E85PKmeHOA0s8atsa2w==
-X-Google-Smtp-Source: AGHT+IHVBo9LkzNee2JKYrKdwtZHZLkreGBOXP7vX/U81FjBHvUbwcdU17sovy3MyAgANjjIbprzmQ==
-X-Received: by 2002:a17:902:fc85:b0:234:d1f2:da31 with SMTP id d9443c01a7336-2364260d38amr40073705ad.2.1749646848615;
-        Wed, 11 Jun 2025 06:00:48 -0700 (PDT)
+        bh=CSKx+jiwSQ8DJGzzvr3skZPVBhTTim+uSj665SiqoD0=;
+        b=WuWxlWtUvUoi17DQwU+bxFp8Fb0P0XjmDnJDoyFe2huoOj4kyz5VVI+i506aKJ5X9I
+         G4mmTsoENEKBNCNmPjV04M3wZp/mJAadD9YLGkShBoyFLEv4qIOtC++6ImNAq9B7KTms
+         GHftzkG3bi7H7Fc9NDn3sJJxTkEhAAtsDL3ivNx9TQeLFIW7vdea1DVRnkxAf4JgLc9c
+         Ta3YWy6o12HIwppIMKNopnbiI1WGATYZnr47BvJOpgTyPcpS++VDjUF98yAtLbXexft4
+         GMlk53RtTsbWIsFZIMS0IjU3qInd3JwawduHHCoi1CTF+lrXVqUKo4klNSuxiIijekl4
+         C4bA==
+X-Forwarded-Encrypted: i=1; AJvYcCWx3hIUO9tlIG+aZ0znYIt0NesOzogg6Q7OvrOtfXySd2ipC/iqU+3W/30OTHM0G1jeARpfPCynfabvvwo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3+RLMeWu/E18p8OoVJ8hQgpWJwFujks9C1B5JfKcKkmPgbmQ7
+	hqcrwNuTWHg65i+sFDgy9aTATb7HAT/ML18Who2FWTKJw7d8YDquAhFXhGCQngkdClg=
+X-Gm-Gg: ASbGncvFL2jr0gAN2rTDW+81R2xiXV7oSbqdS3MVngGURPAnz5ku7HndKu/KXplJPL9
+	4ISVci3zordqQrAhrecaz7CljXJcDnjhsBZ1DQJckF0Eeruaw/EqwrjyE2/IY2NQvHpboplZJ7Y
+	R0AEPN14M6eEVHxstUajMfyIZZzSf2u7Ox3IodAEoNdw1d6YXJCG09jSETedpK7MclV/PzLX7Sj
+	TYF8raGWYMhCFwRrLQe9K5P0KfRpKMKCMKcj/IuZN0yBJTOIrHotaCngtDfaW1UkkKZ6N4q5akd
+	ghI5t1bUzu92rR8fxwlPSbh+epqhy86MII7KM5GLqgNOoIy5fHXOr3H1V5OaKfQKlEJ34kDWnEr
+	YS0FshPnhns057Q/u83WZec2JYOLCgMN2
+X-Google-Smtp-Source: AGHT+IHRhbcivXCxN135O16ueeb4/aUJWfnS89ixSiurI5FZ7uV83frEUoZkuyXDNWNmUKyh7r0P9A==
+X-Received: by 2002:a17:902:c94d:b0:234:8c52:1f9b with SMTP id d9443c01a7336-23641b1553emr48488375ad.43.1749646862200;
+        Wed, 11 Jun 2025 06:01:02 -0700 (PDT)
 Received: from localhost.localdomain ([2409:8a00:31a4:6520:3d67:ceb1:7c60:9098])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236030925e3sm86984115ad.53.2025.06.11.06.00.37
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236030925e3sm86984115ad.53.2025.06.11.06.00.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 06:00:48 -0700 (PDT)
+        Wed, 11 Jun 2025 06:01:01 -0700 (PDT)
 From: Guodong Xu <guodong@riscstar.com>
 To: vkoul@kernel.org,
 	robh@kernel.org,
@@ -84,9 +84,9 @@ Cc: guodong@riscstar.com,
 	linux-kernel@vger.kernel.org,
 	linux-riscv@lists.infradead.org,
 	spacemit@lists.linux.dev
-Subject: [PATCH 7/8] dma: Kconfig: MMP_PDMA: Add support for ARCH_SPACEMIT
-Date: Wed, 11 Jun 2025 20:57:22 +0800
-Message-ID: <20250611125723.181711-8-guodong@riscstar.com>
+Subject: [PATCH 8/8] riscv: defconfig: Enable MMP_PDMA support for SpacemiT K1 SoC
+Date: Wed, 11 Jun 2025 20:57:23 +0800
+Message-ID: <20250611125723.181711-9-guodong@riscstar.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250611125723.181711-1-guodong@riscstar.com>
 References: <20250611125723.181711-1-guodong@riscstar.com>
@@ -98,30 +98,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Extend the MMP_PDMA driver to support the SpacemiT architecture
-by adding ARCH_SPACEMIT as a dependency in Kconfig.
+Enable CONFIG_MMP_PDMA in the riscv defconfig for SpacemiT K1 SoC boards
+like the BananaPI-F3 (BPI-F3) and the Sipeed LicheePi 3A.
 
-This allows the driver to be built for SpacemiT-based platforms
-alongside existing ARCH_MMP and ARCH_PXA architectures.
+According to make savedefconfig, the position of CONFIG_DWMAC_THEAD=m
+should be in another place. It was updated in this patch.
+
+CONFIG_DWMAC_THEAD was initially introduced into riscv defconfig in
+commit 0207244ea0e7 ("riscv: defconfig: enable pinctrl and dwmac support
+for TH1520")
 
 Signed-off-by: Guodong Xu <guodong@riscstar.com>
 ---
- drivers/dma/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/riscv/configs/defconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index db87dd2a07f7..fff70f66c773 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -451,7 +451,7 @@ config MILBEAUT_XDMAC
- 
- config MMP_PDMA
- 	tristate "MMP PDMA support"
--	depends on ARCH_MMP || ARCH_PXA || COMPILE_TEST
-+	depends on ARCH_MMP || ARCH_PXA || ARCH_SPACEMIT || COMPILE_TEST
- 	select DMA_ENGINE
- 	help
- 	  Support the MMP PDMA engine for PXA and MMP platform.
+diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+index 517cc4c99efc..83d0366194ba 100644
+--- a/arch/riscv/configs/defconfig
++++ b/arch/riscv/configs/defconfig
+@@ -134,6 +134,7 @@ CONFIG_MACB=y
+ CONFIG_E1000E=y
+ CONFIG_R8169=y
+ CONFIG_STMMAC_ETH=m
++CONFIG_DWMAC_THEAD=m
+ CONFIG_MICREL_PHY=y
+ CONFIG_MICROSEMI_PHY=y
+ CONFIG_MOTORCOMM_PHY=y
+@@ -240,7 +241,7 @@ CONFIG_RTC_DRV_SUN6I=y
+ CONFIG_DMADEVICES=y
+ CONFIG_DMA_SUN6I=m
+ CONFIG_DW_AXI_DMAC=y
+-CONFIG_DWMAC_THEAD=m
++CONFIG_MMP_PDMA=m
+ CONFIG_VIRTIO_PCI=y
+ CONFIG_VIRTIO_BALLOON=y
+ CONFIG_VIRTIO_INPUT=y
 -- 
 2.43.0
 
