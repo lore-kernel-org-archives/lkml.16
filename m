@@ -1,113 +1,111 @@
-Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D841DF965
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 17:24:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BDA72046A6
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 17:28:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749662670; cv=none; b=tvqMWcO/pGix3Jzktx+FThRbayw6xChWy6lfffmN57sT/D7TORBV+57m3lY+anRVLHsFaugzJJ/12TDEYlygkFykzqEIH7krFUyvZ3miZrSv5oF22kF7HclXtnAf3eLqFy2hi/67UZqEU2Byb5EuI/mAvbGkiYI06Un4353ZLzQ=
+	t=1749662927; cv=none; b=Rn9H2dHCaA9saqdTgrhAHVZMF8x1Ae8UjY/cUQhyPLAwrTWqy1iNpPifGc7iS6vN5EuvVsOBuy5PXh7vWbGLdrb4LK+ezKt/UHP25eT776PeS4MyFXGykkKmYIhh0+cYZsu5gilaPsjYvVR6gm8djR313WxqpRJHE3qxYpqRrWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749662670; c=relaxed/simple;
-	bh=UEtaR4QFXoWG5mFkO6pOWfp4vS5WT0e1+nwbfyCMPhA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oht7eb/IfOWWF6/mVzNRwk2Thc07K3S9JMEyBN1sL90EBDSZ4C4ERV/OjRBe236h+UKiJNq+NAS+oRJK1zn8011A/JTY+NJh/STXt9v6ODdp55POaI155H1a8cYauYm8+d2hEK9GsrKgQJ1aNiIivH3qwWyZMSfk12RICDN93lE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EqcURWLx; arc=none smtp.client-ip=209.85.161.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749662927; c=relaxed/simple;
+	bh=RMIoiiz9p1as1Ud+GnnDMjOkY32YOL7AKOJ1UDjy0LA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=WqS+89WOAhKgWRSKg6CWLcMghz77FhT7RDruOUVsv1RVvMVYWAnSPhWpdsxdXAWOFm7wQ4bTfkGwhaqX7VfnF1+7R0U+MVF7ZGVYZ8wqw0/UL55YLDueYFE0Dt13JBRK84j76ET7jy8qzOLsKv/Dqo9HY7Iaz2jQFpkfmKoCUHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TGPU5+dv; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EqcURWLx"
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-60d6303a11eso83548eaf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 10:24:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749662668; x=1750267468; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DSGkIw7lXPoOOQ6xsmLGULxOdNRYgMzOtzpFjJzQIBE=;
-        b=EqcURWLxj/yJOelUagSjzGBEBgnV4yOUJVSwyz01ARl7cu5kntMsD83hSVxbXepXhw
-         OSARt3JXqOr7eXqivB2JAzGpDJBzb8tCEKDqMVAKAuhDAp/y+Zy3HiYfnBOk54fxTZoR
-         ZoEjhHBXgh/JLy6xkngjWuTZUEb6O4zGvdAH3Kls5k0nrwKBVcljqNkMBHa3B+NSO+a/
-         lWsNks70nuOMk6G3zs/frpwkyukUuRBXmz8eKDGMD74blzxWfWSUWZpcbxaQW6+0Bntl
-         NTKRFM8Zlb/rLkDIHGcggyXeTnuz6yWdOC4HKDJ2elCL9bcNGU6aDb7A1WZi03/Gyeiy
-         ojIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749662668; x=1750267468;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DSGkIw7lXPoOOQ6xsmLGULxOdNRYgMzOtzpFjJzQIBE=;
-        b=qqHXJOo6vs5CqkN2Jv9Iht8bu9XAnPWdQ1dLJti8jur1zPYiNZedOtQ/2qcHxEkBca
-         l26q0eSC+8afzONZmiFuTL2VKxJ53amPKj/0ioeISLYbZL9HYNdgZgn3hoIfommMCju/
-         3+kaxSO1yz88VosIrTP4x7jl9DrzKJ/daE/Aoi320wCUS9MJcZ5s1KLZdhSSHa3eW5MG
-         ASKpPAoMotwZvfat/7z8bpqWIE6ue+qfBmRJei5my7mBV26fuQXoxXKzAKEZw1Na7lAJ
-         yjqq4UWu2aXFE01rHeM5WvFZSb/aSYLN116O3mMBnnuGInT0FlJMp29Oo4JOxmKGBV2v
-         pogw==
-X-Forwarded-Encrypted: i=1; AJvYcCVK38EllLmQb/JBuyVFnxHXbkbvJG2ZzcB13hwbAG6flO1zDb46/T2WABaKzsocgG/fWQ96twv6tTRnvys=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWYwjQvg6O3wuzhzZ+Q9GhwKWFbLXxhvnJdlC/9D9SmrU50v7P
-	7VygMrveZNNXuxwHiixce1QJ8DYbJwV+W2rQtNTopY6cG/ePIuwjpUo3838zrceyGjfPt60os4+
-	N8cBJb99fGo/gLmZ5reWM1D7Akb0p6GL10Hd0hmhm
-X-Gm-Gg: ASbGncsNc4B70fnK8EPBzi3gEilwvp24OadfY+N+Won4vhucsYM4cq/hSQ3ooaqGg96
-	hv6OSzrs12lMK1e+VvlH6Z7J8QCmxazyG7ht1hHszLRXmTl/xXhAx412MrFUbG8Rk2wD7lPNpyG
-	N3Y6NUOBueexjfS1we5s4nDZ8RExAm4vHM9Az80Gd1ZlZ+rrVtf55nDMowPwxh/liUVtk20A/1E
-	Q==
-X-Google-Smtp-Source: AGHT+IHDg8JRnLesFPl1JibUsTLTfDGDn0XZA+uvbAbHEWDtg3wuwb5nGOyTn+G0bLzDeQzprxGqSlM6xctnYJhmBSs=
-X-Received: by 2002:a05:6870:170b:b0:29e:6394:fd4a with SMTP id
- 586e51a60fabf-2ea96b78087mr2556511fac.2.1749662667786; Wed, 11 Jun 2025
- 10:24:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TGPU5+dv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749662926; x=1781198926;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=RMIoiiz9p1as1Ud+GnnDMjOkY32YOL7AKOJ1UDjy0LA=;
+  b=TGPU5+dvv9rwQB+nAEIomGGWa7bw8QiJJ2PSSTlIK4GhWeDZeR0YFbt0
+   f1JLvUvVy1xSx4R2HDRO/7gXl2c+8c4mc86wqkyLEWGfTU3iWZdl1GM8i
+   9fVo6eTGdCIpYFts8imHYXpMXRFIIXkfy1ZqlEojjAU++bMWtNmvDdn5Z
+   SQppV6tcGFp4zhMDb1tMCYM/ZEqxxdXrJNP7oC5ndCUWdeu/EEx9jwCs5
+   +RgeymRslkKF1f+dHNwH7qKEaZfXnNIrDoAYI2o5EB4odiSyarpX/Wlqe
+   GeouHgnOozxTPYfFoZN4dF1xSLw/dUtRKKS6mJaJgqgrgRaeK9KpG9BQh
+   Q==;
+X-CSE-ConnectionGUID: iGZ66tPORD+L4OTizisG5g==
+X-CSE-MsgGUID: 3axRROHJSjmpspyvnmH1+g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="62430059"
+X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
+   d="scan'208";a="62430059"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 10:28:45 -0700
+X-CSE-ConnectionGUID: Be/dsJxyT9qz2f8PPp2kTQ==
+X-CSE-MsgGUID: 5B+q+cTlTCSGL1NEfKb4VQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
+   d="scan'208";a="178207790"
+Received: from chhatrar-mobl.amr.corp.intel.com (HELO desk) ([10.125.146.46])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 10:28:45 -0700
+Date: Wed, 11 Jun 2025 10:28:44 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: x86@kernel.org
+Cc: David Kaplan <david.kaplan@amd.com>, linux-kernel@vger.kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Nikolay Borisov <nik.borisov@suse.com>
+Subject: [PATCH v4 0/7] Retbleed fixes
+Message-ID: <20250611-eibrs-fix-v4-0-5ff86cac6c61@linux.intel.com>
+X-B4-Tracking: v=1; b=H4sIAGa8SWgC/22PwWrDMBBEfyXoHBlpZUVRT4GSltJ7L6UUSV43m
+ zpWkVyTEPzvVVIohvQ4w76Z2TPLmAgzu1ucWcKRMsW+iHq5YGHn+g/k1BTNQIAWGgRH8inzlo5
+ 8FWoNfmVN41tW7r8SFvua9fpW9I7yENPpGj3Ki/tfyig5cCu9C43S2Ai76aj/PlbUD9hVIR7YJ
+ WuEOQ9SglGienxw9+vnp0+z9/t6e4ovZtO64T0kN2DVxeC6X1jNYTkvBy64EQjartEqCDfly7/
+ XYc6pwpUNokawEiXejp6m6QcghP8MXQEAAA==
+X-Change-ID: 20250520-eibrs-fix-6c452b697dbf
+X-Mailer: b4 0.14.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250602135231.1615281-1-bqe@google.com> <20250602135231.1615281-4-bqe@google.com>
- <LGWNtyhjCByj6PPHMsGCwo-WBkCCUuCOn_cUuwlwHPhfRZ4TdDR97a3u63ACSIvJQZF2SyAInyX90iMkERX2MK3Up-R6jazWHWhFzTIWah4=@protonmail.com>
-In-Reply-To: <LGWNtyhjCByj6PPHMsGCwo-WBkCCUuCOn_cUuwlwHPhfRZ4TdDR97a3u63ACSIvJQZF2SyAInyX90iMkERX2MK3Up-R6jazWHWhFzTIWah4=@protonmail.com>
-From: Burak Emir <bqe@google.com>
-Date: Wed, 11 Jun 2025 19:24:16 +0200
-X-Gm-Features: AX0GCFs7WUVNcSH5-pbXuRcq_xrq1pRsTFNiXrQfUtQYZGhl32F3isfEx9mg9UE
-Message-ID: <CACQBu=VX_x97dJcjUUs_=fxYmtitcrNd8NB+5K8Cqu2+9yoXqg@mail.gmail.com>
-Subject: Re: [PATCH v11 3/5] rust: add bitmap API.
-To: Pekka Ristola <pekkarr@protonmail.com>
-Cc: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>, Carlos LLama <cmllamas@google.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Thu, Jun 5, 2025 at 11:20=E2=80=AFPM Pekka Ristola <pekkarr@protonmail.c=
-om> wrote:
->
-> On Monday, June 2nd, 2025 at 16.53, Burak Emir <bqe@google.com> wrote:
+v4:
+- Replace the warning message in set_return_thunk() with an info. (Borislav)
+- Collected tags.
+- Rebased to v6.16-rc1.
+
+v3: https://lore.kernel.org/r/20250522-eibrs-fix-v3-0-12704e291e1e@linux.intel.com
+- Get rid of AUTO check in retbleed mitigation. (Borislav)
+- Update commit message to mention the preparatory patch. (Nikolay)
+- Collected tags.
+
+v2: https://lore.kernel.org/r/20250521-eibrs-fix-v2-0-70e2598e932c@linux.intel.com
+- Split the ITS stuffing patch into smaller patches. (Borislav)
+- Zap spectre_v2_in_retpoline_mode() helper. (Borislav)
+
+v1: https://lore.kernel.org/r/20250520-eibrs-fix-v1-2-91bacd35ed09@linux.intel.com
+
+This series untangles retbleed and ITS mitigation.
+
+Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+---
+Pawan Gupta (7):
+      x86/retbleed: Avoid AUTO after the select step
+      x86/retbleed: Simplify the =stuff checks
+      x86/bugs: Avoid warning when overriding return thunk
+      x86/its: Use switch/case to apply mitigation
+      x86/retbleed: Introduce cdt_possible()
+      x86/its: Remove =stuff dependency on retbleed
+      x86/its: Allow stuffing in eIBRS+retpoline mode also
+
+ arch/x86/kernel/cpu/bugs.c | 93 ++++++++++++++++++++++++++--------------------
+ 1 file changed, 52 insertions(+), 41 deletions(-)
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250520-eibrs-fix-6c452b697dbf
+
+Best regards,
+-- 
+Thanks,
+Pawan
 
 
-[...]
->
-> > +    ($cond:expr, $($arg:tt)+) =3D> {
-> > +        #[cfg(RUST_BITMAP_HARDENED)]
->
-> The config name should be prefixed with `CONFIG_`.
->
-> > +        assert!($e, $($arg)*);
->
-> `$e` is not defined, it should be `$cond`.
->
-
-Thanks for pointing out the macro and config mistakes around
-CONFIG_RUST_BITMAP_HARDENED.
-Fixing all these.
-
-I could not get kunit to enable RUST_BITMAP_HARDENED - now I understand why=
-!
-Also added the missing test now, exercised the code and observed the
-fault (though [should_panic] does not seem to work).
-
-Cheers,
-- Burak
