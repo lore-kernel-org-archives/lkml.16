@@ -1,234 +1,77 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from unicom145.biz-email.net (unicom145.biz-email.net [210.51.26.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56F4925E448;
-	Wed, 11 Jun 2025 09:00:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E38B25DAF4;
+	Wed, 11 Jun 2025 09:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.26.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749632421; cv=none; b=RhYDwV38SUTv0ZdFjZlO1VPXO/vcrRDGGYEos0dRdXmBrtWAXZ+xZo+y558ChreNbEQXshdBx+VsQirn1SIDaQqcoJqif6nVot5hX6pDQUvIXs6VfPFiODFK7QV8bCthkneeN4OxJlHSwaRb/7+x+qfj7FyYtvh5nBujCtfB/+s=
+	t=1749632422; cv=none; b=LX38Ce0kCzeNI0m+6L/hVrkNfqfDNtO1WqU/azinljuQwa10h0XxED3czrvE3yvNXy88lyMzDFTaiLU9+DPgYaLIRseSqlvvHlNV4GKBFzZw1mz03UZi/s86eZc9KTg/LtbVlPBhYLuZ8+p0DpqUEVa6Y/RFpqtrphRCuX/xIvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749632421; c=relaxed/simple;
-	bh=aHZ+jMSZEkyXYnMKzBmBv0lQ/0bHBeqk8lVije5YWNI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jIQZNoZRdi8qPN2FqEtVNTtuj/PpKBUy2P4SoATYAnPN4uj5v4EVSDeBYHyrjWsXvSatjA9PBTS10qe8aCynWBmwe45PhvfG+nMPCKz8WQGO1HdwWgMDsB+SzFI8wQ6jbqKYk5gyfqmiB2WeXalgngBWazDAgQixPLMm1uZHpiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FIVDCRB3; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FIVDCRB3"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id EEA49432E9;
-	Wed, 11 Jun 2025 09:00:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1749632416;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1F5hX8BhZOECQ5k1Z5A4npb6Ke1hWNVmAe0Y0rR02nw=;
-	b=FIVDCRB3BlNkC3bP6+JYFM+z4JmsvNlgvaC24Ht1YLYxO31U6mc0JQ8urKX7mpP3FLuhi/
-	CdBCEXCkDRnXgQuML5fT6ifJDcV+F13h1m2sNlpDgVd4Iu/joQRVQ5b9ulYTN7VDeoW5O8
-	qyDyHxvqUBZ5fy6OxD/5bWBm3sWqqkSWAmK0XoDGI1cWqzOpyRqFAiPC8FTWez9mq82pWo
-	wvRl+Bv4eIgRImqbpEhZAlROoKybIoPLug02tVepwX80nC/iKP6GYB1bKzN/YCLfbodPZc
-	hLtwidEnfBd9Swu7kj7Roc7ME4RlI6PtlFO6ezWW4tBLp946NrZa0eGOp7UZIQ==
-From: Thomas Richard <thomas.richard@bootlin.com>
-Date: Wed, 11 Jun 2025 11:00:06 +0200
-Subject: [PATCH v8 01/10] gpiolib: add support to register sparse pin range
+	s=arc-20240116; t=1749632422; c=relaxed/simple;
+	bh=qdHdY0mYomgUUuP25pEtrs9RUkr6YQXepCL4Tm8nytA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=C26FhkngqPdxC30gV92dW4eoNKCe1I205eGXDHQlx3cqcmdJHvZow6XaPteMPdUxQ/ittSIxh+0eECJyvd7MXvWnUWtCQYqwcJtMFZiQaKauG+R33xormzm6Af1y/je7CJ214+WQnDDuyNUx2i05bsM2clZ/en/5RGIVS9hfXOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.26.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
+Received: from jtjnmail201612.home.langchao.com
+        by unicom145.biz-email.net ((D)) with ASMTP (SSL) id 202506111659051048;
+        Wed, 11 Jun 2025 16:59:05 +0800
+Received: from jtjnmail201607.home.langchao.com (10.100.2.7) by
+ jtjnmail201612.home.langchao.com (10.100.2.12) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Wed, 11 Jun 2025 16:59:04 +0800
+Received: from localhost.localdomain.com (10.94.12.179) by
+ jtjnmail201607.home.langchao.com (10.100.2.7) with Microsoft SMTP Server id
+ 15.1.2507.39; Wed, 11 Jun 2025 16:59:04 +0800
+From: chuguangqing <chuguangqing@inspur.com>
+To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>, Jean-Baptiste Maneyrol
+	<jmaneyrol@invensense.com>
+CC: <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>, chuguangqing
+	<chuguangqing@inspur.com>
+Subject: [PATCH 05/10] iio: health: afe4404: convert to use maple tree register cache
+Date: Wed, 11 Jun 2025 16:58:33 +0800
+Message-ID: <20250611085838.4761-6-chuguangqing@inspur.com>
+X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20250611085838.4761-1-chuguangqing@inspur.com>
+References: <20250611085838.4761-1-chuguangqing@inspur.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250611-aaeon-up-board-pinctrl-support-v8-1-3693115599fe@bootlin.com>
-References: <20250611-aaeon-up-board-pinctrl-support-v8-0-3693115599fe@bootlin.com>
-In-Reply-To: <20250611-aaeon-up-board-pinctrl-support-v8-0-3693115599fe@bootlin.com>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
- Andy Shevchenko <andy@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
- linux-hardening@vger.kernel.org, 
- Thomas Richard <thomas.richard@bootlin.com>
-X-Mailer: b4 0.14.1
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduudeljecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpefvhhhomhgrshcutfhitghhrghrugcuoehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkedthedvieethedtleetffehudevleegledvteegvdeujeeghffhkeeggfefudevnecukfhppedvrgdtudemtggsudegmehfgedtmegsfhdttdemfhdtheegmegtlegtvdemvddutgefmeduheeiieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmehfgedtmegsfhdttdemfhdtheegmegtlegtvdemvddutgefmeduheeiiedphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepthhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedufedprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheprghnugihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrt
- ghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvggvsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehgvggvrhhtodhrvghnvghsrghssehglhhiuggvrhdrsggvpdhrtghpthhtoheplhhinhhugidqhhgrrhguvghnihhnghesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: thomas.richard@bootlin.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+tUid: 2025611165905828bf27d5be692cabd28fa2b0c2e37f1
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 
-Add support to register for GPIO<->pin mapping using a list of non
-consecutive pins. The core already supports sparse pin range (pins member
-of struct pinctrl_gpio_range), but it was not possible to register one. If
-pins is not NULL the core uses it, otherwise it assumes that a consecutive
-pin range was registered and it uses pin_base.
+The maple tree register cache is based on a much more modern data structure
+than the rbtree cache and makes optimisation choices which are probably
+more appropriate for modern systems than those made by the rbtree cache.
 
-The function gpiochip_add_pin_range() which allocates and fills the struct
-pinctrl_gpio_range was renamed to gpiochip_add_pin_range_with_pins() and
-the pins parameter was added.
-
-Two new functions were added, gpiochip_add_pin_range() and
-gpiochip_add_sparse_pin_range() to register a consecutive or sparse pins
-range. Both use gpiochip_add_pin_range_with_pins().
-
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+Signed-off-by: chuguangqing <chuguangqing@inspur.com>
 ---
- drivers/gpio/gpiolib.c      | 29 ++++++++++++++++++--------
- include/linux/gpio/driver.h | 51 ++++++++++++++++++++++++++++++++++++++++++---
- 2 files changed, 68 insertions(+), 12 deletions(-)
+ drivers/iio/health/afe4404.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index fdafa0df1b43..e196463e7c04 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -2340,11 +2340,13 @@ int gpiochip_add_pingroup_range(struct gpio_chip *gc,
- EXPORT_SYMBOL_GPL(gpiochip_add_pingroup_range);
+diff --git a/drivers/iio/health/afe4404.c b/drivers/iio/health/afe4404.c
+index 99ff68aed27c..b2727effecaa 100644
+--- a/drivers/iio/health/afe4404.c
++++ b/drivers/iio/health/afe4404.c
+@@ -413,7 +413,7 @@ static const struct regmap_config afe4404_regmap_config = {
+ 	.val_bits = 24,
  
- /**
-- * gpiochip_add_pin_range() - add a range for GPIO <-> pin mapping
-+ * gpiochip_add_pin_range_with_pins() - add a range for GPIO <-> pin mapping
-  * @gc: the gpiochip to add the range for
-  * @pinctl_name: the dev_name() of the pin controller to map to
-  * @gpio_offset: the start offset in the current gpio_chip number space
-  * @pin_offset: the start offset in the pin controller number space
-+ * @pins: the list of non consecutive pins to accumulate in this range (if not
-+ *	NULL, pin_offset is ignored by pinctrl core)
-  * @npins: the number of pins from the offset of each pin space (GPIO and
-  *	pin controller) to accumulate in this range
-  *
-@@ -2356,9 +2358,12 @@ EXPORT_SYMBOL_GPL(gpiochip_add_pingroup_range);
-  * Returns:
-  * 0 on success, or a negative errno on failure.
-  */
--int gpiochip_add_pin_range(struct gpio_chip *gc, const char *pinctl_name,
--			   unsigned int gpio_offset, unsigned int pin_offset,
--			   unsigned int npins)
-+int gpiochip_add_pin_range_with_pins(struct gpio_chip *gc,
-+				     const char *pinctl_name,
-+				     unsigned int gpio_offset,
-+				     unsigned int pin_offset,
-+				     unsigned int const *pins,
-+				     unsigned int npins)
- {
- 	struct gpio_pin_range *pin_range;
- 	struct gpio_device *gdev = gc->gpiodev;
-@@ -2376,6 +2381,7 @@ int gpiochip_add_pin_range(struct gpio_chip *gc, const char *pinctl_name,
- 	pin_range->range.name = gc->label;
- 	pin_range->range.base = gdev->base + gpio_offset;
- 	pin_range->range.pin_base = pin_offset;
-+	pin_range->range.pins = pins;
- 	pin_range->range.npins = npins;
- 	pin_range->pctldev = pinctrl_find_and_add_gpio_range(pinctl_name,
- 			&pin_range->range);
-@@ -2385,16 +2391,21 @@ int gpiochip_add_pin_range(struct gpio_chip *gc, const char *pinctl_name,
- 		kfree(pin_range);
- 		return ret;
- 	}
--	chip_dbg(gc, "created GPIO range %d->%d ==> %s PIN %d->%d\n",
--		 gpio_offset, gpio_offset + npins - 1,
--		 pinctl_name,
--		 pin_offset, pin_offset + npins - 1);
-+	if (pin_range->range.pins)
-+		chip_dbg(gc, "created GPIO range %d->%d ==> %s %d sparse PIN range { %d, ... }",
-+			 gpio_offset, gpio_offset + npins - 1,
-+			 pinctl_name, npins, pins[0]);
-+	else
-+		chip_dbg(gc, "created GPIO range %d->%d ==> %s PIN %d->%d\n",
-+			 gpio_offset, gpio_offset + npins - 1,
-+			 pinctl_name,
-+			 pin_offset, pin_offset + npins - 1);
+ 	.max_register = AFE4404_AVG_LED1_ALED1VAL,
+-	.cache_type = REGCACHE_RBTREE,
++	.cache_type = REGCACHE_MAPLE,
+ 	.volatile_table = &afe4404_volatile_table,
+ };
  
- 	list_add_tail(&pin_range->node, &gdev->pin_ranges);
- 
- 	return 0;
- }
--EXPORT_SYMBOL_GPL(gpiochip_add_pin_range);
-+EXPORT_SYMBOL_GPL(gpiochip_add_pin_range_with_pins);
- 
- /**
-  * gpiochip_remove_pin_ranges() - remove all the GPIO <-> pin mappings
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index b53233051bee..58492c57063f 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -785,16 +785,50 @@ struct gpio_pin_range {
- 
- #ifdef CONFIG_PINCTRL
- 
--int gpiochip_add_pin_range(struct gpio_chip *gc, const char *pinctl_name,
--			   unsigned int gpio_offset, unsigned int pin_offset,
--			   unsigned int npins);
-+int gpiochip_add_pin_range_with_pins(struct gpio_chip *gc,
-+				     const char *pinctl_name,
-+				     unsigned int gpio_offset,
-+				     unsigned int pin_offset,
-+				     unsigned int const *pins,
-+				     unsigned int npins);
- int gpiochip_add_pingroup_range(struct gpio_chip *gc,
- 			struct pinctrl_dev *pctldev,
- 			unsigned int gpio_offset, const char *pin_group);
- void gpiochip_remove_pin_ranges(struct gpio_chip *gc);
- 
-+static inline int
-+gpiochip_add_pin_range(struct gpio_chip *gc,
-+		       const char *pinctl_name,
-+		       unsigned int gpio_offset,
-+		       unsigned int pin_offset,
-+		       unsigned int npins)
-+{
-+	return gpiochip_add_pin_range_with_pins(gc, pinctl_name, gpio_offset,
-+						pin_offset, NULL, npins);
-+}
-+
-+static inline int
-+gpiochip_add_sparse_pin_range(struct gpio_chip *gc,
-+			      const char *pinctl_name,
-+			      unsigned int gpio_offset,
-+			      unsigned int const *pins,
-+			      unsigned int npins)
-+{
-+	return gpiochip_add_pin_range_with_pins(gc, pinctl_name, gpio_offset, 0,
-+						pins, npins);
-+}
- #else /* ! CONFIG_PINCTRL */
- 
-+static inline int
-+gpiochip_add_pin_range_with_pins(struct gpio_chip *gc,
-+				 const char *pinctl_name,
-+				 unsigned int gpio_offset,
-+				 unsigned int pin_offset,
-+				 unsigned int npins)
-+{
-+	return 0;
-+}
-+
- static inline int
- gpiochip_add_pin_range(struct gpio_chip *gc, const char *pinctl_name,
- 		       unsigned int gpio_offset, unsigned int pin_offset,
-@@ -802,6 +836,17 @@ gpiochip_add_pin_range(struct gpio_chip *gc, const char *pinctl_name,
- {
- 	return 0;
- }
-+
-+static inline int
-+gpiochip_add_sparse_pin_range(struct gpio_chip *gc,
-+			      const char *pinctl_name,
-+			      unsigned int gpio_offset,
-+			      unsigned int const *pins,
-+			      unsigned int npins)
-+{
-+	return 0;
-+}
-+
- static inline int
- gpiochip_add_pingroup_range(struct gpio_chip *gc,
- 			struct pinctrl_dev *pctldev,
-
 -- 
-2.39.5
+2.31.1
 
