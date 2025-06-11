@@ -1,184 +1,516 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A46289E15;
-	Wed, 11 Jun 2025 10:45:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3397028A1E2
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 10:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749638715; cv=none; b=h/ugOkeWVzRjtUvChKHTqTTqohkUq1w17zCJwKvlQYxlqtQkiNuVwjXYQWqRYadM7rxAVCB7CEbnCOmMQyo7v38s1GoRYiMKiPM1vInxvUFSdrkjFtCZgFAzshiYptzXJAFjWKkb8Y7/V+rSYEl3iqY/Oy6LvlJUYVlne37EdK4=
+	t=1749638718; cv=none; b=IcAXKZxbvompWxCLnNPimMrNqey/f3ek0rw7YJH+xrom4h3uQ1AOqd3x9tLdFcSMTZiujUa34iMyvvFBXnibPuShvCUCA3VybNDO36a4/ZItE6qfjwr1vk54a0debkrre0YHW0sIudhhGOkVFb7IW0/0p8YP2qWDfWgmvrnbZQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749638715; c=relaxed/simple;
-	bh=DqgUkWIggm0ChFDOeWFtjBzmN592Cxe7bdY/Aq6bHGk=;
-	h=MIME-Version:Message-ID:From:To:Cc:Subject:Content-Type:Date:
-	 In-Reply-To:References; b=EGDH3ggLsc2pjeAesGEuUV4uMY0cWnkJexzOXGWElITEFTqb5S/PfW8C7vzlj4n93+dEqZtRVKPgoVBeB2v4SZOVJVSNBY66vZpSXqGl4UW8vUJwIaazkgSRvBZ/iFVXOprQpBWBOPCkPZw8Cb8C9QDfceBAtH7G/fpsDskZJcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=RpRDFNg6; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
+	s=arc-20240116; t=1749638718; c=relaxed/simple;
+	bh=cbbaKugVGMDfONBiq9SvnNEMCAgvLg7dj7NaFSeMGGQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=iiumA7ViHl7WLctDcn/4quckfxgxc1h7G4qcMhZz5NNm5+k6l46ZJ0K26rcvEQQAydXnQXwfX+5RPY2IwF/6O03qcjGFj6phMtWOacmJGb9PdnfzN5yDcNwzIvNF6kBOBGy1O0KULtP1pzTDK+HYGUrgz4tWH0NmpyKem3e4XaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=s6hbdop8; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="RpRDFNg6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
-	s=s31663417; t=1749638694; x=1750243494; i=frank-w@public-files.de;
-	bh=4tlDAQPp+Ak4wlcbM+NYh2qaHTfYWrGnJVTAcQWxrFQ=;
-	h=X-UI-Sender-Class:MIME-Version:Message-ID:From:To:Cc:Subject:
-	 Content-Type:Date:In-Reply-To:References:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=RpRDFNg6OkTnwbBvFDQXwDw3ZnY9fU3SrWVN6Y0AXpmLJ7VOUA8Z+M8lU7AOerFI
-	 Ha04XjyzR2yeNDFmBcVpY98IddLHZcPn29i5nnoMdrR/9xpwb0YoUEpnZKPFGYcwg
-	 97vULFG6z8g1GjgKEfEkWk2eLOWr3LemMUBr0E0ngW3/rXuKzRYQAMp656pA0B34S
-	 fg7wYUbEdaK46atnrcxjtJiC/ZAIybLh5qFyMBhxd938EnygQg9YCnRjvHk24tVH3
-	 QlxojIlFYyrqJK2nso72mIArxmmT3mL9w7Sz4jAauUjNagdcb+KURa32u4epCnNMS
-	 LwlCCn2UEh5EKLDnxw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [100.70.254.165] ([100.70.254.165]) by
- trinity-msg-rest-gmx-gmx-live-847b5f5c86-m27rw (via HTTP); Wed, 11 Jun 2025
- 10:44:54 +0000
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="s6hbdop8"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250611104513euoutp0172baf0c9df05fe32a24c5fd8d44b67d3~H9yPPkms81278612786euoutp01b
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 10:45:13 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250611104513euoutp0172baf0c9df05fe32a24c5fd8d44b67d3~H9yPPkms81278612786euoutp01b
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1749638713;
+	bh=beOgCar7OUSQfsblQJn8LZvYL3GuUK7JcMfArxKMct0=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=s6hbdop8+x2A6NVuMsdXWqEipYWJ2zSa4kJ/zR0DPukWwPiKF0W726KnjbNaTmHGK
+	 g1oEy6+BflQrVmdFhmNr2eEYBhhfX0W622CHLqraxsgiEWLwW/j+16ZJF0tiCXRZuX
+	 0QOs8pSpP5xJbmDAD5Oh0rny3QFu+vIL16cuHZBo=
+Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250611104512eucas1p22450fccf3bb7521760bd2d9a2a56ba19~H9yOq475f0549805498eucas1p25;
+	Wed, 11 Jun 2025 10:45:12 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250611104510eusmtip2373b673a7bf2fc544e697ba89fa444e3~H9yMnvgYQ0058000580eusmtip2c;
+	Wed, 11 Jun 2025 10:45:10 +0000 (GMT)
+Message-ID: <2c51cf39-13cb-413f-8dd5-53bc1c11467a@samsung.com>
+Date: Wed, 11 Jun 2025 12:45:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <trinity-cf16c45f-66e1-486f-969f-fb19f722f769-1749638694479@trinity-msg-rest-gmx-gmx-live-847b5f5c86-m27rw>
-From: Frank Wunderlich <frank-w@public-files.de>
-To: angelogioacchino.delregno@collabora.com, linux@fw-web.de,
- myungjoo.ham@samsung.com, kyungmin.park@samsung.com, cw00.choi@samsung.com,
- djakov@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, andrew@lunn.ch, olteanv@gmail.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, matthias.bgg@gmail.com
-Cc: jia-wei.chang@mediatek.com, johnson.wang@mediatek.com,
- arinc.unal@arinc9.com, Landen.Chao@mediatek.com, dqfext@gmail.com,
- sean.wang@mediatek.com, daniel@makrotopia.org, lorenzo@kernel.org,
- nbd@nbd.name, linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-Subject: Aw: Re: [PATCH v3 12/13] arm64: dts: mediatek: mt7988a-bpi-r4: add
- sfp cages and link to gmac
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 11 Jun 2025 10:44:54 +0000
-In-Reply-To: <37c7ac6c-a5ea-45cc-8ded-9d9bb22d092e@collabora.com>
-References: <20250608211452.72920-1-linux@fw-web.de>
- <20250608211452.72920-13-linux@fw-web.de>
- <37c7ac6c-a5ea-45cc-8ded-9d9bb22d092e@collabora.com>
-X-UI-CLIENT-META-MAIL-DROP: W10=
-X-Provags-ID: V03:K1:5rfuqZloftTYUAetD3kmXeAf3vlJVORdvbUbXRuFz6ctJ/YskeQgbaIrY1+CKtBB0RGrh
- xF81oHJBfThhmKqrC7/MQbVKLhQiQWo5qNeBUoLAMolFs9/NiZFcTlCZyGcmFfFI0hkp9ZSMyVJb
- f4bzJVC3oV/YaOnXFS6mtZMMG0pGogVwoOwr2mbGIpAEGfIwdAAJgdbz8AbxmhVo4sxEF82H6CZj
- 89B+KQaWe4amQ0aIQvb6vKIVxQhS1Swsl3m5OKYvFRxldHOFP5ovfoiHVT75u9kGH/OaBI1z83Q6
- mo6DbsyMc0pMe1Nb7DpiY6xS3BA6NvYt9rxOvEUAC7H4Co/P/IqvPwiUkoCq6PY1SQ=
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:daVp29AyH1E=;NfjQzZDQVxx/ddNWbUFfMljQE5a
- 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
- MmTkMNEeyg==
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 3/4] drm/atomic-helper: Re-order bridge chain
+ pre-enable and post-disable
+To: Aradhya Bhatia <aradhya.bhatia@linux.dev>, Tomi Valkeinen
+	<tomi.valkeinen@ideasonboard.com>, Dmitry Baryshkov <lumag@kernel.org>,
+	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
+	<neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
+	Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
+	<jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten
+	Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: DRI Development List <dri-devel@lists.freedesktop.org>, Linux Kernel
+	List <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Vignesh
+	Raghavendra <vigneshr@ti.com>, Devarsh Thakkar <devarsht@ti.com>, Jayesh
+	Choudhary <j-choudhary@ti.com>, Alexander Sverdlin
+	<alexander.sverdlin@siemens.com>
+Content-Language: en-US
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <20250605171524.27222-4-aradhya.bhatia@linux.dev>
+Content-Transfer-Encoding: 7bit
+X-CMS-MailID: 20250611104512eucas1p22450fccf3bb7521760bd2d9a2a56ba19
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250611104512eucas1p22450fccf3bb7521760bd2d9a2a56ba19
+X-EPHeader: CA
+X-CMS-RootMailID: 20250611104512eucas1p22450fccf3bb7521760bd2d9a2a56ba19
+References: <20250605171524.27222-1-aradhya.bhatia@linux.dev>
+	<20250605171524.27222-4-aradhya.bhatia@linux.dev>
+	<CGME20250611104512eucas1p22450fccf3bb7521760bd2d9a2a56ba19@eucas1p2.samsung.com>
 
-Hi
+Hi,
 
-> Gesendet: Mittwoch, 11. Juni 2025 um 11:33
-> Von: "AngeloGioacchino Del Regno" <angelogioacchino.delregno@collabora.c=
-om>
-> Betreff: Re: [PATCH v3 12/13] arm64: dts: mediatek: mt7988a-bpi-r4: add =
-sfp cages and link to gmac
+On 05.06.2025 19:15, Aradhya Bhatia wrote:
+> From: Aradhya Bhatia <a-bhatia1@ti.com>
 >
-> Il 08/06/25 23:14, Frank Wunderlich ha scritto:
-> > From: Frank Wunderlich <frank-w@public-files.de>
-> >=20
-> > Add SFP cages to Bananapi-R4 board. The 2.5g phy variant only contains=
- the
-> > wan-SFP, so add this to common dtsi and the lan-sfp only to the dual-S=
-FP
-> > variant.
-> >=20
-> > Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-> > Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> > ---
-> > v3:
-> > - enable mac with 2.5g phy on r4 phy variant because driver is now mai=
-nline
-> > ---
-> >   .../mediatek/mt7988a-bananapi-bpi-r4-2g5.dts   | 12 ++++++++++++
-> >   .../dts/mediatek/mt7988a-bananapi-bpi-r4.dts   | 18 ++++++++++++++++=
-++
-> >   .../dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi  | 18 ++++++++++++++++=
-++
-> >   3 files changed, 48 insertions(+)
-> >=20
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-2g5.=
-dts b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-2g5.dts
-> > index 53de9c113f60..e63e17ae35a0 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-2g5.dts
-> > +++ b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-2g5.dts
-> > @@ -9,3 +9,15 @@ / {
-> >   	model =3D "Banana Pi BPI-R4 (1x SFP+, 1x 2.5GbE)";
-> >   	chassis-type =3D "embedded";
-> >   };
-> > +
-> > +&gmac1 {
->=20
-> phy =3D ...
-> phy-c..onnection-type
-> phy-m...ode
+> Move the bridge pre_enable call before crtc enable, and the bridge
+> post_disable call after the crtc disable.
+>
+> The sequence of enable after this patch will look like:
+>
+> 	bridge[n]_pre_enable
+> 	...
+> 	bridge[1]_pre_enable
+>
+> 	crtc_enable
+> 	encoder_enable
+>
+> 	bridge[1]_enable
+> 	...
+> 	bridge[n]_enable
+>
+> And, the disable sequence for the display pipeline will look like:
+>
+> 	bridge[n]_disable
+> 	...
+> 	bridge[1]_disable
+>
+> 	encoder_disable
+> 	crtc_disable
+>
+> 	bridge[1]_post_disable
+> 	...
+> 	bridge[n]_post_disable
+>
+> The definition of bridge pre_enable hook says that,
+> "The display pipe (i.e. clocks and timing signals) feeding this bridge
+> will not yet be running when this callback is called".
+>
+> Since CRTC is also a source feeding the bridge, it should not be enabled
+> before the bridges in the pipeline are pre_enabled. Fix that by
+> re-ordering the sequence of bridge pre_enable and bridge post_disable.
+>
+> While at it, update the drm bridge API documentation as well.
+>
+> Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> Tested-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+> Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
+> Signed-off-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
 
-phy-connection-type is dropped in next version due to comment from andrew,=
- but i order alphabetically
+This patch landed in today's linux-next as commit c9b1150a68d9 
+("drm/atomic-helper: Re-order bridge chain pre-enable and 
+post-disable"). In my tests I found that it breaks booting of Samsung 
+Exynos 5420/5800 based Chromebooks (Peach-Pit and Peach-Pi). Both of 
+them use Exynos DRM with Exynos_DP sub-driver (Analogix DP) and EDP 
+panel. Booting stops at '[drm] Initialized exynos 1.1.0 for exynos-drm 
+on minor 0' message. On the other hand, the Samsung Exynos5250 based 
+Snow Chromebook boots fine, but it uses dp-lvds nxp,ptn3460 bridge and 
+lvds panel instead of edp panels. This looks like some sort of deadlock, 
+because if I disable FBDEV emulation, those boards boots fine and I'm 
+able to run modetest and enable the display. Also the DRM kernel logger 
+seems to be working fine, although I didn't check the screen output yet, 
+as I only have a remote access to those boards. I will investigate it 
+further and let You know.
 
-> > +	phy-mode =3D "internal";
-> > +	phy-connection-type =3D "internal";
-> > +	phy =3D <&int_2p5g_phy>;
-> > +	status =3D "okay";
-> > +};
-> > +
-> > +&int_2p5g_phy {
-> > +	pinctrl-names =3D "i2p5gbe-led";
-> > +	pinctrl-0 =3D <&i2p5gbe_led0_pins>;
->=20
-> pinctrl-names
-> pinctrl-0
+> ---
+>   drivers/gpu/drm/drm_atomic_helper.c |   8 +-
+>   include/drm/drm_bridge.h            | 249 ++++++++++++++++++++--------
+>   2 files changed, 187 insertions(+), 70 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+> index 539b7f072c72..2fe6c91910a1 100644
+> --- a/drivers/gpu/drm/drm_atomic_helper.c
+> +++ b/drivers/gpu/drm/drm_atomic_helper.c
+> @@ -1336,9 +1336,9 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *state)
+>   {
+>   	encoder_bridge_disable(dev, state);
+>   
+> -	encoder_bridge_post_disable(dev, state);
+> -
+>   	crtc_disable(dev, state);
+> +
+> +	encoder_bridge_post_disable(dev, state);
+>   }
+>   
+>   /**
+> @@ -1674,10 +1674,10 @@ encoder_bridge_enable(struct drm_device *dev, struct drm_atomic_state *state)
+>   void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
+>   					      struct drm_atomic_state *state)
+>   {
+> -	crtc_enable(dev, state);
+> -
+>   	encoder_bridge_pre_enable(dev, state);
+>   
+> +	crtc_enable(dev, state);
+> +
+>   	encoder_bridge_enable(dev, state);
+>   
+>   	drm_atomic_helper_commit_writebacks(dev, state);
+> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+> index 0af5db244db8..ecdeb90e5586 100644
+> --- a/include/drm/drm_bridge.h
+> +++ b/include/drm/drm_bridge.h
+> @@ -165,17 +165,33 @@ struct drm_bridge_funcs {
+>   	/**
+>   	 * @disable:
+>   	 *
+> -	 * This callback should disable the bridge. It is called right before
+> -	 * the preceding element in the display pipe is disabled. If the
+> -	 * preceding element is a bridge this means it's called before that
+> -	 * bridge's @disable vfunc. If the preceding element is a &drm_encoder
+> -	 * it's called right before the &drm_encoder_helper_funcs.disable,
+> -	 * &drm_encoder_helper_funcs.prepare or &drm_encoder_helper_funcs.dpms
+> -	 * hook.
+> +	 * The @disable callback should disable the bridge.
+>   	 *
+>   	 * The bridge can assume that the display pipe (i.e. clocks and timing
+>   	 * signals) feeding it is still running when this callback is called.
+>   	 *
+> +	 *
+> +	 * If the preceding element is a &drm_bridge, then this is called before
+> +	 * that bridge is disabled via one of:
+> +	 *
+> +	 * - &drm_bridge_funcs.disable
+> +	 * - &drm_bridge_funcs.atomic_disable
+> +	 *
+> +	 * If the preceding element of the bridge is a display controller, then
+> +	 * this callback is called before the encoder is disabled via one of:
+> +	 *
+> +	 * - &drm_encoder_helper_funcs.atomic_disable
+> +	 * - &drm_encoder_helper_funcs.prepare
+> +	 * - &drm_encoder_helper_funcs.disable
+> +	 * - &drm_encoder_helper_funcs.dpms
+> +	 *
+> +	 * and the CRTC is disabled via one of:
+> +	 *
+> +	 * - &drm_crtc_helper_funcs.prepare
+> +	 * - &drm_crtc_helper_funcs.atomic_disable
+> +	 * - &drm_crtc_helper_funcs.disable
+> +	 * - &drm_crtc_helper_funcs.dpms.
+> +	 *
+>   	 * The @disable callback is optional.
+>   	 *
+>   	 * NOTE:
+> @@ -188,17 +204,34 @@ struct drm_bridge_funcs {
+>   	/**
+>   	 * @post_disable:
+>   	 *
+> -	 * This callback should disable the bridge. It is called right after the
+> -	 * preceding element in the display pipe is disabled. If the preceding
+> -	 * element is a bridge this means it's called after that bridge's
+> -	 * @post_disable function. If the preceding element is a &drm_encoder
+> -	 * it's called right after the encoder's
+> -	 * &drm_encoder_helper_funcs.disable, &drm_encoder_helper_funcs.prepare
+> -	 * or &drm_encoder_helper_funcs.dpms hook.
+> -	 *
+>   	 * The bridge must assume that the display pipe (i.e. clocks and timing
+> -	 * signals) feeding it is no longer running when this callback is
+> -	 * called.
+> +	 * signals) feeding this bridge is no longer running when the
+> +	 * @post_disable is called.
+> +	 *
+> +	 * This callback should perform all the actions required by the hardware
+> +	 * after it has stopped receiving signals from the preceding element.
+> +	 *
+> +	 * If the preceding element is a &drm_bridge, then this is called after
+> +	 * that bridge is post-disabled (unless marked otherwise by the
+> +	 * @pre_enable_prev_first flag) via one of:
+> +	 *
+> +	 * - &drm_bridge_funcs.post_disable
+> +	 * - &drm_bridge_funcs.atomic_post_disable
+> +	 *
+> +	 * If the preceding element of the bridge is a display controller, then
+> +	 * this callback is called after the encoder is disabled via one of:
+> +	 *
+> +	 * - &drm_encoder_helper_funcs.atomic_disable
+> +	 * - &drm_encoder_helper_funcs.prepare
+> +	 * - &drm_encoder_helper_funcs.disable
+> +	 * - &drm_encoder_helper_funcs.dpms
+> +	 *
+> +	 * and the CRTC is disabled via one of:
+> +	 *
+> +	 * - &drm_crtc_helper_funcs.prepare
+> +	 * - &drm_crtc_helper_funcs.atomic_disable
+> +	 * - &drm_crtc_helper_funcs.disable
+> +	 * - &drm_crtc_helper_funcs.dpms
+>   	 *
+>   	 * The @post_disable callback is optional.
+>   	 *
+> @@ -241,18 +274,30 @@ struct drm_bridge_funcs {
+>   	/**
+>   	 * @pre_enable:
+>   	 *
+> -	 * This callback should enable the bridge. It is called right before
+> -	 * the preceding element in the display pipe is enabled. If the
+> -	 * preceding element is a bridge this means it's called before that
+> -	 * bridge's @pre_enable function. If the preceding element is a
+> -	 * &drm_encoder it's called right before the encoder's
+> -	 * &drm_encoder_helper_funcs.enable, &drm_encoder_helper_funcs.commit or
+> -	 * &drm_encoder_helper_funcs.dpms hook.
+> -	 *
+>   	 * The display pipe (i.e. clocks and timing signals) feeding this bridge
+> -	 * will not yet be running when this callback is called. The bridge must
+> -	 * not enable the display link feeding the next bridge in the chain (if
+> -	 * there is one) when this callback is called.
+> +	 * will not yet be running when the @pre_enable is called.
+> +	 *
+> +	 * This callback should perform all the necessary actions to prepare the
+> +	 * bridge to accept signals from the preceding element.
+> +	 *
+> +	 * If the preceding element is a &drm_bridge, then this is called before
+> +	 * that bridge is pre-enabled (unless marked otherwise by
+> +	 * @pre_enable_prev_first flag) via one of:
+> +	 *
+> +	 * - &drm_bridge_funcs.pre_enable
+> +	 * - &drm_bridge_funcs.atomic_pre_enable
+> +	 *
+> +	 * If the preceding element of the bridge is a display controller, then
+> +	 * this callback is called before the CRTC is enabled via one of:
+> +	 *
+> +	 * - &drm_crtc_helper_funcs.atomic_enable
+> +	 * - &drm_crtc_helper_funcs.commit
+> +	 *
+> +	 * and the encoder is enabled via one of:
+> +	 *
+> +	 * - &drm_encoder_helper_funcs.atomic_enable
+> +	 * - &drm_encoder_helper_funcs.enable
+> +	 * - &drm_encoder_helper_funcs.commit
+>   	 *
+>   	 * The @pre_enable callback is optional.
+>   	 *
+> @@ -266,19 +311,31 @@ struct drm_bridge_funcs {
+>   	/**
+>   	 * @enable:
+>   	 *
+> -	 * This callback should enable the bridge. It is called right after
+> -	 * the preceding element in the display pipe is enabled. If the
+> -	 * preceding element is a bridge this means it's called after that
+> -	 * bridge's @enable function. If the preceding element is a
+> -	 * &drm_encoder it's called right after the encoder's
+> -	 * &drm_encoder_helper_funcs.enable, &drm_encoder_helper_funcs.commit or
+> -	 * &drm_encoder_helper_funcs.dpms hook.
+> +	 * The @enable callback should enable the bridge.
+>   	 *
+>   	 * The bridge can assume that the display pipe (i.e. clocks and timing
+>   	 * signals) feeding it is running when this callback is called. This
+>   	 * callback must enable the display link feeding the next bridge in the
+>   	 * chain if there is one.
+>   	 *
+> +	 * If the preceding element is a &drm_bridge, then this is called after
+> +	 * that bridge is enabled via one of:
+> +	 *
+> +	 * - &drm_bridge_funcs.enable
+> +	 * - &drm_bridge_funcs.atomic_enable
+> +	 *
+> +	 * If the preceding element of the bridge is a display controller, then
+> +	 * this callback is called after the CRTC is enabled via one of:
+> +	 *
+> +	 * - &drm_crtc_helper_funcs.atomic_enable
+> +	 * - &drm_crtc_helper_funcs.commit
+> +	 *
+> +	 * and the encoder is enabled via one of:
+> +	 *
+> +	 * - &drm_encoder_helper_funcs.atomic_enable
+> +	 * - &drm_encoder_helper_funcs.enable
+> +	 * - drm_encoder_helper_funcs.commit
+> +	 *
+>   	 * The @enable callback is optional.
+>   	 *
+>   	 * NOTE:
+> @@ -291,17 +348,30 @@ struct drm_bridge_funcs {
+>   	/**
+>   	 * @atomic_pre_enable:
+>   	 *
+> -	 * This callback should enable the bridge. It is called right before
+> -	 * the preceding element in the display pipe is enabled. If the
+> -	 * preceding element is a bridge this means it's called before that
+> -	 * bridge's @atomic_pre_enable or @pre_enable function. If the preceding
+> -	 * element is a &drm_encoder it's called right before the encoder's
+> -	 * &drm_encoder_helper_funcs.atomic_enable hook.
+> -	 *
+>   	 * The display pipe (i.e. clocks and timing signals) feeding this bridge
+> -	 * will not yet be running when this callback is called. The bridge must
+> -	 * not enable the display link feeding the next bridge in the chain (if
+> -	 * there is one) when this callback is called.
+> +	 * will not yet be running when the @atomic_pre_enable is called.
+> +	 *
+> +	 * This callback should perform all the necessary actions to prepare the
+> +	 * bridge to accept signals from the preceding element.
+> +	 *
+> +	 * If the preceding element is a &drm_bridge, then this is called before
+> +	 * that bridge is pre-enabled (unless marked otherwise by
+> +	 * @pre_enable_prev_first flag) via one of:
+> +	 *
+> +	 * - &drm_bridge_funcs.pre_enable
+> +	 * - &drm_bridge_funcs.atomic_pre_enable
+> +	 *
+> +	 * If the preceding element of the bridge is a display controller, then
+> +	 * this callback is called before the CRTC is enabled via one of:
+> +	 *
+> +	 * - &drm_crtc_helper_funcs.atomic_enable
+> +	 * - &drm_crtc_helper_funcs.commit
+> +	 *
+> +	 * and the encoder is enabled via one of:
+> +	 *
+> +	 * - &drm_encoder_helper_funcs.atomic_enable
+> +	 * - &drm_encoder_helper_funcs.enable
+> +	 * - &drm_encoder_helper_funcs.commit
+>   	 *
+>   	 * The @atomic_pre_enable callback is optional.
+>   	 */
+> @@ -311,18 +381,31 @@ struct drm_bridge_funcs {
+>   	/**
+>   	 * @atomic_enable:
+>   	 *
+> -	 * This callback should enable the bridge. It is called right after
+> -	 * the preceding element in the display pipe is enabled. If the
+> -	 * preceding element is a bridge this means it's called after that
+> -	 * bridge's @atomic_enable or @enable function. If the preceding element
+> -	 * is a &drm_encoder it's called right after the encoder's
+> -	 * &drm_encoder_helper_funcs.atomic_enable hook.
+> +	 * The @atomic_enable callback should enable the bridge.
+>   	 *
+>   	 * The bridge can assume that the display pipe (i.e. clocks and timing
+>   	 * signals) feeding it is running when this callback is called. This
+>   	 * callback must enable the display link feeding the next bridge in the
+>   	 * chain if there is one.
+>   	 *
+> +	 * If the preceding element is a &drm_bridge, then this is called after
+> +	 * that bridge is enabled via one of:
+> +	 *
+> +	 * - &drm_bridge_funcs.enable
+> +	 * - &drm_bridge_funcs.atomic_enable
+> +	 *
+> +	 * If the preceding element of the bridge is a display controller, then
+> +	 * this callback is called after the CRTC is enabled via one of:
+> +	 *
+> +	 * - &drm_crtc_helper_funcs.atomic_enable
+> +	 * - &drm_crtc_helper_funcs.commit
+> +	 *
+> +	 * and the encoder is enabled via one of:
+> +	 *
+> +	 * - &drm_encoder_helper_funcs.atomic_enable
+> +	 * - &drm_encoder_helper_funcs.enable
+> +	 * - drm_encoder_helper_funcs.commit
+> +	 *
+>   	 * The @atomic_enable callback is optional.
+>   	 */
+>   	void (*atomic_enable)(struct drm_bridge *bridge,
+> @@ -330,16 +413,32 @@ struct drm_bridge_funcs {
+>   	/**
+>   	 * @atomic_disable:
+>   	 *
+> -	 * This callback should disable the bridge. It is called right before
+> -	 * the preceding element in the display pipe is disabled. If the
+> -	 * preceding element is a bridge this means it's called before that
+> -	 * bridge's @atomic_disable or @disable vfunc. If the preceding element
+> -	 * is a &drm_encoder it's called right before the
+> -	 * &drm_encoder_helper_funcs.atomic_disable hook.
+> +	 * The @atomic_disable callback should disable the bridge.
+>   	 *
+>   	 * The bridge can assume that the display pipe (i.e. clocks and timing
+>   	 * signals) feeding it is still running when this callback is called.
+>   	 *
+> +	 * If the preceding element is a &drm_bridge, then this is called before
+> +	 * that bridge is disabled via one of:
+> +	 *
+> +	 * - &drm_bridge_funcs.disable
+> +	 * - &drm_bridge_funcs.atomic_disable
+> +	 *
+> +	 * If the preceding element of the bridge is a display controller, then
+> +	 * this callback is called before the encoder is disabled via one of:
+> +	 *
+> +	 * - &drm_encoder_helper_funcs.atomic_disable
+> +	 * - &drm_encoder_helper_funcs.prepare
+> +	 * - &drm_encoder_helper_funcs.disable
+> +	 * - &drm_encoder_helper_funcs.dpms
+> +	 *
+> +	 * and the CRTC is disabled via one of:
+> +	 *
+> +	 * - &drm_crtc_helper_funcs.prepare
+> +	 * - &drm_crtc_helper_funcs.atomic_disable
+> +	 * - &drm_crtc_helper_funcs.disable
+> +	 * - &drm_crtc_helper_funcs.dpms.
+> +	 *
+>   	 * The @atomic_disable callback is optional.
+>   	 */
+>   	void (*atomic_disable)(struct drm_bridge *bridge,
+> @@ -348,16 +447,34 @@ struct drm_bridge_funcs {
+>   	/**
+>   	 * @atomic_post_disable:
+>   	 *
+> -	 * This callback should disable the bridge. It is called right after the
+> -	 * preceding element in the display pipe is disabled. If the preceding
+> -	 * element is a bridge this means it's called after that bridge's
+> -	 * @atomic_post_disable or @post_disable function. If the preceding
+> -	 * element is a &drm_encoder it's called right after the encoder's
+> -	 * &drm_encoder_helper_funcs.atomic_disable hook.
+> -	 *
+>   	 * The bridge must assume that the display pipe (i.e. clocks and timing
+> -	 * signals) feeding it is no longer running when this callback is
+> -	 * called.
+> +	 * signals) feeding this bridge is no longer running when the
+> +	 * @atomic_post_disable is called.
+> +	 *
+> +	 * This callback should perform all the actions required by the hardware
+> +	 * after it has stopped receiving signals from the preceding element.
+> +	 *
+> +	 * If the preceding element is a &drm_bridge, then this is called after
+> +	 * that bridge is post-disabled (unless marked otherwise by the
+> +	 * @pre_enable_prev_first flag) via one of:
+> +	 *
+> +	 * - &drm_bridge_funcs.post_disable
+> +	 * - &drm_bridge_funcs.atomic_post_disable
+> +	 *
+> +	 * If the preceding element of the bridge is a display controller, then
+> +	 * this callback is called after the encoder is disabled via one of:
+> +	 *
+> +	 * - &drm_encoder_helper_funcs.atomic_disable
+> +	 * - &drm_encoder_helper_funcs.prepare
+> +	 * - &drm_encoder_helper_funcs.disable
+> +	 * - &drm_encoder_helper_funcs.dpms
+> +	 *
+> +	 * and the CRTC is disabled via one of:
+> +	 *
+> +	 * - &drm_crtc_helper_funcs.prepare
+> +	 * - &drm_crtc_helper_funcs.atomic_disable
+> +	 * - &drm_crtc_helper_funcs.disable
+> +	 * - &drm_crtc_helper_funcs.dpms
+>   	 *
+>   	 * The @atomic_post_disable callback is optional.
+>   	 */
 
-what the difference? i don't see it :(
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
-the others i change in v4
-
-regards Frank
