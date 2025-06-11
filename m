@@ -1,71 +1,168 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE901224882;
-	Wed, 11 Jun 2025 17:37:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B67E22256B;
+	Wed, 11 Jun 2025 17:37:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749663428; cv=none; b=EXKXbXtJ6ZWLIIsh2aAiqFYHEJX0IYRR2Lv8Zb8+WHSLUo1zAYMrPJ4uCihfIKFePC5vbnDpAOg4NZPYMVU8cP2Jj4DsW9+l3llMy76DzmJgZQKimGigHwV83m1Kktem2CKmSROEQfBheiQv4iA7Ut1A9TRBK6ppyxIGlOURn0Q=
+	t=1749663444; cv=none; b=DIJVu3TR5+OoJuN7EoPvoJ0HipzNKm0DIknuDSyiQqCFALCHmyb3jvYUGQWJJzVOyOvuoh69K98UH7WL/R7/MtQY4+oHtXnO/aNDplb4NuorU+FuC74Gditvp+OWNEeZEo3hvSMDlcfQqn7b0tbZI5atf11U2727U4kZTgtr12Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749663428; c=relaxed/simple;
-	bh=VMUK+sl62s49iLfhRzSxD6TI8pQfklv8QpNaE41TV8Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V47V1NR6WRQaSrNnLl1e/E2gX74oFud6WRLQbdTt9e5A4go/1Ect8uePgmsFNc49frdpVLUpNLk2onFlojKg0hdeOp2DeL5Nm5ofQy68BBlcmlv9tDAEGQdXtKHSaxeFRhYzPZsH3YzQr/uktbS5Z9c5gAn7PxTS/agU2UFLs2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=bwyDYSS9; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1749663444; c=relaxed/simple;
+	bh=RxRvCCQAc09pOoApuwSOluUbk6YsmNSe3Pm4y3AeGQ4=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=ZMHjOIE/WI1/Qxvu5wVg2DotG5Ll9DdFKNkKkIqlhZP0phPzL0liVoUrkaSBlRe1qebFnedBtiRkQPc3kmDck1EMBiwRtq0kLBGFsOKOe9isfY2PaBb3SpZOety0/5HqoTbeaumciFx/CrB3hzOrkpjVr9fe11c5KvhB9W7tyFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RIZ28o44; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="bwyDYSS9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=DepT5as+DqmaE8TroehmPFoCKfqX6foaMLzj8OpaDos=; b=bwyDYSS93gc++nsYCHxly65fnW
-	nDxDEFZNtZCKv1y0IAN2AOsCVMQmawKL6P8m79dXeAM1ZuDugxKqqbO3gmShFjQLlR7YCYQq3eGof
-	P5AO0Mx8aEXf01KgKn5vVTHFSx+C7EAZbITy94RWpISKuefAh78XJht/RuzD00QD5Vd+FKwpsgopJ
-	f/dFcK42+FI76TtMOfD3Wt0r77Y6PZRRoJJbgRxtZIRVo2Hr7bjPcr/HKI+F3PfuhdAJrEGOO2TNb
-	0M34u1JiDfIQmUUiq6zqoavLu31LacABnGvgxw6zaYJ+rr7fMXNXAZZV24MDWxmIk/GuThsuKucQz
-	alZMcnAg==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uPPNm-00000004hS9-2CLe;
-	Wed, 11 Jun 2025 17:37:02 +0000
-Date: Wed, 11 Jun 2025 18:37:02 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] tracefs: Add d_delete to remove negative dentries
-Message-ID: <20250611173702.GL299672@ZenIV>
-References: <20250611121815.409d02f8@batman.local.home>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RIZ28o44"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-b2f645eba5dso965142a12.1;
+        Wed, 11 Jun 2025 10:37:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749663442; x=1750268242; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Qdx+HUyFlvdHm+W6jgROnH/naTCj5dcAprpNX8qijoM=;
+        b=RIZ28o44vqnk5yw/ukh76PWP1Rjn6qAetcB7TPhQi/ZfeQMzhVzZmJd3XQw7FjTm0I
+         h6PT2PzgAwU0loONKUaz8bG/TPO6YcbIWB6uuipc2aNAckhGVruya3rN6vMcDn36dpwK
+         k3fJ5IizCjt5Bo+Kx0DhQNe1Gl6ND1zOwHrn+gqVZ1IePKZljp72fwepDnn6Z7EdZNsq
+         qHcC0OOU5ZaQ4Pfh2GZgzEmTsXMg9njrk3Xg1qI91PV+K71zDzCXqMjkE6SXVujlOJgj
+         DkDB7LPhclM9SeGniREcOGrbWRYqPzuxCm23/UEggC8pPPQLqr9mALk0O2RyYJkV9IZb
+         J9Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749663442; x=1750268242;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Qdx+HUyFlvdHm+W6jgROnH/naTCj5dcAprpNX8qijoM=;
+        b=CE37W+V282XT1CVKC0hgJYCnxZckUtbGCTAJsuAyeo4i1fcI1E8+ZaTaKUNqQSA0U9
+         FaepPYhHHvLb+8e3SVHPK2H0tlsPejG89L19gB3FpkwopTQabV+zxcS9MHQnORxtKDnZ
+         3fKyKrTZdfyvd84C5NC3Dwveh/BL3VWXtlUNulkQpGvN8Wuz7kyJ0aafXK+h2VhajDNC
+         CeeFHUMYFVtsevKj1GekDc6pXE5YlX1OUqVImqGC+M1dGox2mmzQHYyUAYXInqAAfivA
+         p5PW02DdYj/SVfOkb1+rQ+gBt0L2+99WWYuG14o0rDno6RZTzkIUkJh5IvcuFkWDNXGd
+         X9Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCVNdvLb5ZMQFiJ6uh15f0i/dfVoHEIpCMrL7Ve6MoMoLt1NfA/GiVJCKZFSleW41sRgMHvnsYDg@vger.kernel.org, AJvYcCW6Qk27FN9RaA/sL8Tt9YY3WJRZj1PpzdJnWWJZW5aGd/QmO+TTe4Nhv5Q5VcjL/e49Krl5YbV36UURjgEP@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0QTXavSbf+r60iW8PoanVrmI2CnBPLCK75qjX6vG5qxpisMLD
+	Q+TDJdwpirKLwdUyuIYmIu1fpEZXdRbKquG7Qumt+UYULO04e8cR+bCL9tmsGE7+1j41eaRR0z8
+	BIgK+jloWCmMSwVHtBUNZC3yrvhrBJQk=
+X-Gm-Gg: ASbGncvl+6a90LYfGwB44rinUFmY+uxCIEdMZDoa3GSm1tLdnEfd9XHEF3Nmprpakdq
+	Bz/HNiwKmTshDKqJXifYZ/U+M7xhI06hEDH83nOn2aVCQU/v1UkE9mz3Sfze53AT0GZ0LFb6dN/
+	SDCowUumNLVLWFdXWrkkqFpMJ4T8yiKalRy2GwG0egQBdBEVa31EZwSB8=
+X-Google-Smtp-Source: AGHT+IEjycZwjuaydhb9hB5P8UQ/fl56j+Lznqu09ONsNgiSt1GEAvBLvUlmxXMXjPLZVddE5naJd/n3OlOMt2na/t4=
+X-Received: by 2002:a17:90b:534c:b0:30e:e9f1:8447 with SMTP id
+ 98e67ed59e1d1-313bfd6eb45mr464488a91.4.1749663442245; Wed, 11 Jun 2025
+ 10:37:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611121815.409d02f8@batman.local.home>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+From: Charlemagne Lasse <charlemagnelasse@gmail.com>
+Date: Wed, 11 Jun 2025 19:37:10 +0200
+X-Gm-Features: AX0GCFt6AMPMnfwGbDRevkngQ_776BKkCPArI8xqatqb4HBSG_M9g30Xnaqvjv4
+Message-ID: <CAFGhKbwVyxCwYSNrPaQ-GkuP008+uvDg-wNA5syWLLzODCfpcA@mail.gmail.com>
+Subject: locking/local_lock, mm: sparse warnings about shadowed variable
+To: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Muchun Song <muchun.song@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Vlastimil Babka <vbabka@suse.cz>, Jakub Kicinski <kuba@kernel.org>, 
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>, 
+	LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org, linux-mm@kvack.org, 
+	linux-rt-devel@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jun 11, 2025 at 12:18:15PM -0400, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> If a lookup in tracefs is done on a file that does not exist, it leaves a
-> dentry hanging around until memory pressure removes it. But eventfs
-> dentries should hang around as when their ref count goes to zero, it
-> requires more work to recreate it. For the rest of the tracefs dentries,
-> they hang around as their dentry is used as a descriptor for the tracing
-> system. But if a file lookup happens for a file in tracefs that does not
-> exist, it should be deleted.
-> 
-> Add a .d_delete callback that checks if dentry->fsdata is set or not. Only
-> eventfs dentries set fsdata so if it has content it should not be deleted
-> and should hang around in the cache.
-> 
-> Reported-by: Al Viro <viro@zeniv.linux.org.uk>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+HI,
 
-Applied to #work.dcache
+when I run `make C=2 mm/mlock.o CHECK="sparse -Wshadow"`, I get a lot of
+
+./include/linux/local_lock.h:88:1: warning: symbol 'l' shadows an earlier one
+./include/linux/local_lock.h:88:1: originally declared here
+
+after commit
+
+51339d99c0131bc0d16d378e9b05bc498d2967e2 is the first bad commit
+commit 51339d99c0131bc0d16d378e9b05bc498d2967e2
+Author: Alexei Starovoitov <ast@kernel.org>
+Date:   2025-04-02 19:55:14 -0700
+
+   locking/local_lock, mm: replace localtry_ helpers with local_trylock_t type
+
+   Partially revert commit 0aaddfb06882 ("locking/local_lock: Introduce
+   localtry_lock_t").  Remove localtry_*() helpers, since localtry_lock()
+   name might be misinterpreted as "try lock".
+
+   Introduce local_trylock[_irqsave]() helpers that only work with newly
+   introduced local_trylock_t type.  Note that attempt to use
+   local_trylock[_irqsave]() with local_lock_t will cause compilation
+   failure.
+
+   Usage and behavior in !PREEMPT_RT:
+
+   local_lock_t lock;                     // sizeof(lock) == 0
+   local_lock(&lock);                     // preempt disable
+   local_lock_irqsave(&lock, ...);        // irq save
+   if (local_trylock_irqsave(&lock, ...)) // compilation error
+
+   local_trylock_t lock;                  // sizeof(lock) == 4
+   local_lock(&lock);                     // preempt disable, acquired = 1
+   local_lock_irqsave(&lock, ...);        // irq save, acquired = 1
+   if (local_trylock(&lock))              // if (!acquired) preempt
+disable, acquired = 1
+   if (local_trylock_irqsave(&lock, ...)) // if (!acquired) irq save,
+acquired = 1
+
+   The existing local_lock_*() macros can be used either with local_lock_t or
+   local_trylock_t.  With local_trylock_t they set acquired = 1 while
+   local_unlock_*() clears it.
+
+   In !PREEMPT_RT local_lock_irqsave(local_lock_t *) disables interrupts to
+   protect critical section, but it doesn't prevent NMI, so the fully
+   reentrant code cannot use local_lock_irqsave(local_lock_t *) for exclusive
+   access.
+
+   The local_lock_irqsave(local_trylock_t *) helper disables interrupts and
+   sets acquired=1, so local_trylock_irqsave(local_trylock_t *) from NMI
+   attempting to acquire the same lock will return false.
+
+   In PREEMPT_RT local_lock_irqsave() maps to preemptible spin_lock().  Map
+   local_trylock_irqsave() to preemptible spin_trylock().  When in hard IRQ
+   or NMI return false right away, since spin_trylock() is not safe due to
+   explicit locking in the underneath rt_spin_trylock() implementation.
+   Removing this explicit locking and attempting only "trylock" is undesired
+   due to PI implications.
+
+   The local_trylock() without _irqsave can be used to avoid the cost of
+   disabling/enabling interrupts by only disabling preemption, so
+   local_trylock() in an interrupt attempting to acquire the same lock will
+   return false.
+
+   Note there is no need to use local_inc for acquired variable, since it's a
+   percpu variable with strict nesting scopes.
+
+   Note that guard(local_lock)(&lock) works only for "local_lock_t lock".
+
+   The patch also makes sure that local_lock_release(l) is called before
+   WRITE_ONCE(l->acquired, 0).  Though IRQs are disabled at this point the
+   local_trylock() from NMI will succeed and local_lock_acquire(l) will warn.
+
+   Link: https://lkml.kernel.org/r/20250403025514.41186-1-alexei.starovoitov@gmail.com
+   Fixes: 0aaddfb06882 ("locking/local_lock: Introduce localtry_lock_t")
+   Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+   Acked-by: Vlastimil Babka <vbabka@suse.cz>
+   Acked-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+   Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
+   Cc: Daniel Borkman <daniel@iogearbox.net>
+   Cc: Linus Torvalds <torvalds@linuxfoundation.org>
+   Cc: Martin KaFai Lau <martin.lau@kernel.org>
+   Cc: Michal Hocko <mhocko@suse.com>
+   Cc: Peter Zijlstra <peterz@infradead.org>
+   Cc: Steven Rostedt <rostedt@goodmis.org>
+   Cc: Vlastimil Babka <vbabka@suse.cz>
+   Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+
+include/linux/local_lock.h          |  58 ++--------
+include/linux/local_lock_internal.h | 211 +++++++++++++++---------------------
+mm/memcontrol.c                     |  39 ++++---
+3 files changed, 116 insertions(+), 192 deletions(-)
+bisect found first bad commit
