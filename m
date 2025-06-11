@@ -1,63 +1,42 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7D8F2D543C
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 08:39:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76C723C8C9
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 08:42:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749631189; cv=none; b=lAJI3NK9OEC9o0BZ0AFFf7A9j+QGxJu3R3P/7pWi/SYnX4i8MQhlQ65WJYH5/DECfCelGHlUMLq6Cs1l9+01XZDh+GGH+rFZ4koTO1bs87JcUjUsjRt2JfaZfdDSZsV+s9W+tqjxYqqEYMgIIERpbi5PFbJWlKmO7Kk24UIBIac=
+	t=1749631344; cv=none; b=JDTvoQPh2ejaAqPgBWzsFVx3/wVWi83FnEaX8dZsEvo3f0NqycX1XEK/4D0yTa3uZwDog6viWPJwUMkkpsQalW+T9YHZYZLOoKzQ0DcMzsut0pC5675Fon6pDBZ4MPtgRTiYmi8VK4JXMXeeWEFqvxYjAEQSnk5zAmyanl6roIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749631189; c=relaxed/simple;
-	bh=sqlinEn+WadRkpr66v6lQ6O2iAs13ZkHYy7D1blDOqs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cLJnACXCRnl1h6VLltC6nI+NohUoimngUEzPWu2Z9QRN9XOfhD2aoGefnM8AXtvRF8dFXI2eimZzYDu197CEbmVT/hmxoKKCeRjJAJFNO9VSC4hDkm1+ZOJm6GeOH/johyP9ovKJMu/Y1wGT6td4eR3tv2osuBt+F5qlKQ7WjuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=neon.tech; spf=pass smtp.mailfrom=neon.tech; dkim=pass (1024-bit key) header.d=neon.tech header.i=@neon.tech header.b=c87wWJWR; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=neon.tech
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neon.tech
+	s=arc-20240116; t=1749631344; c=relaxed/simple;
+	bh=JN6/3wMG7bR+MMBVKMBJOzeMXrSF5nsAX5Hl6KT6O6k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=PbqOU4n7he3/F+VFRqBIghG3jGndqaqYRSAo3wANXbPu/mvpbm9jMC2cVB/eHOeypPXxaNKDgVDDA2QFXwgvf5D/zZST+cMHZ0qqVXN87yFKDjwRwNbJEFDyrzDIZql/SNXtzjCnWNVr7OeNC7r8SwtxnCFmRslujX1A77jydJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=eKABDA52; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=neon.tech header.i=@neon.tech header.b="c87wWJWR"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-607434e1821so7532428a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 01:39:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=neon.tech; s=google; t=1749631186; x=1750235986; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sozhA9SLLboh+8HTdUnRws+mKBzTVepTF173TS6LEE4=;
-        b=c87wWJWRGrfj7doXRccelH1NqoAAeYF6rv3Eo4d6F/DH3WUDGSOPD+NN44cHPCATKp
-         H88DQNHcmwT/6X1Xhy4buup4X9bQDQt2Hhk3OxQ7wixn+2xxxlbGpdP08P3NxgW9KyhP
-         TD7YE8x6+NnV3EWKzrZ91rKw8dcgfSmkPfhdI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749631186; x=1750235986;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sozhA9SLLboh+8HTdUnRws+mKBzTVepTF173TS6LEE4=;
-        b=wBiU5Ocl/NdTs+Qj2+P+IaWVauWiIqpnagW2OeM1FZIpf8uvFp1hHKvWqQEi9jUU83
-         e2qRuy4IkUEgGQJ0wglBimDwWnJGdkhX0cKalJowvWz99JnJxkev7dq432w/wI0+iIO9
-         kDD4nmtXpBD42ue4XbpaVltrjpyslSwZ0l/N80GyFv5emVaeUo7ulxaTt6PDPR6w2bzY
-         eiE+joo3RV/nZT1Rkku225IVgdspK2LrqlmeRaAwu9Nx6Pc68DhDFWLs/QMMZ4Y9e89i
-         bhdYc+nwRa0m156N7jvPrL1Y7UfOx2VATguYyTQWQ3nCwO1pfZySOsCjcLlMgo0bhXp8
-         OF4g==
-X-Forwarded-Encrypted: i=1; AJvYcCUX8uU+hskNBQyY+u15CmySq0eiv7XYhIhWWIVxsFQbFvPbsk3TnPOsd6MOElBKSWe3ich4yo3E1/UHtrE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YziQpl14UEEJ/hVlR2+0LdbBnvq6VURRNKwBC0ieFLnXVAZD7uA
-	JWFy3VvrzBPwv6asY5E++TXIgkkkxkuiwH8hKvDetrv4+60sLzWzvsaB2RLs0ojf7dHdJ2TRk/r
-	9+TxA/13YRA==
-X-Gm-Gg: ASbGncv56wcQWvTNVBZswYXmirBWOES46WC6eP5cOI5raeCb489HK6iXPUKwGSJzUue
-	qXmSawmx9KNdCwxSyGf72oafEcjfMIkA9kb/KB/r2+ruvw1TZLDlhWknDX59F14iVRmfS8p+r2K
-	Qx89m+OG3u8lacuS6hnee4cxN7MNCEcmnAIG1XVSJiZzVJCSjgiHWp6CcMhVFnvD6PVIKhnBtJZ
-	2SEa9U1PkDWYQ9IA6oXE57EBeM+YFvmA+df1XxnSdEMClQnuGK/YmfThZBssxExV8cSDvcezyMz
-	CO78VRoLBrS4gMOoIyp/BYwiIQGmZPG2qWIOWGJgRTPP/gT/s52ODYaTruMZRgJNzbVxSK+KO9f
-	t
-X-Google-Smtp-Source: AGHT+IGy/zHKkLoCqd0X2olDp98Qxa0qdVeeG437zq+tGKaNriTn7CidMfefy/lb+POVB1pfKAU92w==
-X-Received: by 2002:a17:907:7290:b0:ad5:a121:6ebc with SMTP id a640c23a62f3a-ade8c3a296dmr185909966b.0.1749631185945;
-        Wed, 11 Jun 2025 01:39:45 -0700 (PDT)
-Received: from [192.168.86.142] ([84.65.228.220])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc7c786sm874845866b.172.2025.06.11.01.39.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jun 2025 01:39:45 -0700 (PDT)
-Message-ID: <876382a4-432c-42c0-adda-cc992d9ffcbb@neon.tech>
-Date: Wed, 11 Jun 2025 09:39:44 +0100
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="eKABDA52"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250611084220euoutp011712cf43b1c51eb9f288b1c374fb55c4~H8G8c6UX20286802868euoutp01R
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 08:42:20 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250611084220euoutp011712cf43b1c51eb9f288b1c374fb55c4~H8G8c6UX20286802868euoutp01R
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1749631340;
+	bh=8s5vFxR1V9KB58LvUJ18g2JnoUARTR5dGOv6Swwdcqg=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=eKABDA52uJCgR/L3d9qNuIbaW4Rixx/M1DCjpGb8hTMXsvy8voYkLO21aqUZRDobq
+	 J+x7a1RCq1JerI6pO/pYbEgKpIIZYHn6KZKaL8haxRIZjBaoKhN7xfCDeoNQLMHeTi
+	 9P+MSw30GsrE7g6y2mqF6pPYqCixkkhR/9k7LjtY=
+Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250611084219eucas1p1b1b445a9017d87f141561fa591847d7d~H8G78SWKX2272022720eucas1p1N;
+	Wed, 11 Jun 2025 08:42:19 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250611084217eusmtip2665432f3fe30a8e815516687a8972357~H8G5lenbh2869928699eusmtip2v;
+	Wed, 11 Jun 2025 08:42:17 +0000 (GMT)
+Message-ID: <4e53d612-534c-46b5-9746-a4a9814d41c3@samsung.com>
+Date: Wed, 11 Jun 2025 10:42:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,30 +44,177 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] x86/mm: Handle alloc failure in phys_*_init()
-To: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-mm@kvack.org
-Cc: Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
- "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
- Oleg Vasilev <oleg@neon.tech>, Arthur Petukhovsky <arthur@neon.tech>,
- Stefan Radig <stefan@neon.tech>, Misha Sakhnov <misha@neon.tech>
-References: <a31e3b89-5040-4426-9ce8-d674b8554aa1@neon.tech>
- <a404d023-e0bb-4dc8-8952-accba299ab50@neon.tech>
- <a43965e2-f0f2-40d5-b7cb-f79bd0261d06@intel.com>
+Subject: Re: [PATCH] mm: Remove PFN_MAP, PFN_SPECIAL, PFN_SG_CHAIN and
+ PFN_SG_LAST
+To: David Hildenbrand <david@redhat.com>, Alistair Popple
+	<apopple@nvidia.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@nvidia.com>,
+	gerald.schaefer@linux.ibm.com, dan.j.williams@intel.com, jgg@ziepe.ca,
+	willy@infradead.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+	jhubbard@nvidia.com, zhang.lyra@gmail.com, debug@rivosinc.com,
+	bjorn@kernel.org, balbirs@nvidia.com, lorenzo.stoakes@oracle.com,
+	John@groves.net
 Content-Language: en-US
-From: Em Sharnoff <sharnoff@neon.tech>
-In-Reply-To: <a43965e2-f0f2-40d5-b7cb-f79bd0261d06@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <52b746ae-82cc-428e-8e88-a05a6b738cd0@redhat.com>
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20250611084219eucas1p1b1b445a9017d87f141561fa591847d7d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250610161811eucas1p18de4ba7b320b6d6ff7da44786b350b6e
+X-EPHeader: CA
+X-CMS-RootMailID: 20250610161811eucas1p18de4ba7b320b6d6ff7da44786b350b6e
+References: <20250604032145.463934-1-apopple@nvidia.com>
+	<CGME20250610161811eucas1p18de4ba7b320b6d6ff7da44786b350b6e@eucas1p1.samsung.com>
+	<957c0d9d-2c37-4d5f-a8b8-8bf90cd0aedb@samsung.com>
+	<hczxxu3txopjnucjrttpcqtkkfnzrqh6sr4v54dfmjbvf2zcfs@ocv6gqddyavn>
+	<1daeaf4e-5477-40cb-bca0-e4cd5ad8a224@samsung.com>
+	<52b746ae-82cc-428e-8e88-a05a6b738cd0@redhat.com>
 
-On 6/10/25 16:07, Dave Hansen wrote:
+On 11.06.2025 10:23, David Hildenbrand wrote:
+> On 11.06.25 10:03, Marek Szyprowski wrote:
+>> On 11.06.2025 04:38, Alistair Popple wrote:
+>>> On Tue, Jun 10, 2025 at 06:18:09PM +0200, Marek Szyprowski wrote:
+>>>> On 04.06.2025 05:21, Alistair Popple wrote:
+>>>>> The PFN_MAP flag is no longer used for anything, so remove it.
+>>>>> The PFN_SG_CHAIN and PFN_SG_LAST flags never appear to have been
+>>>>> used so also remove them. The last user of PFN_SPECIAL was removed
+>>>>> by 653d7825c149 ("dcssblk: mark DAX broken, remove FS_DAX_LIMITED
+>>>>> support").
+>>>>>
+>>>>> Signed-off-by: Alistair Popple <apopple@nvidia.com>
+>>>>> Acked-by: David Hildenbrand <david@redhat.com>
+>>>>> Reviewed-by: Christoph Hellwig <hch@lst.de>
+>>>>> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+>>>>> Cc: gerald.schaefer@linux.ibm.com
+>>>>> Cc: dan.j.williams@intel.com
+>>>>> Cc: jgg@ziepe.ca
+>>>>> Cc: willy@infradead.org
+>>>>> Cc: david@redhat.com
+>>>>> Cc: linux-kernel@vger.kernel.org
+>>>>> Cc: nvdimm@lists.linux.dev
+>>>>> Cc: jhubbard@nvidia.com
+>>>>> Cc: hch@lst.de
+>>>>> Cc: zhang.lyra@gmail.com
+>>>>> Cc: debug@rivosinc.com
+>>>>> Cc: bjorn@kernel.org
+>>>>> Cc: balbirs@nvidia.com
+>>>>> Cc: lorenzo.stoakes@oracle.com
+>>>>> Cc: John@Groves.net
+>>>>>
+>>>>> ---
+>>>>>
+>>>>> Splitting this off from the rest of my series[1] as a separate 
+>>>>> clean-up
+>>>>> for consideration for the v6.16 merge window as suggested by 
+>>>>> Christoph.
+>>>>>
+>>>>> [1] - 
+>>>>> https://lore.kernel.org/linux-mm/cover.541c2702181b7461b84f1a6967a3f0e823023fcc.1748500293.git-series.apopple@nvidia.com/
+>>>>> ---
+>>>>>     include/linux/pfn_t.h             | 31 
+>>>>> +++----------------------------
+>>>>>     mm/memory.c                       |  2 --
+>>>>>     tools/testing/nvdimm/test/iomap.c |  4 ----
+>>>>>     3 files changed, 3 insertions(+), 34 deletions(-)
+>>>> This patch landed in today's linux-next as commit 28be5676b4a3 ("mm:
+>>>> remove PFN_MAP, PFN_SPECIAL, PFN_SG_CHAIN and PFN_SG_LAST"). In my 
+>>>> tests
+>>>> I've noticed that it breaks operation of all RISC-V 64bit boards on my
+>>>> test farm (VisionFive2, BananaPiF3 as well as QEMU's Virt machine). 
+>>>> I've
+>>>> isolated the changes responsible for this issue, see the inline 
+>>>> comments
+>>>> in the patch below. Here is an example of the issues observed in the
+>>>> logs from those machines:
+>>> Thanks for the report. I'm really confused by this because this 
+>>> change should
+>>> just be removal of dead code - nothing sets any of the removed PFN_* 
+>>> flags
+>>> AFAICT.
+>>>
+>>> I don't have access to any RISC-V hardwdare but you say this 
+>>> reproduces under
+>>> qemu - what do you run on the system to cause the error? Is it just 
+>>> a simple
+>>> boot and load a module or are you running selftests or something else?
+>>
+>> It fails a simple boot test. Here is a detailed instruction how to
+>> reproduce this issue with the random Debian rootfs image found on the
+>> internet (tested on Ubuntu 22.04, with next-20250610
+>> kernel source):
+>
+> riscv is one of the archs where pte_mkdevmap() will *not* set the pte 
+> as special. (I
+> raised this recently in the original series, it's all a big mess)
+>
+> So, before this change here, pfn_t_devmap() would have returned 
+> "false" if only
+> PFN_DEV was set, now it would return "true" if only PFN_DEV is set.
+>
+> Consequently, in insert_pfn() we would have done a pte_mkspecial(), 
+> now we do a
+> pte_mkdevmap() -- again, which does not imply "special" on riscv.
+>
+> riscv selects CONFIG_ARCH_HAS_PTE_SPECIAL, so if !pte_special(), it's 
+> considered as
+> normal.
+>
+> Would the following fix your issue?
+>
+>
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 8eba595056fe3..0e972c3493692 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -589,6 +589,10 @@ struct page *vm_normal_page(struct vm_area_struct 
+> *vma, unsigned long addr,
+>  {
+>         unsigned long pfn = pte_pfn(pte);
+>
+> +       /* TODO: remove this crap and set pte_special() instead. */
+> +       if (pte_devmap(pte))
+> +               return NULL;
+> +
+>         if (IS_ENABLED(CONFIG_ARCH_HAS_PTE_SPECIAL)) {
+>                 if (likely(!pte_special(pte)))
+>                         goto check_pfn;
+> @@ -598,16 +602,6 @@ struct page *vm_normal_page(struct vm_area_struct 
+> *vma, unsigned long addr,
+>                         return NULL;
+>                 if (is_zero_pfn(pfn))
+>                         return NULL;
+> -               if (pte_devmap(pte))
+> -               /*
+> -                * NOTE: New users of ZONE_DEVICE will not set 
+> pte_devmap()
+> -                * and will have refcounts incremented on their struct 
+> pages
+> -                * when they are inserted into PTEs, thus they are 
+> safe to
+> -                * return here. Legacy ZONE_DEVICE pages that set 
+> pte_devmap()
+> -                * do not have refcounts. Example of legacy 
+> ZONE_DEVICE is
+> -                * MEMORY_DEVICE_FS_DAX type in pmem or virtio_fs 
+> drivers.
+> -                */
+> -                       return NULL;
+>
+>                 print_bad_pte(vma, addr, pte, NULL);
+>                 return NULL;
+>
+>
+> But, I would have thought the later patches in Alistairs series would 
+> sort that out
+> (where we remove pte_devmap() ... )
+>
+The above change fixes the issues observed on RISCV boards.
 
->> +		 * phys_{ppmd,pud,p4d}_init return allocation errors via ERR_PTR.
-> 
-> 			 ^ typo?
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
-Oh- yes, good catch, thanks!
-
-Em
