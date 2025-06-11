@@ -1,31 +1,33 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DE2822D4CD
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:59:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2FEE22CBD0;
+	Wed, 11 Jun 2025 06:59:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749625163; cv=none; b=odDG4/965WTLS1rLW/Yd810j/yZSlgmNSYOxz/3c/+vc1yv1NO7pjwEN8Ej+MlDq2pvP1s5v/GzatlIxIVenwtbX+4bDnfsAslz3wyhrmVTD8qYGtU0mZJ7O6OzOdTEbCpt0Rvu4+zUVrTswYzRs4gN2TV2Md1H5ZmjSF6M//68=
+	t=1749625200; cv=none; b=J24gHtH4WC65+bv/EJhlKV3bkshmQ4dqIc22D/XRdkf1heKBlI1aiKxBIaxo17A9JSotKCE2CKwuY/ZRQYKGU4hBh9bV79fm8LxTSwL1OK6LzAra13LBOPg0JRoKBB5vN/vARnby7E0vyNp0WRomSihHgAfYKbgX3Zi74WNjrHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749625163; c=relaxed/simple;
-	bh=mdqznnnrJ7nD7GMxxVWzHlB3AVGxZZ1Xu4YQfC+rk44=;
+	s=arc-20240116; t=1749625200; c=relaxed/simple;
+	bh=Yo9Aj6NI6n0oVW7kfpiQql+rb8opiJFPlJ4FKWQs1k4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XLO9ckAcaSEB8oUNPRB7mBdyX7UDwIUyef+Vmq8GYGhx4gxR8oj+/cbpi8LszCH/LKZPw3YYLD5TlIuK8SFi6/ozpgbvDMmAAYjr8JLGFkt9bwVgdU1XjKg3UeEnZl/l5NJuxIe1jBBYsyPzpBNIKmMBgUnUy25iv1eUnpbYub0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Utt/4rxj; arc=none smtp.client-ip=115.124.30.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	 In-Reply-To:Content-Type; b=h6AGyGBrGRL+S1PsqpMeSmkVjmz541JgLt/OYiBeXdXyuYqRh1GsXhZtfHod0U0SFnZRXyngyr5Ekdhm6hrs/XlMfvZnMoxFWUh4Ke+ZnDYlXYkCB3RfyGTpKnblwSue4n5lPjlPnYe0PtEZLpL+AvUQuTzHWTEdflg/h0ccRtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qdzIB9Uh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Utt/4rxj"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1749625151; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=gP5iwLJ/m7kR1tCrsX8gbkxg5lZ/MdYiEoUObTmykjg=;
-	b=Utt/4rxju3tu4lgo0RwZ+H7f39GMPltLOIyr2yF8qg2UnXKe1FarkWjbb3tQdk54xdUWYZM80WiYR54+0CxaLGZeDj0+FFzLk6pTxzQAiosQ9Dm1PtNANoD2LMaeJGT6VyU2yHEClepxWKESnxHzMn2+ztNif9jBv9Rp3EZvLuA=
-Received: from 30.74.144.128(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wdc8EnH_1749625149 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 11 Jun 2025 14:59:10 +0800
-Message-ID: <52024f6e-22e5-495d-ae15-683a50b2ac49@linux.alibaba.com>
-Date: Wed, 11 Jun 2025 14:59:09 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qdzIB9Uh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D053C4CEEE;
+	Wed, 11 Jun 2025 06:59:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749625199;
+	bh=Yo9Aj6NI6n0oVW7kfpiQql+rb8opiJFPlJ4FKWQs1k4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qdzIB9Uh8z/d2o4eBItKJ3MrWPM8D+PI8m4798rlUMWbiJz/TW2v87DP3Pgas/d9W
+	 2i3qUrehwXaJXBlq91drLsW1N35F10sCyigYfNbDVR8ZfGKicBMrM6EMd8Bek8mhRX
+	 bPc0vm04nrwVh/+JGrZYiC4AeokoUOsLzHSP+pgvVROwtBSCg5vgXrIuFvabPVNEOz
+	 xApZSOcdYjgdQ2jnyDBpnTFQlbPOHORGHYvLIQEi3v3S6d5TiK49399SB3Iq/UqDEF
+	 Fp20qR8triDTJDrD8gzXbsIMs8jBoyVYqHSzWYMY3EImXk+0yPjvUcV77nuUXLPUS+
+	 2QBwHz8LTwBvw==
+Message-ID: <e26093a7-2305-4d55-b836-d3bc7c503b9b@kernel.org>
+Date: Wed, 11 Jun 2025 08:59:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,79 +35,81 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] mm: huge_memory: disallow hugepages if the
- system-wide THP sysfs settings are disabled
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: akpm@linux-foundation.org, hughd@google.com, david@redhat.com,
- Liam.Howlett@oracle.com, npache@redhat.com, ryan.roberts@arm.com,
- dev.jain@arm.com, ziy@nvidia.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <cover.1749109709.git.baolin.wang@linux.alibaba.com>
- <8eefb0809c598fadaa4a022634fba5689a4f3257.1749109709.git.baolin.wang@linux.alibaba.com>
- <998a069c-9be5-4a10-888c-ba8269eaa333@lucifer.local>
- <a30660e1-f366-4b0c-846e-986067931c7c@linux.alibaba.com>
- <cd357496-34f4-4d87-90f5-acfc55ca5995@lucifer.local>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <cd357496-34f4-4d87-90f5-acfc55ca5995@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v9 0/4] leds: add new LED driver for TI LP5812
+To: Nam Tran <trannamatk@gmail.com>, lee@kernel.org
+Cc: pavel@kernel.org, krzk+dt@kernel.org, robh@kernel.org,
+ conor+dt@kernel.org, corbet@lwn.net, linux-leds@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-doc@vger.kernel.org
+References: <20250610174319.183375-1-trannamatk@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250610174319.183375-1-trannamatk@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 10/06/2025 19:43, Nam Tran wrote:
+> This patch series adds support for the TI/National Semiconductor LP5812
+> 4x3 matrix RGB LED driver. The driver supports features such as autonomous
+> animation and time-cross-multiplexing (TCM) for dynamic LED effects.
+> 
+> Following feedback from both the LED and auxdisplay subsystem maintainers,
+> the driver has been moved back to the LED subsystem, under drivers/leds/rgb/.
+> This version integrates with the existing multicolor LED APIs, avoiding custom
+> sysfs where standard LED interfaces are sufficient.
+> 
+> Signed-off-by: Nam Tran <trannamatk@gmail.com>
+> ---
+> Changes in v9:
+> - Move driver back to drivers/leds/rgb/
+> - Integrate with LED multicolor framework
+> - Refactor and simplify custom sysfs handling
+> - Extend Device Tree binding to support multi-led@ nodes using leds-class-multicolor.yaml
 
+You need to provide reason why you dropped reviews.
 
-On 2025/6/9 23:17, Lorenzo Stoakes wrote:
-> On Mon, Jun 09, 2025 at 02:10:12PM +0800, Baolin Wang wrote:
->>
->>
->> On 2025/6/7 19:55, Lorenzo Stoakes wrote:
->>> Not related to your patch at all, but man this whole thing (thp allowed orders)
->>> needs significant improvement, it seems always perversely complicated for a
->>> relatively simple operation.
->>>
->>> Overall I LOVE what you're doing here, but I feel we can clarify things a
->>> little while we're at it to make it clear exactly what we're doing.
->>>
->>> This is a very important change so forgive my fiddling about here but I'm
->>> hoping we can take the opportunity to make things a little simpler!
->>>
->>> On Thu, Jun 05, 2025 at 04:00:58PM +0800, Baolin Wang wrote:
->>>> The MADV_COLLAPSE will ignore the system-wide Anon THP sysfs settings, which
->>>> means that even though we have disabled the Anon THP configuration, MADV_COLLAPSE
->>>> will still attempt to collapse into a Anon THP. This violates the rule we have
->>>> agreed upon: never means never.
->>>>
->>>> Another rule for madvise, referring to David's suggestion: “allowing for collapsing
->>>> in a VM without VM_HUGEPAGE in the "madvise" mode would be fine".
->>>
->>> I'm generally not sure it's worth talking only about MADV_COLLAPSE here when
->>> you're changing what THP is permitted across the board, I may have missed some
->>> discussion and forgive me if so, but what is special about MADV_COLLAPSE's use
->>> of thp_vma_allowable_orders() that makes it ignore 'never's moreso than other
->>> users?
->>
->> We found that MADV_COLLAPSE ignores the THP configuration, meaning that even
->> when THP is set to 'never', MADV_COLLAPSE can still collapse into THPs (and
->> mTHPs in the future). This is because when MADV_COLLAPSE calls
->> thp_vma_allowable_orders(), it does not set the TVA_ENFORCE_SYSFS flag,
->> which means it ignores the system-wide Anon THP sysfs settings.
->>
->> So this patch set is aimed to fix the THP policy for MADV_COLLAPSE.
->>
-> 
-> Yeah of course, and this is exactly why, but what I mean is, the patch
-> doesn't explicitly address MADV_COLLAPSE, it addresses a case that
-> MADV_COLLAPSE uses (which is as you say the motivating cause for the
-> change).
-> 
-> So I think the commit message should rather open something like:
-> 
-> 	If, when invoking thp_vma_allowable_orders(), the TVA_ENFORCE_SYSFS
-> 	flag is not specified, we ignore sysfs TLB settings.
-> 
-> 	Whilst it makes sense for the callers who do not specify this flag,
-> 	it creates a odd and surprising situation where a sysadmin
-> 	specifying 'never' for all THP sizes still observing THP pages
-> 	being allocated and used on the system.
-> 
-> 	The motivating case for this is MADV_COLLAPSE, <blah blah blah> :)
-
-OK. Will update the commit message. Thanks.
+Best regards,
+Krzysztof
