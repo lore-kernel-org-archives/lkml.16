@@ -1,112 +1,164 @@
-Received: from smtp1.tecnico.ulisboa.pt (smtp1.tecnico.ulisboa.pt [193.136.128.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E691C75E2;
-	Wed, 11 Jun 2025 12:05:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.136.128.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D61681C75E2;
+	Wed, 11 Jun 2025 12:06:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749643548; cv=none; b=oWl/ENgWKdHwEUgnEq/PPlYuuDEPAOwXbhRJ1O59RtUtiVFshfYLqJzFrlrl6SbdJ6Q4UJqkQEU1B77VFW1Ef60oNqtz2iJ+BUHKHvv/80y3aZwNZ3vQt7jA+rQWSwriVVSad+aEnBLxvcLFycE0lUZ6Q0Q0Bgk7w9CPEupMnTk=
+	t=1749643605; cv=none; b=JlLV0f0sTQ0CMab7gxKXNNQ3szLLyk4O9kX8Ol0hDv/tyR/YmM5N6XcJcsS+T6AGahmJ4G0OlNS1GW2ZAdM6d2ztQAId7gkvkIEsyHgzNPvC4GqQ3HHF4m7DN8jC7TswQx9QKHK4Y4m89ieC7BFpHZY3Rg7iN90nxfieqK4QPCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749643548; c=relaxed/simple;
-	bh=uUbMH9O7dMqePsv7+b9ZrvznQKQvIVtcgBUgeHvIZog=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uZBo8H8dp7OEnCdRZpBwXv+4kZkhMqtHB4MjHlgyOihSc0z+3eI3LQlzQbK6uB/g+Bk9dI6X32wnhzESRSrdsO69nE0fEQbB8QEG8MpPNq1Svrwp2hXdwp1J8R4OtQo9Mx+UaAxtG9QB3aWYRHFzuKunTWw8E9jWuIUjanCahQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt; spf=pass smtp.mailfrom=tecnico.ulisboa.pt; dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b=BPFWdb+a; arc=none smtp.client-ip=193.136.128.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tecnico.ulisboa.pt
+	s=arc-20240116; t=1749643605; c=relaxed/simple;
+	bh=Cils+t4tXpM9xsQTP0M+vh+Agy+XAdhQsIrmg6+CAAE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EUCOkOImHe/9koFQHnfad/vRoqal1BrAW8YRQQEgCjbHMUxH2KUwSJ6jKKQjIE0HXXEquGoBuCMkUwZ1qZaLKKuY3AYAwDKHIG7k+W0M/ru1wD84yFIfXfbsDAUebN1QG+o0jlUrSYiwk5Bf8yuaOKKy9A6e9jup1kA1ZkO/YGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u74OHqHV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b="BPFWdb+a"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTP id 97E146003C11;
-	Wed, 11 Jun 2025 13:05:45 +0100 (WEST)
-X-Virus-Scanned: by amavis-2.13.0 (20230106) (Debian) at tecnico.ulisboa.pt
-Received: from smtp1.tecnico.ulisboa.pt ([127.0.0.1])
- by localhost (smtp1.tecnico.ulisboa.pt [127.0.0.1]) (amavis, port 10025)
- with LMTP id 9o3E2IBRN4VS; Wed, 11 Jun 2025 13:05:43 +0100 (WEST)
-Received: from mail1.tecnico.ulisboa.pt (mail1.ist.utl.pt [IPv6:2001:690:2100:1::b3dd:b9ac])
-	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTPS id 013FD6000870;
-	Wed, 11 Jun 2025 13:05:43 +0100 (WEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tecnico.ulisboa.pt;
-	s=mail; t=1749643543;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EszJrXpVlktwqI9OICr8GM+DRV+5b4sbE2x+AglRscU=;
-	b=BPFWdb+aCnHuRF/GC3OJ2b3BiHphnIUEgV8KPJ/adUx4ak/jVjA3CmWz1trzsGp+x2uIrt
-	tT+kB5b1jmrV22N8tp48OK9Sp3zrxg4fcWQoPkUpzE5+L7PvLRMXt+CMfAIxSx+v7+I3Cu
-	xs0vpmyLy4oIcnK8cDPm2NSs8B++lNA=
-Received: from [IPV6:2001:8a0:57db:f00:3ee2:38aa:e2c9:7dde] (unknown [IPv6:2001:8a0:57db:f00:3ee2:38aa:e2c9:7dde])
-	(Authenticated sender: ist187313)
-	by mail1.tecnico.ulisboa.pt (Postfix) with ESMTPSA id CD012360084;
-	Wed, 11 Jun 2025 13:05:42 +0100 (WEST)
-Message-ID: <96b721cd-7223-4b28-a3fd-a4d92c9d5142@tecnico.ulisboa.pt>
-Date: Wed, 11 Jun 2025 13:05:40 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u74OHqHV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C86ADC4CEEE;
+	Wed, 11 Jun 2025 12:06:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749643604;
+	bh=Cils+t4tXpM9xsQTP0M+vh+Agy+XAdhQsIrmg6+CAAE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=u74OHqHVgY+/94y/MwlQuEekVYdz2s+flrZwF8Sr06l5Aq2qkJ3S4ejOfMWdb4rgW
+	 4B2mI6AV5rbybxQn2EhEjv9FOSm71dwYUVCm/JPyEDuZzN7s4xpHZFaXa9LSgo1BZK
+	 ugirqbR3rP/RoMIC4Y2CrtqrAN+01jCPp2nQHnX+3hMJEq8MdQfVXkEfM8QrEM4nnI
+	 31LNCJx5MTKqSC5FMFWU4UgJFnG4CGBhGe3sDvBhaVQgnWB2H6DBpWDb9NxNYqWc+2
+	 w5v4DOYRiyicshZWNFojA1q4gsIpt3okUWhQV9iLeJd/uSXffMu5R3cNYsFGAWfWUY
+	 KhWQpmqErUXrQ==
+Date: Wed, 11 Jun 2025 14:06:38 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Remo Senekowitsch <remo@buenzli.dev>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Dirk Behme <dirk.behme@de.bosch.com>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v8 0/9] More Rust bindings for device property reads
+Message-ID: <aElxTuk4Nz1qGNpX@cassiopeiae>
+References: <20250611102908.212514-1-remo@buenzli.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] NVIDIA Tegra210 NVJPG support
-To: Mikko Perttunen <cyndis@kapsi.fi>,
- Thierry Reding <thierry.reding@gmail.com>
-Cc: Mikko Perttunen <mperttunen@nvidia.com>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Jonathan Hunter <jonathanh@nvidia.com>,
- Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20250606-diogo-nvjpg-v1-0-5f2c36feeb39@tecnico.ulisboa.pt>
- <mz5sytol6aw7ouwiimmrd7lqhtvq6nj7pqpxq4ie6em6nwvvkh@2cux3no33gre>
- <621a9459-f2dd-4b19-a083-0e62f1a42f50@kapsi.fi>
-Content-Language: en-US
-From: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
-In-Reply-To: <621a9459-f2dd-4b19-a083-0e62f1a42f50@kapsi.fi>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611102908.212514-1-remo@buenzli.dev>
 
+Hi Remo,
 
+On Wed, Jun 11, 2025 at 12:28:59PM +0200, Remo Senekowitsch wrote:
 
-On 6/10/25 10:52 AM, Mikko Perttunen wrote:
-> On 6/10/25 6:05 PM, Thierry Reding wrote:
->> On Fri, Jun 06, 2025 at 11:45:33AM +0100, Diogo Ivo wrote:
->>> Hello,
->>>
->>> This series adds support for the NVJPG hardware accelerator found in the
->>> Tegra210 SoC.
->>>
->>> The kernel driver is essentially a copy of the NVDEC driver as both
->>> engines are Falcon-based.
->>>
->>> For the userspace part I have written a Mesa Gallium backend [1] that,
->>> while still very much experimental, works in decoding images with VA- 
->>> API.
->>>
->>> I have been using ffmpeg to call VA-API with the following command:
->>>
->>> ffmpeg -v verbose -hwaccel vaapi -hwaccel_device /dev/dri/renderD129 
->>> -i <input.jpg> -pix_fmt bgra -f fbdev /dev/fb0
->>>
->>> which decodes <input.jpg> and shows the result in the framebuffer.
->>>
->>> The firmware for the engine can be obtained from a Linux for Tegra
->>> distribution.
->>
->> By the way, have you tried running this on anything newer than Tegra210?
->> Given your progress on this, we can probably start thinking about
->> submitting the binaries to linux-firmware.
-> 
-> FWIW, the impression I have is that NVJPG is basically unchanged all the 
-> way to Tegra234. So if we add stream ID support and the firmwares, it'll 
-> probably just work. Tegra234 has the quirk that it has two instances of 
-> NVJPG -- these have to be distinguished by their different class IDs. 
-> But we should go ahead with the T210 support first.
+I went through the single patches and found the following issues.
 
-I have a question here, what exactly are the stream IDs? While working
-on the driver this came up and I didn't manage to figure it out.
+> Remo Senekowitsch (9):
+>   rust: device: Create FwNode abstraction for accessing device
+>     properties
 
-Diogo
+This patch creates a warning for FwNode::from_raw() to be unused, and needs this
+fix:
+
+diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/property.rs
+index 03850b7bb808..82ef54b54f18 100644
+--- a/rust/kernel/device/property.rs
++++ b/rust/kernel/device/property.rs
+@@ -37,6 +37,7 @@ impl FwNode {
+     /// - They relinquish that increment. That is, if there is only one
+     ///   increment, callers must not use the underlying object anymore -- it is
+     ///   only safe to do so via the newly created `ARef<FwNode>`.
++    #[expect(dead_code)]
+     unsafe fn from_raw(raw: *mut bindings::fwnode_handle) -> ARef<Self> {
+         // SAFETY: As per the safety requirements of this function:
+         // - `NonNull::new_unchecked`:
+
+>   rust: device: Enable accessing the FwNode of a Device
+>   rust: device: Move property_present() to FwNode
+>   rust: device: Enable printing fwnode name and path
+
+This patch starts using FwNode::from_raw() and hence needs:
+
+diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/property.rs
+index a5ebadd878d6..4cac335bad78 100644
+--- a/rust/kernel/device/property.rs
++++ b/rust/kernel/device/property.rs
+@@ -38,7 +38,6 @@ impl FwNode {
+     /// - They relinquish that increment. That is, if there is only one
+     ///   increment, callers must not use the underlying object anymore -- it is
+     ///   only safe to do so via the newly created `ARef<FwNode>`.
+-    #[expect(dead_code)]
+     unsafe fn from_raw(raw: *mut bindings::fwnode_handle) -> ARef<Self> {
+         // SAFETY: As per the safety requirements of this function:
+         // - `NonNull::new_unchecked`:
+
+>   rust: device: Introduce PropertyGuard
+
+This patch fails to compile (print macros are not included) and needs the
+following change.
+
+diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/property.rs
+index a10033d310e6..1286669a9a40 100644
+--- a/rust/kernel/device/property.rs
++++ b/rust/kernel/device/property.rs
+@@ -8,6 +8,7 @@
+ 
+ use crate::{
+     bindings,
++    prelude::*,
+     str::CStr,
+     types::{ARef, Opaque},
+ };
+
+>   rust: device: Implement accessors for firmware properties
+
+This patch also fails to compile, throws a warning about transmute() and hence
+needs the following change.
+
+diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/property.rs
+index 75621abe8117..fe0c5469a278 100644
+--- a/rust/kernel/device/property.rs
++++ b/rust/kernel/device/property.rs
+@@ -6,12 +6,12 @@
+
+ use core::{mem::MaybeUninit, ptr};
+
++use super::private::Sealed;
+ use crate::{
+     alloc::KVec,
+     bindings,
+     error::{to_result, Result},
+     prelude::*,
+-    private::Sealed,
+     str::{CStr, CString},
+     types::{ARef, Opaque},
+ };
+@@ -303,7 +303,7 @@ fn read_array_from_fwnode_property<'a>(
+                 // `&'a mut [Self]` is sound, because the previous call to a
+                 // `fwnode_property_read_*_array` function (which didn't fail)
+                 // fully initialized the slice.
+-                Ok(unsafe { core::mem::transmute(out) })
++                Ok(unsafe { core::mem::transmute::<&mut [MaybeUninit<Self>], &mut [Self]>(out) })
+             }
+
+             fn read_array_len_from_fwnode_property(fwnode: &FwNode, name: &CStr) -> Result<usize> {
+
+>   rust: device: Add child accessor and iterator
+>   rust: device: Add property_get_reference_args
+>   samples: rust: platform: Add property read examples
+
+In general, please make sure to compile test every patch of a series
+individually, not only the entire series.
+
+Otherwise the series looks good. Given that the required fixes are minor, there
+is no need for you to send a new version, I can apply those changes why I apply
+the patch series.
+
+- Danilo
