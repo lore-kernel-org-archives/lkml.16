@@ -1,94 +1,108 @@
-Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B881DF49;
-	Wed, 11 Jun 2025 07:15:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC84DF49
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:15:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749626122; cv=none; b=K5skIv9i9mw3ggC+jntRpEFy8SR99OcMMLWbrwNQHfBrnyhXbVIqLr9ZE0YraZRIxciCcGx9CuWFtI4+VsoNlUKIauX/ojwqCR4DNXotHjXpMPR4DbmhPgZQNekIKm9sMBKiIf1yqMLYr9qey/voglKoEFqcI9TR4sCfj/2y4YY=
+	t=1749626148; cv=none; b=t5W9cz9+s7EOzWjml3CHJJDiSe8OE3MnEmF8gSOE2G1zP34iN/7I3nTqlyAsZ0/fiCr7sZFk5pttnn/0k6KsTUu75Srupbn63ANeLvAuoM/20lvjzoAfq8D/PdqAFAr16p50sRhnTbF7rhKzkQZnVNATlbatBlYKNAUQz1XU/nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749626122; c=relaxed/simple;
-	bh=jE0EBi15MBtvYNaWUv4wm2axETcih/Dq++16RHoTjkA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JuV959NazJOK1RMXbAnxfY31r+kbI/zRK6As9qE7AUixRZmHVfSBJwOBLzdCXgQO2Zxuln/AonpuGH19Da6tmz2WVtaAGYRi1IW9UDPdKmVkcGcUON8GwavTUvOEm5AYwi661kqEqddm8kbQOwpj7e6pdZlZ5k9f9i5YdkLRZ7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com; spf=pass smtp.mailfrom=chenxiaosong.com; arc=none smtp.client-ip=54.92.39.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chenxiaosong.com
-X-QQ-mid: esmtpgz15t1749625977td58cbd24
-X-QQ-Originating-IP: BjPrTujgt+MKPQLp2kCNn3caEZrKE+yYJdXGdJujjho=
-Received: from [192.168.3.231] ( [116.128.244.171])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 11 Jun 2025 15:12:55 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 4787782174800291874
-Message-ID: <64E3DD4D765DEAD1+87aeb2d4-3732-4e57-ada6-098dbf0a7feb@chenxiaosong.com>
-Date: Wed, 11 Jun 2025 15:12:55 +0800
+	s=arc-20240116; t=1749626148; c=relaxed/simple;
+	bh=bDw8lv6DNJsD9dchwMOlh8L211qeg1CfzJ2PVT3ZHbE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Jo+GiNhnXIq+65OBCsDhHg8oJOQePzF7G5y3mFZd/EW0VDgaGPm5EPdm1KmsH6cX9VXjZYHjavk1ZO44P9szMDPDHjhdA7yRm8jPXH+e2i74ypjVBTyV3UcRh0BhhzpjjWJy7Jb4KUSjMjD39mmldDwvH8wKOBWyvqwm05Qvmqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=EDsOoTdy; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="EDsOoTdy"
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e7d9d480e6cso4592099276.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 00:15:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1749626146; x=1750230946; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bDw8lv6DNJsD9dchwMOlh8L211qeg1CfzJ2PVT3ZHbE=;
+        b=EDsOoTdywA3JGa2AL/9SYg8S0Nw+LIhDt0sx3uS/47ZQqersfDsCkjptM/GxIOX+RZ
+         P60q0CV7Yn29/sQ0VY6JOr5rrpZIA85lQqHw9pGmpvLxrkjDXuHzzVlbs5re7vezhLlH
+         g3JAoyI+oDwQTVKThlcdzkb0hNcSUKV9SNVgcBp4A0rT5QtbTFAWMJt+6q6f0rYzaUmE
+         qwD+sjtxzQu0vRw117E7aqJmcC2Q2EeDYq15EnloyxXaojhg+OpVxnHnnVnPyMEWB3N7
+         CH/lpRzOdrTnro3oTM3b2RdlKuzyKOYWpNcCU0vL9fRrS9ykx0BUiAzuAZrZmfnCqnn7
+         zFMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749626146; x=1750230946;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bDw8lv6DNJsD9dchwMOlh8L211qeg1CfzJ2PVT3ZHbE=;
+        b=wgm6Dcig2jZbcnyEuYkXzdD/jlz1BYnanQ2DANDuUFFKGq5Wpm6wkBXPS8ScXpjfZz
+         3Q2GO2SSp47rxgK0N+8RlGT9NAZJNvRHvz+cLfkhBSZ/8I5pzKbG1yl6Y5Ex4vbmNwx2
+         ZL2B+dGl9Nt4x7dMT0M+ffQYfb7dINStqUlx9ojrxovnOMTt8128UWYcdykymSrtdTE1
+         n0EBbsabL+e4+gDUe/1PGnQnpEAz0qbvbBkmpTU/6nENF1xQgo49kunUvGnracyXvPzj
+         M2YWaFMSOaBViEihf+NSmd1E1KWRSxx9ueQeLUytOMUCEOCDQImG486FTMIY2f7boQ87
+         AXmw==
+X-Forwarded-Encrypted: i=1; AJvYcCXOuGQ+/OVqI7dsYj3G8PBoicoy0RcFwsWx2MKPhkDb2hsmnpC/dRvuTPHAVBb72a5AUYxGtUVqeGylHMQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdBqQqSpxA9u08AXQnhP946gkoKM7V+fXz5AqYql1jrLoKBfnQ
+	tIlYfBQbDG1UXKbBH7qNhD6i+3mKrFlZCFwmfCxHclVobRtrdG7HbzD/RxVl8L5YDK8swe83CZZ
+	MtIrlzL6qfCVsg6NAR+8urUmqG103zKLMzc28CDlrE2453a/rMOYeZ9o=
+X-Gm-Gg: ASbGncvevhfE/XQRGcQHB+ca5WKDDyFYKQDt/n0K8DKFiCsTQjZyTfJq/skiD5wA83x
+	Ez3kffeW4DSeOOrlEEILtCFq38+NqYmBXbtsGTfMZXT5/oP3AumBo77eO1ZrZOnI7BYxJ6DLLCg
+	WNrhHoZvQxRITV5+1csUuxEPDA6RDAaffkq29VspVn2fAnlw==
+X-Google-Smtp-Source: AGHT+IEc+9hppzJUUw3dhryHx4clVFd5aDegC77U3+FbbfhX2RUu0BijR2nlmCbtsFlav7Da7Y/c1YmFqqH/eQyJEGw=
+X-Received: by 2002:a05:6902:2191:b0:e78:eb00:babc with SMTP id
+ 3f1490d57ef6-e81fd9b2f22mr3224045276.26.1749626145882; Wed, 11 Jun 2025
+ 00:15:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/5] nfsd: prevent callback tasks running concurrently
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Olga Kornievskaia <okorniev@redhat.com>,
- Li Lingfeng <lilingfeng3@huawei.com>, Dai Ngo <Dai.Ngo@oracle.com>,
- Neil Brown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>,
- Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250220-nfsd-callback-v2-0-6a57f46e1c3a@kernel.org>
- <20250220-nfsd-callback-v2-1-6a57f46e1c3a@kernel.org>
- <23651194C61FBB9C+e2ddd3f5-f51f-44c0-8800-d2abb08a2447@chenxiaosong.com>
- <208bd615061231c035a5633b29190925f271bd4b.camel@kernel.org>
-From: ChenXiaoSong <chenxiaosong@chenxiaosong.com>
-In-Reply-To: <208bd615061231c035a5633b29190925f271bd4b.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpgz:chenxiaosong.com:qybglogicsvrsz:qybglogicsvrsz4a-0
-X-QQ-XMAILINFO: MxdW4jxL6NvXRnxzmeQgeLzPXk4N7vJp66MXQrAuToDEyVib/jZXL7QU
-	w947ezEOYZQ9NngNm/RwkP17xnzoFTEbo3wB2f1du/Fd5jcUI9yUQYM/88Z/F/xUsDt2VXf
-	5GOMEb4fCuQ6w+D7CupHJ0at8lk39ow3O5hsaWqk/FGkU9F1CjaRVZRKuzSci96vVXoCYiw
-	LUMTdNO97yJe/5x9mBIWz6glJQ06RQrPEqpgxJgSSGseT0ZPh3CAsuTXow7B9h2oAu2VHI0
-	H6vCBmysYpunClwT1ZQ0wB0jd30jezNaqWHEiInxgrZWT6SwtG4Ikx4leeGVYTQLaggUUUw
-	+zB5gEGedzbzFVplqbjKyrHTbN2pOxvslqUZ3ryG8HAXcm8HaTZYKuOBrpzxTu/cGkWTv/A
-	YSOe9loIncO8TE0hd1/t3fZmIJBc/cUIjpNraKq3b6MdotmIX13m6fdnhJZAnmNxId/28uk
-	IVwfryc1kNg3AMmEUGV5MXUCrgtLPSgGfdKKj2jQNvoNXc8ke9KHrOZ9+I3XIbP8WoRwRP/
-	uv0sXvF/YtouzPLA5V9YxTGjV7Y92sEZ+AWOnLq/k5to2lNSJpdALSzFUH8n2MNdqA8J9O/
-	dTRx0SCfkXUgl6riSsDcb/TyfNy0vxr42owU/aXcWsCzfSCjKbRhRzZymAWERJHvp079ZvV
-	Amoeh/EetSVaja38NgNIKLPS28y6bEQb0lbRrPlzIvANKiDfuQYfr5IdPx/xjFXl02QfMtx
-	MBMvzc8rXQixJQQYh01Qr9Gpa3MknSr3ZtotU7qpRk7CiYNlPH9k/LHu2I+x74GD9t6PEqe
-	2V6YcEFOXFUdhXkny3LGqSEreq6EKXWqrb6+0EIklErUohFt+cMhZH04dTmPoRT5MgiMqTf
-	HgTegMserqqvQNvZ1NQjO6ome+H4hv0FGDjWKNEbNkprJYQjYta65N2fJp0CS+ZnAox9/4j
-	Il+UWkQd6Cg/eZJtcdFYXiJhWoh5wJceHhr6fFdE/09EW/vfrvoOUxD1XD+W0BxYCZau4IP
-	DIFyHZ9A==
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-X-QQ-RECHKSPAM: 0
+References: <20250611031023.28769-1-nick.hu@sifive.com> <20250611031023.28769-2-nick.hu@sifive.com>
+ <9c429671-8409-4911-8559-73a069d66964@kernel.org>
+In-Reply-To: <9c429671-8409-4911-8559-73a069d66964@kernel.org>
+From: Nick Hu <nick.hu@sifive.com>
+Date: Wed, 11 Jun 2025 15:15:34 +0800
+X-Gm-Features: AX0GCFt836Lo7RPXBqlCX9ju9k05WYmV2JoCwZYZlclqH9DiOrcuiHuFOhx2tAw
+Message-ID: <CAKddAkAyvRdAz9X_rCGgfdxD0Z_Q7sAt8e5nuJe7=s7G-Y3+AQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: power: Add SiFive Domain Management controllers
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: conor+dt@kernel.org, krzk+dt@kernel.org, Cyan Yang <cyan.yang@sifive.com>, 
+	Samuel Holland <samuel.holland@sifive.com>, devicetree@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Rob Herring <robh@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-在 2025/6/10 19:09, Jeff Layton 写道:
-> 
-> Synchronization was probably too strong a word. I remember looking over
-> this code and convincing myself that the probe callback wasn't subject
-> to the same races as the others, but I think that was mostly because
-> the outcome of those races was not harmful. Note that the probe itself
-> can actually be run at the start of a completely unrelated callback to
-> the same client.
-> 
-> So you hit a NULL pointer in __queue_work()? The work_struct is
-> embedded in the nfs4_client so that would probably imply that that the
-> nfs4_client struct was corrupt?
-> 
-> You may want to get a vmcore and analyze it if you can reproduce this.
+On Wed, Jun 11, 2025 at 2:57=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.or=
+g> wrote:
+>
+> On 11/06/2025 05:10, Nick Hu wrote:
+> > SiFive Domain Management controller includes the following components
+> > - SiFive Tile Management Controller
+> > - SiFive Cluster Management Controller
+> > - SiFive Core Complex Management Controller
+> >
+> > These controllers control the clock and power domain of the
+> > corresponding domain.
+> >
+> > However, Since we don't have a SoC specific compatible string yet, so
+> > add '- {}' for the first entry [1][2].
+>
+>
+> But you must have Soc specific compatible strings. See previous discussio=
+n.
+>
+Maybe I'm missing something, but since we don't have a SoC-specific compati=
+ble
+string yet, I thought we agreed to include a `- {}` as the first
+entry, along with an
+explanation in both the commit message and comments [1].
 
-Thanks for your reply.
+Links:
+- [1] https://lore.kernel.org/linux-riscv/c91d99c9-0ecb-4dcd-9beb-5a1e9fadc=
+619@kernel.org/
 
-I have already got a vmcore. Here is the link to the vmcore analysis:
-
-https://chenxiaosong.com/en/nfs/en-null-ptr-deref-in-nfsd4_probe_callback.html
-
-Please let me know if you need any more detailed information.
-
-Thanks,
-ChenXiaoSong.
+> Best regards,
+> Krzysztof
