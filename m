@@ -1,57 +1,57 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD161A285
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 00:10:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE8584D34
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 00:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749600653; cv=none; b=OG3Mafd+2pjL4JH583UBAJHLi1Bf8a1DNWqjFdcroTLlrdI3BvEUz3h7o6tMDEZv3ze9WLfL7cBfQGZuhR/BIIURCN/y/g+VrCkaWTUE273fyBKkhvU+TynQ2swwjXV6HA11mEZ6puQLQpFWeeR1Kr33Jk5sFuMIKaE/8HJlNPE=
+	t=1749600656; cv=none; b=mCUsuWR/2rxLA2/9r0fDWnPFBLRVpVhFWfbmMbdR/zG9+2Re2vMCbIPKpiSiubn3yrh9g92PPT2UNyQi3t6IjCspifnUls79kYtjyNqczKZskki84grabKFQpwi7ZWKGRldbJfbn+8HS5h/WVGOWmvHKAxoWYwUcZvNR5pFgYkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749600653; c=relaxed/simple;
-	bh=ul+BqD3/UAqkxf/sHfpARJUGF1v8V5p1dbDDJToOT0s=;
+	s=arc-20240116; t=1749600656; c=relaxed/simple;
+	bh=fi0POvxipHtqzuBmBtdO+vOuVF1CdKjDHYYgzms+PmI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=fqgnjP/8J97iIblhZu23DejrQ7Ac26e8NvEyJhhuoMMsVO02Ztnk1y5EGx7FTnbIIarPG+aHbo05ZNCOMBK6GvdyNIck5La3mHH/vS2Y3kuNiYkLOiPFsu8WBoy5hMaNsef1TebZ1udEzUS+KnoJZGipF+ZvxVWYPIJqVMbQ380=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mIGsyBLo; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=OXrkaM0Jnfb0RK78J/k3x54fdajhMAc9LG5HQ4HbE4qARdzNgH+cEcgRwVBtct268A62NT8D16Q3JJIn2NBFjLASfil4GcHycRIxNZu2GC/9QxXZ3SaoXMaBB+DxLSFggjetYPg/Fri9nInFeGgWIvUwu9+RmHUV3Fkb0v8PruA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FBdYXLxU; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mIGsyBLo"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7377139d8b1so4958118b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 17:10:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FBdYXLxU"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3138f5e8ff5so2369251a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 17:10:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749600650; x=1750205450; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749600654; x=1750205454; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=Epbf5uosqx6jz5XzFrguC8xd0TfTxmvXTHNlC1WjEX8=;
-        b=mIGsyBLoV+Gm0Vg0E6vgFyov/SVyRSZ3ROLdbYu4ICirKqiAC73G/BBhQSILjvw6I3
-         /7iZ/sMeH/LGz50xHvgo86ORjM8qFB8mNdmXF5L1TJVoMjGa6ctiyy5sy3oFM5LKE+Tq
-         jhGP9g/BtEjlwFQ6f7E8j0DpkJ3pAwymRm300Ev0WC8oRUtrGchu0HpKQpGGfkBbX3XZ
-         UZFsMM22dOEq6NTAfTleyn+cbYCxX/Cq7Y5NdavtXggLYRfBSMItpt6mJCAKJ94K0Qhk
-         nE6QHcOpy+83fhhrd6i/pxkbA0dAZ+etQUjKfyWRrXV47GSU3EyZTr/tRPk6dEkUR2Hd
-         8/mw==
+        bh=hBjwKNBikKgFeXvQ1q5Ivd9CecF6t6Q9MZtjOeYYky8=;
+        b=FBdYXLxUjexGN9WeKSZ2ecIhfrizQ6wveOJNH+ZsAaIruwbgxCgjpsI0flq2xKfa98
+         11YaX4jgJfHh8uJMrMsyNQHFsguJvECRAOPURFonmQJOzrdqGH7IbAUN3c1UV5p4xGbF
+         YyiYr5Pwb2S8XRcEHx5JjCk6sezF8NekBnj0Iu+KzCpULI2FnN0HuOfJaXNvYMIjepqF
+         wh2EEpzu2IFPwVaFYTHP3l1QmLdszH/S7jMlItgsL8dWe917fSFxrYXJ6DKB6Ci/TkEh
+         FxbREDhH/swhMb1LhQdHhjUYvmScvms3rSJz+YBCQ4+FZWCnHmSLLKe85WFCRT6Z0yia
+         j4cA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749600650; x=1750205450;
+        d=1e100.net; s=20230601; t=1749600654; x=1750205454;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Epbf5uosqx6jz5XzFrguC8xd0TfTxmvXTHNlC1WjEX8=;
-        b=O/VyJvgemv7OI8IhxBcqHoEztpcEIpl7A+Dq/wsZMGf27FLbMAa/74fVoplN/sOtgY
-         eI2BHqNlHeobRQzu+5jrDrFqo0p+qVBjhQadLshjAuyljyn1w6zS1IZj8Td7YeiQ7pAG
-         3X0hCH414KWYdzZG9ZAqH5rhqOWdqIxUGHtZxXsh/cjqn660Pv1/pJoV7zjgiLkUdXnq
-         FkK0h+ToU9Zmue+F93q64QjO6EJBEvgTR6SaWmGJmDnjWSTg0Gippe/pwOM+Pgq0mXxV
-         sZ9RgOchWMpdOfFOwL+hj/ujm847gfG1xbQVTBkKK2oqxBdkvBTCgIYOoJhJYb96GF3K
-         U9Ug==
-X-Forwarded-Encrypted: i=1; AJvYcCVLa1s6EqsIQysVWrQxj9545P7xNJvRrIx+rqAMc6mZuK1GhwCcvOk5KxMdtWmE12SsLeFi3JVASPXJJEo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw20Lc1AZ6SiXxWl+mKppiWEZ+3Hgd3R3m5A7L6dptdAkV3rvbH
-	xFCArbgoL9QvnXDK2Ww51FlV8xZNem4o8XAp1AK/VYVjnj7lrDHp+kOVyIdoDsL7HaHsMs3dyD0
-	1L0d+dA==
-X-Google-Smtp-Source: AGHT+IEhyHjusvTVUOtqS0yfSdyCwB4Bf/WQ+mHd5WIpUrUJN5V4Vw3g9p2jvZWjX31+M9mXEgcJGfWPdog=
-X-Received: from pfbhj1.prod.google.com ([2002:a05:6a00:8701:b0:747:b76c:ab92])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:c8e:b0:742:a0cf:7753
- with SMTP id d2e1a72fcca58-7486cb59a9amr2115667b3a.3.1749600650364; Tue, 10
- Jun 2025 17:10:50 -0700 (PDT)
+        bh=hBjwKNBikKgFeXvQ1q5Ivd9CecF6t6Q9MZtjOeYYky8=;
+        b=cwVBYS3/4vj0eiouBlyKTEgm0KZTqKMAPVtd72liQuiZ436ENHEyTDayGMH58sow/c
+         FXrBnC6IznVyR4wKEo04uRZfgwqiW7LQulSzN1bI23XihUiKnJJCeqqwZKaLtWNd4Exj
+         ++IbsMo19kq4CVE3cBLqzIsdVdd9diFUzXQ03GF3YYbS1S0KGmldhov36sLO3rt71qQl
+         85PrwhAs1HWvoNW1R2qt7iMukVOajRaSrrG+mJLzbQ42nkl24qmldJdLCk0pj8ssufHn
+         /rrvwWYS9pzOfBWjccYBQkxp06ttKs3wteRfSVDFTMnAt9u/U277m9Ptu2IovEucpIXV
+         zZ+w==
+X-Forwarded-Encrypted: i=1; AJvYcCWM7mQ3S+iDO27lPlZQ7tKzYNxG7im2xNKEA7/4/tX7VdFTkO9BOob2ry1nT+wyO4xcQv+pefmLGxRv2+s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxH6CYfQML4kKQS6yphkF+MTG1UO4MHoulgKIS+0ItyuExXrNkc
+	45XiB5djJUomiZke5q3Z955lJdBDQrenzjbQPhrZyO1lkiuy1MhbNI26M8Utiy9jTqTkvzq2WT5
+	Ft/LGEA==
+X-Google-Smtp-Source: AGHT+IED4B4s7Ytoor8mnhgXxSS0ZKiCE28nENLHgtxurTVkQjPNLlNungxBpASYaT+z3Y4fvBlDrrKUUDc=
+X-Received: from pjh3.prod.google.com ([2002:a17:90b:3f83:b0:2fc:2c9c:880])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4cc4:b0:312:26d9:d5b2
+ with SMTP id 98e67ed59e1d1-313b1d9c310mr956755a91.0.1749600653718; Tue, 10
+ Jun 2025 17:10:53 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Tue, 10 Jun 2025 17:10:37 -0700
+Date: Tue, 10 Jun 2025 17:10:39 -0700
 In-Reply-To: <20250611001042.170501-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,9 +61,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250611001042.170501-1-seanjc@google.com>
 X-Mailer: git-send-email 2.50.0.rc0.642.g800a2b2222-goog
-Message-ID: <20250611001042.170501-4-seanjc@google.com>
-Subject: [PATCH 3/8] KVM: arm64: Move ARM specific headers in include/kvm to
- arch directory
+Message-ID: <20250611001042.170501-6-seanjc@google.com>
+Subject: [PATCH 5/8] KVM: MIPS: Stop adding virt/kvm to the arch include path
 From: Sean Christopherson <seanjc@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
 	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
@@ -81,299 +80,29 @@ Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
 	Thomas Huth <thuth@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Move kvm/arm_{arch_timer,pmu,vgic}.h to arch/arm64/include/asm and drop
-the "arm" prefix from all file names.  Now that KVM no longer supports
-32-bit ARM, there is no reason to expose ARM specific headers to other
-architectures beyond arm64.
+Don't add virt/kvm to KVM MIPS' include path, the headers in virt/kvm are
+intended to be used only by other code in virt/kvm, i.e. are "private" to
+the core KVM code.  It's not clear that MIPS *ever* included a header from
+virt/kvm, i.e. odds are good the "-Ivirt/kvm" was copied from a different
+architecture's Makefile when MIPS support was first added.
 
-Cc: Colton Lewis <coltonlewis@google.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- .../arm64/include/asm/kvm_arch_timer.h                     | 0
- arch/arm64/include/asm/kvm_host.h                          | 7 +++----
- include/kvm/arm_pmu.h => arch/arm64/include/asm/kvm_pmu.h  | 0
- .../kvm/arm_vgic.h => arch/arm64/include/asm/kvm_vgic.h    | 0
- arch/arm64/kvm/arch_timer.c                                | 5 ++---
- arch/arm64/kvm/arm.c                                       | 3 +--
- arch/arm64/kvm/pmu-emul.c                                  | 4 ++--
- arch/arm64/kvm/reset.c                                     | 3 +--
- arch/arm64/kvm/trace_arm.h                                 | 2 +-
- arch/arm64/kvm/vgic/vgic-debug.c                           | 2 +-
- arch/arm64/kvm/vgic/vgic-init.c                            | 2 +-
- arch/arm64/kvm/vgic/vgic-irqfd.c                           | 2 +-
- arch/arm64/kvm/vgic/vgic-kvm-device.c                      | 2 +-
- arch/arm64/kvm/vgic/vgic-mmio-v2.c                         | 2 +-
- arch/arm64/kvm/vgic/vgic-mmio-v3.c                         | 2 +-
- arch/arm64/kvm/vgic/vgic-mmio.c                            | 4 ++--
- arch/arm64/kvm/vgic/vgic-v2.c                              | 2 +-
- arch/arm64/kvm/vgic/vgic-v3-nested.c                       | 3 +--
- arch/arm64/kvm/vgic/vgic-v3.c                              | 2 +-
- 19 files changed, 21 insertions(+), 26 deletions(-)
- rename include/kvm/arm_arch_timer.h => arch/arm64/include/asm/kvm_arch_timer.h (100%)
- rename include/kvm/arm_pmu.h => arch/arm64/include/asm/kvm_pmu.h (100%)
- rename include/kvm/arm_vgic.h => arch/arm64/include/asm/kvm_vgic.h (100%)
+ arch/mips/kvm/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/kvm/arm_arch_timer.h b/arch/arm64/include/asm/kvm_arch_timer.h
-similarity index 100%
-rename from include/kvm/arm_arch_timer.h
-rename to arch/arm64/include/asm/kvm_arch_timer.h
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index 6ce2c5173482..b8f910d5bdfa 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -26,17 +26,16 @@
- #include <asm/daifflags.h>
- #include <asm/fpsimd.h>
- #include <asm/kvm.h>
-+#include <asm/kvm_arch_timer.h>
- #include <asm/kvm_asm.h>
-+#include <asm/kvm_pmu.h>
-+#include <asm/kvm_vgic.h>
- #include <asm/vncr_mapping.h>
+diff --git a/arch/mips/kvm/Makefile b/arch/mips/kvm/Makefile
+index 805aeea2166e..96a7cd21b140 100644
+--- a/arch/mips/kvm/Makefile
++++ b/arch/mips/kvm/Makefile
+@@ -4,7 +4,7 @@
  
- #define __KVM_HAVE_ARCH_INTC_INITIALIZED
+ include $(srctree)/virt/kvm/Makefile.kvm
  
- #define KVM_HALT_POLL_NS_DEFAULT 500000
+-ccflags-y += -Ivirt/kvm -Iarch/mips/kvm
++ccflags-y += -Iarch/mips/kvm
  
--#include <kvm/arm_vgic.h>
--#include <kvm/arm_arch_timer.h>
--#include <kvm/arm_pmu.h>
--
- #define KVM_MAX_VCPUS VGIC_V3_MAX_CPUS
- 
- #define KVM_VCPU_MAX_FEATURES 9
-diff --git a/include/kvm/arm_pmu.h b/arch/arm64/include/asm/kvm_pmu.h
-similarity index 100%
-rename from include/kvm/arm_pmu.h
-rename to arch/arm64/include/asm/kvm_pmu.h
-diff --git a/include/kvm/arm_vgic.h b/arch/arm64/include/asm/kvm_vgic.h
-similarity index 100%
-rename from include/kvm/arm_vgic.h
-rename to arch/arm64/include/asm/kvm_vgic.h
-diff --git a/arch/arm64/kvm/arch_timer.c b/arch/arm64/kvm/arch_timer.c
-index fdbc8beec930..d61b0450cbf9 100644
---- a/arch/arm64/kvm/arch_timer.c
-+++ b/arch/arm64/kvm/arch_timer.c
-@@ -14,12 +14,11 @@
- 
- #include <clocksource/arm_arch_timer.h>
- #include <asm/arch_timer.h>
-+#include <asm/kvm_arch_timer.h>
- #include <asm/kvm_emulate.h>
- #include <asm/kvm_hyp.h>
- #include <asm/kvm_nested.h>
--
--#include <kvm/arm_vgic.h>
--#include <kvm/arm_arch_timer.h>
-+#include <asm/kvm_vgic.h>
- 
- #include "trace.h"
- 
-diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-index 017c95c7bd03..e452aba1a3b2 100644
---- a/arch/arm64/kvm/arm.c
-+++ b/arch/arm64/kvm/arm.c
-@@ -39,11 +39,10 @@
- #include <asm/kvm_mmu.h>
- #include <asm/kvm_nested.h>
- #include <asm/kvm_pkvm.h>
-+#include <asm/kvm_pmu.h>
- #include <asm/kvm_ptrauth.h>
- #include <asm/sections.h>
- 
--#include <kvm/arm_pmu.h>
--
- #include "arm_hypercalls.h"
- #include "arm_psci.h"
- 
-diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
-index 25c29107f13f..47a518f6a393 100644
---- a/arch/arm64/kvm/pmu-emul.c
-+++ b/arch/arm64/kvm/pmu-emul.c
-@@ -12,8 +12,8 @@
- #include <linux/perf/arm_pmu.h>
- #include <linux/uaccess.h>
- #include <asm/kvm_emulate.h>
--#include <kvm/arm_pmu.h>
--#include <kvm/arm_vgic.h>
-+#include <asm/kvm_pmu.h>
-+#include <asm/kvm_vgic.h>
- 
- #define PERF_ATTR_CFG1_COUNTER_64BIT	BIT(0)
- 
-diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
-index 959532422d3a..bae367638741 100644
---- a/arch/arm64/kvm/reset.c
-+++ b/arch/arm64/kvm/reset.c
-@@ -17,12 +17,11 @@
- #include <linux/string.h>
- #include <linux/types.h>
- 
--#include <kvm/arm_arch_timer.h>
--
- #include <asm/cpufeature.h>
- #include <asm/cputype.h>
- #include <asm/fpsimd.h>
- #include <asm/ptrace.h>
-+#include <asm/kvm_arch_timer.h>
- #include <asm/kvm_arm.h>
- #include <asm/kvm_asm.h>
- #include <asm/kvm_emulate.h>
-diff --git a/arch/arm64/kvm/trace_arm.h b/arch/arm64/kvm/trace_arm.h
-index 9c60f6465c78..8fc8178e21a7 100644
---- a/arch/arm64/kvm/trace_arm.h
-+++ b/arch/arm64/kvm/trace_arm.h
-@@ -3,7 +3,7 @@
- #define _TRACE_ARM_ARM64_KVM_H
- 
- #include <asm/kvm_emulate.h>
--#include <kvm/arm_arch_timer.h>
-+#include <asm/kvm_arch_timer.h>
- #include <linux/tracepoint.h>
- 
- #undef TRACE_SYSTEM
-diff --git a/arch/arm64/kvm/vgic/vgic-debug.c b/arch/arm64/kvm/vgic/vgic-debug.c
-index 2684f273d9e1..0eba9dc78e6f 100644
---- a/arch/arm64/kvm/vgic/vgic-debug.c
-+++ b/arch/arm64/kvm/vgic/vgic-debug.c
-@@ -9,7 +9,7 @@
- #include <linux/interrupt.h>
- #include <linux/kvm_host.h>
- #include <linux/seq_file.h>
--#include <kvm/arm_vgic.h>
-+#include <asm/kvm_vgic.h>
- #include <asm/kvm_mmu.h>
- #include "vgic.h"
- 
-diff --git a/arch/arm64/kvm/vgic/vgic-init.c b/arch/arm64/kvm/vgic/vgic-init.c
-index eb1205654ac8..5a4205fd78b2 100644
---- a/arch/arm64/kvm/vgic/vgic-init.c
-+++ b/arch/arm64/kvm/vgic/vgic-init.c
-@@ -7,7 +7,7 @@
- #include <linux/interrupt.h>
- #include <linux/cpu.h>
- #include <linux/kvm_host.h>
--#include <kvm/arm_vgic.h>
-+#include <asm/kvm_vgic.h>
- #include <asm/kvm_emulate.h>
- #include <asm/kvm_mmu.h>
- #include "vgic.h"
-diff --git a/arch/arm64/kvm/vgic/vgic-irqfd.c b/arch/arm64/kvm/vgic/vgic-irqfd.c
-index c314c016659a..b73401c34f29 100644
---- a/arch/arm64/kvm/vgic/vgic-irqfd.c
-+++ b/arch/arm64/kvm/vgic/vgic-irqfd.c
-@@ -6,7 +6,7 @@
- #include <linux/kvm.h>
- #include <linux/kvm_host.h>
- #include <trace/events/kvm.h>
--#include <kvm/arm_vgic.h>
-+#include <asm/kvm_vgic.h>
- #include "vgic.h"
- 
- /*
-diff --git a/arch/arm64/kvm/vgic/vgic-kvm-device.c b/arch/arm64/kvm/vgic/vgic-kvm-device.c
-index f9ae790163fb..f542479ceb11 100644
---- a/arch/arm64/kvm/vgic/vgic-kvm-device.c
-+++ b/arch/arm64/kvm/vgic/vgic-kvm-device.c
-@@ -6,7 +6,7 @@
-  * Author: Marc Zyngier <marc.zyngier@arm.com>
-  */
- #include <linux/kvm_host.h>
--#include <kvm/arm_vgic.h>
-+#include <asm/kvm_vgic.h>
- #include <linux/uaccess.h>
- #include <asm/kvm_mmu.h>
- #include <asm/cputype.h>
-diff --git a/arch/arm64/kvm/vgic/vgic-mmio-v2.c b/arch/arm64/kvm/vgic/vgic-mmio-v2.c
-index f25fccb1f8e6..d00c8a74fad6 100644
---- a/arch/arm64/kvm/vgic/vgic-mmio-v2.c
-+++ b/arch/arm64/kvm/vgic/vgic-mmio-v2.c
-@@ -9,7 +9,7 @@
- #include <linux/nospec.h>
- 
- #include <kvm/iodev.h>
--#include <kvm/arm_vgic.h>
-+#include <asm/kvm_vgic.h>
- 
- #include "vgic.h"
- #include "vgic-mmio.h"
-diff --git a/arch/arm64/kvm/vgic/vgic-mmio-v3.c b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-index ae4c0593d114..505d4e389885 100644
---- a/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-+++ b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-@@ -9,11 +9,11 @@
- #include <linux/kvm_host.h>
- #include <linux/interrupt.h>
- #include <kvm/iodev.h>
--#include <kvm/arm_vgic.h>
- 
- #include <asm/kvm_emulate.h>
- #include <asm/kvm_arm.h>
- #include <asm/kvm_mmu.h>
-+#include <asm/kvm_vgic.h>
- 
- #include "vgic.h"
- #include "vgic-mmio.h"
-diff --git a/arch/arm64/kvm/vgic/vgic-mmio.c b/arch/arm64/kvm/vgic/vgic-mmio.c
-index e416e433baff..ec1b13abc728 100644
---- a/arch/arm64/kvm/vgic/vgic-mmio.c
-+++ b/arch/arm64/kvm/vgic/vgic-mmio.c
-@@ -10,8 +10,8 @@
- #include <linux/kvm.h>
- #include <linux/kvm_host.h>
- #include <kvm/iodev.h>
--#include <kvm/arm_arch_timer.h>
--#include <kvm/arm_vgic.h>
-+#include <asm/kvm_arch_timer.h>
-+#include <asm/kvm_vgic.h>
- 
- #include "vgic.h"
- #include "vgic-mmio.h"
-diff --git a/arch/arm64/kvm/vgic/vgic-v2.c b/arch/arm64/kvm/vgic/vgic-v2.c
-index 381673f03c39..780afb7aad06 100644
---- a/arch/arm64/kvm/vgic/vgic-v2.c
-+++ b/arch/arm64/kvm/vgic/vgic-v2.c
-@@ -6,7 +6,7 @@
- #include <linux/irqchip/arm-gic.h>
- #include <linux/kvm.h>
- #include <linux/kvm_host.h>
--#include <kvm/arm_vgic.h>
-+#include <asm/kvm_vgic.h>
- #include <asm/kvm_mmu.h>
- 
- #include "vgic.h"
-diff --git a/arch/arm64/kvm/vgic/vgic-v3-nested.c b/arch/arm64/kvm/vgic/vgic-v3-nested.c
-index 4f6954c30674..bdee42a8be17 100644
---- a/arch/arm64/kvm/vgic/vgic-v3-nested.c
-+++ b/arch/arm64/kvm/vgic/vgic-v3-nested.c
-@@ -7,11 +7,10 @@
- #include <linux/io.h>
- #include <linux/uaccess.h>
- 
--#include <kvm/arm_vgic.h>
--
- #include <asm/kvm_arm.h>
- #include <asm/kvm_emulate.h>
- #include <asm/kvm_nested.h>
-+#include <asm/kvm_vgic.h>
- 
- #include "vgic.h"
- 
-diff --git a/arch/arm64/kvm/vgic/vgic-v3.c b/arch/arm64/kvm/vgic/vgic-v3.c
-index b9ad7c42c5b0..a22fe73ca538 100644
---- a/arch/arm64/kvm/vgic/vgic-v3.c
-+++ b/arch/arm64/kvm/vgic/vgic-v3.c
-@@ -7,10 +7,10 @@
- #include <linux/kvm.h>
- #include <linux/kvm_host.h>
- #include <linux/string_choices.h>
--#include <kvm/arm_vgic.h>
- #include <asm/kvm_hyp.h>
- #include <asm/kvm_mmu.h>
- #include <asm/kvm_asm.h>
-+#include <asm/kvm_vgic.h>
- 
- #include "vgic.h"
+ kvm-$(CONFIG_CPU_HAS_MSA) += msa.o
  
 -- 
 2.50.0.rc0.642.g800a2b2222-goog
