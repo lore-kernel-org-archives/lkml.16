@@ -1,118 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A8B1A8404;
-	Wed, 11 Jun 2025 15:33:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852D71DE8B5;
+	Wed, 11 Jun 2025 15:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749656007; cv=none; b=pjGOcF60IW37meOVNec5jVeAWuKLQJllGb27yD3dyTnwV1ohpSj4XxkIVVvpcCE1stBZnKceyB+VGhHiZeCxzgXXf3v8kBlUKYPyHedOcDVCC1smEYk35YKCp/jy9JxLsdO7wr3Yw+cTzwB3H3HmnD8MhfLUAEktGcJV/s6JCMk=
+	t=1749656014; cv=none; b=uJoe+yD11v4s5YVoJKab5So49rZLyj3Q/SOQzzkWXg8Au/HQveA7wsWw5RY13WoPvFqmX43baLlNBpS5U/VHnzdYyPvdvpZIy4NhlyaGP2G/RwpyhLhqh+CZd0Nj5AgkhdktraV+kvx3yo0LeeVp/dN26QYsRZJQGoW6DV7H1DI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749656007; c=relaxed/simple;
-	bh=rHdWhg+1tRJ8pdNXFOs6DUEIeNHlwGzTwvSNZrMPbo0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X3WY5QrQXYKrXR0x+dZx/l+tKdEUsetI/Jxy/IgKX6WsRfFVseR8+c3Qt0g/4P1Av52yIoYUjOvrWJBmMbXrJ70y7sVINgXBPn2kOJMiGK4hzWZjKO7Kiqgo1UGfzAKnqGwe4wy87wsprZRm9Y0eJZnqLANFSJCr3V1Kyv2eSTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BCqoz7zu; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BCqoz7zu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749656005; x=1781192005;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=rHdWhg+1tRJ8pdNXFOs6DUEIeNHlwGzTwvSNZrMPbo0=;
-  b=BCqoz7zu2POseJcFiWXxAfPBC2Vhj3tu8gQfgDdevHdtoQuoGsD36YQL
-   OYBTwVyj+OgiE8kolp5xwJQxb0bHBPOonpZlRYtvqq9R6QP2l/fGPDb28
-   WdvB+RhR3tirzIjZJdTapI3vIIOmGEyDgVUPoNwh/SiUPibMZSbYzZu/7
-   BaNQqVWCjL/bdcH+FVNCbbJVtK4a4AW0yFKyZnahzE1idPmNbm2qfREef
-   suYGl1azJh63F3sAMOKWyZ6RKGeQhCqTVZmxmbSQ3uwbQhml/+2C5LS8I
-   8lEE3McomItFcKuJcMkebbSXr3GqlNDETXq5IcJB8V+dQ6DQ9Y3kv4wYW
-   g==;
-X-CSE-ConnectionGUID: TNeozDW7QGKdn1HY8pP2Uw==
-X-CSE-MsgGUID: rZ4hxHaRQiOHNPOzFN/Fzg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="77205331"
-X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
-   d="scan'208";a="77205331"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 08:33:25 -0700
-X-CSE-ConnectionGUID: zTeiCBArR7qm9y0XLQQFLg==
-X-CSE-MsgGUID: YzgO8cNLQsS+jXVw2sVciw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
-   d="scan'208";a="178181372"
-Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.124.241.118]) ([10.124.241.118])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 08:33:22 -0700
-Message-ID: <ba611f52-9817-46ff-b16b-a9ef7404a51d@linux.intel.com>
-Date: Wed, 11 Jun 2025 23:33:19 +0800
+	s=arc-20240116; t=1749656014; c=relaxed/simple;
+	bh=LFVvjcEUPcLUUGZ+sQE1sFmTa1aTE1eEZgoHDRCWpjI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GeRFuM2MHWncaEQX7ZqJNrwrN4ZO3Rz9xPBty5uKHqNZ3nAURygqwz8fL/tV2GVdx0AgDC+4nu2LbyScCg6mHT/DXe+rFYXV69pXnCfhzgvvwVekPtWXQ/Rno6ZsONy0sXJ4m4+xqm42LojDEzOnd0FLesOPWuZfKb5CNMQMm18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-adb4e36904bso1351602866b.1;
+        Wed, 11 Jun 2025 08:33:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749656011; x=1750260811;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5pWEWrKCcgKVTrwcZ+8YcpLvU8fPQDchyP7vci7CIuQ=;
+        b=WDpgZU8x3q3vThT18VPGkdJaq75NykE6QKQm0Qc5kwTCbJ3+spLFJllFeuFT2FNo8x
+         YwoAVMiuIaV98TgmUIJjm8FbzEnQGhpYUy3j5LV0oddAGweCUOrxW12Y/Q8SzRuWDmUm
+         ayrjVkwvuevTcf6ERZyGPEt8oxhKj7kefeWp5WuJkeANkfy7vLHSOPRcMQjPFk8krGEG
+         Xd7YxfkyhdINUDjLwLmvevWmBSLGs6Yy5XKNywywrScCOSL0to6M1cScYrnvMNlC/ZLQ
+         Glf5vGIfKy+cEQxv+G2BpDUDedkxj1gaj5jO43yh8uOYDUsazBAO3n/oETapRheGyeUK
+         M+Kg==
+X-Forwarded-Encrypted: i=1; AJvYcCUNGQjGlmGS8WRgKpcYegb0zdk1pwMlUtKmKw6IZ1Cx2FAx3YPblpF7nIzL4pxMCAvVkQ/NQaIH3Mk=@vger.kernel.org, AJvYcCUp64mRAlrK1YJR+jAHTpy/kPuXFJWO+3gcnrnl7ONFtVnEhH4k6pAReWgRXKnY7A34mQkSCynr@vger.kernel.org, AJvYcCVVgEQFJejv7+5hC2KjIVF2VDPKcxVp+FYccFSuY8Ll2pmxcp5LNLh6Euk4xpWXEWb95d5LJiXFi/EjYmLA@vger.kernel.org, AJvYcCXmOTc/FT9wNY7jGpV/FEvUnAgBeRLh5vR2E19I6K70JuwA9SeUdJZ/5tw9OKyYBxXk3o2ZBhuU9YVE8HOmxLQ1@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiHBktNAvpmRdr2taCkRlWVk0z5SpKUOE6gPGF9tGfatqFrlq9
+	K/pHDtcGXbFbSgIaVzKUCCIsperqUJtRi+/CsGPDrStfN1kR5jQfPw5w
+X-Gm-Gg: ASbGncvoaYG3VxU/sPYMOmz1OwaE20KCrweyHk0EEVRrJwBlXdtwHzznI+5SxZf2bJ4
+	07Zc/RskK2iAxl55U125zqmFTJcVp5lJgXqqTtgbmZu23uWa4vOXDiurF+kE4m0KtogTdnYcRlG
+	x9suqCRHU97SCEeUpvjEq7MeWDm0cEp1wy9VU1xBNwnf8PwtHRHSGGTjKwIKPttnlWjGCyIBxn/
+	VAIzboNEudn2WPHasEoZiBd87h7yDSmbgbDeY/3Ueohihgd7CTW7XrIPLsiAGw1BPE3v2i9b5Le
+	gSFRC/mN0krDXX4tavcfnRJTe21bSR5aljqeTHD3e//MG4KK5+gqlA==
+X-Google-Smtp-Source: AGHT+IEfZLGhg/nkYXc7GHKnUQ8cgynZfh8zxgjNYfMoL6iegmHZJ0pGGbPX0ENOTFyvS1/RSxxJJg==
+X-Received: by 2002:a17:907:6d23:b0:ad8:a935:b905 with SMTP id a640c23a62f3a-adea2e8a85fmr8568166b.22.1749656010593;
+        Wed, 11 Jun 2025 08:33:30 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:74::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc1c87esm919503566b.107.2025.06.11.08.33.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 08:33:29 -0700 (PDT)
+Date: Wed, 11 Jun 2025 08:33:27 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Gustavo Luiz Duarte <gustavold@gmail.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Shuah Khan <shuah@kernel.org>, Simon Horman <horms@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH net-next 5/5] docs: netconsole: document msgid feature
+Message-ID: <aEmhx1vutCK3RsOd@gmail.com>
+References: <20250611-netconsole-msgid-v1-0-1784a51feb1e@gmail.com>
+ <20250611-netconsole-msgid-v1-5-1784a51feb1e@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 4/4] KVM: TDX: Check KVM exit on KVM_HC_MAP_GPA_RANGE
- when TD finalize
-To: Sean Christopherson <seanjc@google.com>
-Cc: Rick P Edgecombe <rick.p.edgecombe@intel.com>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- "pbonzini@redhat.com" <pbonzini@redhat.com>,
- "mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>,
- Kai Huang <kai.huang@intel.com>, Jiewen Yao <jiewen.yao@intel.com>,
- Xiaoyao Li <xiaoyao.li@intel.com>, Tony Lindgren <tony.lindgren@intel.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Reinette Chatre <reinette.chatre@intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Yan Y Zhao <yan.y.zhao@intel.com>, Isaku Yamahata
- <isaku.yamahata@intel.com>, Kirill Shutemov <kirill.shutemov@intel.com>
-References: <20250610021422.1214715-1-binbin.wu@linux.intel.com>
- <20250610021422.1214715-5-binbin.wu@linux.intel.com>
- <936ccea77b474fbad1bde799ee92139356f91c5f.camel@intel.com>
- <aEh0oGeh96n9OvCT@google.com>
- <31c4ab96-55bf-4f80-a6fd-3478cc1d1117@linux.intel.com>
- <aEmGTZbMpZhtlkIh@google.com>
-Content-Language: en-US
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <aEmGTZbMpZhtlkIh@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611-netconsole-msgid-v1-5-1784a51feb1e@gmail.com>
 
+On Wed, Jun 11, 2025 at 07:36:07AM -0700, Gustavo Luiz Duarte wrote:
+> Add documentation explaining the msgid feature in netconsole.
+> 
+> This feature appends unique id to the userdata dictionary. The message
+> ID is populated from a per-target 32 bit counter which is incremented
+> for each message sent to the target. This allows a target to detect if
+> messages are dropped before reaching the target.
+> 
+> Signed-off-by: Gustavo Luiz Duarte <gustavold@gmail.com>
+> ---
+>  Documentation/networking/netconsole.rst | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/Documentation/networking/netconsole.rst b/Documentation/networking/netconsole.rst
+> index a0076b542e9c..42a0acf2eb5e 100644
+> --- a/Documentation/networking/netconsole.rst
+> +++ b/Documentation/networking/netconsole.rst
+> @@ -340,6 +340,28 @@ In this example, the message was sent by CPU 42.
+>        cpu=42    # kernel-populated value
+>  
+>  
+> +Message ID auto population in userdata
+> +--------------------------------------
+> +
+> +Within the netconsole configfs hierarchy, there is a file named `msgid_enabled`
+> +located in the `userdata` directory. This file controls the message ID
+> +auto-population feature, which assigns a unique id to each message sent to a
 
+Important to say that the message id will eventually wrap, thus it is
+not very unique.
 
-On 6/11/2025 9:36 PM, Sean Christopherson wrote:
-> On Wed, Jun 11, 2025, Binbin Wu wrote:
->> On 6/11/2025 3:58 AM, Sean Christopherson wrote:
->>> On Tue, Jun 10, 2025, Rick P Edgecombe wrote:
->>>> It seems like the reasoning could be just to shrink the possible configurations
->>>> KVM has to think about, and that we only have the option to do this now before
->>>> the ABI becomes harder to change.
->>>>
->>>> Did you need any QEMU changes as a result of this patch?
->>>>
->>>> Wait, actually I think the patch is wrong, because KVM_CAP_EXIT_HYPERCALL could
->>>> be called again after KVM_TDX_FINALIZE_VM. In which case userspace could get an
->>>> exit unexpectedly. So should we drop this patch?
->>> Yes, drop it.
->>>
->> So, when the TDX guest calls MapGPA and KVM finds userspace doesn't opt-in
->> KVM_HC_MAP_GPA_RANGE, just return error to userspace?
-> Why can't KVM just do what it already does, and return an error to the guest?
->
-> 	if (!user_exit_on_hypercall(vcpu->kvm, KVM_HC_MAP_GPA_RANGE)) {
-> 		ret = TDVMCALL_STATUS_INVALID_OPERAND;
-> 		goto error;
-> 	}
->
-My previous thought was MapGpa is in base GHIC API.
-Userspace is required to opt-in KVM_HC_MAP_GPA_RANGE.
-If not, it's userspace's responsibility, so I thought exit to userspace with
-error may be better.
+> +given target and appends the ID to userdata dictionary in every message sent.
+> +
+> +The message ID is built from a per-target 32 bit counter that is incremented
+> +for every message sent to the target. This ID can be used by the target to
+> +detect if messages were dropped before reaching the target.
 
-If return an error code is preferred, now it has a new status code
-TDVMCALL_STATUS_SUBFUNC_UNSUPPORTED to use.
-
-Basically, if the MapGpa is not support, either choice will stop VM from
-execution. But had a second thought, returning an error code to guest allows
-guest to choose to continue or not if MapGpa failed, though I can't
-imagine what case it is.
+Please also add that we cannot rely on console ids, given some messages
+never make netconsole, thus, we never now if the message was never sent,
+or, never received.
