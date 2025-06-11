@@ -1,142 +1,171 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7E2A50
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 18:00:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C094FA50;
+	Wed, 11 Jun 2025 18:01:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749664850; cv=none; b=mOURFloLLR/pQNRVvei+zRU6fToXvc++iKxh1kLyMsXCQ+xmTswQnaLJJ/7ipcf8gdlSYPVfhEB+x0Luyo2qRBd6ymApYuvZpClIee/b1uPQqDTFt2f/zKy/+uRZmJySB2Z9maNQVO99ZWKPoGh0nbU5swmBka3odzfomE5tHYI=
+	t=1749664886; cv=none; b=TmDj8I9hAa3atuI6Y0RlEIIztFh2Rb260abIrHylqnQdJb5DOJsbk+7q5jnF3yDoTEmlWnhRN0wyf/hTFIZoJ2vA316xzPlFE2XewnnsnQ2xHJuia/jR8TeokhaYCba3sUsfKfc0iGZmReb1w2HvYmqNF8A5nipxWtpQh2unc30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749664850; c=relaxed/simple;
-	bh=mQSLWD9/xere2JF5WAfKE7gTGG8IzPl1blnKBELGi4M=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Ip3hJFFEr2o3ZR/6IkKF730vdwcs1yJGOOHQkBzBN9MVGNUtrNQqbV7Za+K4pQWVcjSxaA9wCmqLnodOOTl5i4a+NMo3Ng3wunOWvw1uuv+7/5U1A89kHfWLMRcUtnt9so/P4VssEwvUTJF0WOaKLqv7eYwTjQiv/Hcmi6o7/cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XjWsmaZo; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749664886; c=relaxed/simple;
+	bh=1ueyvC8/mCJFw9JuGdrNLssNoMYyC/92vpBFO+JeLC0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=VHEpBd+8RPFLI3mIPZSWeQ6Rrc7eFCKfokREm6qY6cdaWVUqy2OsZd0X/vmG40SYHqeMgcahmkzrKQygOFd3yfWuWiiJjtx/3Rx+pi8vHK0Yvp0ozLCDOlh9pyUgHxoeq/Jp95m/UEvOkvDLwdBxTFtCceWxuipOLz5J9kfT9IA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BPFcmaGF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XjWsmaZo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749664849; x=1781200849;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=mQSLWD9/xere2JF5WAfKE7gTGG8IzPl1blnKBELGi4M=;
-  b=XjWsmaZo+BUh745cSuTag5HAQ2AsZOLRsryFC2KlPUj6ULYEiULjuLhx
-   5zeVGszTU0XnfT5AzePwUywasqgFnZ9VO2LqYeY09RLOYNf+C6qp2i+EL
-   iZB7ruzt659HI4s1byUY3WMz6nVLQUmFD1KqXKacg0yIs0C9iLdxhO8lB
-   +wnkWdrZksPG4t5OHnteTUt+YCpy87RD43NdQQ4m5tO59G4tCuB61m+7t
-   q6d5CElxyD8ktmcPENqttJh0vwfhvZ5dS2/gZEx5iIFSTqeV5jzUPe54I
-   VDipdh7FHNSv2Wlo9DSkMerR5hgvCbQzFYyK/kyiLsynKgKgj+uRTHVTd
-   g==;
-X-CSE-ConnectionGUID: 8kbLoim/S5CAhSpAhG9+tA==
-X-CSE-MsgGUID: OvDwFcxmQU6432zvqKi0/w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="55622917"
-X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
-   d="scan'208";a="55622917"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 11:00:48 -0700
-X-CSE-ConnectionGUID: DlObzK+YQo2C3v8o1xbkGw==
-X-CSE-MsgGUID: /oYFOTYsTree1FFQXv3Ilw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
-   d="scan'208";a="147822577"
-Received: from chhatrar-mobl.amr.corp.intel.com (HELO desk) ([10.125.146.46])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 11:00:48 -0700
-Date: Wed, 11 Jun 2025 11:00:47 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: x86@kernel.org
-Cc: tony.luck@intel.com, "H. Peter Anvin" <hpa@zytor.com>,
-	linux-kernel@vger.kernel.org,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>
-Subject: [RFC PATCH] x86/cpu: Mark Ice Lake model 7D and 9D as unreleased
-Message-ID: <20250611-icelake-cleanup-v1-1-0f82472dbc8f@linux.intel.com>
-X-B4-Tracking: v=1; b=H4sIAOfDSWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDU0MT3czk1JzE7FTd5JzUxLzSAt0U80QLY0MjA5MUSzMloK6CotS0zAq
- widFKQW7OILEAxxBnD6XY2loAnoUQhm8AAAA=
-X-Change-ID: 20250514-icelake-cleanup-d7a831204d96
-X-Mailer: b4 0.14.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BPFcmaGF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D83BC4CEEA;
+	Wed, 11 Jun 2025 18:01:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749664886;
+	bh=1ueyvC8/mCJFw9JuGdrNLssNoMYyC/92vpBFO+JeLC0=;
+	h=From:Subject:Date:To:Cc:From;
+	b=BPFcmaGFRTtopyRxTH7ClVtgpG9UO5hMbqtKHdZ43Lkqf49KdenbiYvigOSdVKxfk
+	 gsxkF5MaZ1in1Jbgk7SxoCK+3k460w/bZe4qKU0jQ5Md8QEjBnnS6HZXwsW/9fYTl5
+	 NFXpIHyEAssjZT48SJ0XTyfgSbxY1Hj1S44F0h5BPYd19fzI9XCJ2Ymw2BK+yo+O9S
+	 cKOawkuPvA5O5K3OhP19AWXYHzr+wawzwvoCS/0u6Dp/F2Jp5U2Bx7y8FhmV2rPGnS
+	 Jm3HyDZHC/hjjchmnTDHiWLXln8rGFuQXuHYI+CCd6Oo+bsBXcCpuMO2rhjFcHGWeH
+	 85FmMBTLzP+Qg==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Subject: [PATCH v23 0/4] arm64/perf: Enable branch stack sampling
+Date: Wed, 11 Jun 2025 13:01:10 -0500
+Message-Id: <20250611-arm-brbe-v19-v23-0-e7775563036e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGbESWgC/2XNwW7CMAyA4VdBOS/Idpo24cR7oB0gcSDa1qIUV
+ Uyo7z6XHUrLIZFs5fvzUD2XzL3abR6q8JD73LUykPnYqHA5tmfWOcpCEZAFJK+P5Uefyon1gF5
+ TFW30bLkmo4RcC6d8f/YOnzJfcn/ryu8zL++n9X9JrmVpOqAxoAFwQMbZ/ReXlr+3XTmrqTUQv
+ Hh0K08gvmLviVIgdvzucfYVNGuP4lNC16RUB0/u3dPsrXy38iQ+YIyRjeMmLf04jn/gFR5/bAE
+ AAA==
+X-Change-ID: 20250129-arm-brbe-v19-24d5d9e5e623
+To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>, 
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+ Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Zenghui Yu <yuzenghui@huawei.com>, James Clark <james.clark@linaro.org>, 
+ Anshuman Khandual <anshuman.khandual@arm.com>, Leo Yan <leo.yan@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ kvmarm@lists.linux.dev, Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.15-dev
 
-These models were never officially released, but they made it into
-intel-family.h. There is no evidence that these models are being used in
-production. As a matter of fact, Intel's affected CPU list[1] does not
-contain these models.
+This series enables perf branch stack sampling support on arm64 via a 
+v9.2 arch feature called Branch Record Buffer Extension (BRBE). Details 
+on BRBE can be found in the Arm ARM[1] chapter D18.
 
-During CPU mitigations it gets confusing whether to include these models
-with other Ice Lake models or not. Add the comment in the intel-family.h to
-indicate that these models were never released. Also taint and warn about
-these unreleased models, except when running as a guest.
+I've picked up this series from Anshuman. v19 and later versions have 
+been reworked quite a bit by Mark and myself. The bulk of those changes 
+are in patch 5.
 
-[1] https://www.intel.com/content/www/us/en/developer/topic-technology/software-security-guidance/processors-affected-consolidated-product-cpu-model.html
+A git branch is here[2].
 
-Suggested-by: Andrew Cooper <andrew.cooper3@citrix.com>
-Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
-Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+[1] https://developer.arm.com/documentation/ddi0487/latest/
+[2] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git arm/brbe-v23
+
+v23:
+ - Rebase on v6.16-rc1 dropping already applied el2_setup.h clean-ups
+ - Drop the SYSCALL fixup and convert all BRBE CALL events to SYSCALL
+
+v22:
+ - https://lore.kernel.org/all/20250520-arm-brbe-v19-v22-0-c1ddde38e7f8@kernel.org/
+ - New patch reworking the labels in el2_setup.h
+ - Move branch stack disabling after armpmu_stop() in armpmu_del()
+ - Fix branch_records_alloc() to work on heterogeneous systems
+ - Make setting .sched_task function ptr conditional on BRBE support
+ - Reword booting.rst section name (s/feature/the/) and move next to
+   other PMU related features instead of in the middle of SME features.
+ - Drop setting SYS_BRBCR_EL1
+ - Drop CONFIG_ARM64_BRBE ifdef
+ - Rework initialization of HFGITR_EL2
+
+v21:
+ - https://lore.kernel.org/r/20250407-arm-brbe-v19-v21-0-ff187ff6c928@kernel.org
+ - Drop clean-up patches 1-7 already applied
+ - Rebase on v6.15-rc1
+
+v20:
+ - https://lore.kernel.org/r/20250218-arm-brbe-v19-v20-0-4e9922fc2e8e@kernel.org
+ - Added back some of the arm64 specific exception types. The x86 IRQ 
+   branches also include other exceptions like page faults. On arm64, we 
+   can distinguish the exception types, so we do. Also, to better 
+   align with x86, we convert 'call' branches which are user to kernel 
+   to 'syscall'.
+ - Only enable exceptions and exception returns if recording kernel
+   branches (matching x86)
+ - Drop requiring event and branch privileges to match
+ - Add "branches" caps sysfs attribute like x86
+ - Reword comment about FZP and MDCR_EL2.HPMN interaction
+ - Rework BRBE invalidation to avoid invalidating in interrupt handler
+   when no handled events capture the branch stack (i.e. when there are 
+   multiple users).
+ - Also clear BRBCR_ELx bits in brbe_disable(). This is for KVM nVHE 
+   checks if BRBE is enabled.
+ - Document that MDCR_EL3.SBRBE can be 0b01 also
+
+v19:
+ - https://lore.kernel.org/all/20250202-arm-brbe-v19-v19-0-1c1300802385@kernel.org/
+ - Drop saving of branch records when task scheduled out (Mark). Make 
+   sched_task() callback actually get called. Enabling requires a call 
+   to perf_sched_cb_inc(). So the saving of branch records never 
+   happened.
+ - Got rid of added armpmu ops. All BRBE support is contained within 
+   pmuv3 code.
+ - Fix freeze on overflow for VHE
+ - The cycle counter doesn't freeze BRBE on overflow, so avoid assigning
+   it when BRBE is enabled.
+ - Drop all the Arm specific exception branches. Not a clear need for
+   them.
+ - Fix handling of branch 'cycles' reading. CC field is
+   mantissa/exponent, not an integer.
+ - Rework s/w filtering to better match h/w filtering
+ - Reject events with disjoint event filter and branch filter or with 
+   exclude_host set
+ - Dropped perf test patch which has been applied for 6.14
+ - Dropped patch "KVM: arm64: Explicitly handle BRBE traps as UNDEFINED"
+   which has been applied for 6.14
+
+v18:
+ - https://lore.kernel.org/all/20240613061731.3109448-1-anshuman.khandual@arm.com/
+
+For v1-v17, see the above link. Not going to duplicate it all here...
+
+Signed-off-by: "Rob Herring (Arm)" <robh@kernel.org>
 ---
-Please scream if you believe that the assumptions made in this patch are
-incorrect.
 ---
- arch/x86/include/asm/intel-family.h |  4 ++--
- arch/x86/kernel/cpu/intel.c         | 12 ++++++++++++
- 2 files changed, 14 insertions(+), 2 deletions(-)
+Anshuman Khandual (3):
+      arm64/sysreg: Add BRBE registers and fields
+      arm64: Handle BRBE booting requirements
+      KVM: arm64: nvhe: Disable branch generation in nVHE guests
 
-diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-index be10c188614fe24ad41e2e1912b8d5640c6ea171..948e0a057a9629dc57671e4c666b5f62e762d4bb 100644
---- a/arch/x86/include/asm/intel-family.h
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -110,9 +110,9 @@
- 
- #define INTEL_ICELAKE_X			IFM(6, 0x6A) /* Sunny Cove */
- #define INTEL_ICELAKE_D			IFM(6, 0x6C) /* Sunny Cove */
--#define INTEL_ICELAKE			IFM(6, 0x7D) /* Sunny Cove */
-+#define INTEL_ICELAKE			IFM(6, 0x7D) /* Sunny Cove, never released */
- #define INTEL_ICELAKE_L			IFM(6, 0x7E) /* Sunny Cove */
--#define INTEL_ICELAKE_NNPI		IFM(6, 0x9D) /* Sunny Cove */
-+#define INTEL_ICELAKE_NNPI		IFM(6, 0x9D) /* Sunny Cove, never released */
- 
- #define INTEL_ROCKETLAKE		IFM(6, 0xA7) /* Cypress Cove */
- 
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 076eaa41b8c81b2dd9be129d14dc7c8041eb2e79..b7eb8d5ee4351bf4a31e6a2792d24f7dbc0773ed 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -337,9 +337,21 @@ static void early_init_intel(struct cpuinfo_x86 *c)
- 		detect_tme_early(c);
- }
- 
-+static const struct x86_cpu_id unreleased_cpus[] = {
-+	X86_MATCH_VFM(INTEL_ICELAKE,		0),
-+	X86_MATCH_VFM(INTEL_ICELAKE_NNPI,	0),
-+	{},
-+};
-+
- static void bsp_init_intel(struct cpuinfo_x86 *c)
- {
- 	resctrl_cpu_detect(c);
-+
-+	if (x86_match_cpu(unreleased_cpus) && !cpu_has(c, X86_FEATURE_HYPERVISOR)) {
-+		add_taint(TAINT_CPU_OUT_OF_SPEC, LOCKDEP_STILL_OK);
-+		WARN_ONCE(1, "WARNING: CPU family=0x%x, model=0x%x is unreleased, tainting\n",
-+			  c->x86, c->x86_model);
-+	}
- }
- 
- #ifdef CONFIG_X86_32
+Rob Herring (Arm) (1):
+      perf: arm_pmuv3: Add support for the Branch Record Buffer Extension (BRBE)
 
+ Documentation/arch/arm64/booting.rst |  21 +
+ arch/arm64/include/asm/el2_setup.h   |  71 +++-
+ arch/arm64/include/asm/kvm_host.h    |   2 +
+ arch/arm64/include/asm/sysreg.h      |  16 +-
+ arch/arm64/kvm/debug.c               |   4 +
+ arch/arm64/kvm/hyp/nvhe/debug-sr.c   |  32 ++
+ arch/arm64/kvm/hyp/nvhe/switch.c     |   2 +-
+ arch/arm64/tools/sysreg              | 132 ++++++
+ drivers/perf/Kconfig                 |  11 +
+ drivers/perf/Makefile                |   1 +
+ drivers/perf/arm_brbe.c              | 798 +++++++++++++++++++++++++++++++++++
+ drivers/perf/arm_brbe.h              |  47 +++
+ drivers/perf/arm_pmu.c               |  16 +-
+ drivers/perf/arm_pmuv3.c             | 125 +++++-
+ include/linux/perf/arm_pmu.h         |   8 +
+ 15 files changed, 1265 insertions(+), 21 deletions(-)
 ---
 base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250514-icelake-cleanup-d7a831204d96
+change-id: 20250129-arm-brbe-v19-24d5d9e5e623
 
 Best regards,
 -- 
-Pawan
-
+Rob Herring (Arm) <robh@kernel.org>
 
