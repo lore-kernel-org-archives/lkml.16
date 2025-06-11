@@ -1,99 +1,98 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71341225413;
-	Wed, 11 Jun 2025 19:25:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E953225413
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 19:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749669926; cv=none; b=qIflX7OiUjR8qzv1K6ToxCEGQ0swxHAn0802oW7o1TF+Eu2wZL6MP8emSpFmnXzJOlWufMa9EH2sMZNPtYmxJPKP+ms52EhfckxZRQo8ffCwI6Kj9J5mJsrebYKY9SmdW+H2wqWriKQF65hDTWjDWK/duDbMwU6YQTZNbpxRYuI=
+	t=1749669951; cv=none; b=IU6ioiJOalqEPc10XX61QlD1rTdYAyUIS45ZChWXpExeohNBCI9rD8ns9OQ9mF2I/8Vc+AZWA9b551f5u/gIPFClxsbbc/724JC86oTWPJtg9n3ycu6vcrDIYAkr8bt2e0hAXrAAY49T9OMTp8iuCOZlhokQD/d+fFjpW+Oc4Qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749669926; c=relaxed/simple;
-	bh=eKDVnxG3E/blRCYO5ls5suxXi9vDUdZMPz72lIAk2Ew=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=momNKekLk6rO+6AxMzkBCNZOHLuSNDxmHcv0Pz3MP5r2Tk22Yb26XT7tZmOcU6RMKLrxKPQ16QTlOUgdo4gU07uZwoKnFUVdHYy+y8T9d70RZv4a9f5NXSqtBTXZAgaTtDmUQs1hPF7LnyWpRb5f18ypJvLR46a3AVm8TIQSJeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=B+qiX3gY; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1749669951; c=relaxed/simple;
+	bh=Q6mtWCm1v5uFr3b2KUN2li5YOoXLQewKKWyLP3jWxw4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R2iZLMpeF9Llov3dLYOawwcsSsOrVPjIOrdfDs4leaKlAw5I+ec2WMBQ14bK7ZzcDaUhVJ9u/+/wVxGGSF8Imvs2VZfF7oWMlYv/bb7OuNHkS7rXMEqcOqYkSu3s2I25V3OjP3BLyh1n1GP9L16lXfdwg/1kGXNPabmbZGKM95o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mzg1Rtyh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="B+qiX3gY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=AWz/6xHsZld+TcrIo3vA7x/JVCIMknVrwxwjNiRLZaA=; b=B+qiX3gYW6ScfiYm1I+7Tl5dKT
-	j8tr4vzPtqByvw3heukk7BmS3imXnZu3HLFEt/yXsBG2A6URzWx5FOaMv2DVnZrB2a2ADrKaBczhR
-	shEPrglMy3b3OmwXoSjPMQU+Ap8oKAASWnWupFm32zmjoTwrhbSM3sb6S7rR9lgtRqp4gfCFp3Wrh
-	5pGtH/fIZhzu+rfHeeCuOc81GzB2izsBBHqRfuqtYn8s1PnTobtvMbnj1vKMKQ+bnqr3NM72lagRH
-	lPDen7TqYywD3g4oajnWDSYGNmpNl5j8oZOr5Rj4FraUL6A2WBtolOxIWvxcH+Z0uGQo2ga4rE/ry
-	aekrejPA==;
-Received: from [191.204.192.64] (helo=[192.168.15.100])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uPR4F-002Kw8-2w; Wed, 11 Jun 2025 21:24:59 +0200
-Message-ID: <ee678dee-e003-41dc-86fe-c35c18a6171d@igalia.com>
-Date: Wed, 11 Jun 2025 16:24:53 -0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mzg1Rtyh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F22FCC4CEE3;
+	Wed, 11 Jun 2025 19:25:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749669950;
+	bh=Q6mtWCm1v5uFr3b2KUN2li5YOoXLQewKKWyLP3jWxw4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mzg1Rtyh0oR+fi92NHcfD3DwqHvW2dbk33zHDGI2Qtmc13mAGmsMCFGUOGTw5SZ7V
+	 KXCSrJHm1l/aF453JnRT+qU37AQui4qTcR/uGtbO7sR6FPkMV/SY214nK9vQtklnL7
+	 OoqjatpPfc2ojMZSBZnomkXrDvDlzQLT4cdnjn/hdjm0XRWqA0jekz2PquBbmRzvpq
+	 j21j+YDji6tpZQoUGRyCSmInLhnrT9WvsCiIrd6JJq333PFIGeK5UttjpYj0PVOmru
+	 4rbOld2N2tcqJ6b18yLHoQuwJ8Gqni74E2fqF2APVW+Ub+nx9ba7zYbsG07jO34AQg
+	 uan58obvuxWfg==
+Date: Wed, 11 Jun 2025 12:25:48 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Alexandre Chartre <alexandre.chartre@oracle.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, 
+	mingo@kernel.org
+Subject: Re: [RFC 03/13] objtool: Disassemble code with libopcodes instead of
+ running objdump
+Message-ID: <5daj7e2fvojknehmb4phdnyg63e5oma27jlihq6b5xypgnccwt@kmc4no5gza72>
+References: <20250606153440.865808-1-alexandre.chartre@oracle.com>
+ <20250606153440.865808-4-alexandre.chartre@oracle.com>
+ <20250611122317.GA2278213@noisy.programming.kicks-ass.net>
+ <25ae649b-8f0b-447e-8e50-87444c0ea9da@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] af_unix: Introduce SO_PASSRIGHTS - break OpenGL
-To: Kuniyuki Iwashima <kuni1840@gmail.com>, christian@heusel.eu
-Cc: davem@davemloft.net, difrost.kernel@gmail.com, dnaim@cachyos.org,
- edumazet@google.com, horms@kernel.org, kuba@kernel.org, kuniyu@amazon.com,
- linux-kernel@vger.kernel.org, mario.limonciello@amd.com,
- netdev@vger.kernel.org, pabeni@redhat.com, regressions@lists.linux.dev,
- Tvrtko Ursulin <tursulin@igalia.com>
-References: <58be003a-c956-494b-be04-09a5d2c411b9@heusel.eu>
- <20250611164339.2828069-1-kuni1840@gmail.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-In-Reply-To: <20250611164339.2828069-1-kuni1840@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <25ae649b-8f0b-447e-8e50-87444c0ea9da@oracle.com>
 
-Hi Kuniyuki,
-
-Em 11/06/2025 13:42, Kuniyuki Iwashima escreveu:
-> From: Christian Heusel <christian@heusel.eu>
-> Date: Wed, 11 Jun 2025 13:46:01 +0200
->> On 25/06/10 09:22PM, Jacek Łuczak wrote:
-
-[...]
-
->>> Reverting entire SO_PASSRIGHTS fixes the issue.
+On Wed, Jun 11, 2025 at 03:35:38PM +0200, Alexandre Chartre wrote:
 > 
-> Thanks for the report.
+> On 6/11/25 14:23, Peter Zijlstra wrote:
+> > On Fri, Jun 06, 2025 at 05:34:30PM +0200, Alexandre Chartre wrote:
+> > > objtool executes the objdump command to disassemble code. Use libopcodes
+> > > instead to have more control about the disassembly scope and output.
+> > > 
+> > > Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+> > > ---
+> > >   tools/objtool/Makefile                  |   2 +-
+> > >   tools/objtool/arch/loongarch/decode.c   |   6 +
+> > >   tools/objtool/arch/powerpc/decode.c     |   6 +
+> > >   tools/objtool/arch/x86/decode.c         |   7 +
+> > >   tools/objtool/check.c                   |   4 +-
+> > >   tools/objtool/disas.c                   | 186 +++++++++++++++---------
+> > >   tools/objtool/include/objtool/arch.h    |   5 +
+> > >   tools/objtool/include/objtool/check.h   |   5 +
+> > >   tools/objtool/include/objtool/objtool.h |   4 +
+> > >   9 files changed, 154 insertions(+), 71 deletions(-)
+> > > 
+> > > diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
+> > > index 8c20361dd100..00350fc7c662 100644
+> > > --- a/tools/objtool/Makefile
+> > > +++ b/tools/objtool/Makefile
+> > > @@ -34,7 +34,7 @@ INCLUDES := -I$(srctree)/tools/include \
+> > >   # is passed here to match a legacy behavior.
+> > >   WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed -Wno-nested-externs
+> > >   OBJTOOL_CFLAGS := -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
+> > > -OBJTOOL_LDFLAGS := $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
+> > > +OBJTOOL_LDFLAGS := $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS) -lopcodes
+> > 
+> > Would it be possible to make this optional? Such that when people do not
+> > have libopcodes installed they can still build the kernel.
+> > 
+> > Or is libopcodes a mandatory part of any binutils installation?
 > 
-> Could you test the diff below ?
-> 
-> look like some programs start listen()ing before setting
-> SO_PASSCRED or SO_PASSPIDFD and there's a small race window.
-> 
-> ---8<---
-> diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
-> index fd6b5e17f6c4..87439d7f965d 100644
-> --- a/net/unix/af_unix.c
-> +++ b/net/unix/af_unix.c
-> @@ -1971,7 +1971,8 @@ static void unix_maybe_add_creds(struct sk_buff *skb, const struct sock *sk,
->   	if (UNIXCB(skb).pid)
->   		return;
->   
-> -	if (unix_may_passcred(sk) || unix_may_passcred(other)) {
-> +	if (unix_may_passcred(sk) || unix_may_passcred(other) ||
-> +	    !other->sk_socket) {
->   		UNIXCB(skb).pid = get_pid(task_tgid(current));
->   		current_uid_gid(&UNIXCB(skb).uid, &UNIXCB(skb).gid);
->   	}
-> ---8<---
-> 
+> I guess that libopcodes is mandatory because it is used by as (and also objdump).
+> But I can check if it is effectively present anyway.
 
-I confirm that this fixes 6.16-rc1 for me as well. Whenever you send the 
-proper patch please CC me so I can give a Tested-by tag.
+libopcodes should always be present, but compiling/linking against it
+shouldn't be possible unless a binutils devel pkg is installed.
 
-Thanks!
-	André
+So I think Peter's basically asking for what I asked for: make all this
+optional depending on whether the binutils devel pkg is installed, and
+print a helpful error message if somebody tries to use without.
+
+-- 
+Josh
