@@ -1,98 +1,301 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AAC3188A0E;
-	Wed, 11 Jun 2025 02:11:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21DFF17A2FC;
+	Wed, 11 Jun 2025 02:12:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749607870; cv=none; b=ua8m4UvGEky5QdLVSmGPsNTrDD32Wi0kcrF7RRN6NTv7xuzqK5OyW34e6PoYUyqNoOO75My2N1SVKDnK+boMPUslIiMDCDm9q8y9bigI1EdbScOfNZDo2kKMk6zB+9qlQADZNTtaUW7HMDrVVbsqom01/Xnq9OkMhvjKJMty8qU=
+	t=1749607973; cv=none; b=Uw6GzP2DK3OaCEoMeK4q4PTk0iIcPla4TxB3kSW+gIGhmbHbdgt12AlUahVLV8RpinSTVnByZxd7nQ0Xf+RU3qUCumclL5LVmW0zNrm/Zb79xDU2QXZeqmQBrva7xPb6I6xno5C5D6TBe60kiSPCYhOYaXBX5lAXsS0yDyqfaJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749607870; c=relaxed/simple;
-	bh=V5UN5NhiNun71JzA8xAksH+w0p9JSGOBeaRrap2XsUI=;
-	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
-	 Subject:Content-Type; b=BDNfhOQqNiZRNa+oUkqqT6EZUj5oCTRJq8q2IrC6lOHgceWoxBhpazvRFaO/Vldhyp9spyouvKj/pD8R0vGUCw64I0HGF6BrC1/lQHzVQg+sTs2AeHq++DUXH0Sqj2lgadXtnYbvtHKR1muXNE16HOz11gaDibfBg4sUoGoBnTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4bH8K31lSsz5B1Gv;
-	Wed, 11 Jun 2025 10:11:03 +0800 (CST)
-Received: from xaxapp05.zte.com.cn ([10.99.98.109])
-	by mse-fl1.zte.com.cn with SMTP id 55B2AotE031617;
-	Wed, 11 Jun 2025 10:10:50 +0800 (+08)
-	(envelope-from shao.mingyin@zte.com.cn)
-Received: from mapi (xaxapp01[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Wed, 11 Jun 2025 10:10:52 +0800 (CST)
-Date: Wed, 11 Jun 2025 10:10:52 +0800 (CST)
-X-Zmail-TransId: 2af96848e5ac313-fd045
-X-Mailer: Zmail v1.0
-Message-ID: <202506111010521118VJaiO_pb0rD7b3daxqox@zte.com.cn>
-In-Reply-To: <6b9d5edf-7186-4d7b-814c-5c3f306c68db@kernel.org>
-References: 20250610193403161UQCV5cVGXCRVDheTb7jvi@zte.com.cn,6b9d5edf-7186-4d7b-814c-5c3f306c68db@kernel.org
+	s=arc-20240116; t=1749607973; c=relaxed/simple;
+	bh=hTzqIPE8jGSH60x3USrFNk9o+3svOV8hf9z113UDgJI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=kH32ZoMjoqgEImv3wQaFIEnE+8F81wO/f3oTjSCwbu/JCqbhYu5qdFBvgCKp2iwrkwPRD/IipOydVPzDHLFsK7l5PYm7hvp0t5EorxZra6O3H2EmCIqXaipSuDUhc9CzjK1IpeOGJivWqXeRU9BEotXVQLHQl2regWykT0x6VqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O9SOps0U; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O9SOps0U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50059C4CEF1;
+	Wed, 11 Jun 2025 02:12:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749607972;
+	bh=hTzqIPE8jGSH60x3USrFNk9o+3svOV8hf9z113UDgJI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=O9SOps0Uo2bDYBlyskNcRKbp7I+RI3AAQBONiPJ5syevbDXXmUhAsMbLHADD/c1eh
+	 9VRigQ7XlLzJCkIZ3KqoBH67n5HLlbkMOH3gebJSi7cLvFFr2+G8vVcH8WmUMzSkH9
+	 wikjUROQdLIVlJaJ86iPHSU9hoVvcS4W/uonPUUNxcTTs79BA2Qc0rlSQzMoZrVOUN
+	 4dBYK3gGkDQPcmyTHWTRc9/tq39ILKBYirIDvlR9jJ4Gyt9kQ/1r/KtSOhs7UDuKUJ
+	 jkGfUex1KyuizQT/O1E/6lMDD9oMtb4U6f3nNyskPJ1xh1pVg4T40DY432p5vFuF3N
+	 bUqmz4zt2qCtg==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	x86@kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"Jason A . Donenfeld " <Jason@zx2c4.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 01/16] crypto: sha512 - rename conflicting symbols
+Date: Tue, 10 Jun 2025 19:09:08 -0700
+Message-ID: <20250611020923.1482701-2-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250611020923.1482701-1-ebiggers@kernel.org>
+References: <20250611020923.1482701-1-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <shao.mingyin@zte.com.cn>
-To: <krzk@kernel.org>
-Cc: <ulf.hansson@linaro.org>, <changhuang.liang@starfivetech.com>,
-        <geert+renesas@glider.be>, <magnus.damm@gmail.com>, <heiko@sntech.de>,
-        <alim.akhtar@samsung.com>, <walker.chen@starfivetech.com>,
-        <sebastian.reichel@collabora.com>, <detlev.casanova@collabora.com>,
-        <finley.xiao@rock-chips.com>, <shawn.lin@rock-chips.com>,
-        <pgwipeout@gmail.com>, <qiu.yutan@zte.com.cn>,
-        <linux-pm@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-rockchip@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>, <yang.yang29@zte.com.cn>,
-        <xu.xin16@zte.com.cn>, <yang.tao172@zte.com.cn>,
-        <ye.xingchen@zte.com.cn>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2Ml0gcG1kb21haW46IFVzZSBzdHJfZW5hYmxlX2Rpc2FibGUtbGlrZSBoZWxwZXJz?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 55B2AotE031617
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 6848E5B7.000/4bH8K31lSsz5B1Gv
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
->> From: Shao Mingyin <shao.mingyin@zte.com.cn>
->> 
->> Replace ternary (condition ? "enable" : "disable") syntax and ternary
->> (condition ? "on" : "off") syntax with helpers from
->> string_choices.h because:
->> 1. Simple function call with one argument is easier to read.  Ternary
->>    operator has three arguments and with wrapping might lead to quite
->>    long code.
->> 2. Is slightly shorter thus also easier to read.
->> 3. It brings uniformity in the text - same string.
->> 4. Allows deduping by the linker, which results in a smaller binary
->>    file.
->
->So you just taken everything from the same my patch - even entire commit
->subject and commit description - and sent it as yours?
->
->https://lore.kernel.org/all/20250114203547.1013010-1-krzysztof.kozlowski@linaro.org/
->
->oh my, if doing EXACTLY the same keep original authorship - the From and
->Sob fields.
->
->Best regards,
->Krzysztof
-Dear Krzysztof,
-Thank you for your suggestions. I have carefully read your advice and
-made adjustments to the patches accordingly. I used your patch as a
-reference standard, not just taking everything from the same your patch.
+From: Eric Biggers <ebiggers@google.com>
 
-Based on your suggestion, I have consolidated the series of patches for
-the pmdomain driver into a single patch. Additionally, following
-@changhuang's suggestion, I have supplemented the patch for
-drivers/pmdomain/starfive/jh71xx-pmu.c.
+Rename existing functions and structs in architecture-optimized SHA-512
+code that had names conflicting with the upcoming library interface
+which will be added to <crypto/sha2.h>: sha384_init, sha512_init,
+sha512_update, sha384, and sha512.
 
-If there's anything inappropriate in this patch, I sincerely apologize.
+Note: all affected code will be superseded by later commits that migrate
+the arch-optimized SHA-512 code into the library.  This commit simply
+keeps the kernel building for the initial introduction of the library.
 
-Best regards,
-Mingyin
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ arch/arm64/crypto/sha512-glue.c     |  8 ++++----
+ arch/s390/crypto/sha512_s390.c      |  8 ++++----
+ arch/sparc/crypto/sha512_glue.c     | 14 +++++++-------
+ arch/x86/crypto/sha512_ssse3_glue.c | 10 +++++-----
+ 4 files changed, 20 insertions(+), 20 deletions(-)
+
+diff --git a/arch/arm64/crypto/sha512-glue.c b/arch/arm64/crypto/sha512-glue.c
+index 15aa9d8b7b2c4..a78e184c100fa 100644
+--- a/arch/arm64/crypto/sha512-glue.c
++++ b/arch/arm64/crypto/sha512-glue.c
+@@ -25,12 +25,12 @@ static void sha512_arm64_transform(struct sha512_state *sst, u8 const *src,
+ 				   int blocks)
+ {
+ 	sha512_blocks_arch(sst->state, src, blocks);
+ }
+ 
+-static int sha512_update(struct shash_desc *desc, const u8 *data,
+-			 unsigned int len)
++static int sha512_update_arm64(struct shash_desc *desc, const u8 *data,
++			       unsigned int len)
+ {
+ 	return sha512_base_do_update_blocks(desc, data, len,
+ 					    sha512_arm64_transform);
+ }
+ 
+@@ -42,11 +42,11 @@ static int sha512_finup(struct shash_desc *desc, const u8 *data,
+ }
+ 
+ static struct shash_alg algs[] = { {
+ 	.digestsize		= SHA512_DIGEST_SIZE,
+ 	.init			= sha512_base_init,
+-	.update			= sha512_update,
++	.update			= sha512_update_arm64,
+ 	.finup			= sha512_finup,
+ 	.descsize		= SHA512_STATE_SIZE,
+ 	.base.cra_name		= "sha512",
+ 	.base.cra_driver_name	= "sha512-arm64",
+ 	.base.cra_priority	= 150,
+@@ -55,11 +55,11 @@ static struct shash_alg algs[] = { {
+ 	.base.cra_blocksize	= SHA512_BLOCK_SIZE,
+ 	.base.cra_module	= THIS_MODULE,
+ }, {
+ 	.digestsize		= SHA384_DIGEST_SIZE,
+ 	.init			= sha384_base_init,
+-	.update			= sha512_update,
++	.update			= sha512_update_arm64,
+ 	.finup			= sha512_finup,
+ 	.descsize		= SHA512_STATE_SIZE,
+ 	.base.cra_name		= "sha384",
+ 	.base.cra_driver_name	= "sha384-arm64",
+ 	.base.cra_priority	= 150,
+diff --git a/arch/s390/crypto/sha512_s390.c b/arch/s390/crypto/sha512_s390.c
+index 33711a29618c3..e8bb172dbed75 100644
+--- a/arch/s390/crypto/sha512_s390.c
++++ b/arch/s390/crypto/sha512_s390.c
+@@ -15,11 +15,11 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ 
+ #include "sha.h"
+ 
+-static int sha512_init(struct shash_desc *desc)
++static int sha512_init_s390(struct shash_desc *desc)
+ {
+ 	struct s390_sha_ctx *ctx = shash_desc_ctx(desc);
+ 
+ 	ctx->sha512.state[0] = SHA512_H0;
+ 	ctx->sha512.state[1] = SHA512_H1;
+@@ -60,11 +60,11 @@ static int sha512_import(struct shash_desc *desc, const void *in)
+ 	return 0;
+ }
+ 
+ static struct shash_alg sha512_alg = {
+ 	.digestsize	=	SHA512_DIGEST_SIZE,
+-	.init		=	sha512_init,
++	.init		=	sha512_init_s390,
+ 	.update		=	s390_sha_update_blocks,
+ 	.finup		=	s390_sha_finup,
+ 	.export		=	sha512_export,
+ 	.import		=	sha512_import,
+ 	.descsize	=	sizeof(struct s390_sha_ctx),
+@@ -80,11 +80,11 @@ static struct shash_alg sha512_alg = {
+ 	}
+ };
+ 
+ MODULE_ALIAS_CRYPTO("sha512");
+ 
+-static int sha384_init(struct shash_desc *desc)
++static int sha384_init_s390(struct shash_desc *desc)
+ {
+ 	struct s390_sha_ctx *ctx = shash_desc_ctx(desc);
+ 
+ 	ctx->sha512.state[0] = SHA384_H0;
+ 	ctx->sha512.state[1] = SHA384_H1;
+@@ -101,11 +101,11 @@ static int sha384_init(struct shash_desc *desc)
+ 	return 0;
+ }
+ 
+ static struct shash_alg sha384_alg = {
+ 	.digestsize	=	SHA384_DIGEST_SIZE,
+-	.init		=	sha384_init,
++	.init		=	sha384_init_s390,
+ 	.update		=	s390_sha_update_blocks,
+ 	.finup		=	s390_sha_finup,
+ 	.export		=	sha512_export,
+ 	.import		=	sha512_import,
+ 	.descsize	=	sizeof(struct s390_sha_ctx),
+diff --git a/arch/sparc/crypto/sha512_glue.c b/arch/sparc/crypto/sha512_glue.c
+index 47b9277b6877a..fb81c3290c8c0 100644
+--- a/arch/sparc/crypto/sha512_glue.c
++++ b/arch/sparc/crypto/sha512_glue.c
+@@ -38,11 +38,11 @@ static int sha512_sparc64_finup(struct shash_desc *desc, const u8 *src,
+ {
+ 	sha512_base_do_finup(desc, src, len, sha512_block);
+ 	return sha512_base_finish(desc, out);
+ }
+ 
+-static struct shash_alg sha512 = {
++static struct shash_alg sha512_alg = {
+ 	.digestsize	=	SHA512_DIGEST_SIZE,
+ 	.init		=	sha512_base_init,
+ 	.update		=	sha512_sparc64_update,
+ 	.finup		=	sha512_sparc64_finup,
+ 	.descsize	=	SHA512_STATE_SIZE,
+@@ -53,11 +53,11 @@ static struct shash_alg sha512 = {
+ 		.cra_blocksize	=	SHA512_BLOCK_SIZE,
+ 		.cra_module	=	THIS_MODULE,
+ 	}
+ };
+ 
+-static struct shash_alg sha384 = {
++static struct shash_alg sha384_alg = {
+ 	.digestsize	=	SHA384_DIGEST_SIZE,
+ 	.init		=	sha384_base_init,
+ 	.update		=	sha512_sparc64_update,
+ 	.finup		=	sha512_sparc64_finup,
+ 	.descsize	=	SHA512_STATE_SIZE,
+@@ -85,17 +85,17 @@ static bool __init sparc64_has_sha512_opcode(void)
+ }
+ 
+ static int __init sha512_sparc64_mod_init(void)
+ {
+ 	if (sparc64_has_sha512_opcode()) {
+-		int ret = crypto_register_shash(&sha384);
++		int ret = crypto_register_shash(&sha384_alg);
+ 		if (ret < 0)
+ 			return ret;
+ 
+-		ret = crypto_register_shash(&sha512);
++		ret = crypto_register_shash(&sha512_alg);
+ 		if (ret < 0) {
+-			crypto_unregister_shash(&sha384);
++			crypto_unregister_shash(&sha384_alg);
+ 			return ret;
+ 		}
+ 
+ 		pr_info("Using sparc64 sha512 opcode optimized SHA-512/SHA-384 implementation\n");
+ 		return 0;
+@@ -104,12 +104,12 @@ static int __init sha512_sparc64_mod_init(void)
+ 	return -ENODEV;
+ }
+ 
+ static void __exit sha512_sparc64_mod_fini(void)
+ {
+-	crypto_unregister_shash(&sha384);
+-	crypto_unregister_shash(&sha512);
++	crypto_unregister_shash(&sha384_alg);
++	crypto_unregister_shash(&sha512_alg);
+ }
+ 
+ module_init(sha512_sparc64_mod_init);
+ module_exit(sha512_sparc64_mod_fini);
+ 
+diff --git a/arch/x86/crypto/sha512_ssse3_glue.c b/arch/x86/crypto/sha512_ssse3_glue.c
+index 067684c543952..97744b7d23817 100644
+--- a/arch/x86/crypto/sha512_ssse3_glue.c
++++ b/arch/x86/crypto/sha512_ssse3_glue.c
+@@ -36,12 +36,12 @@
+ #include <crypto/sha512_base.h>
+ 
+ asmlinkage void sha512_transform_ssse3(struct sha512_state *state,
+ 				       const u8 *data, int blocks);
+ 
+-static int sha512_update(struct shash_desc *desc, const u8 *data,
+-		       unsigned int len, sha512_block_fn *sha512_xform)
++static int sha512_update_x86(struct shash_desc *desc, const u8 *data,
++			     unsigned int len, sha512_block_fn *sha512_xform)
+ {
+ 	int remain;
+ 
+ 	/*
+ 	 * Make sure struct sha512_state begins directly with the SHA512
+@@ -67,11 +67,11 @@ static int sha512_finup(struct shash_desc *desc, const u8 *data,
+ }
+ 
+ static int sha512_ssse3_update(struct shash_desc *desc, const u8 *data,
+ 		       unsigned int len)
+ {
+-	return sha512_update(desc, data, len, sha512_transform_ssse3);
++	return sha512_update_x86(desc, data, len, sha512_transform_ssse3);
+ }
+ 
+ static int sha512_ssse3_finup(struct shash_desc *desc, const u8 *data,
+ 	      unsigned int len, u8 *out)
+ {
+@@ -139,11 +139,11 @@ static bool avx_usable(void)
+ }
+ 
+ static int sha512_avx_update(struct shash_desc *desc, const u8 *data,
+ 		       unsigned int len)
+ {
+-	return sha512_update(desc, data, len, sha512_transform_avx);
++	return sha512_update_x86(desc, data, len, sha512_transform_avx);
+ }
+ 
+ static int sha512_avx_finup(struct shash_desc *desc, const u8 *data,
+ 	      unsigned int len, u8 *out)
+ {
+@@ -201,11 +201,11 @@ asmlinkage void sha512_transform_rorx(struct sha512_state *state,
+ 				      const u8 *data, int blocks);
+ 
+ static int sha512_avx2_update(struct shash_desc *desc, const u8 *data,
+ 		       unsigned int len)
+ {
+-	return sha512_update(desc, data, len, sha512_transform_rorx);
++	return sha512_update_x86(desc, data, len, sha512_transform_rorx);
+ }
+ 
+ static int sha512_avx2_finup(struct shash_desc *desc, const u8 *data,
+ 	      unsigned int len, u8 *out)
+ {
+-- 
+2.49.0
+
