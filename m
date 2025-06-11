@@ -1,203 +1,109 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F19E229B38
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:36:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 878482309B6;
+	Wed, 11 Jun 2025 07:38:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749627381; cv=none; b=Sln5I7IWBO8EFgOdvxjNcKfCN5Vb/EFR8lCoYE/QXzCgm0swDFovpY7rcsisc0VDpvfNR3yRHTsHGw+LA4RBVerKDIMueQUhQn6xP2PCxGlFUejV4Ijn6uvI/kElF0WanDQZeUjXrsE319b8eHtDi0CTXitCNv8jBRS3Ob8IzHo=
+	t=1749627515; cv=none; b=RRQpj0m1IZCBirRs66w8+Y928mUyU1Rt8xThKU+agNqRoJdVTeL5PC7MyoqIWSSQgTImMl29k2+byotyeAfaW8M/BbsTiLlOB7xEMgih80wM3PrDi9A5p+we/kob+Tfz8J5SNqMbxuCstzngI8yNmrStoOPmfwZcRGckduckHLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749627381; c=relaxed/simple;
-	bh=XfopYv8ohE728Xi2gCeSUZEs6u6N1lsc0va5XJdhNd4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bzByZ0XKZJQde37Omr0j578+CgfA0qO9x64wxsbJ2JHuwYfaiHW5lO5xXKqcYdQTo7ubHjOGYXr3J4FjQf8L5fdvr1lg6ZiXFfirA7cHhAehkT7EHMcEahbexRPeVtf2D035a4miVVW6T+aHfLyLGUvidP8YVbawkpiIk8sZIpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OQZIfjGz; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749627515; c=relaxed/simple;
+	bh=VQTecfMbGmIE2mhR3lC6cykpMVHE/XGTMFcN207W2vw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=qJtuYk2515JEBVQHpPYVlTNpTL1HLVXUT41FVK3Z8IZdBz6swxgdkFSIcxjDVdTqHQmWL/1B8GKhAkHnzfPoHZ88mX19g101ZEviaQmkz1HPU/zt3dereSYzN521MwBMFjGq/pk3QHXu+S2nMYuhLP8uq3POfM3N/g6C1bAAZa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iUtSnZ8S; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LNeYvbSa; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OQZIfjGz"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-23508d30142so79811465ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 00:36:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749627378; x=1750232178; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lP9LxI7qONcXoTdRe9p4EMny84r1sepaW6Yqj2XZ3xs=;
-        b=OQZIfjGzIHAeH5qy5Yhy4fXsUb+29Hpg8Bofneqa12ytGnzj/fKNt8eOpohpcmKUq6
-         0vqEMCdQpOvGzbwuWsspeGN5AEgek57mXUnKKuz6NM9pzMevCEAfabU50iSBPL35O5KX
-         gUUHo+Syn/+WxR6pxvIOAWZQWMl6Qkcx3U0aWunxBk6kTu7D42wYg/x4IVmpT61FR04H
-         NT/WqOQlKo4XwthjxauHhOmv2gAqhc1S0N+FPN9yIYZWAGhUX6Jou4d4TiM+Z9XHi6po
-         E0uustQD6gj48tRVuPOI+pYpU/qWZCsh0kvAwBKr6XzzxBs2COUPa9AfLCbEMRKDCkW4
-         pJXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749627378; x=1750232178;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lP9LxI7qONcXoTdRe9p4EMny84r1sepaW6Yqj2XZ3xs=;
-        b=VJE8yyFuo8KFIuf1/QlraPlhhK9hzcbeXh5kjTvlVUGjv9ooQ7x9mzH/qDu6E9syBu
-         P+q06TlMXX8bfMBuW04fykyiRzwewDDE3bNkHT6ANMtlIBtVzuN/tWuWzdslOpsJsdQP
-         uOdVfroxHomXxbQ/XWhUyn/6QT6k5onnBbafg1T+nvHtc3Oc72Dgz66g59C6BL/KCLdJ
-         OvRKIZf7lmMHGrWO4BNjE3zniBdvYD9AN3RG38Tw4TffKUj/RESRpu4YW9BlR4JL30UM
-         NdkWu/7OyWZq+qnzWhLE6GftsMV2qpykrYzUEelAqsrBAhgQwSgSBU9DgCJxVHxey50m
-         Wuaw==
-X-Forwarded-Encrypted: i=1; AJvYcCW4I4EgDrg/oyjiwxS6LCcCVdacrSLbctuuh+fxeFsQf+FsSeFDtf4q8uunsjv0vg+s8xYxqBFIpDp9vY8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsdSZEv3q1cfftn+73dFw7An8BBWSKQu7hKkv7nvpVlWo+C3FI
-	igpH+url0lYuTtX4Aqn32xOTo4dmn/dYX1xlVkPuVVuhdFiT9TkdUJsJ
-X-Gm-Gg: ASbGncuM2xG/Qja7Nnq6PYevegAwyyr41JuuEMmh155g2n4WHSf3Ae/XKpjCm0jlrFX
-	vRPnYEpMMMH/oDMpdOkwaMGsw+VByxl/hKoUNMYX8Z6PCrJxGTUsd7Nu0+/wDV5m1Zh7YEFJmlC
-	UwjEEAKmn9GD/q+fQ1S/g6vd5zql4g+lFl4seOR/yIAGXW0PDt5FNVSKwCGWbSNOA29ZSZQMRHl
-	tyOF3SNvD//KUhy/jgMMMhnoI+4/tp24E0W+ef9f1Mj2XgZqMpLjaM+J5rIduAE1zNzFjgtFl0q
-	JNCE/j9l7KiNFbFuzB1rFuPntpWk1h4YOgoJucZJG5O1a+0cknPajEKy1bJtF/Ja/iyIOAXTC70
-	dk8H6FYtu2yRZPnZV
-X-Google-Smtp-Source: AGHT+IFNNhUjT+1QGSmPE5NgvvbvJ89c2dVTR659nK9UjRNnj478EreDAn07W7AdN0zsj4rdNl59mg==
-X-Received: by 2002:a17:903:22ce:b0:234:d679:72e9 with SMTP id d9443c01a7336-2364261fa43mr28896165ad.12.1749627377692;
-        Wed, 11 Jun 2025 00:36:17 -0700 (PDT)
-Received: from vaxr-ASUSPRO-D840MB-M840MB.. ([2001:288:7001:2703:52f2:ddbc:f858:ca43])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2360340fbffsm81526305ad.197.2025.06.11.00.36.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 00:36:17 -0700 (PDT)
-From: I Hsin Cheng <richard120310@gmail.com>
-To: jstultz@google.com
-Cc: tglx@linutronix.de,
-	sboyd@kernel.org,
-	linux-kernel@vger.kernel.org,
-	yurynorov@gmail.com,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev,
-	jserv@ccns.ncku.edu.tw,
-	I Hsin Cheng <richard120310@gmail.com>
-Subject: [PATCH v3] clocksource: Replace loop within clocks_calc_mult_shift() with find_last_bit() for calculation of "sftacc"
-Date: Wed, 11 Jun 2025 15:36:08 +0800
-Message-ID: <20250611073608.2049793-1-richard120310@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iUtSnZ8S";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LNeYvbSa"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749627511;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BxrB5F7pB41w5mjMWE31LUYj7rWMdcxJbt62UaOAMsU=;
+	b=iUtSnZ8SzUl94tBC7W3072/gLmGcrlaE2EhTrJWMC2GDLjcZPMyVl1KreixsLGR48oGRTL
+	41lQuTNF3Ct7gb7hOZHrd7N2WMpGx+7pl8TSdAncde6FbKe6cSM0iX7sTwTOd7GFthV/tW
+	tmoxU40Ge1JoK1iywTSGHNQpQErtQXKaA4lz5kMjl2BeesEWIiLg2EonyazKjnPHSEgMTU
+	MdiT10EeC1oJiNmtL6lXpU5pDgszIDjUqnLdUZw+21K3BMQIQcCEKb0gOd6PSqNBMA0Min
+	oKu17jdxQD9/jsQfSL4JuvvCb0kI/rSJHcNAaTQ6K3iB9xnSXwUURDJ47hPaSg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749627511;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BxrB5F7pB41w5mjMWE31LUYj7rWMdcxJbt62UaOAMsU=;
+	b=LNeYvbSa+LpU/7ZesflVIAWrD2JkrhkWvf19GMqBrxd23szxDDLnHqcSuz7EczU1H0oDlT
+	7YPp73cJcxAEYsDw==
+Date: Wed, 11 Jun 2025 09:38:08 +0200
+Subject: [PATCH v3 02/16] kbuild: userprogs: also inherit byte order and
+ ABI from kernel
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20250611-kunit-kselftests-v3-2-55e3d148cbc6@linutronix.de>
+References: <20250611-kunit-kselftests-v3-0-55e3d148cbc6@linutronix.de>
+In-Reply-To: <20250611-kunit-kselftests-v3-0-55e3d148cbc6@linutronix.de>
+To: Masahiro Yamada <masahiroy@kernel.org>, 
+ Nathan Chancellor <nathan@kernel.org>, 
+ Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+ Brendan Higgins <brendan.higgins@linux.dev>, 
+ David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+ Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+ Nicolas Schier <nicolas.schier@linux.dev>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Alexandre Ghiti <alex@ghiti.fr>, Nicolas Schier <nicolas.schier@linux.dev>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+ linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org, 
+ workflows@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749627510; l=1177;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=VQTecfMbGmIE2mhR3lC6cykpMVHE/XGTMFcN207W2vw=;
+ b=IFuBTpGS+0Ubi/+ZN/eyZa5QO9sDBYBdL8p0IZCQJ6pqJ48E7Q50nmm8O7fsEW2cmBChEcD0m
+ YbGBwFi3zgxB/ciDPbleIFJK+oMk2BGULFU+OAUKTBj9jX8WJTM3PrO
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Utilize "find_last_bit()" in replacement of while loop counting
-for the decremenet of "sftacc". They're equivalent in computation result
-but the former is more effective.
+Make sure the byte order and ABI of the userprogs matches the one of the
+kernel, similar to how the bit size is handled.
+Otherwise the userprogs may not be executable.
+This happens for example on powerpc little endian, or riscv32.
 
-"find_last_bit()" will return the bit number of the last set bit of
-"tmp", which is 0-based index. Plus 1 to convert it into bit width as
-desired.
-
-Note that only the lowest 32 bits of "tmp" is taken into consideration
-of the operation, since it was already shifted right by 32 bits, the
-topmost 32 bits should remain 0, only the lowest 32 bits are possible to
-be non-zero.
-
-This change is tested against a test script [1].
-Run the test 10 times for each version of implementation and take the
-average. The result shown that with this change, the operation overhead
-of "clocks_calc_mult_shift()" can be reduced around 99.7% .
-
------------------------------
-| old version | new version |
------------------------------
-|  11500.6 ns |       44 ns |
------------------------------
-
-Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
-Changelog:
+ Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-v1 -> v2:
-	- Refine commit message to explain more about "why"
-	- Check the frequency of "clocks_calc_mult_shift()" get called,
-	  it's not in hotpath on my machine, refine the commit message
-to avoid overselling it
-	- Add comments for the code to explain the implementation in
-	  more detail
-	- Handle case for "tmp == 0" to avoid undefined behavior
-v2 -> v3:
-	- Use "find_last_bit()" instead of "__builtin_clz()"
-	- Convert the type of "tmp" to "const unsigned long *" when
-	  sending into the function
-	- Highlight in the comment that only the lowest 32 bits part
-	  of "tmp" is taken into consideration
-
-[1]:
-static int __init test_init(void)
-{
-    u32 mult, shift;
-    u32 from, to, maxsec;
-    ktime_t start_time, end_time, total_time;
-    pr_info("Starting clocks_calc_mult_shift simple test\n");
-
-    start_time = ktime_get();
-    // Test with parameters from 1 to 1000
-    for (from = 1; from <= 1000; from += 100) {
-        for (to = 1; to <= 1000; to += 100) {
-            for (maxsec = 1; maxsec <= 10; maxsec++) {
-
-                clocks_calc_mult_shift(&mult, &shift, from, to, maxsec);
-            }
-        }
-    }
-
-    end_time = ktime_get();
-    total_time = ktime_to_ns(ktime_sub(end_time, start_time));
-
-    pr_info("Test completed\n");
-    pr_info("Total execution time: %lld ns \n", total_time);
-    return 0;
-}
-
-The test is running in the form of kernel module.
-The test machine is running ubuntu 24.04 on x86_64 machine with kernel
-version of v6.14.0, CPU type is AMD Ryzen 7 5700X3D 8-Core Processor.
-
-Hi John, Yury,
-
-Would you be so kind to give some suggestion/comments on how should the
-usage of "find_last_bit()" be here ? I'm not sure about whether the type
-conversion of "tmp" is appropriate, though compiler will pop out warnings
-if not doing so.
-
-Plus I'm thinking converting to another pointer type might might be correct
-when the endianess isn't guaranteed ? (or this endianess problem should be
-address and solved in filesystem layer ?)
-
-Best regards,
-I Hsin Cheng.
----
- kernel/time/clocksource.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-index 2a7802ec480c..651bed1a53e7 100644
---- a/kernel/time/clocksource.c
-+++ b/kernel/time/clocksource.c
-@@ -66,10 +66,20 @@ clocks_calc_mult_shift(u32 *mult, u32 *shift, u32 from, u32 to, u32 maxsec)
- 	 * range:
- 	 */
- 	tmp = ((u64)maxsec * from) >> 32;
--	while (tmp) {
--		tmp >>=1;
--		sftacc--;
--	}
-+
-+	/*
-+	 * Decrement "sftacc" by the number of bits needed to represent "tmp".
-+	 * Using "find_last_bit(&tmp, 32) + 1" to get the bit width:
-+	 * - find_last_bit(&tmp, 32) returns the bit number of the last set bit
-+	 * - Plus 1 to convert 0-based index into bit width as desired
-+	 *
-+	 * Note: Only the lowest 32 bits of "tmp" is taken into consideration,
-+	 *		 since it was already shifted right by 32 bits, the topmost 32
-+	 *		 bits are guaranteed to be 0.
-+	 *
-+	 */
-+	if (sftacc)
-+		sftacc -= (find_last_bit((const unsigned long *)&tmp, 32) + 1);
+diff --git a/Makefile b/Makefile
+index c4293cf91e968ca8ee64452841fb266e24df63f6..b9aa1058321dabd3b3dd5610e45a2807dfa257f4 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1129,8 +1129,8 @@ ifneq ($(CONFIG_ARCH_VMLINUX_NEEDS_RELOCS),)
+ LDFLAGS_vmlinux	+= --emit-relocs --discard-none
+ endif
  
- 	/*
- 	 * Find the conversion shift/mult pair which has the best
+-# Align the bit size of userspace programs with the kernel
+-USERFLAGS_FROM_KERNEL := -m32 -m64 --target=%
++# Align the bit size, byte order and architecture of userspace programs with the kernel
++USERFLAGS_FROM_KERNEL := -m32 -m64 -mlittle-endian -mbig-endian --target=% -march=% -mabi=%
+ KBUILD_USERCFLAGS  += $(filter $(USERFLAGS_FROM_KERNEL), $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS))
+ KBUILD_USERLDFLAGS += $(filter $(USERFLAGS_FROM_KERNEL), $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS))
+ 
+
 -- 
-2.43.0
+2.49.0
 
