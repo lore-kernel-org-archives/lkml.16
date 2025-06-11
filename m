@@ -1,211 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 644FA1990D8;
-	Wed, 11 Jun 2025 15:35:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C89A91DB375;
+	Wed, 11 Jun 2025 15:35:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749656134; cv=none; b=OxpV/B7e4QG7yanDIdI4Hcsl8MTsa467m68wd9NWKPrrRG25DxOL2uZq3UFR5dsWKqJk3LvBC8BMDxQiDfikY1SKyAEq41Thgw+i5Ar0luikl83XW5A1y7NDxiiOdtAGuNS25teX0yYdhhlGfr3scouxgBPLo9CXhEXKaF+7aPA=
+	t=1749656136; cv=none; b=DGbtFCtZaMUTCXKOURvPd5y7jmRyBjgFKNPjCk5u39bANhjLaU1MMr0v1cg0pGBasIdvwGb7Q7f1WMQQphkhacKzrQiZo7UdeLCza4Y/IBaPZCA1jUKT74o0xUdDEoZ4JLUXIMOJVztwR0vjW82V6c0lZNjIWzsvF3NBN1+McPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749656134; c=relaxed/simple;
-	bh=wtS78pPmQeKtNXLAVDUqcIovJ+ivy0sR/W7vIR6YqYU=;
+	s=arc-20240116; t=1749656136; c=relaxed/simple;
+	bh=oHubF8/Fz/gY531TgWWKSo4ut+bnzUEJuuu5kBinNyk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FP/6rF4U2xTaw1jKT3VOAvXHvroj+LOwnUSlcijbOeaEYdglIvuZNb9zCaT9n3yAXbm831I4LXaw9YhRbOAF0p7Rq9zChy4F1YZRvVPE0swnxfeT4xdJy/MztLuOUh6aE2s9dfPtQGiSL1vSjSVDVC3Wp7riP3Ey2gYXm1iKtcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dt5WqDfY; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=HG3TBOd5WafdIl319JLl4VudAz1/A/XPCsBvhv6N4fj1Ji+FSLH2ivwDksiTaKRBcqFUqRqc8bXWrjOpLZSgAnTYJNpphTjfsypQyHpocAt5lx1o9uX28haSMgyIm6D+9iNFfPGiOVyNK3u5vs3LH5GRXwjyNnLwJUGIYAWM7vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LAvDQ6TM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QWbKAOod; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dt5WqDfY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749656132; x=1781192132;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wtS78pPmQeKtNXLAVDUqcIovJ+ivy0sR/W7vIR6YqYU=;
-  b=dt5WqDfYeLg41V+GWfLAWbHTM9D6lV1e4GSE500spaTrV3ECHgnPNp+k
-   qgBCFcrrLubgQ8w7EIB8DegGx2avGE5ghgAHcggva8KxlsHQ7Y+zi0eC4
-   UA+bjr+5/KpC5DgjjmwcjJ+kLtV3nyzbw9es299bEa2bS/snLSDK/s01N
-   8BSbTXQnBHYfrxOqzFLTH6UiLtlJ1czC4e0EY+jmqRfNuhBWBmHox5j8K
-   q65j2gm6GtYCkumpYolxU+Zc6fQ/5F4PJlWU8Hdr2+FLa4eghlOOuQ8FK
-   vVGeAQIySDfX6UK6ABOLTkgHZkd7ml2s7NoTXIU06Me69TqDzD9mvk+LO
-   g==;
-X-CSE-ConnectionGUID: Q+AEINx7QVGkeM4pCQi9lA==
-X-CSE-MsgGUID: ljuUb7rISSimvtZ6gH7SMA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="55600016"
-X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
-   d="scan'208";a="55600016"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 08:35:31 -0700
-X-CSE-ConnectionGUID: 3p/wA2aPQdyG41GuMigxwA==
-X-CSE-MsgGUID: Go7CJ2mwSm+nXLNn8eq13A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
-   d="scan'208";a="147118627"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 08:35:24 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uPNU0-00000005gZ7-2TyD;
-	Wed, 11 Jun 2025 18:35:20 +0300
-Date: Wed, 11 Jun 2025 18:35:20 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Anup Patel <apatel@ventanamicro.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
-	Rahul Pathak <rpathak@ventanamicro.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Atish Patra <atish.patra@linux.dev>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 05/23] mailbox: Allow controller specific mapping
- using fwnode
-Message-ID: <aEmiOFwofEJyXm4R@smile.fi.intel.com>
-References: <20250611062238.636753-1-apatel@ventanamicro.com>
- <20250611062238.636753-6-apatel@ventanamicro.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LAvDQ6TM";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QWbKAOod"
+Date: Wed, 11 Jun 2025 17:35:32 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749656133;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oHubF8/Fz/gY531TgWWKSo4ut+bnzUEJuuu5kBinNyk=;
+	b=LAvDQ6TMQQl3vs9EIBhO9617QwVEl2AVqbIu6OlH9YwKJEJ+1PwTR2hctQ/Q3/7SGmYz/q
+	WIPoAaEjxQCXXhRklXJ2t65jxPDlH+XLDBWkowxjT14VsHOlEq8/rbNBQF7EUZdBGnKYaP
+	hO0ZrthZ5XBVD82qLxfxgcJu6naQqFMTU7htI6TowqUCorCq7klzcPSyj39FMOa24JWNuW
+	4bo36IIMtGqvU8K5wkU3gX53Cn/8+GDqsaMfqVFHcDn5mm6lZvHEIxJXMmigmZAZAa1h6e
+	AB1PAXXpDPhh1pGfys+BWPKV0NxqJgdbaQnAPc9w+rTfkn8w0p0zJi6Vi9EHew==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749656133;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oHubF8/Fz/gY531TgWWKSo4ut+bnzUEJuuu5kBinNyk=;
+	b=QWbKAOodfr6gCP0H/q3s+zQSlFhkhCBUBQKW8pk0aijRkwnpJ4jrQv9lqyvDJNLh17at9X
+	vRpvx2S0rRpnLrCg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+	"Lai, Yi" <yi1.lai@linux.intel.com>, x86@kernel.org
+Subject: Re: [tip: locking/urgent] futex: Allow to resize the private local
+ hash
+Message-ID: <20250611153532.7xToZUwR@linutronix.de>
+References: <20250602110027.wfqbHgzb@linutronix.de>
+ <174965275618.406.11364856155202390038.tip-bot2@tip-bot2>
+ <20250611144302.1MtYItK6@linutronix.de>
+ <20250611151113.GE2273038@noisy.programming.kicks-ass.net>
+ <20250611152019.GA2273450@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250611062238.636753-6-apatel@ventanamicro.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250611152019.GA2273450@noisy.programming.kicks-ass.net>
 
-On Wed, Jun 11, 2025 at 11:52:20AM +0530, Anup Patel wrote:
-> Introduce optional fw_node() callback which allows a mailbox controller
-> driver to provide controller specific mapping using fwnode.
-> 
-> The Linux OF framework already implements fwnode operations for the
-> Linux DD framework so the fw_xlate() callback works fine with device
-> tree as well.
+On 2025-06-11 17:20:19 [+0200], Peter Zijlstra wrote:
+> ARGH, let me try that again :-(
 
-...
+That last commit 69a14d146f3b87819f3fb73ed5d1de3e1fa680c1 looks great.
+Thank you.
 
->  struct mbox_chan *mbox_request_channel(struct mbox_client *cl, int index)
->  {
-> +	struct fwnode_reference_args fwspec;
-
-Define
-
-	struct fwnode_handle *fwnode;
-
-
->  	struct device *dev = cl->dev;
-
-This better to be just a declaration.
-
->  	struct mbox_controller *mbox;
->  	struct of_phandle_args spec;
->  	struct mbox_chan *chan;
-> +	unsigned int i;
->  	int ret;
-
-With the above the below will look like...
-
-> -	if (!dev || !dev->of_node) {
-> -		pr_debug("%s: No owner device node\n", __func__);
-> +	if (!dev || !dev_fwnode(dev)) {
-> +		pr_debug("No owner %s\n", dev ? "fwnode" : "device");
->  		return ERR_PTR(-ENODEV);
->  	}
->  
-> -	ret = of_parse_phandle_with_args(dev->of_node, "mboxes", "#mbox-cells",
-> -					 index, &spec);
-> +	ret = fwnode_property_get_reference_args(dev_fwnode(dev), "mboxes",
-> +						 "#mbox-cells", 0, index, &fwspec);
->  	if (ret) {
->  		dev_err(dev, "%s: can't parse \"mboxes\" property\n", __func__);
->  		return ERR_PTR(ret);
->  	}
-
-...this
-
-	dev = cl->dev;
-	if (!dev) {
-		pr_debug("No owner device\n");
-		return ERR_PTR(-ENODEV);
-	}
-
-	fwnode = dev_fwnode(dev);
-	if (!fwnode) {
-		dev_dbg(dev, "No owner fwnode\n");
-		return ERR_PTR(-ENODEV);
-	}
-
-	ret = fwnode_property_get_reference_args(fwnode, "mboxes",
-						 "#mbox-cells", 0, index, &fwspec);
-	if (ret) {
-		dev_err(dev, "%s: can't parse \"mboxes\" property\n", __func__);
-
-You may save a few bytes by doing it as
-
-		dev_err(dev, "%s: can't parse \"%s\" property\n", __func__, "mboxes");
-
-		return ERR_PTR(ret);
-	}
-
-> +	spec.np = to_of_node(fwspec.fwnode);
-> +	spec.args_count = fwspec.nargs;
-> +	for (i = 0; i < spec.args_count; i++)
-> +		spec.args[i] = fwspec.args[i];
-> +
->  	scoped_guard(mutex, &con_mutex) {
->  		chan = ERR_PTR(-EPROBE_DEFER);
-> -		list_for_each_entry(mbox, &mbox_cons, node)
-> -			if (mbox->dev->of_node == spec.np) {
-> +		list_for_each_entry(mbox, &mbox_cons, node) {
-
-> +			if (mbox->fw_xlate && dev_fwnode(mbox->dev) == fwspec.fwnode) {
-
-We have a helper device_match_fwnode()
-
-> +				chan = mbox->fw_xlate(mbox, &fwspec);
-> +				if (!IS_ERR(chan))
-> +					break;
-> +			} else if (mbox->of_xlate && mbox->dev->of_node == spec.np) {
-
-No need to check OF node (again). Instead refactor as
-
-			if (device_match_fwnode(...)) {
-				if (fw_xlate) {
-					...
-				} else if (of_xlate) {
-					...
-				}
-			}
-
->  				chan = mbox->of_xlate(mbox, &spec);
->  				if (!IS_ERR(chan))
->  					break;
->  			}
-> +		}
->  
-> -		of_node_put(spec.np);
-> +		fwnode_handle_put(fwspec.fwnode);
->  
->  		if (IS_ERR(chan))
->  			return chan;
-
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Sebastian
