@@ -1,120 +1,123 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA95D221F1C;
-	Wed, 11 Jun 2025 19:51:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480CB221F1C;
+	Wed, 11 Jun 2025 19:51:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749671495; cv=none; b=KEZNVumRuFDbFszZ51AVzC1IJuut1AH0xipC/IlMXcueYBxob2q4aOeSvygTqdXqPyeHm6BOn7qftDahuzE42DJlY2jpAUN6Vy1Nmm5m5RvdHOUc0x5KYoso5dLA+x2VPSJQ1bNwfn3nnV4Pk4ulHPpOALGVEkYAfKV8HdUUBUQ=
+	t=1749671517; cv=none; b=uz/SZrRUpkh2zVJh967zCmInm739kDY0MTyciAqbOvHUn3n6LrpM/CWZJXmpyIY9j6lJe5O8JZCtz9Owjo7xgAjbxDOWMUM5w+ZeB73OKOHgtRO85XBIYbB14x1t0TAd60tBuTJcYDQMLZzU9r6hpvNRiLswW8Tk2dpTPY1imUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749671495; c=relaxed/simple;
-	bh=X/OA1aXD+x1kt5nNgWcOiOS8Y92tVVSfC0Xz93AMSXc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fGtIYJBQELJMVB3HW74mK6FwczlrMq40e63u+DIRN/QW7X0iYWQ3pNGcHOOYH3E/qUlp8Bk/NMWy6LR0PpNqmN6dxo0rvTKpCHG6nkWUxhJH0V+P8AuAcgMddhS7L9f3jn20YB3EQjyopPEssySgEnZ0pk+H9b5FRjq2QRzu9tc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SrXTWMuN; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749671517; c=relaxed/simple;
+	bh=0JxLNWRlX6k+uwatmqej4dYDRJCNBxE+haXmVURsNd0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=E9zUgDeZPqPfAQWm8EejMXHxN7EqtbTyevmMMNoRrxhZl/B9k5nybudcRi++ooQpr7P/Zt+RsdVmSpt0HrHwZlfKc9h89Icn29+Z1+CBx+zSt22+D7kToww8T7Sc0UOwwuXE7EP8NYZPUxbFAcDU1q/TEpZWfx4aEs3qXhrTJ3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=zrmGE8V/; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SrXTWMuN"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a54700a46eso253470f8f.1;
-        Wed, 11 Jun 2025 12:51:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749671492; x=1750276292; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JQzMghNz4SMc/jj8ZNDpIvLoMQsd+F/Mm9SKGgQM0Dg=;
-        b=SrXTWMuNKADkbaTmDXEOzjg3hBT3owisiPs58b3332j9ikLYYthd0Jpo3V2/3G89Pb
-         8GSxsv9S+SnCTMfcuilkHJdzOIli1xS9/r9ZhvLEVE+DTCPAANyBuCOr8MEmVhfJTi/n
-         t7fO9SybEoTTNh9qjCHj/oNGcT8KBiEnzpQNjms18ops0f5RFYvNVMYIJUVnD69kLTza
-         Ag1KMWIzs4qF4kxOhZEepCUESklrtWZQgr6oTJOYfg9KnNT5Hx6Pl6CNHVWI+qabX0Hj
-         zDAdDu1omNz1AjYpp24bIWYpMsHLjk/b8kO/SksDH6yPDev84lT264cPdGese7yMaJYG
-         fo5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749671492; x=1750276292;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JQzMghNz4SMc/jj8ZNDpIvLoMQsd+F/Mm9SKGgQM0Dg=;
-        b=EsTiJbh33ycicovKW+uneABEbOCEcNFRKkXFldCkjlFF0ubcunYw8eS1PsWhXwKpNn
-         8rJoQAVx7TyKie+G71b42YO6TanZbTI48UQy3lAKy60GpQRnfO605bV0xETASpHKnWuh
-         Pe9a/DKGDMjJtxhMzoCqPn8VSxq3LCZn1lEH+jnCRIqZKrVNAgvuuELg5NuofMCVPS/N
-         HQjAbE0reiq8LIuwsCDhwx06dw3dpkdA7FodfhMf5bLztyl1jxFN8A5aUCoPYvthOstW
-         dEr74olygQVgr20gakjtxr007sMz7PQmr+3fjyS+g2D9HhBewwe1cBrasZIZs/t/wnEU
-         +5Xw==
-X-Forwarded-Encrypted: i=1; AJvYcCVVxIcjAC5K8EXlC1+3T6TkkNYUrKNJBKansWhIROjv3suLO9glMg1ypNXF+GtRFLKeHltyl/dz5InjYRy3k4JS@vger.kernel.org, AJvYcCWUkXQLRCQfTFqtm5xz7UMaFgbLgqVkCCHLSCAxrywRlPc2eV4Bn2Cp0p1Alu6W4dfWxARliP7DrQ5MfICU@vger.kernel.org, AJvYcCX5K1RlWzuUglHbOKXAO3Vlm50OP78qLFs2FD/d2N2TYyB6q4D7aji9E6UyNLXcvXPuMn4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBP08Nxc2jtPRX6gD71n3srFWhhTYmpKLeUmiLpFVcT1TDMLL3
-	r/11upLfepHn3ggNeJVzKx1p8i4XqoC9uvCa8H0dLqvT3NyPgMrDqk5VPIhrIc264AC6DMfl6wH
-	fwNpQgFdRiG0DA1FYOL7bQsQqK1eQAoM=
-X-Gm-Gg: ASbGncuVb+8YJptp5+0TekWxz7gB6feAualKjULSLJHoeVKHmqXsQpEu78q15EEeQfl
-	ByFukQrY+dLDUU3DwB9g0lCc6ADyKNG/5Gw0VPxDqHlBvEPFKRfE0YqU8C1+Jh4XfJ6e22K1Bf6
-	bKDmQY4KRYGP0VkLtXOwR2rocS6Y/N6KyvcKSKmvr2gZE1wD++QjyQ+wF0ZeTWQdkADBvOy+Uz
-X-Google-Smtp-Source: AGHT+IHsMOspB6UuSIxOVa8i+vzccdKZaI+htNn9UjH3qwVgBZvxXthrfaJmH1ZHicGFh3pG6c73MfkN8aXZP5JK+T4=
-X-Received: by 2002:a05:6000:310a:b0:3a4:d53d:be20 with SMTP id
- ffacd0b85a97d-3a558695d45mr3327455f8f.18.1749671492015; Wed, 11 Jun 2025
- 12:51:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="zrmGE8V/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1749671513; x=1781207513;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=0JxLNWRlX6k+uwatmqej4dYDRJCNBxE+haXmVURsNd0=;
+  b=zrmGE8V/viznWBjRaVCW7EXc4JXs6uPztzNTiM213L7V12dHP888hvxa
+   2jFxJ764o0NwXoUr1/OxRNXssP2zg4PW9EEV7nl7o2W+gYAnNDH8DPzcS
+   ANctnnwJFB0aMelamjpAO+g5yFTakIllfvA+Q+DJeCj29dIHf3slcBXbd
+   jsHQ/NSd/XhLFkWZLd3nDUTFgp9WEbLmYqpB1UJLtU7v903ZUcySNbjMg
+   e2qd5jdgeIMnrLTbz6gb2dabloxg8omxJPorRSW4t7ZhauDzJqjd/6Mbo
+   AowfRSc2LnFcPZnlGB72s/Hz0x3AjhQFXbmALHbZXNc5K2V4v2U63Mt/Z
+   w==;
+X-CSE-ConnectionGUID: PFE2adCJQrWAEgiYnjIERA==
+X-CSE-MsgGUID: 5eHzcbFMTH+pyjY0H6lqDQ==
+X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
+   d="scan'208";a="210175217"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 11 Jun 2025 12:51:52 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Wed, 11 Jun 2025 12:51:21 -0700
+Received: from [10.10.179.162] (10.10.85.11) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
+ Transport; Wed, 11 Jun 2025 12:51:21 -0700
+Message-ID: <5373558c-d075-4a35-a941-623e385cdc22@microchip.com>
+Date: Wed, 11 Jun 2025 12:51:22 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250608143623.25242-1-wangfushuai@baidu.com>
-In-Reply-To: <20250608143623.25242-1-wangfushuai@baidu.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Wed, 11 Jun 2025 12:51:21 -0700
-X-Gm-Features: AX0GCFv7vXXDLbAwxkRk67UWzs3RvlU2LBWLjvW30iGM-xMtg-Wi-MUDz_hGEmI
-Message-ID: <CAADnVQ+SSPhZNN05F2-MS_79Vhp+mSTWF3Ss1rcoWRnaDjFx+A@mail.gmail.com>
-Subject: Re: [PATCH] selftests/bpf: fix signedness bug in redir_partial()
-To: wangfushuai <wangfushuai@baidu.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, Eduard <eddyz87@gmail.com>, 
-	Mykola Lysenko <mykolal@fb.com>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Shuah Khan <shuah@kernel.org>, Michal Luczaj <mhal@rbox.co>, 
-	Jakub Sitnicki <jakub@cloudflare.com>, Kui-Feng Lee <thinker.li@gmail.com>, bpf <bpf@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] ARM: dts: microchip: sama7d65: Add clock name
+ property
+To: Claudiu Beznea <claudiu.beznea@tuxon.dev>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <nicolas.ferre@microchip.com>,
+	<alexandre.belloni@bootlin.com>
+CC: <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+References: <cover.1748030737.git.Ryan.Wanner@microchip.com>
+ <f6ae8a38a005e1a4e025b25ddb29113c5e65dead.1748030737.git.Ryan.Wanner@microchip.com>
+ <dc0c2777-ed5b-4729-8ae3-6563d8996e2e@tuxon.dev>
+From: Ryan Wanner <ryan.wanner@microchip.com>
+Content-Language: en-US
+In-Reply-To: <dc0c2777-ed5b-4729-8ae3-6563d8996e2e@tuxon.dev>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-On Sun, Jun 8, 2025 at 7:38=E2=80=AFAM wangfushuai <wangfushuai@baidu.com> =
-wrote:
->
-> When xsend() returns -1 (error), the check 'n < sizeof(buf)' incorrectly
-> treats it as success due to unsigned promotion. Explicitly check for -1
-> first.
->
-> Fixes: a4b7193d8efd ("selftests/bpf: Add sockmap test for redirecting par=
-tial skb data")
-> Signed-off-by: wangfushuai <wangfushuai@baidu.com>
+On 6/7/25 04:57, Claudiu Beznea wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> 
+> Hi, Ryan,
+> 
+> On 23.05.2025 23:24, Ryan.Wanner@microchip.com wrote:
+>> From: Ryan Wanner <Ryan.Wanner@microchip.com>
+>>
+>> Add clock-output-names to the xtal nodes, so the driver can correctly
+>> register the main and slow xtal.
+>>
+>> This fixes the issue of the SoC clock driver not being able to find
+>> the main xtal and slow xtal correctly causing a bad clock tree.
+>>
+>> Fixes: 261dcfad1b59 ("ARM: dts: microchip: add sama7d65 SoC DT")
+> 
+> Can you please prepare a similar fix for sam9x7. It is also affected by
+> this, right?
+The driver looks for the xtal differently in the sam9x75 than in the
+SAMA7 clock drivers, so it is not immediately affected. But I will add a
+sam9x7 in the v2 of the patch since in the future it will be needed.
 
-Looks good, but please spell out your name as First Last
-in both From and Signed-off
+Thank you,
+Ryan
+> 
+> Thank you,
+> Claudiu
+> 
+>> Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
+>> ---
+>>  arch/arm/boot/dts/microchip/sama7d65.dtsi | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/microchip/sama7d65.dtsi b/arch/arm/boot/dts/microchip/sama7d65.dtsi
+>> index b6710ccd4c36..7b1dd28a2cfa 100644
+>> --- a/arch/arm/boot/dts/microchip/sama7d65.dtsi
+>> +++ b/arch/arm/boot/dts/microchip/sama7d65.dtsi
+>> @@ -38,11 +38,13 @@ cpu0: cpu@0 {
+>>       clocks {
+>>               main_xtal: clock-mainxtal {
+>>                       compatible = "fixed-clock";
+>> +                     clock-output-names = "main_xtal";
+>>                       #clock-cells = <0>;
+>>               };
+>>
+>>               slow_xtal: clock-slowxtal {
+>>                       compatible = "fixed-clock";
+>> +                     clock-output-names = "slow_xtal";
+>>                       #clock-cells = <0>;
+>>               };
+>>       };
+> 
 
-Also use [PATCH bpf-next] in subject
-
-pw-bot: cr
-
-> ---
->  tools/testing/selftests/bpf/prog_tests/sockmap_listen.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c b/to=
-ols/testing/selftests/bpf/prog_tests/sockmap_listen.c
-> index 1d98eee7a2c3..f1bdccc7e4e7 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
-> @@ -924,6 +924,8 @@ static void redir_partial(int family, int sotype, int=
- sock_map, int parser_map)
->                 goto close;
->
->         n =3D xsend(c1, buf, sizeof(buf), 0);
-> +       if (n =3D=3D -1)
-> +               goto close;
->         if (n < sizeof(buf))
->                 FAIL("incomplete write");
->
-> --
-> 2.36.1
->
