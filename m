@@ -1,184 +1,154 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024062E610F;
-	Wed, 11 Jun 2025 12:14:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07C027C144;
+	Wed, 11 Jun 2025 12:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749644054; cv=none; b=NPq95zsDvHieWyHGSQmiLhWRgFYucF+aSMllNXbb49N4UieVzJdBn4e/ndtTWkAJsx7UNfT3uCIa23twRqoeMYEBapvqyK3O2FK2086tnRnAsFgCpC929UgmY6aluVl0UYUZ9F32ssGPlLE3BYnFGmn1c2n2BISvyqvt40B6EqM=
+	t=1749644078; cv=none; b=j/CaWHhSq4AHnijxufar/wpdMfsBV7o91D77sNlbIRDSHI7JBTIe5Fu4h4FIxICNq3wsPKi71ByfPTweg23gC5XZWrR70mg5y6bHnhYB7KPx2adBBlJlauTEVWK70AhbnVRV4OJvnuwzmKTuFqkPngjuxmc+ZnXQNwO7UEdbYZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749644054; c=relaxed/simple;
-	bh=61aDTTnt0gfL98ranD6ViaA9Dly6+I5sCCKE6B8cKY4=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=eTQHlPBRJWdJ2KN5a9RWC1MpiLB56J2PeKunYq7bPwGhE6LyNkCZ/WNuXVNeeclnr+dmdb9WLPPs9JXrS0JMJk5ipkrAJDr1AKMapAkNUeljwYGSvcVCKUScuycb8fcdr+p3svC/kfoxAiksOvMVIqxzJlW4gDEVvzk5IYcda1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zWnJIqUG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=msODc+dw; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749644078; c=relaxed/simple;
+	bh=FJ1AHEgMmhRXu6CGnQHlc/GRmFKNYpmO4gT7upoqODo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=X1oWY2vZDV33IuZ6GL6EgUXm9aPIGY+2jIYZy647t3AaKu3/EQGOyTI0rthHTLooHpKuy78Kuhmbmgnd4RyjQRRIHifVKoMqicJSlExD9jTlrE+Fg9KyFuA0HPL2nuRhhxnUF9lHABzNtS+j0jiHvKKTBouN6tf1Ub30/kI2IU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Edv1PjRq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zWnJIqUG";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="msODc+dw"
-Date: Wed, 11 Jun 2025 12:14:09 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749644050;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aLJNjzkKV5KVhwn3VgBgmvy6SLBgBFWTT2d+yJKRMmo=;
-	b=zWnJIqUGIaJ9UfuYZuufe1JjFVu5ef9W8mgCp7EOsMIDc/I64QMRdkoObY9ImPy7jZdyAM
-	2SiZn2c9kTjtY/+Oi9NiykprQ1CwNuRlWQqqhtbA4d1DpKN9581PNHBoK64Lh/lx0LLQZI
-	tLuEa3pZWb6KOGD6SkjMV5E+2aJ377vV7otv4eTiKiNkFil7XvoV2QK2rhJBog1u1p6BSu
-	P3b7AOidw9UJJjQlRI02RsN8kzQirJJKI4c66coXN5z/T7SqOXrx840fMfL9ddqV2mVnDY
-	podn0VZx/oLcFuFmcRpXSmf60rAhZJjK62l/GGvBueqgb8MWe8lnChG7cgiL9Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749644050;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aLJNjzkKV5KVhwn3VgBgmvy6SLBgBFWTT2d+yJKRMmo=;
-	b=msODc+dwqXZWqQiKthJCXOGTiwJHVR2z2gYfcyVV4Z056CgvxPMC7IqfezpMGoprDQDAtD
-	p+vvh0peTO0B70Dw==
-From: "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf: Fix the throttle error of some clock events
-Cc: Leo Yan <leo.yan@arm.com>, Aishwarya TCV <aishwarya.tcv@arm.com>,
- Alexei Starovoitov <alexei.starovoitov@gmail.com>,
- Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
- Vince Weaver <vincent.weaver@maine.edu>,
- Kan Liang <kan.liang@linux.intel.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Ian Rogers <irogers@google.com>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250606192546.915765-1-kan.liang@linux.intel.com>
-References: <20250606192546.915765-1-kan.liang@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Edv1PjRq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5CA4C4CEEE;
+	Wed, 11 Jun 2025 12:14:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749644078;
+	bh=FJ1AHEgMmhRXu6CGnQHlc/GRmFKNYpmO4gT7upoqODo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Edv1PjRqitKqfWC53D9UEbG5O7XatWHfY7eu+CVCezYUjI3iBlpiUxBWy9hpBq1Hi
+	 O1ZCBbV56G1rRrHGu22LJh5nGSOp5lyHWsjC6T287wv7lwRVjbRyjPOfLiZXH1LltK
+	 cARMxYQmV/wbB3nmtlqA9Akubigyrr7gNIu1LFSWDfi+mvit8EIB0rCMQgGta+L5Hn
+	 r43JxzN/IgcIkVdtPJnrFYuDYgwzqrMhshnPiaFdKb3jZSFZITCXcER5VXNDIVr1A/
+	 qeJrKq6C14kg1z1G0WmqEcuqy4UISfjKibFRO1t6myCj0+5+fZJcZS7YS616khN/Ak
+	 4vv72X4cGTt5g==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Benno Lossin" <lossin@kernel.org>
+Cc: "Alice Ryhl" <aliceryhl@google.com>,  "Danilo Krummrich"
+ <dakr@kernel.org>,  "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Trevor
+ Gross" <tmgross@umich.edu>,  "Bjorn Helgaas" <bhelgaas@google.com>,
+  Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,  "Greg
+ Kroah-Hartman"
+ <gregkh@linuxfoundation.org>,  "Rafael J. Wysocki" <rafael@kernel.org>,
+  "Tamir Duberstein" <tamird@gmail.com>,  "Viresh Kumar"
+ <viresh.kumar@linaro.org>,  <rust-for-linux@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>,  <linux-pci@vger.kernel.org>,
+  =?utf-8?Q?Ma=C3=ADra?=
+ Canal <mcanal@igalia.com>
+Subject: Re: [PATCH v2] rust: types: add FOREIGN_ALIGN to ForeignOwnable
+In-Reply-To: <DAJOKFHW96XZ.2ANYSSFQO03ZL@kernel.org> (Benno Lossin's message
+	of "Wed, 11 Jun 2025 13:51:21 +0200")
+References: <20250610-pointed-to-v2-1-fad8f92cf1e5@kernel.org>
+	<HCd56HpzAlpsTZWbmM8R3IN8MCXWW-kpIjIt_K1D8ZFN6DLqIGmpNRJdle94PGpHYS86rmmhCPci9TajHZCCrw==@protonmail.internalid>
+	<DAIV6MJAJ5R0.3TZ4IC2KO9MOL@kernel.org> <87v7p3znz6.fsf@kernel.org>
+	<CAH5fLgi3B_Wyz2OzBLhHHgWrg7hboyFUcQe-+GUrrvXiX9di=w@mail.gmail.com>
+	<GHUD6hpYDty0s_oTLGC6owDPKqrNepeGOL9F-XlvY6G50K8Zptjp4f8kVVnyoTjf-E_0QVeHfmUUvcN-p1i24Q==@protonmail.internalid>
+	<DAJHVMM9DND0.2FM0FJYN0XEFV@kernel.org> <87jz5izhg3.fsf@kernel.org>
+	<WXoNAlTJvpteJEAZ3TkYKk2QWHBC0oID8Dy3AHGxLEwiZwBPdSLZB4MpdbObLtFvqiN9re3q6OQpiua2uiv1Hw==@protonmail.internalid>
+	<DAJOKFHW96XZ.2ANYSSFQO03ZL@kernel.org>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Wed, 11 Jun 2025 14:14:25 +0200
+Message-ID: <878qlyzd9a.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174964404970.406.8430049755633286598.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-The following commit has been merged into the perf/urgent branch of tip:
+"Benno Lossin" <lossin@kernel.org> writes:
 
-Commit-ID:     bc4394e5e79cdda1b0997e0be1d65e242f523f02
-Gitweb:        https://git.kernel.org/tip/bc4394e5e79cdda1b0997e0be1d65e242f523f02
-Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Fri, 06 Jun 2025 12:25:46 -07:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 11 Jun 2025 14:05:08 +02:00
+> On Wed Jun 11, 2025 at 12:43 PM CEST, Andreas Hindborg wrote:
+>> "Benno Lossin" <lossin@kernel.org> writes:
+>>
+>>> On Tue Jun 10, 2025 at 4:15 PM CEST, Alice Ryhl wrote:
+>>>> On Tue, Jun 10, 2025 at 4:10=E2=80=AFPM Andreas Hindborg <a.hindborg@k=
+ernel.org> wrote:
+>>>>>
+>>>>> "Benno Lossin" <lossin@kernel.org> writes:
+>>>>>
+>>>>> > On Tue Jun 10, 2025 at 1:30 PM CEST, Andreas Hindborg wrote:
+>>>>> >> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+>>>>> >> index 22985b6f6982..0ccef6b5a20a 100644
+>>>>> >> --- a/rust/kernel/types.rs
+>>>>> >> +++ b/rust/kernel/types.rs
+>>>>> >> @@ -21,15 +21,11 @@
+>>>>> >>  ///
+>>>>> >>  /// # Safety
+>>>>> >>  ///
+>>>>> >> -/// Implementers must ensure that [`into_foreign`] returns a poin=
+ter which meets the alignment
+>>>>> >> -/// requirements of [`PointedTo`].
+>>>>> >> -///
+>>>>> >> -/// [`into_foreign`]: Self::into_foreign
+>>>>> >> -/// [`PointedTo`]: Self::PointedTo
+>>>>> >> +/// Implementers must ensure that [`Self::into_foreign`] returns =
+pointers aligned to
+>>>>> >> +/// [`Self::FOREIGN_ALIGN`].
+>>>>> >>  pub unsafe trait ForeignOwnable: Sized {
+>>>>> >> -    /// Type used when the value is foreign-owned. In practical t=
+erms only defines the alignment of
+>>>>> >> -    /// the pointer.
+>>>>> >> -    type PointedTo;
+>>>>> >> +    /// The alignment of pointers returned by `into_foreign`.
+>>>>> >> +    const FOREIGN_ALIGN: usize;
+>>>>> >>
+>>>>> >>      /// Type used to immutably borrow a value that is currently f=
+oreign-owned.
+>>>>> >>      type Borrowed<'a>;
+>>>>> >> @@ -39,18 +35,20 @@ pub unsafe trait ForeignOwnable: Sized {
+>>>>> >>
+>>>>> >>      /// Converts a Rust-owned object to a foreign-owned one.
+>>>>> >>      ///
+>>>>> >> +    /// The foreign representation is a pointer to void. Aside fr=
+om the guarantees listed below,
+>>>>> >
+>>>>> > I feel like this reads better:
+>>>>> >
+>>>>> > s/guarantees/ones/
+>>>>> >
+>>>>> >> +    /// there are no other guarantees for this pointer. For examp=
+le, it might be invalid, dangling
+>>>>> >
+>>>>> > We should also mention that it could be null. (or is that assumption
+>>>>> > wrong?)
+>>>>>
+>>>>> It is probably not going to be null, but it is allowed to. I can add =
+it.
+>>>>>
+>>>>> The list does not claim to be exhaustive, and a null pointer is just a
+>>>>> special case of an invalid pointer.
+>>>>
+>>>> We probably should not allow null pointers. If we do, then
+>>>> try_from_foreign does not make sense.
+>>>
+>>> That's a good point. Then let's add that as a safety requirement for the
+>>> trait.
+>>
+>> I disagree. It does not matter for the safety of the trait.
+>>
+>> From the point of the user, the pointer is opaque and can be any value.
+>> In fact, one could do a safe implementation where the returned value is
+>> a key into some mapping structure. Probably not super fast, but the user
+>> should not care.
+>
+> Then we'll have to remove `try_from_foreign`.
 
-perf: Fix the throttle error of some clock events
+Oh, I see. OK, it is a safety requirement. Should I just add it to this pat=
+ch?
 
-Both ARM and IBM CI reports RCU stall, which can be reproduced by the
-below perf command.
-  perf record -a -e cpu-clock -- sleep 2
 
-The issue is introduced by the generic throttle patch set, which
-unconditionally invoke the event_stop() when throttle is triggered.
+Best regards,
+Andreas Hindborg
 
-The cpu-clock and task-clock are two special SW events, which rely on
-the hrtimer. The throttle is invoked in the hrtimer handler. The
-event_stop()->hrtimer_cancel() waits for the handler to finish, which is
-a deadlock. Instead of invoking the stop(), the HRTIMER_NORESTART should
-be used to stop the timer.
 
-There may be two ways to fix it:
- - Introduce a PMU flag to track the case. Avoid the event_stop in
-   perf_event_throttle() if the flag is detected.
-   It has been implemented in the
-   https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.intel.com/
-   The new flag was thought to be an overkill for the issue.
- - Add a check in the event_stop. Return immediately if the throttle is
-   invoked in the hrtimer handler. Rely on the existing HRTIMER_NORESTART
-   method to stop the timer.
 
-The latter is implemented here.
-
-Move event->hw.interrupts = MAX_INTERRUPTS before the stop(). It makes
-the order the same as perf_event_unthrottle(). Except the patch, no one
-checks the hw.interrupts in the stop(). There is no impact from the
-order change.
-
-When stops in the throttle, the event should not be updated,
-stop(event, 0). But the cpu_clock_event_stop() doesn't handle the flag.
-In logic, it's wrong. But it didn't bring any problems with the old
-code, because the stop() was not invoked when handling the throttle.
-Checking the flag before updating the event.
-
-Fixes: 9734e25fbf5a ("perf: Fix the throttle logic for a group")
-Closes: https://lore.kernel.org/lkml/20250527161656.GJ2566836@e132581.arm.com/
-Closes: https://lore.kernel.org/lkml/djxlh5fx326gcenwrr52ry3pk4wxmugu4jccdjysza7tlc5fef@ktp4rffawgcw/
-Closes: https://lore.kernel.org/lkml/8e8f51d8-af64-4d9e-934b-c0ee9f131293@linux.ibm.com/
-Closes: https://lore.kernel.org/lkml/4ce106d0-950c-aadc-0b6a-f0215cd39913@maine.edu/
-Reported-by: Leo Yan <leo.yan@arm.com>
-Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
-Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-Reported-by: Vince Weaver <vincent.weaver@maine.edu>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Ian Rogers <irogers@google.com>
-Link: https://lkml.kernel.org/r/20250606192546.915765-1-kan.liang@linux.intel.com
----
- kernel/events/core.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index d7cf008..1f74646 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2674,8 +2674,8 @@ static void perf_event_unthrottle(struct perf_event *event, bool start)
- 
- static void perf_event_throttle(struct perf_event *event)
- {
--	event->pmu->stop(event, 0);
- 	event->hw.interrupts = MAX_INTERRUPTS;
-+	event->pmu->stop(event, 0);
- 	if (event == event->group_leader)
- 		perf_log_throttle(event, 0);
- }
-@@ -11774,7 +11774,12 @@ static void perf_swevent_cancel_hrtimer(struct perf_event *event)
- {
- 	struct hw_perf_event *hwc = &event->hw;
- 
--	if (is_sampling_event(event)) {
-+	/*
-+	 * The throttle can be triggered in the hrtimer handler.
-+	 * The HRTIMER_NORESTART should be used to stop the timer,
-+	 * rather than hrtimer_cancel(). See perf_swevent_hrtimer()
-+	 */
-+	if (is_sampling_event(event) && (hwc->interrupts != MAX_INTERRUPTS)) {
- 		ktime_t remaining = hrtimer_get_remaining(&hwc->hrtimer);
- 		local64_set(&hwc->period_left, ktime_to_ns(remaining));
- 
-@@ -11829,7 +11834,8 @@ static void cpu_clock_event_start(struct perf_event *event, int flags)
- static void cpu_clock_event_stop(struct perf_event *event, int flags)
- {
- 	perf_swevent_cancel_hrtimer(event);
--	cpu_clock_event_update(event);
-+	if (flags & PERF_EF_UPDATE)
-+		cpu_clock_event_update(event);
- }
- 
- static int cpu_clock_event_add(struct perf_event *event, int flags)
-@@ -11907,7 +11913,8 @@ static void task_clock_event_start(struct perf_event *event, int flags)
- static void task_clock_event_stop(struct perf_event *event, int flags)
- {
- 	perf_swevent_cancel_hrtimer(event);
--	task_clock_event_update(event, event->ctx->time);
-+	if (flags & PERF_EF_UPDATE)
-+		task_clock_event_update(event, event->ctx->time);
- }
- 
- static int task_clock_event_add(struct perf_event *event, int flags)
