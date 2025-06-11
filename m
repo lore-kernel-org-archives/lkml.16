@@ -1,108 +1,109 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 540D6C148
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:00:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA2981459F6;
+	Wed, 11 Jun 2025 15:01:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749654044; cv=none; b=aZr+wqPrVoMzpLZbFljOh/vnLnW2ne1o3Tcp2YfVOgXMIetawtHMknEgHrJ9CXtN6yjtLCirwXfQBmkn+vJTl8X5gRgo9z0lGgnV00l0nP4s7aob91+M4bBazGRnJY7sHzaleuvS+o0lmATnYIQykHFNSyDXgwvOW09NdISuSo0=
+	t=1749654108; cv=none; b=uQdLIMpdaUTYNSYf3pLfqq0OAGiBtCTvDs+lige9Z2jMCLXzLlj6wKdWjnBjkl2nPRcp/lUNpA/yc/tF8tEQtM4BLyKCxjAPtiy+pxLklzSNX3LXcmr1qvTdWH3wm4g429meh3vL37BF8yiWzZp0nK+ppzxHCEjAP3V17hWhTfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749654044; c=relaxed/simple;
-	bh=ya+nEh00fQFy2gMFSp7ZKYL/qH5nwJRnW3gq9p3hfHI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gb3/2RcvxQkQNOzIwXAkhZ01efcHf9v+3dhTt4xDWRlnccFypGGNEZxNCbqZnkaQi7FtYxDkSRNLYfsp1PJAFZg2NtMGo1HgXOroTjdCh6mwIyGOGGPao3/Wc2SkMl8yqwR1NmN3U9szxPHfSzDlKpmpB3/hh4IIOxr8nI0azC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Fi0LKFUK; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749654108; c=relaxed/simple;
+	bh=AyJ3hfRbuzfBaQbtE6GZ6eXkPyAo8i4WOgDzMr/lbgs=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=YMfo7mOtzCF28y/Y9Bcmvg7Jg1LCnpy1znvwLr2C+x7WoAWUx8gzl4KOVKxOmZ8twRfJMdN+lLBf5ZBjcFpPMFrJXHVBKXedALrQxFjdiqFVTcYsy6r9CZ2DmfC8jJYc7WRlp+++dqJ9g5M+9k2aLmGmdicRiDE1VMSYJiYqzd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b2WcgYe/; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fi0LKFUK"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a54700a463so762463f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 08:00:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749654040; x=1750258840; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=edmPMFPNCGBbcUfHWPuxKmJMbMtdOOjJESV7iS8XvxY=;
-        b=Fi0LKFUKB5XBOgG/oHpVl+1vOwc3p6LT2ai8cghDi5BWvs4GzUOmOYz3o3j1jKEEo7
-         myYI/pTYE/e6t+nWvcF+p4Yma7CouO4/yEe1Vel5OQgZXihIaYdjyJCvlcJL3Yuz5DSg
-         djnc+7LLoDQQWIj8kuZmFq+IxH+/o7MGv5wTf4n69M6hRpiSv9qq3C2HsNw29369AJql
-         X+6uUjGieK1I1mfv8JB8QW8HxlR7liXoB99DIi/0QsIiPrgoaiWWZa0t769qSyW65WMr
-         wbz2hRKKxMC+pzAXV7OZASXlvTtLxFOWQ+ffGjjjPvGL93fLnDpl3ZenseKLGXw9Nour
-         sG4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749654040; x=1750258840;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=edmPMFPNCGBbcUfHWPuxKmJMbMtdOOjJESV7iS8XvxY=;
-        b=DbeklGSHKjRAOKG2SCX61t1BugDeOhgFiViLawVDlI+15IQtEe7wPcevgqStRYuzqH
-         7mBpq3cYYnfHArWOuxdwcJq4u0/9KrR4p8OmWU115qCrbM7OzdollP3313ddZIc7UK5T
-         HdZFDzFg88rlhA/ffPU3joXgPHb1uMj8ovPo0Sxluoqchf/AGleaPgzlwro7AivKdeH6
-         CpybsMABSO3Fs2vG5KdsB47MiT6CJyRO8hdSXgdJOIiMlOEvBQA9Bwnjj58U09BjBiSl
-         oY/DkUBzQzjkjZ13TDDtZuOVjszJou7ZFejcxBPsoL/EHieUCHzNkwGRroyL6I8lHNnS
-         jOng==
-X-Forwarded-Encrypted: i=1; AJvYcCVEvko4cVELYR08mbGjkaNjsCXrZgGeIAh5mGXHpt4X6ej0EfjF+Lp0vfD4d+QvsoUlK2EcwWaxTRbmFzk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxr6yxnBMrYQnUGu3dGJLPaF9WsXJN+Eh7Xxr/QQ+u9YyIJYh7f
-	93VU7JyTuulhFc/zP/s1lpx0qDNKrfsY7q6/3BtO8haTkgKNbSUgaqnMTKVS2D5SfGY=
-X-Gm-Gg: ASbGnct6gD70VgqEHqllO6wOcgPbKiTacMyFBrSP57kt28REmZ/g8nspq58ch+CIUkh
-	mDx0stZ/T3a1Lvre7IfhBi+ZqgQDml3rCxr3xFGLc+jecsgDpZN0zfm/XG/QD6hsIpjCM5H1k8F
-	RLPAgSE5AuKTbtmn29rOxkZ79CKOPa96OjuLBK7K0fqqqvPoi+xykpwazzwRF+rj+wWnZ+41tYi
-	0R7Xam/F1/MpfXOl1r0hcJ8I+U2P2veGU7mNVqjyxiqtUxXwQaMa0pwpGieW0ndgfxNX58dTOjt
-	z4jWulm1nek24TF+EqhLK5PQ5m4n7SsJZkzYbxqrjSe60Z7+Oce4Jnl5FiF3YJjnvFA=
-X-Google-Smtp-Source: AGHT+IEzzhcppUbW1+BdtVXwBwJBi0yjHM3LGcXgg4DBHtCKKJdkIrDeqab0FDLQ5lwfVDcVY6scNA==
-X-Received: by 2002:a05:6000:18ac:b0:3a4:f70e:bc25 with SMTP id ffacd0b85a97d-3a55825d69dmr3535626f8f.27.1749654040196;
-        Wed, 11 Jun 2025 08:00:40 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532464e3csm15804587f8f.99.2025.06.11.08.00.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jun 2025 08:00:39 -0700 (PDT)
-Message-ID: <472a47da-e442-4335-92f3-9a0263107fc8@linaro.org>
-Date: Wed, 11 Jun 2025 16:00:39 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b2WcgYe/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749654107; x=1781190107;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=AyJ3hfRbuzfBaQbtE6GZ6eXkPyAo8i4WOgDzMr/lbgs=;
+  b=b2WcgYe/e3R48pjbEU4vnRtWkOb/iFaMdxJnj1mD8FfB162txHlhQRvi
+   52JB+4+F85xNL9VVjJqIB/bhlQPM33cJJhoBmhReNHBwZwY6j1ak245Tq
+   ZNpeHJFo8Anb292CAIzFEzu1Ky9WnhoUbqCSTOjOwbMnAMMnXzmY/m5Ls
+   IbWNLcZ/clrKSDiX9f5NFBwY+IH4ox2yuJ4y5fHEl/3D34ppBa5heRsZk
+   rM3miBH/qssQoqP/L8bHMByujz7JfOoElxvhg8qK/tel7GSmz78CVgEdh
+   SySp0M9XkOxLBXK/XQ3jhon7clG14UNGzKPwttJhKcgZENkJ3pj2f2o/O
+   A==;
+X-CSE-ConnectionGUID: Eg92oKdzTFOz72Hn7JdsyA==
+X-CSE-MsgGUID: EDYTyorXQ2GBU/qm7Px7Lw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="51715502"
+X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
+   d="scan'208";a="51715502"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 08:01:44 -0700
+X-CSE-ConnectionGUID: oxe68/56SVOdM6C+h2ZynQ==
+X-CSE-MsgGUID: 49SVVpVeRtalW905Sn70sQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
+   d="scan'208";a="147125280"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.183])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 08:01:39 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 11 Jun 2025 18:01:36 +0300 (EEST)
+To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    Jelle van der Waa <jvanderwaa@redhat.com>, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+cc: Hans de Goede <hdegoede@redhat.com>, ikepanhc@gmail.com, 
+    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Armin Wolf <W_Armin@gmx.de>, 
+    "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, 
+    ibm-acpi-devel@lists.sourceforge.net, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 2/2] platform/x86: Move Lenovo files into lenovo
+ subdir
+In-Reply-To: <002d39fe-44ed-45a4-9410-4fecf1c2163f@app.fastmail.com>
+Message-ID: <b8af4da0-bd7f-1d65-8645-73dbd08ff3a8@linux.intel.com>
+References: <mpearson-lenovo@squebb.ca> <20250610192830.1731454-1-mpearson-lenovo@squebb.ca> <20250610192830.1731454-2-mpearson-lenovo@squebb.ca> <aEiVHXI4vS9BDOPW@smile.fi.intel.com> <002d39fe-44ed-45a4-9410-4fecf1c2163f@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] spi: spi-fsl-dspi: Report FIFO overflows as errors
-To: Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc: Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>,
- linux-spi@vger.kernel.org, imx@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250609-james-nxp-spi-dma-v1-0-2b831e714be2@linaro.org>
- <20250609-james-nxp-spi-dma-v1-4-2b831e714be2@linaro.org>
- <20250610215233.35ikv4sslkyukgwr@skbuf>
- <d95fbd83-995e-48ca-bf23-147caa80b9e1@linaro.org>
- <20250611145634.ncbzl6wwwxlidjl7@skbuf>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250611145634.ncbzl6wwwxlidjl7@skbuf>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
+On Tue, 10 Jun 2025, Mark Pearson wrote:
 
-
-On 11/06/2025 3:56 pm, Vladimir Oltean wrote:
-> On Wed, Jun 11, 2025 at 03:40:40PM +0100, James Clark wrote:
->>> Also, could there be individual error messages for TFUF and for RFOF?
->>> If you are concerned about the penalty for the error-free case, make the
->>> check two-level. First for all errors, then for individual errors.
->>>
->>
->> If I was going to split them I would probably let the compiler optimize it
->> whichever way was best. The real reason for combining them is because
->> usually you get them both together. As long as the message and fifos are
->> configured correctly you'd always get TFUF and RFOF at the same time and I
->> wanted to avoid printing twice for one event.
+> On Tue, Jun 10, 2025, at 4:27 PM, Andy Shevchenko wrote:
+> > On Tue, Jun 10, 2025 at 03:28:25PM -0400, Mark Pearson wrote:
+> >> Create lenovo subdirectory for holding Lenovo specific drivers.
+> >
+> > Assuming Kconfig entries have mostly been copied'n'pasted, the rest LGTM,
 > 
-> In that case, why not:
-> 	if (spi_sr & (SPI_SR_TFUF | SPI_SR_RFOF)) {
-> 		dev_err_ratelimited(dev, "FIFO errors:%s%s\n",
-> 				    spi_sr & SPI_SR_TFUF ? " TX underflow," : "",
-> 				    spi_sr & SPI_SR_RFOF ? " RX overflow," : "");
-> 		}
-> 	}
+> Yes - no changes from what they were previously.
 
-Yep that looks good, will do that
+Indeed, no changes, too bad that the addition "depends on DMI" was missed 
+because of that ;-). I've fixed this for you to not delay this patch 
+further.
+
+A diff-of-pre/post magic trick helps to validate while preparing and 
+review move changes like this:
+
+diff -u <(grep '^[-]' patch.patch | cut -b 2- | sort) <(grep '^[+]' patch.patch | cut -b 2- | sort)
+
+The sorting is not always needed if no core reordering is done in the 
+patch but regardless of sorting or not, the unexpected differences are 
+usually pretty easy to spot from the output of that command. It's how I 
+found out the lack of depends on DMI on the post side and have found 
+plenty of similar issue when changes are rebased/reordered in a series 
+that does contain a move change.
+
+
+While applying this, I realized I'd taken Jelle's ideapad patch which 
+resulted in this move patch not applying cleanly, so I ended up moving 
+Jelle's patch after this change to make things easier for me.
+
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> >
+> Thanks for the reviews and help with both patches
+
+Thanks for doing this, hopefully LKP will be okay with this change too
+and we can once again focus on less conflict prone work. :-)
+
+
+-- 
+ i.
 
