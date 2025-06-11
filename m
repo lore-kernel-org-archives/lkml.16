@@ -1,50 +1,79 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2531822CBFA
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:33:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DBB7229B38;
+	Wed, 11 Jun 2025 07:35:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749627186; cv=none; b=PkfYw0xQbz3CQ2W2Yz96v5106GpqYVkRCJmw7ZR0cTFqLsMSeOQdbWh4o3rpfBJ0MARWVO6eWdfpyEDbtL03f6H7PqdQ3vpcNGduQKtNMAl1gD9WPBS4vwhLFbKuJb0iruj53irWvBbsqYM0VovWnbjB+pFgSGaOT0RukyT04U0=
+	t=1749627331; cv=none; b=NM5qqWUckzVBLtmSm3A0/ajX4tfuhyj0AbVpXzeXoNJe9ic5eSG7v6hl0UnmRiRVwxAFZPiMV5iNkPf1kpkCw/oxKQX0c4kdqNU8fUClzCeN4D6p76kCzdMLeDhINKdkjZcBARGF2TYb+CKcXSSgr+t9OBmczC5W97Zyv5jXbNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749627186; c=relaxed/simple;
-	bh=EDJlGD4wfKphKeMYD141vWBxv2UxlZLo8grwzYmcu7U=;
+	s=arc-20240116; t=1749627331; c=relaxed/simple;
+	bh=NmUB89glos6asOSTmWibIDn1aNbS9flC3wOiPjY7pAk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sLPf7EZDFqJ2HikAL6vu9blr/+HQBH4hxKjjvO+peSx+kPCSQuqVsG/XctWkWYri6mIoviFASIcwrPY4piUMZkBI2f+cH9JcYxsGxlXZMdxrKc6DeUV3bxhe9nfRn1uBiWvv4jtt8JQMqQvv3oNI9ZALlnf4tzArW68bkDpicRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <sha@pengutronix.de>)
-	id 1uPFwv-0007lf-9R; Wed, 11 Jun 2025 09:32:41 +0200
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <sha@pengutronix.de>)
-	id 1uPFwt-002uFg-1G;
-	Wed, 11 Jun 2025 09:32:39 +0200
-Received: from sha by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <sha@pengutronix.de>)
-	id 1uPFwt-006l8F-0q;
-	Wed, 11 Jun 2025 09:32:39 +0200
-Date: Wed, 11 Jun 2025 09:32:39 +0200
-From: Sascha Hauer <s.hauer@pengutronix.de>
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>,
-	MyungJoo Ham <myungjoo.ham@samsung.com>,
-	Kyungmin Park <kyungmin.park@samsung.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	kernel@collabora.com, linux-pm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] PM / devfreq: rockchip-dfi: add support for LPDDR5
-Message-ID: <aEkxF2Q2lBdfmUuJ@pengutronix.de>
-References: <20250530-rk3588-dfi-improvements-v1-0-6e077c243a95@collabora.com>
- <20250530-rk3588-dfi-improvements-v1-2-6e077c243a95@collabora.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=V/nuLA3cJ1HSjXnQ9ZO/hssn4a39uvZT4h+YU+/4ao4y1xNJQ/U3MER+jCLOecO+xqT+D84dZs+fKJExA1/Xy8rESdLXB+7nxSKPrPsrq572zWDGaZcI1OBjjKCaxytU0MHxQtyX6rixn1zuIFLmvw1yhGo3U5olE0Unm6sSgmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ExHWWoEY; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ExHWWoEY"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E7773443D3;
+	Wed, 11 Jun 2025 07:35:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1749627326;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KiyDyclqecsk9BIhJPotcA86DvJLdYwDNphU2h/Syvs=;
+	b=ExHWWoEY7rGIzBH2hTP41+dRx7QD45h9+GCRlhMqsGjxIUva5rl/uu6M7C0UepYUk7Y9I4
+	y0QCs58j7ZYuyIoZCiOsT7vAdRmdkfa4EtnvTsBT1pAMdwtmXmYU7NRLjlgz/AogBmT9gq
+	2US+W4HBVTtpEw73AVkrR8bxCiZTAOQiYLy4Yt0KuNdklqu4q7Okv0y1OK+A26vcxX6zqf
+	6wsxpsI6vtrPBsIEOGd0J/N5QdPcZ5QjoQqEX5Kxy9Ra7Jwt2ZmzTwU5dJMbq7HNgHQQcr
+	ISRQwIoW5kmXWeccGDoDXEyzEJpJB9DPCj8MHSy8O/THILFtsRDHsDLiDWTTvg==
+Date: Wed, 11 Jun 2025 09:35:21 +0200
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	Joel Stanley <joel@jms.id.au>, Avi Fishman <avifishman70@gmail.com>,
+	Tomer Maimon <tmaimon77@gmail.com>,
+	Tali Perry <tali.perry1@gmail.com>,
+	Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>,
+	Benjamin Fair <benjaminfair@google.com>,
+	Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	David Rhodes <david.rhodes@cirrus.com>,
+	Richard Fitzgerald <rf@opensource.cirrus.com>,
+	Charles Keepax <ckeepax@opensource.cirrus.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Sean Wang <sean.wang@kernel.org>,
+	Jesper Nilsson <jesper.nilsson@axis.com>,
+	Lars Persson <lars.persson@axis.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Emil Renner Berthing <kernel@esmil.dk>,
+	Jianlong Huang <jianlong.huang@starfivetech.com>,
+	Hal Feng <hal.feng@starfivetech.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Manivannan Sadhasivam <mani@kernel.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+	openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
+	linux-renesas-soc@vger.kernel.org, linux-sound@vger.kernel.org,
+	patches@opensource.cirrus.com, linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@axis.com, linux-riscv@lists.infradead.org,
+	linux-rtc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v2 17/17] rtc: stm32: Constify static 'pinctrl_desc'
+Message-ID: <20250611073521eaf70434@mail.local>
+References: <20250611-pinctrl-const-desc-v2-0-b11c1d650384@linaro.org>
+ <20250611-pinctrl-const-desc-v2-17-b11c1d650384@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,81 +82,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250530-rk3588-dfi-improvements-v1-2-6e077c243a95@collabora.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20250611-pinctrl-const-desc-v2-17-b11c1d650384@linaro.org>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduudeklecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomheptehlvgigrghnughrvgcuuegvlhhlohhnihcuoegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeiieevfeekgeevgfegudeuuedtfffgiefffedtudeftdehkeelieettdffhffftdenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmedvugdutdemkeejugehmedvsgguieemvdehjeejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmedvugdutdemkeejugehmedvsgguieemvdehjeejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeegledprhgtphhtthhopehkrhiihihsiihtohhfrdhkohiilhhofihskhhisehlihhnrghrohdrohhrghdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopeeurghsrghvrghrrghjrdfpr
+ ghtihhkrghrsegrmhgurdgtohhmpdhrtghpthhtohepufhhhigrmhdqshhunhgurghrrdfuqdhksegrmhgurdgtohhmpdhrtghpthhtoheprghnughrvgifsegtohguvggtohhnshhtrhhutghtrdgtohhmrdgruhdprhgtphhtthhopehjohgvlhesjhhmshdrihgurdgruhdprhgtphhtthhopegrvhhifhhishhhmhgrnhejtdesghhmrghilhdrtghomhdprhgtphhtthhopehtmhgrihhmohhnjeejsehgmhgrihhlrdgtohhm
+X-GND-Sasl: alexandre.belloni@bootlin.com
 
-On Fri, May 30, 2025 at 03:38:09PM +0200, Nicolas Frattaroli wrote:
-> The Rockchip RK3588 SoC can also support LPDDR5 memory. This type of
-> memory needs some special case handling in the rockchip-dfi driver.
+On 11/06/2025 08:13:49+0200, Krzysztof Kozlowski wrote:
+> The local static 'struct pinctrl_desc' is not modified, so can be made
+> const for code safety.
 > 
-> Add support for it in rockchip-dfi, as well as the needed GRF register
-> definitions.
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+
 > 
-> This has been tested as returning both the right cycle count and
-> bandwidth on a LPDDR5 board where the CKR bit is 1. I couldn't test
-> whether the values are correct on a system where CKR is 0, as I'm not
-> savvy enough with the Rockchip tooling to know whether this can be set
-> in the DDR init blob.
-> 
-> Downstream has some special case handling for a hardware version where
-> not just the control bits differ, but also the register. Since I don't
-> know whether that hardware version is in any production silicon, it's
-> left unimplemented for now, with an error message urging users to report
-> if they have such a system.
-> 
-> There is a slight change of behaviour for non-LPDDR5 systems: instead of
-> writing 0 as the control flags to the control register and pretending
-> everything is alright if the memory type is unknown, we now explicitly
-> return an error.
-> 
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 > ---
->  drivers/devfreq/event/rockchip-dfi.c | 84 ++++++++++++++++++++++++++++--------
->  include/soc/rockchip/rk3588_grf.h    |  8 +++-
->  include/soc/rockchip/rockchip_grf.h  |  1 +
->  3 files changed, 73 insertions(+), 20 deletions(-)
 > 
-> @@ -147,21 +200,7 @@ static int rockchip_dfi_enable(struct rockchip_dfi *dfi)
->  			       DDRMON_CTRL_SOFTWARE_EN | DDRMON_CTRL_HARDWARE_EN),
->  			       dfi_regs + i * dfi->ddrmon_stride + DDRMON_CTRL);
+> Patch depends on this series - const in pinctrl core. Please ack and
+> this should go via pinctrl tree.
+> ---
+>  drivers/rtc/rtc-stm32.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/rtc/rtc-stm32.c b/drivers/rtc/rtc-stm32.c
+> index ef8fb88aab48a0edad19ae5872421815aa04fe46..d4ebf3eb54aa9e91c8e9f8254f571c53794192fd 100644
+> --- a/drivers/rtc/rtc-stm32.c
+> +++ b/drivers/rtc/rtc-stm32.c
+> @@ -393,7 +393,7 @@ static const struct pinmux_ops stm32_rtc_pinmux_ops = {
+>  	.strict			= true,
+>  };
 >  
-> -		/* set ddr type to dfi */
-> -		switch (dfi->ddr_type) {
-> -		case ROCKCHIP_DDRTYPE_LPDDR2:
-> -		case ROCKCHIP_DDRTYPE_LPDDR3:
-> -			ctrl = DDRMON_CTRL_LPDDR23;
-> -			break;
-> -		case ROCKCHIP_DDRTYPE_LPDDR4:
-> -		case ROCKCHIP_DDRTYPE_LPDDR4X:
-> -			ctrl = DDRMON_CTRL_LPDDR4;
-> -			break;
-> -		default:
-> -			break;
-> -		}
-> -
-> -		writel_relaxed(HIWORD_UPDATE(ctrl, DDRMON_CTRL_DDR_TYPE_MASK),
-> +		writel_relaxed(HIWORD_UPDATE(ctrl, ctrl_mask),
->  			       dfi_regs + i * dfi->ddrmon_stride + DDRMON_CTRL);
-
-You could move the HIWORD_UPDATE(ctrl, ctrl_mask) to
-rockchip_dfi_ddrtype_to_ctrl() and by that you only have to pass one
-u32* to that function.
-
-That's just nitpicking though, so for the series:
-
-Reviewed-by: Sascha Hauer <s.hauer@pengutronix.de>
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> -static struct pinctrl_desc stm32_rtc_pdesc = {
+> +static const struct pinctrl_desc stm32_rtc_pdesc = {
+>  	.name = DRIVER_NAME,
+>  	.pins = stm32_rtc_pinctrl_pins,
+>  	.npins = ARRAY_SIZE(stm32_rtc_pinctrl_pins),
+> 
+> -- 
+> 2.45.2
+> 
