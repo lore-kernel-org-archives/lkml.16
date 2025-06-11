@@ -1,108 +1,120 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A495323D2BD
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 23:41:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8EA2F4301;
+	Wed, 11 Jun 2025 23:42:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749685281; cv=none; b=A8Cyx4wqsAloXPloImHszO6zQhIcWaBnzG21hZaDN+AN/bWyA2eKBhMjZg35TIqVzsu5vfq5niHJ1bjjbphRlfAQkTdDVwOVpejnvQg+7cRB3+nt0bhWa+t9IROGBuofyspmqYB/fclh7Kc8o16Nze8wt0Kmyd/Ujuc1Xn57ZXQ=
+	t=1749685364; cv=none; b=dpWkstmaoUuJAq5NbEdWTtj8atlxEkfZlIsWSqSiq6TFwAXSnlNVIyberqFyrrgk+/aJ8sYVF3XWwJ5EC8XAJBpxQNkocXROoIrlbayh14Bx3tOakkqf3e+0MB5vmhw1Bxr4KxHW7C2bi6vApi+phnZ3cguMmqnEJ7I8XH4Q3MQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749685281; c=relaxed/simple;
-	bh=kTjXdiUU0uz8DY8+/rLWqtPAVHSUlHMG7bi7fWmNw8s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Rjm1c/G+dZh9ZPcQkF0mDltO1cHsbhQ2OI/h863Zfh64qboNn9YRQ5CQXQJaIEjcBT461zrqfFijyo/5RIX+OMrWmehsfYiLdOJMlpp+XrsjRTTJTUthxJ0RNU+ZsLywHsfpdRPSgH5Y8zi06JRVI1iNKzJ1ExzbK1FZwJtQoNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TnxQdsx5; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749685364; c=relaxed/simple;
+	bh=0Lqc05MJtF78yK+jzAavYAe3CiAx4jlNnkKQn6Lv8No=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RDiPOxC6VDBBzEAYRn65Q+mwmZv3B4kpSwApabAptjqdiERVwl1fBaZhuU5NkYkwLOyNcYn83EIN2NNMdcqaMKvjzvg+g+Cy9oG/FLXFVlJ/xPWUI7kNY7ERw7daCO866kgT16Eo3mPx0ITChbIJ8u3rX/S+4e4F+Ie+BsJfrCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=a/RmTaz3; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=B2iSSqA2; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TnxQdsx5"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4a58ef58a38so90911cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 16:41:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749685276; x=1750290076; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fnwvu7/fKFkzEdGXspXaHEY/ygF+zDGWlZtFYDo91z0=;
-        b=TnxQdsx55rPDt/6EUBIWPDp736iF5pbpcQRZp6OUeDGl7AvIhMBpRQf3HFqTXLLk8M
-         oAYY00pgtteYY2SqRB/q9PDAg4FtpoaU0o2y4eCYqBFUi1/sxWlh2QSj+tZ/MsCDscof
-         9VSycEgXfpWsGVb6D6krfRcKXXe91p1h2LOuFVCIf/YwDUU5M+DBUdPYYkJhQLJaPbiJ
-         64/BtaXtAZz1aeJwgFwecOc6DcRGwftZDZYugjM32IXWivDmx+zXzN9J8FqGWU/LpBuK
-         OKc71tH7q2igPG/VlmCADdC9TMn8kjaLtmhE117JCJHIT92/+lLk8JvkzPG9srtP3PxW
-         63Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749685276; x=1750290076;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fnwvu7/fKFkzEdGXspXaHEY/ygF+zDGWlZtFYDo91z0=;
-        b=AyH4u3gbisrIbmHVnXNi+jOOl1cOBEM1/2WeNjoLVaoNgqIqwaYXuf3guGtkjwhRNa
-         854XTpUlBsYHaQBNFCBoNRn8JzAJDHUAHjXrRtB8sIsAkmNZSNP40c6acw/56dPEnD2e
-         /6zqIJi/HkvxRA4jgYxEE3Qekh2AKwDcKbns6hbNFwrm77nQ/I6nKLhco07nPsC8aI+e
-         ToimyVsJjY9wtbmatB5qlhu1TJKB25fo+KyvaOrIO11nl1coPSnjd1l6M+arOHAKCwCi
-         l6ZYJAne2y+Qn7fX/dIYFT3hYewdkigewHmzYF9YForwS41FuuENeaSt/0vDnlK6qdey
-         uC+A==
-X-Forwarded-Encrypted: i=1; AJvYcCWv3x2ywkEWMPZipfBbsZq+rS+R6uksAk0gRi36dFfKQJtUlFfg5g8m6gO2Iay3adGDkuRaWnV8bb2iCSw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlODebFrIoRjFYZPVcF/QrnbH3NrhctfHI5zxuG7AVHkz182sy
-	wEm/NtzhOgBFvqDWS47Kbcluocf6JIlSbRCs8w75Sn0si26qzRxaEDQ1Y9XLwyH4N2f/P1EEaPz
-	JSjWiX1HlrnONNDm/ITU4o7LJx89o0Kejm4UIx0eQ
-X-Gm-Gg: ASbGncujIUgiST3VzNAZ308qJq5ckOGvbKZ31WS77+IOc/50QwBO1gqOdqT0NJfIDy9
-	bt3I292C0zNel+Mz5NdFNKxhuyW+ORjX5BsKCTdPVUfmGUcRP+OB6UAww1+JwPSb38qrnagXAx5
-	TWKinjQDEZ2xzOPx/kIzHWIR2Bwe/JayiU6ne1/qNTM+E7NAllbhLCKLuO5yEMkUSf2T9Lt6jmT
-	D/lTnB6giTV
-X-Google-Smtp-Source: AGHT+IE8VXJ0lACkCQtSqAJ6+lw38b1R52arM/JkN26dV1XojC/+5OQduLUE8A/SijvJokeBDWTCK+sl90zsPAKPX9Q=
-X-Received: by 2002:a05:622a:1345:b0:494:b06f:7495 with SMTP id
- d75a77b69052e-4a7242e8646mr1211031cf.24.1749685275160; Wed, 11 Jun 2025
- 16:41:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="a/RmTaz3";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="B2iSSqA2"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4bHhzM73Hdz9tNc;
+	Thu, 12 Jun 2025 01:42:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1749685360;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Sn/l8L80yT8SucVw9NU1s346nJMf0F3z8P6jRYyvLow=;
+	b=a/RmTaz3YfWVVWjzZArFwfkmO5NC2U5WzxmKcsMKd3U6l4ZgezdAN8KP0jRVfpL7g25t33
+	J8EGbqMZOS6T4QgbR2kFxBRyixqIRpurcqrdgCHOj9+skydAhT4dmwp/iXkyNEhyEkMyMD
+	/ejbjaAIUzAMFvOcwikq/xhffGYQ7+5WSO8BZyuG3tPoXVqzyFsVZYztd6k6guYbAY5nRd
+	CAAbg2amqLuyafMiMBq+oyb7r2B5VSsOFs72OFGR2TrdaVY0SJaGNEEaMPYPnExYD/W+RB
+	AdKd5OvLyb07PMHY95ePBah3ZbjxgxFdiflJlW8g0l4ePETYMF1CQtr9xC/kIA==
+From: Marek Vasut <marek.vasut+renesas@mailbox.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1749685357;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Sn/l8L80yT8SucVw9NU1s346nJMf0F3z8P6jRYyvLow=;
+	b=B2iSSqA2/FTGSOZmIvAH+X87Dq/xrDgQB1e2YPUH80LbhoEWLEUb3Hhj+jQbKDatdhoPzt
+	K4Vo/9f/JQXhUzu07/Yrg+KmEM43q7qTCOgc9GvevJqzOcOJXqmNVlVSfoU1lzdSfpvIHs
+	qwY5TIf/SeEl/L8txo1b3UySb5IJnB6J1gIjiBqOmBr13PqXfbkSxNZs4gPw9J3Ckyrxyl
+	JEwdOoxOCbldFbj1ndhcV1/+Dk82+wHyEnTbAgzO+gw1jvusKsgwW1K9u1mbTT1pHaKcVw
+	fgl6+rE8ydcdelnZ7EqpVrzA6kHl3+K+XdtDyEDHdsYCbEpOP6TKfnKDZfcMgg==
+To: devicetree@vger.kernel.org
+Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org
+Subject: [PATCH v2] schemas: pci: bridge: Document REFCLK slot clocks
+Date: Thu, 12 Jun 2025 01:41:41 +0200
+Message-ID: <20250611234206.159695-1-marek.vasut+renesas@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250609184029.2634345-1-hramamurthy@google.com>
- <20250609184029.2634345-6-hramamurthy@google.com> <20250610182545.0b69a06d@kernel.org>
-In-Reply-To: <20250610182545.0b69a06d@kernel.org>
-From: Ziwei Xiao <ziweixiao@google.com>
-Date: Wed, 11 Jun 2025 16:41:04 -0700
-X-Gm-Features: AX0GCFudQlLirSQu_pfgV-l62e-RT51p_3WK5BG7S3Kaz7L2GVzeN9WeWjFqHhE
-Message-ID: <CAG-FcCPwJVw_8MyMyUkjwwTcotQyWa6_g1U6_WGf1YQ4_0n9Ww@mail.gmail.com>
-Subject: Re: [PATCH net-next v4 5/8] gve: Add support to query the nic clock
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Harshitha Ramamurthy <hramamurthy@google.com>, netdev@vger.kernel.org, davem@davemloft.net, 
-	edumazet@google.com, pabeni@redhat.com, jeroendb@google.com, 
-	andrew+netdev@lunn.ch, willemb@google.com, pkaligineedi@google.com, 
-	yyd@google.com, joshwash@google.com, shailend@google.com, linux@treblig.org, 
-	thostet@google.com, jfraker@google.com, richardcochran@gmail.com, 
-	jdamato@fastly.com, vadim.fedorenko@linux.dev, horms@kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-MBO-RS-META: uwekucmigtd6pg4quuu68o8z5fztjfrb
+X-MBO-RS-ID: 859cbe2a96078a63047
+X-Rspamd-Queue-Id: 4bHhzM73Hdz9tNc
 
-On Tue, Jun 10, 2025 at 6:25=E2=80=AFPM Jakub Kicinski <kuba@kernel.org> wr=
-ote:
->
-> On Mon,  9 Jun 2025 18:40:26 +0000 Harshitha Ramamurthy wrote:
-> > +     priv->nic_ts_report =3D
-> > +             dma_alloc_coherent(&priv->pdev->dev,
-> > +                                sizeof(struct gve_nic_ts_report),
-> > +                                &priv->nic_ts_report_bus,
-> > +                                GFP_KERNEL);
-> > +     if (!priv->nic_ts_report) {
-> > +             dev_err(&priv->pdev->dev, "%s dma alloc error\n", __func_=
-_);
-> > +             err =3D -ENOMEM;
-> > +             goto release_ptp;
-> > +     }
-> > +
-> > +     ptp_schedule_worker(priv->ptp->clock, 0);
->
-> Given the "very dynamic nature" of the clock I think you need to do the
-> first refresh synchronously. Otherwise the config path may exit, and
-> the first packet arrive before the worker had a chance to run and latch
-> the initial timestamp?
+The PCIe slot may have 'REFCLK' clocks which are explicitly
+controlled by the OS, describe the clocks property.
 
-Thanks for pointing it out. Will add gve_clock_nic_ts_read before the
-ptp_schedule_worker to do the first refresh on V5.
-> --
-> pw-bot: cr
+Acked-by: Manivannan Sadhasivam <mani@kernel.org>
+Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
+---
+Related to https://lore.kernel.org/all/CAMuHMdUFHKHKfymqa6jwfNnxZTAuH3kbj5WL+-zN=TR6XGd0eA@mail.gmail.com/
+---
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Conor Dooley <conor+dt@kernel.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: Magnus Damm <magnus.damm@gmail.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-pci@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org
+---
+V2: - Update commit message
+    - Add AB from Manivannan
+---
+ dtschema/schemas/pci/pci-bus-common.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/dtschema/schemas/pci/pci-bus-common.yaml b/dtschema/schemas/pci/pci-bus-common.yaml
+index ca97a00..3c512cf 100644
+--- a/dtschema/schemas/pci/pci-bus-common.yaml
++++ b/dtschema/schemas/pci/pci-bus-common.yaml
+@@ -82,6 +82,8 @@ properties:
+     items:
+       maximum: 255
+ 
++  clocks: true
++
+   external-facing:
+     description:
+       When present, the port is externally facing. All bridges and endpoints
+-- 
+2.47.2
+
