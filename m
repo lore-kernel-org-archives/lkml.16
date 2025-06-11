@@ -1,86 +1,118 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5585628853E;
-	Wed, 11 Jun 2025 19:40:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B3D1F09B3;
+	Wed, 11 Jun 2025 19:43:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749670808; cv=none; b=CYbZ4RxALhdUFlDUMxuANx6/gEy60bt8YcXb/JomoZeaHA7pTxQLPThi+5i/RZ0EI6qrEywtGpcU2s7UIUoQ2HllOVNbwVD0EFSr3TPdBTM94GvUQ+XiGQ59l0Pq6O+k8YbSUw0vFfBMeLNJ5kSeb+tFB/PEoakhBbzdYMF5jjU=
+	t=1749670981; cv=none; b=Zgia9PVg5GNNBkNHCi/8UwwbqFXmfKZpS8YgknZlMpp8G4BVwaqjo570Fp7s76d6efBjDKPZwKf443E0+kKsZKXOmemeQ+EpEKCFoOPELY4Q/26OiPy3FDgKDKQbBtnRkQhLAH4m9KREH+lw5lA5ef36ndNKBdhp78r2fSIfXd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749670808; c=relaxed/simple;
-	bh=P+77/chWEkT7CmAB48ybuVAEZkvc5wpADMBeS/stKf8=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=FKONSRGyzK/3/0AE3vI9wCChA3FDo/s1jQH+p3HvORFX+HHko9TmQRGNFl4XBIVewDcYyYsidpDKgN8Eo6Z8dXYcy/AFyOQkzRotYcg/WPsnLfPns3zqFDXC1p3pC1J1jYbPY9CnDdY2dKKSlcWQlgzo6Gep++1K4ZfamxW7noE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zm85XNkS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749670981; c=relaxed/simple;
+	bh=7+2javrPWqSAk9Zpl9AulQcOQIGGbbbbRurwg6AeHZw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=cH9BhyE8HDCw72qQYnZYVI3akhQvUgC8hXnosybE1dSBtPCuRrz6s5fnw5PKHIemcrOM3XwNPRHPoKdgGnLskACL2VJkp1oi+Q+sTclYGpltRn2YVGVF+UREaTI01El9KG1BRE/+1pNsa7Lkw2tfjxSlz/U64BxDAXpBIbKDEZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HGkXm5jz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zm85XNkS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDEF7C4CEE3;
-	Wed, 11 Jun 2025 19:40:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HGkXm5jz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6ADCFC4CEE3;
+	Wed, 11 Jun 2025 19:43:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749670807;
-	bh=P+77/chWEkT7CmAB48ybuVAEZkvc5wpADMBeS/stKf8=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Zm85XNkS7FdAfyj4Pz0aSQ5tUEtqSvr5wyZfp5OWjboW+BHrHtGWFfKJkcnW9B+uU
-	 b0Maq23yv+fssenODQNYpzy+VnoSrkCrT/U/KwkDNaXXmyvrjuCEGbRXvxs7Xp1Y1K
-	 HqZnGe+vnqEpP2nCyocuKUq2+Pi7atgw7L68KU8UlZHRq/J+N2wipGArkfSMhzMWd2
-	 QLwimXXf8vW8LY0UyEFliO3UOOUiQLTampm/oSYAvOqLf4ZZtLfrZzuipgGogm8Sy0
-	 lGJmnUO7uXbLb1j39cj4TsASWF5hLHPQ4zlyTsb8hhXsKS1XhwxYeY944mU+qCUI+Z
-	 ixngWT3uJDZYQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33DE8380DBE9;
-	Wed, 11 Jun 2025 19:40:39 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1749670981;
+	bh=7+2javrPWqSAk9Zpl9AulQcOQIGGbbbbRurwg6AeHZw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=HGkXm5jzFWs8lo2Rxe8xrG+ZpRTKtZMg2tULoy/ewNWO8y6xjTiELmi991KtFgw5d
+	 0nvDZJkeQ9A7qRRbbUGOweTehA+Y6k1CAWNsVG90DiKNgwX49/9auuWJfCOKpOy/f4
+	 s7BeJKzk1z0BrLGu5yXMNt8lGkuTWPJwKJjjpkSvaPAru11qBYugvEU9fnH2eauqmR
+	 26P+STx7gehj/DYz8AGFoPjhJUIGuY/oqkJuxs7wSOdG+fyahFaDe8EWLTtVYUmmVJ
+	 tJuPwveYHN1W1PzhNpIP6obWHuujk8J+eZFX947mcvr2Go5YPzcyRJ49Ulbt49iQrN
+	 wEk3iYgr8vqig==
+Date: Wed, 11 Jun 2025 14:42:59 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Geraldo Nascimento <geraldogabriel@gmail.com>
+Cc: linux-rockchip@lists.infradead.org,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 1/4] PCI: pcie-rockchip: add Link Control and
+ Status Register 2
+Message-ID: <20250611194259.GA825364@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next v3] net: Fix RCU usage in task_cls_state() for
- BPF
- programs
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174967083774.3454768.14388619349258228793.git-patchwork-notify@kernel.org>
-Date: Wed, 11 Jun 2025 19:40:37 +0000
-References: <20250611-rcu-fix-task_cls_state-v3-1-3d30e1de753f@posteo.net>
-In-Reply-To: <20250611-rcu-fix-task_cls_state-v3-1-3d30e1de753f@posteo.net>
-To: Charalampos Mitrodimas <charmitro@posteo.net>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, horms@kernel.org, martin.lau@linux.dev,
- daniel@iogearbox.net, john.fastabend@gmail.com, ast@kernel.org,
- andrii@kernel.org, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, jolsa@kernel.org, yangfeng@kylinos.cn, tj@kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- syzbot+b4169a1cfb945d2ed0ec@syzkaller.appspotmail.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <28ae3286f3217881ae6ea3aecad47ae4567d6ec7.1749588810.git.geraldogabriel@gmail.com>
 
-Hello:
-
-This patch was applied to bpf/bpf-next.git (net)
-by Daniel Borkmann <daniel@iogearbox.net>:
-
-On Wed, 11 Jun 2025 17:20:43 +0000 you wrote:
-> The commit ee971630f20f ("bpf: Allow some trace helpers for all prog
-> types") made bpf_get_cgroup_classid_curr helper available to all BPF
-> program types, not just networking programs.
+On Tue, Jun 10, 2025 at 06:19:49PM -0300, Geraldo Nascimento wrote:
+> Link Control and Status Register 2 is not present in current
+> pcie-rockchip.h definitions. Add it in preparation for
+> setting it before Gen2 retraining.
 > 
-> This helper calls __task_get_classid() which internally calls
-> task_cls_state() requiring rcu_read_lock_bh_held(). This works in
-> networking/tc context where RCU BH is held, but triggers an RCU
-> warning when called from other contexts like BPF syscall programs that
-> run under rcu_read_lock_trace():
+> While at it, also reference other registers from offset at
+> Capabilities Register through standard PCI definitions. Only
+> RC registers have been touched, although in principle there's
+> no functional change.
 > 
-> [...]
+> Signed-off-by: Geraldo Nascimento <geraldogabriel@gmail.com>
+> ---
+>  drivers/pci/controller/pcie-rockchip.h | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
+> index 5864a20323f2..90d98aa8830e 100644
+> --- a/drivers/pci/controller/pcie-rockchip.h
+> +++ b/drivers/pci/controller/pcie-rockchip.h
+> @@ -155,17 +155,19 @@
+>  #define PCIE_EP_CONFIG_DID_VID		(PCIE_EP_CONFIG_BASE + 0x00)
+>  #define PCIE_EP_CONFIG_LCS		(PCIE_EP_CONFIG_BASE + 0xd0)
+>  #define PCIE_RC_CONFIG_RID_CCR		(PCIE_RC_CONFIG_BASE + 0x08)
+> -#define PCIE_RC_CONFIG_DCR		(PCIE_RC_CONFIG_BASE + 0xc4)
+> +#define PCIE_RC_CONFIG_CR		(PCIE_RC_CONFIG_BASE + 0xc0)
+> +#define PCIE_RC_CONFIG_DCR		(PCIE_RC_CONFIG_CR + PCI_EXP_DEVCAP)
 
-Here is the summary with links:
-  - [bpf-next,v3] net: Fix RCU usage in task_cls_state() for BPF programs
-    https://git.kernel.org/bpf/bpf-next/c/7f12c3385048
+I would really like to see PCI_EXP_DEVCAP referenced in the source
+where we currently use PCIE_RC_CONFIG_DCR.  That way, cscope/tags/grep
+will find the actual uses of PCI_EXP_DEVCAP, not just this #define of
+PCIE_RC_CONFIG_DCR.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Something like this:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/pci-mvebu.c?id=v6.15#n265
 
+>  #define   PCIE_RC_CONFIG_DCR_CSPL_SHIFT		18
+>  #define   PCIE_RC_CONFIG_DCR_CSPL_LIMIT		0xff
+>  #define   PCIE_RC_CONFIG_DCR_CPLS_SHIFT		26
 
+Also use PCI_EXP_DEVCAP_PWR_VAL and PCI_EXP_DEVCAP_PWR_SCL here if
+possible.  And FIELD_GET()/FIELD_PREP(), which avoid the need to
+define _SHIFT values.
+
+I would do a pure conversion patch of the existing #defines.  Then I
+suspect you wouldn't need a patch to add the Link 2 registers at all
+because you could just use the #defines from pci_regs.h.
+
+> -#define PCIE_RC_CONFIG_DCSR		(PCIE_RC_CONFIG_BASE + 0xc8)
+> +#define PCIE_RC_CONFIG_DCSR		(PCIE_RC_CONFIG_CR + PCI_EXP_DEVCTL)
+>  #define   PCIE_RC_CONFIG_DCSR_MPS_MASK		GENMASK(7, 5)
+>  #define   PCIE_RC_CONFIG_DCSR_MPS_256		(0x1 << 5)
+> -#define PCIE_RC_CONFIG_LINK_CAP		(PCIE_RC_CONFIG_BASE + 0xcc)
+> +#define PCIE_RC_CONFIG_LINK_CAP		(PCIE_RC_CONFIG_CR + PCI_EXP_LNKCAP)
+>  #define   PCIE_RC_CONFIG_LINK_CAP_L0S		BIT(10)
+> -#define PCIE_RC_CONFIG_LCS		(PCIE_RC_CONFIG_BASE + 0xd0)
+> +#define PCIE_RC_CONFIG_LCS		(PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL)
+>  #define PCIE_EP_CONFIG_LCS		(PCIE_EP_CONFIG_BASE + 0xd0)
+> +#define PCIE_RC_CONFIG_LCS_2		(PCIE_RC_CONFIG_CR + PCI_EXP_LNKCTL2)
+>  #define PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2 (PCIE_RC_CONFIG_BASE + 0x90c)
+>  #define PCIE_RC_CONFIG_THP_CAP		(PCIE_RC_CONFIG_BASE + 0x274)
+>  #define   PCIE_RC_CONFIG_THP_CAP_NEXT_MASK	GENMASK(31, 20)
+> -- 
+> 2.49.0
+> 
