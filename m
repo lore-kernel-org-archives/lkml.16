@@ -1,108 +1,119 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC84DF49
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:15:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A5FA923;
+	Wed, 11 Jun 2025 07:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749626148; cv=none; b=t5W9cz9+s7EOzWjml3CHJJDiSe8OE3MnEmF8gSOE2G1zP34iN/7I3nTqlyAsZ0/fiCr7sZFk5pttnn/0k6KsTUu75Srupbn63ANeLvAuoM/20lvjzoAfq8D/PdqAFAr16p50sRhnTbF7rhKzkQZnVNATlbatBlYKNAUQz1XU/nw=
+	t=1749626269; cv=none; b=l9QZiEvasg1DCkIzAhwHxDjD2Kdy2Barqmb/6zjxEZSHcLeK6vL6bEr5nNHMPTsvmg+nSfnXW7KWFtDnPZU/j/uPUqCkYnaYx5aR+C0PKD72tUiXQ9gpde8fRhO3q5RxdzpKfWrq31WaUZ8Wp6AURtLrwuuqBqxmndW/lEv7I4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749626148; c=relaxed/simple;
-	bh=bDw8lv6DNJsD9dchwMOlh8L211qeg1CfzJ2PVT3ZHbE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Jo+GiNhnXIq+65OBCsDhHg8oJOQePzF7G5y3mFZd/EW0VDgaGPm5EPdm1KmsH6cX9VXjZYHjavk1ZO44P9szMDPDHjhdA7yRm8jPXH+e2i74ypjVBTyV3UcRh0BhhzpjjWJy7Jb4KUSjMjD39mmldDwvH8wKOBWyvqwm05Qvmqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=EDsOoTdy; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1749626269; c=relaxed/simple;
+	bh=iHrPvVx1WWrg1knUNOkgUot4HWCPgK9t4nazhE6gR8o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RZtLJKwD+Tsx2w1HEm6FZqXRiG4rGqlGqIXKRGN8ni6E7QBZ1QGfC5jalqDBjUIIQoCM4Y7A2pQqt4isDYELHojnD/tOrq0+9mQHKH65l13KPpyB+EODMO6l6Zh76LgwIRZ/z7Y1kwHmsVVLDta9KzNB/VrxCjoB371wjHBIAYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n37MAECU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="EDsOoTdy"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e7d9d480e6cso4592099276.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 00:15:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1749626146; x=1750230946; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bDw8lv6DNJsD9dchwMOlh8L211qeg1CfzJ2PVT3ZHbE=;
-        b=EDsOoTdywA3JGa2AL/9SYg8S0Nw+LIhDt0sx3uS/47ZQqersfDsCkjptM/GxIOX+RZ
-         P60q0CV7Yn29/sQ0VY6JOr5rrpZIA85lQqHw9pGmpvLxrkjDXuHzzVlbs5re7vezhLlH
-         g3JAoyI+oDwQTVKThlcdzkb0hNcSUKV9SNVgcBp4A0rT5QtbTFAWMJt+6q6f0rYzaUmE
-         qwD+sjtxzQu0vRw117E7aqJmcC2Q2EeDYq15EnloyxXaojhg+OpVxnHnnVnPyMEWB3N7
-         CH/lpRzOdrTnro3oTM3b2RdlKuzyKOYWpNcCU0vL9fRrS9ykx0BUiAzuAZrZmfnCqnn7
-         zFMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749626146; x=1750230946;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bDw8lv6DNJsD9dchwMOlh8L211qeg1CfzJ2PVT3ZHbE=;
-        b=wgm6Dcig2jZbcnyEuYkXzdD/jlz1BYnanQ2DANDuUFFKGq5Wpm6wkBXPS8ScXpjfZz
-         3Q2GO2SSp47rxgK0N+8RlGT9NAZJNvRHvz+cLfkhBSZ/8I5pzKbG1yl6Y5Ex4vbmNwx2
-         ZL2B+dGl9Nt4x7dMT0M+ffQYfb7dINStqUlx9ojrxovnOMTt8128UWYcdykymSrtdTE1
-         n0EBbsabL+e4+gDUe/1PGnQnpEAz0qbvbBkmpTU/6nENF1xQgo49kunUvGnracyXvPzj
-         M2YWaFMSOaBViEihf+NSmd1E1KWRSxx9ueQeLUytOMUCEOCDQImG486FTMIY2f7boQ87
-         AXmw==
-X-Forwarded-Encrypted: i=1; AJvYcCXOuGQ+/OVqI7dsYj3G8PBoicoy0RcFwsWx2MKPhkDb2hsmnpC/dRvuTPHAVBb72a5AUYxGtUVqeGylHMQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdBqQqSpxA9u08AXQnhP946gkoKM7V+fXz5AqYql1jrLoKBfnQ
-	tIlYfBQbDG1UXKbBH7qNhD6i+3mKrFlZCFwmfCxHclVobRtrdG7HbzD/RxVl8L5YDK8swe83CZZ
-	MtIrlzL6qfCVsg6NAR+8urUmqG103zKLMzc28CDlrE2453a/rMOYeZ9o=
-X-Gm-Gg: ASbGncvevhfE/XQRGcQHB+ca5WKDDyFYKQDt/n0K8DKFiCsTQjZyTfJq/skiD5wA83x
-	Ez3kffeW4DSeOOrlEEILtCFq38+NqYmBXbtsGTfMZXT5/oP3AumBo77eO1ZrZOnI7BYxJ6DLLCg
-	WNrhHoZvQxRITV5+1csUuxEPDA6RDAaffkq29VspVn2fAnlw==
-X-Google-Smtp-Source: AGHT+IEc+9hppzJUUw3dhryHx4clVFd5aDegC77U3+FbbfhX2RUu0BijR2nlmCbtsFlav7Da7Y/c1YmFqqH/eQyJEGw=
-X-Received: by 2002:a05:6902:2191:b0:e78:eb00:babc with SMTP id
- 3f1490d57ef6-e81fd9b2f22mr3224045276.26.1749626145882; Wed, 11 Jun 2025
- 00:15:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n37MAECU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7ADBC4CEEE;
+	Wed, 11 Jun 2025 07:17:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749626268;
+	bh=iHrPvVx1WWrg1knUNOkgUot4HWCPgK9t4nazhE6gR8o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=n37MAECUXxjw+k6WTr221FhWxHuilUlwS7gxTQD6iKFT3Jmmkp8WHls+zxXLSq7Ih
+	 xQ/Ok+l05QGc+/wBuUXIgNAnRVbZzwv3FpO1CwIfFn6fCQTWYeOmTbbgS3rpdK3qzc
+	 YKhYoHMJs4VGnZe2Y7ZijjhuOem/e9CZfHOL659o6HaYM6sNmF2dABerp3N1ZcwgPg
+	 3NQ0jI1+AkIGMyRgR/MkV+U8OBlwHyU690V+qbUgil+NZeVgHQs86gw6DLaTMWnR+W
+	 Src1vabhPrSd/e5aXh6sbzOPt6ZYW4e6rxOXkaK+ZX5sH9bARo/U6JceNMyqLKq1IV
+	 7CuGSnp3SZY0Q==
+Message-ID: <b137e6bb-7380-4f4c-8469-422587d08c60@kernel.org>
+Date: Wed, 11 Jun 2025 09:17:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611031023.28769-1-nick.hu@sifive.com> <20250611031023.28769-2-nick.hu@sifive.com>
- <9c429671-8409-4911-8559-73a069d66964@kernel.org>
-In-Reply-To: <9c429671-8409-4911-8559-73a069d66964@kernel.org>
-From: Nick Hu <nick.hu@sifive.com>
-Date: Wed, 11 Jun 2025 15:15:34 +0800
-X-Gm-Features: AX0GCFt836Lo7RPXBqlCX9ju9k05WYmV2JoCwZYZlclqH9DiOrcuiHuFOhx2tAw
-Message-ID: <CAKddAkAyvRdAz9X_rCGgfdxD0Z_Q7sAt8e5nuJe7=s7G-Y3+AQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: power: Add SiFive Domain Management controllers
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: conor+dt@kernel.org, krzk+dt@kernel.org, Cyan Yang <cyan.yang@sifive.com>, 
-	Samuel Holland <samuel.holland@sifive.com>, devicetree@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Rob Herring <robh@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/8] dt-bindings: serial: describe SA8255p
+To: Praveen Talari <quic_ptalari@quicinc.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+ devicetree@vger.kernel.org, psodagud@quicinc.com, djaggi@quicinc.com,
+ quic_msavaliy@quicinc.com, quic_vtanuku@quicinc.com,
+ quic_arandive@quicinc.com, quic_mnaresh@quicinc.com,
+ quic_shazhuss@quicinc.com, Nikunj Kela <quic_nkela@quicinc.com>
+References: <20250606172114.6618-1-quic_ptalari@quicinc.com>
+ <20250606172114.6618-2-quic_ptalari@quicinc.com>
+ <20250610-tested-lilac-raccoon-6c59c4@kuoka>
+ <d744b518-2ae9-4ca0-86ce-11cf74c945e6@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <d744b518-2ae9-4ca0-86ce-11cf74c945e6@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 11, 2025 at 2:57=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.or=
-g> wrote:
->
-> On 11/06/2025 05:10, Nick Hu wrote:
-> > SiFive Domain Management controller includes the following components
-> > - SiFive Tile Management Controller
-> > - SiFive Cluster Management Controller
-> > - SiFive Core Complex Management Controller
-> >
-> > These controllers control the clock and power domain of the
-> > corresponding domain.
-> >
-> > However, Since we don't have a SoC specific compatible string yet, so
-> > add '- {}' for the first entry [1][2].
->
->
-> But you must have Soc specific compatible strings. See previous discussio=
-n.
->
-Maybe I'm missing something, but since we don't have a SoC-specific compati=
-ble
-string yet, I thought we agreed to include a `- {}` as the first
-entry, along with an
-explanation in both the commit message and comments [1].
+On 10/06/2025 10:10, Praveen Talari wrote:
+>>> +
+>>> +  interrupts:
+>>> +    minItems: 1
+>>
+>> Drop, this is not in sync with interrupt-names. You already received
+>> comments on this. We talk about this since v4!
+> I hope you have reviewed the commit message and the description under 
+> interrupt-name regarding the optional wakeup IRQ. I believe that address 
+> your query.
+> 
+> I can include minItems:1 in the interrupt-name property in the next 
+> patch set to align/sync with interrupts property.
+Yes, then the interrupt-names needs minItems.
 
-Links:
-- [1] https://lore.kernel.org/linux-riscv/c91d99c9-0ecb-4dcd-9beb-5a1e9fadc=
-619@kernel.org/
-
-> Best regards,
-> Krzysztof
+Best regards,
+Krzysztof
