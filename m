@@ -1,57 +1,57 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DBAA2D29DF
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 22:47:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91EBC2D3237
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 22:47:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749682048; cv=none; b=MVfa47IwUaQ+IX0LWk3XV8SwMXG08FvzI8koC/CbspWlYSF6ygT51Gkr1aMBl0eQ5B8NicwGyjY4U1hemhWoYovxLeLfnGglb3c2tJkiIWZ3VmLsm+Im7Des42AZyGRrMcDQFLiXVjm9i5dxdSeicQPd7tVTTGlqvayoHZ0wC+A=
+	t=1749682050; cv=none; b=bMKGr+itSF9EBBirjwD03UF2TDIMnw4MtCRrVqGqKJ3oXlU4HoyX/2b+Y974qY4L0sO578Axnn3CefO/iO7+ltRPVnXy42lT7OnT5Ie7G60KLA4rcziRG0y3OBzzFjDjgsja7/6Bd0W/TJPCKuMILVGVtFAuclexbyiZuKH8ubc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749682048; c=relaxed/simple;
-	bh=547ahGwYktSn5Nv2W53Rc8bmaZFK3eiGWpUYnwdvnmw=;
+	s=arc-20240116; t=1749682050; c=relaxed/simple;
+	bh=J6zOinbkdgKylugz+qVBm+Q6AqKeqc/V4kq3h/NovvU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=NY3oOWGZuhls7Duc7t8oTl+p2y91OWEDhfOEkCXhehLaak2DX7LqDT9TZ1QHNFdpZkMfB3GNhmfjKNLKE8C1uLny8LAnE5EFJ+jWFuW1RX3qTIpfwBynorvKoeguRkqIRD3aLydVy2wVhKHE0fu1o8nZ8jDASGYlPxdXiuWgCd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q+k/Dw0c; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=hTy/ErH6yoeUQaX3eZ+0hz5KZ6LmJOUFPNKxUSiNCf/AzE5LYENrhST859PXTmEUfo+mAAQlC653NkX1QjyeGV66HZ5s0KDFrZSA7lOSek7QJmqcWzhLgM2pNv5j7XjAhQinA/hcg4qA3kYlA3VRgUW5Gpk0Vk1wsl0vkp1lvCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vdhp2R6N; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q+k/Dw0c"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-311b6d25163so282644a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:47:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vdhp2R6N"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-31171a736b2so437422a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:47:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749682045; x=1750286845; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749682047; x=1750286847; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y7mFXgOTZx56ZNft/YcUy8E2TW8/wko5wqyDmOqvjJg=;
-        b=q+k/Dw0cER5rTtOYX0COH92Xxt7CFPsK46j5Pi8tgZiVf7K7m3CJfTmFrvjRKMv98p
-         AkK7YvO98ZjGBoxHL/gvzNc9fdelrB6NSHueztmyS/tQYgCJ8NsgMYnVuPt6pFX3pBWm
-         OHdIZDpvf4IqArDvZ6vfgcuAxw1UjdB9qzuRtYrFh4DTGvZOLNNBEif7gA9eGg1ngqF9
-         mTXtGgT7sGiJPX2hsqLt1z+1tvnK/F78MdfMmPsse/QOyqsCu3HDyqa+dVwdHuK6jQ9M
-         YdYhKzWqbj+5tpB7YUJ1FW4ZOocDQvh25cRxlXARIiGlUNNkhKOIcZJjljtimfK/xQDj
-         VTRw==
+        bh=trIKCr3BKTnnj1sqkKg+yTyCPFnaZ4cJOVW948+vsJc=;
+        b=vdhp2R6NpU0yGZ6XlW4fm6oMNxjjpRR+osrTo6k3LExLWC0bk73EEkkuSaIkf+9PMv
+         v/FNBOje5/87qsL5BC+pRcxfsewdSBR3DHIGAt2NSra+eUpCYOFr7eHmKQZ9OXKM7Oir
+         WK78V/IEch2EcWK+xjQUvAn7uLkCkl6ImKryfX4StepRP2OcTvBaAl59JF6yXxpQ+w2w
+         ANyD/DxsW0OU26x8QfeEXeEWeuH3z6uYm+yy4MqPPneETExxLi3cAyxaA4fFK/8Dcyt2
+         oU/WQ+PKIt61vV5cQamD7zeJD12wYMiaZ+FwADG/uUt/MdNy+psf6vtXYS3I1IOt+6qx
+         XtfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749682045; x=1750286845;
+        d=1e100.net; s=20230601; t=1749682047; x=1750286847;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Y7mFXgOTZx56ZNft/YcUy8E2TW8/wko5wqyDmOqvjJg=;
-        b=vSox/5wan1zBhV88TpRusjiWNKyCHAA858p9mEHQo29cZYiIhT+KrXQio2qDMxj2PJ
-         BYLTlXh5sWzTlZTVjpXYJ3I4IdoQj0KWwXdw2yE6B5AdwqGfTEMmgmWR5lJUmXwxN3Ic
-         bIW7BerLzttlfluXVp64IkVs9E0CjK/rq+cI693vI4GAiyzwi0jBSSH3ngIZ1nL3y9eM
-         wi2LCBbZ66/yQoX5Rp9w/V9nODuLKRq8YKgzyG72EPIzuznPADCv8U/3vU31vc0IN7Uk
-         vLtmRP3LKJJJ2XJ3qzvD51IGYKW/pt2jBJW8/dLWpPyalQyoajBA1oYM926VU+TbTWe8
-         0JvA==
-X-Forwarded-Encrypted: i=1; AJvYcCWFUWeg+t4rgMS8AhUKi6ZI/AO4jSk4tOytmbRkj4cKKbXdsQfaQZCqZbHIWcjxVQ0RlNe0hyj2z17ZE18=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/gIXgeF9ElSa/HS60GnAztOf2+JHasygLfKVtwkO6DewgDb2n
-	CbVWIAaZldsAa1fXQwZxbESp3kSHYNsxk0hOtjQoc4UVzyjBVpUCpWmSmu72ryhOunMpfFlsYAK
-	oWKCpyA==
-X-Google-Smtp-Source: AGHT+IHhbL/TBZCG5Y/ATXxmlqQOVoqO8b5Q5McIR7KBGzNPtc92BdBjMfFoGArRz+XJKDhkjLGjJDSDCHk=
-X-Received: from pjbqi5.prod.google.com ([2002:a17:90b:2745:b0:30a:31eb:ec8e])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:510f:b0:313:2754:5910
- with SMTP id 98e67ed59e1d1-313bfbc310bmr1845151a91.15.1749682045371; Wed, 11
- Jun 2025 15:47:25 -0700 (PDT)
+        bh=trIKCr3BKTnnj1sqkKg+yTyCPFnaZ4cJOVW948+vsJc=;
+        b=sa0XR74P/p2qG5uOQe+yANqVkkLkiczjl0/HnYa520Ohfz3zxHWbHHHFkXmLlKMH7t
+         34D7xJtxBfqktiKHqAOcOuMLak3+PXM7xSaNdP777H4rQr0+k6KMVnRHNr7/x6jKmetR
+         oqWJEED3K4ayuznkkAU0LMZA2gvVHBSO7u0cwdJ3Sud7ARWddQmymG5vRuAhDG/FWucw
+         JYmIQz2MLkPqyHq9L7l3PXoqTnmiNESdX3Kriy1MJRxpatr6+sq2ukhadPOWhuW+qEmA
+         l1QafQecVeqjKrvoY4agZEe7HVMMxgN+/rVxbEin5RmocAxIX3rx+Ju5geRVw6UVFws0
+         M1Jw==
+X-Forwarded-Encrypted: i=1; AJvYcCXgpBgb8fd+0uFHjaJtww7rSO9ce3DSTi1iYU9t4xA9cDQm9AAUTBkolmy4dObqw6V3zV0W2aLPCRrziqk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySVV6mxMcxdiEYKBdkB3tUFDptJ2XuASudz1GBz42LB89Tkp5I
+	2lJshqA1+iALuO8JJgRpndidWOlrvo+U3oyiDjnkAqSMEUYtW0KNK6rg458vIcl8CeGphdRUmK4
+	WPNoWHw==
+X-Google-Smtp-Source: AGHT+IF+r3WoBv41JnZ3zMdtBzjsIX3MU1bEitF46j7ZacLy0t9sYOOvunU4WNhpDLaXzfE8bRA/KcgnWWk=
+X-Received: from pji7.prod.google.com ([2002:a17:90b:3fc7:b0:312:3b05:5f44])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3508:b0:312:eaea:afa1
+ with SMTP id 98e67ed59e1d1-313c08cfd2emr946409a91.29.1749682047052; Wed, 11
+ Jun 2025 15:47:27 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed, 11 Jun 2025 15:45:20 -0700
+Date: Wed, 11 Jun 2025 15:45:21 -0700
 In-Reply-To: <20250611224604.313496-2-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,9 +61,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250611224604.313496-2-seanjc@google.com>
 X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-Message-ID: <20250611224604.313496-19-seanjc@google.com>
-Subject: [PATCH v3 17/62] KVM: SVM: Add enable_ipiv param, never set IsRunning
- if disabled
+Message-ID: <20250611224604.313496-20-seanjc@google.com>
+Subject: [PATCH v3 18/62] KVM: SVM: Disable (x2)AVIC IPI virtualization if CPU
+ has erratum #1235
 From: Sean Christopherson <seanjc@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
 	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, 
@@ -77,164 +77,57 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Maxim Levitsky <mlevitsk@redhat.com>
 
-Let userspace "disable" IPI virtualization for AVIC via the enable_ipiv
-module param, by never setting IsRunning.  SVM doesn't provide a way to
-disable IPI virtualization in hardware, but by ensuring CPUs never see
-IsRunning=1, every IPI in the guest (except for self-IPIs) will generate a
-VM-Exit.
+Disable IPI virtualization on AMD Family 17h CPUs (Zen2 and Zen1), as
+hardware doesn't reliably detect changes to the 'IsRunning' bit during ICR
+write emulation, and might fail to VM-Exit on the sending vCPU, if
+IsRunning was recently cleared.
 
-To avoid setting the real IsRunning bit, while still allowing KVM to use
-each vCPU's entry to update GA log entries, simply maintain a shadow of
-the entry, without propagating IsRunning updates to the real table when
-IPI virtualization is disabled.
+The absence of the VM-Exit leads to KVM not waking (or triggering nested
+VM-Exit) of the target vCPU(s) of the IPI, which can lead to hung vCPUs,
+unbounded delays in L2 execution, etc.
 
-Providing a way to effectively disable IPI virtualization will allow KVM
-to safely enable AVIC on hardware that is susceptible to erratum #1235,
-which causes hardware to sometimes fail to detect that the IsRunning bit
-has been cleared by software.
+To workaround the erratum, simply disable IPI virtualization, which
+prevents KVM from setting IsRunning and thus eliminates the race where
+hardware sees a stale IsRunning=1.  As a result, all ICR writes (except
+when "Self" shorthand is used) will VM-Exit and therefore be correctly
+emulated by KVM.
 
-Note, the table _must_ be fully populated, as broadcast IPIs skip invalid
-entries, i.e. won't generate VM-Exit if every entry is invalid, and so
-simply pointing the VMCB at a common dummy table won't work.
+Disabling IPI virtualization does carry a performance penalty, but
+benchmarkng shows that enabling AVIC without IPI virtualization is still
+much better than not using AVIC at all, because AVIC still accelerates
+posted interrupts and the receiving end of the IPIs.
 
-Alternatively, KVM could allocate a shadow of the entire table, but that'd
-be a waste of 4KiB since the per-vCPU entry doesn't actually consume an
-additional 8 bytes of memory (vCPU structures are large enough that they
-are backed by order-N pages).
+Note, when virtualizaing Self-IPIs, the CPU skips reading the physical ID
+table and updates the vIRR directly (because the vCPU is by definition
+actively running), i.e. Self-IPI isn't susceptible to the erratum *and*
+is still accelerated by hardware.
 
 Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
-[sean: keep "entry" variables, reuse enable_ipiv, split from erratum]
+[sean: rebase, massage changelog, disallow user override]
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/svm/avic.c | 32 ++++++++++++++++++++++++++------
- arch/x86/kvm/svm/svm.c  |  2 ++
- arch/x86/kvm/svm/svm.h  |  8 ++++++++
- 3 files changed, 36 insertions(+), 6 deletions(-)
+ arch/x86/kvm/svm/avic.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
-index 0c0be274d29e..48c737e1200a 100644
+index 48c737e1200a..bf8b59556373 100644
 --- a/arch/x86/kvm/svm/avic.c
 +++ b/arch/x86/kvm/svm/avic.c
-@@ -292,6 +292,13 @@ static int avic_init_backing_page(struct kvm_vcpu *vcpu)
- 	/* Setting AVIC backing page address in the phy APIC ID table */
- 	new_entry = avic_get_backing_page_address(svm) |
- 		    AVIC_PHYSICAL_ID_ENTRY_VALID_MASK;
-+	svm->avic_physical_id_entry = new_entry;
-+
+@@ -1187,6 +1187,14 @@ bool avic_hardware_setup(void)
+ 	if (x2avic_enabled)
+ 		pr_info("x2AVIC enabled\n");
+ 
 +	/*
-+	 * Initialize the real table, as vCPUs must have a valid entry in order
-+	 * for broadcast IPIs to function correctly (broadcast IPIs ignore
-+	 * invalid entries, i.e. aren't guaranteed to generate a VM-Exit).
++	 * Disable IPI virtualization for AMD Family 17h CPUs (Zen1 and Zen2)
++	 * due to erratum 1235, which results in missed GA log events and thus
++	 * missed wake events for blocking vCPUs due to the CPU failing to see
++	 * a software update to clear IsRunning.
 +	 */
- 	WRITE_ONCE(kvm_svm->avic_physical_id_table[id], new_entry);
- 
- 	return 0;
-@@ -769,8 +776,6 @@ static int svm_ir_list_add(struct vcpu_svm *svm,
- 			   struct amd_iommu_pi_data *pi)
- {
- 	struct kvm_vcpu *vcpu = &svm->vcpu;
--	struct kvm *kvm = vcpu->kvm;
--	struct kvm_svm *kvm_svm = to_kvm_svm(kvm);
- 	unsigned long flags;
- 	u64 entry;
- 
-@@ -788,7 +793,7 @@ static int svm_ir_list_add(struct vcpu_svm *svm,
- 	 * will update the pCPU info when the vCPU awkened and/or scheduled in.
- 	 * See also avic_vcpu_load().
- 	 */
--	entry = READ_ONCE(kvm_svm->avic_physical_id_table[vcpu->vcpu_id]);
-+	entry = svm->avic_physical_id_entry;
- 	if (entry & AVIC_PHYSICAL_ID_ENTRY_IS_RUNNING_MASK)
- 		amd_iommu_update_ga(entry & AVIC_PHYSICAL_ID_ENTRY_HOST_PHYSICAL_ID_MASK,
- 				    true, pi->ir_data);
-@@ -998,14 +1003,26 @@ void avic_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
- 	 */
- 	spin_lock_irqsave(&svm->ir_list_lock, flags);
- 
--	entry = READ_ONCE(kvm_svm->avic_physical_id_table[vcpu->vcpu_id]);
-+	entry = svm->avic_physical_id_entry;
- 	WARN_ON_ONCE(entry & AVIC_PHYSICAL_ID_ENTRY_IS_RUNNING_MASK);
- 
- 	entry &= ~AVIC_PHYSICAL_ID_ENTRY_HOST_PHYSICAL_ID_MASK;
- 	entry |= (h_physical_id & AVIC_PHYSICAL_ID_ENTRY_HOST_PHYSICAL_ID_MASK);
- 	entry |= AVIC_PHYSICAL_ID_ENTRY_IS_RUNNING_MASK;
- 
-+	svm->avic_physical_id_entry = entry;
++	enable_ipiv = enable_ipiv && boot_cpu_data.x86 != 0x17;
 +
-+	/*
-+	 * If IPI virtualization is disabled, clear IsRunning when updating the
-+	 * actual Physical ID table, so that the CPU never sees IsRunning=1.
-+	 * Keep the APIC ID up-to-date in the entry to minimize the chances of
-+	 * things going sideways if hardware peeks at the ID.
-+	 */
-+	if (!enable_ipiv)
-+		entry &= ~AVIC_PHYSICAL_ID_ENTRY_IS_RUNNING_MASK;
-+
- 	WRITE_ONCE(kvm_svm->avic_physical_id_table[vcpu->vcpu_id], entry);
-+
- 	avic_update_iommu_vcpu_affinity(vcpu, h_physical_id, true);
+ 	amd_iommu_register_ga_log_notifier(&avic_ga_log_notifier);
  
- 	spin_unlock_irqrestore(&svm->ir_list_lock, flags);
-@@ -1030,7 +1047,7 @@ void avic_vcpu_put(struct kvm_vcpu *vcpu)
- 	 * can't be scheduled out and thus avic_vcpu_{put,load}() can't run
- 	 * recursively.
- 	 */
--	entry = READ_ONCE(kvm_svm->avic_physical_id_table[vcpu->vcpu_id]);
-+	entry = svm->avic_physical_id_entry;
- 
- 	/* Nothing to do if IsRunning == '0' due to vCPU blocking. */
- 	if (!(entry & AVIC_PHYSICAL_ID_ENTRY_IS_RUNNING_MASK))
-@@ -1049,7 +1066,10 @@ void avic_vcpu_put(struct kvm_vcpu *vcpu)
- 	avic_update_iommu_vcpu_affinity(vcpu, -1, 0);
- 
- 	entry &= ~AVIC_PHYSICAL_ID_ENTRY_IS_RUNNING_MASK;
--	WRITE_ONCE(kvm_svm->avic_physical_id_table[vcpu->vcpu_id], entry);
-+	svm->avic_physical_id_entry = entry;
-+
-+	if (enable_ipiv)
-+		WRITE_ONCE(kvm_svm->avic_physical_id_table[vcpu->vcpu_id], entry);
- 
- 	spin_unlock_irqrestore(&svm->ir_list_lock, flags);
- 
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 0ad1a6d4fb6d..56d11f7b4bef 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -231,6 +231,7 @@ module_param(tsc_scaling, int, 0444);
-  */
- static bool avic;
- module_param(avic, bool, 0444);
-+module_param(enable_ipiv, bool, 0444);
- 
- module_param(enable_device_posted_irqs, bool, 0444);
- 
-@@ -5594,6 +5595,7 @@ static __init int svm_hardware_setup(void)
- 	enable_apicv = avic = avic && avic_hardware_setup();
- 
- 	if (!enable_apicv) {
-+		enable_ipiv = false;
- 		svm_x86_ops.vcpu_blocking = NULL;
- 		svm_x86_ops.vcpu_unblocking = NULL;
- 		svm_x86_ops.vcpu_get_apicv_inhibit_reasons = NULL;
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index f225d0bed152..939ff0e35a2b 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -307,6 +307,14 @@ struct vcpu_svm {
- 	u32 ldr_reg;
- 	u32 dfr_reg;
- 
-+	/* This is essentially a shadow of the vCPU's actual entry in the
-+	 * Physical ID table that is programmed into the VMCB, i.e. that is
-+	 * seen by the CPU.  If IPI virtualization is disabled, IsRunning is
-+	 * only ever set in the shadow, i.e. is never propagated to the "real"
-+	 * table, so that hardware never sees IsRunning=1.
-+	 */
-+	u64 avic_physical_id_entry;
-+
- 	/*
- 	 * Per-vCPU list of irqfds that are eligible to post IRQs directly to
- 	 * the vCPU (a.k.a. device posted IRQs, a.k.a. IRQ bypass).  The list
+ 	return true;
 -- 
 2.50.0.rc1.591.g9c95f17f64-goog
 
