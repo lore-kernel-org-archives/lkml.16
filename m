@@ -1,92 +1,81 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D2D19CCFA;
-	Wed, 11 Jun 2025 15:20:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903E11A83E8;
+	Wed, 11 Jun 2025 15:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749655223; cv=none; b=QcJ7jx570MPs2i/xfRR3gzsh6s3hzf7rOmiFGrZm5e9x02KNpPswr8M+KqSTf2O5ZR6Re9R68NPjAIgC3zreHOKFyku6eRvk/bvD7Y4776/H/4EdPg9JdTj3NZTN7yBlzB8WmtxDTe5Wj1PgyUhx9UNz2OPkDawoALav/WvR/QM=
+	t=1749655229; cv=none; b=D33aeH1vSxSoSKZoG9TyR5n8kuEn3kgOsrEmSsclrlAcGAi+QC2XTnZtlw+p1mX/8HPBJ2kZDktwPKlRY91XuqXqN7b2d/nQJqXj6qRq8T8vgan4Xu9uHLHNxCvD2y7EzLeb299iGqz+tEIK3AWDFHSdbDKmKWxkihUUEdDiJrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749655223; c=relaxed/simple;
-	bh=NohXNpmsdTjOJpAWWdAFFnAbb0o5/myN9L3C50WQkeQ=;
+	s=arc-20240116; t=1749655229; c=relaxed/simple;
+	bh=doqV80or5FFXZrFJ4XVxJqCcisBBjET6FQ2n9ahub0A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MrurJJdwUCf6Uc87a4VvSROuVg9EOSUIJmITaC4fChecRZl18/CPCnbMU81KSY8EVnwybq6WjJ2jj1E4xPnBG7rBcDWxSMKwSa6kXqO6KWcsNG0wS3R9JH0Ir0IAcM0cvHjTMMb52LD95aQQLGIBU2NLLWMip+PpitEAvNDD8To=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=PV4/tJLC; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=hpWz0E36Ix8Hwk3kY9jVchwJmnGA06QllrurAk1YGt/VMoQjd2LJHasUBegMvEuDV19kfI1zgl0jZt86qZRJGb7KEJjJ/R/1Gsn99xPNQvbeG3eab2LMPK0bEqLdZ3u7UyIK+QYl0MYDX5P/qWsiF531bCEaVHS/rGKYPIbhOO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HBfaOG2d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PV4/tJLC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=JYIgJLsPyubkJQeP0A1dgUwfI4AQsC5JiM6ZqiStDvE=; b=PV4/tJLCp5T6zxcvYQ2bOoCPkN
-	g5yxBt6UYoOAFQ81ehxAPZojUHPyx/5BZNLwMmH54B5qfbR1NiRq+6ZfYMoaLV6Jq2+beAcB9Xp8l
-	zP5MEpl2RSHl8zre6T/Fd5NBy5FrY0qHWQu35LfsgdrpJ48ha5nN28ocz7mob5ke+RCtyjpMx8Rkq
-	GGRtR+osHqU3ZiN+4xAxmLXddHFz+bZ1FskohZjsyIP+JK/Ex51U2h0wNuhU4diLTwmh6ULlVU1s3
-	F/zfcCZ6Nh6nsB1quLP503sq0koZhWjeZkMMpoyV629SvxeaGPbZw68YGX+mrmd2XhPt9MlVoSuae
-	Ww2syyQg==;
-Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uPNFU-00000002QKN-1V0J;
-	Wed, 11 Jun 2025 15:20:20 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 0D12F308722; Wed, 11 Jun 2025 17:20:19 +0200 (CEST)
-Date: Wed, 11 Jun 2025 17:20:19 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-	"Lai, Yi" <yi1.lai@linux.intel.com>, x86@kernel.org
-Subject: Re: [tip: locking/urgent] futex: Allow to resize the private local
- hash
-Message-ID: <20250611152019.GA2273450@noisy.programming.kicks-ass.net>
-References: <20250602110027.wfqbHgzb@linutronix.de>
- <174965275618.406.11364856155202390038.tip-bot2@tip-bot2>
- <20250611144302.1MtYItK6@linutronix.de>
- <20250611151113.GE2273038@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HBfaOG2d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34AAAC4CEEA;
+	Wed, 11 Jun 2025 15:20:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749655229;
+	bh=doqV80or5FFXZrFJ4XVxJqCcisBBjET6FQ2n9ahub0A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HBfaOG2dCW9MelJdcsJ7M7PJxO9mfCeNhStKdABckr06yt5avy4OZ9JbI9B+2JOFq
+	 oZKZx/6SQCU4g8bgG10/PyAOsU8wnCnvL6gu88omNVcfvFl/p0R5jQP5Ygfl2b3GLn
+	 vxhV0CI60qhadkL3doN/eC3pOjMuLJ34qJuA7wTVxVBP42KrwhccjUffIa2NzUbl5F
+	 eVDa3XsBm++zsKzJOen29QAwvzsiVW4McAbE/T6q/FjdEd7zKEug+aKb7f+J41Lesr
+	 +sPFvEOXwHchTcJ5IGHazcEt3P/dNDGtrpn7uPfe0gQggTdnUypApryeEu45PFztys
+	 k1QutgF3XktBA==
+Date: Wed, 11 Jun 2025 16:20:23 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: catalin.marinas@arm.com, pcc@google.com, will@kernel.org,
+	anshuman.khandual@arm.com, joey.gouly@arm.com,
+	yury.khrustalev@arm.com, maz@kernel.org, oliver.upton@linux.dev,
+	frederic@kernel.org, akpm@linux-foundation.org, surenb@google.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v7 5/9] kselftest/arm64/mte: check MTE_FAR feature is
+ supported
+Message-ID: <319315bf-48f3-4482-99f0-e8cb03ce049b@sirena.org.uk>
+References: <20250611135818.31070-1-yeoreum.yun@arm.com>
+ <20250611135818.31070-6-yeoreum.yun@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="LLcsBgYhYhSy6VHW"
+Content-Disposition: inline
+In-Reply-To: <20250611135818.31070-6-yeoreum.yun@arm.com>
+X-Cookie: No skis take rocks like rental skis!
+
+
+--LLcsBgYhYhSy6VHW
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250611151113.GE2273038@noisy.programming.kicks-ass.net>
 
-On Wed, Jun 11, 2025 at 05:11:13PM +0200, Peter Zijlstra wrote:
-> On Wed, Jun 11, 2025 at 04:43:02PM +0200, Sebastian Andrzej Siewior wrote:
-> > On 2025-06-11 14:39:16 [-0000], tip-bot2 for Sebastian Andrzej Siewior wrote:
-> > > The following commit has been merged into the locking/urgent branch of tip:
-> > > 
-> > > Commit-ID:     703b5f31aee5bda47868c09a3522a78823c1bb77
-> > > Gitweb:        https://git.kernel.org/tip/703b5f31aee5bda47868c09a3522a78823c1bb77
-> > > Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> > > AuthorDate:    Mon, 02 Jun 2025 13:00:27 +02:00
-> > > Committer:     Peter Zijlstra <peterz@infradead.org>
-> > > CommitterDate: Wed, 11 Jun 2025 16:26:44 +02:00
-> > > 
-> > > futex: Allow to resize the private local hash
-> > > 
-> > > Once the global hash is requested there is no way back to switch back to
-> > > the per-task private hash. This is checked at the begin of the function.
-> > > 
-> > > It is possible that two threads simultaneously request the global hash
-> > > and both pass the initial check and block later on the
-> > > mm::futex_hash_lock. In this case the first thread performs the switch
-> > > to the global hash. The second thread will also attempt to switch to the
-> > > global hash and while doing so, accessing the nonexisting slot 1 of the
-> > > struct futex_private_hash.
-> > > This has been reported by Yi Lai.
-> > > 
-> > > Verify under mm_struct::futex_phash that the global hash is not in use.
-> > 
-> > Could you please replace it with
-> > 	https://lore.kernel.org/all/20250610104400.1077266-5-bigeasy@linutronix.de/
-> > 
-> > It also looks like the subject from commit bd54df5ea7cad ("futex: Allow
-> > to resize the private local hash")
-> 
-> Now done so, unless I messed up again :/
+On Wed, Jun 11, 2025 at 02:58:14PM +0100, Yeoreum Yun wrote:
+> To run the MTE_FAR test when cpu supports MTE_FAR feature,
+> check the MTE_FAR feature is supported in mte test.
 
-ARGH, let me try that again :-(
+Reviewed-by: Mark Brown <broonie@kernel.org>
+
+--LLcsBgYhYhSy6VHW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhJnrYACgkQJNaLcl1U
+h9DTogf/XEk8iMJBi79waQjbN4WVhdwRu16ZFgYl5bfzdpd2P2Wax05Rwfiy+Heb
+jCCSLf3+Z2KtUWm20Qavvb86/tnscSg72xIrc8piejxltT5yJeJwJzCv8tcRyJdf
++s0LMSfwoNVePKIQkldVgUQ2Dxukz+0xVE/tN/62dgxRU+/fCKDuiU/K3zZphNfo
+Da8ps0g1pqHwm7ee45Q2AW62x83TYU2+Wfj0keaAj7rJ+EgAezJ8WybmtSQpA2XL
+SUhttLWjlqG0eHt4ljxpz+8raoXbClNu48CwJEVYCHQS1hUlBGOseUOOE6KNYNxN
+Z1bNUQVdjn7hzOSL1zCJ/iLOtOrDmQ==
+=jV/l
+-----END PGP SIGNATURE-----
+
+--LLcsBgYhYhSy6VHW--
