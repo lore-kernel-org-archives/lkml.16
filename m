@@ -1,220 +1,161 @@
-Received: from ixit.cz (ip-94-112-25-9.bb.vodafone.cz [94.112.25.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C2512CD8B;
-	Wed, 11 Jun 2025 08:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.112.25.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A7712CD8B;
+	Wed, 11 Jun 2025 08:11:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749629415; cv=none; b=FGXLc2XW8LzJ+OYUVVlPLfUxW2OpWl5QFx+jPDMwtIa/N6O/QbC/WFCr9K5r87bAP8coFagEqCXBGrvYSE0BKKBs4ccs7j1/JipEeui5NkYwnu1Cfo+G5sF2NQxMWaIEE00GVwwDaSlXiiqI5QM1R7XFDdp2pwr67LiA8S56XiA=
+	t=1749629472; cv=none; b=YBXmu/I9FnVtjVONtA1tu2/oZvnkBQ+2HI9z6hD6ZtmlA0eCOREEkDuoAbG+eiXXAJZ4qUSTDjJPLlkYKExqJcq2c/+/W7iDzSEka4vRupYT9E4o8ChC3cZl7tMYAmWl2Rf88cyfWDdOELLViclUXOvDfqaF2J85RLamkUJx+I8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749629415; c=relaxed/simple;
-	bh=0TD+Te+EnncVRspXln2SukbmA0OLeKLM5C/ckAVZztE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=joJugFDwAJtu7fZMWXI1dEnfH/wUd3c+YG9ExCGW2lWW1hoAuzwSaxtjidVp/dfuXxVgwnDFEZdvIabHbZJC4vX/1PDyQH5drmqhximNzFfCkMo/1uzcG1j8gnNzisalGMUwgiWVBQtadpNDzQaAWkcTOViGUhN6CnAMtSwAHJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixit.cz; spf=pass smtp.mailfrom=ixit.cz; dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b=xqcG5OVM; arc=none smtp.client-ip=94.112.25.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixit.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ixit.cz
+	s=arc-20240116; t=1749629472; c=relaxed/simple;
+	bh=kTkKSzhE3N+5xcKYpvA81X8dq2z+SsYne1oPzkYDPYc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l7rXMMXW/UPHhfoyPoi1ZBZJ7jHdcOAkrpBrTas8ze0rffjWOA8BwQoxaPqmwSQqGUWBrQcDLOO6sJvITQ7eUMCffeDDFlbqbTWiiz/kP7M4gsb3bjC1vfuZb7YJOFlwYTUD3b3jxtBWr+NbDtF6BUzZ+l6nj0HsPAvB1BglcVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f/mRgMjx; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b="xqcG5OVM"
-Received: from [192.168.2.138] (cst-prg-45-116.cust.vodafone.cz [46.135.45.116])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ixit.cz (Postfix) with ESMTPSA id 83EF316016B;
-	Wed, 11 Jun 2025 10:10:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ixit.cz; s=dkim;
-	t=1749629402;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=4rFoo6RFf3f3af4Ho4HRqf2Uwh5bvZe2+nsQbsMKIbA=;
-	b=xqcG5OVM79d+hLIWyJFRduP7nJvmm+vCTBxrrJqQyol2Oi2HCNs94SMs6EP5QvXtM1TL/T
-	pjKCqLiXHGMbKwy/g9fVgehLfituVEcLRe9/0t/eiYhKJacqdkzH8IW7JoLYee4nIKze1b
-	KfphvCKL4/MhBRF+B8zsQuIGd8OUGng=
-Message-ID: <72689fa4-cb6d-4299-be29-2b7990a1c365@ixit.cz>
-Date: Wed, 11 Jun 2025 10:10:00 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f/mRgMjx"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4a4bb155edeso78642721cf.2;
+        Wed, 11 Jun 2025 01:11:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749629470; x=1750234270; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+ZZMQxOY3jdiUUlcRVmJEoq9jtCkBekBHkitKdRBzHk=;
+        b=f/mRgMjxXJXGU0fuUIHr+uiBE/h5oajUhTpxdALYhuVvN0A211gKduIa6w8QygutI+
+         mNRz/8aBhKu9N4/TnXfiG1/HHw3mMO15Gpyz16iqp+X6Ce9vVATl38pWlBcXE+LEcVUr
+         WST9rrY0YY5zaNJmjuRyKVqKkMKlBfjXtBgvSA5Y+stuYvpZ+SnvKYLCvtzqpvfs4fqn
+         V+qezkSo1hwu+5hjwCCkzerpSJABYcnbXXnH28BbgdY2+DH5HL9XRpk/tx1llb0LHc8O
+         lXWJuheMtWL7aSOxmXS3MtktC6Md9Jh2JhwE1okt8hSB02nyB0lXd7Hhvrp76gV3NVbj
+         1x5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749629470; x=1750234270;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+ZZMQxOY3jdiUUlcRVmJEoq9jtCkBekBHkitKdRBzHk=;
+        b=qg4alkjX89iddAGZQw6W1cjrqDM/RJ1RIfU34xBecplDiEG4VR3emL+FEPOHEDVrHk
+         DN0aL2xh2NSddvUY0kReJEUvZ0LpATvwgEarYN3rCOeszrnM+NWQFi+w7fff0ebW/Nsv
+         xID95RTY9FfoUW7BU+7kwm+Kf2jchBTUuQnp9rqgV+38mko5ZPqBvuwM31DpJlJqYY9H
+         ur87XyGrQnogMEb9+zF3wflVUJyZtozrHxayEjVK1KMzEfCV2QzfQJqMuzy7snNkefvf
+         nj8+rknCkzRuJm1SItxy3r4HVb5Urt0QSxqY8QuSVhh6VvNl6NljQoxEQ7/mlZtFPxpH
+         etrA==
+X-Forwarded-Encrypted: i=1; AJvYcCXaOskUD3hNpG9WsVbQka7KjoHv9f0wgcVCuH2+HHniBYCvXGDhVdPSo8FS9F9xtmiqLbApeckU23HY@vger.kernel.org, AJvYcCXku4MJI5gn0J9fCelsH/54ElaCnmsMBQcgQBnkCrsAAeW6D6pWCJI+9/8ygiRZBwfjVrGnUHGQJMxSyAuf@vger.kernel.org
+X-Gm-Message-State: AOJu0YzckKJAntWvi1pM9cDH3lQUCpnHLDKO/4Z/Y80C40XHBLNVs4B4
+	sjW+p9LpLbU28yctk6WsEzuaahztXOb3x6g1twCpQZz24vtZ+TDB9SD8
+X-Gm-Gg: ASbGnctjHQTHtbmccRZKmA4ebK/XGZ/F6D/6Wf1D1rNeKRnjJ+ymVDPaFZcsg+p9doV
+	+8XWhMKGAsoPQx+mYVik7hVjvWYdvYVGcL9vlE9FCMNHhpVHFBRcH0ElD2tyQqthdujVbungble
+	S9tU9+yMw/n/AQ8xS71ms0XiHi1BbZWnzmJSsVeGldmUjiN+YTP2Vm+VfU1ElA9l7K9IawC4XTb
+	i/Rafdu69261oY0eIzWEApxAEnixaGOx2XUAifg+f+18GWRFfBtvrVXvsIR6nEXAJFILxdMQWHA
+	FCaK6jFiXslqfc8PiCaSoayf8o2KKnpedjoyeL2vTQzvqwIq
+X-Google-Smtp-Source: AGHT+IGZnue+EG+14/hjDiRd+e4Wrn0+S+QrqOcOTcR+sr6Io4g4wyFZ6oXcvJFQ47foHvKNUa181w==
+X-Received: by 2002:a05:622a:1f0c:b0:494:959e:26a3 with SMTP id d75a77b69052e-4a713c41a06mr39119801cf.34.1749629470186;
+        Wed, 11 Jun 2025 01:11:10 -0700 (PDT)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-4a6f5c7a22esm57218951cf.54.2025.06.11.01.11.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 01:11:09 -0700 (PDT)
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Vinod Koul <vkoul@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Inochi Amaoto <inochiama@gmail.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>
+Cc: dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	sophgo@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	Yixun Lan <dlan@gentoo.org>,
+	Longbin Li <looong.bin@gmail.com>
+Subject: [PATCH v14 0/2] riscv: sophgo: add dmamux support for Sophgo CV1800/SG2000 SoCs
+Date: Wed, 11 Jun 2025 16:09:57 +0800
+Message-ID: <20250611081000.1187374-1-inochiama@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/7] Input: synaptics-rmi4 - add quirks for third party
- touchscreen controllers
-From: David Heidelberg <david@ixit.cz>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, phone-devel@vger.kernel.org,
- ~postmarketos/upstreaming@lists.sr.ht,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Kaustabh Chakraborty <kauschluss@disroot.org>, Rob Herring
- <robh@kernel.org>, Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Vincent Huang <vincent.huang@tw.synaptics.com>,
- "Jason A. Donenfeld" <Jason@zx2c4.com>, Conor Dooley <conor+dt@kernel.org>
-References: <20250410-synaptics-rmi4-v5-0-b41bb90f78b9@ixit.cz>
- <d9bac31d-ad73-4d40-9e6b-7397dd5f5b23@ixit.cz>
-Content-Language: en-US
-Autocrypt: addr=david@ixit.cz; keydata=
- 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
-In-Reply-To: <d9bac31d-ad73-4d40-9e6b-7397dd5f5b23@ixit.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hello Dmitry,
+As the syscon device of CV1800 have a usb phy subdevices. The
+binding of the syscon can not be complete without the usb phy
+is finished. As a result, the binding of syscon is removed
+and will be evolved in its original series after the usb phy
+binding is fully explored.
 
-is there anything else I should adjust to get these fixes merged?
+Changed from v13:
+1. rebase to v6.16-rc1
 
-Thank you
-David
+Changed from v12:
+1. remove syscon header and use local offset instead.
+2. add COMPILE_TEST for coverage.
 
-On 03/05/2025 16:02, David Heidelberg wrote:
-> Kind ping on the series.
-> 
-> When the series is considered solid, it will improve Linux usability on 
-> lower-quality touchscreen replacements (including those from other 
-> vendors and models) outside of our Snapdragon 845 downstream fork.
-> 
-> Thank you
-> David
-> 
-> On 10/04/2025 16:28, David Heidelberg via B4 Relay wrote:
->> With the growing popularity of running upstream Linux on mobile devices,
->> we're beginning to run into more and more edgecases. The OnePlus 6 is a
->> fairly well supported 2018 era smartphone, selling over a million units
->> in it's first 22 days. With this level of popularity, it's almost
->> inevitable that we get third party replacement displays, and as a
->> result, replacement touchscreen controllers.
->>
->> The OnePlus 6 shipped with an extremely usecase specific touchscreen
->> driver, it implemented only the bare minimum parts of the highly generic
->> rmi4 protocol, instead hardcoding most of the register addresses.
->> As a result, the third party touchscreen controllers that are often
->> found in replacement screens, implement only the registers that the
->> downstream driver reads from. They additionally have other restrictions
->> such as heavy penalties on unaligned reads.
->> This series attempts to implement the necessary workaround to support
->> some of these chips with the rmi4 driver. Although it's worth noting
->> that at the time of writing there are other unofficial controllers in
->> the wild that don't work even with these patches.
->> We have been shipping these patches in postmarketOS for the last several
->> years, and they are known to not cause any regressions on the OnePlus
->> 6/6T (with the official Synaptics controller), however I don't own any
->> other rmi4 hardware to further validate this.
->>
->> ---
->> Changes in v5:
->> - Removed -i2c suffix from rmi4-s3706b-i2c (Krzysztof).
->> - Link to v4: https://lore.kernel.org/r/20250402-synaptics-rmi4- 
->> v4-0-1bb95959e564@ixit.cz
->>
->> Changes in v4:
->> - Replaced patch "dt-bindings: input: syna,rmi4: document syna,pdt- 
->> fallback-desc"
->>    with patch documenting specific touchscreen model used in OnePlus 6 
->> and 6T.
->> - Fixed zero electrode return code (Dmitry).
->> - Switched the duplicate detection algo to bitmap (Dmitry).
->> - Optimized rmi_device_platform_data struct to avoid unnecessary
->>    padding.
->> - Changed fallback_size from int to unsigned int.
->> - Changed SoB from nickname and old address (methanal 
->> <baclofen@tuta.io>) to
->>    Kaustabh Chakraborty <kauschluss@disroot.org>.
->>    Verified ownership through the sdm845 chatroom on Matrix.
->> - Link to v3: https://lore.kernel.org/r/20250308-synaptics-rmi4- 
->> v3-0-215d3e7289a2@ixit.cz
->>
->> Changes in v3:
->> - reworded dt-bindings property description
->> - fixed the rmi_driver_of_probe definition for non device-tree builds.
->> - fixed some indentation issues reported by checkpatch
->> - change rmi_pdt_entry_is_valid() variable to unsigned
->> - Link to v2: https://lore.kernel.org/all/20230929-caleb-rmi4-quirks- 
->> v2-0-b227ac498d88@linaro.org
->>
->> Changes in v2:
->> - Improve dt-bindings patch (thanks Rob)
->> - Add missing cast in patch 5 to fix the pointer arithmetic
->> - Link to v1: https://lore.kernel.org/r/20230929-caleb-rmi4-quirks- 
->> v1-0-cc3c703f022d@linaro.org
->>
->> ---
->> Caleb Connolly (1):
->>        Input: synaptics-rmi4 - handle duplicate/unknown PDT entries
->>
->> David Heidelberg (1):
->>        dt-bindings: input: syna,rmi4: Document syna,rmi4-s3706b
->>
->> Kaustabh Chakraborty (5):
->>        Input: synaptics-rmi4 - f12: use hardcoded values for 
->> aftermarket touch ICs
->>        Input: synaptics-rmi4 - f55: handle zero electrode count
->>        Input: synaptics-rmi4 - don't do unaligned reads in IRQ context
->>        Input: synaptics-rmi4 - read product ID on aftermarket touch ICs
->>        Input: synaptics-rmi4 - support fallback values for PDT 
->> descriptor bytes
->>
->>   .../devicetree/bindings/input/syna,rmi4.yaml       |  11 +-
->>   drivers/input/rmi4/rmi_driver.c                    | 124 +++++++++++ 
->> ++++++----
->>   drivers/input/rmi4/rmi_driver.h                    |  10 ++
->>   drivers/input/rmi4/rmi_f01.c                       |  14 +++
->>   drivers/input/rmi4/rmi_f12.c                       | 117 +++++++++++ 
->> +++-----
->>   drivers/input/rmi4/rmi_f55.c                       |   5 +
->>   include/linux/rmi.h                                |   3 +
->>   7 files changed, 234 insertions(+), 50 deletions(-)
->> ---
->> base-commit: f0a16f5363325cc8d9382471cdc7b654c53254c9
->> change-id: 20250308-synaptics-rmi4-c832b2f73ceb
->>
->> Best regards,
-> 
+Changed from v11:
+1. init all the field of the driver data.
 
--- 
-David Heidelberg
+Changed from v10:
+1. binding: fixed binding id.
+
+Changed from v9:
+1. binding: rename to cv1800b-dmamux.
+2. binding: remove the unused formatting.
+
+Changed from v8:
+1. change compatible name from cv1800-dmamux to cv1800b-dmamux
+2. use guard to simpify spinlock process.
+
+Changed from v7:
+1. remove unused variable
+
+Changed from v6:
+1. fix copyright time.
+2. driver only output mapping info in when debugging.
+3. remove dma-master check in the driver init since the binding
+always require it.
+
+Changed from v5:
+1. remove dead binding header.
+2. make "reg" required so the syscon binding can have the same
+example node of the dmamux binding.
+
+Changed from v4:
+1. remove the syscon binding since it can not be complete (still
+lack some subdevices)
+2. add reg description for the binding,
+3. remove the fixed channel assign for dmamux binding
+3. driver adopt to the binding change. Now the driver allocates all the
+channel when initing and maps the request chan to the channel dynamicly.
+
+Changed from v3:
+1. fix dt-binding address issue.
+
+Changed from v2:
+1. add reg property of dmamux node in the binding of patch 2
+
+Changed from v1:
+1. fix wrong title of patch 2.
+
+Inochi Amaoto (2):
+  dt-bindings: dmaengine: Add dma multiplexer for CV18XX/SG200X series
+    SoC
+  dmaengine: add driver for Sophgo CV18XX/SG200X dmamux
+
+ .../bindings/dma/sophgo,cv1800b-dmamux.yaml   |  51 ++++
+ drivers/dma/Kconfig                           |   9 +
+ drivers/dma/Makefile                          |   1 +
+ drivers/dma/cv1800b-dmamux.c                  | 259 ++++++++++++++++++
+ 4 files changed, 320 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/sophgo,cv1800b-dmamux.yaml
+ create mode 100644 drivers/dma/cv1800b-dmamux.c
+
+--
+2.49.0
 
