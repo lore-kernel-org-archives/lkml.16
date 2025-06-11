@@ -1,57 +1,57 @@
 Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB3C25B316
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:36:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA4F25D1FC
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:36:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749677786; cv=none; b=pmiRmYvGYn1DQmQYuqQxe0xn9w/nMV1hhPP9mra4TWwMOxWTee+ccMxw4WIwji9VbpgR3a3SoIqh9CBxax6JNkodUlVHPTIs8qmUiQFHq0kDYSHxS9/6mVsGjlMzsVfERehE7BQROccMqCog1/xlM2yAnPaqSog61BYV98FUeeA=
+	t=1749677790; cv=none; b=Q24PKtVnNLxkx6VYLbnUmyphxeW7TKlzkNDVnhC4cUzBiEPevsYH3GGg4ZCzN81Wg1RZPMOGEpRNgIDYW7eC9Y5mif9BJdfT2s6J8zWxE4azqO6UmnWtGEtChKATjVWU1A1kbVk+HXsWuE2j6oB36Q/rSrFm+7iDmbzfAEu/Rm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749677786; c=relaxed/simple;
-	bh=sSXkJ0TZe+ygIMYoASgFqHZzpgqIcoACWrzJR/DJBLc=;
+	s=arc-20240116; t=1749677790; c=relaxed/simple;
+	bh=pbzjMkYafGxcpLXLqdeS1eEDP6kDrKXYmWNpHPn0xGQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=CGEd0yqNktQW3r7Bem3EXfYMmAFbwf8Kqf2m68bqUvCRe0mlySQv1w8xDMc7X0tc2kuEfYMzzuLgNIKowRks0faJKYluLWYNcGkwDXb2pTIlO9XwHTsa0lAUixwO90GZPwXhT9Kdb4nOu+Ikhnui6W9cZoqnMiegCDs5Fs94DkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LrFJRpcU; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=Yf6culoWvteGwKa3KcSlkA7baPKHJaF7aJifLaFuhDh30Vpz/Srh2HLYQ6XOibMb7jWVlhfawD5r0axWjSwNE4iGFkxmkDhuBr1Me+JIhwF/5CG1uJDrZ7Zb/KnhoqC4S8v86m3OK2ZLVv2YPJBmeSgkajziyo2gZQG12vb2oXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LkY8ERvl; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LrFJRpcU"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-311ae2b6647so287513a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:36:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LkY8ERvl"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-31366819969so257427a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:36:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749677784; x=1750282584; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749677787; x=1750282587; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=JJ4icDH9pAHV3iqWVHA0f06vGLaBRGgQJvOqw3/pxTI=;
-        b=LrFJRpcUJEADYUSmzPUn0YHMijlmTzB+/us70hmARmTBoahEhBFJTW1w6etwjiMEkv
-         stJP4lF8oZChezcVx5oN7K2ku6f1wNWHwjUxAkNeROEKpb7tAqvflxI69wjp54cTwd6X
-         ga7KcpDC9k6uF2/Snjb1x7D5JQtwpcoh6EkNbVWdd8wTOdEAdu/M72zgaSx92sypw/h2
-         3DHDGsMluHyawL/8y8qvX9+oNRgludIIJLAV53kB/n/Ewmeor+y3scGoVMROLAk6YkDy
-         vlyinAD+gsZuJ6BE6wtzaIlFvRYNhbYhrcKdtULpf6veR4X4MSjwC5jkQYxRmzc84w38
-         cNvA==
+        bh=Xzs0IiSJuwZzmnPBx3wmk+iVHWs9BLQaD0Cp4OIfdsI=;
+        b=LkY8ERvlf3FnZ8ZUvjDgJuiVI4mII6ZvPbVgYoKvAr53Gr9Pf7Fbu4IaTCOkveE6v1
+         RoWHSaNfkg9VUbYRIzVdtCzBHQ1Ew4hUTjeYNJ5X7PjFdyGkrvYsuTpxLgNjujWaq13X
+         OnJk+ChHut6rduvNGeqep8UGAaXpLYzLFiAiHfL6TmC39FEz0vlFcKROeELyyapGJlBW
+         bAWUDauTVck17KkkApFtxODVrV4FMG0WAIUqJA9TUyaaK0OmIWHV0THMCnvabHDikuZw
+         WyHwnIKYlWzUlUHA1tFGNz3yHnUYrnq4n6M3LwKVXnYqjL5VLfyorYCcdbE1CXdO0n2V
+         OKuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749677784; x=1750282584;
+        d=1e100.net; s=20230601; t=1749677787; x=1750282587;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=JJ4icDH9pAHV3iqWVHA0f06vGLaBRGgQJvOqw3/pxTI=;
-        b=m31YAQX8hxtpHIVzfbHDAzuqzytXMRY4dlddwh3aC8W9vL1CuRhDqPmGFZ2WECDfSY
-         uCqdM7dSgwd1SYm8nuCVLXpR9hFuhsJvRbgYAnZFclHZz3n8LWPWA/g3dPIpVohVxm7c
-         ZtxFzJ1twG0yAVATZUz3bqW27q07oCQz8yfJgaPrD0Wmuyav+wX0vHjb6yDbUhPqcLkT
-         bMT5FFLYg2rFr2gQXTqg6xObGg5GpFROBkaxUyomDPdnDZNVfyx4yZsM4HbO67QDxBP2
-         QB5P3TrAkWRvu6Otjv2IDU2yO2V0u9WKG0+HkK5lFDwf3yiAWTM16wd/Uq63GFhT8faa
-         kaXA==
-X-Forwarded-Encrypted: i=1; AJvYcCXeWvtyWvI2bV43jK0Z9o8fFt+YiJ17iY9fFQACcwbnCzUSBdgU6SfREaEVb6OsXK0y+aHZTIFyxyfdwQc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUZy5V+taVLs0bg0P5AKkw7Be8nyKu77rf20s1IcYPyhMVYMjV
-	vGHOq2NF4KtzpnPtQm0NeZ4PfB+oaO5Zq5KUURXdcRNgZbsuaJsdMGX52RQrv3OwtMQ2LTvQiX1
-	r6qb02g==
-X-Google-Smtp-Source: AGHT+IH2RdmBLZckAl0b1aVX3IeMbOtuIQc9imdRugK5KZRJRktWKbTEjRk/bYnXfpJGJM2fLWrWGj4vd8c=
-X-Received: from pjur7.prod.google.com ([2002:a17:90a:d407:b0:311:ea2a:3919])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3d87:b0:313:2adc:b4c4
- with SMTP id 98e67ed59e1d1-313bfbdb37bmr1601072a91.24.1749677783899; Wed, 11
- Jun 2025 14:36:23 -0700 (PDT)
+        bh=Xzs0IiSJuwZzmnPBx3wmk+iVHWs9BLQaD0Cp4OIfdsI=;
+        b=O4B+SMXUqMMxFIaOkE4CrMlhwXqYem1h79x8/24cLM9AGwNnScb38FvlKVhBpB67ZE
+         AHhv8qvSjSVCWzwd2aq3pSb94wSE3kddxW1zYZwuvoDLf1V5YCkP+UTaBUo0/2PcE1zt
+         H7gxpH1cvH4V2Zp/GEEolZ5hMOWwFcLp2/FbRoDmI7H8UjMpgoNZD7vPONYqViiGS181
+         zG/8vs+erLL9ZVPSx+06ZTZPG2WDeCjXZUfjlZYEvDL55MZOLg2B6SoKxDlSTsq0b9sS
+         3tzGewK498hEaRlCGgfvc06xHi9E65cNkWZx4EvnFfSrm9d7ak6+ZkL//NzDwSOLvVMV
+         f/QA==
+X-Forwarded-Encrypted: i=1; AJvYcCV3FZT7nA7jeVVa8Lqqa0aAU6qDbE+48sTSmmrud1/Jx/omm511i1JAKET28cSf85Mma4aXK1nl8jK9AJI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNFxlWNiIzXeHy86mT0HdP2w+kD9uS8AwTIvFlBdYR8GHf4nQB
+	KkQOWG0c8yuEMTyEafhZEPaDnbp62gMdQykjKsHLZtrRiToJmUyfRNQlb2ZAQvz74rujV9/Ll7j
+	ltetNTQ==
+X-Google-Smtp-Source: AGHT+IHIvhKkqqWWcEQHXFR65K8FZLh/xEt/zChKvBvk4uS5J2RIxt1u9I6b9xAUE+S9NBqKiPkCbq7uF9c=
+X-Received: from pjv12.prod.google.com ([2002:a17:90b:564c:b0:313:2b27:3f90])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4a8f:b0:311:ed2:b758
+ with SMTP id 98e67ed59e1d1-313af0fd2c3mr5826535a91.3.1749677787281; Wed, 11
+ Jun 2025 14:36:27 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed, 11 Jun 2025 14:35:52 -0700
+Date: Wed, 11 Jun 2025 14:35:54 -0700
 In-Reply-To: <20250611213557.294358-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,8 +61,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250611213557.294358-1-seanjc@google.com>
 X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-Message-ID: <20250611213557.294358-14-seanjc@google.com>
-Subject: [PATCH v2 13/18] KVM: Move x86-only tracepoints to x86's trace.h
+Message-ID: <20250611213557.294358-16-seanjc@google.com>
+Subject: [PATCH v2 15/18] KVM: Squash two CONFIG_HAVE_KVM_IRQCHIP #ifdefs into one
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
 	Vitaly Kuznetsov <vkuznets@redhat.com>
@@ -70,240 +70,39 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Kai Huang <kai.huang@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Move the I/O APIC tracepoints and trace_kvm_msi_set_irq() to x86, as
-__KVM_HAVE_IOAPIC is just code for "x86", and trace_kvm_msi_set_irq()
-isn't unique to I/O APIC emulation.
-
-Opportunistically clean up the absurdly messy #includes in ioapic.c.
+Squash two #idef CONFIG_HAVE_KVM_IRQCHIP regions in KVM's trace events, as
+the only code outside of the #idefs depends on CONFIG_KVM_IOAPIC, and that
+Kconfig only exists for x86, which unconditionally selects HAVE_KVM_IRQCHIP.
 
 No functional change intended.
 
 Acked-by: Kai Huang <kai.huang@intel.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/ioapic.c      |  2 +-
- arch/x86/kvm/irq_comm.c    | 10 ++---
- arch/x86/kvm/trace.h       | 78 ++++++++++++++++++++++++++++++++++++++
- include/trace/events/kvm.h | 77 -------------------------------------
- 4 files changed, 82 insertions(+), 85 deletions(-)
+ include/trace/events/kvm.h | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
-index 65626da1407f..fa7481814bc6 100644
---- a/arch/x86/kvm/ioapic.c
-+++ b/arch/x86/kvm/ioapic.c
-@@ -41,11 +41,11 @@
- #include <asm/processor.h>
- #include <asm/page.h>
- #include <asm/current.h>
--#include <trace/events/kvm.h>
- 
- #include "ioapic.h"
- #include "lapic.h"
- #include "irq.h"
-+#include "trace.h"
- 
- static int ioapic_service(struct kvm_ioapic *vioapic, int irq,
- 		bool line_status);
-diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
-index 138c675dc24b..13d84c25e503 100644
---- a/arch/x86/kvm/irq_comm.c
-+++ b/arch/x86/kvm/irq_comm.c
-@@ -15,15 +15,11 @@
- #include <linux/export.h>
- #include <linux/rculist.h>
- 
--#include <trace/events/kvm.h>
--
--#include "irq.h"
--
-+#include "hyperv.h"
- #include "ioapic.h"
--
-+#include "irq.h"
- #include "lapic.h"
--
--#include "hyperv.h"
-+#include "trace.h"
- #include "x86.h"
- #include "xen.h"
- 
-diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
-index ba736cbb0587..4ef17990574d 100644
---- a/arch/x86/kvm/trace.h
-+++ b/arch/x86/kvm/trace.h
-@@ -260,6 +260,84 @@ TRACE_EVENT(kvm_cpuid,
- 		  __entry->used_max_basic ? ", used max basic" : "")
- );
- 
-+#define kvm_deliver_mode		\
-+	{0x0, "Fixed"},			\
-+	{0x1, "LowPrio"},		\
-+	{0x2, "SMI"},			\
-+	{0x3, "Res3"},			\
-+	{0x4, "NMI"},			\
-+	{0x5, "INIT"},			\
-+	{0x6, "SIPI"},			\
-+	{0x7, "ExtINT"}
-+
-+TRACE_EVENT(kvm_ioapic_set_irq,
-+	    TP_PROTO(__u64 e, int pin, bool coalesced),
-+	    TP_ARGS(e, pin, coalesced),
-+
-+	TP_STRUCT__entry(
-+		__field(	__u64,		e		)
-+		__field(	int,		pin		)
-+		__field(	bool,		coalesced	)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->e		= e;
-+		__entry->pin		= pin;
-+		__entry->coalesced	= coalesced;
-+	),
-+
-+	TP_printk("pin %u dst %x vec %u (%s|%s|%s%s)%s",
-+		  __entry->pin, (u8)(__entry->e >> 56), (u8)__entry->e,
-+		  __print_symbolic((__entry->e >> 8 & 0x7), kvm_deliver_mode),
-+		  (__entry->e & (1<<11)) ? "logical" : "physical",
-+		  (__entry->e & (1<<15)) ? "level" : "edge",
-+		  (__entry->e & (1<<16)) ? "|masked" : "",
-+		  __entry->coalesced ? " (coalesced)" : "")
-+);
-+
-+TRACE_EVENT(kvm_ioapic_delayed_eoi_inj,
-+	    TP_PROTO(__u64 e),
-+	    TP_ARGS(e),
-+
-+	TP_STRUCT__entry(
-+		__field(	__u64,		e		)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->e		= e;
-+	),
-+
-+	TP_printk("dst %x vec %u (%s|%s|%s%s)",
-+		  (u8)(__entry->e >> 56), (u8)__entry->e,
-+		  __print_symbolic((__entry->e >> 8 & 0x7), kvm_deliver_mode),
-+		  (__entry->e & (1<<11)) ? "logical" : "physical",
-+		  (__entry->e & (1<<15)) ? "level" : "edge",
-+		  (__entry->e & (1<<16)) ? "|masked" : "")
-+);
-+
-+TRACE_EVENT(kvm_msi_set_irq,
-+	    TP_PROTO(__u64 address, __u64 data),
-+	    TP_ARGS(address, data),
-+
-+	TP_STRUCT__entry(
-+		__field(	__u64,		address		)
-+		__field(	__u64,		data		)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->address	= address;
-+		__entry->data		= data;
-+	),
-+
-+	TP_printk("dst %llx vec %u (%s|%s|%s%s)",
-+		  (u8)(__entry->address >> 12) | ((__entry->address >> 32) & 0xffffff00),
-+		  (u8)__entry->data,
-+		  __print_symbolic((__entry->data >> 8 & 0x7), kvm_deliver_mode),
-+		  (__entry->address & (1<<2)) ? "logical" : "physical",
-+		  (__entry->data & (1<<15)) ? "level" : "edge",
-+		  (__entry->address & (1<<3)) ? "|rh" : "")
-+);
-+
- #define AREG(x) { APIC_##x, "APIC_" #x }
- 
- #define kvm_trace_symbol_apic						    \
 diff --git a/include/trace/events/kvm.h b/include/trace/events/kvm.h
-index fc7d0f8ff078..96e581900c8e 100644
+index 1065a81ca57f..0b6b79b1a1bc 100644
 --- a/include/trace/events/kvm.h
 +++ b/include/trace/events/kvm.h
-@@ -85,83 +85,6 @@ TRACE_EVENT(kvm_set_irq,
- #endif /* defined(CONFIG_HAVE_KVM_IRQCHIP) */
+@@ -82,7 +82,6 @@ TRACE_EVENT(kvm_set_irq,
+ 	TP_printk("gsi %u level %d source %d",
+ 		  __entry->gsi, __entry->level, __entry->irq_source_id)
+ );
+-#endif /* defined(CONFIG_HAVE_KVM_IRQCHIP) */
  
- #if defined(__KVM_HAVE_IOAPIC)
--#define kvm_deliver_mode		\
--	{0x0, "Fixed"},			\
--	{0x1, "LowPrio"},		\
--	{0x2, "SMI"},			\
--	{0x3, "Res3"},			\
--	{0x4, "NMI"},			\
--	{0x5, "INIT"},			\
--	{0x6, "SIPI"},			\
--	{0x7, "ExtINT"}
--
--TRACE_EVENT(kvm_ioapic_set_irq,
--	    TP_PROTO(__u64 e, int pin, bool coalesced),
--	    TP_ARGS(e, pin, coalesced),
--
--	TP_STRUCT__entry(
--		__field(	__u64,		e		)
--		__field(	int,		pin		)
--		__field(	bool,		coalesced	)
--	),
--
--	TP_fast_assign(
--		__entry->e		= e;
--		__entry->pin		= pin;
--		__entry->coalesced	= coalesced;
--	),
--
--	TP_printk("pin %u dst %x vec %u (%s|%s|%s%s)%s",
--		  __entry->pin, (u8)(__entry->e >> 56), (u8)__entry->e,
--		  __print_symbolic((__entry->e >> 8 & 0x7), kvm_deliver_mode),
--		  (__entry->e & (1<<11)) ? "logical" : "physical",
--		  (__entry->e & (1<<15)) ? "level" : "edge",
--		  (__entry->e & (1<<16)) ? "|masked" : "",
--		  __entry->coalesced ? " (coalesced)" : "")
--);
--
--TRACE_EVENT(kvm_ioapic_delayed_eoi_inj,
--	    TP_PROTO(__u64 e),
--	    TP_ARGS(e),
--
--	TP_STRUCT__entry(
--		__field(	__u64,		e		)
--	),
--
--	TP_fast_assign(
--		__entry->e		= e;
--	),
--
--	TP_printk("dst %x vec %u (%s|%s|%s%s)",
--		  (u8)(__entry->e >> 56), (u8)__entry->e,
--		  __print_symbolic((__entry->e >> 8 & 0x7), kvm_deliver_mode),
--		  (__entry->e & (1<<11)) ? "logical" : "physical",
--		  (__entry->e & (1<<15)) ? "level" : "edge",
--		  (__entry->e & (1<<16)) ? "|masked" : "")
--);
--
--TRACE_EVENT(kvm_msi_set_irq,
--	    TP_PROTO(__u64 address, __u64 data),
--	    TP_ARGS(address, data),
--
--	TP_STRUCT__entry(
--		__field(	__u64,		address		)
--		__field(	__u64,		data		)
--	),
--
--	TP_fast_assign(
--		__entry->address	= address;
--		__entry->data		= data;
--	),
--
--	TP_printk("dst %llx vec %u (%s|%s|%s%s)",
--		  (u8)(__entry->address >> 12) | ((__entry->address >> 32) & 0xffffff00),
--		  (u8)__entry->data,
--		  __print_symbolic((__entry->data >> 8 & 0x7), kvm_deliver_mode),
--		  (__entry->address & (1<<2)) ? "logical" : "physical",
--		  (__entry->data & (1<<15)) ? "level" : "edge",
--		  (__entry->address & (1<<3)) ? "|rh" : "")
--);
+ #ifdef CONFIG_KVM_IOAPIC
  
- #define kvm_irqchips						\
- 	{KVM_IRQCHIP_PIC_MASTER,	"PIC master"},		\
+@@ -93,8 +92,6 @@ TRACE_EVENT(kvm_set_irq,
+ 
+ #endif /* CONFIG_KVM_IOAPIC */
+ 
+-#if defined(CONFIG_HAVE_KVM_IRQCHIP)
+-
+ #ifdef kvm_irqchips
+ #define kvm_ack_irq_string "irqchip %s pin %u"
+ #define kvm_ack_irq_parm  __print_symbolic(__entry->irqchip, kvm_irqchips), __entry->pin
 -- 
 2.50.0.rc1.591.g9c95f17f64-goog
 
