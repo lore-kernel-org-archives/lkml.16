@@ -1,125 +1,150 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D0E229B13;
-	Wed, 11 Jun 2025 09:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77EDD23ED69
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 09:48:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749635232; cv=none; b=iwoTcphnElmSrWcy1vwLyi1QerHkHx7vXoDYqeNSK9eP0+MP4mw2d8ZQAtRTYcISIKO6dJUSFd/4I7pWdSZlnurfDVY2hyDO7zrKJOji5JgCrNisICNYYki5NrQsG3H6fJokhgI6t74LyVlV7WaHG0Zq19wxgAqNjY1kO/ttkWg=
+	t=1749635289; cv=none; b=aIX1hOgD0uAMgyfg+/fW3p1jM9zMDb5UHF0wRq03MH7jQukaiH5j+qHDpvVHU7BO3QwsZVcPYkPchWoMPvaAJtRpRb5u05JUq0H7Ktb5nHJeGQ4IXCWq2vdBTlGMy/jYlEAkvH2xaQcr/fkgI+DY1+TLNK4ZcI0YyQsryEULce4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749635232; c=relaxed/simple;
-	bh=QY+5Tek/02AwNhLeuvLKVoyIRN55q5XqE2CxxS2Khq4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CWiHID7SxFPW2DOWpiXKeR1xQhmLlF0JhQdCgq4bJQs589haDX/7hVSSajV0XMUEKCtZIJ+ckslg3Uv6es29nXLhzkYV7qT3REyFSy3vII4fVn7xL9bUeVDUPuSjaqwTYdcCuryiN02E3OXVKe/T3kqhzpnkiEA/O4gIyYigEeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jzq/UKss; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jzq/UKss"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4a6f6d07bb5so38529031cf.2;
-        Wed, 11 Jun 2025 02:47:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749635228; x=1750240028; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=n9rPiGNTaPA7/GngQM8aAU/prJJW46EXooVz3Uq/Q3M=;
-        b=Jzq/UKssfnFewDURRWKfInIsY+4gt6/t3ZjHVjkPetU1Z5y9Sd5bxA5EGxrfAwBMxT
-         4HZV5ogXPZpUV47HwZfOJXxQVMFyPXVvo2Y4B0eFVHf7iv67H7wt9SRXVdipBHhMaSUG
-         2S37a/jIaZkAnPbWzV8COJyEhNEylfRxuShSx6Upbd5rqO0yz6LH1Ow/4SoOvpcxE2na
-         SenaUpeVwtmtfklRb2+zALUeJik7z+m3jhSo0GF8UeOKbecj3BhvwB0INld6x6ExtqhA
-         QqZxXjLhgeISm0Bk3ldCfKTULfcrl967XaJYtgl6wDGyCcPOYHCDPEjqVXNgfB5SDR1s
-         OZwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749635228; x=1750240028;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=n9rPiGNTaPA7/GngQM8aAU/prJJW46EXooVz3Uq/Q3M=;
-        b=PxZym4fYipP2ryUely1HMToykdiqUr8v8NdnG6B0lsp2JayAjdnY2xK5gANbl9lJYF
-         xI2PSIlXi+ROB8I/SMGEjCIayTjxEpkUFMZnW+IMgDHvmrHwylfQB112YmLmAdh5eseh
-         FcJ8Z/Tb8540uARMh9P77LTxWAl+KT8PrPk57DLkzDzV9qozb6krxLqeGsQvemjcMBPF
-         +dVpFcrsnwv14Tc0jyyg/2CIqL24b3pEjSZ4c6vyUAQx1NgNYrnNKivtFcb+BvSlSrqW
-         UgXQ31BmWzkQgbHu/MNEAzaTYkrHl5RiiMPwPyHhgAp/GGQtG5j6sGDXVzqT7wPQ6OBm
-         TEcg==
-X-Forwarded-Encrypted: i=1; AJvYcCUqG+2Q9YWosbD3YrwC3TCPNWGRPFSwN9uy/nvzR082Xt1q/5A1Zq/EjDfS9UWNrX26N2Wah9E9XG+nlwLb@vger.kernel.org, AJvYcCV/yj+TOithtZcnEFvwjuYv9Rxs2aSrogtkUcR+Z/YJYatKRNh3Rng8fmk6puTBguiw+N3y0qsRDwtN@vger.kernel.org, AJvYcCVYZbd5F8AkYFQr+swEBNT0yWI2gpZyEK3c5UrOz5vnWKXk0gIymFR6+fKdzfLWIYk/281IPo6jzEN0@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYet7EJI7PJUW23X4Y69SWjZOVRylV04FkEStU39bgYVLpS2HH
-	IhRnYTZVMJcSaoZXXGhqrmZgCSV2KYlFX6PmkcZEv4wJ8kGH/TgxNeXB
-X-Gm-Gg: ASbGnctaux+P8qa3UM8lAhHf9sJCWsFb421LAXZWQZNNfdzFC0I0ixi3TpOK33X8u2G
-	zEE630zASaubapLvduD9xvGIjMvcY9UTkeMeVN+NGuHuNZDkDLjUjq1jkv5CMmzptHURT38JcZP
-	GIBw8bwn8crswFsI0b29qomBbRB3H7Al6ps/xgODT8g9zTqxI0bj9nRDz9ZX7/GNV0RE2sx4P9A
-	36RhEc4NYdRHy6RAdLZIdYyu/67Kfn1c7xpFdXuAN6VsycjhTAIX8Sc/8tnsHR89n4a410YDfEg
-	hWb3yHMzWTbA484sVxl+ZV1qZ55GuIk+vTSgrw==
-X-Google-Smtp-Source: AGHT+IHoucd0pTsqUEMuvaSjWbfTQOjCUx6k4huksi1dJ/QwFsl1H1FuuHsdR5T8wu60/r37DLUb9A==
-X-Received: by 2002:a05:622a:5595:b0:4a5:911d:52f6 with SMTP id d75a77b69052e-4a713c5ecc3mr52302751cf.39.1749635228486;
-        Wed, 11 Jun 2025 02:47:08 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-4a61116bc4esm86576941cf.28.2025.06.11.02.47.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 02:47:08 -0700 (PDT)
-Date: Wed, 11 Jun 2025 17:45:59 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
-	Inochi Amaoto <inochiama@gmail.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chen Wang <unicorn_wang@outlook.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Vinod Koul <vkoul@kernel.org>, 
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>, Yu Yuan <yu.yuan@sjtu.edu.cn>, Ze Huang <huangze@whut.edu.cn>, 
-	Thomas Bonnefille <thomas.bonnefille@bootlin.com>, Junhui Liu <junhui.liu@pigmoral.tech>, 
-	devicetree@vger.kernel.org, sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, dmaengine@vger.kernel.org, Yixun Lan <dlan@gentoo.org>, 
-	Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH v3 1/4] dt-bindings: reset: sophgo: Add CV1800B support
-Message-ID: <mbvzlggbisa4zvvbjvlg5lrmhb455av37mrtwmphqiqi53iuyu@ybql2m773x4c>
-References: <20250611075321.1160973-1-inochiama@gmail.com>
- <20250611075321.1160973-2-inochiama@gmail.com>
- <20250611-brown-turtle-of-election-87c324@kuoka>
- <2v4hfzqgz22k6s776onexnhd5cnhfr7s7ggvcmh4mfiviigq66@a2ehkwbv7oll>
- <ec60631a-7e55-4dc0-83f7-6e6cb156dbf2@kernel.org>
+	s=arc-20240116; t=1749635289; c=relaxed/simple;
+	bh=Bcnv2IphMb0GcR61pDD2lYaMzSNOFmQxj4FDqN4O5E8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hzD42O3ivrFWU/1ixEBcQOmcYBH+wyqkYw473dPiLhopcZTL1p2tDc+95R2QsptCkeiAhmc8ejFpBrPm1E7OCl8WfaPseM7MIaFD6JGbpDQIQdYe4z99eQ4EvP1Rb5llawrI7Hc7d3C5/tDf1c3Rw5Y1N08AjjjXmkW4cPxGNpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 381581596;
+	Wed, 11 Jun 2025 02:47:48 -0700 (PDT)
+Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 840013F59E;
+	Wed, 11 Jun 2025 02:48:04 -0700 (PDT)
+From: Yeoreum Yun <yeoreum.yun@arm.com>
+To: catalin.marinas@arm.com,
+	pcc@google.com,
+	will@kernel.org,
+	broonie@kernel.org,
+	anshuman.khandual@arm.com,
+	joey.gouly@arm.com,
+	maz@kernel.org,
+	oliver.upton@linux.dev,
+	frederic@kernel.org,
+	hardevsinh.palaniya@siliconsignals.io,
+	samuel.holland@sifive.com,
+	palmer@rivosinc.com,
+	charlie@rivosinc.com,
+	thiago.bauermann@linaro.org,
+	bgray@linux.ibm.com,
+	tglx@linutronix.de,
+	puranjay@kernel.org,
+	david@redhat.com,
+	yang@os.amperecomputing.com,
+	mbenes@suse.cz,
+	joel.granados@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Yeoreum Yun <yeoreum.yun@arm.com>
+Subject: [PATCH v5 0/7] support FEAT_MTE_STORE_ONLY feature
+Date: Wed, 11 Jun 2025 10:47:55 +0100
+Message-Id: <20250611094802.929332-1-yeoreum.yun@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ec60631a-7e55-4dc0-83f7-6e6cb156dbf2@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 11, 2025 at 11:09:50AM +0200, Krzysztof Kozlowski wrote:
-> On 11/06/2025 10:29, Inochi Amaoto wrote:
-> > On Wed, Jun 11, 2025 at 10:19:49AM +0200, Krzysztof Kozlowski wrote:
-> >> On Wed, Jun 11, 2025 at 03:53:15PM GMT, Inochi Amaoto wrote:
-> >>> Add bindings for the reset generator on the SOPHGO CV1800B
-> >>> RISC-V SoC.
-> >>>
-> >>> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-> >>> Acked-by: Rob Herring (Arm) <robh@kernel.org>
-> >>> ---
-> >>>  Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml | 1 +
-> >>>  1 file changed, 1 insertion(+)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml b/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml
-> >>> index 1d1b84575960..bd8dfa998939 100644
-> >>> --- a/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml
-> >>> +++ b/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml
-> >>> @@ -17,6 +17,7 @@ properties:
-> >>>                - sophgo,sg2044-reset
-> >>>            - const: sophgo,sg2042-reset
-> >>>        - const: sophgo,sg2042-reset
-> >>> +      - const: sophgo,cv1800b-reset
-> >>
-> >> Keep alphabetical order. That's enum with previous entry, btw.
-> >>
-> > 
-> > There is a small question for this: should I move this before the entry
-> > "const: sophgo,sg2042-reset", or before the first item entry?
-> It does not matter where you place the enum. There is no convention for
-> that.
-> 
+ARMv8.5 based processors introduce the Memory Tagging Extension (MTE) feature.
+MTE is built on top of the ARMv8.0 virtual address tagging TBI
+(Top Byte Ignore) feature and allows software to access a 4-bit
+allocation tag for each 16-byte granule in the physical address space.
+A logical tag is derived from bits 59-56 of the virtual
+address used for the memory access. A CPU with MTE enabled will compare
+the logical tag against the allocation tag and potentially raise an
+tag check fault on mismatch, subject to system registers configuration.
 
-Thanks. I will fix it
+Since ARMv8.9, FEAT_MTE_STORE_ONLY can be used to restrict raise of tag
+check fault on store operation only.
+For this, application can use PR_MTE_STORE_ONLY flag
+when it sets the MTE setting with prctl().
 
-Regards,
-Inochi
+This feature omits tag check for fetch/read operation.
+So it might be used not only debugging purpose but also be used
+in runtime requiring strong memory safty in normal env.
+
+Patch Sequences
+================
+
+Patch #1 adds cpufeature FEAT_MTE_STORE_ONLY
+
+Patch #2 introduce new flag -- PR_MTE_STORE_ONLY
+
+Patch #3 support MTE_STORE_ONLY feature
+
+Patch #4 add HWCAP for MTE_STORE_ONLY
+
+Patch #5 adds mte store-only hwcap test
+
+Patch #6 preparation for adding mte store-only testcase
+
+Patch #7 adds mte store-only testcases
+
+Patch History
+================
+v4 to v5:
+  - rebase to v6.16-rc1
+  - refactor the check_mmap_options for STORE_ONLY testcases.
+  - https://lore.kernel.org/linux-arm-kernel/20250507154654.1937588-1-yeoreum.yun@arm.com/
+
+v3 to v4:
+  - separate cpufeature and hwcap commit.
+  - add mte store-only testcases in check_mmap_options
+  - https://lore.kernel.org/linux-arm-kernel/aApBk8eGA2Eo57fq@e129823.arm.com/
+
+v2 to v3:
+  - rebase to 6.15-rc1
+  - https://lore.kernel.org/linux-arm-kernel/20250403174701.74312-1-yeoreum.yun@arm.com/
+
+v1 to v2:
+  - add doc to elf_hwcaps.rst
+  - add MTE_STORE_ONLY hwcap test
+  - https://lore.kernel.org/linux-arm-kernel/20250403142707.26397-1-yeoreum.yun@arm.com/
+
+NOTE:
+  This patch based on https://lore.kernel.org/all/20250611094107.928457-1-yeoreum.yun@arm.com/
+
+Yeoreum Yun (7):
+  arm64/cpufeature: add MTE_STORE_ONLY feature
+  prtcl: introduce PR_MTE_STORE_ONLY
+  arm64/kernel: support store-only mte tag check
+  arm64/hwcaps: add MTE_STORE_ONLY hwcaps
+  tools/kselftest: add MTE_STORE_ONLY feature hwcap test
+  kselftest/arm64/mte: preparation for mte store only test
+  kselftest/arm64/mte: add MTE_STORE_ONLY testcases
+
+ Documentation/arch/arm64/elf_hwcaps.rst       |   3 +
+ arch/arm64/include/asm/hwcap.h                |   1 +
+ arch/arm64/include/asm/processor.h            |   2 +
+ arch/arm64/include/uapi/asm/hwcap.h           |   1 +
+ arch/arm64/kernel/cpufeature.c                |   9 +
+ arch/arm64/kernel/cpuinfo.c                   |   1 +
+ arch/arm64/kernel/mte.c                       |  11 +-
+ arch/arm64/kernel/process.c                   |   6 +-
+ arch/arm64/tools/cpucaps                      |   1 +
+ include/uapi/linux/prctl.h                    |   2 +
+ tools/testing/selftests/arm64/abi/hwcap.c     |   6 +
+ .../selftests/arm64/mte/check_buffer_fill.c   |  10 +-
+ .../selftests/arm64/mte/check_child_memory.c  |   4 +-
+ .../arm64/mte/check_hugetlb_options.c         |   6 +-
+ .../selftests/arm64/mte/check_ksm_options.c   |   2 +-
+ .../selftests/arm64/mte/check_mmap_options.c  | 361 +++++++++++++++++-
+ .../testing/selftests/arm64/mte/check_prctl.c |  25 +-
+ .../arm64/mte/check_tags_inclusion.c          |   8 +-
+ .../selftests/arm64/mte/check_user_mem.c      |   2 +-
+ .../selftests/arm64/mte/mte_common_util.c     |  14 +-
+ .../selftests/arm64/mte/mte_common_util.h     |   3 +-
+ 21 files changed, 437 insertions(+), 41 deletions(-)
+
+--
+LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+
