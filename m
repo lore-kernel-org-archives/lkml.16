@@ -1,175 +1,155 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B595D8F0;
-	Wed, 11 Jun 2025 16:05:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C4A3EA98
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 16:07:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749657912; cv=none; b=o4mCVW6IgfJr9BaZPH6E9HHjk+LXHt1Siz/knv6S+nocorgzPmvPY2ppCqaP/n3XTwVotjY/XJ0aEE2EgvdAjXLBdZGvJ5KyVQI8/4CopshTApTxLGDUwGvCLyRLodD1UWeKk4RMGXacNPVG6TvV+rll/QkLXUzWWytXY0RvSwk=
+	t=1749658037; cv=none; b=LiWKqkUdWMgR3PbANGyUEzKkpfQZA53+ZsxTmYHNsYttbGurrkv+q5tAPX6QjMAEEpNp2G1rFHXp7sjEdpi7tn7FMEtDbqGTi+U8dcHSkK1Yx8UPzee+2S3AvA7W/4dXSC0ZgVSwgrT6SKcl20Hxc91+txGs3GswHpCamPAa0zU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749657912; c=relaxed/simple;
-	bh=CSnYZ++y6v5Y1DTSjORaDJcPADhtw0bVJx427EIGzu4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nsZhrAlzixmpsbFsrG/IW58AGBSkaBYdjFwrmznm4L+43A/t6WFjXjcDTb33aSJ/BunG4aXU59bcCDe96e4AnSyP8w8SD1mWgaWJDhnWm8aL9YccugVy/V0VbuEZa0jvDbyYyBSogSpTOLWYxWJdlZ7rROJavb/cMhJWCj8S3RI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nq36cBtg; arc=none smtp.client-ip=209.85.160.173
+	s=arc-20240116; t=1749658037; c=relaxed/simple;
+	bh=AnyJHhL++25q/RG47chxqn4DLIREpyQ7n2CKRiqDD/w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JdOnR/5OQQgmmCx8RTGyi0ebhATiMWtXvodgW/dbXcVoZqySniKASzv32QedsdG6PE8TxhTZchZz9M6znQQ9vGPoIDn0dN/fKHq1s2aMbDrY1GI+w2qSFAJo5A4DxlCpyi5IsTFzX4zZuEdNE+jR79ZFxohLFXmZ4gJLsetKnjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gcItYL+2; arc=none smtp.client-ip=209.85.208.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nq36cBtg"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-4a44b9b2af8so164991cf.3;
-        Wed, 11 Jun 2025 09:05:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gcItYL+2"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-32addf54a01so56894021fa.3
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 09:07:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749657909; x=1750262709; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1749658034; x=1750262834; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rkcAG8UDHBBCkZWTrBhZdNUZRDSiJX3R2wXFpwTsd/g=;
-        b=Nq36cBtgSPWu94HnNpK2/DaW+i2dIKbMDPopIi7jWipJFVUuAgFsoN6CZJ5TpGuMss
-         ARHWQ9bymjIyoHntO9h/fCSdLLfW1shvww8/sLoflQuXeCJ54OVRKRR6juC2UtgcoFci
-         kLh12MkQ42UTKK4/M3/F5zR0QPW5XoArOJcTi8mujnGIMOM9ZBRW47mgwimVIS19WiqD
-         97KbiGY4vp2hILWpN34rAEl3oXV4aC6lKS0Qrk172XIzRvkEr1YzQXWp9rpweWYE7IWk
-         SP2+M/TD/OafVlRzlJC+QjromNdXeC8Dt5xnHVGvrbsOFEHXsEL30/jQ2pcvAr40O5xw
-         HVwg==
+        bh=/lOaEEbGcex2RKREBh63AjMstfcYn+UkvC0+JjT1LQo=;
+        b=gcItYL+2FM7ZmMQD2vr6vqE0y+QxIi3c4XArs1YhEXo6jmlq8tQV+LJdyxwpjbqpsg
+         p3JEksxOH6C5kZjr2dmFiavq0wKotiJ7weFolGDXdnY2lzVdntyzxmduQgaExxcR8L7A
+         j6poydbygXXyid9fzIo2W4k08Iho5dGMclx6k9Jo4rS01FwpOvd1M/WNTHwIzKo0hwqo
+         pHbqvs2m69VR/hsWpuq0njc6owfLDWTFPe4tyEY9Hnmop7Q5+7mhvVcYxWq6bVF0Us2X
+         U0EPU4bjFBCP9SUwFvqGdoh6Iv54E650vpyE4rEL0EJGQKuRD/WVWIX0R5Oj5TvUYNUL
+         ktaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749657909; x=1750262709;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1749658034; x=1750262834;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rkcAG8UDHBBCkZWTrBhZdNUZRDSiJX3R2wXFpwTsd/g=;
-        b=F33Ad7Q9BwSlGe28qLQUVFf1Hl1UEdWbmDlBR+zJRs4bZhXn5x9riQaSAD0JOMHb6U
-         5iGCBf92ORcwvOq8Igeuwrt+SM2xNfE1sZCyVW9PhqVBL2UjATQ7naNujbOZp8r7HNbt
-         MGIQSkzri+Ncx91+i6TYXgZgbUKV9vKuk0Mmh2G1mjzheiL7SyGePjr/gaWqcTVnD11h
-         8LxSTzR6MukiKBy1UYV6idT83YhaX1+DeEcF+APnjZePPbPfjfkGyLZNuFpNlRJayxi/
-         0OG+xm4wPHEhtrTrv9QqmxfyuWoZ4xRT76OpKjjprQPbKtzTIDHTtdX/ZmBvVqVXVQEt
-         g/iQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU9WYkuH4USzdaTvkr8ijcNPpFC7QNlL97/ta9B83gB6PsdZtsyiTKGRpuW9BDDtNgWT8k=@vger.kernel.org, AJvYcCWMFWGdmky7bmmoC2ldYgHZsRKYIm8wTVUOSTdMzmKXJMvZD8rlsSwLdRgKHHmphUkd/jUD@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGjG1FOWfEhzcHXRlMoDd3KkDVW3JTOFg5cqS6GDvTXaoDAu8D
-	Lb1jqUFTDKls+pIhxrG9h/iGs2txSyAvkDBJGhW4WVu2QMMIBPYba1wK
-X-Gm-Gg: ASbGncscmelTQHpzr3Cv/tbhLH+ENsnIzW76HnhA5jqEvj2BxBfpDnhRgsi6h99d3sn
-	3FpfuPkgKEZAhgKy4JjXNWJJK5lZMyOKhR9DZMrWBtZpkpKSJQPgm9Ig8q6Nfy9YtQMxtJXK5XH
-	3AOpvkWgOj0Rstaev/CpCd2OQxAj6jmKu/3P+I8E8T6sTChQfKadPCzDDiV4jjwdJXGUq81wc2T
-	980cbzxgQDxkekHupjxdvzmsUPiIAots6n4UJOtbYeFlmVIqhlrouutHcnjIyGalZyJw5Ng0WyU
-	NNHAquPnrQi0WCmzrsJU0/csn/GLv63thTF4tTX3aQVHvbn2DcCPh3OrfFfQDpSopmmEpWESeun
-	+JdTPJcobWv7+3t91mfhqSnGEGIPT/KZDrLB1T6lbyLFYcVXiiPhz
-X-Google-Smtp-Source: AGHT+IHn0OfArCOgZJXiU167Jgmx7s9bhvzHybhKaFSAQ93u0NQgeMZQ6mLgt9U6w6eLj5BOQyFYYA==
-X-Received: by 2002:a05:622a:1f9a:b0:4a4:30f5:b504 with SMTP id d75a77b69052e-4a713c221a0mr60374931cf.27.1749657908649;
-        Wed, 11 Jun 2025 09:05:08 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a619852c5bsm91384521cf.45.2025.06.11.09.05.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 09:05:08 -0700 (PDT)
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 9AB14120006C;
-	Wed, 11 Jun 2025 12:05:07 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Wed, 11 Jun 2025 12:05:07 -0400
-X-ME-Sender: <xms:M6lJaDvPDVDiOIkTw_drSiKYoU00Zd7YRGOVxM50leEH8NxGOcHCFg>
-    <xme:M6lJaEdaavpZh1zrAq8ZjE4psSW8IO2J8EyXbloNWSc3lKhyy3kz1_iwaDBJDMuxZ
-    w0B71xTk2FvPKrqqA>
-X-ME-Received: <xmr:M6lJaGySOO8O2eq1al9gZKZlvyon9iDloASYFbTtO0u04-JniF6ZjzRGkQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduvdeivdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
-    necuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilh
-    drtghomheqnecuggftrfgrthhtvghrnhephfetvdfgtdeukedvkeeiteeiteejieehvdet
-    heduudejvdektdekfeegvddvhedtnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenuc
-    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhn
-    odhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejje
-    ekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhn
-    rghmvgdpnhgspghrtghpthhtohepudeipdhmohguvgepshhmthhpohhuthdprhgtphhtth
-    hopehjohgvlhgrghhnvghlfhesnhhvihguihgrrdgtohhmpdhrtghpthhtoheplhhinhhu
-    gidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgruh
-    hlmhgtkheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepfhhrvgguvghrihgtsehkvghr
-    nhgvlhdrohhrghdprhgtphhtthhopehnvggvrhgrjhdruhhprgguhhihrgihsehkvghrnh
-    gvlhdrohhrghdprhgtphhtthhopehjohgvlhesjhhovghlfhgvrhhnrghnuggvshdrohhr
-    ghdprhgtphhtthhopehjohhshhesjhhoshhhthhrihhplhgvthhtrdhorhhgpdhrtghpth
-    htohepuhhrvgiikhhisehgmhgrihhlrdgtohhmpdhrtghpthhtoheprhhoshhtvgguthes
-    ghhoohgumhhishdrohhrgh
-X-ME-Proxy: <xmx:M6lJaCPMFpdjuuhOVv-F_weyEjcM3-ie6kKWUoUDIAGlADuOb5wXpQ>
-    <xmx:M6lJaD8hpJat4-jCD4oyz7zoC1B7-xdquVKURdFIs1ygXJFndO4tnA>
-    <xmx:M6lJaCVeu2JRabQI1RqFRi70mpNKbpC3PK8crpzKyUXOYiACfP73ag>
-    <xmx:M6lJaEflFbPieL9-DxqaHhjyjfcL8L1sxss53CdSzwnV5001p6nGhQ>
-    <xmx:M6lJaBc2deSKQElIAIX_V3cq527YeTKgEz8RZ5qSlunGTDvfjCQ8zTjQ>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 11 Jun 2025 12:05:07 -0400 (EDT)
-Date: Wed, 11 Jun 2025 09:05:06 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Joel Fernandes <joelagnelf@nvidia.com>
-Cc: linux-kernel@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Xiongfeng Wang <wangxiongfeng2@huawei.com>, rcu@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH 2/2] rcu: Fix lockup when RCU reader used while IRQ
- exiting
-Message-ID: <aEmpMohtFsVf4Uh_@tardis.local>
-References: <20250609180125.2988129-1-joelagnelf@nvidia.com>
- <20250609180125.2988129-2-joelagnelf@nvidia.com>
+        bh=/lOaEEbGcex2RKREBh63AjMstfcYn+UkvC0+JjT1LQo=;
+        b=pViLrSPNAMFDXSIde1TIlJpL4LjQR59VBH66UawYxUJAUG74RrykqFcM4S350V20vp
+         Idv4rwbI3Gig9O8KcwtepGAUZ6isRYj/PqePbPeZCFw+5mhjXCiVvUpN4CmfQKnYQ5Ys
+         b1TXxItUkw2KsN71S7RNN3rl3E+9Vd/CBevZ3MZVHvrO4YZKtwxJjFUXwLsOeZXYlkVc
+         F1AqUnRr1kJbGLhY8Tz8is+Yjh3zJYegSgOv3TLUomw4fNtTy1NubwoGGTg4ly8C+GzC
+         7DmL5e4P9b2PUyMTpqF3ibeZfMA5oicWQMntn1itxFoBwdeIM0WjOkXGinP7y96ugS6u
+         EGJg==
+X-Forwarded-Encrypted: i=1; AJvYcCUbTCG1CUShfZYzHfjdjXOI5/pA5MpMkOfP69XKQRKiUpfOfOpQ1/lbujRNRPVQvdF/q5IWTqE+sFPPofE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRXDKWPCb8sJWARqd9AlT9BMKGE64jkpdIL9TQmfhG21QBnk8p
+	Bj3gTJ6egFptBsNf3kf7L5/zsQQOBFEag/kQLv+BFbY26PimM1wj0teJ+mEvJTGSM3PMl92ClKe
+	ER7Eq8EQmKbVsiXOYYmaPKKWmg2g3WdM=
+X-Gm-Gg: ASbGnctSxdrG7OPt1sC93dVIMi5ycSLWfwvQIp2bLn99glj3RqpRkkhWKZbRSj6K1nD
+	YxwPE0pgwH7uWLR1Gvlhex/s05Lj4PnZeNaOw/cGSQIa0PDdcrIbW7Q79CKfChlf6xxukWZ8YFk
+	eVrIecvLILeylqtPoCK9XlgickAnHmPvcnyS8o6g4wcCA=
+X-Google-Smtp-Source: AGHT+IGNGlG+aNsJoJS7p9MAby4PeXXjfTISX9AqQisekrFt2LD9uKzx7WLFPADso6PHLqRJPaaYkWRfwpkVSxZArQY=
+X-Received: by 2002:a2e:bc16:0:b0:329:2135:9cb2 with SMTP id
+ 38308e7fff4ca-32b21e89080mr10519961fa.41.1749658033782; Wed, 11 Jun 2025
+ 09:07:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250609180125.2988129-2-joelagnelf@nvidia.com>
+References: <20250610181645.45922-1-ryncsn@gmail.com> <aEj47L/qO+llWcvH@MiWiFi-R3L-srv>
+In-Reply-To: <aEj47L/qO+llWcvH@MiWiFi-R3L-srv>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Thu, 12 Jun 2025 00:06:56 +0800
+X-Gm-Features: AX0GCFt4t_8yDOu11d-KG53Oczm6SR3x8UIXqkMwAnKPuK9iGpQph60ayJCC9M0
+Message-ID: <CAMgjq7CHMHwCsWZnEPUTg2fq7wRdQAMD3ESGa+GBBp=U0Ld7ag@mail.gmail.com>
+Subject: Re: [PATCH v3] mm/shmem, swap: fix softlockup with mTHP swapin
+To: Baoquan He <bhe@redhat.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org, Hugh Dickins <hughd@google.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Chris Li <chrisl@kernel.org>, Nhat Pham <nphamcs@gmail.com>, Barry Song <baohua@kernel.org>, 
+	Usama Arif <usamaarif642@gmail.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 09, 2025 at 02:01:24PM -0400, Joel Fernandes wrote:
-> During rcu_read_unlock_special(), if this happens during irq_exit(), we
-> can lockup if an IPI is issued. This is because the IPI itself triggers
-> the irq_exit() path causing a recursive lock up.
-> 
-> This is precisely what Xiongfeng found when invoking a BPF program on
-> the trace_tick_stop() tracepoint As shown in the trace below. Fix by
-> using context-tracking to tell us if we're still in an IRQ.
-> context-tracking keeps track of the IRQ until after the tracepoint, so
-> it cures the issues.
-> 
-> irq_exit()
->   __irq_exit_rcu()
->     /* in_hardirq() returns false after this */
->     preempt_count_sub(HARDIRQ_OFFSET)
->     tick_irq_exit()
+On Wed, Jun 11, 2025 at 11:33=E2=80=AFAM Baoquan He <bhe@redhat.com> wrote:
+>
+> On 06/11/25 at 02:16am, Kairui Song wrote:
+> > From: Kairui Song <kasong@tencent.com>
+> >
+> > Following softlockup can be easily reproduced on my test machine with:
+> >
+> > echo always > /sys/kernel/mm/transparent_hugepage/hugepages-64kB/enable=
+d
+> > swapon /dev/zram0 # zram0 is a 48G swap device
+> > mkdir -p /sys/fs/cgroup/memory/test
+> > echo 1G > /sys/fs/cgroup/test/memory.max
+> > echo $BASHPID > /sys/fs/cgroup/test/cgroup.procs
+> > while true; do
+> >     dd if=3D/dev/zero of=3D/tmp/test.img bs=3D1M count=3D5120
+> >     cat /tmp/test.img > /dev/null
+> >     rm /tmp/test.img
+> > done
+> >
+> > Then after a while:
+> > watchdog: BUG: soft lockup - CPU#0 stuck for 763s! [cat:5787]
+> > Modules linked in: zram virtiofs
+> > CPU: 0 UID: 0 PID: 5787 Comm: cat Kdump: loaded Tainted: G             =
+L      6.15.0.orig-gf3021d9246bc-dirty #118 PREEMPT(voluntary)=C2=B7
+> > Tainted: [L]=3DSOFTLOCKUP
+> > Hardware name: Red Hat KVM/RHEL-AV, BIOS 0.0.0 02/06/2015
+> > RIP: 0010:mpol_shared_policy_lookup+0xd/0x70
+> > Code: e9 b8 b4 ff ff 31 c0 c3 cc cc cc cc 90 90 90 90 90 90 90 90 90 90=
+ 90 90 90 90 90 90 90 66 0f 1f 00 0f 1f 44 00 00 41 54 55 53 <48> 8b 1f 48 =
+85 db 74 41 4c 8d 67 08 48 89 fb 48 89 f5 4c 89 e7 e8
+> > RSP: 0018:ffffc90002b1fc28 EFLAGS: 00000202
+> > RAX: 00000000001c20ca RBX: 0000000000724e1e RCX: 0000000000000001
+> > RDX: ffff888118e214c8 RSI: 0000000000057d42 RDI: ffff888118e21518
+> > RBP: 000000000002bec8 R08: 0000000000000001 R09: 0000000000000000
+> > R10: 0000000000000bf4 R11: 0000000000000000 R12: 0000000000000001
+> > R13: 00000000001c20ca R14: 00000000001c20ca R15: 0000000000000000
+> > FS:  00007f03f995c740(0000) GS:ffff88a07ad9a000(0000) knlGS:00000000000=
+00000
+> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > CR2: 00007f03f98f1000 CR3: 0000000144626004 CR4: 0000000000770eb0
+> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > PKRU: 55555554
+> > Call Trace:
+> >  <TASK>
+> >  shmem_alloc_folio+0x31/0xc0
+> >  shmem_swapin_folio+0x309/0xcf0
+> >  ? filemap_get_entry+0x117/0x1e0
+> >  ? xas_load+0xd/0xb0
+> >  ? filemap_get_entry+0x101/0x1e0
+> >  shmem_get_folio_gfp+0x2ed/0x5b0
+> >  shmem_file_read_iter+0x7f/0x2e0
+> >  vfs_read+0x252/0x330
+> >  ksys_read+0x68/0xf0
+> >  do_syscall_64+0x4c/0x1c0
+> >  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> > RIP: 0033:0x7f03f9a46991
+> > Code: 00 48 8b 15 81 14 10 00 f7 d8 64 89 02 b8 ff ff ff ff eb bd e8 20=
+ ad 01 00 f3 0f 1e fa 80 3d 35 97 10 00 00 74 13 31 c0 0f 05 <48> 3d 00 f0 =
+ff ff 77 4f c3 66 0f 1f 44 00 00 55 48 89 e5 48 83 ec
+> > RSP: 002b:00007fff3c52bd28 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+> > RAX: ffffffffffffffda RBX: 0000000000040000 RCX: 00007f03f9a46991
+> > RDX: 0000000000040000 RSI: 00007f03f98ba000 RDI: 0000000000000003
+> > RBP: 00007fff3c52bd50 R08: 0000000000000000 R09: 00007f03f9b9a380
+> > R10: 0000000000000022 R11: 0000000000000246 R12: 0000000000040000
+> > R13: 00007f03f98ba000 R14: 0000000000000003 R15: 0000000000000000
+> >  </TASK>
+> >
+> > The reason is simple, readahead brought some order 0 folio in swap cach=
+e,
+> > and the swapin mTHP folio being allocated is in confict with it, so
+>                                                   ^^^typo, conflict
+>
 
-@Frederic, while we are at it, what's the purpose of in_hardirq() in
-tick_irq_exit()? For nested interrupt detection?
+Nice catch, thanks!
 
-Regards,
-Boqun
-
->       tick_nohz_irq_exit()
-> 	    tick_nohz_stop_sched_tick()
-> 	      trace_tick_stop()  /* a bpf prog is hooked on this trace point */
-> 		   __bpf_trace_tick_stop()
-> 		      bpf_trace_run2()
-> 			    rcu_read_unlock_special()
->                               /* will send a IPI to itself */
-> 			      irq_work_queue_on(&rdp->defer_qs_iw, rdp->cpu);
-> 
-> A simple reproducer can also be obtained by doing the following in
-> tick_irq_exit(). It will hang on boot without the patch:
-> 
->   static inline void tick_irq_exit(void)
->   {
->  +	rcu_read_lock();
->  +	WRITE_ONCE(current->rcu_read_unlock_special.b.need_qs, true);
->  +	rcu_read_unlock();
->  +
-> 
-> While at it, add some comments to this code.
-> 
-> Reported-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-> Closes: https://lore.kernel.org/all/9acd5f9f-6732-7701-6880-4b51190aa070@huawei.com/
-> Tested-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-> Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
-[...]
+Hi Andrew, it's only one typo in the commit message here, will you
+help update the commit message while merging it or should I send a new
+version?
