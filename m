@@ -1,169 +1,346 @@
-Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11023124.outbound.protection.outlook.com [40.107.201.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D45C2E610B
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.201.124
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749640410; cv=fail; b=Q9mQ12oFZKai8n3CmAjRKd/LWKbZgmNrBZlkyABP03YSHEfUm4ViXTi7kea9IDv9C11+B2XHovAC1NaxZbM32ilAkhPHhHKA80YkvmWGWSmiVGgz86ZG9dco686/t7OidV+3VRZ09TiBaLIjWm2dLGGfY5MCfGaXbwGLkqcuS3Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749640410; c=relaxed/simple;
-	bh=6fi448wdJMK5amtgbR4K9pcNOfq31WIKuWpDtDfgrUU=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=dFvtTpE7w/PatNeZr2+kJyVq7r4jMSGarlx8SMnCdNKGttUN3AR2fIxIE9/UFoue9TYlbAcdi8u9Q9EqO4xRirGOCDf/un0NxzqM/qU1Oh8UC5NvmLY7fdkiVOXVJBHiM8MZdPhGvJLGJN16ddMrKMy6mzD0qcw/Sx8yaj7AbUw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inmusicbrands.com; spf=pass smtp.mailfrom=inmusicbrands.com; dkim=pass (1024-bit key) header.d=inmusicbrands.com header.i=@inmusicbrands.com header.b=LGMCOdnk; arc=fail smtp.client-ip=40.107.201.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inmusicbrands.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inmusicbrands.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 477632E6111;
+	Wed, 11 Jun 2025 11:13:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749640429; cv=none; b=Or+Pba2WPH03kykklLVYQmJ70+dcq8etfmdmCWN3+0mAsw2PZ9ZnpmaDkjGJg3o4jqONTGvkU4s0vdt9iq3yanBVPqL6d9qlvzKqwpQ3jFTQEiVfP5MBUDa55w4WAuQtCfkXexcQ902sWLy4Mi+h3SKRI0xDmJRN8daLXjMigXs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749640429; c=relaxed/simple;
+	bh=y9GGlsXxjBj48ApOolUX4b6+EXIItyfsLaqQPJBnoVo=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=GX4KB9+w4/Sqatk5qGA8JAXH04LXgp+xLmI1d73q65eac1NsI+TGoxtKb6QcVDYHFtbFcLvV0UysL7p9bH4hMps3j2fQGE3GDcZXZXsqm+S2NBjnMlBTZ1VE7830jpZ7wQyA0WgrfgJpCqortBsufnEWY5bTQez4xhI6KS+VNRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iqQZEXKO; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inmusicbrands.com header.i=@inmusicbrands.com header.b="LGMCOdnk"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XMYPjQ0RoY00dOylmWcFehLhfZWVxIUvyRhMrk/tKCSXsB+Tb9xBJv6fqFlJu75yzpBx8lORvbNZzPptKT26dcV70/QaeItfh7cIKIFqx5SNTXaRF1uD7xP2QTX+w2SF0NsdOrEmBFyKXdrnrQ2detUDggcFt48ThU1OjeRa8fOp/jI0v4cXWOmBTf1PygaBLLYjwGUjsvd2DJm1Ihg1JUAnjOhErAupLe2YIlLKfjr43khSLU/LGRzk3/DtM6wRiKL9s08goywtVbb48AcVBPm2NwEDLcQSKJC7MfNj87xTfmD/3JphEAJ1ZZUn59CxolUZXrxDo4sT2rNAwx5SwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8wfYE70336bv3aCdUFpUIxvE3MP6r1HCDaIgfGZx2bs=;
- b=MK5a2ZqAnRDoWVv2rPokpPmYI+FnuY0SiaoOdgEQ9B3UfvxGueOB8gIhw95tNYVNKvcjWecpSvnVqFpEMAXtN4NG5TrJfqJ2Qx515ZOij/RW4BEKqNlshDfqJ+ezD4tlaQ5kGEBOuchNHDY2hnqIvb0hhDq2Xc7t6FFI6DNC7qm9n+uS/haM+PoKebXDsPbDgg35ozpfVPl8W9XEursEEcYKcFL02pD88BIOTdrN9LYS7plB9XbfQPI7IuxJ0Dffw2A3vs72zSKAcIqcHrCWFeKBOxwMIUtPBEsmHf2lXHusjOQO0Eszzomt3Xm3FKA6QRBmvf3d3XQstVr4N+wZ3Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=inmusicbrands.com; dmarc=pass action=none
- header.from=inmusicbrands.com; dkim=pass header.d=inmusicbrands.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=inmusicbrands.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8wfYE70336bv3aCdUFpUIxvE3MP6r1HCDaIgfGZx2bs=;
- b=LGMCOdnk5vUhVHwnv1XqwlpAqh9uB13+GauC5jshI5dToq24nyGjTpqX3e1xhy8kk+YCiYI6Hn0v5WBy0mLA06eAF2Qg1Ur2odqXW7lQyQr8loFYO8WUqIiJMyR+3SzDlmMsHn55jBxx93XNAGCzcZrP8/NET7mp0MbPedc5Pi0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=inmusicbrands.com;
-Received: from MW4PR08MB8282.namprd08.prod.outlook.com (2603:10b6:303:1bd::18)
- by BN0PR08MB6949.namprd08.prod.outlook.com (2603:10b6:408:124::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Wed, 11 Jun
- 2025 11:13:22 +0000
-Received: from MW4PR08MB8282.namprd08.prod.outlook.com
- ([fe80::55b3:31f1:11c0:4401]) by MW4PR08MB8282.namprd08.prod.outlook.com
- ([fe80::55b3:31f1:11c0:4401%6]) with mapi id 15.20.8835.018; Wed, 11 Jun 2025
- 11:13:22 +0000
-From: John Keeping <jkeeping@inmusicbrands.com>
-To: Javier Martinez Canillas <javierm@redhat.com>
-Cc: John Keeping <jkeeping@inmusicbrands.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/ssd130x: fix ssd132x_clear_screen() columns
-Date: Wed, 11 Jun 2025 12:13:06 +0100
-Message-ID: <20250611111307.1814876-1-jkeeping@inmusicbrands.com>
-X-Mailer: git-send-email 2.49.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: LO2P265CA0418.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a0::22) To MW4PR08MB8282.namprd08.prod.outlook.com
- (2603:10b6:303:1bd::18)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iqQZEXKO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749640428; x=1781176428;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=y9GGlsXxjBj48ApOolUX4b6+EXIItyfsLaqQPJBnoVo=;
+  b=iqQZEXKO/sQePw7IXyLcAQJMTZHZBYW2JrxyX6GEG3bbm6jSMg47ROQO
+   KGm2DIz04aCBK8VrGQ1O67AVkbesIAaJJG4YbAJKoZFNK2cPkCxWRLv75
+   hxYr22QD5PNiakQVH27LDYU5UUYfZjndytkvYw/aHa0F1HQMmCQszj+du
+   MYJhryhcW7qHsdu++20QSPFrtznR31n8SH9cZ7rAqt+DycFlLT7D5DeLa
+   v807vy79zSOdCkbk9ip9Y4NqqxCqZmAoTfSZORt6zHdR7poUK/kKd6QFg
+   x0/TfqJvXHLSywmQfpyctqflc9/43sZ66GCztZbAgGlg+qZx4EHfJXgjP
+   g==;
+X-CSE-ConnectionGUID: srexPTHvQh2viwSsGlTGzg==
+X-CSE-MsgGUID: XgUSetpHTH+gbAWDY7dEhQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="55583759"
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="55583759"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 04:13:45 -0700
+X-CSE-ConnectionGUID: 71MhQGstSJKGgyIv3b1JpQ==
+X-CSE-MsgGUID: Qend955UQrqXqlwECABGaQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="170341644"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.183])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 04:13:39 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 11 Jun 2025 14:13:35 +0300 (EEST)
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    linux-serial <linux-serial@vger.kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>, Karsten Keil <isdn@linux-pingi.de>, 
+    David Lin <dtwlin@gmail.com>, Johan Hovold <johan@kernel.org>, 
+    Alex Elder <elder@kernel.org>, Oliver Neukum <oneukum@suse.com>, 
+    Marcel Holtmann <marcel@holtmann.org>, 
+    Johan Hedberg <johan.hedberg@gmail.com>, 
+    Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+    Netdev <netdev@vger.kernel.org>, greybus-dev@lists.linaro.org, 
+    linux-staging@lists.linux.dev, linux-usb@vger.kernel.org, 
+    linux-bluetooth@vger.kernel.org
+Subject: Re: [PATCH 01/33] tty: introduce and use tty_port_tty_vhangup()
+ helper
+In-Reply-To: <20250611100319.186924-2-jirislaby@kernel.org>
+Message-ID: <b23d566c-09dc-7374-cc87-0ad4660e8b2e@linux.intel.com>
+References: <20250611100319.186924-1-jirislaby@kernel.org> <20250611100319.186924-2-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW4PR08MB8282:EE_|BN0PR08MB6949:EE_
-X-MS-Office365-Filtering-Correlation-Id: d9eeb574-312b-4727-f98b-08dda8d8f9e3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|52116014|376014|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?RJVIwo+XYkqkaabVlPefk05ZnrLYeKOkCGQgZSUtix9Oefb7lu/vh7zYyU+u?=
- =?us-ascii?Q?tBzi/IMXrA7geyg+yfxxxJoeUIQkUz+ll7YSrAt4uUp2J8Sr9ahy8Cep8xaH?=
- =?us-ascii?Q?ifeMzUZQC06NRgL+/EWaHWz1yIQMWbT/oC65JLov+RLRSSqb8DUOeqBNS8iL?=
- =?us-ascii?Q?zsfSIo2MN7F43xE+Tn10R37aAOpr0MtrrfTgfZpz1CsZoYT/Sjy/E1bmKczX?=
- =?us-ascii?Q?l/qoBrVwc4kyzqkwDPbw8ERprNOrAIbyICf4qkHjsCO/HHP7FKfAm1wfUdMi?=
- =?us-ascii?Q?WudJjcePvXKpl/xas3sF/wTDGyzAb05V9AvS5+zZ+sVNwWL9UuE81VkXK+/d?=
- =?us-ascii?Q?nWPTxAKlAsIzqpyzi3mpXM2CJcLe3gamyzZeRWrAJdxSKDQG1NGei9CPt5Wq?=
- =?us-ascii?Q?IA1Vi/Nf8z/TiqWMEpI8sah0T6DxT6JNQi6OIIeFzuZrglD94RBAJJz4d+4O?=
- =?us-ascii?Q?+tZMGD90iJpN7TLkD8RS76wYlmzWk5c5GsdbG6NNob4UZPVdMOGbeaJMb43I?=
- =?us-ascii?Q?xPa/0bwToQuUqDJCx1eobfmXGaHv/ZcZdHYZVLBjtwljZt9E4nF54sjzF8MS?=
- =?us-ascii?Q?pGto/KLDD+1EfCNnMFbsy3BeI1vCaJWS2FqCmJiOjNL3Pspjbc/c11ARO3ux?=
- =?us-ascii?Q?1NscZlRoZITQysXhh3D7Kywd4Oez7aGbVwJADtLi8cJ2RfNDB5rDec8DgQng?=
- =?us-ascii?Q?nj4ODYkEiRtHpXKTnC31ZDY/vpQnnoqTu7VRz+LAh1FLKPMfY9QVuDuTrNG6?=
- =?us-ascii?Q?VVt96gvixFBBgX/m77TDx63RoPvSN0By48j+Tkqg8EOvnSPd6IluxSA1KqN+?=
- =?us-ascii?Q?jLc0lOMNKJJbzU1pJM4UPkGtKDlyhAVsV+5FvTwnXMbpp/L+l6ESp6skTR23?=
- =?us-ascii?Q?GlevErxCPWC2Ni6PXT99JtVK+PJRtOP2h3RAgxML5/8P+Ozq9UFJZHfJI7FR?=
- =?us-ascii?Q?jZPoMOwQpHuIHWJZAS2ZYOk8TplwyG65RHn6SM69oJKYdnLTJxufaL6gNQbc?=
- =?us-ascii?Q?dJncE0t0b0HW20v/Q4rUQcF5cDJ//yQ8N5sEkg0Qp88/F/rafdVSSh2sRNeJ?=
- =?us-ascii?Q?p2UHdKL6w3vdteDpm549D3i5kc29ato1NYJOr5+EkpyV+p+75QtCPlJXPCc8?=
- =?us-ascii?Q?TGTBLNslGFymyoNFe6VaJK26ZPU+QtWI+F+MB2sgtvdM2Kx5IEQMTo6edKD6?=
- =?us-ascii?Q?sHqmj3jHhoQT5no1+olDdg/lYfkp6iBtdXhyxNc13+lPPdjtX7civfJkfUcZ?=
- =?us-ascii?Q?uFxt4fPj9tb5685jppMwlOoUZFQlXuivVyopkQyQo7pdHMZpanwt6Ivhyl4m?=
- =?us-ascii?Q?ELkFkKQnULOIxrOCZWsXIG/gooeizXLoMlG84ki8neAyiVVkNe8bd9zkPvJM?=
- =?us-ascii?Q?ztDXbqf7H0Gaq+03kYz7YPaBm8kO8t2tQSBYdXUUfcioXT2hnhAQMPVIbl65?=
- =?us-ascii?Q?L6rs3Pn9Sa7iwtN4lKgA4ZNriiJLEbcWw1oSkAMySGtqy/YRNBTNFQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR08MB8282.namprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(376014)(1800799024)(38350700014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?pRkLf3Z9vTrGWN/EdKBVkL4d1yalhrKKLbOJ6BIdbmwb+QXpyI/YzRrYiRzh?=
- =?us-ascii?Q?G4Xh1v6CG9+s4+o4WRjU5ykHmI0kZuurGWP3VpH7YX+uUiTIGiURG7WTovnO?=
- =?us-ascii?Q?sSo+hYUC9GkBcrjINJpKkC96EASgID6zvQGCIgvDgRQ1DPwkJL++pUSS5YcZ?=
- =?us-ascii?Q?78xCp2NmpYmZTCTiM2l+HeJF4IArWzFKcWr45Jd3oS2hboaEIHtaIzW1YGDt?=
- =?us-ascii?Q?10EGXr/LGV5JNlWYdSjL3XTk84YuRHxDAwLj5QSnr6sdU//f8o6GMQYWylGb?=
- =?us-ascii?Q?FQuuWbQhNN0A5wQN5C9bYH+SssBTqsCBEIGnNqcmtwD1/g67pkYGWrYg1dbA?=
- =?us-ascii?Q?T0Tn97XI55LH3AQswC0OPfMLzDOKBfZuNv2wavGRVHD/5WqYD6iyj1D8DYo1?=
- =?us-ascii?Q?RZRUNL22jCfNTlXY0kRKqh1VMabTTcrwvMu5tt3vj8ppN6WsEY9/AWLl9kLt?=
- =?us-ascii?Q?U+sPdvaKrZnq1q4vQWXtRfPCr3W5gJAHLh7kEosvY6AjVVJxdVbDni6hajFt?=
- =?us-ascii?Q?XfA7AgHag6uz5GFsp+EOTWhhdwUZBjIompWShoVRsJJMOdKzR1POf/quBWEK?=
- =?us-ascii?Q?DAZv0tbFk1gcp2Bu2PtSidMeWw5Cv+h9CIJQIcrgyeeCwEwpWM+bX2+EfIOw?=
- =?us-ascii?Q?6jWR+022esofsBwEFbHdlkFep//PAUkPnXuqqwAGcxGi02pa/e76grtQ9hAL?=
- =?us-ascii?Q?312PBHTS9Vapnc/5e/dtAy3jYKgKTPpkQHVWCORiA/pMJ6nhQEuFZzwx+zi4?=
- =?us-ascii?Q?0ftVlfqc3gGOd7y5V76gDUnj+aSd15vGB8iWv9WceYRCpDCrQWQqZPKRe0hY?=
- =?us-ascii?Q?fxpC4dwpJR0M0apiqInXroRROAZ5/NNDjgcIfuL2eIlDleDRij9OJFqAjtZv?=
- =?us-ascii?Q?pDhFUmP8z7PxVx3FQyvcmbgkdPjxTsezUDuz+9KLIjf6Ixs0xnF1Kcllki3x?=
- =?us-ascii?Q?V5mG5HcO9rzjrCQmGEyLZqaMZJ3fuvHrn5TcUrKpFOzrm62u86c153kbktdu?=
- =?us-ascii?Q?j2n76wvUljF45AxEsu+nq2k4+Mac4/drTjljrPVkLFQRoDPhZ4qiCxzoUJQ8?=
- =?us-ascii?Q?N3maPqdYZLazqzTP0q7AbLMnlSM0i3Rf4HaEc1JPpsMSSDZ3+AHuh9y+8bwY?=
- =?us-ascii?Q?N2fVOOUwPZZouFk91DxjmbdHjacRAxklGwTYGAVkI8s6VbejFEBBZclT2sSN?=
- =?us-ascii?Q?P0xe8RQ4DGb+yXMF5ej0TfWsb1V9Ie61j/2HP50PcnQJYRQTIE1yLG9skgdO?=
- =?us-ascii?Q?XJELUfcG02ojbPcF/+eI7QZoB4RIFbSIbsBDwWLR/jw+VzFsNrUGHXI1MTyD?=
- =?us-ascii?Q?s/XV+cum5vuqDu67226cm6XlwiZ/L3Y5DnDl2mIadHCPoxZbRe3mc+pnD8I7?=
- =?us-ascii?Q?SoQaSSFS6zknH04vjNLEx1aNlk0Ld4ix0Rb9oyPE5DAcv/7hiOXZDGiWk0r0?=
- =?us-ascii?Q?buJz9mqeKWEqEcj7UcAGOrDGiDPTpy7uIIoJV0QskqDfxBz/ouOALaSUZM1B?=
- =?us-ascii?Q?JDt7BbPzjnWYONAC9yzQ2hZbNZWAOWXHKX4CtCe8TM1pTzptsOp65tGQJ1xR?=
- =?us-ascii?Q?vSGcaLxOj12kjzetbmrI2r+Ik3sKeF0uwgHWKkcb5WNO5+TbNaOaa52ffXQX?=
- =?us-ascii?Q?rw=3D=3D?=
-X-OriginatorOrg: inmusicbrands.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d9eeb574-312b-4727-f98b-08dda8d8f9e3
-X-MS-Exchange-CrossTenant-AuthSource: MW4PR08MB8282.namprd08.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2025 11:13:21.9495
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 24507e43-fb7c-4b60-ab03-f78fafaf0a65
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: shP/Yi2LpyToz36y54rzJ5Vh5mTceoZzJbJVOAXOuw8fLfcgzXxrBoQ0q19g58JFlkuTBr0e392/pSVOEMQ6y0Qx0biGQFImfELkIn5Fq7k=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR08MB6949
+Content-Type: multipart/mixed; boundary="8323328-1095312045-1749640415=:957"
 
-The number of columns relates to the width, not the height.  Use the
-correct variable.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Signed-off-by: John Keeping <jkeeping@inmusicbrands.com>
----
- drivers/gpu/drm/solomon/ssd130x.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--8323328-1095312045-1749640415=:957
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-diff --git a/drivers/gpu/drm/solomon/ssd130x.c b/drivers/gpu/drm/solomon/ssd130x.c
-index dd2006d51c7a2..eec43d1a55951 100644
---- a/drivers/gpu/drm/solomon/ssd130x.c
-+++ b/drivers/gpu/drm/solomon/ssd130x.c
-@@ -974,7 +974,7 @@ static void ssd130x_clear_screen(struct ssd130x_device *ssd130x, u8 *data_array)
- 
- static void ssd132x_clear_screen(struct ssd130x_device *ssd130x, u8 *data_array)
- {
--	unsigned int columns = DIV_ROUND_UP(ssd130x->height, SSD132X_SEGMENT_WIDTH);
-+	unsigned int columns = DIV_ROUND_UP(ssd130x->width, SSD132X_SEGMENT_WIDTH);
- 	unsigned int height = ssd130x->height;
- 
- 	memset(data_array, 0, columns * height);
--- 
-2.49.0
+On Wed, 11 Jun 2025, Jiri Slaby (SUSE) wrote:
 
+> This code (tty_get -> vhangup -> tty_put) is repeated on few places.
+> Introduce a helper similar to tty_port_tty_hangup() (asynchronous) to
+> handle even vhangup (synchronous).
+>=20
+> And use it on those places.
+>=20
+> In fact, reuse the tty_port_tty_hangup()'s code and call tty_vhangup()
+> depending on a new bool parameter.
+>=20
+> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+> Cc: Karsten Keil <isdn@linux-pingi.de>
+> Cc: David Lin <dtwlin@gmail.com>
+> Cc: Johan Hovold <johan@kernel.org>
+> Cc: Alex Elder <elder@kernel.org>
+> Cc: Oliver Neukum <oneukum@suse.com>
+> Cc: Marcel Holtmann <marcel@holtmann.org>
+> Cc: Johan Hedberg <johan.hedberg@gmail.com>
+> Cc: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+
+Nice cleanup. I'm not sure if it's important enough to be mentioned in
+Documentation/driver-api/tty/tty_port.rst .
+
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
+--=20
+ i.
+
+> ---
+> Cc: netdev@vger.kernel.org
+> Cc: greybus-dev@lists.linaro.org
+> Cc: linux-staging@lists.linux.dev
+> Cc: linux-usb@vger.kernel.org
+> Cc: linux-bluetooth@vger.kernel.org
+
+> ---
+>  drivers/isdn/capi/capi.c         |  8 +-------
+>  drivers/staging/greybus/uart.c   |  7 +------
+>  drivers/tty/serial/serial_core.c |  7 +------
+>  drivers/tty/tty_port.c           | 12 ++++++++----
+>  drivers/usb/class/cdc-acm.c      |  7 +------
+>  drivers/usb/serial/usb-serial.c  |  7 +------
+>  include/linux/tty_port.h         | 12 +++++++++++-
+>  net/bluetooth/rfcomm/tty.c       |  7 +------
+>  8 files changed, 25 insertions(+), 42 deletions(-)
+>=20
+> diff --git a/drivers/isdn/capi/capi.c b/drivers/isdn/capi/capi.c
+> index 70dee9ad4bae..78e6e7748fb9 100644
+> --- a/drivers/isdn/capi/capi.c
+> +++ b/drivers/isdn/capi/capi.c
+> @@ -306,15 +306,9 @@ static void capincci_alloc_minor(struct capidev *cde=
+v, struct capincci *np)
+>  static void capincci_free_minor(struct capincci *np)
+>  {
+>  =09struct capiminor *mp =3D np->minorp;
+> -=09struct tty_struct *tty;
+> =20
+>  =09if (mp) {
+> -=09=09tty =3D tty_port_tty_get(&mp->port);
+> -=09=09if (tty) {
+> -=09=09=09tty_vhangup(tty);
+> -=09=09=09tty_kref_put(tty);
+> -=09=09}
+> -
+> +=09=09tty_port_tty_vhangup(&mp->port);
+>  =09=09capiminor_free(mp);
+>  =09}
+>  }
+> diff --git a/drivers/staging/greybus/uart.c b/drivers/staging/greybus/uar=
+t.c
+> index 308ed1ca9947..10df5c37c83e 100644
+> --- a/drivers/staging/greybus/uart.c
+> +++ b/drivers/staging/greybus/uart.c
+> @@ -916,7 +916,6 @@ static void gb_uart_remove(struct gbphy_device *gbphy=
+_dev)
+>  {
+>  =09struct gb_tty *gb_tty =3D gb_gbphy_get_data(gbphy_dev);
+>  =09struct gb_connection *connection =3D gb_tty->connection;
+> -=09struct tty_struct *tty;
+>  =09int ret;
+> =20
+>  =09ret =3D gbphy_runtime_get_sync(gbphy_dev);
+> @@ -929,11 +928,7 @@ static void gb_uart_remove(struct gbphy_device *gbph=
+y_dev)
+>  =09wake_up_all(&gb_tty->wioctl);
+>  =09mutex_unlock(&gb_tty->mutex);
+> =20
+> -=09tty =3D tty_port_tty_get(&gb_tty->port);
+> -=09if (tty) {
+> -=09=09tty_vhangup(tty);
+> -=09=09tty_kref_put(tty);
+> -=09}
+> +=09tty_port_tty_vhangup(&gb_tty->port);
+> =20
+>  =09gb_connection_disable_rx(connection);
+>  =09tty_unregister_device(gb_tty_driver, gb_tty->minor);
+> diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial=
+_core.c
+> index 1f7708a91fc6..d6485714eb0f 100644
+> --- a/drivers/tty/serial/serial_core.c
+> +++ b/drivers/tty/serial/serial_core.c
+> @@ -3209,7 +3209,6 @@ static void serial_core_remove_one_port(struct uart=
+_driver *drv,
+>  =09struct uart_state *state =3D drv->state + uport->line;
+>  =09struct tty_port *port =3D &state->port;
+>  =09struct uart_port *uart_port;
+> -=09struct tty_struct *tty;
+> =20
+>  =09mutex_lock(&port->mutex);
+>  =09uart_port =3D uart_port_check(state);
+> @@ -3228,11 +3227,7 @@ static void serial_core_remove_one_port(struct uar=
+t_driver *drv,
+>  =09 */
+>  =09tty_port_unregister_device(port, drv->tty_driver, uport->line);
+> =20
+> -=09tty =3D tty_port_tty_get(port);
+> -=09if (tty) {
+> -=09=09tty_vhangup(port->tty);
+> -=09=09tty_kref_put(tty);
+> -=09}
+> +=09tty_port_tty_vhangup(port);
+> =20
+>  =09/*
+>  =09 * If the port is used as a console, unregister it
+> diff --git a/drivers/tty/tty_port.c b/drivers/tty/tty_port.c
+> index 4af1fbf73f51..903eebdbe12d 100644
+> --- a/drivers/tty/tty_port.c
+> +++ b/drivers/tty/tty_port.c
+> @@ -396,15 +396,19 @@ EXPORT_SYMBOL(tty_port_hangup);
+>   * @port: tty port
+>   * @check_clocal: hang only ttys with %CLOCAL unset?
+>   */
+> -void tty_port_tty_hangup(struct tty_port *port, bool check_clocal)
+> +void __tty_port_tty_hangup(struct tty_port *port, bool check_clocal, boo=
+l async)
+>  {
+>  =09struct tty_struct *tty =3D tty_port_tty_get(port);
+> =20
+> -=09if (tty && (!check_clocal || !C_CLOCAL(tty)))
+> -=09=09tty_hangup(tty);
+> +=09if (tty && (!check_clocal || !C_CLOCAL(tty))) {
+> +=09=09if (async)
+> +=09=09=09tty_hangup(tty);
+> +=09=09else
+> +=09=09=09tty_vhangup(tty);
+> +=09}
+>  =09tty_kref_put(tty);
+>  }
+> -EXPORT_SYMBOL_GPL(tty_port_tty_hangup);
+> +EXPORT_SYMBOL_GPL(__tty_port_tty_hangup);
+> =20
+>  /**
+>   * tty_port_tty_wakeup - helper to wake up a tty
+> diff --git a/drivers/usb/class/cdc-acm.c b/drivers/usb/class/cdc-acm.c
+> index c2ecfa3c8349..f9171fbedf5c 100644
+> --- a/drivers/usb/class/cdc-acm.c
+> +++ b/drivers/usb/class/cdc-acm.c
+> @@ -1571,7 +1571,6 @@ static int acm_probe(struct usb_interface *intf,
+>  static void acm_disconnect(struct usb_interface *intf)
+>  {
+>  =09struct acm *acm =3D usb_get_intfdata(intf);
+> -=09struct tty_struct *tty;
+>  =09int i;
+> =20
+>  =09/* sibling interface is already cleaning up */
+> @@ -1598,11 +1597,7 @@ static void acm_disconnect(struct usb_interface *i=
+ntf)
+>  =09usb_set_intfdata(acm->data, NULL);
+>  =09mutex_unlock(&acm->mutex);
+> =20
+> -=09tty =3D tty_port_tty_get(&acm->port);
+> -=09if (tty) {
+> -=09=09tty_vhangup(tty);
+> -=09=09tty_kref_put(tty);
+> -=09}
+> +=09tty_port_tty_vhangup(&acm->port);
+> =20
+>  =09cancel_delayed_work_sync(&acm->dwork);
+> =20
+> diff --git a/drivers/usb/serial/usb-serial.c b/drivers/usb/serial/usb-ser=
+ial.c
+> index 7266558d823a..c78ff40b1e5f 100644
+> --- a/drivers/usb/serial/usb-serial.c
+> +++ b/drivers/usb/serial/usb-serial.c
+> @@ -1176,7 +1176,6 @@ static void usb_serial_disconnect(struct usb_interf=
+ace *interface)
+>  =09struct usb_serial *serial =3D usb_get_intfdata(interface);
+>  =09struct device *dev =3D &interface->dev;
+>  =09struct usb_serial_port *port;
+> -=09struct tty_struct *tty;
+> =20
+>  =09/* sibling interface is cleaning up */
+>  =09if (!serial)
+> @@ -1191,11 +1190,7 @@ static void usb_serial_disconnect(struct usb_inter=
+face *interface)
+> =20
+>  =09for (i =3D 0; i < serial->num_ports; ++i) {
+>  =09=09port =3D serial->port[i];
+> -=09=09tty =3D tty_port_tty_get(&port->port);
+> -=09=09if (tty) {
+> -=09=09=09tty_vhangup(tty);
+> -=09=09=09tty_kref_put(tty);
+> -=09=09}
+> +=09=09tty_port_tty_vhangup(&port->port);
+>  =09=09usb_serial_port_poison_urbs(port);
+>  =09=09wake_up_interruptible(&port->port.delta_msr_wait);
+>  =09=09cancel_work_sync(&port->work);
+> diff --git a/include/linux/tty_port.h b/include/linux/tty_port.h
+> index 08f89a598366..021f9a8415c0 100644
+> --- a/include/linux/tty_port.h
+> +++ b/include/linux/tty_port.h
+> @@ -232,7 +232,7 @@ bool tty_port_carrier_raised(struct tty_port *port);
+>  void tty_port_raise_dtr_rts(struct tty_port *port);
+>  void tty_port_lower_dtr_rts(struct tty_port *port);
+>  void tty_port_hangup(struct tty_port *port);
+> -void tty_port_tty_hangup(struct tty_port *port, bool check_clocal);
+> +void __tty_port_tty_hangup(struct tty_port *port, bool check_clocal, boo=
+l async);
+>  void tty_port_tty_wakeup(struct tty_port *port);
+>  int tty_port_block_til_ready(struct tty_port *port, struct tty_struct *t=
+ty,
+>  =09=09struct file *filp);
+> @@ -251,4 +251,14 @@ static inline int tty_port_users(struct tty_port *po=
+rt)
+>  =09return port->count + port->blocked_open;
+>  }
+> =20
+> +static inline void tty_port_tty_hangup(struct tty_port *port, bool check=
+_clocal)
+> +{
+> +=09__tty_port_tty_hangup(port, check_clocal, true);
+> +}
+> +
+> +static inline void tty_port_tty_vhangup(struct tty_port *port)
+> +{
+> +=09__tty_port_tty_hangup(port, false, false);
+> +}
+> +
+>  #endif
+> diff --git a/net/bluetooth/rfcomm/tty.c b/net/bluetooth/rfcomm/tty.c
+> index 21a5b5535ebc..827dfbe66085 100644
+> --- a/net/bluetooth/rfcomm/tty.c
+> +++ b/net/bluetooth/rfcomm/tty.c
+> @@ -438,7 +438,6 @@ static int __rfcomm_release_dev(void __user *arg)
+>  {
+>  =09struct rfcomm_dev_req req;
+>  =09struct rfcomm_dev *dev;
+> -=09struct tty_struct *tty;
+> =20
+>  =09if (copy_from_user(&req, arg, sizeof(req)))
+>  =09=09return -EFAULT;
+> @@ -464,11 +463,7 @@ static int __rfcomm_release_dev(void __user *arg)
+>  =09=09rfcomm_dlc_close(dev->dlc, 0);
+> =20
+>  =09/* Shut down TTY synchronously before freeing rfcomm_dev */
+> -=09tty =3D tty_port_tty_get(&dev->port);
+> -=09if (tty) {
+> -=09=09tty_vhangup(tty);
+> -=09=09tty_kref_put(tty);
+> -=09}
+> +=09tty_port_tty_vhangup(&dev->port);
+> =20
+>  =09if (!test_bit(RFCOMM_TTY_OWNED, &dev->status))
+>  =09=09tty_port_put(&dev->port);
+>=20
+--8323328-1095312045-1749640415=:957--
