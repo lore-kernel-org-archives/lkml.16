@@ -1,180 +1,114 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC6C276031
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 12:24:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EBD622CBD0;
+	Wed, 11 Jun 2025 12:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749644687; cv=none; b=pluL+mc/0FaaVg5bqUBZYJj4iahB4NNUchWXjgdrtlsqGTkw6pf0NS4+yMjEVRhvEi5I6iTGlAJTKdqeZPROM/2XkENC8qV0q4xzm+tlWDfEuuQBZYIXoP5cwUOPEPgB8PUFsm+LkP1Rt99ylIc2XQQKMK4ai3XxpNDjzyz0KN0=
+	t=1749644729; cv=none; b=nLdGnbBYjS3Le4mwN8+xzNK/hxINtTEv7Asm5qfJFWesissyCzqbmbLI2Unk+dgJbTy+n1thE+XeYqwU84oc2eAT6EHratL/TuwC/JLVPt2CLfKXSAH1ZvnyKftm/HrU4dGNjDjFP5790kAxfDt7YMNtFIuKGNappwsfPtcspbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749644687; c=relaxed/simple;
-	bh=R81Vn86n50s95m24RM0OKR5tanCo8I3XjpHOkclODVs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J6991K3p1WscZ/LRx8kj1JxSCQP3FIC2m3Jkiir5yPw22402TRBb3AMHi3Ltvjycynbs1bpQqSSaImOHbT2d3z4sY2p2x5uR4hQnf7uP3hhXgdm9RI4tpxPRbUgP095Uac18S4HuArxlDKJt98HTNfcQV/Swf5qWzd8kqz3hHOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bDhvnbrL; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749644729; c=relaxed/simple;
+	bh=ya87dO4a/HiSj6eipOEqSoaBIE/2f6SuK5LxdImo3jc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F2WS2wisrytsvy43NRzHDPLEGPMLxKZ5H2suW5Nus66xgz1C/juUq1GV3wFkuIsGwMCucKqIMhOa7oidcrTQbT/ERLY9PsD9hBhnjc0tM2GFP3HEKZAW6gbDP2QMwPYl7bYqe9HCrfCRJqZcybaeHthvaEVfYKhFwtyAhGCry5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cXboh0x1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bDhvnbrL"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a53ee6fcd5so2371941f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 05:24:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749644684; x=1750249484; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pntxaWNnDpEM2Le+70ckmhHLBJI/hmInZvYIpD60p58=;
-        b=bDhvnbrLizjuLIidAszNSvq6JXlta9/PC3M9ppkmwLwDOtyv7tOyj+3wTguQeCUtdz
-         uNukMWzx1xh/G3BMxbIZgI5gAFzSzgfhGgrQ9wz0bVEu09OHr8v89G9tyPSf5M24k0d6
-         yoYx37uXK+Bb6nYaaIfPNR7W1cYhcAQRfVWJiTZr0ZCmj9NEocIs5MvXmkPZuqEAJ+tl
-         SEH2rKrhhDrnEl8atA/5zczVSCNLjuJHfUiCr3b/aO7563yCLD81OWDyuuzYvOTnvAyQ
-         pRsSI6QZu5PhzkBGl6sEXYeJQt6+WcBAbgxsNkSnp1RDF8VEeP1MQbD+hCLJ1jzxT3b+
-         F2Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749644684; x=1750249484;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pntxaWNnDpEM2Le+70ckmhHLBJI/hmInZvYIpD60p58=;
-        b=pUSJzbMlNRQUM5sQiAMfAg3SFL1sKGP5EC/p1MIzaG6BXZQfUVtyOrK08F+zbrQep8
-         hDdd0j8gn98vOaf+P3p2KUDWPUdb9dRVj+XCTispUC1/Dso+m/gcNYplRX4PZnr8QKMJ
-         jmak4yQo/jH+fO8YpwTDdknIIYGXaXpuBvPTecVLNOGyXgBdtEvvrWo/apF4QnsTZOjF
-         m/moFk1IDCDrviI8bBpjMMGcsm0lJdGp1ynu4/InhBwndDKjQFVizOeCeZG+40waInTR
-         5O52/4hdg1PCFFJsv4w5ZqXOu6KOwXgUozo/xAbBN0uU8/uNppb8I5BNFDChOq3w2MWe
-         39TA==
-X-Forwarded-Encrypted: i=1; AJvYcCWeWdfuFbBctb9ecd892JJCByAnADmUynwKzQsYzfti2A4M4eLMM/V0Ub/QlTxxRmBYa7GUuZYndkWik6c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLvzEMusfaLqfqljumBd8iyUtTyqjG7L/5BkrJPEQrrsfB+3Ff
-	nTbHO0Br9IdoK3HnlAT1HkQKaN8RKMaCMy5H0W6IUkLFMJR+0b4OgkWBCqSQ3zWu63kcPAaqfVh
-	ngNSzGInr66t9pgMrLVeg6JSU3ayr1awglPFv0/sF
-X-Gm-Gg: ASbGncuW2/DvK8DeGKXia6t6zyz1yXpCOqU2517CiqpucXHhkEdlBMXZPpJSKOxqNn4
-	sDh6iSAcIkNpF/omffA0jY5A2xjFuvk+5Qoex5gss52JPhipNLRJJIPs88kdoSfKanzBv2sZSvb
-	IlpJqL7sRvUMeAGIdEWiIL6VEr0lUM6TAc9S00SMFr5qQpeR351m8djq3v2HS1fMLHrHdunRNsb
-	w==
-X-Google-Smtp-Source: AGHT+IHqqDzqPqrx+jJdaiStqcmQC5PY9s0h0hv9Nc7By7zX4EjpLulqZbtZUXuN16xlgP3QnLCnsqEL3ZVHwdnGryk=
-X-Received: by 2002:a05:6000:40ce:b0:3a4:f52d:8b05 with SMTP id
- ffacd0b85a97d-3a558af421bmr2451602f8f.35.1749644684234; Wed, 11 Jun 2025
- 05:24:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cXboh0x1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3A59C4CEEE;
+	Wed, 11 Jun 2025 12:25:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749644728;
+	bh=ya87dO4a/HiSj6eipOEqSoaBIE/2f6SuK5LxdImo3jc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cXboh0x1SuHRoR6mxmMtneC+3hObxIcavh8WW9PHLDCq/s5tnf0i7VSp4sZ9j/mE7
+	 dicI6iGqpPOZDYitJxifSE2GxxZWOs3XB7E+kdQiInXFW+dfvEwlXEds7jJEd4YcpS
+	 6etZhw9baEpBID3euUjcKhfIBaiPv10chFZiJfyeP3FvMh4EQ7OvjA4pqvtCqzREjy
+	 pxJvt5cZwOB4k/4pKyS6Rchm8HnIY/NPWKYBQnkh/wzc2p8nOh+4erSi17g185e/SG
+	 JhJVX0KtnsCI7DP4Wf/lX5yhCwX9vebm+ywwhzZ2jhBlHJ5avqPd1bYN/PBG/hujqd
+	 xAca3Yjrzw/uw==
+Date: Wed, 11 Jun 2025 13:25:23 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: catalin.marinas@arm.com, pcc@google.com, will@kernel.org,
+	anshuman.khandual@arm.com, joey.gouly@arm.com,
+	yury.khrustalev@arm.com, maz@kernel.org, oliver.upton@linux.dev,
+	frederic@kernel.org, akpm@linux-foundation.org, surenb@google.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v6 9/9] kselftest/arm64/mte: add mtefar tests on
+ check_mmap_options
+Message-ID: <9a81979b-2b9d-4bf6-88a0-5803483f802c@sirena.org.uk>
+References: <20250611094107.928457-1-yeoreum.yun@arm.com>
+ <20250611094107.928457-10-yeoreum.yun@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610-pointed-to-v2-1-fad8f92cf1e5@kernel.org>
- <HCd56HpzAlpsTZWbmM8R3IN8MCXWW-kpIjIt_K1D8ZFN6DLqIGmpNRJdle94PGpHYS86rmmhCPci9TajHZCCrw==@protonmail.internalid>
- <DAIV6MJAJ5R0.3TZ4IC2KO9MOL@kernel.org> <87v7p3znz6.fsf@kernel.org>
- <CAH5fLgi3B_Wyz2OzBLhHHgWrg7hboyFUcQe-+GUrrvXiX9di=w@mail.gmail.com>
- <GHUD6hpYDty0s_oTLGC6owDPKqrNepeGOL9F-XlvY6G50K8Zptjp4f8kVVnyoTjf-E_0QVeHfmUUvcN-p1i24Q==@protonmail.internalid>
- <DAJHVMM9DND0.2FM0FJYN0XEFV@kernel.org> <87jz5izhg3.fsf@kernel.org>
- <WXoNAlTJvpteJEAZ3TkYKk2QWHBC0oID8Dy3AHGxLEwiZwBPdSLZB4MpdbObLtFvqiN9re3q6OQpiua2uiv1Hw==@protonmail.internalid>
- <DAJOKFHW96XZ.2ANYSSFQO03ZL@kernel.org> <878qlyzd9a.fsf@kernel.org>
-In-Reply-To: <878qlyzd9a.fsf@kernel.org>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Wed, 11 Jun 2025 14:24:31 +0200
-X-Gm-Features: AX0GCFsGrjiahNqXYN_wK3WpFvBjlZuqs41dAS1mQAczR2z1DIFyvKRDh3iJ50o
-Message-ID: <CAH5fLgiNikpTfm6nvyEJaEspPkMNRQSX2XmBXvXktpXQLutDPg@mail.gmail.com>
-Subject: Re: [PATCH v2] rust: types: add FOREIGN_ALIGN to ForeignOwnable
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Benno Lossin <lossin@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Tamir Duberstein <tamird@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ZxWWX4yq1T0f5i2U"
+Content-Disposition: inline
+In-Reply-To: <20250611094107.928457-10-yeoreum.yun@arm.com>
+X-Cookie: No skis take rocks like rental skis!
 
-On Wed, Jun 11, 2025 at 2:14=E2=80=AFPM Andreas Hindborg <a.hindborg@kernel=
-.org> wrote:
->
-> "Benno Lossin" <lossin@kernel.org> writes:
->
-> > On Wed Jun 11, 2025 at 12:43 PM CEST, Andreas Hindborg wrote:
-> >> "Benno Lossin" <lossin@kernel.org> writes:
-> >>
-> >>> On Tue Jun 10, 2025 at 4:15 PM CEST, Alice Ryhl wrote:
-> >>>> On Tue, Jun 10, 2025 at 4:10=E2=80=AFPM Andreas Hindborg <a.hindborg=
-@kernel.org> wrote:
-> >>>>>
-> >>>>> "Benno Lossin" <lossin@kernel.org> writes:
-> >>>>>
-> >>>>> > On Tue Jun 10, 2025 at 1:30 PM CEST, Andreas Hindborg wrote:
-> >>>>> >> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
-> >>>>> >> index 22985b6f6982..0ccef6b5a20a 100644
-> >>>>> >> --- a/rust/kernel/types.rs
-> >>>>> >> +++ b/rust/kernel/types.rs
-> >>>>> >> @@ -21,15 +21,11 @@
-> >>>>> >>  ///
-> >>>>> >>  /// # Safety
-> >>>>> >>  ///
-> >>>>> >> -/// Implementers must ensure that [`into_foreign`] returns a po=
-inter which meets the alignment
-> >>>>> >> -/// requirements of [`PointedTo`].
-> >>>>> >> -///
-> >>>>> >> -/// [`into_foreign`]: Self::into_foreign
-> >>>>> >> -/// [`PointedTo`]: Self::PointedTo
-> >>>>> >> +/// Implementers must ensure that [`Self::into_foreign`] return=
-s pointers aligned to
-> >>>>> >> +/// [`Self::FOREIGN_ALIGN`].
-> >>>>> >>  pub unsafe trait ForeignOwnable: Sized {
-> >>>>> >> -    /// Type used when the value is foreign-owned. In practical=
- terms only defines the alignment of
-> >>>>> >> -    /// the pointer.
-> >>>>> >> -    type PointedTo;
-> >>>>> >> +    /// The alignment of pointers returned by `into_foreign`.
-> >>>>> >> +    const FOREIGN_ALIGN: usize;
-> >>>>> >>
-> >>>>> >>      /// Type used to immutably borrow a value that is currently=
- foreign-owned.
-> >>>>> >>      type Borrowed<'a>;
-> >>>>> >> @@ -39,18 +35,20 @@ pub unsafe trait ForeignOwnable: Sized {
-> >>>>> >>
-> >>>>> >>      /// Converts a Rust-owned object to a foreign-owned one.
-> >>>>> >>      ///
-> >>>>> >> +    /// The foreign representation is a pointer to void. Aside =
-from the guarantees listed below,
-> >>>>> >
-> >>>>> > I feel like this reads better:
-> >>>>> >
-> >>>>> > s/guarantees/ones/
-> >>>>> >
-> >>>>> >> +    /// there are no other guarantees for this pointer. For exa=
-mple, it might be invalid, dangling
-> >>>>> >
-> >>>>> > We should also mention that it could be null. (or is that assumpt=
-ion
-> >>>>> > wrong?)
-> >>>>>
-> >>>>> It is probably not going to be null, but it is allowed to. I can ad=
-d it.
-> >>>>>
-> >>>>> The list does not claim to be exhaustive, and a null pointer is jus=
-t a
-> >>>>> special case of an invalid pointer.
-> >>>>
-> >>>> We probably should not allow null pointers. If we do, then
-> >>>> try_from_foreign does not make sense.
-> >>>
-> >>> That's a good point. Then let's add that as a safety requirement for =
-the
-> >>> trait.
-> >>
-> >> I disagree. It does not matter for the safety of the trait.
-> >>
-> >> From the point of the user, the pointer is opaque and can be any value=
-.
-> >> In fact, one could do a safe implementation where the returned value i=
-s
-> >> a key into some mapping structure. Probably not super fast, but the us=
-er
-> >> should not care.
-> >
-> > Then we'll have to remove `try_from_foreign`.
->
-> Oh, I see. OK, it is a safety requirement. Should I just add it to this p=
-atch?
 
-Sure, this patch is fine.
+--ZxWWX4yq1T0f5i2U
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Jun 11, 2025 at 10:41:07AM +0100, Yeoreum Yun wrote:
+
+> +static int check_anonymous_memory_mapping(int mem_type, int mode, int mapping, int tag_check, int atag_check)
+>  {
+>  	char *ptr, *map_ptr;
+>  	int run, result, map_size;
+> @@ -97,16 +106,16 @@ static int check_anonymous_memory_mapping(int mem_type, int mode, int mapping, i
+>  			munmap((void *)map_ptr, map_size);
+>  			return KSFT_FAIL;
+>  		}
+> -		result = check_mte_memory(ptr, sizes[run], mode, tag_check);
+> +		result = check_mte_memory(ptr, sizes[run], mode, tag_check, atag_check);
+>  		mte_clear_tags((void *)ptr, sizes[run]);
+>  		mte_free_memory((void *)map_ptr, map_size, mem_type, false);
+> -		if (result == KSFT_FAIL)
+> -			return KSFT_FAIL;
+> +		if (result != KSFT_SKIP)
+> +			return result;
+>  	}
+
+This changes the logic to exit the loop immediately if the check passes
+which doesn't seem like what we want, should we instead change the test
+to be:
+
+	if (result != KSFT_PASS)
+
+which I think is more the intent?
+
+> +		result = check_mte_memory(ptr, sizes[run], mode, TAG_CHECK_ON, atag_check);
+>  		mte_free_memory_tag_range((void *)ptr, sizes[run], mem_type, UNDERFLOW, OVERFLOW);
+>  		if (result != KSFT_PASS)
+>  			return KSFT_FAIL;
+> @@ -192,7 +201,7 @@ static int check_clear_prot_mte_flag(int mem_type, int mode, int mapping)
+>  			close(fd);
+>  			return KSFT_FAIL;
+>  		}
+
+Won't this upgrade any skips to fails?
+
+--ZxWWX4yq1T0f5i2U
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhJdbIACgkQJNaLcl1U
+h9AceQf9ESTpI03oYV79ZBWSYTYktYpJpJCThnBIOdQEB+mQwDdhuDOrLIbso7bJ
+GdlaFJ1NDJOYIVLa9jdfiG0kO2WSzq/yClIuGu/HubaKRiVwS0xcfbjfLO5KtrF5
+kY1KJc7ZKqUIBA+Tbe/ntokLUqDnLuPgdINUBeSTuemBK9rbAQicUms0/ishICNs
+976HinKbqFluPCrgcnVIsOoap5L/1A6ZTT8nAsnJLaK+BYTn/PGgNGgIX1NNbL7r
+tX7//JsJpth6lfvUBklfvgM15FZWh+OSH6Zsm4uvML8qFgyf2Vy7CCntJ0XNIPdS
+hrE2xe9NlVva3ernymzkyYMwmufd4Q==
+=pXyY
+-----END PGP SIGNATURE-----
+
+--ZxWWX4yq1T0f5i2U--
