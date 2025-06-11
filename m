@@ -1,114 +1,160 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539A81DF270;
-	Wed, 11 Jun 2025 17:00:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 984175D8F0;
+	Wed, 11 Jun 2025 17:02:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749661248; cv=none; b=QuOD6OJDrhZGkIQP7EU7vPujU/NsulAP0pcIc2IVrGTFaxbvxtSlGAZW9wxGzoztlEr22aWWMHHxP5SXouojiqub7uR/7ds6ajN4xKNGqSUgVNT2F1IADZFBDVEGQ7Bbbx5n8ra9u8Bnzn7bPKcHcNF/l/zDQPEH5s0JJZuWF6Y=
+	t=1749661355; cv=none; b=QRLM7CfaQ+PLaNxJ1qTJeiTMaIjwNLGSJd7DreHJDO0ubbN3XTmEJqSYj46s6lJeWbTNfff5lGFCpix77hje2LsMGxN7LMd88OEguDborwCOPz6JOwwWsXxkDZbHpf4kMxPJYFyCKM8kS4nYEhOan269JCkHYAKHNGUKR+Xo0PQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749661248; c=relaxed/simple;
-	bh=U1j6kxoyOkjl28igDCJYe1I9pHNhofmpnBeLH4TWCQo=;
+	s=arc-20240116; t=1749661355; c=relaxed/simple;
+	bh=gie/APWznz/rqti+SiC/QQqE38KI/nINDEoN4pe6EyM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SIrkoFkdVB/LXxYRVSrqCwkYvst2HYvvrtEiNzaB050qG+tqQKwsg84f1q8qB7y6loDZlr5jI+dTUCk+8KDFpMKRQaoNuGaNIZ8WOzuFIe8IalUG/0A5h/zLRrrm+hhWzxqcdcNkOpsQQ2yhsf1ZzbV2zSn1XOb+vu1CgtJZhto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p4hyrQAc; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=oh1VlLho0qhkKUtu1wqFm9uJ6nfCZN42A0FJaBE58XOhWBEzmC3TlYFInEvDFGgk097gHs9f7PwPPnAwal8CjaJ49aSVS0m0wt58cUgJHYhc/cJ2hEdHKCi4medVYR51CSKBO8lsx9EnNAbPgn3pMkul+jAX6qIIf70dK5WYDTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VYu596wr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p4hyrQAc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9913C4CEE3;
-	Wed, 11 Jun 2025 17:00:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VYu596wr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC6A9C4CEE3;
+	Wed, 11 Jun 2025 17:02:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749661247;
-	bh=U1j6kxoyOkjl28igDCJYe1I9pHNhofmpnBeLH4TWCQo=;
+	s=k20201202; t=1749661355;
+	bh=gie/APWznz/rqti+SiC/QQqE38KI/nINDEoN4pe6EyM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=p4hyrQAc8dlu8sBj0gfIHVVSY23CT2QtlWEWzvD0M2Qj2hHkJPXAttqrZi3+K4NDA
-	 iw0OOgYL4nWtf1rVe8qMXcYbUvJyhcr9CIbR6CVPNEIg9wtwiEFh7K4oigJpqfFiUg
-	 66BA3kLROOgmVH7/msza3brqfhI0FquXuo1AP5C5U1RGGPVLCDs+W9NeHu17xHW7rX
-	 HbYYcRCh0jtU594VHerq02a3wArk7izJddstZ2Zayyh78mP6YfIiA+5ur/eYJ62kK2
-	 3wd9XBinClLcxbS46XGqnXMsYngs/660tSYA3foSTNh80FHylIivcdInuU+H8c+xX9
-	 Ol48rnLqpg3QA==
-Date: Wed, 11 Jun 2025 22:30:38 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: =?utf-8?B?5a2Z5Yip5paMX0Rpbw==?= <dio.sun@enflame-tech.com>
-Cc: "mahesh@linux.ibm.com" <mahesh@linux.ibm.com>, 
-	"oohall@gmail.com" <oohall@gmail.com>, "bhelgaas@google.com" <bhelgaas@google.com>, 
-	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?utf-8?B?572X5a6JX0Fu?= <an.luo@enflame-tech.com>, 
-	=?utf-8?B?6IOh5reuX0Zlcm5hbmRv?= <fernando.hu@enflame-tech.com>, =?utf-8?B?5ZC055qT552/X0JpbGw=?= <bill.wu@enflame-tech.com>, 
-	=?utf-8?B?546L6ZGrX1hpbg==?= <xin.wang@enflame-tech.com>
-Subject: Re: [PATCH] AER: PCIE CTO recovery handle fix
-Message-ID: <6gs5cvpqbbkudnlr7v57odgaxjyrare6nigrf2lkq22yljult2@z5jklzlmsdcq>
-References: <BJXPR01MB0614C01A9523786117B1F1CBCEC8A@BJXPR01MB0614.CHNPR01.prod.partner.outlook.cn>
+	b=VYu596wrqAmov+UwB2AFK/pm9Oy304elurt69CnojeWCH4aczHijnRQV0w5PIQ+4n
+	 NJ85Kfojz4OOMGchlgNqWLEpDjHEcfsKubUMmoLqLzmWGSvOLEO8MS9oGlz/jtvE1F
+	 g2ohVolAm9f/dD5hxcZYMfKMqb1j/+lFweg7ncs8xJAzu4J6WEx50PKSdT7VRB/BKs
+	 MDHYVKvs25iy2eT9DITOYdVFMwvlvZAWY5vsf6fA815B2YAB8fhaZyY0SfIcajZGf6
+	 OAT5EG8NspReXDNtiuN0eZ/9kzSCz+01oGTZHGgFx5ttqbpMRhMA7ROYKsqqCpJiMQ
+	 CTzdN2uw4vdAQ==
+Date: Wed, 11 Jun 2025 20:02:31 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: "Orlov, Ivan" <iorlov@amazon.co.uk>
+Cc: "peterhuewe@gmx.de" <peterhuewe@gmx.de>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
+	"linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Woodhouse, David" <dwmw@amazon.co.uk>
+Subject: Re: [PATCH] tpm: Fix the timeout & use ktime
+Message-ID: <aEm2p-2p3W3Xw5OU@kernel.org>
+References: <20250611162508.85149-1-iorlov@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <BJXPR01MB0614C01A9523786117B1F1CBCEC8A@BJXPR01MB0614.CHNPR01.prod.partner.outlook.cn>
+In-Reply-To: <20250611162508.85149-1-iorlov@amazon.com>
 
-On Tue, Mar 04, 2025 at 07:07:05AM +0000, 孙利斌_Dio wrote:
-> [EXTERNAL EMAIL]
+On Wed, Jun 11, 2025 at 04:25:24PM +0000, Orlov, Ivan wrote:
+> The current implementation of timeout detection works in the following
+> way:
 > 
-> From 5fc7b1a9e0f0bcfa14068c6358019ed1e3ffc6c6 Mon Sep 17 00:00:00 2001
-> From: "dio.sun" <dio.sun@enflame-tech.com>
-> Date: Wed, 26 Feb 2025 08:54:49 +0000
-> Subject: [PATCH] AER: PCIE CTO recovery handle fix
+> 1. Read completion status. If completed, return the data
+> 2. Sleep for some time (usleep_range)
+> 3. Check for timeout using current jiffies value. Return an error if
+>    timed out
+> 4. Goto 1
 > 
+> usleep_range doesn't guarantee it's always going to wake up strictly in
+> (min, max) range, so such a situation is possible:
+> 
+> 1. Driver reads completion status. No completion yet
+> 2. Process sleeps indefinitely. In the meantime, TPM responds
+> 3. We check for timeout without checking for the completion again.
+>    Result is lost.
+> 
+> Such a situation also happens for the guest VMs: if vCPU goes to sleep
+> and doesn't get scheduled for some time, the guest TPM driver will
+> timeout instantly after waking up without checking for the completion
+> (which may already be in place).
 
-Looks like you forwarded this patch instead of submitting directly. Please fix
-it.
+Got it.
 
->  - Non-fatal PCIe CTO is reportted to PCIE RC and it will be convertted to
->    AdvNonFatalErr automatically
->  - according to PCIE SPEC 6.2.3.2.4.4 Requester with Completion Timeout(
->    If the severity of the CTO is non-fatal, and the Requester elects to
->    attempt recovery by issuing a new request, the Requester must
->    first handle the currecnt error case as an Advisory Non-Fatal Error.).
->  - Current Kernel code does nothing when receiving an AdvNonFatalErr(
->    Correctable Error) and the device driver has no chance to handle this
->    error.
->  - Under this situation, sometimes system will hang when more
->    AdvNonFatalErr coming.
 > 
-> Signed-off-by: dio.sun <dio.sun@enflame-tech.com>
+> Instead, perform the check in the following way:
+> 
+> 1. Read the current timestamp
+> 2. Read the completion status. If completed, return the result
+> 3. Sleep
+> 4. Check if the timestamp read at step 1 exceeds the timeout. Return
+>    an error if it does
+> 5. Goto 1
+> 
+> Also, use ktime instead of jiffes as a more reliable and precise timing
+> source.
+
+"also", i.e. a logically separate change which should be split up to
+a separate patch.
+
+> 
+> Signed-off-by: Ivan Orlov <iorlov@amazon.com>
 > ---
-> drivers/pci/pcie/aer.c | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
+>  drivers/char/tpm/tpm-interface.c | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 508474e17183..5ddc990c6f42 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1154,7 +1154,21 @@ static void aer_recover_work_func(struct work_struct *work)
->                 ghes_estatus_pool_region_free((unsigned long)entry.regs,
->                                             sizeof(struct aer_capability_regs));
+> diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
+> index 8d7e4da6ed53..959330212a16 100644
+> --- a/drivers/char/tpm/tpm-interface.c
+> +++ b/drivers/char/tpm/tpm-interface.c
+> @@ -88,7 +88,8 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
+>  	int rc;
+>  	ssize_t len = 0;
+>  	u32 count, ordinal;
+> -	unsigned long stop;
+> +	ktime_t timeout, curr_time;
+> +	unsigned int ord_dur_us;
+>  
+>  	if (bufsiz < TPM_HEADER_SIZE)
+>  		return -EINVAL;
+> @@ -126,8 +127,16 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
+>  	if (chip->flags & TPM_CHIP_FLAG_IRQ)
+>  		goto out_recv;
+>  
+> -	stop = jiffies + tpm_calc_ordinal_duration(chip, ordinal);
+> +	ord_dur_us = jiffies_to_usecs(tpm_calc_ordinal_duration(chip, ordinal));
+> +	timeout = ktime_add_us(ktime_get(), ord_dur_us);
+>  	do {
+> +		/*
+> +		 * Save the time of the completion check. This way even if CPU
+> +		 * goes to sleep indefinitely on tpm_sleep, the driver will
+> +		 * check for completion one more time instead of timing out
+> +		 * instantly after waking up.
+> +		 */
+> +		curr_time = ktime_get();
+>  		u8 status = tpm_chip_status(chip);
+>  		if ((status & chip->ops->req_complete_mask) ==
+>  		    chip->ops->req_complete_val)
+> @@ -140,7 +149,7 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
+>  
+>  		tpm_msleep(TPM_TIMEOUT_POLL);
+>  		rmb();
+> -	} while (time_before(jiffies, stop));
+> +	} while (ktime_before(curr_time, timeout));
+
+
+Wouldn't it be simpler fix to just check completion after dropping out
+of the loop?
+
+	} while (time_before(jiffies, stop));
+
+	if (tpm_transmit_completed(chip))
+		goto out_recv;
+
+And declare this before tpm_try_transmit():
+
+static bool tpm_transmit_completed(struct tpm_chip *chip)
+{
+	u8 status = tpm_chip_status(chip);
+	
+	return (status & chip->ops->req_complete_mask) == chip->ops->req_complete_val;
+}
+
+>  
+>  	tpm_chip_cancel(chip);
+>  	dev_err(&chip->dev, "Operation Timed out\n");
+> -- 
+> 2.43.0
 > 
-> -               if (entry.severity == AER_NONFATAL)
-> +               if (entry.severity == AER_CORRECTABLE) {
-> +                       if (entry.regs->cor_status & PCI_ERR_COR_ADV_NFAT) {
-> +                               pci_err(pdev, "%04x:%02x:%02x:%x advisory non-fatal error\n",
-> +                                               entry.domain, entry.bus, PCI_SLOT(entry.devfn),
-> +                                               PCI_FUNC(entry.devfn));
-> +                               if (entry.regs->uncor_status & PCI_ERR_UNC_COMP_TIME) {
-> +                                       pci_err(pdev, "%04x:%02x:%02x:%x completion timeout\n",
-> +                                                       entry.domain, entry.bus,
-> +                                                       PCI_SLOT(entry.devfn),
-> +                                                       PCI_FUNC(entry.devfn));
-> +                                       pcie_do_recovery(pdev, pci_channel_io_frozen,
-> +                                                                        aer_root_reset);
-> +                               }
-> +                       }
 
-Why the error is handled in aer_recover_work_func()? This looks like only gets
-triggered from ghes_handle_aer() in drivers/acpi/apei/ghes.c.
-
-I think it should be handled in pci_aer_handle_error(). Also, the error prints
-should be sneaked into aer_print_error().
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+BR, Jarkko
