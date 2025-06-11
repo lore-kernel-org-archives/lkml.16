@@ -1,145 +1,112 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09EE2836A0
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 20:03:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B816289E05;
+	Wed, 11 Jun 2025 20:04:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749672189; cv=none; b=ul95raaBcyWOP+7SnnNf8AI/+s6yRPd2cs9/WZWbBn6v7a2UtGmMjVqLCHzBmO4xkWFMnYFs2Y1ClqyObC5gDPR2MyFr7+PH6zdGKIsbNZpnRDmgQx3EL0tVpxj95Ck3iGWixgCRReDirJuThaClHRPryjT3Jo7587Guvrff3Zs=
+	t=1749672296; cv=none; b=EAC9qK2wHv45L1VMVn9n2NkdrGJ0++FLShlMBbF6j6Rj/UJEzB6i+3psmuunCdAYoJzckoTtMZYd2x1oH6+RIQKAdF93W0Qn9vebAvVPo32avTufcSSIlEoTT8Hyr8OKZkurry3Tp7Yjrrna2SsG6WIDJjI3AnQf7Lxi60zsK5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749672189; c=relaxed/simple;
-	bh=Ip1jbGk3WQd8b1Tsp0V2qr0qEDHYUrs18TXFUrZ1JOY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SwGCukF7YeJGWnh6DrM2MvgO9Hu5niBPQFY73wIkdaJBudXJjjbOd+1Hb5cYJDx3QmpW0WlgqfBSIqyYW8Xax7C5y0Qyw5tfOMMAbt28knEhmQdrMcGK4vZN+gdOTtUoNrCaC18jk/i5EJ5g4KKy+A39gpZCKzZsuYjt+nGVKIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=ZrKIF47x; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1749672296; c=relaxed/simple;
+	bh=YltkNEdDFqNIZZD1BCXWEVlBMgaCkKwjGC0e+Su8vTc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iKmXvPrm7TApFsN8KFGG+iLsk72RfKQcCdfJu/X/dbt4f8s7aWyec96WGOoPC6mbzeqgX4nqsBO4KzL6cXhKSBujzw2sQPwaszxlCkuXVh9gH3bYVJqV66Ha+IBiIjtXNlMvlG9tVn50Cc0kmm2ySQHcpCfMRCpJbEU54cqeN1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cwxT3a1D; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="ZrKIF47x"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Pwp6zP2r6tl6AGR6+/QAveGAElR1tE3T/Oioku6FtEg=; b=ZrKIF47xdLvQ+NDsQ9RRzXNyMm
-	fEtAFnpEeBALVuGzxUS2oSwjj1csPaLzaDD6w6j8ivF62y9sYWg6Gg1lEfJGPun1p5HcqCEZcKkdP
-	o3dckBV3KtxEOPaLXhcf6k1utnqYd7stY5KArp0EeKx4AZZk+gYb2sJa2hmnzSWTapEScodML8HPf
-	n3tRADoseDkpk9CEsLvkWT1HyH0ygcAHeTm8efQrQoi4S/am3ATvDy0GHSYMY/4vQQXZkC3SpGlHM
-	/KdMy8BVrYOTav1kAN41lA+uNt9vqsI/77+B6LeYkf2gHjpDIfoELN9kJMZDrzvZvKOpbpD3369n9
-	lhO5s9jw==;
-Received: from [187.36.208.198] (helo=[192.168.1.111])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uPRex-002LhD-Hm; Wed, 11 Jun 2025 22:02:55 +0200
-Message-ID: <37d5b8d8-fdfb-4b10-9095-7f953d7a5ad1@igalia.com>
-Date: Wed, 11 Jun 2025 17:02:47 -0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cwxT3a1D"
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-70cb9ae5479so156917b3.2;
+        Wed, 11 Jun 2025 13:04:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749672293; x=1750277093; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YltkNEdDFqNIZZD1BCXWEVlBMgaCkKwjGC0e+Su8vTc=;
+        b=cwxT3a1DGb/KjBY1ql1/K0dmhF8CVbifb/r3sAkjyRHxGVHzQer92MEr8RbxHYokO1
+         KdrimtLPUGoCrmQtfdAeJsCYW30bnNpYSJVj/Y4aEi7/Bh/MnPioVvHpDrHQQjb2Ewip
+         OA18liD9nsVE/ZocSEJmQ2O7rCmrYK6tQ86/H2mGClRS9Fje5ccfkJiBjdkmCCSbR01H
+         eQGeEvfoPr1dAFhqSrV4+8jZEoNgc9lLEjEid1kOiCljrFr4byQeaGwvCvQopnRPpWFJ
+         sE0XwzHBazoxmIbEq4AS36luUaz9GYGlaOjeAUcbaeZQyOG2xOPKyuJBVV4UouALhgFT
+         gw9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749672293; x=1750277093;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YltkNEdDFqNIZZD1BCXWEVlBMgaCkKwjGC0e+Su8vTc=;
+        b=XUk7Su5i0NrxN0qgQVX1mjQRd2zLCb+vT28iFDHhdhXaphcQxqnkxnThYhr2aU8ETk
+         KJcPKwk3p+5/WqZCzG06Jvkt+7O7Ww118QPcaMQE+JSY2R7JoPxI9SIQck6hqujQLz+z
+         WKkWS1JvkKR2ImYgE/htmFhdY319SM+/IeMjjSYCjhUzsK8YokrEn7alh+EJZYwC33mj
+         hKMV91nU8J+R6/WZnCGa9ywDrJJh1zVUuTtta6XjtVaLr2xmi3Pfl+Rt0oteBpe03QW4
+         HIrenngcqOy8hAup78OOJ/SBpd4oZWxfXDPIGEHjGP+kFfCPgDWJjetdAV6DjFBSTBkv
+         iDDA==
+X-Forwarded-Encrypted: i=1; AJvYcCU1sRZlmw2RyNBa3WmKzJiiHwl0d5KuItGOiZqB5pMN+6qyvzvxhYO3cFfy5sFxmopAP8clM7HRghxw@vger.kernel.org, AJvYcCV7qoN+H8bLBS/32iYIlKPMw8sPnKnC7cdDNV+lpte8CXvRwuwsCOHa26pSi2TBZmSkMblycR5u4qwIMdv6@vger.kernel.org, AJvYcCWDfHs73+imOhQrS5jsGEsuqSnSW2o/NQA7cPagkxxfWoIAZyU4x3menTz2PXOK48tTxQ9uYi60vWQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywa//uQji74bDe2wn2ifKnaKLhv0AjTLcUqR08lFAMNS1nPCR/y
+	0DxsN9cL4QnBvsZILsy2b1skjNk0s2b4O/i81Gz20ilpSzLOQbgxAsDKz0eKuXzdpy41dgRZSB8
+	uL4ZOQV4o5XjpPPYqBdy7vJXhjMENaJ0=
+X-Gm-Gg: ASbGncvupVnl7LYmlgSNXmSzkiawpcOj8KD44nridiFlgGlhBfisbjCy92OOLluV9RQ
+	cvbRoImw8/e4nxIXsOS9l8ob67wz/B+hBEOjfLbWgYENINvThmEb7Aya/Zcbb0hrfEFu46e+qv8
+	PKYY6J7ft0E4eJRXTVRh4ZWrx/y9ARWEC6M2nKPqEF1Rc=
+X-Google-Smtp-Source: AGHT+IFV+AO9HgYFhTTlztYTHVtM7RGHg3xnlcUOyt2aLXZS5Y8CCUoM7JVeqVNE9lcymBg1Kk4aN4BkNSC+LRfHkGI=
+X-Received: by 2002:a05:690c:7242:b0:710:e860:37c5 with SMTP id
+ 00721157ae682-71140aca988mr30956227b3.5.1749672293326; Wed, 11 Jun 2025
+ 13:04:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/8] drm/vkms: Add support for RGB888 formats
-To: Louis Chauvet <louis.chauvet@bootlin.com>,
- Melissa Wen <melissa.srw@gmail.com>, =?UTF-8?Q?Ma=C3=ADra_Canal?=
- <mairacanal@riseup.net>, Haneen Mohammed <hamohammed.sa@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rodrigo Siqueira <siqueira@igalia.com>,
- Simona Vetter <simona.vetter@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, arthurgrillo@riseup.net,
- linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
- miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
- seanpaul@google.com, nicolejadeyee@google.com
-References: <20250530-b4-new-color-formats-v4-0-ef5f9f48376c@bootlin.com>
- <20250530-b4-new-color-formats-v4-5-ef5f9f48376c@bootlin.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
-Autocrypt: addr=mcanal@igalia.com; keydata=
- xsBNBGcCwywBCADgTji02Sv9zjHo26LXKdCaumcSWglfnJ93rwOCNkHfPIBll85LL9G0J7H8
- /PmEL9y0LPo9/B3fhIpbD8VhSy9Sqz8qVl1oeqSe/rh3M+GceZbFUPpMSk5pNY9wr5raZ63d
- gJc1cs8XBhuj1EzeE8qbP6JAmsL+NMEmtkkNPfjhX14yqzHDVSqmAFEsh4Vmw6oaTMXvwQ40
- SkFjtl3sr20y07cJMDe++tFet2fsfKqQNxwiGBZJsjEMO2T+mW7DuV2pKHr9aifWjABY5EPw
- G7qbrh+hXgfT+njAVg5+BcLz7w9Ju/7iwDMiIY1hx64Ogrpwykj9bXav35GKobicCAwHABEB
- AAHNIE1hw61yYSBDYW5hbCA8bWNhbmFsQGlnYWxpYS5jb20+wsCRBBMBCAA7FiEE+ORdfQEW
- dwcppnfRP/MOinaI+qoFAmcCwywCGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQ
- P/MOinaI+qoUBQgAqz2gzUP7K3EBI24+a5FwFlruQGtim85GAJZXToBtzsfGLLVUSCL3aF/5
- O335Bh6ViSBgxmowIwVJlS/e+L95CkTGzIIMHgyUZfNefR2L3aZA6cgc9z8cfow62Wu8eXnq
- GM/+WWvrFQb/dBKKuohfBlpThqDWXxhozazCcJYYHradIuOM8zyMtCLDYwPW7Vqmewa+w994
- 7Lo4CgOhUXVI2jJSBq3sgHEPxiUBOGxvOt1YBg7H9C37BeZYZxFmU8vh7fbOsvhx7Aqu5xV7
- FG+1ZMfDkv+PixCuGtR5yPPaqU2XdjDC/9mlRWWQTPzg74RLEw5sz/tIHQPPm6ROCACFls7A
- TQRnAsMsAQgAxTU8dnqzK6vgODTCW2A6SAzcvKztxae4YjRwN1SuGhJR2isJgQHoOH6oCItW
- Xc1CGAWnci6doh1DJvbbB7uvkQlbeNxeIz0OzHSiB+pb1ssuT31Hz6QZFbX4q+crregPIhr+
- 0xeDi6Mtu+paYprI7USGFFjDUvJUf36kK0yuF2XUOBlF0beCQ7Jhc+UoI9Akmvl4sHUrZJzX
- LMeajARnSBXTcig6h6/NFVkr1mi1uuZfIRNCkxCE8QRYebZLSWxBVr3h7dtOUkq2CzL2kRCK
- T2rKkmYrvBJTqSvfK3Ba7QrDg3szEe+fENpL3gHtH6h/XQF92EOulm5S5o0I+ceREwARAQAB
- wsB2BBgBCAAgFiEE+ORdfQEWdwcppnfRP/MOinaI+qoFAmcCwywCGwwACgkQP/MOinaI+qpI
- zQf+NAcNDBXWHGA3lgvYvOU31+ik9bb30xZ7IqK9MIi6TpZqL7cxNwZ+FAK2GbUWhy+/gPkX
- it2gCAJsjo/QEKJi7Zh8IgHN+jfim942QZOkU+p/YEcvqBvXa0zqW0sYfyAxkrf/OZfTnNNE
- Tr+uBKNaQGO2vkn5AX5l8zMl9LCH3/Ieaboni35qEhoD/aM0Kpf93PhCvJGbD4n1DnRhrxm1
- uEdQ6HUjWghEjC+Jh9xUvJco2tUTepw4OwuPxOvtuPTUa1kgixYyG1Jck/67reJzMigeuYFt
- raV3P8t/6cmtawVjurhnCDuURyhUrjpRhgFp+lW8OGr6pepHol/WFIOQEg==
-In-Reply-To: <20250530-b4-new-color-formats-v4-5-ef5f9f48376c@bootlin.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250601172139.59156-1-l.rubusch@gmail.com> <aDz5WoBFlLiRptza@archie.me>
+In-Reply-To: <aDz5WoBFlLiRptza@archie.me>
+From: Lothar Rubusch <l.rubusch@gmail.com>
+Date: Wed, 11 Jun 2025 22:04:17 +0200
+X-Gm-Features: AX0GCFtHLrO_5QUdGg4rNwkE0hGpJaZsTOIr5EFKX44lHrKyIKyEQZE7GHCLJ-w
+Message-ID: <CAFXKEHZQZuKYS-DJ_KSmHzEO7OAGmKXCeEZ3VaLR-JJdb3Sw6Q@mail.gmail.com>
+Subject: Re: [PATCH v4 00/11] iio: accel: adxl313: add power-save on activity/inactivity
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com, 
+	andy@kernel.org, corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de, 
+	Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/30/25 11:06, Louis Chauvet wrote:
-> Add the support for:
-> - RGB888
-> - BGR888
-> 
-> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+Hi Bagas Sanjaya,
 
-Reviewed-by: Maíra Canal <mcanal@igalia.com>
+On Mon, Jun 2, 2025 at 3:07=E2=80=AFAM Bagas Sanjaya <bagasdotme@gmail.com>=
+ wrote:
+>
+> On Sun, Jun 01, 2025 at 05:21:28PM +0000, Lothar Rubusch wrote:
+> > The patch set covers the following topics:
+> > - add debug register and regmap cache
+> > - prepare iio channel scan_type and scan_index
+> > - prepare interrupt handling
+> > - implement fifo with watermark
+> > - add activity/inactivity together with auto-sleep with link bit
+> > - add ac coupled activity/inactivity, integrate with auto-sleep and lin=
+k bit
+> > - documentation
+>
+> The series doesn't cleanly apply on iio/testing tree. Base commit or tree=
+?
+>
+> Confused...
+>
 
-Best Regards,
-- Maíra
+I'm sorry for that. My base tree is "testing" here:
+https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git/log/?h=3Dtest=
+ing
 
-> ---
->   drivers/gpu/drm/vkms/vkms_formats.c | 7 +++++++
->   drivers/gpu/drm/vkms/vkms_plane.c   | 2 ++
->   2 files changed, 9 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
-> index 2c5cc8d3a14c..5106441f916b 100644
-> --- a/drivers/gpu/drm/vkms/vkms_formats.c
-> +++ b/drivers/gpu/drm/vkms/vkms_formats.c
-> @@ -461,6 +461,9 @@ READ_LINE_ARGB8888(ABGR8888_read_line, px, px[3], px[0], px[1], px[2])
->   READ_LINE_ARGB8888(RGBA8888_read_line, px, px[0], px[3], px[2], px[1])
->   READ_LINE_ARGB8888(BGRA8888_read_line, px, px[0], px[1], px[2], px[3])
->   
-> +READ_LINE_ARGB8888(RGB888_read_line, px, 0xFF, px[2], px[1], px[0])
-> +READ_LINE_ARGB8888(BGR888_read_line, px, 0xFF, px[0], px[1], px[2])
-> +
->   READ_LINE_le16161616(ARGB16161616_read_line, px, px[3], px[2], px[1], px[0])
->   READ_LINE_le16161616(ABGR16161616_read_line, px, px[3], px[0], px[1], px[2])
->   READ_LINE_le16161616(XRGB16161616_read_line, px, cpu_to_le16(0xFFFF), px[2], px[1], px[0])
-> @@ -686,6 +689,10 @@ pixel_read_line_t get_pixel_read_line_function(u32 format)
->   		return &RGBX8888_read_line;
->   	case DRM_FORMAT_BGRX8888:
->   		return &BGRX8888_read_line;
-> +	case DRM_FORMAT_RGB888:
-> +		return RGB888_read_line;
-> +	case DRM_FORMAT_BGR888:
-> +		return BGR888_read_line;
->   	case DRM_FORMAT_ARGB16161616:
->   		return &ARGB16161616_read_line;
->   	case DRM_FORMAT_ABGR16161616:
-> diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
-> index d3783a8f84c2..e82b60fcda4b 100644
-> --- a/drivers/gpu/drm/vkms/vkms_plane.c
-> +++ b/drivers/gpu/drm/vkms/vkms_plane.c
-> @@ -21,6 +21,8 @@ static const u32 vkms_formats[] = {
->   	DRM_FORMAT_XBGR8888,
->   	DRM_FORMAT_RGBX8888,
->   	DRM_FORMAT_BGRX8888,
-> +	DRM_FORMAT_RGB888,
-> +	DRM_FORMAT_BGR888,
->   	DRM_FORMAT_XRGB16161616,
->   	DRM_FORMAT_XBGR16161616,
->   	DRM_FORMAT_ARGB16161616,
-> 
+Since this patch could be applied, I guess it could be a good base commit:
+https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git/commit/?h=3Dt=
+esting&id=3Dd4d10d3535639b946007fb7ffb5bff2d878df921
 
+Thank you for reviewing the documentation, I really appreciate your work.
+Best,
+L
+
+> --
+> An old man doll... just what I always wanted! - Clara
