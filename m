@@ -1,108 +1,167 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6354127145F
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 13:08:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0C1270ED5;
+	Wed, 11 Jun 2025 13:09:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749647321; cv=none; b=VytufmeX1vj9FivYQwqQMObfIZO6dzV+QF7vuHbIa1FEOYl+czf2nW1aIAACkTfRmpLXFGhloP5les1IdExt6Y5/3T6sH7LLxyPeuq39SUX1bi0cpo/mY+kQKb6qSqkAEu+sMSG/5nVaSS4Ao4D1+xhve8Eo9FP9axJBfKH4/2c=
+	t=1749647358; cv=none; b=uzepgmWNF/2x/PU0VGSJ0jOfnEHSS/xvI8QBJkcXWjVCH2YIkav4EuHtBpN+sloXTCZ+RyYLs2MkBVCczt+FvMIeemsFaZ5Gbnn/yk5E5ac24JfMmdoXNKhpDAvKh4NzmvgAB2Jb77dG7ubPcZD3DEml0fIOS8pPWV0a+02eN/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749647321; c=relaxed/simple;
-	bh=NpnlGS+RfAUP1yAlohXjTYdt1pVsFCAm4rXRoM0IsFo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ciZXGv2kJmXUTlworbdjF9co1O2QzXe8PDcTwlK8DG0S0ucfbTeXxZRfnPMy0G7663Evir2x3khLbWMHkV3QMq9cDO5h8hQmi1ZWa3JLZqLAKOzTp18YFdEWPGUOP34C8t8Qlk7aZV1KD2IAp3MDwbYCcYFsUAqATDZE3RhjRwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=R6e+Fxm5; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749647358; c=relaxed/simple;
+	bh=4GuMQVvjJS+NeB3GJxegmcVN/9iZnCKz1igcJRBGrsA=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=EssJkPTW2T7NvaRhd0llXvd9n/AS2P4UGpipiCU0IlwRPKmpveVUFGg1yMLjDPhhBpr1MqfAumZuJTdgvf4NzW+11nwfhM5X/R7SL7BnVlt7+r3JI5IkFqb0RC8n+BZcW7yzfXON/0AtgKpPXUcNS+dn3V6LCyWtsWwn4yklfTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fylOoAU4; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R6e+Fxm5"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so82834395e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:08:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749647318; x=1750252118; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=e22TsvH4RGJKGMMRWkswOq9iBPLvNBJezKH7Y1TV0R4=;
-        b=R6e+Fxm5+wM6OmiD/CaTtNNLlGFv45YaG2ojzmWcHCqyFrnxZSmjjOyD6LzVFeu5J/
-         3czBxOPGxE8NEeKS6DR5icsRNPQUrkWdH2yJnF00cJhzXowBfiKahTVYPLKWeMqtFj5V
-         OnvutvLRenMolAQHnDSPvgW4k5kc+yUsYXBZly67q4zQvKj3IRd3UqSeLZ1/PU/M236Z
-         l3MuF4eU18g4sThtGJctC8bAn1r45uZeDXOVNaSxBcIXj5I6PUuZFwHG9MVaFSYK8aVP
-         9tExzKsY9k6wI9vNXXjo27UrmlWLhTaHrdyIPD29x21fizbGpwKocikYPvO2z2VY95k1
-         VpnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749647318; x=1750252118;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=e22TsvH4RGJKGMMRWkswOq9iBPLvNBJezKH7Y1TV0R4=;
-        b=bsiy6d/yWSqb7bQuwG3CiMYZU7MOK3WNSbdDOBQ3wsDyQZXyZncfVk+T28GI7YQOu8
-         2htcDNfdKU/KIf9+t5HiPPC00VTvpcBtYe1N6Wk134XHL2+lR+zxKYGbAXbUmDXOh+Qc
-         XxzzZ5ls4enLe8fFfJ+bRVgh9Tb/ZNAlw5UGW5fkiTBzPt351h3xkMAyNBb5fo2RMD+O
-         m8k35/878SMETUzEXUk8Z/KRoDTBn3JGcFFSqYlH/Kl7ACQkYX4Zr2G64IuPJL90VyxS
-         3N8Clk6VzPWDUg/272zbW+0wN12B+qerSCsQufNe7/RkXp7dg5mvoIBU7NFeNyylOMGk
-         AW8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXQYqqo9RKvyCh9VE1NW6uCd+eFv6jFDdjsOaVPyaWgVsthJsjmgRpe60aR+i3wFqLBNh/ey2SaR2XFy1g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOFm/Ehf6IgVQJiKVrr69A7jDmFSo+R0J4kfuc1czNvgtd3Lg6
-	XNfKGfTdgPdKX04AIorDGC0yFed6yAvuZvo5iAlm7vSf3Sw6n+ZbXRFCew2XnAKJsK8=
-X-Gm-Gg: ASbGncv3fPF2rglGv7G5bNt+an1i9EcoDEvEijU/OQh3pmcfAh7+bDwSo0ykQxZLw5C
-	B3W3/rmgtVDCoju1Hkn+29X9JqvipLLji3dNkU1KFQ2jMcuq6bL/dXH2dBMnmrTi0VKN5ssnDWY
-	J/XsNIGg2zkxL+QYMydcpSYmQ80Gfqz7BMHhIRTtBDeOq2+jpHBcn3amwMWkfJAdWl1ZRN7kQam
-	WKgrqxUFkESz5tup2sQlqqFSmnWFk+DxhGa6dr8aqoUbJ/XZLLfjsPCsaYmKvoESwLOQKhQT2H5
-	aeqiQ1Mfs9QiMwypXjktd36zKdT7efn+hbQ0g3Sf5ymowqM6mnw1nt1TYGgmr5SCi/A=
-X-Google-Smtp-Source: AGHT+IE9fPV/FMEdv4vx5pe2XHdcJaxNKNwxiFMcA9E0/Gzx11yqf9R5n4B9o6ccUjq2b0WV3jYKyw==
-X-Received: by 2002:a05:600c:64c5:b0:450:cff7:62f9 with SMTP id 5b1f17b1804b1-453248c3bdamr25114375e9.22.1749647317534;
-        Wed, 11 Jun 2025 06:08:37 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4532522669bsm20508125e9.35.2025.06.11.06.08.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 06:08:36 -0700 (PDT)
-Date: Wed, 11 Jun 2025 16:08:33 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>,
-	Lucy Thrun <lucy.thrun@digital-rabbithole.de>,
-	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH] ALSA: hda/ca0132: use snprintf() for kernel hardenning
-Message-ID: <aEl_0XoK4Q__MOVU@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fylOoAU4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749647356; x=1781183356;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=4GuMQVvjJS+NeB3GJxegmcVN/9iZnCKz1igcJRBGrsA=;
+  b=fylOoAU40VYt50ltQLfWZ0m5VbZuAZrkJtm/pBd/5SUJQE//X2+q6sHt
+   2mRyHjxP0p6YDiLXapzEolKXd33TNgBWHMMWFyH5tOk3j03hS/wNTFB1a
+   boSdQ7CTqwA2jrLs+gJK/5KCLFj1S+f8cr7KB25jbRpZI0C4aYEAlmXNL
+   EiKZyOzZr26/Pc2QejBExfX5ROutAoIkD4tuaDnl+mVooDH9/aMcLZ7QX
+   jZ6IDrSg9Bs7mTC0pAmrwLs2AuZu9gqBTCoagJk7BhSw0jYar0I0M8bQN
+   c0r5TT9pK7cRh6twd1+27IBqUw/qfcgOGzFSs8UoLYeAnSJbL/m8S3CSP
+   g==;
+X-CSE-ConnectionGUID: NZl30J/MQuGKSEZ2IWiD/w==
+X-CSE-MsgGUID: zxW1jIg1Qu+lWPZarn740g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="63136515"
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="63136515"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 06:09:14 -0700
+X-CSE-ConnectionGUID: bPiJ05nwTp2jgdyNqmSUxw==
+X-CSE-MsgGUID: dobCd6EtTnOOFwmJm3PNUQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="148103401"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.183])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 06:09:13 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 11 Jun 2025 16:09:08 +0300 (EEST)
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    linux-serial <linux-serial@vger.kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 27/33] serial: 8250: extract
+ serial_get_or_create_irq_info()
+In-Reply-To: <20250611100319.186924-28-jirislaby@kernel.org>
+Message-ID: <5643b834-b9be-a70b-7669-a54be24845ad@linux.intel.com>
+References: <20250611100319.186924-1-jirislaby@kernel.org> <20250611100319.186924-28-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+Content-Type: multipart/mixed; boundary="8323328-1724197455-1749647348=:957"
 
-In this sprintf():
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-	sprintf(namestr, "%s %s Volume", name, dirstr[dir]);
+--8323328-1724197455-1749647348=:957
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Then "namestr" and "name" buffer are both SNDRV_CTL_ELEM_ID_NAME_MAXLEN
-(44) characters long.  We never actually use that full amount in real
-life so everything works fine, but static checkers complain that if name
-is 44 characters then when you combine that with the other strings it
-will lead to a buffer overflow.  Using snprintf() silences the warning
-and makes the code a little bit safer for the future.
+On Wed, 11 Jun 2025, Jiri Slaby (SUSE) wrote:
 
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- sound/pci/hda/patch_ca0132.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> This find-or-create-irq part of the serial_link_irq_chain()'s code is
+> logically bounded and self-standing. For easier-to-follow code flow,
+> extract the code to a separate function:
+> serial_get_or_create_irq_info().
+>=20
+> This allows for an easier found-an-irq handling -- simple jump to the
+> 'unlock' label and return. That results in one less 'if' levels.
+>=20
+> Note when using guard()s in the upcoming patchset, the label can dropped
+> altogether.
+>=20
+> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+> ---
+>  drivers/tty/serial/8250/8250_core.c | 37 ++++++++++++++++++++---------
+>  1 file changed, 26 insertions(+), 11 deletions(-)
+>=20
+> diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/825=
+0/8250_core.c
+> index 7a6050f1c094..d42ceb6ffdc2 100644
+> --- a/drivers/tty/serial/8250/8250_core.c
+> +++ b/drivers/tty/serial/8250/8250_core.c
+> @@ -129,11 +129,15 @@ static void serial_do_unlink(struct irq_info *i, st=
+ruct uart_8250_port *up)
+>  =09}
+>  }
+> =20
+> -static int serial_link_irq_chain(struct uart_8250_port *up)
+> +/*
+> + * Either:
+> + * - find the corresponding info in the hashtable and return it, or
+> + * - allocate a new one, add it to the hashtable and return it.
+> + */
+> +static struct irq_info *serial_get_or_create_irq_info(const struct uart_=
+8250_port *up)
+>  {
+>  =09struct hlist_head *h;
+>  =09struct irq_info *i;
+> -=09int ret;
+> =20
+>  =09mutex_lock(&hash_mutex);
+> =20
+> @@ -141,20 +145,31 @@ static int serial_link_irq_chain(struct uart_8250_p=
+ort *up)
+> =20
+>  =09hlist_for_each_entry(i, h, node)
+>  =09=09if (i->irq =3D=3D up->port.irq)
+> -=09=09=09break;
+> +=09=09=09goto unlock;
+> =20
+> +=09i =3D kzalloc(sizeof(*i), GFP_KERNEL);
+>  =09if (i =3D=3D NULL) {
+> -=09=09i =3D kzalloc(sizeof(struct irq_info), GFP_KERNEL);
+> -=09=09if (i =3D=3D NULL) {
+> -=09=09=09mutex_unlock(&hash_mutex);
+> -=09=09=09return -ENOMEM;
+> -=09=09}
+> -=09=09spin_lock_init(&i->lock);
+> -=09=09i->irq =3D up->port.irq;
+> -=09=09hlist_add_head(&i->node, h);
+> +=09=09i =3D ERR_PTR(-ENOMEM);
+> +=09=09goto unlock;
+>  =09}
+> +=09spin_lock_init(&i->lock);
+> +=09i->irq =3D up->port.irq;
+> +=09hlist_add_head(&i->node, h);
+> +unlock:
+>  =09mutex_unlock(&hash_mutex);
+> =20
+> +=09return i;
+> +}
+> +
+> +static int serial_link_irq_chain(struct uart_8250_port *up)
+> +{
+> +=09struct irq_info *i;
+> +=09int ret;
+> +
+> +=09i =3D serial_get_or_create_irq_info(up);
+> +=09if (IS_ERR(i))
+> +=09=09return PTR_ERR(i);
+> +
+>  =09spin_lock_irq(&i->lock);
+> =20
+>  =09if (i->head) {
+>=20
 
-diff --git a/sound/pci/hda/patch_ca0132.c b/sound/pci/hda/patch_ca0132.c
-index cfe422a79703..5815552cbf89 100644
---- a/sound/pci/hda/patch_ca0132.c
-+++ b/sound/pci/hda/patch_ca0132.c
-@@ -4409,7 +4410,7 @@ static int add_tuning_control(struct hda_codec *codec,
- 	}
- 	knew.private_value =
- 		HDA_COMPOSE_AMP_VAL(nid, 1, 0, type);
--	sprintf(namestr, "%s %s Volume", name, dirstr[dir]);
-+	snprintf(namestr, sizeof(namestr), "%s %s Volume", name, dirstr[dir]);
- 	return snd_hda_ctl_add(codec, nid, snd_ctl_new1(&knew, codec));
- }
- 
--- 
-2.47.2
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
+Unrelated to the patch, I didn't like the use of 'i' as a variable name=20
+to store a struct pointer.
+
+--=20
+ i.
+
+--8323328-1724197455-1749647348=:957--
