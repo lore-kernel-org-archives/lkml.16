@@ -1,116 +1,217 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB312A1CA;
-	Wed, 11 Jun 2025 01:22:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D902E2D5432
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 01:23:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749604946; cv=none; b=FV5ZTqaiSnOwIP7C1Pa2DrtdUXKpZwhmOuFG8KHnnCghVdmGwh08gf7B4Kh0uKkscS1XKJI8lcJnYrumVuMAb7PegYONt4rSP/QcuLrW3nyD3Zlyd7llhka6GoqKSniz7ws0gHdAgqTx4p2x8NyD2vbu5yeNW0eQuJPzsN/mvf0=
+	t=1749605014; cv=none; b=tS+guGZb+RZU8fgyAoOTwiJ5r3G2jQSFCUrp3NXawmbRYGl++YH0rXfT+sAolDuiX9ywRFEMSZEIBIudpM2Fro6gmnMS0TtbZPl2l4/xMMfCcVbevNn1ob7R8xy+K337U+bJuyRksYpUQV/BcZQhF+TtvZEd8iC0x1ODxJpl35Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749604946; c=relaxed/simple;
-	bh=lhADqqBHXy3DGGCkuUwmCo4xqJKb3G0Yaq/McG/zUnM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=roa6obA7ZuflNSMZb/MkDM2J3ANjgTQA7MM3SoVN0T5P7ySSHCseJ3WBMRbCt+lOPGaiI8XiS63HBTAaWKZalT8uh7lgany7MJqCBw4McPE5/yt2NMbwdr2u3GsTrB5OFVoRTXr3rwi1a3U/kDtGKKPc4Zkz57wff6e+E5jwjkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Iy8c1dJJ; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749605014; c=relaxed/simple;
+	bh=iwcIHMwT1YXFwedoNUBMtxUwu1Ja5R01HOB7PbHJAb0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AnRawoCn70k6FDvL5NQLkFDCpOVMMIw/HAlDH40S7Xuoe7adQmKcCKPrNMmIylgt0baBRhKx+hnXiufAF7Wm1gL0+EN7nUU21wvMFTklzLRng1xFm9kaNUXTzL6c2trUT7MxJbtp41X6GMeh97LaNGVE39LWIvygtN+gwYk351A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J6PWBfXa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Iy8c1dJJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749604945; x=1781140945;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=lhADqqBHXy3DGGCkuUwmCo4xqJKb3G0Yaq/McG/zUnM=;
-  b=Iy8c1dJJQrPIxGKLYJ6L1UrOC2A9HOd56dlcGCmVkc/W6+AEmewD7Ciq
-   zb46E+OVJOoSfx43aV3o+fAA/BTMSMDM/82i7tYgjK2cZIfZdDUcZ+7yv
-   9K4QxPhl0PwDzEt3tCWwYliyfqsiO8z5agE73PQGsuh4DYRIa76bYQcxN
-   /HgCQSSLGLdL9sN+v2QVKeqMvnUlrWD+QsVVJyDEa9z+D+/nc4cjJGEXe
-   SEBKpnG5NAllUNHoidTUr9N4aJ/HA7x7aUJONrsunbcBy0Y1DeJt8m19o
-   zhgHLrIIuksfobmQ7BJZGzjL3ojRXTNfhek423Ok9wvVuGfJevJeqx5Ay
-   Q==;
-X-CSE-ConnectionGUID: Q20mTebHQ5Gar11e34mVaw==
-X-CSE-MsgGUID: NgoVL/NaQ6Kx1DWzPE1wHw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51820874"
-X-IronPort-AV: E=Sophos;i="6.16,226,1744095600"; 
-   d="scan'208";a="51820874"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 18:22:24 -0700
-X-CSE-ConnectionGUID: 6DTzPMGwRzq2zNiQmoqPQw==
-X-CSE-MsgGUID: Th2PClIjS06SMunniyWObQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,226,1744095600"; 
-   d="scan'208";a="147581950"
-Received: from unknown (HELO [10.238.0.239]) ([10.238.0.239])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 18:22:21 -0700
-Message-ID: <31c4ab96-55bf-4f80-a6fd-3478cc1d1117@linux.intel.com>
-Date: Wed, 11 Jun 2025 09:22:17 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J6PWBfXa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FEDAC4CEED;
+	Wed, 11 Jun 2025 01:23:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749605014;
+	bh=iwcIHMwT1YXFwedoNUBMtxUwu1Ja5R01HOB7PbHJAb0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=J6PWBfXae+rf+cjyRTi5azEeGwzz1f1vRp0fHntIcZi5qzNlUGhS7PCmr2ENsBzrq
+	 EzGHeolHAy7UwhTBvmRdxBXPIl1ptwxB5SbnbjWatk8feyzeADEduba9bXtVe+Y4G7
+	 zwz0EzOnfAjy+z644wDZhC5mQ174a9BLZ5efq1VZpt2aDU7yQ0D6Vgg0e+CalqJh/Q
+	 fLUuzJg3FbdyMXLfraLOgJOwQUuUhwqCVjCKFNDqiN17JzlIp23nzhhAbOFJqNjZcO
+	 3AkqIIo63dwdzfxxhEHUcd7EsgVJt9AW+/jJth2V4pw8btjGSQQ3TsDpKolOuNucS0
+	 JxcsX7QnUYcNw==
+Date: Tue, 10 Jun 2025 18:23:31 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Alexandre Chartre <alexandre.chartre@oracle.com>
+Cc: linux-kernel@vger.kernel.org, mingo@kernel.org, peterz@infradead.org
+Subject: Re: [RFC 10/13] objtool: Trace instruction state changes during
+ function validation
+Message-ID: <u43x62rul2jxorsljyo6qb2xztnx3wufwdnz32erfhsdomao4a@on7c5uvse4jc>
+References: <20250606153440.865808-1-alexandre.chartre@oracle.com>
+ <20250606153440.865808-11-alexandre.chartre@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 4/4] KVM: TDX: Check KVM exit on KVM_HC_MAP_GPA_RANGE
- when TD finalize
-To: Sean Christopherson <seanjc@google.com>,
- Rick P Edgecombe <rick.p.edgecombe@intel.com>
-Cc: "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- "pbonzini@redhat.com" <pbonzini@redhat.com>,
- "mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>,
- Kai Huang <kai.huang@intel.com>, Jiewen Yao <jiewen.yao@intel.com>,
- Xiaoyao Li <xiaoyao.li@intel.com>, Tony Lindgren <tony.lindgren@intel.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Reinette Chatre <reinette.chatre@intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Yan Y Zhao <yan.y.zhao@intel.com>, Isaku Yamahata
- <isaku.yamahata@intel.com>, Kirill Shutemov <kirill.shutemov@intel.com>
-References: <20250610021422.1214715-1-binbin.wu@linux.intel.com>
- <20250610021422.1214715-5-binbin.wu@linux.intel.com>
- <936ccea77b474fbad1bde799ee92139356f91c5f.camel@intel.com>
- <aEh0oGeh96n9OvCT@google.com>
-Content-Language: en-US
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <aEh0oGeh96n9OvCT@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250606153440.865808-11-alexandre.chartre@oracle.com>
 
+On Fri, Jun 06, 2025 at 05:34:37PM +0200, Alexandre Chartre wrote:
+> +++ b/tools/objtool/check.c
+> @@ -111,6 +111,111 @@ static void vtrace_insn(struct instruction *insn, const char *format, ...)
+>  		free((char *)addr_str);
+>  }
+>  
+> +/*
+> + * Macros to trace CFI state attributes changes.
+> + */
+> +
+> +#define VTRACE_CFI_ATTR(attr, prev, next, fmt, ...)			\
+> +	do {								\
+> +		if ((prev)->attr != (next)->attr)			\
+> +			VTRACE_PRINTF("%s=" fmt " ", #attr, __VA_ARGS__); \
+> +	} while (0)
+> +
+> +#define VTRACE_CFI_ATTR_BOOL(attr, prev, next)				\
+> +	VTRACE_CFI_ATTR(attr, prev, next,				\
+> +			"%s", (next)->attr ? "true" : "false")
+> +
+> +#define VTRACE_CFI_ATTR_NUM(attr, prev, next, fmt)			\
+> +	VTRACE_CFI_ATTR(attr, prev, next, fmt, (next)->attr)
+> +
+> +/*
+> + * Functions and macros to trace CFI registers changes.
+> + */
+> +
+> +static void vtrace_cfi_register(const char *prefix, int reg, const char *fmt,
+> +				int base_prev, int offset_prev,
+> +				int base_next, int offset_next)
+> +{
 
+In keeping with the namespace of the other vtrace_cfi_reg_*()
+functions/macros, I'd suggest calling this vtrace_cfi_reg()
 
-On 6/11/2025 3:58 AM, Sean Christopherson wrote:
-> On Tue, Jun 10, 2025, Rick P Edgecombe wrote:
->> On Tue, 2025-06-10 at 10:14 +0800, Binbin Wu wrote:
->>> Check userspace has enabled KVM exit on KVM_HC_MAP_GPA_RANGE during
->>> KVM_TDX_FINALIZE_VM.
->>>
->>> TDVMCALL_MAP_GPA is one of the GHCI base TDVMCALLs, so it must be
->>> implemented by VMM to support TDX guests. KVM converts TDVMCALL_MAP_GPA
->>> to KVM_HC_MAP_GPA_RANGE, which requires userspace to enable
->>> KVM_CAP_EXIT_HYPERCALL with KVM_HC_MAP_GPA_RANGE bit set. Check it when
->>> userspace requests KVM_TDX_FINALIZE_VM, so that there is no need to check
->>> it during TDX guests running.
->>>
->>> Signed-off-by: Binbin Wu <binbin.wu@linux.intel.com>
->> Do we need this change? It seems reasonable, but I don't think we need KVM to
->> ensure that userspace creates a TD that meets the GHCI spec.
-> +1.  We do need to be careful about unintentionally creating ABI, but generally
-> speaking KVM shouldn't police userspace.
+(or trace_cfi_reg() if we go with my previous suggestion to remove the "v"
+everywhere)
 
-OK.
+> +	const char *rname;
+> +
+> +	if (base_prev == base_next && offset_prev == offset_next)
+> +		return;
+> +
+> +	if (prefix)
+> +		VTRACE_PRINTF("%s:", prefix);
+> +
+> +	rname = register_name(reg);
 
->> So I'm not sure about the justification.
->>
->> It seems like the reasoning could be just to shrink the possible configurations
->> KVM has to think about, and that we only have the option to do this now before
->> the ABI becomes harder to change.
->>
->> Did you need any QEMU changes as a result of this patch?
->>
->> Wait, actually I think the patch is wrong, because KVM_CAP_EXIT_HYPERCALL could
->> be called again after KVM_TDX_FINALIZE_VM. In which case userspace could get an
->> exit unexpectedly. So should we drop this patch?
-> Yes, drop it.
->
-So, when the TDX guest calls MapGPA and KVM finds userspace doesn't opt-in
-KVM_HC_MAP_GPA_RANGE, just return error to userspace?
+For similar reasons, "register_name()" -> "reg_name()".
+
+> +
+> +	if (base_next == CFI_UNDEFINED) {
+> +		VTRACE_PRINTF("%1$s=<undef> ", rname);
+> +	} else {
+> +		VTRACE_PRINTF(fmt, rname,
+> +			      register_name(base_next), offset_next);
+> +	}
+> +}
+> +
+> +static void vtrace_cfi_reg_value(const char *prefix, int reg,
+> +				 int base_prev, int offset_prev,
+> +				 int base_next, int offset_next)
+> +{
+> +	vtrace_cfi_register(prefix, reg, "%1$s=%2$s%3$+d ",
+> +			    base_prev, offset_prev, base_next, offset_next);
+> +}
+> +
+> +static void vtrace_cfi_reg_reference(const char *prefix, int reg,
+> +				     int base_prev, int offset_prev,
+> +				     int base_next, int offset_next)
+> +{
+> +	vtrace_cfi_register(prefix, reg, "%1$s=(%2$s%3$+d) ",
+> +			    base_prev, offset_prev, base_next, offset_next);
+> +}
+> +
+> +#define VTRACE_CFI_REG_VAL(reg, prev, next)				\
+> +	vtrace_cfi_reg_value(NULL, reg, prev.base, prev.offset,		\
+> +			     next.base, next.offset)
+> +
+> +#define VTRACE_CFI_REG_REF(reg, prev, next)				\
+> +	vtrace_cfi_reg_reference(NULL, reg, prev.base, prev.offset,	\
+> +				 next.base, next.offset)
+
+For similar reasons, "*_val()" and "*_ref()".
+
+> +
+> +static void vtrace_insn_state(struct instruction *insn,
+> +			      struct insn_state *sprev,
+> +			      struct insn_state *snext)
+> +{
+> +	struct cfi_state *cprev, *cnext;
+> +	int i;
+> +
+> +	if (memcmp(sprev, snext, sizeof(struct insn_state)) == 0)
+> +		return;
+
+"!memcmp()"
+
+> @@ -3698,6 +3803,7 @@ static int validate_insn(struct objtool_file *file, struct symbol *func,
+>  			 struct instruction *prev_insn, struct instruction *next_insn,
+>  			 bool *validate_nextp)
+>  {
+> +	struct insn_state state_prev;
+
+Can we call it prev_state for consistency with prev_insn?
+
+>  	struct alternative *alt;
+>  	u8 visited;
+>  	int ret;
+> @@ -3814,7 +3920,15 @@ static int validate_insn(struct objtool_file *file, struct symbol *func,
+>  	if (skip_alt_group(insn))
+>  		return 0;
+>  
+> -	if (handle_insn_ops(insn, next_insn, statep))
+> +	if (vtrace)
+> +		state_prev = *statep;
+> +
+> +	ret = handle_insn_ops(insn, next_insn, statep);
+> +
+> +	if (vtrace)
+> +		vtrace_insn_state(insn, &state_prev, statep);
+
+For consistency with the other tracing, can the trace statement be a
+capitalized macro, with the "vtrace" check hidden?
+
+	state_prev = *statep;
+	ret = handle_insn_ops(insn, next_insn, statep);
+	TRACE_INSN_STATE(insn, &state_prev, statep);
+
+> +++ b/tools/objtool/disas.c
+> @@ -29,6 +29,33 @@ struct disas_context {
+>  	((*(dinfo)->fprintf_func)((dinfo)->stream, __VA_ARGS__))
+>  
+>  
+> +#define REGISTER_NAME_MAXLEN   16
+> +
+> +/*
+> + * Return the name of a register. Note that the same static buffer
+> + * is returned if the name is dynamically generated.
+> + */
+> +const char *register_name(unsigned int reg)
+> +{
+> +	static char rname_buffer[REGISTER_NAME_MAXLEN];
+> +
+> +	switch (reg) {
+> +	case CFI_UNDEFINED:
+> +		return "<undefined>";
+> +	case CFI_CFA:
+> +		return "cfa";
+> +	case CFI_SP_INDIRECT:
+> +		return "(sp)";
+> +	case CFI_BP_INDIRECT:
+> +		return "(bp)";
+> +	}
+> +
+> +	if (snprintf(rname_buffer, REGISTER_NAME_MAXLEN, "r%d", reg) == 1)
+> +		return NULL;
+> +
+> +	return (const char *)rname_buffer;
+> +}
+> +
+
+Would this not be a better fit as a static function in check.c?  Its
+only callers are there.  And it references the CFI stuff.
+
+Or we might also want to consider moving all the trace_*() functions to
+their own file, trace.c or so.
+
+-- 
+Josh
