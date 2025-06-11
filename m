@@ -1,123 +1,263 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA4225BF17;
-	Wed, 11 Jun 2025 18:08:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544D5C8FE;
+	Wed, 11 Jun 2025 18:09:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749665323; cv=none; b=XVnCd4IACe7jsSa375S6Lkz6nbuf7xLKOUyLhmlC9EdS3uHhpV8Gptydzm7jFt59m/hr4Z3n2vv5y8T+V/zqmvsR4ydCe1VRYfehZznnBkcmgDrGc5nIPuSgIfMOsjHVEVfuxtKWw9V8yytqPBiW9W9Ss/a36XSx/O7Cqpu8xYQ=
+	t=1749665392; cv=none; b=HuNlR/rnrBtqDcJYBTs1YaLArN7Xc915f6ClNH6xJ6axxPD9vBRYWbtRvCy3ZtWPHh/AiS0IzfMy9zFbuX+Rm4ljB7M2GzLZnYIxp7R+9MQu5/wu7+4Y6OfELaAzmc0Sp7vefossM9GMvg6qs7YFDxqSct5E5BMRidevbg/dY8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749665323; c=relaxed/simple;
-	bh=vuuuUMNJTrbQEHqQfENAGTBD+eC4GhUdnYLcn0MH/mo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jrz72i+skQG2JEp6kuVLTxNsiSi9K8mu66Y6Lpuf7ndmGrzcSHfZj9nff0mqrnA0Hq9xqvPhIFWkJrhcKD6tDJZZdBHRTx78gZ43MYqll5DZY8jEkHoVa466vcCb+Bwc16aIwIEjeBVkZSBn2w15NHjRerUpcPctKsL8rdDyKOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LDieeVu8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749665392; c=relaxed/simple;
+	bh=f6O5q0W2J4qlVd61DBRnTyl1VWb5RPPJVnQLrHCKy0k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fBVRhKcTKntAdVehNtmSBvjC2Ds40PrQWeVzqzGnkV2xgsRkBXfEcysfnt+KD7O6W7K7FYxpWZUZqaV05tYm5On4hPTlx5+nQV4z4YPeyFlmzpiTNSzbKQfBWbHNlFwf53m35ZAMWWj44iqZ0wwdYe87+82Q/JR2nx8BAY0q+A0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eKjkD6pc; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LDieeVu8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCF1EC4CEF7;
-	Wed, 11 Jun 2025 18:08:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749665322;
-	bh=vuuuUMNJTrbQEHqQfENAGTBD+eC4GhUdnYLcn0MH/mo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=LDieeVu8mKI6wIBQ8ZdpWUZUldPV9W0BwMM4LUOtbgqvvI4d0dtyk/SmXmQcfSaIR
-	 d6TnwRoMNtpY2sAOYNUwrazXaCv4ekn4sW7LK2+1VGqEtvkHjYkxUCR9+bp0zDRSuU
-	 KJCUi9kSsfFeRWtJgtF7/hH5uGaY7geR8/vMde+87w1jt2vCfo6pr2TV2t0d8zflOb
-	 RAky1CQfM9+j8Y9RKDCDL8A4/T4Q0UsFlvFDxLELvdB7HQW8SYY8rme9CVEUNY9IE7
-	 WtHdIfp6Qaj7Em7YQKdBuzyInfzFSTbeUTEqoqxssqdiC3toNkz/jnhfTWxSTcyjOO
-	 5yfOuTdcgf7DQ==
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6fa980d05a8so1978976d6.2;
-        Wed, 11 Jun 2025 11:08:42 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVduRSp4ap98z1mjQzIgAUH30ijMd0isDFfMzn7a9TKBKHA1PatbbxBiI/AeQoFvOdhjLE/wUFOm5Bpja7y@vger.kernel.org, AJvYcCWDjEwDVtHqJfo82V2esdRXUAiOc0Fx/lwhFjYLSgd/lj7QH+QVyprMcNjWGb0V4zLy1Es=@vger.kernel.org, AJvYcCXfM5dEVawYAjsAge2Cvt9rFc3h4bRg56utcQvuYGP+f/T9d5AJ2AsOCdOFK0tJDEcswmaO/hbvLYugTlXd5g==@vger.kernel.org, AJvYcCXimap53u38UvBIzmLw1T92OwfGDLEuCYVs4ATk8wCDZHAJauz+5WviGluy+auC7+bQsoWb0/G+4w/Cj71eZfgvdYBnygAj@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPGOu7rxk50a6iSQJ/1Pd/tmIAFjiNud0CT7i6MsOCwki+uIzV
-	DrL8nZHwOoJq1/7J/vTH79zdLnoyuCSfj04nFnHTxwJhtVdz3/B+bfSJukeOv5d6J6D3zXF+OTm
-	tmD/VY5AJvQVcjPXCJPMxrPRzNOe31fY=
-X-Google-Smtp-Source: AGHT+IGzNRxckgFW6/9tgae8ZuBzm8ytC4tCv/ilGsBolC7Bp6fawNV0TjQIMFe+Fjv7DtylNA1bhEMA95ml5uL/rzw=
-X-Received: by 2002:a05:6214:e4d:b0:6fa:b1bb:8315 with SMTP id
- 6a1803df08f44-6fb2c31b52emr62514016d6.6.1749665321863; Wed, 11 Jun 2025
- 11:08:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eKjkD6pc"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-234fcadde3eso1758015ad.0;
+        Wed, 11 Jun 2025 11:09:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749665391; x=1750270191; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bZpCOMPL82z74J5eCC5crL6BX4mR7vO0hUuXz+7gl1U=;
+        b=eKjkD6pcGgHkva10drGWUbmQRezvNh1k4zsxMjPFCINECeFnKkzi9UwZMDy5izmInp
+         CXC8RIsyT+xMSXKTo/YJVvBGPOEx6+pmkO/ovi4tM2y+Zp4ThSmq8CTuurVihyE55sRl
+         PCAR1BB28IfcOMG+uVozlSWQH98MxZHi/GEBbPWPkhv/Kom2f4i4c4m2L8kBpfvfrm+k
+         dmLBKiTdo26N5WxnuRsgdcKkws0oyZWks80XFB0hxtNUKkPUe7eEAyortLOKA0JoQleo
+         2cUKkyJ5NsadcswytrfgPQ1cNFRUzoCKb5263JV7v8GK1smxDNNzSVFzpQ7VEFNNioB3
+         Y2AQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749665391; x=1750270191;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bZpCOMPL82z74J5eCC5crL6BX4mR7vO0hUuXz+7gl1U=;
+        b=BdOyi8bjWM5FQhC9xLphBmHRpCDiztroxshZU9B+qqn/qKK9abJm06Ds52mfb2TKXh
+         gUacJcLpokbDvjVQ+Pna9SatdfRqD8N+FVJ+PhcBimZ8yJVynAh1LKcJYG22uJ0LsxX+
+         OIVzSIeL+BawZxVPEC9/ArPs7HiE4cF9M1B2ExpThXh8+BeI6SLJ6MV7BS5zgGVQW0HS
+         RCJTDOCkQ1vWsaTWiZ91R3P3SAhucOz4UXCX2TOkvooEgvvabT9OUAQla7KOAbkaGPSO
+         IgJO7Ezr08++4ZdBjJ/qN2qK8gD8g4Cr0OMIAUP248fIv2TIvczKF0vWlIXyQ7H3Yv9v
+         IhMg==
+X-Forwarded-Encrypted: i=1; AJvYcCVwuDVeo3Gszc7Pi6MvaMWpLs9Eaie5h2klRgpuafwhNFmaBPhwLq+Uc+RCYQ3zMWkejpcAsPPsbPGHx5A=@vger.kernel.org, AJvYcCXcH8YN/Tkzv2aA/kqciUdGCXlMn2OeCYLL+fsqQbuTMmcy17rF1kqRnMPiIm+vmDU0UzuA1wKsKUk1ciNGGKQ+@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYb2QVJxZDV36wTmClDf7njtOalrn/Jph/C8CpejDUL+GYflpf
+	UK+CJMn3AvT1Py8zVq73ta/yA2jCvVTFTglq0/kF8XQEK0qUrDc6D/R1
+X-Gm-Gg: ASbGncuxwb62gW6ctanGELBDnjU3j+qre0GQZsGVdde6StHtzL2r8JRApUuJgoKDFRr
+	9lGC0i3JZBUjNgZUFtza2oGbL23RH8q1pDsz0zJsAcpsDuz1U0WeE+6JNd7Xt2ltdbCGXvYr3E5
+	b269PLTxUcXLinTHyNwq6vp6QqBKlnH1PQo6CrvM9yH8AA5Kv61Yk1xory7H6JwzC/FZkuSrWfw
+	EzOkHg4x3pY3azywHryR2UMJOeN6O8qexHsd/ZoeaRSDnyLaTYA5izFebh3BFXDLOBdCI1qahVh
+	X8j8vrDgXqDJDQ+FtViU4OIR0sEahYUjYJYMOCJeiQnxdf4FRJELuBnmlvbuvEk=
+X-Google-Smtp-Source: AGHT+IGooPNIiIm9bnCoj6EWYQVYOF49WnMejUgAL5ygblLJCYwU9fkECiTJwQdkrpLGyDJBqAe6oA==
+X-Received: by 2002:a17:903:1206:b0:235:e96b:191c with SMTP id d9443c01a7336-2364d8b712dmr1098035ad.29.1749665390556;
+        Wed, 11 Jun 2025 11:09:50 -0700 (PDT)
+Received: from skc-Dell-Pro-16-Plus-PB16250.. ([139.167.223.130])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313b1ff0fa8sm1795699a91.8.2025.06.11.11.09.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 11:09:50 -0700 (PDT)
+From: Suresh K C <suresh.k.chandrappa@gmail.com>
+X-Google-Original-From: Suresh K C
+To: nphamcs@gmail.com,
+	hannes@cmpxchg.org,
+	shuah@kernel.org
+Cc: linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Suresh K C <suresh.k.chandrappa@gmail.com>
+Subject: [PATCH v2] selftests: cachestat: Refactor test to remove duplication
+Date: Wed, 11 Jun 2025 23:39:36 +0530
+Message-ID: <20250611180936.12886-1-suresh.k.chandrappa@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250606213015.255134-1-song@kernel.org> <20250606213015.255134-2-song@kernel.org>
- <174959847640.608730.1496017556661353963@noble.neil.brown.name>
- <CAPhsuW6oet8_LbL+6mVi7Lc4U_8i7O-PN5F1zOm5esV52sBu0A@mail.gmail.com>
- <20250611.Bee1Iohoh4We@digikod.net> <CAPhsuW6jZxRBEgz00KV4SasiMhBGyMHoP5dMktoyCOeMbJwmgg@mail.gmail.com>
- <e7115b18-84fc-4e8f-afdb-0d3d3e574497@maowtm.org>
-In-Reply-To: <e7115b18-84fc-4e8f-afdb-0d3d3e574497@maowtm.org>
-From: Song Liu <song@kernel.org>
-Date: Wed, 11 Jun 2025 11:08:30 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW4LfhtVCe8Kym4qM6s-7n5rRMY-bBkhwoWU7SPGQdk=bw@mail.gmail.com>
-X-Gm-Features: AX0GCFuvcvlocezfv1YysEsbb8GlPxqoc1TmFc95N3B5xJlTqTWXOvm7IcF3gM8
-Message-ID: <CAPhsuW4LfhtVCe8Kym4qM6s-7n5rRMY-bBkhwoWU7SPGQdk=bw@mail.gmail.com>
-Subject: Re: [PATCH v3 bpf-next 1/5] namei: Introduce new helper function path_walk_parent()
-To: Tingmao Wang <m@maowtm.org>
-Cc: =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	NeilBrown <neil@brown.name>, Jan Kara <jack@suse.cz>, bpf@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, kernel-team@meta.com, 
-	andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, daniel@iogearbox.net, 
-	martin.lau@linux.dev, viro@zeniv.linux.org.uk, brauner@kernel.org, 
-	kpsingh@kernel.org, mattbobrowski@google.com, amir73il@gmail.com, 
-	repnop@google.com, jlayton@kernel.org, josef@toxicpanda.com, 
-	gnoack@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 11, 2025 at 10:50=E2=80=AFAM Tingmao Wang <m@maowtm.org> wrote:
-[...]
-> > I think we will need some callback mechanism for this. Something like:
-> >
-> > for_each_parents(starting_path, root, callback_fn, cb_data, bool try_rc=
-u) {
-> >    if (!try_rcu)
-> >       goto ref_walk;
-> >
-> >    __read_seqcount_begin();
-> >     /* rcu walk parents, from starting_path until root */
-> >    walk_rcu(starting_path, root, path) {
-> >     callback_fn(path, cb_data);
-> >   }
-> >   if (!read_seqcount_retry())
-> >     return xxx;  /* successful rcu walk */
-> >
-> > ref_walk:
-> >   /* ref walk parents, from starting_path until root */
-> >    walk(starting_path, root, path) {
-> >     callback_fn(path, cb_data);
-> >   }
-> >   return xxx;
-> > }
-> >
-> > Personally, I don't like this version very much, because the callback
-> > mechanism is not very flexible, and it is tricky to use it in BPF LSM.
->
-> Aside from the "exposing mount seqcounts" problem, what do you think abou=
-t
-> the parent_iterator approach I suggested earlier?  I feel that it is
-> better than such a callback - more flexible, and also fits in right with
-> the BPF API you already designed (i.e. with a callback you might then hav=
-e
-> to allow BPF to pass a callback?).  There are some specifics that I can
-> improve - Micka=C3=ABl suggested some in our discussion:
->
-> - Letting the caller take rcu_read_lock outside rather than doing it in
-> path_walk_parent_start
->
-> - Instead of always requiring a struct parent_iterator, allow passing in
-> NULL for the iterator to path_walk_parent to do a reference walk without
-> needing to call path_walk_parent_start - this way might be simpler and
-> path_walk_parent_start/end can just be for rcu case.
->
-> but what do you think about the overall shape of it?
+From: Suresh K C <suresh.k.chandrappa@gmail.com>
 
-Personally, I don't have strong objections to this design. But VFS
-folks may have other concerns with it.
+Refactored the mmap and shmem test logic into a common function
+to reduce code duplication and improve maintainability
 
-Thanks,
-Song
+Changes in v2:
+    Refactored mmap and shmem tests into a common function
+    Renamed test function to run_cachestat_test()
+    Removed test for /proc/cpuinfo as a general /proc test case already exists
 
-[...]
+Signed-off-by: Suresh K C <suresh.k.chandrappa@gmail.com>
+---
+ .../selftests/cachestat/test_cachestat.c      | 97 ++++++-------------
+ 1 file changed, 30 insertions(+), 67 deletions(-)
+
+diff --git a/tools/testing/selftests/cachestat/test_cachestat.c b/tools/testing/selftests/cachestat/test_cachestat.c
+index 81e7f6dd2279..7c2f64175943 100644
+--- a/tools/testing/selftests/cachestat/test_cachestat.c
++++ b/tools/testing/selftests/cachestat/test_cachestat.c
+@@ -22,7 +22,7 @@
+ 
+ static const char * const dev_files[] = {
+ 	"/dev/zero", "/dev/null", "/dev/urandom",
+-	"/proc/version","/proc/cpuinfo","/proc"
++	"/proc/version","/proc"
+ };
+ 
+ void print_cachestat(struct cachestat *cs)
+@@ -33,6 +33,11 @@ void print_cachestat(struct cachestat *cs)
+ 	cs->nr_evicted, cs->nr_recently_evicted);
+ }
+ 
++enum file_type {
++	FILE_MMAP,
++	FILE_SHMEM
++};
++
+ bool write_exactly(int fd, size_t filesize)
+ {
+ 	int random_fd = open("/dev/urandom", O_RDONLY);
+@@ -202,66 +207,8 @@ static int test_cachestat(const char *filename, bool write_random, bool create,
+ 	return ret;
+ }
+ 
+-bool test_cachestat_mmap(void){
+-
+-	size_t PS = sysconf(_SC_PAGESIZE);
+-	size_t filesize = PS * 512 * 2;;
+-	int syscall_ret;
+-	size_t compute_len = PS * 512;
+-	struct cachestat_range cs_range = { PS, compute_len };
+-	char *filename = "tmpshmcstat";
+-	unsigned long num_pages = compute_len / PS;
+-	struct cachestat cs;
+-	bool ret = true;
+-	int fd = open(filename, O_RDWR | O_CREAT | O_TRUNC, 0666);
+-	if (fd < 0) {
+-		ksft_print_msg("Unable to create mmap file.\n");
+-		ret = false;
+-		goto out;
+-	}
+-	if (ftruncate(fd, filesize)) {
+-		ksft_print_msg("Unable to truncate mmap file.\n");
+-		ret = false;
+-		goto close_fd;
+-	}
+-	if (!write_exactly(fd, filesize)) {
+-		ksft_print_msg("Unable to write to mmap file.\n");
+-		ret = false;
+-		goto close_fd;
+-	}
+-	char *map = mmap(NULL, filesize, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+-	if (map == MAP_FAILED) {
+-		ksft_print_msg("mmap failed.\n");
+-		ret = false;
+-		goto close_fd;
+-	}
+-
+-	for (int i = 0; i < filesize; i++) {
+-		map[i] = 'A';
+-	}
+-	map[filesize - 1] = 'X';
+-	
+-	syscall_ret = syscall(__NR_cachestat, fd, &cs_range, &cs, 0);
+-	
+-	if (syscall_ret) {
+-		ksft_print_msg("Cachestat returned non-zero.\n");
+-		ret = false;
+-	} else {
+-		print_cachestat(&cs);
+-		if (cs.nr_cache + cs.nr_evicted != num_pages) {
+-			ksft_print_msg("Total number of cached and evicted pages is off.\n");
+-			ret = false;
+-		}
+-	}
+-
+-close_fd:
+-	close(fd);
+-	unlink(filename);
+-out:
+-	return ret;
+-}
+ 
+-bool test_cachestat_shmem(void)
++bool run_cachestat_test(enum file_type type)
+ {
+ 	size_t PS = sysconf(_SC_PAGESIZE);
+ 	size_t filesize = PS * 512 * 2; /* 2 2MB huge pages */
+@@ -271,27 +218,43 @@ bool test_cachestat_shmem(void)
+ 	char *filename = "tmpshmcstat";
+ 	struct cachestat cs;
+ 	bool ret = true;
++	int fd;
+ 	unsigned long num_pages = compute_len / PS;
+-	int fd = shm_open(filename, O_CREAT | O_RDWR, 0600);
++	if (type == FILE_SHMEM)
++		fd = shm_open(filename, O_CREAT | O_RDWR, 0600);
++	else
++		fd = open(filename, O_RDWR | O_CREAT | O_TRUNC, 0666);
+ 
+ 	if (fd < 0) {
+-		ksft_print_msg("Unable to create shmem file.\n");
++		ksft_print_msg("Unable to create file.\n");
+ 		ret = false;
+ 		goto out;
+ 	}
+ 
+ 	if (ftruncate(fd, filesize)) {
+-		ksft_print_msg("Unable to truncate shmem file.\n");
++		ksft_print_msg("Unable to truncate file.\n");
+ 		ret = false;
+ 		goto close_fd;
+ 	}
+ 
+ 	if (!write_exactly(fd, filesize)) {
+-		ksft_print_msg("Unable to write to shmem file.\n");
++		ksft_print_msg("Unable to write to file.\n");
+ 		ret = false;
+ 		goto close_fd;
+ 	}
+ 
++	if (type == FILE_MMAP){
++		char *map = mmap(NULL, filesize, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
++		if (map == MAP_FAILED) {
++			ksft_print_msg("mmap failed.\n");
++			ret = false;
++			goto close_fd;
++		}
++		for (int i = 0; i < filesize; i++) {
++			map[i] = 'A';
++		}
++		map[filesize - 1] = 'X';
++	}
+ 	syscall_ret = syscall(__NR_cachestat, fd, &cs_range, &cs, 0);
+ 
+ 	if (syscall_ret) {
+@@ -333,7 +296,7 @@ int main(void)
+ 		ret = 1;
+ 	}
+ 
+-	for (int i = 0; i < 6; i++) {
++	for (int i = 0; i < 5; i++) {
+ 		const char *dev_filename = dev_files[i];
+ 
+ 		if (test_cachestat(dev_filename, false, false, false,
+@@ -367,14 +330,14 @@ int main(void)
+ 		break;
+ 	}
+ 
+-	if (test_cachestat_shmem())
++	if (run_cachestat_test(FILE_SHMEM))
+ 		ksft_test_result_pass("cachestat works with a shmem file\n");
+ 	else {
+ 		ksft_test_result_fail("cachestat fails with a shmem file\n");
+ 		ret = 1;
+ 	}
+ 
+-	if (test_cachestat_mmap())
++	if (run_cachestat_test(FILE_MMAP))
+ 		ksft_test_result_pass("cachestat works with a mmap file\n");
+ 	else {
+ 		ksft_test_result_fail("cachestat fails with a mmap file\n");
+-- 
+2.43.0
+
