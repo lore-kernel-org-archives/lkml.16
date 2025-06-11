@@ -1,185 +1,189 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48687482EB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 259932236E9;
 	Wed, 11 Jun 2025 09:33:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749634422; cv=none; b=QzpdUvdOB7qf1s4A/uCm/vhAyaIZ3ewLVW8Fk6qUEf1umxAvBA5+PZohrPjVsaW+v16YYTZxOmNOMBrqw2mxcpZhwYnOBUGsFGXLD12i5VhZYma8wGWKgs0LWNg1zLEqGr/nnFIg/hNU1BpEJZflerLcKOrOR41ThzdapmEoUM8=
+	t=1749634423; cv=none; b=NHNl6qW939PTxz/+esH3mV+YaVYb58+no2g7mLGJ57QCKLM2PbccZgyMNOq3li1/VNYrVRU79iCcNyMp7aQINB2jh2mTqhvJT5yeR+KUA+4zQWM6oJOyW0ere+vyWW1k8XYAPuPkVAzILnst4mH7qikn4ld9funkMc4j38q5muY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749634422; c=relaxed/simple;
-	bh=oZEcpnP061nNjDS/WgnKTb1UcVd/WXF6k/yr0VPQsvg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jj8OhQJpfXXXw9Qn8tR5JLACvHP5iieRzYAD86eZnpiKljM3S3QyVQJPSzCrsHNTVL1YJPE6DRk7HQ3zKojTKHuovSPBIPEQTvV1NbxNWD6hrvRTgv4ttAcwl0tqIIU8rqKt6TUtjHKfCfKZtB+oEttaG0eQzk78HK/WX46qsSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Kizb/z0w; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1749634423; c=relaxed/simple;
+	bh=94L3NDzk1PuVU6OC22j44uOdZdn4jd8PZe73OGT0oYk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FXT72DDeyU6sl0M8bcnF5gl/s+H9CHqfkFjO55RPh7R3YsexTLah+enqYca+MR46roydVqp+uA3uMT7m6lOskw+r2GODAxM1ou6OaH/59qnquCraBWMetlBqZNNZxbLkAKTaq45ZU5kj2GqJPh0mthkOjxdZpfuJX7Et19RQLuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ja/yeB9p; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Kizb/z0w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1749634418;
-	bh=oZEcpnP061nNjDS/WgnKTb1UcVd/WXF6k/yr0VPQsvg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Kizb/z0wcw/aH9ltLLM1EZhO+eukqEK/6W7COvd3FhHzaFkMY6jpcQX0Y3jUK6y6w
-	 logvkP55UMr/w1LWJkNQTgfe0gSwSyrIPV/bnnpcXaO4tA/QKK50LTVw91PWrcNb45
-	 /J/Kfdw8XBbwsl3cosQH2Kpyj/TFkCrZlgFpk6qtz1qjJJqDNfiIOdsQqtPBYFh1A7
-	 i0qPQQlgQuQapncN3qsw7/PbGiWHeDTQYTCxUcZUMGjEHnl24SDwe1c9hnc/bgh9ye
-	 A+35IOtHqr7+cPMV18Xw3AgB4gsC0WSELGgOAtzJjR+xC0jJhePabvljxkO6AWOxW+
-	 tYqNLJlm+Lw+Q==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 8EC4417E05C1;
-	Wed, 11 Jun 2025 11:33:36 +0200 (CEST)
-Message-ID: <fecf4045-9cc4-46d2-ba4a-5818fcfcb059@collabora.com>
-Date: Wed, 11 Jun 2025 11:33:36 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ja/yeB9p"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749634421; x=1781170421;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=94L3NDzk1PuVU6OC22j44uOdZdn4jd8PZe73OGT0oYk=;
+  b=Ja/yeB9pIa7wx04+fspVRTYe5oUhzDQcYN1CMxhDFTE6cYqycYZU7wO9
+   5ob8AITXOK0BFXHs4GHsVvkABb6pieN/rtcZDXaMpWIhfibkiGKPLa4RE
+   WmHntFIaPnzVCr8KIMdxoFo+Ui3rYmSMk9gz22v/UI/RNQA1Cli4TiXqy
+   qFX2v5Jb/SAVkijDhlX80L1QMUOe7jMfssKdIPkW6WZDl9I88w8bL4YNz
+   YWp1XDsPo+uWbIcSqzgZdgiml9UmWl46e3QJKpE/ms0npy5UepbgUqz9+
+   Wq6Bnd1UL+Y8Gq4YNowUJSGBwuaAw7hNsZ9bYUxOpmbtGC2xTWpz/xzUC
+   w==;
+X-CSE-ConnectionGUID: 8CEaoBmURG250XK66JFmPQ==
+X-CSE-MsgGUID: Dy5AmAuXQL6lCVJEhazwQg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51631265"
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="51631265"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 02:33:41 -0700
+X-CSE-ConnectionGUID: 7O3v5GAmRVuG4RnS3dqV1Q==
+X-CSE-MsgGUID: Mwnx/+5jTDuJ/lSAWJ05lA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="147500583"
+Received: from lfiedoro-mobl.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.148])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 02:33:39 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 4833211FBA0;
+	Wed, 11 Jun 2025 12:33:36 +0300 (EEST)
+Date: Wed, 11 Jun 2025 09:33:36 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Matthias Fend <matthias.fend@emfend.at>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bsp-development.geo@leica-geosystems.com
+Subject: Re: [PATCH] media: dw9714: add support for powerdown pin
+Message-ID: <aElNcDTLEJTcJs2s@kekkonen.localdomain>
+References: <20250611-dw9714-sd-v1-1-fb47ef5e736c@emfend.at>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 13/13] arm64: dts: mediatek: mt7988a-bpi-r4: configure
- switch phys and leds
-To: Frank Wunderlich <linux@fw-web.de>,
- MyungJoo Ham <myungjoo.ham@samsung.com>,
- Kyungmin Park <kyungmin.park@samsung.com>,
- Chanwoo Choi <cw00.choi@samsung.com>, Georgi Djakov <djakov@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
- Vladimir Oltean <olteanv@gmail.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Frank Wunderlich <frank-w@public-files.de>,
- Jia-Wei Chang <jia-wei.chang@mediatek.com>,
- Johnson Wang <johnson.wang@mediatek.com>, =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?=
- <arinc.unal@arinc9.com>, Landen Chao <Landen.Chao@mediatek.com>,
- DENG Qingfang <dqfext@gmail.com>, Sean Wang <sean.wang@mediatek.com>,
- Daniel Golle <daniel@makrotopia.org>, Lorenzo Bianconi <lorenzo@kernel.org>,
- Felix Fietkau <nbd@nbd.name>, linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <20250608211452.72920-1-linux@fw-web.de>
- <20250608211452.72920-14-linux@fw-web.de>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250608211452.72920-14-linux@fw-web.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611-dw9714-sd-v1-1-fb47ef5e736c@emfend.at>
 
-Il 08/06/25 23:14, Frank Wunderlich ha scritto:
-> From: Frank Wunderlich <frank-w@public-files.de>
+Hi Matthias,
+
+Thanks for the patch.
+
+On Wed, Jun 11, 2025 at 09:13:33AM +0200, Matthias Fend wrote:
+> Add support for the powerdown pin (xSD), which can be used to put the VCM
+> driver into power down mode. This is useful, for example, if the VCM
+> driver's power supply cannot be controlled.
+> The use of the powerdown pin is optional.
+
+Please rewrap. Most editors can do it for you.
+
 > 
-> Assign pinctrl to switch phys and leds.
-> 
-> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> Signed-off-by: Matthias Fend <matthias.fend@emfend.at>
 > ---
-> v2:
-> - add labels and led-function and include after dropping from soc dtsi
-> ---
->   .../dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi | 61 +++++++++++++++++++
->   1 file changed, 61 insertions(+)
+>  drivers/media/i2c/Kconfig  |  2 +-
+>  drivers/media/i2c/dw9714.c | 16 ++++++++++++++++
+>  2 files changed, 17 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
-> index d8b9cd794ee3..f10d3617dcac 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
-> @@ -4,6 +4,7 @@
->   
->   #include <dt-bindings/gpio/gpio.h>
->   #include <dt-bindings/regulator/richtek,rt5190a-regulator.h>
-> +#include <dt-bindings/leds/common.h>
->   
->   #include "mt7988a.dtsi"
->   
-> @@ -151,6 +152,66 @@ &gmac2 {
->   	phy-mode = "usxgmii";
->   };
->   
-> +&gsw_phy0 {
-> +	pinctrl-names = "gbe-led";
-> +	pinctrl-0 = <&gbe0_led0_pins>;
-
-pinctrl-0
-pinctrl-names (here and everywhere else)
-
-> +};
+> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+> index e45ba127069fc0848f1a06ceb789efd3c222c008..e923daeec9c574c5b8c7014b9e83fcbad47866c0 100644
+> --- a/drivers/media/i2c/Kconfig
+> +++ b/drivers/media/i2c/Kconfig
+> @@ -748,7 +748,7 @@ config VIDEO_AK7375
+>  
+>  config VIDEO_DW9714
+>  	tristate "DW9714 lens voice coil support"
+> -	depends on I2C && VIDEO_DEV
+> +	depends on GPIOLIB && I2C && VIDEO_DEV
+>  	select MEDIA_CONTROLLER
+>  	select VIDEO_V4L2_SUBDEV_API
+>  	select V4L2_ASYNC
+> diff --git a/drivers/media/i2c/dw9714.c b/drivers/media/i2c/dw9714.c
+> index 2ddd7daa79e28a2cde915b4173fa27e60d5a2b57..5b78c1848f80bc3e32df13d149f3865ff8defe6e 100644
+> --- a/drivers/media/i2c/dw9714.c
+> +++ b/drivers/media/i2c/dw9714.c
+> @@ -2,6 +2,7 @@
+>  // Copyright (c) 2015--2017 Intel Corporation.
+>  
+>  #include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/i2c.h>
+>  #include <linux/module.h>
+>  #include <linux/pm_runtime.h>
+> @@ -38,6 +39,7 @@ struct dw9714_device {
+>  	struct v4l2_subdev sd;
+>  	u16 current_val;
+>  	struct regulator *vcc;
+> +	struct gpio_desc *powerdown_gpio;
+>  };
+>  
+>  static inline struct dw9714_device *to_dw9714_vcm(struct v4l2_ctrl *ctrl)
+> @@ -151,11 +153,20 @@ static int dw9714_probe(struct i2c_client *client)
+>  	if (IS_ERR(dw9714_dev->vcc))
+>  		return PTR_ERR(dw9714_dev->vcc);
+>  
+> +	dw9714_dev->powerdown_gpio = devm_gpiod_get_optional(&client->dev,
+> +							     "powerdown",
+> +							     GPIOD_OUT_LOW);
+> +	if (IS_ERR(dw9714_dev->powerdown_gpio))
+> +		return dev_err_probe(&client->dev,
+> +				     PTR_ERR(dw9714_dev->powerdown_gpio),
+> +				     "could not get powerdown gpio\n");
 > +
-> +&gsw_phy0_led0 {
+>  	rval = regulator_enable(dw9714_dev->vcc);
+>  	if (rval < 0) {
+>  		dev_err(&client->dev, "failed to enable vcc: %d\n", rval);
+>  		return rval;
+>  	}
+> +	gpiod_set_value_cansleep(dw9714_dev->powerdown_gpio, 0);
 
-function
-color
-status
+This seems to be redundant, you're already setting the GPIO low when
+acquiring it. Typically the order is different, though: the regulator is
+enabled first. Also related to the following comment.
 
-> +	status = "okay";
-> +	function = LED_FUNCTION_WAN;
-> +	color = <LED_COLOR_ID_GREEN>;
-> +};
+>  
+>  	usleep_range(1000, 2000);
+>  
+> @@ -185,6 +196,7 @@ static int dw9714_probe(struct i2c_client *client)
+>  	return 0;
+>  
+>  err_cleanup:
+> +	gpiod_set_value_cansleep(dw9714_dev->powerdown_gpio, 1);
+>  	regulator_disable(dw9714_dev->vcc);
+
+It'd be nice to have a single implementation of the power-on and power-off
+sequences. Now there are two.
+
+>  	v4l2_ctrl_handler_free(&dw9714_dev->ctrls_vcm);
+>  	media_entity_cleanup(&dw9714_dev->sd.entity);
+> @@ -200,6 +212,7 @@ static void dw9714_remove(struct i2c_client *client)
+>  
+>  	pm_runtime_disable(&client->dev);
+>  	if (!pm_runtime_status_suspended(&client->dev)) {
+> +		gpiod_set_value_cansleep(dw9714_dev->powerdown_gpio, 1);
+>  		ret = regulator_disable(dw9714_dev->vcc);
+>  		if (ret) {
+>  			dev_err(&client->dev,
+> @@ -234,6 +247,7 @@ static int __maybe_unused dw9714_vcm_suspend(struct device *dev)
+>  		usleep_range(DW9714_CTRL_DELAY_US, DW9714_CTRL_DELAY_US + 10);
+>  	}
+>  
+> +	gpiod_set_value_cansleep(dw9714_dev->powerdown_gpio, 1);
+>  	ret = regulator_disable(dw9714_dev->vcc);
+>  	if (ret)
+>  		dev_err(dev, "Failed to disable vcc: %d\n", ret);
+> @@ -262,6 +276,8 @@ static int  __maybe_unused dw9714_vcm_resume(struct device *dev)
+>  		dev_err(dev, "Failed to enable vcc: %d\n", ret);
+>  		return ret;
+>  	}
+> +	gpiod_set_value_cansleep(dw9714_dev->powerdown_gpio, 0);
 > +
-> +&gsw_port0 {
-> +	label = "wan";
-> +};
-> +
-> +&gsw_phy1 {
-> +	pinctrl-names = "gbe-led";
-> +	pinctrl-0 = <&gbe1_led0_pins>;
-> +};
-> +
-> +&gsw_phy1_led0 {
-> +	status = "okay";
-> +	function = LED_FUNCTION_LAN;
-> +	color = <LED_COLOR_ID_GREEN>;
-> +};
-> +
-> +&gsw_port1 {
-> +	label = "lan1";
-> +};
-> +
-> +&gsw_phy2 {
-> +	pinctrl-names = "gbe-led";
-> +	pinctrl-0 = <&gbe2_led0_pins>;
-> +};
-> +
-> +&gsw_phy2_led0 {
-> +	status = "okay";
-> +	function = LED_FUNCTION_LAN;
-> +	color = <LED_COLOR_ID_GREEN>;
-> +};
-> +
-> +&gsw_port2 {
-> +	label = "lan2";
-> +};
-> +
-> +&gsw_phy3 {
+>  	usleep_range(1000, 2000);
+>  
+>  	for (val = dw9714_dev->current_val % DW9714_CTRL_STEPS;
+> 
 
-function
+-- 
+Regards,
 
-pinctrl-0
-pinctrl-names
-
-
-> +	pinctrl-names = "gbe-led";
-> +	function = LED_FUNCTION_LAN;
-> +	pinctrl-0 = <&gbe3_led0_pins>;
-> +};
-> +
-> +&gsw_phy3_led0 {
-
-color
-status
-
-> +	status = "okay";
-> +	color = <LED_COLOR_ID_GREEN>;
-> +};
-
-...after which
-
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-
-
+Sakari Ailus
