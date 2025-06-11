@@ -1,52 +1,72 @@
-Received: from smtp-fw-80009.amazon.com (smtp-fw-80009.amazon.com [99.78.197.220])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87827280313;
-	Wed, 11 Jun 2025 12:09:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.220
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DFFE2797B1
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 12:10:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749643784; cv=none; b=IjuROPf6qB2s+pTXdM3xfKsquYNhSJ/dJ2bTaj2wjx6hEKqm6CQGkoKVr25tD0n/0O0PatubrxN6hCFXSqKLFMNn3Pj8kewl9yiP9JWVNRpNv1klM2Fa8MI9Zd0iZp8jor4ELMxw2lf5gYJb3gjDNLUhUdsN9vvPl0JlDwAIN4g=
+	t=1749643828; cv=none; b=jsYQS4ro53FWEeVauntfeHQ8zX+GpBVXxe6o9UMHKT+A8Uqy0yV5EPhJ7IJr3QDx0JJQFajFQwdQ3z12LWB9EfhjN+5K6/eTTrRBO3gWslNsnnIUWb0xK4OiIKPXBQV139DcYAzW6wUZQGpq0VoFXycLYr4kuIFSQ5r1CYZMjRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749643784; c=relaxed/simple;
-	bh=8edYvABXWEyW4QyjYA/sihNI6vUS+2Ib7tvaC/2Cqqs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=E6CXoKTAIS/g7uy7b8kb53GgKRyzq0giLtSUjgdGa79u2NSufqygZeJWKCfAHKL8ayJR/v1eXRYOuO2J+BSrOC5aGM9WITOx2qwllWI7xgcJG9VcQv+AALGC7Q9tK5GcqAqQbMqqKEwd3ou7YWL5iBeH/qc7GkHdyIqLk8FPx8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=jTOyg9qS; arc=none smtp.client-ip=99.78.197.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
+	s=arc-20240116; t=1749643828; c=relaxed/simple;
+	bh=fUVyuM/JZzRTEZVSVxBe4m9fLSnTIzYmKm1y3ITexfE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cZk/rcW1mnoAFFXs4jnK+NC885Xoud7jBtgL9BkBb6v9kIRKsr6X8bL3GzsiMAtycp8kra6CfQqaIriVdEKSf44IO6hNtWaHFVMrP2kS05j4nRELgyMuzK0OxRzQHGefMd6KEfUaQD/c+uRbM/DkG6yB2ZCBtibtACcvA9JMaRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b5LyqQs1; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="jTOyg9qS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1749643782; x=1781179782;
-  h=message-id:date:mime-version:reply-to:subject:to:cc:
-   references:from:in-reply-to:content-transfer-encoding;
-  bh=8uWizOJisq3qvf+JalT9q9Tn4t52oR3ukVog/80wa+A=;
-  b=jTOyg9qS2Iip1E313QaNcMjgTVGriJoa+MPma+NObGnfyxMDfn2svhYO
-   MmUmgzKtSFhQogJT69bW4nPrg9gKpJMvkeB8EOmS7Fo7gXVxqxoYHga0R
-   cG+rbjEob4rTIDYEFNrc4U8iOysxQNgTN7c7e6rBcIl3nuMIi57raBk3N
-   aug0ljnSdCOxL40TwU3a7IxOVKPwJAH1CTYdg6Mv5G6mjWBDNCLlJmo/F
-   hQVzHnzfez2Np6oaAU9Dbf05X4VMIp8WxUN4C5zohptrlyBDztkyTUagg
-   DHj3D9xvd/5TeW80PaZinQVZJapJxMrhi9NX3j1fiQGHIUmcuA+cYGnyT
-   w==;
-X-IronPort-AV: E=Sophos;i="6.16,227,1744070400"; 
-   d="scan'208";a="210305053"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-80009.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 12:09:39 +0000
-Received: from EX19MTAEUB002.ant.amazon.com [10.0.43.254:27053]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.27.130:2525] with esmtp (Farcaster)
- id 7a036aa7-dc10-479b-80c2-2a7384eb7725; Wed, 11 Jun 2025 12:09:38 +0000 (UTC)
-X-Farcaster-Flow-ID: 7a036aa7-dc10-479b-80c2-2a7384eb7725
-Received: from EX19D022EUC002.ant.amazon.com (10.252.51.137) by
- EX19MTAEUB002.ant.amazon.com (10.252.51.59) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 11 Jun 2025 12:09:38 +0000
-Received: from [192.168.1.170] (10.106.82.32) by EX19D022EUC002.ant.amazon.com
- (10.252.51.137) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14; Wed, 11 Jun 2025
- 12:09:36 +0000
-Message-ID: <dd851cab-eb22-40ae-b926-6f0eb1567299@amazon.com>
-Date: Wed, 11 Jun 2025 13:09:36 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b5LyqQs1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749643825;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=AbBtaKYCxKdKVKglizMjSqjtb9qBaSCtFRd2jqHKCgQ=;
+	b=b5LyqQs1lFoD2wRy53LJ1kqG3Vvn502OaCQa/b7OHvrQW20YHRLc5Ha5c39wKnvCw5ZhrF
+	rJ1v/pnI1phyTExkBhZHQ/ujOBh85YkQq1rbPstQjelWczCLAhCCrWpI5ZhHsOWcAmsgcc
+	w5HL6eoMR9Sim0CyPlJhKXmUFlwZx08=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-605-FlbKsFFzMEiszBrKJ00ZlA-1; Wed, 11 Jun 2025 08:10:24 -0400
+X-MC-Unique: FlbKsFFzMEiszBrKJ00ZlA-1
+X-Mimecast-MFC-AGG-ID: FlbKsFFzMEiszBrKJ00ZlA_1749643824
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4a42c569a9aso13378411cf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 05:10:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749643824; x=1750248624;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=AbBtaKYCxKdKVKglizMjSqjtb9qBaSCtFRd2jqHKCgQ=;
+        b=QSQII755RWK5N3sMM/3avcARmxOxPpdmATVUanab/uVmwrfPeT75kIGb5fS96NsvY2
+         LqsrmJHl/l6jk1Gs1eyftal0hbDvKDldTARR5ERHo44CAGh6+F72EoL371tWBaAGhwnv
+         qet4xa5QLNDWMfW6YPxLXb9nbraNYTaWr7X1nOgMTNj9oUCrwxpHsF/Am0LCsQ/IeiLp
+         E0UIMGWtFt00NojLwtt8DEyq5GW4GM8qEfF1RwAu0HxupyhJlJpbqACebLkKvwfIK5I1
+         BzEcpORRy0lMM3n6FlOfTlhlLn0lNaa+/muwi2lL6d0s8ashZ/uc++FYVzXyMhNMUA6i
+         rt8w==
+X-Forwarded-Encrypted: i=1; AJvYcCX6w6FeeONWRJdbKpfPvmfB4b2HsrtXxe5AjkP4bVbv+L/EYDMaNW+zm98XNJQygk6nDjmvMqnQId3KlBs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyhulErN6MRux3ylT889EDYSvAOgAxv8ANHPSKJ7cUoYU6wwix
+	XEnQ75WUH5fLsvMrnA9FZFtF1OV73FTK5hZMtC04VW+ME3UCDdKFtxQjwG+yeLdVDaXJMFO88R4
+	9ueL5h8CPxtWidrKY6JIcJlA4NbjLSprZF/ireIuge9IldVma3lEwt98QY55ms3g3uQ==
+X-Gm-Gg: ASbGnct1POlIbOsCGj8X1Hvf5IldLDKDk/BpOikbmPkE04uUFHfhztWW5AUXfx+WIbW
+	VJyxsvxALb20OBQpT7WFSZ6dw4cl1S83AjD8EKpPTuAaLQ2y4rqtxRUXT24vPqwAWZoLghBlymQ
+	GhaOCAaBJ+R8ueVkBRyqpSuaqwWv620kPfLPFr1yZHAAwo0xnbjfCkxDEYgeAxvONvbWD7GKTOM
+	ihLUegOvnc2n61phDjn+ptrlWdw58gCV85gHPRZn8e+rqjMAeE17gbMCRl48JBu18IUBDI6IgkI
+	Sfg3nmk5K8KW0KzT/39461rMkh0bWTDAhJ/xXiQgvY3d
+X-Received: by 2002:a05:622a:544c:b0:49a:4fc0:56ff with SMTP id d75a77b69052e-4a713cc7259mr49568631cf.12.1749643824164;
+        Wed, 11 Jun 2025 05:10:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGEepQjK3TiCXlLV7iAyNnfWZsZ5ljFhICTRx5WfMX4Xp6Fy/sYo+plUCva/LJAfRC05JEryg==
+X-Received: by 2002:a05:622a:544c:b0:49a:4fc0:56ff with SMTP id d75a77b69052e-4a713cc7259mr49568061cf.12.1749643823744;
+        Wed, 11 Jun 2025 05:10:23 -0700 (PDT)
+Received: from [10.32.64.156] (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a611150cb0sm87438601cf.11.2025.06.11.05.10.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Jun 2025 05:10:22 -0700 (PDT)
+Message-ID: <e88999e6-8c79-4273-9f6f-df28d016cc6e@redhat.com>
+Date: Wed, 11 Jun 2025 14:10:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,168 +74,79 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Reply-To: <kalyazin@amazon.com>
-Subject: Re: [PATCH v3 4/6] KVM: guest_memfd: add support for userfaultfd
- minor
-To: Peter Xu <peterx@redhat.com>
-CC: <akpm@linux-foundation.org>, <pbonzini@redhat.com>, <shuah@kernel.org>,
-	<viro@zeniv.linux.org.uk>, <brauner@kernel.org>, <muchun.song@linux.dev>,
-	<hughd@google.com>, <kvm@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-fsdevel@vger.kernel.org>, <jack@suse.cz>,
-	<lorenzo.stoakes@oracle.com>, <Liam.Howlett@oracle.com>, <jannh@google.com>,
-	<ryan.roberts@arm.com>, <david@redhat.com>, <jthoughton@google.com>,
-	<graf@amazon.de>, <jgowans@amazon.com>, <roypat@amazon.co.uk>,
-	<derekmn@amazon.com>, <nsaenz@amazon.es>, <xmarcalx@amazon.com>
-References: <20250404154352.23078-1-kalyazin@amazon.com>
- <20250404154352.23078-5-kalyazin@amazon.com> <aEiwvi-oqfTiyP3s@x1.local>
+Subject: Re: [PATCH 2/4] selftests/mm: Convert some cow error reports to
+ ksft_perror()
+To: Mark Brown <broonie@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>
+Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250610-selftest-mm-cow-tweaks-v1-0-43cd7457500f@kernel.org>
+ <20250610-selftest-mm-cow-tweaks-v1-2-43cd7457500f@kernel.org>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-From: Nikita Kalyazin <kalyazin@amazon.com>
-Autocrypt: addr=kalyazin@amazon.com; keydata=
- xjMEY+ZIvRYJKwYBBAHaRw8BAQdA9FwYskD/5BFmiiTgktstviS9svHeszG2JfIkUqjxf+/N
- JU5pa2l0YSBLYWx5YXppbiA8a2FseWF6aW5AYW1hem9uLmNvbT7CjwQTFggANxYhBGhhGDEy
- BjLQwD9FsK+SyiCpmmTzBQJnrNfABQkFps9DAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQr5LK
- IKmaZPOpfgD/exazh4C2Z8fNEz54YLJ6tuFEgQrVQPX6nQ/PfQi2+dwBAMGTpZcj9Z9NvSe1
- CmmKYnYjhzGxzjBs8itSUvWIcMsFzjgEY+ZIvRIKKwYBBAGXVQEFAQEHQCqd7/nb2tb36vZt
- ubg1iBLCSDctMlKHsQTp7wCnEc4RAwEIB8J+BBgWCAAmFiEEaGEYMTIGMtDAP0Wwr5LKIKma
- ZPMFAmes18AFCQWmz0MCGwwACgkQr5LKIKmaZPNTlQEA+q+rGFn7273rOAg+rxPty0M8lJbT
- i2kGo8RmPPLu650A/1kWgz1AnenQUYzTAFnZrKSsXAw5WoHaDLBz9kiO5pAK
-In-Reply-To: <aEiwvi-oqfTiyP3s@x1.local>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250610-selftest-mm-cow-tweaks-v1-2-43cd7457500f@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EX19D001EUA002.ant.amazon.com (10.252.50.215) To
- EX19D022EUC002.ant.amazon.com (10.252.51.137)
 
-
-
-On 10/06/2025 23:25, Peter Xu wrote:
-> On Fri, Apr 04, 2025 at 03:43:50PM +0000, Nikita Kalyazin wrote:
->> Add support for sending a pagefault event if userfaultfd is registered.
->> Only page minor event is currently supported.
->>
->> Signed-off-by: Nikita Kalyazin <kalyazin@amazon.com>
->> ---
->>   virt/kvm/guest_memfd.c | 10 ++++++++++
->>   1 file changed, 10 insertions(+)
->>
->> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
->> index fbf89e643add..096d89e7282d 100644
->> --- a/virt/kvm/guest_memfd.c
->> +++ b/virt/kvm/guest_memfd.c
->> @@ -4,6 +4,9 @@
->>   #include <linux/kvm_host.h>
->>   #include <linux/pagemap.h>
->>   #include <linux/anon_inodes.h>
->> +#ifdef CONFIG_KVM_PRIVATE_MEM
->> +#include <linux/userfaultfd_k.h>
->> +#endif /* CONFIG_KVM_PRIVATE_MEM */
->>
->>   #include "kvm_mm.h"
->>
->> @@ -380,6 +383,13 @@ static vm_fault_t kvm_gmem_fault(struct vm_fault *vmf)
->>                kvm_gmem_mark_prepared(folio);
->>        }
->>
->> +     if (userfaultfd_minor(vmf->vma) &&
->> +         !(vmf->flags & FAULT_FLAG_USERFAULT_CONTINUE)) {
->> +             folio_unlock(folio);
->> +             filemap_invalidate_unlock_shared(inode->i_mapping);
->> +             return handle_userfault(vmf, VM_UFFD_MINOR);
->> +     }
->> +
+On 10.06.25 16:13, Mark Brown wrote:
+> This prints the errno and a string decode of it.
 > 
-> Hmm, does guest-memfd (when with your current approach) at least needs to
-> define the new can_userfault() hook?
-> 
-> Meanwhile, we have some hard-coded lines so far, like:
-> 
-> mfill_atomic():
->          if (!vma_is_shmem(dst_vma) &&
->              uffd_flags_mode_is(flags, MFILL_ATOMIC_CONTINUE))
->                  goto out_unlock;
-> 
-> I thought it would fail guest-memfd already on a CONTINUE request, and it
-> doesn't seem to be touched yet in this series.
-> 
-> I'm not yet sure how the test worked out without hitting things like it.
-> Highly likely I missed something.  Some explanations would be welcomed..
+> Reported-by: David Hildenbrand <david@redhat.com>
 
-Yes, I realised that I'd failed to post this part soon after I sent the 
-series, but I refrained from sending a new version because the upstream 
-consensus was to review/merge the mmap support in guest_memfd [1] before 
-continuing to build on top of it.  This is the missed part I planned to 
-include in the next version.  Sorry for the confusion.
+Probably not "Reported-by". Did you mean "Suggested-by" like for the others?
 
-diff --git a/include/linux/userfaultfd_k.h b/include/linux/userfaultfd_k.h
-index 64551e8a55fb..080437fa7eab 100644
---- a/include/linux/userfaultfd_k.h
-+++ b/include/linux/userfaultfd_k.h
-@@ -221,8 +221,10 @@ static inline bool vma_can_userfault(struct 
-vm_area_struct *vma,
-  	if (vm_flags & VM_DROPPABLE)
-  		return false;
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> ---
 
--	if (!vma->vm_ops->can_userfault ||
--	    !vma->vm_ops->can_userfault(vma, VM_UFFD_MINOR))
-+	if ((vm_flags & VM_UFFD_MINOR) &&
-+	     (!vma->vm_ops ||
-+	      !vma->vm_ops->can_userfault ||
-+	      !vma->vm_ops->can_userfault(vma, VM_UFFD_MINOR)))
-  		return false;
+Acked-by: David Hildenbrand <david@redhat.com>
 
-  	/*
-diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-index 0aa82c968e16..638360a78561 100644
---- a/mm/userfaultfd.c
-+++ b/mm/userfaultfd.c
-@@ -788,7 +788,9 @@ static __always_inline ssize_t mfill_atomic(struct 
-userfaultfd_ctx *ctx,
-  		return  mfill_atomic_hugetlb(ctx, dst_vma, dst_start,
-  					     src_start, len, flags);
+-- 
+Cheers,
 
--	can_userfault = dst_vma->vm_ops->can_userfault &&
-+	can_userfault =
-+	    dst_vma->vm_ops &&
-+	    dst_vma->vm_ops->can_userfault &&
-  	    dst_vma->vm_ops->can_userfault(dst_vma, __VM_UFFD_FLAGS);
-
-  	if (!vma_is_anonymous(dst_vma) && !can_userfault)
-diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index 91ee5dd91c31..202b12dc4b6f 100644
---- a/virt/kvm/guest_memfd.c
-+++ b/virt/kvm/guest_memfd.c
-@@ -420,8 +420,15 @@ static vm_fault_t kvm_gmem_fault(struct vm_fault *vmf)
-  	return ret;
-  }
-
-+static bool kvm_gmem_can_userfault(struct vm_area_struct *vma,
-+				   unsigned long vm_flags)
-+{
-+	return vm_flags & VM_UFFD_MINOR;
-+}
-+
-  static const struct vm_operations_struct kvm_gmem_vm_ops = {
--	.fault = kvm_gmem_fault,
-+	.fault         = kvm_gmem_fault,
-+	.can_userfault = kvm_gmem_can_userfault,
-  };
-
-  static int kvm_gmem_mmap(struct file *file, struct vm_area_struct *vma)
-
-
-[1] https://lore.kernel.org/kvm/20250605153800.557144-1-tabba@google.com/
-
-> 
-> Thanks,
-> 
->>        vmf->page = folio_file_page(folio, vmf->pgoff);
->>
->>   out_folio:
->> --
->> 2.47.1
->>
-> 
-> --
-> Peter Xu
-> 
+David / dhildenb
 
