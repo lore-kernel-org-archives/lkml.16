@@ -1,60 +1,62 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA4721A45D;
-	Wed, 11 Jun 2025 08:19:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE792367DE;
+	Wed, 11 Jun 2025 08:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749629965; cv=none; b=TK2NiPQAP1uEKCCXckw9R/xI9JMuHJWKEyIibtSOUvaFuoyU5RaebKM9SUJGfmFDdv0Qs2Czd4fLzkG84XXCB1oxof45bb1gzqFcGoIn0+8wjgNg8Mm9RieLupC5p7ntsAFq4DbI3IY0ZPTzrI9ub5sCopzU0Z5GOH5aHFcHf4Q=
+	t=1749629971; cv=none; b=krkuJHbYPZwYeSik/z/Zy7FEl7dAA2FAb+lYw270kfEtaky6E5Heh0dMl+FuwQAWBvjYTbxN0VgtZtq9I0szutF4/dd/NnO6c1u+JIsR+QVRQrAFaWZcP3Wa5qcud1b50D6N5+G/HpgPzup4mc9G1Q7NGIacU63BN15pEviaUQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749629965; c=relaxed/simple;
-	bh=BgskhzIjhoBBKnyDbYf2UllhqZ0Rn5azDGC2A7sKqU0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WDr3Q5avq9m+3/uutbY/DEKHg2Hpd+OD+kqPbMQXocZJcvHrTtnMrttqXXyvz2Y6nXk3BnGGuHmHjcIaGKAk48rK+r9lvKfmpM8kfyh37oaX5yAGAIDxffhb5vXIyJdmOynXV3yXvSVYLeC+TEAS6Vpx3JyKrYhXs4BFthYCgUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y9vxpw8w; arc=none smtp.client-ip=209.85.219.52
+	s=arc-20240116; t=1749629971; c=relaxed/simple;
+	bh=/Pz+BCMnqum9DQrrlTbtUCM1X78hr/mJFmbdv3ay6cI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Nv+9PFR07pFb0mbnBVPn+5oZEJuY7C7pBvVxD2uuowH14o0rWrJTYPQgImciB1m1gYEJZJU4EpHWHiQ1JXPjyXKPdUsto1kMe5PVYB7ZRWMcj5I3ugWTHBFSEem7B/TnJx3ETY3Z40Cx77z6hwj9E0WA2ATW99aiZYRJkNVjTE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ACY96aJ8; arc=none smtp.client-ip=209.85.222.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y9vxpw8w"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6fafb6899c2so6786776d6.0;
-        Wed, 11 Jun 2025 01:19:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ACY96aJ8"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7cadc92771dso543914685a.1;
+        Wed, 11 Jun 2025 01:19:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749629963; x=1750234763; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vfmr4VZFRC3blHBv6tjDEsekB2JKza+TxJ7wwghY+Nc=;
-        b=Y9vxpw8wEK+NZCrHPb+aU/nkyCBge3GJu0JYA8Sasc0MLMpTP3fG74BKzJgLWP07Vm
-         +0ZsOkv3iivs1pU9R/SfhOzvq9G6TVqhl1eEEA3EynMGjPSwWsp7PDNdJViHi8qnyrPD
-         spptYMPkPzLD71rzAwlWKjJIhzvuVoHygD2VTo72ba3cFDA9dhtQlLVNIr3KBINkwLXD
-         vmbcn1O06m9XA26Ee/TgME9i/6mQRunBuU7Lgppyvu3CuoSONGw1l/G27qlcZWGzDgYl
-         MWDaDoZCknaHHqzy6kzmEQjGruKSEWhUhvbaSWlcPKcsiNCdxnzZj4UtGMguVX1rWkAd
-         BtGQ==
+        d=gmail.com; s=20230601; t=1749629969; x=1750234769; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kTihKaJdX7lICF61Unmn/1qC+7hZZfgUEsDAi37Fi1o=;
+        b=ACY96aJ8o7NebxWccMIeSciCiR6oy9u1/fs967MhW6VTh+9XIx7zjDWj6lYywU2lDH
+         evlXd+CWq0FWMkjuFLfZVC71nXevnHWe1MvGLSpG3UrbHqNlYJBIKdduyAJcSgxxP4Qq
+         hReDlz4N6KIPPL/JNacdaAzxObAQZ2uBRPSV4p/W5lTMyU2wTFKbmVS+Jx30vdNuoyYB
+         Zhrgaf0p9JvprQ7Mu07joFWyCrO97RIpO6hXw/M83dMt23dJLe6c0p0QPRtFeCv+m+Jj
+         8Dx7O2CPJLzyFp3y0UclBvwLSA8k1Dvfs1PReHww30MQHifm3PPJnJDJiXkLu45zG6yL
+         OX7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749629963; x=1750234763;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vfmr4VZFRC3blHBv6tjDEsekB2JKza+TxJ7wwghY+Nc=;
-        b=KDJhM+myTbLA743jPDzKy7lPCRzApVD4Bp4XKJdoayZjs2MyhERXwbqGS4Y4k0noYS
-         HvAdAc2+UJusKFs5MjtRzWPcT9TWoIxKDuZAzXNwDfnawOi4/lGXNp8xBk1pS1HZfRwP
-         xSYB/tjRRik4Bwo8P/SMn4kKQUZJFUJG+578Z4+QfTWna0+aoh8SZnSJvmiJlqBAaL0x
-         gNMbz3g6obyk4wUfCGP/hiX2/Eif1t1ptFP3SBvRWul/dWzEpMYM0RVGzb5/Qibi9EOy
-         2aQ7ZRTBmtBepHg15j7uptFFLkl3DFaHleyZ9EL7Z5KQhSi05OASk1JbceXDwY4PhU4N
-         EkXA==
-X-Forwarded-Encrypted: i=1; AJvYcCUCOrELppTGq7WFMCeDs5JPSIGUce++993lvK2VHJxoQG5I7wlRrvgi3M98y+AzGp0L0fqOxxfjIT/g@vger.kernel.org, AJvYcCVZIYFCwoU6OaJAoRWbm0jT7OCNVjxi/3+DZEokCbt6L41nB/s+ncTGXOWVnoQgfrADmrEehihnEskdRBLP@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxq5/L6t8YyieL3pcGyfY7AQvh+nned1egQXyBYDh5Iu0gEq1SD
-	1KWOXzf+4L2DzsaSt311zJkPTPC7VnXtBvl+R9P9HyjAdfpRR1rzy74O
-X-Gm-Gg: ASbGnctWOUkZoBDeMYnF6s0ehjYTjJimyX1k+BBDdB4O2ro7tkUFf9pNIMYxxU70CvF
-	LdQPrv0YXvQhGT6ED2Wn6sTxBHGvAUE0B2uF1jjBh+oLFedqApJRBokb/9Q5lt6Wn+KHAN2LUKa
-	Wr1S84VKFng0Px5vHd4rs29XFTm59pnWUchb1cyPk7BnpNnZPQiFlu/z+7Oy/vNH3x6J9ndg9Dg
-	rTc72PQNv3ajVvO/OPNxilYCKGC6y2l6L1XFkWyp+R7CVJqtWOSYhCjdD49ChJCe6TQwL2AT+TU
-	8AycFEUi/h0BEdBt9aXI7LPIpv0ut1JGOR7W0g==
-X-Google-Smtp-Source: AGHT+IHLmdiPK1/hfZ3hYVAS6e/Qa18yyzLJzaoN2F5VMxeq5n4N2SYxR2jD2YHscybgUqgzRxu9HA==
-X-Received: by 2002:a05:6214:226a:b0:6fa:a65a:224d with SMTP id 6a1803df08f44-6fb2c37a204mr38375446d6.4.1749629962729;
-        Wed, 11 Jun 2025 01:19:22 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749629969; x=1750234769;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kTihKaJdX7lICF61Unmn/1qC+7hZZfgUEsDAi37Fi1o=;
+        b=EPpyJxhfl4NnKmhsU+LRDrsIoCNapYMlLbHkVEGB6Zwxtlgq1P2DyVyAyiqSmiYuWz
+         YzJKnB97PTGzEIJLRgDmOIUe635iScW0b+uxAaJJ9tyaB0Zm/fuYdDv0AvAX1skX3rcR
+         tcx2Wjpjr50+cMFUIvsCu517B1DGsgW/Rwiam45xDPT8zXhR2hIZ8RVE6rzTL8AaDuV7
+         DS9N1aKfHnxNw49dI82ycUWjKUVsDeFw4nIGZ5BmerlFg91DxsIATqT1iwd9seCSmqDW
+         x/rEfJvhigmTIvan4zjK3gQDgnJ0Fj0gihEvBTs34GbiqZEKWutWBqQhO8rMBINF793A
+         gA8g==
+X-Forwarded-Encrypted: i=1; AJvYcCV2GCrIde+bKLIS1WBOZbCh/wMDf4Gwmy2XHKeAeKae+AcUBmk3NWeDWVJlztYNiq4Ej5DhgrZk2js8giq7@vger.kernel.org, AJvYcCWegBRVgT4iLShRb67LkIh/5Qxo+joMDkMD7F8fLQeKOS+kME7qOTMc35AuxQr6GQONE5nIr+tZQC6A@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6H88fKdpIpmRTrjsfmwBJVCefEmwJ06eJ+Y4/kZ7Kfo5UgWvT
+	W76tPbpAgG94S5PAW4TRQ/U7KdJlE4sZkEaoSHNgUP3ivbeNZQ5gnTJd
+X-Gm-Gg: ASbGncsS88ozl5ANyQKqsyL1oPhLCond3n2+DeuQdYMDuRko73k5vv0Y700JNcN0Iv6
+	RL//mUJD/mxHiCTVpk7PRZeKztytiSrNQ1tYLCVEyoEYo6iJXg66V5VbC9+xF9wDcaV1wUltg5I
+	jjA1gMmDFQ9R4tAYF9REXwmUvAFScFEOwuWn+BzFMba0kheYbt+GzwiU8YWD67Wy6cwEbWhZqNj
+	WiOphV/FRrW5rVe9x+yr7fvGCzqJZeF78GjQp+Agi9DdRT6GRoD53qqjjLFO7SRyJPcmO2OpvWs
+	jSgkqV0pFzFtfroES6px1d4zyEbxHcjKLomBD4OY1THxQIn7
+X-Google-Smtp-Source: AGHT+IE2k0Y0Y3XpkqJoreGwvkWiu0A5c1I9LUjGwUIsU+Yx8pfb5KDzmXaWEDQQc73dwOMzOri2PA==
+X-Received: by 2002:a05:620a:298c:b0:7ce:e010:88b9 with SMTP id af79cd13be357-7d3a8820ef4mr372285385a.13.1749629968697;
+        Wed, 11 Jun 2025 01:19:28 -0700 (PDT)
 Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6fb09b366easm78768726d6.114.2025.06.11.01.19.21
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6fb09ac84cbsm79224076d6.32.2025.06.11.01.19.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 01:19:22 -0700 (PDT)
+        Wed, 11 Jun 2025 01:19:28 -0700 (PDT)
 From: Inochi Amaoto <inochiama@gmail.com>
 To: Vinod Koul <vkoul@kernel.org>,
 	Kishon Vijay Abraham I <kishon@kernel.org>,
@@ -74,10 +76,12 @@ Cc: linux-phy@lists.infradead.org,
 	linux-riscv@lists.infradead.org,
 	Yixun Lan <dlan@gentoo.org>,
 	Longbin Li <looong.bin@gmail.com>
-Subject: [PATCH v4 0/2] riscv: sophgo: add USB phy support for CV18XX series
-Date: Wed, 11 Jun 2025 16:18:01 +0800
-Message-ID: <20250611081804.1196397-1-inochiama@gmail.com>
+Subject: [PATCH v4 1/2] dt-bindings: phy: Add Sophgo CV1800 USB phy
+Date: Wed, 11 Jun 2025 16:18:02 +0800
+Message-ID: <20250611081804.1196397-2-inochiama@gmail.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250611081804.1196397-1-inochiama@gmail.com>
+References: <20250611081804.1196397-1-inochiama@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,36 +90,78 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add USB PHY support for CV18XX/SG200X series
+The USB phy of Sophgo CV18XX series SoC needs to sense a pin called
+"VBUS_DET" to get the right operation mode. If this pin is not
+connected, it only supports setting the mode manually.
 
-Changed from v3:
-1. patch 1: remove vbus-gpio, switch-gpio and dr_mode properties.
-2. patch 2: remove all logic related to the bindings change.
-3. remove the syscon header file.
+Add USB phy bindings for Sophgo CV18XX/SG200X series SoC.
 
-Changed from v2:
-1. add item description for switch gpios.
-
-Changed from v1:
-1. remove dr_mode property and use default mode instead.
-2. improve the description of `vbus_det-gpios` and `sophgo,switch-gpios`
-
-Inochi Amaoto (2):
-  dt-bindings: phy: Add Sophgo CV1800 USB phy
-  phy: sophgo: Add USB 2.0 PHY driver for Sophgo CV18XX/SG200X
-
- .../bindings/phy/sophgo,cv1800b-usb2-phy.yaml |  54 +++++
- drivers/phy/Kconfig                           |   1 +
- drivers/phy/Makefile                          |   1 +
- drivers/phy/sophgo/Kconfig                    |  19 ++
- drivers/phy/sophgo/Makefile                   |   2 +
- drivers/phy/sophgo/phy-cv1800-usb2.c          | 222 ++++++++++++++++++
- 6 files changed, 299 insertions(+)
+Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+---
+ .../bindings/phy/sophgo,cv1800b-usb2-phy.yaml | 54 +++++++++++++++++++
+ 1 file changed, 54 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/phy/sophgo,cv1800b-usb2-phy.yaml
- create mode 100644 drivers/phy/sophgo/Kconfig
- create mode 100644 drivers/phy/sophgo/Makefile
- create mode 100644 drivers/phy/sophgo/phy-cv1800-usb2.c
 
---
+diff --git a/Documentation/devicetree/bindings/phy/sophgo,cv1800b-usb2-phy.yaml b/Documentation/devicetree/bindings/phy/sophgo,cv1800b-usb2-phy.yaml
+new file mode 100644
+index 000000000000..2ff8f85d0282
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/sophgo,cv1800b-usb2-phy.yaml
+@@ -0,0 +1,54 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/sophgo,cv1800b-usb2-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Sophgo CV18XX/SG200X USB 2.0 PHY
++
++maintainers:
++  - Inochi Amaoto <inochiama@gmail.com>
++
++properties:
++  compatible:
++    const: sophgo,cv1800b-usb2-phy
++
++  reg:
++    maxItems: 1
++
++  "#phy-cells":
++    const: 0
++
++  clocks:
++    items:
++      - description: PHY app clock
++      - description: PHY stb clock
++      - description: PHY lpm clock
++
++  clock-names:
++    items:
++      - const: app
++      - const: stb
++      - const: lpm
++
++  resets:
++    maxItems: 1
++
++required:
++  - compatible
++  - "#phy-cells"
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    phy@48 {
++      compatible = "sophgo,cv1800b-usb2-phy";
++      reg = <0x48 0x4>;
++      #phy-cells = <0>;
++      clocks = <&clk 93>, <&clk 94>, <&clk 95>;
++      clock-names = "app", "stb", "lpm";
++      resets = <&rst 58>;
++    };
+-- 
 2.49.0
 
