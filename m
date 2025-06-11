@@ -1,168 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 279C3286A9;
-	Wed, 11 Jun 2025 10:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01897256C93
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 10:39:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749638316; cv=none; b=KLLQ/R12JE/l5515uBX8/DSgROAfVe1MOxgo7zi/t0OS5KtUOyItJXh3m7yE/pC86gkNnbpa4L0hkhOvhWlq7BPhxpki7ouWp5ziG+A4YelLybJHZrHTVFBu4qboeVOxdHSJ/rYC72MGbRKSkao0+9jvzqxZlRqpOGGP6wpikzE=
+	t=1749638389; cv=none; b=gG0Zwi/oAqSEQM8wRDSDPRMYg2xCcpZy1fHlRD7nrxNA0RsK/4CMGsyd/Nu5U/cSpwdw7KlEY7mrR763gKm0X+IK7Co5S/vtOjaYwkKXQyPeDPdYWxLzKSkZX7Y4VnXHrmTeMPFfbtnRcmSeYq5Dogv2smyPGMpPDpnYU9vonUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749638316; c=relaxed/simple;
-	bh=u1/Nc/mxiK63XpSvu3fPhoY0JtJGkKnqVVXwTANKFJA=;
+	s=arc-20240116; t=1749638389; c=relaxed/simple;
+	bh=uGMUMHxFQCUGsonCVqrahKBjFMn8KED3ThrrX01SBSs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kwQw+wKj87gdaMzX9CRyrYGy2DWihGKkGZJXVIkrfgJa3tQ4Iv5v9P3uuXNN68NHyFsl2lVdUaDDPmpihMqCYpWxOAsLEQB4Nv07hnHTAZLmudzmlcJF11pPUhFs09oGNDB+LCmLx9Kg7lAJN/htgFPMTyz7DhS15uoG0ZWxlRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hTu8WU9q; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=GYE7PuajkMcBDz7N2AUMmDTBW/mYwEeKWTMyEsfTP6YyfHZNwHm3o8sYBy1O8+8IpMfrgP1aziWrvMWO9blW3EG9uXl9/YDyOQxdqgwIlVF+YX4yPIpVNn8Dv+sh50UVEC6IEycXkHWNlP/UFC1GVe3QP2mnh9NK3jIXcRDCP0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=LhtajO8m; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hTu8WU9q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CDBAC4CEEE;
-	Wed, 11 Jun 2025 10:38:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749638315;
-	bh=u1/Nc/mxiK63XpSvu3fPhoY0JtJGkKnqVVXwTANKFJA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hTu8WU9q9KkpyLfCNYzNXkR/ECJeqFJ9bPbJ9zntyOk2mzUZIHeIhk2u/9X+tvOvk
-	 aLaS9M5ixnC59uCPZPEqhRd2TW79aERqgQOmNE4Bj/sY1s4XSY7YG4SpXahvTapJY1
-	 iF+VLo0dzbFTn/6sXaNZ84p1RijqmdW3Xvfn/MFjj8l/KXaTO8JadgNKThovn0g7ug
-	 2Eks2qBvNxZ60/bgXu/oe0VaLOMb2qVIrSr21uiWtIO89a1xMIaOrJ5P75l09TatBJ
-	 9t4kjuHuKT1b8UJUYb3KLOQ9GUR4kSxOvjhPcf44o6+gYZ0Oz2UpF4ltgSIAyUntxa
-	 k+BKmpEz3VXLQ==
-Date: Wed, 11 Jun 2025 12:38:30 +0200
-From: Alexey Gladkov <legion@kernel.org>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, Petr Pavlu <petr.pavlu@suse.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] kbuild: extract modules.builtin.modinfo from
- vmlinux.unstripped
-Message-ID: <aElcpj7sC2XUiMPb@example.org>
-References: <20250606041029.614348-1-masahiroy@kernel.org>
- <20250606041029.614348-5-masahiroy@kernel.org>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="LhtajO8m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=uGMU
+	MHxFQCUGsonCVqrahKBjFMn8KED3ThrrX01SBSs=; b=LhtajO8mJC5W7DZ5RSm+
+	n2lXHw2rOP8PjpeWZBE4YEd1BLYfC8iYCZMrTyBt8GHQ/ZK5k7jIcOnMfAqYTJnr
+	OmapZ7LEb3WHgqdvUCdKlbqRhYfLlYh+KHrmZbL3NrU2qOLu2jFVP0q5Dnd2uCSg
+	PPRT99V9HpvePYVaYUxiK+90La7rnY2qyhSF/iRwpzr1tpW19/Yl1NK5cY/ypkEJ
+	PXvNFP39SdGjLAsSSdmW8LG4uu8tAXSW5PHL3ef1cJbYSV2SuvxArKr3dFawHx76
+	iyR4D0+ZSQpK6VKrhIlSE9Zxq9ua7/bsVx8u2/VO7YKNnWR8WSS+o//ZWCVWcdNJ
+	Yg==
+Received: (qmail 3206855 invoked from network); 11 Jun 2025 12:39:45 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 11 Jun 2025 12:39:45 +0200
+X-UD-Smtp-Session: l3s3148p1@1/9obkk3bpwujnuC
+Date: Wed, 11 Jun 2025 12:39:44 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 1/5] pinctrl: renesas: use new GPIO line value setter
+ callbacks
+Message-ID: <aElc8A6JI5639Qv2@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250611-gpiochip-set-rv-pinctrl-renesas-v1-0-ad169a794ef0@linaro.org>
+ <20250611-gpiochip-set-rv-pinctrl-renesas-v1-1-ad169a794ef0@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="NfXtYj+XXyXC+0Dn"
+Content-Disposition: inline
+In-Reply-To: <20250611-gpiochip-set-rv-pinctrl-renesas-v1-1-ad169a794ef0@linaro.org>
+
+
+--NfXtYj+XXyXC+0Dn
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250606041029.614348-5-masahiroy@kernel.org>
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 06, 2025 at 01:10:26PM +0900, Masahiro Yamada wrote:
-> Currently, we assume all the data for modules.builtin.modinfo are
-> available in vmlinux.o.
-> 
-> This makes it impossible for modpost, which is invoked after vmlinux.o,
-> to add additional module info.
-> 
-> This commit moves the modules.builtin.modinfo rule after modpost.
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
-> 
->  scripts/Makefile.vmlinux   | 28 +++++++++++++++++++++++++++-
->  scripts/Makefile.vmlinux_o | 26 +-------------------------
->  2 files changed, 28 insertions(+), 26 deletions(-)
-> 
-> diff --git a/scripts/Makefile.vmlinux b/scripts/Makefile.vmlinux
-> index e2ceeb9e168d..45597068f11f 100644
-> --- a/scripts/Makefile.vmlinux
-> +++ b/scripts/Makefile.vmlinux
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  
->  PHONY := __default
-> -__default: vmlinux
-> +__default:
+On Wed, Jun 11, 2025 at 09:27:52AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>=20
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
+>=20
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-I found the problem. The problem I was talking about earlier [1] is caused
-by this hunk. If I revert it, everything will work.
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-[1] https://lore.kernel.org/all/aEWhwur_W6UwDsx_@example.org/
 
->  include include/config/auto.conf
->  include $(srctree)/scripts/Kbuild.include
-> @@ -96,6 +96,32 @@ targets += vmlinux
->  vmlinux: vmlinux.unstripped FORCE
->  	$(call if_changed,strip_relocs)
->  
-> +# modules.builtin.modinfo
-> +# ---------------------------------------------------------------------------
-> +
-> +OBJCOPYFLAGS_modules.builtin.modinfo := -j .modinfo -O binary
-> +
-> +targets += modules.builtin.modinfo
-> +modules.builtin.modinfo: vmlinux.unstripped FORCE
-> +	$(call if_changed,objcopy)
-> +
-> +# modules.builtin
-> +# ---------------------------------------------------------------------------
-> +
-> +__default: modules.builtin
-> +
-> +# The second line aids cases where multiple modules share the same object.
-> +
-> +quiet_cmd_modules_builtin = GEN     $@
-> +      cmd_modules_builtin = \
-> +	tr '\0' '\n' < $< | \
-> +	sed -n 's/^[[:alnum:]:_]*\.file=//p' | \
-> +	tr ' ' '\n' | uniq | sed -e 's:^:kernel/:' -e 's/$$/.ko/' > $@
-> +
-> +targets += modules.builtin
-> +modules.builtin: modules.builtin.modinfo FORCE
-> +	$(call if_changed,modules_builtin)
-> +
->  # modules.builtin.ranges
->  # ---------------------------------------------------------------------------
->  ifdef CONFIG_BUILTIN_MODULE_RANGES
-> diff --git a/scripts/Makefile.vmlinux_o b/scripts/Makefile.vmlinux_o
-> index b024ffb3e201..23c8751285d7 100644
-> --- a/scripts/Makefile.vmlinux_o
-> +++ b/scripts/Makefile.vmlinux_o
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  
->  PHONY := __default
-> -__default: vmlinux.o modules.builtin.modinfo modules.builtin
-> +__default: vmlinux.o
->  
->  include include/config/auto.conf
->  include $(srctree)/scripts/Kbuild.include
-> @@ -73,30 +73,6 @@ vmlinux.o: $(initcalls-lds) vmlinux.a $(KBUILD_VMLINUX_LIBS) FORCE
->  
->  targets += vmlinux.o
->  
-> -# modules.builtin.modinfo
-> -# ---------------------------------------------------------------------------
-> -
-> -OBJCOPYFLAGS_modules.builtin.modinfo := -j .modinfo -O binary
-> -
-> -targets += modules.builtin.modinfo
-> -modules.builtin.modinfo: vmlinux.o FORCE
-> -	$(call if_changed,objcopy)
-> -
-> -# modules.builtin
-> -# ---------------------------------------------------------------------------
-> -
-> -# The second line aids cases where multiple modules share the same object.
-> -
-> -quiet_cmd_modules_builtin = GEN     $@
-> -      cmd_modules_builtin = \
-> -	tr '\0' '\n' < $< | \
-> -	sed -n 's/^[[:alnum:]:_]*\.file=//p' | \
-> -	tr ' ' '\n' | uniq | sed -e 's:^:kernel/:' -e 's/$$/.ko/' > $@
-> -
-> -targets += modules.builtin
-> -modules.builtin: modules.builtin.modinfo FORCE
-> -	$(call if_changed,modules_builtin)
-> -
->  # Add FORCE to the prerequisites of a target to force it to be always rebuilt.
->  # ---------------------------------------------------------------------------
->  
-> -- 
-> 2.43.0
-> 
+--NfXtYj+XXyXC+0Dn
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Rgrds, legion
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmhJXOwACgkQFA3kzBSg
+KbYNww//XBad062sJcpw+QFkihlJ6boWzPKkoYT1qBJpn0StpPCp1BflSvkwhk/O
+oJednrEeXd8YfKvkF5LT7wcTdhKu8MRx1eHLEFRcTkU7k4Y6Qh8Et8xJqbgKanRI
+M2STDzNRdfo3ykhTk7fmi2ss3d0gNguTitQ+ib6tbgjGbukRJZNYT0/CGrLvyhKz
+YzTohhau1dMjjKPmrEDmDoghPsmtNV8U9otoRCeBw5zSWyJzOmBwcpSW/fysA0zI
+H077aVOHWzSmyIFnarjzq1zR1S5J1wozpJrty1UiSGskJJj5GjU+VZGGXanI6Weh
+lyRW5MIkHgabE8cyNwiu/YA3wG3NNIvb4UIVb7DFHWMr4k21ZXDRltfshaEj9lMr
+vuti5MX8D77+kERM3/6w/s5PJyR0CfQCOrPJa3XWI2c7Fr7FHYJJAayIOgKrA2Pg
+OW7uA9Vq3JC/qVsriBzimyCd3eotYi+Tuo0FiU1VXLPVFn+sIQwYdiBHO6hmbTrp
+KpNN7nMsK2zVsmmsOji3YIczvihq+aQjpZHQo3U4pufAt82A1+49rEPuf0+z43Zu
+N6zFaTAqRKO9OG/aRwjZLWM6AKyOfogjP1PL73LtRe2JlYrQqQJu9JITNjqb/JNd
+Q76LXz5VylAuD1716iUeqOL6w6DzA3GVaBrjoSgLryIN2kRJ5pI=
+=kJLV
+-----END PGP SIGNATURE-----
+
+--NfXtYj+XXyXC+0Dn--
