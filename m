@@ -1,86 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01CF2E611B
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 12:46:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA61272E63;
+	Wed, 11 Jun 2025 12:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749645987; cv=none; b=RmqFETEyG5g56Mk+Z1FZsOSQ5UsjyxBzszronkBcMI1CP7kjT7OIxBNFype0IOm3K81XsFuqk9e+MNDFaPmFi3GrwrCEkFdiokfMtrDKEuOtB32NHfaKMp4zJTdRUq3AuyRJtHTaAHcrXyZdLMm1HJsh9oQb80tT1C9ER+6v38k=
+	t=1749646067; cv=none; b=ecg0TUZpO+rcXebpKQAG5vksd1UeDunb5Z4/fodXLLW8XPtCQuanpjamiz0TIYxTL3I7lcXNzUYNJ368F9HEx/v3R9f5bomMDWIt7jkpSK/Y94R70rm1n3/WJifUgoum9FRZPz1j2NRQZFJHt5t+VejQMz2o7z7Od3Coz8SLNR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749645987; c=relaxed/simple;
-	bh=Pb53XUnfjjR6lu6hoIuxvpaaA+sk6sa2o6bpiQWtwic=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kWA3nwvZ+9Dv/Rsigpi1l1n/lXfBvcCF16UJArzJW9aiNsjl5P19xZjRjl8mHpXofBqqWLNreHDnVqpoWSc6m4Nt7jHaX52aLFOn3oMzrAM9xEVGwAygwZ2sfHFLhvH1SR8xGVFImx3F9DJYV87dor8XErU6tNw4R+gvihxkV6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sKIDC+Cl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749646067; c=relaxed/simple;
+	bh=58wWmn/AAv0t5U67CJoTQL76p41O7pOXAuazZpFO0rU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=rEKiMn2EVZJ7/22NRyWpV+gJVcGmOgYH9LMY8MKHmMLcoapXZm/tCL/kYB0epu+7GEK5yJrgMYHgHN+NGA8adoBXLcGfweOhzOGv1vXM6TnZjT+hOEnNmJ19Wg8ggHB5572r78L5q7ITE6vpMC/lZkuMIfK86wD4zy7qn7dG6Fo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Id8G1AAP; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sKIDC+Cl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AD03C4CEEE;
-	Wed, 11 Jun 2025 12:46:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749645987;
-	bh=Pb53XUnfjjR6lu6hoIuxvpaaA+sk6sa2o6bpiQWtwic=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sKIDC+ClSzn1Ua1TJS1YKb1AYW8i3qJyUvfyExo3patxL3XW7T+jXh5YussTiFqG2
-	 B43K9L8yvRhKp8m+Hep7MpWOK7L+/di665cuzZXcLomtNqckWVFJ4oXZempFM8xgHc
-	 QafHD1xrOPpKoKeXYnCbiNrcG/nchqCihZnDEIZPbUXAGVuOqibiX6QtGhJen8UO9b
-	 YoRj+EG0UKkMPJy3ueywu2zKBfqekHCeE+IA6LVP5T1riNBuFzZRNVXbm1jZ6mcFul
-	 0EbDrV4nrmrLZy4G3QUF8kzjxnoe9j1ULhujl1UGyGDmzZ4xJUHwHd/DDYyByMsZgT
-	 JjlepvcpcRamQ==
-Date: Wed, 11 Jun 2025 13:46:20 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: catalin.marinas@arm.com, pcc@google.com, will@kernel.org,
-	anshuman.khandual@arm.com, joey.gouly@arm.com, maz@kernel.org,
-	oliver.upton@linux.dev, frederic@kernel.org,
-	hardevsinh.palaniya@siliconsignals.io, samuel.holland@sifive.com,
-	palmer@rivosinc.com, charlie@rivosinc.com,
-	thiago.bauermann@linaro.org, bgray@linux.ibm.com,
-	tglx@linutronix.de, puranjay@kernel.org, david@redhat.com,
-	yang@os.amperecomputing.com, mbenes@suse.cz,
-	joel.granados@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 5/7] tools/kselftest: add MTE_STORE_ONLY feature hwcap
- test
-Message-ID: <ea71432c-edbf-419a-bb5a-37da5b09caa0@sirena.org.uk>
-References: <20250611094802.929332-1-yeoreum.yun@arm.com>
- <20250611094802.929332-6-yeoreum.yun@arm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Id8G1AAP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749646066; x=1781182066;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=58wWmn/AAv0t5U67CJoTQL76p41O7pOXAuazZpFO0rU=;
+  b=Id8G1AAPxs6CNhDg2/ieLSBFRUyYWB33osXHhg5iTncsM4hoUXSAbBeh
+   lmjcz19T2WfUQWG/jtaNJjLZpyy59W7SG9+4yt5ewo0cFy6XhWUWf/+m7
+   ywl+7gWMskPGbiAvTnccH19471Bcc8mBInqCnpyVwWO0oxGgcBRkKFZRx
+   qYIulEbYbNvQYqfIuXafqbo9fqFLtE3o3HssxRByZuduZ448gX6GE7XeB
+   +m4cfhPk6ht5GuFbmNMDS0R+q4NfhI7k2zbkCttjuOYOJbz6YUgyIfB+Q
+   GkTdisDlHzkgCx2jzZc3Xyzo8p9EvjHyE3xVYS80dILrlRDQD9Om6ZpYz
+   Q==;
+X-CSE-ConnectionGUID: 20o2LHJ7Rhu/3qPWucYPNg==
+X-CSE-MsgGUID: f5iT5ZgnSQ6/jh0kFhRw5g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="51499827"
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="51499827"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 05:47:46 -0700
+X-CSE-ConnectionGUID: AhtYIV9MR1WC5kP6ZWyYfA==
+X-CSE-MsgGUID: dmI2UtMxTAil53awZIlCvg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="152467978"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.183])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 05:47:43 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 11 Jun 2025 15:47:38 +0300 (EEST)
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+cc: gregkh@linuxfoundation.org, linux-serial@vger.kernel.org, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 22/33] serial: 8250: extract serial8250_set_ier()
+In-Reply-To: <20250611100319.186924-23-jirislaby@kernel.org>
+Message-ID: <0c8d8cf2-03fd-b65d-9dc1-b8529e46cd3f@linux.intel.com>
+References: <20250611100319.186924-1-jirislaby@kernel.org> <20250611100319.186924-23-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="N9Jq5vTIEkplfAUq"
-Content-Disposition: inline
-In-Reply-To: <20250611094802.929332-6-yeoreum.yun@arm.com>
-X-Cookie: No skis take rocks like rental skis!
+Content-Type: multipart/mixed; boundary="8323328-1986209817-1749646058=:957"
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
---N9Jq5vTIEkplfAUq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--8323328-1986209817-1749646058=:957
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On Wed, Jun 11, 2025 at 10:48:00AM +0100, Yeoreum Yun wrote:
-> add MTE_STORE_ONLY feature hwcap test.
+On Wed, 11 Jun 2025, Jiri Slaby (SUSE) wrote:
 
-Subject line doesn't match the usual style, otherwise
+> serial8250_do_set_termios() consists of many registers and up flags
+> settings. Extract all these into separate functions. This time, setting
+> of IER.
+>=20
+> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+> ---
+>  drivers/tty/serial/8250/8250_port.c | 31 ++++++++++++++++-------------
+>  1 file changed, 17 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/825=
+0/8250_port.c
+> index 6bb7f004d607..2c045a4369fc 100644
+> --- a/drivers/tty/serial/8250/8250_port.c
+> +++ b/drivers/tty/serial/8250/8250_port.c
+> @@ -2752,6 +2752,22 @@ static void serial8250_set_errors_and_ignores(stru=
+ct uart_port *port, struct kte
+>  =09=09port->ignore_status_mask |=3D UART_LSR_DR;
+>  }
+> =20
+> +static void serial8250_set_ier(struct uart_port *port, struct ktermios *=
+termios)
+> +{
+> +=09struct uart_8250_port *up =3D up_to_u8250p(port);
+> +
+> +=09/* CTS flow control flag and modem status interrupts */
+> +=09up->ier &=3D ~UART_IER_MSI;
+> +=09if (!(up->bugs & UART_BUG_NOMSR) && UART_ENABLE_MS(&up->port, termios=
+->c_cflag))
+> +=09=09up->ier |=3D UART_IER_MSI;
+> +=09if (up->capabilities & UART_CAP_UUE)
+> +=09=09up->ier |=3D UART_IER_UUE;
+> +=09if (up->capabilities & UART_CAP_RTOIE)
+> +=09=09up->ier |=3D UART_IER_RTOIE;
+> +
+> +=09serial_port_out(port, UART_IER, up->ier);
+> +}
+> +
+>  void
+>  serial8250_do_set_termios(struct uart_port *port, struct ktermios *termi=
+os,
+>  =09=09          const struct ktermios *old)
+> @@ -2780,20 +2796,7 @@ serial8250_do_set_termios(struct uart_port *port, =
+struct ktermios *termios,
+>  =09serial8250_set_afe(port, termios);
+>  =09uart_update_timeout(port, termios->c_cflag, baud);
+>  =09serial8250_set_errors_and_ignores(port, termios);
+> -
+> -=09/*
+> -=09 * CTS flow control flag and modem status interrupts
+> -=09 */
+> -=09up->ier &=3D ~UART_IER_MSI;
+> -=09if (!(up->bugs & UART_BUG_NOMSR) &&
+> -=09=09=09UART_ENABLE_MS(&up->port, termios->c_cflag))
+> -=09=09up->ier |=3D UART_IER_MSI;
+> -=09if (up->capabilities & UART_CAP_UUE)
+> -=09=09up->ier |=3D UART_IER_UUE;
+> -=09if (up->capabilities & UART_CAP_RTOIE)
+> -=09=09up->ier |=3D UART_IER_RTOIE;
+> -
+> -=09serial_port_out(port, UART_IER, up->ier);
+> +=09serial8250_set_ier(port, termios);
+> =20
+>  =09if (up->capabilities & UART_CAP_EFR) {
+>  =09=09unsigned char efr =3D 0;
+>=20
 
-Reviewed-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
---N9Jq5vTIEkplfAUq
-Content-Type: application/pgp-signature; name="signature.asc"
+--=20
+ i.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhJepsACgkQJNaLcl1U
-h9Ds8Af+PUYw26pjKbOjxWOkTwg8nU84B6wNH+uwRAbw+spY9QrvZMFxOQQrAS+8
-IqFjS8WTVj4it9uLc8CaLN1vLnu7oCPpaXsEJiZQ4jrVQ1beIkvR+aBa4LPG0QRk
-ylsYfQK0L3QcpEOAwV8HelLPqstHExzZc3GAFmbpa9Ml8WMEw+4DnnCzbFO6UWOV
-I3Z7viptW8bgJgSXJR3uhhzDXi7hgUvT3TKATRyDgcp+NyWBxpevPnYiVWEhj6XX
-sHjHdZXP1JRVPZI9S9oA2yE8yw6B/CoJsHFWDZhAf2FMxwdK8n5iz0DZgzk7HljH
-UJZYVKNRSI63CtXo/bEOouObcSDI4A==
-=EHzP
------END PGP SIGNATURE-----
-
---N9Jq5vTIEkplfAUq--
+--8323328-1986209817-1749646058=:957--
