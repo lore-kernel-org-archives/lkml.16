@@ -1,108 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E019D261362
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 13:02:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE695284B36;
+	Wed, 11 Jun 2025 13:02:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749646963; cv=none; b=tdUpG6ia8T8qA7iwsQu2DEBjAjEkErB/iBjlyIV8q/GTHHc3B0basbgZhJbXG89qpztx/wznLHZDRl5dCBgUpgvFhC4Mx8k+GJKN1IysEeoYD6Ce6bRXJq4CRa9H1zdXfHIfw2/vt0RyWyPWx2jJtbYcuShf5k2mZ58/VUHasmk=
+	t=1749646972; cv=none; b=BBHwnwnzz/rRrBkC65d2VHgHDBaipx6S3XjTIyyD1hjP2HgtDLhYf7hB3XVOeLlJguYD/ZoT4v3FRnQoXCJoVj3/+aznvqFp4gJ+K2WsMUiAdWzBKSdWJqsLMgIcP4tfilHLTRF9/gXZ+K3TXRd96JhAq6KjETAUcqHmhgXMz8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749646963; c=relaxed/simple;
-	bh=mPSaLB0O4YFKypvEUw2xr1HF7HiKMj7ghM8XCkascqA=;
+	s=arc-20240116; t=1749646972; c=relaxed/simple;
+	bh=GWYTVxKC93YJVMhVzanm/CX1o4JT55CaAW87EgvJi2k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZZCoDSCRwqPKEVsPkDV4j4zUSySBndSG2t3SBH/lzknQYFloto2RkuNbdvDIMu7PGQu3/2RxgEGR+hGkgQdZKLGgTdMOP9fDWJRVfXlzLrSbSXP/w7UpfVLDADZuO/EwaK1UHcnGT83UI2KYCcUoT8HdHSe992hE3uglnKec7EY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bTum4QFi; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ci+F7hVuPNhEddKSNmRNWvItHlBFK1kchnLJn9z90JZo/VQLwkNbWebqTN9ZUng9C8I7f2kJZPPcQTblSWPPrKFGCY5F6VLHvqNOmEe0clyjST1GfCZ6GlBOX93YuJdNrGvvzzUWy5EJjCmsB1/HYs7vfs8k4Vmxn5DkhgzKKxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hG2DfL5J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bTum4QFi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FF9AC4CEEE;
-	Wed, 11 Jun 2025 13:02:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hG2DfL5J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1C76C4CEEE;
+	Wed, 11 Jun 2025 13:02:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749646962;
-	bh=mPSaLB0O4YFKypvEUw2xr1HF7HiKMj7ghM8XCkascqA=;
+	s=k20201202; t=1749646972;
+	bh=GWYTVxKC93YJVMhVzanm/CX1o4JT55CaAW87EgvJi2k=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bTum4QFi0Ja6rGHlIiaXajUns7aQUJyHvQcI8Go2nEAkykZsm3LJmhYfB2H6XLTYm
-	 QIEgUDiGFKw+Zrw25JNZ/eZIKgho+dXxOSjrFDFhxbdF1bPgiVv2NT0uKie2QukNlD
-	 xCvMAUKtNWj9fxRqHZL4EXSw6pecBC8XyWsEWX/rzIlcA8j+OGJHoIArqN4+0FAG9+
-	 yPzj9gU/GF52S/eFesEUkeeAsJhUsjrp+PzbE6OwvKLxJX3J7E5gZsyNqjF6Oqb1vr
-	 y0aXh1Kng6N/PNiohKoNK7aTaHROoY4IEfjAv1Tt799bzRGf58B3f5yc7u2w8L0iqL
-	 /cx9xVHVZZ8AQ==
-Date: Wed, 11 Jun 2025 14:02:35 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: catalin.marinas@arm.com, pcc@google.com, will@kernel.org,
-	anshuman.khandual@arm.com, joey.gouly@arm.com, maz@kernel.org,
-	oliver.upton@linux.dev, frederic@kernel.org,
-	hardevsinh.palaniya@siliconsignals.io, samuel.holland@sifive.com,
-	palmer@rivosinc.com, charlie@rivosinc.com,
-	thiago.bauermann@linaro.org, bgray@linux.ibm.com,
-	tglx@linutronix.de, puranjay@kernel.org, david@redhat.com,
-	yang@os.amperecomputing.com, mbenes@suse.cz,
-	joel.granados@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 7/7] kselftest/arm64/mte: add MTE_STORE_ONLY testcases
-Message-ID: <c613b941-063e-450f-a38f-c16248e95e81@sirena.org.uk>
-References: <20250611094802.929332-1-yeoreum.yun@arm.com>
- <20250611094802.929332-8-yeoreum.yun@arm.com>
+	b=hG2DfL5JR+8qDvnZmSLi/lKndMr1EnbHqsT75jBCcqxPrs46YBWQs78lBKvfIE+aC
+	 Ft54mn2k1z/VL94FG/gGRpAFTrRaNC2WrIJddrIdSTxXBdhZ11poBFM5GyIKizdlje
+	 XLei3+O+DuE8lYoCRgHIF7PTD81y3M8EX7/gvgRuJe7aWmOSpRkCP450dZW1rVp1Z+
+	 271mRK0wm/Wxo+Pbymb6PpDzhp7/YZF5km8FQlnR2xbYKftcYV784uiCDkHso6pVrU
+	 yVZ1Vy0MKOlQ4a+FR2WvVC+7/32bydLAzh0g3S0E3MX5pQZwhALd++Sh1U+r04u37P
+	 Y8AgWtX7mANzQ==
+Date: Wed, 11 Jun 2025 18:32:43 +0530
+From: Sumit Garg <sumit.garg@kernel.org>
+To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
+Cc: Jens Wiklander <jens.wiklander@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Apurupa Pattapu <quic_apurupa@quicinc.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Harshal Dev <quic_hdev@quicinc.com>, linux-arm-msm@vger.kernel.org,
+	op-tee@lists.trustedfirmware.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v5 05/12] tee: increase TEE_MAX_ARG_SIZE to 4096
+Message-ID: <aEl-c-eoezGYKOpE@sumit-X1>
+References: <20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-0-024e3221b0b9@oss.qualcomm.com>
+ <20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-5-024e3221b0b9@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="kfXM4mrCaBVYOJD6"
-Content-Disposition: inline
-In-Reply-To: <20250611094802.929332-8-yeoreum.yun@arm.com>
-X-Cookie: No skis take rocks like rental skis!
-
-
---kfXM4mrCaBVYOJD6
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-5-024e3221b0b9@oss.qualcomm.com>
 
-On Wed, Jun 11, 2025 at 10:48:02AM +0100, Yeoreum Yun wrote:
+On Mon, May 26, 2025 at 11:56:50PM -0700, Amirreza Zarrabi wrote:
+> Increase TEE_MAX_ARG_SIZE to accommodate worst-case scenarios where
+> additional buffer space is required to pass all arguments to TEE.
+> This change is necessary for upcoming support for Qualcomm TEE, which
+> requires a larger buffer for argument marshaling.
+> 
+> Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
+> ---
+>  include/uapi/linux/tee.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-> @@ -144,7 +178,7 @@ static int check_file_memory_mapping(int mem_type, in=
-t mode, int mapping, int ta
->  			close(fd);
->  			return KSFT_FAIL;
->  		}
-> -		result =3D check_mte_memory(ptr, sizes[run], mode, tag_check, atag_che=
-ck);
-> +		result =3D check_mte_memory(ptr, sizes[run], mode, tag_check, atag_che=
-ck, tag_op);
->  		mte_clear_tags((void *)ptr, sizes[run]);
->  		munmap((void *)map_ptr, map_size);
->  		close(fd);
+Reviewed-by: Sumit Garg <sumit.garg@oss.qualcomm.com>
 
-check_file_memory_mapping() looks like it also has the issue from the
-other series with skips being upgraded to fails, looks like there's more
-instances.
+-Sumit
 
-> @@ -106,11 +115,11 @@ int main(void)
->  	int i;
-> =20
->  	ksft_print_header();
-> -	ksft_set_plan(5);
-> +	ksft_set_plan(8);
-> =20
-
-This should probably have been ARRAY_SIZE() to start off with, sorry.
-
---kfXM4mrCaBVYOJD6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhJfmoACgkQJNaLcl1U
-h9BhCAf9HHfyEm6lx/QcH1cq7zU7HaQjxqIgIbv0jy3orlOnCpSDeHnMV+ugDfPJ
-eaewrydpOczLgRj7uAhpcPcd7EvP5pIMJwuBBnK/q8ojxmWzcBKMLKcE0Sq6l6eR
-w+RGsn0RmgBteHcOAM72MT/GyJ+94VIhlC0Yw/SzBsebOM6tdpI1GQ7QrG2XbkC0
-7Y3wsD38xajqLRak2GD2jrxMPG86G1WJyx7NIhE+cnfWcaWCNMTcYjSc98pozrlo
-t0CjVPxZ/m+EwrXjwFKbQra/1YgpezOtQassGUkiDvEAdPr6mQIRAHNCvB2A/AiW
-BC6NnmkMJnziA4pt7FJwRqCLePA0PQ==
-=s4ow
------END PGP SIGNATURE-----
-
---kfXM4mrCaBVYOJD6--
+> 
+> diff --git a/include/uapi/linux/tee.h b/include/uapi/linux/tee.h
+> index 441d97add53f..71a365afb89b 100644
+> --- a/include/uapi/linux/tee.h
+> +++ b/include/uapi/linux/tee.h
+> @@ -42,7 +42,7 @@
+>  #define TEE_IOC_MAGIC	0xa4
+>  #define TEE_IOC_BASE	0
+>  
+> -#define TEE_MAX_ARG_SIZE	1024
+> +#define TEE_MAX_ARG_SIZE	4096
+>  
+>  #define TEE_GEN_CAP_GP		(1 << 0)/* GlobalPlatform compliant TEE */
+>  #define TEE_GEN_CAP_PRIVILEGED	(1 << 1)/* Privileged device (for supplicant) */
+> 
+> -- 
+> 2.34.1
+> 
+> 
