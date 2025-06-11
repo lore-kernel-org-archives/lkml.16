@@ -1,186 +1,139 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9169186A;
-	Wed, 11 Jun 2025 03:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D06186A
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 03:33:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749612754; cv=none; b=OWXlM/uNa2TfZInpXV2FYm1RCN1k08siyXoikslaBKkSGNll8L7enElTsc8IoOZ4z6nM/YbLwx8+i7r9o7umR78UmixlEHfV97iGJ7unaQpufRcwLyyCxHMtrvCtbSgFJW3t0AwrTAsWIytaUlpjYPhSVC3OIIZsCPm94wLOtzc=
+	t=1749612794; cv=none; b=s/xB5A/xbmWBNjO7FmirH1WxtJkDVNeyDKKuf7HyyAjtLxrrZE5cJopP9paQ9F83Aj4pMNYcGC5FppBBXp9KGvjxTZ8TGICcw1MXFoDY3CD/cd0cHjsKNj3f2/VyogAmLXDNp/ud+0WAEFOuTdK+ufdikQIrMNaaO235KK9iYAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749612754; c=relaxed/simple;
-	bh=1E/wjok6CGwwgtqBs99Yk4TdTKJQWmkuSCyoxzkv1wI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lUdjLIOiuXxGPug8n6sm0PB2Q60gZjWXu5J2u9/aj3WFrRDq7tfF53LL3kYaLEFO+T9yvVZIcj6UyPO4RsmmeA2boIkgdcL8hGXR6UwL0DmiESkdD8mLl6LqXjIfHTaQYVOR+eWQbaLxgI9yROepLSFqkdHeYCMBiiTTGCqVHg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lKO6vSi1; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749612794; c=relaxed/simple;
+	bh=NQHQJvOSYCt8Cpz1y9moJUqKuT4AgQFA9yUAGnMNGxc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VzWRZyvhQBcgd7jMIdM4Uq6SEokOymSAqceWp4UcjvQEoNbWvUfDjm0e+m30MQILt7gY+pQfuXnxxPQEbO35yDH3uoZA9eliLuQoKWxYJC0//zpVjSuW/Tx2XxZQoJLt7syOdvIbbZgoa5OAZ5x6eQox9+oxtGa9f9p8l8H3zY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZJBu8pbD; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lKO6vSi1"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a4fd1ba177so307474f8f.0;
-        Tue, 10 Jun 2025 20:32:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749612751; x=1750217551; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nLenIOOCLQXfsIRKzbAicYiRT1mXnLSvtehG1XdOuXw=;
-        b=lKO6vSi1/MI3Tz6r7fT1bc1gpxgHvUTloI7SGcGsORyIM3KKZ+eP61jPUFS4kDEL10
-         J1N0B0t9jjOSdkFPlHN2x4JSErccTnv4s3ey5TIXKWKt7fwuNahs5zuwmecIL6uhO/xl
-         Mx6YkyeHbL9J1WKkeTo+80cDCVrv7uFuM6F0helCsH1AMpYWI4eKyC8AmEbUg36+G2vt
-         SZp/JEnwU0E6Sdk/EeHtkpl0yieZaBwkZYnwHpps+3OJOxYPKep9Oe6HoQ+J2z79brM3
-         PYmDMPuyqTVm8flHS1ul97OHqRivOEtcErNaSoUjjTtmsn53f7T0vi5blBiEJIq4ok2c
-         dYuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749612751; x=1750217551;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nLenIOOCLQXfsIRKzbAicYiRT1mXnLSvtehG1XdOuXw=;
-        b=OpHVZpeJirHzPrh8o5072We9uWX40yl5+5Ug0ubpMb2Cxz7fCrvpgRdSvBTezWNhmp
-         U1wSo7X6pASYxpe21lqcfB8H2yKrKg4AT82YSAb9JzIg6IAQKOe/xLpQqgmWwnFq6Y7H
-         SS4MXxEvjjd+5lBPyxEtUKNj70zu0wX9FpM0PEBMhhac0zHn3CFSssZVYsXvX7ZbKIMa
-         76pU91O7ZjcxY+p1pnBxEhvcq2vZFWuObers6HPtSN+6mbUsyZunAFt8FtK3eZVy8jJv
-         tlldVqdpRoIo+RFPQEXKqQ+tB8YytNuLXDW5sCjRHWY4e9VFQyTiBc12CUFQers+WtvQ
-         F9Zw==
-X-Forwarded-Encrypted: i=1; AJvYcCU+dZrxwY/v0i/E/sLUaRkwhDMhkhBu0g0NwvPDMX7RJ0WNZxM6AWh4g3fKjR9NE8ihHoc=@vger.kernel.org, AJvYcCVaSmLpUnYdun2uqkx2KIqWw1auT/3BQjb0oZLDAYOtOlw7L1WTdHsOZbj2Yn6sqPfWJkGfAt/sy+b81Afy@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGUKnq4keXjhF5OBnZrGnn36ChYhXGm2Qa9rEd1V3CqCDxVmad
-	/trJpcHisrtWAdjcdMhMXujAFmgfWgPMhSXSRbxj5jucODyHtkk6AETameaU/wYzZMHpfYG5m/l
-	zXrhoz6srMuuo98hUfHDvDEubtKGaTVA=
-X-Gm-Gg: ASbGncuxmOuDslDRaQ6j7mVusFD03IxaxAn8G5qAT6BKCR3zxiWs3p4bql7XU+UrGnc
-	3aUfJffTYfSrTRA1Hf+3ZBMJ2niH0EP6uZppdkH8xcqzOxgEDL1uvPAgX2ZZib6Xte/oKTs5r0c
-	1gb4AG12NyhYSSoq9VtxdqRuS6rd5k1TOs/8y1Iuv06el9pyXo6nry9yYQ7pYWa+7mxtYgJwuO
-X-Google-Smtp-Source: AGHT+IH/r58d0YG7LtQz9Os1cCp4W28yg6nFPp8bPRjmdKTBD8o5lW2KoBCX4QfjTf911mmlc2+WvBofQjVI+4GjbLw=
-X-Received: by 2002:a05:6000:2405:b0:3a5:281b:9fac with SMTP id
- ffacd0b85a97d-3a5582431f7mr1118417f8f.17.1749612751076; Tue, 10 Jun 2025
- 20:32:31 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZJBu8pbD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749612791;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LjhWuRqG4Vf2vK8i68w6rrFsWSfkC5uO+M7mBT5HrjI=;
+	b=ZJBu8pbDVMV9SrF/ff+cioKbV4mdY2TZCfS0tD2NNS7O9nD3NtlFdWBwIJii8bx+24oxQa
+	gtr8ZGBn4XkWkhjthztgsExe570pTZed5RWfSdFA5Ozl58tDZ7BMnLa06thB1Coyjf7yEM
+	IEeGFn47ekf7FbaVBQsZ4JWuc+9PUlU=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-76-5U5kZEH1Ms6i82wFkQNpDg-1; Tue,
+ 10 Jun 2025 23:33:09 -0400
+X-MC-Unique: 5U5kZEH1Ms6i82wFkQNpDg-1
+X-Mimecast-MFC-AGG-ID: 5U5kZEH1Ms6i82wFkQNpDg_1749612787
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D4FBE195608A;
+	Wed, 11 Jun 2025 03:33:06 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.181])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4499219560A3;
+	Wed, 11 Jun 2025 03:33:04 +0000 (UTC)
+Date: Wed, 11 Jun 2025 11:33:00 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Kairui Song <kasong@tencent.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+	Hugh Dickins <hughd@google.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Kemeng Shi <shikemeng@huaweicloud.com>,
+	Chris Li <chrisl@kernel.org>, Nhat Pham <nphamcs@gmail.com>,
+	Barry Song <baohua@kernel.org>, Usama Arif <usamaarif642@gmail.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] mm/shmem, swap: fix softlockup with mTHP swapin
+Message-ID: <aEj47L/qO+llWcvH@MiWiFi-R3L-srv>
+References: <20250610181645.45922-1-ryncsn@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528034712.138701-1-dongml2@chinatelecom.cn>
-In-Reply-To: <20250528034712.138701-1-dongml2@chinatelecom.cn>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 10 Jun 2025 20:32:20 -0700
-X-Gm-Features: AX0GCFtkUmz4z26cipOWR3NlyYNmRVyLxzGnqs4BY6NbTkQ2hzmnJshZZYUpsOE
-Message-ID: <CAADnVQ+G+mQPJ+O1Oc9+UW=J17CGNC5B=usCmUDxBA-ze+gZGw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 00/25] bpf: tracing multi-link support
-To: Menglong Dong <menglong8.dong@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Jiri Olsa <jolsa@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Menglong Dong <dongml2@chinatelecom.cn>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250610181645.45922-1-ryncsn@gmail.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Tue, May 27, 2025 at 8:49=E2=80=AFPM Menglong Dong <menglong8.dong@gmail=
-.com> wrote:
->
-> 1. Add per-function metadata storage support.
-> 2. Add bpf global trampoline support for x86_64.
-> 3. Add bpf global trampoline link support.
-> 4. Add tracing multi-link support.
-> 5. Compatibility between tracing and tracing_multi.
+On 06/11/25 at 02:16am, Kairui Song wrote:
+> From: Kairui Song <kasong@tencent.com>
+> 
+> Following softlockup can be easily reproduced on my test machine with:
+> 
+> echo always > /sys/kernel/mm/transparent_hugepage/hugepages-64kB/enabled
+> swapon /dev/zram0 # zram0 is a 48G swap device
+> mkdir -p /sys/fs/cgroup/memory/test
+> echo 1G > /sys/fs/cgroup/test/memory.max
+> echo $BASHPID > /sys/fs/cgroup/test/cgroup.procs
+> while true; do
+>     dd if=/dev/zero of=/tmp/test.img bs=1M count=5120
+>     cat /tmp/test.img > /dev/null
+>     rm /tmp/test.img
+> done
+> 
+> Then after a while:
+> watchdog: BUG: soft lockup - CPU#0 stuck for 763s! [cat:5787]
+> Modules linked in: zram virtiofs
+> CPU: 0 UID: 0 PID: 5787 Comm: cat Kdump: loaded Tainted: G             L      6.15.0.orig-gf3021d9246bc-dirty #118 PREEMPT(voluntary)·
+> Tainted: [L]=SOFTLOCKUP
+> Hardware name: Red Hat KVM/RHEL-AV, BIOS 0.0.0 02/06/2015
+> RIP: 0010:mpol_shared_policy_lookup+0xd/0x70
+> Code: e9 b8 b4 ff ff 31 c0 c3 cc cc cc cc 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 66 0f 1f 00 0f 1f 44 00 00 41 54 55 53 <48> 8b 1f 48 85 db 74 41 4c 8d 67 08 48 89 fb 48 89 f5 4c 89 e7 e8
+> RSP: 0018:ffffc90002b1fc28 EFLAGS: 00000202
+> RAX: 00000000001c20ca RBX: 0000000000724e1e RCX: 0000000000000001
+> RDX: ffff888118e214c8 RSI: 0000000000057d42 RDI: ffff888118e21518
+> RBP: 000000000002bec8 R08: 0000000000000001 R09: 0000000000000000
+> R10: 0000000000000bf4 R11: 0000000000000000 R12: 0000000000000001
+> R13: 00000000001c20ca R14: 00000000001c20ca R15: 0000000000000000
+> FS:  00007f03f995c740(0000) GS:ffff88a07ad9a000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f03f98f1000 CR3: 0000000144626004 CR4: 0000000000770eb0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> PKRU: 55555554
+> Call Trace:
+>  <TASK>
+>  shmem_alloc_folio+0x31/0xc0
+>  shmem_swapin_folio+0x309/0xcf0
+>  ? filemap_get_entry+0x117/0x1e0
+>  ? xas_load+0xd/0xb0
+>  ? filemap_get_entry+0x101/0x1e0
+>  shmem_get_folio_gfp+0x2ed/0x5b0
+>  shmem_file_read_iter+0x7f/0x2e0
+>  vfs_read+0x252/0x330
+>  ksys_read+0x68/0xf0
+>  do_syscall_64+0x4c/0x1c0
+>  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> RIP: 0033:0x7f03f9a46991
+> Code: 00 48 8b 15 81 14 10 00 f7 d8 64 89 02 b8 ff ff ff ff eb bd e8 20 ad 01 00 f3 0f 1e fa 80 3d 35 97 10 00 00 74 13 31 c0 0f 05 <48> 3d 00 f0 ff ff 77 4f c3 66 0f 1f 44 00 00 55 48 89 e5 48 83 ec
+> RSP: 002b:00007fff3c52bd28 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+> RAX: ffffffffffffffda RBX: 0000000000040000 RCX: 00007f03f9a46991
+> RDX: 0000000000040000 RSI: 00007f03f98ba000 RDI: 0000000000000003
+> RBP: 00007fff3c52bd50 R08: 0000000000000000 R09: 00007f03f9b9a380
+> R10: 0000000000000022 R11: 0000000000000246 R12: 0000000000040000
+> R13: 00007f03f98ba000 R14: 0000000000000003 R15: 0000000000000000
+>  </TASK>
+> 
+> The reason is simple, readahead brought some order 0 folio in swap cache,
+> and the swapin mTHP folio being allocated is in confict with it, so
+                                                  ^^^typo, conflict
 
-...
+> swapcache_prepare fails and causes shmem_swap_alloc_folio to return
+> -EEXIST, and shmem simply retries again and again causing this loop.
+> 
+> Fix it by applying a similar fix for anon mTHP swapin.
+> 
+......snip...
 
-> ... and I think it will be a
-> liberation to split it out to another series :/
-
-There are lots of interesting ideas here and you know
-already what the next step should be...
-Split it into small chunks.
-As presented it's hard to review and even if maintainers take on
-that challenge the set is unlandable, since it spans various
-subsystems.
-
-In a small reviewable patch set we can argue about
-approach A vs B while the current set has too many angles
-to argue about.
-Like the new concept of global trampoline.
-It's nice to write bpf_global_caller() in asm
-compared to arch_prepare_bpf_trampoline() that emits asm
-on the fly, but it seems the only thing where it truly
-needs asm is register save/restore. The rest can be done in C.
-I suspect the whole gtramp can be written in C.
-There is an attribute(interrupt) that all compilers support...
-or use no attributes and inline asm for regs save/restore ?
-or attribute(naked) and more inline asm ?
-
-> no-mitigate + hash table mode
-> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> nop     | fentry    | fm_single | fm_all    | km_single | km_all
-> 9.014ms | 162.378ms | 180.511ms | 446.286ms | 220.634ms | 1465.133ms
-> 9.038ms | 161.600ms | 178.757ms | 445.807ms | 220.656ms | 1463.714ms
-> 9.048ms | 161.435ms | 180.510ms | 452.530ms | 220.943ms | 1487.494ms
-> 9.030ms | 161.585ms | 178.699ms | 448.167ms | 220.107ms | 1463.785ms
-> 9.056ms | 161.530ms | 178.947ms | 445.609ms | 221.026ms | 1560.584ms
-
-...
-
-> no-mitigate + function padding mode
-> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> nop     | fentry    | fm_single | fm_all    | km_single | km_all
-> 9.320ms | 166.454ms | 184.094ms | 193.884ms | 227.320ms | 1441.462ms
-> 9.326ms | 166.651ms | 183.954ms | 193.912ms | 227.503ms | 1544.634ms
-> 9.313ms | 170.501ms | 183.985ms | 191.738ms | 227.801ms | 1441.284ms
-> 9.311ms | 166.957ms | 182.086ms | 192.063ms | 410.411ms | 1489.665ms
-> 9.329ms | 166.332ms | 182.196ms | 194.154ms | 227.443ms | 1511.272ms
->
-> The overhead of fentry_multi_all is a little higher than the
-> fentry_multi_single. Maybe it is because the function
-> ktime_get_boottime_ns(), which is used in bpf_testmod_bench_run(), is als=
-o
-> traced? I haven't figured it out yet, but it doesn't matter :/
-
-I think it matters a lot.
-Looking at patch 25 the fm_all (in addition to fm_single) only
-suppose to trigger from ktime_get_boottime,
-but for hash table mode the difference is huge.
-10M bpf_fentry_test1() calls are supposed to dominate 2 calls
-to ktime_get and whatever else is called there,
-but this is not what numbers tell.
-
-Same discrepancy with kprobe_multi. 7x difference has to be understood,
-since it's a sign that the benchmark is not really measuring
-what it is supposed to measure. Which casts doubts on all numbers.
-
-Another part is how come fentry is 20x slower than nop.
-We don't see it in the existing bench-es. That's another red flag.
-
-You need to rethink benchmarking strategy. The bench itself
-should be spotless. Don't invent new stuff. Add to existing benchs.
-They already measure nop, fentry, kprobe, kprobe-multi.
-
-Then only introduce a global trampoline with a simple hash tab.
-Compare against current numbers for fentry.
-fm_single has to be within couple percents of fentry.
-Then make fm_all attach to everything except funcs that bench trigger calls=
-.
-fm_all has to be exactly equal to fm_single.
-If the difference is 2.5x like here (180 for fm_single vs 446 for fm_all)
-something is wrong. Investigate it and don't proceed without full
-understanding.
-
-And only then introduce 5 byte special insn that indices into
-an array for fast access to metadata.
-Your numbers are a bit suspicious, but they show that fm_single
-with hash tab is the same speed as the special kfunc_md_arch_support().
-Which is expected.
-With fm_all that triggers small set of kernel function
-in a tight benchmark loop the performance of hashtab vs special
-should _also_ be the same, because hashtab will perform O(1) lookup
-that is hot in the cache (or hashtab has bad collisions and should be fixed=
-).
-fm_all should have the same speed as fm_single too,
-because bench will only attach to things outside of the tight bench loop.
-So attaching to thousands of kernel functions that are not being
-triggered by the benchmark should not affect results.
-
-The performance advantage of special kfunc_md_arch_support()
-can probably only be seen in production when fentry.multi attaches
-to thousands of kernel functions and random functions are called.
-Then hash tab cache misses will be noticeable vs direct access.
-There will be cache misses in both cases, but significantly more misses
-for hash tab. Only then we can decide where special stuff is truly necessar=
-y.
-So patches 2 and 3 are really last. After everything had already landed.
