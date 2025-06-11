@@ -1,335 +1,208 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18E32E611B;
-	Wed, 11 Jun 2025 11:49:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CFBB2E613D
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:50:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749642571; cv=none; b=UwyDpRlUOnC+XthCrpx0tM86LRB1YQ3ibCfd37aOO5WTin2XBfEJm/2+mXDY3ZyaYrG3KZwfyHYMzNVYp4JcC+TGgJbv/Viy7Z8snPz4bwgCu5WDLCe+wCcAegzaNXB8Nevrc9AGfDPt6MTfEJmqmwxTOx0K9nzmXC5RUzWpSzc=
+	t=1749642609; cv=none; b=j5tH7IJC0AGcdJM9uzF63FUQ30LYLCrZy8pM/m9OAa8EN33/NKohs16JdfqV64ktsu96qKd7oR6N/16WDsBZYB4HKgGQTFXNwzvreBFGULT+U3JiBYSJ/ANNidIsVzmDWQoMMqRVoiCHoigVMjXaYnjeLjm88IqvIa0NGM9a9Es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749642571; c=relaxed/simple;
-	bh=AuV1sbkvV6me8J9YURc/SUOK6IBHhelqaiEVy4c4ZEM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ENRUgUoYNNQ6IC0abG34gkhOlwhK/xHX3Cxys3szvY5cC7+vF3D17n3R3EWt4Fq9IgqAjwdSO6iVUprpRU3A9Ii2OKc2QH9hyC78s2Neuw7zQd2pUJ6TcOtnO7Q+7AWstg8PpD80mCzXSSZrW4GavIJY+iv0Ct8cNoprrQR0ldc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iV43ZDb6; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749642609; c=relaxed/simple;
+	bh=CWu6A+I1LjwFmAU+PAVS8KxvwoMO5RZ75mLuP8WTIVU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JqtBGAonkd3eBpGYy4Dl1jAkfcXOVSExnc3+R0IOx0+53zTpCENqYK0OtYDFQAlWgxlUdD6iQHBB2oo21cHzuSnZOClYITJK6CcfqIMGuAOZl2zX2hjeR/L1CtDAMg/R6OCNT64Jjv67g235lgkRukuO8o7bWuZ7+nqjCKYngtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sb37f9LJ; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iV43ZDb6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749642570; x=1781178570;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=AuV1sbkvV6me8J9YURc/SUOK6IBHhelqaiEVy4c4ZEM=;
-  b=iV43ZDb6YpxkV2ca6W7kn2eLtvf7SdDLLmbpryq+gFHxUOw+792KQX2k
-   0/aS1nBpzImgHuYseqjIdK4tjWs0hBTuXcAkcsU5C+wggQvnQ5Vqa6QBD
-   DAUzidojhBctG5bpcJTO7IWljiTkrAKdCW4JNwZU6K9RjSXdOVZeLd8BV
-   6lb3qBGZmqBL6uIGuo0pceojYKb8wXDf0EDcDWJt5cxNsbWGi3ThQnHqs
-   yfQMX7nYb5207oG0efszX1XSjdjzju0VoePCr5r3Z/NjQofLPl/zUvbnV
-   udcGjOs5gEQI5CdEEIJTxwBK4yRAo23Q54uNxernn3mOaCApOzCQp9DBx
-   w==;
-X-CSE-ConnectionGUID: pzYPZGT1RTmAyClB6GrQAA==
-X-CSE-MsgGUID: 4hFHfO5gSAKtvLRX+6wsDw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="39400851"
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="39400851"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 04:49:17 -0700
-X-CSE-ConnectionGUID: uhaPBnlMRNCWDnv1/G+TvA==
-X-CSE-MsgGUID: 4HFYnJJZT3aRwg3UQNPX6A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="147089132"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.183])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 04:49:16 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 11 Jun 2025 14:49:11 +0300 (EEST)
-To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-cc: gregkh@linuxfoundation.org, linux-serial@vger.kernel.org, 
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 12/33] serial: 8250: move RSA functions to 8250_rsa.c
-In-Reply-To: <20250611100319.186924-13-jirislaby@kernel.org>
-Message-ID: <12af3273-a8b3-d88e-3c5a-290595e346a2@linux.intel.com>
-References: <20250611100319.186924-1-jirislaby@kernel.org> <20250611100319.186924-13-jirislaby@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sb37f9LJ"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-23649faf69fso83075ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 04:50:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749642607; x=1750247407; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Yr1jR2n/3+iHKJOEuEz4EzcjD/8G3U4J0+bvzR27Ds4=;
+        b=Sb37f9LJlSx+VSo1tUG6kGvgPCAXzq3eauDw/pcaZ3+RLB+pJWMj9umz7EiaUXkAp0
+         sVQv1P5XIoAUvKSfv6J10v1lrg3p5grMzoyJ5wbCE74Cvqv0MPrYxtZPj3oxcNbv+lQB
+         G9TX8JcNOq87ENKZXJsFAhOBNCoidpap3nofnM1a8AVQsW0/Eujgfj+FFZOs2SwyfOXX
+         DbZ54WbxEOGyjdRonq/n/9jvO3Kn+XTXQLl1FFAdcwdIJM7AX6LZCVecr0bL1iA9LDIt
+         HnkwKMkRBp3ePGkUNxXLQpztdHsyFPygWt0WzFPYb/094pP1J4+SJtwjU2XiGBBG5mtF
+         c7wQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749642607; x=1750247407;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Yr1jR2n/3+iHKJOEuEz4EzcjD/8G3U4J0+bvzR27Ds4=;
+        b=G4AnUTOrJXFqD0DSSIDw6FNNTknkIUqcjIfaF4xAUMHFfIlKTuaUlZPWJ1BpUMRN5C
+         7mP/MiYiKFVa12B9WnudEe2E1LpiM1O1ljNgc/uVjNtyhIeoqv7FsWvlWPUoSS5VG1Q+
+         oRGP3AlVG0BgX7sOarlxboQK+gcbfCKlR7BV5p0+GjekEdAkD7lWsytySzpLTQxuS7C+
+         SNvCcAASR2uiNcCg75hA/N7fnjDTyxQ+dxrrwCgt32tTnODrUQ1UR4hURNjv4EKaVm9c
+         hZc7Wo//JcaaQtMesUx2yphzX6BOt+jtFUlhtijAEALhCN8i7tjq8QVsrbBVzE+JCaIM
+         OvJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW5vD+zL4a55zOdOyQyzqwZk+RYKMT/KLi/3wY/WsdYzMNgd8nVjmbjzI4Nb3rMd5Z0lcWpOdE/bobnzYk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4yYqmrfTv/3MVZqokje9ZW2FFdU7Vre+2VyGL1Qag1PKZqFVM
+	U+l3uAhpgy1/DZVKU3ObdgkvsYVE6izrjZPbux9d+0eInjGPwpugVXgT
+X-Gm-Gg: ASbGnctqL7Mt2izbIbKJDa7qZ2Jf3NSqNwcWNQqWtweHVAv3yQbYarD/det59gn3TaU
+	FJ1Xvm+lIb8K5eeJngzVre0ZAE5cEbaHrA/nm7wKc04PDyua9zCQJtlQCi3Wzp/Z7By8wQwYM5J
+	gwUnaAbO1QteVFl2+di0+h/LPFA0GuahnF+T/OgbV2GqFtFUEAPI9aZu57gZwcx6y1Lsfamaece
+	VpnNuBujIciu4Kn8CvnD3Bpiex9+mYGTtpfnY8h4y1n+YNMWf2NNA3tj06xbl4EQteQmOPdBoL4
+	S26taKDDduzvQBEAzK/ozv/OxYb/7kKSlbufoqqQ1Sn76ooYqblkuT762Ks06Q==
+X-Google-Smtp-Source: AGHT+IH0mXPNVgqbjYeHRojtDfwaw37TfHsCnjGPZ7Ak5dI5UXEfPx4VvV1LNaJqLCESUv+gq00Mdw==
+X-Received: by 2002:a17:903:1b10:b0:235:f143:9b07 with SMTP id d9443c01a7336-23641a8ac0emr42538815ad.5.1749642607279;
+        Wed, 11 Jun 2025 04:50:07 -0700 (PDT)
+Received: from localhost ([216.228.127.130])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236032fceb2sm85893185ad.96.2025.06.11.04.50.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 04:50:06 -0700 (PDT)
+Date: Wed, 11 Jun 2025 07:50:04 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: I Hsin Cheng <richard120310@gmail.com>
+Cc: jstultz@google.com, tglx@linutronix.de, sboyd@kernel.org,
+	linux-kernel@vger.kernel.org, yurynorov@gmail.com,
+	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev,
+	jserv@ccns.ncku.edu.tw
+Subject: Re: [PATCH v3] clocksource: Replace loop within
+ clocks_calc_mult_shift() with find_last_bit() for calculation of "sftacc"
+Message-ID: <aEltbEpA7US9h8qN@yury>
+References: <20250611073608.2049793-1-richard120310@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1686644607-1749642551=:957"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611073608.2049793-1-richard120310@gmail.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-1686644607-1749642551=:957
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Wed, 11 Jun 2025, Jiri Slaby (SUSE) wrote:
-
-> They are RSA-specific, so should live in a preexisting 8250_rsa.c. Move
-> them there.
->=20
-> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-
-No unexpected change found in the diff-of-diffs,
-
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
---=20
- i.
-
+On Wed, Jun 11, 2025 at 03:36:08PM +0800, I Hsin Cheng wrote:
+> Utilize "find_last_bit()" in replacement of while loop counting
+> for the decremenet of "sftacc". They're equivalent in computation result
+> but the former is more effective.
+> 
+> "find_last_bit()" will return the bit number of the last set bit of
+> "tmp", which is 0-based index. Plus 1 to convert it into bit width as
+> desired.
+> 
+> Note that only the lowest 32 bits of "tmp" is taken into consideration
+> of the operation, since it was already shifted right by 32 bits, the
+> topmost 32 bits should remain 0, only the lowest 32 bits are possible to
+> be non-zero.
+> 
+> This change is tested against a test script [1].
+> Run the test 10 times for each version of implementation and take the
+> average. The result shown that with this change, the operation overhead
+> of "clocks_calc_mult_shift()" can be reduced around 99.7% .
+> 
+> -----------------------------
+> | old version | new version |
+> -----------------------------
+> |  11500.6 ns |       44 ns |
+> -----------------------------
+> 
+> Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
 > ---
->  drivers/tty/serial/8250/8250.h      |  8 +++
->  drivers/tty/serial/8250/8250_port.c | 99 -----------------------------
->  drivers/tty/serial/8250/8250_rsa.c  | 92 +++++++++++++++++++++++++++
->  3 files changed, 100 insertions(+), 99 deletions(-)
->=20
-> diff --git a/drivers/tty/serial/8250/8250.h b/drivers/tty/serial/8250/825=
-0.h
-> index 18530c31a598..cfe6ba286b45 100644
-> --- a/drivers/tty/serial/8250/8250.h
-> +++ b/drivers/tty/serial/8250/8250.h
-> @@ -318,8 +318,16 @@ static inline void serial8250_pnp_exit(void) { }
-> =20
->  #ifdef CONFIG_SERIAL_8250_RSA
->  void univ8250_rsa_support(struct uart_ops *ops);
-> +void rsa_enable(struct uart_8250_port *up);
-> +void rsa_disable(struct uart_8250_port *up);
-> +void rsa_autoconfig(struct uart_8250_port *up);
-> +void rsa_reset(struct uart_8250_port *up);
->  #else
->  static inline void univ8250_rsa_support(struct uart_ops *ops) { }
-> +static inline void rsa_enable(struct uart_8250_port *up) {}
-> +static inline void rsa_disable(struct uart_8250_port *up) {}
-> +static inline void rsa_autoconfig(struct uart_8250_port *up) {}
-> +static inline void rsa_reset(struct uart_8250_port *up) {}
->  #endif
-> =20
->  #ifdef CONFIG_SERIAL_8250_FINTEK
-> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/825=
-0/8250_port.c
-> index d8a90818f431..476f5fc50237 100644
-> --- a/drivers/tty/serial/8250/8250_port.c
-> +++ b/drivers/tty/serial/8250/8250_port.c
-> @@ -713,105 +713,6 @@ static void serial8250_clear_IER(struct uart_8250_p=
-ort *up)
->  =09=09serial_out(up, UART_IER, 0);
->  }
-> =20
-> -#ifdef CONFIG_SERIAL_8250_RSA
-> -/*
-> - * Attempts to turn on the RSA FIFO.  Returns zero on failure.
-> - * We set the port uart clock rate if we succeed.
-> - */
-> -static int __rsa_enable(struct uart_8250_port *up)
-> -{
-> -=09unsigned char mode;
-> -=09int result;
-> -
-> -=09mode =3D serial_in(up, UART_RSA_MSR);
-> -=09result =3D mode & UART_RSA_MSR_FIFO;
-> -
-> -=09if (!result) {
-> -=09=09serial_out(up, UART_RSA_MSR, mode | UART_RSA_MSR_FIFO);
-> -=09=09mode =3D serial_in(up, UART_RSA_MSR);
-> -=09=09result =3D mode & UART_RSA_MSR_FIFO;
-> -=09}
-> -
-> -=09if (result)
-> -=09=09up->port.uartclk =3D SERIAL_RSA_BAUD_BASE * 16;
-> -
-> -=09return result;
-> -}
-> -
-> -/*
-> - * If this is an RSA port, see if we can kick it up to the higher speed =
-clock.
-> - */
-> -static void rsa_enable(struct uart_8250_port *up)
-> -{
-> -=09if (up->port.type !=3D PORT_RSA)
-> -=09=09return;
-> -
-> -=09if (up->port.uartclk !=3D SERIAL_RSA_BAUD_BASE * 16) {
-> -=09=09uart_port_lock_irq(&up->port);
-> -=09=09__rsa_enable(up);
-> -=09=09uart_port_unlock_irq(&up->port);
-> -=09}
-> -=09if (up->port.uartclk =3D=3D SERIAL_RSA_BAUD_BASE * 16)
-> -=09=09serial_out(up, UART_RSA_FRR, 0);
-> -}
-> -
-> -/*
-> - * Attempts to turn off the RSA FIFO and resets the RSA board back to 11=
-5kbps compat mode. It is
-> - * unknown why interrupts were disabled in here. However, the caller is =
-expected to preserve this
-> - * behaviour by grabbing the spinlock before calling this function.
-> - */
-> -static void rsa_disable(struct uart_8250_port *up)
-> -{
-> -=09unsigned char mode;
-> -=09int result;
-> -
-> -=09if (up->port.type !=3D PORT_RSA)
-> -=09=09return;
-> -
-> -=09if (up->port.uartclk !=3D SERIAL_RSA_BAUD_BASE * 16)
-> -=09=09return;
-> -
-> -=09uart_port_lock_irq(&up->port);
-> -=09mode =3D serial_in(up, UART_RSA_MSR);
-> -=09result =3D !(mode & UART_RSA_MSR_FIFO);
-> -
-> -=09if (!result) {
-> -=09=09serial_out(up, UART_RSA_MSR, mode & ~UART_RSA_MSR_FIFO);
-> -=09=09mode =3D serial_in(up, UART_RSA_MSR);
-> -=09=09result =3D !(mode & UART_RSA_MSR_FIFO);
-> -=09}
-> -
-> -=09if (result)
-> -=09=09up->port.uartclk =3D SERIAL_RSA_BAUD_BASE_LO * 16;
-> -=09uart_port_unlock_irq(&up->port);
-> -}
-> -
-> -static void rsa_autoconfig(struct uart_8250_port *up)
-> -{
-> -=09/* Only probe for RSA ports if we got the region. */
-> -=09if (up->port.type !=3D PORT_16550A)
-> -=09=09return;
-> -=09if (!(up->probe & UART_PROBE_RSA))
-> -=09=09return;
-> -
-> -=09if (__rsa_enable(up))
-> -=09=09up->port.type =3D PORT_RSA;
-> -}
-> -
-> -static void rsa_reset(struct uart_8250_port *up)
-> -{
-> -=09if (up->port.type !=3D PORT_RSA)
-> -=09=09return;
-> -
-> -=09serial_out(up, UART_RSA_FRR, 0);
-> -}
-> -#else
-> -static inline void rsa_enable(struct uart_8250_port *up) {}
-> -static inline void rsa_disable(struct uart_8250_port *up) {}
-> -static inline void rsa_autoconfig(struct uart_8250_port *up) {}
-> -static inline void rsa_reset(struct uart_8250_port *up) {}
-> -#endif /* CONFIG_SERIAL_8250_RSA */
-> -
->  /*
->   * This is a quickie test to see how big the FIFO is.
->   * It doesn't work at all the time, more's the pity.
-> diff --git a/drivers/tty/serial/8250/8250_rsa.c b/drivers/tty/serial/8250=
-/8250_rsa.c
-> index 4c8b9671bd41..59d2ecf23068 100644
-> --- a/drivers/tty/serial/8250/8250_rsa.c
-> +++ b/drivers/tty/serial/8250/8250_rsa.c
-> @@ -107,6 +107,98 @@ void univ8250_rsa_support(struct uart_ops *ops)
->  module_param_hw_array(probe_rsa, ulong, ioport, &probe_rsa_count, 0444);
->  MODULE_PARM_DESC(probe_rsa, "Probe I/O ports for RSA");
-> =20
-> +/*
-> + * Attempts to turn on the RSA FIFO.  Returns zero on failure.
-> + * We set the port uart clock rate if we succeed.
-> + */
-> +static int __rsa_enable(struct uart_8250_port *up)
-> +{
-> +=09unsigned char mode;
-> +=09int result;
+> Changelog:
+> 
+> v1 -> v2:
+> 	- Refine commit message to explain more about "why"
+> 	- Check the frequency of "clocks_calc_mult_shift()" get called,
+> 	  it's not in hotpath on my machine, refine the commit message
+> to avoid overselling it
+> 	- Add comments for the code to explain the implementation in
+> 	  more detail
+> 	- Handle case for "tmp == 0" to avoid undefined behavior
+> v2 -> v3:
+> 	- Use "find_last_bit()" instead of "__builtin_clz()"
+> 	- Convert the type of "tmp" to "const unsigned long *" when
+> 	  sending into the function
+> 	- Highlight in the comment that only the lowest 32 bits part
+> 	  of "tmp" is taken into consideration
+> 
+> [1]:
+> static int __init test_init(void)
+> {
+>     u32 mult, shift;
+>     u32 from, to, maxsec;
+>     ktime_t start_time, end_time, total_time;
+>     pr_info("Starting clocks_calc_mult_shift simple test\n");
+> 
+>     start_time = ktime_get();
+>     // Test with parameters from 1 to 1000
+>     for (from = 1; from <= 1000; from += 100) {
+>         for (to = 1; to <= 1000; to += 100) {
+>             for (maxsec = 1; maxsec <= 10; maxsec++) {
+> 
+>                 clocks_calc_mult_shift(&mult, &shift, from, to, maxsec);
+>             }
+>         }
+>     }
+> 
+>     end_time = ktime_get();
+>     total_time = ktime_to_ns(ktime_sub(end_time, start_time));
+> 
+>     pr_info("Test completed\n");
+>     pr_info("Total execution time: %lld ns \n", total_time);
+>     return 0;
+> }
+> 
+> The test is running in the form of kernel module.
+> The test machine is running ubuntu 24.04 on x86_64 machine with kernel
+> version of v6.14.0, CPU type is AMD Ryzen 7 5700X3D 8-Core Processor.
+> 
+> Hi John, Yury,
+> 
+> Would you be so kind to give some suggestion/comments on how should the
+> usage of "find_last_bit()" be here ? I'm not sure about whether the type
+> conversion of "tmp" is appropriate, though compiler will pop out warnings
+> if not doing so.
+> 
+> Plus I'm thinking converting to another pointer type might might be correct
+> when the endianess isn't guaranteed ? (or this endianess problem should be
+> address and solved in filesystem layer ?)
+> 
+> Best regards,
+> I Hsin Cheng.
+> ---
+>  kernel/time/clocksource.c | 18 ++++++++++++++----
+>  1 file changed, 14 insertions(+), 4 deletions(-)
+> 
+> diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
+> index 2a7802ec480c..651bed1a53e7 100644
+> --- a/kernel/time/clocksource.c
+> +++ b/kernel/time/clocksource.c
+> @@ -66,10 +66,20 @@ clocks_calc_mult_shift(u32 *mult, u32 *shift, u32 from, u32 to, u32 maxsec)
+>  	 * range:
+>  	 */
+>  	tmp = ((u64)maxsec * from) >> 32;
+> -	while (tmp) {
+> -		tmp >>=1;
+> -		sftacc--;
+> -	}
 > +
-> +=09mode =3D serial_in(up, UART_RSA_MSR);
-> +=09result =3D mode & UART_RSA_MSR_FIFO;
-> +
-> +=09if (!result) {
-> +=09=09serial_out(up, UART_RSA_MSR, mode | UART_RSA_MSR_FIFO);
-> +=09=09mode =3D serial_in(up, UART_RSA_MSR);
-> +=09=09result =3D mode & UART_RSA_MSR_FIFO;
-> +=09}
-> +
-> +=09if (result)
-> +=09=09up->port.uartclk =3D SERIAL_RSA_BAUD_BASE * 16;
-> +
-> +=09return result;
-> +}
-> +
-> +/*
-> + * If this is an RSA port, see if we can kick it up to the higher speed =
-clock.
-> + */
-> +void rsa_enable(struct uart_8250_port *up)
-> +{
-> +=09if (up->port.type !=3D PORT_RSA)
-> +=09=09return;
-> +
-> +=09if (up->port.uartclk !=3D SERIAL_RSA_BAUD_BASE * 16) {
-> +=09=09uart_port_lock_irq(&up->port);
-> +=09=09__rsa_enable(up);
-> +=09=09uart_port_unlock_irq(&up->port);
-> +=09}
-> +=09if (up->port.uartclk =3D=3D SERIAL_RSA_BAUD_BASE * 16)
-> +=09=09serial_out(up, UART_RSA_FRR, 0);
-> +}
-> +
-> +/*
-> + * Attempts to turn off the RSA FIFO and resets the RSA board back to 11=
-5kbps compat mode. It is
-> + * unknown why interrupts were disabled in here. However, the caller is =
-expected to preserve this
-> + * behaviour by grabbing the spinlock before calling this function.
-> + */
-> +void rsa_disable(struct uart_8250_port *up)
-> +{
-> +=09unsigned char mode;
-> +=09int result;
-> +
-> +=09if (up->port.type !=3D PORT_RSA)
-> +=09=09return;
-> +
-> +=09if (up->port.uartclk !=3D SERIAL_RSA_BAUD_BASE * 16)
-> +=09=09return;
-> +
-> +=09uart_port_lock_irq(&up->port);
-> +=09mode =3D serial_in(up, UART_RSA_MSR);
-> +=09result =3D !(mode & UART_RSA_MSR_FIFO);
-> +
-> +=09if (!result) {
-> +=09=09serial_out(up, UART_RSA_MSR, mode & ~UART_RSA_MSR_FIFO);
-> +=09=09mode =3D serial_in(up, UART_RSA_MSR);
-> +=09=09result =3D !(mode & UART_RSA_MSR_FIFO);
-> +=09}
-> +
-> +=09if (result)
-> +=09=09up->port.uartclk =3D SERIAL_RSA_BAUD_BASE_LO * 16;
-> +=09uart_port_unlock_irq(&up->port);
-> +}
-> +
-> +void rsa_autoconfig(struct uart_8250_port *up)
-> +{
-> +=09/* Only probe for RSA ports if we got the region. */
-> +=09if (up->port.type !=3D PORT_16550A)
-> +=09=09return;
-> +=09if (!(up->probe & UART_PROBE_RSA))
-> +=09=09return;
-> +
-> +=09if (__rsa_enable(up))
-> +=09=09up->port.type =3D PORT_RSA;
-> +}
-> +
-> +void rsa_reset(struct uart_8250_port *up)
-> +{
-> +=09if (up->port.type !=3D PORT_RSA)
-> +=09=09return;
-> +
-> +=09serial_out(up, UART_RSA_FRR, 0);
-> +}
-> +
->  #ifdef CONFIG_SERIAL_8250_DEPRECATED_OPTIONS
->  #ifndef MODULE
->  /*
->=20
---8323328-1686644607-1749642551=:957--
+> +	/*
+> +	 * Decrement "sftacc" by the number of bits needed to represent "tmp".
+> +	 * Using "find_last_bit(&tmp, 32) + 1" to get the bit width:
+> +	 * - find_last_bit(&tmp, 32) returns the bit number of the last set bit
+> +	 * - Plus 1 to convert 0-based index into bit width as desired
+> +	 *
+> +	 * Note: Only the lowest 32 bits of "tmp" is taken into consideration,
+> +	 *		 since it was already shifted right by 32 bits, the topmost 32
+> +	 *		 bits are guaranteed to be 0.
+> +	 *
+> +	 */
+> +	if (sftacc)
+> +		sftacc -= (find_last_bit((const unsigned long *)&tmp, 32) + 1);
+
+1. sftacc is known to be 32. Comparing against 0 is useless.
+2. Just use __fls():
+        if (tmp)
+                sftacc -=__fls(tmp) + 1;
+
+>  
+>  	/*
+>  	 * Find the conversion shift/mult pair which has the best
+> -- 
+> 2.43.0
