@@ -1,56 +1,56 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8859522422F
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 17:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EFBB1E25F2
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 17:30:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749663021; cv=none; b=eDnVActeYs2yxxOrtcPTb/ibgq4vHy3ENIhlmHhm+GD+fPAEQri0l8WSSMPT0GTJ1lqpxisRK5BY/SC8M6ExYl+ERJJSvyctbfNBxE9pbFAHfs00jMfy8cUAYKawkKch57B/xCdEH+NPhcNL5BDtvLTZ0KbjYQ+YXvvhcrJmlcg=
+	t=1749663036; cv=none; b=oNbkPjSy1Dr9zA2LuV0dSdqkMfvDYNX3P6cxJwZ5jyxWOwsQuMwI3wnCt4K9PPzJlvqA0fVFEHPnPqZgDNwGjvJgt0ogTDb7o+yFK9NSFBdB1G+QVNV0MbM5De15aKIPMnlBs3461ZDhQy154z9Q1cpcRDYYBPoYpb1eSNv7U98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749663021; c=relaxed/simple;
-	bh=rhrfi7/7yEe9fGSTl6wltk5sJXQ8B3zVgDESowf09cQ=;
+	s=arc-20240116; t=1749663036; c=relaxed/simple;
+	bh=vNRGRinhyFToBiOjC7wbVvh1/gHG9xRZS8Ltocc5jv4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tkO9hkj0AC5mJtOTs4DqVKzYgHWkFHFXV7oOhZiSGHqMDBNfRAbXTqSgbdWvhWqHYOWhMyh42hBQSubvgc4ua3cqKIs9QJfRIQ68RiKMBkuG42RYCknBTz7xNn6JMNT0U7mSAUoI4BZdAktkSlCy+tBKUZltebN1a2X5DMVfTyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M2/kUrNj; arc=none smtp.client-ip=192.198.163.17
+	 Content-Type:Content-Disposition:In-Reply-To; b=so3XylmUPosZutboHq/CvWx4BSTHwup+cDB2vpyXgAHclvSleh6EzVyWYG85YVOh4nAWn1xImzmIWZB+cEOjioenRIoiYE2F5s0klcDabK4vIn/df08j9rwwRXLz+o4q+cUJNUF3Z8SbJElbEwkC3230gExWRJyylOac93IkQ2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cnvC3JY6; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M2/kUrNj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cnvC3JY6"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749663020; x=1781199020;
+  t=1749663035; x=1781199035;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=rhrfi7/7yEe9fGSTl6wltk5sJXQ8B3zVgDESowf09cQ=;
-  b=M2/kUrNjGqo7gD6LpdzeMsCarJ/y6u18rHin4ea2GiBRCnjTYsp2a5Zz
-   OYnJQE80dcbOVCXEP26zhiHr4QCYZ0R1dhi6VGFePkOuL8ccuKxoIXXZL
-   gYEaoA93aDHj/lq6/lmiuqPcZaJFH99KnFSRi/Dr900x5AfUGn4ao3S4r
-   1UhBP0tkHNn/39u8PbZePSebUq/aANWAhkmMjWCU/n2Yd68sVhxFtKZ+X
-   AwcHww9n3f2gc8VCYxjgOxtdJSPHCPPmgub/4cKX6aDbRz4eYdd/vyE58
-   FjiwpceFW3MIOck+vQHvZiaOK1caMbNZra3GH5ctHFX70LF1Cr/KUPxnp
-   A==;
-X-CSE-ConnectionGUID: gKnZ1KY6TLGpqaN3VNNuxw==
-X-CSE-MsgGUID: FxaOLthVTmmHfufY2yicSQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="51732970"
+  bh=vNRGRinhyFToBiOjC7wbVvh1/gHG9xRZS8Ltocc5jv4=;
+  b=cnvC3JY68259g/1uaKwF3jjVikr9CBy4YrUZxBTeyI5DsOCUW/qpz5tv
+   dWXBvUbzREj2RUCC2+mUPG6yIUZoQSKOxIiVH2HKr0/dwWyEH2ut6dyRc
+   tzNJ6m50PcQ83/TL977XPM81svYsuof2jXT4dM24FGOj3nEKQSPEOdmS8
+   Xh9OJt2O4ELKXG5dwsb2PtDEOV47DjGj+EOONpTZtBmshefjWK2uinD9x
+   dLbe/xEqwZtLUl/VzN/3tRUdeq6nmrppMdxJ0I0T8Ny4ZZv2ixQfveYG0
+   3GUxmaiPVyXrRltbgZK/ipsJfgynDD783Sq8eIHBgQ/cGduD1loBxpe/L
+   g==;
+X-CSE-ConnectionGUID: YpJHk1oWSZiA/H6eUXa5bQ==
+X-CSE-MsgGUID: MSa8634XRVit8s660y43sg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="51961822"
 X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
-   d="scan'208";a="51732970"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 10:30:19 -0700
-X-CSE-ConnectionGUID: IlChh2tUSaisxD/S1RHj0g==
-X-CSE-MsgGUID: oJhMY3pdQIeFakoSSYZmCg==
+   d="scan'208";a="51961822"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 10:30:35 -0700
+X-CSE-ConnectionGUID: 9AjrZvgJR6aSO7MjIj5UPQ==
+X-CSE-MsgGUID: sTQr29vbRCS2PatI7x5bIA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
-   d="scan'208";a="178168599"
+   d="scan'208";a="147140881"
 Received: from chhatrar-mobl.amr.corp.intel.com (HELO desk) ([10.125.146.46])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 10:30:19 -0700
-Date: Wed, 11 Jun 2025 10:30:18 -0700
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 10:30:34 -0700
+Date: Wed, 11 Jun 2025 10:30:33 -0700
 From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 To: x86@kernel.org
 Cc: David Kaplan <david.kaplan@amd.com>, linux-kernel@vger.kernel.org,
 	"H. Peter Anvin" <hpa@zytor.com>,
 	Josh Poimboeuf <jpoimboe@kernel.org>
-Subject: [PATCH v4 6/7] x86/its: Remove =stuff dependency on retbleed
-Message-ID: <20250611-eibrs-fix-v4-6-5ff86cac6c61@linux.intel.com>
+Subject: [PATCH v4 7/7] x86/its: Allow stuffing in eIBRS+retpoline mode also
+Message-ID: <20250611-eibrs-fix-v4-7-5ff86cac6c61@linux.intel.com>
 X-Mailer: b4 0.14.2
 References: <20250611-eibrs-fix-v4-0-5ff86cac6c61@linux.intel.com>
 Precedence: bulk
@@ -63,55 +63,55 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20250611-eibrs-fix-v4-0-5ff86cac6c61@linux.intel.com>
 
-Allow ITS to enable stuffing independent of retbleed. The dependency is
-only on retpoline. It is a valid case for retbleed to be mitigated by eIBRS
-while ITS deploys stuffing at the same time.
+After a recent restructuring of ITS mitigation, RSB stuffing can no
+longer be enabled in eIBRS+Retpoline mode. Before ITS, retbleed
+mitigation only allowed stuffing when eIBRS was not enabled. This was
+perfectly fine since eIBRS mitigates retbleed.
 
+However, RSB stuffing mitigation for ITS is still needed with eIBRS. The
+restructuring solely relies on retbleed to deploy stuffing, and does not
+allow it when eIBRS is enabled. This behavior is different from what was
+before the restructuring. Fix it by allowing stuffing in eIBRS+retpoline
+mode also.
+
+Fixes: 8c57ca583ebf ("x86/bugs: Restructure ITS mitigation")
+Closes: https://lore.kernel.org/lkml/20250519235101.2vm6sc5txyoykb2r@desk/
 Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 ---
- arch/x86/kernel/cpu/bugs.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ arch/x86/kernel/cpu/bugs.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 387610ad222d4dbd196bfb219145510a37979d73..31f3db0a514ea3d6e2513c0f6e072b84e0117f08 100644
+index 31f3db0a514ea3d6e2513c0f6e072b84e0117f08..bdef2c9aa1b8b85a8e0ee7c959ea7afde81d443e 100644
 --- a/arch/x86/kernel/cpu/bugs.c
 +++ b/arch/x86/kernel/cpu/bugs.c
-@@ -1467,13 +1467,8 @@ static void __init its_update_mitigation(void)
- 		break;
+@@ -1126,7 +1126,8 @@ static inline bool cdt_possible(enum spectre_v2_mitigation mode)
+ 	    !IS_ENABLED(CONFIG_MITIGATION_RETPOLINE))
+ 		return false;
+ 
+-	if (mode == SPECTRE_V2_RETPOLINE)
++	if (mode == SPECTRE_V2_RETPOLINE ||
++	    mode == SPECTRE_V2_EIBRS_RETPOLINE)
+ 		return true;
+ 
+ 	return false;
+@@ -1281,7 +1282,7 @@ static void __init retbleed_update_mitigation(void)
+ 
+ 	if (retbleed_mitigation == RETBLEED_MITIGATION_STUFF &&
+ 	    !cdt_possible(spectre_v2_enabled)) {
+-		pr_err("WARNING: retbleed=stuff depends on spectre_v2=retpoline\n");
++		pr_err("WARNING: retbleed=stuff depends on retpoline\n");
+ 		retbleed_mitigation = RETBLEED_MITIGATION_NONE;
  	}
  
--	/*
--	 * retbleed_update_mitigation() will try to do stuffing if its=stuff.
--	 * If it can't, such as if spectre_v2!=retpoline, then fall back to
--	 * aligned thunks.
--	 */
- 	if (its_mitigation == ITS_MITIGATION_RETPOLINE_STUFF &&
--	    retbleed_mitigation != RETBLEED_MITIGATION_STUFF)
-+	    !cdt_possible(spectre_v2_enabled))
- 		its_mitigation = ITS_MITIGATION_ALIGNED_THUNKS;
- 
- 	pr_info("%s\n", its_strings[its_mitigation]);
-@@ -1485,8 +1480,6 @@ static void __init its_apply_mitigation(void)
- 	case ITS_MITIGATION_OFF:
- 	case ITS_MITIGATION_AUTO:
- 	case ITS_MITIGATION_VMEXIT_ONLY:
--	/* its=stuff forces retbleed stuffing and is enabled there. */
--	case ITS_MITIGATION_RETPOLINE_STUFF:
+@@ -1454,6 +1455,7 @@ static void __init its_update_mitigation(void)
+ 		its_mitigation = ITS_MITIGATION_OFF;
  		break;
- 	case ITS_MITIGATION_ALIGNED_THUNKS:
- 		if (!boot_cpu_has(X86_FEATURE_RETPOLINE))
-@@ -1495,6 +1488,11 @@ static void __init its_apply_mitigation(void)
- 		setup_force_cpu_cap(X86_FEATURE_RETHUNK);
- 		set_return_thunk(its_return_thunk);
- 		break;
-+	case ITS_MITIGATION_RETPOLINE_STUFF:
-+		setup_force_cpu_cap(X86_FEATURE_RETHUNK);
-+		setup_force_cpu_cap(X86_FEATURE_CALL_DEPTH);
-+		set_return_thunk(call_depth_return_thunk);
-+		break;
- 	}
- }
- 
+ 	case SPECTRE_V2_RETPOLINE:
++	case SPECTRE_V2_EIBRS_RETPOLINE:
+ 		/* Retpoline+CDT mitigates ITS */
+ 		if (retbleed_mitigation == RETBLEED_MITIGATION_STUFF)
+ 			its_mitigation = ITS_MITIGATION_RETPOLINE_STUFF;
 
 -- 
 2.34.1
