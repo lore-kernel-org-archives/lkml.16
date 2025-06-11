@@ -1,110 +1,90 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E71165EFC
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 02:18:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ABC91779B8;
+	Wed, 11 Jun 2025 02:18:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749608313; cv=none; b=OnqLCBWMfYYUuKn9o3x7dI64ju1AyM5ZIE8omP13wvBqRPaKUr1yYnj4GDoD0TZdw/w0/IaSiOzYBrYEu/QqCaCcvbaCoAjt1/6+rHXa6rm6rFnCzWrSwGFH5LutzLSrNpyKzu8QJAB8Zur3edTM27mKP574JglaF6qWyn+kWzA=
+	t=1749608317; cv=none; b=qAyAbmmpI7l5ZztvfbGiGmUrm++EK9k0kaeSKQu2ljAxO+AuP57nyZxKtvORaQg16sc+GI6kbufT6B96wK4LqeXPqvRi5Cg3Ki7ApEqf9D9lsLLGOhKmg/NwwVr1CuRRnnLy8Omh3291Wk/32Nqh/2fJRKqH+xNEixbRtCKi2YE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749608313; c=relaxed/simple;
-	bh=A1VFeAvhgOC1yMtN7yIyjPHN3d7Ti6ibq7gtPR6jl6U=;
+	s=arc-20240116; t=1749608317; c=relaxed/simple;
+	bh=nJg3fXUbanYONt65/Z46lxZ+uzpCMjnN9glGRCq6Zjc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UURn4pO0dW4im/CTHF91GSDmFC274KYKnXh1ABDz6nGaUsNpgqfInbhrGhWXDPvVb1VCuFwu/XwvwOfupBH8tryyczwTcctKbUFvFrKgIVVijSNbkkZ0H42q7CxHuaa/ciKlYTrnOAsE/R4SB6tWiGHgpL9IMwLeboZCCE0N5Ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WrwnM+C5; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=oZGorSCc1ekXCI+yUN66yiV7DTnA9ixgZwZacMWD6lDKqpBsP+GQoZdlHDDuQIIwr1kOYsXxcz5s8hJHl7lU6cTR/UwpZPBpJI1zVh1/C3ZlhmBauSbXGjNSkmMNOYJV1Y11KjB9lbRrm5OA+keTLWeRU0UPKsQmb9bll/NUc1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=kN/3bCIW; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WrwnM+C5"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b26f7d2c1f1so5646114a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 19:18:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749608311; x=1750213111; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=BVzPT+QBa+W+93Jw6CnS8ATXdFQx76rd+QJAPEuwELM=;
-        b=WrwnM+C5gS3K6h39OPo0xbroKtmYSKvrQTB8inA/cHMPjFxA3/Xck8+dz0nAQEJcpj
-         nGH9hzS50hH1T+xQSupeRsZYD8+oIRHJs4vPOGiDwBfgU1GMR/EyUj6IW5MuvruIRqIm
-         20y4n4U1P2yHs3FgcMTKFEqEjgyXAOVVb+AxKcGPM8CXffSCTYXvlmcoO6XjtXhhTxjk
-         o3ZaAvX57KMGbHD6WwSZicKwQlExmARUZ2inZLRABHBV/KnhOjJlOAmakrD5ruhlXpPt
-         0Qi09WfF6G2hrRkqAX13zrpxstKI+Sii3ilY5p4X9Kk7GftAWgvb5K6jx6muolQUQlhj
-         hFgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749608311; x=1750213111;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BVzPT+QBa+W+93Jw6CnS8ATXdFQx76rd+QJAPEuwELM=;
-        b=ugXIuh40H4SuS/FXnB1EPK8cbR6JwgZmfiwyDZssm4P9eR7jvg0QK+zYw4+6aWoPv8
-         cgOZ1afusOB+T4UWpAViTUXtV08Kf8eb5f34ImDRHgjEJGhKfYPH4Pnn2R7Bl0IDryW+
-         OvMDIJYWc5ZfUXHI8+QKYbxHuJHIG9wUtxjGC/eTZUw+w4FNcpRgoQ9BvZjmbz0ZsrZQ
-         InQ4DU/wBDs5+IZP5MenPzNhciN+X+LLQoWuZdav/lkhCkpYVq+0bfQ9N7FM19X516gw
-         ZrFjJ2bk1DidRSbVZSnOwsyP+aWNWBltMlLW9xVoch8UXJlRWL3BXt3xxH55Ao/q6DE4
-         2N7w==
-X-Forwarded-Encrypted: i=1; AJvYcCWM1abx6tip8/AqzW3zfzHIkcQFLmifwXD9ycR2g4RHQeU3r5SIlJRDjP6ZN6Le3UWskoubvhDuSHTwS4I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrTqPf1iLM4qbXJj9AiVjUxa0KMUZaypxCAwMvDHMCJRu9LkDe
-	Q5PV08VzvtQqAXuqlXpmwUiswDnTkL501EH7KGMp0I/YRsTcS8RCozA2/SuUBrfUIj8=
-X-Gm-Gg: ASbGncsYyWm4knA7OSj3mYKkD0jrnxdB9G/m41b1MljTqLkimeT15GjWIOUe/ld1PbF
-	o9kqJqjcHAY2xfLBsTqOF4C9pAgi52OPd7l+9wDi4S0y1wKqVDuxpIpNfmQ4c3RT0ufpqfLrkHw
-	I69Qwjk1kWl1aUtx1KUoXLaLPCl+bBv8QgiT0S+g1SGtsiJdMV/l3sw2dDIqXIMhWcjesCi0Vcd
-	OFxF1el7G7DFgDhDk23t9dL9zJRZVEbJurX2L27uDaFsyRnRL+6JF+H5l2QoniBK97hdjFbnuQh
-	jAKgepxRjVyrq/8oMVQSutEcad4dceKmUVuSgTSnEnh8xSxYrMYa+us3rwhoPnmnx5n0kuASFQ=
-	=
-X-Google-Smtp-Source: AGHT+IExhs5eYhf6tHwalRmCPZodGm+T8pYXC1tEHKyqqYin+EC/fkXPzgbCpRMDAYA8+l44SvhlXw==
-X-Received: by 2002:a17:90b:1dcf:b0:311:d28a:73ef with SMTP id 98e67ed59e1d1-313b1ef5898mr1307915a91.10.1749608311204;
-        Tue, 10 Jun 2025 19:18:31 -0700 (PDT)
-Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313b2141e6asm256489a91.42.2025.06.10.19.18.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 19:18:30 -0700 (PDT)
-Date: Wed, 11 Jun 2025 07:48:28 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Benno Lossin <lossin@kernel.org>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Danilo Krummrich <dakr@kernel.org>, Gary Guo <gary@garyguo.net>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Trevor Gross <tmgross@umich.edu>, Yury Norov <yury.norov@gmail.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: Re: [PATCH V3 0/3] rust: Introduce CpuId and fix cpumask doctest
-Message-ID: <20250611021828.fbdyugkxz4axz67b@vireshk-i7>
-References: <cover.1749554685.git.viresh.kumar@linaro.org>
- <CANiq72mWAP5ZuOGTXZ1=zTOR_Y2YuqV2i8PberOeWOkx3VL0ew@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="kN/3bCIW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=IuJnBGEYZBtUaLzm2eemejs/8BeVNWawSMjHXM7ac88=; b=kN/3bCIW6AY93L70XwzPH7HP7r
+	wZMCRsITAyj5WrFsPNQ0f/iodF0cOs8EERsIV2OnWLKw4JtfrmhYkmCIx3rWudv434CuQi8qdL8L0
+	L7q3IUy4FEKN9cECKnKPOdRMbNkDx8kRlW4AcPUmYty9U+IPMuBXk8XT4VGH2PTBu/T/ZWO7P+jRv
+	zzMiXEkBMFpCf7lDjOBQLOo5NX6zTHV0FF0tmLeFrTeVJyITAqLMXEh/+6hIZnf9zdHW2mlG9nPmj
+	8It70Uk4QG/bRISzrSjgJ0BcXT7wrY/gIqbR2IBtJS3rZ5uN3jCanVSQI68EWbK4QpTrhXpXv6p6B
+	VXUJQfTg==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uPB2j-00CEh7-1S;
+	Wed, 11 Jun 2025 10:18:22 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 11 Jun 2025 10:18:21 +0800
+Date: Wed, 11 Jun 2025 10:18:21 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Cc: Kristen Accardi <kristen.c.accardi@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Tom Zanussi <tom.zanussi@linux.intel.com>,
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crypto: iaa - Fix race condition when probing IAA devices
+Message-ID: <aEjnbdoqzLoMifRn@gondor.apana.org.au>
+References: <20250603235531.159711-1-vinicius.gomes@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANiq72mWAP5ZuOGTXZ1=zTOR_Y2YuqV2i8PberOeWOkx3VL0ew@mail.gmail.com>
+In-Reply-To: <20250603235531.159711-1-vinicius.gomes@intel.com>
 
-On 10-06-25, 19:10, Miguel Ojeda wrote:
-> On Tue, Jun 10, 2025 at 3:22 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >
-> > Here is another attempt at fixing the cpumask doctest. This series creates a new
-> > abstraction `CpuId`, which is used to write a cleaner cpumask example which
-> > doesn't fail in those corner cases.
-> >
-> > Rebased over v6.16-rc1 + [1].
-> 
-> Given this is growing, should we apply something trivial right away as
-> a fix meanwhile? Or are you planning to send this as a fix during the
-> -rcs?
+On Tue, Jun 03, 2025 at 04:55:31PM -0700, Vinicius Costa Gomes wrote:
+>
+> diff --git a/drivers/crypto/intel/iaa/iaa_crypto_main.c b/drivers/crypto/intel/iaa/iaa_crypto_main.c
+> index 23f585219fb4..2185c101bef3 100644
+> --- a/drivers/crypto/intel/iaa/iaa_crypto_main.c
+> +++ b/drivers/crypto/intel/iaa/iaa_crypto_main.c
+> @@ -35,28 +35,39 @@ static unsigned int cpus_per_iaa;
+>  
+>  /* Per-cpu lookup table for balanced wqs */
+>  static struct wq_table_entry __percpu *wq_table;
+> +static DEFINE_SPINLOCK(wq_table_lock);
 
-Yeah, I am planning to send this for rc2 or rc3.
+This can be called in BH context so you need to disable BH when
+taking the spinlock.
 
+>  static struct idxd_wq *wq_table_next_wq(int cpu)
+>  {
+> -	struct wq_table_entry *entry = per_cpu_ptr(wq_table, cpu);
+> +	struct wq_table_entry *entry;
+> +	struct idxd_wq *wq;
+> +	int id;
+> +
+> +	guard(spinlock)(&wq_table_lock);
+> +
+> +	entry = per_cpu_ptr(wq_table, cpu);
+
+You're taking a global spinlock around a per-cpu variable.  In that
+case you might as well get rid of the per-cpu variable and use the
+spinlock only.
+
+Cheers,
 -- 
-viresh
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
