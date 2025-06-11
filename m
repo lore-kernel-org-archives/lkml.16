@@ -1,95 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CF8228751C
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 13:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9093028751C
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 13:21:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749648006; cv=none; b=s8dNOvmNEoDZjWc1OiT4uKQGuLS8DTVQfs0qhai0E2Elbn7sTugfLZrKsZ7yeR8ZmHe5lYuNvO29AIUGGM6iKpBKxqEpZ3KdS4nEbkrsLQdWFJ2/fg5KmHiNrmXzMtwFUzqfOPMS2ykI4KxDAYqDoEln6X+rM8yCAvZV8GE6bt4=
+	t=1749648079; cv=none; b=ocW3e5/9tD2nxueKmw3XtxjcUrl+KfxUAMsOKudAoLSIW1D9PgE2BsTB2LMYWPoN6Rho3DrhdrHcE37W8QIgyei+tXMCNo1ilkkD0JtQaAUu29Jv9K8PS2XUzvvwtCvhU0KQ9QIePji2AIJAGDKdLVgMfVRbdS+q/o3yoyVuFgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749648006; c=relaxed/simple;
-	bh=UzJeNJW3RMDMtfEx3QPDFOmM9L8mS8UXAa35yr675nE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BYEzU9p5JttOO6Cs862rqwKmDVZssgocD7eTWMQ8W8W+ScqPxE9bu8Nid4XvwaRWrH1cxUv5uMn2+z4e4EnTChXMadafQ8WWIuuuOp121AGh9gsjDby4N5A7o8JKIHNAFws6hpD67h6umQ7i5mS7qSZIqSgqq2AORqz5IJ8JpPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pWAs19wN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749648079; c=relaxed/simple;
+	bh=C4hxsxe0fLBrBotaEoFZDYCLmEECNhldsO7lXFI9foc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LN9o0hESD8oIlUZrasVm+xGUFthBQJ4hxyEPGPBvJpiOqE7H04Z3ZNCauXhISzadOqjykpORNplVN+3jvQZmgffHCTHlGokW31+4HF8qLgr4RjBmixJAw0Ou0zsCO+XjtKSEwXSgIl+r+lBBPab0hK/mw0CjyXXj9TtHr+8LQ1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NoUVNg2q; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pWAs19wN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9644C4CEEE;
-	Wed, 11 Jun 2025 13:20:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749648005;
-	bh=UzJeNJW3RMDMtfEx3QPDFOmM9L8mS8UXAa35yr675nE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pWAs19wN6rphWarV0Tu4IiG2hpeYtuqQPID+BN4Q+yxvw215nxL3B//Rw4we/J+Qt
-	 kB/jcQhTiDtdss47vSFmPR8RfX8rsmjk69eHpSZkJUxqDE4Evb55GqZfx+NuT2id69
-	 GnJso48gs3GYq3rlnanjsLhMEORFva9HlsaMNwkxb4laTyOJUmRjs1TesWhxjr6J0R
-	 qgdr76hmSuWoquQkQ0W6OEdC1Mp2d8oqTRLzNKCoJ9kvNp1HXR1MwgtQ3X869SgeVY
-	 SIt4A3XthDtOBQy024bNS6KaMa51B+ytovl6psDsw+pqhJm/Z0GD9AaP4d5eV2PW6M
-	 /7hrC0cUUBYCg==
-Date: Wed, 11 Jun 2025 14:19:59 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: catalin.marinas@arm.com, pcc@google.com, will@kernel.org,
-	anshuman.khandual@arm.com, joey.gouly@arm.com, maz@kernel.org,
-	oliver.upton@linux.dev, frederic@kernel.org,
-	hardevsinh.palaniya@siliconsignals.io, samuel.holland@sifive.com,
-	palmer@rivosinc.com, charlie@rivosinc.com,
-	thiago.bauermann@linaro.org, bgray@linux.ibm.com,
-	tglx@linutronix.de, puranjay@kernel.org, david@redhat.com,
-	yang@os.amperecomputing.com, mbenes@suse.cz,
-	joel.granados@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 3/7] arm64/kernel: support store-only mte tag check
-Message-ID: <3a0ed679-dfb0-4b10-a081-db56583bffbe@sirena.org.uk>
-References: <20250611094802.929332-1-yeoreum.yun@arm.com>
- <20250611094802.929332-4-yeoreum.yun@arm.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NoUVNg2q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749648076;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=BgaQSbJjCXfhBaWKuPSsh/e0eXuCE8ryvRzwpdMmhNk=;
+	b=NoUVNg2q00amdfIsdD6A8EXB4HLBti15ZFZ+9hpNXI4uVPjJf1s8oZwlbWRIT1SU0cD8ZH
+	rSJLSE/6y7XewNhEIhpLSH8M3FahHTc1o01wEkuKn6U/DaFUQuXvptZ0Z8eeFIAP6t6BZs
+	K3IzepoMgZ7ST4C6t7ZeEDyHueFLr90=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-370-X5Wk39IAMPCLqcDNeItN4w-1; Wed, 11 Jun 2025 09:21:15 -0400
+X-MC-Unique: X5Wk39IAMPCLqcDNeItN4w-1
+X-Mimecast-MFC-AGG-ID: X5Wk39IAMPCLqcDNeItN4w_1749648075
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4a584d0669fso124032651cf.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:21:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749648075; x=1750252875;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=BgaQSbJjCXfhBaWKuPSsh/e0eXuCE8ryvRzwpdMmhNk=;
+        b=fpQjcn5V48IBY9ehgVmVMt9dlQyj4OpNGdKd22xeZck9DJUHPHoB0RVAXiRDCjPSqF
+         qEd1d3nNCREc+fD9jjWpiAgGdI+iA6Go9+2QjR27fxTl0/H04Jv++tusm7Pgsh04Np39
+         dE53oPADh7zBgaiLeLHv2/ZrAZEbzcZbLavayecR9W9OfyAXqPEa9zkQOu9mWpF11OLv
+         6Y2PyWN0cf2kM/bH083PUym/gVUeUl5zrSjzfD7PMcjiW69Yj3Vdz7Cc7b1YDlhGnaHo
+         GLKNXK/A3k0KHzS/6YVAVlxywkvGmqgtxS4wrEVIgwcyhf7ewOKS5v0dBdS1MF5A7aid
+         RlzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXYSDohGWs9Gfmmr9Oqf5Aa0HhJ7eWKp/HiYkrtSdCDmTY8UY3TRgnCAtdvD0rJmEQPl0WlJlDToHzV9ZQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7B7/ygJwYsD3e4udpNuhk8YluqfFvHYEMr2wcebe/QReEVFtC
+	X8IFrKz6usgBUR7U9F5NC6Wye0/MOJPD7wOE+fjLAufwjJL9BWj2iiyCx/vnoGfHYT/2gE6YOX+
+	Jzkyc74ux/wbRyJ9j0eaWTvWz2JeLbxmpeHV0mlAEO0F4bbVVd4VxNStBrGRsh7yI8A==
+X-Gm-Gg: ASbGncsQnL1nH+G8+vCq1ahlC67jzpn83Zh5lGreXEOjm40ITf4sXQA7BlaOwYy2VPO
+	+Gx/UP2Y8dtzu2O0bBIyRZMWAqV8BJwaiCvK89zuEty3nYyaUVcC2wqqndfNULrKYKGxGd05YF7
+	mfKbQDo65CIdqzv//kSeuK9uxhZuJ3wwjgibLKHxb9zuvzqO/J6LDNgBrWr1fdm38Q5SRYjkCXO
+	goVprBL5O3rB5wvc5Y/UfOr7unt4GlUAU3yRI188PqHvvRJuwOloq89q9pMumJ/HwqsMNKhGehY
+	DP8pQQrZjiCecWBJVWo5dPG/WHHBBA5LF+0yetrTlTy/
+X-Received: by 2002:a05:622a:5c17:b0:4a6:c5ee:6ced with SMTP id d75a77b69052e-4a713b8ba7dmr56471101cf.4.1749648068371;
+        Wed, 11 Jun 2025 06:21:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH1ArCnkm2Czjve19sYRLRVRmIA4chf1R1aoKdRXRTJmJlpegiSPkj7PSA7rA024CD57QwdaQ==
+X-Received: by 2002:a05:622a:5c17:b0:4a6:c5ee:6ced with SMTP id d75a77b69052e-4a713b8ba7dmr56464691cf.4.1749648059408;
+        Wed, 11 Jun 2025 06:20:59 -0700 (PDT)
+Received: from [10.32.64.156] (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a61116c02asm86858761cf.32.2025.06.11.06.20.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Jun 2025 06:20:59 -0700 (PDT)
+Message-ID: <a020ab91-2da7-4c47-b88e-4639b8b0bd37@redhat.com>
+Date: Wed, 11 Jun 2025 15:20:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vUy5kMIj7urwy+MA"
-Content-Disposition: inline
-In-Reply-To: <20250611094802.929332-4-yeoreum.yun@arm.com>
-X-Cookie: No skis take rocks like rental skis!
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests/mm: Check for YAMA ptrace_scope configuraiton
+ before modifying it
+To: Mark Brown <broonie@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>
+Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250610-selftest-mm-enable-yama-v1-1-0097b6713116@kernel.org>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250610-selftest-mm-enable-yama-v1-1-0097b6713116@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 10.06.25 16:07, Mark Brown wrote:
+> When running the memfd_secret test run_vmtests.sh unconditionally tries
+> to confgiure the YAMA LSM's ptrace_scope configuration, leading to an error
+> if YAMA is not in the running kernel:
+> 
+> # ./run_vmtests.sh: line 432: /proc/sys/kernel/yama/ptrace_scope: No such file or directory
+> # # ----------------------
+> # # running ./memfd_secret
+> # # ----------------------
+> 
+> Check that this file is present before trying to write to it.
+> 
+> The indentation here is a bit odd, and it doesn't seem great that we
+> configure but don't restore ptrace_scope.
+> 
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> ---
 
---vUy5kMIj7urwy+MA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Acked-by: David Hildenbrand <david@redhat.com>
 
-On Wed, Jun 11, 2025 at 10:47:58AM +0100, Yeoreum Yun wrote:
+-- 
+Cheers,
 
-> Introduce new flag -- MTE_CTRL_STORE_ONLY used to set store-only tag check.
-> This flag isn't overridden by prefered tcf flag setting but set together
-> with prefered setting of way to report tag check fault.
+David / dhildenb
 
-There was a concern when adding asymmetric support that when adding new
-prctl() bits might cause issues when libraries linked into a program
-don't know about the new bits and miss enabling/disabling them.  That
-doesn't seem such an issue here since unlike with asymmetric mode store
-only mode doesn't turn MTE on or off entirely, it's more an
-optimisation.  There's some possibility that something could rely on
-only stores faulting but I'm struggling to think of a real use case.
-Assuming that's OK:
-
-Reviewed-by: Mark Brown <broonie@kernel.org>
-
---vUy5kMIj7urwy+MA
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhJgn4ACgkQJNaLcl1U
-h9DFKQf/UVQXyYeS0IFPcj1QrNsvziBeCEJJzwQDnkBmFFHJ/XPZo6wn7iQFHdL4
-zhZl4dz2MtmfyONRUsSfxxu15zotZI/oR7jkYXeqLoxflPYnT6iekVPaLESeg6af
-duXG5FnmCC9XLQRllCNzTiax8+WY6sHIvopvERPXijaVEsMwQo5lKs9SovoFz0I0
-LjerAQARmBHNChjcfzSD2pO1DriKYxG3QqGwCuDuYOmfGru8tqeDC3OaxqRPj0ND
-nvVJoUrzhnhamYVA9Y3XK/5oVlmF3niseb2vY6n7H1DORkJnRkxUrna/spVk16kP
-hSI5F/qT4iaPVE+W/dCTN4Q0ficqwQ==
-=UECi
------END PGP SIGNATURE-----
-
---vUy5kMIj7urwy+MA--
