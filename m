@@ -1,91 +1,84 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E97F1AAA11
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:49:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC3C1C84CE
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:51:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749656974; cv=none; b=aeOxbywrUqiogDBVKVaTmNiiIB7s0YcfJs3PuE5zNXOiViCTDsH1eBlYduZzAPsOkj1VqbGPyLERygV/eEQwH0aHYLES3mr+9LlvpdaxGsy0sGJ5bWZ/r9NMG9dRDJfoKniGsUeBZJ75nRLZxMhIKIUcK7lkxlZ9LwydvvkknwY=
+	t=1749657073; cv=none; b=XmDvl2GVxGXL3NtEvnuH7vd6VyPzbWJt4c7ro6s09CBZ1ahEXg5EZ3WmP56OngLsuOKxa0nQOVGG9O7tBLxt7ScU3kpG+C6z4Uj49aM5Y3m5dqXHxLphBlr8s4DkStZWT7nyYjidD+tEZxYuDKgaDh0Bu1OR7LyyanCjwa7Me2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749656974; c=relaxed/simple;
-	bh=Vsu5Xaf2CfmWYXrEWUU8kTg6xy3/CnahfubB8AomyEw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dncJRD9nOpjZrsdcvYkxd2CfccDyNQ8uHadiFb/G4K5K4GAr1MRjBv/suIeI85s0iKBmv5NZ3r2PFI1g9Yus7+jBZ5z/wo42zqDVLhXSK87Dx3X+clSbiW9VqQ7wzQM1/2xFRgNIlZ12hswHopIjCQCr+w52ofYIXiH5Ug7o85Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BLMetV01; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1749657073; c=relaxed/simple;
+	bh=ChSNUVxFtx+wYinAqz6EG6K36rN3iauMcmFkc5ToAHQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CDdEGkRuYrvM4uL1hD9JPKx0ZtBcbAzYfTkykP3WY1KQUojSOYurQJkw8AGxVnOaMOV1Rls1B3Ue18aNsQoNay1J9TzJdYPuRzXyHYtCNboKUgowukSDl7RG3xckFl0HHQN0TCSLy5rjGB03d2t5/N/d9eNtxUr6D6KhyITgzIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R3bJdu6A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BLMetV01"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749656960;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=NkpbyMsiJRwWnx6iOR+RLlbhyzNlbJ3e38I3A+4NmfI=;
-	b=BLMetV01lS4FXWjpoxALr+a7Mi0irlvKqYcAZBywjBIwgNGKzGMwf6SP0SwobrqhyTbR8H
-	NQ/nTgeRdr9+LbZ4t/A+vxRUTO28kF4R6uvFYTrAwmTj5i/qgFhOAX9bHiICSohUcwmfK3
-	WvRPHYKGvp0Puq6S/5gBm2Q5AFHG7m4=
-From: Tao Chen <chen.dylane@linux.dev>
-To: kpsingh@kernel.org,
-	mattbobrowski@google.com,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Tao Chen <chen.dylane@linux.dev>
-Subject: [PATCH bpf-next] bpf: clear user buf when bpf_d_path failed
-Date: Wed, 11 Jun 2025 23:48:58 +0800
-Message-ID: <20250611154859.259682-1-chen.dylane@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R3bJdu6A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A9CBC4CEE3;
+	Wed, 11 Jun 2025 15:51:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749657072;
+	bh=ChSNUVxFtx+wYinAqz6EG6K36rN3iauMcmFkc5ToAHQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=R3bJdu6AdPM4A7YDrlYN5JyWQIMAhVg7y5ZO28UKkatL2fukCeREnf12+AgIr0jHQ
+	 RX5SLdxuy2Z1xjnOjUEKREayHeXTp87hVneG2MunraowOH5wjHFmbOu0gGnadi++OO
+	 rYRkwgQeX/OXfIDetDT6GZyB/IzN/HTlLCJGuWKc0+m3d1SSxf/YE4dHLssAm4+fcT
+	 mnXYt5NcUtCGnDWS+vdwoQcRigOa2mz9lt3hSiWKXSkUoHtBTNB/6VSz88jy2ZL46Q
+	 sRF0VgyaGsyi/ALe9RG7hORY0/G788mBJqy5mzSdPyE98LpAuPo9bfqIi4XW0c4HPa
+	 GEwM2R50ki0wQ==
+Date: Wed, 11 Jun 2025 16:51:04 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: catalin.marinas@arm.com, pcc@google.com, will@kernel.org,
+	anshuman.khandual@arm.com, joey.gouly@arm.com, maz@kernel.org,
+	oliver.upton@linux.dev, frederic@kernel.org,
+	hardevsinh.palaniya@siliconsignals.io, samuel.holland@sifive.com,
+	palmer@rivosinc.com, charlie@rivosinc.com,
+	thiago.bauermann@linaro.org, bgray@linux.ibm.com,
+	tglx@linutronix.de, puranjay@kernel.org, david@redhat.com,
+	yang@os.amperecomputing.com, mbenes@suse.cz,
+	joel.granados@kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 7/7] kselftest/arm64/mte: add MTE_STORE_ONLY testcases
+Message-ID: <49b4a106-2ddb-469d-b556-f8f63577a167@sirena.org.uk>
+References: <20250611150417.44850-1-yeoreum.yun@arm.com>
+ <20250611150417.44850-8-yeoreum.yun@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="3aAzPfVUTizjUcAZ"
+Content-Disposition: inline
+In-Reply-To: <20250611150417.44850-8-yeoreum.yun@arm.com>
+X-Cookie: No skis take rocks like rental skis!
 
-The bpf_d_path() function may fail. If it does,
-clear the user buf, like bpf_probe_read etc.
 
-Signed-off-by: Tao Chen <chen.dylane@linux.dev>
----
- kernel/trace/bpf_trace.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+--3aAzPfVUTizjUcAZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 0998cbbb963..bb1003cb271 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -916,11 +916,14 @@ BPF_CALL_3(bpf_d_path, struct path *, path, char *, buf, u32, sz)
- 	 * potentially broken verifier.
- 	 */
- 	len = copy_from_kernel_nofault(&copy, path, sizeof(*path));
--	if (len < 0)
-+	if (len < 0) {
-+		memset(buf, 0, sz);
- 		return len;
-+	}
- 
- 	p = d_path(&copy, buf, sz);
- 	if (IS_ERR(p)) {
-+		memset(buf, 0, sz);
- 		len = PTR_ERR(p);
- 	} else {
- 		len = buf + sz - p;
--- 
-2.48.1
+On Wed, Jun 11, 2025 at 04:04:17PM +0100, Yeoreum Yun wrote:
+> Since ARMv8.9, FEAT_MTE_STORE_ONLY can be used to restrict raise of tag
+> check fault on store operation only.
 
+Reviewed-by: Mark Brown <broonie@kernel.org>
+
+--3aAzPfVUTizjUcAZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhJpecACgkQJNaLcl1U
+h9B2QQf/d+mWZ97O/areQImQSq75oC0pir5NqGhE3ks+INAvV4Fij8ENpSl0kxDy
+rag8fm1VD6d1qzB5GjVwTWwEe1CWNC5TD/KUuGsGXwQkb8sBwJEy47CrfpS1Wedw
+9WTqAQ7LOxzRcndgAo4vhETFB30Mw3Utq0MxC4TuQ4sxvy9RLI/nsXjAg9Y7q6ra
+GH1KHDCW09fkKT91PbNZHzcWNDeIuMp0o05iEw5+RsO1Mc9muJDmwSEGHjL4M+IK
+N55Z5doe8q8I3JoVt3bEhiPTgi5UUDlv+pwkwGxZxhLfg01Gqb1tJJGgg69yNeqt
+PauxFqN+E5yeoR0WnatVADkwG7Coqw==
+=y/aH
+-----END PGP SIGNATURE-----
+
+--3aAzPfVUTizjUcAZ--
