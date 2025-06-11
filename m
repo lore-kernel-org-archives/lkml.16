@@ -1,389 +1,115 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC061DE2CC
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 22:05:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E2E2475F2
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 22:06:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749679543; cv=none; b=Ovfqzlrmop7s64Y6WFZdixXs40cFa1Wd4Vf67WTbBWgf8EhUJvhfSZ98ZgynvlE8Os5oeJG/XGfvB6xhLlWSHGf+iXRhtk/CZKfJstwDSOe5aekJrBaKV0YwADwMpnpNJPYyHsp1d7WY6gowleLFlppw+pFtlfdH7LtaUYBOgo4=
+	t=1749679564; cv=none; b=Fpf9MHh1oW0D8YZTh+lPEI92EIdJesZ9dktmoABI+gH50GqvLFdKMy1INLgjoYMFzeDqmkLzOaIK3iXOVVea2kkeMpfc3MkQmZH9iIU5mmCvKlJ/eFleBvfbNyLYUkEveruW3X61W1Z0SYrscHy5spB3BYf+8psb+RmmlJc/ej0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749679543; c=relaxed/simple;
-	bh=sEX77P0MO+vil+ZpOisgyJ/HTy6z2qtfwCCpVReEcp8=;
+	s=arc-20240116; t=1749679564; c=relaxed/simple;
+	bh=lJcNb+m+LrHIPtdT6t16yrrQCjtNIkMPamXEoDgkxPk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JMLI0v64PalbQpPcizoBqnRfEuYK6rlpd9mkV62ud4rlB+K9ySrlm3Iv0torc3MTzz71KHwOY4HjuAuHnq66KiyO0uX9ngi8PuAiGEVmjzAJTBSYqyDkf1Kf8/BDG74EdL76Hft0r6bSIduTT5uQK8VnV8+zKI4lRsoIkTIYt+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CEqy3A7v; arc=none smtp.client-ip=209.85.166.170
+	 To:Cc:Content-Type; b=KR2YZ3X06OBI8qDTsIYDsceGCiCqoXN2YgPTtJqpw0GTdwSYQ4FP4Ttu/MAgFUlDkodw6qbjNtAc/TxcV8GYExPQTOveqyiQpm3rs6VgIM5rHbTjXcdKhPX83hV5n+8Ris0Woe1hNcRxULoJbjbtRKBtOGcHqoDJWVT1Wxugz70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qnfSWhNE; arc=none smtp.client-ip=209.85.160.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CEqy3A7v"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3da76aea6d5so20425ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:05:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qnfSWhNE"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4a5ac8fae12so142711cf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:06:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749679541; x=1750284341; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749679561; x=1750284361; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=reLosr06TrLHFm6cpSf4Kzju6Dfoth2pVMr4f8PSzO4=;
-        b=CEqy3A7v8Asr4oQi6hIX8f+6uUmteob5HvfNzQzISondBR4O6sBbBDUNtzK0L3oUTq
-         TjGbZ2YovLbhqZ6xi8jMHprDyUylo5Bh/gCg2qxSBktKOBO00AqMJXD191Cu62l94Jgj
-         225oEvojAWr+BMLKmKAcfBOMxhfMTQ081aBVWmq7c7rv5KgG48IIToFHP5pJonq69yKN
-         Kl2rp9iStUkMAP5oo0gEMa+FSXKhK1Pu1cXwed0mx279VSVLH+dGxZAFaBm1H0sYWH+l
-         ghOT83TB7zMNYm/BAjYOxnB/aL6TAzz1boNluBhJqarSKZe72swV//jXvXFXu6rU2taA
-         K3Sg==
+        bh=r6v+Lx00PogSpTLtqb8OpINwiWwlsYccfvqmwc9X17g=;
+        b=qnfSWhNEmnLo+96JaUmmKyqsLdGqWhy8YxkJqM2/p5rBgf2gomvE5Qbq+d10VBUAWY
+         cKVvqyMFEZ2lixu7OLK0bfANSBJ59cn2jXdxA2tLPaQkT4NMSLkGNvGT8MhlyR5Dr5LT
+         os9DykNyOMtxJDA6qbwukURoS8qtn9rS/RnfNrY/WdlBLBYMw1TELBiQN+x1/Ko2RzNT
+         c02IN2+VgykqwhHDK4kF01Nu7BfLlxK3FHxQw0RZRt+6z50gUSAXKDTPlPGzMA0yySnK
+         TlH7oZdEliBuEZRtC8yVBGDJ8wGbWwpm6e878mmiUyoBA8p71PrM8DIopTJv0npCwAJ2
+         Vcpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749679541; x=1750284341;
+        d=1e100.net; s=20230601; t=1749679561; x=1750284361;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=reLosr06TrLHFm6cpSf4Kzju6Dfoth2pVMr4f8PSzO4=;
-        b=JJKWQe+XYvlHeQtsszTCQ2fmX6YnwyhWlWtgWIs7R4Gqa1NDpnNCeuZ3+rXZK8joMp
-         +58EuAIWGalSjer5xQi7+hyrKcDtqf3ohnijkn3CbUHX5R4Kk92TdX91juQtC5gGaO6S
-         ZQHaZwGGv9vkedtyIOtFnh80E3c3pfJL1blo4qN80ajHQks+AgtknnHFuNjbl9sA2Ptd
-         HNCUK1iwybIt8mswQaXkmFwZeiaQ0+AEl2Y0QmrsR6u6dvdtnJYbzfEBW9qFeBm+bwyV
-         UMEPyQn+yNxoMIAFWD3GumNyC65A3LBX546VgoDTWlWVtMHRSDLbi5Fs54cXZYoThDE8
-         V+Hw==
-X-Forwarded-Encrypted: i=1; AJvYcCVw2Cw/Ry3B7TryLIufUCJ+ReHJk/8Z4r6FpGmDPXA900SuxXVgxt+/QF/sHjRtmd3HAKXe3NOmjeXMDrk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzA+yrB+jiZ2dpsI01almtQPm3ryIwRWZOVIxjN/SRhA8ARFwY1
-	QZuF8/ZRPChmrPjuj9K88PAu9w/wch6JD3CzElqoTV9lA4Ovnsl2ogxFn71BVr3ICCEmwdBXhNI
-	+GG0RbRNmH1LQaBwhbdFMXbk2gsid2uciwWy8zuV2
-X-Gm-Gg: ASbGnctm3Ohd6z0hglQyz4dzycwyCEpwyX4C4d/7hkO9TSERDz58OSSt+OZNaU+0uVZ
-	pUkMpvjVWJen5ejkwU8dbp15R2UYxUEKejamsjU3cS3YtoPkNTkaJjb+rE10mnwlYxoAj1JLi1A
-	zK0yE9+vH/2LDh40c7u307v1uQQsTdkFBtwA0UaD3Gq2FYzA1HKRPKpVhqhlYhLERNOAwv5aNj
-X-Google-Smtp-Source: AGHT+IHzdVBH834oO8Lcw+o27OrEeNpQDQLxdJapoXf2t/m8DK0uNcG4r/C4ZFy5u8MaZVT3YQGcfmPKa5Dn0P51gZs=
-X-Received: by 2002:a05:6e02:1d84:b0:3dc:802f:2617 with SMTP id
- e9e14a558f8ab-3ddfb49fb55mr886665ab.28.1749679540684; Wed, 11 Jun 2025
- 15:05:40 -0700 (PDT)
+        bh=r6v+Lx00PogSpTLtqb8OpINwiWwlsYccfvqmwc9X17g=;
+        b=qqLKxozbF95Nse9ppQguv+xoZuESSLlmXSy+eRBzWKAxaVBcQByzp5M5N2u/2HufQN
+         iTbkUuxsd/ETaTeFMBEIc1w+nrSSADSwY9K35k9cBva3XcYlwcYSbJwAatapKR5P8qPB
+         L0fuf4xv2TazcdU8YYJCRfCwBuOAQ3Myt/oW6Cah+kAqvoICJV8VdvB5czK5cFaUfiPr
+         su2hHabr3p6iuHApniM3zAM1YnfRySDPAPmyjpU5ec6UaHpHg6e8d4kb2gZhFfsmJYj2
+         qU6on9b09naFN5kYGuv/hKbNMm1W2o7Q+607aqfkm7/J8l2JlHUEP5S9FutZkY9qSLfk
+         0TVA==
+X-Forwarded-Encrypted: i=1; AJvYcCWaYCSeLz5GwpDswnS3D0S5duhRe9S4IM8C8UTD+sgK+Q/v89OB273n6azYiJcBkN22czqZUOlfHNz2YPk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJUHpkwyHA459LD2oEIoOOh7VJtB9f302LJrccxt2sKpjFcjPr
+	Fwv+SfwAOAIR8UMrs7xHci20HJZAYin3V6y5XeJdkL+lkpGtmCSLdmiGm9tjQw0qd5o1sNyuW3X
+	9JJAfp+/5LrYoC2cAkpE/IDhkNu68C5LV3ec9YMmP
+X-Gm-Gg: ASbGnctl7UM0wypFtgYLGyl4C9AnL14LoYMw8cHukIMDXUR8aPfMzMzCXFXqnd0RsI6
+	FtQeAikpIu2BYtjwmtTJQ77CDZb8WjIy3RPgekHkuYkvmNJAes0IExBYsSMtxuk0FYOH1icUD7I
+	jW93b7x4+vS+aqqWJwPT6qvnh6u5i/qGB1EFD5lLwhW5rh5g+dISU0K5Cxg0tIfLpVUeUHFGBJx
+	g==
+X-Google-Smtp-Source: AGHT+IEBY/UkjQXV1lMnORLfnY9FIZMyMUT3D+2LVLKUtBU9gMCFpZwOtsADD3cHrQ41s2NITvc+hR4EZITi3Ul7ziw=
+X-Received: by 2002:a05:622a:1882:b0:494:b4dd:bee9 with SMTP id
+ d75a77b69052e-4a7243a7933mr859111cf.24.1749679561232; Wed, 11 Jun 2025
+ 15:06:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250529052322.381947-1-irogers@google.com> <20250529052322.381947-2-irogers@google.com>
- <aDjBtuxyumBrn70B@x1> <CAP-5=fXonwoMOqfK30bo1i438cDa7oTWOOWFwJNXY9UOMBpkCQ@mail.gmail.com>
- <CAP-5=fXg-gQVYwdLpWkkD+egqpq1KbPjUt3cXXa+Msm5hSU9PA@mail.gmail.com> <CAP-5=fVGptvc5KQUJ3uE9DNh693Z1oYkt6GMQG+MfFa3Nf09Hw@mail.gmail.com>
-In-Reply-To: <CAP-5=fVGptvc5KQUJ3uE9DNh693Z1oYkt6GMQG+MfFa3Nf09Hw@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 11 Jun 2025 15:05:28 -0700
-X-Gm-Features: AX0GCFtVCbjp6-ULeZ2SwT4D9b2MO37UUZDVM9-6Nj_kwFmhRFQOy9P4jyU3gWg
-Message-ID: <CAP-5=fWbXEv+MLtsF30PTOGMz9Wcu7WG2TkF5x=so9DBm6eKvQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] perf debug: Add function symbols to dump_stack
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, Michael Petlan <mpetlan@redhat.com>, 
-	Andi Kleen <ak@linux.intel.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, 
-	=?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, linux-perf-users@vger.kernel.org, 
+References: <20250609184029.2634345-1-hramamurthy@google.com> <20250610182348.03069023@kernel.org>
+In-Reply-To: <20250610182348.03069023@kernel.org>
+From: Ziwei Xiao <ziweixiao@google.com>
+Date: Wed, 11 Jun 2025 15:05:50 -0700
+X-Gm-Features: AX0GCFuYF3MGPH4TMlK1EsMcjlLsjn5eZWHe_VzolC7pfg4XYeyAOBeZ_oIJfVw
+Message-ID: <CAG-FcCNg5BWcqTBcMA+WYHqFdG-htnYXDuXZ=S+QuwhugZ6fyA@mail.gmail.com>
+Subject: Re: [PATCH net-next v4 0/8] gve: Add Rx HW timestamping support
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Harshitha Ramamurthy <hramamurthy@google.com>, netdev@vger.kernel.org, davem@davemloft.net, 
+	edumazet@google.com, pabeni@redhat.com, jeroendb@google.com, 
+	andrew+netdev@lunn.ch, willemb@google.com, pkaligineedi@google.com, 
+	yyd@google.com, joshwash@google.com, shailend@google.com, linux@treblig.org, 
+	thostet@google.com, jfraker@google.com, richardcochran@gmail.com, 
+	jdamato@fastly.com, vadim.fedorenko@linux.dev, horms@kernel.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 3, 2025 at 2:55=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
+On Tue, Jun 10, 2025 at 6:23=E2=80=AFPM Jakub Kicinski <kuba@kernel.org> wr=
+ote:
 >
-> On Mon, Jun 2, 2025 at 10:32=E2=80=AFAM Ian Rogers <irogers@google.com> w=
-rote:
-> >
-> > On Thu, May 29, 2025 at 3:02=E2=80=AFPM Ian Rogers <irogers@google.com>=
- wrote:
-> > >
-> > > On Thu, May 29, 2025 at 1:21=E2=80=AFPM Arnaldo Carvalho de Melo
-> > > <acme@kernel.org> wrote:
-> > > >
-> > > > On Wed, May 28, 2025 at 10:23:22PM -0700, Ian Rogers wrote:
-> > > > > Symbolize stack traces by creating a live machine. Add this
-> > > > > functionality to dump_stack and switch dump_stack users to use
-> > > > > it. Switch TUI to use it. Add stack traces to the child test func=
-tion
-> > > > > which can be useful to diagnose blocked code.
-> > > > >
-> > > > > Example output:
-> > > > > ```
-> > > > >   8: PERF_RECORD_* events & perf_sample fields                   =
-    : Running (1 active)
-> > > > > ^C
-> > > > > Signal (2) while running tests.
-> > > > > Terminating tests with the same signal
-> > > > > Internal test harness failure. Completing any started tests:
-> > > > > :  8: PERF_RECORD_* events & perf_sample fields:
-> > > >
-> > > > So you are testing it with:
-> > > >
-> > > > root@number:~# perf test PERF_RECORD
-> > > >   8: PERF_RECORD_* events & perf_sample fields                     =
-  : Running (1 active)
-> > > > ^C
-> > > > Signal (2) while running tests.
-> > > > Terminating tests with the same signal
-> > > > Internal test harness failure. Completing any started tests:
-> > > >   8: PERF_RECORD_* events & perf_sample fields                     =
-  : Skip (permissions)
-> > > > root@number:~#
-> > > >
-> > > > ?
-> > >
-> > > You are running the test as a child and by default the child test
-> > > output is only displayed if verbose is enabled. I use verbose=3D2 bel=
-ow
-> > > as verbose=3D1 won't display anything unless the child test gives a f=
-ail
-> > > exit value:
-> > > ```
-> > > $ git log --oneline
-> > > b9ac06abfde9 perf debug: Add function symbols to dump_stack
-> > > e561806265ed perf machine: Factor creating a "live" machine out of dw=
-arf-unwind
-> > > 628e124404b3 perf tests switch-tracking: Fix timestamp comparison
-> > > $ make -C tools/perf O=3D/tmp/perf
-> > > ...
-> > > $ sudo /tmp/perf/perf test -vv PERF_RECORD
-> > >  8: PERF_RECORD_* events & perf_sample fields:
-> > >  8: PERF_RECORD_* events & perf_sample fields                       :
-> > > Running (1 active)
-> > > ^C
-> > > Signal (2) while running tests.
-> > > Terminating tests with the same signal
-> > > Internal test harness failure. Completing any started tests:
-> > > :  8: PERF_RECORD_* events & perf_sample fields:
-> > >
-> > > ---- unexpected signal (2) ----
-> > >    #0 0x5617ec45e5e3 in child_test_sig_handler builtin-test.c:0
-> > >    #1 0x7f855c649df0 in __restore_rt libc_sigaction.c:0
-> > >    #2 0x7f855c699687 in __internal_syscall_cancel cancellation.c:64
-> > >    #3 0x7f855c6e5f7a in clock_nanosleep@GLIBC_2.2.5 clock_nanosleep.c=
-:72
-> > >    #4 0x7f855c6f1393 in __nanosleep nanosleep.c:26
-> > >    #5 0x7f855c702d68 in __sleep sleep.c:55
-> > >    #6 0x5617ec46ebfb in test__PERF_RECORD perf-record.c:0
-> > >    #7 0x5617ec45e4f0 in run_test_child builtin-test.c:0
-> > >    #8 0x5617ec3faf0d in start_command run-command.c:127
-> > >    #9 0x5617ec45f433 in __cmd_test builtin-test.c:0
-> > >    #10 0x5617ec45faff in cmd_test perf[147aff]
-> > >    #11 0x5617ec3ed960 in run_builtin perf.c:0
-> > >    #12 0x5617ec3edc7b in handle_internal_command perf.c:0
-> > >    #13 0x5617ec368d33 in main perf[50d33]
-> > >    #14 0x7f855c633ca8 in __libc_start_call_main libc_start_call_main.=
-h:74
-> > >    #15 0x7f855c633d65 in __libc_start_main@@GLIBC_2.34 libc-start.c:1=
-28
-> > >    #16 0x5617ec369381 in _start perf[51381]
-> > >
-> > > ---- unexpected signal (2) ----
-> > >    #0 0x5617ec45e5e3 in child_test_sig_handler builtin-test.c:0
-> > >    #1 0x7f855c649df0 in __restore_rt libc_sigaction.c:0
-> > >    #2 0x7f855c6a3a14 in pthread_sigmask@GLIBC_2.2.5 pthread_sigmask.c=
-:45
-> > >    #3 0x7f855c649fd9 in __GI___sigprocmask sigprocmask.c:26
-> > >    #4 0x7f855c72601b in __longjmp_chk longjmp.c:36
-> > >    #5 0x5617ec45e600 in print_test_result.isra.0 builtin-test.c:0
-> > >    #6 0x7f855c649df0 in __restore_rt libc_sigaction.c:0
-> > >    #7 0x7f855c699687 in __internal_syscall_cancel cancellation.c:64
-> > >    #8 0x7f855c6e5f7a in clock_nanosleep@GLIBC_2.2.5 clock_nanosleep.c=
-:72
-> > >    #9 0x7f855c6f1393 in __nanosleep nanosleep.c:26
-> > >    #10 0x7f855c702d68 in __sleep sleep.c:55
-> > >    #11 0x5617ec46ebfb in test__PERF_RECORD perf-record.c:0
-> > >    #12 0x5617ec45e4f0 in run_test_child builtin-test.c:0
-> > >    #13 0x5617ec3faf0d in start_command run-command.c:127
-> > >    #14 0x5617ec45f433 in __cmd_test builtin-test.c:0
-> > >    #15 0x5617ec45faff in cmd_test perf[147aff]
-> > >    #16 0x5617ec3ed960 in run_builtin perf.c:0
-> > >    #17 0x5617ec3edc7b in handle_internal_command perf.c:0
-> > >    #18 0x5617ec368d33 in main perf[50d33]
-> > >    #19 0x7f855c633ca8 in __libc_start_call_main libc_start_call_main.=
-h:74
-> > >    #20 0x7f855c633d65 in __libc_start_main@@GLIBC_2.34 libc-start.c:1=
-28
-> > >    #21 0x5617ec369381 in _start perf[51381]
-> > >  8: PERF_RECORD_* events & perf_sample fields                       :
-> > > Skip (permissions)
-> > > ```
-> > >
-> > >
-> > > > I built it with DEBUG=3D1 and without, and with your patch, followi=
-ng your
-> > > > example output, I'm not being able to reproduce.
-> > > >
-> > > > Tried it as well with:
-> > > >
-> > > > =E2=AC=A2 [acme@toolbx perf-tools-next]$ cat segv.patch
-> > > > diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> > > > index 8b30c6f16a9eeac1..e55d86f1097d6d79 100644
-> > > > --- a/tools/perf/util/symbol.c
-> > > > +++ b/tools/perf/util/symbol.c
-> > > > @@ -402,6 +402,8 @@ static struct symbol *symbols__find(struct rb_r=
-oot_cached *symbols, u64 ip)
-> > > >  {
-> > > >         struct rb_node *n;
-> > > >
-> > > > +       *(int *)NULL =3D 0;
-> > > > +
-> > > >         if (symbols =3D=3D NULL)
-> > > >                 return NULL;
-> > > >
-> > > > =E2=AC=A2 [acme@toolbx perf-tools-next]$ patch -p1 < segv.patch
-> > > > patching file tools/perf/util/symbol.c
-> > > > =E2=AC=A2 [acme@toolbx perf-tools-next]$ m
-> > > > rm: cannot remove '/home/acme/libexec/perf-core/scripts/python/Perf=
--Trace-Util/lib/Perf/Trace/__pycache__/Core.cpython-313.pyc': Permission de=
-nied
-> > > > make: Entering directory '/home/acme/git/perf-tools-next/tools/perf=
-'
-> > > >   BUILD:   Doing 'make -j32' parallel build
-> > > > Warning: Kernel ABI header differences:
-> > > >   diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include=
-/asm/cputype.h
-> > > >
-> > > > Auto-detecting system features:
-> > > > ...                                   libdw: [ on  ]
-> > > > ...                                   glibc: [ on  ]
-> > > > ...                                  libelf: [ on  ]
-> > > > ...                                 libnuma: [ on  ]
-> > > > ...                  numa_num_possible_cpus: [ on  ]
-> > > > ...                                 libperl: [ on  ]
-> > > > ...                               libpython: [ on  ]
-> > > > ...                               libcrypto: [ on  ]
-> > > > ...                             libcapstone: [ on  ]
-> > > > ...                               llvm-perf: [ on  ]
-> > > > ...                                    zlib: [ on  ]
-> > > > ...                                    lzma: [ on  ]
-> > > > ...                               get_cpuid: [ on  ]
-> > > > ...                                     bpf: [ on  ]
-> > > > ...                                  libaio: [ on  ]
-> > > > ...                                 libzstd: [ on  ]
-> > > >
-> > > >   INSTALL libsubcmd_headers
-> > > >   INSTALL libperf_headers
-> > > >   INSTALL libapi_headers
-> > > >   INSTALL libsymbol_headers
-> > > >   INSTALL libbpf_headers
-> > > >   CC      /tmp/build/perf-tools-next/util/symbol.o
-> > > >   LD      /tmp/build/perf-tools-next/util/perf-util-in.o
-> > > >   LD      /tmp/build/perf-tools-next/perf-util-in.o
-> > > >   AR      /tmp/build/perf-tools-next/libperf-util.a
-> > > >   LINK    /tmp/build/perf-tools-next/perf
-> > > >   GEN     /tmp/build/perf-tools-next/python/perf.cpython-313-x86_64=
--linux-gnu.so
-> > > >   INSTALL binaries
-> > > >   INSTALL tests
-> > > >   INSTALL libperf-jvmti.so
-> > > >   INSTALL libexec
-> > > >   INSTALL perf-archive
-> > > >   INSTALL perf-iostat
-> > > >   INSTALL perl-scripts
-> > > >   INSTALL python-scripts
-> > > >   INSTALL dlfilters
-> > > >   INSTALL perf_completion-script
-> > > >   INSTALL perf-tip
-> > > > make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
-> > > >  18: 'import perf' in python                                       =
-  : Ok
-> > > > =E2=AC=A2 [acme@toolbx perf-tools-next]$
-> > > >
-> > > > root@number:~# perf top
-> > > > perf: Segmentation fault
-> > > > -------- backtrace --------
-> > > > Segmentation fault (core dumped)
-> > > > root@number:~#
-> > > >
-> > > > Tried also with this, but probably something else is at play:
-> > > >
-> > > > root@number:~# perf probe -x ~/bin/perf dump_stack
-> > > > Added new event:
-> > > >   probe_perf:dump_stack (on dump_stack in /home/acme/bin/perf)
-> > > >
-> > > > You can now use it in all perf tools, such as:
-> > > >
-> > > >         perf record -e probe_perf:dump_stack -aR sleep 1
-> > > >
-> > > > root@number:~#
-> > > > root@number:~# perf trace -e probe_perf:dump_stack/max-stack=3D16/ =
-perf top
-> > > > perf: Segmentation fault
-> > > > -------- backtrace --------
-> > > > root@number:~#
-> > > >
-> > > > Running perf trace on a separate terminal it also doesn't catch
-> > > > dump_stack being called (that probe point).
-> > > >
-> > > > root@number:~# perf top --stdio
-> > > >    PerfTop:       0 irqs/sec  kernel: 0.0%  exact:  0.0% lost: 0/0 =
-drop: 0/0 [4000Hz cycles:P],  (all, 32 CPUs)
-> > > > -------------------------------------------------------------------=
----------------------------------------------------------------------------=
---------------------------
-> > > >
-> > > > perf: Segmentation fault
-> > > > Segmentation fault (core dumped)
-> > > > root@number:~#
-> > > >
-> > > > root@number:~# nm ~/bin/perf | grep dump_stack
-> > > > 0000000000637eaa T __dump_stack
-> > > > 00000000006380fa T dump_stack
-> > > > 000000000063816b T sighandler_dump_stack
-> > > > root@number:~#
-> > > >
-> > > > =E2=AC=A2 [acme@toolbx perf-tools-next]$ rpm -q glibc
-> > > > glibc-2.41-5.fc42.x86_64
-> > > > root@number:~# uname -a
-> > > > Linux number 6.14.8-300.fc42.x86_64 #1 SMP PREEMPT_DYNAMIC Thu May =
-22 19:26:02 UTC 2025 x86_64 GNU/Linux
-> > > > root@number:~#
-> > > >
-> > > > What am I missing?
-> > >
-> > > For perf top I can do:
-> > > ```
-> > > $ sudo /tmp/perf/perf top
-> > > ```
-> > > in a different terminal:
-> > > ```
-> > > $ sudo killall -11 perf
-> > > ```
-> > > then back in the first terminal:
-> > > ```
-> > > perf: Segmentation fault
-> > > -------- backtrace --------
-> > >    #0 0x55ee68647918 in ui__signal_backtrace setup.c:110
-> > >    #1 0x7fe2d3849df0 in __restore_rt libc_sigaction.c:0
-> > >    #2 0x7fe2d38a49ee in __syscall_cancel_arch syscall_cancel.S:56
-> > >    #3 0x7fe2d3899668 in __internal_syscall_cancel cancellation.c:54
-> > >    #4 0x7fe2d38996ad in __syscall_cancel cancellation.c:79
-> > >    #5 0x7fe2d390d9c6 in __poll poll.c:43
-> > >    #6 0x55ee6855dfcb in fdarray__poll array.c:139
-> > >    #7 0x55ee68565a05 in perf_evlist__poll evlist.c:391
-> > >    #8 0x55ee68673b5a in evlist__poll evlist.c:594
-> > >    #9 0x55ee684e7a61 in __cmd_top builtin-top.c:1369
-> > >    #10 0x55ee684e9a6c in cmd_top builtin-top.c:1856
-> > >    #11 0x55ee6855d1f0 in run_builtin perf.c:351
-> > >    #12 0x55ee6855d497 in handle_internal_command perf.c:404
-> > >    #13 0x55ee6855d5f0 in run_argv perf.c:451
-> > >    #14 0x55ee6855d939 in main perf.c:558
-> > >    #15 0x7fe2d3833ca8 in __libc_start_call_main libc_start_call_main.=
-h:74
-> > >    #16 0x7fe2d3833d65 in __libc_start_main@@GLIBC_2.34 libc-start.c:1=
-28
-> > >    #17 0x55ee684b0a91 in _start perf[4ca91]
-> > > ```
-> > > As the same symbol code is used for the backtrace then adding the seg=
-v
-> > > there is likely causing a segv in the signal handler in __dump_stack.
-> >
-> > Just to note, it would be nice for this to land as I need to rebase:
-> > https://lore.kernel.org/lkml/20250529044000.759937-19-irogers@google.co=
-m/
-> > due to the machine changes. I believe the patches are WAI as shown in
-> > the output.
+> On Mon,  9 Jun 2025 18:40:21 +0000 Harshitha Ramamurthy wrote:
+> > This patch series add the support of Rx HW timestamping, which sends
+> > adminq commands periodically to the device for clock synchronization wi=
+th
+> > the nic.
 >
-> Ok, I see this made it into v6.16 PR:
-> https://lore.kernel.org/lkml/20250603203501.1961487-1-acme@kernel.org/
-
-Actually just the first patch. I'll rebase and resend just patch 2 as v3.
-
-Thanks,
-Ian
+> IIUC:
+>  - the driver will only register the PHC if timestamping is enabled
+>    (and unregister it when disabled),
+I checked around the other drivers and it looked like they would
+register the PHC when initializing the driver and keep it alive until
+destroying the driver. I can change it to be that way on V5.
+>  - there is no way to read the PHC from user space other than via
+>    packet timestamps,
+The ability to read the PHC from user space will be added in the
+future patch series when adding the actual PTP support. For this
+patch, it's adding the initial ptp to utilize the ptp_schedule_worker
+to read the NIC clock as suggested in the previous review comments.
+>  - the ethtool API does not report which PHC is associated with the
+>    NIC, presumably because the PHC is useless to the user space.
+>
+Thanks for pointing it out. I can add the phc_index info into the
+gve_get_ts_info on V5.
+> Do I understand that correctly? It's pretty unusual. Why not let user
+> read the clock?
+>
+> Why unregister the PHC? I understand that you may want to cancel
+> the quite aggressive timestamp refresh work, but why kill the whole
+> clock... Perhaps ptp_cancel_worker_sync() didn't exist when you wrote
+> this code?
+Will utilize ptp_cancel_worker_sync instead of unregistering the PHC
+every time on V5.
