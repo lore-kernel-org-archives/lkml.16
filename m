@@ -1,139 +1,116 @@
-Received: from mxout5.mail.janestreet.com (mxout5.mail.janestreet.com [64.215.233.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05481A7AF7
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 18:55:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.215.233.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9E631D5CDD;
+	Wed, 11 Jun 2025 18:57:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749668160; cv=none; b=lAA3d4oTzwwIoOqxWOTBaPzQEdYNF/TxXR+lorGUW8GM2ctD9Jdo04tFKcWkwJJZ2/Pn5HuE/KKyB6cTgVOwfmM79jy6BRX6RxLjHogGQXqaJvyvz2YNZGCMrUO7woi6Hz4UBP4ZyvXt83AAERFeLMnLY9A/UUjj90oB+NdfuvM=
+	t=1749668252; cv=none; b=EUtIfhxPBG93bn2F/ESj7/ixwpxkzzzft09PyN5ptnvXRM1M3Y5yebvBMnhc/d65dAdlbG7FY3h3Zk2d12RZMyhCkDbtY8RRhCkmYmGgNKA3IMHhmiqB06lJvawiZCfyoPASs7o6ctVmuCoUWc72cnBgS3oW0c3tkzSp1LRfqFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749668160; c=relaxed/simple;
-	bh=uZMNI2eKpooRJpq5nrCE/LvN5FOfjLV2hWIZUyweVgA=;
+	s=arc-20240116; t=1749668252; c=relaxed/simple;
+	bh=FA4/cN74JMJAalmgbqNaeO1ru918vWjigUxWd4NER0Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V0+XxiExWLSrCX/j15zVpShIA7lQIQOQNEE2xr77RNbyfwF/A800Bsoqx3Wp5aL35GWxOmPt9bRYO1rVNhogbxh9NUI1KHutZJDR/mziCBAZvutXYlDei/e9RN4HPv0QbP6ezg4+lBYW2mQ+IZWFDgFiMJONmv02nDT2cyRgN5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=janestreet.com; spf=pass smtp.mailfrom=janestreet.com; dkim=pass (2048-bit key) header.d=janestreet.com header.i=@janestreet.com header.b=nvy3ywaK; arc=none smtp.client-ip=64.215.233.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=janestreet.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=janestreet.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=hiIG/9MVGo5p0WLdUbDsvQEvj4SAWyTb+cDV1YSfal3HtBW+am713odabMNdC5OLkDWbGvH4dX+L+lgnv0gC96f9SWfyvLRdhYQrXIIkK+OeWDEZL2S6akmWx3dhu6iV3JJCW+rToQwso9k6THrhaNkEknkNUIVKkiDiO29rrq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XT6eiIWI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=janestreet.com header.i=@janestreet.com header.b="nvy3ywaK"
-Date: Wed, 11 Jun 2025 14:50:31 -0400
-From: Nikhil Jha <njha@janestreet.com>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
- 	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
- 	Olga Kornievskaia <okorniev@redhat.com>,
- 	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
- 	"David S. Miller" <davem@davemloft.net>,
- 	Eric Dumazet <edumazet@google.com>,
- 	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- 	Simon Horman <horms@kernel.org>,
- 	Steven Rostedt <rostedt@goodmis.org>,
- 	Masami Hiramatsu <mhiramat@kernel.org>,
- 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- 	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- 	netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] fix gss seqno handling to be more rfc-compliant
-Message-ID: <20250611A18503192e946d6.njha@janestreet.com>
-References: <20250319-rfc2203-seqnum-cache-v2-0-2c98b859f2dd@janestreet.com>
-  <d78576c1-d743-4ec2-bf8c-d87603460ac1@oracle.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XT6eiIWI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93CCEC4CEE3;
+	Wed, 11 Jun 2025 18:57:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749668252;
+	bh=FA4/cN74JMJAalmgbqNaeO1ru918vWjigUxWd4NER0Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XT6eiIWIMaG0Ss0mBqQm9OyIlONbS8GrNWdECj9HI8lh1+FNzsqnE35rx+2ZsnY1F
+	 aPxzJZwSezIa3QWVXRTpFTPLiUu0Opy22io2/TWDrnMlrvH5z5d4HC8FmoWdoc4Ry5
+	 m/JzQlN7MeZleb2DlnPfPTc/DzqdkC62QYl+A6zCNsQnGXBEzm/eCiZC2X9xt85X17
+	 rwlgUbt4b1fIki0Z8TwU8RYkMbc5aMQRPo93qexzpNZ3dkEkHlbRU78zxC2hdw98wE
+	 rhAsW2DowdlqmZa+6BYYnIjocCyvhSC4NYUQsa9fVburmAu+AfbANyrqmgSpf1oqE6
+	 DUmUH4rygfWMA==
+Date: Wed, 11 Jun 2025 11:57:27 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH v3 3/3] vdso: Reject absolute relocations during build
+Message-ID: <20250611185727.GC2192624@ax162>
+References: <20250611-vdso-absolute-reloc-v3-0-47897d73784b@linutronix.de>
+ <20250611-vdso-absolute-reloc-v3-3-47897d73784b@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <d78576c1-d743-4ec2-bf8c-d87603460ac1@oracle.com>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=janestreet.com;
-  s=waixah; t=1749667831;
-  bh=FpMbOeXSW5gqREJmu38NRaAciY+AIiBd4f7rjLts1EQ=;
-  h=Date:From:To:Cc:Subject:References:In-Reply-To;
-  b=nvy3ywaKM+HXjcbXegRqJJhPWpPema6thNJE0eI9STl3qqpqpdaXrG0RPEcTb6eLi
-  OuFY7Iq4Jo9smQZRj6nhny01S5wernP4efPDmtmCnXwnZ0SCPvRmjn+SGzZBmq77HG
-  DzaYSnlxiSHw13ZY1IL/DsX9E0N6VuqliCxJ1xlb5MSpcGNKDrWgT0TNC34L6aqtA/
-  0vlTLRSBQqCJ9XOQ4osz9zYEPUdSdnR6pEUtIjXbVoR9J62P4bezOZk9U8/YcgjV+5
-  vb/KSZaepYU7UBrFw14chpuFvmzUCwJbRVdFHC+OisEvyGoVCqhoZsKxlVk+Wvjf9z
-  22Ya9jACvP9Rg==
+In-Reply-To: <20250611-vdso-absolute-reloc-v3-3-47897d73784b@linutronix.de>
 
-On Thu, Mar 20, 2025 at 09:16:15AM -0400, Chuck Lever wrote:
-> On 3/19/25 1:02 PM, Nikhil Jha via B4 Relay wrote:
-> > When the client retransmits an operation (for example, because the
-> > server is slow to respond), a new GSS sequence number is associated with
-> > the XID. In the current kernel code the original sequence number is
-> > discarded. Subsequently, if a response to the original request is
-> > received there will be a GSS sequence number mismatch. A mismatch will
-> > trigger another retransmit, possibly repeating the cycle, and after some
-> > number of failed retries EACCES is returned.
-> > 
-> > RFC2203, section 5.3.3.1 suggests a possible solution... ‚Äúcache the
-> > RPCSEC_GSS sequence number of each request it sends‚Äù and "compute the
-> > checksum of each sequence number in the cache to try to match the
-> > checksum in the reply's verifier." This is what FreeBSD‚Äôs implementation
-> > does (rpc_gss_validate in sys/rpc/rpcsec_gss/rpcsec_gss.c).
-> > 
-> > However, even with this cache, retransmits directly caused by a seqno
-> > mismatch can still cause a bad message interleaving that results in this
-> > bug. The RFC already suggests ignoring incorrect seqnos on the server
-> > side, and this seems symmetric, so this patchset also applies that
-> > behavior to the client.
-> > 
-> > These two patches are *not* dependent on each other. I tested them by
-> > delaying packets with a Python script hooked up to NFQUEUE. If it would
-> > be helpful I can send this script along as well.
-> > 
-> > Signed-off-by: Nikhil Jha <njha@janestreet.com>
-> > ---
-> > Changes since v1:
-> >  * Maintain the invariant that the first seqno is always first in
-> >    rq_seqnos, so that it doesn't need to be stored twice.
-> >  * Minor formatting, and resending with proper mailing-list headers so the
-> >    patches are easier to work with.
-> > 
-> > ---
-> > Nikhil Jha (2):
-> >       sunrpc: implement rfc2203 rpcsec_gss seqnum cache
-> >       sunrpc: don't immediately retransmit on seqno miss
-> > 
-> >  include/linux/sunrpc/xprt.h    | 17 +++++++++++-
-> >  include/trace/events/rpcgss.h  |  4 +--
-> >  include/trace/events/sunrpc.h  |  2 +-
-> >  net/sunrpc/auth_gss/auth_gss.c | 59 ++++++++++++++++++++++++++----------------
-> >  net/sunrpc/clnt.c              |  9 +++++--
-> >  net/sunrpc/xprt.c              |  3 ++-
-> >  6 files changed, 64 insertions(+), 30 deletions(-)
-> > ---
-> > base-commit: 7eb172143d5508b4da468ed59ee857c6e5e01da6
-> > change-id: 20250314-rfc2203-seqnum-cache-52389d14f567
-> > 
-> > Best regards,
+On Wed, Jun 11, 2025 at 11:22:14AM +0200, Thomas Weiﬂschuh wrote:
+> All vDSO code needs to be completely position independent.
+> Symbol references are marked as hidden so the compiler emits
+> PC-relative relocations. However there are cases where the compiler may
+> still emit absolute relocations, as they are valid in regular PIC DSO code.
+> These would be resolved by the linker and will break at runtime.
+> This has been observed on arm64 under some circumstances, see
+> commit 0c314cda9325 ("arm64: vdso: Work around invalid absolute relocations from GCC")
 > 
-> This seems like a sensible thing to do to me.
+> Introduce a build-time check for absolute relocations.
+> The check is done on the object files as the relocations will not exist
+> anymore in the final DSO. As there is no extension point for the
+> compilation of each object file, perform the validation in vdso_check.
 > 
-> Acked-by: Chuck Lever <chuck.lever@oracle.com>
+> Debug information can contain legal absolute relocations and readelf can
+> not print relocations from the .text section only. Make use of the fact
+> that all global vDSO symbols follow the naming pattern "vdso_u_".
+> 
+> Link: https://lore.kernel.org/lkml/aApGPAoctq_eoE2g@t14ultra/
+> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120002
+> Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+
+I ran this through a few different architectures with LLVM=1 and did not
+see anything interesting.
+
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+Tested-by: Nathan Chancellor <nathan@kernel.org>
+
+> ---
+>  lib/vdso/Makefile.include | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/lib/vdso/Makefile.include b/lib/vdso/Makefile.include
+> index cedbf15f80874d4bb27c097244bc5b11272f261c..04257d0f28c0ed324e31adbb68497181085752f8 100644
+> --- a/lib/vdso/Makefile.include
+> +++ b/lib/vdso/Makefile.include
+> @@ -12,7 +12,13 @@ c-getrandom-$(CONFIG_VDSO_GETRANDOM) := $(addprefix $(GENERIC_VDSO_DIR), getrand
+>  #
+>  # As a workaround for some GNU ld ports which produce unneeded R_*_NONE
+>  # dynamic relocations, ignore R_*_NONE.
+> +#
+> +# Also validate that no absolute relocations against global symbols are present
+> +# in the object files.
+>  quiet_cmd_vdso_check = VDSOCHK $@
+
+I do not see VDSOCHK in the normal build log but I do see the check
+being executed with V=1. That's obviously an outstanding issue but
+figured it was worth mentioning.
+
+>        cmd_vdso_check = if $(READELF) -rW $@ | grep -v _NONE | grep -q " R_\w*_"; \
+>  		       then (echo >&2 "$@: dynamic relocations are not supported"; \
+> +			     rm -f $@; /bin/false); fi && \
+> +		       if $(READELF) -rW $(filter %.o, $(real-prereqs)) | grep -q " R_\w*_ABS.*vdso_u_"; \
+> +		       then (echo >&2 "$@: absolute relocations are not supported"; \
+>  			     rm -f $@; /bin/false); fi
 > 
 > -- 
-> Chuck Lever
-
-Hi,
-
-We've been running this patch for a while now and noticed a (very silly
-in hindsight) bug.
-
-maj_stat = gss_validate_seqno_mic(ctx, task->tk_rqstp->rq_seqnos[i], seq, p, len);
-
-needs to be
-
-maj_stat = gss_validate_seqno_mic(ctx, task->tk_rqstp->rq_seqnos[i++], seq, p, len);
-
-Or the kernel gets stuck in a loop when you have more than two retries.
-I can resend this patch but I noticed it's already made its way into
-quite a few trees. Should this be a separate patch instead?
-
-- Nikhil
-
-
-
-
-
+> 2.49.0
+> 
