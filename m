@@ -1,98 +1,235 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1023C2DECCE
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 22:47:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 694452DECA0
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 22:47:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749682067; cv=none; b=nEXBU5300Enf9Gke9CXrjJeim+w9A1FJ3ZYNdtPrcIpy8AZnAnUsFHve9NzrOZNP7JSjnW3W7fJI+xOhq+UAEnQjoJm7sXApumUlZUl2I89hxqlcz808eWNtf+60qLAvYmJuYS+L+zuOLTbxbEItw4bb/TMnpv1VZWQHo0k7yjE=
+	t=1749682068; cv=none; b=S4WtBLoxZVof31/zQx5n4a+dKUASz2iBlcKgzylnk34S9Q60l08wDg93rU/VI2oLYTNoVXLDAIUDZ7pZ0zMOtrulKkePzsXuQVbqYtidFjaaCUL1E+7lGSvCN9vcnt/8NyV8rOndWzaJtMLlllBaKCjCq4DIX/TpDyomMmW1LEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749682067; c=relaxed/simple;
-	bh=i3uXg88GrmDL02Ipc0Qdy2wwCTXE7sOzhUrq+EghysA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rM0gSJamw64cqo9ztPz2OR7PPYpGfPC9nrqE3nKuOpCI+rvG9pZn9wCKsAG4MulRl7rTnZw0LI9iILfQl4de/4QlI/1r8CaG/ziVolXE5+JUgzLhL4m11rFVRd8E9/7xugkEZKweXFiKb/ljonsggCnU/t0hNi30+NIUgXDEJzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ji1VIkVs; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1749682068; c=relaxed/simple;
+	bh=EocGUl+znQ6+GySTsc5tfeFokKH4lMkbBdgnP/hNSw8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=IRp5mDoiNt8713OQbHKmJ9ufMrH3cIc/eAn8upiGkM+EMXYhH1hhzH3Bbny7KPe3hRN/mTFiO8Stzng9pFGrZhZHqnOE/eyGL5JoRfQR7piPlOzKCoRsRoNThJl0jjiIOP+aAvtRJr6xbfxgoaYAFQs2oqUURpkU+j4B/tPaWNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x8XbHCi0; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ji1VIkVs"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b2fd091f826so256360a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:47:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x8XbHCi0"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-74299055c3dso487879b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:47:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1749682064; x=1750286864; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vtvuCkqBFYEZRyjG1H+yUqFCaACnLIwx9nH+82roXwU=;
-        b=Ji1VIkVsSKn91hMtWjBeRs69fVlC/81M9b0VkJt2obusM2t5WlIhJwST8Fxp9qFiM1
-         S51OhNCdia0Lep6POMXp5ozFYUqs6H4EBdax4VjslLbeX4mZzRVq2fcRW+JItQEbCaNN
-         MEJ1uPLoiJHHXomsP9hUaa2Nq5ki3iwwmWuzA=
+        d=google.com; s=20230601; t=1749682065; x=1750286865; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=MiX1cBSlPb3QAMFRj3O20TU/yzydIFIDo71+8w5lo7I=;
+        b=x8XbHCi0bw14RMRU29u9CNgqgDyHWiGfGIe1/bwPAI5dcQyn/0IldpMsKK2Var9Bdd
+         RFj+Q3mdkF3i+1aeQs8Pfpi2aslDa+y9JzmyxdS4hjZIKLVhuW+6s1N0dDF820wDHLxc
+         ipgxvGzHK6x7swKEq52JlAPEnoV/2T22/FiY8L+3xtKqMp6q7QGHhnOaUkD+lN6tGEod
+         PrgY2RCwMkANyyqasskNnMEAoFWBGXq+g3ERGxFJW74/jOfElhvRcJY1MUTPDwUUH755
+         vZKma3GZs2zZqmqJT6ekeqempOBwMY8bzMcFF66JiuqMuZHYTViBdRDF5rZ7jRRhScZc
+         eGIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749682064; x=1750286864;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vtvuCkqBFYEZRyjG1H+yUqFCaACnLIwx9nH+82roXwU=;
-        b=RiP5HdQvgFOexyrYJoARJqa9+6Kk0u2VZDBPdqgEavceUSDWgqyUg2ihBPHvavO68j
-         BXxud/DXpg4jxruy29ScC7lZdEBQwdaCpdGzcJBRQa/2sGXmEMKnATW8OORybTThEZ1w
-         dFCLpdZrZcrRO0xnH5kUeRCRYRWN9zqN4c5kP31PenyztXoFle/HHtE6C1L2GJ/jkGxB
-         IogQc7lHau496n3yUWGG0G0iDQuP2syMM+0MnI3IdHUr9tqY7+c6VXeCbgQMIJd/bPTT
-         jOmzNHXH3LMDp7P3Dv0iSkAm42ciGZ1iS/+Dkoin0/ZfxmzOKeUPjl6mfJJ8JyenpdKE
-         7rfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWWkiNW0a/oRlH+PuOBlzX+afKU8S5rRnffhWsiHMnlTpRcf14jnK1gb4sg3xV6bhPLdEHC3hTA9lmaNUs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwiklH6LEHQD7Y/M/ESy4FKnS+0j54hfZ9rpwaRSrzKypH66lG/
-	JyaNec/Nm3oZNz2CSibtNX0BrwEOxqMwxsk4envHHTxQAWz6n/iN4Z0W43edgw36xA==
-X-Gm-Gg: ASbGnctCycvGWCT3iQ2KHL2M30C8QQFs4pPon+v2jI95A9LpOCiy4dQ4GFqR+ZsEhle
-	spuEHuLRhTOR1oja7Fm/N+1z08sdCXgd3uGEmnsTEzKFZBHg9fLOBzZDNN7E2Wyd2504Ow9umSh
-	riC04nX6zrUxFos5ZH2qHVSYXRVKay8VyMaY8oqL0i9JLbU08zXHLSWamLsOUA0VFcHLHVJVZaP
-	vgCmJqNBnca5zAbqRakgiv6yZ5QShxS1DwvjwU4iLXczQ8LVkhquYu4YgSG3tl2gbsNn+nDClrX
-	Hro89ZlBuVdmC1e+YXlfdcXaCnWfFjvaZ6Dukp+DbxBcMobCxPUKXVpo66MydrBNjFNUzUcj7u2
-	YJm5gt6qqnFnO5ntIaDhHk6bQ
-X-Google-Smtp-Source: AGHT+IFHrwkXqx2Z3BILANYYSOX7LZROue9EeXw+W5JfDdbWlJ4+YUXrdt9TxJMVZXgYYIXDGyUMfA==
-X-Received: by 2002:a17:90a:d406:b0:2fa:1e56:5d82 with SMTP id 98e67ed59e1d1-313bfdcc12emr1461708a91.17.1749682064115;
-        Wed, 11 Jun 2025 15:47:44 -0700 (PDT)
-Received: from localhost ([2a00:79e0:2e14:7:e790:5956:5b47:d0a7])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-313c1bca4c7sm113244a91.3.2025.06.11.15.47.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jun 2025 15:47:43 -0700 (PDT)
-Date: Wed, 11 Jun 2025 15:47:42 -0700
-From: Brian Norris <briannorris@chromium.org>
-To: Francesco Dolcini <francesco@dolcini.it>
-Cc: Francesco Dolcini <francesco.dolcini@toradex.com>,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Jeff Chen <jeff.chen_1@nxp.com>, stable@vger.kernel.org
-Subject: Re: [PATCH wireless v2] Revert "wifi: mwifiex: Fix HT40 bandwidth
- issue."
-Message-ID: <aEoHjudwZKs4YMls@google.com>
-References: <20250605130302.55555-1-francesco@dolcini.it>
+        d=1e100.net; s=20230601; t=1749682065; x=1750286865;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MiX1cBSlPb3QAMFRj3O20TU/yzydIFIDo71+8w5lo7I=;
+        b=oTrGqSj8ev6pSf7+srRps1vIwXpagzWji8EjOlmgKm4ipNhtwSjfcOy2Cijx0qYXQu
+         i3PxKt9TWhBhxd3aFf3WF321UsLm7x/ZtJJaTr9HCO9ZuLz7r+uioIB6AD+NjJOzDNbc
+         vOUURL7Kif17uTfbXiYgtlMrZFHPDsbfm4fpiBZ3SMSpx90IVCxLwxbvuXmilIZpM6Z/
+         bKvGAQeH4p/xuhvLMkziqv8FLIA7xesna8nMrrnLUiOQ9gQl7ai7o4mYBs1KB+RrsPO2
+         hNBPOaXrZSw5iSx9aeCkEYFAuTQJvKL1mTwkPbGH+jg2AqcTUfc80N3xhuzwFzFTgrci
+         Su1w==
+X-Forwarded-Encrypted: i=1; AJvYcCUjH+e6+xIXp6mhS8IMMn+d9g+kOGZxgPxGzwRwz0uEW6GafWgymzNNytpMVcd8XKaPX4VS4nTIkR8mk+s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/wmA/MGWLvuU0ok4f9ISAJf2U0iIyaOnfqPfcnED+si7baKiq
+	0USchRCIS1mQjWXjBngOhC79IT36NuMOTP+fIN4wJ1kcW3b+CWIbcLrttm8OH2ZAv4tuAHFT7vr
+	9wQ7+GA==
+X-Google-Smtp-Source: AGHT+IHF9HHczJkxI6npdpQx+RAXhNVPsiYt0OqNmwwcKys/CyATwjqiplFRMGOAVQl4fRFJJoPj5M5Pf18=
+X-Received: from pfbha15.prod.google.com ([2002:a05:6a00:850f:b0:747:b682:5cc0])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:181c:b0:742:9bd3:238a
+ with SMTP id d2e1a72fcca58-7486cb71821mr6183459b3a.4.1749682065649; Wed, 11
+ Jun 2025 15:47:45 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Wed, 11 Jun 2025 15:45:32 -0700
+In-Reply-To: <20250611224604.313496-2-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250605130302.55555-1-francesco@dolcini.it>
+Mime-Version: 1.0
+References: <20250611224604.313496-2-seanjc@google.com>
+X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
+Message-ID: <20250611224604.313496-31-seanjc@google.com>
+Subject: [PATCH v3 29/62] KVM: x86: Move posted interrupt tracepoint to common code
+From: Sean Christopherson <seanjc@google.com>
+To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, 
+	David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>
+Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	kvm@vger.kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Sairaj Kodilkar <sarunkod@amd.com>, Vasant Hegde <vasant.hegde@amd.com>, 
+	Maxim Levitsky <mlevitsk@redhat.com>, Joao Martins <joao.m.martins@oracle.com>, 
+	Francesco Lavra <francescolavra.fl@gmail.com>, David Matlack <dmatlack@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jun 05, 2025 at 03:03:02PM +0200, Francesco Dolcini wrote:
-> From: Francesco Dolcini <francesco.dolcini@toradex.com>
-> 
-> This reverts commit 4fcfcbe457349267fe048524078e8970807c1a5b.
-> 
-> That commit introduces a regression, when HT40 mode is enabled,
-> received packets are lost, this was experience with W8997 with both
-> SDIO-UART and SDIO-SDIO variants. From an initial investigation the
-> issue solves on its own after some time, but it's not clear what is
-> the reason. Given that this was just a performance optimization, let's
-> revert it till we have a better understanding of the issue and a proper
-> fix.
-> 
-> Cc: Jeff Chen <jeff.chen_1@nxp.com>
-> Cc: stable@vger.kernel.org
-> Fixes: 4fcfcbe45734 ("wifi: mwifiex: Fix HT40 bandwidth issue.")
-> Closes: https://lore.kernel.org/all/20250603203337.GA109929@francesco-nb/
-> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+Move the pi_irte_update tracepoint to common x86, and call it whenever the
+IRTE is modified.  Tracing only the modifications that result in an IRQ
+being posted to a vCPU makes the tracepoint useless for debugging.
 
-Johannes seems to have applied this already, but FWIW:
+Drop the vendor specific address; plumbing that into common code isn't
+worth the trouble, as the address is meaningless without a whole pile of
+other information that isn't provided in any tracepoint.
 
-Acked-by: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/kvm/irq.c             | 12 ++++++++++--
+ arch/x86/kvm/svm/avic.c        |  6 ------
+ arch/x86/kvm/trace.h           | 19 +++++++------------
+ arch/x86/kvm/vmx/posted_intr.c |  3 ---
+ arch/x86/kvm/x86.c             |  1 -
+ 5 files changed, 17 insertions(+), 24 deletions(-)
+
+diff --git a/arch/x86/kvm/irq.c b/arch/x86/kvm/irq.c
+index 5948aba9fdc0..ec13d1d7706d 100644
+--- a/arch/x86/kvm/irq.c
++++ b/arch/x86/kvm/irq.c
+@@ -511,9 +511,11 @@ void kvm_arch_irq_routing_update(struct kvm *kvm)
+ static int kvm_pi_update_irte(struct kvm_kernel_irqfd *irqfd,
+ 			      struct kvm_kernel_irq_routing_entry *entry)
+ {
++	unsigned int host_irq = irqfd->producer->irq;
+ 	struct kvm *kvm = irqfd->kvm;
+ 	struct kvm_vcpu *vcpu = NULL;
+ 	struct kvm_lapic_irq irq;
++	int r;
+ 
+ 	if (!irqchip_in_kernel(kvm) ||
+ 	    !kvm_arch_has_irq_bypass() ||
+@@ -540,8 +542,13 @@ static int kvm_pi_update_irte(struct kvm_kernel_irqfd *irqfd,
+ 			vcpu = NULL;
+ 	}
+ 
+-	return kvm_x86_call(pi_update_irte)(irqfd, irqfd->kvm, irqfd->producer->irq,
+-					    irqfd->gsi, vcpu, irq.vector);
++	r = kvm_x86_call(pi_update_irte)(irqfd, irqfd->kvm, host_irq, irqfd->gsi,
++					 vcpu, irq.vector);
++	if (r)
++		return r;
++
++	trace_kvm_pi_irte_update(host_irq, vcpu, irqfd->gsi, irq.vector, !!vcpu);
++	return 0;
+ }
+ 
+ int kvm_arch_irq_bypass_add_producer(struct irq_bypass_consumer *cons,
+@@ -595,6 +602,7 @@ void kvm_arch_irq_bypass_del_producer(struct irq_bypass_consumer *cons,
+ 
+ 	spin_unlock_irq(&kvm->irqfds.lock);
+ 
++
+ 	kvm_arch_end_assignment(irqfd->kvm);
+ }
+ 
+diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
+index 14a1544af192..d8d50b8f14bb 100644
+--- a/arch/x86/kvm/svm/avic.c
++++ b/arch/x86/kvm/svm/avic.c
+@@ -815,9 +815,6 @@ int avic_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
+ 	 */
+ 	svm_ir_list_del(irqfd);
+ 
+-	pr_debug("SVM: %s: host_irq=%#x, guest_irq=%#x, set=%#x\n",
+-		 __func__, host_irq, guest_irq, !!vcpu);
+-
+ 	/**
+ 	 * Here, we setup with legacy mode in the following cases:
+ 	 * 1. When cannot target interrupt to a specific vcpu.
+@@ -853,9 +850,6 @@ int avic_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
+ 		 */
+ 		if (!ret)
+ 			ret = svm_ir_list_add(to_svm(vcpu), irqfd, &pi);
+-
+-		trace_kvm_pi_irte_update(host_irq, vcpu->vcpu_id, guest_irq,
+-					 vector, vcpu_info.pi_desc_addr, true);
+ 	} else {
+ 		ret = irq_set_vcpu_affinity(host_irq, NULL);
+ 	}
+diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
+index ababdba2c186..57d79fd31df0 100644
+--- a/arch/x86/kvm/trace.h
++++ b/arch/x86/kvm/trace.h
+@@ -1176,37 +1176,32 @@ TRACE_EVENT(kvm_smm_transition,
+  * Tracepoint for VT-d posted-interrupts and AMD-Vi Guest Virtual APIC.
+  */
+ TRACE_EVENT(kvm_pi_irte_update,
+-	TP_PROTO(unsigned int host_irq, unsigned int vcpu_id,
+-		 unsigned int gsi, unsigned int gvec,
+-		 u64 pi_desc_addr, bool set),
+-	TP_ARGS(host_irq, vcpu_id, gsi, gvec, pi_desc_addr, set),
++	TP_PROTO(unsigned int host_irq, struct kvm_vcpu *vcpu,
++		 unsigned int gsi, unsigned int gvec, bool set),
++	TP_ARGS(host_irq, vcpu, gsi, gvec, set),
+ 
+ 	TP_STRUCT__entry(
+ 		__field(	unsigned int,	host_irq	)
+-		__field(	unsigned int,	vcpu_id		)
++		__field(	int,		vcpu_id		)
+ 		__field(	unsigned int,	gsi		)
+ 		__field(	unsigned int,	gvec		)
+-		__field(	u64,		pi_desc_addr	)
+ 		__field(	bool,		set		)
+ 	),
+ 
+ 	TP_fast_assign(
+ 		__entry->host_irq	= host_irq;
+-		__entry->vcpu_id	= vcpu_id;
++		__entry->vcpu_id	= vcpu ? vcpu->vcpu_id : -1;
+ 		__entry->gsi		= gsi;
+ 		__entry->gvec		= gvec;
+-		__entry->pi_desc_addr	= pi_desc_addr;
+ 		__entry->set		= set;
+ 	),
+ 
+-	TP_printk("PI is %s for irq %u, vcpu %u, gsi: 0x%x, "
+-		  "gvec: 0x%x, pi_desc_addr: 0x%llx",
++	TP_printk("PI is %s for irq %u, vcpu %d, gsi: 0x%x, gvec: 0x%x",
+ 		  __entry->set ? "enabled and being updated" : "disabled",
+ 		  __entry->host_irq,
+ 		  __entry->vcpu_id,
+ 		  __entry->gsi,
+-		  __entry->gvec,
+-		  __entry->pi_desc_addr)
++		  __entry->gvec)
+ );
+ 
+ /*
+diff --git a/arch/x86/kvm/vmx/posted_intr.c b/arch/x86/kvm/vmx/posted_intr.c
+index 3de767c5d6b2..687ffde3b61c 100644
+--- a/arch/x86/kvm/vmx/posted_intr.c
++++ b/arch/x86/kvm/vmx/posted_intr.c
+@@ -308,9 +308,6 @@ int vmx_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
+ 			.vector = vector,
+ 		};
+ 
+-		trace_kvm_pi_irte_update(host_irq, vcpu->vcpu_id, guest_irq,
+-					 vcpu_info.vector, vcpu_info.pi_desc_addr, true);
+-
+ 		return irq_set_vcpu_affinity(host_irq, &vcpu_info);
+ 	} else {
+ 		return irq_set_vcpu_affinity(host_irq, NULL);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 5ba5e28532de..d3571c484790 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -13891,7 +13891,6 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_nested_intercepts);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_write_tsc_offset);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_ple_window_update);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_pml_full);
+-EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_pi_irte_update);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_avic_unaccelerated_access);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_avic_incomplete_ipi);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_avic_ga_log);
+-- 
+2.50.0.rc1.591.g9c95f17f64-goog
+
