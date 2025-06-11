@@ -1,131 +1,127 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 908402144A2
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:18:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E923A923;
+	Wed, 11 Jun 2025 07:20:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749626283; cv=none; b=Vv3rYzdNsGAF5yJ9kkIZxdX/M8g+luew23b5isILFqy8V3ZzAfcbOQ2w28t/dSG9BY4VbFu7UGV6ynTrEo8GdiqLWTNxPGWlvy7hK20sGS/LDjz+mEo6Rm7EDvd0Uo5W9JiMaivpJOZWlJzuWdVLL5oURN2qmz6sbb3FihdyBwE=
+	t=1749626413; cv=none; b=gKTKMu4sPbOIADa3p569hVARNamuNuuXLMuoUfglwZmXfZ40oORCaI/8BE57uTrcuYLjqnZ8OeIOtN2L6orDh7C8aqr5Kd+CJaoN5n/k0RsR3yYH/0OLsdWlPhiC42vuIV+2lICiinN5mVpHaygIjUc6mX48T+hq2Ixy9PJSTjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749626283; c=relaxed/simple;
-	bh=QNeImmfSFEHcHoVT5BWJstzzNsO907LECLn5apjX4dw=;
-	h=From:Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:
-	 References:In-Reply-To; b=i2VUeARz27NOoptBGjx+HgT/Uy8n1uYjKyIwOavqEXqSU9MWQ+8mkP6yqHYEf/IGWsrF91JOXDyDraUMfaTDRp4q4MAXMGeqlVAR+itE0TmZCqLY6ENr77PEU+8juovLusqTO+64Tl7ZzIya3NNCdzjhOTbE3mT45qhkXLAbL+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DK8+GNVC; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749626413; c=relaxed/simple;
+	bh=/7F7WpshDjelGHatVoqukDPGIQiPrcJCWYW44DDjwdc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ncncDCYk7b0lnRNmjT9tb4KP15FxzcpAG5R4d74rtEhJnhD8jgvWwb3hLYTsqw9AiKM0+5ArY5qChSLd4sowMrV5BRqprMhdPHVbuegwgLlIEHqnTgCpmEZLqtunB7ZqUdKAaF6g0udfwxutsgJm6I46KPbrFAsCuwFQw5St9Lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OzQBkf+x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DK8+GNVC"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-450cfb790f7so44049595e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 00:18:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749626280; x=1750231080; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:message-id:date
-         :content-transfer-encoding:mime-version:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2UV16KNGvk2B5yuORUC0PMOaWLyG4ZWITjVZAENXr0k=;
-        b=DK8+GNVCctgCOT3R8znvJ0egCudv/7L1EeMCt2B3Qa9nd99GeRoLWpn0GcTnu7yGZx
-         ZaDHLcQv4t54r1evoncJMbPPfX0QBiLTlpNkqgXHyOBHWgbxNPhweBxIDxq0007x8gIx
-         vSgKg3es/TKsiBy7tZjTK1vYqSmniCnS6ySYHgpRzckBmIct0QddYfulHgalvZjksk7F
-         nNKy3Z3Cqkyi/7EYsGctGuzLp+rKN5Ov8phSeHd2Ad7XccfeHSIkK92BrFZ183AOnLqf
-         GwtqnFfKO/Idclm/x7ga7HwPuEiil23cMT8IV2uT60fWPxLeY10/baLZYlE72y5FXqgt
-         4nMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749626280; x=1750231080;
-        h=in-reply-to:references:subject:cc:to:message-id:date
-         :content-transfer-encoding:mime-version:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=2UV16KNGvk2B5yuORUC0PMOaWLyG4ZWITjVZAENXr0k=;
-        b=u0k5pBM/A41vPhejcM4efwMbpsMz6z4pciX0X2R6umDj1L+4Ia3o14fYYY4oPNjQlH
-         oQNgrdDlR12h7MIGCxsu/kWHukOyO0oRgin1iWbLRW9GTMR6jqkV4w+amT3MaTHXUE6E
-         Eam4g/tBK7q5t2BkbkRJ5VugGdobCYqCjfk13q2Qn3rtqQaocOJv2JY/dv4u2w4pcHjV
-         5qCw9cBLQA3q+n9RKEHrXo3zuqaG9rvTGqOR4DqqnFI5oFeFYQ7kd4R7Vcwr98N4wZPQ
-         KcT7FtDyMaM4PAG6CpncCnMCyWX3XYXA8qJJ4qhyse4Rispqse1eMzb3lSsnknzLWDbU
-         dA/w==
-X-Forwarded-Encrypted: i=1; AJvYcCX5u49EV+99AAaqWvCWb+kTgdceFDB0quht7dO4JBuGUg0vRadyZXgY0aHI6q0EoPLWoF1s/4S9e1qh+nw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMY6lWkkXm3LnYN8Ya6v+H0A8LEOqYRviJAooq1RWxkPz6xvsT
-	MXOSKr7E/9i5gNZXAoW2uvvn88jHwmt9EpQkWAl0skOK0rbPehNBVF3z
-X-Gm-Gg: ASbGncsyeQZ6D3qrjQ1PMicj163fd0HIxYzE0Oama7HdwGKNv1m5EjyB49E1Baxirie
-	6yk5s/L4d8d2gx+U05DOF54qk1FhgD/4H6BtlwvQt6i5zFrmYtYqYmL7QCijRZNEbB0Vcuo5hf6
-	gGKtnSm0oCx25N5JAledUcUAIzdRjJJi6x7rN2ZaxcCXkTDNRsdw+T6Q5Nsp5OPD5iu9ha8oWE7
-	NG2OiXuCiDUHFTJJesGwoR9zo2qqWEGrvj2sP4GhKmZ5meMy0s88fwaXNrjC9jHlV1l/tvhKewy
-	ps4MgJWcYuLubJF8e7AesR5kDsZHkG9kd5BGHc1/dyPkl0xKRZIfPcZ9ND/gmdwWhn16r46fHVx
-	JAjKo8eVILjGYeQ==
-X-Google-Smtp-Source: AGHT+IFT1pbBYNbS/cZPSP4PTxvgVaj3pNGhmXxZlh1AkFam1XP972B4SbHd1fccSvHvvnUVHTpBrQ==
-X-Received: by 2002:a05:600c:3d13:b0:450:ddb7:ee4d with SMTP id 5b1f17b1804b1-453248cb4c2mr16102345e9.24.1749626279675;
-        Wed, 11 Jun 2025 00:17:59 -0700 (PDT)
-Received: from localhost (a95-94-245-170.cpe.netcabo.pt. [95.94.245.170])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-45325176cf5sm12154925e9.21.2025.06.11.00.17.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 00:17:58 -0700 (PDT)
-From: Rui Miguel Silva <rmfrfs@gmail.com>
-X-Google-Original-From: "Rui Miguel Silva" <rui.silva@linaro.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OzQBkf+x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40CD6C4CEEE;
+	Wed, 11 Jun 2025 07:20:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749626412;
+	bh=/7F7WpshDjelGHatVoqukDPGIQiPrcJCWYW44DDjwdc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=OzQBkf+x0narII+HmtYjWGCDN8/DOMdf4UkTkqxLguCdwRjHLR5+rHwNe1cAfZREB
+	 9pPCpyuhKjmwtzIzueeRyPw5gAAjv/xdaCTYM9MxqqDtxMmKId5ORA9IlQZDcV/0I7
+	 w41ze7A30V5bt0/fPf/sXTv48tG1KawkM9+0GzmoX5Wz8bXUVwRy2T2jN8vSy2tXZ/
+	 cRfhKFJyHsomqx59QY39eHhrjtVUzVaIFIxBQx6MjwgoaLTTTKLVWQPmn29dNe3xmO
+	 6mG7chv3fwK1VWl9325TmhHvN9LgpFDuGnW9erlb0hUw2KJJ5kKvp4xr9udzZg/Kw+
+	 SWh2e0vPAyJZA==
+Message-ID: <19dd3d16-aadd-469c-a090-238baba14d4e@kernel.org>
+Date: Wed, 11 Jun 2025 09:20:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] dt-bindings: power: Add SiFive Domain Management
+ controllers
+To: Nick Hu <nick.hu@sifive.com>
+Cc: conor+dt@kernel.org, krzk+dt@kernel.org, Cyan Yang
+ <cyan.yang@sifive.com>, Samuel Holland <samuel.holland@sifive.com>,
+ devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>
+References: <20250611031023.28769-1-nick.hu@sifive.com>
+ <20250611031023.28769-2-nick.hu@sifive.com>
+ <9c429671-8409-4911-8559-73a069d66964@kernel.org>
+ <CAKddAkAyvRdAz9X_rCGgfdxD0Z_Q7sAt8e5nuJe7=s7G-Y3+AQ@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <CAKddAkAyvRdAz9X_rCGgfdxD0Z_Q7sAt8e5nuJe7=s7G-Y3+AQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Date: Wed, 11 Jun 2025 08:17:58 +0100
-Message-Id: <DAJIR40MBKSP.11QTS156Y7NH2@linaro.com>
-To: "Bartosz Golaszewski" <brgl@bgdev.pl>, "Rui Miguel Silva"
- <rmfrfs@gmail.com>, "Johan Hovold" <johan@kernel.org>, "Alex Elder"
- <elder@kernel.org>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Cc: <greybus-dev@lists.linaro.org>, <linux-staging@lists.linux.dev>,
- <linux-kernel@vger.kernel.org>, "Bartosz Golaszewski"
- <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH] staging: greybus: remove unnecessary GPIO line
- direction check
-References: <20250610152036.86099-1-brgl@bgdev.pl>
-In-Reply-To: <20250610152036.86099-1-brgl@bgdev.pl>
+Content-Transfer-Encoding: 8bit
 
-Hey Bartosz,
-Thanks for the patch.
+On 11/06/2025 09:15, Nick Hu wrote:
+> On Wed, Jun 11, 2025 at 2:57 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>
+>> On 11/06/2025 05:10, Nick Hu wrote:
+>>> SiFive Domain Management controller includes the following components
+>>> - SiFive Tile Management Controller
+>>> - SiFive Cluster Management Controller
+>>> - SiFive Core Complex Management Controller
+>>>
+>>> These controllers control the clock and power domain of the
+>>> corresponding domain.
+>>>
+>>> However, Since we don't have a SoC specific compatible string yet, so
+>>> add '- {}' for the first entry [1][2].
+>>
+>>
+>> But you must have Soc specific compatible strings. See previous discussion.
+>>
+> Maybe I'm missing something, but since we don't have a SoC-specific compatible
+> string yet, I thought we agreed to include a `- {}` as the first
+> entry, along with an
+> explanation in both the commit message and comments [1].
+But your commit msg does not explain. You need to explain why you do not
+have SoC specific compatibles. Saying "I do not have a SoC specific
+compatible" is not an argument explaining why you do not have SoC
+specific compatible.
 
-On Tue Jun 10, 2025 at 4:20 PM WEST, Bartosz Golaszewski wrote:
-
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> As of commit 92ac7de3175e3 ("gpiolib: don't allow setting values on input
-> lines"), the GPIO core makes sure values cannot be set on input lines.
-> Remove the unnecessary check.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-LGTM.
-
-Reviewed-by: Rui Miguel Silva <rui.silva@linaro.org>
-
-Cheers,
-     Rui
-
-> ---
->  drivers/staging/greybus/gpio.c | 6 ------
->  1 file changed, 6 deletions(-)
->
-> diff --git a/drivers/staging/greybus/gpio.c b/drivers/staging/greybus/gpi=
-o.c
-> index f81c34160f720..1280530c8987a 100644
-> --- a/drivers/staging/greybus/gpio.c
-> +++ b/drivers/staging/greybus/gpio.c
-> @@ -192,12 +192,6 @@ static int gb_gpio_set_value_operation(struct gb_gpi=
-o_controller *ggc,
->  	struct gb_gpio_set_value_request request;
->  	int ret;
-> =20
-> -	if (ggc->lines[which].direction =3D=3D 1) {
-> -		dev_warn(dev, "refusing to set value of input gpio %u\n",
-> -			 which);
-> -		return -EPERM;
-> -	}
-> -
->  	request.which =3D which;
->  	request.value =3D value_high ? 1 : 0;
->  	ret =3D gb_operation_sync(ggc->connection, GB_GPIO_TYPE_SET_VALUE,
-> --=20
-> 2.48.1
-
-
-
+Best regards,
+Krzysztof
