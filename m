@@ -1,298 +1,301 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75DF31A8F82;
-	Wed, 11 Jun 2025 15:59:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749657563; cv=fail; b=mVGYKbrRaG8nPEb3L63vTHNRMAymqxoUXFNEQc/KUCxStcEBwxC0M1vDQFak/XCqt9fn95lD2Hn0ZBo2owf/EvJQfM3o3tCCGDgJV6OLbssV5cVFkxo9a4KY8Lj7AbeD4lX6BT2OGj3KPLVVj31F+zhVTe59XRn8k+SQ5iUduqs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749657563; c=relaxed/simple;
-	bh=jTW/o+3CdEgVeBpaCQBvncg+K2u/Z8pOPvGLg30eNAg=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=AtdNARbgvTxYfKCww54LGjBP6k4Ugi2ozMT8tq5btKuOp0lZFxdf4yNACWJUS4SdVA4iZrPJcj98oB7NwMC/Vsk8shNghaOZ1A58ljo0ySgnNgj5b5gIrZS3gOSNPexsaUuS/qKTIN1OokeP5irL6907UCA3QwsjaHqtnHY817M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=EQrJOSjd; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=EIf4lG/h; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74B101A8F82;
+	Wed, 11 Jun 2025 15:59:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749657588; cv=none; b=G7HceuA6XXg5UJZGyFwrcn5euhqpHzI3ERd106F0WQMpqK9jzrCkRbQIeuy+VHEUIE6IWrA8dIyFrUgXK4Dz+zuRqYmRDotKOqqgKyEa5huFZT31fBDC6+c8p6thN+ZT08bC/uzfZgxZqrjZMB8HlJo0fhUev5UJbFZsMTBfnAI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749657588; c=relaxed/simple;
+	bh=89BiTjHBE1lw2kMhVAJalnI8x+UkGxbeH28FkW7pcDE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JXwn4X0qz0E8aWhn0etX5nw6PnYZNXu8meprgD47tlUULZKk7X4oNqFhf+PTWge49xlMPmIzXN4C7qv4j4IbOoA/edAuUNE9TcKOxmyTPeCsfIqEZvQ2SrDBJ0dErijnOce3BQZqe2FpK3zpiDMiQptooBSnnD6f8KyZWw9xSL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SVayobUV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EQrJOSjd";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="EIf4lG/h"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55BFIfFZ004594;
-	Wed, 11 Jun 2025 15:59:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=kwcm830PcVlxc5BIWQ3eDFhdrh274yLn6wqfJ/76ly8=; b=
-	EQrJOSjds0jw64OuNgZRxBhy1rcdt0GsYgzc52H1tZBYsuNPU2Q0E3OcP53Ni/eN
-	3Y3Z+8th5CvQj/cx+vmaDd1c70+SkegPbmlWdgVVL02mdkl/31ePR7IpgYDFX/v3
-	auWcELY/bbzVMyMYxhZNtY06jPmIKm1h3wB0pAPT/cAv/VcWHG+iIqjzPJ2mUaR7
-	yYKw4hvmS3AMbGEymj4mxXxZ0acwW0h0v4Lqw2duzKiMVs39sqaYWKzBKB5lm+Ap
-	YXkesCDJY6GH31Rt+H0Wdo9QIa8preT6KkMaz4aa8aSIEsi1qns1ulq5oNv58uuB
-	4o/tmR1RhnpLxw+H1a282w==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 474dyx00ww-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 11 Jun 2025 15:59:11 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55BEwD5v012027;
-	Wed, 11 Jun 2025 15:59:10 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12on2081.outbound.protection.outlook.com [40.107.244.81])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 474bvbcfwe-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 11 Jun 2025 15:59:10 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MQkdXF2niVClY/tPMW4blBD3NAsdgt63LbYuvQSwAkPt7SVDy6GgnDeVnHyJmfHXktRA/pRGUQMSkIsLrEBI/szxUmXi3iCI3cUWXk9VUUDuWowFDfZJ3AVfns02fMcXBGDDcuvkIOKGbbT0NFmw3Mubp8/c6/2dDJZ3VI6mKBKU5kx8NS2PkBy2ZyXFL2/HccyUjgq8amNPV9vOeUe9dgrChviEn8jcqflC5mrm3SkMKmJouwBwVGah/Ygbz8fqUsIQHiD7yp+O+eabHEwTqrLmzBkFrJeKynlxgkMBjYnhzYbmSsi1G297BjS+YJlVCxkTN4oxAjNoZ+RAcL8XjQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kwcm830PcVlxc5BIWQ3eDFhdrh274yLn6wqfJ/76ly8=;
- b=IYlFrUnfh1EP3iGgx7DzHqJuK/R1ahqziqb35VsXIBU4qGaGbGkWJj9ABTyEXW/4pdMT8CbG80aIIVyg2OKZA/sYpXo54mRcvXDJWqsUtypVpWrA3KsOSwAaZ8Z1WwkoEhNp8IaJ8MiO2zWrxZJH9I+JFnyK//yw8ho8ibyUba4ju0zpy6rpjJFMCwNZpPXR8GpK7MnmmXxhnO3p/IslijnYum2mOOw2VvfwbhC4Fp4nkXOfczpH36M1nECeX8ZVStnBveKiTs5U81eSQhtVTmd8BxE6j+gIyuf9L6yT1gbYabBNvzGdO9NsEcn7gVFe/lnw4XkiW4uxSr8t23fpQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kwcm830PcVlxc5BIWQ3eDFhdrh274yLn6wqfJ/76ly8=;
- b=EIf4lG/hX3+lWqUl9rz+kZjGYE67HRp+ggvNo+wa8ODxWX7Gq5Eyow4+DItGmiJ+lXTriUEzLGfuJ+79pZCl8eM0VB1vEKLaXjSHp+D6rM8UTa7i3rD39r31jBv4Z+16s8iAJCW5LXE/u30UTn7h2SAGNFLsqzfK45XwOZelGs0=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by SA1PR10MB5824.namprd10.prod.outlook.com (2603:10b6:806:236::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.18; Wed, 11 Jun
- 2025 15:58:47 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%4]) with mapi id 15.20.8813.024; Wed, 11 Jun 2025
- 15:58:46 +0000
-Message-ID: <5c8c207c-0844-492f-99e0-48b874b5404a@oracle.com>
-Date: Wed, 11 Jun 2025 11:58:44 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] nfsd: Use correct error code when decoding extents
-To: Sergey Bashirov <sergeybashirov@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
-        Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-        Tom Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Konstantin Evtushenko <koevtushenko@yandex.com>
-References: <20250611154445.12214-1-sergeybashirov@gmail.com>
-Content-Language: en-US
-From: Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20250611154445.12214-1-sergeybashirov@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH0PR03CA0278.namprd03.prod.outlook.com
- (2603:10b6:610:e6::13) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SVayobUV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF130C4CEEA;
+	Wed, 11 Jun 2025 15:59:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749657587;
+	bh=89BiTjHBE1lw2kMhVAJalnI8x+UkGxbeH28FkW7pcDE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=SVayobUVp3aRvF48EyWbLwH90CUS9XtWd6DT2NJPPfkvZi4/Ej9I43IKWun+HFcb0
+	 nRHltTxYcB6Qxfz61p7XckqnhXfyontfKCIS5mkY8AoLiPX9THBWd1JBhCK+fT8MMZ
+	 So91hBGYyqiJywryQwG23FzmWNoX+YFgmL1mzQ7o/Uj2TBCTh/j6xbjgGMzlK0GZHk
+	 A/Xeguy7nCljEZwEx+wlIvaq16xUqMQwqlEZ+QCyIFqLhc5aIQPHpgiZoakb9odsVT
+	 Z17Jukibctyn3iQJwUA2pW9TNYzuf0Va0YRhuRWZZLuWmO01nmPzeI7I/mhiR65gV+
+	 rCk7FwINZM5TQ==
+Date: Wed, 11 Jun 2025 16:59:39 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Marius.Cristea@microchip.com, nuno.sa@analog.com, andy@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ broonie@kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] iio: adc: adding support for PAC194X
+Message-ID: <20250611165939.45bb50ad@jic23-huawei>
+In-Reply-To: <3d95641d-c1c2-44bc-8478-c60734bcf420@baylibre.com>
+References: <20250606093929.100118-1-marius.cristea@microchip.com>
+	<20250606093929.100118-3-marius.cristea@microchip.com>
+	<1c7946f1-d712-4baa-8243-be6a55eec528@baylibre.com>
+	<1b8b10816d1f2f34724e77c68de869422d6c84b6.camel@microchip.com>
+	<3d95641d-c1c2-44bc-8478-c60734bcf420@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|SA1PR10MB5824:EE_
-X-MS-Office365-Filtering-Correlation-Id: 39a2226d-6b25-41f1-8903-08dda900d952
-X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
- =?utf-8?B?RS9hV09FeHdYcFU0QklVeTVoODZJS0pMbTV2Yk5rczBIWWpmSkZoWEgxRkEx?=
- =?utf-8?B?S1FoNUc2Z3F3TXpGVDVQTVJna01nWm14bmwzOWRhQlBxMTR2RFppSCswVGxF?=
- =?utf-8?B?MlowamtSSXFJUUtGT29KSHRFQmFkMFlBWXArKzZBdUptUW9ZL0dqRTErTGpt?=
- =?utf-8?B?L1YwcVBVcG5KWDBKeFhWOGxaQzByQ1FRMEFmYzFZaFlNWVhlVks5N2FGWVFT?=
- =?utf-8?B?a3FpR05rNVdibVJBY3JROEtwWk1QcDA1bEJFYXRuemRBemFRMTRTb0xPeFE1?=
- =?utf-8?B?UmhaVUdJMGNMRU1IMFdhOTh3eVkvcHJzK1J5c2hMN2d3dXdBMWcwcjZ0UjBK?=
- =?utf-8?B?Q0phdGVXK0dkYk14aDdqcFhwWm5QcWd3MkpuUjFHQWNKdlF6Z1hmYTA2TUFI?=
- =?utf-8?B?eUJrbE1Lbk5MVi9IREFTL0VjUXFsMWRpL0o5OFVFbzU3K04xTWR4d1VFL0Jh?=
- =?utf-8?B?VXB1Qm83cGxNbVRRWkduL2prSC9lSU5PcDJRa2cwc2xWeXRiQ1NZdlVMWTZo?=
- =?utf-8?B?T1QwZVVBZG1rRU1KcWhORnJNU25JQzQzMUdyQm1UaGMva3RHY3c0eHlWTnJr?=
- =?utf-8?B?K05VWnNlS1poNzJGa0VTVENSbUQ2UDE4VUVXL0p2QmlZZWtZY1RZT0VFalNz?=
- =?utf-8?B?alRFNWVpTDZpTmJ1OC9wSXpCdEk0TkVpTlJWWjF5YnQ3TlI3cmVXQlBLeGUy?=
- =?utf-8?B?UjFFRXZXU2Zpa0Q1b1dSYnVDZGVtNG14Rml0cFlaa1NSK2FjOThObk5mMmY1?=
- =?utf-8?B?cWRrcE94d2gyUyttMkN5MTVaRjJla28xK2JEUHhsOXFKMUtuZGRNbmlpUHNs?=
- =?utf-8?B?S0gvcWQ5OHo0SkxaZXNtVDdGQ2F6VHdUZFZ1QkF4R1lWV0hNY1duVWQ3eGhh?=
- =?utf-8?B?dXVKaWlVQldmd1A1bDd5NGhwZ0RIanplZG5zRXdNSUFJYW9pbXVaaUk1SmUw?=
- =?utf-8?B?bDdTejRDTzkvZ2V6aERDdDg1OGwzUVNQV0I2TGlBRnc3ejJCNHZyVEo0MmE2?=
- =?utf-8?B?YmJiWmZHbU80aHNiUDV5SUNOdzlGRW1lT3R1Nzk3Yk5BR0s3ZGd2dmI4ZHRG?=
- =?utf-8?B?cVpIZnBIem9WUm9IREFYbWVWRTcxNTR5eHFKaWs0QitwRk04WWlXTnFQVXdy?=
- =?utf-8?B?dWJqWTVzWHZNdDN4TFhNRXRDM0Zhc0xEVG0razZrRjI2TkdkTEdQc0RoOGda?=
- =?utf-8?B?cVRFMGo5b0RNSDRaVzBaWXdHSWNyNGo3SFZEcHo4WXU5MitLSXRmeUlCdGhk?=
- =?utf-8?B?UWFyYVp2Sm5Ob0VGK00vcFFTY2IvVjF4K3luanlIeXFlbXdFTk1TT3hXdEpZ?=
- =?utf-8?B?R2plRUlYMEtxNHNheVBKUk5ZSExoQnB5QytJbFZmUWhCMGpiUDFXclAvejF1?=
- =?utf-8?B?d2hnK2NnajExQmZCYVZyb3Z1eDBEdExHMFhraTYvZzZWajFsWUxTbVpIVm5l?=
- =?utf-8?B?N0pISkE4anhGb1RQbTF0UytTL2d6SlpwNjZNVjd3VWlVaWRZVzB5RHRqa200?=
- =?utf-8?B?QUw5NmpuOUl0Y2FtSEgrZW1INUI5bDdnK0hqNnlsYVVwdkgwSld0VTVFdEli?=
- =?utf-8?B?WlRNYTJaUSs0d0tHMDNVTjkrcXRtdFFYTFd6RlV6TzRLdEdzZ3F4Mnk1Z0s1?=
- =?utf-8?B?S2NwTmpNWmwzUy9TaGlZcnlDb09lZWhNVEZmS2lERmd3dnNiQUhLUjMydVdB?=
- =?utf-8?B?dDRvV0tQbSs1a3BvMEVuOTBSemVTWXVFSGlGZGtGSW85TXcrN2JoTlp5NG03?=
- =?utf-8?B?SmlLaGFFc1NKSWhLaCsyeExWYWUyaGR4Q25iOHYxS3lJZFd6TEhHeDhKeWxs?=
- =?utf-8?B?VXl4b1o3elVMM2RXNmRWenoydjFUbFErMUlKZldhOEpoeFlVSTNSRzRVTmdS?=
- =?utf-8?B?TWdhMm5TcGlTZ2NDYklkUys0UEtvU3l5WDB0WVN2Ukozb3UwcGpCaDZxL0pr?=
- =?utf-8?Q?c/HW7VMMvt0=3D?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?T0l3N2xQdWZYdDNycGZNQ0U4OWhvTTRJcXFiY1dCYTA1QmlHUTlHOXBoaUhx?=
- =?utf-8?B?cHloQmxrY2tUNWN0bjdKWmNLSkJibnFFSGp1Zk8vRk5pUmQ1aUVrRXMwSHRs?=
- =?utf-8?B?MFZnNHgxSjZCVTByakhQaVIwTS9pYnc5LzU0VWhjSDY5M25KNko5MDdEOXd6?=
- =?utf-8?B?OFFBbmxWVUtiS0YyKzBERDVjZnZYWXdyYTRITU1TN21LMU1ZQ0ZSZjh3eDBu?=
- =?utf-8?B?NE1pckF5Z3l3Q0hzSWRBd2Z1VSs4eCtzeEkxS2VlR2xRVHl3Vm8zem9pUWVo?=
- =?utf-8?B?RDVwR25SZVYwZE4zV0FTRm5XSWk4c2FhMVdFNU1WRjZlekZVNW5IRlpwN1JJ?=
- =?utf-8?B?TlRZbkVsanBNa1U2clVabEJaUjB1MUZsQ3lRNzBqck1nWmRSN2R0cFhySzlR?=
- =?utf-8?B?aHJFSldtYjBBTlNJZWpTMUxJWm1ueWNUVXdQVWpsKzlVdHdHSFhyODVGQndM?=
- =?utf-8?B?SjFuakVMTERydk5xdjJBSWVCckVDS2FlMmFoM3Z6ZTB1ZW8yQmYvSWpWZjlp?=
- =?utf-8?B?dGIzWmlqenNtUm5GSGJ1K3MrME5Xb1BJQ2lsdU44bytzQklxV3Q3cVZKemJN?=
- =?utf-8?B?aHM4Y2RDbVhvc29XWEtFWXEwdnhsQkdVNTR1Qlg3WExMRTJYc21tc3JSNDdX?=
- =?utf-8?B?N0o0QUZ0OU1MQkczV2VEM2M4Wk5jLzk3SDBBYjJFNlRhakQ5djJJK0hobGsw?=
- =?utf-8?B?dXhnSFZFbktpS3djOGtyb2o1SU9wL2plT002dWVCcjhmSXN4VDBQbTJmWG8w?=
- =?utf-8?B?R0xaYm9YL2VmazJmY1g1dkdOeXFabElPenVFTVhGalRDNGJPMEJ0dVJuZGNx?=
- =?utf-8?B?LytOUWp4YUlnUDBtaU1scFNqR29ySFZZN0ZzSTRiWHUrM09pSGxZMnU5UTAz?=
- =?utf-8?B?MUxZL2g5S0lINHhtbitLTlQ2bDJMeFRYeUdnK2JPRVRwS0o4K3RDbWZsSVhW?=
- =?utf-8?B?c2VrdTNlMXBUTWcvN0VlQzdlZ0hIdHkzNjJpcXZkcStvWmlKeTJIYVJmOENz?=
- =?utf-8?B?TTFhOVIzbnRSeldSNmVvK1huTGNPUnhhZnpob2VZMlBqRU9LMFVPbDJIMHda?=
- =?utf-8?B?ZFNVWTE1QXhFaFBxV3ZVWEdwZlRwNlkwV1hPVTRqM0xIemp3U1RDdUNSdUtJ?=
- =?utf-8?B?TU1reDA3eWhzQlVuc3BQa3hxcWZYR3hoUEdLZnprT3RHbHc0SHYzL1lJb2Rk?=
- =?utf-8?B?STZOMjljTXcyaCtIQ1BWWlhHWTRQb3h5eVVEOUNqZVBYMGJqbHhEekxGYUV4?=
- =?utf-8?B?M1BiVTNKbVhwTytodzgrOHR3b05DQUQyU0dubzRyRlBpT1NTRXptT1hnZHBH?=
- =?utf-8?B?RUV6alNPTlB1T3NQR293U3lXQmNUdEFwcGIyaG85UEtBb0F5amR3RitRZTVy?=
- =?utf-8?B?RVhvS0M2ZVpDQnJuZEx2SjdqNE5CRjd4Mm4vZlJGSGJudUMxU2NYRDM5NkFj?=
- =?utf-8?B?QS9UQmw2di9hWEJPcjdYK3ZwVUJXbnE0WldpT0ZrYWh4SWo3b3FzMHVqNnJR?=
- =?utf-8?B?eUliSVYzZUpJVTh2ak42NlZqUTgrclFBelI5bDRxa0xobzlqcW9zZk1GQWd0?=
- =?utf-8?B?YTNiOE9INERMTXZ5ckd1a2hGb1pBMEZ2bkVBeHZ0WlJqMU45T29vM2JIajBs?=
- =?utf-8?B?V3JkVXNaWW9zS1hoMStwa1hYMzBEQzY2S1NTU3NCVTBsdWM0SjRWY0EvWHh0?=
- =?utf-8?B?VVZmOFJhOTZBQTdEMzNvdFREWlcwanBTdUJOdThmbDRrMCtEd2ZvQkZ0Q1lG?=
- =?utf-8?B?Sm9aTTF0ZDFYejJwaUFJOW9kanFlTTZLZHp5ZzJPWGdvRnlQczNydDZvTHVv?=
- =?utf-8?B?bkpMbVA2T2lrZlRJMk5NYTBOY1UvWG9FQ0NvNWJBRnVRUGNxZThmMnZoeWdu?=
- =?utf-8?B?VUszemU1ZmV5MWdjMGNFeGF5UFI0T2Y0cjQvL0s0L3l0WDNabVhOOEorL2tL?=
- =?utf-8?B?OVM0ZjY2bFJlUm8zS1RzUmxFeGVUKzBKSDljdm1pSHVWVkhTZkQ5b3VuQVNa?=
- =?utf-8?B?MFJxVTFTazk3OU5ucDM5QlRSTHdYOXhyZjA5bnozdEFlanlkYVozN1BoTGJz?=
- =?utf-8?B?SmFzWEk4eUw0bFVEQk1xajRIS0duZlNwajhGM0NEWjlheHV4c3MzSkFudjBE?=
- =?utf-8?B?VnNnQmgrZjZYeElmaVk5U2Nad1g1aVdOVWdBampDYVhYUjlyYVo2MUxDSDBU?=
- =?utf-8?B?Wmc9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	rzL/SEMmoQ8m4amkq4b72ldWaFYXSTzgcV1bmFT5tooV3DuZKXTl1Dl9+Z3tA91d3ndJLms8upBbvY+5YBfaEb70asyVMMdr0G88KKLawgQOUYfM7gE3QsuSPvy2PRiMkFigsANb3P0cwPQm87UgyGUcfsXM2/rAjhK74jATgBH8B0bH9Y107S1LTf/lP9RM56SF9xNWkkoEA6vXMOX7nHxZbpZKThrtHNsHJKP4aNZZ51ueKQmA5F5Chf7E9B8VX2rPh65gJ+pQU3+5dwxfYUBwFzwNTJJKbXhHIRu6eoPnm+k98jKOEcc9SkIamKPPjcKsNztFsy0+P88S5R+9HkMqnAgvdgpBSCr7TzTjksct5AfKZRMPBjrzKf09mGNCwUWIZjfqpVTVzyuaD2ENmfZTsdGf7EU0Gw0RZeWSwbPP5ho3xaGLULEsARUJFpPNRdcwHKXsg1u/xw7Bibj7DcLL3vePep/YdkWOoe6OCrAim8H+cmP6xtfOauoP2PimgDjCA8R7bgl9cmu9QZr4wgszU3VgYf8ybybJFU8k77hVUmjE3/BOkdKpoBusS01xqLLw3+N3Xf2yvHAYUrAOsfgIn0RJBZAUEzcDzksIyTI=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 39a2226d-6b25-41f1-8903-08dda900d952
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2025 15:58:46.9325
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6qOih+RMhItppuA9Y4VnGp0cU4LKYEm9erg/EUpYdtbp/hI3pKSA3HfaTy1phYa7Yx168jwf3J02Urhu5+kI7Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB5824
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-11_07,2025-06-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 malwarescore=0
- mlxlogscore=825 bulkscore=0 spamscore=0 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2506110134
-X-Authority-Analysis: v=2.4 cv=fdaty1QF c=1 sm=1 tr=0 ts=6849a7cf b=1 cx=c_pps a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=pGLkceISAAAA:8 a=UyQCMIU3FegACkntYa4A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: 4WQav51N8ImICl17iw5hhwUFbDm0XyPA
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjExMDEzNCBTYWx0ZWRfX4B1Ha+NPRIpt +ML+tLjCJtFznFrv9sirYxK78B8zskh8BAyGwq7ljeJFEeUFlNle1ZXcopYuanowQISpnvJJw0N nGY+whahCWN7Pa2rL28vaZ2XfC8d2QKvBcVJkvWMzHt8ZCJRrdE82sbeycVcN20o1mbUxKoEaWs
- 6UvUfCaxuEPYpUgLSSuah4O5uT2wt3iEHEsUFM0L3Yo0Yr7oQ35mIJqa87wRzuVAfa9YnZHuz+Q XaGYheGTYzUNXHD87x69rCDXra5cUySRX08xTgBzQSYUrq2tA8QDBMRK6K7VuN4DhD2yIcjlsZ7 bO4yq+8bvdt0mIZPfaoLQHUwG1bSvnMXww6YTJpeSyJMo9N05iWnTNjbNzhYTFQM8trno+i4N7r
- 6BSz+Rcz7OHoFpu99RGZsjBhZRIdvPmUILVxStv0tptOy037/uy9tm9TA+hU/YhnVqYsNzva
-X-Proofpoint-GUID: 4WQav51N8ImICl17iw5hhwUFbDm0XyPA
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On 6/11/25 11:44 AM, Sergey Bashirov wrote:
-> Update error codes in the block layout driver decoding functions to match
-> the core nfsd code. NFS4ERR_EINVAL means that the server was able to decode
-> the request, but the decoded values are invalid. Use NFS4ERR_BADXDR instead
-> to indicate a decoding error.
-> 
-> Signed-off-by: Sergey Bashirov <sergeybashirov@gmail.com>
-> ---
->  fs/nfsd/blocklayoutxdr.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/fs/nfsd/blocklayoutxdr.c b/fs/nfsd/blocklayoutxdr.c
-> index ce78f74715ee..66f75ee70db3 100644
-> --- a/fs/nfsd/blocklayoutxdr.c
-> +++ b/fs/nfsd/blocklayoutxdr.c
-> @@ -121,19 +121,19 @@ nfsd4_block_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
->  
->  	if (len < sizeof(u32)) {
->  		dprintk("%s: extent array too small: %u\n", __func__, len);
-> -		return -EINVAL;
-> +		return -NFS4ERR_BADXDR;
->  	}
->  	len -= sizeof(u32);
->  	if (len % PNFS_BLOCK_EXTENT_SIZE) {
->  		dprintk("%s: extent array invalid: %u\n", __func__, len);
-> -		return -EINVAL;
-> +		return -NFS4ERR_BADXDR;
->  	}
->  
->  	nr_iomaps = be32_to_cpup(p++);
->  	if (nr_iomaps != len / PNFS_BLOCK_EXTENT_SIZE) {
->  		dprintk("%s: extent array size mismatch: %u/%u\n",
->  			__func__, len, nr_iomaps);
-> -		return -EINVAL;
-> +		return -NFS4ERR_BADXDR;
->  	}
->  
->  	iomaps = kcalloc(nr_iomaps, sizeof(*iomaps), GFP_KERNEL);
-> @@ -181,7 +181,7 @@ nfsd4_block_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
->  	return nr_iomaps;
->  fail:
->  	kfree(iomaps);
-> -	return -EINVAL;
-> +	return -NFS4ERR_BADXDR;
->  }
->  
->  int
-> @@ -193,7 +193,7 @@ nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
->  
->  	if (len < sizeof(u32)) {
->  		dprintk("%s: extent array too small: %u\n", __func__, len);
-> -		return -EINVAL;
-> +		return -NFS4ERR_BADXDR;
->  	}
->  
->  	nr_iomaps = be32_to_cpup(p++);
-> @@ -201,7 +201,7 @@ nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
->  	if (len != expected) {
->  		dprintk("%s: extent array size mismatch: %u/%u\n",
->  			__func__, len, expected);
-> -		return -EINVAL;
-> +		return -NFS4ERR_BADXDR;
->  	}
->  
->  	iomaps = kcalloc(nr_iomaps, sizeof(*iomaps), GFP_KERNEL);
-> @@ -232,5 +232,5 @@ nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
->  	return nr_iomaps;
->  fail:
->  	kfree(iomaps);
-> -	return -EINVAL;
-> +	return -NFS4ERR_BADXDR;
->  }
+On Tue, 10 Jun 2025 11:11:32 -0500
+David Lechner <dlechner@baylibre.com> wrote:
 
-nfsd4_block_decode_layoutupdate()'s only caller is
-nfsd4_block_proc_layoutcommit(), which takes an error return and passes
-it directly to nfserrno(). If nfserrno() gets a negative NFS4ERR status
-value, it will bark. Changing only the return values is not enough.
+> On 6/10/25 10:07 AM, Marius.Cristea@microchip.com wrote:
+> > On Fri, 2025-06-06 at 12:02 -0500, David Lechner wrote: =20
+>=20
+> ...
+>=20
+> >>> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-adc-pac1944
+> >>> b/Documentation/ABI/testing/sysfs-bus-iio-adc-pac1944
+> >>> new file mode 100644
+> >>> index 000000000000..ae88eac354a4
+> >>> --- /dev/null
+> >>> +++ b/Documentation/ABI/testing/sysfs-bus-iio-adc-pac1944
+> >>> @@ -0,0 +1,17 @@
+> >>> +What:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> >>> /sys/bus/iio/devices/iio:deviceX/slow_alert1_cfg
+> >>> +KernelVersion:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 6.16
+> >>> +Contact:=C2=A0=C2=A0=C2=A0=C2=A0 linux-iio@vger.kernel.org
+> >>> +Description:
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 A read/write property used to route, inside the PAC
+> >>> device, a specific ALERT
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 signal to the SLOW/ALERT1 pin. The SLOW/ALERT1 pin
+> >>> must be configured for the
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 ALERT function in order to control the device
+> >>> hardware pin (this is the default
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 functionality of the device hardware pin).
+> >>> +
+> >>> +What:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> >>> /sys/bus/iio/devices/iio:deviceX/gpio_alert2_cfg
+> >>> +KernelVersion:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 6.16
+> >>> +Contact:=C2=A0=C2=A0=C2=A0=C2=A0 linux-iio@vger.kernel.org
+> >>> +Description:
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 A read/write property used to route, inside the PAC
+> >>> device, a specific ALERT
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 signal to the GPIO/ALERT2 hardware pin. The
+> >>> GPIO/ALERT2 pin must be configured
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 for ALERT function in order to control the device
+> >>> hardware pin (this is the
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 default functionality of the device hardware pin). =20
+> >>
+> >>
+> >> What is the use case for needing these? In otherwords, why can't the
+> >> driver just
+> >> make best use of available resources as it sees fit?
+> >> =20
+> >=20
+> > Here inside the PAC the user could choose what limit to be routeed
+> > outside the chip. For sure, all of the limits could be routed to the
+> > same hardware pin, but there are some use cases where the user will
+> > want to connect that output pin to a safety hardware (e.g. over-current
+> > protection or over-voltage and over-current) and in this case we need a
+> > way to allow the user to do the setup.
+> >  =20
+>=20
+> This sounds like it depends on what is wired to the alert pin, so sounds
+> like something that should be specified in the devicetree.
 
-Instead, nfsd4_block_decode_layoutupdate() needs to return /only/ a
-positive or zero I/O map count or a negative NFS4ERR status code. Then,
-if nfsd4_block_proc_layoutcommit() sees a negative return value, it
-converts it to an nfserr by calling cpu_to_be32() on it.
+Absolutely agree.
 
-(The -ENOMEM can be converted to -NFS4ERR_DELAY).
+These corners tend to be tricky to handle cleanly
+in either DT or userspace interfaces though and sometimes we've
+just decided not to be fully flexible to keep that sane.
 
-It would also help to get a nice kdoc comment added in front of
-nfsd4_block_decode_layoutupdate() that explains the return value
-convention.
+>=20
+> I.e. in the devicetree, have a bool property microchip,alert1-is-safety
+> to indicate the ALERT1 pin is wired to the safety hardware. (It could
+> still be also wired as an interrupt input at the same time - or not,
+> doesn't really matter.)
+>=20
+> Then, on the event attributes add a boolean "safety" attribute to allow
+> routing the signal to either the pin that was flagged as the safety pin
+> or not. This would allow the user to chose which signals control the
+> safety hardware at runtime without them having to know how the hardware
+> is actually wired up.
 
-I see that nfsd4_scsi_decode_layoutupdate() needs the same treatment.
+I'd question if the use cases are such that it makes sense to expose the
+option to user space. Generally if you have a way to trigger a safety circu=
+it
+it's there for a reason and you want it always on for that reason (i.e.
+you might tweak exactly when a cut off on power usage fires, but you always
+do it on power usage).
+
+We probably want to propose a binding to he DT folk + take a look at
+what the ABI David suggests looks like in the driver. That's
+messy if it isn't double wired to the interrupt controller though as
+we then have events that never fire.
 
 
--- 
-Chuck Lever
+> >>
+> >> ...
+> >> =20
+> >>> +static IIO_DEVICE_ATTR(in_current1_shunt_resistor, 0644,
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pac1944_shunt_value_show,
+> >>> pac1944_shunt_value_store, 0);
+> >>> +static IIO_DEVICE_ATTR(in_current2_shunt_resistor, 0644,
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pac1944_shunt_value_show,
+> >>> pac1944_shunt_value_store, 1);
+> >>> +static IIO_DEVICE_ATTR(in_current3_shunt_resistor, 0644,
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pac1944_shunt_value_show,
+> >>> pac1944_shunt_value_store, 2);
+> >>> +static IIO_DEVICE_ATTR(in_current4_shunt_resistor, 0644,
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pac1944_shunt_value_show,
+> >>> pac1944_shunt_value_store, 3); =20
+> >>
+> >> These are specified in the devicetree. Why are there also sysfs
+> >> attribtes? =20
+> >=20
+> > Yes, you could put a generic shunt resistor into the device tree but
+> > this resistor will have a tolerance. Because the end user could
+> > calibrate the system, it could also save the calculated/calibrated
+> > shunt resistor somewhere and restore that calibrated value each time
+> > the driver is loaded.
+> >  =20
+>=20
+> If changing the resistor value changes the measured raw value, we
+> could probably use one of the existing standard calibration attributes
+> instead, like calibbias or calibscale.
+
+We have precedence for shunt resistor ABI for this reason, so I agree with
+David if we were starting from scratch (and it's a viable option to
+use the calibration attributes) but we can't drop the existing ABI
+and it does limited harm to carry on using it.
+
+>=20
+> >  =20
+> >>
+> >> =20
+> >>> +/* Available Sample Modes */
+> >>> +static const char * const pac1944_frequency_avail[] =3D {
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0 "1024_ADAP",
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0 "256_ADAP",
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0 "64_ADAP",
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0 "8_ADAP",
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0 "1024",
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0 "256",
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0 "64",
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0 "8",
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0 "single_shot_1x",
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0 "single_shot_8x",
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0 "fast",
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0 "burst",
+> >>> +}; =20
+> >> =20
+> >>> =20
+> > ... =20
+> >>> +
+> >>> +static const struct iio_chan_spec_ext_info pac1944_ext_info[] =3D {
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0 IIO_ENUM("sampling_frequency", IIO_SHARED_B=
+Y_ALL,
+> >>> &sampling_mode_enum),
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0 {
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 .name =3D "sampling_frequency_available",
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 .shared =3D IIO_SHARED_BY_ALL,
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 .read =3D iio_enum_available_read,
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 .private =3D (uintptr_t)&sampling_mode_enum,
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0 },
+> >>> +=C2=A0=C2=A0=C2=A0=C2=A0 { }
+> >>> +}; =20
+> >>
+> >> sampling_frequency{_avialable} are already standard attributes in IIO
+> >> and is
+> >> defined to be a number in Hz. So we will need to find a way to make
+> >> this
+> >> work with the standard attribute (can use IIO_CHAN_INFO_SAMPLE_FREQ,
+> >> by the way).
+> >> And figure out how the other parts fit into other existing IIO
+> >> features. =20
+> >=20
+> > I can change to the standard attributes but I still have some question
+> > related to how to handle the ADAPTIVE sampling frequency that the chip
+> > supports and that it could be used to lower the power consumption of
+> > the chip.
+
+Gah.  Second device to do something like this that we've seen this month.
+(ADXL313 does something similar when enough activity detection modes are
+turned on).  We don't have a good answer yet :(
+
+> >  =20
+> >> =20
+>=20
+> From a quick look at one of the datasheets, it sounds like this
+> "adaptive" mode only applies when using an accumulator. And it doesn't
+> actually change the sample rate, but rather other factors, like scale
+> and the accumulator counter incitement. So it seems like it would be
+> a separate custom boolean attribute.
+
+Generally when I see this sort of thing my first instinct is hide it.
+What use is it for userspace to see that the frequency is changing?
+Maybe we just report the highest (or lowest?) frequency that might
+be going on?  Here it doesn't seem to be coupled to anything else
+though (unlikely the accelerometer) so I'm not sure how the driver
+would guess it makes sense to enable it?
+
+>=20
+> Also, I noticed that the fast mode and burst mode make the sampling
+> frequency dependent on the number of enabled channels. So to handle
+> this, normally, that would mean that IIO_CHAN_INFO_SAMP_FREQ would
+> need to be IIO_SEPARATE rather than IIO_SHARED_BY_ALL.
+>=20
+> But since these chips support can work both ways (there are modes
+> where sample rate doesn't depend on the number of channels enabled
+> and there are modes where it does), I'm not sure what the right way
+> to handle that would be here. Maybe Jonathan will have some suggestion?
+
+Oh goody a new way to stretch that already much stretched interface.
+It's actually more fun because it's not the sum of the number of channels
+for fast mode but 1 more than that.
+
+Given we can't do both ways of reporting it at the same time we will
+probably have to just do IIO_SHARED_BY_ALL.  We can only then report
+the effective sampling frequency as it is fixed in these modes (so
+we can't attempt to match a userspace request by cranking it down
+if there are fewer channels enabled or similar).
+
+So we need
+sampling_frequency_available where the fastest frequency presented
+changes depending on the enabled channels.  Lower values match
+the 8/64/256/1024 values however many are enabled.
+
+if sampling_frequency =3D=3D top value then we just change it if more
+channels are enabled.  ABI always allows for other attributes to
+change 'randomly' when you touch a different one.  That flexibility
+is a pain for users but necessary for cases like this :(
+
+I'm not sure how we pick between burst and fast mode though
+as seems to be about auto offset stuff.
+
+Jonathan
+
