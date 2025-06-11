@@ -1,88 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 044C82367B0;
-	Wed, 11 Jun 2025 08:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961E323183C;
+	Wed, 11 Jun 2025 08:32:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749630666; cv=none; b=KQe2g0WLKkssVHvXr4R9AWEyRjJq3cMzQrfd+kgZ4/dSNDfu9CmdhSYd14H7f8uqlZvFC+kN8K4TG7+HIqGxZq1GyC81rolOp5pINT0OiC6T6em+VksK22pZ0UOk/dVaNPhn+5puxjhJrzUbH+n/qU6oZwJdjf45GCYhBNU7s08=
+	t=1749630732; cv=none; b=q1P9qb3sjX6ORfaVWFVCkYF3Tmh/Jd94Bx/Z8nF7TAslZzJus3weKyaKfB7qEEyMamSahge3dV8DlRUmOMDJdtJz+qPBy/pjUcqKHtQMjJTDNLzOCCfDHFlX4PX9ceW4pFQUB/kySZGqNrhBKoMZSFrZrUC7t3tkuOu17dcvlQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749630666; c=relaxed/simple;
-	bh=DXYIv+tycKjLbFi7q3acp8Gyp8fPNbFB5zSpGO5FcZU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pxrYnF6xAa1WU8EbdZKQncF8H1VP0o7+o34OO048P36ut1N6sFvPRexHDLDET3cCS2Lc7lWmmrGzKZ1vykL1X3SK1+06yxjLonZANkFqoSYWYyZ/jP1pEXS7lodD9DM+VNXM2iu40AZ5pjKPi//epKL/mJpb6eRUOiqJo6O+rCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: bJKmYaoVQm66gsy+4mK2EA==
-X-CSE-MsgGUID: 1HTFPgghS/y4LLPYfapgEA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="69196515"
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="69196515"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 01:31:05 -0700
-X-CSE-ConnectionGUID: sF4xFUWzRrKOlPZNa1B/Fw==
-X-CSE-MsgGUID: iU87REBgRH6elOibkqUvLg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="151901774"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 01:31:00 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1uPGrI-00000005aMS-316w;
-	Wed, 11 Jun 2025 11:30:56 +0300
-Date: Wed, 11 Jun 2025 11:30:56 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Da Xue <da@libre.computer>
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Mark Brown <broonie@kernel.org>,
-	Rui Miguel Silva <rmfrfs@gmail.com>,
-	Viresh Kumar <vireshk@kernel.org>, Johan Hovold <johan@kernel.org>,
-	Alex Elder <elder@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-spi@vger.kernel.org, greybus-dev@lists.linaro.org,
-	linux-staging@lists.linux.dev
-Subject: Re: [RFC] spi: expand bits_per_word_mask to 64 bits
-Message-ID: <aEk-wIJ8FY73NxQG@smile.fi.intel.com>
-References: <20250611000516.1383268-1-da@libre.computer>
+	s=arc-20240116; t=1749630732; c=relaxed/simple;
+	bh=Rt/auWb+MRNh+gBuvFYZR8wNIkhvDQU3bxysvTBeneI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=oMmD5Iv0QqzMji7dw+SotajLTVX3795yVb+nAF34OBOmm+4JcGDmIfnQOaQMOIiA5Y93pHtGhGbz8MfljaulRNqKSSQyuggRH3Crs/iyyMzDZiEuVa4MKb5ABgWt8zWmKyvbDERNpS4pl9TIIoMohcP64Zqe29VHxAevMNaZ1zY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timmermann.space; spf=pass smtp.mailfrom=timmermann.space; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timmermann.space
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timmermann.space
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4bHJmj3HS1z9tgw;
+	Wed, 11 Jun 2025 10:32:05 +0200 (CEST)
+From: Lukas Timmermann <linux@timmermann.space>
+To: lee@kernel.org,
+	pavel@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux@timmermann.space,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v6 1/2] dt-bindings: leds: Add new as3668 support
+Date: Wed, 11 Jun 2025 10:31:50 +0200
+Message-ID: <20250611083151.22150-2-linux@timmermann.space>
+In-Reply-To: <20250611083151.22150-1-linux@timmermann.space>
+References: <20250611083151.22150-1-linux@timmermann.space>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611000516.1383268-1-da@libre.computer>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 4bHJmj3HS1z9tgw
 
-On Tue, Jun 10, 2025 at 08:05:15PM -0400, Da Xue wrote:
-> Most current controller IP support 64-bit words.
+The bindings are incomplete, as the GPIO/Audio Input pin
+is still undocumented. The hardware used for testing this patch series
+does not allow modification, so the mentioned pin has been omitted.
 
-"Most of the current controllers support..."
+Signed-off-by: Lukas Timmermann <linux@timmermann.space>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ .../devicetree/bindings/leds/ams,as3668.yaml  | 74 +++++++++++++++++++
+ MAINTAINERS                                   |  6 ++
+ 2 files changed, 80 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/ams,as3668.yaml
 
-> Update the mask to u64 from u32.
-
->  drivers/iio/adc/ad7949.c         | 2 +-
->  drivers/spi/spi-dln2.c           | 2 +-
->  drivers/spi/spi-ingenic.c        | 2 +-
->  drivers/spi/spi-sh-msiof.c       | 2 +-
->  drivers/spi/spi.c                | 4 ++--
->  drivers/staging/greybus/spilib.c | 2 +-
->  include/linux/spi/altera.h       | 2 +-
->  include/linux/spi/spi.h          | 6 +++---
-
-I guess it would be nice to split on per-driver basis, starting from updating
-the SPI core. I counted 6 patches in such a case.
-
+diff --git a/Documentation/devicetree/bindings/leds/ams,as3668.yaml b/Documentation/devicetree/bindings/leds/ams,as3668.yaml
+new file mode 100644
+index 000000000000..d1d73782da55
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/ams,as3668.yaml
+@@ -0,0 +1,74 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/leds/ams,as3668.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Osram 4-channel i2c LED driver
++
++maintainers:
++  - Lukas Timmermann <linux@timmermann.space>
++
++description:
++  This IC can drive up to four separate LEDs.
++  Having four channels suggests it could be used with a single RGBW LED.
++
++properties:
++  compatible:
++    const: ams,as3668
++
++  reg:
++    maxItems: 1
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++patternProperties:
++  "^led@[0-3]$":
++    type: object
++    $ref: common.yaml#
++    unevaluatedProperties: false
++
++    properties:
++      reg:
++        maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - "#address-cells"
++  - "#size-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/leds/common.h>
++
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      led-controller@42 {
++        compatible = "ams,as3668";
++        reg = <0x42>;
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        led@0 {
++          reg = <0x0>;
++          function = LED_FUNCTION_STATUS;
++          color = <LED_COLOR_ID_RED>;
++        };
++
++        led@1 {
++          reg = <0x1>;
++          function = LED_FUNCTION_STATUS;
++          color = <LED_COLOR_ID_GREEN>;
++        };
++      };
++    };
++
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c59316109e3f..091206c54c63 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3506,6 +3506,12 @@ L:	linux-leds@vger.kernel.org
+ S:	Maintained
+ F:	drivers/leds/flash/leds-as3645a.c
+ 
++AS3668 LED DRIVER
++M:	Lukas Timmermann <linux@timmermann.space>
++L:	linux-leds@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/leds/ams,as3668.yaml
++
+ ASAHI KASEI AK7375 LENS VOICE COIL DRIVER
+ M:	Tianshu Qiu <tian.shu.qiu@intel.com>
+ L:	linux-media@vger.kernel.org
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.49.0
 
