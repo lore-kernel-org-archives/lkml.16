@@ -1,66 +1,66 @@
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2697C25E452
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 22:42:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C95025F99B
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 22:42:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749681768; cv=none; b=ZdvB6lroa7uZ0cSJLrTWDGYOvdae/SaBqFQKJ8JCg7apPHtGrAFIPK6c9czoH2Qa5214QaCZ1r7Ewd8c5EPc/3CURqs6PWqMC5hG6fvVqxF/uvH+cd7+Xiht0Cc/ruttCTcHz/NcoiH3fZkfi3Of8NDJmwvPRed43TSS8Am+0f4=
+	t=1749681771; cv=none; b=XCj42IQn9OnugYcSzqPUreMw//vI/7SZ9sTvVo89mDO+A0f/TqoWuOGbXPYh+KO/qg0zRnxmavQUosll3LbU+VIkCLkTLKHHTVl1KiNM7/7pZ/VFNNHpPu0jgVBMdeECDWBwicQP0kYo+vn7VKsBDHhftpQXy4T6PFV+qI+khis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749681768; c=relaxed/simple;
-	bh=UJXbN0f/Sc264QMDW6dBftvYOYfvz10QBoW4bFVFUX4=;
+	s=arc-20240116; t=1749681771; c=relaxed/simple;
+	bh=fAkKApzgvKKCY+4XB2hNM39jEFCTxF0PElDrgzvAlfA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kzCJXh1fYKvy7JLu+tYB2KqHs6vEiNgfM0kIxb3J1QopUTrcnhyJsJJYQECGsBHNtbbWId5qlZfKW8RVC7+lvER2kH5wEnZHfhCSVrTB+orBphrsVojKt/d0ccYOJuvydULOyHdUvBgn0tONtESRUho+eg+D2qfljrBr6i6cJsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Q3z29XvN; arc=none smtp.client-ip=209.85.210.54
+	 In-Reply-To:To:Cc; b=Lp0CQQeTauVhWW66pf+VZduTAkkLkrAo4IFQjLGztMox8ru6IDrFOAkyTN7F/Ep0DNgS/3yZ1fe9xPtraPUGIZs0TVAtur7AHYS8PO4d5ZFFfrzBIu1EUUuAt8n3Sx24kEs1xFVc239tBSSAHwqwiPNt93iMxp/WOQlwRN0BUIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=RdLgWZa2; arc=none smtp.client-ip=209.85.167.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Q3z29XvN"
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-735a9e65471so216947a34.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:42:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="RdLgWZa2"
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-401f6513cb2so776395b6e.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:42:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749681766; x=1750286566; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749681768; x=1750286568; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=LiF2DulFgRfRNMjiDxreAgm5rKmLlr34bZCxk6U0CK4=;
-        b=Q3z29XvNp5CPueW+ysHJA0zxGCmZ+xPLQj8J3FXAD73TI06ToeZ5m+1Iu03xIb2HuF
-         RYcGt87BdSdgMpvD6EOsN+p0cGLc2slUytSRH8476ut33Ra+yO/lw+Q/nB5R1vnbBdet
-         PWs1x3LpOR3kx0wQAXehcrm++xYARaTS+zDQDSr02LALpNc/OH6gHFUbdVhozZW2s1Ky
-         oNcXwm59fCDZ5kwu7Czuiit0F3/DJexXdhQZEweLxvgwTBwzURsouqPa5F8ZQEBP8owk
-         Pma8powR/fuEF162ab48jG6rlr4/xG0J3LW7MUD9FYSYlYkLrRWKAXFrO3y6axm0qCku
-         1iQw==
+        bh=FaCqKPIs2f0ylRS6bTSnQ5BqgfESWCqO1Av05E42Aq8=;
+        b=RdLgWZa2Vc34/qYNPisBXxqg82arRz0uBD/VFP1QmO+NXHVaz94nXOh2psViGhE+o1
+         +c3qQckjo0DPu2t2NngarfEfOPPNeIyZzFNx9EAevQfSh+Li3CFEf4LVWvsGr4X8oEy7
+         BZ5XvRgG6WnW1P3j2XFWve3uBlxeWkgIaheoEXfV9INODBaOXKFASYu2FP6ITeX0+2Bf
+         80EH93QiznRW90QCUgweceEwPf+1KklNX4IsrLa0SKuDMyO9+iDN8w3pE4wnOT/EqnCL
+         0Rlp6fCI5Dxd4h2m1mT/ogG2z1GqTWYnmJkj+RcqbXeuz41aeIMqMEaoIPXS5klNBdr9
+         TDbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749681766; x=1750286566;
+        d=1e100.net; s=20230601; t=1749681768; x=1750286568;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LiF2DulFgRfRNMjiDxreAgm5rKmLlr34bZCxk6U0CK4=;
-        b=lppslpbk6Qc0B8LZRE1T86qQrFBsO2/ClrhoYVLMkptYHoN/mJQPYOLBBuRq567wjY
-         FoU8QXS6HL2hq/ev/vlfAYrYuyzk4JhgrgV89/n4F+2wbWhFMgSFIEC9Gy3d3VX6wc2S
-         +L9mwxiGVvX+T5TsZXQhfCtoLokbrW3gQbuODfJ9sHm/c3WKkBRtyn3V35XlYNH1P6MV
-         FuNjrdGpqog7/OGuBkns6fxQiWfRcC8GMGw1CykbhWh/RoOg7Sa83acflu6qwnuqYCYN
-         T+DpHkz+QknZKWHPJB/KYkqMZQDwMX6Kabjx1p3B4J743R62D/Oy9wF0UHz/4XLWLTjU
-         iL7g==
-X-Forwarded-Encrypted: i=1; AJvYcCUF5kXa5J6x6piBB4N/I/nDLgOPcFgp8h8aDbm4VmQA0yPbBcjtd+9NyY5ppuQ8Tq38wUbCELrYi9SxDE8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBPyw7kApKK/6aR6Ko9KKj+LtrbVmOPisYUNDhAx20NBBk6m3A
-	wCxJhb//0qDbTwSOQaiClk/mops1ggCkSlF/G2afLjq7E/B13XjUzyBt8JIDAGke8Os=
-X-Gm-Gg: ASbGncv+i63HXve386kUmSWbtMINt1b4lUUuhXb3MdVNJCE+y9t9vfzoGVpBbiFfFC+
-	aDxHzv4eWcY6OlBOdQuvNu+s9MrL00YDVXGzRXjTSGPjOowVCJv23JPcfQF369Q9zf704nvZ2Lp
-	9djdExrFKPL1E22Wo8FHdPAAoQmg6LbFxX4O0TmUxnctZfF6UfHZpVwEVoxDi22iSe9sfvRmm8w
-	zxmokEtG25jCuG1ETSZwihShnJx7CDG4xV+0pJBrdHmAmeiNOPb9BQHEGssC9vqk2Al0kEGQ3y3
-	+ZfKKRQn1iawh9WIn/4c9ja/+HsAnW/aOMymWz9a1jQhJ8KGBnW36r1jY67+ffUkzjgKThtTAmC
-	eru4=
-X-Google-Smtp-Source: AGHT+IGZSFpZmGlN0w2Un5vLT2W24kqk9q0DeivfstNV8sNtHQdO7UhGZijU6igQSf2A4dpARH8gnw==
-X-Received: by 2002:a05:6808:3086:b0:403:3814:b2b1 with SMTP id 5614622812f47-40a5d081c0emr3858130b6e.10.1749681766169;
-        Wed, 11 Jun 2025 15:42:46 -0700 (PDT)
+        bh=FaCqKPIs2f0ylRS6bTSnQ5BqgfESWCqO1Av05E42Aq8=;
+        b=lWJBhsHrTINq+ryqwy/ML0qSfV39tPqsUe0VQiVDvKesBIq+a1cbY/r/FG8HEi2MUA
+         40nR4iDbPZqv/zmqSgRxHH3BHbUlLBYTeJn93ez5h8qpu4fB8gvboePz3KWJrllTh16E
+         HW5ik4d9XhzVa4MCQG57fduG5VAAaiI8iWKx0IFleCy05eMooNXvAS4N+1BDrSjXwwK0
+         Tvq0idl5hcQpRMsHgSpLQAw/cK4PERvkeM31du7xEiF5vPYCGXVB3/vPMDwIGpXAVXBU
+         A+MqruQNfBAsS3WPNusvRzOyQc55eAKvMlTbj8opu2otsFEOJriZ+sQ2UBs0gbcB3E+3
+         kP1A==
+X-Forwarded-Encrypted: i=1; AJvYcCWaYTsj1JB33Ttu5Y6Vm7fQVYxzwbK+sF1xeqkcJdwqqzglPXVZ6ZpB1L8v2kDtr/PqD7C35UDRji92yFc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxP38jXTDUi5Ub57hdFizAFrq9SyTJXRY81+tNd/NnjcgQFescm
+	d3ZVSiOgBd3TbnaX8TCc6MaAm9NHDWUns0Rc2UR+CjrjsjvQKqqVb3vfJKuKBcDPdXo=
+X-Gm-Gg: ASbGncsXNFMAYx5doaZ07SJYwxjuAXmEeflzz6k/Qhaez1lv6AbxUf12vNIAlU0Z8v9
+	daS88JO8FCiqdFdLYm5aaJ6yLu+QNmu+VoFve5PhJ37c8C4uANccr157uu3xN+OSQd96f4WWF+v
+	ja7vYM2yWqerD7iTbsSwpwhQru64TShez2RauLQ69kKhpZiCxtMnfCbMpbYEhebTUspTFKVetO1
+	IYRMeBAVsOtLkYniyGyGYVqRsH8tKMZjRyJMjpS5hIgmqBpngsIN5pBTP/+qeeNkRkLdWbfpdsZ
+	YuN9Bg+DSVefL+GOGGEv581UCPxSeINr1KDzSHrI0wV7a8UKrp3QZkfPKFz/j+paookp
+X-Google-Smtp-Source: AGHT+IEqBdswhJxFab3cfPWoCt/XhvSdy8p4DMoA4oBrcj8i32O67dKlBd9w/Xt2c78Lmmmu54g1yQ==
+X-Received: by 2002:a05:6808:3403:b0:407:a0ea:a233 with SMTP id 5614622812f47-40a66081d10mr892925b6e.10.1749681768360;
+        Wed, 11 Jun 2025 15:42:48 -0700 (PDT)
 Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:4753:719f:673f:547c])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40a682fbf05sm24684b6e.32.2025.06.11.15.42.45
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40a682fbf05sm24684b6e.32.2025.06.11.15.42.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 15:42:45 -0700 (PDT)
+        Wed, 11 Jun 2025 15:42:47 -0700 (PDT)
 From: David Lechner <dlechner@baylibre.com>
-Date: Wed, 11 Jun 2025 17:39:07 -0500
-Subject: [PATCH 15/28] iio: dac: ad3552r: use = { } instead of memset()
+Date: Wed, 11 Jun 2025 17:39:08 -0500
+Subject: [PATCH 16/28] iio: imu: inv_icm42600: use = { } instead of
+ memset()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250611-iio-zero-init-stack-with-instead-of-memset-v1-15-ebb2d0a24302@baylibre.com>
+Message-Id: <20250611-iio-zero-init-stack-with-instead-of-memset-v1-16-ebb2d0a24302@baylibre.com>
 References: <20250611-iio-zero-init-stack-with-instead-of-memset-v1-0-ebb2d0a24302@baylibre.com>
 In-Reply-To: <20250611-iio-zero-init-stack-with-instead-of-memset-v1-0-ebb2d0a24302@baylibre.com>
 To: Michael Hennerich <michael.hennerich@analog.com>, 
@@ -100,15 +100,15 @@ Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-stm32@st-md-mailman.stormreply.com, 
  David Lechner <dlechner@baylibre.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=915; i=dlechner@baylibre.com;
- h=from:subject:message-id; bh=UJXbN0f/Sc264QMDW6dBftvYOYfvz10QBoW4bFVFUX4=;
- b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoSgXmmJnXqBUX52BnBQ8vdrjyxdthhoLPWdbRL
- R+WVVgUfXeJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaEoF5gAKCRDCzCAB/wGP
- wAHpB/9uvsuwsxPRCNHjRwNuY0qyeu9AO2EJoyNvSVzZWpvJJXh6el4lDtmSOYf7BNiSzxoL7GH
- ZA9fAXagxB/cnJd0lWxqHu6IllSBT9tS7KDugmBh+2loJ450FcplnrPuRlzFJx5QRs7XWieNUFB
- MXxCk/XXt6zIf+oAV23jZWywwUtyAzZ6IAh9PIHNdcMrm/xyZ/gKGv3UMTkLdL5rp5SJBwxh4cc
- 00NEmMDVhDI8758T0v6AVJa5hRW1epfYSYXca9HF6od0VNpE0B2edgAefLgFuwdtJeZH/7Ms8qJ
- Qcdf79QFtQZEJjej/ETfZd9QxjJxo8qX5fR8v+r3taHVCkrk
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2716; i=dlechner@baylibre.com;
+ h=from:subject:message-id; bh=fAkKApzgvKKCY+4XB2hNM39jEFCTxF0PElDrgzvAlfA=;
+ b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoSgXt+4nZ+zbyhmjJNdPfIxZOtXs2Bk8+N21Ob
+ xic8BlFYmWJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaEoF7QAKCRDCzCAB/wGP
+ wIUNB/48BoC8ymocKlLoNu3v5QYdcqupR0Gl4uhHgWI4Jt4Brgahbb5SfPq/3olqkbiy+T1Ookv
+ DWyixFwL+PnlcdEYgsS3FtkBM77VlMTSo6KPDdiudRl4FOE1D8dxwHWMFTSURf17zsYwE+dDLHp
+ YZRLNMo9fWgXqlnqEsBGDUgu2l57aaQxB6TaIlukki2lYZmsUTkPQsTN9JnX1WWTeNubNgf9d9W
+ 0ZUaDpZW1pcDF8oQsk1+HVaB1pWPs5UwKNoW9xGgFt43NyStIN8Eb/T84MFJaOOu+ikBdQENY1a
+ Diwzxh8L7c4dTlMajUB9DvjbZGuzAcjh6/xW+3qRtK6/KKlM
 X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
  fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
 
@@ -117,25 +117,56 @@ the code.
 
 Signed-off-by: David Lechner <dlechner@baylibre.com>
 ---
- drivers/iio/dac/ad3552r.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c | 5 ++---
+ drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c  | 5 ++---
+ 2 files changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/iio/dac/ad3552r.c b/drivers/iio/dac/ad3552r.c
-index a44b163f318315cec179aa2ac9d66883a327ebb9..93c33bc3e1be438c2e10c1ca990d8046ba87c9d0 100644
---- a/drivers/iio/dac/ad3552r.c
-+++ b/drivers/iio/dac/ad3552r.c
-@@ -293,10 +293,9 @@ static irqreturn_t ad3552r_trigger_handler(int irq, void *p)
- 	struct iio_buffer *buf = indio_dev->buffer;
- 	struct ad3552r_desc *dac = iio_priv(indio_dev);
- 	/* Maximum size of a scan */
--	u8 buff[AD3552R_MAX_CH * AD3552R_MAX_REG_SIZE];
-+	u8 buff[AD3552R_MAX_CH * AD3552R_MAX_REG_SIZE] = { };
- 	int err;
+diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c
+index e6cd9dcb0687d19554e63a69dc60f065c58d70ee..dbd315ad3c4d2bd5085f7cd3cdc6de4391b1c896 100644
+--- a/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c
++++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c
+@@ -902,7 +902,8 @@ int inv_icm42600_accel_parse_fifo(struct iio_dev *indio_dev)
+ 	const int8_t *temp;
+ 	unsigned int odr;
+ 	int64_t ts_val;
+-	struct inv_icm42600_accel_buffer buffer;
++	/* buffer is copied to userspace, zeroing it to avoid any data leak */
++	struct inv_icm42600_accel_buffer buffer = { };
  
--	memset(buff, 0, sizeof(buff));
- 	err = iio_pop_from_buffer(buf, buff);
- 	if (err)
- 		goto end;
+ 	/* parse all fifo packets */
+ 	for (i = 0, no = 0; i < st->fifo.count; i += size, ++no) {
+@@ -921,8 +922,6 @@ int inv_icm42600_accel_parse_fifo(struct iio_dev *indio_dev)
+ 			inv_sensors_timestamp_apply_odr(ts, st->fifo.period,
+ 							st->fifo.nb.total, no);
+ 
+-		/* buffer is copied to userspace, zeroing it to avoid any data leak */
+-		memset(&buffer, 0, sizeof(buffer));
+ 		memcpy(&buffer.accel, accel, sizeof(buffer.accel));
+ 		/* convert 8 bits FIFO temperature in high resolution format */
+ 		buffer.temp = temp ? (*temp * 64) : 0;
+diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c
+index b4d7ce1432a4f4d096599877040a89ede0625e0b..4058eca076d8b03a2290535eedffa0a74098d739 100644
+--- a/drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c
++++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c
+@@ -806,7 +806,8 @@ int inv_icm42600_gyro_parse_fifo(struct iio_dev *indio_dev)
+ 	const int8_t *temp;
+ 	unsigned int odr;
+ 	int64_t ts_val;
+-	struct inv_icm42600_gyro_buffer buffer;
++	/* buffer is copied to userspace, zeroing it to avoid any data leak */
++	struct inv_icm42600_gyro_buffer buffer = { };
+ 
+ 	/* parse all fifo packets */
+ 	for (i = 0, no = 0; i < st->fifo.count; i += size, ++no) {
+@@ -825,8 +826,6 @@ int inv_icm42600_gyro_parse_fifo(struct iio_dev *indio_dev)
+ 			inv_sensors_timestamp_apply_odr(ts, st->fifo.period,
+ 							st->fifo.nb.total, no);
+ 
+-		/* buffer is copied to userspace, zeroing it to avoid any data leak */
+-		memset(&buffer, 0, sizeof(buffer));
+ 		memcpy(&buffer.gyro, gyro, sizeof(buffer.gyro));
+ 		/* convert 8 bits FIFO temperature in high resolution format */
+ 		buffer.temp = temp ? (*temp * 64) : 0;
 
 -- 
 2.43.0
