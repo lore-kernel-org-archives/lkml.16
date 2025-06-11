@@ -1,195 +1,190 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 613AE27FD61;
-	Wed, 11 Jun 2025 11:52:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DC6A25A344
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749642749; cv=none; b=ZDShzbZm/Atm03GK68k+mJ63HJxf2Xj/zJWarwGtVNLB94NCBrk1Dr8M3yD/eGTgKZVT03aYXzRq2Oqm19Iv1TUU+W56ruB4lQV4pVYVFO6djUJOwxZGmiV9TZK/hOo/+Ok1EBCnwBQdYIvRRNR7LPNDJD6ZUYc8GQXhNQV9mKg=
+	t=1749642785; cv=none; b=QAVY8xGLoRT3BpikS14Qmh/Cy4x6W+VZ/SKgMJZ1ET/wao7WgsO+lnzHyGtuEOynbK6AsT0proWmLh8wLyBnmk+9fNnh4AOghy6bhYQNo7SaquujDjChLTtBDht0Y7CFUPGWvl/MSICMRW8t+kgucbCWUJOhM6zNTYvniq1rUYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749642749; c=relaxed/simple;
-	bh=KH/uGcpNKe59M/jW/2zmh03X9SdcLuGi4pvUOPA+2Ow=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OkSdQSYX//9/VNOVVUsryBA4v8JvYfgLZZAlbwVC60kg9t/w06gm3JKPNkILG2hG8ADlryKMhuB3HZzLfERk2zTQJe2Q3JSQo2/7r70vBgLJEjlW5+HwjJ3AOoE4aPnFUQav4RDwAOmZCuT3avLEAvMIA81WR3F5gVjFZQJ9/Lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=GoQZ5liL; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="GoQZ5liL"
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55B91kIT016838;
-	Wed, 11 Jun 2025 07:52:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=GMgjx
-	Ty8mOIqGeKQIWqHPAdxYMsS577jy6J6Gp+hMsY=; b=GoQZ5liL6xnURxbggqDUL
-	YkidED1I9PfboD/fhN15FksXihm8y3BuDKcUp2aoqmQ/nSmbE4lj39Eh9zhcmnEj
-	hQSCrbjhGIlCv/ZkhW8C0/kuNeVZ6yzPce33/A7sHt+jtbj73WrZ1cIfUG+sUp7I
-	oxpGrbAK2A8AI2Sz32Ep08xUbMrdeBiW4QjHCtAbNf+gEIXUIF7DBq9Ax4yVhmtj
-	kDc+KuoGKQkgtPZRDH+jSVVXcnuR+KTfcHYIRH3fKg+up2qyB0j3nzmwEsUH+fZl
-	6AAAQ0ahmwLsW/CZRpDbrxEfABbHGjCwO2ExnxleCqqK9/f5YUk4ajm8yArlL/At
-	g==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 4776tdgvxa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 11 Jun 2025 07:52:21 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 55BBqKK4031772
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 11 Jun 2025 07:52:20 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Wed, 11 Jun
- 2025 07:52:20 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
- Transport; Wed, 11 Jun 2025 07:52:20 -0400
-Received: from JSANTO12-L01.ad.analog.com ([10.65.60.206])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 55BBq5P2008952;
-	Wed, 11 Jun 2025 07:52:08 -0400
-From: Jonathan Santos <Jonathan.Santos@analog.com>
-To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-CC: Jonathan Santos <Jonathan.Santos@analog.com>, <andy@kernel.org>,
-        <nuno.sa@analog.com>, <Michael.Hennerich@analog.com>,
-        <marcelo.schmitt@analog.com>, <jic23@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <marcelo.schmitt1@gmail.com>, <linus.walleij@linaro.org>,
-        <brgl@bgdev.pl>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
-        <jonath4nns@gmail.com>, <dlechner@baylibre.com>
-Subject: [PATCH v11 11/11] iio: adc: ad7768-1: add low pass -3dB cutoff attribute
-Date: Wed, 11 Jun 2025 08:52:03 -0300
-Message-ID: <804d66f1858014d7278aec3344d81c223661e878.1749569957.git.Jonathan.Santos@analog.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1749569957.git.Jonathan.Santos@analog.com>
-References: <cover.1749569957.git.Jonathan.Santos@analog.com>
+	s=arc-20240116; t=1749642785; c=relaxed/simple;
+	bh=sJipJo+MtLn51jVIbl+mdvj6cXJVhBJaNM2xOHZT7UU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dxfzUz7mtVTm29ZdMVJJBZG9nXwYiq1cyOCB4LhLXqqyj2zQA1wG+ZLKz88XAzpGMp1OazT5cE4I8Xx0Qa44rTzmYi6vKnWPmfxPlcIartyB/oKi04FLorKQxd/7Oq1LyQGlC6RjVqIKVAiDIo0XAlG7XZvfUEb1apnDTdeq24M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EFDA415A1;
+	Wed, 11 Jun 2025 04:52:42 -0700 (PDT)
+Received: from [10.57.28.131] (unknown [10.57.28.131])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C12823F673;
+	Wed, 11 Jun 2025 04:53:00 -0700 (PDT)
+Message-ID: <9e56971a-f025-4fce-8cc8-f7609bda3f49@arm.com>
+Date: Wed, 11 Jun 2025 12:52:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: vgMbvfqAqX-kArYpl0uX7CHp_vR_oTaR
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjExMDEwMSBTYWx0ZWRfXyJ4XMfagPp8u
- YopnYcjE8oY+G5emYpQVghHy6t8dcrJfZLzKwb2Y3e0xIE+3gba0F63Kifozfx6M67kxX6JBbbF
- OoscrbUAeqayH6VfutFG60wmdBCN2R6LiX6itywXwd3iUuEgjqHpRlLfLzVk7/SK+pECXBJpTNz
- lC/V35d/S1vNETHWdjIW2kqNWJCSQxPG6QPWyzSzFEHP2SFQz28wQy7aQEs2bBCOpAvTKGzyIwN
- 0tiA1GzXfWeUCFdiFVhX8lndMb+8swjTbwAK50xJMqMIn4xXLFB6pjSJ0A/itr+oY4nA0jbVXB6
- TNkFpEGsKcn0ZtjnR+FKqo1ukYhyrwYwEYj3jeMLKYSnjrA45vfY5g5b3xFvpMrfQIzxNyUdel8
- qEXshWmNNhwtfSgMr+PWrcKqCPavvJUnXYEc9oLSolXq+Kt3o8iXfqJuq2+8uuRiLwX2zJ8V
-X-Authority-Analysis: v=2.4 cv=BezY0qt2 c=1 sm=1 tr=0 ts=68496df5 cx=c_pps
- a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17
- a=6IFa9wvqVegA:10 a=gAnH3GRIAAAA:8 a=IpJZQVW2AAAA:8 a=UvUlGJLpmzXXuVQgGPIA:9
- a=IawgGOuG5U0WyFbmm1f5:22
-X-Proofpoint-ORIG-GUID: vgMbvfqAqX-kArYpl0uX7CHp_vR_oTaR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-11_05,2025-06-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 spamscore=0 impostorscore=0 clxscore=1015 malwarescore=0
- mlxlogscore=999 bulkscore=0 phishscore=0 suspectscore=0 lowpriorityscore=0
- adultscore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506110101
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC] arm64/mm: Lift the cma address limit when
+ CONFIG_DMA_NUMA_CMA=y
+To: Feng Tang <feng.tang@linux.alibaba.com>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Will Deacon <will@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Yang Shi <yang@os.amperecomputing.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Baruch Siach <baruch@tkos.co.il>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250521014701.73046-1-feng.tang@linux.alibaba.com>
+ <aEhnELJQLw8S8Bho@arm.com> <98c0b70a-0cbd-46fd-b481-7663905bb8dc@arm.com>
+ <aEkBOqvxXaVXU0fQ@U-2FWC9VHC-2323.local>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <aEkBOqvxXaVXU0fQ@U-2FWC9VHC-2323.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Ad7768-1 has a different -3db frequency multiplier depending on
-the filter type configured. The cutoff frequency also varies according
-to the current ODR.
+On 2025-06-11 5:08 am, Feng Tang wrote:
+> Add Marek Szyprowski
+> 
+> Thanks Catalin and Robin for the comments and suggestions!
+> 
+> On Tue, Jun 10, 2025 at 08:46:38PM +0100, Robin Murphy wrote:
+>> On 2025-06-10 6:10 pm, Catalin Marinas wrote:
+>>> On Wed, May 21, 2025 at 09:47:01AM +0800, Feng Tang wrote:
+>>>> When porting an cma related usage from x86_64 server to arm64 server,
+>>>> the "cma=4G" setup failed on arm64, and the reason is arm64 has 4G (32bit)
+>>>> address limit for cma reservation.
+>>>>
+>>>> The limit is reasonable due to device DMA requirement, but for NUMA
+>>>> servers which have CONFIG_DMA_NUMA_CMA enabled, the limit is not required
+>>>> as that config already allows cma area to be reserved on different NUMA
+>>>> nodes whose memory very likely goes beyond 4G limit.
+>>>>
+>>>> Lift the cma limit for platform with such configuration.
+>>>
+>>> I don't think that's the right fix. Those devices that have a NUMA node
+>>> associated may be ok to address memory beyond 4GB. The default for
+>>> NUMA_NO_NODE devices is still dma_contiguous_default_area. I also don't
+>>> like to make such run-time decisions on the config option.
+>>
+>> Indeed, the fact that the kernel was built with the option enabled says
+>> nothing at all about the needs of whatever system we're actually running on,
+>> so that's definitely wrong. This one is also the kind of option which may
+>> well be enabled in a multi-platform distro kernel, since it only adds a tiny
+>> amount of code with no functional impact on systems which don't explicitly
+>> opt in, but offers a useful benefit to those which can and do.
+> 
+> Yep, the analysis from you two make sense to me. Will drop this patch.
+> 
+>> Furthermore, the justification doesn't add up at all - if the relevant
+>> devices could use the per-NUMA-node CMA areas, then... why not just have
+>> them use the per-NUMA-node CMA areas, no kernel change needed (and maybe a
+>> slight performance bonus too)? On the other hand, where those areas may or
+>> may not be allocated is entirely meaningless to NUMA_NO_NODE devices which
+>> wouldn't use them anyway.
+> 
+> The usage model ported from x86_64 is use "cma=4G@4G" in cmdline, and use
+> something like dma_alloc_from_continguous(NULL, 1 << 18, 18, false) to
+> get a huge buffer from 'dma_contiguous_default_area'
+> 
+> btw, I really like the 'numa_cma=' cmdline option, which helps our cma
+> usage a lot.
+> 
+>>> That said, maybe we should make the under-4G CMA allocation a best
+>>> effort. In the arch code, if that failed, attempt the allocation again
+>>> with a limit of 0 and maybe do a pr_notice() that CMA allocation in the
+>>> DMA zone failed.
+>>
+>> TBH given that the command-line parameter can specify placement as well as
+>> size, I think it would make a lot of sense to allow that to override the
+>> default limit provided by the arch code. That would give users the most
+>> flexibility, at the minor cost of having to accept the consequences if they
+>> do specify something which ends up not working for some devices. Otherwise I
+>> fear that any attempt to make the code itself cleverer will just lead down a
+>> rabbit-hole of trying to second-guess the user's intent - if the size
+>> doesn't fit the limit, who says it's right to increase the limit rather than
+>> reduce the size? And so on...
+> 
+> Strongly agree. Some platforms may have the 32bit limit, and many other
+> platforms which don't have to suffer from the limit. This kind of
+> flexibility should benefit users widely.
+> 
+> Something like below?
 
-Add a readonly low pass -3dB frequency cutoff attribute to clarify to
-the user which bandwidth is being allowed depending on the filter
-configurations.
+Pretty much, although personally I wouldn't even bother with the message 
+- if the user has gone out of their way to override the default 
+behaviour on their system, then logically it's because they know what 
+that default is and why it didn't suit them, so it seems unlikely that 
+they need reminding of that in one particular subset of override 
+conditions. We still report the actual address where the CMA region ends 
+up being allocated, and that's what really matters in the end.
 
-Reviewed-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-Reviewed-by: David Lechner <dlechner@baylibre.com>
-Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
----
-v11 Changes:
-* Applied suggestions from Andy.
+Thanks,
+Robin.
 
-v10 Changes:
-* None
-
-v9 Changes:
-* Rearranged new BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY) to
-  make the diff look cleaner.
-
-v8 Changes:
-* None
-
-v7 Changes:
-* None
-
-v6 Changes:
-* None
-
-v5 Changes:
-* None
-
-v4 Changes:
-* None
-
-v3 Changes:
-* None
-
-v2 Changes:
-* New patch in v2.
----
- drivers/iio/adc/ad7768-1.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
-index 291ed801a8a0..e4716e20fcdf 100644
---- a/drivers/iio/adc/ad7768-1.c
-+++ b/drivers/iio/adc/ad7768-1.c
-@@ -152,6 +152,14 @@ enum ad7768_scan_type {
- 	AD7768_SCAN_TYPE_HIGH_SPEED,
- };
- 
-+/* -3dB cutoff frequency multipliers (relative to ODR) for each filter type. */
-+static const int ad7768_filter_3db_odr_multiplier[] = {
-+	[AD7768_FILTER_SINC5] = 204,		/* 0.204 */
-+	[AD7768_FILTER_SINC3] = 262,		/* 0.2617 */
-+	[AD7768_FILTER_SINC3_REJ60] = 262,	/* 0.2617 */
-+	[AD7768_FILTER_WIDEBAND] = 433,		/* 0.433 */
-+};
-+
- static const int ad7768_mclk_div_rates[] = {
- 	16, 8, 4, 2,
- };
-@@ -746,6 +754,7 @@ static const struct iio_chan_spec ad7768_channels[] = {
- 		.type = IIO_VOLTAGE,
- 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
- 		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) |
-+					    BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY) |
- 					    BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
- 		.info_mask_shared_by_type_available = BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
- 		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),
-@@ -766,7 +775,7 @@ static int ad7768_read_raw(struct iio_dev *indio_dev,
- {
- 	struct ad7768_state *st = iio_priv(indio_dev);
- 	const struct iio_scan_type *scan_type;
--	int scale_uv, ret;
-+	int scale_uv, ret, temp;
- 
- 	scan_type = iio_get_current_scan_type(indio_dev, chan);
- 	if (IS_ERR(scan_type))
-@@ -804,6 +813,12 @@ static int ad7768_read_raw(struct iio_dev *indio_dev,
- 	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
- 		*val = st->oversampling_ratio;
- 
-+		return IIO_VAL_INT;
-+
-+	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
-+		temp = st->samp_freq * ad7768_filter_3db_odr_multiplier[st->filter_type];
-+		*val = DIV_ROUND_CLOSEST(temp, 1000);
-+
- 		return IIO_VAL_INT;
- 	}
- 
--- 
-2.34.1
+> ---
+> diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
+> index 8df0dfaaca18..6a93ad3e024d 100644
+> --- a/kernel/dma/contiguous.c
+> +++ b/kernel/dma/contiguous.c
+> @@ -222,7 +222,12 @@ void __init dma_contiguous_reserve(phys_addr_t limit)
+>   	if (size_cmdline != -1) {
+>   		selected_size = size_cmdline;
+>   		selected_base = base_cmdline;
+> -		selected_limit = min_not_zero(limit_cmdline, limit);
+> +
+> +		selected_limit = limit_cmdline ?: limit;
+> +		if (limit_cmdline > limit)
+> +			pr_notice("User set cma limit [0x%llx] bigger than architectual value [0x%llx], will use the former\n",
+> +				limit_cmdline, limit);
+> +
+>   		if (base_cmdline + size_cmdline == limit_cmdline)
+>   			fixed = true;
+>   	} else {
+> 
+> 
+> Thanks,
+> Feng
+> 
+>>
+>> Thanks,
+>> Robin.
+>>
+>>>
+>>> Adding Robin in case he has a different view.
+>>>
+>>>> Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
+>>>> ---
+>>>>    arch/arm64/mm/init.c | 9 ++++++++-
+>>>>    1 file changed, 8 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+>>>> index b99bf3980fc6..661758678cc4 100644
+>>>> --- a/arch/arm64/mm/init.c
+>>>> +++ b/arch/arm64/mm/init.c
+>>>> @@ -312,6 +312,7 @@ void __init arm64_memblock_init(void)
+>>>>    void __init bootmem_init(void)
+>>>>    {
+>>>>    	unsigned long min, max;
+>>>> +	phys_addr_t cma_limit;
+>>>>    	min = PFN_UP(memblock_start_of_DRAM());
+>>>>    	max = PFN_DOWN(memblock_end_of_DRAM());
+>>>> @@ -343,8 +344,14 @@ void __init bootmem_init(void)
+>>>>    	/*
+>>>>    	 * Reserve the CMA area after arm64_dma_phys_limit was initialised.
+>>>> +	 *
+>>>> +	 * When CONFIG_DMA_NUMA_CMA is enabled, system may have CMA reserved
+>>>> +	 * area in different NUMA nodes, which likely goes beyond the 32bit
+>>>> +	 * limit, thus use (PHYS_MASK+1) as cma limit.
+>>>>    	 */
+>>>> -	dma_contiguous_reserve(arm64_dma_phys_limit);
+>>>> +	cma_limit = IS_ENABLED(CONFIG_DMA_NUMA_CMA) ?
+>>>> +			(PHYS_MASK + 1) : arm64_dma_phys_limit;
+>>>> +	dma_contiguous_reserve(cma_limit);
+>>>>    	/*
+>>>>    	 * request_standard_resources() depends on crashkernel's memory being
+>>>> -- 
+>>>> 2.39.5 (Apple Git-154)
 
