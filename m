@@ -1,555 +1,149 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013049.outbound.protection.outlook.com [40.107.162.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAEAA225A23
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 05:36:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749620204; cv=none; b=KsJyC3JywoQXiq5Rl1LG8o1xpghZ6u+owlpraPl/1xHAu4sLJLc+xyZqUBySglBvhO2MvdYe74dpnNODTtlV4ZRXDyck8Ad6q50iXYdak9/j2x0Riem36UdqFm1poIe6Ueo6PqdMPT9PZe0GdMQfTiQ0mogw6GHf0JtsQTXXKVY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749620204; c=relaxed/simple;
-	bh=49AKq9ID6BBuWfyisxuAwvD/4ETkV0WHbvy5s/TxhHE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WnexzCOsGRpvk14Scr4UY4BRJGZhFrjL/U7MGgBZ1bs4nCDabzxbCoXlb5uJ7fWh2YeEPANDU4eq8ax5kSug1Qcc27kbXj2rK0dxdsi6kbcKbsk5as5utbT7MyxzP7ygiyt40+0vrl2J8Gu4B6THyJl429Uu32ZoLj6D7nmqakw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 0a9478f2468611f0b29709d653e92f7d-20250611
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B, HR_CTT_MISS
-	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
-	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
-	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
-	IP_UNTRUSTED, SRC_UNTRUSTED, IP_LOWREP, SRC_LOWREP, DN_TRUSTED
-	SRC_TRUSTED, SA_EXISTED, SN_UNTRUSTED, SN_UNFAMILIAR, SPF_NOPASS
-	DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD, CIE_GOOD_SPF
-	GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_T1, AMN_GOOD
-	AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:c964e10c-97a5-4e69-bff2-d52d016613c5,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:5
-X-CID-INFO: VERSION:1.1.45,REQID:c964e10c-97a5-4e69-bff2-d52d016613c5,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:5
-X-CID-META: VersionHash:6493067,CLOUDID:8fc30d15678a98b10ffcd9ed8dc1fb57,BulkI
-	D:2506111336373KLPVV1F,BulkQuantity:0,Recheck:0,SF:17|19|25|38|45|66|78|81
-	|82|102,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS
-	:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,A
-	RC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 0a9478f2468611f0b29709d653e92f7d-20250611
-X-User: duanchenghao@kylinos.cn
-Received: from localhost.localdomain [(223.104.40.103)] by mailgw.kylinos.cn
-	(envelope-from <duanchenghao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1579172774; Wed, 11 Jun 2025 13:36:36 +0800
-From: Chenghao Duan <duanchenghao@kylinos.cn>
-To: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Chenghao Duan <duanchenghao@kylinos.cn>,
-	George Guo <guodongtai@kylinos.cn>
-Subject: [PATCH v1 4/5] LoongArch: BPF: Add bpf trampoline support for Loongarch
-Date: Wed, 11 Jun 2025 13:36:24 +0800
-Message-Id: <20250611053625.352091-5-duanchenghao@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250611053625.352091-1-duanchenghao@kylinos.cn>
-References: <20250611035952.111182-3-duanchenghao@kylinos.cn>
- <20250611053625.352091-1-duanchenghao@kylinos.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 483BE21FF4B;
+	Wed, 11 Jun 2025 05:43:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749620631; cv=fail; b=jlflHGcd/C8kuJ1jWtePUk28ugVBe12gRS0CWsL4sHGFcym9HqUhUlFJhQGUzxiQegKJMTXAPO7TpIOJPSi9OfPGEMYYY0d4K3SzIU8pceg1PqY1EEQN+OrAyaghYgpNhxwqzR20XdJ1JnDYmJ9kN+F+EBKXVe8CwrkSrSpiQ90=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749620631; c=relaxed/simple;
+	bh=5Lji/VmQ0T0HunEk3bqCu/b8akdi6uxBG2f4X+IUju0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=gYLyihnBydtxzq9n/pxzhWFO9A72htJ/RThCMgAp//U4237CQxKS5PGqQ80BefJc2cnMND5CQplKO21sA8e+x7tCLchMHgtLRlDBxTIBRS3Or7tbe/0HZuc3tgKqVIfG+bHm/SjSDTj1/JZN4BmHinvJqf9rweHN2ETU4QMIGrg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=pC+F+yKN; arc=fail smtp.client-ip=40.107.162.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="pC+F+yKN"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yB+IGU1XXWVEKPjH1uOyyM1YWxsBHezaHvt8oKL8Yf2vGVdkC30Crd+wXM9JoeuRRjYXFbGQiiBngiXl1UCfGQNhk81yoOjFlFC1qG2gspKrKel534MrS/ASXvK8PSSABGzV8lW49wsQ0F6e0EOYaQy+xjsn59XpjOYhffstafVcraLkG9VcenDImupaOU53l3VfuT2XERQXbM9fTcFHzTHn9jedJSKu+HMFlNH28F+7vIWU16TPF6XuPn99u20pWjVsUwak0rhaXcFbot5wk8Z5ZZk72HRhtpHRD3SgUpRTWkPQWCxQrYYkmHCF2cEB4FUK/SI0Csy885UysNTvXg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5Lji/VmQ0T0HunEk3bqCu/b8akdi6uxBG2f4X+IUju0=;
+ b=iCn+3dM+NyFILYh/t2fHRFx4tfs+LkYloU/3cvopuGozskQspPonLD/S7feMajyaelOH9jhoMp/oT4+/KmI6dtHVTrRAbagaBKmZfvzTMaveWyXBHeX9WyxIA+cwWhqh+NUAJ0YK43ezhPBgZ7n2vJ7F03mwsmhsAcSiKfocnPRVvVmveqTYvNUZc4bdiecvfl97lPPbPUHs1W/QMKbnhf0Rga/QPV/yEcbqagzr9n/6iyESgLH0Ttln+w+Z4o/TeEbLLzV+xvDA/8OJPSZObyJFvN6P1jn/ENU4AB00BiSHCUdDTdAktIJfpZhGjashkUQLnmMRPccaVmg/oe2gQw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5Lji/VmQ0T0HunEk3bqCu/b8akdi6uxBG2f4X+IUju0=;
+ b=pC+F+yKNHk5Z8cLue0SkqTSp0xBGpkbIH2bhQyAIOM6AQEUb6Q/1RvUJWeyS6KTHlTcwenx1E6QX8eieKak/BCejXH302qyDkNE+MVBhrAIKq6VvHwYJ4romAZ1ER/ZRtssBv+A7w7FK/P3TG0CJSDDS9dBcUihfHuTMhrAjL0T9jjXhrHAeyply6L4jK97tYgsODBYZlwUZJfkfqWwuheaEkVSNoAWpjJ5nEKudIIlGWjHWp/raTxFicSSa6SIVf6deY0ZxO0MWPv8GrS1t9By8bZ+pVU09PbWJFb9KCIi3xju6z52Pa0VLNiCAtFPAt8m87RYqno3IfIaepofGVg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by VI1PR04MB6957.eurprd04.prod.outlook.com (2603:10a6:803:135::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Wed, 11 Jun
+ 2025 05:43:42 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%3]) with mapi id 15.20.8813.024; Wed, 11 Jun 2025
+ 05:43:42 +0000
+Date: Wed, 11 Jun 2025 14:53:53 +0800
+From: Peng Fan <peng.fan@oss.nxp.com>
+To: Tanmay Shah <tanmay.shah@amd.com>
+Cc: andersson@kernel.org, mathieu.poirier@linaro.org,
+	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] remoteproc: xlnx: allow single core use in split mode
+Message-ID: <20250611065353.GB9120@nxa18884-linux>
+References: <20250610192738.3095247-1-tanmay.shah@amd.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250610192738.3095247-1-tanmay.shah@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: SG2P153CA0054.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c6::23)
+ To PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|VI1PR04MB6957:EE_
+X-MS-Office365-Filtering-Correlation-Id: 75e7d8fd-2533-477d-467c-08dda8aaeca7
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|1800799024|366016|376014|7053199007|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?3ukrMsEJa1eLfN2KCVzP03tLZVR1lXdr89e9phTbv7vzeHbngSkHIVkpzYDT?=
+ =?us-ascii?Q?8zUdVW+Jw4KyqO8IAWcfWVmhXPOSQ9VM1xgOcDm5wtbCSDa4KqYWXmsBmoDz?=
+ =?us-ascii?Q?OuMjNGlSeXssQePi74O/+MH5v7Sk5ZXJk3/DnQtg+byyrM5PqxxIm5QftG4E?=
+ =?us-ascii?Q?+c0tpW9TGkB1HW9M0h0MyYp8dmX4rlFPiFGMTDi7AWIaOfMcn9iAN9Jp0k7z?=
+ =?us-ascii?Q?Or2tPfq1CAydwLjfUuEQ4lsForQG396DzYCG1mCcVkgdjbjgFiKciOKDG+4C?=
+ =?us-ascii?Q?V4DV2NxuTspBy6O/iXzZ/GjfSVPeNJYr4ubzQ7+PooRy62FEDx0bmk+k6M74?=
+ =?us-ascii?Q?DbpRf3duhc+gY4kaYhVw0/ODVvM67mk+YVxA/9SJfDMiisOE5JoGh8ei2OaA?=
+ =?us-ascii?Q?AeM5mn2HD7PHfsD/zJFY84VVThhsQuptHWSwoVgmP2vMzPENavjlr1MHkQfl?=
+ =?us-ascii?Q?KR0SveoqLi4T1wprGfzCzXCpwrdnv+p3++/3LqHU8ZmrJm7JX0RQ0gVmg1vJ?=
+ =?us-ascii?Q?MYc7jBbry1QOVM85JelS1tUeKBHzaroZRjkUTEm3d7TyZ4BW8z0zR6jNvYyr?=
+ =?us-ascii?Q?7F/4dtCz1M/AfuOXggwvUIIBttNeOXuOe+EscAilwzHvIfP07KOF3ymAQap4?=
+ =?us-ascii?Q?d1x/u5H+K3xaaLR0VaA4V6USfDbky9r/QZkVWVwcsO90htPmTu2KrQK6QT0Z?=
+ =?us-ascii?Q?1S036fYEAJ04CS9WKpjg2SSQeOGxh3Ia0Ayn/HsN+qGzedNfejjSssSCjDYN?=
+ =?us-ascii?Q?wgts2XvLqKZS+4nfE2Pe+MDY07NsirQy874dvBg+TRkwb6pzupcsHmwv/WQj?=
+ =?us-ascii?Q?L4YpIDSZGRHgy/W162gbZNl/A9PR2ycs2AaMB5NASBJvfPdKctBR8Gu55FXx?=
+ =?us-ascii?Q?VyQs8oIOhCgf9v8mRWS8rmNdcz7ED8CeA2ClBuYyaWz886DoEyHNZC9aLzp+?=
+ =?us-ascii?Q?RuIpXC4c4hUFCol9qDXFk47Bbv0tpaaIO5nPd3Qz+djx05dqsc8W90ibPKsg?=
+ =?us-ascii?Q?hxQC5sfUHiSiqOltw7EQzzWXVmCuGPSbRSzQejBRtjVrWxNgwgLYhZw5H+30?=
+ =?us-ascii?Q?JLVLxxmY4EjBk1DUWZRAe4zKtIqPwj+ANCll0N0kh4D7NOuebukkqUZqaFs7?=
+ =?us-ascii?Q?3C8wZULrWmvsIQs38lutznnbdAOpJiXbVRCFm2OpVMc6yM9ZzqQ+klv2yKEc?=
+ =?us-ascii?Q?6WKyxEFG4PVyb4Yvb/5BXkGyKT62exyxpXDFGu+g0J/XFgd6WxX2wmfG77b5?=
+ =?us-ascii?Q?LEgbAlIHGbW7kqEZiUTjpBaMym2wz3f7dK9v/YkFqqN2b/0z44q7D5UWJr4i?=
+ =?us-ascii?Q?b0+rhtx8KoOmZo/A8GG6AAai73b4UmMG/urxOLtHVXmsp5uL6qEBfivbutsu?=
+ =?us-ascii?Q?aI1oXrbewNwNgRo2e5tdfc4K9p1Nak/4Yb+cveqpoD/PX8pGNOipgAqDrMJG?=
+ =?us-ascii?Q?/NjrufC4GTgh2QLQ1sWqg6kWrCG2v/Vsr4YIRuCisjpGG+mfnocHAg=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(1800799024)(366016)(376014)(7053199007)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?KKRZtEJJZyEoCCMJj0Ms2vagJTzmnF4Ts89/B7A8Uhi6vjDOucklH7/Q+IDB?=
+ =?us-ascii?Q?1QRh4vHYfM/SREZGlr88iT0+pOAaYMqxA3PhEpj3wtiejtbyp8RtLqgFLOQx?=
+ =?us-ascii?Q?Z/6+R37AVYiZAHYoP4hIEDbGBde+HJuxG5v1HAp3+K5MZ26DubWXV+L7p6Ss?=
+ =?us-ascii?Q?Y9HZzuNwGpxCjqsoD96mYqD3/SlyRHA667zhwILATDF+N+uaOUfcKx321ZUF?=
+ =?us-ascii?Q?4vNm0ZxCFU5LWf3CG/HJCb4tkhmkB4y0ev2Z0gtguKjzPMnquYFDR+J8ItwO?=
+ =?us-ascii?Q?tZx9Hnv/K/VpTROtp40bPP0/VdBQ5u3M+hYYPiJ/PKalnSqqigKNICzAjQqp?=
+ =?us-ascii?Q?9WEP49nF1E6eh0swqO5DpTNWnwLwaYw6nOCMn2IkgBlmW0dvZI6tbLyq6kfj?=
+ =?us-ascii?Q?+VmEOLx1kS7ryB01W36t8nQ9bxHW6do1cTbTtqPQBjfy94cPqx2Q4cpYb3to?=
+ =?us-ascii?Q?Z2Tg0bmGFUuC4DyRXv1PbADdLoLui5oc8nYhMASSCM9WT7M5J85se3uNSPD6?=
+ =?us-ascii?Q?0R8ZnvChqBydmy3TB32msbAVeAdRUhRMxHWQPtLfFm3q71SWlUoDSPxiisTx?=
+ =?us-ascii?Q?kchX49YOVwS5khL8ChM+E+FG32pjbavBXF31Fj59ZN+KPH7wHYBiamWRZPeF?=
+ =?us-ascii?Q?pF+RIAuVrvzkvyVXiJs7BHzdj0fpD9FUZuZYgj/7elHgDFsL3Or3loapTh7T?=
+ =?us-ascii?Q?uk+jvlaFljd8t2IM+kOGfKwtNs4vIDyX6bk7oTt2z/J4t6WN6tdGjcdRrqoq?=
+ =?us-ascii?Q?MsfVBbqyP7U1gOC6HvyeHOJ3FvzfIFZArzFp/EHU7drYXPiIIIKMH5+KdAUn?=
+ =?us-ascii?Q?34UjHBim1eyW1jRPD4VfRPwqNr2EMb9vGSo8VQhI0okoUXs/dAuCU1xH8hN6?=
+ =?us-ascii?Q?oQR/PSqJRq1xve18Kg70DtUghrXZJGY0iQ7n0fsqEyhUFnD0RgF95FjuwYx1?=
+ =?us-ascii?Q?MTDoglWwQ/VkNqExA3HwfOlLe3Ax67OFdtWiBLXPkeKV5vwhPSFwR0mdnCuV?=
+ =?us-ascii?Q?etWols7gY9vYiP0fxCtckoEgRzlRh2JG/4jF6ruuj22X7tEhkO89iaAr9gN7?=
+ =?us-ascii?Q?Eqtarx/e4fraLYwqatrr6PX1uRIM+6MfhOn8099ctciLGrvNP/ximzEZZhO3?=
+ =?us-ascii?Q?83Ag7pwM2h30EzDS/9yUYmkOGsNbmfnkDqcCoZxFfoA3rdCyCrev2LqCjTyA?=
+ =?us-ascii?Q?JxXY9/Z4ytTGXkHHmkaqwx6jinyhJhNeV9L2o6rWX4pkhyGSgyn0XAoSYNdX?=
+ =?us-ascii?Q?EDcRInkO5TQaUDi2y+xAKINhAm/R56+7IgF4Fd+I8sMhhWY1THPJsS5l+VDQ?=
+ =?us-ascii?Q?/d/Z3Tb3mA1L16OntxpFQpE1CnI4Xexvvj6PR+FYtFtMWjni2XZw1xynCfZ+?=
+ =?us-ascii?Q?jJ8R/hWpAPbPzKYxAEFVT1LwcU9HZ5n9jYv8rurNZtK4C7ogRaFWpwg58XKW?=
+ =?us-ascii?Q?tSMW6flAwR78CEkhIl6FsRjF8EK+nfpQFkRtk9f3TLY5c3P1i2ESRJlfAIge?=
+ =?us-ascii?Q?QyxxrTY2ud9mMMa4ZRcHGsX4AD4WBkOeuBta014CIi1/5xIznC+sEqRIvumu?=
+ =?us-ascii?Q?FYVBokVZBen/0XVivitU+tLbKPLqwBNfu/aYsPr+?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 75e7d8fd-2533-477d-467c-08dda8aaeca7
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2025 05:43:42.6820
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7bLYsMddQ5+5qKcGF32YS7jDU5cYF7c0F4HlbDDOyTL7oV/CF1CtoAKwrFrjCPISiWF1qHkMoIz2i3sfNkVTWg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6957
 
-BPF trampoline is the critical infrastructure of the BPF subsystem, acting
-as a mediator between kernel functions and BPF programs. Numerous important
-features, such as using BPF program for zero overhead kernel introspection,
-rely on this key component. We can't wait to support bpf trampoline on
-Loongarch.
+On Tue, Jun 10, 2025 at 12:27:38PM -0700, Tanmay Shah wrote:
+>It's a valid use case to have only one core enabled in cluster in split
+>mode. Remove exact core count expecatation from the driver.
+>
+>Signed-off-by: Tanmay Shah <tanmay.shah@amd.com>
 
-The related tests have passed, Including the following technical points:
-1. fentry
-2. fmod_ret
-3. fexit
-
-Signed-off-by: George Guo <guodongtai@kylinos.cn>
-Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
----
- arch/loongarch/net/bpf_jit.c | 423 +++++++++++++++++++++++++++++++++++
- arch/loongarch/net/bpf_jit.h |   6 +
- 2 files changed, 429 insertions(+)
-
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index 0e31d4d66..cdcb73f93 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -7,6 +7,10 @@
- #include <linux/memory.h>
- #include "bpf_jit.h"
- 
-+#define LOONGARCH_MAX_REG_ARGS 8
-+#define LOONGARCH_FENTRY_NINSNS 2
-+#define LOONGARCH_FENTRY_NBYTES (LOONGARCH_FENTRY_NINSNS * 4)
-+
- #define REG_TCC		LOONGARCH_GPR_A6
- #define TCC_SAVED	LOONGARCH_GPR_S5
- 
-@@ -1386,6 +1390,20 @@ static int gen_jump_or_nops(void *target, void *ip, u32 *insns, bool is_call)
- 					(unsigned long)ip, (unsigned long)target);
- }
- 
-+static int emit_call(struct jit_ctx *ctx, u64 addr)
-+{
-+	u64 ip;
-+	s64 off = 0;
-+
-+	if (addr && ctx->image && ctx->ro_image) {
-+		ip = (u64)(ctx->image + ctx->idx);
-+		off = addr - ip;
-+	}
-+
-+	return emit_jump_and_link(ctx, LOONGARCH_GPR_RA, ip, addr);
-+}
-+
-+
- int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type poke_type,
- 			void *old_addr, void *new_addr)
- {
-@@ -1415,3 +1433,408 @@ int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type poke_type,
- 	mutex_unlock(&text_mutex);
- 	return ret;
- }
-+
-+static void store_args(struct jit_ctx *ctx, int nargs, int args_off)
-+{
-+	int i = 0;
-+
-+	for (i = 0; i < nargs; i++) {
-+		emit_insn(ctx, std, LOONGARCH_GPR_A0 + i, LOONGARCH_GPR_FP, -args_off);
-+		args_off -= 8;
-+	}
-+}
-+
-+static void restore_args(struct jit_ctx *ctx, int nargs, int args_off)
-+{
-+	int i = 0;
-+
-+	for (i = 0; i < nargs; i++) {
-+		emit_insn(ctx, ldd, LOONGARCH_GPR_A0 + i, LOONGARCH_GPR_FP, -args_off);
-+		args_off -= 8;
-+	}
-+}
-+
-+static int invoke_bpf_prog(struct jit_ctx *ctx, struct bpf_tramp_link *l,
-+			   int args_off, int retval_off,
-+			   int run_ctx_off, bool save_ret)
-+{
-+	int ret;
-+	u32 *branch;
-+	struct bpf_prog *p = l->link.prog;
-+	int cookie_off = offsetof(struct bpf_tramp_run_ctx, bpf_cookie);
-+
-+	if (l->cookie) {
-+		move_imm(ctx, LOONGARCH_GPR_T1, l->cookie, false);
-+		emit_insn(ctx, std, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP, -run_ctx_off + cookie_off);
-+	} else {
-+		emit_insn(ctx, std, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_FP,
-+				-run_ctx_off + cookie_off);
-+	}
-+
-+	/* arg1: prog */
-+	move_imm(ctx, LOONGARCH_GPR_A0, (const s64)p, false);
-+	/* arg2: &run_ctx */
-+	emit_insn(ctx, addid, LOONGARCH_GPR_A1, LOONGARCH_GPR_FP, -run_ctx_off);
-+	ret = emit_call(ctx, (const u64)bpf_trampoline_enter(p));
-+	if (ret)
-+		return ret;
-+
-+	/* store prog start time */
-+	move_reg(ctx, LOONGARCH_GPR_S1, LOONGARCH_GPR_A0);
-+
-+	/* if (__bpf_prog_enter(prog) == 0)
-+	 *      goto skip_exec_of_prog;
-+	 *
-+	 */
-+	branch = (u32 *)ctx->image + ctx->idx;
-+	/* NOP reserved for conditional jump */
-+	emit_insn(ctx, NOP);
-+
-+	/* arg1: &args_off */
-+	emit_insn(ctx, addid, LOONGARCH_GPR_A0, LOONGARCH_GPR_FP, -args_off);
-+	if (!p->jited)
-+		move_imm(ctx, LOONGARCH_GPR_A1, (const s64)p->insnsi, false);
-+	ret = emit_call(ctx, (const u64)p->bpf_func);
-+	if (ret)
-+		return ret;
-+
-+	if (save_ret) {
-+		emit_insn(ctx, std, LOONGARCH_GPR_A0, LOONGARCH_GPR_FP, -retval_off);
-+		emit_insn(ctx, std, regmap[BPF_REG_0], LOONGARCH_GPR_FP, -(retval_off - 8));
-+	}
-+
-+	/* update branch with beqz */
-+	if (ctx->image) {
-+		int offset = (void *)(u32 *)(&ctx->image[ctx->idx]) - (void *)branch;
-+		*branch = larch_insn_gen_beq(LOONGARCH_GPR_A0, LOONGARCH_GPR_ZERO, offset);
-+	}
-+
-+	/* arg1: prog */
-+	move_imm(ctx, LOONGARCH_GPR_A0, (const s64)p, false);
-+	/* arg2: prog start time */
-+	move_reg(ctx, LOONGARCH_GPR_A1, LOONGARCH_GPR_S1);
-+	/* arg3: &run_ctx */
-+	emit_insn(ctx, addid, LOONGARCH_GPR_A2, LOONGARCH_GPR_FP, -run_ctx_off);
-+	ret = emit_call(ctx, (const u64)bpf_trampoline_exit(p));
-+
-+	return ret;
-+}
-+
-+static void invoke_bpf_mod_ret(struct jit_ctx *ctx, struct bpf_tramp_links *tl,
-+			       int args_off, int retval_off, int run_ctx_off, u32 **branches)
-+{
-+	int i;
-+
-+	emit_insn(ctx, std, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_FP, -retval_off);
-+	for (i = 0; i < tl->nr_links; i++) {
-+		invoke_bpf_prog(ctx, tl->links[i], args_off, retval_off,
-+			run_ctx_off, true);
-+		emit_insn(ctx, ldd, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP, -retval_off);
-+		branches[i] = (u32 *)ctx->image + ctx->idx;
-+		emit_insn(ctx, NOP);
-+	}
-+}
-+
-+void *bpf_arch_text_copy(void *dst, void *src, size_t len)
-+{
-+	if (larch_insn_text_copy(dst, src, len))
-+		return ERR_PTR(-EINVAL);
-+
-+	return dst;
-+}
-+
-+u64 bpf_jit_alloc_exec_limit(void)
-+{
-+	return VMALLOC_END - VMALLOC_START;
-+}
-+
-+void *arch_alloc_bpf_trampoline(unsigned int size)
-+{
-+	void *image;
-+
-+	if (WARN_ON_ONCE(size > PAGE_SIZE))
-+		return NULL;
-+	image = bpf_jit_alloc_exec(PAGE_SIZE);
-+	if (image) {
-+		jit_fill_hole(image, size);
-+		set_vm_flush_reset_perms(image);
-+	}
-+
-+	return image;
-+}
-+
-+void arch_free_bpf_trampoline(void *image, unsigned int size)
-+{
-+	WARN_ON_ONCE(size > PAGE_SIZE);
-+	bpf_jit_free_exec(image);
-+}
-+
-+int arch_protect_bpf_trampoline(void *image, unsigned int size)
-+{
-+	return 0;
-+}
-+
-+int bpf_arch_text_invalidate(void *dst, size_t len)
-+{
-+	jit_fill_hole(dst, len);
-+	return 0;
-+}
-+
-+static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_image *im,
-+					 const struct btf_func_model *m,
-+					 struct bpf_tramp_links *tlinks,
-+					 void *func_addr, u32 flags)
-+{
-+	int i;
-+	int stack_size = 0, nargs = 0;
-+	int retval_off, args_off, nargs_off, ip_off, run_ctx_off, sreg_off;
-+	struct bpf_tramp_links *fentry = &tlinks[BPF_TRAMP_FENTRY];
-+	struct bpf_tramp_links *fexit = &tlinks[BPF_TRAMP_FEXIT];
-+	struct bpf_tramp_links *fmod_ret = &tlinks[BPF_TRAMP_MODIFY_RETURN];
-+	int ret, save_ret;
-+	void *orig_call = func_addr;
-+	u32 **branches = NULL;
-+
-+	if (flags & (BPF_TRAMP_F_ORIG_STACK | BPF_TRAMP_F_SHARE_IPMODIFY))
-+		return -ENOTSUPP;
-+
-+	/*
-+	 * FP + 8       [ RA to parent func ] return address to parent
-+	 *                    function
-+	 * FP + 0       [ FP of parent func ] frame pointer of parent
-+	 *                    function
-+	 * FP - 8       [ T0 to traced func ] return address of traced
-+	 *                    function
-+	 * FP - 16      [ FP of traced func ] frame pointer of traced
-+	 *                    function
-+	 *
-+	 * FP - retval_off  [ return value      ] BPF_TRAMP_F_CALL_ORIG or
-+	 *                    BPF_TRAMP_F_RET_FENTRY_RET
-+	 *                  [ argN              ]
-+	 *                  [ ...               ]
-+	 * FP - args_off    [ arg1              ]
-+	 *
-+	 * FP - nargs_off   [ regs count        ]
-+	 *
-+	 * FP - ip_off      [ traced func   ] BPF_TRAMP_F_IP_ARG
-+	 *
-+	 * FP - run_ctx_off [ bpf_tramp_run_ctx ]
-+	 *
-+	 * FP - sreg_off    [ callee saved reg  ]
-+	 *
-+	 */
-+
-+	if (m->nr_args > LOONGARCH_MAX_REG_ARGS)
-+	    return -ENOTSUPP;
-+
-+	if (flags & (BPF_TRAMP_F_ORIG_STACK | BPF_TRAMP_F_SHARE_IPMODIFY))
-+		return -ENOTSUPP;
-+
-+	stack_size = 0;
-+
-+	/* room of trampoline frame to store return address and frame pointer */
-+	stack_size += 16;
-+
-+	save_ret = flags & (BPF_TRAMP_F_CALL_ORIG | BPF_TRAMP_F_RET_FENTRY_RET);
-+	if (save_ret) {
-+		/* Save BPF R0 and A0 */
-+		stack_size += 16;
-+		retval_off = stack_size;
-+	}
-+
-+	/* room of trampoline frame to store args */
-+	nargs = m->nr_args;
-+	stack_size += nargs * 8;
-+	args_off = stack_size;
-+	/* room of trampoline frame to store args number */
-+	stack_size += 8;
-+	nargs_off = stack_size;
-+
-+	/* room of trampoline frame to store ip address */
-+	if (flags & BPF_TRAMP_F_IP_ARG) {
-+		stack_size += 8;
-+		ip_off = stack_size;
-+	}
-+
-+	/* room of trampoline frame to store struct bpf_tramp_run_ctx */
-+	stack_size += round_up(sizeof(struct bpf_tramp_run_ctx), 8);
-+	run_ctx_off = stack_size;
-+
-+	stack_size += 8;
-+	sreg_off = stack_size;
-+
-+	stack_size = round_up(stack_size, 16);
-+
-+	/* For the trampoline called from function entry */
-+	/* RA and FP for parent function*/
-+	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -16);
-+	emit_insn(ctx, std, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, 8);
-+	emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0);
-+	emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 16);
-+
-+	/* RA and FP for traced function*/
-+	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -stack_size);
-+	emit_insn(ctx, std, LOONGARCH_GPR_T0, LOONGARCH_GPR_SP, stack_size - 8);
-+	emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
-+	emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size);
-+
-+	/* callee saved register S1 to pass start time */
-+	emit_insn(ctx, std, LOONGARCH_GPR_S1, LOONGARCH_GPR_FP, -sreg_off);
-+
-+	/* store ip address of the traced function */
-+	if (flags & BPF_TRAMP_F_IP_ARG) {
-+		move_imm(ctx, LOONGARCH_GPR_T1, (const s64)func_addr, false);
-+		emit_insn(ctx, std, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP, -ip_off);
-+	}
-+
-+	/* store nargs number*/
-+	move_imm(ctx, LOONGARCH_GPR_T1, nargs, false);
-+	emit_insn(ctx, std, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP, -nargs_off);
-+
-+	store_args(ctx, nargs, args_off);
-+
-+	/* To traced function */
-+	orig_call += LOONGARCH_FENTRY_NBYTES;
-+	if (flags & BPF_TRAMP_F_CALL_ORIG) {
-+		move_imm(ctx, LOONGARCH_GPR_A0, (const s64)im, false);
-+		ret = emit_call(ctx, (const u64)__bpf_tramp_enter);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	for (i = 0; i < fentry->nr_links; i++) {
-+		ret = invoke_bpf_prog(ctx, fentry->links[i], args_off, retval_off,
-+			run_ctx_off, flags & BPF_TRAMP_F_RET_FENTRY_RET);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (fmod_ret->nr_links) {
-+		branches  = kcalloc(fmod_ret->nr_links, sizeof(u32 *), GFP_KERNEL);
-+		if (!branches)
-+			return -ENOMEM;
-+
-+		invoke_bpf_mod_ret(ctx, fmod_ret, args_off, retval_off,
-+			run_ctx_off, branches);
-+	}
-+
-+	if (flags & BPF_TRAMP_F_CALL_ORIG) {
-+		restore_args(ctx, m->nr_args, args_off);
-+		ret = emit_call(ctx, (const u64)orig_call);
-+		if (ret)
-+			goto out;
-+		emit_insn(ctx, std, LOONGARCH_GPR_A0, LOONGARCH_GPR_FP, -retval_off);
-+		emit_insn(ctx, std, regmap[BPF_REG_0], LOONGARCH_GPR_FP, -(retval_off - 8));
-+		im->ip_after_call = ctx->ro_image + ctx->idx;
-+		/* Reserve space for the move_imm + jirl instruction */
-+		emit_insn(ctx, NOP);
-+		emit_insn(ctx, NOP);
-+		emit_insn(ctx, NOP);
-+		emit_insn(ctx, NOP);
-+		emit_insn(ctx, NOP);
-+	}
-+
-+	for (i = 0; ctx->image && i < fmod_ret->nr_links; i++) {
-+		int offset = (u32 *)&ctx->image[ctx->idx] - branches[i];
-+		*branches[i] = larch_insn_gen_bne(LOONGARCH_GPR_T1, LOONGARCH_GPR_ZERO, offset);
-+	}
-+
-+	for (i = 0; i < fexit->nr_links; i++) {
-+		ret = invoke_bpf_prog(ctx, fexit->links[i], args_off, retval_off,
-+				run_ctx_off, false);
-+		if (ret)
-+			goto out;
-+	}
-+
-+	if (flags & BPF_TRAMP_F_CALL_ORIG) {
-+		im->ip_epilogue = ctx->ro_image + ctx->idx;
-+		move_imm(ctx, LOONGARCH_GPR_A0, (const s64)im, false);
-+		ret = emit_call(ctx, (const u64)__bpf_tramp_exit);
-+		if (ret)
-+			goto out;
-+	}
-+
-+	if (flags & BPF_TRAMP_F_RESTORE_REGS)
-+		restore_args(ctx, m->nr_args, args_off);
-+
-+	if (save_ret) {
-+		emit_insn(ctx, ldd, LOONGARCH_GPR_A0, LOONGARCH_GPR_FP, -retval_off);
-+		emit_insn(ctx, ldd, regmap[BPF_REG_0], LOONGARCH_GPR_FP, -(retval_off - 8));
-+	}
-+
-+	emit_insn(ctx, ldd, LOONGARCH_GPR_S1, LOONGARCH_GPR_FP, -sreg_off);
-+
-+	/* trampoline called from function entry */
-+	emit_insn(ctx, ldd, LOONGARCH_GPR_T0, LOONGARCH_GPR_SP, stack_size - 8);
-+	emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
-+	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, stack_size);
-+
-+	emit_insn(ctx, ldd, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, 8);
-+	emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0);
-+	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, 16);
-+
-+	if (flags & BPF_TRAMP_F_SKIP_FRAME)
-+		/* return to parent function */
-+		emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_RA, 0);
-+	else
-+		/* return to traced function */
-+		emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_T0, 0);
-+
-+	ret = ctx->idx;
-+out:
-+	kfree(branches);
-+
-+	return ret;
-+}
-+
-+int arch_prepare_bpf_trampoline(struct bpf_tramp_image *im, void *ro_image,
-+				void *ro_image_end, const struct btf_func_model *m,
-+				u32 flags, struct bpf_tramp_links *tlinks,
-+				void *func_addr)
-+{
-+	int ret;
-+	void *image, *tmp;
-+	u32 size = ro_image_end - ro_image;
-+
-+	image = kvmalloc(size, GFP_KERNEL);
-+	if (!image)
-+		return -ENOMEM;
-+
-+	struct jit_ctx ctx = {
-+		.image = (union loongarch_instruction *)image,
-+		.ro_image = (union loongarch_instruction *)ro_image,
-+		.idx = 0,
-+	};
-+
-+	jit_fill_hole(image, (unsigned int)(ro_image_end - ro_image));
-+	ret = __arch_prepare_bpf_trampoline(&ctx, im, m, tlinks, func_addr, flags);
-+	if (ret > 0 && validate_code(&ctx) < 0) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	tmp = bpf_arch_text_copy(ro_image, image, size);
-+	if (IS_ERR(tmp)) {
-+		ret = PTR_ERR(tmp);
-+		goto out;
-+	}
-+
-+	bpf_flush_icache(ro_image, ro_image_end);
-+out:
-+	kvfree(image);
-+	return ret < 0 ? ret : size;
-+}
-+
-+int arch_bpf_trampoline_size(const struct btf_func_model *m, u32 flags,
-+			     struct bpf_tramp_links *tlinks, void *func_addr)
-+{
-+	struct bpf_tramp_image im;
-+	struct jit_ctx ctx;
-+	int ret;
-+
-+	ctx.image = NULL;
-+	ctx.idx = 0;
-+
-+	ret = __arch_prepare_bpf_trampoline(&ctx, &im, m, tlinks, func_addr, flags);
-+	return ret < 0 ? ret : ret * LOONGARCH_INSN_SIZE;
-+}
-diff --git a/arch/loongarch/net/bpf_jit.h b/arch/loongarch/net/bpf_jit.h
-index 68586338e..51a12b809 100644
---- a/arch/loongarch/net/bpf_jit.h
-+++ b/arch/loongarch/net/bpf_jit.h
-@@ -18,6 +18,7 @@ struct jit_ctx {
- 	u32 *offset;
- 	int num_exentries;
- 	union loongarch_instruction *image;
-+	union loongarch_instruction *ro_image;
- 	u32 stack_size;
- };
- 
-@@ -303,3 +304,8 @@ static inline int emit_tailcall_jmp(struct jit_ctx *ctx, u8 cond, enum loongarch
- 
- 	return -EINVAL;
- }
-+
-+static inline void bpf_flush_icache(void *start, void *end)
-+{
-+	flush_icache_range((unsigned long)start, (unsigned long)end);
-+}
--- 
-2.25.1
-
+Reviewed-by: <peng.fan@nxp.com>
