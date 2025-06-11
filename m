@@ -1,136 +1,101 @@
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3388625E45A
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 18:11:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7346726B084
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 18:13:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749665512; cv=none; b=FDz1M9YFBDu99t3UoKO+pNa0JNI73SRmkL6s8GwVjhEwAe6rii3y8P1Otu4s5YQks1jRNqMRikFmXDY4mSG+PWEGSIGGArVogrrv2sxNXVQOxQEhOdNjSGB9k6oWiHfJvZwovD2GjhjQO9aAeduF8BXjsvfrHkhpwIt9frRHazo=
+	t=1749665639; cv=none; b=U1xlJUiYheMqBZYBhRSykd9Es9oTk5VP+WhAueESDAs+OS51soAPnM0t5ijhsWLICqyidaauBppyu/EWB90xPRbNmnRVlK2ZRvPxAsOa19NpBX7UwLPepFW6XRO1MEJBinQ7bZT9ctE3MkM10FcRyJknUpSssmVmam0nQ8brjM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749665512; c=relaxed/simple;
-	bh=x2LAshC4TaowOHTTAfdCSxFpB1VG0IOM05NdXRo/GcQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Jcwz0pmwFvO/vpu1SEVO/I3P/NFj6c4JnMLuP1jMzymlM6S2M92b78i774r8PxaMfLVV0uc/dut1HSK9w5EfGMbwRtrtRGICuXd2lrsc1TSP9xQ40R/90FTCgp9t4iHW6O3v6TT+gYXd+JJmouOXB0w/kcWwUtLKJ0jLwQpLD64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=La17B5WS; arc=none smtp.client-ip=209.85.167.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1749665639; c=relaxed/simple;
+	bh=IeatVXM/VPJssVAVzMs9KocuyEJiD/TQkBaPU8yqP9M=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=OHwyamdFttmI5MEDMd3Q+pR+YCDjVGBsQGTne4A9bMdsZPu2GPBh2RPNoMbFGTcPSxeoVM4ZXrincCqvPmCqwof8aZyEd2JNiTK257DMToKOFnNlypfyTYBSulQvAgrwYx/m4yBKrzBhPGSE0LIobaHJL7vHBoUxMmpyyB/la/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ndzXYe66; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="La17B5WS"
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-40791b696a2so37235b6e.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:11:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ndzXYe66"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30a59538b17so121760a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:13:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749665509; x=1750270309; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xix0JxJ/wHDD577WOa2daCtZJP2bD7JoNgtk2Dh0B/s=;
-        b=La17B5WSB892ulsxuu8IWfqt3gvwiGX6vLPles3ejgFUhPDo1rSwqicwNsvNGkNeY5
-         va4Yen8KLLQWCg0RIEhZlaPjB5qWKhqzdaUrbRbTnGz0ggZv6bfewQqT5AhAPnlklCNc
-         MkGKDM9vjU4PXibjjkXPdhyk9tsx6idcR3VxmDV3WLfCcQRGJEHqWgG4dHqwLX1Cc060
-         Rtc8OxdebYwOP9kbu+rZ2bkjXeEHP+Kc0DgbnNHApP/OjG3Barg7/exfbtWa6J0X2Om/
-         S2XDBWzfnrob8e0p9r2l/eozR4AKJNNY0E2rxWzpmGDrwvuT4aaq42+wg2mRu+yExKcd
-         gP3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749665509; x=1750270309;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=google.com; s=20230601; t=1749665636; x=1750270436; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=xix0JxJ/wHDD577WOa2daCtZJP2bD7JoNgtk2Dh0B/s=;
-        b=eeITZtQHvzoMPhb4fV/8V2Q/dxX3g06gRNYI8aUUaPJjyovF3NQvcTD5arzafa1IY8
-         M05jZxq0VG7Q3HqjinS1jQ9HCDJ6xXn8Dkens7SaQTP0QuA5OlMIkqXuifqH1z1NxFZf
-         KWa2YUkLiKNQOfT3sFs7jwH9eXOeeFYqfs/Ro8INbpeHyw7vbWE5sk2w8H/gyuYFrEyL
-         MVYrFkTLuMlNtVU5hC3gbCD7ZjkYXz19poxGNlSDP4447aWtfYtSAmVZp/vbuu57eLvr
-         S8+c3BDI5RkZgrEv3l/L9qoGIvOJECNvEg0TLBM/11qkdn7Nj8KF/sx2HQQ35PXK/1Z/
-         BmkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXJVVuU8jBEB0IKcl2/lTNuO+5Nt8VMB4Jvrba6Bbt/LIMkA+gCQehoCEeZXyu889klEMMtfsFn4DMfOLg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0mFtnHUMT+cwwUm/iTOcZXel0TcQ78XrcgtX2D0XjFWjkssqA
-	dgupSnaT+dWar9d24XBr1qIEqZ31gpTf6VZjwLWudPJwHmYQk/OGXT9bUhlP522pzWM=
-X-Gm-Gg: ASbGnct/QXOSodjOk9PxJwNyFswp8JsLXkkCQ7dIFOwc8HU4lCd85PadlPutIFtVKP0
-	9En5hrxqOqdh0lMRFuIRJ8n3GBsiFQVk8X1FqT2xqaYvSkR6dloyBewb53egs3dvrJWZoC2hmWN
-	G6Z5ChpmrO5EcX4JY1jOik56N2ULF+kNh7NsuOzBpUkgP8R8+I+JWqbFTQQgTjBEmWhOuvssEE+
-	2GCiZnrpUtTn1tZ8ytCmQKGBsZcoloS8ugNDWzWGRVnleEmAtwgAFzR/ta9ztv6Drw2gJWCKIa+
-	TemUczZ2YBBco70W0lNlsLh1QDOA0cniuyxFRdXNUXpCeZSLAwMoovhFRjdnY4de313YSMd1cRC
-	NfKo=
-X-Google-Smtp-Source: AGHT+IHf9DVkWmbX6t+akoi4x+O8WSA+NWzTIrXuhlLrnn7dTD81mWETTKau86Jvi85i8SCQm9Zr1A==
-X-Received: by 2002:a05:6808:23cd:b0:403:25bd:ca71 with SMTP id 5614622812f47-40a6611ea15mr300602b6e.15.1749665509066;
-        Wed, 11 Jun 2025 11:11:49 -0700 (PDT)
-Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:4753:719f:673f:547c])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40a5d94147esm424719b6e.28.2025.06.11.11.11.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 11:11:48 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-Date: Wed, 11 Jun 2025 13:11:36 -0500
-Subject: [PATCH RESEND] net: mdio: mux-gpio: use
- gpiod_multi_set_value_cansleep
+        bh=9AP2CEelaM2vm+ln8/2uTSplrSdzavfE46dg+YRKF6M=;
+        b=ndzXYe668sooADCn2WBwnrVPfUuujajE2G/4oR3/zAGlUEJXQjNsMC57m+vsx6zntP
+         Kkr3mZVEOhYtnw3Di0PGZ7OI2MhRhckGWQHVqfDhE2HTZ6pYtSGMMXBKNNSj25nrzmP7
+         Lb9opzc1hVnkI9WT+kfkVMiM9pcIuVjSwmNP3j4gA3a/W65AE12OejD8Lt20wNE1tDY1
+         w04c2q2L+8f1xEPcajzCxHcwdtrEp0Rq43qJ9XpQKpsyRu7TDFwnyT4qfmwU7AqzOLVg
+         aeZYnW45LDcbO2Ewn5CJp0gTuZKLmaqnYtc2AvAYj3xw6OPmvieh8nk0PX9r/LSZ/2Jb
+         8lKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749665636; x=1750270436;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=9AP2CEelaM2vm+ln8/2uTSplrSdzavfE46dg+YRKF6M=;
+        b=EtFINc+/ggfgMklJHFlr6VKRL2iaRKle3sDnD5NiDLPTrICDXd69JNzP6RHeaet9WX
+         3wI0pxiFkoQR4FZH4FiVbH1j2tosJxpZ+ksvzzQlPmA3fIA6okYHyKBuFtT4x4adXmMf
+         Vvm32N2EHMMmhmzJCfy2EnrG5jtRXfUcxva7T3Tv6vpLUroOaMmG1jb7tsYJVxrwbpGB
+         y47NfK4Vu5pqBbhT6XiaSkshYNH5fOwWwJ/mZ6eIUczv4ARyzeaR4xmHWUBuJNML1niV
+         Ux9pLIRBjzoFdnRIPtKzXnvlSQdQ+NKtBJueqMzucnRq4Y17tGGtycq8Yt6etqgvuSEk
+         HOSA==
+X-Forwarded-Encrypted: i=1; AJvYcCXPs26MRm/XSdqK82im3XQ/fYWmqG+RqanC7eD37GRihiJGXT0tmXmhHkcTkaavew6NTRC7LGIxK+ZxezE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzy1iVUww5vUXlI43/IfF58AowZbBK9Yht7JmFx9MIjJdMp3m/T
+	uyUE//cb0PLuNEa4nzjUs0crpJYe4bBJ5cUsyopfRi/Fd2idRPHM4sROy8nsYpb1/9zjU5al9cv
+	BhZO4Rw==
+X-Google-Smtp-Source: AGHT+IFHVGTO4vjh2VGjTQJUjZQ7j92tMCP8tpw8KYudlqm/NMDL6qN15xcu4YOSiQLv7dKLIC6IDIM5PMg=
+X-Received: from pjcc3.prod.google.com ([2002:a17:90b:5743:b0:2fc:3022:36b8])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5410:b0:312:e6f1:c05d
+ with SMTP id 98e67ed59e1d1-313af0fce66mr6663752a91.2.1749665635713; Wed, 11
+ Jun 2025 11:13:55 -0700 (PDT)
+Date: Wed, 11 Jun 2025 11:13:54 -0700
+In-Reply-To: <089eeacb231f3afa04f81b9d5ddbb98b6d901565.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+References: <20250610021422.1214715-1-binbin.wu@linux.intel.com>
+ <20250610021422.1214715-4-binbin.wu@linux.intel.com> <ff5fd57a-9522-448c-9ab6-e0006cb6b2ee@intel.com>
+ <671f2439-1101-4729-b206-4f328dc2d319@linux.intel.com> <7f17ca58-5522-45de-9dae-6a11b1041317@intel.com>
+ <aEmYqH_2MLSwloBX@google.com> <effb33d4277c47ffcc6d69b71348e3b7ea8a2740.camel@intel.com>
+ <aEmuKII8FGU4eQZz@google.com> <089eeacb231f3afa04f81b9d5ddbb98b6d901565.camel@intel.com>
+Message-ID: <aEnHYjTGofgGiDTH@google.com>
+Subject: Re: [RFC PATCH 3/4] KVM: TDX: Exit to userspace for GetTdVmCallInfo
+From: Sean Christopherson <seanjc@google.com>
+To: Rick P Edgecombe <rick.p.edgecombe@intel.com>
+Cc: "mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kai Huang <kai.huang@intel.com>, 
+	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, Jiewen Yao <jiewen.yao@intel.com>, 
+	Xiaoyao Li <xiaoyao.li@intel.com>, Tony Lindgren <tony.lindgren@intel.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Reinette Chatre <reinette.chatre@intel.com>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, Yan Y Zhao <yan.y.zhao@intel.com>, 
+	Isaku Yamahata <isaku.yamahata@intel.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	Kirill Shutemov <kirill.shutemov@intel.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250611-net-mdio-mux-gpio-use-gpiod_multi_set_value_cansleep-v1-1-6eb5281f1b41@baylibre.com>
-X-B4-Tracking: v=1; b=H4sIANfGSWgC/x2NPQvCMBQA/0p5s4GkGG2d7eqgo0gIzbM+SNKQj
- 1Io/e+GbnfL3QYJI2GCW7NBxIUSzb6KODUw/rSfkJGpDi1vJb8IwTxm5gzNzJWVTaFCSXiAUa7
- YTCphVou2BdWofbKIgSHv5Vl2vdHXDmo6RPzSemzf8Bxew+MOn33/AwhwSfaOAAAA
-X-Change-ID: 20250611-net-mdio-mux-gpio-use-gpiod_multi_set_value_cansleep-e0954589da78
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
- Russell King <linux@armlinux.org.uk>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Linus Walleij <linus.walleij@linaro.org>, 
- David Lechner <dlechner@baylibre.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1495; i=dlechner@baylibre.com;
- h=from:subject:message-id; bh=x2LAshC4TaowOHTTAfdCSxFpB1VG0IOM05NdXRo/GcQ=;
- b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoScbdHEvJMh49ii8PaXm06NcRK+4G6Qji4mc3I
- 3TUxFf2n1GJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaEnG3QAKCRDCzCAB/wGP
- wLmRB/wJEQPXAFte0Br8P+SmauFUXC8UTnHAKRXPpH8BojKuIfDgrC1wNdEwKMZh46vbXvAHpXG
- X/CnEN+ox+eAjVXNSc3UacvLPk8qycSRXKYCTpvGxvYQkHYWK1R7UCtvBOxpz2DjjEU644pGmT3
- LfnepErKd3uHDNeJ05Ty+/BTVBcEd2GnSv39G5O8k6S3yR8fngUlviT24vd3aa0DXYYemQdpxo+
- JyW6QbNyTBIukj/wjctMDaHcqEIUpA4c1TR0hAcbZ1bMIMVsnU9IqySeJ62zgg92ufZGjWASUXL
- fuMLT31VN/6z6//tazIRidTeyEwxwsL7Oyo/ksv/fkdPY9UD
-X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
- fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
+Content-Transfer-Encoding: quoted-printable
 
-Reduce verbosity by using gpiod_multi_set_value_cansleep() instead of
-gpiod_set_array_value_cansleep().
+On Wed, Jun 11, 2025, Rick P Edgecombe wrote:
+> On Wed, 2025-06-11 at 09:26 -0700, Sean Christopherson wrote:
+> > > GetQuote is not part of the "Base" TDVMCALLs and so has a bit in
+> > > GetTdVmCallInfo. We could move it to base?
+> >=20
+> > Is GetQuote actually optional?=C2=A0 TDX without attestation seems rath=
+er
+> > pointless.
+>=20
+> I don't know if that was a consideration for why it got added to the opti=
+onal
+> category. The inputs were gathered from more than just Linux.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: David Lechner <dlechner@baylibre.com>
----
-This is a resend of a patch from the series "[PATCH v3 00/15] gpiolib:
-add gpiod_multi_set_value_cansleep" [1].
-
-This patch never got acked so didn't go picked up with the rest of that
-series. The dependency has been in mainline since v6.15-rc1 so this
-patch can now be applied independently.
-
-[1]: https://lore.kernel.org/all/20250210-gpio-set-array-helper-v3-0-d6a673674da8@baylibre.com/
----
- drivers/net/mdio/mdio-mux-gpio.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/net/mdio/mdio-mux-gpio.c b/drivers/net/mdio/mdio-mux-gpio.c
-index ef77bd1abae984e5b1e51315de39cae33e0d063d..fefa40ea5227c5a35d89ec2c6f95c6668a2470f6 100644
---- a/drivers/net/mdio/mdio-mux-gpio.c
-+++ b/drivers/net/mdio/mdio-mux-gpio.c
-@@ -30,8 +30,7 @@ static int mdio_mux_gpio_switch_fn(int current_child, int desired_child,
- 
- 	values[0] = desired_child;
- 
--	gpiod_set_array_value_cansleep(s->gpios->ndescs, s->gpios->desc,
--				       s->gpios->info, values);
-+	gpiod_multi_set_value_cansleep(s->gpios, values);
- 
- 	return 0;
- }
-
----
-base-commit: 19a60293b9925080d97f22f122aca3fc46dadaf9
-change-id: 20250611-net-mdio-mux-gpio-use-gpiod_multi_set_value_cansleep-e0954589da78
-
-Best regards,
--- 
-David Lechner <dlechner@baylibre.com>
-
+If there's an actual use case for TDX without attestation, then by all mean=
+s,
+make it optional.  I'm genuinely curious if there's a hypervisor that plans=
+ on
+productizing TDX without supporting attestation.  It's entirely possible (l=
+ikely?)
+I'm missing or forgetting something.
