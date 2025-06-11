@@ -1,92 +1,112 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74CA322B5AD;
-	Wed, 11 Jun 2025 20:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from gofer.mess.org (gofer.mess.org [88.97.38.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796B8221F1C;
+	Wed, 11 Jun 2025 20:09:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.97.38.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749672503; cv=none; b=V4ui7Lr/26gN1cQ/ekKWIgZL097YzjZ/be27gDK4qzPd55FoJy7pCGqCcb0syCnLlr/NxnzYZ4VUAkYu+VZkqvi3UWQot1gKsPIbUPVZ2U5hYCvtvVwPxB0wCl/RrB3TUjmZ/B6UqQDosgcplrYQpscH7l8yaf//DNFH8iH15TQ=
+	t=1749672584; cv=none; b=nDTJiGVeddijU2ZMHAK+YPc4mJi8QjpERhhnKmTua/Uq2eA7R4/VbaReHSYk4r/JTqbG0oAT2GHdY8FaE9XfqgXPfkvOPaOGFOP/jLe/pBJZzKVLHH9zn1uuHgDRMRnSRu1stJ9WV6XTtmGV8DaeGKQO/ir8ynL8lPOOv7tl1EY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749672503; c=relaxed/simple;
-	bh=9dte98wA25RugD7vFBF8pAYG1GDxBkzlGS+rfWj0mx0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tiI//wp3lG0Po6WGkrZmUkvRD7fSyKj0XPbi+9S6ILBtAR4fC55ydw0Q3JlOkmHfqz2YUIKgkr1VhS51quZg/dhShCP9kZPmi2jGd/9/hIUYaPHdUYgpWA5KGFtd5c8t+bWzt0WYwqhNZgipmKFJpzAPZdhZ7bOjbU8h5Hq690I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=MHLCf4Nf; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1749672584; c=relaxed/simple;
+	bh=95CplAYh589c94KT4OHeDw6dyXWciFWaE0dM3Q8zu4k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KevIeQe8rgfw3g+YOEQ9/dmHzkuUHTImutD6gl7P3XAJ1O9FPhEZ692Ua+k6bxFykCqkWawhG0hKJ0YYbN6WIVK7EvpAq7sxao1V5njOcTYvg0yytrsmd5IzDsoHOTBL64hbXEDa/GNZPr3LOVTKqPxdTEdeolAcHVTzkeGUCgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org; spf=pass smtp.mailfrom=mess.org; dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b=fBzsLyWg; arc=none smtp.client-ip=88.97.38.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mess.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="MHLCf4Nf"
-Received: from [10.0.14.36] (unknown [70.37.26.38])
-	by linux.microsoft.com (Postfix) with ESMTPSA id C91C82115191;
-	Wed, 11 Jun 2025 13:08:21 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C91C82115191
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1749672501;
-	bh=Un6/Vgv9rKYfD3CNjrrC2nZ3EzZZaYcSViwze4kSTew=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MHLCf4NfqP/UAgaWBtH7FU8Jn0yaoZf/tKBPoHaAgrB3JHj/C/RnwyNmx0xH5AjA8
-	 /MWXmrAmio0zrrhkvPK1HQ/3Le7FI+EFF6Ksod8YwX73MuJpUlx0fwnr8oau+jqqMc
-	 K96tioVSeDktZYP91xpVXoXWJvwPikArxsCVzZ3g=
-Message-ID: <1ccbaac5-7866-42f6-b324-cb9e851579e6@linux.microsoft.com>
-Date: Wed, 11 Jun 2025 13:08:21 -0700
+	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="fBzsLyWg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
+	t=1749672575; bh=95CplAYh589c94KT4OHeDw6dyXWciFWaE0dM3Q8zu4k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fBzsLyWgfrKlL9tvvk7RXWndSrn28DGDmTq6rgQD7fT7+ATd797KTZHN/r0e5Mdvr
+	 6Qjtvrj0QY1QvhCMHaaN2DHzTckqqKpgzp0X+x9l1NlhSfIgonBIUNsOoLgi6Y7p6w
+	 w6Di/AoXl5fumu2wGrbu4IRCIaUR+hW2Ty/Hl86ePA5yOFGBhmCNZc3xvTPoOTpYTJ
+	 lLwYLAJUQhCrx2COaLtEYdapXJDPucy2no2sj8Ib5r60ixtqy7WfrMQZZ+POoK9pbM
+	 LxNHq7UXYjj3QsfcEIoUXbHWV3xw9dbsBtaYAjwMUVHMz4UKkaoZKLeoFSj+pVkjTt
+	 kB7uDSPkLOr6A==
+Received: by gofer.mess.org (Postfix, from userid 1000)
+	id F2C43100069; Wed, 11 Jun 2025 21:09:34 +0100 (BST)
+Date: Wed, 11 Jun 2025 21:09:34 +0100
+From: Sean Young <sean@mess.org>
+To: Cosmin Tanislav <demonsingur@gmail.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] media: rc: ir-spi: constrain carrier frequency
+Message-ID: <aEnifhd1M6oJjy1S@gofer.mess.org>
+References: <20250611112348.3576093-1-demonsingur@gmail.com>
+ <20250611112348.3576093-3-demonsingur@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] PCI: Reduce FLR delay to 10ms for MSFT devices
-To: Niklas Cassel <cassel@kernel.org>, Christoph Hellwig <hch@infradead.org>
-Cc: linux-pci@vger.kernel.org, shyamsaini@linux.microsoft.com,
- code@tyhicks.com, Okaya@kernel.org, bhelgaas@google.com,
- linux-kernel@vger.kernel.org
-References: <20250611000552.1989795-1-grwhyte@linux.microsoft.com>
- <aEj3kAy5bOXPA_1O@infradead.org> <aEku4RTXT-uitUSi@ryzen>
-Content-Language: en-US
-From: Graham Whyte <grwhyte@linux.microsoft.com>
-In-Reply-To: <aEku4RTXT-uitUSi@ryzen>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611112348.3576093-3-demonsingur@gmail.com>
+
+On Wed, Jun 11, 2025 at 02:23:44PM +0300, Cosmin Tanislav wrote:
+> Carrier frequency is currently unconstrained, allowing the SPI transfer
+> to be allocated and filled only for it to be later rejected by the SPI
+> controller since the frequency is too large.
+> 
+> Add a check to constrain the carrier frequency inside
+> ir_spi_set_tx_carrier().
+> 
+> Also, move the number of bits per pulse to a macro since it is not used
+> in multiple places.
+> 
+> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+> ---
+>  drivers/media/rc/ir-spi.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/rc/ir-spi.c b/drivers/media/rc/ir-spi.c
+> index 50e30e2fae22..bf731204c81e 100644
+> --- a/drivers/media/rc/ir-spi.c
+> +++ b/drivers/media/rc/ir-spi.c
+> @@ -21,6 +21,7 @@
+>  #define IR_SPI_DRIVER_NAME		"ir-spi"
+>  
+>  #define IR_SPI_DEFAULT_FREQUENCY	38000
+> +#define IR_SPI_BITS_PER_PULSE		16
+>  
+>  struct ir_spi_data {
+>  	u32 freq;
+> @@ -70,7 +71,7 @@ static int ir_spi_tx(struct rc_dev *dev, unsigned int *buffer, unsigned int coun
+>  
+>  	memset(&xfer, 0, sizeof(xfer));
+>  
+> -	xfer.speed_hz = idata->freq * 16;
+> +	xfer.speed_hz = idata->freq * IR_SPI_BITS_PER_PULSE;
+>  	xfer.len = len * sizeof(*tx_buf);
+>  	xfer.tx_buf = tx_buf;
+>  
+> @@ -98,6 +99,9 @@ static int ir_spi_set_tx_carrier(struct rc_dev *dev, u32 carrier)
+>  	if (!carrier)
+>  		return -EINVAL;
+>  
+> +	if (carrier * IR_SPI_BITS_PER_PULSE > idata->spi->max_speed_hz)
+> +		return -EINVAL;
+
+Just a nitpick.
+
+I think carrier * IR_SPI_BITS_PER_PULSE could overflow, and then the check
+wouldn't work. It might be better to do:
+
+	if (carrier > idata->spi->max_speed_hz / IR_SPI_BITS_PER_PULSE)
+
+However since IR_SPI_BITS_PER_PULSE is 16, which is just a shift left by 4,
+I don't think this can be abused in any useful way.
 
 
+Sean
 
-On 6/11/2025 12:23 AM, Niklas Cassel wrote:
-> On Tue, Jun 10, 2025 at 08:27:12PM -0700, Christoph Hellwig wrote:
->> On Wed, Jun 11, 2025 at 12:05:50AM +0000, grwhyte@linux.microsoft.com wrote:
->>> From: Graham Whyte <grwhyte@linux.microsoft.com>
->>>
->>> Add a new flr_delay member of the pci_dev struct to allow customization of
->>> the delay after FLR for devices that do not support immediate readiness
->>> or readiness time reporting. The main scenario this addresses is VF
->>> removal and rescan during runtime repairs and driver updates, which,
->>> if fixed to 100ms, introduces significant delays across multiple VFs.
->>> These delays are unnecessary for devices that complete the FLR well
->>> within this timeframe.
->>
->> Please work with the PCIe SIG to have a standard capability for this
->> instead of piling up hacks like this quirk.
+> +
+>  	idata->freq = carrier;
+>  
+>  	return 0;
+> -- 
+> 2.49.0
 > 
-> There is already some support in PCIe for this.
-> 
-> For Conventional Reset, see PCIe 6.0, section 6.6.1, there is the
-> "Readiness Time Reporting Extended Capability":
-> "For a Device that implements the Readiness Time Reporting Extended Capability,
-> and has reported a Reset Time shorter than 100ms, software is permitted to send
-> a Configuration Request to the Device after waiting the reported Reset Time
-> from Conventional Reset."
-> 
-> 
-> For FLR, see PCIe 6.0, section 6.6.2, there is the "Function Readiness Status":
-> "After an FLR has been initiated by writing a 1b to the Initiate Function Level
-> Reset bit, the Function must complete the FLR within 100 ms. [...] If Function
-> Readiness Status (FRS - see § Section 6.22.2 ) is implemented, then system
-> software is permitted to issue Configuration Requests to the Function
-> immediately following receipt of an FRS Message indicating Configuration-Ready,
-> however, this does not necessarily indicate that outstanding Requests initiated
-> by the Function have completed."
-> 
-> 
-> Kind regards,
-> Niklas
-
-We can ask our HW engineers to implement function readiness but we need to be
-able to support exiting products, hence why posting it as a quirk. 
