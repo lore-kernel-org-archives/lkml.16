@@ -1,761 +1,167 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4349260560
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:36:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5E923AB94;
+	Wed, 11 Jun 2025 21:37:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749677795; cv=none; b=QtCmKK3cQPMQffGeNlvEWUseJEckKozs1SvHenl7xwqhf1abzodDy0SPkE1gT6GAa3LL4zEyK+vONn33+leZ2dk4FoNqcI5kYDLJM2svoev63+/okWzpV5XCM1P/O1Io3KiLoa5erWr0Q2lYlvR+0k26wB44q5lnaXagzd2Dj+E=
+	t=1749677837; cv=none; b=laz9ZwkSOwVsK0yHZJjsniZtwIDrhiEdTVPh/ZvizSRvJ5R/0WXgP30PcyzbbLjgfVOGZs93qQnHK2T43Jx11yCpVukdDhco1uq1uCB69f2wmejzC73LRGBgZ4noiZc0sDQ+2BIzhsA0nm2+0H7BS3vmVr8yEs3haYOwiM8JgJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749677795; c=relaxed/simple;
-	bh=PmbWC/TIlLCQzSKdxm1GVL9bgskn+dbrOnYa6rqBgWg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=SSwPjNEvJCgUamoCofu3K6uQUiRZ4uYjum+IxQUnt3z0bc9F0SxXgR4Ao06wYat+yTmHPH7WRulEnFg8aUJh0cWKfWodvVG4Nc5wMlxazsIWHrUnM6ThMgcsa1GP9+D/fMAwL503E7//SrGXr1qDmttj4vxfjrjIYaI2z3TT8LU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZQBCirEh; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1749677837; c=relaxed/simple;
+	bh=wZi/d2yVDTCIEgAGY6nDiS7L0Kio+LCTdXEd7e2/GJQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=epSaHGvSrwld11Tu3vWCMxl4DtSAeKqksA2BHdEpkpbAxa9RT0A/e0yEgOarZNSRwIqpvf9ahkY3MOauZLBWxYiZbO2TNWEh4+o0UYsV9sqA3xAAQSgrg1oWwpxb9XUDbJnO8bblveQhxc+8EPpuejMJ3TS9NoQRLCkEnsxURPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m6JShxX/; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZQBCirEh"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-747d29e90b4so250412b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:36:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m6JShxX/"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-450cfb79177so1270165e9.0;
+        Wed, 11 Jun 2025 14:37:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749677792; x=1750282592; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=vsgWR+xgtVyVwImlz4N8xQ42xaa1qcLxZh31sYTHKkU=;
-        b=ZQBCirEhbwb6PaKtnEB1N0kQqbCi1FS86iNR3pahqknFmH0WGb7LgxMiL3tpFQdqzm
-         kyoUk+oI0Imt5fCE1xCT0J+Mij4ug/kXcAeeyJs8C0N1KQwDmwzMjjQ6/6Oh/1sNKPjY
-         IXttyVEaGRH5NwxDZvnGocs5URXuyF2GUehvkxd3wN29iYb8XQlnl3GpMNoP0rg8kjiP
-         n6oZEzilzWZAoVtpJknFgbONei13EJTs8S7a/Jtr2CIbHKZBw1zL9q4ScoLUIHbtAg/x
-         ovovxe1UULct7Ohks4z0hG+gjTszopEUlDItgrUXhTwv1v74n7/x4F47MQGzlje3wVTH
-         BkDA==
+        d=gmail.com; s=20230601; t=1749677834; x=1750282634; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GadKINRywzBXrfqPVJAYfbBeC3UCh33khZeoLkWRJYU=;
+        b=m6JShxX/KV0o+Zv1DFRxTYmU+qTLiYI2ngWlFVOxQjmmIOIc/mYqLiD4tVBK5/A2QW
+         Hf+XUSQCwnpec/rumQDPt68jpOLIVrov2pmYZviVrbCprMCjPpfZ8HqcQsxu0KX/O9b4
+         SglwLvd2Q/0ysegBY6PP9YFbTNs94fxsNolqma7mOCKDoaZJPYnZwOYDYiBeB65rx7Gz
+         wqLIopnp6MqD+f1uEXwaEaAp3VS0kTtRO2f1SQbPp5azwxeCD/t3+yMSowrE0yMHGC4O
+         IgIVYFzWAa/JDTQ22MIdevsrHOxNLM9a/MnwkpaBdrlDOKKfVo5Qdfs4mqPShV2oK8Nv
+         7dcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749677792; x=1750282592;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vsgWR+xgtVyVwImlz4N8xQ42xaa1qcLxZh31sYTHKkU=;
-        b=hBBJ/faTWzHapIUBcHWs2qTgwDTfAIQ+AJwAmWswYpxaNYUsmKOktb4/eO+yWKtHg5
-         e2LrNSrLg1efyUIibYf+Kr5bQGlHpKOnkM+oWGrxz9/W1hswPvR9mDiRF1oxnG4j5ZnI
-         R6yZ3G7fTYoehYGdVoNtGgy82qpPXrY/KLj2PpQpDQG7nqbfOCWchxNq+zhJT0wQSPXL
-         gsQpq4NUgM4b2Ybp4QUpzpXtwicyVGEl7rzIMCRGw3UQS/mCeXZdkIOl7ANRgRLNMSd9
-         iio0I2ewWibZrKmlIj4IASEgk0K+CuYN2rJG+UYghha7UYwIRSbljl3/v2K+h1KZDtc+
-         9JNw==
-X-Forwarded-Encrypted: i=1; AJvYcCVVjTqbqZTu5rxV2rX800jvSLTtfeLtWwcBWKqrpwj+kxHb8MW0xoq0wfqlE1zk89c1K7C9AUXJiyvk9Bs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7GNnwDK5pOT8U5D3y30H32Zid/8biPFOalMTu8MuTzRRnt+HI
-	gb72h80e3HR/ka3OAvN+KGO0ZZVp9t0Q9Vib4c63No/3ZpQjxlKe4G3o2ksj9uLVWeE1IUjuK07
-	+I3TTRQ==
-X-Google-Smtp-Source: AGHT+IErRFT1YxlszZ8+Hn/lk6gYaxEVplONKqwV+JCUeXaN9V2hIH4Qm61XoRwm2x2oWrmpm9siqH0ZiFQ=
-X-Received: from pfax8.prod.google.com ([2002:aa7:9188:0:b0:746:fd4c:1fd0])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3e29:b0:748:2ff7:5e22
- with SMTP id d2e1a72fcca58-7487c239e74mr1359444b3a.10.1749677792072; Wed, 11
- Jun 2025 14:36:32 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed, 11 Jun 2025 14:35:57 -0700
-In-Reply-To: <20250611213557.294358-1-seanjc@google.com>
+        d=1e100.net; s=20230601; t=1749677834; x=1750282634;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GadKINRywzBXrfqPVJAYfbBeC3UCh33khZeoLkWRJYU=;
+        b=RakOOD3iuMcsfgk6hCjwBWh2TdaGQuebtWC0O6CfyvbQkJWPtLDLhX0uJcvweCMUoh
+         WxHDS2/iKCtwB1ZYfvs8fg++RrxER8mbCitLs+iaVjPY+S5ngRAC/DgKTEXLlCCaIZk3
+         /Kf8eDrK0E3/W96lNWzzsiQHdfhcVpaj3ZSEqojxemuaH5mXXM52jPm6MsJWcgrqoNMW
+         4h2IcBDj7BHk+VgtERH5OkyxPHFbIbPlh551zZZUqDK0K25kUtqaahV/ZKaAUqlH0vAE
+         itTtbaVV0k04KBXXQN+3x7wp/5djzzmnIVoc+UjnaNVXE2ans1l5BfTYtZ4KvsnUfS64
+         Nhhw==
+X-Forwarded-Encrypted: i=1; AJvYcCXHckQQ9gtopMSBVOWdvoFwtd58IUfFGGdRHf3VGLPPzJ3tPDkDNQbtPhvtrPZBa9CYljjQPamISoj3qsY=@vger.kernel.org, AJvYcCXqdKNGHVA1eNLjfr1OIdX4Qezk+Jj7OuTnlL+PfJ9Yhh6rsWwZmhWrgUDeT8HtjqbqDEU8z7uIPOmiILs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyovJDzHfetiF1owJPeaXr5hDtmUy3qnPlpgOpJ936WRzYAQM1n
+	r7wPMvy7jNyLCb/H2DLdMHQqIIIfRcekoHCt4KCTZPJvIzdUB2+aE/VXxw/Ltg==
+X-Gm-Gg: ASbGnctC6hxrl4FjDFTRQ4/MV8TGnVB3pmjFW181C4UxwfloFzm6vwiG6joaOful2QG
+	yQxez8INaONtLh/l+AUQ9AonmDaZ0eAp+Vujy/j9ByqxRB1w0/HMWRlohluAYxcFQwmy+k2JLGT
+	pufjz6lICvOid7tgAbw2qRyA2vPXiwf5IRATr4QFphC5A1+5L1rZQBeIhJHwA92RNm2tM9YHuFi
+	yt4mUj38QBmW/tBdlytsHdApZqus48fHcfjkPyiG0jxDW9IBZ5RYhaDcKgRhU7L2FZv8d42Q+xR
+	QX3NEp7VOC3+VcbyhIhrz8Fz2mHSnvKhnXtyKbQFpB/1AOrGQgaOmN5zTVLGGGZfJN2aqmRB5OT
+	wvEZwydn1XdYoLqy9bZeUJWNy
+X-Google-Smtp-Source: AGHT+IENXAxOFUkn6ai3f7uiv1cxIoglRihLgcmGTCPE72Ecl4xW86WzHKRFfKByroxWekJSsl3FSA==
+X-Received: by 2002:a05:600c:8b24:b0:442:f4a3:b5ec with SMTP id 5b1f17b1804b1-4532b89f9d3mr13570905e9.4.1749677833651;
+        Wed, 11 Jun 2025 14:37:13 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e25ec9fsm851985e9.34.2025.06.11.14.37.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 14:37:13 -0700 (PDT)
+Date: Wed, 11 Jun 2025 22:37:10 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-sound@vger.kernel.org, Herve Codina <herve.codina@bootlin.com>, Mark
+ Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ALSA: pcm: Convert multiple {get/put}_user to
+ user_access_begin/user_access_end()
+Message-ID: <20250611223710.254780d8@pumpkin>
+In-Reply-To: <051e9722-44ad-4547-af5d-3e42c8cfe8d9@csgroup.eu>
+References: <bf9288392b1d4b9e92fe29212d9cb933c5b3fbae.1749296015.git.christophe.leroy@csgroup.eu>
+	<20250610205358.07b1cc05@pumpkin>
+	<051e9722-44ad-4547-af5d-3e42c8cfe8d9@csgroup.eu>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250611213557.294358-1-seanjc@google.com>
-X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-Message-ID: <20250611213557.294358-19-seanjc@google.com>
-Subject: [PATCH v2 18/18] KVM: x86: Fold irq_comm.c into irq.c
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Kai Huang <kai.huang@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Drop irq_comm.c, a.k.a. common IRQ APIs, as there has been no non-x86 user
-since commit 003f7de62589 ("KVM: ia64: remove") (at the time, irq_comm.c
-lived in virt/kvm, not arch/x86/kvm).
+On Wed, 11 Jun 2025 15:48:30 +0200
+Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
 
-Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-Acked-by: Kai Huang <kai.huang@intel.com>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/kvm/Makefile   |   6 +-
- arch/x86/kvm/irq.c      | 304 ++++++++++++++++++++++++++++++++++++-
- arch/x86/kvm/irq_comm.c | 325 ----------------------------------------
- 3 files changed, 305 insertions(+), 330 deletions(-)
- delete mode 100644 arch/x86/kvm/irq_comm.c
+> Le 10/06/2025 =C3=A0 21:53, David Laight a =C3=A9crit=C2=A0:
+> > On Sat,  7 Jun 2025 13:37:42 +0200
+> > Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
+> >  =20
+> >> With user access protection (Called SMAP on x86 or KUAP on powerpc)
+> >> each and every call to get_user() or put_user() performs heavy
+> >> operations to unlock and lock kernel access to userspace.
+> >>
+> >> To avoid that, perform user accesses by blocks using
+> >> user_access_begin/user_access_end() and unsafe_get_user()/
+> >> unsafe_put_user() and alike. =20
+> >=20
+> > Did you consider using masked_user_access_begin() ?
+> > It removes a conditional branch and lfence as well. =20
+>=20
+> Thanks, was not aware of that new function, allthought I remember some=20
+> discussion about masked user access.
+>=20
+> Looks like this is specific to x86 at the time being.
 
-diff --git a/arch/x86/kvm/Makefile b/arch/x86/kvm/Makefile
-index 92c737257789..c4b8950c7abe 100644
---- a/arch/x86/kvm/Makefile
-+++ b/arch/x86/kvm/Makefile
-@@ -5,10 +5,8 @@ ccflags-$(CONFIG_KVM_WERROR) += -Werror
- 
- include $(srctree)/virt/kvm/Makefile.kvm
- 
--kvm-y			+= x86.o emulate.o irq.o lapic.o \
--			   irq_comm.o cpuid.o pmu.o mtrr.o \
--			   debugfs.o mmu/mmu.o mmu/page_track.o \
--			   mmu/spte.o
-+kvm-y			+= x86.o emulate.o irq.o lapic.o cpuid.o pmu.o mtrr.o \
-+			   debugfs.o mmu/mmu.o mmu/page_track.o mmu/spte.o
- 
- kvm-$(CONFIG_X86_64) += mmu/tdp_iter.o mmu/tdp_mmu.o
- kvm-$(CONFIG_KVM_IOAPIC) += i8259.o i8254.o ioapic.o
-diff --git a/arch/x86/kvm/irq.c b/arch/x86/kvm/irq.c
-index 4c219e9f52b0..a0b1499baf6e 100644
---- a/arch/x86/kvm/irq.c
-+++ b/arch/x86/kvm/irq.c
-@@ -12,9 +12,10 @@
- #include <linux/export.h>
- #include <linux/kvm_host.h>
- 
-+#include "hyperv.h"
- #include "ioapic.h"
- #include "irq.h"
--#include "i8254.h"
-+#include "trace.h"
- #include "x86.h"
- #include "xen.h"
- 
-@@ -193,6 +194,307 @@ bool kvm_arch_irqchip_in_kernel(struct kvm *kvm)
- 	return irqchip_in_kernel(kvm);
- }
- 
-+int kvm_irq_delivery_to_apic(struct kvm *kvm, struct kvm_lapic *src,
-+			     struct kvm_lapic_irq *irq, struct dest_map *dest_map)
-+{
-+	int r = -1;
-+	struct kvm_vcpu *vcpu, *lowest = NULL;
-+	unsigned long i, dest_vcpu_bitmap[BITS_TO_LONGS(KVM_MAX_VCPUS)];
-+	unsigned int dest_vcpus = 0;
-+
-+	if (kvm_irq_delivery_to_apic_fast(kvm, src, irq, &r, dest_map))
-+		return r;
-+
-+	if (irq->dest_mode == APIC_DEST_PHYSICAL &&
-+	    irq->dest_id == 0xff && kvm_lowest_prio_delivery(irq)) {
-+		pr_info("apic: phys broadcast and lowest prio\n");
-+		irq->delivery_mode = APIC_DM_FIXED;
-+	}
-+
-+	memset(dest_vcpu_bitmap, 0, sizeof(dest_vcpu_bitmap));
-+
-+	kvm_for_each_vcpu(i, vcpu, kvm) {
-+		if (!kvm_apic_present(vcpu))
-+			continue;
-+
-+		if (!kvm_apic_match_dest(vcpu, src, irq->shorthand,
-+					irq->dest_id, irq->dest_mode))
-+			continue;
-+
-+		if (!kvm_lowest_prio_delivery(irq)) {
-+			if (r < 0)
-+				r = 0;
-+			r += kvm_apic_set_irq(vcpu, irq, dest_map);
-+		} else if (kvm_apic_sw_enabled(vcpu->arch.apic)) {
-+			if (!kvm_vector_hashing_enabled()) {
-+				if (!lowest)
-+					lowest = vcpu;
-+				else if (kvm_apic_compare_prio(vcpu, lowest) < 0)
-+					lowest = vcpu;
-+			} else {
-+				__set_bit(i, dest_vcpu_bitmap);
-+				dest_vcpus++;
-+			}
-+		}
-+	}
-+
-+	if (dest_vcpus != 0) {
-+		int idx = kvm_vector_to_index(irq->vector, dest_vcpus,
-+					dest_vcpu_bitmap, KVM_MAX_VCPUS);
-+
-+		lowest = kvm_get_vcpu(kvm, idx);
-+	}
-+
-+	if (lowest)
-+		r = kvm_apic_set_irq(lowest, irq, dest_map);
-+
-+	return r;
-+}
-+
-+void kvm_set_msi_irq(struct kvm *kvm, struct kvm_kernel_irq_routing_entry *e,
-+		     struct kvm_lapic_irq *irq)
-+{
-+	struct msi_msg msg = { .address_lo = e->msi.address_lo,
-+			       .address_hi = e->msi.address_hi,
-+			       .data = e->msi.data };
-+
-+	trace_kvm_msi_set_irq(msg.address_lo | (kvm->arch.x2apic_format ?
-+			      (u64)msg.address_hi << 32 : 0), msg.data);
-+
-+	irq->dest_id = x86_msi_msg_get_destid(&msg, kvm->arch.x2apic_format);
-+	irq->vector = msg.arch_data.vector;
-+	irq->dest_mode = kvm_lapic_irq_dest_mode(msg.arch_addr_lo.dest_mode_logical);
-+	irq->trig_mode = msg.arch_data.is_level;
-+	irq->delivery_mode = msg.arch_data.delivery_mode << 8;
-+	irq->msi_redir_hint = msg.arch_addr_lo.redirect_hint;
-+	irq->level = 1;
-+	irq->shorthand = APIC_DEST_NOSHORT;
-+}
-+EXPORT_SYMBOL_GPL(kvm_set_msi_irq);
-+
-+static inline bool kvm_msi_route_invalid(struct kvm *kvm,
-+		struct kvm_kernel_irq_routing_entry *e)
-+{
-+	return kvm->arch.x2apic_format && (e->msi.address_hi & 0xff);
-+}
-+
-+int kvm_set_msi(struct kvm_kernel_irq_routing_entry *e,
-+		struct kvm *kvm, int irq_source_id, int level, bool line_status)
-+{
-+	struct kvm_lapic_irq irq;
-+
-+	if (kvm_msi_route_invalid(kvm, e))
-+		return -EINVAL;
-+
-+	if (!level)
-+		return -1;
-+
-+	kvm_set_msi_irq(kvm, e, &irq);
-+
-+	return kvm_irq_delivery_to_apic(kvm, NULL, &irq, NULL);
-+}
-+
-+int kvm_arch_set_irq_inatomic(struct kvm_kernel_irq_routing_entry *e,
-+			      struct kvm *kvm, int irq_source_id, int level,
-+			      bool line_status)
-+{
-+	struct kvm_lapic_irq irq;
-+	int r;
-+
-+	switch (e->type) {
-+#ifdef CONFIG_KVM_HYPERV
-+	case KVM_IRQ_ROUTING_HV_SINT:
-+		return kvm_hv_synic_set_irq(e, kvm, irq_source_id, level,
-+					    line_status);
+I think it is two architectures.
+But mostly requires a guard page between user and kernel and 'cmov'
+if you want to avoid speculation 'issues' (and 'round tuits').
+
+> I would have=20
+> expected that to be transparent to the consumer. Allthought looking at=20
+> strncpy_from_user() I understand the benefit of keeping it separate.
+>=20
+> However is it worth the effort and the ugliness of having to do (copied=20
+> from fs/select.c):
+>=20
+> 		if (can_do_masked_user_access())
+> 			from =3D masked_user_access_begin(from);
+> 		else if (!user_read_access_begin(from, sizeof(*from)))
+> 			return -EFAULT;
+
+I proposed (uaccess: Simplify code pattern for masked user copies):
+
++#ifdef masked_user_access_begin
++#define masked_user_read_access_begin(from, size) \
++       ((*(from) =3D masked_user_access_begin(*(from))), 1)
++#define masked_user_write_access_begin(from, size) \
++       ((*(from) =3D masked_user_access_begin(*(from))), 1)
++#else
++#define masked_user_read_access_begin(from, size) \
++       user_read_access_begin(*(from), size)
++#define masked_user_write_access_begin(from, size) \
++       user_write_access_begin(*(from), size)
 +#endif
-+
-+	case KVM_IRQ_ROUTING_MSI:
-+		if (kvm_msi_route_invalid(kvm, e))
-+			return -EINVAL;
-+
-+		kvm_set_msi_irq(kvm, e, &irq);
-+
-+		if (kvm_irq_delivery_to_apic_fast(kvm, NULL, &irq, &r, NULL))
-+			return r;
-+		break;
-+
-+#ifdef CONFIG_KVM_XEN
-+	case KVM_IRQ_ROUTING_XEN_EVTCHN:
-+		if (!level)
-+			return -1;
-+
-+		return kvm_xen_set_evtchn_fast(&e->xen_evtchn, kvm);
-+#endif
-+	default:
-+		break;
-+	}
-+
-+	return -EWOULDBLOCK;
-+}
-+
-+bool kvm_arch_can_set_irq_routing(struct kvm *kvm)
-+{
-+	return irqchip_in_kernel(kvm);
-+}
-+
-+int kvm_set_routing_entry(struct kvm *kvm,
-+			  struct kvm_kernel_irq_routing_entry *e,
-+			  const struct kvm_irq_routing_entry *ue)
-+{
-+	/* We can't check irqchip_in_kernel() here as some callers are
-+	 * currently initializing the irqchip. Other callers should therefore
-+	 * check kvm_arch_can_set_irq_routing() before calling this function.
-+	 */
-+	switch (ue->type) {
-+#ifdef CONFIG_KVM_IOAPIC
-+	case KVM_IRQ_ROUTING_IRQCHIP:
-+		if (irqchip_split(kvm))
-+			return -EINVAL;
-+		e->irqchip.pin = ue->u.irqchip.pin;
-+		switch (ue->u.irqchip.irqchip) {
-+		case KVM_IRQCHIP_PIC_SLAVE:
-+			e->irqchip.pin += PIC_NUM_PINS / 2;
-+			fallthrough;
-+		case KVM_IRQCHIP_PIC_MASTER:
-+			if (ue->u.irqchip.pin >= PIC_NUM_PINS / 2)
-+				return -EINVAL;
-+			e->set = kvm_pic_set_irq;
-+			break;
-+		case KVM_IRQCHIP_IOAPIC:
-+			if (ue->u.irqchip.pin >= KVM_IOAPIC_NUM_PINS)
-+				return -EINVAL;
-+			e->set = kvm_ioapic_set_irq;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+		e->irqchip.irqchip = ue->u.irqchip.irqchip;
-+		break;
-+#endif
-+	case KVM_IRQ_ROUTING_MSI:
-+		e->set = kvm_set_msi;
-+		e->msi.address_lo = ue->u.msi.address_lo;
-+		e->msi.address_hi = ue->u.msi.address_hi;
-+		e->msi.data = ue->u.msi.data;
-+
-+		if (kvm_msi_route_invalid(kvm, e))
-+			return -EINVAL;
-+		break;
-+#ifdef CONFIG_KVM_HYPERV
-+	case KVM_IRQ_ROUTING_HV_SINT:
-+		e->set = kvm_hv_synic_set_irq;
-+		e->hv_sint.vcpu = ue->u.hv_sint.vcpu;
-+		e->hv_sint.sint = ue->u.hv_sint.sint;
-+		break;
-+#endif
-+#ifdef CONFIG_KVM_XEN
-+	case KVM_IRQ_ROUTING_XEN_EVTCHN:
-+		return kvm_xen_setup_evtchn(kvm, e, ue);
-+#endif
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+bool kvm_intr_is_single_vcpu(struct kvm *kvm, struct kvm_lapic_irq *irq,
-+			     struct kvm_vcpu **dest_vcpu)
-+{
-+	int r = 0;
-+	unsigned long i;
-+	struct kvm_vcpu *vcpu;
-+
-+	if (kvm_intr_is_single_vcpu_fast(kvm, irq, dest_vcpu))
-+		return true;
-+
-+	kvm_for_each_vcpu(i, vcpu, kvm) {
-+		if (!kvm_apic_present(vcpu))
-+			continue;
-+
-+		if (!kvm_apic_match_dest(vcpu, NULL, irq->shorthand,
-+					irq->dest_id, irq->dest_mode))
-+			continue;
-+
-+		if (++r == 2)
-+			return false;
-+
-+		*dest_vcpu = vcpu;
-+	}
-+
-+	return r == 1;
-+}
-+EXPORT_SYMBOL_GPL(kvm_intr_is_single_vcpu);
-+
-+void kvm_scan_ioapic_irq(struct kvm_vcpu *vcpu, u32 dest_id, u16 dest_mode,
-+			 u8 vector, unsigned long *ioapic_handled_vectors)
-+{
-+	/*
-+	 * Intercept EOI if the vCPU is the target of the new IRQ routing, or
-+	 * the vCPU has a pending IRQ from the old routing, i.e. if the vCPU
-+	 * may receive a level-triggered IRQ in the future, or already received
-+	 * level-triggered IRQ.  The EOI needs to be intercepted and forwarded
-+	 * to I/O APIC emulation so that the IRQ can be de-asserted.
-+	 */
-+	if (kvm_apic_match_dest(vcpu, NULL, APIC_DEST_NOSHORT, dest_id, dest_mode)) {
-+		__set_bit(vector, ioapic_handled_vectors);
-+	} else if (kvm_apic_pending_eoi(vcpu, vector)) {
-+		__set_bit(vector, ioapic_handled_vectors);
-+
-+		/*
-+		 * Track the highest pending EOI for which the vCPU is NOT the
-+		 * target in the new routing.  Only the EOI for the IRQ that is
-+		 * in-flight (for the old routing) needs to be intercepted, any
-+		 * future IRQs that arrive on this vCPU will be coincidental to
-+		 * the level-triggered routing and don't need to be intercepted.
-+		 */
-+		if ((int)vector > vcpu->arch.highest_stale_pending_ioapic_eoi)
-+			vcpu->arch.highest_stale_pending_ioapic_eoi = vector;
-+	}
-+}
-+
-+void kvm_scan_ioapic_routes(struct kvm_vcpu *vcpu,
-+			    ulong *ioapic_handled_vectors)
-+{
-+	struct kvm *kvm = vcpu->kvm;
-+	struct kvm_kernel_irq_routing_entry *entry;
-+	struct kvm_irq_routing_table *table;
-+	u32 i, nr_ioapic_pins;
-+	int idx;
-+
-+	idx = srcu_read_lock(&kvm->irq_srcu);
-+	table = srcu_dereference(kvm->irq_routing, &kvm->irq_srcu);
-+	nr_ioapic_pins = min_t(u32, table->nr_rt_entries,
-+			       kvm->arch.nr_reserved_ioapic_pins);
-+	for (i = 0; i < nr_ioapic_pins; ++i) {
-+		hlist_for_each_entry(entry, &table->map[i], link) {
-+			struct kvm_lapic_irq irq;
-+
-+			if (entry->type != KVM_IRQ_ROUTING_MSI)
-+				continue;
-+
-+			kvm_set_msi_irq(vcpu->kvm, entry, &irq);
-+
-+			if (!irq.trig_mode)
-+				continue;
-+
-+			kvm_scan_ioapic_irq(vcpu, irq.dest_id, irq.dest_mode,
-+					    irq.vector, ioapic_handled_vectors);
-+		}
-+	}
-+	srcu_read_unlock(&kvm->irq_srcu, idx);
-+}
-+
-+void kvm_arch_irq_routing_update(struct kvm *kvm)
-+{
-+#ifdef CONFIG_KVM_HYPERV
-+	kvm_hv_irq_routing_update(kvm);
-+#endif
-+
-+	if (irqchip_split(kvm))
-+		kvm_make_scan_ioapic_request(kvm);
-+}
-+
- #ifdef CONFIG_KVM_IOAPIC
- #define IOAPIC_ROUTING_ENTRY(irq) \
- 	{ .gsi = irq, .type = KVM_IRQ_ROUTING_IRQCHIP,	\
-diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
-deleted file mode 100644
-index 76d1c85a1011..000000000000
---- a/arch/x86/kvm/irq_comm.c
-+++ /dev/null
-@@ -1,325 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * irq_comm.c: Common API for in kernel interrupt controller
-- * Copyright (c) 2007, Intel Corporation.
-- *
-- * Authors:
-- *   Yaozu (Eddie) Dong <Eddie.dong@intel.com>
-- *
-- * Copyright 2010 Red Hat, Inc. and/or its affiliates.
-- */
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
--#include <linux/kvm_host.h>
--#include <linux/slab.h>
--#include <linux/export.h>
--#include <linux/rculist.h>
--
--#include "hyperv.h"
--#include "ioapic.h"
--#include "irq.h"
--#include "lapic.h"
--#include "trace.h"
--#include "x86.h"
--#include "xen.h"
--
--int kvm_irq_delivery_to_apic(struct kvm *kvm, struct kvm_lapic *src,
--		struct kvm_lapic_irq *irq, struct dest_map *dest_map)
--{
--	int r = -1;
--	struct kvm_vcpu *vcpu, *lowest = NULL;
--	unsigned long i, dest_vcpu_bitmap[BITS_TO_LONGS(KVM_MAX_VCPUS)];
--	unsigned int dest_vcpus = 0;
--
--	if (kvm_irq_delivery_to_apic_fast(kvm, src, irq, &r, dest_map))
--		return r;
--
--	if (irq->dest_mode == APIC_DEST_PHYSICAL &&
--	    irq->dest_id == 0xff && kvm_lowest_prio_delivery(irq)) {
--		pr_info("apic: phys broadcast and lowest prio\n");
--		irq->delivery_mode = APIC_DM_FIXED;
--	}
--
--	memset(dest_vcpu_bitmap, 0, sizeof(dest_vcpu_bitmap));
--
--	kvm_for_each_vcpu(i, vcpu, kvm) {
--		if (!kvm_apic_present(vcpu))
--			continue;
--
--		if (!kvm_apic_match_dest(vcpu, src, irq->shorthand,
--					irq->dest_id, irq->dest_mode))
--			continue;
--
--		if (!kvm_lowest_prio_delivery(irq)) {
--			if (r < 0)
--				r = 0;
--			r += kvm_apic_set_irq(vcpu, irq, dest_map);
--		} else if (kvm_apic_sw_enabled(vcpu->arch.apic)) {
--			if (!kvm_vector_hashing_enabled()) {
--				if (!lowest)
--					lowest = vcpu;
--				else if (kvm_apic_compare_prio(vcpu, lowest) < 0)
--					lowest = vcpu;
--			} else {
--				__set_bit(i, dest_vcpu_bitmap);
--				dest_vcpus++;
--			}
--		}
--	}
--
--	if (dest_vcpus != 0) {
--		int idx = kvm_vector_to_index(irq->vector, dest_vcpus,
--					dest_vcpu_bitmap, KVM_MAX_VCPUS);
--
--		lowest = kvm_get_vcpu(kvm, idx);
--	}
--
--	if (lowest)
--		r = kvm_apic_set_irq(lowest, irq, dest_map);
--
--	return r;
--}
--
--void kvm_set_msi_irq(struct kvm *kvm, struct kvm_kernel_irq_routing_entry *e,
--		     struct kvm_lapic_irq *irq)
--{
--	struct msi_msg msg = { .address_lo = e->msi.address_lo,
--			       .address_hi = e->msi.address_hi,
--			       .data = e->msi.data };
--
--	trace_kvm_msi_set_irq(msg.address_lo | (kvm->arch.x2apic_format ?
--			      (u64)msg.address_hi << 32 : 0), msg.data);
--
--	irq->dest_id = x86_msi_msg_get_destid(&msg, kvm->arch.x2apic_format);
--	irq->vector = msg.arch_data.vector;
--	irq->dest_mode = kvm_lapic_irq_dest_mode(msg.arch_addr_lo.dest_mode_logical);
--	irq->trig_mode = msg.arch_data.is_level;
--	irq->delivery_mode = msg.arch_data.delivery_mode << 8;
--	irq->msi_redir_hint = msg.arch_addr_lo.redirect_hint;
--	irq->level = 1;
--	irq->shorthand = APIC_DEST_NOSHORT;
--}
--EXPORT_SYMBOL_GPL(kvm_set_msi_irq);
--
--static inline bool kvm_msi_route_invalid(struct kvm *kvm,
--		struct kvm_kernel_irq_routing_entry *e)
--{
--	return kvm->arch.x2apic_format && (e->msi.address_hi & 0xff);
--}
--
--int kvm_set_msi(struct kvm_kernel_irq_routing_entry *e,
--		struct kvm *kvm, int irq_source_id, int level, bool line_status)
--{
--	struct kvm_lapic_irq irq;
--
--	if (kvm_msi_route_invalid(kvm, e))
--		return -EINVAL;
--
--	if (!level)
--		return -1;
--
--	kvm_set_msi_irq(kvm, e, &irq);
--
--	return kvm_irq_delivery_to_apic(kvm, NULL, &irq, NULL);
--}
--
--int kvm_arch_set_irq_inatomic(struct kvm_kernel_irq_routing_entry *e,
--			      struct kvm *kvm, int irq_source_id, int level,
--			      bool line_status)
--{
--	struct kvm_lapic_irq irq;
--	int r;
--
--	switch (e->type) {
--#ifdef CONFIG_KVM_HYPERV
--	case KVM_IRQ_ROUTING_HV_SINT:
--		return kvm_hv_synic_set_irq(e, kvm, irq_source_id, level,
--					    line_status);
--#endif
--
--	case KVM_IRQ_ROUTING_MSI:
--		if (kvm_msi_route_invalid(kvm, e))
--			return -EINVAL;
--
--		kvm_set_msi_irq(kvm, e, &irq);
--
--		if (kvm_irq_delivery_to_apic_fast(kvm, NULL, &irq, &r, NULL))
--			return r;
--		break;
--
--#ifdef CONFIG_KVM_XEN
--	case KVM_IRQ_ROUTING_XEN_EVTCHN:
--		if (!level)
--			return -1;
--
--		return kvm_xen_set_evtchn_fast(&e->xen_evtchn, kvm);
--#endif
--	default:
--		break;
--	}
--
--	return -EWOULDBLOCK;
--}
--
--bool kvm_arch_can_set_irq_routing(struct kvm *kvm)
--{
--	return irqchip_in_kernel(kvm);
--}
--
--int kvm_set_routing_entry(struct kvm *kvm,
--			  struct kvm_kernel_irq_routing_entry *e,
--			  const struct kvm_irq_routing_entry *ue)
--{
--	/* We can't check irqchip_in_kernel() here as some callers are
--	 * currently initializing the irqchip. Other callers should therefore
--	 * check kvm_arch_can_set_irq_routing() before calling this function.
--	 */
--	switch (ue->type) {
--#ifdef CONFIG_KVM_IOAPIC
--	case KVM_IRQ_ROUTING_IRQCHIP:
--		if (irqchip_split(kvm))
--			return -EINVAL;
--		e->irqchip.pin = ue->u.irqchip.pin;
--		switch (ue->u.irqchip.irqchip) {
--		case KVM_IRQCHIP_PIC_SLAVE:
--			e->irqchip.pin += PIC_NUM_PINS / 2;
--			fallthrough;
--		case KVM_IRQCHIP_PIC_MASTER:
--			if (ue->u.irqchip.pin >= PIC_NUM_PINS / 2)
--				return -EINVAL;
--			e->set = kvm_pic_set_irq;
--			break;
--		case KVM_IRQCHIP_IOAPIC:
--			if (ue->u.irqchip.pin >= KVM_IOAPIC_NUM_PINS)
--				return -EINVAL;
--			e->set = kvm_ioapic_set_irq;
--			break;
--		default:
--			return -EINVAL;
--		}
--		e->irqchip.irqchip = ue->u.irqchip.irqchip;
--		break;
--#endif
--	case KVM_IRQ_ROUTING_MSI:
--		e->set = kvm_set_msi;
--		e->msi.address_lo = ue->u.msi.address_lo;
--		e->msi.address_hi = ue->u.msi.address_hi;
--		e->msi.data = ue->u.msi.data;
--
--		if (kvm_msi_route_invalid(kvm, e))
--			return -EINVAL;
--		break;
--#ifdef CONFIG_KVM_HYPERV
--	case KVM_IRQ_ROUTING_HV_SINT:
--		e->set = kvm_hv_synic_set_irq;
--		e->hv_sint.vcpu = ue->u.hv_sint.vcpu;
--		e->hv_sint.sint = ue->u.hv_sint.sint;
--		break;
--#endif
--#ifdef CONFIG_KVM_XEN
--	case KVM_IRQ_ROUTING_XEN_EVTCHN:
--		return kvm_xen_setup_evtchn(kvm, e, ue);
--#endif
--	default:
--		return -EINVAL;
--	}
--
--	return 0;
--}
--
--bool kvm_intr_is_single_vcpu(struct kvm *kvm, struct kvm_lapic_irq *irq,
--			     struct kvm_vcpu **dest_vcpu)
--{
--	int r = 0;
--	unsigned long i;
--	struct kvm_vcpu *vcpu;
--
--	if (kvm_intr_is_single_vcpu_fast(kvm, irq, dest_vcpu))
--		return true;
--
--	kvm_for_each_vcpu(i, vcpu, kvm) {
--		if (!kvm_apic_present(vcpu))
--			continue;
--
--		if (!kvm_apic_match_dest(vcpu, NULL, irq->shorthand,
--					irq->dest_id, irq->dest_mode))
--			continue;
--
--		if (++r == 2)
--			return false;
--
--		*dest_vcpu = vcpu;
--	}
--
--	return r == 1;
--}
--EXPORT_SYMBOL_GPL(kvm_intr_is_single_vcpu);
--
--void kvm_scan_ioapic_irq(struct kvm_vcpu *vcpu, u32 dest_id, u16 dest_mode,
--			 u8 vector, unsigned long *ioapic_handled_vectors)
--{
--	/*
--	 * Intercept EOI if the vCPU is the target of the new IRQ routing, or
--	 * the vCPU has a pending IRQ from the old routing, i.e. if the vCPU
--	 * may receive a level-triggered IRQ in the future, or already received
--	 * level-triggered IRQ.  The EOI needs to be intercepted and forwarded
--	 * to I/O APIC emulation so that the IRQ can be de-asserted.
--	 */
--	if (kvm_apic_match_dest(vcpu, NULL, APIC_DEST_NOSHORT, dest_id, dest_mode)) {
--		__set_bit(vector, ioapic_handled_vectors);
--	} else if (kvm_apic_pending_eoi(vcpu, vector)) {
--		__set_bit(vector, ioapic_handled_vectors);
--
--		/*
--		 * Track the highest pending EOI for which the vCPU is NOT the
--		 * target in the new routing.  Only the EOI for the IRQ that is
--		 * in-flight (for the old routing) needs to be intercepted, any
--		 * future IRQs that arrive on this vCPU will be coincidental to
--		 * the level-triggered routing and don't need to be intercepted.
--		 */
--		if ((int)vector > vcpu->arch.highest_stale_pending_ioapic_eoi)
--			vcpu->arch.highest_stale_pending_ioapic_eoi = vector;
--	}
--}
--
--void kvm_scan_ioapic_routes(struct kvm_vcpu *vcpu,
--			    ulong *ioapic_handled_vectors)
--{
--	struct kvm *kvm = vcpu->kvm;
--	struct kvm_kernel_irq_routing_entry *entry;
--	struct kvm_irq_routing_table *table;
--	u32 i, nr_ioapic_pins;
--	int idx;
--
--	idx = srcu_read_lock(&kvm->irq_srcu);
--	table = srcu_dereference(kvm->irq_routing, &kvm->irq_srcu);
--	nr_ioapic_pins = min_t(u32, table->nr_rt_entries,
--			       kvm->arch.nr_reserved_ioapic_pins);
--	for (i = 0; i < nr_ioapic_pins; ++i) {
--		hlist_for_each_entry(entry, &table->map[i], link) {
--			struct kvm_lapic_irq irq;
--
--			if (entry->type != KVM_IRQ_ROUTING_MSI)
--				continue;
--
--			kvm_set_msi_irq(vcpu->kvm, entry, &irq);
--
--			if (!irq.trig_mode)
--				continue;
--
--			kvm_scan_ioapic_irq(vcpu, irq.dest_id, irq.dest_mode,
--					    irq.vector, ioapic_handled_vectors);
--		}
--	}
--	srcu_read_unlock(&kvm->irq_srcu, idx);
--}
--
--void kvm_arch_irq_routing_update(struct kvm *kvm)
--{
--#ifdef CONFIG_KVM_HYPERV
--	kvm_hv_irq_routing_update(kvm);
--#endif
--
--	if (irqchip_split(kvm))
--		kvm_make_scan_ioapic_request(kvm);
--}
--- 
-2.50.0.rc1.591.g9c95f17f64-goog
+
+Which allows the simple change
+-               if (!user_read_access_begin(from, sizeof(*from)))
++               if (!masked_user_read_access_begin(&from, sizeof(*from)))
+                        return -EFAULT;
+                unsafe_get_user(xxx, &from->xxx, Efault);
+
+But Linus said:
+
+> I really dislike the use of "pass pointer to simple variable you are
+> going to change" interfaces which is why I didn't do it this way.
+
+But, in this case, you absolutely need the 'user pointer' updated.
+So need to make it hard to code otherwise.
+
+Note that it is best if masked_user_access_begin() returns the base
+address of the guard page for kernel addresses (which amd64 now does)
+rather than ~0.
+Otherwise it is pretty imperative that the first access be to offset 0.
+
+	David
+
+>=20
+> In addition I would expect a masked_user_read_access_begin() and a=20
+> masked_write_access_begin(). It looks odd (and would be wrong on=20
+> powerpc) to not be able to differentiate between read and write in the=20
+> begin yet using user_read_access_end() at the end, ref get_sigset_argpack=
+()
+>=20
+> Christophe
 
