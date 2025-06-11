@@ -1,120 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D8D21B9D6;
-	Wed, 11 Jun 2025 08:17:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA4721A45D;
+	Wed, 11 Jun 2025 08:19:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749629875; cv=none; b=smMqZXOcLcQmlWEAboDsO2UGCr2hroYOoPBwG5NxHPjq6ADnpGntKgDPi0KrQh1q+xVrxvT+4G3aJtIG8jbyb8zf6wYkDMqe4ycSIVHpxtHi4JxqU13mNdM+ta2DOOyzgz9nreXfQgFL0PFwe4vGZN5+MYoH0L8BE9clWZ+KzEI=
+	t=1749629965; cv=none; b=TK2NiPQAP1uEKCCXckw9R/xI9JMuHJWKEyIibtSOUvaFuoyU5RaebKM9SUJGfmFDdv0Qs2Czd4fLzkG84XXCB1oxof45bb1gzqFcGoIn0+8wjgNg8Mm9RieLupC5p7ntsAFq4DbI3IY0ZPTzrI9ub5sCopzU0Z5GOH5aHFcHf4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749629875; c=relaxed/simple;
-	bh=2LzeeufXjEPMtFWp+PnoigkYYRqq/JI4VyA6/ujyTj0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fLyfVpCmZ4ZdqCf/j8jlXutTLuoGL0LZRoavMwz4uKq8wvVutf1NbtHncCIlSvkB0dogSYGQKx5qDyxWndmOVTRfEtUFxxN7pbrpOEU3hj6K56JqFZKaX+/JLtV5cAbJklA4sfRI2w0HqWj2g4+pt2SNTulqiQXfLBz/VD3ZJWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iDLg0h8U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749629965; c=relaxed/simple;
+	bh=BgskhzIjhoBBKnyDbYf2UllhqZ0Rn5azDGC2A7sKqU0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WDr3Q5avq9m+3/uutbY/DEKHg2Hpd+OD+kqPbMQXocZJcvHrTtnMrttqXXyvz2Y6nXk3BnGGuHmHjcIaGKAk48rK+r9lvKfmpM8kfyh37oaX5yAGAIDxffhb5vXIyJdmOynXV3yXvSVYLeC+TEAS6Vpx3JyKrYhXs4BFthYCgUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y9vxpw8w; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iDLg0h8U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77972C4CEEE;
-	Wed, 11 Jun 2025 08:17:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749629874;
-	bh=2LzeeufXjEPMtFWp+PnoigkYYRqq/JI4VyA6/ujyTj0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iDLg0h8Upcqqqw/ysGdmxXHLCc0L5NQyV0Xw+jmN0z9GfWSdHXhl4EOFBIXG1NFeV
-	 MJ+c99W8I7t4f3nn4VhnvAcj2oGxtVzzL+fTzUCzUdu30IFL6hUCctm2aTQQ2iSCmq
-	 9fLJbqj3WeCOI4SX6Y3tHd0y593XBu1rYsiPkLOm6AUWAYUwA6btrDTlCdhs0UiFj+
-	 DYkUaR/utGAjzI/sh1mf2fV/Y4VvBa1XvNYqel5h8D2zsFDbZNtBZfmVYTYPgvadWa
-	 byurqs6M68AFiuA2FcnxHi1B7CHNMouwG+fkMUHv/clC9WkOOo462zz+GRazc4x31z
-	 fqzLxVWUbpDHA==
-Message-ID: <c9688c18-515d-4e5b-82d9-fcdcb468c634@kernel.org>
-Date: Wed, 11 Jun 2025 10:17:48 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y9vxpw8w"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6fafb6899c2so6786776d6.0;
+        Wed, 11 Jun 2025 01:19:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749629963; x=1750234763; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vfmr4VZFRC3blHBv6tjDEsekB2JKza+TxJ7wwghY+Nc=;
+        b=Y9vxpw8wEK+NZCrHPb+aU/nkyCBge3GJu0JYA8Sasc0MLMpTP3fG74BKzJgLWP07Vm
+         +0ZsOkv3iivs1pU9R/SfhOzvq9G6TVqhl1eEEA3EynMGjPSwWsp7PDNdJViHi8qnyrPD
+         spptYMPkPzLD71rzAwlWKjJIhzvuVoHygD2VTo72ba3cFDA9dhtQlLVNIr3KBINkwLXD
+         vmbcn1O06m9XA26Ee/TgME9i/6mQRunBuU7Lgppyvu3CuoSONGw1l/G27qlcZWGzDgYl
+         MWDaDoZCknaHHqzy6kzmEQjGruKSEWhUhvbaSWlcPKcsiNCdxnzZj4UtGMguVX1rWkAd
+         BtGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749629963; x=1750234763;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vfmr4VZFRC3blHBv6tjDEsekB2JKza+TxJ7wwghY+Nc=;
+        b=KDJhM+myTbLA743jPDzKy7lPCRzApVD4Bp4XKJdoayZjs2MyhERXwbqGS4Y4k0noYS
+         HvAdAc2+UJusKFs5MjtRzWPcT9TWoIxKDuZAzXNwDfnawOi4/lGXNp8xBk1pS1HZfRwP
+         xSYB/tjRRik4Bwo8P/SMn4kKQUZJFUJG+578Z4+QfTWna0+aoh8SZnSJvmiJlqBAaL0x
+         gNMbz3g6obyk4wUfCGP/hiX2/Eif1t1ptFP3SBvRWul/dWzEpMYM0RVGzb5/Qibi9EOy
+         2aQ7ZRTBmtBepHg15j7uptFFLkl3DFaHleyZ9EL7Z5KQhSi05OASk1JbceXDwY4PhU4N
+         EkXA==
+X-Forwarded-Encrypted: i=1; AJvYcCUCOrELppTGq7WFMCeDs5JPSIGUce++993lvK2VHJxoQG5I7wlRrvgi3M98y+AzGp0L0fqOxxfjIT/g@vger.kernel.org, AJvYcCVZIYFCwoU6OaJAoRWbm0jT7OCNVjxi/3+DZEokCbt6L41nB/s+ncTGXOWVnoQgfrADmrEehihnEskdRBLP@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxq5/L6t8YyieL3pcGyfY7AQvh+nned1egQXyBYDh5Iu0gEq1SD
+	1KWOXzf+4L2DzsaSt311zJkPTPC7VnXtBvl+R9P9HyjAdfpRR1rzy74O
+X-Gm-Gg: ASbGnctWOUkZoBDeMYnF6s0ehjYTjJimyX1k+BBDdB4O2ro7tkUFf9pNIMYxxU70CvF
+	LdQPrv0YXvQhGT6ED2Wn6sTxBHGvAUE0B2uF1jjBh+oLFedqApJRBokb/9Q5lt6Wn+KHAN2LUKa
+	Wr1S84VKFng0Px5vHd4rs29XFTm59pnWUchb1cyPk7BnpNnZPQiFlu/z+7Oy/vNH3x6J9ndg9Dg
+	rTc72PQNv3ajVvO/OPNxilYCKGC6y2l6L1XFkWyp+R7CVJqtWOSYhCjdD49ChJCe6TQwL2AT+TU
+	8AycFEUi/h0BEdBt9aXI7LPIpv0ut1JGOR7W0g==
+X-Google-Smtp-Source: AGHT+IHLmdiPK1/hfZ3hYVAS6e/Qa18yyzLJzaoN2F5VMxeq5n4N2SYxR2jD2YHscybgUqgzRxu9HA==
+X-Received: by 2002:a05:6214:226a:b0:6fa:a65a:224d with SMTP id 6a1803df08f44-6fb2c37a204mr38375446d6.4.1749629962729;
+        Wed, 11 Jun 2025 01:19:22 -0700 (PDT)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6fb09b366easm78768726d6.114.2025.06.11.01.19.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 01:19:22 -0700 (PDT)
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Inochi Amaoto <inochiama@gmail.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>
+Cc: linux-phy@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	sophgo@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	Yixun Lan <dlan@gentoo.org>,
+	Longbin Li <looong.bin@gmail.com>
+Subject: [PATCH v4 0/2] riscv: sophgo: add USB phy support for CV18XX series
+Date: Wed, 11 Jun 2025 16:18:01 +0800
+Message-ID: <20250611081804.1196397-1-inochiama@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/4] dt-bindings: display: panel: Add Himax HX83112B
-To: Luca Weiss <luca@lucaweiss.eu>, ~postmarketos/upstreaming@lists.sr.ht,
- phone-devel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>,
- Jessica Zhang <quic_jesszhan@quicinc.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-References: <20250610-fp3-display-v3-0-e7e7561812e1@lucaweiss.eu>
- <20250610-fp3-display-v3-2-e7e7561812e1@lucaweiss.eu>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250610-fp3-display-v3-2-e7e7561812e1@lucaweiss.eu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 10/06/2025 21:09, Luca Weiss wrote:
-> +  iovcc-supply:
-> +    description: I/O voltage rail
-> +
-> +  vsn-supply:
-> +    description: Positive source voltage rail
-> +
-> +  vsp-supply:
-> +    description: Negative source voltage rail
-> +
-> +  port: true
+Add USB PHY support for CV18XX/SG200X series
 
-if you are going to resend, then drop port here.
+Changed from v3:
+1. patch 1: remove vbus-gpio, switch-gpio and dr_mode properties.
+2. patch 2: remove all logic related to the bindings change.
+3. remove the syscon header file.
 
+Changed from v2:
+1. add item description for switch gpios.
 
+Changed from v1:
+1. remove dr_mode property and use default mode instead.
+2. improve the description of `vbus_det-gpios` and `sophgo,switch-gpios`
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Inochi Amaoto (2):
+  dt-bindings: phy: Add Sophgo CV1800 USB phy
+  phy: sophgo: Add USB 2.0 PHY driver for Sophgo CV18XX/SG200X
 
-Best regards,
-Krzysztof
+ .../bindings/phy/sophgo,cv1800b-usb2-phy.yaml |  54 +++++
+ drivers/phy/Kconfig                           |   1 +
+ drivers/phy/Makefile                          |   1 +
+ drivers/phy/sophgo/Kconfig                    |  19 ++
+ drivers/phy/sophgo/Makefile                   |   2 +
+ drivers/phy/sophgo/phy-cv1800-usb2.c          | 222 ++++++++++++++++++
+ 6 files changed, 299 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/sophgo,cv1800b-usb2-phy.yaml
+ create mode 100644 drivers/phy/sophgo/Kconfig
+ create mode 100644 drivers/phy/sophgo/Makefile
+ create mode 100644 drivers/phy/sophgo/phy-cv1800-usb2.c
+
+--
+2.49.0
+
