@@ -1,62 +1,62 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C042724678B;
-	Wed, 11 Jun 2025 07:54:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55E4C248F60;
+	Wed, 11 Jun 2025 07:54:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749628487; cv=none; b=KVldjOh0q1kHsHBOtVRi28yKeWRQO4ahJUIZRzcxvLYOumy+sG21QE1WJNNcb+Jm/cYxA6W6oB3hy3ZYKn4igFaKTCDgNHUWKKk2T2VcyjyDU9TwOZO6nqZjC1v59mTruAd45FNt9/T9WU4Bfw61F4BpRAzYNEwIfbVa2Q61nYA=
+	t=1749628489; cv=none; b=allfd6xcH6wyTthR/sbvpyrc40OMF5XF8GMJsoiNFWadbb7oAU+MJwaQ38zR6wwaN6NlazMT/VITaSZfa2G/Z7WI3cXJ0HiwhXVVq1uPjb3LP3T4MEPQkckl+5f54r3MoUpjsgu7oWhEgKhdNLLBRL0JRYiU1n1I13EtL1tPNdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749628487; c=relaxed/simple;
-	bh=VluJ5mmYbGngSNNUREfnzarLKZaoN59HUH1rSdoa7gk=;
+	s=arc-20240116; t=1749628489; c=relaxed/simple;
+	bh=6W7L6mLae0Gwk7i/q8VTDrfQXggHDNqoAV/kISEHYUc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=l9X+3lO8aLmkjl/LAzWhMlRGxSCCr5ORzxeM6WXFSV4A386dExz0dH2/QjjiGluc5Hxewh58riZLUApYdlEgcOFdHYg/91aMSI6gk0YJJz06hW0yGpET+++Eg9Y+ASd2i29uaj9GSsoN3AXaIx0PngOlwvJKI8+am70EjMUU4v8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lGem+Kdi; arc=none smtp.client-ip=209.85.222.175
+	 MIME-Version; b=BSamdQjgqlsDKy3s44Ii2jx1aIniSAhEdv1Tv6DxfOfUpPmIsS7LVVltULMgBO016JFCYQOB+YAfa9wYd/FQomlX6kvApk5QyypBnb6/NCjRrK+UxG4aA/CK5KoaIJPVlEZPr53Y7odzoHdD078sma30SFQeMiBMOD1BnWvkq7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZF3340iL; arc=none smtp.client-ip=209.85.210.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lGem+Kdi"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7d0a0bcd3f3so69126485a.1;
-        Wed, 11 Jun 2025 00:54:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZF3340iL"
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-735a9e65471so3838761a34.1;
+        Wed, 11 Jun 2025 00:54:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749628485; x=1750233285; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749628487; x=1750233287; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YhFbypeFAxQ8f5bzL+8ikB/KiObjW6nRA+DZBhJ2u9A=;
-        b=lGem+KditxvbZh8417eDN17ATiT4mJpqGdi5M6muVhcraJ+CUM5rr8a2cLyIjcNCy2
-         HP2QOukYc/FQG0SxY8akbteeLlMmZNPeUagS0D1yRjPdwtoCDzRIVRM8TLg5/lFql4b4
-         EDRszTWPTydavWtcTSWEdY8un6+/J07STF5wcsQpzf1difChD3iekdAvPItR9+R04GyG
-         lJYrELI8jY+hkxFM3jnTTQjjiXYqesWDXMqA7tJP7KHHRugnq+7c3nP8x5ll+61V8uH7
-         P6WlqSRJFEQbveI63RXRO5h4XbXUas1e1ISZP4kaBF7NiDnZsqlbLyN5/rqD4XuO0VCk
-         YCvQ==
+        bh=hnz/0tuwhYz4DMu7YFaY4+MBrOn4ASwg3VdpZXlOjs0=;
+        b=ZF3340iLobIaiQQMLYfpKc5fbLjnW+1dxbS/6c0aOIfcAqi6s5gPydB5dVtbAyFGCK
+         0CYp6jONcHpqxwTzbUXBtb1ivRL3U98b+wCaOQevu5lFEaInNevBfsKcejNrscSd16+L
+         abs/IxMxvQrcHcUIJBu+dSdup8vp8mL38s5xQ+8db5nQMe+BcKiluOYCZs14Jou+op+k
+         WM0a6dFGK2IAlqJ2a5HE+kOyUFDs2+xyecdPi5DmAd4+bzf7YoX99XtfhE+fA20sNtN8
+         vi7Ta1eYbo2JnLj2SdZjlAVbWndkfFQrsluWBj6+SOSStv7yZ0UJQ5VmO13dNcpPkDuR
+         5n3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749628485; x=1750233285;
+        d=1e100.net; s=20230601; t=1749628487; x=1750233287;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YhFbypeFAxQ8f5bzL+8ikB/KiObjW6nRA+DZBhJ2u9A=;
-        b=BGLTMNXmvvsUY6GJh6S4e4vlAx08UQngvC49R8Ut2lg0HDWWuY7j56BggZEhshjOaV
-         F2f50KXQqgsFJ8vVsebXCN6H/woGSkunl1JKv4KvzuTcdJ+2nuSKhLT3e+MNwitbUTI0
-         XfPx+vcByt9PrjXEga5bhqkyDJ7j7Vssmcz4ndBYiZcxJCmhj7gPm5XYNlOE2LDjTKy3
-         QdlUB+gwNJGL5bh2+48//cWffXYXwSRlfyCl/qpZB6WQ9T4gb/WqfxagsQHcyhSicjhm
-         T4JP4ZeEE395XJ+Vz1zdvG0VzjkRael2EPpkSr/DvlS8ZpWycqsMzJqqB8+4WMkuzDw2
-         jX7w==
-X-Forwarded-Encrypted: i=1; AJvYcCU0G8Ieyt8sNDkQYAhXc3XZPtxaHJwDx694ZXIdAaD85fkFPMXzckJkVsfBB/RCayvyi66b8/PrOAoR@vger.kernel.org, AJvYcCUPO4nOCrbMWMpwvPz9uH5mPkAeCLrS76y2bAtBRZ+noerui2avaZDVL1VYF01z+QXXe++cjzofPG4E@vger.kernel.org, AJvYcCXi/OV4V0jmmfBdUctcbt5lKEkcvf/bmners9fDfXiwjT/dZt8tgHjx3+o2M1SvAZoT0XdJ9A3/bh3Lve7l@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEgKtaDlJahiTcCHK1WVmJZfDw6UtFrdesFLs80/JB9N5yvYHz
-	dh/kQG0FFk8SyTWgLu/uiCfLqYc8n6MP8DFtPuAVX1TXGkUmAwWI2yGz
-X-Gm-Gg: ASbGncuuB+0AraKbT6a2fj59muFmV9IsMlsW0eK5cZMxKyzxFfu9pZlwEWIADCqu2Qb
-	aku8LZQxmzQfhbt3dfTVI2eZ8hGRdbQN944r7Rplnlze3q/RTcBCxz6Aj9Tou+/6MuHiNsN3882
-	quva8hFvDzdI2TRYzV13Gi91CyOa/wzL6Ks5t9Oi8lEIptsmZBo4lVXMnEZMHWSFzY+38qGkLeS
-	RQ1HduUnDF50MK346+RfI6UmBcfloJbiOrQz/Z6NyLoYLhTL4PWx8S9ulysKqKWTF3nxGfsgyrm
-	Zu6z3Ghjvyj9JuiIc7RABZ6SITUA3dFjV9nyOA==
-X-Google-Smtp-Source: AGHT+IG+bZxDKiJkiUxLzUSj6ZSrcG1zMQKfyU+XGW5MIGqNr/oq3BfFTD+gZoUkdiX7PQSX/dupCg==
-X-Received: by 2002:a05:620a:460e:b0:7d3:9e56:6345 with SMTP id af79cd13be357-7d3a88088c9mr358828585a.10.1749628484647;
-        Wed, 11 Jun 2025 00:54:44 -0700 (PDT)
+        bh=hnz/0tuwhYz4DMu7YFaY4+MBrOn4ASwg3VdpZXlOjs0=;
+        b=LqbcGVPu9tRKZDhFh9su1ZOrYv0B4HYOlaTY9zohtk4sJ84ma1O62N4/wiU/+jKuYH
+         Xw1NvTUkR+k0Td5nylLbnGuEqcXetiJBWVmlLDZgUqyr+1XEoEbPZjOo/cgPJytBMb8K
+         xEl6Cfa+QtsXqqMVjBvbj2cd+d6IpHed6Tw3q/w1ORMV2xgpwMLLTMQXI3g0fDxXFh+S
+         ARkXIWHFMh972/9egZT3uYhovKJoDAr4tAPfdkgdrZA6KKJdnarOQgStzNDcCuZ/4d7U
+         qpcBQYog60JmzoKBrsmhIxaKKSZpk1+Zv/6mGeRPN9/rgn8v2vrLts5O7fPQW+KFA7IE
+         U0wA==
+X-Forwarded-Encrypted: i=1; AJvYcCU65kTtKafD13e4Da2vdK6yHYPaYtMn6UodQTJAtSXkWACoEWMWzQB6CFrWhOrmGfNoO2kl7KznIoNO@vger.kernel.org, AJvYcCU6Sougu2tZXGvlUCwDOZuYIdZuzXu5LLw4yaHiOP/vxE+s/DyybbIyMkggnujZzHjWzHx3aLte5kZvwh9i@vger.kernel.org, AJvYcCW2gp/xkGBzE72NaSX4VxsmrSQYob2GN6aULZCpS+xdukZlmMjiFJk/wRepr+TbM8GO5DmrwxEsMN54@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+CRoZ5TuxdU0BXSLlRXlnvamcRBSTDfTRPuB1nt9S79P06tBg
+	OHKtGR75TgX4QmBJKblFswDP9h6Rd6iIamo/eeaubN8DjmWISYNikZ5OkQpvjsmp
+X-Gm-Gg: ASbGnctUMOk/lOGoeafGMXXHssXPzc2U+/zfeUsK/3ceS/PQjKZ/4+0piAmoVNxZYk0
+	NWRaKWcGB2bny4jtsWd85ICcusiohhx6FOpQC4KTjYihXSVCaGmSLXOz2QEk5zd18cHBycGNEDB
+	3OrABmNlgvQM5LTCdil1h7keIBmHX6rAuI7siS5n5h404Tn4npxn8goE1/FC16reXKMnxpa9W3m
+	uUuC4Gegdvlvrkkp3lWKelnOf8QikL/wZyJ30bBgPih8d7crIBZJmWwpmieNzBpZq3tjRfgLkso
+	0pSmbEHQEiYkNDLc4ojaZjrZ3AgXkeoWM5dBCrFZ9RHUs8kT
+X-Google-Smtp-Source: AGHT+IHeItzokrKWw9l9oyv6bnHcsz0dOO4Q14MZQ9wo4Ra1X7rEUiC3C9xPLLzARwfKUZ6RpDZSIw==
+X-Received: by 2002:a05:620a:288d:b0:7c5:af73:4f72 with SMTP id af79cd13be357-7d3a89330ebmr320142685a.42.1749628475059;
+        Wed, 11 Jun 2025 00:54:35 -0700 (PDT)
 Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7d25a60a1dbsm822918885a.56.2025.06.11.00.54.43
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6fb09b1d1d0sm79736646d6.77.2025.06.11.00.54.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 00:54:44 -0700 (PDT)
+        Wed, 11 Jun 2025 00:54:34 -0700 (PDT)
 From: Inochi Amaoto <inochiama@gmail.com>
 To: Philipp Zabel <p.zabel@pengutronix.de>,
 	Rob Herring <robh@kernel.org>,
@@ -81,9 +81,9 @@ Cc: Junhui Liu <junhui.liu@pigmoral.tech>,
 	dmaengine@vger.kernel.org,
 	Yixun Lan <dlan@gentoo.org>,
 	Longbin Li <looong.bin@gmail.com>
-Subject: [PATCH v3 4/4] riscv: dts: sophgo: add reset configuration for Sophgo CV1800 series SoC
-Date: Wed, 11 Jun 2025 15:53:18 +0800
-Message-ID: <20250611075321.1160973-5-inochiama@gmail.com>
+Subject: [PATCH v3 1/4] dt-bindings: reset: sophgo: Add CV1800B support
+Date: Wed, 11 Jun 2025 15:53:15 +0800
+Message-ID: <20250611075321.1160973-2-inochiama@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250611075321.1160973-1-inochiama@gmail.com>
 References: <20250611075321.1160973-1-inochiama@gmail.com>
@@ -95,162 +95,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add known reset configuration for existed device.
+Add bindings for the reset generator on the SOPHGO CV1800B
+RISC-V SoC.
 
 Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-Reviewed-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- arch/riscv/boot/dts/sophgo/cv180x.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/riscv/boot/dts/sophgo/cv180x.dtsi b/arch/riscv/boot/dts/sophgo/cv180x.dtsi
-index 4c3d16764131..e91bb512b099 100644
---- a/arch/riscv/boot/dts/sophgo/cv180x.dtsi
-+++ b/arch/riscv/boot/dts/sophgo/cv180x.dtsi
-@@ -36,6 +36,7 @@ gpio0: gpio@3020000 {
- 			reg = <0x3020000 0x1000>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-+			resets = <&rst RST_GPIO0>;
+diff --git a/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml b/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml
+index 1d1b84575960..bd8dfa998939 100644
+--- a/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml
++++ b/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml
+@@ -17,6 +17,7 @@ properties:
+               - sophgo,sg2044-reset
+           - const: sophgo,sg2042-reset
+       - const: sophgo,sg2042-reset
++      - const: sophgo,cv1800b-reset
  
- 			porta: gpio-controller@0 {
- 				compatible = "snps,dw-apb-gpio-port";
-@@ -54,6 +55,7 @@ gpio1: gpio@3021000 {
- 			reg = <0x3021000 0x1000>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-+			resets = <&rst RST_GPIO1>;
- 
- 			portb: gpio-controller@0 {
- 				compatible = "snps,dw-apb-gpio-port";
-@@ -72,6 +74,7 @@ gpio2: gpio@3022000 {
- 			reg = <0x3022000 0x1000>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-+			resets = <&rst RST_GPIO2>;
- 
- 			portc: gpio-controller@0 {
- 				compatible = "snps,dw-apb-gpio-port";
-@@ -90,6 +93,7 @@ gpio3: gpio@3023000 {
- 			reg = <0x3023000 0x1000>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-+			resets = <&rst RST_GPIO3>;
- 
- 			portd: gpio-controller@0 {
- 				compatible = "snps,dw-apb-gpio-port";
-@@ -133,6 +137,7 @@ i2c0: i2c@4000000 {
- 			clocks = <&clk CLK_I2C>, <&clk CLK_APB_I2C0>;
- 			clock-names = "ref", "pclk";
- 			interrupts = <SOC_PERIPHERAL_IRQ(33) IRQ_TYPE_LEVEL_HIGH>;
-+			resets = <&rst RST_I2C0>;
- 			status = "disabled";
- 		};
- 
-@@ -144,6 +149,7 @@ i2c1: i2c@4010000 {
- 			clocks = <&clk CLK_I2C>, <&clk CLK_APB_I2C1>;
- 			clock-names = "ref", "pclk";
- 			interrupts = <SOC_PERIPHERAL_IRQ(34) IRQ_TYPE_LEVEL_HIGH>;
-+			resets = <&rst RST_I2C1>;
- 			status = "disabled";
- 		};
- 
-@@ -155,6 +161,7 @@ i2c2: i2c@4020000 {
- 			clocks = <&clk CLK_I2C>, <&clk CLK_APB_I2C2>;
- 			clock-names = "ref", "pclk";
- 			interrupts = <SOC_PERIPHERAL_IRQ(35) IRQ_TYPE_LEVEL_HIGH>;
-+			resets = <&rst RST_I2C2>;
- 			status = "disabled";
- 		};
- 
-@@ -166,6 +173,7 @@ i2c3: i2c@4030000 {
- 			clocks = <&clk CLK_I2C>, <&clk CLK_APB_I2C3>;
- 			clock-names = "ref", "pclk";
- 			interrupts = <SOC_PERIPHERAL_IRQ(36) IRQ_TYPE_LEVEL_HIGH>;
-+			resets = <&rst RST_I2C3>;
- 			status = "disabled";
- 		};
- 
-@@ -177,6 +185,7 @@ i2c4: i2c@4040000 {
- 			clocks = <&clk CLK_I2C>, <&clk CLK_APB_I2C4>;
- 			clock-names = "ref", "pclk";
- 			interrupts = <SOC_PERIPHERAL_IRQ(37) IRQ_TYPE_LEVEL_HIGH>;
-+			resets = <&rst RST_I2C4>;
- 			status = "disabled";
- 		};
- 
-@@ -188,6 +197,7 @@ uart0: serial@4140000 {
- 			clock-names = "baudclk", "apb_pclk";
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
-+			resets = <&rst RST_UART0>;
- 			status = "disabled";
- 		};
- 
-@@ -199,6 +209,7 @@ uart1: serial@4150000 {
- 			clock-names = "baudclk", "apb_pclk";
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
-+			resets = <&rst RST_UART1>;
- 			status = "disabled";
- 		};
- 
-@@ -210,6 +221,7 @@ uart2: serial@4160000 {
- 			clock-names = "baudclk", "apb_pclk";
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
-+			resets = <&rst RST_UART2>;
- 			status = "disabled";
- 		};
- 
-@@ -221,6 +233,7 @@ uart3: serial@4170000 {
- 			clock-names = "baudclk", "apb_pclk";
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
-+			resets = <&rst RST_UART3>;
- 			status = "disabled";
- 		};
- 
-@@ -232,6 +245,7 @@ spi0: spi@4180000 {
- 			clocks = <&clk CLK_SPI>, <&clk CLK_APB_SPI0>;
- 			clock-names = "ssi_clk", "pclk";
- 			interrupts = <SOC_PERIPHERAL_IRQ(38) IRQ_TYPE_LEVEL_HIGH>;
-+			resets = <&rst RST_SPI0>;
- 			status = "disabled";
- 		};
- 
-@@ -243,6 +257,7 @@ spi1: spi@4190000 {
- 			clocks = <&clk CLK_SPI>, <&clk CLK_APB_SPI1>;
- 			clock-names = "ssi_clk", "pclk";
- 			interrupts = <SOC_PERIPHERAL_IRQ(39) IRQ_TYPE_LEVEL_HIGH>;
-+			resets = <&rst RST_SPI1>;
- 			status = "disabled";
- 		};
- 
-@@ -254,6 +269,7 @@ spi2: spi@41a0000 {
- 			clocks = <&clk CLK_SPI>, <&clk CLK_APB_SPI2>;
- 			clock-names = "ssi_clk", "pclk";
- 			interrupts = <SOC_PERIPHERAL_IRQ(40) IRQ_TYPE_LEVEL_HIGH>;
-+			resets = <&rst RST_SPI2>;
- 			status = "disabled";
- 		};
- 
-@@ -265,6 +281,7 @@ spi3: spi@41b0000 {
- 			clocks = <&clk CLK_SPI>, <&clk CLK_APB_SPI3>;
- 			clock-names = "ssi_clk", "pclk";
- 			interrupts = <SOC_PERIPHERAL_IRQ(41) IRQ_TYPE_LEVEL_HIGH>;
-+			resets = <&rst RST_SPI3>;
- 			status = "disabled";
- 		};
- 
-@@ -276,6 +293,7 @@ uart4: serial@41c0000 {
- 			clock-names = "baudclk", "apb_pclk";
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
-+			resets = <&rst RST_UART4>;
- 			status = "disabled";
- 		};
- 
+   reg:
+     maxItems: 1
 -- 
 2.49.0
 
