@@ -1,162 +1,139 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A9A267B65;
-	Wed, 11 Jun 2025 10:29:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE6F8268C55
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 10:29:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749637794; cv=none; b=Uyt82cjYZav4BoPWpc1cvyVmSZPDxLo0/3RGxW2RBUy+zuCUk+YMIPO8f+TanQPw/YaYnQI6ZdZx/iGLL3FID3m448Ge4n7HOt6STllR5rLtP1CX1EesDH+TyWzvnoLhqyjTUlxFlkokE5Cv5i+XYsblot3gXbDvDRjiCMiYRHQ=
+	t=1749637797; cv=none; b=nHnd+qRiOTjofUAlkrofOxhSZ8fycnFPtyApHQTIhxQfCjrGi5uNoqPRmhq8i5PwlN/Zo6OeT0HEzbDl6SGZD7a6EfJhrMZ7q4T1M+LXSodlY22W2HZJmeFQDDPqVFDHq7iXUH5xqExfI7XK+Jv41IswziXwV+wlXCjAk+W1H7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749637794; c=relaxed/simple;
-	bh=2BoW4pFaIctzE8BFvVPtU04cbrv4X3tZKXfOo1/sW/A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Tk5/L0RIYom1zuGltXpUAkV5SX/lSy94H9aZt3zvjgm9CkC4EYjrQIeea5uMcfFMvFam847oGdqi1ARbjzwQhYBbt0AFaNXPFzdTYmb/D+pJMtU55QUh38zYGQVaIb32xRhtlpCfZxJgcXAqQlj1UpQhg8M5pwOb64ueNi2lAdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4bHMNR0zGNz9tKs;
-	Wed, 11 Jun 2025 12:29:43 +0200 (CEST)
-From: Remo Senekowitsch <remo@buenzli.dev>
-To: Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Dirk Behme <dirk.behme@de.bosch.com>,
-	Remo Senekowitsch <remo@buenzli.dev>
-Cc: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: [PATCH v8 4/9] rust: device: Enable printing fwnode name and path
-Date: Wed, 11 Jun 2025 12:29:03 +0200
-Message-ID: <20250611102908.212514-5-remo@buenzli.dev>
-In-Reply-To: <20250611102908.212514-1-remo@buenzli.dev>
-References: <20250611102908.212514-1-remo@buenzli.dev>
+	s=arc-20240116; t=1749637797; c=relaxed/simple;
+	bh=YlHXxMugl9yjOiNKeFUjiSUYbzIfe6d6gCIYXllOlIE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BtSlYA+K0e2ttQm6q6VxrCH/l7/fIQeCaXH3TzIFqt+t2mF+8pj6RV2lsXMP3fiBzjEexJRPDphRpQ3ql7t3bfIDg0lUWdThW/7wzKxrORQmqXyqfIevmHjP1/gYqWKvRqlzch+PDERdZC233nZYAxjPy6hyZphM1L1bn2/xjOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fRSPguXx; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fRSPguXx"
+Message-ID: <cdcd54ff-ff67-4ad8-8aa7-baa711928242@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749637792;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vsD0r2ubczrvxe7E6Hz3oR1VDIOnDQXAzS4kwGFiDY0=;
+	b=fRSPguXxdP+bxFKXzw8IXPvBDS7PNhulrJ5AKNaVBxE/HU5Sy8+bASY2d9tYSO8RYqBZ9Y
+	OpqAXd/4ejqf/HgKyaGjLGSfkBizkMG/JrEgEFI7RHEL4hePKPX68ihcfBIQpWBtJrwZle
+	LX45PMC+xyaBy+CAu+fxUDRdbDXZk9s=
+Date: Wed, 11 Jun 2025 11:29:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4bHMNR0zGNz9tKs
+Subject: Re: [PATCH net-next v8 06/11] net: ti: prueth: Adds HW timestamping
+ support for PTP using PRU-ICSS IEP module
+To: Parvathi Pudi <parvathi@couthit.com>, danishanwar@ti.com,
+ rogerq@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, ssantosh@kernel.org,
+ richardcochran@gmail.com, s.hauer@pengutronix.de, m-karicheri2@ti.com,
+ glaroque@baylibre.com, afd@ti.com, saikrishnag@marvell.com,
+ m-malladi@ti.com, jacob.e.keller@intel.com, diogo.ivo@siemens.com,
+ javier.carrasco.cruz@gmail.com, horms@kernel.org, s-anna@ti.com,
+ basharath@couthit.com
+Cc: linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pratheesh@ti.com,
+ prajith@ti.com, vigneshr@ti.com, praneeth@ti.com, srk@ti.com, rogerq@ti.com,
+ krishna@couthit.com, pmohan@couthit.com, mohan@couthit.com
+References: <20250610105721.3063503-1-parvathi@couthit.com>
+ <20250610123245.3063659-7-parvathi@couthit.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <20250610123245.3063659-7-parvathi@couthit.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Add two new public methods `display_name` and `display_path` to
-`FwNode`. They can be used by driver authors for logging purposes. In
-addition, they will be used by core property abstractions for automatic
-logging, for example when a driver attempts to read a required but
-missing property.
+On 10/06/2025 13:32, Parvathi Pudi wrote:
+> From: Roger Quadros <rogerq@ti.com>
+> 
+> PRU-ICSS IEP module, which is capable of timestamping RX and
+> TX packets at HW level, is used for time synchronization by PTP4L.
+> 
+> This change includes interaction between firmware and user space
+> application (ptp4l) with required packet timestamps. The driver
+> initializes the PRU firmware with appropriate mode and configuration
+> flags. Firmware updates local registers with the flags set by driver
+> and uses for further operation. RX SOF timestamp comes along with
+> packet and firmware will rise interrupt with TX SOF timestamp after
+> pushing the packet on to the wire.
+> 
+> IEP driver is available in upstream and we are reusing for hardware
+> configuration for ICSSM as well. On top of that we have extended it
+> with the changes for AM57xx SoC.
+> 
+> Extended ethtool for reading HW timestamping capability of the PRU
+> interfaces.
+> 
+> Currently ordinary clock (OC) configuration has been validated with
+> Linux ptp4l.
+> 
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
+> Signed-off-by: Basharath Hussain Khaja <basharath@couthit.com>
+> Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
+> ---
+>   drivers/net/ethernet/ti/icssg/icss_iep.c      |  42 ++
+>   drivers/net/ethernet/ti/icssm/icssm_ethtool.c |  23 +
+>   drivers/net/ethernet/ti/icssm/icssm_prueth.c  | 443 +++++++++++++++++-
+>   drivers/net/ethernet/ti/icssm/icssm_prueth.h  |  11 +
+>   .../net/ethernet/ti/icssm/icssm_prueth_ptp.h  |  85 ++++
+>   5 files changed, 602 insertions(+), 2 deletions(-)
+>   create mode 100644 drivers/net/ethernet/ti/icssm/icssm_prueth_ptp.h
 
-Tested-by: Dirk Behme <dirk.behme@de.bosch.com>
-Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
----
- rust/kernel/device/property.rs | 76 ++++++++++++++++++++++++++++++++++
- 1 file changed, 76 insertions(+)
+[...]
 
-diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/property.rs
-index 50c61aa056e6b..4cac335bad78c 100644
---- a/rust/kernel/device/property.rs
-+++ b/rust/kernel/device/property.rs
-@@ -57,6 +57,32 @@ pub(crate) fn as_raw(&self) -> *mut bindings::fwnode_handle {
-         self.0.get()
-     }
- 
-+    /// Returns an object that implements [`Display`](core::fmt::Display) for
-+    /// printing the name of a node.
-+    ///
-+    /// This is an alternative to the default `Display` implementation, which
-+    /// prints the full path.
-+    pub fn display_name(&self) -> impl core::fmt::Display + '_ {
-+        struct FwNodeDisplayName<'a>(&'a FwNode);
-+
-+        impl core::fmt::Display for FwNodeDisplayName<'_> {
-+            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-+                // SAFETY: `self` is valid by its type invariant.
-+                let name = unsafe { bindings::fwnode_get_name(self.0.as_raw()) };
-+                if name.is_null() {
-+                    return Ok(());
-+                }
-+                // SAFETY:
-+                // - `fwnode_get_name` returns null or a valid C string.
-+                // - `name` was checked to be non-null.
-+                let name = unsafe { CStr::from_char_ptr(name) };
-+                write!(f, "{name}")
-+            }
-+        }
-+
-+        FwNodeDisplayName(self)
-+    }
-+
-     /// Checks if property is present or not.
-     pub fn property_present(&self, name: &CStr) -> bool {
-         // SAFETY: By the invariant of `CStr`, `name` is null-terminated.
-@@ -78,3 +104,53 @@ unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
-         unsafe { bindings::fwnode_handle_put(obj.cast().as_ptr()) }
-     }
- }
-+
-+enum Node<'a> {
-+    Borrowed(&'a FwNode),
-+    Owned(ARef<FwNode>),
-+}
-+
-+impl core::fmt::Display for FwNode {
-+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-+        // The logic here is the same as the one in lib/vsprintf.c
-+        // (fwnode_full_name_string).
-+
-+        // SAFETY: `self.as_raw()` is valid by its type invariant.
-+        let num_parents = unsafe { bindings::fwnode_count_parents(self.as_raw()) };
-+
-+        for depth in (0..=num_parents).rev() {
-+            let fwnode = if depth == 0 {
-+                Node::Borrowed(self)
-+            } else {
-+                // SAFETY: `self.as_raw()` is valid.
-+                let ptr = unsafe { bindings::fwnode_get_nth_parent(self.as_raw(), depth) };
-+                // SAFETY:
-+                // - The depth passed to `fwnode_get_nth_parent` is
-+                //   within the valid range, so the returned pointer is
-+                //   not null.
-+                // - The reference count was incremented by
-+                //   `fwnode_get_nth_parent`.
-+                // - That increment is relinquished to
-+                //   `FwNode::from_raw`.
-+                Node::Owned(unsafe { FwNode::from_raw(ptr) })
-+            };
-+            // Take a reference to the owned or borrowed `FwNode`.
-+            let fwnode: &FwNode = match &fwnode {
-+                Node::Borrowed(f) => f,
-+                Node::Owned(f) => f,
-+            };
-+
-+            // SAFETY: `fwnode` is valid by its type invariant.
-+            let prefix = unsafe { bindings::fwnode_get_name_prefix(fwnode.as_raw()) };
-+            if !prefix.is_null() {
-+                // SAFETY: `fwnode_get_name_prefix` returns null or a
-+                // valid C string.
-+                let prefix = unsafe { CStr::from_char_ptr(prefix) };
-+                write!(f, "{prefix}")?;
-+            }
-+            write!(f, "{}", fwnode.display_name())?;
-+        }
-+
-+        Ok(())
-+    }
-+}
--- 
-2.49.0
+> @@ -732,9 +949,22 @@ int icssm_emac_rx_packet(struct prueth_emac *emac, u16 *bd_rd_ptr,
+>   		src_addr += actual_pkt_len;
+>   	}
+>   
+> +	if (pkt_info->timestamp) {
+> +		src_addr = (void *)PTR_ALIGN((uintptr_t)src_addr,
+> +					   ICSS_BLOCK_SIZE);
+> +		dst_addr = &ts;
+> +		memcpy(dst_addr, src_addr, sizeof(ts));
+> +	}
+> +
+>   	if (!pkt_info->sv_frame) {
+>   		skb_put(skb, actual_pkt_len);
+>   
+> +		if (icssm_prueth_ptp_rx_ts_is_enabled(emac) &&
+> +		    pkt_info->timestamp) {
+> +			ssh = skb_hwtstamps(skb);
+> +			memset(ssh, 0, sizeof(*ssh));
+> +			ssh->hwtstamp = ns_to_ktime(ts);
+> +		}
+>   		/* send packet up the stack */
+>   		skb->protocol = eth_type_trans(skb, ndev);
+>   		netif_receive_skb(skb);
 
+Could you please explain why do you need to copy timestamp to a
+temporary variable if you won't use it in some cases? I believe these
+2 blocks should be placed under the last if condition and simplified a
+bit, like
+
++		if (icssm_prueth_ptp_rx_ts_is_enabled(emac) &&
++		    pkt_info->timestamp) {
++			src_addr = (void*)PTR_ALIGN((uintptr_t)src_addr,
++					   ICSS_BLOCK_SIZE);
++			memcpy(&ts, src_addr, sizeof(ts));
++			ssh = skb_hwtstamps(skb);
++			ssh->hwtstamp = ns_to_ktime(ts);
++		}
+
+This will avoid useless copy when the packet will be dropped anyway, WDYT?
