@@ -1,113 +1,147 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC2F17B506
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:45:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B0623A99D;
+	Wed, 11 Jun 2025 14:46:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749653142; cv=none; b=Y1wJervgo9sdXrBDAc5ADtQCBKLkTbgqKGq/wQfrK03HZrwXYRY1vVbbxMmMpflCWxVwo4bLTJ0sHhkF+itb0ArCUNWtNGq1TnqkWhgZ8W0yGZ2OIg5vnteL+QpOyvtk0fG2Js2vWLnnU7DVLaylWI97JsCAc3D9IO1i1ABN5VA=
+	t=1749653197; cv=none; b=s0zbR/2p6/YRrYltCrI6jl2HPWtMYeaIgyZJBXqV6BZ78A3p6VQKrcBqkCl0EskmPEuqarJc44zW+RCGqpop9rSJFkrrtg2eU8jh4TBdGmlqxA8aUr8Zb7KUckNhKYXGv+3S6zxPYMYoxBrKz854oYHrXsyby9zwrYTmwf2RFC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749653142; c=relaxed/simple;
-	bh=SRXJc+/v+1LIkdE07fyxzRSfvp00XTj8LyVYf5274DY=;
-	h=From:Date:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=YgUzDjEj2zetzoa+x00S4fDkNgCabl9A2LrfWw/+NGCB0Fn2APsKlN/fK7uZ+JQWWokyL8JW+3afJL1mTSWTR/Ovx+B4kh6hZFtMGiloxX4iS49o5u80GZ3D/CP2BnF522A5nWQfUgCIu1FcZafgElbNObjllJGGvTHkE2jO+co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=QtaXUq93; arc=none smtp.client-ip=209.85.222.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
+	s=arc-20240116; t=1749653197; c=relaxed/simple;
+	bh=4/hh4YENcSHGUjgQwEQhru/Zqy1vGFCLZ+lEog3Di/o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C88Kb5/T8aZtiQrnKQgW/JKmwvHW061T0nsXCM+pJUO9T9F2tG8RuFrepvexkw8PqjMCw6jcDW8xLTirTFnBe/oosVrtCDF4bzpGqGybOGqcxysqohluxINE0gZYM+G0FFjTHf4BcZFjzyxt83we40ux1yDVJYI12Zz+PBFObR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j7kOC6M9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="QtaXUq93"
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7d38ddc198eso391626485a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:45:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google; t=1749653139; x=1750257939; darn=vger.kernel.org;
-        h=mime-version:message-id:subject:cc:to:date:from:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=cfbJyQPrMZeDp78Rg2T4zqF8WJjcnPAUY6gfdhylnlE=;
-        b=QtaXUq93ytXVI6m4XomHL0m/8uib1RIR4XFMVGMUtU2ZHYVITRlC8JH50NfhZJTrxS
-         c9wbxf2UhMpMtLHTE676Jg7/OY0KKUtYUa59OdLMw23U8bNUv083RUZn3thLhLNqFEhN
-         9kNqSO9+v/eS1nlY8vGnW3B2fp2Stg6lAgHqg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749653139; x=1750257939;
-        h=mime-version:message-id:subject:cc:to:date:from:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cfbJyQPrMZeDp78Rg2T4zqF8WJjcnPAUY6gfdhylnlE=;
-        b=H9uWGY8o9s3JYFb2w5+abSR4DDFVIob74rRiQgofttlVfeBd1GxZgdEAdbd9LZ7A9h
-         PpFKf/XH1xyg0ev8OhsDHRVN1cbcSWzanThv3B4yYdC/7GxqhVTyQOCCiuusWcr1kaPU
-         0eBUQ+J5sJSZrG+76Gy3y4zfx2r9smZn9rkJQegmrEMYBrUp8VQILrICUhhbXqNIzIKU
-         LUZg59hhnVxNsCEk7V1a8Nzk8ZVPpWwZJprvb4984m5vcz2uAKjpDXeeWoufHI5uHCOH
-         TEJO9gDyZMrKedZ66yvyKQ68LoicE1nh+eLXJ6KuU72fRNUwOhrPJoU5Ct8sVGkYo741
-         wdxg==
-X-Gm-Message-State: AOJu0YzsbbD4hpTlJbIziQDGA/CCwogpIqK34G0lXWpuS8bcLag8u+RY
-	0aCRLRWX+KCfhI0ZWkpFmFby1Yk45qHelQRvQwVhp+yEA/8ckmiflYXS5Wen6ieNx+FJtgQ57V7
-	GNvw=
-X-Gm-Gg: ASbGncs1r/GVhSeRx8719PReEGIcJLacKxs4ONDoNkiFBNjfXIVazM91UD3btFsZ+C1
-	0mgi6n8dkcN5FwZ7KmdXEec8mMH856lzSceoZOLiMIOdqqh5oHyTQ18zVCEVZklcT+tgiqma4jH
-	bPvjAxwoxNXl9AhWWxdQnOza+8XiXWEtVVDYCYHCorIN/JEQ5wqDC4AJ2RRgWwBSYjfmDHv+Mgi
-	6ybz7i+msgkDYSP5ZUsOwULArW7yiVhF4M6iua3jLmc+mg55VMfg1mRijUxeaEkv1W8xb1OZz0T
-	27nLPtUy00au5K+M3220st+oPHEV0D5531+pwKpUE5MY8rB1BaHWS6qR7iHa1Ck6Ge0vgd7W6rN
-	jc3UTUg==
-X-Google-Smtp-Source: AGHT+IH+DKL6K4/WPA2RhHiNNf/xq1FLisWHBAwHOLkFnDa7gAGYcOYg9/XqQ605Um/pwe9fvlkMrw==
-X-Received: by 2002:a05:620a:4144:b0:7c5:5859:1b81 with SMTP id af79cd13be357-7d3a8903c14mr535543785a.57.1749653139282;
-        Wed, 11 Jun 2025 07:45:39 -0700 (PDT)
-Received: from [192.168.8.146] (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d38c57a71csm621980885a.30.2025.06.11.07.45.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 07:45:38 -0700 (PDT)
-From: Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date: Wed, 11 Jun 2025 10:45:37 -0400 (EDT)
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-cc: "Liang, Kan" <kan.liang@linux.intel.com>, 
-    Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-    Arnaldo Carvalho de Melo <acme@kernel.org>, 
-    Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-    Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-    Adrian Hunter <adrian.hunter@intel.com>
-Subject: [perf] crashing bug in icl_update_topdown_event
-Message-ID: <352f0709-f026-cd45-e60c-60dfd97f73f3@maine.edu>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j7kOC6M9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D98F3C4CEEA;
+	Wed, 11 Jun 2025 14:46:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749653195;
+	bh=4/hh4YENcSHGUjgQwEQhru/Zqy1vGFCLZ+lEog3Di/o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=j7kOC6M9BQy5wO8h6teMI1mbyDvpKlbgKXL7Wjl4Yn5ldM65KlFHsnK9CBh7fz/T2
+	 N5k5Ka7jG5l3i/gilNG0WVE6k17Oi6ef1yYsrDk0BhLS00+SAXaHuHihGlnYlI32rv
+	 sMWtrpmmzSYptMWLK9X1jNXSSqc12z/VVCoL8ZjpppSDp8MfnZwNgf+NAt8KW0fmf9
+	 P3g7TPZTB9BT4Aaqrro8IEVXsz3MnzZixRQzRGAqy3LxPDqZBBupn4TjJSq5eJG0yK
+	 QCiswNVxjHpa7l/A6s7k62RtfsQnm4y4LQHtEQ+RB1mXN+reXcqlhkqbiZqGuABMJO
+	 GJoW+M7Q52sFQ==
+Date: Wed, 11 Jun 2025 11:46:32 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Tomas Glozar <tglozar@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	John Kacur <jkacur@redhat.com>,
+	Luis Goncalves <lgoncalv@redhat.com>, Chang Yin <cyin@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>
+Subject: Re: [PATCH 0/8] rtla/timerlat: Support actions on threshold and on
+ end
+Message-ID: <aEmWyPqQw2Ly7Jlu@x1>
+References: <20250611135644.219127-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611135644.219127-1-tglozar@redhat.com>
 
-Hello
+On Wed, Jun 11, 2025 at 03:56:36PM +0200, Tomas Glozar wrote:
+> This series adds a feature that allows to user to specify certain
+> kinds of "actions" to be executed at one of two places in the rtla
+> measurement: when tracing is stopped on latency threshold, and at the
+> end of tracing.
+ 
+> Two new options are added: -A/--on-threshold, and -N/--on-end, taking
+> the action as an argument. For example:
 
-the perf_fuzzer found a hard-lock crash with current git on my RaptorLake 
-machine.  Appears to be in icl_update_topdown_event()
+I wouldn't add -A and -N, leaving just the long options, as it documents
+scripts (and we should have autocomplete as well), leaving the one
+letter options for things that are used super frequently, which could be
+these new options, after a while, time will tell :-)
 
-this crashes the machine so hard that I had to take a picture with a 
-camera and transcribe the oops, let me know if there's missing info that 
-would help.  (Also what's current best practices for getting dumps like 
-this on machines without serial ports for serial console?)
+But I see that "A"ction connection, and since you show it is used
+multiple times in a single command line, maybe its warranted the
+one-letter option.
+ 
+> $ rtla timerlat hist -T 10 -A shell,command="echo Threshold" \
+> -N shell,command="echo Tracing stopped"
+ 
+> will print "Threshold" if a thread latency higher than 10 microseconds
+> is reached, and "Tracing stopped" always at the end.
+ 
+> The list of possible actions is extensible and is covered in
+> the commit messages. Later, a documentation patch series will be sent
+> with clear explanation of every action and its syntax.
 
-This does seem to be reproducible so I will try to investigate a bit more 
-too.
+I think having the documentation together with the new options is
+desirable.
+ 
+> Notably, a special action "continue" resumes tracing. For example:
+ 
+> $ rtla timerlat hist -T 100 -A shell,command="echo Threshold" \
+> -A continue -d 10s
 
-Vince
+so --on-threshold ends up being a list of things to do when the
+threshold is hit?
+ 
+> will print "Threshold" as many times as tracing is stopped after
+> thread latency reaches 100us.
 
-Oops: general protection fault, maybe for address 0xffff89aeceab400: 0000
-CPU: 23 UID: 0 PID: 0 Comm: swapper/23
-Tainted: [W]=WARN
-Hardware name: Dell Inc. Precision 9660/0VJ762
-RIP: 0010:native_read_pmc+0x7/0x40
-Code: cc e8 8d a9 01 00 48 89 03 5b cd cc cc cc cc 0f 1f ...
-RSP: 000:fffb03100273de8 EFLAGS: 00010046
-....
-Call Trace:
-  <TASK>
-  icl_update_topdown_event+0x165/0x190
-  ? ktime_get+0x38/0xd0
-  intel_pmu_read_event+0xf9/0x210
-  __perf_event_read+0xf9/0x210
-  ? __pfx___perf_event_read+0x10/0x10
-  __flush_smp_call_function_queue+0x37/0x70
-  do_idle+0x144/0x240
-  cpu_startup_entry+0x29/0x30
-  start_secondary+0x119/0x140 
-  common_startup_64+0x13e/0x141
-  </TASK>
- Modules linked in: ...
+> The feature was inspired by a case where collecting perf data on rtla
+> latency overflow was required, which can be done by sending a signal
+> to the perf process.
+ 
+> Example of this with Intel PT aux buffer:
+ 
+> $ perf record --cpu 0 -e intel_pt// -S -- rtla timerlat top -q -T 100 \
+> -c 0 -A signal,pid=parent,num=12 -A continue
+ 
+> In general, the feature is aiming to allow integration with external
+> tooling. To implement even more flexibility, passing context to the
+> shell through environmental variables, or even an entire scripting
+> language with access to the rtla internals can be implemented if
+> needed.
 
+That is an interesting example of cross-tool integration using existing
+mechanisms for detecting special events and asking for hardware tracing
+snapshots, good stuff!
+
+At some point we need to have this signalling to not involve userspace,
+shortcircuiting the snapshot request closer to the event of interest,
+inside the kernel.
+
+- Arnaldo
+ 
+> Tomas Glozar (8):
+>   rtla/timerlat: Introduce enum timerlat_tracing_mode
+>   rtla/timerlat: Add action on threshold feature
+>   rtla/timerlat_bpf: Allow resuming tracing
+>   rtla/timerlat: Add continue action
+>   rtla/timerlat: Add action on end feature
+>   rtla/tests: Check rtla output with grep
+>   rtla/tests: Add tests for actions
+>   rtla/tests: Limit duration to maximum of 10s
+> 
+>  tools/tracing/rtla/src/Build           |   1 +
+>  tools/tracing/rtla/src/actions.c       | 260 +++++++++++++++++++++++++
+>  tools/tracing/rtla/src/actions.h       |  52 +++++
+>  tools/tracing/rtla/src/timerlat.bpf.c  |  13 +-
+>  tools/tracing/rtla/src/timerlat.c      |  24 ++-
+>  tools/tracing/rtla/src/timerlat.h      |  24 ++-
+>  tools/tracing/rtla/src/timerlat_bpf.c  |  13 ++
+>  tools/tracing/rtla/src/timerlat_bpf.h  |   3 +
+>  tools/tracing/rtla/src/timerlat_hist.c | 145 ++++++++++----
+>  tools/tracing/rtla/src/timerlat_top.c  | 167 ++++++++++------
+>  tools/tracing/rtla/tests/engine.sh     |  21 +-
+>  tools/tracing/rtla/tests/hwnoise.t     |   8 +-
+>  tools/tracing/rtla/tests/osnoise.t     |   4 +-
+>  tools/tracing/rtla/tests/timerlat.t    |  36 +++-
+>  14 files changed, 652 insertions(+), 119 deletions(-)
+>  create mode 100644 tools/tracing/rtla/src/actions.c
+>  create mode 100644 tools/tracing/rtla/src/actions.h
+> 
+> -- 
+> 2.49.0
