@@ -1,81 +1,126 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD6D413635E;
-	Wed, 11 Jun 2025 14:40:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C9935970
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:40:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749652807; cv=none; b=TXd9wgt1hoBWVRkOpE349vZvHSrpAOEywu2NAhqvuYlDjnnxvE8YXGzDZRe1ad1qt/7+2ABA+uZ8AgpJPqR8gqDYWHCd95RY2aOK+/2d6gHvPyRWLlxmb+J4/+dkhnezaFfldjHuRm68jm4zZaU0pYNPy9y4LsQPnpbhxXeRSTU=
+	t=1749652831; cv=none; b=DUUBYYyRvMOqe6KXAahNZjwBhTNa4489FplSdbmCTS0Z0ptH06GpEc0tuw2/0P02oBEw92JVafe3w4hMQsv4U2HliIvHp6GnxOqAL1+VPDGTggoOKuyKmcSChatfLMRA71j5rItnx5xASeweTdrlsHno5eRimDOhGDaiU8k+/vs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749652807; c=relaxed/simple;
-	bh=0ohGz/4GuhWVzFJeeiQQWGKcA1Cl68f8/k3g+lzPV9I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AtH22Eh9kZEF+VbuwUg3LyxafVpctNaoYRto90PrmiV9It9ezCqi/fyASOnVY4Tn0FCiIgAbkv5KrCPilQjtvIK1rQEyiEC8TlxtV54//ZKtKPrjabu94mgBR6K84nij5slhAlQjJw7c1TJaan+gbTpOyPSyGj+1dQaDaqegOoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mzqg/HGH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LmHdTqZ6; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749652831; c=relaxed/simple;
+	bh=AoNBXfxmjiJwlJyNJTpuHiDBXjwzWldZGbKBWicfIv8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=FWTEPaAVggevP+i+VnBXO7mVSNjV9U/m5lWDSFGuaLQ8eDwGoUUPPSjOFFGU189do7Xpznf0cI+uqcdOUQE4LqqgRUi9uqcSHl4uYSZM20Jd7MBWctIiK8VuMGXULzp4ERUlZOd9+KrkS7Tm3NxnVCn46V8s441XHmkPVp6lUV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=CM0NakH2; arc=none smtp.client-ip=209.85.210.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mzqg/HGH";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LmHdTqZ6"
-Date: Wed, 11 Jun 2025 16:40:02 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749652803;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PWM46jWKP7aNFgqvaKUjJ8B+43hx0DMeI0J+u6bVndA=;
-	b=mzqg/HGH9SEt5YtmM7Es2WzqVhSUUXiVxmwtTsxcs+GvSsoAcGpJ8Xtud/0jqJMVYHzBaf
-	yeggLFhdRyUT39B5lTaat1iItoMM4ePA6D03ETn27/JqdPy3cldZCSP5jw8ILtakqQw96n
-	n8eiHiInjFbUhZgBqxpngeiJytm6ghl0fMfqD7lPVsRYObqXDZu/PXQtgceWG40aol5n8x
-	y/wJ3CFz8ZJm1trpfuTcGObz5P2kh9cRqiJnJ+B5khJnzjN5hqf5Q/6dgAlRzWFzkSNxt6
-	GIDWE5L/X17tyvmQNJacOqV7KALkW7fn2uo9tmwTKNn5xTwjLhlQm+7hGqg6ZA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749652803;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PWM46jWKP7aNFgqvaKUjJ8B+43hx0DMeI0J+u6bVndA=;
-	b=LmHdTqZ61yBtpSHERUnXrM0qSX5pOfzhECOqh8QBSaQVHvwis9vwfcHKtAnAMECN1dEr7y
-	StLfceepIs5iswAw==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Petr Mladek <pmladek@suse.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
-	John Ogness <john.ogness@linutronix.de>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	John Ogness <jogness@linutronix.de>, David Gow <davidgow@google.com>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] printk: ringbuffer: Add KUnit test
-Message-ID: <20250611163751-f6b7056b-2bad-4cd4-9369-9ee0f02959a6@linutronix.de>
-References: <20250506-printk-ringbuffer-test-v2-1-152200569eb1@linutronix.de>
- <aEmMdirOERyv8COG@pathway.suse.cz>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="CM0NakH2"
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-72bc3987a05so617310a34.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:40:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749652828; x=1750257628; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mLrrcjxPAjeFKi7iUJTxvFP27ls+0S72xIdrAaB/V34=;
+        b=CM0NakH2YsQcYV0RupCN9KJcFRRJniJNLL9imCu3TvckMZDI5ZocGq7sKkWFiBUwfz
+         ZPLV7mDKfW6FqMvWBeAKqhOam3AElSqB0p7S8PdZk//p6+Zz7h/PxlTH2oMI8PBqLt+i
+         AI3R+RUSzlA87zdyBsZ4AakuDcljAiKaB+Lqaat9lQBgvx67qD5X1RALP6BOCdZDV5R/
+         ZyL50DQfDaVxCG1T9bXzdPVk1jStQFD1W4yeB6AUtBp7GGVutzxZkqSVHsLOluTLk2jv
+         NabtAxJCPjjxV8oL92ZhIFv968nS0cNaHXnaiLBLQuv9GEwV2eC6lJuUv8x9QsIAJRcJ
+         2R1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749652828; x=1750257628;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mLrrcjxPAjeFKi7iUJTxvFP27ls+0S72xIdrAaB/V34=;
+        b=Xfu8SQrb+JZdqnJz7jtcdNZXBsZhwdogt4hlhkR4jRPs8McjO3m2gc55LBw0S/ipkc
+         2StTNM68o5iOCqJdiIHdnvDqpkEV4F6KoVnIRtRx5Qs2Iy4/uRKPd4GmFBOGKb8xpO3S
+         /znbf5mt8UVndHVqqyAU27VZHuUPl6WPwAfMDWfN3GMYgk7PG1TKyTJzfLR15s/WX4W9
+         bN8JJyju1gGAF1nUyPpauGS2F9O5LhAkMroYxnnYFhkayzux8nJrZTuvEAvWneBsxwpo
+         +fFLucJxFO5plXIOb7vn2G3PKU94BQpg+n96JFnoUMckAAwsgkWaLLaScftqxZeEl5rc
+         Qk8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWT6W9ucPV/lBP/06HqaufZqhuw3DnSBUmqCsx+G1RMb2+Ao8cUlAApoa/2scXHEs1o0dQApccmzth69V8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhNadlzO9nRrQ/wNbldwgbof4+X8Evu6ROgDsZs14ZzBSTPPqL
+	UVuaRpPAKOVYULI8oDmjbrNv6JfIltSx8sym0Egv79sRwu1SN44QVqgEfHNUeRmfgjc=
+X-Gm-Gg: ASbGnct5w7JJtkjNAvA42L6OgwQ6yCVKdhJ9ynEv3O7W2E0e01yCaJh4Eb13nTxSVx9
+	CX2mZ7exl5DpnIL9Dln4ylfLg+3IGzki1JdocpL60cqf8iKjHhT1fVZXK3n34ANGxURm0pRAZYw
+	pc9ppkplWBc0LSyPnzczn/FhVLqFrmuwNTafr13pvoSNjC3TJ88MjEXCxsdLcGLfKI23CQA5QK4
+	RLx1q8Bc8+N0JCZ26jntV4csnG6jBR6x3l9zdb1WZ3L1OJN2Mq7QiMblqeqsZe7UDhvdWrSOyKj
+	3WQh+jQYmM78VKA9yX7fKb8+jG7pn0aFEPflZx1gdJ2xQhrTQhYokEKzX/yCWKBxG94=
+X-Google-Smtp-Source: AGHT+IFr6GLRVZwQuuEJUWf6+gPiIRd12h4YaeLZ8Ur4iNPV4hBUvhA1RQPoqix09J2XDOWzvZobxA==
+X-Received: by 2002:a9d:7d85:0:b0:72b:7dbb:e39d with SMTP id 46e09a7af769-73a0652151bmr1588147a34.1.1749652828260;
+        Wed, 11 Jun 2025 07:40:28 -0700 (PDT)
+Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:eb6c:30d1:632b:494])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73a06faa7a4sm330735a34.7.2025.06.11.07.40.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 07:40:27 -0700 (PDT)
+From: David Lechner <dlechner@baylibre.com>
+Date: Wed, 11 Jun 2025 09:40:16 -0500
+Subject: [PATCH] iio: adc: ad7173: check return value of spi_setup()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEmMdirOERyv8COG@pathway.suse.cz>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250611-iio-adc-ad7173-check-spi_setup-return-v1-1-4d6f9ef0a2e4@baylibre.com>
+X-B4-Tracking: v=1; b=H4sIAE+VSWgC/x2NQQrCQAxFr1KyNjCZoQ54FREpaWqDMB0SFaH07
+ gYX78Pb/LeDi6k4XIYdTD7qurUQOg3A69QegjqHQ055TGciVN1wmjmoVAvyKvxE73p3eb07Wqw
+ 1TDUnqrmMS2GIr26y6Pffud6O4wfDhGBkdwAAAA==
+X-Change-ID: 20250611-iio-adc-ad7173-check-spi_setup-return-072017235f3c
+To: Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ David Lechner <dlechner@baylibre.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1097; i=dlechner@baylibre.com;
+ h=from:subject:message-id; bh=AoNBXfxmjiJwlJyNJTpuHiDBXjwzWldZGbKBWicfIv8=;
+ b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoSZVR9M0Y2yJvw8Y3W1UqUwM2S92STPmFTqFkv
+ /YhRZ3r+W2JATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaEmVUQAKCRDCzCAB/wGP
+ wF2KCACFPxTMDj4CL5i7akxNe1PjAzgkhUg2vFq9o2g5vSBsA4+H7uJ4QTe7QtnrkK29QKm/kk9
+ K59OyZcHOm3ggA7wQkgWtqtEZ2w084F5bFrMR3kMc6zitxnVxoIo4ESfiU+HsP/wHFekncHaEzt
+ UVYgLReJyxkbxtjRSBc4BjBPwnngiDHocpSF2IbN3d+5mYI2t/py9MveadvUr+Bv4sh9EBz5qPQ
+ b/jMmCC3krjSWRGuXn6vgKmNVAu3lpr3FGEPAAYig4AGEF4zK/i6L9MSpUZ4DUXSF8z/heeVDs6
+ oh6t/dZ8al2+1+O5dnRvDU4vUNckEeo9WpD8BYdKBdp3Mzp4
+X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
+ fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
 
-On Wed, Jun 11, 2025 at 04:02:30PM +0200, Petr Mladek wrote:
+Check the return value of spi_setup() and propagate the error in the
+ad7173_probe() function. This is unlikely to happen since virtually
+every SPI controller supports SPI_MODE_3, but still always a good idea
+to check the return value.
 
-<snip>
+Signed-off-by: David Lechner <dlechner@baylibre.com>
+---
+ drivers/iio/adc/ad7173.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> Otherwise, it looks good to me.
-> 
-> I would push it with the timer API renames so that it works in
-> Linus' master and linux-next out of box. So, with the following
-> changes:
-> 
-> Reviewed-by: Petr Mladek <pmladek@suse.com>
-> Tested-by: Petr Mladek <pmladek@suse.com>
+diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
+index 69de5886474ce2f700bf277ce707b15637113564..911001be368302fb9d7d6e8da3783751fe0f61c5 100644
+--- a/drivers/iio/adc/ad7173.c
++++ b/drivers/iio/adc/ad7173.c
+@@ -1775,7 +1775,9 @@ static int ad7173_probe(struct spi_device *spi)
+ 	indio_dev->info = &ad7173_info;
+ 
+ 	spi->mode = SPI_MODE_3;
+-	spi_setup(spi);
++	ret = spi_setup(spi);
++	if (ret)
++		return ret;
+ 
+ 	ret = ad_sd_init(&st->sd, indio_dev, spi, st->info->sd_info);
+ 	if (ret)
 
-Thanks.
+---
+base-commit: aff301f37e220970c2f301b5c65a8bfedf52058e
+change-id: 20250611-iio-adc-ad7173-check-spi_setup-return-072017235f3c
 
-Please hold off applying this patch for now, please.
-With 6.16-rc1/GCC15 it runs into fortify-string errors for me.
-I'll fix these up, integrate your changes and tags and will resubmit it.
+Best regards,
+-- 
+David Lechner <dlechner@baylibre.com>
 
-
-Thomas
