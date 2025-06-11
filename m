@@ -1,98 +1,196 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C4023643F
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 18:44:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CAC3380
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 18:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749667466; cv=none; b=bz2NHx8AgZ22fEXtKj8d3HPvBLz26FRxxW3XmdeRCx8XNzci3z4brE/AWKaC6RRaO6tlnh+pUUVQO+s/1c67B140b6UrJlJI08spfAtnyCDg928M6K7+620aXC8OLAn+cAClCYomcL3m+hLVrS+6IESIKYiRifB844WxpmF32qA=
+	t=1749667496; cv=none; b=ll3ytQY6W/LqJ1wf+qL0lJhtgHY19iRr7TiB8oqs9hxrQiK16D+P/o7sxwHepiSE3WALMTNA/XYnh7UA6SueVM43pRzERORMUpajHHzMxrE88uHw2vFmg7YAFPZ+9gXi/kht1yDG6m2mMlIHwm/9WFymMWgpo7O2hmv8hE6kdzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749667466; c=relaxed/simple;
-	bh=rW9AYnao7epI6DSNNsNbXeG46uk1hDnvTmVoKXHljtI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FNViUKyV8s58yYg5cHE/I4E15P0QXLseolk6J1JxqL9fFCGfQnf5bNixTs3B8pcA/1QyPIrRLD13DcqTbrAXjsZwd2XybxXmsKYM1H72u0yYNZICPl8mhqWOmwe3lif189fXasBxhscn2mQZinEt8CJnd6F0OKf+2XGu8v4A06s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mfZDiv2f; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749667496; c=relaxed/simple;
+	bh=wac+svBXGON8ziPcVrSLJ4B2YSmTE7hYnL72gXdrIKs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RjR3h7Dg/mBu8CORI8gbjJGuRtttDtEiYRXtMd63gc6V9SXQTUFVg9/FXxe5WGhSJDHu+NdY9UcSCIHNy/De1KdRZxSE0h2RZi8h91wBk4le0FPT1oZuuKbT89lqKVd7nBqIxsSpQZ8ypZKD6kPF3G47A+7Ce4cOKg1mG4vaU90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WinE532H; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mfZDiv2f"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-450dd065828so752605e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:44:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749667463; x=1750272263; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=b8Z7wa9sbPXA5dzp8SGUkYWXsK6DxzHA1Tojy5Vy9ow=;
-        b=mfZDiv2fFm+ACiWLDuOXvI4+iJQJBIWPo7yKU8UK55o0P+Xd8iven6WI7No0EW91AS
-         2FaJc3OxwU6D7sd7wZt2A962Ge77twubdXeBMYTBC87tYVNp+OjmSr9sQnK/K5Ask+gx
-         fZon7+vZaIcJFJ07ZOoHbJ12/1ifHsUSHpSX45h6agTn9jDnr+QOiahuwlw36kVGyGeZ
-         7WpIAY2z4Wv/+vKPIwHPjTyyOAoPKp7MBpgxQ4x5bA1iXn/y8GkFhAZ088oL5T1xnqPX
-         WrfpelGwhWRTVMtPCWiSpVkS1SAiUXFNKRo+aLW0Mc+Xj+ac7B7QeDPA6vn4V3xTTqw3
-         6jDA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WinE532H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749667493;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=4tzmsQv4WOvggfbfFT6gkBMqKRhm06CcuuIIOc9ssS0=;
+	b=WinE532Hs4sxhB6PZQM1ygmvei7T7vE17LFOIlCeBW5w8V8c2TE+o4+06OBt07xofj40eX
+	Kxoq8dA4YShLWEb9zv2mJEhqEfxYFYfUzGOWr/fDz1AHJhRUosVvR/syyVGuBat0Y4PBSi
+	t0vGhaMef2clvYef/CH7YxoYHYFi/oE=
+Received: from mail-vs1-f72.google.com (mail-vs1-f72.google.com
+ [209.85.217.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-561-6FaKJ24XMaaHs1o62ev1UQ-1; Wed, 11 Jun 2025 14:44:52 -0400
+X-MC-Unique: 6FaKJ24XMaaHs1o62ev1UQ-1
+X-Mimecast-MFC-AGG-ID: 6FaKJ24XMaaHs1o62ev1UQ_1749667492
+Received: by mail-vs1-f72.google.com with SMTP id ada2fe7eead31-4e7bf87688eso102994137.3
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:44:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749667463; x=1750272263;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1749667489; x=1750272289;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=b8Z7wa9sbPXA5dzp8SGUkYWXsK6DxzHA1Tojy5Vy9ow=;
-        b=STlfChDL0RvXuAhbMBbLDGNI+ZjItZQTCbv5cB4CKBP5Oon59yqM13hM3jSNCl8pZY
-         ljZrX1h8GhkEO7hu5XGBQZeCKNwz+GeCKKixyBScrArQGFjufiBPEqkMr+4zaNMn1TaI
-         RLugp7Me8oIo0Iafc8G9hhk8qnk8ztWJI2AcqmvUA4FTKk8qDyYKDXwe0vu/vXnMb3hT
-         ta5M6rJRj42DPnsUjziAbuXz/h2dSe8vNKnT23H29XK1KAS/hg0UCO88TR828h7DqXpl
-         J4i5ccTaD5l4RPDhpIIJfjFtDSROWDjs8Qy+nhlP/7zZYqnmTRb957lv7SaOZwXkHOkq
-         JEGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVJkUK9KgGWzX8GHP/okOJq+2BRjwKTorJJvjoeW+hCE27JcYTBHmvHk2eXDk7XCxnMRWsnr0b4GpXGDWA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVlYtbP4bD56gs2lVUvawwCh2seqTw3NltOjzFsIBlGiOhaMNv
-	aBXWJZGYTg1C4HtfdwnGL2qLxxCRCTjDEqCNmQVAHEAKTDMocowNqaqZyCgZVUEAank=
-X-Gm-Gg: ASbGnctM0oUDz81QzspzkwHuj7VVGbgozJcme3K+P9UtFe2uzg7GPlTWNvpKlrMs3R1
-	n8XbuMdjHA6Cp1zFzcW0bJnuCQhzWxSAyUY4gPTjQpDN3+ldXBKqjkHlalOy7Qr+LHEbBwqnZyF
-	DaW1ASRD6REZRew63SJkvrakH8DtA7M8dfT6R2bnSS+m8Y5QRuv7DnMd0SmVlpnPNMMxGUEfbYz
-	8M7XtFXXYGTfxuZck7VHzwnub0EvgRKAHL7oe3RAlxdGKmRLNguTdQvqXYeNawLpIrm/CJvlQGl
-	aD8nlpRwVDVlrI5CTU0+ug+yC2CAZEnvHqKQ0TT4utHGbuJ4Cw9S7YNlzLpyR+WE7Rk=
-X-Google-Smtp-Source: AGHT+IFG5n+JZ+POBoHmw+qc3E80yBwZHeBiwkYm45+ICWtt0Wje2BpvjDKUU1DHUI4PN2DGbGjVOw==
-X-Received: by 2002:a05:600c:8b26:b0:450:d367:c385 with SMTP id 5b1f17b1804b1-4532b9079cdmr10409495e9.16.1749667462950;
-        Wed, 11 Jun 2025 11:44:22 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4532513e27fsm29150025e9.1.2025.06.11.11.44.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 11:44:22 -0700 (PDT)
-Date: Wed, 11 Jun 2025 21:44:19 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Karan Tilak Kumar <kartilak@cisco.com>
-Cc: sebaddel@cisco.com, arulponn@cisco.com, djhawar@cisco.com,
-	gcboffa@cisco.com, mkai2@cisco.com, satishkh@cisco.com,
-	aeasi@cisco.com, jejb@linux.ibm.com, martin.petersen@oracle.com,
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	jmeneghi@redhat.com, revers@redhat.com
-Subject: Re: [PATCH 4/5] scsi: fnic: Turn off FDMI ACTIVE flags on link down
-Message-ID: <aEnOg5B0tYOQIuME@stanley.mountain>
-References: <20250611183033.4205-1-kartilak@cisco.com>
- <20250611183033.4205-4-kartilak@cisco.com>
+        bh=4tzmsQv4WOvggfbfFT6gkBMqKRhm06CcuuIIOc9ssS0=;
+        b=QyF1OgDlmepbxuWb5w41n1OEiVHciRu/YOONncuOlE6iFv3C1UxFEbHTdvng3WFNvp
+         D5u02TCY49BZm1SxC6KFG8XARzSPNsMXoXb7QOmiK3a9ayT8IHiq0aGNbQyUsgnsRrsp
+         /6lHT+j+qJsBGqNny9mSlH9Q5C/k9wyv83jlQ8vyg33qPK9WESB5bc3CQ5qGPiygYmyA
+         3rHMc3VOKosm/GtoMzqa9lamBioEVA3a5yXifRrTs7d4GRZyNYI1Iq9nn/k34rmk6uyW
+         0UqxKFGl39EYakYs4G1nIXoBCt8gz1zPdxXeB/DGWBd+ntULTdrvhmsAt6xm+DpLladP
+         IfXg==
+X-Gm-Message-State: AOJu0YzZnxSWybe9B+dG/p4A6IuKjdoHEIuw4dTXcMxBpeJqW5LxVJ3U
+	tKOmIydZkOXAltC45thX03LIZw4E4jXtfU+pi2UITfT2K0GgTDDSHB18nkSde3lIzaUCznxkK88
+	+jW9+MenVaciBVG7UPxS1yi9ZZHswyAqJggfNr/pLlOuq05K9AWUXfoslwGUsFYRH/XgCMzPJ/Q
+	==
+X-Gm-Gg: ASbGnctBvafbbdVpwU+1x5cWwSovmXRUBcQS8AyT7F3QBCRcn1m3u8paysFmfyTxFuj
+	/mzndYfmlGQtRYOXzJrJU5RywYjCtpBNhA0sE7BIeioru0ZljJRFkQLJ2sbHKKTmf47PPDJ2CJr
+	CR2BZdCr7I5tumLq2bSffoZd2tfYqDJH2mPYyssVRzpnfFCXUYgMgybVKVw74TOWZseCsZkm0x3
+	Bz150GDzh5lNsqRxXmlOgQIC+r9aLdEq0CgG2Zi17kS+rnQoecI4zdr7rKxxJlebuUQeE6dJmSU
+	Ze+pkvXjuDorhdBtnLwHe471suQYVXSxJ7vXdyGyzt2Vs68jKlptKZw5RFz9uWdzIF8vhomKhaL
+	NbQ==
+X-Received: by 2002:a05:6102:5092:b0:4e7:7146:a9e with SMTP id ada2fe7eead31-4e7bae71352mr4336032137.6.1749667488966;
+        Wed, 11 Jun 2025 11:44:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHYph1bi2nQ2Ltt49fwaGderCEkbHTYBGtonyOC7JAuZFD8Gyhdt5tJmovi3OyRetrZeYxwgQ==
+X-Received: by 2002:a05:622a:259b:b0:4a4:4144:93b4 with SMTP id d75a77b69052e-4a713b8b8ffmr88519401cf.3.1749667477514;
+        Wed, 11 Jun 2025 11:44:37 -0700 (PDT)
+Received: from [192.168.1.17] (pool-68-160-160-85.bstnma.fios.verizon.net. [68.160.160.85])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a6198650besm92606541cf.57.2025.06.11.11.44.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Jun 2025 11:44:36 -0700 (PDT)
+Message-ID: <8c79b86e-fc30-4f48-bdd2-91ef6f612bb5@redhat.com>
+Date: Wed, 11 Jun 2025 14:44:35 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611183033.4205-4-kartilak@cisco.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 59/62] livepatch/klp-build: Introduce klp-build script
+ for generating livepatch modules
+To: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org
+Cc: linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+ Miroslav Benes <mbenes@suse.cz>, live-patching@vger.kernel.org,
+ Song Liu <song@kernel.org>, laokz <laokz@foxmail.com>,
+ Jiri Kosina <jikos@kernel.org>, Marcos Paulo de Souza <mpdesouza@suse.com>,
+ Weinan Liu <wnliu@google.com>, Fazla Mehrab <a.mehrab@bytedance.com>,
+ Chen Zhongjin <chenzhongjin@huawei.com>, Puranjay Mohan <puranjay@kernel.org>
+References: <cover.1746821544.git.jpoimboe@kernel.org>
+ <10ccbeb0f4bcd7d0a10cc9b9bd12fdc4894f83ee.1746821544.git.jpoimboe@kernel.org>
+Content-Language: en-US
+From: Joe Lawrence <joe.lawrence@redhat.com>
+Autocrypt: addr=joe.lawrence@redhat.com; keydata=
+ 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
+ pNzsRQ==
+In-Reply-To: <10ccbeb0f4bcd7d0a10cc9b9bd12fdc4894f83ee.1746821544.git.jpoimboe@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 11, 2025 at 11:30:32AM -0700, Karan Tilak Kumar wrote:
-> When the link goes down and comes up, FDMI requests are not sent out
-> anymore.
-> Fix bug by turning off FNIC_FDMI_ACTIVE when the link goes down.
+On 5/9/25 4:17 PM, Josh Poimboeuf wrote:
+> Add a klp-build script which automates the generation of a livepatch
+> module from a source .patch file by performing the following steps:
 > 
-> Reviewed-by: Sesidhar Baddela <sebaddel@cisco.com>
-> Reviewed-by: Arulprabhu Ponnusamy <arulponn@cisco.com>
-> Reviewed-by: Gian Carlo Boffa <gcboffa@cisco.com>
-> Reviewed-by: Arun Easi <aeasi@cisco.com>
-> Tested-by: Karan Tilak Kumar <kartilak@cisco.com>
-> Signed-off-by: Karan Tilak Kumar <kartilak@cisco.com>
+>   - Builds an original kernel with -function-sections and
+>     -fdata-sections, plus objtool function checksumming.
+> 
+>   - Applies the .patch file and rebuilds the kernel using the same
+>     options.
+> 
+>   - Runs 'objtool klp diff' to detect changed functions and generate
+>     intermediate binary diff objects.
+> 
+>   - Builds a kernel module which links the diff objects with some
+>     livepatch module init code (scripts/livepatch/init.c).
+> 
+>   - Finalizes the livepatch module (aka work around linker wreckage)
+>     using 'objtool klp post-link'.
+> 
+> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 > ---
+>  scripts/livepatch/klp-build | 697 ++++++++++++++++++++++++++++++++++++
+> ...
+> +get_patch_files() {
+> +	local patch="$1"
+> +
+> +	grep0 -E '^(--- |\+\+\+ )' "$patch"			\
+> +		| gawk '{print $2}'				\
 
-Fixes tag etc.
+If we split the rest of this line on the tab character and print the
+first part of $2:
 
-regards,
-dan carpenter
+  gawk '{ split($2, a, "\t"); print a[1] }'
+
+then it can additionally handle patches generated by `diff -Nupr` with a
+timepstamp ("--- <filepath>\t<timestamp>").
+
+> +# Refresh the patch hunk headers, specifically the line numbers and counts.
+> +refresh_patch() {
+> +	local patch="$1"
+> +	local tmpdir="$PATCH_TMP_DIR"
+> +	local files=()
+> +
+> +	rm -rf "$tmpdir"
+> +	mkdir -p "$tmpdir/a"
+> +	mkdir -p "$tmpdir/b"
+> +
+> +	# Find all source files affected by the patch
+> +	grep0 -E '^(--- |\+\+\+ )[^ /]+' "$patch"	|
+> +		sed -E 's/(--- |\+\+\+ )[^ /]+\///'	|
+> +		sort | uniq | mapfile -t files
+> +
+
+Should just call `get_patch_files() here?
+
+-- 
+Joe
 
