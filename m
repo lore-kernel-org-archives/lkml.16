@@ -1,275 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 982131DED53;
-	Wed, 11 Jun 2025 16:13:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749658438; cv=fail; b=WSmfoorx8x49r9J+YL2nNAsKmMyPp7dASdG929+g/sZg6P+/hs4974jaeeLX73e+nJQEVAQ3bgUo25FkZeJltC8XYdtLeDWMz25JsVXVVyjIVxrqo9CsfgpEvUk3LkC2U8c9Sbbmud18k8tunuT9NqAYmfNcS+SfplNT1oA9bvg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749658438; c=relaxed/simple;
-	bh=SVpBqjKn+3vtZfPERXUK1TrCV5LfbFmo2+alzw1tHNA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=QMo8iAOhyw+0YntwQk+YTwG10JnOUZlo4bB3Mtc36MndQv2pKLoik39WAXPasi86ihZFu2y2vKgyn+vKCI6UfaIFSRnLm9NtBOP8xrZ/t5jMtueGpojguLAZoX1iHDlQa6MBXo8Ne4/7HKyt3/bYYhOBoXw+KHkUubV/HxE5Wbo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ClRY1bGj; arc=fail smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D9B1F4169
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 16:14:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749658444; cv=none; b=WBQ0W7UvWCKS44wsMlDKmHJUnujf1GtCB5My3WJCnW59FIymMwR7KHFFlA9xATtRm6yO41MckYRxZt6Nb+wzTW4eYwg2b+tlPLQFEQGm+EVGbrEO2sHofGjjhyzqvRb/budgvcQqGZtxEn7bTOwc4sHVCXmE5U4Tg1Se7yx1NiY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749658444; c=relaxed/simple;
+	bh=2yrDMcy47m3okG6GDzNg0nEycBup6VJdleVS9+J2zns=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bgevhu2ik28jdfaypYf47f+ePrtkjUnzQBJqIlLqHO/ndy1RoNQ309SWIbxKvmIB9bZAm+0wZy4JqFFqYAd9bEQEk404EdUyBrHY2+9ZxsApgwWHldlCQzNvx/omDEYFr3WKCzzkFhYg46YZZcNXw95LcO5mI0JDCBqb9/qcias=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=S9nwzEEn; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ClRY1bGj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749658437; x=1781194437;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=SVpBqjKn+3vtZfPERXUK1TrCV5LfbFmo2+alzw1tHNA=;
-  b=ClRY1bGjmiCBTV2nZE5OZ4kSuVnUW1dVdFI7FYoGbtfRAcJLZArHq8YM
-   AfmyroCja3VF4isAO5jp3m8fRuMaTWoNlIdEjXwYfGGd/lVPvFfkoTLc+
-   kZg3p0yA0BoTdBKI7JvV/Y8Bk5tWdGHxniWcDqu0qL4n+hRmsdtIArlaV
-   +jKVmtuGLgMzGL5UPM2EoRQ6Cpi5/SB0/Uk0oPR2x/DG3dqbpYjrk6/l2
-   QCtljNdExS0E5ZbGlanHS8Fcqv0RSETlwMbZ6sSmYDiiABBBmSvTcfyqD
-   oiC5MjMUU5F/GSxQYz+EBLKNY5Yj55f7A2/v3vy8DfefyqV0EizXKBYE0
-   w==;
-X-CSE-ConnectionGUID: khoydyE/S9C204bJXa8aQw==
-X-CSE-MsgGUID: ngYieL3RSEq4Ld64Wuqp3g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="51724416"
-X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
-   d="scan'208";a="51724416"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 09:13:56 -0700
-X-CSE-ConnectionGUID: ShTkvaopT0qChdG6sE0Mog==
-X-CSE-MsgGUID: IMQGTbGfTIukqef6yq37MA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
-   d="scan'208";a="152132825"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 09:13:55 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 11 Jun 2025 09:13:54 -0700
-Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Wed, 11 Jun 2025 09:13:54 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (40.107.92.59) by
- edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 11 Jun 2025 09:13:54 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jN5NkY7/oExY+QRnenlgVZdl/3d/D2kPEKTyVdagbhevIvj0l/bhdpRv2r2KK/5eUVEPjoNvNsdTi/J9uODf7KjH5yPCqtjS8nRPGdT+dJVLT5YIMSE6KqR5Sur6HyREtuoN5KCLFX0bqqeI1HiggoGOg0xjD8hLrFN+6upJAOM6CrlQxwtBgFNumIxidQeRxipONV+NqRgJL6UMVTtvh9L3warnRdqVtovqHW+D6toykOKknoRKjOy648s1KirZYBNFKcVvFjcDdOuFKrHz04DOhXfiJcFEhj4xg0tjqZ+IUmSyh5Zv+LjR/3PAkXGs34rY3gKFuin8+cLxzpCZiQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uHGkWbOqZvH5lFKUporUjZ6wG4QvYIvKV9N10eMEG3w=;
- b=Yq0bDbVYLm5M4Cvw004tyxxTLLJ1s6wEz9Wvv4S4Agv+BIvgol//F0eqRqNhtb/9RG634QPmoGSW0v2rQsb9yiMFcmu95AMjpMN5o0vqaXpl3bOV66c38EwFbs9m+Gz4xVX3AIFFQC0SsoWV5VlvA38xAV/jA8Acw/tT04NqXV9w4aumVGZMo56Lgk85BO/cwOZaG27Y/k+QoxPN0COIoM98gEaWtj43WyIeNguLx2Vt6nTkbCDI+HXG9FQRZahaPJN9Kh8d7nacCVRr4O8Euf8XtT0R7xEKvXTdSbOLcmWEPlXaS3rpSVmgB8JvtsDsxfAuAXJbUqTBU3UQ9wXsPw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CY5PR11MB6366.namprd11.prod.outlook.com (2603:10b6:930:3a::8)
- by DS0PR11MB7651.namprd11.prod.outlook.com (2603:10b6:8:149::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.34; Wed, 11 Jun
- 2025 16:13:33 +0000
-Received: from CY5PR11MB6366.namprd11.prod.outlook.com
- ([fe80::6826:6928:9e6:d778]) by CY5PR11MB6366.namprd11.prod.outlook.com
- ([fe80::6826:6928:9e6:d778%3]) with mapi id 15.20.8835.018; Wed, 11 Jun 2025
- 16:13:33 +0000
-Date: Wed, 11 Jun 2025 17:13:25 +0100
-From: "Cabiddu, Giovanni" <giovanni.cabiddu@intel.com>
-To: Alex Williamson <alex.williamson@redhat.com>
-CC: Mario Limonciello <superm1@kernel.org>, <bhelgaas@google.com>,
-	<mario.limonciello@amd.com>, <rafael.j.wysocki@intel.com>,
-	<huang.ying.caritas@gmail.com>, <stern@rowland.harvard.edu>,
-	<linux-pci@vger.kernel.org>, <mike.ximing.chen@intel.com>,
-	<ahsan.atta@intel.com>, <suman.kumar.chakraborty@intel.com>,
-	<kvm@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] PCI: Explicitly put devices into D0 when initializing
- - Bug report
-Message-ID: <aEmrJSqhApz/sRe8@gcabiddu-mobl.ger.corp.intel.com>
-References: <aEl8J3kv6HAcAkUp@gcabiddu-mobl.ger.corp.intel.com>
- <56d0e247-8095-4793-a5a9-0b5cf2565b88@kernel.org>
- <20250611100002.1e14381a.alex.williamson@redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250611100002.1e14381a.alex.williamson@redhat.com>
-Organization: Intel Research and Development Ireland Ltd - Co. Reg. #308263 -
- Collinstown Industrial Park, Leixlip, County Kildare - Ireland
-X-ClientProxiedBy: DUZPR01CA0246.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:4b5::12) To CY5PR11MB6366.namprd11.prod.outlook.com
- (2603:10b6:930:3a::8)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="S9nwzEEn"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55B9DE6M026004
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 16:14:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=IzZh7++TWPnt7YAqqfAhzt
+	YsaqI1nC4j1vdMdoyOJp4=; b=S9nwzEEnytmD5lsY3JIK/u2CxjjnuBzwa2Z4K+
+	En/lXI5srBKNpC6TCq81bBvRIs2kl2iTorlABiOoBrB73JPxPRO8pQ2MMDXbZSdj
+	/3pkzw0KNnMk80rSIpIoL/csMMouRrMWK42SGare5klQ7lMd0iMxuQskVp5JpJ3+
+	quST39cipuIM/aldhh3TpSVaNg41pVuT4LY8zaftX4VNppysWhNUKaqCAuzAYWoH
+	cZ0LX9sc52OrzgBBDa5dckOoW6alBlcfKTtSC+BrPlfShG3WoeMi5qL+PMuZd2Yk
+	qJzzFl70vd6H16ZyCeDe9ahEZr+8wX3mE6PIcmVUTMk3pB0g==
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 475v2y8ed1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 16:14:01 +0000 (GMT)
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-747d84fe5f8so21971b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 09:14:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749658441; x=1750263241;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IzZh7++TWPnt7YAqqfAhztYsaqI1nC4j1vdMdoyOJp4=;
+        b=fGlFmd6CUr5R4z2CYFZKdV78sC/pymPs3agDDaii6KJalWQXXwmHejSqz2HBKlxW/D
+         MhgKtqFvN0C1H8FFAUFQEkq5gFjVjhWej5+qOVAoSFyci5yQ7MdTumgKxuJVpGOEaHyx
+         UFHeosgkiqzjPlvcLJWrRd+zHNXxJt5G5ba82QBkBahN+d26G6HEYiSbnSn7KwJL2FFT
+         8lQFIO3tFCCIcFKLzxF7tfA912kdYHLOzVfY04xJArbET49DJGFNM86qRwSDW9QRdjHo
+         dzF84c2OPhfGBFTRcUz4faNVqd67p+wLfZTw4l3Q0ICSuqpNzt+7ECH9qH2RCn62opFI
+         IoLg==
+X-Forwarded-Encrypted: i=1; AJvYcCV+dVHLLG7OR28OBtju2PwuyW4hChMzGc4DwNsAvRd0+OVCd1wWNJ4YJYxdOxpLLfzjlzgoPpvMiKebD2M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOuuWAH71iPoY6hzHNcnqmqHPx7F9/cyNcr4VH2ITBc2e4a2vj
+	GYKVjM70L1VmPQB6phhvdiWj5IemO3LNgXTYaOn511bQPDbKrPYYKRmx9dbq9vt7coMjQLNJ4Nf
+	l3OB5JmNojC3GVOhYz3z+mhnGZIKRPLtQUzh94pOtCrY4dvKFXeNvHZf7b2VlJccRJI8=
+X-Gm-Gg: ASbGncuBV3OjNkCwW9rbpdDJBH/KeVcnwV2VsV4n77xiMZYpQ08Sz0OZ07a1g9lBTpU
+	PeLbdchxWrlRo9cRyldQo30i+D5zqmZ0jJs7FYaAYae/Kw+lA7fRvDEHX4/6nm9pq1HcMngmhIO
+	9bhgv0C/Wc9tt3d2IRCzadyoaMhXfQZCAs70bpdEORS+pMFALi7nYuOFLq2663KfLqwKNMvUAEJ
+	Xmq39XwlUIoBNRSDb3w4xnObIsCaO0ARymThOb9Su/j2jZwFj+Cc9aF/szqI/+mNnjPK2BgdWJH
+	qlg4P0/0sdrIAFKh2wgRNUhHjy6xvIgcu0yRP9rmH8+AYxRcbXD3Ns+rWPY=
+X-Received: by 2002:a05:6a00:2314:b0:736:a8db:93bb with SMTP id d2e1a72fcca58-7486cb21d0dmr5341545b3a.5.1749658440958;
+        Wed, 11 Jun 2025 09:14:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH/6SRDJJ5564j6vwuGUZRBSXLBvt48Y+4pJb7MX/NqEakaLAuxT3fRBYYzZ/dhUftkuTCdKw==
+X-Received: by 2002:a05:6a00:2314:b0:736:a8db:93bb with SMTP id d2e1a72fcca58-7486cb21d0dmr5341521b3a.5.1749658440551;
+        Wed, 11 Jun 2025 09:14:00 -0700 (PDT)
+Received: from [169.254.0.1] (Global_NAT1.qualcomm.com. [129.46.96.20])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482cdf1c41sm9443708b3a.149.2025.06.11.09.13.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 09:14:00 -0700 (PDT)
+From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Subject: [PATCH ath-next 0/5] wifi: ath: Add missing includes of export.h
+Date: Wed, 11 Jun 2025 09:13:53 -0700
+Message-Id: <20250611-ath-unused-export-v1-0-c36819df7e7b@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR11MB6366:EE_|DS0PR11MB7651:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3f7d018d-d84b-4873-79b4-08dda902e9d1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?iKz/imw/eW23jK4zGPIugiNsdSfV+qZ5hvO70CKeZQLuIkGeCIHnwBRSR/4N?=
- =?us-ascii?Q?OtMeFpEOfo2MDEmoeTbiRoXbedtd0ovzb9ckSRc8HAHfjpbH9rjv7e6bapUM?=
- =?us-ascii?Q?tT0OPmhPHmxkzfguEqEVRjO6OzTLibFDW1P7yHQ1qyFCGMZbi+fdhIizF5YW?=
- =?us-ascii?Q?83JXb3fCuzWa7+dJNYOh11M8idVes2PEItIvtEHGo5TH4ht268QSdPbfsPj8?=
- =?us-ascii?Q?2HVRg3TI27s1ZlhYeV6vKdyEvvkCSErHDu462yvWMijqxw8tAX38F910rQRE?=
- =?us-ascii?Q?sZozCm/bfdFkR0JHMoUx4xeO6vqnmlf2WaZ/cxFY2i2ZzqQFGaewPrfp9Dfg?=
- =?us-ascii?Q?kOHqG/fQyJjPGVVG9LGNCHFBNzc9akE6sxJ/Kf00oV4UHMgipmVg/YBbg33A?=
- =?us-ascii?Q?FCCj7N9MncGciy2NxB/y7w56PSNtj6ZDkOr9Jv9GhX/gZcx70nmQWxsP7hC6?=
- =?us-ascii?Q?Mdva+1s1LelYMkoHxflcV5TcjPn14WKzNUEPy7J1f2eA7+JaMc6fKCPycPV1?=
- =?us-ascii?Q?rSHF/vALupeNSy6yfz4K1S0FI0mIEjULDal11E61AaOjuqy7wuM4aaKJIAet?=
- =?us-ascii?Q?3+pQlcKX1qUhSehBb8pB9SlOhWjJqHo8o6RrxTcJcfByfVNOZ4WVZHzxCj3S?=
- =?us-ascii?Q?NKvTS/d858yHCZRXa//6015H5UeDYWF51DqMlgDB3RE/4ktcqdFh/Kpt5AZa?=
- =?us-ascii?Q?2svfy8qpZPXwEivjpeU0/QGUsD6odRSVkqWA5LNznxhj5VIjsoqxNVOcOyly?=
- =?us-ascii?Q?W07zzeV3G0fMPqL2f3XhGk7rVBKSdxMb/iks4gwYvMj3VE/PBpT1PtNaU9JC?=
- =?us-ascii?Q?1m2tC9/M6Djzxob3sUeaHxCHkLxqnwFsPzwC05uQ40C86iAcJipE5wLYtHE/?=
- =?us-ascii?Q?xsRd0/ar9m2i+2yeQ/fphYM7o6cEhUo9kKCFnbDE4ECfCr/RsqlD+m5MVWwZ?=
- =?us-ascii?Q?5KBvu1ue5mwxbnI5oMsrfagIGcqWtldvSv3YZ2vJSu25mziUt+Ls17x63J8z?=
- =?us-ascii?Q?0zcL7MnEdE98NC6hOocCuPgEyisxpcezV0vxOTj0Yhcw/vbTFrKuHJWXkyEg?=
- =?us-ascii?Q?do4eNFOMDqivu1KABn+4H/fAUFbXSuLjcXUhaYxO2AN1PB6SbBaZxuVvUovw?=
- =?us-ascii?Q?1W/3+OWG+dnLN6xylOfG0l1+9CjAN1Pr8doaGCHFv117q4gbB/uEpsmw8s12?=
- =?us-ascii?Q?XxM4MffqQpnS8Dpo2sELRcQ4s5ZuIxKI8NHi4iDBJMaxh0c61PuglrC9TzDy?=
- =?us-ascii?Q?xIAYrg2qGjnSX8EuaM0OTpyvKIUnUCHga5XRvHvpWTKLS5LgeEfwPWoBel+/?=
- =?us-ascii?Q?CMNiyPTgD/JAny2pn/zXk3ca5RoLpUWAVyoqNN8pJY3YI8kuUyl3K6/taAFk?=
- =?us-ascii?Q?TvyeLU1Oz4VI1i35AJr47RCIhDcTEl5LeiRbIMEJUNXtFp1YIcPz0j0poR8a?=
- =?us-ascii?Q?W4K7HzXsAzc=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6366.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?F6PvAI/wlZYqAhlux8WDx3fX6vzL+FVArAQXLjp8ErhmSgDl3WW+eiiZPwkk?=
- =?us-ascii?Q?vTMfuUIXZlOUZ3qZGvNFSOENGR4ic1+7ICJSHT5cIw8CXYEH1zP4ZISo67jG?=
- =?us-ascii?Q?/whEoi1OzYCi+kD4k6f/pSG8xUPTyJOFf1cS+ojCTLKrmMBgixyDChSICfCc?=
- =?us-ascii?Q?/YwHBgS1bf6XOworIRa0z+n5PrpPFB8rpTQQ5YINuJ31R6u4PgtUSW3x46Yi?=
- =?us-ascii?Q?L7ZYq66XBc0ZLh/ne3C6gbNwfi00E15vQSN5u5WcciEwIYkL88tPHoT23USH?=
- =?us-ascii?Q?2v5rk9S0UQ4Conu4+tD5LWd1bseiKNGCax1zOlA4V3IG1KuV2u9IXrMiGcY8?=
- =?us-ascii?Q?N2OYHoIavawZ12abat/CwtHBIFa02BQ1I9Bs8OAF27MbmOkebKnNVcQTViU4?=
- =?us-ascii?Q?+kIY7beorVQH4ysgdkBfiPIaX9r96p656fp5C+wIFzakOQbHBq2yPee9xIq9?=
- =?us-ascii?Q?f+HGdQIQi1ENpVUVbIyukdhiZ84k6wGxDjIXnKIZ+yEYbb/Y1tWJbsyAmek9?=
- =?us-ascii?Q?fKIsgXeKRio2tcWx0J4BaOH9EmyBj9WsFErmK5ah8b65Sxnn2ga0NMh6r35q?=
- =?us-ascii?Q?RTYHjJPLOs3+CpR09gltIpZMEzyjQ1KuzASbsmeYwGuhlGqkiMhxhgDyKLhG?=
- =?us-ascii?Q?uBNTz2Zr6YLPVfh5Ivb6zofe1RchuljWxsUxNGmEIR5/f/QeephhCcqLZGWB?=
- =?us-ascii?Q?jyMCtD58Lwef6Eo2P5NK1b8MYvmXLp2tC6RfACqwxlkliw7SazoE7ZZfvZJW?=
- =?us-ascii?Q?YQgTfdFbSqXRQvvfCYmFshVMngKz/GCA/QFW0yfRTFalDQ6Bk0BxsBbobzpj?=
- =?us-ascii?Q?ubofIlO+V3xViYfx2NEYV1aHNSgo3b8TAinqVQ+isUPrUkSrX2wAtZH0WItm?=
- =?us-ascii?Q?/ajASLzW0IkSvJyrVVjUhX1VD+qe+kjSLdbH7EmjTiGQJYpLn+q6+0oNOEpn?=
- =?us-ascii?Q?BgFmdBjcm773TFimrHK6K4AdltwRd6g6jFzEF5HVfluEkP959S9mK6xkl3wB?=
- =?us-ascii?Q?jNaFBrFsiYD5NCDDMLpYRvQdbaUTbmFGYEI5/7sEKEjADMgT1V/9I9Ljo1PH?=
- =?us-ascii?Q?nUlYSBq+aHNm7athMJyzUpb2uYx2SR2yqu/RyKNyidyPWiDlDVLStW/OVao9?=
- =?us-ascii?Q?inSO61d61BOtXOU9UeZqihwhv5Ssx0unTdnRbBm/sS+EwPWapOF0qOzCB7g2?=
- =?us-ascii?Q?GuOB8SxKJTieQqo7/gzq3IkNimsiSSwFV9ouV0rjFAPTohuZ3C6VKcrP1Jy5?=
- =?us-ascii?Q?GVnaxQd/CgQ0leMrjFU/P7aehNwe6QdXxSaBxVWfpkIsMCClZV8/Y8PGSpRs?=
- =?us-ascii?Q?DvkTd6mKmF0mQ8LH7MFVkM+DkkzTDE/heXmtqCIcM9dLGlpMcOicf4bd6sO6?=
- =?us-ascii?Q?z1YJtdAEdtIMGlpvmTPOfH4cq2bMaByqePQPg/wkrIzJcpltQc7tf30EzNKG?=
- =?us-ascii?Q?2cWdxQowlGfXRIRiXbul+arWGXxaZKz+OJiMiJy5axvLj/48vgD7TiLPY4LP?=
- =?us-ascii?Q?FOfhSCZaEwXxVPr3Sf8EkzpBATCFoTROtKBR9vOyD4DJ5EJ1/Gnco0A4GxhH?=
- =?us-ascii?Q?fkc0t7khix/kRdNNu0jEAXoO7sYXcC1IJ0y4Y9ux/tcWKQoJtzGA2hSk8t3d?=
- =?us-ascii?Q?VQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3f7d018d-d84b-4873-79b4-08dda902e9d1
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6366.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2025 16:13:33.5907
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EOXsY/gH9rgiDBcrH4K1w7y/N0CnVi7Qqk8kuimAmfCeleaQmv9tDH9KLmFF2xPdW9nKr8vdd+1EwFXTYU9GsPuWG+j/jQMvu2HSsEOqJBE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7651
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEGrSWgC/32NQQ6CMBREr0L+2k/aIjS68h6GBbYfaSIt9heCI
+ dzdygHcTDKZmTcbMEVHDNdig0iLYxd8NvJUgBk6/yR0NntQQtWikQK7NODsZyaLtE4hJrS9vNS
+ NsvJRaci7KVLv1oN5h1/d05qgzcngOIX4Oc4WeeR/uItEgWToXFmtje7VLTCX77l7mTCOZRZo9
+ 33/Aq7uSK3DAAAA
+X-Change-ID: 20250610-ath-unused-export-df19562d1b37
+To: Jeff Johnson <jjohnson@kernel.org>,
+        =?utf-8?q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>
+Cc: linux-wireless@vger.kernel.org, ath10k@lists.infradead.org,
+        linux-kernel@vger.kernel.org, ath11k@lists.infradead.org,
+        ath12k@lists.infradead.org,
+        Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjExMDEzNiBTYWx0ZWRfX3ohqgPePxjdX
+ t2vtC2Ogyi3DxYcj8yT3O7ZpS865ee4zmc6glNzZFx260+MurxzkOkYR40/oecM4wZE95aZyF3B
+ zL8wmix7ImbxKau2bhowWL4ZVOtOJdxEdxwMMpzyZPwvjYfJRarksewJdoq9CWpQqmxwIATTK2o
+ BNBsCW8TpDGU/297zr7KoQcv2VMtB+Bx5cteriw4W8YPOLVi8YmfWW4BO/LcQsLQwMNa7WHkscy
+ bDsHSPbSj5NCfTis94zf198ikNfVgaSEllFZnKKG2SFS/fBYplp1Xev0dM0JzkbAYyfLlejQDnB
+ S35WYk+dzypglUqfMsN2CFByp2Tk5k78MVh2deXyybURT2BveAlyDMPz42rE8A5ddTxT0Cy5Z3w
+ 96z8S44z6SyEYUux0pYA9mmcYmPf3oFPjMFXK3EiJCsyfiGR50/zUIeLuu/WBfngeEo8ecY9
+X-Proofpoint-GUID: APOnqxuyjhDwDTsHe5Vkn3M57Z9BYwCz
+X-Proofpoint-ORIG-GUID: APOnqxuyjhDwDTsHe5Vkn3M57Z9BYwCz
+X-Authority-Analysis: v=2.4 cv=f+BIBPyM c=1 sm=1 tr=0 ts=6849ab4a cx=c_pps
+ a=rEQLjTOiSrHUhVqRoksmgQ==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=pn7C01q4hUtA5Nn5QkAA:9
+ a=QEXdDO2ut3YA:10 a=2VI0MkxyNR6bbpdq8BZq:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-11_07,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 spamscore=0 mlxlogscore=619 bulkscore=0 impostorscore=0
+ lowpriorityscore=0 priorityscore=1501 adultscore=0 phishscore=0 mlxscore=0
+ malwarescore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506110136
 
-On Wed, Jun 11, 2025 at 10:00:02AM -0600, Alex Williamson wrote:
-> On Wed, 11 Jun 2025 06:50:59 -0700
-> Mario Limonciello <superm1@kernel.org> wrote:
-> 
-> > On 6/11/2025 5:52 AM, Cabiddu, Giovanni wrote:
-> > > Hi Mario, Bjorn and Alex,
-> > > 
-> > > On Wed, Apr 23, 2025 at 11:31:32PM -0500, Mario Limonciello wrote:  
-> > >> From: Mario Limonciello <mario.limonciello@amd.com>
-> > >>
-> > >> AMD BIOS team has root caused an issue that NVME storage failed to come
-> > >> back from suspend to a lack of a call to _REG when NVME device was probed.
-> > >>
-> > >> commit 112a7f9c8edbf ("PCI/ACPI: Call _REG when transitioning D-states")
-> > >> added support for calling _REG when transitioning D-states, but this only
-> > >> works if the device actually "transitions" D-states.
-> > >>
-> > >> commit 967577b062417 ("PCI/PM: Keep runtime PM enabled for unbound PCI
-> > >> devices") added support for runtime PM on PCI devices, but never actually
-> > >> 'explicitly' sets the device to D0.
-> > >>
-> > >> To make sure that devices are in D0 and that platform methods such as
-> > >> _REG are called, explicitly set all devices into D0 during initialization.
-> > >>
-> > >> Fixes: 967577b062417 ("PCI/PM: Keep runtime PM enabled for unbound PCI devices")
-> > >> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> > >> ---  
-> > > Through a bisect, we identified that this patch, in v6.16-rc1,
-> > > introduces a regression on vfio-pci across all Intel QuickAssist (QAT)
-> > > devices. Specifically, the ioctl VFIO_GROUP_GET_DEVICE_FD call fails
-> > > with -EACCES.
-> > > 
-> > > Upon further investigation, the -EACCES appears to originate from the
-> > > rpm_resume() function, which is called by pm_runtime_resume_and_get()
-> > > within vfio_pci_core_enable(). Here is the exact call trace:
-> > > 
-> > >      drivers/base/power/runtime.c: rpm_resume()
-> > >      drivers/base/power/runtime.c: __pm_runtime_resume()
-> > >      include/linux/pm_runtime.h: pm_runtime_resume_and_get()
-> > >      drivers/vfio/pci/vfio_pci_core.c: vfio_pci_core_enable()
-> > >      drivers/vfio/pci/vfio_pci.c: vfio_pci_open_device()
-> > >      drivers/vfio/vfio_main.c: device->ops->open_device()
-> > >      drivers/vfio/vfio_main.c: vfio_df_device_first_open()
-> > >      drivers/vfio/vfio_main.c: vfio_df_open()
-> > >      drivers/vfio/group.c: vfio_df_group_open()
-> > >      drivers/vfio/group.c: vfio_device_open_file()
-> > >      drivers/vfio/group.c: vfio_group_ioctl_get_device_fd()
-> > >      drivers/vfio/group.c: vfio_group_fops_unl_ioctl(..., VFIO_GROUP_GET_DEVICE_FD, ...)
-> > > 
-> > > Is this a known issue that affects other devices? Is there any ongoing
-> > > discussion or fix in progress?
-> > > 
-> > > Thanks,
-> > >   
-> > 
-> > This is the first I've heard about an issue with that patch.
-> > 
-> > Does setting the VFIO parameter disable_idle_d3 help?
-> > 
-> > If so; this feels like an imbalance of runtime PM calls in the VFIO 
-> > stack that this patch exposed.
-> > 
-> > Alex, any ideas?
-> 
-> Does the device in question have a PM capability?  I note that
-> 4d4c10f763d7 makes the sequence:
-> 
->        pm_runtime_forbid(&dev->dev);
->        pm_runtime_set_active(&dev->dev);
->        pm_runtime_enable(&dev->dev);
-> 
-> Dependent on the presence of a PM capability.  The PM capability is
-> optional on SR-IOV VFs.  This feels like a bug in the original patch,
-> we should be able to use pm_runtime ops on a device without
-> specifically checking if the device supports PCI PM.
-> 
-> vfio-pci also has a somewhat unique sequence versus other drivers, we
-> don't call pci_enable_device() until the user opens the device, but we
-> want to put the device into low power before that occurs.  Historically
-> PCI-core left device in an unknown power state between driver uses, so
-> we've needed to manually move the device to D0 before calling
-> pm_runtime_allow() and pm_runtime_put() (see
-> vfio_pci_core_register_device()).  Possibly this is redundant now but
-> we're using pci_set_power_state() which shouldn't interact with
-> pm_runtime, so my initial guess is that we might be unbalanced because
-> this is a VF w/o a PM capability and we've missed the expected
-> pm_runtime initialization sequence.  Thanks,
+commit a934a57a42f6 ("scripts/misc-check: check missing #include
+<linux/export.h> when W=1") added a check which is now generating
+warnings. Fix the ones in drivers/net/wireless/ath/...
 
-Yes, for Intel QAT, the issue occurs with a VF without the PM capability.
+---
+Jeff Johnson (5):
+      wifi: ath: Add missing include of export.h
+      wifi: ath9k: Add missing include of export.h
+      wifi: ath10k: Add missing include of export.h
+      wifi: ath11k: Add missing include of export.h
+      wifi: ath12k: Add missing include of export.h
 
-Thanks,
+ drivers/net/wireless/ath/ath10k/bmi.c            | 2 ++
+ drivers/net/wireless/ath/ath10k/ce.c             | 2 ++
+ drivers/net/wireless/ath/ath10k/core.c           | 2 ++
+ drivers/net/wireless/ath/ath10k/coredump.c       | 2 ++
+ drivers/net/wireless/ath/ath10k/debug.c          | 2 ++
+ drivers/net/wireless/ath/ath10k/htc.c            | 3 +++
+ drivers/net/wireless/ath/ath10k/htt_rx.c         | 3 +++
+ drivers/net/wireless/ath/ath10k/htt_tx.c         | 2 ++
+ drivers/net/wireless/ath/ath10k/mac.c            | 1 +
+ drivers/net/wireless/ath/ath10k/trace.c          | 2 ++
+ drivers/net/wireless/ath/ath11k/ce.c             | 2 ++
+ drivers/net/wireless/ath/ath11k/core.c           | 2 ++
+ drivers/net/wireless/ath/ath11k/coredump.c       | 2 ++
+ drivers/net/wireless/ath/ath11k/debug.c          | 2 ++
+ drivers/net/wireless/ath/ath11k/debugfs.c        | 2 ++
+ drivers/net/wireless/ath/ath11k/dp.c             | 2 ++
+ drivers/net/wireless/ath/ath11k/fw.c             | 2 ++
+ drivers/net/wireless/ath/ath11k/hal.c            | 2 ++
+ drivers/net/wireless/ath/ath11k/pcic.c           | 2 ++
+ drivers/net/wireless/ath/ath11k/qmi.c            | 2 ++
+ drivers/net/wireless/ath/ath11k/trace.c          | 2 ++
+ drivers/net/wireless/ath/ath12k/core.c           | 2 ++
+ drivers/net/wireless/ath/ath9k/common-beacon.c   | 1 +
+ drivers/net/wireless/ath/ath9k/common-debug.c    | 1 +
+ drivers/net/wireless/ath/ath9k/common-init.c     | 1 +
+ drivers/net/wireless/ath/ath9k/common-spectral.c | 1 +
+ drivers/net/wireless/ath/ath9k/common.c          | 1 +
+ drivers/net/wireless/ath/ath9k/dynack.c          | 1 +
+ drivers/net/wireless/ath/ath9k/hw.c              | 1 +
+ drivers/net/wireless/ath/main.c                  | 1 +
+ 30 files changed, 53 insertions(+)
+---
+base-commit: 2b404d0c06adaeeebd355bd727ef600706b28197
+change-id: 20250610-ath-unused-export-df19562d1b37
 
--- 
-Giovanni
