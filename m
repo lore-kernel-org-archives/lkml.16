@@ -1,255 +1,205 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 531FC2620CA
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 12:01:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F6E271459;
+	Wed, 11 Jun 2025 12:03:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749643312; cv=none; b=J/4NX4jOaHDxD4e30vfgW4/pxFpi9cly5RtMY7qlCPrqVHgxw9gP8q1Cw7z6hTodunD3JIWudT7gTGmoY89PUC87Njt50aweuqJgsNhq3w+TXOAzcjzPVn1hp9VmGsezMAVLSIPqf1RR6ZNcwLtqshwP7dy/ZAkAHFFKrxdFGZA=
+	t=1749643407; cv=none; b=iZvFFYI5zarKshSwdGubeLxWZa/ssvCDnGlDwQI5JfjcFG4WNhWH2JMPS045vVkA+ZOxhWWzp7xvvq8S5aBW0nyaS8bBJP0Ncr887KPdJW8Ed8gTd6HehSX6EDegxHj9YyXTITNOdw8bGbCmJGIbGuOpYQDv40n3ALHIvyhaVd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749643312; c=relaxed/simple;
-	bh=H4wZc57Qg6cDhRTTpkdEvNqclWkDTQf/RJeQNyh+1qA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=enRAdE4Vy2FwtaUlj05awafbwvrQprxPhW+D9wQXqDi7MywwuAAml93OI/Wii/Ec4D6S7THZu4KBKWt6lAqTakA/PDokOv4wanisyYQ/ophD9JRmDHYiYLylIkVfj4ZWQoZQWR0eTRi4SoDMObIK8DxkTSSzK81HqEMiAjdjQjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ZstTO5Ls; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1749643407; c=relaxed/simple;
+	bh=MLNf9BlK6xMOHAGq5DSVwdju6kiEM8tRxQxwL0LNK24=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=tVWgo1I28IksqqB6CjlF4TRq/jTvNU5DNMbuwBQwKEX5A+B4n55/Y2FUUtzdjlIOWAtjr2kwAlH0eWREdHvqZaCr+93UvJ2pSK+FFvIvT9jAoyOxgA4ssNBwb0ox/+QDGVpEuiM/irFPz3ZbuzVPmb8M1yD1JgG/KahnQBx5hws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E88IPVB+; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZstTO5Ls"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250611120148euoutp02fc7f63a7378497bbdfc6aba663a3c91c~H_1G4Ktdi2305623056euoutp02x
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 12:01:48 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250611120148euoutp02fc7f63a7378497bbdfc6aba663a3c91c~H_1G4Ktdi2305623056euoutp02x
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1749643308;
-	bh=lZTHv6xa6G6PABQRHpdbXMWUGV56gqtjCAtlzRz/SMk=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=ZstTO5LsnJThFu5q3RKEmOgJIueSmEceCMtGs9YAl3rnIoDI5FIQ2MlnFF2z1kTGC
-	 TLy89bs4Nsmmr+4ERGgrpsofL5PUig8cRVnKr6BDLjmJcs8rq7k454UPH89GXNf4nY
-	 T+CuED1SYBpFoE9iFrfQigMTWCcj9Jpn47sijkLM=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250611120148eucas1p1f24ae22505904a1475d542f55cd46b58~H_1GRfWHp1118011180eucas1p17;
-	Wed, 11 Jun 2025 12:01:48 +0000 (GMT)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250611120146eusmtip21ffd06c724f840fcf655aef74f6eabce~H_1FNt0lU1704917049eusmtip26;
-	Wed, 11 Jun 2025 12:01:46 +0000 (GMT)
-Message-ID: <ad6981eb-f53a-4a7b-90bd-2e2705bd0297@samsung.com>
-Date: Wed, 11 Jun 2025 14:01:46 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E88IPVB+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749643406; x=1781179406;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=MLNf9BlK6xMOHAGq5DSVwdju6kiEM8tRxQxwL0LNK24=;
+  b=E88IPVB+XNMcgsaGdwVLN/vdCbP/YPsopSrjMOfCcd2GM5ThOXlgkFxt
+   HKESv3Ks7c9Iks8opEkecL54f3UUjYjkKh5+VsJuidV0JRLQ/SxBT8x7c
+   FrdDZUImmWCesAEY5pT0N2NwG8QFaOiYN9q0cxWgZh/+z/eVsdOHErxxm
+   GriRWnLIQhSVW2j2qdHqK1YWxd9oAreBfz3F6qhXU8hRiSUKxqn462O4F
+   /4VCXHG75/37UPTX3o9gvr7QOQ5o/9ns+V36tw45rYCF1Z8D8pRvm7Xeg
+   cJ3XLvHapdJC42JxrcVMVnw3zC56FbCLSbzr2ehs+saRS20pAhvfjTJi3
+   A==;
+X-CSE-ConnectionGUID: cNotr/r8SxSZbRoHtKWNgg==
+X-CSE-MsgGUID: B7lE8BlhQSCYDBNRTn2Rmg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="55576967"
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="55576967"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 05:03:25 -0700
+X-CSE-ConnectionGUID: RyqVNbn+RLeC9FrtBdOFNw==
+X-CSE-MsgGUID: MEbQAkFVTTuxyjqiH1G0gg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="184382899"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.183])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 05:03:23 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 11 Jun 2025 15:03:18 +0300 (EEST)
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    linux-serial <linux-serial@vger.kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 15/33] serial: 8250: extract serial8250_THRE_test()
+In-Reply-To: <20250611100319.186924-16-jirislaby@kernel.org>
+Message-ID: <2c7977aa-831d-16be-667f-9f761ea0060f@linux.intel.com>
+References: <20250611100319.186924-1-jirislaby@kernel.org> <20250611100319.186924-16-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/8] drm/imagination: Use pwrseq for TH1520 GPU power
- management
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Matt Coster
-	<matt.coster@imgtec.com>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Drew Fustini <drew@pdp7.com>, Guo
-	Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, Rob Herring
-	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Frank Binns
-	<frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>, Maarten
-	Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
-	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
-	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Paul Walmsley
-	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson
-	<ulf.hansson@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <CAMRc=Mexq9ThfG6jZUbs3wYDA9UZN-+pHnX_Y-7WO4ubXvEuCw@mail.gmail.com>
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250611120148eucas1p1f24ae22505904a1475d542f55cd46b58
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250529222405eucas1p18ed1254bf1b2d78468734656fec537e1
-X-EPHeader: CA
-X-CMS-RootMailID: 20250529222405eucas1p18ed1254bf1b2d78468734656fec537e1
-References: <20250530-apr_14_for_sending-v3-0-83d5744d997c@samsung.com>
-	<CGME20250529222405eucas1p18ed1254bf1b2d78468734656fec537e1@eucas1p1.samsung.com>
-	<20250530-apr_14_for_sending-v3-3-83d5744d997c@samsung.com>
-	<20250603-whispering-jaybird-of-thunder-f87867@kuoka>
-	<d42a8c49-7ad2-49ef-bd9c-1e3d9981b58e@samsung.com>
-	<e5a0bee2-ff74-47cf-ad2c-0c78b57ae6cf@kernel.org>
-	<a6a29e58-8613-47f0-9e5c-d125da7ddb49@samsung.com>
-	<cc4dbf7c-e023-403c-88be-4691f97a0ff0@kernel.org>
-	<c7774790-07c3-469d-a994-9e84108ad21d@samsung.com>
-	<CAMRc=Mexq9ThfG6jZUbs3wYDA9UZN-+pHnX_Y-7WO4ubXvEuCw@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
 
+On Wed, 11 Jun 2025, Jiri Slaby (SUSE) wrote:
 
-
-On 6/5/25 10:10, Bartosz Golaszewski wrote:
-> On Thu, Jun 5, 2025 at 9:47 AM Michal Wilczynski
-> <m.wilczynski@samsung.com> wrote:
->>
->>
->>
->> On 6/4/25 14:07, Krzysztof Kozlowski wrote:
->>> On 04/06/2025 13:53, Michal Wilczynski wrote:
->>>>>>
->>>>>> The GPU node will depend on the AON node, which will be the sole
->>>>>> provider for the 'gpu-power' sequencer (based on the discussion in patch
->>>>>> 1).
->>>>>>
->>>>>> Therefore, if the AON/pwrseq driver has already completed its probe, and
->>>>>> devm_pwrseq_get() in the GPU driver subsequently returns -EPROBE_DEFER
->>>>>> (because pwrseq_get found 'no match' on the bus for 'gpu-power'), the
->>>>>> interpretation is that the AON driver did not register this optional
->>>>>> sequencer. Since AON is the only anticipated source, it implies the
->>>>>> sequencer won't become available later from its designated provider.
->>>>>
->>>>> I don't understand why you made this assumption. AON could be a module
->>>>> and this driver built-in. AON will likely probe later.
->>>>
->>>> You're absolutely right that AON could be a module and would generally
->>>> probe later in that scenario. However, the GPU device also has a
->>>> 'power-domains = <&aon TH1520_GPU_PD>' dependency. If the AON driver (as
->>>> the PM domain provider) were a late probing module, the GPU driver's
->>>> probe would hit -EPROBE_DEFER when its power domain is requested
->>>> which happens before attempting to get other resources like a power
->>>> sequencer.
->>>
->>> Huh, so basically you imply certain hardware design and certain DTS
->>> description in your driver code. Well, that's clearly fragile design to
->>> me, because you should not rely how hardware properties are presented in
->>> DTS. Will work here on th1520 with this DTS, won't work with something else.
->>>
->>> Especially that this looks like generic Imagination GPU code, common to
->>> multiple devices, not TH1520 only specific.
->>>
->>>>
->>>> So, if the GPU driver's code does reach the devm_pwrseq_get(dev,
->>>> "gpu-power") call, it strongly implies the AON driver has already
->>>> successfully probed.
->>>>
->>>> This leads to the core challenge with the optional 'gpu-power'
->>>> sequencer: Even if the AON driver has already probed, if it then chooses
->>>> not to register the "gpu-power" sequence (because it's an optional
->>>> feature), pwrseq_get() will still find "no device matched" on the
->>>> pwrseq_bus and return EPROBE_DEFER.
->>>>
->>>> If the GPU driver defers here, as it normally should for -EPROBE_DEFER,
->>>> it could wait indefinitely for an optional sequence that its
->>>> already probed AON provider will not supply.
->>>>
->>>> Anyway I think you're right, that this is probably confusing and we
->>>> shouldn't rely on this behavior.
->>>>
->>>> To solve this, and to allow the GPU driver to correctly handle
->>>> -EPROBE_DEFER when a sequencer is genuinely expected, I propose using a
->>>> boolean property on the GPU's DT node, e.g.
->>>> img,gpu-expects-power-sequencer. If the GPU node provides this property
->>>> it means the pwrseq 'gpu-power' is required.
->>>
->>> No, that would be driver design in DTS.
->>>
->>> I think the main problem is the pwrseq API: you should get via phandle,
->>> not name of the pwrseq controller. That's how all producer-consumer
->>> relationships are done in OF platforms.
->>
->> Bart,
->> Given Krzysztof's valid concerns about the current name based
->> lookup in pwrseq_get() and the benefits of phandle based resource
->> linking in OF platforms: Would you be open to a proposal for extending
->> the pwrseq API to allow consumers to obtain a sequencer (or a specific
->> target sequence) via a phandle defined in their Device Tree node? For
->> instance, a consumer device could specify power-sequencer =
->> <&aon> and a new API variant could resolve this.
->>
+> serial8250_do_startup() contains a stand-alone code for probing THRE.
+> Furthermore, the code block is conditional (port->irq and test for
+> UPF_NO_THRE_TEST).
 > 
-> I can be open to it all I want, but I bet Krzysztof won't be open to
-> introducing anything like a power-sequencer device property in DT
-> bindings. Simply because there's no such thing in the physical world.
-> The concept behind the power sequencing framework was to bind
-> providers to consumers based on existing links modelling real device
-> properties (which a "power-sequencer" is not). I commented on it under
-> another email saying that you already have a link here - the
-> power-domains property taking the aon phandle. In your pwrseq
-> provider's match() callback you can parse and resolve it back to the
-> aon node thus making sure you're matching the consumer with the
-> correct provider.
+> Move this code to a separate function. The conditional can be evaluated
+> easier there -- by a simple return in the beginning. So the indentation
+> level lowers and the code is overall more readable now.
 > 
-> Please take a look at the existing wcn pwrseq driver which does a
-> similar thing but parses the regulator properties of the power
-> management unit (in the pwrseq_qcom_wcn_match() function).
+> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+> ---
+>  drivers/tty/serial/8250/8250_port.c | 92 +++++++++++++++--------------
+>  1 file changed, 49 insertions(+), 43 deletions(-)
 > 
-> We've tried to do something like what you're proposing for years and
-> it always got stuck on the fact that DT must not make up bogus
-> properties only to satisfy the driver implementation. We've done it in
-> the past, that's true, but just because we didn't know any better and
-> DT maintainers are currently much stricter as to what kind of
-> properties to allow.
+> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+> index c09a90b38d8f..5466286bb44f 100644
+> --- a/drivers/tty/serial/8250/8250_port.c
+> +++ b/drivers/tty/serial/8250/8250_port.c
+> @@ -2199,6 +2199,54 @@ static void serial8250_set_TRG_levels(struct uart_port *port)
+>  	}
+>  }
+>  
+> +static void serial8250_THRE_test(struct uart_port *port)
+> +{
+> +	struct uart_8250_port *up = up_to_u8250p(port);
+> +	unsigned long flags;
+> +	bool iir_noint1, iir_noint2;
+> +
+> +	if (!port->irq)
+> +		return;
+> +
+> +	if (up->port.flags & UPF_NO_THRE_TEST)
+> +		return;
+> +
+> +	if (port->irqflags & IRQF_SHARED)
+> +		disable_irq_nosync(port->irq);
+> +
+> +	/*
+> +	 * Test for UARTs that do not reassert THRE when the transmitter is idle and the interrupt
+> +	 * has already been cleared.  Real 16550s should always reassert this interrupt whenever the
+> +	 * transmitter is idle and the interrupt is enabled.  Delays are necessary to allow register
+> +	 * changes to become visible.
 
-Hi Bartosz, Krzysztof, Matt
+Very long comment lines are hard to read. (This is mostly not related to
+line length limits, but with eye movement required.)
 
-Thanks for the detailed explanation. I understand and agree with your
-point about using existing device tree links. The pwrseq framework's
-design makes perfect sense, and matching via the power-domains property
-is the right way forward for the provider.
+It may make sense to place some of the descriptive comment text into a 
+function comment instead of placing them mid-function.
 
-Just to clarify, my intention is to add the power-domains check to my
-existing .match() function, which already validates the consumer's
-compatible ("thead,th1520-gpu"). Combining these two checks will create
-an even stronger, more specific match. I will proceed with this change.
+> +	 *
+> +	 * Synchronize UART_IER access against the console.
+> +	 */
+> +	uart_port_lock_irqsave(port, &flags);
+> +
+> +	wait_for_xmitr(up, UART_LSR_THRE);
+> +	serial_port_out_sync(port, UART_IER, UART_IER_THRI);
+> +	udelay(1); /* allow THRE to set */
 
-However, this leads me back to a fundamental issue with the
-consumer side implementation in the generic pvr_device.c driver. The
-current fallback code is:
+These comments mix visually into the code making this look a big wall of 
+text overall. Maybe consider adding empty lines to the logic as well as
+there are what looks clear steps in this logic.
 
-/*
- * If the error is -EPROBE_DEFER, it's because the
- * optional sequencer provider is not present
- * and it's safe to fall back on manual power-up.
- */
-if (pwrseq_err == -EPROBE_DEFER)
-        pvr_dev->pwrseq = NULL;
-
-As Krzysztof noted, simply ignoring -EPROBE_DEFER is not ideal. But if I
-change this to a standard deferred probe, the pvr_device.c driver will
-break on all other supported SoCs. It would wait indefinitely for a
-pwrseq-thead-gpu provider that will never appear on those platforms.
-
-The core of the problem is that any solution within the provider's
-.match() function cannot help here. On other SoCs, the
-pwrseq-thead-gpu.c driver is not even compiled, so its .match() function
-will never be executed. The generic consumer driver needs a way to know
-whether it should even attempt to get a sequencer.
-
-This brings me back to the idea of a DT property, and I'd like to frame
-it from a different perspective. A property like needs-power-sequencer
-(perhaps vendor-prefixed as thead,needs-power-sequencer) isn't meant to
-describe driver behavior, but rather to describe a physical integration
-requirement of the hardware.
-
-For the TH1520, the SoC integrators made a design choice that mandates a
-specific software driven power on sequence. On other supported SoCs, as
-noted by the Imagination developers [1], this sequencing is handled by
-the hardware itself. Describing this platform specific requirement this
-hardware quirk in the DT seems to be the most accurate way to model the
-physical reality.
-
-What would be the recommended way to proceed? The generic consumer
-driver needs a way to know if it should expect a sequencer for a
-particular platform, and the DT seems like the most appropriate place to
-describe this hardware specific need.
-
-If a DT property remains unacceptable, the only other path I can see is
-a minimal change to the core pwrseq API itself, perhaps by adding a
-non deferring devm_pwrseq_try_get() function.
-
-[1] - https://lore.kernel.org/all/fd46f443-b1f9-4f82-8d73-117cda093315@imgtec.com/
-
-> 
-> Bartosz
+> +	iir_noint1 = serial_port_in(port, UART_IIR) & UART_IIR_NO_INT;
+> +	serial_port_out(port, UART_IER, 0);
+> +	serial_port_out_sync(port, UART_IER, UART_IER_THRI);
+> +	udelay(1); /* allow a working UART time to re-assert THRE */
+> +	iir_noint2 = serial_port_in(port, UART_IIR) & UART_IIR_NO_INT;
+> +	serial_port_out(port, UART_IER, 0);
+> +
+> +	uart_port_unlock_irqrestore(port, flags);
+> +
+> +	if (port->irqflags & IRQF_SHARED)
+> +		enable_irq(port->irq);
+> +
+> +	/*
+> +	 * If the interrupt is not reasserted, or we otherwise don't trust the iir, setup a timer to
+> +	 * kick the UART on a regular basis.
+> +	 */
+> +	if ((!iir_noint1 && iir_noint2) || up->port.flags & UPF_BUG_THRE)
+> +		up->bugs |= UART_BUG_THRE;
+> +}
+> +
+>  int serial8250_do_startup(struct uart_port *port)
+>  {
+>  	struct uart_8250_port *up = up_to_u8250p(port);
+> @@ -2258,49 +2306,7 @@ int serial8250_do_startup(struct uart_port *port)
+>  	if (retval)
+>  		goto out;
+>  
+> -	if (port->irq && !(up->port.flags & UPF_NO_THRE_TEST)) {
+> -		unsigned char iir1;
+> -
+> -		if (port->irqflags & IRQF_SHARED)
+> -			disable_irq_nosync(port->irq);
+> -
+> -		/*
+> -		 * Test for UARTs that do not reassert THRE when the
+> -		 * transmitter is idle and the interrupt has already
+> -		 * been cleared.  Real 16550s should always reassert
+> -		 * this interrupt whenever the transmitter is idle and
+> -		 * the interrupt is enabled.  Delays are necessary to
+> -		 * allow register changes to become visible.
+> -		 *
+> -		 * Synchronize UART_IER access against the console.
+> -		 */
+> -		uart_port_lock_irqsave(port, &flags);
+> -
+> -		wait_for_xmitr(up, UART_LSR_THRE);
+> -		serial_port_out_sync(port, UART_IER, UART_IER_THRI);
+> -		udelay(1); /* allow THRE to set */
+> -		iir1 = serial_port_in(port, UART_IIR);
+> -		serial_port_out(port, UART_IER, 0);
+> -		serial_port_out_sync(port, UART_IER, UART_IER_THRI);
+> -		udelay(1); /* allow a working UART time to re-assert THRE */
+> -		iir = serial_port_in(port, UART_IIR);
+> -		serial_port_out(port, UART_IER, 0);
+> -
+> -		uart_port_unlock_irqrestore(port, flags);
+> -
+> -		if (port->irqflags & IRQF_SHARED)
+> -			enable_irq(port->irq);
+> -
+> -		/*
+> -		 * If the interrupt is not reasserted, or we otherwise
+> -		 * don't trust the iir, setup a timer to kick the UART
+> -		 * on a regular basis.
+> -		 */
+> -		if ((!(iir1 & UART_IIR_NO_INT) && (iir & UART_IIR_NO_INT)) ||
+> -		    up->port.flags & UPF_BUG_THRE) {
+> -			up->bugs |= UART_BUG_THRE;
+> -		}
+> -	}
+> +	serial8250_THRE_test(port);
+>  
+>  	up->ops->setup_timer(up);
+>  
 > 
 
-Best regards,
 -- 
-Michal Wilczynski <m.wilczynski@samsung.com>
+ i.
+
