@@ -1,63 +1,63 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91E41281357
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 13:14:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43967284663
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 13:15:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749647700; cv=none; b=Ic/GO2Nn0FG9ao6HQnRTNtc+gI1G2bwVZMvQwcq6jS2ed18gA+ojB5a2SUBgXeRuFi2wz9qoO/tSLw63vkCnjVPoXXrUb+L2L0ppMuHq8mAKvQcIjRoDk0z7fnayCDScoZ3j9I9UaOV8rCxU4fyWOioW8seKbxGvX/AwNaC1F0o=
+	t=1749647703; cv=none; b=u/6rGrtoHYts8CuaYtLeLvMlifH2R8jlOtjqDzBfruPmTryB/JM4L8V+FKBke6ugxrFwaGCOrqgDHhdtANLQnG/fIiFlWiyuyNXAreyt6GxVjkaN0g8sPDpRfTskD6Vh10oRfkqz+vSHh5I/m3v1AIIlpXNOJ2AaPF+Y9EdtgcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749647700; c=relaxed/simple;
-	bh=nxPWFf3cevMBeZnqTBUR2KxNKDC+KbXW/fVZ6nY33qE=;
+	s=arc-20240116; t=1749647703; c=relaxed/simple;
+	bh=nVIfEjZaTpZ+Ut2MwZcCo8MMWQ9Pb8niIhxzCWk4rdg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=V7qhlTxUw132Q2gE3OmGRgQwLyd373CuOZKfKZinYD9OtORR/zcNw+1Iod57dF1DJZ7an3+91MUnpdYKkOtiz2ZF1UCAlczlK0ZIDlwmePWcBssR77EqzpxRLLXg9DQ5VUZS/cu8YJweEUhUvYy2J0N5yaQJR7abAjyWXczyLVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=I+vFanr5; arc=none smtp.client-ip=209.85.128.54
+	 MIME-Version; b=K3r2glPYqb8AKvNzUKRnPxiHuiWvd7RGVtQO8mAv4l+aIV6hDES6No3tINdb849K9OvZJjLPIHS0qcVMQe/o8lCz4hYHN5nhY08CZzhrYZ1dVthD5RJS9QUwii1DHD16cFHA8h5KdAll4MMr7lDEJEidf/hunKQA/DgC/1jZ1ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=QdRqSx65; arc=none smtp.client-ip=209.85.128.65
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="I+vFanr5"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-451d3f72391so86361585e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:14:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="QdRqSx65"
+Received: by mail-wm1-f65.google.com with SMTP id 5b1f17b1804b1-45024721cbdso57162005e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:15:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749647697; x=1750252497; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1749647699; x=1750252499; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zOjKIJH1ol0JJuOKGy0y64ALk2zaD7FKRkqyE44Vz4c=;
-        b=I+vFanr5NQRuotfa8HNhVCgZb8CrDCnwMsfi+FDhYEXiPrWA4hUTLCCgdVOMrV/3+z
-         HFK+UdPJWlch5WE5Tac4m0Q/CjerY29zMITkuP+TGwGP1X06BAHykFSFDjL31VbO8loK
-         voCt6/EV1mHg9vH2MFczHypG64Us8OwfT9jr+MmzTlY2wCpNUEXiTWTGIz9poIO5aX/S
-         IjkPWBZ6T1JHNPhdBzM5yeFAU1T67oyk6SDXIW+86PufM4Jk5xSAdEnTU4aGMQiGYVsV
-         wljV8xTmcDp6o1G6nhgA2zl1WPIGrW9ok1sYPd6CfAJJtRfd2bIWA+lZaCFMB3yNGs4X
-         9mjQ==
+        bh=PscFTZIFJAAdYDBzEvyv96+pEf2Tq9pY8w9RxNVdTSc=;
+        b=QdRqSx65Rmj6mJTY8Hdfll56rnCUSEzq39uhhrQnR5617Skva2Yioz/BeEtda9XErv
+         Uf9btPH+yP50IMykW8QbEFEzs6g63TNNVU51X8/yqpAWhE6f58u17/Zdx/QA7CWrAxxA
+         OGshPIJa+rVVBaQNUu9qH1wgy9gP9K4ETuK48XHFXQ38FjNixyFLqrxsREd+LtLSoN97
+         Ue7+Om98dWLhVSZPJrtc/XB+xkuaQajbB0vSrkQYSwtf6EFr5m7tv594sCr5ksjPmUhk
+         UcI+BFSfmyLw+kP3LeWYXgfIQT+m/pWn6no62OZdyDxcCmiqp1DsuFH6uc+jc8HAuG8U
+         3FEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749647697; x=1750252497;
+        d=1e100.net; s=20230601; t=1749647699; x=1750252499;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zOjKIJH1ol0JJuOKGy0y64ALk2zaD7FKRkqyE44Vz4c=;
-        b=TJda8AAuPDkV8xV96yhmYx59uwr/mAQH2uqiwCnr3jnxFQDgP+KzrkbNDrhNJkPhdQ
-         r8XV0dWWRNQ9a3sFcMGpyNdZceOXX4IPRlt/MkIwrMyyk7mvMHKhkC5WGNhES8WqVJ/v
-         IAYsEVeKSDa48XYGPUEzCAGJRahCYwzu5CSplMpWjOUnrVJkdZeyEskfyh0CG6lUpg+r
-         bpKjHrku/dbnJaSKMwAZm8DT7feIip9zCjkQXzXtyVMQP7kd7ZZD6lftvphhDGEmjVY9
-         3rgH5dV9/7hCL9mBliqOOcOhwFzwo6ksHk6nrQFC9Ga8/Qjan99tgsKGQzdI4RG5WFgb
-         U5+A==
-X-Gm-Message-State: AOJu0YyDuHzqSmSCZPBrypkoMAMyv2RjJ4Rx1DeNodDnUwMG255/LHzB
-	3YF+6WdZDL4/JOuLQpTq/RPq0t+2BYiWV0b3XkB105QmvLT1zmczWVk9JsSwHWCnFLT3IPyspBZ
-	K+au6OBE=
-X-Gm-Gg: ASbGncvOA42v4Giez1Vsamr2PQec4VNFQKEsP7J3MH4bdZFvEWR0cd7R7RLhUUxKT+3
-	3Hi8cI44/wT+rozyw6KIUT0IF2iUXW5zyBkBqDIpoXZZTFMTnIg+H3eumwLIbcDcd608GgXK8fl
-	NVSkwbWwm/bH7umKKxqcPVWm6wjzjX9eq/qb0Q3hg26rUfj9iQzc5lD7VfKn/sppLjYdWcu4gYL
-	j04tTnBGXjlOk+1zT00mCSyE1IS3xIdlycerlKRxhK/qXEUceNf3lY9fDAkygbkXLDKV82a7VTA
-	oE060cH9ySsr25un/RJ1XLdFJvbshcBEdP+VG6A/ekAJRGUXSHqYyCJy41j9RJDzmFHIC42JFig
-	cYeAFG9kbrQA=
-X-Google-Smtp-Source: AGHT+IFvv30ivA7IIrSDgnMOgxi2gRygJfJjVsH3mGhuozRGYC3EyXjjsYx4Wje+9IDSAHjFIroiaA==
-X-Received: by 2002:a05:6000:188b:b0:3a4:e6c6:b8bf with SMTP id ffacd0b85a97d-3a558af94cdmr2469652f8f.52.1749647696541;
-        Wed, 11 Jun 2025 06:14:56 -0700 (PDT)
+        bh=PscFTZIFJAAdYDBzEvyv96+pEf2Tq9pY8w9RxNVdTSc=;
+        b=l+GHc/X0Xk9uX2gDk/hJqCIcN/w5GDiVSEckIdmS89MlfLifYiryz2ie9tk8dMjDmP
+         Vt5G6fnRwN4QNAXUkDUSlEQ37Gk+zcrlKA4csier/wfslLF4jPVBFH03cVN92P/5u7gy
+         T+vQU/6n7ypM5fONrWJxImkHuXtwJwuValtQqUz/zQIr+RwjvIdhWEYBDlm8QUsPtCLF
+         Ylhuuypw1d/eCgYSJbtltVQ2pqeXFFhUauG2M/SUC4DjvO5p9lDa1Cix53F//UW7Ma/7
+         O3NM6FnlwbsoONi+C0nbivpDu1yylx1r4ePc1eoHeGsrIJeUZDFpIw6tURtENnQaTkyk
+         uiuQ==
+X-Gm-Message-State: AOJu0YxThdkLlL7vpb9Pii+yapjyug/aFR7hYZbMsBzfHLgToQdClmDX
+	0/vr/J2HW1aGlntsTlGA4sIoZmqSPKB3lqesNxns82emv4vh7b/KyU9rz9vfmc2jKkvN0hEA+JZ
+	T7a9WjiyRcw==
+X-Gm-Gg: ASbGncv5J29l74i9WbSclmvqw1yPLjuc+IihSMN665VfO1Xm0Qa5Y0cPGX+xGJ7Kn/q
+	K0DQKpyOgYLOQ3Sc6yFGXL4Fc0bqNB8w150mTFi1xHTq7FVZJrxSvCeT7nfFEEPdxgffrH/Pz0n
+	fqKAQyjCuWiGMHmvUUeG2w/0l4/KjPUunqknlKUcSVNfPQruvpsvDblK0QTzjd1tR0eHkyGxESl
+	VOt3ciwL4p8qoqtyJJ05cA5TRIQAmI2pD/n87k0zIVvxiiRI9198OM7dlxFIPxKn6Av/hjRVnlO
+	i/gi2uxazqw4ZwYvHUPwKALKamYYV+R8pbD4KIJqzS4hT3yLGbiDFEJj1j4SijI0OU9P/vwQtrQ
+	e
+X-Google-Smtp-Source: AGHT+IG1115VZ2PzUMMt/1x6yp9tkesGeamxa+JO/G8f+DST/xKInuoPDQ74pjg/Zw1Kzc6ICG7pzA==
+X-Received: by 2002:a05:6000:144f:b0:3a4:eeb5:58c0 with SMTP id ffacd0b85a97d-3a5586f2792mr2812902f8f.20.1749647699340;
+        Wed, 11 Jun 2025 06:14:59 -0700 (PDT)
 Received: from linux.fritz.box ([2a00:6d43:105:c401:e307:1a37:2e76:ce91])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5323b67ccsm15300103f8f.40.2025.06.11.06.14.55
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5323b67ccsm15300103f8f.40.2025.06.11.06.14.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 06:14:56 -0700 (PDT)
+        Wed, 11 Jun 2025 06:14:59 -0700 (PDT)
 From: Marco Crivellari <marco.crivellari@suse.com>
 To: linux-kernel@vger.kernel.org
 Cc: Tejun Heo <tj@kernel.org>,
@@ -67,9 +67,9 @@ Cc: Tejun Heo <tj@kernel.org>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
 	Marco Crivellari <marco.crivellari@suse.com>,
 	Michal Hocko <mhocko@suse.com>
-Subject: [PATCH v3 1/9] Workqueue: add system_percpu_wq and system_dfl_wq
-Date: Wed, 11 Jun 2025 15:14:30 +0200
-Message-ID: <20250611131438.651493-2-marco.crivellari@suse.com>
+Subject: [PATCH v3 4/9] Workqueue: add new WQ_PERCPU flag
+Date: Wed, 11 Jun 2025 15:14:33 +0200
+Message-ID: <20250611131438.651493-5-marco.crivellari@suse.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250611131438.651493-1-marco.crivellari@suse.com>
 References: <20250611131438.651493-1-marco.crivellari@suse.com>
@@ -86,60 +86,33 @@ used wq is "system_wq" (per-cpu wq) while queue_delayed_work() use
 WORK_CPU_UNBOUND (used when a cpu is not specified). The same applies to
 schedule_work() that is using system_wq and queue_work(), that makes use
 again of WORK_CPU_UNBOUND.
-
 This lack of consistentcy cannot be addressed without refactoring the API.
 
-system_wq is a per-CPU worqueue, yet nothing in its name tells about that
-CPU affinity constraint, which is very often not required by users. Make
-it clear by adding a system_percpu_wq.
+This patch adds a new WQ_PERCPU flag to explicitly request the use of
+the per-CPU behavior. Both flags coexist for one release cycle to allow
+callers to transition their calls.
 
-system_unbound_wq should be the default workqueue so as not to enforce
-locality constraints for random work whenever it's not required.
-
-Adding system_dfl_wq to encourage its use when unbound work should be used.
+Once migration is complete, WQ_UNBOUND can be removed and unbound will
+become the implicit default.
 
 Suggested-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
 ---
- include/linux/workqueue.h | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ include/linux/workqueue.h | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
-index b0dc957c3e56..74b0042709cd 100644
+index 79c21fbf5896..90258f228ea5 100644
 --- a/include/linux/workqueue.h
 +++ b/include/linux/workqueue.h
-@@ -427,7 +427,7 @@ enum wq_consts {
- /*
-  * System-wide workqueues which are always present.
-  *
-- * system_wq is the one used by schedule[_delayed]_work[_on]().
-+ * system_percpu_wq is the one used by schedule[_delayed]_work[_on]().
-  * Multi-CPU multi-threaded.  There are users which expect relatively
-  * short queue flush time.  Don't queue works which can run for too
-  * long.
-@@ -438,7 +438,7 @@ enum wq_consts {
-  * system_long_wq is similar to system_wq but may host long running
-  * works.  Queue flushing might take relatively long.
-  *
-- * system_unbound_wq is unbound workqueue.  Workers are not bound to
-+ * system_dfl_wq is unbound workqueue.  Workers are not bound to
-  * any specific CPU, not concurrency managed, and all queued works are
-  * executed immediately as long as max_active limit is not reached and
-  * resources are available.
-@@ -455,10 +455,12 @@ enum wq_consts {
-  * system_bh[_highpri]_wq are convenience interface to softirq. BH work items
-  * are executed in the queueing CPU's BH context in the queueing order.
-  */
--extern struct workqueue_struct *system_wq;
-+extern struct workqueue_struct *system_wq; /* use system_percpu_wq, this will be removed */
-+extern struct workqueue_struct *system_percpu_wq;
- extern struct workqueue_struct *system_highpri_wq;
- extern struct workqueue_struct *system_long_wq;
- extern struct workqueue_struct *system_unbound_wq;
-+extern struct workqueue_struct *system_dfl_wq;
- extern struct workqueue_struct *system_freezable_wq;
- extern struct workqueue_struct *system_power_efficient_wq;
- extern struct workqueue_struct *system_freezable_power_efficient_wq;
+@@ -401,6 +401,7 @@ enum wq_flags {
+ 	 * http://thread.gmane.org/gmane.linux.kernel/1480396
+ 	 */
+ 	WQ_POWER_EFFICIENT	= 1 << 7,
++	WQ_PERCPU		= 1 << 8, /* bound to a specific cpu */
+ 
+ 	__WQ_DESTROYING		= 1 << 15, /* internal: workqueue is destroying */
+ 	__WQ_DRAINING		= 1 << 16, /* internal: workqueue is draining */
 -- 
 2.49.0
 
