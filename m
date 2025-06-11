@@ -1,83 +1,99 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24E44C8CE;
-	Wed, 11 Jun 2025 05:33:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C9420102D
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 05:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749620028; cv=none; b=Q0HEcKQr4Wfx6SPU7B4IrvS+k4R00YSH3aaHWGAGX28ucMDZJ+7fnydqv4mgKVSJFbCy/z3rmRKQiP+G+WK+8BFX9DDD7dj6RBHndwG178rek8vkmEUyp3MYsPsuMvvj5/Ubjp6/00WWrbCC3qq9rrzM8Do6TukuogH60/WV4Qs=
+	t=1749620201; cv=none; b=XitJ4bKlNac5Dv6sv7rAPbhzL/Zl3EsAKGMzcwJzNqVBB2Zl2HSB5YTP1H7TZcdaAFSAFb56uuYnRxaBOg/Q+qs+rK4eGUmpKIL/pJ0me3AIPLwizMZu1CN7Tzujs3TZaBSB8gJLFDH+47PB7j/edup1htt8Mriv9/qIQ9j5d/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749620028; c=relaxed/simple;
-	bh=j2JT6w4di0suk2PM+HT3i53B4qhB+nWi353sMFqh0tg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gL9ESm1Nv8uT6e3lR4IbDS9jGF7BDsACBq4l8BU25skxYVzFhKwZowNidHYWVT8jA30JdUID0VlOFIkpkBEddwnFn62pK/oOnbmwp4f0TjCtaZ+65giYqZSJg5DjEGdcJchKLWDWEzOdruB6lZ0yZZ385+drLwCEt+XZjd90xI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=VHfYSWCs; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="VHfYSWCs"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 690EC2078616; Tue, 10 Jun 2025 22:33:45 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 690EC2078616
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1749620025;
-	bh=IVNHs60qCEhEzZwh6VrFBZy8KV9zYK8+Roq6Zu0WZlw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VHfYSWCsorU9YqaB3Xq/2jz7p1a/1SJboRLvQ+QggwEbS+wvMEU648MWFf/7c1Ypn
-	 CJ1kA+zDkXL4PF38YB+ulc57YqFL3a8y5318y00Lnk8MD/p0oY/Egv5iAfTuGpjwhV
-	 XMJAQ1UEY9kLdsWoZgISxbC/4Fxa04nmtzjxexVU=
-Date: Tue, 10 Jun 2025 22:33:45 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>,
-	Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof Wilczy???~Dski <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v5 0/5] Allow dyn MSI-X vector allocation of MANA
-Message-ID: <20250611053345.GA25921@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1749476901-27251-1-git-send-email-shradhagupta@linux.microsoft.com>
- <20250610144046.1deba9f3@kernel.org>
+	s=arc-20240116; t=1749620201; c=relaxed/simple;
+	bh=rhu5cC4ghVBpa9vn/6ZN4Nc/bR6KUWlM03H+8o/sF60=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=K3PZkUIb/nQzLpd/zncWWYsh7B+8NeFXrpI3K6M6h7wwJ26IvfLytAPGgLIUmCduvD6sO3AdjItclUyaTecZGxN9N+DPoo1tYmNyKHr5FzJqqQk6WfbXlpwR9Q8vhALg2WrvbRwyBXPiahflyNt6ZdMiQ2jyrgGHOucKVznUXPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 0609d7aa468611f0b29709d653e92f7d-20250611
+X-CTIC-Tags:
+	HR_CC_AS_FROM, HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NO_NAME, IP_UNTRUSTED, SRC_UNTRUSTED, IP_LOWREP, SRC_LOWREP
+	DN_TRUSTED, SRC_TRUSTED, SA_EXISTED, SN_UNTRUSTED, SN_UNFAMILIAR
+	SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD
+	CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_T1
+	AMN_GOOD, AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:025eaa40-22f1-4416-8857-2450d067be6b,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:5
+X-CID-INFO: VERSION:1.1.45,REQID:025eaa40-22f1-4416-8857-2450d067be6b,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:5
+X-CID-META: VersionHash:6493067,CLOUDID:55ab9264808ed9ccff8b7b59c523c8fc,BulkI
+	D:2506111336315M34QFLP,BulkQuantity:0,Recheck:0,SF:17|19|25|38|45|66|78|81
+	|82|102,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS
+	:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,A
+	RC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR
+X-UUID: 0609d7aa468611f0b29709d653e92f7d-20250611
+X-User: duanchenghao@kylinos.cn
+Received: from localhost.localdomain [(223.104.40.103)] by mailgw.kylinos.cn
+	(envelope-from <duanchenghao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 959882847; Wed, 11 Jun 2025 13:36:28 +0800
+From: Chenghao Duan <duanchenghao@kylinos.cn>
+To: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Chenghao Duan <duanchenghao@kylinos.cn>
+Subject: [PATCH v1 0/5] Support trampoline for LoongArch
+Date: Wed, 11 Jun 2025 13:36:20 +0800
+Message-Id: <20250611053625.352091-1-duanchenghao@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250611035952.111182-3-duanchenghao@kylinos.cn>
+References: <20250611035952.111182-3-duanchenghao@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250610144046.1deba9f3@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 10, 2025 at 02:40:46PM -0700, Jakub Kicinski wrote:
-> On Mon,  9 Jun 2025 06:48:21 -0700 Shradha Gupta wrote:
-> > Since this patchset has patches from PCI and net tree, I am not entirely
-> > sure what should be the target tree. Any suggestions/recommendations on
-> > the same are welcomed.
-> 
-> Could you put these on a branch based on v6.16-rc1 ?
-> That why if someone else needs them before the next merge window
-> they can pull that branch. The patches look fine to me.
+v1: Support trampoline for LoongArch. The following feature tests
+have been completed:
+1. fentry
+2. fexit
+3. fmod_ret
 
-Thanks Jakub. Sure I will send out an update rebasing the series to
-linux-next's v6.16-rc1.
+TODO: The support for the struct_ops feature will be provided in
+subsequent patches.
 
-Regards,
-Shradha.
+Chenghao Duan (4):
+  LoongArch: BPF: The operation commands needed to add a trampoline
+  LoongArch: BPF: Add bpf_arch_text_poke support for Loongarch
+  LoongArch: BPF: Add bpf trampoline support for Loongarch
+  LoongArch: BPF: Update the code to rename validate_code to
+    validate_ctx.
+
+George Guo (1):
+  LoongArch: Support fixmap
+
+ arch/loongarch/include/asm/fixmap.h |   2 +
+ arch/loongarch/include/asm/inst.h   |  19 ++
+ arch/loongarch/kernel/inst.c        |  85 +++++
+ arch/loongarch/kernel/setup.c       |   1 +
+ arch/loongarch/mm/init.c            | 111 ++++++-
+ arch/loongarch/net/bpf_jit.c        | 497 +++++++++++++++++++++++++++-
+ arch/loongarch/net/bpf_jit.h        |   6 +
+ 7 files changed, 714 insertions(+), 7 deletions(-)
+
+Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
+
+-- 
+2.25.1
+
