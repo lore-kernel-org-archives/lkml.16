@@ -1,80 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D263247DEA;
-	Wed, 11 Jun 2025 21:25:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D89221294;
+	Wed, 11 Jun 2025 21:27:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749677125; cv=none; b=MzrXT+lBnttSR8Og/iWKgzGw9b9HdJiavSlxAm9OeaRt5zMoAdmValsHPc6EDQsRnhhKlzNJMhwJheCkWi+xFvJ3FC+jYjeDIjnkRvBLwvpNeVXjj1MUs8DW0QXTjInDr49EXRvcBPfk6DMVdEmt1LqKa7BrVfc2l9lhqa3uSxU=
+	t=1749677231; cv=none; b=Lh+huGkWUTcCB92T9lHwSm2Xy2R9Ec/P4qhe858UCYOMYIsw+bO3dPOOqcZyrS4RlCyXbHFfhEkUxklZhNVam9nObbz2o852Cs+AXL1IX2hPTblDhIA9pgf5h1FBK3NsGMd9OHRV+BmjrVCMQaPQO68dVeZXYW+w2kckJz60DiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749677125; c=relaxed/simple;
-	bh=p5G9hodyoqquGQv0FDJLWXP70EcteeuZIP/ixo9N4RM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=X8bWY8BlfegQtyReVnJgDGaBW/d5phhEr1+fdd7HQfjAzb1a6uJSPMsC8/aBnjPwNb59wOXGbf0HB89zD1eT3Im+WnH7X64aZxFKXMDpzrWyiAFOFJUdc7bPWALVsSfxj7qDZKWd2Qx8vQN2vjaLJMWWNewH8gNzfStjUx1K5e0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hDJP3oC0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749677231; c=relaxed/simple;
+	bh=jUy8QAn0m9tzE07JAe76z+1J1MVw/EYMYYDN9ar6REQ=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=Q7ti/pnSqM2K760TpcL8naYOlLHys6Qckh4bEbPBh4kHRWwbN0Zj9vRBNXv84cb5FytS0vTasP0klUIBAyyPUmFj+78HU8wFcRl3+WKPB+Gh/qol0xB9fwtF5nx0AvCoKl3AVvMiFaEr0/YsilOmq0QAyK+j4pmQCEeJVEm3/ho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ElwcDGOa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hDJP3oC0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 516DCC4CEF2;
-	Wed, 11 Jun 2025 21:25:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ElwcDGOa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14F4EC4CEE3;
+	Wed, 11 Jun 2025 21:27:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749677124;
-	bh=p5G9hodyoqquGQv0FDJLWXP70EcteeuZIP/ixo9N4RM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=hDJP3oC0xQexyVhR/7d4PZtjUyHFBj0hP2HYXx5kEDYYvUG173CJ5Qfo9lSNM07Vy
-	 8r4fFR37bDAD94oq9ai0JOuHFxKCjX9DM1WV9tXJ2vyuvxnD2Yb/KTTYCngc8baNOD
-	 zCDftQ49uBaS114bnMk3PIOJ1lL24Gy3Qayqj4tB95uYkcB78ymm3dMweLJ82kKNKd
-	 dtc7QTPlvNwUOBvQGGPLeiMtk9esKZhdTqF6DFrnNqzQt1wIXyCZKVQkjvo0a8HQFy
-	 4Vj1cnFaQQ9k6P6zreTMcMj/Dd4Sdp5WL6VN582GftigXuql4dXcGDKFMiKL00CcNj
-	 UIr2ywhn1x1Mg==
-Date: Wed, 11 Jun 2025 14:25:23 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Justin Lai <justinlai0215@realtek.com>
-Cc: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
- <andrew+netdev@lunn.ch>, <linux-kernel@vger.kernel.org>,
- <netdev@vger.kernel.org>, <horms@kernel.org>, <pkshih@realtek.com>,
- <larry.chiu@realtek.com>
-Subject: Re: [PATCH net-next] rtase: Refine the flexibility of Rx queue
- allocation
-Message-ID: <20250611142523.67e7d984@kernel.org>
-In-Reply-To: <20250610095518.6585-1-justinlai0215@realtek.com>
-References: <20250610095518.6585-1-justinlai0215@realtek.com>
+	s=k20201202; t=1749677230;
+	bh=jUy8QAn0m9tzE07JAe76z+1J1MVw/EYMYYDN9ar6REQ=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=ElwcDGOaoP8xjRrx1iWqhxRB0GclLdep88yUuSevxWZwQBpHqH4j0PGTqedCv44oO
+	 NafBTlU4LtgTqF5BZ6cAu+mziQtJk7ZMzn4SRdwjVy/vWyOGMsSBf9tZsaXoMpXwMp
+	 yJyZwx7dfo/AESHwHFJxJVR2iisk2Hs8d2m3aZhO6D75KyKwsSlETHFuLVIam9Rjrj
+	 L9bA3HbGDIorLGCfKinr5e/tMvFlnNUdW9tEUDD24vh3w8lk2I+IzpBZTGde9yJRQ1
+	 yHuVCUbCa9Ye0V44ziD5Uv4F9Xl7G7K+JW6CqFSKHuhN0ALuet1h/lfrWerNJQ4pvD
+	 u94pz5Q88JWqQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 11 Jun 2025 23:27:06 +0200
+Message-Id: <DAK0T99XTJ22.2FTHQGST9Y8IC@kernel.org>
+Cc: "Andreas Hindborg" <a.hindborg@kernel.org>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Jens Axboe"
+ <axboe@kernel.dk>, "Fiona Behrens" <me@kloenk.dev>, "Christian Schrefl"
+ <chrisi.schrefl@gmail.com>, <linux-block@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] change blanket impls for `[Pin]Init` and add one
+ for `Result<T, E>`
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Danilo Krummrich" <dakr@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250529081027.297648-1-lossin@kernel.org>
+ <20250529081027.297648-2-lossin@kernel.org>
+ <df637115-e0ce-45ae-a9b6-817ea7454bce@kernel.org>
+In-Reply-To: <df637115-e0ce-45ae-a9b6-817ea7454bce@kernel.org>
 
-On Tue, 10 Jun 2025 17:55:18 +0800 Justin Lai wrote:
-> Refine the flexibility of Rx queue allocation by using alloc_etherdev_mqs.
-> 
-> Signed-off-by: Justin Lai <justinlai0215@realtek.com>
-> ---
->  drivers/net/ethernet/realtek/rtase/rtase_main.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-> index 4d37217e9a14..c22dd573418a 100644
-> --- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-> +++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-> @@ -2080,8 +2080,8 @@ static int rtase_init_board(struct pci_dev *pdev, struct net_device **dev_out,
->  	int ret = -ENOMEM;
->  
->  	/* dev zeroed in alloc_etherdev */
-> -	dev = alloc_etherdev_mq(sizeof(struct rtase_private),
-> -				RTASE_FUNC_TXQ_NUM);
-> +	dev = alloc_etherdev_mqs(sizeof(struct rtase_private),
-> +				 RTASE_FUNC_TXQ_NUM, RTASE_FUNC_RXQ_NUM);
->  	if (!dev)
->  		goto err_out;
->  
+On Tue Jun 10, 2025 at 3:44 PM CEST, Danilo Krummrich wrote:
+> On 5/29/25 10:10 AM, Benno Lossin wrote:
+>> Remove the error from the blanket implementations `impl<T, E> Init<T, E>
+>> for T` (and also for `PinInit`). Add implementations for `Result<T, E>`.
+>>=20
+>> This allows one to easily construct (un)conditional failing
+>> initializers. It also improves the compatibility with APIs that do not
+>> use pin-init, because users can supply a `Result<T, E>` to a  function
+>> taking an `impl PinInit<T, E>`.
+>>=20
+>> Suggested-by: Alice Ryhl <aliceryhl@google.com>
+>> Link: https://github.com/Rust-for-Linux/pin-init/pull/62/commits/5861251=
+4b256c6f4a4a0718be25298410e67387a
+>> [ Also fix a compile error in block. - Benno ]
+>> Signed-off-by: Benno Lossin <lossin@kernel.org>
+>> ---
+>>=20
+>> This patch is also needed by Danilo for initializing `Devres`
+>> ergonomically.
+>
+> For this purpose, can you please provide me with a signed tag for this on=
+e
+> please? Otherwise I can also add the explicit `Infallible` generics in a =
+few
+> places until next cycle.
 
-$ git grep RTASE_FUNC_.XQ_NUM
-drivers/net/ethernet/realtek/rtase/rtase.h:#define RTASE_FUNC_TXQ_NUM  1
-drivers/net/ethernet/realtek/rtase/rtase.h:#define RTASE_FUNC_RXQ_NUM  1
+I rebased `pin-init-next` to have these two commits as the first two and
+will create a tag a bit later in the cycle when I'm sure that they are
+stable.
 
-This patch is a nop?
--- 
-pw-bot: reject
+---
+Cheers,
+Benno
