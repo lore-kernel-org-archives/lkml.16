@@ -1,126 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mxout5.mail.janestreet.com (mxout5.mail.janestreet.com [64.215.233.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCFD620127D;
-	Wed, 11 Jun 2025 19:05:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 962372750ED
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 19:05:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.215.233.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749668700; cv=none; b=Rm6+FPnVfy8Cd/1HZvgHOcq7z8Gaagw8K53o3zM7YCq005qfO1Ae48E4XPxEAH4TwrO9K/SVQ9w7POce+RtfudduFzToHCqIHXG0qQPWppGVoLjNXUBzGUw4sWcnCdw9ivAECcfFXjGUI+zrrBZtKCxL2+7M0JEdPF3GX1F5LQE=
+	t=1749668723; cv=none; b=DrQC01hDukeR8323d6q6GSwnRqnidgwrCmHAYVNTnq6Vc39y4FGY0ZBld2KXwfRiRj9EY1oFi39QZ/hXpcKy0ufBCgaVwnQC2O+yks5C/aM6/r4DfzwEo/yfjNfpP8apEVRdvCVh+sHDi1Ua0v+4KIpTIVgbot67ieF94KzxGMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749668700; c=relaxed/simple;
-	bh=icZWZbeICgE88YiKrti132QlDFdl7tW9WpDg51w0jtM=;
+	s=arc-20240116; t=1749668723; c=relaxed/simple;
+	bh=1eacTEzFuKU/QCLoMNFUx9adZT3ri5aEptCBJeFczmE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l//ya4T4ph4LsK6r8IzyECEk7/MZEX3VveQFZh1cYxFD8HTg4Xm/HRR1JWQNY21ckMOVCqLJdYqtsgTbRFgNbwTt/SmWwsJTO4+WaznWjJDMUuPFWtTLez61qemY1Z68elZHkbKH/C1X3ZWBz5p+A3B8bripTWqTzV0BHgrm3uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dRo93oQw; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=rIWYNVepCafcER0z7ZhGrZhtNtk/7VwL8MLugxcJ+vrg9yH8kn0qHekFEqluoKviifbuKNDrfK2PNjB1bn7Ntz0ywFCEOCDkK7EtmPnOky1v7DR7hSNqfuD7ziunNlQaVmpN5k4OxYyO0Sa/sTZ8hbZAJ20l6r3H0o752nZqMo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=janestreet.com; spf=pass smtp.mailfrom=janestreet.com; dkim=pass (2048-bit key) header.d=janestreet.com header.i=@janestreet.com header.b=ssU3KQNe; arc=none smtp.client-ip=64.215.233.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=janestreet.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=janestreet.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dRo93oQw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21AABC4CEE3;
-	Wed, 11 Jun 2025 19:05:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749668700;
-	bh=icZWZbeICgE88YiKrti132QlDFdl7tW9WpDg51w0jtM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dRo93oQwuzbVL+tUCDJOLtfcv2lLvUKFV1Cjf4ohjdd4T2CT2xZSiLLZWmg8KNg9M
-	 KRnhx3MAKKIXMpWjzpO9S5BWSZF7F//HmHCm3r2nLZaK39ry7+aa4jvybsg5YJTXke
-	 eiSWPOdtumLRkmJopSE9/GXdUxab1y8m0yr2yBA8sVvoYhem61hYlbEUXqQnybEC0B
-	 dasPxxQqQEFqCapIYsc1XgT3xukW0GS1qorgV0jS8fYbV6Yn1M1S4GztndYBdXk0EF
-	 JiqM5QpS82kzZv30MWc1/YLi7Tn/UpByjABvP/2jU/qPT1VYlehJM8EhNDwUCs4hzI
-	 EpjuvMes8i5Og==
-Date: Wed, 11 Jun 2025 19:04:58 +0000
-From: Eric Biggers <ebiggers@kernel.org>
-To: Diederik de Haas <didi.debian@cknow.org>
-Cc: linux-crypto@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
-	linux-kernel@vger.kernel.org, Ingo Franzki <ifranzki@linux.ibm.com>
-Subject: Re: [PATCH] crypto: testmgr - reinstate kconfig support for fast
- tests only
-Message-ID: <20250611190458.GA4097002@google.com>
-References: <20250611175525.42516-1-ebiggers@kernel.org>
- <DAJXJHLY2ITB.3IBN23DX0RO4Z@cknow.org>
+	dkim=pass (2048-bit key) header.d=janestreet.com header.i=@janestreet.com header.b="ssU3KQNe"
+Date: Wed, 11 Jun 2025 15:05:20 -0400
+From: Nikhil Jha <njha@janestreet.com>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+ 	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+ 	Olga Kornievskaia <okorniev@redhat.com>,
+ 	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+ 	"David S. Miller" <davem@davemloft.net>,
+ 	Eric Dumazet <edumazet@google.com>,
+ 	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ 	Simon Horman <horms@kernel.org>,
+ 	Steven Rostedt <rostedt@goodmis.org>,
+ 	Masami Hiramatsu <mhiramat@kernel.org>,
+ 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ 	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ 	netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] fix gss seqno handling to be more rfc-compliant
+Message-ID: <20250611A1905207b67479b.njha@janestreet.com>
+References: <20250319-rfc2203-seqnum-cache-v2-0-2c98b859f2dd@janestreet.com>
+  <d78576c1-d743-4ec2-bf8c-d87603460ac1@oracle.com>
+  <20250611A18503192e946d6.njha@janestreet.com>
+  <81cd5e1e-218d-4e24-b127-c8d1757e4d99@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <DAJXJHLY2ITB.3IBN23DX0RO4Z@cknow.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <81cd5e1e-218d-4e24-b127-c8d1757e4d99@oracle.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=janestreet.com;
+  s=waixah; t=1749668720;
+  bh=TwBEfFFd7f2nQPQET57nFnHM2aPp4dA96MYxki19d+Q=;
+  h=Date:From:To:Cc:Subject:References:In-Reply-To;
+  b=ssU3KQNeguS8m7tmod/gMHjHRPy9SkIXKPiPaM/C9s0lvkpU5bahDlpA0HQsVUVBF
+  d++foJeXUhaOigaAc9L/JdW3ccztM2DEIEIKGlE8eYO9axp76tWnSWRbITM2E8/kKk
+  tUZ5LX2EPip0FrziAbOkl9/M2qBrZzRGyvpSWcOiDYWrQkC+WB84H/a3PGnpHfZ+hk
+  8EG0xhaZmTSvBQWGbfuhwcmlWDLZ12+IAlkRUCfDSdQJprkhx+OwVPFrLvy+PK2THo
+  wEs0nlMICyNmvUVTI17KqB2iEQRRHrDemIoCysY7bf3pTmlYxJD419uhbP11Q/9n16
+  6ivBLrZEOx3uw==
 
-On Wed, Jun 11, 2025 at 08:53:17PM +0200, Diederik de Haas wrote:
-> I was about to respond to your reply, but I guess this may be a better
-> fit for it. The TL;DR: version is this:
+On Wed, Jun 11, 2025 at 02:54:09PM -0400, Chuck Lever wrote:
+> On 6/11/25 2:50 PM, Nikhil Jha wrote:
+> > On Thu, Mar 20, 2025 at 09:16:15AM -0400, Chuck Lever wrote:
+> >> On 3/19/25 1:02 PM, Nikhil Jha via B4 Relay wrote:
+> >>> When the client retransmits an operation (for example, because the
+> >>> server is slow to respond), a new GSS sequence number is associated with
+> >>> the XID. In the current kernel code the original sequence number is
+> >>> discarded. Subsequently, if a response to the original request is
+> >>> received there will be a GSS sequence number mismatch. A mismatch will
+> >>> trigger another retransmit, possibly repeating the cycle, and after some
+> >>> number of failed retries EACCES is returned.
+> >>>
+> >>> RFC2203, section 5.3.3.1 suggests a possible solution... “cache the
+> >>> RPCSEC_GSS sequence number of each request it sends” and "compute the
+> >>> checksum of each sequence number in the cache to try to match the
+> >>> checksum in the reply's verifier." This is what FreeBSD’s implementation
+> >>> does (rpc_gss_validate in sys/rpc/rpcsec_gss/rpcsec_gss.c).
+> >>>
+> >>> However, even with this cache, retransmits directly caused by a seqno
+> >>> mismatch can still cause a bad message interleaving that results in this
+> >>> bug. The RFC already suggests ignoring incorrect seqnos on the server
+> >>> side, and this seems symmetric, so this patchset also applies that
+> >>> behavior to the client.
+> >>>
+> >>> These two patches are *not* dependent on each other. I tested them by
+> >>> delaying packets with a Python script hooked up to NFQUEUE. If it would
+> >>> be helpful I can send this script along as well.
+> >>>
+> >>> Signed-off-by: Nikhil Jha <njha@janestreet.com>
+> >>> ---
+> >>> Changes since v1:
+> >>>  * Maintain the invariant that the first seqno is always first in
+> >>>    rq_seqnos, so that it doesn't need to be stored twice.
+> >>>  * Minor formatting, and resending with proper mailing-list headers so the
+> >>>    patches are easier to work with.
+> >>>
+> >>> ---
+> >>> Nikhil Jha (2):
+> >>>       sunrpc: implement rfc2203 rpcsec_gss seqnum cache
+> >>>       sunrpc: don't immediately retransmit on seqno miss
+> >>>
+> >>>  include/linux/sunrpc/xprt.h    | 17 +++++++++++-
+> >>>  include/trace/events/rpcgss.h  |  4 +--
+> >>>  include/trace/events/sunrpc.h  |  2 +-
+> >>>  net/sunrpc/auth_gss/auth_gss.c | 59 ++++++++++++++++++++++++++----------------
+> >>>  net/sunrpc/clnt.c              |  9 +++++--
+> >>>  net/sunrpc/xprt.c              |  3 ++-
+> >>>  6 files changed, 64 insertions(+), 30 deletions(-)
+> >>> ---
+> >>> base-commit: 7eb172143d5508b4da468ed59ee857c6e5e01da6
+> >>> change-id: 20250314-rfc2203-seqnum-cache-52389d14f567
+> >>>
+> >>> Best regards,
+> >>
+> >> This seems like a sensible thing to do to me.
+> >>
+> >> Acked-by: Chuck Lever <chuck.lever@oracle.com>
+> >>
+> >> -- 
+> >> Chuck Lever
+> > 
+> > Hi,
+> > 
+> > We've been running this patch for a while now and noticed a (very silly
+> > in hindsight) bug.
+> > 
+> > maj_stat = gss_validate_seqno_mic(ctx, task->tk_rqstp->rq_seqnos[i], seq, p, len);
+> > 
+> > needs to be
+> > 
+> > maj_stat = gss_validate_seqno_mic(ctx, task->tk_rqstp->rq_seqnos[i++], seq, p, len);
+> > 
+> > Or the kernel gets stuck in a loop when you have more than two retries.
+> > I can resend this patch but I noticed it's already made its way into
+> > quite a few trees. Should this be a separate patch instead?
 > 
-> If you think distros shouldn't enable it, as you initially clearly
-> described and it seems to me you still think so, the right thing for
-> distros to do, is to disable those test. Which in turn means the fast
-> tests should not be reinstated (?).
+> The course of action depends on what trees you found the patch in.
 > 
-> On Wed Jun 11, 2025 at 7:55 PM CEST, Eric Biggers wrote:
-> > From: Eric Biggers <ebiggers@google.com>
-> >
-> > Commit 698de822780f ("crypto: testmgr - make it easier to enable the
-> > full set of tests") removed support for building kernels that run only
-> > the "fast" set of crypto self-tests by default.  This assumed that
-> > nearly everyone actually wanted the full set of tests, *if* they had
-> > already chosen to enable the tests at all.
-> >
-> > Unfortunately, it turns out that both Debian and Fedora have the crypto
-> > self-tests enabled in their production kernels, and they seem to want to
 > 
-> I explicitly referenced https://bugs.debian.org/599441 as that was the
-> only justification I found for enabling it.
-> In it, on 2010-10-07 "Mario 'BitKoenig' Holbe" said:
-> 
->   I personally think (re)enabling these tests would be a way safer
->   default for a distribution kernel which runs on lots of different
->   hardware setups
-> 
-> Before I looked up that bug, I had not heard of that person, so I don't
-> know if they're a crypto expert or just a random person on the internet.
-> It also doesn't say *why* they thought it would be a good idea to enable
-> those tests.
-> I have no idea what Fedora's reasoning was for enabling it. Maybe their
-> reasons were sound; I think Debian's are rather thin (that I could
-> find). And from ~ 15 years ago.
-> 
-> > keep them enabled.  The full set of tests isn't great for that, since
-> 
-> I think the 'new' description is(/was) great. A subject matter expert
-> says/said "don't enable this on production kernels". I wish all Kconfig
-> help texts were this clear :-)
-> So based on the previous description, it seems wise that Debian (and
-> Fedora) would update their kernel config and disable those test.
-> 
-> In *my* update to 6.16-rc1, I only 'converted' to new names.
-> A change to my kernel config (ie disable the tests) would be in a
-> separate commit (with an appropriate commit msg).
-> I hadn't done that yet as I was curious what the results would be.
-> 
-> So "they seem to want to keep them enabled" seems a premature
-> conclusion; at least wrt Debian and AFAICT.
-> It's also possible that if/when people see the kernel warning, they'd
-> file a new Debian bug to have it disabled.
-> 
-> (I've made some contributions in the past, but) I am not part of
-> Debian's kernel team, so I don't know what they will decide.
->  
-> I'll gladly leave it up to you if you still think reinstating the fast
-> tests is worth it, but I felt a bit more context was warranted.
-> 
-> Cheers,
->   Diederik
+> -- 
+> Chuck Lever
 
-I mean, not enabling the tests in production is how it should be.
+It shows up here, so I think it's in v6.16-rc1 already.
 
-But Fedora already enabled CRYPTO_SELFTESTS, apparently because of FIPS
-(https://gitlab.com/cki-project/kernel-ark/-/merge_requests/3886).
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=v6.16-rc1&id=08d6ee6d8a10aef958c2af16bb121070290ed589
 
-You're right there doesn't seem to be an up-to-date bug for Debian
-(https://bugs.debian.org/599441 is old), so maybe my conclusion is premature.
+- Nikhil
 
-However, besides FIPS I think the problem is that the crypto/ philosophy is to
-throw untested and broken hardware drivers over the wall at users.  As long as
-that's the case, the self-tests do actually have some value in protecting users
-from those drivers, even though that's not how it should be.
 
-- Eric
