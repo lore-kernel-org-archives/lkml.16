@@ -1,127 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E711F13212A;
-	Wed, 11 Jun 2025 03:53:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 054EEEAF9
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 03:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749614017; cv=none; b=r5z/VTI+UJatIQtgHdYP9IW+VN0VTilFa2x5fUnrFoqvmkMQDgOWQcvDeF4s/8LfiTHvMQzWFiUy17YNlZpoXZkXKAjwakVpSFw+VVt4j8bnaVjiVhqV8NO4Zx8wYFLRqpBEjXugBZOwutOxryQWvrHnmrM8j3ZFAL9fgSMVeUg=
+	t=1749614295; cv=none; b=oNVr3HO/E25+owHICsUbPXKkO4nhkABFX9okj40n591chxLVK+VBjYyqzW2JdYqVNEvPFAVMrPvId6kVuzA//Cf590UWnQdqS+A2rns1QHGoBA3jxMFqQKCzN60Ys35osDOsbkh6lzhXzLaYzcO8uFHV5a1GS5+Azje+Q0oPaHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749614017; c=relaxed/simple;
-	bh=wm/A6FauAurYm1sipIdO+M/XsU9Nmefj0cel/q+ahx8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OZpJDR2JDyKz6b551MlHGtMq87OoV/I3yYAUi42ukMbuWsxZUIDN15mPnBEW2CkeRbduywu/FDIk/V9vLVYWD777yOxdtb+TC56Ot14tpFN6kvVH2hluWbbcyXFCKj+Vx1fg73OFZ5NUlvjl9MR07IKyagWpVyAaG82KtMjdl1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CZNmCmjk; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CZNmCmjk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749614016; x=1781150016;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=wm/A6FauAurYm1sipIdO+M/XsU9Nmefj0cel/q+ahx8=;
-  b=CZNmCmjkKu6r7xEpQfTWCXSWgvANUP9e7SM+6FOJpg6/JwbKLzltbkc7
-   xiT3xajFIoZtaIgRIXZ39+91SDs8ZVPshHeZvt/JF7seXT4ZWrwTGR5/I
-   JsDTC4H7wUR8O+Gp8iIQnz8/lVQFBL1BnDvIn0ErRx2FortHv/7HNYDIF
-   A9VgoAIVF+qAmXgxWCo9JJ/5PxT+vyn9uEByfpnrfvGkIzB+Dn9COalAl
-   pKGOV/ZXLjfd7U3ALqgv3erRyQ+Bn0/FPh1Ag+Bez378OYpg7Y5ag5fkM
-   cXuhCiDlZ12mAJ0uvGPjyc9m9q5TxTmkFhjKQszJW2njXN/AcKVXkF0tn
-   w==;
-X-CSE-ConnectionGUID: vDABhEUdSoqe5zUg0GmKoQ==
-X-CSE-MsgGUID: I5ItbUsgTM2x5dQeZ7FG7A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="39361547"
-X-IronPort-AV: E=Sophos;i="6.16,226,1744095600"; 
-   d="scan'208";a="39361547"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 20:53:35 -0700
-X-CSE-ConnectionGUID: QoyKo9LZQF6wtYB6M9OrbA==
-X-CSE-MsgGUID: ILUiVhorTm+22hzPHc8huw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,226,1744095600"; 
-   d="scan'208";a="152187331"
-Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.111.151]) ([10.125.111.151])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 20:53:34 -0700
-Message-ID: <1c282625-c433-4675-b934-030e33a0f6fb@intel.com>
-Date: Tue, 10 Jun 2025 20:53:33 -0700
+	s=arc-20240116; t=1749614295; c=relaxed/simple;
+	bh=rhu5cC4ghVBpa9vn/6ZN4Nc/bR6KUWlM03H+8o/sF60=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aejBpI08eLW8yMsx92sAePmKuTwAQbj5HqbYHHIGJPK8i6K7eCqZtoifJ8pXRV4KGDOQSzwglQQ6aCaK5+uEEQY+WtHdxbjFxts3aAINl4rM5KOpm8wBL4ih8ZoEofDqmgMK77StYGYdhzHR/VbuKq8X0XpFHZuNVcV9Z1u6zBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 44b975b8467811f0b29709d653e92f7d-20250611
+X-CTIC-Tags:
+	HR_CC_AS_FROM, HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NO_NAME, IP_UNTRUSTED, SRC_UNTRUSTED, IP_LOWREP, SRC_LOWREP
+	DN_TRUSTED, SRC_TRUSTED, SA_EXISTED, SN_UNTRUSTED, SN_UNFAMILIAR
+	SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD
+	CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_T1
+	AMN_GOOD, AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:84eba28e-0853-4b65-8d08-6309ca01b988,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:5
+X-CID-INFO: VERSION:1.1.45,REQID:84eba28e-0853-4b65-8d08-6309ca01b988,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:5
+X-CID-META: VersionHash:6493067,CLOUDID:c3055b5b53bd2229661cf11d8646a8db,BulkI
+	D:250610171445IFDGA2P6,BulkQuantity:3,Recheck:0,SF:17|19|25|45|66|78|102,T
+	C:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:40,QS:nil,BEC:n
+	il,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: 44b975b8467811f0b29709d653e92f7d-20250611
+X-User: duanchenghao@kylinos.cn
+Received: from localhost.localdomain [(223.104.40.103)] by mailgw.kylinos.cn
+	(envelope-from <duanchenghao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 663439612; Wed, 11 Jun 2025 11:58:01 +0800
+From: Chenghao Duan <duanchenghao@kylinos.cn>
+To: linux-kernel@vger.kernel.org
+Cc: Chenghao Duan <duanchenghao@kylinos.cn>
+Subject: [PATCH v1 0/5] Support trampoline for LoongArch
+Date: Wed, 11 Jun 2025 11:57:57 +0800
+Message-Id: <20250611035757.106636-1-duanchenghao@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/mm: Disable INVLPGB when PTI is enabled
-To: Rik van Riel <riel@surriel.com>, Dave Hansen
- <dave.hansen@linux.intel.com>, linux-kernel@vger.kernel.org
-Cc: Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
- Ingo Molnar <mingo@kernel.org>, Nadav Amit <nadav.amit@gmail.com>,
- Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org
-References: <20250610222420.E8CBF472@davehans-spike.ostc.intel.com>
- <ce520c1e28475703c71ab817de790823e29cda7e.camel@surriel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <ce520c1e28475703c71ab817de790823e29cda7e.camel@surriel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/10/25 17:43, Rik van Riel wrote:
-> On Tue, 2025-06-10 at 15:24 -0700, Dave Hansen wrote:
->> Disable INVLPGB if PTI is enabled. Avoid overrunning the small
->> bitmap.
->>
->> Note: this will be fixed up properly by making the bitmap bigger.
->> For now, just avoid the mostly theoretical bug.
->>
-> Does that mean the patch to make the bitmap bigger
-> is a dependency that needs to be in place before
-> the RAR code (hoping to send out v4 later this week)
-> can be merged?
+v1: Support trampoline for LoongArch. The following feature tests
+have been completed:
+1. fentry
+2. fexit
+3. fmod_ret
 
-That's what I was thinking. Your series to fix this all up properly from
-last week looks like the right way. It just seems like a wee bit more
-work than I want to see getting backported. It's not a huge lift, though.
+TODO: The support for the struct_ops feature will be provided in
+subsequent patches.
+
+Chenghao Duan (4):
+  LoongArch: BPF: The operation commands needed to add a trampoline
+  LoongArch: BPF: Add bpf_arch_text_poke support for Loongarch
+  LoongArch: BPF: Add bpf trampoline support for Loongarch
+  LoongArch: BPF: Update the code to rename validate_code to
+    validate_ctx.
+
+George Guo (1):
+  LoongArch: Support fixmap
+
+ arch/loongarch/include/asm/fixmap.h |   2 +
+ arch/loongarch/include/asm/inst.h   |  19 ++
+ arch/loongarch/kernel/inst.c        |  85 +++++
+ arch/loongarch/kernel/setup.c       |   1 +
+ arch/loongarch/mm/init.c            | 111 ++++++-
+ arch/loongarch/net/bpf_jit.c        | 497 +++++++++++++++++++++++++++-
+ arch/loongarch/net/bpf_jit.h        |   6 +
+ 7 files changed, 714 insertions(+), 7 deletions(-)
+
+Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
+
+-- 
+2.25.1
+
