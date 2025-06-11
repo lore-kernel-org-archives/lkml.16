@@ -1,120 +1,108 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB9B71C6FE9;
-	Wed, 11 Jun 2025 15:15:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11CE619CC36
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749654943; cv=none; b=u0MbprMvlpvetkJkX2Fa7rT5x+Az00lizxZfbTHzpgArcRdCeOyjmyXjhZOFwBir7t9wz0bFZe3alU3WWgzwtwQxkvyRP5fGqU/1HeSXIbMEF59tHruDhXeZK6Djw64T1eXd3Wq27kz9+U+sjfPmC73d8UgLyJKzZwiR/KNtmts=
+	t=1749654977; cv=none; b=dfIoQbcHUN6yJUt3FQmsXTTUb+Nzp5ty8IiZcb8J6me0PudTNY3Ogccjrt3ADmozwR6ioDphSt0Wr5l+niPNKLJ1v2YViAGchupk9f9zhF2bHzVpnv64s6nkIKGGVgzncZx8UjoWLCp8tC/duE6wBcjCOemz+cLbT41r93Zr3NM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749654943; c=relaxed/simple;
-	bh=032bhY7AgZpJmvzjgqpVwjt4tQt+F+MwrCwmvM6koLY=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=eq+uqNeeqcr2lp+v0zYXck3GQIYmSVhg9CR48VwBOILbGgiejndCxA1FWLanArPcvXouo6Rp0sOnj98ire/AwaeZ4Sxa0/7thisKdAw7W+g9Wt54ejhITf9mIv42mmSiAGFZQsoCU+vc2pEYIROVvqvxm1NncJFEsSMi8b4Xyjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Qaab39/p; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EzJEP0FE; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749654977; c=relaxed/simple;
+	bh=nXklkhjhGPFueXugk206tjO1XocGEjlotHKEQ1wizoo=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VxM+5cYA1dpIAyeT6HmaSNeCh0nFWXuTBAWz+g0kVag6Kw/vPw+5EMKWNfNw4QeVxH4MJS+ugrOrMCZW+NoJkmZzE+2O3j/r5Wx8EDx7pVjc/fN9I+0IxuDys+C2GL5rsJS6SXc/rBXN4GuzSVhiolgEUuoKrQV02ZfZ3/UgNik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JSvmFqqy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Qaab39/p";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EzJEP0FE"
-Date: Wed, 11 Jun 2025 15:15:38 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749654940;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=YoIfmvcRvHtmdybdTEQ9WBjWfBIgG87qTRkyrDtq+Lc=;
-	b=Qaab39/pbsbs5+Kk/myO2odjK3Nj7XgSN/PwOYnVhjsY6JtAHLsk2Hl84xmX8iSZT0wSGy
-	DE6i+Ur6eAbwk10fLYGDroY9WXlMrrbx59SUsTtXxYRy0zBdEvTKzawNoTrpB09d/IX2M7
-	YvElnAY7JQgs+VbLJ7czehhEOEV6E+vum34Vjg9oOe7mz2puBqxHqidiBclrPI4e0I54Qf
-	gm54jA4M/3NbM6rCtnxh2YXYpmXraZAgew3ONz42RoVrNZs+CV0zVXmkuMBB6BIyskNVpy
-	TSZz29M30RF4rjFbGo/3vk4/Q191pL4vyouX++nc643ukRGbBq7sj5P1Ri1stQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749654940;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=YoIfmvcRvHtmdybdTEQ9WBjWfBIgG87qTRkyrDtq+Lc=;
-	b=EzJEP0FE0NtGL0U7A6Bv7tFAmWMcN/pHA0XKrouiaFndtybBkGe8802WsH2rraBAkunTRj
-	KCTHGlzpxbonoyBg==
-From: "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: locking/urgent] futex: Verify under the lock if hash can be replaced
-Cc: "Lai, Yi" <yi1.lai@linux.intel.com>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JSvmFqqy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F50BC4CEEE;
+	Wed, 11 Jun 2025 15:16:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749654974;
+	bh=nXklkhjhGPFueXugk206tjO1XocGEjlotHKEQ1wizoo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=JSvmFqqyv27mHrmgQnp+DqL683JVATCFJGGw0Kz9zlTnpHNSCrMtHSn19B8xef+xO
+	 RvnDSeavvvV3Skxc6lSLFtvMTB2+KOg5XUOuZT0dWqjEzazcsDqptEj0nh669oxTGJ
+	 CMw2/pHNNy4aH03QvpRNx1ts7ubFsqhumrpwOfT1FTUadiiYcV7/u/hu8BEGEhw04y
+	 CZnpPLDyxufARaquOkvKFIvYbKscmxoj6SUfJZukcGa9zcV+ln9fg1XEO3m+POPu/3
+	 9S+NT0VWvak8dD0/5nEhOrR7bA4wfcA1eN1nUVTeQYNWDr25AXUwGWzuPbtu3ths53
+	 qYRpdhMG3/THQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uPNBU-005umF-8L;
+	Wed, 11 Jun 2025 16:16:12 +0100
+Date: Wed, 11 Jun 2025 16:16:10 +0100
+Message-ID: <861prqe2bp.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: catalin.marinas@arm.com,
+	will@kernel.org,
+	broonie@kernel.org,
+	oliver.upton@linux.dev,
+	ardb@kernel.org,
+	frederic@kernel.org,
+	james.morse@arm.com,
+	joey.gouly@arm.com,
+	scott@os.amperecomputing.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] arm64: cpufeature: add FEAT_LSUI
+In-Reply-To: <20250611104916.10636-2-yeoreum.yun@arm.com>
+References: <20250611104916.10636-1-yeoreum.yun@arm.com>
+	<20250611104916.10636-2-yeoreum.yun@arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-ID: <174965493896.406.142707070957914445.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: yeoreum.yun@arm.com, catalin.marinas@arm.com, will@kernel.org, broonie@kernel.org, oliver.upton@linux.dev, ardb@kernel.org, frederic@kernel.org, james.morse@arm.com, joey.gouly@arm.com, scott@os.amperecomputing.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-The following commit has been merged into the locking/urgent branch of tip:
+On Wed, 11 Jun 2025 11:49:11 +0100,
+Yeoreum Yun <yeoreum.yun@arm.com> wrote:
+> 
+> Since Armv9.6, FEAT_LSUI supplies load/store instructions
+> for privileged level to access user memory without clearing PSTATE.PAN bit.
+> 
+> Add LSUI feature so that the unprevilieged load/store instrcutions
 
-Commit-ID:     b9163c452ae0d155c39f4549b56fae7eb34c59af
-Gitweb:        https://git.kernel.org/tip/b9163c452ae0d155c39f4549b56fae7eb34c59af
-Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate:    Mon, 02 Jun 2025 13:00:27 +02:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 11 Jun 2025 17:08:37 +02:00
+nit: instructions
 
-futex: Verify under the lock if hash can be replaced
+> could be used when kernel accesses user memory without clearing PSTATE.PAN bit.
+> 
+> Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+> ---
+>  arch/arm64/kernel/cpufeature.c | 8 ++++++++
+>  arch/arm64/tools/cpucaps       | 1 +
+>  2 files changed, 9 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index b34044e20128..d914982c7cee 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -278,6 +278,7 @@ static const struct arm64_ftr_bits ftr_id_aa64isar2[] = {
+>  
+>  static const struct arm64_ftr_bits ftr_id_aa64isar3[] = {
+>  	ARM64_FTR_BITS(FTR_VISIBLE, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64ISAR3_EL1_FPRCVT_SHIFT, 4, 0),
+> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64ISAR3_EL1_LSUI_SHIFT, 4, ID_AA64ISAR3_EL1_LSUI_NI),
+>  	ARM64_FTR_BITS(FTR_VISIBLE, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64ISAR3_EL1_FAMINMAX_SHIFT, 4, 0),
+>  	ARM64_FTR_END,
+>  };
 
-Once the global hash is requested there is no way back to switch back to
-the per-task private hash. This is checked at the begin of the function.
+Please enable the equivalent bits in KVM so that the feature can be
+exposed to a guest.
 
-It is possible that two threads simultaneously request the global hash
-and both pass the initial check and block later on the
-mm::futex_hash_lock. In this case the first thread performs the switch
-to the global hash. The second thread will also attempt to switch to the
-global hash and while doing so, accessing the nonexisting slot 1 of the
-struct futex_private_hash.
-The same applies if the hash is made immutable: There is no reference
-counting and the hash must not be replaced.
+Thanks,
 
-Verify under mm_struct::futex_phash that neither the global hash nor an
-immutable hash in use.
+	M.
 
-Tested-by: "Lai, Yi" <yi1.lai@linux.intel.com>
-Reported-by: "Lai, Yi" <yi1.lai@linux.intel.com>
-Closes: https://lore.kernel.org/all/aDwDw9Aygqo6oAx+@ly-workstation/
-Fixes: bd54df5ea7cad ("futex: Allow to resize the private local hash")
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lore.kernel.org/all/20250610104400.1077266-5-bigeasy@linutronix.de/
----
- kernel/futex/core.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/kernel/futex/core.c b/kernel/futex/core.c
-index b652d2f..33b3643 100644
---- a/kernel/futex/core.c
-+++ b/kernel/futex/core.c
-@@ -1629,6 +1629,16 @@ again:
- 		mm->futex_phash_new = NULL;
- 
- 		if (fph) {
-+			if (cur && !cur->hash_mask) {
-+				/*
-+				 * If two threads simultaneously request the global
-+				 * hash then the first one performs the switch,
-+				 * the second one returns here.
-+				 */
-+				free = fph;
-+				mm->futex_phash_new = new;
-+				return -EBUSY;
-+			}
- 			if (cur && !new) {
- 				/*
- 				 * If we have an existing hash, but do not yet have
+-- 
+Without deviation from the norm, progress is not possible.
