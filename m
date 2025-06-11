@@ -1,104 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7531201000;
-	Wed, 11 Jun 2025 16:17:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30131D5CDD;
+	Wed, 11 Jun 2025 16:18:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749658662; cv=none; b=FnzHX/Ofsj4Cy79EjDb8U59awKCJ4S5CPXBIMfBwjXLQycyi4pASY+3p7e8r37IvrD5OaOvakfXqFRgZlvu/ra1y/MJGjfH79S2b/RwjOFufC0CjmpcoVPnAMrGaLGkXdHq00XiUpH7JOjlS4OG6N9Mn36dOYzIRy5Pvme/m6hk=
+	t=1749658702; cv=none; b=mTHm6qfR8D3xE5w8nKTofVCIGTKP/8Ef6ojkzNTsn8IxqN8pD2mOKeBhmVsEn+Hna59uKtrRs0pXWDvbz08NK0L20+nrPu4Zlk4ZyngsKzzLfsZLnqNItyt7hYglfcFxcsUwSMWNBsGLrrtcMrj/iVXxs2iGf4Y78bIgSWKqmy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749658662; c=relaxed/simple;
-	bh=FraoX4V3TAqQuBkvIAxSNPXL4fMoaDR64I9fTU/5cwg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r8vRKZb0xTJvq1AGwEkMb4c5HKOJXJfkmwMxMkpXj54hrvbCVnUa5lKcjt1eOqrdatywHmCFbvyVoZsxmLMpTdXN4UQUjSRF2owqywNJbxoUjdFPyJ8OD6j0c3wWgBnvP3vz0wnGYnFlEu2sbn7JLNGUlMMBF5eCcKc7mgnQzbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TiCb9CKK; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TiCb9CKK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F0DFC4CEE3;
-	Wed, 11 Jun 2025 16:17:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749658661;
-	bh=FraoX4V3TAqQuBkvIAxSNPXL4fMoaDR64I9fTU/5cwg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TiCb9CKKjnJWcrc+xA/1bEw5YOdWPb2cv1RC46vyQy/X9cUVZXYVrcZqBB7R08Ntc
-	 Q6ohhw6Ulx+0D3GMsjRQX0xJL1DHPu595b5Azao9iu6h2Sv6wrS4Sa/62oVyDdMygm
-	 WCN4bnJrZ9BOQkakZ+GxBA6ciFmpMWUcdZeubY6F5TObW3w27gXoljQxMzdT0oiFqb
-	 KPycUteZSos5uewBlje973p3ib74oIRVG5w+x/pE64NSZqXOrgp4RSbGzl47uZKEtP
-	 4uwE+EkT/GM20qgkL3bvG2/9YE9HXBksfPQfqTzXEPEUkMyhIqxzNHj/hAJrGwKpWF
-	 0OD9N2Zeaal2Q==
-Date: Wed, 11 Jun 2025 17:17:35 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: catalin.marinas@arm.com, pcc@google.com, will@kernel.org,
-	anshuman.khandual@arm.com, joey.gouly@arm.com,
-	yury.khrustalev@arm.com, maz@kernel.org, oliver.upton@linux.dev,
-	frederic@kernel.org, akpm@linux-foundation.org, surenb@google.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v7 2/9] arm64: report address tag when
- FEAT_MTE_TAGGED_FAR is supported
-Message-ID: <d93452bf-7296-47fc-9d48-44c390cb5080@sirena.org.uk>
-References: <20250611135818.31070-1-yeoreum.yun@arm.com>
- <20250611135818.31070-3-yeoreum.yun@arm.com>
- <9a78c058-2aeb-43d8-94f8-987507a1a9a3@sirena.org.uk>
- <aEmg9cNGAzqsrTd1@e129823.arm.com>
+	s=arc-20240116; t=1749658702; c=relaxed/simple;
+	bh=iCSp5O0s2s0EfwUP1NTze5TIzcnTBSIPTs27KJTso3M=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=PbeA62LiPkQPM57kGazM30fJfn5qDXz8PXXDlM/iKNWU6JRzIQwzO1JNBn5yU/p3z46DUvISYkuB2gWqtjO2yjZyOYnfgJatyUwJZhxKq+KPjRx/SdMJQOwS8OhF6tUgfkEyK68Ru8Rtprv297cz++kfza9kqCspLqyczCha8nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 3A7681019BB;
+	Wed, 11 Jun 2025 16:18:18 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id 8968C2002B;
+	Wed, 11 Jun 2025 16:18:16 +0000 (UTC)
+Date: Wed, 11 Jun 2025 12:18:15 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Al Viro <viro@ZenIV.linux.org.uk>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [PATCH] tracefs: Add d_delete to remove negative dentries
+Message-ID: <20250611121815.409d02f8@batman.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="AcPDYuBXDOqguWX5"
-Content-Disposition: inline
-In-Reply-To: <aEmg9cNGAzqsrTd1@e129823.arm.com>
-X-Cookie: No skis take rocks like rental skis!
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 8968C2002B
+X-Rspamd-Server: rspamout08
+X-Stat-Signature: nxx4hwgkekwe4364xgixpp53aw6kig1o
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+NPhW+5xNRU0Cg4dInKx8FL3ulEJKb7L0=
+X-HE-Tag: 1749658696-732145
+X-HE-Meta: U2FsdGVkX1+OmWEOjLpUfkUPENEyZa7Ld0ag+7o5+MLZU0bP69ABNsG3+OMyyXaIyEIVqYuLa3DrGIfi4ggMYkVHJ/POShQMYHAZHMQ/ZagrKD1eS6HdvB30YmL5X/nYiVJZ9NhBw4VG+JkarTkcxxKBXMLg7C+Pq9FDtnQpcLNBSzbZObiIy7m5Yu5ruZU96helNJGaFvrjvv2Qr7f4zgRrPuxtkJniIMkTo4rnaV8CXlOmJ2KXg55GkL9qZYJLdl2a30IknWuWFAvqkFhbE6NgBwGRRZ7ngT9ebVuUJ4FW0K1Opu/QmkydvhAbr6bU5cTG+Ruz7QjPeP8uRD6d1yWTIOvO5484kSGHtiGaMMaNBT1w8enjOiX7J+vk4QkH/ZK+Ah6DtpOoMfYwBBganJ4jHddyQwtwUwnJadpAuVA8px25vts+Cmn8XjFjiTGL
 
+From: Steven Rostedt <rostedt@goodmis.org>
 
---AcPDYuBXDOqguWX5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+If a lookup in tracefs is done on a file that does not exist, it leaves a
+dentry hanging around until memory pressure removes it. But eventfs
+dentries should hang around as when their ref count goes to zero, it
+requires more work to recreate it. For the rest of the tracefs dentries,
+they hang around as their dentry is used as a descriptor for the tracing
+system. But if a file lookup happens for a file in tracefs that does not
+exist, it should be deleted.
 
-On Wed, Jun 11, 2025 at 04:29:57PM +0100, Yeoreum Yun wrote:
-> Hi Mark.
-> > On Wed, Jun 11, 2025 at 02:58:11PM +0100, Yeoreum Yun wrote:
+Add a .d_delete callback that checks if dentry->fsdata is set or not. Only
+eventfs dentries set fsdata so if it has content it should not be deleted
+and should hang around in the cache.
 
-> > >  	 * The architecture specifies that bits 63:60 of FAR_EL1 are UNKNOWN
-> > >  	 * for tag check faults. Set them to corresponding bits in the untagged
-> > > -	 * address.
-> > > +	 * address if ARM64_MTE_FAR isn't supported.
-> > > +	 * Otherwise, bits 63:60 of FAR_EL1 are KNOWN.
+Reported-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ fs/tracefs/inode.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-> > Should that be "are UNKNOWN"?
+diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+index a3fd3cc591bd..43f83fc9594f 100644
+--- a/fs/tracefs/inode.c
++++ b/fs/tracefs/inode.c
+@@ -465,9 +465,20 @@ static int tracefs_d_revalidate(struct inode *inode, const struct qstr *name,
+ 	return !(ei && ei->is_freed);
+ }
+ 
++static int tracefs_d_delete(const struct dentry *dentry)
++{
++	/*
++	 * We want to keep eventfs dentries around but not tracefs
++	 * ones. eventfs dentries have content in d_fsdata.
++	 * Use d_fsdata to determine if it's a eventfs dentry or not.
++	 */
++	return dentry->d_fsdata == NULL;
++}
++
+ static const struct dentry_operations tracefs_dentry_operations = {
+ 	.d_revalidate = tracefs_d_revalidate,
+ 	.d_release = tracefs_d_release,
++	.d_delete = tracefs_d_delete,
+ };
+ 
+ static int tracefs_fill_super(struct super_block *sb, struct fs_context *fc)
+-- 
+2.47.2
 
-> Otherwise in here mentions the case when ARM64_MTE_FAR is supported,
-> So the bits 63:60 of FAR_EL1 are "not UNKNOWN" but I write it with
-> KNOWN.
-
-Ah, I see - KNOWN looks like one of the specially defined architectural
-terms from the glossary of the ARM since it's all caps but KNOWN isn't
-one of those words which was confusing me.
-
-> Do you want to change this to "not UNKNOWN"?
-> or Am I missing something?
-
-DDI0487L.a D24.2.43 does use the term "not UNKNOWN" for that case so
-that'd work like you suggest, or some other rewrite to use less formal
-terms.  Like I say it was specifically the use of caps.
-
---AcPDYuBXDOqguWX5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhJrB4ACgkQJNaLcl1U
-h9BYHgf+Iit2rwd3yHK5WEV9aQ3ItTDeP7YyFQrmZUxPDi9M1hxYKXvHUsLtyaWf
-WYnwjrzkM8ykmhzQonLE+ecQDd1wEk5Z08CBZHH0ut4EmVt6hjf333uXFF/s7jKY
-YPxMmtGvzK3hoeqXUvKKnaRZ/3ZDYOjFTUGLDCf6SuZDCF5/J2KlXNkM4WgNn+T6
-dDXllbnC/+SU5PBk9fEYG43hyEjsnkT/qAAdgomLTyzg/eddrXWSX3E0xEHOU/Hk
-fGSSBTKZB/uKky6wHF+pVF6Gs65UyZ5NFj1bnJAN+AoOIU6GHrifwPvknwinIiUv
-GKv0mQwOeqGrzaLeRineWNxPckGr3A==
-=QnsX
------END PGP SIGNATURE-----
-
---AcPDYuBXDOqguWX5--
