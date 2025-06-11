@@ -1,118 +1,225 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6889815B102;
-	Wed, 11 Jun 2025 14:26:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5858B23958C
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:26:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749651989; cv=none; b=QX9HdZJ94XrV6VfvxM6UnYNE5pmL+3kikYYAQLNrIC0lxIFSra8a21D7x9/8naUG++Y7D31oLk4dlCs+J4MWPKn6mOCQLjVH68v8loTJoFosu+/8tQGIBgv7snTf5ivhOJySCAY1KXlOAigj+qTB9JNnp+5nCOxG893+hdBTCjI=
+	t=1749652006; cv=none; b=t0XyBA2+fJUfdMbTsQXWwenAxr5OIxt5SM48H1M8Q9KuRq8/2cWZWZXFmQuKgW0ND+Lm910jfFOIBnYSJEkCn6Sy60CkqoueOFivRXBO67t8sX82b//qaHhQlaMJu9BLaVLAYCHcEEkdknIoqejDnKgc7RpAx1jLWuYdDfLnZUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749651989; c=relaxed/simple;
-	bh=2v0L3nIc6S0R6Cw8HMNJRjjjRiB2Ue8P/o1nFtAELTw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pRMfuU9vlRuUmWVLuApB9VU2HXYJEcxmJvN8Ks2r3w73yqhAhy92wbK+keslTNYJBqnmel6nklzvk/m5CqU98ox5TIyY5Z/pFKvD5deW6v4zUkYSTZz62YjHUIWaUQXnKvp1JrAF9O3jrdJEi0jtQ43UvWeKftE3iNS9vCS5GDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IeXQ3vEl; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749652006; c=relaxed/simple;
+	bh=t0kpz7pvCeH8E2yL46QfBqaRY/4ZUJel5yFsSnt9ujs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LmutvALaIqPy6hZcitqprig1gTNXwpnQw/aVVHuDH+6joLBzro4jbebqC8T4s3sg3kXElLkLwefk6a0LLY4yUtsP+onHQC6UlfJ3Zm65/FlWaivO+QP9xNG89WaFMyNNNCPrHlZlWBhvBEwfqbknGwo3tqza8E7Fy72+nJnOgIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qn/pglzU; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IeXQ3vEl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749651989; x=1781187989;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=2v0L3nIc6S0R6Cw8HMNJRjjjRiB2Ue8P/o1nFtAELTw=;
-  b=IeXQ3vElvfx/xALRULpm/Vx2lO86BX/ZFwn4k3voPoheTqqrJHE5MsuT
-   gc4r4BaAf2I39grn7v6K/yuE8gPfYBvFw5A4t8S6GWAfU0TCKxNVv5Lr9
-   m8ayoMGCObQ7DZbNX7Ff8qLB50LQw2PNRCO+dYlJbAgITY9frua8aGxIb
-   mx/CmYRzmSiiUk1fHhnNz442otN1CBa54ElmXLAOBZixffbMRKZuSeLFz
-   j6VmzVNWV8MQLyORro/opuwHZuYge+jPOcFJIBXCW5Qrsr4HU2zfK3KlC
-   3/112rcDb18lXWzFhnnMzcgOgOYV/HZkad1XU73t1YZIewNUE1DpIzmXI
-   Q==;
-X-CSE-ConnectionGUID: yK8edSzKRYebq7MFDLm2GA==
-X-CSE-MsgGUID: EZ0Jv/0ZQj2PsMFkipy+eQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="51882808"
-X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
-   d="scan'208";a="51882808"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 07:26:28 -0700
-X-CSE-ConnectionGUID: 9fU3IbJ6T92DkAvUOxVEgQ==
-X-CSE-MsgGUID: 9ygHyfExTwSGmKsPG1YP0g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
-   d="scan'208";a="184416951"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 07:26:24 -0700
-Message-ID: <a7929151-0a1f-4349-99b5-186c187710ff@intel.com>
-Date: Wed, 11 Jun 2025 22:26:20 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qn/pglzU"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-311a6236effso5055995a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:26:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749652004; x=1750256804; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=DraqQelyt+bdJU5+YFLLhDQGQccP2q6ONNc7M1b6iwQ=;
+        b=Qn/pglzUx7O8/HPqO/J0/KGZIkW0B7JT36YyHCDM6FxsHAExgfXhCjyoYDoXzi5xPV
+         m0JTjjhSjdJDmCPDZ2wZrBcLuRzjXCgPTrX5PQeRQi3czH2SB8992QSPmMCn2Bc2SRTy
+         CJfzDNXzebtNtaImh7Hdt8vHwmIkCGbSZBWnIQ+d5tKcBzZYhKX8FUvfwaSn9zs85nj8
+         T70nloEIv2nO1xyypcWJz+6kpQjKrKoiqB+qa4iowMk1aCNC4CDR74XwT+ozKYlI8/tM
+         vZbKqHiG1zrPaC+A9XroeNVYo9j/LQsg7DlsAfKuyM7/Jxb2ERlJmSJ7zaQfkzFtOhXf
+         ujGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749652004; x=1750256804;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DraqQelyt+bdJU5+YFLLhDQGQccP2q6ONNc7M1b6iwQ=;
+        b=Fps3f7nBIvfhjyLpeHB4R1+m42YqgFLnHpDJCXO1oeuR98c9ie4FYeSRaXH9fu1K35
+         KPG/HRowf+kJ0dMTunJY1ftJzVtWkdGKHLLPOAYpIOBfRIr8YkGRwcDlo71MuQ99a6gM
+         gPvTYvM3lWPWgTDG+Y51kPHgVw8dRw5Pepye5M7IUwXS1UD6K8/nrgfMleBthfV++Izu
+         q4THknycW+4rE4G+Q1y1jHkMx+5/jqfyEzf89pOTc0p/rIFQHf0xreGb/JR2/FrBtrf+
+         Hb0A1n9QMBB/u/n/9b6CRquBG+BzfE9vTuVnbaewosvpvwz75wKJOOLclQPjqWezXf9G
+         38mw==
+X-Forwarded-Encrypted: i=1; AJvYcCUx8y2Xzt1ZIygbVwWGX5W30SXK6XLBWZc1QufgzrvK+eghNHMy3HFHtyXGi1vmVVXfmqhgxUgeemLwAjw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdxhXm5bIbPk1J+1P9BTX8OBXM8mWZ+5g7Ogt9nDRWo0fImV30
+	7qSQYCBBpq05kWh5rV+M227fhNFuA713rHmEBzX6Dd2tF0kE5zUUOIC8
+X-Gm-Gg: ASbGncuTV1KUZfFP3pCeNaGRljzYYKkAQcMJOrTTOxrmmS5qMbZfqtdD5iaMxj2flgm
+	nk1ZoGwJizqqVFjr9f5AnBtW2/lzCjI4To8FAWxZvxd8Qecz4ksChHaEVkV/55DABI/BGPRFPW9
+	3pfj2t3sCto8+pr6S6vzdsUU3OItUi3mgynIY4Lh7ZiVCjiLPpmAavXR7E8NCARn/WoLdpcw7Mj
+	RkwUi0ETRLB9/ovNUBYCtBP1ASNfOaPkBPDmz9tPE64gguKqnH2DY5DDgmckm1oUoALULACZjqu
+	JQV5HcRfdShjeuAvMVROAK6bCQEj69WhB7xMR7PTlgparNkrrwUlk0/WE7T1LtmdFPUB2z86nFR
+	dfg==
+X-Google-Smtp-Source: AGHT+IFCy7pJmrhs4pVrZNcNeETyXGxqD+9XpTLoLS7EYamXpVVm7nhNsOc/iKkxIxzO8Vo/DPb30Q==
+X-Received: by 2002:a17:90b:4cc5:b0:311:2f5:6b1 with SMTP id 98e67ed59e1d1-313b1fbe77fmr3324748a91.22.1749652004380;
+        Wed, 11 Jun 2025 07:26:44 -0700 (PDT)
+Received: from vaxr-BM6660-BM6360 ([2001:288:7001:2703:2c7d:4ae3:493:2da6])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313b2039bfdsm1346088a91.36.2025.06.11.07.26.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 07:26:43 -0700 (PDT)
+Date: Wed, 11 Jun 2025 22:26:39 +0800
+From: I Hsin Cheng <richard120310@gmail.com>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: jstultz@google.com, tglx@linutronix.de, sboyd@kernel.org,
+	linux-kernel@vger.kernel.org, yurynorov@gmail.com,
+	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev,
+	jserv@ccns.ncku.edu.tw
+Subject: Re: [PATCH v3] clocksource: Replace loop within
+ clocks_calc_mult_shift() with find_last_bit() for calculation of "sftacc"
+Message-ID: <aEmSH50geb-2qTBb@vaxr-BM6660-BM6360>
+References: <20250611073608.2049793-1-richard120310@gmail.com>
+ <aEltbEpA7US9h8qN@yury>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 4/4] KVM: TDX: Check KVM exit on KVM_HC_MAP_GPA_RANGE
- when TD finalize
-To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
- "seanjc@google.com" <seanjc@google.com>,
- "binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>
-Cc: "mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>,
- "Huang, Kai" <kai.huang@intel.com>, "Yao, Jiewen" <jiewen.yao@intel.com>,
- "Chatre, Reinette" <reinette.chatre@intel.com>,
- "Lindgren, Tony" <tony.lindgren@intel.com>,
- "Hunter, Adrian" <adrian.hunter@intel.com>,
- "Zhao, Yan Y" <yan.y.zhao@intel.com>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- "pbonzini@redhat.com" <pbonzini@redhat.com>,
- "Yamahata, Isaku" <isaku.yamahata@intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "Shutemov, Kirill" <kirill.shutemov@intel.com>
-References: <20250610021422.1214715-1-binbin.wu@linux.intel.com>
- <20250610021422.1214715-5-binbin.wu@linux.intel.com>
- <936ccea77b474fbad1bde799ee92139356f91c5f.camel@intel.com>
- <aEh0oGeh96n9OvCT@google.com>
- <31c4ab96-55bf-4f80-a6fd-3478cc1d1117@linux.intel.com>
- <aEmGTZbMpZhtlkIh@google.com>
- <ac62541b-185a-47aa-86a7-d4425a98699d@intel.com>
- <f0d42c86e0b2fbad3fa3fdcdce214059b0581573.camel@intel.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <f0d42c86e0b2fbad3fa3fdcdce214059b0581573.camel@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEltbEpA7US9h8qN@yury>
 
-On 6/11/2025 10:04 PM, Edgecombe, Rick P wrote:
-> On Wed, 2025-06-11 at 22:01 +0800, Xiaoyao Li wrote:
->>>> So, when the TDX guest calls MapGPA and KVM finds userspace doesn't opt-in
->>>> KVM_HC_MAP_GPA_RANGE, just return error to userspace?
->>>
->>> Why can't KVM just do what it already does, and return an error to the
->>> guest?
->>
->> Because GHCI requires it must be supported. No matter with the old GHCI
->> that only allows <GetTdVmCallInfo> to succeed and the success of
->> <GetTdVmCallInfo> means all the TDVMCALL leafs are support, or the
->> proposed updated GHCI that defines <MapGpa> as one of the base API/leaf,
->> and the base API must be supported by VMM.
->>
->> Binbin wants to honor it.
+On Wed, Jun 11, 2025 at 07:50:04AM -0400, Yury Norov wrote:
+> On Wed, Jun 11, 2025 at 03:36:08PM +0800, I Hsin Cheng wrote:
+> > Utilize "find_last_bit()" in replacement of while loop counting
+> > for the decremenet of "sftacc". They're equivalent in computation result
+> > but the former is more effective.
+> > 
+> > "find_last_bit()" will return the bit number of the last set bit of
+> > "tmp", which is 0-based index. Plus 1 to convert it into bit width as
+> > desired.
+> > 
+> > Note that only the lowest 32 bits of "tmp" is taken into consideration
+> > of the operation, since it was already shifted right by 32 bits, the
+> > topmost 32 bits should remain 0, only the lowest 32 bits are possible to
+> > be non-zero.
+> > 
+> > This change is tested against a test script [1].
+> > Run the test 10 times for each version of implementation and take the
+> > average. The result shown that with this change, the operation overhead
+> > of "clocks_calc_mult_shift()" can be reduced around 99.7% .
+> > 
+> > -----------------------------
+> > | old version | new version |
+> > -----------------------------
+> > |  11500.6 ns |       44 ns |
+> > -----------------------------
+> > 
+> > Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+> > ---
+> > Changelog:
+> > 
+> > v1 -> v2:
+> > 	- Refine commit message to explain more about "why"
+> > 	- Check the frequency of "clocks_calc_mult_shift()" get called,
+> > 	  it's not in hotpath on my machine, refine the commit message
+> > to avoid overselling it
+> > 	- Add comments for the code to explain the implementation in
+> > 	  more detail
+> > 	- Handle case for "tmp == 0" to avoid undefined behavior
+> > v2 -> v3:
+> > 	- Use "find_last_bit()" instead of "__builtin_clz()"
+> > 	- Convert the type of "tmp" to "const unsigned long *" when
+> > 	  sending into the function
+> > 	- Highlight in the comment that only the lowest 32 bits part
+> > 	  of "tmp" is taken into consideration
+> > 
+> > [1]:
+> > static int __init test_init(void)
+> > {
+> >     u32 mult, shift;
+> >     u32 from, to, maxsec;
+> >     ktime_t start_time, end_time, total_time;
+> >     pr_info("Starting clocks_calc_mult_shift simple test\n");
+> > 
+> >     start_time = ktime_get();
+> >     // Test with parameters from 1 to 1000
+> >     for (from = 1; from <= 1000; from += 100) {
+> >         for (to = 1; to <= 1000; to += 100) {
+> >             for (maxsec = 1; maxsec <= 10; maxsec++) {
+> > 
+> >                 clocks_calc_mult_shift(&mult, &shift, from, to, maxsec);
+> >             }
+> >         }
+> >     }
+> > 
+> >     end_time = ktime_get();
+> >     total_time = ktime_to_ns(ktime_sub(end_time, start_time));
+> > 
+> >     pr_info("Test completed\n");
+> >     pr_info("Total execution time: %lld ns \n", total_time);
+> >     return 0;
+> > }
+> > 
+> > The test is running in the form of kernel module.
+> > The test machine is running ubuntu 24.04 on x86_64 machine with kernel
+> > version of v6.14.0, CPU type is AMD Ryzen 7 5700X3D 8-Core Processor.
+> > 
+> > Hi John, Yury,
+> > 
+> > Would you be so kind to give some suggestion/comments on how should the
+> > usage of "find_last_bit()" be here ? I'm not sure about whether the type
+> > conversion of "tmp" is appropriate, though compiler will pop out warnings
+> > if not doing so.
+> > 
+> > Plus I'm thinking converting to another pointer type might might be correct
+> > when the endianess isn't guaranteed ? (or this endianess problem should be
+> > address and solved in filesystem layer ?)
+> > 
+> > Best regards,
+> > I Hsin Cheng.
+> > ---
+> >  kernel/time/clocksource.c | 18 ++++++++++++++----
+> >  1 file changed, 14 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
+> > index 2a7802ec480c..651bed1a53e7 100644
+> > --- a/kernel/time/clocksource.c
+> > +++ b/kernel/time/clocksource.c
+> > @@ -66,10 +66,20 @@ clocks_calc_mult_shift(u32 *mult, u32 *shift, u32 from, u32 to, u32 maxsec)
+> >  	 * range:
+> >  	 */
+> >  	tmp = ((u64)maxsec * from) >> 32;
+> > -	while (tmp) {
+> > -		tmp >>=1;
+> > -		sftacc--;
+> > -	}
+> > +
+> > +	/*
+> > +	 * Decrement "sftacc" by the number of bits needed to represent "tmp".
+> > +	 * Using "find_last_bit(&tmp, 32) + 1" to get the bit width:
+> > +	 * - find_last_bit(&tmp, 32) returns the bit number of the last set bit
+> > +	 * - Plus 1 to convert 0-based index into bit width as desired
+> > +	 *
+> > +	 * Note: Only the lowest 32 bits of "tmp" is taken into consideration,
+> > +	 *		 since it was already shifted right by 32 bits, the topmost 32
+> > +	 *		 bits are guaranteed to be 0.
+> > +	 *
+> > +	 */
+> > +	if (sftacc)
+> > +		sftacc -= (find_last_bit((const unsigned long *)&tmp, 32) + 1);
 > 
-> But KVM doesn't need to support all ways that userspace could meet the GHCI
-> spec. If userspace opts-in to the exit, they will meet the spec. If they
-> configure KVM differently then they wont, but this is their decision.
 
-I agree with you and Sean. And I'm trying to answer Sean's question on 
-behalf of Binbin.
+Hi Yury,
 
-Strictly speaking, KVM can be blamed for some reason. Because it is KVM 
-that returns success for <GetTdVmCallInfo> unconditionally when r12 == 0 
-  to report that all the (base) leafs are supported.
+Thanks for your suggestions !
 
-But I totally agree with KVM cannot guarantee userspace will behave 
-correctly. Even with this patch that KVM mandates the userspace to 
-enable user exit of KVM_HC_MAP_GPA_RANGE, it's still possible for a 
-misbehaved userspace to error to TD guest on KVM_HC_MAP_GPA_RANGE and 
-breaks the semantics of successful <GetTdVmCallInfo>.
+> 1. sftacc is known to be 32. Comparing against 0 is useless.
+> 2. Just use __fls():
+>         if (tmp)
+>                 sftacc -=__fls(tmp) + 1;
+> 
 
-So I'm with you and Sean.
+No problem, I'll fix them up in the next version.
+Just wondering the reason to use __fls() directly, is it because we're
+sure that the value of "tmp" will definitely fall into
+small_const_nbits() case in find_last_bit() ? 
+
+Best regards,
+I Hsin Cheng
+
+> >  
+> >  	/*
+> >  	 * Find the conversion shift/mult pair which has the best
+> > -- 
+> > 2.43.0
