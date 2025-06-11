@@ -1,114 +1,130 @@
-Received: from lithops.sigma-star.at (mailout.nod.at [116.203.167.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05412322E
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 10:26:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.167.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112DF26058B;
+	Wed, 11 Jun 2025 10:28:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749637605; cv=none; b=L8CDGoFjPzFS40iEdh9mXdCDufB9WkU8+0D6lP5zj8+hI6NOpwTBoRrP1k7FxWMlejlyyIzMRxNFVbNYnZU0OcyefT+H1JQ74wVJ/HRe1NkAO8oxUKKOpOauZJ29amzqHzf4n7pLU25wZIKcPa9+BmxOYJy4lz8SGj6aW4iGQ1g=
+	t=1749637732; cv=none; b=COrH8aYcjgBJvZgyTKN7CHsCp4fSJ9HBLXs5YahxzN8EleCcvFj+ekesBYe7VAsKMo+0TIMCZv25sMX5UT0N5XMkYZbyPVEqj5ypyNPy5+9IoFx13h2qIqhLmJtAa/3N9nZUguyChe4tG8zt+FysVweLLo3BkBzMx5KUGkh5xUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749637605; c=relaxed/simple;
-	bh=jQsLPO1KESrDa2jHITOgdFh57VARaccASz+XKTEuh0U=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=oBynR8UwW6tdQd2Ps4zz0BGKeTbQJyGg1a1r+QFTo4UFCEZobXL0RUGPekhyYhjAAHWfY7conPT8lmzyoxiApBlSp2BTdCmu3If2bLE/ndnt7+/vIhPanlB9IYUBmTc27Z/0U/y0XHVpEUvmW+C1/OefNqsS2dwYyNnIuVQLR+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=116.203.167.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 0BADA298569;
-	Wed, 11 Jun 2025 12:26:34 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id 5-8g9srQQ1ss; Wed, 11 Jun 2025 12:26:33 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 4754329856B;
-	Wed, 11 Jun 2025 12:26:33 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id Er3YZUgwoz17; Wed, 11 Jun 2025 12:26:33 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 1062B298569;
-	Wed, 11 Jun 2025 12:26:33 +0200 (CEST)
-Date: Wed, 11 Jun 2025 12:26:32 +0200 (CEST)
-From: Richard Weinberger <richard@nod.at>
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, 
-	Alexander Usyskin <alexander.usyskin@intel.com>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, 
-	Lucas De Marchi <lucas.demarchi@intel.com>, 
-	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Jani Nikula <jani.nikula@linux.intel.com>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
-	Tvrtko Ursulin <tursulin@ursulin.net>, 
-	Karthik Poosa <karthik.poosa@intel.com>, 
-	Reuven Abliyev <reuven.abliyev@intel.com>, 
-	Oren Weil <oren.jer.weil@intel.com>, 
-	linux-mtd <linux-mtd@lists.infradead.org>, 
-	DRI mailing list <dri-devel@lists.freedesktop.org>, 
-	intel-gfx <intel-gfx@lists.freedesktop.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>
-Message-ID: <1612313571.134371311.1749637592940.JavaMail.zimbra@nod.at>
-In-Reply-To: <877c1ivcym.fsf@bootlin.com>
-References: <20250302140921.504304-1-alexander.usyskin@intel.com> <CY5PR11MB63662D21B2C7B1A1C2E6BC4BED6BA@CY5PR11MB6366.namprd11.prod.outlook.com> <2e5ebbdd-2a57-4f1f-85c6-7c2dff127b50@roeck-us.net> <1176847729.134356549.1749504429656.JavaMail.zimbra@nod.at> <CY5PR11MB6366B2B40E0C357D6C0935C2ED6AA@CY5PR11MB6366.namprd11.prod.outlook.com> <130790886.134361099.1749560056731.JavaMail.zimbra@nod.at> <c90c8bad-9c7a-4bf7-8282-ebefebba90a3@roeck-us.net> <877c1ivcym.fsf@bootlin.com>
-Subject: Re: [PATCH v6 01/11] mtd: core: always create master device
+	s=arc-20240116; t=1749637732; c=relaxed/simple;
+	bh=IDRc53NqDCpcrV6aw56Dpua8MOPqDY4aqlcO9iCxAQo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=SE1qNDPplKcx9HnR09NH6yIR0GKK49PkJMrgncdBpkvgNQNEAHzsCrN4DARxk6PoCZ9uw4Ir+BzdiyvfzohdOGOjNe9FcMiWXQ2kQDCWmEjy+KnklQ/tWrjpCZpeus2z1B6WOHXsBhr8UfiKbJ8ghgrC6J3XfgIVT4u+4zdw9VQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KXnEMOaW; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KXnEMOaW"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4a58f79d6e9so71148591cf.2;
+        Wed, 11 Jun 2025 03:28:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749637730; x=1750242530; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=znsXXWlpLwmtt17S+WR/1ngYo4zWZtKruO9NdSqNJUI=;
+        b=KXnEMOaWR7qmGyYDjKxpodp7WHjZEBw6elAROZBwtSSBlMkoHhvkh9j1VFYBLAa+dv
+         sD8olYWIvPQQtmmTl7QIok+m4aEQfez4HlkIE/7Ur7b3yFbn0LRZJprGbU8b3Z6Qa/UA
+         9zcfi1OSjJ4wlcoGG5+T6iW9/ajnlOOGs9qKYGERDGjhEI8rtm7i5bQpYctrsPegvU59
+         EbCzRDk9ihR7r+ti/9Gp5cduF4pKgy7mr6RumyjuarSuKUP2lxH0m1nvH5jnfk1QdKoh
+         ytgv0jFR0CH7EJwPb9NSq3tw823Ta8QTJn/njHDIhuwB7MuaX43gTrJxGKGXPXiGxcHQ
+         KljQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749637730; x=1750242530;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=znsXXWlpLwmtt17S+WR/1ngYo4zWZtKruO9NdSqNJUI=;
+        b=j/qQoU4XEWp3/Gfz/He+Zln3G9S0/tzmXM8DAfHUVdxTDQtCnGNLfnNtquigmxk5zA
+         KfZGo2rNRolmHeqXTm+bpPgWats2vRMCSGAcMG7+8LyZSC52k9+EyB87ii3gJvzw5Y5z
+         C51wtS8GbEJxMYG4H1Z9vdlPAC68zvhcDKaG93wYQB0g5MJtk1i+Glt2IOHrmGRdKDZE
+         cubU8YZfmtkRqat2A6iCycZg13JtTeiJzsQWkxnvfk7Rs2nadHmF/w7Xlek1kTe+K7yO
+         3dj7Jg+EisrPurClKlzYkauIUSbomZmursPgXZklt4XKu5KawgAzdMDXgY7YPMVu7MOt
+         KWOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW4TNXPSV7566T1GIt95zInLF1g0yPco2erH/eWMgXHgAsKysg+PR5fGMC9DAlgRbvxQatzdX2SUMM/Gjs=@vger.kernel.org, AJvYcCW8IxLgW3n1EOt1XVG267EkzVjMKUAFQANMfmgFCU0BFX0sF+LnFq2bOEs2rt17f0L2xnrDe+ovsjx2/v88ZPI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxggVBJ5c5daglsC8W40kZmVQ9AR2lukbFmT7Xp97AVVuiEAnY
+	RMVUVTGDMRuUEpImtNsZ+eNetJl94/7p+/VHigbdIXcHiuzgtboeN1EO
+X-Gm-Gg: ASbGncu1YkOHW8BLwlDG+D3n1FqjOYh3RZLBJNmqvccR/ZLYwG0XrZ2bwLdOTdT/qvr
+	7T06Dkg4ky/XhdcdR7nOQ/WUQh76AdLB2e/M2WPQoX/JJaLe6Hkz9iAnqd3fChDdmXTBTpP1Kcs
+	u2iwBAAUSSlcZLCMbMoli0hCSZxvan4w7Q+5wK81EsYvfnew8xzYvrk0woOc7bMHgXWdlfYlbph
+	wv6KW2RyI6bN31QjAptXeH2sfG7Nafo0yeZLwEKrPDTl3JB4ry14ktUTwES45+wQiXSTL96kHMW
+	g6t/Zd5sYh4ic4uFAR4+wpawXf7bH/69aQuZq8gOevSuJ1i9yg6qMAlWE8u24mCrCbsxCyM8yaj
+	ejQ==
+X-Google-Smtp-Source: AGHT+IGqC9BsK9jAoZAYq7RLvabUq3cm7i6vxdBqy8Qr3HtuK5D04J+G6xhx7ck17XOA+7RI+agCYA==
+X-Received: by 2002:a05:622a:7908:b0:4a7:1402:3b3 with SMTP id d75a77b69052e-4a714020447mr28368911cf.11.1749637729813;
+        Wed, 11 Jun 2025 03:28:49 -0700 (PDT)
+Received: from 1.0.0.127.in-addr.arpa ([204.93.149.208])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a61116bfe7sm85555311cf.18.2025.06.11.03.28.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 03:28:49 -0700 (PDT)
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Wed, 11 Jun 2025 06:28:47 -0400
+Subject: [PATCH] rust: cast to the proper type
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF139 (Linux)/8.8.12_GA_3809)
-Thread-Topic: core: always create master device
-Thread-Index: 1HQqhqcLtEdhoRxzAvXExqJX+VZLOg==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250611-correct-type-cast-v1-1-06c1cf970727@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAF5aSWgC/x3MPQqAMAxA4atIZgON4A9eRRwkTTWLSlpEkd7d4
+ vgN770QxVQijNULJpdGPfYCqivgbdlXQfXF0LimdR0R8mEmnDA9pyAvMSF5GYa+8z4wQelOk6D
+ 3/5zmnD/zAJzEYwAAAA==
+X-Change-ID: 20250611-correct-type-cast-1de8876ddfc1
+To: FUJITA Tomonori <fujita.tomonori@gmail.com>, 
+ Trevor Gross <tmgross@umich.edu>, Miguel Ojeda <ojeda@kernel.org>, 
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+ Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+ Alice Ryhl <aliceryhl@google.com>, Danilo Krummrich <dakr@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
------ Urspr=C3=BCngliche Mail -----
-> Von: "Miquel Raynal" <miquel.raynal@bootlin.com>
->> On 6/10/25 05:54, Richard Weinberger wrote:
->>> ----- Urspr=C3=BCngliche Mail -----
->>>> Von: "Alexander Usyskin" <alexander.usyskin@intel.com>
->>>> Richard, I've reproduced your setup (modulo that I must load mtdram ma=
-nually)
->>>> and patch provided in this thread helps to fix the issue.
->>>> Can you apply and confirm?
->>> Yes, it fixes the issue here! :-)
->>>=20
->>
->> It doesn't seem to fix the issue if the partition data is in
->> devicetree.
->=20
-> I had a look at the patch again. The whole mtd core makes assumptions on
-> parenting, which is totally changed with this patch. There are so many
-> creative ways this can break, I don't believe we are going to continue
-> this route. I propose to revert the patch entirely for now. We need to
-> find another approach, I'm sorry.
+Use the ffi type rather than the resolved underlying type.
 
-I think reverting is a valid option to consider if the issue turns out to b=
-e
-a "back to the drawing board" problem.
-=20
-> Alexander, can you please remind me what was your initial problem? I
-> believe you needed to anchor runtime PM on the master device. Can you
-> please elaborate again? Why taking the controller as source (the
-> default, before your change) did not work? Also why was selecting
-> MTD_PARTITIONED_MASTER not an option for you? I'm trying to get to the
-> root of this change again, so we can find a solution fixing "the world"
-> (fast) and in a second time a way to address your problem.
+Fixes: f20fd5449ada ("rust: core abstractions for network PHY drivers")
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+---
+ rust/kernel/net/phy.rs | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-IIRC the problem is that depending on CONFIG_MTD_PARTITIONED_MASTER
-won't fly as PM needs to work with any configuration.
-And enforcing CONFIG_MTD_PARTITIONED_MASTER will break existing
-setups because mtd id's will change.
+diff --git a/rust/kernel/net/phy.rs b/rust/kernel/net/phy.rs
+index 32ea43ece646..905e6534c083 100644
+--- a/rust/kernel/net/phy.rs
++++ b/rust/kernel/net/phy.rs
+@@ -163,17 +163,17 @@ pub fn set_speed(&mut self, speed: u32) {
+         let phydev = self.0.get();
+         // SAFETY: The struct invariant ensures that we may access
+         // this field without additional synchronization.
+-        unsafe { (*phydev).speed = speed as i32 };
++        unsafe { (*phydev).speed = speed as crate::ffi::c_int };
+     }
+ 
+     /// Sets duplex mode.
+     pub fn set_duplex(&mut self, mode: DuplexMode) {
+         let phydev = self.0.get();
+         let v = match mode {
+-            DuplexMode::Full => bindings::DUPLEX_FULL as i32,
+-            DuplexMode::Half => bindings::DUPLEX_HALF as i32,
+-            DuplexMode::Unknown => bindings::DUPLEX_UNKNOWN as i32,
+-        };
++            DuplexMode::Full => bindings::DUPLEX_FULL,
++            DuplexMode::Half => bindings::DUPLEX_HALF,
++            DuplexMode::Unknown => bindings::DUPLEX_UNKNOWN,
++        } as crate::ffi::c_int;
+         // SAFETY: The struct invariant ensures that we may access
+         // this field without additional synchronization.
+         unsafe { (*phydev).duplex = v };
 
-On the other hand, how about placing the master device at the end
-of the available mtd id space if CONFIG_MTD_PARTITIONED_MASTER=3Dn?
-A bit hacky but IMHO worth a thought.
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250611-correct-type-cast-1de8876ddfc1
 
-Thanks,
-//richard
+Best regards,
+--  
+Tamir Duberstein <tamird@gmail.com>
+
