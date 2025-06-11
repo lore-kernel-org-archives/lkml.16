@@ -1,91 +1,118 @@
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4A920127D;
-	Wed, 11 Jun 2025 19:07:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0392620127D
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 19:08:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749668828; cv=none; b=SsMgnMhSkDb9XKCX3nv1rN94KNK3xVvFz7vnDJ4rZfuSGEWPwnyTMogwadN/T3Yip3Wgn1p8LdWQ7/2YaDG6J6hoyT1AkEWCWXb4aZaRLCp0AWa+B+I8qESrrksouwNUAIWNGdHdxxNLyFe9SyPBO0LG2t0noj0aahbNSXKP8tY=
+	t=1749668898; cv=none; b=fsL5DLHE9Ql2Zc628Oi05/ZdAWvtHXKd2kqI6BMzIJqZ8XOz2joSiQCXuZn/uMAcCZFsbXWiqHLSEDsdG4M1/lZK5RX6o9eMkfzylB30KMu3+arEs+xYVyBFfF5gBqwbYZpl8rumGjs2yfwKlAOHKCrkVqHwEBViHAPPLNZx6Lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749668828; c=relaxed/simple;
-	bh=pdnpO1YxkWzXV5U9M40ePTBWbqEr3apcyjJa/6o3ZT4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cOyEzD0TR+6lD818uHgdIsU3iJcxX8/QQCAERJ5WUeg0KjewSg3n5IyUu1RB+dcPau3wRgzRJKjhuN0du90/TS/dOXN4Qz1wFqwPKdg+DRgyjYlPjrcGSczsHP2ni86WLwbAtX1HULJVDA5YN3l2iRORoRkOcUGFu/iscFGU+aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CNsI87mp; arc=none smtp.client-ip=209.85.219.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749668898; c=relaxed/simple;
+	bh=Qb+rw+/+v6vkARv8Ptja+GP0pY6S9kxgJsfkBLogMiw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kE7xyPX9mTlZWkPGJs1dCH/2fb0jt0dbx/eKKPwRCQkMw5k9KlueLx0nggwhvvnSFiryc9b1BY+UDBNt0uhYDhkpeZJPXfNYLSAAtSMMj3kPrlgFleRJRq4LM+c3GHwo81kTr6vFconHiot0L6BkHvC9bD6L64KcovV0wc+nUms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=f2c/JIY1; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CNsI87mp"
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e818a572828so114987276.1;
-        Wed, 11 Jun 2025 12:07:07 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f2c/JIY1"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-235e1d4cba0so1557655ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 12:08:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749668826; x=1750273626; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=1MF1dHTik4WYDT1dqFKnZOlAFt0Xaso+/EljV+ZdGk8=;
-        b=CNsI87mpzIyNTSX0NLELYbHVn/bqYdAISvCJwe9KCqavnHKrCsBpTP5mbecD4do1vZ
-         4NpbVyjlUlnLzTJKX2Jyy7nOTcdzz2VloZJebwnRaDTcdx6gxMvu7SjDBncA+PATSMrH
-         qD9dQotEDe0mS1iJRsnXe6VbB07lc+hfuqavi18PBfqb68y5UvekjE54TKvTnCWY14/Y
-         854TkIRN7rLGNNFxaTwG7IuPfCsOdysvMXxkGVems60H6/QIyHidXq0UT9N14DEuDKt+
-         mhSf2H0ixwcsggKVlNrIPAZFqfrNZ0g6+ZwRcJV1VE9vazMf7IBu+s0OO5jYV957YWNm
-         SAaA==
+        d=chromium.org; s=google; t=1749668896; x=1750273696; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=d5WV78r9hsFDa0FOY/UalZ2/FYtYwT6NjQmp0SNoQZk=;
+        b=f2c/JIY1bUKRNFZhWb23QqqnxPQsexIZYsD/t4In9f3109cbn1JifIwZNxAjrB0eyI
+         maiiCbpWyBwHe6U268zUMuXNeScAh/HQAsrp3LcBmvSHAQ9eGCaltgBTM7//Nf1B3vA2
+         U7KPkUWAboFVLav+9Ajp80F4vWnwyvIcOqFfc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749668826; x=1750273626;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1MF1dHTik4WYDT1dqFKnZOlAFt0Xaso+/EljV+ZdGk8=;
-        b=BX8+7KOjEu0xfed20EqTeH6wBghZvh3sg+UympX+Pho0sQyNY2Q10CMfSpvZ7HPLou
-         pDXa0F7ipfN8egd7VSGwmYeusxChy2YD5P2tkhK+u2jGePJad4/9ac5rLlCfPq3yMppu
-         DD0vPGEtV2oJULj0GeqxUC0nGqUdYbCKfI3H+CAF/0t3TIdzu1F1jdqpV9LkZxIm4TNf
-         FWqmo02YJ6BqKGy7LwKd4uXZ0O318i63hMVy+0X4Z+gmS8RETCVGw9T0rKkpiXgNaD4P
-         3h5WYYbbVSwMmd3eZuq9fKEZSLsj3PkqEZpAThmqqPqDp9cmQp1Qk+1FJ3NQXO9+yTmp
-         jTdw==
-X-Forwarded-Encrypted: i=1; AJvYcCWYDc+5NMX3p+8GmOo4VxG/1cTMsieX/BsvSEQr7kZu9v2m6HFOfFraHLkODCmEDc+q2Ym8/RdBEVotaSyP@vger.kernel.org, AJvYcCXqagW9taD6+okOXUIiE1YXiSYHqfvyxHoMwr+7daxIDGS7p1HvsfjIPI+r+bRb92qtTaEWsZqW4I4M@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/CJdmutO+PUEMtdDfLq4iJcEhnmS/E0J+NiCMi9JNaV5oLbNp
-	DOLzABEMJTDS7vtO5pGk/r9/P4+q3JPOb7Zwe1ap7rRaG+6ITdP8zGEp9suKHrDFG/MYqCPTsVN
-	W8YDC6YdHH2svxS5JpzbSS3GygJ2NHvmA+A==
-X-Gm-Gg: ASbGncu6KTiMSoIuCpWhd9AnSbTKin6mqO0rfxyVCeqFqaxGuIvZpW0ZzZL/Qz9AV+7
-	O26Njj0hP4m3fjE8M8AEniPmcoz/flz5ns6CDaz2woAlBGPiz3oLQihPa6bhvwTSVSryNSdrT8s
-	FbonE4YLJmCp/Xp/wqtAt+t8aET5RE3VKq7D39nMNoNWWts9qxrKRzqfA=
-X-Google-Smtp-Source: AGHT+IFsZ3UIOk9VseJbWKxt8KvtKbfGOyN+aFYnhFj7EA+lzwyye2nE75imMRB1Spn6prKv90Mi/kjbFVIWTts4th0=
-X-Received: by 2002:a05:6902:250b:b0:e81:99cd:9be with SMTP id
- 3f1490d57ef6-e820b64d1a3mr1175425276.14.1749668826227; Wed, 11 Jun 2025
- 12:07:06 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749668896; x=1750273696;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d5WV78r9hsFDa0FOY/UalZ2/FYtYwT6NjQmp0SNoQZk=;
+        b=u1NaNutIldk9Ojf8vXmXwFd3VZZoqnp9Yk9rvyyZoyJjAdXF5F4ZKE0lg17KMK+gob
+         pe6uWgWGDFZIgSUYtjMrR0lUrSudUH68cqnA4puQJXYJDIbOgpr45N1kZcCurocJwLmq
+         erWZJazuOoJWsj+3CeBVeR3pbPA22GHY/NwkXELK/y8G6A8qmbu3kC9mbHTrj0Ss7U4t
+         8zK/LS43ikfpPSrCrWnvpPhcqhKPSW7Vz2kLGU3W2HXl+S9/ArHaAJqT3eaV/Cu2QYZ8
+         sT1zTifyOlsSaHe8t+xtFsVG44Ov6+yULRyfIc2jjBHTaq2fK29b7le58PAQN79JFdlU
+         XcUA==
+X-Forwarded-Encrypted: i=1; AJvYcCVrcEvT3NyMniInWP31INuG8/S+qbZTnokjUFeo0i9ThFRKR/d/1GkNxxr+vauePEbNyUa6bV3Do/RCFGY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpSk4VNNYXYFcqofPBwrQFjaxSnKn31yeJ4NNHLhmQm07H8PgG
+	455qBXhbYSBtwVGx5gK7FiBHhI88blXOQOwfRSqIrcBZDNMF4OEoIhkJgxepbngYKA==
+X-Gm-Gg: ASbGnctt6KBG52PKqPyvIakKfYWMnbnZiRty/SsiyUs8qiOOdqcYdF2x1FpZR4CyyMT
+	BFmQLF7MbZlchV7/3pWFFsyIx0GP8iZH7R2li2RSumKGkb3Cit1wAbcXUzNROZh8iry3za8A3BA
+	V1fjb2qnQkutSa9GgoRZMPOCCiBTfvD7K99yxQIUxOYS9zDp6pGYU/1WS5QLO150Sl0nG1yMPap
+	8bBeNePjtjapTizsI3qUR8H7Sz8N4hzkjmyyt4V0AnUFiQI+HEOLOPGNjbfb1lZbRTDA54zHCam
+	Ew1iTWI1nECIo2C1UbiCRFBteaPHv1XAIXyzz8L3AYYh6/1wAHc/hTzTpYEZOVXzD3mAPXqdhp1
+	A7lAFUnlvU5LLv/ugPtABTQo5
+X-Google-Smtp-Source: AGHT+IGUdxhmprcVIjSuN4yZNd+FHL+5/zfrk/Oy7uV844JlySkH+ZJtP4VdG03ApE+R0C4tAE7OvA==
+X-Received: by 2002:a17:902:cec3:b0:234:8c64:7875 with SMTP id d9443c01a7336-2364d8cc697mr3722255ad.38.1749668896237;
+        Wed, 11 Jun 2025 12:08:16 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e14:7:4ad1:78dc:7f25:dde3])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-236035068ddsm90940625ad.237.2025.06.11.12.08.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Jun 2025 12:08:15 -0700 (PDT)
+Date: Wed, 11 Jun 2025 12:08:14 -0700
+From: Brian Norris <briannorris@chromium.org>
+To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Tsai Sung-Fu <danielsftsai@google.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v2 1/2] genirq: Retain depth for managed IRQs across CPU
+ hotplug
+Message-ID: <aEnUHv8xMTDYgps9@google.com>
+References: <20250514201353.3481400-1-briannorris@chromium.org>
+ <20250514201353.3481400-2-briannorris@chromium.org>
+ <24ec4adc-7c80-49e9-93ee-19908a97ab84@gmail.com>
+ <aEcWTM3Y1roOf4Ph@google.com>
+ <CAMcHhXqq9DHgip3rr0=24Y-LEBq5n4rDrE6AsWyjyBmsS7s+-A@mail.gmail.com>
+ <aEiQitCsXq9XSBcZ@google.com>
+ <CAMcHhXrT-y3EotxrcCZ0Pj8Sic6wsPSmRiW7NSzdG=9iH8xqKg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611-sgx-dt-v1-0-7a11f3885c60@gmail.com> <20250611-sgx-dt-v1-1-7a11f3885c60@gmail.com>
- <edf14a64-decc-4392-a038-08b5dd942f8d@kernel.org>
-In-Reply-To: <edf14a64-decc-4392-a038-08b5dd942f8d@kernel.org>
-From: Sasha Finkelstein <fnkl.kernel@gmail.com>
-Date: Wed, 11 Jun 2025 21:06:55 +0200
-X-Gm-Features: AX0GCFvMeV5Ol-Irt1s6ubsKN_ZZGACBjoQJdDOoAp2hIzH0XLvrHdYRqZQPnT0
-Message-ID: <CAMT+MTRYybR=tFJrcUn43UK3iW-fqEH3rmCLUezq2eTrEK=nQw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: Add Apple SoC GPU
-To: Sven Peter <sven@kernel.org>
-Cc: asahi@lists.linux.dev, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Simona Vetter <simona@ffwll.ch>, 
-	David Airlie <airlied@gmail.com>, Neal Gompa <neal@gompa.dev>, Maxime Ripard <mripard@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, Janne Grunau <j@jannau.net>, 
-	linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMcHhXrT-y3EotxrcCZ0Pj8Sic6wsPSmRiW7NSzdG=9iH8xqKg@mail.gmail.com>
 
-On Wed, 11 Jun 2025 at 20:44, Sven Peter <sven@kernel.org> wrote:
-> > +      - description: Driver-opaque calibration blob
-> > +      - description: Calibration blob
->
-> Like Alyssa mentioned, this description also raises more questions than
-> it answers for me. Do we know what these two blobs contain or why they
-> are two separate blobs?
+Hi Alex,
 
-At some point in the gpu initialization process we give the firmware a bag
-of pointers to various stuff it needs. HwCalA and HwCalB are separate
-pointers, and they use separate gpu allocations. We do not fully know
-what is in there, but we know what some of the fields do and how to
-create the blobs based on data from apple device tree.
+On Wed, Jun 11, 2025 at 08:56:40AM +0200, Aleksandrs Vinarskis wrote:
+> Yes. Dell XPS 9345 is arch/arm64/boot/dts/qcom/x1e80100.dtsi based,
+> and Asus Zenbook A14 is arch/arm64/boot/dts/qcom/x1p42100.dtsi based,
+> which is a derivative but has a slightly different PCIe setup. So far
+> both laptops would behave in the same ways.
+
+Thanks. So that's what I suspected, a DWC/pcie-qcom PCIe driver, and
+seemingly standard NVMe on top. pcie-qcom doesn't seem to do anything
+weird regarding MSIs or affinity, so I wonder why I can't reproduce the
+same symptoms on other NVMe setups so far. I can see some of the NVMe
+queue MSIs left disabled (queue 0 / CPU 0 doesn't hit the same bugs,
+since we don't hotplug CPU 0), but operations seem to function OK even
+when missing a few queues. Maybe that's an implementation-specific
+behavior that exhibits differently depending on the exact disk in
+question.
+
+Anyway, I think we've probably honed in on the bugs, so this might just
+be a curiosity.
+
+> > Thanks for the testing. I've found a few problems with my proposed
+> > patch, and I've come up with the appended alternative that solves them.
+> > Could you give it a try?
+> 
+> Just tested, and it appears to solve it, though I see some errors on
+> wakeup that I don't remember seeing before. I will test-drive this
+> setup for a day to provide better feedback and confirm if it is
+> related to the fixup or not.
+
+That's promising, I think. Do feel free to forward info if you think
+there's still a problem though. I'll await your feedback before spinning
+patches.
+
+Brian
