@@ -1,23 +1,30 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE65222F75D
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50FDC23183C;
+	Wed, 11 Jun 2025 07:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749627085; cv=none; b=GnvRk4GK5pCnHj0WAkdEzTZFlskW2bc9n2TlWj1P6WChsz6rbW4Zt4k/6Qd1sz3AihU5q2146KiZO5abfbnbLILoExLkj9v6k3tZxb8OAgWfomt8lpAH6xXIQ2HTVSTRSZ2FFU4eZq7OtU5vv7LQYWWPBkxh+6PkKdJc79V3uSs=
+	t=1749627089; cv=none; b=MHQTRmtxN1clMCtQBMTKVIZmlLb8y6XGOLHfb4zc/GR4TZ1k1uHxGpqVkxyVV5cpaWZXaqSs5f9AEBZf4ekwYLagIe7FYBO2Jxs6HZpJG5jKCAio16LKGREGiqc8784Sz8NJIvV/JPRcOP4hSptVDuVQrn8plw+C0ZnfrGTzMnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749627085; c=relaxed/simple;
-	bh=T1U4EL57DYQYZnP+jC+6otuijyh3wOR+W2q/Q44Bgcc=;
+	s=arc-20240116; t=1749627089; c=relaxed/simple;
+	bh=uVY8gD5wTvCS8m0kEGk+hfJFF8nXcQhSPWKbuime2kk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OACyWc8E/1I7YRLivAsk0PVKN2b2/m7eu9XkeY4T7euQkU6UdsHP8/hnorSnuReuHY2J+5xY+nXejZ5QKEC+XDm3WzGr2t0gvfiA30OuJ2M72i8LnR1Wmwfdmvw+77ku21W6ESPClmKrRNnhOHw5DjREpVHTAAGNmaso9Esu96I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A9EDB443D4;
-	Wed, 11 Jun 2025 07:31:18 +0000 (UTC)
-Message-ID: <de5e9d8d-c620-4371-8c74-7ef804d97d53@ghiti.fr>
-Date: Wed, 11 Jun 2025 09:31:18 +0200
+	 In-Reply-To:Content-Type; b=LCPSO3WBMzUPw/0CtRcSdlK0hcCZQaFbK09q36js3xqb2mpiOO713nXu9zWGekclg1H/hkU6WAge2QbaZVVabS1zAQsW3VtVgqZE9C74IfKQGX1hDdAH4pT3DlShIguq8ZAFgWjs8UVBi98tU6QWR+uzDijnfDPvcJw6V4Cand8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bHHQh4rsVzYQvJs;
+	Wed, 11 Jun 2025 15:31:24 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id A3D651A0A55;
+	Wed, 11 Jun 2025 15:31:23 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP3 (Coremail) with SMTP id _Ch0CgA3icPJMElo89e+Ow--.19807S3;
+	Wed, 11 Jun 2025 15:31:23 +0800 (CST)
+Message-ID: <343f7f06-9bf6-442f-8e77-0a774203ec3f@huaweicloud.com>
+Date: Wed, 11 Jun 2025 15:31:21 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -25,79 +32,75 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] RISC-V: uaccess: Wrap the get_user_8 uaccess macro
-To: Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
- cyrilbur@tenstorrent.com, jszhang@kernel.org, cleger@rivosinc.com,
- samuel.holland@sifive.com, linux-kernel@vger.kernel.org
-References: <20250610213058.24852-1-palmer@dabbelt.com>
+Subject: Re: [PATCH 01/10] block: introduce BLK_FEAT_WRITE_ZEROES_UNMAP to
+ queue limits features
+To: Christoph Hellwig <hch@lst.de>
+Cc: linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
+ linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+ linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, tytso@mit.edu,
+ djwong@kernel.org, john.g.garry@oracle.com, bmarzins@redhat.com,
+ chaitanyak@nvidia.com, shinichiro.kawasaki@wdc.com, brauner@kernel.org,
+ martin.petersen@oracle.com, yi.zhang@huawei.com, chengzhihao1@huawei.com,
+ yukuai3@huawei.com, yangerkun@huawei.com
+References: <20250604020850.1304633-1-yi.zhang@huaweicloud.com>
+ <20250604020850.1304633-2-yi.zhang@huaweicloud.com>
+ <20250611060900.GA4613@lst.de>
 Content-Language: en-US
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20250610213058.24852-1-palmer@dabbelt.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+In-Reply-To: <20250611060900.GA4613@lst.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduudekkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnheptdfhleefjeegheevgeeljeellefgvefhkeeiffekueejteefvdevhfelvdeggeeinecukfhppedvtddtudemkeeiudemfeefkedvmegvfheltdemkedttgegmehfieekkeemvgehgehfmegutgdtfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvtddtudemkeeiudemfeefkedvmegvfheltdemkedttgegmehfieekkeemvgehgehfmegutgdtfedphhgvlhhopeglkffrggeimedvtddtudemkeeiudemfeefkedvmegvfheltdemkedttgegmehfieekkeemvgehgehfmegutgdtfegnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepledprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopehlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiess
- hhifhhivhgvrdgtohhmpdhrtghpthhtoheprghouhesvggvtghsrdgsvghrkhgvlhgvhidrvgguuhdprhgtphhtthhopegthihrihhlsghurhesthgvnhhsthhorhhrvghnthdrtghomhdprhgtphhtthhopehjshiihhgrnhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtlhgvghgvrhesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtohepshgrmhhuvghlrdhhohhllhgrnhgusehsihhfihhvvgdrtghomh
-X-GND-Sasl: alex@ghiti.fr
+X-CM-TRANSID:_Ch0CgA3icPJMElo89e+Ow--.19807S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xw1kXw1DJFWxCryUZF4xWFg_yoWfWFc_Za
+	1SyryDCw4DArySyanrAwn8trWkKr4DXFWxur47Kay5Ca45Ja4xCrs5urySva4FqayFqF4I
+	krZxXF9F9FZ2gjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbxxYFVCjjxCrM7AC8VAFwI0_Xr0_Wr1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
+	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x02
+	67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
+	wI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUIa
+	0PDUUUU
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-On 6/10/25 23:30, Palmer Dabbelt wrote:
-> From: Palmer Dabbelt <palmer@dabbelt.com>
->
-> I must have lost this rebasing things during the merge window, I know I
-> got it at some point but it's not here now.  Without this I get warnings
-> along the lines of
->
->      include/linux/fs.h:3975:15: warning: label followed by a declaration is a C23 extension [-Wc23-extensions]
->       3975 |         if (unlikely(get_user(c, path)))
->            |                      ^
->      arch/riscv/include/asm/uaccess.h:274:3: note: expanded from macro 'get_user'
->        274 |                 __get_user((x), __p) :                          \
->            |                 ^
->      arch/riscv/include/asm/uaccess.h:244:2: note: expanded from macro '__get_user'
->        244 |         __get_user_error(__gu_val, __gu_ptr, __gu_err);         \
->            |         ^
->      arch/riscv/include/asm/uaccess.h:207:2: note: expanded from macro '__get_user_error'
->        207 |         __ge  LD [M]  net/802/psnap.ko
->      t_user_nocheck(x, ptr, __gu_failed);                        \
->            |         ^
->      arch/riscv/include/asm/uaccess.h:196:3: note: expanded from macro '__get_user_nocheck'
->        196 |                 __get_user_8((x), __gu_ptr, label);             \
->            |                 ^
->      arch/riscv/include/asm/uaccess.h:130:2: note: expanded from macro '__get_user_8'
->        130 |         u32 __user *__ptr = (u32 __user *)(ptr);                \
->            |         ^
->
-> Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
-> ---
->   arch/riscv/include/asm/uaccess.h | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/riscv/include/asm/uaccess.h b/arch/riscv/include/asm/uaccess.h
-> index d472da4450e6..525e50db24f7 100644
-> --- a/arch/riscv/include/asm/uaccess.h
-> +++ b/arch/riscv/include/asm/uaccess.h
-> @@ -127,6 +127,7 @@ do {								\
->   
->   #ifdef CONFIG_CC_HAS_ASM_GOTO_OUTPUT
->   #define __get_user_8(x, ptr, label)				\
-> +do {								\
->   	u32 __user *__ptr = (u32 __user *)(ptr);		\
->   	u32 __lo, __hi;						\
->   	asm_goto_output(					\
-> @@ -141,7 +142,7 @@ do {								\
->   		: : label);                                     \
->   	(x) = (__typeof__(x))((__typeof__((x) - (x)))(		\
->   		(((u64)__hi << 32) | __lo)));			\
-> -
-> +} while (0)
->   #else /* !CONFIG_CC_HAS_ASM_GOTO_OUTPUT */
->   #define __get_user_8(x, ptr, label)				\
->   do {								\
+On 2025/6/11 14:09, Christoph Hellwig wrote:
+> On Wed, Jun 04, 2025 at 10:08:41AM +0800, Zhang Yi wrote:
+>> +static ssize_t queue_write_zeroes_unmap_show(struct gendisk *disk, char *page)
+> 
+> ..
+> 
+>> +static int queue_write_zeroes_unmap_store(struct gendisk *disk,
+>> +		const char *page, size_t count, struct queue_limits *lim)
+> 
+> We're probably getting close to wanting macros for the sysfs
+> flags, similar to the one for the features (QUEUE_SYSFS_FEATURE).
+> 
+> No need to do this now, just thinking along.
 
+Yes.
 
-I had come up with the same fix so:
+> 
+>> +/* supports unmap write zeroes command */
+>> +#define BLK_FEAT_WRITE_ZEROES_UNMAP	((__force blk_features_t)(1u << 17))
+> 
+> 
+> Should this be exposed through sysfs as a read-only value?
 
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+Uh, are you suggesting adding another sysfs interface to expose
+this feature?
+
+> 
+> Otherwise looks good:
+> 
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+
+Thanks,
+Yi.
 
