@@ -1,153 +1,174 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B951779B8;
-	Wed, 11 Jun 2025 20:01:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A3E72253E8
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 20:02:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749672118; cv=none; b=J1t8oqtx1QNmGe3EiuZFPr++QKS07/Ay2CmgA94SYfu4+3ihj+TbU0fI1hVi7i+4O9WsJ1jF9cBI9WtpBSmcJNpKCMlMYrIckEGRHBysk6CFFOOfYiELD4PFuepjsYd+e5Hx1IPLCMLwrjsjVV4w13QkV0azanxhldJeAp5thig=
+	t=1749672148; cv=none; b=Zpz3Z/TRE4MJw8v1MrTBvJkwIMg4i2qjkPuF5lbALN3zWkE6IO5fdf35Ok8tHM/5T2BNhH64WW4+9nXP9ofyRymoN4ogGADv5UJHSgEFFNhQ/II7S0Whmb4Yqzd0bvYRPasbnkC7SfW5VW/FI5DaVo5lyaNVRu3XVK/j9l8Bghk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749672118; c=relaxed/simple;
-	bh=M8uEt0SnHdIXnV62UONCsrgyaseuQmStaQjjoOYp2qU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p60I9OBOQZ4UC9+/2bvTWyUrQpiMpDlDVf5WjVjp3A6ogTp7OErtS1GsjxQE0A0UTQjMwu/jb+16hRpZXFB7vG7NK7HmL33pnveJYh6OtRtZYFuR6GSj9lDdpazHZ//UbsRh7GYz+ARxMfHMwTbfsx49TJOXpsE+klZhRK9nsKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fytIJ6jj; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749672148; c=relaxed/simple;
+	bh=SX3UZ0sQiJZGO+N8t9qUxt+kK159zo8e8pi+2UJUne0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=I0zKLpBR6KLl5a7WL0VLLPqbsuDLXSdNrmM6lTHk5spwEbRP8/tYHnXgjB7D5lw2j5/I9vrjb9w8oF7Y5pw2cdyzGSd1vAQiECPO1eh83GuCkHjZ0fZzxezM8AKIppepVwiA2rw7/flor4jjmi1JF7OMRuULBBc0Zaetex9pmqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=MQ5pBI/A; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fytIJ6jj"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4a43d2d5569so3669491cf.0;
-        Wed, 11 Jun 2025 13:01:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749672115; x=1750276915; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Jo1T1w5Sm385t0bg/df5NG8clj59nwIX7gQBQcNhWj0=;
-        b=fytIJ6jjwuLezVC9wjKpLq5M62KtGzkKNgpcTtc9gZls+Rsnm/ERRfhO3SR1SKh4ZA
-         t7+S2GAY6ZSchXxwiflQfyL7pgGdkVTT7do/OeJy7bpvEBi5Z75khUn5itn7y+duHyOU
-         EnWdtvk5XkIdu9cFktMgvjlS946hrTf3NTDgSzVjDOg91O4oUdd2lAaBVxF7FBUpZTs7
-         baDBpXVTPHLCuUq6T0B81CgB7XuBCpuVglLnTO5EFPL+hrivQF8kB7ZAPqM1pw7gygGr
-         YQu5rDj6zQjatMdKlM/xNc5sWXivdGspghH/KLzErfWXXrqSvfkrvZTeYPhRbQBy2PnG
-         cZQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749672115; x=1750276915;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Jo1T1w5Sm385t0bg/df5NG8clj59nwIX7gQBQcNhWj0=;
-        b=xMjnCE/XFAMN4DlPv/s6Ln/YVgpCzpEM3E5KDU3bKo0NRkofQG3WDu5gucrMQUJAwi
-         JfmrKqiMIHqaF6JBxXzYFxP080CDX82Yw7SVnTQmXrZ5bsBSit4dmt9gG1h4wE1PhaVr
-         AIDGOBt2mWZE4qAd2C01mK8umbZ19p/azowx9cVNr8Z1o9nyn/JizIZ/WcBYQRgMGnDw
-         E2abfWjJxJ8I1PtV1bIf1NuT1ycfN7dYTr+keEVZ4juFMwKhzPTb1HPDFW6w7NyyNMF5
-         bB/POQXC2Qoa1oBxZVin3idcIReMZ4nFM05yeuqIcJPLE+Ec+6fnaFJ7rul3AU08fT37
-         GrKA==
-X-Forwarded-Encrypted: i=1; AJvYcCVuy1EJxzUJhP24ABIK6Y4M9U9bbmd7zsdkFHDqm9jsQA9gmysyr/Xislqf2tOFdxgP7kCciUYw02pkRAvcAXM=@vger.kernel.org, AJvYcCXVsRD9OhloyxvF6YcSlStmUPstQf40I+h7G5U8ngoqtjRInhuosPZDioUj+Qi8rl2BaaXSYrAJnj48MR4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxinuxfDUaPoxpD2EZWyRuSA01yt75gaphRkhMC0th57YeUCc9
-	fEVlER+npD53ofVjfz554lOH3CophbmO3aZ1teOXe1DgHallRGziXego
-X-Gm-Gg: ASbGncsxf1iBZU5ZGf7LsxvpJEEz2OkxxF1uhybLdiTgq/jOovTCIJsXLR+fHCbbw4k
-	wp28182q2IpvpiFb2koMQ2I1vtfRQVNMVYEbMCr2lBqE/EWhnNd/npIP9fYXbNITk69UDg1XV7I
-	dDbiPOFIRn1ttCk3qB2I0i63uuH+9tR+NokojUxOeYMGkcY6bjLQnqrnpGDaH8O3NZcaRqJDQd2
-	NfMrhdFm7o2/7aJaBuNyG6oZTkQu5X6Di3qlu7S1+lbvFDtVdwr0E3CjifGsOBqQBP0VJ6go/Ni
-	GZIzy3c6lrnFuivxg6BaDNQbJ04Y/O5GTnwlxHOgAfwtOyP5Bjk9huvTqup327T//MtDNKteBkR
-	QbtwyOGPTQ/KZ9gZyQAcleomy3OL1vvnda2luXXJWFtCMPmXYpX8n
-X-Google-Smtp-Source: AGHT+IGDFvxHUQFOJsK4fq9EQ3UAjRgZ4ccmnAHDpsTlgOd06snNOJkq11EElXrdBX8UMaOgOkP5UQ==
-X-Received: by 2002:a05:622a:1929:b0:4a7:189b:98ad with SMTP id d75a77b69052e-4a72293fadbmr21285491cf.14.1749672115366;
-        Wed, 11 Jun 2025 13:01:55 -0700 (PDT)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7248e1ca9sm221181cf.74.2025.06.11.13.01.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 13:01:54 -0700 (PDT)
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 16BB21200066;
-	Wed, 11 Jun 2025 16:01:54 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-03.internal (MEProxy); Wed, 11 Jun 2025 16:01:54 -0400
-X-ME-Sender: <xms:seBJaFXsZplErvNgtdIQu7dQu2V06NgGvLO9ms6eamlM7LNd_D6i7A>
-    <xme:seBJaFkaeaXfnPRJrFRDSBMB1Mw5d7YcUJJVAISR8AzwBo-iiwgbaqh6UXCY7kp9o
-    cTbhZpLwqIbtRIGdg>
-X-ME-Received: <xmr:seBJaBaGqLFhPvbiP7SG5yZMniv8uUgYNPv-119ag00G3SH6xVAOTt0r825Mbw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddufedtlecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
-    necuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilh
-    drtghomheqnecuggftrfgrthhtvghrnhephedugfduffffteeutddvheeuveelvdfhleel
-    ieevtdeguefhgeeuveeiudffiedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghl
-    ihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepgh
-    hmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopedvgedpmhho
-    uggvpehsmhhtphhouhhtpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprh
-    gtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgt
-    phhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepohhjvggurg
-    eskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnhhorhesghhmrghi
-    lhdrtghomhdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvthdprhgtphhtth
-    hopegsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtghomhdprhgtphhtthhopegs
-    vghnnhhordhlohhsshhinhesphhrohhtohhnrdhmvgdprhgtphhtthhopegrrdhhihhnug
-    gsohhrgheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:suBJaIVHZAIaW8ZLWkrcexaOiYtzuEW4AlcikClJ0WbKSRJgQmMv3g>
-    <xmx:suBJaPm1053HF2juV7R3ntYGKM_MzmOLpgeal50dxal95avqBKf0LA>
-    <xmx:suBJaFfNFJljxv2XsNbw93cFrHuSLeQnVSnXo9f6EC4BFDLNZEnQ0Q>
-    <xmx:suBJaJEpKQ_DaPqKMGoHYQsH17IZ5p78NHhMI2be7WTexvVZd2OCFg>
-    <xmx:suBJaJnFO4j7hvEL0GjGA1mNzZLReqSdkBf8IJ9oP1TfOTUkaUYDH52N>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 11 Jun 2025 16:01:53 -0400 (EDT)
-Date: Wed, 11 Jun 2025 13:01:52 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
-	alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
-	tmgross@umich.edu, chrisi.schrefl@gmail.com,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>
-Subject: Re: [PATCH 1/3] rust: completion: implement initial abstraction
-Message-ID: <aEngsOXTFsFg-RkD@tardis.local>
-References: <20250603205416.49281-1-dakr@kernel.org>
- <20250603205416.49281-2-dakr@kernel.org>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="MQ5pBI/A"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=VpiOuQsBjD5zEcCNbIZvqiFzhDlVWPYNUz3QItJAJRM=; b=MQ5pBI/ALiXUp4hFyxffhJh4Bn
+	YBHzVfPeckBz4pavwvnhbvt0dAYKvNwdc/7rp+YzfPZmwJMNt5Ska4iyaqypNckCam3Pnl80aeNJ3
+	mfLG92oYIi5TMl+rtKQ9++zg91wOt0qgR3P+lD0BFR6+ZOm7QTBz1D6dykH1r6vIbfctEG0Uw3pOE
+	zxbcQZoe593QsitGkLzeDuV9yBIeh/z+GtE7fr/30PheklnokDfdhWnTxrlNLP7hN/tWbmqYsywyz
+	2ee/RqKLoKKrf7UkJHaIaVpk3pH400CBOLP3g9GXfhLRpmh8fGKONULdSQn717XqUUEMDTyUFySVq
+	6hdXv3wA==;
+Received: from [187.36.208.198] (helo=[192.168.1.111])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uPReH-002LgM-SK; Wed, 11 Jun 2025 22:02:14 +0200
+Message-ID: <52a9eb56-f2b2-4bc6-9847-4fad426f0d50@igalia.com>
+Date: Wed, 11 Jun 2025 17:02:05 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250603205416.49281-2-dakr@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 4/8] drm/vkms: Add support for RGB565 formats
+To: Louis Chauvet <louis.chauvet@bootlin.com>,
+ Melissa Wen <melissa.srw@gmail.com>, =?UTF-8?Q?Ma=C3=ADra_Canal?=
+ <mairacanal@riseup.net>, Haneen Mohammed <hamohammed.sa@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Rodrigo Siqueira <siqueira@igalia.com>,
+ Simona Vetter <simona.vetter@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, arthurgrillo@riseup.net,
+ linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
+ miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
+ seanpaul@google.com, nicolejadeyee@google.com
+References: <20250530-b4-new-color-formats-v4-0-ef5f9f48376c@bootlin.com>
+ <20250530-b4-new-color-formats-v4-4-ef5f9f48376c@bootlin.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
+Autocrypt: addr=mcanal@igalia.com; keydata=
+ xsBNBGcCwywBCADgTji02Sv9zjHo26LXKdCaumcSWglfnJ93rwOCNkHfPIBll85LL9G0J7H8
+ /PmEL9y0LPo9/B3fhIpbD8VhSy9Sqz8qVl1oeqSe/rh3M+GceZbFUPpMSk5pNY9wr5raZ63d
+ gJc1cs8XBhuj1EzeE8qbP6JAmsL+NMEmtkkNPfjhX14yqzHDVSqmAFEsh4Vmw6oaTMXvwQ40
+ SkFjtl3sr20y07cJMDe++tFet2fsfKqQNxwiGBZJsjEMO2T+mW7DuV2pKHr9aifWjABY5EPw
+ G7qbrh+hXgfT+njAVg5+BcLz7w9Ju/7iwDMiIY1hx64Ogrpwykj9bXav35GKobicCAwHABEB
+ AAHNIE1hw61yYSBDYW5hbCA8bWNhbmFsQGlnYWxpYS5jb20+wsCRBBMBCAA7FiEE+ORdfQEW
+ dwcppnfRP/MOinaI+qoFAmcCwywCGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQ
+ P/MOinaI+qoUBQgAqz2gzUP7K3EBI24+a5FwFlruQGtim85GAJZXToBtzsfGLLVUSCL3aF/5
+ O335Bh6ViSBgxmowIwVJlS/e+L95CkTGzIIMHgyUZfNefR2L3aZA6cgc9z8cfow62Wu8eXnq
+ GM/+WWvrFQb/dBKKuohfBlpThqDWXxhozazCcJYYHradIuOM8zyMtCLDYwPW7Vqmewa+w994
+ 7Lo4CgOhUXVI2jJSBq3sgHEPxiUBOGxvOt1YBg7H9C37BeZYZxFmU8vh7fbOsvhx7Aqu5xV7
+ FG+1ZMfDkv+PixCuGtR5yPPaqU2XdjDC/9mlRWWQTPzg74RLEw5sz/tIHQPPm6ROCACFls7A
+ TQRnAsMsAQgAxTU8dnqzK6vgODTCW2A6SAzcvKztxae4YjRwN1SuGhJR2isJgQHoOH6oCItW
+ Xc1CGAWnci6doh1DJvbbB7uvkQlbeNxeIz0OzHSiB+pb1ssuT31Hz6QZFbX4q+crregPIhr+
+ 0xeDi6Mtu+paYprI7USGFFjDUvJUf36kK0yuF2XUOBlF0beCQ7Jhc+UoI9Akmvl4sHUrZJzX
+ LMeajARnSBXTcig6h6/NFVkr1mi1uuZfIRNCkxCE8QRYebZLSWxBVr3h7dtOUkq2CzL2kRCK
+ T2rKkmYrvBJTqSvfK3Ba7QrDg3szEe+fENpL3gHtH6h/XQF92EOulm5S5o0I+ceREwARAQAB
+ wsB2BBgBCAAgFiEE+ORdfQEWdwcppnfRP/MOinaI+qoFAmcCwywCGwwACgkQP/MOinaI+qpI
+ zQf+NAcNDBXWHGA3lgvYvOU31+ik9bb30xZ7IqK9MIi6TpZqL7cxNwZ+FAK2GbUWhy+/gPkX
+ it2gCAJsjo/QEKJi7Zh8IgHN+jfim942QZOkU+p/YEcvqBvXa0zqW0sYfyAxkrf/OZfTnNNE
+ Tr+uBKNaQGO2vkn5AX5l8zMl9LCH3/Ieaboni35qEhoD/aM0Kpf93PhCvJGbD4n1DnRhrxm1
+ uEdQ6HUjWghEjC+Jh9xUvJco2tUTepw4OwuPxOvtuPTUa1kgixYyG1Jck/67reJzMigeuYFt
+ raV3P8t/6cmtawVjurhnCDuURyhUrjpRhgFp+lW8OGr6pepHol/WFIOQEg==
+In-Reply-To: <20250530-b4-new-color-formats-v4-4-ef5f9f48376c@bootlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 03, 2025 at 10:48:50PM +0200, Danilo Krummrich wrote:
-> Implement a minimal abstraction for the completion synchronization
-> primitive.
+Hi Louis,
+
+On 5/30/25 11:05, Louis Chauvet wrote:
+> The format RGB565 was already supported. Add the support for:
+> - BGR565
 > 
-> This initial abstraction only adds complete_all() and
-> wait_for_completion(), since that is what is required for the subsequent
-> Devres patch.
+> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> ---
+>   drivers/gpu/drm/vkms/vkms_formats.c | 23 +++++++++++++++++++++++
+>   drivers/gpu/drm/vkms/vkms_plane.c   |  1 +
+>   2 files changed, 24 insertions(+)
 > 
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Juri Lelli <juri.lelli@redhat.com>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Ben Segall <bsegall@google.com>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Cc: Valentin Schneider <vschneid@redhat.com>
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
+> index 95771bff5202..2c5cc8d3a14c 100644
+> --- a/drivers/gpu/drm/vkms/vkms_formats.c
+> +++ b/drivers/gpu/drm/vkms/vkms_formats.c
+> @@ -259,6 +259,26 @@ static struct pixel_argb_u16 argb_u16_from_grayu16(u16 gray)
+>   	return argb_u16_from_u16161616(0xFFFF, gray, gray, gray);
+>   }
+>   
+> +static struct pixel_argb_u16 argb_u16_from_BGR565(const __le16 *pixel)
+> +{
+> +	struct pixel_argb_u16 out_pixel;
+> +
+> +	s64 fp_rb_ratio = drm_fixp_div(drm_int2fixp(65535), drm_int2fixp(31));
+> +	s64 fp_g_ratio = drm_fixp_div(drm_int2fixp(65535), drm_int2fixp(63));
+> +
+> +	u16 rgb_565 = le16_to_cpu(*pixel);
+> +	s64 fp_b = drm_int2fixp((rgb_565 >> 11) & 0x1f);
+> +	s64 fp_g = drm_int2fixp((rgb_565 >> 5) & 0x3f);
+> +	s64 fp_r = drm_int2fixp(rgb_565 & 0x1f);
+> +
+> +	out_pixel.a = (u16)0xffff;
+> +	out_pixel.b = drm_fixp2int_round(drm_fixp_mul(fp_b, fp_rb_ratio));
+> +	out_pixel.g = drm_fixp2int_round(drm_fixp_mul(fp_g, fp_g_ratio));
+> +	out_pixel.r = drm_fixp2int_round(drm_fixp_mul(fp_r, fp_rb_ratio));
+> +
+> +	return out_pixel;
+> +}
 
-There is a DECLARE_COMPLETION() which allows to customiz the lock class
-for a particular completion allocated on the stack, but we can add that
-feature in the future, the current abstraction looks good to me. And I
-think this should go into the driver-core with the rest of the fixes.
+Instead of writing `argb_u16_from_BGR565()` from scratch, I wonder if
+we could just call `argb_u16_from_RGB565()` and swap `out_pixel.b` with
+`out_pixel.r` . For me, it looks like a cleaner approach.
 
-Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+Well, even without this suggestion,
 
-Regards,
-Boqun
+Reviewed-by: Maíra Canal <mcanal@igalia.com>
+
+Best Regards,
+- Maíra
+
+> +
+>   VISIBLE_IF_KUNIT struct pixel_argb_u16 argb_u16_from_yuv888(u8 y, u8 channel_1, u8 channel_2,
+>   							    const struct conversion_matrix *matrix)
+>   {
+> @@ -447,6 +467,7 @@ READ_LINE_le16161616(XRGB16161616_read_line, px, cpu_to_le16(0xFFFF), px[2], px[
+>   READ_LINE_le16161616(XBGR16161616_read_line, px, cpu_to_le16(0xFFFF), px[0], px[1], px[2])
+>   
+>   READ_LINE(RGB565_read_line, px, __le16, argb_u16_from_RGB565, px)
+> +READ_LINE(BGR565_read_line, px, __le16, argb_u16_from_BGR565, px)
+>   
+>   READ_LINE(R8_read_line, px, u8, argb_u16_from_gray8, *px)
+>   
+> @@ -675,6 +696,8 @@ pixel_read_line_t get_pixel_read_line_function(u32 format)
+>   		return &XBGR16161616_read_line;
+>   	case DRM_FORMAT_RGB565:
+>   		return &RGB565_read_line;
+> +	case DRM_FORMAT_BGR565:
+> +		return &BGR565_read_line;
+>   	case DRM_FORMAT_NV12:
+>   	case DRM_FORMAT_NV16:
+>   	case DRM_FORMAT_NV24:
+> diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
+> index 505847ec8508..d3783a8f84c2 100644
+> --- a/drivers/gpu/drm/vkms/vkms_plane.c
+> +++ b/drivers/gpu/drm/vkms/vkms_plane.c
+> @@ -26,6 +26,7 @@ static const u32 vkms_formats[] = {
+>   	DRM_FORMAT_ARGB16161616,
+>   	DRM_FORMAT_ABGR16161616,
+>   	DRM_FORMAT_RGB565,
+> +	DRM_FORMAT_BGR565,
+>   	DRM_FORMAT_NV12,
+>   	DRM_FORMAT_NV16,
+>   	DRM_FORMAT_NV24,
+> 
+
