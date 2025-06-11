@@ -1,80 +1,86 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ABBF1B6D01;
-	Wed, 11 Jun 2025 15:14:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8A2188CC9;
+	Wed, 11 Jun 2025 15:14:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749654855; cv=none; b=cWWkogX2JB6nmyX2V/f1Mg0yWjYjesLgbaaYJdRWLNNpGRSyRYsGUM3Fw3Wm1dC4MSot4GQpJMcTY/o32r6JSx1QpDvFxpBmqQwDjLKSHeDag7IQRdtaT/+RNlhKh8uIkk7hR3ixFHvz2Z0p11wrfFWs0RTIGgfvr+yR21bxXHA=
+	t=1749654869; cv=none; b=uzspPouu4Dp1KxzGPYDvfntPmACi6SOAXeKEMdVBFfLtjzAmqDp+itcySzKVkWPBguueAPOy7WkJp2VJ9PjGWA+Arys3ZkTXs9Yn5xb7EpXU3VRXRkVIufTbrm4eKk3+W4/IfuYUdQuFsu/u8bpMm4pU5ei/cFmZquoQafuVn2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749654855; c=relaxed/simple;
-	bh=j4HtOeH+lQJTeLsbYvGMDZFJPCC7o1GI6t95ynQNJ9A=;
+	s=arc-20240116; t=1749654869; c=relaxed/simple;
+	bh=8zfSXXFV1xgQJy1mUdrZsabuC4LujniNvHm8OnpJ6Zo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BRQLlGBv7m//Ir5O6Ja6c42/eU4AWpCiPZx3hgjxEyDDis61yj6QiTNiRfbz15EDCmMOxy6keN0Tv9RhFIWA6G6eZ1YC9J9yU0gK/wvjIOrKBF8uA1bFz/Om90NFSEYIRKSJQjTiwBfoHyzurbnB+wiGfu+10YhOqSbbOwELth4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ade5b8aab41so684202566b.0;
-        Wed, 11 Jun 2025 08:14:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749654852; x=1750259652;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xxtjsYc5WzCsw0sWcakgTm1NCq+gnxfAoujY6jqX05Y=;
-        b=k8XEMhkE3lEujU1Koaubi3uuOVM+kieDgrJSd489TimiI7mC7VZ8w/596ACH2I8BCj
-         VX9jspf79zjWZ64Rl84QfjaNx4RvN5zccV/jcKM111qfKZNDiGuPpsACOz/UFlRfUNiM
-         nRlOfkArYyD5c3XSzbkcFHjxNlrmB4s+g7EMy7YdBxUChO3Qo9eLab9B2Yn5vu8YslrF
-         +V0DOz1IhvIHR5utf7iTGRO5XLw7hmW4AT8KMt9UZlhb3Ls24GyfTgHjF7usWkmmxrga
-         LkLl8SkfGV9E6JCtWs1iTS2+B/HLAi1F/iX5CnhGvPSkLa8Dtcp2le/yIwliXujMtTQu
-         v6tg==
-X-Forwarded-Encrypted: i=1; AJvYcCVznSPwsJeBQ0WhrQCdYBrb0+AZmw6XCvia7pqsJvHkvP+IfVooKn+iRytrVmLafuQssnKsSI7Z4p/aHAOg@vger.kernel.org, AJvYcCWbKRu3tULiHWsV7R/7k1N11/Ie+z9PVruGo9/rsA8oDCwCn2B3KNhovgWAtK/8rle0YQmESKCe0ZM=@vger.kernel.org, AJvYcCWo9vkmNjxLvQ+KCSDyaAAcQ5mG4FwQJ4+XQY/FeI02xoD2cIOiHOaft4qc7EXwWRlJJd00zKpA@vger.kernel.org, AJvYcCXGgyNIBKIimzHGH1XNhViUCfTOKIq801CAXf1LyQCrIimXalh682PWw+xHrd0hg8coUnk8aHM5a4aUkdQNEwJu@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyj2pdMzY++zUhX8uNbm2RjDRqJRuBVAb11/QgoaNr8qwkDNG/S
-	67LumXCH/yNhKNEVSmc8JFIesO29daPn705K+0n8y+dpgMSTqcyfCpHe
-X-Gm-Gg: ASbGnct79JJnkqDOhS5MGGeIHsRNb5FeCMVknIvU45un489YjtOI1kN1eO4IsNAUucZ
-	jAU6sG7QeWZHCniyNI+ulhDHPH7FapnpkHmxFiKOtR4ZYGXBi+wk+eylMOHHe0th4H4ayzaRZzv
-	R4Y/hd4+c2x0hwuAi2HGO7jbInluEjNKEBJPPKPbdZEIVhT56yUfV0iLM0FSBm1trJkRn1F3/lY
-	sjRw7TptYQcCAIPIfN5FuwfEg/cS0OocQm9CazLB02o3RnkA8QdPr3qbWVNGfCqWuM+yqTd76pW
-	96UN8tAQCcLXRd/FT7UzXFGHbsjVOgkORulcoQo/vsr+N8fuMynSiA==
-X-Google-Smtp-Source: AGHT+IEJvF/k6wW9sOP1mWvnvDvmZbJ83yqSoXHsvG5vRtSWUDSp4eE4+B2E5P14jKw4coIWl3JZ3Q==
-X-Received: by 2002:a17:907:72d1:b0:ade:3bec:ea40 with SMTP id a640c23a62f3a-ade893e2b8dmr406508566b.10.1749654851743;
-        Wed, 11 Jun 2025 08:14:11 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:74::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc3a241sm900604066b.135.2025.06.11.08.14.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 08:14:11 -0700 (PDT)
-Date: Wed, 11 Jun 2025 08:14:09 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Gustavo Luiz Duarte <gustavold@gmail.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>, Simon Horman <horms@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	 Content-Type:Content-Disposition:In-Reply-To; b=E9OaWRi2R6wx+DeD27KEY+8RC7gaKmmuHLeA/1W36mW41AfokHLoxP7iKqOJ94r0zbABNx5EatC3RJ35QLADEqjYXNLZ7QKELIiiqEyDlVp6eC7JeZUPQDKXV4KTNmxhN9edt6m6vwDseA+658wn+moAUomcsBi/z879dDqQANk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z0uCF56r; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z0uCF56r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73C14C4CEE3;
+	Wed, 11 Jun 2025 15:14:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749654869;
+	bh=8zfSXXFV1xgQJy1mUdrZsabuC4LujniNvHm8OnpJ6Zo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z0uCF56r6j27XgvKCyCizr6xrutKJGUpp4AcCHT01Rw2e/qrfgs/Rz0yVtixer5wA
+	 NM4kEDqYDy6IBEPkT0fueSGEG2lVijkxx7FkcKeJ8KYVAtEKPspcaf4OL1hgJFEv/2
+	 dRymKCmndm4aW1LSOrrxbtVnxKdcmxj8mx5nfgv+RYUgHNHQr2Y2O0yq+1nwUn6dxq
+	 fZAXboHW54lLSudqtZQTyJQRvnCil1OPpdmtpSVAJFt1Q5cMOPPeUGBl3x02Rd4Dki
+	 4DM5TwWiO5LnCO4Q1rk4WpGkXEKr118k+JydDJVFosiBFdVi6NNOHXDxYe9QJsEC7T
+	 +aHrMIJWdwUhw==
+Date: Wed, 11 Jun 2025 16:14:23 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: catalin.marinas@arm.com, pcc@google.com, will@kernel.org,
+	anshuman.khandual@arm.com, joey.gouly@arm.com,
+	yury.khrustalev@arm.com, maz@kernel.org, oliver.upton@linux.dev,
+	frederic@kernel.org, akpm@linux-foundation.org, surenb@google.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org
-Subject: Re: [PATCH net-next 1/5] netconsole: introduce 'msgid' as a new
- sysdata field
-Message-ID: <aEmdQaxnlS4jbfSO@gmail.com>
-References: <20250611-netconsole-msgid-v1-0-1784a51feb1e@gmail.com>
- <20250611-netconsole-msgid-v1-1-1784a51feb1e@gmail.com>
+Subject: Re: [PATCH v7 2/9] arm64: report address tag when
+ FEAT_MTE_TAGGED_FAR is supported
+Message-ID: <9a78c058-2aeb-43d8-94f8-987507a1a9a3@sirena.org.uk>
+References: <20250611135818.31070-1-yeoreum.yun@arm.com>
+ <20250611135818.31070-3-yeoreum.yun@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="llNME2sYZezlFhNO"
+Content-Disposition: inline
+In-Reply-To: <20250611135818.31070-3-yeoreum.yun@arm.com>
+X-Cookie: No skis take rocks like rental skis!
+
+
+--llNME2sYZezlFhNO
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250611-netconsole-msgid-v1-1-1784a51feb1e@gmail.com>
 
-On Wed, Jun 11, 2025 at 07:36:03AM -0700, Gustavo Luiz Duarte wrote:
-> This adds a new sysdata field to enable assigning a per-target unique id
-> to each message sent to that target. This id can later be appended as
-> part of sysdata, allowing targets to detect dropped netconsole messages.
-> Update count_extradata_entries() to take the new field into account.
-> 
-> Signed-off-by: Gustavo Luiz Duarte <gustavold@gmail.com>
+On Wed, Jun 11, 2025 at 02:58:11PM +0100, Yeoreum Yun wrote:
 
-Reviewed-by: Breno Leitao <leitao@debian.org>
+>  	 * The architecture specifies that bits 63:60 of FAR_EL1 are UNKNOWN
+>  	 * for tag check faults. Set them to corresponding bits in the untagged
+> -	 * address.
+> +	 * address if ARM64_MTE_FAR isn't supported.
+> +	 * Otherwise, bits 63:60 of FAR_EL1 are KNOWN.
+>  	 */
+
+Should that be "are UNKNOWN"?
+
+--llNME2sYZezlFhNO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhJnU4ACgkQJNaLcl1U
+h9C55wf/TdyfC/w7P1v4F0hQRmhNZ6ZT6FQpZRqi0HVD/ZBIHWgIpUenQ1p+dTrL
+Yh9K8yel2k1AKNsrZwpcTYGX6EHG1e+cpxTBHRQ1QBAMjIZA4QGpUqmBLFv9HSa7
+fQfN06W843PM4GCO8U94F7ovaj+Vtroe01uCZhkO0zaYGpuBppaL0yWKw88unErL
+lRnHmzOy74Vip/f7zNEdXYscNcBrHQW9hIZj+RFi7sE9jykuCCxQlrT5kTNckmAV
+BWwj7tCisc8IRj/ov8BRtANfk3BqZlLsHtBCkMUACdNCmnhATAbhkZa1tQUOsROl
+q81tUHwm4zYBMoApcuEa4DSp2Ex73Q==
+=6B4e
+-----END PGP SIGNATURE-----
+
+--llNME2sYZezlFhNO--
