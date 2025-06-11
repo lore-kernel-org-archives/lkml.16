@@ -1,99 +1,86 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 759F92AD1C
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 12:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01CF2E611B
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 12:46:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749645945; cv=none; b=WMnAJstKrD9oa5YAu7B9jH1SmBc5ulBxUe2csqJtfDuN9mApYkPf7aFTStOOwjalmP54At56FTsEJ1Hcp8BMDu9TM36igbMA0Qgzs150sxF8LxAINUzJQ+ir03OaLtUSKU+1bj2/v/fqTQuM/iIXnGqXuqrf1xZpjCyBB8sS/1g=
+	t=1749645987; cv=none; b=RmqFETEyG5g56Mk+Z1FZsOSQ5UsjyxBzszronkBcMI1CP7kjT7OIxBNFype0IOm3K81XsFuqk9e+MNDFaPmFi3GrwrCEkFdiokfMtrDKEuOtB32NHfaKMp4zJTdRUq3AuyRJtHTaAHcrXyZdLMm1HJsh9oQb80tT1C9ER+6v38k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749645945; c=relaxed/simple;
-	bh=HMR0dRRf3L/PNjfbGHO9u1WxtRGfWFVFCqgi4AVbt6c=;
+	s=arc-20240116; t=1749645987; c=relaxed/simple;
+	bh=Pb53XUnfjjR6lu6hoIuxvpaaA+sk6sa2o6bpiQWtwic=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n4QutYQ6gmjQligfiuaucuiAReCOzw4pFVxUHKi6tXHTA+4cQ0LQpd0buQHNSXz5YUrLYyBsjlTpb2qfmISo7lYWQpo8RUM2NAQno17M9QIWJDGqcoqry+RdfI25YEVpZw/36p8+0tlaHGY8rsTPLYJqh+4SiKtWwJKi4QvTCGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 40AA515A1;
-	Wed, 11 Jun 2025 05:45:24 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B1D0C3F673;
-	Wed, 11 Jun 2025 05:45:42 -0700 (PDT)
-Date: Wed, 11 Jun 2025 13:45:39 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Sumit Garg <sumit.garg@kernel.org>
-Cc: Jens Wiklander <jens.wiklander@linaro.org>,
-	linux-kernel@vger.kernel.org, op-tee@lists.trustedfirmware.org,
-	Jerome Forissier <jerome.forissier@linaro.org>,
-	Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH] optee: ffa: fix sleep in atomic context
-Message-ID: <20250611-kickass-tasteful-markhor-c6c7ff@sudeepholla>
-References: <20250602120452.2507084-1-jens.wiklander@linaro.org>
- <aEl4kWxWexuskLGe@sumit-X1>
+	 Content-Type:Content-Disposition:In-Reply-To; b=kWA3nwvZ+9Dv/Rsigpi1l1n/lXfBvcCF16UJArzJW9aiNsjl5P19xZjRjl8mHpXofBqqWLNreHDnVqpoWSc6m4Nt7jHaX52aLFOn3oMzrAM9xEVGwAygwZ2sfHFLhvH1SR8xGVFImx3F9DJYV87dor8XErU6tNw4R+gvihxkV6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sKIDC+Cl; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sKIDC+Cl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AD03C4CEEE;
+	Wed, 11 Jun 2025 12:46:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749645987;
+	bh=Pb53XUnfjjR6lu6hoIuxvpaaA+sk6sa2o6bpiQWtwic=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sKIDC+ClSzn1Ua1TJS1YKb1AYW8i3qJyUvfyExo3patxL3XW7T+jXh5YussTiFqG2
+	 B43K9L8yvRhKp8m+Hep7MpWOK7L+/di665cuzZXcLomtNqckWVFJ4oXZempFM8xgHc
+	 QafHD1xrOPpKoKeXYnCbiNrcG/nchqCihZnDEIZPbUXAGVuOqibiX6QtGhJen8UO9b
+	 YoRj+EG0UKkMPJy3ueywu2zKBfqekHCeE+IA6LVP5T1riNBuFzZRNVXbm1jZ6mcFul
+	 0EbDrV4nrmrLZy4G3QUF8kzjxnoe9j1ULhujl1UGyGDmzZ4xJUHwHd/DDYyByMsZgT
+	 JjlepvcpcRamQ==
+Date: Wed, 11 Jun 2025 13:46:20 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: catalin.marinas@arm.com, pcc@google.com, will@kernel.org,
+	anshuman.khandual@arm.com, joey.gouly@arm.com, maz@kernel.org,
+	oliver.upton@linux.dev, frederic@kernel.org,
+	hardevsinh.palaniya@siliconsignals.io, samuel.holland@sifive.com,
+	palmer@rivosinc.com, charlie@rivosinc.com,
+	thiago.bauermann@linaro.org, bgray@linux.ibm.com,
+	tglx@linutronix.de, puranjay@kernel.org, david@redhat.com,
+	yang@os.amperecomputing.com, mbenes@suse.cz,
+	joel.granados@kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 5/7] tools/kselftest: add MTE_STORE_ONLY feature hwcap
+ test
+Message-ID: <ea71432c-edbf-419a-bb5a-37da5b09caa0@sirena.org.uk>
+References: <20250611094802.929332-1-yeoreum.yun@arm.com>
+ <20250611094802.929332-6-yeoreum.yun@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="N9Jq5vTIEkplfAUq"
+Content-Disposition: inline
+In-Reply-To: <20250611094802.929332-6-yeoreum.yun@arm.com>
+X-Cookie: No skis take rocks like rental skis!
+
+
+--N9Jq5vTIEkplfAUq
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aEl4kWxWexuskLGe@sumit-X1>
 
-On Wed, Jun 11, 2025 at 06:07:37PM +0530, Sumit Garg wrote:
-> On Mon, Jun 02, 2025 at 02:04:35PM +0200, Jens Wiklander wrote:
-> > The OP-TEE driver registers the function notif_callback() for FF-A
-> > notifications. However, this function is called in an atomic context
-> > leading to errors like this when processing asynchronous notifications:
-> > 
-> >  | BUG: sleeping function called from invalid context at kernel/locking/mutex.c:258
-> >  | in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 9, name: kworker/0:0
-> >  | preempt_count: 1, expected: 0
-> >  | RCU nest depth: 0, expected: 0
-> >  | CPU: 0 UID: 0 PID: 9 Comm: kworker/0:0 Not tainted 6.14.0-00019-g657536ebe0aa #13
-> >  | Hardware name: linux,dummy-virt (DT)
-> >  | Workqueue: ffa_pcpu_irq_notification notif_pcpu_irq_work_fn
-> >  | Call trace:
-> >  |  show_stack+0x18/0x24 (C)
-> >  |  dump_stack_lvl+0x78/0x90
-> >  |  dump_stack+0x18/0x24
-> >  |  __might_resched+0x114/0x170
-> >  |  __might_sleep+0x48/0x98
-> >  |  mutex_lock+0x24/0x80
-> >  |  optee_get_msg_arg+0x7c/0x21c
-> >  |  simple_call_with_arg+0x50/0xc0
-> >  |  optee_do_bottom_half+0x14/0x20
-> >  |  notif_callback+0x3c/0x48
-> >  |  handle_notif_callbacks+0x9c/0xe0
-> >  |  notif_get_and_handle+0x40/0x88
-> >  |  generic_exec_single+0x80/0xc0
-> >  |  smp_call_function_single+0xfc/0x1a0
-> >  |  notif_pcpu_irq_work_fn+0x2c/0x38
-> >  |  process_one_work+0x14c/0x2b4
-> >  |  worker_thread+0x2e4/0x3e0
-> >  |  kthread+0x13c/0x210
-> >  |  ret_from_fork+0x10/0x20
-> > 
-> > Fix this by adding work queue to process the notification in a
-> > non-atomic context.
-> > 
-> > Fixes: d0476a59de06 ("optee: ffa_abi: add asynchronous notifications")
-> > Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
-> 
-> Forgot to mention, let's explicitly CC for stable kernel backport here.
+On Wed, Jun 11, 2025 at 10:48:00AM +0100, Yeoreum Yun wrote:
+> add MTE_STORE_ONLY feature hwcap test.
 
-Makes sense.
+Subject line doesn't match the usual style, otherwise
 
-Jens,
+Reviewed-by: Mark Brown <broonie@kernel.org>
 
-Just FYI:
+--N9Jq5vTIEkplfAUq
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Here is the FF-A fix PR to Arnd if you need any reference:
-https://lore.kernel.org/all/20250609105207.1185570-1-sudeep.holla@arm.com
+-----BEGIN PGP SIGNATURE-----
 
-I haven't tagged it for stable assuming Fixes: tag ones get selected and
-also it is not trivial to apply. I do have the backports also ready to
-send once merged upstream.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhJepsACgkQJNaLcl1U
+h9Ds8Af+PUYw26pjKbOjxWOkTwg8nU84B6wNH+uwRAbw+spY9QrvZMFxOQQrAS+8
+IqFjS8WTVj4it9uLc8CaLN1vLnu7oCPpaXsEJiZQ4jrVQ1beIkvR+aBa4LPG0QRk
+ylsYfQK0L3QcpEOAwV8HelLPqstHExzZc3GAFmbpa9Ml8WMEw+4DnnCzbFO6UWOV
+I3Z7viptW8bgJgSXJR3uhhzDXi7hgUvT3TKATRyDgcp+NyWBxpevPnYiVWEhj6XX
+sHjHdZXP1JRVPZI9S9oA2yE8yw6B/CoJsHFWDZhAf2FMxwdK8n5iz0DZgzk7HljH
+UJZYVKNRSI63CtXo/bEOouObcSDI4A==
+=EHzP
+-----END PGP SIGNATURE-----
 
--- 
-Regards,
-Sudeep
+--N9Jq5vTIEkplfAUq--
