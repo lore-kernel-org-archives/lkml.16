@@ -1,161 +1,206 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E45412E610F;
-	Wed, 11 Jun 2025 16:50:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F462E610F;
+	Wed, 11 Jun 2025 16:52:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749660634; cv=none; b=YYQ04DlVtDDKYK/9oZBnlvc9gevSkTDZM1lO5/PmTOTyqqRIffaj5vRFUQRt1FpSOkxBe00NqD3rjY/TqWj/QGWho6DL0zjYRx3VZGZ9WLpOeUjn0rUHl8UxtEGaB7WfBVhRdE8KL6NrBbLuqiHSinTTCz2H1omr04FvWEpuVQM=
+	t=1749660745; cv=none; b=HB4XozVvcUOBauSRgWu7x2ZNVOrYoRXjTfXfArKbWWFGzrZzqNv3+Z2EDHGBpDj8oPjDlIwD8AP77nwnGTpR8/PlaXuiE9dRj2Fc6vBiNwGbWWlD76mYdoxvbWW0zeX/ShgMjIoa8hsPUXMXMmTybImZd3sF32nWdpnNSTRxnKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749660634; c=relaxed/simple;
-	bh=pKeHfuJCvibCVUEiijmqIbl2R3U0gwLuy7BlutemhL8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J0upvQa3pjZdK9cz1rA56qs+1sD8iFs51Rw3HzdYCHMT3zfpumF9RKNF/iOR1jzLoDVxZRstbAOqzkB9MMdgKO4BBeRFqDWAUd0B8e8ynipz6TaTzhDj0TbVf2S+7g4EGAAhd8y7VP2vcEk9y6VSLatvh/dU2TES0onTevlZRE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=n5VnOf12; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1749660745; c=relaxed/simple;
+	bh=bZ7Zp+RHAzcuC/JNEGT+goE+g1TCIlv+thSOowgvvLs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ek3zhZz31+w+GmxfUY9tr5arh/eIS5SH7WsZknxIYSepQtSv6BqcrrJH+ttpMB/JrDO3oJK7CeC1oFc/HtTpC54227pPrS6UZyoEGPzRbKbf85n4ntUePBYYM3eiA+pmUGr0n2SoeqCIgfO6qhrJ/ddyIMANPNcTkp168GvMsyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oRHNY/eb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="n5VnOf12"
-Received: from [100.65.208.185] (unknown [20.236.11.69])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 3DB1F21151A2;
-	Wed, 11 Jun 2025 09:50:30 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3DB1F21151A2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1749660632;
-	bh=FPPX7YYZ8XcYflcrWTpvoOffBT2d5LZYxQ3qxbCqh4s=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=n5VnOf12XqDy1EJXmNidNMRRrGTiqAP2sCXq0CDii1u/gxSlrbHUUBZNbDVvNlzvG
-	 pC+FRSOjFzu21Z8Be5lz4e77cvw2ht+jbnG0a00v68Sx9350zHovrdMvXRywTy104j
-	 vnSsJY80Za2jPuW6uSY5Flm3KJYdI4MpQcqyg7fc=
-Message-ID: <789d1112-020f-402e-9fd2-aa6e061879ff@linux.microsoft.com>
-Date: Wed, 11 Jun 2025 09:50:29 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oRHNY/eb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C014C4CEE3;
+	Wed, 11 Jun 2025 16:52:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749660744;
+	bh=bZ7Zp+RHAzcuC/JNEGT+goE+g1TCIlv+thSOowgvvLs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=oRHNY/ebdAaxsrEfuV+Q9nygv8R9p7UtmfltidvSspsL850DtKTM0Tk4wIghE+j5h
+	 o0XCZxyWNwQIksft8H+Va2qArgzYf+DeptwhWaz3h8GOgzAoUF7YK0KAY7U+9aD4CI
+	 cYpMoZ4kAXQBtaAIvhnszo8W10zCutmY3AYiPTSfwp8oDYyIpwvd7dRgc7a5MDd2hC
+	 TDKbsdGmSXWVrCpWFKENYAi8icAYwOQGYzqbwMm0neEjb5KFUMKXy8bDXzg6kfsrQO
+	 wLUV5HSm1nGqB0vd79sGnQH0Jw18M6nJvxYECP26PSeu6/QXZrC9IuGX8/S3zJ2OHA
+	 06wYqc1og7RPw==
+Date: Wed, 11 Jun 2025 17:52:16 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, dlechner@baylibre.com,
+ nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net,
+ lucas.p.stankus@gmail.com, lars@metafoo.de, Michael.Hennerich@analog.com,
+ bagasdotme@gmail.com, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 08/11] iio: accel: adxl313: add inactivity sensing
+Message-ID: <20250611175216.602d6a3f@jic23-huawei>
+In-Reply-To: <CAFXKEHYP6o5vzsSP24SLUSs+Tu2Oqm=oVf71xy8EKKD5hoCQqg@mail.gmail.com>
+References: <20250601172139.59156-1-l.rubusch@gmail.com>
+	<20250601172139.59156-9-l.rubusch@gmail.com>
+	<CAHp75Vd=mzfVN_UBUHAkTyj2Ap_tz76AB0LtKEz28pR=WmNzog@mail.gmail.com>
+	<CAFXKEHYP6o5vzsSP24SLUSs+Tu2Oqm=oVf71xy8EKKD5hoCQqg@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/6] Drivers: hv: Fix warnings for missing export.h header
- inclusion
-To: Naman Jain <namjain@linux.microsoft.com>,
- "K . Y . Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H . Peter Anvin" <hpa@zytor.com>, Vitaly Kuznetsov <vkuznets@redhat.com>,
- Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Daniel Lezcano <daniel.lezcano@linaro.org>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Konstantin Taranov <kotaranov@microsoft.com>,
- Leon Romanovsky <leon@kernel.org>, Long Li <longli@microsoft.com>,
- Shiraz Saleem <shirazsaleem@microsoft.com>,
- Shradha Gupta <shradhagupta@linux.microsoft.com>,
- Maxim Levitsky <mlevitsk@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
- Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, netdev@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20250611100459.92900-1-namjain@linux.microsoft.com>
- <20250611100459.92900-2-namjain@linux.microsoft.com>
-Content-Language: en-US
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <20250611100459.92900-2-namjain@linux.microsoft.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-On 6/11/2025 3:04 AM, Naman Jain wrote:
-> Fix below warning in Hyper-V drivers that comes when kernel is compiled
-> with W=1 option. Include export.h in driver files to fix it.
-> * warning: EXPORT_SYMBOL() is used, but #include <linux/export.h>
-> is missing
-> 
-> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
-> ---
->  drivers/hv/channel.c           | 1 +
->  drivers/hv/channel_mgmt.c      | 1 +
->  drivers/hv/hv_proc.c           | 1 +
->  drivers/hv/mshv_common.c       | 1 +
->  drivers/hv/mshv_root_hv_call.c | 1 +
->  drivers/hv/ring_buffer.c       | 1 +
->  6 files changed, 6 insertions(+)
-> 
-> diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
-> index 35f26fa1ffe7..7c7c66e0dc3f 100644
-> --- a/drivers/hv/channel.c
-> +++ b/drivers/hv/channel.c
-> @@ -18,6 +18,7 @@
->  #include <linux/uio.h>
->  #include <linux/interrupt.h>
->  #include <linux/set_memory.h>
-> +#include <linux/export.h>
->  #include <asm/page.h>
->  #include <asm/mshyperv.h>
->  
-> diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-> index 6e084c207414..65dd299e2944 100644
-> --- a/drivers/hv/channel_mgmt.c
-> +++ b/drivers/hv/channel_mgmt.c
-> @@ -20,6 +20,7 @@
->  #include <linux/delay.h>
->  #include <linux/cpu.h>
->  #include <linux/hyperv.h>
-> +#include <linux/export.h>
->  #include <asm/mshyperv.h>
->  #include <linux/sched/isolation.h>
->  
-> diff --git a/drivers/hv/hv_proc.c b/drivers/hv/hv_proc.c
-> index 7d7ecb6f6137..fbb4eb3901bb 100644
-> --- a/drivers/hv/hv_proc.c
-> +++ b/drivers/hv/hv_proc.c
-> @@ -6,6 +6,7 @@
->  #include <linux/slab.h>
->  #include <linux/cpuhotplug.h>
->  #include <linux/minmax.h>
-> +#include <linux/export.h>
->  #include <asm/mshyperv.h>
->  
->  /*
-> diff --git a/drivers/hv/mshv_common.c b/drivers/hv/mshv_common.c
-> index 2575e6d7a71f..6f227a8a5af7 100644
-> --- a/drivers/hv/mshv_common.c
-> +++ b/drivers/hv/mshv_common.c
-> @@ -13,6 +13,7 @@
->  #include <linux/mm.h>
->  #include <asm/mshyperv.h>
->  #include <linux/resume_user_mode.h>
-> +#include <linux/export.h>
->  
->  #include "mshv.h"
->  
-> diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
-> index a222a16107f6..c9c274f29c3c 100644
-> --- a/drivers/hv/mshv_root_hv_call.c
-> +++ b/drivers/hv/mshv_root_hv_call.c
-> @@ -9,6 +9,7 @@
->  
->  #include <linux/kernel.h>
->  #include <linux/mm.h>
-> +#include <linux/export.h>
->  #include <asm/mshyperv.h>
->  
->  #include "mshv_root.h"
-> diff --git a/drivers/hv/ring_buffer.c b/drivers/hv/ring_buffer.c
-> index 3c9b02471760..23ce1fb70de1 100644
-> --- a/drivers/hv/ring_buffer.c
-> +++ b/drivers/hv/ring_buffer.c
-> @@ -18,6 +18,7 @@
->  #include <linux/slab.h>
->  #include <linux/prefetch.h>
->  #include <linux/io.h>
-> +#include <linux/export.h>
->  #include <asm/mshyperv.h>
->  
->  #include "hyperv_vmbus.h"
+On Wed, 11 Jun 2025 17:36:49 +0200
+Lothar Rubusch <l.rubusch@gmail.com> wrote:
 
-Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> On Sun, Jun 1, 2025 at 9:46=E2=80=AFPM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> >
+> > On Sun, Jun 1, 2025 at 8:22=E2=80=AFPM Lothar Rubusch <l.rubusch@gmail.=
+com> wrote: =20
+> > >
+> > > Extend the interrupt handler to process interrupts as inactivity even=
+ts.
+> > > Add functions to set threshold and period registers for inactivity. A=
+dd
+> > > functions to enable / disable inactivity. Extend the fake iio channel=
+ to =20
+> >
+> > IIO
+> > =20
+> > > deal with inactivity events on x, y and z combined with AND. =20
+> >
+> > ...
+> > =20
+> > > +static int adxl313_set_inact_time_s(struct adxl313_data *data,
+> > > +                                   unsigned int val_s)
+> > > +{
+> > > +       unsigned int max_boundary =3D 255; =20
+> >
+> > This is unclear how it's defined. What is the limit behind? Size of a
+> > bit field? Decimal value from the datasheet?
+> >
+> > The forms of (BIT(8) - 1) or GENMASK(7, 0) may be better depending on
+> > the answers to the above questions.
+> > =20
+> > > +       unsigned int val =3D min(val_s, max_boundary);
+> > > +
+> > > +       return regmap_write(data->regmap, ADXL313_REG_TIME_INACT, val=
+);
+> > > +} =20
+> >
+> > ...
+> > =20
+> > > -       axis_en =3D FIELD_GET(ADXL313_ACT_XYZ_EN, axis_ctrl);
+> > > +       if (type =3D=3D ADXL313_ACTIVITY)
+> > > +               axis_en =3D FIELD_GET(ADXL313_ACT_XYZ_EN, axis_ctrl);
+> > > +       else
+> > > +               axis_en =3D FIELD_GET(ADXL313_INACT_XYZ_EN, axis_ctrl=
+); =20
+> >
+> > Even with this change my previous comment stays.
+> >
+> > ...
+> > =20
+> > > +       en =3D cmd_en && threshold;
+> > > +       if (type =3D=3D ADXL313_INACTIVITY) {
+> > > +               ret =3D regmap_read(data->regmap, ADXL313_REG_TIME_IN=
+ACT, &inact_time_s);
+> > > +               if (ret)
+> > > +                       return ret;
+> > > +
+> > > +               en =3D en && inact_time_s;
+> > > +       } =20
+> >
+> > ...
+> > =20
+> > > -       if (info !=3D IIO_EV_INFO_VALUE)
+> > > -               return -EINVAL;
+> > > -
+> > > -       /* Scale factor 15.625 mg/LSB */
+> > > -       regval =3D DIV_ROUND_CLOSEST(MICRO * val + val2, 15625);
+> > > -       switch (dir) {
+> > > -       case IIO_EV_DIR_RISING:
+> > > -               ret =3D regmap_write(data->regmap,
+> > > -                                  adxl313_act_thresh_reg[ADXL313_ACT=
+IVITY],
+> > > -                                  regval); =20
+> >
+> > Hmm... This was added by the previous patches, right? Why can't it be
+> > done as a switch case to begin with? I remember one of the previous
+> > versions had some nested switch-cases, perhaps you need to rethink on
+> > how to split the code between functions to avoid too much nesting (add
+> > some helper functions?). =20
+>=20
+> The point here is, as I mentioned in the other mail:
+> Initially, I wanted to build up the final switch/case struct i.e.
+> going by MAG/MAG_ADAPTIVE, then INFO_VALUE -> RISING / FALLING and
+> PERIOD.
+>=20
+> This will distinguish properties for four different types of events,
+> of course it then also will use separate functions. As I uderstood
+> your review, why starting with switch/case, do
+> if (!MAG event) then, return right away. I implemented that as I
+> understood. For further switch/case-ing, I did the same.
+> Now, patch by patch, it grows. Thus the if-not-back-out lines will be
+> moved out and replaced by switch/case. Worse, with every level switch
+> case, all existing code needs indention, thus reading through the
+> patches show (too) many changes.
+>=20
+> How can I improve to help you reviewing this or make the feedback more
+> useful for me? Or is my approach wrong? I'd like to start with the
+> switch case right away, then just add up what comes in with every
+> other patch. If so, you'd only see the changes, since the final
+> structure of this is already clear, because very similar to all
+> iio/accel drivers at least (as you probably know better than me).
+As mentioned earlier, reviewers tend to look at patches in a linear
+fashion (and forget them more or less entirely between versions posted!)
+
+So feel free to push back on earlier review comments that say 'you could
+simplify this as X' with 'I did this because it becomes more complex in pat=
+ch 4
+and this reduces churn'.
+
+Maybe here factoring out some elements into helpers will reduce the churn
+anyway (to a couple of lines) and that discussion become unnecessary.
+
+J
+>=20
+> > =20
+> > > +       switch (info) {
+> > > +       case IIO_EV_INFO_VALUE:
+> > > +               /* Scale factor 15.625 mg/LSB */
+> > > +               regval =3D DIV_ROUND_CLOSEST(MICRO * val + val2, 1562=
+5);
+> > > +               switch (dir) {
+> > > +               case IIO_EV_DIR_RISING:
+> > > +                       ret =3D regmap_write(data->regmap,
+> > > +                                          adxl313_act_thresh_reg[ADX=
+L313_ACTIVITY],
+> > > +                                          regval);
+> > > +                       if (ret)
+> > > +                               return ret;
+> > > +                       return adxl313_set_measure_en(data, true);
+> > > +               case IIO_EV_DIR_FALLING:
+> > > +                       ret =3D regmap_write(data->regmap,
+> > > +                                          adxl313_act_thresh_reg[ADX=
+L313_INACTIVITY],
+> > > +                                          regval);
+> > > +                       if (ret)
+> > > +                               return ret;
+> > > +                       return adxl313_set_measure_en(data, true);
+> > > +               default:
+> > > +                       return -EINVAL;
+> > > +               }
+> > > +       case IIO_EV_INFO_PERIOD:
+> > > +               ret =3D adxl313_set_inact_time_s(data, val);
+> > >                 if (ret)
+> > >                         return ret;
+> > >                 return adxl313_set_measure_en(data, true); =20
+> >
+> > --
+> > With Best Regards,
+> > Andy Shevchenko =20
+>=20
+
