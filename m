@@ -1,105 +1,143 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 912502405F6;
-	Wed, 11 Jun 2025 08:37:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C669243969;
+	Wed, 11 Jun 2025 08:37:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749631058; cv=none; b=Pp4rzjBXoO57IJUz9+CIRgkhnW8iPmw7eJ3+22kgLLpqR4pqIueGkeJVwphton3riTqwBFO8cUHgwgUT2v4a4vnMAeYDUlNc1Wrt0Zfq1ppj0DPHqDlyCQcIpiyNubEpAZISEEmz111lM40NlalAIOp3u9DzQIYtKshzX9qVxQc=
+	t=1749631064; cv=none; b=UDLH53o2O9SWFnyM2azZBjjlw/VpuEUf4PBtHzH+69eqQ7dVoZmTasZG6YztxpTbgSkMASkBzF9jawQqSEAyY8sVGQRSkwR8+hrg6tSuuJmh4oSplgYLjWv34r5fsSa6CoLFQhfumtoLK5mkIJnQCHT1HzfyTlerEtwnNOpDHmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749631058; c=relaxed/simple;
-	bh=2kinzhlmz4ZC51GgMVeRamrxVg5pzwaLxW8qfc0MaDM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ukHxikAlwHAT81oV/wE3WnT58oQBEg0tZReBgZ+pDhCGfCnVnv8nzlP9pFBTuS8fSUc8wAh+5zkPI+gLntSErLE5ej1UBw4jXHq638hq/OvzxrrK7pYfY/FJghp08oUNEuJ1ZcbB1L00DXSw0mE8IbYLKXGPSSEXeH/KB9GV+bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PyCmOX+9; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PyCmOX+9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749631057; x=1781167057;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2kinzhlmz4ZC51GgMVeRamrxVg5pzwaLxW8qfc0MaDM=;
-  b=PyCmOX+93ixbM+3PqMUpdRv9AneK0Ra9AM5zNbNFi+Ty38dHYBuqDX+T
-   l2AKU+N2HbHv+6hRlhY97nKEkj4hfDQ45A3aaKCGPPOSsWJHVr7ut/LGt
-   tBRV3TzQjBbG8ACq/gFirW3CkcwIurL6OKHyqSXe61TLDQKhuakujARye
-   V3c1P0tyjC2wBAQydJFT0asDzudhJ2/UHYgogYKBqv04KgeCgIwUcLUQ8
-   996YnUquvifoiTqNMjB6kR/R24+PBDdaOpnR3fBncxkDZioEjK5HTzqgA
-   /eLiU7rLsCQ/33Vvc0JsYfdLQRXd3T0UB4s7ge9it4NZu1J1rHc9hgtxy
-   A==;
-X-CSE-ConnectionGUID: BgGCNocrTdy6rMB3cxnBDw==
-X-CSE-MsgGUID: 5+WG0UHXRsCaLc2T8SYH4Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="62418520"
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="62418520"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 01:37:36 -0700
-X-CSE-ConnectionGUID: WUkEGOYpTlWF1DvX0mYXGA==
-X-CSE-MsgGUID: FopgQGVwQVO8ZzHiCd1LqA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="184332570"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 01:33:18 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uPGtX-00000005aOn-1tE9;
-	Wed, 11 Jun 2025 11:33:15 +0300
-Date: Wed, 11 Jun 2025 11:33:15 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Waiman Long <longman@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Vicentiu Galanopulo <vicentiu.galanopulo@remote-tech.co.uk>,
-	Will Deacon <will@kernel.org>, Han Xu <han.xu@nxp.com>,
-	Haibo Chen <haibo.chen@nxp.com>,
-	Yogesh Gaur <yogeshgaur.83@gmail.com>, Lee Jones <lee@kernel.org>,
-	Pavel Machek <pavel@kernel.org>, Andrew Davis <afd@ti.com>,
-	linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-spi@vger.kernel.org, imx@lists.linux.dev,
-	linux-leds@vger.kernel.org
-Subject: Re: [PATCH v6 1/3] spi: spi-nxp-fspi: check return value of
- devm_mutex_init()
-Message-ID: <aEk_Sx2qht6WK6yQ@smile.fi.intel.com>
-References: <20250609-must_check-devm_mutex_init-v6-0-9540d5df9704@weissschuh.net>
- <20250609-must_check-devm_mutex_init-v6-1-9540d5df9704@weissschuh.net>
- <7afc214a-affd-4a99-8528-c58c31fbcc59@sirena.org.uk>
- <aEgBkROmEV2df4rA@smile.fi.intel.com>
- <d8d1ee94-ee95-461f-a5d8-040bb2a1cfee@sirena.org.uk>
+	s=arc-20240116; t=1749631064; c=relaxed/simple;
+	bh=YMXTcyMncS+OYLcYJJSBaiK//v5mGME8+PN5/+MBWsg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IrMQ7LJTTf2ak4OFfnXcSWQ8wBRsL4wSifLoX2TnLz1wR1mtS30o4mrXEgHkE81Zqz8TXowYzUYV40bXOqxSHEb4+DogBJyK42+B0EW1WOaKtJiKA/W7yoJkGP+L2SJuO8JONcCQjrfKD/pXjhZaF2KeYkryh4U2VtJdJlGX/Ts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bHJv80H56zKHN79;
+	Wed, 11 Jun 2025 16:37:40 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 60FF21A0AF7;
+	Wed, 11 Jun 2025 16:37:38 +0800 (CST)
+Received: from ultra.huawei.com (unknown [10.90.53.71])
+	by APP2 (Coremail) with SMTP id Syh0CgDHhGdRQEloV8o1PA--.29312S2;
+	Wed, 11 Jun 2025 16:37:38 +0800 (CST)
+From: Pu Lehui <pulehui@huaweicloud.com>
+To: akpm@linux-foundation.org,
+	shuah@kernel.org,
+	lorenzo.stoakes@oracle.com
+Cc: linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	pulehui@huawei.com
+Subject: [PATCH] selftests/mm: Use generic read_sysfs in thuge-gen test
+Date: Wed, 11 Jun 2025 08:40:11 +0000
+Message-Id: <20250611084011.1047132-1-pulehui@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d8d1ee94-ee95-461f-a5d8-040bb2a1cfee@sirena.org.uk>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:Syh0CgDHhGdRQEloV8o1PA--.29312S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7WFWDCr4rXr1rWw48GFWDXFb_yoW8ury5pF
+	s3K34j93yxKr98GryUXFs8Wry5Ar4Dt3y0y397A34rZw1UJr9IgrZ7ZasrJa1kurZ7Wayf
+	Aay3Grsakr1UJaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUyKb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI
+	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
+	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY
+	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
+	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
+	1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUwxhLUUUUU
+X-CM-SenderInfo: psxovxtxl6x35dzhxuhorxvhhfrp/
 
-On Tue, Jun 10, 2025 at 12:46:12PM +0100, Mark Brown wrote:
-> On Tue, Jun 10, 2025 at 12:57:37PM +0300, Andy Shevchenko wrote:
-> > On Mon, Jun 09, 2025 at 09:59:46PM +0100, Mark Brown wrote:
-> 
-> > > I don't understand the comment about leaking here?  We might end up with
-> > > an unitialised mutex but how would we leak anything?
-> 
-> > In case if the mutex_init() allocates something that needs to be freed
-> > (in the future).
-> 
-> I don't see how checking the return value impacts that?  The management
-> via devm is still there either way.
+From: Pu Lehui <pulehui@huawei.com>
 
-I see now what you mean. Yes, this is more likely applicable to non-devm case.
-Thomas, can you adjust the commit message(s), please, for v7?
+As generic read_sysfs is available in vm_utils, let's
+use is in thuge-gen test.
 
+Signed-off-by: Pu Lehui <pulehui@huawei.com>
+---
+ tools/testing/selftests/mm/thuge-gen.c | 37 +++++++-------------------
+ 1 file changed, 9 insertions(+), 28 deletions(-)
+
+diff --git a/tools/testing/selftests/mm/thuge-gen.c b/tools/testing/selftests/mm/thuge-gen.c
+index 95b6f043a3cb..e11dfbfa661b 100644
+--- a/tools/testing/selftests/mm/thuge-gen.c
++++ b/tools/testing/selftests/mm/thuge-gen.c
+@@ -77,40 +77,19 @@ void show(unsigned long ps)
+ 	system(buf);
+ }
+ 
+-unsigned long thuge_read_sysfs(int warn, char *fmt, ...)
++unsigned long read_free(unsigned long ps)
+ {
+-	char *line = NULL;
+-	size_t linelen = 0;
+-	char buf[100];
+-	FILE *f;
+-	va_list ap;
+ 	unsigned long val = 0;
++	char buf[100];
+ 
+-	va_start(ap, fmt);
+-	vsnprintf(buf, sizeof buf, fmt, ap);
+-	va_end(ap);
++	snprintf(buf, sizeof(buf),
++		 "/sys/kernel/mm/hugepages/hugepages-%lukB/free_hugepages",
++		 ps >> 10);
++	read_sysfs(buf, &val);
+ 
+-	f = fopen(buf, "r");
+-	if (!f) {
+-		if (warn)
+-			ksft_print_msg("missing %s\n", buf);
+-		return 0;
+-	}
+-	if (getline(&line, &linelen, f) > 0) {
+-		sscanf(line, "%lu", &val);
+-	}
+-	fclose(f);
+-	free(line);
+ 	return val;
+ }
+ 
+-unsigned long read_free(unsigned long ps)
+-{
+-	return thuge_read_sysfs(ps != getpagesize(),
+-			  "/sys/kernel/mm/hugepages/hugepages-%lukB/free_hugepages",
+-			  ps >> 10);
+-}
+-
+ void test_mmap(unsigned long size, unsigned flags)
+ {
+ 	char *map;
+@@ -173,6 +152,7 @@ void test_shmget(unsigned long size, unsigned flags)
+ void find_pagesizes(void)
+ {
+ 	unsigned long largest = getpagesize();
++	unsigned long shmmax_val = 0;
+ 	int i;
+ 	glob_t g;
+ 
+@@ -195,7 +175,8 @@ void find_pagesizes(void)
+ 	}
+ 	globfree(&g);
+ 
+-	if (thuge_read_sysfs(0, "/proc/sys/kernel/shmmax") < NUM_PAGES * largest)
++	read_sysfs("/proc/sys/kernel/shmmax", &shmmax_val);
++	if (shmmax_val < NUM_PAGES * largest)
+ 		ksft_exit_fail_msg("Please do echo %lu > /proc/sys/kernel/shmmax",
+ 				   largest * NUM_PAGES);
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.34.1
 
