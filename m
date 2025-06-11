@@ -1,79 +1,36 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 907B21D89FD
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 04:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C866801
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 04:02:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749614425; cv=none; b=HQSSPxwM5W5wJgicnPiDAZSHpNm5LZDVolb7ey1lU4jw17Z2LeaMbBzlO4uELpYzwtzDbE1UDucHgY2vuAWbO9BVkbaXa9My+HvF0jYTMmmFKNuKpoXu+9WA5JVAdVbTbOQWooouR0iolJWExmfTSNiArBHc/VIWmSQKoBMmURM=
+	t=1749614534; cv=none; b=O1Umwpzj9WIo1lHOLcW1rLgaPRccK7zSvzTqTxA9MCpMZ0nLm3/GYjkcyxayWZFnVBgd6aT+t4m+wskhmB8N094XJUq2S3qvT/bnM+jPDANz1hYTTFbg3cUuXCJVeQcLX3OSdY2CS46wuO60Wf24NrKMr+x1ODtpUwm1Bt60mPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749614425; c=relaxed/simple;
-	bh=49AKq9ID6BBuWfyisxuAwvD/4ETkV0WHbvy5s/TxhHE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fSpc1UVGkywS4fJ04blLZ24/BHXeJm/Mch0N3xY7XRY39G29JPGHxwgl4x6LN7sNb7+6bn9o4aUZmH1kfdCmQWE7/iQPudIvvL8E/Rkc7Rer6tkWPFmRmSWibrSucG2AU51wVCZxEyH36Iw7VBytmqXbTbhYK/Kx/yDbXiwn4Vo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 961d0276467811f0b29709d653e92f7d-20250611
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_MISS
-	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
-	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
-	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
-	IP_UNTRUSTED, SRC_UNTRUSTED, IP_LOWREP, SRC_LOWREP, DN_TRUSTED
-	SRC_TRUSTED, SA_EXISTED, SN_UNTRUSTED, SN_UNFAMILIAR, SPF_NOPASS
-	DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD, CIE_GOOD_SPF
-	GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_T1, AMN_GOOD
-	AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:d3f0a21b-bf3f-449e-a3ab-2a7002329e0a,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:5
-X-CID-INFO: VERSION:1.1.45,REQID:d3f0a21b-bf3f-449e-a3ab-2a7002329e0a,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:5
-X-CID-META: VersionHash:6493067,CLOUDID:0d8521574f84f4fbb7eb2b4f11f72291,BulkI
-	D:250610171449BXUNP0X7,BulkQuantity:3,Recheck:0,SF:17|19|25|38|45|66|78|81
-	|82|102,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:40,QS:
-	nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,AR
-	C:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 961d0276467811f0b29709d653e92f7d-20250611
-X-User: duanchenghao@kylinos.cn
-Received: from localhost.localdomain [(223.104.40.103)] by mailgw.kylinos.cn
-	(envelope-from <duanchenghao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 2091719683; Wed, 11 Jun 2025 12:00:17 +0800
-From: Chenghao Duan <duanchenghao@kylinos.cn>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	yangtiezhu@loongson.cn,
-	hengqi.chen@gmail.com,
-	chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	linux-kernel@vger.kernel.org
-Cc: guodongtai@kylinos.cn,
-	duanchenghao@kylinos.cn,
-	youling.tang@linux.dev,
-	jianghaoran@kylinos.cn
-Subject: [PATCH v1 4/5] LoongArch: BPF: Add bpf trampoline support for Loongarch
-Date: Wed, 11 Jun 2025 11:59:51 +0800
-Message-Id: <20250611035952.111182-5-duanchenghao@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250611035952.111182-1-duanchenghao@kylinos.cn>
-References: <20250611035952.111182-1-duanchenghao@kylinos.cn>
+	s=arc-20240116; t=1749614534; c=relaxed/simple;
+	bh=EK/C5QZx6UIntGR2yHyRghFeJqlqXVuHx9b/QiWvL7w=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SIm3d/F+S2t4VNyckpswdwkRuXiCKKuEZIRHCjZEfO3JeezzMFcTpTgnYa+kPhO3zZz6dQ8B9470b4Y2jCVtJUTMpucYp2uc2T88cHrFZZ6N2nNTQXVkF0v8EaX7jvKGr82gKHrlwcyaLAJs3QtoyXKUiUGqJ3FFXesLd9t8Pzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Wed, 11 Jun
+ 2025 12:02:03 +0800
+Received: from twmbx02.aspeed.com (192.168.10.13) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
+ Transport; Wed, 11 Jun 2025 12:02:03 +0800
+From: Billy Tsai <billy_tsai@aspeedtech.com>
+To: <jk@codeconstruct.com.au>, <alexandre.belloni@bootlin.com>,
+	<Frank.Li@nxp.com>, <aniketmaurya@google.com>, <billy_tsai@aspeedtech.com>,
+	<jarkko.nikula@linux.intel.com>, <Shyam-sundar.S-k@amd.com>,
+	<wsa+renesas@sang-engineering.com>, <linux-i3c@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <BMC-SW@aspeedtech.com>,
+	<elbadrym@google.com>, <romlem@google.com>
+Subject: [PATCH] i3c: ast2600: Generate T-bits to terminate IBI storm
+Date: Wed, 11 Jun 2025 12:02:03 +0800
+Message-ID: <20250611040203.487734-1-billy_tsai@aspeedtech.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,491 +38,177 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-BPF trampoline is the critical infrastructure of the BPF subsystem, acting
-as a mediator between kernel functions and BPF programs. Numerous important
-features, such as using BPF program for zero overhead kernel introspection,
-rely on this key component. We can't wait to support bpf trampoline on
-Loongarch.
+Under certain conditions, such as when an IBI interrupt is received and
+SDA remains high after the address phase, the I3C controller will enter
+an infinite loop attempting to read data until a T-bit is detected.
+This commit addresses the issue by generating a fake T-bit to terminate
+the IBI storm when the received IBI data length exceeds the maximum
+allowable IBI payload.
+This issue cannot be resolved using the abort function, as it is
+ineffective when the I3C FSM is in the Servicing IBI Transfer (0xE) or
+Clock Extension (0x12) states.
 
-The related tests have passed, Including the following technical points:
-1. fentry
-2. fmod_ret
-3. fexit
-
-Signed-off-by: George Guo <guodongtai@kylinos.cn>
-Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
+Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
 ---
- arch/loongarch/net/bpf_jit.c | 423 +++++++++++++++++++++++++++++++++++
- arch/loongarch/net/bpf_jit.h |   6 +
- 2 files changed, 429 insertions(+)
+ drivers/i3c/master/ast2600-i3c-master.c | 60 +++++++++++++++++++++++++
+ drivers/i3c/master/dw-i3c-master.c      | 14 ++++++
+ drivers/i3c/master/dw-i3c-master.h      |  9 ++++
+ 3 files changed, 83 insertions(+)
 
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index 0e31d4d66..cdcb73f93 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -7,6 +7,10 @@
- #include <linux/memory.h>
- #include "bpf_jit.h"
+diff --git a/drivers/i3c/master/ast2600-i3c-master.c b/drivers/i3c/master/ast2600-i3c-master.c
+index e05e83812c71..6ac0122474d0 100644
+--- a/drivers/i3c/master/ast2600-i3c-master.c
++++ b/drivers/i3c/master/ast2600-i3c-master.c
+@@ -33,11 +33,28 @@
+ #define AST2600_I3CG_REG1_SA_EN			BIT(15)
+ #define AST2600_I3CG_REG1_INST_ID_MASK		GENMASK(19, 16)
+ #define AST2600_I3CG_REG1_INST_ID(x)		(((x) << 16) & AST2600_I3CG_REG1_INST_ID_MASK)
++#define AST2600_I3CG_REG1_SCL_SW_MODE_OE	BIT(20)
++#define AST2600_I3CG_REG1_SCL_OUT_SW_MODE_VAL	BIT(21)
++#define AST2600_I3CG_REG1_SCL_IN_SW_MODE_VAL	BIT(23)
++#define AST2600_I3CG_REG1_SDA_SW_MODE_OE	BIT(24)
++#define AST2600_I3CG_REG1_SDA_OUT_SW_MODE_VAL	BIT(25)
++#define AST2600_I3CG_REG1_SDA_IN_SW_MODE_VAL	BIT(27)
++#define AST2600_I3CG_REG1_SCL_IN_SW_MODE_EN	BIT(28)
++#define AST2600_I3CG_REG1_SDA_IN_SW_MODE_EN	BIT(29)
++#define AST2600_I3CG_REG1_SCL_OUT_SW_MODE_EN	BIT(30)
++#define AST2600_I3CG_REG1_SDA_OUT_SW_MODE_EN	BIT(31)
  
-+#define LOONGARCH_MAX_REG_ARGS 8
-+#define LOONGARCH_FENTRY_NINSNS 2
-+#define LOONGARCH_FENTRY_NBYTES (LOONGARCH_FENTRY_NINSNS * 4)
+ #define AST2600_DEFAULT_SDA_PULLUP_OHMS		2000
+ 
+ #define DEV_ADDR_TABLE_IBI_PEC			BIT(11)
+ 
++#define IBI_QUEUE_STATUS		0x18
++#define PRESENT_STATE			0x54
++#define   CM_TFR_STS			GENMASK(13, 8)
++#define     CM_TFR_STS_MASTER_SERV_IBI	0xe
++#define   SDA_LINE_SIGNAL_LEVEL		BIT(1)
++#define   SCL_LINE_SIGNAL_LEVEL		BIT(0)
 +
- #define REG_TCC		LOONGARCH_GPR_A6
- #define TCC_SAVED	LOONGARCH_GPR_S5
- 
-@@ -1386,6 +1390,20 @@ static int gen_jump_or_nops(void *target, void *ip, u32 *insns, bool is_call)
- 					(unsigned long)ip, (unsigned long)target);
+ struct ast2600_i3c {
+ 	struct dw_i3c_master dw;
+ 	struct regmap *global_regs;
+@@ -117,9 +134,52 @@ static void ast2600_i3c_set_dat_ibi(struct dw_i3c_master *i3c,
+ 	}
  }
  
-+static int emit_call(struct jit_ctx *ctx, u64 addr)
++static bool ast2600_i3c_fsm_exit_serv_ibi(struct dw_i3c_master *dw)
 +{
-+	u64 ip;
-+	s64 off = 0;
-+
-+	if (addr && ctx->image && ctx->ro_image) {
-+		ip = (u64)(ctx->image + ctx->idx);
-+		off = addr - ip;
-+	}
-+
-+	return emit_jump_and_link(ctx, LOONGARCH_GPR_RA, ip, addr);
-+}
-+
-+
- int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type poke_type,
- 			void *old_addr, void *new_addr)
- {
-@@ -1415,3 +1433,408 @@ int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type poke_type,
- 	mutex_unlock(&text_mutex);
- 	return ret;
- }
-+
-+static void store_args(struct jit_ctx *ctx, int nargs, int args_off)
-+{
-+	int i = 0;
-+
-+	for (i = 0; i < nargs; i++) {
-+		emit_insn(ctx, std, LOONGARCH_GPR_A0 + i, LOONGARCH_GPR_FP, -args_off);
-+		args_off -= 8;
-+	}
-+}
-+
-+static void restore_args(struct jit_ctx *ctx, int nargs, int args_off)
-+{
-+	int i = 0;
-+
-+	for (i = 0; i < nargs; i++) {
-+		emit_insn(ctx, ldd, LOONGARCH_GPR_A0 + i, LOONGARCH_GPR_FP, -args_off);
-+		args_off -= 8;
-+	}
-+}
-+
-+static int invoke_bpf_prog(struct jit_ctx *ctx, struct bpf_tramp_link *l,
-+			   int args_off, int retval_off,
-+			   int run_ctx_off, bool save_ret)
-+{
-+	int ret;
-+	u32 *branch;
-+	struct bpf_prog *p = l->link.prog;
-+	int cookie_off = offsetof(struct bpf_tramp_run_ctx, bpf_cookie);
-+
-+	if (l->cookie) {
-+		move_imm(ctx, LOONGARCH_GPR_T1, l->cookie, false);
-+		emit_insn(ctx, std, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP, -run_ctx_off + cookie_off);
-+	} else {
-+		emit_insn(ctx, std, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_FP,
-+				-run_ctx_off + cookie_off);
-+	}
-+
-+	/* arg1: prog */
-+	move_imm(ctx, LOONGARCH_GPR_A0, (const s64)p, false);
-+	/* arg2: &run_ctx */
-+	emit_insn(ctx, addid, LOONGARCH_GPR_A1, LOONGARCH_GPR_FP, -run_ctx_off);
-+	ret = emit_call(ctx, (const u64)bpf_trampoline_enter(p));
-+	if (ret)
-+		return ret;
-+
-+	/* store prog start time */
-+	move_reg(ctx, LOONGARCH_GPR_S1, LOONGARCH_GPR_A0);
-+
-+	/* if (__bpf_prog_enter(prog) == 0)
-+	 *      goto skip_exec_of_prog;
-+	 *
-+	 */
-+	branch = (u32 *)ctx->image + ctx->idx;
-+	/* NOP reserved for conditional jump */
-+	emit_insn(ctx, NOP);
-+
-+	/* arg1: &args_off */
-+	emit_insn(ctx, addid, LOONGARCH_GPR_A0, LOONGARCH_GPR_FP, -args_off);
-+	if (!p->jited)
-+		move_imm(ctx, LOONGARCH_GPR_A1, (const s64)p->insnsi, false);
-+	ret = emit_call(ctx, (const u64)p->bpf_func);
-+	if (ret)
-+		return ret;
-+
-+	if (save_ret) {
-+		emit_insn(ctx, std, LOONGARCH_GPR_A0, LOONGARCH_GPR_FP, -retval_off);
-+		emit_insn(ctx, std, regmap[BPF_REG_0], LOONGARCH_GPR_FP, -(retval_off - 8));
-+	}
-+
-+	/* update branch with beqz */
-+	if (ctx->image) {
-+		int offset = (void *)(u32 *)(&ctx->image[ctx->idx]) - (void *)branch;
-+		*branch = larch_insn_gen_beq(LOONGARCH_GPR_A0, LOONGARCH_GPR_ZERO, offset);
-+	}
-+
-+	/* arg1: prog */
-+	move_imm(ctx, LOONGARCH_GPR_A0, (const s64)p, false);
-+	/* arg2: prog start time */
-+	move_reg(ctx, LOONGARCH_GPR_A1, LOONGARCH_GPR_S1);
-+	/* arg3: &run_ctx */
-+	emit_insn(ctx, addid, LOONGARCH_GPR_A2, LOONGARCH_GPR_FP, -run_ctx_off);
-+	ret = emit_call(ctx, (const u64)bpf_trampoline_exit(p));
-+
-+	return ret;
-+}
-+
-+static void invoke_bpf_mod_ret(struct jit_ctx *ctx, struct bpf_tramp_links *tl,
-+			       int args_off, int retval_off, int run_ctx_off, u32 **branches)
-+{
-+	int i;
-+
-+	emit_insn(ctx, std, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_FP, -retval_off);
-+	for (i = 0; i < tl->nr_links; i++) {
-+		invoke_bpf_prog(ctx, tl->links[i], args_off, retval_off,
-+			run_ctx_off, true);
-+		emit_insn(ctx, ldd, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP, -retval_off);
-+		branches[i] = (u32 *)ctx->image + ctx->idx;
-+		emit_insn(ctx, NOP);
-+	}
-+}
-+
-+void *bpf_arch_text_copy(void *dst, void *src, size_t len)
-+{
-+	if (larch_insn_text_copy(dst, src, len))
-+		return ERR_PTR(-EINVAL);
-+
-+	return dst;
-+}
-+
-+u64 bpf_jit_alloc_exec_limit(void)
-+{
-+	return VMALLOC_END - VMALLOC_START;
-+}
-+
-+void *arch_alloc_bpf_trampoline(unsigned int size)
-+{
-+	void *image;
-+
-+	if (WARN_ON_ONCE(size > PAGE_SIZE))
-+		return NULL;
-+	image = bpf_jit_alloc_exec(PAGE_SIZE);
-+	if (image) {
-+		jit_fill_hole(image, size);
-+		set_vm_flush_reset_perms(image);
-+	}
-+
-+	return image;
-+}
-+
-+void arch_free_bpf_trampoline(void *image, unsigned int size)
-+{
-+	WARN_ON_ONCE(size > PAGE_SIZE);
-+	bpf_jit_free_exec(image);
-+}
-+
-+int arch_protect_bpf_trampoline(void *image, unsigned int size)
-+{
-+	return 0;
-+}
-+
-+int bpf_arch_text_invalidate(void *dst, size_t len)
-+{
-+	jit_fill_hole(dst, len);
-+	return 0;
-+}
-+
-+static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_image *im,
-+					 const struct btf_func_model *m,
-+					 struct bpf_tramp_links *tlinks,
-+					 void *func_addr, u32 flags)
-+{
-+	int i;
-+	int stack_size = 0, nargs = 0;
-+	int retval_off, args_off, nargs_off, ip_off, run_ctx_off, sreg_off;
-+	struct bpf_tramp_links *fentry = &tlinks[BPF_TRAMP_FENTRY];
-+	struct bpf_tramp_links *fexit = &tlinks[BPF_TRAMP_FEXIT];
-+	struct bpf_tramp_links *fmod_ret = &tlinks[BPF_TRAMP_MODIFY_RETURN];
-+	int ret, save_ret;
-+	void *orig_call = func_addr;
-+	u32 **branches = NULL;
-+
-+	if (flags & (BPF_TRAMP_F_ORIG_STACK | BPF_TRAMP_F_SHARE_IPMODIFY))
-+		return -ENOTSUPP;
++	u32 state;
 +
 +	/*
-+	 * FP + 8       [ RA to parent func ] return address to parent
-+	 *                    function
-+	 * FP + 0       [ FP of parent func ] frame pointer of parent
-+	 *                    function
-+	 * FP - 8       [ T0 to traced func ] return address of traced
-+	 *                    function
-+	 * FP - 16      [ FP of traced func ] frame pointer of traced
-+	 *                    function
-+	 *
-+	 * FP - retval_off  [ return value      ] BPF_TRAMP_F_CALL_ORIG or
-+	 *                    BPF_TRAMP_F_RET_FENTRY_RET
-+	 *                  [ argN              ]
-+	 *                  [ ...               ]
-+	 * FP - args_off    [ arg1              ]
-+	 *
-+	 * FP - nargs_off   [ regs count        ]
-+	 *
-+	 * FP - ip_off      [ traced func   ] BPF_TRAMP_F_IP_ARG
-+	 *
-+	 * FP - run_ctx_off [ bpf_tramp_run_ctx ]
-+	 *
-+	 * FP - sreg_off    [ callee saved reg  ]
-+	 *
++	 * Clear the IBI queue to enable the hardware to generate SCL and
++	 * begin detecting the T-bit low to stop reading IBI data.
 +	 */
++	readl(dw->regs + IBI_QUEUE_STATUS);
++	state = FIELD_GET(CM_TFR_STS, readl(dw->regs + PRESENT_STATE));
++	if (state == CM_TFR_STS_MASTER_SERV_IBI)
++		return false;
 +
-+	if (m->nr_args > LOONGARCH_MAX_REG_ARGS)
-+	    return -ENOTSUPP;
-+
-+	if (flags & (BPF_TRAMP_F_ORIG_STACK | BPF_TRAMP_F_SHARE_IPMODIFY))
-+		return -ENOTSUPP;
-+
-+	stack_size = 0;
-+
-+	/* room of trampoline frame to store return address and frame pointer */
-+	stack_size += 16;
-+
-+	save_ret = flags & (BPF_TRAMP_F_CALL_ORIG | BPF_TRAMP_F_RET_FENTRY_RET);
-+	if (save_ret) {
-+		/* Save BPF R0 and A0 */
-+		stack_size += 16;
-+		retval_off = stack_size;
-+	}
-+
-+	/* room of trampoline frame to store args */
-+	nargs = m->nr_args;
-+	stack_size += nargs * 8;
-+	args_off = stack_size;
-+	/* room of trampoline frame to store args number */
-+	stack_size += 8;
-+	nargs_off = stack_size;
-+
-+	/* room of trampoline frame to store ip address */
-+	if (flags & BPF_TRAMP_F_IP_ARG) {
-+		stack_size += 8;
-+		ip_off = stack_size;
-+	}
-+
-+	/* room of trampoline frame to store struct bpf_tramp_run_ctx */
-+	stack_size += round_up(sizeof(struct bpf_tramp_run_ctx), 8);
-+	run_ctx_off = stack_size;
-+
-+	stack_size += 8;
-+	sreg_off = stack_size;
-+
-+	stack_size = round_up(stack_size, 16);
-+
-+	/* For the trampoline called from function entry */
-+	/* RA and FP for parent function*/
-+	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -16);
-+	emit_insn(ctx, std, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, 8);
-+	emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0);
-+	emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 16);
-+
-+	/* RA and FP for traced function*/
-+	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -stack_size);
-+	emit_insn(ctx, std, LOONGARCH_GPR_T0, LOONGARCH_GPR_SP, stack_size - 8);
-+	emit_insn(ctx, std, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
-+	emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size);
-+
-+	/* callee saved register S1 to pass start time */
-+	emit_insn(ctx, std, LOONGARCH_GPR_S1, LOONGARCH_GPR_FP, -sreg_off);
-+
-+	/* store ip address of the traced function */
-+	if (flags & BPF_TRAMP_F_IP_ARG) {
-+		move_imm(ctx, LOONGARCH_GPR_T1, (const s64)func_addr, false);
-+		emit_insn(ctx, std, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP, -ip_off);
-+	}
-+
-+	/* store nargs number*/
-+	move_imm(ctx, LOONGARCH_GPR_T1, nargs, false);
-+	emit_insn(ctx, std, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP, -nargs_off);
-+
-+	store_args(ctx, nargs, args_off);
-+
-+	/* To traced function */
-+	orig_call += LOONGARCH_FENTRY_NBYTES;
-+	if (flags & BPF_TRAMP_F_CALL_ORIG) {
-+		move_imm(ctx, LOONGARCH_GPR_A0, (const s64)im, false);
-+		ret = emit_call(ctx, (const u64)__bpf_tramp_enter);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	for (i = 0; i < fentry->nr_links; i++) {
-+		ret = invoke_bpf_prog(ctx, fentry->links[i], args_off, retval_off,
-+			run_ctx_off, flags & BPF_TRAMP_F_RET_FENTRY_RET);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (fmod_ret->nr_links) {
-+		branches  = kcalloc(fmod_ret->nr_links, sizeof(u32 *), GFP_KERNEL);
-+		if (!branches)
-+			return -ENOMEM;
-+
-+		invoke_bpf_mod_ret(ctx, fmod_ret, args_off, retval_off,
-+			run_ctx_off, branches);
-+	}
-+
-+	if (flags & BPF_TRAMP_F_CALL_ORIG) {
-+		restore_args(ctx, m->nr_args, args_off);
-+		ret = emit_call(ctx, (const u64)orig_call);
-+		if (ret)
-+			goto out;
-+		emit_insn(ctx, std, LOONGARCH_GPR_A0, LOONGARCH_GPR_FP, -retval_off);
-+		emit_insn(ctx, std, regmap[BPF_REG_0], LOONGARCH_GPR_FP, -(retval_off - 8));
-+		im->ip_after_call = ctx->ro_image + ctx->idx;
-+		/* Reserve space for the move_imm + jirl instruction */
-+		emit_insn(ctx, NOP);
-+		emit_insn(ctx, NOP);
-+		emit_insn(ctx, NOP);
-+		emit_insn(ctx, NOP);
-+		emit_insn(ctx, NOP);
-+	}
-+
-+	for (i = 0; ctx->image && i < fmod_ret->nr_links; i++) {
-+		int offset = (u32 *)&ctx->image[ctx->idx] - branches[i];
-+		*branches[i] = larch_insn_gen_bne(LOONGARCH_GPR_T1, LOONGARCH_GPR_ZERO, offset);
-+	}
-+
-+	for (i = 0; i < fexit->nr_links; i++) {
-+		ret = invoke_bpf_prog(ctx, fexit->links[i], args_off, retval_off,
-+				run_ctx_off, false);
-+		if (ret)
-+			goto out;
-+	}
-+
-+	if (flags & BPF_TRAMP_F_CALL_ORIG) {
-+		im->ip_epilogue = ctx->ro_image + ctx->idx;
-+		move_imm(ctx, LOONGARCH_GPR_A0, (const s64)im, false);
-+		ret = emit_call(ctx, (const u64)__bpf_tramp_exit);
-+		if (ret)
-+			goto out;
-+	}
-+
-+	if (flags & BPF_TRAMP_F_RESTORE_REGS)
-+		restore_args(ctx, m->nr_args, args_off);
-+
-+	if (save_ret) {
-+		emit_insn(ctx, ldd, LOONGARCH_GPR_A0, LOONGARCH_GPR_FP, -retval_off);
-+		emit_insn(ctx, ldd, regmap[BPF_REG_0], LOONGARCH_GPR_FP, -(retval_off - 8));
-+	}
-+
-+	emit_insn(ctx, ldd, LOONGARCH_GPR_S1, LOONGARCH_GPR_FP, -sreg_off);
-+
-+	/* trampoline called from function entry */
-+	emit_insn(ctx, ldd, LOONGARCH_GPR_T0, LOONGARCH_GPR_SP, stack_size - 8);
-+	emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_size - 16);
-+	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, stack_size);
-+
-+	emit_insn(ctx, ldd, LOONGARCH_GPR_RA, LOONGARCH_GPR_SP, 8);
-+	emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0);
-+	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, 16);
-+
-+	if (flags & BPF_TRAMP_F_SKIP_FRAME)
-+		/* return to parent function */
-+		emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_RA, 0);
-+	else
-+		/* return to traced function */
-+		emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_T0, 0);
-+
-+	ret = ctx->idx;
-+out:
-+	kfree(branches);
-+
-+	return ret;
++	return true;
 +}
 +
-+int arch_prepare_bpf_trampoline(struct bpf_tramp_image *im, void *ro_image,
-+				void *ro_image_end, const struct btf_func_model *m,
-+				u32 flags, struct bpf_tramp_links *tlinks,
-+				void *func_addr)
++static void ast2600_i3c_gen_tbits_in(struct dw_i3c_master *dw)
 +{
-+	int ret;
-+	void *image, *tmp;
-+	u32 size = ro_image_end - ro_image;
-+
-+	image = kvmalloc(size, GFP_KERNEL);
-+	if (!image)
-+		return -ENOMEM;
-+
-+	struct jit_ctx ctx = {
-+		.image = (union loongarch_instruction *)image,
-+		.ro_image = (union loongarch_instruction *)ro_image,
-+		.idx = 0,
-+	};
-+
-+	jit_fill_hole(image, (unsigned int)(ro_image_end - ro_image));
-+	ret = __arch_prepare_bpf_trampoline(&ctx, im, m, tlinks, func_addr, flags);
-+	if (ret > 0 && validate_code(&ctx) < 0) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	tmp = bpf_arch_text_copy(ro_image, image, size);
-+	if (IS_ERR(tmp)) {
-+		ret = PTR_ERR(tmp);
-+		goto out;
-+	}
-+
-+	bpf_flush_icache(ro_image, ro_image_end);
-+out:
-+	kvfree(image);
-+	return ret < 0 ? ret : size;
-+}
-+
-+int arch_bpf_trampoline_size(const struct btf_func_model *m, u32 flags,
-+			     struct bpf_tramp_links *tlinks, void *func_addr)
-+{
-+	struct bpf_tramp_image im;
-+	struct jit_ctx ctx;
++	struct ast2600_i3c *i3c = to_ast2600_i3c(dw);
++	bool is_idle;
 +	int ret;
 +
-+	ctx.image = NULL;
-+	ctx.idx = 0;
++	regmap_write_bits(i3c->global_regs, AST2600_I3CG_REG1(i3c->global_idx),
++			  AST2600_I3CG_REG1_SDA_IN_SW_MODE_VAL,
++			  AST2600_I3CG_REG1_SDA_IN_SW_MODE_VAL);
++	regmap_write_bits(i3c->global_regs, AST2600_I3CG_REG1(i3c->global_idx),
++			  AST2600_I3CG_REG1_SDA_IN_SW_MODE_EN,
++			  AST2600_I3CG_REG1_SDA_IN_SW_MODE_EN);
 +
-+	ret = __arch_prepare_bpf_trampoline(&ctx, &im, m, tlinks, func_addr, flags);
-+	return ret < 0 ? ret : ret * LOONGARCH_INSN_SIZE;
++	regmap_write_bits(i3c->global_regs, AST2600_I3CG_REG1(i3c->global_idx),
++			  AST2600_I3CG_REG1_SDA_IN_SW_MODE_VAL, 0);
++	ret = readx_poll_timeout_atomic(ast2600_i3c_fsm_exit_serv_ibi, dw,
++					is_idle, is_idle, 0, 2000000);
++	regmap_write_bits(i3c->global_regs, AST2600_I3CG_REG1(i3c->global_idx),
++			  AST2600_I3CG_REG1_SDA_IN_SW_MODE_EN, 0);
++	if (ret)
++		dev_err(&dw->base.dev,
++			"Failed to exit the I3C fsm from %lx(MASTER_SERV_IBI): %d",
++			FIELD_GET(CM_TFR_STS, readl(dw->regs + PRESENT_STATE)),
++			ret);
 +}
-diff --git a/arch/loongarch/net/bpf_jit.h b/arch/loongarch/net/bpf_jit.h
-index 68586338e..51a12b809 100644
---- a/arch/loongarch/net/bpf_jit.h
-+++ b/arch/loongarch/net/bpf_jit.h
-@@ -18,6 +18,7 @@ struct jit_ctx {
- 	u32 *offset;
- 	int num_exentries;
- 	union loongarch_instruction *image;
-+	union loongarch_instruction *ro_image;
- 	u32 stack_size;
++
+ static const struct dw_i3c_platform_ops ast2600_i3c_ops = {
+ 	.init = ast2600_i3c_init,
+ 	.set_dat_ibi = ast2600_i3c_set_dat_ibi,
++	.gen_tbits_in = ast2600_i3c_gen_tbits_in,
  };
  
-@@ -303,3 +304,8 @@ static inline int emit_tailcall_jmp(struct jit_ctx *ctx, u8 cond, enum loongarch
+ static int ast2600_i3c_probe(struct platform_device *pdev)
+diff --git a/drivers/i3c/master/dw-i3c-master.c b/drivers/i3c/master/dw-i3c-master.c
+index 611c22b72c15..380e6a29c7b8 100644
+--- a/drivers/i3c/master/dw-i3c-master.c
++++ b/drivers/i3c/master/dw-i3c-master.c
+@@ -158,6 +158,14 @@
+ #define DATA_BUFFER_STATUS_LEVEL_TX(x)	((x) & GENMASK(7, 0))
  
- 	return -EINVAL;
+ #define PRESENT_STATE			0x54
++#define   CM_TFR_ST_STS			GENMASK(21, 16)
++#define     CM_TFR_ST_STS_HALT		0x13
++#define   CM_TFR_STS			GENMASK(13, 8)
++#define     CM_TFR_STS_MASTER_SERV_IBI	0xe
++#define     CM_TFR_STS_MASTER_HALT	0xf
++#define     CM_TFR_STS_SLAVE_HALT	0x6
++#define   SDA_LINE_SIGNAL_LEVEL		BIT(1)
++#define   SCL_LINE_SIGNAL_LEVEL		BIT(0)
+ #define CCC_DEVICE_STATUS		0x58
+ #define DEVICE_ADDR_TABLE_POINTER	0x5c
+ #define DEVICE_ADDR_TABLE_DEPTH(x)	(((x) & GENMASK(31, 16)) >> 16)
+@@ -1393,6 +1401,8 @@ static void dw_i3c_master_handle_ibi_sir(struct dw_i3c_master *master,
+ 	unsigned long flags;
+ 	u8 addr, len;
+ 	int idx;
++	bool terminate_ibi = false;
++	u32 state;
+ 
+ 	addr = IBI_QUEUE_IBI_ADDR(status);
+ 	len = IBI_QUEUE_STATUS_DATA_LEN(status);
+@@ -1435,6 +1445,7 @@ static void dw_i3c_master_handle_ibi_sir(struct dw_i3c_master *master,
+ 		dev_dbg_ratelimited(&master->base.dev,
+ 				    "IBI payload len %d greater than max %d\n",
+ 				    len, dev->ibi->max_payload_len);
++		terminate_ibi = true;
+ 		goto err_drain;
+ 	}
+ 
+@@ -1450,6 +1461,9 @@ static void dw_i3c_master_handle_ibi_sir(struct dw_i3c_master *master,
+ 
+ err_drain:
+ 	dw_i3c_master_drain_ibi_queue(master, len);
++	state = FIELD_GET(CM_TFR_STS, readl(master->regs + PRESENT_STATE));
++	if (terminate_ibi && state == CM_TFR_STS_MASTER_SERV_IBI)
++		master->platform_ops->gen_tbits_in(master);
+ 
+ 	spin_unlock_irqrestore(&master->devs_lock, flags);
  }
-+
-+static inline void bpf_flush_icache(void *start, void *end)
-+{
-+	flush_icache_range((unsigned long)start, (unsigned long)end);
-+}
+diff --git a/drivers/i3c/master/dw-i3c-master.h b/drivers/i3c/master/dw-i3c-master.h
+index c5cb695c16ab..1da485e42e74 100644
+--- a/drivers/i3c/master/dw-i3c-master.h
++++ b/drivers/i3c/master/dw-i3c-master.h
+@@ -89,6 +89,15 @@ struct dw_i3c_platform_ops {
+ 	 */
+ 	void (*set_dat_ibi)(struct dw_i3c_master *i3c,
+ 			    struct i3c_dev_desc *dev, bool enable, u32 *reg);
++	/*
++	 * Gerenating the fake t-bit (SDA low) to stop the IBI storm when the received
++	 * data length of IBI is larger than the maximum IBI payload.
++	 *
++	 * When an IBI is received and SDA remains high after the address phase, the i3c
++	 * controller may enter an infinite loop while trying to read data until the t-bit
++	 * appears
++	 */
++	void (*gen_tbits_in)(struct dw_i3c_master *i3c);
+ };
+ 
+ extern int dw_i3c_common_probe(struct dw_i3c_master *master,
 -- 
 2.25.1
 
