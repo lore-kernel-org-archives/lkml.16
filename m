@@ -1,145 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5B7428850C;
-	Wed, 11 Jun 2025 10:44:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAEFB277037
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 10:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749638685; cv=none; b=PJ6zPTYu0W/9URrUqr43s9etp8MzB4mT3pQ52iJuNys8BuVPWwKATwrw9qhMhm9xPBVo9QIJhqODolTxriHLPLflO1QYAWJYDsFc34XcxV8i5hU5Pfn0hHv6IQrCbUGsc+iqzwg9T8cnrIQVBdt8L05Gwpsho5rjv2spmL2FH0A=
+	t=1749638696; cv=none; b=n6sGYYdGUTRR556PmcVuByLgGwE+t3qsoSKz7494qiHhMAEoe1ePbRf/Cq7H9LmV5+scOyniweVKxXI45uL9XlDYUEocewwIgNk8NRhIB8qRHKLlo+R2huQNvvhY3LEnSUI98EiwtsB/K/IaEupWaoypC1eRsuscfxNpKHtH+Wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749638685; c=relaxed/simple;
-	bh=f5qbQ8Fc4E+01P0Dh1oZ2Hoqqa0z07Fu0gRmiBSanlk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GcV0SzDpD97FWPGrVBq8R97QPoh2GgaIKfWdT0x0AzD+YUoVxpjWozIgR3gdDxo2hcN7yvQZggLYeULksOkKVLM63c/bnVfl/3DSWqa9mBpuVrOr0QgXw85od3Fr8mU8+AAuyVY2MMf+Ncexee2jBwKLU/sId+z5/HV9Qd5Q9vU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sa4DIAu9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749638696; c=relaxed/simple;
+	bh=AkmlIkiSTFxMXdM17LcikxgoK7JYJCTqbrGwWgMtQVk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G8gjsUYxAIlz9/2YsbP251XMZXyIAaZxazyp8b14kf7uUSKyHAVnqBs2bCXZKYe393AV9fu9h/JESLQEeKLpPpEvOfBK6zvh1xta2UjqEeMG5imgQW8c96uteYTdYEddEjXUq2qRzhkDJhQKMwFdjHTzBU5KUJVhI+ZWZ3Wa3/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=TyRMti4M; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sa4DIAu9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAC3AC4CEF2;
-	Wed, 11 Jun 2025 10:44:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749638685;
-	bh=f5qbQ8Fc4E+01P0Dh1oZ2Hoqqa0z07Fu0gRmiBSanlk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sa4DIAu9Vvf1WurQjI0XhYcEIcBkDlZ3nyZ23fCFbbba0Mh1Iq6uywKVi5H9/NcoI
-	 a2Pmjva05ZVRM38aqIYUO9X+GUQW/N69gi1nSvWcd+XEowP3bATpkkt5LqlKNWZRc0
-	 OKI+Yi5uJkgMxg9FuyH6L9ebGHnH38BHj/XPVokzGZ0DgVDTzV1Nkh77hEmEeYlSXT
-	 6sDR7tP7fyEj3PcrdnTsZEVRcpSImF4PRJiJu1CkAmaANzBfNF2t29cPRKNZtBhC74
-	 FeP68e4Jw3uhhr3f2tBxpldJKsvAfnlEKss+6xoyBrDxOJ7T+avAJChry0yU6mnC0A
-	 B6OAlJsAeR/HA==
-From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: tglx@linutronix.de,
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Amit Kucheria <amitk@kernel.org>,
-	Thara Gopinath <thara.gopinath@gmail.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	linux-arm-msm@vger.kernel.org,
-	linux-tegra@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH] thermal: Use dev_fwnode()
-Date: Wed, 11 Jun 2025 12:43:48 +0200
-Message-ID: <20250611104348.192092-20-jirislaby@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250611104348.192092-1-jirislaby@kernel.org>
-References: <20250611104348.192092-1-jirislaby@kernel.org>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="TyRMti4M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=Akml
+	IkiSTFxMXdM17LcikxgoK7JYJCTqbrGwWgMtQVk=; b=TyRMti4MuR4qhkjd7UZW
+	0DENHjUkcHAvMqIM6FyUllfddgTgEfm+wEeqGnS8gjkHQmfLNSSXzrx4lcE7BLs2
+	Wnr/TWU5JTEWO+H1FmwlzRwhh/NLqpTabhjBrCxgZ1NHKq/ASc8GDCIDiHnL99Wm
+	8E/7WspgEQimgg+V6fFjh9xYGPsjyrkGPQnOESQz/3UijWWwQFEITFZO8nbQvKLV
+	SwezLdFuWudN4OO2noZFlGKHlfh47G17sSSfgmPukMra3GVmCE2Zt9mGdlENHaMc
+	wwxz0VBVbMBu+2kvwln2AbCcy6qYxLCBYlNVseUDQo2GpUFR1ilGRRkIrpT7cGVO
+	kQ==
+Received: (qmail 3208528 invoked from network); 11 Jun 2025 12:44:52 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 11 Jun 2025 12:44:52 +0200
+X-UD-Smtp-Session: l3s3148p1@6FW+gEk3go4ujnuC
+Date: Wed, 11 Jun 2025 12:44:52 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 0/5] pinctrl: renesas: use new GPIO line value setter
+ callbacks
+Message-ID: <aEleJFgQxLfMpOW9@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250611-gpiochip-set-rv-pinctrl-renesas-v1-0-ad169a794ef0@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="m9HLKi0jyL6BPHJD"
+Content-Disposition: inline
+In-Reply-To: <20250611-gpiochip-set-rv-pinctrl-renesas-v1-0-ad169a794ef0@linaro.org>
 
-irq_domain_create_simple() takes fwnode as the first argument. It can be
-extracted from the struct device using dev_fwnode() helper instead of
-using of_node with of_fwnode_handle().
 
-So use the dev_fwnode() helper.
+--m9HLKi0jyL6BPHJD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-Cc: Amit Kucheria <amitk@kernel.org>
-Cc: Thara Gopinath <thara.gopinath@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: Lukasz Luba <lukasz.luba@arm.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Jonathan Hunter <jonathanh@nvidia.com>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: linux-tegra@vger.kernel.org
----
-Cc: linux-pm@vger.kernel.org
----
- drivers/thermal/qcom/lmh.c       |  3 +--
- drivers/thermal/tegra/soctherm.c | 13 +++++--------
- 2 files changed, 6 insertions(+), 10 deletions(-)
+On Wed, Jun 11, 2025 at 09:27:51AM +0200, Bartosz Golaszewski wrote:
+> Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
+> values") added new line setter callbacks to struct gpio_chip. They allow
+> to indicate failures to callers. We're in the process of converting all
+> GPIO controllers to using them before removing the old ones. This series
+> converts all GPIO chips in renesas pin control drivers.
 
-diff --git a/drivers/thermal/qcom/lmh.c b/drivers/thermal/qcom/lmh.c
-index 991d1573983d..75eaa9a68ab8 100644
---- a/drivers/thermal/qcom/lmh.c
-+++ b/drivers/thermal/qcom/lmh.c
-@@ -209,8 +209,7 @@ static int lmh_probe(struct platform_device *pdev)
- 	}
- 
- 	lmh_data->irq = platform_get_irq(pdev, 0);
--	lmh_data->domain = irq_domain_create_linear(of_fwnode_handle(np), 1, &lmh_irq_ops,
--						    lmh_data);
-+	lmh_data->domain = irq_domain_create_linear(dev_fwnode(dev), 1, &lmh_irq_ops, lmh_data);
- 	if (!lmh_data->domain) {
- 		dev_err(dev, "Error adding irq_domain\n");
- 		return -EINVAL;
-diff --git a/drivers/thermal/tegra/soctherm.c b/drivers/thermal/tegra/soctherm.c
-index 926f1052e6de..53a5c649f4b1 100644
---- a/drivers/thermal/tegra/soctherm.c
-+++ b/drivers/thermal/tegra/soctherm.c
-@@ -1206,7 +1206,7 @@ static const struct irq_domain_ops soctherm_oc_domain_ops = {
- /**
-  * soctherm_oc_int_init() - Initial enabling of the over
-  * current interrupts
-- * @np:	The devicetree node for soctherm
-+ * @fwnode:	The devicetree node for soctherm
-  * @num_irqs:	The number of new interrupt requests
-  *
-  * Sets the over current interrupt request chip data
-@@ -1215,7 +1215,7 @@ static const struct irq_domain_ops soctherm_oc_domain_ops = {
-  * -ENOMEM (out of memory), or irq_base if the function failed to
-  * allocate the irqs
-  */
--static int soctherm_oc_int_init(struct device_node *np, int num_irqs)
-+static int soctherm_oc_int_init(struct fwnode_handle *fwnode, int num_irqs)
- {
- 	if (!num_irqs) {
- 		pr_info("%s(): OC interrupts are not enabled\n", __func__);
-@@ -1234,10 +1234,8 @@ static int soctherm_oc_int_init(struct device_node *np, int num_irqs)
- 	soc_irq_cdata.irq_chip.irq_set_type = soctherm_oc_irq_set_type;
- 	soc_irq_cdata.irq_chip.irq_set_wake = NULL;
- 
--	soc_irq_cdata.domain = irq_domain_create_linear(of_fwnode_handle(np), num_irqs,
--						     &soctherm_oc_domain_ops,
--						     &soc_irq_cdata);
--
-+	soc_irq_cdata.domain = irq_domain_create_linear(fwnode, num_irqs, &soctherm_oc_domain_ops,
-+							&soc_irq_cdata);
- 	if (!soc_irq_cdata.domain) {
- 		pr_err("%s: Failed to create IRQ domain\n", __func__);
- 		return -ENOMEM;
-@@ -1968,10 +1966,9 @@ static void tegra_soctherm_throttle(struct device *dev)
- static int soctherm_interrupts_init(struct platform_device *pdev,
- 				    struct tegra_soctherm *tegra)
- {
--	struct device_node *np = pdev->dev.of_node;
- 	int ret;
- 
--	ret = soctherm_oc_int_init(np, TEGRA_SOC_OC_IRQ_MAX);
-+	ret = soctherm_oc_int_init(dev_fwnode(&pdev->dev), TEGRA_SOC_OC_IRQ_MAX);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "soctherm_oc_int_init failed\n");
- 		return ret;
--- 
-2.49.0
+Looks fine, builds fine. Thank you!
 
+
+--m9HLKi0jyL6BPHJD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmhJXiMACgkQFA3kzBSg
+KbarSA/+N40q5pc6ncbfya5l4DCj7mIJ5yMh6XMpJiyE7Rcw/NtxFYZWGAUzVkJY
+0D7aoAyp5k2i9OxMoc9ZOdW585nst3fH1rKp7gzrkgp1lr9+kgetw034sMx6WgTu
+jJ1VsmfvdcXmkhngWYpc1Am52K4WkJkkW4CbkyEx8vealnOwrrDJpXscaoIzEFCN
+OZw9xH1Rux7+/yPYySgwAzCFySSj3tDOkN1fLmGpTE/XHqzEHtKduqwWKNu975E+
+4o6AboShUy5NjzvcKq0038vFKvDpLFqSb/sgguLNpCr32Qzg5kEleQjkZI7ocYkX
+i2pLjh4XDyfc0LFt8p7zPQYZnmWddRsxEXnWmUt0aseSXfPx1iwLMNBjC//qrpzG
+QNn4oA9GD8IoCOiSMY/AMp0z5IX4drls0rL8xoCbdvpSt9mep36JZzYXKXcUxsH8
+fBYZDXvHhgVUylj2eMLdCShDU3/kHKSfVYKVFVJQj2PGaEjEbFde5dWPWTgPFVwj
+/ZED2wDSMoDBXmDGBALsern3pM8jtIN0Nz88PhnSqnv05WEb2uv5C/N9CWr1Djob
+p/B+Pnsy4l1z9Ldqrx6mWMnMsuYawcARYZsdZ7mL0m9GB2PNGqS8sCybMFmjK6cw
+I0xtwVZdqEoVQ+KYQfEMuLrNS3AExryMkV1U/8O/TPwqNULXou4=
+=1QtY
+-----END PGP SIGNATURE-----
+
+--m9HLKi0jyL6BPHJD--
