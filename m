@@ -1,123 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA8EB5D8F0;
-	Wed, 11 Jun 2025 17:03:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060E81A317A;
+	Wed, 11 Jun 2025 17:05:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749661383; cv=none; b=T0MFSWnkI412JSXiE4B4oMu8f8ChZvVjZxhbzkXbiZ7oQaGbeoKTBtCVR6+Fzf0a/vE3++yHT0n6U0I5NHuznLSts3lOOW2+ZiPCyRP6X3Pxh4H8bA+V+Ya7t/3h35AFUeuocc8jaO32U68DMAoRPvzO4elkz+/jnRmApdCxbnQ=
+	t=1749661520; cv=none; b=iJ2sKwKzCPK3zVI+uv+MX5XIvuujGbHf4FwxMnkS65P8fXnbVuGrFzGGySgtW9wZHIXJrLgyzJjSV+fKfBwbOqPvtjWkXXLGFfsCL+AmE6XzPZyo2ybEQFTZPTCS9K0MnI7rmrsem7YKZf3nApZPuOmH7yuKyQ8Ex0PJqcNCz2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749661383; c=relaxed/simple;
-	bh=G0KSz/s71VLYdbW5iDsJv1tB/CxVMgpLlLEVm+oxZo0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MtkbUvlNNLWAZ1KE5ANhbPnSsP2gcpupxLD0eIYHWg1Es041L9Ddy/HWPXZDbL+rpesq7Bx2a9z+53Z/knpT4Dj6eC8RPxebgHj7dl3CugCd3BWnBMrQPQAkYWE/+yfiGwcrRoO1SOCec5vpTU7GampdR7pMhAbt7OxUuuxeGtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G68faQTa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749661520; c=relaxed/simple;
+	bh=wE17FUWoXTtsVVyfUweavOVY7qJotag8pGhX4VoqGAc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=A3YgMz3AXRNikL0LEmCGXSc86ty1wMLkoZw1uhoo06KAK5gBezmwlvRrvuL+7YPaypHb4qs4Ge5SHQ3bIF5nXaCK2+ujjyBuZUclLC1nAcKcpnSulZ6I6N46/UDElEn/9y8r8Qi7S2WcH7dFg7GKYy6/j4wYl8kFepgR8r2+a/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=mbDVAX+V; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G68faQTa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20889C4CEEA;
-	Wed, 11 Jun 2025 17:02:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749661383;
-	bh=G0KSz/s71VLYdbW5iDsJv1tB/CxVMgpLlLEVm+oxZo0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=G68faQTaAJPR3mXFzLQ1rT2HAVnsgMdkgBjJAyyMW6lpqhsJtie4+kEw4sgvFvfux
-	 qjeUT8gUsuAjUAKc+HvlqbKAtSZMjeb2dyUSHhHHkTeNUCAuPOSQsRp6LRZDqH5w0O
-	 7Qd1D861TWmBtQe+1KzVf10/L3/PSFpg2a0IR3Zl1ywgNXmQ/b1Q4MdIHRaoNq1niN
-	 Jn62Rhi8zaNj7WzJtbRk9tIrtSqGEdifX1nkpgqyoXKvvdRmIdMx+sPf38P7uRgHFM
-	 wCJyp86dutK8TZAWSDFSvBjqq2ASiHLPyZkGoAboc+61a/PjpPoPcjeMPOoK6MJA3l
-	 hGnLI0eL98nHw==
-Date: Wed, 11 Jun 2025 18:02:52 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Jorge Marques <jorge.marques@analog.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, David Lechner <dlechner@baylibre.com>,
- Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko
- <andy@kernel.org>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?=
- <ukleinek@kernel.org>, <linux-iio@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-doc@vger.kernel.org>, <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH v3 1/8] Documentation: ABI: add oversampling frequency
- in sysfs-bus-iio
-Message-ID: <20250611180252.76f1fe7f@jic23-huawei>
-In-Reply-To: <20250610-iio-driver-ad4052-v3-1-cf1e44c516d4@analog.com>
-References: <20250610-iio-driver-ad4052-v3-0-cf1e44c516d4@analog.com>
-	<20250610-iio-driver-ad4052-v3-1-cf1e44c516d4@analog.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="mbDVAX+V"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 026F941ECE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1749661518; bh=+VWSQ4ODTAC6Kk4O/+fTY+FOsVbZtqm+QbfgKKPfzmk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=mbDVAX+V3HgxcvBRNIwMTEiudyZD2XhYKkRzl4Zb0feO5gDYLrwd4nbmifxH2Cxyx
+	 OASYX578aLc6TRsEQHci8ctwHo1ErIrloLBzzTbE30uVtcoPrFaTsovFs+RFvMUpGA
+	 zcrhDkA589fuXR55SGMC62Fb9huohqfhmc8NLhu2Ctol6+wJ8wCec3kNBzicRjWa5S
+	 lKOdW4lzQTzf5YfjV7MmUgII/5RbSiWeY13kA2fryrdyIc7wp3GigEOCsNujhYa9J6
+	 qcPdQuq4sl6Wah0/qi1LdJc+H3mPMSmwTBlOkN3iC3a6mJsp4bCno1Eox9vyGl17/Q
+	 Smc9Pl+MBn6Fw==
+Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 026F941ECE;
+	Wed, 11 Jun 2025 17:05:17 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: "Darrick J. Wong" <djwong@kernel.org>, Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux
+ Documentation <linux-doc@vger.kernel.org>, Linux ext4
+ <linux-ext4@vger.kernel.org>, Theodore Ts'o <tytso@mit.edu>, Andreas
+ Dilger <adilger.kernel@dilger.ca>, "Ritesh Harjani (IBM)"
+ <ritesh.list@gmail.com>
+Subject: Re: [PATCH] Documentation: ext4: atomic_writes: Remove
+ cross-reference labels
+In-Reply-To: <20250611164800.GC6134@frogsfrogsfrogs>
+References: <20250610091200.54075-2-bagasdotme@gmail.com>
+ <20250611164800.GC6134@frogsfrogsfrogs>
+Date: Wed, 11 Jun 2025 11:05:17 -0600
+Message-ID: <87ikl21a5u.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On Tue, 10 Jun 2025 09:34:34 +0200
-Jorge Marques <jorge.marques@analog.com> wrote:
+"Darrick J. Wong" <djwong@kernel.org> writes:
 
-Trivial: 
-In the patch title use the actual file name of the new ABI.
+> On Tue, Jun 10, 2025 at 04:11:59PM +0700, Bagas Sanjaya wrote:
+>> Sphinx reports htmldocs warnings on ext4 atomic block writes docs:
+>> 
+>> Documentation/filesystems/ext4/atomic_writes.rst:5: WARNING: duplicate label atomic_writes, other instance in Documentation/filesystems/ext4/atomic_writes.rst
+>> Documentation/filesystems/ext4/atomic_writes.rst:207: WARNING: duplicate label atomic_write_bdev_support, other instance in Documentation/filesystems/ext4/atomic_writes.rst
+>> 
+>> These warnings reference duplicated cross-reference labels to themselves in
+>> the same doc, which are because atomic_writes.rst is transcluded in
+>> overview.rst via include:: directive, thus the culprit docs get processed
+>> twice.
+>
+> <confused> How is that possible?  atomic_writes.rst is only "include::"d
+> once in overview.rst.  Is the file implicitly included through some
+> other means?
 
-add oversampling_frequency in sysfs-bus-iio
+Sphinx wants to snarf up every .rst file it sees, regardless of whether
+it is explicitly made part of the document tree.  So it will pick up
+atomic_writes.rst separately from the include.
 
+This could be "fixed" by removing the .rst extension from the included
+file.  But, since there is no use of the atomic_writes label to begin
+with, it's better to just take it out.  The other fix, removing a cross
+reference, is not entirely ideal, but there is little text between the
+label and the reference.
 
-> Some devices have an internal clock used to space out the conversion
-> trigger for the oversampling filter, Consider an ADC with conversion and
-> data ready pins topology:
-> 
->   Sampling trigger |       |       |       |       |
->   ADC conversion   ++++    ++++    ++++    ++++    ++++
->   ADC data ready      *       *       *       *       *
-> 
-> With the oversampling frequency, conversions are spaced:
-> 
->   Sampling trigger |       |       |       |       |
->   ADC conversion   + + + + + + + + + + + + + + + + + + + +
->   ADC data ready         *       *       *       *       *
-> 
-> In some devices and ranges, this internal clock can be used to evenly
-> space the conversions between the sampling edge. In other devices the
-> oversampling frequency is fixed or is computed based on the sampling
-> frequency parameter, and the parameter is read only.
-> 
-> Signed-off-by: Jorge Marques <jorge.marques@analog.com>
-> ---
->  Documentation/ABI/testing/sysfs-bus-iio | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-> index ef52c427a015cf47bb9847782e13afbee01e9f31..e60367255be89a9acc827ec1a749b729735f60e6 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-iio
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio
-> @@ -139,6 +139,23 @@ Contact:	linux-iio@vger.kernel.org
->  Description:
->  		Hardware dependent values supported by the oversampling filter.
->  
-> +What:		/sys/bus/iio/devices/iio:deviceX/oversampling_frequency
-> +KernelVersion:	6.17
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Some devices have internal clocks for oversampling.
-
-Wrapping on each sentence is unusual. David pointed this out in v2.
-Wrap at 80 chars as a single paragraph.
-
-> +		Sets the resulting frequency in Hz to trigger a conversion used by
-> +		the oversampling filter.
-> +		If the device has a fixed internal clock or is computed based on
-> +		the sampling frequency parameter, the parameter is read only.
-> +
-> +What:		/sys/bus/iio/devices/iio:deviceX/oversampling_frequency_available
-> +KernelVersion:	6.17
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Hardware dependent values supported by the oversampling
-> +		frequency.
-> +
->  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_raw
->  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_supply_raw
->  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_i_raw
-> 
-
+jon
