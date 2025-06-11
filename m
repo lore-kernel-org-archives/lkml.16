@@ -1,114 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EBD622CBD0;
-	Wed, 11 Jun 2025 12:25:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EEE3280300;
+	Wed, 11 Jun 2025 12:25:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749644729; cv=none; b=nLdGnbBYjS3Le4mwN8+xzNK/hxINtTEv7Asm5qfJFWesissyCzqbmbLI2Unk+dgJbTy+n1thE+XeYqwU84oc2eAT6EHratL/TuwC/JLVPt2CLfKXSAH1ZvnyKftm/HrU4dGNjDjFP5790kAxfDt7YMNtFIuKGNappwsfPtcspbg=
+	t=1749644733; cv=none; b=E8EFdZVD+Q6xuEuUubxsSVqhcB72ljvN/t4bI3iDGJdnIk1xfJie3t2R86TB9Vq2veiUOesQwWtLJ2B8tgC2QMw/fjhaV+WnVQZarXznhBpE9HHo6LyHURC30BKviGFSgLWKERDYQAi6NirmCUyw8PCf6ZGmZzJsti7hfK4K/E4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749644729; c=relaxed/simple;
-	bh=ya87dO4a/HiSj6eipOEqSoaBIE/2f6SuK5LxdImo3jc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F2WS2wisrytsvy43NRzHDPLEGPMLxKZ5H2suW5Nus66xgz1C/juUq1GV3wFkuIsGwMCucKqIMhOa7oidcrTQbT/ERLY9PsD9hBhnjc0tM2GFP3HEKZAW6gbDP2QMwPYl7bYqe9HCrfCRJqZcybaeHthvaEVfYKhFwtyAhGCry5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cXboh0x1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749644733; c=relaxed/simple;
+	bh=mq5fQh6TxmI6S2ebT8lugj5Q9NravY0okjLw4RPOEH0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=K95staXafmM/IMl3xcNgqGCjEfGIjjGNZ5bBj2QtqKTFth5GTzieF6dwaEwy3dyhUh8RIixmycyzf3hLZD8jZU+dscWdE23p36Ap3vqIpMOHLAR6vEsOf8gl4+pWJJ9sIsrZ3g14/yzYtrf/sx53t5EOrHCsl1IQlIsz6jBrWCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gYDy+ZM8; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cXboh0x1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3A59C4CEEE;
-	Wed, 11 Jun 2025 12:25:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749644728;
-	bh=ya87dO4a/HiSj6eipOEqSoaBIE/2f6SuK5LxdImo3jc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cXboh0x1SuHRoR6mxmMtneC+3hObxIcavh8WW9PHLDCq/s5tnf0i7VSp4sZ9j/mE7
-	 dicI6iGqpPOZDYitJxifSE2GxxZWOs3XB7E+kdQiInXFW+dfvEwlXEds7jJEd4YcpS
-	 6etZhw9baEpBID3euUjcKhfIBaiPv10chFZiJfyeP3FvMh4EQ7OvjA4pqvtCqzREjy
-	 pxJvt5cZwOB4k/4pKyS6Rchm8HnIY/NPWKYBQnkh/wzc2p8nOh+4erSi17g185e/SG
-	 JhJVX0KtnsCI7DP4Wf/lX5yhCwX9vebm+ywwhzZ2jhBlHJ5avqPd1bYN/PBG/hujqd
-	 xAca3Yjrzw/uw==
-Date: Wed, 11 Jun 2025 13:25:23 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: catalin.marinas@arm.com, pcc@google.com, will@kernel.org,
-	anshuman.khandual@arm.com, joey.gouly@arm.com,
-	yury.khrustalev@arm.com, maz@kernel.org, oliver.upton@linux.dev,
-	frederic@kernel.org, akpm@linux-foundation.org, surenb@google.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v6 9/9] kselftest/arm64/mte: add mtefar tests on
- check_mmap_options
-Message-ID: <9a81979b-2b9d-4bf6-88a0-5803483f802c@sirena.org.uk>
-References: <20250611094107.928457-1-yeoreum.yun@arm.com>
- <20250611094107.928457-10-yeoreum.yun@arm.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gYDy+ZM8"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55B9DDrF023918;
+	Wed, 11 Jun 2025 12:24:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	pGAuQJnCZRenSUKeUSJste/qOhgDi8yuC9MgXtEQqHA=; b=gYDy+ZM8lCRyvKb8
+	Y927Tqu4+0a16Mf2gDCVxhZfsUWS5YCE0iwHFZy79ojO1v5ENqTp3uLJv/Gb8cHK
+	dX+rqJioT+ndWZCbQBq2xZA2324/Uce0Z4PNyFMX29jyvhLAT/I1HMEXodVLEN3x
+	c45z59T9GTrijJd3hoWvOLkgnL+gJFkYhozjust+Ql9CRbCYCh2I9jcQEWZ6VXv8
+	5c9n+wNGZ+qt0pQ5/QtgvYTR5utTiAlUW1QXEUlJpzM0Ck0zxXDtvCStQDwjduha
+	arMy/gPTPJUJOxqkiFXoytpRBain2Z70mRSRHT6/N10L8uzVBYKGUQ27KDnaDYuH
+	ALHz4A==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 475v2tfhvs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 11 Jun 2025 12:24:57 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55BCOuWd012122
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 11 Jun 2025 12:24:56 GMT
+Received: from [10.216.28.79] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 11 Jun
+ 2025 05:24:48 -0700
+Message-ID: <d482653e-5c0e-4b03-98d6-2c898b445917@quicinc.com>
+Date: Wed, 11 Jun 2025 17:54:44 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ZxWWX4yq1T0f5i2U"
-Content-Disposition: inline
-In-Reply-To: <20250611094107.928457-10-yeoreum.yun@arm.com>
-X-Cookie: No skis take rocks like rental skis!
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/4] dt-bindings: opp: adreno: Update regex of OPP
+ entry
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Akhil P Oommen
+	<akhilpo@oss.qualcomm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "Will
+ Deacon" <will@kernel.org>,
+        Rob Clark <robin.clark@oss.qualcomm.com>, Sean
+ Paul <sean@poorly.run>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Dmitry
+ Baryshkov <lumag@kernel.org>,
+        Abhinav Kumar <abhinav.kumar@linux.dev>,
+        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+        Marijn Suijten
+	<marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, "Simona
+ Vetter" <simona@ffwll.ch>,
+        Bjorn Andersson <andersson@kernel.org>, Rob
+ Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor
+ Dooley <conor+dt@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Nishanth
+ Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>
+References: <20250611-x1p-adreno-v2-0-5074907bebbd@oss.qualcomm.com>
+ <20250611-x1p-adreno-v2-1-5074907bebbd@oss.qualcomm.com>
+ <492417fe-c086-4980-b108-0487bad08155@kernel.org>
+From: Akhil P Oommen <quic_akhilpo@quicinc.com>
+Content-Language: en-US
+In-Reply-To: <492417fe-c086-4980-b108-0487bad08155@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 19Wy04pcgBOYQabLMROi2WkoaX8g-IgR
+X-Authority-Analysis: v=2.4 cv=GoxC+l1C c=1 sm=1 tr=0 ts=68497599 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8
+ a=snIp_u72ujy8X2fHCcYA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: 19Wy04pcgBOYQabLMROi2WkoaX8g-IgR
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjExMDEwNiBTYWx0ZWRfX8/VpQ35K3txV
+ 0LE/3vFvyiqLM1KGZhDyw53Hlk7CMoEbHrqhh0/DhZeXDc2YvHYAhicvpnujZyStWiy35n5K4rN
+ wX+m80mCGjHNIvl0Ry5I0BXYGwz2LJkpBnyDmGlIYSi7/tbFY8dMtk83X/vB6RgHmK5fw+8c0EZ
+ 1tBW63P14pVPPyK4NJNNqZllRWwtW5xPwNXQmYHRSX51BdA4l+o+AJAbmK+dYX6PkXgilZMY1YD
+ 97BZ15yjVYz+ddZTvlddufqXy/JvHXCV4meWLqWU0hFePNdgnlmBm6zvH61JLpWiSjEKeuSuerb
+ YAp5p1kVZMVHOG5K/h5A8NQ3RXIfacvN3HXqnu0oAnM2Cz9bgn65fbnu+MQSk5laoYL/BJ7jXq1
+ iJwZdswf/j6MgVIP9xJSsJ/e2KTjOb7Yy2aXssLnpEXAsVAq6Jf5HNnu93XhdMqpcd+ZfrTZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-11_05,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=999 adultscore=0 impostorscore=0 malwarescore=0 mlxscore=0
+ suspectscore=0 phishscore=0 priorityscore=1501 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506110106
 
+On 6/11/2025 4:50 PM, Krzysztof Kozlowski wrote:
+> On 11/06/2025 13:15, Akhil P Oommen wrote:
+>> Update regex to allow multi-worded OPP entry names.
+> 
+> Why would we want multi-worded? This needs to be explained here.
 
---ZxWWX4yq1T0f5i2U
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I took the new regex from "opp-v2-base.yaml" file, so I thought it was
+obvious enough. The requirement is that sometimes Adreno GPU may require
+variants of OPP entries with same frequency. As an example, we may want
+to vote different peak bandwidths in different SKUs for the same GPU
+frequency. So to denote this minor variation, we can add an integer
+suffix to the OPP entry name separated by '-'. An example from another
+patch in this series:
 
-On Wed, Jun 11, 2025 at 10:41:07AM +0100, Yeoreum Yun wrote:
+ opp-666000000-0 {
+         opp-hz = /bits/ 64 <666000000>;
+         opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
+         opp-peak-kBps = <8171875>;
+         qcom,opp-acd-level = <0xa82d5ffd>;
+         opp-supported-hw = <0xf>;
+ };
 
-> +static int check_anonymous_memory_mapping(int mem_type, int mode, int mapping, int tag_check, int atag_check)
->  {
->  	char *ptr, *map_ptr;
->  	int run, result, map_size;
-> @@ -97,16 +106,16 @@ static int check_anonymous_memory_mapping(int mem_type, int mode, int mapping, i
->  			munmap((void *)map_ptr, map_size);
->  			return KSFT_FAIL;
->  		}
-> -		result = check_mte_memory(ptr, sizes[run], mode, tag_check);
-> +		result = check_mte_memory(ptr, sizes[run], mode, tag_check, atag_check);
->  		mte_clear_tags((void *)ptr, sizes[run]);
->  		mte_free_memory((void *)map_ptr, map_size, mem_type, false);
-> -		if (result == KSFT_FAIL)
-> -			return KSFT_FAIL;
-> +		if (result != KSFT_SKIP)
-> +			return result;
->  	}
+ /* Only applicable for SKUs which has 666Mhz as Fmax */
+ opp-666000000-1 {
+         opp-hz = /bits/ 64 <666000000>;
+         opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
+         opp-peak-kBps = <16500000>;
+         qcom,opp-acd-level = <0xa82d5ffd>;
+         opp-supported-hw = <0x10>;
+ };
 
-This changes the logic to exit the loop immediately if the check passes
-which doesn't seem like what we want, should we instead change the test
-to be:
+I will add this explanation in the commit text in the next revision.
 
-	if (result != KSFT_PASS)
+> 
+> 
+>>
+>> Signed-off-by: Akhil P Oommen <akhilpo@oss.qualcomm.com>
+>> ---
+>>  Documentation/devicetree/bindings/opp/opp-v2-qcom-adreno.yaml | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/opp/opp-v2-qcom-adreno.yaml b/Documentation/devicetree/bindings/opp/opp-v2-qcom-adreno.yaml
+>> index a27ba7b663d456f964628a91a661b51a684de1be..bba95799919eb52d12afa42354ed909d0ef3c627 100644
+>> --- a/Documentation/devicetree/bindings/opp/opp-v2-qcom-adreno.yaml
+>> +++ b/Documentation/devicetree/bindings/opp/opp-v2-qcom-adreno.yaml
+>> @@ -23,7 +23,7 @@ properties:
+>>        const: operating-points-v2-adreno
+>>  
+>>  patternProperties:
+>> -  '^opp-[0-9]+$':
+>> +  '^opp(-?[0-9]+)*$':
+> 
+> Not correct regex. You allow "opp", "opp1" and all other unusual
+> variants. Commit does not explain what problem you are solving, so I
+> have no clue what you want here, but for sure opp1 is wrong.
 
-which I think is more the intent?
+Just to confirm, would this be fine for the requirement I mentioned above?
 
-> +		result = check_mte_memory(ptr, sizes[run], mode, TAG_CHECK_ON, atag_check);
->  		mte_free_memory_tag_range((void *)ptr, sizes[run], mem_type, UNDERFLOW, OVERFLOW);
->  		if (result != KSFT_PASS)
->  			return KSFT_FAIL;
-> @@ -192,7 +201,7 @@ static int check_clear_prot_mte_flag(int mem_type, int mode, int mapping)
->  			close(fd);
->  			return KSFT_FAIL;
->  		}
+"'^opp(-[0-9]+)*$'"
 
-Won't this upgrade any skips to fails?
+-Akhil.
 
---ZxWWX4yq1T0f5i2U
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+> 
+> Best regards,
+> Krzysztof
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhJdbIACgkQJNaLcl1U
-h9AceQf9ESTpI03oYV79ZBWSYTYktYpJpJCThnBIOdQEB+mQwDdhuDOrLIbso7bJ
-GdlaFJ1NDJOYIVLa9jdfiG0kO2WSzq/yClIuGu/HubaKRiVwS0xcfbjfLO5KtrF5
-kY1KJc7ZKqUIBA+Tbe/ntokLUqDnLuPgdINUBeSTuemBK9rbAQicUms0/ishICNs
-976HinKbqFluPCrgcnVIsOoap5L/1A6ZTT8nAsnJLaK+BYTn/PGgNGgIX1NNbL7r
-tX7//JsJpth6lfvUBklfvgM15FZWh+OSH6Zsm4uvML8qFgyf2Vy7CCntJ0XNIPdS
-hrE2xe9NlVva3ernymzkyYMwmufd4Q==
-=pXyY
------END PGP SIGNATURE-----
-
---ZxWWX4yq1T0f5i2U--
