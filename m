@@ -1,122 +1,116 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E404235355
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 19:47:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB481DFF7;
+	Wed, 11 Jun 2025 19:47:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749671262; cv=none; b=exF9ilPz/4mtudDqCCHXHbG2pNi+FuoAL5kmbsKWSsjIceU+BJRwq49pPvjimo6wjlQNJc5qnUf4avDBl3rt3X88TdwmsBhQcFWXCgEKI1k3XJnHoIaZqLpmE4eHuR1R+iHcHNijJWqN/WHSr3XrZV3aOgrlHJ8SEzkyYyHHpyg=
+	t=1749671272; cv=none; b=QXralo90SAY0+NBWeOuT7I3nzNliBJJFvdbkU0V4gD8RDizZ/VHQoqV9j1BoCCyCesWIv2N4xV0PwBsQkFwTrfPRfbmZFO9XxnFJlKa89m3rNhEeMKCqZ0lJ66GeHOGOvgBv7BsLGQe4WDEAJpbhXljDWxRMDT8JrdGJxJk1Yck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749671262; c=relaxed/simple;
-	bh=Y/m/IgEWTAA9kttf6amVM6YhOy/r6U5vq99jtoMZeeA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=nxm/1GWTnPtSP3eVSJ5Oz5pmu6oD2VetUddtzktgVZYXGN7qCQasY1R9ob7XVSOGdbqt3LF+/kzwvj2c9pwtbE+cLWHCcxKxo4oHzwQDUYNU3GGJ/Es3RKb1a3+MxFnr4ZEtUTyuO0WHMuote5uQnJ4qAoTZ4DOdjQW5UPg7X3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=NFWAcz8N; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1749671272; c=relaxed/simple;
+	bh=Gqyo4fCstlkVEleXkAgPU9oWDNK+rPLjgHBpeirZILI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t5GB2s13CPEmHRUHbV580GIKTiJshVfASTyoeW+cugFx36rzB06ULBfRxDSPUcDh5Frz+kqsEO/4KPTsmush+RLrcngn6XMX5FirEuiDN1vAuJy31YvUr8hYjTeCXI9KrcBIcaQknplIspZjzbW9Ob70GR/fg2u1jF4KDiRuH0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JvRJrN+l; arc=none smtp.client-ip=209.85.128.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="NFWAcz8N"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JvRJrN+l"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-70e64b430daso1541787b3.3;
+        Wed, 11 Jun 2025 12:47:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749671269; x=1750276069; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TGAUWL2dZwy17PTD85xcsniFkQj8bTvYAj4X8J5pVic=;
+        b=JvRJrN+lctiwFV5ErCqxdjEe+ce3LEJtMSr/5VFgMSJDVtROKpeAmxLPaO2aC0Fi/R
+         KrE4sc44zIrO8KsZwhl3eghGf/yg+vZ8Ouot/O1sCk1IZ9buBoM/e8i6+MTMi3v/j7XW
+         +Axiz39EGZlOIA5qc7C9eLnqnVNwzJKD7Ptwsdx5DrnICTsDNARS6qi/Y0m2NkjwTKN+
+         7S5nOjhGrTtao3EhS8RmGJkZAIHos2cWiGs++7fp0uIeuapO+tZgdOMTceIrAihtIXI8
+         Ut2edLSKrDPWtvBzPsjZ1JLbW3ZK5FcYoWK3saz6tA44mc1YU47Sc5Yf7ODutNLSqrFh
+         PEGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749671269; x=1750276069;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TGAUWL2dZwy17PTD85xcsniFkQj8bTvYAj4X8J5pVic=;
+        b=e//iLtDbbAr7X6d/8P94FOsHisEzEGeEbUIlj2+qGZoGcdyELsAf/PtFCemJroYhcS
+         X3e6v8EsFIGeAl4W4mao+RR/w4oGxetMnhaHgXdhsGqAOLhEJImyB2zZMmBrqZDXFXjq
+         wBwlReseLoJJYBN+HbodrY70TcgMQ9byda7RFARPZki/K0bHzZxsfQZP5/l3979kqu3x
+         FMiprlAaEN80/AmJqu8DossSJxaKGrl5sCVgTSjxWOUWFIxFuwKMErdJjsI9616S87Tw
+         LwwwxC4pvJzXxzXLa/a0v+Nzc4CzHJymMxTshOhCzmumk90rB6hKaWLID5n0EyWAEpbx
+         W4ew==
+X-Forwarded-Encrypted: i=1; AJvYcCW2x/CthDbgwlV4Syz/LF7J7/4yT1lx5+lkZ8RAdVVhlGscmDNplN2ibhWlo/5WnBWPkyY2a2qtmYE=@vger.kernel.org, AJvYcCX5YEyXyhEpGyFDrldoqo3hWSaQyoYB+XlLjd3zTm9wnIZiMQ+ABLGvUL4jjsmH6LseHLuT0CyeBqbXffA4@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2hP402rtd8LWskU4/OeA4rNkg2zpQbjwhzYU04yqf/+USoOGV
+	gamY1skafB0gPmaeXLbC8EBSbV3bc5EWAg6GAuKbuxKbvpIq0RH1/pJV
+X-Gm-Gg: ASbGnctN+ZKwe+bdh7GthVdxrIanC8GxoQWhB+qaFkhDjiVrau8zZM5RsxU+3ntWAig
+	/MvSaVe1d9PEXGcAeNuUqwkoDCC0MdJ3CiXMU/d2heXD+NYp/6PwIiq+tUD5f7SiojQzAEoSArk
+	2hi2HllFuJaT5WuI/n0/RdET2oAIQchJwA11zUS70mjtrgDoAMYnjPal4CFFL/znYRhM5eoCKhI
+	jI3QLDe/3GltEOuVG9MFZmj22rBFzAlmWTErZdaO2pxeaKJFwrBkXBeXR7t9XmPNm31Cal5zN0B
+	rRyXZ0LIpTLMXnI1eotmDJwILvey7zcwGnNu2jx6TFhctmwuwAfsHq9ddMQvVc532L/bet4rTlG
+	uKr6e
+X-Google-Smtp-Source: AGHT+IHLs4g2USl9/3mIyc4/NBHj2TilOt7w38tn6sLQ9Sanz7WX2m3aB8WGZ+BR2XHkEhceRYX7uQ==
+X-Received: by 2002:a05:690c:5c09:b0:70e:128c:3019 with SMTP id 00721157ae682-71150a897e3mr4593667b3.31.1749671269321;
+        Wed, 11 Jun 2025 12:47:49 -0700 (PDT)
+Received: from delta4.semfio.usp.br ([143.107.45.1])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-7115206130csm80587b3.1.2025.06.11.12.47.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 12:47:49 -0700 (PDT)
+From: Andrew Ijano <andrew.ijano@gmail.com>
+X-Google-Original-From: Andrew Ijano <andrew.lopes@alumni.usp.br>
+To: jic23@kernel.org
+Cc: andrew.lopes@alumni.usp.br,
+	gustavobastos@usp.br,
+	dlechner@baylibre.com,
+	nuno.sa@analog.com,
+	andy@kernel.org,
+	jstephan@baylibre.com,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/3] iio: accel: sca3000: simplify by using newer infrastructure
+Date: Wed, 11 Jun 2025 16:39:18 -0300
+Message-ID: <20250611194648.18133-1-andrew.lopes@alumni.usp.br>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1749671258;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sTC3oSbB+ScZdZaL0SzBekBJT8/ZI/K943eS/mhMDVg=;
-	b=NFWAcz8N+hnT/MVD8wepFBlBanLkeYc1XzOvVNboKpikwOvp2jSNtb3+SD72EL9ud8kPrx
-	OAEaL1Z1HeG94aLL9nvba/i2QDfr5I/tqbGtkJBKPuK7Eo+2kNoJ/So0Z+btxfRmqHEBTX
-	JcsR5iSEaXyb9nOKNlESRW5/rNeswcnCsymF8Euz4SejPhGd6lQS/NvF2b12oyck5xF8c6
-	YFOQ7WdsM+/B7pVdjxn65QEu/CihD+5OHimwbTz0tkZbB0sHRBAvy2DvSvCGgmdrX57D02
-	RS0JIuoKYdhtj0Ri/fD2oyaiphjJuux4HCXjfSeJI674y9/9pozMCgfJ+Tnh6Q==
-Content-Type: multipart/signed;
- boundary=36522f84442309e0e08e0989a11672ccff56feee362f4f60085dd1946f6e;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Wed, 11 Jun 2025 21:47:27 +0200
-Message-Id: <DAJYOYMK9UJD.LB0N2L64FFA@cknow.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Diederik de Haas" <didi.debian@cknow.org>
-To: "Eric Biggers" <ebiggers@kernel.org>
-Cc: <linux-crypto@vger.kernel.org>, "Herbert Xu"
- <herbert@gondor.apana.org.au>, <linux-kernel@vger.kernel.org>, "Ingo
- Franzki" <ifranzki@linux.ibm.com>
-Subject: Re: [PATCH] crypto: testmgr - reinstate kconfig support for fast
- tests only
-References: <20250611175525.42516-1-ebiggers@kernel.org>
- <DAJXJHLY2ITB.3IBN23DX0RO4Z@cknow.org>
- <20250611190458.GA4097002@google.com>
-In-Reply-To: <20250611190458.GA4097002@google.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
---36522f84442309e0e08e0989a11672ccff56feee362f4f60085dd1946f6e
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+The sca3000 driver is old and could be simplified by using newer
+infrastructure.
 
-On Wed Jun 11, 2025 at 9:04 PM CEST, Eric Biggers wrote:
-> On Wed, Jun 11, 2025 at 08:53:17PM +0200, Diederik de Haas wrote:
->> I was about to respond to your reply, but I guess this may be a better
->> fit for it. The TL;DR: version is this:
->>=20
->> If you think distros shouldn't enable it, as you initially clearly
->> described and it seems to me you still think so, the right thing for
->> distros to do, is to disable those test. Which in turn means the fast
->> tests should not be reinstated (?).
->
-> I mean, not enabling the tests in production is how it should be.
->
-> But Fedora already enabled CRYPTO_SELFTESTS, apparently because of FIPS
-> (https://gitlab.com/cki-project/kernel-ark/-/merge_requests/3886).
+Signed-off-by: Andrew Ijano <andrew.lopes@alumni.usp.br>
+Co-developed-by: Gustavo Bastos <gustavobastos@usp.br>
+Signed-off-by: Gustavo Bastos <gustavobastos@usp.br>
+Suggested-by: Jonathan Cameron <jic23@kernel.org>
+---
+v4 -> v5:
+- break up the changes in three patches
+- replace error_ret labels by simple returns
+- use spi_w8r16be() for be16 reads
+- use guard(mutex) for handling mutex lock
 
-That is recent and there's at least 1 person I recognize as having
-proper expertise in this matter ;-)
+v3 -> v4:
+- clean the code and remove redundant operations
 
-> You're right there doesn't seem to be an up-to-date bug for Debian
-> (https://bugs.debian.org/599441 is old), so maybe my conclusion is premat=
-ure.
->
-> However, besides FIPS I think the problem is that the crypto/ philosophy =
-is to
+v2 -> v3:
+- replace usages of internal read data helpers by spi helpers
 
-Another problem (IMO) is that a lot (?) of people (like myself) don't
-(really) understand crypto and therefor rely on the description in the
-Kconfig help text and make a choice based on that.
-That's (one of) the reason(s) I was so happy with the clear text :-)
+v1 -> v2:
+- simplify the return of the internal read data function
+---
+Andrew Ijano (3):
+  iio: accel: sca3000: replace error_ret labels by simple returns
+  iio: accel: sca3000: replace usages of internal read data helpers by
+    spi helpers
+  iio: accel: sca3000: use guard(mutex)() for handling mutex lock
 
-> throw untested and broken hardware drivers over the wall at users.  As lo=
-ng as
+ drivers/iio/accel/sca3000.c | 366 +++++++++++++-----------------------
+ 1 file changed, 133 insertions(+), 233 deletions(-)
 
-Only speaking for myself, my *assumption* is that crypto functionality
-in hardware is/should be faster and would lessen the load on the CPU
-(which with several SBCs seems really worthwhile).
-But I don't have the knowledge to determine whether it's broken or not.
-Unless there's a(n easy) tool for that (like 'rngtest' [1]).
+-- 
+2.49.0
 
-[1] https://lore.kernel.org/linux-rockchip/6425788.NZdkxuyfQg@bagend/
-resulting in f.e.
-5afdb98dcc55 ("arm64: dts: rockchip: Describe why is HWRNG disabled in RK35=
-6x base dtsi")
-
-> that's the case, the self-tests do actually have some value in protecting=
- users
-> from those drivers, even though that's not how it should be.
-
-Thanks for the additional info :-)
-
-Diederik
-
---36522f84442309e0e08e0989a11672ccff56feee362f4f60085dd1946f6e
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaEndUgAKCRDXblvOeH7b
-bhZvAQC8GDINu2UaLYccIQbsE1Ic63aekMhkgY/fKKna630QlwEAgo9a8jeX7bzO
-KdBEBwoXU49l2PRqVKGXMcLAYk0uggU=
-=2fnQ
------END PGP SIGNATURE-----
-
---36522f84442309e0e08e0989a11672ccff56feee362f4f60085dd1946f6e--
