@@ -1,83 +1,84 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5540823ABB1;
-	Wed, 11 Jun 2025 08:33:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BAAE2367C0;
+	Wed, 11 Jun 2025 08:34:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749630818; cv=none; b=HZ1yPilNtIz5B8SKFFLdxDu8k2LHpvXrJt6DJh9ydl5CBPmcPye7G4MBmNIR65njSo5oS28P9iK8LYv5f/nI0Fi02Yh7W5Gdu3DoEyz/ixSYQc3BUdTJoBrQYJA5MdotCepSRBF4VXukZTBa/OW7Kwsj5k861ojn1CpCfw2Et/o=
+	t=1749630856; cv=none; b=qK5utb+Y26LazQyXuakjBwCgCXK0QrSzSQk7k2oMKgKFH1fNjIMKPT0/HkRmsX3ifjDXRXNtRxhdr10phli421L3SbXphfe7C5LwfS5f3Dc1Z7DEiw09hgCvszfMlyeOLdWxwy2HYRcIRwOT7NkGoSn9lqCcXTTXDPEkHSZ7bLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749630818; c=relaxed/simple;
-	bh=BUbdxVLJuS4fYAYAMWAmKlXzifES1ZREElljdWotK8I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ufRVtbc+9b3+dWYcDjFQ2BRGMGaYhucaKNLLxwm6CQhTmqFeQuf0sgOkD2YS76mudgn9iTVUbZBKcFqk6rU/um0qoqM/LmYh4Zh0elRn6d8kTawHi94/q6H1pm+Vk5QCzZEc5NnMpbi+tCCh2zH55U8e5kDAOxA79aJM1vIlCvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=MLHxkMMm; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1749630856; c=relaxed/simple;
+	bh=YjUuaMXRjj3yUKM1oXzB5tryE1JdcUrQb6CsDD4lW7o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fu9VFRJgYw+FdM00O+qcUF2KpRBjoz9yxKRo0ebQiAoO3tE7G4Tt4vAM6hWnOpzqkwhnuehdLfVtY00HBsQyFpSaUhzS07u22Qjj9sZ4KTXILIZbxSVF9XHAwPN7nwZVKj9qxQU93jncPfM+hDvfJM0tIImzZK4q6T6GEevzSfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y3ULcI9I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="MLHxkMMm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1749630814;
-	bh=BUbdxVLJuS4fYAYAMWAmKlXzifES1ZREElljdWotK8I=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MLHxkMMm3Hua6frP7w6apjFbxOH+2rWBBkuLeRsn4k+NHtk1y+ngba1mdk+aq3N9J
-	 g/uYluVcm8JwfuatvfvZbAKql1NHFo5TmcnVNir6KBVG5iPq2F2bw5syV1z5DHYL2C
-	 v5A0jXbjazNOFx3fpGK5hpsTYuAK6dsEVtX9ARcbfByyf8upTEqYuAU7nDp+c7pqch
-	 HtPvfn2EUysuDah6+xy31icKlZosKLis9eKWy9y3xnW8zMJlBWByM4zLkmkcahK4cy
-	 lMY6UwoImu3hdQhmytu/NWU64U9GHofr4hLCDqq3vHsC8XRtjJDqCsjtNoCyVNnrfd
-	 HSDLqLaoeIvYQ==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 592C217E02B0;
-	Wed, 11 Jun 2025 10:33:33 +0200 (CEST)
-Message-ID: <e492fb4d-2899-4b63-b69d-1e922c3807d2@collabora.com>
-Date: Wed, 11 Jun 2025 10:33:32 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y3ULcI9I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5311AC4CEEE;
+	Wed, 11 Jun 2025 08:34:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749630855;
+	bh=YjUuaMXRjj3yUKM1oXzB5tryE1JdcUrQb6CsDD4lW7o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Y3ULcI9IJyU/3l5FNnF21dookZoXpT0aM6QPxdT5KR4dj5+MwmuBef05fRcY7CvZK
+	 UeBU/WbML8g8V2ZL2h+sTSB8laoO7PDxiX6kvecKeUcl2IAD8GbCSkN9SavXl6WuY1
+	 4MeUMVGBJiaY3jt32AJp0OJWQoVnQ6JEEdcJiQXz2RsWlMl+HyL8g3Otn+G0/gdz/e
+	 eKJOq//e/kg3jeadV8QCPHBdmUKKIUSVGrkK1ULlLjfVMh6zbV28tPRlyVBMBK2u6V
+	 L7MgsqJc0Pbe0lggsEFkW89fWPIeryKYmGkJTIrzKXP7Vk2hBiIfNccbDW/7SsIYEg
+	 IaiTDLO+Cf+uQ==
+Date: Wed, 11 Jun 2025 10:34:13 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Jammy Huang <jammy_huang@aspeedtech.com>
+Cc: jassisinghbrar@gmail.com, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: mailbox: Add ASPEED AST2700 series
+ SoC
+Message-ID: <20250611-serval-of-immortal-novelty-055c93@kuoka>
+References: <20250610091026.49724-1-jammy_huang@aspeedtech.com>
+ <20250610091026.49724-2-jammy_huang@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/5] media: vcodec: Implement manual request completion
-To: Nicolas Dufresne <nicolas.dufresne@collabora.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
- <hverkuil@xs4all.nl>, Tiffany Lin <tiffany.lin@mediatek.com>,
- Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
- Yunfei Dong <yunfei.dong@mediatek.com>,
- Matthias Brugger <matthias.bgg@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, kernel@collabora.com,
- linux-media@vger.kernel.org,
- Sebastian Fricke <sebastian.fricke@collabora.com>
-References: <20250604-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v3-0-603db4749d90@collabora.com>
- <20250604-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v3-4-603db4749d90@collabora.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250604-sebastianfricke-vcodec_manual_request_completion_with_state_machine-v3-4-603db4749d90@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250610091026.49724-2-jammy_huang@aspeedtech.com>
 
-Il 04/06/25 22:09, Nicolas Dufresne ha scritto:
-> From: Sebastian Fricke <sebastian.fricke@collabora.com>
+On Tue, Jun 10, 2025 at 05:10:25PM GMT, Jammy Huang wrote:
+> Introduce the mailbox module for AST27XX series SoC, which is responsible
+> for interchanging messages between asymmetric processors.
 > 
-> Rework how requests are completed in the MediaTek VCodec driver, by
-> implementing the new manual request completion feature, which allows to
-> keep a request open while allowing to add new bitstream data.
-> This is useful in this case, because the hardware has a LAT and a core
-> decode work, after the LAT decode the bitstream isn't required anymore
-> so the source buffer can be set done and the request stays open until
-> the core decode work finishes.
-> 
-> Signed-off-by: Sebastian Fricke <sebastian.fricke@collabora.com>
-> Co-developed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-> Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+> Signed-off-by: Jammy Huang <jammy_huang@aspeedtech.com>
+> ---
+>  .../mailbox/aspeed,ast2700-mailbox.yaml       | 57 +++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/aspeed,ast2700-mailbox.yaml
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
+<form letter>
+This is an automated instruction, just in case, because many review
+tags are being ignored. If you know the process, just skip it entirely
+(please do not feel offended by me posting it here - no bad intentions
+intended, no patronizing, I just want to avoid wasted efforts). If you
+do not know the process, here is a short explanation:
+
+Please add Acked-by/Reviewed-by/Tested-by tags when posting new
+versions of patchset, under or above your Signed-off-by tag, unless
+patch changed significantly (e.g. new properties added to the DT
+bindings). Tag is "received", when provided in a message replied to you
+on the mailing list. Tools like b4 can help here ('b4 trailers -u ...').
+However, there's no need to repost patches *only* to add the tags. The
+upstream maintainer will do that for tags received on the version they
+apply.
+
+https://elixir.bootlin.com/linux/v6.15/source/Documentation/process/submitting-patches.rst#L591
+</form letter>
+
+Best regards,
+Krzysztof
 
