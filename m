@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3373225C83E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B049625C837
 	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 09:22:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749633748; cv=none; b=Ty89yuxg12pU+NlAArxJybpEVk3tBRjPd++sT7qNlTnp01s1/LDefSuvw8yppr9A32oCNHnnR2wKTtFz3+r4f3nB4mKMjAjLRFPdO3wuBaIgZtl62ZtsO8nsqn80KFwWmPrL6RHfjr29v8/fTqUAA0FR+nnnhsLKfW30Je3iBG8=
+	t=1749633749; cv=none; b=nIlVynHqvj10RrYhoumvrDaH6YIWxksC9xf6mnfm+SNN511gfTfyWsjYYK2UPZ3BjaFGfghVu87Zs5PP/Rk5Kk92gtM8G5Rhr+TY3w5gqHio+50s1OWIAiijkgYBfQtFm6jz1/Y53Q2zvYxKk7C0hltKsDHAcNMQGzG7NKBR4Qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749633748; c=relaxed/simple;
-	bh=mIAtGDHPvKeYdgafPU461SwU1pvMX0e9L3qKBEtEQp4=;
+	s=arc-20240116; t=1749633749; c=relaxed/simple;
+	bh=8B4x12CzHaxPC9X4pfyxH+ejQsD81seE02RnNXMkzSE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Usl1DhtXA819+VlCQs2O6MctH5ehvOEUQRGUnjdGrmoZ945Qe02VscXBdAXqnQz6ndPZ5wpK3guIxd0Tt4la9o3ncSE7LvrzDvKF6eAujxcytT2QSPU7USgr/+p8nJQOm4gFy+c82FZmYzJmW3z1LfAnv9wF2A8+4lxtER7Iftg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GL6NHJdh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/7HqhDUo; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=Va3U9rahUxJdrV9UYkH2gGV08rEfWdXxnYT8JsE1UmmHEvzdMH0K9CB3Q4nP6+UJnWkFHlroXRZDgneDgrE3Q5FE/PZsNmPC7eRKM4D7b6qAYkKk0MHbnd0tNmXpq1cA4TCIfVmoNrTIjuYZSRyRac6vosRGfg+AYw129CpYXSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=t2CcHL/N; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xP7vQrJi; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GL6NHJdh";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/7HqhDUo"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="t2CcHL/N";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xP7vQrJi"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1749633745;
@@ -24,23 +24,23 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=J0wTJl4RIVSFj/J21gRTDQ3w5OE3XK4ggTZJSCDLD2I=;
-	b=GL6NHJdh8oRCBHoc0pCvwGt+FMm6CmPZDaSPIyv0AwYaPhxb6cgvtH+x7vJMNVY1OvbVAI
-	0Fcd0Mg5z7ACVlsKkKr9GLrbmp/yN6erZB9Dqysrq4OJ5Wp5KOgoHP7NEjAup6dOP20C8+
-	Qj+nQ+46L5YgUEr8Cv78NgVN7B8FVAJZgeIQcMtleDiPCobxuF791zte11xQITQbB5DbJP
-	qEkaZ7pqplVdht4OWG2xF9S46mLE85l7rmEMx26hg5dh0fevA7HHj2iBN0hE4s6ycTm9M3
-	V7o+ysyNJ6bKBnaNaWJpGv8ctCgNrT1J8rRDGZC3cRjx3oxsP4gTKds75cdnJw==
+	bh=qtawFApvVC/il3WzGQ5ouLlAcuOcFQ89dR48c5s84KQ=;
+	b=t2CcHL/NgPvPqqPO5DyCZ65WcPtZlecd4bwAusp8WJzx9DkTuK1mi3X7WoXgwRMTPQlDtu
+	E2fudBz0nBDHxplzTT7TD7BJz79l3wmbBcGOcZ61Cf+RQgzJG8q9WQN16BMFwThSh25X1R
+	kdHD2t2SaJBoGmQXanudASPg5lXZAaf2EsQkO+aTTe2u1t/6H1CgoDsFfJCPMQsZk4gvCY
+	KbtJdALtEHnX1SbWi8ia6YtvZd+KaPE3JUEprRE+kWNgsaXGlVfrQvUwk1C3T4gqAqLiy9
+	AwpLjDOmGbbLUo/q8YnA5w5xdTj0K+VCzuU8Sbq+2yuAuAOD/cRhylzrTnQH7w==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1749633745;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=J0wTJl4RIVSFj/J21gRTDQ3w5OE3XK4ggTZJSCDLD2I=;
-	b=/7HqhDUo5GHztwH4u2uOVsaIcikw4P3TFVxK9YTQ1WvyeNbCBVTlHRglhhFUb3ok/wdW/N
-	137plfNu6ojVANAg==
-Date: Wed, 11 Jun 2025 11:22:14 +0200
-Subject: [PATCH v3 3/3] vdso: Reject absolute relocations during build
+	bh=qtawFApvVC/il3WzGQ5ouLlAcuOcFQ89dR48c5s84KQ=;
+	b=xP7vQrJiwJzrto/eGP3l0LRHVTKCO8A0mjI0RKYg+ofFAFuliV0w5ytJUMJAq1i6wi+zcr
+	xQhZeqrOHrHODfCQ==
+Date: Wed, 11 Jun 2025 11:22:13 +0200
+Subject: [PATCH v3 2/3] riscv: vdso: Disable LTO for the vDSO
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,7 +49,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250611-vdso-absolute-reloc-v3-3-47897d73784b@linutronix.de>
+Message-Id: <20250611-vdso-absolute-reloc-v3-2-47897d73784b@linutronix.de>
 References: <20250611-vdso-absolute-reloc-v3-0-47897d73784b@linutronix.de>
 In-Reply-To: <20250611-vdso-absolute-reloc-v3-0-47897d73784b@linutronix.de>
 To: Paul Walmsley <paul.walmsley@sifive.com>, 
@@ -62,56 +62,44 @@ To: Paul Walmsley <paul.walmsley@sifive.com>,
 Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
  llvm@lists.linux.dev, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749633741; l=2264;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749633741; l=1308;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=mIAtGDHPvKeYdgafPU461SwU1pvMX0e9L3qKBEtEQp4=;
- b=saA8vG7G5+nuYZSAIasKPk5cLM4d6JKHzQ2YGvNfixdyOAnpwSO6H7XzKmIVedADkizpqv1bb
- jU+UQS4HuWOD3hih0qgzsdHbpqtAnSo8QNwysBfBekBxh9MTlcW2DV1
+ bh=8B4x12CzHaxPC9X4pfyxH+ejQsD81seE02RnNXMkzSE=;
+ b=MeVEZf4Tcm6ZHthWxkq9DUB7vjcgxE6V95k51kMGjendRw+PKJPPvVusb/jXN1+RUNZvon5rI
+ Da78ZxH2LuxDWaGizyH12vN351IGlYgjYr82O6nMWi3zsWSrxFlm/8m
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-All vDSO code needs to be completely position independent.
-Symbol references are marked as hidden so the compiler emits
-PC-relative relocations. However there are cases where the compiler may
-still emit absolute relocations, as they are valid in regular PIC DSO code.
-These would be resolved by the linker and will break at runtime.
-This has been observed on arm64 under some circumstances, see
-commit 0c314cda9325 ("arm64: vdso: Work around invalid absolute relocations from GCC")
+All the other architectures supporting LTO (x86, arm64, loongarch) do not
+use it for the vDSO.
 
-Introduce a build-time check for absolute relocations.
-The check is done on the object files as the relocations will not exist
-anymore in the final DSO. As there is no extension point for the
-compilation of each object file, perform the validation in vdso_check.
+Its is problematic for some upcoming compile-time validation of the
+generated object code.
+The LTO object files do not contain the necessary relocation information
+and -flto-fat-objects is not compatible with clang < 16.
 
-Debug information can contain legal absolute relocations and readelf can
-not print relocations from the .text section only. Make use of the fact
-that all global vDSO symbols follow the naming pattern "vdso_u_".
+For consistency and to enable the mentioned compile-time checks,
+disable LTO for the vDSO.
+The vDSO heavily uses __always_inline anyways.
 
-Link: https://lore.kernel.org/lkml/aApGPAoctq_eoE2g@t14ultra/
-Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120002
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- lib/vdso/Makefile.include | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/riscv/kernel/vdso/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/vdso/Makefile.include b/lib/vdso/Makefile.include
-index cedbf15f80874d4bb27c097244bc5b11272f261c..04257d0f28c0ed324e31adbb68497181085752f8 100644
---- a/lib/vdso/Makefile.include
-+++ b/lib/vdso/Makefile.include
-@@ -12,7 +12,13 @@ c-getrandom-$(CONFIG_VDSO_GETRANDOM) := $(addprefix $(GENERIC_VDSO_DIR), getrand
- #
- # As a workaround for some GNU ld ports which produce unneeded R_*_NONE
- # dynamic relocations, ignore R_*_NONE.
-+#
-+# Also validate that no absolute relocations against global symbols are present
-+# in the object files.
- quiet_cmd_vdso_check = VDSOCHK $@
-       cmd_vdso_check = if $(READELF) -rW $@ | grep -v _NONE | grep -q " R_\w*_"; \
- 		       then (echo >&2 "$@: dynamic relocations are not supported"; \
-+			     rm -f $@; /bin/false); fi && \
-+		       if $(READELF) -rW $(filter %.o, $(real-prereqs)) | grep -q " R_\w*_ABS.*vdso_u_"; \
-+		       then (echo >&2 "$@: absolute relocations are not supported"; \
- 			     rm -f $@; /bin/false); fi
+diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
+index c19c3c76f7c9f6b2f7523a59269de3b683656323..9f1bf5bae9bd473e43d9fd3022e9e1a185128b73 100644
+--- a/arch/riscv/kernel/vdso/Makefile
++++ b/arch/riscv/kernel/vdso/Makefile
+@@ -49,7 +49,7 @@ CPPFLAGS_vdso.lds += -DHAS_VGETTIMEOFDAY
+ endif
+ 
+ # Disable -pg to prevent insert call site
+-CFLAGS_REMOVE_VDSO = $(CC_FLAGS_FTRACE) $(CC_FLAGS_SCS)
++CFLAGS_REMOVE_VDSO = $(CC_FLAGS_FTRACE) $(CC_FLAGS_SCS) $(CC_FLAGS_LTO)
+ CFLAGS_REMOVE_vgettimeofday.o = $(CFLAGS_REMOVE_VDSO)
+ CFLAGS_REMOVE_getrandom.o = $(CFLAGS_REMOVE_VDSO)
+ CFLAGS_REMOVE_hwprobe.o = $(CFLAGS_REMOVE_VDSO)
 
 -- 
 2.49.0
