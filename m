@@ -1,142 +1,160 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606FC17BB6;
-	Wed, 11 Jun 2025 05:23:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96F817BB6
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 05:27:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749619436; cv=none; b=JNedICMiTzBybk59oD8n1k5+zQOgxTzd3O4ef+6vYYjlCJ7uklGUdeU/Hdbh3PBOc4ixaTVZ8T4jTKnV8d0S3eMjQg2e8JI3ddo/hgNHAjKU1iDR5yC5z3GT/NReUlE7eICc7DcyGuEY7j11USWCIa3pzjDeUvQ79ax0t0H9y+c=
+	t=1749619674; cv=none; b=n8e3QLus/BufJfTFTq3RoXsp3mD36sGnKIcI3Kuz4WsKcO03wrzrBMBXApc0lMPrvbz1EJfSzDU4fNNUjKY2nGL3Kbz94L1vJmhArCgCaeMrpqWjK9zId0ep8IwTX+5Fj00gIkQYDk/p8JzbxVoy5Y8e9uckw76CsOi7fCL13Ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749619436; c=relaxed/simple;
-	bh=QdkrtsbUzTDgsS/mT7ppoJf+YPJWtOY2mETjuHwI8bg=;
+	s=arc-20240116; t=1749619674; c=relaxed/simple;
+	bh=VblKf4eUyeI8N6clHN0PxlRzOPLMBcHrTI/YiemJEfM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DDnDvzPBOnwb5iqy5y3IMQs0m3eD25gfvoMVCfUPVkFEHQzvWhK9jA9EVVrWpmy/rS865i751nNDoptaM5ZhA8ohs+jlG/6pI+qSIeO4YfIRSYn7nzll6fByTgg5AIimPCfEV66hkWJo7ZnmlkpriyM9zSrhmnRQM12PjDSwLiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vcj1FQp1; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=p6tVsHuQeP6v2hnmZtuFseLSejgOF25PxWJYRnDU2AHqRFVh6nOSPgNKy48nckmWku7tTYeDCYF4uD8yAo9ItELOOOF0RpBtf9iXfZglaOXDLEy6mDTCvWdzRmpeXZzBnfHaJWVvkqy/CfcOgwZaSGg04TUPJ436sj4vLsoDj9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=a9YMknsx; arc=none smtp.client-ip=91.218.175.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vcj1FQp1"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2363616a1a6so15664565ad.3;
-        Tue, 10 Jun 2025 22:23:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749619435; x=1750224235; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2130SYJpBwgCGHXYYTpNm5sjUlFw+z+qbv0CH8rq1ec=;
-        b=Vcj1FQp1PhGuXiyJO+dGE4calnsN2EGldJYYwmYijs5a5AY5Y+r1Uvb2YokrJot2mA
-         n7S3bvaIW539ZXaIbyfmHRW9RP8tbJ6xkcBME4DtTh0/cDuGveS7O1R1Xlc2J7DnjyfU
-         GTQltmeP8VQ0bRCMTUmjFLqXUnyT1ESXZN30flDuLA8PNVljjgoQI4f5ltDi5w+QDn+7
-         zKWNr9Ai0FPyDPsNJO3GqU7qbxLqeAC01NUlDv5W6gL7uVDENAKMjfqmPjX+TmZTjQXl
-         pWFAg7A9z+QVRMBi/FvEoBAAhGC1/r8v1dKUPOAmP+oREhuSyIOBw3bOxKjd0VuW7yZ6
-         hk3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749619435; x=1750224235;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2130SYJpBwgCGHXYYTpNm5sjUlFw+z+qbv0CH8rq1ec=;
-        b=KHqs0Zt9+eoNOc0n2uCFWWoz/WWE6nBwUiBbsTsCjMdO05VRAf3ieTZpRmgHtjYYBD
-         Bm86X1Y1p2fKSXB8M1/usP4zgvGsD81yrOrzSiOfavAPedI1VuqpDXdY1NtFYNqRfEN3
-         PQhiPVRvmvTc0lfCpCjkLjtDO0f/jvsKcuDyX3JL0xJH5UfPyIeWvntq++uwBHHtlKDp
-         l7l9Xcdy1SLBELpRMMEyJQm+zkN2KBqMDZIkdQIRtLMLZgVaVk2kfWUWNg/8eZ11bLwM
-         1pWk5o9nbzP/0EX1hPo3hC/ejEKm+dOPzkIYGqyls/f9+VYIQgakr3gMytwEANdH1EqV
-         y6Zw==
-X-Forwarded-Encrypted: i=1; AJvYcCUA8BuaHBcDjURyyADhi9qQM1QQy4/hhe0uM633tPP/AIfGCtxKAKOluyDxrhKYjEn8CzjIuEXi8Uo0eqEs@vger.kernel.org, AJvYcCV+AQQxwxGhu2QM32eUMV0x+ChPCq9rjh2+y+XDomGggoQdOqsySXyBIC3nGK9aRYfrgrM=@vger.kernel.org, AJvYcCVVnv0CYICJGzi7l+F/NtgFv0bhkkDJ9BcRNZ6qVUFn8g8eDkeMdEpHH3d/qPF+k+N37fuwV+d0zw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrqfTkfqsEdZWo6TFd/Q4ALsBZjyMf53NSx9hFSqWyQvNk2q6P
-	cfGWAjgx6Oe/u86vqoFe1YP6K/0P25a++jT2ENlD4Tfes5/QYSTEuM2uHUe+5Q==
-X-Gm-Gg: ASbGnctNG1pnLSEoo4cQuzIIrIwqDp+hOckVB7TgnLFkxMsbsidymrqM7UM7CvihOM5
-	XEtCMkRGtRL3x02/Y1IMuQdHhy9DX+jCSu/4JoRexlcML+thsTxuzmby/wJWZV+iZDjBqaNcSz2
-	lOFJEAn94eAYo8BI38ZDTAm2/Yn0s92JIENoI06/Z67zV4oed8uzQKFSpgsduyxEWjpSpkO903Y
-	/Wmqg05VNxFit0YIW/2XtacKGt9lkOO5/RlHvhmpFCZA1xR5ivQ4LkQ3Kjw0anwX0a1R3Q/NZt5
-	a4RrKHkLiY4LcqETUNOaZKTtTDgG+EBQgtWZrsH/nmZmiSi7SBSL0an1IA8lfvgye2kxase2tj9
-	YC/P5TyeZKExEJxHV6+ZSwGWKBQa/+6AnbqY=
-X-Google-Smtp-Source: AGHT+IEYoGt2DW8dmU8G7W8VbLXAXyReelYumM1CpQ6rdvCFn1U5bH0sa6DJ8R25zLoOr18TTOa5+g==
-X-Received: by 2002:a17:902:cf0f:b0:234:e0c3:8406 with SMTP id d9443c01a7336-23641a8ac31mr24808175ad.1.1749619434535;
-        Tue, 10 Jun 2025 22:23:54 -0700 (PDT)
-Received: from [192.168.4.196] (c-76-103-195-132.hsd1.ca.comcast.net. [76.103.195.132])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603c6c325sm78316115ad.173.2025.06.10.22.23.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jun 2025 22:23:53 -0700 (PDT)
-Message-ID: <9cf00007-f068-4ced-8977-f39a792eef6a@gmail.com>
-Date: Tue, 10 Jun 2025 22:23:51 -0700
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="a9YMknsx"
+Message-ID: <b132dd1f-984b-452e-b19b-18cdecb2842a@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749619668;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o/2aaI9Jc+UnnUYnd+8Q2hPmP+rI4bqFnbU4LUmieaM=;
+	b=a9YMknsxGDwTreHyjLWatAFWBw75aBIZM3CGgiYmylO5UHC/vTMRg2bcuNSh0JqBFBFaVA
+	jVEgQE7Oea84sxvFdlirND2HsaaMOufVAeO3p1bx8RAmepeeuy96omvzhwhzxM94YL6Sf0
+	lndbskN5nteIuGXCNl9qG9CoFexvg3M=
+Date: Wed, 11 Jun 2025 13:26:52 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] cgroup: make css_rstat_updated nmi safe
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,
- Andrew Morton <akpm@linux-foundation.org>, Tejun Heo <tj@kernel.org>,
- Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>,
- Muchun Song <muchun.song@linux.dev>, Vlastimil Babka <vbabka@suse.cz>,
- Alexei Starovoitov <ast@kernel.org>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
- Harry Yoo <harry.yoo@oracle.com>, Yosry Ahmed <yosry.ahmed@linux.dev>,
- bpf@vger.kernel.org, linux-mm@kvack.org, cgroups@vger.kernel.org,
- linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
-References: <20250609225611.3967338-1-shakeel.butt@linux.dev>
- <20250609225611.3967338-3-shakeel.butt@linux.dev>
+Subject: Re: [PATCH] mm/alloc_tag: add the ARCH_NEEDS_WEAK_PER_CPU macro when
+ statically defining the percpu variable alloc_tag_counters.
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Kent Overstreet <kent.overstreet@linux.dev>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, Hao Ge <gehao@kylinos.cn>
+References: <20250529073537.563107-1-hao.ge@linux.dev>
+ <177e1f6b-50f0-4c0a-bb0b-514283e009a2@linux.dev>
+ <CAJuCfpE9Y6iMt5sDd+NUuXAeqXiQXaYZOobGDvi7LYRqm=7-KA@mail.gmail.com>
 Content-Language: en-US
-From: JP Kobryn <inwardvessel@gmail.com>
-In-Reply-To: <20250609225611.3967338-3-shakeel.butt@linux.dev>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Hao Ge <hao.ge@linux.dev>
+In-Reply-To: <CAJuCfpE9Y6iMt5sDd+NUuXAeqXiQXaYZOobGDvi7LYRqm=7-KA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 6/9/25 3:56 PM, Shakeel Butt wrote:
-[..]
-> diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
-> index a5608ae2be27..4fabd7973067 100644
-> --- a/kernel/cgroup/rstat.c
-> +++ b/kernel/cgroup/rstat.c
-> @@ -138,13 +138,15 @@ void _css_rstat_cpu_unlock(struct cgroup_subsys_state *css, int cpu,
->    * @css: target cgroup subsystem state
->    * @cpu: cpu on which rstat_cpu was updated
->    *
-> - * @css's rstat_cpu on @cpu was updated. Put it on the parent's matching
-> - * rstat_cpu->updated_children list. See the comment on top of
-> - * css_rstat_cpu definition for details.
-> + * Atomically inserts the css in the ss's llist for the given cpu. This is nmi
-> + * safe. The ss's llist will be processed at the flush time to create the update
-> + * tree.
->    */
->   __bpf_kfunc void css_rstat_updated(struct cgroup_subsys_state *css, int cpu)
->   {
-> -	unsigned long flags;
-> +	struct llist_head *lhead = ss_lhead_cpu(css->ss, cpu);
-> +	struct css_rstat_cpu *rstatc = css_rstat_cpu(css, cpu);
-> +	struct llist_node *self;
->   
->   	/*
 
-> -	flags = _css_rstat_cpu_lock(css, cpu, true);
-> +	llist_add(&rstatc->lnode, lhead);
-> +}
-[..]
-> +
-> +static void css_process_update_tree(struct cgroup_subsys *ss, int cpu)
-> +{
-> +	struct llist_head *lhead = ss_lhead_cpu(ss, cpu);
-> +	struct llist_node *lnode;
-> +
-> +	while ((lnode = llist_del_first_init(lhead))) {
-> +		struct css_rstat_cpu *rstatc;
->   
-> -	_css_rstat_cpu_unlock(css, cpu, flags, true);
-> +		rstatc = container_of(lnode, struct css_rstat_cpu, lnode);
-> +		__css_process_update_tree(rstatc->owner, cpu);
-> +	}
->   }
->   
->   /**
-> @@ -300,6 +331,8 @@ static struct cgroup_subsys_state *css_rstat_updated_list(
->   
->   	flags = _css_rstat_cpu_lock(root, cpu, false);
+On 2025/6/10 00:39, Suren Baghdasaryan wrote:
+> On Sun, Jun 8, 2025 at 11:08 PM Hao Ge <hao.ge@linux.dev> wrote:
+>>
+>> On 2025/5/29 15:35, Hao Ge wrote:
+>>> From: Hao Ge <gehao@kylinos.cn>
+>>>
+>>> Recently discovered this entry while checking kallsyms on ARM64:
+>>> ffff800083e509c0 D _shared_alloc_tag
+>>>
+>>> If ARCH_NEEDS_WEAK_PER_CPU is not defined,there's no need to statically
+>>> define the percpu variable alloc_tag_counters.
+>>>
+>>> Therefore,add therelevant macro guards at the appropriate location.
+>>>
+>>> Fixes: 22d407b164ff ("lib: add allocation tagging support for memory allocation profiling")
+>>> Signed-off-by: Hao Ge <gehao@kylinos.cn>
+>>> ---
+>>>    lib/alloc_tag.c | 2 ++
+>>>    1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
+>>> index c7f602fa7b23..d1dab80b70ad 100644
+>>> --- a/lib/alloc_tag.c
+>>> +++ b/lib/alloc_tag.c
+>>> @@ -24,8 +24,10 @@ static bool mem_profiling_support;
+>>>
+>>>    static struct codetag_type *alloc_tag_cttype;
+>>>
+>>> +#ifdef ARCH_NEEDS_WEAK_PER_CPU
+>>>    DEFINE_PER_CPU(struct alloc_tag_counters, _shared_alloc_tag);
+>>>    EXPORT_SYMBOL(_shared_alloc_tag);
+>>> +#endif /* ARCH_NEEDS_WEAK_PER_CPU */
+>>>
+>>>    DEFINE_STATIC_KEY_MAYBE(CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT,
+>>>                        mem_alloc_profiling_key);
+>> Hi Suren
+>>
+>>
+>> I'm sorry to bother you. As mentioned in my commit message,
+>>
+>> in fact, on the ARM64 architecture, the _shared_alloc_tag percpu
+>> variable is not needed.
+>>
+>> In my understanding, it will create a copy for each CPU.
+>>
+>>    The alloc_tag_counters variable will occupy 16 bytes,
+>>
+>> and as the number of CPUs increases, more and more memory will be wasted
+>> in this segment.
+>>
+>> I realized that this modification was a mistake. It resulted in a build
+>> error, and the link is as follows:
+>>
+>> https://lore.kernel.org/all/202506080448.KWN8arrX-lkp@intel.com/
+>>
+>> After I studied the comments of DECLARE_PER_CPU_SECTION, I roughly
+>> understood why this is the case.
+>>
+>> But so far, I haven't come up with a good way to solve this problem. Do
+>> you have any suggestions?
+> Hi Hao,
+> The problem here is that ARCH_NEEDS_WEAK_PER_CPU is not a Kconfig
+> option, it gets defined only on 2 architectures and only when building
+> modules here https://elixir.bootlin.com/linux/v6.15.1/source/arch/alpha/include/asm/percpu.h#L14
+> and here https://elixir.bootlin.com/linux/v6.15.1/source/arch/s390/include/asm/percpu.h#L21.
+> A nicer way to deal with that is to make if a Kconfig option which is
+> enabled only for alpha and s390 and then do something like this:
+>
+>   #if defined(MODULE) && defined(ARCH_NEEDS_WEAK_PER_CPU)
+> #define MODULE_NEEDS_WEAK_PER_CPU
+> #endif
+>
+> and change all the usages of ARCH_NEEDS_WEAK_PER_CPU with
+> MODULE_NEEDS_WEAK_PER_CPU.
+> Did I explain the idea clearly?
+> Thanks,
+> Suren.
+>
+Hi Suren
 
-The subsystem per-cpu locks were used to synchronize updater and flusher
-on a given cpu. Since you no longer use them on the updater side, it
-seems these locks can be removed altogether.
+Thanks for your guidance.
+I understand this train of thought.
+
+I've been thinking about a problem: I only added the 
+ARCH_NEEDS_WEAK_PER_CPU
+
+macro to isolate the definition of _shared_alloc_tag.
+
+Since s390 defines this macro, why did this build error occur?
+
+Could you please help explain it again?
+
+Thanks
+Best Regards
+Hao
+
+>>
+>> Thanks
+>>
+>> Best Regards
+>>
+>> Hao
+>>
+>>
+>>
+>>
