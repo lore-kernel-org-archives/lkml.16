@@ -1,122 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41136FBF;
-	Wed, 11 Jun 2025 02:05:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F29E14B965;
+	Wed, 11 Jun 2025 02:08:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749607503; cv=none; b=qlt/iZItzTFH+uRJKl4SIe2v1j5DRi9JQrv0ZvQhpP3ERfJ/hIxnvennKh+Uc6nPiHoleK5UcWXIo3sYO2N9x2+vGOlXSdVAGo4/XPUCBW6tiSutvdxkZk1+jqMKk/OnZ26YNvrzTjFBiuUMPUzQyUuzVUdCvUK/ipdEkQYAyoY=
+	t=1749607691; cv=none; b=Ne3LPlwz116EYI15FeWp4xZ1ytyCFk9rcc1clKjMd3TKhfRJd7Grtu6lImvUVZdrS2jdJLVI50o/nmk2SNrKj9fB49m/6+IfJkQs/ycN6mb9s8E8HAOPo2//hYzAAtym9z3rjEPIbmo58Wnr9BI3Br5t9+JQa2fJeeB75/QxoWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749607503; c=relaxed/simple;
-	bh=QkjN0yrqWqSyvn3N877w5lr2kBMnRiRybGvkYTQ55fk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iHpSoqd3QDPOprUaVUxiMUKEmz7GSyqEO4SlmcrIzZvJ4KE6j+hZXeUlRtB+QqGOcf1pkjKwQcrIgPzny0ym5bFDG0Lm5kflNE+fFgoozqcmOD6jxOOPng8VJLdwIAKyXc/WYyoeahMmP9kTUa1pI46R4z5WJ+I0awnLQvF7KpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HWy06SWF; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749607691; c=relaxed/simple;
+	bh=lPS+saJyF22lEituIljUGn3gpsIa5rtdnhgXpYaBrY8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=YVPQxGDa94R3kUmvcBhr2Dz5AUK0u0gINOav+uJtAcotvQZjlZ75qlXrGvbpjUZyPaD/aaTOw9zw4q1f2prH5YyBNp3oz4oJorQVbtAy9inK6u3biJG21qxbs7Zz3UYssU8pUc9AQdPWmLmU6Ki1GmmrEts9mK7obg0cr+H/rYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=JrBvaL/9; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HWy06SWF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749607502; x=1781143502;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=QkjN0yrqWqSyvn3N877w5lr2kBMnRiRybGvkYTQ55fk=;
-  b=HWy06SWF14+4zsksv2ZU8JXMqgDPZC4GibK6qd3qqZ0ynxGGieE7/mGj
-   1WNUpZ/LCX0qRanz/cuTb9y+0lvHPWeabiJsDJy8vYwFoMnKulYK0BqIo
-   k32LIQaThCSU1xRY79DWe/uE4l8FI1gVeKwlG5KjNf8vajqlqFlDYobqM
-   pvJXkroSqnNU12SebVdtrQSkRenSQud7aqrBmbsiIOtf2dr5HUl70+Bmp
-   6ORpW8rgDj9Av9uzi+08/0YVHAH5MluAwiI+mOogprzfXNPw2soTy8W/3
-   lnYJxAVt/VABkC+GJO28yFU3LeJYs/YSCJqf+vmuMj2uaax5uscqW63nv
-   Q==;
-X-CSE-ConnectionGUID: oHN/GLZ5R8alWrnJ37AQjQ==
-X-CSE-MsgGUID: 3xySpXq3TzSorHfCl3JA3Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51616444"
-X-IronPort-AV: E=Sophos;i="6.16,226,1744095600"; 
-   d="scan'208";a="51616444"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 19:05:01 -0700
-X-CSE-ConnectionGUID: YQndixjfTtyajYVuEuJH6w==
-X-CSE-MsgGUID: 4Xj4m9ZcSA+igvZcXs8l4g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,226,1744095600"; 
-   d="scan'208";a="150861724"
-Received: from unknown (HELO [10.238.0.239]) ([10.238.0.239])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 19:04:58 -0700
-Message-ID: <e2e7f3d0-1077-44c6-8a1d-add4e1640d32@linux.intel.com>
-Date: Wed, 11 Jun 2025 10:04:56 +0800
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JrBvaL/9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1749607683;
+	bh=REcs1wFnLHXC5/tgOun5mcsWTntGLj/q6Gx6NYBTaA8=;
+	h=Date:From:To:Cc:Subject:From;
+	b=JrBvaL/9Q1VtMtdyp0D3qcPlPpuOl8T70ZMChJKypSVhqg+ZZYG3iCYtpDviuZpdu
+	 dukxiY+OeysM+Vh1NOMDJ/CdCHFdH58xzuLqaJeHvjOTrJTkaM9gbWh9ofCZIFyUzK
+	 3oUAGS/JIbKe3c1EVV3+IV4mcVZTiQouECa9IGE8PiRHfkP1ugLYBg+trUapm5Lyps
+	 vqKMHrmg1Nd7YBXM9PdZIBBFIyYIKQKBnMOTyu3qT64GdUn66Mc+vshDl8Wm5g45Fv
+	 h+09ytwGXLP4FeaO9/pKWGpYiIfxwCnkCWVbreCXmZRd7+h743ANo1qZrR9fjeDZaW
+	 52oW+rdV3/fCA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bH8FZ61Gcz4wbW;
+	Wed, 11 Jun 2025 12:08:02 +1000 (AEST)
+Date: Wed, 11 Jun 2025 12:08:01 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Simona Vetter <simona.vetter@ffwll.ch>
+Cc: Intel Graphics <intel-gfx@lists.freedesktop.org>, DRI
+ <dri-devel@lists.freedesktop.org>, Dmitry Baryshkov
+ <dmitry.baryshkov@linaro.org>, Dmitry Baryshkov
+ <dmitry.baryshkov@oss.qualcomm.com>, Gabriel Dalimonte
+ <gabriel.dalimonte@gmail.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Maxime Ripard <mripard@kernel.org>
+Subject: linux-next: manual merge of the drm-misc tree with the
+ drm-misc-fixes tree
+Message-ID: <20250611120801.48566070@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 3/4] KVM: TDX: Exit to userspace for GetTdVmCallInfo
-To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
- "Li, Xiaoyao" <xiaoyao.li@intel.com>,
- "pbonzini@redhat.com" <pbonzini@redhat.com>,
- "seanjc@google.com" <seanjc@google.com>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Cc: "mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>,
- "Huang, Kai" <kai.huang@intel.com>, "Yao, Jiewen" <jiewen.yao@intel.com>,
- "Chatre, Reinette" <reinette.chatre@intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "Zhao, Yan Y" <yan.y.zhao@intel.com>,
- "Lindgren, Tony" <tony.lindgren@intel.com>,
- "Shutemov, Kirill" <kirill.shutemov@intel.com>,
- "Hunter, Adrian" <adrian.hunter@intel.com>,
- "Yamahata, Isaku" <isaku.yamahata@intel.com>
-References: <20250610021422.1214715-1-binbin.wu@linux.intel.com>
- <20250610021422.1214715-4-binbin.wu@linux.intel.com>
- <ff5fd57a-9522-448c-9ab6-e0006cb6b2ee@intel.com>
- <9421ffccdc40fb5a75921e758626354996abb8a9.camel@intel.com>
- <d4285aa9adb60b774ca1491e2a0be573e6c82c07.camel@intel.com>
-Content-Language: en-US
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <d4285aa9adb60b774ca1491e2a0be573e6c82c07.camel@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/Q/mECVjvsV7CLbvRf5Gkl3k";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
+--Sig_/Q/mECVjvsV7CLbvRf5Gkl3k
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 6/11/2025 12:54 AM, Edgecombe, Rick P wrote:
-> On Tue, 2025-06-10 at 09:50 -0700, Rick Edgecombe wrote:
->> Why do we need an opt-in interface instead of a way to expose which exit's are
->> supported by KVM? I would think the need for a TDVMCALL opt-in interface would
->> only come up if there was a bad guest that was making TDVMCALLs that it did not
->> see in GetTdVmCallInfo.
+Today's linux-next merge of the drm-misc tree got a conflict in:
 
-The opt-in interface can eliminate some requirements for userspace.
-E.g, for GetQuote, this patch set enforces userspace to handle the exit reason
-due to GetQuote as the initial support, because KVM doesn't know if userspace
-is able to handle the exit reason or not without userspace's opt-in, unless
-it's handled by default in userspace.
+  drivers/gpu/drm/vc4/vc4_hdmi.c
 
->>   So that we would actually require an opt-in is not
->> guaranteed.
->>
->> Another consideration could be how to handle GetQuote for an eventual TDVMCALL
->> opt-in interface, should it be needed. The problem would be GetQuote would be
->> opted in by default and make the interface weird. But we may not want to have a
->> TDVMCall specific opt-in interface. There could be other TDX behaviors that we
->> need to opt-in around. In which case the opt-in interface could be more generic,
->> and by implementing the TDVMCall opt-in interface ahead of time we would end up
->> with two opt-in interfaces instead of one.
+between commit:
 
-Maybe we can use a TDX specific opt-in interface instead of TDVMCALL specific
-interface.
-But not sure we should add it now or later.
+  c0317ad44f45 ("drm/vc4: fix infinite EPROBE_DEFER loop")
 
->>
->> So how about just adding a field to struct kvm_tdx_capabilities to describe the
->> KVM TDVMcalls? Or some other place? But don't invent an opt-in interface
->> until/if we need it.
-> Oh, and there already is a hypercall exit opt-in interface, so
-> KVM_CAP_TDX_USER_EXIT_TDVMCALL would overlap with it, right?
-Not sure what does "overlap" mean here.
+from the drm-misc-fixes tree and commit:
 
-They have different namespaces, so they don't impact each other.
+  d9f9bae6752f ("drm/bridge: allow limiting I2S formats")
 
-Or did you mean it's a duplication both having KVM_CAP_EXIT_HYPERCALL and
-KVM_CAP_TDX_USER_EXIT_TDVMCALL?
+from the drm-misc tree.
+
+I fixed it up (the former removes code updated by the latter, so I just
+removed the code) and can carry the fix as necessary. This is now fixed
+as far as linux-next is concerned, but any non trivial conflicts should
+be mentioned to your upstream maintainer when your tree is submitted for
+merging.  You may also want to consider cooperating with the maintainer
+of the conflicting tree to minimise any particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Q/mECVjvsV7CLbvRf5Gkl3k
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhI5QEACgkQAVBC80lX
+0Gx5sAgAma9RHCJSWk5R3L3oKbQiQZ4Esp3YpBsZ/0pijUYtjHkJ0qLIW/A4nmeS
+Xm2zkhxQVblyDElX+5oD0J6ng01+gxW34v3aPtatw8OVMKIGGmc0l4DVJVmE6iVf
+xKfnLTuOk2rTH2G6prIbxxlinDHLap702gDWm1gsII8Hj/a/S96pN5AVac9MN4he
+kTTEmN06kQP7OMFqDD9FT7n/FUs4U/xmOewOpHF3lor20HwxDK/ZnocsoL5YFK2H
+3hk9CEAUr0HM8jlbQoRbLyK+PETY9uJKYBGdXv2kor5W9VSpeAhLM4jtSmFKsP//
+C0zPDtpuK8Qg4wYZNCJ2LFJu02IjtQ==
+=eatc
+-----END PGP SIGNATURE-----
+
+--Sig_/Q/mECVjvsV7CLbvRf5Gkl3k--
