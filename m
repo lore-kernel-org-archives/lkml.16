@@ -1,272 +1,153 @@
-Received: from smtp1.tecnico.ulisboa.pt (smtp1.tecnico.ulisboa.pt [193.136.128.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 388DF260562;
-	Wed, 11 Jun 2025 11:47:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.136.128.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1D625BEED
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:49:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749642480; cv=none; b=UlTPzOjuJkUmDykuhi0S+tj8bFo0YzKDtL/vdLpZXYXPZ1J61zPCAndf7xQ6p0H+8g3dBVwiB2rbiMrnvaFAj964B7pq/PpPHw1vQuk3LkXEPRcYqvuJ+eixeSXgTolQDtQms1KunpxdoKzDc/Sb+JWVbFZQkOTqs3Z5LA2m6D0=
+	t=1749642542; cv=none; b=pQ0Zzq9k94JP2aXO6ThEwWdluhfkMTpZnvoMw9erwhtQDG4IHv8GKgA6mypKIgib/Zy1GLFhucfa8Bg/EmkUETv1DniyZ5ijuumfNRvbl//2LBQDpop/ynY/+9kfHbscgm0QdFh9LJI1EbbMr3gMWx6ty0rTCwidOYBv08XW7Q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749642480; c=relaxed/simple;
-	bh=IdMBVvgaXytKVcHq/lbqSGRHi2D8T8Rr04wHTwx+0gk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R6elnQCjtvSKdaf4WL8AT4VhzuKsqhpANFPd9865Eynt9n/OYGekVK0/JbHhIKaCCeShp8xcOp1CUgdsZVA+7y7i5eCC//Ln6YImis4lNLRvK1E6eT/yJy5rcBAoqzpExM9El6SopbaXqnwqcR9iA7lr0cJQJ5/O4jfumGTq3SM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt; spf=pass smtp.mailfrom=tecnico.ulisboa.pt; dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b=nS0nlRsc; arc=none smtp.client-ip=193.136.128.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tecnico.ulisboa.pt
+	s=arc-20240116; t=1749642542; c=relaxed/simple;
+	bh=35M5gOyWlSaqL6iH1KU+YV0U7S6wgKSwxLGbs4KIhfE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OA9nYEqdFDOlKCHun0emcd42hxOjpekNdc1mbWQxUnoIiVvqb8DTfdfkA1mE263ASX4YZwRjL8uXoVfrNrBlN4Gw94vr7llPOXgxUOjnzPu/0EYywzqfagE2QDaXEfkLIgsu37Ywn4cose6NvCh5GC81VdCMR15/MpfNNvtlH38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C9ghENme; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b="nS0nlRsc"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTP id 9DC196003010;
-	Wed, 11 Jun 2025 12:47:48 +0100 (WEST)
-X-Virus-Scanned: by amavis-2.13.0 (20230106) (Debian) at tecnico.ulisboa.pt
-Received: from smtp1.tecnico.ulisboa.pt ([127.0.0.1])
- by localhost (smtp1.tecnico.ulisboa.pt [127.0.0.1]) (amavis, port 10025)
- with LMTP id 0b2qLiOQMRWj; Wed, 11 Jun 2025 12:47:46 +0100 (WEST)
-Received: from mail1.tecnico.ulisboa.pt (mail1.ist.utl.pt [193.136.128.10])
-	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTPS id B7514600300D;
-	Wed, 11 Jun 2025 12:47:45 +0100 (WEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tecnico.ulisboa.pt;
-	s=mail; t=1749642466;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=asfj8P0qBl+47/jdsiGM3FqMrZ4mD4Q9Fmdq7rUrsPM=;
-	b=nS0nlRscUryncl2VrCpg9Drtep5/5mB+xDfRFEae1u6GFaOWQcLulY+h2Oyl5lnccdAe4j
-	HtHYY/mtuReuUFo0O8HNQRPscns/FhqeuBi29p2B9XAyjIj7hjDvY7CpELzZk9l8/MIdpq
-	jTbXVb2r/07TwBGvDLnd5K2RGsYPtDI=
-Received: from [IPV6:2001:8a0:57db:f00:3ee2:38aa:e2c9:7dde] (unknown [IPv6:2001:8a0:57db:f00:3ee2:38aa:e2c9:7dde])
-	(Authenticated sender: ist187313)
-	by mail1.tecnico.ulisboa.pt (Postfix) with ESMTPSA id EDDCE360061;
-	Wed, 11 Jun 2025 12:47:43 +0100 (WEST)
-Message-ID: <da94459b-1e06-4e07-936c-51aac41c0d26@tecnico.ulisboa.pt>
-Date: Wed, 11 Jun 2025 12:47:20 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C9ghENme"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-60794c43101so6871108a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 04:49:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749642539; x=1750247339; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LSRjpysjkvUqzPQa+4DtR1H7++BicgArTKa2t6hjtGY=;
+        b=C9ghENmeToVUF/KYUew990rIk9SrUTkgGjpP12pJl7qXlQLp+y4NweVUlamKaSsMjr
+         2zHl013HMcukEUKqOBOUlE9DmJJ8K1NADum6QEgjHFr3+Xsxl7EaWr1KCTc7earcwBAv
+         TXh+0iU/lcd87q9yNkTaWDFu4/5jDw4Dfl6CyToMhlie0Mi7S7Xn1Ndc85AwJdLJEMcC
+         /IBWDysgXbsDwiJcYR9JSOajoncc8ZdHrRc4+w+VXT3SeRG9tmBpLluEpvVcNliYEugi
+         T7hsNKFhcr1OUQIcPilvxsG6fuM4BHNHcb5PLMPnDr6s03EpAPRb9DjldjbsfO3NtyKx
+         H2hQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749642539; x=1750247339;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LSRjpysjkvUqzPQa+4DtR1H7++BicgArTKa2t6hjtGY=;
+        b=ikQTvjnZjVaoFLzUmS8C4Kx0EY6QzpkAOWBXZRsteobeeg98djJg8Yk20+5ef6QRaV
+         lYrFc+Z+KwYHo1CjJDyqGt3xwTEPLo6dD5mcVH13X+9rSdJ/dhM7EMIA3YFYYSlnMaTK
+         MROTPEdOZFHUoRvkCwRMuTaJ0py692GWQslgm9As+4VxsrKssDwBNV28X9b7DGGku/a2
+         cj31E9oRT0lRWJf41Z75m5USgEJtIbkzrlH8kQF7c7CN1IVeaulje7H78NhuMiPxTd4T
+         Hkx+JvCiYUzVIaytC1iTrWp556wDY/e/Pidp8PBHuIw0bb728EzSMU8BoB5zFPhFmB0y
+         YqzQ==
+X-Gm-Message-State: AOJu0YwBGwHZLAgTE+yFK6ViHuCiB2pPlXnNsA8dN9Gn/Kq85ScxrRQ9
+	Qwncf9BmHLxpAz+/M3JUQJLjbtUGkz4Vfo+KyXJx+uCy92hC0HisFi0z
+X-Gm-Gg: ASbGncsnnssYYBBUZz/hYUJdoKgOOGowmvEbiymvHFjMJn0Lp0UKmRSfbipQKEww2Ie
+	sgdLJ0CdIb+3tC4heexlHAcIR8kuXUfmWzrZKTrpVjmrhgOVt1vdKz3ML4Ri9lHKSr88QyIDASr
+	66ogneBYMwA6+2udKRC15xhprfrCf9on7JH9kebfzs7F7dFUGrXqJT6NRoiyqBC3yUZ/T7ya+VI
+	ExN+m0HhPOI2DNu4O0REV/gzE2+KrXDGlzC1Kg5t9ev2wymez6IEzaO9/nbagSFuAsOQRqY3tX0
+	5OBxrhItobUoySeJ5ezQJXgbIEJu9QgM3Zyku4sVCbUdSbE7UjFZGIAHS4taHaEcnAVMH//l/WZ
+	iag==
+X-Google-Smtp-Source: AGHT+IFvMMhhCIH4jalpWwB+920r18WVhja2oWWNtYf6uMWbIL0d0FmohQk/xL8AYQFH9BE5Ruxc9w==
+X-Received: by 2002:a17:906:f581:b0:ad2:15c4:e23f with SMTP id a640c23a62f3a-ade8946222dmr282933066b.13.1749642538835;
+        Wed, 11 Jun 2025 04:48:58 -0700 (PDT)
+Received: from localhost.localdomain ([41.79.198.22])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade33c09594sm787588566b.97.2025.06.11.04.48.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 04:48:58 -0700 (PDT)
+From: Khalid Ali <khaliidcaliy@gmail.com>
+X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
+To: tglx@linutronix.de,
+	peterz@infradead.org,
+	luto@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Khalid Ali <khaliidcaliy@gmail.com>
+Subject: [PATCH] kernel/entry: Remove some redundancy checks on syscall works
+Date: Wed, 11 Jun 2025 11:43:53 +0000
+Message-ID: <20250611114810.785-1-khaliidcaliy@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] drm/tegra: Add NVJPG driver
-To: Mikko Perttunen <cyndis@kapsi.fi>,
- Thierry Reding <thierry.reding@gmail.com>,
- Mikko Perttunen <mperttunen@nvidia.com>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Jonathan Hunter <jonathanh@nvidia.com>,
- Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-tegra@vger.kernel.org, devicetree@vger.kernel.org
-References: <20250606-diogo-nvjpg-v1-0-5f2c36feeb39@tecnico.ulisboa.pt>
- <20250606-diogo-nvjpg-v1-1-5f2c36feeb39@tecnico.ulisboa.pt>
- <811ad406-4afb-45c5-9783-683779f874cc@kapsi.fi>
-Content-Language: en-US
-From: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
-In-Reply-To: <811ad406-4afb-45c5-9783-683779f874cc@kapsi.fi>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+There is a redundant checks of thread syscall work.
 
-Hi Mikko, thanks for the quick review!
+After we read thread syscall work we are checking the work bits using
+SYSCALL_WORK_ENTER and SYSCALL_WORK_EXIT on syscall entry and exit
+respectively, and at the same time syscall_trace_enter() and
+syscall_exit_work() checking bits one by one, the bits we already checked.
+This is redundancy. So either we need to check the work bits one by one as I
+did, or check as whole. On my prespective, i think the way code is
+implemented now checking work bits one by one is simpler and gives us
+more granular control.
 
-On 6/10/25 4:26 AM, Mikko Perttunen wrote:
-> On 6/6/25 7:45 PM, Diogo Ivo wrote:
->> Add support for booting and using NVJPG on Tegra210 to the Host1x
->> and TegraDRM drivers. This driver only supports the new TegraDRM uAPI.
-> 
-> Hello Diogo -- I'm happy to see this driver!
-> 
->>
->> Signed-off-by: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
->> ---
->>   drivers/gpu/drm/tegra/Makefile |   1 +
->>   drivers/gpu/drm/tegra/drm.c    |   2 +
->>   drivers/gpu/drm/tegra/drm.h    |   1 +
->>   drivers/gpu/drm/tegra/nvjpg.c  | 379 +++++++++++++++++++++++++++++++ 
->> ++++++++++
->>   4 files changed, 383 insertions(+)
->> ...
->> +
->> +static __maybe_unused int nvjpg_runtime_resume(struct device *dev)
->> +{
->> +    struct nvjpg *nvjpg = dev_get_drvdata(dev);
->> +    int err;
->> +
->> +    err = clk_prepare_enable(nvjpg->clk);
->> +    if (err < 0)
->> +        return err;
->> +
->> +    usleep_range(20, 30);
->> +
->> +    if (nvjpg->rst) {
->> +        err = reset_control_acquire(nvjpg->rst);
->> +        if (err < 0) {
->> +            dev_err(dev, "failed to acquire reset: %d\n", err);
->> +            goto disable_clk;
->> +        }
->> +
->> +        err = reset_control_deassert(nvjpg->rst);
->> +        if (err < 0) {
->> +            dev_err(dev, "failed to deassert reset: %d\n", err);
->> +            goto release_reset;
->> +        }
->> +
->> +        usleep_range(20, 30);
->> +    }
-> 
-> Do we need this manual reset handling? NVJPG is only on T210+ where the 
-> power domain code handles the reset as well. Did you run into any issues 
-> with it?
+I also checking if SYSCALL_WORK_SYSCALL_AUDIT is set on work as other
+part. Thus we don't need SYSCALL_WORK_ENTER and SYSCALL_WORK_EXIT
+anymore. We may need on the future, so we can safely let them be there.
 
-Everything works just fine without the manual reset handling. I was
-unsure if I should add it to the driver and in the end I decided to do
-it because I thought that it would be better if the driver had explicit
-control over it. However if delegating this to the power domain code is
-enough I'll delete it for v2.
+Signed-off-by: Khalid Ali <khaliidcaliy@gmail.com>
+---
+ include/linux/entry-common.h | 9 ++-------
+ kernel/entry/common.c        | 8 +++++---
+ 2 files changed, 7 insertions(+), 10 deletions(-)
 
->> +
->> +    err = nvjpg_load_falcon_firmware(nvjpg);
->> +    if (err < 0)
->> +        goto assert_reset;
->> +
->> +    err = falcon_boot(&nvjpg->falcon);
->> +    if (err < 0)
->> +        goto assert_reset;
->> +
->> +    return 0;
->> +
->> +assert_reset:
->> +    reset_control_assert(nvjpg->rst);
->> +release_reset:
->> +    reset_control_release(nvjpg->rst);
->> +disable_clk:
->> +    clk_disable_unprepare(nvjpg->clk);
->> +    return err;
->> +}
->> ...
->> +
->> +static int nvjpg_probe(struct platform_device *pdev)
->> +{
->> +    struct device *dev = &pdev->dev;
->> +    struct nvjpg *nvjpg;
->> +    int err;
->> +
->> +    /* inherit DMA mask from host1x parent */
->> +    err = dma_coerce_mask_and_coherent(dev, *dev->parent->dma_mask);
->> +    if (err < 0) {
->> +        dev_err(&pdev->dev, "failed to set DMA mask: %d\n", err);
->> +        return err;
->> +    }
->> +
->> +    nvjpg = devm_kzalloc(dev, sizeof(*nvjpg), GFP_KERNEL);
->> +    if (!nvjpg)
->> +        return -ENOMEM;
->> +
->> +    nvjpg->config = of_device_get_match_data(dev);
->> +
->> +    nvjpg->regs = devm_platform_get_and_ioremap_resource(pdev, 0, NULL);
-> 
-> This can be devm_platform_ioremap_resource -- slightly simpler.
+diff --git a/include/linux/entry-common.h b/include/linux/entry-common.h
+index f94f3fdf15fc..60a6741d5c5a 100644
+--- a/include/linux/entry-common.h
++++ b/include/linux/entry-common.h
+@@ -165,11 +165,7 @@ long syscall_trace_enter(struct pt_regs *regs, long syscall,
+ static __always_inline long syscall_enter_from_user_mode_work(struct pt_regs *regs, long syscall)
+ {
+ 	unsigned long work = READ_ONCE(current_thread_info()->syscall_work);
+-
+-	if (work & SYSCALL_WORK_ENTER)
+-		syscall = syscall_trace_enter(regs, syscall, work);
+-
+-	return syscall;
++	return  syscall_trace_enter(regs, syscall, work);
+ }
+ 
+ /**
+@@ -408,8 +404,7 @@ static __always_inline void syscall_exit_to_user_mode_work(struct pt_regs *regs)
+ 	 * enabled, we want to run them exactly once per syscall exit with
+ 	 * interrupts enabled.
+ 	 */
+-	if (unlikely(work & SYSCALL_WORK_EXIT))
+-		syscall_exit_work(regs, work);
++	syscall_exit_work(regs, work);
+ 	local_irq_disable_exit_to_user();
+ 	exit_to_user_mode_prepare(regs);
+ }
+diff --git a/kernel/entry/common.c b/kernel/entry/common.c
+index e774dc9e7eaf..9accf5fde8e7 100644
+--- a/kernel/entry/common.c
++++ b/kernel/entry/common.c
+@@ -64,8 +64,9 @@ long syscall_trace_enter(struct pt_regs *regs, long syscall,
+ 		 */
+ 		syscall = syscall_get_nr(current, regs);
+ 	}
+-
+-	syscall_enter_audit(regs, syscall);
++	
++	if (work & SYSCALL_WORK_SYSCALL_AUDIT)
++		syscall_enter_audit(regs, syscall);
+ 
+ 	return ret ? : syscall;
+ }
+@@ -162,7 +163,8 @@ void syscall_exit_work(struct pt_regs *regs, unsigned long work)
+ 		}
+ 	}
+ 
+-	audit_syscall_exit(regs);
++	if (work & SYSCALL_WORK_SYSCALL_AUDIT)
++		audit_syscall_exit(regs);
+ 
+ 	if (work & SYSCALL_WORK_SYSCALL_TRACEPOINT)
+ 		trace_sys_exit(regs, syscall_get_return_value(current, regs));
+-- 
+2.49.0
 
-Thanks, I'll update that for v2.
-
->> +    if (IS_ERR(nvjpg->regs))
->> +        return PTR_ERR(nvjpg->regs);
->> +
->> +    nvjpg->rst = devm_reset_control_get_exclusive_released(&pdev- 
->> >dev, "nvjpg");
->> +    if (IS_ERR(nvjpg->rst)) {
->> +        err = PTR_ERR(nvjpg->rst);
->> +
->> +        if (err != -EBUSY || WARN_ON(!pdev->dev.pm_domain)) {
->> +            dev_err(&pdev->dev, "failed to get reset control: %d\n",
->> +                err);
->> +            return err;
->> +        }
->> +
->> +        /*
->> +         * At this point, the reset control is most likely being used
->> +         * by the generic power domain implementation. With any luck
->> +         * the power domain will have taken care of resetting the SOR
->> +         * and we don't have to do anything.
->> +         */
->> +        nvjpg->rst = NULL;
->> +    }
-> 
-> I see you've taken this from sor.c, but I think it should be 
-> unnecessary. I imagine the code in sor.c is overcomplicated as well, 
-> maybe because we used not to have the power domain implementation.
-
-Following my comment above I'll delete this block for v2.
-
->> +
->> +    nvjpg->clk = devm_clk_get(dev, "nvjpg");
->> +    if (IS_ERR(nvjpg->clk)) {
->> +        dev_err(&pdev->dev, "failed to get clock\n");
->> +        return PTR_ERR(nvjpg->clk);
->> +    }
-> 
-> Probably a good idea to set the clock rate to max (see vic.c).
-
-Sounds good, I'll update it for v2.
-
->> +
->> +    nvjpg->falcon.dev = dev;
->> +    nvjpg->falcon.regs = nvjpg->regs;
->> +
->> +    err = falcon_init(&nvjpg->falcon);
->> +    if (err < 0)
->> +        return err;
->> +
->> +    platform_set_drvdata(pdev, nvjpg);
->> +
->> +    INIT_LIST_HEAD(&nvjpg->client.base.list);
->> +    nvjpg->client.base.ops = &nvjpg_client_ops;
->> +    nvjpg->client.base.dev = dev;
->> +    nvjpg->client.base.class = HOST1X_CLASS_NVJPG;
->> +    nvjpg->dev = dev;
->> +
->> +    INIT_LIST_HEAD(&nvjpg->client.list);
->> +    nvjpg->client.version = nvjpg->config->version;
->> +    nvjpg->client.ops = &nvjpg_ops;
->> +
->> +    err = host1x_client_register(&nvjpg->client.base);
->> +    if (err < 0) {
->> +        dev_err(dev, "failed to register host1x client: %d\n", err);
->> +        goto exit_falcon;
->> +    }
->> +
->> +    pm_runtime_use_autosuspend(dev);
->> +    pm_runtime_set_autosuspend_delay(dev, 500);
->> +    devm_pm_runtime_enable(dev);
->> +
->> +    return 0;
->> +
->> +exit_falcon:
->> +    falcon_exit(&nvjpg->falcon);
->> +
->> +    return err;
->> +}
->> +
->> +static void nvjpg_remove(struct platform_device *pdev)
->> +{
->> +    struct nvjpg *nvjpg = platform_get_drvdata(pdev);
->> +
->> +    host1x_client_unregister(&nvjpg->client.base);
->> +    falcon_exit(&nvjpg->falcon);
->> +}
->> +
->> +static const struct dev_pm_ops nvjpg_pm_ops = {
->> +    SET_RUNTIME_PM_OPS(nvjpg_runtime_suspend, nvjpg_runtime_resume, 
->> NULL)
->> +    SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
->> +                pm_runtime_force_resume)
->> +};
-> 
-> There are modern, improved variants with no SET_ prefix.
-
-I'll update it for v2 as well.
-
-Thank you for your time!
-Diogo
