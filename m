@@ -1,132 +1,126 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E4CA20127D
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 19:04:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCFD620127D;
+	Wed, 11 Jun 2025 19:05:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749668688; cv=none; b=GCkcYcmBiUmmnhNre7VUmNFVLR2FUawdglfivy075G3/CJlA5g1TS+k+J4Q9w5OY/qfrcMlgoWJuO47KUCAqBynKK7VUb4hJP81oWFUyDL7kzcBR6tmp3MbymzDACYZ8WQjDUWmnwY5Cb++8SkHnqYP+i7DQu0j+Wh82GLeLs5c=
+	t=1749668700; cv=none; b=Rm6+FPnVfy8Cd/1HZvgHOcq7z8Gaagw8K53o3zM7YCq005qfO1Ae48E4XPxEAH4TwrO9K/SVQ9w7POce+RtfudduFzToHCqIHXG0qQPWppGVoLjNXUBzGUw4sWcnCdw9ivAECcfFXjGUI+zrrBZtKCxL2+7M0JEdPF3GX1F5LQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749668688; c=relaxed/simple;
-	bh=+t8ACet9xqwRNJy9b8899wiD25b/003UaXpKZdUYUJE=;
+	s=arc-20240116; t=1749668700; c=relaxed/simple;
+	bh=icZWZbeICgE88YiKrti132QlDFdl7tW9WpDg51w0jtM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uiAxdG+f5bzkENHvOvUwf6pQpOZkUX/wG6BUoxqcnD9RNM0pRlgEScHhlw7E1+4QbrC5gWc11+A7hCG9R+MdQZ9xaRJFqfvqnO+AD41ObgakF9HRMErT7rN70aHV81did2M5bPVxE9atgoYYhSfWQ0DNalEiL2UPfTwPc/b+Q1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L/Sbp4qm; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=l//ya4T4ph4LsK6r8IzyECEk7/MZEX3VveQFZh1cYxFD8HTg4Xm/HRR1JWQNY21ckMOVCqLJdYqtsgTbRFgNbwTt/SmWwsJTO4+WaznWjJDMUuPFWtTLez61qemY1Z68elZHkbKH/C1X3ZWBz5p+A3B8bripTWqTzV0BHgrm3uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dRo93oQw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L/Sbp4qm"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-b1ff9b276c2so62707a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 12:04:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749668686; x=1750273486; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Yu2PImzFHGaLiTWdxu2ihmwRTn972j20R7GA0tijYc4=;
-        b=L/Sbp4qmhiLJrc5EZADLmfzNaIlDUr0hY7YliKl/Os9xnuFOVsOAxPb1GJP3/xPljD
-         F4EiL1NKg+6yT6u6lhASa1B+n/eN8nUpj55Ch88ewAjpNXNF5qbl7wRMZYdCCUcOqru1
-         zdnJCVHpuxonUj0gkpSlKWydxBJ6UmhaOtepp3MyQbDt1GAZN82E21LPnYIBuVzvwDuG
-         gcqiEQj3x/Ti8k5ovB5oOCfoWdcHU2cPqMazsaxgUdpeu72jqXY09A2l9ppP/vx6pEhf
-         mi3Nzb+iX8mtV2I6L8pPq5fc2XnGgKCLI6fjWojaiMyg/wQDuphRQdOugPT4yzzF2ORn
-         jP4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749668686; x=1750273486;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Yu2PImzFHGaLiTWdxu2ihmwRTn972j20R7GA0tijYc4=;
-        b=S8uNH9LZeHD1kqI5TWL5zFJgknbDBi0XzbiwTT6lpoPnf+7C/KK+SA3TZtvxpQgOzi
-         vVGl8wJxw5n6bS5DV6hzPd/PdQkcjukyTKXS4fyABoMA7xZ11KFG7G0IucghLfWQjMUo
-         0a7PQFcb8EH/ZBduDH+66qqQ6XA0pB3t39dqUKXy8A+irN5wkzBFgvVFwkU1Ik2ZX1nA
-         BKhzTHFwirrNNM3ALFp9VPEdY1yOQdbVfGB7NUUotXF6g0wOW9M5dp8tEMehHRgCf0gD
-         xgR7yI8ali6FSqMudBwrT3twCAodOnq4IqZsLht+NCiR/+0idikFkp3xjiL+2iYAdt/S
-         MUBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV+rdMDWORll5NaOHssZuClxz56D+GYfbUrNWAJXdiuzzYaROSdfD3sPvFYmM2t6UHRAOlV2buK4TCkrrQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5vBa0C+gDCiQeIV8R4d+Z4qCM8q03BnhlCb2nSg/G40W8bIAc
-	5emUrSUmBxveHtytwRH44zglpiFTodFUuTNj8sCVlXliL+f7Fko3/rz7
-X-Gm-Gg: ASbGncvn/0Np248hPNQJAaIjP4pY0zW+iHxsNQ+YsVSsTzzSFjkCE8GgCeNw6D/6zNL
-	3gdXVDBzn/QzqHaZnBTumpm2mQamH6T8Wz/KXXLl/d1/ImqdYcbbRsl0o4ho81TJGnmZsJrT9KB
-	91Bod6hob95szkhpmLk6HZQZ//RSDuzKwz7otz5s5ju/JSlZzCh2XOcZ0eoeGOHUVq5u/lMLvjQ
-	PRe68NgxAlcwLxsOgPWiAdfuh16rIkb0FwsruKXYD7I8q7GzCBz608T/LTb40HwtivDnFqX+ZI+
-	0uw4R2Q2UsVn9gdk2Rd6KGR2P1uqL7evYqYijPyB80qp1Snlkuts2Ulo/lQy4Q==
-X-Google-Smtp-Source: AGHT+IHlKwUHlG5l5OkH/T5Emuq4G3wP5gvRvJQ20dNe+S3Lsa4RrQlO5tlqWQU83u4ZPK3w8pteOw==
-X-Received: by 2002:a17:90b:520f:b0:311:fc8b:31b5 with SMTP id 98e67ed59e1d1-313c069ede0mr408927a91.14.1749668685680;
-        Wed, 11 Jun 2025 12:04:45 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313b20112d4sm1859375a91.20.2025.06.11.12.04.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 12:04:44 -0700 (PDT)
-Date: Wed, 11 Jun 2025 15:04:42 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: John Stultz <jstultz@google.com>
-Cc: I Hsin Cheng <richard120310@gmail.com>, tglx@linutronix.de,
-	sboyd@kernel.org, linux-kernel@vger.kernel.org,
-	jserv@ccns.ncku.edu.tw, skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH] clocksource: Utilize cpumask_next_wrap() to shrink code
- size
-Message-ID: <aEnTSuVy2Aq8jRk8@yury>
-References: <20250611104506.2270561-1-richard120310@gmail.com>
- <CANDhNCoJ_MmpEfyuL+JWav+NUfQDH3dm196JSE-Mv3QrPUzi3g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dRo93oQw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21AABC4CEE3;
+	Wed, 11 Jun 2025 19:05:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749668700;
+	bh=icZWZbeICgE88YiKrti132QlDFdl7tW9WpDg51w0jtM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dRo93oQwuzbVL+tUCDJOLtfcv2lLvUKFV1Cjf4ohjdd4T2CT2xZSiLLZWmg8KNg9M
+	 KRnhx3MAKKIXMpWjzpO9S5BWSZF7F//HmHCm3r2nLZaK39ry7+aa4jvybsg5YJTXke
+	 eiSWPOdtumLRkmJopSE9/GXdUxab1y8m0yr2yBA8sVvoYhem61hYlbEUXqQnybEC0B
+	 dasPxxQqQEFqCapIYsc1XgT3xukW0GS1qorgV0jS8fYbV6Yn1M1S4GztndYBdXk0EF
+	 JiqM5QpS82kzZv30MWc1/YLi7Tn/UpByjABvP/2jU/qPT1VYlehJM8EhNDwUCs4hzI
+	 EpjuvMes8i5Og==
+Date: Wed, 11 Jun 2025 19:04:58 +0000
+From: Eric Biggers <ebiggers@kernel.org>
+To: Diederik de Haas <didi.debian@cknow.org>
+Cc: linux-crypto@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
+	linux-kernel@vger.kernel.org, Ingo Franzki <ifranzki@linux.ibm.com>
+Subject: Re: [PATCH] crypto: testmgr - reinstate kconfig support for fast
+ tests only
+Message-ID: <20250611190458.GA4097002@google.com>
+References: <20250611175525.42516-1-ebiggers@kernel.org>
+ <DAJXJHLY2ITB.3IBN23DX0RO4Z@cknow.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANDhNCoJ_MmpEfyuL+JWav+NUfQDH3dm196JSE-Mv3QrPUzi3g@mail.gmail.com>
+In-Reply-To: <DAJXJHLY2ITB.3IBN23DX0RO4Z@cknow.org>
 
-On Wed, Jun 11, 2025 at 11:35:13AM -0700, John Stultz wrote:
-> On Wed, Jun 11, 2025 at 3:45 AM I Hsin Cheng <richard120310@gmail.com> wrote:
-> >
-> > Simplify the procedure of CPU random selection under
-> > "clocksource_verify_choose_cpus()" with "cpumask_next_wrap()". The
-> > logic is still the same but with this change it can shrink the code size
-> > by 18 bytes and increase readability.
-> >
-> > $ ./scripts/bloat-o-meter vmlinux_old vmlinux_new
-> > add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-18 (-18)
-> > Function                                     old     new   delta
-> > clocksource_verify_percpu                   1064    1046     -18
-> >
-> > Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
-> > ---
-> >  kernel/time/clocksource.c | 4 +---
-> >  1 file changed, 1 insertion(+), 3 deletions(-)
-> >
-> > diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-> > index bb48498ebb5a..ab580873408b 100644
-> > --- a/kernel/time/clocksource.c
-> > +++ b/kernel/time/clocksource.c
-> > @@ -343,9 +343,7 @@ static void clocksource_verify_choose_cpus(void)
-> >          */
-> >         for (i = 1; i < n; i++) {
-> >                 cpu = get_random_u32_below(nr_cpu_ids);
-> > -               cpu = cpumask_next(cpu - 1, cpu_online_mask);
-> > -               if (cpu >= nr_cpu_ids)
-> > -                       cpu = cpumask_first(cpu_online_mask);
-> > +               cpu = cpumask_next_wrap(cpu - 1, cpu_online_mask);
-> >                 if (!WARN_ON_ONCE(cpu >= nr_cpu_ids))
-> >                         cpumask_set_cpu(cpu, &cpus_chosen);
-> >         }
+On Wed, Jun 11, 2025 at 08:53:17PM +0200, Diederik de Haas wrote:
+> I was about to respond to your reply, but I guess this may be a better
+> fit for it. The TL;DR: version is this:
 > 
-> I think Yury submitted the same change here recently:
->   https://lore.kernel.org/lkml/20250607141106.563924-3-yury.norov@gmail.com/
+> If you think distros shouldn't enable it, as you initially clearly
+> described and it seems to me you still think so, the right thing for
+> distros to do, is to disable those test. Which in turn means the fast
+> tests should not be reinstated (?).
 > 
-> Though, I think he has another iteration needed as Thomas had feedback
-> on the subject line.
+> On Wed Jun 11, 2025 at 7:55 PM CEST, Eric Biggers wrote:
+> > From: Eric Biggers <ebiggers@google.com>
+> >
+> > Commit 698de822780f ("crypto: testmgr - make it easier to enable the
+> > full set of tests") removed support for building kernels that run only
+> > the "fast" set of crypto self-tests by default.  This assumed that
+> > nearly everyone actually wanted the full set of tests, *if* they had
+> > already chosen to enable the tests at all.
+> >
+> > Unfortunately, it turns out that both Debian and Fedora have the crypto
+> > self-tests enabled in their production kernels, and they seem to want to
 > 
-> The bloat-o-meter data is a nice inclusion here!
+> I explicitly referenced https://bugs.debian.org/599441 as that was the
+> only justification I found for enabling it.
+> In it, on 2010-10-07 "Mario 'BitKoenig' Holbe" said:
 > 
-> Yury: Would you be open to adapting I Hsin Cheng's commit message into
-> yours and adding them as co-author via the Co-developed-by: tag?
-> (Assuming I Hsin Cheng agrees - See
-> Documentation/process/submitting-patches.rst for how to do this
-> properly).
+>   I personally think (re)enabling these tests would be a way safer
+>   default for a distribution kernel which runs on lots of different
+>   hardware setups
+> 
+> Before I looked up that bug, I had not heard of that person, so I don't
+> know if they're a crypto expert or just a random person on the internet.
+> It also doesn't say *why* they thought it would be a good idea to enable
+> those tests.
+> I have no idea what Fedora's reasoning was for enabling it. Maybe their
+> reasons were sound; I think Debian's are rather thin (that I could
+> find). And from ~ 15 years ago.
+> 
+> > keep them enabled.  The full set of tests isn't great for that, since
+> 
+> I think the 'new' description is(/was) great. A subject matter expert
+> says/said "don't enable this on production kernels". I wish all Kconfig
+> help texts were this clear :-)
+> So based on the previous description, it seems wise that Debian (and
+> Fedora) would update their kernel config and disable those test.
+> 
+> In *my* update to 6.16-rc1, I only 'converted' to new names.
+> A change to my kernel config (ie disable the tests) would be in a
+> separate commit (with an appropriate commit msg).
+> I hadn't done that yet as I was curious what the results would be.
+> 
+> So "they seem to want to keep them enabled" seems a premature
+> conclusion; at least wrt Debian and AFAICT.
+> It's also possible that if/when people see the kernel warning, they'd
+> file a new Debian bug to have it disabled.
+> 
+> (I've made some contributions in the past, but) I am not part of
+> Debian's kernel team, so I don't know what they will decide.
+>  
+> I'll gladly leave it up to you if you still think reinstating the fast
+> tests is worth it, but I felt a bit more context was warranted.
+> 
+> Cheers,
+>   Diederik
 
-Yeah, bloat-o-meter report is good enough to add co-developed-by tag.
-I Hsin, do you agree?
+I mean, not enabling the tests in production is how it should be.
+
+But Fedora already enabled CRYPTO_SELFTESTS, apparently because of FIPS
+(https://gitlab.com/cki-project/kernel-ark/-/merge_requests/3886).
+
+You're right there doesn't seem to be an up-to-date bug for Debian
+(https://bugs.debian.org/599441 is old), so maybe my conclusion is premature.
+
+However, besides FIPS I think the problem is that the crypto/ philosophy is to
+throw untested and broken hardware drivers over the wall at users.  As long as
+that's the case, the self-tests do actually have some value in protecting users
+from those drivers, even though that's not how it should be.
+
+- Eric
