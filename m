@@ -1,379 +1,311 @@
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5BD283C8C
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 13:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FBF61E487;
+	Wed, 11 Jun 2025 13:49:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749649396; cv=none; b=SeZ7wK4IspGrMRB+QF41YBoCXZg2PbYw+rb1AcJLKhK1M3MXG8J+ClpZ/hjoi3v1FRdi6LiIhJN5rFYrEQ4kJXd6zbOY6uw3WG7Mh92V6bmurik+F/Bw0j/axlaMtw0gUXMDA2hvvauVTf/vaf5gb6xzekVmH7TM8pruRYnWAxg=
+	t=1749649745; cv=none; b=WTUeyj+yLNJZprSUEFTPdr524nEvvsODjlffxtgvBJqHLpdwD7HqAZmpvU5NGtz166g7JhmeAblwHBC3BMDJFo39rzjg6CQw1ZeFk/SPra/xJbeO3FFkaZHoXc5ioCMsizRj+6BVBHsTv7TqJorv1sBNi2plLYYAl3v/3lR2TA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749649396; c=relaxed/simple;
-	bh=d7M2Yf2nMMYVtXgp6jVsep8bS5X2JaEQTLw12tFnuH8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WY6DOj4XvGbAhR2wzifIe8RRVj9sbO9EniURfqH2kFtWRq5VeluBJXxQ33NXVdwDi8eh0VrEtW08rheqbIzWd3p+4on0oQ5hneplIsc9RPHsdnvIgZsdRD1ia4QpVVYFfIGalcZDwOayOvkulLTr9aZ7JPwK/G9zU7MSUteUidE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=vH9Kn9zY; arc=none smtp.client-ip=115.124.30.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1749649745; c=relaxed/simple;
+	bh=sQbaweY0frk2luiX3/n3rJGLVgftGMYmUJmjH9Ph3Fo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jJEmzt7hG4ccDNuV4NhKIqhpxvOZyFfcO6F9nyLN72JlIOuWx0PiIUD8rzMoMK3qrmpHQNiPhrPFAqDgWsXA4pN7HXCwO1FZLZAL48vKsCRu5llgYmH3pmMXOqw3JkwgoHjoshNLNi8tSeSkKFNZyFjOwHG/H4YYZlM9WdGN+xE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H5FspoOz; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="vH9Kn9zY"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1749649382; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
-	bh=uNWfyrwsZewb1ypeWW/hB0H0RxCft6Ku1ei4fo0t4Ck=;
-	b=vH9Kn9zYLkCSr7Eu3ZJvl4ZKv5tuPchQ349pNA+YtQ6hfJPf3l6hMzUnfYK5XE8RVLqwf3CXL+d1Vv5VLdW/QYTNuKnyyzpT5pCRZbfEGF0jt5O9bYryPgXOMOtgnn9DzLfttpNwu+ZCMhgPgpIRY9kfmaqVrooM1yWM0gcT5A8=
-Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WddMyx3_1749649381 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 11 Jun 2025 21:43:01 +0800
-Date: Wed, 11 Jun 2025 21:43:00 +0800
-From: Feng Tang <feng.tang@linux.alibaba.com>
-To: Petr Mladek <pmladek@suse.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Lance Yang <lance.yang@linux.dev>, linux-kernel@vger.kernel.org,
-	mhiramat@kernel.org, llong@redhat.com,
-	"Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH v1 1/3] kernel/panic: generalize panic_print's function
- to show sys info
-Message-ID: <aEmH5JbdwFopOU4g@U-2FWC9VHC-2323.local>
-References: <20250511085254.61446-1-feng.tang@linux.alibaba.com>
- <20250511085254.61446-2-feng.tang@linux.alibaba.com>
- <aCMXf0JOi1g6ZI8u@pathway.suse.cz>
- <aCNHzXkz4wfnIDPM@U-2FWC9VHC-2323.local>
- <aCXCpGkXJ1x9ncHS@pathway.suse.cz>
- <aCbPOry4r_ac0zUL@U-2FWC9VHC-2323.local>
- <aC1lKGWOuYXP7Bmt@U-2FWC9VHC-2323.local>
- <aEhS4iybzwYYMkJF@pathway.suse.cz>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H5FspoOz"
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-70c9fabeffdso672397b3.1;
+        Wed, 11 Jun 2025 06:49:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749649742; x=1750254542; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WRZVjmnICFpQvhZEBlWNB0AvSNBklwqbPtIWM3ToCw0=;
+        b=H5FspoOz7AMqG3U4zAaU9SnFhHL3+IWkGptD0sNZL9wTIGkvpBcS79vf5/2TDCa0PH
+         g0wX7ib0Ffm1eTlpTm/h+1XYMquukIpAxtXvGLROketHg3tFng/pP8NJ4n8czLjGI8sY
+         AG5g0ovuxcmp0NwXZCiVgQFjNVO2kXsry1MKwPqObWIrdkUpL7VhqUiQdIvUB8y8Ddof
+         hx1j4hJqo5VeUvRN+IplF7bECs4ZDfsr4pCsRm1dUjb6gLsMf9rpthgbLFTQzbQP5MoC
+         a/IGXdEdTwP1ptNXwXn8+JeMOMSuMolHUzUEks1t+h1w1wJMfyoAbp3CjXMZbHQAWnMs
+         N1fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749649742; x=1750254542;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WRZVjmnICFpQvhZEBlWNB0AvSNBklwqbPtIWM3ToCw0=;
+        b=NlBLddKawQABMvV3/yNezmlURAEQbrd9lN5iLO1PCNrqpmRXCAvLBJfjL4sD0VXxLO
+         ICOGDm5hjN3iBdeDoIbsvPEIb3q1cSa2sunF/SNmfmU3+h4TnHZv0K5D7P0Vajo6671j
+         r0WwekZRDHyp3igXnanXSoHSLeUmlWRxgHwMPRsClF381As54D81EBzhKr4rdyJi/kfA
+         SO9FO8B+Cyh1N5RlcqGary0z6n0lVjukhGTC6wVDJ6dq8xYQLEhSdcaNiXpameh97dYO
+         9HXN/FH/a2IUAE8dfEcc+WUFw21upiNPwbekDbzdBjYezrFcmS1Rh2DoWgLtaDu0eKwo
+         VEVw==
+X-Forwarded-Encrypted: i=1; AJvYcCWDmzn5UPnT/CMaJb8rSBLsGcXVRPyNBkf8GY6DpVv4HpXEopcxYE1MZw9mZm7VgRw0qhlYh2IoxEw=@vger.kernel.org, AJvYcCWGzjZFcQ+b8MEnaPPVyYo/PjBzQs7bA3eYEsz3cpfhSWXXYB3wDYF1CP6SLT6dZ70iNnXnUIYgB1mR@vger.kernel.org, AJvYcCX2Q5BuwqVE9QaZCFcImItoECLfqpGIPDqDiim0AEbA32rptjY1Lhf029za88T0GCIEpZg8Oi+UWg0yQt1w@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyXrmaa29B10LGDO0MJZ+Ti2FuNnr/BXvludw7IfzOZFnt9R3z
+	Ja82GAzQkAHaR4XvQAkNKy7y1zuCoJF2T/u7/A7qI8F52qR4urSEIiV2XXamA3IrbZ0uEsqZV1p
+	JhG/8Ov3XoNb/9RgDeoXHEY3NtOfpHPobfRV3
+X-Gm-Gg: ASbGncu9qY+cvNrcEAP9sjlW2HWsbOFzV6pOtzH0w5YJbrQ5QBdOL2Fp1B+nl0AE083
+	Ksx2DhBNlcgNMvKp66dV+9Dh5utcG4ZwQtJwTRJXNQHRHxr03jnzcSF2MQ5EtcrPmpX4KRiZejn
+	oKix/Ouuh+mfIgCYPj31jW91IokqFlQEEvu7XLPsiBW6wFbJFkIeD/vw==
+X-Google-Smtp-Source: AGHT+IGuEpto+YUufrvRYMCTEh35xKfud8fxXFD/RtUDT9o/btM9zC88aUf81wJBM65HLlv67bi2SwBKNqIo4g4Jn3o=
+X-Received: by 2002:a05:690c:688f:b0:70e:7613:e31b with SMTP id
+ 00721157ae682-711409edfadmr22715767b3.2.1749649742251; Wed, 11 Jun 2025
+ 06:49:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aEhS4iybzwYYMkJF@pathway.suse.cz>
+References: <20250601172139.59156-1-l.rubusch@gmail.com> <20250601172139.59156-4-l.rubusch@gmail.com>
+ <20250608162215.0d1789d0@jic23-huawei> <20250608163812.4a1a93df@jic23-huawei>
+In-Reply-To: <20250608163812.4a1a93df@jic23-huawei>
+From: Lothar Rubusch <l.rubusch@gmail.com>
+Date: Wed, 11 Jun 2025 15:48:25 +0200
+X-Gm-Features: AX0GCFuu-cTelHNADDn6x7Lu3Hn9Ovb_GhhOGWmahwK8_xRWE0dzFakjViNfJlw
+Message-ID: <CAFXKEHY5SmtTrxy-8AWxGNqkPUAZjitgYDg2pR7acTAt-tFWdQ@mail.gmail.com>
+Subject: Re: [PATCH v4 03/11] iio: accel: adxl313: make use of regmap cache
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net, 
+	lucas.p.stankus@gmail.com, lars@metafoo.de, Michael.Hennerich@analog.com, 
+	bagasdotme@gmail.com, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 10, 2025 at 05:44:34PM +0200, Petr Mladek wrote:
-[...]
-> > > > Note:
-> > > > 
-> > > > One question is whether to use sysctl or module parameters.
-> > > > 
-> > > > An advantage of sysctl is the "systcl" userspace tool. Some people
-> > > > might like it. But the API is very old and a bit cumbersome for
-> > > > implementing.
-> > > > 
-> > > > The sysfs, aka include/linux/moduleparam.h, API looks cleaner to me.
-> > > > But the parameters are hidden in the /sys/... jungle ;-)
-> > > > 
-> > > > I would slightly prefer "sysctl" because these parameters are easier
-> > > > to find.
-> > > 
-> > > I will think about the string parsing in sys_info.c, and in the backend,
-> > > a bitmap is still needed to save the parsing result, and as the parameter
-> > > for sys_show_info().
-> > 
-> > Hi Petr
-> > 
-> > I tried further this way, and with below patch on top of current 1/3
-> > patch, the 'panic_sys_info' sysctl interface basically works, as parsing
-> > user-input, and save it in 'panic_print' bitmap. 
-> 
-> It does not apply. It seems that it depends on another change which
-> crated lib/sys_info.c...
+On Sun, Jun 8, 2025 at 5:38=E2=80=AFPM Jonathan Cameron <jic23@kernel.org> =
+wrote:
+>
+> On Sun, 8 Jun 2025 16:22:15 +0100
+> Jonathan Cameron <jic23@kernel.org> wrote:
+>
+> > On Sun,  1 Jun 2025 17:21:31 +0000
+> > Lothar Rubusch <l.rubusch@gmail.com> wrote:
+> >
+> > > Setup regmap cache to cache register configuration. This is a prepara=
+tory
+> > > step for follow up patches. Using cached settings will help at inerru=
+pt
+> > > handling, to generate activity and inactivity events.
+> >
+> > The regmap cache will reduce traffic to the device for things like read=
+ing
+> > back sampling frequency, so no need to justify this patch with 'future'
+> > stuff.  Justify it with current.   I've applied with the description of
+> > simply
+> >
+> > "Setup regmap cache to cache register configuration, reducing bus traff=
+ic
+> > for repeated accesses to non volatile registers."
+> >
+> Dropped again.  The is_volatile should include all volatile registers
+> not just ones we happen to be using so far.
+>
 
-My bad. It could be another my local change which follows your suggestion
-of using a panic_console_replay() cleanup.
+I see among the patches, REG_INT_SOURCE is added later. For a v5 then
+I'll prepare a patch which sets up all registers - including
+REG_INT_SOURCE right away. Correct?
 
-> > It has  one problem that it doesn't support the string parsing as a the
-> > kernel command line parameter (auto-derived from sysctl interface), I'm
-> > not sure if we should add a __setup() or early_param() for it, or it's
-> > fine?
-> 
-> Ah, I was not aware of this. We need to make it working from the
-> command line, definitely. I would go with __setup() for now. We could
-> always switch it to early_param() when anyone requires it.
+Then it should be added the following line:
+bool adxl313_is_volatile_reg(struct device *dev, unsigned int reg)
+{
+    switch (reg) {
+    case ADXL313_REG_DATA_AXIS(0):
+    case ADXL313_REG_DATA_AXIS(1):
+    case ADXL313_REG_DATA_AXIS(2):
+    case ADXL313_REG_DATA_AXIS(3):
+    case ADXL313_REG_DATA_AXIS(4):
+    case ADXL313_REG_DATA_AXIS(5):
+    case ADXL313_REG_FIFO_STATUS:
++    case ADXL313_REG_INT_SOURCE:
+        return true;
+    default:
+        return false;
+    }
+}
 
-OK.
+> You added debug accesses in previous patch which will not take the volati=
+le
+> nature into account unless the register is in that switch statement.
 
-> See some more comments, below.
-> 
-> > ---
-> > diff --git a/include/linux/sys_info.h b/include/linux/sys_info.h
-> > index 79bf4a942e5f..d6d55646e25a 100644
-> > --- a/include/linux/sys_info.h
-> > +++ b/include/linux/sys_info.h
-> > @@ -17,4 +17,8 @@
-> >  
-> >  extern void sys_show_info(unsigned long info_mask);
-> >  
-> > +struct ctl_table;
-> > +extern int sysctl_sys_info_handler(const struct ctl_table *ro_table, int write,
-> > +					  void *buffer, size_t *lenp,
-> > +					  loff_t *ppos);
-> >  #endif	/* _LINUX_SYS_INFO_H */
-> > diff --git a/kernel/panic.c b/kernel/panic.c
-> > index 3d9cf8063242..8ca9b30f0fe4 100644
-> > --- a/kernel/panic.c
-> > +++ b/kernel/panic.c
-> > @@ -88,6 +88,13 @@ static const struct ctl_table kern_panic_table[] = {
-> >  		.extra2         = SYSCTL_ONE,
-> >  	},
-> >  #endif
-> > +	{
-> > +		.procname	= "panic_sys_info",
-> > +		.data		= &panic_print,
-> > +		.maxlen         = sizeof(panic_print),
-> > +		.mode		= 0644,
-> > +		.proc_handler	= sysctl_sys_info_handler,
-> > +	},
-> >  	{
-> >  		.procname       = "warn_limit",
-> >  		.data           = &warn_limit,
-> > diff --git a/lib/sys_info.c b/lib/sys_info.c
-> > index 4090b2e0515e..27de6f0d0a4d 100644
-> > --- a/lib/sys_info.c
-> > +++ b/lib/sys_info.c
-> > @@ -4,6 +4,121 @@
-> >  #include <linux/console.h>
-> >  #include <linux/nmi.h>
-> >  
-> > +struct sys_info_name {
-> > +	unsigned long bit;
-> > +	const char *name;
-> > +};
-> > +
-> > +static const char sys_info_avail[] = " tasks mem timer lock ftrace all_bt blocked_tasks ";
-> 
-> It is a bit confusing to have it space-separated when the parameter
-> is comma-separated.
+This is not quite clear to me. What am I missing here?
 
-Aha, right.
+When I try to find iio drivers using "debugfs" and having a
+"volatile_reg" called specification (using either ranges or by a
+function), I could only identify the following drivers:
+./drivers/iio/accel/msa311.c
+./drivers/iio/adc/ad7380.c
+./drivers/iio/adc/ina2xx-adc.c
+./drivers/iio/imu/bno055/bno055.c
+./drivers/iio/light/gp2ap020a00f.c
 
-> Also I am not sure why there is the leading and
-> trailing space.
+I tried to find if there is a special declaration of debug registers
+in the volatile_reg list, but could not find any.
 
-I tried to give more space to avoid 'char names[strlen()+1]' 
+Most interesting here was:
+./drivers/iio/adc/ad7380.c
 
-> I would expect:
-> 
-> static const char sys_info_avail[] = "tasks,mem,timer,lock,ftrace,all_bt,blocked_tasks";
+It seems to claim a kind of a "direct" access specifier. Should I use
+similar calls to `iio_device_claim_direct()` and
+`iio_device_release_direct()` here?
 
-OK.
+ 999
+1000 static int ad7380_debugfs_reg_access(struct iio_dev *indio_dev,
+u32 reg,
+1001                                      u32 writeval, u32 *readval)
+1002 {
+1003         struct ad7380_state *st =3D iio_priv(indio_dev);
+1004         int ret;
+1005
+1006         if (!iio_device_claim_direct(indio_dev))
+1007                 return -EBUSY;
+1008
+1009         if (readval)
+1010                 ret =3D regmap_read(st->regmap, reg, readval);
+1011         else
+1012                 ret =3D regmap_write(st->regmap, reg, writeval);
+1013
+1014         iio_device_release_direct(indio_dev);
+1015
+1016         return ret;
+1017 }
+1018
 
-> > +static const struct sys_info_name  si_names[] = {
-> > +	{ SYS_SHOW_TASK_INFO,	"tasks" },
-> > +	{ SYS_SHOW_MEM_INFO,	"mem" },
-> > +	{ SYS_SHOW_TIMER_INFO,	"timer" },
-> > +	{ SYS_SHOW_LOCK_INFO,	"lock" },
-> > +	{ SYS_SHOW_FTRACE_INFO, "ftrace" },
-> > +	{ SYS_SHOW_ALL_CPU_BT,	"all_bt" },
-> > +	{ SYS_SHOW_BLOCKED_TASKS, "blocked_tasks" },
-> > +};
-> 
-> I guess that this is just an RFC. Anyway, I would expect that
-> SYS_SHOW_* values would be defined in sys_info.h.
+>
+> Put the all in from the start.
+>
 
-Yes, in 0001 patch, they are defined in sys_info.h   
+I guess, in the ADXL313 I'm doing the same approach as for the
+ADXL345. If it's wrong / incomplete here, it will need to be fixed in
+the ADXL345 as well. Or did I understand something wrong?
 
-> > +
-> > +/* Expecting string like "xxx_sys_info=tasks,mem,timer,lock" */
-> > +static int write_handler(const struct ctl_table *ro_table, void *buffer,
-> > +				size_t *lenp, loff_t *ppos)
-> > +{
-> > +	char names[sizeof(sys_info_avail)];
-> > +	char *buf, *name;
-> > +	struct ctl_table table;
-> > +	unsigned long *si_flag;
-> > +	int i, len, ret;
-> > +
-> > +	si_flag = ro_table->data;
-> > +
-> > +	/* Clear it first */
-> > +	*si_flag = 0;
-> > +
-> > +	table = *ro_table;
-> > +	table.data = names;
-> > +	table.maxlen = sizeof(names);
-> > +	ret = proc_dostring(&table, 1, buffer, lenp, ppos);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	buf = names;
-> > +	while ((name = strsep(&buf, ",")) && *name) {
-> > +		for (i = 0; i < ARRAY_SIZE(si_names); i++) {
-> > +			if (!strcmp(name, si_names[i].name))
-> > +				*si_flag |= si_names[i].bit;
-> > +		}
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> 
-> The above function is defined but not used. The same code is
-> copy&pasted in the if (write) section below.
-
-I forgot to remove it in code clean :)
-
-> I think that we would need a helper function which could be used
-> in both sysctl_sys_info_handler() and in the __setup() callback.
-> 
-> Something like:
-> 
-> static unsigned long sys_info_parse_flags(char *str)
-> {
-> 	unsigned long si_bits = 0;
-> 	char *s, *name;
-> 	int i;
-> 
-> 	s = str;
-> 	while ((name = strsep(&s, ",")) && *name) {
-> 		for (i = 0; i < ARRAY_SIZE(si_names); i++) {
-> 			if (!strcmp(name, si_names[i].name)) {
-> 				*si_bits |= si_names[i].bit;
-> 				break;
-
-Good catch! thanks
-
-> 			}
-> 		}
-> 	}
-> 
-> 	return si_bits;
-> }
-
-Will do.
-
-> > +
-> > +int sysctl_sys_info_handler(const struct ctl_table *ro_table, int write,
-> > +					  void *buffer, size_t *lenp,
-> > +					  loff_t *ppos)
-> > +{
-> > +	char names[sizeof(sys_info_avail) + 1];
-> > +	char *buf, *name;
-> > +	struct ctl_table table;
-> > +	unsigned long *si_flag;
-> 
-> Nit: I would call this "si_bits_global" to make it more clear that
->      this is pointer to the global bitmask.
- 
-Makes sense.
-
-> 
-> > +	int i, ret, len;
-> > +
-> > +	si_flag = ro_table->data;
-> > +
-> > +	if (write) {
-> > +		/* Clear it first */
-> > +		*si_flag = 0;
-> 
-> There is no synchronization against readers. IMHO, it is not worth it.
-> But we should at least update the global value only once.
-> 
-> We should define a local variable, e.g.
-> 
-> 		unsigned long si_bits;
-> 
-> and do the following:
-
-Will do.
-
-> > +		table = *ro_table;
-> > +		table.data = names;
-> > +		table.maxlen = sizeof(names);
-> > +		ret = proc_dostring(&table, 1, buffer, lenp, ppos);
-> 
-> I would pass the "write" parameter here instead of the hard-coded "1".
-> Do we know that it should be exactly '1'?
-> 
-> > +		if (ret)
-> > +			return ret;
-> 
-> 		si_bits = sys_info_parse_param(flags);
-> 		/*
-> 		 * The access to the global value is not synchronized.
-> 		 * Update it at once at least.
-> 		 */
-> 		WRITE_ONCE(*si_bits_global, si_bits);
-
-Thanks for the suggestion.
-
-
-> > +		/* Expecting string like "xxx_sys_info=tasks,mem,timer,lock" */
-> > +		buf = names;
-> > +		while ((name = strsep(&buf, ",")) && *name) {
-> > +			for (i = 0; i < ARRAY_SIZE(si_names); i++) {
-> > +				if (!strcmp(name, si_names[i].name))
-> > +					*si_flag |= si_names[i].bit;
-> > +			}
-> > +		}
-> > +
-> > +		return 0;
-> > +	} else {
-> > +		bool first = true;
-> > +
-> > +		memset(names, 0, sizeof(names));
-> 
-> I guess that you took this from read_actions_logged().
-
-Yes, I referred the seccomp.c in many places.
-
-> It looks too paranoid to me. I do not see it anywhere else.
-> IMHO, if the proc_dostring() does not stop at the trailing '\0'
-> then most interfaces would leak data.
-> 
-> > +		buf = names;
-> > +		for (i = 0; i < ARRAY_SIZE(si_names); i++) {
-> > +			if (*si_flag & si_names[i].bit) {
-> > +
-> > +				if (first) {
-> > +					first = false;
-> > +				} else {
-> > +					*buf = ',';
-> > +					buf++;
-> > +				}
-> > +
-> > +				len = strlen(si_names[i].name);
-> > +				strncpy(buf, si_names[i].name, len);
-> > +				buf += len;
-> > +			}
-> > +
-> > +		}
-> > +		*buf = '\0';
-> 
-> IMHO, always adding this trailing '\0' should be enough.
-
-OK.
-
-> 
-> > +		table = *ro_table;
-> > +		table.data = names;
-> > +		table.maxlen = sizeof(names);
-> > +		return proc_dostring(&table, 0, buffer, lenp, ppos);
-> 
-> I would pass the "write" parameter here instead of the hard coded 0.
-> But it is a matter of taste.
-
-I think it's obviously better :). will change.
-
-> 
-> > +	}
-> > +}
-> > +
-> >  void sys_show_info(unsigned long info_flag)
-> >  {
-> >  	if (info_flag & SYS_SHOW_TASK_INFO)
-> 
-> Best Regards,
-> Petr
-> 
-> PS: I am sorry for the late reply. Too many things have accumulated
-> over the few last weeks.
-
-No problem! I really appreciate your review and suggestions, like
-your help on reviewing my early 'panic_print' patches years ago.
-
-Thanks,
-Feng
-
+> Jonathan
+>
+> > >
+> > > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+> > > ---
+> > >  drivers/iio/accel/adxl313.h      |  2 ++
+> > >  drivers/iio/accel/adxl313_core.c | 17 +++++++++++++++++
+> > >  drivers/iio/accel/adxl313_i2c.c  |  6 ++++++
+> > >  drivers/iio/accel/adxl313_spi.c  |  6 ++++++
+> > >  4 files changed, 31 insertions(+)
+> > >
+> > > diff --git a/drivers/iio/accel/adxl313.h b/drivers/iio/accel/adxl313.=
+h
+> > > index 72f624af4686..fc937bdf83b6 100644
+> > > --- a/drivers/iio/accel/adxl313.h
+> > > +++ b/drivers/iio/accel/adxl313.h
+> > > @@ -54,6 +54,8 @@ extern const struct regmap_access_table adxl312_wri=
+table_regs_table;
+> > >  extern const struct regmap_access_table adxl313_writable_regs_table;
+> > >  extern const struct regmap_access_table adxl314_writable_regs_table;
+> > >
+> > > +bool adxl313_is_volatile_reg(struct device *dev, unsigned int reg);
+> > > +
+> > >  enum adxl313_device_type {
+> > >     ADXL312,
+> > >     ADXL313,
+> > > diff --git a/drivers/iio/accel/adxl313_core.c b/drivers/iio/accel/adx=
+l313_core.c
+> > > index 06a771bb4726..0c893c286017 100644
+> > > --- a/drivers/iio/accel/adxl313_core.c
+> > > +++ b/drivers/iio/accel/adxl313_core.c
+> > > @@ -46,6 +46,23 @@ const struct regmap_access_table adxl314_readable_=
+regs_table =3D {
+> > >  };
+> > >  EXPORT_SYMBOL_NS_GPL(adxl314_readable_regs_table, IIO_ADXL313);
+> > >
+> > > +bool adxl313_is_volatile_reg(struct device *dev, unsigned int reg)
+> > > +{
+> > > +   switch (reg) {
+> > > +   case ADXL313_REG_DATA_AXIS(0):
+> > > +   case ADXL313_REG_DATA_AXIS(1):
+> > > +   case ADXL313_REG_DATA_AXIS(2):
+> > > +   case ADXL313_REG_DATA_AXIS(3):
+> > > +   case ADXL313_REG_DATA_AXIS(4):
+> > > +   case ADXL313_REG_DATA_AXIS(5):
+> > > +   case ADXL313_REG_FIFO_STATUS:
+> > > +           return true;
+> > > +   default:
+> > > +           return false;
+> > > +   }
+> > > +}
+> > > +EXPORT_SYMBOL_NS_GPL(adxl313_is_volatile_reg, "IIO_ADXL313");
+> > > +
+> > >  static int adxl312_check_id(struct device *dev,
+> > >                         struct adxl313_data *data)
+> > >  {
+> > > diff --git a/drivers/iio/accel/adxl313_i2c.c b/drivers/iio/accel/adxl=
+313_i2c.c
+> > > index a4cf0cf2c5aa..e8636e8ab14f 100644
+> > > --- a/drivers/iio/accel/adxl313_i2c.c
+> > > +++ b/drivers/iio/accel/adxl313_i2c.c
+> > > @@ -21,6 +21,8 @@ static const struct regmap_config adxl31x_i2c_regma=
+p_config[] =3D {
+> > >             .rd_table       =3D &adxl312_readable_regs_table,
+> > >             .wr_table       =3D &adxl312_writable_regs_table,
+> > >             .max_register   =3D 0x39,
+> > > +           .volatile_reg   =3D adxl313_is_volatile_reg,
+> > > +           .cache_type     =3D REGCACHE_MAPLE,
+> > >     },
+> > >     [ADXL313] =3D {
+> > >             .reg_bits       =3D 8,
+> > > @@ -28,6 +30,8 @@ static const struct regmap_config adxl31x_i2c_regma=
+p_config[] =3D {
+> > >             .rd_table       =3D &adxl313_readable_regs_table,
+> > >             .wr_table       =3D &adxl313_writable_regs_table,
+> > >             .max_register   =3D 0x39,
+> > > +           .volatile_reg   =3D adxl313_is_volatile_reg,
+> > > +           .cache_type     =3D REGCACHE_MAPLE,
+> > >     },
+> > >     [ADXL314] =3D {
+> > >             .reg_bits       =3D 8,
+> > > @@ -35,6 +39,8 @@ static const struct regmap_config adxl31x_i2c_regma=
+p_config[] =3D {
+> > >             .rd_table       =3D &adxl314_readable_regs_table,
+> > >             .wr_table       =3D &adxl314_writable_regs_table,
+> > >             .max_register   =3D 0x39,
+> > > +           .volatile_reg   =3D adxl313_is_volatile_reg,
+> > > +           .cache_type     =3D REGCACHE_MAPLE,
+> > >     },
+> > >  };
+> > >
+> > > diff --git a/drivers/iio/accel/adxl313_spi.c b/drivers/iio/accel/adxl=
+313_spi.c
+> > > index 9a16b40bff34..68e323e81aeb 100644
+> > > --- a/drivers/iio/accel/adxl313_spi.c
+> > > +++ b/drivers/iio/accel/adxl313_spi.c
+> > > @@ -24,6 +24,8 @@ static const struct regmap_config adxl31x_spi_regma=
+p_config[] =3D {
+> > >             .max_register   =3D 0x39,
+> > >             /* Setting bits 7 and 6 enables multiple-byte read */
+> > >             .read_flag_mask =3D BIT(7) | BIT(6),
+> > > +           .volatile_reg   =3D adxl313_is_volatile_reg,
+> > > +           .cache_type     =3D REGCACHE_MAPLE,
+> > >     },
+> > >     [ADXL313] =3D {
+> > >             .reg_bits       =3D 8,
+> > > @@ -33,6 +35,8 @@ static const struct regmap_config adxl31x_spi_regma=
+p_config[] =3D {
+> > >             .max_register   =3D 0x39,
+> > >             /* Setting bits 7 and 6 enables multiple-byte read */
+> > >             .read_flag_mask =3D BIT(7) | BIT(6),
+> > > +           .volatile_reg   =3D adxl313_is_volatile_reg,
+> > > +           .cache_type     =3D REGCACHE_MAPLE,
+> > >     },
+> > >     [ADXL314] =3D {
+> > >             .reg_bits       =3D 8,
+> > > @@ -42,6 +46,8 @@ static const struct regmap_config adxl31x_spi_regma=
+p_config[] =3D {
+> > >             .max_register   =3D 0x39,
+> > >             /* Setting bits 7 and 6 enables multiple-byte read */
+> > >             .read_flag_mask =3D BIT(7) | BIT(6),
+> > > +           .volatile_reg   =3D adxl313_is_volatile_reg,
+> > > +           .cache_type     =3D REGCACHE_MAPLE,
+> > >     },
+> > >  };
+> > >
+> >
+>
