@@ -1,96 +1,70 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 569C229ACC6;
-	Wed, 11 Jun 2025 14:20:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02F272BDC13
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749651639; cv=none; b=UoQdN0bf4XPgnqwGfkoP9pfIUgdI71MRagsWlh5CnxRwah7uX5cL+Msc03z4xZ50UjWBOzFsNG1AutUDi5bZx+JrZH2ppIT2hgAnB8bxcmxAXa5ZCaDi1o0GxGej4sBNQ12ddJBilte3PY9vUYsb81wQ50NKIoS44yldz8IXfh8=
+	t=1749651656; cv=none; b=ZDyhCJOQe3tZfEu7RyoG7bFE+whmyddoQcNMdxqNXNj+J9TEasSlnhB425H2MURXP/j0KV13rXqogwG9QuypBS9Wfu0b0yLLZl2sMdt1Q8Mv3LogZTfhfN9D+4zuSE/3+x963AY12GZ3KGyY5d164Nr2vYHWLDZZiDeIaaaNG3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749651639; c=relaxed/simple;
-	bh=lrsNJweeZYaMaTbdcd2GbbAYTKskhj3jd9U8ksOBE9c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WKxlKPwzdh6mZkp6llo5VsBDLyeqFya7MVmEOYMtoXY7xoi5tSJOEyxUywBOr7+CNOEEz4Pmai8X874xuKsvxdpABWJ8lnoaeBbnz8mlkLzI+oaz4iVMC1AdCbLJq3T4pqPD4zATwQ0UMMURakv0vJUopAz7EzHHIM6qK1opUjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4bHRnp6q9mz9t1J;
-	Wed, 11 Jun 2025 15:48:30 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id yiP35XkF9PLz; Wed, 11 Jun 2025 15:48:30 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4bHRnp65M1z9sqT;
-	Wed, 11 Jun 2025 15:48:30 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id CBBD18B77A;
-	Wed, 11 Jun 2025 15:48:30 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id 0Cm2GCpeF4lX; Wed, 11 Jun 2025 15:48:30 +0200 (CEST)
-Received: from [10.25.207.146] (unknown [10.25.207.146])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id A32698B769;
-	Wed, 11 Jun 2025 15:48:30 +0200 (CEST)
-Message-ID: <051e9722-44ad-4547-af5d-3e42c8cfe8d9@csgroup.eu>
-Date: Wed, 11 Jun 2025 15:48:30 +0200
+	s=arc-20240116; t=1749651656; c=relaxed/simple;
+	bh=VNLm1SsklXsQRCPUAhqQBnfv+wbj/KnXfx4AxV6OMO0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NxE7P/KkR/HnBHt5TPFwCJxOBdP1YvVPI5aQdMAUyS6XibS4qHcWYgCmbmsDyLonsIGPXet8BgbS6RroOPMcdMUOd3jpPWm4l6L5eB870KtwvEegr8rDrG6ei4wnKaXrze3MrOkO1N7rdZcN/bPTnrHI4uFErOOTJ5kcf8Z+a5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=sfKZb4fZ; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sfKZb4fZ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Z7tlvIPQVVOIrSN+nkTXJowd4ISzLB9Yaz5HC7TJyFE=; b=sfKZb4fZc6T6uniPAVFaDiwptx
+	3UyI6X1pkzV/vRw26MVVt4YKqz6USEJiZoMtcjYnLoRA28FrZJls+3Ibw/AgLQgtafKRJfySyFEFQ
+	smMinDz/hOgd03ZbIGA+6AtoOtlLIH8UNtozWbDPuYaGm06jye2Grx1nztCf33g9XdurkkQ7tfoX4
+	miQo9zdkIH4Qub/7zArpXFXnrMN9ZYeeuFhQObFwoXsdzXSFU9oic+y7WiK3puZzoXtxWQLNZ8YB2
+	eZh5ktZT7s4mCo5loWlsCxUr0kDXXp6K0Nx8KjWSw+EYEEEbY+VnASJUmgbR1dXWgoXWCoQaKMRIl
+	c2PBHeSw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uPMJv-0000000AjYj-3SlD;
+	Wed, 11 Jun 2025 14:20:51 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 8B977308641; Wed, 11 Jun 2025 16:20:50 +0200 (CEST)
+Date: Wed, 11 Jun 2025 16:20:50 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Alexandre Chartre <alexandre.chartre@oracle.com>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, linux-kernel@vger.kernel.org,
+	mingo@kernel.org
+Subject: Re: [RFC 00/13] objtool: Function validation tracing
+Message-ID: <20250611142050.GB2278213@noisy.programming.kicks-ass.net>
+References: <20250606153440.865808-1-alexandre.chartre@oracle.com>
+ <vx6cxar2ium7zsqqzf57lmn2nhwemi2kmeu2kal6s4mazj3tp3@zdymccnsispv>
+ <d52b6b3a-dd18-4c8e-b7f6-5ac0879d959a@oracle.com>
+ <c0153249-5643-492f-ab2f-70dcafcfdd0c@oracle.com>
+ <iutvcrog7abyz2ski5fhcfzikc54b2gwodsds2gmovutahapg4@5rk4o4b7eajz>
+ <7e803ed0-60ac-4d5e-a039-904c3fba8e80@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ALSA: pcm: Convert multiple {get/put}_user to
- user_access_begin/user_access_end()
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-sound@vger.kernel.org, Herve Codina <herve.codina@bootlin.com>,
- Mark Brown <broonie@kernel.org>
-References: <bf9288392b1d4b9e92fe29212d9cb933c5b3fbae.1749296015.git.christophe.leroy@csgroup.eu>
- <20250610205358.07b1cc05@pumpkin>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20250610205358.07b1cc05@pumpkin>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7e803ed0-60ac-4d5e-a039-904c3fba8e80@oracle.com>
 
+On Wed, Jun 11, 2025 at 08:00:32AM +0200, Alexandre Chartre wrote:
 
-
-Le 10/06/2025 à 21:53, David Laight a écrit :
-> On Sat,  7 Jun 2025 13:37:42 +0200
-> Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
+> > That would also mean disas_warned_funcs() would be disabled on missing
+> > binutils-devel.  But I think that's probably fine.  In fact that will
+> > now have less reason for existing now that we have this tracing.  Maybe
+> > we won't need it at all.
+> > 
 > 
->> With user access protection (Called SMAP on x86 or KUAP on powerpc)
->> each and every call to get_user() or put_user() performs heavy
->> operations to unlock and lock kernel access to userspace.
->>
->> To avoid that, perform user accesses by blocks using
->> user_access_begin/user_access_end() and unsafe_get_user()/
->> unsafe_put_user() and alike.
-> 
-> Did you consider using masked_user_access_begin() ?
-> It removes a conditional branch and lfence as well.
+> We can also fall back to using objdump if binutils-devel is not there.
 
-Thanks, was not aware of that new function, allthought I remember some 
-discussion about masked user access.
-
-Looks like this is specific to x86 at the time being. I would have 
-expected that to be transparent to the consumer. Allthought looking at 
-strncpy_from_user() I understand the benefit of keeping it separate.
-
-However is it worth the effort and the ugliness of having to do (copied 
-from fs/select.c):
-
-		if (can_do_masked_user_access())
-			from = masked_user_access_begin(from);
-		else if (!user_read_access_begin(from, sizeof(*from)))
-			return -EFAULT;
-
-In addition I would expect a masked_user_read_access_begin() and a 
-masked_write_access_begin(). It looks odd (and would be wrong on 
-powerpc) to not be able to differentiate between read and write in the 
-begin yet using user_read_access_end() at the end, ref get_sigset_argpack()
-
-Christophe
+I don't think that is needed; normal builds will never use this code.
+Just print "Rebuild with libopcodes for disasm support" or somesuch when
+not present. Then developers will know what to do when they need it.
