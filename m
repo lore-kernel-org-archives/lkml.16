@@ -1,160 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2982126E708;
-	Wed, 11 Jun 2025 14:22:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC3DE288503
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:24:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749651781; cv=none; b=EX9HKaEQP/wIXqz2Yt/HI5IrPFCI442v/xpITL4lVyq9ntKRHO1jndZLEd+r4Xe+DVZ10gscFvWBQD12XomPTAucTbSx2vmSdvT5JvZSPzl/lHxWEu8DE5eQ1PJ+7M1DWvBkgZ3vN3I+73mtM1vD985/OCxqNoe3olHZ/gkyHp4=
+	t=1749651852; cv=none; b=CcesBg50ZFoZDfMAHGuG5IngYE/syLdyZSieTVEGY6bVKdnXJB9B5Zn2HNtfQnPH4QYKqmHsN2BaQR9ST4JotD49gxfkC6e49+v6cccVL6a4/GBg8kI+aPv9ns9rJ964JCVf7buRiHIdkX4QSgIhCnxkEuocaxjywxztIoLZnzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749651781; c=relaxed/simple;
-	bh=23ZiHQ1YGdQ2GxpBT4mjPpRAra6Bfr4xKOjZt5xAzC0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VmJ2Pr1ZG/KtvJn3/V9FjMbJ2kBSFFu4ICFO25MLkTuR0+y1vS/ITRK2Sk9eS6iMigxKP7kePXJyFEH5ZNzvL+FUk1+6VIo6N4vGEhM1JD8cnUY93GRoDhPAJeCKpPYCLgkmL0659LhPHn1XmOC7DqNe3Qi8usksD76mhZTetvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SNLZx3x7; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749651852; c=relaxed/simple;
+	bh=+n2wxlhNO/5kmSj5JkekXPG3vsLUDhvGncEIlxfIMF4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mns9RFjF7kZXht0vH1f59n6puCrkWVJt7uHFEwfQrsDdr3Lf5gQ2rQnDkLMRCNwmA5/jPs8hB32G9UHwdfHZMAVfo1SpELHvOgdyVotxt/CSeRxL79ZOl0XPy3njVmSQIBYRCEWxO2W9H86ezcoLJjSGCog19FY2w4b4rBzOHpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=fboq00SM; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SNLZx3x7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749651779; x=1781187779;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=23ZiHQ1YGdQ2GxpBT4mjPpRAra6Bfr4xKOjZt5xAzC0=;
-  b=SNLZx3x7aw8T2J5RuNc7tGitQ1zJU8dECplepvcAh7yL2K7sLdvMabYL
-   gEaH7XMyVUX9PSNx9lV/54omd6C7xY19fPhEi7d8xoeORU3cY1hErEBeC
-   VfScckft79A7jVuUPEzoSth3ry86qwsEneKonbpkyEvER38YdqfcL+usD
-   M+mIp8Tit25D4wCl99CyVvtDM1ED/zjrZ+YxLQ39NWBJ5TNQ88LQDlwR3
-   6Z+Vgw9WhonWAwCyMqJki6hjm0E6bADUMDmKbY3VlprmXquBuywNbJa8o
-   mbipAbm0xhswY7GSM2GAf8wtex2OOBsz3t38jlMaCGTRvwByYyY6X2Dd1
-   Q==;
-X-CSE-ConnectionGUID: XsmZbysuQNKG4f5eHScJ1A==
-X-CSE-MsgGUID: wa0R2/fvS8utKtXJ2M5sHA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="63144495"
-X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
-   d="scan'208";a="63144495"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 07:22:58 -0700
-X-CSE-ConnectionGUID: Y6hkqo0IQem+GRa+je0Ncg==
-X-CSE-MsgGUID: 9k1LO/yWTva4JNmXQX/Lbg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
-   d="scan'208";a="147117140"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 11 Jun 2025 07:22:56 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uPMLt-000AYk-0L;
-	Wed, 11 Jun 2025 14:22:53 +0000
-Date: Wed, 11 Jun 2025 22:22:39 +0800
-From: kernel test robot <lkp@intel.com>
-To: =?utf-8?B?VG9tw6HFoSBKdcWZZW5h?= <jurenatomas@gmail.com>,
-	dmitry.torokhov@gmail.com
-Cc: oe-kbuild-all@lists.linux.dev, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, linux-input@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Tomas Jurena <jurenatomas@gmail.com>
-Subject: Re: [PATCH] Input: tca6416-keypad - Add OF support for driver
- instantiation
-Message-ID: <202506112236.gn3kTosZ-lkp@intel.com>
-References: <20250610154609.1382818-1-jurenatomas@gmail.com>
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="fboq00SM"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ad8826c05f2so1281471066b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:24:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ionos.com; s=google; t=1749651848; x=1750256648; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+n2wxlhNO/5kmSj5JkekXPG3vsLUDhvGncEIlxfIMF4=;
+        b=fboq00SMjpBc/dzR+nnXMmZDLpc4cY4Uk/8wUG0553GWJsGrpqT8xialuROWYUOgT/
+         3Ys48/I2I6OUa8vHn18KMVkvpHqzfgzRFKuiPNkQaAgPWRzcRRjYXGrxzy/S5CQvAkxQ
+         rnhfRmIr5HobqnCprThFMaaKeQG2s6sC6OREEwhCgIfEKPcnjILByz+aJKy29yOVXG/n
+         31s/8/p34/yBuXNJf5ZSB/WUrEtj7ypG5E44PUuHGp85T5r9BhHloI4qjR7rLLwlUnn/
+         fgCh+bk/DWCTTJS/F1FiAKF7Wy9F+VgSopHi05EfRKRWxWWJglD3tlP8vieJ33cpfMI1
+         y9jQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749651848; x=1750256648;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+n2wxlhNO/5kmSj5JkekXPG3vsLUDhvGncEIlxfIMF4=;
+        b=I2XNipfGiB+u+ZpRkxGCw2Ro79jfLg91heTLfIvhgC8h+m9PEn257B/mr3wVw5PkP3
+         CEQMUuzzLwxonGZKwwW/JtnQPSuD9yhSh0hSPbnhwXlOk1kXfyZzAApIAIkIAdqC2I3j
+         j2YF0M0Fcvtby6jB/Cj86Pp+bQSIJho7OeJAylbrdBakj41buQEt7gwKH/Bl4SVdV3qo
+         Fb+wNUPBDw7YhWfJj7iwM5x9rvpSU5AmslfaKqMfHydS2Zq7wYEZZSryGSz0UfBW5v0y
+         qyjGYiqtcjOfdhQgxHERgPrFlFYF9V9ciGJMAuTfxHllwIGPShczZYRucii22X7zcD8m
+         zgxA==
+X-Forwarded-Encrypted: i=1; AJvYcCWvYqFViG6Fd4azSKO4mmxQDR2MyHRyjhwmYFHB1Zl6fpUyuZteKmLgNxm5iZtBt+ET+zkOZ3SqCcr1yD4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqQ0o5M8j2j+ckHRGhVD6BOpwccF9/+gz/1mDpwlaCLhkK68FO
+	56AwW0ZnK2Z6XgnRVAO80bJXbRDjNWoHZj84gDRnjAElRdpkr7EZ6rUXy29la+LAYGPxC1P8/fk
+	sBuYmVsjgFqJdmD9zrlimNkCoy5YZUOZUN/cjpVHL2w==
+X-Gm-Gg: ASbGncti+4OjbgGwi0p3/rIhHVR4VpiwL6wSq9VbWE11Z5VG24OSi9F+n0VKevU2zUW
+	F+rfwXr9CA/4kV/anUdsemYWVEpf5vM5XOu6iZB7Sn8XssZUW87CcP7rUZe4uSancBZITWGyUUj
+	JVLXq38HV4idYJdPfDLX2k81OQRZmFIZBuqfLHHzRmE6dlA3503PsxK+i0jwyjSzdE9sS/gHkd
+X-Google-Smtp-Source: AGHT+IHi3WuXVPV9hfbd1BQHgmHc2xgdYuuZf0M1hUFi8jc87uLtSAZ8i8Pv46mcKxcv8DLSc26FN718JaJ1toUbZkI=
+X-Received: by 2002:a17:907:c0c:b0:ad8:9466:3344 with SMTP id
+ a640c23a62f3a-ade8c8993d1mr286839666b.43.1749651847859; Wed, 11 Jun 2025
+ 07:24:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250610154609.1382818-1-jurenatomas@gmail.com>
+References: <20250306082615.174777-1-max.kellermann@ionos.com>
+ <878qmxsuy8.fsf@email.froward.int.ebiederm.org> <202505151451.638C22B@keescook>
+ <87ecwopofp.fsf@email.froward.int.ebiederm.org> <CAG48ez1VpuTR9_cvLrJEMmjOxTCYpYFswXVPmN6fE3NcSmPPVA@mail.gmail.com>
+ <87wmagnnhq.fsf@email.froward.int.ebiederm.org> <202505201319.D57FDCB2A@keescook>
+ <87frgznd74.fsf_-_@email.froward.int.ebiederm.org> <CAG48ez0N_1CEKyMHdjnvwsxUkCenmzsLe7dkUL=a6OmU4tPa6Q@mail.gmail.com>
+ <87zff6gf17.fsf@email.froward.int.ebiederm.org> <CAG48ez1z97sCsx53W0O_dCCJL6tnf2pWuv=qaeszcYBfz_01sA@mail.gmail.com>
+ <CAHC9VhRPUXwqLvo4rbxL0++5zqHXfD8_tr-sirTJXdF_Aba_UQ@mail.gmail.com>
+In-Reply-To: <CAHC9VhRPUXwqLvo4rbxL0++5zqHXfD8_tr-sirTJXdF_Aba_UQ@mail.gmail.com>
+From: Max Kellermann <max.kellermann@ionos.com>
+Date: Wed, 11 Jun 2025 16:23:56 +0200
+X-Gm-Features: AX0GCFt-lvgulZZy51v1nQGdrw4LjdO7BhuMTAtxvy7UyojcjPOL_75VvfjJ_Cc
+Message-ID: <CAKPOu+-S5C59X8zW=6keYAsHecketOBzMbb3XXDnLTc0X1nBhA@mail.gmail.com>
+Subject: Re: [PATCH v2] exec: Correct the permission check for unsafe exec
+To: Paul Moore <paul@paul-moore.com>
+Cc: Jann Horn <jannh@google.com>, "Eric W. Biederman" <ebiederm@xmission.com>, 
+	Richard Guy Briggs <rgb@redhat.com>, "Serge E. Hallyn" <serge@hallyn.com>, Kees Cook <kees@kernel.org>, jmorris@namei.org, 
+	Andy Lutomirski <luto@kernel.org>, morgan@kernel.org, 
+	Christian Brauner <christian@brauner.io>, linux-security-module@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Tomáš,
+On Wed, Jun 11, 2025 at 2:19=E2=80=AFAM Paul Moore <paul@paul-moore.com> wr=
+ote:
+> Aside from a tested-by verification from Max, it looks like everyone
+> is satisfied with the v2 patch, yes?
 
-kernel test robot noticed the following build warnings:
+Sorry for the delay. I tested Eric's v2 patch and it solves my
+problem. His patch is nearly identical to mine, it's only a bit more
+intrusive by removing the weird __is_setXid functions that never made
+sense. I welcome that; I wasn't confident enough to do that and tried
+to make the least intrusive patch.
 
-[auto build test WARNING on dtor-input/next]
-[also build test WARNING on dtor-input/for-linus linus/master v6.16-rc1 next-20250611]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Eric, I'm glad you changed your mind and no longer consider my work
+"pure nonsense" and "pointless".
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Tom-Ju-ena/Input-tca6416-keypad-Add-OF-support-for-driver-instantiation/20250611-094643
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git next
-patch link:    https://lore.kernel.org/r/20250610154609.1382818-1-jurenatomas%40gmail.com
-patch subject: [PATCH] Input: tca6416-keypad - Add OF support for driver instantiation
-config: arm-randconfig-001-20250611 (https://download.01.org/0day-ci/archive/20250611/202506112236.gn3kTosZ-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 11.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250611/202506112236.gn3kTosZ-lkp@intel.com/reproduce)
+But one problem remains: in the same email, you demanded evidence that
+userspace doesn't depend on the current behavior. However, in your
+patch description, you hand-waved that away by "I don't expect anyone
+to care". What happened to that?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506112236.gn3kTosZ-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/input/keyboard/tca6416-keypad.c: In function 'tca6416_parse_properties':
->> drivers/input/keyboard/tca6416-keypad.c:194:12: warning: unused variable 'pin' [-Wunused-variable]
-     194 |         u8 pin;
-         |            ^~~
-
-
-vim +/pin +194 drivers/input/keyboard/tca6416-keypad.c
-
-   185	
-   186	static struct tca6416_keys_platform_data *
-   187	tca6416_parse_properties(struct device *dev, uint8_t io_size)
-   188	{
-   189		static const char keymap_property[] = "linux,gpio-keymap";
-   190		struct tca6416_keys_platform_data *pdata;
-   191		u32 keymap[TCA6416_MAX_IO_SIZE];
-   192		struct tca6416_button *buttons;
-   193		int ret, i;
- > 194		u8 pin;
-   195	
-   196		pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-   197		if (!pdata)
-   198			return NULL;
-   199	
-   200		ret = device_property_count_u32(dev, keymap_property);
-   201		if (ret <= 0)
-   202			return NULL;
-   203	
-   204		pdata->nbuttons = ret;
-   205		if (pdata->nbuttons > io_size)
-   206			pdata->nbuttons = io_size;
-   207	
-   208		ret = device_property_read_u32_array(dev, keymap_property, keymap,
-   209						     pdata->nbuttons);
-   210		if (ret)
-   211			return NULL;
-   212	
-   213		buttons = devm_kcalloc(dev, pdata->nbuttons, sizeof(*buttons),
-   214				       GFP_KERNEL);
-   215		if (!buttons)
-   216			return NULL;
-   217	
-   218		for (i = 0; i < pdata->nbuttons; i++) {
-   219			buttons[i].code = FIELD_GET(CFG_CODE, keymap[i]);
-   220			buttons[i].type = FIELD_GET(CFG_TYPE, keymap[i]);
-   221			buttons[i].active_low = FIELD_GET(CFG_ACTIVE_LOW, keymap[i]);
-   222			/* enable all inputs by default */
-   223			pdata->pinmask |= BIT(i);
-   224		}
-   225	
-   226		pdata->buttons = buttons;
-   227	
-   228		pdata->rep = device_property_read_bool(dev, "autorepeat");
-   229		/* we can ignore the result as by default all inputs are enabled */
-   230		device_property_read_u16(dev, "pinmask", &pdata->pinmask);
-   231		pdata->use_polling = device_property_read_bool(dev, "polling");
-   232	
-   233		return pdata;
-   234	}
-   235	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Max
