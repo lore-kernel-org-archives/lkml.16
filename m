@@ -1,131 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0FC1236442;
-	Wed, 11 Jun 2025 08:08:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FCB82356B3;
+	Wed, 11 Jun 2025 08:09:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749629329; cv=none; b=SgvMSFTfMdWBies2fuLhnwBzWh11tbNkLnxpfPDrypsS9Li81DP8gdGuXJ/kIvr/HJU3ordUsulMc96S1jh5KDaWdrPJDIJ9XIve96+/FEcOTkJXTJRwBI3NX0lEH+nBjpRFCYPOuIRb6LHfUPlsePrNuu26SS+eCwfMvdjtGos=
+	t=1749629344; cv=none; b=lISXHNtI/Ftbwbwl4ZZ6e7telmBWf4SaaKIkuCd09v9XlyMTyyAi04vFU0Hvuho5d4Ei6RDmEySPk/fXprv1xXg1gmLJTtHz3H3B7D192wxNocurYOjGLAaIHwOoAC2ezaoM36UawmOImkVXHApWBJ65k6oqPxad2o94fPWPCao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749629329; c=relaxed/simple;
-	bh=KnDDIm1qdlSLJu6NRdL1REmX0JGZlnsrv3PCGBq43EA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=epIz3+2AAGmcM8RLyunSUvCv5BWhAo4cVnok336EXkyS5vvChX05up+Br3YAcIQQOKs/ekn9WF9rl+cwUKKzUfN2y5Mrc9neUHAyT2QPrDMM1LAdvXVeMal51fLP3ex7WAgNPUHYyrBYNWmVzgFA9hbIurhdSiHAm6DEV15QxMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mlCArnYK; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mlCArnYK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C00B7C4CEEE;
-	Wed, 11 Jun 2025 08:08:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749629328;
-	bh=KnDDIm1qdlSLJu6NRdL1REmX0JGZlnsrv3PCGBq43EA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=mlCArnYKvWQxUvCbz8RvRMFtZNr42NmT7Q9XAEjp8ompSWW2qHkeQMvs53y2u0KXL
-	 AfmrN/qe2ArIkPmZT534OEuHDkwVQcUiYK1JPMReT/I9XTeM20oGdTz2UCSBe1xFbK
-	 6tYcITPwfUzxq1Dit5n9E4s8GHoKNBlYLMqEutPthurbLfcQqxoPNay+s6aXUYazKt
-	 SV4uwxJday6lj/RwuUIDeams+Cw3oxBsd4f23/qTPD81DQjJqjGYyeaikB3ErE4+7R
-	 ZQ8ZiCBwH/kMrCostxqQEF4WF1qLQAT0NwxdEYN7ufnJGZZwyAy39Gt/IX/WKqQgM1
-	 +T9brn5188S+g==
-Date: Wed, 11 Jun 2025 17:08:45 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jason Xing <kerneljasonxing@gmail.com>
-Cc: kernel test robot <lkp@intel.com>, axboe@kernel.dk, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- akpm@linux-foundation.org, oe-kbuild-all@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Jason Xing <kernelxing@tencent.com>,
- Yushan Zhou <katrinzhou@tencent.com>
-Subject: Re: [PATCH v4 4/5] blktrace: use rbuf->stats.full as a drop
- indicator in relayfs
-Message-Id: <20250611170845.8f88347e3cba51cf15a01b21@kernel.org>
-In-Reply-To: <CAL+tcoARvQVgd68HGoXXiK=+RSH12WQ_rc47B4rgtt2Eb05c0w@mail.gmail.com>
-References: <20250610004844.66688-5-kerneljasonxing@gmail.com>
-	<202506102340.uo7QDaVk-lkp@intel.com>
-	<CAL+tcoARvQVgd68HGoXXiK=+RSH12WQ_rc47B4rgtt2Eb05c0w@mail.gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749629344; c=relaxed/simple;
+	bh=bb/gYoBGqnnv8Qs7r02fycV4dkWTGnthEecbIoM/PwQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QgsLcgSA7M/DYPeGA/isRNd/n04m6mASkrNkN+IFbIFVVd6t3M4sQKQfIVlBKx5wSTDoikKF6GBZPAnzpQ3QKXQ/QIE+Prh+oJJuA2jMywab1B5RkDuYCXB0cXTMzczgJBb5Pz7L+DFfrIy1v7ZtMMG4nWrFAmXaRxiMDhKPLzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-acb5ec407b1so1135165866b.1;
+        Wed, 11 Jun 2025 01:09:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749629341; x=1750234141;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xGRU+Kv08xe5NBWzNvaRaFDet3u9/sA86Kboke4WJ9A=;
+        b=kHS9Tn5+qJl99lehQqT16FVawKmtjMAY5bA3SIdSISW3hO87UQApHy6qAhU08EXKhd
+         JFFk0cVdHhJ8/ekRcOXoCRtuPggdze42W2/JFDE+MlnlqBc5S+dLIDpvfgaEdHtDPNNx
+         YIa2rWjAUaKe1c/K/wyKTeQ9qeWRLSHJbUYJBNNPeM2zYEpM2LopDjg5dqsQN8hGqIj5
+         dUycMoWe1ELeAyjyCwpUZ/HcieeUn/C6l4hXuPEZ+FtiP7x8xUq11e9VY3vk8Cunv8nX
+         ynmDi0iBMIKONY/5Ime6n19p5hSGPcd5hAwPmHjufy/ZOMNK7RO3ZK5uCea68INt+9Uw
+         Zumw==
+X-Forwarded-Encrypted: i=1; AJvYcCUBmg9H1DlrD3/tJVVAXow+Ipz0fPupTIwW1BU7dI11KuAQ6YI59GTEuEd89fWMQDRji9W+13W2BWNHjYUZb0a4@vger.kernel.org, AJvYcCVf/YqmSEOKDFgKRX9bhWi+Fk672fi+L9aYUm7YCgiJQ7jVwrtwiNujDTGjn7CkbXSmElT5RU/cX8T47K4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxC6SY2geJoSFfNwkt6e50JDi3egI7rZEzJl6QQ5NEjJrViWMoh
+	ukv2WNc0T9dzmmaTYSfY3mOoqGUBshc1DKuAARnlilMGoKqig93f0v8v
+X-Gm-Gg: ASbGncsqkDHTTiakaRAu4WUZnD4l/JYyvLKy2ei8/ehzG8+a+qB0k6lxP9cn/cGT+ic
+	eYJ7Q2KToHz4szMmzCdAQgZsaxP6v9lxsGpkIcDA0PT1ALRTegP3KDKw3X+qm0B9NrRyLsBGNmS
+	oy3s6uGM5nh6NwexP1UuvvtHJnK2FpfIZkubjR1tFcwRteCW+Fw6e3W3Khr3DgaeDpaQNC6CMBO
+	61/z7J+WVfjHs4IvghFybbZTzGQ8bMhJOIB1uICB3ma5MOwswkpb5YS0cc9UoGQzwFT4pfDEyWD
+	4FYQp5M0vid88BQHA1eplEsp160kCsl+AIq7sgm4XkTtL4LeZYIiXksmJK1ZzX+g
+X-Google-Smtp-Source: AGHT+IGbQu5qlFUouSqkJhPj8jhxnrJC0Olr7Zwa5gMMOkWdUeanOk7UUb5kvt1BxjCg3bkg0oosmw==
+X-Received: by 2002:a17:907:9449:b0:ad2:2fa8:c0a7 with SMTP id a640c23a62f3a-ade8c76b521mr172874366b.21.1749629341249;
+        Wed, 11 Jun 2025 01:09:01 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:72::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc1c5besm845927466b.87.2025.06.11.01.09.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 01:09:00 -0700 (PDT)
+Date: Wed, 11 Jun 2025 01:08:58 -0700
+From: Breno Leitao <leitao@debian.org>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>, Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH net-next 0/7] netpoll: Untangle netconsole and netpoll
+Message-ID: <aEk5mv69Ha7xyvPV@gmail.com>
+References: <20250610-rework-v1-0-7cfde283f246@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250610-rework-v1-0-7cfde283f246@debian.org>
 
-On Wed, 11 Jun 2025 13:15:40 +0800
-Jason Xing <kerneljasonxing@gmail.com> wrote:
+On Tue, Jun 10, 2025 at 08:18:12AM -0700, Breno Leitao wrote:
+>  drivers/net/netconsole.c                           | 137 ++++++++++++++++++++-
+>  include/linux/netpoll.h                            |  10 +-
+>  net/core/netpoll.c                                 | 136 +-------------------
+>  tools/testing/selftests/drivers/net/Makefile       |   1 +
+>  .../selftests/drivers/net/lib/sh/lib_netcons.sh    |  39 +++++-
+>  .../selftests/drivers/net/netcons_cmdline.sh       |  52 ++++++++
+>  6 files changed, 228 insertions(+), 147 deletions(-)
 
-> On Wed, Jun 11, 2025 at 9:42 AM kernel test robot <lkp@intel.com> wrote:
-> >
-> > Hi Jason,
-> >
-> > kernel test robot noticed the following build warnings:
-> >
-> > [auto build test WARNING on axboe-block/for-next]
-> > [also build test WARNING on drm-i915/for-linux-next drm-i915/for-linux-next-fixes akpm-mm/mm-everything linus/master v6.16-rc1 next-20250610]
-> > [If your patch is applied to the wrong git tree, kindly drop us a note.
-> > And when submitting patch, we suggest to use '--base' as documented in
-> > https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> >
-> > url:    https://github.com/intel-lab-lkp/linux/commits/Jason-Xing/relayfs-abolish-prev_padding/20250610-085150
-> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git for-next
-> > patch link:    https://lore.kernel.org/r/20250610004844.66688-5-kerneljasonxing%40gmail.com
-> > patch subject: [PATCH v4 4/5] blktrace: use rbuf->stats.full as a drop indicator in relayfs
-> > config: arc-randconfig-001-20250610
-> > compiler: arc-linux-gcc (GCC) 12.4.0
-> > reproduce (this is a W=1 build):
-> >
-> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes: https://lore.kernel.org/oe-kbuild-all/202506102340.uo7QDaVk-lkp@intel.com/
-> >
-> > All warnings (new ones prefixed by >>):
-> >
-> >    kernel/trace/blktrace.c: In function 'blk_dropped_read':
-> > >> kernel/trace/blktrace.c:421:39: warning: format '%lu' expects argument of type 'long unsigned int', but argument 4 has type 'size_t' {aka 'unsigned int'} [-Wformat=]
-> >      421 |         snprintf(buf, sizeof(buf), "%lu\n", dropped);
-> >          |                                     ~~^     ~~~~~~~
-> >          |                                       |     |
-> >          |                                       |     size_t {aka unsigned int}
-> >          |                                       long unsigned int
-> >          |                                     %u
-> 
-> Well, I suppose I will fix it in the re-spin after receiving more
-> comments so that I don't need to quickly respond to this minor issue.
+I've just found that this current patchset didn't apply to
+net-next, thus, the NIPA tests didn't run. I will send a v2 soon. I do
+not plan to change anything, other than rebasing it.
 
-Please update the patch and send series with my reviewed-by on 1/5.
-BTW, size_t should use %zu.
-Please check Documentation/core-api/printk-formats.rst
-
-Thank you,
-
-> 
-> Thanks,
-> Jason
-> 
-> >
-> >
-> > vim +421 kernel/trace/blktrace.c
-> >
-> >    413
-> >    414  static ssize_t blk_dropped_read(struct file *filp, char __user *buffer,
-> >    415                                  size_t count, loff_t *ppos)
-> >    416  {
-> >    417          struct blk_trace *bt = filp->private_data;
-> >    418          size_t dropped = relay_stats(bt->rchan, RELAY_STATS_BUF_FULL);
-> >    419          char buf[16];
-> >    420
-> >  > 421          snprintf(buf, sizeof(buf), "%lu\n", dropped);
-> >    422
-> >    423          return simple_read_from_buffer(buffer, count, ppos, buf, strlen(buf));
-> >    424  }
-> >    425
-> >
-> > --
-> > 0-DAY CI Kernel Test Service
-> > https://github.com/intel/lkp-tests/wiki
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+--breno
