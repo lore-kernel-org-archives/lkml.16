@@ -1,164 +1,132 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E29E283CA2;
-	Wed, 11 Jun 2025 19:01:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E4CA20127D
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 19:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749668486; cv=none; b=WPgIB1/jdp6xHG+G3A9C2AqlP89m1JKnfN9axsON03lreLITwhIJ+7AUGhrdzDFdWGivSJ0r7BTxmgoS74K1LzjdCfhuwCHFY2C7zq2hDqtDGWAMUZbph98F9cEKXUf8gMTUJMy0m9a0yqZV+5UIAH9/WWp03S4BU0RmEctfXvI=
+	t=1749668688; cv=none; b=GCkcYcmBiUmmnhNre7VUmNFVLR2FUawdglfivy075G3/CJlA5g1TS+k+J4Q9w5OY/qfrcMlgoWJuO47KUCAqBynKK7VUb4hJP81oWFUyDL7kzcBR6tmp3MbymzDACYZ8WQjDUWmnwY5Cb++8SkHnqYP+i7DQu0j+Wh82GLeLs5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749668486; c=relaxed/simple;
-	bh=hfeyK/eTihwmpGVnQxX1pqhXZgt2fJWgCy74pCgGR4E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dOoZXjmRsvmg5lr5b/TamEBexMOGrdEKcQC6XlWc4CqTldYw++PzTE6nOQFSb+3E9OOVG4X//6/Yd3Nd3SfSJ6c6+d+2VC/vTNaoV6Uhyg4HAgHhD+0oBS6/ZsfrqvCFtMNV96ftaGjbhBCKIxE9ePYi3jTPSxi2r7irENFvKqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cSVdE0v7; arc=none smtp.client-ip=209.85.210.178
+	s=arc-20240116; t=1749668688; c=relaxed/simple;
+	bh=+t8ACet9xqwRNJy9b8899wiD25b/003UaXpKZdUYUJE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uiAxdG+f5bzkENHvOvUwf6pQpOZkUX/wG6BUoxqcnD9RNM0pRlgEScHhlw7E1+4QbrC5gWc11+A7hCG9R+MdQZ9xaRJFqfvqnO+AD41ObgakF9HRMErT7rN70aHV81did2M5bPVxE9atgoYYhSfWQ0DNalEiL2UPfTwPc/b+Q1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L/Sbp4qm; arc=none smtp.client-ip=209.85.215.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cSVdE0v7"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-747abb3cd0bso972673b3a.1;
-        Wed, 11 Jun 2025 12:01:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L/Sbp4qm"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-b1ff9b276c2so62707a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 12:04:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749668484; x=1750273284; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kZGyYXYc3SZhPlDKvAJZs+fBk6MmM4JqN/0ybuzC+cc=;
-        b=cSVdE0v7hSRFE8CX3luHIjIN7QUgIOIB67zdckBiVF4NpoOHZCa9gjrxw1LojGOzK7
-         pDwiuv9NfRfca5Xlbj6zekuqBC652sV+P7D4KNxI3dZ/ZEzuxe0Mu3HpFiBQhKJruyfP
-         EnYrtqiRmdApcatTpz0qZaHmR6CD2chRn/EKt3unllofLL8epnFCfEzf8JC7j2Gxvjh5
-         DFrgip/YM2JQGE29TnOEzcjCMABitMDz65/5hM9RijFM3N8ZRtBzEB0GX4fGEcET3n0B
-         qGuUtG5ypBT2SXupHR3/vrf2SpI0jzuZkUfKeUyO8y43aeSpGFrnRGToqBlKUMuZXAmt
-         f+Dg==
+        d=gmail.com; s=20230601; t=1749668686; x=1750273486; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Yu2PImzFHGaLiTWdxu2ihmwRTn972j20R7GA0tijYc4=;
+        b=L/Sbp4qmhiLJrc5EZADLmfzNaIlDUr0hY7YliKl/Os9xnuFOVsOAxPb1GJP3/xPljD
+         F4EiL1NKg+6yT6u6lhASa1B+n/eN8nUpj55Ch88ewAjpNXNF5qbl7wRMZYdCCUcOqru1
+         zdnJCVHpuxonUj0gkpSlKWydxBJ6UmhaOtepp3MyQbDt1GAZN82E21LPnYIBuVzvwDuG
+         gcqiEQj3x/Ti8k5ovB5oOCfoWdcHU2cPqMazsaxgUdpeu72jqXY09A2l9ppP/vx6pEhf
+         mi3Nzb+iX8mtV2I6L8pPq5fc2XnGgKCLI6fjWojaiMyg/wQDuphRQdOugPT4yzzF2ORn
+         jP4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749668484; x=1750273284;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kZGyYXYc3SZhPlDKvAJZs+fBk6MmM4JqN/0ybuzC+cc=;
-        b=PvkWqQE6x16dPQJXKdJnpf3tMYZzP89oTO3c1Zmc/XhZokCQ/K5DCjiQueWpz76p2D
-         LQXO8fWYxaGgqaUg1f6jAxCCplzaO7t7ADIWvirW6I0UTVsousrgO0MAaGiEdV1DQvnK
-         nqP6zSV5dKmJXHhOzLT7rtLeKmV+sRE9LUpklEEnKZvIH3eFkc3ANLY8dbQzgQexkRTs
-         v43l23jwrqDnvqdSXCtSMkWPWkhz4cfcUc/zUk4o6VND1FH6FxR5XSHYAF143uBZueuW
-         sT+K9UaKEeDXOm7s1GINlVlfSA5CxbpQNQHXbozPo7gZe7IH0TUV0Ppi9FwZm6MlPvTt
-         vxSw==
-X-Forwarded-Encrypted: i=1; AJvYcCUrsy6yjLW0hj0qId26fndCdceRWq4hLXB7Nbw2oDygcfcSoYQ4BckSDk1y1AwyzaxhqIRIV9wC7Zyi@vger.kernel.org, AJvYcCWR0TDoeylBhvOer/SK0GrOZJvwq9r5AapzcSvInBvOgu6l18GZPV6DwN1G/YenyYq6EhmHRrMH6inUoeo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7EA6GROqH4QySpcREeJcNIpxvS9MWIRSWuh4uem0yQm1IiR8v
-	CHilznHDDsHED2zMTZWkRgdmvxkFpGEiLWnQXG9Xm4JN6rXMCP3Ubvgs
-X-Gm-Gg: ASbGncvclGI6Zynu5qfwFZLhoeu4LZHRpZdDaguRrrQzggBel3H2qauT6QM/mnzFtyz
-	MRxhqNFtUX7mo87woWjn2EEv6tqBHo9Eyfx/zeZweEobhB7P0QCqIqXSqTFsgFT9CibBrwJB8rv
-	dvRgtsYnvevL5AnuwE9JalLhRbJhnuh2q5Mm/Cw++mYnnVkgPutigvAJ6nrzmHP1STF43GU+sRP
-	chvQ9z/vloAnm8OSKo+O7AqNy9aGyJnX6HMaz0lE8zVyttjxQKmZ4A7aUyYtH+x0zx3XgkmCcgR
-	4OucxgyKY0c7HJQRxEqbmhpgkAyUJCWd8ntmlU60tOzlnuUorTFirL21ow2pCjOcNNVEydgFiHv
-	P
-X-Google-Smtp-Source: AGHT+IEMmil3asp25VvB9Lf6ITUkxC/JbPLatMIJdku5ioTE3FR6q5SQWOrizUA/z/Q7dClNFGB6kA==
-X-Received: by 2002:a05:6a20:244b:b0:218:1fa6:420e with SMTP id adf61e73a8af0-21f991040a6mr797761637.13.1749668483580;
-        Wed, 11 Jun 2025 12:01:23 -0700 (PDT)
-Received: from akshayaj-lenovo.. ([2401:4900:8839:85c6:8863:1c9:9e9c:ef7d])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2f5f892f57sm8766759a12.66.2025.06.11.12.01.19
+        d=1e100.net; s=20230601; t=1749668686; x=1750273486;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Yu2PImzFHGaLiTWdxu2ihmwRTn972j20R7GA0tijYc4=;
+        b=S8uNH9LZeHD1kqI5TWL5zFJgknbDBi0XzbiwTT6lpoPnf+7C/KK+SA3TZtvxpQgOzi
+         vVGl8wJxw5n6bS5DV6hzPd/PdQkcjukyTKXS4fyABoMA7xZ11KFG7G0IucghLfWQjMUo
+         0a7PQFcb8EH/ZBduDH+66qqQ6XA0pB3t39dqUKXy8A+irN5wkzBFgvVFwkU1Ik2ZX1nA
+         BKhzTHFwirrNNM3ALFp9VPEdY1yOQdbVfGB7NUUotXF6g0wOW9M5dp8tEMehHRgCf0gD
+         xgR7yI8ali6FSqMudBwrT3twCAodOnq4IqZsLht+NCiR/+0idikFkp3xjiL+2iYAdt/S
+         MUBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+rdMDWORll5NaOHssZuClxz56D+GYfbUrNWAJXdiuzzYaROSdfD3sPvFYmM2t6UHRAOlV2buK4TCkrrQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5vBa0C+gDCiQeIV8R4d+Z4qCM8q03BnhlCb2nSg/G40W8bIAc
+	5emUrSUmBxveHtytwRH44zglpiFTodFUuTNj8sCVlXliL+f7Fko3/rz7
+X-Gm-Gg: ASbGncvn/0Np248hPNQJAaIjP4pY0zW+iHxsNQ+YsVSsTzzSFjkCE8GgCeNw6D/6zNL
+	3gdXVDBzn/QzqHaZnBTumpm2mQamH6T8Wz/KXXLl/d1/ImqdYcbbRsl0o4ho81TJGnmZsJrT9KB
+	91Bod6hob95szkhpmLk6HZQZ//RSDuzKwz7otz5s5ju/JSlZzCh2XOcZ0eoeGOHUVq5u/lMLvjQ
+	PRe68NgxAlcwLxsOgPWiAdfuh16rIkb0FwsruKXYD7I8q7GzCBz608T/LTb40HwtivDnFqX+ZI+
+	0uw4R2Q2UsVn9gdk2Rd6KGR2P1uqL7evYqYijPyB80qp1Snlkuts2Ulo/lQy4Q==
+X-Google-Smtp-Source: AGHT+IHlKwUHlG5l5OkH/T5Emuq4G3wP5gvRvJQ20dNe+S3Lsa4RrQlO5tlqWQU83u4ZPK3w8pteOw==
+X-Received: by 2002:a17:90b:520f:b0:311:fc8b:31b5 with SMTP id 98e67ed59e1d1-313c069ede0mr408927a91.14.1749668685680;
+        Wed, 11 Jun 2025 12:04:45 -0700 (PDT)
+Received: from localhost ([216.228.127.130])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313b20112d4sm1859375a91.20.2025.06.11.12.04.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 12:01:23 -0700 (PDT)
-From: Akshay Jindal <akshayaj.lkd@gmail.com>
-To: bhelgaas@google.com,
-	ilpo.jarvinen@linux.intel.com,
-	Jonathan.Cameron@huawei.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
-	kwilczynski@kernel.org,
-	mahesh@linux.ibm.com,
-	oohall@gmail.com,
-	karolina.stolarek@oracle.com,
-	lukas@wunner.de,
-	pandoh@google.com
-Cc: Akshay Jindal <akshayaj.lkd@gmail.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI/AER: Add Error Log in case when AER_MAX_MULTI_ERR_DEVICES limit hit during AER handling.
-Date: Thu, 12 Jun 2025 00:30:53 +0530
-Message-ID: <20250611190056.355878-1-akshayaj.lkd@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        Wed, 11 Jun 2025 12:04:44 -0700 (PDT)
+Date: Wed, 11 Jun 2025 15:04:42 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: John Stultz <jstultz@google.com>
+Cc: I Hsin Cheng <richard120310@gmail.com>, tglx@linutronix.de,
+	sboyd@kernel.org, linux-kernel@vger.kernel.org,
+	jserv@ccns.ncku.edu.tw, skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH] clocksource: Utilize cpumask_next_wrap() to shrink code
+ size
+Message-ID: <aEnTSuVy2Aq8jRk8@yury>
+References: <20250611104506.2270561-1-richard120310@gmail.com>
+ <CANDhNCoJ_MmpEfyuL+JWav+NUfQDH3dm196JSE-Mv3QrPUzi3g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANDhNCoJ_MmpEfyuL+JWav+NUfQDH3dm196JSE-Mv3QrPUzi3g@mail.gmail.com>
 
-When an error is detected at a PCIe device and the root port receives the
-error message, the threaded IRQ handler aer_isr traverses down the
-hierarchy from the root port and keeps on adding those pcie devices on
-which error has been recorded into the e_info->dev[] array for
-respective error handling and recovery. The e_info->dev[] array has size
-AER_MAX_MULTI_ERR_DEVICES which currently has been defined as 5.
-This change adds an error message in case this limit is hit.
+On Wed, Jun 11, 2025 at 11:35:13AM -0700, John Stultz wrote:
+> On Wed, Jun 11, 2025 at 3:45 AM I Hsin Cheng <richard120310@gmail.com> wrote:
+> >
+> > Simplify the procedure of CPU random selection under
+> > "clocksource_verify_choose_cpus()" with "cpumask_next_wrap()". The
+> > logic is still the same but with this change it can shrink the code size
+> > by 18 bytes and increase readability.
+> >
+> > $ ./scripts/bloat-o-meter vmlinux_old vmlinux_new
+> > add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-18 (-18)
+> > Function                                     old     new   delta
+> > clocksource_verify_percpu                   1064    1046     -18
+> >
+> > Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+> > ---
+> >  kernel/time/clocksource.c | 4 +---
+> >  1 file changed, 1 insertion(+), 3 deletions(-)
+> >
+> > diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
+> > index bb48498ebb5a..ab580873408b 100644
+> > --- a/kernel/time/clocksource.c
+> > +++ b/kernel/time/clocksource.c
+> > @@ -343,9 +343,7 @@ static void clocksource_verify_choose_cpus(void)
+> >          */
+> >         for (i = 1; i < n; i++) {
+> >                 cpu = get_random_u32_below(nr_cpu_ids);
+> > -               cpu = cpumask_next(cpu - 1, cpu_online_mask);
+> > -               if (cpu >= nr_cpu_ids)
+> > -                       cpu = cpumask_first(cpu_online_mask);
+> > +               cpu = cpumask_next_wrap(cpu - 1, cpu_online_mask);
+> >                 if (!WARN_ON_ONCE(cpu >= nr_cpu_ids))
+> >                         cpumask_set_cpu(cpu, &cpus_chosen);
+> >         }
+> 
+> I think Yury submitted the same change here recently:
+>   https://lore.kernel.org/lkml/20250607141106.563924-3-yury.norov@gmail.com/
+> 
+> Though, I think he has another iteration needed as Thomas had feedback
+> on the subject line.
+> 
+> The bloat-o-meter data is a nice inclusion here!
+> 
+> Yury: Would you be open to adapting I Hsin Cheng's commit message into
+> yours and adding them as co-author via the Co-developed-by: tag?
+> (Assuming I Hsin Cheng agrees - See
+> Documentation/process/submitting-patches.rst for how to do this
+> properly).
 
-Signed-off-by: Akshay Jindal <akshayaj.lkd@gmail.com>
----
-
-Testing:
-========
-Verified log in dmesg on QEMU.
-
-1. Following command created the required environment. As mentioned below a
-pcie-root-port and a virtio-net-pci device are used on a Q35 machine model.
-./qemu-system-x86_64 \
-	-M q35,accel=kvm \
-	-m 2G -cpu host -nographic \
-	-serial mon:stdio \
-	-kernel /home/akshayaj/pci/arch/x86/boot/bzImage \
-	-initrd /home/akshayaj/Embedded_System_Using_QEMU/rootfs/rootfs.cpio.gz \
-	-append "console=ttyS0 root=/ pci=pcie_scan_all" \
-	-device pcie-root-port,id=rp0,chassis=1,slot=1 \
-	-device virtio-net-pci,bus=rp0
-
-~ # mylspci -t
--[0000:00]-+-00.0
-           +-01.0
-           +-02.0
-           +-03.0-[01]----00.0
-           +-1f.0
-           +-1f.2
-           \-1f.3
-00:03.0--> pcie-root-port
-
-
-2. Kernel bzImage compiled with following changes:
-	2.1 CONFIG_PCIEAER=y in config
-	2.2 AER_MAX_MULTI_ERR_DEVICES set to 0
-	Since there is no pcie-testdev in QEMU, it is impossible to create
-	a 5-level hierarchy of PCIe devices in QEMU. So we simulate the
-	error scenario by changing the limit to 0.
-	2.3 Log added at the required place in aer.c.
-
-3. Both correctable and uncorrectable errors were injected on
-pcie-root-port via HMP command (pcie_aer_inject_error) in QEMU.
-HMP Command used are as follows:
-	3.1 pcie_aer_inject_error -c rp0 0x1
-	3.2 pcie_aer_inject_error -c rp0 0x40
-	3.3 pcie_aer_inject_error rp0 0x10
-
-Resulting dmesg:
-================
-[    0.380534] pcieport 0000:00:03.0: AER: enabled with IRQ 24
-[   55.729530] pcieport 0000:00:03.0: AER: Exceeded max allowed (0) addition of PCIe devices for AER handling
-[  225.484456] pcieport 0000:00:03.0: AER: Exceeded max allowed (0) addition of PCIe devices for AER handling
-[  356.976253] pcieport 0000:00:03.0: AER: Exceeded max allowed (0) addition of PCIe devices for AER handling
-
- drivers/pci/pcie/aer.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 70ac66188367..3995a1db5699 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -1039,7 +1039,8 @@ static int find_device_iter(struct pci_dev *dev, void *data)
- 		/* List this device */
- 		if (add_error_device(e_info, dev)) {
- 			/* We cannot handle more... Stop iteration */
--			/* TODO: Should print error message here? */
-+			pci_err(dev, "Exceeded max allowed (%d) addition of PCIe "
-+				"devices for AER handling\n", AER_MAX_MULTI_ERR_DEVICES);
- 			return 1;
- 		}
- 
--- 
-2.43.0
-
+Yeah, bloat-o-meter report is good enough to add co-developed-by tag.
+I Hsin, do you agree?
