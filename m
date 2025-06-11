@@ -1,25 +1,40 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93BBE2749C9
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 10:31:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436CE26A1AA;
+	Wed, 11 Jun 2025 10:31:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749637912; cv=none; b=V6wM41Rcq5mJwpds4z//fEdK6A5wXHdyJkn/+qfzTQ2mK93dmsiGzu2Ip8KGaye58PBRWjgib/vx40Dl7C0khTpkD02qnkzNJpIHKE8DZ+DRPgs9keqAG2h8hIhjWa/VHapvl3nhdV9IO6ETInZi5cEdEJ1R7nGgNZOe427tvg0=
+	t=1749637916; cv=none; b=KSLHWZcd8a6nosBHPEKI5VzGxwBKyyF2KalRqCEkKaWWxsA6eI+Fw9+mBVYRyvUPvSddHowQTEz2e64PKtEksVUouG0TWQpaCLVlTJMimz0qCq0UFexB+moIB6uRX0PH8GoZAcsewr2EJbXO8kKyj8iQMAM2QwAbmKXkHwtwUng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749637912; c=relaxed/simple;
-	bh=NurDmQcFY2qdtvA6zliu4v+3Zwrf1QLQZtUjK022rR4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NNji0nGn37N2J3JObLkv8xRAHpUmeh+2VMwI37UFX8NteZqlHvOobT7ytQPbqmFgcZTt6CalxANk9F2EBApv+tCj5zRCvAf7AUQMzIPD9CskzCBjp+7AJLVnboJJvtNNtYpKeumMcJySCC/G4sZuWWCE1vnk7vcqTtYVTUbaKBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68EBF1BC0;
-	Wed, 11 Jun 2025 03:31:30 -0700 (PDT)
-Received: from [10.164.146.17] (J09HK2D2RT.blr.arm.com [10.164.146.17])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EBD423F673;
-	Wed, 11 Jun 2025 03:31:47 -0700 (PDT)
-Message-ID: <aa2fa283-528c-4658-9bd3-7092eac7a442@arm.com>
-Date: Wed, 11 Jun 2025 16:01:44 +0530
+	s=arc-20240116; t=1749637916; c=relaxed/simple;
+	bh=3z8hZFa9//bUvzwLa3zjwL+7K6avZpJg2PLIMuQmLL4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=JZnBJJVnmIB7XEjaCo5HiGr31ZbRdYLA5bzdK/1IpmhesjsTqphhfmipD08rL1EEZZwinG67YPUqKNXdKiaIBGgL1eFfmo7lsguOq8fzv063mP3MzcJUW9s78Ajo09OTdpb6lFhEsV6spp51ETgBcauwMlrVP1gLGfT2WbBZX/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Og+Ohgdr; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Og+Ohgdr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1749637912;
+	bh=3z8hZFa9//bUvzwLa3zjwL+7K6avZpJg2PLIMuQmLL4=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=Og+Ohgdrlx/tf6pMagXXUidF1owJ7JRpFiMxz0sXLlLR9I2U8xFsYL9B+0W1w1MT3
+	 ABTGmg3o1ZfpZDQW+9sCzpec1N0npade21fFY2BIdbUSmoTiAndGHckAXyVLBin1Zw
+	 SEFLxL2fNGuiAOER7JvOE7F5hrIsNSMOMWwk5wJLRaG04QJoWl4/qY1oXWuzJBb6Af
+	 wsSwTI7WHVnBOjhKpaaXNrSKvb/y52T44HaGHpXZpxyCXBT0I6xgzKADXngnaMedXD
+	 TeT5RIjeDhQMAfnPxWxgjbiRGw9wPUnIqens1694qMuudhCCCtN7OR2QcCO8DmFrm2
+	 P+aTeW0M3kohQ==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6F6D417E02B0;
+	Wed, 11 Jun 2025 12:31:51 +0200 (CEST)
+Message-ID: <ccd10443-c643-487b-ab2b-f1da00f97ed7@collabora.com>
+Date: Wed, 11 Jun 2025 12:31:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,78 +42,58 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 1/2] arm64/debug: Drop redundant DBG_MDSCR_* macros
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Ada Couprie Diaz <ada.coupriediaz@arm.com>, linux-kernel@vger.kernel.org
-References: <20250610053128.4118784-1-anshuman.khandual@arm.com>
- <20250610053128.4118784-2-anshuman.khandual@arm.com>
- <aEhnzsXHfilVhJ1s@J2N7QTR9R3> <68d762d4-a755-4ede-976b-0616bf3aab28@arm.com>
- <aElRi0Usn8dH6O4m@J2N7QTR9R3>
+Subject: Re: [PATCH v2 00/13] ASoC: mediatek: use reserved memory or enable
+ buffer pre-allocation
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: Mark Brown <broonie@kernel.org>, Chen-Yu Tsai <wenst@chromium.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Jiaxin Yu <jiaxin.yu@mediatek.com>,
+ linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250424102509.1083185-1-wenst@chromium.org>
+ <aCRaTY76dnaavsrd@finisterre.sirena.org.uk>
+ <89e2699a-94cc-4d1d-9788-2c5bce1c361c@collabora.com>
 Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <aElRi0Usn8dH6O4m@J2N7QTR9R3>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <89e2699a-94cc-4d1d-9788-2c5bce1c361c@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 11/06/25 3:25 PM, Mark Rutland wrote:
-> On Wed, Jun 11, 2025 at 09:10:45AM +0530, Anshuman Khandual wrote:
+Il 11/06/25 12:22, AngeloGioacchino Del Regno ha scritto:
+> Il 14/05/25 10:54, Mark Brown ha scritto:
+>> On Thu, Apr 24, 2025 at 06:24:54PM +0800, Chen-Yu Tsai wrote:
 >>
->>
->> On 10/06/25 10:43 PM, Mark Rutland wrote:
->>> On Tue, Jun 10, 2025 at 11:01:27AM +0530, Anshuman Khandual wrote:
->>>> MDSCR_EL1 has already been defined in tools sysreg format and hence can be
->>>> used in all debug monitor related call paths. Subsequently all DBG_MDSCR_*
->>>> macros become redundant and hence can be dropped off completely. While here
->>>> convert all variables handling MDSCR_EL1 register as u64 which reflects its
->>>> true width as well.
+>>> This is v2 of what was just a single patch "ASoC: mediatek: re-enable
+>>> buffer pre-allocation on some platforms". Link to v1:
 >>>
->>> I think that for now it'd be best to *only* change over to the
->>> generated MDSCR_EL1_* defintions, and leave the register sizes as-is.
+>>>      https://lore.kernel.org/all/20250401085659.1222008-1-wenst@chromium.org/
+>>>
+>>> Angelo requested that these platforms use reserved memory regions if
+>>> possible, and fall back to pre-allocated buffers only if that fails,
+>>> to align with other MediaTek SoCs / platforms that already use reserved
+>>> memory. The series covers MediaTek's MT8173, MT8183, MT8186, and MT8192
+>>> SoCs.
 >>
->> I had tried doing that originally but without changing mdscr register size,
->> there is a build warning because MDSCR_EL1_MDE is defined as GENMASK(15, 15)
->> which is represented as 'long unsigned int'.
->>
->> #define __GENMASK(h, l) (((~_UL(0)) << (l)) & (~_UL(0) >> (BITS_PER_LONG - 1 - (h))))
->>
->> arch/arm64/kernel/debug-monitors.c: In function ‘disable_debug_monitors’:
->> arch/arm64/kernel/debug-monitors.c:108:13: warning: conversion from ‘long unsigned int’ to ‘u32’ {aka ‘unsigned int’} changes value from ‘18446744073709518847’ to ‘4294934527’ [-Woverflow]
->>   108 |   disable = ~MDSCR_EL1_MDE;
->>       |             ^
+>> AngeloGioacchino?
 > 
-> Please mention that in the commit message. As-is, the commit message has
-> no rationale for changing to u64.
-
-Sure, agreed. I had missed that, it was my bad.> 
-> More generally, if you need to make a change to avoid a compiler
-> warning, please describe that as part of the rationale.
-Makes sense, will do.
-
+> Truly sorry for this slipping through the cracks - and thank you for the pings.
+> Also, thank you for all this code, love it.
 > 
->> MDSCR_EL1 is a 64 bit system register as per ARM DDI 0487 L.A (D24.3.20).
->> Representing it as u32 does not seem right irrespective of whether the
->> extended break point support is enabled or not. Besides even arm64 kvm
->> uses u64 for mdscr register.
+> Whole series is:
 > 
-> Sure, but that wasn't my complaint.
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 > 
-> My complaint was that it was a logically unrelated change, because you
-> had provided no rationale as for why it was necessary to change to u64
-> as a conseqeunce of changing to the generated MDSCR_EL1_* definitions.
+> Sorry again for all the wait.
 > 
-> Please also note that *almost all* system registers have the
-> "${REGISTER} is a 64-bit register wording", including things like DAIF,
-> SPSel, etc. It's necessary to consider the context of use.
+> Cheers!
+> Angelo
 
-Understood.
+Also, I picked patches 10 to 13, applied to v6.16-next/dts64 and manually fixed
+a merge issue with patch 13.
 
-I will add a rationale in the commit message for the u64 changes along
-with changes related to the generated MDSCR_EL1_* definitions and then
-re-spin the series. Thanks for your review.
+https://git.kernel.org/pub/scm/linux/kernel/git/mediatek/linux.git/log/?h=v6.16-next/dts64
 
-> 
-> Mark.
-
-
+Cheers!
