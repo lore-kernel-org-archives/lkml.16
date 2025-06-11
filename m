@@ -1,127 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E923A923;
-	Wed, 11 Jun 2025 07:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F1D21B8EC;
+	Wed, 11 Jun 2025 07:22:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749626413; cv=none; b=gKTKMu4sPbOIADa3p569hVARNamuNuuXLMuoUfglwZmXfZ40oORCaI/8BE57uTrcuYLjqnZ8OeIOtN2L6orDh7C8aqr5Kd+CJaoN5n/k0RsR3yYH/0OLsdWlPhiC42vuIV+2lICiinN5mVpHaygIjUc6mX48T+hq2Ixy9PJSTjw=
+	t=1749626564; cv=none; b=BZrOVcOGXgB86G5sxz4zWnhDdsVCZkAlw/UU6hm2QJ/2i7RUbdFPQdFnSKAVCssAZ6a9/5vY/CUschToHUCHkS+NcDnRhxqF1BJqsDJR3fd7GHigzlAucDwbHXijnec/lsShz7jTr0MjJVxQXm4yvWf5srEpHm9qiIoaJaEB9ZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749626413; c=relaxed/simple;
-	bh=/7F7WpshDjelGHatVoqukDPGIQiPrcJCWYW44DDjwdc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ncncDCYk7b0lnRNmjT9tb4KP15FxzcpAG5R4d74rtEhJnhD8jgvWwb3hLYTsqw9AiKM0+5ArY5qChSLd4sowMrV5BRqprMhdPHVbuegwgLlIEHqnTgCpmEZLqtunB7ZqUdKAaF6g0udfwxutsgJm6I46KPbrFAsCuwFQw5St9Lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OzQBkf+x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749626564; c=relaxed/simple;
+	bh=ECQdEF/hlN++AB53DFuBDy9A9Lr5rxVtAjzxgJo3pqY=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=IlLUUUP80n7FqNG2/o6p5VqWxt077dN6Ft/mEPZL5oGVV24CQy+Pc/W0SH4CJbKsTiJNPVEAKuiKAYMEDvT6nkCougSyaLpFXonpxyQa0NxF2qnsCCcc7xUQKiL3MKUuhmrbxcxKQMO3IXOpHDQNPgaSGIfsJ7sApxS9IHpctQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DOaFM3ai; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OzQBkf+x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40CD6C4CEEE;
-	Wed, 11 Jun 2025 07:20:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749626412;
-	bh=/7F7WpshDjelGHatVoqukDPGIQiPrcJCWYW44DDjwdc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OzQBkf+x0narII+HmtYjWGCDN8/DOMdf4UkTkqxLguCdwRjHLR5+rHwNe1cAfZREB
-	 9pPCpyuhKjmwtzIzueeRyPw5gAAjv/xdaCTYM9MxqqDtxMmKId5ORA9IlQZDcV/0I7
-	 w41ze7A30V5bt0/fPf/sXTv48tG1KawkM9+0GzmoX5Wz8bXUVwRy2T2jN8vSy2tXZ/
-	 cRfhKFJyHsomqx59QY39eHhrjtVUzVaIFIxBQx6MjwgoaLTTTKLVWQPmn29dNe3xmO
-	 6mG7chv3fwK1VWl9325TmhHvN9LgpFDuGnW9erlb0hUw2KJJ5kKvp4xr9udzZg/Kw+
-	 SWh2e0vPAyJZA==
-Message-ID: <19dd3d16-aadd-469c-a090-238baba14d4e@kernel.org>
-Date: Wed, 11 Jun 2025 09:20:08 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DOaFM3ai"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749626564; x=1781162564;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ECQdEF/hlN++AB53DFuBDy9A9Lr5rxVtAjzxgJo3pqY=;
+  b=DOaFM3aiEtPZI2XHY90PRuZtiAYCdR0kLIpaudBE/qt3UCkoksUQ+fKa
+   NqzI5c8c78KfcN/GpVYUdt5SGk8/g7ESH1yeYTr8UWvzXAWyv+F8wDNvh
+   Ysl4lmu0M2UqRDohcslXFZJymUdMCoNtkCw6wiPHK9xvvJy7xWbNHRzGp
+   9aEngQQmHnGu/pmAvujZRUa4h3JaC5ohXlOtTCNri8ZNvKhqNlIQdDYm0
+   2K2qxPII3DjlgOxnssgyJKGmpYvgDMWfQP1GH/P8dc69cN03+9T0AOzmm
+   DSwDnc7Dr9kkIvSpy/p1O3PqdndDswaswDv2TJIlWjTbwRjL4t+F2yYOo
+   w==;
+X-CSE-ConnectionGUID: LgbjJypLSOmb8GTK6HxJmA==
+X-CSE-MsgGUID: EcXgswJWQdKboWuiqH6WKg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="55562558"
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="55562558"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 00:22:43 -0700
+X-CSE-ConnectionGUID: WiPnG0SZQ8e/Im6ttCX92A==
+X-CSE-MsgGUID: 6jKYhHsVQyq29ffUu4J4Ig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="147652666"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.183])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 00:22:40 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 11 Jun 2025 10:22:35 +0300 (EEST)
+To: Jakub Kicinski <kuba@kernel.org>
+cc: linux-pci@vger.kernel.org, Potnuri Bharat Teja <bharat@chelsio.com>, 
+    Andrew Lunn <andrew+netdev@lunn.ch>, 
+    "David S. Miller" <davem@davemloft.net>, 
+    Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
+    Netdev <netdev@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] cxgb3: Replace PCI related literals with defines &
+ correct variable
+In-Reply-To: <20250610135338.580aa25b@kernel.org>
+Message-ID: <a24d9048-d296-9bd5-aa65-4e630dc34d51@linux.intel.com>
+References: <20250610103205.6750-1-ilpo.jarvinen@linux.intel.com> <20250610135338.580aa25b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] dt-bindings: power: Add SiFive Domain Management
- controllers
-To: Nick Hu <nick.hu@sifive.com>
-Cc: conor+dt@kernel.org, krzk+dt@kernel.org, Cyan Yang
- <cyan.yang@sifive.com>, Samuel Holland <samuel.holland@sifive.com>,
- devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
- Paul Walmsley <paul.walmsley@sifive.com>
-References: <20250611031023.28769-1-nick.hu@sifive.com>
- <20250611031023.28769-2-nick.hu@sifive.com>
- <9c429671-8409-4911-8559-73a069d66964@kernel.org>
- <CAKddAkAyvRdAz9X_rCGgfdxD0Z_Q7sAt8e5nuJe7=s7G-Y3+AQ@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <CAKddAkAyvRdAz9X_rCGgfdxD0Z_Q7sAt8e5nuJe7=s7G-Y3+AQ@mail.gmail.com>
+Content-Type: multipart/mixed; boundary="8323328-1062828760-1749626555=:957"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-1062828760-1749626555=:957
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On 11/06/2025 09:15, Nick Hu wrote:
-> On Wed, Jun 11, 2025 at 2:57 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>
->> On 11/06/2025 05:10, Nick Hu wrote:
->>> SiFive Domain Management controller includes the following components
->>> - SiFive Tile Management Controller
->>> - SiFive Cluster Management Controller
->>> - SiFive Core Complex Management Controller
->>>
->>> These controllers control the clock and power domain of the
->>> corresponding domain.
->>>
->>> However, Since we don't have a SoC specific compatible string yet, so
->>> add '- {}' for the first entry [1][2].
->>
->>
->> But you must have Soc specific compatible strings. See previous discussion.
->>
-> Maybe I'm missing something, but since we don't have a SoC-specific compatible
-> string yet, I thought we agreed to include a `- {}` as the first
-> entry, along with an
-> explanation in both the commit message and comments [1].
-But your commit msg does not explain. You need to explain why you do not
-have SoC specific compatibles. Saying "I do not have a SoC specific
-compatible" is not an argument explaining why you do not have SoC
-specific compatible.
+On Tue, 10 Jun 2025, Jakub Kicinski wrote:
+> On Tue, 10 Jun 2025 13:32:03 +0300 Ilpo J=C3=A4rvinen wrote:
+> > Replace literals 0, 2, 0x1425 with PCI_VENDOR_ID, PCI_DEVICE_ID,
+> > PCI_VENDOR_ID_CHELSIO, respectively. Rename devid variable to vendor_id
+> > to remove confusion.
+>=20
+> This series is missing a cover letter. An explanation of why you're
+> touching this very very old driver is in order, and please comment
+> on whether you can test this on real HW, because we don't like
 
-Best regards,
-Krzysztof
+No, I don't have the HW available.
+
+> refactoring of very old code:
+>=20
+> Quoting documentation:
+>=20
+>   Clean-up patches
+>   ~~~~~~~~~~~~~~~~
+>  =20
+>   Netdev discourages patches which perform simple clean-ups, which are no=
+t in
+>   the context of other work. For example:
+>  =20
+>   * Addressing ``checkpatch.pl`` warnings
+>   * Addressing :ref:`Local variable ordering<rcs>` issues
+>   * Conversions to device-managed APIs (``devm_`` helpers)
+>  =20
+>   This is because it is felt that the churn that such changes produce com=
+es
+>   at a greater cost than the value of such clean-ups.
+>  =20
+>   Conversely, spelling and grammar fixes are not discouraged.
+>  =20
+> See: https://www.kernel.org/doc/html/next/process/maintainer-netdev.html#=
+clean-up-patches
+
+Fine, I don't _need_ to get these accepted. I'll keep this in mind in
+future.
+
+It probably came up during some other work when I had to look through use=
+=20
+of all PCI accessor functions and understand what the callers are trying=20
+to do. When I took a look at the C file, I ended up noticing other things=
+=20
+too.
+
+As these are/were not direct requirement for the actual accessor work, I=20
+tend to send such series separately to avoid complicating review of one or=
+=20
+the other, feature series tend to be complicated enough even without the=20
+cleanup patches.
+
+It seems that in the unsent state, these patches predated adding that=20
+guidance.
+
+--=20
+ i.
+
+--8323328-1062828760-1749626555=:957--
