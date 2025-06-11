@@ -1,107 +1,92 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 532C8235044;
-	Wed, 11 Jun 2025 09:30:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA68F21B8EC
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 09:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749634235; cv=none; b=Z4t2AXsMMW9U6ufBqTSt8qmOOSTqI+aL4y78fcKkYBC5GSJdDASjLq/yn2+patyAH4du7V526kPu4k7kNRmN6JEkAVCs4kIbdK/XqiA6NJ5Z13rBiIZD/qHHnHgThX0tRdldtV1OvDhYqlyO6tF0pke8aq9Qp+FYe5hXAD9Rn7E=
+	t=1749634255; cv=none; b=hGLzqs1vJuNjRT/q9BEK2TkD3iuUYbYHQQW9peweHOOmnNireaOaK2wpuZo/WDIqbFbRCDhoQJ+v3we62iLZFe4R+1OQsRH2fVxh2OqXfBC5ueZLJ8WCpmQAAyQMAOjjbufbY1KbBvg9Uv/ek4/I7XrhaT7VAnzxrdSfcHsaTAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749634235; c=relaxed/simple;
-	bh=mFJrK1GSbumlSY17hCJ4tifRjTsfnnZ9l5K9gpPLQuI=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=dHOihogSs/MyYIkvAYbQEwdEtnjyX02AshdJ72fzHM83kyo/ZPPZvR8OvkD5yfUKsW9ge4Kq1KHcq4OAYre3sUGVIC4wfx5vU7/vyTzB+UwBkU1a7aTHh0T6sPRMW7uovqiq+i5wAHOgAQnPup5B3UJRqHjgf9lgIj2nY6g2J08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CHut6TOG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2/ikOoNB; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749634255; c=relaxed/simple;
+	bh=cOgg6lgUEFyEcbnuu0dGxi33Q451rEg1KMhORQ9NOrw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lp4EwrgWQ4MyffCvSO3l2CjqOTo//ip311ZDaPk8MsG6V24icNL2JQuABG+6rvAItHgW0N5etGKaGMiXC7TXr+KCTSbFNhTUunThjpPfdbj0EVFgy3OkANvSBmjiflqWxodpJjHM0J25mIaE4ZuV41M4ICgiOF+KLJq7FK3Vt84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f8EXLgY0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CHut6TOG";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2/ikOoNB"
-Date: Wed, 11 Jun 2025 09:30:31 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749634232;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=h6g8XTjYvRj/QYmzX8VBEJaIWUi9qt+BWCUfgqhptTw=;
-	b=CHut6TOGbJXC+Sv0MxIdmKg3c19Q5njkQZ+auXydlH/9jf6wFV76I0bdUbPddTtmD8Ziye
-	LiI5bl2IWoJAFr+8pZxFeJ8wodL3O8ZRlON7YwzqL52wv46uhj4RDiRHb3Ik7Bcnfr4qJh
-	ZhRqluEHDeEKdC8W3Wf8IG32Z8td47PrAXjRYbJmyZCEomkFIMlJS4sZjWrwa9x26MJFsY
-	0/8kAtHSCemgf1qU5tsLSi0CYB9UK8jlH073aGjR/LqlZw20eTLz3T7+35GSbK/Wo06Cy2
-	3P33KVjDgG9ljX7v6tf1/hwCxemz1c4F/I9zU/ichkC8DATqtW42tOrM8iM9Fg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749634232;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=h6g8XTjYvRj/QYmzX8VBEJaIWUi9qt+BWCUfgqhptTw=;
-	b=2/ikOoNBaW5wrIMxWCLKuMNW26JYcAjQHxmwCxC8LUVSK6rqFMy/wi514WbNrjm7uwYXtL
-	BJLqh2Z+kLu8MvDw==
-From: "tip-bot2 for Juergen Gross" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/mm/pat: don't collapse pages without PSE set
-Cc: Juergen Gross <jgross@suse.com>,
- "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>, stable@vger.kernel.org,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250528123557.12847-3-jgross@suse.com>
-References: <20250528123557.12847-3-jgross@suse.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f8EXLgY0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59C82C4CEEE;
+	Wed, 11 Jun 2025 09:30:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749634254;
+	bh=cOgg6lgUEFyEcbnuu0dGxi33Q451rEg1KMhORQ9NOrw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=f8EXLgY0os1ciSmYdYccnRrocKIZhcauR/+N6/zk9jHx6M4ktKWEupjt5VVLnCHms
+	 qoMAdEgjR2Nu8aFQoAZfPqukuivAWisRUOekKy8v10lubTD62JRMZtyomIPuQsqBER
+	 xRw952Jcs7n6/HL9/6x1ID/mQrieAHaaOZEpGXpFHGttdnUlkhphm9Jq04ZIhVN93X
+	 uSflwDAXO/Fhs2OBGOBIY0bbNp4tLA53UGj/Sn0hyCdtqWWvQefYpdAe5Eu5nDuWe8
+	 JkTl5DmPKGDOUX36hVOWOeZq7qiMlEwKO2aTdFI5noS40x6Gx2o7hNw69Gb86qSNLR
+	 JPO8pfPD067iA==
+Date: Wed, 11 Jun 2025 10:30:49 +0100
+From: Will Deacon <will@kernel.org>
+To: Dev Jain <dev.jain@arm.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>, catalin.marinas@arm.com,
+	anshuman.khandual@arm.com, quic_zhenhuah@quicinc.com,
+	kevin.brodsky@arm.com, yangyicong@hisilicon.com, joey.gouly@arm.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	david@redhat.com
+Subject: Re: [PATCH v2] arm64: Enable vmalloc-huge with ptdump
+Message-ID: <20250611093048.GA10885@willie-the-truck>
+References: <20250610160048.11254-1-dev.jain@arm.com>
+ <e10d0c8f-c86b-4e26-8006-f38734993796@arm.com>
+ <1cf5e639-dcf8-492b-9164-493ee45cc0ac@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174963423169.406.17577535195665090252.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1cf5e639-dcf8-492b-9164-493ee45cc0ac@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Wed, Jun 11, 2025 at 08:32:51AM +0530, Dev Jain wrote:
+> 
+> On 11/06/25 12:30 am, Ryan Roberts wrote:
+> > On 10/06/2025 17:00, Dev Jain wrote:
+> > > arm64 disables vmalloc-huge when kernel page table dumping is enabled,
+> > > because an intermediate table may be removed, potentially causing the
+> > > ptdump code to dereference an invalid address. We want to be able to
+> > > analyze block vs page mappings for kernel mappings with ptdump, so to
+> > > enable vmalloc-huge with ptdump, synchronize between page table removal in
+> > > pmd_free_pte_page()/pud_free_pmd_page() and ptdump pagetable walking. We
+> > > use mmap_read_lock and not write lock because we don't need to synchronize
+> > > between two different vm_structs; two vmalloc objects running this same
+> > > code path will point to different page tables, hence there is no race.
+> > > 
+> > > For pud_free_pmd_page(), we isolate the PMD table to avoid taking the lock
+> > > 512 times again via pmd_free_pte_page(). Note that there is no need to
+> > > move __flush_tlb_kernel_pgtable() to immediately after pud_clear(); the
+> > > only argument against this would be that we immediately require a
+> > > dsb(ishst) (present in __flush_tlb_kernel_pgtable()) after pud_clear(),
+> > > but that is not the case, since the transition is from
+> > > valid -> invalid, not vice-versa.
+> > > 
+> > > No issues were observed with mm-selftests. No issues were observed while
+> > > parallelly running test_vmalloc.sh and dumping the kernel pagetable through
+> > > sysfs in a loop.
+> > > 
+> > > v1->v2:
+> > >   - Take lock only when CONFIG_PTDUMP_DEBUGFS is on
+> > I thought we agreed that we would use a static key and some rcu synchronize
+> > magic? What was the reason for taking this approach?
+> 
+> As I understand it, the RCU magic won't work, I had replied here:
+> https://lore.kernel.org/all/6cd41ae9-303d-4eda-8d64-f7dba19eb106@arm.com/
 
-Commit-ID:     1dbf30fdb5e57fb2c39f17f35f2b544d5de34397
-Gitweb:        https://git.kernel.org/tip/1dbf30fdb5e57fb2c39f17f35f2b544d5de34397
-Author:        Juergen Gross <jgross@suse.com>
-AuthorDate:    Tue, 03 Jun 2025 14:14:41 +03:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 11 Jun 2025 11:20:51 +02:00
+Regardless, it's still not acceptable to penalise the common code because
+of a debug option so I'm not going to merge this as-is.
 
-x86/mm/pat: don't collapse pages without PSE set
+Lemme go reply on the other thread.
 
-Collapsing pages to a leaf PMD or PUD should be done only if
-X86_FEATURE_PSE is available, which is not the case when running e.g.
-as a Xen PV guest.
-
-Fixes: 41d88484c71c ("x86/mm/pat: restore large ROX pages after fragmentation")
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20250528123557.12847-3-jgross@suse.com
----
- arch/x86/mm/pat/set_memory.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index 46edc11..8834c76 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -1257,6 +1257,9 @@ static int collapse_pmd_page(pmd_t *pmd, unsigned long addr,
- 	pgprot_t pgprot;
- 	int i = 0;
- 
-+	if (!cpu_feature_enabled(X86_FEATURE_PSE))
-+		return 0;
-+
- 	addr &= PMD_MASK;
- 	pte = pte_offset_kernel(pmd, addr);
- 	first = *pte;
+Will
