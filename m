@@ -1,193 +1,316 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 413971F949;
-	Wed, 11 Jun 2025 01:05:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD9B2D5432;
+	Wed, 11 Jun 2025 01:21:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749603929; cv=none; b=Oy8jKchh44EaCq5uxubPxEw7kpBiULEGZBMjfP0QAkWc/sa3uqis8wcTjhTb7dj5PKtUDlMYPH+xyWd7wZvZinS1vjLSxkDJNgcGSSENvA/ofAKUeY/uyBYINsJlhMTxynEqU2QVvA4ffyq2eYJG49TOnDrkv4wCN8yjukl9LOQ=
+	t=1749604917; cv=none; b=BmlvKzQcgESRftMTDs1bIptjto5opFC0vkQn3DLiNV+lmNxD6bblJCnSAUFsGOw2E/tVZ86s7foiDZqM504t7EN1F+X8X853awCF/4I3m7qjWh9dAYFniK3Dm2c4V8+SNHJhVq1gCX4vymV+c2GVDT3QKFAUiHdtV23pWWv1B3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749603929; c=relaxed/simple;
-	bh=dOkoIKcGlaQosiiCi9rgVkqR/O0cr1xBBo61BLwUxgY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=P1oU45R4JqWTrRg37h63/7iVv5hx5KINkeW1PyG2cKxZ+B2uSBgYHfO7CF1hsCNU1YmaJZoVG4Kvam8aborpEquZ8zdZGFbphzWzTOyp753URIqdmnkam8RtwYLI2lJOTGIc6CgVZhBxtGan4f4RQySCtpWds464NLoV424lko8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fUmzr6VA; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1749604917; c=relaxed/simple;
+	bh=tTjsu8lTN11JSxqzr3hCWB8hrnE0NSoCDe78vDpJErI=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=lm2uRMCq1yh4063VlZxenNsok/OsFg4AT/YDHr2l7u9Q0pFbS51bS930SA0OEDj+CyaBcDInfUD8PuVWni/etQyjQKav0Sk107rsvnleGt+4OJhQydpMzhjs8fh9RhlFs+Ina22fu1Exfxfa3vu/+6agkvkAa87KcPScS0UhKdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=KpfWfXf9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fUmzr6VA"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55AIPqps030889;
-	Wed, 11 Jun 2025 01:05:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	v+a+SXakBgY50D6h/qPLnwaw5txhUBpHruIFhwWc8qY=; b=fUmzr6VA47VhQnXC
-	EP3/0eJesu+tjlNO0HFMUEUfX4ISm02lnF4TfeuOoHRHMPdQqYijoZgcM9Fi54uU
-	rvqB2XtsapJIdQ+spj/0X+W0JSwXRr5jvpR5GoE8R+8jOLN6hYhqeY791B10LMqo
-	3tFe1huk3AMsIddZ8FkjKapE+G1WC1ObWY8aqPRYtasXy113KTPcF/1SQSgy9OyF
-	u63X/xQUWp/6ce9LCtN8b0Y8oTpyUhQKpB0wLF4yw72uALg8y+xlWCsr5UMQm5ym
-	7u8wMjcwfwVQsnNS6KAqu76yod73kEpjgkBwC5X7+A6rSpIjRV/P3SfIoZSdnkze
-	t3x/yA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 475v2tdw05-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 11 Jun 2025 01:05:23 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55B15LIQ010262
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 11 Jun 2025 01:05:22 GMT
-Received: from [10.64.68.153] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 10 Jun
- 2025 18:05:18 -0700
-Message-ID: <6759e8c9-53a6-42cf-8199-d6836c77445c@quicinc.com>
-Date: Wed, 11 Jun 2025 09:05:16 +0800
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="KpfWfXf9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41EFDC4CEED;
+	Wed, 11 Jun 2025 01:21:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1749604916;
+	bh=tTjsu8lTN11JSxqzr3hCWB8hrnE0NSoCDe78vDpJErI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=KpfWfXf92tyEGz1rtvsaSElzITNTB2ok7P2/fIh/B0wztIDOXdpIBM508+PHNB0LY
+	 OD2InUbShjewc0Eb74Gl1RGoKubl07NA9cr+lTuC91N5l3Sv0p+/URPtFXVJvZ/SvM
+	 NFtaq0n+Ft1yzKU1EZW3SuHFzCnZMAjZMkRqgHE4=
+Date: Tue, 10 Jun 2025 18:21:55 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Casey Chen <cachen@purestorage.com>
+Cc: surenb@google.com, kent.overstreet@linux.dev, corbet@lwn.net,
+ dennis@kernel.org, tj@kernel.org, cl@gentwo.org, vbabka@suse.cz,
+ mhocko@suse.com, jackmanb@google.com, hannes@cmpxchg.org, ziy@nvidia.com,
+ rientjes@google.com, roman.gushchin@linux.dev, harry.yoo@oracle.com,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, yzhong@purestorage.com
+Subject: Re: [PATCH] alloc_tag: add per-NUMA node stats
+Message-Id: <20250610182155.36090c78124e1f60f2959d8e@linux-foundation.org>
+In-Reply-To: <20250610233053.973796-1-cachen@purestorage.com>
+References: <20250610233053.973796-1-cachen@purestorage.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: qcs615: disable the CTI device of the
- camera block
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Jie Gan
-	<jie.gan@oss.qualcomm.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        "Konrad
- Dybcio" <konradybcio@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: Tingwei Zhang <quic_tingweiz@quicinc.com>,
-        Jinlong Mao
-	<quic_jinlmao@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250527015224.7343-1-jie.gan@oss.qualcomm.com>
- <5fbb515a-c3d0-4bbe-a689-41e730ecd952@oss.qualcomm.com>
- <9a156925-cf7b-4d2e-88a8-fdfed5528553@quicinc.com>
- <1fef810c-47fe-4f6d-95bc-0d72dbd63bf0@oss.qualcomm.com>
- <79f5e42f-f857-4247-abf9-d0f3f5c1a498@quicinc.com>
- <f3f8f446-4f0d-482d-952d-35c80d7d7881@oss.qualcomm.com>
- <405f0432-3f07-45be-8511-06235dcd84d0@oss.qualcomm.com>
- <a63ff3a7-c67b-4251-81f3-ce6cc3a3d068@oss.qualcomm.com>
-Content-Language: en-US
-From: Jie Gan <quic_jiegan@quicinc.com>
-In-Reply-To: <a63ff3a7-c67b-4251-81f3-ce6cc3a3d068@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: ivas1hn-Oh8OBIRpnoa1XYVwqQ8lY5Ki
-X-Authority-Analysis: v=2.4 cv=GoxC+l1C c=1 sm=1 tr=0 ts=6848d653 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=P-IC7800AAAA:8
- a=OefDGO8NFz7VKNv-hUoA:9 a=QEXdDO2ut3YA:10 a=d3PnA9EDa4IxuAV0gXij:22
-X-Proofpoint-ORIG-GUID: ivas1hn-Oh8OBIRpnoa1XYVwqQ8lY5Ki
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjExMDAwOCBTYWx0ZWRfX7BjdkqVQz4HV
- JGegskcinglcHH+M0Rfv28+o3qXvhu+j8GpOORbqy0sVEDSbjI1OF3sDd5r0C6S/FVV7VE6LMiF
- OKvf+I8fHMa9E/GphiQ3mWiwOdABHvJjF9IK3B653PZ+X12bRudN3bqVqxm8lVqM/DpzHK5Ka8R
- nfNAA5+R/IcK5D6gJPsatGlufG/AkZidJpNKCDCUn1SnManFqseGdzyla0Ls0PGc4jgVSdR9lEo
- Mx+HooWb3R0kLaQmTUgEUuq1n/e8jmL8leUSHYDpZ/kseiQIrxkUlFq/aNS7UUgwq3iGvRHy+n6
- okCB60p+vLP74EkglY2d+I8qWBppvMRVxwrYbG8STEZHDX61d11BsRErtR1t8LSHTT+hZOwnmrr
- lRvMMaAMzYwezo2SPKB+bJCCaTSKxeN36fNZLGma/acLQMgRWcDcWLZ2qtckuyBd7VHO+V6+
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-10_11,2025-06-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=956 adultscore=0 impostorscore=0 malwarescore=0 mlxscore=0
- suspectscore=0 phishscore=0 priorityscore=1501 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506110008
 
+On Tue, 10 Jun 2025 17:30:53 -0600 Casey Chen <cachen@purestorage.com> wrote:
 
-
-On 6/10/2025 9:24 PM, Konrad Dybcio wrote:
-> On 6/3/25 5:17 AM, Jie Gan wrote:
->>
->>
->> On 5/31/2025 7:05 AM, Konrad Dybcio wrote:
->>> On 5/28/25 5:02 AM, Jie Gan wrote:
->>>>
->>>>
->>>> On 5/27/2025 6:41 PM, Konrad Dybcio wrote:
->>>>> On 5/27/25 12:32 PM, Jie Gan wrote:
->>>>>>
->>>>>>
->>>>>> On 5/27/2025 6:23 PM, Konrad Dybcio wrote:
->>>>>>> On 5/27/25 3:52 AM, Jie Gan wrote:
->>>>>>>> Disable the CTI device of the camera block to prevent potential NoC errors
->>>>>>>> during AMBA bus device matching.
->>>>>>>>
->>>>>>>> The clocks for the Qualcomm Debug Subsystem (QDSS) are managed by aoss_qmp
->>>>>>>> through a mailbox. However, the camera block resides outside the AP domain,
->>>>>>>> meaning its QDSS clock cannot be controlled via aoss_qmp.
->>>>>>>
->>>>>>> Which clock drives it then?
->>>>>>
->>>>>> It's qcom,aoss-qmp.
->>>>>>
->>>>>> clk_prepare->qmp_qdss_clk_prepare
->>>>>> https://elixir.bootlin.com/linux/v6.15-rc7/source/drivers/soc/qcom/qcom_aoss.c#L280
->>>>>
->>>>> I'm confused about this part:
->>>>>
->>>>>> However, the camera block resides outside the AP domain,
->>>>>> meaning its QDSS clock cannot be controlled via aoss_qmp.
->>>>>
->>>>> Do we need to poke the QMP of another DRV?
->>>>
->>>> The AOSS has a clock control register for all QDSS clocks. when we vote the qdss clock, the aoss_qmp driver will send a message to AOSS to enable the clock control register, then the clock control register will enable all QDSS clocks.
->>>>
->>>> The QDSS clock is not a single clock source, it is a term that representing all the clock sources utilized by the QDSS.
->>>
->>> What I'm trying to ask is, is there any way we could enable that
->>> clock from Linux? Can the camera hw turn these on? Maybe we could
->>> trick it into enabling them?
->>
->> There is a power issue if we keep the debug clock on with a long time.
->>
->> We had a discussion with AOP to check if possible to add the debug clock of titan to the QDSS clock list, but they need time to evaluate it.
+> Add support for tracking per-NUMA node statistics in /proc/allocinfo.
+> Previously, each alloc_tag had a single set of counters (bytes and
+> calls), aggregated across all CPUs. With this change, each CPU can
+> maintain separate counters for each NUMA node, allowing finer-grained
+> memory allocation profiling.
 > 
-> Changing the firmware is a band-aid solution, as the update will never
-> reach millions of devices on the market. I'm curious in whether there's
-> any way (or os-accessible debug register) to manage the necessary clocks
-> from Linux, as a workaround.
+> This feature is controlled by the new
+> CONFIG_MEM_ALLOC_PROFILING_PER_NUMA_STATS option:
 > 
->>  From Coresight view, what we can do by now is disable it in DT to prevent the unexpected NoC error.
+> * When enabled (=y), the output includes per-node statistics following
+>   the total bytes/calls:
 > 
-> How about something like this:
-
-Thanks for the suggestion. It makes sense for me and much better than 
-current version.
-
-I will send a new version to fix it.
-
-Thanks,
-Jie
-
+> <size> <calls> <tag info>
+> ...
+> 315456       9858     mm/dmapool.c:338 func:pool_alloc_page
+>         nid0     94912        2966
+>         nid1     220544       6892
+> 7680         60       mm/dmapool.c:254 func:dma_pool_create
+>         nid0     4224         33
+>         nid1     3456         27
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-> index bb8b6c3ebd03..fc2ab750f2cd 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-> @@ -2461,6 +2461,9 @@ cti@6c13000 {
->   
->                          clocks = <&aoss_qmp>;
->                          clock-names = "apb_pclk";
+> * When disabled (=n), the output remains unchanged:
+> <size> <calls> <tag info>
+> ...
+> 315456       9858     mm/dmapool.c:338 func:pool_alloc_page
+> 7680         60       mm/dmapool.c:254 func:dma_pool_create
+> 
+> To minimize memory overhead, per-NUMA stats counters are dynamically
+> allocated using the percpu allocator. PERCPU_DYNAMIC_RESERVE has been
+> increased to ensure sufficient space for in-kernel alloc_tag counters.
+> 
+> For in-kernel alloc_tag instances, pcpu_alloc_noprof() is used to
+> allocate counters. These allocations are excluded from the profiling
+> statistics themselves.
+
+What is glaringly missing here is "why".
+
+What is the use case?  Why does Linux want this?  What benefit does
+this bring to our users?  This is the most important part of the
+changelog because it tells Andrew why he is even looking at this patch.
+
+
+Probably related to the above omission: why per-nid?  It would be more
+flexible to present the per-cpu counts and let userspace aggregate that
+into per-node info if that is desirable.
+
+>
+> ...
+>
+> --- a/include/linux/alloc_tag.h
+> +++ b/include/linux/alloc_tag.h
+> @@ -15,6 +15,8 @@
+>  #include <linux/static_key.h>
+>  #include <linux/irqflags.h>
+>  
+> +extern int pcpu_counters_num;
+
+This globally-visible variable's identifier is too generic - the name
+should communicate which subsystem the variable belongs to.  Perhaps
+alloc_tag_num_pcpu_counters?  It's long, but only used in a few places.
+
+In fact, it's a count-of-nodes so a better name would be alloc_tag_num_nodes.
+
+Also, as it's written to a single time, __read_mostly is appropriate.
+
+>  struct alloc_tag_counters {
+>  	u64 bytes;
+>  	u64 calls;
+> @@ -134,16 +136,34 @@ static inline bool mem_alloc_profiling_enabled(void)
+>  				   &mem_alloc_profiling_key);
+>  }
+>  
+> +static inline struct alloc_tag_counters alloc_tag_read_nid(struct alloc_tag *tag, int nid)
+> +{
+> +	struct alloc_tag_counters v = { 0, 0 };
+> +	struct alloc_tag_counters *counters;
+> +	int cpu;
 > +
-> +                       /* Not all required clocks can be enabled from the OS */
-> +                       status = "fail";
->                  };
->   
->                  cti@6c20000 {
-> 
-> Konrad
+> +	for_each_possible_cpu(cpu) {
 
+for_each_possible_cpu() is lame - potentially much more expensive than
+for_each_online_cpu.  Is it impractical to use for_each_online_cpu()?
+
+Probably doesn't matter for a userspace displaying function but
+userspace can do weird and unexpected things.
+
+> +		counters = per_cpu_ptr(tag->counters, cpu);
+> +		v.bytes += counters[nid].bytes;
+> +		v.calls += counters[nid].calls;
+> +	}
+> +
+> +	return v;
+> +}
+> +
+>
+> ...
+>
+>  static int allocinfo_show(struct seq_file *m, void *arg)
+>  {
+>  	struct allocinfo_private *priv = (struct allocinfo_private *)arg;
+> @@ -116,6 +136,9 @@ static int allocinfo_show(struct seq_file *m, void *arg)
+>  		priv->print_header = false;
+>  	}
+>  	alloc_tag_to_text(&buf, priv->iter.ct);
+> +#ifdef CONFIG_MEM_ALLOC_PROFILING_PER_NUMA_STATS
+> +	alloc_tag_to_text_all_nids(&buf, priv->iter.ct);
+> +#endif
+
+We can eliminate the ifdef by adding
+
+#else
+static inline void alloc_tag_to_text_all_nids(struct seq_buf *out, struct codetag *ct)
+{
+}
+#endif
+
+above.
+
+> +static void alloc_tag_to_text_all_nids(struct seq_buf *out, struct codetag *ct)
+
+>  	seq_commit(m, seq_buf_used(&buf));
+>  	return 0;
+>  }
+>
+> ...
+>
+> @@ -247,19 +270,41 @@ static void shutdown_mem_profiling(bool remove_file)
+>  void __init alloc_tag_sec_init(void)
+>  {
+>  	struct alloc_tag *last_codetag;
+> +	int i;
+>  
+>  	if (!mem_profiling_support)
+>  		return;
+>  
+> -	if (!static_key_enabled(&mem_profiling_compressed))
+> -		return;
+> -
+>  	kernel_tags.first_tag = (struct alloc_tag *)kallsyms_lookup_name(
+>  					SECTION_START(ALLOC_TAG_SECTION_NAME));
+>  	last_codetag = (struct alloc_tag *)kallsyms_lookup_name(
+>  					SECTION_STOP(ALLOC_TAG_SECTION_NAME));
+>  	kernel_tags.count = last_codetag - kernel_tags.first_tag;
+>  
+> +#ifdef CONFIG_MEM_ALLOC_PROFILING_PER_NUMA_STATS
+> +	pcpu_counters_num = num_possible_nodes();
+> +#else
+> +	pcpu_counters_num = 1;
+> +#endif
+
+In the CONFIG_MEM_ALLOC_PROFILING_PER_NUMA_STATS=n case, let's make
+pcpu_counters_num a constant "1", visible to all compilation units. 
+
+That way the compiler can optimize away all the
+
+	for (nid = 0; nid < pcpu_counters_num; nid++)
+
+looping.
+
+> +	pcpu_counters_size = pcpu_counters_num * sizeof(struct alloc_tag_counters);
+> 
+> +	for (i = 0; i < kernel_tags.count; i++) {
+> +		/* Each CPU has one alloc_tag_counters per numa node */
+> +		kernel_tags.first_tag[i].counters =
+> +			pcpu_alloc_noprof(pcpu_counters_size,
+> +					  sizeof(struct alloc_tag_counters),
+> +					  false, GFP_KERNEL | __GFP_ZERO);
+> +		if (!kernel_tags.first_tag[i].counters) {
+> +			while (--i >= 0)
+> +				free_percpu(kernel_tags.first_tag[i].counters);
+> +			pr_info("Failed to allocate per-cpu alloc_tag counters\n");
+
+pr_err(), methinks.
+
+> +			return;
+
+And now what happens.  Will the kernel even work?
+
+This code path is untestable unless the developer jumps through hoops
+and it will never be tested again.
+
+We assume that __init-time allocations always succeed, so a hearty
+panic() here would be OK.
+
+> +		}
+> +	}
+> +
+> +	if (!static_key_enabled(&mem_profiling_compressed))
+> +		return;
+> +
+>  	/* Check if kernel tags fit into page flags */
+>  	if (kernel_tags.count > (1UL << NR_UNUSED_PAGEFLAG_BITS)) {
+>  		shutdown_mem_profiling(false); /* allocinfo file does not exist yet */
+> @@ -622,7 +667,9 @@ static int load_module(struct module *mod, struct codetag *start, struct codetag
+>  	stop_tag = ct_to_alloc_tag(stop);
+>  	for (tag = start_tag; tag < stop_tag; tag++) {
+>  		WARN_ON(tag->counters);
+> -		tag->counters = alloc_percpu(struct alloc_tag_counters);
+> +		tag->counters = __alloc_percpu_gfp(pcpu_counters_size,
+> +						   sizeof(struct alloc_tag_counters),
+> +						   GFP_KERNEL | __GFP_ZERO);
+>  		if (!tag->counters) {
+>  			while (--tag >= start_tag) {
+>  				free_percpu(tag->counters);
+
+Ditto here, actually.
+
+Not that it matters much.  It's init.text and gets thrown away, shrug.
+
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+>
+> ...
+>
+> @@ -428,6 +429,7 @@ void __show_mem(unsigned int filter, nodemask_t *nodemask, int max_zone_idx)
+>  		nr = alloc_tag_top_users(tags, ARRAY_SIZE(tags), false);
+>  		if (nr) {
+>  			pr_notice("Memory allocations:\n");
+> +			pr_notice("<size> <calls> <tag info>\n");
+>  			for (i = 0; i < nr; i++) {
+>  				struct codetag *ct = tags[i].ct;
+>  				struct alloc_tag *tag = ct_to_alloc_tag(ct);
+> @@ -435,16 +437,27 @@ void __show_mem(unsigned int filter, nodemask_t *nodemask, int max_zone_idx)
+>  				char bytes[10];
+>  
+>  				string_get_size(counter.bytes, 1, STRING_UNITS_2, bytes, sizeof(bytes));
+> -
+>  				/* Same as alloc_tag_to_text() but w/o intermediate buffer */
+>  				if (ct->modname)
+> -					pr_notice("%12s %8llu %s:%u [%s] func:%s\n",
+> -						  bytes, counter.calls, ct->filename,
+> -						  ct->lineno, ct->modname, ct->function);
+> +					pr_notice("%-12s %-8llu %s:%u [%s] func:%s\n",
+> +						bytes, counter.calls, ct->filename,
+> +						ct->lineno, ct->modname, ct->function);
+>  				else
+> -					pr_notice("%12s %8llu %s:%u func:%s\n",
+> -						  bytes, counter.calls, ct->filename,
+> -						  ct->lineno, ct->function);
+> +					pr_notice("%-12s %-8llu %s:%u func:%s\n",
+> +						bytes, counter.calls,
+> +						ct->filename, ct->lineno, ct->function);
+> +
+> +#ifdef CONFIG_MEM_ALLOC_PROFILING_PER_NUMA_STATS
+> +				int nid;
+
+C99 definition.
+
+> +				for (nid = 0; nid < pcpu_counters_num; nid++) {
+
+If we're going to use C99 (is OK now) then it's better to go all the
+way and give `i' loop scope.  "for (int i..".
+
+> +					counter = alloc_tag_read_nid(tag, nid);
+> +					string_get_size(counter.bytes, 1, STRING_UNITS_2,
+> +							bytes, sizeof(bytes));
+> +					pr_notice("        nid%-5u %-12lld %-8lld\n",
+> +						  nid, counter.bytes, counter.calls);
+> +				}
+> +#endif
+>  			}
+>  		}
+>  	}
+>
+> ...
+>
