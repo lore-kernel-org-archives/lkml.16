@@ -1,30 +1,31 @@
 Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A6A81FAC48;
-	Wed, 11 Jun 2025 16:34:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7635D213E78;
+	Wed, 11 Jun 2025 16:34:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749659643; cv=none; b=UgVx/GL29tl7s9W1n7Os3/4O4tl3TFYHSHX4xsut5Wn6NwpuOQlHqR0ANDMEYNRIi+2ISXr/ZXe9dFkoflliWTUCrHJyPiRmSdWrvqY+vQiPnc+Su0EMCD0AIYDe17FKzjkRlUYBCnA8vCZfQbadJO5d/ke5/VN7w6PHoLBRTnI=
+	t=1749659645; cv=none; b=UXLKyRYuajp5gSd1gioyC1vziNP4RShxFvFptcmaxRNKUPaOJ9rvznrdFtxZxfE7/zR4vRsq2XX6u79smGUCOLUgLQmbPmdjOYUdWX+IpphB1oOdFs15xZeWDFwdyRz7o6bpVEJ+RBRLqkSE/OQH6rTXsofN7KNLrFQYChSPeXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749659643; c=relaxed/simple;
-	bh=t7hdxYz+chmbcKWjNALyrNVpKeDqXfdchbiPUCyhJ8E=;
+	s=arc-20240116; t=1749659645; c=relaxed/simple;
+	bh=9PghBU/VAIibPl4YWoEbxb+Vq7pSne0KImwxsb0T908=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fXFX1+sz3NIDUW7c1hj5nfbpw1UsImVqlc210Rl27fsvXEmkdn/AMrk9eu9uzR+1ELlhc3Ni0oSY4B9ruASyQYa44BGi42ARA1QAfPn4zi/enxTst8YWZO/ixwvZBZOpl1D72BLGlCEacA5jqcgoBUCIl6JUNFF59NaZ9gAxQAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=AZBnIro8; arc=none smtp.client-ip=128.199.32.197
+	 In-Reply-To:To:Cc; b=Vt5sqbI4Yc1U2KJAdaxvae2yhBAllk1QMjmuJ5iJAdXiDS5NfaHqVgu9e0F3DcOWES1t5CCHVfGo4KZjx0+EyIn4giDBi1ARG6XFO9F+6xdgoc4X+KvrsSHbE/Dbvsu1839zRA04tn8qiBaHphUWZmD3hdV+KWmbHuvM4UkEHro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=F52v95jE; arc=none smtp.client-ip=128.199.32.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="AZBnIro8"
+	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="F52v95jE"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
-	t=1749659638; bh=t7hdxYz+chmbcKWjNALyrNVpKeDqXfdchbiPUCyhJ8E=;
+	t=1749659639; bh=9PghBU/VAIibPl4YWoEbxb+Vq7pSne0KImwxsb0T908=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=AZBnIro8yt85w69usmIHTSxeHi32OmkcAChW3N36BpWTvyaydf0o5fiaksWUuKohL
-	 qXBGa6PgmlI0y8iXPifx/4KA554k4fdooCi458sgOMM9I9AvLSn5NxJPEo8FnPFt+T
-	 GOHfkcVofS7D2+1Nkk6UQp9cICIw4P08in1UKixY=
+	b=F52v95jEqDy6RoNLRnD+RLUwn8rapwmQP5bV7oDh1HxNwcxULvniTMwfndx682YRT
+	 MTCQBDBihwuHwpSHRXc2MxGWGHxBw/GO+B2Nq91PstepJCNavA0ulIovZ32+NVgUti
+	 UEWVJG4QidcWOgCrJO7EqpFwGhYPnb7OQRtFT2mg=
 From: Luca Weiss <luca@lucaweiss.eu>
-Date: Wed, 11 Jun 2025 18:33:16 +0200
-Subject: [PATCH v4 2/4] dt-bindings: display: panel: Add Himax HX83112B
+Date: Wed, 11 Jun 2025 18:33:18 +0200
+Subject: [PATCH v4 4/4] arm64: dts: qcom: sdm632-fairphone-fp3: Enable
+ display and GPU
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,7 +34,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250611-fp3-display-v4-2-ef67701e7687@lucaweiss.eu>
+Message-Id: <20250611-fp3-display-v4-4-ef67701e7687@lucaweiss.eu>
 References: <20250611-fp3-display-v4-0-ef67701e7687@lucaweiss.eu>
 In-Reply-To: <20250611-fp3-display-v4-0-ef67701e7687@lucaweiss.eu>
 To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
@@ -48,114 +49,148 @@ To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
 Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
  Luca Weiss <luca@lucaweiss.eu>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+ Dmitry Baryshkov <lumag@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2316; i=luca@lucaweiss.eu;
- h=from:subject:message-id; bh=t7hdxYz+chmbcKWjNALyrNVpKeDqXfdchbiPUCyhJ8E=;
- b=owEBbQKS/ZANAwAKAXLYQ7idTddWAcsmYgBoSa/yh5K+T861P0/TUJU7Q/RAQB+B5GNaj9ppv
- EWyzeadN1eJAjMEAAEKAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCaEmv8gAKCRBy2EO4nU3X
- VvoOEACW0QL96gtaDGYOCCf4z/uZc1aXTxshqI8dINxhfgDT6kd2AAh0Kx+/WnePSQuvKcxYlMq
- TKSRodwTj4DVJfTbGDSLiqODQFL8ruCQcGP2xs8BMWFVwBQ2IY1uqn2sNqnCV3G87Z+5z4aU72T
- CRlZYcE+Qi4V+Zg03awUWTljt/pY/VlmFh/pVq40qSXswrSzHn5ZhE6JUfLTLhfNguO7BXYHoqt
- oTCnVRHiSzh4h+npAuB857BJU00+q63kbRCEY4RcBfOXBEOZwJN3OCMtAH9mf4vJYXauG7ZMU6k
- N2NP6ljB0JCfXilAe+X5SUFoNaOSI3FzIq4FJyJEyVupjGWF9r9zH8eoa77C3Vy7rnUGU7Wxn2M
- 0+YAKcrsFPFG7VqBoGfaFhQFhfKefC2Lg1xOT6JYDrRX4mbCf7BEC7ktmFLALovXMXM9ralB4CY
- F04MjnlkRkBkJlBrFQrx0scdvYw9QTvIpUQhtqJFLYKWpkGB39pcLEtEfTYtnlD76wvpqe6w33X
- 9lGArsT4zJkV3mp7+KLCFpDVPlJ1yDEidR1ULcnc8pxe1pbTgRgVG+EV7eL+F400KHP3vPID2F3
- pmLXGiKOgf1apiAKlJPd5YF4tgMvKuDvFfue2hofC5fFblVCfvVYYOH2W8czu6q59+v9exJc1NC
- h15Hr0pXHgR7VcQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3280; i=luca@lucaweiss.eu;
+ h=from:subject:message-id; bh=9PghBU/VAIibPl4YWoEbxb+Vq7pSne0KImwxsb0T908=;
+ b=owEBbQKS/ZANAwAKAXLYQ7idTddWAcsmYgBoSa/0dZklWpKiHcLeocBA55qVH330Y6VmwhQt1
+ FME+LsNK16JAjMEAAEKAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCaEmv9AAKCRBy2EO4nU3X
+ Vtc3D/sGEpreLVLjkNB9Q0671b/UlYCfku5noSUCU+kK7JT6IWI/st31bd33VQP8qe2xaXzKW+c
+ feNsmmF25dB3Tht6FnF4xV4sTxFRyZF8H7+G1Tafw13AnX5NPFdKYvL1q7616wfl4GUFMzyqQhk
+ mHyv2kvsbiRVCk0sN6pPgG6OL2ppAuGMGg/fbUQptmTsvavdLQw1ihufyr1H+PHyvNSOoyGsJeK
+ OXCJ6EtKGXYgweQY3AYU6RfPjhOOp6qfdJBOr08b5LMhFrbP8Cl4+JHU2eqlAwTrUxgGU0MSY+n
+ d9Z0U8dmr4md1mIj77Up5WdasPlZr+9QjEqtFsstvby5ouObwbgEdHpixy/FRIR50NFfA8iEsUO
+ hDTZYyjlqbwZOSUGhIOS0hnwZhwO+j8r1Kx+X6I1BfKAr0PsQmbd9IkLEP8SDCk3RCLoal7Mxlo
+ wjGoGCnVRiXTIOlRNr//IR8PWBmgzQ5xHRSIxruxZrHSJD/ou3IYB/l1Wyoqoeqw8ciZQhzJJKQ
+ 6SNECSnMUNo7Z0swtCawhpZMEyqPXNTTGG/0W5kqqkx8ksh65xo8URojQEWfm1uad6oHQ0/OyyL
+ n25vjtGumTJxc+eXAmgYdF7yG1SMZok+U58bkpJYeagmZlLKs3u82qmTTZKbZqQjluYfr1xzWgL
+ URD3tSw0v8ZAAVw==
 X-Developer-Key: i=luca@lucaweiss.eu; a=openpgp;
  fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
-Himax HX83112B is a display driver IC used to drive LCD DSI panels.
-Describe it and the Fairphone 3 panel (98-03057-6598B-I) from DJN using
-it.
+Add the description for the display panel found on this phone.
+Unfortunately the LCDB module on PMI632 isn't yet supported upstream so
+we need to use a dummy regulator-fixed in the meantime.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+And with this done we can also enable the GPU and set the zap shader
+firmware path.
+
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
 ---
- .../bindings/display/panel/himax,hx83112b.yaml     | 73 ++++++++++++++++++++++
- 1 file changed, 73 insertions(+)
+ arch/arm64/boot/dts/qcom/msm8953.dtsi             |  2 +-
+ arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts | 62 +++++++++++++++++++++++
+ 2 files changed, 63 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/display/panel/himax,hx83112b.yaml b/Documentation/devicetree/bindings/display/panel/himax,hx83112b.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..e58bb3d45331490e0ae2764aa341d3c3391af550
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/himax,hx83112b.yaml
-@@ -0,0 +1,73 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/himax,hx83112b.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm64/boot/dts/qcom/msm8953.dtsi b/arch/arm64/boot/dts/qcom/msm8953.dtsi
+index 273e79fb75695af1fd7a6f77273b95fe3b913fac..c5205d09c442e45e4a0cc3e6d8ff7d9d7bda0034 100644
+--- a/arch/arm64/boot/dts/qcom/msm8953.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8953.dtsi
+@@ -1147,7 +1147,7 @@ &bimc SLV_EBI RPM_ALWAYS_TAG>,
+ 
+ 			status = "disabled";
+ 
+-			zap-shader {
++			gpu_zap_shader: zap-shader {
+ 				memory-region = <&zap_shader_region>;
+ 			};
+ 
+diff --git a/arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts b/arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts
+index 31ed26c31e6ea381a8942ccf569513df3300cdeb..55a45b528bd3f1bf9b6fe7882753338b43c62271 100644
+--- a/arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts
++++ b/arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts
+@@ -36,6 +36,14 @@ key-volume-up {
+ 		};
+ 	};
+ 
++	/* Dummy regulator until PMI632 has LCDB VSP/VSN support */
++	lcdb_dummy: regulator-lcdb-dummy {
++		compatible = "regulator-fixed";
++		regulator-name = "lcdb_dummy";
++		regulator-min-microvolt = <5500000>;
++		regulator-max-microvolt = <5500000>;
++	};
 +
-+title: Himax HX83112B-based DSI display panels
+ 	vph_pwr: vph-pwr-regulator {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vph_pwr";
+@@ -44,6 +52,14 @@ vph_pwr: vph-pwr-regulator {
+ 	};
+ };
+ 
++&gpu {
++	status = "okay";
++};
 +
-+maintainers:
-+  - Luca Weiss <luca@lucaweiss.eu>
++&gpu_zap_shader {
++	firmware-name = "qcom/msm8953/fairphone/fp3/a506_zap.mbn";
++};
 +
-+description:
-+  The Himax HX83112B is a generic DSI Panel IC used to control
-+  LCD panels.
+ &hsusb_phy {
+ 	vdd-supply = <&pm8953_l3>;
+ 	vdda-pll-supply = <&pm8953_l7>;
+@@ -87,6 +103,45 @@ &lpass {
+ 	status = "okay";
+ };
+ 
++&mdss {
++	status = "okay";
++};
 +
-+allOf:
-+  - $ref: panel-common.yaml#
++&mdss_dsi0 {
++	vdda-supply = <&pm8953_s3>;
++	status = "okay";
 +
-+properties:
-+  compatible:
-+    contains:
-+      const: djn,98-03057-6598b-i
++	panel@0 {
++		compatible = "djn,98-03057-6598b-i";
++		reg = <0>;
 +
-+  reg:
-+    maxItems: 1
++		reset-gpios = <&tlmm 61 GPIO_ACTIVE_LOW>;
 +
-+  iovcc-supply:
-+    description: I/O voltage rail
++		iovcc-supply = <&pm8953_l6>;
++		vsn-supply = <&lcdb_dummy>;
++		vsp-supply = <&lcdb_dummy>;
 +
-+  vsn-supply:
-+    description: Positive source voltage rail
++		pinctrl-0 = <&mdss_te_default>;
++		pinctrl-names = "default";
 +
-+  vsp-supply:
-+    description: Negative source voltage rail
++		port {
++			panel_in: endpoint {
++				remote-endpoint = <&mdss_dsi0_out>;
++			};
++		};
++	};
++};
 +
-+required:
-+  - compatible
-+  - reg
-+  - reset-gpios
-+  - iovcc-supply
-+  - vsn-supply
-+  - vsp-supply
-+  - port
++&mdss_dsi0_out {
++	data-lanes = <0 1 2 3>;
++	remote-endpoint = <&panel_in>;
++};
 +
-+unevaluatedProperties: false
++&mdss_dsi0_phy {
++	vcca-supply = <&pm8953_l3>;
++	status = "okay";
++};
 +
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
+ &mpss {
+ 	firmware-name = "qcom/msm8953/fairphone/fp3/mba.mbn",
+ 			"qcom/msm8953/fairphone/fp3/modem.mbn";
+@@ -292,6 +347,13 @@ &tlmm {
+ 	 * 135-138: fingerprint reader (SPI)
+ 	 */
+ 	gpio-reserved-ranges = <0 4>, <135 4>;
 +
-+    dsi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        panel@0 {
-+            compatible = "djn,98-03057-6598b-i";
-+            reg = <0>;
-+
-+            reset-gpios = <&tlmm 61 GPIO_ACTIVE_LOW>;
-+
-+            iovcc-supply = <&pm8953_l6>;
-+            vsn-supply = <&pmi632_lcdb_ncp>;
-+            vsp-supply = <&pmi632_lcdb_ldo>;
-+
-+            port {
-+                panel_in_0: endpoint {
-+                    remote-endpoint = <&dsi0_out>;
-+                };
-+            };
-+        };
-+    };
-+
-+...
++	mdss_te_default: mdss-te-default-state {
++		pins = "gpio24";
++		function = "mdp_vsync";
++		drive-strength = <2>;
++		bias-pull-down;
++	};
+ };
+ 
+ &uart_0 {
 
 -- 
 2.49.0
