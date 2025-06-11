@@ -1,565 +1,214 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BEF12609C2;
-	Wed, 11 Jun 2025 09:29:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749634199; cv=none; b=iayhFOa5WgxSXa8FS/eJxSc3Qa+Tu4r4Ci0y2Dd0wD9N1UXSqUvMhN3ayn8IZ1iSBPHi3Tq3D6JxhiW+YFjsHGhCYaHHPlzXEfFsS2AqaVPNNnYquinqS1l7UP4I+IFSA26ocDXFwzKSM5a2ydigK6Y1L+7twTO0GR9kzn1PBOA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749634199; c=relaxed/simple;
-	bh=oJ72dR1s0z8kyrUXCO6WcfbYkzOQSiRCywrVG0PsnJE=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=Vx3DPL7ioCam467wLMLZU2gMTqi8vEFgZFN+8yI0CNm80/K0rbrMM1VX1izAvRTE1tJQT+3C6Qrc1JsMuXg3ZhLNolBcR14QCqcPNFT4XYjQ5umeiHnVnQykfVUL70qzv5VP/Yc3X/Hphzd57nTYvMVg55Eguf6FqKL6L/AxjuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wTRnYRpf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IRofqjtB; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A1421A9B28;
+	Wed, 11 Jun 2025 09:30:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749634216; cv=fail; b=Mei7qIM0K1iBVwW+yJsHPo5RGzertB3tetBNQahMAoXMJwtHHUpbSLQJCF4I6glNF9NCXWRaLzQbb4UT0fv0QJoPuShA0ZMwqphcARhmhGM5pkGF1iaQKbZBFwps8EOjqyBBjW3lrh661VJfgNw16IfgaSovoOCn09z7K0CFk0A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749634216; c=relaxed/simple;
+	bh=QanWZLNe1GwOtK+HvYylfwBtb8cmiJeZjQ6lOnUIK/Q=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=GwsaMG6y1EvEwamWt/Le9WAs6Ls7UVMcOjqJPDiXSAi1iz+FL7aq7+QA0KZm8A+F5WZPhuAvzg1yHEq4F5H//rOLKadj+f+DerUbfNNuuWkHmXsKrhIAyfZqGh7yg6rLhnOTCKXQiwAkaciP9AmBE47WjawBeuD5DMRc2ckC54w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z0tesly6; arc=fail smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wTRnYRpf";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IRofqjtB"
-Date: Wed, 11 Jun 2025 09:29:54 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749634196;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f9ubBetirWuzNlWZsvp41TYR3tDxq4sYiDWGtbk47Zk=;
-	b=wTRnYRpfbDe/7l/l2JW1KwSP0cQGJJECPREGvKd7oZ6g3Mn/SrvYlyEIBB5KKUkOCqWfDk
-	Mbf01xsHbtZvePUilpPumFviSr+WXJiU3DBqAD7BbHBLKKKvCPMJLXuGMVf9D/B6KmiHCc
-	j9zxTN8js4fe3gZo5lWqadjEMdYyUNMJwtX8l9Klu455msiUGLcNeOrcSSpEaYqtFAUP9x
-	qXwBQ2uItB60fuQ2Z5Eq6HohI5LrrzxaAkn0hvvnohbkQ3cznyNufXERveg5LwkOhNe4lG
-	+QYwQSMdnmuBilsthShRmVKqHYhaAgQLDVBEpR1+A27JUsmZedx1v2CbASQUug==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749634196;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f9ubBetirWuzNlWZsvp41TYR3tDxq4sYiDWGtbk47Zk=;
-	b=IRofqjtBKAIqHnCEWZZegW9YNAR0Ta3zbMLEgZfQ5J9Jaxbb2YwMceR54k/UqhQ93gK9ZT
-	BwWBGYYMdCJkp+AQ==
-From: "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched: Make clangd usable
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>, Juri Lelli <juri.lelli@redhat.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250523164348.GN39944@noisy.programming.kicks-ass.net>
-References: <20250523164348.GN39944@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z0tesly6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749634215; x=1781170215;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=QanWZLNe1GwOtK+HvYylfwBtb8cmiJeZjQ6lOnUIK/Q=;
+  b=Z0tesly6MF9D69YANvKKNl6wGnfpcltLBzWY40vYuT0CVqR9+1Hke5zX
+   ewm4y215NkadFz0kPgD+rL5UOpuw04wQfEPykfpJVH6fY/H+TTuDgUZJX
+   w7Ad57EeNt444OHmyeWVbFXyjcXDmWLsY2KwrqN9BQLX9H7+oklw50geK
+   r5UsOo53xhiaH9OkNtlZ6DMVvmDwtCWg3a0R9UypWmNVa5Ssl1lVEPle4
+   FXdU8rUV4BHPC5jsBgLyXmnlTIZm6bp/zARi8FzOnaKgmOMtUo/VZlaFO
+   FhS00MQi4OZVvg8HhJKkx4vSARMsV+VMQ57UfuRQxIdfCNsXFrE3Puxce
+   g==;
+X-CSE-ConnectionGUID: nr/fmGgMR22jSZH81fewkA==
+X-CSE-MsgGUID: jTREON8yQpuktC5Rj02B5w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="69332081"
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="69332081"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 02:30:14 -0700
+X-CSE-ConnectionGUID: +3zsOZr9S/qoZ4QxH48QrA==
+X-CSE-MsgGUID: WJyC+mSqRZeubR8f8vG6PQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="148053381"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 02:30:13 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 11 Jun 2025 02:30:12 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Wed, 11 Jun 2025 02:30:12 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (40.107.236.71)
+ by edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 11 Jun 2025 02:30:12 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VEZIRipFwPfxE9H5mqY6iE2jtncfOgZCbdlw9Xb+IT5By+LvwJnG9PWw3MywwJztStJ1LfD5nHrRVDUZx8om9kBUow5DvIF8AnLvjrO1/2oUmedJhocx2/VcbNI+/5le6ZmBy7mm7NOYxQ/n9y2biYEysrhVjqsA/ORzVVv8rg8GpKPqUJ0KE4awZDHDTFfmqVBxbhL7SkYlHC58/hzJYWs/F62XGBPii0JisX4aBPLHqkWZ0k30ytGT0S8qwBDShOryDBAszNk8hYqDkUOWjz6nyoY5UKFm23+LeyPTvSe9YqRN+85IKKUQbfiV4GD49mTwXEELVg8MATTK9UQNgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=a1aSfzCrXpD7cMo2uL3Q/XTKje9hBbPAWyD89JeUuv0=;
+ b=NHeFNfoO6/3k9pn/lpD9gdBnYNCOq+GNOUEPHaVEtVWto4sOF1zQXq6vCzNCruIXXLlx0XCefh3OUF4HuNAd2+c5WIdtTfX4PJq6SDvHSAm2OHais1Mr+2R7uSJh2kcy/YRiBiR59+l1RlVZfvuUa0QkeUIkJzrPO9cPSHrOYO0BseCONZSgfpFtKCO8zC3P+RjSnFGVsW7QTQ15nqI6ucMCyAPnlM3k1v2OHkfb8HNHqYVAleA2juRkqoUUkPM5REooqWBBCW6P4hY427HPS0/VijVPrXozNyqObNHcrxcgPalzCkCNbyzILP6l3EbVR71X8zi3rWkxZKk00Y3Mmw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SN6PR11MB3214.namprd11.prod.outlook.com (2603:10b6:805:c7::12)
+ by DS7PR11MB7738.namprd11.prod.outlook.com (2603:10b6:8:e0::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8813.30; Wed, 11 Jun 2025 09:30:03 +0000
+Received: from SN6PR11MB3214.namprd11.prod.outlook.com
+ ([fe80::9507:5635:9ddf:a558]) by SN6PR11MB3214.namprd11.prod.outlook.com
+ ([fe80::9507:5635:9ddf:a558%3]) with mapi id 15.20.8813.018; Wed, 11 Jun 2025
+ 09:30:01 +0000
+Message-ID: <bde92ac8-6c6d-476f-9c9d-d057cc1a051c@intel.com>
+Date: Wed, 11 Jun 2025 12:29:56 +0300
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/8] KVM: TDX: Use kvm_arch_vcpu.host_debugctl to
+ restore the host's DEBUGCTL
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+	<pbonzini@redhat.com>
+CC: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Maxim Levitsky
+	<mlevitsk@redhat.com>
+References: <20250610232010.162191-1-seanjc@google.com>
+ <20250610232010.162191-2-seanjc@google.com>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20250610232010.162191-2-seanjc@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BL1PR13CA0278.namprd13.prod.outlook.com
+ (2603:10b6:208:2bc::13) To SN6PR11MB3214.namprd11.prod.outlook.com
+ (2603:10b6:805:c7::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174963419485.406.884452610882068130.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN6PR11MB3214:EE_|DS7PR11MB7738:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5acec388-807f-46ca-c1be-08dda8ca8a32
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?cmlEanlrQkhvbFVrRzZWS2daSTVsZ3ZkZlhFZ1haaFFQamFFdUtuK0FNSmZW?=
+ =?utf-8?B?TnJhYmVzWE5TSWtYZmdjWFB4WmRzS0hJU3hGZ0lmZmZCUVd5ZXp3NldTaUVX?=
+ =?utf-8?B?N2h5Tm1YWGg1WGJvNnhDR3NaWHlCRXZVeDJ6SWxpcStmcVE1bVE0QmdleUo2?=
+ =?utf-8?B?U2JSbU9MTVNuak0wMDdSNktwdzBmWUtTZHJ6TVlPN1V0NEVIbERZKzR5Wnhl?=
+ =?utf-8?B?TXIyT2oxUzRFTkhmWkxPQUwzQVhuZWtYTEkvdzlMaHZybllucWRONFlUL204?=
+ =?utf-8?B?czJwRTZBNm5iYlI2c1kzT2V3UkZ0QVkyVTB5N2cwcCswUlJZOTdsa05qSGpF?=
+ =?utf-8?B?dFdNeFBLN0dyTm5heGczV0VwcFJjdTR5Qkxud2xBRkw4eGJCRGM0aDExMzdl?=
+ =?utf-8?B?ZFRZSDJZQW0zQlFmdkM1bitKKzBJSmQ0bHpZOVdTQUd1REVOV1UxUXRpdHU1?=
+ =?utf-8?B?V1A5aTUwZVk3b2ltMDgyYWc5RWNNQ21mTnYrVGM1c2VYOVN4YmMyWjFoOFVZ?=
+ =?utf-8?B?WUs5R1FoTjNSVDRuUEVZWWN5cXNTWkNoNUx1NlFIMlpPYlhlN2Mzb2I1Uzd1?=
+ =?utf-8?B?M0Ztb0VvWVgyNFdOYnEvbTNrT2wrMENDVUZ1bVNGcFBtRkRjeTd0bEx4L0tn?=
+ =?utf-8?B?YUsrM3RibWE3Tk1tQTBxc3JCanpGS3VtMjB1UUVEMmNuaXJlQVZkbUM2K3Jj?=
+ =?utf-8?B?ZnVMd2UydkdmUGlwMG9hcXdFQ0pTWFpJSitTSU1yOU1BR0laUTkxem03eVI4?=
+ =?utf-8?B?UkxxelVYYWN2azYvYzJtOHNPT0djam5NWFRrWFVtSnRWOXhLVmJzOE9ySWJK?=
+ =?utf-8?B?K0VwWHF3YWYwZmdBekt6UEVzbGk2eFNPNS9laTJvcFRrOHYrNVkzWjRieSsx?=
+ =?utf-8?B?SEdmQmp5aTFwaW5oMy9OWWE1SElHb3Z2SDR6Y0JSUDBLY3lYbFIzRC9PMXFS?=
+ =?utf-8?B?TVZpalh4Q0x5dTJ5NjlPOCsxNEM5K3U1dVFWRjczcE92eUFuWjVRQSttZmVI?=
+ =?utf-8?B?WkxSRThkdTZYck1IZktrbWJjRHhST1RxUDA5N1BWMGs4OEtUTGVaZE5jRHVC?=
+ =?utf-8?B?UmkxWmZ5STdwZkRZTkNOVXRqdElaWlBHNnRkVkxITzllRzllRm9aOHJMeDdH?=
+ =?utf-8?B?cjhSUGF6Nm5WaUZETDZOUkhNVEM0SStXS0x1RkErcGpYSHVMaFlza2xiODU0?=
+ =?utf-8?B?VDlhTmlCODIxMS92bG1IS2lITzRSb3BPbEZnYmMyWE1aeWNmbTNpNVk3VkV4?=
+ =?utf-8?B?QXJubWlFekEzeUpQVTM3U2lVcWZHNHJoR3FITFlsRkxJWFlERS9xMS9ad1J3?=
+ =?utf-8?B?MW5lMDJlcStNZ3F0T0k3ZXliYUFkK0UzUUpPSlBtYkhkZFJtaFErKzd5OTBF?=
+ =?utf-8?B?cDVHYnd1NjlmekF5MlhLNEpFOEQwS1BwWDg3RW9mODdYLzdZcUxkV0F2R0Rk?=
+ =?utf-8?B?QklUNUNqVWIvYms4MmlVbG8reThQNm9zdWQ2dStDYitkUEtqZDVicEVBMWYx?=
+ =?utf-8?B?bGNJMGVNK2lWS0tjRUFoSms1bzNhb1ZwcndoRkN3UEFRc0s0YVBUWlRxUkxN?=
+ =?utf-8?B?bzNHem94YUtTVGppcHJuTUVzNTdUQms4Ynlucm1NbG0xYUxUTU1nby9iYVVp?=
+ =?utf-8?B?NDdxUXRiY0Q4T0dQenZEVjJxcGZKVGo3dlR5Q1lxRE4yM2VadFB1Mm9pVzND?=
+ =?utf-8?B?L2FrclZoT044V1JFT2RPOS9Hb21BSG1BZnBsTURNeTZzZmxnK2pvZVZmOS9k?=
+ =?utf-8?B?QjVPbUxxNnFaYzIzK3VsdlQvcE1qczJGdGxXZ1h6UlEvVUxZMG1PSmoweW1t?=
+ =?utf-8?B?dXVuNDdMNFVqME5FWXNkMGV5NisyUGlnaG81MHRlNU5DM3VaWGVDRmxjRElh?=
+ =?utf-8?B?cnQxdHU0aEpZSWpSemxuL3ZpUisrb1ZrUElLMUJmK1FUUHlmZG9scmxvdC9j?=
+ =?utf-8?Q?2fGyYz68kKY=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB3214.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?c1BOQjlsTFZ1NjhPRnVVUUMvUDZvb0kydkNQQXUrNFBDK3FZUlBiQ0tsOHZB?=
+ =?utf-8?B?L29KSUZuS0d1bmErdG1EbzN0Z2FvNGV3MGMvSXVNZHltQUZyNXdxdCt2Q2VK?=
+ =?utf-8?B?QnNmOVFIRFZHS3NqVnBJNGRSdEZFRFE1dXZnMUR0dlg4OWlVUWU4NXZEVEt5?=
+ =?utf-8?B?N255ZU9ETDh4TnRBS2NhWHdFSEMwNlQrR2J4NEpXcXpkemR0dUd4U29sUGh5?=
+ =?utf-8?B?bHJFdnhuWFdCT3RuNk11akZrVUVmOG95dStsZmpzNWEvclF6UjFPTythcnNV?=
+ =?utf-8?B?Z2djaHR6Ym0xKy84QktSL3I2VWgwK2dHUVBqNG0xRFhheEkxZytNZm92YWF4?=
+ =?utf-8?B?a2JKWnVLa3E1alJubWhobWI2UlhWcEtxc0RYTlBKSE1ydFJmbkRZN21qaDdB?=
+ =?utf-8?B?ZEdIUkZEeU9ORmVPeU5aelFBdXhQWTFzeDYwWVNaR0Z4enNwNmxUN2xLaksv?=
+ =?utf-8?B?Mm02NEpObmtwSjlkL01KaHFDck94dXZ3dkJ3WWJIRkdiQVZNemY5bFliVGNF?=
+ =?utf-8?B?RngycGFFemlBZTh5TjIrM0VUUWdJMW9JdWpDOXVSSkx0QWQ5YS9wdzc5akVh?=
+ =?utf-8?B?K3ZQVFgrL0ZFd3NnckF3aEJCYVBxeTR5OEE0UzhBSFZjK2oxMjR0WXprRTVp?=
+ =?utf-8?B?UEpoOStqNUtCbkJPR0UvcmdaMTduMy9LcVZjTHZ4TEcrMUNXeGNabmlJWGZ1?=
+ =?utf-8?B?blJpd3lwcnNxUUJzTXpkZmNNZ0lOTFZYVThPUWtHeVBmSEZBSTRTa3Vwandy?=
+ =?utf-8?B?NFRWdjVOMzk3a0JVcUNxMVc3NGdHS28xZnh5V0tPVnVuenFmU1h1azM4RHN5?=
+ =?utf-8?B?cUhHOFV2ZlVaT2Z0NlZneVNyTWJoSGJ3NkY0RGJCcFFUWnhuR2pOZGJ2UUQ1?=
+ =?utf-8?B?ZmdZQW14UzJ6OUJITElVS2RLck1ZUEszYkFrNE05anJ5S1lybmVCSGsyNWZy?=
+ =?utf-8?B?YWowQUJjVFRjMzhLNVZSMnQ4WXk1bmdKeGFOaVNsUGNKb01jY2ZrOUNlZnlH?=
+ =?utf-8?B?Y0UrM2VWdDNQY2hOTm1IRk5oNklmV1NCYlVMTWFtT25sRVJqT0h4YTBaY0Nh?=
+ =?utf-8?B?QmJ3alN6RXpBZGZ5eE56VURrZnBHTXE2NHR4bitjRVVvT0xZUmRZSFNNVHNs?=
+ =?utf-8?B?YXVDWFNMVW1TOEpTcDI1dWFzcHUxR0FmQ2VBTTVnZDFhMjZJRUZ5MHNmOVpk?=
+ =?utf-8?B?U0ZaRC9PL3Raak0zVU9RNERYL0FmRVdQRTV6aUJTZmEycXI5STd1WU02Skhz?=
+ =?utf-8?B?NGNCeGlnWVRDbXBtZUJWSmk4blBCUWxDNUcycVFTOEMvUHBscnVVcVFibkRO?=
+ =?utf-8?B?cmZsbVNEUUd0eklOSGZTYWgxYlgzS3hDaUNiTWp0OGJQK3hycXNJOVhsVzAv?=
+ =?utf-8?B?MEtxNVEwa2hhVm5vckFTcWt1Kytja09BNTZkZkhiSUhFV3BEQWg1ZUgybHVX?=
+ =?utf-8?B?aE1HaFRZaGtXSTNybEM3dW4vS1hPNUtva2JQN0lxSG8wZGxMaXZHSFc3RHFs?=
+ =?utf-8?B?UG85b0VlemMzY1VZM0ZDTGtwaDJGNzhLT0VpdTE4OWhHM2s1V3lwanBZYi9C?=
+ =?utf-8?B?MW9FYkQ3VGtZR2gyVnIwajhjRHlidGp4UjFXZlVoWHM0ZjlXNjFhc1FBNVFq?=
+ =?utf-8?B?YzBWRWxqUU9wcHVtVVVpam5ieE80bjcraW5JME51UnlTMVVRdUNnL1dLSXEz?=
+ =?utf-8?B?enRuYWNjdFhnV1RuWkpQZEF6bGQxZGlXOG9ja3ErZWNLWmJIK3hwUGNSVFVa?=
+ =?utf-8?B?Q1lOM0xLZVJZZUl6b2Q3Zkx5ZFNacGI0U0ZyOW1TdmVITE9oYksrK1pwOW92?=
+ =?utf-8?B?M0pTWkVqQm9sVW9MbWVUYm80OHAzTTlrd3kxUXNTL2pqT29abXVFZXNjWEJp?=
+ =?utf-8?B?aXNWZ3ZVSzA4ekRnY1JkWngrN0ZCRnlFQlRoZUlxeFNwYkhCSzhBNVVpVkNt?=
+ =?utf-8?B?OFYxWjg2NWNKZnUwK0pud1hvOVp2bTRLeDF2bW9MUmNkN2ozM05ycGt0ZWp0?=
+ =?utf-8?B?STkzdWRKNlZNczdaVTMrNEdSZis3T2hTZE83VWY1b1NHZDVIaU5MbCtOdUlI?=
+ =?utf-8?B?QXVLYzgyenhTUkd6KzcvUDlZVWc3WktwWmZOL2RCQlNFUTQ5VlFBaFBSemFx?=
+ =?utf-8?B?aDZyS3g0QUhTS1Jyd0ZlbG5VcjVVNzRiZ3ZEZzgyMzNIZDg3K2s0U2Z0dktP?=
+ =?utf-8?B?VGc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5acec388-807f-46ca-c1be-08dda8ca8a32
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB3214.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2025 09:30:01.6175
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: k7+IFV03/z+xnuf8rVhQ1P1lMsb/lbRv9HbW0tS3KAY2cBZHnJYXek+V4jgqZG0FLmjYWZdXyvAIOznDTyLN7Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB7738
+X-OriginatorOrg: intel.com
 
-The following commit has been merged into the sched/core branch of tip:
+On 11/06/2025 02:20, Sean Christopherson wrote:
+> Use the kvm_arch_vcpu.host_debugctl snapshot to restore DEBUGCTL after
+> running a TD vCPU.  The final TDX series rebase was mishandled, likely due
+> to commit fb71c7959356 ("KVM: x86: Snapshot the host's DEBUGCTL in common
+> x86") deleting the same line of code from vmx.h, i.e. creating a semantic
+> conflict of sorts, but no syntactic conflict.
+> 
+> Using the version in kvm_vcpu_arch picks up the ulong => u64 fix (which
+> isn't relevant to TDX) as well as the IRQ fix from commit 189ecdb3e112
+> ("KVM: x86: Snapshot the host's DEBUGCTL after disabling IRQs").
+> 
+> Link: https://lore.kernel.org/all/20250307212053.2948340-10-pbonzini@redhat.com
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Fixes: 8af099037527 ("KVM: TDX: Save and restore IA32_DEBUGCTL")
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
 
-Commit-ID:     3d7e10188ae0b68dadd60f611ca81ecf9d991f77
-Gitweb:        https://git.kernel.org/tip/3d7e10188ae0b68dadd60f611ca81ecf9d991f77
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Fri, 23 May 2025 18:26:21 +02:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 11 Jun 2025 11:20:53 +02:00
+Thanks for fixing this up!
 
-sched: Make clangd usable
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Due to the weird Makefile setup of sched the various files do not
-compile as stand alone units. The new generation of editors are trying
-to do just this -- mostly to offer fancy things like completions but
-also better syntax highlighting and code navigation.
-
-Specifically, I've been playing around with neovim and clangd.
-
-Setting up clangd on the kernel source is a giant pain in the arse
-(this really should be improved), but once you do manage, you run into
-dumb stuff like the above.
-
-Fix up the scheduler files to at least pretend to work.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Ingo Molnar <mingo@kernel.org>
-Tested-by: Juri Lelli <juri.lelli@redhat.com>
-Link: https://lkml.kernel.org/r/20250523164348.GN39944@noisy.programming.kicks-ass.net
----
- kernel/sched/autogroup.c         | 3 +++
- kernel/sched/autogroup.h         | 2 ++
- kernel/sched/clock.c             | 3 +++
- kernel/sched/completion.c        | 5 +++++
- kernel/sched/core_sched.c        | 2 ++
- kernel/sched/cpuacct.c           | 2 ++
- kernel/sched/cpudeadline.c       | 1 +
- kernel/sched/cpudeadline.h       | 2 ++
- kernel/sched/cpufreq.c           | 1 +
- kernel/sched/cpufreq_schedutil.c | 2 ++
- kernel/sched/cpupri.c            | 1 +
- kernel/sched/cpupri.h            | 3 +++
- kernel/sched/cputime.c           | 3 +++
- kernel/sched/deadline.c          | 4 ++++
- kernel/sched/debug.c             | 3 +++
- kernel/sched/idle.c              | 5 +++++
- kernel/sched/isolation.c         | 2 ++
- kernel/sched/loadavg.c           | 2 ++
- kernel/sched/membarrier.c        | 2 ++
- kernel/sched/pelt.c              | 1 +
- kernel/sched/pelt.h              | 7 ++++++-
- kernel/sched/psi.c               | 4 ++++
- kernel/sched/rt.c                | 3 +++
- kernel/sched/sched-pelt.h        | 1 +
- kernel/sched/sched.h             | 1 +
- kernel/sched/smp.h               | 7 +++++++
- kernel/sched/stats.c             | 1 +
- kernel/sched/stop_task.c         | 1 +
- kernel/sched/swait.c             | 1 +
- kernel/sched/topology.c          | 2 ++
- kernel/sched/wait.c              | 1 +
- kernel/sched/wait_bit.c          | 3 +++
- 32 files changed, 80 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/sched/autogroup.c b/kernel/sched/autogroup.c
-index 2b33182..e96a167 100644
---- a/kernel/sched/autogroup.c
-+++ b/kernel/sched/autogroup.c
-@@ -4,6 +4,9 @@
-  * Auto-group scheduling implementation:
-  */
- 
-+#include "autogroup.h"
-+#include "sched.h"
-+
- unsigned int __read_mostly sysctl_sched_autogroup_enabled = 1;
- static struct autogroup autogroup_default;
- static atomic_t autogroup_seq_nr;
-diff --git a/kernel/sched/autogroup.h b/kernel/sched/autogroup.h
-index 90d69f2..5c1796a 100644
---- a/kernel/sched/autogroup.h
-+++ b/kernel/sched/autogroup.h
-@@ -2,6 +2,8 @@
- #ifndef _KERNEL_SCHED_AUTOGROUP_H
- #define _KERNEL_SCHED_AUTOGROUP_H
- 
-+#include "sched.h"
-+
- #ifdef CONFIG_SCHED_AUTOGROUP
- 
- struct autogroup {
-diff --git a/kernel/sched/clock.c b/kernel/sched/clock.c
-index a09655b..e62b551 100644
---- a/kernel/sched/clock.c
-+++ b/kernel/sched/clock.c
-@@ -54,6 +54,9 @@
-  *
-  */
- 
-+#include <linux/sched/clock.h>
-+#include "sched.h"
-+
- /*
-  * Scheduler clock - returns current time in nanosec units.
-  * This is default implementation.
-diff --git a/kernel/sched/completion.c b/kernel/sched/completion.c
-index 3561ab5..19ee702 100644
---- a/kernel/sched/completion.c
-+++ b/kernel/sched/completion.c
-@@ -13,6 +13,11 @@
-  * Waiting for completion is a typically sync point, but not an exclusion point.
-  */
- 
-+#include <linux/linkage.h>
-+#include <linux/sched/debug.h>
-+#include <linux/completion.h>
-+#include "sched.h"
-+
- static void complete_with_flags(struct completion *x, int wake_flags)
- {
- 	unsigned long flags;
-diff --git a/kernel/sched/core_sched.c b/kernel/sched/core_sched.c
-index c4606ca..9ede71e 100644
---- a/kernel/sched/core_sched.c
-+++ b/kernel/sched/core_sched.c
-@@ -4,6 +4,8 @@
-  * A simple wrapper around refcount. An allocated sched_core_cookie's
-  * address is used to compute the cookie of the task.
-  */
-+#include "sched.h"
-+
- struct sched_core_cookie {
- 	refcount_t refcnt;
- };
-diff --git a/kernel/sched/cpuacct.c b/kernel/sched/cpuacct.c
-index 0de9dda..23a56ba 100644
---- a/kernel/sched/cpuacct.c
-+++ b/kernel/sched/cpuacct.c
-@@ -6,6 +6,8 @@
-  * Based on the work by Paul Menage (menage@google.com) and Balbir Singh
-  * (balbir@in.ibm.com).
-  */
-+#include <linux/sched/cputime.h>
-+#include "sched.h"
- 
- /* Time spent by the tasks of the CPU accounting group executing in ... */
- enum cpuacct_stat_index {
-diff --git a/kernel/sched/cpudeadline.c b/kernel/sched/cpudeadline.c
-index 95baa12..cdd740b 100644
---- a/kernel/sched/cpudeadline.c
-+++ b/kernel/sched/cpudeadline.c
-@@ -6,6 +6,7 @@
-  *
-  *  Author: Juri Lelli <j.lelli@sssup.it>
-  */
-+#include "sched.h"
- 
- static inline int parent(int i)
- {
-diff --git a/kernel/sched/cpudeadline.h b/kernel/sched/cpudeadline.h
-index 0adeda9..3f7c73d 100644
---- a/kernel/sched/cpudeadline.h
-+++ b/kernel/sched/cpudeadline.h
-@@ -1,4 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
-+#include <linux/types.h>
-+#include <linux/spinlock.h>
- 
- #define IDX_INVALID		-1
- 
-diff --git a/kernel/sched/cpufreq.c b/kernel/sched/cpufreq.c
-index 5252fb1..742fb9e 100644
---- a/kernel/sched/cpufreq.c
-+++ b/kernel/sched/cpufreq.c
-@@ -5,6 +5,7 @@
-  * Copyright (C) 2016, Intel Corporation
-  * Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-  */
-+#include "sched.h"
- 
- DEFINE_PER_CPU(struct update_util_data __rcu *, cpufreq_update_util_data);
- 
-diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-index 461242e..3d7e9cc 100644
---- a/kernel/sched/cpufreq_schedutil.c
-+++ b/kernel/sched/cpufreq_schedutil.c
-@@ -5,6 +5,8 @@
-  * Copyright (C) 2016, Intel Corporation
-  * Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-  */
-+#include <uapi/linux/sched/types.h>
-+#include "sched.h"
- 
- #define IOWAIT_BOOST_MIN	(SCHED_CAPACITY_SCALE / 8)
- 
-diff --git a/kernel/sched/cpupri.c b/kernel/sched/cpupri.c
-index 42c40cf..76a9ac5 100644
---- a/kernel/sched/cpupri.c
-+++ b/kernel/sched/cpupri.c
-@@ -22,6 +22,7 @@
-  *  worst case complexity of O(min(101, nr_domcpus)), though the scenario that
-  *  yields the worst case search is fairly contrived.
-  */
-+#include "sched.h"
- 
- /*
-  * p->rt_priority   p->prio   newpri   cpupri
-diff --git a/kernel/sched/cpupri.h b/kernel/sched/cpupri.h
-index d6cba00..f0f5a73 100644
---- a/kernel/sched/cpupri.h
-+++ b/kernel/sched/cpupri.h
-@@ -1,4 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
-+#include <linux/atomic.h>
-+#include <linux/cpumask.h>
-+#include <linux/sched/rt.h>
- 
- #define CPUPRI_NR_PRIORITIES	(MAX_RT_PRIO+1)
- 
-diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
-index 6dab485..f01f17a 100644
---- a/kernel/sched/cputime.c
-+++ b/kernel/sched/cputime.c
-@@ -2,6 +2,9 @@
- /*
-  * Simple CPU accounting cgroup controller
-  */
-+#include <linux/sched/cputime.h>
-+#include <linux/tsacct_kern.h>
-+#include "sched.h"
- 
- #ifdef CONFIG_VIRT_CPU_ACCOUNTING_NATIVE
-  #include <asm/cputime.h>
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index ad45a8f..ff5be80 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -17,6 +17,10 @@
-  */
- 
- #include <linux/cpuset.h>
-+#include <linux/sched/clock.h>
-+#include <uapi/linux/sched/types.h>
-+#include "sched.h"
-+#include "pelt.h"
- 
- /*
-  * Default limits for DL period; on the top end we guard against small util
-diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index 9d71baf..b384124 100644
---- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -6,6 +6,9 @@
-  *
-  * Copyright(C) 2007, Red Hat, Inc., Ingo Molnar
-  */
-+#include <linux/debugfs.h>
-+#include <linux/nmi.h>
-+#include "sched.h"
- 
- /*
-  * This allows printing both to /sys/kernel/debug/sched/debug and
-diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-index 2c85c86..cd32986 100644
---- a/kernel/sched/idle.c
-+++ b/kernel/sched/idle.c
-@@ -6,6 +6,11 @@
-  * (NOTE: these are not related to SCHED_IDLE batch scheduled
-  *        tasks which are handled in sched/fair.c )
-  */
-+#include <linux/cpuidle.h>
-+#include <linux/suspend.h>
-+#include <linux/livepatch.h>
-+#include "sched.h"
-+#include "smp.h"
- 
- /* Linker adds these: start and end of __cpuidle functions */
- extern char __cpuidle_text_start[], __cpuidle_text_end[];
-diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index 93b038d..a4cf17b 100644
---- a/kernel/sched/isolation.c
-+++ b/kernel/sched/isolation.c
-@@ -7,6 +7,8 @@
-  * Copyright (C) 2017-2018 SUSE, Frederic Weisbecker
-  *
-  */
-+#include <linux/sched/isolation.h>
-+#include "sched.h"
- 
- enum hk_flags {
- 	HK_FLAG_DOMAIN		= BIT(HK_TYPE_DOMAIN),
-diff --git a/kernel/sched/loadavg.c b/kernel/sched/loadavg.c
-index c48900b..f6df84c 100644
---- a/kernel/sched/loadavg.c
-+++ b/kernel/sched/loadavg.c
-@@ -6,6 +6,8 @@
-  * figure. Its a silly number but people think its important. We go through
-  * great pains to make it work on big machines and tickless kernels.
-  */
-+#include <linux/sched/nohz.h>
-+#include "sched.h"
- 
- /*
-  * Global load-average calculations
-diff --git a/kernel/sched/membarrier.c b/kernel/sched/membarrier.c
-index 809194c..62fba83 100644
---- a/kernel/sched/membarrier.c
-+++ b/kernel/sched/membarrier.c
-@@ -4,6 +4,8 @@
-  *
-  * membarrier system call
-  */
-+#include <uapi/linux/membarrier.h>
-+#include "sched.h"
- 
- /*
-  * For documentation purposes, here are some membarrier ordering
-diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
-index 7a8534a..09be6a8 100644
---- a/kernel/sched/pelt.c
-+++ b/kernel/sched/pelt.c
-@@ -23,6 +23,7 @@
-  *  Move PELT related code from fair.c into this pelt.c file
-  *  Author: Vincent Guittot <vincent.guittot@linaro.org>
-  */
-+#include "pelt.h"
- 
- /*
-  * Approximate:
-diff --git a/kernel/sched/pelt.h b/kernel/sched/pelt.h
-index f4f6a08..1959207 100644
---- a/kernel/sched/pelt.h
-+++ b/kernel/sched/pelt.h
-@@ -1,3 +1,8 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#ifndef _KERNEL_SCHED_PELT_H
-+#define _KERNEL_SCHED_PELT_H
-+#include "sched.h"
-+
- #ifdef CONFIG_SMP
- #include "sched-pelt.h"
- 
-@@ -233,4 +238,4 @@ update_idle_rq_clock_pelt(struct rq *rq) { }
- static inline void update_idle_cfs_rq_clock_pelt(struct cfs_rq *cfs_rq) { }
- #endif
- 
--
-+#endif /* _KERNEL_SCHED_PELT_H */
-diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-index ad04a5c..333a7ba 100644
---- a/kernel/sched/psi.c
-+++ b/kernel/sched/psi.c
-@@ -136,6 +136,10 @@
-  * cost-wise, yet way more sensitive and accurate than periodic
-  * sampling of the aggregate task states would be.
-  */
-+#include <linux/sched/clock.h>
-+#include <linux/workqueue.h>
-+#include <linux/psi.h>
-+#include "sched.h"
- 
- static int psi_bug __read_mostly;
- 
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index e40422c..16008ac 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -4,6 +4,9 @@
-  * policies)
-  */
- 
-+#include "sched.h"
-+#include "pelt.h"
-+
- int sched_rr_timeslice = RR_TIMESLICE;
- /* More than 4 hours if BW_SHIFT equals 20. */
- static const u64 max_rt_runtime = MAX_BW;
-diff --git a/kernel/sched/sched-pelt.h b/kernel/sched/sched-pelt.h
-index c529706..6803cfe 100644
---- a/kernel/sched/sched-pelt.h
-+++ b/kernel/sched/sched-pelt.h
-@@ -1,5 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /* Generated by Documentation/scheduler/sched-pelt; do not modify. */
-+#include <linux/types.h>
- 
- static const u32 runnable_avg_yN_inv[] __maybe_unused = {
- 	0xffffffff, 0xfa83b2da, 0xf5257d14, 0xefe4b99a, 0xeac0c6e6, 0xe5b906e6,
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 475bb59..f3a4148 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -69,6 +69,7 @@
- #include <linux/wait_bit.h>
- #include <linux/workqueue_api.h>
- #include <linux/delayacct.h>
-+#include <linux/mmu_context.h>
- 
- #include <trace/events/power.h>
- #include <trace/events/sched.h>
-diff --git a/kernel/sched/smp.h b/kernel/sched/smp.h
-index 21ac444..7f151d9 100644
---- a/kernel/sched/smp.h
-+++ b/kernel/sched/smp.h
-@@ -1,8 +1,13 @@
- /* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef _KERNEL_SCHED_SMP_H
-+#define _KERNEL_SCHED_SMP_H
-+
- /*
-  * Scheduler internal SMP callback types and methods between the scheduler
-  * and other internal parts of the core kernel:
-  */
-+#include <linux/types.h>
- 
- extern void sched_ttwu_pending(void *arg);
- 
-@@ -13,3 +18,5 @@ extern void flush_smp_call_function_queue(void);
- #else
- static inline void flush_smp_call_function_queue(void) { }
- #endif
-+
-+#endif /* _KERNEL_SCHED_SMP_H */
-diff --git a/kernel/sched/stats.c b/kernel/sched/stats.c
-index 4346fd8..1faea87 100644
---- a/kernel/sched/stats.c
-+++ b/kernel/sched/stats.c
-@@ -2,6 +2,7 @@
- /*
-  * /proc/schedstat implementation
-  */
-+#include "sched.h"
- 
- void __update_stats_wait_start(struct rq *rq, struct task_struct *p,
- 			       struct sched_statistics *stats)
-diff --git a/kernel/sched/stop_task.c b/kernel/sched/stop_task.c
-index 058dd42..1c1bbc6 100644
---- a/kernel/sched/stop_task.c
-+++ b/kernel/sched/stop_task.c
-@@ -7,6 +7,7 @@
-  *
-  * See kernel/stop_machine.c
-  */
-+#include "sched.h"
- 
- #ifdef CONFIG_SMP
- static int
-diff --git a/kernel/sched/swait.c b/kernel/sched/swait.c
-index 72505cd..0fef649 100644
---- a/kernel/sched/swait.c
-+++ b/kernel/sched/swait.c
-@@ -2,6 +2,7 @@
- /*
-  * <linux/swait.h> (simple wait queues ) implementation:
-  */
-+#include "sched.h"
- 
- void __init_swait_queue_head(struct swait_queue_head *q, const char *name,
- 			     struct lock_class_key *key)
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index b958fe4..9026d32 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -3,7 +3,9 @@
-  * Scheduler topology setup/handling methods
-  */
- 
-+#include <linux/sched/isolation.h>
- #include <linux/bsearch.h>
-+#include "sched.h"
- 
- DEFINE_MUTEX(sched_domains_mutex);
- void sched_domains_mutex_lock(void)
-diff --git a/kernel/sched/wait.c b/kernel/sched/wait.c
-index 51e38f5..a6f0001 100644
---- a/kernel/sched/wait.c
-+++ b/kernel/sched/wait.c
-@@ -4,6 +4,7 @@
-  *
-  * (C) 2004 Nadia Yvette Chambers, Oracle
-  */
-+#include "sched.h"
- 
- void __init_waitqueue_head(struct wait_queue_head *wq_head, const char *name, struct lock_class_key *key)
- {
-diff --git a/kernel/sched/wait_bit.c b/kernel/sched/wait_bit.c
-index b410b61..1088d3b 100644
---- a/kernel/sched/wait_bit.c
-+++ b/kernel/sched/wait_bit.c
-@@ -1,5 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0-only
- 
-+#include <linux/sched/debug.h>
-+#include "sched.h"
-+
- /*
-  * The implementation of the wait_bit*() and related waiting APIs:
-  */
