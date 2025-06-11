@@ -1,158 +1,169 @@
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F5C023F43C
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 08:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6E624339D;
+	Wed, 11 Jun 2025 08:57:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749632241; cv=none; b=ZJ45NItjkJu4qmWRA+FTjLK6BQZ6EjYfCgWm7EaBMVaOPsOn5NpV2DRAiOmjIQAz+Vrrzpxc4ZZe6b4e0Km6qiXaKcByzhzej22FvtGBntBJ+spTS+kyTkBP2BAInnMoTmOeMAJ22gubhKywKm6mbuwnlLtvDmqXfTf0bsvAr70=
+	t=1749632276; cv=none; b=iLb3mFaK1T7OWuDlu0bItrgNbCb9RFFj/iuNMXrZ5UaKOm4ZAJU1ioA0pbstoNcp8dQq9H3db8Yv9KyGzV1z2VCM2Yl5pemGB4b/ebzjDMhp4VSnL3dTkrkXKc2mbq+hpeQhsikr2NdLPqW7g6uje8Dg4iazT2ncTV41cZiFgpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749632241; c=relaxed/simple;
-	bh=BOiBGegJRIsJAwhdaPg0kbdMQr6Mw/a7D38ClN94RqQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=clRkzV3vhJ5N0uiiAu50VtQtYa8eMSG6s9mxZmbS9/XebR5CwdfUAxjSaso9GfD8xK7IsoMnll8aJ1xILIqKQAyz/R9O/+Rhnp2YQ+LUPxOLg9cjfwVkQDYRCql+/f2xWnROlbwLn1lbjjVl4uEfiAAnR4/jC8ITwk0FUffAowM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MwDyGr3A; arc=none smtp.client-ip=209.85.217.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749632276; c=relaxed/simple;
+	bh=oCz3V+7ZTi4hFmVrBJWM7NCWZDfRFBK/IEiwC/HpnyI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dkiVSZSjWnWs1rGRk7lUtG3Q8oTotxIVMKWYUpZpHlzToH+e6E1CJGwam+kQm27I6DaFcgA/gYhj3d/l4vEfjzAPgviyq/y8ZBAolBaVtOr7E9sbKx1yAWG44VeTbrW3nAewjJDdXsVHZxs4P8XO4qJnGcmahbgxSONXrU0lneo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ry/wUV//; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MwDyGr3A"
-Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4e7b8112f4dso350920137.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 01:57:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749632238; x=1750237038; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DV9t5sYiI13RU+dfHyim24Ym/TfwiK76Thbl9i9KKag=;
-        b=MwDyGr3A2nzkrw0WRJBKyig3h5TX3soXhdOkju01GdrOlq89cqp7EZF7bwvhW3zHQn
-         f8fh+TyYQblpZem3RFnmCOML5n4EeSnNN5mqEEAFrhEFX2SC5dxbjUvdB/WnSavbbUkP
-         tVc/5VWCkpC2mx1k3DeBpIprw4aerWs3TJ4uxnFIYL4ZPiBis/Ju2eTYSkVggtXLr2vW
-         fX4khsooHai2GyWiKNDAkOiPxUE2wXBYQCJsdmq3zedEQAzzuMZ1NzFbpARyLTSCAx4c
-         CKewgbuyR3u7MIzmwrnZh4Roz7oCgTIzS7HwKmdFwuG9WgqJq50ow+otdbtHtBJm4vqz
-         qNSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749632238; x=1750237038;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DV9t5sYiI13RU+dfHyim24Ym/TfwiK76Thbl9i9KKag=;
-        b=YusD+vkHx09UAB6IrY96/XzOVP81dENYkYDouSaXIS9YimqRgPKZbjayXy3vOhKfx8
-         ECXdj5J4HrMWOmnpeIJykJQe6Svru27IVAgihszYOwPF9LHF1Y2Xjs6axMBZs5olblHt
-         LyJg3Gj9OhwlRUDaMmUGcnjZ3ZShydS5daLSUN8lfcYt/Ev2eEKb+a/bIPUct1j5h2cl
-         jDvONezBk0sGYkQSPzmlI5UvzEce39q5XbcdDmaCEQ7iYCJ+vpjLJXjERV9xf8dZc/cs
-         2Fmb1YOd7jQ9rupCoj+xXmBUKaSb4+j9KkOhCGxGLUmY4MRgxKaJpDu4/v2rgu9ZJbOt
-         Iu2g==
-X-Gm-Message-State: AOJu0YyIqIkjhBsysUgZCh3q4PKztmPrnWpT+d5XefZvWDRwE6GLnTji
-	1bpAfzVoTUBmu+tm3iNQdGOQoJcgkbismF0/kJsAqOvoaXcI/bJoqGg+ZBYt7f02d1JNLHKRgi7
-	3KGW5v0j1VE+pe5698AsuWTkCw9YEFja+uKnuvwPUxQ==
-X-Gm-Gg: ASbGnctwOW0YlExqzD9ObtULSr9jbXB+3SNNXzq9IaS5PPmL9wstOVATrYmRK3JLKEj
-	B63lxV4MuC4XiytqLgPyjT/AP88K2hue92LbBLpz8NODvMK+KATyyFIBofDlrVPrmOpqDT8vo0U
-	vELvnfQZVtqWpP9i70w/VdZbcN+lsxnS6tjaDsuwjwUlc94B78oEUsTQQdu8yYZOBoX/Uw9g6SY
-	mB1
-X-Google-Smtp-Source: AGHT+IFQXF+sKGFKqYzvIWVQbzE1S3LEQpj/qr+Mjs6PmUNCe9qyp66456X1HYoQ3EeWcUwMf1iYDwClQBMee+auP2M=
-X-Received: by 2002:a05:6102:2b8b:b0:4e5:a2bf:4fd6 with SMTP id
- ada2fe7eead31-4e7bba95fc7mr1734093137.8.1749632238461; Wed, 11 Jun 2025
- 01:57:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ry/wUV//"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FE43C4CEEF;
+	Wed, 11 Jun 2025 08:57:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749632276;
+	bh=oCz3V+7ZTi4hFmVrBJWM7NCWZDfRFBK/IEiwC/HpnyI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ry/wUV///yloc7ZH6Z3DbDtkoWmr7OVO/u0DivsYbyhoZBnaBorMu9v5hUhXBncNC
+	 YoxHmILhOHrEfJTJi0nHycFYs0UF0JcddVe3oB/pN4P7zz17WOTVk+KbvIOlNb9myu
+	 ZW0Hlant5vbqQnPMJDnN4ewgVxmw3geWBQP3BkyDtrq8zeJoh0mdV2luoHm9sOpnHT
+	 X5m/7JqIF5vcvfqNeYMeCUlvkque0Bc+1nmQ6L6uIEiAeJSQ2p+pKhiZVkJT52E0uS
+	 SuuZ1pg1RU391hCzzdzM67q0tYp1DfBLnKyVQ+5oMURIFdL5U+vYL3fzjeA77sX7wR
+	 Sfc8KkK5zWsIA==
+Date: Wed, 11 Jun 2025 10:57:53 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: =?utf-8?B?QW5kcsOp?= Draszik <andre.draszik@linaro.org>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Lee Jones <lee@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Peter Griffin <peter.griffin@linaro.org>, Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
+	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 03/17] regulator: dt-bindings: add s2mpg11-pmic
+ regulators
+Message-ID: <20250611-spectral-bullfrog-of-perfection-cb8e01@kuoka>
+References: <20250606-s2mpg1x-regulators-v2-0-b03feffd2621@linaro.org>
+ <20250606-s2mpg1x-regulators-v2-3-b03feffd2621@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA+G9fYuppX5LeRjOAZWsYRCs76PVbnv-TN_RrszhDsk=KregyA@mail.gmail.com>
- <15979303.uLZWGnKmhe@diego> <CADYN=9L+Gao0w_CThNd96-yYbZDMZnwY7RvagCOdzUC4rKc-Ug@mail.gmail.com>
-In-Reply-To: <CADYN=9L+Gao0w_CThNd96-yYbZDMZnwY7RvagCOdzUC4rKc-Ug@mail.gmail.com>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 11 Jun 2025 14:27:06 +0530
-X-Gm-Features: AX0GCFuVYEyn4auVNPUyj-VnDVcIp7H9e0QdsmhpYhaxmLWCVhksJEW8y_9TvVE
-Message-ID: <CA+G9fYvk7kBqDqPSxndxG2CxxVxhNrf4Easp-aYrR=UeTS1=eQ@mail.gmail.com>
-Subject: Re: next-20250610: arm64 No rule to make target rockchip rk3399-rockpro64-screen.dtso
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	Linux Regressions <regressions@lists.linux.dev>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Peter Robinson <pbrobinson@gmail.com>, krzk+dt@kernel.org, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, 
-	Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250606-s2mpg1x-regulators-v2-3-b03feffd2621@linaro.org>
 
-On Tue, 10 Jun 2025 at 17:07, Anders Roxell <anders.roxell@linaro.org> wrot=
-e:
->
-> On Tue, 10 Jun 2025 at 13:22, Heiko St=C3=BCbner <heiko@sntech.de> wrote:
-> >
-> > Hi Naresh,
->
-> Hi Heiko,
->
-> >
-> > Am Dienstag, 10. Juni 2025, 12:25:31 Mitteleurop=C3=A4ische Sommerzeit =
-schrieb Naresh Kamboju:
-> > > Regression while building arm64 with the Linux next-20250610
->
-> [...]
->
-> > > https://storage.tuxsuite.com/public/linaro/lkft/builds/2yJ4IOQa1XxMqD=
-gmzjEl7VszYE9/build.log
-> > > * Build link:  https://storage.tuxsuite.com/public/linaro/lkft/builds=
-/2yJ4IOQa1XxMqDgmzjEl7VszYE9/
-> > > * Kernel config:
-> > > https://storage.tuxsuite.com/public/linaro/lkft/builds/2yJ4IOQa1XxMqD=
-gmzjEl7VszYE9/config
-> >
-> > thanks a lot for this notification.
-> >
-> > I'm surprised that overlay build at all when I built it yesterday.
-> > But yeah, the dtbs_install target really broke with that change.
-> >
-> > I've amended the commit now [0]
->
-> Thank you for the quick fix.
-> I applied your patch and built it, it worked fine for me.
->
-> I built it like this:
-> tuxmake --runtime podman --target-arch arm64 --toolchain gcc-13
-> --kconfig defconfig dtbs
->
-> Tested-by: Anders Roxell <anders.roxell@linaro.org>
+On Fri, Jun 06, 2025 at 04:02:59PM GMT, Andr=C3=A9 Draszik wrote:
+> The S2MPG11 PMIC is a Power Management IC for mobile applications with
+> buck converters, various LDOs, power meters, and additional GPIO
+> interfaces. It typically complements an S2MPG10 PMIC in a main/sub
+> configuration as the sub-PMIC.
+>=20
+> S2MPG11 has 12 buck, 1 buck-boost, and 15 LDO rails. Several of these
+> can either be controlled via software or via external signals, e.g.
+> input pins connected to a main processor's GPIO pins.
+>=20
+> Add documentation related to the regulator (buck & ldo) parts like
+> devicetree definitions, regulator naming patterns, and additional
+> properties.
+>=20
+> Since S2MPG11 is typically used as the sub-PMIC together with an
+> S2MPG10 as the main-PMIC, the datasheet and the binding both suffix the
+> rails with an 's'.
+>=20
+> Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+>=20
+> ---
+> Note: checkpatch suggests to update MAINTAINERS, but the new file is
+> covered already due to using a wildcard.
+>=20
+> v2:
+> - fix commit message typos: s2mp1 -> s2mpg1
+> - mention GPIOs in commit message
+> ---
+>  .../regulator/samsung,s2mpg11-regulator.yaml       | 150 +++++++++++++++=
+++++++
+>  .../regulator/samsung,s2mpg10-regulator.h          |  18 +++
+>  2 files changed, 168 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/regulator/samsung,s2mpg11-=
+regulator.yaml b/Documentation/devicetree/bindings/regulator/samsung,s2mpg1=
+1-regulator.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..f2d596642501c197e2911ee3b=
+9caac189cf541a4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/samsung,s2mpg11-regulat=
+or.yaml
+> @@ -0,0 +1,150 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/regulator/samsung,s2mpg11-regulator.y=
+aml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung S2MPG11 Power Management IC regulators
+> +
+> +maintainers:
+> +  - Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+> +
+> +description: |
+> +  This is part of the device tree bindings for the S2MG11 Power Manageme=
+nt IC
+> +  (PMIC).
+> +
+> +  The S2MPG11 PMIC provides 12 buck, 1 buck-boost, and 15 LDO regulators.
+> +
+> +  See also Documentation/devicetree/bindings/mfd/samsung,s2mps11.yaml for
+> +  additional information and example.
+> +
+> +definitions:
+> +  s2mpg11-ext-control:
+> +    properties:
+> +      samsung,ext-control:
+> +        description: |
+> +          These rails can be controlled via one of several possible exte=
+rnal
+> +          (hardware) signals. If so, this property configures the signal=
+ the PMIC
+> +          should monitor. The following values generally corresponding t=
+o the
+> +          respective on-chip pin are valid:
+> +            - 0 # S2MPG11_PCTRLSEL_ON - always on
 
-Thank you for providing the fix patch.
-I confirm that the reported build regression is no longer present in
-today=E2=80=99s Linux next-20250611 tag.
+Use regulator-always-on
 
-- Naresh
+> +            - 1 # S2MPG11_PCTRLSEL_PWREN - PWREN pin
 
->
->
-> Cheers,
-> Anders
->
-> >, to change dtso to dtbo and ran the
-> > dtbs_install target sucessfully with that change.
-> >
-> > So on the next linux-next creation, this should hopefully be gone.
-> >
-> >
-> > Heiko
-> >
-> > [0] https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchi=
-p.git/commit/?h=3Dv6.17-armsoc/dts64&id=3De14491aaa6ff598bbe9d462e44c01ac65=
-754f445
-> >
-> >
-> >
-> > >
-> > > ## Steps to reproduce
-> > >  - tuxmake --runtime podman --target-arch arm64 --toolchain gcc-13
-> > > --kconfig defconfig
-> > >
-> > > --
-> > > Linaro LKFT
-> > > https://lkft.linaro.org
-> > >
-> >
-> >
-> >
-> >
+That's duplicating regulator in standby properties.
+
+> +            - 2 # S2MPG11_PCTRLSEL_PWREN_TRG - PWREN_TRG bit in MIMICKIN=
+G_CTRL
+> +            - 3 # S2MPG11_PCTRLSEL_PWREN_MIF - PWREN_MIF pin
+> +            - 4 # S2MPG11_PCTRLSEL_PWREN_MIF_TRG - PWREN_MIF_TRG bit in =
+MIMICKING_CTRL
+> +            - 5 # S2MPG11_PCTRLSEL_AP_ACTIVE_N - ~AP_ACTIVE_N pin
+> +            - 6 # S2MPG11_PCTRLSEL_AP_ACTIVE_N_TRG - ~AP_ACTIVE_N_TRG bi=
+t in MIMICKING_CTRL
+> +            - 7 # S2MPG11_PCTRLSEL_G3D_EN - G3D_EN pin
+> +            - 8 # S2MPG11_PCTRLSEL_G3D_EN2 - G3D_EN & ~AP_ACTIVE_N pins
+> +            - 9 # S2MPG11_PCTRLSEL_AOC_VDD - AOC_VDD pin
+> +            - 10 # S2MPG11_PCTRLSEL_AOC_RET - AOC_RET pin
+> +            - 11 # S2MPG11_PCTRLSEL_UFS_EN - UFS_EN pin
+
+Now I have doubts these are real signals. Are you saying that S2MPG11
+has a pin named UFS_EN (such pin on ballmap)?
+
+> +            - 12 # S2MPG11_PCTRLSEL_LDO13S_EN - VLDO13S_EN pin
+> +
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        minimum: 0
+> +        maximum: 12
+> +
+> +      samsung,ext-control-gpios:
+
+Same comments as previous patch.
+
+Best regards,
+Krzysztof
+
