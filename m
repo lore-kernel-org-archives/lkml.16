@@ -1,88 +1,121 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 280AF1FDA94;
-	Wed, 11 Jun 2025 03:46:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CCD1182B4
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 03:47:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749613615; cv=none; b=pmmKSTkKbNkoq5KHVD92Z1OHxs71Va3ChIADfDaZgCd42I/ii62XhRF5DJFvJjTv3zsGCTZ8Re3PL2Wl9PMxDObdWIAufJwy9dme9RAVJLq/beIQTuNaNmJbMbSi7ZlhwhEkK+KuXV1IgvySqhAEf2LBc0t+MCG0T2G+dtU6FfU=
+	t=1749613668; cv=none; b=GTvJTlxIAJePsdUd9nqNmRSIO+Su7Igc6+AxeXtWzi9xuNcRNjgn6LU2VYjpceHMwUWoEVpceBv7JdBXw5Wisma2Y2SUMHNcy8fQwWBH0MoBv4rVuDWGbwb3z2L7xipZl4f1CVPAR8viVJ0TnmkbohhQAm6gq4w4wnnOcmChEN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749613615; c=relaxed/simple;
-	bh=oxGGKo2SzS/d0PM18T3o9qSmS9kbEB5Ud4wDWF0Zsi4=;
+	s=arc-20240116; t=1749613668; c=relaxed/simple;
+	bh=RLtUcIQJcfNe31BGVjPU6Llz02bUwQhES1+Od36btWE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C9404hKc61Cb70k8Wqcr95ZVyRpk0jh3IRjVdtCsAoKNW2IynxySifQC8XbCZQ6nAwRe1WfHDmYXl0Y0jalqyxoE1+ccOi7cBVvRCQnaVcSEgpym+0exDoT/2SJjcIGO5qmjhh/Q59VUAvS8knHsHHRbtiomtLDLJutkKIOlgJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=mkFa3OhC; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	 Content-Type:Content-Disposition:In-Reply-To; b=o8PsmbmF/3QHIPfJ/u/uHyPj890TrWqftWjlgKXQcObukwGemCwAUdTAyspN1vQn5RyF7GRjFQS/6HBhE6DJj2dpNMjgsnr/4v45iy3721NF8n/dfmsweP1Py3DIptVPFI5XWvGk/cZOfFcOlnXsIDxev8EYS10ZHslenwevAjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KuVeWYfp; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="mkFa3OhC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=FaUxGj4VtfSrMWJ+tBWopr/w3bGCwOfzq4u3E//ODvI=; b=mkFa3OhC+Qo4uggq0lm+VesVgK
-	ws5RLDEtaTsq4bUYSBpul0obfyudjKCh/9tUf+YUaCcXdNPAIqDUATISwpCILd5hxw2B3ByCr7wZM
-	CiaXuBOcN1xsetLKjVg/ex3IbYABc3Uec4Yv02lkMzqtMm/rVW/x0qmK1tU3JDKqMd06vYQz6OL4H
-	wxzG2kV9vwkdEtrzGsOlS954o/HhO+YsgXgFbP+INSiUq1g1MwjULr6MpamQeCsQgax9LuV/VPcwE
-	+X61xGRTLI6NKWhWfIqnDiaZ0lgwTtuudG76/yMtoYPyPBMt1wZStvPLtENAGMHHmj8UXrtRyvHsw
-	Xs2BEJkg==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uPCQJ-00CFcx-0o;
-	Wed, 11 Jun 2025 11:46:48 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 11 Jun 2025 11:46:47 +0800
-Date: Wed, 11 Jun 2025 11:46:47 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org, x86@kernel.org, ardb@kernel.org,
-	Jason@zx2c4.com, torvalds@linux-foundation.org
-Subject: Re: [PATCH 07/16] crypto: sha512 - replace sha512_generic with
- wrapper around SHA-512 library
-Message-ID: <aEj8J3ZIYEFp_XT4@gondor.apana.org.au>
-References: <20250611020923.1482701-8-ebiggers@kernel.org>
- <aEjo6YZn59m5FnZ_@gondor.apana.org.au>
- <20250611033957.GA1484147@sol>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KuVeWYfp"
+Date: Tue, 10 Jun 2025 23:47:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749613664;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xvpnQoqgyLnzKDoMRY0NMalAYqmO3bg2+7Ckkfaxpf0=;
+	b=KuVeWYfp9oMxP80mFfGk0WXdDsLCgRN3km2DUOXVDerGKl7A/kplaxVvPACnnEe9PUDQ5u
+	m6tk6Rq973H5A980GqGmm379Jl7pTGkppi6itYpLImupWjHiS8UawG62U09CPIfGNmxqTe
+	NxXnQE44v+KXCZJpr3x5hV4EfSur+74=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Casey Chen <cachen@purestorage.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, surenb@google.com, 
+	corbet@lwn.net, dennis@kernel.org, tj@kernel.org, cl@gentwo.org, vbabka@suse.cz, 
+	mhocko@suse.com, jackmanb@google.com, hannes@cmpxchg.org, ziy@nvidia.com, 
+	rientjes@google.com, roman.gushchin@linux.dev, harry.yoo@oracle.com, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	yzhong@purestorage.com
+Subject: Re: [PATCH] alloc_tag: add per-NUMA node stats
+Message-ID: <z4wctxhaajq7r3i6ste2fkeglj527ahk3kkb6jbhlics7mjqto@bgsmpm2qcus7>
+References: <20250610233053.973796-1-cachen@purestorage.com>
+ <20250610182155.36090c78124e1f60f2959d8e@linux-foundation.org>
+ <CALCePG318ATYRH-5G+OTY_utre57EwTe3EuP4BLuXMaXPJK9gA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250611033957.GA1484147@sol>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALCePG318ATYRH-5G+OTY_utre57EwTe3EuP4BLuXMaXPJK9gA@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Jun 10, 2025 at 08:39:57PM -0700, Eric Biggers wrote:
->
-> Do you have a concrete example (meaning, a specific driver) where this actually
-> matters?  Historically, export and import have always had to be paired for the
-> same transformation object, i.e. import was called only with the output of
-> export.  There is, and has never been, any test that tests otherwise.  This
-> seems like a brand new "requirement" that you've made up unnecessarily.
+On Tue, Jun 10, 2025 at 06:33:58PM -0700, Casey Chen wrote:
+> On Tue, Jun 10, 2025 at 6:21 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+> >
+> > On Tue, 10 Jun 2025 17:30:53 -0600 Casey Chen <cachen@purestorage.com> wrote:
+> >
+> > > Add support for tracking per-NUMA node statistics in /proc/allocinfo.
+> > > Previously, each alloc_tag had a single set of counters (bytes and
+> > > calls), aggregated across all CPUs. With this change, each CPU can
+> > > maintain separate counters for each NUMA node, allowing finer-grained
+> > > memory allocation profiling.
+> > >
+> > > This feature is controlled by the new
+> > > CONFIG_MEM_ALLOC_PROFILING_PER_NUMA_STATS option:
+> > >
+> > > * When enabled (=y), the output includes per-node statistics following
+> > >   the total bytes/calls:
+> > >
+> > > <size> <calls> <tag info>
+> > > ...
+> > > 315456       9858     mm/dmapool.c:338 func:pool_alloc_page
+> > >         nid0     94912        2966
+> > >         nid1     220544       6892
+> > > 7680         60       mm/dmapool.c:254 func:dma_pool_create
+> > >         nid0     4224         33
+> > >         nid1     3456         27
+> > >
+> > > * When disabled (=n), the output remains unchanged:
+> > > <size> <calls> <tag info>
+> > > ...
+> > > 315456       9858     mm/dmapool.c:338 func:pool_alloc_page
+> > > 7680         60       mm/dmapool.c:254 func:dma_pool_create
+> > >
+> > > To minimize memory overhead, per-NUMA stats counters are dynamically
+> > > allocated using the percpu allocator. PERCPU_DYNAMIC_RESERVE has been
+> > > increased to ensure sufficient space for in-kernel alloc_tag counters.
+> > >
+> > > For in-kernel alloc_tag instances, pcpu_alloc_noprof() is used to
+> > > allocate counters. These allocations are excluded from the profiling
+> > > statistics themselves.
+> >
+> > What is glaringly missing here is "why".
+> >
+> > What is the use case?  Why does Linux want this?  What benefit does
+> > this bring to our users?  This is the most important part of the
+> > changelog because it tells Andrew why he is even looking at this patch.
+> >
+> >
+> > Probably related to the above omission: why per-nid?  It would be more
+> > flexible to present the per-cpu counts and let userspace aggregate that
+> > into per-node info if that is desirable.
+> >
+> 
+> Hi Andrew,
+> 
+> Thanks for taking time reviewing my patch. Sorry I didn't include you
+> in the previous conversion. See
+> https://lore.kernel.org/all/CAJuCfpHhSUhxer-6MP3503w6520YLfgBTGp7Q9Qm9kgN4TNsfw@mail.gmail.com/T/#u
 
-It's not just drivers that may be using fallbacks, the ahash API
-code itself now relies on this to provide fallbacks for cases that
-drivers can't handle, such as linear addresses.
+It's good practice to add lore links to any and all previous discussion
+to the commit message for the latest patch, like so:
 
-I did add the testing for it, which revealed a few problems with
-s390 so it was reverted for 6.16.  But I will be adding it back
-after the s390 issues have been resolved.
- 
-> I'll add export and import functions if you insist, but it seems pointless.
->
-> Could you at least provide proper definitions for the legacy structs so that I
-> don't have to do pointer arithmetic to generate them?
+Link: https://lore.kernel.org/all/CAJuCfpHhSUhxer-6MP3503w6520YLfgBTGp7Q9Qm9kgN4TNsfw@mail.gmail.com/T/#u
 
-Just expose the sha512 block functions and use them as is.  There
-is no need to do the export/import dance.
-
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Make sure to give as much as context as possible - and your commit
+message should always include _rationale_ - none of us can keep up with
+everything :)
