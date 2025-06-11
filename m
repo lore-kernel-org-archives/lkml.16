@@ -1,234 +1,229 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2067.outbound.protection.outlook.com [40.107.244.67])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12olkn2015.outbound.protection.outlook.com [40.92.22.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E639478;
-	Wed, 11 Jun 2025 07:05:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3379D2D543C;
+	Wed, 11 Jun 2025 07:06:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.22.15
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749625547; cv=fail; b=NApocKIgYhu9G6/0qBNpwsTtsqA/YowWUNp1zCPHLOD1R8ty6lO/NzqZGfjbatl9EccmE7lM53RI3IJ/VAT3IHwcfNiuuF7VkU41GSGX7wQbGKJusV+v2aqO9p1vtcGG30Jk9sbzYyASMdNypzY5QMFD8KekbQZQRGckXSMmVnM=
+	t=1749625612; cv=fail; b=UtB9y8kARo9IwCsCLUad1Ck9XFZlc1lmAzOhMH9pKsstYIPvr8a18dkJLhYi7qgYIS1WLNDHwnl1mJHovu15jVmqekPrmJfwiJOdfhcyawvgHDrZKHLWeyh7kP7BTzABc5BIqI8p8DEocjRDEeYuvSseICxwUSQFM8qKkCkNFYA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749625547; c=relaxed/simple;
-	bh=b1NadHM9VLXCXbzoM6qiXgMs/es3BqaEyEx48/MXzEU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Co+nGDJsGSQ0D/yBbJEPmYB/0M1Nvww2LcZTS+8ccJJ5xTZYI73k4lefbtBRezVets1Lux+xkR9PhW3Ucod4LVu3sfH0uFO7BioYlweIvBrwRc57Kui2Pml9etkRTP1i4KwqsOBBHV5SJc66TRPWlXRPqRlSe2MLK2SdwvH2guw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=fail (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Dy5gM1Mv reason="signature verification failed"; arc=fail smtp.client-ip=40.107.244.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1749625612; c=relaxed/simple;
+	bh=SRXz4cy98ixducQ4aW0m5p/9e1afELIHY9qAE20Cl4c=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=ZeZzVSlBxQs25cj5VMtAcqSaB1LzKsu203DYYMhIE5ccgZQc1/5yzq0tXZJOYPkqhDBDbRiyTxQMPVY2/rp12zkIH6ePDYPqMuJ5jFYQY/6h9c2sNtY6/1PekLI+Vv8eibrhil1isKQ2Pkqud65gCwl5n34QDmZHc53tavywXYY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=JmgN6dmu; arc=fail smtp.client-ip=40.92.22.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Dy5gM1Mv"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="JmgN6dmu"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Y8QZhXeUzcr0vlLEGY/q8x6EAnQ7SLgGaioyMDZcwoZlvTpCDaxjnj9afpxzQDAnrc6GV/tzX3e5WV5xAlbf13rL3EWmRxr9cEV9helR6OuvRv5cDKveeeY+KxvfWI2gg7Ga4+l6RjfjmEP5bBGY1RLbtaL8WrkQ5m38OgJM3+xa4MyUWUH2x33b3U//PgmQfmlAnuiYsGIC5UkJhHY3Gr4bCBhGEqg2HFxFJ1ooVme1uKXp0Tbng4HUkv7R+u4L5nSJ1mQrbFV6xmhU9rhtDS5QTi7tqJY3MBqeVrNKPbVtlzNgPF/drw6XvrSAeB/uxCo0cAjBCFM4/4DabhHzqw==
+ b=qURPb85rX5J0wvGuDYgh/Bs/O4JsMG4a2oDAc79ZnWzQUfCaBBgaR8bwwsbjq5y62SaSlF4xJcVcm4VfVDr6y+vI9uk1FdOqdKFF2beMxBMzS1CFUAD8iGJ6t+uG3jrLvl/GXE7/lbHxZWNmbNtYKmnMsA6psoGh407dLNOk8uxSwhcWS9oXtRWpHF7PItmVW2eUMVPGadFvI4C5+PvKblRfTftxcWMqtGetqm4tWyQki3wAdcIoubROJ8Y6GfSt0O9yyp/27cU1qLwK3rFU26fHJFsq24XYcQKvrnVwt/gUgxK/zIuV42IJcxhi8u4y+v5vzQb0XZKYqzVQyFmiJg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pJDZFPoc2nfiuMRSzpyIhX7hm0LxMpSO2DnHY07pcLI=;
- b=MpXy86obE5zokF1ZYt+Rtr3gNp8Q0xMj5X6DPfZv5nIoBfb6J9fqXnQNmucXnFW37k3M5zSIwMcjtMKVg/3+nt7Pdj8vl/mtAQxfXzlaRJzFDicJYD6t0X7uBZtG8UMYJDORl2on6VRx/P/uUkIh4rLawZfwnKwlzxV1Vxiw+GHI0v9xGP1HMTmnOQgOdgDPm2+IA1kYMZLBNZ+KUXoUjIXBT1JTxFxFTZRLdX1mpTB5R6RTsOGeba/rudxUlKndhe9nqaOVsj+lNPtQMr+3B6yDktZvJaChf8tuNHTGGGN8s/zBRM3TkJPn+4cg5ngFUyjoNScMliwnf9KQ8wY8gw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.232) smtp.rcpttodomain=linutronix.de smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ bh=HCMuPiTAQeEfSp1iolha2clbPjgQNvk8/dysYbczu5E=;
+ b=aUMVsnc01B9K2sDaL+iEgeZ4VCubhcGUV+vUP6EdL7YL3iz1K6qR93xSRsmKxfMJN21kUO3oah3sfNiyIQ6LTXCsr2riWdTbbG0Dxicy3Lr3TTarrS4Q/FPk5hx16WqtPVF7q2QcrRLiMHdeUuueWrX3iMYKLVHfZQkGPE8p01e4UoFjyjYak5gQNPoQGZ4XI1zp3tzOJ2khuQibI7BGji84IAjTAsLc5a7zYT5qn+eIEKJKOkPvOe2/ly8wpCKPzkbtSaTfkEcHdoJAusYTl/N1S5pveNB1eKPEsQAIKFfN/lENQnqPYymMpK1+7XXyWorBDDLr/BzZ/iZVZbL5aw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pJDZFPoc2nfiuMRSzpyIhX7hm0LxMpSO2DnHY07pcLI=;
- b=Dy5gM1Mv682F1pqwW77TvGuX5vTnMA9C/kGjI6Vpj7iY/1VF8XNf6Dqya5mpsh0bVt14CnoA1xdbSDgx0+hfIhRz2a0NUAZ4ESOdAIucSgwprQBcH8KpIZaIUHweWFddaLWykyDLnGYtiCd4FJDLVCVI74sEYeGI26toK4MpCW5yn5/Yt2nx4vRGc0zU0NVKI1SEaYL/7OuNcaEH04fbxA8/btwaIIONKVP8oZqeg9QgB0ZsyHjdIgeTlGed9MVVFiWVbUAOGagbGz3ETEmhjLwR7fbXN+5Z+zx2qfA8KfGsCx4hG7LdR/OyuoQ34ullZgM4lp6USUU9jlsmxTzGZg==
-Received: from MW4PR04CA0294.namprd04.prod.outlook.com (2603:10b6:303:89::29)
- by LV8PR12MB9269.namprd12.prod.outlook.com (2603:10b6:408:1fe::21) with
+ bh=HCMuPiTAQeEfSp1iolha2clbPjgQNvk8/dysYbczu5E=;
+ b=JmgN6dmu/DLuXnprfzbgDabbQepHJEJSFhZeiR7yfQD53RiF2MKF6XOfMdxdRk2Zu270Zfb7aK1LkTQyeuzy/Wz0DDh42+likwMeJkvLJXcBR7816FuLE4IgjBftOMx0pJCbhtrw5Uwca/6zrZtlKAvsf0MVGrq7DWQQ3fTwhJ7QcwF0v6AbDzRiCY5QskWwYiZiL+r/xx40/+nqAVw5fWIZItZiRSM9NIAo5EIwCf1d7tVmk/Pu3u2qc7VFboE9xeA5ZKjLcmYGCOBz+95yCj0kxoB3RNF4P+ZtlTcZ0RTdQXVk3AmIpG7fTd/daRQwsyAZbxpHWBWXSFG6nFg77Q==
+Received: from DS7PR19MB8883.namprd19.prod.outlook.com (2603:10b6:8:253::16)
+ by BLAPR19MB4628.namprd19.prod.outlook.com (2603:10b6:208:295::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.42; Wed, 11 Jun
- 2025 07:05:41 +0000
-Received: from SJ1PEPF00002313.namprd03.prod.outlook.com
- (2603:10b6:303:89:cafe::56) by MW4PR04CA0294.outlook.office365.com
- (2603:10b6:303:89::29) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.19 via Frontend Transport; Wed,
- 11 Jun 2025 07:05:40 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.232) by
- SJ1PEPF00002313.mail.protection.outlook.com (10.167.242.167) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8835.15 via Frontend Transport; Wed, 11 Jun 2025 07:05:40 +0000
-Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
- (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 11 Jun
- 2025 00:05:30 -0700
-Received: from drhqmail201.nvidia.com (10.126.190.180) by
- drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 11 Jun 2025 00:05:29 -0700
-Received: from nvidia.com (10.127.8.10) by mail.nvidia.com (10.126.190.180)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Wed, 11 Jun 2025 00:05:27 -0700
-Date: Wed, 11 Jun 2025 00:05:25 -0700
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: Jason Gunthorpe <jgg@nvidia.com>, Thomas =?iso-8859-1?Q?Wei=DFschuh?=
-	<thomas.weissschuh@linutronix.de>
-CC: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
-	Willy Tarreau <w@1wt.eu>, Thomas =?iso-8859-1?Q?Wei=DFschuh?=
-	<linux@weissschuh.net>, Kees Cook <kees@kernel.org>, Andy Lutomirski
-	<luto@amacapital.net>, Will Drewry <wad@chromium.org>, Mark Brown
-	<broonie@kernel.org>, Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	<linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH v4 09/14] selftests: harness: Move teardown conditional
- into test metadata
-Message-ID: <aEkqtfcOJDrxAAcs@nvidia.com>
-References: <20250505-nolibc-kselftest-harness-v4-0-ee4dd5257135@linutronix.de>
- <20250505-nolibc-kselftest-harness-v4-9-ee4dd5257135@linutronix.de>
- <aEfVYQaid5uOHB+Y@nvidia.com>
- <20250610130817-253d2b2d-030a-4eda-91fc-3edb58a4f549@linutronix.de>
- <20250610120902.GB543171@nvidia.com>
- <aEh+DNmbZrqg6rHR@nvidia.com>
- <20250610234657.GO543171@nvidia.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.16; Wed, 11 Jun
+ 2025 07:06:47 +0000
+Received: from DS7PR19MB8883.namprd19.prod.outlook.com
+ ([fe80::e0c2:5b31:534:4305]) by DS7PR19MB8883.namprd19.prod.outlook.com
+ ([fe80::e0c2:5b31:534:4305%6]) with mapi id 15.20.8835.012; Wed, 11 Jun 2025
+ 07:06:47 +0000
+Message-ID:
+ <DS7PR19MB8883034308D6642B6B567CAD9D75A@DS7PR19MB8883.namprd19.prod.outlook.com>
+Date: Wed, 11 Jun 2025 11:06:36 +0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 1/2] dt-bindings: thermal: qcom-tsens: make ipq5018
+ tsens standalone compatible
+To: Krzysztof Kozlowski <krzk@kernel.org>, Amit Kucheria <amitk@kernel.org>,
+ Thara Gopinath <thara.gopinath@gmail.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250611-ipq5018-tsens-v11-0-266566bfd16a@outlook.com>
+ <20250611-ipq5018-tsens-v11-1-266566bfd16a@outlook.com>
+ <17eaaad4-7713-4149-b66c-1c48db3ab42f@kernel.org>
+Content-Language: en-US
+From: George Moussalem <george.moussalem@outlook.com>
+In-Reply-To: <17eaaad4-7713-4149-b66c-1c48db3ab42f@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DX0P273CA0043.AREP273.PROD.OUTLOOK.COM
+ (2603:1086:300:58::11) To DS7PR19MB8883.namprd19.prod.outlook.com
+ (2603:10b6:8:253::16)
+X-Microsoft-Original-Message-ID:
+ <3c9138ea-c088-44cb-a59b-5aaeb1b34217@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250610234657.GO543171@nvidia.com>
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
+X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00002313:EE_|LV8PR12MB9269:EE_
-X-MS-Office365-Filtering-Correlation-Id: bdc325f7-238a-4fa1-0288-08dda8b6604d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
+X-MS-TrafficTypeDiagnostic: DS7PR19MB8883:EE_|BLAPR19MB4628:EE_
+X-MS-Office365-Filtering-Correlation-Id: dd67b1dd-9787-44ae-6a8b-08dda8b68719
+X-MS-Exchange-SLBlob-MailProps:
+	qdrM8TqeFBvbAt8nrAK1sszYZ7KbVe5e5mMvtLM6tHmZrBV7mvXXb4ALwMUGdvdjkwa6YVsT0hsL4UdpdYvYIzG6TYLYmO3VE7VyK8Oq7/sqJlwkUjUGp6snU+hY7XhSRP6ddroMivVpooITskqULzzYefppH8aXJglvxCbaP11IRCjbfzfWzv8Mzq4wqmC/6WWhpVHKzvpv4w5n0dPYifThg1UEoL69BAEbQLNxfgzQmMEWFPn2bmhLO27D4Ssi9LJcRBxbjGEpz4fuG2dSYly/5c4pqlGNIuASQMKobsO/w/LwWUvPWr/fV/vJZHOi9YlOFx6QGqvyghkoP5w3o95hMi+ka6F5Puquoa0UQxqkAhJF0aAy+siRa9CSuknWI7y4iiMR4eMvew99MPk0D5cyqOl5+SyBjEW84V6SSScqPe+a6BesdW+yiODuqhFy68a/k1HAOVk333VLiM1j1CI80GerBkzen+6rt4/w9Ue50EarAmJ+GTd5oi+lg48u11v0DcMqRtkAdkYHSBPaAnEOnl9FxD8z40hC8TpqYTzB2ZA7iFu+PJMuJZyhOEobweHtCC/I/4dt6wsBn5MrS3g/pJXJeFzUj5P2vMGvMpssqXbMpfoXnzKMkZfQ5sCQQwm6XNT8MOXeS6Db+Bl6xYspMKgrFcm8yiaTIekxJgN3UN5GheGAt1u5UBZ3DaJ2w7L50WDHpYIaCIsjAIdHMxSI7cfnEJMwvj4vNwezWU0+oPVhN9Hbivcr5N1mqsEWsahE5maYe3D5lpQfqchMNpEIVOp0DdFf
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014|7416014;
+	BCL:0;ARA:14566002|8060799009|6090799003|5072599009|461199028|19110799006|15080799009|7092599006|440099028|3412199025|4302099013|10035399007|1602099012;
 X-Microsoft-Antispam-Message-Info:
-	=?iso-8859-1?Q?MjmaTQe3juJi5gkETP1PE8TuG58rqRjAd/LG9Mro3NKU5AkPdO4BXFxaOb?=
- =?iso-8859-1?Q?imopL8ZJONJdPZS2qtHmS/4hfXGPTM0XqKQR/eArgfaRthrw6BujcNcJyQ?=
- =?iso-8859-1?Q?bxsMEtUE5ohNV+EZNmd8Jb5atLHkLzifJwG02srCmBRyLq8L9tKXnZk3WG?=
- =?iso-8859-1?Q?1nm/byDaBq30myhWJhApbA5zXr0rDm29v007JdLFeoyf7M2fHW+lBPHiNb?=
- =?iso-8859-1?Q?/67UckCKZw2CgxXFbj6aPyxixg3YV8sL6LWMgZF+ya4inpqQPVg0Gy52dC?=
- =?iso-8859-1?Q?Q4zoX8BLIUT24R4UpD7U101Y4/e/ESZClKSXreU2IagR1OuZa3XwwFLQ3v?=
- =?iso-8859-1?Q?BtTcsMFd9AIXU9WkDNYEIFpveC994US1N8Tx687oOxXenW2FDdFxHCCWJM?=
- =?iso-8859-1?Q?TAYUYIYkphTpSX5UMqiMxJolXjJ3mHf6tHmK8/4hPyd25Zq3tCfxi0Dsru?=
- =?iso-8859-1?Q?uWD0TZ9wJdRutJL7uZCzyuJh908F8RIUHDmbEfbna8yIb5LzIKgd33uefh?=
- =?iso-8859-1?Q?RnU3pCMY6h2RsYrbLmCB1TWMgjVnuj1pUxNM2GV4mUtotNLlJZ2Vq4uUDa?=
- =?iso-8859-1?Q?3HMneWSVt/lq0JIVMcqjFoFtqNCUIzmda2ih+MMldZlqP91BjXqy7lVKdG?=
- =?iso-8859-1?Q?5p+F6Qd2cifuTYjMDP3k8obk9YqLSAUtEvOuNGiQ1pVINr21Au2wFf4Kys?=
- =?iso-8859-1?Q?NXZvoZBN78QGRHT9XJYKmH9hpSgzX/yK0Dw5mI07kZak176VxG/q+YL9ay?=
- =?iso-8859-1?Q?fTGFftntJdjhRCJZ6MEbnavQvJieCDIVwlOEwUIEGve/xSp8o8yqA4vxSR?=
- =?iso-8859-1?Q?nZpARAo/3+sUHLnjyh3Gqyyn6R8ifsz6jL3o9yRi3rAHzQups/+VRSpHuB?=
- =?iso-8859-1?Q?bw6gRwF+QmmSBMobsp8riZzWSKw1HWvTv+LTqws2ig54764RHghfckccQR?=
- =?iso-8859-1?Q?AztK5Af9Y50Q9OXB/fM9wFfQHvBoDvC2IogCwmXoQdCgDCPBlZ4x8VBwl6?=
- =?iso-8859-1?Q?csQbznqyzDtZ23sjPnnA9fVkodvKUEQrjhowGXZcqaPpZKgeqgNqKvEGe6?=
- =?iso-8859-1?Q?JKXzPIo7bs33YAWym+LoiAaTp+xpz+LlYyUwWMGYrPD7dU8Sk+uXOR/Pnb?=
- =?iso-8859-1?Q?Whd0EywU+A0XkbkaDoDuef2FhNY1Jb5OoqY88DumN8upE75Q1fYwzSqBR6?=
- =?iso-8859-1?Q?XDJNGTejfErjcL2te0YPVD1A8qvmuFP7e5GdzVuJ7/g6oEBUEfX75qEPFV?=
- =?iso-8859-1?Q?GB/wTppTxjOkIEoGFr/u/LHai0yM+SQXihSbrODYdmrbM4vRSgaPvkgruu?=
- =?iso-8859-1?Q?lmt0GbjDfcwLlAbgEUb22Cpzv8ClBv9BLzKBzjEnKS+Q9P56qesEaD7MUE?=
- =?iso-8859-1?Q?0fNpPnAGImKCmEkGEkWo68S38Q8fNOjlQCldbpLJ4rROBbS2oORN94da5I?=
- =?iso-8859-1?Q?leJIyKz6U9JjQxj6wNOtC/sJjExnyi/4/ql4kne4/h7lumACHuVQZveGOf?=
- =?iso-8859-1?Q?DJzBFlxpFIxeAi0Lz87hOgIVecs1GKyqLif39GQ+MWEO1AecOyEunuv/cc?=
- =?iso-8859-1?Q?MeFIAwfWFvxOZGPCLM9GUxhiu44i?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014)(7416014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2025 07:05:40.9546
+	=?utf-8?B?V2RhamhxL2loRGxXRkZBWUk1SWZQcHpRaEpXT3hRTmtOUGduNERHQlc5TEQ3?=
+ =?utf-8?B?a2RuTFRNQWJXdXRFeHZZU1QrNGpVc0hpM1dyVUhTUzU4d29WU2RiU212bUhn?=
+ =?utf-8?B?MHp0cnFtUk9vT0RCSG9MdXhLcWxTSitreEhPYnhwdVQzQmFjQzBYL2w2Rm1N?=
+ =?utf-8?B?dDZzSTFkd3pjdUNkOWxNTzRTYUZUcGl6Uy9XYmFyM2ZrMmthR3dRSTR6bm4y?=
+ =?utf-8?B?TjVNdWhRU2hpbmpLMUJqclNVdG5kUDRMU0xiQjlmQ2lyTllPNGVrYUl5bFdD?=
+ =?utf-8?B?RnlaMDhzaldnMVFDR3RJV21pdUNtRzBjcFFQdkNIV2c5T1BrYzBzaXVoc29B?=
+ =?utf-8?B?NnNyemthaVBGMmx4b1BuRUVwRDBDaWlHS3M3WjNaRVJLc3RXeWJoQ1plSlht?=
+ =?utf-8?B?QnN5WGVwNWRyc1FsTUwwb01HQktvY3hjL2NIQ0hFZnd6VVRhSHZsa2JCT3dl?=
+ =?utf-8?B?MTFGZTA1NTlZMGt4UE8wT3hJU09UTzh3cEh1RGxndjhFWTRtU0FHR1NRUXZl?=
+ =?utf-8?B?aWdUQWlpWnBkc3llSWZ6aEZhbnN4N1pXZkhxS2FmRk5wNnkyWUd3Y0h4L3Vu?=
+ =?utf-8?B?R1I0LzJGTy81aWUyZjhBby9BK3FBMm0zd3YwR0duMjRBeG9hRlR1YUVOUTZv?=
+ =?utf-8?B?ZTF2eWtCWWU4M3E3QTNLM1BNeGRuU2JyeHFxK3NBaUwwdU5rMTRaVGVCSUlu?=
+ =?utf-8?B?N1pmOEIrd0xuUzVzc2Jib1QwSnB1aVQ1anl5K1MvVERXd3YxcTZSNXkxd1o0?=
+ =?utf-8?B?UkltVkRMaGg1SXF4cnN3SkdUMGlRcG12QUY5bWloOWU2NjAvbEwxdGVSTzRm?=
+ =?utf-8?B?VWxtYW85aXh4cHd6Vnkya2FIL3BuVWhtV3Uzd2pJRWg0RW5GeGtOMnpNMXNz?=
+ =?utf-8?B?WU1zUHgxTzJ1aWQwckZ0eldIc29MaUowM3RoNHB0ZEVwVG4rKytDb1N3dTRt?=
+ =?utf-8?B?bUI0OXNKN3ZxZkdRVzhmQ1hVZ0NUOGQrdHg0Vm1mdFNuVkpoR0UvcE5UWlpI?=
+ =?utf-8?B?YUJhYmZIS2ZwcWtGeGY1MHVPSEloeVBQL1VNTEV1UHJRM1RhLysxRWFBV2I1?=
+ =?utf-8?B?V1FRR1l4Tk1HMFhGa3RKMk15aDY1Q0x5djhscTV6MHFhbkxtR2V1R1BFMndP?=
+ =?utf-8?B?R2haTnFvS2hTWHVyeWZkZ2todWphUG5GTkdXYk9aQWdrdmhNUEJVWFZDOXhn?=
+ =?utf-8?B?VnZHdWNKQzM5RENoRG1UMkhEMzVvTWsxb1Zma0E3cHhzWFd4aHF2OFJQY3dM?=
+ =?utf-8?B?bnhzNXpuaHRoc2xMT3hIemtKSFp0dy9wcGl0cmxjdnFFV1NpQmRteEZhbndy?=
+ =?utf-8?B?M2ptYXBqTFhGUTZhRkZ3WDZrNW1LUFVrV3BaL0ZZbFhuMyttdGZHRUpDWVM1?=
+ =?utf-8?B?K3Q1U1czU0c5K295Um9QdnlCMmJsOUxCVUppQTZTeU15VHlrbDN6Ly94cko1?=
+ =?utf-8?B?Y09NVjBJZlZBRkU5bkZDeCtEQ3E1VllPdHE5MFhGNHZrNWV0VEpvYWZueExa?=
+ =?utf-8?B?NGNDSEh6b2NrbzFoV1plVjhXTk1xQzRQM0hRUVdNbnY5NEh1Vyt0RmM0QU9y?=
+ =?utf-8?B?dTR0WmNhODUyQnhRM0FwVGhKWmloOFNWN3VoWTVxamhnQVZuZ21nRlp2dEhC?=
+ =?utf-8?B?bmtVTGtFQlY4OWVKclhmTml2R3AwVkRjbDhKMUhOaEVhOEZ0M3BRZ3FCem9U?=
+ =?utf-8?B?a2VGS2VUTFRLbFl0ZlRTVGM3UHBtblg4THVxV25ONERITWJLWGZwcko2VVRl?=
+ =?utf-8?Q?m8H8Ipf5TpF+BIktt8=3D?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?TkFzbE0yNUw2TXNObkZuVGFYNzFoNDl0eDVOS1FwR1YxbHlVSHllZDlkTUxH?=
+ =?utf-8?B?UnMzT2FCU1VNU3Y1VVJadGpXWVBBV1R5c3JvNFo4YlBLUHFkMVdkVzBLd1Rp?=
+ =?utf-8?B?SHNlZ2oyUUVGNDIrWWpDamhGQm9lUWgvQ3c3ZExndzF6Y0I3YUNBUUMwMnBn?=
+ =?utf-8?B?eVlFMFJCRDVJaVo0Wmx4dEdPUHdOZEJCS1pFTDhvb3RQcUp2UEJaaDU2SmVZ?=
+ =?utf-8?B?ZVlOQ3lhbGEvQ3UxQ3p0Ym5hWVZraTJsajEwbWZ6RSt4dkJ6eTA2S1RqY2po?=
+ =?utf-8?B?ZVZVODdZNDRhY1V5eEpKWEVWanEvK2xDa3FwOUlRZ2ZJa2xiTnQ0VXRwM2Z3?=
+ =?utf-8?B?cEtSeWs5SWgrZ0Z3WlZFSk5KZUtyV1pqT2FVaVR4bkFnZzYwWUUwSFQ1VWJx?=
+ =?utf-8?B?Z2dPWjdrNUZIQmlSMHhseDZJSCtKbHE1eE5RWlI0bXY0R29kL1kwcWhKeldQ?=
+ =?utf-8?B?OHRIUXVQdDMwbGt5TnA3Rlp2blhTd0EvQVYxMEM3Tkovd20yWVNwRjZJa1dD?=
+ =?utf-8?B?QmEwK1oyTmFuaG4vck9DVkN2ZWFQRU8zcnJFMkdjYktlcWNlV2xHQkFnb2d6?=
+ =?utf-8?B?TlZodWY5U0d6Y0RBYmV4MTY2RG9ZWTdFTlRPOWt2TDI5elJLVGlsTTNRTVZ0?=
+ =?utf-8?B?MnhXVWQrTFUrS0NaTzNMM2NSano5RXcrZWpDUDNWTVoxSmJsRE5PZ3JtS1FE?=
+ =?utf-8?B?eWFuRG9NVjFHKzRPMkJVL2J1UzdMTm9jWFZWN1hGRUExSVhBWStsbXJzN0cy?=
+ =?utf-8?B?QzYzY3hJVVdvYzRNUlZDYllsdCtwYkcwaVYyb1pLc002elhNWTJDVkNUK3RW?=
+ =?utf-8?B?K2xVV1ZYekVBNHRrNFBXZzZLWDNRRGFQVUY2QjA1cnpXVGRraFY0dmhaUGFv?=
+ =?utf-8?B?b2xmYXBLaEdGV0cwbmxMMElOYm9QSUpjbTlreXc2UjdxaUtqYy9lTGNsOWcx?=
+ =?utf-8?B?M2NJNlRxMEhpTHl3eU0yR0wwVTNSRnhPRXg3b0tBQ3NHbSswdzZJVGV4R2NF?=
+ =?utf-8?B?SEVBUGNodjFCZlZHTCs5L1RJM2FBaFVLVis2cDFNVHVpWm9mYVdUSUV1dTY0?=
+ =?utf-8?B?d3FWb2lwK0IxRHo0VHhtTnpXa2o4eUQ4TnRtcm1HNTB6eFhvS3dFbzhCcEJI?=
+ =?utf-8?B?UzRpNC9LaTA2U1kyVFlXMlNockpGTXdvOFB5b3Y1UVFydG9mZ05EN0c3ejQy?=
+ =?utf-8?B?SnlYMGRuVklnT0RUUDE1cGNGOEs5L3dpbjNHOGVPVTVrSkUwYUh6c2ZwMThI?=
+ =?utf-8?B?SkdkaGMwNTVaeWRvUnl3YWdqSmJWZG15cXp2dEFBamw5MkhEV0ZzcUEybCtB?=
+ =?utf-8?B?OURFQmR4aWxMWkl6UVJ1My8zU2pSQStGWDJOREhaeGl5MHpJUnRVREtyZXFR?=
+ =?utf-8?B?MGxtS1ZLTHhvdmxWbnl0RWVJNnhSRHNSQWRLc2hoOFVCb0ZpbktKdXR5TkRT?=
+ =?utf-8?B?dVFBT1U1ajNZUnozTzRuNWdLL0VQS0tXeWQxRlhUR1RraEhzS25JNXMySnpu?=
+ =?utf-8?B?Tmk1Umt2c3NzSCs5UWFDOUFEYXgwbVVpVE9Rbm0yTUx4eTJuVk9tRVBLZW51?=
+ =?utf-8?B?UGM0ZXV5eE02djZ3eVlBZ3lLRHg1WUhJMHFHeEVCdEJWelpTd0JlNEZlTWtF?=
+ =?utf-8?B?Y3lDMHRiVWl5WlNhV3R2T1A2MTZxdTZPWmRucVR2bk5Ddml1eUJ0b3hHNUZJ?=
+ =?utf-8?Q?85VYjz0xXjXCoaHfcD5N?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dd67b1dd-9787-44ae-6a8b-08dda8b68719
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR19MB8883.namprd19.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2025 07:06:47.0664
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: bdc325f7-238a-4fa1-0288-08dda8b6604d
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00002313.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9269
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR19MB4628
 
-On Tue, Jun 10, 2025 at 08:46:57PM -0300, Jason Gunthorpe wrote:
-> On Tue, Jun 10, 2025 at 11:48:44AM -0700, Nicolin Chen wrote:
-> > On Tue, Jun 10, 2025 at 09:09:02AM -0300, Jason Gunthorpe wrote:
-> > > On Tue, Jun 10, 2025 at 01:38:22PM +0200, Thomas Weißschuh wrote:
-> > > > > ------------------------------------------------------------------
-> > > > > #  RUN           iommufd_dirty_tracking.domain_dirty128M_huge.enforce_dirty ...
-> > > > > # enforce_dirty: Test terminated unexpectedly by signal 11
-> > > 
-> > > Sig 11 is weird..
-> > 
-> > > > On another note, the selftest should use the kselftest_harness' ASSERT_*()
-> > > > macros instead of plain assert().
-> > > 
-> > > IIRC the kselftest stuff explodes if you try to use it's assert
-> > > functions within a fixture setup/teardown context.
-> > > 
-> > > I also wasn't able to reproduce this (x86 ubuntu 24 LTS OS) Maybe
-> > > it is ARM specific, I think Nicolin is running on ARM..
-> > 
-> > Yes. And I was running with 64KB page size. I just quickly retried
-> > with 4KB page size (matching x86), and all failed tests pass now.
+Hi Krzysztof,
+
+On 6/11/25 10:51, Krzysztof Kozlowski wrote:
+> On 11/06/2025 07:12, George Moussalem via B4 Relay wrote:
+>> From: George Moussalem <george.moussalem@outlook.com>
+>>
+>> IPQ5018 tsens should not use qcom,tsens-v1 as fallback since it has no RPM
+>> and, as such, deviates from the standard v1 init routine in the driver.
+>> So let's make qcom,ipq5018-tsens a standalone compatible in the bindings.
+>>
+>> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+>> ---
+>>   Documentation/devicetree/bindings/thermal/qcom-tsens.yaml | 5 ++++-
 > 
-> That's a weird thing to be sensitive too. Can you get a backtrace from
-> the crash, what function/line is crashing?
+> You just added it recently with the fallback (in v9 of this patchset)
+> and now remove it?
+> 
+> And what does it mean it has no RPM? How does it affect the driver? Does
+> fallback work or not?
 
-I think I am getting what's going on. Here the harness code has a
-parent process and a child process:
+IPQ5018 tsens IP is V1, but since it's got no RPM, it follows a 
+different init routine for which VER_1_X_NO_RPM was created just like 
+there is one for V2 without RPM, else the driver wouldn't probe. This 
+was added as part of:
 
---------------------------------------------------------------
-428-            /* _metadata and potentially self are shared with all forks. */ \
-429:            child = fork(); \
-430:            if (child == 0) { \
-431-                    fixture_name##_setup(_metadata, self, variant->data); \
-432-                    /* Let setup failure terminate early. */ \
-433-                    if (_metadata->exit_code) \
-434-                            _exit(0); \
-435-                    *_metadata->no_teardown = false; \
-436-                    fixture_name##_##test_name(_metadata, self, variant->data); \
-437-                    _metadata->teardown_fn(false, _metadata, self, variant->data); \
-438-                    _exit(0); \
-439:            } else if (child < 0 || child != waitpid(child, &status, 0)) { \
-440-                    ksft_print_msg("ERROR SPAWNING TEST GRANDCHILD\n"); \
-441-                    _metadata->exit_code = KSFT_FAIL; \
-442-            } \
-443-            _metadata->teardown_fn(true, _metadata, self, variant->data); \
-444-            munmap(_metadata->no_teardown, sizeof(*_metadata->no_teardown)); \
-445-            _metadata->no_teardown = NULL; \
-446-            if (self && fixture_name##_teardown_parent) \
-447-                    munmap(self, sizeof(*self)); \
-448-            if (WIFEXITED(status)) { \
-449-                    if (WEXITSTATUS(status)) \
-450-                            _metadata->exit_code = WEXITSTATUS(status); \
-451-            } else if (WIFSIGNALED(status)) { \
-452-                    /* Forward signal to __wait_for_test(). */ \
-453-                    kill(getpid(), WTERMSIG(status)); \
-454-            } \
-....
-456-    static void wrapper_##fixture_name##_##test_name##_teardown( \
-457-            bool in_parent, struct __test_metadata *_metadata, \
-458-            void *self, const void *variant) \
-459-    { \
-460-            if (fixture_name##_teardown_parent == in_parent && \
-461-                            !__atomic_test_and_set(_metadata->no_teardown, __ATOMIC_RELAXED)) \
-462-                    fixture_name##_teardown(_metadata, self, variant); \
-463-    } \
---------------------------------------------------------------
+https://patchwork.kernel.org/project/linux-arm-msm/patch/DS7PR19MB8883C5D7974C7735E23923769DCC2@DS7PR19MB8883.namprd19.prod.outlook.com/
 
-I found there is a race between those two processes, resulting in
-the teardown() not getting invoked: I added some ksft_print_msg()
-calls in-between the lines to debug, those tests can pass mostly,
-as teardown() got invoked.
+Since its introduction, I missed updating the bindings which caused a 
+binding issue (as reported by Rob) on the compatible as it expects the 
+qcom,tsens-v1 as a fallback. But we can't use that fallback, so that's 
+why it needs to be a standalone compatible.
 
-I think the reason why those huge page cases fail is just because 
-the huge version of setup() takes longer time..
+> 
+> 
+>>   1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+>> index 0e653bbe9884953b58c4d8569b8d096db47fd54f..73d722bda8adc2c930edfc3373e6011f19c7c491 100644
+>> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+>> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+>> @@ -36,10 +36,13 @@ properties:
+>>                 - qcom,msm8974-tsens
+>>             - const: qcom,tsens-v0_1
+>>   
+>> +      - description: v1 of TSENS
+> 
+> So that's still v1... I don't understand.
 
-I haven't figured out a proper fix yet, but something smells bad:
-1) *no_teardown is set non-atomically, while both processes calls
-   __atomic_test_and_set()
-2) parent doesn't seem to wait for the setup() to complete..
-3) when parent runs faster than the child that is still running
-   setup(), the parent unmaps the no_teardown and set it to NULL,
-   then UAF in the child, i.e. signal 11?
+As mentioned, the IP is still v1 but with a different init routine in 
+the driver for IP v1 without RPM
 
-I think Thomas should have an idea with these info :)
+> 
+>> +        enum:
+>> +          - qcom,ipq5018-tsens
+>> +
+>>         - description: v1 of TSENS
+>>           items:
+>>             - enum:
+>> -              - qcom,ipq5018-tsens
+>>                 - qcom,msm8937-tsens
+>>                 - qcom,msm8956-tsens
+>>                 - qcom,msm8976-tsens
+>>
+> 
+> 
+> Best regards,
+> Krzysztof
 
-Thanks
-Nicolin
+Best regards,
+George
+
