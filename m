@@ -1,76 +1,95 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9356198A1A
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 19:18:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B862198A1A;
+	Wed, 11 Jun 2025 19:20:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749669523; cv=none; b=BM2VMNgk8N+zPbfmSkNbgQ4YOHsnNQPZQ0+9wsmo2heS8+zht3n9X0SOX+3zECAZwHbNlQbEYEHrTT/EZp1hrzYRoZFAKYMZcwZk2g0zsvlxfO96KjoNo15K9ItEICYyENx/6AnMuhLbD48MVsjayxEth7SGQI2RbDMSuy6nBZc=
+	t=1749669631; cv=none; b=TMxsuSSDhQibFZomhLBS15EPqmzLymAELZ61DVjUwsA1HaaEVZOmjmBGex7SbZKCD66OX+SAOWrR+3DCtl57evARcHoGsmYZXmlFCetBQ8F7gT+cbSJsg4VNNKP+uhfibb+UbuP3YPCH12BraiVJNkTEXQWpW0Q9yqXP0A+M0Aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749669523; c=relaxed/simple;
-	bh=fgUe9b2qDsgJmbUQKzVEGW8IZ6IqLriGahw85ECywOM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BPxxYvUyV2/9kNj9PAL+Fn61c2jRoXqj2DDkZfSy8bFLFMasLQoJzfrFLR9tc8g3VLexBHHQNF8FX5+t9cP1hX1MBa72vLAv3tqZeU3cDaEfPhaRn3d6z9Ou1ZeFP4WngY/1nfMa+HmvgqZwCQMpu9At3ejM+7iFa2x0U61CJ1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=xS7/njEY; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
+	s=arc-20240116; t=1749669631; c=relaxed/simple;
+	bh=9LJHRT+E/wk94eKXUDQqXwO8zes7SwCEbBLxYOlLXPs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NmGdGHUCN2d8ALfC4B4PZ/wldL87kbhI+jBnHo3DZDznb9qSgKsZY1zMjYvoDURxxvhpHMw49X9IPWnFcUl864qoHiaDtL6QTLidCvJAOjKZCsM/QIRALgvlYDVq5SMNw2GZ5Ws3F36IzWSpbC4dgXM2uFll/q5kZy2m0F80ycg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=sWBPtAcx; arc=none smtp.client-ip=83.149.199.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="xS7/njEY"
-Date: Wed, 11 Jun 2025 15:18:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
-	s=key1; t=1749669509;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=T7fxo3q5zRvtn6y/SCuAsnMPegqoz8YNRTrlcg1kSc4=;
-	b=xS7/njEYBTGVj+XQys0OeTRvJbIslTpkzVwP5HZTRxG1dr9FteQ84d09ko5aQzmIR54n3Y
-	MDvwR8nbAe9EpQ2Y5LgaPu+AapAchfueR9BwT4929UCSiDxhlQ0uwhPe6BM8MkJiVSxmPo
-	YsA2PcSqfz+t/FDhUKhJw1mZhUZyRtwGgYp4jGJNZjlg2s1VLv+AWwMIXCuHeMHOl2JiNh
-	uXtrZjyfrtju1PPzYae1byKtiCTDgdcHpL/bfKBwGKPZkn+B3DQULbRoMZZ/ihcz9RswGG
-	vldfxoVbp5bew0aIPK5Hh22JLynv3hCGDwG819zvrVH+4losBF+2EAvgtbJKGg==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-To: Rob Herring <robh@kernel.org>
-Cc: fnkl.kernel@gmail.com, Sven Peter <sven@kernel.org>,
-	Janne Grunau <j@jannau.net>, Neal Gompa <neal@gompa.dev>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: Add Apple SoC GPU
-Message-ID: <aEnWgbSb77M9zdy3@blossom>
-References: <20250611-sgx-dt-v1-0-7a11f3885c60@gmail.com>
- <20250611-sgx-dt-v1-1-7a11f3885c60@gmail.com>
- <CAL_JsqLsE8JqHHEFPpNpDug0KtAPrZ54KwQ+M9=-r0vAzg4d0A@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="sWBPtAcx"
+Received: from fedora.intra.ispras.ru (unknown [10.10.165.2])
+	by mail.ispras.ru (Postfix) with ESMTPSA id BC85340755EE;
+	Wed, 11 Jun 2025 19:20:24 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru BC85340755EE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1749669624;
+	bh=X1XLZomizBfNBgtVPwKunjP0EbzXC94GEAJ74eLqJBI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=sWBPtAcxFeab/kzIPH+A4A90p8TL0GUs/6Zbs6bR0Qt9HevJaYWCNNUB0hLvSck+T
+	 fq97cZQrBNLj2MxLY7Uqif9HIg3AEKV26duY3eb6MasBY4eQaxh+wmf7bJBKDPwi4U
+	 L4VJSRNWaA/NrxxUE/zx+VQXdUCjORoXEcoUqEeo=
+From: Fedor Pchelkin <pchelkin@ispras.ru>
+To: Harald Freudenberger <freude@linux.ibm.com>,
+	Holger Dengler <dengler@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>
+Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Ingo Franzki <ifranzki@linux.ibm.com>,
+	linux-s390@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	stable@vger.kernel.org
+Subject: [PATCH v2] s390/pkey: prevent overflow in size calculation for memdup_user()
+Date: Wed, 11 Jun 2025 22:20:10 +0300
+Message-ID: <20250611192011.206057-1-pchelkin@ispras.ru>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLsE8JqHHEFPpNpDug0KtAPrZ54KwQ+M9=-r0vAzg4d0A@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-> > +              - apple,agx-g13s
-> > +              - apple,agx-g13c
-> > +              - apple,agx-g13d
-> > +          - const: apple,agx-g13x
-> 
-> I'm assuming the 'x' is a wildcard. The preferred thing to do make one
-> of the 3 actual devices the fallback. Typically, the oldest one is
-> used.
+Number of apqn target list entries contained in 'nr_apqns' variable is
+determined by userspace via an ioctl call so the result of the product in
+calculation of size passed to memdup_user() may overflow.
 
-Yeah, it's something of a family. G13X is an apple codename for these
-three chips.
+In this case the actual size of the allocated area and the value
+describing it won't be in sync leading to various types of unpredictable
+behaviour later.
 
-We can do `apple,agx-g13d, apple,agx-g13s` as the compatible list and
-omit the g13x compatible. I'm not sure if that's actually better since
-we'd continue to use the G13X naming in the driver itself but it's a
-minor point either way.
+Use a proper memdup_array_user() helper which returns an error if an
+overflow is detected. Note that it is different from when nr_apqns is
+initially zero - that case is considered valid and should be handled in
+subsequent pkey_handler implementations.
+
+Found by Linux Verification Center (linuxtesting.org).
+
+Fixes: f2bbc96e7cfa ("s390/pkey: add CCA AES cipher key support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
+---
+
+v2: use memdup_array_user() helper (Heiko Carstens)
+
+ drivers/s390/crypto/pkey_api.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/s390/crypto/pkey_api.c b/drivers/s390/crypto/pkey_api.c
+index cef60770f68b..b3fcdcae379e 100644
+--- a/drivers/s390/crypto/pkey_api.c
++++ b/drivers/s390/crypto/pkey_api.c
+@@ -86,7 +86,7 @@ static void *_copy_apqns_from_user(void __user *uapqns, size_t nr_apqns)
+ 	if (!uapqns || nr_apqns == 0)
+ 		return NULL;
+ 
+-	return memdup_user(uapqns, nr_apqns * sizeof(struct pkey_apqn));
++	return memdup_array_user(uapqns, nr_apqns, sizeof(struct pkey_apqn));
+ }
+ 
+ static int pkey_ioctl_genseck(struct pkey_genseck __user *ugs)
+-- 
+2.49.0
+
