@@ -1,385 +1,245 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2972227E84;
-	Wed, 11 Jun 2025 06:52:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 636F32253FB
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:52:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749624750; cv=none; b=XhZ3P0fVDZJly3y+/KwxnsrNALHfubcGFJbiw9aEfr31GjPeQDHJFxVGCsnHjI01WoVYvPPUl1J15AMxHXjASxM/XCKO2Tm7l6wSDcA1yp/2d+U/WA+M6EGXoJk7MbcmYfs14+jCOT4uIh3iMt2U9JWFKcVaw3OGyHbjqJ9tzkw=
+	t=1749624779; cv=none; b=NY72B+Pfud6ECECfOKjYVVsMSoE+DJtvfhSgN5LRlJiXj8MtCmBFQ1+w9blqTN8YFFGH3QZF6FAC5SW+q8+/lOEjqaeSLOHfUIaxWsewd08gWzC9fa/oKGLG6sGEcstxypC9/flSOEBlbA09vgYppDByVY8FzyQg6VtBPplVCWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749624750; c=relaxed/simple;
-	bh=/MC1xarcQyl4vJYieWtAjsYWFqj7dWXRUvYIvlcNm+Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GYJgxYQechzJQhmXJLoPM1+PQxVqvvxe9iD1fIVROesnDjxxSX8+qpNbowfbAt37fRntJKyw3UKUnSttIEX6TqbYPd0wP03WcETxMI8cFFc7ivRJ6hhmy8iBGE7Ta+VgKanPBejy36ZjpcZkps1AslrDHw98Cbub8JUQkMlWFyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LsMHAeEs; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749624779; c=relaxed/simple;
+	bh=/CLLrIW5aQMUJNR9aLvDWLib2WpGEzBt04bGlUBvQpI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WKsYw1vN7PBHSltUfOox7a6MOud8QdOjg/so5Cbd93QDuBTHvbECMjAsz2y6R0/TwjLfK0CToiDCk6+WzgnFi/2OLEKxT8eDONcC+WGPyHItqPpYHTOKG29eQLAZEUahn6xSUhcNCK3dheZlPj15ZnQ6ORLWXUgWm7IVIV0sZZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YKPaZy2s; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LsMHAeEs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749624749; x=1781160749;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/MC1xarcQyl4vJYieWtAjsYWFqj7dWXRUvYIvlcNm+Y=;
-  b=LsMHAeEsqHJF3YVrumC5/gLwbMp/12u48eXA08wvHDR7hkUDCe7x3IvA
-   z/KXpZcpMLR/VbE1ssGyCndqsC1l+RdFXu4mDmPNFJZYYbWMov2Jj2TvN
-   cT0oz6v7M76FEszamNg9jAwfkEjVKKL7Az6snjB75NOE87u6Tlzgc8imK
-   HGYjq1KQ3+7GyY3RNSnRqE6TMZhDELkGYkQ4x14ZaQ3HIYZrNM61ytAs0
-   ohCkDwOH5vboUthwjx8aS5nq4ZiCRHPXULb/45VulRMKApkDORwgJe3Sr
-   eQ1/Ov83d1oUNXH5fzNAnw6xppY+3NTPNISamORFla26lNNUtKChtMdJb
-   g==;
-X-CSE-ConnectionGUID: SyYc9hooSsGH2VqMKX/sFg==
-X-CSE-MsgGUID: 3ALDy0NWSFqdCmZEfTiltg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="62370807"
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="62370807"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 23:52:27 -0700
-X-CSE-ConnectionGUID: oE9VShhfSayuA5RM/Az+Vg==
-X-CSE-MsgGUID: oaFoJ6IxSnKox1MVw0jAnQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="150924357"
-Received: from unknown (HELO [10.238.0.239]) ([10.238.0.239])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 23:52:24 -0700
-Message-ID: <bb9d138c-6442-4d50-a612-df723f4dbeb8@linux.intel.com>
-Date: Wed, 11 Jun 2025 14:52:22 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YKPaZy2s"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a528e301b0so31120f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 23:52:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749624776; x=1750229576; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6ZcoFkVAiTRFqiOiNNWpiZEngLNxlokcj95V82V3k6w=;
+        b=YKPaZy2sGYDuokZ2viUJxW75BaPTK6L3XGkMe7z0vuxO07wJqZkZTIebOYP9Is2Z4o
+         ANc806h1CIftTdG0r4AkFVqXvNn0ksOYbWo4tT0bS+ovybFzTLSdwOA1VG1l8dY/7ZgF
+         h+nJSWTKr4qQ4pK/vM/S3/NJF7wdLSJhIFoMpE/outza35N6SFK4swfPiR3tXDxnMulW
+         +PzNNJz/syYnLSDFSNaqk0VdA8jZtupwkOQPho63OiNmZa7yHrZGqfw4fcAu5fAkJuy+
+         hJPAF1T5JkEUXRHR6smNlVcA/ZkCdUWCJCzwrwJ7hzcDCB+9zhWDXZ4c/tujicmRcSHb
+         /Ujg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749624776; x=1750229576;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6ZcoFkVAiTRFqiOiNNWpiZEngLNxlokcj95V82V3k6w=;
+        b=V91o0OegcM+wk5ZYhDOCWsaI4Ce3cosd13fsfdlwipFsUN3SEes+spOHZUHcJhvrp9
+         YZVWCcjHME6b1UIsVKDW9iAqXrFT5DJngc47B6ZCYBLAkxKXiijjRW7gcl27gr3nnXK7
+         QvbXd9X8wOKjCsYa0VnefRpY2w4D2+sNMTtdntWgsnSdOjT/gvhztRtyK48+4y/x7HA9
+         f55D8Oxr+lpCD/wa7lTQMwz6FphD2c8x9RrHHcWB3GFgRZ9nhh+jVTiNTPsUvuNawYcx
+         FcH7UBNDXiS/g9cG3Cz5K8nwcYFBqnvvmEQlZKOLRhfG7T4oPgmfQsyLOn7ckQVHiMwa
+         rM0w==
+X-Forwarded-Encrypted: i=1; AJvYcCXb6iM7VmE8mEmcsjqR0CRi7LKHNUp5YwmXl0651iX8vrJd4++IgXjhcYNtjqoGos5AqV6+pDpfBLogiVI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTwhQgB2IpFQ+4Jp6haIf9Q6B9PTuYlkhzeV6zrMUPQlaervNE
+	+Xi7kXbUzXBWNsead3sIfyPjt0QWY5tDG1YEAo6vbp/04I7LUzcKgOee/4BtrAZr2wKLcKaERPx
+	pf7Aw0W3JPzRTgr3QhfQWz/KO4Z3292U=
+X-Gm-Gg: ASbGncufpGwpPMNVq1a55JrYrOsjac27vsJS4gpI2+i54gwHkcUrp6YGyLe7OFOM+Yc
+	p/w2w8EEFmRiBRb3gV1tFoCPcWxNvTsvQLwDknBDO+TBCzkjw5onUBESt0eyhF75da+C5R3a4nW
+	prJZfshUzreAoe/RfB4i3YvARM5OnG9shumhPs2oQByWpO
+X-Google-Smtp-Source: AGHT+IFZh6owmX7HkiRyf7we5O3Nj8AI3dd6DQRu2hcC5wXD5rSpVUk53mGX3UXq06FsnBnovOBbHjJ++ogCfyvGCfQ=
+X-Received: by 2002:a05:6000:2082:b0:3a4:da29:d13f with SMTP id
+ ffacd0b85a97d-3a5586b89d0mr531578f8f.3.1749624775564; Tue, 10 Jun 2025
+ 23:52:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 18/32] KVM: VMX: Manually recalc all MSR intercepts on
- userspace MSR filter change
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org, Chao Gao <chao.gao@intel.com>,
- Borislav Petkov <bp@alien8.de>, Xin Li <xin@zytor.com>,
- Dapeng Mi <dapeng1.mi@linux.intel.com>,
- Francesco Lavra <francescolavra.fl@gmail.com>,
- Manali Shukla <Manali.Shukla@amd.com>
-References: <20250610225737.156318-1-seanjc@google.com>
- <20250610225737.156318-19-seanjc@google.com>
-Content-Language: en-US
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <20250610225737.156318-19-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <1749107920-17958-1-git-send-email-zhiguo.niu@unisoc.com>
+ <aEhYfYrknbNzT8Or@google.com> <5c1da066-0c76-42f4-8c46-a99f60a900bf@kernel.org>
+ <CAHJ8P3LNrSRT8hfbr=x5HvkQRGBSTpftPbd7NrfUdO-2LgSLfg@mail.gmail.com> <c36ab955-c8db-4a8b-a9d0-f07b5f426c3f@kernel.org>
+In-Reply-To: <c36ab955-c8db-4a8b-a9d0-f07b5f426c3f@kernel.org>
+From: Zhiguo Niu <niuzhiguo84@gmail.com>
+Date: Wed, 11 Jun 2025 14:52:44 +0800
+X-Gm-Features: AX0GCFsgQsBYEedhmjPxxYOEFa7Lezd6IZoo4NA3srqISU4K_ypR7qGlMdQgg-g
+Message-ID: <CAHJ8P3+=LEbbj8bzh0N3HbPu=jVkRfkowbxqoT0PfCZtWbuRbg@mail.gmail.com>
+Subject: Re: [PATCH v3] f2fs: compress: fix UAF of f2fs_inode_info in f2fs_free_dic
+To: Chao Yu <chao@kernel.org>
+Cc: Jaegeuk Kim <jaegeuk@kernel.org>, Zhiguo Niu <zhiguo.niu@unisoc.com>, 
+	linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
+	ke.wang@unisoc.com, Hao_hao.Wang@unisoc.com, baocong.liu@unisoc.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 6/11/2025 6:57 AM, Sean Christopherson wrote:
-> On a userspace MSR filter change, recalculate all MSR intercepts using the
-> filter-agnostic logic instead of maintaining a "shadow copy" of KVM's
-> desired intercepts.  The shadow bitmaps add yet another point of failure,
-> are confusing (e.g. what does "handled specially" mean!?!?), an eyesore,
-> and a maintenance burden.
+Chao Yu <chao@kernel.org> =E4=BA=8E2025=E5=B9=B46=E6=9C=8811=E6=97=A5=E5=91=
+=A8=E4=B8=89 14:47=E5=86=99=E9=81=93=EF=BC=9A
 >
-> Given that KVM *must* be able to recalculate the correct intercepts at any
-> given time, and that MSR filter updates are not hot paths, there is zero
-> benefit to maintaining the shadow bitmaps.
+> On 6/11/25 14:41, Zhiguo Niu wrote:
+> > Chao Yu <chao@kernel.org> =E4=BA=8E2025=E5=B9=B46=E6=9C=8811=E6=97=A5=
+=E5=91=A8=E4=B8=89 14:07=E5=86=99=E9=81=93=EF=BC=9A
+> >>
+> >> On 6/11/25 00:08, Jaegeuk Kim wrote:
+> >>> Hi Zhiguo,
+> >>>
+> >>> This patch causes CPU hang when running fsstress on compressed/non-co=
+mpressed
+> >>> files. Please check.
+> >>
+> >> Oh, seems it may cause below deadlock:
+> >>
+> >> CPU0
+> >> process A
+> >> - spin_lock(i_lock)
+> >> software IRQ
+> >> - end_io
+> >>  - igrab
+> >>   - spin_lock(i_lock)
+> >>
+> >> Thanks,
+> > Hi Chao,
+> > Thanks for pointing this out.
+> > I have tested this patch locally about some basic cases before submissi=
+on.
+> > So it seems that should use the following method  to solve this problem=
+?
+> > " store i_compress_algorithm/sbi in dic to avoid inode access?"
 >
-> Opportunistically switch from boot_cpu_has() to cpu_feature_enabled() as
-> appropriate.
+> Zhiguo,
 >
-> Link: https://lore.kernel.org/all/aCdPbZiYmtni4Bjs@google.com
-> Link: https://lore.kernel.org/all/20241126180253.GAZ0YNTdXH1UGeqsu6@fat_crate.local
-> Cc: Borislav Petkov <bp@alien8.de>
-> Reviewed-by: Chao Gao <chao.gao@intel.com>
-> Reviewed-by: Xin Li (Intel) <xin@zytor.com>
-> Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-
-Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
-
-> ---
->   arch/x86/kvm/vmx/vmx.c | 183 +++++++++++------------------------------
->   arch/x86/kvm/vmx/vmx.h |   7 --
->   2 files changed, 46 insertions(+), 144 deletions(-)
+> Yeah, I guess so.
+Hi Chao,
+OK, I will prepare it .
+Thanks a lot.
 >
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 8f7fe04a1998..ce7a1c07e402 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -166,31 +166,6 @@ module_param(allow_smaller_maxphyaddr, bool, S_IRUGO);
->   	RTIT_STATUS_ERROR | RTIT_STATUS_STOPPED | \
->   	RTIT_STATUS_BYTECNT))
->   
-> -/*
-> - * List of MSRs that can be directly passed to the guest.
-> - * In addition to these x2apic, PT and LBR MSRs are handled specially.
-> - */
-> -static u32 vmx_possible_passthrough_msrs[MAX_POSSIBLE_PASSTHROUGH_MSRS] = {
-> -	MSR_IA32_SPEC_CTRL,
-> -	MSR_IA32_PRED_CMD,
-> -	MSR_IA32_FLUSH_CMD,
-> -	MSR_IA32_TSC,
-> -#ifdef CONFIG_X86_64
-> -	MSR_FS_BASE,
-> -	MSR_GS_BASE,
-> -	MSR_KERNEL_GS_BASE,
-> -	MSR_IA32_XFD,
-> -	MSR_IA32_XFD_ERR,
-> -#endif
-> -	MSR_IA32_SYSENTER_CS,
-> -	MSR_IA32_SYSENTER_ESP,
-> -	MSR_IA32_SYSENTER_EIP,
-> -	MSR_CORE_C1_RES,
-> -	MSR_CORE_C3_RESIDENCY,
-> -	MSR_CORE_C6_RESIDENCY,
-> -	MSR_CORE_C7_RESIDENCY,
-> -};
-> -
->   /*
->    * These 2 parameters are used to config the controls for Pause-Loop Exiting:
->    * ple_gap:    upper bound on the amount of time between two successive
-> @@ -672,40 +647,6 @@ static inline bool cpu_need_virtualize_apic_accesses(struct kvm_vcpu *vcpu)
->   	return flexpriority_enabled && lapic_in_kernel(vcpu);
->   }
->   
-> -static int vmx_get_passthrough_msr_slot(u32 msr)
-> -{
-> -	int i;
-> -
-> -	switch (msr) {
-> -	case 0x800 ... 0x8ff:
-> -		/* x2APIC MSRs. These are handled in vmx_update_msr_bitmap_x2apic() */
-> -		return -ENOENT;
-> -	case MSR_IA32_RTIT_STATUS:
-> -	case MSR_IA32_RTIT_OUTPUT_BASE:
-> -	case MSR_IA32_RTIT_OUTPUT_MASK:
-> -	case MSR_IA32_RTIT_CR3_MATCH:
-> -	case MSR_IA32_RTIT_ADDR0_A ... MSR_IA32_RTIT_ADDR3_B:
-> -		/* PT MSRs. These are handled in pt_update_intercept_for_msr() */
-> -	case MSR_LBR_SELECT:
-> -	case MSR_LBR_TOS:
-> -	case MSR_LBR_INFO_0 ... MSR_LBR_INFO_0 + 31:
-> -	case MSR_LBR_NHM_FROM ... MSR_LBR_NHM_FROM + 31:
-> -	case MSR_LBR_NHM_TO ... MSR_LBR_NHM_TO + 31:
-> -	case MSR_LBR_CORE_FROM ... MSR_LBR_CORE_FROM + 8:
-> -	case MSR_LBR_CORE_TO ... MSR_LBR_CORE_TO + 8:
-> -		/* LBR MSRs. These are handled in vmx_update_intercept_for_lbr_msrs() */
-> -		return -ENOENT;
-> -	}
-> -
-> -	for (i = 0; i < ARRAY_SIZE(vmx_possible_passthrough_msrs); i++) {
-> -		if (vmx_possible_passthrough_msrs[i] == msr)
-> -			return i;
-> -	}
-> -
-> -	WARN(1, "Invalid MSR %x, please adapt vmx_possible_passthrough_msrs[]", msr);
-> -	return -ENOENT;
-> -}
-> -
->   struct vmx_uret_msr *vmx_find_uret_msr(struct vcpu_vmx *vmx, u32 msr)
->   {
->   	int i;
-> @@ -4015,25 +3956,12 @@ void vmx_disable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type)
->   {
->   	struct vcpu_vmx *vmx = to_vmx(vcpu);
->   	unsigned long *msr_bitmap = vmx->vmcs01.msr_bitmap;
-> -	int idx;
->   
->   	if (!cpu_has_vmx_msr_bitmap())
->   		return;
->   
->   	vmx_msr_bitmap_l01_changed(vmx);
->   
-> -	/*
-> -	 * Mark the desired intercept state in shadow bitmap, this is needed
-> -	 * for resync when the MSR filters change.
-> -	 */
-> -	idx = vmx_get_passthrough_msr_slot(msr);
-> -	if (idx >= 0) {
-> -		if (type & MSR_TYPE_R)
-> -			__clear_bit(idx, vmx->shadow_msr_intercept.read);
-> -		if (type & MSR_TYPE_W)
-> -			__clear_bit(idx, vmx->shadow_msr_intercept.write);
-> -	}
-> -
->   	if ((type & MSR_TYPE_R) &&
->   	    !kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_READ)) {
->   		vmx_set_msr_bitmap_read(msr_bitmap, msr);
-> @@ -4057,25 +3985,12 @@ void vmx_enable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type)
->   {
->   	struct vcpu_vmx *vmx = to_vmx(vcpu);
->   	unsigned long *msr_bitmap = vmx->vmcs01.msr_bitmap;
-> -	int idx;
->   
->   	if (!cpu_has_vmx_msr_bitmap())
->   		return;
->   
->   	vmx_msr_bitmap_l01_changed(vmx);
->   
-> -	/*
-> -	 * Mark the desired intercept state in shadow bitmap, this is needed
-> -	 * for resync when the MSR filter changes.
-> -	 */
-> -	idx = vmx_get_passthrough_msr_slot(msr);
-> -	if (idx >= 0) {
-> -		if (type & MSR_TYPE_R)
-> -			__set_bit(idx, vmx->shadow_msr_intercept.read);
-> -		if (type & MSR_TYPE_W)
-> -			__set_bit(idx, vmx->shadow_msr_intercept.write);
-> -	}
-> -
->   	if (type & MSR_TYPE_R)
->   		vmx_set_msr_bitmap_read(msr_bitmap, msr);
->   
-> @@ -4159,35 +4074,58 @@ void pt_update_intercept_for_msr(struct kvm_vcpu *vcpu)
->   	}
->   }
->   
-> -void vmx_msr_filter_changed(struct kvm_vcpu *vcpu)
-> +static void vmx_recalc_msr_intercepts(struct kvm_vcpu *vcpu)
->   {
-> -	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> -	u32 i;
-> -
->   	if (!cpu_has_vmx_msr_bitmap())
->   		return;
->   
-> -	/*
-> -	 * Redo intercept permissions for MSRs that KVM is passing through to
-> -	 * the guest.  Disabling interception will check the new MSR filter and
-> -	 * ensure that KVM enables interception if usersepace wants to filter
-> -	 * the MSR.  MSRs that KVM is already intercepting don't need to be
-> -	 * refreshed since KVM is going to intercept them regardless of what
-> -	 * userspace wants.
-> -	 */
-> -	for (i = 0; i < ARRAY_SIZE(vmx_possible_passthrough_msrs); i++) {
-> -		u32 msr = vmx_possible_passthrough_msrs[i];
-> -
-> -		if (!test_bit(i, vmx->shadow_msr_intercept.read))
-> -			vmx_disable_intercept_for_msr(vcpu, msr, MSR_TYPE_R);
-> -
-> -		if (!test_bit(i, vmx->shadow_msr_intercept.write))
-> -			vmx_disable_intercept_for_msr(vcpu, msr, MSR_TYPE_W);
-> +	vmx_disable_intercept_for_msr(vcpu, MSR_IA32_TSC, MSR_TYPE_R);
-> +#ifdef CONFIG_X86_64
-> +	vmx_disable_intercept_for_msr(vcpu, MSR_FS_BASE, MSR_TYPE_RW);
-> +	vmx_disable_intercept_for_msr(vcpu, MSR_GS_BASE, MSR_TYPE_RW);
-> +	vmx_disable_intercept_for_msr(vcpu, MSR_KERNEL_GS_BASE, MSR_TYPE_RW);
-> +#endif
-> +	vmx_disable_intercept_for_msr(vcpu, MSR_IA32_SYSENTER_CS, MSR_TYPE_RW);
-> +	vmx_disable_intercept_for_msr(vcpu, MSR_IA32_SYSENTER_ESP, MSR_TYPE_RW);
-> +	vmx_disable_intercept_for_msr(vcpu, MSR_IA32_SYSENTER_EIP, MSR_TYPE_RW);
-> +	if (kvm_cstate_in_guest(vcpu->kvm)) {
-> +		vmx_disable_intercept_for_msr(vcpu, MSR_CORE_C1_RES, MSR_TYPE_R);
-> +		vmx_disable_intercept_for_msr(vcpu, MSR_CORE_C3_RESIDENCY, MSR_TYPE_R);
-> +		vmx_disable_intercept_for_msr(vcpu, MSR_CORE_C6_RESIDENCY, MSR_TYPE_R);
-> +		vmx_disable_intercept_for_msr(vcpu, MSR_CORE_C7_RESIDENCY, MSR_TYPE_R);
->   	}
->   
->   	/* PT MSRs can be passed through iff PT is exposed to the guest. */
->   	if (vmx_pt_mode_is_host_guest())
->   		pt_update_intercept_for_msr(vcpu);
-> +
-> +	if (vcpu->arch.xfd_no_write_intercept)
-> +		vmx_disable_intercept_for_msr(vcpu, MSR_IA32_XFD, MSR_TYPE_RW);
-> +
-> +	vmx_set_intercept_for_msr(vcpu, MSR_IA32_SPEC_CTRL, MSR_TYPE_RW,
-> +				  !to_vmx(vcpu)->spec_ctrl);
-> +
-> +	if (kvm_cpu_cap_has(X86_FEATURE_XFD))
-> +		vmx_set_intercept_for_msr(vcpu, MSR_IA32_XFD_ERR, MSR_TYPE_R,
-> +					  !guest_cpu_cap_has(vcpu, X86_FEATURE_XFD));
-> +
-> +	if (cpu_feature_enabled(X86_FEATURE_IBPB))
-> +		vmx_set_intercept_for_msr(vcpu, MSR_IA32_PRED_CMD, MSR_TYPE_W,
-> +					  !guest_has_pred_cmd_msr(vcpu));
-> +
-> +	if (cpu_feature_enabled(X86_FEATURE_FLUSH_L1D))
-> +		vmx_set_intercept_for_msr(vcpu, MSR_IA32_FLUSH_CMD, MSR_TYPE_W,
-> +					  !guest_cpu_cap_has(vcpu, X86_FEATURE_FLUSH_L1D));
-> +
-> +	/*
-> +	 * x2APIC and LBR MSR intercepts are modified on-demand and cannot be
-> +	 * filtered by userspace.
-> +	 */
-> +}
-> +
-> +void vmx_msr_filter_changed(struct kvm_vcpu *vcpu)
-> +{
-> +	vmx_recalc_msr_intercepts(vcpu);
->   }
->   
->   static int vmx_deliver_nested_posted_interrupt(struct kvm_vcpu *vcpu,
-> @@ -7537,26 +7475,6 @@ int vmx_vcpu_create(struct kvm_vcpu *vcpu)
->   		evmcs->hv_enlightenments_control.msr_bitmap = 1;
->   	}
->   
-> -	/* The MSR bitmap starts with all ones */
-> -	bitmap_fill(vmx->shadow_msr_intercept.read, MAX_POSSIBLE_PASSTHROUGH_MSRS);
-> -	bitmap_fill(vmx->shadow_msr_intercept.write, MAX_POSSIBLE_PASSTHROUGH_MSRS);
-> -
-> -	vmx_disable_intercept_for_msr(vcpu, MSR_IA32_TSC, MSR_TYPE_R);
-> -#ifdef CONFIG_X86_64
-> -	vmx_disable_intercept_for_msr(vcpu, MSR_FS_BASE, MSR_TYPE_RW);
-> -	vmx_disable_intercept_for_msr(vcpu, MSR_GS_BASE, MSR_TYPE_RW);
-> -	vmx_disable_intercept_for_msr(vcpu, MSR_KERNEL_GS_BASE, MSR_TYPE_RW);
-> -#endif
-> -	vmx_disable_intercept_for_msr(vcpu, MSR_IA32_SYSENTER_CS, MSR_TYPE_RW);
-> -	vmx_disable_intercept_for_msr(vcpu, MSR_IA32_SYSENTER_ESP, MSR_TYPE_RW);
-> -	vmx_disable_intercept_for_msr(vcpu, MSR_IA32_SYSENTER_EIP, MSR_TYPE_RW);
-> -	if (kvm_cstate_in_guest(vcpu->kvm)) {
-> -		vmx_disable_intercept_for_msr(vcpu, MSR_CORE_C1_RES, MSR_TYPE_R);
-> -		vmx_disable_intercept_for_msr(vcpu, MSR_CORE_C3_RESIDENCY, MSR_TYPE_R);
-> -		vmx_disable_intercept_for_msr(vcpu, MSR_CORE_C6_RESIDENCY, MSR_TYPE_R);
-> -		vmx_disable_intercept_for_msr(vcpu, MSR_CORE_C7_RESIDENCY, MSR_TYPE_R);
-> -	}
-> -
->   	vmx->loaded_vmcs = &vmx->vmcs01;
->   
->   	if (cpu_need_virtualize_apic_accesses(vcpu)) {
-> @@ -7842,18 +7760,6 @@ void vmx_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
->   		}
->   	}
->   
-> -	if (kvm_cpu_cap_has(X86_FEATURE_XFD))
-> -		vmx_set_intercept_for_msr(vcpu, MSR_IA32_XFD_ERR, MSR_TYPE_R,
-> -					  !guest_cpu_cap_has(vcpu, X86_FEATURE_XFD));
-> -
-> -	if (boot_cpu_has(X86_FEATURE_IBPB))
-> -		vmx_set_intercept_for_msr(vcpu, MSR_IA32_PRED_CMD, MSR_TYPE_W,
-> -					  !guest_has_pred_cmd_msr(vcpu));
-> -
-> -	if (boot_cpu_has(X86_FEATURE_FLUSH_L1D))
-> -		vmx_set_intercept_for_msr(vcpu, MSR_IA32_FLUSH_CMD, MSR_TYPE_W,
-> -					  !guest_cpu_cap_has(vcpu, X86_FEATURE_FLUSH_L1D));
-> -
->   	set_cr4_guest_host_mask(vmx);
->   
->   	vmx_write_encls_bitmap(vcpu, NULL);
-> @@ -7869,6 +7775,9 @@ void vmx_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
->   		vmx->msr_ia32_feature_control_valid_bits &=
->   			~FEAT_CTL_SGX_LC_ENABLED;
->   
-> +	/* Recalc MSR interception to account for feature changes. */
-> +	vmx_recalc_msr_intercepts(vcpu);
-> +
->   	/* Refresh #PF interception to account for MAXPHYADDR changes. */
->   	vmx_update_exception_bitmap(vcpu);
->   }
-> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-> index 0afe97e3478f..a26fe3d9e1d2 100644
-> --- a/arch/x86/kvm/vmx/vmx.h
-> +++ b/arch/x86/kvm/vmx/vmx.h
-> @@ -294,13 +294,6 @@ struct vcpu_vmx {
->   	struct pt_desc pt_desc;
->   	struct lbr_desc lbr_desc;
->   
-> -	/* Save desired MSR intercept (read: pass-through) state */
-> -#define MAX_POSSIBLE_PASSTHROUGH_MSRS	16
-> -	struct {
-> -		DECLARE_BITMAP(read, MAX_POSSIBLE_PASSTHROUGH_MSRS);
-> -		DECLARE_BITMAP(write, MAX_POSSIBLE_PASSTHROUGH_MSRS);
-> -	} shadow_msr_intercept;
-> -
->   	/* ve_info must be page aligned. */
->   	struct vmx_ve_information *ve_info;
->   };
-
+> Thanks,
+>
+> > thanks=EF=BC=81
+> >
+> >
+> >>
+> >>>
+> >>> On 06/05, Zhiguo Niu wrote:
+> >>>> The decompress_io_ctx may be released asynchronously after
+> >>>> I/O completion. If this file is deleted immediately after read,
+> >>>> and the kworker of processing post_read_wq has not been executed yet
+> >>>> due to high workloads, It is possible that the inode(f2fs_inode_info=
+)
+> >>>> is evicted and freed before it is used f2fs_free_dic.
+> >>>>
+> >>>>     The UAF case as below:
+> >>>>     Thread A                                      Thread B
+> >>>>     - f2fs_decompress_end_io
+> >>>>      - f2fs_put_dic
+> >>>>       - queue_work
+> >>>>         add free_dic work to post_read_wq
+> >>>>                                                    - do_unlink
+> >>>>                                                     - iput
+> >>>>                                                      - evict
+> >>>>                                                       - call_rcu
+> >>>>     This file is deleted after read.
+> >>>>
+> >>>>     Thread C                                 kworker to process post=
+_read_wq
+> >>>>     - rcu_do_batch
+> >>>>      - f2fs_free_inode
+> >>>>       - kmem_cache_free
+> >>>>      inode is freed by rcu
+> >>>>                                              - process_scheduled_wor=
+ks
+> >>>>                                               - f2fs_late_free_dic
+> >>>>                                                - f2fs_free_dic
+> >>>>                                                 - f2fs_release_decom=
+p_mem
+> >>>>                                       read (dic->inode)->i_compress_=
+algorithm
+> >>>>
+> >>>> This patch use igrab before f2fs_free_dic and iput after free the di=
+c when dic free
+> >>>> action is done by kworker.
+> >>>>
+> >>>> Cc: Daeho Jeong <daehojeong@google.com>
+> >>>> Fixes: bff139b49d9f ("f2fs: handle decompress only post processing i=
+n softirq")
+> >>>> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+> >>>> Signed-off-by: Baocong Liu <baocong.liu@unisoc.com>
+> >>>> ---
+> >>>> v3: use igrab to replace __iget
+> >>>> v2: use __iget/iput function
+> >>>> ---
+> >>>>  fs/f2fs/compress.c | 14 +++++++++-----
+> >>>>  1 file changed, 9 insertions(+), 5 deletions(-)
+> >>>>
+> >>>> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+> >>>> index b3c1df9..729ad16 100644
+> >>>> --- a/fs/f2fs/compress.c
+> >>>> +++ b/fs/f2fs/compress.c
+> >>>> @@ -1687,7 +1687,7 @@ static void f2fs_release_decomp_mem(struct dec=
+ompress_io_ctx *dic,
+> >>>>  }
+> >>>>
+> >>>>  static void f2fs_free_dic(struct decompress_io_ctx *dic,
+> >>>> -            bool bypass_destroy_callback);
+> >>>> +            bool bypass_destroy_callback, bool late_free);
+> >>>>
+> >>>>  struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc)
+> >>>>  {
+> >>>> @@ -1743,12 +1743,12 @@ struct decompress_io_ctx *f2fs_alloc_dic(str=
+uct compress_ctx *cc)
+> >>>>      return dic;
+> >>>>
+> >>>>  out_free:
+> >>>> -    f2fs_free_dic(dic, true);
+> >>>> +    f2fs_free_dic(dic, true, false);
+> >>>>      return ERR_PTR(ret);
+> >>>>  }
+> >>>>
+> >>>>  static void f2fs_free_dic(struct decompress_io_ctx *dic,
+> >>>> -            bool bypass_destroy_callback)
+> >>>> +            bool bypass_destroy_callback, bool late_free)
+> >>>>  {
+> >>>>      int i;
+> >>>>
+> >>>> @@ -1775,6 +1775,8 @@ static void f2fs_free_dic(struct decompress_io=
+_ctx *dic,
+> >>>>      }
+> >>>>
+> >>>>      page_array_free(dic->inode, dic->rpages, dic->nr_rpages);
+> >>>> +    if (late_free)
+> >>>> +            iput(dic->inode);
+> >>>>      kmem_cache_free(dic_entry_slab, dic);
+> >>>>  }
+> >>>>
+> >>>> @@ -1783,16 +1785,18 @@ static void f2fs_late_free_dic(struct work_s=
+truct *work)
+> >>>>      struct decompress_io_ctx *dic =3D
+> >>>>              container_of(work, struct decompress_io_ctx, free_work)=
+;
+> >>>>
+> >>>> -    f2fs_free_dic(dic, false);
+> >>>> +    f2fs_free_dic(dic, false, true);
+> >>>>  }
+> >>>>
+> >>>>  static void f2fs_put_dic(struct decompress_io_ctx *dic, bool in_tas=
+k)
+> >>>>  {
+> >>>>      if (refcount_dec_and_test(&dic->refcnt)) {
+> >>>>              if (in_task) {
+> >>>> -                    f2fs_free_dic(dic, false);
+> >>>> +                    f2fs_free_dic(dic, false, false);
+> >>>>              } else {
+> >>>>                      INIT_WORK(&dic->free_work, f2fs_late_free_dic);
+> >>>> +                    /* use igrab to avoid inode is evicted simultan=
+eously */
+> >>>> +                    f2fs_bug_on(F2FS_I_SB(dic->inode), !igrab(dic->=
+inode));
+> >>>>                      queue_work(F2FS_I_SB(dic->inode)->post_read_wq,
+> >>>>                                      &dic->free_work);
+> >>>>              }
+> >>>> --
+> >>>> 1.9.1
+> >>
+>
