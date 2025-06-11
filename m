@@ -1,106 +1,80 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16F2A1B6D01
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:14:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ABBF1B6D01;
+	Wed, 11 Jun 2025 15:14:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749654849; cv=none; b=ZOsqvPSxRLpESFPfV8n3HL9VESAsGQ6o8z1NM+j47tS/EWDzPCqjFfjhwDzt/TGL97uJYQ7EpqFWY+wEnaFwKJhaUPFfZMjGwdAYXkjXvza2du32AHx2bkGRrjSZ+wvyboVAopiWjvsdd4a0T8rs00B/LsBgMP5Ob2Xjh6gvwDI=
+	t=1749654855; cv=none; b=cWWkogX2JB6nmyX2V/f1Mg0yWjYjesLgbaaYJdRWLNNpGRSyRYsGUM3Fw3Wm1dC4MSot4GQpJMcTY/o32r6JSx1QpDvFxpBmqQwDjLKSHeDag7IQRdtaT/+RNlhKh8uIkk7hR3ixFHvz2Z0p11wrfFWs0RTIGgfvr+yR21bxXHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749654849; c=relaxed/simple;
-	bh=xXF1fKQYQwjTZw8iXbTlsihrAwKe/UiVkJhwQdslq/U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=blI908fBuWrcDF5q+lom0zVuZxAgJFd8sWhR6Y+X1lTKruhuCN8rM5g605eJNvb0R8K3WXfSaEw/ONPuoFktkuM70SwcJ2VNhWDDcRnRcFGicaf0+Aas55nzhSI6qq1xFePxmLEEEhT6PIiZhVbzSpDQJQNc5yk8n0wQ5exaOHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=An9ldRSC; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="An9ldRSC"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5533303070cso6931895e87.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 08:14:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749654846; x=1750259646; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xXF1fKQYQwjTZw8iXbTlsihrAwKe/UiVkJhwQdslq/U=;
-        b=An9ldRSCdLRkipqgVv/skcPgiURxe11hGCS7E3tbTBbNHTK8cdAtHj8cDJjaXDYzfB
-         gd2yjyERbvy1MJPwo6HigNPfk1bcebLu5gjtwxn7MPvqbbTYmeCRPiYx59miRTYOVCHw
-         acDl5JX45HU2QvV+zF0Ob6sq5I1odFhCNvzhKFsuzl7SziC13LtY7y3ZnAN+/v6aOzXO
-         mYJWq0HrchckMgeczwD/LFcsVfouB5FECagEbxRMUcCZWTa0uufCWhMMW1AW1UD3wbAQ
-         ZvX32eH+wz7XO7IdPZck6hpDYcg8MbOf4N9LhWhUC1PEceIaS6YaxheylvzgpEpZLDcz
-         pKHQ==
+	s=arc-20240116; t=1749654855; c=relaxed/simple;
+	bh=j4HtOeH+lQJTeLsbYvGMDZFJPCC7o1GI6t95ynQNJ9A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BRQLlGBv7m//Ir5O6Ja6c42/eU4AWpCiPZx3hgjxEyDDis61yj6QiTNiRfbz15EDCmMOxy6keN0Tv9RhFIWA6G6eZ1YC9J9yU0gK/wvjIOrKBF8uA1bFz/Om90NFSEYIRKSJQjTiwBfoHyzurbnB+wiGfu+10YhOqSbbOwELth4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ade5b8aab41so684202566b.0;
+        Wed, 11 Jun 2025 08:14:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749654846; x=1750259646;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xXF1fKQYQwjTZw8iXbTlsihrAwKe/UiVkJhwQdslq/U=;
-        b=lUiU/ZZaiydR71W2eabFvYaViBLUWi+d6pbErxF0U5kCgK2LJw2ntlcutSYcAQSp7E
-         rw5bdxghOVQdi82zqihLkte+hIT6F8HZ2fROS3SYMphyew5zFCq9doDjznMTuPzjoFJq
-         LgA6XaBAD8eWrW8NyrspBx1gHbMxQOywh4/JtSZAPTyHTftEHcYsGr3QigL0RaZIQsrT
-         7nk3szMk1IQWYGFJsprXrfsBmnfs1hiO9pf/V5Aodo2NIw8HXEJxO6fF2T9v8TwIEvUf
-         L3qrq4E2ZCo7yYODlGpBzbpm/AvUKS6GUSPc2H4fPFhuScSZEbHLI7Yf5vb8FMoI9pm2
-         Ndxg==
-X-Forwarded-Encrypted: i=1; AJvYcCXh5RsWgQOEl9z1OiywIg+MO6nhBZm2SlykxPYBAq82MyzPUcA4oEesiRuIapxSB9Vw5Mo7Z5Dambr0bx0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfpfbCopE1Broln1RQCMYwxTsoeCQWGJ2QeUJDCcfwmcVRwcfV
-	eqG9LzqYVFkrD1GqVkvDDlEkcev+q+Vyp5dXNkmbxKsy+wPbCXdWZsDqwIGrajmAprzm7SkTXx1
-	9jhikhHAl8oUfFyQaGuNd29aLPPsT5knxx/OT2aMFUA==
-X-Gm-Gg: ASbGncsxWpJqCpgJ64/M+nWL/IvB4LlMsSLEQVRyCfD3CU9s5AUwsek4Je6ReSrYZ4+
-	PmDY4FUckz4r1/CA+lfng5FsIlWn62l0WLrhzuBidQaBmPHlQMDq75IK8OhFSWzzPOBLfZhUFY9
-	tfga9mMOeugUN+LTG8gOJTyvToqcIknHvypUK3j81dKc+b4iy+le6ZUP0Pho08mbRb40dri/16X
-	Iw=
-X-Google-Smtp-Source: AGHT+IGw+q2yvYWpmAIUWy0VGe58eE1SrQ78oJJGrnBnU83UjI38DO9zFzggcPEe+DrUAq6iTBI5SWIZkHBiPk9ESOc=
-X-Received: by 2002:a05:6512:2355:b0:553:3178:2928 with SMTP id
- 2adb3069b0e04-5539c0e243emr1434831e87.16.1749654846050; Wed, 11 Jun 2025
- 08:14:06 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749654852; x=1750259652;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xxtjsYc5WzCsw0sWcakgTm1NCq+gnxfAoujY6jqX05Y=;
+        b=k8XEMhkE3lEujU1Koaubi3uuOVM+kieDgrJSd489TimiI7mC7VZ8w/596ACH2I8BCj
+         VX9jspf79zjWZ64Rl84QfjaNx4RvN5zccV/jcKM111qfKZNDiGuPpsACOz/UFlRfUNiM
+         nRlOfkArYyD5c3XSzbkcFHjxNlrmB4s+g7EMy7YdBxUChO3Qo9eLab9B2Yn5vu8YslrF
+         +V0DOz1IhvIHR5utf7iTGRO5XLw7hmW4AT8KMt9UZlhb3Ls24GyfTgHjF7usWkmmxrga
+         LkLl8SkfGV9E6JCtWs1iTS2+B/HLAi1F/iX5CnhGvPSkLa8Dtcp2le/yIwliXujMtTQu
+         v6tg==
+X-Forwarded-Encrypted: i=1; AJvYcCVznSPwsJeBQ0WhrQCdYBrb0+AZmw6XCvia7pqsJvHkvP+IfVooKn+iRytrVmLafuQssnKsSI7Z4p/aHAOg@vger.kernel.org, AJvYcCWbKRu3tULiHWsV7R/7k1N11/Ie+z9PVruGo9/rsA8oDCwCn2B3KNhovgWAtK/8rle0YQmESKCe0ZM=@vger.kernel.org, AJvYcCWo9vkmNjxLvQ+KCSDyaAAcQ5mG4FwQJ4+XQY/FeI02xoD2cIOiHOaft4qc7EXwWRlJJd00zKpA@vger.kernel.org, AJvYcCXGgyNIBKIimzHGH1XNhViUCfTOKIq801CAXf1LyQCrIimXalh682PWw+xHrd0hg8coUnk8aHM5a4aUkdQNEwJu@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyj2pdMzY++zUhX8uNbm2RjDRqJRuBVAb11/QgoaNr8qwkDNG/S
+	67LumXCH/yNhKNEVSmc8JFIesO29daPn705K+0n8y+dpgMSTqcyfCpHe
+X-Gm-Gg: ASbGnct79JJnkqDOhS5MGGeIHsRNb5FeCMVknIvU45un489YjtOI1kN1eO4IsNAUucZ
+	jAU6sG7QeWZHCniyNI+ulhDHPH7FapnpkHmxFiKOtR4ZYGXBi+wk+eylMOHHe0th4H4ayzaRZzv
+	R4Y/hd4+c2x0hwuAi2HGO7jbInluEjNKEBJPPKPbdZEIVhT56yUfV0iLM0FSBm1trJkRn1F3/lY
+	sjRw7TptYQcCAIPIfN5FuwfEg/cS0OocQm9CazLB02o3RnkA8QdPr3qbWVNGfCqWuM+yqTd76pW
+	96UN8tAQCcLXRd/FT7UzXFGHbsjVOgkORulcoQo/vsr+N8fuMynSiA==
+X-Google-Smtp-Source: AGHT+IEJvF/k6wW9sOP1mWvnvDvmZbJ83yqSoXHsvG5vRtSWUDSp4eE4+B2E5P14jKw4coIWl3JZ3Q==
+X-Received: by 2002:a17:907:72d1:b0:ade:3bec:ea40 with SMTP id a640c23a62f3a-ade893e2b8dmr406508566b.10.1749654851743;
+        Wed, 11 Jun 2025 08:14:11 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:74::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc3a241sm900604066b.135.2025.06.11.08.14.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 08:14:11 -0700 (PDT)
+Date: Wed, 11 Jun 2025 08:14:09 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Gustavo Luiz Duarte <gustavold@gmail.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Shuah Khan <shuah@kernel.org>, Simon Horman <horms@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH net-next 1/5] netconsole: introduce 'msgid' as a new
+ sysdata field
+Message-ID: <aEmdQaxnlS4jbfSO@gmail.com>
+References: <20250611-netconsole-msgid-v1-0-1784a51feb1e@gmail.com>
+ <20250611-netconsole-msgid-v1-1-1784a51feb1e@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611143911.48501-1-brgl@bgdev.pl> <3i6ni6jfq7vzij5cj4h35sy4ceegeekuv3lr5b3nmyqtheky6q@mlrspoyavfwt>
-In-Reply-To: <3i6ni6jfq7vzij5cj4h35sy4ceegeekuv3lr5b3nmyqtheky6q@mlrspoyavfwt>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 11 Jun 2025 17:13:54 +0200
-X-Gm-Features: AX0GCFtymhBATZElPAXX9UTuzF3eRZfHttarjFE9PeI16lNBM-F_-vPrq_rdhb8
-Message-ID: <CAMRc=McF+eRfdo73Z_WHj75vOJcc3=yvd2QbVFwGNp7OOYyHHw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: qcom: msm: mark certain pins as invalid for interrupts
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-arm-msm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611-netconsole-msgid-v1-1-1784a51feb1e@gmail.com>
 
-On Wed, Jun 11, 2025 at 5:03=E2=80=AFPM Bjorn Andersson <andersson@kernel.o=
-rg> wrote:
->
-> On Wed, Jun 11, 2025 at 04:39:11PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > When requesting pins whose intr_detection_width setting is not 1 or 2
-> > for interrupts (for example by running `gpiomon -c 0 113` on RB2), we'l=
-l
-> > hit a BUG() in msm_gpio_irq_set_type(). Potentially crashing the kernel
-> > due to an invalid request from user-space is not optimal, so let's go
-> > through the pins and mark those that would fail the check as invalid fo=
-r
-> > the irq chip as we should not even register them as available irqs.
-> >
->
-> I had to go dig into the code to understand why there is a problem with
-> GPIO 113 on RB2 (i.e. UFS_RESET on SM6115)... I think it would have been
-> better to document the actual reason for the problem, which is:
->
-> "The UFS_RESET pin doesn't have interrupt logic, but is registered as a
-> GPIO. Requesting the interrupt of this pin hits a BUG() in
-> msm_gpio_irq_set_type() because intr_detection_width is invalid"
+On Wed, Jun 11, 2025 at 07:36:03AM -0700, Gustavo Luiz Duarte wrote:
+> This adds a new sysdata field to enable assigning a per-target unique id
+> to each message sent to that target. This id can later be appended as
+> part of sysdata, allowing targets to detect dropped netconsole messages.
+> Update count_extradata_entries() to take the new field into account.
+> 
+> Signed-off-by: Gustavo Luiz Duarte <gustavold@gmail.com>
 
-The UFS_RESET() case is the one I figured out initially but then
-realized that the issue will be the same for other non-PINGROUP()
-macros which set all the interrupt related fields to -1 so I made the
-message more generic. I will include the above in v2.
-
-Bart
+Reviewed-by: Breno Leitao <leitao@debian.org>
