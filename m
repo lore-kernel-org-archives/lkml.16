@@ -1,47 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899642367A1;
-	Wed, 11 Jun 2025 07:38:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F64F2376EF;
+	Wed, 11 Jun 2025 07:38:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749627518; cv=none; b=egLPCmfev76YtHWXVymkaLDN33kE1wDlaawmJdFL49BLO3oSY0MfnO8G4vbCO/LYYx1WIJo3L/lpSRJcTxscPpnBwr+s93Kkfoesyt+Nf+pdJ+F+h+z4tM18I5XSg57yfCytrGd8iWvp3COrEYWbCL3pcMdFPWMLWQptfEEXf5o=
+	t=1749627519; cv=none; b=QdJwkuP4TItMVRwe2xG4J3uaGiRTH9Ywx3aX4Az8rD9+URMTZL+7joKYoPrH4NTr4d3d6FHQ0/+t+6ROcOFLcbB+smX5PlLqmUaqqFW4jqWZvkgbeTgk10WExxSxOPjnb0jRcJQAgQDlJ9AgVy3nfK+494IBsWa0NV/3ODuUkLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749627518; c=relaxed/simple;
-	bh=lI/60pEr6pY3/pLg+6Hxz2diPV2LL+wQWsSjlOiVzgY=;
+	s=arc-20240116; t=1749627519; c=relaxed/simple;
+	bh=jBKSdQACvBBwcM6WzYQQQ4hGpXONRfQDjnNvXZvxW6A=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CJeVSPUZ8vbeQ/yJTv3rhXLkVOgxpgO4DCEFbMr0kqKmxA0v1/ccUrRyjarVIg14X3xM0jiZRd/XmIZMzWOrpLmPmD0POx0aXROH6iLhaUH3OODgIQwfVdpdaTurabz25TQdi92wEimg9eRxQEsEV/tPGvy/bT50HA8UsiRKsuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DvYyg6Qv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iNdYa4BG; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=Vpk0xl7c6fYYAUHe0M5FRbxBzuCjcuIqSixb4xJPjT8V6ZmCLfMIQi0ebhcAo91bsWZFQaJiOtuSdoWhosxzod42yk9RgOC5HEFUKJ1auy83Gg0QjlxLFGph9QufrBfmiNHgMSj/mZKQIrA2qti31iqu6N5ZPUIjGAY887vsPrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=geerNP5r; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qtPNzx5N; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DvYyg6Qv";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iNdYa4BG"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="geerNP5r";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qtPNzx5N"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749627514;
+	s=2020; t=1749627515;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=VYgtidffxNZR2vi7Ilvk4ikd2wExNwWXZn779oXpOZw=;
-	b=DvYyg6QvrAo5e+rlyt/4KLUOfbkR1iPns2d35AFrnM0IieJ3DplwfsMtI6Xne+BZslL3BN
-	/Gb1bwfvg97Vn1v3WOxkwnSmldUde2QM5k6twv3hg6l4GwndFFSuA29I+Sj+fXHkT5vI3z
-	VzYXudrr3iM+krKkavjQ/2clQ9ddURFv9+xNs9U76m0bQuURPESAqroseTaKg3XPvkpMn3
-	9dy0zuRxUGOEHsU/RcQBCZzrXpPqBGl/lYVdhCtKnqMHnYfkODKzMcNaH00B+rKmFL6di8
-	ae47FP0aw0RuczB1ZAMsOg1w0gcRTNqUmPeEAbpZabS7nRy+LZWAizlM8+LiGQ==
+	bh=vdek1izyzsKO1yVmEA7bKNhgQcuaR13nn+u8f6WyIHk=;
+	b=geerNP5rxOPVeqffu3dQrtqo4+vGzQHyBJQQ2gTbXnsNbGfcYqeRI3eH+7kl6d6Q8ZOWM8
+	cZSaPjHv0bETgi/Bu0OA082S6U3pF8SYOBGgIoUdEfQogLVPazY5apgW8s9qmYKVeeLzdw
+	OCwgF8qiNtMuxHTMARdglws33NZPZq4vzZ+xqwydlaF501Hh73VXlsVXlkf/eqVBCew8ok
+	3Osi+tEr7cfaW6b6Nv/gXUhZzz2/ny4Je2CcdrJo3ntBV0XT5e8wKWgU6vgAjHAKy1C6lq
+	KGZndSVn2ldurZLYZmIK/8Q1/P4AN0fVimsOA3H6tux+iV7E5yDn5vV1QjiydQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749627514;
+	s=2020e; t=1749627515;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=VYgtidffxNZR2vi7Ilvk4ikd2wExNwWXZn779oXpOZw=;
-	b=iNdYa4BGqT8T0LBKV8V4HUwFq81N8ZO5b2HUwUfdOfNoS62BHJdUQRxRci9ajmsS4kAcHd
-	9Mwt3V27vHBKwCBQ==
-Date: Wed, 11 Jun 2025 09:38:14 +0200
-Subject: [PATCH v3 08/16] kunit: tool: Add test for nested test result
- reporting
+	bh=vdek1izyzsKO1yVmEA7bKNhgQcuaR13nn+u8f6WyIHk=;
+	b=qtPNzx5NePI7G6dwBvU7pzFKpSbdK0NPlWYBDIrCPoSjEKR4g6RLBmdNNUOn4hLiKepuEb
+	bo6Y19/By7QYsoAw==
+Date: Wed, 11 Jun 2025 09:38:16 +0200
+Subject: [PATCH v3 10/16] kunit: tool: Parse skipped tests from kselftest.h
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,7 +49,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250611-kunit-kselftests-v3-8-55e3d148cbc6@linutronix.de>
+Message-Id: <20250611-kunit-kselftests-v3-10-55e3d148cbc6@linutronix.de>
 References: <20250611-kunit-kselftests-v3-0-55e3d148cbc6@linutronix.de>
 In-Reply-To: <20250611-kunit-kselftests-v3-0-55e3d148cbc6@linutronix.de>
 To: Masahiro Yamada <masahiroy@kernel.org>, 
@@ -70,57 +69,79 @@ Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
  linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org, 
  workflows@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749627510; l=2070;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749627510; l=2785;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=lI/60pEr6pY3/pLg+6Hxz2diPV2LL+wQWsSjlOiVzgY=;
- b=sHO8F73U/BrcQR+S5CdVr2kAfBk6sOvpmwGLe0GkHA6MtLjeLt3qQ2pEdENOYL4cGlV2NaBsp
- I53K+L8LC7pDqkqfZsB1bte48hcxCzXlCnvHHw8owd8DlTq+B8X/8Wx
+ bh=jBKSdQACvBBwcM6WzYQQQ4hGpXONRfQDjnNvXZvxW6A=;
+ b=bjaPIZjodgAcgTvHsoZuoYuCJ+8/113ovz1oTBu/1LlrHK/MHWKqy2KqNxuYAG05G3hLbAykW
+ UvyjivABt0VD8uvoFsDEry57lSwU0Hn9WKM/N0eHfz2aN/PQpcmR7uG
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Currently there is no test validating the result reporting from nested
-tests. Add one, it will also be used to validate upcoming changes to the
-nested test parsing.
+Skipped tests reported by kselftest.h use a different format than KTAP,
+there is no explicit test name. Normally the test name is part of the
+free-form string after the SKIP keyword:
+
+	ok 3 # SKIP test: some reason
+
+Extend the parser to handle those correctly. Use the free-form string as
+test name instead.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- tools/testing/kunit/kunit_tool_test.py                           | 9 +++++++++
- .../kunit/test_data/test_is_test_passed-failure-nested.log       | 7 +++++++
- 2 files changed, 16 insertions(+)
+ tools/testing/kunit/kunit_parser.py                             | 8 +++++---
+ tools/testing/kunit/test_data/test_is_test_passed-kselftest.log | 3 ++-
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/kunit/kunit_tool_test.py b/tools/testing/kunit/kunit_tool_test.py
-index bbba921e0eacb18663abfcabb2bccf330d8666f5..691cde9b030f7729128490c1bdb42ccee1967ad6 100755
---- a/tools/testing/kunit/kunit_tool_test.py
-+++ b/tools/testing/kunit/kunit_tool_test.py
-@@ -165,6 +165,15 @@ class KUnitParserTest(unittest.TestCase):
- 		self.assertEqual(kunit_parser.TestStatus.FAILURE, result.status)
- 		self.assertEqual(result.counts.errors, 0)
+diff --git a/tools/testing/kunit/kunit_parser.py b/tools/testing/kunit/kunit_parser.py
+index 2478beb28fc3db825855ad46200340e884da7df1..4599d23c79b79f0e219d655c7053c8c3b34f8152 100644
+--- a/tools/testing/kunit/kunit_parser.py
++++ b/tools/testing/kunit/kunit_parser.py
+@@ -352,9 +352,9 @@ def parse_test_plan(lines: LineStream, test: Test) -> bool:
+ 	lines.pop()
+ 	return True
  
-+	def test_parse_failed_nested_tests_log(self):
-+		nested_log = test_data_path('test_is_test_passed-failure-nested.log')
-+		with open(nested_log) as file:
-+			result = kunit_parser.parse_run_tests(file.readlines(), stdout)
-+		self.assertEqual(kunit_parser.TestStatus.FAILURE, result.status)
-+		self.assertEqual(result.counts.failed, 2)
-+		self.assertEqual(kunit_parser.TestStatus.FAILURE, result.subtests[0].status)
-+		self.assertEqual(kunit_parser.TestStatus.FAILURE, result.subtests[1].status)
-+
- 	def test_no_header(self):
- 		empty_log = test_data_path('test_is_test_passed-no_tests_run_no_header.log')
- 		with open(empty_log) as file:
-diff --git a/tools/testing/kunit/test_data/test_is_test_passed-failure-nested.log b/tools/testing/kunit/test_data/test_is_test_passed-failure-nested.log
-new file mode 100644
-index 0000000000000000000000000000000000000000..835816e0a07715a514f5f5afab1b6250037feaf4
---- /dev/null
-+++ b/tools/testing/kunit/test_data/test_is_test_passed-failure-nested.log
-@@ -0,0 +1,7 @@
-+KTAP version 1
-+1..2
-+not ok 1 subtest 1
-+    KTAP version 1
-+    1..1
-+        not ok 1 test 1
-+not ok 2 subtest 2
+-TEST_RESULT = re.compile(r'^\s*(ok|not ok) ([0-9]+) (- )?([^#]*)( # .*)?$')
++TEST_RESULT = re.compile(r'^\s*(ok|not ok) ([0-9]+)? ?(- )?([^#]*)( # .*)?$')
+ 
+-TEST_RESULT_SKIP = re.compile(r'^\s*(ok|not ok) ([0-9]+) (- )?(.*) # SKIP(.*)$')
++TEST_RESULT_SKIP = re.compile(r'^\s*(ok|not ok) ([0-9]+)? ?(- )?(.*) # SKIP ?(.*)$')
+ 
+ def peek_test_name_match(lines: LineStream, test: Test) -> bool:
+ 	"""
+@@ -379,6 +379,8 @@ def peek_test_name_match(lines: LineStream, test: Test) -> bool:
+ 	if not match:
+ 		return False
+ 	name = match.group(4)
++	if not name:
++		return False
+ 	return name == test.name
+ 
+ def parse_test_result(lines: LineStream, test: Test,
+@@ -416,7 +418,7 @@ def parse_test_result(lines: LineStream, test: Test,
+ 
+ 	# Set name of test object
+ 	if skip_match:
+-		test.name = skip_match.group(4)
++		test.name = skip_match.group(4) or skip_match.group(5)
+ 	else:
+ 		test.name = match.group(4)
+ 
+diff --git a/tools/testing/kunit/test_data/test_is_test_passed-kselftest.log b/tools/testing/kunit/test_data/test_is_test_passed-kselftest.log
+index 65d3f27feaf22a3f47ed831c4c24f6f11c625a92..30d9ef18bcec177067288d5242771236f29b7d56 100644
+--- a/tools/testing/kunit/test_data/test_is_test_passed-kselftest.log
++++ b/tools/testing/kunit/test_data/test_is_test_passed-kselftest.log
+@@ -1,5 +1,5 @@
+ TAP version 13
+-1..2
++1..3
+ # selftests: membarrier: membarrier_test_single_thread
+ # TAP version 13
+ # 1..2
+@@ -12,3 +12,4 @@ ok 1 selftests: membarrier: membarrier_test_single_thread
+ # ok 1 sys_membarrier available
+ # ok 2 sys membarrier invalid command test: command = -1, flags = 0, errno = 22. Failed as expected
+ ok 2 selftests: membarrier: membarrier_test_multi_thread
++ok 3 # SKIP selftests: membarrier: membarrier_test_multi_thread
 
 -- 
 2.49.0
