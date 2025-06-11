@@ -1,135 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAF1A21B19D;
-	Wed, 11 Jun 2025 06:32:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375CA21B19D;
+	Wed, 11 Jun 2025 06:33:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749623537; cv=none; b=gRpYShnjmpx2Y//HeCod/NBsIMgDiuLoIEQX2RRQysYBfK+gADEPxf67dLzPOymfQZAk2mqatDIIksgeYk/CS+fVjX6jifm84oNAxP5S9wIc3jnZa8HymOJWHXZSKwoNpQakOitKL5ft9mfkjroywsPz906MGUnamcRaDZ9Pso4=
+	t=1749623633; cv=none; b=L4ot+KloroqEc0IXgEd/XRYMtvcc5MN8jtVupeoacxHMMFcSp2O1hYlbg6JyR561cZm05tDYD5zH2b9uFlhytdV11CQsZOi9IHm4bhHCRaN4Xioimz0qy+Wu2fLqLvtlHeUo6+bNJzyDMQRtm8hczRY/O6EoAZYa6OgZ9n2OeDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749623537; c=relaxed/simple;
-	bh=J3UGwgi7fwDEC+FexveDUmJHugoo+CsBZ5+yIQEJbUU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=StFT4G2z3S3s3H3mL/OIOjNyh22LAtu/LjvnKBQPFXy19b29K8Opb9kYazz/h1iKQG/pbujMQhGzE/Ly2sawZa3BzNrXcgBtjMOnLsy1a3/7wsxbb1yVHMZ+W0u1iuxy8dGg1x8LrcpT270GA5PZkRg6meVLNQMubaYL+AUUJV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IVMQlmEW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749623633; c=relaxed/simple;
+	bh=Mh3IBAJJLPsihFnUd8lzghlKsY+ledSbMenVLAl8F7Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oRMXc4qhnulW4xk71ZPDNl5IGeZHHZ+dufNPasjggpGuwmwSqXvOf7rbmc9i31V666u+7kvWYoeFX7+CUs0N0BW4PLiXokNpykZ4qgpl7rhRi79yiLt553VSZM3ItPY6+rFPwGz7VKlUaj8mseFW/FhLibqc7d4eTaWK3vi9fIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CoHhrVry; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IVMQlmEW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3228EC4CEEF;
-	Wed, 11 Jun 2025 06:32:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749623535;
-	bh=J3UGwgi7fwDEC+FexveDUmJHugoo+CsBZ5+yIQEJbUU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IVMQlmEW+ijtbmKTyDHg7FCcoEq+Ygux3RaWTquf9ajIdFOIyWuDPGwkXWQHq2CMg
-	 UYEa9GibvvAX8tnfxrnEF75PAfSAmSAoy6kJr0tzrhzOMLjkYLsbJdI1fHYITTtdKK
-	 mZNL/v+w3w2hSt6ysmnYfEN46Zg0AgwHi0fsaSqm5z5JuPtWzAQQdeSulwKJgtcQr0
-	 8euWoK08HuDq/25lCI4IodeWSQmv+X0OKwPZoc5ajfrx5QI0lEwpJxnsvIFbB24Rmp
-	 D9j0q8Az7Ga9g9AciHKYlvTvVOpKK+AsD18Ztr5aEi5XvfhQeUE4rC0nAjrmHfkoae
-	 ungWZ97qQvReQ==
-Message-ID: <d0b13867-9aa4-4fb1-8492-0cc58e92c61d@kernel.org>
-Date: Wed, 11 Jun 2025 08:32:10 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CoHhrVry"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a4f7865b22so26283f8f.0;
+        Tue, 10 Jun 2025 23:33:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749623630; x=1750228430; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Xi53fMKD3cKJk5G9CvrhErtFN8YzIqzdTSF68BonW+Q=;
+        b=CoHhrVryH+2OkpVXuk0orGcliGcNQOJiMXp9G5QCwtaF4z3MOTAAUL7ncijbzDk70o
+         spZAa5CLVPPhUm2NQHB5XTnmd0cMvYnAs35UwZxx5YKLczRYmzX2+xEs4HeA3Yr9inXY
+         XrDy17n75s3VZ+1b3MPyRRbGwNzZwI3jtJ0u7mtdhTnUjuUYA1okBGiQcao0Yc/QQ3LJ
+         GTFelb1yN9pVWfEHYjjrsxXi2hMCPPz/Cf47jy522UwcOqpe0+YCLaNRcE4ooZEeqgIN
+         gY4O3xqqpEJ1RTAyHY/P9t4n4NCLmmuq/abnhM8DvsMRBCKG9Gcwr9ioT+bLGAOG85Hj
+         DQhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749623630; x=1750228430;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Xi53fMKD3cKJk5G9CvrhErtFN8YzIqzdTSF68BonW+Q=;
+        b=H2cF5RtKWoRP+cfveezahMJTlVwTjZXcpFOBdg9jXGR/ybIkX30TkVbTnbS4PU2prv
+         xG8pPzw9aAO+sVAvos+rP5RlQiaNCrB6EbPdtA/0yt0hPd/SRITPvjSrlQseUHb4Rp61
+         9xLr/7Gx1gwdW6zeMRhk8OzThoyXrL1ubTIKh5emnZnty/MNDWc1HrY7OmV31FDc2YQ+
+         4s62GWy49g7VueRnuaAS/DQ2JRRmhsCTsZggb9v5cJy9PjWw03XENv7aNkSaQJoaShri
+         K7uh1mGBRFrWj/KuSdgawzxQRyv/jxDHyoUDqGHMQxisU0DnZkvmGRfWT7LtyG/Yst0N
+         NHfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVR2ZmYy4LVJXhIKgMCoXg5AgvT8FAD0GB6yGF0bWtiZYJ04vjtI2zXTjK6/Ap+dL/YRJTwbe3J/2GbA1k=@vger.kernel.org, AJvYcCXBYP3quec7Y3tU8HtHDHACo5w87Z1+mAIMAyaXaFWP7ymgg6wQr3UWiMBvulZF5obaqDTdi3rMZHaDurIg@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzffa3vC3FXhCcHAty34YpIt/DEQ9iFQUlHYx0dbBNhtZCtiXiv
+	Knp6fuADtFAqUhmUCy7XzbawU5+SWxyEOosiwNl4QHtmVTvweul+vc/1
+X-Gm-Gg: ASbGncsqck1fYpsqgG2ZFz03DeL0x7DZg0fumG+ciARwA1vBoMyeq/uGZJtifnLmHw5
+	e86aecyDqWBOKNp1rlb13nPvwmgQ8axFjrD4W/sEWZlY5Of1fMc/ewzTrToxIS2RRIOYh4mKKy8
+	+7vJ0/Ae/MnItF4C47EvysMz/cJVxd9bjzC7y5M40XIzFc/XMiMp+QOspJ3sDesXJuzLL2u6ilM
+	PCYnh5ggQJrXFJD48S6ZWX2NEUZSkqh2uZprlcoShU5AM4I5jvIDkM0l7CTGdMHwyM+5T50XRhl
+	S3tH5qtUSovqJs8NRZrLzG2HSCcmq+jwhV1adeXrhmXI5PvVa5Bg8qZWHuveOOqhWaFltA4iSfS
+	ijNO2g9M=
+X-Google-Smtp-Source: AGHT+IHqzA22qfVooFHgPHYXbsp7freFm89h/OzXJ7nibh5EChOXLAXLUwkTVzWLKe8uuREBQYZA1Q==
+X-Received: by 2002:a05:6000:208a:b0:3a4:f7ae:77cd with SMTP id ffacd0b85a97d-3a5586bd8e1mr443311f8f.1.1749623630296;
+        Tue, 10 Jun 2025 23:33:50 -0700 (PDT)
+Received: from DESKTOP-LCRLR8G.localdomain ([102.186.42.58])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5323b653dsm14364226f8f.39.2025.06.10.23.33.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 23:33:49 -0700 (PDT)
+From: Marwan Seliem <marwanmhks@gmail.com>
+To: jirislaby@kernel.org
+Cc: gregkh@linuxfoundation.org,
+	akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Subject: Re: [PATCH] tty: sysrq: Introduce compile-time crash-only mode
+Date: Wed, 11 Jun 2025 09:33:49 +0300
+Message-Id: <20250611063349.25187-1-marwanmhks@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250607151957.222347-1-marwanmhks@gmail.com>
+References: <20250607151957.222347-1-marwanmhks@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/1] dt-bindings: net: convert qca,qca7000.txt yaml
- format
-To: Frank Li <Frank.li@nxp.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Stefan Wahren <wahrenst@gmx.net>,
- "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
- imx@lists.linux.dev
-References: <20250606155118.1355413-1-Frank.Li@nxp.com>
- <20250610-thick-gifted-tuna-7eab4f@kuoka>
- <aEhPTXHHulIP5MqG@lizhi-Precision-Tower-5810>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <aEhPTXHHulIP5MqG@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=y
+Content-Transfer-Encoding: 8bit
 
-On 10/06/2025 17:29, Frank Li wrote:
->>
->>> +      $ref: /schemas/types.yaml#/definitions/flag
->>> +      description:
->>> +        Set the SPI data transfer of the QCA7000 to legacy mode.
->>> +        In this mode the SPI master must toggle the chip select
->>> +        between each data word. In burst mode these gaps aren't
->>> +        necessary, which is faster. This setting depends on how
->>> +        the QCA7000 is setup via GPIO pin strapping. If the
->>> +        property is missing the driver defaults to burst mode.
->>> +
->>> +  allOf:
->>> +    - $ref: /schemas/spi/spi-peripheral-props.yaml#
->>
->> This should be part of top-level allOf.
->>
->>> +
->>> +else:
->>> +  properties:
->>> +    current-speed:
->>> +      default: 115200
->>> +
->>> +  allOf:
->>> +    - $ref: /schemas/serial/serial-peripheral-props.yaml#
->>
->> Same here.
-> 
-> If it is one top, how to disable all properties in serial-peripheral-props.yaml
-> if it connect to spi (reg exist).
-You do not have to disallow them. If this is somehow useful, it can stay
-here, although the earlier properties still need to be defined in top level.
+Hi Jiri,
 
-Best regards,
-Krzysztof
+Thank you for your review and feedback. Let me address your comments and provide more context about the use case for this change.
+
+> I must admit I don't much understand the purpose of this. It can be
+> spelled as: you can crash the system only by sysrq-c from now on. Don't
+> use sysrq-r or others. Who did ask for this?
+
+This change was created with embedded systems that have external subsystems in mind (like modems/co-processors) where we need:
+    - The ability to trigger a full system crash (via sysrq-c) to collect subsystem crash dumps
+    - While explicitly disabling all other sysrq functionality for security reasons
+
+In these environments:
+    - Crash dumps are essential for debugging
+	- Other sysrq commands pose unnecessary security risks
+
+> These inline #ifdefs are horrid.
+
+Agreed. I will restructure this.
+
+> This can be invoked from userspace. So you can nicely DoS the machine by
+> the added warn, right? Hint: use ratelimiting.
+
+Good point. I'll add ratelimiting to the pr_warn() calls or we can consider reducing these to pr_debug()?
+
+> No need for this return ^^.
+
+You're right, the second return is redundant. I'll clean this up.
+
+> Is it for real?
+
+From a pure security viewpoint, expert advice is to remove this Magic Sysrq functionality, 
+either with kernel.sysrq=0 in sysctl config file, or with a full kernel rebuild 
+with n value for CONFIG_MAGIC_SYSRQ parameter.
+This patch provides a middle ground that:
+    1) Resolves the Core Security Conflict
+		The CRASH_ONLY mode provides the minimal debug capability while eliminating:
+            - Register dumps (disables 'p' command)
+            - Filesystem operations (disables 'u'/sync commands)
+            - All other privileged operations
+    2) Security Architecture Benefits
+	
+		Traditional: All-or-nothing  
+		│─────────────┬─────────────│  
+			Full disable			Full enable  
+
+		Our Approach: Principle of Least Privilege  
+		│─────┬───────┬─────────────│  
+			Off	Crash-only		Full enable  
+
+For v2 of the patch, I'll make these improvements:
+    1) Restructure to minimize #ifdef fiasco
+	2) Add proper rate limiting on pr_warn/change it to pr_debug
+	3) Clean up redundant return
+
+Thank you again for your valuable feedback. I appreciate you taking the time to review this.
+
+Warmest regards,
+Marwan Seliem
