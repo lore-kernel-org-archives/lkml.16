@@ -1,66 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx-rz-1.rrze.uni-erlangen.de (mx-rz-1.rrze.uni-erlangen.de [131.188.11.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0B1B1BD9CE;
-	Wed, 11 Jun 2025 21:23:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7AC91BD9CE;
+	Wed, 11 Jun 2025 21:23:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749677027; cv=none; b=JYcR9/Ivhv+Yt4x6GEHgR2QZV1SnK+wh9BbDu2rh3kAH1fPSblvb848nw2Q57u6tmi7mmRLtHf1gj7htYpvyJaGyIjt/2t1gu1u7nuYzC0zAZfh+CGg8FUvmSz4k+BOYw1MflGv1qs12Ehgmtd01MwTVBzenHbA+wkCz/A96ENQ=
+	t=1749677039; cv=none; b=bulC0PajIt2khmUIQghsRSLVKqwkKS3fdZQKeKGs4Zg7ZWkBWYd/ej67pLHg8W8yyui0f+UVMzzzbxfSI9FyhX7JiFfnzGL0823U3MTj5SScqF7HF4WYXltBrTFkOFiv+weTDQhnnn8ZfgDaDqe0ZHq0RmBMfikUQCkeijfNU5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749677027; c=relaxed/simple;
-	bh=KwDlr2NcpOH/WfeOqVZYlad0IdNSL1ybFymSn4u6kDc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kZNv8R6z7hiZGAvhK9mtYbg/iBCRS03R29BHcR8wtvJ4JO2vlGOrfwB2KrTLRd/a6UeqcN1+GRCUVhH1U8ZIfx75wA/l5mtMRIs0kPWlpGwq6zANhna9m9fG45ELKX85hXtH+RrygCWyUZ+3fWNOrw7AhBj2kNVyEjpFJFhvC6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZFHX9zkH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749677039; c=relaxed/simple;
+	bh=t1zJH4Rmm4htAzj/dQwNCS9TEe1c1gCbgRoNZ2a76h4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pmjGXMk3QCKFgFTT68iAmRpIwKmw34sleU895c+CEsdg15rSKJJqlR+aB62ooiKlYt6qxQISHckIahuxK1gE55QH1o3NNUs9PUUuxiLBRZ9aJMVJtqnnEzk/047LEXygW8m46lQTewkpHDYyQocm1SSt3rmJW/RFsLiKtzgfQak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=GB7QRGZ5; arc=none smtp.client-ip=131.188.11.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZFHX9zkH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31839C4CEE3;
-	Wed, 11 Jun 2025 21:23:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749677027;
-	bh=KwDlr2NcpOH/WfeOqVZYlad0IdNSL1ybFymSn4u6kDc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ZFHX9zkHacxxUyWFRQDAmVX78eHKBAF+OUfJxyRyZv+E0MdeZ2SmNtfQ/S8CHOD1v
-	 GFFWxIU4/eIQ43nEEzDMSb1Rn2UDkeuDC86XeUDCnQE9hY8hqMtCtpX53y5J5ctp9d
-	 HpH6FtprjuEK6kVrB7irHRtmTcTUYlEOWRlwtqroDT8ltBrYo0fcV4a6/S4pPm8w2e
-	 v54HaxIZGOQV6m52+gZeLwsLyl0nvHstA+P/nnuSpH/Jd8+VVtHTBdQh4OEo/K2W13
-	 mH6pROhufqp0CO/zm+EDoz8Q2eWv1WV/Axp8awh5wwTHLSeo7ps/fA/9WjqGw0gGM3
-	 2354vrHs+SVww==
-Date: Wed, 11 Jun 2025 14:23:46 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Yuyang Huang <yuyanghuang@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
- <horms@kernel.org>, Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, "Maciej
- =?UTF-8?B?xbtlbmN6eWtvd3NraQ==?=" <maze@google.com>, Lorenzo Colitti
- <lorenzo@google.com>
-Subject: Re: [PATCH net-next, v2] selftest: Add selftest for multicast
- address notifications
-Message-ID: <20250611142346.4c3456f0@kernel.org>
-In-Reply-To: <20250610094045.3829667-1-yuyanghuang@google.com>
-References: <20250610094045.3829667-1-yuyanghuang@google.com>
+	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="GB7QRGZ5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
+	t=1749676562; bh=S2j0xHEZeQOTVtx7TJX88U0NbtEMbxvs08E3DcOiM3k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From:To:CC:
+	 Subject;
+	b=GB7QRGZ5lNQDix0fSkRgtNjMUUycMz/UHj26osAKdXgqXZKpzhvC7+v9XyS8QmlYC
+	 azUB/LpaFU0XoJC/mJ0vbZ/D59tDhDxJBssj5jaqn1fbH695ZHK/xkgYdQIE7kK+sS
+	 N5j8WALlbhpLQrq98pYbzkDR7mjZlqOt+NDyWZyph3hi749A9BIreU1ETu6Pg/Pma7
+	 QZXaBnZdUvryQAzJbNaE60AG/8ryVYMTcyp52o6CfoGab8AYoxvbeVrnlVBXMvDLHI
+	 OyijBtu3r24T5wMOIZBqjwlbpMaG3cg0dUtM4NFqKqTy0xGay1OeXO7hnwnR+7souS
+	 uQpsPOkO1Iuxg==
+Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-rz-1.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4bHdkB0q3Sz8sk1;
+	Wed, 11 Jun 2025 23:16:02 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at boeck1.rrze.uni-erlangen.de (RRZE)
+X-RRZE-Flag: Not-Spam
+X-RRZE-Submit-IP: 2001:9e8:3626:500:39da:8819:39bd:1255
+Received: from luis-tp.fritz.box (unknown [IPv6:2001:9e8:3626:500:39da:8819:39bd:1255])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: U2FsdGVkX19Vu+9xQHHGMkmfqtW7CJMHQ2bOqLm6aCk=)
+	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4bHdk70Msdz8spC;
+	Wed, 11 Jun 2025 23:15:58 +0200 (CEST)
+From: Luis Gerhorst <luis.gerhorst@fau.de>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Luis Gerhorst <luis.gerhorst@fau.de>
+Subject: [PATCH bpf-next] bpf: Remove redundant free_verifier_state()/pop_stack()
+Date: Wed, 11 Jun 2025 23:14:31 +0200
+Message-ID: <20250611211431.275731-1-luis.gerhorst@fau.de>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <b6931bd0dd72327c55287862f821ca6c4c3eb69a.camel@gmail.com>
+References: <b6931bd0dd72327c55287862f821ca6c4c3eb69a.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Tue, 10 Jun 2025 18:40:45 +0900 Yuyang Huang wrote:
-> This commit adds a new kernel selftest to verify RTNLGRP_IPV4_MCADDR
-> and RTNLGRP_IPV6_MCADDR notifications. The test works by adding and
-> removing a dummy interface and then confirming that the system
-> correctly receives join and removal notifications for the 224.0.0.1
-> and ff02::1 multicast addresses.
-> 
-> The test relies on the iproute2 version to be 6.13+.
+This patch removes duplicated code.
 
-Thanks for the test. Could you please add it to another (perhaps
-a new?) test? rtnetlink is the main configuration interface for 
-networking, if we add all test cases that relate to it to a single
-file it will quickly become huge.
+Eduard points out [1]:
+
+    Same cleanup cycles are done in push_stack() and push_async_cb(),
+    both functions are only reachable from do_check_common() via
+    do_check() -> do_check_insn().
+
+    Hence, I think that cur state should not be freed in push_*()
+    functions and pop_stack() loop there is not needed.
+
+This would also fix the 'symptom' for [2], but the issue also has a
+simpler fix which was sent separately. This fix also makes sure the
+push_*() callers always return an error for which
+error_recoverable_with_nospec(err) is false. This is required because
+otherwise we try to recover and access the stale `state`.
+
+[1] https://lore.kernel.org/all/b6931bd0dd72327c55287862f821ca6c4c3eb69a.camel@gmail.com/
+[2] https://lore.kernel.org/all/68497853.050a0220.33aa0e.036a.GAE@google.com/
+
+Reported-by: Eduard Zingerman <eddyz87@gmail.com>
+Link: https://lore.kernel.org/all/b6931bd0dd72327c55287862f821ca6c4c3eb69a.camel@gmail.com/
+Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
+---
+ kernel/bpf/verifier.c | 26 +++++++++++---------------
+ 1 file changed, 11 insertions(+), 15 deletions(-)
+
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index d3bff0385a55..fa147c207c4b 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -2066,10 +2066,10 @@ static struct bpf_verifier_state *push_stack(struct bpf_verifier_env *env,
+ 	}
+ 	return &elem->st;
+ err:
+-	free_verifier_state(env->cur_state, true);
+-	env->cur_state = NULL;
+-	/* pop all elements and return */
+-	while (!pop_stack(env, NULL, NULL, false));
++	/* free_verifier_state() and pop_stack() loop will be done in
++	 * do_check_common(). Caller must return an error for which
++	 * error_recoverable_with_nospec(err) is false.
++	 */
+ 	return NULL;
+ }
+ 
+@@ -2838,10 +2838,10 @@ static struct bpf_verifier_state *push_async_cb(struct bpf_verifier_env *env,
+ 	elem->st.frame[0] = frame;
+ 	return &elem->st;
+ err:
+-	free_verifier_state(env->cur_state, true);
+-	env->cur_state = NULL;
+-	/* pop all elements and return */
+-	while (!pop_stack(env, NULL, NULL, false));
++	/* free_verifier_state() and pop_stack() loop will be done in
++	 * do_check_common(). Caller must return an error for which
++	 * error_recoverable_with_nospec(err) is false.
++	 */
+ 	return NULL;
+ }
+ 
+@@ -22904,13 +22904,9 @@ static int do_check_common(struct bpf_verifier_env *env, int subprog)
+ 
+ 	ret = do_check(env);
+ out:
+-	/* check for NULL is necessary, since cur_state can be freed inside
+-	 * do_check() under memory pressure.
+-	 */
+-	if (env->cur_state) {
+-		free_verifier_state(env->cur_state, true);
+-		env->cur_state = NULL;
+-	}
++	WARN_ON_ONCE(!env->cur_state);
++	free_verifier_state(env->cur_state, true);
++	env->cur_state = NULL;
+ 	while (!pop_stack(env, NULL, NULL, false));
+ 	if (!ret && pop_log)
+ 		bpf_vlog_reset(&env->log, 0);
+
+base-commit: 1d251153a480fc7467d00a8c5dabc55cc6166c43
 -- 
-pw-bot: cr
+2.49.0
+
