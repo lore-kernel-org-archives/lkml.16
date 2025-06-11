@@ -1,105 +1,149 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5567D23D290
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 08:38:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2191B23E359;
+	Wed, 11 Jun 2025 08:38:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749631098; cv=none; b=sU6DEQNAs753hiaUwBQLhpyiJPTk2WgQ7Pf2QKse6rebm5wRmRXFMfL7X+EtffmUOpObxnPR3H8hpL8RnQOvATYhDTs9YRXKjh8NqMncq+TmPBq1l60Xv0sWxOOro5H/vyVhkUMj9CniNTy5a7HPof1ZUyVO5AK9rVMz964UKQ0=
+	t=1749631114; cv=none; b=LSeGNaZUoS7p+Ww7X+wZ8q2Yxbkd3mnuLg6Vsllki7YmfTWgjfZ1TEhTjsJISK3X6jV5OdWCzLmN/1gLUvvETslkHwx/d85Nz2eF5joSjnbLqwREPV8YTrxD0uihXVxcDwp9pIyWvZV/7ECyZasdfqX6b5ThyiEzclJi+XmKqWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749631098; c=relaxed/simple;
-	bh=D64AGcRCPHcvDx1jfHJpg23zObBF7fp6mUeiKWe/Mks=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BtKBGhf7nOzu4JImhjJQvyRnO1Sdx4aqRU9UAkWehNCO/GBF+lzSlb/IDBIzcjjnly1tVRFWWCoxE8JF2oif5LTeHQxjoCY1QsQXyuid52Y4qBH7u7qMR5nIw5K4k22gqIXgQvTQBh6umwrg0Ce3CGVTGM4OD4Xm3FjkDRn0ly0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=neon.tech; spf=pass smtp.mailfrom=neon.tech; dkim=pass (1024-bit key) header.d=neon.tech header.i=@neon.tech header.b=Sat4IauE; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=neon.tech
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neon.tech
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=neon.tech header.i=@neon.tech header.b="Sat4IauE"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-60780d74c8cso8243598a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 01:38:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=neon.tech; s=google; t=1749631094; x=1750235894; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=D64AGcRCPHcvDx1jfHJpg23zObBF7fp6mUeiKWe/Mks=;
-        b=Sat4IauEHIGcvOQ/V072BWy809Jxi2Zrk7HbVWNFZHYkyVhm2AcO/E3o7+VCp6kg4z
-         RVJHeDUOGoek86UqRnBKblcjiFOtR3UKsD2Tgg5Fde7OlfiF8N7AY7z9lWCrvB4UfHYY
-         532EXdXT1GeJYnbuGNROahPPqGhgukecGY/9M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749631094; x=1750235894;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=D64AGcRCPHcvDx1jfHJpg23zObBF7fp6mUeiKWe/Mks=;
-        b=DX10tRcrU6xRy6dpRX4ju5pWs4kj3f26u/kKxriSud4+qdXpQpi4NzwBkEFEWEFBEE
-         /pVHHelwpCVzf+mBs5V1Ksc+UE6Qq+3cFwdAWlM9Cs9JkHfDsODd8ARRMe/XlfcPRMXs
-         defddEQRWSTQw/CCarfPSPaLVm5honqkvnkq/lRK+Uyd+c7PcX/1tuD5Zvr1sueykH85
-         1X+q7LEI6ofAF3bFt4Jgl/iHA3ONWRCc//71Syu5KWClPhOe1K67z1BiqtX+Ck75d/4j
-         2kyycQEKhtQxA+t7zn+Tjsgy6+BC7zHtWAjoPvyznDW64wjTBGOQ0u2tPclV0o38d6Or
-         Vtdg==
-X-Forwarded-Encrypted: i=1; AJvYcCVPvs+LYyXP8rF2Rl94Gr+5gKArHDyiEJ3yTl9lNLx4UV+KlqpNYKwK2AqXGWT7NddvTeMYe27FLjwQnwo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBqeybBfrwtOWkh3sNGsOuAq1DjF5F842J/okLH0CF4egBWlvL
-	qAS4U2DzjQWT98owORalUF5OIHTKi43SXmgEjVzq1aev+eVsNH9VMDA8MoBKZn9e9ATRsfhopjy
-	EKPLOr9Yf0w==
-X-Gm-Gg: ASbGncvc5UsHSP4ZcPvKaOoJ3FksPug8nmhIrXF6Dse2gDrctc/6bddcFycstGdxGFA
-	wx+uJT3/AfZPZ3757/pzOUXkYUE7ZdJWrk7/EGtlJRTmnYlKzFDVofUfZiINb91bMrUUTIdPrQj
-	r1Mz+iT6sOHkuU1oxEF7XBc1a6IpUBW9ybzz5WMcSnBBDtJ5BLQ+fZgghOkdJhN0plI5UqC7RH/
-	b6F2hvnmpEFEy5uvCgqGQPonP6L6nwuvE1EyZ9KRZh2iqPwCzwU09AVedh9PVcPCgPrP5lHcVgl
-	UIvgbAdZU/Dk9bIimjec2Rtjy08gNAlEkRzGVpn5ngxYKHzlCZOQ57zxH/DfGJxgTQ==
-X-Google-Smtp-Source: AGHT+IHfpgxq/IKP0ThT1N5OnbuDnVWyZUPwXmhwvUMbpRGv4tnTD5aJBQbcBrn4Pnd25O2AoX5W1g==
-X-Received: by 2002:a05:6402:382:b0:608:523c:1365 with SMTP id 4fb4d7f45d1cf-608523c1401mr864164a12.29.1749631093581;
-        Wed, 11 Jun 2025 01:38:13 -0700 (PDT)
-Received: from [192.168.86.142] ([84.65.228.220])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60778377a38sm7268698a12.27.2025.06.11.01.38.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jun 2025 01:38:13 -0700 (PDT)
-Message-ID: <2080ec7c-8dc8-4f03-bd96-78ba47e55a97@neon.tech>
-Date: Wed, 11 Jun 2025 09:38:11 +0100
+	s=arc-20240116; t=1749631114; c=relaxed/simple;
+	bh=aHulynXRVVHWpUyUXomIsK4Ep2mEimLnrKrGIEb43Rk=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=IpntorObZGYSFdnbIR94x+5IE7j8ouJ9sRXC+gbucb4hAPoJcA0BBPGtXbWdb8NxMcnjl7anmCs5mBhIBoICmdNIzVgtYe2D6sjL7f9rX/BVyeewEP/+CTmmzaVDjQU7T2vhDafjD8B29QH+jVTJfXKBtEsBVBebaL2l0uF/jaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bHJw52mcJzYQvTS;
+	Wed, 11 Jun 2025 16:38:29 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 5DDFD1A0A6C;
+	Wed, 11 Jun 2025 16:38:28 +0800 (CST)
+Received: from [10.174.99.169] (unknown [10.174.99.169])
+	by APP2 (Coremail) with SMTP id Syh0CgCXoGOCQEloTNk1PA--.4547S2;
+	Wed, 11 Jun 2025 16:38:28 +0800 (CST)
+Subject: Re: [PATCH 1/7] mm: shmem: correctly pass alloced parameter to
+ shmem_recalc_inode() to avoid WARN_ON()
+To: Baolin Wang <baolin.wang@linux.alibaba.com>, hughd@google.com,
+ willy@infradead.org, akpm@linux-foundation.org
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org
+References: <20250605221037.7872-1-shikemeng@huaweicloud.com>
+ <20250605221037.7872-2-shikemeng@huaweicloud.com>
+ <3d07c68f-da11-43d8-a2da-6b200b2fa40a@linux.alibaba.com>
+ <994283d9-2dc4-6887-5d46-247b834879b5@huaweicloud.com>
+ <9e59f1f0-db3b-2182-4485-887ac7036bfd@huaweicloud.com>
+ <cf70cde3-b4a4-4596-aefa-a510e082e129@linux.alibaba.com>
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+Message-ID: <1ded199d-149f-d64c-536d-21ce158a09d6@huaweicloud.com>
+Date: Wed, 11 Jun 2025 16:38:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] x86/mm: Handle alloc failure in phys_*_init()
-To: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-mm@kvack.org
-Cc: Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
- "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
- Oleg Vasilev <oleg@neon.tech>, Arthur Petukhovsky <arthur@neon.tech>,
- Stefan Radig <stefan@neon.tech>, Misha Sakhnov <misha@neon.tech>
-References: <a31e3b89-5040-4426-9ce8-d674b8554aa1@neon.tech>
- <a404d023-e0bb-4dc8-8952-accba299ab50@neon.tech>
- <22cd0fa8-d14d-4d37-a6a1-5e6827d6182b@intel.com>
-Content-Language: en-US
-From: Em Sharnoff <sharnoff@neon.tech>
-In-Reply-To: <22cd0fa8-d14d-4d37-a6a1-5e6827d6182b@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <cf70cde3-b4a4-4596-aefa-a510e082e129@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:Syh0CgCXoGOCQEloTNk1PA--.4547S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxWryfuFyxur1xtryxZw4fXwb_yoW5try5pr
+	W8Gas0yFZ8Jry0yFn2qF18Z3yaq3yrJa1UXrW5CFyxCan0qr1SgrWUKrWj9ryUCrWkGw4j
+	qF47K3srZryUZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
+	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUFB
+	T5DUUUU
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-On 6/10/25 15:55, Dave Hansen wrote:
 
-> Are there any _actual_ users of 'paddr_last'? I see a lot of setting it
-> and passing it around, but I _think_ this is the only place it actually
-> gets used. Here, the fact that it's an address doesn't even matter.
 
-I checked and didn't find any other users, but I'm happy to give others a
-chance to correct me in case I missed something.
+on 6/11/2025 3:29 PM, Baolin Wang wrote:
+> 
+> 
+> On 2025/6/10 09:02, Kemeng Shi wrote:
+>>
+>>
+>> on 6/9/2025 8:46 AM, Kemeng Shi wrote:
+>>>
+>>>
+>>> on 6/7/2025 2:11 PM, Baolin Wang wrote:
+>>>>
+>>>>
+>>>> On 2025/6/6 06:10, Kemeng Shi wrote:
+>>>>> As noted in the comments, we need to release block usage for swap entry
+>>>>> which was replaced with poisoned swap entry. However, no block usage is
+>>>>> actually freed by calling shmem_recalc_inode(inode, -nr_pages, -nr_pages).
+>>>>> Instead, call shmem_recalc_inode(inode, 0, -nr_pages) can correctly release
+>>>>> the block usage.
+>>>>>
+>>>>> Fixes: 6cec2b95dadf7 ("mm/shmem: fix infinite loop when swap in shmem error at swapoff time")
+>>>>> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+>>>>> ---
+>>>>>    mm/shmem.c | 2 +-
+>>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/mm/shmem.c b/mm/shmem.c
+>>>>> index 4b42419ce6b2..e27d19867e03 100644
+>>>>> --- a/mm/shmem.c
+>>>>> +++ b/mm/shmem.c
+>>>>> @@ -2145,7 +2145,7 @@ static void shmem_set_folio_swapin_error(struct inode *inode, pgoff_t index,
+>>>>>         * won't be 0 when inode is released and thus trigger WARN_ON(i_blocks)
+>>>>>         * in shmem_evict_inode().
+>>>>>         */
+>>>>> -    shmem_recalc_inode(inode, -nr_pages, -nr_pages);
+>>>>> +    shmem_recalc_inode(inode, 0, -nr_pages);
+>>>>>        swap_free_nr(swap, nr_pages);
+>>>>>    }
+>>>>
+>>>> Have you tested your patch? When I inject an error to test your patch, the following issue will be triggered:As all issues are hard to trigger, I only run some simple test to ensure normal
+>>> process is fine. Could you share how to inject the error to trigger following
+>>> issue. I will have a deep look. Thanks
+>> Sorry that the message is truncated. I mean I only test normal process is fine.
+> 
+> Please also test the swapin error case you try to fix. Obviously your current patch is incorrect.
+> 
+>> Besides, I think there is another long-standing issue which could trigger the
+>> following issue. Here is the issue which is possible to blame:
+>> When swap entry is replaced with error entry in shmem_set_folio_swapin_error(),
+>> we will reduce info->swapped. Afterwards, error entry could be deleted in
+>> shmem_undo_range() and the info->swapped is reduced again. As a result, we
+>> reduce info->swapped twice for a single swap entry.
+> 
+> OK. So you should do something like in shmem_find_swap_entries() to avoid decreasing info->swapped again.
+> 
+> entry = radix_to_swp_entry(folio);
+> /*
+> * swapin error entries can be found in the mapping. But they're
+> * deliberately ignored here as we've done everything we can do.
+> */
+> if (swp_type(entry) != type)
+>     continue;
+> 
+>> A simple way to confirm this is injecting error to original code. Could you
+>> share how to trigger the issue or could you do the same test to original code?
+> 
+> Yes, original code is good.
+I still suspect that it's another long-standing issue which is triggerd by
+this by accident.
+> 
+> A simple test procedure is to allocate some shmem memory and swap them out, then swap in the shmem while injecting an error to trigger the swap-in error case, and finally unmap the program.
+> 
+Sure, will fix the mentiond long-standing issue first and try to run this
+test.
+I will appreciate if you can share your test code if it's convenient.
 
-> Could you please find a way to reduce the number of casts?
+Thanks
 
-What do you think about changing the return for these functions to just 'int'
-for errors?
-It's a larger change (especially if all callers should be updated to check the
-return value), but I think much cleaner in the end.
-
-> Please write everything in imperative voice. No "we's", please.
-
-Noted, thanks - will address in the next version.
-
-Em
