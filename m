@@ -1,104 +1,142 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72D91244678;
-	Wed, 11 Jun 2025 18:00:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7E2A50
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 18:00:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749664812; cv=none; b=gZm+YsYO2k08NZqkJHlYkO770Hg1x0F/lxNiIC5t6E9BhOdV7s0cNynGWobpaA+IGL34kUFqkTVqV7fWgVnqpF+MQ7VlIeTqxVUYItbm3l6yWkUgPOfciksC4fjbjQCTYUtHNynJDNocMUuPQp4UvCFKXHcIP3mFJOEEOM98p9M=
+	t=1749664850; cv=none; b=mOURFloLLR/pQNRVvei+zRU6fToXvc++iKxh1kLyMsXCQ+xmTswQnaLJJ/7ipcf8gdlSYPVfhEB+x0Luyo2qRBd6ymApYuvZpClIee/b1uPQqDTFt2f/zKy/+uRZmJySB2Z9maNQVO99ZWKPoGh0nbU5swmBka3odzfomE5tHYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749664812; c=relaxed/simple;
-	bh=KlnMCl+JWTR4vag+rTUNR+POorFEvuqAqbk1bhUtLk8=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=QWKPfJgUWvbeQeNIoaIc9E9FHFi3Qx+iEskc6YCHUUlKEescbEuUX9wmtds845SUrF7IEwF7IGStmbQ4bUJ4kfcNX46en8Ocnw/JksfcQdhuBlOc2W/MNF0xQ2BxMaFjD53COWWX/N7YGIUZpR1oDse6zoHQFKJcGWsO2Xe1sOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=HktHWfx3; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1749664850; c=relaxed/simple;
+	bh=mQSLWD9/xere2JF5WAfKE7gTGG8IzPl1blnKBELGi4M=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Ip3hJFFEr2o3ZR/6IkKF730vdwcs1yJGOOHQkBzBN9MVGNUtrNQqbV7Za+K4pQWVcjSxaA9wCmqLnodOOTl5i4a+NMo3Ng3wunOWvw1uuv+7/5U1A89kHfWLMRcUtnt9so/P4VssEwvUTJF0WOaKLqv7eYwTjQiv/Hcmi6o7/cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XjWsmaZo; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HktHWfx3"
-Received: from [100.64.225.229] (unknown [52.148.138.235])
-	by linux.microsoft.com (Postfix) with ESMTPSA id C660C21151A2;
-	Wed, 11 Jun 2025 11:00:10 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C660C21151A2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1749664811;
-	bh=dbrvDIIvFK57NZQv781wDufNFlpQT1k9keSoeqSk8OU=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=HktHWfx3nn4nLvQkFUEDVbFAWkz8jpDFYsSm9WzHht9i9jiwwCi+9lO2kg5FEBff1
-	 yXAqDbH1odWJUFdwQ4Krfg+iKt3I2Agn7yMg+LBpvTcfqON4QvLpaJgtaPDKcxLj7g
-	 6n4tx+1ycDVaF6DQtzWVmnyX4AOKrJPy/EO9x6tg=
-Message-ID: <6be766a4-c983-4316-a07b-fd96238191e4@linux.microsoft.com>
-Date: Wed, 11 Jun 2025 11:00:11 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XjWsmaZo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749664849; x=1781200849;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=mQSLWD9/xere2JF5WAfKE7gTGG8IzPl1blnKBELGi4M=;
+  b=XjWsmaZo+BUh745cSuTag5HAQ2AsZOLRsryFC2KlPUj6ULYEiULjuLhx
+   5zeVGszTU0XnfT5AzePwUywasqgFnZ9VO2LqYeY09RLOYNf+C6qp2i+EL
+   iZB7ruzt659HI4s1byUY3WMz6nVLQUmFD1KqXKacg0yIs0C9iLdxhO8lB
+   +wnkWdrZksPG4t5OHnteTUt+YCpy87RD43NdQQ4m5tO59G4tCuB61m+7t
+   q6d5CElxyD8ktmcPENqttJh0vwfhvZ5dS2/gZEx5iIFSTqeV5jzUPe54I
+   VDipdh7FHNSv2Wlo9DSkMerR5hgvCbQzFYyK/kyiLsynKgKgj+uRTHVTd
+   g==;
+X-CSE-ConnectionGUID: 8kbLoim/S5CAhSpAhG9+tA==
+X-CSE-MsgGUID: OvDwFcxmQU6432zvqKi0/w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="55622917"
+X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
+   d="scan'208";a="55622917"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 11:00:48 -0700
+X-CSE-ConnectionGUID: DlObzK+YQo2C3v8o1xbkGw==
+X-CSE-MsgGUID: /oYFOTYsTree1FFQXv3Ilw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
+   d="scan'208";a="147822577"
+Received: from chhatrar-mobl.amr.corp.intel.com (HELO desk) ([10.125.146.46])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 11:00:48 -0700
+Date: Wed, 11 Jun 2025 11:00:47 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: x86@kernel.org
+Cc: tony.luck@intel.com, "H. Peter Anvin" <hpa@zytor.com>,
+	linux-kernel@vger.kernel.org,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>
+Subject: [RFC PATCH] x86/cpu: Mark Ice Lake model 7D and 9D as unreleased
+Message-ID: <20250611-icelake-cleanup-v1-1-0f82472dbc8f@linux.intel.com>
+X-B4-Tracking: v=1; b=H4sIAOfDSWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDU0MT3czk1JzE7FTd5JzUxLzSAt0U80QLY0MjA5MUSzMloK6CotS0zAq
+ widFKQW7OILEAxxBnD6XY2loAnoUQhm8AAAA=
+X-Change-ID: 20250514-icelake-cleanup-d7a831204d96
+X-Mailer: b4 0.14.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Naman Jain <namjain@linux.microsoft.com>,
- "K . Y . Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, eahariha@linux.microsoft.com,
- Roman Kisel <romank@linux.microsoft.com>,
- Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
- Saurabh Sengar <ssengar@linux.microsoft.com>,
- Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
- ALOK TIWARI <alok.a.tiwari@oracle.com>, linux-kernel@vger.kernel.org,
- linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH v5 2/2] Drivers: hv: Introduce mshv_vtl driver
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-References: <20250611072704.83199-1-namjain@linux.microsoft.com>
- <20250611072704.83199-3-namjain@linux.microsoft.com>
- <2f2a252f-c2cb-40ee-a416-c07fd120dd49@linux.microsoft.com>
-From: Easwar Hariharan <eahariha@linux.microsoft.com>
-Content-Language: en-US
-In-Reply-To: <2f2a252f-c2cb-40ee-a416-c07fd120dd49@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 6/11/2025 9:46 AM, Nuno Das Neves wrote:
-> On 6/11/2025 12:27 AM, Naman Jain wrote:
->> Provide an interface for Virtual Machine Monitor like OpenVMM and its
->> use as OpenHCL paravisor to control VTL0 (Virtual trust Level).
->> Expose devices and support IOCTLs for features like VTL creation,
->> VTL0 memory management, context switch, making hypercalls,
->> mapping VTL0 address space to VTL2 userspace, getting new VMBus
->> messages and channel events in VTL2 etc.
->>
->> Co-developed-by: Roman Kisel <romank@linux.microsoft.com>
->> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
->> Co-developed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
->> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
->> Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
->> Reviewed-by: Alok Tiwari <alok.a.tiwari@oracle.com>
->> Message-ID: <20250512140432.2387503-3-namjain@linux.microsoft.com>
->> Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
->> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
->> ---
->>  drivers/hv/Kconfig          |   23 +
->>  drivers/hv/Makefile         |    7 +-
->>  drivers/hv/mshv_vtl.h       |   52 +
->>  drivers/hv/mshv_vtl_main.c  | 1783 +++++++++++++++++++++++++++++++++++
->>  include/hyperv/hvgdk_mini.h |   81 ++
->>  include/hyperv/hvhdk.h      |    1 +
->>  include/uapi/linux/mshv.h   |   82 ++
->>  7 files changed, 2028 insertions(+), 1 deletion(-)
->>  create mode 100644 drivers/hv/mshv_vtl.h
->>  create mode 100644 drivers/hv/mshv_vtl_main.c
->>
+These models were never officially released, but they made it into
+intel-family.h. There is no evidence that these models are being used in
+production. As a matter of fact, Intel's affected CPU list[1] does not
+contain these models.
 
-<snip>
+During CPU mitigations it gets confusing whether to include these models
+with other Ice Lake models or not. Add the comment in the intel-family.h to
+indicate that these models were never released. Also taint and warn about
+these unreleased models, except when running as a guest.
 
-> 
-> Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+[1] https://www.intel.com/content/www/us/en/developer/topic-technology/software-security-guidance/processors-affected-consolidated-product-cpu-model.html
 
-Hi Nuno,
+Suggested-by: Andrew Cooper <andrew.cooper3@citrix.com>
+Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
+Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+---
+Please scream if you believe that the assumptions made in this patch are
+incorrect.
+---
+ arch/x86/include/asm/intel-family.h |  4 ++--
+ arch/x86/kernel/cpu/intel.c         | 12 ++++++++++++
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
-In the future, please trim unnecessary context, example above, following 
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html#use-trimmed-interleaved-replies-in-email-discussions
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index be10c188614fe24ad41e2e1912b8d5640c6ea171..948e0a057a9629dc57671e4c666b5f62e762d4bb 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -110,9 +110,9 @@
+ 
+ #define INTEL_ICELAKE_X			IFM(6, 0x6A) /* Sunny Cove */
+ #define INTEL_ICELAKE_D			IFM(6, 0x6C) /* Sunny Cove */
+-#define INTEL_ICELAKE			IFM(6, 0x7D) /* Sunny Cove */
++#define INTEL_ICELAKE			IFM(6, 0x7D) /* Sunny Cove, never released */
+ #define INTEL_ICELAKE_L			IFM(6, 0x7E) /* Sunny Cove */
+-#define INTEL_ICELAKE_NNPI		IFM(6, 0x9D) /* Sunny Cove */
++#define INTEL_ICELAKE_NNPI		IFM(6, 0x9D) /* Sunny Cove, never released */
+ 
+ #define INTEL_ROCKETLAKE		IFM(6, 0xA7) /* Cypress Cove */
+ 
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index 076eaa41b8c81b2dd9be129d14dc7c8041eb2e79..b7eb8d5ee4351bf4a31e6a2792d24f7dbc0773ed 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -337,9 +337,21 @@ static void early_init_intel(struct cpuinfo_x86 *c)
+ 		detect_tme_early(c);
+ }
+ 
++static const struct x86_cpu_id unreleased_cpus[] = {
++	X86_MATCH_VFM(INTEL_ICELAKE,		0),
++	X86_MATCH_VFM(INTEL_ICELAKE_NNPI,	0),
++	{},
++};
++
+ static void bsp_init_intel(struct cpuinfo_x86 *c)
+ {
+ 	resctrl_cpu_detect(c);
++
++	if (x86_match_cpu(unreleased_cpus) && !cpu_has(c, X86_FEATURE_HYPERVISOR)) {
++		add_taint(TAINT_CPU_OUT_OF_SPEC, LOCKDEP_STILL_OK);
++		WARN_ONCE(1, "WARNING: CPU family=0x%x, model=0x%x is unreleased, tainting\n",
++			  c->x86, c->x86_model);
++	}
+ }
+ 
+ #ifdef CONFIG_X86_32
 
-"Similarly, please trim all unneeded quotations that aren’t relevant to your reply.
-This makes responses easier to find, and saves time and space. For more details see:
- http://daringfireball.net/2007/07/on_top"
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250514-icelake-cleanup-d7a831204d96
 
-Thanks,
-Easwar (he/him)
+Best regards,
+-- 
+Pawan
+
+
