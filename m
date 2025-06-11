@@ -1,183 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01182BCF7B;
-	Wed, 11 Jun 2025 13:32:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F14535897;
+	Wed, 11 Jun 2025 13:33:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749648728; cv=none; b=GZw2kWLm8HdRWfpGuNVrghMysISuHN+4ygKCPvzAZJpQXpnfXsWPMpyR86MByPs4U8WQW9fqH1FyU/2AG+UycW4TDCz/JbNfXgDVLIcxCA49pqc0TgVZRs5YKR/xlLDbtwey9ZNSeq/OPxlP461F2WbGEhWzlV3qQ785xfbmdVI=
+	t=1749648785; cv=none; b=pDNoS2qdDDPN3bMTJp8HLL/hgWJ778RSIB6FdqrvXk4BY95GKDJPSoz8PTuE1N1cDUtqL01EeCrj18eJRnwBL0+okEp2DX1oKjzJSo/q4w/0YVlD23I7rOd4qrBE0B4YqbxdBdUB6C8ntUDbKo68HiH4xZddXbrR7D/IJROU4Pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749648728; c=relaxed/simple;
-	bh=XiSy6EA+nY4FGmZhH6fU8zZo9na9VIQe0Qv5BQB5i4Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fu2tnuJ+3srdC6kXil0iIxzEpp3+2L1c9eHht7ka16C7Xx1eHO5LRgU32cTXf2xXN1qLkgk+Fv2c2bD+7t9DyYF5pQXsGa4BY3EWV8CN1YI3005b2zqHuf0DEJqju68ZqpYWSIVB5Dn+MagAtGg8Z/5HW52TvpRM0pgywCWYLHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PgmfmKQR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749648785; c=relaxed/simple;
+	bh=joeF+vcWw9jF2hVUV2wLUIYdu3wA0qlKcnITq1MB8Ng=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OnYP8A6lz5ga0tiM+EYACq9VpMVseBu+CwwPTZlO0PNi8eXKboBLJMgY5AraS4kGfBJgoTOcjMxm7leRmsHHcSoRE7yJ8cQC5/NLseYgtTsX+IP6deNtEgVQWmgms7qlSIqkBdjyFmU3BWAetxEfLWOKTkg79n26u/biNzI1ZDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=izdWAQ9y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PgmfmKQR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC86FC4CEEE;
-	Wed, 11 Jun 2025 13:32:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="izdWAQ9y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0996DC4CEF0;
+	Wed, 11 Jun 2025 13:33:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749648727;
-	bh=XiSy6EA+nY4FGmZhH6fU8zZo9na9VIQe0Qv5BQB5i4Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PgmfmKQRS/2BiTQLkQf3VrOESp1mSELSO8JW8xYjcW9+8Azsf7eVB/1mgqeyvXqLM
-	 Dw959O/+9soTBcH2N9EAcTdbDTM1uLvmEv/6VRFWrfBGhqcjoyALC9D4SKTWKSWcvb
-	 OdbIf3V780ZLj1+gxwzpNBVpvYzpbowc1rLuKsWwvnNlhdErmWlqL+oxNpOblHniq7
-	 +ycrYK0IhBNh80rl8UfuWzhwLhQlhEdCeZ4CZxe9ZSYH+JKsfzCGC+4HhX/w7t6R0/
-	 55b46pcOrkuXz7GqscwjpnMFOQC6uuiEhs+3F8iU4eosaLvI/zytb8akJtk+tTbuSU
-	 Egvy3QKmSW1MA==
-From: Michael Walle <mwalle@kernel.org>
-To: Lee Jones <lee@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Julien Panis <jpanis@baylibre.com>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Michael Walle <mwalle@kernel.org>
-Subject: [PATCH v1 5/5] regulator: tps6594-regulator: Add TI TPS652G1 PMIC regulators
-Date: Wed, 11 Jun 2025 15:31:37 +0200
-Message-Id: <20250611133137.1686183-6-mwalle@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250611133137.1686183-1-mwalle@kernel.org>
-References: <20250611133137.1686183-1-mwalle@kernel.org>
+	s=k20201202; t=1749648785;
+	bh=joeF+vcWw9jF2hVUV2wLUIYdu3wA0qlKcnITq1MB8Ng=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=izdWAQ9yIMMRAb8osi6/jac08Tcx8sCXgwCZvX4vZoN3SbZZdt0B40+r+hvncRUAk
+	 dAy+VTSEh8uSGAShYdZUW0htisB0HAj9mjs43tlVgj9TVvf3Ydyp+oCwx248mGFXOI
+	 l+6im02n+Cyiz6/3ZIK5ff7HQPZwjtr0eGmXQXItkddBT/AMIgeiAv5OsGuAo9s3DL
+	 9v0C58abDmdDvFJE8r2GUX+SgK9b7FN9l4G6ns/XpQ1FW7K/J+ysDg3Dne5A/6AAvf
+	 0RM+TbyilD8bXCZNjkDud1DJo6ASBggonSicmTvUlTFJaNpAlnhMYIX1JFhG3ObuGr
+	 jreZDT3VBwqDw==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-55351af2fc6so8030513e87.0;
+        Wed, 11 Jun 2025 06:33:04 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVU1D6+/8TiRWiqZCN220tvnIrHKxH27ckErJxa8q45TXIQM8GLDV+F4v7yaZkjlDGp/amG3bqb+Zun3r8=@vger.kernel.org, AJvYcCWp7/m//vc+Mqo6Q8QfHzBE+Nl5hDHBaNg8xxhKVihYl/Kwn8b0SF4azdli7KEXPsieRviHOB6u58fpnU9g@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyqw8j40xCsARjIRfoGsrJDNFhgH+0ZoGEooFG2ICr+O4YboS/W
+	cfL7pF8F/uAWU9FaDKn/6D+gHsJz1FN0nCPpyt4YtwJR/mW/f5pD3sOh/F8MpNToiy/g8hMz2lV
+	Tb+98KrRF6QhY0KWqN/bq0xMPOqkfyzc=
+X-Google-Smtp-Source: AGHT+IFNVUN7XuIjpfYPJwgta4Gjv8qv2eyOJbAM/h6iUR3e1inIgTF4rSFilLfAOPCrklG0evUg7R4g3PK9YR6GrL8=
+X-Received: by 2002:a05:6512:3e22:b0:553:20f2:2e77 with SMTP id
+ 2adb3069b0e04-5539d55dc4cmr801852e87.55.1749648783718; Wed, 11 Jun 2025
+ 06:33:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAK7LNAQunzxOHR+vMZLf8kqxyRtLx-Z2G2VZquJmndrT9TZjiQ@mail.gmail.com>
+ <20250611075533.8102A57-hca@linux.ibm.com>
+In-Reply-To: <20250611075533.8102A57-hca@linux.ibm.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Wed, 11 Jun 2025 22:32:26 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASSeuZWAXS6tDGL1T8S1N9fmg4DND616BL6uco4gnYFqA@mail.gmail.com>
+X-Gm-Features: AX0GCFv0jbbR-vbqIHzHbknTnj-UPv7EfuyqK0wlyWTgl-XQejmGq6KCE6rdppc
+Message-ID: <CAK7LNASSeuZWAXS6tDGL1T8S1N9fmg4DND616BL6uco4gnYFqA@mail.gmail.com>
+Subject: Re: [GIT PULL] Kbuild updates for v6.16-rc1
+To: Heiko Carstens <hca@linux.ibm.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The TI TPS652G1 is a stripped down version of the TPS65224 PMIC. It
-doesn't feature the multiphase buck converter nor any voltage
-monitoring. Due to the latter there are no interrupts serviced. In case
-of the TPS652G1 any interrupt related setup is just skipped.
+On Wed, Jun 11, 2025 at 4:55=E2=80=AFPM Heiko Carstens <hca@linux.ibm.com> =
+wrote:
+>
+> On Sun, Jun 08, 2025 at 01:41:18AM +0900, Masahiro Yamada wrote:
+> > Kbuild updates for v6.16
+> >
+> >  - Add support for the EXPORT_SYMBOL_GPL_FOR_MODULES() macro, which exp=
+orts a
+> >    symbol only to specified modules
+> >
+> >  - Improve ABI handling in gendwarfksyms
+> >
+> >  - Forcibly link lib-y objects to vmlinux even if CONFIG_MODULES=3Dn
+> >
+> >  - Add checkers for redundant or missing <linux/export.h> inclusion
+>
+> As you write in commit a934a57a42f6 ("scripts/misc-check: check missing
+> #include <linux/export.h> when W=3D1") this adds now 4000+ extra warnings
+> for W=3D1 builds, which makes such builds more or less useless for me.
+>
+> Also the commit only describes what you want to achieve, but not why.
+> I can only guess that you want to reduce header dependencies(?).
 
-Signed-off-by: Michael Walle <mwalle@kernel.org>
----
- drivers/regulator/tps6594-regulator.c | 41 +++++++++++++++++++++------
- 1 file changed, 33 insertions(+), 8 deletions(-)
+Yes.
 
-diff --git a/drivers/regulator/tps6594-regulator.c b/drivers/regulator/tps6594-regulator.c
-index 51264c869aa0..401bc9ca4cd6 100644
---- a/drivers/regulator/tps6594-regulator.c
-+++ b/drivers/regulator/tps6594-regulator.c
-@@ -578,6 +578,7 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
- 	const struct tps6594_regulator_irq_type **ldos_irq_types;
- 	const struct regulator_desc *ldo_regs;
- 	size_t interrupt_count;
-+	const struct regulator_desc *buck_cfg;
- 
- 	if (tps->chip_id == TPS65224) {
- 		bucks_irq_types = tps65224_bucks_irq_types;
-@@ -586,6 +587,12 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
- 		ldos_irq_types = tps65224_ldos_irq_types;
- 		ldo_regs = tps65224_ldo_regs;
- 		multi_phase_cnt = ARRAY_SIZE(tps65224_multi_regs);
-+		buck_cfg = tps65224_buck_regs;
-+	} else if (tps->chip_id == TPS652G1) {
-+		ldo_regs = tps65224_ldo_regs;
-+		/* TPS652G1 doesn't have multi phase buck converters */
-+		multi_phase_cnt = 0;
-+		buck_cfg = tps65224_buck_regs;
- 	} else {
- 		bucks_irq_types = tps6594_bucks_irq_types;
- 		interrupt_count = ARRAY_SIZE(tps6594_buck1_irq_types);
-@@ -593,6 +600,7 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
- 		ldos_irq_types = tps6594_ldos_irq_types;
- 		ldo_regs = tps6594_ldo_regs;
- 		multi_phase_cnt = ARRAY_SIZE(tps6594_multi_regs);
-+		buck_cfg = buck_regs;
- 	}
- 
- 	enum {
-@@ -657,18 +665,24 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
- 		nr_buck = ARRAY_SIZE(tps65224_buck_regs);
- 		nr_ldo = ARRAY_SIZE(tps65224_ldo_regs);
- 		nr_types = TPS65224_REGS_INT_NB;
-+	} else if (tps->chip_id == TPS652G1) {
-+		nr_buck = ARRAY_SIZE(tps65224_buck_regs);
-+		nr_ldo = ARRAY_SIZE(tps65224_ldo_regs);
- 	} else {
- 		nr_buck = ARRAY_SIZE(buck_regs);
- 		nr_ldo = (tps->chip_id == LP8764) ? 0 : ARRAY_SIZE(tps6594_ldo_regs);
- 		nr_types = REGS_INT_NB;
- 	}
- 
--	reg_irq_nb = nr_types * (nr_buck + nr_ldo);
-+	if (tps->chip_id != TPS652G1) {
-+		reg_irq_nb = nr_types * (nr_buck + nr_ldo);
- 
--	irq_data = devm_kmalloc_array(tps->dev, reg_irq_nb,
--				      sizeof(struct tps6594_regulator_irq_data), GFP_KERNEL);
--	if (!irq_data)
--		return -ENOMEM;
-+		irq_data = devm_kmalloc_array(tps->dev, reg_irq_nb,
-+					      sizeof(struct tps6594_regulator_irq_data),
-+					      GFP_KERNEL);
-+		if (!irq_data)
-+			return -ENOMEM;
-+	}
- 
- 	for (i = 0; i < multi_phase_cnt; i++) {
- 		if (!buck_multi[i])
-@@ -680,6 +694,10 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
- 					     "failed to register %s regulator\n",
- 					     pdev->name);
- 
-+		/* skip interrupts */
-+		if (tps->chip_id == TPS652G1)
-+			continue;
-+
- 		/* config multiphase buck12+buck34 */
- 		if (i == MULTI_BUCK12_34)
- 			buck_idx = 2;
-@@ -718,14 +736,15 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
- 		if (buck_configured[i])
- 			continue;
- 
--		const struct regulator_desc *buck_cfg = (tps->chip_id == TPS65224) ?
--							 tps65224_buck_regs : buck_regs;
--
- 		rdev = devm_regulator_register(&pdev->dev, &buck_cfg[i], &config);
- 		if (IS_ERR(rdev))
- 			return dev_err_probe(tps->dev, PTR_ERR(rdev),
- 					     "failed to register %s regulator\n", pdev->name);
- 
-+		/* skip interrupts */
-+		if (tps->chip_id == TPS652G1)
-+			continue;
-+
- 		error = tps6594_request_reg_irqs(pdev, rdev, irq_data,
- 						 bucks_irq_types[i], interrupt_count, &irq_idx);
- 		if (error)
-@@ -741,6 +760,10 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
- 						     "failed to register %s regulator\n",
- 						     pdev->name);
- 
-+			/* skip interrupts */
-+			if (tps->chip_id == TPS652G1)
-+				continue;
-+
- 			error = tps6594_request_reg_irqs(pdev, rdev, irq_data,
- 							 ldos_irq_types[i], interrupt_count,
- 							 &irq_idx);
-@@ -752,6 +775,8 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
- 	if (tps->chip_id == TPS65224) {
- 		irq_types = tps65224_ext_regulator_irq_types;
- 		irq_count = ARRAY_SIZE(tps65224_ext_regulator_irq_types);
-+	} else if (tps->chip_id == TPS652G1) {
-+		irq_count = 0;
- 	} else {
- 		irq_types = tps6594_ext_regulator_irq_types;
- 		if (tps->chip_id == LP8764)
--- 
-2.39.5
+Here, more numbers.
+There are around 32000 *.c files in the tree, but only about 6000 of them
+actually export symbols.
+However, most of them end up including <linux/export.h>,
+even though only 20% of them truly need it.
 
+Header dependency cleanup is necessary.
+Many a little makes a mickle.
+
+> Don't get me wrong, I can address all of this trivial churn for s390, how=
+ever
+> enforcing so many extra warnings to everyone with W=3D1 builds doesn't lo=
+ok like
+> the right approach to me.
+
+This is what W=3D1 is for.
+0day bot detects a new W=3D1 warning, so we can avoid new warnings coming i=
+n.
+
+People do not know which headers should be included when.
+So, this warning must exist at least until we can get rid of
+#include <linux/export.h> from include/linux/module.h,
+include/linux/linkage.h etc.
+
+
+--=20
+Best Regards
+Masahiro Yamada
