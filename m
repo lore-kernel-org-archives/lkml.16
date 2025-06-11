@@ -1,314 +1,288 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2219428A3FA
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:02:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0372A44C63
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749650571; cv=none; b=LJxGp4Nfat65tkFDvXY2LmuZTJT9RDHq3HJo/1NiOCAL1GoRfdJi7rWf8dvyIUXUSPfypQNEVP+h9N+qVxB2XZfaFmnk2DJqHRNlKvL1Q+VRuygnP05wnP51jyu9cZen46Tl5RiyY8my24o+MkkMEeUwf6nrflo2z9iJs6lNAyQ=
+	t=1749650637; cv=none; b=XysV893kY9b6BZ5EBqZk7tW7OCscWQfMGKeEkU86aWu822ymtgI6WOdZONlzy4WHUjJK5ON4rCHAZn1IxNmgiDvoLKQc/kVnOTdh+NNRuzVBbW7krRVlANVS6PO4z3yWCV6PWMrY+h8/Z40Mn4GHVEHFzNiygWgKLA4gffWUyQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749650571; c=relaxed/simple;
-	bh=o0u+MzreQqxmxPcaJUgkWIV6t2qZ1GoGgCoKawHBveg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tjTUnAoqqYhSKfvcotsVy+fdRi5+Nm1Muck4qlHbPfk6Lvjm8bYinFStGHz3Wq77+rCCT+uDKeZ4fW/5MCjRsfy7NUm1pASLQGpdB+EzRMP7/4TzjREDSmV3yU2U4T0CpN6Uo3Ae0fO8Bv8Zgj4py3XZIaXRHYIWDSUvKOONJ6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=XepqDvdB; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1749650637; c=relaxed/simple;
+	bh=OzPB4GNYM+Tc520rN09+ufJ7Fcfmj7iSdvdWSRXE/Js=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DIGZPykZ5iqJAEmAYRC8XhbGpbTLeGvUMBW+42TZ9/5MwSmwElgECHcpR9XudjE6g4aqBMs7pDEref96YsIs5xEhmn1UwyQueSw8B/W21S2kTwTEZHnREqnS8MtztXVAYRJxIBh+Vz2iySZOjRlRjvA8e5L/bwzMNztieUbkFk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ecaT0xx1; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="XepqDvdB"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5533302b49bso6978142e87.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:02:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ecaT0xx1"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-32a7a5ab797so52023711fa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:03:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749650567; x=1750255367; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=zIB46TLcdDazaxx/FuNPRf75NEIO/odsUpYD0AT+6kA=;
-        b=XepqDvdBtcxc3CPq4F4lWTTBHxXeU9X3HT1HpoiHhSw4KBa+gNM3ht8A47XRIPApiZ
-         DubE7ovff0DukGKLTJvquWOJIxYRdJFA7NxE2sfhbkKG7v92HmUzyZA4sKFjaKfQxxVM
-         CdeC7t82QIfhszQ2T4RvLo57iB/YMTUHwE2byMZ7rkyCR2nuF7mkhD+ZcOsBXXNMb3Db
-         bjI4XlSQlM7Kxt9KY1QwNLAVsQZG1ft0h1BiaXRD70Nj75LT7ZsC8aqe0wL3I3UvlaJe
-         pzd73ADMjRpv85YJlQk3s+Na2UZwHVWist/yO/0hlFQ/RZmPqGQEfjdXhy5WRWRs55JC
-         /f7g==
+        d=gmail.com; s=20230601; t=1749650634; x=1750255434; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/9xKEB3kc2TRwlYRrzySNb+uFlw3/FX6SdaA3l9rJuo=;
+        b=ecaT0xx1xJN6YTyu+fzrYrMoMlmvSdBFJ18OA0qKDYM361ppJ+Mo+DQgEC2JAoETqh
+         k7qvEbOmNKfib0cptzwYZwUaZnkW5XnW2lnkmxadWHzv7//a04LPZCj5UKFb18bQ1z6R
+         QUt7B5LmzbKp/OzAoV4tWgCmtPe7ajD3F/RU1JONF8mWqzgMBevgZe/9zFzqzpnPA0sO
+         gprWWZy9OV43UlFSpEyKeXXpJpjwAamzywCNDs3ewA9rF6Hm+5hO/bLLIhd7vW2K2teK
+         QWgdRKqvh95JwOie0KPes201Gjo7dP7JcBC/+vMTVyWPWxg0/g91Q/5vlSESaRiNNP5w
+         +rsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749650567; x=1750255367;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zIB46TLcdDazaxx/FuNPRf75NEIO/odsUpYD0AT+6kA=;
-        b=FXyNdiEemEcIwPJaVJd0tANQUlLeb2jQA78PahMijxTCSoZODPFjk8yqnjyNXPdP9n
-         XY10IimyKfEcgx4SncqnzDO90312AgLTbnvYH44l6PWIHBw3831tRmW0iWv5i4IiN5JH
-         GLCdOAUK5p5rV/MyfHQUwGdd2sMewhxs8yPn33wgUTGMrSxN8YmZ+OuSQ6ei2oOpHYXc
-         unqr6uvhFN3hJ5GQqDGUXYumd3Tk5rKo4I317FDuq1Mu79jOSchGZKI8Gmr0TIileYMj
-         aWoVi5e0kvv/wOMpoEXsXQ/TTAhKMR/YlDjYNBy36YN0rjUsX3F4SiRrGYz+0O/94/c+
-         eQCA==
-X-Forwarded-Encrypted: i=1; AJvYcCXY8gnrmZgFHQB+ScDjeRf1kLTKabHy38YcFICtaQMVj1V3KB/nSsuN5yYaHV7Ea+PvJ4vYMUJkBldZIKA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhXiZTtc8K/qPt1eLqaWc58Wp739ax/bvv/vGGLiBAXUEFhNvu
-	BOYqDk0ShUU0U1dQMe0LWad812SQkz52kPQ/r0vi4qkvT9qqpKpkPcQWajAWGgtyyZs=
-X-Gm-Gg: ASbGncvekol3+SyK2hKlBcu41a5lyns+vXQsHc6ZO4GjAjq602rUAT8fIhm8U+Ympvm
-	Frn0ndbSh9FZuI6lpq2l9HWEmrkt/LOShGDLLvYosdIoNLXOLL9xhsd74yn5DeCu1Rnt9SmHb8T
-	cyhLa/VeIh24ulN3pJJjNHXBJbNvoEm3DiYAKBXszFvI2+7oaeT4v9BTALMhJkLlOHDmJ8utAFe
-	rH3UmceGAfi2AXvWWAp0cjW47ZgF/ZeOyt7p14GpPwz18XE6ZwprTBtKFElw35jndBvnKvQGXQm
-	rc0ISbPXDYolL8j6IWLde3yagS50PqBooPcZnVrHkRHB0YeTQEleLWY9u38tN0Sr
-X-Google-Smtp-Source: AGHT+IHK5Hj5K2xpl++HknaoG+eNqzmM14dC11o00vR+KIbIAlNp6iIr3v3/hhPXrslVcqxUmQzq9Q==
-X-Received: by 2002:a19:f605:0:b0:553:a2dc:6624 with SMTP id 2adb3069b0e04-553a2dc66fcmr194189e87.7.1749650565346;
-        Wed, 11 Jun 2025 07:02:45 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482af7ab09sm9520720b3a.58.2025.06.11.07.02.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 07:02:44 -0700 (PDT)
-Date: Wed, 11 Jun 2025 16:02:30 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	John Ogness <jogness@linutronix.de>,
-	David Gow <davidgow@google.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] printk: ringbuffer: Add KUnit test
-Message-ID: <aEmMdirOERyv8COG@pathway.suse.cz>
-References: <20250506-printk-ringbuffer-test-v2-1-152200569eb1@linutronix.de>
+        d=1e100.net; s=20230601; t=1749650634; x=1750255434;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/9xKEB3kc2TRwlYRrzySNb+uFlw3/FX6SdaA3l9rJuo=;
+        b=Y96Q/j67PUmrHRIdIIBcehSnuCN8CvbynW9PKx42p8uMEQwY1YMXZ7MksriCUZTs5S
+         ZQ08BbknDPeGirgMJrU1hx4EMoVAt1frhxMQdz3714NviqqQZ7nNqyVKb12g6sxMLWsi
+         0g8+CD0p6zQkS7yL3i8/7S3VUIxGnTLl2Lxvhm17SgW5ZXBSu62XX8HZdqfk1LOptSBR
+         WFkwSdPxENfGs3f37HHapmEXL7wyI8Oun9AzcruuAJ1yXETQ+ULH37FzallgeMHt4nbx
+         cHrS0Zyt9FUlRzlWbf61MgRg94ZODJj0zIdV7qQLdp5GaZVc/ceRgJmHLWwLwZq1EoTG
+         mhrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWOjoPfqaWlArtnMw7s4rg7MseP6iho38F8wVw2VyUXs05cZzCDmqFFQiJyBPuDRUcFTfJ+O2VfHwfvexQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXwgqs0QSP4jZXVMkVhzlf5MKo9UAPacMD2hPGwNhAiLmljCxA
+	X7lCpgWr4x/f8hBk9I8yM511IYAJ34+ygq/EubM/43b8lZgc302wzlrdcJNG/5ZM4nKB5fcalJO
+	FlJy/LOfSKWHv20UpuSlBu41yxxGRtW8=
+X-Gm-Gg: ASbGncuR4bqA+7k4PsTAVp8MZFX+4nFbwdc5USYwAmG/zkc9x+r+cL3k9JnAdmeM1ur
+	dq0k/2EOkiVQZX+jjKKyxe3w0yb7l6BeE/Q+7hG26pkkh5dUShsYGWteXjEALSCE3lBsIcDr1oe
+	KXaQAAk4WpgHMcy58Ayq0pGE8qX2qM0FYL33IVYJvMDUcr8KzthlqNAcFtqcPwwv3LF53ls68/Q
+	aqftg==
+X-Google-Smtp-Source: AGHT+IH+gJe+BL6yCA7mEGder2oiUWhfY4G8pX6Nt7XDyy4GsjjjIXGrWNqCqgE9eotrFsyBSb7jcR3yYkMAQ0N7mWM=
+X-Received: by 2002:a2e:a781:0:b0:32a:83b5:34ba with SMTP id
+ 38308e7fff4ca-32b223b6f4bmr9396991fa.20.1749650632133; Wed, 11 Jun 2025
+ 07:03:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250506-printk-ringbuffer-test-v2-1-152200569eb1@linutronix.de>
+References: <20250607064444.4310-1-pranav.tyagi03@gmail.com> <87cybdp7to.ffs@tglx>
+In-Reply-To: <87cybdp7to.ffs@tglx>
+From: Pranav Tyagi <pranav.tyagi03@gmail.com>
+Date: Wed, 11 Jun 2025 19:33:39 +0530
+X-Gm-Features: AX0GCFsALrCD5nGDJIuDloqSPWlSSAfHKuZ-ZeZ9_L94K6dWGNOykGhECj18iEk
+Message-ID: <CAH4c4jLjSBxbd3bqkdgcCSWqXURratANgnbq9negrSU283xHpg@mail.gmail.com>
+Subject: Re: [PATCH] futex: don't leak robust_list pointer on exec race
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Darren Hart <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>, 
+	=?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
+	linux-kernel@vger.kernel.org, jann@thejh.net, keescook@chromium.org, 
+	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue 2025-05-06 13:58:48, Thomas Weiﬂschuh wrote:
-> The KUnit test validates the correct operation of the ringbuffer.
-> A separate dedicated ringbuffer is used so that the global printk
-> ringbuffer is not touched.
-> 
-> Co-developed-by: John Ogness <john.ogness@linutronix.de>
-> Signed-off-by: John Ogness <john.ogness@linutronix.de>
-> Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
-> --- a/kernel/printk/printk_ringbuffer.c
-> +++ b/kernel/printk/printk_ringbuffer.c
-> @@ -1685,6 +1686,7 @@ bool prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
->  	memset(r, 0, sizeof(*r));
->  	return false;
->  }
-> +EXPORT_SYMBOL_IF_KUNIT(prb_reserve);
+On Mon, Jun 9, 2025 at 3:15=E2=80=AFPM Thomas Gleixner <tglx@linutronix.de>=
+ wrote:
 >
->  /* Commit the data (possibly finalizing it) and restore interrupts. */
->  static void _prb_commit(struct prb_reserved_entry *e, unsigned long state_val)
+> On Sat, Jun 07 2025 at 12:14, Pranav Tyagi wrote:
+> > Previously, the get_robust_list() and compat_get_robust_list() syscalls
+> > used rcu_read_lock() to access the target task's robust list pointer.
+>
+> This is not previously. It's how the code is right now and you want to
+> describe the status as is.
+>
+> > However, rcu_read_lock() is not sufficient when the operation may sleep
+> > (e.g., locking or user-spaces access), nor does it prevent the task fro=
+m
+> > exiting while the syscall is in progress.
+>
+> 1) There is no sleeping operation in this code path.
+>
+> 2) Of course it does not prevent the task from exiting, it only prevents
+>    the task struct from being freed. But what's the actual problem with
+>    that?
+>
+>    task->robust_list contains the tasks robust list pointer even after
+>    the task exited.
+>
+> > This patch replaces rcu_read_lock() with
+>
+> git grep 'This patch' Documentation/process/
+>
+> > get_task_struct()/put_task_struct() to ensure the task is pinned during
+> > syscall execution prevent use-after-free.
+>
+> Which use after free? You fail to explain the actual problem in the
+> first place and then you describe a solution for the non explained
+> problem.
+>
+> > Additionally, the robust_list pointer can be modified during exec()
+> > causing a race condition if accessed concurrently.
+>
+> Sure, but what is the effect of that race condition?
+>
+> begin_new_exec() -> exec_mmap() -> exec_mm_release() ->
+> futex_exec_release()
+>
+> The latter sets task::robust_list to NULL. So this either sees the real
+> pointer or NULL. The actual problem is?
+>
+> A similar concurrency race exists between sys_get_robust_list() and
+> sys_set_robust_list(), no?
+>
+> > ... To fix this we
+>
+> We do nothing. See
+>
+> https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#change=
+log
+>
+> > introduce down_read_killable(&exec_update_lock), a read lock on a
+> > rw_semaphore protecting signal_struct members that change during exec.
+>
+> > This read-write semaphore allows multiple concurrent readers of
+> > robust_list, while exec() takes the write lock to modify it, ensuring
+> > synchronization.
+>
+> Synchronization of what?
+>
+> > This prevents an attacker from determining the robust_list or
+> > compat_robust_list userspace pointer of a process created by executing
+> > a setuid binary. Such an attack could be performed by racing
+> > get_robust_list() with setuid execution. The impact of this issue is th=
+at
+> > the attacker could theoretically bypass ASLR when attacking setuid
+> > binaries.
+>
+> It can theoretically bypass ASLR. That's impressive given the fact that
+> there are a gazillion ways to do so.
+>
+> Now let me ask the obvious question. How is the new code so much more
+> protective?
+>
+> T1                                      T2
+>
+>                                         exit();
+> sys_get_robust_list(T2)
+>    lock();
+>                                         lock();
+>    head =3D T2->robust_list;
+>    unlock();
+>    copy_to_user(head);                  // T2 mops up
+>    ....
+>    return_to_user();
+>
+> T1 has the pointer, which is not longer valid. So what is this magic
+> serialization actually preventing?
+>
+> Surely not the fact that the robust list pointer of T2 can be invalid
+> immediately after T1 retrieved it.
+>
+> > Overall, this patch fixes a use-after-free and race condition by
+> > properly pinning the task and synchronizing access to robust_list,
+> > improving syscall safety and security.
+>
+> By handwaving....
+>
+> The real issue what Jann's original series is trying to address is that
+> the ptrace_may_access() check is racy against a concurrent exec(). But
+> that's nowhere mentionened in the above word salad.
+>
+> That said, I'm not opposed against the change per se, but it needs to
+> come with a proper explanation of the actual problem and a description
+> of the real world relevance of the issue in the existing code.
+>
 
-[...]
+Hi,
 
-I had to add:
+Thank you for the detailed feedback. I appreciate the time and
+insight you=E2=80=99ve shared, and I=E2=80=99ve learned a lot from it. I ho=
+pe you=E2=80=99ll kindly
+excuse the shortcomings in my initial changelog. I=E2=80=99m still new to k=
+ernel
+work and upstreaming. I understand that my changelog
+didn=E2=80=99t clearly convey the actual problem.
 
-@@ -2337,6 +2337,7 @@ void prb_init(struct printk_ringbuffer *rb,
- 	infos[0].seq = -(u64)_DESCS_COUNT(descbits);
- 	infos[_DESCS_COUNT(descbits) - 1].seq = 0;
- }
-+EXPORT_SYMBOL_IF_KUNIT(prb_init);
- 
- /**
-  * prb_record_text_space() - Query the full actual used ringbuffer space for
+Does the revised version below address the concerns more effectively
+or does it still need a bit more seasoning?
 
-> diff --git a/kernel/printk/printk_ringbuffer_kunit_test.c b/kernel/printk/printk_ringbuffer_kunit_test.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..0d60b2273b710b9b7ecf41b37503beeb76703054
-> --- /dev/null
-> +++ b/kernel/printk/printk_ringbuffer_kunit_test.c
-> @@ -0,0 +1,292 @@
+"Currently, sys_get_robust_list() and compat_get_robust_list() perform a
+ptrace_may_access() check to verify if the calling task is allowed to
+query another task=E2=80=99s robust_list pointer. However, this check is ra=
+cy
+against a concurrent exec() in the target process.
 
-[...]
+During exec(), a task's credentials and memory mappings can change, and
+the task may transition from a non-privileged binary to a privileged one
+(e.g., a setuid binary). If get_robust_list() performs ptrace_may_access()
+before this transition, it may wrongly allow access to sensitive
+information after the target becomes privileged.
 
-> +struct prbtest_wakeup_timer {
-> +	struct timer_list timer;
-> +	struct task_struct *task;
-> +};
-> +
-> +static void prbtest_wakeup_callback(struct timer_list *timer)
-> +{
-> +	struct prbtest_wakeup_timer *wakeup = from_timer(wakeup, timer, timer);
+To address this, a read lock is taken on signal->exec_update_lock prior
+to invoking ptrace_may_access() and accessing the robust_list. This
+ensures that the target task's exec state remains stable during the
+check, allowing for consistent and synchronized validation of
+credentials."
 
-Just for record. The function from_timer() has been renamed
-to timer_container_of() by the commit 41cb08555c4164996
-("treewide, timers: Rename from_timer() to timer_container_of()")
-in v6.16-rc1.
+> Let me look at the code.
+>
+> > diff --git a/kernel/futex/syscalls.c b/kernel/futex/syscalls.c
+> > index 4b6da9116aa6..27e44a304271 100644
+> > --- a/kernel/futex/syscalls.c
+> > +++ b/kernel/futex/syscalls.c
+> > @@ -53,31 +53,43 @@ SYSCALL_DEFINE3(get_robust_list, int, pid,
+> >       unsigned long ret;
+> >       struct task_struct *p;
+> >
+> > -     rcu_read_lock();
+> > -
+> > -     ret =3D -ESRCH;
+> > -     if (!pid)
+> > +     if (!pid) {
+> >               p =3D current;
+> > -     else {
+> > +             get_task_struct(p);
+> > +     } else {
+> > +             rcu_read_lock();
+> >               p =3D find_task_by_vpid(pid);
+> > +             /* pin the task to permit dropping the RCU read lock befo=
+re
+>
+> This is not networking code. So please use proper comment style:
+>
+> https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#commen=
+t-style
+>
+> > +              * acquiring the semaphore
+> > +              */
+> > +             if (p)
+> > +                     get_task_struct(p);
+> > +             rcu_read_unlock();
+> >               if (!p)
+> > -                     goto err_unlock;
+> > +                     return -ESRCH;
+> >       }
+> >
+> > +     ret =3D down_read_killable(&p->signal->exec_update_lock);
+>
+> Lacks a comment explaining what this is actually protecting.
+>
+> >       if (put_user(sizeof(*head), len_ptr))
+> >               return -EFAULT;
+> >       return put_user(ptr_to_compat(head), head_ptr);
+> >
+> >  err_unlock:
+> > -     rcu_read_unlock();
+> > -
+> > +     up_read(&p->signal->exec_update_lock);
+> > +err_put:
+> > +     put_task_struct(p);
+> >       return ret;
+>
+> You really did not have a better idea than copying all of that logic
+> into the compat code?
 
-> +	set_tsk_thread_flag(wakeup->task, TIF_NOTIFY_SIGNAL);
-> +	wake_up_process(wakeup->task);
-> +}
-> +
-> +static int prbtest_reader(struct prbtest_data *test_data, unsigned long timeout_ms)
-> +{
-> +	struct prbtest_wakeup_timer wakeup;
-> +	char text_buf[MAX_PRB_RECORD_SIZE];
-> +	unsigned long count = 0;
-> +	struct printk_info info;
-> +	struct printk_record r;
-> +	u64 seq = 0;
-> +
-> +	wakeup.task = current;
-> +	timer_setup_on_stack(&wakeup.timer, prbtest_wakeup_callback, 0);
-> +	mod_timer(&wakeup.timer, jiffies + msecs_to_jiffies(timeout_ms));
-> +
-> +	prb_rec_init_rd(&r, &info, text_buf, sizeof(text_buf));
-> +
-> +	kunit_info(test_data->test, "start reader\n");
-> +
-> +	while (!wait_event_interruptible(test_data->new_record_wait,
-> +					 prb_read_valid(test_data->ringbuffer, seq, &r))) {
-> +		/* check/track the sequence */
-> +		if (info.seq < seq)
-> +			KUNIT_FAIL(test_data->test, "BAD SEQ READ: request=%llu read=%llu\n",
-> +				   seq, info.seq);
-> +
-> +		if (!prbtest_check_data((struct prbtest_rbdata *)r.text_buf))
-> +			prbtest_fail_record(test_data->test,
-> +					    (struct prbtest_rbdata *)r.text_buf, info.seq);
-> +
-> +		if ((count++ & 0x3fff) == 0)
-> +			cond_resched();
-> +
-> +		seq = info.seq + 1;
-> +	}
-> +
-> +	timer_delete_sync(&wakeup.timer);
-> +	destroy_timer_on_stack(&wakeup.timer);
+As I=E2=80=99m still learning, I wasn=E2=80=99t quite sure how to avoid
+duplication there. Would factoring out the common logic into a helper funct=
+ion
+be the right direction? I=E2=80=99d be grateful for your suggestion.
 
-Also this function has been renamed by the commit
-aad823aa3a7d675a8d0 ("treewide, timers: Rename
-destroy_timer_on_stack() as timer_destroy_on_stack()")
-in v6.16-rc1.
-
-> +
-> +	kunit_info(test_data->test, "end reader: read=%lu seq=%llu\n", count, info.seq);
-> +
-> +	return 0;
-> +}
-
-[...]
-
-> +static void test_readerwriter(struct kunit *test)
-> +{
-> +	/* Equivalent to CONFIG_LOG_BUF_SHIFT=13 */
-> +	DEFINE_PRINTKRB(test_rb, 8, 5);
-> +
-> +	struct prbtest_thread_data *thread_data;
-> +	struct prbtest_data *test_data;
-> +	struct task_struct *thread;
-> +	cpumask_t test_cpus;
-> +	int cpu, reader_cpu;
-> +
-> +	cpus_read_lock();
-> +	/*
-> +	 * Failure of KUNIT_ASSERT() kills the current task
-> +	 * so it can not be called while the CPU hotplug lock is held.
-> +	 * Instead use a snapshot of the online CPUs.
-> +	 * If they change during test execution it is unfortunate but not a grave error.
-> +	 */
-> +	cpumask_copy(&test_cpus, cpu_online_mask);
-> +	cpus_read_unlock();
-> +
-> +	/* One CPU is for the reader, all others are writers */
-> +	reader_cpu = cpumask_first(&test_cpus);
-> +	if (cpumask_weight(&test_cpus) == 1)
-> +		kunit_warn(test, "more than one CPU is recommended");
-> +	else
-> +		cpumask_clear_cpu(reader_cpu, &test_cpus);
-> +
-
-I was curious why the reinit (below) was needed. We did not need this for
-the default printk log buffer (printk_rb_static).
-
-My understanding is that we need this because the unit test might be
-started more times. It might be worth a comment. Something like:
-
-	/* KUnit tests cat be re-started more times. */
-> +	prbtest_prb_reinit(&test_rb);
-> +
-> +	test_data = kunit_kmalloc(test, sizeof(*test_data), GFP_KERNEL);
-> +	KUNIT_ASSERT_NOT_NULL(test, test_data);
-> +	test_data->test = test;
-> +	test_data->ringbuffer = &test_rb;
-> +	init_waitqueue_head(&test_data->new_record_wait);
-> +
-> +	kunit_info(test, "running for %lu ms\n", runtime_ms);
-> +
-> +	for_each_cpu(cpu, &test_cpus) {
-> +		thread_data = kunit_kmalloc(test, sizeof(*thread_data), GFP_KERNEL);
-> +		KUNIT_ASSERT_NOT_NULL(test, thread_data);
-> +		thread_data->test_data = test_data;
-> +		thread_data->num = cpu;
-> +
-> +		thread = kthread_run_on_cpu(prbtest_writer, thread_data, cpu,
-> +					    "prbtest writer %u");
-> +		KUNIT_ASSERT_NOT_ERR_OR_NULL(test, thread);
-> +		prbtest_add_kthread_cleanup(test, thread);
-> +	}
-> +
-> +	kunit_info(test, "starting test\n");
-> +
-> +	set_cpus_allowed_ptr(current, cpumask_of(reader_cpu));
-> +	prbtest_reader(test_data, runtime_ms);
-> +
-> +	kunit_info(test, "completed test\n");
-> +}
-
-Otherwise, it looks good to me.
-
-I would push it with the timer API renames so that it works in
-Linus' master and linux-next out of box. So, with the following
-changes:
-
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Tested-by: Petr Mladek <pmladek@suse.com>
-
-diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-index 7d75cf2e15c6..bc811de18316 100644
---- a/kernel/printk/printk_ringbuffer.c
-+++ b/kernel/printk/printk_ringbuffer.c
-@@ -2337,6 +2337,7 @@ void prb_init(struct printk_ringbuffer *rb,
- 	infos[0].seq = -(u64)_DESCS_COUNT(descbits);
- 	infos[_DESCS_COUNT(descbits) - 1].seq = 0;
- }
-+EXPORT_SYMBOL_IF_KUNIT(prb_init);
- 
- /**
-  * prb_record_text_space() - Query the full actual used ringbuffer space for
-diff --git a/kernel/printk/printk_ringbuffer_kunit_test.c b/kernel/printk/printk_ringbuffer_kunit_test.c
-index 0d60b2273b71..6a24294b85f5 100644
---- a/kernel/printk/printk_ringbuffer_kunit_test.c
-+++ b/kernel/printk/printk_ringbuffer_kunit_test.c
-@@ -153,7 +153,7 @@ struct prbtest_wakeup_timer {
- 
- static void prbtest_wakeup_callback(struct timer_list *timer)
- {
--	struct prbtest_wakeup_timer *wakeup = from_timer(wakeup, timer, timer);
-+	struct prbtest_wakeup_timer *wakeup = timer_container_of(wakeup, timer, timer);
- 
- 	set_tsk_thread_flag(wakeup->task, TIF_NOTIFY_SIGNAL);
- 	wake_up_process(wakeup->task);
-@@ -194,7 +194,7 @@ static int prbtest_reader(struct prbtest_data *test_data, unsigned long timeout_
- 	}
- 
- 	timer_delete_sync(&wakeup.timer);
--	destroy_timer_on_stack(&wakeup.timer);
-+	timer_destroy_on_stack(&wakeup.timer);
- 
- 	kunit_info(test_data->test, "end reader: read=%lu seq=%llu\n", count, info.seq);
- 
-@@ -245,6 +245,7 @@ static void test_readerwriter(struct kunit *test)
- 	else
- 		cpumask_clear_cpu(reader_cpu, &test_cpus);
- 
-+	/* KUnit test can get restarted more times. */
- 	prbtest_prb_reinit(&test_rb);
- 
- 	test_data = kunit_kmalloc(test, sizeof(*test_data), GFP_KERNEL);
-
-
-Best Regards,
-Petr
+>
+> Thanks,
+>
+>         tglx
