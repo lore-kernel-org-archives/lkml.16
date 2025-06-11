@@ -1,106 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5683E28D836;
-	Wed, 11 Jun 2025 13:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 222CF280CC8
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 13:54:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749650040; cv=none; b=dGIwpOrfvzyjwUMgGQPtcrtsQOG3SyUc8ny/zm534Jmh4QJv6dJupKc8/egPe66janBpchVtHLDpZir8eobecmg39tf+UrfzH4ZCOhvykgUwrSCBP56D5wQTa4gaWHWBMl01VsGm27xh0p6mb1Rlq06beFJvtWKKLFXC1U8EvP4=
+	t=1749650066; cv=none; b=Z/EH8WhXDA/kxltgWZ7gBBJdgj2XHN/3Cywx1n8ebMYZ/7GtaSjj5Na4VBNvaKuUMb5XvH0z3vL84Ufp1/O3IIQZxEqrqlP1M8dl9xGlx4Irxju6heLVd0xVxd2wJEWEdPA2KQhmPPh9WWHgnMmiMIag2SBEpyYL09F6TpyqY04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749650040; c=relaxed/simple;
-	bh=ekZAr3CEJWDzff5er4X5jw1Q0ODtHKyY9RG8ZM87MUQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CO8TRvTkgjdmmq4NycubgVOxvnGke+m9LeSQ/JS0IDPAvZbaMIR59p63e/G3h84l78NYpxfFYBHPwHiiNK2ghXG8/YN8rQtmiO1+XBebjvtFWGjo6snNNxgpMAR6W5HEMVxrRYnmj6g3IoORAHA+bI+Z8c0c9Gp7G6+68NNsLb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BB7a8MDf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749650066; c=relaxed/simple;
+	bh=G/kIycwYqirYck+M921BNMVSw5v6vlV/Q/P4Z1DKwTs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HOLbKs/FeJmhzJXagi1aeJHrzhzjh5Ma99hqXIDrwZa+7fmkYawfLcQpiv/JvdiUr8IhTtZEdpJlVB6waFaLjZeHPjTgyV/TqfKdtUrxmCwc+7Q4HcPJwu9hiyOSUwlrDZSJnav2v/Tn2ER3TJnzsduYoo4rIhty+A4xrYBtmkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cNtmNe8f; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BB7a8MDf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 391A8C4CEEE;
-	Wed, 11 Jun 2025 13:53:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749650040;
-	bh=ekZAr3CEJWDzff5er4X5jw1Q0ODtHKyY9RG8ZM87MUQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BB7a8MDf5KzPB6OObcwJpakmulnwJFPAwwkyiMMNwbfYuQA97tfHdYyiv2siBb/sA
-	 agU0SrYv9VWP3bCMjey9CP6+2NolyeFEnob4mGCI06ULY6VdhyjRwCdaODXfafNWE8
-	 l4UYxNl64lqpfmutaL3w2TynxMa2L5aLsJYWzFFSn2ixUdwJQHQQuwhWpk2e4XvIAO
-	 8LeeIsmGqrI6UaRxj2sKkzax1HmA37yQuRsW80YK1aVc54C+Jf7/UxZ3i4/xJLHkX0
-	 d2fTn32EFcgNxemMNzz0JNX7ZuWh6CReaDQeXUP7zbs5cxWXZNkbzYThqxuuhee8Lw
-	 jPEERwBq8luDQ==
-Date: Wed, 11 Jun 2025 14:53:54 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: =?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>, Lee Jones <lee@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Peter Griffin <peter.griffin@linaro.org>,
-	Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
-	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 02/17] regulator: dt-bindings: add s2mpg10-pmic
- regulators
-Message-ID: <f5fcaac5-fa8e-41da-b1d2-e84197992e3c@sirena.org.uk>
-References: <20250606-s2mpg1x-regulators-v2-0-b03feffd2621@linaro.org>
- <20250606-s2mpg1x-regulators-v2-2-b03feffd2621@linaro.org>
- <20250611-statuesque-dolphin-of-felicity-6fbf54@kuoka>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cNtmNe8f"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-74800b81f1bso5247009b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:54:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749650064; x=1750254864; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JGvMW86VXWpD8TUWzcsdQ8UFCbH8qUwhnEOVQjKuKho=;
+        b=cNtmNe8f5uqx+YhF/A8a/V6S88hFxJux8rZi2Av8zfgYvyv8UbZPLFrfKbXRJG6j3q
+         440HVh9hpOwBq+6tC4D4qoaXuZLaeK32WJRtlAu7HvgfBjw0kbCiMRWSEaosbKxgMW3u
+         MlS496dJnm0/fzDUALxAIiZexpl+tNWh9ALZy5mAorhusyfs/44OF8D4HtW1w8YZy3EK
+         DgZgdk32DwmvLoOz4vlvmG0QhXrxfavhSNZIpQF3aND7A3sx0dFQVbT+eAC13D1PBSpt
+         ELDyLOuykswHmvi9sCZXLgJXZzNN3948FXdsGNXiPql0gO6aqJFgFCH8k6FcjeRPMQE0
+         ap6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749650064; x=1750254864;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JGvMW86VXWpD8TUWzcsdQ8UFCbH8qUwhnEOVQjKuKho=;
+        b=XbW5c2SXsMsxtdvqEW5yCHvv0Abstwfe590jpRWeeXEW0sza9crvg85flI3/9xPIXv
+         G2mXRrLvC5MefUsQeM/s3vGYN9qMSejzXLALjMBCvDdleFXJLfxZveooVfXMtYs1bD19
+         s/cC39qHLFIXtrYx+tF/jiPesqp8piBZGBDURsL2gByNQLnNJu+Ayc3NxrIh1xQNCqUV
+         qoO01qCpXa6LX3khJ5m220B9l/dUVRda4RwWPwqUXI4Olc+N6P1iy9bayMl9td7jcTT4
+         PW/zzQNRO92qGWrUd55+/xEqNHDAlOeE4FfIeLiaL0pWgei7s3lKcP+EZzLoHhUjHIYA
+         cobg==
+X-Gm-Message-State: AOJu0YzCA0okX4DjygATzNOer5WSoMkPIy/bNoYN+HaP0DCjhtiD7VrQ
+	a6Iugw2VEk8aYzUYt/8oYhOyTUdpJ8dB6N9wUVnL3NuhrIG3JvA8EGmQuTA4WYrcFSc=
+X-Gm-Gg: ASbGncvsIQwzf322qUCQtEUAUNPDGRKoKdD11yqo7i77G1rAZSVg/BAbehjn6c9YBnx
+	8uAb7Qjb0YcI6d44zE+mMBRLcyo2huUKYtF5ACt+Y8/16a6wSgabK3HVIe+gcyIFrIh1iCg3S5H
+	K4QSL82TQCeNy2PCHR4+gmtrAAKTnn0D4n6/P7Q/sSMkRv0CcWwl1WMdvtbc8O1xLyeTwNwMKpa
+	fiTuZDUw9YZKlGot7Ki0Qolgz9E6Qds7qE+fahvL8Vk333hKHtLjrqACVIVLG52vweEycZvKovi
+	CVf/0kEw3gqxGVrX/I/V9CUlrlzIZfIt+JaEIK5CTaUqoUd/vnAmNcBvy1p4zlvqP284Kz6MM4d
+	owuzPjZainzsx5ru+xFjuKCQcBQ45hcAo6ywU0JYP90xd5IqMjIQX
+X-Google-Smtp-Source: AGHT+IEoIe8+uPE93FTiWY4Vne5yYKjsFQAwkptqiFFPAaiUg35KFIgOU2MU9h32qh8PfN8GKiIsZQ==
+X-Received: by 2002:a05:6a20:e608:b0:21f:545e:84f0 with SMTP id adf61e73a8af0-21f89145850mr4534414637.40.1749650063967;
+        Wed, 11 Jun 2025 06:54:23 -0700 (PDT)
+Received: from eric-acer.tail151456.ts.net (36-225-84-3.dynamic-ip.hinet.net. [36.225.84.3])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b0ea3cdsm9247523b3a.159.2025.06.11.06.54.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 06:54:23 -0700 (PDT)
+From: Cheng-Yang Chou <yphbchou0911@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: tj@kernel.org,
+	void@manifault.com,
+	arighi@nvidia.com,
+	changwoo@igalia.com,
+	jserv@ccns.ncku.edu.tw,
+	yphbchou0911@gmail.com
+Subject: [PATCH 0/4] sched_ext: Standardize preprocessor comment markers
+Date: Wed, 11 Jun 2025 21:54:00 +0800
+Message-ID: <20250611135404.13851-1-yphbchou0911@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="II5ctZhWLoXlcVcY"
-Content-Disposition: inline
-In-Reply-To: <20250611-statuesque-dolphin-of-felicity-6fbf54@kuoka>
-X-Cookie: No skis take rocks like rental skis!
+Content-Transfer-Encoding: 8bit
 
+This series standardizes `#if/#else/#endif` comment markers in the
+`sched/ext*.{c,h}` files for consistency and readability.
 
---II5ctZhWLoXlcVcY
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It follows the direction of Ingo Molnar's recent cleanup
+("[PATCH 00/43] sched: Use the SMP scheduler on UP too"), which reduced
+`CONFIG_SMP` complexity and removed many `#ifdef` blocks across the scheduler.
 
-On Wed, Jun 11, 2025 at 10:55:44AM +0200, Krzysztof Kozlowski wrote:
-> On Fri, Jun 06, 2025 at 04:02:58PM GMT, Andr=E9 Draszik wrote:
+No functional change.
 
-> > +          For S2MPG10 ldo20m, the following values are valid
-> > +            - 0 # S2MPG10_PCTRLSEL_LDO20M_ON - always on
+Thanks.
 
-> No, use standard regulator properties - regulator-always-on
+-chengyang
 
-> > +            - 1 # S2MPG10_PCTRLSEL_LDO20M_EN_SFR - VLDO20M_EN & LDO20M=
-_SFR
-> > +            - 2 # S2MPG10_PCTRLSEL_LDO20M_EN - VLDO20M_EN pin
-> > +            - 3 # S2MPG10_PCTRLSEL_LDO20M_SFR - LDO20M_SFR in LDO_CTRL=
-1 register
-> > +            - 4 # S2MPG10_PCTRLSEL_LDO20M_OFF - disable
+---
+Cheng-Yang Chou (4):
+  sched_ext: Clean up and standardize #if/#else/#endif markers in
+    sched/ext.c
+  sched_ext: Clean up and standardize #if/#else/#endif markers in
+    sched/ext.h
+  sched_ext: Clean up and standardize #if/#else/#endif markers in
+    sched/ext_idle.c
+  sched_ext: Clean up and standardize #if/#else/#endif markers in
+    sched/ext_idle.h
 
-> I don't think we allowed such property in the past. I don't get what is
-> here the actual signal - you described registers in multiple places, not
-> signals. Few of these duplicate standard properties, so this looks like
-> exact copy of downstream which was doing exactly that way and that was
-> exactly never upstreamed.
+ kernel/sched/ext.c      | 26 +-------------------------
+ kernel/sched/ext.h      |  2 +-
+ kernel/sched/ext_idle.c | 25 +------------------------
+ kernel/sched/ext_idle.h | 10 ----------
+ 4 files changed, 3 insertions(+), 60 deletions(-)
 
-It looks like we can infer the configuration needed here from the
-existing properties, if a GPIO is provided then use value 2 otherwise
-use value 3.
+-- 
+2.43.0
 
---II5ctZhWLoXlcVcY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhJinEACgkQJNaLcl1U
-h9B/KQf/So5r1954Cqj0MGQ3kptk5Nq5KmqHw0TJIbhPv2N+8N6g7os3+rryQOed
-F2TMFmttMHHFoSD/aeBVyPGgd7ynr02oAau+FGX9Jfii4FkHyvaTLEycwnRvUJEn
-oFf6CWb/DJa/9THCjgduw5I8j4qG4PH0kXjQ3FSgA7q+du7g2U/8FDAD0naJQfes
-mlG1EVq1ncI89vJuRfjQt5QXeYO3GqwCK9XGhmVxrqVXeP871hJLJEGl84ZOrihY
-5n5bktH5BVCfJa+SnoWc7VNlMe3poy5ya+hCtUD4BXoJXKjszzdfFvTZsKfZchbJ
-4KiMIP+5AmKJyIGujjqHcyiG0lp3aw==
-=XBpF
------END PGP SIGNATURE-----
-
---II5ctZhWLoXlcVcY--
