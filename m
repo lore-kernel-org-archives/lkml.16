@@ -1,46 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E64EAF9;
-	Wed, 11 Jun 2025 03:59:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9170C8FE;
+	Wed, 11 Jun 2025 03:59:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749614347; cv=none; b=Ts3JD+ZAwCUjXF0MZ9uZw7eKSgLRGK3Fqzd7q5ylA2J6WRwoPNvM2IqXDCJ47oGQb3cYtVQFajOe+HVpq/8UGgXDo/f/3fx39oFqMGCx1h8tX2iIBNvjLS6C9CxYMlO4IRQhMI6r0/TLpBXiI+saP6UJvEaZgkq9kmFkiarFVxw=
+	t=1749614399; cv=none; b=oInLwA4/Hn4MHNHXYMElENngffNy2B1CemH2LW2uXeTx4NyWF+satmMk1LvZLHvA4yPCwSCs6OomXg+njyfhSJDD4zUI4CXFlRf2Lb2/QC7Ce0WUg33lZYiLo/ShwJ2W9lA4+hFsOKSFDRfSy7oYkHYH1tBHu1EjR/R+upls5Nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749614347; c=relaxed/simple;
-	bh=szt+yu2QyA/QhUjatSBOr43sMK30sECLXWC5HWNvAj0=;
+	s=arc-20240116; t=1749614399; c=relaxed/simple;
+	bh=6Bv1xt+Ulsxs3ZANi+lB4WzocuIuNfvDq3Y/oLo/j/0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GQcD2msF3gO+1V7uQv4b4STuLWSR2qmXqFMLY5SebuM159R5ves8hmgsHWCPlXwMB/Lgwws4DpRMsgChyaqLRUWVNFbw/SdmgPOkBbh1FDBUv9YBRorAYLkRPjrqHBl3XfumE6dmGMg0v6HasOLLzlb4rsXcz7y76oC5FlsJ4Vo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oCI/NgO6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=IPEJk88d0K4n00K5iA9ZJ42mAazhmElXPy3RGG04xuBJCWe9GLZOEVliYs2HWZAfzzvod+g4fU0wVLjhWxFb4VFMNoAG/uvVnkRYH5CMSDZTcq5CCxnXFoCg+1CladGgZGo7d4QQP1nHYL7dT6emIWTDmdnyn+Ge8UMTcL+iOrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AluZbev8; arc=none smtp.client-ip=209.85.221.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oCI/NgO6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27A1EC4CEEE;
-	Wed, 11 Jun 2025 03:59:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749614346;
-	bh=szt+yu2QyA/QhUjatSBOr43sMK30sECLXWC5HWNvAj0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oCI/NgO6t82+0dt4rZ58DB+IkwRvjcNZ8pj5AEN6fKZSLEVlNEcF2b+DBphS2gu8/
-	 soA6FLw7oMdHnpjUO+8dOJvlRr1p33bXZWdRSPljd2QvQe3FkrsUr+3IlRuy+lY705
-	 8OIZGNq6+RStoCDw3miB+z/Emh3WsYmaW7T5NQTVBV/iG//6cY5agrJleSTHWSbuGH
-	 eFd8ehhhWiUy0B2yIimmqk8TwvGDygZZ14r7jQYOb7GPEXoSNehfYGl1FkahLvK4x5
-	 IGbF4jVwt+BqNJ8PquUrLFiUbiNyU8mcnJGot5yfNv+gOb2msM+oiMu2P4k9vYt2YW
-	 nReNvxvHkbt1w==
-Date: Tue, 10 Jun 2025 20:58:42 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org, x86@kernel.org, ardb@kernel.org,
-	Jason@zx2c4.com, torvalds@linux-foundation.org
-Subject: Re: [PATCH 07/16] crypto: sha512 - replace sha512_generic with
- wrapper around SHA-512 library
-Message-ID: <20250611035842.GB1484147@sol>
-References: <20250611020923.1482701-8-ebiggers@kernel.org>
- <aEjo6YZn59m5FnZ_@gondor.apana.org.au>
- <20250611033957.GA1484147@sol>
- <aEj8J3ZIYEFp_XT4@gondor.apana.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AluZbev8"
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-5311cfb975aso311959e0c.1;
+        Tue, 10 Jun 2025 20:59:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749614396; x=1750219196; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pj6z2aRKvHtITq4Z+f1qO93pmK8lNGG0j4aMXrIWEqE=;
+        b=AluZbev8p6LHon9Qi8g0JjsjoqMaio4KkXWWEOvLm+3dPNmNNDIDXXbrYVtRkMlSlI
+         6eovcKpfloO/PZX6jvC7TJ+4Tb3YXUBpqOwLEtiBVfdlu6qAxOrcssDnTCuJFXs+ZSrC
+         9hBlMhw25gxTpZYN0U17tlFADOdxfA+VffGsx3j5wiquURSKDFuRb+a60JDi+4ju3Kt9
+         5TiafS5iPCe/GaRNWthVof8zHht76GMuOS0431JFazLjwGdMA1Gm7YZjfhYjHSK+BIIa
+         a2KiMqZ3HSaXxZoRC2K0uYMa15inEfr2cq+SSN9jy7KHMxHtTsgIhaj+tjXGHEs7/QMe
+         pufw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749614396; x=1750219196;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pj6z2aRKvHtITq4Z+f1qO93pmK8lNGG0j4aMXrIWEqE=;
+        b=X/qghanupnh5YQFNMQBzRKC60w65zmAXqBsg56RVYHeDT/ccAQZJTC4al058FJUSJe
+         lo6SrX9juEzJclTFPubamy83OsCib22xEkxA+8NuLyL4Q69/dbfoK/D7kEknun2suLiJ
+         orMJY+kqWOdevDkK/7g/4/Cfg9rZbVL/KLMMGUy8LYSzpys+S4BqsGv+RcRzsZo2RV9C
+         Lk98thJy8zSaqDxm/QhBCqE4F5T9F8urkayBgqG3wf0ruKLkuJXEKTaneAmPfk1F4Rqb
+         5pUz7rtKERplnM88hdEjr2edZhBgRbqZJQpk0d+jjb6jeRddvhR4uTQWHa95rGpF2xWw
+         6iAA==
+X-Forwarded-Encrypted: i=1; AJvYcCV1veIsgzOZIYqfSJL6QiLttJKJFD+YQzwqKVS3WumeT0Z/uqPYrKagfjfds++n72Az87bZKmWuoROc6gg=@vger.kernel.org, AJvYcCVi/lus0nmY2/LuZYDzhQW0l0cdUegaiPuuF/a85qzLd/Om8li+oHJ0D8oxiURXZ3MC8ar07B5JLkzH@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmAkyvo6gT9e36XstEBy225u0OsspojkdG3wyeXjeAoPivdi/F
+	6mALoSGTTqyTprjb6pWkvplUSI4f1VpKXFVp3aEdh8aSFDRwsoCaGXoL
+X-Gm-Gg: ASbGnct2WW9s+pTkdzWJofwd6ZXT+P4x+9Obrzuv1rULD83kUiJhB9pjnbYGxbuqyMu
+	enUSzai8jJWLAGwQcq4SZFPVyVvSHM572orlnqUUYfZ7wVVL6q+inLCmwz2miM7XjZ6Piw2TGRx
+	3mJaz5G5ooxY3U+sP9p2wEjkD9QfbUxbKpuDFomClRv/ZSqd+29s/Kki5vJLge9LITYTUk3Rs4D
+	Wbnu6ElpDY/z5OxvKsjR8O6rHzlbs8Qb/PFXR777IHw/SfXKTVXrXZBZMCpLMma8t9FjP3ZOwhg
+	5qtD8qiz6idVGzq/1HlpOLGVqLj7IDGeeONUPajrYa+RGDgHDgT7kp+ih/V5
+X-Google-Smtp-Source: AGHT+IGUDa7JtBq2dvoPFRpR8Ucsyx6ySznxILJ7IulGOvVCBM169/ICR1GV4mTL56zEZimS2JYQug==
+X-Received: by 2002:a05:6122:119c:b0:52d:cc6f:81a2 with SMTP id 71dfb90a1353d-53121e8cdeamr1223105e0c.6.1749614396582;
+        Tue, 10 Jun 2025 20:59:56 -0700 (PDT)
+Received: from geday ([2804:7f2:800b:5f6a::dead:c001])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-53113c0ee7fsm2411261e0c.41.2025.06.10.20.59.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 20:59:55 -0700 (PDT)
+Date: Wed, 11 Jun 2025 00:59:48 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-rockchip@lists.infradead.org,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 1/4] PCI: pcie-rockchip: add bits for Target Link
+ Speed in LCS_2
+Message-ID: <aEj_NDgaFJT-oceR@geday>
+References: <aEQb5kEOCJNQJMin@geday>
+ <20250610200744.GA820589@bhelgaas>
+ <aEj7-6fMGKSXQb3J@geday>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,38 +83,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aEj8J3ZIYEFp_XT4@gondor.apana.org.au>
+In-Reply-To: <aEj7-6fMGKSXQb3J@geday>
 
-On Wed, Jun 11, 2025 at 11:46:47AM +0800, Herbert Xu wrote:
-> On Tue, Jun 10, 2025 at 08:39:57PM -0700, Eric Biggers wrote:
-> >
-> > Do you have a concrete example (meaning, a specific driver) where this actually
-> > matters?  Historically, export and import have always had to be paired for the
-> > same transformation object, i.e. import was called only with the output of
-> > export.  There is, and has never been, any test that tests otherwise.  This
-> > seems like a brand new "requirement" that you've made up unnecessarily.
+On Wed, Jun 11, 2025 at 12:46:10AM -0300, Geraldo Nascimento wrote:
+> Hi again Bjorn,
 > 
-> It's not just drivers that may be using fallbacks, the ahash API
-> code itself now relies on this to provide fallbacks for cases that
-> drivers can't handle, such as linear addresses.
+> Your message reminded me of something that may be important.
 > 
-> I did add the testing for it, which revealed a few problems with
-> s390 so it was reverted for 6.16.  But I will be adding it back
-> after the s390 issues have been resolved.
-
-Okay, so it sounds like in practice this is specific to ahash_do_req_chain()
-which you recently added.  I'm not sure what it's meant to be doing.
-
-> > I'll add export and import functions if you insist, but it seems pointless.
-> >
-> > Could you at least provide proper definitions for the legacy structs so that I
-> > don't have to do pointer arithmetic to generate them?
+> During my debugging I had the mild impression L0s capability is not
+> being cleared from Link Capabilities Register in the presence of
+> "aspm-no-l0s" DT property.
 > 
-> Just expose the sha512 block functions and use them as is.  There
-> is no need to do the export/import dance.
+> I can't confirm it right now but I might revisit this later on. From
+> what I've seen it can only be cleared from inside the port init
+> in pcie-rockchip.c and does nothing in present form.
+> 
+> Not a clear, confirmable report but something to watch out for...
 
-We're not going to support direct access to the SHA-512 compression function as
-part of the library API.  It's just unnecessary and error-prone.  crypto/ will
-just use the same well-documented and well-tested public API as everyone else.
+Not correct. ASPM bit for L0s is being properly cleared according
+to my printk's.
 
-- Eric
+Should have checked before creating noise. Sorry.
+Geraldo Nascimento
+
+> 
+> Regards,
+> Geraldo Nascimento
