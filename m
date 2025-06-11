@@ -1,277 +1,218 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54FE2262FCB;
-	Wed, 11 Jun 2025 09:41:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5165D264A8E;
+	Wed, 11 Jun 2025 09:41:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749634879; cv=none; b=Qxp2ICvTOk8lvTwHWEEsjIzqnkbsR9M5NGpbJ6u8AF20aXqgml666Cq0VBHwaPxGsQEAi9Fi3ENkceTSwYxozh4+SN8DgcvHon/g2qbTzs/3LCaT4FLkVA9HR0JpFjpOVXTo2i05zZ71a09XqrRCPGggjPhQYhEXOxglxF+uZOc=
+	t=1749634884; cv=none; b=NIhcthwvypkbtt9DDtZhuXtrf4SZ7lk63WgHQUjHzjkhNALMTJyAsiy21t3wBwrqt+i0QnHyhGyxg2HK/mbsnqci5aGKcTmYN7mhVW0p1Dbvg8Rs3dLew+J6ngOAKYhl5KqPgzoPlboNq7rrUA5HHSrVUhLhAycebEc6HpBaND4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749634879; c=relaxed/simple;
-	bh=TsHTys5p+kCpjkxZoTXlOVWR2jW1yNLCbU1XBZMBavo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=j5qaTNEyWj/TJJxo9EBAJazeOsgI4f2M7jgdlCmJvQ0g5aOZv/R6C2XoBHC/d1ApwZPel0+XjoeV9zh8eyxSBpSLxu/xaqYhVgZ2RJ41vqp9gKPVDH2RrXQ2HwyvM7emK9hNO4vX3mNhZfsCaydxdyhxf54Tmc+CisJJYe71iuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=pT85o15H; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pT85o15H"
-Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55B9efh92551038;
-	Wed, 11 Jun 2025 04:40:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1749634841;
-	bh=ICMYgHUJn775s1HXZV50Y8Poxnt8AvE5dvw388PWPI8=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=pT85o15Hr4oz59yGeBfsMmFt92cujnTwoD1eitRxyiqKJEszp0HsM/zOsGnLPXZf+
-	 qtOetbW9WFgDBT8cVc/TpYz5+2Zpj+yJu9nSkB3i1XGpVM2zIfCK1pSutnISft2F0Z
-	 XsaFavfy8YiFiv8afdXxuzC2dXJrjIzggjyLRBKE=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55B9efpE1631823
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Wed, 11 Jun 2025 04:40:41 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 11
- Jun 2025 04:40:41 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 11 Jun 2025 04:40:41 -0500
-Received: from [10.24.69.25] (danish-tpc.dhcp.ti.com [10.24.69.25])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55B9eZCj137397;
-	Wed, 11 Jun 2025 04:40:36 -0500
-Message-ID: <10d1c003-fcac-4463-8bce-f40bda3047f0@ti.com>
-Date: Wed, 11 Jun 2025 15:10:35 +0530
+	s=arc-20240116; t=1749634884; c=relaxed/simple;
+	bh=64RMp4IP7Aa8vIasQzKCeWfDpFqdXhzYpdWMulIxLf8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=uAjlnGtOOpTIKmrMX6PRo8QTgfBhKfXHNESMB+yYTftpaDzLhkvzwktPEaF/FDVSYJVzz2c6TUeiDXgLE1FGLLNdkODOCI2fpP4x0i3Fwu8yJ31u1FjdhXWUP6o1Ht3qDXQYojBdJERf1cqPgmCR3mJdiJFkf4iJbGno+CLFFCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 391AF1596;
+	Wed, 11 Jun 2025 02:41:02 -0700 (PDT)
+Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8C15C3F59E;
+	Wed, 11 Jun 2025 02:41:19 -0700 (PDT)
+From: Yeoreum Yun <yeoreum.yun@arm.com>
+To: catalin.marinas@arm.com,
+	pcc@google.com,
+	will@kernel.org,
+	broonie@kernel.org,
+	anshuman.khandual@arm.com,
+	joey.gouly@arm.com,
+	yury.khrustalev@arm.com,
+	maz@kernel.org,
+	oliver.upton@linux.dev,
+	frederic@kernel.org,
+	akpm@linux-foundation.org,
+	surenb@google.com
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Yeoreum Yun <yeoreum.yun@arm.com>
+Subject: [PATCH v6 4/9] kselftest/arm64/mte: register mte signal handler with SA_EXPOSE_TAGBITS
+Date: Wed, 11 Jun 2025 10:41:02 +0100
+Message-Id: <20250611094107.928457-5-yeoreum.yun@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250611094107.928457-1-yeoreum.yun@arm.com>
+References: <20250611094107.928457-1-yeoreum.yun@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v10] net: ti: icssg-prueth: add TAPRIO offload
- support
-To: Vladimir Oltean <vladimir.oltean@nxp.com>
-CC: Meghana Malladi <m-malladi@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Simon Horman <horms@kernel.org>,
-        Guillaume La Roque <glaroque@baylibre.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Roger Quadros <rogerq@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>, Eric
- Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Andrew Lunn <andrew+netdev@lunn.ch>,
-        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <srk@ti.com>,
-        Roger
- Quadros <rogerq@ti.com>
-References: <20250502104235.492896-1-danishanwar@ti.com>
- <20250506154631.gvzt75gl2saqdpqj@skbuf>
- <5e928ff0-e75b-4618-b84c-609138598801@ti.com>
- <b05cc264-44f1-42e9-ba38-d2ef587763f5@ti.com>
- <20250610085001.3upkj2wbmoasdcel@skbuf>
- <1cee4cab-c88f-4bd8-bd71-62cd06901b3b@ti.com>
- <20250610150254.w4gvmbsw6nrhb6k4@skbuf>
-Content-Language: en-US
-From: MD Danish Anwar <danishanwar@ti.com>
-In-Reply-To: <20250610150254.w4gvmbsw6nrhb6k4@skbuf>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Transfer-Encoding: 8bit
 
+To test address tag[63:60] and memory tag[59:56] is preserved
+when memory tag fault happen, Let mte_register_signal() to register
+signal handler with SA_EXPOSE_TAGBITS.
 
+Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+---
+ tools/testing/selftests/arm64/mte/check_buffer_fill.c |  2 +-
+ .../testing/selftests/arm64/mte/check_child_memory.c  |  4 ++--
+ .../selftests/arm64/mte/check_hugetlb_options.c       |  4 ++--
+ tools/testing/selftests/arm64/mte/check_ksm_options.c |  4 ++--
+ .../testing/selftests/arm64/mte/check_mmap_options.c  |  4 ++--
+ .../selftests/arm64/mte/check_tags_inclusion.c        |  2 +-
+ tools/testing/selftests/arm64/mte/check_user_mem.c    |  2 +-
+ tools/testing/selftests/arm64/mte/mte_common_util.c   | 11 ++++++++++-
+ tools/testing/selftests/arm64/mte/mte_common_util.h   |  3 ++-
+ 9 files changed, 23 insertions(+), 13 deletions(-)
 
-On 10/06/25 8:32 pm, Vladimir Oltean wrote:
-> On Tue, Jun 10, 2025 at 04:14:29PM +0530, MD Danish Anwar wrote:
->>> 1. If there is no "existing" schedule, what does the "extend" variable
->>>    extend? The custom base-time mechanism has to work even for the first
->>>    taprio schedule. (this is an unanswered pre-existing question)
->>
->> The firmware has a cycle-time of 1ms even if there is no schedule. Every
->> 1ms, firmware updates a counter. The curr_time is calculated as
->> CounterValue * 1ms.
->>
->> Even if there are no schedule, the default cycle-time will remain 1ms.
->> Let's say the first schedule has a base-time of 20.5ms then the default
->> cycle will be extended by 0.5 ms and then the schedule will apply. This
->> is the reason, the extend feature is also impacting get/set_time
->> calculations.
-> 
-> So what is an ICSSG IEP cycle, then? I think this is another case where
-> the firmware calls something X, taprio (and 802.1Q) also calls something
-> X, and yet, they are talking about different things.
-> 
-> A schedule (in taprio terms) is an array of gate states and the
-> respective time intervals for which those states apply. The schedule is
-> periodic, and a cycle is the period of time after which the schedule
-> repeats itself. By default, the cycle time (the duration of the cycle)
-> is equal to the sum of the gate intervals, but it can also be longer or
-> shorter (extended or truncated schedule).
-> 
-
-Yes I understand that.
-
-> Whereas in the case of ICSSG, based on a code search for
-> IEP_DEFAULT_CYCLE_TIME_NS, a cycle seems to be some elementary unit of
-> timekeeping, used by the firmware API to express other information in
-> terms of it, like packet timestamps and periodic output. Would that be a
-> correct description?
-> 
-> When you say that "even if there is no schedule, the default cycle time
-> will remain 1ms", you are talking about the cycle time in the ICSSG
-> sense, because in the taprio/802.1Q sense, it is absurd to talk about a
-
-Yes I am. By default cycle-time, I meant IEP_DEFAULT_CYCLE_TIME_NS.
-
-> cycle time in absense of a schedule. And implicitly, you are saying that
-> when the firmware extends the next-to-last cycle in order for unaligned
-> base times to work, this alters that timekeeping unit. Like stretching
-
-Yes. This is exactly what's happening. The IEP cycle and schedule cycle
-are related to each other in firmware implementation. I am not sure how,
-but that's what the firmware team confirmed with me. Due to this, a
-different cycle-time in scheduling impacts the IEP cycles and
-get/set_time APIs.
-
-> the ruler in order for a mouse and an elephant to measure the same.
-> 
-> I think it needs to be explicitly pointed out that the taprio schedule
-> is only supposed to affect packet scheduling at the egress of the port,
-> but taprio is only a reader of the timekeeping process (and PTP time)
-> and should not alter it. The timekeeping process should be independent
-> and the taprio portion of the firmware should keep track of its own
-> "cycles" which may not begin at the beginning of a timekeeping "cycle",
-> may not end at the end of one, and may span multiple timekeeping
-> "cycles", respectively.
-> 
-
-I understand that. But there are some dependency in firmware which
-results into taprio schedule impacting the IEP cycle.
-
-> What if you also have a Qci (tc-gate) schedule on the ingress of the
-> same port, and that is configured for a different cycle-time or a
-> different base-time (requiring a different "extend" value)? It will be
-> too inflexible to apply the restriction that the parameters have to be
-> the same.
-> 
->>>>> That's what our first approach was. If it's okay with you I can drop all
->>>>> these changes and add below check in driver
->>>>>
->>>>> if (taprio->base_time % taprio->cycle_time) {
->>>>> 	NL_SET_ERR_MSG_MOD(taprio->extack, "Base-time should be multiple of cycle-time");
->>>>> 	return -EOPNOTSUPP;
->>>>> }
->>>
->>> I don't want to make a definitive statement on this just yet, I don't
->>> fully understand what was implemented in the firmware and what was the
->>> thinking.
->>>
->>
->> The firmware always expects cycle-time of 1ms and base-time to multiple
->> of cycle-time i.e. base-time to be multiple of 1ms.
->>
->> This way all the schedules will be aligned and that's what current
->> implementation is.
->>
->> To add support for base-time that are not multiple of cycle-time we
->> added "extend". However that will also only work as long as cycle-time
->> is 1ms. cycle-time other than 1ms is not supported by firmware as of
->> now. This is something we discovered recently.
->>
->> We have a check for TAS_MIN_CYCLE_TIME and TAS_MAX_CYCLE_TIME and they
->> are defined as,
->>
->> /* Minimum cycle time supported by implementation (in ns) */
->> #define TAS_MIN_CYCLE_TIME  (1000000)
->>
->> /* Minimum cycle time supported by implementation (in ns) */
->> #define TAS_MAX_CYCLE_TIME  (4000000000)
->>
->> But it is wrong. As per current firmware implementation,
->> 	TAS_MIN_CYCLE_TIME = TAS_MAX_CYCLE_TIME = 1ms
->>
->>
->> The ideal use case will be to support,
->> 1. Different cycle times
->> 2. Different base times which may or may not be multiple of cycle-times.
->>
->> With the current implementation, we are able to support #2 however #1 is
->> still a limitation. Once support for #1 is added, the implementation
->> will need to be changed.
-> 
-> (...)
-> 
->>> As you can see, I still have trouble understanding the concepts proposed
->>> by the firmware.
->>
->> I understand that. I hope this makes it a bit more clear. Let me know
->> what needs to be done now.
-> 
-> Was the "extend" feature added to the ICSSG firmware as a result of the
-> previous taprio review feedback? Because if it was, it's unfortunate
-> that because of the lack of clarity of the firmware concepts, the way
-> this feature was implemented is essentially DOA and cannot be used.
-> 
-
-Yes, the extend feature was added based on the feedback on v9.
-
-> I am not very positive that even if adding the extra restrictions
-> discovered here (cycle-time cannot be != IEP_DEFAULT_CYCLE_TIME_NS),
-> the implementation will work as expected. I am not sure that our image
-> of "as expected" is the same.
-> 
-> Given that these don't seem to be hardware limitations, but constraints
-> imposed by the ICSSG firmware, I guess my suggestion would be to start
-> with the selftest I mentioned earlier (which may need to be adapted),
-
-Yes I am working on running the selftest on ICSSG driver however there
-are some setup issues that I am encountering. I will try to test this
-using the selftest.
-
-> and use it to get a better picture of the gaps. Then make a plan to fix
-> them in the firmware, and see what it takes. If it isn't going to be
-> sufficient to fix the bugs unless major API changes are introduced, then
-> maybe it doesn't make sense for Linux to support taprio offload on the
-> buggy firmware versions.
-> 
-> Or maybe it does (with the appropriate restrictions), but it would still
-> inspire more trust to see that the developer at least got some version
-> of the firmware to pass a selftest, and has a valid reference to follow.
-
-Sure. I think we can go back to v9 implementation (no extend feature)
-and add two additional restrictions in the driver.
-
-1. Cycle-time needs to be 1ms
-2. Base-time needs to be Multiple of 1ms
-
-With these two restrictions we can have the basic taprio support. Once
-the firmware is fixed and has support for both the above cases, I will
-modify the driver as needed.
-
-I know firmware is very buggy as of now. But we can still start the
-driver integration and fix these bugs with time.
-
-I will try to test the implementation with these two limitations using
-the selftest and share the logs if it's okay with you to go ahead with
-these limitations.
-
-> Not going to lie, it doesn't look great that we discover during v10 that
-> taprio offload only works with a cycle time of 1 ms. The schedule is
-
-I understand that. Even I got to know about this limitation after my
-last response to v10
-(https://lore.kernel.org/all/5e928ff0-e75b-4618-b84c-609138598801@ti.com/)
-
-> network-dependent and user-customizable, and maybe the users didn't get
-> the memo that only 1 ms was tested :-/
-
-Let me know if it'll be okay to go ahead with the two limitations
-mentioned above for now (with selftest done).
-
-If it's okay, I will try to send v11 with testing with selftest done as
-well. Thanks for the continuous feedback.
-
+diff --git a/tools/testing/selftests/arm64/mte/check_buffer_fill.c b/tools/testing/selftests/arm64/mte/check_buffer_fill.c
+index 2ee7f114d7fa..5248b5265aa4 100644
+--- a/tools/testing/selftests/arm64/mte/check_buffer_fill.c
++++ b/tools/testing/selftests/arm64/mte/check_buffer_fill.c
+@@ -415,7 +415,7 @@ int main(int argc, char *argv[])
+ 		return err;
+ 
+ 	/* Register SIGSEGV handler */
+-	mte_register_signal(SIGSEGV, mte_default_handler);
++	mte_register_signal(SIGSEGV, mte_default_handler, false);
+ 
+ 	/* Set test plan */
+ 	ksft_set_plan(20);
+diff --git a/tools/testing/selftests/arm64/mte/check_child_memory.c b/tools/testing/selftests/arm64/mte/check_child_memory.c
+index 7597fc632cad..b97ea3981c21 100644
+--- a/tools/testing/selftests/arm64/mte/check_child_memory.c
++++ b/tools/testing/selftests/arm64/mte/check_child_memory.c
+@@ -160,8 +160,8 @@ int main(int argc, char *argv[])
+ 		return err;
+ 
+ 	/* Register SIGSEGV handler */
+-	mte_register_signal(SIGSEGV, mte_default_handler);
+-	mte_register_signal(SIGBUS, mte_default_handler);
++	mte_register_signal(SIGSEGV, mte_default_handler, false);
++	mte_register_signal(SIGBUS, mte_default_handler, false);
+ 
+ 	/* Set test plan */
+ 	ksft_set_plan(12);
+diff --git a/tools/testing/selftests/arm64/mte/check_hugetlb_options.c b/tools/testing/selftests/arm64/mte/check_hugetlb_options.c
+index 3bfcd3848432..4e644a606394 100644
+--- a/tools/testing/selftests/arm64/mte/check_hugetlb_options.c
++++ b/tools/testing/selftests/arm64/mte/check_hugetlb_options.c
+@@ -235,8 +235,8 @@ int main(int argc, char *argv[])
+ 		return err;
+ 
+ 	/* Register signal handlers */
+-	mte_register_signal(SIGBUS, mte_default_handler);
+-	mte_register_signal(SIGSEGV, mte_default_handler);
++	mte_register_signal(SIGBUS, mte_default_handler, false);
++	mte_register_signal(SIGSEGV, mte_default_handler, false);
+ 
+ 	allocate_hugetlb();
+ 
+diff --git a/tools/testing/selftests/arm64/mte/check_ksm_options.c b/tools/testing/selftests/arm64/mte/check_ksm_options.c
+index 88c74bc46d4f..afea4e381862 100644
+--- a/tools/testing/selftests/arm64/mte/check_ksm_options.c
++++ b/tools/testing/selftests/arm64/mte/check_ksm_options.c
+@@ -141,8 +141,8 @@ int main(int argc, char *argv[])
+ 		return KSFT_FAIL;
+ 	}
+ 	/* Register signal handlers */
+-	mte_register_signal(SIGBUS, mte_default_handler);
+-	mte_register_signal(SIGSEGV, mte_default_handler);
++	mte_register_signal(SIGBUS, mte_default_handler, false);
++	mte_register_signal(SIGSEGV, mte_default_handler, false);
+ 
+ 	/* Set test plan */
+ 	ksft_set_plan(4);
+diff --git a/tools/testing/selftests/arm64/mte/check_mmap_options.c b/tools/testing/selftests/arm64/mte/check_mmap_options.c
+index 17694caaff53..b37bf481c9f9 100644
+--- a/tools/testing/selftests/arm64/mte/check_mmap_options.c
++++ b/tools/testing/selftests/arm64/mte/check_mmap_options.c
+@@ -201,8 +201,8 @@ int main(int argc, char *argv[])
+ 	sizes[item - 1] = page_size + 1;
+ 
+ 	/* Register signal handlers */
+-	mte_register_signal(SIGBUS, mte_default_handler);
+-	mte_register_signal(SIGSEGV, mte_default_handler);
++	mte_register_signal(SIGBUS, mte_default_handler, false);
++	mte_register_signal(SIGSEGV, mte_default_handler, false);
+ 
+ 	/* Set test plan */
+ 	ksft_set_plan(22);
+diff --git a/tools/testing/selftests/arm64/mte/check_tags_inclusion.c b/tools/testing/selftests/arm64/mte/check_tags_inclusion.c
+index a3d1e23fe02a..b96296ab9870 100644
+--- a/tools/testing/selftests/arm64/mte/check_tags_inclusion.c
++++ b/tools/testing/selftests/arm64/mte/check_tags_inclusion.c
+@@ -180,7 +180,7 @@ int main(int argc, char *argv[])
+ 		return err;
+ 
+ 	/* Register SIGSEGV handler */
+-	mte_register_signal(SIGSEGV, mte_default_handler);
++	mte_register_signal(SIGSEGV, mte_default_handler, false);
+ 
+ 	/* Set test plan */
+ 	ksft_set_plan(4);
+diff --git a/tools/testing/selftests/arm64/mte/check_user_mem.c b/tools/testing/selftests/arm64/mte/check_user_mem.c
+index f4ae5f87a3b7..d1d14aaaba16 100644
+--- a/tools/testing/selftests/arm64/mte/check_user_mem.c
++++ b/tools/testing/selftests/arm64/mte/check_user_mem.c
+@@ -211,7 +211,7 @@ int main(int argc, char *argv[])
+ 		return err;
+ 
+ 	/* Register signal handlers */
+-	mte_register_signal(SIGSEGV, mte_default_handler);
++	mte_register_signal(SIGSEGV, mte_default_handler, false);
+ 
+ 	/* Set test plan */
+ 	ksft_set_plan(64);
+diff --git a/tools/testing/selftests/arm64/mte/mte_common_util.c b/tools/testing/selftests/arm64/mte/mte_common_util.c
+index a1dc2fe5285b..83240b980f9c 100644
+--- a/tools/testing/selftests/arm64/mte/mte_common_util.c
++++ b/tools/testing/selftests/arm64/mte/mte_common_util.c
+@@ -19,6 +19,10 @@
+ #include "mte_common_util.h"
+ #include "mte_def.h"
+ 
++#ifndef SA_EXPOSE_TAGBITS
++#define SA_EXPOSE_TAGBITS 0x00000800
++#endif
++
+ #define INIT_BUFFER_SIZE       256
+ 
+ struct mte_fault_cxt cur_mte_cxt;
+@@ -79,12 +83,17 @@ void mte_default_handler(int signum, siginfo_t *si, void *uc)
+ 	}
+ }
+ 
+-void mte_register_signal(int signal, void (*handler)(int, siginfo_t *, void *))
++void mte_register_signal(int signal, void (*handler)(int, siginfo_t *, void *),
++			 bool export_tags)
+ {
+ 	struct sigaction sa;
+ 
+ 	sa.sa_sigaction = handler;
+ 	sa.sa_flags = SA_SIGINFO;
++
++	if (export_tags && signal == SIGSEGV)
++		sa.sa_flags |= SA_EXPOSE_TAGBITS;
++
+ 	sigemptyset(&sa.sa_mask);
+ 	sigaction(signal, &sa, NULL);
+ }
+diff --git a/tools/testing/selftests/arm64/mte/mte_common_util.h b/tools/testing/selftests/arm64/mte/mte_common_util.h
+index a0017a303beb..6b109e84fa39 100644
+--- a/tools/testing/selftests/arm64/mte/mte_common_util.h
++++ b/tools/testing/selftests/arm64/mte/mte_common_util.h
+@@ -40,7 +40,8 @@ extern struct mte_fault_cxt cur_mte_cxt;
+ 
+ /* MTE utility functions */
+ void mte_default_handler(int signum, siginfo_t *si, void *uc);
+-void mte_register_signal(int signal, void (*handler)(int, siginfo_t *, void *));
++void mte_register_signal(int signal, void (*handler)(int, siginfo_t *, void *),
++			 bool export_tags);
+ void mte_wait_after_trig(void);
+ void *mte_allocate_memory(size_t size, int mem_type, int mapping, bool tags);
+ void *mte_allocate_memory_tag_range(size_t size, int mem_type, int mapping,
 -- 
-Thanks and Regards,
-Danish
+LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+
