@@ -1,57 +1,47 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA601A0BF3;
-	Wed, 11 Jun 2025 15:05:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4259418BC2F;
+	Wed, 11 Jun 2025 15:05:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749654347; cv=none; b=hmCqztkAJIaC3QaUOr7wiImQ+09MIndYoHFdfgIFCvYHSD4bamHjBAfFoWGY0UhTlzR1ae70ipIuV8ogAofTdivSqROthWJ47puKRZGmMmQ3w+GSYKb8lNPuF+E/X80qpM8VFTkj7lZ1bSi1oktJh+4rS3cjCQCi/xDLlPHhd8Q=
+	t=1749654356; cv=none; b=gs2p97F8xakutiMBlAhVpbhOEq0ICMVZ4Xd9sDMtS01a2sWk/COeeYYx4rqiFik8WB3FVb/zvDgqgvFtEx1s/ZGU9CyW32NLSPipu/rdOcCmYJ5qhodTZXJ8AFqhmwbz02QXQ8KWTmJmglmwdBBKE8Lr1SlUfmaCUas/9cTQHNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749654347; c=relaxed/simple;
-	bh=GN263RmwEk00x8lzbSkBIhabezE842uTAO7Z1eXmkSQ=;
+	s=arc-20240116; t=1749654356; c=relaxed/simple;
+	bh=nXn//9wEDz612qpwUp8e5GEyUKA50kkwM4h/bE6ZsuQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hu840eQmnTbvnHUXHxKEmBxGotHRssTeVlWKpA5i9HHpdEJ/w+y8VqbxfUr+q6cjZiKof9axDAEE0RF6HQXCrdRmA8gM+/q0IqXwjVeBoBsVGksTtssVc5OsuhYPvX4/e+A4HdCwqVgKwnlvbT7PbI2yhm0P08uKu1XHMCsvnyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=hiWnYlNV; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=su5z1yS8jd8azCp46KNpSr3hGUrUxHodUkSa+nWZc3tLl4dQVwIHtbkS0idMXbDby+r8eqovkXu0UhwBY3u26oWorq0EgJWCy2yxS/3YLRcycAhBIkhbUozQjxDFHetKSj8wLxN6+SmApe8OT+k09HiqetS+eJ9HtWj2LJ6Pxn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q09gTN7J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="hiWnYlNV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=J0ACVruKN2q4p/Qa6A04ZCMVXW2I9cmZiPjmdkppk/w=; b=hiWnYlNVjKoUvnmi4RKso3EEPZ
-	ulLWMWHDeFIaWd5hFTU5U0s1B2X8GyZi8bXfuBF6QT1ied369ZeJFqJktGfvw6+EHluP3SUzqKG/A
-	1kZGddH7MCe+zggdPa5VFROrxjAU+oZ6Z8AhGQYUa5U+0W+Y/LIYaxqnNo3dkO72pagk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uPN0z-00FPmp-T6; Wed, 11 Jun 2025 17:05:21 +0200
-Date: Wed, 11 Jun 2025 17:05:21 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Icenowy Zheng <uwu@icenowy.me>
-Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>,
-	Rob Herring <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chaoyi Chen <chaoyi.chen@rock-chips.com>,
-	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v2] dt-bindings: net: ethernet-controller: Add
- informative text about RGMII delays
-Message-ID: <e08888ab-d190-4829-9aef-a8adef63b968@lunn.ch>
-References: <20250430-v6-15-rc3-net-rgmii-delays-v2-1-099ae651d5e5@lunn.ch>
- <e4db4e6f0a5a42ceacacc925adbe13747a6f948e.camel@icenowy.me>
- <debcb2e1-b7ef-493b-a4c4-e13d4aaf0223@lunn.ch>
- <2e42f2f7985fb036bec6ab085432a49961c8dc42.camel@icenowy.me>
- <aEFmNMSvffMvNA8I@shell.armlinux.org.uk>
- <84c534f9dbfa7c82300863cd40e5a9b6e6e29411.camel@icenowy.me>
- <ba7b290d-0cd1-4809-822a-bfe902684d7e@lunn.ch>
- <9ebe16a8d33e00c39c142748a1ea6fff96b9565a.camel@icenowy.me>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q09gTN7J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF97EC4CEE3;
+	Wed, 11 Jun 2025 15:05:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749654355;
+	bh=nXn//9wEDz612qpwUp8e5GEyUKA50kkwM4h/bE6ZsuQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Q09gTN7JEA9p4RLFDHZ4C0xd3qOt0xR+cuu6CEvOs3oeO1rgndK/SFluuYHxpBwiL
+	 pcrJUktzodkyPGdCmioD3Pn+DGNwZw7t8x7x2D0qcxhP98WSlrEXXDrl7ncRliIhTv
+	 i4B1LttaTfBZZFx7yGC/ufWAgQofppsA7SN8MiAQIPngifAuoyFFbczwovXdJeehdI
+	 4OJt2ThjrKPM/ptQuox2H9n/ZSCCZ39v0wavG5UYR+eo8fL5G9z0B1cJtSFNF0XXL9
+	 lNIgvxMVexROrysgq8wf/C4BYLcPSK2fCrvofoN4KX+z/6+s8eFIPH4pHF4mqI6jr0
+	 gYUgZDM+G7c/Q==
+Date: Wed, 11 Jun 2025 08:05:55 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
+	linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de,
+	tytso@mit.edu, john.g.garry@oracle.com, bmarzins@redhat.com,
+	chaitanyak@nvidia.com, shinichiro.kawasaki@wdc.com,
+	brauner@kernel.org, martin.petersen@oracle.com, yi.zhang@huawei.com,
+	chengzhihao1@huawei.com, yukuai3@huawei.com, yangerkun@huawei.com,
+	linux-api@vger.kernel.org
+Subject: Re: [PATCH 07/10] fs: introduce FALLOC_FL_WRITE_ZEROES to fallocate
+Message-ID: <20250611150555.GB6134@frogsfrogsfrogs>
+References: <20250604020850.1304633-1-yi.zhang@huaweicloud.com>
+ <20250604020850.1304633-8-yi.zhang@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,65 +50,133 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9ebe16a8d33e00c39c142748a1ea6fff96b9565a.camel@icenowy.me>
+In-Reply-To: <20250604020850.1304633-8-yi.zhang@huaweicloud.com>
 
-> BTW I found that in some case the assumption of PHY-side delay being
-> always better than MAC-side one is wrong -- modern MACs usually have
-> adjustable delay line, but Realtek 8211-series PHYs have only on/off
-> delay with a fixed 2ns value.
+[cc linux-api about a fallocate uapi change]
 
-There is another email conversation last month about this. The RGMII
-standard says a 2ns delay is needed. If your hardware needs something
-other than 2ns, it is breaking the standard. It probably means
-somebody has been lazy and made a bad design. The PCB track lengths
-have not been balanced, or the MAC or PHY internal delays are poorly
-designed. Whatever, it is breaking the standard. We should not be
-encouraging such bad design by making it easy to work around broken
-designs.
-
-There is also another thread about Broadcom MAC/PHY combinations, and
-somebody doing tests and showing that combination is very robust to
-delays, it will happily work with 1ns or 3ns, not just 2.00ns.
-
-So in general, a fixed 2ns value should just work if you are
-compliment to the standard.
-
-> > > Well I am not sure, considering two examples I raised here (please
-> > > note
-> > > I am comparing QCOM ETHQOS and TI PRUETH two drivers, they have
-> > > contrary handling of RGMII modes, and one matches the old binding
-> > > document, one matches the new one).
-> > 
-> > Nope, i fully agree with Russell, the binding has not changed, just
-> > the
-> > words to explain the binding.
+On Wed, Jun 04, 2025 at 10:08:47AM +0800, Zhang Yi wrote:
+> From: Zhang Yi <yi.zhang@huawei.com>
 > 
-> Well I read about phy.rst, and I found my understanding of the old
-> binding matches my understanding of phy.rst, but does not match the new
-> binding.
+> With the development of flash-based storage devices, we can quickly
+> write zeros to SSDs using the WRITE_ZERO command if the devices do not
+> actually write physical zeroes to the media. Therefore, we can use this
+> command to quickly preallocate a real all-zero file with written
+> extents. This approach should be beneficial for subsequent pure
+> overwriting within this file, as it can save on block allocation and,
+> consequently, significant metadata changes, which should greatly improve
+> overwrite performance on certain filesystems.
+> 
+> Therefore, introduce a new operation FALLOC_FL_WRITE_ZEROES to
+> fallocate. This flag is used to convert a specified range of a file to
+> zeros by issuing a zeroing operation. Blocks should be allocated for the
+> regions that span holes in the file, and the entire range is converted
+> to written extents. If the underlying device supports the actual offload
+> write zeroes command, the process of zeroing out operation can be
+> accelerated. If it does not, we currently don't prevent the file system
+> from writing actual zeros to the device. This provides users with a new
+> method to quickly generate a zeroed file, users no longer need to write
+> zero data to create a file with written extents.
+> 
+> Users can determine whether a disk supports the unmap write zeroes
+> operation through querying this sysfs interface:
+> 
+>     /sys/block/<disk>/queue/write_zeroes_unmap
+> 
+> Finally, this flag cannot be specified in conjunction with the
+> FALLOC_FL_KEEP_SIZE since allocating written extents beyond file EOF is
+> not permitted. In addition, filesystems that always require out-of-place
+> writes should not support this flag since they still need to allocated
+> new blocks during subsequent overwrites.
+> 
+> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  fs/open.c                   |  1 +
+>  include/linux/falloc.h      |  3 ++-
+>  include/uapi/linux/falloc.h | 18 ++++++++++++++++++
+>  3 files changed, 21 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/open.c b/fs/open.c
+> index 7828234a7caa..b777e11e5522 100644
+> --- a/fs/open.c
+> +++ b/fs/open.c
+> @@ -281,6 +281,7 @@ int vfs_fallocate(struct file *file, int mode, loff_t offset, loff_t len)
+>  		break;
+>  	case FALLOC_FL_COLLAPSE_RANGE:
+>  	case FALLOC_FL_INSERT_RANGE:
+> +	case FALLOC_FL_WRITE_ZEROES:
+>  		if (mode & FALLOC_FL_KEEP_SIZE)
+>  			return -EOPNOTSUPP;
+>  		break;
+> diff --git a/include/linux/falloc.h b/include/linux/falloc.h
+> index 3f49f3df6af5..7c38c6b76b60 100644
+> --- a/include/linux/falloc.h
+> +++ b/include/linux/falloc.h
+> @@ -36,7 +36,8 @@ struct space_resv {
+>  				 FALLOC_FL_COLLAPSE_RANGE |	\
+>  				 FALLOC_FL_ZERO_RANGE |		\
+>  				 FALLOC_FL_INSERT_RANGE |	\
+> -				 FALLOC_FL_UNSHARE_RANGE)
+> +				 FALLOC_FL_UNSHARE_RANGE |	\
+> +				 FALLOC_FL_WRITE_ZEROES)
+>  
+>  /* on ia32 l_start is on a 32-bit boundary */
+>  #if defined(CONFIG_X86_64)
+> diff --git a/include/uapi/linux/falloc.h b/include/uapi/linux/falloc.h
+> index 5810371ed72b..265aae7ff8c1 100644
+> --- a/include/uapi/linux/falloc.h
+> +++ b/include/uapi/linux/falloc.h
+> @@ -78,4 +78,22 @@
+>   */
+>  #define FALLOC_FL_UNSHARE_RANGE		0x40
+>  
+> +/*
+> + * FALLOC_FL_WRITE_ZEROES is used to convert a specified range of a file to
+> + * zeros by issuing a zeroing operation. Blocks should be allocated for the
+> + * regions that span holes in the file, and the entire range is converted to
+> + * written extents.
 
-So please quote the text, explain how you interpret it, and maybe we
-can then tell you how you have it wrong. Or i might admit that the
-text needs more work to remove more ambiguities.
+I think you could simplify this a bit by talking only about the end
+state after a successful call:
 
-> Well I think "rgmii-*" shouldn't exist at all, if focusing on hardware.
-> I prefer only "rgmii" with properties describing the delay numbers.
+"FALLOC_FL_WRITE_ZEROES zeroes a specified file range in such a way that
+subsequent writes to that range do not require further changes to file
+mapping metadata."
 
-As Russell said, we cannot easily change it without breaking
-systems. And i'm not convinced a new set of properties would be any
-better. Developers are often lazy. They try various things until it
-works and call it done. There are multiple ways of getting a MAC/PHY
-link to work given the available parameters, and there are multiple
-combination which works, but are not correct according to the
-definitions. I expect the same to be true for a new set of
-parameters. Laziness wins out over correctness.
+Note that we don't say how the filesystem gets to this goal.  Presumably
+the first implementations will send a zeroing operation to the block
+device during allocation and the fs will create written mappings, but
+there are other ways to get there -- a filesystem could maintain a pool
+of pre-zeroed space and hand those out; or it could zero space on
+freeing and mounting such that all new mappings can be created as
+written even without the block device zeroing operation.
 
-And the real issue is more subtle. Working incorrect implementations
-sometimes turn into broken incorrect implementations. We have seen
-cases where somebody correctly describes their hardware in DT and it
-did not work. Digging into the details, how the implementation was
-broken was found, and fixed, so that it correctly implemented DT, and
-made that correctly described board work. But in the process it broken
-lots of incorrectly described but working boards.
+Or you could be running on some carefully engineered system where you
+know the storage will always be zeroed at allocation time due to some
+other aspect of the system design, e.g. a single-use throwaway cloud vm
+where you allocate to the end of the disk and reboot the node.
 
-	Andrew
+> + *                  This flag is beneficial for subsequent pure overwriting
+> + * within this range, as it can save on block allocation and, consequently,
+> + * significant metadata changes. Therefore, filesystems that always require
+> + * out-of-place writes should not support this flag.
+> + *
+> + * Different filesystems may implement different limitations on the
+> + * granularity of the zeroing operation. Most will preferably be accelerated
+> + * by submitting write zeroes command if the backing storage supports, which
+> + * may not physically write zeros to the media.
+> + *
+> + * This flag cannot be specified in conjunction with the FALLOC_FL_KEEP_SIZE.
+> + */
+> +#define FALLOC_FL_WRITE_ZEROES		0x80
+
+The rest of the writeup seems fine to me.
+
+--D
+
+> +
+>  #endif /* _UAPI_FALLOC_H_ */
+> -- 
+> 2.46.1
+> 
+> 
