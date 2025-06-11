@@ -1,231 +1,199 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A24A4190497
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 17:57:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6AEB188CC9;
+	Wed, 11 Jun 2025 17:58:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749664669; cv=none; b=tglF2TWWKCYhQxgWYZSQNSC+5F0s0zpANgjgsGyHlf/O3PZcrpmYWOwy1QdE3EoVo71GYZLSaKW2QqoUHlKP7vA5K9IMWmFkGmfrjoZXQ34Hr1HkXboFwufJmjZDirH2PwI2N/88wyftpzhfh/OZQy3T9ivY8YuXoeWGcfPO6OQ=
+	t=1749664707; cv=none; b=W24lNVw5t1bZDYP7nfysvMksOOX4NTHnCXhqq1PJ35UnP/LXtp+iop88vnrjHw8eX8qanzj+2AKvuqd6e1GPySqtpZjAHtGVq9iXVTzmumojyxTu74giJDKyODu8VmK60WTgkS5nTEi6whYf5WToPp9CLqzng9QgrkEe26xmprk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749664669; c=relaxed/simple;
-	bh=SEijMsxsIR2Saxm6OlXmeotZaQb1SQYvRUkHr8kOD64=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=smDWGu/0O3r6L1iZE8af0bBy53dop6S1a2KW9Sgsk00m04t9ZSIsDi4DdI8dJJrtaLnSD9N205g4LO8rOHmxCzXEC9IgjpwdmHA/bzaFkc1thDkqzCP7gBt+OOYhXpV3UxaJd1L2efjMTTN91mI+qy1fWGyDHt2hBeH9BmBSX+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=qGQAiysI; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=VcN2Kp0R; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=qGQAiysI; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=VcN2Kp0R; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1749664707; c=relaxed/simple;
+	bh=5+kbWDXXq4IG8sDuXqes6a43G6RDWXt2POCGQmcpyOc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=skiltTbEQGl4EeTgfpf8kiX4BvCEPJRsvlSG7hI1yQC8wJUrTJMezg/39PDzMsCjXZiJWVhNpPgBekGEhOLTAcQy2Kk6Wf5Cde/QEHEGkMrFrEZBTg3i/CWxechW8JQA2xrvAqqnZwYi+9HfbAL2f09etscAi9G+o0GJbRXT1G8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MND96yGu; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="qGQAiysI";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="VcN2Kp0R";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="qGQAiysI";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="VcN2Kp0R"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C4C2221921;
-	Wed, 11 Jun 2025 17:57:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749664665; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=VhoXWW6F68B+fBMvoXJeILEJUgHeYVE8gaY+ZRAg9Ow=;
-	b=qGQAiysIR0GuooorxKARHF0/hcxq7HVD7uFvSuieZ7HmA1CHothZoN9UFCWxKcqhWw1Oxl
-	5m7b8rihF5c1Rb4gmXwzJ6eUD4rszXLShaFKwB/EnttlgYK6a6ZOxT3/3XTfEgTB0NRcLg
-	ZAQ4NXt3R5QJvZeTy2tgiU/DcSbXbZ8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749664665;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=VhoXWW6F68B+fBMvoXJeILEJUgHeYVE8gaY+ZRAg9Ow=;
-	b=VcN2Kp0RE+wYMuEwGlzTMbmzNze/CGmWtvovbbBG5RlfNvyuceoYZLTcE18lGTEvJ1NI2d
-	dDRpx6MdA9ss4fDg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749664665; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=VhoXWW6F68B+fBMvoXJeILEJUgHeYVE8gaY+ZRAg9Ow=;
-	b=qGQAiysIR0GuooorxKARHF0/hcxq7HVD7uFvSuieZ7HmA1CHothZoN9UFCWxKcqhWw1Oxl
-	5m7b8rihF5c1Rb4gmXwzJ6eUD4rszXLShaFKwB/EnttlgYK6a6ZOxT3/3XTfEgTB0NRcLg
-	ZAQ4NXt3R5QJvZeTy2tgiU/DcSbXbZ8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749664665;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=VhoXWW6F68B+fBMvoXJeILEJUgHeYVE8gaY+ZRAg9Ow=;
-	b=VcN2Kp0RE+wYMuEwGlzTMbmzNze/CGmWtvovbbBG5RlfNvyuceoYZLTcE18lGTEvJ1NI2d
-	dDRpx6MdA9ss4fDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9D2C4139CE;
-	Wed, 11 Jun 2025 17:57:45 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id jQTAJZnDSWhhIgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 11 Jun 2025 17:57:45 +0000
-Message-ID: <68c0649d-d9b3-44f4-9a92-7f72c51a5013@suse.cz>
-Date: Wed, 11 Jun 2025 19:57:45 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MND96yGu"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-450cea01b9cso311295e9.0;
+        Wed, 11 Jun 2025 10:58:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749664704; x=1750269504; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iuauSSTqx1TDFESDgGFVyFslKTU+wwALp8k7RA41ffM=;
+        b=MND96yGuGsI/mxw1pkY2GBK/SYPyWN7LsLlV0QnwIvXzeTXpyyQt4hRVep5Gcfi8cW
+         1+t3DGg3YVo+W+s1GIo4uqiuonEOXMpmsrTkbrYSYomVBfdCIW5qdRMhs/0J/qqzPk9g
+         6iCmPy970p+8dUUBaSr5y+ABEodxcFyjhmJfK91qMntTVEeriYVzCYSOREFHoGj+8T5Z
+         cNjdUCzjOuXkLaVRgmQUkUwPiO7n863act+s1GsFILBTHXA3bqGtLna7bDqreiWIyvJS
+         dpnNRgFmlpkvnsZl0/TJbSBAcqarDEJnxaO53VnA+YJ9i/Vs3IxEemtAIVcw04pse/7i
+         UC6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749664704; x=1750269504;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=iuauSSTqx1TDFESDgGFVyFslKTU+wwALp8k7RA41ffM=;
+        b=oMQ1dlmD5yeBUxQfffSHhfJi3GoVUyZllfKEYMHKU5nR+CVQJRdljquDxQ9x7sOpWX
+         Dd49QPo6XlCLkjTC+DOr81ACmcldfaxs+OQ0JKwXwU8sS7b4TkQzp/vv5nrW4KoDsm7r
+         nwDyjyuYpNxGbak5IBheMszFXNckgWmJbM2jh70kQM8gWJIa25DqwPyR0TilvB1Q14Qz
+         0UvaLKnf9KEx56KT872lH0gdXeh9EOEoJ7tK8V7kM/uUevI2qBRCs3O6YJYk6SSElOlA
+         VThB4LhLFQP/c/+krx70gXSBc4uqgx6mOhqmrCIwdRdClm0pjQtT9PVjUfWCoq62tMl5
+         6AeA==
+X-Forwarded-Encrypted: i=1; AJvYcCURbX4v3unlNzFNXOcoBqtQvGR9qAHq2nZgxIz/kB/bOS2K8mCJTbAXUJLhqHzGzvjyotjbLLjL3DFs6B3m@vger.kernel.org, AJvYcCUVeaWu6gp6GTa6WBBJfeidQCp1x5iM9mHy7YOA6gEOcx20x5rzWAPtME4UeOa7HLHzdcW+f+4rGWso@vger.kernel.org, AJvYcCW+kMXnnaRhsH+rKD/Nc85TT0vFBx271d7a9a4DFJc8hqAiY/U7/MT0KBSGWsNdwZBthINUkirtoi/LyrXTxDc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzeYlHRDLclxPFYDREImFZdSmNrJmDpeTNRjBXZYE5IdXIEa/Wl
+	UKCwC2ZgrTcAGSia3SDm9RVDSaxotD6CjMTko5txJj/Q4MWCAcjpZJzUa3famaJ+wHg=
+X-Gm-Gg: ASbGncvtQfD2CqKxyMoMHgqOdRozUfIhG2nZnKWLOWyI/4YgKmRCVG3qhnucsyPndcF
+	CcSQZR/LDwS2DG9tUVonmlQw6P437cMILlndf3yMkGNUCDCgC+9M3WTJG+P+D0tdBysHtvR/wdl
+	vTUL9O9sJb/nc4RgVEFR5exZ6B7ct374uZYyPWRWyOAc7pSBma1qWa6stvA+UtP6RYKydhlmx+w
+	TNALSlM75gzwFHbv0Nuh2p7YD5ONhtLZvLi/SDCkzd9C01N4TuBq2xJ3rLbfWeXt0NpTxBGFIhv
+	0LjkG55qhaIt2zfLLHsp7VOSD0TYshypQYZ+ZUKY3C04J6hkcgPhyMAjtSI+NAOilhNYmVqMsb9
+	9ar5m2knzs5s5PE9oR4z5Zk6DQ0iqrprVq6lw
+X-Google-Smtp-Source: AGHT+IEg0k970DGPt+HOeiv6kkgVg9C2xgXIHwMpy2WRypQIpwqG83M++zCuuFAXKTvjT5p9ZNVqEw==
+X-Received: by 2002:a05:600c:1c9e:b0:450:d4a6:799d with SMTP id 5b1f17b1804b1-4532b8c5807mr7781705e9.7.1749664703588;
+        Wed, 11 Jun 2025 10:58:23 -0700 (PDT)
+Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532513e27fsm28248385e9.1.2025.06.11.10.58.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 10:58:23 -0700 (PDT)
+Sender: Igor Korotin <igorkor.3vium@gmail.com>
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+To: ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	rafael@kernel.org,
+	gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Cc: boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	dakr@kernel.org,
+	lenb@kernel.org,
+	wedsonaf@gmail.com,
+	viresh.kumar@linaro.org,
+	alex.hung@amd.com,
+	dingxiangfei2009@gmail.com
+Subject: [PATCH v5 6/6] samples: rust: add ACPI match table example to platform driver
+Date: Wed, 11 Jun 2025 18:56:20 +0100
+Message-ID: <20250611175620.804242-1-igor.korotin.linux@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250611174034.801460-1-igor.korotin.linux@gmail.com>
+References: <20250611174034.801460-1-igor.korotin.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: locking/local_lock, mm: sparse warnings about shadowed variable
-Content-Language: en-US
-To: Charlemagne Lasse <charlemagnelasse@gmail.com>,
- Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Muchun Song <muchun.song@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- Alexei Starovoitov <ast@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Jakub Kicinski <kuba@kernel.org>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Davidlohr Bueso <dave@stgolabs.net>, LKML <linux-kernel@vger.kernel.org>,
- cgroups@vger.kernel.org, linux-mm@kvack.org, linux-rt-devel@lists.linux.dev
-References: <CAFGhKbwVyxCwYSNrPaQ-GkuP008+uvDg-wNA5syWLLzODCfpcA@mail.gmail.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- m6M14QORSWTLRg==
-In-Reply-To: <CAFGhKbwVyxCwYSNrPaQ-GkuP008+uvDg-wNA5syWLLzODCfpcA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[gmail.com,cmpxchg.org,kernel.org,linux.dev,linux-foundation.org,linutronix.de,goodmis.org,infradead.org,stgolabs.net,vger.kernel.org,kvack.org,lists.linux.dev];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid]
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
 
-On 6/11/25 19:37, Charlemagne Lasse wrote:
-> HI,
-> 
-> when I run `make C=2 mm/mlock.o CHECK="sparse -Wshadow"`, I get a lot of
-> 
-> ./include/linux/local_lock.h:88:1: warning: symbol 'l' shadows an earlier one
-> ./include/linux/local_lock.h:88:1: originally declared here
-> 
-> after commit
-> 
-> 51339d99c0131bc0d16d378e9b05bc498d2967e2 is the first bad commit
-> commit 51339d99c0131bc0d16d378e9b05bc498d2967e2
-> Author: Alexei Starovoitov <ast@kernel.org>
-> Date:   2025-04-02 19:55:14 -0700
-> 
->    locking/local_lock, mm: replace localtry_ helpers with local_trylock_t type
+Extend the Rust sample platform driver to probe using device/driver name
+matching, OF ID table matching, or ACPI ID table matching.
 
-Looks like __DEFINE_LOCK_GUARD_1() has "_type *l" and __local_lock_acquire()
-has "local_lock_t *l;". It can be fixed e.g. like this, although it's
-harmless? The _release() part is not necessary, just for symmetry.
+Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
+---
+ samples/rust/rust_driver_platform.rs | 71 +++++++++++++++++++++++++++-
+ 1 file changed, 70 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/local_lock_internal.h b/include/linux/local_lock_internal.h
-index 8d5ac16a9b17..075338f270d0 100644
---- a/include/linux/local_lock_internal.h
-+++ b/include/linux/local_lock_internal.h
-@@ -97,17 +97,17 @@ do {                                                                \
- #define __local_lock_acquire(lock)                                     \
-        do {                                                            \
-                local_trylock_t *tl;                                    \
--               local_lock_t *l;                                        \
-+               local_lock_t *ll;                                       \
-                                                                        \
--               l = (local_lock_t *)this_cpu_ptr(lock);                 \
--               tl = (local_trylock_t *)l;                              \
-+               ll = (local_lock_t *)this_cpu_ptr(lock);                \
-+               tl = (local_trylock_t *)ll;                             \
-                _Generic((lock),                                        \
-                        __percpu local_trylock_t *: ({                  \
-                                lockdep_assert(tl->acquired == 0);      \
-                                WRITE_ONCE(tl->acquired, 1);            \
-                        }),                                             \
-                        __percpu local_lock_t *: (void)0);              \
--               local_lock_acquire(l);                                  \
-+               local_lock_acquire(ll);                                 \
-        } while (0)
+diff --git a/samples/rust/rust_driver_platform.rs b/samples/rust/rust_driver_platform.rs
+index 8b42b3cfb363..35d5067aa023 100644
+--- a/samples/rust/rust_driver_platform.rs
++++ b/samples/rust/rust_driver_platform.rs
+@@ -2,7 +2,7 @@
  
- #define __local_lock(lock)                                     \
-@@ -165,11 +165,11 @@ do {                                                              \
- #define __local_lock_release(lock)                                     \
-        do {                                                            \
-                local_trylock_t *tl;                                    \
--               local_lock_t *l;                                        \
-+               local_lock_t *ll;                                       \
-                                                                        \
--               l = (local_lock_t *)this_cpu_ptr(lock);                 \
--               tl = (local_trylock_t *)l;                              \
--               local_lock_release(l);                                  \
-+               ll = (local_lock_t *)this_cpu_ptr(lock);                \
-+               tl = (local_trylock_t *)ll;                             \
-+               local_lock_release(ll);                                 \
-                _Generic((lock),                                        \
-                        __percpu local_trylock_t *: ({                  \
-                                lockdep_assert(tl->acquired == 1);      \
+ //! Rust Platform driver sample.
+ 
+-use kernel::{c_str, device::Core, of, platform, prelude::*, types::ARef};
++use kernel::{acpi, c_str, device::Core, of, platform, prelude::*, types::ARef};
+ 
+ struct SampleDriver {
+     pdev: ARef<platform::Device>,
+@@ -17,9 +17,78 @@ struct SampleDriver {
+     [(of::DeviceId::new(c_str!("test,rust-device")), Info(42))]
+ );
+ 
++// ACPI match table test
++//
++// This demonstrates how to test an ACPI-based Rust platform driver using QEMU
++// with a custom SSDT.
++//
++// Steps:
++//
++// 1. **Create an SSDT source file** (`ssdt.dsl`) with the following content:
++//
++//     ```asl
++//     DefinitionBlock ("", "SSDT", 2, "TEST", "VIRTACPI", 0x00000001)
++//     {
++//         Scope (\_SB)
++//         {
++//             Device (T432)
++//             {
++//                 Name (_HID, "TEST4321")  // ACPI hardware ID to match
++//                 Name (_UID, 1)
++//                 Name (_STA, 0x0F)        // Device present, enabled
++//                 Name (_CRS, ResourceTemplate ()
++//                 {
++//                     Memory32Fixed (ReadWrite, 0xFED00000, 0x1000)
++//                 })
++//             }
++//         }
++//     }
++//     ```
++//
++// 2. **Compile the table**:
++//
++//     ```sh
++//     iasl -tc ssdt.dsl
++//     ```
++//
++//     This generates `ssdt.aml`
++//
++// 3. **Run QEMU** with the compiled AML file:
++//
++//     ```sh
++//     qemu-system-x86_64 -m 512M \
++//         -enable-kvm \
++//         -kernel path/to/bzImage \
++//         -append "root=/dev/sda console=ttyS0" \
++//         -hda rootfs.img \
++//         -serial stdio \
++//         -acpitable file=ssdt.aml
++//     ```
++//
++//     Requirements:
++//     - The `rust_driver_platform` must be present either:
++//         - built directly into the kernel (`bzImage`), or
++//         - available as a `.ko` file and loadable from `rootfs.img`
++//
++// 4. **Verify it worked** by checking `dmesg`:
++//
++//     ```
++//     rust_driver_platform TEST4321:00: Probed with info: '0'.
++//     ```
++//
++// This demonstrates ACPI table matching using a custom ID in QEMU with a minimal SSDT
++
++kernel::acpi_device_table!(
++    ACPI_TABLE,
++    MODULE_ACPI_TABLE,
++    <SampleDriver as platform::Driver>::IdInfo,
++    [(acpi::DeviceId::new(c_str!("TEST4321")), Info(0))]
++);
++
+ impl platform::Driver for SampleDriver {
+     type IdInfo = Info;
+     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
++    const ACPI_ID_TABLE: Option<acpi::IdTable<Self::IdInfo>> = Some(&ACPI_TABLE);
+ 
+     fn probe(
+         pdev: &platform::Device<Core>,
+-- 
+2.43.0
 
