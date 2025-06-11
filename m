@@ -1,70 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F4B13AA53;
-	Wed, 11 Jun 2025 09:06:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 194AD22DFA2
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 09:07:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749632814; cv=none; b=MPPbbCR9fj/k+/W1V/4r/SiRSMbtGWemkKnXQp22a62ng8A8Ld/AlJgeTyWQIIuCeBgiFSo0QLQmWvn50QAWmPleXMoUnhHmI2c7dIz59pMqy03t5CJj6X7xAg3HcpmKlBud/Coq/od0F1yTgNSmbxBsESSpEvWp8Mdk8XdVxP8=
+	t=1749632834; cv=none; b=J0Q8z2f4Lba1ea1o8zU2vZzVyfNPvGwaA87T9agFvbPGw9EmiWxbDAJcIq/M3FlE1FdkoeOKuRaJOfyGj7ZnwuGmC3wemgzJus9US0+rXgg4lEfhRscRAjbS2cBQyHxEH/FxI0ajc+iO4q49pa5tHxFN9vkVdJ1M9boYDUxNHmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749632814; c=relaxed/simple;
-	bh=O0uQCkVF2DF0j/u8y3WHsonkojrCpDOW+gMtxCpHxYs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PZrZhKEwcdHSx6p8sazkmh7+PvR1P27KYoRSBqXuS2eeTMmpqrewYoPCR84SxnlROt2PQ4Lx92kOuE6O1/vka5cidvmvg8xFaKuCtGaxkbYKA1Fn2R/TFew62Ew4gfIKM15S+uXPvn9PSL9bHZqqkSQotQ+1UyQmf07yPg1jC68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VmeNnFz0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749632834; c=relaxed/simple;
+	bh=3Ip4QlReFFhe2GLgKmX5HdTzhz5q7Ydnp6NSKHxRFlA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oBCREa4h0iRKQ62ZSIoW1pGo0jvONiXUOLOOP2e+DzJX246PCnaBSeMXP+Vua8jQjuE98PKW6IGuIzfLw7BbKdiILASIWa3scPf3Xz1tPPAfx7jJmCVFDDUB76CzUhJ4pWM5jViynMsOJKGwlDwPKjLyXCXWnI1e0FduilogPxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=oeBR2Cdk; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VmeNnFz0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0000C4CEEE;
-	Wed, 11 Jun 2025 09:06:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749632814;
-	bh=O0uQCkVF2DF0j/u8y3WHsonkojrCpDOW+gMtxCpHxYs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VmeNnFz0+/K5eSgh8l9OZLPHDZUhrvOiw0gJVG/B6B1SroJCxbdfVNm1J8SJ5N2ww
-	 y5geFDy8k8v7zyaOon+Rf//Yknp/aYhFeC6KzgB7LpKi1/fN1fJ6WXQIqM8ze3kkNZ
-	 VMrokQj4jMkV3gqbOyop7nZbrk589Y9mouQ1Gf4NYW/z2FBsR9ihPaLwqK9upaRECc
-	 6ll3JEDg2di9UY3NSrpVZ83eAylG6S4jgvMjGfoGj4zmys+c304iwEv3/YaliFFeta
-	 kFAF59JEIW/sqzdWSmuEJ8LwWcVtbfhRon5BGhRGJxeG8wHypFvGfEcPpNMjXAGNFl
-	 PgLsvxIdBbcXQ==
-Date: Wed, 11 Jun 2025 11:06:51 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Aaro Koskinen <aaro.koskinen@iki.fi>, Andreas Kemnade <andreas@kemnade.info>, 
-	Kevin Hilman <khilman@baylibre.com>, Roger Quadros <rogerq@kernel.org>, 
-	Russell King <linux@armlinux.org.uk>, Bajjuri Praneeth <praneeth@ti.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 2/5] binding: omap: Add lots of missing omap AM33
- compatibles
-Message-ID: <20250611-purring-ochre-basilisk-3fd08c@kuoka>
-References: <20250609-bbg-v2-0-5278026b7498@bootlin.com>
- <20250609-bbg-v2-2-5278026b7498@bootlin.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="oeBR2Cdk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1749632830;
+	bh=3Ip4QlReFFhe2GLgKmX5HdTzhz5q7Ydnp6NSKHxRFlA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=oeBR2Cdkvw5FS5Uj+EMSWDpyYAIRfmum/UQEmEmc2NH+uR3ykyn782Cwk++CJV68w
+	 lTMYB9QLbBFILVapHjXCVkxxn5HO6MNp5wabOBINNpPKg+zMFNdNpnUQQOPFquqLki
+	 G9rTB3wl25n8txJ16MHKJVl39rzd4R5a7jQNZGPJTpKr3oTnBa56QUxTzwSUsiih8j
+	 SMDxAGmHpK87FuHPmv3PDqQLHn0otU7xM6ldZhTSKbLwT/3bCNvLeBHqWQLz7BaQSv
+	 Z/n5sTMwJwpoIo4bJVvlISXhbuZrlJieYT/6XSceGYnn42SPeGunysx+E0yd0dHrTw
+	 a5EWbwjgoQwkA==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 858FC17E1045;
+	Wed, 11 Jun 2025 11:07:09 +0200 (CEST)
+Message-ID: <c197ad80-cd12-4168-b1db-9826cc42760f@collabora.com>
+Date: Wed, 11 Jun 2025 11:07:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250609-bbg-v2-2-5278026b7498@bootlin.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/mediatek: mtk_dpi: Reorder output formats on
+ MT8195/88
+To: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>,
+ Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org,
+ linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20250606-mtk_dpi-mt8195-fix-wrong-color-v1-1-47988101b798@collabora.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250606-mtk_dpi-mt8195-fix-wrong-color-v1-1-47988101b798@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 09, 2025 at 05:43:52PM GMT, Kory Maincent wrote:
-> Add several compatible strings that were missing from the binding
-> documentation. Add description for Bone, BoneBlack and BoneGreen
-> variants.
+Il 06/06/25 14:50, Louis-Alexis Eyraud ha scritto:
+> Reorder output format arrays in both MT8195 DPI and DP_INTF block
+> configuration by decreasing preference order instead of alphanumeric
+> one, as expected by the atomic_get_output_bus_fmts callback function
+> of drm_bridge controls, so the RGB ones are used first during the
+> bus format negotiation process.
 > 
-> Add several compatible that were missing from the binding.
-> 
-> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+> Fixes: 20fa6a8fc588 ("drm/mediatek: mtk_dpi: Allow additional output formats on MT8195/88")
+> Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
 
-Subject prefix is: dt-bindings.
+Well actually there is a way to make this still behave while having those
+alphabetically sorted, which I was thinking that was already properly implemented
+for MediaTek drivers.
 
-https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
+Apparently it's not true for *all* of them... but then, just keeping things ordered
+by preference is a simpler solution and probably the best one for now.
 
-Best regards,
-Krzysztof
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+
 
