@@ -1,120 +1,118 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8EA2F4301;
-	Wed, 11 Jun 2025 23:42:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD782C1794;
+	Wed, 11 Jun 2025 23:43:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749685364; cv=none; b=dpWkstmaoUuJAq5NbEdWTtj8atlxEkfZlIsWSqSiq6TFwAXSnlNVIyberqFyrrgk+/aJ8sYVF3XWwJ5EC8XAJBpxQNkocXROoIrlbayh14Bx3tOakkqf3e+0MB5vmhw1Bxr4KxHW7C2bi6vApi+phnZ3cguMmqnEJ7I8XH4Q3MQ=
+	t=1749685386; cv=none; b=FZjCwiuh8rHF2oWF2ejdLM6sFj4PdDrv28riYOCW3suAdDN2JoLXynAr1H81HyKgk5uF5oSJ3eI7TwwK5GFkeu7m4Irz8bYk+NiLiRRYhAu9XpA/iHLaxM4s7waV/U6Nu7CTdEpdrRN3soIhpb2GlYlJDx+FAVnDQYYMfo02tsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749685364; c=relaxed/simple;
-	bh=0Lqc05MJtF78yK+jzAavYAe3CiAx4jlNnkKQn6Lv8No=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RDiPOxC6VDBBzEAYRn65Q+mwmZv3B4kpSwApabAptjqdiERVwl1fBaZhuU5NkYkwLOyNcYn83EIN2NNMdcqaMKvjzvg+g+Cy9oG/FLXFVlJ/xPWUI7kNY7ERw7daCO866kgT16Eo3mPx0ITChbIJ8u3rX/S+4e4F+Ie+BsJfrCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=a/RmTaz3; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=B2iSSqA2; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1749685386; c=relaxed/simple;
+	bh=rzlIdkQY8WNYV6UEoBGGsvl7jgrSdBvD5LIZYne+4pQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KkyunUTl27R8p1JB8XgpNBOlxqhPtiD7cJo5dmkPRr3eLN+CIsqtpKaDe9rdxmQFTopc/OHgPjOSTtl76Ue4/NedWNNr5jtBaG1RzQhlGPjSnmUJy7BOwVRl26f8ejHeM+iKwtNaz+zkcskPY9oTtKTT5BenYemTUIi6RSre/+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BgPUj2DX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="a/RmTaz3";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="B2iSSqA2"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4bHhzM73Hdz9tNc;
-	Thu, 12 Jun 2025 01:42:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1749685360;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Sn/l8L80yT8SucVw9NU1s346nJMf0F3z8P6jRYyvLow=;
-	b=a/RmTaz3YfWVVWjzZArFwfkmO5NC2U5WzxmKcsMKd3U6l4ZgezdAN8KP0jRVfpL7g25t33
-	J8EGbqMZOS6T4QgbR2kFxBRyixqIRpurcqrdgCHOj9+skydAhT4dmwp/iXkyNEhyEkMyMD
-	/ejbjaAIUzAMFvOcwikq/xhffGYQ7+5WSO8BZyuG3tPoXVqzyFsVZYztd6k6guYbAY5nRd
-	CAAbg2amqLuyafMiMBq+oyb7r2B5VSsOFs72OFGR2TrdaVY0SJaGNEEaMPYPnExYD/W+RB
-	AdKd5OvLyb07PMHY95ePBah3ZbjxgxFdiflJlW8g0l4ePETYMF1CQtr9xC/kIA==
-From: Marek Vasut <marek.vasut+renesas@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1749685357;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Sn/l8L80yT8SucVw9NU1s346nJMf0F3z8P6jRYyvLow=;
-	b=B2iSSqA2/FTGSOZmIvAH+X87Dq/xrDgQB1e2YPUH80LbhoEWLEUb3Hhj+jQbKDatdhoPzt
-	K4Vo/9f/JQXhUzu07/Yrg+KmEM43q7qTCOgc9GvevJqzOcOJXqmNVlVSfoU1lzdSfpvIHs
-	qwY5TIf/SeEl/L8txo1b3UySb5IJnB6J1gIjiBqOmBr13PqXfbkSxNZs4gPw9J3Ckyrxyl
-	JEwdOoxOCbldFbj1ndhcV1/+Dk82+wHyEnTbAgzO+gw1jvusKsgwW1K9u1mbTT1pHaKcVw
-	fgl6+rE8ydcdelnZ7EqpVrzA6kHl3+K+XdtDyEDHdsYCbEpOP6TKfnKDZfcMgg==
-To: devicetree@vger.kernel.org
-Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org
-Subject: [PATCH v2] schemas: pci: bridge: Document REFCLK slot clocks
-Date: Thu, 12 Jun 2025 01:41:41 +0200
-Message-ID: <20250611234206.159695-1-marek.vasut+renesas@mailbox.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BgPUj2DX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96AE8C4CEE3;
+	Wed, 11 Jun 2025 23:43:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749685386;
+	bh=rzlIdkQY8WNYV6UEoBGGsvl7jgrSdBvD5LIZYne+4pQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BgPUj2DXnznuD/EoWPtVFvIGaxdQ74zP4IYKtqcAdJ0T3QBCGBQuNu2rkSLcaMayD
+	 FYimIhe2wpW2u+TbbDolNLiLncepxYOMZ52JA6eMqdSlYfXDkPbMsRAP6VKeBdiqc/
+	 WO3tXK7hI4pHt3vOByKPGeDx+9vZGLdIxzDmDGev0jPnOYO2wYCVQb+7LreEXeV82T
+	 lpchtpe1heatkw4WJqbPXPkxPDnV1NSw+8RBKjhD/8gUPBrR0eCrtTkOLU5kFwKmHm
+	 5LeJKCYbW3nUwEc0WmZ+nvn1+pT2/JvoW7TfHXjsW8lWHtcCDpzyAx2D9SZCXebXBp
+	 Dtoif7kCZ3iFA==
+Date: Wed, 11 Jun 2025 16:43:04 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Chun-Tse Shao <ctshao@google.com>
+Cc: linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>,
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v1] perf stat: Fix uncore aggregation number
+Message-ID: <aEoUiCz0neodnQmu@google.com>
+References: <20250611233239.3098064-1-ctshao@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-MBO-RS-META: uwekucmigtd6pg4quuu68o8z5fztjfrb
-X-MBO-RS-ID: 859cbe2a96078a63047
-X-Rspamd-Queue-Id: 4bHhzM73Hdz9tNc
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250611233239.3098064-1-ctshao@google.com>
 
-The PCIe slot may have 'REFCLK' clocks which are explicitly
-controlled by the OS, describe the clocks property.
+Hello,
 
-Acked-by: Manivannan Sadhasivam <mani@kernel.org>
-Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
----
-Related to https://lore.kernel.org/all/CAMuHMdUFHKHKfymqa6jwfNnxZTAuH3kbj5WL+-zN=TR6XGd0eA@mail.gmail.com/
----
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Conor Dooley <conor+dt@kernel.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
-Cc: Magnus Damm <magnus.damm@gmail.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-pci@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org
----
-V2: - Update commit message
-    - Add AB from Manivannan
----
- dtschema/schemas/pci/pci-bus-common.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+On Wed, Jun 11, 2025 at 04:32:16PM -0700, Chun-Tse Shao wrote:
+> Follow up:
+> lore.kernel.org/CAP-5=fVDF4-qYL1Lm7efgiHk7X=_nw_nEFMBZFMcsnOOJgX4Kg@mail.gmail.com/
+> 
+> The patch adds unit aggregation during evsel merge the aggregated uncore
+> counters.
+> 
+> Tested on a 2-socket machine with SNC3, uncore_imc_[0-11] and
+> cpumask="0,120"
+> Before:
+>   perf stat -e clockticks -I 1000 --per-socket
+>   #           time socket cpus             counts unit events
+>        1.001085024 S0        1         9615386315      clockticks
+>        1.001085024 S1        1         9614287448      clockticks
+>   perf stat -e clockticks -I 1000 --per-node
+>   #           time node   cpus             counts unit events
+>        1.001029867 N0        1         3205726984      clockticks
+>        1.001029867 N1        1         3205444421      clockticks
+>        1.001029867 N2        1         3205234018      clockticks
+>        1.001029867 N3        1         3205224660      clockticks
+>        1.001029867 N4        1         3205207213      clockticks
+>        1.001029867 N5        1         3205528246      clockticks
+> After:
+>   perf stat -e clockticks -I 1000 --per-socket
+>   #           time socket cpus             counts unit events
+>        1.001022937 S0       12         9621463177      clockticks
+>        1.001022937 S1       12         9619804949      clockticks
+>   perf stat -e clockticks -I 1000 --per-node
+>   #           time node   cpus             counts unit events
+>        1.001029867 N0        4         3206782080      clockticks
+>        1.001029867 N1        4         3207025354      clockticks
+>        1.001029867 N2        4         3207067946      clockticks
+>        1.001029867 N3        4         3206871733      clockticks
+>        1.001029867 N4        4         3206199005      clockticks
+>        1.001029867 N5        4         3205525058      clockticks
+> 
+> Suggested-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
 
-diff --git a/dtschema/schemas/pci/pci-bus-common.yaml b/dtschema/schemas/pci/pci-bus-common.yaml
-index ca97a00..3c512cf 100644
---- a/dtschema/schemas/pci/pci-bus-common.yaml
-+++ b/dtschema/schemas/pci/pci-bus-common.yaml
-@@ -82,6 +82,8 @@ properties:
-     items:
-       maximum: 255
- 
-+  clocks: true
-+
-   external-facing:
-     description:
-       When present, the port is externally facing. All bridges and endpoints
--- 
-2.47.2
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
+> ---
+>  tools/perf/util/stat.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+> index 355a7d5c8ab8..52266d773353 100644
+> --- a/tools/perf/util/stat.c
+> +++ b/tools/perf/util/stat.c
+> @@ -527,6 +527,7 @@ static int evsel__merge_aggr_counters(struct evsel *evsel, struct evsel *alias)
+>  		struct perf_counts_values *aggr_counts_b = &ps_b->aggr[i].counts;
+>  
+>  		/* NB: don't increase aggr.nr for aliases */
+
+Probably we need to delete this comment.
+
+Thanks,
+namhyung
+
+
+> +		ps_a->aggr[i].nr += ps_b->aggr[i].nr;
+>  
+>  		aggr_counts_a->val += aggr_counts_b->val;
+>  		aggr_counts_a->ena += aggr_counts_b->ena;
+> -- 
+> 2.50.0.rc1.591.g9c95f17f64-goog
+> 
