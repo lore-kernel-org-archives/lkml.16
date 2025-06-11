@@ -1,139 +1,107 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF6628C2C1
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 13:55:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B55E528937E;
+	Wed, 11 Jun 2025 13:55:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749650105; cv=none; b=FWX2UV7aTsJoy8Tt973+3PNe59N9k/jwpVK8FiQSVJBFkdtxwXBI5qvVCW7i+wKZEthZVun4yGA2dgqZYyD9Z8vikRuKpzwJNIfU/qbcVze00PDI/hwJLgXEq07Vo17MMZbJwPTMyj0DvnFbZ663IWQnOYT5scZ2HEfW/kauPUA=
+	t=1749650142; cv=none; b=HBUz2q+wbUe0++Rm80o9ETvzebJyeOJfLmjgwsEqKXu7kWzggJUKusmxCQYgqhkrBtT/fXWthHvTxgqlH7ISVaKM2a9I46K04vMzha8QDJUX5dQsSKhryR5rO5olCXwwUvq0DAyKeK853gWCM3lXSWQuJmgb9ZnrfKruihFO5i0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749650105; c=relaxed/simple;
-	bh=SVo3B24OwlGB4MegvwJiCx+gPz1XAKK8W690GqvITAQ=;
-	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NCRC084funA5xHZUmcL15Y1yKVs8CgKlLI4Lxhvv8SmFz8rk4Jp3FaVFYiqqo39r2nD65YFbqPotNwbX5cNYuikJmvdZ7ljP/OtAwN5qsxkvXsCQS6UwotLBLaUnPNkQ0Zm/8Wz1Qd5RGM8UHP/xJwKQ4SoqIA8MtfiFkRGNxJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=a3CiH6h0; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1749650142; c=relaxed/simple;
+	bh=IifNnRPlQTOlLPQoP4l2aK06ak5l7AOOpGK/E93CQEs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LAXjk4iXVxsIq6MBWKxMO/oaHWfZ5TcQEJ+LmLtOVAh+3HdHvaYsYCHnodwQau8LIewXZXsiQ+xVWxfAvncM8jB4KX8zraw1S2oWXZO8HJQK3UGGLYiQwgpsgrnvwMt2sIPEQblunFmIrGRNS24vZPBpXmp7apn3Q0HEbPPdauM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lz5vG7H+; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="a3CiH6h0"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55BCFOAP014824;
-	Wed, 11 Jun 2025 15:54:28 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	SVo3B24OwlGB4MegvwJiCx+gPz1XAKK8W690GqvITAQ=; b=a3CiH6h0cxGgTkgA
-	Aqee/5M/6dNuYYLxJdIVA+T0Im2/E65K7ptBXpADH0V+zNyZa3b8Qpv3rxV67eGR
-	mCO87tx4+jGIAHUiwJAeThs04F7Rk8GF35De9xoq1+ECrpydeANzzpD4pbY2b0IN
-	mjcwVS6eDOPTQTwd/DPfLJjwkRQHtWepwPiX3iEUt+aWUcTdrDO/ePYyEHnHwtwi
-	SIGHKSiRI8e2KB+VUWXYJhr67wWD47NYR7Nvd3a++wt9u0odcRes/VkTwpaU09ms
-	H+YeJmq+CCRjU53+AKY4FQYwNQYjiCBDMMi4DCSWkNqSa0VLl8dETa6DU7j8Nkqj
-	u3NJbA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 474ajaa6d5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 11 Jun 2025 15:54:28 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id CE8EE40048;
-	Wed, 11 Jun 2025 15:52:56 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 00A94B12446;
-	Wed, 11 Jun 2025 15:51:46 +0200 (CEST)
-Received: from [192.168.8.15] (10.252.18.240) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 11 Jun
- 2025 15:51:44 +0200
-Message-ID: <a5e25ab7c595936f93198c9ac0b2e048a83f5b57.camel@foss.st.com>
-Subject: Re: [Linux-stm32] [PATCH] irqchip: Use dev_fwnode()
-From: Antonio Borneo <antonio.borneo@foss.st.com>
-To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>, <linux-kernel@vger.kernel.org>
-CC: Nishanth Menon <nm@ti.com>, Andrew Lunn <andrew@lunn.ch>,
-        "Maxime
- Coquelin" <mcoquelin.stm32@gmail.com>, <imx@lists.linux.dev>,
-        Fabio Estevam
-	<festevam@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Santosh Shilimkar
-	<ssantosh@kernel.org>, <tglx@linutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Sebastian Hesselbarth
-	<sebastian.hesselbarth@gmail.com>
-Date: Wed, 11 Jun 2025 15:51:42 +0200
-In-Reply-To: <20250611104348.192092-10-jirislaby@kernel.org>
-References: <20250611104348.192092-1-jirislaby@kernel.org>
-	 <20250611104348.192092-10-jirislaby@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lz5vG7H+"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-450cb2ddd46so39622105e9.2;
+        Wed, 11 Jun 2025 06:55:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749650139; x=1750254939; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KwI5P3Q3ihOeLowm5FSpCJuMLkzkYQo2YbGk0t9yYTo=;
+        b=lz5vG7H+aHyV7HafRBRfQj5ZYRKXR1GW/0pA2upUlPqgCxaq5HOQ/U+x1tR/NSjLLD
+         YAUctI2vySqtdX+p8N3dhRgbbSoaFLLr8FD/5UgpWBM/yrKxOnYATCJyXLV+IstYK7GU
+         Pe8jJRN39rYrRysbWWrSdVOSkhdDYC8C1u4uhAsYS1pOaKFyyOPLtx8ZQ30+oO56M5Tg
+         Xx7f1Lz/oYs0dYxnU/+SIg/my1uB1ePMpdjlWRBgdtGpMz/4lkLZNB08+lxpohPVvgjl
+         MlreAX+aZdxM+HNGEh1m+JHp3ip/WxLdtFsnmjSpCnoJwtUGn8mIi8EMM2vE5zTklTXP
+         GSFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749650139; x=1750254939;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KwI5P3Q3ihOeLowm5FSpCJuMLkzkYQo2YbGk0t9yYTo=;
+        b=wB7ptbSJdDH3LwKc08hIPU6uE7628XBalhDVtcVcusqdn810ps28f4CM/7vuPACt4F
+         +XKvPcwJmlrsD/+j5ywCMEwBcXrrJ4wHEEtyVLyXizksb23bjYu5zblF+mCZ3idVBewb
+         OYInIhj3n/+JJL+Ha8N7brBARM4uxtJ3d0WpgC84LbilpR6tmK3xDmAabnsk7UPpnHw4
+         ivjEJ97Zl435UopZS6X40qmQKvvPMkBLIQEcxpBkSFBYwBKzzBDszFjLw3XmXv1oMQNO
+         ULJQPYbcN+6teuWUbfTdrjFG9GXbf8tKFauHaqM/xr3BJ4/TbURJ5yfcCwHFYKfKtSQV
+         nSXg==
+X-Forwarded-Encrypted: i=1; AJvYcCUjnwRpArldy94gdA4AeKy3XHiqEb+9fvd6NxI8joX0UOAAVKRqGl+OcUMHCFWoJw0rOd49bIlN9ErqqBM=@vger.kernel.org, AJvYcCVnarL05G2L7+ek+f633YBu7URLO3HWe7/yI3wF85myNCce8SBSXuDNQHN4aWljFBlHRUutBWx92eUF4WRoPXI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyX1VsseLl8lbWmfiBKYW/7oO9Q/FiQNN6c38pXMgfj2kXQIhAY
+	Zo7GqeyZAPNlet7eye6zaYarVnz1E44UnePThX2dxxc5fCSNujDCTcMoZSDh5MSWlYc=
+X-Gm-Gg: ASbGncsEGKKJjkeAmAtXFDNlslgIZ9XuHcxpUPDtoiJ8YxlIp/KouScY4A++SJYNRVH
+	4l1fkTlo4hXsuQ0KMkMxY52i8qDKHqaxsU2uJE6nHRdEHtezCpamsKZ5PN76ACvVYDkq/zuVF6R
+	x9X6/DgWyqRc0oo+Nq3FE8yGQsg5BHu/YJqJIv+P4uPen0bwB/Tpm93Ip7pbz0+rBQhBOZHHCmd
+	/RH6qujkERaauy58tzZahbYdIz1PoJnj6/W13XCnTjfzH/pprMbQmJa9a3TGEuNzXouTICgiaos
+	WSTotnN0EjU3+DoU2VEYH9BCtBiggKs0optiqkeP8KP2V5bZU1kEvDrMBNyh
+X-Google-Smtp-Source: AGHT+IGc2bG2Zj3o3WugCbZzNyfbrrgGT+HOzwOj9wWXwjW4xvK6DyhvCSnSahj1aZEAAbVLsrMn1w==
+X-Received: by 2002:a05:600c:3489:b0:441:d4e8:76c6 with SMTP id 5b1f17b1804b1-453248dc848mr35536005e9.30.1749650138776;
+        Wed, 11 Jun 2025 06:55:38 -0700 (PDT)
+Received: from localhost ([87.254.0.133])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4532522a543sm23383005e9.40.2025.06.11.06.55.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 06:55:38 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Ping-Ke Shih <pkshih@realtek.com>,
+	linux-wireless@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] wifi: rtlwifi: rtl8821ae: make the read-only array params static const
+Date: Wed, 11 Jun 2025 14:55:21 +0100
+Message-ID: <20250611135521.172521-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-11_05,2025-06-10_01,2025-03-28_01
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2025-06-11 at 12:43 +0200, Jiri Slaby (SUSE) wrote:
-> irq_domain_create_simple() takes fwnode as the first argument. It can be
-> extracted from the struct device using dev_fwnode() helper instead of
-> using of_node with of_fwnode_handle().
->=20
-> So use the dev_fwnode() helper.
->=20
-> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
->=20
-> ---
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Gregory Clement <gregory.clement@bootlin.com>
-> Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
-> Cc: Nishanth Menon <nm@ti.com>
-> Cc: Tero Kristo <kristo@kernel.org>
-> Cc: Santosh Shilimkar <ssantosh@kernel.org>
-> Cc: imx@lists.linux.dev
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-stm32@st-md-mailman.stormreply.com
-> ---
-> =C2=A0drivers/irqchip/irq-imgpdc.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 2 +-
-> =C2=A0drivers/irqchip/irq-imx-irqsteer.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 | 2 +-
-> =C2=A0drivers/irqchip/irq-keystone.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 4 ++--
-> =C2=A0drivers/irqchip/irq-mvebu-pic.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 | 2 +-
-> =C2=A0drivers/irqchip/irq-pruss-intc.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 | 2 +-
-> =C2=A0drivers/irqchip/irq-renesas-intc-irqpin.c | 6 ++----
-> =C2=A0drivers/irqchip/irq-renesas-irqc.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 | 2 +-
-> =C2=A0drivers/irqchip/irq-renesas-rza1.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 | 5 ++---
-> =C2=A0drivers/irqchip/irq-renesas-rzg2l.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 | 5 ++---
-> =C2=A0drivers/irqchip/irq-renesas-rzv2h.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 | 2 +-
-> =C2=A0drivers/irqchip/irq-stm32mp-exti.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 | 4 +---
+Don't populate the read-only array params on the stack at run time,
+instead make it static const.
 
-For drivers/irqchip/irq-stm32mp-exti.c
-Reviewed-by: Antonio Borneo <antonio.borneo@foss.st.com>
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/net/wireless/realtek/rtlwifi/rtl8821ae/hw.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-Thanks
-Antonio
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/hw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/hw.c
+index f4b232f038a9..14bd64ff3f88 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/hw.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/hw.c
+@@ -3064,10 +3064,12 @@ static void _rtl8821ae_read_adapter_info(struct ieee80211_hw *hw, bool b_pseudo_
+ 	struct rtl_priv *rtlpriv = rtl_priv(hw);
+ 	struct rtl_efuse *rtlefuse = rtl_efuse(rtl_priv(hw));
+ 	struct rtl_hal *rtlhal = rtl_hal(rtl_priv(hw));
+-	int params[] = {RTL_EEPROM_ID, EEPROM_VID, EEPROM_DID,
+-			EEPROM_SVID, EEPROM_SMID, EEPROM_MAC_ADDR,
+-			EEPROM_CHANNELPLAN, EEPROM_VERSION, EEPROM_CUSTOMER_ID,
+-			COUNTRY_CODE_WORLD_WIDE_13};
++	static const int params[] = {
++		RTL_EEPROM_ID, EEPROM_VID, EEPROM_DID,
++		EEPROM_SVID, EEPROM_SMID, EEPROM_MAC_ADDR,
++		EEPROM_CHANNELPLAN, EEPROM_VERSION, EEPROM_CUSTOMER_ID,
++		COUNTRY_CODE_WORLD_WIDE_13
++	};
+ 	u8 *hwinfo;
+ 
+ 	if (b_pseudo_test) {
+-- 
+2.49.0
 
