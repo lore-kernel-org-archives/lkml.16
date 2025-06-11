@@ -1,289 +1,131 @@
-Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A441188CC9;
-	Wed, 11 Jun 2025 20:28:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08DA815C0;
+	Wed, 11 Jun 2025 20:30:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749673700; cv=none; b=BUI1wCkJ5b+oVwvrgjGMbaorqb51ISNdg7pGQi23mudcF57/nA/TR9YgtdYWwS4s3nv1N3gzV0IDW0JXwFHF+H007uovj30DkSqwOyNy5BNcjydztNLfZfQvd7oF37mIFdFfmq9BHFvvarSmqaoliiEkE0m8+3X1MpOpmHZuOpE=
+	t=1749673819; cv=none; b=ESnYzhZLQMdjXLjwhNKl3hrkRbkxmGsG1+51WWapXIrX68rFmgQQtV50wrZc0VckOWXgsSEmWpCTPftIylg5IM6jcVh0UryFIGr+DSsnskxYBn2JGZyOiSavu2Ryt3AKidWiC+fD/0BuYZr/WSC2PDexQo/ysk315xEfLiYHSQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749673700; c=relaxed/simple;
-	bh=ZssVXgx8hnnbULRb36vOlgpHe97BLFLepJWPJ+kY1BE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=MCCWCf7yGGJVQJReDuXl+6QeaMQhMLTUCcnyyY2ywNnSa5Wiwne5NImrsO87TMIxcHIPe+OJOmBSL7rbSjydnOzxgQxiTIE5hcxJMPYKPPHbbUyyFEvmI9Xh456n4zyvC5ho9A7YE03lRk+UOstB6e9bHW3qa/eFSUP6MxzRjZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=ant7PzNJ; arc=none smtp.client-ip=185.226.149.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+	s=arc-20240116; t=1749673819; c=relaxed/simple;
+	bh=4UtRKohkxqENpsYh8iGXRD6NETIX2qwRPWFjW0quexo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=K9YAL76VoVfAntEZwH/tmBAQbIzRAlCVJhQ16BqNmrse4eiZ9yuh1Ev7QZpHhvn6tgbFSlfHUriBPNVAV0Y4eYQvLQgzp+Rmc0+bV9JJB3nCtw4DcbiHoHNzgb9Pz341Xo/0wjp2PH9b4Fp71rmCbQnFF60hQ7OtZERdQvIlQwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YIYDasS5; arc=none smtp.client-ip=209.85.161.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="ant7PzNJ"
-Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
-	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1uPRZU-00BKll-Ni; Wed, 11 Jun 2025 21:57:16 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector2; h=Cc:To:In-Reply-To:References:Message-Id:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From;
-	bh=ewM7ow5NIDiWYLcRgpurn6xaYCHK+eeVvzpYtjNmuR8=; b=ant7PzNJleX8zqd5bFKA/t5+Pp
-	fJ2DOf2RQIoY4e26o2JpLwuwdzZLUbXObCKnBJovSAbO8KW2nQxOZwNYUDcYng6b+n5ZMs8MfQRuE
-	QTpImTsOiOCTz8fBbvyDAbgoRhzTJi8tZP3DXW4qHBFJSMka65YSpA6UwSUTVJtHLlJYZ5uYnLot+
-	/XnxzTrcVYyE925cePhq1EvKf+NyH0NYUL6V3//oY9UVBkbk/6eW9lahRKZ5M5o92v5vbJyMD3Grw
-	9I+z5Nnn4DFPUPNzcBz/Y4NMG+lDQBDcXLRnwohomdVymLwsFs7Kzu8VtZNqfVSLeEMidYZqY37YW
-	hUr15p3A==;
-Received: from [10.9.9.74] (helo=submission03.runbox)
-	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1uPRZU-0004Al-6E; Wed, 11 Jun 2025 21:57:16 +0200
-Received: by submission03.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1uPRZH-00BycS-WF; Wed, 11 Jun 2025 21:57:04 +0200
-From: Michal Luczaj <mhal@rbox.co>
-Date: Wed, 11 Jun 2025 21:56:52 +0200
-Subject: [PATCH net-next v3 3/3] vsock/test: Cover more CIDs in
- transport_uaf test
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YIYDasS5"
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-60ef850d590so100424eaf.3;
+        Wed, 11 Jun 2025 13:30:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749673817; x=1750278617; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Pv5p8TJwxPf045PkEKfFQACVA3z/pX6ZOvkokNNKGr4=;
+        b=YIYDasS52RRwvN+3E0I3e1d1rSLtMz4r+NyO51MP7U/QZvH3cOUgQOQaq2Xfsjx3XA
+         mC31WCCPFRPMU2lr9uDzdO7hHa4yvtlx1QEiyzYAC8vFf+jquRfUpTfDzQpPLgwtZimT
+         r5aXgGGbEOa9yXvpQmOscnIozwYUC8VtUNRJj5P3O7OrmQf/XtDrcIyeymsGbtteS24M
+         CMO2wzoyZUr1CwvqOndRdOixs/GVmZn5R3R4KRQfskCsSMYJHlyluIe2wPryUsstTcaM
+         iOXJqil9WAtddDB40pViPBdA1lgGryr+tO4vfrSmnYWxTFqqOZx0x1UqyilFnErw2S9T
+         R3WQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749673817; x=1750278617;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Pv5p8TJwxPf045PkEKfFQACVA3z/pX6ZOvkokNNKGr4=;
+        b=MRNqV3hv/weROUAhZKnxwIPGzbhwEOZQdohl3ZWJKQBGcJH11nmEUb0fzBm+1OY5m+
+         h+CTwNDpKNvFvs2KZXYcjv4g3mG1aEJP5iwQYAEUQSrSsOTvEYsv4sr91eXk2PNZbvlX
+         K1x8EbvcgNUKCwf2/vP3rLB1b493ni8gBj3fil6QjvYBExfgQC3XkwxmpeHE1rGvloY7
+         qoXnJxlEBHlTWml6owgORjI2MSw439deQNDb6LBRyXVLteK9NCI0/WEuYMz8iDxCuaG8
+         YFDSuf5xUAM9hzlMCYmt/7OuQYp53khZsJXwp4rMXTL8fGW7x8b0AIrUgjmFkf6czpyL
+         zE7A==
+X-Forwarded-Encrypted: i=1; AJvYcCUfznnypHfolPrx8D+++SzFwbbOMJH134IveJStdzLTeYysADDYdUWbuI/80pEUXG6AsfjsP/ZP5NT6D8Y=@vger.kernel.org, AJvYcCXh0SYTJbGu+FE9CE6QIaSc2Ns1K7kEzyW/u1CNXOZrtGBLQw5ZFajhZZdULvrGxwA6GbXaaPGYsI4vN4darRs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGS2kcLt1WiPDvJu90aEolptYgMNngzqlIFE6qgyOGfGWmV9hS
+	zvN48R4q+x/ifIEiTL5DTDOIszOodZ6n+MClGOjN96yKuk4G4oUNLQYg
+X-Gm-Gg: ASbGnct2+zBC0gni+yZiQ9ZRp8+7JHZeKyM1TVJtPPeaFo6TXwWSW+bKQxDsgH71DMM
+	4jtVy7JPdDhPeFAKEpV4ayvo7GZqBoD1eEXWLSKPX0/XZQa8jW0DsJ7HMnj4fh4mRRPs1/kCu77
+	y9etHcHCkjvzsWzWYJ124pvKU+NgwxBm6r1qIMNVHtvSy7toih943ssUevBIlv58yVHmSddv/fL
+	bam54eOLkceKJOMvnxdUNXEatQo3lk+zgHF0N7Ctj17srOcyNEa5khEeKrvRbZyJ3zmzXqQmG1V
+	s5mXZvxXiI3lVNcFcBdocyFLOkJqgcxf/Pzu1jUM5bpfQH09VHNNVILFxURDfwydN+wNaRHGUby
+	TMw+2mm1nk3ZwK2/91IwkXyymmjgygvTthQ==
+X-Google-Smtp-Source: AGHT+IEdW2GwwH7UlC82DZ8tArQruFrLKD9FvV+cJYxLDW8g1S5uaDlfI73iFWvbZTw8jio1Ez/bQA==
+X-Received: by 2002:a05:6820:1347:b0:610:dabc:f94c with SMTP id 006d021491bc7-610fbe42378mr832225eaf.2.1749673816935;
+        Wed, 11 Jun 2025 13:30:16 -0700 (PDT)
+Received: from my-computer.lan (c-73-76-29-249.hsd1.tx.comcast.net. [73.76.29.249])
+        by smtp.googlemail.com with ESMTPSA id 006d021491bc7-610fd44cc85sm19129eaf.16.2025.06.11.13.30.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 13:30:16 -0700 (PDT)
+From: Andrew Ballance <andrewjballance@gmail.com>
+To: jbaron@akamai.com,
+	jim.cromie@gmail.com,
+	daniel.almeida@collabora.com,
+	acourbot@nvidia.com,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	lossin@kernel.org,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	dakr@kernel.org,
+	gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	rostedt@goodmis.org,
+	andrewjballance@gmail.com
+Cc: viresh.kumar@linaro.org,
+	lina+kernel@asahilina.net,
+	tamird@gmail.com,
+	jubalh@iodoru.org,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 0/3] rust: add suppord for dynamic debug
+Date: Wed, 11 Jun 2025 15:29:49 -0500
+Message-ID: <20250611202952.1670168-1-andrewjballance@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250611-vsock-test-inc-cov-v3-3-5834060d9c20@rbox.co>
-References: <20250611-vsock-test-inc-cov-v3-0-5834060d9c20@rbox.co>
-In-Reply-To: <20250611-vsock-test-inc-cov-v3-0-5834060d9c20@rbox.co>
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Michal Luczaj <mhal@rbox.co>
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
 
-Increase the coverage of test for UAF due to socket unbinding, and losing
-transport in general. It's a follow up to commit 301a62dfb0d0 ("vsock/test:
-Add test for UAF due to socket unbinding") and discussion in [1].
+This patch series adds support for dynamic debug to the rust
+pr_debug! and dev_dbg! macros.
 
-The idea remains the same: take an unconnected stream socket with a
-transport assigned and then attempt to switch the transport by trying (and
-failing) to connect to some other CID. Now do this iterating over all the
-well known CIDs (plus one).
+I have tested it and it and it does work but, there are a few
+differences between this and the c version (hence why this is a rfc).
 
-While at it, drop the redundant synchronization between client and server.
+rust does not have an equivlant to the C __func__ macro. so, for the
+time being this hard codes the function name to be the name of the
+macro e.g. "pr_debug!" and "dev_dbg!".
 
-Some single-transport setups can't be tested effectively; a warning is
-issued. Depending on transports available, a variety of splats are possible
-on unpatched machines. After reverting commit 78dafe1cf3af ("vsock: Orphan
-socket after transport release") and commit fcdd2242c023 ("vsock: Keep the
-binding until socket destruction"):
+This uses the module_path! macro to get the module name, which will not
+be exactly the same as the c version if a kernel module contains multiple
+rust modules. e.g. it might be "kernel_module_name::rust_module_name".
+this does give a more accurate description of where the print statement
+is located but it exactly what the c version does.
 
-BUG: KASAN: slab-use-after-free in __vsock_bind+0x61f/0x720
-Read of size 4 at addr ffff88811ff46b54 by task vsock_test/1475
-Call Trace:
- dump_stack_lvl+0x68/0x90
- print_report+0x170/0x53d
- kasan_report+0xc2/0x180
- __vsock_bind+0x61f/0x720
- vsock_connect+0x727/0xc40
- __sys_connect+0xe8/0x100
- __x64_sys_connect+0x6e/0xc0
- do_syscall_64+0x92/0x1c0
- entry_SYSCALL_64_after_hwframe+0x4b/0x53
+This patch series also had to make a small change to the static_branch!
+macro so that it allows keys that are nested multiple structs deep within
+a static variable. 
 
-WARNING: CPU: 0 PID: 1475 at net/vmw_vsock/virtio_transport_common.c:37 virtio_transport_send_pkt_info+0xb2b/0x1160
-Call Trace:
- virtio_transport_connect+0x90/0xb0
- vsock_connect+0x782/0xc40
- __sys_connect+0xe8/0x100
- __x64_sys_connect+0x6e/0xc0
- do_syscall_64+0x92/0x1c0
- entry_SYSCALL_64_after_hwframe+0x4b/0x53
+Closes: https://github.com/Rust-for-Linux/linux/issues/453
+Link: https://rust-for-linux.zulipchat.com/#narrow/channel/291565-Help/topic/Dynamic.20Debug.3F/with/519289668
 
-KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
-RIP: 0010:sock_has_perm+0xa7/0x2a0
-Call Trace:
- selinux_socket_connect_helper.isra.0+0xbc/0x450
- selinux_socket_connect+0x3b/0x70
- security_socket_connect+0x31/0xd0
- __sys_connect_file+0x79/0x1f0
- __sys_connect+0xe8/0x100
- __x64_sys_connect+0x6e/0xc0
- do_syscall_64+0x92/0x1c0
- entry_SYSCALL_64_after_hwframe+0x4b/0x53
+Andrew Ballance (3):
+  rust: static jump: add support for nested arguments
+  rust: device add support for dynamic debug to pr_debug!
+  rust: device add support for dynamic debug to dev_dbg!
 
-refcount_t: addition on 0; use-after-free.
-WARNING: CPU: 7 PID: 1518 at lib/refcount.c:25 refcount_warn_saturate+0xdd/0x140
-RIP: 0010:refcount_warn_saturate+0xdd/0x140
-Call Trace:
- __vsock_bind+0x65e/0x720
- vsock_connect+0x727/0xc40
- __sys_connect+0xe8/0x100
- __x64_sys_connect+0x6e/0xc0
- do_syscall_64+0x92/0x1c0
- entry_SYSCALL_64_after_hwframe+0x4b/0x53
-
-refcount_t: underflow; use-after-free.
-WARNING: CPU: 0 PID: 1475 at lib/refcount.c:28 refcount_warn_saturate+0x12b/0x140
-RIP: 0010:refcount_warn_saturate+0x12b/0x140
-Call Trace:
- vsock_remove_bound+0x18f/0x280
- __vsock_release+0x371/0x480
- vsock_release+0x88/0x120
- __sock_release+0xaa/0x260
- sock_close+0x14/0x20
- __fput+0x35a/0xaa0
- task_work_run+0xff/0x1c0
- do_exit+0x849/0x24c0
- make_task_dead+0xf3/0x110
- rewind_stack_and_make_dead+0x16/0x20
-
-[1]: https://lore.kernel.org/netdev/CAGxU2F5zhfWymY8u0hrKksW8PumXAYz-9_qRmW==92oAx1BX3g@mail.gmail.com/
-
-Suggested-by: Stefano Garzarella <sgarzare@redhat.com>
-Signed-off-by: Michal Luczaj <mhal@rbox.co>
----
- tools/testing/vsock/vsock_test.c | 93 ++++++++++++++++++++++++++++++++--------
- 1 file changed, 74 insertions(+), 19 deletions(-)
-
-diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
-index f669baaa0dca3bebc678d00eafa80857d1f0fdd6..eb6f54378667ac7ed324f4823e988ec9846e41a3 100644
---- a/tools/testing/vsock/vsock_test.c
-+++ b/tools/testing/vsock/vsock_test.c
-@@ -1718,16 +1718,27 @@ static void test_stream_msgzcopy_leak_zcskb_server(const struct test_opts *opts)
- 
- #define MAX_PORT_RETRIES	24	/* net/vmw_vsock/af_vsock.c */
- 
--/* Test attempts to trigger a transport release for an unbound socket. This can
-- * lead to a reference count mishandling.
-- */
--static void test_stream_transport_uaf_client(const struct test_opts *opts)
-+static bool test_stream_transport_uaf(int cid)
- {
- 	int sockets[MAX_PORT_RETRIES];
- 	struct sockaddr_vm addr;
--	int fd, i, alen;
-+	socklen_t alen;
-+	int fd, i, c;
-+	bool ret;
-+
-+	/* Probe for a transport by attempting a local CID bind. Unavailable
-+	 * transport (or more specifically: an unsupported transport/CID
-+	 * combination) results in EADDRNOTAVAIL, other errnos are fatal.
-+	 */
-+	fd = vsock_bind_try(cid, VMADDR_PORT_ANY, SOCK_STREAM);
-+	if (fd < 0) {
-+		if (errno != EADDRNOTAVAIL) {
-+			perror("Unexpected bind() errno");
-+			exit(EXIT_FAILURE);
-+		}
- 
--	fd = vsock_bind(VMADDR_CID_ANY, VMADDR_PORT_ANY, SOCK_STREAM);
-+		return false;
-+	}
- 
- 	alen = sizeof(addr);
- 	if (getsockname(fd, (struct sockaddr *)&addr, &alen)) {
-@@ -1735,38 +1746,83 @@ static void test_stream_transport_uaf_client(const struct test_opts *opts)
- 		exit(EXIT_FAILURE);
- 	}
- 
-+	/* Drain the autobind pool; see __vsock_bind_connectible(). */
- 	for (i = 0; i < MAX_PORT_RETRIES; ++i)
--		sockets[i] = vsock_bind(VMADDR_CID_ANY, ++addr.svm_port,
--					SOCK_STREAM);
-+		sockets[i] = vsock_bind(cid, ++addr.svm_port, SOCK_STREAM);
- 
- 	close(fd);
--	fd = socket(AF_VSOCK, SOCK_STREAM, 0);
-+
-+	/* Setting SOCK_NONBLOCK makes connect() return soon after
-+	 * (re-)assigning the transport. We are not connecting to anything
-+	 * anyway, so there is no point entering the main loop in
-+	 * vsock_connect(); waiting for timeout, checking for signals, etc.
-+	 */
-+	fd = socket(AF_VSOCK, SOCK_STREAM | SOCK_NONBLOCK, 0);
- 	if (fd < 0) {
- 		perror("socket");
- 		exit(EXIT_FAILURE);
- 	}
- 
--	if (!vsock_connect_fd(fd, addr.svm_cid, addr.svm_port)) {
--		perror("Unexpected connect() #1 success");
-+	/* Assign transport, while failing to autobind. Autobind pool was
-+	 * drained, so EADDRNOTAVAIL coming from __vsock_bind_connectible() is
-+	 * expected.
-+	 *
-+	 * One exception is ENODEV which is thrown by vsock_assign_transport(),
-+	 * i.e. before vsock_auto_bind(), when the only transport loaded is
-+	 * vhost.
-+	 */
-+	if (!connect(fd, (struct sockaddr *)&addr, alen)) {
-+		fprintf(stderr, "Unexpected connect() success\n");
- 		exit(EXIT_FAILURE);
- 	}
--
--	/* Vulnerable system may crash now. */
--	if (!vsock_connect_fd(fd, VMADDR_CID_HOST, VMADDR_PORT_ANY)) {
--		perror("Unexpected connect() #2 success");
-+	if (errno == ENODEV && cid == VMADDR_CID_HOST) {
-+		ret = false;
-+		goto cleanup;
-+	}
-+	if (errno != EADDRNOTAVAIL) {
-+		perror("Unexpected connect() errno");
- 		exit(EXIT_FAILURE);
- 	}
- 
-+	/* Reassign transport, triggering old transport release and
-+	 * (potentially) unbinding of an unbound socket.
-+	 *
-+	 * Vulnerable system may crash now.
-+	 */
-+	for (c = VMADDR_CID_HYPERVISOR; c <= VMADDR_CID_HOST + 1; ++c) {
-+		if (c != cid) {
-+			addr.svm_cid = c;
-+			(void)connect(fd, (struct sockaddr *)&addr, alen);
-+		}
-+	}
-+
-+	ret = true;
-+cleanup:
- 	close(fd);
- 	while (i--)
- 		close(sockets[i]);
- 
--	control_writeln("DONE");
-+	return ret;
- }
- 
--static void test_stream_transport_uaf_server(const struct test_opts *opts)
-+/* Test attempts to trigger a transport release for an unbound socket. This can
-+ * lead to a reference count mishandling.
-+ */
-+static void test_stream_transport_uaf_client(const struct test_opts *opts)
- {
--	control_expectln("DONE");
-+	bool tested = false;
-+	int cid, tr;
-+
-+	for (cid = VMADDR_CID_HYPERVISOR; cid <= VMADDR_CID_HOST + 1; ++cid)
-+		tested |= test_stream_transport_uaf(cid);
-+
-+	tr = get_transports();
-+	if (!tr)
-+		fprintf(stderr, "No transports detected\n");
-+	else if (tr == TRANSPORT_VIRTIO)
-+		fprintf(stderr, "Setup unsupported: sole virtio transport\n");
-+	else if (!tested)
-+		fprintf(stderr, "No transports tested\n");
- }
- 
- static void test_stream_connect_retry_client(const struct test_opts *opts)
-@@ -2034,7 +2090,6 @@ static struct test_case test_cases[] = {
- 	{
- 		.name = "SOCK_STREAM transport release use-after-free",
- 		.run_client = test_stream_transport_uaf_client,
--		.run_server = test_stream_transport_uaf_server,
- 	},
- 	{
- 		.name = "SOCK_STREAM retry failed connect()",
+ rust/bindings/bindings_helper.h |   1 +
+ rust/kernel/device.rs           | 102 ++++++++++++++++++-
+ rust/kernel/jump_label.rs       |  10 +-
+ rust/kernel/print.rs            | 167 +++++++++++++++++++++++++++++++-
+ 4 files changed, 269 insertions(+), 11 deletions(-)
 
 -- 
 2.49.0
