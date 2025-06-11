@@ -1,131 +1,92 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08A613A3F2;
-	Wed, 11 Jun 2025 03:37:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749613064; cv=pass; b=cilZFT8M17vHZi3maanbWyBe3eOLuyN4pzAFUURSqoQ8nQuU/6NfCj+UwyiM5X6hrTRtQ49iJ5Vbj6lIq60tK04vy2yAkM9u2G899cIlbNnMf/e3ZFaIJFDO/4P08FPczSuSNdMufu6yDzgpzeQxNwwhSloFv8M+F4WjY2bHP4c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749613064; c=relaxed/simple;
-	bh=WBYZJNpKxuiJOBYXbR+TQh0cq5L9uaE7NAB6VnlearM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AzzaspXmV4ZMZV2lasXeebnNYKS6qz6b2EQGeWxT3tItvmldWK4jUEP5xNNjXyWklt/dO924lYZmIc1V7af8N8K9iUXrgUQl44TBq56UqJ2Ual/Ijj7Z1LGsaSb18BIcm3TAAwyB55huCLRKvDx3uTf7iSfNq57ha9X5vdYl+E8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=B+Xbi1c4; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC5481749;
+	Wed, 11 Jun 2025 03:40:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749613222; cv=none; b=H6HzIOdNHEu4/Z5TWokXNAiTWk8AoHh9UhluEBbvpE3QQ2kns5h+dYKGBTSwiM4QrtXCf7xDVhBuTnUpsx0T2IGZRL2XNqT0s5fphiyiNY/L72fZtr2/nwhyBgq4BPQ/FjCo+1ZLqPLvTXKsZg45rBcWIrqMEKx45UH1EpIozN8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749613222; c=relaxed/simple;
+	bh=UPRjxBTu6kPICuG6iqdM2F4dkniXO25Wjw0+01KGFmU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t8wsOh8KbzGKyS4OB6gPIEff4j0eiG/9g/169qgTHT30Pc8OSlL5huYBP40PCOnKWr4S8el2vNyjRLbUrnM2XZbh41DCbN70Q5uCd6u7hVQBPGWUhoV57ZteaBu+mfP/l9PsxKeG7x9qdoSRqM/mXUPAqGjk6eJLX6aJv/BaCO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z33pKRSU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="B+Xbi1c4"
-ARC-Seal: i=1; a=rsa-sha256; t=1749613046; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=h2HgZfUvVxnMbpFC3jyOX2cKHFCJPINOMZE7CgeHOSNOg6/PjdZ+hwfWryek1o7AjmhVGUYS+9hksWH3WguW+SNsOL2AqgALqbwQyZUpFXHMJwmnkzAzcyzQlZf+vsHu51jV4iqSf4AhYvm48xhziSoLihJND8i5oHAElZe2Y2g=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1749613046; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=faHRvR+SGHmxzSv7cHI84PGrtEsnJDo9oDvQ6DBDa2A=; 
-	b=Wg56mmLhoeKFAe28KoUTcqxEIxSs+oDI7jrH03Frd/+IMs1XoCQaQ8lsUeZcb8rEoO1spuUJrN1dddCbnPIErVcdZKvuutROGCuWrfhW1DAUse/1rCcN/jjf0g2apS+aM8Wu81r79Fo+VSzOh+0lxF26SZUBd0EMhXblhR2j5yE=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749613046;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
-	bh=faHRvR+SGHmxzSv7cHI84PGrtEsnJDo9oDvQ6DBDa2A=;
-	b=B+Xbi1c4KU0Wv/RnuPEFwyGGm/PsPL0VAgi3cRmsxvdWfJrWBK0GgfeZKjoCres7
-	729Z0pcEAP9BRLYurR15VAzjPhys9wxvZl5GdN9GzpvYvMX1HkkQAn9JpIYxSPR1OW9
-	rTTYNh4p8gKDXSBN4t2Pj9FSR4VFHgHM2p9EgGIc=
-Received: by mx.zohomail.com with SMTPS id 1749613044314624.6785588017032;
-	Tue, 10 Jun 2025 20:37:24 -0700 (PDT)
-From: Li Ming <ming.li@zohomail.com>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	shiju.jose@huawei.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Li Ming <ming.li@zohomail.com>
-Subject: [PATCH 1/1] cxl/edac: Fix potential memory leak issues
-Date: Wed, 11 Jun 2025 11:35:42 +0800
-Message-Id: <20250611033542.96184-1-ming.li@zohomail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z33pKRSU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33443C4CEF0;
+	Wed, 11 Jun 2025 03:40:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749613221;
+	bh=UPRjxBTu6kPICuG6iqdM2F4dkniXO25Wjw0+01KGFmU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z33pKRSU6mJ9GSS4cRBNfZIfpjRhPF1PZPALwTKO3QwWXB5uo9f61gwgeH769IoAC
+	 d6xahp+3wHEl4r/g3tk8o+BeqhrARs7AzJELD84EBatPgwfxi9bkQhTlk8qLlt4j6D
+	 ebmTuRLjo4AW4jTitCG74cjdELPhR8GJah7XjR6cri9pKFl1+4Nf7SIUAbOSQUDMG2
+	 zRUlMRhHZq20l0KfOHLL0Jewlitxfm0yqgy/t3mD7bWYL93vdxOe6a2WRTu3jz7/p9
+	 w+AWN6gAQ46GgDieGGe7FQ6BwXkjIZI2t56ro6VAKh5jCj8mKLOKKm3ef64c2f069E
+	 29Prr/qCH9kjQ==
+Date: Tue, 10 Jun 2025 20:39:57 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org, x86@kernel.org, ardb@kernel.org,
+	Jason@zx2c4.com, torvalds@linux-foundation.org
+Subject: Re: [PATCH 07/16] crypto: sha512 - replace sha512_generic with
+ wrapper around SHA-512 library
+Message-ID: <20250611033957.GA1484147@sol>
+References: <20250611020923.1482701-8-ebiggers@kernel.org>
+ <aEjo6YZn59m5FnZ_@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Feedback-ID: rr08011227d2a18e541872dd899b08b2780000ef9113495e4c5a724022f8f4c8e44db4221c7aba003b0413a7:zu080112276e7654b12c07aa55d2c5f5cc0000fbb3770a9a91b5c2455bf3c8fbdc8947ce237166555cdb479d:rf0801122d1cc9bff403e174513f9128b40000900505c44c2c6c26ab15d56e00452bc821e69e23e7997452209261b63b08e5:ZohoMail
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEjo6YZn59m5FnZ_@gondor.apana.org.au>
 
-In cxl_store_rec_gen_media() and cxl_store_rec_dram(), use kmemdup() to
-duplicate a cxl gen_media/dram event to store the event in a xarray by
-xa_store(). The cxl gen_media/dram event allocated by kmemdup() should
-be freed in the case that the xa_store() fails.
+On Wed, Jun 11, 2025 at 10:24:41AM +0800, Herbert Xu wrote:
+> Eric Biggers <ebiggers@kernel.org> wrote:
+> >
+> > +       {
+> > +               .base.cra_name          = "sha512",
+> > +               .base.cra_driver_name   = "sha512-lib",
+> > +               .base.cra_priority      = 100,
+> > +               .base.cra_blocksize     = SHA512_BLOCK_SIZE,
+> > +               .base.cra_module        = THIS_MODULE,
+> > +               .digestsize             = SHA512_DIGEST_SIZE,
+> > +               .init                   = crypto_sha512_init,
+> > +               .update                 = crypto_sha512_update,
+> > +               .final                  = crypto_sha512_final,
+> > +               .digest                 = crypto_sha512_digest,
+> > +               .descsize               = sizeof(struct sha512_ctx),
+> > +       },
+> 
+> This changes the export format which breaks fallback support
+> for ahash drivers.
+> 
+> You need to retain the existing export format.
 
-Fixes: 0b5ccb0de1e2 ("cxl/edac: Support for finding memory operation attributes from the current boot")
-Signed-off-by: Li Ming <ming.li@zohomail.com>
----
-base-commit: 87b42c114cdda76c8ad3002f2096699ad5146cb3 cxl/fixes
----
- drivers/cxl/core/edac.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+Do you have a concrete example (meaning, a specific driver) where this actually
+matters?  Historically, export and import have always had to be paired for the
+same transformation object, i.e. import was called only with the output of
+export.  There is, and has never been, any test that tests otherwise.  This
+seems like a brand new "requirement" that you've made up unnecessarily.
 
-diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
-index 2cbc664e5d62..b4c5c23a45d4 100644
---- a/drivers/cxl/core/edac.c
-+++ b/drivers/cxl/core/edac.c
-@@ -1086,13 +1086,13 @@ static void cxl_del_overflow_old_recs(struct xarray *rec_xarray)
- int cxl_store_rec_gen_media(struct cxl_memdev *cxlmd, union cxl_event *evt)
- {
- 	struct cxl_mem_err_rec *array_rec = cxlmd->err_rec_array;
--	struct cxl_event_gen_media *rec;
- 	void *old_rec;
- 
- 	if (!IS_ENABLED(CONFIG_CXL_EDAC_MEM_REPAIR) || !array_rec)
- 		return 0;
- 
--	rec = kmemdup(&evt->gen_media, sizeof(*rec), GFP_KERNEL);
-+	struct cxl_event_gen_media *rec __free(kfree) =
-+		kmemdup(&evt->gen_media, sizeof(*rec), GFP_KERNEL);
- 	if (!rec)
- 		return -ENOMEM;
- 
-@@ -1106,6 +1106,7 @@ int cxl_store_rec_gen_media(struct cxl_memdev *cxlmd, union cxl_event *evt)
- 
- 	cxl_del_expired_gmedia_recs(&array_rec->rec_gen_media, rec);
- 	cxl_del_overflow_old_recs(&array_rec->rec_gen_media);
-+	retain_and_null_ptr(rec);
- 
- 	return 0;
- }
-@@ -1114,13 +1115,13 @@ EXPORT_SYMBOL_NS_GPL(cxl_store_rec_gen_media, "CXL");
- int cxl_store_rec_dram(struct cxl_memdev *cxlmd, union cxl_event *evt)
- {
- 	struct cxl_mem_err_rec *array_rec = cxlmd->err_rec_array;
--	struct cxl_event_dram *rec;
- 	void *old_rec;
- 
- 	if (!IS_ENABLED(CONFIG_CXL_EDAC_MEM_REPAIR) || !array_rec)
- 		return 0;
- 
--	rec = kmemdup(&evt->dram, sizeof(*rec), GFP_KERNEL);
-+	struct cxl_event_dram *rec __free(kfree) =
-+		kmemdup(&evt->dram, sizeof(*rec), GFP_KERNEL);
- 	if (!rec)
- 		return -ENOMEM;
- 
-@@ -1134,6 +1135,7 @@ int cxl_store_rec_dram(struct cxl_memdev *cxlmd, union cxl_event *evt)
- 
- 	cxl_del_expired_dram_recs(&array_rec->rec_dram, rec);
- 	cxl_del_overflow_old_recs(&array_rec->rec_dram);
-+	retain_and_null_ptr(rec);
- 
- 	return 0;
- }
--- 
-2.34.1
+It also makes much more sense for the export format to simply be the struct used
+by the library (e.g. sha512_ctx), not some undocumented struct generated by
+pointer arithmetic.
 
+And drivers should just use the library as their fallback, or else just do what
+they did before when they must not have been depending on a particular format.
+
+I'll add export and import functions if you insist, but it seems pointless.
+
+Could you at least provide proper definitions for the legacy structs so that I
+don't have to do pointer arithmetic to generate them?
+
+- Eric
