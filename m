@@ -1,140 +1,126 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE921A83E8;
-	Wed, 11 Jun 2025 15:23:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D580F1AAA11;
+	Wed, 11 Jun 2025 15:24:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749655438; cv=none; b=LRvRB6iw7xVfOIBoSJgzMP05MesPhgXEh67PWmaJqA5xag0Hrq/U2bADk8oKvlW+N4CfQsmTUmU8ixdko/KO0yeVnkyoE44kWtzybew6TXasnKePGucGBQo38JHvMcNTq0gwfSf2S/cdXMCP/z32CTI0zXPjX3iIQjte9K+yrAM=
+	t=1749655452; cv=none; b=ekdA43jcJ8YPFHuimBTnBR1GiI+mjqoY5Eqm4l6fOJay6zlg3jXAO3CZZvF/y0uo2O5JFzElRqTp+JOYncFysDGMinollTJs90TjTx7MZ9EL79t1XSkaHppUo4YYjaFEUV0io4rTHYeupaoYdfNel6DFOK4255897AVqGrELyzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749655438; c=relaxed/simple;
-	bh=hB5NPzsdUKebHol986TcEN09r28kynGS/+NNFkmxmzY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DmntVkmvZuSS5Z4N/o9Kc5SVGF++Y42xTF5a77+CO7HfmQdqNOMlrt0Z7rfyodrQ1dljMILz+u5Yr4srYkrOFLHem2Ogc3+zLYE0u6yl229cufmX53m4gx1qAuQSVkYl4lpgttx+k5UXs4x/kkqhQr0biV6RyT5ouovovnlk5YQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-X-CSE-ConnectionGUID: +WLqTz+BQeODSi6TrAhnjw==
-X-CSE-MsgGUID: 0oHJv4/ESO+LHUoXzmFWZA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="51683821"
-X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
-   d="scan'208";a="51683821"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 08:23:57 -0700
-X-CSE-ConnectionGUID: OaO9Uf/1S+ayfF1UV7Aezg==
-X-CSE-MsgGUID: 99Z2mP0LSCKA1zYlRdO/pw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
-   d="scan'208";a="148136517"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 08:23:54 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy.shevchenko@gmail.com>)
-	id 1uPNIs-00000005gQ6-0e5X;
-	Wed, 11 Jun 2025 18:23:50 +0300
-Date: Wed, 11 Jun 2025 18:23:49 +0300
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Lothar Rubusch <l.rubusch@gmail.com>, dlechner@baylibre.com,
-	nuno.sa@analog.com, corbet@lwn.net, lucas.p.stankus@gmail.com,
-	lars@metafoo.de, Michael.Hennerich@analog.com, bagasdotme@gmail.com,
-	linux-iio@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 07/11] iio: accel: adxl313: add activity sensing
-Message-ID: <aEmfhauUtXowGzUz@smile.fi.intel.com>
-References: <20250601172139.59156-1-l.rubusch@gmail.com>
- <20250601172139.59156-8-l.rubusch@gmail.com>
- <CAHp75VemOXhpRp2hfDhvzi3y5j5oL-_0xMmWRWkwEtX7Ks5nMQ@mail.gmail.com>
- <CAFXKEHZcS2qpb1zp6kkQm_Pb-MxYHErpjD=q6huuLm1Nq=xjqA@mail.gmail.com>
- <20250611161504.56d402e2@jic23-huawei>
+	s=arc-20240116; t=1749655452; c=relaxed/simple;
+	bh=4ZJrxbQD7Wq1zQl7il+htYlEl74rivfaeLej9OYZtSY=;
+	h=Subject:Message-ID:Date:MIME-Version:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=XlrYQSRdAulNCcvpwKF2wUWllhwvo4tleLOh6RyTOLThNA6hUCPz45qWVxI5OyRwaH5QDOdEgv0vmIOkIgMn9nZ+5vYi0P9X7H6BOb9QOmnSi+HnpqjHWykgANtafL64ThqTBTrEOxvWs5MSoj0szz8zBhsH3BOnL020RxJ2MSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=W/Qwl9S2; arc=none smtp.client-ip=52.119.213.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="W/Qwl9S2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1749655450; x=1781191450;
+  h=message-id:date:mime-version:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:subject;
+  bh=T4o6YcPRF1U1tvznrJTs87/iT7vaJoRM/tUg+dY5ocQ=;
+  b=W/Qwl9S2MnJkQDuXGkdsmWpSZMK5NJ/YC8vch2AQMsHRbGReoo8Obl4P
+   piq2FyNxWgKe1w+uiEaGsNDlKcnQ2BTApg9lxVJs+pSIu/lglkdLg4WSp
+   3kYjkwv7OCo7OQK5DLYaWOL4kLyfnn1ZeDBvffPySRNHJjehb2HDzi7xA
+   EC46aMEIStFkz8Fdgnc8uaPCCRASyIcY8pZuCDLWMt+hfpRDDWATduJ4B
+   4GyD/OIuqnsC6KOo52J541bq1u12EPUZ/V8t52zFn4kHeoL5DReiHZtSI
+   fy/9KjC0wEr8WKjlzl3yBBo1lRHe3wsSO+ZKtGnZRwT2q2O3upB0lhzAf
+   g==;
+X-IronPort-AV: E=Sophos;i="6.16,228,1744070400"; 
+   d="scan'208";a="754310820"
+Subject: Re: [PATCH] Revert "block: don't reorder requests in blk_add_rq_to_plug"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 15:24:08 +0000
+Received: from EX19MTAEUC001.ant.amazon.com [10.0.43.254:34556]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.8.92:2525] with esmtp (Farcaster)
+ id 3f9813e5-609c-48b8-930f-26a74422b933; Wed, 11 Jun 2025 15:24:08 +0000 (UTC)
+X-Farcaster-Flow-ID: 3f9813e5-609c-48b8-930f-26a74422b933
+Received: from EX19D018EUA004.ant.amazon.com (10.252.50.85) by
+ EX19MTAEUC001.ant.amazon.com (10.252.51.155) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 11 Jun 2025 15:24:08 +0000
+Received: from [192.168.11.154] (10.106.82.32) by
+ EX19D018EUA004.ant.amazon.com (10.252.50.85) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 11 Jun 2025 15:24:07 +0000
+Message-ID: <32c83d67-1d69-4d69-8d00-274cf0d0ff62@amazon.com>
+Date: Wed, 11 Jun 2025 16:24:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250611161504.56d402e2@jic23-huawei>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+To: Ming Lei <ming.lei@redhat.com>
+CC: <stable@vger.kernel.org>, kernel test robot <oliver.sang@intel.com>, Hagar
+ Hemdan <hagarhem@amazon.com>, Shaoying Xu <shaoyi@amazon.com>, "Jens Axboe"
+	<axboe@kernel.dk>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang
+	<jasowang@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>, Stefan Hajnoczi
+	<stefanha@redhat.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Keith Busch <kbusch@kernel.org>,
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	<linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<virtualization@lists.linux.dev>, <linux-nvme@lists.infradead.org>,
+	<linux-fsdevel@vger.kernel.org>
+References: <20250611121626.7252-1-abuehaze@amazon.com>
+ <aEmcZLGtQFWMDDXZ@fedora>
+Content-Language: en-US
+From: "Mohamed Abuelfotoh, Hazem" <abuehaze@amazon.com>
+In-Reply-To: <aEmcZLGtQFWMDDXZ@fedora>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EX19D006EUC003.ant.amazon.com (10.252.51.252) To
+ EX19D018EUA004.ant.amazon.com (10.252.50.85)
 
-On Wed, Jun 11, 2025 at 04:15:04PM +0100, Jonathan Cameron wrote:
-> On Wed, 11 Jun 2025 16:49:34 +0200
-> Lothar Rubusch <l.rubusch@gmail.com> wrote:
-> > On Sun, Jun 1, 2025 at 9:38 PM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > On Sun, Jun 1, 2025 at 8:22 PM Lothar Rubusch <l.rubusch@gmail.com> wrote:  
-
-...
-
-> > > > -               return adxl313_fifo_push(indio_dev, samples);
-> > > > +               ret = adxl313_fifo_push(indio_dev, samples);  
-> > >
-> > > This is not needed...
-> > >  
-> > 
-> > IMHO this will be needed, or shall be needed in the follow up context.
-> > 
-> > The [going to be renamed] function push_events() shall evaluate the
-> > interrupt status register for the events the driver can handle and
-> > also eventually drain the FIFO in case of watermark. It shall
-> > distinguish between failure, events / drain the FIFO which can be
-> > handled, and events which cannot be handled so far. It's not a if /
-> > else, there can be some event, and some fifo data. Therefore I'd like
-> > not a simple return here, but init a ret var.
-> > 
-> > I interpreted your reviews, to change the particular implementation as
-> > if there was just activity. Then in a follow up patch, rewrite it
-> > again, now to distinguish just bewteen just activity and inactivity
-> > e.g. by if/else. Eventually rewrite it by a third approach to
-> > distinghish activity, inactivity, AC-coupled activity and AC-coupled
-> > inactivity, might be now switch/case. Eventually you might complain
-> > that my patches contain way too much modification of every line in
-> > every patch.
-> > 
-> > I'd rather like to start right away with the final structure with just
-> > the first element - e.g. "activity" - leads to results like the above.
-> > Less churn among patches, but having just one element looks like
-> > having taken an over-complicated approach.
+On 11/06/2025 16:10, Ming Lei wrote:
+> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
 > 
-> I'd do the from the first but with the comment up with where ret is
-> declared.  
 > 
-> > Perhaps it's my patch split? Unsure, I tried to note in the commit message:
-> > > This is a preparatory patch. Some of the definitions and functions are
-> > > supposed to be extended for inactivity later on.  
-> > Perhaps it needs more feedback here?
-> > 
-> > Another example is seting up the read/write_event_config() or
-> > read/write_event_value() functions. I mean, eventually this will
-> > become a switch/case implementation. Of course with just one element
-> > switch/case seems to be obvious overkill. Going by your advice, I
-> > changed it to if(!..) return, it's definitely cleaner. Definitely in
-> > the follow up patches this will be rewritten, though.
-> Don't do that. Just use the switch from the start.
+> 
+> On Wed, Jun 11, 2025 at 12:14:54PM +0000, Hazem Mohamed Abuelfotoh wrote:
+>> This reverts commit e70c301faece15b618e54b613b1fd6ece3dd05b4.
+>>
+>> Commit <e70c301faece> ("block: don't reorder requests in
+>> blk_add_rq_to_plug") reversed how requests are stored in the blk_plug
+>> list, this had significant impact on bio merging with requests exist on
+>> the plug list. This impact has been reported in [1] and could easily be
+>> reproducible using 4k randwrite fio benchmark on an NVME based SSD without
+>> having any filesystem on the disk.
+>>
+>> My benchmark is:
+>>
+>>      fio --time_based --name=benchmark --size=50G --rw=randwrite \
+>>        --runtime=60 --filename="/dev/nvme1n1" --ioengine=psync \
+>>        --randrepeat=0 --iodepth=1 --fsync=64 --invalidate=1 \
+>>        --verify=0 --verify_fatal=0 --blocksize=4k --numjobs=4 \
+>>        --group_reporting
+>>
+>> On 1.9TiB SSD(180K Max IOPS) attached to i3.16xlarge AWS EC2 instance.
+>>
+>> Kernel        |  fio (B.W MiB/sec)  | I/O size (iostat)
+>> --------------+---------------------+--------------------
+>> 6.15.1        |   362               |  2KiB
+>> 6.15.1+revert |   660 (+82%)        |  4KiB
+>> --------------+---------------------+--------------------
+> 
+> I just run one quick test in my test VM, but can't reproduce it.
 
-But at the same time if switch becomes nested and 2+ levels, it's better
-to split the inner parts to the helpr functions or so. Doing a switch
-with 2+ levels looks ugly independently on the approach taken.
+Possibly you aren't hitting the Disk IOPS limit because you are using 
+more powerful SSD? In this case I am using i3.16xlarge EC2 instance 
+running AL2023 or may be fio has different behavior across Distribution. 
+In AL2023 we have fio-3.32
 
-> Sometimes we will give review feedback that doesn't take the whole
-> series into account (because it takes much longer to review a full series
-> then reread the feedback to spot anything that turned out to be due
-> to a later change)  In those cases it is fine to just reply to the
-> comment with - "The switch gathers additional elements in patches X,Y,Z
-> and so is introduced in this first patch to reduce churn.
+> Also be curious, why does writeback produce so many 2KiB bios?
 
-Indeed.
+Good question unfortunately I don't have a good answer on why we have
+2KB bios although I am specifying 4K as I/O size in fio, this is 
+something we probably should explore further.
 
-> > Please, let me know what is the best approach or what I can improve to
-> > avoid such "ping pong patching" as you name it?
-> > 
-> > Might be that you're right here in this particular case, but then it
-> > would be better to discuss the final structure, isn't it?
+Hazem
 
--- 
-With Best Regards,
-Andy Shevchenko
 
 
