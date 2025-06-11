@@ -1,83 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFDE722338;
-	Wed, 11 Jun 2025 16:55:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D183220C47A;
+	Wed, 11 Jun 2025 16:55:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749660914; cv=none; b=dMmh7hRVF2yNM+zPDUZT/6p9uAD4A/+bRg/0Cb3bL61MBC/UQ6VONEm0CrL4bdqQQKofjrMBm0PlGTnH5YVa0UiX0nKx4sIvS/xjLCNk8CnxvzuWww/7A2AKlB+M/F9fpSWNweqFcUy/ZoP7L+bCjg9Kjuiu9s0/m9QuWR46ZpU=
+	t=1749660931; cv=none; b=mQl+Mw7pNQJ3DOeKYykuP9vsPqJ6Bz4aAYqCEmDoQBHD1BQSdZ4Gsd/KNpR1zw64fSfub9RxsTKymbt8YIYqNO1QjCdbSbH3iionopYfOdQsc8Qm4kwYkbJeUREluIkBb8KOCo2Aptj865yHR+wB+RuyYj8j2omi4qXZlLBGZOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749660914; c=relaxed/simple;
-	bh=m/PwAkiiVHHJw2QiKL5QvGkPvJ7GRB3BXGGzMcGJYZs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AKaSv8SLcbxJCRnJ9oGZ2bQG9+AmKb+RG2KNKlJBp6aKJJJVRIlMUmCJrgGjQSIQXR3c4SNgCxHWO6P4Y+t71BF5vlUsVS7ejERqPNrBfL6owxtHbWiwj0uosl71vKsjewKy946pR5KFeHKH1vYRogNRqmdcPW8GnIHPEIIlIvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NCFKS3OV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749660931; c=relaxed/simple;
+	bh=KyNFKemnRNzyt/7LqR30HwimFe7KXWQY+EiWh5tmzaI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D9+PHVmv0nWs/SInC6xJbw5TlhHksoiztcWVCbpEJlxFbkEpoKlInrBpQ6LKrOtSPxGmg1PO3K+DD33cu+R3y8qqmS3JNE7IQ7mDZIG1lMOjGbpktb0rqgGYv8X3QOOhSTQEIbzvZGmI2QGTfeTMSYWrrN49Aj43X+TF1SgteHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ax2uLJxY; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NCFKS3OV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CC9EC4CEE3;
-	Wed, 11 Jun 2025 16:55:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749660913;
-	bh=m/PwAkiiVHHJw2QiKL5QvGkPvJ7GRB3BXGGzMcGJYZs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=NCFKS3OVabpqRYi/QeQ7FKarYGiwk56zxwiRy1+AGURu/F+ApJePO33Mb1bWmhbwE
-	 dNj0yCoATDW/LS3wj2mDPemUifNxiRyVwl3HfLeILcDu8FHgOmkLTQWM7DikBxSUfR
-	 ICHgGsq70Er1H5pudfYDSRNxbfFCJuZzJTS+4iAE6KUFe/xUXxWBJpyQcORIuWy8fb
-	 O0UNpU+VNy/S+sgw8hnvRotvXNjwBFgsZhMpGC/bglaFJJ8uYeXKgQJP8+fwmssFx1
-	 8FcGAwWsGYM/1+npUc0/tLfsVWSQ71DApIkZFMt6a/r4Kn1a0oPCkdcKZD1l3G6TFn
-	 w596j/jl9rV0A==
-Date: Wed, 11 Jun 2025 17:55:06 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Andy Shevchenko <andy@kernel.org>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
- Da Xue <da@libre.computer>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: adc: ad7949: use spi_is_bpw_supported()
-Message-ID: <20250611175506.01d11675@jic23-huawei>
-In-Reply-To: <851b7d08-3e77-4344-97d1-9d60f1fb8762@baylibre.com>
-References: <20250611-iio-adc-ad7949-use-spi_is_bpw_supported-v1-1-c4e15bfd326e@baylibre.com>
-	<aEmdhV0ATRuUeGaL@smile.fi.intel.com>
-	<851b7d08-3e77-4344-97d1-9d60f1fb8762@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ax2uLJxY"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-31306794b30so13681a91.2;
+        Wed, 11 Jun 2025 09:55:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749660929; x=1750265729; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KyNFKemnRNzyt/7LqR30HwimFe7KXWQY+EiWh5tmzaI=;
+        b=ax2uLJxYAzt3Xjjj45zhdd1k6hVad+uIXzoXOd4oaS/Wj+oRBdMKvHcZhiQamAWm1Y
+         JBhyNrv4diEF57pyX+CmM+ax7i4JeT5aQVtQ03dpdpDOitxT/apLYXnmtulOpeg8Hb+V
+         2PZWla/msdl0E6CRfk11xSit25l5hV0Hk0bLzIBCtnBDI7nNR27qaI1cAS084tENZ7LV
+         12TzxJrUwz9TIDFMmJtEpviQ0+H/dZPzAcDGfx9g0wKvb1BiX0j13GcwQrbY3OYocsbD
+         UT3uV08DJ+daDoaE92+VCh1mAO2f60HFKwhmqsvybYhQOR991vnlrnrOiNyBjUGS3qn3
+         Z9NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749660929; x=1750265729;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KyNFKemnRNzyt/7LqR30HwimFe7KXWQY+EiWh5tmzaI=;
+        b=aoQEIOZih06cb2wiG451/dgMVi2pDIVSSICE7r+wl71+atzPjCWppefsjzqBqqkD7G
+         MK/dZ12DjVa6sfE8i/6alN0sgaZskUeqvcO0tuPjWgKdfC12xe+n4+X7HEupfwrLPPU6
+         JllUsSpjDZZNikDDSXK6vV1WJWi0Ch1kxNMOavzlfRGwTS8qXC7HTmd46g8qRFpnbpCP
+         LZUrIQ8AubzmhmdF5s9kJsDQqdmawgbLnudDlvR5LgqCn/+XrsjXOtY30Vlkx70tQe6d
+         thGPYbZ7SVc3yS8uyALx70eEvrGdkGGGyG6kPFC7efa1Jpp/Y8QxOTiBU2HPsa8I0xZd
+         qsLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUXD03ifCHIo+n3O7YAdAPmDjQQEaB3NpI+avZ3uA4J5/Pf/oGunsk4vQ9Teaw41mEbO/iSnjKLPX+C@vger.kernel.org, AJvYcCVSyDt9w7vVrRTreCfcoV3Iv7VxMA6PISVkkOhIZNh1oGjiEkjwhCDmZsdSLNYR61jLGLy/ur7UwwOm@vger.kernel.org, AJvYcCVZkHgKSj5vyi0EurTOxVWoJ2L4Rj86NpzNChiNqfzHlmAC7uT5YNnQlbuTVwZkqiWtrhGDfw9QaRsz@vger.kernel.org, AJvYcCX9JgSUXQhKG12I86l6yikpEENDdE0qRbKGzbyIjChyzvln2+BfxGHWuT7n1U67LJB8colagOFE9Qfgjhhu@vger.kernel.org, AJvYcCXRthceYES5Z4TzhsLhsvfA0vatEQLE580smTvFJ2QL81AZCCMBFNNg21x0239NGh2dwlSKFV8HVhCqvcbTrF4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywe3/UOr7OGcdKgsStV1OfTGxrQrN4hDC6HpjvhE0FszdSOzezf
+	+z/b7yAP/R2TLj6e/+TYk60LJ3qi/4l6RdR7DqSnu73CTF+2ON5K/4CKbK2dX0k3TZPkToj0FOf
+	Nk8Ylf79qj2nobDsjBLVVlo7Ud3PiY4s=
+X-Gm-Gg: ASbGncsHKpW92O2HI1mVEv0Y0MV6MK+ljAIxfTOIxZOcBtsOxEINuCrkInpE0VA+6u7
+	kX7RF/CaWIZOl+7w47q2Mms1ki0HJR83RehpHftQbO4ObHo1eYEXXNqYh2tjYFRiG3TH8W7alXk
+	2KYIo4bMyBztgaThUEx6ICclgv4hWDFcPA1nnbb4fns4c=
+X-Google-Smtp-Source: AGHT+IE8o2IorCuFcUqW3Dxq8LkFc4fMvAMKwf+dTmyr9FxnqdwSW1OMco+JDmkRZVwCnFY7SBpojWZ8MSza5Nch4Qw=
+X-Received: by 2002:a17:90b:1dcb:b0:311:a314:c2c9 with SMTP id
+ 98e67ed59e1d1-313af0f9611mr2302611a91.1.1749660929073; Wed, 11 Jun 2025
+ 09:55:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <CGME20250610125330eucas1p2a573627ca8f124fe11e725c2d75bdcc9@eucas1p2.samsung.com>
+ <20250610-rust-next-pwm-working-fan-for-sending-v2-0-753e2955f110@samsung.com>
+ <aEifXZnLxKd2wa0w@x1> <6ca6016e-3b17-48a0-ad8d-bb05317aa100@samsung.com>
+In-Reply-To: <6ca6016e-3b17-48a0-ad8d-bb05317aa100@samsung.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 11 Jun 2025 18:55:15 +0200
+X-Gm-Features: AX0GCFtO16UWgR7wAnoHoWp6WjbNacZo98Lk-lDtKNRkXYeSnMBe-Yw1GCMYPlU
+Message-ID: <CANiq72=88Aa-Fe0b6XiSfsOq0mM3jUw_e+DxpRRQdrdtWFJHsA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/7] Rust Abstractions for PWM subsystem with TH1520
+ PWM driver
+To: Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: Drew Fustini <drew@pdp7.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Guo Ren <guoren@kernel.org>, 
+	Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Benno Lossin <lossin@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 11 Jun 2025 10:21:56 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+On Wed, Jun 11, 2025 at 5:14=E2=80=AFPM Michal Wilczynski
+<m.wilczynski@samsung.com> wrote:
+>
+> The kernel config option that is different on my setup is:
+> CONFIG_RUST_BUILD_ASSERT_ALLOW=3Dy
 
-> On 6/11/25 10:15 AM, Andy Shevchenko wrote:
-> > On Wed, Jun 11, 2025 at 10:04:58AM -0500, David Lechner wrote:  
-> >> Use spi_is_bpw_supported() instead of directly accessing spi->controller  
-> >> ->bits_per_word_mask. bits_per_word_mask may be 0, which implies that  
-> >> 8-bits-per-word is supported. spi_is_bpw_supported() takes this into
-> >> account while spi_ctrl_mask == SPI_BPW_MASK(8) does not.  
-> >   
-> >> Closes: https://lore.kernel.org/linux-spi/c8b8a963-6cef-4c9b-bfef-dab2b7bd0b0f@sirena.org.uk/  
-> > 
-> > Reported-by yourself. I'm wondering if the Closes adds a value in this case.
-> > Otherwise I can do the same to maybe 10% of my patches, for instance. But
-> > I don't think I put Closes tag on whatever improvement potential bug fix
-> > I do report (read: notice) myself.  
-> 
-> I included it so that Da Xue will know that this has been resolved and
-> doesn't need to do anything more. Normally I would have not included
-> it though.
+Yeah, code must work with `CONFIG_RUST_BUILD_ASSERT_ALLOW=3Dn` -- the
+config is an escape hatch just in case a user toolchain cannot build
+the code for some reason.
 
-If I followed the discussion correctly does this need a fixes tag?
+In other words, if a `build_assert!` is triggered, then that is a bug
+(likely in new callers misusing an API, but it could also be in the
+callees, of course).
 
-> 
-> >   
-> >> Signed-off-by: David Lechner <dlechner@baylibre.com>  
-> > 
-> > Code wise LGTM,
-> > Reviewed-by: Andy Shevchenko <andy@kernel.org>
-> >   
-> 
+We may eventually remove it, or perhaps invert its meaning so that
+`allmodconfig` doesn't enable it, which is how I guess you ended up
+with it, right?
 
+I hope that helps.
+
+Cheers,
+Miguel
