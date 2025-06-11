@@ -1,81 +1,84 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D05B20C494;
-	Wed, 11 Jun 2025 18:26:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F4420C494
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 18:27:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749666371; cv=none; b=c+Th9Ui9vSOp0OuUDLJMZ3j6Chs3OLRXWxNWoWpVUjDOGZlhYQjiul5DBQuKaw8OLt4/R92rL6RUf5O5zDUwNiMJV5Zc2Yr+c1udxf+kqL8M111Y6My5u2rJQlR4Av6IQirybxwYgXYxPn6r7v3kK0rPBsttHkcE4tXKMuUFkz0=
+	t=1749666455; cv=none; b=qkQdiAvRsqhP6pv4KVevqRZrD7YCpLaV+IM0ZQuX62HREIKyTMUeu2Qfu6LVEke3IKoZIlhZcKFFeHVo/MxFKNNfxjbMya71Ouzf4itNIEnaCrlVQaZjtwqPOXJeVTr0yP5VDUejcGwQwlq8Hf0Zb/QFbybMM7uW/LTX8UKoFJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749666371; c=relaxed/simple;
-	bh=X5nIp4Du5EP+28y6NroWhGcnMI/IpDxiHC8/nV44wFw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f1WzDW3YShr9BE8QhF7mDCqQfB7YN6ZfrlyokvpNRimzK9xEeOUUNE74x6DCx3knzTSSlEVOJoOOd7Yfc3bXK0Obm/4/GKdlTFBBFezg4x97wp4B4bXeuHE/cE7XwujkNSHPCRhq9idixuzcDFaGYB1qov8xt41Ry9jfLT63W20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=lsaceU4x; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1749666455; c=relaxed/simple;
+	bh=cyh9GNwkSeiWX8VVWJet6cmrStrv1Y1BhHYKMAKCy08=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=k6jnpvr9usnGrqAWYOkldfGDeecRhZdgWdkWMUpsGPx6N2d0uOmukvJQhMxU9ZLOlQs6cXL3/I3ltmAMjThF3ro8RTd/70xQ8IwnjihnJyfCtfAyR1A4GQtC7S6E7k9XOU4yYsjTDoP9LpB/o3OF/YaPA7y+hh70RCkym3gWSOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XlpRsS6Q; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="lsaceU4x"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=neALwql1yvZkvXtKYl9+4IX5+TOVPty8265XtgK9DCw=; b=lsaceU4xlstsL7AtpYN5CkMT86
-	sxKOK799kjkTYpoUyxccLNHkRFTk+Gpr+7g3SOWJSAYAioCvFwfOjsgdGpJn9gFkvYudJldxKqZF2
-	NtN59+GseynlQjVo7G1TYNlZ40eQNl6ViPIpgPZV90amvqg9sh1CW0HCuBgKvDKo7sDk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uPQ96-00FR5L-Am; Wed, 11 Jun 2025 20:25:56 +0200
-Date: Wed, 11 Jun 2025 20:25:56 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH RESEND] net: mdio: mux-gpio: use
- gpiod_multi_set_value_cansleep
-Message-ID: <d4899393-f465-4139-ac3d-8e652c4dd1dc@lunn.ch>
-References: <20250611-net-mdio-mux-gpio-use-gpiod_multi_set_value_cansleep-v1-1-6eb5281f1b41@baylibre.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XlpRsS6Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749666453;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cyh9GNwkSeiWX8VVWJet6cmrStrv1Y1BhHYKMAKCy08=;
+	b=XlpRsS6Q7rAOly3oPVGNOQ27r/7/kI6r7/jOHhGF7jGJwtXPoNSymKwM3kVCbQYHWpT8+t
+	ShneSPMNUjUG/sh/ZGLmQe/CoVMOzbz/eWYNjWEg7pYhfzFSeatKrj+geBcTQf+hDOO/mK
+	EZwYwMsaBAbTX/SG5E0NNYk67c0TMOk=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-453-LBJXklAmOW24FrcpQgPxqQ-1; Wed,
+ 11 Jun 2025 14:27:29 -0400
+X-MC-Unique: LBJXklAmOW24FrcpQgPxqQ-1
+X-Mimecast-MFC-AGG-ID: LBJXklAmOW24FrcpQgPxqQ_1749666447
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BCE85180026D;
+	Wed, 11 Jun 2025 18:27:26 +0000 (UTC)
+Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6365E1956094;
+	Wed, 11 Jun 2025 18:27:23 +0000 (UTC)
+From: Paolo Bonzini <pbonzini@redhat.com>
+To: Ashish Kalra <Ashish.Kalra@amd.com>
+Cc: seanjc@google.com,
+	pbonzini@redhat.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	thomas.lendacky@amd.com,
+	shuah@kernel.org,
+	prsampat@amd.com,
+	pgonda@google.com,
+	nikunj@amd.com,
+	pankaj.gupta@amd.com,
+	michael.roth@amd.com,
+	sraithal@amd.com,
+	linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	kvm@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-coco@lists.linux.dev
+Subject: Re: [PATCH v3] KVM: SEV: Disable SEV-SNP support on initialization failure
+Date: Wed, 11 Jun 2025 14:27:22 -0400
+Message-ID: <20250611182722.150019-1-pbonzini@redhat.com>
+In-Reply-To: <20250512221634.12045-1-Ashish.Kalra@amd.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611-net-mdio-mux-gpio-use-gpiod_multi_set_value_cansleep-v1-1-6eb5281f1b41@baylibre.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Wed, Jun 11, 2025 at 01:11:36PM -0500, David Lechner wrote:
-> Reduce verbosity by using gpiod_multi_set_value_cansleep() instead of
-> gpiod_set_array_value_cansleep().
-> 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
-> This is a resend of a patch from the series "[PATCH v3 00/15] gpiolib:
-> add gpiod_multi_set_value_cansleep" [1].
-> 
-> This patch never got acked so didn't go picked up with the rest of that
-> series. The dependency has been in mainline since v6.15-rc1 so this
-> patch can now be applied independently.
+Queued, thanks.
 
-It is not surprising it did not get picked up when it is mixed in with
-a lot of other subsystems. Please always post a patchset per
-subsystem.
+Paolo
 
-This also appears to be version 4.
 
-Since you did not annotate the Subject: line with the tree this is
-for, i'm not sure the CI system will accept it an run the tests.
-
-https://patchwork.kernel.org/project/netdevbpf/patch/20250611-net-mdio-mux-gpio-use-gpiod_multi_set_value_cansleep-v1-1-6eb5281f1b41@baylibre.com/
-
-https://www.kernel.org/doc/html/latest/process/maintainer-netdev.html
-
-	Andrew
