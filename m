@@ -1,89 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11023124.outbound.protection.outlook.com [40.107.201.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A862E610B;
-	Wed, 11 Jun 2025 11:12:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749640377; cv=none; b=Oxu5AKrfFusWjyOtCX5reZPXpS8edG3cGNJ0fFzJugNAn0Z7r5/Kc8h5sMVWbwmnkyvIEogWSD2+OcPnXh+5NdhIONX5vZHJvmQot8Kz3maQqNxZwMS/GlqxgaFpHSGJL2DLFsppUczHWVboRbn7zYIG+39wsECOI7U52oqJt2I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749640377; c=relaxed/simple;
-	bh=cuL/gnq/gn/v2XXovLUaVPiE6Y9kxenTDBpAhcvSFog=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R6fWRcx1A/Dc2pfpUSl+e5+e2GIJNqt6MYHmeQfpKQYWXs4jQh8nZbx+pwAdgP6yXbmOzHCDSzIp0W6zZt6mEauE3KJW/eIZVnV9xfxicfpezIqypvLokEVr6g5i6ai0OaTMRxHyPiI2Hmtq6C5RaOf3ztc+GLM4Hji2c6gTS0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FB+OkxzF; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D45C2E610B
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:13:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.201.124
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749640410; cv=fail; b=Q9mQ12oFZKai8n3CmAjRKd/LWKbZgmNrBZlkyABP03YSHEfUm4ViXTi7kea9IDv9C11+B2XHovAC1NaxZbM32ilAkhPHhHKA80YkvmWGWSmiVGgz86ZG9dco686/t7OidV+3VRZ09TiBaLIjWm2dLGGfY5MCfGaXbwGLkqcuS3Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749640410; c=relaxed/simple;
+	bh=6fi448wdJMK5amtgbR4K9pcNOfq31WIKuWpDtDfgrUU=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=dFvtTpE7w/PatNeZr2+kJyVq7r4jMSGarlx8SMnCdNKGttUN3AR2fIxIE9/UFoue9TYlbAcdi8u9Q9EqO4xRirGOCDf/un0NxzqM/qU1Oh8UC5NvmLY7fdkiVOXVJBHiM8MZdPhGvJLGJN16ddMrKMy6mzD0qcw/Sx8yaj7AbUw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inmusicbrands.com; spf=pass smtp.mailfrom=inmusicbrands.com; dkim=pass (1024-bit key) header.d=inmusicbrands.com header.i=@inmusicbrands.com header.b=LGMCOdnk; arc=fail smtp.client-ip=40.107.201.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inmusicbrands.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inmusicbrands.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FB+OkxzF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9E41C4CEEE;
-	Wed, 11 Jun 2025 11:12:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749640375;
-	bh=cuL/gnq/gn/v2XXovLUaVPiE6Y9kxenTDBpAhcvSFog=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FB+OkxzF/JTkIABV3hZpRIBuk3D+cl0hLPtR5s//hJ7x70YRGgWCw5cRt9djzjTKx
-	 NaPRoPJGUt7Qxwjv/+Hk2Gboyqg6TRSjdOJb5bmwQujFGTkHcHv9oe+u3zxRblOtFE
-	 a+LJD4KRpv2w5g7rKZQgjQOr2jpRr5j9Su+E4RBzrAt6xhRwkHxlDd5VRTDMJtuUvG
-	 X3WN1/q0ZFW/cQ4j+ufuMPcbCFFTV0e6kATr9sV9+w4qfbXk1kLX9uvuXefQwQ+KIs
-	 q8GYmBwxblMzQqbLVAX0A/GaTZbI+q6FaNPH4Z9QwdXvPNFepj1pzHgZMKOlgnFtBv
-	 fmC+G/lveDWsw==
-Date: Wed, 11 Jun 2025 12:12:50 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Da Xue <da@libre.computer>
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Rui Miguel Silva <rmfrfs@gmail.com>,
-	Viresh Kumar <vireshk@kernel.org>, Johan Hovold <johan@kernel.org>,
-	Alex Elder <elder@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-spi@vger.kernel.org, greybus-dev@lists.linaro.org,
-	linux-staging@lists.linux.dev
-Subject: Re: [RFC] spi: expand bits_per_word_mask to 64 bits
-Message-ID: <b3d2a914-77be-4be6-bd43-cfaea7e450c9@sirena.org.uk>
-References: <20250611000516.1383268-1-da@libre.computer>
+	dkim=pass (1024-bit key) header.d=inmusicbrands.com header.i=@inmusicbrands.com header.b="LGMCOdnk"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XMYPjQ0RoY00dOylmWcFehLhfZWVxIUvyRhMrk/tKCSXsB+Tb9xBJv6fqFlJu75yzpBx8lORvbNZzPptKT26dcV70/QaeItfh7cIKIFqx5SNTXaRF1uD7xP2QTX+w2SF0NsdOrEmBFyKXdrnrQ2detUDggcFt48ThU1OjeRa8fOp/jI0v4cXWOmBTf1PygaBLLYjwGUjsvd2DJm1Ihg1JUAnjOhErAupLe2YIlLKfjr43khSLU/LGRzk3/DtM6wRiKL9s08goywtVbb48AcVBPm2NwEDLcQSKJC7MfNj87xTfmD/3JphEAJ1ZZUn59CxolUZXrxDo4sT2rNAwx5SwQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8wfYE70336bv3aCdUFpUIxvE3MP6r1HCDaIgfGZx2bs=;
+ b=MK5a2ZqAnRDoWVv2rPokpPmYI+FnuY0SiaoOdgEQ9B3UfvxGueOB8gIhw95tNYVNKvcjWecpSvnVqFpEMAXtN4NG5TrJfqJ2Qx515ZOij/RW4BEKqNlshDfqJ+ezD4tlaQ5kGEBOuchNHDY2hnqIvb0hhDq2Xc7t6FFI6DNC7qm9n+uS/haM+PoKebXDsPbDgg35ozpfVPl8W9XEursEEcYKcFL02pD88BIOTdrN9LYS7plB9XbfQPI7IuxJ0Dffw2A3vs72zSKAcIqcHrCWFeKBOxwMIUtPBEsmHf2lXHusjOQO0Eszzomt3Xm3FKA6QRBmvf3d3XQstVr4N+wZ3Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=inmusicbrands.com; dmarc=pass action=none
+ header.from=inmusicbrands.com; dkim=pass header.d=inmusicbrands.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=inmusicbrands.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8wfYE70336bv3aCdUFpUIxvE3MP6r1HCDaIgfGZx2bs=;
+ b=LGMCOdnk5vUhVHwnv1XqwlpAqh9uB13+GauC5jshI5dToq24nyGjTpqX3e1xhy8kk+YCiYI6Hn0v5WBy0mLA06eAF2Qg1Ur2odqXW7lQyQr8loFYO8WUqIiJMyR+3SzDlmMsHn55jBxx93XNAGCzcZrP8/NET7mp0MbPedc5Pi0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=inmusicbrands.com;
+Received: from MW4PR08MB8282.namprd08.prod.outlook.com (2603:10b6:303:1bd::18)
+ by BN0PR08MB6949.namprd08.prod.outlook.com (2603:10b6:408:124::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Wed, 11 Jun
+ 2025 11:13:22 +0000
+Received: from MW4PR08MB8282.namprd08.prod.outlook.com
+ ([fe80::55b3:31f1:11c0:4401]) by MW4PR08MB8282.namprd08.prod.outlook.com
+ ([fe80::55b3:31f1:11c0:4401%6]) with mapi id 15.20.8835.018; Wed, 11 Jun 2025
+ 11:13:22 +0000
+From: John Keeping <jkeeping@inmusicbrands.com>
+To: Javier Martinez Canillas <javierm@redhat.com>
+Cc: John Keeping <jkeeping@inmusicbrands.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/ssd130x: fix ssd132x_clear_screen() columns
+Date: Wed, 11 Jun 2025 12:13:06 +0100
+Message-ID: <20250611111307.1814876-1-jkeeping@inmusicbrands.com>
+X-Mailer: git-send-email 2.49.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: LO2P265CA0418.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a0::22) To MW4PR08MB8282.namprd08.prod.outlook.com
+ (2603:10b6:303:1bd::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="bucA20IzGsWOGyc7"
-Content-Disposition: inline
-In-Reply-To: <20250611000516.1383268-1-da@libre.computer>
-X-Cookie: No skis take rocks like rental skis!
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW4PR08MB8282:EE_|BN0PR08MB6949:EE_
+X-MS-Office365-Filtering-Correlation-Id: d9eeb574-312b-4727-f98b-08dda8d8f9e3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|52116014|376014|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?RJVIwo+XYkqkaabVlPefk05ZnrLYeKOkCGQgZSUtix9Oefb7lu/vh7zYyU+u?=
+ =?us-ascii?Q?tBzi/IMXrA7geyg+yfxxxJoeUIQkUz+ll7YSrAt4uUp2J8Sr9ahy8Cep8xaH?=
+ =?us-ascii?Q?ifeMzUZQC06NRgL+/EWaHWz1yIQMWbT/oC65JLov+RLRSSqb8DUOeqBNS8iL?=
+ =?us-ascii?Q?zsfSIo2MN7F43xE+Tn10R37aAOpr0MtrrfTgfZpz1CsZoYT/Sjy/E1bmKczX?=
+ =?us-ascii?Q?l/qoBrVwc4kyzqkwDPbw8ERprNOrAIbyICf4qkHjsCO/HHP7FKfAm1wfUdMi?=
+ =?us-ascii?Q?WudJjcePvXKpl/xas3sF/wTDGyzAb05V9AvS5+zZ+sVNwWL9UuE81VkXK+/d?=
+ =?us-ascii?Q?nWPTxAKlAsIzqpyzi3mpXM2CJcLe3gamyzZeRWrAJdxSKDQG1NGei9CPt5Wq?=
+ =?us-ascii?Q?IA1Vi/Nf8z/TiqWMEpI8sah0T6DxT6JNQi6OIIeFzuZrglD94RBAJJz4d+4O?=
+ =?us-ascii?Q?+tZMGD90iJpN7TLkD8RS76wYlmzWk5c5GsdbG6NNob4UZPVdMOGbeaJMb43I?=
+ =?us-ascii?Q?xPa/0bwToQuUqDJCx1eobfmXGaHv/ZcZdHYZVLBjtwljZt9E4nF54sjzF8MS?=
+ =?us-ascii?Q?pGto/KLDD+1EfCNnMFbsy3BeI1vCaJWS2FqCmJiOjNL3Pspjbc/c11ARO3ux?=
+ =?us-ascii?Q?1NscZlRoZITQysXhh3D7Kywd4Oez7aGbVwJADtLi8cJ2RfNDB5rDec8DgQng?=
+ =?us-ascii?Q?nj4ODYkEiRtHpXKTnC31ZDY/vpQnnoqTu7VRz+LAh1FLKPMfY9QVuDuTrNG6?=
+ =?us-ascii?Q?VVt96gvixFBBgX/m77TDx63RoPvSN0By48j+Tkqg8EOvnSPd6IluxSA1KqN+?=
+ =?us-ascii?Q?jLc0lOMNKJJbzU1pJM4UPkGtKDlyhAVsV+5FvTwnXMbpp/L+l6ESp6skTR23?=
+ =?us-ascii?Q?GlevErxCPWC2Ni6PXT99JtVK+PJRtOP2h3RAgxML5/8P+Ozq9UFJZHfJI7FR?=
+ =?us-ascii?Q?jZPoMOwQpHuIHWJZAS2ZYOk8TplwyG65RHn6SM69oJKYdnLTJxufaL6gNQbc?=
+ =?us-ascii?Q?dJncE0t0b0HW20v/Q4rUQcF5cDJ//yQ8N5sEkg0Qp88/F/rafdVSSh2sRNeJ?=
+ =?us-ascii?Q?p2UHdKL6w3vdteDpm549D3i5kc29ato1NYJOr5+EkpyV+p+75QtCPlJXPCc8?=
+ =?us-ascii?Q?TGTBLNslGFymyoNFe6VaJK26ZPU+QtWI+F+MB2sgtvdM2Kx5IEQMTo6edKD6?=
+ =?us-ascii?Q?sHqmj3jHhoQT5no1+olDdg/lYfkp6iBtdXhyxNc13+lPPdjtX7civfJkfUcZ?=
+ =?us-ascii?Q?uFxt4fPj9tb5685jppMwlOoUZFQlXuivVyopkQyQo7pdHMZpanwt6Ivhyl4m?=
+ =?us-ascii?Q?ELkFkKQnULOIxrOCZWsXIG/gooeizXLoMlG84ki8neAyiVVkNe8bd9zkPvJM?=
+ =?us-ascii?Q?ztDXbqf7H0Gaq+03kYz7YPaBm8kO8t2tQSBYdXUUfcioXT2hnhAQMPVIbl65?=
+ =?us-ascii?Q?L6rs3Pn9Sa7iwtN4lKgA4ZNriiJLEbcWw1oSkAMySGtqy/YRNBTNFQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR08MB8282.namprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(376014)(1800799024)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?pRkLf3Z9vTrGWN/EdKBVkL4d1yalhrKKLbOJ6BIdbmwb+QXpyI/YzRrYiRzh?=
+ =?us-ascii?Q?G4Xh1v6CG9+s4+o4WRjU5ykHmI0kZuurGWP3VpH7YX+uUiTIGiURG7WTovnO?=
+ =?us-ascii?Q?sSo+hYUC9GkBcrjINJpKkC96EASgID6zvQGCIgvDgRQ1DPwkJL++pUSS5YcZ?=
+ =?us-ascii?Q?78xCp2NmpYmZTCTiM2l+HeJF4IArWzFKcWr45Jd3oS2hboaEIHtaIzW1YGDt?=
+ =?us-ascii?Q?10EGXr/LGV5JNlWYdSjL3XTk84YuRHxDAwLj5QSnr6sdU//f8o6GMQYWylGb?=
+ =?us-ascii?Q?FQuuWbQhNN0A5wQN5C9bYH+SssBTqsCBEIGnNqcmtwD1/g67pkYGWrYg1dbA?=
+ =?us-ascii?Q?T0Tn97XI55LH3AQswC0OPfMLzDOKBfZuNv2wavGRVHD/5WqYD6iyj1D8DYo1?=
+ =?us-ascii?Q?RZRUNL22jCfNTlXY0kRKqh1VMabTTcrwvMu5tt3vj8ppN6WsEY9/AWLl9kLt?=
+ =?us-ascii?Q?U+sPdvaKrZnq1q4vQWXtRfPCr3W5gJAHLh7kEosvY6AjVVJxdVbDni6hajFt?=
+ =?us-ascii?Q?XfA7AgHag6uz5GFsp+EOTWhhdwUZBjIompWShoVRsJJMOdKzR1POf/quBWEK?=
+ =?us-ascii?Q?DAZv0tbFk1gcp2Bu2PtSidMeWw5Cv+h9CIJQIcrgyeeCwEwpWM+bX2+EfIOw?=
+ =?us-ascii?Q?6jWR+022esofsBwEFbHdlkFep//PAUkPnXuqqwAGcxGi02pa/e76grtQ9hAL?=
+ =?us-ascii?Q?312PBHTS9Vapnc/5e/dtAy3jYKgKTPpkQHVWCORiA/pMJ6nhQEuFZzwx+zi4?=
+ =?us-ascii?Q?0ftVlfqc3gGOd7y5V76gDUnj+aSd15vGB8iWv9WceYRCpDCrQWQqZPKRe0hY?=
+ =?us-ascii?Q?fxpC4dwpJR0M0apiqInXroRROAZ5/NNDjgcIfuL2eIlDleDRij9OJFqAjtZv?=
+ =?us-ascii?Q?pDhFUmP8z7PxVx3FQyvcmbgkdPjxTsezUDuz+9KLIjf6Ixs0xnF1Kcllki3x?=
+ =?us-ascii?Q?V5mG5HcO9rzjrCQmGEyLZqaMZJ3fuvHrn5TcUrKpFOzrm62u86c153kbktdu?=
+ =?us-ascii?Q?j2n76wvUljF45AxEsu+nq2k4+Mac4/drTjljrPVkLFQRoDPhZ4qiCxzoUJQ8?=
+ =?us-ascii?Q?N3maPqdYZLazqzTP0q7AbLMnlSM0i3Rf4HaEc1JPpsMSSDZ3+AHuh9y+8bwY?=
+ =?us-ascii?Q?N2fVOOUwPZZouFk91DxjmbdHjacRAxklGwTYGAVkI8s6VbejFEBBZclT2sSN?=
+ =?us-ascii?Q?P0xe8RQ4DGb+yXMF5ej0TfWsb1V9Ie61j/2HP50PcnQJYRQTIE1yLG9skgdO?=
+ =?us-ascii?Q?XJELUfcG02ojbPcF/+eI7QZoB4RIFbSIbsBDwWLR/jw+VzFsNrUGHXI1MTyD?=
+ =?us-ascii?Q?s/XV+cum5vuqDu67226cm6XlwiZ/L3Y5DnDl2mIadHCPoxZbRe3mc+pnD8I7?=
+ =?us-ascii?Q?SoQaSSFS6zknH04vjNLEx1aNlk0Ld4ix0Rb9oyPE5DAcv/7hiOXZDGiWk0r0?=
+ =?us-ascii?Q?buJz9mqeKWEqEcj7UcAGOrDGiDPTpy7uIIoJV0QskqDfxBz/ouOALaSUZM1B?=
+ =?us-ascii?Q?JDt7BbPzjnWYONAC9yzQ2hZbNZWAOWXHKX4CtCe8TM1pTzptsOp65tGQJ1xR?=
+ =?us-ascii?Q?vSGcaLxOj12kjzetbmrI2r+Ik3sKeF0uwgHWKkcb5WNO5+TbNaOaa52ffXQX?=
+ =?us-ascii?Q?rw=3D=3D?=
+X-OriginatorOrg: inmusicbrands.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d9eeb574-312b-4727-f98b-08dda8d8f9e3
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR08MB8282.namprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2025 11:13:21.9495
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 24507e43-fb7c-4b60-ab03-f78fafaf0a65
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: shP/Yi2LpyToz36y54rzJ5Vh5mTceoZzJbJVOAXOuw8fLfcgzXxrBoQ0q19g58JFlkuTBr0e392/pSVOEMQ6y0Qx0biGQFImfELkIn5Fq7k=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR08MB6949
 
+The number of columns relates to the width, not the height.  Use the
+correct variable.
 
---bucA20IzGsWOGyc7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: John Keeping <jkeeping@inmusicbrands.com>
+---
+ drivers/gpu/drm/solomon/ssd130x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Tue, Jun 10, 2025 at 08:05:15PM -0400, Da Xue wrote:
+diff --git a/drivers/gpu/drm/solomon/ssd130x.c b/drivers/gpu/drm/solomon/ssd130x.c
+index dd2006d51c7a2..eec43d1a55951 100644
+--- a/drivers/gpu/drm/solomon/ssd130x.c
++++ b/drivers/gpu/drm/solomon/ssd130x.c
+@@ -974,7 +974,7 @@ static void ssd130x_clear_screen(struct ssd130x_device *ssd130x, u8 *data_array)
+ 
+ static void ssd132x_clear_screen(struct ssd130x_device *ssd130x, u8 *data_array)
+ {
+-	unsigned int columns = DIV_ROUND_UP(ssd130x->height, SSD132X_SEGMENT_WIDTH);
++	unsigned int columns = DIV_ROUND_UP(ssd130x->width, SSD132X_SEGMENT_WIDTH);
+ 	unsigned int height = ssd130x->height;
+ 
+ 	memset(data_array, 0, columns * height);
+-- 
+2.49.0
 
-> Most current controller IP support 64-bit words.
-> Update the mask to u64 from u32.
-
-The change looks broadly good, the only concern I have is making sure
-that the controllers are individually checked for support and impose any
-restrictions they need.
-
---bucA20IzGsWOGyc7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhJZLEACgkQJNaLcl1U
-h9DHHgf/dHG/rr6Bv2YtqYL+Ket5fd/hqjQ86KroqI0toxCmA1eE9KbCpJt6vXZc
-oJed5XwyXWhlOInKHxFal9yCkn2RDV3B8DI4XYOc4L+PXKJXFSsFu/Hcck+5Q1hr
-OWTFIVJVM8g082nL9ds4yHZgBXhuoA6om8/y3vLSSymOYV2r3muV9TLtuLi7RRvp
-cffMdI7ojL9FHwYhYl/q+9K/NBqP95o4pdPY8mCjJUhGGxJhr6PlhV3rRC/Xwsyc
-XCcE3aGY4vwURe2IhfiK+9ZIk+SnzaQ3lkdtdmAW5oaP6lE162f8hgLFjnDBegiH
-LVe9SYAWS++X3iV5XYI6XUvbTbkiYw==
-=7Xzl
------END PGP SIGNATURE-----
-
---bucA20IzGsWOGyc7--
