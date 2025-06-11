@@ -1,109 +1,86 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8ED16C8FE;
-	Wed, 11 Jun 2025 03:45:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E593182B4;
+	Wed, 11 Jun 2025 03:45:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749613520; cv=none; b=o3oK53h+rQtS/BVOeEkeIXUtddLxvQ0oxginv20ABf2w6ql3KW6af2/AjNfvSUW83JkWNbAcXt+ppWXcXGnYCVArGc/IKLEDSia/RZmDtAfPw6chWDFq5R/D2ztm9REQYU18vpHmrEeKao+4bUpV9RGUpC+CoFgjKVTtg28M7HQ=
+	t=1749613549; cv=none; b=ElyUhBpnV+S9oafWF42V8a/KVwravG/RaRRJid6yj1BTjWjIiZwSa4Hqom6MdU2C3cCbgDXhQtFW+DC3JQ45GsNCQxnkmWHY2SXmrzrG19AXgNLPTH0wIAIhIjduVrAQWyE6O1QN1+6Z/KhTo8u8y5jraXVB1cyUrcHlAqoewK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749613520; c=relaxed/simple;
-	bh=yxPpEZKRlcPhVzBirYEswfS6uV977vjcwVzBZWkAgF8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X+eMkzMkZ2yDpaANtKH8Dkbp3IOcRsBTiZ+ziGZwGPBSIfEcHSSfE0ORNnpm0Mxm4Z8Ab+UNGRBATE89WbX8m2Akwti5j1VaklrF1zNT+s2q7okQrQuW+3kNK7hKI0D+WsP3rorVzJnUwTl12+as9LwmIm38nq+vNnwul1Yt+04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 59E1B168F;
-	Tue, 10 Jun 2025 20:44:58 -0700 (PDT)
-Received: from [10.164.146.17] (J09HK2D2RT.blr.arm.com [10.164.146.17])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC1563F66E;
-	Tue, 10 Jun 2025 20:45:13 -0700 (PDT)
-Message-ID: <9b378582-44eb-4fbb-a03a-40eb317daebd@arm.com>
-Date: Wed, 11 Jun 2025 09:15:10 +0530
+	s=arc-20240116; t=1749613549; c=relaxed/simple;
+	bh=qKFJzbosf4mDCS/14sJ3cMRoNH33yesUmP64ZdIXvEQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M8SIxlsoT7pWmlYyQKc1/Q/X3+Kx5oUVI7yXD5LlY+yskZiCU5i+PnoK0fEKfY7JtyexSJY4+FScD2ynBiFJjoPg8hhHCiOUmEHCOATHSq3w/C+5EAngnC7qKU4DEwf6tZaYE3X26spxdm/ZSlGBIN5pLo/3fJZKIZLOie06OcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gc6KLZH1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gc6KLZH1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65B5DC4CEEE;
+	Wed, 11 Jun 2025 03:45:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749613548;
+	bh=qKFJzbosf4mDCS/14sJ3cMRoNH33yesUmP64ZdIXvEQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gc6KLZH1g42eYuB7liBv7QTxpqwUqA28QQ3XBHAYv7x1kovg/fSdVwWzJ3BMgDci8
+	 IgEcPTMbQ2nGCGkH/j5+/zNgHHbElvkgHA8ADGZ54aXR+A8rbEKnprD+SkyUI36ZWM
+	 qHme9Py3PsAx+VCNnd7Z7A0IzoAeLzOG+FgOGsEI3Xuo0hqPne+oohnfzsWMlU3FC1
+	 AT2C+pPQjw+YTC0LiaHVauPoC1+UAQklbVfkKxWgPPSVzqFGF6dkk2M9wRuc18vZyU
+	 GfP/hG04V+eR0iSW9q7ce2WDIm7iOyhgF0I6KkVQ8WtubsR9elFA8i5P5uC9efUOJQ
+	 q6qqnE2x0jXuA==
+Date: Tue, 10 Jun 2025 22:45:47 -0500
+From: Rob Herring <robh@kernel.org>
+To: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Marco Felsch <m.felsch@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Frank Li <Frank.Li@nxp.com>, linux-kernel@vger.kernel.org,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	Shengjiu Wang <shengjiu.wang@nxp.com>, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, Shawn Guo <shawnguo@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	Alexander Stein <alexander.stein@ew.tq-group.com>
+Subject: Re: [PATCH v7 1/6] dt-bindings: bus: document the IMX AIPSTZ bridge
+Message-ID: <20250611034547.GA3317268-robh@kernel.org>
+References: <20250610160152.1113930-1-laurentiumihalcea111@gmail.com>
+ <20250610160152.1113930-2-laurentiumihalcea111@gmail.com>
+ <174957889856.2397515.16063954809229071708.robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 2/2] KVM: selftests: Change MDSCR_EL1 register holding
- variables as uint64_t
-To: Marc Zyngier <maz@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Ada Couprie Diaz <ada.coupriediaz@arm.com>, linux-kernel@vger.kernel.org,
- Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>,
- kvm@vger.kernel.org, kvmarm@lists.linux.dev, linux-kselftest@vger.kernel.org
-References: <20250610053128.4118784-1-anshuman.khandual@arm.com>
- <20250610053128.4118784-3-anshuman.khandual@arm.com>
- <864iwnedjk.wl-maz@kernel.org>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <864iwnedjk.wl-maz@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <174957889856.2397515.16063954809229071708.robh@kernel.org>
 
-
-
-On 10/06/25 10:31 PM, Marc Zyngier wrote:
-> On Tue, 10 Jun 2025 06:31:28 +0100,
-> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
->>
->> Change MDSCR_EL1 register holding local variables as uint64_t that reflects
->> its true register width as well.
->>
->> Cc: Marc Zyngier <maz@kernel.org>
->> Cc: Oliver Upton <oliver.upton@linux.dev>
->> Cc: Joey Gouly <joey.gouly@arm.com>
->> Cc: kvm@vger.kernel.org
->> Cc: kvmarm@lists.linux.dev
->> Cc: linux-kernel@vger.kernel.org
->> Cc: linux-kselftest@vger.kernel.org
->> Cc: linux-arm-kernel@lists.infradead.org
->> Reviewed-by: Ada Couprie Diaz <ada.coupriediaz@arm.com>
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->>  tools/testing/selftests/kvm/arm64/debug-exceptions.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/tools/testing/selftests/kvm/arm64/debug-exceptions.c b/tools/testing/selftests/kvm/arm64/debug-exceptions.c
->> index c7fb55c9135b..e34963956fbc 100644
->> --- a/tools/testing/selftests/kvm/arm64/debug-exceptions.c
->> +++ b/tools/testing/selftests/kvm/arm64/debug-exceptions.c
->> @@ -140,7 +140,7 @@ static void enable_os_lock(void)
->>  
->>  static void enable_monitor_debug_exceptions(void)
->>  {
->> -	uint32_t mdscr;
->> +	uint64_t mdscr;
->>  
->>  	asm volatile("msr daifclr, #8");
->>  
->> @@ -223,7 +223,7 @@ void install_hw_bp_ctx(uint8_t addr_bp, uint8_t ctx_bp, uint64_t addr,
->>  
->>  static void install_ss(void)
->>  {
->> -	uint32_t mdscr;
->> +	uint64_t mdscr;
->>  
->>  	asm volatile("msr daifclr, #8");
->>  
+On Tue, Jun 10, 2025 at 01:08:18PM -0500, Rob Herring (Arm) wrote:
 > 
-> Why change this in the place that matters *the least*?
+> On Tue, 10 Jun 2025 12:01:47 -0400, Laurentiu Mihalcea wrote:
+> > From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+> > 
+> > Add documentation for IMX AIPSTZ bridge.
+> > 
+> > Co-developed-by: Daniel Baluta <daniel.baluta@nxp.com>
+> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> > Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+> > Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> > ---
+> >  .../bindings/bus/fsl,imx8mp-aipstz.yaml       | 104 ++++++++++++++++++
+> >  1 file changed, 104 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/bus/fsl,imx8mp-aipstz.yaml
+> > 
 > 
-> arch/arm64/kernel/debug-monitors.c is full of 32bit manipulation of
-> this register, and that's only one example of it. So if you are going
-> to change this, please do it fully, not as a random change in a random
-> file.
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> yamllint warnings/errors:
+> 
+> dtschema/dtc warnings/errors:
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/bus/fsl,imx8mp-aipstz.yaml: oneOf: Missing additionalProperties/unevaluatedProperties constraint
 
-The first patch in this series changes mdscr system register to 64 bit
-in the mentioned file (i.e arch/arm64/kernel/debug-monitors.c). 
+You can ignore this. It's an issue in the tools.
 
-> 
-> Thanks,
-> 
-> 	M.
-> 
-
+Rob
