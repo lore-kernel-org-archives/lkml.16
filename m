@@ -1,106 +1,216 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B642BDC1D;
-	Wed, 11 Jun 2025 20:30:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA44A15C0
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 20:32:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749673839; cv=none; b=m4DsbVCLKu/r1eAkxSAjh80MIYR+nouvl3YnDtj7lwTV2vzGls20OcvNeyQH6jL4UX6P0xsdxJluGtWZde6yTxpX8WD4euIVVtLrRY2lYz2Fp+80AMmz4x4Okbo1JMHkE4ctWBtEomcuIY1oFD7TNaJBGAK4UjESt4LCq7/pQak=
+	t=1749673972; cv=none; b=hIDv/uM8Bcqd4IP0Hr6URihFet+qAGwgqprqpEF1tlfHONIWDQrfzTz/QN6oghEr6P1MClaiRLk8modK+PAXyGphrrrk6NQwY1h3vdVaP0/U5XdmpROYiAnr0SsTwnHtU/5hJkqI+i/ov1VQ1T+SQqRuufjuluhu3bZbfeUj9JM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749673839; c=relaxed/simple;
-	bh=T6MQUq+5csmPuEPWpE+uUchnp4jTFEZuMy7pJ1JdciM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=BY5QXFNv+B8uG2c0kkaMZD4h30vL4q0ZgfoqBncbsw6kDmChJYXzyYvVsc/UYTCTR9NrBRT9ByGGN+Nua7dxLlx0Ph9yvucLjuqrr995BOHZdidNwjA5UIGhp7ToiyclQ+QcdxOJpo06gObySvB3noxaRHSL7askDWMtr17cqho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S5GCgIDd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749673972; c=relaxed/simple;
+	bh=mEvLouG9W7A9zZ+G6VM+l4Hq03L/lmmH9enrmfgFekE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Epv0QhiOlsJilc77ZzheonYpARHEtg8NX7wPjbns5ycH7lNc3az98ARKyLFfstESdqqGgS+IzXvTbMdZNN5Yl8NYvQr8SruHV2uEgSXeAuI6XlC1+qG30oG4xPLD8Zs1SyxU6m/DaaAR9pMyStAECV4wtNdJw9uneLp/b3OrIEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=Vhg2KtV0; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S5GCgIDd"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8BF47C4CEF1;
-	Wed, 11 Jun 2025 20:30:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749673835;
-	bh=T6MQUq+5csmPuEPWpE+uUchnp4jTFEZuMy7pJ1JdciM=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=S5GCgIDdqwW5uQvwOOOGjyKNhlM4xrU3CjO6NpVsLLJEFaUU/LVQwWmgXGpQ4NCPb
-	 eQzXs45T4jXhXz/6TRTtnK61ELFNCMd5lLNkhwBlKpzXYeWmEflM1paUlzXujeqzFx
-	 BhrhzyQiOuQdAxwFmJHrI9FUXRk3HPSitfphnUoQexG83Js3tXMWYU+z8pFxDyHmt+
-	 Ev9cc1NSwlLRl+Hj6k6LClzwF9uhkVd7LbIpEO46Yvm9kweX9kXYk3q20IssQ0Y5FL
-	 46TzQJya+ay0U9NTUe5yuTrOwz6D0xOHbolrhtIR6DOmbJ9gsdEJNNooq+v/3SLrX4
-	 CQd0AUnzcu2iw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECEEC7113E;
-	Wed, 11 Jun 2025 20:30:35 +0000 (UTC)
-From: Janne Grunau via B4 Relay <devnull+j.jannau.net@kernel.org>
-Date: Wed, 11 Jun 2025 22:30:31 +0200
-Subject: [PATCH] arm64: dts: apple: t8103: Fix PCIe BCM4377 nodename
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="Vhg2KtV0"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=I1ROOz6q/EtfqWpNZah1S7LaOISIKhDuAQrSuQeGxzc=; b=Vhg2KtV0+qzSWlNWX9NfA84Kjh
+	QMYR3gGu6ltzYWI0KGjwDBbYSZF/wtjMZQ07D40h9yJUUbUJCR0e3UfdXo3m+nkE1RwDBKvTJabwX
+	W00qHCy7ul2CtbFXry6cxM2oHlXQl/Q/ThMliOlvF6SYuEXDrQtW8KaWjZozMCS6lV7tOMPtd8Rp+
+	PZrL+giQ186jidXJIhrvKgibKMAtMoqRmmf9hevEu+XpFASa93W8OMaIGb/PIL1jfUm+ON6Mef4Ze
+	Vn36OblS9nURA921ZCtUkFL+4rsuOnDQ+XE4wRg6tECaIBxALexqyx2jghy5JDMuUeQPW9MAQ0YdS
+	AGU0W9vA==;
+Received: from [187.36.208.198] (helo=[192.168.1.111])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uPS7e-002MEE-QP; Wed, 11 Jun 2025 22:32:35 +0200
+Message-ID: <87cc0c8e-5c25-49d1-88a5-52cc263c7c5f@igalia.com>
+Date: Wed, 11 Jun 2025 17:32:25 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250611-arm64_dts_apple_wifi-v1-1-fb959d8e1eb4@jannau.net>
-X-B4-Tracking: v=1; b=H4sIAGbnSWgC/x3MTQqAIBBA4avErBMaM4OuEiGSUw30IxoVhHdPW
- n6L916IFJgidMULgS6OfOwZWBYwLnafSbDLBlnJptKIwoZNK+POaKz3K5mbJxZOYSNRtbImDTn
- 1gSZ+/m0/pPQBKqY7WGYAAAA=
-X-Change-ID: 20250611-arm64_dts_apple_wifi-d415214723e6
-To: Sven Peter <sven@kernel.org>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
- Neal Gompa <neal@gompa.dev>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Mark Kettenis <kettenis@openbsd.org>, 
- Marc Zyngier <maz@kernel.org>
-Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Janne Grunau <j@jannau.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1444; i=j@jannau.net;
- s=yk2024; h=from:subject:message-id;
- bh=wHLTjbA+ZQtpL0eNy1zcPArF/Oix96dlxYfH46ebBpY=;
- b=owGbwMvMwCW2UNrmdq9+ahrjabUkhgzP51kRH8Mu3v4jEB23riR0deCkgE6+c2cMvr65PcVSe
- 0ccb9X0jlIWBjEuBlkxRZYk7ZcdDKtrFGNqH4TBzGFlAhnCwMUpABMJ2MzIcLts4jqju75O01+L
- W7AzLZr3XaNW7reybOvtzn/v4/9UeDP8D1O7tNy9eNnCJpMtf/9daq65scqR77nMzOoP0rJxOVf
- 4GQE=
-X-Developer-Key: i=j@jannau.net; a=openpgp;
- fpr=8B336A6BE4E5695E89B8532B81E806F586338419
-X-Endpoint-Received: by B4 Relay for j@jannau.net/yk2024 with auth_id=264
-X-Original-From: Janne Grunau <j@jannau.net>
-Reply-To: j@jannau.net
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 7/8] drm/vkms: Create helper macro for YUV formats
+To: Louis Chauvet <louis.chauvet@bootlin.com>,
+ Melissa Wen <melissa.srw@gmail.com>, =?UTF-8?Q?Ma=C3=ADra_Canal?=
+ <mairacanal@riseup.net>, Haneen Mohammed <hamohammed.sa@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Rodrigo Siqueira <siqueira@igalia.com>,
+ Simona Vetter <simona.vetter@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, arthurgrillo@riseup.net,
+ linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
+ miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
+ seanpaul@google.com, nicolejadeyee@google.com
+References: <20250530-b4-new-color-formats-v4-0-ef5f9f48376c@bootlin.com>
+ <20250530-b4-new-color-formats-v4-7-ef5f9f48376c@bootlin.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
+Autocrypt: addr=mcanal@igalia.com; keydata=
+ xsBNBGcCwywBCADgTji02Sv9zjHo26LXKdCaumcSWglfnJ93rwOCNkHfPIBll85LL9G0J7H8
+ /PmEL9y0LPo9/B3fhIpbD8VhSy9Sqz8qVl1oeqSe/rh3M+GceZbFUPpMSk5pNY9wr5raZ63d
+ gJc1cs8XBhuj1EzeE8qbP6JAmsL+NMEmtkkNPfjhX14yqzHDVSqmAFEsh4Vmw6oaTMXvwQ40
+ SkFjtl3sr20y07cJMDe++tFet2fsfKqQNxwiGBZJsjEMO2T+mW7DuV2pKHr9aifWjABY5EPw
+ G7qbrh+hXgfT+njAVg5+BcLz7w9Ju/7iwDMiIY1hx64Ogrpwykj9bXav35GKobicCAwHABEB
+ AAHNIE1hw61yYSBDYW5hbCA8bWNhbmFsQGlnYWxpYS5jb20+wsCRBBMBCAA7FiEE+ORdfQEW
+ dwcppnfRP/MOinaI+qoFAmcCwywCGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQ
+ P/MOinaI+qoUBQgAqz2gzUP7K3EBI24+a5FwFlruQGtim85GAJZXToBtzsfGLLVUSCL3aF/5
+ O335Bh6ViSBgxmowIwVJlS/e+L95CkTGzIIMHgyUZfNefR2L3aZA6cgc9z8cfow62Wu8eXnq
+ GM/+WWvrFQb/dBKKuohfBlpThqDWXxhozazCcJYYHradIuOM8zyMtCLDYwPW7Vqmewa+w994
+ 7Lo4CgOhUXVI2jJSBq3sgHEPxiUBOGxvOt1YBg7H9C37BeZYZxFmU8vh7fbOsvhx7Aqu5xV7
+ FG+1ZMfDkv+PixCuGtR5yPPaqU2XdjDC/9mlRWWQTPzg74RLEw5sz/tIHQPPm6ROCACFls7A
+ TQRnAsMsAQgAxTU8dnqzK6vgODTCW2A6SAzcvKztxae4YjRwN1SuGhJR2isJgQHoOH6oCItW
+ Xc1CGAWnci6doh1DJvbbB7uvkQlbeNxeIz0OzHSiB+pb1ssuT31Hz6QZFbX4q+crregPIhr+
+ 0xeDi6Mtu+paYprI7USGFFjDUvJUf36kK0yuF2XUOBlF0beCQ7Jhc+UoI9Akmvl4sHUrZJzX
+ LMeajARnSBXTcig6h6/NFVkr1mi1uuZfIRNCkxCE8QRYebZLSWxBVr3h7dtOUkq2CzL2kRCK
+ T2rKkmYrvBJTqSvfK3Ba7QrDg3szEe+fENpL3gHtH6h/XQF92EOulm5S5o0I+ceREwARAQAB
+ wsB2BBgBCAAgFiEE+ORdfQEWdwcppnfRP/MOinaI+qoFAmcCwywCGwwACgkQP/MOinaI+qpI
+ zQf+NAcNDBXWHGA3lgvYvOU31+ik9bb30xZ7IqK9MIi6TpZqL7cxNwZ+FAK2GbUWhy+/gPkX
+ it2gCAJsjo/QEKJi7Zh8IgHN+jfim942QZOkU+p/YEcvqBvXa0zqW0sYfyAxkrf/OZfTnNNE
+ Tr+uBKNaQGO2vkn5AX5l8zMl9LCH3/Ieaboni35qEhoD/aM0Kpf93PhCvJGbD4n1DnRhrxm1
+ uEdQ6HUjWghEjC+Jh9xUvJco2tUTepw4OwuPxOvtuPTUa1kgixYyG1Jck/67reJzMigeuYFt
+ raV3P8t/6cmtawVjurhnCDuURyhUrjpRhgFp+lW8OGr6pepHol/WFIOQEg==
+In-Reply-To: <20250530-b4-new-color-formats-v4-7-ef5f9f48376c@bootlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-From: Janne Grunau <j@jannau.net>
+Hi Louis,
 
-Fix the following `make dtbs_check` warnings for all t8103 based devices:
+On 5/30/25 11:06, Louis Chauvet wrote:
+> The callback functions for line conversion are almost identical for
+> semi-planar formats. The generic READ_LINE_YUV_SEMIPLANAR macro
+> generate all the required boilerplate to process a line from a
+> semi-planar format.
+> 
+> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> ---
+>   drivers/gpu/drm/vkms/vkms_formats.c | 75 ++++++++++++++++++++++++-------------
+>   1 file changed, 48 insertions(+), 27 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
+> index 261e822e9618..8ecd75d063f4 100644
+> --- a/drivers/gpu/drm/vkms/vkms_formats.c
+> +++ b/drivers/gpu/drm/vkms/vkms_formats.c
+> @@ -485,35 +485,56 @@ READ_LINE(R8_read_line, px, u8, argb_u16_from_gray8, *px)
+>    * - Convert YUV and YVU with the same function (a column swap is needed when setting up
+>    * plane->conversion_matrix)
+>    */
+> -static void semi_planar_yuv_read_line(const struct vkms_plane_state *plane, int x_start,
+> -				      int y_start, enum pixel_read_direction direction, int count,
+> -				      struct pixel_argb_u16 out_pixel[])
+> -{
+> -	u8 *y_plane;
+> -	u8 *uv_plane;
+> -
+> -	packed_pixels_addr_1x1(plane->frame_info, x_start, y_start, 0,
+> -			       &y_plane);
+> -	packed_pixels_addr_1x1(plane->frame_info,
+> -			       x_start / plane->frame_info->fb->format->hsub,
+> -			       y_start / plane->frame_info->fb->format->vsub, 1,
+> -			       &uv_plane);
+> -	int step_y = get_block_step_bytes(plane->frame_info->fb, direction, 0);
+> -	int step_uv = get_block_step_bytes(plane->frame_info->fb, direction, 1);
+> -	int subsampling = get_subsampling(plane->frame_info->fb->format, direction);
+> -	int subsampling_offset = get_subsampling_offset(direction, x_start, y_start);
+> -	const struct conversion_matrix *conversion_matrix = &plane->conversion_matrix;
+>   
+> -	for (int i = 0; i < count; i++) {
+> -		*out_pixel = argb_u16_from_yuv161616(conversion_matrix, y_plane[0] * 257,
+> -						     uv_plane[0] * 257, uv_plane[1] * 257);
+> -		out_pixel += 1;
+> -		y_plane += step_y;
+> -		if ((i + subsampling_offset + 1) % subsampling == 0)
+> -			uv_plane += step_uv;
+> -	}
+> +/**
+> + * READ_LINE_YUV_SEMIPLANAR() - Generic generator for a read_line function which can be used for yuv
+> + * formats with two planes and block_w == block_h == 1.
+> + *
+> + * @function_name: Function name to generate
+> + * @pixel_1_name: temporary pixel name for the first plane used in the @__VA_ARGS__ parameters
 
-arch/arm64/boot/dts/apple/t8103-j274.dtb: network@0,0: $nodename:0: 'network@0,0' does not match '^wifi(@.*)?$'
-        from schema $id: http://devicetree.org/schemas/net/wireless/brcm,bcm4329-fmac.yaml#
-arch/arm64/boot/dts/apple/t8103-j274.dtb: network@0,0: Unevaluated properties are not allowed ('local-mac-address' was unexpected)
-        from schema $id: http://devicetree.org/schemas/net/wireless/brcm,bcm4329-fmac.yaml#
+s/temporary/Temporary
 
-Fixes: bf2c05b619ff ("arm64: dts: apple: t8103: Expose PCI node for the WiFi MAC address")
-Signed-off-by: Janne Grunau <j@jannau.net>
----
- arch/arm64/boot/dts/apple/t8103-jxxx.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> + * @pixel_2_name: temporary pixel name for the second plane used in the @__VA_ARGS__ parameters
+> + * @pixel_1_type: Used to specify the type you want to cast the pixel pointer on the plane 1
+> + * @pixel_2_type: Used to specify the type you want to cast the pixel pointer on the plane 2
+> + * @callback: Callback to call for each pixels. This function should take
+> + *            (struct conversion_matrix*, @__VA_ARGS__) as parameter and return a pixel_argb_u16
 
-diff --git a/arch/arm64/boot/dts/apple/t8103-jxxx.dtsi b/arch/arm64/boot/dts/apple/t8103-jxxx.dtsi
-index 8e82231acab59ca0bffdcecfb6681f59661fcd96..0c8206156bfefda8a32c869787b2e0c8e67a9d17 100644
---- a/arch/arm64/boot/dts/apple/t8103-jxxx.dtsi
-+++ b/arch/arm64/boot/dts/apple/t8103-jxxx.dtsi
-@@ -71,7 +71,7 @@ hpm1: usb-pd@3f {
-  */
- &port00 {
- 	bus-range = <1 1>;
--	wifi0: network@0,0 {
-+	wifi0: wifi@0,0 {
- 		compatible = "pci14e4,4425";
- 		reg = <0x10000 0x0 0x0 0x0 0x0>;
- 		/* To be filled by the loader */
+s/struct conversion_matrix*/struct conversion_matrix *
 
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250611-arm64_dts_apple_wifi-d415214723e6
+> + * @__VA_ARGS__: Argument to pass inside the callback. You can use @pixel_1_name and @pixel_2_name
+> + *               to access current pixel values
+> + */
+> +#define READ_LINE_YUV_SEMIPLANAR(function_name, pixel_1_name, pixel_2_name, pixel_1_type,	\
+> +				 pixel_2_type, callback, ...)					\
+> +static void function_name(const struct vkms_plane_state *plane, int x_start,			\
+> +		 int y_start, enum pixel_read_direction direction, int count,			\
+> +		 struct pixel_argb_u16 out_pixel[])						\
+> +{												\
+> +	u8 *plane_1;										\
+> +	u8 *plane_2;										\
 
-Best regards,
--- 
-Janne Grunau <j@jannau.net>
+For now, how do you feel about keeping it as `y_plane` and `uv_plane`.
+For me, it has more semantic information and eases the understanding.
 
+With those nits,
+
+Reviewed-by: Maíra Canal <mcanal@igalia.com>
+
+Best Regards,
+- Maíra
+
+> +												\
+> +	packed_pixels_addr_1x1(plane->frame_info, x_start, y_start, 0,				\
+> +			       &plane_1);							\
+> +	packed_pixels_addr_1x1(plane->frame_info,						\
+> +			       x_start / plane->frame_info->fb->format->hsub,			\
+> +			       y_start / plane->frame_info->fb->format->vsub, 1,		\
+> +			       &plane_2);							\
+> +	int step_1 = get_block_step_bytes(plane->frame_info->fb, direction, 0);			\
+> +	int step_2 = get_block_step_bytes(plane->frame_info->fb, direction, 1);			\
+> +	int subsampling = get_subsampling(plane->frame_info->fb->format, direction);		\
+> +	int subsampling_offset = get_subsampling_offset(direction, x_start, y_start);		\
+> +	const struct conversion_matrix *conversion_matrix = &plane->conversion_matrix;		\
+> +												\
+> +	for (int i = 0; i < count; i++) {							\
+> +		pixel_1_type *(pixel_1_name) = (pixel_1_type *)plane_1;				\
+> +		pixel_2_type *(pixel_2_name) = (pixel_2_type *)plane_2;				\
+> +		*out_pixel = (callback)(conversion_matrix, __VA_ARGS__);			\
+> +		out_pixel += 1;									\
+> +		plane_1 += step_1;								\
+> +		if ((i + subsampling_offset + 1) % subsampling == 0)				\
+> +			plane_2 += step_2;							\
+> +	}											\
+>   }
+>   
+> +READ_LINE_YUV_SEMIPLANAR(YUV888_semiplanar_read_line, y, uv, u8, u8, argb_u16_from_yuv161616,
+> +			 y[0] * 257, uv[0] * 257, uv[1] * 257)
+> +
+>   /*
+>    * This callback can be used for YUV format where each color component is
+>    * stored in a different plane (often called planar formats). It will
+> @@ -713,7 +734,7 @@ pixel_read_line_t get_pixel_read_line_function(u32 format)
+>   	case DRM_FORMAT_NV21:
+>   	case DRM_FORMAT_NV61:
+>   	case DRM_FORMAT_NV42:
+> -		return &semi_planar_yuv_read_line;
+> +		return &YUV888_semiplanar_read_line;
+>   	case DRM_FORMAT_YUV420:
+>   	case DRM_FORMAT_YUV422:
+>   	case DRM_FORMAT_YUV444:
+> 
 
