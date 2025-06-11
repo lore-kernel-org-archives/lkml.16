@@ -1,481 +1,162 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012066.outbound.protection.outlook.com [52.101.66.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB24B26A1D0;
-	Wed, 11 Jun 2025 14:56:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749653786; cv=none; b=BuYNjuok1RDZaTbHBVc6YW8uKUj/5iaepUtVxiXvDtlEov/AWeFe4PETHVNyJrOl43I15LhyqY7xwKVwZpcS5KZ/lQKy+0P8oozUMNRaP1n9kLcIE/2gN1MWJO7nbpXrLmU6wmGr2aABkNfauGyAs9hvg978uov6fseNG7QXFQs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749653786; c=relaxed/simple;
-	bh=HbAVgJzxmHytKJ+Ywh2WokGuTgri+HoqWdPmSJduIFQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=V5wmdSTJlKtnG5jzLmLDqBI33BfLyZB54LRA7t62ElS0bLr+NVCMTda/VjJV5baGbXYI7ro0xS2dOjBekZ8DSWxTzAV7zXTiADBcsgrhsFbF+MyIj4B/kIzFTXNIwj4OcDrSdNxTt+WDrru2SEQT5aF+v73bb2a3bFwyh58Aa9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fJiSPjmy; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C087F2857CF;
+	Wed, 11 Jun 2025 14:56:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749653803; cv=fail; b=bTruaOOqicvD0pig5BnKnAYNshDeHs3RxVKEHl000YKxN2mq+mYNdHQyG8Jan7WKpvXA+At/d++dw/LMQSUMOujttRV9wDUJg5Q8mL+gv3SauTcK4KZAjLFUV/hfdiWtGpqjCzWiTLBI9tdPeq5E9CS7o4QiNMSdoq3iWJNRYLg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749653803; c=relaxed/simple;
+	bh=+3ypHjPY+vOTTaXYChN/vr50+sMTObDPnUPlwmDBqvE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=ZZIWAzeFKpc2oglHAdSva8GKtrGycuaHZkkS9yQXfZjiZaf+LbNk8f7iXlyida3dgFKaWshbntjnSmLxtKrvPpGIFYbh57nLrVTlAfzdOhAsKCNVTPcbIDtGsY9yqhVIpKhHVHa/oDZZ9cGpYDO0ZCXNXyPDAn+FqBTTFwh2MEg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=MzAL7GAa; arc=fail smtp.client-ip=52.101.66.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fJiSPjmy"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id CE3B7441C6;
-	Wed, 11 Jun 2025 14:56:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1749653779;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=v3Z+3u2W7PA87RlVTUWiVQeMe8kPAuxHo6SLi0E3GsA=;
-	b=fJiSPjmyGi+Iy5+NQAIWyyC1tNAKCU8Rqyg48JpDWGFg0R2M5dDhXFvyjQeKOWtkpWhgeH
-	1LkXXa0wLyVWqXHkf1fUO8EmZViyW5Rx9shiipJ2QKVN5dRpPsCGeTJR1tCXsb/E2kEAaR
-	IPCu8cJ3kFza46ffqDj+o1+5LPutUPDJoCpzbzYNke02TukqkebDa+RFyzjo4KFADTB+0T
-	00b8OtuLYfR3WZncs/SjcJsVtQumbhhS2CDXzVVZPIOtPdDo2XCPCzzueeqTSkPnyO9Q6j
-	TcSWhbZ1bAWxH7+I8i0ckzZ2ALnlScS1w1PnqvVLT6Q1SuQzbJRrgqkBM6UWZw==
-Date: Wed, 11 Jun 2025 16:56:17 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Rob Herring
- <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, Bjorn Helgaas
- <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-pci@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
- Horatiu Vultur <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v8 5/5] PCI: of: Create device-tree PCI host bridge node
-Message-ID: <20250611165617.641c7c09@bootlin.com>
-In-Reply-To: <594d284e-afce-446a-9fcb-a67b157ef6dc@tuxon.dev>
-References: <20250224141356.36325-1-herve.codina@bootlin.com>
-	<20250224141356.36325-6-herve.codina@bootlin.com>
-	<594d284e-afce-446a-9fcb-a67b157ef6dc@tuxon.dev>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="MzAL7GAa"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NDzE9aBcUxBf3T2nJ9nc81QKy2zWhMsir+2pk95kh+pjyH8gmLS267Fk8fqhT54zpWtgt2dkUPWWx6YxX6m97i26HlSctwtciFQtO0hJLuQMiqUcUzQn78pPetQ5572W8YXiTVnWej7Q49qeSpPmJteY8hJ9W7YYPvKbfm1wSw+0xc4ScR667SVO8pl74NOZfFlzTpSFQUt5A5/4TKRIpEVLL+KV83k6lpfqBU0APjAm+iDycYKjsGIWdZrQ1FVTZ5aoltyxIbxbEI5IAPT+ntIdtDmMuAB/MFFEsScjfY8Tirz0yrjt6SD3To1UPrOkjtNKWQJV/VLD7XHY68O5AA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TVfH19WmPFkXggYbuz79vx8HN7MFawxyadh6ZmmfNTM=;
+ b=i0e8ZsQu2KWAvU/ts0t94ADnIEQF2bFueTateo/bvUeBxpSet725mnNmLY46Qx3E125aRm7qFdSeVJeUYXnTaP9sGKFiAuMGAEPVFpgHQQ3FQJeBLLwbEhD72AmuPPFUGVmIyQ/a0eXXTYf2Lyn9jzey9IgosO0dSk6YyRKSTB8V8BuuG0vY8nI1pmdtLLdwLKHITvL2upOp2Jyk3qFWprZY5n3zO1onOsMeJ3kgDTuBfmQzl9hMrKio1uc20TKTTox9wgXaXcX/Id5Z3dfm9p+A6h+MkcYGVgiGr7E/bN0vl9N+jy6MMxnh5C22JLzfYOlGBpY3XTssg5a/1H/juw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TVfH19WmPFkXggYbuz79vx8HN7MFawxyadh6ZmmfNTM=;
+ b=MzAL7GAaksgSAKNDRdaap/t+wQ0RZKuYAHwmRzP5cnUpMm1qH5J+99ygWvsDPQ3vwOrZDt49AQLD00uW4kHPQrRSzxYkrO0a3jfy7B5d6BMwfPOEVm1+1mHszHiQ2BRv61IRVHQQvtmNYgwV7swKxRktpaD3DJk/wvKJpECbzpYJhC3ca+cx9U+UWOcr4EMqubOiUtuUSFa5Wkn+I9gP8C0n7id6q87kh/Tmihi5TMisAHIlh7XSvwfVzUUPZftMA4RuDxeobzg+JZN/ToqizDKgMJvfHIgolg7rQ2kGfhKvbwHEAXshNV1fi56/B+3OVrUA7yJ82OGX1Ph5TXEN9A==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM8PR04MB7779.eurprd04.prod.outlook.com (2603:10a6:20b:24b::14)
+ by VI2PR04MB11275.eurprd04.prod.outlook.com (2603:10a6:800:296::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.18; Wed, 11 Jun
+ 2025 14:56:37 +0000
+Received: from AM8PR04MB7779.eurprd04.prod.outlook.com
+ ([fe80::7417:d17f:8d97:44d2]) by AM8PR04MB7779.eurprd04.prod.outlook.com
+ ([fe80::7417:d17f:8d97:44d2%3]) with mapi id 15.20.8835.018; Wed, 11 Jun 2025
+ 14:56:37 +0000
+Date: Wed, 11 Jun 2025 17:56:34 +0300
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>,
+	linux-spi@vger.kernel.org, imx@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] spi: spi-fsl-dspi: Report FIFO overflows as errors
+Message-ID: <20250611145634.ncbzl6wwwxlidjl7@skbuf>
+References: <20250609-james-nxp-spi-dma-v1-0-2b831e714be2@linaro.org>
+ <20250609-james-nxp-spi-dma-v1-4-2b831e714be2@linaro.org>
+ <20250610215233.35ikv4sslkyukgwr@skbuf>
+ <d95fbd83-995e-48ca-bf23-147caa80b9e1@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d95fbd83-995e-48ca-bf23-147caa80b9e1@linaro.org>
+X-ClientProxiedBy: BE1P281CA0174.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:b10:66::20) To AM8PR04MB7779.eurprd04.prod.outlook.com
+ (2603:10a6:20b:24b::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduvdeglecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeejffelhfeiudetgeffieefgefgffdvuedvuedtvdefudduueekffelheehffekteenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudehpdhrtghpthhtoheptghlrghuughiuhdrsggviihnvggrsehtuhigohhnrdguvghvpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvl
- hdrohhrghdprhgtphhtthhopehsrghrrghvrghnrghksehgohhoghhlvgdrtghomhdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheplhhiiihhihdrhhhouhesrghmugdrtghomh
-X-GND-Sasl: herve.codina@bootlin.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM8PR04MB7779:EE_|VI2PR04MB11275:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1a73b6fd-265b-4fca-c60c-08dda8f82a52
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?FuUXr0bTH2xOc1auaAGhBdvUrIEwZhDTCKgSmAyZ59dR8RPA1J9wAPcXJ/2L?=
+ =?us-ascii?Q?dvcNdYrFjoQT4wlq7RXL8WonPR+hTGEt5zLtGPArk5XfqFTkEv4kBb/Q493M?=
+ =?us-ascii?Q?HaSpKpciRctGmwCDJYij80WRcIf6GGckqjfx8EyQd6FAYjJ9etI5jKj3p0bM?=
+ =?us-ascii?Q?uks2nAW0pzTEK3Hl/PrFL+z1s6Q/duSx4g06oCKHAJpD3p/+pEoihVVheLKJ?=
+ =?us-ascii?Q?YCk4Uj0v86fZt8bxzHYXHLss/0RjxaaLgm55IVmK1phxeFPAJb/HjDrrb+W8?=
+ =?us-ascii?Q?bAtBRhoLD+PLw8LmtD0R885xs1jBWzBQj9xcNS8DGOGe7keSHW4OEFOBctX+?=
+ =?us-ascii?Q?XqTuJGxzDqBOn5F9Q2bOuPI6teehXTSHjYilFshkwfkohwYmLSI3njvyknuq?=
+ =?us-ascii?Q?I3/frYNLSkPIwNcSY4n3QiVMTgNvYOtSvN1YySwF+GFw/LducltOrGJ6RpkC?=
+ =?us-ascii?Q?glyuV9upHHNvPEKTLIWjDtq4u2DdAZNpKc3i3fpGFG0laDloGalIH2Sq7+X5?=
+ =?us-ascii?Q?grkZWaKrwC/cG4MsDEbp8TBqVGI58HrIziaeygqAqfeuNbMsZXS1Azl8Qveg?=
+ =?us-ascii?Q?obOAzKdAexXFIvBaySayv38v13/Lb9CRqZx+wQyyPw/4VhXIugPOeo395vV3?=
+ =?us-ascii?Q?SOXsrY5Is1J1BOY7pvytgkn48BBEv/UEuElFCbuYj2b+aabkCTTTeTVewNhw?=
+ =?us-ascii?Q?/HCMlmtP0BR2HVfqcSCSs5ajzB5FC0aTU5PKX67FmDVPwKYJw7g5tlNDe6Mi?=
+ =?us-ascii?Q?IXIoUEsFBHz2CUHGIwc4daMU2Eh8/22OgTYEQycRYWmvMczSZeXrYiYkjR4e?=
+ =?us-ascii?Q?/5UpK1Mmyv5Mt4+nKOfNiwWQwB44QYKkIoSKvEjvApG/GvNQuEewNakGxUhB?=
+ =?us-ascii?Q?+LStZYdYs1/hGsfO3Cy9MIVVr8Tg7p3j7/WLgbzSNWwA/NuHaeyvyiaMi3Nr?=
+ =?us-ascii?Q?Ak1jX5bG9vzSKJar/jOkGz18uP9izEyTS3rKDX8pijQmK9sRFG4JrsNMx94Y?=
+ =?us-ascii?Q?9JiKX8vqDbpHgd6zcdkaV1J8434czlk2C88mLte9EoQYxpfTNdniAwoGQoVd?=
+ =?us-ascii?Q?LmGWlYLLgS24COcUbBz20oI9hy1nk9Svwv1bVS5OwtmdN9SEOTsWTiud4tBf?=
+ =?us-ascii?Q?uRSSgpVC3mQ2HuKqpZ23fBaLzyVjaQO43x/Kl1L2TzdDIRi5v4neCDMrle+m?=
+ =?us-ascii?Q?h9+f5zW99GTB3EW7OXMjXKKwgFI3VJi3vybLCPepGNYMmb8lhWeh2gcRF8sz?=
+ =?us-ascii?Q?RM7BLH5Tl1RNXBwXWOCklAXYhEQ0zQmQ9crvlPmR+WEiENAGM4acezPm1VKS?=
+ =?us-ascii?Q?7tyWkbDKtiRpxGJZk4A6TfEZ9ZxvBPWw5PGLqN6apCl6wx+bH7eoTmjrXkA4?=
+ =?us-ascii?Q?5nGwstg+ALSCtgnXb4qFnqjytHkMuL+i8wbZbxjrFX0STeH/o5ZWIezPfZDw?=
+ =?us-ascii?Q?f8BHGVSLJl4=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7779.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?jo5t6t+LkeStBKaK1C8gZF15mk6vDb5SNcHWqoODYV4V3ro7xbYqdVmFKhyi?=
+ =?us-ascii?Q?bH4o9BYlDdraUTtNCdsX4j/8GP2lZQmwSog4cTZTXBhvtGm8cWbwLQT7j2c1?=
+ =?us-ascii?Q?nNC4j2JC9FB5cID5JuWY7XjjC5xVMheGxQH3u7NDmBh3zPslhh+f656S0BfR?=
+ =?us-ascii?Q?yclTnvqlML/xsGXbrpMMmr8WlSpFFeweVpDdmf9i82K0D54jMKBHXqOrJJ8z?=
+ =?us-ascii?Q?1HC7iWDXHYnlEj7/R90R+1cNC3CYpBmZDnee0zoQsXw7FTHndKhzSs7bfCZh?=
+ =?us-ascii?Q?M9JYVkVlKOh2YQsW5oaAOamaf9KJ8LyZRR7bEQiwTr6exxktlDVgs4cOoLCq?=
+ =?us-ascii?Q?vs474COyTEdRUWNjG8VuNiY8+UcAmIok5dCrHT7lcRhJyPbdQzMFaNum6lFu?=
+ =?us-ascii?Q?Mc6PCqLv8UWCuxOFKVa3anVCV33LA5RN7YXI42PthSMAuZMpVV8rTQ4mh7HX?=
+ =?us-ascii?Q?csDsNxlg89v3qQ2N4dIKNrb/VfhWYqP/rjjPKSo3AMP0JlG+HNLVpiKd48QY?=
+ =?us-ascii?Q?pbRgtZPmYDZzIGKoxBlC4FM/ENOQHOSvSpTUH1prN5c2owdGrcu6QGhhM3gh?=
+ =?us-ascii?Q?Vk1NoRZ5WQ5VV1gbvv1QDTMyH1A99hM4rc3HBFFV9juqLoJpLWKWEXJeDV+T?=
+ =?us-ascii?Q?udd3EnvMv28Abl7BP1GOHvj+/gDWKdfL3kd8tSf/Jpv0EWsofVB2y8PB2KuS?=
+ =?us-ascii?Q?wo5rCSvZP65njNudi6IbrngoT5GLtOLh2fwVluyk5FxBLEQJa+dCMp767VnW?=
+ =?us-ascii?Q?vgejeStoenUZxxHbZ0OuO1f6P9E/T1sR4YjEGcyP7cqUWA4JH/HFWlEdBkF+?=
+ =?us-ascii?Q?5fFTVAF0RK10rcWhRgceK92WtpJ2y7EiIghper5cJCX6mHjG/ivr9jkRmMYe?=
+ =?us-ascii?Q?oVPe4dBX5endqWtg/p98UwyxloLR6h1sttwy2y+Xw57Obt1W0iP4eWHKIhAu?=
+ =?us-ascii?Q?SlD1016zo9bEQb1v8jZ84WfdDJ6QSDceIPO6vcF0A7k9ZHwtG6LrrmIVAR1U?=
+ =?us-ascii?Q?jOSHhZ+qTTriOJbmpjYBZhPxR1KbCHJD+DC7bjX5YKt8+3CGBIi9gsaxnJ/I?=
+ =?us-ascii?Q?Na4tGrz0VRvyyG8KVJiSldOzqObCwQxIMcLHENqmSudvoaYDBlfqxrwcTUCj?=
+ =?us-ascii?Q?ONO+/N57XGtJ6hfZ2uw/L+j0Ck6b799sFV0FmtztfVXkozmpCeblXfVTPDcp?=
+ =?us-ascii?Q?gHiC8nKROeH8Ktgqz39NwhHCmC5V2vqRUx1twcEnQYTFlYStejipLrJ6MGO1?=
+ =?us-ascii?Q?o7zGph4OLwV7D+io7J4KNZUbphFJWLcoK97xwJm+kyCDRSD7joYURmmggLi9?=
+ =?us-ascii?Q?GvytAsGzofzRLi51ww01824LcodXuBQhb6qVwKEvoLnyqy7EHwyeZzEkW+VX?=
+ =?us-ascii?Q?oyI8zlQI1svBr2BFWPDnyj30CbdEul08HGwrE/CEEB7UbbmJt7G8qfPmu0BW?=
+ =?us-ascii?Q?ftnhdfdD2rWt9syqhwMeID+Dg0XRUc6ClVIKCj808QBTPRGIR061+/6EoxFO?=
+ =?us-ascii?Q?R6vvbexe5ZkL5BPrVSJgo8QpORQArqPtC8lYVZp+aoEpGLVS7qs6M87vEDhk?=
+ =?us-ascii?Q?CVeEyySOWiGrQfBo2gYauz6j9Sg05O/pXM/JpUuVrCT4nEf3sGWzAcrGWZWt?=
+ =?us-ascii?Q?pA=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1a73b6fd-265b-4fca-c60c-08dda8f82a52
+X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7779.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2025 14:56:37.3310
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7g2ZT0EPyVG9ojiObZTKeK/28nWftSHEKVdZUKpshRAILYIKTAUARLkFcRRCuDOaV36wdXBpKBrz9N8RUXgYMg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI2PR04MB11275
 
-Hi Claudiu,
-
-On Wed, 11 Jun 2025 11:26:37 +0300
-Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
-
-> Hi, Herve,
-> 
-> On 24.02.2025 16:13, Herve Codina wrote:
-> > PCI devices device-tree nodes can be already created. This was
-> > introduced by commit 407d1a51921e ("PCI: Create device tree node for
-> > bridge").
+On Wed, Jun 11, 2025 at 03:40:40PM +0100, James Clark wrote:
+> > Also, could there be individual error messages for TFUF and for RFOF?
+> > If you are concerned about the penalty for the error-free case, make the
+> > check two-level. First for all errors, then for individual errors.
 > > 
-> > In order to have device-tree nodes related to PCI devices attached on
-> > their PCI root bus (the PCI bus handled by the PCI host bridge), a PCI
-> > root bus device-tree node is needed. This root bus node will be used as
-> > the parent node of the first level devices scanned on the bus. On
-> > device-tree based systems, this PCI root bus device tree node is set to
-> > the node of the related PCI host bridge. The PCI host bridge node is
-> > available in the device-tree used to describe the hardware passed at
-> > boot.
-> > 
-> > On non device-tree based system (such as ACPI), a device-tree node for
-> > the PCI host bridge or for the root bus does not exist. Indeed, the PCI
-> > host bridge is not described in a device-tree used at boot simply
-> > because no device-tree are passed at boot.
-> > 
-> > The device-tree PCI host bridge node creation needs to be done at
-> > runtime. This is done in the same way as for the creation of the PCI
-> > device nodes. I.e. node and properties are created based on computed
-> > information done by the PCI core. Also, as is done on device-tree based
-> > systems, this PCI host bridge node is used for the PCI root bus.
-> > 
-> > With this done, hardware available in a PCI device that doesn't follow
-> > the PCI model consisting in one PCI function handled by one driver can
-> > be described by a device-tree overlay loaded by the PCI device driver on
-> > non device-tree based systems. Those PCI devices provide a single PCI
-> > function that includes several functionalities that require different
-> > driver. The device-tree overlay describes in that case the internal
-> > devices and their relationships. It allows to load drivers needed by
-> > those different devices in order to have functionalities handled.
-> > 
-> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> > Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-> > ---
-> >  drivers/pci/of.c          | 104 +++++++++++++++++++++++++++++++++++++-
-> >  drivers/pci/of_property.c | 102 +++++++++++++++++++++++++++++++++++++
-> >  drivers/pci/pci.h         |   6 +++
-> >  drivers/pci/probe.c       |   2 +
-> >  drivers/pci/remove.c      |   2 +
-> >  5 files changed, 215 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> > index fb5e6da1ead0..c59429e909c0 100644
-> > --- a/drivers/pci/of.c
-> > +++ b/drivers/pci/of.c
-> > @@ -731,7 +731,109 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
-> >  out_free_name:
-> >  	kfree(name);
-> >  }
-> > -#endif
-> > +
-> > +void of_pci_remove_host_bridge_node(struct pci_host_bridge *bridge)
-> > +{
-> > +	struct device_node *np;
-> > +
-> > +	np = pci_bus_to_OF_node(bridge->bus);
-> > +	if (!np || !of_node_check_flag(np, OF_DYNAMIC))
-> > +		return;
-> > +
-> > +	device_remove_of_node(&bridge->bus->dev);
-> > +	device_remove_of_node(&bridge->dev);
-> > +	of_changeset_revert(np->data);
-> > +	of_changeset_destroy(np->data);
-> > +	of_node_put(np);
-> > +}
-> > +
-> > +void of_pci_make_host_bridge_node(struct pci_host_bridge *bridge)
-> > +{
-> > +	struct device_node *np = NULL;
-> > +	struct of_changeset *cset;
-> > +	const char *name;
-> > +	int ret;
-> > +
-> > +	/*
-> > +	 * If there is already a device-tree node linked to the PCI bus handled
-> > +	 * by this bridge (i.e. the PCI root bus), nothing to do.
-> > +	 */
-> > +	if (pci_bus_to_OF_node(bridge->bus))
-> > +		return;
-> > +
-> > +	/* The root bus has no node. Check that the host bridge has no node too */
-> > +	if (bridge->dev.of_node) {
-> > +		dev_err(&bridge->dev, "PCI host bridge of_node already set");
-> > +		return;
-> > +	}
-> > +
-> > +	/* Check if there is a DT root node to attach the created node */
-> > +	if (!of_root) {
-> > +		pr_err("of_root node is NULL, cannot create PCI host bridge node\n");
-> > +		return;
-> > +	}
-> > +
-> > +	name = kasprintf(GFP_KERNEL, "pci@%x,%x", pci_domain_nr(bridge->bus),
-> > +			 bridge->bus->number);  
 > 
-> After testing series [1] on next-20250528 I noticed the INTx are not
-> working anymore. Debugging it, I found it is related to the creation of a
-> node with this name.
-> 
-> On [1], the interrupt-map points to the pcie node itself. If I activate the
-> debug messages in of_irq_parse_raw() I'm getting this output:
-> 
-> [    0.466542] rzg3s-pcie-host 11e40000.pcie: PCIe link status [0x100014e]
-> [    0.466571] rzg3s-pcie-host 11e40000.pcie: PCIe x1: link up
-> [    0.571095] rzg3s-pcie-host 11e40000.pcie: PCI host bridge to bus 0000:00
-> [    0.571161] pci_bus 0000:00: root bus resource [bus 00-ff]
-> [    0.571198] pci_bus 0000:00: root bus resource [mem 0x30000000-0x37ffffff]
-> [    0.571289] pci 0000:00:00.0: [1912:0033] type 01 class 0x060400 PCIe
-> Root Port
-> [    0.571355] pci 0000:00:00.0: PCI bridge to [bus 01-ff]
-> [    0.571393] pci 0000:00:00.0:   bridge window [mem 0xfff00000-0xffffffff]
-> [    0.571433] pci 0000:00:00.0:   bridge window [mem 0x00000000-0x000fffff
-> 64bit pref]
-> [    0.571533] pci 0000:00:00.0: PME# supported from D0 D3hot
-> [    0.574149] pci 0000:01:00.0: [1d79:2263] type 00 class 0x010802 PCIe
-> Endpoint
-> [    0.574223] pci_bus 0000:01: 2-byte config write to 0000:01:00.0 offset
-> 0x4 may corrupt adjacent RW1C bits
-> [    0.574775] pci 0000:01:00.0: BAR 0 [mem 0x00000000-0x00003fff 64bit]
-> [    0.575722] pci 0000:01:00.0: 4.000 Gb/s available PCIe bandwidth,
-> limited by 5.0 GT/s PCIe x1 link at 0000:00:00.0 (capable of 15.752 Gb/s
-> with 8.0 GT/s PCIe x2 link)
-> [    0.576434] pci 0000:00:00.0: bridge window [mem 0x30000000-0x300fffff]:
-> assigned
-> [    0.576491] pci 0000:01:00.0: BAR 0 [mem 0x30000000-0x30003fff 64bit]:
-> assigned
-> [    0.576618] pci 0000:00:00.0: PCI bridge to [bus 01-ff]
-> [    0.576654] pci 0000:00:00.0:   bridge window [mem 0x30000000-0x300fffff]
-> [    0.576697] pci_bus 0000:00: resource 4 [mem 0x30000000-0x37ffffff]
-> [    0.576730] pci_bus 0000:01: resource 1 [mem 0x30000000-0x300fffff]
-> [    0.576800] of_irq_parse_raw:  /soc/pcie@11e40000:00000001
-> [    0.576864] OF: of_irq_parse_raw: ipar=/soc/pcie@11e40000, size=1
-> [    0.576904] OF:  -> addrsize=3
-> [    0.576936] OF:  -> match=1 (imaplen=32)
-> [    0.576962] OF:  -> intsize=1, addrsize=3
-> [    0.576984] OF:  -> imaplen=31
-> [    0.577009] OF: /soc/pcie@11e40000 interrupt-map entry to self
-> [    0.577044] of_irq_parse_raw:  /soc/pcie@11e40000:00000002
-> [    0.577089] OF: of_irq_parse_raw: ipar=/soc/pcie@11e40000, size=1
-> [    0.577126] OF:  -> addrsize=3
-> [    0.577153] OF:  -> match=0 (imaplen=32)
-> [    0.577177] OF:  -> intsize=1, addrsize=3
-> [    0.577198] OF:  -> imaplen=31
-> [    0.577220] OF:  -> imaplen=27
-> [    0.577238] OF:  -> match=1 (imaplen=23)
-> [    0.577261] OF:  -> intsize=1, addrsize=3
-> [    0.577282] OF:  -> imaplen=22
-> [    0.577303] OF: /soc/pcie@11e40000 interrupt-map entry to self
-> [    0.577337] of_irq_parse_raw:  /soc/pcie@11e40000:00000003
-> [    0.577382] OF: of_irq_parse_raw: ipar=/soc/pcie@11e40000, size=1
-> [    0.577419] OF:  -> addrsize=3
-> [    0.577445] OF:  -> match=0 (imaplen=32)
-> [    0.577469] OF:  -> intsize=1, addrsize=3
-> [    0.577490] OF:  -> imaplen=31
-> [    0.577511] OF:  -> imaplen=27
-> [    0.577530] OF:  -> match=0 (imaplen=23)
-> [    0.577553] OF:  -> intsize=1, addrsize=3
-> [    0.577573] OF:  -> imaplen=22
-> [    0.577595] OF:  -> imaplen=18
-> [    0.577613] OF:  -> match=1 (imaplen=14)
-> [    0.577637] OF:  -> intsize=1, addrsize=3
-> [    0.577657] OF:  -> imaplen=13
-> [    0.577678] OF: /soc/pcie@11e40000 interrupt-map entry to self
-> [    0.577712] of_irq_parse_raw:  /soc/pcie@11e40000:00000004
-> [    0.577758] OF: of_irq_parse_raw: ipar=/soc/pcie@11e40000, size=1
-> [    0.577794] OF:  -> addrsize=3
-> [    0.577820] OF:  -> match=0 (imaplen=32)
-> [    0.577844] OF:  -> intsize=1, addrsize=3
-> [    0.577865] OF:  -> imaplen=31
-> [    0.577886] OF:  -> imaplen=27
-> [    0.577905] OF:  -> match=0 (imaplen=23)
-> [    0.577928] OF:  -> intsize=1, addrsize=3
-> [    0.577948] OF:  -> imaplen=22
-> [    0.577969] OF:  -> imaplen=18
-> [    0.577987] OF:  -> match=0 (imaplen=14)
-> [    0.578010] OF:  -> intsize=1, addrsize=3
-> [    0.578031] OF:  -> imaplen=13
-> [    0.578052] OF:  -> imaplen=9
-> [    0.578070] OF:  -> match=1 (imaplen=5)
-> [    0.578092] OF:  -> intsize=1, addrsize=3
-> [    0.578113] OF:  -> imaplen=4
-> [    0.578133] OF: /soc/pcie@11e40000 interrupt-map entry to self
-> [    0.578609] pci_assign_irq(): pin=0
-> [    0.578641] assign IRQ: got 0
-> [    0.578677] pcieport 0000:00:00.0: enabling device (0000 -> 0002)
-> [    0.579095] pci_assign_irq(): pin=1
-> [    0.579124] pci_assign_irq(): swizzle_irq=806c2ad8, map_irq=806daa90
-> [    0.579154] pci_common_swizzle(): pin=1
-> [    0.579177] pci_assign_irq(): slot=0, pin=1
-> [    0.579209] of_irq_parse_raw:  /soc/pcie@11e40000/pci@0,0:00000001
-> [    0.579271] OF: of_irq_parse_raw: ipar=/soc/pcie@11e40000/pci@0,0, size=1
-> [    0.579314] OF:  -> addrsize=3
-> [    0.579339] OF:  -> match=1 (imaplen=32)
-> [    0.579365] OF:  -> intsize=1, addrsize=3
-> [    0.579386] OF:  -> imaplen=31
-> [    0.579409] OF:  -> new parent: /soc/pcie@11e40000
-> [    0.579452] OF:  -> match=0 (imaplen=32)
-> [    0.579476] OF:  -> intsize=1, addrsize=3
-> [    0.579497] OF:  -> imaplen=31
-> [    0.579520] OF:  -> imaplen=27
-> [    0.579538] OF:  -> match=0 (imaplen=23)
-> [    0.579562] OF:  -> intsize=1, addrsize=3
-> [    0.579583] OF:  -> imaplen=22
-> [    0.579604] OF:  -> imaplen=18
-> [    0.579622] OF:  -> match=0 (imaplen=14)
-> [    0.579645] OF:  -> intsize=1, addrsize=3
-> [    0.579666] OF:  -> imaplen=13
-> [    0.579688] OF:  -> imaplen=9
-> [    0.579706] OF:  -> match=0 (imaplen=5)
-> [    0.579728] OF:  -> intsize=1, addrsize=3
-> [    0.579749] OF:  -> imaplen=4
-> [    0.579769] OF:  -> imaplen=0
-> [    0.580473] nvme 0000:01:00.0: of_irq_parse_pci: failed with rc=-22
-> [    0.580952] assign IRQ: got 0
-> [    0.581718] nvme nvme0: pci function 0000:01:00.0
-> [    0.581811] nvme 0000:01:00.0: enabling device (0000 -> 0002)
-> [    0.585447] nvme nvme0: missing or invalid SUBNQN field.
-> [    0.592193] nvme nvme0: 1/0/0 default/read/poll queues
-> [    0.600035]  nvme0n1: p1
-> 
-> 
-> I currently managed to fix it by applying the following diff on top of [1]:
-> 
-> diff --git a/arch/arm64/boot/dts/renesas/r9a08g045s33.dtsi
-> b/arch/arm64/boot/dts/renesas/r9a08g045s33.dtsi
-> index f1d642c70436..aac917f0b143 100644
-> --- a/arch/arm64/boot/dts/renesas/r9a08g045s33.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r9a08g045s33.dtsi
-> @@ -54,13 +54,6 @@ pcie: pcie@11e40000 {
->                                   "intb", "intc", "intd", "msi",
->                                   "link_bandwidth", "pm_pme", "dma",
->                                   "pcie_evt", "msg", "all";
-> -               #interrupt-cells = <1>;
-> -               interrupt-controller;
-> -               interrupt-map-mask = <0 0 0 7>;
-> -               interrupt-map = <0 0 0 1 &pcie 0 0 0 0>, /* INT A */
-> -                               <0 0 0 2 &pcie 0 0 0 1>, /* INT B */
-> -                               <0 0 0 3 &pcie 0 0 0 2>, /* INT C */
-> -                               <0 0 0 4 &pcie 0 0 0 3>; /* INT D */
->                 device_type = "pci";
->                 num-lanes = <1>;
->                 #address-cells = <3>;
-> @@ -70,5 +63,20 @@ pcie: pcie@11e40000 {
->                 device-id = <0x0033>;
->                 renesas,sysc = <&sysc>;
->                 status = "disabled";
-> +
-> +               port0: pci@0,0 {
-> +                       device_type = "pci";
-> +                       reg = <0x0 0x0 0x0 0x0 0x0>;
-> +                       #address-cells = <3>;
-> +                       #size-cells = <2>;
-> +                       ranges;
-> +                       #interrupt-cells = <1>;
-> +                       interrupt-controller;
-> +                       interrupt-map-mask = <0 0 0 7>;
-> +                       interrupt-map = <0 0 0 1 &port0 0 0 0 0>, /* INT A */
-> +                                       <0 0 0 2 &port0 0 0 0 1>, /* INT B */
-> +                                       <0 0 0 3 &port0 0 0 0 2>, /* INT C */
-> +                                       <0 0 0 4 &port0 0 0 0 3>; /* INT D */
-> +               };
->         };
->  };
-> diff --git a/drivers/pci/controller/pcie-rzg3s-host.c
-> b/drivers/pci/controller/pcie-rzg3s-host.c
-> index 39140183addf..affbf4f79f23 100644
-> --- a/drivers/pci/controller/pcie-rzg3s-host.c
-> +++ b/drivers/pci/controller/pcie-rzg3s-host.c
-> @@ -431,7 +431,24 @@ static int rzg3s_pcie_root_write(struct pci_bus *bus,
-> unsigned int devfn,
->         return PCIBIOS_SUCCESSFUL;
->  }
-> 
-> +static int rzg3s_pcie_intx_setup(struct rzg3s_pcie_host *host, struct
-> device_node *port);
-> +
-> +static int rzg3s_pcie_root_add_bus(struct pci_bus *bus)
-> +{
-> +       struct device_node *of_port;
-> +
-> +       for_each_child_of_node(bus->dev.of_node, of_port) {
-> +               int ret = rzg3s_pcie_intx_setup(bus->sysdata, of_port);
-> +
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
->  static struct pci_ops rzg3s_pcie_root_ops = {
-> +       .add_bus        = rzg3s_pcie_root_add_bus,
->         .read           = pci_generic_config_read,
->         .write          = rzg3s_pcie_root_write,
->         .map_bus        = rzg3s_pcie_root_map_bus,
-> @@ -895,7 +912,7 @@ static void rzg3s_pcie_intx_teardown(void *data)
->         irq_domain_remove(host->intx_domain);
->  }
-> 
-> -static int rzg3s_pcie_intx_setup(struct rzg3s_pcie_host *host)
-> +static int rzg3s_pcie_intx_setup(struct rzg3s_pcie_host *host, struct
-> device_node *port)
->  {
->         struct device *dev = host->dev;
-> 
-> @@ -918,7 +935,7 @@ static int rzg3s_pcie_intx_setup(struct rzg3s_pcie_host
-> *host)
->                                                  host);
->         }
-> 
-> -       host->intx_domain = irq_domain_add_linear(dev->of_node, PCI_NUM_INTX,
-> +       host->intx_domain = irq_domain_add_linear(port, PCI_NUM_INTX,
->                                                   &rzg3s_pcie_intx_domain_ops,
->                                                   host);
->         if (!host->intx_domain)
-> @@ -1542,7 +1559,7 @@ static int rzg3s_pcie_probe(struct platform_device *pdev)
-> 
->         raw_spin_lock_init(&host->hw_lock);
-> 
-> -       ret = rzg3s_pcie_host_setup(host, rzg3s_pcie_intx_setup,
-> +       ret = rzg3s_pcie_host_setup(host, NULL,
->                                     rzg3s_pcie_msi_enable, true);
->         if (ret)
->                 return ret;
-> 
-> 
-> With this, of_irq_parse_pci() no longer fails with -22:
-> 
-> 
-> [    0.564106] pci 0000:00:00.0: [1912:0033] type 01 class 0x060400 PCIe
-> Root Port
-> [    0.564173] pci 0000:00:00.0: PCI bridge to [bus 01-ff]
-> [    0.564212] pci 0000:00:00.0:   bridge window [mem 0xfff00000-0xffffffff]
-> [    0.564252] pci 0000:00:00.0:   bridge window [mem 0x00000000-0x000fffff
-> 64bit pref]
-> [    0.564355] pci 0000:00:00.0: PME# supported from D0 D3hot
-> [    0.564999] /soc/pcie@11e40000/pci@0,0: Fixed dependency cycle(s) with
-> /soc/pcie@11e40000/pci@0,0
-> [    0.567407] pci 0000:01:00.0: [1d79:2263] type 00 class 0x010802 PCIe
-> Endpoint
-> [    0.567483] pci_bus 0000:01: 2-byte config write to 0000:01:00.0 offset
-> 0x4 may corrupt adjacent RW1C bits
-> [    0.567922] pci 0000:01:00.0: BAR 0 [mem 0x00000000-0x00003fff 64bit]
-> [    0.568870] pci 0000:01:00.0: 4.000 Gb/s available PCIe bandwidth,
-> limited by 5.0 GT/s PCIe x1 link at 0000:00:00.0 (capable of 15.752 Gb/s
-> with 8.0 GT/s PCIe x2 link)
-> [    0.569599] pci 0000:00:00.0: bridge window [mem 0x30000000-0x300fffff]:
-> assigned
-> [    0.569657] pci 0000:01:00.0: BAR 0 [mem 0x30000000-0x30003fff 64bit]:
-> assigned
-> [    0.569785] pci 0000:00:00.0: PCI bridge to [bus 01-ff]
-> [    0.569822] pci 0000:00:00.0:   bridge window [mem 0x30000000-0x300fffff]
-> [    0.570056] pci_bus 0000:00: resource 4 [mem 0x30000000-0x37ffffff]
-> [    0.570095] pci_bus 0000:01: resource 1 [mem 0x30000000-0x300fffff]
-> [    0.570311] pci_assign_irq(): pin=0
-> [    0.570338] assign IRQ: got 0
-> [    0.570373] pcieport 0000:00:00.0: enabling device (0000 -> 0002)
-> [    0.570775] pci_assign_irq(): pin=1
-> [    0.570805] pci_assign_irq(): swizzle_irq=806c2b70, map_irq=806dab28
-> [    0.570834] pci_common_swizzle(): pin=1
-> [    0.570855] pci_assign_irq(): slot=0, pin=1
-> [    0.570888] of_irq_parse_raw:  /soc/pcie@11e40000/pci@0,0:00000001
-> [    0.570954] OF: of_irq_parse_raw: ipar=/soc/pcie@11e40000/pci@0,0, size=1
-> [    0.570997] OF:  -> addrsize=3
-> [    0.571028] OF:  -> match=1 (imaplen=32)
-> [    0.571053] OF:  -> intsize=1, addrsize=3
-> [    0.571075] OF:  -> imaplen=31
-> [    0.571095] OF: /soc/pcie@11e40000/pci@0,0 interrupt-map entry to self
-> [    0.571270] assign IRQ: got 46
-> [    0.571998] nvme nvme0: pci function 0000:01:00.0
-> [    0.572082] nvme 0000:01:00.0: enabling device (0000 -> 0002)
-> [    0.575619] nvme nvme0: missing or invalid SUBNQN field.
-> [    0.584554] nvme nvme0: 1/0/0 default/read/poll queues
-> [    0.592958]  nvme0n1: p1
-> 
-> 
-> Could you please let me know if this is how the PCIe controller should now
-> be described in DT with your patch?
+> If I was going to split them I would probably let the compiler optimize it
+> whichever way was best. The real reason for combining them is because
+> usually you get them both together. As long as the message and fifos are
+> configured correctly you'd always get TFUF and RFOF at the same time and I
+> wanted to avoid printing twice for one event.
 
-In my series, no node should be created if a node is already existing.
-  https://elixir.bootlin.com/linux/v6.15/source/drivers/pci/of.c#L764
-  https://elixir.bootlin.com/linux/v6.15/source/drivers/pci/of.c#L771
-
-The idea is to create the missing node which can be used as PCI device node
-parent.
-
-On my side, I have performed tests using an Armada 3720 board and so, I used
-this DT:
-  https://elixir.bootlin.com/linux/v6.15/source/arch/arm64/boot/dts/marvell/armada-3720-db.dts
-and more precisely, this PCIe controller node description:
-  https://elixir.bootlin.com/linux/v6.15/source/arch/arm64/boot/dts/marvell/armada-37xx.dtsi#L495
-
-On this system, I didn't observed any issues but of course, the PCIe drivers are
-different.
-Also, on my system, no node were created by of_pci_make_host_bridge_node().
-
-To be honest, I didn't re-test recently to see if something has been broken.
-I can do that on my side with my system.
-
-On your side, maybe you can have look at the Armada PCIe driver and see if
-something could explain your behavior. I am not sure that you need to add the
-pci@0,0 node in your DT.
-
-Best regards,
-Hervé
+In that case, why not:
+	if (spi_sr & (SPI_SR_TFUF | SPI_SR_RFOF)) {
+		dev_err_ratelimited(dev, "FIFO errors:%s%s\n",
+				    spi_sr & SPI_SR_TFUF ? " TX underflow," : "",
+				    spi_sr & SPI_SR_RFOF ? " RX overflow," : "");
+		}
+	}
