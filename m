@@ -1,117 +1,110 @@
-Received: from esa4.hc1455-7.c3s2.iphmx.com (esa4.hc1455-7.c3s2.iphmx.com [68.232.139.117])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D7C17A2EE
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 02:18:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.117
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E71165EFC
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 02:18:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749608302; cv=none; b=rmYSXDgnRfNndPo/OWdsZpRKeQ2WLOg+Oc8llNNMFROSuc9KZ45oQVyq1eExYNl/dqiBdKmTeKmaLVZcP/Zzg7DsmERfPsspXd8qhBXwtMjAwSxDvYPjFozp6SYJcd+2N8PE90ZoxPWwD+vksKxE/pwhlspjHOtEVu1UGRV0zPw=
+	t=1749608313; cv=none; b=OnqLCBWMfYYUuKn9o3x7dI64ju1AyM5ZIE8omP13wvBqRPaKUr1yYnj4GDoD0TZdw/w0/IaSiOzYBrYEu/QqCaCcvbaCoAjt1/6+rHXa6rm6rFnCzWrSwGFH5LutzLSrNpyKzu8QJAB8Zur3edTM27mKP574JglaF6qWyn+kWzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749608302; c=relaxed/simple;
-	bh=47FryM0n8vCaNjijOjTIR4zgLMY5SGBa2CfCuVDwt/0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VzlS5zGg+ORx4YXELZBmhyXqEftFzUDc2BAAZ3iov545xLX3xBZNn/h1lniNtGTS42Em3ggNjuG/qC+Td5PLyMJe/wXK7Z/ar3jFkCdENKAQcgaBb04ubc1PHzcH3GWGQjezqKDcebKmLfCR6ymNUOhu2LB+weZF+X7ovy2PYMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jp.fujitsu.com; spf=pass smtp.mailfrom=jp.fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=rsjzUJZD; arc=none smtp.client-ip=68.232.139.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jp.fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jp.fujitsu.com
+	s=arc-20240116; t=1749608313; c=relaxed/simple;
+	bh=A1VFeAvhgOC1yMtN7yIyjPHN3d7Ti6ibq7gtPR6jl6U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UURn4pO0dW4im/CTHF91GSDmFC274KYKnXh1ABDz6nGaUsNpgqfInbhrGhWXDPvVb1VCuFwu/XwvwOfupBH8tryyczwTcctKbUFvFrKgIVVijSNbkkZ0H42q7CxHuaa/ciKlYTrnOAsE/R4SB6tWiGHgpL9IMwLeboZCCE0N5Ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WrwnM+C5; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="rsjzUJZD"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1749608300; x=1781144300;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=47FryM0n8vCaNjijOjTIR4zgLMY5SGBa2CfCuVDwt/0=;
-  b=rsjzUJZDNAnZvJRACvoIyj2YVcPCv9z5SaMLLY9ojVd/K7c9R/z0c+rG
-   sCPCm+HPs6haGRb5D7au7SDacx/olGbOSORIrDWbQwO9Zs8lfrddHAyRX
-   sPtIZ2bLQx7UmWHI8oD4kZqF0n3bCzQqXRheG29t3qlLarDtN+lEDqrRv
-   1FpelOa1Pw3atLWeKUpiwjsmUdLnngTAoXr2Q9sdfyjryMr+aEixnrPvV
-   A/ov6kKFLeqAO/LNx37q9hIy4IX2kq0lfIukApt+OnPCwX52L2d5PimCI
-   DDZhboB9YIAFb+5LO5ZJ9A28VPc9KuISE363KLfOo/8t35ra03gqxTp7r
-   w==;
-X-CSE-ConnectionGUID: 9CWJdtVGTEC3ffwTGA3DQg==
-X-CSE-MsgGUID: 6Gk54wiNRoKicvJUmcGlCA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="202795237"
-X-IronPort-AV: E=Sophos;i="6.16,226,1744038000"; 
-   d="scan'208";a="202795237"
-Received: from unknown (HELO oym-r3.gw.nic.fujitsu.com) ([210.162.30.91])
-  by esa4.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 11:17:08 +0900
-Received: from oym-m2.gw.nic.fujitsu.com (oym-nat-oym-m2.gw.nic.fujitsu.com [192.168.87.59])
-	by oym-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id 45D07E9ED3
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:17:05 +0900 (JST)
-Received: from oym-om1.fujitsu.com (oym-om1.o.css.fujitsu.com [10.85.58.161])
-	by oym-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 1651FBF3C7
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:17:05 +0900 (JST)
-Received: from sm-x86-amd03.ssoft.mng.com (sm-x86-stp01.soft.fujitsu.com [10.124.178.20])
-	by oym-om1.fujitsu.com (Postfix) with ESMTP id 153784007A495;
-	Wed, 11 Jun 2025 11:17:04 +0900 (JST)
-From: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Reinette Chatre <reinette.chatre@intel.com>,
-	James Morse <james.morse@arm.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Dave Martin <dave.martin@arm.com>,
-	fenghuay@nvidia.com,
-	peternewman@google.com,
-	Babu Moger <Babu.Moger@amd.com>,
-	Borislav Petkov <bp@alien8.de>,
-	shameerali.kolothum.thodi@huawei.com,
-	bobo.shaobowang@huawei.com,
-	D Scott Phillips OS <scott@os.amperecomputing.com>,
-	carl@os.amperecomputing.com,
-	Koba Ko <kobak@nvidia.com>,
-	Shanker Donthineni <sdonthineni@nvidia.com>,
-	Xin Hao <xhao@linux.alibaba.com>,
-	baolin.wang@linux.alibaba.com,
-	lcherian@marvell.com,
-	amitsinght@marvell.com,
-	Ingo Molnar <mingo@redhat.com>,
-	David Hildenbrand <david@redhat.com>,
-	H Peter Anvin <hpa@zytor.com>,
-	Rex Nie <rex.nie@jaguarmicro.com>,
-	Jamie Iles <quic_jiles@quicinc.com>,
-	dfustini@baylibre.com,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 2/2] x86/resctrl: Optimize code in rdt_get_tree()
-Date: Wed, 11 Jun 2025 11:15:39 +0900
-Message-ID: <20250611021547.2766889-3-tan.shaopeng@jp.fujitsu.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250611021547.2766889-1-tan.shaopeng@jp.fujitsu.com>
-References: <20250611021547.2766889-1-tan.shaopeng@jp.fujitsu.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WrwnM+C5"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b26f7d2c1f1so5646114a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 19:18:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749608311; x=1750213111; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=BVzPT+QBa+W+93Jw6CnS8ATXdFQx76rd+QJAPEuwELM=;
+        b=WrwnM+C5gS3K6h39OPo0xbroKtmYSKvrQTB8inA/cHMPjFxA3/Xck8+dz0nAQEJcpj
+         nGH9hzS50hH1T+xQSupeRsZYD8+oIRHJs4vPOGiDwBfgU1GMR/EyUj6IW5MuvruIRqIm
+         20y4n4U1P2yHs3FgcMTKFEqEjgyXAOVVb+AxKcGPM8CXffSCTYXvlmcoO6XjtXhhTxjk
+         o3ZaAvX57KMGbHD6WwSZicKwQlExmARUZ2inZLRABHBV/KnhOjJlOAmakrD5ruhlXpPt
+         0Qi09WfF6G2hrRkqAX13zrpxstKI+Sii3ilY5p4X9Kk7GftAWgvb5K6jx6muolQUQlhj
+         hFgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749608311; x=1750213111;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BVzPT+QBa+W+93Jw6CnS8ATXdFQx76rd+QJAPEuwELM=;
+        b=ugXIuh40H4SuS/FXnB1EPK8cbR6JwgZmfiwyDZssm4P9eR7jvg0QK+zYw4+6aWoPv8
+         cgOZ1afusOB+T4UWpAViTUXtV08Kf8eb5f34ImDRHgjEJGhKfYPH4Pnn2R7Bl0IDryW+
+         OvMDIJYWc5ZfUXHI8+QKYbxHuJHIG9wUtxjGC/eTZUw+w4FNcpRgoQ9BvZjmbz0ZsrZQ
+         InQ4DU/wBDs5+IZP5MenPzNhciN+X+LLQoWuZdav/lkhCkpYVq+0bfQ9N7FM19X516gw
+         ZrFjJ2bk1DidRSbVZSnOwsyP+aWNWBltMlLW9xVoch8UXJlRWL3BXt3xxH55Ao/q6DE4
+         2N7w==
+X-Forwarded-Encrypted: i=1; AJvYcCWM1abx6tip8/AqzW3zfzHIkcQFLmifwXD9ycR2g4RHQeU3r5SIlJRDjP6ZN6Le3UWskoubvhDuSHTwS4I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrTqPf1iLM4qbXJj9AiVjUxa0KMUZaypxCAwMvDHMCJRu9LkDe
+	Q5PV08VzvtQqAXuqlXpmwUiswDnTkL501EH7KGMp0I/YRsTcS8RCozA2/SuUBrfUIj8=
+X-Gm-Gg: ASbGncsYyWm4knA7OSj3mYKkD0jrnxdB9G/m41b1MljTqLkimeT15GjWIOUe/ld1PbF
+	o9kqJqjcHAY2xfLBsTqOF4C9pAgi52OPd7l+9wDi4S0y1wKqVDuxpIpNfmQ4c3RT0ufpqfLrkHw
+	I69Qwjk1kWl1aUtx1KUoXLaLPCl+bBv8QgiT0S+g1SGtsiJdMV/l3sw2dDIqXIMhWcjesCi0Vcd
+	OFxF1el7G7DFgDhDk23t9dL9zJRZVEbJurX2L27uDaFsyRnRL+6JF+H5l2QoniBK97hdjFbnuQh
+	jAKgepxRjVyrq/8oMVQSutEcad4dceKmUVuSgTSnEnh8xSxYrMYa+us3rwhoPnmnx5n0kuASFQ=
+	=
+X-Google-Smtp-Source: AGHT+IExhs5eYhf6tHwalRmCPZodGm+T8pYXC1tEHKyqqYin+EC/fkXPzgbCpRMDAYA8+l44SvhlXw==
+X-Received: by 2002:a17:90b:1dcf:b0:311:d28a:73ef with SMTP id 98e67ed59e1d1-313b1ef5898mr1307915a91.10.1749608311204;
+        Tue, 10 Jun 2025 19:18:31 -0700 (PDT)
+Received: from localhost ([122.172.81.72])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313b2141e6asm256489a91.42.2025.06.10.19.18.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 19:18:30 -0700 (PDT)
+Date: Wed, 11 Jun 2025 07:48:28 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Benno Lossin <lossin@kernel.org>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Danilo Krummrich <dakr@kernel.org>, Gary Guo <gary@garyguo.net>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Trevor Gross <tmgross@umich.edu>, Yury Norov <yury.norov@gmail.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: Re: [PATCH V3 0/3] rust: Introduce CpuId and fix cpumask doctest
+Message-ID: <20250611021828.fbdyugkxz4axz67b@vireshk-i7>
+References: <cover.1749554685.git.viresh.kumar@linaro.org>
+ <CANiq72mWAP5ZuOGTXZ1=zTOR_Y2YuqV2i8PberOeWOkx3VL0ew@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiq72mWAP5ZuOGTXZ1=zTOR_Y2YuqV2i8PberOeWOkx3VL0ew@mail.gmail.com>
 
-Inconsistent context format. Optimize it,
-not only save a line and also make it easier to understand.
+On 10-06-25, 19:10, Miguel Ojeda wrote:
+> On Tue, Jun 10, 2025 at 3:22 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> >
+> > Here is another attempt at fixing the cpumask doctest. This series creates a new
+> > abstraction `CpuId`, which is used to write a cleaner cpumask example which
+> > doesn't fail in those corner cases.
+> >
+> > Rebased over v6.16-rc1 + [1].
+> 
+> Given this is growing, should we apply something trivial right away as
+> a fix meanwhile? Or are you planning to send this as a fix during the
+> -rcs?
 
-Signed-off-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
----
- fs/resctrl/rdtgroup.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Yeah, I am planning to send this for rc2 or rc3.
 
-diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
-index 1beb124e25f6..8bf87211eadb 100644
---- a/fs/resctrl/rdtgroup.c
-+++ b/fs/resctrl/rdtgroup.c
-@@ -2608,10 +2608,8 @@ static int rdt_get_tree(struct fs_context *fc)
- 		goto out_root;
- 
- 	ret = schemata_list_create();
--	if (ret) {
--		schemata_list_destroy();
--		goto out_ctx;
--	}
-+	if (ret)
-+		goto out_schemata_free;
- 
- 	ret = closid_init();
- 	if (ret)
 -- 
-2.43.5
-
+viresh
