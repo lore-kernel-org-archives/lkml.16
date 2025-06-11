@@ -1,237 +1,162 @@
-Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DA8E2222CA;
-	Wed, 11 Jun 2025 19:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7105EC8FE;
+	Wed, 11 Jun 2025 19:59:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749671850; cv=none; b=RIsVn7gkM5apxufQz+bQufBrtogpqErRVagIUm19fxHiPpYHXsJGoevtexykYACfFb0rbUOhyV+ai4hnYBbOs1+kloPIOWXu1v7Na8MRx69XlFfpfj36gFwXH1R3j3QIEFYrctHY9R3rnqvO795k0VKAJLmrTNWbZY5QdYUO9s4=
+	t=1749671955; cv=none; b=djQER8+uH8uYEk0xz0T3xouvmQlBJNgQ9eC2+xM9Iw+m377H/frILjjReLwwnbO7iCi2ipGh8ChN/pmLwxzKHk23xFMKWFlp3yxuF6MGFmClu3lrDzfa7vuwvBqShSwOYhVXCzbYFmVgB9RkxAaj44YrBbEtHXwDkHqOMB6ItXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749671850; c=relaxed/simple;
-	bh=l+3eGtGFJPPGFfFCjxhEmKxENxAOs/hijlNpTuHUvQ8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=W2fyV5RZFvb5vLYb9dqqGl0KjpUMp0opRZ0H/kVGGTNJX55cy5TYCmG8mUykSUXW8W5mD7817bXe+IkRy0nEMhokLYpyl7NZL04XSJJtQbB5bbyHs8d0+cyJ389+dnxsc6xCMz6ZyjiQJRQ8+NOflwN6DleHWQ6fu6/aaNT3qBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=0vdyDy4w; arc=none smtp.client-ip=185.226.149.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+	s=arc-20240116; t=1749671955; c=relaxed/simple;
+	bh=g5ZYbYOK1aUC0FTjWb74OVx65hmXOJFd6WWlyHG+nsE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=U6qPDbmCyFkmUneaqg0nNjqZiReQ2lwjQWFdzg/q/USIlAjlD4gI9+C8TKRsab0uuSO8DfEx71FtSGqAkjQSlLQ78YWtycD3h917olbEtU4dInFLJCvRy5RRo5LLyrrxgiT0R+tjdCrDOvWSlR1yi8Qonn7CrgwooDbFiD/fS60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PEOoeZ7g; arc=none smtp.client-ip=209.85.128.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="0vdyDy4w"
-Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
-	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1uPRZZ-00BIDl-4K; Wed, 11 Jun 2025 21:57:21 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector2; h=Cc:To:In-Reply-To:References:Message-Id:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From;
-	bh=g3P/b2xpkd5Ju2ZEi9PD/MpzldHWyAMly/rPPt2zMp4=; b=0vdyDy4w5DEKVG4vQ/baGS47cS
-	St3J+CbDkgG9+KuUpsqMHAiOIIsofDG+d1F4xW9EJXAcX/EgIZI55kbLU+jVWCNMxXOrR/JIEubnY
-	75ipr07E23f8+d9qn5bBKjBLH3qjsEOj46h8abjZdGVloRSY8dCnyky1RL8F3a1hfz5iXAPqkbpSf
-	lAkw1vd/v1QAjRJBDOvR+ZD/yxSKJ3wjzjn+2MeL7ZQcK7J0JET1taicdFl9arVnQ5hHTcqhw/kq1
-	ej4d2tXfyD99id4VJyVF0smc59cihC2Sm1LH+Fg/VE8s/jpfIwrmeXlIS78Q+ibAyOrpbHRVC9HfS
-	3yxlyouQ==;
-Received: from [10.9.9.74] (helo=submission03.runbox)
-	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1uPRZY-0004Bc-PC; Wed, 11 Jun 2025 21:57:20 +0200
-Received: by submission03.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1uPRZH-00BycS-Lv; Wed, 11 Jun 2025 21:57:03 +0200
-From: Michal Luczaj <mhal@rbox.co>
-Date: Wed, 11 Jun 2025 21:56:51 +0200
-Subject: [PATCH net-next v3 2/3] vsock/test: Introduce get_transports()
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PEOoeZ7g"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-70b684670e7so216857b3.2;
+        Wed, 11 Jun 2025 12:59:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749671952; x=1750276752; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gxFme6q2BwhARk9P34NIeJ60XrHXGwqFtKOjSld0rp4=;
+        b=PEOoeZ7gaLVjb/OaWMqDSwuaNAoCif3iRcbQsq+R+wxKqSQ5+TO7zwvsocTyihgby3
+         Ek3Dzc2u2BNF17bUzsHGPWHgV918OOftsuBXRAryEhvu+MGjXZBEUWCPp56idHP5vHrO
+         RaZX2FwWY7v1ZcYxz+rhFC0zsnpjihr9MrUN+63D5hWELUkvEi/bzKcCNGgwVcZsvD34
+         6TJycGxwIWR5zGoVgB/CNG3wrZom8Lqt+3OMetJX+EP9fsLvKjaY5YHJSACKEZXZbiu1
+         /72tFYasPzjwIgplkNQSUs6YPEAtHt+YELew3x36ySgCzr9A6BU3aemekFz37XW+JJnu
+         E4aQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749671952; x=1750276752;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gxFme6q2BwhARk9P34NIeJ60XrHXGwqFtKOjSld0rp4=;
+        b=m3FIQ3JHoWFZAa0mWPjsDhBkwaVZfGkGCL+YzuGze54LJuJH1zSOzAV92Fg1ZY/EFi
+         HOB6ePydVvvjUN8IGKglB/uCO3kcLJpCOftvct0Qn9Ezb/sIslCK+b9hye/s4DiveIdZ
+         uBhaPcTO6BD3DU3NZS8WJRxrq4AMq294czu3V/ejBRsJO3lWYoTZHAyIfKMDiEETPsch
+         W2bxNUVpaTkqbuk+GiV2Bcpf8jFxgJ59YFgHlbcWZg8m5ioMNWXvCyYz6Y0psMTfKn1W
+         9aoYTqbfVnbETPJD9mJaICM6LALKmD61VvuM9jdmPTM40rFb3abjQi3nlsXf2OGo96/o
+         gdGA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBP3wUGfJuZgPMi22lmKcxDa4jqYUb0z+lvHAHKv/w1Jd6ArB0nC0TtDvP8ITPdxXKHM5S0NwHBhk=@vger.kernel.org, AJvYcCVjtezlUz0T70aepLpSsqeN2kfYvkuluTKRsH4NboER7rN7HWWWBhln2MlfKWZOkBa2GmGVyzAk8Rwg@vger.kernel.org, AJvYcCXGlhA9TU4YDNwi+RQtC/UkW8pbpsmKZVKxjg4DZPO6POIHsyJajQbcZsY8pdzEh5OgMAy6vip7tMuF0CKg@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5hKmPz9q0+AHWG9bEJj2ZPsjOSgcIEl+n4d4bUVYeyQXKtKh1
+	699xe4jPv0I9gAjS4A/p1Cqcr5lhCP9rXHAjySrE7+hQpR2MGyYrXGbyYHBIDmUJo0EuCzmOkeL
+	lMd3xrjIOSUSKHJFhw1OXywEjQsRT8R0=
+X-Gm-Gg: ASbGncsuvAt9oCdqfyFNSulfzk5D2yjmdudSJLJP7/8usD8ATrEd9WH+jXJdZDLfYiz
+	5Byb89Po6QLeiO9LhXx+nDG0bdkGEs8cRvr0b6lLYwwNqXCU5MUevFuGOTo8FO+4QPN2NbEB9nT
+	QqX+Cw5r+Fyyw9wZJTlI7H1Oqqd5evURQHbTLzT4WqEt+4NpMGYj4ezg==
+X-Google-Smtp-Source: AGHT+IGgnTLD9FiBr75NlfKlcMt5VyjwhnQidVERWleFWbPgSYjaA7xYm8HM59m3DuvQF61FZiTrWS8pj8XuscbbkK0=
+X-Received: by 2002:a05:690c:60c4:b0:70e:86a2:9b3a with SMTP id
+ 00721157ae682-7114089c3cemr31099857b3.0.1749671952314; Wed, 11 Jun 2025
+ 12:59:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250611-vsock-test-inc-cov-v3-2-5834060d9c20@rbox.co>
-References: <20250611-vsock-test-inc-cov-v3-0-5834060d9c20@rbox.co>
-In-Reply-To: <20250611-vsock-test-inc-cov-v3-0-5834060d9c20@rbox.co>
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Michal Luczaj <mhal@rbox.co>
-X-Mailer: b4 0.14.2
+References: <20250601172139.59156-1-l.rubusch@gmail.com> <20250601172139.59156-11-l.rubusch@gmail.com>
+ <20250608172317.63473b9b@jic23-huawei>
+In-Reply-To: <20250608172317.63473b9b@jic23-huawei>
+From: Lothar Rubusch <l.rubusch@gmail.com>
+Date: Wed, 11 Jun 2025 21:58:36 +0200
+X-Gm-Features: AX0GCFskRJiUUFIn6P0la-7-85XS-DoiKPtts1BFZLCEPQ5xBxG18pp3MvgD2mg
+Message-ID: <CAFXKEHZj7nYOJA7Ztxh8xiOcPpwDNBzNyN830tiKL=7rL0fiug@mail.gmail.com>
+Subject: Re: [PATCH v4 10/11] iio: accel: adxl313: add AC coupled
+ activity/inactivity events
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net, 
+	lucas.p.stankus@gmail.com, lars@metafoo.de, Michael.Hennerich@analog.com, 
+	bagasdotme@gmail.com, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Return a bitmap of registered vsock transports. As guesstimated by grepping
-/proc/kallsyms (CONFIG_KALLSYMS=y) for known symbols of type `struct
-vsock_transport`, or `struct virtio_transport` in case the vsock_transport
-is embedded within.
+Hi Jonathan,
 
-Note that the way `enum transport` and `transport_ksyms[]` are defined
-triggers checkpatch.pl:
+On Sun, Jun 8, 2025 at 6:23=E2=80=AFPM Jonathan Cameron <jic23@kernel.org> =
+wrote:
+>
+> On Sun,  1 Jun 2025 17:21:38 +0000
+> Lothar Rubusch <l.rubusch@gmail.com> wrote:
+>
+> > Add AC coupling activity and inactivity as MAG_ADAPTIVE events. This ad=
+ds
+> > up an additional set of threshold and period handles, verifies matching
+> > disabling functionality and extends setting the link bit to complementa=
+ry
+> > event configurations.
+> >
+> > This means, e.g. either ACTIVITY or ACTIVITY_AC can be enabled. The mos=
+t
+> > recent set will remain configured. Disabling ACTIVITY where ACTIVITY_AC=
+ was
+> > enabled is ignored, since it does not match (should be disabling
+> > ACTIVITY_AC). When INACTIVITY or INACTIVITY_AC is also enabled, the lin=
+k
+> > bit will be set. Note, having the link bit and auto-sleep in place acti=
+vity
+> > and inactivity indicate the power save state change and thus will only =
+be
+> > triggered once a state transition occurs. Since there is a separate AC =
+bit
+> > for ACTIVITY and for INACTIVITY, events can be linked independently fro=
+m
+> > each other i.e. ACTIVITY can be linked to INACTIVITY_AC for instance.
+> >
+> > When one of both is disabled, the link bit will be removed. Hence, the
+> > remaining event will not indicate a plain state change anymore, but occ=
+ur
+> > as a periodically triggered inactivity event or for each activity event
+> > above the threshold.
+> >
+> > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+>
+> Minor thought on rereading this.  If we don't have the link bit set
+> (and the paired event) the AC events are more accurately described as
+> MAG_REFERENCED as they are referenced simply to whatever acceleration
+> was going on when they were first enabled.   Only with the link bit
+> set (and the other event type enabled) are they actually adapting
+> (so MAG_ADAPTIVE).
+>
 
-util.h:11: ERROR: Macros with complex values should be enclosed in parentheses
-util.h:20: ERROR: Macros with complex values should be enclosed in parentheses
-util.h:20: WARNING: Argument 'symbol' is not used in function-like macro
-util.h:28: WARNING: Argument 'name' is not used in function-like macro
+Going by examples, I can follow you as practically I'm aware of the
+difference between a plain inactivity setup and a link-bit enabled
+inactivity(and activity) setup. Initially I thought of MAG and the
+AC-coupled equivalent being MAG_REFERENCED. By your explanation I
+understand why you preferred MAG_ADAPTIVE rather. But still all three
+configurations are possible.
 
-While commit 15d4734c7a58 ("checkpatch: qualify do-while-0 advice")
-suggests it is known that the ERRORs heuristics are insufficient, I can not
-find many other places where preprocessor is used in this
-checkpatch-unhappy fashion. Notable exception being bcachefs, e.g.
-fs/bcachefs/alloc_background_format.h. WARNINGs regarding unused macro
-arguments seem more common, e.g. __ASM_SEL in arch/x86/include/asm/asm.h.
+My idea is, the driver implementation supports all cases in parallel,
+at least to a certain extent. I mean, at the current implementation
+someone can configure plain activity, or AC-coupled activity, or
+respectively, their inactivity equivalents - when both, an activity
+type together with an inactivity type are enabled, they will be linked
+counter events. I.e. "adaptive" - and auto-sleep will be turned on for
+the inactivity periods. Built on using just plain IIO API w/o custom
+API calls.
 
-In other words, this might be unnecessarily complex. The same can be
-achieved by just telling human to keep the order:
+Due to all the possible combinations, this comes at a certain
+complexity. In terms of configuration and for instance mapping to MAG,
+MAG_REFERNCED or MAG_ADAPTIVE. Here I rely on your feedback. On my
+side, I'll try to recycle the automation setup to verify registers are
+configured as I like them to be using the sysfs handles (that's btw
+the reason why I'm glad to have debugfs on board). So, if you tell me,
+to change it rather to MAG_REFERENCED, I'll do it, but then AC-coupled
+events will be all MAG_REFRENCED w/ or w/o link bit. Or we come up
+with a total different approach, like putting link-bit AC on
+MAG_ADAPTIVE and plain AC-coupled on MAG_REFERENCED, but then what
+about MAG events w/ or w/o link-bit? hmm, I think current approach
+seems to be a good compromise. Let me know what you think.
 
-enum transport {
-	TRANSPORT_LOOPBACK = BIT(0),
-	TRANSPORT_VIRTIO = BIT(1),
-	TRANSPORT_VHOST = BIT(2),
-	TRANSPORT_VMCI = BIT(3),
-	TRANSPORT_HYPERV = BIT(4),
-	TRANSPORT_NUM = 5,
-};
+Best,
+L
 
- #define KSYM_ENTRY(sym) "d " sym "_transport"
-
-/* Keep `enum transport` order */
-static const char * const transport_ksyms[] = {
-	KSYM_ENTRY("loopback"),
-	KSYM_ENTRY("virtio"),
-	KSYM_ENTRY("vhost"),
-	KSYM_ENTRY("vmci"),
-	KSYM_ENTRY("vhs"),
-};
-
-Suggested-by: Stefano Garzarella <sgarzare@redhat.com>
-Signed-off-by: Michal Luczaj <mhal@rbox.co>
----
- tools/testing/vsock/util.c | 56 ++++++++++++++++++++++++++++++++++++++++++++++
- tools/testing/vsock/util.h | 29 ++++++++++++++++++++++++
- 2 files changed, 85 insertions(+)
-
-diff --git a/tools/testing/vsock/util.c b/tools/testing/vsock/util.c
-index b7b3fb2221c1682ecde58cf12e2f0b0ded1cff39..803f1e075b62228c25f9dffa1eff131b8072a06a 100644
---- a/tools/testing/vsock/util.c
-+++ b/tools/testing/vsock/util.c
-@@ -7,6 +7,7 @@
-  * Author: Stefan Hajnoczi <stefanha@redhat.com>
-  */
- 
-+#include <ctype.h>
- #include <errno.h>
- #include <stdio.h>
- #include <stdint.h>
-@@ -23,6 +24,9 @@
- #include "control.h"
- #include "util.h"
- 
-+#define KALLSYMS_PATH		"/proc/kallsyms"
-+#define KALLSYMS_LINE_LEN	512
-+
- /* Install signal handlers */
- void init_signals(void)
- {
-@@ -854,3 +858,55 @@ void enable_so_linger(int fd, int timeout)
- 		exit(EXIT_FAILURE);
- 	}
- }
-+
-+static int __get_transports(void)
-+{
-+	char buf[KALLSYMS_LINE_LEN];
-+	const char *ksym;
-+	int ret = 0;
-+	FILE *f;
-+
-+	f = fopen(KALLSYMS_PATH, "r");
-+	if (!f) {
-+		perror("Can't open " KALLSYMS_PATH);
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	while (fgets(buf, sizeof(buf), f)) {
-+		char *match;
-+		int i;
-+
-+		assert(buf[strlen(buf) - 1] == '\n');
-+
-+		for (i = 0; i < TRANSPORT_NUM; ++i) {
-+			if (ret & BIT(i))
-+				continue;
-+
-+			/* Match should be followed by '\t' or '\n'.
-+			 * See kallsyms.c:s_show().
-+			 */
-+			ksym = transport_ksyms[i];
-+			match = strstr(buf, ksym);
-+			if (match && isspace(match[strlen(ksym)])) {
-+				ret |= BIT(i);
-+				break;
-+			}
-+		}
-+	}
-+
-+	fclose(f);
-+	return ret;
-+}
-+
-+/* Return integer with TRANSPORT_* bit set for every (known) registered vsock
-+ * transport.
-+ */
-+int get_transports(void)
-+{
-+	static int tr = -1;
-+
-+	if (tr == -1)
-+		tr = __get_transports();
-+
-+	return tr;
-+}
-diff --git a/tools/testing/vsock/util.h b/tools/testing/vsock/util.h
-index 0afe7cbae12e5194172c639ccfbeb8b81f7c25ac..71895192cc02313bf52784e2f77aa3b0c28a0c94 100644
---- a/tools/testing/vsock/util.h
-+++ b/tools/testing/vsock/util.h
-@@ -3,8 +3,36 @@
- #define UTIL_H
- 
- #include <sys/socket.h>
-+#include <linux/bitops.h>
-+#include <linux/kernel.h>
- #include <linux/vm_sockets.h>
- 
-+/* All known vsock transports, see callers of vsock_core_register() */
-+#define KNOWN_TRANSPORTS(x)		\
-+	x(LOOPBACK, "loopback")		\
-+	x(VIRTIO, "virtio")		\
-+	x(VHOST, "vhost")		\
-+	x(VMCI, "vmci")			\
-+	x(HYPERV, "hvs")
-+
-+enum transport {
-+	TRANSPORT_COUNTER_BASE = __COUNTER__ + 1,
-+	#define x(name, symbol)		\
-+		TRANSPORT_##name = BIT(__COUNTER__ - TRANSPORT_COUNTER_BASE),
-+	KNOWN_TRANSPORTS(x)
-+	TRANSPORT_NUM = __COUNTER__ - TRANSPORT_COUNTER_BASE,
-+	#undef x
-+};
-+
-+static const char * const transport_ksyms[] = {
-+	#define x(name, symbol) "d " symbol "_transport",
-+	KNOWN_TRANSPORTS(x)
-+	#undef x
-+};
-+
-+static_assert(ARRAY_SIZE(transport_ksyms) == TRANSPORT_NUM);
-+static_assert(BITS_PER_TYPE(int) >= TRANSPORT_NUM);
-+
- /* Tests can either run as the client or the server */
- enum test_mode {
- 	TEST_MODE_UNSET,
-@@ -82,4 +110,5 @@ void setsockopt_timeval_check(int fd, int level, int optname,
- 			      struct timeval val, char const *errmsg);
- void enable_so_zerocopy_check(int fd);
- void enable_so_linger(int fd, int timeout);
-+int get_transports(void);
- #endif /* UTIL_H */
-
--- 
-2.49.0
-
+>
+> Maybe there is room to use that to ultimately control whether the
+> link bit is set or not (putting aside the power aspect of that).
+>
