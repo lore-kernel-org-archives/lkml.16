@@ -1,176 +1,408 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A98F1EA65
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 01:33:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9764685
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 01:34:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749605619; cv=none; b=IYDcTY17WO7DZT5NXIEkP7gr8UrkViNJJ2PXYXP5OO7EQDGuGyrRTfU9qUmcTBfhIBCGMbaeh+ALzdan6xl5OKdSc89rZUj51FaH5mzFs37jviGNRjE+E9ZTNAUHad4vNSnjma1gTGdaI/rdOiMMmlVFTq77zt59ExvMWADoU2E=
+	t=1749605652; cv=none; b=X6nwXlF8eC8sEyuLHhBhvgt1FGcpThhyaW8gcRjoZqjmQdFuNxIBZHgJZERVrVUgr7STjcDxqqwRgMum2YxgnrO6vORR8+MI3HGFMg9KdtrbXL30YhbHKAldG9S+yGt0SAqns6+5B+F0IufFLNfEd4y1EbWjdERqR6foQRvs2gM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749605619; c=relaxed/simple;
-	bh=a7zLtHKT5M6Fl3wADrK0Ts5XKmk+GX6S7QhB7fNtI6c=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=Yz46hNkeyqF9SiKK7v4RHrSykNZu5A07QWnLBeeOYVMxnrwK57zOAo7Yg+vW8X+eEDPq793p8LI46gqEiHXdtBXHAkjY5mdQ9tgrnLnR248ZauE8cIyVrEedgriEn/UrF8Uaw8fmJoMVQgDI/fkNQvqS62hekxe0HcRKIPvZ164=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=isZxnGSE; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1749605652; c=relaxed/simple;
+	bh=x+OnI1hmCeeSWOq5Kt9cogRY31pzrCUgmspRKccz+GE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B3Z3mHzze4rika3n88TmcD4ikuvs7gw8c5gUDM+bJ70uT7rq0rD/JjHedSTD5NR5vByHV7Z4Wm/jQg9YxjlQGe288tt0t37w/2kaRyS2ca0j/5/5rt95OeRWczsVdx9jQZqd22ky/wIGvba+KDhNsRLligk+6zV7Ic1CnDo0M1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=WPpeRvWk; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="isZxnGSE"
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250611013328epoutp01c882bc166aaa72fb1951d810b06d04f4~H2Qf7BptU2857028570epoutp01h
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 01:33:28 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250611013328epoutp01c882bc166aaa72fb1951d810b06d04f4~H2Qf7BptU2857028570epoutp01h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1749605608;
-	bh=GZco/lD0FO9ZEx8hZGGAoWY76+lWGAijqGbtBh8HY20=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=isZxnGSEAPS0VdnIYBMbw8wI9Ky7Vo0q9LmLTp6BlyVvCghvGmuBKvEp98xY+/fnj
-	 jZBK66EfhFI5NhWR8u0jMaVvgMN30QnS+ks9GxFqFGWuB3wvffUV5wAYcnJ2qQS/mF
-	 MyhzWBbZvsukI6Qskhe+R2Na8pEQ1GrANajcwPD0=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas1p1.samsung.com (KnoxPortal) with ESMTPS id
-	20250611013328epcas1p1df9a149c0fe9eac90f7a17460419b367~H2QfdPUs21275512755epcas1p1v;
-	Wed, 11 Jun 2025 01:33:28 +0000 (GMT)
-Received: from epcas1p1.samsung.com (unknown [182.195.38.242]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4bH7Tg4wjTz6B9m6; Wed, 11 Jun
-	2025 01:33:27 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250611013327epcas1p239a2fad32789064beb3769e03737c60d~H2QelxTjN3179331793epcas1p2E;
-	Wed, 11 Jun 2025 01:33:27 +0000 (GMT)
-Received: from yjjunylee03 (unknown [10.252.68.99]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250611013327epsmtip1afc64bcde70abfea04b654dffb76bb0f~H2QejLa7h1630516305epsmtip1K;
-	Wed, 11 Jun 2025 01:33:27 +0000 (GMT)
-From: <yjjuny.lee@samsung.com>
-To: "'Laurent Pinchart'" <laurent.pinchart@ideasonboard.com>, "'Ricardo
- Ribalda'" <ribalda@chromium.org>
-Cc: <hdegoede@redhat.com>, <mchehab@kernel.org>,
-	<linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-In-Reply-To: <20250610213058.GG24465@pendragon.ideasonboard.com>
-Subject: RE: [PATCH] usb: uvc: Fix 1-byte out-of-bounds read in
- uvc_parse_format()
-Date: Wed, 11 Jun 2025 10:33:27 +0900
-Message-ID: <01b501dbda70$d47d5ee0$7d781ca0$@samsung.com>
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="WPpeRvWk"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-313862d48e7so10450a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 18:34:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1749605649; x=1750210449; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O+RwS1PnfLMbD0PcfPF/1nwrqQ/N+l3fAFRI/JL96GI=;
+        b=WPpeRvWkxuO0eYn5EFZ86G/j1ZpwosRYozS1qLLChK9jDk8udDLC5BGwwJcsQ+1C0c
+         dPH3+l/5kKsMvGFVhYb+IpoRlOXbkyK4KPKRmuKOBmT6vC90gLIwk/UkufMWcs/GIIIN
+         keGmaT7XN17Gc+joWZr3UiP7T5oLYqcdxKbQCyLlBcbdiupTB0+mHsNy9atFZbJH9pA9
+         DTrVttRaIfLV522rq1gNYX4ixdgzH/BBE4br9iTpRy3jXHgtBHs4jSNyY8u+0rkre3RT
+         LeqCdVWgocZgENjJUCGtOsaHI2FeN27wgg8oHBMq1Z4/RzG3enMsKRtfdzgicWgsN5oq
+         0VBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749605649; x=1750210449;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O+RwS1PnfLMbD0PcfPF/1nwrqQ/N+l3fAFRI/JL96GI=;
+        b=nSb3KrtLryRp4+GzekUNs/py+GpXF8Zy/dS/Vyr0e/EIpynNt19cwP5SQ0odU2H94Z
+         QI0h6hPbKexgwg3a1RCilo7rcmjRT3SSwFYhZdB2QnifSY+Idnt4jQFDwXt0KBHi9JvY
+         1obooLifv5AyrYkMl+NwSpG2iGJgAmN0LBJl27eTcXx1spS2U06XunsQjuiCSWM4iKR5
+         rbmGUCOEmDzkY+YncvOB8PJy7aUGrnXDJ4evqcRHb4tp3k/BqpEAdyc4d/BYkhEBRR6R
+         N87yBj5sJcb9hP+eceXyz6XBOow56rA54vr77jyOHy7iqtcq58mtgdCW86woWSl5He6P
+         9qtw==
+X-Forwarded-Encrypted: i=1; AJvYcCWh3TMFegCAQkroJsKyKyYW8orQsx0iZhWylFLq3OQNA0D2Y3LGNdWxkB6ggsFRMChLd+TpOg/Unj6heH4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3F0OK2cgZSF7gDaT7AfaKRHdp/zpTKyBkilPvzTz1sn+GO+Cd
+	brtsUsRKJKhoGO7BSZa+Z6liKGBxBa9adhxXrxPAcQetXuQL9xCfA5iNaKx0bAzCZAlvm4EjQuA
+	xWweRm7YHka4x8atlG7fvJREn+qCiTbCVAuP+2Ua+4w==
+X-Gm-Gg: ASbGncuqFu4Xh0MupAcT60+qG0GbZhaE1YCwfFzaMgJePgSnsdEhvYq0J9X5WcS634h
+	FLTwu7LjhL+SqXceaIDI2B3JAJhQhnv2w0chTGRMoG2Q/Qya8+jdr2E3eQOE0GU9WRXGk1v/hHV
+	Z4jQaQAVLQSV51tlAdLmrPKRYAtHUCx5JU1j4i5CrOorU0
+X-Google-Smtp-Source: AGHT+IEzl3sJB2wN19xR6W5vHIJ9eBZ803hJ4/GH3M5wIItPR+l3lII0iZcLuPI7+4eKztFXy7/pTtc1b3K9AFS6fSI=
+X-Received: by 2002:a17:90b:3ec5:b0:311:c939:c855 with SMTP id
+ 98e67ed59e1d1-313af1a5f6dmr762729a91.3.1749605649344; Tue, 10 Jun 2025
+ 18:34:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250610233053.973796-1-cachen@purestorage.com> <20250610182155.36090c78124e1f60f2959d8e@linux-foundation.org>
+In-Reply-To: <20250610182155.36090c78124e1f60f2959d8e@linux-foundation.org>
+From: Casey Chen <cachen@purestorage.com>
+Date: Tue, 10 Jun 2025 18:33:58 -0700
+X-Gm-Features: AX0GCFsyzJdMCG0em6cVNKgcAjnFwkzRC995PaClcyP6g5VbMYXECJd6EZjBTAI
+Message-ID: <CALCePG318ATYRH-5G+OTY_utre57EwTe3EuP4BLuXMaXPJK9gA@mail.gmail.com>
+Subject: Re: [PATCH] alloc_tag: add per-NUMA node stats
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: surenb@google.com, kent.overstreet@linux.dev, corbet@lwn.net, 
+	dennis@kernel.org, tj@kernel.org, cl@gentwo.org, vbabka@suse.cz, 
+	mhocko@suse.com, jackmanb@google.com, hannes@cmpxchg.org, ziy@nvidia.com, 
+	rientjes@google.com, roman.gushchin@linux.dev, harry.yoo@oracle.com, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	yzhong@purestorage.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQJyD9DS5gI4YbVKzdNc8WxXy/HMZgKBOkd2AiccIVgCUixxMrKY7JfA
-Content-Language: ko
-X-CMS-MailID: 20250611013327epcas1p239a2fad32789064beb3769e03737c60d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-cpgsPolicy: CPGSC10-711,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250610124111epcas1p18fe9fd8ab47a424c2143d4e2912a8179
-References: <CGME20250610124111epcas1p18fe9fd8ab47a424c2143d4e2912a8179@epcas1p1.samsung.com>
-	<20250610124107.37360-1-yjjuny.lee@samsung.com>
-	<CANiDSCsaQCJCzfjjnMvVRAde0ZrMZC753y7m2MPQJuK=dVqQBQ@mail.gmail.com>
-	<20250610213058.GG24465@pendragon.ideasonboard.com>
 
-The buffer length check before calling uvc_parse_format() only ensured
-that the buffer has at least 3 bytes (buflen > 2), buf the function
-accesses buffer=5B3=5D, requiring at least 4 bytes.
-
-This can lead to an out-of-bounds read if the buffer has exactly 3 bytes.
-
-Fix it by checking that the buffer has at least 4 bytes in
-uvc_parse_format().
-
-Signed-off-by: Youngjun Lee <yjjuny.lee=40samsung.com>
-Reviewed-by: Ricardo Ribalda <ribalda=40chromium.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart=40ideasonboard.com>
----
- drivers/media/usb/uvc/uvc_driver.c =7C 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc=
-_driver.c
-index da24a655ab68..1100469a83a2 100644
---- a/drivers/media/usb/uvc/uvc_driver.c
-+++ b/drivers/media/usb/uvc/uvc_driver.c
-=40=40 -344,6 +344,9 =40=40 static int uvc_parse_format(struct uvc_device *=
-dev,
- 	u8 ftype;
- 	int ret;
-=20
-+	if (buflen < 4)
-+		return -EINVAL;
-+
- 	format->type =3D buffer=5B2=5D;
- 	format->index =3D buffer=5B3=5D;
- 	format->frames =3D frames;
---=20
-2.43.0
-
-
-> On Tue, Jun 10, 2025 at 02:58:25PM +0200, Ricardo Ribalda wrote:
-> > Hi Youngjun
-> >=20
-> > You still miss the v2 (v3 in this case). and the trailers.
-> >=20
-> > In the future you can use the b4 tool to take care of most of the detai=
-ls.
-> > https://b4.docs.kernel.org/en/latest/contributor/overview.html
-> > It has =22dry-run=22 option that let you review the mails before you se=
-nd=20
-> > them to the mailing list
-> >=20
-> > Please do not resubmit a new patch to fix this, only send a new patch=
-=20
-> > to fix more comments for other people.
-> >=20
-> > Regards=21
-> >=20
-> > On Tue, 10 Jun 2025 at 14:41, Youngjun Lee <yjjuny.lee=40samsung.com> w=
-rote:
-> > >
-> > > The buffer length check before calling uvc_parse_format() only=20
-> > > ensured that the buffer has at least 3 bytes (buflen > 2), buf the=20
-> > > function accesses buffer=5B3=5D, requiring at least 4 bytes.
-> > >
-> > > This can lead to an out-of-bounds read if the buffer has exactly 3 by=
-tes.
-> > >
-> > > Fix it by checking that the buffer has at least 4 bytes in=20
-> > > uvc_parse_format().
+On Tue, Jun 10, 2025 at 6:21=E2=80=AFPM Andrew Morton <akpm@linux-foundatio=
+n.org> wrote:
+>
+> On Tue, 10 Jun 2025 17:30:53 -0600 Casey Chen <cachen@purestorage.com> wr=
+ote:
+>
+> > Add support for tracking per-NUMA node statistics in /proc/allocinfo.
+> > Previously, each alloc_tag had a single set of counters (bytes and
+> > calls), aggregated across all CPUs. With this change, each CPU can
+> > maintain separate counters for each NUMA node, allowing finer-grained
+> > memory allocation profiling.
 > >
-> > Fixes: c0efd232929c (=22V4L/DVB (8145a): USB Video Class driver=22)
-> > Cc: stable=40vger.kernel.org
-> > Reviewed-by: Ricardo Ribalda <ribalda=40chromium.org>
+> > This feature is controlled by the new
+> > CONFIG_MEM_ALLOC_PROFILING_PER_NUMA_STATS option:
+> >
+> > * When enabled (=3Dy), the output includes per-node statistics followin=
+g
+> >   the total bytes/calls:
+> >
+> > <size> <calls> <tag info>
+> > ...
+> > 315456       9858     mm/dmapool.c:338 func:pool_alloc_page
+> >         nid0     94912        2966
+> >         nid1     220544       6892
+> > 7680         60       mm/dmapool.c:254 func:dma_pool_create
+> >         nid0     4224         33
+> >         nid1     3456         27
+> >
+> > * When disabled (=3Dn), the output remains unchanged:
+> > <size> <calls> <tag info>
+> > ...
+> > 315456       9858     mm/dmapool.c:338 func:pool_alloc_page
+> > 7680         60       mm/dmapool.c:254 func:dma_pool_create
+> >
+> > To minimize memory overhead, per-NUMA stats counters are dynamically
+> > allocated using the percpu allocator. PERCPU_DYNAMIC_RESERVE has been
+> > increased to ensure sufficient space for in-kernel alloc_tag counters.
+> >
+> > For in-kernel alloc_tag instances, pcpu_alloc_noprof() is used to
+> > allocate counters. These allocations are excluded from the profiling
+> > statistics themselves.
 >
-> Reviewed-by: Laurent Pinchart <laurent.pinchart=40ideasonboard.com>
+> What is glaringly missing here is "why".
 >
-> > > Signed-off-by: Youngjun Lee <yjjuny.lee=40samsung.com>
-> > > ---
-> > >  drivers/media/usb/uvc/uvc_driver.c =7C 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > >
-> > > diff --git a/drivers/media/usb/uvc/uvc_driver.c=20
-> > > b/drivers/media/usb/uvc/uvc_driver.c
-> > > index da24a655ab68..1100469a83a2 100644
-> > > --- a/drivers/media/usb/uvc/uvc_driver.c
-> > > +++ b/drivers/media/usb/uvc/uvc_driver.c
-> > > =40=40 -344,6 +344,9 =40=40 static int uvc_parse_format(struct uvc_de=
-vice *dev,
-> > >         u8 ftype;
-> > >         int ret;
-> > >
-> > > +       if (buflen < 4)
-> > > +               return -EINVAL;
-> > > +
-> > >         format->type =3D buffer=5B2=5D;
-> > >         format->index =3D buffer=5B3=5D;
-> > >         format->frames =3D frames;
+> What is the use case?  Why does Linux want this?  What benefit does
+> this bring to our users?  This is the most important part of the
+> changelog because it tells Andrew why he is even looking at this patch.
+>
+>
+> Probably related to the above omission: why per-nid?  It would be more
+> flexible to present the per-cpu counts and let userspace aggregate that
+> into per-node info if that is desirable.
+>
 
---
-Thanks & Regards,
+Hi Andrew,
 
-Youngjun Lee
+Thanks for taking time reviewing my patch. Sorry I didn't include you
+in the previous conversion. See
+https://lore.kernel.org/all/CAJuCfpHhSUhxer-6MP3503w6520YLfgBTGp7Q9Qm9kgN4T=
+Nsfw@mail.gmail.com/T/#u
+It includes some motivations and people's opinions. You can take a
+look while I am fixing your comments ASAP.
+Basically, we want to know if there is any NUMA imbalance on memory
+allocation. Further we could optimize our system based on the NUMA
+nodes stats.
 
+> >
+> > ...
+> >
+> > --- a/include/linux/alloc_tag.h
+> > +++ b/include/linux/alloc_tag.h
+> > @@ -15,6 +15,8 @@
+> >  #include <linux/static_key.h>
+> >  #include <linux/irqflags.h>
+> >
+> > +extern int pcpu_counters_num;
+>
+> This globally-visible variable's identifier is too generic - the name
+> should communicate which subsystem the variable belongs to.  Perhaps
+> alloc_tag_num_pcpu_counters?  It's long, but only used in a few places.
+>
+> In fact, it's a count-of-nodes so a better name would be alloc_tag_num_no=
+des.
+>
+> Also, as it's written to a single time, __read_mostly is appropriate.
+>
+> >  struct alloc_tag_counters {
+> >       u64 bytes;
+> >       u64 calls;
+> > @@ -134,16 +136,34 @@ static inline bool mem_alloc_profiling_enabled(vo=
+id)
+> >                                  &mem_alloc_profiling_key);
+> >  }
+> >
+> > +static inline struct alloc_tag_counters alloc_tag_read_nid(struct allo=
+c_tag *tag, int nid)
+> > +{
+> > +     struct alloc_tag_counters v =3D { 0, 0 };
+> > +     struct alloc_tag_counters *counters;
+> > +     int cpu;
+> > +
+> > +     for_each_possible_cpu(cpu) {
+>
+> for_each_possible_cpu() is lame - potentially much more expensive than
+> for_each_online_cpu.  Is it impractical to use for_each_online_cpu()?
+>
+> Probably doesn't matter for a userspace displaying function but
+> userspace can do weird and unexpected things.
+>
+> > +             counters =3D per_cpu_ptr(tag->counters, cpu);
+> > +             v.bytes +=3D counters[nid].bytes;
+> > +             v.calls +=3D counters[nid].calls;
+> > +     }
+> > +
+> > +     return v;
+> > +}
+> > +
+> >
+> > ...
+> >
+> >  static int allocinfo_show(struct seq_file *m, void *arg)
+> >  {
+> >       struct allocinfo_private *priv =3D (struct allocinfo_private *)ar=
+g;
+> > @@ -116,6 +136,9 @@ static int allocinfo_show(struct seq_file *m, void =
+*arg)
+> >               priv->print_header =3D false;
+> >       }
+> >       alloc_tag_to_text(&buf, priv->iter.ct);
+> > +#ifdef CONFIG_MEM_ALLOC_PROFILING_PER_NUMA_STATS
+> > +     alloc_tag_to_text_all_nids(&buf, priv->iter.ct);
+> > +#endif
+>
+> We can eliminate the ifdef by adding
+>
+> #else
+> static inline void alloc_tag_to_text_all_nids(struct seq_buf *out, struct=
+ codetag *ct)
+> {
+> }
+> #endif
+>
+> above.
+>
+> > +static void alloc_tag_to_text_all_nids(struct seq_buf *out, struct cod=
+etag *ct)
+>
+> >       seq_commit(m, seq_buf_used(&buf));
+> >       return 0;
+> >  }
+> >
+> > ...
+> >
+> > @@ -247,19 +270,41 @@ static void shutdown_mem_profiling(bool remove_fi=
+le)
+> >  void __init alloc_tag_sec_init(void)
+> >  {
+> >       struct alloc_tag *last_codetag;
+> > +     int i;
+> >
+> >       if (!mem_profiling_support)
+> >               return;
+> >
+> > -     if (!static_key_enabled(&mem_profiling_compressed))
+> > -             return;
+> > -
+> >       kernel_tags.first_tag =3D (struct alloc_tag *)kallsyms_lookup_nam=
+e(
+> >                                       SECTION_START(ALLOC_TAG_SECTION_N=
+AME));
+> >       last_codetag =3D (struct alloc_tag *)kallsyms_lookup_name(
+> >                                       SECTION_STOP(ALLOC_TAG_SECTION_NA=
+ME));
+> >       kernel_tags.count =3D last_codetag - kernel_tags.first_tag;
+> >
+> > +#ifdef CONFIG_MEM_ALLOC_PROFILING_PER_NUMA_STATS
+> > +     pcpu_counters_num =3D num_possible_nodes();
+> > +#else
+> > +     pcpu_counters_num =3D 1;
+> > +#endif
+>
+> In the CONFIG_MEM_ALLOC_PROFILING_PER_NUMA_STATS=3Dn case, let's make
+> pcpu_counters_num a constant "1", visible to all compilation units.
+>
+> That way the compiler can optimize away all the
+>
+>         for (nid =3D 0; nid < pcpu_counters_num; nid++)
+>
+> looping.
+>
+> > +     pcpu_counters_size =3D pcpu_counters_num * sizeof(struct alloc_ta=
+g_counters);
+> >
+> > +     for (i =3D 0; i < kernel_tags.count; i++) {
+> > +             /* Each CPU has one alloc_tag_counters per numa node */
+> > +             kernel_tags.first_tag[i].counters =3D
+> > +                     pcpu_alloc_noprof(pcpu_counters_size,
+> > +                                       sizeof(struct alloc_tag_counter=
+s),
+> > +                                       false, GFP_KERNEL | __GFP_ZERO)=
+;
+> > +             if (!kernel_tags.first_tag[i].counters) {
+> > +                     while (--i >=3D 0)
+> > +                             free_percpu(kernel_tags.first_tag[i].coun=
+ters);
+> > +                     pr_info("Failed to allocate per-cpu alloc_tag cou=
+nters\n");
+>
+> pr_err(), methinks.
+>
+> > +                     return;
+>
+> And now what happens.  Will the kernel even work?
+>
+> This code path is untestable unless the developer jumps through hoops
+> and it will never be tested again.
+>
+> We assume that __init-time allocations always succeed, so a hearty
+> panic() here would be OK.
+>
+> > +             }
+> > +     }
+> > +
+> > +     if (!static_key_enabled(&mem_profiling_compressed))
+> > +             return;
+> > +
+> >       /* Check if kernel tags fit into page flags */
+> >       if (kernel_tags.count > (1UL << NR_UNUSED_PAGEFLAG_BITS)) {
+> >               shutdown_mem_profiling(false); /* allocinfo file does not=
+ exist yet */
+> > @@ -622,7 +667,9 @@ static int load_module(struct module *mod, struct c=
+odetag *start, struct codetag
+> >       stop_tag =3D ct_to_alloc_tag(stop);
+> >       for (tag =3D start_tag; tag < stop_tag; tag++) {
+> >               WARN_ON(tag->counters);
+> > -             tag->counters =3D alloc_percpu(struct alloc_tag_counters)=
+;
+> > +             tag->counters =3D __alloc_percpu_gfp(pcpu_counters_size,
+> > +                                                sizeof(struct alloc_ta=
+g_counters),
+> > +                                                GFP_KERNEL | __GFP_ZER=
+O);
+> >               if (!tag->counters) {
+> >                       while (--tag >=3D start_tag) {
+> >                               free_percpu(tag->counters);
+>
+> Ditto here, actually.
+>
+> Not that it matters much.  It's init.text and gets thrown away, shrug.
+>
+> > --- a/mm/page_alloc.c
+> > +++ b/mm/page_alloc.c
+> >
+> > ...
+> >
+> > @@ -428,6 +429,7 @@ void __show_mem(unsigned int filter, nodemask_t *no=
+demask, int max_zone_idx)
+> >               nr =3D alloc_tag_top_users(tags, ARRAY_SIZE(tags), false)=
+;
+> >               if (nr) {
+> >                       pr_notice("Memory allocations:\n");
+> > +                     pr_notice("<size> <calls> <tag info>\n");
+> >                       for (i =3D 0; i < nr; i++) {
+> >                               struct codetag *ct =3D tags[i].ct;
+> >                               struct alloc_tag *tag =3D ct_to_alloc_tag=
+(ct);
+> > @@ -435,16 +437,27 @@ void __show_mem(unsigned int filter, nodemask_t *=
+nodemask, int max_zone_idx)
+> >                               char bytes[10];
+> >
+> >                               string_get_size(counter.bytes, 1, STRING_=
+UNITS_2, bytes, sizeof(bytes));
+> > -
+> >                               /* Same as alloc_tag_to_text() but w/o in=
+termediate buffer */
+> >                               if (ct->modname)
+> > -                                     pr_notice("%12s %8llu %s:%u [%s] =
+func:%s\n",
+> > -                                               bytes, counter.calls, c=
+t->filename,
+> > -                                               ct->lineno, ct->modname=
+, ct->function);
+> > +                                     pr_notice("%-12s %-8llu %s:%u [%s=
+] func:%s\n",
+> > +                                             bytes, counter.calls, ct-=
+>filename,
+> > +                                             ct->lineno, ct->modname, =
+ct->function);
+> >                               else
+> > -                                     pr_notice("%12s %8llu %s:%u func:=
+%s\n",
+> > -                                               bytes, counter.calls, c=
+t->filename,
+> > -                                               ct->lineno, ct->functio=
+n);
+> > +                                     pr_notice("%-12s %-8llu %s:%u fun=
+c:%s\n",
+> > +                                             bytes, counter.calls,
+> > +                                             ct->filename, ct->lineno,=
+ ct->function);
+> > +
+> > +#ifdef CONFIG_MEM_ALLOC_PROFILING_PER_NUMA_STATS
+> > +                             int nid;
+>
+> C99 definition.
+>
+> > +                             for (nid =3D 0; nid < pcpu_counters_num; =
+nid++) {
+>
+> If we're going to use C99 (is OK now) then it's better to go all the
+> way and give `i' loop scope.  "for (int i..".
+>
+> > +                                     counter =3D alloc_tag_read_nid(ta=
+g, nid);
+> > +                                     string_get_size(counter.bytes, 1,=
+ STRING_UNITS_2,
+> > +                                                     bytes, sizeof(byt=
+es));
+> > +                                     pr_notice("        nid%-5u %-12ll=
+d %-8lld\n",
+> > +                                               nid, counter.bytes, cou=
+nter.calls);
+> > +                             }
+> > +#endif
+> >                       }
+> >               }
+> >       }
+> >
+> > ...
+> >
