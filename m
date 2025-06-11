@@ -1,40 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F845284B3A;
-	Wed, 11 Jun 2025 10:44:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE81A27586B;
+	Wed, 11 Jun 2025 10:44:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749638673; cv=none; b=GebfK/q7oo0+Rfsn/APwAwvmqhzKY3TI/E1n0pF9/+UE19QgkKenZvlsNOfzrmlnuGyBEPtpAozXmc62SN6XncYwXiaH5LMe0DVdUTjlEorfxjq84W4wNG6MEclgHim1AlFrXiEz0mcv3xaReNTkvdPICgdR26Dy2QegXedwc7o=
+	t=1749638677; cv=none; b=X4SmAvr9ezHpX+9lifhpCLygTM+zwhk/wXDdMuTRroEK7P0scZIfmI9Ra3MozKpsm9zT+1tHGbhYsC7/dMpztfRx2RITlk1mywGvg+JhgZ9/f1AuzL9j8EYB1gYsX4Jj7RZYBXaCQoEBhSTo8jDAd48UZrrqf+bUc5YfrLtr6qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749638673; c=relaxed/simple;
-	bh=hA0wj8cW1lU72wYErpe+Q30mvQrkFsCwfJGZ5PR4buI=;
+	s=arc-20240116; t=1749638677; c=relaxed/simple;
+	bh=DFXb2Sd1AviR0meTWbNWr6As2FJfbh6fzCtv+oFGSEI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FwFagip64KDSzJbvYG/GP7PN6pcdGRgq83yYSrdV6irF6e4Ol1BFXyP3ndwsQmj4Ghfdf0MiXq4PF0HUl0vrSWJMfYY5qxC82aqVMJwoLID0r+I6rCFvY14amUDp/fChNIIFKvA0X9eNtUA70xLumCS/rBMv/N5IVNigfoZ20pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=idAe2R7l; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=fGXjvgMmCEmeADZtctInqAZBcfd3msoY7ai19o9qr2xHqQjhH88LdRVQxjmfNblgobtJb2//dzdJrSCspn6nYzrtSAKCU6JPqFwzbBRbMfk6chv7KJjhcxFBAyDVqEwhfGv0DS9pTiRZuWGYhY2bvPuWJHBzh9M4ICi2rxYWFxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jxwd/KZP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="idAe2R7l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E086EC4CEEE;
-	Wed, 11 Jun 2025 10:44:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jxwd/KZP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99AB5C4CEF3;
+	Wed, 11 Jun 2025 10:44:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749638673;
-	bh=hA0wj8cW1lU72wYErpe+Q30mvQrkFsCwfJGZ5PR4buI=;
+	s=k20201202; t=1749638677;
+	bh=DFXb2Sd1AviR0meTWbNWr6As2FJfbh6fzCtv+oFGSEI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=idAe2R7l8Vm5D3aOhjTSclyhlRJOEbI1FzRE4akb9XeIBXKgTwAUZk2m6fn0VA6wb
-	 VfCAAEvDTmHhsAtx2CJXOvukuplPLKmBpnHcFcNO/XD2DZfCzh+wFeGqo68Cnnvn4a
-	 OHjk4/fAAennKcum1dL866WrFwbA1m+qD9LzU1FsVy3bObP6jV53WMJK8Luyb0Da/t
-	 5p03N875nDZwGOLHpb8xoSW7g6mj5Uvb8Hnlh96WGc3T8ascQD11melYsvfXUThXKv
-	 377GGjGU5wougSAWGUjubD9uYMVyelZDj40DEIRFX1YY2gywi4AhtkvuKQKFYydktn
-	 heqOjK4Gw4xpA==
+	b=jxwd/KZPJJwG9Ywjh1/PhRGVdKW45Lk0qDePpntE/WGmu+0Cu+8m9ZsJhmwrjm15d
+	 pp0KgriTv6qpadEyjMj9KerrndYQbYAhprMi5SKtSuNmYGWRXdacFwBDwWd+S6CccU
+	 xqi2pRmxylUOrjjpZnm+QhpDOWYtok/3ghf8eiB3i2CckpHXr7l28hWPvOvng9giI8
+	 JHOqZZcVOEFSSG8xZdAYrrin2Ng2c/TGFsm72zZ6S7anjMveDsnWgTBpYoeS9KcUFk
+	 /O093vWRxY02LXlWByH+fKEDXWdRDV8IEaUzWwsu2fRxDZeuVcNLncmyA7dlrHU7Bu
+	 thZbbZf5ZCDFQ==
 From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: tglx@linutronix.de,
 	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org
-Subject: [PATCH] pci/controller: Use dev_fwnode()
-Date: Wed, 11 Jun 2025 12:43:44 +0200
-Message-ID: <20250611104348.192092-16-jirislaby@kernel.org>
+	Sean Wang <sean.wang@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Ludovic Desroches <ludovic.desroches@microchip.com>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev
+Subject: [PATCH] pinctrl: Use dev_fwnode()
+Date: Wed, 11 Jun 2025 12:43:45 +0200
+Message-ID: <20250611104348.192092-17-jirislaby@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250611104348.192092-1-jirislaby@kernel.org>
 References: <20250611104348.192092-1-jirislaby@kernel.org>
@@ -53,43 +66,75 @@ using of_node with of_fwnode_handle().
 So use the dev_fwnode() helper.
 
 Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org
----
- drivers/pci/controller/mobiveil/pcie-mobiveil-host.c | 5 ++---
- drivers/pci/controller/pcie-mediatek-gen3.c          | 3 +--
- 2 files changed, 3 insertions(+), 5 deletions(-)
+Cc: Sean Wang <sean.wang@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
 
-diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
-index a600f46ee3c3..cd44ddb698ea 100644
---- a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
-+++ b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
-@@ -464,9 +464,8 @@ static int mobiveil_pcie_init_irq_domain(struct mobiveil_pcie *pcie)
- 	struct mobiveil_root_port *rp = &pcie->rp;
+--
+
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: Chen-Yu Tsai <wens@csie.org>
+Cc: Jernej Skrabec <jernej.skrabec@gmail.com>
+Cc: Samuel Holland <samuel@sholland.org>
+Cc: linux-mediatek@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-sunxi@lists.linux.dev
+---
+ drivers/pinctrl/mediatek/mtk-eint.c   | 4 ++--
+ drivers/pinctrl/pinctrl-at91-pio4.c   | 6 +++---
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
+index d906a5e4101f..9f175c73613f 100644
+--- a/drivers/pinctrl/mediatek/mtk-eint.c
++++ b/drivers/pinctrl/mediatek/mtk-eint.c
+@@ -561,8 +561,8 @@ int mtk_eint_do_init(struct mtk_eint *eint, struct mtk_eint_pin *eint_pin)
+ 			goto err_eint;
+ 	}
  
- 	/* setup INTx */
--	rp->intx_domain = irq_domain_create_linear(of_fwnode_handle(dev->of_node), PCI_NUM_INTX,
--						   &intx_domain_ops, pcie);
--
-+	rp->intx_domain = irq_domain_create_linear(dev_fwnode(dev), PCI_NUM_INTX, &intx_domain_ops,
-+						   pcie);
- 	if (!rp->intx_domain) {
- 		dev_err(dev, "Failed to get a INTx IRQ domain\n");
- 		return -ENOMEM;
-diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
-index b55f5973414c..5464b4ae5c20 100644
---- a/drivers/pci/controller/pcie-mediatek-gen3.c
-+++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-@@ -756,8 +756,7 @@ static int mtk_pcie_init_irq_domains(struct mtk_gen3_pcie *pcie)
- 	/* Setup MSI */
- 	mutex_init(&pcie->lock);
+-	eint->domain = irq_domain_create_linear(of_fwnode_handle(eint->dev->of_node),
+-						eint->hw->ap_num, &irq_domain_simple_ops, NULL);
++	eint->domain = irq_domain_create_linear(dev_fwnode(eint->dev), eint->hw->ap_num,
++						&irq_domain_simple_ops, NULL);
+ 	if (!eint->domain)
+ 		goto err_eint;
  
--	pcie->msi_bottom_domain = irq_domain_create_linear(of_fwnode_handle(node),
--							   PCIE_MSI_IRQS_NUM,
-+	pcie->msi_bottom_domain = irq_domain_create_linear(dev_fwnode(dev), PCIE_MSI_IRQS_NUM,
- 							   &mtk_msi_bottom_domain_ops, pcie);
- 	if (!pcie->msi_bottom_domain) {
- 		dev_err(dev, "failed to create MSI bottom domain\n");
+diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
+index ca8a54a43ff5..57f105ac962d 100644
+--- a/drivers/pinctrl/pinctrl-at91-pio4.c
++++ b/drivers/pinctrl/pinctrl-at91-pio4.c
+@@ -1212,9 +1212,9 @@ static int atmel_pinctrl_probe(struct platform_device *pdev)
+ 		dev_dbg(dev, "bank %i: irq=%d\n", i, ret);
+ 	}
+ 
+-	atmel_pioctrl->irq_domain = irq_domain_create_linear(of_fwnode_handle(dev->of_node),
+-			atmel_pioctrl->gpio_chip->ngpio,
+-			&irq_domain_simple_ops, NULL);
++	atmel_pioctrl->irq_domain = irq_domain_create_linear(dev_fwnode(dev),
++							     atmel_pioctrl->gpio_chip->ngpio,
++							     &irq_domain_simple_ops, NULL);
+ 	if (!atmel_pioctrl->irq_domain)
+ 		return dev_err_probe(dev, -ENODEV, "can't add the irq domain\n");
+ 
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+index bf8612d72daa..a090d78a3413 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+@@ -1646,7 +1646,7 @@ int sunxi_pinctrl_init_with_flags(struct platform_device *pdev,
+ 		}
+ 	}
+ 
+-	pctl->domain = irq_domain_create_linear(of_fwnode_handle(node),
++	pctl->domain = irq_domain_create_linear(dev_fwnode(&pdev->dev),
+ 						pctl->desc->irq_banks * IRQ_PER_BANK,
+ 						&sunxi_pinctrl_irq_domain_ops, pctl);
+ 	if (!pctl->domain) {
 -- 
 2.49.0
 
