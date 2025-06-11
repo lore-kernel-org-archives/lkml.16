@@ -1,40 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0FA0223DD7;
-	Wed, 11 Jun 2025 17:56:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C66A5223DD7;
+	Wed, 11 Jun 2025 17:57:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749664606; cv=none; b=arypTYl4ZVvhkpWSGYx79/Q2j4DVrLxWr7X8RVom7umDGDKyENL7d2akfb6EF4JiamJl2gxp4SF+agzRIUppAGdLHzwuoJGAEXtcpbNk1KgRbLBseM3xYw+VMROxP5HCzbeqXUKpPh7yofVCnZt8JldUQh4QoZtBJ/6j5ne48PY=
+	t=1749664624; cv=none; b=Ljm9ZudOTLNugqI42L83M0u5feRjZMuM1PRrzCMC0NSNL4COlyb7N1Qi7rbjtDrJJItNc/h7T/DZ/BuXMPhM932jOV+af2J4yxsxFeKMze7y3MI2cxc8qR5hw7G98M37u1y67aMA3F+jtSZbn7vwrYBVYrTHILR0HS6GdMcUPM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749664606; c=relaxed/simple;
-	bh=9UxSGzmrhJ12Y47WI59Uc32TrPJnAitCYA2IdeNdqcM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CyC1m0FgDS/wA2EGDgINVSbDKjSBilmC02QwSlQCHoKIp19PhO0K7A0BjUv7qG3DteOmO6aBSvjnU564EYfdBoaGkRFsk3dbDgUzcaiSoo2feBGBoaymfJjoL16CqE9t9TWNh1gZJg+h3aCv4tYbOpATkUu1Ry7x5UwQVrTPpMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rXgLQzXV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749664624; c=relaxed/simple;
+	bh=iKPTna4nKkfa8XyeeaeDDDGGxssnxNMy5Hly+3Y9s3c=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=D8wZgx/4I0aB8j7cwIAmBynPa0Lr/NVV33stavzQLfC4GTvRBeCQJuIfOS3686NWz6tfUyhZZ4gXkMVyCMcnIwkzDa4KvHi9dwjPDxyevhnRgNQQn0OXdUXdpxnbV4+oy8+JeOeajqp8zRXd8h+ba8rLDZ4z1DEXpbgNwiInyPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FfVLEJGu; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rXgLQzXV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CCD2C4CEE3;
-	Wed, 11 Jun 2025 17:56:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749664606;
-	bh=9UxSGzmrhJ12Y47WI59Uc32TrPJnAitCYA2IdeNdqcM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=rXgLQzXVB+LkCqepBidBmbMMObHgmyB8sfv0yzleYjJSUX7OZsQz6RAJBxi2tYyiU
-	 oudHjc95vj9UEYPSdtsrSb8sJWo1/itOUM/OUe+v7yCepBJ/7UcTJTRUszwxpBozgP
-	 tlek6fYLL2ZKxYEaIYONyuUReP5yTBqZNeMmlbY1cIeEreKfAC2p4b7aXbCIe6hzoT
-	 nL7u7/KnFvFfPv9/5ZHRRRogtW+XFbLSXOdqQK4HDV04h0j35fvlMnvag/EmFZ6vFq
-	 xoHrQWioO/6dZ8bOKh/NhXZw1PZZSwEZERvuibzjVoWyq0W2Phbpnmtge56pqitU+R
-	 67wt1Js1qSEqA==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-crypto@vger.kernel.org,
-	Herbert Xu <herbert@gondor.apana.org.au>
-Cc: linux-kernel@vger.kernel.org,
-	Diederik de Haas <didi.debian@cknow.org>,
-	Ingo Franzki <ifranzki@linux.ibm.com>
-Subject: [PATCH] crypto: testmgr - reinstate kconfig support for fast tests only
-Date: Wed, 11 Jun 2025 10:55:25 -0700
-Message-ID: <20250611175525.42516-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FfVLEJGu"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5536b9be607so36968e87.0;
+        Wed, 11 Jun 2025 10:57:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749664621; x=1750269421; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ptaNBN0vV7LvzsN1JdzUNyN5uGL6NSic8/J0BeQprnQ=;
+        b=FfVLEJGuwNgyjhkGonq2dxn4FWYT/8fhl47/ZCrJ+7HxMOV1KTGLulNzIX5hFKw5Dc
+         uU6nWpKOM50Qa16LWj8E8CeuMObnHjr6s7at0NFvIk54GMARL1gibATxAycHNPcU64+a
+         g+M3jzOVwydsJddcu47+yahQyJ/634JrmFCMPSb455IMrnSH1sSDxyLKad/8ETjeLm6v
+         Y/DdtKIpzPH3+ahNDDHqgQc8TWwlH/CeKb0bZRmrvjgHdAZ60LzrmPXKo3yqs9SYd6+2
+         D3cQyGKZubuSiauZ5aiAV9CNOVqJaFXVk2Z6zPLRqFdiz+ne2PAlNVeu0Ao3a+a0yPq6
+         +wjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749664621; x=1750269421;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ptaNBN0vV7LvzsN1JdzUNyN5uGL6NSic8/J0BeQprnQ=;
+        b=aCjsGIzNML9KowSotywQFwhxAdSEMiSfS4u6F3934wrIv4Ka65cgD+jux9wbiQtZkl
+         odLU/UiSS9dOriOQdN/+XnkmkqmxzqYywd1ATsDt3CRjYySUKSqIJWt1MGes4ZoRlI1V
+         D0RC+8KCdGP2COSGpdzN8imbnzTGsdqGjlUDhfEiP3U5qOH44ygaUd2lyVkiZIAm0UU4
+         n1i+iEH9J+LQ4josqFEDI3ns3TMiZ21WCamE7Tkqn8uj0QjVIcsqbPOuLU4kXY/WW1Ku
+         SDZJkdGimFmWHUNZWqukooXxa+ei2aPk/HUGJstaHMPF3J/4lgAfM9gmlfgQ8OK1jgMS
+         hHhg==
+X-Forwarded-Encrypted: i=1; AJvYcCVCjulknUS2lYW4522pV2A6KMq2yKRYOJl+//r3M6DIU6gsJRJVSHCYUEjLFJL27SxJl69H@vger.kernel.org, AJvYcCWQGFnWRw49xqbv6Mgw2zb3ZSG9Avat6l6CCmH5Am9DXT+2XigrpGUP4grRefnm7KNy4VfE6mKmhRyXkfI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yya4/Crr9KWGysTtrV8EY9avPz1VM/YthPRzrZUcB5fh5npFItY
+	BRj6J7wZgRAuhOcb+7G1mEK0oNAUG3J4da+VCKRCD9RFuyZX2tRKqaeq52t0WODZ
+X-Gm-Gg: ASbGncu+SIPv7JDnl3HO5/UXr97Wq2dIgr8A47YvBQwVIKLtAGjoT4ckWo/mBqdY9W1
+	/1vjC0KGnyIW911Rhb7vYsUTnZVxWgLQMkRL5/oLp9SdXv8eskRbwxMx+O+94Z9HFBmI1smd2xr
+	z5uiNQnb+RgM/cV+3i2lTNoJYibcJVnqDJeM+RfwnaT68CuAHKOfygiBbJnbUPeLQfnufVujmWZ
+	wTLMN719PuZGzAoLBy9h/nHmawQfAaodQgJGubjbkxPFN7HmNuaARN8y91m5SJlT6B6U9DoHUPU
+	v6zCrEMufAkrR4RvXFZzQ6nzoFT8lIJCjV1c54YSYn+e6U/VQqqF1AeKaiPw4E9CdkUm
+X-Google-Smtp-Source: AGHT+IE2zotykWid212DM/+eqjD9o7gy/Nqq1aeZIL17mTjbMqJ076cAsgdzsEyQbZVZMTihPc+Pmw==
+X-Received: by 2002:a05:6512:2304:b0:553:2c93:6140 with SMTP id 2adb3069b0e04-5539c0a047dmr1430683e87.9.1749664620436;
+        Wed, 11 Jun 2025 10:57:00 -0700 (PDT)
+Received: from pc638.lan ([2001:9b1:d5a0:a500:2d8:61ff:fec9:d743])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5536772a899sm2003603e87.170.2025.06.11.10.56.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 10:56:59 -0700 (PDT)
+From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+To: "Paul E . McKenney" <paulmck@kernel.org>,
+	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>
+Cc: Joel Fernandes <joel@joelfernandes.org>,
+	RCU <rcu@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Uladzislau Rezki <urezki@gmail.com>
+Subject: [PATCH v2 1/2] rcu: Enable rcu_normal_wake_from_gp on small systems
+Date: Wed, 11 Jun 2025 19:56:57 +0200
+Message-Id: <20250611175658.91361-1-urezki@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,200 +75,92 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Eric Biggers <ebiggers@google.com>
+Automatically enable the rcu_normal_wake_from_gp parameter on
+systems with a small number of CPUs. The activation threshold
+is set to 16 CPUs.
 
-Commit 698de822780f ("crypto: testmgr - make it easier to enable the
-full set of tests") removed support for building kernels that run only
-the "fast" set of crypto self-tests by default.  This assumed that
-nearly everyone actually wanted the full set of tests, *if* they had
-already chosen to enable the tests at all.
+This helps to reduce a latency of normal synchronize_rcu() API
+by waking up GP-waiters earlier and decoupling synchronize_rcu()
+callers from regular callback handling.
 
-Unfortunately, it turns out that both Debian and Fedora have the crypto
-self-tests enabled in their production kernels, and they seem to want to
-keep them enabled.  The full set of tests isn't great for that, since
-they take significantly longer to run and slow down the boot.
+A benchmark running 64 parallel jobs(system with 64 CPUs) invoking
+synchronize_rcu() demonstrates a notable latency reduction with the
+setting enabled.
 
-One issue is that the crypto self-tests are being (mis)used to meet FIPS
-140-3 pre-operational testing requirements.  But actually the more
-fundamental issue is that the crypto/ subsystem has many buggy and
-untested drivers for off-CPU hardware accelerators on rare platforms.
-As a result, apparently in some cases the tests are actually being
-relied on *in production kernels* to stop buggy drivers from being used.
-I think this is kind of crazy (untested drivers should just not be
-enabled at all), but that seems to be how things work currently.
+Latency distribution (microseconds):
 
-Thus, reintroduce a kconfig option that controls the level of testing.
-Instead of the original CRYPTO_MANAGER_EXTRA_TESTS which was confusing
-and disabled by default, go with CRYPTO_SELFTESTS_FULL which is enabled
-by default (but dependent on CRYPTO_SELFTESTS, of course).
+<default>
+ 0      - 9999   : 1
+ 10000  - 19999  : 4
+ 20000  - 29999  : 399
+ 30000  - 39999  : 3197
+ 40000  - 49999  : 10428
+ 50000  - 59999  : 17363
+ 60000  - 69999  : 15529
+ 70000  - 79999  : 9287
+ 80000  - 89999  : 4249
+ 90000  - 99999  : 1915
+ 100000 - 109999 : 922
+ 110000 - 119999 : 390
+ 120000 - 129999 : 187
+ ...
+<default>
 
-Given the "production kernel" use cases, also remove the dependency on
-DEBUG_KERNEL from CRYPTO_SELFTESTS.  It was introduced by
-commit 40b9969796bf ("crypto: testmgr - replace
-CRYPTO_MANAGER_DISABLE_TESTS with CRYPTO_SELFTESTS") and wasn't present
-on the original option.
+<rcu_normal_wake_from_gp>
+ 0      - 9999  : 1
+ 10000  - 19999 : 234
+ 20000  - 29999 : 6678
+ 30000  - 39999 : 33463
+ 40000  - 49999 : 20669
+ 50000  - 59999 : 2766
+ 60000  - 69999 : 183
+ ...
+<rcu_normal_wake_from_gp>
 
-I also haven't reinstated all the #ifdefs in crypto/testmgr.c.  Instead,
-just rely on the compiler to optimize out unused code.
-
-Fixes: 40b9969796bf ("crypto: testmgr - replace CRYPTO_MANAGER_DISABLE_TESTS with CRYPTO_SELFTESTS")
-Fixes: 698de822780f ("crypto: testmgr - make it easier to enable the full set of tests")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 ---
+ kernel/rcu/tree.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-This patch is targeting the crypto tree for 6.16.
-
- crypto/Kconfig                 | 18 ++++++++++++++----
- crypto/testmgr.c               | 15 ++++++++++++---
- include/crypto/internal/simd.h |  6 ++++--
- lib/crypto/Makefile            |  2 +-
- 4 files changed, 31 insertions(+), 10 deletions(-)
-
-diff --git a/crypto/Kconfig b/crypto/Kconfig
-index e9fee7818e270..8612ebf655647 100644
---- a/crypto/Kconfig
-+++ b/crypto/Kconfig
-@@ -174,20 +174,30 @@ config CRYPTO_USER
- 	  Userspace configuration for cryptographic instantiations such as
- 	  cbc(aes).
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index e8a4b720d7d2..b88ceb35cebd 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -1625,8 +1625,10 @@ static void rcu_sr_put_wait_head(struct llist_node *node)
+ 	atomic_set_release(&sr_wn->inuse, 0);
+ }
  
- config CRYPTO_SELFTESTS
- 	bool "Enable cryptographic self-tests"
--	depends on DEBUG_KERNEL
- 	help
- 	  Enable the cryptographic self-tests.
- 
- 	  The cryptographic self-tests run at boot time, or at algorithm
- 	  registration time if algorithms are dynamically loaded later.
- 
--	  This is primarily intended for developer use.  It should not be
--	  enabled in production kernels, unless you are trying to use these
--	  tests to fulfill a FIPS testing requirement.
-+config CRYPTO_SELFTESTS_FULL
-+	bool "Enable the full set of cryptographic self-tests"
-+	depends on CRYPTO_SELFTESTS
-+	default y
-+	help
-+	  Enable the full set of cryptographic self-tests for each algorithm.
+-/* Disabled by default. */
+-static int rcu_normal_wake_from_gp;
++/* Enable rcu_normal_wake_from_gp automatically on small systems. */
++#define WAKE_FROM_GP_CPU_THRESHOLD 16
 +
-+	  For development and pre-release testing, leave this as 'y'.
++static int rcu_normal_wake_from_gp = -1;
+ module_param(rcu_normal_wake_from_gp, int, 0644);
+ static struct workqueue_struct *sync_wq;
+ 
+@@ -3239,7 +3241,7 @@ static void synchronize_rcu_normal(void)
+ 
+ 	trace_rcu_sr_normal(rcu_state.name, &rs.head, TPS("request"));
+ 
+-	if (!READ_ONCE(rcu_normal_wake_from_gp)) {
++	if (READ_ONCE(rcu_normal_wake_from_gp) < 1) {
+ 		wait_rcu_gp(call_rcu_hurry);
+ 		goto trace_complete_out;
+ 	}
+@@ -4843,6 +4845,12 @@ void __init rcu_init(void)
+ 	sync_wq = alloc_workqueue("sync_wq", WQ_MEM_RECLAIM, 0);
+ 	WARN_ON(!sync_wq);
+ 
++	/* Respect if explicitly disabled via a boot parameter. */
++	if (rcu_normal_wake_from_gp < 0) {
++		if (num_possible_cpus() <= WAKE_FROM_GP_CPU_THRESHOLD)
++			rcu_normal_wake_from_gp = 1;
++	}
 +
-+	  If you're keeping the crypto self-tests enabled in a production
-+	  kernel, you likely want to set this to 'n' to speed up the boot.  This
-+	  will cause the "slow" tests to be skipped.  This may suffice for a
-+	  quick sanity check of drivers and for FIPS 140-3 pre-operational self-
-+	  testing, but some issues can be found only by the full set of tests.
- 
- config CRYPTO_NULL
- 	tristate "Null algorithms"
- 	select CRYPTO_ALGAPI
- 	select CRYPTO_SKCIPHER
-diff --git a/crypto/testmgr.c b/crypto/testmgr.c
-index 72005074a5c26..32f753d6c4302 100644
---- a/crypto/testmgr.c
-+++ b/crypto/testmgr.c
-@@ -43,17 +43,22 @@ MODULE_IMPORT_NS("CRYPTO_INTERNAL");
- 
- static bool notests;
- module_param(notests, bool, 0644);
- MODULE_PARM_DESC(notests, "disable all crypto self-tests");
- 
-+#ifdef CONFIG_CRYPTO_SELFTESTS_FULL
- static bool noslowtests;
- module_param(noslowtests, bool, 0644);
- MODULE_PARM_DESC(noslowtests, "disable slow crypto self-tests");
- 
- static unsigned int fuzz_iterations = 100;
- module_param(fuzz_iterations, uint, 0644);
- MODULE_PARM_DESC(fuzz_iterations, "number of fuzz test iterations");
-+#else
-+#define noslowtests 1
-+#define fuzz_iterations 0
-+#endif
- 
- #ifndef CONFIG_CRYPTO_SELFTESTS
- 
- /* a perfect nop */
- int alg_test(const char *driver, const char *alg, u32 type, u32 mask)
-@@ -317,13 +322,13 @@ struct testvec_config {
- 
- #define TESTVEC_CONFIG_NAMELEN	192
- 
- /*
-  * The following are the lists of testvec_configs to test for each algorithm
-- * type when the fast crypto self-tests are enabled.  They aim to provide good
-- * test coverage, while keeping the test time much shorter than the full tests
-- * so that the fast tests can be used to fulfill FIPS 140 testing requirements.
-+ * type when the "fast" crypto self-tests are enabled.  They aim to provide good
-+ * test coverage, while keeping the test time much shorter than the "full" tests
-+ * so that the "fast" tests can be enabled in a wider range of circumstances.
-  */
- 
- /* Configs for skciphers and aeads */
- static const struct testvec_config default_cipher_testvec_configs[] = {
- 	{
-@@ -1181,18 +1186,22 @@ static void generate_random_testvec_config(struct rnd_state *rng,
- 	WARN_ON_ONCE(!valid_testvec_config(cfg));
- }
- 
- static void crypto_disable_simd_for_test(void)
- {
-+#ifdef CONFIG_CRYPTO_SELFTESTS_FULL
- 	migrate_disable();
- 	__this_cpu_write(crypto_simd_disabled_for_test, true);
-+#endif
- }
- 
- static void crypto_reenable_simd_for_test(void)
- {
-+#ifdef CONFIG_CRYPTO_SELFTESTS_FULL
- 	__this_cpu_write(crypto_simd_disabled_for_test, false);
- 	migrate_enable();
-+#endif
- }
- 
- /*
-  * Given an algorithm name, build the name of the generic implementation of that
-  * algorithm, assuming the usual naming convention.  Specifically, this appends
-diff --git a/include/crypto/internal/simd.h b/include/crypto/internal/simd.h
-index 7e7f1ac3b7fda..9e338e7aafbd9 100644
---- a/include/crypto/internal/simd.h
-+++ b/include/crypto/internal/simd.h
-@@ -42,13 +42,15 @@ void simd_unregister_aeads(struct aead_alg *algs, int count,
-  * crypto_simd_usable() - is it allowed at this time to use SIMD instructions or
-  *			  access the SIMD register file?
-  *
-  * This delegates to may_use_simd(), except that this also returns false if SIMD
-  * in crypto code has been temporarily disabled on this CPU by the crypto
-- * self-tests, in order to test the no-SIMD fallback code.
-+ * self-tests, in order to test the no-SIMD fallback code.  This override is
-+ * currently limited to configurations where the "full" self-tests are enabled,
-+ * because it might be a bit too invasive to be part of the "fast" self-tests.
-  */
--#ifdef CONFIG_CRYPTO_SELFTESTS
-+#ifdef CONFIG_CRYPTO_SELFTESTS_FULL
- DECLARE_PER_CPU(bool, crypto_simd_disabled_for_test);
- #define crypto_simd_usable() \
- 	(may_use_simd() && !this_cpu_read(crypto_simd_disabled_for_test))
- #else
- #define crypto_simd_usable() may_use_simd()
-diff --git a/lib/crypto/Makefile b/lib/crypto/Makefile
-index 3e79283b617d9..f9e44aac6619b 100644
---- a/lib/crypto/Makefile
-+++ b/lib/crypto/Makefile
-@@ -60,9 +60,9 @@ libsha256-y					:= sha256.o
- obj-$(CONFIG_CRYPTO_LIB_SHA256_GENERIC)		+= libsha256-generic.o
- libsha256-generic-y				:= sha256-generic.o
- 
- obj-$(CONFIG_MPILIB) += mpi/
- 
--obj-$(CONFIG_CRYPTO_SELFTESTS)			+= simd.o
-+obj-$(CONFIG_CRYPTO_SELFTESTS_FULL)		+= simd.o
- 
- obj-$(CONFIG_CRYPTO_LIB_SM3)			+= libsm3.o
- libsm3-y					:= sm3.o
-
-base-commit: aef17cb3d3c43854002956f24c24ec8e1a0e3546
+ 	/* Fill in default value for rcutree.qovld boot parameter. */
+ 	/* -After- the rcu_node ->lock fields are initialized! */
+ 	if (qovld < 0)
 -- 
-2.49.0
+2.39.5
 
