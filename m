@@ -1,196 +1,162 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511668828;
-	Wed, 11 Jun 2025 16:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4070182B4;
+	Wed, 11 Jun 2025 16:21:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749658907; cv=none; b=kXGqPoUDc338HfpVyf1rllQg+4LGoT5uo3+pH+xnae6A7ehMZnRqk4LLgy/r/ZLgakWF3p9vkj886PvwFh1Lv2ZgHv6ntHvQrzC5dRxxpYiFfhTJbZ5t2jz89WjFnFfFUb7NwkjJd8Klbn6+l5UITZ7mAOjEBKvglT0aq47PozQ=
+	t=1749658917; cv=none; b=LjhCaYWQPsv/6C34EiF3iweCsBWL0rFDXQK7nuv+qNCUx0LiOh8etXnAnmRo3t0YnsypJiCKTKsQFbG4HBgSemNjbRPCEHvTNTWNP2ZcP9PI5dAA64GVAPdTj7IJJ+iexQRYDBWo0CbqMEMWfG+Z+Jn3daFiXFptiKE7jdAkQWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749658907; c=relaxed/simple;
-	bh=8CRIh69EyfjvaHKU5sQ1XIZ/l/ajlYcwJtr1I6utixQ=;
+	s=arc-20240116; t=1749658917; c=relaxed/simple;
+	bh=yhHILjKN4KyXc1dRjfmoVhQCyL5X32w0a/kSF1NLxBg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L2ybtdoTdyj9SByQ0uuKyOfnc3Lp7uRQtrvwdkAZtORCNhx9UtfhVZ4EUgjBHrmIg8276iUFzds/TKw22+Ju9yZlzXvleQKkSnXTJPjED+fLuIZjCBEYQGAZlAZNlSTuPVfj/k3RQh7Ld1aYzwwyAGdBq+YQfR7M1JIiTlJpmxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MUhXIjv+; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=oVTBpbAZbNPtT4tuf7jS4StzXvEi3y5uXE8RbJFUTYrqsURvtKUeK3KdO00USp0yip9/L1ivpMfaJ//bLkTCN1DkooJpwnDX4MEr5F0RlHdBPI3oUH0pav8Rz2/75UNCnNuJ7sqdMT9IuOa/u18okEztX2uaxBHH6lnprTTSGYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ejXfaqT5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MUhXIjv+"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6fada2dd785so1062046d6.2;
-        Wed, 11 Jun 2025 09:21:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749658905; x=1750263705; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VP4/v4+c48z4rifbWH/5ulFSxvfp2M0yJ/8pTtIhn3U=;
-        b=MUhXIjv+3mDgCLtGK2voyvNGzCYjlHC16t6QAjMGR01glXvrVqVm0VPF4hcMnWkKd8
-         9uLYj4afIPPdd4F6+KRJ+wIPd3DiHURYfVOOmBGEXgRePqS0MmZBHN1dR8NyhgVOME64
-         d9nohTUv/6aRHRWVzUuo2EGTrDfTYaKQYu2mSqFkA2K0/IyuTHaMYiQ/E2qdpAoRyg3g
-         MOpHCk/EYbE3YFpYJOfCIrU7Sm+rSkkxv5Xj35/G8Nj2nfQfwDngexNhWensB3xuowvN
-         yaJnVNAZyfZUY6QuizzDpWKMzbuCngEx3KkBECJvb0dnPM3JbWmq6Pt3ple6z6jTnQLU
-         H/WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749658905; x=1750263705;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VP4/v4+c48z4rifbWH/5ulFSxvfp2M0yJ/8pTtIhn3U=;
-        b=dVEx8r3ScLHZbczFWvq28czw7Xgjc1VdDhiPU3YQLkIHdGdMKFu9+NnDb75Mwb1+0L
-         eTVEpDq5+aFYGZPFhwtuzx3eXU64LQcNpQHkWG57Kh3kGBJC/xdmtV01FzljUB8mZ6KI
-         5K0UiE7OJaZZCVDyEUrxO02c9CtOZ8ioAGb/qIDNeU1U+PnblLr193XNhY7s3JJfSTCm
-         MwLEIWl9H2kalnPKAaIEx5NtgXJuBAdEESAweddKlOI6ZrOJVU+835wNAkGlm4VykiNm
-         VXnpmoy19KNTshXOm3Od1l3tkdN6fV5nGI7IjeGQFPEnQoe+WWbbS8r+HjNjfcw89H8H
-         bXNA==
-X-Forwarded-Encrypted: i=1; AJvYcCV1ujhADGtx8ywp1LU4tG0rpCjnMuGr12PI0w4n8Cfzu34/4E7hXsy8hUl94BTB0OTF7uA=@vger.kernel.org, AJvYcCWvYmINrE19HJNqPNiqd6jJv0KVZ2hx1EJ/zdstdH65k71Q2hRc1Jd+wL5vjqr0sJDv/NwJXWQuxx54sngi@vger.kernel.org, AJvYcCXLAS7v95eB2qzUtL4g3U5g/Cu0znzXsd994OoNzaoZDnOde40ko2VNXVy6u6HOAPqovYu/@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFHEHDQ2YRMrMk3V5MzNHxqX0nE9K+sndlPlueFREEISF3Zr1o
-	jhM+htsf1FpS5YpcTruPm+/IytBSlf8KBhxQABfbEu52iTMFHvlEPvSl
-X-Gm-Gg: ASbGncvftwST1rS0FV5d3kUnU3iXVDNOGQvDN/336QG57FCsY6Wpv132XE4jNkmRGBi
-	4l/coFXj3ra5tXBQwvLvlQWCa+uwvSiWKJ+3W95NwaSXQyK2f16Qar+QeyvtqjnTvQemeSgySvI
-	46nwUnQj2S9ndsVPrKD7mmT0yc2fHUYfuH7ZuTfnp64nZWIPS+gJMI183ACxyqv4PVqkiKZuqx9
-	UWv+gtlR2oy39jtKs1/ywKYIH9Dm/Qx9bGKk3YsChkhx99JWUklyorO1SSpdG4IfwxCKbx7lTmW
-	VLSOQCfkjYnbFqU1bswTkYWsOsA2XmTTpPoCyEcD3VXDS878rQoqna49L8pDWzyPuFTJF6/3J3h
-	qX1w6GgSkajdW5lnFJtp9QkEb8x05L5OV3pJZqepoKBdyTBr68kin
-X-Google-Smtp-Source: AGHT+IGFTqWko7Ow7Diy0KqMnYhHo7JmV0L6/EAhWea/i+8wem+djZ4ARdjdUqKqBiSkbCtF/B2wmQ==
-X-Received: by 2002:a05:6214:2b08:b0:6fa:c81a:6228 with SMTP id 6a1803df08f44-6fb3466773bmr2141686d6.42.1749658905080;
-        Wed, 11 Jun 2025 09:21:45 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb09ab8a19sm83244206d6.8.2025.06.11.09.21.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 09:21:44 -0700 (PDT)
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 43AEE1200043;
-	Wed, 11 Jun 2025 12:21:44 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-06.internal (MEProxy); Wed, 11 Jun 2025 12:21:44 -0400
-X-ME-Sender: <xms:GK1JaG3ETSvuKcXNeKxWDBZFb7saYbVABYXq5B6IHtG5wBYOs5RJiQ>
-    <xme:GK1JaJGsCDG0yaAQ0ooATrFRJBcAxGXXwLpNt5b-ky3e-mrOGc_F16NuPoaNvePQT
-    2qPdD8OP2FUgIwNlA>
-X-ME-Received: <xmr:GK1JaO4XyHbERZuu8j8pgwWk5UgLQgLWadGWcUt5rJsTBFSW9cQWWI_CKg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduvdeihecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
-    necuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilh
-    drtghomheqnecuggftrfgrthhtvghrnhephfetvdfgtdeukedvkeeiteeiteejieehvdet
-    heduudejvdektdekfeegvddvhedtnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenuc
-    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhn
-    odhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejje
-    ekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhn
-    rghmvgdpnhgspghrtghpthhtohepudeipdhmohguvgepshhmthhpohhuthdprhgtphhtth
-    hopehprghulhhmtghksehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjohgvlhgrghhn
-    vghlfhesnhhvihguihgrrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlse
-    hvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepfhhrvgguvghrihgtsehkvghr
-    nhgvlhdrohhrghdprhgtphhtthhopehnvggvrhgrjhdruhhprgguhhihrgihsehkvghrnh
-    gvlhdrohhrghdprhgtphhtthhopehjohgvlhesjhhovghlfhgvrhhnrghnuggvshdrohhr
-    ghdprhgtphhtthhopehjohhshhesjhhoshhhthhrihhplhgvthhtrdhorhhgpdhrtghpth
-    htohepuhhrvgiikhhisehgmhgrihhlrdgtohhmpdhrtghpthhtoheprhhoshhtvgguthes
-    ghhoohgumhhishdrohhrgh
-X-ME-Proxy: <xmx:GK1JaH1w_RCpQEERA8nT-dz4BoLCp22VlpAKDNpz1e2pYQ8P7exvwQ>
-    <xmx:GK1JaJH3eERg-2A6MnVH9Z4vtYc9tvuplM7f7_TRArGsMCURmZpHNQ>
-    <xmx:GK1JaA9LgE7LFG8-HoAWD7gG-ecphAmN9alNqHC-OBJ51GR5-02piQ>
-    <xmx:GK1JaOkAgVZIHvtAv4n51GW-Q2cMvJ2HCKh5gSNy3yRJ295r_-c6Gg>
-    <xmx:GK1JaBGGO6mpuJ0ep9WgtPan05sfUyS4perpJUTEUrIuGQVypnRda_Nx>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 11 Jun 2025 12:21:43 -0400 (EDT)
-Date: Wed, 11 Jun 2025 09:21:42 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Joel Fernandes <joelagnelf@nvidia.com>, linux-kernel@vger.kernel.org,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Xiongfeng Wang <wangxiongfeng2@huawei.com>, rcu@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH 2/2] rcu: Fix lockup when RCU reader used while IRQ
- exiting
-Message-ID: <aEmtFr3sHCgLpWoT@tardis.local>
-References: <20250609180125.2988129-1-joelagnelf@nvidia.com>
- <20250609180125.2988129-2-joelagnelf@nvidia.com>
- <aEmpMohtFsVf4Uh_@tardis.local>
- <2a0902a7-852b-4868-b0c5-2a6962f273ed@paulmck-laptop>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ejXfaqT5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F368C4CEE3;
+	Wed, 11 Jun 2025 16:21:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749658917;
+	bh=yhHILjKN4KyXc1dRjfmoVhQCyL5X32w0a/kSF1NLxBg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ejXfaqT5ChdI9lgxLtgwiwpEUUdoc1+RZsXtNiosz3LchFdWCUqSR8Q0bgwYt/Q18
+	 3+ppiRipP3woOMIi2Am2nrwOlIjyk9yAZq/FjOH15PcGPKXpbYpAWErFzB08MK3yIv
+	 35vhhrA5WAahlU85+oRRA9sD/5GjVkw4bNN1kYoAGqEm7jhgsCX+MnpCDxF5/xt9xP
+	 edXaXtO8K1ftob4CjK/toomYa/ChJJSNi9pwSfADBgOVINVAIAOXkfY67dxj6fChCU
+	 BQwRqspGLTF10ryMJb4LpDj3zE2k5KLHMHm1I6lSsN9G7ysycHXMxJ06rJ8K6jW6wv
+	 TYvmCI8ikEMTQ==
+Date: Wed, 11 Jun 2025 17:21:51 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Ben Zong-You Xie <ben717@andestech.com>
+Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	alex@ghiti.fr, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, tglx@linutronix.de, daniel.lezcano@linaro.org,
+	prabhakar.mahadev-lad.rj@bp.renesas.com, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	tim609@andestech.com, arnd@arndb.de
+Subject: Re: [PATCH v5 0/8] add Voyager board support
+Message-ID: <20250611-tapeless-arson-a6ace3c42c00@spud>
+References: <20250602060747.689824-1-ben717@andestech.com>
+ <20250606-booth-icky-b416c1827a43@spud>
+ <aEbOLztcBsKs84pn@atctrx.andestech.com>
+ <20250609-donut-oozy-4dcc8b8a292d@spud>
+ <20250609-twiddling-clamp-eaa0dd2b1cad@spud>
+ <aEmrHPd7RxUSOLAY@atctrx.andestech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="WFYaPWbEs/9kFIBx"
 Content-Disposition: inline
-In-Reply-To: <2a0902a7-852b-4868-b0c5-2a6962f273ed@paulmck-laptop>
+In-Reply-To: <aEmrHPd7RxUSOLAY@atctrx.andestech.com>
 
-On Wed, Jun 11, 2025 at 09:16:05AM -0700, Paul E. McKenney wrote:
-> On Wed, Jun 11, 2025 at 09:05:06AM -0700, Boqun Feng wrote:
-> > On Mon, Jun 09, 2025 at 02:01:24PM -0400, Joel Fernandes wrote:
-> > > During rcu_read_unlock_special(), if this happens during irq_exit(), we
-> > > can lockup if an IPI is issued. This is because the IPI itself triggers
-> > > the irq_exit() path causing a recursive lock up.
-> > > 
-> > > This is precisely what Xiongfeng found when invoking a BPF program on
-> > > the trace_tick_stop() tracepoint As shown in the trace below. Fix by
-> > > using context-tracking to tell us if we're still in an IRQ.
-> > > context-tracking keeps track of the IRQ until after the tracepoint, so
-> > > it cures the issues.
-> > > 
-> > > irq_exit()
-> > >   __irq_exit_rcu()
-> > >     /* in_hardirq() returns false after this */
-> > >     preempt_count_sub(HARDIRQ_OFFSET)
-> > >     tick_irq_exit()
-> > 
-> > @Frederic, while we are at it, what's the purpose of in_hardirq() in
-> > tick_irq_exit()? For nested interrupt detection?
-> 
-> If you are talking about the comment, these sorts of comments help
-> people reading the code, the point being that some common-code function
-> that invokes in_hardirq() after that point will get the wrong answer
-> from it.  The context-tracking code does the same for whether or not
 
-The thing is that tick_irq_exit() is supposed to be only called in
-irq_exit() IIUC (given its name), and so without nested interrupts,
-in_hardirq() will also give the wrong answer.
+--WFYaPWbEs/9kFIBx
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-Boqun
++CC Arnd,
 
-> RCU is watching.
-> 
-> 							Thanx, Paul
-> 
-> > Regards,
-> > Boqun
-> > 
-> > >       tick_nohz_irq_exit()
-> > > 	    tick_nohz_stop_sched_tick()
-> > > 	      trace_tick_stop()  /* a bpf prog is hooked on this trace point */
-> > > 		   __bpf_trace_tick_stop()
-> > > 		      bpf_trace_run2()
-> > > 			    rcu_read_unlock_special()
-> > >                               /* will send a IPI to itself */
-> > > 			      irq_work_queue_on(&rdp->defer_qs_iw, rdp->cpu);
-> > > 
-> > > A simple reproducer can also be obtained by doing the following in
-> > > tick_irq_exit(). It will hang on boot without the patch:
-> > > 
-> > >   static inline void tick_irq_exit(void)
-> > >   {
-> > >  +	rcu_read_lock();
-> > >  +	WRITE_ONCE(current->rcu_read_unlock_special.b.need_qs, true);
-> > >  +	rcu_read_unlock();
-> > >  +
-> > > 
-> > > While at it, add some comments to this code.
-> > > 
-> > > Reported-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-> > > Closes: https://lore.kernel.org/all/9acd5f9f-6732-7701-6880-4b51190aa070@huawei.com/
-> > > Tested-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-> > > Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
-> > [...]
-> 
+On Thu, Jun 12, 2025 at 12:13:16AM +0800, Ben Zong-You Xie wrote:
+> On Mon, Jun 09, 2025 at 05:17:50PM +0100, Conor Dooley wrote:
+> > [EXTERNAL MAIL]
+>=20
+> > Date: Mon, 9 Jun 2025 17:17:50 +0100
+> > From: Conor Dooley <conor@kernel.org>
+> > To: Ben Zong-You Xie <ben717@andestech.com>
+> > Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+> >  alex@ghiti.fr, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.or=
+g,
+> >  tglx@linutronix.de, daniel.lezcano@linaro.org,
+> >  prabhakar.mahadev-lad.rj@bp.renesas.com, devicetree@vger.kernel.org,
+> >  linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+> >  tim609@andestech.com
+> > Subject: Re: [PATCH v5 0/8] add Voyager board support
+> >=20
+> > On Mon, Jun 09, 2025 at 05:16:54PM +0100, Conor Dooley wrote:
+> > > On Mon, Jun 09, 2025 at 08:06:07PM +0800, Ben Zong-You Xie wrote:
+> > > > On Fri, Jun 06, 2025 at 05:00:06PM +0100, Conor Dooley wrote:
+> > > > > [EXTERNAL MAIL]
+> > > >=20
+> > > > > Date: Fri, 6 Jun 2025 17:00:06 +0100
+> > > > > From: Conor Dooley <conor@kernel.org>
+> > > > > To: Ben Zong-You Xie <ben717@andestech.com>
+> > > > > Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkel=
+ey.edu,
+> > > > >  alex@ghiti.fr, robh@kernel.org, krzk+dt@kernel.org, conor+dt@ker=
+nel.org,
+> > > > >  tglx@linutronix.de, daniel.lezcano@linaro.org,
+> > > > >  prabhakar.mahadev-lad.rj@bp.renesas.com, devicetree@vger.kernel.=
+org,
+> > > > >  linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+> > > > >  tim609@andestech.com
+> > > > > Subject: Re: [PATCH v5 0/8] add Voyager board support
+> > > > >=20
+> > > > > On Mon, Jun 02, 2025 at 02:07:39PM +0800, Ben Zong-You Xie wrote:
+> > > > > > The Voyager is a 9.6=E2=80=9D x 9.6=E2=80=9D Micro ATX form fac=
+tor development board
+> > > > > > including Andes QiLai SoC. This patch series adds minimal devic=
+e tree
+> > > > > > files for the QiLai SoC and the Voyager board [1].
+> > > > > >=20
+> > > > > > Now only support basic uart drivers to boot up into a basic con=
+sole. Other
+> > > > > > features will be added later.
+> > > > > >=20
+> > > > > > [1] https://www.andestech.com/en/products-solutions/andeshape-p=
+latforms/qilai-chip/
+> > > > >=20
+> > > > > Ball is in your court now, after rc1 make a tree and get it in
+> > > > > linux-next, and then send a pr to soc@kernel.org with this new co=
+ntent.
+> > > > > Perhaps the defconfig should go separately, I can take that one i=
+f you
+> > > > > want.
+
+> > > > Thanks for your guidance on these patches. I will send a PR to
+> > > > soc@kernel.org as you suggested.
+> > > >=20
+> > > > For the defconfig patch, I'm happy for you to handle it. Just let me
+> > > > know if there's anything specific you'd like me to include.
+> > >=20
+> > > Okay, I picked it up on the basis that you'll send this all to Arnd f=
+or
+> > > 6.17
+> >=20
+> > Sorry, I think that was really poorly worded. I picked it up on the
+> > basis that you're going to send the other patches in the series to Arnd
+> > for 6.17.
+>=20
+> According to the SoC maintainer documentation [1], I should send a
+> patchset (not a PR) to soc@kernel.org. Since I'm not a submaintainer yet.
+> I think I should not sent a PR to the main SoC maintainer. Is that right?
+
+I think you can send a PR and not worry about it.
+
+> Further, I have two questions about sending a patchset:  =20
+> 1. Should I send v5 or start a new patchset?
+> 2. Should I continue excluding the defconfig patch, as we discussed
+>    previously? I think it should be included now.
+
+Arnd, you okay with a defconfig in the same branch as the dts/core
+bindings for a new platform? I'll happily drop it from by branch if it
+can all go as one.
+
+
+--WFYaPWbEs/9kFIBx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaEmtHwAKCRB4tDGHoIJi
+0hxOAQC1qmiuQTIkth0fjU0BJkWcNXeY7/dI2Y9Yvqiy9smpQAEAuhnCv1kfdYjO
+ksxcZcHeMKiBLF6hIeHx76zK6daflAo=
+=jply
+-----END PGP SIGNATURE-----
+
+--WFYaPWbEs/9kFIBx--
