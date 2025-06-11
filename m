@@ -1,143 +1,132 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD0429ACC6
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBEAE296147;
+	Wed, 11 Jun 2025 14:20:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749651573; cv=none; b=IxRLaWl5Aq+Gxm6Uw0mFx5vCQs/ZeB/53rFoZpPP3uJFjSsaxtXRQuMdRiN6Z3KEe5k3F3RJeKEormy2E7ZDOD3vPYfETBpocaiRhylP3VT0Ngtwrt+atD34L0HRB3xwcMYLxanZrpgssYtAJBGSR33wb/T4TMUkuCYwa4qKdsE=
+	t=1749651622; cv=none; b=Uk0uM2GTP5dJuckIr1TlqAoWwCQEXgKnHmEEqf7UojmS8qqDBlQ15Glvp192ApzoQtfOaT8QKNKwTfAJ+j1g2nJhA3noYQ/uxUOB7kqyX2Awnon/XeDjSoVHyHyrTjLgVbYkiCa/w2DNpFnO1pQvmofnGOn2Mcq0RZenLVmTr+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749651573; c=relaxed/simple;
-	bh=UfnHdSKZ0T9IHQZh4HA/F4jJyg+5+9FOJsW1zZ6W8Mo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MzlVFhOxbtKEawKXqoRYH1FdB5l3uIHQZN65WBdOPpYrSnQMkVBDhNsvkkJNdlRJBktRANHGJ3pYL2WinO5Y1e74lNuwguaZ58yUsXec0biWLFbqhfrgE6PpRY0xkIevp6RqQcJq8hTPYZFfe2jt7s81wvtaFvOcNCm0eSecfrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=W1sgz+rH; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="W1sgz+rH"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55B9DC4d027238
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:19:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=874Q5YVFPtejmOnGeVJRP8KZ
-	m5kEcEGmP2NS8rGVaww=; b=W1sgz+rH9iaGWziEFkvmzRbJOZ1/u+RfoZOJNjxC
-	vLez+0c9NEeHtJclxnRVEXeGByYrf1UfJt5vO5oYxAPlQcwzm4930nv9G/ls7FXO
-	sBL9Z8XJWt4sTSBODjMi59Ke8d9pI//8NMN+vlvWHZvvYdsCJNIrsK76XJ1HdQqs
-	TINgf41whSBuPMl79Qr4BE8FEV7C/P70bCx3K0u85WiWkpqJ8mXXAP+DfsJX7NeR
-	y6y/RIhbbzf6mMk1+i7+qyzmKm0Gf4jJ+Q4VB2CyPasVIDxutrCc3ikJAyb0A1DC
-	d+YI6EGIWDX4r2aQCXfrFLMHiNiDfwHr7C8vNegGCHQ7Fw==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 476jrhc75c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:19:25 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d099c1779dso1178358585a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:19:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749651564; x=1750256364;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=874Q5YVFPtejmOnGeVJRP8KZm5kEcEGmP2NS8rGVaww=;
-        b=KXrik1v5W3JVSg5JThL6FZSPDizQUhtygQ3PI12aCgyauZZWvhbzIRCfeqdGF9boxd
-         JrGm4y4wZMfclXWynhjemQMp90/D2X459fwL1I4w645gh57g6c10+4rIpOeyQskThLO3
-         Hj3OfTo/oFXSSdtm63YQ28xIIAB82LuFx2zdRVK3PS6yEM+QzsJybtBPW/l0ReYiJohE
-         yMQpUv3hMzkjfQB0/PgallKl+/tgqMlejgvxQGlmEVLJc8581HchhmngUiowyhIMRUJW
-         /RcwoautZrX4B+DdKIQrLbte0XQdiKc95IiEoeWz9j1xNP+BMxThPsLWYOzVDOsBHByX
-         dAFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWnaDE8+VkPDrIKWOw19pzZ41aElSwhG13Z1XrgweNvQvOHTqVIj74E639Lu1t6Wp9KnniGNL5BxAwQ7j0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHCVIDLEYD5wbH2AjnscjIlj6R96X2PZPt4j9EwwySG45wQnKJ
-	msBgwlg4XQPTQ0ROJSKjSseExPhENPZkaTgqW6//hYuaitq9cBFlBT1KNsfboeovFDg13KzzdmA
-	/zexZJ0BG2UDJJX3MWSazpImMuDqN3p2lTcnOnK3HVSv4L+wSFemhtTHpjoiY7PUGBCE=
-X-Gm-Gg: ASbGncuBhjQsV7+fwWpZ5MHhS2i+qc3BmXRgVvgZUaEti5ESE7jtqin000XDEokQ9Su
-	H2NSQKty6PMFUwgOKl/hWz1y5S7Ld9P7dbusyi+K0w3+TmrrXOL3tzRSYLccV9P/hZwmv7TKpJ4
-	fIzI520cmiWIlk68agDjgPdqq+FoWSKQoWoWw8EDVxaC+PdyEKrzgSlYcZzbpkBeqvUfKHezr0A
-	MadII6zHD4f99QxwzXhKeAUOejFXbxOLymZRIZTw+XFddqZz4YRQojXEXs40vb297sT/BXEXjXG
-	4iUm+vPDgIXpN6a81jhKiBa/FU+b53GwNcdoxi+etDI/j1USF2EWYWRl1gqvMg9h8eHJCMCtUAY
-	ZhqYcxhrEfLwKmjeuZgQqjSZ8ujNH0c87qDk=
-X-Received: by 2002:a05:620a:1d07:b0:7d3:96ba:78d9 with SMTP id af79cd13be357-7d3a95d7ebcmr462331885a.29.1749651564651;
-        Wed, 11 Jun 2025 07:19:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGAaOi73AYWlSbDOB5FoX5maZieuX6BK9CyazXK7gUyraDN4tNP1BHcDiW8mhiwHO8YmQIfKg==
-X-Received: by 2002:a05:620a:1d07:b0:7d3:96ba:78d9 with SMTP id af79cd13be357-7d3a95d7ebcmr462328285a.29.1749651564172;
-        Wed, 11 Jun 2025 07:19:24 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32ae1cccad8sm18806571fa.80.2025.06.11.07.19.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 07:19:23 -0700 (PDT)
-Date: Wed, 11 Jun 2025 17:19:21 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Gaurav Kohli <quic_gkohli@quicinc.com>, amitk@kernel.org,
-        daniel.lezcano@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
-        andersson@kernel.org, konradybcio@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, quic_manafm@quicinc.com
-Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: qcs615: Enable TSENS support
- for QCS615 SoC
-Message-ID: <x2avlatyjo7sgcjubefexsfk6gerdbhx5dcug2kszk2hukcusm@srs5dwuc2m22>
-References: <cover.1744955863.git.gkohli@qti.qualcomm.com>
- <1758b5c2d839d40a9cb1dd17c734f36c279ac81c.1744955863.git.gkohli@qti.qualcomm.com>
- <74b017c2-7144-4446-969c-8502fb2cb74b@oss.qualcomm.com>
+	s=arc-20240116; t=1749651622; c=relaxed/simple;
+	bh=AG0Bs9vpCQ4T8QEl8ZO9vLvDMYsYLyqpe1wrOEo4RWI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UpMlqxto+w0n2VpuA7E+ykiBsv1za8vKpg09NwgD2PB80NFom7ExV0LKDoGC7TjDxa2fmgkt9kVe4riCWAL8+oRPPwCbTBVbQzm+wyi8qmloLar614hijzsvylda9xA7N6bldiEel0LFF9YIBsyHRDvF42a5cHp4Fa1p/BTH/uI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 529F780E2D;
+	Wed, 11 Jun 2025 14:20:16 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 95CCA20027;
+	Wed, 11 Jun 2025 14:20:11 +0000 (UTC)
+Date: Wed, 11 Jun 2025 10:20:10 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Naresh Kamboju
+ <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>,
+ Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+ lkft-triage@lists.linaro.org, Stephen Rothwell <sfr@canb.auug.org.au>, Arnd
+ Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, Anders
+ Roxell <anders.roxell@linaro.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo  Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav  Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org
+Subject: Re: [RFC PATCH 2/2] x86: alternative: Invalidate the cache for
+ updated instructions
+Message-ID: <20250611102010.1bf7c264@batman.local.home>
+In-Reply-To: <20250611192610.6edf9713f6ee84c26f653ea5@kernel.org>
+References: <20250610234307.c675969e83ce53bb856e94d7@kernel.org>
+	<174956686826.1494782.11512582667456262594.stgit@mhiramat.tok.corp.google.com>
+	<20250610115030.0d60da65@gandalf.local.home>
+	<20250611192610.6edf9713f6ee84c26f653ea5@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <74b017c2-7144-4446-969c-8502fb2cb74b@oss.qualcomm.com>
-X-Authority-Analysis: v=2.4 cv=EovSrTcA c=1 sm=1 tr=0 ts=6849906d cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=fHpipdgcYPiT0vFNL1EA:9 a=CjuIK1q_8ugA:10
- a=NFOGd7dJGGMPyQGDc5-O:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: Y-yNIJOHlnNnxar3AWHNiuQ6F91EZuYc
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjExMDEyMCBTYWx0ZWRfX+Q0S4pZnxLxG
- x1r53N99xN+SeMxT9mxnAacby9GjtGpZAsP6OVXn6Un94KoBA4oqmDnbOiGZAGMQMkYBsUeGHoQ
- O2M7DAkBdv/2Ujq+/OQwRqbOasD+FQOjOCKv6/wo7zNA9vvO5E11kMyoPsKaLp9ikSlY9mno4Gh
- LHe/FmvvzovaSCXg4F8jLhvgWjGy3qVr3lPj6mmboZf0j4l8YkoPwA/K7DW+p2lP+hBkPYpf+jh
- s5R2CBE17D43UfsACGac6NghBva57D9hikQrYLV48NzhFVWSFup+P8fU2G8QNMyWaphm8/hoB6r
- ZDmybzAABzSP/lpzFknOXGeDClS8t0mABQRmTes6B5AHJNZ6TFwge1zzkgHFVNK0eCNzNQTV9no
- 4YUzZdlrnTtH9fyAcvfKxZVi9dERpnNqHj7EqO83JDq3NXmXEQIlh0of8HPxPdNfD5DUhvtK
-X-Proofpoint-GUID: Y-yNIJOHlnNnxar3AWHNiuQ6F91EZuYc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-11_05,2025-06-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 spamscore=0 suspectscore=0 priorityscore=1501 mlxlogscore=745
- mlxscore=0 clxscore=1015 malwarescore=0 adultscore=0 lowpriorityscore=0
- phishscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506110120
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 95CCA20027
+X-Stat-Signature: rhy6xig8f8wkqqnjpmmytqx9dmy49ou7
+X-Rspamd-Server: rspamout06
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19mYjjxbE8STn8J2hKAdlQENeelbUtZG70=
+X-HE-Tag: 1749651611-325749
+X-HE-Meta: U2FsdGVkX1/2aM+oDd68kNXfBzofjOaafPkaVS0pnksX1xew9r6cjHEwJ4izXAJYQbx8MTAV21VwjnOr1iZ69Pq7JftqNEf7NpShANf7/ykgE/TcSnX+UK00rN+ieIwcw9tGM7VkVKPD6QF/7nwAftGkk2wpD/lF6DTNOSS2udxOzMtbf6le4PPGlalfxyJBp24xMw3mtmYEL4me12gH7BoBVM50q7cFhI3cBbzfEqOY5l/dPUM8JMMk/0PSn4lNlrngkM4UnmOepWaeHbKiEYiyec8gIYPFtf+wtqDI8mfYq9MJ0UwxazkzaXGfMGu6PSYrkQSoNH8VHpq4mK7fBWwMQc3tRjxFTQ4e+Q5NoTl7gBHv8DAqHizWgdFeMRRR0jEhxrQ4Mbds7aCafjkDuw==
 
-On Wed, Jun 11, 2025 at 04:08:57PM +0200, Konrad Dybcio wrote:
-> On 6/11/25 8:37 AM, Gaurav Kohli wrote:
-> > Add TSENS and thermal devicetree node for QCS615 SoC.
+
+[ I just noticed that you continued on the thread without the x86 folks Cc ]
+
+On Wed, 11 Jun 2025 19:26:10 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+
+> On Tue, 10 Jun 2025 11:50:30 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > On Tue, 10 Jun 2025 23:47:48 +0900
+> > "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> >   
+> > > Maybe one possible scenario is to hit the int3 after the third step
+> > > somehow (on I-cache).
+> > > 
+> > > ------
+> > > <CPU0>					<CPU1>
+> > > 					Start smp_text_poke_batch_finish().
+> > > 					Start the third step. (remove INT3)
+> > > 					on_each_cpu(do_sync_core)
+> > > do_sync_core(do SERIALIZE)
+> > > 					Finish the third step.
+> > > Hit INT3 (from I-cache)
+> > > 					Clear text_poke_array_refs[cpu0]
+> > > Start smp_text_poke_int3_handler()  
 > > 
-> > Signed-off-by: Gaurav Kohli <quic_gkohli@quicinc.com>
-> > ---
+> > I believe your analysis is the issue here. The commit that changed the ref
+> > counter from a global to per cpu didn't cause the issue, it just made the
+> > race window bigger.
+> >   
 > 
-> [...]
+> Ah, OK. It seems more easier to explain. Since we use the
+> trap gate for #BP, it does not clear the IF automatically.
+> Thus there is a time window between executing INT3 on icache
+> (or already in the pipeline) and its handler disables
+> interrupts. If the IPI is received in the time window,
+> this bug happens.
 > 
-> > +	thermal-zones {
-> > +		aoss-thermal {
-> > +			thermal-sensors = <&tsens0 0>;
-> > +
-> > +			trips {
-> > +				trip-point0 {
-> > +					temperature = <110000>;
-> > +					hysteresis = <5000>;
-> > +					type = "passive";
+> <CPU0>					<CPU1>
+> 					Start smp_text_poke_batch_finish().
+> 					Start the third step. (remove INT3)
+> Hit INT3 (from icache/pipeline)
+> 					on_each_cpu(do_sync_core)
+> ----
+> do_sync_core(do SERIALIZE)
+> ----
+> 					Finish the third step.
+> Handle #BP including CLI
+> 					Clear text_poke_array_refs[cpu0]
+> preparing stack
+> Start smp_text_poke_int3_handler()
+> Failed to get text_poke_array_refs[cpu0]
 > 
-> All of the passive trip points you added that aren't bound to any
-> cooling devices should be critical instead (otherwise they're not
-> doing anything)
+> In this case, per-cpu text_poke_array_refs will make a time
+> window bigger because clearing text_poke_array_refs is faster.
 > 
-> otherwise, looks good
+> If this is correct, flushing cache does not matter (it
+> can make the window smaller.)
+> 
+> One possible solution is to send IPI again which ensures the
+> current #BP handler exits. It can make the window small enough.
+> 
+> Another solution is removing WARN_ONCE() from [1/2], which
+> means we accept this scenario, but avoid catastrophic result.
 
-Don't we need cooling-maps for CPU thermal zones?
+If interrupts are enabled when the break point hits and just enters the
+int3 handler, does that also mean it can schedule?
 
--- 
-With best wishes
-Dmitry
+If that's the case, then we either have to remove the WARN_ONCE() or we
+would have to do something like a synchronize_rcu_tasks().
+
+-- Steve
