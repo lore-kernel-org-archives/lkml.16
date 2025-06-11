@@ -1,86 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8A2188CC9;
-	Wed, 11 Jun 2025 15:14:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FF0B1AF0CE
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:14:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749654869; cv=none; b=uzspPouu4Dp1KxzGPYDvfntPmACi6SOAXeKEMdVBFfLtjzAmqDp+itcySzKVkWPBguueAPOy7WkJp2VJ9PjGWA+Arys3ZkTXs9Yn5xb7EpXU3VRXRkVIufTbrm4eKk3+W4/IfuYUdQuFsu/u8bpMm4pU5ei/cFmZquoQafuVn2o=
+	t=1749654887; cv=none; b=oA5cUZfPCdUDi6NYY1PzqlTEdb7dmVOeKE3SqhRGPdUPbHQBP3zC74JR5aG2HeoBaLbHZ7j7Z6fghUlZWLBhVL0yxqFj+b5g4t9iT4QTqHuq4TS9/GPnNP7X84BSBCjJr8UpwlHtEN3Q5TM69TLWpWZffJvBlztknrt6L7N4lEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749654869; c=relaxed/simple;
-	bh=8zfSXXFV1xgQJy1mUdrZsabuC4LujniNvHm8OnpJ6Zo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E9OaWRi2R6wx+DeD27KEY+8RC7gaKmmuHLeA/1W36mW41AfokHLoxP7iKqOJ94r0zbABNx5EatC3RJ35QLADEqjYXNLZ7QKELIiiqEyDlVp6eC7JeZUPQDKXV4KTNmxhN9edt6m6vwDseA+658wn+moAUomcsBi/z879dDqQANk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z0uCF56r; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749654887; c=relaxed/simple;
+	bh=pb1NQueabVI9wQkdaC+YDQL17yZ/J3cirFxX0Ib+CQA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=MySujDPwEPiANDg98DP6u55cS63qUdpVnC9xAcG02hxh8yvrdWBMfNPJmOBPUDirB9FqQPGUevgo0CEPLB6AYohV7aMJ4+zglN6wOen1vVWuc8HPzarTeFnwcThouco5FbvIYqD3LtBDfK6ApnYb7oup388yK6WUc1MdC+PFG6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ihUI4pic; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z0uCF56r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73C14C4CEE3;
-	Wed, 11 Jun 2025 15:14:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749654869;
-	bh=8zfSXXFV1xgQJy1mUdrZsabuC4LujniNvHm8OnpJ6Zo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z0uCF56r6j27XgvKCyCizr6xrutKJGUpp4AcCHT01Rw2e/qrfgs/Rz0yVtixer5wA
-	 NM4kEDqYDy6IBEPkT0fueSGEG2lVijkxx7FkcKeJ8KYVAtEKPspcaf4OL1hgJFEv/2
-	 dRymKCmndm4aW1LSOrrxbtVnxKdcmxj8mx5nfgv+RYUgHNHQr2Y2O0yq+1nwUn6dxq
-	 fZAXboHW54lLSudqtZQTyJQRvnCil1OPpdmtpSVAJFt1Q5cMOPPeUGBl3x02Rd4Dki
-	 4DM5TwWiO5LnCO4Q1rk4WpGkXEKr118k+JydDJVFosiBFdVi6NNOHXDxYe9QJsEC7T
-	 +aHrMIJWdwUhw==
-Date: Wed, 11 Jun 2025 16:14:23 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: catalin.marinas@arm.com, pcc@google.com, will@kernel.org,
-	anshuman.khandual@arm.com, joey.gouly@arm.com,
-	yury.khrustalev@arm.com, maz@kernel.org, oliver.upton@linux.dev,
-	frederic@kernel.org, akpm@linux-foundation.org, surenb@google.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v7 2/9] arm64: report address tag when
- FEAT_MTE_TAGGED_FAR is supported
-Message-ID: <9a78c058-2aeb-43d8-94f8-987507a1a9a3@sirena.org.uk>
-References: <20250611135818.31070-1-yeoreum.yun@arm.com>
- <20250611135818.31070-3-yeoreum.yun@arm.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ihUI4pic"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250611151442euoutp016be74b48138e134daf545a87272fdcb9~IBdiAHKDI3089430894euoutp01V
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:14:42 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250611151442euoutp016be74b48138e134daf545a87272fdcb9~IBdiAHKDI3089430894euoutp01V
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1749654882;
+	bh=/aG3yXc2EucpbW7sa9J+WzUETPZ1G5/7AvZ60LGbpt8=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=ihUI4picgtqUec1YrsKY2X8y+lZtQi5PEzaMdY1POhzjEGEKAYKdwrIPJowunk9ho
+	 McMbITHYYQQRjiqckByAn6RcHEdimhnM9Ieyp+MhmKyNYPlmxMJ9cYHkMutsHLsxM/
+	 jYGC2BBusGkTjcJqayLlYd3mMorqFK1VDaKlb0y8=
+Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250611151441eucas1p1c5b30da3e0bd7484b27c9ad78a91f678~IBdhUjG441932119321eucas1p1c;
+	Wed, 11 Jun 2025 15:14:41 +0000 (GMT)
+Received: from [192.168.1.44] (unknown [106.210.136.40]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250611151440eusmtip2d72d1b30d77ba1ed35d675241db8b411~IBdgIHHGO2985829858eusmtip2g;
+	Wed, 11 Jun 2025 15:14:40 +0000 (GMT)
+Message-ID: <6ca6016e-3b17-48a0-ad8d-bb05317aa100@samsung.com>
+Date: Wed, 11 Jun 2025 17:14:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="llNME2sYZezlFhNO"
-Content-Disposition: inline
-In-Reply-To: <20250611135818.31070-3-yeoreum.yun@arm.com>
-X-Cookie: No skis take rocks like rental skis!
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/7] Rust Abstractions for PWM subsystem with TH1520
+ PWM driver
+To: Drew Fustini <drew@pdp7.com>
+Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Miguel Ojeda
+	<ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng
+	<boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas
+	Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor
+	Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Guo Ren
+	<guoren@kernel.org>, Fu Wei <wefu@redhat.com>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+	Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
+	Ghiti <alex@ghiti.fr>, Marek Szyprowski <m.szyprowski@samsung.com>, Benno
+	Lossin <lossin@kernel.org>, Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org
+Content-Language: en-US
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+In-Reply-To: <aEifXZnLxKd2wa0w@x1>
+Content-Transfer-Encoding: 7bit
+X-CMS-MailID: 20250611151441eucas1p1c5b30da3e0bd7484b27c9ad78a91f678
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250610125330eucas1p2a573627ca8f124fe11e725c2d75bdcc9
+X-EPHeader: CA
+X-CMS-RootMailID: 20250610125330eucas1p2a573627ca8f124fe11e725c2d75bdcc9
+References: <CGME20250610125330eucas1p2a573627ca8f124fe11e725c2d75bdcc9@eucas1p2.samsung.com>
+	<20250610-rust-next-pwm-working-fan-for-sending-v2-0-753e2955f110@samsung.com>
+	<aEifXZnLxKd2wa0w@x1>
 
 
---llNME2sYZezlFhNO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Wed, Jun 11, 2025 at 02:58:11PM +0100, Yeoreum Yun wrote:
+On 6/10/25 23:10, Drew Fustini wrote:
+> On Tue, Jun 10, 2025 at 02:52:48PM +0200, Michal Wilczynski wrote:
+>> This patch series introduces Rust support for the T-HEAD TH1520 PWM
+>> controller and demonstrates its use for fan control on the Sipeed Lichee
+>> Pi 4A board.
+>>
+>> The primary goal of this patch series is to introduce a basic set of
+>> Rust abstractions for the Linux PWM subsystem. As a first user and
+>> practical demonstration of these abstractions, the series also provides
+>> a functional PWM driver for the T-HEAD TH1520 SoC. This allows control
+>> of its PWM channels and ultimately enables temperature controlled fan
+>> support for the Lichee Pi 4A board. This work aims to explore the use of
+>> Rust for PWM drivers and lay a foundation for potential future
+>> Rust based PWM drivers.
+>>
+>> The core of this series is a new rust/kernel/pwm.rs module that provides
+>> abstractions for writing PWM chip provider drivers in Rust. This has
+>> been significantly reworked from v1 based on extensive feedback. The key
+>> features of the new abstraction layer include:
+>>
+>>  - Ownership and Lifetime Management: The pwm::Chip wrapper is managed
+>>    by ARef, correctly tying its lifetime to its embedded struct device
+>>    reference counter. Chip registration is handled by a pwm::Registration
+>>    RAII guard, which guarantees that pwmchip_add is always paired with
+>>    pwmchip_remove, preventing resource leaks.
+>>
+>>  - Modern and Safe API: The PwmOps trait is now based on the modern
+>>    waveform API (round_waveform_tohw, write_waveform, etc.) as recommended
+>>    by the subsystem maintainer. It is generic over a driver's
+>>    hardware specific data structure, moving all unsafe serialization logic
+>>    into the abstraction layer and allowing drivers to be written in 100%
+>>    safe Rust.
+>>
+>>  - Ergonomics: The API provides safe, idiomatic wrappers for other PWM
+>>    types (State, Args, Device, etc.) and uses standard kernel error
+>>    handling patterns.
+>>
+>> The series is structured as follows:
+>>  - Rust PWM Abstractions: The new safe abstraction layer.
+>>  - TH1520 PWM Driver: A new Rust driver for the TH1520 SoC, built on
+>>    top of the new abstractions.
+>>  - Clock Fix: A necessary fix to the TH1520 clock driver to ensure bus
+>>    clocks remain enabled.
+>>  - Device Tree Bindings & Nodes: The remaining patches add the necessary
+>>    DT bindings and nodes for the TH1520 PWM controller, a thermal
+>>    sensor, and the PWM fan configuration for the Lichee Pi 4A board.
+>>
+>> Testing:
+>> Tested on the TH1520 SoC. The fan works correctly. The duty/period
+>> calculaties are correct. Fan starts slow when the chip is not hot and
+>> gradually increases the speed when PVT reports higher temperatures.
+>>
+>> The patches are based on mainline, with some dependencies which are not
+>> merged yet - platform Io support [1] and math wrapper [2].
+>>
+>> Reference repository with all the patches together can be found on
+>> github [3].
+> 
+> I'm trying to build your rust-next-pwm-working-fan-for-sending-v4 branch
+> but I get this error:
+> 
+> $ make W=1 LLVM=1 ARCH=riscv -j16
+>   CALL    scripts/checksyscalls.sh
+> .pylintrc: warning: ignored by one of the .gitignore files
+>   UPD     include/generated/utsversion.h
+>   CC      init/version-timestamp.o
+>   KSYMS   .tmp_vmlinux0.kallsyms.S
+>   AS      .tmp_vmlinux0.kallsyms.o
+>   LD      .tmp_vmlinux1
+> ld.lld: error: undefined symbol: rust_build_error
+>     referenced by pwm_th1520.4789668fc0b4e501-cgu.0
+>                   drivers/pwm/pwm_th1520.o:(<pwm_th1520::Th1520PwmDriverData as kernel::pwm::PwmOps>::get_state) in archive vmlinux.a
+>     referenced by pwm_th1520.4789668fc0b4e501-cgu.0
+>                   drivers/pwm/pwm_th1520.o:(<pwm_th1520::Th1520PwmDriverData as kernel::pwm::PwmOps>::write_waveform) in archive vmlinux.a
+>     referenced by pwm_th1520.4789668fc0b4e501-cgu.0
+>                   drivers/pwm/pwm_th1520.o:(<pwm_th1520::Th1520PwmDriverData as kernel::pwm::PwmOps>::write_waveform) in archive vmlinux.a
+> make[2]: *** [scripts/Makefile.vmlinux:91: vmlinux] Error 1
+> make[1]: *** [/home/pdp7/linux/Makefile:1241: vmlinux] Error 2
+> make: *** [Makefile:248: __sub-make] Error 2
 
->  	 * The architecture specifies that bits 63:60 of FAR_EL1 are UNKNOWN
->  	 * for tag check faults. Set them to corresponding bits in the untagged
-> -	 * address.
-> +	 * address if ARM64_MTE_FAR isn't supported.
-> +	 * Otherwise, bits 63:60 of FAR_EL1 are KNOWN.
->  	 */
+Hi,
 
-Should that be "are UNKNOWN"?
+Thanks for testing !
+I can reproduce the issue with your config.
 
---llNME2sYZezlFhNO
-Content-Type: application/pgp-signature; name="signature.asc"
+The root of the problem was a failing compile time assertion
+(build_assert!) in the underlying Rust abstracions, I think IoMem since
+get_state and write_waveform functions are impacted. My development
+configuration was accidentally hiding this issue, but your configuration
+correctly exposed it.
 
------BEGIN PGP SIGNATURE-----
+The kernel config option that is different on my setup is:
+CONFIG_RUST_BUILD_ASSERT_ALLOW=y
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhJnU4ACgkQJNaLcl1U
-h9C55wf/TdyfC/w7P1v4F0hQRmhNZ6ZT6FQpZRqi0HVD/ZBIHWgIpUenQ1p+dTrL
-Yh9K8yel2k1AKNsrZwpcTYGX6EHG1e+cpxTBHRQ1QBAMjIZA4QGpUqmBLFv9HSa7
-fQfN06W843PM4GCO8U94F7ovaj+Vtroe01uCZhkO0zaYGpuBppaL0yWKw88unErL
-lRnHmzOy74Vip/f7zNEdXYscNcBrHQW9hIZj+RFi7sE9jykuCCxQlrT5kTNckmAV
-BWwj7tCisc8IRj/ov8BRtANfk3BqZlLsHtBCkMUACdNCmnhATAbhkZa1tQUOsROl
-q81tUHwm4zYBMoApcuEa4DSp2Ex73Q==
-=6B4e
------END PGP SIGNATURE-----
+Now I have to take a look at the IoMem abstractions, I think there is
+a new revision [1]. Will apply it and check why exactly compile
+assertions are triggering.
 
---llNME2sYZezlFhNO--
+[1] - https://lore.kernel.org/all/20250603-topics-tyr-platform_iomem-v9-0-a27e04157e3e@collabora.com/
+
+> 
+> I've uploaded the config to:
+> https://protect2.fireeye.com/v1/url?k=0cc1a518-535a9c14-0cc02e57-000babff3563-8df2dfc535042c2a&q=1&e=eaf92127-0b5a-4559-9796-3264da753ae3&u=https%3A%2F%2Fgist.github.com%2Fpdp7%2Fe2c34dd7e4349a54bd67b53254bd3a22
+> 
+> Thanks,
+> Drew
+> 
+
+Best regards,
+-- 
+Michal Wilczynski <m.wilczynski@samsung.com>
