@@ -1,66 +1,65 @@
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6268525BEF9
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 22:42:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D39A250C18
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 22:42:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749681762; cv=none; b=pfUQGy4ziV4L1SWzQ520+P4oUAZx6IhLgxAD356OHbykNW8xdzR7pRUdBUskYVTH7A3uHmYlbT+Fin50DXb4bOlAg6f1kqZpWp4TObNlF7JuqvYYx3w0vd52Z+LONKSINb0X9xRMi04nSzX2VtwQKVq+kGFckreGAXQktiM7oME=
+	t=1749681764; cv=none; b=VX33PoUYg/IaFoaseRyfXwCbpvoVpY65nso/KW/GoWkWulb0n0McY4NRpqQQgtCBSmW5DKgHEtGa6K697ixPNcEClkhVg7YR/u+8ohscCF/gsOoXZUEGwxErV9zxd2ggM+9QYCBOJRuqQEAw/GkJpr4lXBO1HWllSLYTCIlmxf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749681762; c=relaxed/simple;
-	bh=yBs3XS+1GgmnqB6Z/LBOG9076RbaTKgSQXFeV9Rx9Tg=;
+	s=arc-20240116; t=1749681764; c=relaxed/simple;
+	bh=w6sewnHJwVlZtUZ1XCEB4lsBcr4uySr0t3enC0nXMgo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZUIg3qcyc7dktSzeTKnynfgD6G2nb7XYfc2wxAXdeqaq+uC+cSytg/Gr/UdKnbz32esFuIoMFW3ikLa+C3MwkFH1xwC+qaRe+Z83Cmuag+Z3Scu5dCsw1PsU8yZDl59tVy+K0Q4BzjpvwL0/502BA003OiJGLTBjWb+gBdGm0Og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=zQ71/c/3; arc=none smtp.client-ip=209.85.167.176
+	 In-Reply-To:To:Cc; b=k2tp8KGsB9SX9z5SFTlZaLmEkr1uoqqiD4Da7XRGdK19xQoLLzpnDK/Z0qdgq/htL3yDUW6hyJrNgDu2Tv1D30IOAT5P1Yq18703lzC9qdau5+jyGrBQ/Xy4Dnn56q+I96NjTKKoDLlInO6CIs+d8J7a+yeKN04MJOhnfglKh1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=SsOefWXt; arc=none smtp.client-ip=209.85.167.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="zQ71/c/3"
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-408e0986303so224244b6e.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:42:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="SsOefWXt"
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-4091180d3e5so173368b6e.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:42:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749681759; x=1750286559; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749681762; x=1750286562; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=6sYRnmDUxprHg+LgR2XosmphvKPLQ0+i+LbqXhoNfpA=;
-        b=zQ71/c/38S23VDirhOmYl/N9BKCgpDOG7jWi7JvUbRAkBPQRwtujDtngt8yIIYjXSu
-         Sh54Amdf4BWPgG1H5rMsPWTm8XTzTw3ARaS5XIRFkmGgMnABbgl7g8FAogxUTxqem4gT
-         ndnCUljs3Kf2WIGMCyps0cjDw2ZanGQtTyDMQk4yDjpW7kJIL8tqwL8vnL4KNoJuXgo3
-         bbXU2/tDXpaofC67LyN6pxIkrt0dzIs9bCUEiZS2ZCZdNmLUmsskg++B7UKxEXvPGLmf
-         Ol4v0+vIpbr8Ikzz76FSDYk+7LXCqfcPSpEmz7DxWxExDrgAPfZII1Wwid6JizGu1bup
-         ew+g==
+        bh=1+AXM43LJmcTiZ4+XLqifo1WeAnz6FejMu0e+/VkXQ4=;
+        b=SsOefWXtrms4NznSIcRfSkLaBy82PIQP0FU67RK0TLT11w2pk51VhvDcpLLOn7HGGH
+         XG2xSOKh/YpeZUwtFdqim7jCbI4L5QG11roTx2bdc7JsJvlwHqNcQ/8HOyMjjrKAscuK
+         U61F4KWdDSC9VuKUHwVD2Kpbh0+koy+Rpv6GKu15wPsrvcWpb5HISRkEQLNEIus2Wv0/
+         8LGGZSaoAfmh65u/RDyJclLeBRtuWku494GIVH/taYyHHgl0SDsxvo9Lnk4iDT3MJqfj
+         wfAs6QhCK5Ug1emw3Fhs2VnRW5O89kyVS31A3w4LlJx8L1v1ZTX+yqoyKczMlJ2xNYPr
+         jiDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749681759; x=1750286559;
+        d=1e100.net; s=20230601; t=1749681762; x=1750286562;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6sYRnmDUxprHg+LgR2XosmphvKPLQ0+i+LbqXhoNfpA=;
-        b=XVQdMptC5aDFmQon9QdrfrX/9Cr24z2hy1ItC2D+OQ33oQvTzBc0PtSiDXbaDfxSE6
-         VWcUuZnNqA2rG6RSLZaFVtK7M7I+S0xaI93yiZdy7UphvMGqy8ONNivnGMoZyuv61ftr
-         fZnichXAFgxnhIR+UrhAMZCCO9wu8eB0ExAnjJ5n2RZKxkQv0eEkGEmPy9AC37ukikco
-         OtI1JtPzxMOsplZDNt3lAJ2m8i3TMoXwrUeIAe4w/c0wVdwBoWBh2aR1dTAD73evgu9U
-         3pkEZKIyofmHLQHulnZYXxG8E53uqzyRkw+DP15JME7wsellnig+OOXrT66WUFZY0LDA
-         76yQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWD40N99poiDUvTqpx+yW/C7jnCheCllvn13rRe8KP6cWiIffnt1Zb913ptyP+X21VQy5lPkJyWLCIj+DQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvM8CkZWB83aeZGHh3kOMgEIbZs177A4Y1wp3QpDPpUgt1yQyp
-	eRgvHXjZeELAL6B+b3QZ0O24cXqlciUJydoEmFf6T2SK/0QRN6OuXWQxGwUHUHiXWG4=
-X-Gm-Gg: ASbGncvH+b9QMurNiwQIxAgC8WilNN++DcGhZWXwWHWWiCP37nkDQYI7ucE5/rxXrTc
-	fcZeVkgXGq8MsmC0u5NMWKTlqgoKkp9mkCl1KaZ3sAuuVIgFBlayEF0WJA7Flvomu00ht0GMBVZ
-	ixp1vhRNDix6snN0CdvfT5v/oItIL4hwzlaWKIWUAFVXsJKyBaHNdDbwr0SOQKZ7wbMylC5Joi1
-	WzmANcGT3SObG0HMJEd4y+lbrZaN59so5REMThlMpWd18Tbi8o9ZI2Utj1VqWk2KxIzuKx+gowZ
-	nsj+edxzxmoGKnosG8FKLXM/RBF8gTdBWP65XIZlFneG3oJYgafvyopRjzjhsWHn431dB//7kPr
-	/8WA=
-X-Google-Smtp-Source: AGHT+IErlYL4bsSFy9ngVg9McugAmwec16wRc+73AVkKa1/aJVelh+e5fLLya/tzgRaNA/PwviOmtQ==
-X-Received: by 2002:a05:6808:2213:b0:406:6dd2:5eb9 with SMTP id 5614622812f47-40a6609c56cmr824967b6e.26.1749681759456;
-        Wed, 11 Jun 2025 15:42:39 -0700 (PDT)
+        bh=1+AXM43LJmcTiZ4+XLqifo1WeAnz6FejMu0e+/VkXQ4=;
+        b=lkP2cePBuAXI+BYEgQH3huNK3j55LR+Zt13MaH9UCXpgGUQrqyzxvNA/HuWBS+V+CC
+         JZiOPyuf7fp9HlWtTQz7/lw7buMncR1EXoqObF5ipSGTtp6ckHrBTcUtBiCzY7zcdQI+
+         XVR3Ka01Do9nleaC+L9izJip7sXoxOhqLtR/DWvy9GiWUXqIHmkKzwtFpi+gUfptWX+W
+         dEDl6cZageyFtrE+VVJiKYaEOtqOS2GepOzgTljsOFTp3GqL0hw2ITwEzzGfndxxebSs
+         zTuEKUqXZDxWkYeFcn799DwAytiEOBf/eyulOifqGbEkYBRLyMPs2qe84MC6Qt1AbSQ+
+         K5VA==
+X-Forwarded-Encrypted: i=1; AJvYcCXmUwIO8Odb8aZuNA5mxccHlsES3mLRxy7u370ybjgLiAfYAiLaX8U5TFbLya+KLDRO5qT/Q6Wvd9tq2EM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7k4tSNHjw7ABUZ3ekfIm4XL4Ofz+s+K2b5b5yjaHIBgL3B7vA
+	WxJPcssQXnQt/Y8RiH5UbWRUlkkl8IPHbvPxOa8D5NgMJBdGiGC2Q6ncCEUPu0Hwsoc=
+X-Gm-Gg: ASbGnctdWnPHg+zCb1hJe6XKlsU5tGIn495m4NWXOGyqye1ZAoM07kqZMd4Jw0ZQDCq
+	xXfbaE6/CqyoKe5T2iR4kJrMtolh5KiEl60M1uDto3wfF/kIM8qhTKTsUJ4UQmOehyMhyqNWrQy
+	ggiot0gL8TdAgTaMsV3NisO3N9vhmFP6Bz+Nk75NxPxO6v2D6PCyT02WlFHsTyCdtej7s3nQq+m
+	mwzTrSFXzNJAhV8PfH/r1LqFeW+deJ++WbillkYdy7tN38qVQwdofC0T9+LTtnthJQ3M1lXIJGQ
+	MM5Yo1Sh6XQs40DGvUywhuWP6BhL0iFYvmY3mgl4DfrRFqD7qiW2AB+PzZZt+yRw42WJ
+X-Google-Smtp-Source: AGHT+IFMMzvtGjq/XF9sKG5BGljgdifNq6jOybNnZI2VIWkdnxiv1hDecZPrcYLXm/jeBNerhjgiZw==
+X-Received: by 2002:a05:6808:144f:b0:406:39b4:2232 with SMTP id 5614622812f47-40a5d053e13mr3229763b6e.3.1749681761758;
+        Wed, 11 Jun 2025 15:42:41 -0700 (PDT)
 Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:4753:719f:673f:547c])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40a682fbf05sm24684b6e.32.2025.06.11.15.42.37
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40a682fbf05sm24684b6e.32.2025.06.11.15.42.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 15:42:38 -0700 (PDT)
+        Wed, 11 Jun 2025 15:42:40 -0700 (PDT)
 From: David Lechner <dlechner@baylibre.com>
-Date: Wed, 11 Jun 2025 17:39:03 -0500
-Subject: [PATCH 11/28] iio: adc: ti-tsc2046: use = { } instead of memset()
+Date: Wed, 11 Jun 2025 17:39:04 -0500
+Subject: [PATCH 12/28] iio: chemical: scd4x: use = { } instead of memset()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +68,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250611-iio-zero-init-stack-with-instead-of-memset-v1-11-ebb2d0a24302@baylibre.com>
+Message-Id: <20250611-iio-zero-init-stack-with-instead-of-memset-v1-12-ebb2d0a24302@baylibre.com>
 References: <20250611-iio-zero-init-stack-with-instead-of-memset-v1-0-ebb2d0a24302@baylibre.com>
 In-Reply-To: <20250611-iio-zero-init-stack-with-instead-of-memset-v1-0-ebb2d0a24302@baylibre.com>
 To: Michael Hennerich <michael.hennerich@analog.com>, 
@@ -100,15 +99,15 @@ Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-stm32@st-md-mailman.stormreply.com, 
  David Lechner <dlechner@baylibre.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1172; i=dlechner@baylibre.com;
- h=from:subject:message-id; bh=yBs3XS+1GgmnqB6Z/LBOG9076RbaTKgSQXFeV9Rx9Tg=;
- b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoSgXMR0GMvFJcokv5VGg+Ekcm/aUw3x65eQXt5
- Qau3vKbyEKJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaEoFzAAKCRDCzCAB/wGP
- wEqYB/0aWaPu55zIJCA1+8Yh+2nKwvk/9shr5lt8X2HMjBVuKIJBARV1Ihwlk9gBU3FIMvsGMgJ
- W4gNnxW2ahFYBRU9X6NIB7qIDdnlu9FLgIBs+7HvG5ZrFCdOT1vleHncGAZvz81Lg/RtNlspo6w
- s1e4DQd9TKIrPHH4VDXiTl3tRfJ9p25SdmwrE3UDuHM6w2LPmkgKoeJBV8Q9r3QX0867CsQZJaL
- 9H8G6DUTaF7neBW/gG1OOaACNgb6ckSo1vV7pvEjTzFp78nLZuf8MaSYHl/PCQHCKhEakB8WqjH
- 9f3O2YBAUgw4FjBIASvaE7wTglESbk23by+IQjvgTwOJGF9M
+X-Developer-Signature: v=1; a=openpgp-sha256; l=810; i=dlechner@baylibre.com;
+ h=from:subject:message-id; bh=w6sewnHJwVlZtUZ1XCEB4lsBcr4uySr0t3enC0nXMgo=;
+ b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoSgXTO0fwqvdhMYlsTHXtIYGob2RsszuHsUyLs
+ SfL1LagKj+JATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaEoF0wAKCRDCzCAB/wGP
+ wPZeCACIJ32MRJGFXAWVkUo7XJ8IPrL0OrDOVi8YV9Bz71zO9E1Xbt2tdxaHIRCxRXTjHv0+zxe
+ w/o0PiRItwBJgVkYx0LCNcV0wRJiX/3SOXvkNIYHEjW/6bG5mIuft2mWy9pOWtFB1hHlRO5OHW0
+ HRZV2jH97fcqcIdH9wSd/O5uzb2vY2Mv537m9vzG3NCE1EZ6ni5m4frRR2Ju3EquwZ5eFRMUZDk
+ 6TffT8htFYg5wCw+GGZ+kUM+ESDQvMFNiOZTKVDPOJtDl6Lepqk3gBrXVA5n8ijfXQPulfkc44L
+ Ad5/aXu1TD4BBvsWqxbL+8KuoPFw5kwu1Q/N4uflwEd9cOV+
 X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
  fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
 
@@ -117,30 +116,25 @@ the code.
 
 Signed-off-by: David Lechner <dlechner@baylibre.com>
 ---
- drivers/iio/adc/ti-tsc2046.c | 3 +--
+ drivers/iio/chemical/scd4x.c | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/iio/adc/ti-tsc2046.c b/drivers/iio/adc/ti-tsc2046.c
-index c2d2aada6772aae6fc8d01c3878d6e869d413bc7..74471f08662e0291b097fcb277b8ad9cb6df200c 100644
---- a/drivers/iio/adc/ti-tsc2046.c
-+++ b/drivers/iio/adc/ti-tsc2046.c
-@@ -276,7 +276,7 @@ static int tsc2046_adc_read_one(struct tsc2046_adc_priv *priv, int ch_idx,
- 	struct tsc2046_adc_ch_cfg *ch = &priv->ch_cfg[ch_idx];
- 	unsigned int val, val_normalized = 0;
- 	int ret, i, count_skip = 0, max_count;
--	struct spi_transfer xfer;
-+	struct spi_transfer xfer = { };
- 	struct spi_message msg;
- 	u8 cmd;
+diff --git a/drivers/iio/chemical/scd4x.c b/drivers/iio/chemical/scd4x.c
+index 2463149519b6d82caede9c9b253942fa421fdd3c..8859f89fb2a942d940b1ba7adf202977df7b4ad6 100644
+--- a/drivers/iio/chemical/scd4x.c
++++ b/drivers/iio/chemical/scd4x.c
+@@ -665,10 +665,9 @@ static irqreturn_t scd4x_trigger_handler(int irq, void *p)
+ 	struct {
+ 		uint16_t data[3];
+ 		aligned_s64 ts;
+-	} scan;
++	} scan = { };
+ 	int ret;
  
-@@ -314,7 +314,6 @@ static int tsc2046_adc_read_one(struct tsc2046_adc_priv *priv, int ch_idx,
- 	/* automatically power down on last sample */
- 	tx_buf[i].cmd = tsc2046_adc_get_cmd(priv, ch_idx, false);
- 
--	memset(&xfer, 0, sizeof(xfer));
- 	xfer.tx_buf = tx_buf;
- 	xfer.rx_buf = rx_buf;
- 	xfer.len = sizeof(*tx_buf) * max_count;
+-	memset(&scan, 0, sizeof(scan));
+ 	mutex_lock(&state->lock);
+ 	ret = scd4x_read_poll(state, scan.data);
+ 	mutex_unlock(&state->lock);
 
 -- 
 2.43.0
