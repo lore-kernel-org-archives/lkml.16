@@ -1,132 +1,179 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652452E6135;
-	Wed, 11 Jun 2025 11:22:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF406FB9;
+	Wed, 11 Jun 2025 11:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749640962; cv=none; b=lBKW/kYa2SmgyHrXGunrBsUlMUZcI+vogjjTK8JPEzhSkSHHjDQHVU/ufZD/zFhTfBoJwHoukgOyQ+hneqqkivj/XuQ8o0TA12ciIBIvzC6U4+5JaYfMf0gPaWmngtXuZlqRXwVR1QYPYNkNByVDOOuZAlu2PZ4tuAVcGITBnxQ=
+	t=1749640962; cv=none; b=SVBQdLb/lViyBw7x/RV9TEH51B5bcI/h1cmMgJCNgChabKINK4W01qslv3yLLXxVF0GMnSWw38g71VC3Hcmy4D5lauNAeSzOUidA8JXgSx0xwHKI4Ufh8mp8jAQhakaRLRaBZlq/boZu1o0Of+dTAqBUn4gMiSXRJRrUQ8NPWl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749640962; c=relaxed/simple;
-	bh=docsndFI6Pu2XiM5fhPypxl5HJBhGvZAfSKa9arbkFY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uW56L/nKBCPs6CfOiip/CWFj5yo/EQReMvXdKAmtGai9PNGLZyjUOOUPZdbibPTIwWj3xHYGZgq1GSrym8ESSgmDuP3hwsMjmh1K/RuzHcNSoSgL0mSHUh1qN1DRnNMHacZQBoZMFNk1q8zDhTiHBhlpvCDpf8shLcVpjIgoXHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PDP9PBo/; arc=none smtp.client-ip=10.30.226.201
+	bh=Qe6Nr2dHM83kzSqpO6AU8+NASoIrgEuIaTGJZzzqwls=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=mWvONG3nKTum/ksqaOCuH6MPtPm2Ho1SBHwZY3SS8J5qCTUxw/8FFzg77NPF8DZ5JYiMSaKb8k79Z2SvQoGsii2u0Re0YzMZJ7DlJEMgZ1Y34RZkdGxgIxs0M2drcbpEeBw25x7Oe39xVI6BB3MBM+/an/gyp7OekVps+W2Z7zM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fVrV3M04; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PDP9PBo/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF3EEC4CEEE;
-	Wed, 11 Jun 2025 11:22:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749640962;
-	bh=docsndFI6Pu2XiM5fhPypxl5HJBhGvZAfSKa9arbkFY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PDP9PBo/LYCXBfQVelEBN/Z6h+1sGl43me9RqV2mdNPiuSrXcTOX5E7srWXDxtsPu
-	 gRXWwmUHGY4GgGe/mF6JXJBg5AY/8xPGwRSo6yRcfcEtz4xckFscb7Cgb9Ma+5tf5U
-	 hy581ySOpQA7DuLaVzyHsEoXUluxKQbGuA34TxjvWVO2o61WSASYs3zCi5/sbdkCZW
-	 i97MmVXropQ3P1zruX8V7ijad/EYSxyxl0Xnez0s5+r603Oq0i+5VgiFAxo7tAcHkW
-	 FbagN9CswA8sZMHJ+nZInFf1LObaTqYIBw44ynOynJHKHvTroW0PCCTr5foGmG5sJA
-	 7U9uLRaS2IMdQ==
-Message-ID: <1ee554e4-d813-47cd-a1ab-9eaa4634cdb1@kernel.org>
-Date: Wed, 11 Jun 2025 13:22:35 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fVrV3M04"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749640961; x=1781176961;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Qe6Nr2dHM83kzSqpO6AU8+NASoIrgEuIaTGJZzzqwls=;
+  b=fVrV3M04dmAUeT99dk53/9CzMU8EjJVf7b1Jx8xSDyE13PXYob0lx91X
+   P8V3RrOa0qyJ2qrpWkTdgUgYJx/mIAdYAOhzZh55MndD59thZQB+Pka16
+   ysj6QD+5RYyEME6on532/smqpYbcrkjllrfnG99GJ2KipbT0yD8XA0Ady
+   5oz31UGkofuO9n22n+2QIyOnUm+h+zf6F9NC/zqRkOIpaJnSBuJWzuO02
+   H1l390mrnqwmR45eNQ06Zz7aYbDDuPUtU53vGoohurfND/w0DSH1MYG6I
+   crbjpXHTDmKRbi1Y62iwLhGptEy2uQfyp4CuNF67uCLaINBIIlBmsf8kC
+   w==;
+X-CSE-ConnectionGUID: wsUSBSJTS6qKrLXP5AqQng==
+X-CSE-MsgGUID: qiu9jxTRQrOfP65X3R2nug==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="62058877"
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="62058877"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 04:22:40 -0700
+X-CSE-ConnectionGUID: Ojyg/RhjTriSvTpn1TMQ5w==
+X-CSE-MsgGUID: 52oD8a70SvawWK4mDJNmAQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="147017158"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.183])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 04:22:38 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 11 Jun 2025 14:22:34 +0300 (EEST)
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    linux-serial <linux-serial@vger.kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    Geert Uytterhoeven <geert@linux-m68k.org>, 
+    Joshua Thompson <funaho@jurai.org>, linux-m68k@lists.linux-m68k.org
+Subject: Re: [PATCH 04/33] m68k: remove unneeded tty includes
+In-Reply-To: <20250611100319.186924-5-jirislaby@kernel.org>
+Message-ID: <2e994f05-8aa9-82c0-e8e3-927730dccadf@linux.intel.com>
+References: <20250611100319.186924-1-jirislaby@kernel.org> <20250611100319.186924-5-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] arm64: dts: qcom: Add GPU support to X1P42100 SoC
-To: Akhil P Oommen <akhilpo@oss.qualcomm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Rob Clark <robin.clark@oss.qualcomm.com>, Sean Paul <sean@poorly.run>,
- Konrad Dybcio <konradybcio@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>,
- Abhinav Kumar <abhinav.kumar@linux.dev>,
- Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
- Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-pm@vger.kernel.org
-References: <20250611-x1p-adreno-v2-0-5074907bebbd@oss.qualcomm.com>
- <20250611-x1p-adreno-v2-4-5074907bebbd@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250611-x1p-adreno-v2-4-5074907bebbd@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="8323328-843499514-1749640954=:957"
 
-On 11/06/2025 13:15, Akhil P Oommen wrote:
-> +		opp-280000000 {
-> +			opp-hz = /bits/ 64 <280000000>;
-> +			opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS_D1>;
-> +			opp-peak-kBps = <2136719>;
-> +			qcom,opp-acd-level = <0xc82f5ffd>;
-> +			opp-supported-hw = <0x1f>;
-> +		};
-> +	};
-> +
->  };
->  
->  &gpucc {
-> @@ -41,6 +150,13 @@ &pcie6a_phy {
->  	compatible = "qcom,x1p42100-qmp-gen4x4-pcie-phy";
->  };
->  
-> +&qfprom {
-> +	gpu_speed_bin: gpu_speed_bin@119 {
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-No underscores. You need to align downstream code to upstream. See
-coding style.
+--8323328-843499514-1749640954=:957
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
+On Wed, 11 Jun 2025, Jiri Slaby (SUSE) wrote:
 
+> All these includes must have been cut & pasted. The code does not use
+> any tty or vt functionality at all.
+>=20
+> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> Cc: Joshua Thompson <funaho@jurai.org>
+> Cc: linux-m68k@lists.linux-m68k.org
 
-Best regards,
-Krzysztof
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
+--
+ i.
+
+> ---
+>  arch/m68k/amiga/config.c  | 2 --
+>  arch/m68k/apollo/config.c | 2 --
+>  arch/m68k/atari/config.c  | 1 -
+>  arch/m68k/mac/config.c    | 2 --
+>  arch/m68k/q40/config.c    | 2 --
+>  5 files changed, 9 deletions(-)
+>=20
+> diff --git a/arch/m68k/amiga/config.c b/arch/m68k/amiga/config.c
+> index 0147130dc34e..242d18e750b0 100644
+> --- a/arch/m68k/amiga/config.c
+> +++ b/arch/m68k/amiga/config.c
+> @@ -16,12 +16,10 @@
+>  #include <linux/kernel.h>
+>  #include <linux/mm.h>
+>  #include <linux/seq_file.h>
+> -#include <linux/tty.h>
+>  #include <linux/clocksource.h>
+>  #include <linux/console.h>
+>  #include <linux/rtc.h>
+>  #include <linux/init.h>
+> -#include <linux/vt_kern.h>
+>  #include <linux/delay.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/zorro.h>
+> diff --git a/arch/m68k/apollo/config.c b/arch/m68k/apollo/config.c
+> index e161ecd76035..e324c5f671de 100644
+> --- a/arch/m68k/apollo/config.c
+> +++ b/arch/m68k/apollo/config.c
+> @@ -3,9 +3,7 @@
+>  #include <linux/types.h>
+>  #include <linux/kernel.h>
+>  #include <linux/mm.h>
+> -#include <linux/tty.h>
+>  #include <linux/rtc.h>
+> -#include <linux/vt_kern.h>
+>  #include <linux/interrupt.h>
+> =20
+>  #include <asm/setup.h>
+> diff --git a/arch/m68k/atari/config.c b/arch/m68k/atari/config.c
+> index b48a0606a000..ee2d061efb2a 100644
+> --- a/arch/m68k/atari/config.c
+> +++ b/arch/m68k/atari/config.c
+> @@ -33,7 +33,6 @@
+>  #include <linux/ioport.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/usb/isp116x.h>
+> -#include <linux/vt_kern.h>
+>  #include <linux/module.h>
+> =20
+>  #include <asm/bootinfo.h>
+> diff --git a/arch/m68k/mac/config.c b/arch/m68k/mac/config.c
+> index d26c7f4f8c36..c0033f885ed4 100644
+> --- a/arch/m68k/mac/config.c
+> +++ b/arch/m68k/mac/config.c
+> @@ -15,7 +15,6 @@
+>  #include <linux/reboot.h>
+>  #include <linux/types.h>
+>  #include <linux/mm.h>
+> -#include <linux/tty.h>
+>  #include <linux/console.h>
+>  #include <linux/interrupt.h>
+>  /* keyb */
+> @@ -23,7 +22,6 @@
+>  #include <linux/delay.h>
+>  /* keyb */
+>  #include <linux/init.h>
+> -#include <linux/vt_kern.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/ata_platform.h>
+>  #include <linux/adb.h>
+> diff --git a/arch/m68k/q40/config.c b/arch/m68k/q40/config.c
+> index de7870ad2a30..5a4258697622 100644
+> --- a/arch/m68k/q40/config.c
+> +++ b/arch/m68k/q40/config.c
+> @@ -13,14 +13,12 @@
+>  #include <linux/types.h>
+>  #include <linux/kernel.h>
+>  #include <linux/mm.h>
+> -#include <linux/tty.h>
+>  #include <linux/console.h>
+>  #include <linux/linkage.h>
+>  #include <linux/init.h>
+>  #include <linux/major.h>
+>  #include <linux/serial_reg.h>
+>  #include <linux/rtc.h>
+> -#include <linux/vt_kern.h>
+>  #include <linux/bcd.h>
+>  #include <linux/platform_device.h>
+> =20
+>=20
+--8323328-843499514-1749640954=:957--
