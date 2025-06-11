@@ -1,200 +1,316 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailrelay-egress12.pub.mailoutpod2-cph3.one.com (mailrelay-egress12.pub.mailoutpod2-cph3.one.com [46.30.211.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2540157A67;
-	Wed, 11 Jun 2025 17:12:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A4ED1B4F1F
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 17:13:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749661967; cv=none; b=nWNE9yIlPMZCcFybnoYJQNHyv0IOquMmt8bpvrwsYdQI9KtR8HNbL9NeZTQy8/eMwXB0TJF+aR8wJcO1SSTCHBX2w5JHhGCwNfG+Fc8pyHdee/CA039Uc9Jc2MzeBUI9BSNScjhy6il/u+uCBqX1gxPck019VTUiCSsJcPUlGx0=
+	t=1749661990; cv=none; b=DwuWpONpGBcr5I3MJlM+GnE3+Mkq39zj3nR4rQ8aHafWnuY526aV6WfTNbNJBOik5xMKVboC1F44HlZMuQ4rnMtgZ5oj1QwAS7MxvVWhitmP4y26jRZ2lXqnfdzGuN+l4koAI/JT5NIkn3GqPe++2tDz6fXlt+DsY9jPPysbL+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749661967; c=relaxed/simple;
-	bh=fo7JC4KScGUQTIQ/w+iOjsTGi3bBJrY6VglgxIlGW/I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MlGyQsJoSdHEhY8LZNiAjKrTzArdPO9q8JMswAyV7TDb07c0J15uktE7NxovpsZiWQ5wZY55MNcQALhEAZz8/gTpI7mxGd0IVyHykCX4V7eLMr66K5UV+qyZ7c5jySEYSFudVXjQsIeKaRlFA/jbop5o+1UytcH+OKnqKA9rcQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nWEEMwVy; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749661990; c=relaxed/simple;
+	bh=84WoXnekke+/EOYukFwA6C4CFkxRvsEpoPC0KWQ4GBo=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=Eac8na+pGex+GsregVjX2RNWsAlIDbTl37x22cgxQNsqGukbjhEZcVsss+mFSQ05Swmt9+Cm3o6YRStTeVpkdi2dBcw6/xR5X+iIf6EPCRe69UzoeoDVJhg8XR8SMxzR4vkIMA51UWKO40NSfDZPSuTtUW2VDg7/iHfnkixwA80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se; spf=none smtp.mailfrom=konsulko.se; dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=Lcj3M4cX; dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=92h/a/6B; arc=none smtp.client-ip=46.30.211.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=konsulko.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nWEEMwVy"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-71101232af5so21127b3.0;
-        Wed, 11 Jun 2025 10:12:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749661964; x=1750266764; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KQ5j+E9v3b7sSvEXVxCoNNdW6tgOp2f2eMuGP+gBZoA=;
-        b=nWEEMwVymJIdNuQmUO28Yw+UQx2xZUHmYTTyVlS5Y0kPiJakoW5BC+gFCJ7POAHiXN
-         AboQDJrwphZjgI0PkgpJ2c9LeHxQpFCIKGGdYwc2nO58soYZ6atF64nUXrQdB/wWcGvz
-         vtUNn7puXHHYd2pY/uFgDry3TxOg7Xk+/85unapoPB0UYSM+2xGt1TWI4BozRCsqgKVm
-         bQKctf53BN8Cfx2yjGZxUijWMW9fG+pwIaHGhkRf4tux3bjwmK9Jwh3UcYhfmJbNNuCZ
-         h50xYw3xIhiM2Ssjpc7H90ZFhNW/WYna7jGck9EZChnEm3n5xz/h5lsDbaAinzvcO8ES
-         xuhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749661964; x=1750266764;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KQ5j+E9v3b7sSvEXVxCoNNdW6tgOp2f2eMuGP+gBZoA=;
-        b=Z8akOLb5CQrEA8gZt4t7HokbKBjT33DdnbZJlyebjhBSa9ljkmsfaqZ1ERGi1Zeh6A
-         MKKWzCUvD6thHb/Tdo0ceZ3BrQlu0/ZaWf+lOZvCO/pzKbqDsSgex+KwGW3oibeqXNze
-         yTPJn3gepd6wkbJ3bH6my0ivcQOZ7LBwJmMYDWKLfItL3AWOIDkcARWwZWaNI5Qt7WMJ
-         nTbnLwlZH1Pn1tb3rc5grTm3AMFV6lh1CDzGlZkoeox3BdlMa/FgM7Py3GlwPFeFY3Kk
-         5PKbw1xc+pcAdSO27it9uSg0jYUslozMca7EScqNKeo0VN3WqUKUO4Hu2dCMH6jWrK/m
-         gwtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWKVuxiNdFtTCZaFdot/IkzajV4SGWhmZX45H8o74IipLL1/FGHG2VC2b/P7oQWg4pqpsPsl0HVK7s=@vger.kernel.org, AJvYcCWQV5BXco38yAesucNo0A/vxCUhVMwvjKE8Ug2U65J0mqyGCCKsbEpzKaxQpypNhWXFCqrzd2ZBIEm/4F8e@vger.kernel.org, AJvYcCWqAIfILHnAO6Gzb8RB5sSdUrDHtIpn35g6pBHyZABV1PrNmwXE3Yu4sjm7YpzoOOnmzvDWBm/CVewu@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxquasnli7tzlvlfQiElA8jboG93NawiFGzFB7lF71TVo7FK4Pe
-	af7kMqoxmlIRq11N0Z4FG1MSdKfvXKucHBXFmTDVfPhFv02h69THDX6pVzSNpk3Q3NYKxn4NLVM
-	Bhmm+HzeXKjQ1OsWcwymx7vCHRnO26YCZIQ==
-X-Gm-Gg: ASbGncvipmx17qAxhnl/xFCXuEl5uBRNyxBz9tJVaQbb3KnyDaABW5OjkoQGsS2DZeK
-	7EYEW0stFOcrDto6DGf16fjKD8TcuUv+E3t15u8LltuOrLmp7nZBLddB6pqXM7JJbyWsUAsS+rG
-	LVii2KuE++usUPFZIcdaZe5EcwMXlt/i9VQ4ZLMrzXKSQ=
-X-Google-Smtp-Source: AGHT+IFrKWrFFkvbxgx2J2LOU1dTY9SksrisaeaMBSed/RqZfvGOG6zzy1YT6frh6KIF+LA2Y6oLj8CrMbFcBLbezXE=
-X-Received: by 2002:a05:690c:6311:b0:70e:7613:e365 with SMTP id
- 00721157ae682-71140a0a4ccmr28108717b3.3.1749661963730; Wed, 11 Jun 2025
- 10:12:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="Lcj3M4cX";
+	dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="92h/a/6B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1749661916; x=1750266716;
+	d=konsulko.se; s=rsa1;
+	h=to:references:message-id:content-transfer-encoding:cc:date:in-reply-to:from:
+	 subject:mime-version:content-type:from;
+	bh=GaVAQSgpZoBNTHsju8IZV9S1B2pmDlHGv+cf1Lx2veQ=;
+	b=Lcj3M4cXuSGOglipCNW0A9sFPKhE7gIdV/r9KNuSPSyGTf2Z1G+h97Q0RL0sJSBTu3k18QBQXiCy2
+	 e5NsyswtIHh8duxE/mabUWKikHRyCJdcPWmTJSSmU7ZlMfN5FLCaLj0ljgZx0Qy7dzuAXlt/LU9fmc
+	 uXdQoykaNT/w+a1ymWGl+IbZIO+Lpzys0FqLtQqW45dfbEQSQEV4jJ70jrgnRqd1Y6aq9GmL855Bqa
+	 QbA2gdIJSvsGGGA1CD5tlKD6EhBDxgu2Bv6tWPy12mTVvwEl5FGPrZWhXUjnWNgNZiicH6STlq4xv5
+	 FX9dQ8Xzo40SQPe/nXNCH26RigqDeiQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1749661916; x=1750266716;
+	d=konsulko.se; s=ed1;
+	h=to:references:message-id:content-transfer-encoding:cc:date:in-reply-to:from:
+	 subject:mime-version:content-type:from;
+	bh=GaVAQSgpZoBNTHsju8IZV9S1B2pmDlHGv+cf1Lx2veQ=;
+	b=92h/a/6B2VYlQP+RYkY/9XxN1YeHpMZedVHeGcdnYmANnQfBEBHIEzawaClWaTD4FLgNG42pJxnN9
+	 +90fAcGCQ==
+X-HalOne-ID: 2cb8d90a-46e7-11f0-ae00-e90f2b8e16ca
+Received: from smtpclient.apple (c188-150-224-8.bredband.tele2.se [188.150.224.8])
+	by mailrelay2.pub.mailoutpod2-cph3.one.com (Halon) with ESMTPSA
+	id 2cb8d90a-46e7-11f0-ae00-e90f2b8e16ca;
+	Wed, 11 Jun 2025 17:11:55 +0000 (UTC)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250601172139.59156-1-l.rubusch@gmail.com> <20250601172139.59156-11-l.rubusch@gmail.com>
- <CAHp75Ve+f4c-aVD3vMfi1NP7vohJWDFFO+F4ckYCKkw2iYDsFw@mail.gmail.com>
-In-Reply-To: <CAHp75Ve+f4c-aVD3vMfi1NP7vohJWDFFO+F4ckYCKkw2iYDsFw@mail.gmail.com>
-From: Lothar Rubusch <l.rubusch@gmail.com>
-Date: Wed, 11 Jun 2025 19:12:05 +0200
-X-Gm-Features: AX0GCFuio6pOww4OvJeIBcJ4chzgH4vhtj2xAfqZoDBdeLhkTHCy-H6ewenMhoY
-Message-ID: <CAFXKEHYB-JM11tbpdb+sRBZ7pF4oYD5BO5OVxxf1VPU09MXkNQ@mail.gmail.com>
-Subject: Re: [PATCH v4 10/11] iio: accel: adxl313: add AC coupled
- activity/inactivity events
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com, 
-	andy@kernel.org, corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de, 
-	Michael.Hennerich@analog.com, bagasdotme@gmail.com, linux-iio@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.200.121\))
+Subject: Re: [PATCH v4] mm: add zblock allocator
+From: Vitaly Wool <vitaly.wool@konsulko.se>
+In-Reply-To: <aBoI39N_mHx0Tlp-@google.com>
+Date: Wed, 11 Jun 2025 19:11:53 +0200
+Cc: linux-mm@kvack.org,
+ akpm@linux-foundation.org,
+ linux-kernel@vger.kernel.org,
+ Nhat Pham <nphamcs@gmail.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>,
+ Johannes Weiner <hannes@cmpxchg.org>,
+ Igor Belousov <igor.b@beldev.am>,
+ Minchan Kim <minchan@kernel.org>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <84279524-384D-4843-B205-0F850828C782@konsulko.se>
+References: <20250412154207.2152667-1-vitaly.wool@konsulko.se>
+ <aAdzjdv674Jn6G63@Asmaa.> <e764d05a-6a83-4563-9f28-3f1a3e28727b@konsulko.se>
+ <aBIXJrbxCmYSoCuz@Asmaa.> <c612aff8-1b07-43aa-b909-f555da511da2@konsulko.se>
+ <aBoI39N_mHx0Tlp-@google.com>
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+X-Mailer: Apple Mail (2.3826.200.121)
 
-Hi Andy,
 
-On Sun, Jun 1, 2025 at 9:54=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Sun, Jun 1, 2025 at 8:22=E2=80=AFPM Lothar Rubusch <l.rubusch@gmail.co=
-m> wrote:
-> >
-> > Add AC coupling activity and inactivity as MAG_ADAPTIVE events. This ad=
-ds
-> > up an additional set of threshold and period handles, verifies matching
-> > disabling functionality and extends setting the link bit to complementa=
-ry
-> > event configurations.
-> >
-> > This means, e.g. either ACTIVITY or ACTIVITY_AC can be enabled. The mos=
-t
-> > recent set will remain configured. Disabling ACTIVITY where ACTIVITY_AC=
- was
-> > enabled is ignored, since it does not match (should be disabling
-> > ACTIVITY_AC). When INACTIVITY or INACTIVITY_AC is also enabled, the lin=
-k
-> > bit will be set. Note, having the link bit and auto-sleep in place acti=
-vity
-> > and inactivity indicate the power save state change and thus will only =
+
+> On May 6, 2025, at 3:04=E2=80=AFPM, Yosry Ahmed =
+<yosry.ahmed@linux.dev> wrote:
+>=20
+> On Thu, May 01, 2025 at 02:41:29PM +0200, Vitaly Wool wrote:
+>> Hi Yosry,
+>>=20
+>> On 4/30/25 14:27, Yosry Ahmed wrote:
+>>> On Wed, Apr 23, 2025 at 09:53:48PM +0200, Vitaly Wool wrote:
+>>>> On 4/22/25 12:46, Yosry Ahmed wrote:
+>>>>> I didn't look too closely but I generally agree that we should =
+improve
+>>>>> zsmalloc where possible rather than add a new allocator. We are =
+trying
+>>>>> not to repeat the zbud/z3fold or slub/slob stories here. Zsmalloc =
+is
+>>>>> getting a lot of mileage from both zswap and zram, and is =
+more-or-less
+>>>>> battle-tested. Let's work toward building upon that instead of =
+starting
+>>>>> over.
+>>>>=20
+>>>> The thing here is, zblock is using a very different approach to =
+small object
+>>>> allocation. The idea is: we have an array of descriptors which =
+correspond to
+>>>> multi-page blocks divided in chunks of equal size (block_size[i]). =
+For each
+>>>> object of size x we find the descriptor n such as:
+>>>> block_size[n-1] < n < block_size[n]
+>>>> and then we store that object in an empty slot in one of the =
+blocks. Thus,
+>>>> the density is high, the search is fast (rbtree based) and there =
+are no
+>>>> objects spanning over 2 pages, so no extra memcpy involved.
+>>>=20
+>>> The block sizes seem to be similar in principle to class sizes in
+>>> zsmalloc. It seems to me that there are two apparent differentiating
+>>> properties to zblock:
+>>>=20
+>>> - Block lookup uses an rbtree, so it's faster than zsmalloc's list
+>>>   iteration. On the other hand, zsmalloc divides each class into
+>>>   fullness groups and tries to pack almost full groups first. Not =
+sure
+>>>   if zblock's approach is strictly better.
+>>=20
+>> If we free a slot in a fully packed block we put it on top of the =
+list.
+>> zswap's normal operation pattern is that there will be more free =
+slots in
+>> that block so it's roughly the same.
+>=20
+> How so? IIUC the order in which slots are freed depends on the LRU =
+(for
+> writeback) and swapins (for loads). Why do we expect that slots from =
+the
+> same block will be freed in close succession?
+>=20
+>>=20
+>>> - Zblock uses higher order allocations vs. zsmalloc always using =
+order-0
+>>>   allocations. I think this may be the main advantage and I remember
+>>>   asking if zsmalloc can support this. Always using order-0 pages is
+>>>   more reliable but may not always be the best choice.
+>>=20
+>> There's a patch we'll be posting soon with "opportunistic" high order
+>> allocations (i. e. if try_alloc_pages fails, allocate order-0 pages
+>> instead). This will leverage the benefits of higher order allocations
+>> without putting too much stress on the system.
+>>=20
+>>> On the other hand, zblock is lacking in other regards. For example:
+>>> - The lack of compaction means that certain workloads will see a lot =
+of
+>>>   fragmentation. It purely depends on the access patterns. We could =
+end
+>>>   up with a lot of blocks each containing a single object and there =
+is
+>>>   no way to recover AFAICT.
+>>=20
+>> We have been giving many variants of stress load on the memory =
+subsystem and
+>> the worst compression ratio *after* the stress load was 2.8x using =
+zstd as
+>> the compressor (and about 4x under load). With zsmalloc under the =
+same
+>> conditions the ratio was 3.6x after and 4x under load.
+>>=20
+>> With more normal (but still stressing) usage patterns the numbers =
+*after*
+>> the stress load were around 3.8x and 4.1x, respectively.
+>>=20
+>> Bottom line, ending up with a lot of blocks each containing a single =
+object
+>> is not a real life scenario. With that said, we have a quite simple =
+solution
+>> in the making that will get zblock on par with zsmalloc even in the =
+cases
+>> described above.
+>=20
+> Could you share a high-level description of how this issue will be
+> addressed in zblock? I am trying to understand why/how zblock can =
+handle
+> this better/simpler than zsmalloc.
+>=20
+>>=20
+>>> - Zblock will fail if a high order allocation cannot be satisfied, =
+which
+>>>   is more likely to happen under memory pressure, and it's usually =
+when
+>>>   zblock is needed in the first place.
+>>=20
+>> See above, this issue will be addressed in the patch coming in a =
+really
+>> short while.
+>>=20
+>>> - There's probably more, I didn't check too closely, and I am hoping
+>>>   that Minchan and Sergey will chime in here.
+>>>=20
+>>>>=20
+>>>> And with the latest zblock, we see that it has a clear advantage in
+>>>> performance over zsmalloc, retaining roughly the same allocation =
+density for
+>>>> 4K pages and scoring better on 16K pages. E. g. on a kernel =
+compilation:
+>>>>=20
+>>>> * zsmalloc/zstd/make -j32 bzImage
+>>>> real 8m0.594s
+>>>> user 39m37.783s
+>>>> sys 8m24.262s
+>>>> Zswap:            200600 kB <-- after build completion
+>>>> Zswapped:         854072 kB <-- after build completion
+>>>> zswpin 309774
+>>>> zswpout 1538332
+>>>>=20
+>>>> * zblock/zstd/make -j32 bzImage
+>>>> real 7m35.546s
+>>>> user 38m03.475s
+>>>> sys 7m47.407s
+>>>> Zswap:            250940 kB <-- after build completion
+>>>> Zswapped:         870660 kB <-- after build completion
+>>>> zswpin 248606
+>>>> zswpout 1277319
+>>>>=20
+>>>> So what we see here is that zblock is definitely faster and at =
+least not
+>>>> worse with regard to allocation density under heavy load. It has =
+slightly
+>>>> worse _idle_ allocation density but since it will quickly catch up =
+under
+>>>> load it is not really important. What is important is that its
+>>>> characteristics don't deteriorate over time. Overall, zblock is =
+simple and
+>>>> efficient and there is /raison d'etre/ for it.
+>>>=20
+>>> Zblock is performing better for this specific workload, but as I
+>>> mentioned earlier there are other aspects that zblock is missing.
+>>> Zsmalloc has seen a very large range of workloads of different =
+types,
+>>> and we cannot just dismiss this.
+>>=20
+>> We've been running many different work loads with both allocators but
+>> posting all the results in the patch description will go well beyond =
+the
+>> purpose of a patch submission. If there are some workloads you are
+>> interested in in particular, please let me know, odds are high we =
+have some
+>> results for those too.
+>=20
+> That's good to know. I don't have specific workloads in mind, was just
+> stating the fact that zsmalloc has been tested with a variety of
+> workloads in production environments.
+>=20
+>>=20
+>>>> Now, it is indeed possible to partially rework zsmalloc using =
+zblock's
+>>>> algorithm but this will be a rather substantial change, equal or =
+bigger in
+>>>> effort to implementing the approach described above from scratch =
+(and this
+>>>> is what we did), and with such drastic changes most of the testing =
+that has
+>>>> been done with zsmalloc would be invalidated, and we'll be out in =
+the wild
+>>>> anyway. So even though I see your point, I don't think it applies =
+in this
+>>>> particular case.
+>>>=20
+>>>=20
+>>> Well, we should start by breaking down the differences and finding =
+out
+>>> why zblock is performing better, as I mentioned above. If it's the
+>>> faster lookups or higher order allocations, we can work to support =
+that
+>>> in zsmalloc. Similarly, if zsmalloc has unnecessary complexity it'd =
 be
-> > triggered once a state transition occurs. Since there is a separate AC =
-bit
-> > for ACTIVITY and for INACTIVITY, events can be linked independently fro=
-m
-> > each other i.e. ACTIVITY can be linked to INACTIVITY_AC for instance.
-> >
-> > When one of both is disabled, the link bit will be removed. Hence, the
-> > remaining event will not indicate a plain state change anymore, but occ=
-ur
-> > as a periodically triggered inactivity event or for each activity event
-> > above the threshold.
->
-> ...
->
-> > +/**
-> > + * adxl313_is_act_inact_ac() - Check if AC coupling is enabled.
->
-> > + *
->
-> Unneeded blank line.
->
-> > + * @data: The device data.
-> > + * @type: The activity or inactivity type.
-> > + *
-> > + * Provide a type of activity or inactivity, combined with either AC c=
-oupling
-> > + * set, or default to DC coupling. This function verifies, if the comb=
-ination is
-> > + * currently enabled or not.
-> > + *
-> > + * Return if the provided activity type has AC coupling enabled or a n=
-egative
-> > + * error value.
->
-> Missing Return section. Always try kernel-doc validation when adding
-> new kernel-doc descriptions.
->
-> > + */
->
-> ...
->
-> >         unsigned int regval;
-> > +       int coupling;
->
-> Why? Doesn't 'ret' suffice?
->
+>>> great to get rid of it rather than starting over.
+>>>=20
+>>> Also, we don't have to do it all at once and invalidate the testing =
+that
+>>> zsmalloc has seen. These can be incremental changes that get spread =
+over
+>>> multiple releases, getting incremental exposure in the process.
+>>=20
+>> I believe we are a lot closer now to having a zblock without the =
+initial
+>> drawbacks you have pointed out than a faster zsmalloc, retaining the =
+code
+>> simplicity of the former.
+>=20
+> This does not answer my question tho. I am trying to understand what
+> makes zblock faster than zsmalloc.
+>=20
+> If it's the (optionally opportunistic) higher order allocations, we =
+can
+> probably do the same in zsmalloc and avoid memcpys as well. I guess we
+> can try to allocate zspages as a high-order contiguous allocation =
+first,
+> and fallback to the current "chain" structure on failure.
 
-the coupling variable here is rather meant to provide kind of a
-semantic context. It shall be checked for being negative (error), or
-used in binary decision logic. In fact, could be done with ret as
-well, but then in case I'd need to comment that in this case the value
-of 'ret' carries either error, or the bool if we have coupling or not.
-I'd like to leave it like this, but let me know if better replace it
-by ret here.
+We got rid of high order allocations and see better results now. vmalloc =
+works well for our purpose.
 
-> >         int axis_en, int_en, ret;
->
-> ...
->
-> > -       int act_en, inact_en;
-> > -       bool en;
-> > +       int act_en, inact_en, act_ac_en, inact_ac_en;
-> > +       bool en, act_inact_ac;
-> >         int ret;
->
-> For all your patches: try really hard to avoid the ping-pong coding,
-> i.e. when you add something in one patch in the series and change in
-> the other for no reason. I.o.w. when the initial code may be written
-> already in a form that doesn't need further changes (e.g., switch-case
-> vs. if).
->
-> This patch is *very* noisy due to the above. So, just slow down, try a
-> new approach that you have less '-' lines in the diff:s all over the
-> code.
 
-Agree. I tried to follow the review comments. Probably, IMHO it's
-mostly about how to separate the patches. Your reviews seem to be
-quite focussed on the particular patch w/o taking the context of
-follow up patches so much into account. [At least by the way you gave
-me feed back here. Actually, by your vast experience I'm pretty sure
-you have the context of how such a driver shall look and have an
-excellent overview well in mind.]
+> I am not arguing that you're seeing better results from zblock, what I
+> am saying is let's pinpoint what makes zblock better first, then =
+decide
+> whether the same can be applied to zsmalloc or if it's really better =
+to
+> create a new allocator instead. Right now we don't have full
+> information.
+>=20
+> WDYT?
 
-So, I guess you'd like to stress on certain points. I'm wondering if
-it might probably be better to send you this all first in one big
-patch, or say rather bigger patches, and then separate pieces out? Let
-me know what you think. Thank you so much for the reviews, let's see
-how this can be improved here in a v5.
+I would suggest that we focused on what zblock could deliver what =
+zsmalloc doesn=E2=80=99t seem to be able to. E. g. it=E2=80=99s easy to =
+add block descriptors at runtime basing on the statistics from the =
+existing allocations, and it will lead to even higher compression =
+density. Since zsmalloc only operates on 2^n sized objects, it doesn=E2=80=
+=99t have that flexibility and it=E2=80=99s not possible to add it =
+without making it essentially a zblock. I believe this is also why =
+zsmalloc is losing to zblock in compression density on 16K pages =
+already.
 
-Best,
-L
-
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+~Vitaly=
