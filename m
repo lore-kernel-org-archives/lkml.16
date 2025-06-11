@@ -1,124 +1,102 @@
-Received: from smtp-190e.mail.infomaniak.ch (smtp-190e.mail.infomaniak.ch [185.125.25.14])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6455B1DE2A4
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:42:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D6A1DBB2E;
+	Wed, 11 Jun 2025 15:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749656545; cv=none; b=cRXXfbLchXkEFKzjh+LWNIeJvGvnKZx3Dxt3UdhOS+kQ2e4qpVuHS4ewxRsJj1VlbX0YQNYyEzPnNxxTnqpqy8u5KlcjuNbWBC+9uk1vAJjFD4YvwjS70CdkYznQbe+MpPCLkKdJX8lU5FHGhUTDQYmtMqt7L+PHhgeVdQK4PAU=
+	t=1749656573; cv=none; b=R8fYorno3jLEPu6gt3e4qXnA12GfiN9O5OG/PoEO8JrsiaHDP1gtw5hCfDuCun7Ekg/LKF+buAj9AOrigyFW/ck6najPAJcmB42DHrCIgm93e3LYm0lHGyKWP3Mw55UXBkhyLetcSXfJtTAxWyZL5tBVZe7ltGcomfpsIpViyoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749656545; c=relaxed/simple;
-	bh=ioO3hNxPGeFPNa5Dj0Y1Ac/kXyZI+FCLfoSP26I/0zg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sKjpP9iOqHWTFSTDSSPQHXkAee1uv6bozwCKUOeZEi1dR3ITgWVX51rGLopEJMapJmSqP1DVocOGhpYgxGovpMMY9IG7nqk6dzjaT5NPl6LkluWABKaUgrJQzzdx1Q/A5T6y2oYcaN8MzioqjXiKiWHXB9PLr3Y4ZWtt1VrKLXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=ng74j9lQ; arc=none smtp.client-ip=185.125.25.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="ng74j9lQ"
-Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bHVK31fsszGrJ;
-	Wed, 11 Jun 2025 17:42:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1749656535;
-	bh=XuuN/g9Cip9+rlNBlmxCYRns/lSpStRWBT4apK7M81Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ng74j9lQSQ9YmZybW55MxcLniGl4bKLh+P247kFAkEcxTV/RePcLDF4e8WmJHTbj5
-	 0fcNVhi/shlKKd8ZYVh6So4amaJmxEORoQPHVIAnZI/PwQNw3/hOErnMJN/Ne0LlNN
-	 9cqArzbYSzfH8vpOsL6gLpJbnItZq8i+aKvWSlr8=
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4bHVK234ZSzlYN;
-	Wed, 11 Jun 2025 17:42:14 +0200 (CEST)
-Date: Wed, 11 Jun 2025 17:42:13 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Song Liu <song@kernel.org>
-Cc: NeilBrown <neil@brown.name>, Jan Kara <jack@suse.cz>, 
-	bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, 
-	ast@kernel.org, daniel@iogearbox.net, martin.lau@linux.dev, 
-	viro@zeniv.linux.org.uk, brauner@kernel.org, kpsingh@kernel.org, mattbobrowski@google.com, 
-	amir73il@gmail.com, repnop@google.com, jlayton@kernel.org, josef@toxicpanda.com, 
-	gnoack@google.com, m@maowtm.org
-Subject: Re: [PATCH v3 bpf-next 1/5] namei: Introduce new helper function
- path_walk_parent()
-Message-ID: <20250611.Bee1Iohoh4We@digikod.net>
-References: <20250606213015.255134-1-song@kernel.org>
- <20250606213015.255134-2-song@kernel.org>
- <174959847640.608730.1496017556661353963@noble.neil.brown.name>
- <CAPhsuW6oet8_LbL+6mVi7Lc4U_8i7O-PN5F1zOm5esV52sBu0A@mail.gmail.com>
+	s=arc-20240116; t=1749656573; c=relaxed/simple;
+	bh=oo0SuwwGExHFaOJFlP5OUqwnZC6rcdmMw2ydNsXzKVM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZM8iyBi8y6JSI4GLoT2S3ElO8bNGBRQMs9ZFObeMwcEDyPoyhpGgO6B3ev3ebTI2C0ECuAPyl8+4/HHIv/zDhX3/VBCKacFGd8uqc0UY1xIvqzBju32mXMEdoXqi7gVgAmAcfTTNf5cA1ykDwnahxijQABipWHulvArFGVoYMSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 54A4D1D7490;
+	Wed, 11 Jun 2025 15:42:48 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id EBAE344;
+	Wed, 11 Jun 2025 15:42:44 +0000 (UTC)
+Date: Wed, 11 Jun 2025 11:42:43 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Naresh Kamboju
+ <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>,
+ Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+ lkft-triage@lists.linaro.org, Stephen Rothwell <sfr@canb.auug.org.au>, Arnd
+ Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, Anders
+ Roxell <anders.roxell@linaro.org>
+Subject: Re: [RFC PATCH 2/2] x86: alternative: Invalidate the cache for
+ updated instructions
+Message-ID: <20250611114243.43a9e3e2@batman.local.home>
+In-Reply-To: <20250611102010.1bf7c264@batman.local.home>
+References: <20250610234307.c675969e83ce53bb856e94d7@kernel.org>
+	<174956686826.1494782.11512582667456262594.stgit@mhiramat.tok.corp.google.com>
+	<20250610115030.0d60da65@gandalf.local.home>
+	<20250611192610.6edf9713f6ee84c26f653ea5@kernel.org>
+	<20250611102010.1bf7c264@batman.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPhsuW6oet8_LbL+6mVi7Lc4U_8i7O-PN5F1zOm5esV52sBu0A@mail.gmail.com>
-X-Infomaniak-Routing: alpha
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: EBAE344
+X-Stat-Signature: nbi5zcj69fqxhb99qxhyur8yityfrkzi
+X-Rspamd-Server: rspamout06
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/FS9wqtWZfxAKVfAwEw2qh9QPtWdgwg40=
+X-HE-Tag: 1749656564-458231
+X-HE-Meta: U2FsdGVkX19LET8LxWpGGUA9FMmmpcBZD9S5sG+hwI90c36aS8MFYsmjJ4B9sh2uLCuOaYCzZGH5eiBhgxPUDsUcCVKBBeXh0rV0NixwrIoQJWbOMXYuEExaWDmcygtRoeUczYq4diKHa3r8xt6NdmQ417e4YcYs6WzGzwpYQ6GwiYEwnxcJsSAWDwWf0oLi3X9JL4tzMwLkCfZIP8NaH06bROV+gxsv9AeXpNG4ZCixzL5ucKjigeNJ+27ANeRXpTUOPDz4WKAJzDoC7rTBEe94mnv4ITYpJSt45xYF/Wdq29U0IKumVkVoA53ejduExzy76UJYbz8/1HWN4G5ew3bTuYTOEOiNvYKzzPvixVwZSgYhYDQoRqjnUKF+A+Rz
 
-On Tue, Jun 10, 2025 at 05:56:01PM -0700, Song Liu wrote:
-> Hi Neil,
-> 
-> Thanks for your suggestion! It does look like a good solution.
-> 
-> On Tue, Jun 10, 2025 at 4:34 PM NeilBrown <neil@brown.name> wrote:
-> 
-> > The above looks a lot like follow_dotdot().  This is good because it
-> > means that it is likely correct.  But it is bad because it means there
-> > are two copies of essentially the same code - making maintenance harder.
-> >
-> > I think it would be good to split the part that you want out of
-> > follow_dotdot() and use that.  Something like the following.
-> >
-> > You might need a small wrapper in landlock which would, for example,
-> > pass LOOKUP_BENEATH and replace path->dentry with the parent on success.
-> >
-> > NeilBrown
-> >
-> > diff --git a/fs/namei.c b/fs/namei.c
-> > index 4bb889fc980b..b81d07b4417b 100644
-> > --- a/fs/namei.c
-> > +++ b/fs/namei.c
-> > @@ -2048,36 +2048,65 @@ static struct dentry *follow_dotdot_rcu(struct nameidata *nd)
-> >         return nd->path.dentry;
-> >  }
-> >
-> > -static struct dentry *follow_dotdot(struct nameidata *nd)
-> > +/**
-> > + * path_walk_parent - Find the parent of the given struct path
-> > + * @path  - The struct path to start from
-> > + * @root  - A struct path which serves as a boundary not to be crosses
-> > + * @flags - Some LOOKUP_ flags
-> > + *
-> > + * Find and return the dentry for the parent of the given path (mount/dentry).
-> > + * If the given path is the root of a mounted tree, it is first updated to
-> > + * the mount point on which that tree is mounted.
-> > + *
-> > + * If %LOOKUP_NO_XDEV is given, then *after* the path is updated to a new mount,
-> > + * the error EXDEV is returned.
-> > + * If no parent can be found, either because the tree is not mounted or because
-> > + * the @path matches the @root, then @path->dentry is returned unless @flags
-> > + * contains %LOOKUP_BENEATH, in which case -EXDEV is returned.
-> > + *
-> > + * Returns: either an ERR_PTR() or the chosen parent which will have had the
-> > + * refcount incremented.
-> > + */
-> > +struct dentry *path_walk_parent(struct path *path, struct path *root, int flags)
-> 
-> We can probably call this __path_walk_parent() and make it static.
-> 
-> Then we can add an exported path_walk_parent() that calls
-> __path_walk_parent() and adds extra logic.
-> 
-> If this looks good to folks, I can draft v4 based on this idea.
+On Wed, 11 Jun 2025 10:20:10 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-This looks good but it would be better if we could also do a full path
-walk within RCU when possible.
+> If interrupts are enabled when the break point hits and just enters the
+> int3 handler, does that also mean it can schedule?
 
-> 
-> Thanks,
-> Song
-> 
-> [...]
-> 
+I added this:
+
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index c5c897a86418..0f3153322ad2 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -854,6 +854,8 @@ static bool do_int3(struct pt_regs *regs)
+ {
+ 	int res;
+ 
++	if (!irqs_disabled())
++		printk("IRQS NOT DISABLED\n");
+ #ifdef CONFIG_KGDB_LOW_LEVEL_TRAP
+ 	if (kgdb_ll_trap(DIE_INT3, "int3", regs, 0, X86_TRAP_BP,
+ 			 SIGTRAP) == NOTIFY_STOP)
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index ecfe7b497cad..2856805d9ed1 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -2728,6 +2728,12 @@ noinstr int smp_text_poke_int3_handler(struct pt_regs *regs)
+ 	int ret = 0;
+ 	void *ip;
+ 
++	if (!irqs_disabled()) {
++		instrumentation_begin();
++		printk("IRQS NOT DISABLED\n");
++		instrumentation_end();
++	}
++
+ 	if (user_mode(regs))
+ 		return 0;
+ 
+
+
+And it didn't trigger when enabling function tracing. Are you sure
+interrupts are enabled here?
+
+-- Steve
