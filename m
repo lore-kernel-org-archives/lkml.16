@@ -1,124 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673EB1EDA02;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826B71F91C8;
 	Wed, 11 Jun 2025 16:48:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749660481; cv=none; b=IdxyZt41ZB9IGNv35REHxEb3AwEeI3RqCQNWHAcLaPZulTFjaQqEhUzv5AJbm01vUD7YIAPsmWXQupmRcOh9IFH9IixP4TPRUz8bHcXEGjEx8ZR0inUK/YcAZW0zxp65ylEqe6ANUlI0TppuzQH6kAAPK1cZqwx9LOW8ePyDVsw=
+	t=1749660481; cv=none; b=layUkyb9NJun5Q2AvT/ZouE/3HVjvjgLfXWnYJuZcPJN+oH0R0IGO7SjMVXA69lIopR76G3Th3PzcBuEtS2+LvkdLmMJJU6qEZsMYRwWeaF45b00JgIA48PJRBnaw61P0b/ZKA2fIvRntzlVLD9Q6O/ck0ST2cDH8VLVjoWExvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749660481; c=relaxed/simple;
-	bh=shR7CjHfewUOZWnt1K8nSueY1b7AwTEUCxc3wScauGE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JfUTXjlg7zgoAsrDVxzFXrlsGydCs1LbnhAhU5ehef1VH/V/NSHNNxXu158s/UsKpwPpNFPkFumuQrHTvGASrZW9WfH3FeynKBv8MGJg4v30VqHrGpZmdaV7ONpHREnNIWOF2JsZB+rI69cl49s978Rj2oGvI1bsZ//fP1lxs+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oBMjNugp; arc=none smtp.client-ip=10.30.226.201
+	bh=I9mqgXd9Ufhb22J0vFmLN/XFtTu2g2mWaKX5hF1Cdr0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mbifCo8F8w+vKjxlMAQYDIC28ShaGh2ZoR3pzwkQzu5+7srdLN+I5VpioURwmvJKNp5KQ9t5p2jkK2K3lnjy4w7TOQdLAdY7vLVZfNEYpxsYBNgJmlv+pzlgrMGSRUAuPz5t8itlMUW5hwwXDuX4ZlnOawQkmhc+77B+Fdqc44A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LTXxqDjG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oBMjNugp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C71AC4CEEA;
-	Wed, 11 Jun 2025 16:47:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LTXxqDjG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09C81C4CEEF;
+	Wed, 11 Jun 2025 16:48:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749660480;
-	bh=shR7CjHfewUOZWnt1K8nSueY1b7AwTEUCxc3wScauGE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=oBMjNugpvLyh0irwRRKKoaOvvigzPp77i0hOnqd97w1Q4VakWUXoJYf2W3EH5SNs1
-	 eFcNITvH/Sws5JtyhbAigpAMOcMe1sqkhtLzYIpj+EyalNAd9I7luoceGkU6rQHvar
-	 A72/jpYmp1dFxwzEReG3sCh3yT/SiiBNsuN13HQlzmL5GrdRBfGuHEUYEgne12y6JT
-	 bAQQCDdSC4zFmee62JyAnOmugwx1ONxZ83010eDFp+8BNpy0xUv8a+NGLXTQ64e6Ut
-	 vDFXG57hTElPCx3f6GO+tw6FJPr+3tveR5tDAA1y43wv4QqkByzrCwK3ZLn1RStIVo
-	 Y80uVjh/W2EQg==
-Date: Wed, 11 Jun 2025 17:47:51 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
- corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de,
- Michael.Hennerich@analog.com, bagasdotme@gmail.com,
- linux-iio@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 07/11] iio: accel: adxl313: add activity sensing
-Message-ID: <20250611174751.0612dfc0@jic23-huawei>
-In-Reply-To: <CAFXKEHaRupFmFQ9ixTT_3p_XaoorJP=y4asYjw3dSMpxXhbOwQ@mail.gmail.com>
-References: <20250601172139.59156-1-l.rubusch@gmail.com>
-	<20250601172139.59156-8-l.rubusch@gmail.com>
-	<20250608170819.3de87f4e@jic23-huawei>
-	<CAFXKEHaRupFmFQ9ixTT_3p_XaoorJP=y4asYjw3dSMpxXhbOwQ@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=k20201202; t=1749660481;
+	bh=I9mqgXd9Ufhb22J0vFmLN/XFtTu2g2mWaKX5hF1Cdr0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LTXxqDjGKKYme+hA/UjSezMXPAQQ6eys43nj8bfQtuECrWnxw43ZlL9HloGvJnAz4
+	 7Jfx+NPRqB3Pqfru+Dcci1xfMbshPBZxVtHEhSssNx/1/BGv4S70p33bmvNbJvBMiL
+	 bvvSzp12r5r042ilv23I11Cw1C+9oQYlKpjwmqR5yZ1MfxzTB2yB/JwtMe8u1fh/pO
+	 0nXk3/nvl0hTlTCi9ZsI4ylns4dlHmtFT+oNiz68QPYHRVhrPtVylUJ5rv32cKWSng
+	 QcGFpByzPlXezYPw7w8LNgDuCrp7kC4Yoen3jeqGiNtCdX+1GYySM5fuCa1WfmzEzH
+	 +2FkbPYVStpbA==
+Date: Wed, 11 Jun 2025 09:48:00 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Documentation <linux-doc@vger.kernel.org>,
+	Linux ext4 <linux-ext4@vger.kernel.org>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Jonathan Corbet <corbet@lwn.net>,
+	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>
+Subject: Re: [PATCH] Documentation: ext4: atomic_writes: Remove
+ cross-reference labels
+Message-ID: <20250611164800.GC6134@frogsfrogsfrogs>
+References: <20250610091200.54075-2-bagasdotme@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250610091200.54075-2-bagasdotme@gmail.com>
 
-
-> > >  static int adxl313_set_watermark(struct iio_dev *indio_dev, unsigned int value)
-> > >  {
-> > >       struct adxl313_data *data = iio_priv(indio_dev);
-> > > @@ -502,19 +705,32 @@ static int adxl313_fifo_push(struct iio_dev *indio_dev, int samples)
-> > >
-> > >  static int adxl313_push_event(struct iio_dev *indio_dev, int int_stat)  
-> >
-> > Ah. This does not also have events.  Still it's a mix, so maybe
-> > adxl313_handle_interrupts() or something like that.  
+On Tue, Jun 10, 2025 at 04:11:59PM +0700, Bagas Sanjaya wrote:
+> Sphinx reports htmldocs warnings on ext4 atomic block writes docs:
 > 
-> I also could break it up into:
-> - handle interrupt source register events
-> - drain fifo watermark samples
-Sure - if that makes more logical sense that break up is fine.
-
-> ?
+> Documentation/filesystems/ext4/atomic_writes.rst:5: WARNING: duplicate label atomic_writes, other instance in Documentation/filesystems/ext4/atomic_writes.rst
+> Documentation/filesystems/ext4/atomic_writes.rst:207: WARNING: duplicate label atomic_write_bdev_support, other instance in Documentation/filesystems/ext4/atomic_writes.rst
 > 
-> > >  {
-> > > +     s64 ts = iio_get_time_ns(indio_dev);
-> > >       struct adxl313_data *data = iio_priv(indio_dev);
-> > >       int samples;
-> > > +     int ret = -ENOENT;
-> > > +
-> > > +     if (FIELD_GET(ADXL313_INT_ACTIVITY, int_stat)) {
-> > > +             ret = iio_push_event(indio_dev,
-> > > +                                  IIO_MOD_EVENT_CODE(IIO_ACCEL, 0,
-> > > +                                                     IIO_MOD_X_OR_Y_OR_Z,
-> > > +                                                     IIO_EV_TYPE_MAG,
-> > > +                                                     IIO_EV_DIR_RISING),
-> > > +                                  ts);
-> > > +             if (ret)
-> > > +                     return ret;
-> > > +     }
-> > >
-> > >       if (FIELD_GET(ADXL313_INT_WATERMARK, int_stat)) {
-> > >               samples = adxl313_get_samples(data);
-> > >               if (samples < 0)
-> > >                       return samples;
-> > >
-> > > -             return adxl313_fifo_push(indio_dev, samples);
-> > > +             ret = adxl313_fifo_push(indio_dev, samples);
-> > >       }
-> > >
-> > >       /* Return error if no event data was pushed to the IIO channel. */
-> > > -     return -ENOENT;
-> > > +     return ret;  
-> > This handling works, but as Andy observed maybe the comment is now confusing
-> > given ret is mostly not an error.  Perhaps put that where ret is declared
-> > instead, or use a separate mask check at the start to quickly
-> > error out if no bits that we handle are set.  
-> > >  }  
+> These warnings reference duplicated cross-reference labels to themselves in
+> the same doc, which are because atomic_writes.rst is transcluded in
+> overview.rst via include:: directive, thus the culprit docs get processed
+> twice.
+
+<confused> How is that possible?  atomic_writes.rst is only "include::"d
+once in overview.rst.  Is the file implicitly included through some
+other means?
+
+--D
+
+> Remove the labels to fix the warnings.
 > 
-> Yes. Andy also pointed out here. I already developed a feeling for
-> "something's smelly" with this code, but cannot really think of a
-> better approach. Actually it works, and for me it is somehow logical.
-> Probably there are better ways to solve this situation in a cleaner
-> way?
-
-The check against a mask at the start is pretty common way to deal with
-no status bits (that we understand) set.  Then update that mask
-define as you support more bits.
-
-That deals with the odd error case.  It is technically an additional
-conditional but the compiler may squash it anyway or if on a decent CPU
-it'll be a very easy to predict branch as it should never happen.
-
-Jonathan
-
+> Fixes: 0bf1f51e34c4 ("ext4: Add atomic block write documentation")
+> Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+> ---
+>  Documentation/filesystems/ext4/atomic_writes.rst | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
-
+> diff --git a/Documentation/filesystems/ext4/atomic_writes.rst b/Documentation/filesystems/ext4/atomic_writes.rst
+> index f65767df3620d5..f1a086aa026b1b 100644
+> --- a/Documentation/filesystems/ext4/atomic_writes.rst
+> +++ b/Documentation/filesystems/ext4/atomic_writes.rst
+> @@ -1,5 +1,4 @@
+>  .. SPDX-License-Identifier: GPL-2.0
+> -.. _atomic_writes:
+>  
+>  Atomic Block Writes
+>  -------------------------
+> @@ -154,7 +153,7 @@ Creating Filesystems with Atomic Write Support
+>  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>  
+>  First check the atomic write units supported by block device.
+> -See :ref:`atomic_write_bdev_support` for more details.
+> +See "Hardware Support" section below for more details.
+>  
+>  For single-fsblock atomic writes with a larger block size
+>  (on systems with block size < page size):
+> @@ -201,7 +200,6 @@ details:
+>  The STATX_ATTR_WRITE_ATOMIC flag in ``statx->attributes`` is set if atomic
+>  writes are supported.
+>  
+> -.. _atomic_write_bdev_support:
+>  
+>  Hardware Support
+>  ----------------
+> 
+> base-commit: d3f825032091fc14c7d5e34bcd54317ae4246903
+> -- 
+> An old man doll... just what I always wanted! - Clara
+> 
+> 
