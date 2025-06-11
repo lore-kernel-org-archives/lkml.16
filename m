@@ -1,57 +1,57 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F0872594AA
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:36:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214DB25B1C5
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749677782; cv=none; b=lOgqxvZbpwgv0JSqDdShRgcpdaumtAD+xF+xmo/EEILmYPbs5VLt0eOVV+/KsM25NeN/aaNK9AOnqg7tdoseuauGoSrd1bbbP4Q+ru4lnWJg9bOKODruxYymghViofCjcRPF1ErUhVLxETAnlBb9iYYmxaxSSPDb5r0Ognz8eZk=
+	t=1749677784; cv=none; b=JzXGnpChLIC/RSncqukTM3SuBT9KWLLbOmyKrWSJ1EM+awtp1t6fh98UAjxbjb09FncsA9wVRPAX+SOyK3cXcoNQELr9/mq6oNWo8243cWBlx2oFzaB1gu0vXR+6+AD+BkhrmcgaESd5rbSYKkNEfCAQRStJbtbSHvxMN4OM60g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749677782; c=relaxed/simple;
-	bh=eMo600wYx6b04es2mg4zvb7ZJ1X3gsBg3cCmJNefs84=;
+	s=arc-20240116; t=1749677784; c=relaxed/simple;
+	bh=HU/O+hAQBRCathiCEhtneyg+3txtTnYDWui28f+iNq4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ZAEgCYgVRsFSmdtYPAMN4iWNPJCY0bhh/5fvUO1PlHMdVe+L0pR+gkkPFxLVeIelo8OjuhZHCUXP4VmhDqJRkqYsckedUCZtT2qvAV557mJuIB0YyXIO7atKfKRaTIvItzfdEZkZR6CMn7q2ZCTT944l33Q32rTUGDbNUxbMaqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K23i7uht; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=Nodz4sFTr/We2qVOxCsxF+dL2shC2ef3SGDddkxe5PLMuo3yOJk0El2cwBHnMklAEebAvZFj2/1oIq1msH+ha/SQq07ERKGPvxI+ETeI1366OlsrQPU5+0BRs1wS3b3nau345YlJxgppl8AHUpXvcYi8kSGGUCkNNsNzan1is7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K6haRCWK; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K23i7uht"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-311ae2b6647so287490a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:36:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K6haRCWK"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b16b35ea570so202261a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:36:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749677780; x=1750282580; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749677782; x=1750282582; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=5FzQpJPBws5g+wsljIIo7Z5Bp6DrDU9fqIl8eG4VyGw=;
-        b=K23i7uhtvUee2Hm04PJeJNl3e01MBUj+203+fGJs95Zy5MmxWKnB51IYgnV6xTBzDa
-         tGVHWBLOLaKS2ClIFHffrimTQhSAi4eDkJkz4KYj4AiadjOUweqrH91RhXLWP5cKAn37
-         UXK3Pfk8vTeW00G6t/8szU8I4GpjmZ8cKboBNZ41msBDnZT5QQWVzU1ytcBNrqzNzpEU
-         /4ONxA8H1P2CT5vhADKLO5gvnJdIyElqWPjXaBoSj6s2tOpcBrVrl61A8QpSdeLbDYze
-         1xis52dQtnjNiOYEhhfCyOSTpzq2HbBfHJ2LwFXYd7Sn/kuTIByOwAuvES6FsxdEa88x
-         TjjA==
+        bh=PIqY5l9QTfLBnGxVH0bNVPmqIZNzodkqRPy8g7rI1YM=;
+        b=K6haRCWKfka0gB4LnfmDsj+eWuOP+4xTGOO+EN6DLMmxhRfi37u5gbfvJ/UfmCZt3a
+         qCVZ2JoauypbcvpKoHQhInucVDP21kHRLvyXy4WOZ2mTU07YnNXUdTXVWQS0udHKE6S9
+         KQWvTu/kgnFVYQfcgpzUPVPfeyiHhsKTbqElF/6ll1B131fMWNO2LofaDVAn+VHi8Jq6
+         1vv96eCw8InDVWr5ynLwbjsPegWAnJgbqQZLVuQS5+EyOlBg/2+uSREx0awzMfAtYKzS
+         Ds95lQW4oRY79LCX6LANmQ8WyrzPD1mfWNdG9Yfppv8w8Bot9gps2jCmyowXY0HljLsw
+         DU8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749677780; x=1750282580;
+        d=1e100.net; s=20230601; t=1749677782; x=1750282582;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=5FzQpJPBws5g+wsljIIo7Z5Bp6DrDU9fqIl8eG4VyGw=;
-        b=H8emwfkfa58kKG8dyrQtRNUoyYaWU8+BxuCvJbY4oEOYRsqtkKeVzblalX++G2r7cj
-         Pytj/hsPRnplArf/i6w8wgYgtkvRyoEFg6xTQSs24CmPknT+LHUk2oPz8DsSpfLRXZup
-         PLfjyfjz++iincsVD9IjXRwGn9oRdBkXQiuQmun33A1pVx2M9rjOcaq6LaDcY3FLvwiK
-         TIq1uCCkklk7uYOiXQNd9T5REphFeN20DCFDqjrsRHCj2WBU1O51Pn+n5qGgb8qNvJPi
-         mPJIcZ2IsgNET+lU0u1NVjymSeOo94sqF9t7mHlZouP22ahUC0YF98NRvUggvHaxkiUh
-         uAXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXJdZ4R0NBOoqEsiiLrWB34phb17K2lHRGrr9fT8VLlwNSgf8oFXPaVs4WGKRh0t+ghxE9OIX5EV0vidok=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzqDJnqg4QY17N2fFY3ov0PT2esN9dAXtC6hRHdRSyfEbV/qDd
-	ZnM61jyoghGB5f/T99+hHe4TcWqEZ77QWAQCj0+AdoIxGNJm1ZxEUJ6ZFDqlQ7pfYGP4OoWZmu0
-	fX+ZqzQ==
-X-Google-Smtp-Source: AGHT+IFD12JRdHUCksGhy/XcWTkonRiOG3BhyvAgj37rBTKE+EmIrEmNXmDOjjdvt8FotqXYFeSehrvQeAA=
-X-Received: from pjbpl16.prod.google.com ([2002:a17:90b:2690:b0:311:e9bb:f8d4])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3e43:b0:312:e445:fdd5
- with SMTP id 98e67ed59e1d1-313bfbe89f9mr1322456a91.35.1749677780496; Wed, 11
- Jun 2025 14:36:20 -0700 (PDT)
+        bh=PIqY5l9QTfLBnGxVH0bNVPmqIZNzodkqRPy8g7rI1YM=;
+        b=jCjq8wR8TGL74AJGTD5+JYAM5Ga6O57OvSrU9T8b+ki+Uguq9P3VpZnqlJ5bTZiskl
+         V8HtPhAD4BYHBSy5W1waS5BxYuD9M0xy1aLf7QeuNNbRNMtOJj7lFiOScZlqbvEJRyZ/
+         wHF0QLMXo7qUCUZU97X3iJDVw6pdV9pcEIPctwmPD5BmcdZm5wpiz4CzhKmKTBCBUfQv
+         aOpb67aeYgmY4ImlisZLtpKq0Sr7Iz/Fref20KWg/cXm04Yoah8D9MCOuvlh7bF5JT+D
+         evsp27NpYRbXpkp24zQ72RQGBPj5GLvL2g/Ftel9AFhTVl4AToC4FKmxP4jIgP2h1Gtq
+         My4g==
+X-Forwarded-Encrypted: i=1; AJvYcCVQjncjPce3YNPOs7EDH2nwX79f8L3oazD3lRaDIvIkemwA7MDpl6fQKNVAJ5KRr8Mamg0nxrXXzzjGZWA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5nurj3/da5HIAvWDsD4EwgK2lz2WyEZ3d6M3WXcV8HjUVExiX
+	V9zgruJemFXIUA8C1R8JZYwOvBjErhur8Q+fzT/5ZQKJY+ncubZBpN9NVahB3z0+qsCtmvx0Ehm
+	q9gs0wg==
+X-Google-Smtp-Source: AGHT+IE4xupnaiqX63lqW3UVbRH6cr7BEnhgz243ASqU8XEvcG4UXXe/TA4G9u/tYDjQoONdqCLDMZz1UGY=
+X-Received: from pghc2.prod.google.com ([2002:a63:da02:0:b0:b2c:4fcd:fe1b])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:6e92:b0:215:dbb0:2a85
+ with SMTP id adf61e73a8af0-21f9b52c5e6mr536039637.0.1749677782442; Wed, 11
+ Jun 2025 14:36:22 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed, 11 Jun 2025 14:35:50 -0700
+Date: Wed, 11 Jun 2025 14:35:51 -0700
 In-Reply-To: <20250611213557.294358-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,9 +61,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250611213557.294358-1-seanjc@google.com>
 X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-Message-ID: <20250611213557.294358-12-seanjc@google.com>
-Subject: [PATCH v2 11/18] KVM: x86: Don't clear PIT's IRQ line status when
- destroying PIT
+Message-ID: <20250611213557.294358-13-seanjc@google.com>
+Subject: [PATCH v2 12/18] KVM: x86: Explicitly check for in-kernel PIC when
+ getting ExtINT
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
 	Vitaly Kuznetsov <vkuznets@redhat.com>
@@ -71,132 +71,73 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Kai Huang <kai.huang@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Don't bother clearing the PIT's IRQ line status when destroying the PIT,
-as userspace can't possibly rely on KVM to lower the IRQ line in any sane
-use case, and it's not at all obvious that clearing the PIT's IRQ line is
-correct/desirable in kvm_create_pit()'s error path.
+Explicitly check for an in-kernel PIC when checking for a pending ExtINT
+in the PIC.  Effectively swapping the split vs. full irqchip logic will
+allow guarding the in-kernel I/O APIC (and PIC) emulation with a Kconfig,
+and also makes it more obvious that kvm_pic_read_irq() won't result in a
+NULL pointer dereference.
 
-When called from kvm_arch_pre_destroy_vm(), the entire VM is being torn
-down and thus {kvm_pic,kvm_ioapic}.irq_states are unreachable.
-
-As for the error path in kvm_create_pit(), the only way the PIT's bit in
-irq_states can be set is if userspace raises the associated IRQ before
-KVM_CREATE_PIT{2} completes.  Forcefully clearing the bit would clobber
-userspace's input, nonsensical though that input may be.  Not to mention
-that no known VMM will continue on if PIT creation fails.
+Opportunistically add WARNs in the fallthrough path, mostly to document
+that the userspace ExtINT logic is only relevant to split IRQ chips.
 
 Acked-by: Kai Huang <kai.huang@intel.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/include/asm/kvm_host.h |  2 --
- arch/x86/kvm/i8254.c            | 10 ----------
- arch/x86/kvm/i8259.c            | 10 ----------
- arch/x86/kvm/ioapic.c           | 10 ----------
- arch/x86/kvm/ioapic.h           |  1 -
- 5 files changed, 33 deletions(-)
+ arch/x86/kvm/irq.c | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index c8654e461933..ebda93979179 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -2207,8 +2207,6 @@ static inline int __kvm_irq_line_state(unsigned long *irq_state,
- 	return !!(*irq_state);
+diff --git a/arch/x86/kvm/irq.c b/arch/x86/kvm/irq.c
+index b696161ec078..fb3bad0f4965 100644
+--- a/arch/x86/kvm/irq.c
++++ b/arch/x86/kvm/irq.c
+@@ -42,6 +42,14 @@ static int pending_userspace_extint(struct kvm_vcpu *v)
+ 	return v->arch.pending_external_vector != -1;
  }
  
--void kvm_pic_clear_all(struct kvm_pic *pic, int irq_source_id);
--
- void kvm_inject_nmi(struct kvm_vcpu *vcpu);
- int kvm_get_nr_pending_nmis(struct kvm_vcpu *vcpu);
- 
-diff --git a/arch/x86/kvm/i8254.c b/arch/x86/kvm/i8254.c
-index fa8187608cfc..d1b79b418c05 100644
---- a/arch/x86/kvm/i8254.c
-+++ b/arch/x86/kvm/i8254.c
-@@ -641,14 +641,6 @@ static void kvm_pit_reset(struct kvm_pit *pit)
- 	kvm_pit_reset_reinject(pit);
- }
- 
--static void kvm_pit_clear_all(struct kvm *kvm)
--{
--	mutex_lock(&kvm->irq_lock);
--	kvm_ioapic_clear_all(kvm->arch.vioapic, KVM_PIT_IRQ_SOURCE_ID);
--	kvm_pic_clear_all(kvm->arch.vpic, KVM_PIT_IRQ_SOURCE_ID);
--	mutex_unlock(&kvm->irq_lock);
--}
--
- static void pit_mask_notifer(struct kvm_irq_mask_notifier *kimn, bool mask)
- {
- 	struct kvm_pit *pit = container_of(kimn, struct kvm_pit, mask_notifier);
-@@ -803,7 +795,6 @@ struct kvm_pit *kvm_create_pit(struct kvm *kvm, u32 flags)
- 	kvm_pit_set_reinject(pit, false);
- 	kthread_destroy_worker(pit->worker);
- fail_kthread:
--	kvm_pit_clear_all(kvm);
- 	kfree(pit);
- 	return NULL;
- }
-@@ -820,7 +811,6 @@ void kvm_free_pit(struct kvm *kvm)
- 		kvm_pit_set_reinject(pit, false);
- 		hrtimer_cancel(&pit->pit_state.timer);
- 		kthread_destroy_worker(pit->worker);
--		kvm_pit_clear_all(kvm);
- 		kfree(pit);
- 	}
- }
-diff --git a/arch/x86/kvm/i8259.c b/arch/x86/kvm/i8259.c
-index 0150aec4f523..4de055efc4ee 100644
---- a/arch/x86/kvm/i8259.c
-+++ b/arch/x86/kvm/i8259.c
-@@ -206,16 +206,6 @@ int kvm_pic_set_irq(struct kvm_kernel_irq_routing_entry *e, struct kvm *kvm,
- 	return ret;
- }
- 
--void kvm_pic_clear_all(struct kvm_pic *s, int irq_source_id)
--{
--	int i;
--
--	pic_lock(s);
--	for (i = 0; i < PIC_NUM_PINS; i++)
--		__clear_bit(irq_source_id, &s->irq_states[i]);
--	pic_unlock(s);
--}
--
++static int get_userspace_extint(struct kvm_vcpu *vcpu)
++{
++	int vector = vcpu->arch.pending_external_vector;
++
++	vcpu->arch.pending_external_vector = -1;
++	return vector;
++}
++
  /*
-  * acknowledge interrupt 'irq'
-  */
-diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
-index 8c8a8062eb19..65626da1407f 100644
---- a/arch/x86/kvm/ioapic.c
-+++ b/arch/x86/kvm/ioapic.c
-@@ -498,16 +498,6 @@ int kvm_ioapic_set_irq(struct kvm_kernel_irq_routing_entry *e, struct kvm *kvm,
- 	return ret;
+  * check if there is pending interrupt from
+  * non-APIC source without intack.
+@@ -68,10 +76,11 @@ int kvm_cpu_has_extint(struct kvm_vcpu *v)
+ 	if (!kvm_apic_accept_pic_intr(v))
+ 		return 0;
+ 
+-	if (irqchip_split(v->kvm))
+-		return pending_userspace_extint(v);
+-	else
++	if (pic_in_kernel(v->kvm))
+ 		return v->kvm->arch.vpic->output;
++
++	WARN_ON_ONCE(!irqchip_split(v->kvm));
++	return pending_userspace_extint(v);
  }
  
--void kvm_ioapic_clear_all(struct kvm_ioapic *ioapic, int irq_source_id)
--{
--	int i;
--
--	spin_lock(&ioapic->lock);
--	for (i = 0; i < KVM_IOAPIC_NUM_PINS; i++)
--		__clear_bit(irq_source_id, &ioapic->irq_states[i]);
--	spin_unlock(&ioapic->lock);
--}
--
- static void kvm_ioapic_eoi_inject_work(struct work_struct *work)
- {
- 	int i;
-diff --git a/arch/x86/kvm/ioapic.h b/arch/x86/kvm/ioapic.h
-index 289cca3aec69..dc92bd7c37bc 100644
---- a/arch/x86/kvm/ioapic.h
-+++ b/arch/x86/kvm/ioapic.h
-@@ -114,7 +114,6 @@ void kvm_ioapic_destroy(struct kvm *kvm);
- int kvm_ioapic_set_irq(struct kvm_kernel_irq_routing_entry *e, struct kvm *kvm,
- 		       int irq_source_id, int level, bool line_status);
+ /*
+@@ -127,13 +136,11 @@ int kvm_cpu_get_extint(struct kvm_vcpu *v)
+ 		return v->kvm->arch.xen.upcall_vector;
+ #endif
  
--void kvm_ioapic_clear_all(struct kvm_ioapic *ioapic, int irq_source_id);
- void kvm_get_ioapic(struct kvm *kvm, struct kvm_ioapic_state *state);
- void kvm_set_ioapic(struct kvm *kvm, struct kvm_ioapic_state *state);
- void kvm_ioapic_scan_entry(struct kvm_vcpu *vcpu,
+-	if (irqchip_split(v->kvm)) {
+-		int vector = v->arch.pending_external_vector;
+-
+-		v->arch.pending_external_vector = -1;
+-		return vector;
+-	} else
++	if (pic_in_kernel(v->kvm))
+ 		return kvm_pic_read_irq(v->kvm); /* PIC */
++
++	WARN_ON_ONCE(!irqchip_split(v->kvm));
++	return get_userspace_extint(v);
+ }
+ EXPORT_SYMBOL_GPL(kvm_cpu_get_extint);
+ 
 -- 
 2.50.0.rc1.591.g9c95f17f64-goog
 
