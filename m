@@ -1,89 +1,120 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31BB715A8;
-	Wed, 11 Jun 2025 16:15:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63B121C245C;
+	Wed, 11 Jun 2025 16:16:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749658506; cv=none; b=i6NuK6+TiubESaXIpMAVx+M+7g7B7tFpuzgz3oNcAS8UeFKME2Wp5jUa7XZ/FeGt26ANV3NUUPN9/LIDvhnu+A2Unmo8hVapRfNTfH9eiYDWXcYmR1X+0/DwM0mVzlydfNE3IbncWuP+cO39eJ6w7RokFRKac5U1bblb2TD7vew=
+	t=1749658567; cv=none; b=jtKikx8w7cynSXCELLVmLOipcJ2nnS5JRFkyL5OIfjfAONWfhdtcWpt1nGak6izmW4/qxp+jZAwuNgUod0PXoIeDdBSvFwSdOpt6G+EKECRm0OStgvdvqUNHnseYgRBGRkx1TkaOsOj4eCNlkxM6v2MRHPkhcof+RxyPO5VPIPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749658506; c=relaxed/simple;
-	bh=O9MOBWHvWZ5MN0ix5avPsdQVSs2Pd615xfzCnOn1X34=;
+	s=arc-20240116; t=1749658567; c=relaxed/simple;
+	bh=lP9gzkyo2SB1Zb3WgBljR00/GqGDCXaDC6eCHABGu/g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H0ai3LOy2AXSAs4vNZFEDyVeFkyV8hXLAThOIP0AxR0OPb1EbaBVcSUwkGGVBWZyEFeOIgEctKcj9h84bEra5hW18Y25ZKhA2ueGsr+S40Zm5DThm6aypjZNMY0S2YwOst1aVKu+AfhF9Sp2g73L0aSevNzpP+N5UjXqbBjFN+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oCUZmOVO; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=o921umo3csecHRLIqeT2MqAjEYevTTwVhdtZdSNs5sWuEEPOdV1jSxvVmyf1e+jEt50Kc8H86LaVyxPzyET43yKqCJp4PK34ETpd5ngrZxZZv9OtDHd98lmG9qUDn0W7QC+6zNewVqWamF8V1Ud09Xj6ONAQhbW8kk7zbGn2NvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R5SsMI4P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oCUZmOVO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45B25C4CEE3;
-	Wed, 11 Jun 2025 16:15:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R5SsMI4P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2080C4CEE3;
+	Wed, 11 Jun 2025 16:16:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749658505;
-	bh=O9MOBWHvWZ5MN0ix5avPsdQVSs2Pd615xfzCnOn1X34=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oCUZmOVOhAomOZhebCoHlJAVMUeSTmncz16T0PwafTIuwYEXqioMK49DZFFjThD19
-	 D7kjcJ/VF4nLxxCid4Id3aQC5LQhit7BSZsTY0xTNeccjhEnc5d72DTpLuoRsj2jQm
-	 /fZcSjgP94qDmWt1OR5FzNyNTNMF+Cr8q0qBrt9TWzuykR4dPZGgFRzh5wa/pdLsT8
-	 oyWjbH0WBVIqoFS00TyVfnI6UtOzBf+KQj4h7DUT9rZl6kKqp7qak5Ax8vtgCqbJQa
-	 U1g+ZxJ96HsoirQNOrIKfq/UCwkhOWc+jf/L6gA1Vwcmwp1knTPmELuifkyDyo7I9f
-	 InHgJCZJmVcOA==
-Date: Wed, 11 Jun 2025 17:14:59 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Inochi Amaoto <inochiama@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-	Yu Yuan <yu.yuan@sjtu.edu.cn>, Yixun Lan <dlan@gentoo.org>,
-	Ze Huang <huangze@whut.edu.cn>,
-	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
-	devicetree@vger.kernel.org, sophgo@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH RFC 0/3] riscv: sophgo: add top syscon device for cv18xx
-Message-ID: <20250611-doodle-storage-f1f23230adee@spud>
-References: <20250611082452.1218817-1-inochiama@gmail.com>
+	s=k20201202; t=1749658565;
+	bh=lP9gzkyo2SB1Zb3WgBljR00/GqGDCXaDC6eCHABGu/g=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=R5SsMI4PjouvkDrGKyT7rYg6I2zk1kU/066uUf22Y5Qq2bz16Q9mVgEPjq+saI8iu
+	 rabL33lu8oioCvH40QgYvkfdqFEoZdHM8E7OntYjkgu6BYyc2y0FrTsW0TYqdXVssm
+	 C6ixf4pQvhjL70k2NPWma65f1h44sIp7jt08tGqKDZc114WA6xFhebUJTKmzCr2QbY
+	 nLSkMCq5UdiVEI/Gjfi2wSvzLs6pIBOuYGZcZsb4UKCG9O68NRomSOnLBnW7mHgmvl
+	 8Oviy1ou7tHLrBJi8YZ6Kewx4K5xmGrm1wnah/H6y4MfS7Kgz0jNYVK1VorkT4EP0S
+	 92Zn5hHap284g==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 7158BCE077D; Wed, 11 Jun 2025 09:16:05 -0700 (PDT)
+Date: Wed, 11 Jun 2025 09:16:05 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: Joel Fernandes <joelagnelf@nvidia.com>, linux-kernel@vger.kernel.org,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Xiongfeng Wang <wangxiongfeng2@huawei.com>, rcu@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH 2/2] rcu: Fix lockup when RCU reader used while IRQ
+ exiting
+Message-ID: <2a0902a7-852b-4868-b0c5-2a6962f273ed@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250609180125.2988129-1-joelagnelf@nvidia.com>
+ <20250609180125.2988129-2-joelagnelf@nvidia.com>
+ <aEmpMohtFsVf4Uh_@tardis.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="l4ajHlLW4CTqOoSC"
-Content-Disposition: inline
-In-Reply-To: <20250611082452.1218817-1-inochiama@gmail.com>
-
-
---l4ajHlLW4CTqOoSC
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <aEmpMohtFsVf4Uh_@tardis.local>
 
-On Wed, Jun 11, 2025 at 04:24:48PM +0800, Inochi Amaoto wrote:
-> Add top syscon device bindings related DTS change for CV1800.
->=20
-> The patch required the following 3 patch series.
-> 1. https://lore.kernel.org/all/20250611075321.1160973-1-inochiama@gmail.c=
-om
-> 2. https://lore.kernel.org/all/20250611081804.1196397-1-inochiama@gmail.c=
-om
-> 3. https://lore.kernel.org/all/20250611081000.1187374-1-inochiama@gmail.c=
-om
+On Wed, Jun 11, 2025 at 09:05:06AM -0700, Boqun Feng wrote:
+> On Mon, Jun 09, 2025 at 02:01:24PM -0400, Joel Fernandes wrote:
+> > During rcu_read_unlock_special(), if this happens during irq_exit(), we
+> > can lockup if an IPI is issued. This is because the IPI itself triggers
+> > the irq_exit() path causing a recursive lock up.
+> > 
+> > This is precisely what Xiongfeng found when invoking a BPF program on
+> > the trace_tick_stop() tracepoint As shown in the trace below. Fix by
+> > using context-tracking to tell us if we're still in an IRQ.
+> > context-tracking keeps track of the IRQ until after the tracepoint, so
+> > it cures the issues.
+> > 
+> > irq_exit()
+> >   __irq_exit_rcu()
+> >     /* in_hardirq() returns false after this */
+> >     preempt_count_sub(HARDIRQ_OFFSET)
+> >     tick_irq_exit()
+> 
+> @Frederic, while we are at it, what's the purpose of in_hardirq() in
+> tick_irq_exit()? For nested interrupt detection?
 
-What is RFC about this?
+If you are talking about the comment, these sorts of comments help
+people reading the code, the point being that some common-code function
+that invokes in_hardirq() after that point will get the wrong answer
+from it.  The context-tracking code does the same for whether or not
+RCU is watching.
 
---l4ajHlLW4CTqOoSC
-Content-Type: application/pgp-signature; name="signature.asc"
+							Thanx, Paul
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaEmrgwAKCRB4tDGHoIJi
-0oEGAP9CowrUU72dQHLlJwso523NN6agE/wQrGVa7TAkoMkGHAEArgoSYWu2Xe+n
-LLB9vYJIT+FexWc/jyDGiCGXj/Dn/A8=
-=3V/H
------END PGP SIGNATURE-----
-
---l4ajHlLW4CTqOoSC--
+> Regards,
+> Boqun
+> 
+> >       tick_nohz_irq_exit()
+> > 	    tick_nohz_stop_sched_tick()
+> > 	      trace_tick_stop()  /* a bpf prog is hooked on this trace point */
+> > 		   __bpf_trace_tick_stop()
+> > 		      bpf_trace_run2()
+> > 			    rcu_read_unlock_special()
+> >                               /* will send a IPI to itself */
+> > 			      irq_work_queue_on(&rdp->defer_qs_iw, rdp->cpu);
+> > 
+> > A simple reproducer can also be obtained by doing the following in
+> > tick_irq_exit(). It will hang on boot without the patch:
+> > 
+> >   static inline void tick_irq_exit(void)
+> >   {
+> >  +	rcu_read_lock();
+> >  +	WRITE_ONCE(current->rcu_read_unlock_special.b.need_qs, true);
+> >  +	rcu_read_unlock();
+> >  +
+> > 
+> > While at it, add some comments to this code.
+> > 
+> > Reported-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+> > Closes: https://lore.kernel.org/all/9acd5f9f-6732-7701-6880-4b51190aa070@huawei.com/
+> > Tested-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+> > Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
+> [...]
