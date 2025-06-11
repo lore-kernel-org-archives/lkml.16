@@ -1,49 +1,50 @@
-Received: from esa3.hc1455-7.c3s2.iphmx.com (esa3.hc1455-7.c3s2.iphmx.com [207.54.90.49])
+Received: from esa5.hc1455-7.c3s2.iphmx.com (esa5.hc1455-7.c3s2.iphmx.com [68.232.139.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D966933E7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FE15EEA9
 	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 02:18:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.49
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749608299; cv=none; b=IJaBDIbK6nJD5yGok6kxEjvikBspsAMksQBjybCuazVehyBTi1RGDrZKIEKzxPho+gEBB0CRn8w6Zk+L1/iHiwP7AT/N7eEplJi13JvohVx/6Jaenhh8Gl8eGBkv1+z74e86UhOP4jehVgVns/H6fJZQWjKVZE84LXLC3dDi4jo=
+	t=1749608299; cv=none; b=CuKL8mGnke2e19S9Qb5ViTNtxpDvb/9/zSH2I29wa7jjCEqdxCo9yYJifSLkH8M/TPpDTO1BnQu1LhMn/ZUqtKPuJJdJxe0Jwe74ikFdMxcPd0RXjBOt0I7wo/EJ7FGaNcotk+x+h0Pz2S+hZqVEDhQ1kwK1rGHEtZ8D8uA/cPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749608299; c=relaxed/simple;
-	bh=OJo6yXbg6d0/SdHePUMl0loF5P3GXQTQMLRfUX99cQo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fKvMFhXHHRssBBRoIibxATJHkCqSOo+gYExJABdHI4mpkvScTDiW+Npdi/4eCqs799cNdwShiQ2VY+Rtaw9mD30Q1fk6safcoWzTi2EQ65thZ7cBDNq+fv7ZPV5TTsVcu/4bOLXbPTSuBMuEkTsaRb9ri7nm5iCcmmrsbB/NHY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jp.fujitsu.com; spf=pass smtp.mailfrom=jp.fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=JfxCWsCy; arc=none smtp.client-ip=207.54.90.49
+	bh=xSfht9KRPJIN3XKnJcISniqHonnzom51ddjqLydjIOE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=I9N9FP1H0+F8YEAI2pgCe1rN98mBOt6K35/j4UKTid6vT3PKldZhJ7+XXGgE2QancUR+9mCygf3MJF73kHtM9NMd2HGBtZXsD+BVI8IejhtiWuywiKuSAWbX6d3ObsiBP41Hr/kjn9XzI12NiHedj2y9UYNqZEwWJpEIWauxHEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jp.fujitsu.com; spf=pass smtp.mailfrom=jp.fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=p+TwdXpz; arc=none smtp.client-ip=68.232.139.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jp.fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jp.fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="JfxCWsCy"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="p+TwdXpz"
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1749608297; x=1781144297;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=OJo6yXbg6d0/SdHePUMl0loF5P3GXQTQMLRfUX99cQo=;
-  b=JfxCWsCy5Tp2ERjvPs1hTKG4hm2f0QbTsP+ps+efNHkObzwYK+ntLG51
-   EZTe1+y5nyuI1VVGQBzg0mcCbiopeHbNbqOBdlIVAwnN0h5r0QKDePe2K
-   Ft7adqGnNppf+xtIrvguvEP2IBpF2pKlmKTaKwXMrozWbomgpx3IHdnb+
-   eiS+JQb+TUOLGIi56kdL6lLsqsnWvFU/CMA5zCDFnRoYuv5yu/AuYLQ4E
-   vD19GLZUbHSztne6z0dlB982/PrhDyfRa8iAI06cR8Vbh6sB+88+JZvmL
-   9WoR8PcqSnEo4a1j2Zhz1Xc50M8DwQFQqpOm6cf/jWw288VL0VcgiktDp
-   Q==;
-X-CSE-ConnectionGUID: d7parjerRb+tqAJgXjta3g==
-X-CSE-MsgGUID: BHxgfoXzQrWl1vRoll39GA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="202305754"
+  t=1749608298; x=1781144298;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=xSfht9KRPJIN3XKnJcISniqHonnzom51ddjqLydjIOE=;
+  b=p+TwdXpzMVX3WI0dv6UDjKNkjyx96+JKHYuqZnWZ4BX4N4MQZZuALeLN
+   ZkXGdSsTizijpWwuvj47mVBQu+sPWN8vQbMVkhLfSmmbiGJE0ZqIg3xDI
+   2sbUKE+lg4A4lEbKHZdML1btAQxt1msolD55JUQz9UuotMI+eXZ0dDIRQ
+   orGIJGm4qdChaxg4zGoK3gXnvhg0Dj7lEzbf1Xt8hqfydw635ToU7hIZj
+   GXsRIEsEwVG7Gz78Ucn+wz5RYkGV09UW3XScGbYPVrqUM96n9qFGkr/3E
+   Os9NE0x3ay6qvTxy66lmOz3HFntd1zDUaPP+4q+0u+C/F84rTIE3koPgN
+   w==;
+X-CSE-ConnectionGUID: bZ25ZASURlCitz4rKQmyNw==
+X-CSE-MsgGUID: HOLmiDGzTHCTgCx41IdDDw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="201563999"
 X-IronPort-AV: E=Sophos;i="6.16,226,1744038000"; 
-   d="scan'208";a="202305754"
-Received: from unknown (HELO oym-r4.gw.nic.fujitsu.com) ([210.162.30.92])
-  by esa3.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 11:17:06 +0900
-Received: from oym-m3.gw.nic.fujitsu.com (oym-nat-oym-m3.gw.nic.fujitsu.com [192.168.87.60])
-	by oym-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id 1521ED8E64
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:17:03 +0900 (JST)
+   d="scan'208";a="201563999"
+Received: from unknown (HELO yto-r2.gw.nic.fujitsu.com) ([218.44.52.218])
+  by esa5.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 11:17:06 +0900
+Received: from yto-m4.gw.nic.fujitsu.com (yto-nat-yto-m4.gw.nic.fujitsu.com [192.168.83.67])
+	by yto-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 56E6CC68FB
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:17:04 +0900 (JST)
 Received: from oym-om1.fujitsu.com (oym-om1.o.css.fujitsu.com [10.85.58.161])
-	by oym-m3.gw.nic.fujitsu.com (Postfix) with ESMTP id CB97DD7749
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:17:02 +0900 (JST)
+	by yto-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id 228FCD3F13
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:17:04 +0900 (JST)
 Received: from sm-x86-amd03.ssoft.mng.com (sm-x86-stp01.soft.fujitsu.com [10.124.178.20])
-	by oym-om1.fujitsu.com (Postfix) with ESMTP id 3A5D44007A498;
-	Wed, 11 Jun 2025 11:17:00 +0900 (JST)
+	by oym-om1.fujitsu.com (Postfix) with ESMTP id BB9FE40072E3A;
+	Wed, 11 Jun 2025 11:17:02 +0900 (JST)
 From: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
 To: x86@kernel.org,
 	linux-kernel@vger.kernel.org
@@ -72,10 +73,12 @@ Cc: Reinette Chatre <reinette.chatre@intel.com>,
 	Jamie Iles <quic_jiles@quicinc.com>,
 	dfustini@baylibre.com,
 	Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 0/2] x86/resctrl: Optimize some resctrl code
-Date: Wed, 11 Jun 2025 11:15:37 +0900
-Message-ID: <20250611021547.2766889-1-tan.shaopeng@jp.fujitsu.com>
+Subject: [PATCH 1/2] x86/resctrl: Remove unnecessary cpumask_nth_andnot()
+Date: Wed, 11 Jun 2025 11:15:38 +0900
+Message-ID: <20250611021547.2766889-2-tan.shaopeng@jp.fujitsu.com>
 X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20250611021547.2766889-1-tan.shaopeng@jp.fujitsu.com>
+References: <20250611021547.2766889-1-tan.shaopeng@jp.fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,22 +87,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hello Reinette, James, and Yury,
+In commit 94f753143028("x86/resctrl: Optimize cpumask_any_housekeeping()"),
+cpumask_any_andnot_but() replaced cpumask_nth_andnot(),
+but left the function cpumask_nth_andnot() unused, delete it.
 
-These two patches are just optimizations for the following patches
-by James. The behavior has not changed.
-
-https://lore.kernel.org/lkml/aB4jHPsWVNqrSG6W@yury/
-https://lore.kernel.org/all/a86e72d1-1a1d-4348-9e2d-34b799571518@arm.com/
-
-Shaopeng Tan (2):
-  x86/resctrl: Remove unnecessary cpumask_nth_andnot()
-  x86/resctrl: Optimize code in rdt_get_tree()
-
- fs/resctrl/rdtgroup.c   |  6 ++----
+Signed-off-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+---
  include/linux/cpumask.h | 16 ----------------
- 2 files changed, 2 insertions(+), 20 deletions(-)
+ 1 file changed, 16 deletions(-)
 
+diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
+index 7ae80a7ca81e..498790f74fa8 100644
+--- a/include/linux/cpumask.h
++++ b/include/linux/cpumask.h
+@@ -546,22 +546,6 @@ unsigned int cpumask_nth_and(unsigned int cpu, const struct cpumask *srcp1,
+ 				small_cpumask_bits, cpumask_check(cpu));
+ }
+ 
+-/**
+- * cpumask_nth_andnot - get the Nth cpu set in 1st cpumask, and clear in 2nd.
+- * @srcp1: the cpumask pointer
+- * @srcp2: the cpumask pointer
+- * @cpu: the Nth cpu to find, starting from 0
+- *
+- * Return: >= nr_cpu_ids if such cpu doesn't exist.
+- */
+-static __always_inline
+-unsigned int cpumask_nth_andnot(unsigned int cpu, const struct cpumask *srcp1,
+-							const struct cpumask *srcp2)
+-{
+-	return find_nth_andnot_bit(cpumask_bits(srcp1), cpumask_bits(srcp2),
+-				small_cpumask_bits, cpumask_check(cpu));
+-}
+-
+ /**
+  * cpumask_nth_and_andnot - get the Nth cpu set in 1st and 2nd cpumask, and clear in 3rd.
+  * @srcp1: the cpumask pointer
 -- 
 2.43.5
 
