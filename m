@@ -1,94 +1,86 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 054EEEAF9
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 03:58:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E64EAF9;
+	Wed, 11 Jun 2025 03:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749614295; cv=none; b=oNVr3HO/E25+owHICsUbPXKkO4nhkABFX9okj40n591chxLVK+VBjYyqzW2JdYqVNEvPFAVMrPvId6kVuzA//Cf590UWnQdqS+A2rns1QHGoBA3jxMFqQKCzN60Ys35osDOsbkh6lzhXzLaYzcO8uFHV5a1GS5+Azje+Q0oPaHU=
+	t=1749614347; cv=none; b=Ts3JD+ZAwCUjXF0MZ9uZw7eKSgLRGK3Fqzd7q5ylA2J6WRwoPNvM2IqXDCJ47oGQb3cYtVQFajOe+HVpq/8UGgXDo/f/3fx39oFqMGCx1h8tX2iIBNvjLS6C9CxYMlO4IRQhMI6r0/TLpBXiI+saP6UJvEaZgkq9kmFkiarFVxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749614295; c=relaxed/simple;
-	bh=rhu5cC4ghVBpa9vn/6ZN4Nc/bR6KUWlM03H+8o/sF60=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aejBpI08eLW8yMsx92sAePmKuTwAQbj5HqbYHHIGJPK8i6K7eCqZtoifJ8pXRV4KGDOQSzwglQQ6aCaK5+uEEQY+WtHdxbjFxts3aAINl4rM5KOpm8wBL4ih8ZoEofDqmgMK77StYGYdhzHR/VbuKq8X0XpFHZuNVcV9Z1u6zBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 44b975b8467811f0b29709d653e92f7d-20250611
-X-CTIC-Tags:
-	HR_CC_AS_FROM, HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B
-	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
-	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
-	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
-	HR_TO_NO_NAME, IP_UNTRUSTED, SRC_UNTRUSTED, IP_LOWREP, SRC_LOWREP
-	DN_TRUSTED, SRC_TRUSTED, SA_EXISTED, SN_UNTRUSTED, SN_UNFAMILIAR
-	SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD
-	CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_T1
-	AMN_GOOD, AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:84eba28e-0853-4b65-8d08-6309ca01b988,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:5
-X-CID-INFO: VERSION:1.1.45,REQID:84eba28e-0853-4b65-8d08-6309ca01b988,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:5
-X-CID-META: VersionHash:6493067,CLOUDID:c3055b5b53bd2229661cf11d8646a8db,BulkI
-	D:250610171445IFDGA2P6,BulkQuantity:3,Recheck:0,SF:17|19|25|45|66|78|102,T
-	C:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:40,QS:nil,BEC:n
-	il,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 44b975b8467811f0b29709d653e92f7d-20250611
-X-User: duanchenghao@kylinos.cn
-Received: from localhost.localdomain [(223.104.40.103)] by mailgw.kylinos.cn
-	(envelope-from <duanchenghao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 663439612; Wed, 11 Jun 2025 11:58:01 +0800
-From: Chenghao Duan <duanchenghao@kylinos.cn>
-To: linux-kernel@vger.kernel.org
-Cc: Chenghao Duan <duanchenghao@kylinos.cn>
-Subject: [PATCH v1 0/5] Support trampoline for LoongArch
-Date: Wed, 11 Jun 2025 11:57:57 +0800
-Message-Id: <20250611035757.106636-1-duanchenghao@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1749614347; c=relaxed/simple;
+	bh=szt+yu2QyA/QhUjatSBOr43sMK30sECLXWC5HWNvAj0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GQcD2msF3gO+1V7uQv4b4STuLWSR2qmXqFMLY5SebuM159R5ves8hmgsHWCPlXwMB/Lgwws4DpRMsgChyaqLRUWVNFbw/SdmgPOkBbh1FDBUv9YBRorAYLkRPjrqHBl3XfumE6dmGMg0v6HasOLLzlb4rsXcz7y76oC5FlsJ4Vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oCI/NgO6; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oCI/NgO6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27A1EC4CEEE;
+	Wed, 11 Jun 2025 03:59:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749614346;
+	bh=szt+yu2QyA/QhUjatSBOr43sMK30sECLXWC5HWNvAj0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oCI/NgO6t82+0dt4rZ58DB+IkwRvjcNZ8pj5AEN6fKZSLEVlNEcF2b+DBphS2gu8/
+	 soA6FLw7oMdHnpjUO+8dOJvlRr1p33bXZWdRSPljd2QvQe3FkrsUr+3IlRuy+lY705
+	 8OIZGNq6+RStoCDw3miB+z/Emh3WsYmaW7T5NQTVBV/iG//6cY5agrJleSTHWSbuGH
+	 eFd8ehhhWiUy0B2yIimmqk8TwvGDygZZ14r7jQYOb7GPEXoSNehfYGl1FkahLvK4x5
+	 IGbF4jVwt+BqNJ8PquUrLFiUbiNyU8mcnJGot5yfNv+gOb2msM+oiMu2P4k9vYt2YW
+	 nReNvxvHkbt1w==
+Date: Tue, 10 Jun 2025 20:58:42 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org, x86@kernel.org, ardb@kernel.org,
+	Jason@zx2c4.com, torvalds@linux-foundation.org
+Subject: Re: [PATCH 07/16] crypto: sha512 - replace sha512_generic with
+ wrapper around SHA-512 library
+Message-ID: <20250611035842.GB1484147@sol>
+References: <20250611020923.1482701-8-ebiggers@kernel.org>
+ <aEjo6YZn59m5FnZ_@gondor.apana.org.au>
+ <20250611033957.GA1484147@sol>
+ <aEj8J3ZIYEFp_XT4@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEj8J3ZIYEFp_XT4@gondor.apana.org.au>
 
-v1: Support trampoline for LoongArch. The following feature tests
-have been completed:
-1. fentry
-2. fexit
-3. fmod_ret
+On Wed, Jun 11, 2025 at 11:46:47AM +0800, Herbert Xu wrote:
+> On Tue, Jun 10, 2025 at 08:39:57PM -0700, Eric Biggers wrote:
+> >
+> > Do you have a concrete example (meaning, a specific driver) where this actually
+> > matters?  Historically, export and import have always had to be paired for the
+> > same transformation object, i.e. import was called only with the output of
+> > export.  There is, and has never been, any test that tests otherwise.  This
+> > seems like a brand new "requirement" that you've made up unnecessarily.
+> 
+> It's not just drivers that may be using fallbacks, the ahash API
+> code itself now relies on this to provide fallbacks for cases that
+> drivers can't handle, such as linear addresses.
+> 
+> I did add the testing for it, which revealed a few problems with
+> s390 so it was reverted for 6.16.  But I will be adding it back
+> after the s390 issues have been resolved.
 
-TODO: The support for the struct_ops feature will be provided in
-subsequent patches.
+Okay, so it sounds like in practice this is specific to ahash_do_req_chain()
+which you recently added.  I'm not sure what it's meant to be doing.
 
-Chenghao Duan (4):
-  LoongArch: BPF: The operation commands needed to add a trampoline
-  LoongArch: BPF: Add bpf_arch_text_poke support for Loongarch
-  LoongArch: BPF: Add bpf trampoline support for Loongarch
-  LoongArch: BPF: Update the code to rename validate_code to
-    validate_ctx.
+> > I'll add export and import functions if you insist, but it seems pointless.
+> >
+> > Could you at least provide proper definitions for the legacy structs so that I
+> > don't have to do pointer arithmetic to generate them?
+> 
+> Just expose the sha512 block functions and use them as is.  There
+> is no need to do the export/import dance.
 
-George Guo (1):
-  LoongArch: Support fixmap
+We're not going to support direct access to the SHA-512 compression function as
+part of the library API.  It's just unnecessary and error-prone.  crypto/ will
+just use the same well-documented and well-tested public API as everyone else.
 
- arch/loongarch/include/asm/fixmap.h |   2 +
- arch/loongarch/include/asm/inst.h   |  19 ++
- arch/loongarch/kernel/inst.c        |  85 +++++
- arch/loongarch/kernel/setup.c       |   1 +
- arch/loongarch/mm/init.c            | 111 ++++++-
- arch/loongarch/net/bpf_jit.c        | 497 +++++++++++++++++++++++++++-
- arch/loongarch/net/bpf_jit.h        |   6 +
- 7 files changed, 714 insertions(+), 7 deletions(-)
-
-Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
-
--- 
-2.25.1
-
+- Eric
