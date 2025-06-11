@@ -1,50 +1,23 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED762F85B;
-	Wed, 11 Jun 2025 07:31:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE65222F75D
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:31:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749627068; cv=none; b=sQ2vMOUCMeQdB6FMSySSAfmFOvfQCdp6ydVKirmbq6+A91vRtvLT1V8xJ4PfyPmNIZDQi/8pnq4E2OfP1xkPxWGTHJrAn/KN6Dv2Hv6QovRcq4HirF4QO2HBYfMEf8Jw4XjzoLxSBON3AtVBRu0qCPRnjIUjrXIRRp9FyLi/gwU=
+	t=1749627085; cv=none; b=GnvRk4GK5pCnHj0WAkdEzTZFlskW2bc9n2TlWj1P6WChsz6rbW4Zt4k/6Qd1sz3AihU5q2146KiZO5abfbnbLILoExLkj9v6k3tZxb8OAgWfomt8lpAH6xXIQ2HTVSTRSZ2FFU4eZq7OtU5vv7LQYWWPBkxh+6PkKdJc79V3uSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749627068; c=relaxed/simple;
-	bh=5MdI/iDwHBTHKaErNZaK89tcWsio8Sj+Ml2VksuOC/Y=;
+	s=arc-20240116; t=1749627085; c=relaxed/simple;
+	bh=T1U4EL57DYQYZnP+jC+6otuijyh3wOR+W2q/Q44Bgcc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KSI2lzmXP3bXH3Mri1HM9vXnPDO/alcItFJgqnWYJp6x6PZNjCfxnaetEmxg2wQ2663EP08pQahFWXvuafL5tP1zZgDBFPJD5bowsEwwJeo9lT72tAHX5ysfX4V3N6ldBgzr52ZmWKi7lhzWMnUhUzotBMDbm6xzT7t//oJAeKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KIDQtvpO; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KIDQtvpO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749627068; x=1781163068;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=5MdI/iDwHBTHKaErNZaK89tcWsio8Sj+Ml2VksuOC/Y=;
-  b=KIDQtvpOM/A2ll9rm3K2oDa1wOaE4Av/DQwr9NrtxiIfSK6CKhQi9TCN
-   sk50Q/7whoi0hZXoOdP192k55tHd6o1CUHxUgvU7oAxtUYXvmJtfrLdgy
-   DOxjcJmVcv2gWDEbqEx+SACvPqFbUNlKgyqf+KPVbIs+u0vGG/YCu1wv/
-   Oix61//M6trob4B4zZaHZ7qHZUf86/+qv5FFlhDuXcyllSY9QiV3JbK3/
-   QtG//5iNCyKhsDaEdgerlTYt5cYK2UNB349a+fMr5FXGAkuOrDr5hP147
-   IuKCieNppx7TB6HChOuFRfU/7O/mUeoZ7pu8x6+QV/okWmxSCnpVr41Z/
-   g==;
-X-CSE-ConnectionGUID: UCAG/zQ6R5WAsK55VbHOBg==
-X-CSE-MsgGUID: SYs+YsEWQ7iDZr+PiIPqWw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="62795719"
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="62795719"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 00:31:07 -0700
-X-CSE-ConnectionGUID: zaXYcOu6Qx2AzVSQkQxnnw==
-X-CSE-MsgGUID: yQ768NV8RkmPFy0qVcXpLg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="152231710"
-Received: from unknown (HELO [10.238.0.239]) ([10.238.0.239])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 00:31:03 -0700
-Message-ID: <323c9840-24b7-43d8-b08f-659287693555@linux.intel.com>
-Date: Wed, 11 Jun 2025 15:31:01 +0800
+	 In-Reply-To:Content-Type; b=OACyWc8E/1I7YRLivAsk0PVKN2b2/m7eu9XkeY4T7euQkU6UdsHP8/hnorSnuReuHY2J+5xY+nXejZ5QKEC+XDm3WzGr2t0gvfiA30OuJ2M72i8LnR1Wmwfdmvw+77ku21W6ESPClmKrRNnhOHw5DjREpVHTAAGNmaso9Esu96I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A9EDB443D4;
+	Wed, 11 Jun 2025 07:31:18 +0000 (UTC)
+Message-ID: <de5e9d8d-c620-4371-8c74-7ef804d97d53@ghiti.fr>
+Date: Wed, 11 Jun 2025 09:31:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,51 +25,79 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 14/32] KVM: SVM: Implement and adopt VMX style MSR
- intercepts APIs
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org, Chao Gao <chao.gao@intel.com>,
- Borislav Petkov <bp@alien8.de>, Xin Li <xin@zytor.com>,
- Dapeng Mi <dapeng1.mi@linux.intel.com>,
- Francesco Lavra <francescolavra.fl@gmail.com>,
- Manali Shukla <Manali.Shukla@amd.com>
-References: <20250610225737.156318-1-seanjc@google.com>
- <20250610225737.156318-15-seanjc@google.com>
+Subject: Re: [PATCH] RISC-V: uaccess: Wrap the get_user_8 uaccess macro
+To: Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
+ cyrilbur@tenstorrent.com, jszhang@kernel.org, cleger@rivosinc.com,
+ samuel.holland@sifive.com, linux-kernel@vger.kernel.org
+References: <20250610213058.24852-1-palmer@dabbelt.com>
 Content-Language: en-US
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <20250610225737.156318-15-seanjc@google.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20250610213058.24852-1-palmer@dabbelt.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduudekkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnheptdfhleefjeegheevgeeljeellefgvefhkeeiffekueejteefvdevhfelvdeggeeinecukfhppedvtddtudemkeeiudemfeefkedvmegvfheltdemkedttgegmehfieekkeemvgehgehfmegutgdtfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvtddtudemkeeiudemfeefkedvmegvfheltdemkedttgegmehfieekkeemvgehgehfmegutgdtfedphhgvlhhopeglkffrggeimedvtddtudemkeeiudemfeefkedvmegvfheltdemkedttgegmehfieekkeemvgehgehfmegutgdtfegnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepledprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopehlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiess
+ hhifhhivhgvrdgtohhmpdhrtghpthhtoheprghouhesvggvtghsrdgsvghrkhgvlhgvhidrvgguuhdprhgtphhtthhopegthihrihhlsghurhesthgvnhhsthhorhhrvghnthdrtghomhdprhgtphhtthhopehjshiihhgrnhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtlhgvghgvrhesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtohepshgrmhhuvghlrdhhohhllhgrnhgusehsihhfihhvvgdrtghomh
+X-GND-Sasl: alex@ghiti.fr
+
+On 6/10/25 23:30, Palmer Dabbelt wrote:
+> From: Palmer Dabbelt <palmer@dabbelt.com>
+>
+> I must have lost this rebasing things during the merge window, I know I
+> got it at some point but it's not here now.  Without this I get warnings
+> along the lines of
+>
+>      include/linux/fs.h:3975:15: warning: label followed by a declaration is a C23 extension [-Wc23-extensions]
+>       3975 |         if (unlikely(get_user(c, path)))
+>            |                      ^
+>      arch/riscv/include/asm/uaccess.h:274:3: note: expanded from macro 'get_user'
+>        274 |                 __get_user((x), __p) :                          \
+>            |                 ^
+>      arch/riscv/include/asm/uaccess.h:244:2: note: expanded from macro '__get_user'
+>        244 |         __get_user_error(__gu_val, __gu_ptr, __gu_err);         \
+>            |         ^
+>      arch/riscv/include/asm/uaccess.h:207:2: note: expanded from macro '__get_user_error'
+>        207 |         __ge  LD [M]  net/802/psnap.ko
+>      t_user_nocheck(x, ptr, __gu_failed);                        \
+>            |         ^
+>      arch/riscv/include/asm/uaccess.h:196:3: note: expanded from macro '__get_user_nocheck'
+>        196 |                 __get_user_8((x), __gu_ptr, label);             \
+>            |                 ^
+>      arch/riscv/include/asm/uaccess.h:130:2: note: expanded from macro '__get_user_8'
+>        130 |         u32 __user *__ptr = (u32 __user *)(ptr);                \
+>            |         ^
+>
+> Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
+> ---
+>   arch/riscv/include/asm/uaccess.h | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/riscv/include/asm/uaccess.h b/arch/riscv/include/asm/uaccess.h
+> index d472da4450e6..525e50db24f7 100644
+> --- a/arch/riscv/include/asm/uaccess.h
+> +++ b/arch/riscv/include/asm/uaccess.h
+> @@ -127,6 +127,7 @@ do {								\
+>   
+>   #ifdef CONFIG_CC_HAS_ASM_GOTO_OUTPUT
+>   #define __get_user_8(x, ptr, label)				\
+> +do {								\
+>   	u32 __user *__ptr = (u32 __user *)(ptr);		\
+>   	u32 __lo, __hi;						\
+>   	asm_goto_output(					\
+> @@ -141,7 +142,7 @@ do {								\
+>   		: : label);                                     \
+>   	(x) = (__typeof__(x))((__typeof__((x) - (x)))(		\
+>   		(((u64)__hi << 32) | __lo)));			\
+> -
+> +} while (0)
+>   #else /* !CONFIG_CC_HAS_ASM_GOTO_OUTPUT */
+>   #define __get_user_8(x, ptr, label)				\
+>   do {								\
 
 
+I had come up with the same fix so:
 
-On 6/11/2025 6:57 AM, Sean Christopherson wrote:
-> Add and use SVM MSR interception APIs (in most paths) to match VMX's
-> APIs and nomenclature.  Specifically, add SVM variants of:
->
->          vmx_disable_intercept_for_msr(vcpu, msr, type)
->          vmx_enable_intercept_for_msr(vcpu, msr, type)
->          vmx_set_intercept_for_msr(vcpu, msr, type, intercept)
->
-> to eventually replace SVM's single helper:
->
->          set_msr_interception(vcpu, msrpm, msr, allow_read, allow_write)
->
-> which is awkward to use (in all cases, KVM either applies the same logic
-> for both reads and writes, or intercepts one of read or write), and is
-> unintuitive due to using '0' to indicate interception should be *set*.
->
-> Keep the guts of the old API for the moment to avoid churning the MSR
-> filter code, as that mess will be overhauled in the near future.  Leave
-> behind a temporary comment to call out that the shadow bitmaps have
-> inverted polarity relative to the bitmaps consumed by hardware.
->
-> No functional change intended.
->
-> Reviewed-by: Chao Gao <chao.gao@intel.com>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 
-Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
-
-[...]
