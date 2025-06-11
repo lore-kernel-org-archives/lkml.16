@@ -1,88 +1,101 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF5F91DC1AB;
-	Wed, 11 Jun 2025 15:11:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D7A9198A08
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:12:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749654679; cv=none; b=Svd++R+LDGDloIyOCxDdCaAlXkUGhNr1SRuV6zruGxWB8FfMLVCLfLeVrcRIEMvus2QN7gkIKE6hpKSUpwEwxawDpEzXqy9Xiol/z6w/F9JhYMsFbKT5EKOVcwY1Ftzhwu10m7hdIiQIG/efiH2LJv4RF1+Yun34MrhtGwPpZrE=
+	t=1749654724; cv=none; b=m5A4PRJfW7mRmlUmeBgSnSc5SWVHW1YPqswpFOLX9ZIOpCNh//1WWJEV3hiQjDrNHmT02l4V34YnKmTvurW14XEYsiEOXoxT4v9i3tSt2GleCNqXRGZKoSvk9PgrJkBvuhkQbxLrbSHy9O1OP4BEkvz3EjQFTMuPiOPtXud3qmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749654679; c=relaxed/simple;
-	bh=Tz6HIGNxRaZNdDY+aXV8gtj9xCm9Ihk2l5HtGeFEbDs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oX0JHQGti6Ev9tsTxgizRgswz3Ielu1Kyn1LvVIyTQUtYD1dJGX+0CC3WtcB5CL9v3M2qr/etSMkKGhVH4kD71uyOrxsfq0BZulhjxZGA9xdn3AbbEBCOXdjN40Nbl4evlIig+w31GvcegkfiuDvdaQ/oNO/9SEOAFjsDPyXXLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=M/0Jqpgq; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M/0Jqpgq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=xogBe9OOJunfPNDVrb0ne+5gqa6BZn20KN9zD4DQ7I8=; b=M/0JqpgqvBWk16ejMCAOT1WWYP
-	Qrh39r/RdEvnP+1guKsTIZwqfkesyBOXj5UR3H6NhnA8uRQNSAkOXhV+m/+BooDRnhFywTFwAWdTD
-	/Yut76KwlAYbGBkdC5IcwNJmuRl7KavJm0jZWsOW8tLl2FHKwCaOT7CKaXeOxlcpUZ4aZ8gRSajpD
-	xprNUatfxeqp2VjP5GOtanqiKZmQZ0m4eyWsYGU5DCCY1dAKOMKF4EkEdg4LfoLd0wVczr09M4oa7
-	Yr4/4PLd5ZG7EVX2AU3w8ByLrg6ock2EZ1+qLMgWQqzXcz30rz1wnP68Sh9KQed1tRiFZtFXDFK6W
-	9MWPZ6rw==;
-Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uPN6h-00000002Pxh-23mh;
-	Wed, 11 Jun 2025 15:11:15 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 6ABA53061CA; Wed, 11 Jun 2025 17:11:13 +0200 (CEST)
-Date: Wed, 11 Jun 2025 17:11:13 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-	"Lai, Yi" <yi1.lai@linux.intel.com>, x86@kernel.org
-Subject: Re: [tip: locking/urgent] futex: Allow to resize the private local
- hash
-Message-ID: <20250611151113.GE2273038@noisy.programming.kicks-ass.net>
-References: <20250602110027.wfqbHgzb@linutronix.de>
- <174965275618.406.11364856155202390038.tip-bot2@tip-bot2>
- <20250611144302.1MtYItK6@linutronix.de>
+	s=arc-20240116; t=1749654724; c=relaxed/simple;
+	bh=uDtZpEKbcs5hrKRAGjNKhdsVcdeRm/+2JhvW3NWACOE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Opuziskrm3paIEr9C99JzmZR95ZbxmrcZfEc853ALP5I5u4yN4Evcvq7Sd0MF1YATZ8tXIKutMmgcV5Y88uKvlVZDktpmndDnQZXXzGHwmZ5yPB/33NQOVWrmGXSXxkDqpQ5YJttPjuFFvaqMtMPgd6KXSG42PhgX6DBQS/Z95U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D4B415A1;
+	Wed, 11 Jun 2025 08:11:43 -0700 (PDT)
+Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E7D643F59E;
+	Wed, 11 Jun 2025 08:12:00 -0700 (PDT)
+From: Yeoreum Yun <yeoreum.yun@arm.com>
+To: catalin.marinas@arm.com,
+	will@kernel.org,
+	broonie@kernel.org,
+	maz@kernel.org,
+	oliver.upton@linux.dev,
+	ardb@kernel.org,
+	frederic@kernel.org,
+	james.morse@arm.com,
+	joey.gouly@arm.com,
+	scott@os.amperecomputing.com
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Yeoreum Yun <yeoreum.yun@arm.com>
+Subject: [PATCH v2 0/6] support FEAT_LSUI and apply it on futex atomic ops
+Date: Wed, 11 Jun 2025 16:11:48 +0100
+Message-Id: <20250611151154.46362-1-yeoreum.yun@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611144302.1MtYItK6@linutronix.de>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 11, 2025 at 04:43:02PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2025-06-11 14:39:16 [-0000], tip-bot2 for Sebastian Andrzej Siewior wrote:
-> > The following commit has been merged into the locking/urgent branch of tip:
-> > 
-> > Commit-ID:     703b5f31aee5bda47868c09a3522a78823c1bb77
-> > Gitweb:        https://git.kernel.org/tip/703b5f31aee5bda47868c09a3522a78823c1bb77
-> > Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> > AuthorDate:    Mon, 02 Jun 2025 13:00:27 +02:00
-> > Committer:     Peter Zijlstra <peterz@infradead.org>
-> > CommitterDate: Wed, 11 Jun 2025 16:26:44 +02:00
-> > 
-> > futex: Allow to resize the private local hash
-> > 
-> > Once the global hash is requested there is no way back to switch back to
-> > the per-task private hash. This is checked at the begin of the function.
-> > 
-> > It is possible that two threads simultaneously request the global hash
-> > and both pass the initial check and block later on the
-> > mm::futex_hash_lock. In this case the first thread performs the switch
-> > to the global hash. The second thread will also attempt to switch to the
-> > global hash and while doing so, accessing the nonexisting slot 1 of the
-> > struct futex_private_hash.
-> > This has been reported by Yi Lai.
-> > 
-> > Verify under mm_struct::futex_phash that the global hash is not in use.
-> 
-> Could you please replace it with
-> 	https://lore.kernel.org/all/20250610104400.1077266-5-bigeasy@linutronix.de/
-> 
-> It also looks like the subject from commit bd54df5ea7cad ("futex: Allow
-> to resize the private local hash")
+Since Armv9.6, FEAT_LSUI supplies the load/store instructions for
+previleged level to access to access user memory without clearing
+PSTATE.PAN bit.
 
-Now done so, unless I messed up again :/
+This patchset support FEAT_LUSI and applies in futex atomic operation
+where can replace from ldxr/stlxr pair implmentation with clearing
+PSTATE.PAN bit to correspondant load/store unprevileged atomic operation
+without clearing PSTATE.PAN bit.
+
+Patch Sequences
+================
+
+Patch #1 adds cpufeature for FEAT_LUSI
+
+Patch #2 adds Kconfig for FEAT_LUSI
+
+Patch #3 separtes former futex atomic-op implmentation from futex.h
+to futex_ll_sc_u.h
+
+Patch #4 implments futex atomic operation using lsui instruction.
+
+Patch #5 introduces lsui.h to apply runtime patch to use former
+implmentation when FEAT_LUSI doesn't support.
+
+Patch #6 applies lsui.h into arch_futext_atomic_op().
+
+Patch History
+==============
+from v1 to v2:
+  - remove empty v9.6 menu entry
+  - locate HAS_LUSI in cpucaps in order
+  - https://lore.kernel.org/all/20250611104916.10636-1-yeoreum.yun@arm.com/
+
+Yeoreum Yun (6):
+  arm64: cpufeature: add FEAT_LSUI
+  arm64/Kconfig: add LSUI Kconfig
+  arm64/futex: move futex atomic logic with clearing PAN bit
+  arm64/futex: add futex atomic operation with FEAT_LSUI
+  arm64/asm: introduce lsui.h
+  arm64/futex: support futex with FEAT_LSUI
+
+ arch/arm64/Kconfig                     |   3 +
+ arch/arm64/include/asm/futex.h         |  99 ++++++-------------
+ arch/arm64/include/asm/futex_ll_sc_u.h | 115 +++++++++++++++++++++
+ arch/arm64/include/asm/futex_lsui.h    | 132 +++++++++++++++++++++++++
+ arch/arm64/include/asm/lsui.h          |  37 +++++++
+ arch/arm64/kernel/cpufeature.c         |   8 ++
+ arch/arm64/tools/cpucaps               |   1 +
+ 7 files changed, 327 insertions(+), 68 deletions(-)
+ create mode 100644 arch/arm64/include/asm/futex_ll_sc_u.h
+ create mode 100644 arch/arm64/include/asm/futex_lsui.h
+ create mode 100644 arch/arm64/include/asm/lsui.h
+
+--
+LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+
