@@ -1,594 +1,235 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A6262E6108;
-	Wed, 11 Jun 2025 14:11:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749651077; cv=none; b=u0ncPxwTxcY96FAJxKZj8xkn+3cQX8+kkeF99mdYcXn3ALOBoOYuM8/SbLpNtsofq8Dvej4T494LVMDZU2mFvac9ibLtTU2kl+VFREpKZG1EdMLqrPLBI+ztA/i9aTXJE1wISk8Wy4dpvav/0ye5nRLZqGE7zmJygVcSyg52EWY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749651077; c=relaxed/simple;
-	bh=R0qI1l+Dp+BQxaI9jUomP00rTdQeSJOMBr9UWWJTbf8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=Z6+b8YEbMZMy+ofNIF+N5vOZw2kBr64lY9yj8G+SoN4ADhsqN6ZdInPGkPyCSr8EtkLEUXBne0dXlqtNsiu7rhUUTzfg6uZCKVvNRcIurbbCQ9zTUclfBJa9koTXd3F0i4NWIA6eojyTH6ug7h1dzC0YZvhcOHzpEWWIF21VGEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=HKLF/gTR; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011008.outbound.protection.outlook.com [52.101.70.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C567428C855
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:12:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.8
+ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749651128; cv=fail; b=JQ3t1hGRD2rhPWfV76GZBT1x0BonTADXOGozTZm+8vHYqWl5x74UuOwOtQLs9bArSdvh/BtVMs5une85IbFSfnmM/kOrJu+OQvceTPmEU0/p59qi5EelA3SVpTaJYwlYYsG5BtWrGyybEDFZgAHjfLYU5xtCQ9lMzwppKMOhm+c=
+ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749651128; c=relaxed/simple;
+	bh=sT+KL1hNRDnZJsc9ye5tNPijAEU7SpTzLe1Qaxg/1Ow=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=S3j+TQZfrwZCxewVN06P5ER286RzB7SDeoto32L0o5NBiB3NvEhf991s7tXUhRrD0bNLeQ/RzNKsHVk/G1JIPVNc1y7vjaqBvq+SsKFd6C3bdaJNXysbuG6B8T8MFEMVhViqIyedQCbdIWTFY5SquZHRjcpaRopH/+67rEz/9r0=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Ceaeh+gM; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Ceaeh+gM; arc=fail smtp.client-ip=52.101.70.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HKLF/gTR"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id D3AB4203EE0A; Wed, 11 Jun 2025 07:11:14 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D3AB4203EE0A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1749651074;
-	bh=7Vj/WeKE7E1u91ZSnRU675QpCJSIZVJHWMl588pdaUs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HKLF/gTRvi3pyM9c1bdYHW9fLq1zCt4EIES4UrtrEKQiWEMf4OHM5VxxRWDnW6dJr
-	 Tcyn0DMtVq+6ihsMOKyLQvG1xwiee46sxIW3lFj/VOHAorFM/sETZxcdi0I79tjejM
-	 fEkafs7OMlUnXDMm92xc1KRW0eLH8tXWX3ZIBMJE=
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Dexuan Cui <decui@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>,
-	Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Michael Kelley <mhklinux@outlook.com>
-Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	linux-hyperv@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Nipun Gupta <nipun.gupta@amd.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=EF=BF=BD=7EDski?= <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: [PATCH v6 5/5] net: mana: Allocate MSI-X vectors dynamically
-Date: Wed, 11 Jun 2025 07:11:13 -0700
-Message-Id: <1749651073-10399-1-git-send-email-shradhagupta@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1749650984-9193-1-git-send-email-shradhagupta@linux.microsoft.com>
-References: <1749650984-9193-1-git-send-email-shradhagupta@linux.microsoft.com>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Ceaeh+gM";
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Ceaeh+gM"
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=kI6TJR5VAXkKFvQEC5SWBX5IIsyt+Hbi2pqB++YmSqRZKes1dV4FoeeU6ahSVgJpjChmhxQerMP0C4rvAfjQGzmEGfb/lhxQWG8Vq1EnxlBb0J6r7txWbhHkmjzTszjZJv08NLQGyS8HViwJKlAXTSHuj96lsncN4AW08yfhbjidjmQ8K9bz35Tb/bI1zZrXfxi1nHONwZ7ExBXYMkaFcrqakXRlAhxOoqj9sZfvvWE4ufv4dK+CikUD30RAyHUat9ZxnVxN2O5igpoqcjoD5Q+D+6VE7VAtJ+f98LcBelSZG3j82hiy63T4wWhL4cNb9AwrYDoX+x1WjATrsehS+Q==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lxTCxy474wIYG8a6dpaASV6tjdRZJz94qbjMl9DuRXk=;
+ b=CiCOrATayrrFTXDLWhalEeO7VE2l/LfbGSuVcZfoCXdQ65dkOgx8fzzNxK0LYstV/0Xeu8U12AVL6MtTGuzaxVmJjJacV8IVkvCvDSkQbDNqTYILlY28sXFkB57nZ6Rm3oUlap+w+LMJ4ihCPj09//Z+wES04rh3fAWhFRQ6I/BAijIghwUpyYLz7lEbVhphxJjNlWXJ3V0mj0tOKICc4oIzq/wR+4dSTGLkUQQfmIk3n9TojSsR0bv3/zq7TfywIZO2Be4KdvYNOdz7iv3Nb8pASLZyNASx0N64MUfjDdafICY9T3Y7IBjp3gzxiMnPk2TP+bdz5eR+xkdn/KBn4w==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=kernel.org smtp.mailfrom=arm.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
+ (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lxTCxy474wIYG8a6dpaASV6tjdRZJz94qbjMl9DuRXk=;
+ b=Ceaeh+gMuRTBPsIg2+CkOmbg/uo66nJmp6Q5RLQNKH5Qgheoy3StFTW7m8gHmp9lwb6RgQ6HmynDr+R65Ga5/o9+pKn2FX/HreuW0eXQOFXsJ/+k+tAwA3vwEVeH8UJ/zvmXD5y6OM78XT7kPFYe4+hVdovZ8IPMj1NN//DoiuU=
+Received: from DUZP191CA0068.EURP191.PROD.OUTLOOK.COM (2603:10a6:10:4fa::29)
+ by AM8PR08MB6483.eurprd08.prod.outlook.com (2603:10a6:20b:315::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.18; Wed, 11 Jun
+ 2025 14:12:03 +0000
+Received: from DU2PEPF00028CFF.eurprd03.prod.outlook.com
+ (2603:10a6:10:4fa:cafe::7a) by DUZP191CA0068.outlook.office365.com
+ (2603:10a6:10:4fa::29) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.17 via Frontend Transport; Wed,
+ 11 Jun 2025 14:12:02 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ DU2PEPF00028CFF.mail.protection.outlook.com (10.167.242.183) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.15
+ via Frontend Transport; Wed, 11 Jun 2025 14:12:01 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=j2pkMmF50ZKGBhsnjP/JT6Grr8yyO49Gn1XSgGAVV2cZ698AAS3PaqAEPSFlbmpoLL4DICjpMGzMiDGSyM9xUr9rYT2xxIf9S0JgBhNm1Ouv5Zkex3QuEhYPdbVLrIuEeKuKWkipmWmrLlt6tvpGKHmIxO/neMaGe4jRnRHTbfU2zPm7YS6Nw90xC0UNCrqoW8OaA+eVZnmwvsbxPyTnwy10a9IA31eI52Oyvg1HZ/gKYjJgg9kRYslNRBxBUQSDM44egobXWs3TNEQmfCm+Y0ubd82BKOC8gBBTgbaokPVIGsHIUzIPAWbGKVIvRVpVj20hMN4mDmWrfdW0edEbkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lxTCxy474wIYG8a6dpaASV6tjdRZJz94qbjMl9DuRXk=;
+ b=ErB9ShEcZruMSUcnmQCzZbXMuDSutcpsXY0UZZxXKzPPZa2y6mcHfbzQZGV2xwhbrcKxmhAXaxLLXhYRL7EHISRQz+QsWkAMkKR4mm2axP6ZUur66PBJXrPANPLbGExTxgnBoKsmkDdv6tn2oEFGp9lrXcBFHPiuvYol+eYjp3Rnpjd0ZN4GgnSYL2IYUIcgHBUz3l1RvT48eSWMuDZ9845Q4GrRT1vgrs36sbd8CgFiFkS6IMDesB2gbV3hlAbBwhypA9+Q6TYVRn3j5KUimH4wdJsTHJIAyJQ682ryBHDZhxUT/fyI4qFlDx7ZU76dLFD5odBbUBqbKUNIyMCQZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lxTCxy474wIYG8a6dpaASV6tjdRZJz94qbjMl9DuRXk=;
+ b=Ceaeh+gMuRTBPsIg2+CkOmbg/uo66nJmp6Q5RLQNKH5Qgheoy3StFTW7m8gHmp9lwb6RgQ6HmynDr+R65Ga5/o9+pKn2FX/HreuW0eXQOFXsJ/+k+tAwA3vwEVeH8UJ/zvmXD5y6OM78XT7kPFYe4+hVdovZ8IPMj1NN//DoiuU=
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
+ (2603:10a6:150:163::20) by DU0PR08MB9678.eurprd08.prod.outlook.com
+ (2603:10a6:10:446::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.31; Wed, 11 Jun
+ 2025 14:11:29 +0000
+Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
+ ([fe80::d430:4ef9:b30b:c739]) by GV1PR08MB10521.eurprd08.prod.outlook.com
+ ([fe80::d430:4ef9:b30b:c739%7]) with mapi id 15.20.8835.018; Wed, 11 Jun 2025
+ 14:11:28 +0000
+Date: Wed, 11 Jun 2025 15:11:25 +0100
+From: Yeoreum Yun <yeoreum.yun@arm.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: catalin.marinas@arm.com, pcc@google.com, will@kernel.org,
+	anshuman.khandual@arm.com, joey.gouly@arm.com, maz@kernel.org,
+	oliver.upton@linux.dev, frederic@kernel.org,
+	hardevsinh.palaniya@siliconsignals.io, samuel.holland@sifive.com,
+	palmer@rivosinc.com, charlie@rivosinc.com,
+	thiago.bauermann@linaro.org, bgray@linux.ibm.com,
+	tglx@linutronix.de, puranjay@kernel.org, david@redhat.com,
+	yang@os.amperecomputing.com, mbenes@suse.cz,
+	joel.granados@kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 7/7] kselftest/arm64/mte: add MTE_STORE_ONLY testcases
+Message-ID: <aEmOja7F5afmuosj@e129823.arm.com>
+References: <20250611094802.929332-1-yeoreum.yun@arm.com>
+ <20250611094802.929332-8-yeoreum.yun@arm.com>
+ <c613b941-063e-450f-a38f-c16248e95e81@sirena.org.uk>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c613b941-063e-450f-a38f-c16248e95e81@sirena.org.uk>
+X-ClientProxiedBy: LO6P123CA0001.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:338::7) To GV1PR08MB10521.eurprd08.prod.outlook.com
+ (2603:10a6:150:163::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-TrafficTypeDiagnostic:
+	GV1PR08MB10521:EE_|DU0PR08MB9678:EE_|DU2PEPF00028CFF:EE_|AM8PR08MB6483:EE_
+X-MS-Office365-Filtering-Correlation-Id: ffc1496a-abd3-4d01-7d43-08dda8f1ef67
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted:
+ BCL:0;ARA:13230040|1800799024|7416014|366016|376014;
+X-Microsoft-Antispam-Message-Info-Original:
+ =?us-ascii?Q?DwCeYcmUw/cgClaIedTgpgbz9s7BEjhWiH/WAeLu90Pwk34BGbuq8XK6/QBX?=
+ =?us-ascii?Q?hKl2y1H7p568IzG/i2QIoHm7o82fzOENaXhOlK4q8+0Iw8hB0i1uxN8ieV1C?=
+ =?us-ascii?Q?QQfJI9rehxaEMhHGvpF2rWWxR8pluHeD+mi3/VXwk5K2c54cgANQ4IZc0sBH?=
+ =?us-ascii?Q?Z6UVa7Yjb3Pw0OhB8x4XG2gZQoQEx9FhiSvqzZT1wafG0udqIZuXZoa04RPA?=
+ =?us-ascii?Q?wHDKMY+ekmDjW6GAE8mo1mNjBUHZ1SGfFuvMXZ38izt55vJAquDCjuLzmbnP?=
+ =?us-ascii?Q?4idARRjDaSpfWTSWprOIF6O/jmFGWj/8BnJg1o4wMA+uzqwQKYSSVYzWzeCY?=
+ =?us-ascii?Q?DIVRG34+GLdMClfToGCJVtmZovT5zrO43wh/jjcHQTOOHqcEv2oCC9pAtStb?=
+ =?us-ascii?Q?s74uSxDHhw17V1tO1B6xb26vEV2L8SMctY4QBdOddCBym8ZN/Hf0Jy2cZmmL?=
+ =?us-ascii?Q?V2ekh7tA++Fepxbo4ihuiwrhyO4CRJ/sR+TFY2bJov+Q1BuhQpImD/kSN7kD?=
+ =?us-ascii?Q?Qx5UxFT1TkFMAh9rJib1iyxsNl6twhs273SJ54nghIslmpkBlqHxDr2ArCYL?=
+ =?us-ascii?Q?xm0zE70tN1Hj6ZbR1Waji3fpB/KY5vKLgb+hA9A8Kf7obDhJYP1CCoPlt8aA?=
+ =?us-ascii?Q?xYnlhCV+DFO6UAKeApnww+y3EI+fqrltKnYJvxfpsSrir8hJXwgeBbop7i/U?=
+ =?us-ascii?Q?buqxu9XWwfcZuTreMgCEqBbMJ/3cB5sE1eAMs5TYxZOrXsCyp/Y9j8ZHTWr5?=
+ =?us-ascii?Q?E3/9KrHgSW91TJej7Qst+4pp06Tga6a2QEWUAvJkMr5FfwsiTon4IyYLlU8f?=
+ =?us-ascii?Q?4HyaELX5DXpbWgiaccWdS6jn/hcu6Jtlr9JCuBiMz8OxdlCsbZT+W6Qft3Eu?=
+ =?us-ascii?Q?0PBADrZ8zOsx3kBxfNy5n/HurHrqncg/iJubRLe4EApTIF3u5i6a8Ct2zBx2?=
+ =?us-ascii?Q?LPuOgocWlaz9oZ/lsVEUeTlD7EnprCDpjFeD7uf/HOci0FspAHT0gkSfh6Vy?=
+ =?us-ascii?Q?i8Ja/QHd1ZYn4FR2yOLuv8+1aFcSi6b+hGLXYM/S5UCPRnhg50ab0kdC+XS5?=
+ =?us-ascii?Q?VOlhWJOW1M142nj0LktGT93ijDBL3nit6J1W5wa1fvpNqaVP53JZwv6cSnEh?=
+ =?us-ascii?Q?noZYXAonvH7z+A9pmrYrVD1WxVsaLX7fKUweiaPvJBt9o7GqYB76q57akDl/?=
+ =?us-ascii?Q?Zs1d1YZEVzKEmG36z7ZDz7HG7XOlhlUFw8bHbjZDthU7sg/qXvFSqplzb7IW?=
+ =?us-ascii?Q?FxyyqzK77edHH5/zdBpYyNREYFZ+2FEqNqwzeO6Ej+ZpRWyDG99+C+C/9c4i?=
+ =?us-ascii?Q?4QrOAPN2V00DFiZkjP8GfOE2HJ+P+ol70OwUP4RI55RtqRaLdJSGHxJG7gI5?=
+ =?us-ascii?Q?ZK8xbUIXB7TH83NOkNN50lSU39K4jFJ4OVCRoXr+oAJk02mfQ+Um8/uKOZ+k?=
+ =?us-ascii?Q?u0sx4EPOrBg=3D?=
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB10521.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR08MB9678
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ DU2PEPF00028CFF.eurprd03.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	cd9182da-c6dc-468d-d586-08dda8f1db7e
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|14060799003|82310400026|1800799024|36860700013|35042699022;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?1JcIJAtny/PXwa0O3dggvpW8f6O44wo0ZnMdn9RTIOziA2cc8fqJh8bcBnxZ?=
+ =?us-ascii?Q?D1H5zqhhGUi/qVXxKvHt2gfosJ2qmc0+F1+NiXNPucpQZErJI22PHn1SYILj?=
+ =?us-ascii?Q?64fuOZ/YZdnRdbYvkqX6GGKBcSV8oq1oieTzPwuPpJAKtYP0fveg/k+z0O9A?=
+ =?us-ascii?Q?G+vly7S8EtLSEnwRPBWcNrsgCyzqrfdGwK8IYzoGQN7ab2t+5SQK8OsWNsVk?=
+ =?us-ascii?Q?BuouQcaZIyyaqRystMfSzw31e7Z5Y/gwfLVqXrU9XI105ceA7Qr0z82mGOp6?=
+ =?us-ascii?Q?VyzIdgFgkL+fwgZ4Jpd8LSFcCpm/nalVT1ezszLB6DalGDnM+h0ALolpPMvQ?=
+ =?us-ascii?Q?CibP2L7z7Id5YEvQYmuAspttdA14UGi/TIq264qYBm6+9VAZO3SfaSu03po0?=
+ =?us-ascii?Q?x85tp3ZOsgdaAz8OiWKrynnf3LdZqu9dAlrpDCDtdntpKP6xnmuIz0PI0/6p?=
+ =?us-ascii?Q?IB8xD8MGeL7ZH0fVUyosKwWrik40Qajn81shccTt/UzYPGulWVwLWkZ/K1Re?=
+ =?us-ascii?Q?uXaoPGXRaZtDOjWHj2TPLtxQBU9FYrStGEMKJzF92JZmoJSgUZNh40ZidAb3?=
+ =?us-ascii?Q?dbBag8dS5GQWI22udr9o4XlXTVFnOcZFAqJRJt1zi+IFOvoAhhUmFjhznszk?=
+ =?us-ascii?Q?Xwo+10iwBPBdEZPb5IFQyrnabqz5qtHNvdUUJS/+mzKk4ddiWKoZmSm09caJ?=
+ =?us-ascii?Q?5N2bw3WNtqFrGHuW5DTLdH1hLijO2wAk3GTcBZNwYydz4QcHXZhItggMBHYt?=
+ =?us-ascii?Q?IansYULer2UPI/fWO563KkIFkuJ+v3Vq9t7Wd3KQlRsfL/oaCmNpq/k616Z4?=
+ =?us-ascii?Q?XcoOr/JMBxey448UdLRgvq0xH2kAq2Kh7VpAeXuLpaEXXxI3TuIKSWw1jnG9?=
+ =?us-ascii?Q?1P5G/1Pol9QRuHGdH61NbCP/5bWrB1iJFEqm7AtIxC3OtcjQKwcXxZ7MfoOf?=
+ =?us-ascii?Q?aQc15RiyDVd62iiwk80dxwM/8/C8FzSe0VKJyvr3KlPtuIUjOm0wHd9XNYaq?=
+ =?us-ascii?Q?NVlm9TTGMUW0OUQtLaZCbMOAjQsNDPfbfC+rav0zvHYau8EfMuGZJQdT9wFc?=
+ =?us-ascii?Q?fOTQNL3WIRmr1xBZ9qpunBUVZ2yrRBScbXe4CakhmZRPf1vUywSnby0gB6FP?=
+ =?us-ascii?Q?tPQ0aIPiWE2lilu4EhJpIufJGUF9LpVQ/aruNX8o+2mCtlcbJ4yyCwU6XgFU?=
+ =?us-ascii?Q?QRQSdzVKrBjNXZ22/PAuqWCQbimRHnh9gaYAJXaMJEkgv6TfVfVvZScsa3L/?=
+ =?us-ascii?Q?IC3oSKV8b7emvLlWwjWAt+YBKKAyPUTUgnw2RinxQcCd/25yOuvzqK1WzdRr?=
+ =?us-ascii?Q?mx0L/yAVLnt6oNEDB5zT3ZqlNs3I3q6ynfCob+JJUVMFEJ3k9MRUoaZ49m0H?=
+ =?us-ascii?Q?5fd5fCGdWHzVEEtEDRhR0g5WC7a5PGQX27FDPim6t89c+BwX5ub+y89JyJOC?=
+ =?us-ascii?Q?dNw3o6PV/SlpJh6e2USSdfkdI3HeE/qW4t6IweDOxurpm9SrUgzFdw9l6B3M?=
+ =?us-ascii?Q?X4zIEs2rr4Q91qCIEIzXh/P9wfW+uuDnXkXs?=
+X-Forefront-Antispam-Report:
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(14060799003)(82310400026)(1800799024)(36860700013)(35042699022);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2025 14:12:01.2626
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ffc1496a-abd3-4d01-7d43-08dda8f1ef67
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DU2PEPF00028CFF.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR08MB6483
 
-Currently, the MANA driver allocates MSI-X vectors statically based on
-MANA_MAX_NUM_QUEUES and num_online_cpus() values and in some cases ends
-up allocating more vectors than it needs. This is because, by this time
-we do not have a HW channel and do not know how many IRQs should be
-allocated.
+Hi Mark,
 
-To avoid this, we allocate 1 MSI-X vector during the creation of HWC and
-after getting the value supported by hardware, dynamically add the
-remaining MSI-X vectors.
+> On Wed, Jun 11, 2025 at 10:48:02AM +0100, Yeoreum Yun wrote:
+>
+> > @@ -144,7 +178,7 @@ static int check_file_memory_mapping(int mem_type, int mode, int mapping, int ta
+> >  			close(fd);
+> >  			return KSFT_FAIL;
+> >  		}
+> > -		result = check_mte_memory(ptr, sizes[run], mode, tag_check, atag_check);
+> > +		result = check_mte_memory(ptr, sizes[run], mode, tag_check, atag_check, tag_op);
+> >  		mte_clear_tags((void *)ptr, sizes[run]);
+> >  		munmap((void *)map_ptr, map_size);
+> >  		close(fd);
+>
+> check_file_memory_mapping() looks like it also has the issue from the
+> other series with skips being upgraded to fails, looks like there's more
+> instances.
 
-Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
----
- Changes in v5:
- * Correctly initialized start_irqs, so that it is cleaned properly
- * rearranged the cpu_lock to minimize the critical section
----
- Changes in v4:
- * added BUG_ON at appropriate places
- * moved xa_destroy to mana_gd_remove()
- * rearragned the cleanup logic in mana_gd_setup_dyn_irqs()
- * simplified processing around start_irq_index in mana_gd_setup_irqs()
- * return 0 instead of return err as appropriate
----
- Changes in v3:
- * implemented irq_contexts as xarrays rather than list
- * split the patch to create a perparation patch around irq_setup()
- * add log when IRQ allocation/setup for remaining IRQs fails
----
- Changes in v2:
- * Use string 'MSI-X vectors' instead of 'pci vectors'
- * make skip-cpu a bool instead of int
- * rearrange the comment arout skip_cpu variable appropriately
- * update the capability bit for driver indicating dynamic IRQ
- * allocation
- * enforced max line length to 80
- * enforced RCT convention
- * initialized gic to NULL, for when there is a possibility of gic
-   not being populated correctly
----
- .../net/ethernet/microsoft/mana/gdma_main.c   | 311 +++++++++++++-----
- include/net/mana/gdma.h                       |   8 +-
- 2 files changed, 235 insertions(+), 84 deletions(-)
+Thanks. I've fixed this in
+  - https://lore.kernel.org/all/20250611135818.31070-10-yeoreum.yun@arm.com/
 
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index 6e468c0f2c40..d0040c12b8a2 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-+++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -6,6 +6,8 @@
- #include <linux/pci.h>
- #include <linux/utsname.h>
- #include <linux/version.h>
-+#include <linux/msi.h>
-+#include <linux/irqdomain.h>
- 
- #include <net/mana/mana.h>
- 
-@@ -80,8 +82,15 @@ static int mana_gd_query_max_resources(struct pci_dev *pdev)
- 		return err ? err : -EPROTO;
- 	}
- 
--	if (gc->num_msix_usable > resp.max_msix)
--		gc->num_msix_usable = resp.max_msix;
-+	if (!pci_msix_can_alloc_dyn(pdev)) {
-+		if (gc->num_msix_usable > resp.max_msix)
-+			gc->num_msix_usable = resp.max_msix;
-+	} else {
-+		/* If dynamic allocation is enabled we have already allocated
-+		 * hwc msi
-+		 */
-+		gc->num_msix_usable = min(resp.max_msix, num_online_cpus() + 1);
-+	}
- 
- 	if (gc->num_msix_usable <= 1)
- 		return -ENOSPC;
-@@ -483,7 +492,9 @@ static int mana_gd_register_irq(struct gdma_queue *queue,
- 	}
- 
- 	queue->eq.msix_index = msi_index;
--	gic = &gc->irq_contexts[msi_index];
-+	gic = xa_load(&gc->irq_contexts, msi_index);
-+	if (WARN_ON(!gic))
-+		return -EINVAL;
- 
- 	spin_lock_irqsave(&gic->lock, flags);
- 	list_add_rcu(&queue->entry, &gic->eq_list);
-@@ -508,7 +519,10 @@ static void mana_gd_deregiser_irq(struct gdma_queue *queue)
- 	if (WARN_ON(msix_index >= gc->num_msix_usable))
- 		return;
- 
--	gic = &gc->irq_contexts[msix_index];
-+	gic = xa_load(&gc->irq_contexts, msix_index);
-+	if (WARN_ON(!gic))
-+		return;
-+
- 	spin_lock_irqsave(&gic->lock, flags);
- 	list_for_each_entry_rcu(eq, &gic->eq_list, entry) {
- 		if (queue == eq) {
-@@ -1366,47 +1380,108 @@ static int irq_setup(unsigned int *irqs, unsigned int len, int node,
- 	return 0;
- }
- 
--static int mana_gd_setup_irqs(struct pci_dev *pdev)
-+static int mana_gd_setup_dyn_irqs(struct pci_dev *pdev, int nvec)
- {
- 	struct gdma_context *gc = pci_get_drvdata(pdev);
--	unsigned int max_queues_per_port;
- 	struct gdma_irq_context *gic;
--	unsigned int max_irqs, cpu;
--	int start_irq_index = 1;
--	int nvec, *irqs, irq;
--	int err, i = 0, j;
-+	bool skip_first_cpu = false;
-+	int *irqs, irq, err, i;
- 
--	cpus_read_lock();
--	max_queues_per_port = num_online_cpus();
--	if (max_queues_per_port > MANA_MAX_NUM_QUEUES)
--		max_queues_per_port = MANA_MAX_NUM_QUEUES;
-+	irqs = kmalloc_array(nvec, sizeof(int), GFP_KERNEL);
-+	if (!irqs)
-+		return -ENOMEM;
-+
-+	/*
-+	 * While processing the next pci irq vector, we start with index 1,
-+	 * as IRQ vector at index 0 is already processed for HWC.
-+	 * However, the population of irqs array starts with index 0, to be
-+	 * further used in irq_setup()
-+	 */
-+	for (i = 1; i <= nvec; i++) {
-+		gic = kzalloc(sizeof(*gic), GFP_KERNEL);
-+		if (!gic) {
-+			err = -ENOMEM;
-+			goto free_irq;
-+		}
-+		gic->handler = mana_gd_process_eq_events;
-+		INIT_LIST_HEAD(&gic->eq_list);
-+		spin_lock_init(&gic->lock);
- 
--	/* Need 1 interrupt for the Hardware communication Channel (HWC) */
--	max_irqs = max_queues_per_port + 1;
-+		snprintf(gic->name, MANA_IRQ_NAME_SZ, "mana_q%d@pci:%s",
-+			 i - 1, pci_name(pdev));
- 
--	nvec = pci_alloc_irq_vectors(pdev, 2, max_irqs, PCI_IRQ_MSIX);
--	if (nvec < 0) {
--		cpus_read_unlock();
--		return nvec;
-+		/* one pci vector is already allocated for HWC */
-+		irqs[i - 1] = pci_irq_vector(pdev, i);
-+		if (irqs[i - 1] < 0) {
-+			err = irqs[i - 1];
-+			goto free_current_gic;
-+		}
-+
-+		err = request_irq(irqs[i - 1], mana_gd_intr, 0, gic->name, gic);
-+		if (err)
-+			goto free_current_gic;
-+
-+		xa_store(&gc->irq_contexts, i, gic, GFP_KERNEL);
- 	}
--	if (nvec <= num_online_cpus())
--		start_irq_index = 0;
- 
--	irqs = kmalloc_array((nvec - start_irq_index), sizeof(int), GFP_KERNEL);
--	if (!irqs) {
--		err = -ENOMEM;
--		goto free_irq_vector;
-+	/*
-+	 * When calling irq_setup() for dynamically added IRQs, if number of
-+	 * CPUs is more than or equal to allocated MSI-X, we need to skip the
-+	 * first CPU sibling group since they are already affinitized to HWC IRQ
-+	 */
-+	cpus_read_lock();
-+	if (gc->num_msix_usable <= num_online_cpus())
-+		skip_first_cpu = true;
-+
-+	err = irq_setup(irqs, nvec, gc->numa_node, skip_first_cpu);
-+	if (err) {
-+		cpus_read_unlock();
-+		goto free_irq;
- 	}
- 
--	gc->irq_contexts = kcalloc(nvec, sizeof(struct gdma_irq_context),
--				   GFP_KERNEL);
--	if (!gc->irq_contexts) {
--		err = -ENOMEM;
--		goto free_irq_array;
-+	cpus_read_unlock();
-+	kfree(irqs);
-+	return 0;
-+
-+free_current_gic:
-+	kfree(gic);
-+free_irq:
-+	for (i -= 1; i > 0; i--) {
-+		irq = pci_irq_vector(pdev, i);
-+		gic = xa_load(&gc->irq_contexts, i);
-+		if (WARN_ON(!gic))
-+			continue;
-+
-+		irq_update_affinity_hint(irq, NULL);
-+		free_irq(irq, gic);
-+		xa_erase(&gc->irq_contexts, i);
-+		kfree(gic);
- 	}
-+	kfree(irqs);
-+	return err;
-+}
-+
-+static int mana_gd_setup_irqs(struct pci_dev *pdev, int nvec)
-+{
-+	struct gdma_context *gc = pci_get_drvdata(pdev);
-+	struct gdma_irq_context *gic;
-+	int *irqs, *start_irqs, irq;
-+	unsigned int cpu;
-+	int err, i;
-+
-+	irqs = kmalloc_array(nvec, sizeof(int), GFP_KERNEL);
-+	if (!irqs)
-+		return -ENOMEM;
-+
-+	start_irqs = irqs;
- 
- 	for (i = 0; i < nvec; i++) {
--		gic = &gc->irq_contexts[i];
-+		gic = kzalloc(sizeof(*gic), GFP_KERNEL);
-+		if (!gic) {
-+			err = -ENOMEM;
-+			goto free_irq;
-+		}
-+
- 		gic->handler = mana_gd_process_eq_events;
- 		INIT_LIST_HEAD(&gic->eq_list);
- 		spin_lock_init(&gic->lock);
-@@ -1418,69 +1493,128 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
- 			snprintf(gic->name, MANA_IRQ_NAME_SZ, "mana_q%d@pci:%s",
- 				 i - 1, pci_name(pdev));
- 
--		irq = pci_irq_vector(pdev, i);
--		if (irq < 0) {
--			err = irq;
--			goto free_irq;
-+		irqs[i] = pci_irq_vector(pdev, i);
-+		if (irqs[i] < 0) {
-+			err = irqs[i];
-+			goto free_current_gic;
- 		}
- 
--		if (!i) {
--			err = request_irq(irq, mana_gd_intr, 0, gic->name, gic);
--			if (err)
--				goto free_irq;
--
--			/* If number of IRQ is one extra than number of online CPUs,
--			 * then we need to assign IRQ0 (hwc irq) and IRQ1 to
--			 * same CPU.
--			 * Else we will use different CPUs for IRQ0 and IRQ1.
--			 * Also we are using cpumask_local_spread instead of
--			 * cpumask_first for the node, because the node can be
--			 * mem only.
--			 */
--			if (start_irq_index) {
--				cpu = cpumask_local_spread(i, gc->numa_node);
--				irq_set_affinity_and_hint(irq, cpumask_of(cpu));
--			} else {
--				irqs[start_irq_index] = irq;
--			}
--		} else {
--			irqs[i - start_irq_index] = irq;
--			err = request_irq(irqs[i - start_irq_index], mana_gd_intr, 0,
--					  gic->name, gic);
--			if (err)
--				goto free_irq;
--		}
-+		err = request_irq(irqs[i], mana_gd_intr, 0, gic->name, gic);
-+		if (err)
-+			goto free_current_gic;
-+
-+		xa_store(&gc->irq_contexts, i, gic, GFP_KERNEL);
- 	}
- 
--	err = irq_setup(irqs, nvec - start_irq_index, gc->numa_node, false);
--	if (err)
-+	/* If number of IRQ is one extra than number of online CPUs,
-+	 * then we need to assign IRQ0 (hwc irq) and IRQ1 to
-+	 * same CPU.
-+	 * Else we will use different CPUs for IRQ0 and IRQ1.
-+	 * Also we are using cpumask_local_spread instead of
-+	 * cpumask_first for the node, because the node can be
-+	 * mem only.
-+	 */
-+	cpus_read_lock();
-+	if (nvec > num_online_cpus()) {
-+		cpu = cpumask_local_spread(0, gc->numa_node);
-+		irq_set_affinity_and_hint(irqs[0], cpumask_of(cpu));
-+		irqs++;
-+		nvec -= 1;
-+	}
-+
-+	err = irq_setup(irqs, nvec, gc->numa_node, false);
-+	if (err) {
-+		cpus_read_unlock();
- 		goto free_irq;
-+	}
- 
--	gc->max_num_msix = nvec;
--	gc->num_msix_usable = nvec;
- 	cpus_read_unlock();
--	kfree(irqs);
-+	kfree(start_irqs);
- 	return 0;
- 
-+free_current_gic:
-+	kfree(gic);
- free_irq:
--	for (j = i - 1; j >= 0; j--) {
--		irq = pci_irq_vector(pdev, j);
--		gic = &gc->irq_contexts[j];
-+	for (i -= 1; i >= 0; i--) {
-+		irq = pci_irq_vector(pdev, i);
-+		gic = xa_load(&gc->irq_contexts, i);
-+		if (WARN_ON(!gic))
-+			continue;
- 
- 		irq_update_affinity_hint(irq, NULL);
- 		free_irq(irq, gic);
-+		xa_erase(&gc->irq_contexts, i);
-+		kfree(gic);
- 	}
- 
--	kfree(gc->irq_contexts);
--	gc->irq_contexts = NULL;
--free_irq_array:
--	kfree(irqs);
--free_irq_vector:
--	cpus_read_unlock();
--	pci_free_irq_vectors(pdev);
-+	kfree(start_irqs);
- 	return err;
- }
- 
-+static int mana_gd_setup_hwc_irqs(struct pci_dev *pdev)
-+{
-+	struct gdma_context *gc = pci_get_drvdata(pdev);
-+	unsigned int max_irqs, min_irqs;
-+	int nvec, err;
-+
-+	if (pci_msix_can_alloc_dyn(pdev)) {
-+		max_irqs = 1;
-+		min_irqs = 1;
-+	} else {
-+		/* Need 1 interrupt for HWC */
-+		max_irqs = min(num_online_cpus(), MANA_MAX_NUM_QUEUES) + 1;
-+		min_irqs = 2;
-+	}
-+
-+	nvec = pci_alloc_irq_vectors(pdev, min_irqs, max_irqs, PCI_IRQ_MSIX);
-+	if (nvec < 0)
-+		return nvec;
-+
-+	err = mana_gd_setup_irqs(pdev, nvec);
-+	if (err) {
-+		pci_free_irq_vectors(pdev);
-+		return err;
-+	}
-+
-+	gc->num_msix_usable = nvec;
-+	gc->max_num_msix = nvec;
-+
-+	return 0;
-+}
-+
-+static int mana_gd_setup_remaining_irqs(struct pci_dev *pdev)
-+{
-+	struct gdma_context *gc = pci_get_drvdata(pdev);
-+	struct msi_map irq_map;
-+	int max_irqs, i, err;
-+
-+	if (!pci_msix_can_alloc_dyn(pdev))
-+		/* remain irqs are already allocated with HWC IRQ */
-+		return 0;
-+
-+	/* allocate only remaining IRQs*/
-+	max_irqs = gc->num_msix_usable - 1;
-+
-+	for (i = 1; i <= max_irqs; i++) {
-+		irq_map = pci_msix_alloc_irq_at(pdev, i, NULL);
-+		if (!irq_map.virq) {
-+			err = irq_map.index;
-+			/* caller will handle cleaning up all allocated
-+			 * irqs, after HWC is destroyed
-+			 */
-+			return err;
-+		}
-+	}
-+
-+	err = mana_gd_setup_dyn_irqs(pdev, max_irqs);
-+	if (err)
-+		return err;
-+
-+	gc->max_num_msix = gc->max_num_msix + max_irqs;
-+
-+	return 0;
-+}
-+
- static void mana_gd_remove_irqs(struct pci_dev *pdev)
- {
- 	struct gdma_context *gc = pci_get_drvdata(pdev);
-@@ -1495,19 +1629,21 @@ static void mana_gd_remove_irqs(struct pci_dev *pdev)
- 		if (irq < 0)
- 			continue;
- 
--		gic = &gc->irq_contexts[i];
-+		gic = xa_load(&gc->irq_contexts, i);
-+		if (WARN_ON(!gic))
-+			continue;
- 
- 		/* Need to clear the hint before free_irq */
- 		irq_update_affinity_hint(irq, NULL);
- 		free_irq(irq, gic);
-+		xa_erase(&gc->irq_contexts, i);
-+		kfree(gic);
- 	}
- 
- 	pci_free_irq_vectors(pdev);
- 
- 	gc->max_num_msix = 0;
- 	gc->num_msix_usable = 0;
--	kfree(gc->irq_contexts);
--	gc->irq_contexts = NULL;
- }
- 
- static int mana_gd_setup(struct pci_dev *pdev)
-@@ -1522,9 +1658,10 @@ static int mana_gd_setup(struct pci_dev *pdev)
- 	if (!gc->service_wq)
- 		return -ENOMEM;
- 
--	err = mana_gd_setup_irqs(pdev);
-+	err = mana_gd_setup_hwc_irqs(pdev);
- 	if (err) {
--		dev_err(gc->dev, "Failed to setup IRQs: %d\n", err);
-+		dev_err(gc->dev, "Failed to setup IRQs for HWC creation: %d\n",
-+			err);
- 		goto free_workqueue;
- 	}
- 
-@@ -1540,6 +1677,12 @@ static int mana_gd_setup(struct pci_dev *pdev)
- 	if (err)
- 		goto destroy_hwc;
- 
-+	err = mana_gd_setup_remaining_irqs(pdev);
-+	if (err) {
-+		dev_err(gc->dev, "Failed to setup remaining IRQs: %d", err);
-+		goto destroy_hwc;
-+	}
-+
- 	err = mana_gd_detect_devices(pdev);
- 	if (err)
- 		goto destroy_hwc;
-@@ -1620,6 +1763,7 @@ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	gc->is_pf = mana_is_pf(pdev->device);
- 	gc->bar0_va = bar0_va;
- 	gc->dev = &pdev->dev;
-+	xa_init(&gc->irq_contexts);
- 
- 	if (gc->is_pf)
- 		gc->mana_pci_debugfs = debugfs_create_dir("0", mana_debugfs_root);
-@@ -1654,6 +1798,7 @@ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	 */
- 	debugfs_remove_recursive(gc->mana_pci_debugfs);
- 	gc->mana_pci_debugfs = NULL;
-+	xa_destroy(&gc->irq_contexts);
- 	pci_iounmap(pdev, bar0_va);
- free_gc:
- 	pci_set_drvdata(pdev, NULL);
-@@ -1679,6 +1824,8 @@ static void mana_gd_remove(struct pci_dev *pdev)
- 
- 	gc->mana_pci_debugfs = NULL;
- 
-+	xa_destroy(&gc->irq_contexts);
-+
- 	pci_iounmap(pdev, gc->bar0_va);
- 
- 	vfree(gc);
-diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
-index 3ce56a816425..87162ba96d91 100644
---- a/include/net/mana/gdma.h
-+++ b/include/net/mana/gdma.h
-@@ -388,7 +388,7 @@ struct gdma_context {
- 	unsigned int		max_num_queues;
- 	unsigned int		max_num_msix;
- 	unsigned int		num_msix_usable;
--	struct gdma_irq_context	*irq_contexts;
-+	struct xarray		irq_contexts;
- 
- 	/* L2 MTU */
- 	u16 adapter_mtu;
-@@ -578,12 +578,16 @@ enum {
- /* Driver can handle holes (zeros) in the device list */
- #define GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP BIT(11)
- 
-+/* Driver supports dynamic MSI-X vector allocation */
-+#define GDMA_DRV_CAP_FLAG_1_DYNAMIC_IRQ_ALLOC_SUPPORT BIT(13)
-+
- #define GDMA_DRV_CAP_FLAGS1 \
- 	(GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
- 	 GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX | \
- 	 GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG | \
- 	 GDMA_DRV_CAP_FLAG_1_VARIABLE_INDIRECTION_TABLE_SUPPORT | \
--	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP)
-+	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP | \
-+	 GDMA_DRV_CAP_FLAG_1_DYNAMIC_IRQ_ALLOC_SUPPORT)
- 
- #define GDMA_DRV_CAP_FLAGS2 0
- 
--- 
-2.34.1
+> > @@ -106,11 +115,11 @@ int main(void)
+> >  	int i;
+> >
+> >  	ksft_print_header();
+> > -	ksft_set_plan(5);
+> > +	ksft_set_plan(8);
+> >
+>
+> This should probably have been ARRAY_SIZE() to start off with, sorry.
 
+Okay. I'll fix this.
+
+
+--
+Sincerely,
+Yeoreum Yun
