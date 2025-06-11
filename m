@@ -1,178 +1,123 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3490F13CA9C;
-	Wed, 11 Jun 2025 01:36:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B57A4685;
+	Wed, 11 Jun 2025 01:37:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749605808; cv=none; b=JHSv8YxjqQTooKSP3cEIQCpEGq5Q7EIuJxhVTmdnOCGH9oNe9chhFIWW9nwf8Z6yum4wqbGPYuSsUnAACbT1oUXANOw/P2HQ/O4HiyYdIvtKdgzOf57scUStrZ5030SA8Gzi/KI3tqgY7Q5eKRhR5RdNMiG4YZdi10IFhZobAkU=
+	t=1749605873; cv=none; b=DOnl7fskH6tHQC7xAIF2+eh/puxyMaPDgdqIedovZJhXGNKHvW79BS68Pj6jaOM5QQz54KMJ6qxO7Fo4Ra0lWOkH9tIbflhlpMEaIpBilIEWFTGfIhMJ+U4lBUFpPrkBIOKw9LxXqtTaC1NV0aMg5SvcnPKkuNF+zIUaVrzqM1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749605808; c=relaxed/simple;
-	bh=uOx5DfUnBLxP9fI1uU9zO1GwRE8LdxHgs3BL/mHcvYk=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=QrdcFKcwGb4Uzxy59JqpvqqE66a3EvWMqZQJ6qJdEYxYvxq/4TiE4GRUWMcZsTAzrk0BkZv7S3yLUe7bCR2euyu/sVDYnLTLqdQVxofHkUpmxojIPJdzsy9cSM8AG3XueT74CauJZTU3m0Oub9oFawpHCBwkQFgYAdD42dVhMHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id D819B161695;
-	Wed, 11 Jun 2025 01:36:10 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id C731830;
-	Wed, 11 Jun 2025 01:36:07 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98.2)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1uPAPL-00000000wPu-3gw0;
-	Tue, 10 Jun 2025 21:37:39 -0400
-Message-ID: <20250611013739.729783787@goodmis.org>
-User-Agent: quilt/0.68
-Date: Tue, 10 Jun 2025 21:34:29 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org,
- x86@kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Andrii Nakryiko <andrii@kernel.org>,
- Indu Bhagat <indu.bhagat@oracle.com>,
- "Jose E. Marchesi" <jemarch@gnu.org>,
- Beau Belgrave <beaub@linux.microsoft.com>,
- Jens Remus <jremus@linux.ibm.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v9 08/11] perf record: Enable defer_callchain for user callchains
-References: <20250611013421.040264741@goodmis.org>
+	s=arc-20240116; t=1749605873; c=relaxed/simple;
+	bh=ySBIz6b+AevIn4XXj1S6nfSdPvS3hHtJOf0Uu8vKYPI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A8E0SFvckyaxAdjqP/NXKcae2cqPWMvGne/U+4qZ0cb4Dajtl6QmxC8H02vEBKAsUAe1LGU3cwRx7MPj6ic57PKrzqTq+phNc1bxYCqCsElNJLCM/aSUYE9Vr72RJP3HTyGlaP4YkwgRvPLmsDfxhPLIxwo2Uyh46W4iN1XwCZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N9YiNPQv; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N9YiNPQv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749605871; x=1781141871;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ySBIz6b+AevIn4XXj1S6nfSdPvS3hHtJOf0Uu8vKYPI=;
+  b=N9YiNPQv8mFOTVM3auqCRYZYhSrM8SS+ZA5XOewkWY43oqQP2P2gdEE8
+   z0Ujl+sq5IRGVEI0uOBgorKWQgdx37S5z/fNNhJhnTrhYIjshWHIsvhtu
+   FQajQZlW9EKunRMahPMp4OjRtP3AkQIvbr/cpzorOTMO3e/UQ/NKqytur
+   HlBmn2x/PxF/mscinoBK1u9sF0wl//zV3a4y0b15HtoUhUWp8+6c2Cb4l
+   ViVaKA0ppR9cAWavf+dnzVye7dzV2cJkox/JvDYg+eY6XqB/oZrUZTzmg
+   EJuojD1skMu2jOrpkDYjVCjfqs9QqC1x5kqB0JlxfUXLldXmpoUuE3nS9
+   Q==;
+X-CSE-ConnectionGUID: rYElw3QYTpmIqkV5mqpXuA==
+X-CSE-MsgGUID: Mw31z7vbShq9DjkLuFSX2g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="62772240"
+X-IronPort-AV: E=Sophos;i="6.16,226,1744095600"; 
+   d="scan'208";a="62772240"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 18:37:50 -0700
+X-CSE-ConnectionGUID: tI47WslSQxW58SsX+uvsBg==
+X-CSE-MsgGUID: XuMszIcAQWKlYt0mKb0M7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,226,1744095600"; 
+   d="scan'208";a="146915458"
+Received: from unknown (HELO [10.238.0.239]) ([10.238.0.239])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 18:37:47 -0700
+Message-ID: <671f2439-1101-4729-b206-4f328dc2d319@linux.intel.com>
+Date: Wed, 11 Jun 2025 09:37:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: C731830
-X-Stat-Signature: h5b7fmwnrw168ijd648x81uqrk9ibbus
-X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+k4XHp6j5KwSycV+Ysud7ar1xFx8TiKNo=
-X-HE-Tag: 1749605767-182671
-X-HE-Meta: U2FsdGVkX1/4vcraRNh7yW36Z2cDJrxKgG3BaCldGK3oIaz103YScSepKLVuWlL/HOuoO0nDh6No/dmD0vFyOmhIlbV0hA6nJV/FU+Wy9+/oxOSECCqtmCiKRTAe0J4nR3m85NyHGaAx3NpgyhlHJDVec+42VJgmNnf/fWVGtLuwj2cjX8w1jqHM3I02MrxNSELIddjJtS4SmlzWXlAHAPFNB5lE9c6wlpFuSDBUGp9nqi+9bDXKOtJ5jpzBzPq07gZ97MtpKuytL3vJAbiJBScCT8aJy8ZoZqkTGoxG/uXhToDC6soH5GATS/s0YLkpidwluvVN5EMxdun3cBYNuTji4Kkuw9CPsemzqLJzXrgI7Q8aYzLqd8nqH6iSqx1zew0+WQwJN5GcLggPWFRWUJlbi9g0kNRDSbkdsxtCqgc=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 3/4] KVM: TDX: Exit to userspace for GetTdVmCallInfo
+To: Xiaoyao Li <xiaoyao.li@intel.com>, rick.p.edgecombe@intel.com,
+ pbonzini@redhat.com, seanjc@google.com
+Cc: kvm@vger.kernel.org, kai.huang@intel.com, adrian.hunter@intel.com,
+ reinette.chatre@intel.com, tony.lindgren@intel.com,
+ isaku.yamahata@intel.com, yan.y.zhao@intel.com,
+ mikko.ylinen@linux.intel.com, linux-kernel@vger.kernel.org,
+ kirill.shutemov@intel.com, jiewen.yao@intel.com
+References: <20250610021422.1214715-1-binbin.wu@linux.intel.com>
+ <20250610021422.1214715-4-binbin.wu@linux.intel.com>
+ <ff5fd57a-9522-448c-9ab6-e0006cb6b2ee@intel.com>
+Content-Language: en-US
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <ff5fd57a-9522-448c-9ab6-e0006cb6b2ee@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-From: Namhyung Kim <namhyung@kernel.org>
 
-And add the missing feature detection logic to clear the flag on old
-kernels.
 
-  $ perf record -g -vv true
-  ...
-  ------------------------------------------------------------
-  perf_event_attr:
-    type                             0 (PERF_TYPE_HARDWARE)
-    size                             136
-    config                           0 (PERF_COUNT_HW_CPU_CYCLES)
-    { sample_period, sample_freq }   4000
-    sample_type                      IP|TID|TIME|CALLCHAIN|PERIOD
-    read_format                      ID|LOST
-    disabled                         1
-    inherit                          1
-    mmap                             1
-    comm                             1
-    freq                             1
-    enable_on_exec                   1
-    task                             1
-    sample_id_all                    1
-    mmap2                            1
-    comm_exec                        1
-    ksymbol                          1
-    bpf_event                        1
-    defer_callchain                  1
-  ------------------------------------------------------------
-  sys_perf_event_open: pid 162755  cpu 0  group_fd -1  flags 0x8
-  sys_perf_event_open failed, error -22
-  switching off deferred callchain support
+On 6/10/2025 5:16 PM, Xiaoyao Li wrote:
+> On 6/10/2025 10:14 AM, Binbin Wu wrote:
+>> Exit to userspace for TDG.VP.VMCALL<GetTdVmCallInfo> via a new KVM exit
+>> reason to allow userspace to provide information about the support of
+>> TDVMCALLs when r12 is 1 for the TDVMCALLs beyond the GHCI base API.
+>>
+>> GHCI spec defines the GHCI base TDVMCALLs: <GetTdVmCallInfo>, <MapGPA>,
+>> <ReportFatalError>, <Instruction.CPUID>, <#VE.RequestMMIO>,
+>> <Instruction.HLT>, <Instruction.IO>, <Instruction.RDMSR> and
+>> <Instruction.WRMSR>. They must be supported by VMM to support TDX guests.
+>>
+>> For GetTdVmCallInfo
+>> - When leaf (r12) to enumerate TDVMCALL functionality is set to 0,
+>>    successful execution indicates all GHCI base TDVMCALLs listed above are
+>>    supported.
+>>
+>>    Update the KVM TDX document with the set of the GHCI base APIs.
+>>
+>> - When leaf (r12) to enumerate TDVMCALL functionality is set to 1, it
+>>    indicates the TDX guest is querying the supported TDVMCALLs beyond
+>>    the GHCI base TDVMCALLs.
+>>    Exit to userspace to let userspace set the TDVMCALL sub-function bit(s)
+>>    accordingly to the leaf outputs.  KVM could set the TDVMCALL bit(s)
+>>    supported by itself when the TDVMCALLs don't need support from userspace
+>>    after returning from userspace and before entering guest. Currently, no
+>>    such TDVMCALLs implemented, KVM just sets the values returned from
+>>    userspace.
+>>
+>>    A new KVM exit reason KVM_EXIT_TDX_GET_TDVMCALL_INFO and its structure
+>>    are added. Userspace is required to handle the exit reason as the initial
+>>    support for TDX.
+>
+> It doesn't look like a good and correct design.
+>
+> Consider the case that userspace supports SetupEventNotifyInterrupt and returns bit 1 of leaf_output[0] as 1 to KVM, and KVM returns it to TD guest for TDVMCALL_GET_TD_VM_CALL_INFO. So TD guest treats it as SetupEventNotifyInterrupt is support. But when TD guest issues this TDVMCALL, KVM doesn't support the exit to userspace for this specific leaf and userspace doesn't have chance to handle it.
+Previously, I also had the idea of setting the information based on userspace's
+opt-ins.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- tools/perf/util/evsel.c | 24 ++++++++++++++++++++++++
- tools/perf/util/evsel.h |  1 +
- 2 files changed, 25 insertions(+)
+But for simplicity, this patch set doesn't adopt the opt-in mechanism for KVM
+exit reasons due to TDVMCALLs.
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 6176c31b57ea..c942983b870e 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1076,6 +1076,14 @@ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *o
- 		}
- 	}
- 
-+	if (param->record_mode == CALLCHAIN_FP && !attr->exclude_callchain_user) {
-+		/*
-+		 * Enable deferred callchains optimistically.  It'll be switched
-+		 * off later if the kernel doesn't support it.
-+		 */
-+		attr->defer_callchain = 1;
-+	}
-+
- 	if (function) {
- 		pr_info("Disabling user space callchains for function trace event.\n");
- 		attr->exclude_callchain_user = 1;
-@@ -2124,6 +2132,8 @@ static int __evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
- 
- static void evsel__disable_missing_features(struct evsel *evsel)
- {
-+	if (perf_missing_features.defer_callchain)
-+		evsel->core.attr.defer_callchain = 0;
- 	if (perf_missing_features.inherit_sample_read && evsel->core.attr.inherit &&
- 	    (evsel->core.attr.sample_type & PERF_SAMPLE_READ))
- 		evsel->core.attr.inherit = 0;
-@@ -2398,6 +2408,15 @@ static bool evsel__detect_missing_features(struct evsel *evsel, struct perf_cpu
- 
- 	/* Please add new feature detection here. */
- 
-+	attr.defer_callchain = true;
-+	attr.sample_type = PERF_SAMPLE_CALLCHAIN;
-+	if (has_attr_feature(&attr, /*flags=*/0))
-+		goto found;
-+	perf_missing_features.defer_callchain = true;
-+	pr_debug2("switching off deferred callchain support\n");
-+	attr.defer_callchain = false;
-+	attr.sample_type = 0;
-+
- 	attr.inherit = true;
- 	attr.sample_type = PERF_SAMPLE_READ;
- 	if (has_attr_feature(&attr, /*flags=*/0))
-@@ -2509,6 +2528,11 @@ static bool evsel__detect_missing_features(struct evsel *evsel, struct perf_cpu
- 	errno = old_errno;
- 
- check:
-+	if (evsel->core.attr.defer_callchain &&
-+	    evsel->core.attr.sample_type & PERF_SAMPLE_CALLCHAIN &&
-+	    perf_missing_features.defer_callchain)
-+		return true;
-+
- 	if (evsel->core.attr.inherit &&
- 	    (evsel->core.attr.sample_type & PERF_SAMPLE_READ) &&
- 	    perf_missing_features.inherit_sample_read)
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 6dbc9690e0c9..a01c1de8f95f 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -221,6 +221,7 @@ struct perf_missing_features {
- 	bool branch_counters;
- 	bool aux_action;
- 	bool inherit_sample_read;
-+	bool defer_callchain;
- };
- 
- extern struct perf_missing_features perf_missing_features;
--- 
-2.47.2
+To resolve the issue you mentions that userspace could set a bit that KVM
+doesn't support the exit to userspace, KVM could mask off the bit(s) not
+supported by KVM before returning back to guest.
+
+If we agree that it's the right time to have the opt-in, we could go the opt-in
+way and KVM could set the information based on userspace's opt-ins without
+exit to userspace for GetTdVmCallInfo.
 
 
