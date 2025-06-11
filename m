@@ -1,112 +1,129 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D0A31EDA02
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 16:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 080321E5B7E;
+	Wed, 11 Jun 2025 16:26:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749659182; cv=none; b=OTHZ+ErjsbUxsAar1rARydFtyv44+lEud6NL7eoxCC0CUzX05uhfKsWfAMd6KVU1z8U5m9K1UmWQ/6oFwlJmTDI6x70CA+YC/I9PiF9YxpXeElHGfKwLhY6kP0ESqFcw3jA5TGN8wBi8KS8mkq85IF0XgtdjbWGvh1g2aISUlZg=
+	t=1749659191; cv=none; b=GNRAosWMB5CCxwiTkTqEr4pozB2X8IV0le5GfDAqRLEH0EpWbDKGP3hIlZVCxvqBXY4uXX+CTlkUmqtGXJ/IjrOTMqjLr4AVm1/YKb7l5ehSOptcd/rKr5G6ApDLGajonhipuirtJjW8hLX1McPF/4VRdDo/Du4irSlerPr+NDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749659182; c=relaxed/simple;
-	bh=1ATIAtScEwv8MflLrosr1hnS8gOgGORCXCED04okpVY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=CpZT7fV7glwi0gUYKgCgEbhm86hme3AJF4rYYrysU8nk8p4y3l84dYPL2HjOLKB4bD7aKqKUBucTvEabLzalPgbMhd3AM/HYZhQR3uoqyYDlJKGM08kYoG8xOxQ0EzqN+lLbnRUAxzl8TEXuiB8u30l3tGi91/gLjBaZt3cWbGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zB5Vnq3T; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1749659191; c=relaxed/simple;
+	bh=rA8dODhAt/uUC//Z3tuOg3Vt6MfeVRuex9l8SlI4yIQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pFEjTFSJdBB5q3Xzn8+/npQKWSHt/2roFAl7D/bM0QqQs00MoAEsyi/xagLC1lhH0+0+pGe8paYRsWQGifc4r5bZxPRmqFmywwBNcEuZ/7SzCpVDYgDU6/h+2oy2s+21hAnwVajuMd+ZikZfC1hQ9x6tnOBTjWgV9tm+Y3pO5dE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D7/DJ0Hq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zB5Vnq3T"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-748269c6516so46214b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 09:26:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749659178; x=1750263978; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aLjniqHBYepM/xcM6MPcnCZ4VmaaSdZz4NNkRlqyWXM=;
-        b=zB5Vnq3TIKsJZ0PuVLbVWa5MedAsB+4N9x92NjZOY0/uryEY7UzqrAZB88N0S/Qs/V
-         8RnOGdHPklKhcs3lTt0+Mb0HGD7sZF1HmywWarM0kfCjhsq98DsjEjYlTHVp2Ml/oWJe
-         vlX+qI2Y94hoQg6H5To9Z6N/Imm9qflEV+d1UBkhVyhwUrtJK4iAy553+L0AknMP3ouI
-         GdtfIIV1NWogQc+vvVV0dY0xxm/cYElEphua8tj6MdObVKykh2Du7a7HpiHbt9g9N4QT
-         4urLhNkH8ichYlUXYVE7HyT9g46zZQwMv+awfAmR3nyoxYu5iypRLMArV/iKySiNjOZT
-         uqtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749659178; x=1750263978;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=aLjniqHBYepM/xcM6MPcnCZ4VmaaSdZz4NNkRlqyWXM=;
-        b=T/Zxyk1suwtH6q3YvbS7LMwfGprXfPMjRfB7HOSgt58P3M1mSaupvlYe02XHxYwC5p
-         E1coa5n9SI6kM2YHuFIY4QGj0UUNN5/wyEbIKHKTcb70t6N1/6UB3caFYtHdO6fW6ti3
-         DkA+gSiaLpxwG08pAUJkPVpi/nMUcDymx5ScSHMBUZ6lPIDS9uHwwMuz+lPmr6cw36kk
-         N+ZsPtopsEgv29z9UfVktkCu5x91ewFqDNc1qc6fA7tguW794K0oU70OTOG2NLqlIJ/G
-         HMzpG2VtLIwbKaWjrvr7+7IZ8jShwZqraMObf+RjCGXmhl3KRx+cmilan8oscbK6R6qB
-         U4iA==
-X-Forwarded-Encrypted: i=1; AJvYcCULDFtte8kjMCRwVgb82bBiFrVN/ASG27gQ6JTv1TB2nI8FRJyeqXRKB1VeHdpF7W25tTQycwLu4mBaywQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXFrPvfw0jcD7uXj6WOpf7R74c0FHUW68BkwYIp2ndzJS1OlCe
-	Ov3MMraaoKw9nZxE/xgH5m4qG2pqHatj0NylhmkDJCynK9J5LRkfJpu3XMjrfFRKxkclkbK7wYn
-	p5Kj3Zw==
-X-Google-Smtp-Source: AGHT+IEw5I/HfvQsgS82ZS/cuurbOuN425fhtHwxIgk3ZRi/K6leOQnkqnKRfQf0SFlrP0Qu9NQy4NaWX0c=
-X-Received: from pfbjt31.prod.google.com ([2002:a05:6a00:91df:b0:746:247f:7384])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:c8a:b0:742:a23e:2a67
- with SMTP id d2e1a72fcca58-7486cde17b0mr4859975b3a.16.1749659178368; Wed, 11
- Jun 2025 09:26:18 -0700 (PDT)
-Date: Wed, 11 Jun 2025 09:26:16 -0700
-In-Reply-To: <effb33d4277c47ffcc6d69b71348e3b7ea8a2740.camel@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D7/DJ0Hq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 793F9C4CEE3;
+	Wed, 11 Jun 2025 16:26:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749659190;
+	bh=rA8dODhAt/uUC//Z3tuOg3Vt6MfeVRuex9l8SlI4yIQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D7/DJ0Hq6F1ARg3g8k56lIyy4ONTSOIVEmNeNnBcwwMiwOSVa7fxs+tZj1jSG48HF
+	 A/xxuV67mjvHZsbVXpaNKFYVAUdpYhqg/OF1psmvRaRiYJ6wLXlLcw5+WIRC8GVIMp
+	 qSqtpTeCcK+/PIuhaQmn5+tV02F8RfFG8SYaeWRN/1IOFNK3SdRqLMs9akb1PU/vIl
+	 wyWjz6GNh+ea8xV8h+hY5r+pj20Jn0+b3O4oINNGF1nZy2o5acgalu18Hk65mPElpn
+	 rk1CUImWLHEWT1sVBM9uM3tBtQDV4FlEYRzE4Y+vNrltYvbLMIo7Sxir6dYUSBmnIu
+	 AvYtms3sRoeFQ==
+Date: Wed, 11 Jun 2025 09:26:29 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, jack@suse.cz,
+	linux-kernel@vger.kernel.org,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	mcgrof@kernel.org, hch@infradead.org, david@fromorbit.com,
+	rafael@kernel.org, pavel@kernel.org, peterz@infradead.org,
+	mingo@redhat.com, will@kernel.org, boqun.feng@gmail.com
+Subject: Re: [PATCH v2 1/6] super: remove pointless s_root checks
+Message-ID: <20250611162629.GE6138@frogsfrogsfrogs>
+References: <20250329-work-freeze-v2-0-a47af37ecc3d@kernel.org>
+ <20250329-work-freeze-v2-1-a47af37ecc3d@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250610021422.1214715-1-binbin.wu@linux.intel.com>
- <20250610021422.1214715-4-binbin.wu@linux.intel.com> <ff5fd57a-9522-448c-9ab6-e0006cb6b2ee@intel.com>
- <671f2439-1101-4729-b206-4f328dc2d319@linux.intel.com> <7f17ca58-5522-45de-9dae-6a11b1041317@intel.com>
- <aEmYqH_2MLSwloBX@google.com> <effb33d4277c47ffcc6d69b71348e3b7ea8a2740.camel@intel.com>
-Message-ID: <aEmuKII8FGU4eQZz@google.com>
-Subject: Re: [RFC PATCH 3/4] KVM: TDX: Exit to userspace for GetTdVmCallInfo
-From: Sean Christopherson <seanjc@google.com>
-To: Rick P Edgecombe <rick.p.edgecombe@intel.com>
-Cc: Xiaoyao Li <xiaoyao.li@intel.com>, 
-	"mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
-	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, Jiewen Yao <jiewen.yao@intel.com>, 
-	Reinette Chatre <reinette.chatre@intel.com>, Tony Lindgren <tony.lindgren@intel.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Yan Y Zhao <yan.y.zhao@intel.com>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	Isaku Yamahata <isaku.yamahata@intel.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kirill Shutemov <kirill.shutemov@intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250329-work-freeze-v2-1-a47af37ecc3d@kernel.org>
 
-On Wed, Jun 11, 2025, Rick P Edgecombe wrote:
-> On Wed, 2025-06-11 at 07:54 -0700, Sean Christopherson wrote:
-> > > Let's see what Paolo and Sean will say.
-> >=20
-> > Kicking this to userspace seems premature.=C2=A0 AIUI, no "optional" VM=
-CALL
-> > features
-> > are defined at this time, i.e. there's nothing to enumerate.=C2=A0 And =
-there's no
-> > guarantee that there will ever be capabilties that require enumeration =
-from=20
-> > *userspace*.=C2=A0 E.g. if fancy feature XYZ requires enumeration, but =
-that feature
-> > requires explicit KVM support, then forcing userspace will be messy.
-> >=20
-> > So I don't see why KVM should anything other than return '0' to the gue=
-st (or
-> > whatever value says "there's nothing here").
->=20
-> GetQuote is not part of the "Base" TDVMCALLs and so has a bit in
-> GetTdVmCallInfo. We could move it to base?
+On Sat, Mar 29, 2025 at 09:42:14AM +0100, Christian Brauner wrote:
+> The locking guarantees that the superblock is alive and sb->s_root is
+> still set. Remove the pointless check.
+> 
+> Signed-off-by: Christian Brauner <brauner@kernel.org>
+> ---
+>  fs/super.c | 19 ++++++-------------
+>  1 file changed, 6 insertions(+), 13 deletions(-)
+> 
+> diff --git a/fs/super.c b/fs/super.c
+> index 97a17f9d9023..dc14f4bf73a6 100644
+> --- a/fs/super.c
+> +++ b/fs/super.c
+> @@ -930,8 +930,7 @@ void iterate_supers(void (*f)(struct super_block *, void *), void *arg)
+>  
+>  		locked = super_lock_shared(sb);
+>  		if (locked) {
+> -			if (sb->s_root)
+> -				f(sb, arg);
+> +			f(sb, arg);
+>  			super_unlock_shared(sb);
+>  		}
+>  
+> @@ -967,11 +966,8 @@ void iterate_supers_type(struct file_system_type *type,
+>  		spin_unlock(&sb_lock);
+>  
+>  		locked = super_lock_shared(sb);
+> -		if (locked) {
+> -			if (sb->s_root)
+> -				f(sb, arg);
+> -			super_unlock_shared(sb);
+> -		}
+> +		if (locked)
+> +			f(sb, arg);
 
-Is GetQuote actually optional?  TDX without attestation seems rather pointl=
-ess.
+Hey Christian,
 
-> Paolo seemed keen on GetTdVmCallInfo exiting to userspace, but this was b=
-efore
-> the spec overhaul.
+I might be trying to be the second(?) user of iterate_supers_type[1]. :)
 
-If GetQuote is truly optional, then exiting to userspace makes sense.  But =
-as
-above, that seems odd to me.
+This change removes the call to super_unlock_shared, which means that
+iterate_supers_type returns with the super_lock(s) still held.  I'm
+guessing that this is a bug and not an intentional change to require the
+callback to call super_unlock_shared, right?
+
+--D
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/commit/?h=health-monitoring&id=3ae9b1d43dcdeaa38e93dc400d1871872ba0e27f
+
+>  
+>  		spin_lock(&sb_lock);
+>  		if (p)
+> @@ -991,18 +987,15 @@ struct super_block *user_get_super(dev_t dev, bool excl)
+>  
+>  	spin_lock(&sb_lock);
+>  	list_for_each_entry(sb, &super_blocks, s_list) {
+> -		if (sb->s_dev ==  dev) {
+> +		if (sb->s_dev == dev) {
+>  			bool locked;
+>  
+>  			sb->s_count++;
+>  			spin_unlock(&sb_lock);
+>  			/* still alive? */
+>  			locked = super_lock(sb, excl);
+> -			if (locked) {
+> -				if (sb->s_root)
+> -					return sb;
+> -				super_unlock(sb, excl);
+> -			}
+> +			if (locked)
+> +				return sb; /* caller will drop */
+>  			/* nope, got unmounted */
+>  			spin_lock(&sb_lock);
+>  			__put_super(sb);
+> 
+> -- 
+> 2.47.2
+> 
+> 
