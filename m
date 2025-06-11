@@ -1,127 +1,129 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FB58380
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 18:35:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC6562153E7
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 18:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749666928; cv=none; b=OM4njnaGpCNcaKiDdW0Paq8vW8Ir7Ngzl9UeZMPF8CKU70ugmiRRTZY/VrR8qe3yYplZ5J9cEWkSCt3WyB6ICRbkfvetw5PCi69BfFyCYI1mU5x3WKjPF7sRzjZG/sbWaVQDX0Jnmo/ci+xes7E382jBogJ/+QqX2OANKiHwUVI=
+	t=1749667045; cv=none; b=grZGIsFqe6S+TGc3urqMzqxogYuBzIy/KK6b5mQUI71//0WTCkVynKddrqYiEiV7TxiFJDKzrF2IiYw5iVC4ps/JjZGfkxF7lC151x6j74VETWkGilue/I4gf+UZUKXZddH1knuVCavnL6iEUYTk26PeyErPh9aVoLWsaL1K1iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749666928; c=relaxed/simple;
-	bh=PX+uFi2TRcTAZzkDxUG4RPAgbW201ntMO7lrolf22Fk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QhBaU4ge16siKLkZ043n8KWyabNkbd8ArFyBF60Qv09JAe+QG98Ku/0QHig2offvcEZxY6PXZIPEaRt7LB6NcMWwRNibOn5t9ggGAFnhsSXAayfu0fvrMxN6fawGTRBKHqoccHJyr/4VpSZ9wR3mFr3UxHNLxPY4fV1ea/1gmtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cyIjYSrA; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749667045; c=relaxed/simple;
+	bh=RyLIKNeJDHGcRQHXIaBVFM/PFmHB/hcFvEYioa32LRQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Y+SlnE5a7hj/1BFgtqRMcgjWypqNmabyA2LqSJ51whxzPkVzr2YfWqBNww6+hWy5WsY5o/h+da8HxZFMejaLt9vHwGgI/AWo32ZG58eg+FYAoA1Y13t2Kx0QyTwDDFkmHvc8nqhFyUYAVcUOVwDFel15e0nzo5COxI7fzwX8jP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=VB2T1mWi; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cyIjYSrA"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5534edc6493so95992e87.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:35:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="VB2T1mWi"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a54700a46eso198531f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:37:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749666925; x=1750271725; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4LW+JbhkF0pib1AA3WNg/XYx3vRhJwNQnFgWXrNhyNI=;
-        b=cyIjYSrAJH1R1hXlam7zN3LLMMDxZHP24QopSPL/8Vc3nhvzvG0kzGQTJEr/xC4iIn
-         MYPyNNGR5AxNxvKwTcovNsPMaiVOSr25914rkuN8UaZjIfKe44gACe5vh7fBwPZpQABN
-         ZQI9AiJQ+/HDurb8lBqqhUIcGY9hTs6LcZTcPm1PwfUeYx0oJL43wnq/6wLGPWUhwJK+
-         SMcqz2C3rNHAtCTVwTJGc/ZMFSSEn1o52/rrgbi15aG4oAYF+UHpC7oI2bhB8dzs3iBA
-         4IRpB9GvLfHD4lCg/0bM652hcFWB4oVSAGC+w0puqBT6m1BQyp+83EIRfuuFLMU1uW0z
-         FPwA==
+        d=raspberrypi.com; s=google; t=1749667042; x=1750271842; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6/DWf3eFTS1FAKsBMmWgLu1g2vHF8byXbBX1nrqf/VM=;
+        b=VB2T1mWifQGJcLguGEC73P3aw+Ok5QvPAwB0qwbo4C7m1ahWrx+yILFuMXTkwqK9Vr
+         Ps1IQui43AjQB/n1Z9f+7HGWq6honuJ7HJDWjA45aKQBERpVVkVJS/PS6rlV3C1P5sl7
+         HxOnVWCxCGVJ8iePCamBxtWi6E/lkMIb/MuVNYLhohYXpeFJVsvpYWrQyAlgZwHVRxZU
+         K5CCcIAvTNPc8alozPrRdZMIZbEZ1DqYJBPnHYUYYVYC9KWxXVkQ7zskO/yYXGRLGKQx
+         7+pdtQKKovkbjpjoDc+EcfhYOZ6kN1m5j7IGsmG9mfXI44h8RqsIN2c0ZUSuGP18mJ9n
+         wVeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749666925; x=1750271725;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1749667042; x=1750271842;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4LW+JbhkF0pib1AA3WNg/XYx3vRhJwNQnFgWXrNhyNI=;
-        b=tc8zcowG0h+WN60+LZVLm+6IRk1c7Q/dPjXmC5/0iowSRAfT4pxDZlEUpP63zqy8rf
-         4PL9C18417a1ZqPEBmi6z4d3scufWfemQUv71bSQkdR3t9OQx9e0X4t86qXN5d4xWATE
-         jz8A83CYaqwgtk9AwRzKFOIsFIUBIb1ULCLuVT3GoT9hkg+LB94KBOIuzBzE7srGoTRq
-         4LYvn9UwMvWxRstS23L63wOFklZYFf9ZrZcwNHdaEogMxBBo+3vKx1JHZSdPueXfGESU
-         UQoweYe2uPxrvyNPkMzDIOTfd5sC2992aNgqfUAELy/o6C0c4AfFZxKksx/fadXF7qwC
-         6Nqw==
-X-Forwarded-Encrypted: i=1; AJvYcCWWEGqHBTCQuWuOtDrCXrVk6MCHOa3tUwcsLNn1yllUGC6Kv3TLXNCLVErMiHkVLcMe8SxiCBuhl1R8YgE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPLdEWuCQNZa3fU0suX6CZ9A92cOf4bXQhUmSXnK078X+nNO/Z
-	AcFkqGI60ngKYUhdmvTE1g9EMgqYQ0hsKDPeqtb0ihKCpSt2gECYNWHi0dpJLaCa978a1KyzFEK
-	gmtSKcJZ/vIvMvbjA/BCKdxPYV9Fwg6YByJ3bFgo=
-X-Gm-Gg: ASbGncuIfODpZ0JuptnNIXs8UQPpwFKFI+f7FYNewpvXaQdho372a2UWJT2wIzVkKXy
-	hZ8WsNIeWwxATFWrGNiie03s+rMjc78JJ+ApZlnB13AuxRjGzngiVlL0wF8ChZqY0OAAovrIXge
-	lZvUmBYI/vU7J/MsH+aV1ZNHjqW8ZUwqzB/rMkTJeU38fRxu5HCSiAfFJ8vQFUYrNwfcqiToY+6
-	mGnHz7a
-X-Google-Smtp-Source: AGHT+IHhJ2bujyaLwyGfM62GuB4nxlpb8VRVfrxNgScBPvK+ovW5Gr8i/lmdjCY06YU1YK3LOhGiWRzZ2Ly5ZcPlDyQ=
-X-Received: by 2002:ac2:4bca:0:b0:553:3916:4e1c with SMTP id
- 2adb3069b0e04-553a556785dmr144689e87.2.1749666924953; Wed, 11 Jun 2025
- 11:35:24 -0700 (PDT)
+        bh=6/DWf3eFTS1FAKsBMmWgLu1g2vHF8byXbBX1nrqf/VM=;
+        b=NwUlXE9YwB7zgbtl//pPRmX3ilLgUppcs0n3Yz4/w9tl+s4U7TYG7KHLe/lpt2uPuS
+         rxHTekPemcdMe3H3a7cHp0iw22NK55eASU0xPS4mrfE35Q4dGcKkOR3/FHZsJzdnxN18
+         ESfT53h2//Ge3uscTb+G152B4wJWX9NabUN7Nf1oPqu1Snj4VDxjveZw2c1FRbIxPu16
+         1upOP6KhbpB/qnFoftQEbA0ZK7zDHjR5Du+3ObAL63NVvMjvYRapv5Uo89rTU1XUpYG0
+         6cO2w386OcMg7FgSZXAS2FNiAzlVRMC4IKvd6ZQ0wG+mXre8nAUncLd0IptncV8LskKn
+         OfAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU9VC37e11bWEMhLRlx0KlAfTy1YaclvOiFm4mJfZ4vXcBxUUBwlleKUxalXQi774eFeNIR8IzBT8lV9R4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1YOohgjNYCk1EKioz9HDjtYYd0UJgtiGot0EqBCsG8wtm+YyW
+	5/GCEDPrd1rIAomnimcJ1w9MhYxuwOyRO5J4rPVC+NcS2Hf3KZyCo7rKQWlYf74t3kQ=
+X-Gm-Gg: ASbGncu23PoLMaTF2H1Tuq6mgbihu38CSr9Yy5e9wfKqhWktXLM9JpK20wco8i5ku7b
+	YYsMaYBTcJd1/FP1SPQoKELo5BMwwoWeJV6jGVS0MZJ2aLpnaU3uECjtieyh01iNTmLF1TFdJvs
+	2Z0XJIIqF9s8YlMHCJv+cD8nLxyY3nSVV9OXbW1NIaS43/6AX2oiHV1sx7j3UeTyMmbIukZlEMJ
+	IXAVWtwHOe+j5njbbNJgF9+FwFhJGj+ONDNjpRcldUNb9UYmvKG42FzJqmMU9YNmm/LN0nccgzO
+	LgAF4YNKxS47jvti3Y8MO6VlRvIPAI5d4nHBytT+dSOBvWVsUMAAQA==
+X-Google-Smtp-Source: AGHT+IEkF/dFZASIDjRh7yC2bAPt/if4YBRK41hg0H9/5YtD56ovdLDxPjw06Yoz2hJ3UEcOFPSVyQ==
+X-Received: by 2002:a05:6000:2204:b0:3a3:7593:818b with SMTP id ffacd0b85a97d-3a558695e91mr3797607f8f.21.1749667041968;
+        Wed, 11 Jun 2025 11:37:21 -0700 (PDT)
+Received: from [127.0.1.1] ([2a00:1098:3142:e::8])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a5324364d4sm16119390f8f.55.2025.06.11.11.37.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 11:37:21 -0700 (PDT)
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date: Wed, 11 Jun 2025 19:37:14 +0100
+Subject: [PATCH 2/4] media: tc358743: Increase FIFO trigger level to 374
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611104506.2270561-1-richard120310@gmail.com>
-In-Reply-To: <20250611104506.2270561-1-richard120310@gmail.com>
-From: John Stultz <jstultz@google.com>
-Date: Wed, 11 Jun 2025 11:35:13 -0700
-X-Gm-Features: AX0GCFvxFuyx5v9O2yGfkI2Uej1mipIc8heSHC46LTYcnHRLUpOAa2r2xFAgXhE
-Message-ID: <CANDhNCoJ_MmpEfyuL+JWav+NUfQDH3dm196JSE-Mv3QrPUzi3g@mail.gmail.com>
-Subject: Re: [PATCH] clocksource: Utilize cpumask_next_wrap() to shrink code size
-To: I Hsin Cheng <richard120310@gmail.com>, Yury Norov <yury.norov@gmail.com>
-Cc: tglx@linutronix.de, sboyd@kernel.org, linux-kernel@vger.kernel.org, 
-	jserv@ccns.ncku.edu.tw, skhan@linuxfoundation.org, 
-	linux-kernel-mentees@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250611-media-tc358743-v1-2-708556026f9d@raspberrypi.com>
+References: <20250611-media-tc358743-v1-0-708556026f9d@raspberrypi.com>
+In-Reply-To: <20250611-media-tc358743-v1-0-708556026f9d@raspberrypi.com>
+To: Hans Verkuil <hverkuil@xs4all.nl>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Maxime Ripard <mripard@redhat.com>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, linux-media@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Dave Stevenson <dave.stevenson@raspberrypi.com>
+X-Mailer: b4 0.14.1
 
-On Wed, Jun 11, 2025 at 3:45=E2=80=AFAM I Hsin Cheng <richard120310@gmail.c=
-om> wrote:
->
-> Simplify the procedure of CPU random selection under
-> "clocksource_verify_choose_cpus()" with "cpumask_next_wrap()". The
-> logic is still the same but with this change it can shrink the code size
-> by 18 bytes and increase readability.
->
-> $ ./scripts/bloat-o-meter vmlinux_old vmlinux_new
-> add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-18 (-18)
-> Function                                     old     new   delta
-> clocksource_verify_percpu                   1064    1046     -18
->
-> Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
-> ---
->  kernel/time/clocksource.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-> index bb48498ebb5a..ab580873408b 100644
-> --- a/kernel/time/clocksource.c
-> +++ b/kernel/time/clocksource.c
-> @@ -343,9 +343,7 @@ static void clocksource_verify_choose_cpus(void)
->          */
->         for (i =3D 1; i < n; i++) {
->                 cpu =3D get_random_u32_below(nr_cpu_ids);
-> -               cpu =3D cpumask_next(cpu - 1, cpu_online_mask);
-> -               if (cpu >=3D nr_cpu_ids)
-> -                       cpu =3D cpumask_first(cpu_online_mask);
-> +               cpu =3D cpumask_next_wrap(cpu - 1, cpu_online_mask);
->                 if (!WARN_ON_ONCE(cpu >=3D nr_cpu_ids))
->                         cpumask_set_cpu(cpu, &cpus_chosen);
->         }
+The existing fixed value of 16 worked for UYVY 720P60 over
+2 lanes at 594MHz, or UYVY 1080P60 over 4 lanes. (RGB888
+1080P60 needs 6 lanes at 594MHz).
+It doesn't allow for lower resolutions to work as the FIFO
+underflows.
 
-I think Yury submitted the same change here recently:
-  https://lore.kernel.org/lkml/20250607141106.563924-3-yury.norov@gmail.com=
-/
+374 is required for 1080P24 or 1080P30 UYVY over 2 lanes @
+972Mbit/s, but >374 means that the FIFO underflows on 1080P50
+UYVY over 2 lanes @ 972Mbit/s.
 
-Though, I think he has another iteration needed as Thomas had feedback
-on the subject line.
+Whilst it would be nice to compute it, the required information
+isn't published by Toshiba.
 
-The bloat-o-meter data is a nice inclusion here!
+Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+---
+ drivers/media/i2c/tc358743.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-Yury: Would you be open to adapting I Hsin Cheng's commit message into
-yours and adding them as co-author via the Co-developed-by: tag?
-(Assuming I Hsin Cheng agrees - See
-Documentation/process/submitting-patches.rst for how to do this
-properly).
+diff --git a/drivers/media/i2c/tc358743.c b/drivers/media/i2c/tc358743.c
+index b87db3de20db..ddba8c392ead 100644
+--- a/drivers/media/i2c/tc358743.c
++++ b/drivers/media/i2c/tc358743.c
+@@ -1972,8 +1972,19 @@ static int tc358743_probe_of(struct tc358743_state *state)
+ 	state->pdata.refclk_hz = clk_get_rate(refclk);
+ 	state->pdata.ddc5v_delay = DDC5V_DELAY_100_MS;
+ 	state->pdata.enable_hdcp = false;
+-	/* A FIFO level of 16 should be enough for 2-lane 720p60 at 594 MHz. */
+-	state->pdata.fifo_level = 16;
++	/*
++	 * Ideally the FIFO trigger level should be set based on the input and
++	 * output data rates, but the calculations required are buried in
++	 * Toshiba's register settings spreadsheet.
++	 * A value of 16 works with a 594Mbps data rate for 720p60 (using 2
++	 * lanes) and 1080p60 (using 4 lanes), but fails when the data rate
++	 * is increased, or a lower pixel clock is used that result in CSI
++	 * reading out faster than the data is arriving.
++	 *
++	 * A value of 374 works with both those modes at 594Mbps, and with most
++	 * modes on 972Mbps.
++	 */
++	state->pdata.fifo_level = 374;
+ 	/*
+ 	 * The PLL input clock is obtained by dividing refclk by pll_prd.
+ 	 * It must be between 6 MHz and 40 MHz, lower frequency is better.
 
-thanks
--john
+-- 
+2.34.1
+
