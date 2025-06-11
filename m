@@ -1,109 +1,139 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7215022D4C3
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:09:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BFF11F7904;
+	Wed, 11 Jun 2025 21:13:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749676184; cv=none; b=YPIh1pQC2Jk8zWF96yOyc8M8wYgSVkOgzAypSjlViHIGAhfTFkVHoZrzT8CPU9jWC6NBtW2d+9IyikYJEj8Tp1JMK3YF9H5narOWc3MPYy6A5oDTfRBlRvn6DQAVLNqevt60r2WTD1YyFkhtNGl5NYvK5T12WpC2IIaf926769Y=
+	t=1749676434; cv=none; b=JTRVbGis5LmbiABX2DMXa3Isw9jyDPoiHzl9OAM/fiNNYXiXLOjTJUGjyyZXvsmvNziBoYxCZoBhy1ERaGF2VNlCfi6Od87xmdSgY57Jbe4IlpDZFhHSwnOKNhvPsfKGEWQa34n9b8FuIFLCrueKktF+dYek31MU2hFv8pHxJXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749676184; c=relaxed/simple;
-	bh=aNvWjxK6lyH38L8TrWmLCp5uspZgS1RsSRt2DKL3AEY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=eOsG9gdlMc2MueV3aLMWzQ6R5VOsxIJ3b4OvwNSuuPOl2BUdSkpvs5tT6WxVCXRFF/JwgP2RgXy8dOm6cE+slOfZCa1FsZ4221kIc0anGcOp4YmU8J2i9D188VIcy+T7gL4J0Azp9YnAjA9piuM2JfcLixB9sov0eLHHhLrGOLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h9lEO8qB; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1749676434; c=relaxed/simple;
+	bh=ayf4MxTJT3l5fo3kpVYbW6H4t8k6I/d2JD5oWmRS3lE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=paT1cVKN7Hw5wTZwGhm7Mmk/lyvNVd1IWsJPJZG7XECIU2hPK8ReOkXixZcuyb+bz0rhWzbSs+2yq14ytRQ8e095DFyyS6qzO5E6amPeGc31sw527lnbMD0fcRsNvUEz5JuYsPrhA8lbX83jzF4fHMXugC9hPySHcez/+QxxDwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=dE0mmlgJ; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h9lEO8qB"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-311ae2b6647so271864a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:09:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749676182; x=1750280982; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZMQkqCwzmIXYFrrnZkAcfDl3xDOFYF2dYn4KNgsYvkY=;
-        b=h9lEO8qBY+12ohCKhfqARq3q5ZLJ7UQcknYEccHmcr/5z+6Nrm0be2okDgjHgXtRTU
-         cEnAwDXFYoJEC8TRV9VtcX9ZUsgORtsGLEC3xj06cwlNF4CntPiOwHGkat5vqGg+/RFu
-         mKxZfZBmIpZmMtK510r32AU5YpRiaAl0RKrZ9bnxRvz2KMC7T0Rfkv/CgHzYcDSCUN0N
-         RYzHgbCrGEi14GEMUQQZOSW3ngCjthS64R+lCDocvytKCkSEt9aFvjC6Mgo2Vka6dXcg
-         y4TFyUsr1+aQIjxNLuhnNEUHiN9D0kwpAEPXrDE74tVcXZHKlqKPRJTROmzyPJNVDy/E
-         xJJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749676182; x=1750280982;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ZMQkqCwzmIXYFrrnZkAcfDl3xDOFYF2dYn4KNgsYvkY=;
-        b=iIisbIwWBC7MenemrbTO8A7XjJp5CEmpLX+/HDf80J5zemgsU73CX8VmXrG2DCPlCK
-         O/cut6dmfJsAYjIDRVEuS8d2IL+IzCw2MSjRtjEyE0XfOpftFnm7xeVBbdKdni/iGioD
-         QjjZbmKqRc8mWOwTh+VlnJKd2HQtHShbYL1l4R7OX8yjK68/mIhB8RQk8BuPAWh6/yLp
-         HRnwgKxckYCHYSCSFRHNtKDA9OP135tb7e+cFr/8x5XRwmM1Yu0ZBh3atOVfbhOd6DXk
-         +yh/s763HS3jihFLquW/CeUF8J/F+pJ1dY94tBDZ5xxiIzu6/1eqlpIjLcquCAP1UkJk
-         XJJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUwLYPP4p+nCVOIfRqonegHUXd0dAWXhqh/h0a3NWfKWjrHWvIg0dbAGe8HKT6dSIEAV08c50/FYDa4Ul0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjDjNcXU3l765eOmwQTcuTYPhGsP8XijoKczSJK7M8uallFu0s
-	/67vZVw7KTuykDGk2FZMD3sxZeWNwYPMjlwKC8G874pm8xhTR++iDMvZDGWo9qfZfdIzXJB0ETW
-	c8fJQTA==
-X-Google-Smtp-Source: AGHT+IEb/UGrw1LaCOx+NlySWUskzO3viqPifHVWpoL14YgOs7Ph7yCuEndM+iEYCbyktI8ZT/I3bf7B8B8=
-X-Received: from pjbqi16.prod.google.com ([2002:a17:90b:2750:b0:312:f650:c7aa])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1d49:b0:311:ad7f:3281
- with SMTP id 98e67ed59e1d1-313bfb676f6mr1565236a91.12.1749676182673; Wed, 11
- Jun 2025 14:09:42 -0700 (PDT)
-Date: Wed, 11 Jun 2025 14:09:41 -0700
-In-Reply-To: <32ff838c57f88fd4b092326afcb68b6a40f24ba0.camel@intel.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dE0mmlgJ"
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55BLD7hs1489819;
+	Wed, 11 Jun 2025 16:13:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1749676387;
+	bh=P+Ei0nVTdPkuikDxd53VFZwYxoc432vn+t6Xh2VDjE0=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=dE0mmlgJbKsvhfBls2pR1EbemC7uEJZuES1EahQoc8L6WSOnP8d1R9evWoC6GzdP3
+	 oeZpSbqnZmO5dq24iQEK0m9FEziQiySjMvgU0x0naAIIDm3umuYzmD6IUgybyolKJc
+	 hG6C/5SmGkOAHrNVcr2M3+Jm9jQXsDOCg+Hx05JM=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55BLD7Iq1414936
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Wed, 11 Jun 2025 16:13:07 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 11
+ Jun 2025 16:13:06 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 11 Jun 2025 16:13:06 -0500
+Received: from [10.249.42.149] ([10.249.42.149])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55BLD55v923069;
+	Wed, 11 Jun 2025 16:13:06 -0500
+Message-ID: <1d87fa3b-c3b9-44fd-9e61-7f1ffadcfb0c@ti.com>
+Date: Wed, 11 Jun 2025 16:13:05 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250611001018.2179964-1-xiaoyao.li@intel.com>
- <aEnGjQE3AmPB3wxk@google.com> <32ff838c57f88fd4b092326afcb68b6a40f24ba0.camel@intel.com>
-Message-ID: <aEnwlQtenIEUczVX@google.com>
-Subject: Re: [PATCH] KVM: x86/mmu: Embed direct bits into gpa for KVM_PRE_FAULT_MEMORY
-From: Sean Christopherson <seanjc@google.com>
-To: Rick P Edgecombe <rick.p.edgecombe@intel.com>
-Cc: Xiaoyao Li <xiaoyao.li@intel.com>, Kai Huang <kai.huang@intel.com>, 
-	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, Reinette Chatre <reinette.chatre@intel.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Yan Y Zhao <yan.y.zhao@intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, Isaku Yamahata <isaku.yamahata@intel.com>, 
-	"tony.lindgren@linux.intel.com" <tony.lindgren@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/5] arm: omap2plus_defconfig: Enable TPS65219
+ regulator
+To: Kory Maincent <kory.maincent@bootlin.com>,
+        Tony Lindgren
+	<tony@atomide.com>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Aaro Koskinen
+	<aaro.koskinen@iki.fi>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Kevin Hilman
+	<khilman@baylibre.com>,
+        Roger Quadros <rogerq@kernel.org>,
+        Russell King
+	<linux@armlinux.org.uk>
+CC: Bajjuri Praneeth <praneeth@ti.com>, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Thomas Petazzoni
+	<thomas.petazzoni@bootlin.com>,
+        <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+References: <20250609-bbg-v2-0-5278026b7498@bootlin.com>
+ <20250609-bbg-v2-5-5278026b7498@bootlin.com>
+Content-Language: en-US
+From: Andrew Davis <afd@ti.com>
+In-Reply-To: <20250609-bbg-v2-5-5278026b7498@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Wed, Jun 11, 2025, Rick P Edgecombe wrote:
-> On Wed, 2025-06-11 at 11:10 -0700, Sean Christopherson wrote:
-> > Back to the main topic, KVM needs to have a single source of truth when=
- it comes
-> > to whether a fault is private and thus mirrored (or not).=C2=A0 Common =
-KVM needs to be
-> > aware of aliased GFN bits, but absolute nothing outside of TDX (includi=
-ng common
-> > VMX code) should be aware the mirror vs. "direct" (I hate that terminol=
-ogy; KVM
-> > has far, far too much history and baggage with "direct") is tied to the=
- existence
-> > and polarity of aliased GFN bits.
-> >=20
-> > What we have now does work *today* (see this bug), and it will be a com=
-plete
-> > trainwreck if we ever want to steal GFN bits for other reasons.
->=20
-> KVM XO's time has come and gone. Out of curiosity is there anything else?
+On 6/9/25 10:43 AM, Kory Maincent wrote:
+> Enable the TPS65219 regulator in the defconfig, as the TPS65214
+> variant is used by the newly introduced BeagleBoard Green Eco board.
+> 
+> Reviewed-by: Andreas Kemnade <andreas@kemnade.info>
+> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+> ---
+>   arch/arm/configs/omap2plus_defconfig | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
+> index 9f9780c8e62a..2ad669f7b202 100644
+> --- a/arch/arm/configs/omap2plus_defconfig
+> +++ b/arch/arm/configs/omap2plus_defconfig
 
-Not that I know of.
+Why omap2plus_defconfig? OMAP3 and newer are all ARMv7 and
+boards with those can/should use multi_v7_defconfig.
 
-> Readability is the main objection here, right?
+OMAP1 and OMAP2 are the only devices that cannot use multi_v7_defconfig
+as they are not ARMv7. So I'd almost recommend we rename
+omap2plus_defconfig to just omap2_defconfig to avoid more confusion.
+Then we would have:
 
-Maintainability first and foremost, but definitely readability too (which o=
-bviously
-plays into maintainability).  E.g. if we properly encapsulate TDX, then it'=
-ll be
-harder to pile on hacks and whatnot simply because common code won't have a=
-ccess
-to state that lets it misbehave. =20
+OMAP1:  ARMv4/5: omap1_defconfig
+OMAP2:  ARMv6:   omap2_defconfig
+OMAP3+: ARMv7:   multi_v7_defconfig
 
-But yes, you're correct in that I don't have a specific use case in mind.
+Any issue with that I'm missing?
+
+Andrew
+
+> @@ -385,6 +385,7 @@ CONFIG_TOUCHSCREEN_TSC2007=m
+>   CONFIG_INPUT_MISC=y
+>   CONFIG_INPUT_CPCAP_PWRBUTTON=m
+>   CONFIG_INPUT_TPS65218_PWRBUTTON=m
+> +CONFIG_INPUT_TPS65219_PWRBUTTON=m
+>   CONFIG_INPUT_TWL4030_PWRBUTTON=m
+>   CONFIG_INPUT_UINPUT=m
+>   CONFIG_INPUT_PALMAS_PWRBUTTON=m
+> @@ -454,6 +455,7 @@ CONFIG_MFD_TPS65217=y
+>   CONFIG_MFD_TI_LP873X=y
+>   CONFIG_MFD_TI_LP87565=y
+>   CONFIG_MFD_TPS65218=y
+> +CONFIG_MFD_TPS65219=y
+>   CONFIG_MFD_TPS65910=y
+>   CONFIG_TWL6040_CORE=y
+>   CONFIG_REGULATOR_CPCAP=y
+> @@ -470,6 +472,7 @@ CONFIG_REGULATOR_TPS65023=y
+>   CONFIG_REGULATOR_TPS6507X=y
+>   CONFIG_REGULATOR_TPS65217=y
+>   CONFIG_REGULATOR_TPS65218=y
+> +CONFIG_REGULATOR_TPS65219=y
+>   CONFIG_REGULATOR_TPS65910=y
+>   CONFIG_REGULATOR_TWL4030=y
+>   CONFIG_RC_CORE=m
+> 
