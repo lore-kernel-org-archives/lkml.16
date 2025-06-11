@@ -1,228 +1,466 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214FF213224;
-	Wed, 11 Jun 2025 21:50:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D25F7DA82
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:51:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749678646; cv=none; b=m9DJAFhODjHvmBFfs1IkcJXVXpgQ0Lrk2hrgJ1aZI9tsjV4sDrutVKbdNqDoSy8ihq5lLAgEqiqianLnCQUQbheCGRAYPVh95EetyJKKhS/CAIUlkDgxfahe/u7qQcSbmSKVlRUS4js7hunuvknI0AYbu6QY0qpyBggA3qfDUqs=
+	t=1749678702; cv=none; b=E5uE/bWzAeOXOtV/quVfFc1xnHhr9MQbw/+nZsc0bEW/Vs7bbcGRRiGc70QkN3/WHOdxA4HEGzwQDczSY6UOUdEQKjPWnNkmuQOZjDegXbgB62/LtJWZpA9fmdLca6N62ASrZRb3ykC4TSYz4TPfsLtG8NGBjZVXEFmFR4EqKgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749678646; c=relaxed/simple;
-	bh=RWVYRiPZVmtgySePvK9Fgk/us/xzILqK49c9tQBEmKc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IdoVgtmYBOgtkP1iLHWLp36WREh01Dr7AtultV91PMxTwmE8Y9ij8VPZgjJDi9gfLDzuHqIW6uaegM5G4dY4izhNbaY5W1WV+P05zLiaKW6BqBLijI3RTeFc5aWnZClPkuHIfdpza+t1Jj+KnFxW8cYMc17dpTRgKCpeGkxbAkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dcnJ7GRH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749678702; c=relaxed/simple;
+	bh=IFFauBa06Dp5AA6wuuBZFjGoEDH8goVFQ4+yVa0oHDw=;
+	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=odEGtyaBYFY1u6VDx/JRoxKhmkRwr/KSDHWzLFts7Anb5upTt1nqauAqsq0ENeHfULKkB9CNWUCAXl8Ukb46EmrYbwerEtV1eMI6H5lBeZbYKY/nkXfM+E/AUICJetik5eLcHUMeKu5UBfDtq1AkjtaDPSadsPFysM0EDA19xc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jVZuacOo; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dcnJ7GRH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A8EAC4CEE3;
-	Wed, 11 Jun 2025 21:50:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749678645;
-	bh=RWVYRiPZVmtgySePvK9Fgk/us/xzILqK49c9tQBEmKc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dcnJ7GRHk/Kwn8dcnC5nqRlP0OflMqeJ1nrPjz2f4GyiXhngjxoLt6f9DOnkeYnLQ
-	 usw51rZIB0VUV6CO+0LmnkfJuNZx7mJ7BkJKHJP/7aLn7xa2XKurgYQN/fpek4EraY
-	 6//0wsrEyfFn7eBmEw5Ng2VM5TDqHt1XXLc0HTaw2HKQrL9E/180ED4ZJ9GVCBghwx
-	 2GgHZTAiPcWvoyTkh5fVEvFdlVISrsxTJrDUyaqWThYGBCYr9LRhseRLVJq2xDXRPR
-	 VGiVatkdQVjOMK3NgPRWSqIlbHMp37jQnDhYszTB0sGE3f91h6SehWNCc2hKakkwDD
-	 fkKQJBuRSDZAg==
-Date: Wed, 11 Jun 2025 14:50:43 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [BUG] perf tools: Build failure in v6.16-rc1
-Message-ID: <aEn6M_DTUHx9_hMS@google.com>
-References: <aEh6xO14wDSCFUDr@google.com>
- <20250611092542.F4ooE2FL@linutronix.de>
- <aEmBOO0bSJYSvX2i@x1>
- <aEmY259Mx92D60KG@x1>
- <20250611150615.FcVIIhgA@linutronix.de>
- <aEnSbBaFYgd4Gr9u@x1>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jVZuacOo"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-740270e168aso229417b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:51:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749678700; x=1750283500; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=P74GB7QCjfO1/JUQfevXX891SWVXbSdMv9d1fQ1ZP9c=;
+        b=jVZuacOoRJNjoceCDknIw2tbCw37wzXTJuZiQXVIRc8Gj5e1oQzvibCAng0S1AaDKQ
+         ahhYYK6kzb1gKkgseEUE6+N5FjeIa5tJZapLP/UH4YW9fbaDRmcNWhCi5N9lDnzZT4jz
+         Ke0jtg+2R5Utn8jdVdYH/Y7t1b2bl08ZsgWYTozxTYqBWwBZZgEIeEljbufRxVwJSVK+
+         MnCCnUzIqRU7M+ibePm54VbK+AEasOeP4ZgAaQp4uBSNcDiNanxRamKpOFYVeVevWzLJ
+         Pf/JO5ngK9kHOmUUEroIGRjlao1NAOm8RvdQcvrmHLUSQ1hnXbkenEd3WZJkAeDDNcD7
+         nkQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749678700; x=1750283500;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=P74GB7QCjfO1/JUQfevXX891SWVXbSdMv9d1fQ1ZP9c=;
+        b=Sz05UFSttIrVxsYJ/LAOUYf9OTvT/aYCbE7g22RvWggyjhm1Qm9TnnxcWpzVJ9iCgd
+         vW/k3V/b22ZGNm2t93FbhX3drBoW/8mc7mzFvL5K6ALZpd4CTwCthCSEWTo/vGTp+e/2
+         cBdM5XGQF2KAaLhBNBHmug7wZpVCUOpDWv9ZdXYaDLPbn1fZxr8jtr4WZew74ZXCXFxn
+         wOhsnxZJyn2CRlEcVNPqbNVIrass7u6feOGBTIh08LVKmu2qkhP/6QipHO5R2oNRYNZ8
+         ARJadUhMtp/SmsQfr8gt8+ivzJZDDp5Aj4Axu0PZgywQTqmZZ70aCv8ULJ/4OvrREzl4
+         PnOw==
+X-Forwarded-Encrypted: i=1; AJvYcCU5L5t4D457Oqe5IQaNCy9vskLPlGddvL3MqgYKM7x6ruKtoph37BtPOjXitfAsMEapVrgY7xopo+/5DTI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4yVsi8VGr2pU7myYQ546OlNiQ5uUc+e6dLBM9mzZ7hpwfC471
+	4+GsYg2406boS8Ycm/VN6X4717gNQhEonQtb95LypGAM8FDLUOfgeYp8jhfLCJjTtLiq/p6NLPO
+	yukEVO7iOR4LJIN0TPhQvsq9HBA==
+X-Google-Smtp-Source: AGHT+IGDTpLNIk1v6FYeKf7oNfAk8Qg6hqB3D47kkAOSUbTW/pul7qUFUR3OYyVFMKcQ9CcbKjzQTmU7clRREaS3tA==
+X-Received: from pfbhj8.prod.google.com ([2002:a05:6a00:8708:b0:746:2747:e782])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a00:98f:b0:742:a77b:8c3 with SMTP id d2e1a72fcca58-7486cb21e68mr6223581b3a.4.1749678699581;
+ Wed, 11 Jun 2025 14:51:39 -0700 (PDT)
+Date: Wed, 11 Jun 2025 14:51:38 -0700
+In-Reply-To: <20250529054227.hh2f4jmyqf6igd3i@amd.com> (message from Michael
+ Roth on Thu, 29 May 2025 00:42:27 -0500)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aEnSbBaFYgd4Gr9u@x1>
+Mime-Version: 1.0
+Message-ID: <diqz1prqvted.fsf@ackerleytng-ctop.c.googlers.com>
+Subject: Re: [RFC PATCH v2 02/51] KVM: guest_memfd: Introduce and use
+ shareability to guard faulting
+From: Ackerley Tng <ackerleytng@google.com>
+To: Michael Roth <michael.roth@amd.com>
+Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com, 
+	ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com, 
+	anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu, 
+	bfoster@redhat.com, binbin.wu@linux.intel.com, brauner@kernel.org, 
+	catalin.marinas@arm.com, chao.p.peng@intel.com, chenhuacai@kernel.org, 
+	dave.hansen@intel.com, david@redhat.com, dmatlack@google.com, 
+	dwmw@amazon.co.uk, erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, 
+	graf@amazon.com, haibo1.xu@intel.com, hch@infradead.org, hughd@google.com, 
+	ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz, 
+	james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, 
+	jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com, 
+	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com, 
+	kent.overstreet@linux.dev, kirill.shutemov@intel.com, liam.merwick@oracle.com, 
+	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
+	mic@digikod.net, mpe@ellerman.id.au, muchun.song@linux.dev, nikunj@amd.com, 
+	nsaenz@amazon.es, oliver.upton@linux.dev, palmer@dabbelt.com, 
+	pankaj.gupta@amd.com, paul.walmsley@sifive.com, pbonzini@redhat.com, 
+	pdurrant@amazon.co.uk, peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, 
+	qperret@google.com, quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
+	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
+	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
+	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
+	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
+	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
+	thomas.lendacky@amd.com, usama.arif@bytedance.com, vannapurve@google.com, 
+	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com, 
+	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org, 
+	xiaoyao.li@intel.com, yan.y.zhao@intel.com, yilun.xu@intel.com, 
+	yuzenghui@huawei.com, zhiquan1.li@intel.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jun 11, 2025 at 04:01:00PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Wed, Jun 11, 2025 at 05:06:15PM +0200, Sebastian Andrzej Siewior wrote:
-> > On 2025-06-11 11:55:23 [-0300], Arnaldo Carvalho de Melo wrote:
-> > > commit 8386dc356158fc50c55831c96b1248e01d112ebc
-> > > Author: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> > > Date:   Wed Jun 11 11:25:42 2025 +0200
-> > > 
-> > >     perf bench futex: Fix prctl include in musl libc
-> > >     
-> > >     Namhyung Kim reported:
-> > >     
-> > >       I've updated the perf-tools-next to v6.16-rc1 and found a build error
-> > >       like below on alpine linux 3.18.
-> > >     
-> > >         In file included from bench/futex.c:6:
-> > >         /usr/include/sys/prctl.h:88:8: error: redefinition of 'struct prctl_mm_map'
-> > >            88 | struct prctl_mm_map {
-> > >               |        ^~~~~~~~~~~~
-> > >         In file included from bench/futex.c:5:
-> > >         /linux/tools/include/uapi/linux/prctl.h:134:8: note: originally defined here
-> > >           134 | struct prctl_mm_map {
-> > >               |        ^~~~~~~~~~~~
-> > >         make[4]: *** [/linux/tools/build/Makefile.build:86: /build/bench/futex.o] Error 1
-> > >     
-> > >       git bisect says it's the first commit introduced the failure.
-> > >     
-> > >     So your /usr/include/sys/prctl.h and
-> > >     /linux/tools/include/uapi/linux/prctl.h both provide struct prctl_mm_map
-> > >     but their include guard must be different.
-> > >     
-> > >     My /usr/include/sys/prctl.h is provided by glibc and contains the
-> > >     prctl() declaration. It includes also linux/prctl.h.  The
-> > >     tools/include/uapi/linux/prctl.h is the same as
-> > >     /usr/include/linux/prctl.h.
-> > >     
-> > >     The /usr/include/sys/prctl.h on alpine linux is different. This is
-> > >     probably coming from musl. It contains the PR_* definition and the
-> > >     prctl() declaration.  So it clashes here because now the one struct is
-> > >     available twice.
-> > >     
-> > >     The man page for prctl(2) says:
-> > >     
-> > >     |       #include <linux/prctl.h>  /* Definition of PR_* constants */
-> > >     |       #include <sys/prctl.h>
-> > >     
-> > >     so musl doesn't follow this.
-> > >     
-> > >     So align with the other builds.
-> > >     
-> > >     Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> > >     Reported-by: Namhyung Kim <namhyung@kernel.org>
-> > >     Link: https://lore.kernel.org/r/20250611092542.F4ooE2FL@linutronix.de
->  
-> > s/Link/Closes/
-> 
-> ok
->  
-> > >     [ Remove one more in tools/perf/bench/futex-hash.c and conditionally define PR_FUTEX_HASH and friends ]
-> > >     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > 
-> > > diff --git a/tools/perf/bench/futex-hash.c b/tools/perf/bench/futex-hash.c
-> > > index fdf133c9520f73a4..d2d6d7f3ea331c84 100644
-> > > --- a/tools/perf/bench/futex-hash.c
-> > > +++ b/tools/perf/bench/futex-hash.c
-> > > @@ -18,7 +18,6 @@
-> > >  #include <stdlib.h>
-> > >  #include <linux/compiler.h>
-> > >  #include <linux/kernel.h>
-> > > -#include <linux/prctl.h>
-> > >  #include <linux/zalloc.h>
-> > >  #include <sys/time.h>
-> > >  #include <sys/mman.h>
-> > > diff --git a/tools/perf/bench/futex.c b/tools/perf/bench/futex.c
-> > > index 26382e4d8d4ce2ff..4c4fee107e5912d5 100644
-> > > --- a/tools/perf/bench/futex.c
-> > > +++ b/tools/perf/bench/futex.c
-> > > @@ -2,11 +2,18 @@
-> > >  #include <err.h>
-> > >  #include <stdio.h>
-> > >  #include <stdlib.h>
-> > > -#include <linux/prctl.h>
-> > >  #include <sys/prctl.h>
-> > >  
-> > This is what I had locally and was waiting for confirmation.
-> > 
-> > >  #include "futex.h"
-> > >  
-> > > +#ifndef PR_FUTEX_HASH
-> > > +#define PR_FUTEX_HASH                   78
-> > > +# define PR_FUTEX_HASH_SET_SLOTS        1
-> > > +# define FH_FLAG_IMMUTABLE              (1ULL << 0)
-> > > +# define PR_FUTEX_HASH_GET_SLOTS        2
-> > > +# define PR_FUTEX_HASH_GET_IMMUTABLE    3
-> > > +#endif // PR_FUTEX_HASH
-> > 
-> > Is this needed? Aren't these defines coming from that local copy?
-> 
-> So, these are, as you say, in the copied linux/prctl.h, but in musl libc
-> we have:
-> 
-> /tmp/perf-6.16.0-rc1 $ grep 'struct prctl_mm_map {' /usr/include/linux/prctl.h 
-> struct prctl_mm_map {
-> /tmp/perf-6.16.0-rc1 $ grep 'struct prctl_mm_map {' /usr/include/sys/prctl.h 
-> struct prctl_mm_map {
-> /tmp/perf-6.16.0-rc1 $
-> 
-> And sys/prctl.h doesn't include linux/prctl.h, if we do it, we get
-> multiple definitions for 'struct prctl_mm_map'.
-> 
-> While in fedora (probably in all the others, haven't checked, but no
-> failure on them from my last container set build tests):
-> 
-> ⬢ [acme@toolbx perf-tools]$ grep 'struct prctl_mm_map {' /usr/include/linux/prctl.h
-> struct prctl_mm_map {
-> ⬢ [acme@toolbx perf-tools]$ grep 'struct prctl_mm_map {' /usr/include/sys/prctl.h
-> ⬢ [acme@toolbx perf-tools]$
-> 
-> furthermore fedora's sys/prctl.h includes linux/prctl.h, while musl libc
-> doesn't.
-> 
-> I thought this would be something fixed in newer alpine versions, but
-> no:
-> 
-> toolsbuilder@five:~$ grep FAIL dm.log.old/summary 
->    5    19.53 alpine:3.16                   : FAIL gcc version 11.2.1 20220219 (Alpine 11.2.1_git20220219) 
->    6    20.83 alpine:3.17                   : FAIL gcc version 12.2.1 20220924 (Alpine 12.2.1_git20220924-r4) 
->    7    13.94 alpine:3.18                   : FAIL gcc version 12.2.1 20220924 (Alpine 12.2.1_git20220924-r10) 
->    8    16.60 alpine:3.19                   : FAIL gcc version 13.2.1 20231014 (Alpine 13.2.1_git20231014) 
->    9    15.72 alpine:3.20                   : FAIL gcc version 13.2.1 20240309 (Alpine 13.2.1_git20240309) 
->   10    16.38 alpine:3.22                   : FAIL gcc version 14.2.0 (Alpine 14.2.0) 
->   11    15.09 alpine:edge                   : FAIL gcc version 14.2.0 (Alpine 14.2.0) 
-> toolsbuilder@five:~$
-> 
-> So the easiest way out of this seems to be not to explicitely include
-> linux/prctl.h and define the new stuff conditionally, as I did, right?
+Michael Roth <michael.roth@amd.com> writes:
 
-Yep, it fixes my build too.  Without the defines, I see
+> On Wed, May 14, 2025 at 04:41:41PM -0700, Ackerley Tng wrote:
+>> Track guest_memfd memory's shareability status within the inode as
+>> opposed to the file, since it is property of the guest_memfd's memory
+>> contents.
+>> 
+>> Shareability is a property of the memory and is indexed using the
+>> page's index in the inode. Because shareability is the memory's
+>> property, it is stored within guest_memfd instead of within KVM, like
+>> in kvm->mem_attr_array.
+>> 
+>> KVM_MEMORY_ATTRIBUTE_PRIVATE in kvm->mem_attr_array must still be
+>> retained to allow VMs to only use guest_memfd for private memory and
+>> some other memory for shared memory.
+>> 
+>> Not all use cases require guest_memfd() to be shared with the host
+>> when first created. Add a new flag, GUEST_MEMFD_FLAG_INIT_PRIVATE,
+>> which when set on KVM_CREATE_GUEST_MEMFD, initializes the memory as
+>> private to the guest, and therefore not mappable by the
+>> host. Otherwise, memory is shared until explicitly converted to
+>> private.
+>> 
+>> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+>> Co-developed-by: Vishal Annapurve <vannapurve@google.com>
+>> Signed-off-by: Vishal Annapurve <vannapurve@google.com>
+>> Co-developed-by: Fuad Tabba <tabba@google.com>
+>> Signed-off-by: Fuad Tabba <tabba@google.com>
+>> Change-Id: If03609cbab3ad1564685c85bdba6dcbb6b240c0f
+>> ---
+>>  Documentation/virt/kvm/api.rst |   5 ++
+>>  include/uapi/linux/kvm.h       |   2 +
+>>  virt/kvm/guest_memfd.c         | 124 ++++++++++++++++++++++++++++++++-
+>>  3 files changed, 129 insertions(+), 2 deletions(-)
+>> 
+>> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+>> index 86f74ce7f12a..f609337ae1c2 100644
+>> --- a/Documentation/virt/kvm/api.rst
+>> +++ b/Documentation/virt/kvm/api.rst
+>> @@ -6408,6 +6408,11 @@ belonging to the slot via its userspace_addr.
+>>  The use of GUEST_MEMFD_FLAG_SUPPORT_SHARED will not be allowed for CoCo VMs.
+>>  This is validated when the guest_memfd instance is bound to the VM.
+>>  
+>> +If the capability KVM_CAP_GMEM_CONVERSIONS is supported, then the 'flags' field
+>> +supports GUEST_MEMFD_FLAG_INIT_PRIVATE.  Setting GUEST_MEMFD_FLAG_INIT_PRIVATE
+>> +will initialize the memory for the guest_memfd as guest-only and not faultable
+>> +by the host.
+>> +
+>
+> KVM_CAP_GMEM_CONVERSION doesn't get introduced until later, so it seems
+> like this flag should be deferred until that patch is in place. Is it
+> really needed at that point though? Userspace would be able to set the
+> initial state via KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls.
+>
 
-  bench/futex.c: In function 'futex_set_nbuckets_param':
-  bench/futex.c:25:45: error: 'FH_FLAG_IMMUTABLE' undeclared (first use in this function)
-     25 |         flags = params->buckets_immutable ? FH_FLAG_IMMUTABLE : 0;
-        |                                             ^~~~~~~~~~~~~~~~~
-  bench/futex.c:25:45: note: each undeclared identifier is reported only once for each function it appears in
-  bench/futex.c:26:21: error: 'PR_FUTEX_HASH' undeclared (first use in this function)
-     26 |         ret = prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_SET_SLOTS, params->nbuckets, flags);
-        |                     ^~~~~~~~~~~~~
-    CC      /build/ui/browsers/annotate-data.o
-  bench/futex.c:26:36: error: 'PR_FUTEX_HASH_SET_SLOTS' undeclared (first use in this function)
-     26 |         ret = prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_SET_SLOTS, params->nbuckets, flags);
-        |                                    ^~~~~~~~~~~~~~~~~~~~~~~
-  bench/futex.c: In function 'futex_print_nbuckets':
-  bench/futex.c:39:21: error: 'PR_FUTEX_HASH' undeclared (first use in this function)
-     39 |         ret = prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_GET_SLOTS);
-        |                     ^~~~~~~~~~~~~
-  bench/futex.c:39:36: error: 'PR_FUTEX_HASH_GET_SLOTS' undeclared (first use in this function)
-     39 |         ret = prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_GET_SLOTS);
-        |                                    ^~~~~~~~~~~~~~~~~~~~~~~
-  bench/futex.c:53:52: error: 'PR_FUTEX_HASH_GET_IMMUTABLE' undeclared (first use in this function)
-     53 |                         ret = prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_GET_IMMUTABLE);
-        |                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-  make[4]: *** [/linux/tools/build/Makefile.build:86: /build/bench/futex.o] Error 1
+I can move this change to the later patch. Thanks! Will fix in the next
+revision.
 
-Tested-by: Namhyung Kim <namhyung@kernel.org>
+> The mtree contents seems to get stored in the same manner in either case so
+> performance-wise only the overhead of a few userspace<->kernel switches
+> would be saved. Are there any other reasons?
+>
+> Otherwise, maybe just settle on SHARED as a documented default (since at
+> least non-CoCo VMs would be able to reliably benefit) and let
+> CoCo/GUEST_MEMFD_FLAG_SUPPORT_SHARED VMs set PRIVATE at whatever
+> granularity makes sense for the architecture/guest configuration.
+>
 
-Thanks,
-Namhyung
+Because shared pages are split once any memory is allocated, having a
+way to INIT_PRIVATE could avoid the split and then merge on
+conversion. I feel that is enough value to have this config flag, what
+do you think?
 
+I guess we could also have userspace be careful not to do any allocation
+before converting.
 
-> 
-> - Arnaldo
->  
-> > >  void futex_set_nbuckets_param(struct bench_futex_parameters *params)
-> > >  {
-> > >  	unsigned long flags;
-> > 
-> > Sebastian
+>>  See KVM_SET_USER_MEMORY_REGION2 for additional details.
+>>  
+>>  4.143 KVM_PRE_FAULT_MEMORY
+>> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+>> index 4cc824a3a7c9..d7df312479aa 100644
+>> --- a/include/uapi/linux/kvm.h
+>> +++ b/include/uapi/linux/kvm.h
+>> @@ -1567,7 +1567,9 @@ struct kvm_memory_attributes {
+>>  #define KVM_MEMORY_ATTRIBUTE_PRIVATE           (1ULL << 3)
+>>  
+>>  #define KVM_CREATE_GUEST_MEMFD	_IOWR(KVMIO,  0xd4, struct kvm_create_guest_memfd)
+>> +
+>>  #define GUEST_MEMFD_FLAG_SUPPORT_SHARED	(1UL << 0)
+>> +#define GUEST_MEMFD_FLAG_INIT_PRIVATE	(1UL << 1)
+>>  
+>>  struct kvm_create_guest_memfd {
+>>  	__u64 size;
+>> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+>> index 239d0f13dcc1..590932499eba 100644
+>> --- a/virt/kvm/guest_memfd.c
+>> +++ b/virt/kvm/guest_memfd.c
+>> @@ -4,6 +4,7 @@
+>>  #include <linux/falloc.h>
+>>  #include <linux/fs.h>
+>>  #include <linux/kvm_host.h>
+>> +#include <linux/maple_tree.h>
+>>  #include <linux/pseudo_fs.h>
+>>  #include <linux/pagemap.h>
+>>  
+>> @@ -17,6 +18,24 @@ struct kvm_gmem {
+>>  	struct list_head entry;
+>>  };
+>>  
+>> +struct kvm_gmem_inode_private {
+>> +#ifdef CONFIG_KVM_GMEM_SHARED_MEM
+>> +	struct maple_tree shareability;
+>> +#endif
+>> +};
+>> +
+>> +enum shareability {
+>> +	SHAREABILITY_GUEST = 1,	/* Only the guest can map (fault) folios in this range. */
+>> +	SHAREABILITY_ALL = 2,	/* Both guest and host can fault folios in this range. */
+>> +};
+>> +
+>> +static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index);
+>> +
+>> +static struct kvm_gmem_inode_private *kvm_gmem_private(struct inode *inode)
+>> +{
+>> +	return inode->i_mapping->i_private_data;
+>> +}
+>> +
+>>  /**
+>>   * folio_file_pfn - like folio_file_page, but return a pfn.
+>>   * @folio: The folio which contains this index.
+>> @@ -29,6 +48,58 @@ static inline kvm_pfn_t folio_file_pfn(struct folio *folio, pgoff_t index)
+>>  	return folio_pfn(folio) + (index & (folio_nr_pages(folio) - 1));
+>>  }
+>>  
+>> +#ifdef CONFIG_KVM_GMEM_SHARED_MEM
+>> +
+>> +static int kvm_gmem_shareability_setup(struct kvm_gmem_inode_private *private,
+>> +				      loff_t size, u64 flags)
+>> +{
+>> +	enum shareability m;
+>> +	pgoff_t last;
+>> +
+>> +	last = (size >> PAGE_SHIFT) - 1;
+>> +	m = flags & GUEST_MEMFD_FLAG_INIT_PRIVATE ? SHAREABILITY_GUEST :
+>> +						    SHAREABILITY_ALL;
+>> +	return mtree_store_range(&private->shareability, 0, last, xa_mk_value(m),
+>> +				 GFP_KERNEL);
+>
+> One really nice thing about using a maple tree is that it should get rid
+> of a fairly significant startup delay for SNP/TDX when the entire xarray gets
+> initialized with private attribute entries via KVM_SET_MEMORY_ATTRIBUTES
+> (which is the current QEMU default behavior).
+>
+> I'd originally advocated for sticking with the xarray implementation Fuad was
+> using until we'd determined we really need it for HugeTLB support, but I'm
+> sort of thinking it's already justified just based on the above.
+>
+> Maybe it would make sense for KVM memory attributes too?
+>
+>> +}
+>> +
+>> +static enum shareability kvm_gmem_shareability_get(struct inode *inode,
+>> +						 pgoff_t index)
+>> +{
+>> +	struct maple_tree *mt;
+>> +	void *entry;
+>> +
+>> +	mt = &kvm_gmem_private(inode)->shareability;
+>> +	entry = mtree_load(mt, index);
+>> +	WARN(!entry,
+>> +	     "Shareability should always be defined for all indices in inode.");
+>> +
+>> +	return xa_to_value(entry);
+>> +}
+>> +
+>> +static struct folio *kvm_gmem_get_shared_folio(struct inode *inode, pgoff_t index)
+>> +{
+>> +	if (kvm_gmem_shareability_get(inode, index) != SHAREABILITY_ALL)
+>> +		return ERR_PTR(-EACCES);
+>> +
+>> +	return kvm_gmem_get_folio(inode, index);
+>> +}
+>> +
+>> +#else
+>> +
+>> +static int kvm_gmem_shareability_setup(struct maple_tree *mt, loff_t size, u64 flags)
+>> +{
+>> +	return 0;
+>> +}
+>> +
+>> +static inline struct folio *kvm_gmem_get_shared_folio(struct inode *inode, pgoff_t index)
+>> +{
+>> +	WARN_ONCE("Unexpected call to get shared folio.")
+>> +	return NULL;
+>> +}
+>> +
+>> +#endif /* CONFIG_KVM_GMEM_SHARED_MEM */
+>> +
+>>  static int __kvm_gmem_prepare_folio(struct kvm *kvm, struct kvm_memory_slot *slot,
+>>  				    pgoff_t index, struct folio *folio)
+>>  {
+>> @@ -333,7 +404,7 @@ static vm_fault_t kvm_gmem_fault_shared(struct vm_fault *vmf)
+>>  
+>>  	filemap_invalidate_lock_shared(inode->i_mapping);
+>>  
+>> -	folio = kvm_gmem_get_folio(inode, vmf->pgoff);
+>> +	folio = kvm_gmem_get_shared_folio(inode, vmf->pgoff);
+>>  	if (IS_ERR(folio)) {
+>>  		int err = PTR_ERR(folio);
+>>  
+>> @@ -420,8 +491,33 @@ static struct file_operations kvm_gmem_fops = {
+>>  	.fallocate	= kvm_gmem_fallocate,
+>>  };
+>>  
+>> +static void kvm_gmem_free_inode(struct inode *inode)
+>> +{
+>> +	struct kvm_gmem_inode_private *private = kvm_gmem_private(inode);
+>> +
+>> +	kfree(private);
+>> +
+>> +	free_inode_nonrcu(inode);
+>> +}
+>> +
+>> +static void kvm_gmem_destroy_inode(struct inode *inode)
+>> +{
+>> +	struct kvm_gmem_inode_private *private = kvm_gmem_private(inode);
+>> +
+>> +#ifdef CONFIG_KVM_GMEM_SHARED_MEM
+>> +	/*
+>> +	 * mtree_destroy() can't be used within rcu callback, hence can't be
+>> +	 * done in ->free_inode().
+>> +	 */
+>> +	if (private)
+>> +		mtree_destroy(&private->shareability);
+>> +#endif
+>> +}
+>> +
+>>  static const struct super_operations kvm_gmem_super_operations = {
+>>  	.statfs		= simple_statfs,
+>> +	.destroy_inode	= kvm_gmem_destroy_inode,
+>> +	.free_inode	= kvm_gmem_free_inode,
+>>  };
+>>  
+>>  static int kvm_gmem_init_fs_context(struct fs_context *fc)
+>> @@ -549,12 +645,26 @@ static const struct inode_operations kvm_gmem_iops = {
+>>  static struct inode *kvm_gmem_inode_make_secure_inode(const char *name,
+>>  						      loff_t size, u64 flags)
+>>  {
+>> +	struct kvm_gmem_inode_private *private;
+>>  	struct inode *inode;
+>> +	int err;
+>>  
+>>  	inode = alloc_anon_secure_inode(kvm_gmem_mnt->mnt_sb, name);
+>>  	if (IS_ERR(inode))
+>>  		return inode;
+>>  
+>> +	err = -ENOMEM;
+>> +	private = kzalloc(sizeof(*private), GFP_KERNEL);
+>> +	if (!private)
+>> +		goto out;
+>> +
+>> +	mt_init(&private->shareability);
+>> +	inode->i_mapping->i_private_data = private;
+>> +
+>> +	err = kvm_gmem_shareability_setup(private, size, flags);
+>> +	if (err)
+>> +		goto out;
+>> +
+>>  	inode->i_private = (void *)(unsigned long)flags;
+>>  	inode->i_op = &kvm_gmem_iops;
+>>  	inode->i_mapping->a_ops = &kvm_gmem_aops;
+>> @@ -566,6 +676,11 @@ static struct inode *kvm_gmem_inode_make_secure_inode(const char *name,
+>>  	WARN_ON_ONCE(!mapping_unevictable(inode->i_mapping));
+>>  
+>>  	return inode;
+>> +
+>> +out:
+>> +	iput(inode);
+>> +
+>> +	return ERR_PTR(err);
+>>  }
+>>  
+>>  static struct file *kvm_gmem_inode_create_getfile(void *priv, loff_t size,
+>> @@ -654,6 +769,9 @@ int kvm_gmem_create(struct kvm *kvm, struct kvm_create_guest_memfd *args)
+>>  	if (kvm_arch_vm_supports_gmem_shared_mem(kvm))
+>>  		valid_flags |= GUEST_MEMFD_FLAG_SUPPORT_SHARED;
+>>  
+>> +	if (flags & GUEST_MEMFD_FLAG_SUPPORT_SHARED)
+>> +		valid_flags |= GUEST_MEMFD_FLAG_INIT_PRIVATE;
+>> +
+>>  	if (flags & ~valid_flags)
+>>  		return -EINVAL;
+>>  
+>> @@ -842,6 +960,8 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
+>>  	if (!file)
+>>  		return -EFAULT;
+>>  
+>> +	filemap_invalidate_lock_shared(file_inode(file)->i_mapping);
+>> +
+>
+> I like the idea of using a write-lock/read-lock to protect write/read access
+> to shareability state (though maybe not necessarily re-using filemap's
+> invalidate lock), it's simple and still allows concurrent faulting in of gmem
+> pages. One issue on the SNP side (which also came up in one of the gmem calls)
+> is if we introduce support for tracking preparedness as discussed (e.g. via a
+> new SHAREABILITY_GUEST_PREPARED state) the
+> SHAREABILITY_GUEST->SHAREABILITY_GUEST_PREPARED transition would occur at
+> fault-time, and so would need to take the write-lock and no longer allow for
+> concurrent fault-handling.
+>
+> I was originally planning on introducing a new rw_semaphore with similar
+> semantics to the rw_lock that Fuad previously had in his restricted mmap
+> series[1] (and simiar semantics to filemap invalidate lock here). The main
+> difference, to handle setting SHAREABILITY_GUEST_PREPARED within fault paths,
+> was that in the case of a folio being present for an index, the folio lock would
+> also need to be held in order to update the shareability state. Because
+> of that, fault paths (which will always either have or allocate folio
+> basically) can rely on the folio lock to guard shareability state in a more
+> granular way and so can avoid a global write lock.
+>
+> They would still need to hold the read lock to access the tree however.
+> Or more specifically, any paths that could allocate a folio need to take
+> a read lock so there isn't a TOCTOU situation where shareability is
+> being updated for an index for which a folio hasn't been allocated, but
+> then just afterward the folio gets faulted in/allocated while the
+> shareability state is already being updated which the understand that
+> there was no folio around that needed locking.
+>
+> I had a branch with in-place conversion support for SNP[2] that added this
+> lock reworking on top of Fuad's series along with preparation tracking,
+> but I'm now planning to rebase that on top of the patches from this
+> series that Sean mentioned[3] earlier:
+>
+>   KVM: guest_memfd: Add CAP KVM_CAP_GMEM_CONVERSION
+>   KVM: Query guest_memfd for private/shared status
+>   KVM: guest_memfd: Skip LRU for guest_memfd folios
+>   KVM: guest_memfd: Introduce KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
+>   KVM: guest_memfd: Introduce and use shareability to guard faulting
+>   KVM: guest_memfd: Make guest mem use guest mem inodes instead of anonymous inodes
+>
+> but figured I'd mention it here in case there are other things to consider on
+> the locking front.
+>
+> Definitely agree with Sean though that it would be nice to start identifying a
+> common base of patches for the in-place conversion enablement for SNP, TDX, and
+> pKVM so the APIs/interfaces for hugepages can be handled separately.
+>
+> -Mike
+>
+> [1] https://lore.kernel.org/kvm/20250328153133.3504118-1-tabba@google.com/
+> [2] https://github.com/mdroth/linux/commits/mmap-swprot-v10-snp0-wip2/
+> [3] https://lore.kernel.org/kvm/aC86OsU2HSFZkJP6@google.com/
+>
+>>  	folio = __kvm_gmem_get_pfn(file, slot, index, pfn, &is_prepared, max_order);
+>>  	if (IS_ERR(folio)) {
+>>  		r = PTR_ERR(folio);
+>> @@ -857,8 +977,8 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
+>>  		*page = folio_file_page(folio, index);
+>>  	else
+>>  		folio_put(folio);
+>> -
+>>  out:
+>> +	filemap_invalidate_unlock_shared(file_inode(file)->i_mapping);
+>>  	fput(file);
+>>  	return r;
+>>  }
+>> -- 
+>> 2.49.0.1045.g170613ef41-goog
+>> 
