@@ -1,126 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E2D326A1D0;
-	Wed, 11 Jun 2025 14:56:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABBD32BDC02
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:56:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749653763; cv=none; b=UNauLKgvC/PhcIEjoD1r7w1W7LlmmALlqCCNoLq2x9PwVNAFC5avLLOLEe/Yp+ddBxFcTS5mFZ/mb0G4TaebicYFTpp5Zbv/ZLJ3kOEjKbf6y3u3mKOpbsoerblj58DYGDMEhLhPHjJP+ZnMAVLE+ZR87VXghUNXaxSpDpnW/ho=
+	t=1749653791; cv=none; b=AG9ej2f/aT5p1TmpfRkTr0u9u2WXrgV04fEbdju/CvW0X37Br22wekvVoHYAYG/OSK0x1r9LIcii2I1t1rNscniBIZ/K70zRp1ptHWTWqjl1OuINoRCkqTSn7U6bmq6TeF0FWvwzF7uz5ijcWdLD5g0geNoBXQNIJglkyPOnLPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749653763; c=relaxed/simple;
-	bh=isneXLCqbOruHYkj2ItmtM8OHJUlnBsjO2FCHsL8Jwg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=asL7gJE914hPEQVhonI0zE88Hoqb8B8fyS6HtgArTv8XBnrrYFeQZkqRQ+TrQBiFBWw4g2SBl+Mg+hA2njqZftJEm9VM7zJWHIG9OicYuwwiVJVgAO4j9koF61i1oSUYnYHA2mllHyF0RSSRnzi47wRdhuDL/T8lC8u8IA69Q3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gLlXrggN; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gLlXrggN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D4ACC4CEE3;
-	Wed, 11 Jun 2025 14:55:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749653763;
-	bh=isneXLCqbOruHYkj2ItmtM8OHJUlnBsjO2FCHsL8Jwg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=gLlXrggNR4yholGByFgP2+BgEpfybD5papqiAeDCWY8iyX0kbApFoUNgwe1MCOmzR
-	 py+PK+XYTu+gbK1IIJ62BjDxMjlAienR5W853iWao5od15/h/Sy96lbSLdJrrr1mKu
-	 fEDUFa+7nZBYB99XPNPMN+3BexYeZUgTtNUixEAejdwpIvpy2vrsES6O2qS16G+dND
-	 vaDZrqky2OKmj6f/dUmLtGJsqvcebgiiHUnCJhDBWa1kgOoQItVBUlwmjBwz093RCZ
-	 DUVaK6jA8UkJn5g4EkhBvY7iqRCMawKivdPg0izsUG/Q2XMcYXg8ylbGJibq9Vh7UR
-	 dW0rnyrFB+rlg==
-Date: Wed, 11 Jun 2025 15:55:55 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com>
-Cc: Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
- David Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, linux-iio <linux-iio@vger.kernel.org>, LKML
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] iio: imu: inv_icm42600: add WoM support
-Message-ID: <20250611155555.68ac59e4@jic23-huawei>
-In-Reply-To: <FR3P281MB17573A98ECB6B89306DB8DCBCE6AA@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
-References: <20250418-losd-3-inv-icm42600-add-wom-support-v3-0-7a180af02bfe@tdk.com>
-	<20250418-losd-3-inv-icm42600-add-wom-support-v3-1-7a180af02bfe@tdk.com>
-	<aAPDovuee7hoY1PS@smile.fi.intel.com>
-	<FR3P281MB17573A98ECB6B89306DB8DCBCE6AA@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749653791; c=relaxed/simple;
+	bh=AQT8gj4xTBMw8so4kCxpdxtX6at/oNsMVTMEr/8Woqg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Ur0TCnLvNw0Kx8M7u/ro27DsX+wUF6qUEMkVb701qmkO5jEceZHhRN5nxsFB+AQVj+DRNeN48rU6fJ/WVcB5w1OexPBIhzIvyFyf51iiigpMQ/j+7rtLwv7PIy7IbGbGFRoC2JZI39V4Vt9vTe3mSD7OxBex+C7UA2iUBLuMoqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from [127.0.0.1] (unknown [116.232.147.71])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id C628C33BDFF;
+	Wed, 11 Jun 2025 14:56:25 +0000 (UTC)
+From: Yixun Lan <dlan@gentoo.org>
+Date: Wed, 11 Jun 2025 22:56:04 +0800
+Subject: [PATCH] riscv: defconfig: run savedefconfig to reorder it
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250611-01-riscv-defconfig-v1-1-b48fc3517498@gentoo.org>
+X-B4-Tracking: v=1; b=H4sIAAOZSWgC/x3MQQqAIBBA0avIrBtQo6yuEi1CZ2o2FgoShHdPW
+ r7F/y9kSkIZFvVCoiJZrthgOgX+3ONBKKEZrLaDHo1BbTBJ9gUDsb8iy4GOZ82uD3bqA7TwTsT
+ y/NN1q/UD2NZiTWQAAAA=
+X-Change-ID: 20250611-01-riscv-defconfig-7f90f73d283d
+To: Conor Dooley <conor@kernel.org>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Alexandre Ghiti <alex@ghiti.fr>
+Cc: Guodong Xu <guodong@riscstar.com>, linux-riscv@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, spacemit@lists.linux.dev, 
+ Yixun Lan <dlan@gentoo.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1945; i=dlan@gentoo.org;
+ h=from:subject:message-id; bh=AQT8gj4xTBMw8so4kCxpdxtX6at/oNsMVTMEr/8Woqg=;
+ b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBoSZkWufTaZdRh6DX6w+W5fpSc/YuCt9t8gi33q
+ JnaMfzti6OJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCaEmZFl8UgAAAAAAuAChp
+ c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
+ CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277bWrD/9d/QMkMszVaP2n4l
+ /Tek7n0hbNq7jnvIjdleHffHTxI/1uxI1MvK/FA7lqD8Riqoj+3F8XIuw8Wim2/HOP8uqb42FLI
+ d6xpWrnJDwcfwdin2MkWm2Zw8zQTUGXule5fcAAesPefiBlyPPJxixxIV+/D3hQKb2nqjK/8U/S
+ kMrKVybm4oSXxvv4qAeAwOTYjDSJK5aPLqbeeRNmIY+h2LToPnr91JxVt795TNNEwpLT/ZCnDEM
+ 9xtZIC0KbLd/NDwfiVSXuTQBKWi2JMA2ZIqdJBfxC4FfmvR7yitvyuO4t3MnXmwwzD4UzL9UOnt
+ mQ1xo3XnOg7ff1Y7qYFxpib06+fqRH3CsxRsUT79uVPSk/13LrKko9iZ8vYzGUPV3UBmHlynV0n
+ Kd3LfSxcYQpd+vroxoTnDt54lcDoe7mq9E1zqfCt2X7aDmTiDx9MGYuMUI4mOj/2yeXV/gsge7B
+ rIsqDw5ZM8A8P+g6ZsExk5eEiZP2R7o48TiKSkNCGBPIUn/PtaAa7/uR/mJLjCaQlZ1HC1eyYyG
+ iGUyKpQOGaNC6QnYVZoRo+Nw04mMay5MrnwGbGLy8FrEec2ojkbysOdBknr9wfBsY32nEalhKy0
+ M4O4UU7DKoSoaEHuBH+3S9xZAjObvA76Evr+9wMuZK2YOQPbcM4PkZwmSB5BgPgHPePg==
+X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
+ fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
 
-On Tue, 10 Jun 2025 14:13:38 +0000
-Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com> wrote:
+Changes to defconfig should be always updated via 'make
+savedefconfig', run this command to make it aligned again.
 
-> Hello Andy,
->=20
-> sorry for the very late response, here are my answers.
->=20
-> Thanks,
-> JB
->=20
-> >________________________________________
-> >From:=C2=A0Andy Shevchenko <andy@kernel.org>
-> >Sent:=C2=A0Saturday, April 19, 2025 17:39
-> >To:=C2=A0Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com>
-> >Cc:=C2=A0Jonathan Cameron <jic23@kernel.org>; Lars-Peter Clausen <lars@m=
-etafoo.de>; David Lechner <dlechner@baylibre.com>; Nuno S=C3=A1 <nuno.sa@an=
-alog.com>; linux-iio@vger.kernel.org <linux-iio@vger.kernel.org>; linux-ker=
-nel@vger.kernel.org <linux-kernel@vger.kernel.org>
-> >Subject:=C2=A0Re: [PATCH v3 1/2] iio: imu: inv_icm42600: add WoM support
-> >=C2=A0
-> >This Message Is From an External Sender
-> >This message came from outside your organization.
-> >=C2=A0
-> >On Fri, Apr 18, 2025 at 06:19:02PM +0200, Jean-Baptiste Maneyrol via B4 =
-Relay wrote: =20
-> >> From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
-> >>=20
-> >> Add WoM as accel roc rising x|y|z event. =20
-> >
-> >...
-> > =20
-> >> +static unsigned int inv_icm42600_accel_convert_roc_to_wom(uint64_t ro=
-c,
-> >> +							 =C2=A0int accel_hz, int accel_uhz)
-> >> +{
-> >> +	/* 1000/256mg per LSB converted in =C2=B5m/s=C2=B2 */
-> >> +	const unsigned int convert =3D (1000U * 9807U) / 256U; =20
-> >
-> >Wondering if KILO (or MILLI?) is a good suit here... =20
->=20
-> This one is a little complex, since we have gravity value in mm/s=C2=B2 m=
-ultiplied
-> by 1000 to go to =C2=B5m/s=C2=B2.
-> If you have an idea of better writing that, I will do.
- =3D (9807U * (MICRO / MILLI)) / 256U;
+This will ease the effort of reviewing changes of defconfig
+in the future.
 
-probably best way to express what you've written.  Rely on compiler working
-out the constant for us.
+Signed-off-by: Yixun Lan <dlan@gentoo.org>
+---
+Update PDMA config bring in unnecessary changes[1], let's fix
+it by run savedefconfig first.
 
-> >> +static int inv_icm42600_accel_disable_wom(struct iio_dev *indio_dev)
-> >> +{
-> >> +	struct inv_icm42600_state *st =3D iio_device_get_drvdata(indio_dev);
-> >> +	struct device *pdev =3D regmap_get_device(st->map);
-> >> +	struct inv_icm42600_sensor_conf conf =3D INV_ICM42600_SENSOR_CONF_IN=
-IT;
-> >> +	unsigned int sleep_ms =3D 0;
-> >> +	int ret;
-> >> +
-> >> +	scoped_guard(mutex, &st->lock) { =20
-> > =20
-> >> +		st->apex.wom.enable =3D false;
-> >> +		st->apex.on--; =20
-> >
-> >Hmm... Even if the below fails we consider it successful? Why? =20
->=20
-> If it fails, there is no easy way to restore functioning. Better consider
-> everything is disabled to not prevent the chip go into sleep (which will
-> disable the feature anyway) and give a chance to reenable it afterward.
->=20
+This patch is based on top of tag 6.16-rc1.
 
-Maybe add a comment?
+Link: https://lore.kernel.org/all/20250611134859-GYA125008@gentoo/ [1]
+---
+ arch/riscv/configs/defconfig | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
+diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+index fe8bd8afb4183ce871020fb2992a21a13bccbc87..37c98c0f98ffc0ee9d021e4d07aa37a27d342f7a 100644
+--- a/arch/riscv/configs/defconfig
++++ b/arch/riscv/configs/defconfig
+@@ -134,6 +134,7 @@ CONFIG_MACB=y
+ CONFIG_E1000E=y
+ CONFIG_R8169=y
+ CONFIG_STMMAC_ETH=m
++CONFIG_DWMAC_THEAD=m
+ CONFIG_MICREL_PHY=y
+ CONFIG_MICROSEMI_PHY=y
+ CONFIG_MOTORCOMM_PHY=y
+@@ -151,7 +152,6 @@ CONFIG_HW_RANDOM_JH7110=m
+ CONFIG_I2C=y
+ CONFIG_I2C_CHARDEV=m
+ CONFIG_I2C_DESIGNWARE_CORE=y
+-CONFIG_I2C_DESIGNWARE_PLATFORM=y
+ CONFIG_I2C_MV64XXX=m
+ CONFIG_SPI=y
+ CONFIG_SPI_CADENCE_QUADSPI=m
+@@ -159,11 +159,11 @@ CONFIG_SPI_PL022=m
+ CONFIG_SPI_SIFIVE=y
+ CONFIG_SPI_SUN6I=y
+ # CONFIG_PTP_1588_CLOCK is not set
++CONFIG_PINCTRL_TH1520=y
+ CONFIG_PINCTRL_SOPHGO_CV1800B=y
+ CONFIG_PINCTRL_SOPHGO_CV1812H=y
+ CONFIG_PINCTRL_SOPHGO_SG2000=y
+ CONFIG_PINCTRL_SOPHGO_SG2002=y
+-CONFIG_PINCTRL_TH1520=y
+ CONFIG_GPIO_DWAPB=y
+ CONFIG_GPIO_SIFIVE=y
+ CONFIG_GPIO_SPACEMIT_K1=y
+@@ -240,7 +240,6 @@ CONFIG_RTC_DRV_SUN6I=y
+ CONFIG_DMADEVICES=y
+ CONFIG_DMA_SUN6I=m
+ CONFIG_DW_AXI_DMAC=y
+-CONFIG_DWMAC_THEAD=m
+ CONFIG_VIRTIO_PCI=y
+ CONFIG_VIRTIO_BALLOON=y
+ CONFIG_VIRTIO_INPUT=y
 
-J
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250611-01-riscv-defconfig-7f90f73d283d
+
+Best regards,
+-- 
+Yixun Lan
+
