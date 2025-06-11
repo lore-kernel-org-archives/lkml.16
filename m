@@ -1,126 +1,117 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F8C2BD5A1
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 13:57:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F3C28F930
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 13:57:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749650254; cv=none; b=gq6idxEEJHj/hlTq31Af3sSwwZhilQ/dghRHIjqLhxFJApoI4yI3oW22fFx5hIa0swoEJK1SoOJ4IctoSeRuLBHjR/L+yjJakc9EO7+FwrwwZ3bkZN7EdSx3mMDiVA7dujtLPQ89uu59ksaNZ9m9ewm7RyuY07dugdK4rZfkgt8=
+	t=1749650256; cv=none; b=uYmIqPXNP40NBxvsApkv/PSy0rrlrQwtvNuWKbJvhmZN+gQRL+eQm4TflpJpBCmJSTf54B7J/DtoRj582/cgMHBRgbxXdJj/fNAL/mtEdkIp4oUJcj7qiPMjtdAZJFpZb/21AGfVQDKtJw/yO9C57BRn79my5cFx27miWFADS6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749650254; c=relaxed/simple;
-	bh=Go5JGuIZNIfDL3ZeStX4Ulz3lvP95/gd1jxsbDwz00U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ozyB9rzaDqR+GIRVU6KuVcTEUBKFC6jS87G04L1/Cg3xC5aH22mV6gS9CmHzI4UP36vtzg+hh7OJZi71IDgz77NWpHA3ylL3ZYu5HvSQmdlaZ+QQKOfb/3uHRhdYewY6E8GQ9Z9jk6xcZz8daePCXOYZBUJUgW4ornBOGDflchg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dbLvsGAg; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749650256; c=relaxed/simple;
+	bh=nd64DLm4mhs4qa7Cw4rmwJkqLp8AQYl+cgtOwldnmD4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jcOPJ7fVtUL7CkhtF72vNhaocB2ztXWbxFyZnx/cLL9ze3NHgDY5IgpNKw56rUquTL69EJgDyavMOt1nRJ39pkwJggZUny7qf5qEGEMuI+c+25t9Ko6dRLVDUZjFeZ79q9AzgpSgSS8bOesTRslAUFGVnzsrmwUSJcMCODwDGl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=jisvjjVS; arc=none smtp.client-ip=209.85.167.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dbLvsGAg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749650252;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SHi0wdPt/H6x9IskZMhJkRdb3PKUTgsnf0jUg3nci1o=;
-	b=dbLvsGAgq+PUe+Ml4EgUNgoZizAkP7O1TqUOnSCz4vH8VtRRKNNA1MEqV+Y8UAoLsb5Shs
-	9GNfYsITv3r+FqWpF6JfTywYWzfw3KMZAj1RdTtxRE/jx5L5MWJkWz/2Hd7abdaq3DAK2Y
-	lc7qQvmg/oCugz6nmXod/bMlru5ULS8=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-176-mUbO50PBP1uwErUu09FLoQ-1; Wed,
- 11 Jun 2025 09:57:29 -0400
-X-MC-Unique: mUbO50PBP1uwErUu09FLoQ-1
-X-Mimecast-MFC-AGG-ID: mUbO50PBP1uwErUu09FLoQ_1749650248
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CCD1E1800286;
-	Wed, 11 Jun 2025 13:57:27 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.45.225.32])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B4D9119560A3;
-	Wed, 11 Jun 2025 13:57:24 +0000 (UTC)
-From: Tomas Glozar <tglozar@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	John Kacur <jkacur@redhat.com>,
-	Luis Goncalves <lgoncalv@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Chang Yin <cyin@redhat.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Tomas Glozar <tglozar@redhat.com>
-Subject: [PATCH 7/8] rtla/tests: Add tests for actions
-Date: Wed, 11 Jun 2025 15:56:43 +0200
-Message-ID: <20250611135644.219127-8-tglozar@redhat.com>
-In-Reply-To: <20250611135644.219127-1-tglozar@redhat.com>
-References: <20250611135644.219127-1-tglozar@redhat.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="jisvjjVS"
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-408e0986303so4693124b6e.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:57:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749650254; x=1750255054; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Onw+F7Njzqx9qJlT9wI5+vJ8uzypmHxvVhvYZXMTUQc=;
+        b=jisvjjVSMo6qU0hKqooo4xFc31Oxn/qrMatYVDoyD1Hlz/Mx81tChCJMdJtqh6+eu7
+         WFDPicZtUYGKuRJ+HLRIiMLLoCu8+mxhOyHj2EEif5tZMWHXo3NFf8uuTIWl366+nP5j
+         4Dg2IrNX+bFVtrTogNgEByk059T4xNAV8smCcD1idD5NF7PN2OIkNG2iQvgBChGia+hA
+         cmXNoqrx7InvM8/WD1Qk+btPc4wBRIuJ/zheCgXbEkf2PE7IumT9X1LUVitKVnBnvdYr
+         EI06lDApvbkvt1ZPcAJtDrHQ6/lykU6eSgbnBB3r2PewVAQnUQv5gpcTdJdQzbaUk+Xo
+         vS/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749650254; x=1750255054;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Onw+F7Njzqx9qJlT9wI5+vJ8uzypmHxvVhvYZXMTUQc=;
+        b=Psza/6dw8zyKkPLz2dNBXwUG3I89jJr24z5HR09T9bR37paIjO405alvFHCL959/BC
+         zcqGRCEU0xff8jnqBGqhMWTsCuNVVxt1Wn2PmyI+1+6AeGE+mHX/TF18RlDz9f0W7E2q
+         KfweC50HxC6MmioeQRmSUHr1kXxw5me5rtaVszl1Wee2iQRcy2XDO6m+CUS8No2gMZHj
+         n+M4DPmwWWJGGgGFefVMBd94vPGna5RY9TJbpTs2oHoxCcAHKjxkt3bNbhWspw4FenB7
+         FaWkEQ2IKBa5hrH79suPGWLUO5WROTWRRO3hSAV35Kp4GzwINNavfTmvPhxszMt64Iul
+         hmpg==
+X-Forwarded-Encrypted: i=1; AJvYcCWE5+1ClF4JhUmuNPjZOerujdWDj7doCrBJ8H3/BShKOU6SRB5P81iPG/d6smzxbPAuO7K9f2holRG2Rqk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/ODJ5I5Mgvm0GotCZeR8GxcX1fh5TIEPFlGGwGzTRxD8IhtQf
+	1OBkrOoRUBnp72MqJPJHSPpcRrLOwR7bnrfc/ReasTzlzibfEepeRzSTaFW64wm89HQ1CdB0U06
+	ch94C
+X-Gm-Gg: ASbGncuy6TwnmOc0chY+UAUS1zYBP7ZY7csUEnT1tWhf4rGe2lU0G/lnOi6S/w0Ngcx
+	qSLKdiXLlBAa0Ay3aYwXQ+vIC8+kk2kdZF48xr62OhpNJcmvujUhWcIZDCXUjTf7rfwqfJk3zs7
+	CXyJgO0tXRQHqEIHJU1qXH5VhPlw6RJdh3F/9IxcrCWsu/bHDvGYfdMs2+jc2DeWyQsutgiYVGF
+	3ETcMpZCtHEzIGGHs08jdpsA3TQKDnwiqEycMBpi6vOx4T+Td++eEWTfR/D/N7qKcL7T/ddKnJv
+	gh4yz/5RlMXhHvzBQw4Zuja7JPSsaqW7bP54t/d10oG/ij7xCJXQfBCutSdu7pvS98jVLydkPc+
+	8s96sqohvVD54QoYXLNCOr1O1bjbhaYTvAC0S
+X-Google-Smtp-Source: AGHT+IHHOJ7UPUjqfa7Ax2DODQaNiUV5DY9O1oiua1yOw8frXqBPksX3fFK+2Qk20HoobYMoNjVxXw==
+X-Received: by 2002:a05:6808:21a4:b0:3f8:3eeb:11a3 with SMTP id 5614622812f47-40a5e0a6824mr1694522b6e.11.1749650253782;
+        Wed, 11 Jun 2025 06:57:33 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:eb6c:30d1:632b:494? ([2600:8803:e7e4:1d00:eb6c:30d1:632b:494])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40a5d941cbesm333645b6e.24.2025.06.11.06.57.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Jun 2025 06:57:32 -0700 (PDT)
+Message-ID: <0ec0fd5e-8fbe-43c4-8aad-f36d2872f280@baylibre.com>
+Date: Wed, 11 Jun 2025 08:57:30 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iio: Use dev_fwnode()
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>, linux-kernel@vger.kernel.org
+Cc: tglx@linutronix.de, Jonathan Cameron <jic23@kernel.org>,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+ Andy Shevchenko <andy@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, linux-iio@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250611104348.192092-1-jirislaby@kernel.org>
+ <20250611104348.192092-9-jirislaby@kernel.org>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250611104348.192092-9-jirislaby@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add a bunch of tests covering most of both action on threshold
-(-A/--on-threshold) and action on end (-N/--on-end). Parts sensitive to
-implementation of hist/top are tested for both.
+Subject should be "iio: adc: stm32-adc: Use dev_fwnode()"
 
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
----
- tools/tracing/rtla/tests/timerlat.t | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+On 6/11/25 5:43 AM, Jiri Slaby (SUSE) wrote:
+> irq_domain_create_simple() takes fwnode as the first argument. It can be
+> extracted from the struct device using dev_fwnode() helper instead of
+> using of_node with of_fwnode_handle().
+> 
+> So use the dev_fwnode() helper.
+> 
 
-diff --git a/tools/tracing/rtla/tests/timerlat.t b/tools/tracing/rtla/tests/timerlat.t
-index 579c12a85e8f..b810b36a04a3 100644
---- a/tools/tracing/rtla/tests/timerlat.t
-+++ b/tools/tracing/rtla/tests/timerlat.t
-@@ -18,6 +18,8 @@ fi
- for option in $no_bpf_options
- do
- export RTLA_NO_BPF=$option
-+
-+# Basic tests
- check "verify help page" \
- 	"timerlat --help"
- check "verify -s/--stack" \
-@@ -36,6 +38,32 @@ check "verify -c/--cpus" \
- 	"timerlat hist -c 0 -d 30s"
- check "hist test in nanoseconds" \
- 	"timerlat hist -i 2 -c 0 -n -d 30s" 2
-+
-+# Actions tests
-+check "trace output through -t" \
-+	"timerlat hist -T 2 -t" 2 "^  Saving trace to timerlat_trace.txt$"
-+check "trace output through -t with custom filename" \
-+	"timerlat hist -T 2 -t custom_filename.txt" 2 "^  Saving trace to custom_filename.txt$"
-+check "trace output through -A trace" \
-+	"timerlat hist -T 2 -A trace" 2 "^  Saving trace to timerlat_trace.txt$"
-+check "trace output through -A trace with custom filename" \
-+	"timerlat hist -T 2 -A trace,file=custom_filename.txt" 2 "^  Saving trace to custom_filename.txt$"
-+check "exec command" \
-+	"timerlat hist -T 2 -A shell,command='echo TestOutput'" 2 "^TestOutput$"
-+check "multiple actions" \
-+	"timerlat hist -T 2 -A shell,command='echo -n 1' -A shell,command='echo 2'" 2 "^12$"
-+check "hist stop at failed action" \
-+	"timerlat hist -T 2 -A shell,command='echo -n 1; false' -A shell,command='echo -n 2'" 2 "^1# RTLA timerlat histogram$"
-+check "top stop at failed action" \
-+	"timerlat top -T 2 -A shell,command='echo -n 1; false' -A shell,command='echo -n 2'" 2 "^1ALL"
-+check "hist with continue" \
-+	"timerlat hist -T 2 -d 1s -A shell,command='echo TestOutput' -A continue" 0 "^TestOutput$"
-+check "top with continue" \
-+	"timerlat top -q -T 2 -d 1s -A shell,command='echo TestOutput' -A continue" 0 "^TestOutput$"
-+check "hist with trace output at end" \
-+	"timerlat hist -d 1s -N trace" 0 "^  Saving trace to timerlat_trace.txt$"
-+check "top with trace output at end" \
-+	"timerlat top -d 1s -N trace" 0 "^  Saving trace to timerlat_trace.txt$"
- done
- 
- test_end
--- 
-2.49.0
+...
+
+> @@ -421,10 +420,8 @@ static int stm32_adc_irq_probe(struct platform_device *pdev,
+>  			return priv->irq[i];
+>  	}
+>  
+> -	priv->domain = irq_domain_create_simple(of_fwnode_handle(np),
+> -						STM32_ADC_MAX_ADCS, 0,
+> -						&stm32_adc_domain_ops,
+> -						priv);
+> +	priv->domain = irq_domain_create_simple(dev_fwnode(&pdev->dev), STM32_ADC_MAX_ADCS, 0,
+> +						&stm32_adc_domain_ops, priv);
+
+In the IIO subsystem, we still usually wrap at 80 characters so
+wouldn't want to unwrap the lines here.
+
+>  	if (!priv->domain) {
+>  		dev_err(&pdev->dev, "Failed to add irq domain\n");
+>  		return -ENOMEM;
 
