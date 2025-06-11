@@ -1,216 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300A118787A;
-	Wed, 11 Jun 2025 18:46:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C60210F53
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 18:50:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749667615; cv=none; b=H0CeqcSSIz3ImhqLyc5dH7TykTIbH/bx5UMjqt0ih5BiLRCu+jQPSUtm994QetV1Z+MBA2v9Uf7URLdwsgvryT3w6RZTqjwE6Trol0DXR6PubWnJ4jneKoJKR9Xfqzj7rt15AbPm33pqxH+IZaMt0eyRfVpg65Yjehb7nNH4izU=
+	t=1749667842; cv=none; b=IQDNd9gncjnyKweKFkAkZGurNqmG+q4Aff55zFZUSuqZiFzRsBiDP2mjy7pyc7Z83I+2f0vlJ8kscoRExctveCMus5hdhL/mua5e5mtPG6x8W1YvPND5mZKQQS7TbBtdQRbY1n3ZSvjg1CV2AM9HU7wUmz45PHsU7y8niKzn3Qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749667615; c=relaxed/simple;
-	bh=a4l2CHrqJdsjNmKQhyuxmXX7as3MmuRLONCmwbTJ5xI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LHOdxPuhndTA1hJ2wyCLQzmIzsjJagcZ7XsuGrJCkIThvdQbZl9wlhi7APaWum9dj5FAd1U2HFW6D3bDFRLE6uFBxQSTSndy/P64yRyIhC3UL6Q1P+YUwMVtEkBmoH622IVuM+rVXJ9qCajdaoBtzQwpKjYhXX1MVhztKCqvHYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MMtwMTsB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749667842; c=relaxed/simple;
+	bh=nSfjD6bMZBS4BmZBx5jpM03quxzAgEVRFOeFWsKppzc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=JooRuTwh/BJeXQGzpW/I5bC1mGK20tJCR+hlQg6gZ0aIlSV6e/nl8ZBoZG446/TorGdk4Xk5f6dDlq4zv2U3xTZbBphRytp2Ic1d9Fp6SjgLzDXofiD3mnaAmxpMVtPcnl8QmDMFeXTzaZAJGltcGZaP1G/rGvJTOl0QoeQq4HM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=gzLXoim6; arc=none smtp.client-ip=209.85.160.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MMtwMTsB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84ED2C4CEE3;
-	Wed, 11 Jun 2025 18:46:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749667614;
-	bh=a4l2CHrqJdsjNmKQhyuxmXX7as3MmuRLONCmwbTJ5xI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=MMtwMTsBlxDHmWS/yYHJCRLjsUdF8XYGDVnIGVsgIjNqR0No/vpJjrSEt7xFJvfXl
-	 I3Bno5FFVJZfM767cUsKq6tYTTJYEAbXVHRI74trjZ1iQ0VLYID81bwvuCc8jahGmJ
-	 gdHybPESN18I3iMd6JyYHqTdtdsj1KIRWH2MzgS3H1qGz7oYOJLGcCZ7z6HQ37bXHk
-	 N7NCne3qWTZo5+LkhccEGi8y8C91sGKJH2zJQBbCvfGkMhWPHrjyqIzVBjCF2pZhDQ
-	 UhSFiT0TpIMMPLyE/cnVE8SKQYX9ZodVFyEECM0cyT+b2okgN7FgR2oUEvrnLw5roE
-	 yZRp9M18Ydz9Q==
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-adb2bd27c7bso22994366b.2;
-        Wed, 11 Jun 2025 11:46:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVAu6JZMUnEEeqeOKcSBmTIpYzm23j6CBJvvfvSui/+W/xaWMi8kgM7NgCqDmzjlzt0Bjom16Kl0wM0OFR6@vger.kernel.org, AJvYcCVkpd7fmuXj+gJwofpI0UTTXImI5e7X+5W4GXdydJuJusqXp/97b8/3afizWxsKffoblQLeoKeWPi50@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNUNFRILXAs59oNVZmYB69CqiMFROATyM90DxlM12siq4GbO8q
-	knsSkBARl5KoTM/XN2ys3fSz8Frc7lmcYj//fLbYn4dQ3t+OhtwKNLewbvronTxqYfRrUUPxSj3
-	aERDrfCIdaV5aHeMY3p8eXVFYJ0B6XA==
-X-Google-Smtp-Source: AGHT+IEtiYLqZxPX6vg79k1l4PJrPl4a356jYKlMYVrfSiN34x4GAKFDsw4RbXmE6kLrUUCaPNybODY9V3P09GFhmaM=
-X-Received: by 2002:a17:906:6a14:b0:ad8:99cc:774c with SMTP id
- a640c23a62f3a-adea9456cdfmr18086266b.58.1749667612085; Wed, 11 Jun 2025
- 11:46:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="gzLXoim6"
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2cc57330163so75138fac.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:50:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749667836; x=1750272636; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VfLSwwtWqu9qQ/BXRbsnm8G6Ja0ZcDCL6XYgy1oOSxM=;
+        b=gzLXoim60yzOv/Ze+/4YLOkW4YRipBB4Tu4AuW6IlXMkyBuVfMw9Nmh7VNuPfF2zpo
+         be1hDDl9UOKW3kB6EKdIN3mm/uzivw30+aAzLsCU/EeQGNEZXu+AqoTTjTNE4gqtqEs8
+         NrraQ/5FjYOn9dO7ASjDyJqmpldRumkmwazkvFuYIV9EguRlNi78ckzSqh9ofrMbxKN+
+         zrjKgFVSK6J0oilQKtZi58wf4DVuk+XqtdMVfrsp2GZ/HK48bAkmv1RomuiSKWQlKOVN
+         CVvbbwSubP9fbI+I4eSkQ0DU5jfFULZEd6MhSMAJJ8lbIYF332Xe/CoGAs+q30AkNFvG
+         okiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749667836; x=1750272636;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VfLSwwtWqu9qQ/BXRbsnm8G6Ja0ZcDCL6XYgy1oOSxM=;
+        b=jxAH9GxPkr3StMyu8aHaMGjvmRur7jI2tnm+1ZS3kTsD5c4RxCDR3ZnTzDb6Iv68AT
+         PyIJIiQPBIoQhAnxpKhDOlUZSv8F3I1yjFEHCc3LJYY08w57LxeSPVf7q1ox4R+y/Ekv
+         KXJlfeUG4ZMNDS648DTdhSzcryFqPTJGb1yyLiHqJCrECb6YvbAzW7jveu5PeQ1C6bM+
+         HfnsOdDNU98E2rQwXZg7o3suyKw4ZiR/A//FPyLvIVvt2hBPDAUfMSAvtVvknUHYk9kA
+         uy0UKKtAffURfJEafENi3kQgvA6DplSF6DVekQpvcY/Pz8A1Pf59tcrkxA90gqP5dVTH
+         GTnw==
+X-Forwarded-Encrypted: i=1; AJvYcCWkdIkkWlJvia0ZWYmnC904NpMGH4KnyayWaQp6IAM6nwGsj8FHFEG8z43HwspcF8G7yBtjcTmomsl80zQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+gEcZuyy2MYMM0hzPT+JRzx9DE954D4/YYvrR/icbSR79Z7Tr
+	S47s98LU7ZxWC69wGNXCX5OjaAgdplA/FRy9D/2v4XmgUBtKNBCuRc8UqwyO8I+u5+M=
+X-Gm-Gg: ASbGncsnMY9ufNfA7AcPjVA1gKL9M9B38qkVQI0zknEvqOqEk2gqK6w3R4Uwx4+VHkB
+	PL+7lmvM3vWo9UTAxM8Q64rXU0y21ZEHCyrU8s6ZLZ2XRCMbuJS/xZDwa4h62ItFPUmIR7lHBh2
+	YrUDLX6tJf9CuETnaf4PoGjikA7cRTnQ7YWBKYHcyCju00sj85Yt7ZWMqs2M7f2/5C7LIlnWXue
+	X0AGmsoXMRqEQYdqZX6YncNmiGOS0FnZMeAPX6hMbFeyv5PoGXcw7iJxAcD6o4IczKWM1l3gg9A
+	7xU0rDbE2E38YfPDB/cYJQkoik/nLRxRFPmOaHt7uEQI9ofB2EG87sl4FdCdZuyFacZv
+X-Google-Smtp-Source: AGHT+IHjYXz01Zl9sopL5Bo7WGyboaTC4cea8WBMM0dh6eeMLiHstHuEoKqxYD/qWOWCRh7nF1LZKA==
+X-Received: by 2002:a05:6870:1255:b0:2ea:7574:e243 with SMTP id 586e51a60fabf-2ea96c1a31emr2126324fac.9.1749667836342;
+        Wed, 11 Jun 2025 11:50:36 -0700 (PDT)
+Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:4753:719f:673f:547c])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2ea06fe5784sm3009668fac.2.2025.06.11.11.50.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 11:50:35 -0700 (PDT)
+From: David Lechner <dlechner@baylibre.com>
+Date: Wed, 11 Jun 2025 13:50:26 -0500
+Subject: [PATCH] gpio: virtuser: use gpiod_multi_set_value_cansleep()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611-sgx-dt-v1-0-7a11f3885c60@gmail.com> <20250611-sgx-dt-v1-1-7a11f3885c60@gmail.com>
-In-Reply-To: <20250611-sgx-dt-v1-1-7a11f3885c60@gmail.com>
-From: Rob Herring <robh@kernel.org>
-Date: Wed, 11 Jun 2025 13:46:39 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLsE8JqHHEFPpNpDug0KtAPrZ54KwQ+M9=-r0vAzg4d0A@mail.gmail.com>
-X-Gm-Features: AX0GCFsOeaA5WdIXO14g7zVwNMaCmTI9osasLBHNTNRqJq2RE6YUF5IFXoLClZA
-Message-ID: <CAL_JsqLsE8JqHHEFPpNpDug0KtAPrZ54KwQ+M9=-r0vAzg4d0A@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: Add Apple SoC GPU
-To: fnkl.kernel@gmail.com
-Cc: Sven Peter <sven@kernel.org>, Janne Grunau <j@jannau.net>, 
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, asahi@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250611-gpio-virtuser-use-gpiod_multi_set_value_cansleep-v1-1-43b4adf6c807@baylibre.com>
+X-B4-Tracking: v=1; b=H4sIAPHPSWgC/x2N2wrDIBBEfyXsc4U1vRj6KyWIxG26YI24KoWQf
+ 6/kZeAMnJkdhDKTwHPYIVNj4S120JcBlo+LKyn2nWHE8Y4PrdWaeFONc6ndVD3OxttvDYWtULH
+ NhUp2cVECUVJXj7cJ0ZjJIPTZlOnNv/PyNR/HH3RbZWqCAAAA
+X-Change-ID: 20250611-gpio-virtuser-use-gpiod_multi_set_value_cansleep-3d0480077870
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ David Lechner <dlechner@baylibre.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1159; i=dlechner@baylibre.com;
+ h=from:subject:message-id; bh=nSfjD6bMZBS4BmZBx5jpM03quxzAgEVRFOeFWsKppzc=;
+ b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoSc/zhZOmMebGMUbepV8a3eTCjZkLkJqsDG+FW
+ kXqUnj+2MeJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaEnP8wAKCRDCzCAB/wGP
+ wG+EB/0Q3zdJ06NySiiqCRQsp8x7sv6xy0yypu1OIPZ2sl36W8GmKXPriTkQLvwthDTA5x/xNcA
+ jKOYBZkLcwESwA8rrIF363u7vs4eK1pajsjQkXmc/Wgweniel0rwLNzla+bN5XmIWtn/7/burXr
+ a/9dBfjzBJN9K7gTT5V21T42cJLUQTQT7cUprzF5nyEG/0u1r/2d0I4gwNjPr6iCsXA8xKVQUNY
+ mZIgpel6IqSlxxsqsNHZsdKAiAptY0NSaEoQ7Axbvs0whr32wve83G2XEHuYrugu7LEyLtU/sX8
+ ttkXLSe9bJboRL43adockg7DJo05aHURPpT8iTVvIzJyra9W
+X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
+ fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
 
-On Wed, Jun 11, 2025 at 12:32=E2=80=AFPM Sasha Finkelstein via B4 Relay
-<devnull+fnkl.kernel.gmail.com@kernel.org> wrote:
->
-> From: Sasha Finkelstein <fnkl.kernel@gmail.com>
->
-> Add bindings for the GPU present in Apple SoCs
->
-> Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
-> ---
->  Documentation/devicetree/bindings/gpu/apple,agx.yaml | 95 ++++++++++++++=
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
-++++++
->  MAINTAINERS                                          |  1 +
->  2 files changed, 96 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/gpu/apple,agx.yaml b/Docum=
-entation/devicetree/bindings/gpu/apple,agx.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..23df3ebd689b1e885eb99ca57=
-3343fe7f2d09dc4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpu/apple,agx.yaml
-> @@ -0,0 +1,95 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpu/apple,agx.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Apple SoC GPU
-> +
-> +maintainers:
-> +  - Sasha Finkelstein <fnkl.kernel@gmail.com>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - const: apple,agx-g13g
-> +      - items:
-> +          - enum:
-> +              - apple,agx-g13s
-> +              - apple,agx-g13c
-> +              - apple,agx-g13d
-> +          - const: apple,agx-g13x
+Reduce verbosity by using gpiod_multi_set_value_cansleep() instead of
+gpiod_set_array_value_cansleep().
 
-I'm assuming the 'x' is a wildcard. The preferred thing to do make one
-of the 3 actual devices the fallback. Typically, the oldest one is
-used.
+Signed-off-by: David Lechner <dlechner@baylibre.com>
+---
+ drivers/gpio/gpio-virtuser.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-> +      - items:
-> +          - const: apple,agx-g14g
+diff --git a/drivers/gpio/gpio-virtuser.c b/drivers/gpio/gpio-virtuser.c
+index eab6726953b4118dc0d72c2e37daeb9629040d11..a10eab7d2617e40cefb5f08e1211e9cb33035d0d 100644
+--- a/drivers/gpio/gpio-virtuser.c
++++ b/drivers/gpio/gpio-virtuser.c
+@@ -215,9 +215,7 @@ static int gpio_virtuser_set_array_value(struct gpio_descs *descs,
+ 	struct gpio_virtuser_irq_work_context ctx;
+ 
+ 	if (!atomic)
+-		return gpiod_set_array_value_cansleep(descs->ndescs,
+-						      descs->desc,
+-						      descs->info, values);
++		return gpiod_multi_set_value_cansleep(descs, values);
+ 
+ 	gpio_virtuser_init_irq_work_context(&ctx);
+ 	ctx.work = IRQ_WORK_INIT_HARD(gpio_virtuser_set_value_array_atomic);
 
-This and the 1st entry can be a single enum.
+---
+base-commit: 19a60293b9925080d97f22f122aca3fc46dadaf9
+change-id: 20250611-gpio-virtuser-use-gpiod_multi_set_value_cansleep-3d0480077870
 
-> +  reg:
-> +    items:
-> +      - description: ASC coprocessor control
-> +      - description: GPU block MMIO registers
+Best regards,
+-- 
+David Lechner <dlechner@baylibre.com>
 
-Seems odd that the main GPU registers are not first in the list, but
-either way is fine.
-
-> +
-> +  reg-names:
-> +    items:
-> +      - const: asc
-> +      - const: sgx
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  mboxes:
-> +    maxItems: 1
-> +
-> +  memory-region:
-> +    items:
-> +      - description: Region containing GPU MMU TTBs
-> +      - description: Region containing GPU MMU page tables
-> +      - description:
-> +          Region containing a shared handoff structure for VM
-> +          management coordination
-> +      - description: Driver-opaque calibration blob
-> +      - description: Calibration blob
-> +      - description: Shared global variables with GPU firmware
-> +
-> +  memory-region-names:
-> +    items:
-> +      - const: ttbs
-> +      - const: pagetables
-> +      - const: handoff
-> +      - const: hw-cal-a
-> +      - const: hw-cal-b
-> +      - const: globals
-> +
-> +  apple,firmware-compat:
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    minItems: 3
-> +    description:
-> +      MacOS version the current firmware is paired with, used to pick
-> +      the version of firmware ABI to be used.
-> +      Bootloader will overwrite this
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - mboxes
-> +  - memory-region
-> +  - apple,firmware-compat
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/apple-aic.h>
-> +    gpu@6400000 {
-> +        compatible =3D "apple,agx-g13g";
-> +        reg =3D <0x6400000 0x40000>,
-> +              <0x4000000 0x1000000>;
-> +        reg-names =3D "asc", "sgx";
-> +        mboxes =3D <&agx_mbox>;
-> +        power-domains =3D <&ps_gfx>;
-> +        memory-region =3D <&uat_ttbs>, <&uat_pagetables>, <&uat_handoff>=
-,
-> +                        <&gpu_hw_cal_a>, <&gpu_hw_cal_b>, <&gpu_globals>=
-;
-> +        memory-region-names =3D "ttbs", "pagetables", "handoff",
-> +                              "hw-cal-a", "hw-cal-b", "globals";
-> +
-> +        apple,firmware-compat =3D <0 0 0>;
-> +    };
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index a92290fffa163f9fe8fe3f04bf66426f9a894409..2a32c9c4ee355a1109a3e2031=
-ea3663c39cc8c68 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2331,6 +2331,7 @@ F:        Documentation/devicetree/bindings/arm/app=
-le/*
->  F:     Documentation/devicetree/bindings/clock/apple,nco.yaml
->  F:     Documentation/devicetree/bindings/cpufreq/apple,cluster-cpufreq.y=
-aml
->  F:     Documentation/devicetree/bindings/dma/apple,admac.yaml
-> +F:     Documentation/devicetree/bindings/gpu/apple,agx.yaml
->  F:     Documentation/devicetree/bindings/i2c/apple,i2c.yaml
->  F:     Documentation/devicetree/bindings/input/touchscreen/apple,z2-mult=
-itouch.yaml
->  F:     Documentation/devicetree/bindings/interrupt-controller/apple,*
->
-> --
-> 2.49.0
->
->
