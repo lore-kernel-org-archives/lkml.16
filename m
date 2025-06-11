@@ -1,164 +1,127 @@
-Received: from lx20.hoststar.hosting (lx20.hoststar.hosting [168.119.41.54])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1016226D19;
-	Wed, 11 Jun 2025 07:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.41.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE9622D9E0;
+	Wed, 11 Jun 2025 07:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749626034; cv=none; b=Jw09intIfcmeQOgqeTx9K75u/GbAugG2TdNSvdiq37H/PghA49tpnMAhJAb9IRVMLWVzfvsifhlUgx49Gm67WSuyaTdlWmhJ3TzQcrS6cn8N9NK8nf7KUpL2o9mCwpEfcLjvLKVu7Yt6MI5/64Mt0uIojptUjuzbGYNvoQdcCj4=
+	t=1749626106; cv=none; b=oB/eLU4u0a6fLWz3RkGU5B9HMO9NHlpWHevRk90mMQestPL4MBamtjfYlcEKDzH60VpjbGrmuBzYt6b+/I+M80TWVeJs4Fr1EYLI/MOXPpfxu9TL0dSUfRIpGanUe4cbmdW7OvuQ6QEjuhFsEtSIeSl7Zh+ozoaTg1drn8V3OyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749626034; c=relaxed/simple;
-	bh=ocYLGrn4DKyRdjJkUqfv9yBG++qwjH8EOCZ0CFdAVIk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=I4FHIq4Q6z1iyekkSvpWtFXgDqPBNMBpsSSLr6YO7lbJMMTTVRwi5i/L06l7v1Wbk/xGjnaOufg5fGiJC7lrzkCJG0VWVFh8bMLXusOio+8JROfXP+p5ZSheKSz7bUBFHxAQFe8orUQ/eml+ZZEOgzZKmJKhOlLzAzaaSGRgFGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at; spf=pass smtp.mailfrom=emfend.at; dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b=LAjTGT3t; arc=none smtp.client-ip=168.119.41.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emfend.at
+	s=arc-20240116; t=1749626106; c=relaxed/simple;
+	bh=LBuV2/MkPPLMESpMzqhuYZ2zgNvWeRWkWk8EU9VNXVw=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=SmtuN/rnQc1kWHMbhn0Rd4iEENp75HVUb62M2AePwmhMyjuwVxjBTt0ptgI04/1b3xSBS7jbBbox5gYPXEvNdWRICQnWWpimqjTKehq009KxB6jOQA7ylIH8XM9JgEHxhWC6iIMnlDBA3bVUh6+l73qFaZjjctfDIpVNyAuHv0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f7JCeeMF; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b="LAjTGT3t"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=emfend.at;
-	 s=mail; h=Cc:To:Message-Id:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Subject:Date:From:Sender:Reply-To:Content-ID:Content-Description
-	:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=Jbe15mnO9u7J7i3pEkARcJf909rCxy+rkEFHQHi+nn0=; b=LAjTGT3tp5Ne0I6Mw4XbIR6A7g
-	f4tuIxEeU7uC4SDXTie3Ez7K5CxWBoeCoHSPWXefZBXjQTfuYaL/hYu+3cHCgcqRr4WWybe30nTQ0
-	KJaonu35AWUjw6IR8tk3lOtblnmz629dmOw6Okx/N0DImDc0o+Bzfgh1/yPxaTIec5Go=;
-Received: from 194-208-208-245.tele.net ([194.208.208.245]:62424 helo=[127.0.1.1])
-	by lx20.hoststar.hosting with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <matthias.fend@emfend.at>)
-	id 1uPFeX-00GO9r-Ha; Wed, 11 Jun 2025 09:13:42 +0200
-From: Matthias Fend <matthias.fend@emfend.at>
-Date: Wed, 11 Jun 2025 09:13:33 +0200
-Subject: [PATCH] media: dw9714: add support for powerdown pin
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f7JCeeMF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749626105; x=1781162105;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=LBuV2/MkPPLMESpMzqhuYZ2zgNvWeRWkWk8EU9VNXVw=;
+  b=f7JCeeMFEgyjCxoLkhzQTn9+g5jWo6JnHXQaRgz41nL5WJV4Z7DRaq/e
+   fdc9p0wcU5q3Hs/azDJfkYnXBnR34kZCgQh6uLnYPJ77WHYBGYMf/4kUJ
+   fna6P++g4tbm9CvPsHET7aIVis+KUrYqqL1VboimiWzdQdu/P7Au5oH2O
+   Ln5WsfT+392Vuv3lfsa19nlI0BT9Ih8aznha8LH9dAr6GjcNC6t8U2aak
+   WmKBCb8VIBpqiYEQxp/RKHeoozP5o1IBEgI64p5OIZBjGUAivGZfshAMi
+   tZeL4EEQde1LyJ1q+aaPXtKpMtUq99bIu+tu8BfsqQcONGgNZ/ATAr9Mn
+   Q==;
+X-CSE-ConnectionGUID: 3UznumaHTH6dAR9CdpWONg==
+X-CSE-MsgGUID: ZY8YMweDTwGWmrRt0EoPzw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51747313"
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="51747313"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 00:15:05 -0700
+X-CSE-ConnectionGUID: JU3XRYaKR56sOKqNXnoqBQ==
+X-CSE-MsgGUID: b9Lg0LNyTAGkxPw6lX9asw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="177997213"
+Received: from unknown (HELO [10.238.0.239]) ([10.238.0.239])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 00:15:02 -0700
+Message-ID: <e86f6cd2-e2ed-4928-8a79-e162068d0f15@linux.intel.com>
+Date: Wed, 11 Jun 2025 15:14:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250611-dw9714-sd-v1-1-fb47ef5e736c@emfend.at>
-X-B4-Tracking: v=1; b=H4sIAJwsSWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDM0ND3ZRyS3NDE93iFN20pETTRGNTkzRLYzMloPqCotS0zAqwWdGxtbU
- AK9Q4mFsAAAA=
-X-Change-ID: 20250611-dw9714-sd-fba5a354f936
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- bsp-development.geo@leica-geosystems.com, 
- Matthias Fend <matthias.fend@emfend.at>
-X-Mailer: b4 0.14.2
-X-Spam-Score: 
-X-Spam-Bar: 
-X-Spam-Report: 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/32] KVM: SVM: Disable interception of SPEC_CTRL iff
+ the MSR exists for the guest
+From: Binbin Wu <binbin.wu@linux.intel.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Chao Gao <chao.gao@intel.com>,
+ Borislav Petkov <bp@alien8.de>, Xin Li <xin@zytor.com>,
+ Dapeng Mi <dapeng1.mi@linux.intel.com>,
+ Francesco Lavra <francescolavra.fl@gmail.com>,
+ Manali Shukla <Manali.Shukla@amd.com>
+References: <20250610225737.156318-1-seanjc@google.com>
+ <20250610225737.156318-2-seanjc@google.com>
+ <629e0dc3-49b4-45f5-aeaa-8a9109e81d14@linux.intel.com>
+Content-Language: en-US
+In-Reply-To: <629e0dc3-49b4-45f5-aeaa-8a9109e81d14@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Add support for the powerdown pin (xSD), which can be used to put the VCM
-driver into power down mode. This is useful, for example, if the VCM
-driver's power supply cannot be controlled.
-The use of the powerdown pin is optional.
 
-Signed-off-by: Matthias Fend <matthias.fend@emfend.at>
----
- drivers/media/i2c/Kconfig  |  2 +-
- drivers/media/i2c/dw9714.c | 16 ++++++++++++++++
- 2 files changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-index e45ba127069fc0848f1a06ceb789efd3c222c008..e923daeec9c574c5b8c7014b9e83fcbad47866c0 100644
---- a/drivers/media/i2c/Kconfig
-+++ b/drivers/media/i2c/Kconfig
-@@ -748,7 +748,7 @@ config VIDEO_AK7375
- 
- config VIDEO_DW9714
- 	tristate "DW9714 lens voice coil support"
--	depends on I2C && VIDEO_DEV
-+	depends on GPIOLIB && I2C && VIDEO_DEV
- 	select MEDIA_CONTROLLER
- 	select VIDEO_V4L2_SUBDEV_API
- 	select V4L2_ASYNC
-diff --git a/drivers/media/i2c/dw9714.c b/drivers/media/i2c/dw9714.c
-index 2ddd7daa79e28a2cde915b4173fa27e60d5a2b57..5b78c1848f80bc3e32df13d149f3865ff8defe6e 100644
---- a/drivers/media/i2c/dw9714.c
-+++ b/drivers/media/i2c/dw9714.c
-@@ -2,6 +2,7 @@
- // Copyright (c) 2015--2017 Intel Corporation.
- 
- #include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/i2c.h>
- #include <linux/module.h>
- #include <linux/pm_runtime.h>
-@@ -38,6 +39,7 @@ struct dw9714_device {
- 	struct v4l2_subdev sd;
- 	u16 current_val;
- 	struct regulator *vcc;
-+	struct gpio_desc *powerdown_gpio;
- };
- 
- static inline struct dw9714_device *to_dw9714_vcm(struct v4l2_ctrl *ctrl)
-@@ -151,11 +153,20 @@ static int dw9714_probe(struct i2c_client *client)
- 	if (IS_ERR(dw9714_dev->vcc))
- 		return PTR_ERR(dw9714_dev->vcc);
- 
-+	dw9714_dev->powerdown_gpio = devm_gpiod_get_optional(&client->dev,
-+							     "powerdown",
-+							     GPIOD_OUT_LOW);
-+	if (IS_ERR(dw9714_dev->powerdown_gpio))
-+		return dev_err_probe(&client->dev,
-+				     PTR_ERR(dw9714_dev->powerdown_gpio),
-+				     "could not get powerdown gpio\n");
-+
- 	rval = regulator_enable(dw9714_dev->vcc);
- 	if (rval < 0) {
- 		dev_err(&client->dev, "failed to enable vcc: %d\n", rval);
- 		return rval;
- 	}
-+	gpiod_set_value_cansleep(dw9714_dev->powerdown_gpio, 0);
- 
- 	usleep_range(1000, 2000);
- 
-@@ -185,6 +196,7 @@ static int dw9714_probe(struct i2c_client *client)
- 	return 0;
- 
- err_cleanup:
-+	gpiod_set_value_cansleep(dw9714_dev->powerdown_gpio, 1);
- 	regulator_disable(dw9714_dev->vcc);
- 	v4l2_ctrl_handler_free(&dw9714_dev->ctrls_vcm);
- 	media_entity_cleanup(&dw9714_dev->sd.entity);
-@@ -200,6 +212,7 @@ static void dw9714_remove(struct i2c_client *client)
- 
- 	pm_runtime_disable(&client->dev);
- 	if (!pm_runtime_status_suspended(&client->dev)) {
-+		gpiod_set_value_cansleep(dw9714_dev->powerdown_gpio, 1);
- 		ret = regulator_disable(dw9714_dev->vcc);
- 		if (ret) {
- 			dev_err(&client->dev,
-@@ -234,6 +247,7 @@ static int __maybe_unused dw9714_vcm_suspend(struct device *dev)
- 		usleep_range(DW9714_CTRL_DELAY_US, DW9714_CTRL_DELAY_US + 10);
- 	}
- 
-+	gpiod_set_value_cansleep(dw9714_dev->powerdown_gpio, 1);
- 	ret = regulator_disable(dw9714_dev->vcc);
- 	if (ret)
- 		dev_err(dev, "Failed to disable vcc: %d\n", ret);
-@@ -262,6 +276,8 @@ static int  __maybe_unused dw9714_vcm_resume(struct device *dev)
- 		dev_err(dev, "Failed to enable vcc: %d\n", ret);
- 		return ret;
- 	}
-+	gpiod_set_value_cansleep(dw9714_dev->powerdown_gpio, 0);
-+
- 	usleep_range(1000, 2000);
- 
- 	for (val = dw9714_dev->current_val % DW9714_CTRL_STEPS;
+On 6/11/2025 12:38 PM, Binbin Wu wrote:
+>
+>
+> On 6/11/2025 6:57 AM, Sean Christopherson wrote:
+>> Disable interception of SPEC_CTRL when the CPU virtualizes (i.e. context
+>> switches) SPEC_CTRL if and only if the MSR exists according to the vCPU's
+>> CPUID model.  Letting the guest access SPEC_CTRL is generally benign, but
+>> the guest would see inconsistent behavior if KVM happened to emulate an
+>> access to the MSR.
+>>
+>> Fixes: d00b99c514b3 ("KVM: SVM: Add support for Virtual SPEC_CTRL")
+>> Reported-by: Chao Gao <chao.gao@intel.com>
+>> Signed-off-by: Sean Christopherson <seanjc@google.com>
+>> ---
+>>   arch/x86/kvm/svm/svm.c | 9 ++++++---
+>>   1 file changed, 6 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+>> index 0ad1a6d4fb6d..21e745acebc3 100644
+>> --- a/arch/x86/kvm/svm/svm.c
+>> +++ b/arch/x86/kvm/svm/svm.c
+>> @@ -1362,11 +1362,14 @@ static void init_vmcb(struct kvm_vcpu *vcpu)
+>>       svm_recalc_instruction_intercepts(vcpu, svm);
+>>         /*
+>> -     * If the host supports V_SPEC_CTRL then disable the interception
+>> -     * of MSR_IA32_SPEC_CTRL.
+>> +     * If the CPU virtualizes MSR_IA32_SPEC_CTRL, i.e. KVM doesn't need to
+>> +     * manually context switch the MSR, immediately configure interception
+>> +     * of SPEC_CTRL, without waiting for the guest to access the MSR.
+>>        */
+>>       if (boot_cpu_has(X86_FEATURE_V_SPEC_CTRL))
+>> -        set_msr_interception(vcpu, svm->msrpm, MSR_IA32_SPEC_CTRL, 1, 1);
+>> +        set_msr_interception(vcpu, svm->msrpm, MSR_IA32_SPEC_CTRL,
+>> +                     guest_has_spec_ctrl_msr(vcpu),
+>> +                     guest_has_spec_ctrl_msr(vcpu));
+> Side topic, not related to this patch directly.
+>
+> Setting to 1 for set_msr_interception() means to disable interception.
+> The name of the function seems a bit counterintuitive to me.
+> Maybe some description for the function can help people not familiar with
+> SVM code without further checking the implementation?
 
----
-base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
-change-id: 20250611-dw9714-sd-fba5a354f936
+Oh, please ignore it.
 
-Best regards,
--- 
-Matthias Fend <matthias.fend@emfend.at>
+A later patch in this patch set has handled it.
+
+>
+>
+>>         if (kvm_vcpu_apicv_active(vcpu))
+>>           avic_init_vmcb(svm, vmcb);
+>
+>
 
