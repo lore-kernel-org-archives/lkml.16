@@ -1,260 +1,191 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DF7C1E835B
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 03:40:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD072C2C9
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 03:41:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749613255; cv=none; b=bVKh43MRXNCjFhtoX8q1nhZoSk9WtUYdiNlJs/ZZcPNHE0iCGdlA3yMhQlimdmwejp6+neuGhdlguIlKBvZR/FXFSWVwA4EIvdamFSvlxCpzkz2GhnPvZSNXyk+NwD2HyQNxUdK1tWt/KPhgWjZN5jyW+KBykt4JpW8dIX1QNwA=
+	t=1749613303; cv=none; b=Y7olDWX+jL/nDDaVM5rocXmtKew8+CKeJK1k9KRrHhLXX9UJLCdhfMjNzROrFFOjW4OcM3CxyO+2x+mQeoDZdW4aLYcESvMCzU4gynBCNxssfCPGGe+Unhdwuum1Ksxn51xTh1kzIE2SsFjtSsfJpW37fISG4uI0OwIXBsONq08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749613255; c=relaxed/simple;
-	bh=e2dVSQg48wAkt0ejRhppG/FQr6UjvLNPP1LXHo8tjHU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ItxUHjRwtVvIi5NFbfACXPq4cH3JFs3kmSXIlKQ0cherc/iiaVkYRjUaDhnJcSKC1gJesXti+Mg7XauFxhQdAyzvP6JWErX+mhYk4loIYZhfbZfLIXw9LuEHBcUi19Jjhvly/PJk5BXgtaRIbeRIZpT98jqEmcD0ZPQf8yGhk/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 948DF168F;
-	Tue, 10 Jun 2025 20:40:31 -0700 (PDT)
-Received: from [10.164.146.17] (J09HK2D2RT.blr.arm.com [10.164.146.17])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF4693F66E;
-	Tue, 10 Jun 2025 20:40:48 -0700 (PDT)
-Message-ID: <68d762d4-a755-4ede-976b-0616bf3aab28@arm.com>
-Date: Wed, 11 Jun 2025 09:10:45 +0530
+	s=arc-20240116; t=1749613303; c=relaxed/simple;
+	bh=fWpvHug4KD46JDmNRZOMiqJkfXioXvNjgZ6P+4H2Pqc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MNBcOuKX9udyQbo6nluCnXnBuqg0sUn+4fVq1nffxxFp/Y7Ses8DGsJuS62lHabm6DfUDtGcmgjL9oWaI5U0mZk8PWsuv/1Qa9gLhyOwHeNggk60hBCMEGMmGxu14vnU43DTSkMxz+nwY1A+vpOZfdbrOsCB9CeBYUfKcsOFHW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=sPDei5hw; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="sPDei5hw"
+Date: Tue, 10 Jun 2025 23:41:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749613297;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FcbMdWL9nohzlfXyKkU5qmdIVkZuUvvMyKp/ZhqYUxQ=;
+	b=sPDei5hw1wxHO/c7GpPFFng4Z4B4Q2mjUKA09sRqeegIkAHF2HWzbE9gqLotIZpH32WPKx
+	BNbJB4xOq7CjLrSFybj5csBKEL8iO1ScqutkJ07iWWtBXHGMruLiXOvkc7S8QuCRVuT1jG
+	IdGyALOoF4unS5NnuNnqcIbPDZhqY6E=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Casey Chen <cachen@purestorage.com>, surenb@google.com, corbet@lwn.net, 
+	dennis@kernel.org, tj@kernel.org, cl@gentwo.org, vbabka@suse.cz, mhocko@suse.com, 
+	jackmanb@google.com, hannes@cmpxchg.org, ziy@nvidia.com, rientjes@google.com, 
+	roman.gushchin@linux.dev, harry.yoo@oracle.com, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, yzhong@purestorage.com
+Subject: Re: [PATCH] alloc_tag: add per-NUMA node stats
+Message-ID: <hvtuqyu6urtutdjfqvtowgjqf5psyubljqujwtq3exdm33a7sq@3nxcevou3pok>
+References: <20250610233053.973796-1-cachen@purestorage.com>
+ <20250610182155.36090c78124e1f60f2959d8e@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 1/2] arm64/debug: Drop redundant DBG_MDSCR_* macros
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Ada Couprie Diaz <ada.coupriediaz@arm.com>, linux-kernel@vger.kernel.org
-References: <20250610053128.4118784-1-anshuman.khandual@arm.com>
- <20250610053128.4118784-2-anshuman.khandual@arm.com>
- <aEhnzsXHfilVhJ1s@J2N7QTR9R3>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <aEhnzsXHfilVhJ1s@J2N7QTR9R3>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250610182155.36090c78124e1f60f2959d8e@linux-foundation.org>
+X-Migadu-Flow: FLOW_OUT
 
-
-
-On 10/06/25 10:43 PM, Mark Rutland wrote:
-> On Tue, Jun 10, 2025 at 11:01:27AM +0530, Anshuman Khandual wrote:
->> MDSCR_EL1 has already been defined in tools sysreg format and hence can be
->> used in all debug monitor related call paths. Subsequently all DBG_MDSCR_*
->> macros become redundant and hence can be dropped off completely. While here
->> convert all variables handling MDSCR_EL1 register as u64 which reflects its
->> true width as well.
+On Tue, Jun 10, 2025 at 06:21:55PM -0700, Andrew Morton wrote:
+> On Tue, 10 Jun 2025 17:30:53 -0600 Casey Chen <cachen@purestorage.com> wrote:
 > 
-> I think that for now it'd be best to *only* change over to the
-> generated MDSCR_EL1_* defintions, and leave the register sizes as-is.
-
-I had tried doing that originally but without changing mdscr register size,
-there is a build warning because MDSCR_EL1_MDE is defined as GENMASK(15, 15)
-which is represented as 'long unsigned int'.
-
-#define __GENMASK(h, l) (((~_UL(0)) << (l)) & (~_UL(0) >> (BITS_PER_LONG - 1 - (h))))
-
-arch/arm64/kernel/debug-monitors.c: In function ‘disable_debug_monitors’:
-arch/arm64/kernel/debug-monitors.c:108:13: warning: conversion from ‘long unsigned int’ to ‘u32’ {aka ‘unsigned int’} changes value from ‘18446744073709518847’ to ‘4294934527’ [-Woverflow]
-  108 |   disable = ~MDSCR_EL1_MDE;
-      |             ^
-
-MDSCR_EL1 is a 64 bit system register as per ARM DDI 0487 L.A (D24.3.20).
-Representing it as u32 does not seem right irrespective of whether the
-extended break point support is enabled or not. Besides even arm64 kvm
-uses u64 for mdscr register.
-
-arch/arm64/kvm/debug.c: u64 mdscr = vcpu_read_sys_reg(vcpu, MDSCR_EL1) & ~(MDSCR_EL1_SS |
-arch/arm64/kvm/debug.c:         mdscr |= MDSCR_EL1_SS;
-arch/arm64/kvm/debug.c:         mdscr |= MDSCR_EL1_MDE | MDSCR_EL1_KDE;
-arch/arm64/kvm/debug.c: vcpu->arch.external_mdscr_el1 = mdscr;
-arch/arm64/kvm/debug.c: u64 mdscr;
-arch/arm64/kvm/debug.c:         setup_external_mdscr(vcpu);
-arch/arm64/kvm/debug.c:         mdscr = vcpu_read_sys_reg(vcpu, MDSCR_EL1);
-arch/arm64/kvm/debug.c:         if (mdscr & (MDSCR_EL1_KDE | MDSCR_EL1_MDE))
-
+> > Add support for tracking per-NUMA node statistics in /proc/allocinfo.
+> > Previously, each alloc_tag had a single set of counters (bytes and
+> > calls), aggregated across all CPUs. With this change, each CPU can
+> > maintain separate counters for each NUMA node, allowing finer-grained
+> > memory allocation profiling.
+> > 
+> > This feature is controlled by the new
+> > CONFIG_MEM_ALLOC_PROFILING_PER_NUMA_STATS option:
+> > 
+> > * When enabled (=y), the output includes per-node statistics following
+> >   the total bytes/calls:
+> > 
+> > <size> <calls> <tag info>
+> > ...
+> > 315456       9858     mm/dmapool.c:338 func:pool_alloc_page
+> >         nid0     94912        2966
+> >         nid1     220544       6892
+> > 7680         60       mm/dmapool.c:254 func:dma_pool_create
+> >         nid0     4224         33
+> >         nid1     3456         27
+> > 
+> > * When disabled (=n), the output remains unchanged:
+> > <size> <calls> <tag info>
+> > ...
+> > 315456       9858     mm/dmapool.c:338 func:pool_alloc_page
+> > 7680         60       mm/dmapool.c:254 func:dma_pool_create
+> > 
+> > To minimize memory overhead, per-NUMA stats counters are dynamically
+> > allocated using the percpu allocator. PERCPU_DYNAMIC_RESERVE has been
+> > increased to ensure sufficient space for in-kernel alloc_tag counters.
+> > 
+> > For in-kernel alloc_tag instances, pcpu_alloc_noprof() is used to
+> > allocate counters. These allocations are excluded from the profiling
+> > statistics themselves.
 > 
-> Those are logically distinct changes, and AFAICT the latter is a
-> requirement for using extended breakpoints, where it would be clearer to
-> have that change as part of the series adding that support, with an
-> explanation as to why we care.
+> What is glaringly missing here is "why".
 > 
-> Mark.
-> 
->>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-kernel@vger.kernel.org
->> Reviewed-by: Ada Couprie Diaz <ada.coupriediaz@arm.com>
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->>  arch/arm64/include/asm/assembler.h      |  4 ++--
->>  arch/arm64/include/asm/debug-monitors.h |  6 ------
->>  arch/arm64/kernel/debug-monitors.c      | 22 +++++++++++-----------
->>  arch/arm64/kernel/entry-common.c        |  4 ++--
->>  4 files changed, 15 insertions(+), 21 deletions(-)
->>
->> diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
->> index ad63457a05c5..f229d96616e5 100644
->> --- a/arch/arm64/include/asm/assembler.h
->> +++ b/arch/arm64/include/asm/assembler.h
->> @@ -53,7 +53,7 @@
->>  	.macro	disable_step_tsk, flgs, tmp
->>  	tbz	\flgs, #TIF_SINGLESTEP, 9990f
->>  	mrs	\tmp, mdscr_el1
->> -	bic	\tmp, \tmp, #DBG_MDSCR_SS
->> +	bic	\tmp, \tmp, #MDSCR_EL1_SS
->>  	msr	mdscr_el1, \tmp
->>  	isb	// Take effect before a subsequent clear of DAIF.D
->>  9990:
->> @@ -63,7 +63,7 @@
->>  	.macro	enable_step_tsk, flgs, tmp
->>  	tbz	\flgs, #TIF_SINGLESTEP, 9990f
->>  	mrs	\tmp, mdscr_el1
->> -	orr	\tmp, \tmp, #DBG_MDSCR_SS
->> +	orr	\tmp, \tmp, #MDSCR_EL1_SS
->>  	msr	mdscr_el1, \tmp
->>  9990:
->>  	.endm
->> diff --git a/arch/arm64/include/asm/debug-monitors.h b/arch/arm64/include/asm/debug-monitors.h
->> index 8f6ba31b8658..1f37dd01482b 100644
->> --- a/arch/arm64/include/asm/debug-monitors.h
->> +++ b/arch/arm64/include/asm/debug-monitors.h
->> @@ -13,14 +13,8 @@
->>  #include <asm/ptrace.h>
->>  
->>  /* Low-level stepping controls. */
->> -#define DBG_MDSCR_SS		(1 << 0)
->>  #define DBG_SPSR_SS		(1 << 21)
->>  
->> -/* MDSCR_EL1 enabling bits */
->> -#define DBG_MDSCR_KDE		(1 << 13)
->> -#define DBG_MDSCR_MDE		(1 << 15)
->> -#define DBG_MDSCR_MASK		~(DBG_MDSCR_KDE | DBG_MDSCR_MDE)
->> -
->>  #define	DBG_ESR_EVT(x)		(((x) >> 27) & 0x7)
->>  
->>  /* AArch64 */
->> diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
->> index 58f047de3e1c..08f1d02507cd 100644
->> --- a/arch/arm64/kernel/debug-monitors.c
->> +++ b/arch/arm64/kernel/debug-monitors.c
->> @@ -34,7 +34,7 @@ u8 debug_monitors_arch(void)
->>  /*
->>   * MDSCR access routines.
->>   */
->> -static void mdscr_write(u32 mdscr)
->> +static void mdscr_write(u64 mdscr)
->>  {
->>  	unsigned long flags;
->>  	flags = local_daif_save();
->> @@ -43,7 +43,7 @@ static void mdscr_write(u32 mdscr)
->>  }
->>  NOKPROBE_SYMBOL(mdscr_write);
->>  
->> -static u32 mdscr_read(void)
->> +static u64 mdscr_read(void)
->>  {
->>  	return read_sysreg(mdscr_el1);
->>  }
->> @@ -79,16 +79,16 @@ static DEFINE_PER_CPU(int, kde_ref_count);
->>  
->>  void enable_debug_monitors(enum dbg_active_el el)
->>  {
->> -	u32 mdscr, enable = 0;
->> +	u64 mdscr, enable = 0;
->>  
->>  	WARN_ON(preemptible());
->>  
->>  	if (this_cpu_inc_return(mde_ref_count) == 1)
->> -		enable = DBG_MDSCR_MDE;
->> +		enable = MDSCR_EL1_MDE;
->>  
->>  	if (el == DBG_ACTIVE_EL1 &&
->>  	    this_cpu_inc_return(kde_ref_count) == 1)
->> -		enable |= DBG_MDSCR_KDE;
->> +		enable |= MDSCR_EL1_KDE;
->>  
->>  	if (enable && debug_enabled) {
->>  		mdscr = mdscr_read();
->> @@ -100,16 +100,16 @@ NOKPROBE_SYMBOL(enable_debug_monitors);
->>  
->>  void disable_debug_monitors(enum dbg_active_el el)
->>  {
->> -	u32 mdscr, disable = 0;
->> +	u64 mdscr, disable = 0;
->>  
->>  	WARN_ON(preemptible());
->>  
->>  	if (this_cpu_dec_return(mde_ref_count) == 0)
->> -		disable = ~DBG_MDSCR_MDE;
->> +		disable = ~MDSCR_EL1_MDE;
->>  
->>  	if (el == DBG_ACTIVE_EL1 &&
->>  	    this_cpu_dec_return(kde_ref_count) == 0)
->> -		disable &= ~DBG_MDSCR_KDE;
->> +		disable &= ~MDSCR_EL1_KDE;
->>  
->>  	if (disable) {
->>  		mdscr = mdscr_read();
->> @@ -415,7 +415,7 @@ void kernel_enable_single_step(struct pt_regs *regs)
->>  {
->>  	WARN_ON(!irqs_disabled());
->>  	set_regs_spsr_ss(regs);
->> -	mdscr_write(mdscr_read() | DBG_MDSCR_SS);
->> +	mdscr_write(mdscr_read() | MDSCR_EL1_SS);
->>  	enable_debug_monitors(DBG_ACTIVE_EL1);
->>  }
->>  NOKPROBE_SYMBOL(kernel_enable_single_step);
->> @@ -423,7 +423,7 @@ NOKPROBE_SYMBOL(kernel_enable_single_step);
->>  void kernel_disable_single_step(void)
->>  {
->>  	WARN_ON(!irqs_disabled());
->> -	mdscr_write(mdscr_read() & ~DBG_MDSCR_SS);
->> +	mdscr_write(mdscr_read() & ~MDSCR_EL1_SS);
->>  	disable_debug_monitors(DBG_ACTIVE_EL1);
->>  }
->>  NOKPROBE_SYMBOL(kernel_disable_single_step);
->> @@ -431,7 +431,7 @@ NOKPROBE_SYMBOL(kernel_disable_single_step);
->>  int kernel_active_single_step(void)
->>  {
->>  	WARN_ON(!irqs_disabled());
->> -	return mdscr_read() & DBG_MDSCR_SS;
->> +	return mdscr_read() & MDSCR_EL1_SS;
->>  }
->>  NOKPROBE_SYMBOL(kernel_active_single_step);
->>  
->> diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
->> index 7c1970b341b8..171f93f2494b 100644
->> --- a/arch/arm64/kernel/entry-common.c
->> +++ b/arch/arm64/kernel/entry-common.c
->> @@ -344,7 +344,7 @@ static DEFINE_PER_CPU(int, __in_cortex_a76_erratum_1463225_wa);
->>  
->>  static void cortex_a76_erratum_1463225_svc_handler(void)
->>  {
->> -	u32 reg, val;
->> +	u64 reg, val;
->>  
->>  	if (!unlikely(test_thread_flag(TIF_SINGLESTEP)))
->>  		return;
->> @@ -354,7 +354,7 @@ static void cortex_a76_erratum_1463225_svc_handler(void)
->>  
->>  	__this_cpu_write(__in_cortex_a76_erratum_1463225_wa, 1);
->>  	reg = read_sysreg(mdscr_el1);
->> -	val = reg | DBG_MDSCR_SS | DBG_MDSCR_KDE;
->> +	val = reg | MDSCR_EL1_SS | MDSCR_EL1_KDE;
->>  	write_sysreg(val, mdscr_el1);
->>  	asm volatile("msr daifclr, #8");
->>  	isb();
->> -- 
->> 2.25.1
->>
+> What is the use case?  Why does Linux want this?  What benefit does
+> this bring to our users?  This is the most important part of the
+> changelog because it tells Andrew why he is even looking at this patch.
 
+In the last thread, I was pushing to get some input from other people
+working on userspace profiling - it seems like that's where we're going
+with this, so we need to make sure people working in the same area are
+talking to each other, and if we're building tools to export data we
+want to make sure it's relevant and useful.
+
+Steven Rostadt sent out some pings, but I don't think we've heard back
+from the relevant people, and I do want that to happen before (if) this
+goes in.
+
+And more basic than this, now that we've got the ability to map kernel
+address -> code that owns it, we should be seeing if that is relevant
+and interesting to the tooling people before we get fancier.
+
+Casey also mentioned that this was being used for some internal stuff at
+Pure, and I'd still like to hear more about that. If they already know
+interesting and cool stuff we can use this for - great, let's please
+hear what it is.
+
+But we definitely need some wider context before merging this.
+
+> Probably related to the above omission: why per-nid?  It would be more
+> flexible to present the per-cpu counts and let userspace aggregate that
+> into per-node info if that is desirable.
+
+Per nid makes more sense to me if this is for profiling, and since this
+is a text interface meant primarily for human consumption we don't want
+to bloat that excessively.
+
+We can always add multiple interfaces for viewing the same data, and
+there's nothing preventing us from adding that later if it turns out
+something else does want per-cpu counts.
+
+Per-cpu counts would, I believe, bloat the data structures quite a bit
+since the counters are internally percpu - would there then be counters
+in nr_cpus^2? I hope not :)
+
+> > +static inline struct alloc_tag_counters alloc_tag_read_nid(struct alloc_tag *tag, int nid)
+> > +{
+> > +	struct alloc_tag_counters v = { 0, 0 };
+> > +	struct alloc_tag_counters *counters;
+> > +	int cpu;
+> > +
+> > +	for_each_possible_cpu(cpu) {
+> 
+> for_each_possible_cpu() is lame - potentially much more expensive than
+> for_each_online_cpu.  Is it impractical to use for_each_online_cpu()?
+> 
+> Probably doesn't matter for a userspace displaying function but
+> userspace can do weird and unexpected things.
+
+for_each_online_cpu() means having to think hard about cpu hotplug and
+possibly adding callbacks, no? I think simple and dumb is fine here.
+
+> > +	for (i = 0; i < kernel_tags.count; i++) {
+> > +		/* Each CPU has one alloc_tag_counters per numa node */
+> > +		kernel_tags.first_tag[i].counters =
+> > +			pcpu_alloc_noprof(pcpu_counters_size,
+> > +					  sizeof(struct alloc_tag_counters),
+> > +					  false, GFP_KERNEL | __GFP_ZERO);
+> > +		if (!kernel_tags.first_tag[i].counters) {
+> > +			while (--i >= 0)
+> > +				free_percpu(kernel_tags.first_tag[i].counters);
+> > +			pr_info("Failed to allocate per-cpu alloc_tag counters\n");
+> 
+> pr_err(), methinks.
+> 
+> > +			return;
+> 
+> And now what happens.  Will the kernel even work?
+> 
+> This code path is untestable unless the developer jumps through hoops
+> and it will never be tested again.
+> 
+> We assume that __init-time allocations always succeed, so a hearty
+> panic() here would be OK.
+
+percpu allocations are more limited than normal allocations, and we did
+hit that when developing memory allocation profiling, so - maybe WARN()?
+
+> > +				int nid;
+> 
+> C99 definition.
+> 
+> > +				for (nid = 0; nid < pcpu_counters_num; nid++) {
+> 
+> If we're going to use C99 (is OK now) then it's better to go all the
+> way and give `i' loop scope.  "for (int i..".
+
+Yes please; variable reuse can lead to some nasties.
+
+Going full C99 has its own problems (you can't do it after labels, and
+only one of gcc or clang complains and I forget which - perpetual
+headache).
+
+But C99 for loops are a total no brainer.
