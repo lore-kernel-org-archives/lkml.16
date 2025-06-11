@@ -1,316 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD9B2D5432;
-	Wed, 11 Jun 2025 01:21:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2578C8CE
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 01:22:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749604917; cv=none; b=BmlvKzQcgESRftMTDs1bIptjto5opFC0vkQn3DLiNV+lmNxD6bblJCnSAUFsGOw2E/tVZ86s7foiDZqM504t7EN1F+X8X853awCF/4I3m7qjWh9dAYFniK3Dm2c4V8+SNHJhVq1gCX4vymV+c2GVDT3QKFAUiHdtV23pWWv1B3Y=
+	t=1749604944; cv=none; b=bioFoZY0S6ByDXnLbIXDqTAvjf8hsbpWU6jnLXEov0GWe9wRmggu1RUguQy/QBMQOoklLQzmAVn+yhN4PM07dkiOFHeFDMeTGh6ykZbgVtkK2k+xogzGAKBK9+irAh29rf8fxS158GRV/9vAiJLCkzfTy4UGvnAUpyCYykSoczM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749604917; c=relaxed/simple;
-	bh=tTjsu8lTN11JSxqzr3hCWB8hrnE0NSoCDe78vDpJErI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=lm2uRMCq1yh4063VlZxenNsok/OsFg4AT/YDHr2l7u9Q0pFbS51bS930SA0OEDj+CyaBcDInfUD8PuVWni/etQyjQKav0Sk107rsvnleGt+4OJhQydpMzhjs8fh9RhlFs+Ina22fu1Exfxfa3vu/+6agkvkAa87KcPScS0UhKdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=KpfWfXf9; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="KpfWfXf9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41EFDC4CEED;
-	Wed, 11 Jun 2025 01:21:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1749604916;
-	bh=tTjsu8lTN11JSxqzr3hCWB8hrnE0NSoCDe78vDpJErI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=KpfWfXf92tyEGz1rtvsaSElzITNTB2ok7P2/fIh/B0wztIDOXdpIBM508+PHNB0LY
-	 OD2InUbShjewc0Eb74Gl1RGoKubl07NA9cr+lTuC91N5l3Sv0p+/URPtFXVJvZ/SvM
-	 NFtaq0n+Ft1yzKU1EZW3SuHFzCnZMAjZMkRqgHE4=
-Date: Tue, 10 Jun 2025 18:21:55 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Casey Chen <cachen@purestorage.com>
-Cc: surenb@google.com, kent.overstreet@linux.dev, corbet@lwn.net,
- dennis@kernel.org, tj@kernel.org, cl@gentwo.org, vbabka@suse.cz,
- mhocko@suse.com, jackmanb@google.com, hannes@cmpxchg.org, ziy@nvidia.com,
- rientjes@google.com, roman.gushchin@linux.dev, harry.yoo@oracle.com,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, yzhong@purestorage.com
-Subject: Re: [PATCH] alloc_tag: add per-NUMA node stats
-Message-Id: <20250610182155.36090c78124e1f60f2959d8e@linux-foundation.org>
-In-Reply-To: <20250610233053.973796-1-cachen@purestorage.com>
-References: <20250610233053.973796-1-cachen@purestorage.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749604944; c=relaxed/simple;
+	bh=TqDA/IN/fKY6drHQdoxX4n86zvkoCka3nVYVgMABPSc=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=rGax2x3S0E4kfAWnK2tuzALux1kME8sUwF36SVlFKuut0Ib7LUF9A6f0z939Y5l0aba02BZeesbp40W0ahHj8Ov9PJ/8jkvLmexStwKkzDTOpr4UB1LaKdW0BRtKahimT2mKDV3BQ4Hmx+UkTOYhx5WcRCAgijrAMuNOM9JUZN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bH7Dh2PpnzYQw1j
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 09:22:12 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 564BC1A1E6A
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 09:22:11 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP3 (Coremail) with SMTP id _Ch0CgBnu8U82khoGpikOw--.29151S2;
+	Wed, 11 Jun 2025 09:22:11 +0800 (CST)
+Message-ID: <0602e96c-a77f-4b64-8a19-60041543f5c8@huaweicloud.com>
+Date: Wed, 11 Jun 2025 09:22:04 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Tengda Wu <wutengda@huaweicloud.com>
+Subject: Re: [PATCH -next] arm64/ptrace: Fix stack-out-of-bounds read in
+ regs_get_kernel_stack_nth()
+To: Oleg Nesterov <oleg@redhat.com>, Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>, "David A . Long" <dave.long@linaro.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250604005533.1278992-1-wutengda@huaweicloud.com>
+Content-Language: en-US
+In-Reply-To: <20250604005533.1278992-1-wutengda@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_Ch0CgBnu8U82khoGpikOw--.29151S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxJw1rXry3trykJF4fWFykZrb_yoWrCF1rpw
+	nxZw4DCr48Ar12va17Cw1jgryrJw4DAF1DGrZ7Gw1Fyr18Gr1jyry7XF1UWrWUZw1DZw43
+	JFyDAr90qr1UWw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUylb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAK
+	I48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
+	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xII
+	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
+	67AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUFKZXUUUUU
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-On Tue, 10 Jun 2025 17:30:53 -0600 Casey Chen <cachen@purestorage.com> wrote:
+Ping?
 
-> Add support for tracking per-NUMA node statistics in /proc/allocinfo.
-> Previously, each alloc_tag had a single set of counters (bytes and
-> calls), aggregated across all CPUs. With this change, each CPU can
-> maintain separate counters for each NUMA node, allowing finer-grained
-> memory allocation profiling.
+Thanks,
+Tengda
+
+On 2025/6/4 8:55, Tengda Wu wrote:
+> KASAN reports a stack-out-of-bounds read in regs_get_kernel_stack_nth().
 > 
-> This feature is controlled by the new
-> CONFIG_MEM_ALLOC_PROFILING_PER_NUMA_STATS option:
+> Call Trace:
+> [   97.283505] BUG: KASAN: stack-out-of-bounds in regs_get_kernel_stack_nth+0xa8/0xc8
+> [   97.284677] Read of size 8 at addr ffff800089277c10 by task 1.sh/2550
+> [   97.285732]
+> [   97.286067] CPU: 7 PID: 2550 Comm: 1.sh Not tainted 6.6.0+ #11
+> [   97.287032] Hardware name: linux,dummy-virt (DT)
+> [   97.287815] Call trace:
+> [   97.288279]  dump_backtrace+0xa0/0x128
+> [   97.288946]  show_stack+0x20/0x38
+> [   97.289551]  dump_stack_lvl+0x78/0xc8
+> [   97.290203]  print_address_description.constprop.0+0x84/0x3c8
+> [   97.291159]  print_report+0xb0/0x280
+> [   97.291792]  kasan_report+0x84/0xd0
+> [   97.292421]  __asan_load8+0x9c/0xc0
+> [   97.293042]  regs_get_kernel_stack_nth+0xa8/0xc8
+> [   97.293835]  process_fetch_insn+0x770/0xa30
+> [   97.294562]  kprobe_trace_func+0x254/0x3b0
+> [   97.295271]  kprobe_dispatcher+0x98/0xe0
+> [   97.295955]  kprobe_breakpoint_handler+0x1b0/0x210
+> [   97.296774]  call_break_hook+0xc4/0x100
+> [   97.297451]  brk_handler+0x24/0x78
+> [   97.298073]  do_debug_exception+0xac/0x178
+> [   97.298785]  el1_dbg+0x70/0x90
+> [   97.299344]  el1h_64_sync_handler+0xcc/0xe8
+> [   97.300066]  el1h_64_sync+0x78/0x80
+> [   97.300699]  kernel_clone+0x0/0x500
+> [   97.301331]  __arm64_sys_clone+0x70/0x90
+> [   97.302084]  invoke_syscall+0x68/0x198
+> [   97.302746]  el0_svc_common.constprop.0+0x11c/0x150
+> [   97.303569]  do_el0_svc+0x38/0x50
+> [   97.304164]  el0_svc+0x44/0x1d8
+> [   97.304749]  el0t_64_sync_handler+0x100/0x130
+> [   97.305500]  el0t_64_sync+0x188/0x190
+> [   97.306151]
+> [   97.306475] The buggy address belongs to stack of task 1.sh/2550
+> [   97.307461]  and is located at offset 0 in frame:
+> [   97.308257]  __se_sys_clone+0x0/0x138
+> [   97.308910]
+> [   97.309241] This frame has 1 object:
+> [   97.309873]  [48, 184) 'args'
+> [   97.309876]
+> [   97.310749] The buggy address belongs to the virtual mapping at
+> [   97.310749]  [ffff800089270000, ffff800089279000) created by:
+> [   97.310749]  dup_task_struct+0xc0/0x2e8
+> [   97.313347]
+> [   97.313674] The buggy address belongs to the physical page:
+> [   97.314604] page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x14f69a
+> [   97.315885] flags: 0x15ffffe00000000(node=1|zone=2|lastcpupid=0xfffff)
+> [   97.316957] raw: 015ffffe00000000 0000000000000000 dead000000000122 0000000000000000
+> [   97.318207] raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
+> [   97.319445] page dumped because: kasan: bad access detected
+> [   97.320371]
+> [   97.320694] Memory state around the buggy address:
+> [   97.321511]  ffff800089277b00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> [   97.322681]  ffff800089277b80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> [   97.323846] >ffff800089277c00: 00 00 f1 f1 f1 f1 f1 f1 00 00 00 00 00 00 00 00
+> [   97.325023]                          ^
+> [   97.325683]  ffff800089277c80: 00 00 00 00 00 00 00 00 00 f3 f3 f3 f3 f3 f3 f3
+> [   97.326856]  ffff800089277d00: f3 f3 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 > 
-> * When enabled (=y), the output includes per-node statistics following
->   the total bytes/calls:
+> This issue seems to be related to the behavior of some gcc compilers and
+> was also fixed on the s390 architecture before:
 > 
-> <size> <calls> <tag info>
-> ...
-> 315456       9858     mm/dmapool.c:338 func:pool_alloc_page
->         nid0     94912        2966
->         nid1     220544       6892
-> 7680         60       mm/dmapool.c:254 func:dma_pool_create
->         nid0     4224         33
->         nid1     3456         27
+>  commit d93a855c31b7 ("s390/ptrace: Avoid KASAN false positives in regs_get_kernel_stack_nth()")
 > 
-> * When disabled (=n), the output remains unchanged:
-> <size> <calls> <tag info>
-> ...
-> 315456       9858     mm/dmapool.c:338 func:pool_alloc_page
-> 7680         60       mm/dmapool.c:254 func:dma_pool_create
+> As described in that commit, regs_get_kernel_stack_nth() has confirmed that
+> `addr` is on the stack, so reading the value at `*addr` should be allowed.
+> Use READ_ONCE_NOCHECK() helper to silence the KASAN check for this case.
 > 
-> To minimize memory overhead, per-NUMA stats counters are dynamically
-> allocated using the percpu allocator. PERCPU_DYNAMIC_RESERVE has been
-> increased to ensure sufficient space for in-kernel alloc_tag counters.
+> Fixes: 0a8ea52c3eb1 ("arm64: Add HAVE_REGS_AND_STACK_ACCESS_API feature")
+> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+> ---
+>  arch/arm64/kernel/ptrace.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> For in-kernel alloc_tag instances, pcpu_alloc_noprof() is used to
-> allocate counters. These allocations are excluded from the profiling
-> statistics themselves.
-
-What is glaringly missing here is "why".
-
-What is the use case?  Why does Linux want this?  What benefit does
-this bring to our users?  This is the most important part of the
-changelog because it tells Andrew why he is even looking at this patch.
-
-
-Probably related to the above omission: why per-nid?  It would be more
-flexible to present the per-cpu counts and let userspace aggregate that
-into per-node info if that is desirable.
-
->
-> ...
->
-> --- a/include/linux/alloc_tag.h
-> +++ b/include/linux/alloc_tag.h
-> @@ -15,6 +15,8 @@
->  #include <linux/static_key.h>
->  #include <linux/irqflags.h>
+> diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
+> index f79b0d5f71ac..fe3f7e554d14 100644
+> --- a/arch/arm64/kernel/ptrace.c
+> +++ b/arch/arm64/kernel/ptrace.c
+> @@ -141,7 +141,7 @@ unsigned long regs_get_kernel_stack_nth(struct pt_regs *regs, unsigned int n)
 >  
-> +extern int pcpu_counters_num;
-
-This globally-visible variable's identifier is too generic - the name
-should communicate which subsystem the variable belongs to.  Perhaps
-alloc_tag_num_pcpu_counters?  It's long, but only used in a few places.
-
-In fact, it's a count-of-nodes so a better name would be alloc_tag_num_nodes.
-
-Also, as it's written to a single time, __read_mostly is appropriate.
-
->  struct alloc_tag_counters {
->  	u64 bytes;
->  	u64 calls;
-> @@ -134,16 +136,34 @@ static inline bool mem_alloc_profiling_enabled(void)
->  				   &mem_alloc_profiling_key);
+>  	addr += n;
+>  	if (regs_within_kernel_stack(regs, (unsigned long)addr))
+> -		return *addr;
+> +		return READ_ONCE_NOCHECK(addr);
+>  	else
+>  		return 0;
 >  }
->  
-> +static inline struct alloc_tag_counters alloc_tag_read_nid(struct alloc_tag *tag, int nid)
-> +{
-> +	struct alloc_tag_counters v = { 0, 0 };
-> +	struct alloc_tag_counters *counters;
-> +	int cpu;
-> +
-> +	for_each_possible_cpu(cpu) {
 
-for_each_possible_cpu() is lame - potentially much more expensive than
-for_each_online_cpu.  Is it impractical to use for_each_online_cpu()?
-
-Probably doesn't matter for a userspace displaying function but
-userspace can do weird and unexpected things.
-
-> +		counters = per_cpu_ptr(tag->counters, cpu);
-> +		v.bytes += counters[nid].bytes;
-> +		v.calls += counters[nid].calls;
-> +	}
-> +
-> +	return v;
-> +}
-> +
->
-> ...
->
->  static int allocinfo_show(struct seq_file *m, void *arg)
->  {
->  	struct allocinfo_private *priv = (struct allocinfo_private *)arg;
-> @@ -116,6 +136,9 @@ static int allocinfo_show(struct seq_file *m, void *arg)
->  		priv->print_header = false;
->  	}
->  	alloc_tag_to_text(&buf, priv->iter.ct);
-> +#ifdef CONFIG_MEM_ALLOC_PROFILING_PER_NUMA_STATS
-> +	alloc_tag_to_text_all_nids(&buf, priv->iter.ct);
-> +#endif
-
-We can eliminate the ifdef by adding
-
-#else
-static inline void alloc_tag_to_text_all_nids(struct seq_buf *out, struct codetag *ct)
-{
-}
-#endif
-
-above.
-
-> +static void alloc_tag_to_text_all_nids(struct seq_buf *out, struct codetag *ct)
-
->  	seq_commit(m, seq_buf_used(&buf));
->  	return 0;
->  }
->
-> ...
->
-> @@ -247,19 +270,41 @@ static void shutdown_mem_profiling(bool remove_file)
->  void __init alloc_tag_sec_init(void)
->  {
->  	struct alloc_tag *last_codetag;
-> +	int i;
->  
->  	if (!mem_profiling_support)
->  		return;
->  
-> -	if (!static_key_enabled(&mem_profiling_compressed))
-> -		return;
-> -
->  	kernel_tags.first_tag = (struct alloc_tag *)kallsyms_lookup_name(
->  					SECTION_START(ALLOC_TAG_SECTION_NAME));
->  	last_codetag = (struct alloc_tag *)kallsyms_lookup_name(
->  					SECTION_STOP(ALLOC_TAG_SECTION_NAME));
->  	kernel_tags.count = last_codetag - kernel_tags.first_tag;
->  
-> +#ifdef CONFIG_MEM_ALLOC_PROFILING_PER_NUMA_STATS
-> +	pcpu_counters_num = num_possible_nodes();
-> +#else
-> +	pcpu_counters_num = 1;
-> +#endif
-
-In the CONFIG_MEM_ALLOC_PROFILING_PER_NUMA_STATS=n case, let's make
-pcpu_counters_num a constant "1", visible to all compilation units. 
-
-That way the compiler can optimize away all the
-
-	for (nid = 0; nid < pcpu_counters_num; nid++)
-
-looping.
-
-> +	pcpu_counters_size = pcpu_counters_num * sizeof(struct alloc_tag_counters);
-> 
-> +	for (i = 0; i < kernel_tags.count; i++) {
-> +		/* Each CPU has one alloc_tag_counters per numa node */
-> +		kernel_tags.first_tag[i].counters =
-> +			pcpu_alloc_noprof(pcpu_counters_size,
-> +					  sizeof(struct alloc_tag_counters),
-> +					  false, GFP_KERNEL | __GFP_ZERO);
-> +		if (!kernel_tags.first_tag[i].counters) {
-> +			while (--i >= 0)
-> +				free_percpu(kernel_tags.first_tag[i].counters);
-> +			pr_info("Failed to allocate per-cpu alloc_tag counters\n");
-
-pr_err(), methinks.
-
-> +			return;
-
-And now what happens.  Will the kernel even work?
-
-This code path is untestable unless the developer jumps through hoops
-and it will never be tested again.
-
-We assume that __init-time allocations always succeed, so a hearty
-panic() here would be OK.
-
-> +		}
-> +	}
-> +
-> +	if (!static_key_enabled(&mem_profiling_compressed))
-> +		return;
-> +
->  	/* Check if kernel tags fit into page flags */
->  	if (kernel_tags.count > (1UL << NR_UNUSED_PAGEFLAG_BITS)) {
->  		shutdown_mem_profiling(false); /* allocinfo file does not exist yet */
-> @@ -622,7 +667,9 @@ static int load_module(struct module *mod, struct codetag *start, struct codetag
->  	stop_tag = ct_to_alloc_tag(stop);
->  	for (tag = start_tag; tag < stop_tag; tag++) {
->  		WARN_ON(tag->counters);
-> -		tag->counters = alloc_percpu(struct alloc_tag_counters);
-> +		tag->counters = __alloc_percpu_gfp(pcpu_counters_size,
-> +						   sizeof(struct alloc_tag_counters),
-> +						   GFP_KERNEL | __GFP_ZERO);
->  		if (!tag->counters) {
->  			while (--tag >= start_tag) {
->  				free_percpu(tag->counters);
-
-Ditto here, actually.
-
-Not that it matters much.  It's init.text and gets thrown away, shrug.
-
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
->
-> ...
->
-> @@ -428,6 +429,7 @@ void __show_mem(unsigned int filter, nodemask_t *nodemask, int max_zone_idx)
->  		nr = alloc_tag_top_users(tags, ARRAY_SIZE(tags), false);
->  		if (nr) {
->  			pr_notice("Memory allocations:\n");
-> +			pr_notice("<size> <calls> <tag info>\n");
->  			for (i = 0; i < nr; i++) {
->  				struct codetag *ct = tags[i].ct;
->  				struct alloc_tag *tag = ct_to_alloc_tag(ct);
-> @@ -435,16 +437,27 @@ void __show_mem(unsigned int filter, nodemask_t *nodemask, int max_zone_idx)
->  				char bytes[10];
->  
->  				string_get_size(counter.bytes, 1, STRING_UNITS_2, bytes, sizeof(bytes));
-> -
->  				/* Same as alloc_tag_to_text() but w/o intermediate buffer */
->  				if (ct->modname)
-> -					pr_notice("%12s %8llu %s:%u [%s] func:%s\n",
-> -						  bytes, counter.calls, ct->filename,
-> -						  ct->lineno, ct->modname, ct->function);
-> +					pr_notice("%-12s %-8llu %s:%u [%s] func:%s\n",
-> +						bytes, counter.calls, ct->filename,
-> +						ct->lineno, ct->modname, ct->function);
->  				else
-> -					pr_notice("%12s %8llu %s:%u func:%s\n",
-> -						  bytes, counter.calls, ct->filename,
-> -						  ct->lineno, ct->function);
-> +					pr_notice("%-12s %-8llu %s:%u func:%s\n",
-> +						bytes, counter.calls,
-> +						ct->filename, ct->lineno, ct->function);
-> +
-> +#ifdef CONFIG_MEM_ALLOC_PROFILING_PER_NUMA_STATS
-> +				int nid;
-
-C99 definition.
-
-> +				for (nid = 0; nid < pcpu_counters_num; nid++) {
-
-If we're going to use C99 (is OK now) then it's better to go all the
-way and give `i' loop scope.  "for (int i..".
-
-> +					counter = alloc_tag_read_nid(tag, nid);
-> +					string_get_size(counter.bytes, 1, STRING_UNITS_2,
-> +							bytes, sizeof(bytes));
-> +					pr_notice("        nid%-5u %-12lld %-8lld\n",
-> +						  nid, counter.bytes, counter.calls);
-> +				}
-> +#endif
->  			}
->  		}
->  	}
->
-> ...
->
