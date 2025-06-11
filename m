@@ -1,34 +1,46 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D115925BEEA
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:02:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31C3C2528F3;
+	Wed, 11 Jun 2025 11:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749639725; cv=none; b=VajXG1y52nM7rEgSXGCWVBXf27Xpa40tT0HzI7sDlRq2UQI2FqEyrviuMQz/W27r7EtzbCO0a2Ua3BnPdsdu0O/rCaWDG7NuDmK7VONpvIuKKP1dAGFuwLNl/Oim0We7iJ+iQBQHbULbLeM88GfhiaW/0w2J4fga77yw3e7lkAU=
+	t=1749639834; cv=none; b=OCf88kY1uvjOItNSlw40x4iEZmiUctBHWAQpo615fXOwgXjsz057dSxsqrfJhZKgpnznIcfSsyVqmKAXD/gdNlTS2lKo8CPVPJsIdEGLq7weqKEQcH+sQFN/i3nxxoMoSUioqR+OM7tviov9ITKacpIVAgZvAZ6lzK9MxGN2TsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749639725; c=relaxed/simple;
-	bh=65jF5NE3I8Fc+8S92Emr3Z+vVJ7RS5+69CCZgK+ZoFw=;
+	s=arc-20240116; t=1749639834; c=relaxed/simple;
+	bh=nTdr2YuMMa9V0HwwyZrdkmee+oPqvCIbhsYJD8YpNCc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pezI/RFMBmpwDyZEjGUJYy8ur0S8qWZ5O+vOrAaN4u8JJ/TizPKtuPImCciwP8w8Aw42A42CVEAwyTq5/AISQ9M2u5DAcHWt3QVbA/o4X+LE8VEed8pqFl0cd73txnOQPDQqAeku5xaD2NE2d/DrJoT6WuWzsvg/UXKDRnWX9qA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8F272A2A;
-	Wed, 11 Jun 2025 04:01:43 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D7CE83F59E;
-	Wed, 11 Jun 2025 04:02:02 -0700 (PDT)
-Date: Wed, 11 Jun 2025 12:01:57 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: suzuki.poulose@arm.com, mike.leach@linaro.org, james.clark@linaro.org,
-	alexander.shishkin@linux.intel.com, coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v2] coresight: fix indentation error in
- cscfg_remove_owned_csdev_configs()
-Message-ID: <20250611110157.GU8020@e132581.arm.com>
-References: <20250611103025.939020-1-yeoreum.yun@arm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=GSj3prEMYR8K8+nFYjtilP8gq5HTBp98aH0b5vuUZe7NqTYQvBu+cbleeeLS4OIECzfUNM/e7C9FpiHvP2EufjXLlJWR79k1766tB2B9S4UBQYLLQ91CH47aDpp582XwVt8OKf9vA9YLV9mqeD/5lzq1I9EU+s8ztWfQWP56134=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=UMo9AtHj; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="UMo9AtHj"
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id BDB112115190; Wed, 11 Jun 2025 04:03:52 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BDB112115190
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1749639832;
+	bh=2AMfXxOQB+XCP0ckN4VqEkyDLcKkN5LJc6Z0NVpoSTA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UMo9AtHji3Jd8ZjOC5cnzWJLB4OJdOfQAfsk66I39FJiMYpPLiOKcWXa0LwjlPy+X
+	 sOOjO6FrPsD81XWVT4M/cu8CQQ6hjbgSdqgUQf9k0Uh9mL5X9DExAn4euEY0Qw47lV
+	 YXQFTRjrR7EpqTzhblnZzn5YUM1oc995+nz1Lb0M=
+Date: Wed, 11 Jun 2025 04:03:52 -0700
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	kotaranov@microsoft.com, longli@microsoft.com, horms@kernel.org,
+	shirazsaleem@microsoft.com, leon@kernel.org,
+	shradhagupta@linux.microsoft.com, schakrabarti@linux.microsoft.com,
+	rosenp@gmail.com, sdf@fomichev.me, linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Subject: Re: [PATCH net-next 1/4] net: mana: Fix potential deadlocks in mana
+ napi ops
+Message-ID: <20250611110352.GA31913@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1749631576-2517-1-git-send-email-ernis@linux.microsoft.com>
+ <1749631576-2517-2-git-send-email-ernis@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,39 +49,67 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250611103025.939020-1-yeoreum.yun@arm.com>
+In-Reply-To: <1749631576-2517-2-git-send-email-ernis@linux.microsoft.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Wed, Jun 11, 2025 at 11:30:25AM +0100, Yeoreum Yun wrote:
-> Fix wrong indentation in cscfg_remove_owned_csdev_configs()
+On Wed, Jun 11, 2025 at 01:46:13AM -0700, Erni Sri Satya Vennela wrote:
+> When net_shaper_ops are enabled for MANA, netdev_ops_lock
+> becomes active.
 > 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202506102238.XQfScl5x-lkp@intel.com/
-> Fixes: 53b9e2659719 ("coresight: holding cscfg_csdev_lock while removing cscfg from csdev")
-> Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+> The netvsc sets up MANA VF via following call chain:
+> 
+> netvsc_vf_setup()
+>         dev_change_flags()
+> 		...
+>          __dev_open() OR __dev_close()
+> 
+> dev_change_flags() holds the netdev mutex via netdev_lock_ops.
+> 
+> During this process, mana_create_txq() and mana_create_rxq()
+> invoke netif_napi_add_tx(), netif_napi_add_weight(), and napi_enable(),
+> all of which attempt to acquire the same lock,
+> leading to a potential deadlock.
 
-Reviewed-by: Leo Yan <leo.yan@arm.com>
+commit message could be better oriented.
 
+> 
+> Similarly, mana_destroy_txq() and mana_destroy_rxq() call
+> netif_napi_disable() and netif_napi_del(), which also contend
+> for the same lock.
+> 
+> Switch to the _locked variants of these APIs to avoid deadlocks
+> when the netdev_ops_lock is held.
+> 
+> Fixes: d4c22ec680c8 ("net: hold netdev instance lock during ndo_open/ndo_stop")
+> Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
 > ---
+>  drivers/net/ethernet/microsoft/mana/mana_en.c | 39 ++++++++++++++-----
+>  1 file changed, 30 insertions(+), 9 deletions(-)
 > 
-> Sorry for my bad forgetting to run checkpatch.pl...
-> 
-> ---
->  drivers/hwtracing/coresight/coresight-syscfg.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-syscfg.c b/drivers/hwtracing/coresight/coresight-syscfg.c
-> index 83dad24e0116..6836b05986e8 100644
-> --- a/drivers/hwtracing/coresight/coresight-syscfg.c
-> +++ b/drivers/hwtracing/coresight/coresight-syscfg.c
-> @@ -395,7 +395,7 @@ static void cscfg_remove_owned_csdev_configs(struct coresight_device *csdev, voi
->  	if (list_empty(&csdev->config_csdev_list))
->  		return;
-> 
-> -  guard(raw_spinlock_irqsave)(&csdev->cscfg_csdev_lock);
-> +	guard(raw_spinlock_irqsave)(&csdev->cscfg_csdev_lock);
-> 
->  	list_for_each_entry_safe(config_csdev, tmp, &csdev->config_csdev_list, node) {
->  		if (config_csdev->config_desc->load_owner == load_owner)
-> --
-> LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
-> 
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> index ccd2885c939e..3c879d8a39e3 100644
+> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> @@ -1911,8 +1911,13 @@ static void mana_destroy_txq(struct mana_port_context *apc)
+>  		napi = &apc->tx_qp[i].tx_cq.napi;
+>  		if (apc->tx_qp[i].txq.napi_initialized) {
+>  			napi_synchronize(napi);
+> -			napi_disable(napi);
+> -			netif_napi_del(napi);
+> +			if (netdev_need_ops_lock(napi->dev)) {
+> +				napi_disable_locked(napi);
+> +				netif_napi_del_locked(napi);
+> +			} else {
+> +				napi_disable(napi);
+> +				netif_napi_del(napi);
+> +			}
+
+Instead of using if-else, we can used netdev_lock_ops(), followed by *_locked api-s.
+Same for rest of the patch.
+
+Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+
+- Saurabh
+
