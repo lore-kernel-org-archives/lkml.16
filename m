@@ -1,78 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 760B6248F5F;
-	Wed, 11 Jun 2025 23:08:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92632254848;
+	Wed, 11 Jun 2025 23:10:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749683286; cv=none; b=fpkHtZlagLAbi7LgNZwc0EnYabvvELskKYWViLPwCsXnABVEjaLa6JcxIutIK7eFPdi2g6lMpR4IQHJirJi48/23nHgNaOA4XGQiRTiota6k5Sb0+w3kRLnf+u2RHRUhy1pMaxR7ef5LMNngdkHnOQKKRQ7b2itFplMBKEKA/Ys=
+	t=1749683416; cv=none; b=fIPW5kvnirsUQ7VNeB4UL6/kCTSeNgVTPbl5Vbajy9YpN4VT3yKu0ActJQS11TkBvHiRf6hcqPm3Rv54vDSJKMALHWgl/KQdlwHG07ach2RlpvHwRUdg1AO8lZ2Nuv+ggMxyU65ig2cs4GgItj9XGI7i+gxtmchNY2pg30T4wOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749683286; c=relaxed/simple;
-	bh=iI0Kj0iMx9/gwAzrpZC4Q+nF6kk89nBYnME2MFD72CM=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=kzrHNCVn680LDOHfIUa+ETDrdzIcevKXpZBPsqLS+kH9nNH/Oj+ZghtJgOLbvuRA0duDCT+9rgh/bEcA47zu0j7xyLUM/tOTTZSenzCKjCkQ8VvJzne/p9BZHyFZEq6I2fxdKZt98WQslsO+rmweCF9U6IrklWdduQxw50lRUi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=SY/GHK89; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749683416; c=relaxed/simple;
+	bh=S/zN57o/a580ZWcuxntqq1DlFtuBBkxLAkhEXK6n3Kk=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=pYNEx1yp9OrOQ5sqBkyyjUu2r1a0vVxgxYiw3sdLSVA01GFST9LVNnbZX5QX9x81tPSmfgv++wqFVLE13XMRzTyvOuz2nel+mAJlWwXdDNfsl/DrxvCt4auWTnjGXyqbCKi+Qwhr0wI7Swh/e6KeSPL3mClPGbHX8oCDiV8YOtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O9YySEnf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="SY/GHK89"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71BFBC4CEE3;
-	Wed, 11 Jun 2025 23:08:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1749683286;
-	bh=iI0Kj0iMx9/gwAzrpZC4Q+nF6kk89nBYnME2MFD72CM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=SY/GHK89FXr8Uvif53wRdWKd6NAI6EnUtId5643s2rBEq9cvqXxgWQ4xB8FRdXn1E
-	 LT8tcUNB3wmpUUkETQuY2Ps7PWhppAcPBiKkrnX3r8Pc0sUhov4SoH4OSozrWGelGR
-	 X6qAaCdLB/hHevrQvWx3YBJRepuxlNYn/cByC6ks=
-Date: Wed, 11 Jun 2025 16:08:04 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, Alistair Popple
- <apopple@nvidia.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan
- <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Zi Yan
- <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache
- <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain
- <dev.jain@arm.com>, Dan Williams <dan.j.williams@intel.com>, Oscar Salvador
- <osalvador@suse.de>
-Subject: Re: [PATCH v2 0/3] mm/huge_memory: vmf_insert_folio_*() and
- vmf_insert_pfn_pud() fixes
-Message-Id: <20250611160804.89bc8b8cb570101e51b522e4@linux-foundation.org>
-In-Reply-To: <20250611120654.545963-1-david@redhat.com>
-References: <20250611120654.545963-1-david@redhat.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O9YySEnf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29C9BC4CEE3;
+	Wed, 11 Jun 2025 23:10:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749683415;
+	bh=S/zN57o/a580ZWcuxntqq1DlFtuBBkxLAkhEXK6n3Kk=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=O9YySEnfyfXm93lZDKpUcZMnK3Owl7UPmVV0M8tXmrmbnorwXuG+Dp5MLA7NxNwj2
+	 lNpLJyFdz96APUeAyJL3DyuBP+zIcdJ24PxejExWwu+px2PR3bz/d2RKQIQObNiF4c
+	 2ZSzYr68ItHZO2U45eN6eMSP/XMYLQ509OFf9FXfHhkZWvbNGWAEiolYmudGdcWjyo
+	 qRq329a6V+jRBXNTlkh0z+28NxFuIR+R0B80ABP+71ojQ0eBWvwCUCJjzp25x0ZEMe
+	 uFA88+OHxYOWgyKlMQsNRbt3VWHm48vkYL4xWTeI8mSBmb/ztBtkJ0OhG/9+i7Cdlc
+	 1Wa+VeL+lmZ2Q==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70C97380DBE9;
+	Wed, 11 Jun 2025 23:10:46 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH bpf-next] bpf: Fix state use-after-free on push_stack()
+ err
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174968344511.3524559.6735332386842029341.git-patchwork-notify@kernel.org>
+Date: Wed, 11 Jun 2025 23:10:45 +0000
+References: <20250611210728.266563-1-luis.gerhorst@fau.de>
+In-Reply-To: <20250611210728.266563-1-luis.gerhorst@fau.de>
+To: Luis Gerhorst <luis.gerhorst@fau.de>
+Cc: ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+ andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
+ yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me,
+ haoluo@google.com, jolsa@kernel.org, memxor@gmail.com,
+ henriette.herzog@rub.de, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ syzbot+b5eb72a560b8149a1885@syzkaller.appspotmail.com
 
-On Wed, 11 Jun 2025 14:06:51 +0200 David Hildenbrand <david@redhat.com> wrote:
+Hello:
 
-> While working on improving vm_normal_page() and friends, I stumbled
-> over this issues: refcounted "normal" pages must not be marked
-> using pmd_special() / pud_special().
+This patch was applied to bpf/bpf-next.git (master)
+by Alexei Starovoitov <ast@kernel.org>:
 
-Why is this?
+On Wed, 11 Jun 2025 23:07:28 +0200 you wrote:
+> Without this, `state->speculative` is used after the cleanup cycles in
+> push_stack() or push_async_cb() freed `env->cur_state` (i.e., `state`).
+> Avoid this by relying on the short-circuit logic to only access `state`
+> if the error is recoverable (and make sure it never is after push_*()
+> failed).
+> 
+> push_*() callers must always return an error for which
+> error_recoverable_with_nospec(err) is false if push_*() returns NULL,
+> otherwise we try to recover and access the stale `state`. This is only
+> violated by sanitize_ptr_alu(), thus also fix this case to return
+> -ENOMEM.
+> 
+> [...]
 
->
-> ...
->
-> I spent too much time trying to get the ndctl tests mentioned by Dan
-> running (.config tweaks, memmap= setup, ... ), without getting them to
-> pass even without these patches. Some SKIP, some FAIL, some sometimes
-> suddenly SKIP on first invocation, ... instructions unclear or the tests
-> are shaky. This is how far I got:
+Here is the summary with links:
+  - [bpf-next] bpf: Fix state use-after-free on push_stack() err
+    https://git.kernel.org/bpf/bpf-next/c/1c66f4a3612c
 
-I won't include this in the [0/N] - it doesn't seem helpful for future
-readers of the patchset.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-I'll give the patchset a run in mm-new, but it feels like some more
-baking is needed?
 
-The [1/N] has cc:stable but there's nothing in there to explain this
-decision.  How does the issues affect userspace?
