@@ -1,50 +1,33 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195011494A8;
-	Wed, 11 Jun 2025 07:09:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D5C1494A8;
+	Wed, 11 Jun 2025 07:13:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749625753; cv=none; b=kFhfbj5RY3hfCk+0t/goebfp2xbejgoi8TSKq2S/Dflljj4RYHHwt4v78L5hFsu1BIZi5SC18NTISS2Yp5z05S/jKkkRYhtFOVjNmwHzw66yzD6yJxJ4OBzkhPiVHA3pKgcde/U7dzifUaB0t1ySR+QBsWwIYnfLDWDmqGm2xQQ=
+	t=1749625987; cv=none; b=hpZlzaaH9zypVepE0GTU/LH4HLl7h4a7OdS4gkw4eGrBOlstw2ZcPRb1RCqMGerH/MT52bm0WRprZIxOBEVjGt30Oo10R3qrjNYJzVzKe1h5+YotQQi0n0840w4Ocl/T9h76U6QGfc1E2bX9XHYk812s531V+f8f8uDHgeLFpB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749625753; c=relaxed/simple;
-	bh=PSOUw4nND6JTRG7Gcj3JAP7WhQyzD+HANN81r+8hnqk=;
+	s=arc-20240116; t=1749625987; c=relaxed/simple;
+	bh=BU/YIa0ZINv1YKgZsp2RiDxt77s+yheUVlOxVKJfnoI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dizfGvtogAkKekW32YyZLxJgsYngZbx4DMxDO0gbjOe+w/qh9zo0/HmrUX3mwmZ8pOFW4e6Lks2OSz5qN6TbJjG9oHjC5HZE2+ZRsaIP1eWneEOumANlrf7RtkbcRtfLK2pBCkYzhgC8twvgHxi7mR+pktZq2CUpZ6rXM2IBIqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lDkxGNV4; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=l5Dd/EUntMLFlp8uOCBSboTZ04tmD3/bi8TzillrIwVVolEJWM46mr1Tfz2wC//hG3dV9rTeTKfFJzWZ6MhfNV0+cnyRKHwSD/uKlD6R9pvogz4q5lrI95LgUTRtiDZjlZvKo0oaDwSEsoKm4D3PQZ+ZTT5Jm0ek+PiOfaiRy70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ggpUFbak; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lDkxGNV4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749625751; x=1781161751;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=PSOUw4nND6JTRG7Gcj3JAP7WhQyzD+HANN81r+8hnqk=;
-  b=lDkxGNV49YBpwGstQZkUPaybP3DmrsA6QcA3zCMh/0iFw09UFLIBnzL0
-   vQ/NbUscvzvvQrYtlEKoh9BgHYnAum235J2GH1/b6LkIjqlhfBidbWqop
-   gZMNPuJeABwmmtC5gnAzNUFfdxWprIzT+MTBjkBYjrm5w48OSYp+GbYMg
-   CyWuACwjFd0AdEmyJz+eH2jkin/xmVAB9nPEHA5Ymbg93uDSPPMOt5TJd
-   EIJxPKR66u5vUi0L8D+9HVXl4fTQwndwQYX0TAwhYeANY50fNauTfnoLf
-   J8s7Vwp6HBERTfLB6c48brWJtBm05O0YilPvJfFz5Os8Uf9zIP7Uukw2/
-   Q==;
-X-CSE-ConnectionGUID: fxi/kRf5Qu2oY3LvjOvyDA==
-X-CSE-MsgGUID: KLI+Rx8/SqOEAYNRwYuUOg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="69188885"
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="69188885"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 00:09:10 -0700
-X-CSE-ConnectionGUID: tFAysObOQ9qC2LkKwJMKhg==
-X-CSE-MsgGUID: j9yyoq9ySNi/QpZiMkzvPA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="150926587"
-Received: from unknown (HELO [10.238.0.239]) ([10.238.0.239])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 00:09:08 -0700
-Message-ID: <27f345bd-2f2b-4e40-8601-d2bd7c12ce5e@linux.intel.com>
-Date: Wed, 11 Jun 2025 15:09:05 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ggpUFbak"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50B3EC4CEEE;
+	Wed, 11 Jun 2025 07:13:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749625986;
+	bh=BU/YIa0ZINv1YKgZsp2RiDxt77s+yheUVlOxVKJfnoI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ggpUFbakPeZUwoBwH3YDz6XB4SvzLcIv93QmM46YM+pk7TkxphJmt2AVm4vM4d2I4
+	 9YRikKRU79nDuRh9+COoO01myW8eoqucdmNmT0Ss1NCLtMRHoQi+mRpjdkuLVTi3YZ
+	 /K9HDQFxYSEToErX9mnDPVlsYlxvYn0ED1ktHAcIeATAh8ADHulLe6C8+BO+qvC+hx
+	 cfPS/DEEHI1kDaHTrdbqUBDDirhU5SFwmKEB38XR0R3eA24RPfN19S29wSdIYx2FOX
+	 wbcLBHbnidiJVTIn2ldh2CCZKuXrE2VsfLWS6K+Q3cnP9a/+ipMcSUyziEumMJXQnN
+	 2mnFPkDF9EUTw==
+Message-ID: <61e53f55-394d-422f-8600-9035eac40ff4@kernel.org>
+Date: Wed, 11 Jun 2025 09:13:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,193 +35,128 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 20/32] KVM: x86: Rename msr_filter_changed() =>
- recalc_msr_intercepts()
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org, Chao Gao <chao.gao@intel.com>,
- Borislav Petkov <bp@alien8.de>, Xin Li <xin@zytor.com>,
- Dapeng Mi <dapeng1.mi@linux.intel.com>,
- Francesco Lavra <francescolavra.fl@gmail.com>,
- Manali Shukla <Manali.Shukla@amd.com>
-References: <20250610225737.156318-1-seanjc@google.com>
- <20250610225737.156318-21-seanjc@google.com>
+Subject: Re: [PATCH v11 1/2] dt-bindings: thermal: qcom-tsens: make ipq5018
+ tsens standalone compatible
+To: George Moussalem <george.moussalem@outlook.com>,
+ Amit Kucheria <amitk@kernel.org>, Thara Gopinath <thara.gopinath@gmail.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250611-ipq5018-tsens-v11-0-266566bfd16a@outlook.com>
+ <20250611-ipq5018-tsens-v11-1-266566bfd16a@outlook.com>
+ <17eaaad4-7713-4149-b66c-1c48db3ab42f@kernel.org>
+ <DS7PR19MB8883034308D6642B6B567CAD9D75A@DS7PR19MB8883.namprd19.prod.outlook.com>
 Content-Language: en-US
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <20250610225737.156318-21-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <DS7PR19MB8883034308D6642B6B567CAD9D75A@DS7PR19MB8883.namprd19.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+On 11/06/2025 09:06, George Moussalem wrote:
+> Hi Krzysztof,
+> 
+> On 6/11/25 10:51, Krzysztof Kozlowski wrote:
+>> On 11/06/2025 07:12, George Moussalem via B4 Relay wrote:
+>>> From: George Moussalem <george.moussalem@outlook.com>
+>>>
+>>> IPQ5018 tsens should not use qcom,tsens-v1 as fallback since it has no RPM
+>>> and, as such, deviates from the standard v1 init routine in the driver.
+>>> So let's make qcom,ipq5018-tsens a standalone compatible in the bindings.
+>>>
+>>> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+>>> ---
+>>>   Documentation/devicetree/bindings/thermal/qcom-tsens.yaml | 5 ++++-
+>>
+>> You just added it recently with the fallback (in v9 of this patchset)
+>> and now remove it?
+>>
+>> And what does it mean it has no RPM? How does it affect the driver? Does
+>> fallback work or not?
+> 
+> IPQ5018 tsens IP is V1, but since it's got no RPM, it follows a 
+> different init routine for which VER_1_X_NO_RPM was created just like 
+> there is one for V2 without RPM, else the driver wouldn't probe. This 
+> was added as part of:
+> 
+> https://patchwork.kernel.org/project/linux-arm-msm/patch/DS7PR19MB8883C5D7974C7735E23923769DCC2@DS7PR19MB8883.namprd19.prod.outlook.com/
+> 
+> Since its introduction, I missed updating the bindings which caused a 
+> binding issue (as reported by Rob) on the compatible as it expects the 
+> qcom,tsens-v1 as a fallback. But we can't use that fallback, so that's 
+> why it needs to be a standalone compatible.
 
 
-On 6/11/2025 6:57 AM, Sean Christopherson wrote:
-> Rename msr_filter_changed() to recalc_msr_intercepts() and drop the
-> trampoline wrapper now that both SVM and VMX use a filter-agnostic recalc
-> helper to react to the new userspace filter.
->
-> No functional change intended.
->
-> Reviewed-by: Xin Li (Intel) <xin@zytor.com>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+So you need Fixes tag and explain what was buggy in previous patch.
 
-Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
+> 
+>>
+>>
+>>>   1 file changed, 4 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+>>> index 0e653bbe9884953b58c4d8569b8d096db47fd54f..73d722bda8adc2c930edfc3373e6011f19c7c491 100644
+>>> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+>>> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+>>> @@ -36,10 +36,13 @@ properties:
+>>>                 - qcom,msm8974-tsens
+>>>             - const: qcom,tsens-v0_1
+>>>   
+>>> +      - description: v1 of TSENS
+>>
+>> So that's still v1... I don't understand.
+> 
+> As mentioned, the IP is still v1 but with a different init routine in 
+> the driver for IP v1 without RPM
 
-> ---
->   arch/x86/include/asm/kvm-x86-ops.h | 2 +-
->   arch/x86/include/asm/kvm_host.h    | 2 +-
->   arch/x86/kvm/svm/svm.c             | 8 +-------
->   arch/x86/kvm/vmx/main.c            | 6 +++---
->   arch/x86/kvm/vmx/vmx.c             | 7 +------
->   arch/x86/kvm/vmx/x86_ops.h         | 2 +-
->   arch/x86/kvm/x86.c                 | 8 +++++++-
->   7 files changed, 15 insertions(+), 20 deletions(-)
->
-> diff --git a/arch/x86/include/asm/kvm-x86-ops.h b/arch/x86/include/asm/kvm-x86-ops.h
-> index 8d50e3e0a19b..19a6735d6dd8 100644
-> --- a/arch/x86/include/asm/kvm-x86-ops.h
-> +++ b/arch/x86/include/asm/kvm-x86-ops.h
-> @@ -139,7 +139,7 @@ KVM_X86_OP(check_emulate_instruction)
->   KVM_X86_OP(apic_init_signal_blocked)
->   KVM_X86_OP_OPTIONAL(enable_l2_tlb_flush)
->   KVM_X86_OP_OPTIONAL(migrate_timers)
-> -KVM_X86_OP(msr_filter_changed)
-> +KVM_X86_OP(recalc_msr_intercepts)
->   KVM_X86_OP(complete_emulated_msr)
->   KVM_X86_OP(vcpu_deliver_sipi_vector)
->   KVM_X86_OP_OPTIONAL_RET0(vcpu_get_apicv_inhibit_reasons);
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 330cdcbed1a6..89a626e5b80f 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1885,7 +1885,7 @@ struct kvm_x86_ops {
->   	int (*enable_l2_tlb_flush)(struct kvm_vcpu *vcpu);
->   
->   	void (*migrate_timers)(struct kvm_vcpu *vcpu);
-> -	void (*msr_filter_changed)(struct kvm_vcpu *vcpu);
-> +	void (*recalc_msr_intercepts)(struct kvm_vcpu *vcpu);
->   	int (*complete_emulated_msr)(struct kvm_vcpu *vcpu, int err);
->   
->   	void (*vcpu_deliver_sipi_vector)(struct kvm_vcpu *vcpu, u8 vector);
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index de3d59c71229..710bc5f965dc 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -896,11 +896,6 @@ static void svm_recalc_msr_intercepts(struct kvm_vcpu *vcpu)
->   	 */
->   }
->   
-> -static void svm_msr_filter_changed(struct kvm_vcpu *vcpu)
-> -{
-> -	svm_recalc_msr_intercepts(vcpu);
-> -}
-> -
->   void svm_copy_lbrs(struct vmcb *to_vmcb, struct vmcb *from_vmcb)
->   {
->   	to_vmcb->save.dbgctl		= from_vmcb->save.dbgctl;
-> @@ -929,7 +924,6 @@ static void svm_disable_lbrv(struct kvm_vcpu *vcpu)
->   	struct vcpu_svm *svm = to_svm(vcpu);
->   
->   	KVM_BUG_ON(sev_es_guest(vcpu->kvm), vcpu->kvm);
-> -
->   	svm->vmcb->control.virt_ext &= ~LBR_CTL_ENABLE_MASK;
->   	svm_recalc_lbr_msr_intercepts(vcpu);
->   
-> @@ -5227,7 +5221,7 @@ static struct kvm_x86_ops svm_x86_ops __initdata = {
->   
->   	.apic_init_signal_blocked = svm_apic_init_signal_blocked,
->   
-> -	.msr_filter_changed = svm_msr_filter_changed,
-> +	.recalc_msr_intercepts = svm_recalc_msr_intercepts,
->   	.complete_emulated_msr = svm_complete_emulated_msr,
->   
->   	.vcpu_deliver_sipi_vector = svm_vcpu_deliver_sipi_vector,
-> diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
-> index d1e02e567b57..b3c58731a2f5 100644
-> --- a/arch/x86/kvm/vmx/main.c
-> +++ b/arch/x86/kvm/vmx/main.c
-> @@ -220,7 +220,7 @@ static int vt_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->   	return vmx_get_msr(vcpu, msr_info);
->   }
->   
-> -static void vt_msr_filter_changed(struct kvm_vcpu *vcpu)
-> +static void vt_recalc_msr_intercepts(struct kvm_vcpu *vcpu)
->   {
->   	/*
->   	 * TDX doesn't allow VMM to configure interception of MSR accesses.
-> @@ -231,7 +231,7 @@ static void vt_msr_filter_changed(struct kvm_vcpu *vcpu)
->   	if (is_td_vcpu(vcpu))
->   		return;
->   
-> -	vmx_msr_filter_changed(vcpu);
-> +	vmx_recalc_msr_intercepts(vcpu);
->   }
->   
->   static int vt_complete_emulated_msr(struct kvm_vcpu *vcpu, int err)
-> @@ -1034,7 +1034,7 @@ struct kvm_x86_ops vt_x86_ops __initdata = {
->   	.apic_init_signal_blocked = vt_op(apic_init_signal_blocked),
->   	.migrate_timers = vmx_migrate_timers,
->   
-> -	.msr_filter_changed = vt_op(msr_filter_changed),
-> +	.recalc_msr_intercepts = vt_op(recalc_msr_intercepts),
->   	.complete_emulated_msr = vt_op(complete_emulated_msr),
->   
->   	.vcpu_deliver_sipi_vector = kvm_vcpu_deliver_sipi_vector,
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index ce7a1c07e402..bdff81f8288d 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -4074,7 +4074,7 @@ void pt_update_intercept_for_msr(struct kvm_vcpu *vcpu)
->   	}
->   }
->   
-> -static void vmx_recalc_msr_intercepts(struct kvm_vcpu *vcpu)
-> +void vmx_recalc_msr_intercepts(struct kvm_vcpu *vcpu)
->   {
->   	if (!cpu_has_vmx_msr_bitmap())
->   		return;
-> @@ -4123,11 +4123,6 @@ static void vmx_recalc_msr_intercepts(struct kvm_vcpu *vcpu)
->   	 */
->   }
->   
-> -void vmx_msr_filter_changed(struct kvm_vcpu *vcpu)
-> -{
-> -	vmx_recalc_msr_intercepts(vcpu);
-> -}
-> -
->   static int vmx_deliver_nested_posted_interrupt(struct kvm_vcpu *vcpu,
->   						int vector)
->   {
-> diff --git a/arch/x86/kvm/vmx/x86_ops.h b/arch/x86/kvm/vmx/x86_ops.h
-> index b4596f651232..34c6e683e321 100644
-> --- a/arch/x86/kvm/vmx/x86_ops.h
-> +++ b/arch/x86/kvm/vmx/x86_ops.h
-> @@ -52,7 +52,7 @@ void vmx_deliver_interrupt(struct kvm_lapic *apic, int delivery_mode,
->   			   int trig_mode, int vector);
->   void vmx_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu);
->   bool vmx_has_emulated_msr(struct kvm *kvm, u32 index);
-> -void vmx_msr_filter_changed(struct kvm_vcpu *vcpu);
-> +void vmx_recalc_msr_intercepts(struct kvm_vcpu *vcpu);
->   void vmx_prepare_switch_to_guest(struct kvm_vcpu *vcpu);
->   void vmx_update_exception_bitmap(struct kvm_vcpu *vcpu);
->   int vmx_get_feature_msr(u32 msr, u64 *data);
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index dd34a2ec854c..cc9a01b6dbc8 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -10926,8 +10926,14 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->   			kvm_vcpu_update_apicv(vcpu);
->   		if (kvm_check_request(KVM_REQ_APF_READY, vcpu))
->   			kvm_check_async_pf_completion(vcpu);
-> +
-> +		/*
-> +		 * Recalc MSR intercepts as userspace may want to intercept
-> +		 * accesses to MSRs that KVM would otherwise pass through to
-> +		 * the guest.
-> +		 */
->   		if (kvm_check_request(KVM_REQ_MSR_FILTER_CHANGED, vcpu))
-> -			kvm_x86_call(msr_filter_changed)(vcpu);
-> +			kvm_x86_call(recalc_msr_intercepts)(vcpu);
->   
->   		if (kvm_check_request(KVM_REQ_UPDATE_CPU_DIRTY_LOGGING, vcpu))
->   			kvm_x86_call(update_cpu_dirty_logging)(vcpu);
+OK, just merge it into first enum and drop the description there.
 
+Best regards,
+Krzysztof
