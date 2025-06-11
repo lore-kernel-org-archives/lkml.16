@@ -1,135 +1,146 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3766B2836A4
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 12:58:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E440F2857FB
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 12:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749646742; cv=none; b=U1JDdAbxfc4GYiDPwGyNJDNuAo8ImWikVUfQ/D1+r3NTej7GZRFTdSx8/cNDvltVHyjGpJ4ii12LerKLpfmLyYBo+PmZe3622aioZ9SFvcOw/b614bjDCq7P+DybLii6MBx9GAnCUhoZSB9ql0teJFQIUATYDSuvlW5DuCTqFrc=
+	t=1749646747; cv=none; b=QvurkyDnfVN3LXOBj/hUwIRuYtQ7ebjMDEl9yeVnI51/8Jzp6hC9njzDik5osOUfQ6GvRiooyCPZPJhTlbb38tVVraYYgk3HRU3QXA0q0M7K/RROVvwMKpmDvDmzMGOcFzH8nMLzYj3bAzAAGZKUK0A/8xqbckZ14ofEeZNawko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749646742; c=relaxed/simple;
-	bh=a2tnsV+oorpD96ckvy193k53s6Jk34v+Ogifp++7l3o=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=NlseKxAbxBs7IU99YfQZ6xn01ZM5x93k54kQDYtNKX6gZD5248C/REJpx46ugNp+OtgKoSegqx3Y8koTczWuL2+YQPxGtnxlAN4Opcjzc3cQgob0YmEpxnnxwLPZhTPoRLG4VkCPM8KTrM9Vx3Vc36L0Pmgm7tzDsJq5z/kEWJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AR569d5I; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1749646747; c=relaxed/simple;
+	bh=c4q9hKJ0GfSD4cmrQLce0PPykLtXw5caieViAR29pPA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C0CQLIvZQv00xZ3pM8TfZ3z7vDOhh9kYA26Y2sjSv1kv5KS5qdbNVa5NfG2FslDHQoFNSVoYYX55b2ivF0ynQpvye9r+Bu3lI+u9S3T+Vbyg/a3+hVAHkBjsIGsCwb1g2t/rjbsEfHyeRpAXEWAvpU0xVKOqQNcMT0BbFVkdZbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=M9GyxUvn; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AR569d5I"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3138e65efe2so2964514a91.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 05:58:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="M9GyxUvn"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2363616a1a6so18935125ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 05:59:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749646738; x=1750251538; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=q7qyDxfambCUeuVJ579d13LTUju7h5fRgxZwQlTMLrA=;
-        b=AR569d5ILcR68f7Pxq+LwHL6RLFU05NqwYpOdaJ+Qe3OQXO+ptf3U/4rAxU3AN00o1
-         CO1NogIZTZJUC3zY+9FP7OHtWuWFe3Z3Z5a44yoSr19Ykjfuxlgn9wrvtH9uK5yxE8iB
-         dUQCSybEc1Q4m2JgIPQQiRQxqpmsXh1VQvlI127wfVbYjVoN6Gz/cxuhGk8oPeawHQZj
-         KGfj/ckfORUQQUiT4MjphLHHjexsBpzDuNOawuiWmjowG8sWlhgD6mX6zuyLYqArNDhm
-         dnkZS1xSKCxBd4UhDZyBYLVODaztffrV0Fzvvj+cix5CEEbGynwKCWljB3UZDItqmbj8
-         vi9w==
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1749646744; x=1750251544; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=x4QOx+b/QncvHLv/sLMwOKnuymoyk68+Yx3qOBYw2f8=;
+        b=M9GyxUvn1UMaCwbbFLIX7weFVaLwLVo3/2bEe5sFY+FoeCLkX80ke1SKw4DpS0PMyG
+         etjxkmuPj4popWwpxtXxs9KIUgPNNfSeEQPaDIIkOIUKEmIAFnK24D4YgXCw5zrTmKHZ
+         zXqBS8FxrTpvdAK2PkchX4UrndepKANf2TNLtJuynfd3c+/t5QxGseMNaMKM7MJbA9+6
+         UG5M71JceK9nIqvWHzgBIg/J79IGYtPap6ohC883x1wZyH3jSg2BOywipySBRi04bX8U
+         BvMNCEleXtYG/3pipPlk9WmITlUq+0Vk+ER/dU2PthLLrEdGM/8KWO1Sw2DXDOHvF9C3
+         jsgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749646738; x=1750251538;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=q7qyDxfambCUeuVJ579d13LTUju7h5fRgxZwQlTMLrA=;
-        b=AYzdNdL8xTz3Yu1j56dVomuOK+RihL/HTHMX4RZA0oLuHtDUSDY2fkDtNUeMFPnFD2
-         By4kQ3xmGwpMZkclVVKq8k5YiKeVn/4rKa9lt6x+NxRIGNFQZnJSrr7sEeQXjJy1QNWe
-         sWf2UzPsWsbx5uFBjQi6zpjrMNJ0+B4GKl+7mLoTfhvv7XiaZE0agip/xp7EGj2SUPlf
-         3JooyEIB0YMf6oxZxe1QSlzAeLPeNGmq4pAU+CyXQhnk5aIjzYi1HthOPFCb6W6wijw/
-         S2IFYHxC+mJWWMTOx7XVaoyax487h0/tNF+T2mYqgKyDdsGSp+Nb3DZAWv5/hq7txktT
-         +MNw==
-X-Forwarded-Encrypted: i=1; AJvYcCVPVZxBQ4T0Oae6i/pJPUXitIlAlrn16kkQUSHgVzAnHCqRHBn2/6qoe8RMlJ5ik3SZLDrzhCM0i6pOKJM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnCVvvd8RF9ImG3J+yh8vgBV2dvqVCT0TO/mxQ8V8yzs75k+Gq
-	TB0QlwztsANWpM9kqoh1cRXTtV3XETPbhIlOVfWQbphwJsLp550ZzTQx1tz0Tce8k8LZXKmAxKF
-	EvzUJ/A==
-X-Google-Smtp-Source: AGHT+IFdzlhprq4olNF24x13BTaUWLzAfJB7XPYxrgkrprbcAns4rzVG+UdGiB00+0oVMZb22058wK4h5o8=
-X-Received: from pjg4.prod.google.com ([2002:a17:90b:3f44:b0:311:2058:21e7])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:540c:b0:311:df4b:4b93
- with SMTP id 98e67ed59e1d1-313b1ea41c8mr3910557a91.7.1749646738303; Wed, 11
- Jun 2025 05:58:58 -0700 (PDT)
-Date: Wed, 11 Jun 2025 05:58:56 -0700
-In-Reply-To: <20250611100459.92900-4-namjain@linux.microsoft.com>
+        d=1e100.net; s=20230601; t=1749646744; x=1750251544;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=x4QOx+b/QncvHLv/sLMwOKnuymoyk68+Yx3qOBYw2f8=;
+        b=OSJ51CNP/etB9ovozWYaKulNVM1bJ0xx31mpK9733kP6Zh1v5jvsrY22sAdghf9NsG
+         jmIQwXhU28ciDFERgAi/NQCrW21RPE2KRH5NuSwVJhkFERuz9xxvgehQfZ9LYCGh1/GH
+         IE3N6d1Rdt2aqAiWYiiP5i5x5cCExUbjSqIY1u66EGAZssgUOsR5nNapX+VNGuVt3R9p
+         mFIv0bLlpVRYgQCdwlayAs5ryL70CixMv+cZP5Qy7NYXIZsAaUxJkgcFMOu0hPWrSFrc
+         A5/6QgBG/huXQ5n0A56iHMd5Emz6ZCfRN3Gy85vfaa7+x6Zd8hO8UNCYkeoGdf63GrEi
+         z1oQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVM4kGiLNgAFiIiVg3GxlW2gIvYaHDEHUG+9Iw44UuOG0vjik7iN0729H+jdK1q07tG6/Gzco6Z0TlhD1I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiObdrr3sHQDNdta08XrzIxPMEp0jc1KSyarsS+3lrVUKolAaT
+	hbGPNrO9xydmbmwITxxZjYnsR0h1TKprFzH9QMxShGAkh/XSta3jWLNUgwfJqHSXWgU=
+X-Gm-Gg: ASbGncuYbFyRWz6jNmpiUy8Tv1P2lCr10MwOgfVyKVIQzgkMr7d7eWTuhSh0R9uQIHR
+	B64Ejonak/b53zOMqwARmEtTlW0uaNBUoLR1GQ8qeinbtFUrwJKFcnJXiNidBFpOmqTeJZ8xR6l
+	kmtOSJi2c11i7uuapCghi8sCDOBtXkkMwTqOu2XTem2DAsYcLuj9jawpZoUMbbxj26rb5PD6zOW
+	qlNBG8rFSxfzVTOPGTvw8vJCoriLgluU/K/+1VcQh4tixDZ0hO0uX6qt7wJ3r8km0rpZbIYnfdf
+	ryxkIJD513BzYImnPHaAcAsQmfoSePoJDh/fEBstYas+4+8J5QeZieUW2ROTQ/THDRvnnVHpqdA
+	V9MToP3z06I41ZLpCx4jTlQ==
+X-Google-Smtp-Source: AGHT+IHeeQKbfAGNGeX62nkTUoAIUb+/0YEOPG1s+np4s8lIc4gcrO2OCn3QlplFdVVleQo4sYhIgw==
+X-Received: by 2002:a17:902:e74b:b0:234:f182:a759 with SMTP id d9443c01a7336-23641af07efmr51079475ad.28.1749646744203;
+        Wed, 11 Jun 2025 05:59:04 -0700 (PDT)
+Received: from localhost.localdomain ([2409:8a00:31a4:6520:3d67:ceb1:7c60:9098])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236030925e3sm86984115ad.53.2025.06.11.05.58.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 05:59:03 -0700 (PDT)
+From: Guodong Xu <guodong@riscstar.com>
+To: vkoul@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	dlan@gentoo.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	p.zabel@pengutronix.de,
+	drew@pdp7.com,
+	emil.renner.berthing@canonical.com,
+	inochiama@gmail.com,
+	geert+renesas@glider.be,
+	tglx@linutronix.de,
+	hal.feng@starfivetech.com,
+	joel@jms.id.au,
+	duje.mihanovic@skole.hr
+Cc: guodong@riscstar.com,
+	elder@riscstar.com,
+	dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	spacemit@lists.linux.dev
+Subject: [PATCH 0/8] dma: mmp_pdma: Add SpacemiT K1 SoC support with 64-bit addressing
+Date: Wed, 11 Jun 2025 20:57:15 +0800
+Message-ID: <20250611125723.181711-1-guodong@riscstar.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250611100459.92900-1-namjain@linux.microsoft.com> <20250611100459.92900-4-namjain@linux.microsoft.com>
-Message-ID: <aEl9kO81-kp0hhw0@google.com>
-Subject: Re: [PATCH 3/6] KVM: x86: hyper-v: Fix warnings for missing export.h
- header inclusion
-From: Sean Christopherson <seanjc@google.com>
-To: Naman Jain <namjain@linux.microsoft.com>
-Cc: "K . Y . Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H . Peter Anvin" <hpa@zytor.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	"Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=" <kwilczynski@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Konstantin Taranov <kotaranov@microsoft.com>, 
-	Leon Romanovsky <leon@kernel.org>, Long Li <longli@microsoft.com>, 
-	Shiraz Saleem <shirazsaleem@microsoft.com>, 
-	Shradha Gupta <shradhagupta@linux.microsoft.com>, Maxim Levitsky <mlevitsk@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Erni Sri Satya Vennela <ernis@linux.microsoft.com>, 
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>, linux-hyperv@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 11, 2025, Naman Jain wrote:
-> Fix below warning in Hyper-V drivers
+This series extends the existing MMP PDMA driver to support SpacemiT PDMA
+controllers with 64-bit addressing capabilities, as used in the K1 SoC.
 
-KVM is quite obviously not a Hyper-V driver.
+The SpacemiT K1 SoC contains a PDMA controller that is largely compatible
+with the existing Marvell MMP PDMA, but adds support for 64-bit physical
+addressing through Long Physical Address Extension (LPAE) mode. This
+requires programming additional high address registers (DDADRH, DSADRH,
+DTADRH) and enabling the DCSR_LPAEEN control bit.
 
-> that comes when kernel is compiled with W=1 option. Include export.h in
-> driver files to fix it.  * warning: EXPORT_SYMBOL() is used, but #include
-> <linux/export.h> is missing
+The implementation maintains full backward compatibility with existing
+32-bit Marvell platforms while adding the necessary infrastructure for
+64-bit address handling through a flexible configuration-based approach.
 
-NAK.  I agree with Heiko[*], this is absurd.  And if the W=1 change isn't reverted
-for some reason, I'd rather "fix" all of KVM in one shot, not update random files
-just because of their name.
+Key features added:
+- 64-bit DMA address support via LPAE mode
+- Platform-specific operation abstractions (mmp_pdma_ops)
+- Optional clock and reset controller support for modern SoCs
+- Device tree integration for SpacemiT K1 SoC and Banana Pi F3 board
 
-Sorry.
+Testing:
+This patchset has been tested on SpacemiT K1-based Banana Pi F3 hardware
+to ensure the PDMA controller operates correctly with 64-bit addressing.
+Existing functionality on 32-bit platforms remains unchanged.
 
-[*] https://lore.kernel.org/all/20250611075533.8102A57-hca@linux.ibm.com
+This patchset is based on [spacemit/for-next]
+  base: https://github.com/spacemit-com/linux for-next
+Plus the reset controller driver, posted by Alex Elder (v10):
+https://lore.kernel.org/all/20250513215345.3631593-1-elder@riscstar.com/
 
-> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
-> ---
->  arch/x86/kvm/hyperv.c       | 1 +
->  arch/x86/kvm/kvm_onhyperv.c | 1 +
->  2 files changed, 2 insertions(+)
-> 
-> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-> index 24f0318c50d7..09f9de4555dd 100644
-> --- a/arch/x86/kvm/hyperv.c
-> +++ b/arch/x86/kvm/hyperv.c
-> @@ -33,6 +33,7 @@
->  #include <linux/sched/cputime.h>
->  #include <linux/spinlock.h>
->  #include <linux/eventfd.h>
-> +#include <linux/export.h>
->  
->  #include <asm/apicdef.h>
->  #include <asm/mshyperv.h>
-> diff --git a/arch/x86/kvm/kvm_onhyperv.c b/arch/x86/kvm/kvm_onhyperv.c
-> index ded0bd688c65..ba45f8364187 100644
-> --- a/arch/x86/kvm/kvm_onhyperv.c
-> +++ b/arch/x86/kvm/kvm_onhyperv.c
-> @@ -5,6 +5,7 @@
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->  
->  #include <linux/kvm_host.h>
-> +#include <linux/export.h>
->  #include <asm/mshyperv.h>
->  
->  #include "hyperv.h"
-> -- 
-> 2.34.1
-> 
+Guodong Xu (8):
+  dt-bindings: dma: marvell,mmp-dma: Add SpacemiT PDMA compatibility
+  dma: mmp_pdma: Add optional clock support
+  dma: mmp_pdma: Add optional reset controller support
+  dma: mmp_pdma: Add SpacemiT PDMA support with 64-bit addressing
+  riscv: dts: spacemit: Add dma bus and PDMA node for K1 SoC
+  riscv: dts: spacemit: Enable PDMA0 controller on Banana Pi F3
+  dma: Kconfig: MMP_PDMA: Add support for ARCH_SPACEMIT
+  riscv: defconfig: Enable MMP_PDMA support for SpacemiT K1 SoC
+
+ .../bindings/dma/marvell,mmp-dma.yaml         |  17 ++
+ .../boot/dts/spacemit/k1-bananapi-f3.dts      |   4 +
+ arch/riscv/boot/dts/spacemit/k1.dtsi          | 234 ++++++++--------
+ arch/riscv/configs/defconfig                  |   3 +-
+ drivers/dma/Kconfig                           |   2 +-
+ drivers/dma/mmp_pdma.c                        | 249 +++++++++++++++---
+ 6 files changed, 370 insertions(+), 139 deletions(-)
+
+-- 
+2.43.0
+
