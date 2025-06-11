@@ -1,162 +1,151 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A90522F
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 00:19:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67575EBE;
+	Wed, 11 Jun 2025 00:21:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749601150; cv=none; b=e/a6lWnH4HhPQw7a6iZXtBV7axIdGrDj+r2xE0MhqcfPNo4tEfBmISrg5qgyEqAw5yZILegrRM3PQB6CIwJKT/0NdDiUL3ZPLK7U5GMIiEDrsodZT+Y9MlTWQnStj2S4pQPPjNS7SUs6bLE3xJN6bGhL5Wu3kZzYtG6o3944edU=
+	t=1749601274; cv=none; b=MGvXXss9bO6ITo0HJtGAiP5vjP6cDcdLNfgNSkaQ6ehI0C4UASEZRmWBo5E9oAFh5Y8z8hk7cbg2TEYF2SKXBh3IDDxuZdUk4CxmwedUF1iBh9Ve1nBahTvZxLDoBz9yM3DxZzzZc9MpJkphJEhdfkMM9uMNFfTTAmA3dMEhPaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749601150; c=relaxed/simple;
-	bh=IORY47wQy4LdI/kDBVKUbdiso0NR611iMYIP8OEfsyk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hKWVNwJ0+IL7NFdt6v2aRy5AQcu74WSKXeGCm+IEdz5dbqYzu8f+pE+CfqmyrsU9wDT46l0lwkJT2HK2+tCq2HsGHWeBaqGQJx7M1woHx7rJWUbnRmU0wWRhOqZLDGTaBg3MGC8iK/uxU/2uZxHcAK4MjyfD03TPfOJhdjQQ+Ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=JTh8w6YA; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1749601274; c=relaxed/simple;
+	bh=5M7maN+cSHCHwskgXnnjymfOkGGLppKSjzBoq/C0N5c=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=oLpTmPCeE+p61XJ64TKVYIiu1E2csnmv8ipXO7Uf2a77SurmVPNHgKr7f0qXJnL184hG2rVSBf4ijpE4nmfmQOlQ1PSlr9uK/Bn2ZKQAADstPHWejpxWRXcvLvOo5SAukyn5JYmp4M2UmUVJ95T/+YRe4oE3VSRfsSgEpdVocdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZKrrE0aT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="JTh8w6YA"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e81877c1ed6so371519276.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 17:19:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1749601147; x=1750205947; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WVdd3dLz7ZIcTr4ufDvopuLf4wfm5imcfIZtINlNmT8=;
-        b=JTh8w6YA00XKao01rmwKXhwmpa/t4X9EF472nSVPbopTKbrpmpDwm14wDQJ6Z/8Wv4
-         tHtbeBFBGLTqyl4RLoqhUk2ixOJCcSlq0ACfbnFycyyDNUKGFc6b2jSU0EN6cQWFUxxd
-         xeGYNTjlqnkxhcxImxvg9GVuozJrE8A3bZrL+1PWgE8MF1ngTtpwdVz78PtYsBmtK+nI
-         cSvBdiZ3bQYZAorKwhh9W98I8yuGwehYbVOzsEd8jBF0egXMjuByAAg1+RhtQyy1UxjT
-         bA1OhtYHVtG+AVYu7YS2bQlS3k6k4ntCvMc7thOxk5sF9Nkl/dbONmcTDfDW1qzn8IGb
-         VeKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749601147; x=1750205947;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WVdd3dLz7ZIcTr4ufDvopuLf4wfm5imcfIZtINlNmT8=;
-        b=Dbm/kwUmifewRRK78Zts9kElkffg+3hz3wwteIJyUPV7xqZkXEI1l6//QtPAah5vYN
-         fcnjKUKFlbhF20VNw0cURyTBAk0A74OSZQAWU57KILfy9J1SRQpPwU2WDh0otzV+qa8J
-         Qa7FFrA7sKAHAOJ4rY1RHV0VtjWvTVyFARfsZHiSCQQBWBR+wpEz/vXKMtHki7nVAMsW
-         8d1CSQlV8ifir13UsPA7QxVxdljvHZCN0LWWiR68MgkxzFSsLEUeONvamCNi7Wfguk9z
-         ZBrVo2dmZeAN/4llaK883I9Raduhs3liDVL8fcE/4g2ggeV957rEZuUwZLpEbgEuO3F9
-         Oyog==
-X-Forwarded-Encrypted: i=1; AJvYcCW1sOQCgTFz31N8vXr2Tr9KFA7TmdPBNe5z/heU+tCMFHe4vZu4sp0UNKrrAOeh49T1prIkDRplxIAfqYE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzi5xcOJmxrlEmza+BIrzs8fesukzDWqKJL01Y/4zXyi10qgI/Q
-	aFmL2/SKjUN7/kBTjg4aUJ/6/blzotsd4fNYxSqg3cE+anBVQdMGlzTMqFhHyaF2P0hHZ7YuTI8
-	MNk1D8GwaAMrpZcZZhXevMgSOGmOOoRLzeRe37+6D
-X-Gm-Gg: ASbGncuKCH4PvnrGs7YfHd2Y6YOKqhBjrFd3fxQPmn80jPc22ylRwSVJEgGMm9Mc7Nb
-	6uM8e/DNOwg4s8uwEJq1IJpkujgTFGUK5F+WsuaGE97Ma3Bd4cLZZWXfe+7ZlGbIrJnLGAyweT+
-	t7Pyc2isiaqKsamqNv6muSWyC97XABpQ5zS8+jM+Pxw+o=
-X-Google-Smtp-Source: AGHT+IFhaywKvZhSqGMYCEnZVjdvyyEH3lPyXmudVciSPFI3Riyi/kqwflYAzvkhk/3jL5m6fRCinhNMSX8xauJ1HpU=
-X-Received: by 2002:a05:690c:dc3:b0:70e:25b2:8f42 with SMTP id
- 00721157ae682-71140b0ba00mr21319537b3.18.1749601146869; Tue, 10 Jun 2025
- 17:19:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZKrrE0aT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 036D1C4CEED;
+	Wed, 11 Jun 2025 00:21:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749601274;
+	bh=5M7maN+cSHCHwskgXnnjymfOkGGLppKSjzBoq/C0N5c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ZKrrE0aTEJiPmix6kRun20+sEoLWU244WzGiSNFGF/AjRTLqiPglpkdVmui/meK5U
+	 LmeG5BTN8pRclJghk7zc4jpbhLaDGelhs0C3PCYQXIcexT66y8BpGqmyJbbd7CgYJb
+	 DTprKSoQQhqx3LWl9L+uHzBXGLArSJ3kd6e7yU+q2x3MVasgOv+rA+8gDuuEiChpAc
+	 RHY2IaceKbzvNBS1Q9F83+OEphS6AHOMqNYdwtdXDNt6b74RB4XV16dq04Dyd1I0Xa
+	 ub/2gMCjqsFbh/89xEuhSudlSXf3irNqfuEjvv/x7vZ5ExmL5/n/+tCyt6S8d5eaf7
+	 QiMijxkbqHqJQ==
+Date: Wed, 11 Jun 2025 09:21:10 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Naresh Kamboju
+ <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>,
+ Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+ lkft-triage@lists.linaro.org, Stephen Rothwell <sfr@canb.auug.org.au>, Arnd
+ Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, Anders
+ Roxell <anders.roxell@linaro.org>
+Subject: Re: [RFC PATCH 2/2] x86: alternative: Invalidate the cache for
+ updated instructions
+Message-Id: <20250611092110.f285e7943666941dfa3b29d3@kernel.org>
+In-Reply-To: <20250610115030.0d60da65@gandalf.local.home>
+References: <20250610234307.c675969e83ce53bb856e94d7@kernel.org>
+	<174956686826.1494782.11512582667456262594.stgit@mhiramat.tok.corp.google.com>
+	<20250610115030.0d60da65@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250306082615.174777-1-max.kellermann@ionos.com>
- <878qmxsuy8.fsf@email.froward.int.ebiederm.org> <202505151451.638C22B@keescook>
- <87ecwopofp.fsf@email.froward.int.ebiederm.org> <CAG48ez1VpuTR9_cvLrJEMmjOxTCYpYFswXVPmN6fE3NcSmPPVA@mail.gmail.com>
- <87wmagnnhq.fsf@email.froward.int.ebiederm.org> <202505201319.D57FDCB2A@keescook>
- <87frgznd74.fsf_-_@email.froward.int.ebiederm.org> <CAG48ez0N_1CEKyMHdjnvwsxUkCenmzsLe7dkUL=a6OmU4tPa6Q@mail.gmail.com>
- <87zff6gf17.fsf@email.froward.int.ebiederm.org> <CAG48ez1z97sCsx53W0O_dCCJL6tnf2pWuv=qaeszcYBfz_01sA@mail.gmail.com>
-In-Reply-To: <CAG48ez1z97sCsx53W0O_dCCJL6tnf2pWuv=qaeszcYBfz_01sA@mail.gmail.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Tue, 10 Jun 2025 20:18:56 -0400
-X-Gm-Features: AX0GCFteIk2y01CS-cNcS4mA_PTKbDwTd2hyrP2HwjpuZ2_UI5DzEEK5JAgjzOw
-Message-ID: <CAHC9VhRPUXwqLvo4rbxL0++5zqHXfD8_tr-sirTJXdF_Aba_UQ@mail.gmail.com>
-Subject: Re: [PATCH v2] exec: Correct the permission check for unsafe exec
-To: Jann Horn <jannh@google.com>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>, Richard Guy Briggs <rgb@redhat.com>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Kees Cook <kees@kernel.org>, 
-	Max Kellermann <max.kellermann@ionos.com>, jmorris@namei.org, 
-	Andy Lutomirski <luto@kernel.org>, morgan@kernel.org, 
-	Christian Brauner <christian@brauner.io>, linux-security-module@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 21, 2025 at 11:36=E2=80=AFAM Jann Horn <jannh@google.com> wrote=
-:
-> On Wed, May 21, 2025 at 5:27=E2=80=AFPM Eric W. Biederman <ebiederm@xmiss=
-ion.com> wrote:
-> > Jann Horn <jannh@google.com> writes:
-> >
-> > > On Wed, May 21, 2025 at 12:13=E2=80=AFAM Eric W. Biederman
-> > > <ebiederm@xmission.com> wrote:
-> >
-> > > Looks good to me overall, thanks for figuring out the history of this
-> > > not-particularly-easy-to-understand code and figuring out the right
-> > > fix.
-> > >
-> > > Reviewed-by: Jann Horn <jannh@google.com>
-> > >
-> > >> @@ -917,7 +911,7 @@ int cap_bprm_creds_from_file(struct linux_binprm=
- *bprm, const struct file *file)
-> > >>         /* Process setpcap binaries and capabilities for uid 0 */
-> > >>         const struct cred *old =3D current_cred();
-> > >>         struct cred *new =3D bprm->cred;
-> > >> -       bool effective =3D false, has_fcap =3D false, is_setid;
-> > >> +       bool effective =3D false, has_fcap =3D false, id_changed;
-> > >>         int ret;
-> > >>         kuid_t root_uid;
-> > >>
-> > >> @@ -941,9 +935,9 @@ int cap_bprm_creds_from_file(struct linux_binprm=
- *bprm, const struct file *file)
-> > >>          *
-> > >>          * In addition, if NO_NEW_PRIVS, then ensure we get no new p=
-rivs.
-> > >>          */
-> > >> -       is_setid =3D __is_setuid(new, old) || __is_setgid(new, old);
-> > >> +       id_changed =3D !uid_eq(new->euid, old->euid) || !in_group_p(=
-new->egid);
-> > >
-> > > Hm, so when we change from one EGID to another EGID which was already
-> > > in our groups list, we don't treat it as a privileged exec? Which is
-> > > okay because, while an unprivileged user would not just be allowed to
-> > > change their EGID to a GID from their groups list themselves through
-> > > __sys_setregid(), they would be allowed to create a new setgid binary
-> > > owned by a group from their groups list and then execute that?
-> > >
-> > > That's fine with me, though it seems a little weird to me. setgid exe=
-c
-> > > is changing our creds and yet we're not treating it as a "real" setgi=
-d
-> > > execution because the execution is only granting privileges that
-> > > userspace could have gotten anyway.
-> >
-> > More than could have gotten.  From permission checking point of view
-> > permission that the application already had.  In general group based
-> > permission checks just check in_group_p, which looks at cred->fsgid and
-> > the group.
-> >
-> > The logic is since the effective permissions of the running executable
-> > have not changed, there is nothing to special case.
-> >
-> > Arguably a setgid exec can drop what was egid, and if people have
-> > configured their permissions to deny people access based upon a group
-> > they are in that could change the result of the permission checks.  If
-> > changing egid winds up dropping a group from the list of the process's
-> > groups, the process could also have dropped that group with setresgid.
-> > So I don't think we need to be concerned about the combination of
-> > dropping egid and brpm->unsafe.
-> >
-> > If anyone sees a hole in that logic I am happy to change the check
-> > to !gid_eq(new->egid, old->egid), but I just can't see a way changing
-> > egid/fsgid to a group the process already has is a problem.
->
-> I'm fine with leaving your patch as-is.
+On Tue, 10 Jun 2025 11:50:30 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Aside from a tested-by verification from Max, it looks like everyone
-is satisfied with the v2 patch, yes?
+> On Tue, 10 Jun 2025 23:47:48 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> 
+> > Maybe one possible scenario is to hit the int3 after the third step
+> > somehow (on I-cache).
+> > 
+> > ------
+> > <CPU0>					<CPU1>
+> > 					Start smp_text_poke_batch_finish().
+> > 					Start the third step. (remove INT3)
+> > 					on_each_cpu(do_sync_core)
+> > do_sync_core(do SERIALIZE)
+> > 					Finish the third step.
+> > Hit INT3 (from I-cache)
+> > 					Clear text_poke_array_refs[cpu0]
+> > Start smp_text_poke_int3_handler()
+> 
+> I believe your analysis is the issue here. The commit that changed the ref
+> counter from a global to per cpu didn't cause the issue, it just made the
+> race window bigger.
 
-Serge, I see you've reviewed this patch, can I assume that now you
-have a capabilities tree up and running you'll take this patch?
+Agreed. That is a suspicious commit, but even though, as you said
+it might just cause the bug easier. Here I wrote refcount as a
+per-cpu array because of showing the current code.
 
---=20
-paul-moore.com
+> 
+> > Failed to get text_poke_array_refs[cpu0]
+> > Oops: int3
+> > ------
+> > 
+> > SERIALIZE instruction flashes pipeline, thus the processor needs
+> > to reload the instruction. But it is not ensured to reload it from
+> > memory because SERIALIZE does not invalidate the cache.
+> > 
+> > To prevent reloading replaced INT3, we need to invalidate the cache
+> > (flush TLB) in the third step, before the do_sync_core().
+> > 
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> > Closes: https://lore.kernel.org/all/CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com/
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > ---
+> >  arch/x86/kernel/alternative.c |   10 +++++++++-
+> >  1 file changed, 9 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+> > index ecfe7b497cad..1b606db48017 100644
+> > --- a/arch/x86/kernel/alternative.c
+> > +++ b/arch/x86/kernel/alternative.c
+> > @@ -2949,8 +2949,16 @@ void smp_text_poke_batch_finish(void)
+> >  		do_sync++;
+> >  	}
+> >  
+> > -	if (do_sync)
+> > +	if (do_sync) {
+> > +		/*
+> > +		 * Flush the instructions on the cache, then serialize the
+> > +		 * pipeline of each CPU.
+> 
+> The IPI interrupt should flush the cache. And the TLB should not be an
+> issue here. If anything, this may work just because it will make the race
+> smaller. 
+
+I'm not sure, I'm searching it in the Intel SDM.
+
+> 
+> I'm thinking this may be a QEMU bug. If QEMU doesn't flush the icache on an
+> IPI then this would indeed be an problem.
+
+Does the qemu manage its icache? (Is that possible to manage it?)
+And I guess it is using KVM to run VM, thus the actual cache or TLB
+operation has been done by KVM.
+
+Thanks,
+
+> 
+> -- Steve
+> 
+> 
+> > +		 */
+> > +		flush_tlb_kernel_range((unsigned long)text_poke_addr(&text_poke_array.vec[0]),
+> > +				       (unsigned long)text_poke_addr(text_poke_array.vec +
+> > +								text_poke_array.nr_entries - 1));
+> >  		smp_text_poke_sync_each_cpu();
+> > +	}
+> >  
+> >  	/*
+> >  	 * Remove and wait for refs to be zero.
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
