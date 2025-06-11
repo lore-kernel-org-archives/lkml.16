@@ -1,57 +1,35 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088387080E
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 01:25:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D027C8CE
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 01:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749605162; cv=none; b=IYIOoyS1RP2eWohjT1XoeARCmn0eui/WRyxmsIg0jxceRyCVrva1/ZzlVyci3puDhs5hkcDbfNnl+RbK2Npy1V6WpZ+Z/AHPzk6Jr3+ZPMiOk51Y2YqPSgkYe03p9rB6f1D8diLpUKuvELZJ3y65mugJGockhOiFjS+t9jSchO4=
+	t=1749605398; cv=none; b=PDsJIW23ZJUVmhlJxFmFcwyr83g1iHcb8QNYzlt6lIvqqw+27WmKK53lN8zsqaj/xJVmpSGgrUpwuSmhuVoNufRYitTbgBj4p5FmmeQTo7RbbXa5D9sIoMc7Fe2gt7LHGg+p/vfrkSDMn6rwwc7bS2hmaqkxUEnpp84p7SvjdZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749605162; c=relaxed/simple;
-	bh=VKWE54UMcR041r5jQB05zWFSUtRwIxUfFhYz4GaHrBI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=Nxc9a16ZVaYCUus3cRo6CvPHXDAodyVd3G0Kgtf8+gexvGLfDl/lfL2wprsQQM7ukXwjvVgRU8PecfNatdqBEz1RCBA7WoeznjTwjUnsc91v/hY1OkzNdswmyfnkmx8i9WW5dQ8NaAV1oEnSfeA+qibHSGo2KWg/BlN+zIerrJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=RgDgoElY; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1749605398; c=relaxed/simple;
+	bh=r1RV6yWcPTMdXv7fcO+LFlOF0On2abCreVsMxm4BoXo=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=PEkMmtAq1fG6DSDl3v8aeDXcuzBF54fJHK4HFgST6K2SBDUX/+Zqg/AQkze0xjxh20hIOn3Stmbg0m4CzZjtAGUPGGcodXjvSeaFvijzRlo4NPTIAsjipVOETWfsw8PHOu726hR7ENy8nJCMw+m0kdQy+9O53Osdp+89tLqMxTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jBU4i5CF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="RgDgoElY"
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250611012557epoutp03e3bf0f5eb470732499e17c4a4efde386~H2J8RZyJb0873008730epoutp03e
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 01:25:57 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250611012557epoutp03e3bf0f5eb470732499e17c4a4efde386~H2J8RZyJb0873008730epoutp03e
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1749605158;
-	bh=HdkJ86X8mFGVShQeGlIsAFxkRbgmE4Xo8V1mtGu+fo8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RgDgoElYQT9NK067BsP7kUJ6MLVFUitZzbhXd2rLtaxqXFTZx+bFqIm0Np/rGeJBp
-	 m4S8GGhCjLzfhr7eI7DoqX+jJ0NEuBm7a2zQSQDcbHWyRNUrH2e0M0XV2TlCiYAXZ8
-	 dwz42tPYmrlFP4mCAzk+LFycpEKANllUKK3d0QTg=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas1p4.samsung.com (KnoxPortal) with ESMTPS id
-	20250611012557epcas1p45cdcede2ad82d3ea24782798094ed530~H2J766VQx2750227502epcas1p4x;
-	Wed, 11 Jun 2025 01:25:57 +0000 (GMT)
-Received: from epcas1p4.samsung.com (unknown [182.195.36.227]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4bH7K10vHQz6B9mC; Wed, 11 Jun
-	2025 01:25:57 +0000 (GMT)
-Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250611012556epcas1p2c22e7ceaed2677bcea2d0ac6c794ed1d~H2J7B7J9j1398113981epcas1p2D;
-	Wed, 11 Jun 2025 01:25:56 +0000 (GMT)
-Received: from yjjuny-lee03.tn.corp.samsungelectronics.net (unknown
-	[10.252.68.99]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250611012556epsmtip26ff35c8eb67a6983c6bcf11bf25d82ae~H2J682GQr1741517415epsmtip2Z;
-	Wed, 11 Jun 2025 01:25:56 +0000 (GMT)
-From: Youngjun Lee <yjjuny.lee@samsung.com>
-To: ribalda@chromium.org, laurent.pinchart@ideasonboard.com
-Cc: hdegoede@redhat.com, mchehab@kernel.org, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Youngjun Lee <yjjuny.lee@samsung.com>
-Subject: [PATCH v3] media: uvcvideo: Fix 1-byte out-of-bounds read in
- uvc_parse_format()
-Date: Wed, 11 Jun 2025 10:25:44 +0900
-Message-ID: <20250611012544.40281-1-yjjuny.lee@samsung.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250610213058.GG24465@pendragon.ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jBU4i5CF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3A6EC4CEED;
+	Wed, 11 Jun 2025 01:29:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749605397;
+	bh=r1RV6yWcPTMdXv7fcO+LFlOF0On2abCreVsMxm4BoXo=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=jBU4i5CFrmBcAS/iwe2PgxqcewiXD1vFGdE3VUxmepKIju5h1vBe+VFJp5WTe8MUd
+	 rDsIFriUPwrZQOdQPBNCfuX0jZydOvM5qDiGEd/tHd+FzGzFbsSl8Qm/e04ljn69oR
+	 Dig6eQByqMlPJ4kffeQyG67e4/ccC0NzqSZr6YDdTMR1OMXD8cd6R6HRAIdfmkgYAp
+	 rHg5c6j/Xa/hnTbHzpLZ6IOX9M9Pc77wtuZpJ2VPNfVzGBUyc8WCOOm+tlQLOTM9Q5
+	 oawapUlxdvsoIVPxMFXB3erJnvGoKnrday+xzliO8fEJC78nMrkxrWT52POFguexqA
+	 Gfxb9cUU89Elg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70C0839D6540;
+	Wed, 11 Jun 2025 01:30:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,46 +37,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250611012556epcas1p2c22e7ceaed2677bcea2d0ac6c794ed1d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-cpgsPolicy: CPGSC10-711,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250611012556epcas1p2c22e7ceaed2677bcea2d0ac6c794ed1d
-References: <20250610213058.GG24465@pendragon.ideasonboard.com>
-	<CGME20250611012556epcas1p2c22e7ceaed2677bcea2d0ac6c794ed1d@epcas1p2.samsung.com>
+Subject: Re: [PATCH v1 0/1] fix riscv runtime constant support
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <174960542825.2762376.5266886940672974555.git-patchwork-notify@kernel.org>
+Date: Wed, 11 Jun 2025 01:30:28 +0000
+References: <20250530211422.784415-1-cmirabil@redhat.com>
+In-Reply-To: <20250530211422.784415-1-cmirabil@redhat.com>
+To: Charles Mirabile <cmirabil@redhat.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ alex@ghiti.fr, charlie@rivosinc.com
 
-The buffer length check before calling uvc_parse_format() only ensured
-that the buffer has at least 3 bytes (buflen > 2), buf the function
-accesses buffer[3], requiring at least 4 bytes.
+Hello:
 
-This can lead to an out-of-bounds read if the buffer has exactly 3 bytes.
+This patch was applied to riscv/linux.git (fixes)
+by Palmer Dabbelt <palmer@dabbelt.com>:
 
-Fix it by checking that the buffer has at least 4 bytes in
-uvc_parse_format().
+On Fri, 30 May 2025 17:14:21 -0400 you wrote:
+> I discovered that something broke basic booting on riscv64 for a nommu
+> kernel with a minimal configuration running on qemu between 6.13 and
+> current master. The symptom was that the kernel would hang and print
+> nothing instead of booting normally. I bisected my way to:
+> 
+> commit a44fb5722199 ("riscv: Add runtime constant support")
+> 
+> [...]
 
-Signed-off-by: Youngjun Lee <yjjuny.lee@samsung.com>
-Reviewed-by: Ricardo Ribalda <ribalda@chromium.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
- drivers/media/usb/uvc/uvc_driver.c | 3 +++
- 1 file changed, 3 insertions(+)
+Here is the summary with links:
+  - [v1,1/1] riscv: fix runtime constant support for nommu kernels
+    https://git.kernel.org/riscv/c/8d90d9872eda
 
-diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-index da24a655ab68..1100469a83a2 100644
---- a/drivers/media/usb/uvc/uvc_driver.c
-+++ b/drivers/media/usb/uvc/uvc_driver.c
-@@ -344,6 +344,9 @@ static int uvc_parse_format(struct uvc_device *dev,
- 	u8 ftype;
- 	int ret;
- 
-+	if (buflen < 4)
-+		return -EINVAL;
-+
- 	format->type = buffer[2];
- 	format->index = buffer[3];
- 	format->frames = frames;
+You are awesome, thank you!
 -- 
-2.43.0
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
