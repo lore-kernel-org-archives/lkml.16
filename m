@@ -1,63 +1,63 @@
 Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 158AE288C89
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 13:00:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A22283C9E
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 13:00:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749646812; cv=none; b=TcV+uLUHtaYm8OYj3OaBXZNZFORKRwnLFeCB20VyfklGpK2OQnxOU/zU48SlXbtGWMMRZjJVvxnVxcoyG5rWteXpqeOexWcgLZAEB/9fmouJTGU3bP9N9y3hB1O0+4f6wvCVNZrDRsfER8MPEF8YQ8Ne7g3gpIfqQrm9b7Oonwg=
+	t=1749646823; cv=none; b=X6T2cDdcEjpRPMhiotw1D9Bnrdjv7KNzHzG2v9QzvtmtX1/oG0xc8gKdbNeUUFB+7z93gRtRd7tTFU0jGtiyKDuNWDSjPMvLr3kDxbM+biCBRwLjA6lvzRCiGWVIzKgE51XmcJo68SnjFBtOO7WrXSPU16lFcpQLAgQ5+4A5tYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749646812; c=relaxed/simple;
-	bh=eGMVc5h94PL2B2E3UrKcFyODORQJmy/6+RlRQQdLCbc=;
+	s=arc-20240116; t=1749646823; c=relaxed/simple;
+	bh=OwZYPy6rlzwZIArlF9lrCLQyQuHFt7ZjSzgDcEQMuBA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SELo2u0G+Z1NVHJfoTcMeDXIYZBmLwKNQk1IOuWcA/EfMVIM5C4hVaDO2EuT1ieF/2lHalB8TbI/zrzGwEmi2FJTnKQA0zZOcGxzmy+hnScSVOAV+wTI62Zjr8BULplFpPWf+15qGbIrfCw8OR483Ppkjd0p3xL3YWG7ZcKgW5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=Lj3mfJpF; arc=none smtp.client-ip=209.85.214.173
+	 MIME-Version; b=IM9YBBTBQdTYePWTYW0gwIUhQjgO1LsK4on+ESoruBV2OlQmHJQc3VMFzIz4yibaLhhxpwNLqVgzlU15QKOZDVg8FzktTXmF8BmHbNUB8Nk2pGjO5er8kFJRb0F3Vgf+wYeBvlEx+u+gLtmwuleBRAN5G/NKMUOt5RMWch+6w9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=v5rnMyAs; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="Lj3mfJpF"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2351227b098so51216085ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:00:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="v5rnMyAs"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-235e1d710d8so81835845ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:00:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1749646808; x=1750251608; darn=vger.kernel.org;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1749646821; x=1750251621; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0/NsOpvMXQBYdYoYMIoGcM16eh3qz+f1G2mte69Ome0=;
-        b=Lj3mfJpF3TT0yh6MUl3cCdSnY9z+VVfWMwoXz0WxENm0Sog1THndF/5umE22TidkqH
-         c6jfRRNVv9xXh/h1yT2PFXmhSuIDLskuDf9WNmqN8Hbfdhjyz1/3O1gx351zLCUKxBU+
-         SuoVi4V3V2wP1eYgXkovMaZM67G+sLtmt8LMSrvYswuLqCMun9uH/kt/yl+9Rjht/MkW
-         641uxBtFvwLtZZFJ6hgk5zj+tCp8J7thnniZAuJNlBHFqbSwQszO4juaiF5LXsk0yNKv
-         5a6SbUcP6CudzWDFMe6mQvxkhAZS4O/yeItQvFAw0XNtzQAxOGIbEYhZFQnzmgdZ5XwL
-         cydQ==
+        bh=Wfkuc3Nm6XNXxPvRJIgpzIHQXi51C7ZBujG/Lertj5Y=;
+        b=v5rnMyAs0vQpyaummZegu9aJcVqtckwEt0dmd5b+1JPotFPml5QohfkuROcqwdI7dA
+         wZmMv1atOFklvcG910jzOAAN1eI35jcA7AzeJ0VLa4kNDO/Re8wKOZ6ds+5SMLs+pdQ4
+         tdXx+63q+29PeH6tQZjbvbigRnMW5RWYEXD5vwcFAJC4/TsUvG8PuK6eEtSo1FG2Ff27
+         n69ZKfoCqpVgaYWXctwHXo5VBPOI2lH5RUAhK9RLQnyPkOnp4htQkwuSQ1uO3MlHIUjJ
+         A+DLHWk0zoGcVp5NSnavdCNfMtWd4u4vNfPvuIrc76w/cWm+ziZsG8cqy8g6C3doOHG+
+         UhYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749646808; x=1750251608;
+        d=1e100.net; s=20230601; t=1749646821; x=1750251621;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0/NsOpvMXQBYdYoYMIoGcM16eh3qz+f1G2mte69Ome0=;
-        b=vEa+n4EbzF5SKaGCG/fPbofy1FRx66saa+HuN/CbXsnSVoitEihkNhNQtZtxd2gI1x
-         0G9BAJI6Oa5WRFU1O7jDxxqni1mPnwRfXyu6ZIF45c9mRYUYP6A/wIxTszcntS/uW74q
-         EkkHHgpUclKFM65BsjUdTjiPrNo8vndpWc0C6EhxqI0EV3Sx9iLqhqg4Qktk4zSOwMBN
-         GVv/ZlsdLeOSc+keSx/UlPa6Re0maiyIBlTr1vTXJR1YtutW8jFzcYajYRjldAOiGbK3
-         v6aNjKeveWo4wDfTTXAXmUx35wy5HJyjlC1yuAFUo7hperUHylxW5cc3Hdk+PxgvUmQo
-         aGNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXUAK0WVpktpiwregtofPBKRsc6xUPIhB8ZP1LI209Fjog6sSAtDsrG7a1w7qp8AqmnFLN6fY1+IgP8zl4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvQ7qaMKEhEid/Qhb+3jHdCH4TBHTLqsDATc4cLkNuCK17stSU
-	knAApzXzEQU29qxJcVHqfTaOykj/TasPXlF39HXaVQP4H7W84WxBvRE45AsYFJVI0Wg=
-X-Gm-Gg: ASbGncuASVABLbA3op7/u+x2iWQ+099zfW8uK8s2fuIciPz5pn32vzRSpkpjjin8Iu2
-	vyrebJdcTNImUczTvntNHFPj7t2LFWdetZGEbeImAaDgLkmoX7A5PHUs2lMeIC1lsYGUE8QesxF
-	uPnxRXFhib5c+GH2zmMNk5wmd3C/tLMk0mZFxWM8dbSvBHKp01uHCqYTqvaHCUd9y4EerpibrZ6
-	2k641dH37PzuHE7HbK9JdWL5ukV3IXYEIuj04ZsWqgWJkyZUXDPFQxV2I84IF3YRMzUhSK4OkIL
-	CV2YzG/ohLGCKfdvmp4hkJCdbO1mp41oDTon7o9KpMvyZ9B+5VU74w0DTF/2ACpZBiWQOfNXvzn
-	vb2TwyKGk2EwQIFzYB4a3sQ==
-X-Google-Smtp-Source: AGHT+IFAd6T3/67ht19F0MK/g7NtaPkmZC41svy2FhzOoer8pe2Va/OnaRRT/Pa7aVpyF0HN5Jgqig==
-X-Received: by 2002:a17:902:f545:b0:234:a139:1215 with SMTP id d9443c01a7336-23641b141b0mr42125965ad.35.1749646808176;
-        Wed, 11 Jun 2025 06:00:08 -0700 (PDT)
+        bh=Wfkuc3Nm6XNXxPvRJIgpzIHQXi51C7ZBujG/Lertj5Y=;
+        b=irMFa4pNvp0IhDvA0Oz7+RCNUUFOHOn7PaGHpL/lEHCgT0Rsil0sdPuk27cdmqdnui
+         E1O5xnzDIib84MGaost4wA4HkXcWiUSykWreJbOoCFzhzhR1bNt/CuV9RqDHmRMXjrrf
+         ofbxW+bKbR6DCfCPwiNDk6Y1QTqdv6zw1VRhjrqD9nE8VAFlxsY62jVuefBVpHRjOs7N
+         CuSnWlsp4T2lfm/aYUSWIBgS55HZHdOc5OFCfSdauHIFOQSj3ilmh2g6ZdHiA1uQ/G+g
+         jBWVFbMEjCBLaWXH5k/wusWe7fYuYh7ahnVKIq+E3W/IvrrROkkKjgcFhSzle2Ut75mX
+         EnYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUDZZwnH/veqVbglzS6wbRA1dnFaQ0sa9Y6lkqmjaxZmoH+1pAY4dmg5W7Nm/Yn9KZzk//hqnvj8RLUGL8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3ELyQq2dScxzdZrdH/XkocZg6vbqafpPtRKq+UnLcw61W+aCL
+	4uPA+4vA8xWGpi/6nGIN+OFBoOcGXltcJij7VDqQc4mdGJlFE21Mol94ZmiWJBdh0WY=
+X-Gm-Gg: ASbGncsSkRVxgzbxiK7DV71Wt0Bde5Qd2dcNUlbnVYDrhCxiasACI/TMUHD13fHti5s
+	6U8BRg+CnmcVL4qEgnsAmv9CtFYrUxeil/NiaFwxglNWpQ4N7exuFOS3po4VYdBvyBVhXV+a932
+	JmG9PvFtAKw1gLwown3JotltI6QqTXyfW/1aMpT6WDOAFsVnLVFLIUmUnBw+WXlGh1DOrZ4E3WN
+	GbAPN6DkLao4M4PlGMbPh6rmqkwrvRTb+fL33Ts3rI5nr6Qj3/2uzF58mSRE3x2o1vsBK17Zaw/
+	XuP3Miw0ZmQT7kVmincBrgz8nNMRNoeVaC3WHLjp4bdfuVeasmPCsFFznkR2RwQC/j+B08+My0b
+	VLuBedj6ClhrqB454qGAZzQ==
+X-Google-Smtp-Source: AGHT+IGTQR16JIfczgjiJDhE97qKg0H9XYRosojidd3FLQgGETflIpsSTEjq5mENRWeE6+WcGFS80A==
+X-Received: by 2002:a17:902:e5c6:b0:235:caa8:1a72 with SMTP id d9443c01a7336-23641b19943mr43885485ad.30.1749646821466;
+        Wed, 11 Jun 2025 06:00:21 -0700 (PDT)
 Received: from localhost.localdomain ([2409:8a00:31a4:6520:3d67:ceb1:7c60:9098])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236030925e3sm86984115ad.53.2025.06.11.05.59.56
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236030925e3sm86984115ad.53.2025.06.11.06.00.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 06:00:07 -0700 (PDT)
+        Wed, 11 Jun 2025 06:00:21 -0700 (PDT)
 From: Guodong Xu <guodong@riscstar.com>
 To: vkoul@kernel.org,
 	robh@kernel.org,
@@ -84,9 +84,9 @@ Cc: guodong@riscstar.com,
 	linux-kernel@vger.kernel.org,
 	linux-riscv@lists.infradead.org,
 	spacemit@lists.linux.dev
-Subject: [PATCH 4/8] dma: mmp_pdma: Add SpacemiT PDMA support with 64-bit addressing
-Date: Wed, 11 Jun 2025 20:57:19 +0800
-Message-ID: <20250611125723.181711-5-guodong@riscstar.com>
+Subject: [PATCH 5/8] riscv: dts: spacemit: Add dma bus and PDMA node for K1 SoC
+Date: Wed, 11 Jun 2025 20:57:20 +0800
+Message-ID: <20250611125723.181711-6-guodong@riscstar.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250611125723.181711-1-guodong@riscstar.com>
 References: <20250611125723.181711-1-guodong@riscstar.com>
@@ -98,471 +98,283 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Extend the MMP PDMA driver to support SpacemiT PDMA controllers with
-64-bit physical addressing capabilities, as used in the K1 SoC. This
-change introduces a flexible architecture that maintains compatibility
-with existing 32-bit Marvell platforms while adding 64-bit support.
+Reorganize the K1 SoC device tree to better reflect the hardware topology
+by introducing a dedicated dma_bus node that groups devices sharing
+the same address translation scheme. This change aligns with the actual
+hardware organization where devices are physically connected to different
+bus segments with different address translation characteristics.
 
-Key changes:
-- Add struct mmp_pdma_config to abstract platform-specific behaviors
-- Implement 64-bit address support through:
-  * New high address registers (DDADRH, DSADRH, DTADRH)
-  * DCSR_LPAEEN bit for Long Physical Address Extension mode
-  * Helper functions for 32/64-bit address handling
-- Add "spacemit,pdma-1.0" compatible string with associated config
-- Extend descriptor structure to support 64-bit addresses
-- Refactor address handling code to be platform-agnostic
-- Add proper DMA mask configuration for both 32-bit and 64-bit modes
+The changes include:
+- New dma_bus node with:
+  * DMA address translation ranges:
+    - First range:  0x0_00000000 -> 0x0_00000000 (size: 2GB)
+    - Second range: 0x1_00000000 -> 0x1_80000000 (size: 12GB)
+  * All UART devices moved under this bus to reflect their shared address
+    translation domain
 
-The implementation uses a configuration-based approach to keeps all
-platform-specific code isolated in config structures. It maintains clean
-separation between 32-bit and 64-bit code paths, provides consistent
-API for both addressing modes and preserves backward compatibility.
+- New PDMA controller node under dma_bus with:
+  * Base address and interrupt configuration
+  * Clock and reset controls
+  * 16 DMA channels
+  * Required DMA cell properties
+
+The PDMA node is marked as disabled by default, allowing board-specific
+device trees to enable it as needed.
 
 Signed-off-by: Guodong Xu <guodong@riscstar.com>
 ---
- drivers/dma/mmp_pdma.c | 236 +++++++++++++++++++++++++++++++++++------
- 1 file changed, 205 insertions(+), 31 deletions(-)
+ arch/riscv/boot/dts/spacemit/k1.dtsi | 234 +++++++++++++++------------
+ 1 file changed, 128 insertions(+), 106 deletions(-)
 
-diff --git a/drivers/dma/mmp_pdma.c b/drivers/dma/mmp_pdma.c
-index fe627efeaff0..57313754b611 100644
---- a/drivers/dma/mmp_pdma.c
-+++ b/drivers/dma/mmp_pdma.c
-@@ -25,9 +25,12 @@
- #define DCSR		0x0000
- #define DALGN		0x00a0
- #define DINT		0x00f0
--#define DDADR		0x0200
-+#define DDADR(n)	(0x0200 + ((n) << 4))
- #define DSADR(n)	(0x0204 + ((n) << 4))
- #define DTADR(n)	(0x0208 + ((n) << 4))
-+#define DDADRH(n)	(0x0300 + ((n) << 4))
-+#define DSADRH(n)	(0x0304 + ((n) << 4))
-+#define DTADRH(n)	(0x0308 + ((n) << 4))
- #define DCMD		0x020c
+diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
+index dead05a3c816..557feac860de 100644
+--- a/arch/riscv/boot/dts/spacemit/k1.dtsi
++++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
+@@ -369,112 +369,13 @@ syscon_apbc: system-controller@d4015000 {
+ 			#reset-cells = <1>;
+ 		};
  
- #define DCSR_RUN	BIT(31)	/* Run Bit (read / write) */
-@@ -44,6 +47,7 @@
- #define DCSR_EORSTOPEN	BIT(26)	/* STOP on an EOR */
- #define DCSR_SETCMPST	BIT(25)	/* Set Descriptor Compare Status */
- #define DCSR_CLRCMPST	BIT(24)	/* Clear Descriptor Compare Status */
-+#define DCSR_LPAEEN	BIT(21)	/* Long Physical Address Extension Enable */
- #define DCSR_CMPST	BIT(10)	/* The Descriptor Compare Status */
- #define DCSR_EORINTR	BIT(9)	/* The end of Receive */
+-		uart0: serial@d4017000 {
+-			compatible = "spacemit,k1-uart", "intel,xscale-uart";
+-			reg = <0x0 0xd4017000 0x0 0x100>;
+-			clocks = <&syscon_apbc CLK_UART0>,
+-				 <&syscon_apbc CLK_UART0_BUS>;
+-			clock-names = "core", "bus";
+-			interrupts = <42>;
+-			reg-shift = <2>;
+-			reg-io-width = <4>;
+-			status = "disabled";
+-		};
+-
+-		uart2: serial@d4017100 {
+-			compatible = "spacemit,k1-uart", "intel,xscale-uart";
+-			reg = <0x0 0xd4017100 0x0 0x100>;
+-			clocks = <&syscon_apbc CLK_UART2>,
+-				 <&syscon_apbc CLK_UART2_BUS>;
+-			clock-names = "core", "bus";
+-			interrupts = <44>;
+-			reg-shift = <2>;
+-			reg-io-width = <4>;
+-			status = "disabled";
+-		};
+-
+-		uart3: serial@d4017200 {
+-			compatible = "spacemit,k1-uart", "intel,xscale-uart";
+-			reg = <0x0 0xd4017200 0x0 0x100>;
+-			clocks = <&syscon_apbc CLK_UART3>,
+-				 <&syscon_apbc CLK_UART3_BUS>;
+-			clock-names = "core", "bus";
+-			interrupts = <45>;
+-			reg-shift = <2>;
+-			reg-io-width = <4>;
+-			status = "disabled";
+-		};
+-
+-		uart4: serial@d4017300 {
+-			compatible = "spacemit,k1-uart", "intel,xscale-uart";
+-			reg = <0x0 0xd4017300 0x0 0x100>;
+-			clocks = <&syscon_apbc CLK_UART4>,
+-				 <&syscon_apbc CLK_UART4_BUS>;
+-			clock-names = "core", "bus";
+-			interrupts = <46>;
+-			reg-shift = <2>;
+-			reg-io-width = <4>;
+-			status = "disabled";
+-		};
+-
+-		uart5: serial@d4017400 {
+-			compatible = "spacemit,k1-uart", "intel,xscale-uart";
+-			reg = <0x0 0xd4017400 0x0 0x100>;
+-			clocks = <&syscon_apbc CLK_UART5>,
+-				 <&syscon_apbc CLK_UART5_BUS>;
+-			clock-names = "core", "bus";
+-			interrupts = <47>;
+-			reg-shift = <2>;
+-			reg-io-width = <4>;
+-			status = "disabled";
+-		};
+-
+-		uart6: serial@d4017500 {
+-			compatible = "spacemit,k1-uart", "intel,xscale-uart";
+-			reg = <0x0 0xd4017500 0x0 0x100>;
+-			clocks = <&syscon_apbc CLK_UART6>,
+-				 <&syscon_apbc CLK_UART6_BUS>;
+-			clock-names = "core", "bus";
+-			interrupts = <48>;
+-			reg-shift = <2>;
+-			reg-io-width = <4>;
+-			status = "disabled";
+-		};
+-
+-		uart7: serial@d4017600 {
+-			compatible = "spacemit,k1-uart", "intel,xscale-uart";
+-			reg = <0x0 0xd4017600 0x0 0x100>;
+-			clocks = <&syscon_apbc CLK_UART7>,
+-				 <&syscon_apbc CLK_UART7_BUS>;
+-			clock-names = "core", "bus";
+-			interrupts = <49>;
+-			reg-shift = <2>;
+-			reg-io-width = <4>;
+-			status = "disabled";
+-		};
+-
+-		uart8: serial@d4017700 {
+-			compatible = "spacemit,k1-uart", "intel,xscale-uart";
+-			reg = <0x0 0xd4017700 0x0 0x100>;
+-			clocks = <&syscon_apbc CLK_UART8>,
+-				 <&syscon_apbc CLK_UART8_BUS>;
+-			clock-names = "core", "bus";
+-			interrupts = <50>;
+-			reg-shift = <2>;
+-			reg-io-width = <4>;
+-			status = "disabled";
+-		};
+-
+-		uart9: serial@d4017800 {
+-			compatible = "spacemit,k1-uart", "intel,xscale-uart";
+-			reg = <0x0 0xd4017800 0x0 0x100>;
+-			clocks = <&syscon_apbc CLK_UART9>,
+-				 <&syscon_apbc CLK_UART9_BUS>;
+-			clock-names = "core", "bus";
+-			interrupts = <51>;
+-			reg-shift = <2>;
+-			reg-io-width = <4>;
+-			status = "disabled";
++		dma_bus: bus@4 {
++			compatible = "simple-bus";
++			#address-cells = <2>;
++			#size-cells = <2>;
++			dma-ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>,
++				     <0x1 0x00000000 0x1 0x80000000 0x3 0x00000000>;
++			ranges;
+ 		};
  
-@@ -76,6 +80,16 @@ struct mmp_pdma_desc_hw {
- 	u32 dsadr;	/* DSADR value for the current transfer */
- 	u32 dtadr;	/* DTADR value for the current transfer */
- 	u32 dcmd;	/* DCMD value for the current transfer */
-+	/*
-+	 * The following 32-bit words are only used in the 64-bit, ie.
-+	 * LPAE (Long Physical Address Extension) mode.
-+	 * They are used to specify the high 32 bits of the descriptor's
-+	 * addresses.
-+	 */
-+	u32 ddadrh;	/* High 32-bit of DDADR */
-+	u32 dsadrh;	/* High 32-bit of DSADR */
-+	u32 dtadrh;	/* High 32-bit of DTADR */
-+	u32 rsvd;	/* reserved */
- } __aligned(32);
- 
- struct mmp_pdma_desc_sw {
-@@ -120,12 +134,36 @@ struct mmp_pdma_phy {
- 	struct mmp_pdma_chan *vchan;
+ 		gpio: gpio@d4019000 {
+@@ -792,3 +693,124 @@ pwm19: pwm@d4022c00 {
+ 		};
+ 	};
  };
- 
-+/**
-+ * struct mmp_pdma_ops - Operations for the MMP PDMA controller
-+ * @set_desc:   Function to program descriptor addresses into DDADR/DDADRH
-+ *              channel registers
-+ * @addr_split: Function to split DMA address into 32-bit low/high parts
-+ *              for hardware programming
-+ * @addr_join:  Function to combine 32-bit low/high values into 64-bit
-+ *              for software processing
-+ * @reg_read64: Function to read and combine two 32-bit registers into
-+ *              64-bit value
-+ * @run_bits:   Control bits in DCSR register for channel start/stop
-+ * @dma_mask:   DMA addressing capability of controller. 0 to use OF/platform
-+ *              settings, or explicit mask like DMA_BIT_MASK(32/64)
-+ */
-+struct mmp_pdma_ops {
-+	void (*set_desc)(struct mmp_pdma_phy *phy, dma_addr_t addr);
-+	void (*addr_split)(u32 *lower, u32 *upper, dma_addr_t addr);
-+	u64 (*addr_join)(u32 lower, u32 upper);
-+	u64 (*reg_read64)(void __iomem *base, u32 low_offset, u32 high_offset);
-+	u32 run_bits;
-+	u64 dma_mask;
-+};
 +
- struct mmp_pdma_device {
- 	int				dma_channels;
- 	void __iomem			*base;
- 	struct device			*dev;
- 	struct dma_device		device;
- 	struct mmp_pdma_phy		*phy;
-+	const struct mmp_pdma_ops	*config;
- 	spinlock_t phy_lock; /* protect alloc/free phy channels */
- };
- 
-@@ -138,24 +176,89 @@ struct mmp_pdma_device {
- #define to_mmp_pdma_dev(dmadev)					\
- 	container_of(dmadev, struct mmp_pdma_device, device)
- 
--static int mmp_pdma_config_write(struct dma_chan *dchan,
--			   struct dma_slave_config *cfg,
--			   enum dma_transfer_direction direction);
-+/* For 32-bit version */
-+static void addr_split_32(u32 *lower, u32 *upper __maybe_unused,
-+			  dma_addr_t addr)
-+{
-+	*lower = addr;
-+}
++&dma_bus {
++	pdma0: dma-controller@d4000000 {
++		compatible = "spacemit,pdma-1.0";
++		reg = <0x0 0xd4000000 0x0 0x4000>;
++		interrupts = <72>;
++		clocks = <&syscon_apmu CLK_DMA>;
++		resets = <&syscon_apmu RESET_DMA>;
++		#dma-cells= <2>;
++		#dma-channels = <16>;
++		status = "disabled";
++	};
 +
-+static void set_desc_32(struct mmp_pdma_phy *phy, dma_addr_t addr)
-+{
-+	writel(addr, phy->base + DDADR(phy->idx));
-+}
++	uart0: serial@d4017000 {
++		compatible = "spacemit,k1-uart", "intel,xscale-uart";
++		reg = <0x0 0xd4017000 0x0 0x100>;
++		clocks = <&syscon_apbc CLK_UART0>,
++			 <&syscon_apbc CLK_UART0_BUS>;
++		clock-names = "core", "bus";
++		interrupts = <42>;
++		reg-shift = <2>;
++		reg-io-width = <4>;
++		status = "disabled";
++	};
 +
-+static u64 addr_join_32(u32 lower, u32 upper __maybe_unused)
-+{
-+	return lower;
-+}
- 
--static void set_desc(struct mmp_pdma_phy *phy, dma_addr_t addr)
-+static u64 reg_read64_32(void __iomem *base, u32 low_offset,
-+			 u32 high_offset __maybe_unused)
- {
--	u32 reg = (phy->idx << 4) + DDADR;
-+	return readl(base + low_offset);
-+}
- 
--	writel(addr, phy->base + reg);
-+/* For 64-bit version */
-+static void addr_split_64(u32 *lower, u32 *upper, dma_addr_t addr)
-+{
-+	*lower = lower_32_bits(addr);
-+	*upper = upper_32_bits(addr);
-+}
++	uart2: serial@d4017100 {
++		compatible = "spacemit,k1-uart", "intel,xscale-uart";
++		reg = <0x0 0xd4017100 0x0 0x100>;
++		clocks = <&syscon_apbc CLK_UART2>,
++			 <&syscon_apbc CLK_UART2_BUS>;
++		clock-names = "core", "bus";
++		interrupts = <44>;
++		reg-shift = <2>;
++		reg-io-width = <4>;
++		status = "disabled";
++	};
 +
-+static void set_desc_64(struct mmp_pdma_phy *phy, dma_addr_t addr)
-+{
-+	writel(lower_32_bits(addr), phy->base + DDADR(phy->idx));
-+	writel(upper_32_bits(addr), phy->base + DDADRH(phy->idx));
-+}
++	uart3: serial@d4017200 {
++		compatible = "spacemit,k1-uart", "intel,xscale-uart";
++		reg = <0x0 0xd4017200 0x0 0x100>;
++		clocks = <&syscon_apbc CLK_UART3>,
++			 <&syscon_apbc CLK_UART3_BUS>;
++		clock-names = "core", "bus";
++		interrupts = <45>;
++		reg-shift = <2>;
++		reg-io-width = <4>;
++		status = "disabled";
++	};
 +
-+static u64 addr_join_64(u32 lower, u32 upper)
-+{
-+	return ((u64)upper << 32) | lower;
-+}
++	uart4: serial@d4017300 {
++		compatible = "spacemit,k1-uart", "intel,xscale-uart";
++		reg = <0x0 0xd4017300 0x0 0x100>;
++		clocks = <&syscon_apbc CLK_UART4>,
++			 <&syscon_apbc CLK_UART4_BUS>;
++		clock-names = "core", "bus";
++		interrupts = <46>;
++		reg-shift = <2>;
++		reg-io-width = <4>;
++		status = "disabled";
++	};
 +
-+static u64 reg_read64_64(void __iomem *base, u32 low_offset,
-+			 u32 high_offset)
-+{
-+	return addr_join_64(readl(base + low_offset),
-+			    readl(base + high_offset));
- }
- 
-+/* Helper functions */
-+static inline void pdma_desc_set_addr(struct mmp_pdma_device *pdev,
-+				      u32 *addr_low, u32 *addr_high,
-+				      dma_addr_t addr)
-+{
-+	pdev->config->addr_split(addr_low, addr_high, addr);
-+}
++	uart5: serial@d4017400 {
++		compatible = "spacemit,k1-uart", "intel,xscale-uart";
++		reg = <0x0 0xd4017400 0x0 0x100>;
++		clocks = <&syscon_apbc CLK_UART5>,
++			 <&syscon_apbc CLK_UART5_BUS>;
++		clock-names = "core", "bus";
++		interrupts = <47>;
++		reg-shift = <2>;
++		reg-io-width = <4>;
++		status = "disabled";
++	};
 +
-+static inline u64 pdma_read_addr(struct mmp_pdma_phy *phy,
-+				 struct mmp_pdma_device *pdev,
-+				 u32 reg_low, u32 reg_high)
-+{
-+	return pdev->config->reg_read64(phy->base, reg_low, reg_high);
-+}
++	uart6: serial@d4017500 {
++		compatible = "spacemit,k1-uart", "intel,xscale-uart";
++		reg = <0x0 0xd4017500 0x0 0x100>;
++		clocks = <&syscon_apbc CLK_UART6>,
++			 <&syscon_apbc CLK_UART6_BUS>;
++		clock-names = "core", "bus";
++		interrupts = <48>;
++		reg-shift = <2>;
++		reg-io-width = <4>;
++		status = "disabled";
++	};
 +
-+static inline u64 pdma_desc_addr(struct mmp_pdma_device *pdev,
-+				 u32 addr_low, u32 addr_high)
-+{
-+	return pdev->config->addr_join(addr_low, addr_high);
-+}
++	uart7: serial@d4017600 {
++		compatible = "spacemit,k1-uart", "intel,xscale-uart";
++		reg = <0x0 0xd4017600 0x0 0x100>;
++		clocks = <&syscon_apbc CLK_UART7>,
++			 <&syscon_apbc CLK_UART7_BUS>;
++		clock-names = "core", "bus";
++		interrupts = <49>;
++		reg-shift = <2>;
++		reg-io-width = <4>;
++		status = "disabled";
++	};
 +
-+static int mmp_pdma_config_write(struct dma_chan *dchan,
-+				 struct dma_slave_config *cfg,
-+				 enum dma_transfer_direction direction);
++	uart8: serial@d4017700 {
++		compatible = "spacemit,k1-uart", "intel,xscale-uart";
++		reg = <0x0 0xd4017700 0x0 0x100>;
++		clocks = <&syscon_apbc CLK_UART8>,
++			 <&syscon_apbc CLK_UART8_BUS>;
++		clock-names = "core", "bus";
++		interrupts = <50>;
++		reg-shift = <2>;
++		reg-io-width = <4>;
++		status = "disabled";
++	};
 +
- static void enable_chan(struct mmp_pdma_phy *phy)
- {
- 	u32 reg, dalgn;
-+	struct mmp_pdma_device *pdev;
- 
- 	if (!phy->vchan)
- 		return;
- 
-+	pdev = to_mmp_pdma_dev(phy->vchan->chan.device);
-+
- 	reg = DRCMR(phy->vchan->drcmr);
- 	writel(DRCMR_MAPVLD | phy->idx, phy->base + reg);
- 
-@@ -167,18 +270,29 @@ static void enable_chan(struct mmp_pdma_phy *phy)
- 	writel(dalgn, phy->base + DALGN);
- 
- 	reg = (phy->idx << 2) + DCSR;
--	writel(readl(phy->base + reg) | DCSR_RUN, phy->base + reg);
-+	writel(readl(phy->base + reg) | pdev->config->run_bits,
-+	       phy->base + reg);
- }
- 
- static void disable_chan(struct mmp_pdma_phy *phy)
- {
--	u32 reg;
-+	u32 reg, dcsr;
- 
- 	if (!phy)
- 		return;
- 
- 	reg = (phy->idx << 2) + DCSR;
--	writel(readl(phy->base + reg) & ~DCSR_RUN, phy->base + reg);
-+	dcsr = readl(phy->base + reg);
-+
-+	if (phy->vchan) {
-+		struct mmp_pdma_device *pdev;
-+
-+		pdev = to_mmp_pdma_dev(phy->vchan->chan.device);
-+		writel(dcsr & ~pdev->config->run_bits, phy->base + reg);
-+	} else {
-+		/* If no vchan, just clear the RUN bit */
-+		writel(dcsr & ~DCSR_RUN, phy->base + reg);
-+	}
- }
- 
- static int clear_chan_irq(struct mmp_pdma_phy *phy)
-@@ -297,6 +411,7 @@ static void mmp_pdma_free_phy(struct mmp_pdma_chan *pchan)
- static void start_pending_queue(struct mmp_pdma_chan *chan)
- {
- 	struct mmp_pdma_desc_sw *desc;
-+	struct mmp_pdma_device *pdev = to_mmp_pdma_dev(chan->chan.device);
- 
- 	/* still in running, irq will start the pending list */
- 	if (!chan->idle) {
-@@ -331,7 +446,7 @@ static void start_pending_queue(struct mmp_pdma_chan *chan)
- 	 * Program the descriptor's address into the DMA controller,
- 	 * then start the DMA transaction
- 	 */
--	set_desc(chan->phy, desc->async_tx.phys);
-+	pdev->config->set_desc(chan->phy, desc->async_tx.phys);
- 	enable_chan(chan->phy);
- 	chan->idle = false;
- }
-@@ -447,6 +562,7 @@ mmp_pdma_prep_memcpy(struct dma_chan *dchan,
- 		     size_t len, unsigned long flags)
- {
- 	struct mmp_pdma_chan *chan;
-+	struct mmp_pdma_device *pdev = to_mmp_pdma_dev(dchan->device);
- 	struct mmp_pdma_desc_sw *first = NULL, *prev = NULL, *new;
- 	size_t copy = 0;
- 
-@@ -478,13 +594,17 @@ mmp_pdma_prep_memcpy(struct dma_chan *dchan,
- 			chan->byte_align = true;
- 
- 		new->desc.dcmd = chan->dcmd | (DCMD_LENGTH & copy);
--		new->desc.dsadr = dma_src;
--		new->desc.dtadr = dma_dst;
-+		pdma_desc_set_addr(pdev, &new->desc.dsadr, &new->desc.dsadrh,
-+					 dma_src);
-+		pdma_desc_set_addr(pdev, &new->desc.dtadr, &new->desc.dtadrh,
-+					 dma_dst);
- 
- 		if (!first)
- 			first = new;
- 		else
--			prev->desc.ddadr = new->async_tx.phys;
-+			pdma_desc_set_addr(pdev, &prev->desc.ddadr,
-+						 &prev->desc.ddadrh,
-+						 new->async_tx.phys);
- 
- 		new->async_tx.cookie = 0;
- 		async_tx_ack(&new->async_tx);
-@@ -528,6 +648,7 @@ mmp_pdma_prep_slave_sg(struct dma_chan *dchan, struct scatterlist *sgl,
- 		       unsigned long flags, void *context)
- {
- 	struct mmp_pdma_chan *chan = to_mmp_pdma_chan(dchan);
-+	struct mmp_pdma_device *pdev = to_mmp_pdma_dev(dchan->device);
- 	struct mmp_pdma_desc_sw *first = NULL, *prev = NULL, *new = NULL;
- 	size_t len, avail;
- 	struct scatterlist *sg;
-@@ -559,17 +680,23 @@ mmp_pdma_prep_slave_sg(struct dma_chan *dchan, struct scatterlist *sgl,
- 
- 			new->desc.dcmd = chan->dcmd | (DCMD_LENGTH & len);
- 			if (dir == DMA_MEM_TO_DEV) {
--				new->desc.dsadr = addr;
-+				pdma_desc_set_addr(pdev, &new->desc.dsadr,
-+							 &new->desc.dsadrh,
-+							 addr);
- 				new->desc.dtadr = chan->dev_addr;
- 			} else {
- 				new->desc.dsadr = chan->dev_addr;
--				new->desc.dtadr = addr;
-+				pdma_desc_set_addr(pdev, &new->desc.dtadr,
-+							 &new->desc.dtadrh,
-+							 addr);
- 			}
- 
- 			if (!first)
- 				first = new;
- 			else
--				prev->desc.ddadr = new->async_tx.phys;
-+				pdma_desc_set_addr(pdev, &prev->desc.ddadr,
-+							 &prev->desc.ddadrh,
-+							 new->async_tx.phys);
- 
- 			new->async_tx.cookie = 0;
- 			async_tx_ack(&new->async_tx);
-@@ -609,6 +736,7 @@ mmp_pdma_prep_dma_cyclic(struct dma_chan *dchan,
- 			 unsigned long flags)
- {
- 	struct mmp_pdma_chan *chan;
-+	struct mmp_pdma_device *pdev = to_mmp_pdma_dev(dchan->device);
- 	struct mmp_pdma_desc_sw *first = NULL, *prev = NULL, *new;
- 	dma_addr_t dma_src, dma_dst;
- 
-@@ -651,13 +779,17 @@ mmp_pdma_prep_dma_cyclic(struct dma_chan *dchan,
- 
- 		new->desc.dcmd = (chan->dcmd | DCMD_ENDIRQEN |
- 				  (DCMD_LENGTH & period_len));
--		new->desc.dsadr = dma_src;
--		new->desc.dtadr = dma_dst;
-+		pdma_desc_set_addr(pdev, &new->desc.dsadr, &new->desc.dsadrh,
-+					 dma_src);
-+		pdma_desc_set_addr(pdev, &new->desc.dtadr, &new->desc.dtadrh,
-+					 dma_dst);
- 
- 		if (!first)
- 			first = new;
- 		else
--			prev->desc.ddadr = new->async_tx.phys;
-+			pdma_desc_set_addr(pdev, &prev->desc.ddadr,
-+						 &prev->desc.ddadrh,
-+						 new->async_tx.phys);
- 
- 		new->async_tx.cookie = 0;
- 		async_tx_ack(&new->async_tx);
-@@ -678,7 +810,8 @@ mmp_pdma_prep_dma_cyclic(struct dma_chan *dchan,
- 	first->async_tx.cookie = -EBUSY;
- 
- 	/* make the cyclic link */
--	new->desc.ddadr = first->async_tx.phys;
-+	pdma_desc_set_addr(pdev, &new->desc.ddadr, &new->desc.ddadrh,
-+				 first->async_tx.phys);
- 	chan->cyclic_first = first;
- 
- 	return &first->async_tx;
-@@ -764,7 +897,9 @@ static unsigned int mmp_pdma_residue(struct mmp_pdma_chan *chan,
- 				     dma_cookie_t cookie)
- {
- 	struct mmp_pdma_desc_sw *sw;
--	u32 curr, residue = 0;
-+	struct mmp_pdma_device *pdev = to_mmp_pdma_dev(chan->chan.device);
-+	u64 curr;
-+	u32 residue = 0;
- 	bool passed = false;
- 	bool cyclic = chan->cyclic_first != NULL;
- 
-@@ -776,17 +911,24 @@ static unsigned int mmp_pdma_residue(struct mmp_pdma_chan *chan,
- 		return 0;
- 
- 	if (chan->dir == DMA_DEV_TO_MEM)
--		curr = readl(chan->phy->base + DTADR(chan->phy->idx));
-+		curr = pdma_read_addr(chan->phy, pdev,
-+				      DTADR(chan->phy->idx),
-+				      DTADRH(chan->phy->idx));
- 	else
--		curr = readl(chan->phy->base + DSADR(chan->phy->idx));
-+		curr = pdma_read_addr(chan->phy, pdev,
-+				      DSADR(chan->phy->idx),
-+				      DSADRH(chan->phy->idx));
- 
- 	list_for_each_entry(sw, &chan->chain_running, node) {
--		u32 start, end, len;
-+		u64 start, end;
-+		u32 len;
- 
- 		if (chan->dir == DMA_DEV_TO_MEM)
--			start = sw->desc.dtadr;
-+			start = pdma_desc_addr(pdev, sw->desc.dtadr,
-+						     sw->desc.dtadrh);
- 		else
--			start = sw->desc.dsadr;
-+			start = pdma_desc_addr(pdev, sw->desc.dsadr,
-+						     sw->desc.dsadrh);
- 
- 		len = sw->desc.dcmd & DCMD_LENGTH;
- 		end = start + len;
-@@ -802,7 +944,7 @@ static unsigned int mmp_pdma_residue(struct mmp_pdma_chan *chan,
- 		if (passed) {
- 			residue += len;
- 		} else if (curr >= start && curr <= end) {
--			residue += end - curr;
-+			residue += (u32)(end - curr);
- 			passed = true;
- 		}
- 
-@@ -996,9 +1138,34 @@ static int mmp_pdma_chan_init(struct mmp_pdma_device *pdev, int idx, int irq)
- 	return 0;
- }
- 
-+static const struct mmp_pdma_ops marvell_pdma_v1_config = {
-+	.set_desc = set_desc_32,
-+	.addr_split = addr_split_32,
-+	.addr_join = addr_join_32,
-+	.reg_read64 = reg_read64_32,
-+	.run_bits = (DCSR_RUN),
-+	.dma_mask = 0,			/* let OF/platform set DMA mask */
-+};
-+
-+static const struct mmp_pdma_ops spacemit_k1_pdma_v1_config = {
-+	.set_desc = set_desc_64,
-+	.addr_split = addr_split_64,
-+	.addr_join = addr_join_64,
-+	.reg_read64 = reg_read64_64,
-+	.run_bits = (DCSR_RUN | DCSR_LPAEEN),
-+	.dma_mask = DMA_BIT_MASK(64),	/* force 64-bit DMA addr capability */
-+};
-+
- static const struct of_device_id mmp_pdma_dt_ids[] = {
--	{ .compatible = "marvell,pdma-1.0", },
--	{}
-+	{
-+		.compatible = "marvell,pdma-1.0",
-+		.data = &marvell_pdma_v1_config
-+	}, {
-+		.compatible = "spacemit,pdma-1.0",
-+		.data = &spacemit_k1_pdma_v1_config
-+	}, {
-+		/* sentinel */
-+	}
- };
- MODULE_DEVICE_TABLE(of, mmp_pdma_dt_ids);
- 
-@@ -1050,6 +1217,10 @@ static int mmp_pdma_probe(struct platform_device *op)
- 	if (IS_ERR(rst))
- 		return PTR_ERR(rst);
- 
-+	pdev->config = of_device_get_match_data(&op->dev);
-+	if (!pdev->config)
-+		return -ENODEV;
-+
- 	if (pdev->dev->of_node) {
- 		/* Parse new and deprecated dma-channels properties */
- 		if (of_property_read_u32(pdev->dev->of_node, "dma-channels",
-@@ -1111,7 +1282,10 @@ static int mmp_pdma_probe(struct platform_device *op)
- 	pdev->device.directions = BIT(DMA_MEM_TO_DEV) | BIT(DMA_DEV_TO_MEM);
- 	pdev->device.residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
- 
--	if (pdev->dev->coherent_dma_mask)
-+	/* Set DMA mask based on config, or OF/platform */
-+	if (pdev->config->dma_mask)
-+		dma_set_mask(pdev->dev, pdev->config->dma_mask);
-+	else if (pdev->dev->coherent_dma_mask)
- 		dma_set_mask(pdev->dev, pdev->dev->coherent_dma_mask);
- 	else
- 		dma_set_mask(pdev->dev, DMA_BIT_MASK(64));
++	uart9: serial@d4017800 {
++		compatible = "spacemit,k1-uart", "intel,xscale-uart";
++		reg = <0x0 0xd4017800 0x0 0x100>;
++		clocks = <&syscon_apbc CLK_UART9>,
++			 <&syscon_apbc CLK_UART9_BUS>;
++		clock-names = "core", "bus";
++		interrupts = <51>;
++		reg-shift = <2>;
++		reg-io-width = <4>;
++		status = "disabled";
++	};
++}; /* &dma_bus */
 -- 
 2.43.0
 
