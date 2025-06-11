@@ -1,118 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A902E6108;
-	Wed, 11 Jun 2025 11:26:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D1A2E6102;
+	Wed, 11 Jun 2025 11:28:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749641168; cv=none; b=rBdFBsUf/3HcGIlB15KwSFTWPqgdhLj8JL4nULRzYYsawNM+pyKLiM5YYLy5815ogID/dmbIb6bzoJUr6qWthiXLjQzYkJfpGUXasVNVKdnjWBgN+izjComHBB+VGsreZ2FZxAv8pRIs+9d9EaYdB0gAXgl+dIiCv2LD1rH8800=
+	t=1749641320; cv=none; b=pFHL/qJCCSHbb+gYsGMPYrXqY5ES2BgKb8emPPCTZ4YUgAKCrcb4I1c1Ddns3EpIM7ksZgBiYRSx/9XqM+W9KuQC7uptqjJ6U2AeEwCG8QoS6L+WTzA28W4sfNGeRbPlQE6V7blHNkJxq/rThVP5j89slmBi5Qlm7ifK0eUXeXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749641168; c=relaxed/simple;
-	bh=2GfVP3Z9YcDigzZONt06cS6x+4ldhMcMNo3koUPT450=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=jrELEcMcZE8uK+qo3vlzvQbOvoUwQQ1fkhJCDlsvGs3iBD4zlF5+/7QQRVzVLE7uVlcFOOjUfjo5xsGz7DI0JtOSYfo5GlI8SwxImyTxYyCNVXHdOxTLUdb7+HQRSwGBd7be4GCi0O5QA0Q41uHTZzouhJfOddK+keRJ0LGtwGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CTnPQHIR; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749641320; c=relaxed/simple;
+	bh=hmVwy4P8GF90kNjTKVxfjbpxUv+vEAeOqExZXUX7TVU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=V1geZf32WXyvZFM7tfDrNsbYjPXze5JGKss92Bgb4S+JsKFFA/eV8f3sNgmwuNFKMJ5sme9Q735HUU7cVzlAgUeDh3dDke8AhUm8VEFlJUpcJGt4rqPn6o3t/0V/3fywXU5yg4C01rFkr+iOPDscE9YkuCToSeb4wu9mQY583bw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=t2yGevFN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bUamVAkG; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CTnPQHIR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749641167; x=1781177167;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=2GfVP3Z9YcDigzZONt06cS6x+4ldhMcMNo3koUPT450=;
-  b=CTnPQHIR8YJ2MNRJHuAHzOGk3AksCB2aj/r361V6PY4nVuyXVh5dTsP7
-   mrMLPsYG1YB/UjhDVOo/Kf1pZ0u3WUWvHIavbI8B5n/frbmbm2dJPrEi+
-   jKqNdKHT+VGkAc77pFfKOsDmeXSQ7xHgJ6FDJSicqXlVpjexdYatyjd21
-   GuwwR+XssPjRy5z321jT0WJFrf7MSZ3C/mfjnpZAGwQ7jmSb2r6saj1dl
-   gQy56/BuigU97tDP9+EpoOmyBn48Fc/PCBy605WJ5j+JbYihpZg+ruAMr
-   EACOx2StGNOIqp7fSoa1QLMGwwbgsFKunloLYv0++SRtcKr15IX/2EoLM
-   A==;
-X-CSE-ConnectionGUID: 95yIAYKFQR6COTWX1XyqcA==
-X-CSE-MsgGUID: kGqALrGAQEGIG07RgawYaQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51772672"
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="51772672"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 04:26:07 -0700
-X-CSE-ConnectionGUID: WDQ9oEjJQESrmQ9f+xgpmg==
-X-CSE-MsgGUID: SgwegByST9mmtk0IF6lBKA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="151950817"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.183])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 04:26:03 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 11 Jun 2025 14:25:59 +0300 (EEST)
-To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    linux-serial <linux-serial@vger.kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Madhavan Srinivasan <maddy@linux.ibm.com>, 
-    Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-    Christophe Leroy <christophe.leroy@csgroup.eu>, 
-    linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 05/33] powerpc/powermac: remove unneeded tty includes
-In-Reply-To: <20250611100319.186924-6-jirislaby@kernel.org>
-Message-ID: <3bd8996c-b463-4b1d-cc45-2a84d47f6cd0@linux.intel.com>
-References: <20250611100319.186924-1-jirislaby@kernel.org> <20250611100319.186924-6-jirislaby@kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="t2yGevFN";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bUamVAkG"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749641312;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=GHv2KcbsS1/mwsMjRFZVxsR01KjDyT1642lDqUnbNzY=;
+	b=t2yGevFN3lGXYs683ScYQqg3CJIyK8R7my9BX9zdNU+H2h/tRbF+JRktwPJK+69m4e4BUY
+	r0R6js+AMI73UaZfsNA+VkwCdAD0C33wXEdyykSfHl1w1BIOfx774fT/d15XXuyHaB2Y/w
+	CayKuvZ9tby806WWnaNVfBckXJZEvSfv5ysOD/ZIQtYpFBscD1lJeVXIFKNlAnMJqp2YyP
+	LwemV6fOmk2DySW28TzJV9xnpTIh2srW2LApfGNVhTAcykNxCjOVp7x3Uu5Ppx5z1soZko
+	B8gzwyzn/zwyxtwutqLmXYPdje6Yd3sbUfGwMqfqWa21AyAIyKx9J2hQEsR5MA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749641312;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=GHv2KcbsS1/mwsMjRFZVxsR01KjDyT1642lDqUnbNzY=;
+	b=bUamVAkGAUZ7ikZnYG0W6vlN8ZmvYE1XrRQ5zt7KV4C5jxp4sqh/daD7pqC7U0you6izxh
+	9d+VAiItSKGIqzBg==
+Subject: [PATCH v4 0/2] kunit: qemu_configs: Add MIPS configurations
+Date: Wed, 11 Jun 2025 13:28:25 +0200
+Message-Id: <20250611-kunit-mips-v4-0-1d8997fb2ae4@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-291572204-1749641159=:957"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAFloSWgC/23OQQrCMBCF4atI1kYyY5JSV95DXNR0qoOalqQNi
+ vTupt1YxeUb+H7mJSIFpih2q5cIlDhy6/PQ65Vwl8qfSXKdt0CFGhRoeR089/LOXZSkGwKH1lB
+ diAy6QA0/5tjhmPeFY9+G59xOMF2njFEIuMwkkErSSZeurAtrwexv7Ic+tJ4fm5rElEr44fr7i
+ 4SZa9coIKiwJPuPb5fcfPHtxMmhtnAyVUG/fBzHN9pUtpwmAQAA
+X-Change-ID: 20241014-kunit-mips-e4fe1c265ed7
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Brendan Higgins <brendan.higgins@linux.dev>, 
+ David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749641311; l=1561;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=hmVwy4P8GF90kNjTKVxfjbpxUv+vEAeOqExZXUX7TVU=;
+ b=YymmBFYQwTDoBVoP+rsyB9K+eYamRKVD64oLbtNCAK47iEdUVS4XeZ59yX0zc7Q+DXgzl1Kno
+ 4LGoeO94vljCGlWy5LOTWiuH+9pMLCKZYWifBHSXsi7VP4q3pU5jNkt
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Add basic support to run various MIPS variants via kunit_tool using the
+virtualized malta platform.
 
---8323328-291572204-1749641159=:957
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+Changes in v4:
+- Rebase on v6.16-rc1
+- Pick up reviews from David
+- Clarify that GIC page is linked to vDSO
+- Link to v3: https://lore.kernel.org/r/20250415-kunit-mips-v3-0-4ec2461b5a7e@linutronix.de
 
-On Wed, 11 Jun 2025, Jiri Slaby (SUSE) wrote:
+Changes in v3:
+- Also skip VDSO_RANDOMIZE_SIZE adjustment for kthreads
+- Link to v2: https://lore.kernel.org/r/20250414-kunit-mips-v2-0-4cf01e1a29e6@linutronix.de
 
-> All these includes must have been cut & pasted. The code does not use
-> any tty or vt functionality at all.
->=20
-> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> ---
->  arch/powerpc/platforms/powermac/setup.c | 2 --
->  1 file changed, 2 deletions(-)
->=20
-> diff --git a/arch/powerpc/platforms/powermac/setup.c b/arch/powerpc/platf=
-orms/powermac/setup.c
-> index e119ced05d10..eb092f293113 100644
-> --- a/arch/powerpc/platforms/powermac/setup.c
-> +++ b/arch/powerpc/platforms/powermac/setup.c
-> @@ -28,13 +28,11 @@
->  #include <linux/ptrace.h>
->  #include <linux/export.h>
->  #include <linux/user.h>
-> -#include <linux/tty.h>
->  #include <linux/string.h>
->  #include <linux/delay.h>
->  #include <linux/ioport.h>
->  #include <linux/major.h>
->  #include <linux/initrd.h>
-> -#include <linux/vt_kern.h>
->  #include <linux/console.h>
->  #include <linux/pci.h>
->  #include <linux/adb.h>
+Changes in v2:
+- Fix usercopy kunit test by handling ABI-less tasks in stack_top()
+- Drop change to mm initialization.
+  The broken test is not built by default anymore.
+- Link to v1: https://lore.kernel.org/r/20250212-kunit-mips-v1-0-eb49c9d76615@linutronix.de
 
-Seems true. I had to actually scan through the file as it does have some=20
-console related setup.
+---
+Thomas Weißschuh (2):
+      MIPS: Don't crash in stack_top() for tasks without ABI or vDSO
+      kunit: qemu_configs: Add MIPS configurations
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+ arch/mips/kernel/process.c                   | 16 +++++++++-------
+ tools/testing/kunit/qemu_configs/mips.py     | 18 ++++++++++++++++++
+ tools/testing/kunit/qemu_configs/mips64.py   | 19 +++++++++++++++++++
+ tools/testing/kunit/qemu_configs/mips64el.py | 19 +++++++++++++++++++
+ tools/testing/kunit/qemu_configs/mipsel.py   | 18 ++++++++++++++++++
+ 5 files changed, 83 insertions(+), 7 deletions(-)
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20241014-kunit-mips-e4fe1c265ed7
 
---=20
- i.
+Best regards,
+-- 
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
---8323328-291572204-1749641159=:957--
