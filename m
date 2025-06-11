@@ -1,50 +1,29 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE9622D9E0;
-	Wed, 11 Jun 2025 07:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B881DF49;
+	Wed, 11 Jun 2025 07:15:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749626106; cv=none; b=oB/eLU4u0a6fLWz3RkGU5B9HMO9NHlpWHevRk90mMQestPL4MBamtjfYlcEKDzH60VpjbGrmuBzYt6b+/I+M80TWVeJs4Fr1EYLI/MOXPpfxu9TL0dSUfRIpGanUe4cbmdW7OvuQ6QEjuhFsEtSIeSl7Zh+ozoaTg1drn8V3OyI=
+	t=1749626122; cv=none; b=K5skIv9i9mw3ggC+jntRpEFy8SR99OcMMLWbrwNQHfBrnyhXbVIqLr9ZE0YraZRIxciCcGx9CuWFtI4+VsoNlUKIauX/ojwqCR4DNXotHjXpMPR4DbmhPgZQNekIKm9sMBKiIf1yqMLYr9qey/voglKoEFqcI9TR4sCfj/2y4YY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749626106; c=relaxed/simple;
-	bh=LBuV2/MkPPLMESpMzqhuYZ2zgNvWeRWkWk8EU9VNXVw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=SmtuN/rnQc1kWHMbhn0Rd4iEENp75HVUb62M2AePwmhMyjuwVxjBTt0ptgI04/1b3xSBS7jbBbox5gYPXEvNdWRICQnWWpimqjTKehq009KxB6jOQA7ylIH8XM9JgEHxhWC6iIMnlDBA3bVUh6+l73qFaZjjctfDIpVNyAuHv0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f7JCeeMF; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f7JCeeMF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749626105; x=1781162105;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=LBuV2/MkPPLMESpMzqhuYZ2zgNvWeRWkWk8EU9VNXVw=;
-  b=f7JCeeMFEgyjCxoLkhzQTn9+g5jWo6JnHXQaRgz41nL5WJV4Z7DRaq/e
-   fdc9p0wcU5q3Hs/azDJfkYnXBnR34kZCgQh6uLnYPJ77WHYBGYMf/4kUJ
-   fna6P++g4tbm9CvPsHET7aIVis+KUrYqqL1VboimiWzdQdu/P7Au5oH2O
-   Ln5WsfT+392Vuv3lfsa19nlI0BT9Ih8aznha8LH9dAr6GjcNC6t8U2aak
-   WmKBCb8VIBpqiYEQxp/RKHeoozP5o1IBEgI64p5OIZBjGUAivGZfshAMi
-   tZeL4EEQde1LyJ1q+aaPXtKpMtUq99bIu+tu8BfsqQcONGgNZ/ATAr9Mn
-   Q==;
-X-CSE-ConnectionGUID: 3UznumaHTH6dAR9CdpWONg==
-X-CSE-MsgGUID: ZY8YMweDTwGWmrRt0EoPzw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51747313"
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="51747313"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 00:15:05 -0700
-X-CSE-ConnectionGUID: JU3XRYaKR56sOKqNXnoqBQ==
-X-CSE-MsgGUID: b9Lg0LNyTAGkxPw6lX9asw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="177997213"
-Received: from unknown (HELO [10.238.0.239]) ([10.238.0.239])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 00:15:02 -0700
-Message-ID: <e86f6cd2-e2ed-4928-8a79-e162068d0f15@linux.intel.com>
-Date: Wed, 11 Jun 2025 15:14:59 +0800
+	s=arc-20240116; t=1749626122; c=relaxed/simple;
+	bh=jE0EBi15MBtvYNaWUv4wm2axETcih/Dq++16RHoTjkA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JuV959NazJOK1RMXbAnxfY31r+kbI/zRK6As9qE7AUixRZmHVfSBJwOBLzdCXgQO2Zxuln/AonpuGH19Da6tmz2WVtaAGYRi1IW9UDPdKmVkcGcUON8GwavTUvOEm5AYwi661kqEqddm8kbQOwpj7e6pdZlZ5k9f9i5YdkLRZ7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com; spf=pass smtp.mailfrom=chenxiaosong.com; arc=none smtp.client-ip=54.92.39.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chenxiaosong.com
+X-QQ-mid: esmtpgz15t1749625977td58cbd24
+X-QQ-Originating-IP: BjPrTujgt+MKPQLp2kCNn3caEZrKE+yYJdXGdJujjho=
+Received: from [192.168.3.231] ( [116.128.244.171])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 11 Jun 2025 15:12:55 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 4787782174800291874
+Message-ID: <64E3DD4D765DEAD1+87aeb2d4-3732-4e57-ada6-098dbf0a7feb@chenxiaosong.com>
+Date: Wed, 11 Jun 2025 15:12:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,76 +31,64 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 01/32] KVM: SVM: Disable interception of SPEC_CTRL iff
- the MSR exists for the guest
-From: Binbin Wu <binbin.wu@linux.intel.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org, Chao Gao <chao.gao@intel.com>,
- Borislav Petkov <bp@alien8.de>, Xin Li <xin@zytor.com>,
- Dapeng Mi <dapeng1.mi@linux.intel.com>,
- Francesco Lavra <francescolavra.fl@gmail.com>,
- Manali Shukla <Manali.Shukla@amd.com>
-References: <20250610225737.156318-1-seanjc@google.com>
- <20250610225737.156318-2-seanjc@google.com>
- <629e0dc3-49b4-45f5-aeaa-8a9109e81d14@linux.intel.com>
-Content-Language: en-US
-In-Reply-To: <629e0dc3-49b4-45f5-aeaa-8a9109e81d14@linux.intel.com>
+Subject: Re: [PATCH v2 1/5] nfsd: prevent callback tasks running concurrently
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Olga Kornievskaia <okorniev@redhat.com>,
+ Li Lingfeng <lilingfeng3@huawei.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+ Neil Brown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>,
+ Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250220-nfsd-callback-v2-0-6a57f46e1c3a@kernel.org>
+ <20250220-nfsd-callback-v2-1-6a57f46e1c3a@kernel.org>
+ <23651194C61FBB9C+e2ddd3f5-f51f-44c0-8800-d2abb08a2447@chenxiaosong.com>
+ <208bd615061231c035a5633b29190925f271bd4b.camel@kernel.org>
+From: ChenXiaoSong <chenxiaosong@chenxiaosong.com>
+In-Reply-To: <208bd615061231c035a5633b29190925f271bd4b.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpgz:chenxiaosong.com:qybglogicsvrsz:qybglogicsvrsz4a-0
+X-QQ-XMAILINFO: MxdW4jxL6NvXRnxzmeQgeLzPXk4N7vJp66MXQrAuToDEyVib/jZXL7QU
+	w947ezEOYZQ9NngNm/RwkP17xnzoFTEbo3wB2f1du/Fd5jcUI9yUQYM/88Z/F/xUsDt2VXf
+	5GOMEb4fCuQ6w+D7CupHJ0at8lk39ow3O5hsaWqk/FGkU9F1CjaRVZRKuzSci96vVXoCYiw
+	LUMTdNO97yJe/5x9mBIWz6glJQ06RQrPEqpgxJgSSGseT0ZPh3CAsuTXow7B9h2oAu2VHI0
+	H6vCBmysYpunClwT1ZQ0wB0jd30jezNaqWHEiInxgrZWT6SwtG4Ikx4leeGVYTQLaggUUUw
+	+zB5gEGedzbzFVplqbjKyrHTbN2pOxvslqUZ3ryG8HAXcm8HaTZYKuOBrpzxTu/cGkWTv/A
+	YSOe9loIncO8TE0hd1/t3fZmIJBc/cUIjpNraKq3b6MdotmIX13m6fdnhJZAnmNxId/28uk
+	IVwfryc1kNg3AMmEUGV5MXUCrgtLPSgGfdKKj2jQNvoNXc8ke9KHrOZ9+I3XIbP8WoRwRP/
+	uv0sXvF/YtouzPLA5V9YxTGjV7Y92sEZ+AWOnLq/k5to2lNSJpdALSzFUH8n2MNdqA8J9O/
+	dTRx0SCfkXUgl6riSsDcb/TyfNy0vxr42owU/aXcWsCzfSCjKbRhRzZymAWERJHvp079ZvV
+	Amoeh/EetSVaja38NgNIKLPS28y6bEQb0lbRrPlzIvANKiDfuQYfr5IdPx/xjFXl02QfMtx
+	MBMvzc8rXQixJQQYh01Qr9Gpa3MknSr3ZtotU7qpRk7CiYNlPH9k/LHu2I+x74GD9t6PEqe
+	2V6YcEFOXFUdhXkny3LGqSEreq6EKXWqrb6+0EIklErUohFt+cMhZH04dTmPoRT5MgiMqTf
+	HgTegMserqqvQNvZ1NQjO6ome+H4hv0FGDjWKNEbNkprJYQjYta65N2fJp0CS+ZnAox9/4j
+	Il+UWkQd6Cg/eZJtcdFYXiJhWoh5wJceHhr6fFdE/09EW/vfrvoOUxD1XD+W0BxYCZau4IP
+	DIFyHZ9A==
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+X-QQ-RECHKSPAM: 0
 
+在 2025/6/10 19:09, Jeff Layton 写道:
+> 
+> Synchronization was probably too strong a word. I remember looking over
+> this code and convincing myself that the probe callback wasn't subject
+> to the same races as the others, but I think that was mostly because
+> the outcome of those races was not harmful. Note that the probe itself
+> can actually be run at the start of a completely unrelated callback to
+> the same client.
+> 
+> So you hit a NULL pointer in __queue_work()? The work_struct is
+> embedded in the nfs4_client so that would probably imply that that the
+> nfs4_client struct was corrupt?
+> 
+> You may want to get a vmcore and analyze it if you can reproduce this.
 
+Thanks for your reply.
 
-On 6/11/2025 12:38 PM, Binbin Wu wrote:
->
->
-> On 6/11/2025 6:57 AM, Sean Christopherson wrote:
->> Disable interception of SPEC_CTRL when the CPU virtualizes (i.e. context
->> switches) SPEC_CTRL if and only if the MSR exists according to the vCPU's
->> CPUID model.  Letting the guest access SPEC_CTRL is generally benign, but
->> the guest would see inconsistent behavior if KVM happened to emulate an
->> access to the MSR.
->>
->> Fixes: d00b99c514b3 ("KVM: SVM: Add support for Virtual SPEC_CTRL")
->> Reported-by: Chao Gao <chao.gao@intel.com>
->> Signed-off-by: Sean Christopherson <seanjc@google.com>
->> ---
->>   arch/x86/kvm/svm/svm.c | 9 ++++++---
->>   1 file changed, 6 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
->> index 0ad1a6d4fb6d..21e745acebc3 100644
->> --- a/arch/x86/kvm/svm/svm.c
->> +++ b/arch/x86/kvm/svm/svm.c
->> @@ -1362,11 +1362,14 @@ static void init_vmcb(struct kvm_vcpu *vcpu)
->>       svm_recalc_instruction_intercepts(vcpu, svm);
->>         /*
->> -     * If the host supports V_SPEC_CTRL then disable the interception
->> -     * of MSR_IA32_SPEC_CTRL.
->> +     * If the CPU virtualizes MSR_IA32_SPEC_CTRL, i.e. KVM doesn't need to
->> +     * manually context switch the MSR, immediately configure interception
->> +     * of SPEC_CTRL, without waiting for the guest to access the MSR.
->>        */
->>       if (boot_cpu_has(X86_FEATURE_V_SPEC_CTRL))
->> -        set_msr_interception(vcpu, svm->msrpm, MSR_IA32_SPEC_CTRL, 1, 1);
->> +        set_msr_interception(vcpu, svm->msrpm, MSR_IA32_SPEC_CTRL,
->> +                     guest_has_spec_ctrl_msr(vcpu),
->> +                     guest_has_spec_ctrl_msr(vcpu));
-> Side topic, not related to this patch directly.
->
-> Setting to 1 for set_msr_interception() means to disable interception.
-> The name of the function seems a bit counterintuitive to me.
-> Maybe some description for the function can help people not familiar with
-> SVM code without further checking the implementation?
+I have already got a vmcore. Here is the link to the vmcore analysis:
 
-Oh, please ignore it.
+https://chenxiaosong.com/en/nfs/en-null-ptr-deref-in-nfsd4_probe_callback.html
 
-A later patch in this patch set has handled it.
+Please let me know if you need any more detailed information.
 
->
->
->>         if (kvm_vcpu_apicv_active(vcpu))
->>           avic_init_vmcb(svm, vmcb);
->
->
-
+Thanks,
+ChenXiaoSong.
