@@ -1,352 +1,261 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013041.outbound.protection.outlook.com [40.107.159.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 249482638A9
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 09:34:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749634480; cv=none; b=dIy+ZkH5wAY7oNqsVw6PlH4qnD3OtZF9hULXGdWzSdMSVdtSO9z/iE7zfPGK0DXMvtvdDY/Vw6UJ9SBDJbD7yetajMvirGmdeU4s5EN9btyQ9xzYcpxVhOdum7wixKIs8pcK58BJzJcQ0GKx/4o96GF8CkSJEYG3ePvAM9p+TQM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749634480; c=relaxed/simple;
-	bh=qTs3IRLu5xA+mhLIgJ44rsQgmMvxnUCHZ/EW6gO8Vwk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HaUwYVSliEQwWV118pqbf3TJvP+GJYfdqpiY35Ocvv34HhpNhM7VmeEounUOr8grm/PkRfL8SuUTVyZfvz8M8+C3SkRDZtSADnzngrukHkFzwHLrzDzdAZMCOqLEJAlNz3DtL5EhEcf1vufYf1sS3Sr401h4lZi/lRiewPGsO18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KTjfz7cE; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734E0264624;
+	Wed, 11 Jun 2025 09:35:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.41
+ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749634531; cv=fail; b=dQiJTtCo8RmgtAV+qLfR0LF/po7VdQfAtionSzha2lq2MEZZrPDTeSGeMDET9rLXQJ05X+UwxCovYBs3y0gt0c7os4uNWE0QSZKiEHjb9T7qgF49spDApVjV2NR2FN+BqUePX3PzgYnWYVSv56/PcgeUArstQAzKasRyNyZnccQ=
+ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749634531; c=relaxed/simple;
+	bh=7QhJmDXcrmJG+Le0xp2lQTJA4oPYuhdBYgUrTsXi8Vs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=eqLqgYAyvkr4EVo2DLxY3GT/sIq66Da50eLUEEbqks286uyMjSsoH/CIk7OR/zoH7Lo1O45wjM5oosDfs7jwG6YE2X6tgs55iS7oDHuI7XK4vvtcr626P+4mrrhLbGimNh01tYF9EDQGpLKB3ahjqCgY0TZ6p4WXwOF5Q24r1lw=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=IaJPI5Fd; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=IaJPI5Fd; arc=fail smtp.client-ip=40.107.159.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KTjfz7cE"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-453066fad06so27600775e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 02:34:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749634476; x=1750239276; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PVeXPFuPVbQsXF19uNENjG1a5bYP5vKL7OyCc5YR918=;
-        b=KTjfz7cER/eUSzfoKtqll9Na7qTxZjM5NjeUSZbSsv0tOf1w94/H6mHmE8WVqNeadl
-         HOEGplYkeNuZ5SlkwnfDwPApUcKwRPV3W/Wm370E340BXcTxGmVCwB//A597LssuaMcz
-         ZakoOD433nYqcrhKsDbvPFueWzN7MzyHPkHqZzPuOBrBERVov/g1cRvdhEwSunwx/gw6
-         WliGtnh2oWlBl1ZSq29FmK4j/bZoKZ5AefHhz1qAzXkjLO7YwgMdtjqy9LjnPzl3npEs
-         X6gaMTwBhcKjWHJALOD82eHZNZodjoTn4p3rAZlYQP34A+yqyCFIlhjVSsWwvFUxQcOX
-         lPAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749634476; x=1750239276;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PVeXPFuPVbQsXF19uNENjG1a5bYP5vKL7OyCc5YR918=;
-        b=tCDnUkOrN6zuwLP/bXMgxDVYG2zo7SbCQs08jPA8fpIRQ8tGzZiwSXQEPz00uM8eDu
-         Z0x43lkStj4yldaDWlbrIKtZXwUVwhl/ta3QqI8WHeMG9z07cuo20iNlIkJOMJndd4ij
-         vjVILs5dSZYYphloi+WeL8SrRESctzGtaKTXijWGgxlZVBji4+82JDCXS9xr21cRN32/
-         HnqostGiq3hOCVzjK4eXCkEf14X3zCgI+VHqt01Jv/95DtY5C+LFRBPUv5tDpkCsgdt9
-         Uuzelk1F4vhxFsyovf+cGlpnJ4zNZMWOrR6ZxWNzqJtbKufbfGsGTmtYqThuVwO038yk
-         d/KA==
-X-Forwarded-Encrypted: i=1; AJvYcCU8OZIjKsR75iiXQv8EuIdZ2p47YMVi1g9xffXmm8ECd6wezi9S9kcrgU2mZfisKUsad0a9GfuO5aI8tCs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQHq9fw32CUrnc//6IKbloxwAOHb41/jpIXBPcLW1VJw2CJIlJ
-	SSI1wchcCUjL7mBrInotG9KOLXLU7FkWyOLyK4LoNWil3X/PKftaGYjyI0zGZv8ztW0=
-X-Gm-Gg: ASbGncvqdzeUUp3y+gLqpu13ri5l/LQyKDIr4o0RnysolwV59i21vd28/qKnETSEuuf
-	uZpRaDHPN+NpPNcKegnjo2nc5DcV2L4l1vcmyjhkOxOVmPRaBJ10J/PelM/0j2Pj6VQ6ssrlbl1
-	7ABcGONjDidFQ7/g+HO2DYWX5K9XGvCnue7R5grUT23Jro8FbPviHJ6FIxK2invglbRMlDaWvTS
-	HmKqwcgy6XZHfIlSXS4QpNe8RJRI4YL+TCIQSmSwq1hPQ/aGyKjx0N8/J8gTyNyuUrdA6sDuuO5
-	3BKPgazMOwxLOvmQxx9yw5ryQJP2Z/zFfq+g4jAP/+4OXaQURH4UXobGeokZ2YGWKnLI9dy9cSC
-	l01M9h9/dz44R6NM=
-X-Google-Smtp-Source: AGHT+IFezP6rZ6NJam3qkYM1ont9V/Ju3WNFxU4NhSoAWiBk+tW7MeR71vKuui0yalRYjWiHv6SH+w==
-X-Received: by 2002:a05:600c:8719:b0:442:f482:c432 with SMTP id 5b1f17b1804b1-453248f9836mr22050755e9.18.1749634476351;
-        Wed, 11 Jun 2025 02:34:36 -0700 (PDT)
-Received: from gpeter-l.roam.corp.google.com ([145.224.65.90])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453251a2303sm15467005e9.31.2025.06.11.02.34.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 02:34:35 -0700 (PDT)
-From: Peter Griffin <peter.griffin@linaro.org>
-Date: Wed, 11 Jun 2025 10:34:26 +0100
-Subject: [PATCH v2 2/2] soc: samsung: exynos-pmu: Enable CPU Idle for gs101
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="IaJPI5Fd";
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="IaJPI5Fd"
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=dQjoB3j7yoNt35M9jQyWGs/9SljZ4dGw42VtuQyTTv/yIGSE7FIFSM0gMZyjd4T4yYNjJ4DgDMBRMjnYa0r66PrVfgf1ieFIrLMudfyEBVlfOPJ0v029mV7obKxpF8H3m7jlGnU6eegt+QkFMXwM7Diyf5z5Qfi8U0aOkXwyeJTqmWs983rRovDgVFWxcTutHQ/21MKHZgVMuhtnoKyVRKsXIEmzWf9GWdCiBeX7CUTHE+KQQuvBLetm8Ui2IYJWMZ0YphVCAjsCN7MgQStWqBAA4dw1sQ1PJf/3EI2VjcxgyunOy+0l7hUd/Dfs0CaaTnMDitw9GsTOzaNfW9/boQ==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sDNno9+MVFM0JULjBJRkb2jrhhPTUgNHLTN/G8vKJE4=;
+ b=mxjgbtMdPVBheow0a8+3f0sm7H57VHabAReGC7qUS9H1ikKBQxECScJ0B54p7z3YmodSh+kqGbNi1xTmGDzSOtMA60mqk/Dgm5jfTIcAsBL+UvfVhM6MoGqzYqa5Q3foBSdoU55yPcpu+xvK2krv1dZvoWJpfyycSGSPu6txASIAZ7D2MvX3D81VJHEn8iawLNrXBVfAoZktq8UfbVORIG/ZLgiIz4scF8WTnDq0ghmTAd2pXx0Bf7rSnBtkLiNcuvdYEt0IBGAVTmq5pNLl79GSO3urZJbWeSjLKaDdmXaxZElSxCl2RQ2wInXK74OgKivtkuXAX5odcpS/radLrA==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=kernel.org smtp.mailfrom=arm.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
+ (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sDNno9+MVFM0JULjBJRkb2jrhhPTUgNHLTN/G8vKJE4=;
+ b=IaJPI5FdNwRsByxvFv2sD03CyYnhg/Q4YXCknZylJ2kj56oP1dNWJhezNTnD0TP10BvfRtuX/YLcEi11Mgg88R/WTYQj7sxq27dDH8RWNuAdZV4dlN5yRF7sxvzEhthfrZ0XfuztCN1XuhrHXpp5nNBpFtF2eTY0hmS9Hx4qjQM=
+Received: from DUZPR01CA0080.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:46a::9) by AM9PR08MB6162.eurprd08.prod.outlook.com
+ (2603:10a6:20b:2df::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.18; Wed, 11 Jun
+ 2025 09:35:25 +0000
+Received: from DU6PEPF0000B61B.eurprd02.prod.outlook.com
+ (2603:10a6:10:46a:cafe::a1) by DUZPR01CA0080.outlook.office365.com
+ (2603:10a6:10:46a::9) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.19 via Frontend Transport; Wed,
+ 11 Jun 2025 09:35:26 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ DU6PEPF0000B61B.mail.protection.outlook.com (10.167.8.132) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.15
+ via Frontend Transport; Wed, 11 Jun 2025 09:35:25 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qZmzU4pNQo7QKsty+ionfg+WlItZpqw+ASgvW5HowF1CUQFAUI/7lsTuwt/8VMlBY+T/Y2b04W0BVJrNAVSJCL4i4A1xnOfrShXNT1Lr0J6cbI6BDIqtb6XKIafgG/PWXsxY5jZoGDcQZ1n2TxPGOI3IwXnBUZZVeupST6NkmHSU9Z4a8TjV6w5RNHbtLQJlhd3gkLjHy9Ode2KdaR1V6MdfL1sYJqQ+M1HdjWPrkhodIO8yvAfhnSQtOUo+kWr/U+x/lXJVmqBQHFfTzxy8SDi5vWEfWMNIv/vaMT9H4gN5WbBrSuE0O/LO2BWyRUgO6Pi/ucE3W7/igoQWBsxOqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sDNno9+MVFM0JULjBJRkb2jrhhPTUgNHLTN/G8vKJE4=;
+ b=KX/63+oFobWtXv/ogQf8HmriyUEK6H/AZoOrVfglWZd/XMGdcMvn/H45ejW+14GQmuxeV5XFoeS/Gxkw5U0wz2dR0f9oVwXc7jREwVF3KX+LciAa4BOQHlZaFr0Yc7fljy8YoYlc40n+9HEaH30t8viYzEzzuRs1SecD0gYaaoWizAexaMiQSrrsokRgPp2EsltY7DpPVnic7DZv4ZhMoVPjz5l8YpHT82Op8P5nXOzoyQjJtFAHRw03fRSFZlMK+M1VDYVgQLpw0+ZfuyVh91+pWz+5NQ54kdk6Ow3GonMJvoJax3DmQ3C6bVSZhjlgpU0QIbEaohD5JE4rpqypvg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sDNno9+MVFM0JULjBJRkb2jrhhPTUgNHLTN/G8vKJE4=;
+ b=IaJPI5FdNwRsByxvFv2sD03CyYnhg/Q4YXCknZylJ2kj56oP1dNWJhezNTnD0TP10BvfRtuX/YLcEi11Mgg88R/WTYQj7sxq27dDH8RWNuAdZV4dlN5yRF7sxvzEhthfrZ0XfuztCN1XuhrHXpp5nNBpFtF2eTY0hmS9Hx4qjQM=
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
+ (2603:10a6:150:163::20) by DB9PR08MB9825.eurprd08.prod.outlook.com
+ (2603:10a6:10:462::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.31; Wed, 11 Jun
+ 2025 09:34:52 +0000
+Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
+ ([fe80::d430:4ef9:b30b:c739]) by GV1PR08MB10521.eurprd08.prod.outlook.com
+ ([fe80::d430:4ef9:b30b:c739%7]) with mapi id 15.20.8835.018; Wed, 11 Jun 2025
+ 09:34:52 +0000
+Date: Wed, 11 Jun 2025 10:34:49 +0100
+From: Yeoreum Yun <yeoreum.yun@arm.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: catalin.marinas@arm.com, pcc@google.com, will@kernel.org,
+	anshuman.khandual@arm.com, joey.gouly@arm.com,
+	yury.khrustalev@arm.com, maz@kernel.org, oliver.upton@linux.dev,
+	frederic@kernel.org, shmeerali.kolothum.thodi@huawei.com,
+	akpm@linux-foundation.org, surenb@google.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v5 5/6] kselftest/arm64/mte: refactor check_mmap_option
+ test
+Message-ID: <aElNuX+ddy0xcBUj@e129823.arm.com>
+References: <20250610150144.2523945-1-yeoreum.yun@arm.com>
+ <20250610150144.2523945-6-yeoreum.yun@arm.com>
+ <69778d2c-3ace-4fbe-a55f-297e280f8761@sirena.org.uk>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <69778d2c-3ace-4fbe-a55f-297e280f8761@sirena.org.uk>
+X-ClientProxiedBy: LO4P123CA0279.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:195::14) To GV1PR08MB10521.eurprd08.prod.outlook.com
+ (2603:10a6:150:163::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250611-gs101-cpuidle-v2-2-4fa811ec404d@linaro.org>
-References: <20250611-gs101-cpuidle-v2-0-4fa811ec404d@linaro.org>
-In-Reply-To: <20250611-gs101-cpuidle-v2-0-4fa811ec404d@linaro.org>
-To: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
- Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
- Krzysztof Kozlowski <krzk@kernel.org>
-Cc: William Mcvicker <willmcvicker@google.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- kernel-team@android.com, Peter Griffin <peter.griffin@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7073;
- i=peter.griffin@linaro.org; h=from:subject:message-id;
- bh=qTs3IRLu5xA+mhLIgJ44rsQgmMvxnUCHZ/EW6gO8Vwk=;
- b=owEBbQKS/ZANAwAKAc7ouNYCNHK6AcsmYgBoSU2lxp0CXerInpZzjgxAxPDiAXS+cx5GGZ3wL
- 66Mv1PObHKJAjMEAAEKAB0WIQQO/I5vVXh1DVa1SfzO6LjWAjRyugUCaElNpQAKCRDO6LjWAjRy
- ugz7D/9ycWCS+1kysD81RwKEkYsnWRulQwV4baIqdf8qXrUZQnpecMUToyOmrIR/oJVJ0yzWByh
- gAmVsSxSHNJrzgTq+f9ebDMNTPtCx9xQMoBc+RVSUcNIhhMl3gohnBz1+1jpIERNxn/yreNT5Us
- frHSHyEUzMJl+njMaelO9Vlz6/Pcl3JTWOC651/TU22n5lHFkf3ljfx4oPnv6u6uKhobVHBdBmZ
- ITISASnTUdBdbAEQ+ZQOUBj0Nhdc595E/McvaeMoqWa4OkYxRT3ngMpiBJFkQUoH/e/XNln/ncB
- 2l+yKdB2B3ss20rnc62oXlstrqkSM6aCJ/bzuyJeRoLfMHdH0jRPTk9h6xrpgZYgtdGQD1J0Vhv
- C1+CJxE5PY1tS0VwZCRjG92jYLcfAgdPwUeajIxA1w7oyOv72MaMGh5+8ye8mizG2RzGVsO6Ed0
- o3eS8zWc6GNsSMoedxDBHU4TtIsZ5AC40onJL2nPnKk3Ro8pQCxGRhWehSqUjkhh5e0Be+lRRxh
- aArz7RINoGwZu/y+MYbq0xlNY7dfXKBXja9N/ge15MBWkTsnSMqzzFQqX033Sgizr4i5hhP/63l
- bV1gZHhoVXUSKfKvwPG/mjBRR3KvmMfQCUkkFTUiiRg8rlx/kuPjuHuAD3omWXAa0AwsSEuGFTT
- IhL6HciJ6J7uRRA==
-X-Developer-Key: i=peter.griffin@linaro.org; a=openpgp;
- fpr=0EFC8E6F5578750D56B549FCCEE8B8D6023472BA
+X-MS-TrafficTypeDiagnostic:
+	GV1PR08MB10521:EE_|DB9PR08MB9825:EE_|DU6PEPF0000B61B:EE_|AM9PR08MB6162:EE_
+X-MS-Office365-Filtering-Correlation-Id: 29309463-fa60-48ab-f455-08dda8cb4b59
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted:
+ BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info-Original:
+ =?us-ascii?Q?BUPC+KrGO3LPHDTSt86rBTMB0t4q41bCNk/xe0kTNDexcd06kTg01DM8YlQh?=
+ =?us-ascii?Q?1uzOL489iLOy+bSolvRURz2VMcBQQZw82SbXkHjAep108gBZbCe9rN+9vs5o?=
+ =?us-ascii?Q?DpilEOWBmi6SaA5Hmb0AeHZW9xWkjz6sAdEpBJU+xnRotvnvyV0oDx2aT8vg?=
+ =?us-ascii?Q?bqLgcrvTYrCfrZiRTTL047xNutXHHfFu3l6PVbwYq4vslKXSqNptIrrOxpDt?=
+ =?us-ascii?Q?LOOT7RWZ9/Q4KWKZ9rnhljQSyA5tV39HA7RDYJPGvJ0ewRIWidCidh1uYmUf?=
+ =?us-ascii?Q?v2bpD+A9tPvkNc/qIYTi+qTMaiVS1FbyIhommnSZ0ybsd0v/OZkMoDpOscNv?=
+ =?us-ascii?Q?bQMk3WJVreZIAZlvJ37yhaWa9YYtCNdJT89Dxb4G6VbyAY+sRu1DkvtSx3ae?=
+ =?us-ascii?Q?CdnFMTftX7g5w/tZHkgi/aHMP6DtbrKUjQaGgWZjMdYxvgd/HEQorbRa5CI1?=
+ =?us-ascii?Q?ZOd0cy4k3Llj7qijBpsjREGv8249UVSE15u+q9RItsZ8ljFZRPSxISsHIUd0?=
+ =?us-ascii?Q?D+i2QDvzGJ1o5tGj3Ly9NtDWIm11bMDx6CYulTgnH6chlGc6aarAs7Nk3xfc?=
+ =?us-ascii?Q?3nfZEAqJETIa8LyCTP74HzwPikS59lOU5AP+gznJ3yPzmv74EA+YeIQq+iIw?=
+ =?us-ascii?Q?mGv4lgkzZQFUrR+vonx09ju4cZynuoEJcPwAj6CVxW8V++hE8JjN3CtrkY4r?=
+ =?us-ascii?Q?nF60+HY2U9XNgTb8waj5DeJpyqISN2w1ty7lfkA04AHViCyuTcLavRrnWcvz?=
+ =?us-ascii?Q?rMmGo+tpLIBc5NtRtR9Otr+Bpfyh35L9/hnPEGuSpy4GLHYjLHy2k/3zO9kM?=
+ =?us-ascii?Q?3tVrMo9NoD9OvIQ1v1rFLaZL3lW6UTXIeRPbsvEKj6NcY2AkSyFCPin9iH3x?=
+ =?us-ascii?Q?Q1Rmcs+5C1Ad5YriR0+1N2ojQa4fwq2P53fFRRK/lz6aM83jpSqKSMUW2qBR?=
+ =?us-ascii?Q?YiyZ5eF8LifJNZoMj7/pgdVBtvfMnquYU9iEklYGK7Dwjr9g257uTGp5Lxku?=
+ =?us-ascii?Q?uYSecAKbUPVr6DYx8GM1PrFLSvVMoSXAgGascflBCRrHuLvC72QzKclCUcsJ?=
+ =?us-ascii?Q?rGzjyt4ZIewDUHZrN67UY/v9o+uSpuvk8Gv6iDg5oY5Bcq1e+FWNseidPp17?=
+ =?us-ascii?Q?16GpvwSoXNcthKcryWKfrXvbHOiGPVCP5a1jeCpiKE1Z3A5fjYiUL062Lw6U?=
+ =?us-ascii?Q?Mxb016UPAjmocto8MwIQOeJwRrtfqLjagT3+dj/Iw85Gec3tTf0nAdAuxKAq?=
+ =?us-ascii?Q?1O1JsEECKHCkm0QdtmuBM5wURF6jUY0dLLjVywV6+07R6Mc3PPesULj16cq7?=
+ =?us-ascii?Q?dYUBMrdDG94xOhRMJ+mHx72+CrP5VRGxP1e91OyvcEVBOo+Iv/s6mE1rv0M1?=
+ =?us-ascii?Q?eYgYJxGYnK5qWCFZmn5dcVDGbMgA2KTA1JaAP6yNelKZMmRLRQ=3D=3D?=
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB10521.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR08MB9825
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ DU6PEPF0000B61B.eurprd02.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	18a2cd7e-f317-4f06-d3c5-08dda8cb3796
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|14060799003|376014|7416014|35042699022;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?AvO5NqhfKlDdETcuhRqNraanlLZbCduXeOHKMyyf4oI2t0zUwZyu0Joo1Ip9?=
+ =?us-ascii?Q?tO8TL0vS9GWpN54LNJM+S8PCqqsKhRd7/WFBTVs5lP0m3zwdOsWHK7LHYmXi?=
+ =?us-ascii?Q?hWVpzj7HI1/cJhygP8ZNwISLtW8uJOwg507lFWIVjXdYPvMpqrZVAnkmVMMI?=
+ =?us-ascii?Q?jqe5BxX447+ul4HPArRy+lO35qjeHZ+NUKCfVXT8yzu8KiO9VVDV/v4CYKAa?=
+ =?us-ascii?Q?ibSopipKwBEuL2nDUI98EnWPYP7Qf94EIECjO0hOS62FQJ2ertDgcKf5oSda?=
+ =?us-ascii?Q?F6rOUR6I4DYgm5RcV1AlrwGi8lYk1iBgDOpB3oSRAMGgNxutIG73MEJKl8kw?=
+ =?us-ascii?Q?Di+nn0pJZivmCKUE/F4b7dWSHASXOqySVJ44nL9QmhEoeDOi34PFD2sBu5y6?=
+ =?us-ascii?Q?XzsdbCbBDYhpfNVy4Q0G4cI7C1m9UDKgOe6psgxquDbDeigqCitVL7VM40gO?=
+ =?us-ascii?Q?4BjMebeDpzEVZKPYmh9o8p2CITUwyqGq60FZPYvBDgtxyS4m6NtmLW3ZCuCG?=
+ =?us-ascii?Q?SbkKtOGFbnyDsJ9BLIZ/67Lf0If9CPf4LFiCOitC9wdDduHzrYqHvmWuerZC?=
+ =?us-ascii?Q?oZOD2fHR3uKEby6ThSmvVJS/LN4d3+bO/BLh2AD20bLl1fRvHzWjVSi9xxkZ?=
+ =?us-ascii?Q?HSjZSZ13Op/GohoiVMPJ/4ko6FNKPMvDrubm5JQbnV+JF8gvyGzihU9S+1gB?=
+ =?us-ascii?Q?4r7q4Qd8ltwcoPy6iQlReDQT+HOKnhV0hVyhLMQyzI5jbEkyPUGRprcmNBpB?=
+ =?us-ascii?Q?N5H+zTeMsi4THCsYeUtuM3qv03BxEiJWKgz5wf6xRpsBg5LRMBWEG58e114/?=
+ =?us-ascii?Q?XXjjyNF6L7OGDno68ly0eRyYwS+k5VkOOeo6+ZxaxEc0fALe2eSh8z3fdhn+?=
+ =?us-ascii?Q?4AbaVQnjNMRblH0HXM+r0rpc7JxGlz2yZi5TQQ6pJrRa7sksImRFTJlfEp6J?=
+ =?us-ascii?Q?JSNjmvqh/o7tJ8u2KMdpzHOFAa7UleUbOBV66N2EelY952nPzL4VyXrTigbW?=
+ =?us-ascii?Q?UGuev2nVQvbJduE6as6XZeUKr28iUgHc1ya3XdAHDs3boxtDKstVRmFNCSYJ?=
+ =?us-ascii?Q?z5AFID+Eax/NUKtKJaf7Y3EkiO0PPJAaizqXBCnMEwplb5P6SCUB6/QsZvQx?=
+ =?us-ascii?Q?22izW0o50iwnbO7i11+VEMJsg7wJbYCLijTsGYM30bLT7rCT9Y+D2ieoQ4D9?=
+ =?us-ascii?Q?Ov+ydUYGe/vzcz/wHZvRmE4uAiY1+yqln+abgh+c0LDM6pGyLTJQSOf4Uh9K?=
+ =?us-ascii?Q?1PrwTM7RJxe1hrYzjeEm3MkXyM9xGfU95Pv0Dz+3SYBNGC/3t1S/DHJcw544?=
+ =?us-ascii?Q?yMiiKuq8ONUriHAufsZ6mROJvKZbM4Q0a/+9DPA/SB+Ln4anF39SLNer4lTO?=
+ =?us-ascii?Q?E8ik8DpC1pRHxJ1hVhTPXV7s2qBlXFEson8XAF4f5yzL2el0QDaitqfwFkom?=
+ =?us-ascii?Q?qaod1ckXZSNzUl1y38+Z2Om8/NtKG3y4twE0hUBAVcWkXUSdImp7BmbERQaN?=
+ =?us-ascii?Q?fg+xlQgl6KaHbVXp72L6Nqg2xDNEc6IS6sXR?=
+X-Forefront-Antispam-Report:
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(14060799003)(376014)(7416014)(35042699022);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2025 09:35:25.1467
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 29309463-fa60-48ab-f455-08dda8cb4b59
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DU6PEPF0000B61B.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR08MB6162
 
-Register cpu pm notifiers for gs101 which call the
-gs101_cpu_pmu_online/offline callbacks which in turn
-program the ACPM hint. This is required to actually
-enter the idle state.
+Hi Mark,
 
-A couple of corner cases are handled, namely when the
-system is rebooting or suspending we ignore the request.
-Additionally the request is ignored if the CPU is in
-CPU hot plug.
+>
+> > Before add mtefar testcase on check_mmap_option.c,
+> > refactor check_mmap_option.
+>
+> Please describe the intended refactoring here.
+>
+> > +#define CHECK_ANON_MEM		0
+> > +#define CHECK_FILE_MEM		1
+> > +#define CHECK_CLEAR_PROT_MTE	2
+> > +
+>
+> Perhaps use enums for this sort of thing?
 
-Note: this patch has a runtime dependency on adding
-'local-timer-stop' dt property to the CPU nodes. This
-informs the time framework to switch to a broadcast timer
-as the local timer will be shutdown. Without that DT
-property specified the system hangs in early boot with
-this patch applied.
+Thank. I'll changed to enum.
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
----
-Changes in v2
- * Add ifdef CONFIG_PM_SLEEP to avoid
-   Fix warning: unused variable 'cpupm_pm_ops' [-Wunused-const-variable] (0-day)
----
- drivers/soc/samsung/exynos-pmu.c | 137 +++++++++++++++++++++++++++++++++++++--
- 1 file changed, 133 insertions(+), 4 deletions(-)
+>
+> > +{
+> > +	static char test_name[TEST_NAME_MAX];
+> > +	const char* check_type_str;
+>
+> Coding style would usually be
+>
+> 	const char *check_type_str;
+>
 
-diff --git a/drivers/soc/samsung/exynos-pmu.c b/drivers/soc/samsung/exynos-pmu.c
-index a77288f49d249f890060c595556708334383c910..7f72ecd60994f18bb639dd8e09e1c6ff6158066b 100644
---- a/drivers/soc/samsung/exynos-pmu.c
-+++ b/drivers/soc/samsung/exynos-pmu.c
-@@ -8,6 +8,7 @@
- #include <linux/array_size.h>
- #include <linux/arm-smccc.h>
- #include <linux/cpuhotplug.h>
-+#include <linux/cpu_pm.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/mfd/core.h>
-@@ -15,6 +16,7 @@
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
- #include <linux/delay.h>
-+#include <linux/reboot.h>
- #include <linux/regmap.h>
- 
- #include <linux/soc/samsung/exynos-regs-pmu.h>
-@@ -35,6 +37,10 @@ struct exynos_pmu_context {
- 	const struct exynos_pmu_data *pmu_data;
- 	struct regmap *pmureg;
- 	struct regmap *pmuintrgen;
-+	spinlock_t cpupm_lock;	/* serialization lock */
-+	bool __percpu *hotplug_ing;
-+	atomic_t sys_suspended;
-+	atomic_t sys_rebooting;
- };
- 
- void __iomem *pmu_base_addr;
-@@ -336,7 +342,7 @@ EXPORT_SYMBOL_GPL(exynos_get_pmu_regmap_by_phandle);
- #define CPU_INFORM_CLEAR	0
- #define CPU_INFORM_C2		1
- 
--static int gs101_cpuhp_pmu_online(unsigned int cpu)
-+static int gs101_cpu_pmu_online(unsigned int cpu)
- {
- 	unsigned int cpuhint = smp_processor_id();
- 	u32 reg, mask;
-@@ -358,10 +364,26 @@ static int gs101_cpuhp_pmu_online(unsigned int cpu)
- 	return 0;
- }
- 
--static int gs101_cpuhp_pmu_offline(unsigned int cpu)
-+static int gs101_cpuhp_pmu_online(unsigned int cpu)
-+{
-+	gs101_cpu_pmu_online(cpu);
-+
-+	/*
-+	 * Mark this CPU as having finished the hotplug.
-+	 * This means this CPU can now enter C2 idle state.
-+	 */
-+	*per_cpu_ptr(pmu_context->hotplug_ing, cpu) = false;
-+
-+	return 0;
-+}
-+
-+static int gs101_cpu_pmu_offline(unsigned int cpu)
- {
- 	u32 reg, mask;
--	unsigned int cpuhint = smp_processor_id();
-+	unsigned int cpuhint;
-+
-+	spin_lock(&pmu_context->cpupm_lock);
-+	cpuhint	= smp_processor_id();
- 
- 	/* set cpu inform hint */
- 	regmap_write(pmu_context->pmureg, GS101_CPU_INFORM(cpuhint),
-@@ -379,16 +401,89 @@ static int gs101_cpuhp_pmu_offline(unsigned int cpu)
- 	regmap_read(pmu_context->pmuintrgen, GS101_GRP1_INTR_BID_UPEND, &reg);
- 	regmap_write(pmu_context->pmuintrgen, GS101_GRP1_INTR_BID_CLEAR,
- 		     reg & mask);
-+
-+	spin_unlock(&pmu_context->cpupm_lock);
- 	return 0;
- }
- 
-+static int gs101_cpuhp_pmu_offline(unsigned int cpu)
-+{
-+	/*
-+	 * Mark this CPU as entering hotplug. So as not to confuse
-+	 * ACPM the CPU entering hotplug should not enter C2 idle state.
-+	 */
-+	*per_cpu_ptr(pmu_context->hotplug_ing, cpu) = true;
-+
-+	gs101_cpu_pmu_offline(cpu);
-+
-+	return 0;
-+}
-+
-+static int gs101_cpu_pm_notify_callback(struct notifier_block *self,
-+					unsigned long action, void *v)
-+{
-+	int cpu = smp_processor_id();
-+
-+	switch (action) {
-+	case CPU_PM_ENTER:
-+		/*
-+		 * Ignore CPU_PM_ENTER event in reboot or
-+		 * suspend sequence.
-+		 */
-+
-+		if (atomic_read(&pmu_context->sys_suspended) ||
-+		    atomic_read(&pmu_context->sys_rebooting))
-+			return NOTIFY_OK;
-+
-+		if (*per_cpu_ptr(pmu_context->hotplug_ing, cpu))
-+			return NOTIFY_BAD;
-+
-+		gs101_cpu_pmu_offline(cpu);
-+
-+		break;
-+	case CPU_PM_EXIT:
-+
-+		if (atomic_read(&pmu_context->sys_rebooting))
-+			return NOTIFY_OK;
-+
-+		gs101_cpu_pmu_online(cpu);
-+
-+		break;
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
-+static struct notifier_block gs101_cpu_pm_notifier = {
-+	.notifier_call = gs101_cpu_pm_notify_callback,
-+	.priority = INT_MAX	/* we want to be called first */
-+};
-+
-+static int exynos_cpupm_reboot_notifier(struct notifier_block *nb,
-+					unsigned long event, void *v)
-+{
-+	switch (event) {
-+	case SYS_POWER_OFF:
-+	case SYS_RESTART:
-+		atomic_set(&pmu_context->sys_rebooting, 1);
-+		break;
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
-+static struct notifier_block exynos_cpupm_reboot_nb = {
-+	.priority = INT_MAX,
-+	.notifier_call = exynos_cpupm_reboot_notifier,
-+};
-+
- static int exynos_pmu_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct regmap_config pmu_regmcfg;
- 	struct regmap *regmap;
- 	struct resource *res;
--	int ret;
-+	int ret, cpu;
- 
- 	pmu_base_addr = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(pmu_base_addr))
-@@ -444,6 +539,12 @@ static int exynos_pmu_probe(struct platform_device *pdev)
- 			 */
- 			dev_warn(&pdev->dev, "pmu-intr-gen syscon unavailable\n");
- 		} else {
-+			pmu_context->hotplug_ing = alloc_percpu(bool);
-+
-+			/* set PMU to power on */
-+			for_each_online_cpu(cpu)
-+				gs101_cpuhp_pmu_online(cpu);
-+
- 			cpuhp_setup_state(CPUHP_BP_PREPARE_DYN,
- 					  "soc/exynos-pmu:prepare",
- 					  gs101_cpuhp_pmu_online, NULL);
-@@ -451,6 +552,12 @@ static int exynos_pmu_probe(struct platform_device *pdev)
- 			cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
- 					  "soc/exynos-pmu:online",
- 					  NULL, gs101_cpuhp_pmu_offline);
-+
-+			cpu_pm_register_notifier(&gs101_cpu_pm_notifier);
-+			spin_lock_init(&pmu_context->cpupm_lock);
-+			atomic_set(&pmu_context->sys_rebooting, 0);
-+			atomic_set(&pmu_context->sys_suspended, 0);
-+			register_reboot_notifier(&exynos_cpupm_reboot_nb);
- 		}
- 	}
- 
-@@ -471,10 +578,32 @@ static int exynos_pmu_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_PM_SLEEP
-+static int exynos_cpupm_suspend_noirq(struct device *dev)
-+{
-+	atomic_set(&pmu_context->sys_suspended, 1);
-+	return 0;
-+}
-+
-+static int exynos_cpupm_resume_noirq(struct device *dev)
-+{
-+	atomic_set(&pmu_context->sys_suspended, 0);
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops cpupm_pm_ops = {
-+	.suspend_noirq = exynos_cpupm_suspend_noirq,
-+	.resume_noirq = exynos_cpupm_resume_noirq,
-+};
-+#endif
-+
- static struct platform_driver exynos_pmu_driver = {
- 	.driver  = {
- 		.name   = "exynos-pmu",
- 		.of_match_table = exynos_pmu_of_device_ids,
-+#ifdef CONFIG_PM_SLEEP
-+		.pm = &cpupm_pm_ops,
-+#endif
- 	},
- 	.probe = exynos_pmu_probe,
- };
+Sorry for my typo... :(
 
--- 
-2.50.0.rc1.591.g9c95f17f64-goog
+> > +	snprintf(test_name, TEST_NAME_MAX,
+> > +	         "Check %s with %s mapping, %s mode, %s memory and %s\n",
+> > +	         check_type_str, mapping_str, sync_str, mem_type_str, tag_check_str);
+>
+> sizeof(test_name).
 
+Okay.
+
+>
+> >  	evaluate_test(check_anonymous_memory_mapping(USE_MMAP, MTE_SYNC_ERR, MAP_PRIVATE, TAG_CHECK_OFF),
+> > -	"Check anonymous memory with private mapping, sync error mode, mmap memory and tag check off\n");
+> > +		      format_test_name(CHECK_ANON_MEM, USE_MMAP, MTE_SYNC_ERR, MAP_PRIVATE, TAG_CHECK_OFF));
+>
+> Looking at this I can't help but think that the more common pattern for
+> test programs where we have an array of test parameters that we loop
+> through might make sense:
+>
+> 	for (i = 0; i < ARRAY_SIZE(test_cases); i++) {
+> 		format_test_name(test_cases[i]);
+>
+> 		switch (test_cases[i].test_type) {
+> 		case CHECK_ANON_MEM:
+> 			check_anonymous_memory_mapping(USE_MMAP, ...);
+>
+> That seems a bit more legible and maintainable.
+>
+> >  	mte_disable_pstate_tco();
+>
+> The management of this could be added as a parameter in the test struct.
+
+I see, I'll repsin and send it again.
+
+Thanks!
+
+--
+Sincerely,
+Yeoreum Yun
