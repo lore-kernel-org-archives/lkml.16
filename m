@@ -1,115 +1,125 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E91223099C;
-	Wed, 11 Jun 2025 11:33:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC2D92E611B;
+	Wed, 11 Jun 2025 11:35:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749641598; cv=none; b=cgpK8NA7idYyIaD1M7QZp/vDqK8YBZ+5SBpIGRCzj+bqB8XKAvsOihFAdMV2Efvx5qGbla+R9ko+Ut/36cFshYxHE7zs408I2HeIiUCUupEQgLwHgK448pAiFjtxPCqgUaHVChf1WcbBe74UcziZGh5Qz9FXM5WtJ7jtDQfLdBQ=
+	t=1749641741; cv=none; b=OVjr0vvFaHlTtHAe2NVm/ZyD74/3sV53FCnHEnZec6ORbq80QCMJ2G5ljjPAZaupED9YoGiVe3U7Y6V+0ab9jTN/D9/avtTTKZ20MhXPweB0kFjNbbwZGSWUMHgZVWA5cZH+owGymHJmDglgIUCoVRixstvrBx2eTIdhomppguU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749641598; c=relaxed/simple;
-	bh=AeoKYUfqPpxYTwa9dOPzz1NIZa4CwemYCpr69gr9Bbc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=juLRgbZ4FCX14ryOREPXDxjaktsYBPnpYdUxu171omA1NGvE6ZOLgmvq5kN1DMWVjxvghHsUr0FFiUEwSXd6n91mtNY8+Pd1YkciAsXA8xh2dnTOJ1y/mzGNx/3/X3Mf70+6bbJXj7ekBuNw7EhpRe8Hvc2t857dGR7qr0F+cwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GjlCgm+y; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749641741; c=relaxed/simple;
+	bh=gdzkfF2i2Tltnxp3wCW3EYmYB3Ip+td0r7l4VMxs5ag=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iGyPs9UN46sbz1shp7JDfnZhtTnNkHwL0jq2ah9FbFO5dORCpt8rm40uWpzPOe8oVQJ49B3XHvH+Dw2NTanuCGXexG80wMAQJOG4RwAAUfQEQh1b0tQw6npY4kQMfNuzzRLRKFXAPGY9vytlyCtjcvrDlYEy83J5J5fjWBGW1+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=tD8xfmPi; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GjlCgm+y"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-32ac52f78c1so66789341fa.3;
-        Wed, 11 Jun 2025 04:33:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749641594; x=1750246394; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IGE+TNgN8AiJDwpgQ02ln4zwsMtlaz7bMg5HLVNRnrA=;
-        b=GjlCgm+yjYqThpdirOiHVeEtmj2EqL9YtrQ32VJs3FzbPYfG+wGbGyJb/y3d4Q6EcA
-         xHGBrbynVf+ge0zUxfEhBX6Ca5UGaCUGymK5JaU3Cskh9ljUwoKhJIvUrzKfufrykxWb
-         pntgM9muRmcRnqkk7z2s+NfIN0J2IvK4VoR6udmcwra4L4w5iI2wTBAEukhTTrr/xoJ3
-         1Ucx6flAZZKrp+SKf1Z13VniPyBP7c0zNVNJUt03H6cXJkkmiiFLFi+iQRhMcpc1N75v
-         7i8tPPhtnMgtJIH/CTQsmLstgLGPl+cqVk8n3I5bOM53x2B3MgIPUmXQfxRvq6xFr92c
-         PKlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749641594; x=1750246394;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IGE+TNgN8AiJDwpgQ02ln4zwsMtlaz7bMg5HLVNRnrA=;
-        b=vyVu4/7+gW5J2P9Sou2SEo436O+LYnPr6ZHMAYeojkAQJwiHRsfJJpjNFPcC1GaeDd
-         Cx1U9jtEYGXoQFBv/ensFGCHEpjUmtV1iqNyNY2KJYkrn8BJqwpiHot7lMfmTE6ZxKyp
-         mWhquE4cOktHMuBGqnPW4fFJc1mMcaWN1UD6ZhMQqaQPtXjtUc/lQCVZkEFKMWDGQn9L
-         aEmYyvZVYklM1Fbf3qrXnA/egkbhLP03LyPKFNcQf2rAcLgISGfXgTPXVGl+SCQIDIm6
-         SEcNG6GdCKM3TIOX5zgZ0q2LXNu/gF+s+IVVwiBzc5Dspu+pOtMDBL47MOs8p2OnuUK/
-         KczA==
-X-Forwarded-Encrypted: i=1; AJvYcCXqP26F1a5a/uzxcAjG6Rniv4W8WdSImVHfzw2yuFHgh8dJ7WMqP7ULvsrx0s6fSbMmVXiWoPGt9LZFX+c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6SdWs0SWRBuJEkvROUJGqvMcoLBnn9MxQHZmHogwpXyRMe8I2
-	i8L1ZgJGVLNXBls71uWpvRzeS3Lpa0mIOTtCdqaNDSpItVPn4kHr52id
-X-Gm-Gg: ASbGncupXANo6Prp/jgaCvGcdgBTqe6g5W32NDmE9rbWiijjfRRO/m6rv/25yiHxo9W
-	s/0vGxSgg31YI2Bhf0cVBB0bZggi+loaYBFsVLtqPbc91vhQIZK3FhbeumHvuPlmM05La+Z7ygO
-	lVIGsWD408Ym1XmnqGGkexDB3HY+W7hVB6mbcLZSDC61NfeBOOATdoeB+/gZmnNE67f4hAeB40B
-	xI/LueSBjzKXa3hDBcA7Y2ZwpCeIcWLkyz/USUlHXcANx9zcWXdrFMNsVhmC56lGkYjvqg0h8Yj
-	VoOltGnQJ2zt5TaxwCi0EM/Fy5tV9mdOQr5pQCm+AgK4R45s7BNjSIH5qGHk5VDg+pZU1zCAJ87
-	E6wGgffXdGZ1RQdsB2cHGtqzP+2wHk9CWXWPvTebegVZ1IkTbmQnqY7W5CYEhUufsrhrWWcDqrI
-	jtG5v9VrLhXpxVuFI+0QauD/du
-X-Google-Smtp-Source: AGHT+IE2kzQKVgzgwd3yt80d6uhyHJ6VDdhEtsKW+aItli5kCRdPijQS2jEZ4uFGLbUyM9wZHtc6gw==
-X-Received: by 2002:a2e:b887:0:b0:32a:888e:b30f with SMTP id 38308e7fff4ca-32b2227dce0mr7598041fa.6.1749641594023;
-        Wed, 11 Jun 2025 04:33:14 -0700 (PDT)
-Received: from ?IPV6:2001:14ba:6e:3100:d134:143d:95b6:6d13? (2001-14ba-6e-3100-d134-143d-95b6-6d13.rev.dnainternet.fi. [2001:14ba:6e:3100:d134:143d:95b6:6d13])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32ae1b0cf7fsm17713801fa.12.2025.06.11.04.33.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jun 2025 04:33:13 -0700 (PDT)
-Message-ID: <5dad612b-495b-4f1c-82ff-e8ed4ef34c07@gmail.com>
-Date: Wed, 11 Jun 2025 14:33:12 +0300
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="tD8xfmPi"
+Received: by linux.microsoft.com (Postfix, from userid 1204)
+	id 679F52115190; Wed, 11 Jun 2025 04:35:39 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 679F52115190
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1749641739;
+	bh=yTM0EgThVZQxa2c0e+/uF2mVqguQ/f7u3RX7IVxP8Ho=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tD8xfmPinXTIogxftAkkmwRRNqSWjiDqnrdFyJPG4ZhaaaXpwiPD/YjxcBDDUVZzx
+	 7gi5WUQDUWJZQ1TI/94+3m6IkjT/I2JXb+8RycBqK7POrXWUBipwXeNFCxjqt4OZUo
+	 4Hk0koikSo3CIk3lciY1GvcNO/DZNErd2CK+Qek8=
+Date: Wed, 11 Jun 2025 04:35:39 -0700
+From: Dipayaan Roy <dipayanroy@linux.microsoft.com>
+To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	kotaranov@microsoft.com, longli@microsoft.com, horms@kernel.org,
+	shirazsaleem@microsoft.com, leon@kernel.org,
+	shradhagupta@linux.microsoft.com, schakrabarti@linux.microsoft.com,
+	rosenp@gmail.com, sdf@fomichev.me, linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Subject: Re: [PATCH net-next 4/4] net: mana: Handle unsupported HWC commands
+Message-ID: <20250611113539.GB4690@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1749631576-2517-1-git-send-email-ernis@linux.microsoft.com>
+ <1749631576-2517-5-git-send-email-ernis@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] docs: Improve grammar in Userspace API/DVB API
-To: Bagas Sanjaya <bagasdotme@gmail.com>, mchehab@kernel.org,
- ribalda@chromium.org, hverkuil@xs4all.nl, hljunggr@cisco.com,
- dave.jiang@intel.com, jgg@ziepe.ca, saeedm@nvidia.com,
- Jonathan.Cameron@huawei.com, corbet@lwn.net, ilpo.jarvinen@linux.intel.com,
- mario.limonciello@amd.com, W_Armin@gmx.de, mpearson-lenovo@squebb.ca,
- skhan@linuxfoundation.org
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kernel-mentees@lists.linux.dev
-References: <20250522115255.137450-1-hannelotta@gmail.com>
- <aDAOhl7gKhkcTEjk@archie.me>
-Content-Language: en-US
-From: =?UTF-8?B?SGFubmUtTG90dGEgTcOkZW5ww6TDpA==?= <hannelotta@gmail.com>
-In-Reply-To: <aDAOhl7gKhkcTEjk@archie.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1749631576-2517-5-git-send-email-ernis@linux.microsoft.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On 5/23/25 08:58, Bagas Sanjaya wrote:
-> On Thu, May 22, 2025 at 02:52:52PM +0300, Hanne-Lotta Mäenpää wrote:
->>     #. On Satellite and Cable delivery systems, the bandwidth depends on
->> -     the symbol rate. So, the Kernel will silently ignore any setting
->> -     :ref:`DTV-BANDWIDTH-HZ`. I will however fill it back with a
->> -     bandwidth estimation.
->> +     the symbol rate. The kernel will silently ignore any setting
->> +     :ref:`DTV-BANDWIDTH-HZ` and overwrites it with bandwidth estimation.
-> "The kernel will silently ignore any :ref:`DTV-BANDWIDTH-HZ` setting ..."
->>   
->>        Such bandwidth estimation takes into account the symbol rate set with
->>        :ref:`DTV-SYMBOL-RATE`, and the rolloff factor, with is fixed for
+On Wed, Jun 11, 2025 at 01:46:16AM -0700, Erni Sri Satya Vennela wrote:
+> If any of the HWC commands are not recognized by the
+> underlying hardware, the hardware returns the response
+> header status of -1. Log the information using
+> netdev_info_once to avoid multiple error logs in dmesg.
 > 
-> Thanks.
+> Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> ---
+>  drivers/net/ethernet/microsoft/mana/hw_channel.c |  4 ++++
+>  drivers/net/ethernet/microsoft/mana/mana_en.c    | 11 +++++++++++
+>  2 files changed, 15 insertions(+)
 > 
+> diff --git a/drivers/net/ethernet/microsoft/mana/hw_channel.c b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+> index a8c4d8db75a5..70c3b57b1e75 100644
+> --- a/drivers/net/ethernet/microsoft/mana/hw_channel.c
+> +++ b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+> @@ -890,6 +890,10 @@ int mana_hwc_send_request(struct hw_channel_context *hwc, u32 req_len,
+>  	}
+>  
+>  	if (ctx->status_code && ctx->status_code != GDMA_STATUS_MORE_ENTRIES) {
+> +		if (ctx->status_code == -1) {
+Minor comment: instead of == -1 could use some macro like GDMA_STATUS_CMD_UNSUPPORTED, rest LGTM.
 
-Hello,
+> +			err = -EOPNOTSUPP;
+> +			goto out;
+> +		}
+>  		dev_err(hwc->dev, "HWC: Failed hw_channel req: 0x%x\n",
+>  			ctx->status_code);
+>  		err = -EPROTO;
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> index d5644400e71f..10e766c73fca 100644
+> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> @@ -847,6 +847,9 @@ static int mana_send_request(struct mana_context *ac, void *in_buf,
+>  	err = mana_gd_send_request(gc, in_len, in_buf, out_len,
+>  				   out_buf);
+>  	if (err || resp->status) {
+> +		if (err == -EOPNOTSUPP)
+> +			return err;
+> +
+>  		dev_err(dev, "Failed to send mana message: %d, 0x%x\n",
+>  			err, resp->status);
+>  		return err ? err : -EPROTO;
+> @@ -1251,6 +1254,10 @@ int mana_query_link_cfg(struct mana_port_context *apc)
+>  				sizeof(resp));
+>  
+>  	if (err) {
+> +		if (err == -EOPNOTSUPP) {
+> +			netdev_info_once(ndev, "MANA_QUERY_LINK_CONFIG not supported\n");
+> +			return err;
+> +		}
+>  		netdev_err(ndev, "Failed to query link config: %d\n", err);
+>  		return err;
+>  	}
+> @@ -1293,6 +1300,10 @@ int mana_set_bw_clamp(struct mana_port_context *apc, u32 speed,
+>  				sizeof(resp));
+>  
+>  	if (err) {
+> +		if (err == -EOPNOTSUPP) {
+> +			netdev_info_once(ndev, "MANA_SET_BW_CLAMP not supported\n");
+> +			return err;
+> +		}
+>  		netdev_err(ndev, "Failed to set bandwidth clamp for speed %u, err = %d",
+>  			   speed, err);
+>  		return err;
+> -- 
+> 2.34.1
+>
 
-What is the best way to send an update on this patch, now that patches 
-3/4 and 4/4 have been applied, but 1/4 and 2/4 have not been applied?
-
-Do I send v3 for the first two only?
-
-Any guidance is greatly appreciated, since I am new to kernel development.
-
-Best regards,
-
-Hanne-Lotta Mäenpää
+Reviewed-by: Dipayaan Roy <dipayanroy@linux.microsoft.com>
