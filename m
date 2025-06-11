@@ -1,162 +1,82 @@
-Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A26431E521A;
-	Wed, 11 Jun 2025 16:25:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB1F81E521A;
+	Wed, 11 Jun 2025 16:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749659134; cv=none; b=mjTuU7ShnNih57+31Iau61/5is0V5MqkALoqSrTgsbU3KRzVAvT7LyeOyH1HMszZ/m+aQJlNuV3bEJd79OPWYYbQZFskyrn2MchvWahDuHsFFxE6tD5EHVVc0g2KDdYJlhGJVOTqkkSqt+pvlTpksR3u2Go96L1lPXv9J+WpY7Q=
+	t=1749659138; cv=none; b=P+r4viBxV9rTNvxuMVjYvtZxAUq9WpOe+BeUM5LdgcZ+Mbm21svfbhv/1TP8gOit8z0nvw4m706HXGwWGMzOsJ443KR+d6H8drQCTVkNufasBUwgUEGhxsmoF4AJj7TogHLceUVpy8RJSMg7YWdFnE+T1IdHwsdH+Vh7o8kcsiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749659134; c=relaxed/simple;
-	bh=aBTVw3PuvJo5z3eN/AQeqvV+M+Pj0uGtLXlCNtG97ow=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=hfQ6zy4F/BWnz392RYHaLlT3mR+KrJZ3ePB6dCejelaUal6bZIS2bETFRdzgyZAB2ytjIeMfTQnI3CJLOI8dEPfwEi98br6yua77XQVeHYk+WhK9WaZjJgFvQ9DHcNiice8NPFGp75BRTGeAmlIp6n84IppFXeVDc61Up/LgkFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (2048-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b=hOzaqiUH; arc=none smtp.client-ip=52.119.213.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
+	s=arc-20240116; t=1749659138; c=relaxed/simple;
+	bh=JoKvHcd/16FOMfJ8hZS2otWQ1fq0YEBXKYnmBQ5qxos=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X3iBo4JzThsLQrEbNDXSfb5cK1gfkJwSSUSygiHDFlxKfcvTLZU/7HGwhr9u+8Yr9Ar/HBYQ53RZeAKRH7PLAEwaEsdqTQmFhT1epywWI25nrDujpHbFrl0rrnQYpOrjmLyDrg3V/4/IX5Ido0PDGeKuISe/72kVJi+wirzVvrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=duQbIDmM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="hOzaqiUH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
-  s=amazoncorp2; t=1749659132; x=1781195132;
-  h=from:to:cc:subject:date:message-id:
-   content-transfer-encoding:mime-version;
-  bh=zxipZaSvMF3rLRe+Je24orldwQjdEfGflisvDibgi1E=;
-  b=hOzaqiUHrA8TUdCI0V7kW+/9pz7oe9g8ujLEnkGLhswstlMd8ssiYREy
-   vmt/nm2ra1/1YjYYLzmJ7jHnB9A6jfTuj7Vxk2Lgum+blm3+KhuB+V0r0
-   U12WA/7G4RxR+5G3lkJdi2WSKuHIxsw0yg8bu9a0sf6VWB1hHn+lO+FcT
-   leiYm3uUYf3bwCi8T/SPlJPAPjALKRCeP4S4teT92y/u/qA1RIcg8kpPM
-   MWnJco3kJg/Sz9iIL+4KtQFu65W3biLgLaPTQ9ImQ+EidofapR0+/+tAk
-   MUNIxFiK4onZ1aMfVomuqpLDaEJXHSrvm3GuOy8+2A9YGIXefWihYzth+
-   g==;
-X-IronPort-AV: E=Sophos;i="6.16,228,1744070400"; 
-   d="scan'208";a="754326538"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 16:25:29 +0000
-Received: from EX19MTAEUA001.ant.amazon.com [10.0.17.79:28764]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.7.229:2525] with esmtp (Farcaster)
- id 1a0bb186-a9d1-4c9f-9181-3be1f035e32f; Wed, 11 Jun 2025 16:25:27 +0000 (UTC)
-X-Farcaster-Flow-ID: 1a0bb186-a9d1-4c9f-9181-3be1f035e32f
-Received: from EX19D031EUB001.ant.amazon.com (10.252.61.29) by
- EX19MTAEUA001.ant.amazon.com (10.252.50.223) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 11 Jun 2025 16:25:24 +0000
-Received: from EX19D031EUB002.ant.amazon.com (10.252.61.105) by
- EX19D031EUB001.ant.amazon.com (10.252.61.29) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 11 Jun 2025 16:25:24 +0000
-Received: from EX19D031EUB002.ant.amazon.com ([fe80::33ef:803f:4724:b020]) by
- EX19D031EUB002.ant.amazon.com ([fe80::33ef:803f:4724:b020%3]) with mapi id
- 15.02.1544.014; Wed, 11 Jun 2025 16:25:24 +0000
-From: "Orlov, Ivan" <iorlov@amazon.co.uk>
-To: "peterhuewe@gmx.de" <peterhuewe@gmx.de>, "jarkko@kernel.org"
-	<jarkko@kernel.org>
-CC: "Orlov, Ivan" <iorlov@amazon.co.uk>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
-	"linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Woodhouse,
- David" <dwmw@amazon.co.uk>
-Subject: [PATCH] tpm: Fix the timeout & use ktime
-Thread-Topic: [PATCH] tpm: Fix the timeout & use ktime
-Thread-Index: AQHb2u1uqkNjG78d+ECf34VMuAYsKA==
-Date: Wed, 11 Jun 2025 16:25:24 +0000
-Message-ID: <20250611162508.85149-1-iorlov@amazon.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="duQbIDmM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99B85C4CEEA;
+	Wed, 11 Jun 2025 16:25:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749659136;
+	bh=JoKvHcd/16FOMfJ8hZS2otWQ1fq0YEBXKYnmBQ5qxos=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=duQbIDmML9WvmIyfdCPqarFvaytffHe4zKpMK0erbva9VbrUlErgN/6KcJi4OyCA7
+	 AN4DOtRiELMvi4IvMnKWVfkrD44EOr4cgyg12PZFlhvvCnuXmlgUXctRBNxlkg7NvZ
+	 Zn6fqbk5jhLnKDtn0FlKO0DJKbJ9U4MpM5KKc62GOFXRPFBUjlpEWIxZoMneaszy5U
+	 nk+2HWCa+0dsE9UkEF7TRsOorBHwcjDY0w7Iap3O+EcdS3hcbpzG/PkmsRwLNX9zWw
+	 clCwiLW/Wy2K+Q1KoMqG92sy56+6ak8cxblNoL6NqJ4Jv473Iy7X7fyWRrYgu27Db8
+	 vkq4KbbBM1IOQ==
+Date: Wed, 11 Jun 2025 17:25:31 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Michael Walle <mwalle@kernel.org>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Julien Panis <jpanis@baylibre.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v1 1/5] dt-bindings: mfd: ti,tps6594: Add TI TPS652G1 PMIC
+Message-ID: <20250611-ion-barrette-1e43f2620c03@spud>
+References: <20250611133137.1686183-1-mwalle@kernel.org>
+ <20250611133137.1686183-2-mwalle@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="NPyqz6VEAkXZBKkJ"
+Content-Disposition: inline
+In-Reply-To: <20250611133137.1686183-2-mwalle@kernel.org>
 
-The current implementation of timeout detection works in the following=0A=
-way:=0A=
-=0A=
-1. Read completion status. If completed, return the data=0A=
-2. Sleep for some time (usleep_range)=0A=
-3. Check for timeout using current jiffies value. Return an error if=0A=
-   timed out=0A=
-4. Goto 1=0A=
-=0A=
-usleep_range doesn't guarantee it's always going to wake up strictly in=0A=
-(min, max) range, so such a situation is possible:=0A=
-=0A=
-1. Driver reads completion status. No completion yet=0A=
-2. Process sleeps indefinitely. In the meantime, TPM responds=0A=
-3. We check for timeout without checking for the completion again.=0A=
-   Result is lost.=0A=
-=0A=
-Such a situation also happens for the guest VMs: if vCPU goes to sleep=0A=
-and doesn't get scheduled for some time, the guest TPM driver will=0A=
-timeout instantly after waking up without checking for the completion=0A=
-(which may already be in place).=0A=
-=0A=
-Instead, perform the check in the following way:=0A=
-=0A=
-1. Read the current timestamp=0A=
-2. Read the completion status. If completed, return the result=0A=
-3. Sleep=0A=
-4. Check if the timestamp read at step 1 exceeds the timeout. Return=0A=
-   an error if it does=0A=
-5. Goto 1=0A=
-=0A=
-Also, use ktime instead of jiffes as a more reliable and precise timing=0A=
-source.=0A=
-=0A=
-Signed-off-by: Ivan Orlov <iorlov@amazon.com>=0A=
----=0A=
- drivers/char/tpm/tpm-interface.c | 15 ++++++++++++---=0A=
- 1 file changed, 12 insertions(+), 3 deletions(-)=0A=
-=0A=
-diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interf=
-ace.c=0A=
-index 8d7e4da6ed53..959330212a16 100644=0A=
---- a/drivers/char/tpm/tpm-interface.c=0A=
-+++ b/drivers/char/tpm/tpm-interface.c=0A=
-@@ -88,7 +88,8 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, vo=
-id *buf, size_t bufsiz)=0A=
- 	int rc;=0A=
- 	ssize_t len =3D 0;=0A=
- 	u32 count, ordinal;=0A=
--	unsigned long stop;=0A=
-+	ktime_t timeout, curr_time;=0A=
-+	unsigned int ord_dur_us;=0A=
- =0A=
- 	if (bufsiz < TPM_HEADER_SIZE)=0A=
- 		return -EINVAL;=0A=
-@@ -126,8 +127,16 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip,=
- void *buf, size_t bufsiz)=0A=
- 	if (chip->flags & TPM_CHIP_FLAG_IRQ)=0A=
- 		goto out_recv;=0A=
- =0A=
--	stop =3D jiffies + tpm_calc_ordinal_duration(chip, ordinal);=0A=
-+	ord_dur_us =3D jiffies_to_usecs(tpm_calc_ordinal_duration(chip, ordinal))=
-;=0A=
-+	timeout =3D ktime_add_us(ktime_get(), ord_dur_us);=0A=
- 	do {=0A=
-+		/*=0A=
-+		 * Save the time of the completion check. This way even if CPU=0A=
-+		 * goes to sleep indefinitely on tpm_sleep, the driver will=0A=
-+		 * check for completion one more time instead of timing out=0A=
-+		 * instantly after waking up.=0A=
-+		 */=0A=
-+		curr_time =3D ktime_get();=0A=
- 		u8 status =3D tpm_chip_status(chip);=0A=
- 		if ((status & chip->ops->req_complete_mask) =3D=3D=0A=
- 		    chip->ops->req_complete_val)=0A=
-@@ -140,7 +149,7 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, =
-void *buf, size_t bufsiz)=0A=
- =0A=
- 		tpm_msleep(TPM_TIMEOUT_POLL);=0A=
- 		rmb();=0A=
--	} while (time_before(jiffies, stop));=0A=
-+	} while (ktime_before(curr_time, timeout));=0A=
- =0A=
- 	tpm_chip_cancel(chip);=0A=
- 	dev_err(&chip->dev, "Operation Timed out\n");=0A=
--- =0A=
-2.43.0=0A=
-=0A=
+
+--NPyqz6VEAkXZBKkJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jun 11, 2025 at 03:31:33PM +0200, Michael Walle wrote:
+> The TPS652G1 is a stripped down version of the TPS65224. From a software
+> point of view, it lacks any voltage monitoring, the watchdog, the ESM
+> and the ADC.
+>=20
+> Signed-off-by: Michael Walle <mwalle@kernel.org>
+
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+--NPyqz6VEAkXZBKkJ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaEmt+wAKCRB4tDGHoIJi
+0qOfAP9B2sAwIv6xmvc26A60sTqWMV2cr7IVjvVfmX7DHSkg/wD/QjCLgH9LDlwO
+hmaJmmJp9+R/hjvg0es3TISpx02CFgU=
+=uyTT
+-----END PGP SIGNATURE-----
+
+--NPyqz6VEAkXZBKkJ--
