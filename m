@@ -1,188 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4FEA59;
-	Wed, 11 Jun 2025 21:33:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 646AA23E336
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:33:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749677608; cv=none; b=dlHkEZJ0BItvBQs0am0iNtBr78QA+uF0hA+/uNWlnMWnai31g3XEutqFASSgUACAcEkoK6drVg1R+VxyE0tguyrSsZYxPwZ7bERig7ziNLUgJ1PXZIf2muBh3vpSYoOKq1/gtfay+QVh0PrLbAmwtoCjaKNgVWsqZ9Ksta8MJ/o=
+	t=1749677628; cv=none; b=M3O6tgjyb2RTkG0RpEpmjAie8ZnJG1S6kLtm738/RjFtQHYjPdQB0EJIDKnqn4v+hj71wKYvzfR99CWS+gOaVXbedyl8MgBQdM2r7iGN/ZKhu4YhdCk1Qpwml0FTr07N1+vFkeQ92jCihJK7p+klPFNPcWl29IPbbDVfPlnmea4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749677608; c=relaxed/simple;
-	bh=WspaWX6ltyvacFoa8VcS7DEX6oFplc+kX3bMWPCvjH8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=svbjnDH9eJ7BEqC66fxVdssxXBixZWnSwvFNa6soTaM10PxhgYw+lwCEEPVk8almDuY/sAeLwMSDCfHApUlG+Nci31G+rr637nFv4F71JPbXtHkygbhZqequdFnW8K82/IXbE9PR1GXd74aoXipFRGgrQp3qET7XAnyIJ0T1fa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dgjocorr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749677628; c=relaxed/simple;
+	bh=3xGbjEvhtWNk9UZDW4oDQlZf3t0OoAAqRkGj1GJGXjE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=tan4RoYS978nY4cqxn3ReJT3wwnT1CVy6Lo9sDyqV0RPGOI06muQ9tx5q+fUCfevBqjysP6ugmn//9EwYWDyP5EUXfNuayby5p0XlbbH7qzCVEZQyLgzIJgqtGV/i5Lzc+GuNKmhp1m8YWasMkhj/nl8SF9GK5w/k2swPKflwk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=x/d154/y; arc=none smtp.client-ip=209.85.167.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dgjocorr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9301CC4CEE3;
-	Wed, 11 Jun 2025 21:33:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749677607;
-	bh=WspaWX6ltyvacFoa8VcS7DEX6oFplc+kX3bMWPCvjH8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DgjocorrzyV6LlvqYeg47ovX2DinXNDpF12+GXVscQTnE68zu9B17SOx8+2GS3lKE
-	 GfwiQFWta0ITGkvZVPzcBph27PxWAqX6iIMB4P/IWj4z3TCnshCpERY8/HDuKFMlhz
-	 NL2ngBo5Ldpv3o8ZkZz0A/r44C0gPwfojlyOmsL7z3rQfclup1+mI4POxg9igIKFl1
-	 jGHmQOdrO7BlSMgDdePW1L42LHcUA8EU+HMWz5nx7/I8XIih0qqf5/VIueuYcZodiU
-	 qSdTJlkLVKwxcZcSsNd3BhIdbgFSmJxPA7Ez66yumFKoQXczh5H+G4EWiUF9Iv+jNt
-	 0sJqE528PodTQ==
-Date: Wed, 11 Jun 2025 18:33:25 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: "Falcon, Thomas" <thomas.falcon@intel.com>,
-	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"peterz@infradead.org" <peterz@infradead.org>,
-	"mark.rutland@arm.com" <mark.rutland@arm.com>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"Hunter, Adrian" <adrian.hunter@intel.com>,
-	"jolsa@kernel.org" <jolsa@kernel.org>,
-	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
-	"irogers@google.com" <irogers@google.com>
-Subject: Re: [PATCH 2/2 v3] perf top: populate PMU capabilities data in
- perf_env
-Message-ID: <aEn2JVfsx8aVIe3t@x1>
-References: <20250513231813.13846-1-thomas.falcon@intel.com>
- <20250513231813.13846-2-thomas.falcon@intel.com>
- <a327dc2e5837a743a08403b5ad58dbe5e8c4f926.camel@intel.com>
- <aEiUqtB9Zg9ZBQO6@x1>
- <6445eecf1767aa7e4a64af2feed48075ac101a1c.camel@intel.com>
- <aEnpFxn9DUz_usV0@google.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="x/d154/y"
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-407a3c0654aso157860b6e.3
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:33:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749677624; x=1750282424; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zy6UWwrY4Tniy+czQvdxOfPUTPr6mmKu08OTScCjXL4=;
+        b=x/d154/ynLwxgipqS6zH+Jp0vkDJV/uijutulFwNZHN2Me8yAZ18COkZhNUIoPY3+i
+         M/Mce1SMSH0nMPw+sx3hZyhRrOK6Yy4F/9RJEvgZywYyqkOoptvpERTm83SNYjog9QEQ
+         FJ8ztk8N4IAKrHrTEzxcWP11fnmFa3/SnwUi8bflZFLwvSdMWsz3EfO5Fg7K/e50Z8Eb
+         J/vE0YiDiLI8ea8TjMhdGYe1K4nMYntgfq7wem7+AD3I9tLrEzXcaSMf3EqIY8DLr4sg
+         W2z/2ms8MPyzMUmAbyJRC/H7N1+Ij+cZs57OYuAxSvqR/nj0nqRqR2ZMPy3HfwaLjOyN
+         YSiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749677624; x=1750282424;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Zy6UWwrY4Tniy+czQvdxOfPUTPr6mmKu08OTScCjXL4=;
+        b=Ph4jqPJrllIj3kkgt8xrRlmp9Oz9NI8YavmB1HEFpoV9QP6/Ny9eF7eMJccXjpT7jy
+         S8Q5kkvA1EqpSRfMaUy2azXe+fp4sMIUYGRC7ih6Jfhcfqxsze224mQaV31tVmBJUsWS
+         Q8+TouXPeGyXT+x3pj+FMnnWXQnymzilOcN0iAufSXwd8gvO3zvjgQQil6ZpOoNxaCYe
+         EXaBbPdWm7zKkm3pZnhSd1cuwCjiyKJXiMUC/ovcoXrwKgJZrchewILnfwxFWRhTgJws
+         d0fsuancJgcMrEvOOIKtSrvFddFYYudrWzd5VW/+nC5hQv+Xobs4Pg4TsPYH8bngQlRs
+         MtvA==
+X-Forwarded-Encrypted: i=1; AJvYcCU1pCk5wE6P63H3jGnmADhuvUGumOtPHW3Zmy9FhWXiFx9XvDl9mfoFkHvAaTXLByC02y/4ev9CGErtV7s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHaIh8sRdRRp39pjDi04MPyf/Dc0yzwatTyCUrI0ssPk1e8pAl
+	6hktTwv7AzgaK3CUEINWeUG30Dcd0vTh+EQKAfpYaIkDd1DjljSPascx+YcR71aGOMPuJCwAQYM
+	8gTRj
+X-Gm-Gg: ASbGncsNAGSDJYiPddLVT94QecjHNyK3t/jmB30SgYLqorWHt0gtfN6FuLlyiU4h/qF
+	+d6MInPSAUj8Hkf1BhIb45IJXWwnyANBVp7cvtkXlE2kXIQpH+xvh+r6Hreq1xaFXIszKD93jWc
+	ifd7IVKROkCGJgA/wj9oFk+FU6trnm5qQiD1a3vcMFNC7PnfFofkdR14SrKygTxhdiBN9opISwi
+	wFylsikHCY/TDpkhd57nK1OTiNPHwJENbcpVgf40LOXWQOAhqaz5IHLorjI778WlEMVqTGaBUNu
+	84jNbe7x2I2KM3ePkE1gOFmr1N9TsGG8wqNTNlsyW+dVnhTVcrMr+stzRpvcDnzo9NZdbT4hOP6
+	4Ymw=
+X-Google-Smtp-Source: AGHT+IGSrMqexpW6ugcP80DLENJRmDJg90YGu+YfvZUzRlil4e88131PLFwRMPRkaCzUBoSu4y7+9w==
+X-Received: by 2002:a05:6808:7005:b0:403:3673:65f0 with SMTP id 5614622812f47-40a5d16118cmr3627488b6e.31.1749677624463;
+        Wed, 11 Jun 2025 14:33:44 -0700 (PDT)
+Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:4753:719f:673f:547c])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40a682fb0bdsm2262b6e.23.2025.06.11.14.33.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 14:33:44 -0700 (PDT)
+From: David Lechner <dlechner@baylibre.com>
+Subject: [PATCH v3 0/5] iio: amplifiers: ada4250: various cleanups
+Date: Wed, 11 Jun 2025 16:33:00 -0500
+Message-Id: <20250611-iio-amplifiers-ada4250-simplify-data-buffer-in-init-v3-0-bf85ddea79f2@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEnpFxn9DUz_usV0@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAz2SWgC/63Ouw7CMAwF0F9BmTFqHqWUif9ADE7jUEt9KSkVV
+ dV/J+3ICpKXey35eBGRAlMU18MiAk0cue9S0MeDqGrsngTsUhYqU3lm5AWYe8B2aNgzhQjo0KQ
+ NRN67GRyOCPblPQXgLg2PUGqyVmpjVJmLdHkI5Pm9q/dHyjXHsQ/z/sQkt/Y3b5IgoaDCurNDZ
+ 5S+WZwbtoFOVd+KjZzUHxiVGGl9aTOtEX3+xazr+gFAV9a6YAEAAA==
+X-Change-ID: 20250418-iio-amplifiers-ada4250-simplify-data-buffer-in-init-93ebb1344295
+To: Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Antoniu Miclaus <antoniu.miclaus@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1190; i=dlechner@baylibre.com;
+ h=from:subject:message-id; bh=3xGbjEvhtWNk9UZDW4oDQlZf3t0OoAAqRkGj1GJGXjE=;
+ b=kA0DAAoBwswgAf8Bj8AByyZiAGhJ9hCiXPBgFvY9Ne8YAtoEsFFlNoNxKf6+93hubX6RyKnwD
+ 4kBMwQAAQoAHRYhBOwY2Z5iDoPWnNhomMLMIAH/AY/ABQJoSfYQAAoJEMLMIAH/AY/AyggH/0B2
+ MKafUNkwRK8U0wJm/ZABhuZBykM3VFl6kaSOvdbVGTgtcmBryRKkc7yZGhwtkXXld07hfFjZM6F
+ uYs4z2zNLh/3U9r9fxN8iFwq0yQqAp5xAtOxW81xGJH/yFnI2tDM+2yY4wc4hnh0W/0CCGlNmlz
+ ELSrJt7j7jDTEOtRtoplFB+aBw9BsEL+lNT9DCokOzGDs2ZyNpxPdD1e3lcw80tOJq35towUe1j
+ 0LxMWpv6g3jBMd+3SVMlnKRFc18liG+9IKsM5iSARCmqahGOmTlh1W7JSxYA5h0Sgzw9VPSEX6x
+ +zfv8rxRLMmZVbqtIKlSsnxrDe/pipsKE1FHRP8=
+X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
+ fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
 
-On Wed, Jun 11, 2025 at 01:37:43PM -0700, Namhyung Kim wrote:
-> On Wed, Jun 11, 2025 at 07:00:04PM +0000, Falcon, Thomas wrote:
-> > On Tue, 2025-06-10 at 17:25 -0300, Arnaldo Carvalho de Melo wrote:
-> > > On Mon, Jun 09, 2025 at 04:21:39PM +0000, Falcon, Thomas wrote:
-> > > > Ping?
-> > > > 
-> > > > Thanks,
-> > > > Tom
-> > > > 
-> > > > On Tue, 2025-05-13 at 18:18 -0500, Thomas Falcon wrote:
-> > > > > Calling perf top with branch filters enabled on Intel CPU's
-> > > > > with branch counters logging (A.K.A LBR event logging [1]) support
-> > > > > results in a segfault.
-> > > > > 
-> > > > > Thread 27 "perf" received signal SIGSEGV, Segmentation fault.
-> > > > > [Switching to Thread 0x7fffafff76c0 (LWP 949003)]
-> > > > > perf_env__find_br_cntr_info (env=0xf66dc0 <perf_env>, nr=0x0, width=0x7fffafff62c0) at util/env.c:653
-> > > > > 653			*width = env->cpu_pmu_caps ? env->br_cntr_width :
-> > > > > (gdb) bt
-> > > > >  #0  perf_env__find_br_cntr_info (env=0xf66dc0 <perf_env>, nr=0x0, width=0x7fffafff62c0) at util/env.c:653
-> > > > >  #1  0x00000000005b1599 in symbol__account_br_cntr (branch=0x7fffcc3db580, evsel=0xfea2d0, offset=12, br_cntr=8) at util/annotate.c:345
-> > > > >  #2  0x00000000005b17fb in symbol__account_cycles (addr=5658172, start=5658160, sym=0x7fffcc0ee420, cycles=539, evsel=0xfea2d0, br_cntr=8) at util/annotate.c:389
-> > > > >  #3  0x00000000005b1976 in addr_map_symbol__account_cycles (ams=0x7fffcd7b01d0, start=0x7fffcd7b02b0, cycles=539, evsel=0xfea2d0, br_cntr=8) at util/annotate.c:422
-> > > > >  #4  0x000000000068d57f in hist__account_cycles (bs=0x110d288, al=0x7fffafff6540, sample=0x7fffafff6760, nonany_branch_mode=false, total_cycles=0x0, evsel=0xfea2d0) at util/hist.c:2850
-> > > > >  #5  0x0000000000446216 in hist_iter__top_callback (iter=0x7fffafff6590, al=0x7fffafff6540, single=true, arg=0x7fffffff9e00) at builtin-top.c:737
-> > > > >  #6  0x0000000000689787 in hist_entry_iter__add (iter=0x7fffafff6590, al=0x7fffafff6540, max_stack_depth=127, arg=0x7fffffff9e00) at util/hist.c:1359
-> > > > >  #7  0x0000000000446710 in perf_event__process_sample (tool=0x7fffffff9e00, event=0x110d250, evsel=0xfea2d0, sample=0x7fffafff6760, machine=0x108c968) at builtin-top.c:845
-> > > > >  #8  0x0000000000447735 in deliver_event (qe=0x7fffffffa120, qevent=0x10fc200) at builtin-top.c:1211
-> > > > >  #9  0x000000000064ccae in do_flush (oe=0x7fffffffa120, show_progress=false) at util/ordered-events.c:245
-> > > > >  #10 0x000000000064d005 in __ordered_events__flush (oe=0x7fffffffa120, how=OE_FLUSH__TOP, timestamp=0) at util/ordered-events.c:324
-> > > > >  #11 0x000000000064d0ef in ordered_events__flush (oe=0x7fffffffa120, how=OE_FLUSH__TOP) at util/ordered-events.c:342
-> > > > >  #12 0x00000000004472a9 in process_thread (arg=0x7fffffff9e00) at builtin-top.c:1120
-> > > > >  #13 0x00007ffff6e7dba8 in start_thread (arg=<optimized out>) at pthread_create.c:448
-> > > > >  #14 0x00007ffff6f01b8c in __GI___clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
-> > > > > 
-> > > > > The cause is that perf_env__find_br_cntr_info tries to access a
-> > > > > null pointer pmu_caps in the perf_env struct. A similar issue exists
-> > > > > for homogeneous core systems which use the cpu_pmu_caps structure.
-> > > > > 
-> > > > > Fix this by populating cpu_pmu_caps and pmu_caps structures with
-> > > > > values from sysfs when calling perf top with branch stack sampling
-> > > > > enabled.
-> > > > > 
-> > > > > [1], LBR event logging introduced here:
-> > > > > https://lore.kernel.org/all/20231025201626.3000228-5-kan.liang@linux.intel.com/
-> > > > > 
-> > > > > Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
-> > > > > ---
-> > > > > v3: constify struct perf_pmu *pmu in __perf_env__read_core_pmu_caps()
-> > > > >     use perf_pmus__find_core_pmu() instead of perf_pmus__scan_core(NULL)
-> > > > > 
-> > > > > v2: update commit message with more meaningful stack trace from
-> > > > >     gdb and indicate that affected systems are limited to CPU's
-> > > > >     with LBR event logging support and that both hybrid and
-> > > > >     non-hybrid core systems are affected.
-> > > > > ---
-> > > > >  tools/perf/builtin-top.c |   8 +++
-> > > > >  tools/perf/util/env.c    | 114 +++++++++++++++++++++++++++++++++++++++
-> > > > >  tools/perf/util/env.h    |   1 +
-> > > > >  3 files changed, 123 insertions(+)
-> > > > > 
-> > > > > diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> > > > > index f9f31391bddb..c9d679410591 100644
-> > > > > --- a/tools/perf/builtin-top.c
-> > > > > +++ b/tools/perf/builtin-top.c
-> > > > > @@ -1729,6 +1729,14 @@ int cmd_top(int argc, const char **argv)
-> > > > >  	if (opts->branch_stack && callchain_param.enabled)
-> > > > >  		symbol_conf.show_branchflag_count = true;
-> > > > >  
-> > > > > +	if (opts->branch_stack) {
-> > > > > +		status = perf_env__read_core_pmu_caps(&perf_env);
-> > > > > +		if (status) {
-> > > > > +			pr_err("PMU capability data is not available\n");
-> > > > > +			goto out_delete_evlist;
-> > > > > +		}
-> > > > > +	}
-> > > > > +
-> > > > >  	sort__mode = SORT_MODE__TOP;
-> > > > >  	/* display thread wants entries to be collapsed in a different tree */
-> > > > >  	perf_hpp_list.need_collapse = 1;
-> > > > > diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-> > > > > index 36411749e007..6735786a1d22 100644
-> > > > > --- a/tools/perf/util/env.c
-> > > > > +++ b/tools/perf/util/env.c
-> > > > > @@ -416,6 +416,120 @@ static int perf_env__read_nr_cpus_avail(struct perf_env *env)
-> > > > >  	return env->nr_cpus_avail ? 0 : -ENOENT;
-> > > > >  }
-> > > > >  
-> > > > > +static int __perf_env__read_core_pmu_caps(const struct perf_pmu *pmu,
-> > > > > +					  int *nr_caps, char ***caps,
-> > > > > +					  unsigned int *max_branches,
-> > > > > +					  unsigned int *br_cntr_nr,
-> > > > > +					  unsigned int *br_cntr_width)
-> > > > > +{
-> > > > > +	struct perf_pmu_caps *pcaps = NULL;
-> > > > > +	char *ptr, **tmp;
-> > > > > +	int ret = 0;
-> > > > > +
-> > > > > +	*nr_caps = 0;
-> > > > > +	*caps = NULL;
-> > > > > +
-> > > > > +	if (!pmu->nr_caps)
-> > > > > +		return 0;
-> > > > > +
-> > > > > +	*caps = zalloc(sizeof(char *) * pmu->nr_caps);
+While investigating some potential bugs, we noticed quite a few
+opportunities for small improvements in the ada4250 driver.
 
-> > > calloc?
+---
+Changes in v3:
+- Split into multiple patches.
+- Added even more cleanups.
+- Link to v2: https://lore.kernel.org/r/20250418-iio-amplifiers-ada4250-simplify-data-buffer-in-init-v2-1-1bf9b033aaf5@baylibre.com
 
-> > Thanks for reviewing. Is there a reason not to use zalloc here or is this related to using free
-> > instead of zfree later?
- 
-> Conceptually, zmalloc() = malloc() + memset() for a single entry.
-> calloc() would be more appropriate if you allocate multiple.
+Changes in v2:
+- Totally new patch.
+- Link to v1: https://lore.kernel.org/r/20250418-iio-amplifiers-ada4250-simplify-data-buffer-in-init-v1-1-7e7bd6dad423@baylibre.com
 
-Yes, the definition of calloc() is to alloc multiple entries and zero
-them, so no need for that explicit multiplication there.
+---
+David Lechner (5):
+      iio: amplifiers: ada4250: used dev local variable
+      iio: amplifiers: ada4250: don't fail on bad chip ID
+      iio: amplifiers: ada4250: use devm_regulator_get_enable_read_voltage()
+      iio: amplifiers: ada4250: move offset_uv in struct
+      iio: amplifiers: ada4250: use dev_err_probe()
 
-zalloc is just a malloc version that does the zeroing after allocation,
-like calloc does.
+ drivers/iio/amplifiers/ada4250.c | 45 ++++++++++++----------------------------
+ 1 file changed, 13 insertions(+), 32 deletions(-)
+---
+base-commit: 4c6073fec2fee4827fa0dd8a4ab4e6f7bbc05ee6
+change-id: 20250418-iio-amplifiers-ada4250-simplify-data-buffer-in-init-93ebb1344295
 
-zfree() is about removing references to areas of memory that are freed,
-so if someone uses that pointer that was freed(), it will deref NULL,
-not something that may be in use for something else.
+Best regards,
+-- 
+David Lechner <dlechner@baylibre.com>
 
-So its not pairing zmalloc() with zfree(), albeit that is common.
- 
-- Arnaldo
