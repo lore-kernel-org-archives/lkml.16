@@ -1,85 +1,120 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A8127057D;
-	Wed, 11 Jun 2025 10:04:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E532270EA9;
+	Wed, 11 Jun 2025 10:04:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749636246; cv=none; b=FtRNFPRsI5W4gDxn0no/pcueuEf2PvV63sEOnz3F6RFwqA1mHuT9tCXQQ9HNUa3nD14DaMN3SWWP5RiMeYxfmFJGMTEW4L/bV3Uhbbi//ZfxO3/tjg5k3qel+VQy928G9Zy/yx1HkwP5LmqL8TGPLsBxfbLFjtyvGQsvSdha2yo=
+	t=1749636246; cv=none; b=u7BJgmnuca7MeqOzL1UADfhMEF1pnTrQFktWL520W/km1rml1iEzkFRsgpWvDNg2qqiridGYxnLNdqBJ+w3YVHoUAflsbyWxTjlZqdVztJ76X45qmealHpBj4kL8x2M4Dn6tlNbNlXzOtrRP0bIQy1MzA5ZxQuLTO90TABMXjCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749636246; c=relaxed/simple;
-	bh=T1ppAz1VzmH29y9/d6Z6oorRiK8qdvAxomNpsVpA7tY=;
+	bh=KrS7UF/iteN9keGU/ybxP25+KoQLtb2QJ16P7m4vfEk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LyPyj20TaksDCBz1T4ITADG0hKM4EKkXHR0pjMveOV+wcKXDR/M0uZN94Qq4eqjz/bmqI6T5Q0cd/fPrF1uGUanCDvD+UlmgiO4eVGmFkioPZJPSc2S8Vgw59Wx0vVysc2MbChwaipYpK2HHlLmiptSPcaGbQgZ6NMTuFY5BlkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vJclE1To; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=X4hHBG4s8m4RKJiV2hGH11QalNPGerwAzNnpxz/xJU8HcAY/wjhpLe1cf90Ac3Izusrb0OmUwH7FQztgJ/+xpMcRKk+NwV8MMPymyYHzvNBT2zHvaoF13MsJDu4Zi/O0utiPu4wJ5bpx/FOeueFqfvUOG+eU8fn55ZnN1CjzkqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D/WyqptG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vJclE1To"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78D09C4CEEE;
-	Wed, 11 Jun 2025 10:04:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D/WyqptG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F5F8C4CEF3;
+	Wed, 11 Jun 2025 10:04:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749636245;
-	bh=T1ppAz1VzmH29y9/d6Z6oorRiK8qdvAxomNpsVpA7tY=;
+	s=k20201202; t=1749636246;
+	bh=KrS7UF/iteN9keGU/ybxP25+KoQLtb2QJ16P7m4vfEk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=vJclE1Tok3zWmw469WgTJ5EfN7AFHXEMryPejVbjnnZNaiOSr7EoH6hpXn7+i6RmK
-	 qgvgnPXbilI5n9p/ZyasBvgpz6QJ3moasqcwrb/ErkU9BP8nunnL8WR1BIgMIK2ce9
-	 1oBQdITqAp07Ub5tWDyQ3vjl5SQeWukc4KdwWi5uEldxsyzGXw5Nexvfbcy+gVCMab
-	 qERo1+l/2KjgQu4n4rCnS1f2aHiV8hr1U5J2alOAC9g/7G3LkPZ9SGuhRy3gCLnm3s
-	 b5s4Q7W80x5EtTLfywawKOOktcD/jZM2lM00BiJnDzZFJC2RbfaidJxrZyp7CTz9ku
-	 I6AOY5oQ2yh/A==
-From: Christian Brauner <brauner@kernel.org>
-To: NeilBrown <neil@brown.name>
-Cc: Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	CIFS <linux-cifs@vger.kernel.org>,
-	Bharath S M <bharathsm@microsoft.com>,
-	Steve French <smfrench@gmail.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.com>
-Subject: Re: [PATCH] VFS: change try_lookup_noperm() to skip revalidation
-Date: Wed, 11 Jun 2025 12:03:53 +0200
-Message-ID: <20250611-leisten-vokal-55db13cc534e@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <174951744454.608730.18354002683881684261@noble.neil.brown.name>
-References: <174951744454.608730.18354002683881684261@noble.neil.brown.name>
+	b=D/WyqptGLktSWxJ7sJTg1Sy/x8+bdTam74nE48tsEyn/FBqPUgc8Jij6GhobGzSMj
+	 vEKLNVMQBqwEazYhqMRoXAie/NYz9n8+PWpR07sbGchBdxTGNCqXfHpEUCDpuHB8vY
+	 tJjojNMpbNhM2h0nQxonPrC69ZmiW8UoKSMUdbzcJice/6M3PtaFtWdNULDBFA53+5
+	 P1tbaIRw7GqKEWTedDaKz/44KzSPQ3cnt7moG9bMhubW1SWCvAoNIf8mL68SE2YOhr
+	 zK2nWNI/DEet06fN1dVj9pqVsvLlDoWjfXdbF+gJ0JrLqwMlSpOLSM54lHgM7LU7qg
+	 fjyFDTFSNNbcg==
+From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+To: gregkh@linuxfoundation.org
+Cc: linux-serial@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+Subject: [PATCH 23/33] serial: 8250: extract serial8250_set_efr()
+Date: Wed, 11 Jun 2025 12:03:09 +0200
+Message-ID: <20250611100319.186924-24-jirislaby@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250611100319.186924-1-jirislaby@kernel.org>
+References: <20250611100319.186924-1-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1354; i=brauner@kernel.org; h=from:subject:message-id; bh=T1ppAz1VzmH29y9/d6Z6oorRiK8qdvAxomNpsVpA7tY=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWR4hkwo6tjEvjbwxlf9mlOnrq59dEKKU6j3reh2q/66k 9ZlHR53OkpZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACbiGcbwT9c71+gEu/T3hhyl SKYd7ef4fszk5fuzpXfJQsbGZN3TKxgZNtS0v3X6sqWQ+1EQ+8c8/ocrn2xQY3265+pjo7rz5gd t2QA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 
-On Tue, 10 Jun 2025 11:04:04 +1000, NeilBrown wrote:
-> The recent change from using d_hash_and_lookup() to using
-> try_lookup_noperm() inadvertently introduce a d_revalidate() call when
-> the lookup was successful.  Steven French reports that this resulted in
-> worse than halving of performance in some cases.
-> 
-> Prior to the offending patch the only caller of try_lookup_noperm() was
-> autofs which does not need the d_revalidate().  So it is safe to remove
-> the d_revalidate() call providing we stop using try_lookup_noperm() to
-> implement lookup_noperm().
-> 
-> [...]
+serial8250_do_set_termios() consists of many registers and up flags
+settings. Extract all these into separate functions. This time, setting
+of EFR for UART_CAP_EFR ports.
 
-Applied to the vfs.fixes branch of the vfs/vfs.git tree.
-Patches in the vfs.fixes branch should appear in linux-next soon.
+Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+---
+ drivers/tty/serial/8250/8250_port.c | 43 +++++++++++++++++------------
+ 1 file changed, 25 insertions(+), 18 deletions(-)
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+index 2c045a4369fc..0f16398cc86f 100644
+--- a/drivers/tty/serial/8250/8250_port.c
++++ b/drivers/tty/serial/8250/8250_port.c
+@@ -2768,6 +2768,30 @@ static void serial8250_set_ier(struct uart_port *port, struct ktermios *termios)
+ 	serial_port_out(port, UART_IER, up->ier);
+ }
+ 
++static void serial8250_set_efr(struct uart_port *port, struct ktermios *termios)
++{
++	struct uart_8250_port *up = up_to_u8250p(port);
++	u8 efr_reg = UART_EFR;
++	u8 efr = 0;
++
++	if (!(up->capabilities & UART_CAP_EFR))
++		return;
++
++	/*
++	 * TI16C752/Startech hardware flow control.  FIXME:
++	 * - TI16C752 requires control thresholds to be set.
++	 * - UART_MCR_RTS is ineffective if auto-RTS mode is enabled.
++	 */
++	if (termios->c_cflag & CRTSCTS)
++		efr |= UART_EFR_CTS;
++
++	if (port->flags & UPF_EXAR_EFR)
++		efr_reg = UART_XR_EFR;
++
++	serial_port_out(port, UART_LCR, UART_LCR_CONF_MODE_B);
++	serial_port_out(port, efr_reg, efr);
++}
++
+ void
+ serial8250_do_set_termios(struct uart_port *port, struct ktermios *termios,
+ 		          const struct ktermios *old)
+@@ -2797,24 +2821,7 @@ serial8250_do_set_termios(struct uart_port *port, struct ktermios *termios,
+ 	uart_update_timeout(port, termios->c_cflag, baud);
+ 	serial8250_set_errors_and_ignores(port, termios);
+ 	serial8250_set_ier(port, termios);
+-
+-	if (up->capabilities & UART_CAP_EFR) {
+-		unsigned char efr = 0;
+-		/*
+-		 * TI16C752/Startech hardware flow control.  FIXME:
+-		 * - TI16C752 requires control thresholds to be set.
+-		 * - UART_MCR_RTS is ineffective if auto-RTS mode is enabled.
+-		 */
+-		if (termios->c_cflag & CRTSCTS)
+-			efr |= UART_EFR_CTS;
+-
+-		serial_port_out(port, UART_LCR, UART_LCR_CONF_MODE_B);
+-		if (port->flags & UPF_EXAR_EFR)
+-			serial_port_out(port, UART_XR_EFR, efr);
+-		else
+-			serial_port_out(port, UART_EFR, efr);
+-	}
+-
++	serial8250_set_efr(port, termios);
+ 	serial8250_set_divisor(port, baud, quot, frac);
+ 
+ 	/*
+-- 
+2.49.0
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.fixes
-
-[1/1] VFS: change try_lookup_noperm() to skip revalidation
-      https://git.kernel.org/vfs/vfs/c/ad5a0351064c
