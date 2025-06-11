@@ -1,82 +1,122 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 220886FBF;
-	Wed, 11 Jun 2025 02:02:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41136FBF;
+	Wed, 11 Jun 2025 02:05:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749607352; cv=none; b=sZU/IADpQxbhShRW6r9rGlgcMIhyeBuEHdiBtv/e2DmLAvikO6R+vrnxZCxpvqIZu70wEWVpVcbmkivWBN/VeUbBCQrN47vopSGnXlS5TEQvnTXyqhRGtCn3KiiqxCTt30bGKiur63hJBS7LGRdliEKFWsO9p5FLW+b9wIwvdM4=
+	t=1749607503; cv=none; b=qlt/iZItzTFH+uRJKl4SIe2v1j5DRi9JQrv0ZvQhpP3ERfJ/hIxnvennKh+Uc6nPiHoleK5UcWXIo3sYO2N9x2+vGOlXSdVAGo4/XPUCBW6tiSutvdxkZk1+jqMKk/OnZ26YNvrzTjFBiuUMPUzQyUuzVUdCvUK/ipdEkQYAyoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749607352; c=relaxed/simple;
-	bh=MwRP3MjkanXH5MsPlrHeH1GolpSHF55hJd1hVoFHLu4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dN8gG3fyf+FBtHJ9bBoPZsLJP/6qTphnymLbJtBo8XbDR0yCMRWHCC2kg1DtIcTHUwhnAtVAyW6Yz8VsoClOIxtLtS3gBhFLCFMuF/GpCk5inyMlLysIInm2EwCTZEm223fiufxXpKh1/VVc7ClZpZk3MnL8NK+wZeoqZi1BzAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=0v7Hnj7l; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1749607503; c=relaxed/simple;
+	bh=QkjN0yrqWqSyvn3N877w5lr2kBMnRiRybGvkYTQ55fk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iHpSoqd3QDPOprUaVUxiMUKEmz7GSyqEO4SlmcrIzZvJ4KE6j+hZXeUlRtB+QqGOcf1pkjKwQcrIgPzny0ym5bFDG0Lm5kflNE+fFgoozqcmOD6jxOOPng8VJLdwIAKyXc/WYyoeahMmP9kTUa1pI46R4z5WJ+I0awnLQvF7KpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HWy06SWF; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0v7Hnj7l"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=X9FpvER8PD2MOmvDWoEC2AeOOYPGUKq7iiqeH/690Ks=; b=0v7Hnj7lM4xToCUI17yyO+fn+g
-	9HvEOLGQdUm3uPftBCgMs4PTKazylzf+AHHlRRrqmCoOMfkphEXQKM6a/U+50crXuF6XJBDrEvz+B
-	lUEwOpN9yrZ6pNdkC7MP/8A2sCFQW8b5eg4TlDHJ1ZbpIktE4Whq2yD5oc5JsxiowcF4fB/KIdmKN
-	qEEFG1uN54cyThC0IofFeH/QejYohlqmrUM/ikl3NchltC4jMLYO17HM95LaT2MsOeS64kGEBXs1u
-	uFQ6zxm9tMJRvrekQ3Boa6Jnl/fonr80Ixx3dlMQRbq4JOTXRAcN1cwBY97iW8+fh+oXKPP/1w1V7
-	aEg8pvtQ==;
-Received: from [50.53.25.54] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uPAnO-00000008bTm-0UU3;
-	Wed, 11 Jun 2025 02:02:30 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Nicolas Pitre <npitre@baylibre.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-serial@vger.kernel.org
-Subject: [PATCH v4] vt: fix kernel-doc warnings in ucs_get_fallback()
-Date: Tue, 10 Jun 2025 19:02:29 -0700
-Message-ID: <20250611020229.2650595-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HWy06SWF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749607502; x=1781143502;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=QkjN0yrqWqSyvn3N877w5lr2kBMnRiRybGvkYTQ55fk=;
+  b=HWy06SWF14+4zsksv2ZU8JXMqgDPZC4GibK6qd3qqZ0ynxGGieE7/mGj
+   1WNUpZ/LCX0qRanz/cuTb9y+0lvHPWeabiJsDJy8vYwFoMnKulYK0BqIo
+   k32LIQaThCSU1xRY79DWe/uE4l8FI1gVeKwlG5KjNf8vajqlqFlDYobqM
+   pvJXkroSqnNU12SebVdtrQSkRenSQud7aqrBmbsiIOtf2dr5HUl70+Bmp
+   6ORpW8rgDj9Av9uzi+08/0YVHAH5MluAwiI+mOogprzfXNPw2soTy8W/3
+   lnYJxAVt/VABkC+GJO28yFU3LeJYs/YSCJqf+vmuMj2uaax5uscqW63nv
+   Q==;
+X-CSE-ConnectionGUID: oHN/GLZ5R8alWrnJ37AQjQ==
+X-CSE-MsgGUID: 3xySpXq3TzSorHfCl3JA3Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51616444"
+X-IronPort-AV: E=Sophos;i="6.16,226,1744095600"; 
+   d="scan'208";a="51616444"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 19:05:01 -0700
+X-CSE-ConnectionGUID: YQndixjfTtyajYVuEuJH6w==
+X-CSE-MsgGUID: 4Xj4m9ZcSA+igvZcXs8l4g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,226,1744095600"; 
+   d="scan'208";a="150861724"
+Received: from unknown (HELO [10.238.0.239]) ([10.238.0.239])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 19:04:58 -0700
+Message-ID: <e2e7f3d0-1077-44c6-8a1d-add4e1640d32@linux.intel.com>
+Date: Wed, 11 Jun 2025 10:04:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 3/4] KVM: TDX: Exit to userspace for GetTdVmCallInfo
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+ "Li, Xiaoyao" <xiaoyao.li@intel.com>,
+ "pbonzini@redhat.com" <pbonzini@redhat.com>,
+ "seanjc@google.com" <seanjc@google.com>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Cc: "mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>,
+ "Huang, Kai" <kai.huang@intel.com>, "Yao, Jiewen" <jiewen.yao@intel.com>,
+ "Chatre, Reinette" <reinette.chatre@intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "Zhao, Yan Y" <yan.y.zhao@intel.com>,
+ "Lindgren, Tony" <tony.lindgren@intel.com>,
+ "Shutemov, Kirill" <kirill.shutemov@intel.com>,
+ "Hunter, Adrian" <adrian.hunter@intel.com>,
+ "Yamahata, Isaku" <isaku.yamahata@intel.com>
+References: <20250610021422.1214715-1-binbin.wu@linux.intel.com>
+ <20250610021422.1214715-4-binbin.wu@linux.intel.com>
+ <ff5fd57a-9522-448c-9ab6-e0006cb6b2ee@intel.com>
+ <9421ffccdc40fb5a75921e758626354996abb8a9.camel@intel.com>
+ <d4285aa9adb60b774ca1491e2a0be573e6c82c07.camel@intel.com>
+Content-Language: en-US
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <d4285aa9adb60b774ca1491e2a0be573e6c82c07.camel@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Use the correct function parameter name in ucs_get_fallback() to prevent
-kernel-doc warnings:
 
-Warning: drivers/tty/vt/ucs.c:218 function parameter 'cp' not described in 'ucs_get_fallback'
-Warning: drivers/tty/vt/ucs.c:218 Excess function parameter 'base' description in 'ucs_get_fallback'
 
-Fixes: fe26933cf1e1 ("vt: add ucs_get_fallback()")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Nicolas Pitre <npitre@baylibre.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jirislaby@kernel.org>
-Cc: linux-serial@vger.kernel.org
-Reviewed-by: Nicolas Pitre <npitre@baylibre.com>.
----
-v2: add Jiri and linux-serial. Mea culpa.
-v3: drop "Base" from @cp description (Nicolas).
-v4: add Nicolas' Reviewed-by tag (duh).
+On 6/11/2025 12:54 AM, Edgecombe, Rick P wrote:
+> On Tue, 2025-06-10 at 09:50 -0700, Rick Edgecombe wrote:
+>> Why do we need an opt-in interface instead of a way to expose which exit's are
+>> supported by KVM? I would think the need for a TDVMCALL opt-in interface would
+>> only come up if there was a bad guest that was making TDVMCALLs that it did not
+>> see in GetTdVmCallInfo.
 
- drivers/tty/vt/ucs.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The opt-in interface can eliminate some requirements for userspace.
+E.g, for GetQuote, this patch set enforces userspace to handle the exit reason
+due to GetQuote as the initial support, because KVM doesn't know if userspace
+is able to handle the exit reason or not without userspace's opt-in, unless
+it's handled by default in userspace.
 
---- lnx-616-rc1.orig/drivers/tty/vt/ucs.c
-+++ lnx-616-rc1/drivers/tty/vt/ucs.c
-@@ -206,7 +206,7 @@ static int ucs_page_entry_cmp(const void
- 
- /**
-  * ucs_get_fallback() - Get a substitution for the provided Unicode character
-- * @base: Base Unicode code point (UCS-4)
-+ * @cp: Unicode code point (UCS-4)
-  *
-  * Get a simpler fallback character for the provided Unicode character.
-  * This is used for terminal display when corresponding glyph is unavailable.
+>>   So that we would actually require an opt-in is not
+>> guaranteed.
+>>
+>> Another consideration could be how to handle GetQuote for an eventual TDVMCALL
+>> opt-in interface, should it be needed. The problem would be GetQuote would be
+>> opted in by default and make the interface weird. But we may not want to have a
+>> TDVMCall specific opt-in interface. There could be other TDX behaviors that we
+>> need to opt-in around. In which case the opt-in interface could be more generic,
+>> and by implementing the TDVMCall opt-in interface ahead of time we would end up
+>> with two opt-in interfaces instead of one.
+
+Maybe we can use a TDX specific opt-in interface instead of TDVMCALL specific
+interface.
+But not sure we should add it now or later.
+
+>>
+>> So how about just adding a field to struct kvm_tdx_capabilities to describe the
+>> KVM TDVMcalls? Or some other place? But don't invent an opt-in interface
+>> until/if we need it.
+> Oh, and there already is a hypercall exit opt-in interface, so
+> KVM_CAP_TDX_USER_EXIT_TDVMCALL would overlap with it, right?
+Not sure what does "overlap" mean here.
+
+They have different namespaces, so they don't impact each other.
+
+Or did you mean it's a duplication both having KVM_CAP_EXIT_HYPERCALL and
+KVM_CAP_TDX_USER_EXIT_TDVMCALL?
