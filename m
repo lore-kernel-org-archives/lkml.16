@@ -1,126 +1,133 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF8C295502;
-	Wed, 11 Jun 2025 14:12:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B64295502;
+	Wed, 11 Jun 2025 14:12:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749651176; cv=none; b=tKtlNuRwbM7TelsKJ1KVeVgK07/L2Vf3sRO/7tqpcm848m5pxNXRhKKcX/4VVHX0cwGAJFdQCG8Jy0oxycP95ontwY2gqX82tJL20Plaz2xStzIxM9zk3zWjfu8niRG2ybElxPgOwBUwtivIi/Dv8dg/b5D+R3NXaiYONzJJifE=
+	t=1749651181; cv=none; b=ridoR01HZk9yyqNKaIGZEvGAFrWKZP2cvUbn3iEnt0wxbAMIy9CkoXX9/8SFqK4Nt3kQFXFefb9/18fMb3P1elmyxmQi/1/ruF4aZTVzWst4jZUQnxybQCE265XtUA7KTMvamCWT8vFIbij1n0sm5/IobiDtOpaOnIsg6IF0mzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749651176; c=relaxed/simple;
-	bh=AiOkcrQXv5dBfuU+br0+1pqKGEfPTV809EosE5nl+x8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qiHSKQrHNBaEbeWi0aNj3nVp4MHbk8noDStWpQR2oEvO5HhqP1SWrrNZo4iQ3pW1iWzUSsuPoUFpsT7LrtLT2W26ZU0M+sWuZR9n+TFgJGFwgwRb3PUGY9+rFDpwkVAHZarnEbslLmcK/l2LBGwe7VZRU2C/1f51E8TMzX3/t6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cQVGahRD; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749651181; c=relaxed/simple;
+	bh=atmhHy6QpcP64ofmiEEwUrG4vMaYmZXjgF3h18/VPdU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=jY6FXdZbmUQzr3f5mTXTKeOqkq7NhYhc/4nVvXeFTAgavR8ocfun4A1hYFqXrRmm2xLnvz1UvSjYlWPpNl7XnhP3ZyVsyRNajfH0ecsaSWFlhPRtOEEjEsWO34Fcwehz4KLmzjUmz/uEr/hkEHO8yoClUuzcqlyR8PILfVkZKQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=X5oJtr8J; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cQVGahRD"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-32a72e61a3fso10067851fa.0;
-        Wed, 11 Jun 2025 07:12:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749651173; x=1750255973; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hiHg7SNH+pSMtOhNSqpQ2vUspKGZ2spdd3OjZnoxU8Q=;
-        b=cQVGahRDaya0o0hXjC2NjMEeGVwfCk7GMDdB6b9Gdwrbj/OPdkvjDsh0p4djzqe7mj
-         RbraucB19j2CQJcb/wU+3ArcAvAjyXBhL4XUmY3wPNu2rfoMdtclM7WRS0xg16MfSy37
-         x4MRfdfMmAhj6CCYceaUI+UOA4JmtLo/FMkT214//ZNX4eLmhCupHd5rX/iWlzeyxAdC
-         50FYCmWAvS2Srd2CUBAax2HVJcAFuHC7Sf9xNRNrR2vLD5ob+pesRu9ftHzvz04YAyjj
-         oGHVD3CFbk0Li8B1YbwAYfQUaPGHS2h34wHyDpV/n+VHB68wJB7lYspuIP2O1yk/BaxQ
-         NLAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749651173; x=1750255973;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hiHg7SNH+pSMtOhNSqpQ2vUspKGZ2spdd3OjZnoxU8Q=;
-        b=b2jP9HG2dpXUtWXgvmTdzSLGPLu3L52AeSrkj9DU0HjBqqbEaw2bF/Nw2xNGQsH5u9
-         wTYVoSPi4TxhRNZ2TB9ZYXfs95S8nrMOE+4H8Ex/I1HeT1c0HvxtSXn27dkjIAgacd6j
-         mDkUGo6dH1LRz2B7QOwhtddyrv80gkqjzFNCt7bcBfp7OtOqyw/4XRSsuN7NuIvJApLq
-         1csExWqSXdClKJXRCi2MP8aL5VHQAyKb4RQRmf5WISsC/AQGKqyKqDWj2q9GOCVtuZRi
-         60ApCC1P83kROLU5H+ZWPPFmc8wZX6/y2oGzqpyT7Hgwl/Ot9+uOqqiMZ7lUZEjXMRT7
-         V0jQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUX7wMR2UcqUwfRZlX1u4NbxnasR1YTnYx1pu06ncTRdHT/VnR29q88cUahDDzZpm8xnS6HkyaA@vger.kernel.org, AJvYcCXMIQCN5NTPKMZZEWfFOLGBKhCAYbrBmTlxS0zRPO6vbdApCzlflkOTzsVHNh/bv2Qp3pVa8ou6bcP9mqY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRQzUBYtA3ZIZMOKiMUFASgjtk90UPbRNxzS2UEKu2IuMkCEtK
-	v0RdEClljnhKYF/cNDxQohbgw1OrwpURzrB/j/qXOReCaKZr7FeLK5SjmZ/FqhA7z9N8XUT99Q5
-	BmO0vZMpq6IOTj7yKh5J0L5rdnzerkzA=
-X-Gm-Gg: ASbGncvDFtOMzY4mEB19Za98y1AMpolW3R5H4oKm7cg5MKmWsCi7fMKJIWOovfw+eAY
-	XC69JfQ7av/DRlZYb/LIx6AIFRbsid6fdLlftrJkhQFF9awhKCNgP6ok0Hh+LnkP8MrssyP+Tng
-	o5I7Cst1pVHScYxHv2/sCWB/u5+3CfYM1iBO2bNsQSp8QvEMuRWkwv6OylBbcVGHqXBOfLzK8dl
-	yzqAQ==
-X-Google-Smtp-Source: AGHT+IEAValel8liDMEYhfCrnmQ5CestXZtWv84livqk4j/ymswdWR+PpAD0W4JSr184M5y7GQRG879SrHISz7W20Eg=
-X-Received: by 2002:a05:651c:4ca:b0:328:d50:d7cc with SMTP id
- 38308e7fff4ca-32b21269b9dmr10951451fa.20.1749651172599; Wed, 11 Jun 2025
- 07:12:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="X5oJtr8J"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55B9DGt8026057;
+	Wed, 11 Jun 2025 14:12:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	rZWGVsTR3YY/nyjtsNCnhYm+76PbrRj0mIU9l49BmHs=; b=X5oJtr8J6xLfPVEt
+	TObmZGGXWyPq3X3Q2rB+HIHwBK594Zv3kQnxo5Hn8BNbmsIHeL2iOvyxD0EALq4V
+	+iEtobY6F3P/Fv8xKbcZR+hDUM9U0L5GA2OAV930vEjZForjvrVW6BadLzlU+pXc
+	9XkJbY/icluo3nsIxXI1O9MWyD2YhoXMLgwcMBeIHoy7rQ7R/jlq6OB+eV0BXN2n
+	Bo6TuSS1ur8pbrAhuGghWqMrXlo/MUcKWKoT9s7Xt4bZhbWzCZfVLj9R9HcWryO9
+	GdtlCQIWDgKbd8963ehUlKvlJhrDLUfQyIPbFeG7xxJaqbsDx/ii42gU3ERDNEEf
+	DsGiXA==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 475v2y81w6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 11 Jun 2025 14:12:52 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55BECp7b021265
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 11 Jun 2025 14:12:52 GMT
+Received: from [10.216.3.123] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 11 Jun
+ 2025 07:12:46 -0700
+Message-ID: <ee2affe2-7d9e-4ced-bbe7-c7decf8bf336@quicinc.com>
+Date: Wed, 11 Jun 2025 19:42:43 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250607152830.26597-1-pranav.tyagi03@gmail.com> <20250607164200.GC197663@horms.kernel.org>
-In-Reply-To: <20250607164200.GC197663@horms.kernel.org>
-From: Pranav Tyagi <pranav.tyagi03@gmail.com>
-Date: Wed, 11 Jun 2025 19:42:41 +0530
-X-Gm-Features: AX0GCFvcXQG5H4Lymw6YWunRZt95liFnErGnHf7Tk2DyxYxDDx34gA1WdzNq0ac
-Message-ID: <CAH4c4jKcnmquBJ1fXo0ENRf+D3xuogF+Cu4iGVsR18FZfggqqw@mail.gmail.com>
-Subject: Re: [PATCH] net: ipconfig: replace strncpy with strscpy
-To: Simon Horman <horms@kernel.org>
-Cc: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, skhan@linuxfoundation.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kernel-mentees@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/8] dt-bindings: serial: describe SA8255p
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby
+	<jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <psodagud@quicinc.com>, <djaggi@quicinc.com>,
+        <quic_msavaliy@quicinc.com>, <quic_vtanuku@quicinc.com>,
+        <quic_arandive@quicinc.com>, <quic_mnaresh@quicinc.com>,
+        <quic_shazhuss@quicinc.com>, Nikunj Kela
+	<quic_nkela@quicinc.com>
+References: <20250606172114.6618-1-quic_ptalari@quicinc.com>
+ <20250606172114.6618-2-quic_ptalari@quicinc.com>
+ <20250610-tested-lilac-raccoon-6c59c4@kuoka>
+ <d744b518-2ae9-4ca0-86ce-11cf74c945e6@quicinc.com>
+ <b137e6bb-7380-4f4c-8469-422587d08c60@kernel.org>
+Content-Language: en-US
+From: Praveen Talari <quic_ptalari@quicinc.com>
+In-Reply-To: <b137e6bb-7380-4f4c-8469-422587d08c60@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjExMDExOCBTYWx0ZWRfX5R5K13Jr6jbB
+ lfUsjdPmEPzDBt0OtaSr60rfl/sCAenoNLyBXMGXfYHFYHtB9sZU9W8DpUg2ynpHYF+zPN+8a2r
+ Snlu4gRtESE8rPV6GPK6hjkVL+wC1kcPo/Unbbl/9kXK+clirlOrncq+jWjlcokNPibkYJfovi/
+ oZbW3jqOw1qn3uNwpS6uv7wmeS0qTwkywFLzJOB5OB3ETZfN7gaTCHK0cf9y1WcEEdSaP554X8q
+ U5/QrfTGcVf2k02oXrAIQLdJwVDanKSQpAZTMXXROA6wS1b/chhBRp7UzkpTy5ukXbniY2Ai0VB
+ oojDVOEOzO5LEQYmTPQ6qXg/ujyMcTWM2/kHNToCOIyM0hsJmxE+1r0K7qCaST64dRIZuDH1Pp1
+ PezApOakaG2uMcmT9k+S8UDatL3ba90pfi8E8GuH17PfxtaxoPkZI4FNqdmqYxPgfxJmP+ey
+X-Proofpoint-GUID: ZOCsCpc2dl9pviTiiGwzO_XevpbnGGRG
+X-Proofpoint-ORIG-GUID: ZOCsCpc2dl9pviTiiGwzO_XevpbnGGRG
+X-Authority-Analysis: v=2.4 cv=f+BIBPyM c=1 sm=1 tr=0 ts=68498ee4 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
+ a=o5fqufYwVcAoi6U72LcA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-11_05,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 spamscore=0 mlxlogscore=717 bulkscore=0 impostorscore=0
+ lowpriorityscore=0 priorityscore=1501 adultscore=0 phishscore=0 mlxscore=0
+ malwarescore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506110118
 
-On Sat, Jun 7, 2025 at 10:12=E2=80=AFPM Simon Horman <horms@kernel.org> wro=
-te:
->
-> On Sat, Jun 07, 2025 at 08:58:30PM +0530, Pranav Tyagi wrote:
-> > Replace the deprecated strncpy() with strscpy() as the destination
-> > buffer is NUL-terminated and does not require any
-> > trailing NUL-padding. Also increase the length to 252
-> > as NUL-termination is guaranteed.
-> >
-> > Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
->
-> Hi Pranav,
->
-> As a non-bug fix for Networking code this should be targeted
-> at net-next. And it's helpful to do so explicitly in the patch subject,
-> like this:
->
->         [PATCH v2 net-next] ...
->
-> Also, unfortunately the timing of this patch is not good
-> as net-next is currently closed for the merge window.
->
-> You can find more information about the above,
-> and other aspects of the workflow for the Networking subsystem
-> in https://docs.kernel.org/process/maintainer-netdev.html
->
->
-> ## Form letter - net-next-closed
->
-> The merge window for v6.16 has begun and therefore net-next is closed
-> for new drivers, features, code refactoring and optimizations. We are
-> currently accepting bug fixes only.
->
-> Please repost when net-next reopens after June 8th.
->
-> RFC patches sent for review only are obviously welcome at any time.
->
-> --
-> pw-bot: defer
+Hi Krzysztof,
 
-Hi,
+Thank you for review.
 
-Thanks for pointing out the shortcomings in the patch.
-The doc will help a lot. I will correct the patch accordingly and
-send the v2 as the merge window has reopened.
+On 6/11/2025 12:47 PM, Krzysztof Kozlowski wrote:
+> On 10/06/2025 10:10, Praveen Talari wrote:
+>>>> +
+>>>> +  interrupts:
+>>>> +    minItems: 1
+>>>
+>>> Drop, this is not in sync with interrupt-names. You already received
+>>> comments on this. We talk about this since v4!
+>> I hope you have reviewed the commit message and the description under
+>> interrupt-name regarding the optional wakeup IRQ. I believe that address
+>> your query.
+>>
+>> I can include minItems:1 in the interrupt-name property in the next
+>> patch set to align/sync with interrupts property.
+> Yes, then the interrupt-names needs minItems.
+Sure, will update in next patch-set.
 
-Regards
-
-Pranav Tyagi
+Thanks,
+Praveen Talari
+> 
+> Best regards,
+> Krzysztof
