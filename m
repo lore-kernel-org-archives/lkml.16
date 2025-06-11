@@ -1,235 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6FDC22CBD0;
-	Wed, 11 Jun 2025 12:24:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC6C276031
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 12:24:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749644661; cv=none; b=XIZAbHKo2io0F3B02lCZNZW8lrvavhvwwBOwSvGLNrVCLZAJfqNHCQTThRv+NfgL5QQ2DdsnX9pO8c0UhhwViAr3+pc3RNXstFH4WlIIB7Pd9fHF4AIEMDruNQbUoWtFFYnEB1oPXHgY3ZPtcVVgi9+sBm3aRhd6Dc1JLBoXeoc=
+	t=1749644687; cv=none; b=pluL+mc/0FaaVg5bqUBZYJj4iahB4NNUchWXjgdrtlsqGTkw6pf0NS4+yMjEVRhvEi5I6iTGlAJTKdqeZPROM/2XkENC8qV0q4xzm+tlWDfEuuQBZYIXoP5cwUOPEPgB8PUFsm+LkP1Rt99ylIc2XQQKMK4ai3XxpNDjzyz0KN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749644661; c=relaxed/simple;
-	bh=HktI37/DNEasblw5pBFr+wXSlVnkb1VCmOLWOfwxbbA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=QC46fGTi+8UOZ8jrmLgh5xvlII4DeO1D+VOk8cLnNRMZbS91g8vQPYVIy1YZLxcT5D9yhHyEZnbAs1VQagOwr76HyaT+6lWFCYmrEWDhc3Mv/17dxZa3fLlHnH3V2C0bDYNtlz3fY9D4l94zF/dy7jLBa2AF7XJXtDQDSp7wsxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kmsX30+y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749644687; c=relaxed/simple;
+	bh=R81Vn86n50s95m24RM0OKR5tanCo8I3XjpHOkclODVs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J6991K3p1WscZ/LRx8kj1JxSCQP3FIC2m3Jkiir5yPw22402TRBb3AMHi3Ltvjycynbs1bpQqSSaImOHbT2d3z4sY2p2x5uR4hQnf7uP3hhXgdm9RI4tpxPRbUgP095Uac18S4HuArxlDKJt98HTNfcQV/Swf5qWzd8kqz3hHOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bDhvnbrL; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kmsX30+y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E54BC4CEEE;
-	Wed, 11 Jun 2025 12:24:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749644661;
-	bh=HktI37/DNEasblw5pBFr+wXSlVnkb1VCmOLWOfwxbbA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=kmsX30+yJAmTEQ2T/Do0NBj6OcyuV/J5ThkBUVxFbXbyMhDedCdOYm2Hl3boEzK5o
-	 Xm2TZ+lYAz75r9KrCv3pFQA4JTVuVFEocMlJr3Uie/iV9w7rbdQUDpjF8k8H4C3HMJ
-	 2x92Okb/RS27hjk/2S8YcjJpvJsbXE/nRc1Dn7i3y6CqEAIVvQgeluwNM/qnNwzF7F
-	 2FNvfi7+ccW6l2MQw8EpKI6kg9RJmFZI92KiE7QrLy28gJ/kzYrWrS/rypq4wiLFtV
-	 Qkq9rhD8WEm9GsTC4+8NBv04Qyrr41lY4dgmIANio6wznnCn8ylekt1Cz7wK6PNo/Z
-	 RJnXEJ1KKGVeg==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Benno Lossin" <lossin@kernel.org>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
- <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
- <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Benno
- Lossin" <benno.lossin@proton.me>,  "Alice Ryhl" <aliceryhl@google.com>,
-  "Masahiro Yamada" <masahiroy@kernel.org>,  "Nathan Chancellor"
- <nathan@kernel.org>,  "Luis Chamberlain" <mcgrof@kernel.org>,  "Danilo
- Krummrich" <dakr@kernel.org>,  "Nicolas Schier"
- <nicolas.schier@linux.dev>,  "Trevor Gross" <tmgross@umich.edu>,  "Adam
- Bratschi-Kaye" <ark.email@gmail.com>,  <rust-for-linux@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>,  <linux-kbuild@vger.kernel.org>,  "Petr
- Pavlu" <petr.pavlu@suse.com>,  "Sami Tolvanen" <samitolvanen@google.com>,
-  "Daniel Gomez" <da.gomez@samsung.com>,  "Simona Vetter"
- <simona.vetter@ffwll.ch>,  "Greg KH" <gregkh@linuxfoundation.org>,  "Fiona
- Behrens" <me@kloenk.dev>,  "Daniel Almeida"
- <daniel.almeida@collabora.com>,  <linux-modules@vger.kernel.org>
-Subject: Re: [PATCH v12 2/3] rust: add parameter support to the `module!` macro
-In-Reply-To: <87plfazi13.fsf@kernel.org> (Andreas Hindborg's message of "Wed,
-	11 Jun 2025 12:31:20 +0200")
-References: <20250506-module-params-v3-v12-0-c04d80c8a2b1@kernel.org>
-	<20250506-module-params-v3-v12-2-c04d80c8a2b1@kernel.org>
-	<D9PW1NI2S6FV.8LA53J87VCML@kernel.org> <87plfazi13.fsf@kernel.org>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Wed, 11 Jun 2025 14:24:08 +0200
-Message-ID: <87wm9ixy8n.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bDhvnbrL"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a53ee6fcd5so2371941f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 05:24:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749644684; x=1750249484; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pntxaWNnDpEM2Le+70ckmhHLBJI/hmInZvYIpD60p58=;
+        b=bDhvnbrLizjuLIidAszNSvq6JXlta9/PC3M9ppkmwLwDOtyv7tOyj+3wTguQeCUtdz
+         uNukMWzx1xh/G3BMxbIZgI5gAFzSzgfhGgrQ9wz0bVEu09OHr8v89G9tyPSf5M24k0d6
+         yoYx37uXK+Bb6nYaaIfPNR7W1cYhcAQRfVWJiTZr0ZCmj9NEocIs5MvXmkPZuqEAJ+tl
+         SEH2rKrhhDrnEl8atA/5zczVSCNLjuJHfUiCr3b/aO7563yCLD81OWDyuuzYvOTnvAyQ
+         pRsSI6QZu5PhzkBGl6sEXYeJQt6+WcBAbgxsNkSnp1RDF8VEeP1MQbD+hCLJ1jzxT3b+
+         F2Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749644684; x=1750249484;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pntxaWNnDpEM2Le+70ckmhHLBJI/hmInZvYIpD60p58=;
+        b=pUSJzbMlNRQUM5sQiAMfAg3SFL1sKGP5EC/p1MIzaG6BXZQfUVtyOrK08F+zbrQep8
+         hDdd0j8gn98vOaf+P3p2KUDWPUdb9dRVj+XCTispUC1/Dso+m/gcNYplRX4PZnr8QKMJ
+         jmak4yQo/jH+fO8YpwTDdknIIYGXaXpuBvPTecVLNOGyXgBdtEvvrWo/apF4QnsTZOjF
+         m/moFk1IDCDrviI8bBpjMMGcsm0lJdGp1ynu4/InhBwndDKjQFVizOeCeZG+40waInTR
+         5O52/4hdg1PCFFJsv4w5ZqXOu6KOwXgUozo/xAbBN0uU8/uNppb8I5BNFDChOq3w2MWe
+         39TA==
+X-Forwarded-Encrypted: i=1; AJvYcCWeWdfuFbBctb9ecd892JJCByAnADmUynwKzQsYzfti2A4M4eLMM/V0Ub/QlTxxRmBYa7GUuZYndkWik6c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLvzEMusfaLqfqljumBd8iyUtTyqjG7L/5BkrJPEQrrsfB+3Ff
+	nTbHO0Br9IdoK3HnlAT1HkQKaN8RKMaCMy5H0W6IUkLFMJR+0b4OgkWBCqSQ3zWu63kcPAaqfVh
+	ngNSzGInr66t9pgMrLVeg6JSU3ayr1awglPFv0/sF
+X-Gm-Gg: ASbGncuW2/DvK8DeGKXia6t6zyz1yXpCOqU2517CiqpucXHhkEdlBMXZPpJSKOxqNn4
+	sDh6iSAcIkNpF/omffA0jY5A2xjFuvk+5Qoex5gss52JPhipNLRJJIPs88kdoSfKanzBv2sZSvb
+	IlpJqL7sRvUMeAGIdEWiIL6VEr0lUM6TAc9S00SMFr5qQpeR351m8djq3v2HS1fMLHrHdunRNsb
+	w==
+X-Google-Smtp-Source: AGHT+IHqqDzqPqrx+jJdaiStqcmQC5PY9s0h0hv9Nc7By7zX4EjpLulqZbtZUXuN16xlgP3QnLCnsqEL3ZVHwdnGryk=
+X-Received: by 2002:a05:6000:40ce:b0:3a4:f52d:8b05 with SMTP id
+ ffacd0b85a97d-3a558af421bmr2451602f8f.35.1749644684234; Wed, 11 Jun 2025
+ 05:24:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250610-pointed-to-v2-1-fad8f92cf1e5@kernel.org>
+ <HCd56HpzAlpsTZWbmM8R3IN8MCXWW-kpIjIt_K1D8ZFN6DLqIGmpNRJdle94PGpHYS86rmmhCPci9TajHZCCrw==@protonmail.internalid>
+ <DAIV6MJAJ5R0.3TZ4IC2KO9MOL@kernel.org> <87v7p3znz6.fsf@kernel.org>
+ <CAH5fLgi3B_Wyz2OzBLhHHgWrg7hboyFUcQe-+GUrrvXiX9di=w@mail.gmail.com>
+ <GHUD6hpYDty0s_oTLGC6owDPKqrNepeGOL9F-XlvY6G50K8Zptjp4f8kVVnyoTjf-E_0QVeHfmUUvcN-p1i24Q==@protonmail.internalid>
+ <DAJHVMM9DND0.2FM0FJYN0XEFV@kernel.org> <87jz5izhg3.fsf@kernel.org>
+ <WXoNAlTJvpteJEAZ3TkYKk2QWHBC0oID8Dy3AHGxLEwiZwBPdSLZB4MpdbObLtFvqiN9re3q6OQpiua2uiv1Hw==@protonmail.internalid>
+ <DAJOKFHW96XZ.2ANYSSFQO03ZL@kernel.org> <878qlyzd9a.fsf@kernel.org>
+In-Reply-To: <878qlyzd9a.fsf@kernel.org>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Wed, 11 Jun 2025 14:24:31 +0200
+X-Gm-Features: AX0GCFsGrjiahNqXYN_wK3WpFvBjlZuqs41dAS1mQAczR2z1DIFyvKRDh3iJ50o
+Message-ID: <CAH5fLgiNikpTfm6nvyEJaEspPkMNRQSX2XmBXvXktpXQLutDPg@mail.gmail.com>
+Subject: Re: [PATCH v2] rust: types: add FOREIGN_ALIGN to ForeignOwnable
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Benno Lossin <lossin@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Tamir Duberstein <tamird@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Andreas Hindborg <a.hindborg@kernel.org> writes:
-
+On Wed, Jun 11, 2025 at 2:14=E2=80=AFPM Andreas Hindborg <a.hindborg@kernel=
+.org> wrote:
+>
 > "Benno Lossin" <lossin@kernel.org> writes:
 >
->> On Tue May 6, 2025 at 3:02 PM CEST, Andreas Hindborg wrote:
->>> Add support for module parameters to the `module!` macro. Implement read
->>> only support for integer types without `sysfs` support.
->>>
->>> Acked-by: Petr Pavlu <petr.pavlu@suse.com> # from modules perspective
->>> Tested-by: Daniel Gomez <da.gomez@samsung.com>
->>> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
->>> ---
->>>  rust/kernel/lib.rs           |   1 +
->>>  rust/kernel/module_param.rs  | 204 +++++++++++++++++++++++++++++++++++++++++++
->>>  rust/macros/helpers.rs       |  25 ++++++
->>>  rust/macros/lib.rs           |  31 +++++++
->>>  rust/macros/module.rs        | 195 ++++++++++++++++++++++++++++++++++++-----
->>>  samples/rust/rust_minimal.rs |  10 +++
->>
->> I know this is already the 12th version, but I think this patch should
->> be split into the module_param module introduction, proc-macro
->> modifications and the sample changes.
->>
+> > On Wed Jun 11, 2025 at 12:43 PM CEST, Andreas Hindborg wrote:
+> >> "Benno Lossin" <lossin@kernel.org> writes:
+> >>
+> >>> On Tue Jun 10, 2025 at 4:15 PM CEST, Alice Ryhl wrote:
+> >>>> On Tue, Jun 10, 2025 at 4:10=E2=80=AFPM Andreas Hindborg <a.hindborg=
+@kernel.org> wrote:
+> >>>>>
+> >>>>> "Benno Lossin" <lossin@kernel.org> writes:
+> >>>>>
+> >>>>> > On Tue Jun 10, 2025 at 1:30 PM CEST, Andreas Hindborg wrote:
+> >>>>> >> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+> >>>>> >> index 22985b6f6982..0ccef6b5a20a 100644
+> >>>>> >> --- a/rust/kernel/types.rs
+> >>>>> >> +++ b/rust/kernel/types.rs
+> >>>>> >> @@ -21,15 +21,11 @@
+> >>>>> >>  ///
+> >>>>> >>  /// # Safety
+> >>>>> >>  ///
+> >>>>> >> -/// Implementers must ensure that [`into_foreign`] returns a po=
+inter which meets the alignment
+> >>>>> >> -/// requirements of [`PointedTo`].
+> >>>>> >> -///
+> >>>>> >> -/// [`into_foreign`]: Self::into_foreign
+> >>>>> >> -/// [`PointedTo`]: Self::PointedTo
+> >>>>> >> +/// Implementers must ensure that [`Self::into_foreign`] return=
+s pointers aligned to
+> >>>>> >> +/// [`Self::FOREIGN_ALIGN`].
+> >>>>> >>  pub unsafe trait ForeignOwnable: Sized {
+> >>>>> >> -    /// Type used when the value is foreign-owned. In practical=
+ terms only defines the alignment of
+> >>>>> >> -    /// the pointer.
+> >>>>> >> -    type PointedTo;
+> >>>>> >> +    /// The alignment of pointers returned by `into_foreign`.
+> >>>>> >> +    const FOREIGN_ALIGN: usize;
+> >>>>> >>
+> >>>>> >>      /// Type used to immutably borrow a value that is currently=
+ foreign-owned.
+> >>>>> >>      type Borrowed<'a>;
+> >>>>> >> @@ -39,18 +35,20 @@ pub unsafe trait ForeignOwnable: Sized {
+> >>>>> >>
+> >>>>> >>      /// Converts a Rust-owned object to a foreign-owned one.
+> >>>>> >>      ///
+> >>>>> >> +    /// The foreign representation is a pointer to void. Aside =
+from the guarantees listed below,
+> >>>>> >
+> >>>>> > I feel like this reads better:
+> >>>>> >
+> >>>>> > s/guarantees/ones/
+> >>>>> >
+> >>>>> >> +    /// there are no other guarantees for this pointer. For exa=
+mple, it might be invalid, dangling
+> >>>>> >
+> >>>>> > We should also mention that it could be null. (or is that assumpt=
+ion
+> >>>>> > wrong?)
+> >>>>>
+> >>>>> It is probably not going to be null, but it is allowed to. I can ad=
+d it.
+> >>>>>
+> >>>>> The list does not claim to be exhaustive, and a null pointer is jus=
+t a
+> >>>>> special case of an invalid pointer.
+> >>>>
+> >>>> We probably should not allow null pointers. If we do, then
+> >>>> try_from_foreign does not make sense.
+> >>>
+> >>> That's a good point. Then let's add that as a safety requirement for =
+the
+> >>> trait.
+> >>
+> >> I disagree. It does not matter for the safety of the trait.
+> >>
+> >> From the point of the user, the pointer is opaque and can be any value=
+.
+> >> In fact, one could do a safe implementation where the returned value i=
+s
+> >> a key into some mapping structure. Probably not super fast, but the us=
+er
+> >> should not care.
+> >
+> > Then we'll have to remove `try_from_foreign`.
 >
-> OK.
->
->> [...]
->>
->>> +/// Set the module parameter from a string.
->>> +///
->>> +/// Used to set the parameter value at kernel initialization, when loading
->>> +/// the module or when set through `sysfs`.
->>> +///
->>> +/// See `struct kernel_param_ops.set`.
->>> +///
->>> +/// # Safety
->>> +///
->>> +/// - If `val` is non-null then it must point to a valid null-terminated string.
->>> +///   The `arg` field of `param` must be an instance of `T`.
->>
->> This sentence is conveying the same (or at least similar) requirement as
->> the bullet point below.
->
-> Yes, you are right. At any rate the wording is wrong, a pointer cannot
-> "be an instance", it can point to one.
->
->>
->>> +/// - `param.arg` must be a pointer to valid `*mut T` as set up by the
->>> +///   [`module!`] macro.
->>> +///
->>> +/// # Invariants
->>> +///
->>> +/// Currently, we only support read-only parameters that are not readable
->>> +/// from `sysfs`. Thus, this function is only called at kernel
->>> +/// initialization time, or at module load time, and we have exclusive
->>> +/// access to the parameter for the duration of the function.
->>
->> Why is this an Invariants section?
->
-> Looks like a mistake, I'll change it to "# Note".
->
->>
->>> +///
->>> +/// [`module!`]: macros::module
->>> +unsafe extern "C" fn set_param<T>(
->>> +    val: *const kernel::ffi::c_char,
->>> +    param: *const crate::bindings::kernel_param,
->>> +) -> core::ffi::c_int
->>> +where
->>> +    T: ModuleParam,
->>> +{
->>> +    // NOTE: If we start supporting arguments without values, val _is_ allowed
->>> +    // to be null here.
->>> +    if val.is_null() {
->>> +        // TODO: Use pr_warn_once available.
->>> +        crate::pr_warn!("Null pointer passed to `module_param::set_param`");
->>> +        return EINVAL.to_errno();
->>> +    }
->>> +
->>> +    // SAFETY: By function safety requirement, val is non-null and
->>> +    // null-terminated. By C API contract, `val` is live and valid for reads
->>> +    // for the duration of this function.
->>
->> We shouldn't mention "C API contract" here and move the liveness
->> requirement to the safety requirements of the function. Or change the
->> safety requirements for this function to only be called from some
->> specific C API.
->
-> OK.
->
->>
->>> +    let arg = unsafe { CStr::from_char_ptr(val) };
->>> +
->>> +    crate::error::from_result(|| {
->>> +        let new_value = T::try_from_param_arg(arg)?;
->>> +
->>> +        // SAFETY: `param` is guaranteed to be valid by C API contract
->>> +        // and `arg` is guaranteed to point to an instance of `T`.
->>
->> Ditto.
->
-> OK.
->
->>
->>> +        let old_value = unsafe { (*param).__bindgen_anon_1.arg as *mut T };
->>> +
->>> +        // SAFETY: `old_value` is valid for writes, as we have exclusive
->>> +        // access. `old_value` is pointing to an initialized static, and
->>> +        // so it is properly initialized.
->>
->> Why do we have exclusive access? Should be in the safety requirements.
->
-> Will add this.
->
->>
->>> +        unsafe { *old_value = new_value };
->>> +        Ok(0)
->>> +    })
->>> +}
->>
->> [...]
->>
->>> +#[doc(hidden)]
->>> +#[macro_export]
->>> +/// Generate a static [`kernel_param_ops`](srctree/include/linux/moduleparam.h) struct.
->>> +///
->>> +/// # Examples
->>> +///
->>> +/// ```ignore
->>> +/// make_param_ops!(
->>> +///     /// Documentation for new param ops.
->>> +///     PARAM_OPS_MYTYPE, // Name for the static.
->>> +///     MyType // A type which implements [`ModuleParam`].
->>> +/// );
->>> +/// ```
->>> +macro_rules! make_param_ops {
->>> +    ($ops:ident, $ty:ty) => {
->>> +        ///
->>
->> Spurious newline?
->
-> Will remove.
->
->>
->>> +        /// Static [`kernel_param_ops`](srctree/include/linux/moduleparam.h)
->>> +        /// struct generated by `make_param_ops`
->>
->> Is it useful for this fact to be in the docs? I'd remove it.
->
-> OK.
->
+> Oh, I see. OK, it is a safety requirement. Should I just add it to this p=
+atch?
 
-Clippy thinks it is useful:
-
-    error: missing documentation for a static
-      --> /home/aeh/src/linux-rust/module-params/rust/kernel/module_param.rs:182:9
-        |
-    182 |         pub static $ops: $crate::bindings::kernel_param_ops = $crate::bindings::kernel_param_ops {
-        |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    ...
-    191 | make_param_ops!(PARAM_OPS_I8, i8);
-        | --------------------------------- in this macro invocation
-        |
-
-So either we need to `#[allow(missing_docs)]` or just add the line back. What do you prefer?
-
-
-Best regards,
-Andreas Hindborg
-
-
+Sure, this patch is fine.
