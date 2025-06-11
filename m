@@ -1,215 +1,412 @@
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013008.outbound.protection.outlook.com [40.107.162.8])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F26C2BB04
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.8
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749653576; cv=fail; b=kQii2lMmthhm0M7W1gRSH2TDoGc4Hf8zBb2ut+8gK3AFvgkMMRZDIbRWzMc+o2fmEJ66iRm7SBg9Le3A56QkjmeE91rcmlPTcH7OA5WZym+Dd8m/HR5GQA78wEkcLPinQS7vGF7F9AZLtXCTGS8cS5Noh0lUmFP9iml09T+5MYI=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749653576; c=relaxed/simple;
-	bh=0wkYGggt98fsBtsKfHIKc5dW0ls5rEXGR8I5gBDItDA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=IABi0dEVkox2DLrdn6JNqrzVtNGf4GDomoY+GvCJfnK49EPE4T0s9i/7DNwKodOOUZyn1VlN3x6ii4OgveHtrAGqnTm2rEr4Y/EDJPHCSM/tcO6uTFBjJ4jTN4N4jafIZf6Edv07qvOBci4O4TsqWhleuN2b2BffM82FwgCStl4=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=FVlVPuR5; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=FVlVPuR5; arc=fail smtp.client-ip=40.107.162.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D902D280CC8
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749653604; cv=none; b=aPsphAHTfTHy15mKYE6ffwfHKcxZ++PZuFz7Gn88BulkFSmCeTVXH8WXV6LrZxEzi/dsSJvq3l9HYmD+/FY6SaEmIVFQaJCe4yO0rfAwxllb1OlPceyxmdyX/THJYdKjpwxT0xXGYdrLruyncW3ZhHYOubTq9KnLTlBq6+NrhlY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749653604; c=relaxed/simple;
+	bh=z/i4/E5DOr+PEti0Bz8z+s8pDPkNo/Hyhatgsrlrrgw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X3G6v7vJBDpblwXBUPB3y6KxePaqssLfW5ghheWC5uJO1AkHVby57SoKPWcfselzAygD3R6yN3WUcqQMxPcn2UpLxPVNmq0eX04lqsxVV04iIZRMiygfpRXPpTdTeXPDTt63eWYX5+VZliva22HgIHcfGQzDhuYtzxSumCnZO3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cFbdiKu3; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="FVlVPuR5";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="FVlVPuR5"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=FSsOfgSFVFIQO1Sd8qTnaZHMJ1ffi/CQDT4sDeNbLq+el5HO4YcB1ySG4GLCNF0Ph3o+mWDuVo1PddnCWqIf0b0xRH2TqI5fuIJf0Rus3K0W5/UevltpujEuPzvLvCsgp5EmBrVh6hWem30brdDrshe6ajFIGAPyMbBnCZ6+HGM9RG65is1Q0H9CppHoJIgIra3JT54ZVSewSLQlqgIlhJn/EDhzQdvOA2+scvKkLvZVMySh9mb2B+/OGuFYTtz8xoGSOrI874FK95bI5/pwcvq5L6DJmhkx25cWZl9kGcH40Frv3moUuO0DwEwznc4begxJUyrZHS4/j8MwM1tOiw==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XQ9i5heX7xs1cLLLZ/wfxqSkA4VcTN41kybJY2ai8gw=;
- b=Aw9qSbA7jcf3L7X3+yltSoF+vdidMACdy4hVh/UfTDveUTyFlpTe+rnayyW/ZrW8Wd4o8Ejr83Ie0EuF19DaVsd3usq2jplk5ktb87YiPlv3sq+X6kh4XZn8cMOYAGtWg9B3yAfNzemGLhsYBi7GxKfuFL3GiqToc8cSsQKr3shjP+pQNZD8ls3KJJoOTh2rKBuVvPs8iJR1nn0xJjmCxXrWKhMa2TNNwDyg3XCcTurSs6VyGvkkEg1w3/e1Hc2CXL8/k2xyobbl2Oo+S5T1Xf7fK+0nF6t+G9xdn9d/al6m98z9q8LC2LISJvuWnYjqeds4B1jdFcLEYpkn0+Ysyw==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 4.158.2.129) smtp.rcpttodomain=kernel.org smtp.mailfrom=arm.com; dmarc=pass
- (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
- (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XQ9i5heX7xs1cLLLZ/wfxqSkA4VcTN41kybJY2ai8gw=;
- b=FVlVPuR5CrDCPoo9+pRz0nbFjQ5w7/I97kqBbGlAMkFl++Z+n+n2n4MxfqpOXSPPCFQo+4JAHz1QYNfr5jPn7WojHvBGz+3cEpdT01vtYDiOQ9W+Qa33vo758shSlv85NJfKVts/RjZ2BqvnOAAA/c8Z/YaRV/ZobJV3iRLVQ6E=
-Received: from AS4P191CA0017.EURP191.PROD.OUTLOOK.COM (2603:10a6:20b:5d9::7)
- by DU0PR08MB7905.eurprd08.prod.outlook.com (2603:10a6:10:3b3::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.27; Wed, 11 Jun
- 2025 14:52:47 +0000
-Received: from AM3PEPF0000A78E.eurprd04.prod.outlook.com
- (2603:10a6:20b:5d9:cafe::8f) by AS4P191CA0017.outlook.office365.com
- (2603:10a6:20b:5d9::7) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.19 via Frontend Transport; Wed,
- 11 Jun 2025 14:52:47 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
- client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
-Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- AM3PEPF0000A78E.mail.protection.outlook.com (10.167.16.117) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.15
- via Frontend Transport; Wed, 11 Jun 2025 14:52:47 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sJHp9A1fEWAwMXaZlB4OZqFGtZd51nEAuF2byxX0ixd2iBjMIGF3WFnmbIR+aZybOU33LrMUnCPd4lOJYeRLlkTxh7tykY1V4bmDgCqVdpKeGawJcY7a5cqym9teMB1HSMe23ORAFIhmXYWuGKPlpmCdfpWYTAVROh964TKKbfek2ThRl+7YnP+MKyc7M+gxTVT72A2M7PJ2sQLVI257c7jnREAGgL753dM8OgEkaXRcdeM/IZRZ9KXfAN/VhCGAqv6zO4NpSc1hdVfP9SmwSPRi/nHm7mEYW5/3HGlFofiO/bMtw+4O2+QSJ08ZnHCv1LUo4QdKieLqDJ8lO8fKSQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XQ9i5heX7xs1cLLLZ/wfxqSkA4VcTN41kybJY2ai8gw=;
- b=H42k208UTvcnePW4j1mkcNpoSXejTeRgXhGOqVWyzP5I2HILBQ0SpLmZdCz8bJaXxnbKOrmRLhXXDt6+7FQh0qJwDEL5g0aN5YV6h3y/SOY1EFIlcSr7r3Qkl71tbugxrvTOPPBSU6r80eSZt/81hjJyjN4H0zozDPgD6RNoPbMa5XtiQY1J1uq59+iEi/sJNerDlRjP3utmoau8PUqyUQ1KBlu8lVNyfJ+lyPg0WLMlFEtKs+2yPRLi++C9BN1qQB7oRR4BeA1rp6m6XUmkdoljr2WvsW6vyMqjQUQWxCivMjpCRCi52nf/ZVxGesL9p2gG3d0nq7zpT+aHjAFEYw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XQ9i5heX7xs1cLLLZ/wfxqSkA4VcTN41kybJY2ai8gw=;
- b=FVlVPuR5CrDCPoo9+pRz0nbFjQ5w7/I97kqBbGlAMkFl++Z+n+n2n4MxfqpOXSPPCFQo+4JAHz1QYNfr5jPn7WojHvBGz+3cEpdT01vtYDiOQ9W+Qa33vo758shSlv85NJfKVts/RjZ2BqvnOAAA/c8Z/YaRV/ZobJV3iRLVQ6E=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
- (2603:10a6:150:163::20) by AS8PR08MB8682.eurprd08.prod.outlook.com
- (2603:10a6:20b:564::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.27; Wed, 11 Jun
- 2025 14:52:15 +0000
-Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
- ([fe80::d430:4ef9:b30b:c739]) by GV1PR08MB10521.eurprd08.prod.outlook.com
- ([fe80::d430:4ef9:b30b:c739%7]) with mapi id 15.20.8835.018; Wed, 11 Jun 2025
- 14:52:15 +0000
-Date: Wed, 11 Jun 2025 15:52:12 +0100
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: catalin.marinas@arm.com, will@kernel.org, maz@kernel.org,
-	oliver.upton@linux.dev, ardb@kernel.org, frederic@kernel.org,
-	james.morse@arm.com, joey.gouly@arm.com,
-	scott@os.amperecomputing.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] arm64: cpufeature: add FEAT_LSUI
-Message-ID: <aEmYHMoaW1sCdqyN@e129823.arm.com>
-References: <20250611104916.10636-1-yeoreum.yun@arm.com>
- <20250611104916.10636-2-yeoreum.yun@arm.com>
- <ba043c27-710f-4f0b-bbcb-64175bad5df7@sirena.org.uk>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ba043c27-710f-4f0b-bbcb-64175bad5df7@sirena.org.uk>
-X-ClientProxiedBy: LNXP265CA0079.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:76::19) To GV1PR08MB10521.eurprd08.prod.outlook.com
- (2603:10a6:150:163::20)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cFbdiKu3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749653601;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lf9xzKCZ2Qn0juoDOpkczXBo7DHMysvOR4TsAgqr+cg=;
+	b=cFbdiKu344+g9i5gJ/a8qI1Bdm6kxZL5syc1FMNJ9+NzTIY26QiwUOomjdVyhdDNIq8PWa
+	WFPGItWd2PhmjjI4GZCmHfenBBd1NlSSkLHRK9ySJ1+QlEoFrluBJ23ZzPMjAFfRPdM8VY
+	dKTkK8zOXRL5ajXfMW7F3XD/bSf266I=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-441-KUg9oz4MOECje_c46v3jaA-1; Wed, 11 Jun 2025 10:53:18 -0400
+X-MC-Unique: KUg9oz4MOECje_c46v3jaA-1
+X-Mimecast-MFC-AGG-ID: KUg9oz4MOECje_c46v3jaA_1749653598
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7caef20a528so1658197485a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:53:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749653598; x=1750258398;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lf9xzKCZ2Qn0juoDOpkczXBo7DHMysvOR4TsAgqr+cg=;
+        b=RJF7q9LC7CpeJ9ALHdQJmhiObQSuq6GnlGhysCr4uGQU2VaAOMv+NQT1gZMPtFriFk
+         c4zHi32fe/+/uKemfO9ke2HSfiCM0hbMNZlIlguRJc8TAlxhYcUosp6XTzi2qucmsC+6
+         B0jSSSxKayw2LN7YWHybMRYRsoATVKcMhYnnlOoRlLIfyS7/ftN/lsaJRH5lNT6q/UL6
+         wSvcJM9KLoha0S9+l4MhyUue+XEvPRNdYdbFbs1SNuhsJlJmDij60nU8TqKH8cbpW4Vi
+         G6g9hHfcedSbNWJx5eNpWkcI3RoFGg9PcAwtosNDEVU82/0aVp1i14422Qd+1jgbv+GB
+         tKRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWXAJB3AVWeCmrLZ0D8UgzKHznWceqn2bym6Ska4cd1I3ySZAISCJ+XnZ4U6q25abhO2GYFYnRYjUI2czA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+R6Dvh2DkOeKSdVMbb+TQcifptXx6ix+VYcReOSKvkuZOFloG
+	BKK4WbZCtJ1e7lOkN4JhYb/PCL6wyc2bHVeIt2NQP8fhSOxDgHcVizSjMAtTlwFd/WNqlb2aLDF
+	/GJE4h54RnECJScIaflbey7PQfS+x+HlXZ7T9UVr4nNNTTa9smHdgekLUJs7krnUXyw==
+X-Gm-Gg: ASbGncv99MiUJXIZ8iQt1giQHgrd5G1Po4mlhovtHCWXWR+jQqc4G5VhEzjy4FS8CZx
+	8TjsL1A8HpG5I390JxQcvzHgJWdzLMOe4pKTRBAlZPqIDU68Ovr2/KMctb4IpMhNPcUO68X6CuT
+	8HHbkrXLxkCvpm1B7Qb12QJASmh9SU3/YsBgGWiuNNE6+rjAyqdMdF/i6Dg/x/ZODjA0HSfZigz
+	xMebDsa9mFWiCYpsOWQPKWgmg4DSXE8lEmh2rEUYKjttNzA6ca8HPP+rsFqU8UN8oM+VgsVdP4N
+	rbSvjSEsbz74w/9CxOnx3O86CpIl
+X-Received: by 2002:a05:620a:2984:b0:7ce:f3fd:cc69 with SMTP id af79cd13be357-7d3a9576ab1mr425909685a.19.1749653597746;
+        Wed, 11 Jun 2025 07:53:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHVvQXdBxvFGgQ4UAlmckh17KS2srASaNg+jQYfvx4Ww+gN7/Vyvgw8J9f72/KtbRIhgog87Q==
+X-Received: by 2002:a05:620a:2984:b0:7ce:f3fd:cc69 with SMTP id af79cd13be357-7d3a9576ab1mr425903885a.19.1749653597022;
+        Wed, 11 Jun 2025 07:53:17 -0700 (PDT)
+Received: from sgarzare-redhat ([193.207.148.235])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d25a61d725sm863276885a.88.2025.06.11.07.53.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 07:53:16 -0700 (PDT)
+Date: Wed, 11 Jun 2025 16:53:11 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Luigi Leonardi <leonardi@redhat.com>
+Cc: Michal Luczaj <mhal@rbox.co>, virtualization@lists.linux.dev, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Hyunwoo Kim <v4bel@theori.io>
+Subject: Re: [PATCH net-next v3] vsock/test: Add test for null ptr deref when
+ transport changes
+Message-ID: <zpc6pbabs5m5snrsfubtl3wp4eb64w4qwqosywp7tsmrfnba3j@ybkgg2cnhqec>
+References: <20250611-test_vsock-v3-1-8414a2d4df62@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	GV1PR08MB10521:EE_|AS8PR08MB8682:EE_|AM3PEPF0000A78E:EE_|DU0PR08MB7905:EE_
-X-MS-Office365-Filtering-Correlation-Id: 964452e7-58ea-4149-266a-08dda8f7a198
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info-Original:
- =?us-ascii?Q?w6KPS+JdZuynybfpHi+4fiXA9UkaVGj5Xw2bJjvOUMGlj5ajAyA0ESgus+m4?=
- =?us-ascii?Q?JKJE6CoSr5B3/zeTpx2riaMccxRNfEr5RZJhjDjWLy8tPMIXdoTRLpOBVzy6?=
- =?us-ascii?Q?r1cKLxUt1LQYor8sjJ3wErTPGDLU9XatopinUOWtZNj5wMHH4Mr4HlLZ3Dwg?=
- =?us-ascii?Q?N3VnaDnPqhB1t+q2EgBdG44IzbR3o3gx84YN2rQTjxTmovGDjw6OD/LXx7wE?=
- =?us-ascii?Q?Ci3MWp58k/zNfPSeT+5TkIqwMCNI5Dd71Uy+2I5a9ak4EBIlORo/sSriN8ln?=
- =?us-ascii?Q?RZV3xgkLqNJM21ai5hp9rGMiWpKbcpyX6ZV47cDD3GamXMyOcOPoEpfH3wT/?=
- =?us-ascii?Q?eOnKrtCVjAu0qNtgxNYlsTB6Yqq3QI/7gBxUPEDtl1GfNsPuGDAPZ3PoVoo7?=
- =?us-ascii?Q?X3haSvjcLT2uNJwe9OYkhgjZcFX/yhFA4ZQoB/sT4sk7YUGPF/kBr5fw2kiM?=
- =?us-ascii?Q?0V8BI9ioqyDc5wFcITQzNPdtucqV4OJL9l5UCRafgL6jsBOs/3DWoiapLXpY?=
- =?us-ascii?Q?Ty477YQ2iNE3XO2k5UFgh+mOnMTQ7OKE+BcuNTZC9vjNzQIiB4Nl6p8tOYU1?=
- =?us-ascii?Q?qbv7IdyF80kHWvll4Wa8C9M7uyYLXMsK7BEWrjXQovl7WPm5UnPZfFfGqibN?=
- =?us-ascii?Q?OtaKNZdU0Ox2zgELIsSCljNi+v6hiJimOZeA9oLnd3hdeJGLg6OO7WdkiS5+?=
- =?us-ascii?Q?jnCZFg5Dp2243xGeJwCmJ7sXaJd9NAcXr/+SlYV+NCRoROlgE62wl+H5MObl?=
- =?us-ascii?Q?/73rAHtWAaPVbuVGgKjj2wWGHDkamDhSZ04Gd6DG7odVP+ri4QQEfnfhOddU?=
- =?us-ascii?Q?noxcc25wEtIwJAtpjV2WyNOZBYPpMY9nJSbILp7OenxdYgdIf7spRESOkIPg?=
- =?us-ascii?Q?3+m0Wj3b1O8SStDBBIYHHoox2E4BJcbHdDA2ZxwE47zyvi3aIXWh4HqXlEZT?=
- =?us-ascii?Q?4i3xon9Z41zFMWim7P2ApdDESzobeple2mM2vPTFWDKFPNLaiJBDEI/Put3q?=
- =?us-ascii?Q?DyEpqpzkbrTBNKJpuY2UGUlGryoEoSjf0XBmn8ZSYvBLlePb2ovCAL0diRkm?=
- =?us-ascii?Q?awFGLHvZ4Z6a39LcCB2ER8RFDifwOIrtOUY7uhmtQXK9kW877LXRESyYYLn7?=
- =?us-ascii?Q?c6lA3S4M/lIC6IrdRM2T3oplUu0Ohu3z5s5RnxLyCIwCCSDjvpvEWY/JwDGX?=
- =?us-ascii?Q?RzAzlYGE6nmd8/NcKR9rK/M9/dwb/07uojTFbZK44C0eSfArWI01WlOLXiMB?=
- =?us-ascii?Q?Zv8FpEJipqlTRuQdP7xFEGZBV5T4LfklMKNEhNgg+M72vj/6Z16NFUWm93Hz?=
- =?us-ascii?Q?HGQFdirtoA45Cvhu+RFE0t8NkA4+NVF3mtyykrpmGyYKk3MAYAaFbgzDDBD2?=
- =?us-ascii?Q?z4Dx+HVOJyMx8Bg9HbSwUOnB/kWTrnTFT8eEKeHBrdjMqs3j+bt/0I5qofCs?=
- =?us-ascii?Q?6fHwFA/PucQ=3D?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB10521.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB8682
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- AM3PEPF0000A78E.eurprd04.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	9da4da84-750f-40c6-dc99-08dda8f78e23
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|376014|14060799003|82310400026|35042699022;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?gUXG0WI30e1MYaCcxX5Vt2aiXj8pNdqT2yT/Xfa32P+5n6y9B5zyWFTs1Oxs?=
- =?us-ascii?Q?boJm1uj2Ilueemu/kSi8a/V0+LfAN5MUkxd8PIX//jjZcD7hi5m2XKTEAuqt?=
- =?us-ascii?Q?SChHyQ25/HFdsqzCL0N9O9QVq390RJf4EE1mIkIscpOqQnltw2dqhDkexh2N?=
- =?us-ascii?Q?rp7SJ43llvd0dVPXzLLYZNwXBv9t35qqKTBKx4MuqthmPaMKUcH1yfZFUWJa?=
- =?us-ascii?Q?ns2fhKr7gfB3cC3QWt1sa4BBOuME4wNH1R9QsNjzSVK4oV8IIgZD2LqPQRQe?=
- =?us-ascii?Q?tt1+BVNHuAxmGzPDCUY6giy+ikC3tIZxPPVrCXdKMXMJ1bSTQxkUPtNPrUjT?=
- =?us-ascii?Q?rucLk6Nl5iXKT0aO1CRql4xVhCE3X5bSxvT8AO3mlgyyATUH8zNJY5fkHRyR?=
- =?us-ascii?Q?yWLu53ki5/uKjVtT8ChpIv5qpqmMgfp+2C3t0Rd2uXpZOMHvEQjW8ro0KEnM?=
- =?us-ascii?Q?n/T/EFuhwxszWGuysL61km5VuBqwXD3uXzTDujHQXSPcstMurvDIjDpg3/+D?=
- =?us-ascii?Q?9hqb6iZ40Sn6gdTIJtE2WNL5NNdzw1GJn64Ni3wzJ5/SXPmu/1Ki6J8G8kOx?=
- =?us-ascii?Q?nhNWJRQGzusUd9SEjaTPdl+NJJFGHeJAij753yiSwiimhyeCQgkCovSjk5CC?=
- =?us-ascii?Q?KBCs/bBOPxQigzMrMrnKP63TL9vq8zD41HNh59lo/UYQ6d7u/xWMYzMBOeY4?=
- =?us-ascii?Q?ucpj1TIpO/IpsGGJ6EdiPVnOChzk0T+jKagDAWsfvSS6mLcpJV8TZ9f/zugK?=
- =?us-ascii?Q?Vpq2pofJRv/2JIF0io7u9gtxKeUpzPAPsHdf5Y1XJuUsNUtfEk9bt1YQ0Fd8?=
- =?us-ascii?Q?BgwsWqG+VxGKJdCfEla0GYx0Ov4ghvrnTALayOv17ReXFXD+W5zBAErz20Fv?=
- =?us-ascii?Q?AZKosh6i5JHz1AA5KCOd87xbgTzaO+/6EYFz6KLQFMmcvKmohK/57l1Hy7MQ?=
- =?us-ascii?Q?quq6yuWTRqpKuVDUeGv7nkmX7/OlbjW5eh6cMjRdHc0KIfV2jlzYBR+g3YyJ?=
- =?us-ascii?Q?LOGT0AONVG5OFEHD9q5wKbtVrxIGK/k2T4S0IIRScyyctsc9KirjIQuU/G5j?=
- =?us-ascii?Q?xahLbl8tgZpUbKkrSbpIr6XQY0jI4o2mHzwnr3MBfYuIboGjbwFdS9k+4164?=
- =?us-ascii?Q?Oau7jGExZ9zMvL2KZ7ThR/C0wkgFwZ/tJEVp8ZnrHap/sG7PR2ka7YIHPjyz?=
- =?us-ascii?Q?xH9XqRFmfPUF51AoNyhLEWdjdGvMih8idZscB6XGszS/PEefk1hRU7ZTZ/7w?=
- =?us-ascii?Q?c8KfnGns770VWmbc0PCBlXN1u5Gat0wcAdGEfW2u0H7EvgSQFtiKI6pFC55b?=
- =?us-ascii?Q?yb9A3iIIUMctIamxt1WZGtepeX8PxczDsuYkINA4uLyCHFKvIQUJPLY7qHcH?=
- =?us-ascii?Q?J94N93ELlh2u8MwmUl5CPTEDK3RpDt5lJinV3MNsDA574rvJDZxuMkFoTVO8?=
- =?us-ascii?Q?TPNQC8JQwTNoHQzxEq2HbDJAABzAdgjBzerxNG6V3hD5sLqqggVnhxmYp93I?=
- =?us-ascii?Q?KoJj6cI+XPROY2sOsbNe7VFjISdmkfDAp7oR?=
-X-Forefront-Antispam-Report:
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(14060799003)(82310400026)(35042699022);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2025 14:52:47.6074
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 964452e7-58ea-4149-266a-08dda8f7a198
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AM3PEPF0000A78E.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR08MB7905
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250611-test_vsock-v3-1-8414a2d4df62@redhat.com>
 
-Hi Mark,
-
-> On Wed, Jun 11, 2025 at 11:49:11AM +0100, Yeoreum Yun wrote:
+On Wed, Jun 11, 2025 at 04:07:25PM +0200, Luigi Leonardi wrote:
+>Add a new test to ensure that when the transport changes a null pointer
+>dereference does not occur. The bug was reported upstream [1] and fixed
+>with commit 2cb7c756f605 ("vsock/virtio: discard packets if the
+>transport changes").
 >
-> > index 10effd4cff6b..d625f4987aa7 100644
-> > --- a/arch/arm64/tools/cpucaps
-> > +++ b/arch/arm64/tools/cpucaps
-> > @@ -59,6 +59,7 @@ HAS_TLB_RANGE
-> >  HAS_VA52
-> >  HAS_VIRT_HOST_EXTN
-> >  HAS_WFXT
-> > +HAS_LSUI
-> >  HAFT
-> >  HW_DBM
-> >  KVM_HVHE
+>KASAN: null-ptr-deref in range [0x0000000000000060-0x0000000000000067]
+>CPU: 2 UID: 0 PID: 463 Comm: kworker/2:3 Not tainted
+>Workqueue: vsock-loopback vsock_loopback_work
+>RIP: 0010:vsock_stream_has_data+0x44/0x70
+>Call Trace:
+> virtio_transport_do_close+0x68/0x1a0
+> virtio_transport_recv_pkt+0x1045/0x2ae4
+> vsock_loopback_work+0x27d/0x3f0
+> process_one_work+0x846/0x1420
+> worker_thread+0x5b3/0xf80
+> kthread+0x35a/0x700
+> ret_from_fork+0x2d/0x70
+> ret_from_fork_asm+0x1a/0x30
 >
-> This file should be sorted to reduce spurious conflicts.
+>Note that this test may not fail in a kernel without the fix, but it may
+>hang on the client side if it triggers a kernel oops.
+>
+>This works by creating a socket, trying to connect to a server, and then
+>executing a second connect operation on the same socket but to a
+>different CID (0). This triggers a transport change. If the connect
+>operation is interrupted by a signal, this could cause a null-ptr-deref.
+>
+>Since this bug is non-deterministic, we need to try several times. It
+>is reasonable to assume that the bug will show up within the timeout
+>period.
+>
+>If there is a G2H transport loaded in the system, the bug is not
+>triggered and this test will always pass.
 
-Thanks. I'll fix this.
+Should we re-use what Michal is doing in 
+https://lore.kernel.org/virtualization/20250528-vsock-test-inc-cov-v2-0-8f655b40d57c@rbox.co/
+to print a warning?
 
---
-Sincerely,
-Yeoreum Yun
+>
+>[1]https://lore.kernel.org/netdev/Z2LvdTTQR7dBmPb5@v4bel-B760M-AORUS-ELITE-AX/
+>
+>Suggested-by: Hyunwoo Kim <v4bel@theori.io>
+>Suggested-by: Michal Luczaj <mhal@rbox.co>
+>Signed-off-by: Luigi Leonardi <leonardi@redhat.com>
+>---
+>This series introduces a new test that checks for a null pointer
+>dereference that may happen when there is a transport change[1]. This
+>bug was fixed in [2].
+>
+>Note that this test *cannot* fail, it hangs if it triggers a kernel
+>oops. The intended use-case is to run it and then check if there is any
+>oops in the dmesg.
+>
+>This test is based on Hyunwoo Kim's[3] and Michal's python
+>reproducers[4].
+>
+>[1]https://lore.kernel.org/netdev/Z2LvdTTQR7dBmPb5@v4bel-B760M-AORUS-ELITE-AX/
+>[2]https://lore.kernel.org/netdev/20250110083511.30419-1-sgarzare@redhat.com/
+>[3]https://lore.kernel.org/netdev/Z2LvdTTQR7dBmPb5@v4bel-B760M-AORUS-ELITE-AX/#t
+>[4]https://lore.kernel.org/netdev/2b3062e3-bdaa-4c94-a3c0-2930595b9670@rbox.co/
+>---
+>Sorry, this took waaay longer than expected.
+>
+>Changes in v3:
+>Addressed Stefano's and Michal's comments:
+>    - Added the splat text to the commit commessage.
+>    - Introduced commit hash that fixes the bug.
+>    - Not using perror anymore on pthread_* functions.
+>    - Listener is just created once.
+>
+>- Link to v2:
+>https://lore.kernel.org/r/20250314-test_vsock-v2-1-3c0a1d878a6d@redhat.com
+>
+>Changes in v2:
+>- Addressed Stefano's comments:
+>    - Timeout is now using current_nsec()
+>    - Check for return values
+>    - Style issues
+>- Added Hyunwoo Kim to Suggested-by
+>- Link to v1: https://lore.kernel.org/r/20250306-test_vsock-v1-0-0320b5accf92@redhat.com
+>---
+> tools/testing/vsock/Makefile     |   1 +
+> tools/testing/vsock/vsock_test.c | 169 +++++++++++++++++++++++++++++++++++++++
+> 2 files changed, 170 insertions(+)
+>
+>diff --git a/tools/testing/vsock/Makefile b/tools/testing/vsock/Makefile
+>index 6e0b4e95e230500f99bb9c74350701a037ecd198..88211fd132d23ecdfd56ab0815580a237889e7f2 100644
+>--- a/tools/testing/vsock/Makefile
+>+++ b/tools/testing/vsock/Makefile
+>@@ -5,6 +5,7 @@ vsock_test: vsock_test.o vsock_test_zerocopy.o timeout.o control.o util.o msg_ze
+> vsock_diag_test: vsock_diag_test.o timeout.o control.o util.o
+> vsock_perf: vsock_perf.o msg_zerocopy_common.o
+>
+>+vsock_test: LDLIBS = -lpthread
+> vsock_uring_test: LDLIBS = -luring
+> vsock_uring_test: control.o util.o vsock_uring_test.o timeout.o msg_zerocopy_common.o
+>
+>diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
+>index f669baaa0dca3bebc678d00eafa80857d1f0fdd6..1aed483e7e622d3623be07fcd7fe4295fcfce230 100644
+>--- a/tools/testing/vsock/vsock_test.c
+>+++ b/tools/testing/vsock/vsock_test.c
+>@@ -22,6 +22,8 @@
+> #include <signal.h>
+> #include <sys/ioctl.h>
+> #include <linux/time64.h>
+>+#include <pthread.h>
+>+#include <fcntl.h>
+>
+> #include "vsock_test_zerocopy.h"
+> #include "timeout.h"
+>@@ -1811,6 +1813,168 @@ static void test_stream_connect_retry_server(const struct test_opts *opts)
+> 	close(fd);
+> }
+>
+>+#define TRANSPORT_CHANGE_TIMEOUT 2 /* seconds */
+>+
+>+static void *test_stream_transport_change_thread(void *vargp)
+>+{
+>+	pid_t *pid = (pid_t *)vargp;
+>+	int ret;
+>+
+>+	/* We want this thread to terminate as soon as possible */
+>+	ret = pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+>+	if (ret) {
+>+		fprintf(stderr, "pthread_setcanceltype: %d\n", ret);
+>+		exit(EXIT_FAILURE);
+>+	}
+>+
+>+	while (true) {
+>+		if (kill(*pid, SIGUSR1) < 0) {
+>+			perror("kill");
+>+			exit(EXIT_FAILURE);
+>+		}
+>+	}
+>+	return NULL;
+>+}
+>+
+>+static void test_transport_change_signal_handler(int signal)
+>+{
+>+	/* We need a custom handler for SIGUSR1 as the default one terminates the process. */
+>+}
+>+
+>+static void test_stream_transport_change_client(const struct test_opts *opts)
+>+{
+>+	__sighandler_t old_handler;
+>+	pid_t pid = getpid();
+>+	pthread_t thread_id;
+>+	time_t tout;
+>+	int ret;
+>+
+>+	old_handler = signal(SIGUSR1, test_transport_change_signal_handler);
+>+	if (old_handler == SIG_ERR) {
+>+		perror("signal");
+>+		exit(EXIT_FAILURE);
+>+	}
+>+
+>+	ret = pthread_create(&thread_id, NULL, test_stream_transport_change_thread, &pid);
+>+	if (ret) {
+>+		fprintf(stderr, "pthread_create: %d\n", ret);
+>+		exit(EXIT_FAILURE);
+>+	}
+>+
+>+	control_expectln("LISTENING");
+>+
+>+	tout = current_nsec() + TRANSPORT_CHANGE_TIMEOUT * NSEC_PER_SEC;
+>+	do {
+>+		struct sockaddr_vm sa = {
+>+			.svm_family = AF_VSOCK,
+>+			.svm_cid = opts->peer_cid,
+>+			.svm_port = opts->peer_port,
+>+		};
+>+		int s;
+>+
+>+		s = socket(AF_VSOCK, SOCK_STREAM, 0);
+>+		if (s < 0) {
+>+			perror("socket");
+>+			exit(EXIT_FAILURE);
+>+		}
+>+
+>+		ret = connect(s, (struct sockaddr *)&sa, sizeof(sa));
+>+		/* The connect can fail due to signals coming from the thread.
+>+		 * or because the receiver connection queue is full.
+>+		 * Ignoring also the latter case because there is no way
+>+		 * of synchronizing client's connect and server's accept when
+>+		 * connect(s) are constantly being interrupted by signals.
+>+		 */
+>+		if (ret == -1 && (errno != EINTR && errno != ECONNRESET)) {
+>+			perror("connect");
+>+			exit(EXIT_FAILURE);
+>+		}
+>+
+>+		/* Set CID to 0 cause a transport change. */
+>+		sa.svm_cid = 0;
+>+		/* This connect must fail. No-one listening on CID 0
+>+		 * This connect can also be interrupted, ignore this error.
+>+		 */
+>+		ret = connect(s, (struct sockaddr *)&sa, sizeof(sa));
+>+		if (ret != -1 && errno != EINTR) {
+
+Should this condition be `ret != -1 || errno != EINTR` ?
+
+
+>+			fprintf(stderr,
+>+				"connect: expected a failure because of unused CID: %d\n", errno);
+>+			exit(EXIT_FAILURE);
+>+		}
+>+
+>+		close(s);
+>+
+>+		control_writeulong(CONTROL_CONTINUE);
+>+
+>+	} while (current_nsec() < tout);
+>+
+>+	control_writeulong(CONTROL_DONE);
+>+
+>+	ret = pthread_cancel(thread_id);
+>+	if (ret) {
+>+		fprintf(stderr, "pthread_cancel: %d\n", ret);
+>+		exit(EXIT_FAILURE);
+>+	}
+>+
+>+	/* Wait for the thread to terminate */
+>+	ret = pthread_join(thread_id, NULL);
+>+	if (ret) {
+>+		fprintf(stderr, "pthread_join: %d\n", ret);
+>+		exit(EXIT_FAILURE);
+>+	}
+>+
+>+	/* Restore the old handler */
+>+	if (signal(SIGUSR1, old_handler) == SIG_ERR) {
+>+		perror("signal");
+>+		exit(EXIT_FAILURE);
+>+	}
+>+}
+>+
+>+static void test_stream_transport_change_server(const struct test_opts *opts)
+>+{
+>+	int ret, s;
+>+
+>+	s = vsock_stream_listen(VMADDR_CID_ANY, opts->peer_port);
+>+
+>+	/* Set the socket to be nonblocking because connects that have been interrupted
+>+	 * (EINTR) can fill the receiver's accept queue anyway, leading to connect failure.
+>+	 * As of today (6.15) in such situation there is no way to understand, from the
+>+	 * client side, if the connection has been queued in the server or not.
+>+	 */
+>+	ret = fcntl(s, F_SETFL, fcntl(s, F_GETFL, 0) | O_NONBLOCK);
+>+	if (ret < 0) {
+
+nit: If you need to resend, I'd remove `ret` and check fcntl directly:
+	if (fcntl(...) < 0) {
+
+>+		perror("fcntl");
+>+		exit(EXIT_FAILURE);
+>+	}
+>+	control_writeln("LISTENING");
+>+
+>+	while (control_readulong() == CONTROL_CONTINUE) {
+>+		struct sockaddr_vm sa_client;
+>+		socklen_t socklen_client = sizeof(sa_client);
+>+
+>+		/* Must accept the connection, otherwise the `listen`
+>+		 * queue will fill up and new connections will fail.
+>+		 * There can be more than one queued connection,
+>+		 * clear them all.
+>+		 */
+>+		while (true) {
+>+			int client = accept(s, (struct sockaddr *)&sa_client, &socklen_client);
+>+
+>+			if (client < 0 && errno != EAGAIN) {
+>+				perror("accept");
+>+				exit(EXIT_FAILURE);
+>+			} else if (client > 0) {
+
+0 in theory is a valid fd, so here we should check `client >= 0`.
+
+>+				close(client);
+>+			}
+>+
+>+			if (errno == EAGAIN)
+>+				break;
+
+I think you can refactor in this way:
+			if (client < 0) {
+				if (errno == EAGAIN)
+					break;
+
+				perror("accept");
+				exit(EXIT_FAILURE);
+			}
+
+			close(client);
+
+Thanks,
+Stefano
+
+>+		}
+>+	}
+>+
+>+	close(s);
+>+}
+>+
+> static void test_stream_linger_client(const struct test_opts *opts)
+> {
+> 	int fd;
+>@@ -2051,6 +2215,11 @@ static struct test_case test_cases[] = {
+> 		.run_client = test_stream_nolinger_client,
+> 		.run_server = test_stream_nolinger_server,
+> 	},
+>+	{
+>+		.name = "SOCK_STREAM transport change null-ptr-deref",
+>+		.run_client = test_stream_transport_change_client,
+>+		.run_server = test_stream_transport_change_server,
+>+	},
+> 	{},
+> };
+>
+>
+>---
+>base-commit: 5abc7438f1e9d62e91ad775cc83c9594c48d2282
+>change-id: 20250306-test_vsock-3e77a9c7a245
+>
+>Best regards,
+>-- 
+>Luigi Leonardi <leonardi@redhat.com>
+>
+
