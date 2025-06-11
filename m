@@ -1,121 +1,126 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CCD1182B4
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 03:47:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38A7D182B4;
+	Wed, 11 Jun 2025 03:48:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749613668; cv=none; b=GTvJTlxIAJePsdUd9nqNmRSIO+Su7Igc6+AxeXtWzi9xuNcRNjgn6LU2VYjpceHMwUWoEVpceBv7JdBXw5Wisma2Y2SUMHNcy8fQwWBH0MoBv4rVuDWGbwb3z2L7xipZl4f1CVPAR8viVJ0TnmkbohhQAm6gq4w4wnnOcmChEN8=
+	t=1749613741; cv=none; b=PNtifvpALCfxSV4teZKI/JC99nu1ajjLDkZIs7LZa2P974RGyoIAqANcC3ocQBxXITpAxsFoUUlAJLdB+By4ruji4KTsXwKyORxK4QX3IvwP/2KyXgha+WFc6lLDazkx6djH8nbMP6/U1+oP1/6tIRUvHumc3zc92x4POiPKMic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749613668; c=relaxed/simple;
-	bh=RLtUcIQJcfNe31BGVjPU6Llz02bUwQhES1+Od36btWE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o8PsmbmF/3QHIPfJ/u/uHyPj890TrWqftWjlgKXQcObukwGemCwAUdTAyspN1vQn5RyF7GRjFQS/6HBhE6DJj2dpNMjgsnr/4v45iy3721NF8n/dfmsweP1Py3DIptVPFI5XWvGk/cZOfFcOlnXsIDxev8EYS10ZHslenwevAjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KuVeWYfp; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1749613741; c=relaxed/simple;
+	bh=LSbcy9Fqxg5HNHH4TDFafpQj4yGx1SwPwfWd9FU8XCk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LTPs19vZrqXT6zyEJACGP3Tx7BeOCQqb5t1/1DDzIHaepO+m+CUm6IJlHQGhUc7W3QbhNczsxxo+x5VSnnRW82zuR1o5DJDF++qScKlul9lrPWH2QAHwevftODdRye3HC9AmMj6FUohxwlpaMiWOaKC+fMkal9gz3NrhH677UqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PzWE/LwE; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KuVeWYfp"
-Date: Tue, 10 Jun 2025 23:47:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749613664;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xvpnQoqgyLnzKDoMRY0NMalAYqmO3bg2+7Ckkfaxpf0=;
-	b=KuVeWYfp9oMxP80mFfGk0WXdDsLCgRN3km2DUOXVDerGKl7A/kplaxVvPACnnEe9PUDQ5u
-	m6tk6Rq973H5A980GqGmm379Jl7pTGkppi6itYpLImupWjHiS8UawG62U09CPIfGNmxqTe
-	NxXnQE44v+KXCZJpr3x5hV4EfSur+74=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Casey Chen <cachen@purestorage.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, surenb@google.com, 
-	corbet@lwn.net, dennis@kernel.org, tj@kernel.org, cl@gentwo.org, vbabka@suse.cz, 
-	mhocko@suse.com, jackmanb@google.com, hannes@cmpxchg.org, ziy@nvidia.com, 
-	rientjes@google.com, roman.gushchin@linux.dev, harry.yoo@oracle.com, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	yzhong@purestorage.com
-Subject: Re: [PATCH] alloc_tag: add per-NUMA node stats
-Message-ID: <z4wctxhaajq7r3i6ste2fkeglj527ahk3kkb6jbhlics7mjqto@bgsmpm2qcus7>
-References: <20250610233053.973796-1-cachen@purestorage.com>
- <20250610182155.36090c78124e1f60f2959d8e@linux-foundation.org>
- <CALCePG318ATYRH-5G+OTY_utre57EwTe3EuP4BLuXMaXPJK9gA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PzWE/LwE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749613740; x=1781149740;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=LSbcy9Fqxg5HNHH4TDFafpQj4yGx1SwPwfWd9FU8XCk=;
+  b=PzWE/LwE7dwAihJ5sVFwfpwNu6YN6UUdT+XUNWu/odoxRVD3RACZ9i5Z
+   7biMbMIWmf7wIonf8o9vL5YGo2/LkUXRM+8/VpwGFmL2MLrHN1xF+Rexx
+   CVNDb+yT7WMY8qV9lZNLeDEnH3Q8aEO120DT4Jc2/e9H3bkR4bM4pzoM9
+   Dr6NHRulQ3HJeGyQBvOW55OPrlkODQizMZKqmf/HhhkYMO67BP1rEkq8a
+   xeaBEHbFFToNKoiUH/P54VVtbN1k1KhfgRMKgVEyF2535/95bkTlYpIHF
+   UN7fIXsWFvvO/GWVP+g74XsUYVr7sUTB/ZeS94FWUDJD+82ijea2meZ9k
+   w==;
+X-CSE-ConnectionGUID: hYJ7TwKuSwuiKf7DYQWZww==
+X-CSE-MsgGUID: XA5KlGFfSLGZDjDzhBl0dg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="63095717"
+X-IronPort-AV: E=Sophos;i="6.16,226,1744095600"; 
+   d="scan'208";a="63095717"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 20:49:00 -0700
+X-CSE-ConnectionGUID: FEetEAYVRjapRGsjrhqHNg==
+X-CSE-MsgGUID: 2zghLxYlSr+uR+cfcSSCCQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,226,1744095600"; 
+   d="scan'208";a="150884020"
+Received: from emr.sh.intel.com ([10.112.229.56])
+  by fmviesa003.fm.intel.com with ESMTP; 10 Jun 2025 20:48:57 -0700
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jim Mattson <jmattson@google.com>,
+	Mingwei Zhang <mizhang@google.com>,
+	Zide Chen <zide.chen@intel.com>,
+	Das Sandipan <Sandipan.Das@amd.com>,
+	Shukla Manali <Manali.Shukla@amd.com>,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [kvm-unit-tests PATCH] x86/pmu: Verify all available GP counters in check_counters_many()
+Date: Wed, 11 Jun 2025 07:58:42 +0000
+Message-ID: <20250611075842.20959-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALCePG318ATYRH-5G+OTY_utre57EwTe3EuP4BLuXMaXPJK9gA@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
 
-On Tue, Jun 10, 2025 at 06:33:58PM -0700, Casey Chen wrote:
-> On Tue, Jun 10, 2025 at 6:21 PM Andrew Morton <akpm@linux-foundation.org> wrote:
-> >
-> > On Tue, 10 Jun 2025 17:30:53 -0600 Casey Chen <cachen@purestorage.com> wrote:
-> >
-> > > Add support for tracking per-NUMA node statistics in /proc/allocinfo.
-> > > Previously, each alloc_tag had a single set of counters (bytes and
-> > > calls), aggregated across all CPUs. With this change, each CPU can
-> > > maintain separate counters for each NUMA node, allowing finer-grained
-> > > memory allocation profiling.
-> > >
-> > > This feature is controlled by the new
-> > > CONFIG_MEM_ALLOC_PROFILING_PER_NUMA_STATS option:
-> > >
-> > > * When enabled (=y), the output includes per-node statistics following
-> > >   the total bytes/calls:
-> > >
-> > > <size> <calls> <tag info>
-> > > ...
-> > > 315456       9858     mm/dmapool.c:338 func:pool_alloc_page
-> > >         nid0     94912        2966
-> > >         nid1     220544       6892
-> > > 7680         60       mm/dmapool.c:254 func:dma_pool_create
-> > >         nid0     4224         33
-> > >         nid1     3456         27
-> > >
-> > > * When disabled (=n), the output remains unchanged:
-> > > <size> <calls> <tag info>
-> > > ...
-> > > 315456       9858     mm/dmapool.c:338 func:pool_alloc_page
-> > > 7680         60       mm/dmapool.c:254 func:dma_pool_create
-> > >
-> > > To minimize memory overhead, per-NUMA stats counters are dynamically
-> > > allocated using the percpu allocator. PERCPU_DYNAMIC_RESERVE has been
-> > > increased to ensure sufficient space for in-kernel alloc_tag counters.
-> > >
-> > > For in-kernel alloc_tag instances, pcpu_alloc_noprof() is used to
-> > > allocate counters. These allocations are excluded from the profiling
-> > > statistics themselves.
-> >
-> > What is glaringly missing here is "why".
-> >
-> > What is the use case?  Why does Linux want this?  What benefit does
-> > this bring to our users?  This is the most important part of the
-> > changelog because it tells Andrew why he is even looking at this patch.
-> >
-> >
-> > Probably related to the above omission: why per-nid?  It would be more
-> > flexible to present the per-cpu counts and let userspace aggregate that
-> > into per-node info if that is desirable.
-> >
-> 
-> Hi Andrew,
-> 
-> Thanks for taking time reviewing my patch. Sorry I didn't include you
-> in the previous conversion. See
-> https://lore.kernel.org/all/CAJuCfpHhSUhxer-6MP3503w6520YLfgBTGp7Q9Qm9kgN4TNsfw@mail.gmail.com/T/#u
+The intent of check_counters_many() is to verify all available counters
+can count correctly at the same time. So an alternative event should be
+picked to verify the avaialbe GP counter instead of skiping the counter
+if the initial event is not available.
 
-It's good practice to add lore links to any and all previous discussion
-to the commit message for the latest patch, like so:
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+---
+Please notice this patch is based on Sean's "x86: Add CPUID properties,
+ clean up related code" v2 patchset (https://lore.kernel.org/all/20250610195415.115404-1-seanjc@google.com/).
 
-Link: https://lore.kernel.org/all/CAJuCfpHhSUhxer-6MP3503w6520YLfgBTGp7Q9Qm9kgN4TNsfw@mail.gmail.com/T/#u
+ x86/pmu.c | 22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
 
-Make sure to give as much as context as possible - and your commit
-message should always include _rationale_ - none of us can keep up with
-everything :)
+diff --git a/x86/pmu.c b/x86/pmu.c
+index 3987311c..a6b0cfcc 100644
+--- a/x86/pmu.c
++++ b/x86/pmu.c
+@@ -457,18 +457,34 @@ static void check_fixed_counters(void)
+ 	}
+ }
+ 
++static struct pmu_event *get_one_event(int idx)
++{
++	int i;
++
++	if (pmu_arch_event_is_available(idx))
++		return &gp_events[idx % gp_events_size];
++
++	for (i = 0; i < gp_events_size; i++) {
++		if (pmu_arch_event_is_available(i))
++			return &gp_events[i];
++	}
++
++	return NULL;
++}
++
+ static void check_counters_many(void)
+ {
++	struct pmu_event *evt;
+ 	pmu_counter_t cnt[48];
+ 	int i, n;
+ 
+ 	for (i = 0, n = 0; n < pmu.nr_gp_counters; i++) {
+-		if (!pmu_arch_event_is_available(i))
++		evt = get_one_event(i);
++		if (!evt)
+ 			continue;
+ 
+ 		cnt[n].ctr = MSR_GP_COUNTERx(n);
+-		cnt[n].config = EVNTSEL_OS | EVNTSEL_USR |
+-			gp_events[i % gp_events_size].unit_sel;
++		cnt[n].config = EVNTSEL_OS | EVNTSEL_USR | evt->unit_sel;
+ 		n++;
+ 	}
+ 	for (i = 0; i < fixed_counters_num; i++) {
+-- 
+2.43.0
+
