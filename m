@@ -1,122 +1,175 @@
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C60210F53
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 18:50:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A04C8FE
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 18:52:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749667842; cv=none; b=IQDNd9gncjnyKweKFkAkZGurNqmG+q4Aff55zFZUSuqZiFzRsBiDP2mjy7pyc7Z83I+2f0vlJ8kscoRExctveCMus5hdhL/mua5e5mtPG6x8W1YvPND5mZKQQS7TbBtdQRbY1n3ZSvjg1CV2AM9HU7wUmz45PHsU7y8niKzn3Qw=
+	t=1749667924; cv=none; b=qQlMC99D1EG7j48JjkUs47MK0v5ay0pbx83S0/1Gg8tPVeDBgS00dJJ8UhtP7traJVdW1fqO5hW6fEfu0cPpmD/aaCgSYzYi7DHV6e6Kj1KDLfXZdM0dlL0Ojswwde+XaztyFT5VW/Hgrb/DsDtMKXwMSgBQ83dKdqSlDkxciLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749667842; c=relaxed/simple;
-	bh=nSfjD6bMZBS4BmZBx5jpM03quxzAgEVRFOeFWsKppzc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=JooRuTwh/BJeXQGzpW/I5bC1mGK20tJCR+hlQg6gZ0aIlSV6e/nl8ZBoZG446/TorGdk4Xk5f6dDlq4zv2U3xTZbBphRytp2Ic1d9Fp6SjgLzDXofiD3mnaAmxpMVtPcnl8QmDMFeXTzaZAJGltcGZaP1G/rGvJTOl0QoeQq4HM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=gzLXoim6; arc=none smtp.client-ip=209.85.160.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1749667924; c=relaxed/simple;
+	bh=kAGN3q7sLnscFHDkYJjPpSRwEd31KZvcJj4sfQlPVbk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=igF0kjcFXkEYkjZlbqmzei6XpyizDfvg0qZrdtYVGBWTebt2UNkhSoej50/7Psv/cp2q9/ozXen1Ebg9t8KfqCH2JWv1H2yy/wKd5iqBRzHKcpBiN508gCJA1izSetShyrqbad2pgsCq9NMbM5+xV02ALekwH1ySkiRGr4TDOgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=mHcUFjk4; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="gzLXoim6"
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2cc57330163so75138fac.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:50:37 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mHcUFjk4"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-234fcadde3eso2209295ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:52:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749667836; x=1750272636; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VfLSwwtWqu9qQ/BXRbsnm8G6Ja0ZcDCL6XYgy1oOSxM=;
-        b=gzLXoim60yzOv/Ze+/4YLOkW4YRipBB4Tu4AuW6IlXMkyBuVfMw9Nmh7VNuPfF2zpo
-         be1hDDl9UOKW3kB6EKdIN3mm/uzivw30+aAzLsCU/EeQGNEZXu+AqoTTjTNE4gqtqEs8
-         NrraQ/5FjYOn9dO7ASjDyJqmpldRumkmwazkvFuYIV9EguRlNi78ckzSqh9ofrMbxKN+
-         zrjKgFVSK6J0oilQKtZi58wf4DVuk+XqtdMVfrsp2GZ/HK48bAkmv1RomuiSKWQlKOVN
-         CVvbbwSubP9fbI+I4eSkQ0DU5jfFULZEd6MhSMAJJ8lbIYF332Xe/CoGAs+q30AkNFvG
-         okiw==
+        d=chromium.org; s=google; t=1749667922; x=1750272722; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8dNFQR6DwLKSqb/lm3sm6C2D1H+3BGQbDVmpKSvZzQM=;
+        b=mHcUFjk4op1L+BgvtzxJxhJKysKKHGF77KA6QMcy+Zf7dgYAdDl3/DQTlMDqW3qgec
+         SnXIgK8YslRen62xgTEQGnEdHScsNbx4PlErRU5QOd+MUwrjudj9jbWXi/smJ6/i7N1+
+         mRS4kH/t4aEhiYrDa3RtlgB+6CgP3lxdjbmLs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749667836; x=1750272636;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VfLSwwtWqu9qQ/BXRbsnm8G6Ja0ZcDCL6XYgy1oOSxM=;
-        b=jxAH9GxPkr3StMyu8aHaMGjvmRur7jI2tnm+1ZS3kTsD5c4RxCDR3ZnTzDb6Iv68AT
-         PyIJIiQPBIoQhAnxpKhDOlUZSv8F3I1yjFEHCc3LJYY08w57LxeSPVf7q1ox4R+y/Ekv
-         KXJlfeUG4ZMNDS648DTdhSzcryFqPTJGb1yyLiHqJCrECb6YvbAzW7jveu5PeQ1C6bM+
-         HfnsOdDNU98E2rQwXZg7o3suyKw4ZiR/A//FPyLvIVvt2hBPDAUfMSAvtVvknUHYk9kA
-         uy0UKKtAffURfJEafENi3kQgvA6DplSF6DVekQpvcY/Pz8A1Pf59tcrkxA90gqP5dVTH
-         GTnw==
-X-Forwarded-Encrypted: i=1; AJvYcCWkdIkkWlJvia0ZWYmnC904NpMGH4KnyayWaQp6IAM6nwGsj8FHFEG8z43HwspcF8G7yBtjcTmomsl80zQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+gEcZuyy2MYMM0hzPT+JRzx9DE954D4/YYvrR/icbSR79Z7Tr
-	S47s98LU7ZxWC69wGNXCX5OjaAgdplA/FRy9D/2v4XmgUBtKNBCuRc8UqwyO8I+u5+M=
-X-Gm-Gg: ASbGncsnMY9ufNfA7AcPjVA1gKL9M9B38qkVQI0zknEvqOqEk2gqK6w3R4Uwx4+VHkB
-	PL+7lmvM3vWo9UTAxM8Q64rXU0y21ZEHCyrU8s6ZLZ2XRCMbuJS/xZDwa4h62ItFPUmIR7lHBh2
-	YrUDLX6tJf9CuETnaf4PoGjikA7cRTnQ7YWBKYHcyCju00sj85Yt7ZWMqs2M7f2/5C7LIlnWXue
-	X0AGmsoXMRqEQYdqZX6YncNmiGOS0FnZMeAPX6hMbFeyv5PoGXcw7iJxAcD6o4IczKWM1l3gg9A
-	7xU0rDbE2E38YfPDB/cYJQkoik/nLRxRFPmOaHt7uEQI9ofB2EG87sl4FdCdZuyFacZv
-X-Google-Smtp-Source: AGHT+IHjYXz01Zl9sopL5Bo7WGyboaTC4cea8WBMM0dh6eeMLiHstHuEoKqxYD/qWOWCRh7nF1LZKA==
-X-Received: by 2002:a05:6870:1255:b0:2ea:7574:e243 with SMTP id 586e51a60fabf-2ea96c1a31emr2126324fac.9.1749667836342;
-        Wed, 11 Jun 2025 11:50:36 -0700 (PDT)
-Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:4753:719f:673f:547c])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2ea06fe5784sm3009668fac.2.2025.06.11.11.50.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 11:50:35 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-Date: Wed, 11 Jun 2025 13:50:26 -0500
-Subject: [PATCH] gpio: virtuser: use gpiod_multi_set_value_cansleep()
+        d=1e100.net; s=20230601; t=1749667922; x=1750272722;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8dNFQR6DwLKSqb/lm3sm6C2D1H+3BGQbDVmpKSvZzQM=;
+        b=ApDZsi6ho0495NINDXCIhIX/JWq9tiIlLJpqjIMi3Q8OAO/1zWbTKtt3Irsqwq9jSc
+         u/e92xiOz/4NURKRsd5kjCJZhAaSzSuDuDGTq4HTtlcFXFXwuQlEX4bMb45CmokqXaJD
+         T8M6Lv6LN2jQLtexKLYMFM52QNnznq/fsfFv5OCDS/XQHVnYoCP6jAB1DJq4P3lQUNLR
+         yUl7EYUAGgKXdHmnYtShqBbZ1kQOQw2yYzgKn5yu8lUkwvxSC1Zrh/yD69SHEJyqZbMY
+         GqPBXAt4CpACD8wYVDuGgHeMBClmjYcEt9uvfljIwpI3rNKiFpQSGyX/AYrDkkFxkfqz
+         5G2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUjAiDrEcOT74GSkAn/+pwmhSuyWfiPL2zUVMy964rCFqAzWYZkrB5GnB18J6WJEdWN8k0qMLft6hD9lrk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEDb2F1lJ2ObGomi/SPzd5kBklGHVje2g+hhzFXJYXmwcueo4r
+	EMG1Olre8+p1D7wi+lollB0V7Wg/0/Up5c2VHOh3JyOJfh5NzyaBiY52nRAT1peO5Q==
+X-Gm-Gg: ASbGncsbg+MBLAjUlAQ0X0aroHA5Tgq0ewWE8a7hvMhhuhweiLLJ3hAXGox9OmOem9N
+	rJWgUHLAFIs4aYj+RkjIOokiw3tk/+2+CXfpo1XSpt2dcBMzz2YytF9qsmlZ77O2eNo80qxPxnb
+	ZKfht28fOpkrlSuCioV892vWWwfvupu4LQv555DCPXbNXKoyWeVaH332aV1SG487y9n3r7QFERJ
+	zOcAst/eD0IHruVQWUWuXMlLaIg7vLwJ4rfxE0rB42nq1uP7BsevH8mZtM+E8olV4Cc5e9Mlnry
+	Zdls0B1D+TiLJIiyc4REX8bDXesOOQPYULAQ+2FdfhCBCVbBpEIKy5P5100ISvkb3Jq6jhq+GRP
+	NV0NpEAE18l4p/eZgzGSaGSVd
+X-Google-Smtp-Source: AGHT+IHqMz/HEa7jAGZc/vMx+phqOG6eS1CA4PRutdXQxxU79ck93w78bDAVkOgKJBW7oPDVqbXuPA==
+X-Received: by 2002:a17:903:1ae3:b0:234:b44c:d3c8 with SMTP id d9443c01a7336-2364d8cc78bmr2780605ad.37.1749667922285;
+        Wed, 11 Jun 2025 11:52:02 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e14:7:4ad1:78dc:7f25:dde3])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-23603410b4csm91615085ad.212.2025.06.11.11.52.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Jun 2025 11:52:01 -0700 (PDT)
+Date: Wed, 11 Jun 2025 11:51:59 -0700
+From: Brian Norris <briannorris@chromium.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
+	Tsai Sung-Fu <danielsftsai@google.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v2 1/2] genirq: Retain depth for managed IRQs across CPU
+ hotplug
+Message-ID: <aEnQT3PdjdNJGi25@google.com>
+References: <20250514201353.3481400-1-briannorris@chromium.org>
+ <20250514201353.3481400-2-briannorris@chromium.org>
+ <24ec4adc-7c80-49e9-93ee-19908a97ab84@gmail.com>
+ <aEcWTM3Y1roOf4Ph@google.com>
+ <CAMcHhXqq9DHgip3rr0=24Y-LEBq5n4rDrE6AsWyjyBmsS7s+-A@mail.gmail.com>
+ <aEiQitCsXq9XSBcZ@google.com>
+ <87qzzqojpt.ffs@tglx>
+ <87o6uuoe5j.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250611-gpio-virtuser-use-gpiod_multi_set_value_cansleep-v1-1-43b4adf6c807@baylibre.com>
-X-B4-Tracking: v=1; b=H4sIAPHPSWgC/x2N2wrDIBBEfyXsc4U1vRj6KyWIxG26YI24KoWQf
- 6/kZeAMnJkdhDKTwHPYIVNj4S120JcBlo+LKyn2nWHE8Y4PrdWaeFONc6ndVD3OxttvDYWtULH
- NhUp2cVECUVJXj7cJ0ZjJIPTZlOnNv/PyNR/HH3RbZWqCAAAA
-X-Change-ID: 20250611-gpio-virtuser-use-gpiod_multi_set_value_cansleep-3d0480077870
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- David Lechner <dlechner@baylibre.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1159; i=dlechner@baylibre.com;
- h=from:subject:message-id; bh=nSfjD6bMZBS4BmZBx5jpM03quxzAgEVRFOeFWsKppzc=;
- b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoSc/zhZOmMebGMUbepV8a3eTCjZkLkJqsDG+FW
- kXqUnj+2MeJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaEnP8wAKCRDCzCAB/wGP
- wG+EB/0Q3zdJ06NySiiqCRQsp8x7sv6xy0yypu1OIPZ2sl36W8GmKXPriTkQLvwthDTA5x/xNcA
- jKOYBZkLcwESwA8rrIF363u7vs4eK1pajsjQkXmc/Wgweniel0rwLNzla+bN5XmIWtn/7/burXr
- a/9dBfjzBJN9K7gTT5V21T42cJLUQTQT7cUprzF5nyEG/0u1r/2d0I4gwNjPr6iCsXA8xKVQUNY
- mZIgpel6IqSlxxsqsNHZsdKAiAptY0NSaEoQ7Axbvs0whr32wve83G2XEHuYrugu7LEyLtU/sX8
- ttkXLSe9bJboRL43adockg7DJo05aHURPpT8iTVvIzJyra9W
-X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
- fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87o6uuoe5j.ffs@tglx>
 
-Reduce verbosity by using gpiod_multi_set_value_cansleep() instead of
-gpiod_set_array_value_cansleep().
+Hi Thomas,
 
-Signed-off-by: David Lechner <dlechner@baylibre.com>
----
- drivers/gpio/gpio-virtuser.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+On Wed, Jun 11, 2025 at 10:50:32AM +0200, Thomas Gleixner wrote:
+> On Wed, Jun 11 2025 at 08:50, Thomas Gleixner wrote:
+> > On Tue, Jun 10 2025 at 13:07, Brian Norris wrote:
+> >> On Mon, Jun 09, 2025 at 08:19:58PM +0200, Aleksandrs Vinarskis wrote:
+> >>  
+> >>  void irq_startup_managed(struct irq_desc *desc)
+> >>  {
+> >> +	struct irq_data *d = irq_desc_get_irq_data(desc);
+> >> +
+> >>  	/*
+> >>  	 * Only start it up when the disable depth is 1, so that a disable,
+> >>  	 * hotunplug, hotplug sequence does not end up enabling it during
+> >>  	 * hotplug unconditionally.
+> >>  	 */
+> >>  	desc->depth--;
+> >> +	irqd_clr_managed_shutdown(d);
+> >
+> > If depth > 0, then it's still shutdown and the subsequent enable
+> > operation which brings it down to 0 will take care of it. So what are
+> > you trying to solve here?
+> 
+> I found the previous version which has an explanation for this. That
 
-diff --git a/drivers/gpio/gpio-virtuser.c b/drivers/gpio/gpio-virtuser.c
-index eab6726953b4118dc0d72c2e37daeb9629040d11..a10eab7d2617e40cefb5f08e1211e9cb33035d0d 100644
---- a/drivers/gpio/gpio-virtuser.c
-+++ b/drivers/gpio/gpio-virtuser.c
-@@ -215,9 +215,7 @@ static int gpio_virtuser_set_array_value(struct gpio_descs *descs,
- 	struct gpio_virtuser_irq_work_context ctx;
- 
- 	if (!atomic)
--		return gpiod_set_array_value_cansleep(descs->ndescs,
--						      descs->desc,
--						      descs->info, values);
-+		return gpiod_multi_set_value_cansleep(descs, values);
- 
- 	gpio_virtuser_init_irq_work_context(&ctx);
- 	ctx.work = IRQ_WORK_INIT_HARD(gpio_virtuser_set_value_array_atomic);
+Right, I didn't update and carry the explanations here, as I figured I'd
+format this all as proper patches after getting Alex's testing
+feedbabck. (I think I'll split to two patches, since there are two
+distinct bugs I'm fixing in here.)
 
----
-base-commit: 19a60293b9925080d97f22f122aca3fc46dadaf9
-change-id: 20250611-gpio-virtuser-use-gpiod_multi_set_value_cansleep-3d0480077870
+> makes sense. You really want this to be:
+> 
+> 	struct irq_data *d = irq_desc_get_irq_data(desc);
+> 
+>         /* Proper comment */
+> 	irqd_clr_managed_shutdown(d);
 
-Best regards,
--- 
-David Lechner <dlechner@baylibre.com>
+Ack, will add a comment.
 
+>   	/*
+>   	 * Only start it up when the disable depth is 1, so that a disable,
+>   	 * hotunplug, hotplug sequence does not end up enabling it during
+>   	 * hotplug unconditionally.
+>   	 */
+>   	desc->depth--;
+> 
+> ...
+> 
+> >>  	if (!desc->depth)
+> >>  		irq_startup(desc, IRQ_RESEND, IRQ_START_COND);
+> >>  }
+> >> diff --git a/kernel/irq/cpuhotplug.c b/kernel/irq/cpuhotplug.c
+> >> index f07529ae4895..755346ea9819 100644
+> >> --- a/kernel/irq/cpuhotplug.c
+> >> +++ b/kernel/irq/cpuhotplug.c
+> >> @@ -210,13 +210,6 @@ static void irq_restore_affinity_of_irq(struct irq_desc *desc, unsigned int cpu)
+> >>  	    !irq_data_get_irq_chip(data) || !cpumask_test_cpu(cpu, affinity))
+> >>  		return;
+> >>  
+> >> -	/*
+> >> -	 * Don't restore suspended interrupts here when a system comes back
+> >> -	 * from S3. They are reenabled via resume_device_irqs().
+> >> -	 */
+> >> -	if (desc->istate & IRQS_SUSPENDED)
+> >> -		return;
+> >> -
+> >
+> > Huch? Care to read:
+> >
+> > a60dd06af674 ("genirq/cpuhotplug: Skip suspended interrupts when restoring affinity")
+> 
+> Never mind. After staring long enough at it, this should work because
+> suspend increments depth and shutdown does too.
+
+Yeah, that one definitely deserves an explanation :)
+
+I wrote out a commit message already, but didn't include it here yet, as
+I was only looking for testing. Sorry to have sent you staring so long
+at it.
+
+One snippet:
+
+    This effectively reverts commit a60dd06af674 ("genirq/cpuhotplug: Skip
+    suspended interrupts when restoring affinity"), because it is replaced
+    by commit 788019eb559f ("genirq: Retain disable depth for managed
+    interrupts across CPU hotplug").
+
+IOW, the depth-tracking we added accomplishes the same goal as commit
+a60dd06af674, but including both causes further bugs/imbalances.
+
+Brian
