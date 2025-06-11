@@ -1,126 +1,126 @@
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C9935970
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:40:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A7E535970
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:40:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749652831; cv=none; b=DUUBYYyRvMOqe6KXAahNZjwBhTNa4489FplSdbmCTS0Z0ptH06GpEc0tuw2/0P02oBEw92JVafe3w4hMQsv4U2HliIvHp6GnxOqAL1+VPDGTggoOKuyKmcSChatfLMRA71j5rItnx5xASeweTdrlsHno5eRimDOhGDaiU8k+/vs=
+	t=1749652843; cv=none; b=MFLUgRo5PktQcPVw9886xA8HLsR4mYIbvsXWMIfkey0fFIYVAYSz4Vf6TN0kMMCNZHpob9d+fp8yLyoYbqx8pmZeZEzIKy+l8VEYNIFWkAG0KQbgaIU+cC2KR7HOH9rvmzfZ7V6wRiCCOrvAWQOrAGWnRw5QIA+1gGN+wPJlDk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749652831; c=relaxed/simple;
-	bh=AoNBXfxmjiJwlJyNJTpuHiDBXjwzWldZGbKBWicfIv8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=FWTEPaAVggevP+i+VnBXO7mVSNjV9U/m5lWDSFGuaLQ8eDwGoUUPPSjOFFGU189do7Xpznf0cI+uqcdOUQE4LqqgRUi9uqcSHl4uYSZM20Jd7MBWctIiK8VuMGXULzp4ERUlZOd9+KrkS7Tm3NxnVCn46V8s441XHmkPVp6lUV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=CM0NakH2; arc=none smtp.client-ip=209.85.210.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1749652843; c=relaxed/simple;
+	bh=Ves9IAlDOG6rT2wK3GTXUgHQbJsl7xwyic6gvh9n1D8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KlfmF1SU2dnBcibc77OxuceeYMDbXtLlkAPWj0k3K90M7iPF/2BpUbeKe3bv0boO4lk10VWmdTehvXVgmWSDxYHUMfAVvod/yD9DV1mzHzJ+Bzej/RmGoP4sa+Ef5m0jPDKFK3V87sQ9XYSyobwZGfzdmPICCTH//nqSsb85r0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=ymlLGxnM; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="CM0NakH2"
-Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-72bc3987a05so617310a34.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:40:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="ymlLGxnM"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ad883afdf0cso1229427966b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:40:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749652828; x=1750257628; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mLrrcjxPAjeFKi7iUJTxvFP27ls+0S72xIdrAaB/V34=;
-        b=CM0NakH2YsQcYV0RupCN9KJcFRRJniJNLL9imCu3TvckMZDI5ZocGq7sKkWFiBUwfz
-         ZPLV7mDKfW6FqMvWBeAKqhOam3AElSqB0p7S8PdZk//p6+Zz7h/PxlTH2oMI8PBqLt+i
-         AI3R+RUSzlA87zdyBsZ4AakuDcljAiKaB+Lqaat9lQBgvx67qD5X1RALP6BOCdZDV5R/
-         ZyL50DQfDaVxCG1T9bXzdPVk1jStQFD1W4yeB6AUtBp7GGVutzxZkqSVHsLOluTLk2jv
-         NabtAxJCPjjxV8oL92ZhIFv968nS0cNaHXnaiLBLQuv9GEwV2eC6lJuUv8x9QsIAJRcJ
-         2R1Q==
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1749652839; x=1750257639; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VanCGAV853jeZl/piu55b8cOeQ1lh3SiVReRL2SvGyU=;
+        b=ymlLGxnMsVfiy/aok9AEqGYJFidNS+mNhQrefas1XlXonhcN7fIoSVeXXSYu4Ggi/6
+         u1bedUuR9OXXmTBMrxtLE5IAqMZlo7ZsLjcm5ewCbfGGthkDcATGwEFuKRAlccvrEMFo
+         yM1iKcqmFlwZLovjnbb1k2pIELqp9nwM1H3jyTuGwcbX2ZvCJoIbZ23yPMhn6VXIY8ja
+         y+XI5/WAd5QSserPAWxtNaylQ/VZwNUljHQbAtXo8kpVfQOM9iNQeDKdvHlWQIYvtjRR
+         EtZTGiPExK5QgjbQrIxpSyFmMLRn5bsoUvoA8YtJ2jlcFqCQoDRyJmaAW57HCnZLJUy4
+         TSrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749652828; x=1750257628;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mLrrcjxPAjeFKi7iUJTxvFP27ls+0S72xIdrAaB/V34=;
-        b=Xfu8SQrb+JZdqnJz7jtcdNZXBsZhwdogt4hlhkR4jRPs8McjO3m2gc55LBw0S/ipkc
-         2StTNM68o5iOCqJdiIHdnvDqpkEV4F6KoVnIRtRx5Qs2Iy4/uRKPd4GmFBOGKb8xpO3S
-         /znbf5mt8UVndHVqqyAU27VZHuUPl6WPwAfMDWfN3GMYgk7PG1TKyTJzfLR15s/WX4W9
-         bN8JJyju1gGAF1nUyPpauGS2F9O5LhAkMroYxnnYFhkayzux8nJrZTuvEAvWneBsxwpo
-         +fFLucJxFO5plXIOb7vn2G3PKU94BQpg+n96JFnoUMckAAwsgkWaLLaScftqxZeEl5rc
-         Qk8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWT6W9ucPV/lBP/06HqaufZqhuw3DnSBUmqCsx+G1RMb2+Ao8cUlAApoa/2scXHEs1o0dQApccmzth69V8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhNadlzO9nRrQ/wNbldwgbof4+X8Evu6ROgDsZs14ZzBSTPPqL
-	UVuaRpPAKOVYULI8oDmjbrNv6JfIltSx8sym0Egv79sRwu1SN44QVqgEfHNUeRmfgjc=
-X-Gm-Gg: ASbGnct5w7JJtkjNAvA42L6OgwQ6yCVKdhJ9ynEv3O7W2E0e01yCaJh4Eb13nTxSVx9
-	CX2mZ7exl5DpnIL9Dln4ylfLg+3IGzki1JdocpL60cqf8iKjHhT1fVZXK3n34ANGxURm0pRAZYw
-	pc9ppkplWBc0LSyPnzczn/FhVLqFrmuwNTafr13pvoSNjC3TJ88MjEXCxsdLcGLfKI23CQA5QK4
-	RLx1q8Bc8+N0JCZ26jntV4csnG6jBR6x3l9zdb1WZ3L1OJN2Mq7QiMblqeqsZe7UDhvdWrSOyKj
-	3WQh+jQYmM78VKA9yX7fKb8+jG7pn0aFEPflZx1gdJ2xQhrTQhYokEKzX/yCWKBxG94=
-X-Google-Smtp-Source: AGHT+IFr6GLRVZwQuuEJUWf6+gPiIRd12h4YaeLZ8Ur4iNPV4hBUvhA1RQPoqix09J2XDOWzvZobxA==
-X-Received: by 2002:a9d:7d85:0:b0:72b:7dbb:e39d with SMTP id 46e09a7af769-73a0652151bmr1588147a34.1.1749652828260;
-        Wed, 11 Jun 2025 07:40:28 -0700 (PDT)
-Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:eb6c:30d1:632b:494])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73a06faa7a4sm330735a34.7.2025.06.11.07.40.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 07:40:27 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-Date: Wed, 11 Jun 2025 09:40:16 -0500
-Subject: [PATCH] iio: adc: ad7173: check return value of spi_setup()
+        d=1e100.net; s=20230601; t=1749652839; x=1750257639;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VanCGAV853jeZl/piu55b8cOeQ1lh3SiVReRL2SvGyU=;
+        b=OglzieFtjZARwGOI69ZFw60oAi8mlToKG1a2nxw2HPy3awBu6DB5SGXZBaq8tHwpPZ
+         slvghZWIvaVmiMlkS3T4erjgBqW2IAvmxMurLuyx93KmGv6jPjMmPo0heEvQfN4xAX14
+         /Uhk13bYLp7IYUYV0UH8x9/dvoVEPS2qhVxlbFaD34NedDKpVpMP+2hUImFp17NCiUjr
+         Ujjf5NntLOy1C/QbfYKw2JXMUr7aGwxBgZ9S9r/FqcS7psfNPCgwqdukVP5wyvoQjDXV
+         IiszwdaItLUW1Lm/nP6U0aZpPEgpd6pf0b5nlqaNdIzOywoZFv/2ARmeJzoZ/mFqB8h1
+         78lQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWXnCVd6ADLoYGiJjp7nYsFhcOlLs2SnSrF8Bqfelcv6Vb8EuTkxP9u3GA+IkFvPsEGO5K0qCeHEZJMtyg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+YFgdjGAflJoFXtzIcFQ5zc60cqpRPPNm+bemxVrhoEvFHEce
+	b4T6h4dGvDx7Q+7hpnWRre48zIkY84rYk3xHyRqEU7v7brwgAzYx49glj5bTSL0Ph3h+tzNF0LI
+	P0KHux3K+bFc8zjpa77C0jgrFQwtv4f8WqdHCaKBjsQ==
+X-Gm-Gg: ASbGncv3bbC2m0ELi0eDqz6CDqW8t+dNP3y+1ECSgkwa/MpxOPs0vWcy4jElUZtAexf
+	b81ItIsCuQDIbwjpWxi6vvDHhSR8O5fn2so6Yq1No7Z+LjxE7kZ/vA0400lHk7aH7gX+9DqZr3U
+	j/AC0AiOvPpjuD4AlJkuwyewprurUBNa3uDOhnn6+xu5n7
+X-Google-Smtp-Source: AGHT+IHDSmTZDyiDRZOD1n1VEoO2BN/q5+1t3d32dZUsxmTdSpg0xwKQkFHQYBpUpsmp4CIhNRKBUUObLCw4k1Y89D8=
+X-Received: by 2002:a17:907:968a:b0:adb:1804:db93 with SMTP id
+ a640c23a62f3a-ade8c8eff15mr309077666b.49.1749652839519; Wed, 11 Jun 2025
+ 07:40:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250611-iio-adc-ad7173-check-spi_setup-return-v1-1-4d6f9ef0a2e4@baylibre.com>
-X-B4-Tracking: v=1; b=H4sIAE+VSWgC/x2NQQrCQAxFr1KyNjCZoQ54FREpaWqDMB0SFaH07
- gYX78Pb/LeDi6k4XIYdTD7qurUQOg3A69QegjqHQ055TGciVN1wmjmoVAvyKvxE73p3eb07Wqw
- 1TDUnqrmMS2GIr26y6Pffud6O4wfDhGBkdwAAAA==
-X-Change-ID: 20250611-iio-adc-ad7173-check-spi_setup-return-072017235f3c
-To: Michael Hennerich <Michael.Hennerich@analog.com>, 
- Jonathan Cameron <jic23@kernel.org>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Andy Shevchenko <andy@kernel.org>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- David Lechner <dlechner@baylibre.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1097; i=dlechner@baylibre.com;
- h=from:subject:message-id; bh=AoNBXfxmjiJwlJyNJTpuHiDBXjwzWldZGbKBWicfIv8=;
- b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoSZVR9M0Y2yJvw8Y3W1UqUwM2S92STPmFTqFkv
- /YhRZ3r+W2JATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaEmVUQAKCRDCzCAB/wGP
- wF2KCACFPxTMDj4CL5i7akxNe1PjAzgkhUg2vFq9o2g5vSBsA4+H7uJ4QTe7QtnrkK29QKm/kk9
- K59OyZcHOm3ggA7wQkgWtqtEZ2w084F5bFrMR3kMc6zitxnVxoIo4ESfiU+HsP/wHFekncHaEzt
- UVYgLReJyxkbxtjRSBc4BjBPwnngiDHocpSF2IbN3d+5mYI2t/py9MveadvUr+Bv4sh9EBz5qPQ
- b/jMmCC3krjSWRGuXn6vgKmNVAu3lpr3FGEPAAYig4AGEF4zK/i6L9MSpUZ4DUXSF8z/heeVDs6
- oh6t/dZ8al2+1+O5dnRvDU4vUNckEeo9WpD8BYdKBdp3Mzp4
-X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
- fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
+References: <20250611125723.181711-1-guodong@riscstar.com> <20250611125723.181711-8-guodong@riscstar.com>
+ <20250611135116-GYB125008@gentoo>
+In-Reply-To: <20250611135116-GYB125008@gentoo>
+From: Guodong Xu <guodong@riscstar.com>
+Date: Wed, 11 Jun 2025 22:40:28 +0800
+X-Gm-Features: AX0GCFtLP8n8AGHV29EjK0zTceQ99c8B_7Z1bY9fkoSHAd2Q1BdFWQkZ6Pv-a54
+Message-ID: <CAH1PCMbP54PRq27p7Ss+cdvB86M8k3CQepzxJwfpwfJPPnrMag@mail.gmail.com>
+Subject: Re: [PATCH 7/8] dma: Kconfig: MMP_PDMA: Add support for ARCH_SPACEMIT
+To: Yixun Lan <dlan@gentoo.org>
+Cc: vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	alex@ghiti.fr, p.zabel@pengutronix.de, drew@pdp7.com, 
+	emil.renner.berthing@canonical.com, inochiama@gmail.com, 
+	geert+renesas@glider.be, tglx@linutronix.de, hal.feng@starfivetech.com, 
+	joel@jms.id.au, duje.mihanovic@skole.hr, elder@riscstar.com, 
+	dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	spacemit@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Check the return value of spi_setup() and propagate the error in the
-ad7173_probe() function. This is unlikely to happen since virtually
-every SPI controller supports SPI_MODE_3, but still always a good idea
-to check the return value.
+On Wed, Jun 11, 2025 at 9:51=E2=80=AFPM Yixun Lan <dlan@gentoo.org> wrote:
+>
+> Hi Guodong,
+>   I'd suggest moving this patch after 4/8, as both of them should go
+> via DMA susbystem tree, or simply squash them?
+>
 
-Signed-off-by: David Lechner <dlechner@baylibre.com>
----
- drivers/iio/adc/ad7173.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Thanks for your advice. Agree. It makes sense.
+I will arrange them.
 
-diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
-index 69de5886474ce2f700bf277ce707b15637113564..911001be368302fb9d7d6e8da3783751fe0f61c5 100644
---- a/drivers/iio/adc/ad7173.c
-+++ b/drivers/iio/adc/ad7173.c
-@@ -1775,7 +1775,9 @@ static int ad7173_probe(struct spi_device *spi)
- 	indio_dev->info = &ad7173_info;
- 
- 	spi->mode = SPI_MODE_3;
--	spi_setup(spi);
-+	ret = spi_setup(spi);
-+	if (ret)
-+		return ret;
- 
- 	ret = ad_sd_init(&st->sd, indio_dev, spi, st->info->sd_info);
- 	if (ret)
+-Guodong
 
----
-base-commit: aff301f37e220970c2f301b5c65a8bfedf52058e
-change-id: 20250611-iio-adc-ad7173-check-spi_setup-return-072017235f3c
-
-Best regards,
--- 
-David Lechner <dlechner@baylibre.com>
-
+> On 20:57 Wed 11 Jun     , Guodong Xu wrote:
+> > Extend the MMP_PDMA driver to support the SpacemiT architecture
+> > by adding ARCH_SPACEMIT as a dependency in Kconfig.
+> >
+> > This allows the driver to be built for SpacemiT-based platforms
+> > alongside existing ARCH_MMP and ARCH_PXA architectures.
+> >
+> > Signed-off-by: Guodong Xu <guodong@riscstar.com>
+> > ---
+> >  drivers/dma/Kconfig | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> > index db87dd2a07f7..fff70f66c773 100644
+> > --- a/drivers/dma/Kconfig
+> > +++ b/drivers/dma/Kconfig
+> > @@ -451,7 +451,7 @@ config MILBEAUT_XDMAC
+> >
+> >  config MMP_PDMA
+> >       tristate "MMP PDMA support"
+> > -     depends on ARCH_MMP || ARCH_PXA || COMPILE_TEST
+> > +     depends on ARCH_MMP || ARCH_PXA || ARCH_SPACEMIT || COMPILE_TEST
+> >       select DMA_ENGINE
+> >       help
+> >         Support the MMP PDMA engine for PXA and MMP platform.
+> > --
+> > 2.43.0
+> >
+> >
+>
+> --
+> Yixun Lan (dlan)
