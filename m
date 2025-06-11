@@ -1,193 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F69925BEEB;
-	Wed, 11 Jun 2025 11:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15BB42E610F;
+	Wed, 11 Jun 2025 11:30:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749641447; cv=none; b=TVEbN3x4vaaCbnAnNfaTAF8sp/a91iPA6mUfnZdcBF1VCb1VbJt53Ao9giFwptlkcuoqJwFCSws/73QAGMC8xSB57bYWbPUswKKFJqXs4SuWQIYjpXrPF+4p8YBAvVagmVLumEG/mS5dpdxudOc56DVXcnAhLpsairpkSe5L+eY=
+	t=1749641450; cv=none; b=ilUB/CasSgzijQn8CLm4M8jLSIHqy0i0ToVu8ANtNqIYYJ2dp7ckMZLT04qNUv5rNfiknDCbO/Z0qFeOqCdRXdSncPiiZRr0hAqILnsvatNAl5Lt9Zvu40EsQhgILWlmwmZhsxs6aSLeDIZpwi3+Q3HHzg043zNQyVY0FZNoCOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749641447; c=relaxed/simple;
-	bh=KQrqtEH0etXWoUXGzvlnizb+C+/gmbJQ4VquC2KTQEo=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=QoPc5bbYLm9F+9T4UhFrLThRt73GhS7zzYWQ1qF0cDefg7EEEUsMMlfYFBY6p4g0CdrBaiU0a2jd7DTFeIL5yCHBT3HsgtBgbWU3w4NZSjRaQ3DhMep7bOHmKaT/CQbtC7iAUAPPiGmYEyxnQRmKCkc9eGCGNzy33Q56tqzXAW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OEvdk6yF; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749641450; c=relaxed/simple;
+	bh=vC4yTA9SmrAgEgHHZQ6kzFeLQEt6WJRdftXvctmtg6I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=L+pEIUeT+ICAOnWhWooenbpCjUfKUXjo/RXhEEIfxn48zNrgwHTj2lEQmri5v4CtoAt2tv07PxloNiN3z1mPGE1hzb8MA1kVcejLDs0Pxv+MhhqLVm6vXFW/N/183Cvc7eGXpYr6QTmsNXofV3RBpttmiw3tWYC57qeShePRSUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HLMwO0bP; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OEvdk6yF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749641446; x=1781177446;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=KQrqtEH0etXWoUXGzvlnizb+C+/gmbJQ4VquC2KTQEo=;
-  b=OEvdk6yFG27PX42dY2k3Nnypa+qwrp0uEhOxtR2gZqcNOli5x37KFIAe
-   X8FSLsHGo9MPVL5BmbAWtZ4Mln1LSoPTjrElvqJLFb2ad3Mrygcq9pR+M
-   XXp/KB9G87uUjBNoTpWh8yi76fl0wq/+ujI6mhr389cBw7qU6VOoNvOj+
-   nIhejYjC5QbDrDBhdlbdOVI6rZSZWx7ym+GUKVflojp2mVMVcFmBa50YW
-   L3QfaP4aWHwkBqRzy0puugyAIldqUZOOHpj55loeq9wCJB3GP5w9Z+6fz
-   Sq/BNrUkfhxgzFaDQszCevudznVb2WzKMWc0B/urAdRDTRy8447wJ53NB
-   g==;
-X-CSE-ConnectionGUID: STY4W1ZzTXq/7nYtr4Ei2w==
-X-CSE-MsgGUID: jhvT7LDxR9SgECW2lOm88Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51642790"
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="51642790"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 04:30:44 -0700
-X-CSE-ConnectionGUID: 8lmJBuFMSJmfzMHixfqJmQ==
-X-CSE-MsgGUID: 3w/GH2mxTZGSz/Q5cXhc7Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="152161957"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.183])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 04:30:42 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 11 Jun 2025 14:30:37 +0300 (EEST)
-To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-cc: gregkh@linuxfoundation.org, linux-serial@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, Nicolas Pitre <nico@fluxnic.net>
-Subject: Re: [PATCH 07/33] tty: vt: use _IO() to define ioctl numbers
-In-Reply-To: <20250611100319.186924-8-jirislaby@kernel.org>
-Message-ID: <0c69d88b-d6a8-b6e7-9482-5ac21fc88192@linux.intel.com>
-References: <20250611100319.186924-1-jirislaby@kernel.org> <20250611100319.186924-8-jirislaby@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HLMwO0bP"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-adb4e36904bso1294570566b.1;
+        Wed, 11 Jun 2025 04:30:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749641445; x=1750246245; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uufpzLeFHw9pdIZ6dvCNHoZRW9ZSAUt0Lz7+TMw96CI=;
+        b=HLMwO0bPhLV2moNVEfzhA4qwF/1yiksqgWFhbE02mSCItpEi3WJxtFb72NHbbS9uQI
+         OsKqn2d6owL83mXGkGB2qAo3bAAW6Z8/DYqMtBYzdm1pmhKKQ6n88NVOeSdt7tn1Ejm4
+         xjEfk1Axf1xhxhAHd/9vMl6q9VXZFlv1n6LiMgRCGAAcc3CeH6TimhxIjVhkOOxrTABk
+         4hbsZ+e/wEEmtdp5WhpRsvYcB4rGd5KgvP5qBhZ35LHFmN8KA+wG6QxkMeezVwMSbss7
+         KFVVnU9te3suiPbaTkZqGurWnfmnIZh/MCYJ7G64IigyevxTrM3GsJfGdoD73/Bcg/zg
+         A8zA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749641445; x=1750246245;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uufpzLeFHw9pdIZ6dvCNHoZRW9ZSAUt0Lz7+TMw96CI=;
+        b=GRbWPo/mh6NPctzjeHTXEGD8nNSBWeyyK9U8GYvHv4eiqhgd+OO3kjS3wQZ+5ySb1f
+         6ZGExCdAc+0qX+UJveD8cEbBdGDxzsQlWDsqE7Njx8nCfMgFVaEKyA6Gt95jN7tvEYhs
+         i+wTyOjd0sgqewmZsGsoMSTmMWByqdJQ6js5UHYNw/NK3O+66gFhaL3kA0/Pus8uzEcd
+         WwXzOEb3i4BjX7vuQx0K/z8YppyVvPeg+cCiVAwypeqvcYM7+NCb7X4rDOCbQxtQwgY0
+         5zA/lfk33PYERUsKY7Kk0QiyV/Fn5ys79uaS/MyKzvZvtDyeWEsVBeMNvMudp4aQFcIP
+         wXzA==
+X-Forwarded-Encrypted: i=1; AJvYcCXSnI3UPL5NQSi1ghkMBLWC20SX/8sI1qaHkGx7NpZew5juf5k0Mss6gJDPPak9NDhLnEBUlDgZiX1cFalc@vger.kernel.org, AJvYcCXrBXCBc1vvOB9B4ivJc8JQGBzXNkuKkZfcnmuPJY1W3xgrQ6/k0CwG9/J42kb1S2LotHH66Q9EXt8f@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaJ6bfPpDfRmW3/qIBDJVEox7Dh9OACBQkFRKvAloZF7wdz/Gl
+	jDhtVwwfcNAtWjWTiHkfVIsFdIBuEByiztl8tDIqdRoYPBAhKRMzmNGSRprnVA==
+X-Gm-Gg: ASbGncseiOG7ZPepQrCK4+ZJHaNZU0gF4AuI7hg6GXoEBmOxavyst6YmUELxSxdxkR6
+	DSFyH9gX1KlWxby2x0zEDtzqdSIUo3KWdJFh+oj1VowGBH3mbJexduLkqdGy+huDQ9Q4RDBIahX
+	IJpCZmRLcuUrlWsct45/r/ZDTPfEVC3RlI4od123gdl3atfeTbphgNoeWdGbkgf+7K6DmmWtHG1
+	VhZy2ueS07UxrJPDjtdRq+XmzXCp6EcmCRAk1s0DmTpuyvUl/aUoiln40NmhNSIax8uvPJvG88e
+	jzbyH2DmCuM3C65DK9UvU2lXGC+QvCqAepCeHXa8H52SKYj01dOFuDCIH2DEFPT1A7Wvnn5S6oz
+	ZbxkLS0AKwYQw
+X-Google-Smtp-Source: AGHT+IESqJAZRKIEu2aYv41GW69ANi7wzoD0rggPz/LwgJu6KXn77JmwkH9T5pd1qm+bZwplP31o0w==
+X-Received: by 2002:a17:906:12d0:b0:ade:9b47:9242 with SMTP id a640c23a62f3a-ade9b47960amr28948666b.0.1749641444965;
+        Wed, 11 Jun 2025 04:30:44 -0700 (PDT)
+Received: from wslxew242.. (11-127.static.abakusbp.net. [46.17.127.11])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1db55d6csm870519066b.72.2025.06.11.04.30.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 04:30:44 -0700 (PDT)
+From: =?UTF-8?q?Goran=20Ra=C4=91enovi=C4=87?= <goran.radni@gmail.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	boerge.struempfel@gmail.com
+Cc: =?UTF-8?q?Goran=20Ra=C4=91enovi=C4=87?= <goran.radni@gmail.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] arm64: dts: Add support for Ultratronik i.MX8MP Ultra-MACH SBC
+Date: Wed, 11 Jun 2025 13:30:35 +0200
+Message-ID: <20250611113039.304742-1-goran.radni@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1458262110-1749641437=:957"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+This patch series adds support for the Ultratronik i.MX8MP-based Ultra-MACH SBC.
 
---8323328-1458262110-1749641437=:957
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+The Ultra-MACH SBC is an industrial-grade single-board computer based on the NXP i.MX8M Plus SoC. This initial support includes:
 
-On Wed, 11 Jun 2025, Jiri Slaby (SUSE) wrote:
+- Updating the MAINTAINERS file to include the new board in the Ultratronik support section.
+- Adding a compatible string entry for the board to `fsl.yaml` in device tree bindings.
+- Introducing a new device tree source file `imx8mp-ultra-mach-sbc.dts` with basic hardware support.
 
-> _IO*() is the proper way of defining ioctl numbers. All these vt numbers
-> were synthetically built up the same way the _IO() macro does.
->=20
-> So instead of implicit hex numbers, use _IO() properly.
->=20
-> To not change the pre-existing numbers, use only _IO() (and not _IOR()
-> or _IOW()). The latter would change the numbers indeed.
->=20
-> Objdump of vt_ioctl.o reveals no difference with this patch.
->=20
-> Again, VT_GETCONSIZECSRPOS already uses _IOR(), so everything is paved
-> for this patch.
->=20
-> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-> Cc: Nicolas Pitre <nico@fluxnic.net>
+This series is modeled after the support added for the STM32MP157C-based Ultra-FLY SBC and aims to follow the conventions used for other i.MX8MP boards in mainline..
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+Changes in v2:
+  - Use `enum` with `const:` values in fsl.yaml to correctly represent multiple compatibles.
+  - Updated SPI child node name to use the generic `nfc-transceiver` per DT naming conventions.
+  - Renamed several peripheral nodes (`crypto@35`, `pmic@25`, etc.) to standard names.
+  - Minor formatting cleanup and compliance fixes per review feedback.
 
---=20
- i.
+Tested on hardware with:
+  - Serial console
+  - HDMI output via LCDIF pipeline
+  - eMMC and SD boot
+  - USB gadget and host modes
+  - Ethernet and basic SPI/I2C devices
 
-> ---
->  include/uapi/linux/vt.h | 34 +++++++++++++++++-----------------
->  1 file changed, 17 insertions(+), 17 deletions(-)
->=20
-> diff --git a/include/uapi/linux/vt.h b/include/uapi/linux/vt.h
-> index 714483d68c69..b60fcdfb2746 100644
-> --- a/include/uapi/linux/vt.h
-> +++ b/include/uapi/linux/vt.h
-> @@ -14,9 +14,9 @@
->  =09=09/* Note: the ioctl VT_GETSTATE does not work for
->  =09=09   consoles 16 and higher (since it returns a short) */
-> =20
-> -/* 0x56 is 'V', to avoid collision with termios and kd */
-> +/* 'V' to avoid collision with termios and kd */
-> =20
-> -#define VT_OPENQRY=090x5600=09/* find available vt */
-> +#define VT_OPENQRY=09=09_IO('V', 0x00)=09/* find available vt */
-> =20
->  struct vt_mode {
->  =09__u8 mode;=09=09/* vt mode */
-> @@ -25,8 +25,8 @@ struct vt_mode {
->  =09__s16 acqsig;=09=09/* signal to raise on acquisition */
->  =09__s16 frsig;=09=09/* unused (set to 0) */
->  };
-> -#define VT_GETMODE=090x5601=09/* get mode of active vt */
-> -#define VT_SETMODE=090x5602=09/* set mode of active vt */
-> +#define VT_GETMODE=09=09_IO('V', 0x01)=09/* get mode of active vt */
-> +#define VT_SETMODE=09=09_IO('V', 0x02)=09/* set mode of active vt */
->  #define=09=09VT_AUTO=09=090x00=09/* auto vt switching */
->  #define=09=09VT_PROCESS=090x01=09/* process controls switching */
->  #define=09=09VT_ACKACQ=090x02=09/* acknowledge switch */
-> @@ -36,21 +36,21 @@ struct vt_stat {
->  =09__u16 v_signal;=09/* signal to send */
->  =09__u16 v_state;=09=09/* vt bitmask */
->  };
-> -#define VT_GETSTATE=090x5603=09/* get global vt state info */
-> -#define VT_SENDSIG=090x5604=09/* signal to send to bitmask of vts */
-> +#define VT_GETSTATE=09=09_IO('V', 0x03)=09/* get global vt state info */
-> +#define VT_SENDSIG=09=09_IO('V', 0x04)=09/* signal to send to bitmask of=
- vts */
-> =20
-> -#define VT_RELDISP=090x5605=09/* release display */
-> +#define VT_RELDISP=09=09_IO('V', 0x05)=09/* release display */
-> =20
-> -#define VT_ACTIVATE=090x5606=09/* make vt active */
-> -#define VT_WAITACTIVE=090x5607=09/* wait for vt active */
-> -#define VT_DISALLOCATE=090x5608  /* free memory associated to vt */
-> +#define VT_ACTIVATE=09=09_IO('V', 0x06)=09/* make vt active */
-> +#define VT_WAITACTIVE=09=09_IO('V', 0x07)=09/* wait for vt active */
-> +#define VT_DISALLOCATE=09=09_IO('V', 0x08)  /* free memory associated to=
- vt */
-> =20
->  struct vt_sizes {
->  =09__u16 v_rows;=09=09/* number of rows */
->  =09__u16 v_cols;=09=09/* number of columns */
->  =09__u16 v_scrollsize;=09/* number of lines of scrollback */
->  };
-> -#define VT_RESIZE=090x5609=09/* set kernel's idea of screensize */
-> +#define VT_RESIZE=09=09_IO('V', 0x09)=09/* set kernel's idea of screensi=
-ze */
-> =20
->  struct vt_consize {
->  =09__u16 v_rows;=09/* number of rows */
-> @@ -60,10 +60,10 @@ struct vt_consize {
->  =09__u16 v_vcol;=09/* number of pixel columns on screen */
->  =09__u16 v_ccol;=09/* number of pixel columns per character */
->  };
-> -#define VT_RESIZEX      0x560A  /* set kernel's idea of screensize + mor=
-e */
-> -#define VT_LOCKSWITCH   0x560B  /* disallow vt switching */
-> -#define VT_UNLOCKSWITCH 0x560C  /* allow vt switching */
-> -#define VT_GETHIFONTMASK 0x560D  /* return hi font mask */
-> +#define VT_RESIZEX=09=09_IO('V', 0x0A)  /* set kernel's idea of screensi=
-ze + more */
-> +#define VT_LOCKSWITCH=09=09_IO('V', 0x0B)  /* disallow vt switching */
-> +#define VT_UNLOCKSWITCH=09=09_IO('V', 0x0C)  /* allow vt switching */
-> +#define VT_GETHIFONTMASK=09_IO('V', 0x0D)  /* return hi font mask */
-> =20
->  struct vt_event {
->  =09__u32 event;
-> @@ -77,14 +77,14 @@ struct vt_event {
->  =09__u32 pad[4];=09=09/* Padding for expansion */
->  };
-> =20
-> -#define VT_WAITEVENT=090x560E=09/* Wait for an event */
-> +#define VT_WAITEVENT=09=09_IO('V', 0x0E)=09/* Wait for an event */
-> =20
->  struct vt_setactivate {
->  =09__u32 console;
->  =09struct vt_mode mode;
->  };
-> =20
-> -#define VT_SETACTIVATE=090x560F=09/* Activate and set the mode of a cons=
-ole */
-> +#define VT_SETACTIVATE=09=09_IO('V', 0x0F)=09/* Activate and set the mod=
-e of a console */
-> =20
->  /* get console size and cursor position */
->  struct vt_consizecsrpos {
->=20
---8323328-1458262110-1749641437=:957--
+Feedback is welcome.
+
+Goran Rađenović (3):
+  MAINTAINERS: Add i.MX8MP Ultra-MACH SBC to ULTRATRONIK BOARD SUPPORT
+  dt-bindings: arm: imx8mp: Add Ultratronik Ultra-MACH SBC
+  arm64: dts: imx8mp: Add initial support for Ultratronik
+    imx8mp-ultra-mach-sbc board
+
+ Documentation/devicetree/bindings/arm/fsl.yaml |   6 +
+ MAINTAINERS                                    |   1 +
+ arch/arm64/boot/dts/freescale/Makefile         |   1 +
+ arch/arm64/boot/dts/freescale/imx8mp-ultra-mach-sbc.dts | 909 ++++++++++++++++++
+ 4 files changed, 917 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mp-ultra-mach-sbc.dts
+
+base-commit: cd2e103d57e5615f9bb027d772f93b9efd567224
+-- 
+2.43.0
