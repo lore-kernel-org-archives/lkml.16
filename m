@@ -1,212 +1,124 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABADB2857CF;
-	Wed, 11 Jun 2025 13:37:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6938E28F1
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 13:38:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749649064; cv=none; b=jIydv1zJOVsT+gvY4KkcuVHSWyZMLFG6tT5V/OZ/IbsebJG6KIXoVa+SjKLhfhBGvFRmiipmMuooiag3uCFSJYqiBrEN0TEgMif86OnwmCJ6iijRGHqlAx+JgKq2izrMtg5esO69OfkF2PtVbZmR9RGMiZayxsaKnwVjvbFbDXo=
+	t=1749649124; cv=none; b=iRtz9ddfh6mvVTNVMHw7T2l0t0vEWmyqjAlcrADH/aW3JBFDZ0SA1taETlUH9ZrmLMa/jgoC7Z2rL736IdAUJbS8oe5K9BGzFOv6ueXQidZPBRE1RrH6c0LcD1ZhN35oObqczC3cWfkQUP832RJhqZqOHbbdEyBfIfUrQ9RYtD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749649064; c=relaxed/simple;
-	bh=LlinO4DQVDm6Z0yBVcBfYI1ybTL41BszC99Grakd+uA=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iLQ4NzLqVjlz3C+BJ6A8r5oIQTuSSIRkribiaXKG8326jo/MDYunA9Vdcab98qTQ4tD1OMvAAhG0vA+uFdP/iAL7U+/yU5wZERA+YSjEreUEvDWG1VDd2DWC9eX97+m5Lc4MBe38sNcGRppnGHGF+tYHVLIgVUAM1UNOjRNnnHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bHRXq1JY4z6DB2C;
-	Wed, 11 Jun 2025 21:37:15 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 83C221405E2;
-	Wed, 11 Jun 2025 21:37:39 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 11 Jun
- 2025 15:37:38 +0200
-Date: Wed, 11 Jun 2025 14:37:37 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Alistair Francis <alistair@alistair23.me>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<lukas@wunner.de>, <linux-pci@vger.kernel.org>, <bhelgaas@google.com>,
-	<rust-for-linux@vger.kernel.org>, <akpm@linux-foundation.org>,
-	<boqun.feng@gmail.com>, <bjorn3_gh@protonmail.com>,
-	<wilfred.mallawa@wdc.com>, <aliceryhl@google.com>, <ojeda@kernel.org>,
-	<alistair23@gmail.com>, <a.hindborg@kernel.org>, <tmgross@umich.edu>,
-	<gary@garyguo.net>, <alex.gaynor@gmail.com>, <benno.lossin@proton.me>
-Subject: Re: [RFC v2 00/20] lib: Rust implementation of SPDM
-Message-ID: <20250611143737.00005e21@huawei.com>
-In-Reply-To: <20250227030952.2319050-1-alistair@alistair23.me>
-References: <20250227030952.2319050-1-alistair@alistair23.me>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1749649124; c=relaxed/simple;
+	bh=ApP+He8rbDgY3eull1tpS3JNL84wa6c46rgsr+2B2rI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=pQe7HVtdzbjPvrKRvUe4QprwK8qvuPBWobjX+dapym1x+gqjOq6uW0RwFwBuQ1mRgXxjtIftvRfY8r0BVyqWSEjHHpi3uSaqJCytq0lktNAlZmVsW6C6mYgPeazl8XQOERapRGdUO/6jTU/ufe4wWUexjgMaetSN2cF5YoMUP44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H3/0dNW+; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H3/0dNW+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B8E5C4CEEE;
+	Wed, 11 Jun 2025 13:38:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749649123;
+	bh=ApP+He8rbDgY3eull1tpS3JNL84wa6c46rgsr+2B2rI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=H3/0dNW+kMGwcGMHzgalbsTXgIMCO2rpJ0js9L+r0AThN/s0Eyx4qH+i17Kd4dl3F
+	 qxBriuvT1ZnnD00+VWINeYWuC3MtvOwVf2fxao9E6cps2zCYCB/h4MXBozMab3NUEy
+	 uHKXJKjo3HPfm+dOf1Rb4cjsWvIK29aW5bR+pjLvMZv+iSL6871EgZj1odwsQnbUOM
+	 AJbYohWEZceQJotFEgGY8JrKBTx8UeaYh8Q51p+FJ7c6P1E/cw0dJCNHsyqQVsMYaJ
+	 Knk1gpQRSORDWJPwkkVDgYME3NsaVSNIwK2K6TUzcKHlFCtzKGOzPEz/2scBaHfqpd
+	 gn/6dHrCoAAAQ==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  Mike Rapoport <rppt@kernel.org>,
+  Alexander Graf <graf@amazon.com>,  Changyuan Lyu <changyuanl@google.com>,
+  Andrew Morton <akpm@linux-foundation.org>,  Baoquan He <bhe@redhat.com>,
+  kexec@lists.infradead.org,  linux-kernel@vger.kernel.org,
+  linux-mm@kvack.org,  Michal Clapinski <mclapinski@google.com>
+Subject: Re: [PATCH] kho: initialize tail pages for higher order folios
+ properly
+In-Reply-To: <CA+CK2bBoMfJuUCV6sL80kwzYPnENnt7fDk2jRMPV0iPn1jCJdw@mail.gmail.com>
+References: <20250605171143.76963-1-pratyush@kernel.org>
+	<aEKhF3HcrvG77Ogb@kernel.org> <mafs0jz5osutx.fsf@kernel.org>
+	<aEc30BoLE9HRxiZm@kernel.org>
+	<CA+CK2bAAbZjS2Og79xxLcDtNf-eM0up-8fwhd4fg_dp0j_TahA@mail.gmail.com>
+	<aEfGTXrsEL5-DuF1@kernel.org>
+	<CA+CK2bDXOWzrTsNtbCCK2rabNysf0JFQT5VfAjYrX5oSoiLmSQ@mail.gmail.com>
+	<aEhgNU80Dr9iRwoD@kernel.org>
+	<CA+CK2bD3n=JDuSsMGvsyMnVbPhGdhdf6zWFDa3KpzRGEXygdgQ@mail.gmail.com>
+	<mafs0qzzqo2bg.fsf@kernel.org>
+	<CA+CK2bBoMfJuUCV6sL80kwzYPnENnt7fDk2jRMPV0iPn1jCJdw@mail.gmail.com>
+Date: Wed, 11 Jun 2025 15:38:40 +0200
+Message-ID: <mafs0msaeo0tb.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 27 Feb 2025 13:09:32 +1000
-Alistair Francis <alistair@alistair23.me> wrote:
+On Wed, Jun 11 2025, Pasha Tatashin wrote:
 
-> Security Protocols and Data Models (SPDM) [1] is used for authentication,
-> attestation and key exchange. SPDM is generally used over a range of
-> transports, such as PCIe, MCTP/SMBus/I3C, ATA, SCSI, NVMe or TCP.
-> 
-> From the kernels perspective SPDM is used to authenticate and attest devices.
-> In this threat model a device is considered untrusted until it can be verified
-> by the kernel and userspace using SPDM. As such SPDM data is untrusted data
-> that can be mallicious.
-> 
-> The SPDM specification is also complex, with the 1.2.1 spec being almost 200
-> pages and the 1.3.0 spec being almost 250 pages long.
-> 
-> As such we have the kernel parsing untrusted responses from a complex
-> specification, which sounds like a possible exploit vector. This is the type
-> of place where Rust excels!
-> 
-> This series implements a SPDM requester in Rust.
-> 
-> This is very similar to Lukas' implementation [2]. This series includes patches
-> and files from Lukas' C SPDM implementation, which isn't in mainline.
-> 
-> This is a standalone series and doesn't depend on Lukas' implementation, although
-> we do still rely on Lukas' crypto preperation patches, not all of which are
-> upstream yet.
-> 
-> To help with maintaining compatibility it's designed in a way to match Lukas'
-> design and the state struct stores the same information, although in a Rust
-> struct instead of the original C one.
-> 
-> This series doesn't expose the data to userspace (except for a single sysfs
-> bool) to avoid the debate about how to do that. I'm planning to do that in
-> the future though.
-> 
-> This series is based on the latest rust-next tree.
-> 
-> This seris depends on the Untrusted abstraction work [4].
-> 
-> This seris also depends on the recent bindgen support for static inlines  [5].
-> 
-> The entire tree can be seen here: https://github.com/alistair23/linux/tree/alistair/spdm-rust
-> 
-> based-on: https://lore.kernel.org/rust-for-linux/20240925205244.873020-1-benno.lossin@proton.me/
-> based-on: https://lore.kernel.org/rust-for-linux/20250107035058.818539-1-alistair@alistair23.me/
+> On Wed, Jun 11, 2025 at 9:06=E2=80=AFAM Pratyush Yadav <pratyush@kernel.o=
+rg> wrote:
+>>
+>> On Tue, Jun 10 2025, Pasha Tatashin wrote:
+[...]
+>> >> > > We could, but with that would mean we'll run this before SMP and =
+it's not
+>> >> > > desirable. Also, init_deferred_page() for a random page requires
+>> >> >
+>> >> > We already run KHO init before smp_init:
+>> >> > start_kernel() -> mm_core_init() -> kho_memory_init() ->
+>> >> > kho_restore_folio() -> struct pages must be already initialized her=
+e!
+>> >> >
+>> >> > While deferred struct pages are initialized:
+>> >> > start_kernel() -> rest_init() -> kernel_init() ->
+>> >> > kernel_init_freeable() -> page_alloc_init_late() ->
+>> >> > deferred_init_memmap()
+>> >> >
+>> >> > If the number of preserved pages that is needed during early boot is
+>> >> > relatively small, that it should not be an issue to pre-initialize
+>> >> > struct pages for them before deferred struct pages are initialized.=
+ We
+>> >> > already pre-initialize some  "struct pages" that are needed during
+>> >> > early boot before the reset are initialized, see deferred_grow_zone=
+()
+>> >>
+>> >> deferred_grow_zone() takes a chunk in the beginning of uninitialized =
+range,
+>> >> with kho we are talking about some random pages. If we preinit them e=
+arly,
+>> >> deferred_init_memmap() will overwrite them.
+>> >
+>> > Yes, this is why I am saying that we would need to skip the KHO
+>> > initialized "struct pages" somehow during deferred initialization. If
+>> > we create an ordered by PFN list of early-initialized KHO struct
+>> > pages, skipping during deferred initialization could be done
+>> > efficiently.
+>>
+>> Or keep things simple and don't use any KHO struct pages during early
+>> init. You can access the page itself, just don't use its struct page.
+>>
+>> Currently the only user of kho_restore_folio() during init is
+>> kho_memory_init(). The FDT is accessed by doing
+>> phys_to_virt(kho_in.fdt_phys) anyway, so there is really no need for
+>> restoring the folio so early. It can be done later, for example when LUO
+>> does the finish event, to clean up and free the folio.
+>
+> Good suggestion, however, KHO does not have any sophisticated users
+> that we are going to be adding as part of the live update work in the
+> future: IR, KVM, early VCPU threads, and so on. So, while today, this
+> might work, in the future, I am not sure if we should expect struct
+> pages are not accessed until after deferred initialization or simply
+> fix it once and for all.
 
-Hi Alastair,
+Right. We might end up needing it down the line. But from a quick look,
+it doesn't seem to be trivial to solve, so IMO we should solve it when
+those use cases actually show up, and keep things simple for now.
 
-I've completely failed to find time to actually pick up enough rust to review
-this :(  Also failed to find anyone else who has the rust skills and enough of
-the background.
-
-Ideally I'll get up to speed at some point, but in the meantime wanted to revisit
-the question of whether we want to go this way from day 1 rather than trying to
-deal with C version and later this?
-
-What's your current thoughts?  I know Lukas mentioned he was going to spin a
-new version shortly (in one of the TSM threads) so are we waiting on that?
-
-For now I'm going to take this off my review queue. Sorry!
-
-Jonathan
-
-
-
-> 
-> 1: https://www.dmtf.org/standards/spdm
-> 2: https://lore.kernel.org/all/cover.1719771133.git.lukas@wunner.de/
-> 3: https://github.com/l1k/linux/commits/spdm-future/
-> 4: https://lore.kernel.org/rust-for-linux/20240925205244.873020-1-benno.lossin@proton.me/
-> 5: https://lore.kernel.org/rust-for-linux/20250107035058.818539-1-alistair@alistair23.me/
-> 
-> v2:
->  - Drop support for Rust and C implementations
->  - Include patches from Lukas to reduce series deps
->  - Large code cleanups based on more testing
->  - Support support for authentication
-> 
-> Alistair Francis (12):
->   lib: rspdm: Initial commit of Rust SPDM
->   lib: rspdm: Support SPDM get_version
->   lib: rspdm: Support SPDM get_capabilities
->   lib: rspdm: Support SPDM negotiate_algorithms
->   lib: rspdm: Support SPDM get_digests
->   lib: rspdm: Support SPDM get_certificate
->   crypto: asymmetric_keys - Load certificate parsing early in boot
->   KEYS: Load keyring and certificates early in boot
->   PCI/CMA: Support built in X.509 certificates
->   lib: rspdm: Support SPDM certificate validation
->   rust: allow extracting the buffer from a CString
->   lib: rspdm: Support SPDM challenge
-> 
-> Jonathan Cameron (1):
->   PCI/CMA: Authenticate devices on enumeration
-> 
-> Lukas Wunner (7):
->   X.509: Make certificate parser public
->   X.509: Parse Subject Alternative Name in certificates
->   X.509: Move certificate length retrieval into new helper
->   certs: Create blacklist keyring earlier
->   PCI/CMA: Validate Subject Alternative Name in certificates
->   PCI/CMA: Reauthenticate devices on reset and resume
->   PCI/CMA: Expose in sysfs whether devices are authenticated
-> 
->  Documentation/ABI/testing/sysfs-devices-spdm |   31 +
->  MAINTAINERS                                  |   14 +
->  certs/blacklist.c                            |    4 +-
->  certs/system_keyring.c                       |    4 +-
->  crypto/asymmetric_keys/asymmetric_type.c     |    2 +-
->  crypto/asymmetric_keys/x509_cert_parser.c    |    9 +
->  crypto/asymmetric_keys/x509_loader.c         |   38 +-
->  crypto/asymmetric_keys/x509_parser.h         |   40 +-
->  crypto/asymmetric_keys/x509_public_key.c     |    2 +-
->  drivers/pci/Kconfig                          |   13 +
->  drivers/pci/Makefile                         |    4 +
->  drivers/pci/cma.asn1                         |   41 +
->  drivers/pci/cma.c                            |  272 +++++
->  drivers/pci/doe.c                            |    5 +-
->  drivers/pci/pci-driver.c                     |    1 +
->  drivers/pci/pci-sysfs.c                      |    3 +
->  drivers/pci/pci.c                            |   12 +-
->  drivers/pci/pci.h                            |   15 +
->  drivers/pci/pcie/err.c                       |    3 +
->  drivers/pci/probe.c                          |    1 +
->  drivers/pci/remove.c                         |    1 +
->  include/keys/asymmetric-type.h               |    2 +
->  include/keys/x509-parser.h                   |   55 +
->  include/linux/oid_registry.h                 |    3 +
->  include/linux/pci-doe.h                      |    4 +
->  include/linux/pci.h                          |   16 +
->  include/linux/spdm.h                         |   39 +
->  lib/Kconfig                                  |   16 +
->  lib/Makefile                                 |    2 +
->  lib/rspdm/Makefile                           |   11 +
->  lib/rspdm/consts.rs                          |  135 +++
->  lib/rspdm/lib.rs                             |  180 +++
->  lib/rspdm/req-sysfs.c                        |   97 ++
->  lib/rspdm/state.rs                           | 1037 ++++++++++++++++++
->  lib/rspdm/sysfs.rs                           |   28 +
->  lib/rspdm/validator.rs                       |  489 +++++++++
->  rust/bindgen_static_functions                |    5 +
->  rust/bindings/bindings_helper.h              |    7 +
->  rust/kernel/error.rs                         |    3 +
->  rust/kernel/str.rs                           |    5 +
->  40 files changed, 2587 insertions(+), 62 deletions(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-devices-spdm
->  create mode 100644 drivers/pci/cma.asn1
->  create mode 100644 drivers/pci/cma.c
->  create mode 100644 include/keys/x509-parser.h
->  create mode 100644 include/linux/spdm.h
->  create mode 100644 lib/rspdm/Makefile
->  create mode 100644 lib/rspdm/consts.rs
->  create mode 100644 lib/rspdm/lib.rs
->  create mode 100644 lib/rspdm/req-sysfs.c
->  create mode 100644 lib/rspdm/state.rs
->  create mode 100644 lib/rspdm/sysfs.rs
->  create mode 100644 lib/rspdm/validator.rs
-> 
-
+--=20
+Regards,
+Pratyush Yadav
