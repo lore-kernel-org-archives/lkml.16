@@ -1,61 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 259932236E9;
-	Wed, 11 Jun 2025 09:33:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE3B2641CC
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 09:33:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749634423; cv=none; b=NHNl6qW939PTxz/+esH3mV+YaVYb58+no2g7mLGJ57QCKLM2PbccZgyMNOq3li1/VNYrVRU79iCcNyMp7aQINB2jh2mTqhvJT5yeR+KUA+4zQWM6oJOyW0ere+vyWW1k8XYAPuPkVAzILnst4mH7qikn4ld9funkMc4j38q5muY=
+	t=1749634424; cv=none; b=XHKaOK/OiyI6ItsVqJTHoTyFFua4eQfff4aG25Fyp2Zr27D41TtOncFFScfKkIaMtliBr2XE5BcrvV6Ljv7Tadb/8HI5jY4/XDEjr2IhBT3daGwwSI2JoGnqYG6ZIU6UPXXHzrnTq3sdUZW3iZnSvOf8QB/QHx2pzMJWTyV6r18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749634423; c=relaxed/simple;
-	bh=94L3NDzk1PuVU6OC22j44uOdZdn4jd8PZe73OGT0oYk=;
+	s=arc-20240116; t=1749634424; c=relaxed/simple;
+	bh=dCxYhXgXkoUEmgozhBC3G0zLWKAepHqQDL8jsvt0uPw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FXT72DDeyU6sl0M8bcnF5gl/s+H9CHqfkFjO55RPh7R3YsexTLah+enqYca+MR46roydVqp+uA3uMT7m6lOskw+r2GODAxM1ou6OaH/59qnquCraBWMetlBqZNNZxbLkAKTaq45ZU5kj2GqJPh0mthkOjxdZpfuJX7Et19RQLuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ja/yeB9p; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=EOLzgKhpLOfRrJb4pZjXQBY4OIJcvuTrDGrOgX03wvf4R85yOMmhMnzj5Oj1eaKverM5usVtCynJv/27A4IIJcWk2ho6HBJab2SNLkTVZ06HhzQd1lJUcynOq1oH0+L9GaBrRLSbq5GBU0J/UaBq8YWeHcNxRxFBQlZJhw4yrAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MjP8eK0u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ja/yeB9p"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749634421; x=1781170421;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=94L3NDzk1PuVU6OC22j44uOdZdn4jd8PZe73OGT0oYk=;
-  b=Ja/yeB9pIa7wx04+fspVRTYe5oUhzDQcYN1CMxhDFTE6cYqycYZU7wO9
-   5ob8AITXOK0BFXHs4GHsVvkABb6pieN/rtcZDXaMpWIhfibkiGKPLa4RE
-   WmHntFIaPnzVCr8KIMdxoFo+Ui3rYmSMk9gz22v/UI/RNQA1Cli4TiXqy
-   qFX2v5Jb/SAVkijDhlX80L1QMUOe7jMfssKdIPkW6WZDl9I88w8bL4YNz
-   YWp1XDsPo+uWbIcSqzgZdgiml9UmWl46e3QJKpE/ms0npy5UepbgUqz9+
-   Wq6Bnd1UL+Y8Gq4YNowUJSGBwuaAw7hNsZ9bYUxOpmbtGC2xTWpz/xzUC
-   w==;
-X-CSE-ConnectionGUID: 8CEaoBmURG250XK66JFmPQ==
-X-CSE-MsgGUID: Dy5AmAuXQL6lCVJEhazwQg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51631265"
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="51631265"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 02:33:41 -0700
-X-CSE-ConnectionGUID: 7O3v5GAmRVuG4RnS3dqV1Q==
-X-CSE-MsgGUID: Mwnx/+5jTDuJ/lSAWJ05lA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="147500583"
-Received: from lfiedoro-mobl.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.148])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 02:33:39 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 4833211FBA0;
-	Wed, 11 Jun 2025 12:33:36 +0300 (EEST)
-Date: Wed, 11 Jun 2025 09:33:36 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Matthias Fend <matthias.fend@emfend.at>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bsp-development.geo@leica-geosystems.com
-Subject: Re: [PATCH] media: dw9714: add support for powerdown pin
-Message-ID: <aElNcDTLEJTcJs2s@kekkonen.localdomain>
-References: <20250611-dw9714-sd-v1-1-fb47ef5e736c@emfend.at>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MjP8eK0u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A122CC4CEF1;
+	Wed, 11 Jun 2025 09:33:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749634423;
+	bh=dCxYhXgXkoUEmgozhBC3G0zLWKAepHqQDL8jsvt0uPw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MjP8eK0u553Rmcc4iup0emJYRA+W3FmA9kUZBpIAUv8hyBKhUMASw9CiNn4j5CvZw
+	 C4/Yc3KKIBvZnQ5+PugChPTPH6fDy4EeboidarhmIQuEZMUNXtrtimx4pZsKpTf7J/
+	 LJKJpC4jcAk84Xw4CFH0QRaNnH4tAhxxzIUxfjcDE1EyOnINKpnRh0qpoh4oKpXu+/
+	 wIjNFZ6lvdko5oJ4ULeZ/oDsmVvb7Xq7CvSrOIyuYusFpKeyyenPO5FnOlOIE1iXh0
+	 xclN8LqtjskAP/7DfVBKFXzZioC2AdfdlPd9hU7mR0fusgKWyOJ+ycB2ZROesYA+RK
+	 hfF3cOsNEqzWQ==
+Date: Wed, 11 Jun 2025 10:33:38 +0100
+From: Will Deacon <will@kernel.org>
+To: Dev Jain <dev.jain@arm.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>, catalin.marinas@arm.com,
+	anshuman.khandual@arm.com, quic_zhenhuah@quicinc.com,
+	kevin.brodsky@arm.com, yangyicong@hisilicon.com, joey.gouly@arm.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	david@redhat.com
+Subject: Re: [PATCH] arm64: Enable vmalloc-huge with ptdump
+Message-ID: <20250611093337.GB10885@willie-the-truck>
+References: <20250530082021.18182-1-dev.jain@arm.com>
+ <d2b63b97-232e-4d2e-816b-71fd5b0ffcfa@arm.com>
+ <832e84a9-4303-4e21-a88b-94395898fa3e@arm.com>
+ <4202a03d-dacd-429c-91e6-81a5d05726a4@arm.com>
+ <20250530123527.GA30463@willie-the-truck>
+ <b223245d-c43c-4d3e-86d4-9fbfd90cfacf@arm.com>
+ <20250530133625.GA30622@willie-the-truck>
+ <6cd41ae9-303d-4eda-8d64-f7dba19eb106@arm.com>
+ <33dd9ce3-f6ab-4054-9245-7338f06afbfd@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,126 +53,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250611-dw9714-sd-v1-1-fb47ef5e736c@emfend.at>
+In-Reply-To: <33dd9ce3-f6ab-4054-9245-7338f06afbfd@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Hi Matthias,
-
-Thanks for the patch.
-
-On Wed, Jun 11, 2025 at 09:13:33AM +0200, Matthias Fend wrote:
-> Add support for the powerdown pin (xSD), which can be used to put the VCM
-> driver into power down mode. This is useful, for example, if the VCM
-> driver's power supply cannot be controlled.
-> The use of the powerdown pin is optional.
-
-Please rewrap. Most editors can do it for you.
-
+On Thu, Jun 05, 2025 at 01:46:01PM +0530, Dev Jain wrote:
+> On 05/06/25 10:18 am, Dev Jain wrote:
+> > On 30/05/25 7:06 pm, Will Deacon wrote:
+> > > On Fri, May 30, 2025 at 02:11:36PM +0100, Ryan Roberts wrote:
+> > > > On 30/05/2025 13:35, Will Deacon wrote:
+> > > > > I really don't think we should be adding unconditional
+> > > > > locking overhead
+> > > > > to core mm routines purely to facilitate a rarely used debug option.
+> > > > > 
+> > > > > Instead, can we either adopt something like the RCU-like walk used by
+> > > > > fast GUP or stick the locking behind a static key that's only enabled
+> > > > > when a ptdump walk is in progress (a bit like how
+> > > > > hugetlb_vmemmap_optimize_folio() manipulates
+> > > > > hugetlb_optimize_vmemmap_key)?
+> > > > My sense is that the static key will be less effort and can be
+> > > > contained fully
+> > > > in arm64. I think we would need to enable the key around the call to
+> > > > ptdump_walk_pgd() in both ptdump_walk() and ptdump_check_wx().
+> > > > Then where Dev is
+> > > > currently taking the read lock, that would be contingent on the
+> > > > key being
+> > > > enabled and the unlock would be contingent on having taken the lock.
+> > > > 
+> > > > Does that sound like an acceptable approach?
+> > > Yup, and I think you'll probably need something like a synchronize_rcu()
+> > > when flipping the key to deal with any pre-existing page-table freers.
+> > 
+> > IIUC, you mean to say that we need to ensure any existing readers having
+> > a reference to the isolated table in pmd_free_pte_page and friend, have
+> > exited.
+> > But the problem is that we take an mmap_write_lock() around
+> > ptdump_walk_pgd() so
+> > this is a sleepable code path.
 > 
-> Signed-off-by: Matthias Fend <matthias.fend@emfend.at>
-> ---
->  drivers/media/i2c/Kconfig  |  2 +-
->  drivers/media/i2c/dw9714.c | 16 ++++++++++++++++
->  2 files changed, 17 insertions(+), 1 deletion(-)
+> The mmap_write_lock around ptdump_walk_pgd() is definitely restrictive. I
+> think that
 > 
-> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-> index e45ba127069fc0848f1a06ceb789efd3c222c008..e923daeec9c574c5b8c7014b9e83fcbad47866c0 100644
-> --- a/drivers/media/i2c/Kconfig
-> +++ b/drivers/media/i2c/Kconfig
-> @@ -748,7 +748,7 @@ config VIDEO_AK7375
->  
->  config VIDEO_DW9714
->  	tristate "DW9714 lens voice coil support"
-> -	depends on I2C && VIDEO_DEV
-> +	depends on GPIOLIB && I2C && VIDEO_DEV
->  	select MEDIA_CONTROLLER
->  	select VIDEO_V4L2_SUBDEV_API
->  	select V4L2_ASYNC
-> diff --git a/drivers/media/i2c/dw9714.c b/drivers/media/i2c/dw9714.c
-> index 2ddd7daa79e28a2cde915b4173fa27e60d5a2b57..5b78c1848f80bc3e32df13d149f3865ff8defe6e 100644
-> --- a/drivers/media/i2c/dw9714.c
-> +++ b/drivers/media/i2c/dw9714.c
-> @@ -2,6 +2,7 @@
->  // Copyright (c) 2015--2017 Intel Corporation.
->  
->  #include <linux/delay.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/i2c.h>
->  #include <linux/module.h>
->  #include <linux/pm_runtime.h>
-> @@ -38,6 +39,7 @@ struct dw9714_device {
->  	struct v4l2_subdev sd;
->  	u16 current_val;
->  	struct regulator *vcc;
-> +	struct gpio_desc *powerdown_gpio;
->  };
->  
->  static inline struct dw9714_device *to_dw9714_vcm(struct v4l2_ctrl *ctrl)
-> @@ -151,11 +153,20 @@ static int dw9714_probe(struct i2c_client *client)
->  	if (IS_ERR(dw9714_dev->vcc))
->  		return PTR_ERR(dw9714_dev->vcc);
->  
-> +	dw9714_dev->powerdown_gpio = devm_gpiod_get_optional(&client->dev,
-> +							     "powerdown",
-> +							     GPIOD_OUT_LOW);
-> +	if (IS_ERR(dw9714_dev->powerdown_gpio))
-> +		return dev_err_probe(&client->dev,
-> +				     PTR_ERR(dw9714_dev->powerdown_gpio),
-> +				     "could not get powerdown gpio\n");
-> +
->  	rval = regulator_enable(dw9714_dev->vcc);
->  	if (rval < 0) {
->  		dev_err(&client->dev, "failed to enable vcc: %d\n", rval);
->  		return rval;
->  	}
-> +	gpiod_set_value_cansleep(dw9714_dev->powerdown_gpio, 0);
-
-This seems to be redundant, you're already setting the GPIO low when
-acquiring it. Typically the order is different, though: the regulator is
-enabled first. Also related to the following comment.
-
->  
->  	usleep_range(1000, 2000);
->  
-> @@ -185,6 +196,7 @@ static int dw9714_probe(struct i2c_client *client)
->  	return 0;
->  
->  err_cleanup:
-> +	gpiod_set_value_cansleep(dw9714_dev->powerdown_gpio, 1);
->  	regulator_disable(dw9714_dev->vcc);
-
-It'd be nice to have a single implementation of the power-on and power-off
-sequences. Now there are two.
-
->  	v4l2_ctrl_handler_free(&dw9714_dev->ctrls_vcm);
->  	media_entity_cleanup(&dw9714_dev->sd.entity);
-> @@ -200,6 +212,7 @@ static void dw9714_remove(struct i2c_client *client)
->  
->  	pm_runtime_disable(&client->dev);
->  	if (!pm_runtime_status_suspended(&client->dev)) {
-> +		gpiod_set_value_cansleep(dw9714_dev->powerdown_gpio, 1);
->  		ret = regulator_disable(dw9714_dev->vcc);
->  		if (ret) {
->  			dev_err(&client->dev,
-> @@ -234,6 +247,7 @@ static int __maybe_unused dw9714_vcm_suspend(struct device *dev)
->  		usleep_range(DW9714_CTRL_DELAY_US, DW9714_CTRL_DELAY_US + 10);
->  	}
->  
-> +	gpiod_set_value_cansleep(dw9714_dev->powerdown_gpio, 1);
->  	ret = regulator_disable(dw9714_dev->vcc);
->  	if (ret)
->  		dev_err(dev, "Failed to disable vcc: %d\n", ret);
-> @@ -262,6 +276,8 @@ static int  __maybe_unused dw9714_vcm_resume(struct device *dev)
->  		dev_err(dev, "Failed to enable vcc: %d\n", ret);
->  		return ret;
->  	}
-> +	gpiod_set_value_cansleep(dw9714_dev->powerdown_gpio, 0);
-> +
->  	usleep_range(1000, 2000);
->  
->  	for (val = dw9714_dev->current_val % DW9714_CTRL_STEPS;
+> was put because ptdump is rarely used, I think we could have done
+> RCU-freeing of pagetables to
 > 
+> synchronize between ptdump and vmalloc pagetable lazy freeing/ hotunplug
+> pagetable freeing.
 
--- 
-Regards,
+The other idea was to use a static key like the HVO code does, which
+shouldn't place any RCU requirements on the debug walk.
 
-Sakari Ailus
+Will
