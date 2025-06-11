@@ -1,116 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F10B18D;
-	Wed, 11 Jun 2025 19:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E29E283CA2;
+	Wed, 11 Jun 2025 19:01:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749668468; cv=none; b=kmnzdOK+kb6TrColUZA+DLCg+E4XJ3A4KUDI6kcAbq4+uUn2NwM1TQHMYeGKdwuf2cc2qBMh7f6cK0kgpePRamZW3RMUt194eM+UQ6Q3gxINi1NJf2U/+9reQPjm8DMlvLoCW1bUvVn9gsfOwQhce9Xmw8MUf5o20ICq4cJL5uY=
+	t=1749668486; cv=none; b=WPgIB1/jdp6xHG+G3A9C2AqlP89m1JKnfN9axsON03lreLITwhIJ+7AUGhrdzDFdWGivSJ0r7BTxmgoS74K1LzjdCfhuwCHFY2C7zq2hDqtDGWAMUZbph98F9cEKXUf8gMTUJMy0m9a0yqZV+5UIAH9/WWp03S4BU0RmEctfXvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749668468; c=relaxed/simple;
-	bh=HEU4YutA9kG/s0/mba3Ytoq2491mLHZZ1L9DBov7nkM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=AbBdgoQVtKqyrB8A3WBZNQwlTjiIYFlS1ofKxboHUe+tBVZj2qUBgwl7+LHi5LUD/Jd/xeLUs2iytxEf1vbxsaDlRaRAVZkFj0ax3chgk6IVhzKWaiccVBKUnTWs/Z44v2pY2wNXizM8xFw3TljAV6j+3rvmGL58Y1hKTDaiXtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s7d89dHb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749668486; c=relaxed/simple;
+	bh=hfeyK/eTihwmpGVnQxX1pqhXZgt2fJWgCy74pCgGR4E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dOoZXjmRsvmg5lr5b/TamEBexMOGrdEKcQC6XlWc4CqTldYw++PzTE6nOQFSb+3E9OOVG4X//6/Yd3Nd3SfSJ6c6+d+2VC/vTNaoV6Uhyg4HAgHhD+0oBS6/ZsfrqvCFtMNV96ftaGjbhBCKIxE9ePYi3jTPSxi2r7irENFvKqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cSVdE0v7; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s7d89dHb"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9F5D0C4CEEA;
-	Wed, 11 Jun 2025 19:01:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749668467;
-	bh=HEU4YutA9kG/s0/mba3Ytoq2491mLHZZ1L9DBov7nkM=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=s7d89dHbjMDYIEd1Gn4wI/fitFyYw4wUZNjZKDx64yneWUFCGbbWUgIBliO8RBCLl
-	 s+3mZuC5dTu99y8EHqyNt8pcLNhBIekbr7QiD7MkvGSPPhA3lp1R+XgewCLdpcW0en
-	 PhzRiFpANFU8jm83mTp0Hi8Bl3taTUCHLlZL9HF82U9zXwhG5h9e8njw3nCtiohzCu
-	 wlcU3EV2c9qR4I12+s/ho7t5CNIKd1rfO9SG69VFXa6rLpUolrkhM2xhmn856INgha
-	 yKmNhwggG9t1utPlyN5XcUzbJ4T4i3QBCqclNSlRF4CZXHYSt068+2LT4Yj77g3XUF
-	 HXq/tkc+MOlKw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94910C71136;
-	Wed, 11 Jun 2025 19:01:07 +0000 (UTC)
-From: =?utf-8?q?J=2E_Neusch=C3=A4fer_via_B4_Relay?= <devnull+j.ne.posteo.net@kernel.org>
-Date: Wed, 11 Jun 2025 21:01:01 +0200
-Subject: [PATCH RESEND] powerpc: dts: mpc8315erdb: Add GPIO controller node
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cSVdE0v7"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-747abb3cd0bso972673b3a.1;
+        Wed, 11 Jun 2025 12:01:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749668484; x=1750273284; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kZGyYXYc3SZhPlDKvAJZs+fBk6MmM4JqN/0ybuzC+cc=;
+        b=cSVdE0v7hSRFE8CX3luHIjIN7QUgIOIB67zdckBiVF4NpoOHZCa9gjrxw1LojGOzK7
+         pDwiuv9NfRfca5Xlbj6zekuqBC652sV+P7D4KNxI3dZ/ZEzuxe0Mu3HpFiBQhKJruyfP
+         EnYrtqiRmdApcatTpz0qZaHmR6CD2chRn/EKt3unllofLL8epnFCfEzf8JC7j2Gxvjh5
+         DFrgip/YM2JQGE29TnOEzcjCMABitMDz65/5hM9RijFM3N8ZRtBzEB0GX4fGEcET3n0B
+         qGuUtG5ypBT2SXupHR3/vrf2SpI0jzuZkUfKeUyO8y43aeSpGFrnRGToqBlKUMuZXAmt
+         f+Dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749668484; x=1750273284;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kZGyYXYc3SZhPlDKvAJZs+fBk6MmM4JqN/0ybuzC+cc=;
+        b=PvkWqQE6x16dPQJXKdJnpf3tMYZzP89oTO3c1Zmc/XhZokCQ/K5DCjiQueWpz76p2D
+         LQXO8fWYxaGgqaUg1f6jAxCCplzaO7t7ADIWvirW6I0UTVsousrgO0MAaGiEdV1DQvnK
+         nqP6zSV5dKmJXHhOzLT7rtLeKmV+sRE9LUpklEEnKZvIH3eFkc3ANLY8dbQzgQexkRTs
+         v43l23jwrqDnvqdSXCtSMkWPWkhz4cfcUc/zUk4o6VND1FH6FxR5XSHYAF143uBZueuW
+         sT+K9UaKEeDXOm7s1GINlVlfSA5CxbpQNQHXbozPo7gZe7IH0TUV0Ppi9FwZm6MlPvTt
+         vxSw==
+X-Forwarded-Encrypted: i=1; AJvYcCUrsy6yjLW0hj0qId26fndCdceRWq4hLXB7Nbw2oDygcfcSoYQ4BckSDk1y1AwyzaxhqIRIV9wC7Zyi@vger.kernel.org, AJvYcCWR0TDoeylBhvOer/SK0GrOZJvwq9r5AapzcSvInBvOgu6l18GZPV6DwN1G/YenyYq6EhmHRrMH6inUoeo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7EA6GROqH4QySpcREeJcNIpxvS9MWIRSWuh4uem0yQm1IiR8v
+	CHilznHDDsHED2zMTZWkRgdmvxkFpGEiLWnQXG9Xm4JN6rXMCP3Ubvgs
+X-Gm-Gg: ASbGncvclGI6Zynu5qfwFZLhoeu4LZHRpZdDaguRrrQzggBel3H2qauT6QM/mnzFtyz
+	MRxhqNFtUX7mo87woWjn2EEv6tqBHo9Eyfx/zeZweEobhB7P0QCqIqXSqTFsgFT9CibBrwJB8rv
+	dvRgtsYnvevL5AnuwE9JalLhRbJhnuh2q5Mm/Cw++mYnnVkgPutigvAJ6nrzmHP1STF43GU+sRP
+	chvQ9z/vloAnm8OSKo+O7AqNy9aGyJnX6HMaz0lE8zVyttjxQKmZ4A7aUyYtH+x0zx3XgkmCcgR
+	4OucxgyKY0c7HJQRxEqbmhpgkAyUJCWd8ntmlU60tOzlnuUorTFirL21ow2pCjOcNNVEydgFiHv
+	P
+X-Google-Smtp-Source: AGHT+IEMmil3asp25VvB9Lf6ITUkxC/JbPLatMIJdku5ioTE3FR6q5SQWOrizUA/z/Q7dClNFGB6kA==
+X-Received: by 2002:a05:6a20:244b:b0:218:1fa6:420e with SMTP id adf61e73a8af0-21f991040a6mr797761637.13.1749668483580;
+        Wed, 11 Jun 2025 12:01:23 -0700 (PDT)
+Received: from akshayaj-lenovo.. ([2401:4900:8839:85c6:8863:1c9:9e9c:ef7d])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2f5f892f57sm8766759a12.66.2025.06.11.12.01.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 12:01:23 -0700 (PDT)
+From: Akshay Jindal <akshayaj.lkd@gmail.com>
+To: bhelgaas@google.com,
+	ilpo.jarvinen@linux.intel.com,
+	Jonathan.Cameron@huawei.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	kwilczynski@kernel.org,
+	mahesh@linux.ibm.com,
+	oohall@gmail.com,
+	karolina.stolarek@oracle.com,
+	lukas@wunner.de,
+	pandoh@google.com
+Cc: Akshay Jindal <akshayaj.lkd@gmail.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI/AER: Add Error Log in case when AER_MAX_MULTI_ERR_DEVICES limit hit during AER handling.
+Date: Thu, 12 Jun 2025 00:30:53 +0530
+Message-ID: <20250611190056.355878-1-akshayaj.lkd@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250611-mpc-gpio-v1-1-02d1f75336e2@posteo.net>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Madhavan Srinivasan <maddy@linux.ibm.com>, 
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- Naveen N Rao <naveen@kernel.org>
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749668466; l=1409;
- i=j.ne@posteo.net; s=20240329; h=from:subject:message-id;
- bh=yIo4OMFzwIHk/Y7Ad7fIh7vacgPJLYwfWJ8zjzP38HI=;
- b=t2XtzKk2H7rwfNQdpvWOKJG4VX8BR/rxKH6Dz6UQMgVFtZru+BUuVAF8xZp/evmj28KZWpxgG
- JgO+ojw6KFlC8hwxoeHM7YdVVX7H+wqjB0xhsUl8KqDVM9xAD42Bznx
-X-Developer-Key: i=j.ne@posteo.net; a=ed25519;
- pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
-X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
- auth_id=156
-X-Original-From: =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-Reply-To: j.ne@posteo.net
 
-From: "J. Neuschäfer" <j.ne@posteo.net>
+When an error is detected at a PCIe device and the root port receives the
+error message, the threaded IRQ handler aer_isr traverses down the
+hierarchy from the root port and keeps on adding those pcie devices on
+which error has been recorded into the e_info->dev[] array for
+respective error handling and recovery. The e_info->dev[] array has size
+AER_MAX_MULTI_ERR_DEVICES which currently has been defined as 5.
+This change adds an error message in case this limit is hit.
 
-The MPC8315E SoC and variants have a GPIO controller at IMMR + 0xc00.
-This node was previously missing from the device tree.
-
-Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+Signed-off-by: Akshay Jindal <akshayaj.lkd@gmail.com>
 ---
-A version of this patch was previously part of the series "powerpc:
-MPC83xx cleanup and LANCOM NWAPP2 board", but I'm splitting it out to
-reduce the size of that series.
----
- arch/powerpc/boot/dts/mpc8315erdb.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
 
-diff --git a/arch/powerpc/boot/dts/mpc8315erdb.dts b/arch/powerpc/boot/dts/mpc8315erdb.dts
-index e09b37d7489d01bfd16a26e9786868f630fa0262..a89cb3139ca8c3d4f22e43838a4b7d2dd5109aa5 100644
---- a/arch/powerpc/boot/dts/mpc8315erdb.dts
-+++ b/arch/powerpc/boot/dts/mpc8315erdb.dts
-@@ -6,6 +6,7 @@
-  */
- 
- /dts-v1/;
-+#include <dt-bindings/interrupt-controller/irq.h>
- 
- / {
- 	compatible = "fsl,mpc8315erdb";
-@@ -358,6 +359,15 @@ pmc: power@b00 {
- 			interrupt-parent = <&ipic>;
- 			fsl,mpc8313-wakeup-timer = <&gtm1>;
- 		};
-+
-+		gpio: gpio-controller@c00 {
-+			compatible = "fsl,mpc8314-gpio";
-+			reg = <0xc00 0x100>;
-+			interrupts = <74 IRQ_TYPE_LEVEL_LOW>;
-+			interrupt-parent = <&ipic>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+		};
- 	};
- 
- 	pci0: pci@e0008500 {
+Testing:
+========
+Verified log in dmesg on QEMU.
 
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250418-mpc-gpio-79dca9f70546
+1. Following command created the required environment. As mentioned below a
+pcie-root-port and a virtio-net-pci device are used on a Q35 machine model.
+./qemu-system-x86_64 \
+	-M q35,accel=kvm \
+	-m 2G -cpu host -nographic \
+	-serial mon:stdio \
+	-kernel /home/akshayaj/pci/arch/x86/boot/bzImage \
+	-initrd /home/akshayaj/Embedded_System_Using_QEMU/rootfs/rootfs.cpio.gz \
+	-append "console=ttyS0 root=/ pci=pcie_scan_all" \
+	-device pcie-root-port,id=rp0,chassis=1,slot=1 \
+	-device virtio-net-pci,bus=rp0
 
-Best regards,
+~ # mylspci -t
+-[0000:00]-+-00.0
+           +-01.0
+           +-02.0
+           +-03.0-[01]----00.0
+           +-1f.0
+           +-1f.2
+           \-1f.3
+00:03.0--> pcie-root-port
+
+
+2. Kernel bzImage compiled with following changes:
+	2.1 CONFIG_PCIEAER=y in config
+	2.2 AER_MAX_MULTI_ERR_DEVICES set to 0
+	Since there is no pcie-testdev in QEMU, it is impossible to create
+	a 5-level hierarchy of PCIe devices in QEMU. So we simulate the
+	error scenario by changing the limit to 0.
+	2.3 Log added at the required place in aer.c.
+
+3. Both correctable and uncorrectable errors were injected on
+pcie-root-port via HMP command (pcie_aer_inject_error) in QEMU.
+HMP Command used are as follows:
+	3.1 pcie_aer_inject_error -c rp0 0x1
+	3.2 pcie_aer_inject_error -c rp0 0x40
+	3.3 pcie_aer_inject_error rp0 0x10
+
+Resulting dmesg:
+================
+[    0.380534] pcieport 0000:00:03.0: AER: enabled with IRQ 24
+[   55.729530] pcieport 0000:00:03.0: AER: Exceeded max allowed (0) addition of PCIe devices for AER handling
+[  225.484456] pcieport 0000:00:03.0: AER: Exceeded max allowed (0) addition of PCIe devices for AER handling
+[  356.976253] pcieport 0000:00:03.0: AER: Exceeded max allowed (0) addition of PCIe devices for AER handling
+
+ drivers/pci/pcie/aer.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 70ac66188367..3995a1db5699 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -1039,7 +1039,8 @@ static int find_device_iter(struct pci_dev *dev, void *data)
+ 		/* List this device */
+ 		if (add_error_device(e_info, dev)) {
+ 			/* We cannot handle more... Stop iteration */
+-			/* TODO: Should print error message here? */
++			pci_err(dev, "Exceeded max allowed (%d) addition of PCIe "
++				"devices for AER handling\n", AER_MAX_MULTI_ERR_DEVICES);
+ 			return 1;
+ 		}
+ 
 -- 
-J. Neuschäfer <j.ne@posteo.net>
-
+2.43.0
 
