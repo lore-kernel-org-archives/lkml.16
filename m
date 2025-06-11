@@ -1,142 +1,99 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112512236E8
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 17:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22BFD1A3154;
+	Wed, 11 Jun 2025 17:22:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749662471; cv=none; b=fIcvw7ip23N8KJNy5QC+S4cxT6SjB/gHcSl1Zxqid+FnbH4jxhTrtvv/KyYIzvec+7lBRunUPqSTPPmQU+5pmqqSeg02emyVHJONs1k1wd/OpEZffjcYRNUi6oU8aRgvPC9F1lk6dKAwgQbZSsLYH1rbCePEmlxVowP9LebEBCU=
+	t=1749662557; cv=none; b=bBgFNcp8MNPyj2aEe/6ln1vy0o61ICeNkGZpjlTJt1pq6uJe9ZcAl86+5OayL0CQC/TB4b4IW/p8pEj/nAcepMyHy/Z7k+thuHtVg02vEsEFM6AA/Mvy9qYeIh6qhwE4qdHYjVYglGJs5r9a0T+nnozjaUdUhWPbDvSVLAPEHSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749662471; c=relaxed/simple;
-	bh=u5Kk1jfvzFrOwlCXwYxoep/9dBDPOwrOQVQdE3Geobw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=C9Woqk2GWImZm18X++r/v4f+Tz/54iG9LqN25UikQcgsMFIukmRLqJQg90gSjQ5bUQV24yO0UtWDI+MiwtjV3dnD+OC1F71HTTF8tTGm2zDTuPFor1ACjLJQc6FeXKuHNgKT/hyt7Ku/CbRtHN+FLzcARj1WeYpRKAn8t6xKGBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (3072-bit key) header.d=posteo.net header.i=@posteo.net header.b=A5Md52u3; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	s=arc-20240116; t=1749662557; c=relaxed/simple;
+	bh=Yu7E6ne2wmzeCeTB9QOux0GM4iebpctkf6tFykAS048=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kFecPW9/Wsc0orFbeoK+uV6peXD41xs5NJqEmMpszv4HB3GTmP2JI/4J/k9mJtXz56B4Y0wxybJDhjrHYMfLTKJCkrBznP+bp+WCjAoHgeiSHGLJ0xp66Hq+ecyoVimqEUfcWfACA912adb0+b8AWXL76tXq78JWpd//of9g1pE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=FseFOgjt; arc=none smtp.client-ip=83.149.199.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (3072-bit key) header.d=posteo.net header.i=@posteo.net header.b="A5Md52u3"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 67BC0240029
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 19:21:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net;
-	s=1984.ea087b; t=1749662467;
-	bh=u5Kk1jfvzFrOwlCXwYxoep/9dBDPOwrOQVQdE3Geobw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:Message-Id:To:Cc:From;
-	b=A5Md52u3STlkO+A8jTT+13k1GA3nD1EBgT6khcCenX/tpCDQSURx9JPPCVEBBHfXb
-	 eZzOT1HsHBVaGUqYPzH02x4srcEGZer2OgO0WGiv6/dueoIu4mcT8Pu6NXpP2Ndhxq
-	 yq5/9d83/1d0Qz5W58Oqj7yjbCwIcjq3oL1yaIx28k1hClgRVafa/GdYJVtb2nmOhJ
-	 GlPPnpmIArGpb0ls3pFhioBSjphuortNfRRXyibVYOozphg/KxuQ5k+8OXh0QMWoOC
-	 TjYVvv62gb/mCO8W+dpH3oPPUOcGi2Mx++WS/ldb4SLfBDidrseF7OVhgYMvi5pFAp
-	 xQRM30E1zv/K7YuEcXOb+nQr8jaHLir+p64PvyIH3QZN0B8nfE7Gpf8QoupLV+wDNb
-	 V8c4lRb+/aLqXNaqd8oAMP45JlSvR6nfEtEyHEinPQMeJB5aemwbxl1SgZYFLDjoYD
-	 kWR2mzs87p7pGq9RKP419oYEJ8aMqwSALe52YeKvIpFpxcxQUOP
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4bHXW323xjz9rxQ;
-	Wed, 11 Jun 2025 19:21:03 +0200 (CEST)
-From: Charalampos Mitrodimas <charmitro@posteo.net>
-Date: Wed, 11 Jun 2025 17:20:43 +0000
-Subject: [PATCH bpf-next v3] net: Fix RCU usage in task_cls_state() for BPF
- programs
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="FseFOgjt"
+Received: from fedora.intra.ispras.ru (unknown [10.10.165.2])
+	by mail.ispras.ru (Postfix) with ESMTPSA id B935A40755EE;
+	Wed, 11 Jun 2025 17:22:25 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru B935A40755EE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1749662545;
+	bh=lCxU3qIlN1bUKIKmqXhs0N7ebKh/c0ah9xgB5KfswMM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=FseFOgjteGGvzo/LWzMW+sWz81PaKaseSxROqD+XYyfoQ1JtLQeNxq/Bj4LcyhY9C
+	 PtP31IBpx5qb3xxa1xXR1qmZFJoLyebWGlM4zrvKGrgJxE+/mw+B067sP9tkOxPkqe
+	 hcVceEPku5LXGzgZwE0pqApZi3lalkCtkpTO16dM=
+From: Fedor Pchelkin <pchelkin@ispras.ru>
+To: Harald Freudenberger <freude@linux.ibm.com>,
+	Holger Dengler <dengler@linux.ibm.com>
+Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Ingo Franzki <ifranzki@linux.ibm.com>,
+	linux-s390@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	stable@vger.kernel.org
+Subject: [PATCH] s390/pkey: prevent overflow in size calculation for memdup_user()
+Date: Wed, 11 Jun 2025 20:21:15 +0300
+Message-ID: <20250611172116.182343-1-pchelkin@ispras.ru>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250611-rcu-fix-task_cls_state-v3-1-3d30e1de753f@posteo.net>
-X-B4-Tracking: v=1; b=H4sIAOq6SWgC/4XNQQ6CMBAF0KuQrq1ppxWIK+9hDCllkEZDSac2G
- sLdLax0YVz+yf9vZkYYHBI7FjMLmBw5P+agdgWzgxmvyF2XMwMBB1GKmgf74L178mjo1tg7NRR
- NRC6wq1SvVdVJZHk8BcytDT5fch4cRR9e258k1+tfMkkuOZi11upSqPY0eYro9yNGtpoJPhwpf
- zqQHWmq3oKuQYH5cpZleQNGtF7QBQEAAA==
-X-Change-ID: 20250608-rcu-fix-task_cls_state-0ed73f437d1e
-To: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Daniel Borkmann <daniel@iogearbox.net>, 
- John Fastabend <john.fastabend@gmail.com>, 
- Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, Feng Yang <yangfeng@kylinos.cn>, 
- Tejun Heo <tj@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- bpf@vger.kernel.org, syzbot+b4169a1cfb945d2ed0ec@syzkaller.appspotmail.com, 
- Charalampos Mitrodimas <charmitro@posteo.net>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749662443; l=2729;
- i=charmitro@posteo.net; s=20250526; h=from:subject:message-id;
- bh=u5Kk1jfvzFrOwlCXwYxoep/9dBDPOwrOQVQdE3Geobw=;
- b=cOJU/Y97B/mIsiD6ycUzLbHOj+hDqh9honeXQ3bF5ZN1FpCw/P9xFzMlBjxDgS6XhO9jdIj0R
- BW5omZ1EtlGBMPPQfoVetlQvPuxjKIUWGThuj0Mz8r5uXn4WqXjI4A4
-X-Developer-Key: i=charmitro@posteo.net; a=ed25519;
- pk=PNHEh5o1dcr5kfKoZhfwdsfm3CxVfRje7vFYKIW0Mp4=
+Content-Transfer-Encoding: 8bit
 
-The commit ee971630f20f ("bpf: Allow some trace helpers for all prog
-types") made bpf_get_cgroup_classid_curr helper available to all BPF
-program types, not just networking programs.
+Number of apqn target list entries contained in 'nr_apqns' variable is
+determined by userspace via an ioctl call so the result of the product in
+calculation of size passed to memdup_user() may overflow.
 
-This helper calls __task_get_classid() which internally calls
-task_cls_state() requiring rcu_read_lock_bh_held(). This works in
-networking/tc context where RCU BH is held, but triggers an RCU
-warning when called from other contexts like BPF syscall programs that
-run under rcu_read_lock_trace():
+In this case the actual size of the allocated area and the value
+describing it won't be in sync leading to various types of unpredictable
+behaviour later.
 
-  WARNING: suspicious RCU usage
-  6.15.0-rc4-syzkaller-g079e5c56a5c4 #0 Not tainted
-  -----------------------------
-  net/core/netclassid_cgroup.c:24 suspicious rcu_dereference_check() usage!
+Return an error if an overflow is detected. Note that it is different
+from when nr_apqns is zero - that case is considered valid and should be
+handled in subsequent pkey_handler implementations.
 
-Fix this by also accepting rcu_read_lock_held() and
-rcu_read_lock_trace_held() as valid RCU contexts in the
-task_cls_state() function. This ensures the helper works correctly in
-all RCU contexts where it might be called, regular RCU, RCU BH (for
-networking), and RCU trace (for BPF syscall programs).
+Found by Linux Verification Center (linuxtesting.org).
 
-Reported-by: syzbot+b4169a1cfb945d2ed0ec@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=b4169a1cfb945d2ed0ec
-Fixes: ee971630f20f ("bpf: Allow some trace helpers for all prog types")
-Signed-off-by: Charalampos Mitrodimas <charmitro@posteo.net>
+Fixes: f2bbc96e7cfa ("s390/pkey: add CCA AES cipher key support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
 ---
-Changes in v3:
-- Add rcu_read_lock_held() check as well 
-- Link to v2: https://lore.kernel.org/r/20250611-rcu-fix-task_cls_state-v2-1-1a7fc248232a@posteo.net
+ drivers/s390/crypto/pkey_api.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-Changes in v2:
-- Fix RCU usage in task_cls_state() instead of BPF helper
-- Add rcu_read_lock_trace_held() check to accept trace RCU as valid
-  context
-- Drop the approach of using task_cls_classid() which has in_interrupt()
-  check
-- Link to v1: https://lore.kernel.org/r/20250608-rcu-fix-task_cls_state-v1-1-2a2025b4603b@posteo.net
----
- net/core/netclassid_cgroup.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/net/core/netclassid_cgroup.c b/net/core/netclassid_cgroup.c
-index d22f0919821e931fbdedf5a8a7a2998d59d73978..dff66d8fb325d28bb15f42641b9ec738b0022353 100644
---- a/net/core/netclassid_cgroup.c
-+++ b/net/core/netclassid_cgroup.c
-@@ -21,7 +21,9 @@ static inline struct cgroup_cls_state *css_cls_state(struct cgroup_subsys_state
- struct cgroup_cls_state *task_cls_state(struct task_struct *p)
- {
- 	return css_cls_state(task_css_check(p, net_cls_cgrp_id,
--					    rcu_read_lock_bh_held()));
-+					    rcu_read_lock_held() ||
-+					    rcu_read_lock_bh_held() ||
-+					    rcu_read_lock_trace_held()));
- }
- EXPORT_SYMBOL_GPL(task_cls_state);
+diff --git a/drivers/s390/crypto/pkey_api.c b/drivers/s390/crypto/pkey_api.c
+index cef60770f68b..a731fc9c62a7 100644
+--- a/drivers/s390/crypto/pkey_api.c
++++ b/drivers/s390/crypto/pkey_api.c
+@@ -83,10 +83,15 @@ static void *_copy_key_from_user(void __user *ukey, size_t keylen)
  
-
----
-base-commit: 079e5c56a5c41d285068939ff7b0041ab10386fa
-change-id: 20250608-rcu-fix-task_cls_state-0ed73f437d1e
-
-Best regards,
+ static void *_copy_apqns_from_user(void __user *uapqns, size_t nr_apqns)
+ {
++	size_t size;
++
+ 	if (!uapqns || nr_apqns == 0)
+ 		return NULL;
+ 
+-	return memdup_user(uapqns, nr_apqns * sizeof(struct pkey_apqn));
++	if (check_mul_overflow(nr_apqns, sizeof(struct pkey_apqn), &size))
++		return ERR_PTR(-EINVAL);
++
++	return memdup_user(uapqns, size);
+ }
+ 
+ static int pkey_ioctl_genseck(struct pkey_genseck __user *ugs)
 -- 
-Charalampos Mitrodimas <charmitro@posteo.net>
+2.49.0
 
