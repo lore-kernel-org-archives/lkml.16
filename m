@@ -1,106 +1,176 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB611EA65;
-	Wed, 11 Jun 2025 01:31:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A98F1EA65
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 01:33:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749605499; cv=none; b=bL8xecHVju34MKcUdLWaQWyWeO45v52Tw9JKI3eJtO9ToLNVUpPkZCfopE9P9wmSDsIpiwILRE7sNQFMIAVrmbYF5TtAZkIkxpfBzLmxae5VYJwPbIjxUgoBlQR4dpsaCdZXJf4B+6TkOrUMqKJrlj3A06HKw1ZIGM0KicWkWuY=
+	t=1749605619; cv=none; b=IYDcTY17WO7DZT5NXIEkP7gr8UrkViNJJ2PXYXP5OO7EQDGuGyrRTfU9qUmcTBfhIBCGMbaeh+ALzdan6xl5OKdSc89rZUj51FaH5mzFs37jviGNRjE+E9ZTNAUHad4vNSnjma1gTGdaI/rdOiMMmlVFTq77zt59ExvMWADoU2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749605499; c=relaxed/simple;
-	bh=a5ZvgIfN3OKxFjLTf2AnMkbOIVrM7et3+35m+Z/toVQ=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=OrJx2uKLULjLO3L8yxqwSSMATyGngmmKzjZbPJsbMPO93NatFz1OPGeWiEV/zokdpWrenU8yxIrHnvWk7B94C84j8E65UgFjILLlBAWk8iPSyWMqv4eeDuESj/2A7LzYtrv/h8IyZ8XMboFg3fITH7P5G1d2JF5Xss3LcqNRDs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PYGA0xzl; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749605619; c=relaxed/simple;
+	bh=a7zLtHKT5M6Fl3wADrK0Ts5XKmk+GX6S7QhB7fNtI6c=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=Yz46hNkeyqF9SiKK7v4RHrSykNZu5A07QWnLBeeOYVMxnrwK57zOAo7Yg+vW8X+eEDPq793p8LI46gqEiHXdtBXHAkjY5mdQ9tgrnLnR248ZauE8cIyVrEedgriEn/UrF8Uaw8fmJoMVQgDI/fkNQvqS62hekxe0HcRKIPvZ164=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=isZxnGSE; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PYGA0xzl"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-32add56e9ddso49589921fa.2;
-        Tue, 10 Jun 2025 18:31:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749605494; x=1750210294; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=vraTKiNI8477CY05dFluHmdT9xg40IS+eMCdDurmLVQ=;
-        b=PYGA0xzlRcT3xxVYXJm4C4y0zk+yxCqAIwYuZRabKdQEjV+YJSWp8xiDRS5MWVm+8Y
-         JG2j+3MNmhu847j5I2jbZtuMmjgzjYxVGqwxNLypOB8gDHe15SuDXJq7fsUa0LeNvqgv
-         mDqCrnVbShHUAgYzmRgAJE+wLsjKF+AOIGELCvx5Shj9UZjopF/oG9+4wf99QI7EnZVm
-         GzL4MiTUkvyzlzxFNF8XTdlmYgfO+vloXig6aA26dFSyihImm1C+nJYW5eKsb57bso0T
-         h6o0s0NsITauGEWzr2ylwQesMsz2rd7F97+jt0lT3HOGHEr4FPI+wdpXzPVYbS6Vj2/d
-         5edA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749605494; x=1750210294;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vraTKiNI8477CY05dFluHmdT9xg40IS+eMCdDurmLVQ=;
-        b=BJG8dXfJ/s4aFWu25Wm4WsccTlm+nLH5QX+Fpv81f6v2yi4L5o1M6yf6qa2N3AWA0L
-         oskdJj2oOMyTFYgiNCdxh7/7i0IoOuGNV/an7leyg2CzN43G9GOb3mi4d8Jj3oSOpzqe
-         W6RTnM3Rd52AdAk14DklsBw+trypwv4c6R/Tkx5UDvK3f0srO91mmZwk3Brr14dv1RKE
-         kMGBZPHBvAMEfDKWATSLfb+O03dxM3Qc2/MHhyglQceQapDf6zK17TqAvyZnUEegCQR2
-         sMk/pavYvmwcxXrk5QT3xgkBryhVHDhQI4+E2iFEKBd7R9Fp7mfFAzRCPv5gKLfyiD7o
-         INwg==
-X-Forwarded-Encrypted: i=1; AJvYcCWdykWdP/9Czr/qLrDDK3Y12Od1edARSo5CgAPtZsGKamDrTcgMsT75wTb1SNQGz/P69qAOcCunDF74HpQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkKI6P4nsJM1H8e3xFGuUykzm9vcoGCArJDpsS5J8uvK9k777U
-	gNPe3ymzUMsS5QPlSmyqGOPqnLOfbtg2CiumioiYFM75lEj8eehhdR4KHa5AVLuTnRzzWml1P4O
-	PkQkVKPY1ofA3O0J2dJZC4d8ob3pT5mFpO+c5
-X-Gm-Gg: ASbGnctBc7A4vAfiWJACVwoyfZyfFKiC9hlgdocTD/v8wlHgyDKbnecLx1ELC9TuGkb
-	KlulAfKDWG8fIoVAfuzl9ubidsAqg3BT+NCWJsJQPDa0d+yfXt91CGxQpFwCNaV5RXDpMU3wiWV
-	gZVK2n/REJXk8CGE7xOmHHQ0EGqjBeYj5zxGNjXyX9KJQie3KSMm+IwtXyoXG78g7OCpQhO5iQW
-	g7GIg==
-X-Google-Smtp-Source: AGHT+IE4rW7D/o8QA3IDLlv5DmCcDPwX0EnbcKt6buiNsiHyuUDZPtlMGLIrt5C7qvE23puW3c5nLgzUJcd/ebf9X7I=
-X-Received: by 2002:a2e:bc11:0:b0:32a:8bf4:3a81 with SMTP id
- 38308e7fff4ca-32b22285b8dmr2578301fa.5.1749605493624; Tue, 10 Jun 2025
- 18:31:33 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="isZxnGSE"
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250611013328epoutp01c882bc166aaa72fb1951d810b06d04f4~H2Qf7BptU2857028570epoutp01h
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 01:33:28 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250611013328epoutp01c882bc166aaa72fb1951d810b06d04f4~H2Qf7BptU2857028570epoutp01h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1749605608;
+	bh=GZco/lD0FO9ZEx8hZGGAoWY76+lWGAijqGbtBh8HY20=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=isZxnGSEAPS0VdnIYBMbw8wI9Ky7Vo0q9LmLTp6BlyVvCghvGmuBKvEp98xY+/fnj
+	 jZBK66EfhFI5NhWR8u0jMaVvgMN30QnS+ks9GxFqFGWuB3wvffUV5wAYcnJ2qQS/mF
+	 MyhzWBbZvsukI6Qskhe+R2Na8pEQ1GrANajcwPD0=
+Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
+	epcas1p1.samsung.com (KnoxPortal) with ESMTPS id
+	20250611013328epcas1p1df9a149c0fe9eac90f7a17460419b367~H2QfdPUs21275512755epcas1p1v;
+	Wed, 11 Jun 2025 01:33:28 +0000 (GMT)
+Received: from epcas1p1.samsung.com (unknown [182.195.38.242]) by
+	epsnrtp04.localdomain (Postfix) with ESMTP id 4bH7Tg4wjTz6B9m6; Wed, 11 Jun
+	2025 01:33:27 +0000 (GMT)
+Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
+	epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250611013327epcas1p239a2fad32789064beb3769e03737c60d~H2QelxTjN3179331793epcas1p2E;
+	Wed, 11 Jun 2025 01:33:27 +0000 (GMT)
+Received: from yjjunylee03 (unknown [10.252.68.99]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250611013327epsmtip1afc64bcde70abfea04b654dffb76bb0f~H2QejLa7h1630516305epsmtip1K;
+	Wed, 11 Jun 2025 01:33:27 +0000 (GMT)
+From: <yjjuny.lee@samsung.com>
+To: "'Laurent Pinchart'" <laurent.pinchart@ideasonboard.com>, "'Ricardo
+ Ribalda'" <ribalda@chromium.org>
+Cc: <hdegoede@redhat.com>, <mchehab@kernel.org>,
+	<linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <20250610213058.GG24465@pendragon.ideasonboard.com>
+Subject: RE: [PATCH] usb: uvc: Fix 1-byte out-of-bounds read in
+ uvc_parse_format()
+Date: Wed, 11 Jun 2025 10:33:27 +0900
+Message-ID: <01b501dbda70$d47d5ee0$7d781ca0$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Steve French <smfrench@gmail.com>
-Date: Tue, 10 Jun 2025 20:31:22 -0500
-X-Gm-Features: AX0GCFtn3fjSd3bm0PUue66pR4M9D8LAwg1yDVZX5nsDQ7DwECVdOQclinbY2h4
-Message-ID: <CAH2r5mt_wPk99ns95oV1tjo62VEmw+zCkoxY=8otNNhV=pnX1A@mail.gmail.com>
-Subject: [ANNOUNCE] cifs-utils release 7.4
-To: CIFS <linux-cifs@vger.kernel.org>, 
-	samba-technical <samba-technical@lists.samba.org>
-Cc: Pavel Shilovsky <piastryyy@gmail.com>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQJyD9DS5gI4YbVKzdNc8WxXy/HMZgKBOkd2AiccIVgCUixxMrKY7JfA
+Content-Language: ko
+X-CMS-MailID: 20250611013327epcas1p239a2fad32789064beb3769e03737c60d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 101P
+cpgsPolicy: CPGSC10-711,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250610124111epcas1p18fe9fd8ab47a424c2143d4e2912a8179
+References: <CGME20250610124111epcas1p18fe9fd8ab47a424c2143d4e2912a8179@epcas1p1.samsung.com>
+	<20250610124107.37360-1-yjjuny.lee@samsung.com>
+	<CANiDSCsaQCJCzfjjnMvVRAde0ZrMZC753y7m2MPQJuK=dVqQBQ@mail.gmail.com>
+	<20250610213058.GG24465@pendragon.ideasonboard.com>
 
-A new update, version 7.4, of cifs-utils has been released today.
-Users of cifs-utils version 7.3 on older kernels are encouraged to
-update to 7.4 since it includes a fix for a mount problem with version
-7.3 of cifs-utils on older kernels when using namespaces.
+The buffer length check before calling uvc_parse_format() only ensured
+that the buffer has at least 3 bytes (buflen > 2), buf the function
+accesses buffer=5B3=5D, requiring at least 4 bytes.
 
-Links:
+This can lead to an out-of-bounds read if the buffer has exactly 3 bytes.
 
-webpage: https://wiki.samba.org/index.php/LinuxCIFS_utils
-tarball: https://download.samba.org/pub/linux-cifs/cifs-utils/
-git: git://git.samba.org/cifs-utils.git
-gitweb: http://git.samba.org/?p=cifs-utils.git;a=summary
+Fix it by checking that the buffer has at least 4 bytes in
+uvc_parse_format().
+
+Signed-off-by: Youngjun Lee <yjjuny.lee=40samsung.com>
+Reviewed-by: Ricardo Ribalda <ribalda=40chromium.org>
+Reviewed-by: Laurent Pinchart <laurent.pinchart=40ideasonboard.com>
+---
+ drivers/media/usb/uvc/uvc_driver.c =7C 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc=
+_driver.c
+index da24a655ab68..1100469a83a2 100644
+--- a/drivers/media/usb/uvc/uvc_driver.c
++++ b/drivers/media/usb/uvc/uvc_driver.c
+=40=40 -344,6 +344,9 =40=40 static int uvc_parse_format(struct uvc_device *=
+dev,
+ 	u8 ftype;
+ 	int ret;
+=20
++	if (buflen < 4)
++		return -EINVAL;
++
+ 	format->type =3D buffer=5B2=5D;
+ 	format->index =3D buffer=5B3=5D;
+ 	format->frames =3D frames;
+--=20
+2.43.0
 
 
-Detailed list of changes since version 7.3 was released
-----------------------------------------------------------------
-Enzo Matsumiya (1):
-      mount.cifs: retry mount on -EINPROGRESS
+> On Tue, Jun 10, 2025 at 02:58:25PM +0200, Ricardo Ribalda wrote:
+> > Hi Youngjun
+> >=20
+> > You still miss the v2 (v3 in this case). and the trailers.
+> >=20
+> > In the future you can use the b4 tool to take care of most of the detai=
+ls.
+> > https://b4.docs.kernel.org/en/latest/contributor/overview.html
+> > It has =22dry-run=22 option that let you review the mails before you se=
+nd=20
+> > them to the mailing list
+> >=20
+> > Please do not resubmit a new patch to fix this, only send a new patch=
+=20
+> > to fix more comments for other people.
+> >=20
+> > Regards=21
+> >=20
+> > On Tue, 10 Jun 2025 at 14:41, Youngjun Lee <yjjuny.lee=40samsung.com> w=
+rote:
+> > >
+> > > The buffer length check before calling uvc_parse_format() only=20
+> > > ensured that the buffer has at least 3 bytes (buflen > 2), buf the=20
+> > > function accesses buffer=5B3=5D, requiring at least 4 bytes.
+> > >
+> > > This can lead to an out-of-bounds read if the buffer has exactly 3 by=
+tes.
+> > >
+> > > Fix it by checking that the buffer has at least 4 bytes in=20
+> > > uvc_parse_format().
+> >
+> > Fixes: c0efd232929c (=22V4L/DVB (8145a): USB Video Class driver=22)
+> > Cc: stable=40vger.kernel.org
+> > Reviewed-by: Ricardo Ribalda <ribalda=40chromium.org>
+>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart=40ideasonboard.com>
+>
+> > > Signed-off-by: Youngjun Lee <yjjuny.lee=40samsung.com>
+> > > ---
+> > >  drivers/media/usb/uvc/uvc_driver.c =7C 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > >
+> > > diff --git a/drivers/media/usb/uvc/uvc_driver.c=20
+> > > b/drivers/media/usb/uvc/uvc_driver.c
+> > > index da24a655ab68..1100469a83a2 100644
+> > > --- a/drivers/media/usb/uvc/uvc_driver.c
+> > > +++ b/drivers/media/usb/uvc/uvc_driver.c
+> > > =40=40 -344,6 +344,9 =40=40 static int uvc_parse_format(struct uvc_de=
+vice *dev,
+> > >         u8 ftype;
+> > >         int ret;
+> > >
+> > > +       if (buflen < 4)
+> > > +               return -EINVAL;
+> > > +
+> > >         format->type =3D buffer=5B2=5D;
+> > >         format->index =3D buffer=5B3=5D;
+> > >         format->frames =3D frames;
 
-Henrique Carvalho (1):
-      cifs.upcall: correctly treat UPTARGET_UNSPECIFIED as UPTARGET_APP
+--
+Thanks & Regards,
 
-Paulo Alcantara (1):
-      cifs.upcall: fix memory leaks in check_service_ticket_exits()
+Youngjun Lee
 
-Pavel Shilovsky (1):
-      cifs-utils: bump version to 7.4
-
-Z. Liu (2):
-      getcifsacl, setcifsacl: use <libgen.h> for basename
-      cifscreds: use <libgen.h> for basename
-
-
-
--- 
-Thanks,
-
-Steve
