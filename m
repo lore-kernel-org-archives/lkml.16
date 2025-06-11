@@ -1,102 +1,129 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C02BD1E485;
-	Wed, 11 Jun 2025 14:24:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF9A273D60;
+	Wed, 11 Jun 2025 14:24:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749651878; cv=none; b=FouxsjJVtaTsG4BSsav4XKLU6cFqKrA29ciidCFht7HlzWzz00V1GGKahHRtAk8Pl2MzF1xtJOQGJovxa5aur0WEHAEAQZZ0A1/magfrXqEINwGj4odfGecVsFK8WUTaByjDkGkfhPssZnXuQhGBbOXetajgRuaOS/ZzBPfDqz0=
+	t=1749651877; cv=none; b=eEaPn3C0rIru/tnkJo1aJEcOXJQAVPbWxHJGDb2/WwWmUvTsn43gQcNjAVSblpGSAMptJq8YzQhe/B5/GlZnFHJcN29mp/4hPhh5mmU91ATVgomC0w5ZLtdgsviAV/6jbLU/BBAsjhYKIKUUz3mXj3OfgPD5gc7ShCMSXKVEPWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749651878; c=relaxed/simple;
-	bh=zhuxC+KhjOVBwtC+ZikFTxVlNB4jrxhuaXaa+Xblpxs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bwt9Djr4F3H3Xz74c3JUOEB1vP4DJ8wnUU3uQD1qYrcm8gdnDzINKGt/8f9VLWPDIWrCxhijtokhdA/XPk5JFtnYpIpv4BpiKU/4DpjEL4RTfXBMHLupYa04d7779ncjUNNK7hkE/Zgg1asvLNujHkQcxbg7bpIkrnuScBAXZjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L3ZTKswQ; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749651877; c=relaxed/simple;
+	bh=EUvKzRW3jKjXOja8nGHEwok4l8x6iNu/m9wRjoGqUnI=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=BlyOMHz/18YDutfdJPcEK330r+Ke+RURPOryTFfzhoTWMOgtFCmEgtv9+FyoTfeUxbD+3D69cStlJZsIFWp0Qwqf4OlWuhV7G6wzM/DgLZCg85QHpE4WEPpIIIpu7HN7v9v0CZ3dKpe9mEVwhzxxDA/bvQn7Xad5baMu13r8THw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=G/ZET1c7; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=SeD7Lcbb; arc=none smtp.client-ip=202.12.124.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L3ZTKswQ"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-451d3f72391so87617065e9.3;
-        Wed, 11 Jun 2025 07:24:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749651874; x=1750256674; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RTXKRBFGUAka08dub7+UBA5yiZf9fur0UOXcxOoy2sc=;
-        b=L3ZTKswQ5gCyfLURktJlabE68b4ktLtGrsOLVSGsn3ltwcsNMDcao4qi6ei7bDr/p6
-         9znCZxe78JZ5f9tv6L3RxqgLIbxdw7J7aMAnKDyacNy1hT29AOsQJhMQeXz+eCdv86sG
-         QLVcFa3TDmupxTiI2GiyyRmMKkUcjUQ3bSKHrzBUBdZDJmLT1qH89nSrP5LsWxkCHQA5
-         mNTXRM0GBgZFjc9COUguqZYyb+jXXF4gOHHoXsfLdSWOZPMJq6yh/BK2iFUV+CMDSnuB
-         0av/gY9jSovttr/wYx7TBH2SNWfBBxHyTDW5TcCu+JcaAurGNAwEKSd4jzz1PcyPYLWP
-         /ZDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749651874; x=1750256674;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RTXKRBFGUAka08dub7+UBA5yiZf9fur0UOXcxOoy2sc=;
-        b=mQmERdfe5B6ayEEsrsJJ9L6gcZbZ0/yWAlRPd6Yc5pAS/d8mxTp63nxOD6/AAptykO
-         ExWuK5iibIhct/ExlP7eCRphOAdluE6kfhSNxNDXJWPDHyGRfAObQczShzeBdAnDaJPY
-         bktPKLLjMTSCyQVDFzI7DnxBItUQaJNjL/cet78yBBiQZk6N8OdF3PmmuyzLjLujPi8B
-         8zF6bT4AL1I/HG2NNU+SRbS4ucQYOd48n7tIEVD4a4oe7C6EcGKs+sHk/aiJl4D+KRVE
-         H8aSXIHZyck1D+aOw0wr87b8PHcjtC/DOrxf6LXlrrg9qRktozIYuzcEd2bJTSQFFoUc
-         N0iw==
-X-Forwarded-Encrypted: i=1; AJvYcCUo936QnRflxbbvBf9CVnUtLdaPR4ZjP5N024t//zzIEZ6GpVXHzYLSTvZOXtPLdIa4fm/hYQFn@vger.kernel.org, AJvYcCVCdrfvZlg4nAT8QDm1aXkKX4DpT83BU1z0GZd/0vWylBKO7kGMAhHjO7rodGv4CJ+OQxI=@vger.kernel.org, AJvYcCWcDGfEN7hPR9Hs+clf4Ei21i+wXrBWWcr9Bhs805ZBbP/byQKrxUBLaN1DxEuCFohLh6cqR1iGhgPdzQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7doMNuV5IXs8LKxwBCr56+etY6m7A7EWbHLwfXJ2hmGgNLvOH
-	YP06o6/PJvVUbzwB0ccMnA6oKf8M68gvGT3/XjTV2x08MrewiQabxgPV
-X-Gm-Gg: ASbGnctOqWXtDcykqLE2p+YQzWeDZZzCwyFXfb/7W/GDhoFPswcnbUzfhxJJdGFKmin
-	aTwRsDCCYaqywLyYYKJrckhfVopWyVEZ2uWk4my0Apza3KuouAWicIakwmFaBs51gDwWbFxDoah
-	YlRQy5vUnYdZ4GE51HuVw4IriDirTWN9e6YVbt/lOovtaBz1IB5QkMfulG0LPPrEODb87xT38H6
-	FSh5mpM7FDB7EdDT4LVaKmKlPCfuw8oFQcThcSZZVDXm692VA9FrCEY4RLqHdXQjzAnWePg+Q/p
-	GxyIMJ4ZGVrnb0YVigyfw9TW8XoEKm1UcfEkWSK923mINOlR9Qi+o0bZaAovXpNBWWOfdik=
-X-Google-Smtp-Source: AGHT+IHoeACtZ7Lq1d6rrqu6tvHRqZvx/wZr02IW/ChCWd4ssRnTymEzapp3q53gv8ZTjy+QowM5Nw==
-X-Received: by 2002:a05:600c:3586:b0:441:b3eb:574e with SMTP id 5b1f17b1804b1-4532b8c5658mr22745e9.5.1749651873795;
-        Wed, 11 Jun 2025 07:24:33 -0700 (PDT)
-Received: from [192.168.8.100] ([148.252.145.22])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5323a8acasm15187999f8f.26.2025.06.11.07.24.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jun 2025 07:24:33 -0700 (PDT)
-Message-ID: <8c7c1039-5b9c-4060-8292-87047dfd9845@gmail.com>
-Date: Wed, 11 Jun 2025 15:25:54 +0100
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="G/ZET1c7";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SeD7Lcbb"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 15FD12540241;
+	Wed, 11 Jun 2025 10:24:34 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Wed, 11 Jun 2025 10:24:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1749651873;
+	 x=1749738273; bh=+ODIXdffxI+NiC6rP3Lj0Q8ZCzaWxLNsTJAoOGA2ZdI=; b=
+	G/ZET1c7ml8PM4cslNjpAZLiQn4RsbQXkvkBqWQiZSaDRo01dQmgyIwuDFEQjr0C
+	crS+WWB/4bvZhihhfXoKHJE11aedJ2d3KLlK7Cq0Q81sqm50Mi5++PgaW1hVQD3g
+	clX7gOz+YUFDY83i3r1S4MoiE9CgmZ78840TVTiSKgRbEeM/imPsPyyERONL/TiV
+	weP0xBLPBiEFb0D0uqyy0xiFDnsFIOWXH3NsuSIuNn5e/kgDrz6vRldVbWx1b8sG
+	ykvT2Xs/72lf8v1m/WLPLA2JOBZYvl/JCCuubRT0ZXo090kd01FWTnDtle19HfzU
+	6dQFZ/Tc55WhNIaKxpvwZA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749651873; x=
+	1749738273; bh=+ODIXdffxI+NiC6rP3Lj0Q8ZCzaWxLNsTJAoOGA2ZdI=; b=S
+	eD7LcbbTypHMh/Z7By6tRW7VQWRTwVsOKbdnMbTqsQRuYCVqH4SfLLXRUnm7q6JQ
+	5c9OI4IbTzvmJjj3nyCz1zjTDSvLghnNr47AnpyRCn9rEa61ENBED6kp852GA8Ne
+	k0+UEuV4Go+SW7RMkhyHVuysUDE6dZNM0fucQVOqadEbBuRBi9dXpvEGuVCuPuSL
+	XySHYVFKN8WR2HROM1UbjQfovDh0FWYK4UPUVqYAEXC0NLmefOegJ9Uu15kuq/lD
+	nHTMe2eANavL1waza4eQQHEGz2HrvlKgczjzW1qlf/5s7Ns8BG4loMYPLozzcGL/
+	u6nmBebVLiLC7Y6gkh67w==
+X-ME-Sender: <xms:oZFJaKbrv0d59G27HwIuQHfRfnjtdvU9g947UYljGpT2E6AwlgZong>
+    <xme:oZFJaNaVbHOJLZE3VXrgY__h52rtRVQ8tnlt8sVMZKunhJGybscsUwJz_mSXM_H_M
+    BeShoXKsTYmpMQVBt8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduvdegvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
+    jeenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
+    druggvqeenucggtffrrghtthgvrhhnpedvhfdvkeeuudevfffftefgvdevfedvleehvddv
+    geejvdefhedtgeegveehfeeljeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeeh
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehmrghsrghhihhrohihsehkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopehtohhrvhgrlhgusheslhhinhhugidqfhhouhhnuggr
+    thhiohhnrdhorhhgpdhrtghpthhtohephhgtrgeslhhinhhugidrihgsmhdrtghomhdprh
+    gtphhtthhopehlihhnuhigqdhksghuihhlugesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
+    rhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:oZFJaE9ogmB_Szdpw6Diucr8KuJDL0h-qBAbWRqgkW8BDMlGR1SzOQ>
+    <xmx:oZFJaMrP9DBo7zOvUkPub7pvqzf8h-O9VbQiBkAReILrLU-IrCkA8A>
+    <xmx:oZFJaFq5Z8Eakl5lW2CNOQ3bZNN99crdLc66qxwIo4yex3qZoKDWrA>
+    <xmx:oZFJaKRjj_VWwKLpXayCEf_B9wyiz3NCYOkEl2ktgCus_-xhCVqTpw>
+    <xmx:oZFJaO7Au_QSTd5C3-ZXCgE0Fguraeva6H5vReFI_I0x4cUHXOXBTbrA>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 91800700064; Wed, 11 Jun 2025 10:24:33 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 0/9] Split netmem from struct page
-To: Byungchul Park <byungchul@sk.com>, willy@infradead.org,
- netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- kernel_team@skhynix.com, kuba@kernel.org, almasrymina@google.com,
- ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
- akpm@linux-foundation.org, davem@davemloft.net, john.fastabend@gmail.com,
- andrew+netdev@lunn.ch, toke@redhat.com, tariqt@nvidia.com,
- edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com, leon@kernel.org,
- ast@kernel.org, daniel@iogearbox.net, david@redhat.com,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
- rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org,
- linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com
-References: <20250609043225.77229-1-byungchul@sk.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <20250609043225.77229-1-byungchul@sk.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-ThreadId: T11a455a1e4054318
+Date: Wed, 11 Jun 2025 16:24:13 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Masahiro Yamada" <masahiroy@kernel.org>,
+ "Heiko Carstens" <hca@linux.ibm.com>
+Cc: "Linus Torvalds" <torvalds@linux-foundation.org>,
+ "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+ "Linux Kbuild mailing list" <linux-kbuild@vger.kernel.org>
+Message-Id: <8992766a-cc96-40bb-b8c2-60931ad0f065@app.fastmail.com>
+In-Reply-To: 
+ <CAK7LNASSeuZWAXS6tDGL1T8S1N9fmg4DND616BL6uco4gnYFqA@mail.gmail.com>
+References: 
+ <CAK7LNAQunzxOHR+vMZLf8kqxyRtLx-Z2G2VZquJmndrT9TZjiQ@mail.gmail.com>
+ <20250611075533.8102A57-hca@linux.ibm.com>
+ <CAK7LNASSeuZWAXS6tDGL1T8S1N9fmg4DND616BL6uco4gnYFqA@mail.gmail.com>
+Subject: Re: [GIT PULL] Kbuild updates for v6.16-rc1
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 6/9/25 05:32, Byungchul Park wrote:
-> Hi all,
-> 
-> In this version, I'm posting non-controversial patches first.  I will
-> post the rest more carefully later.  In this version, no update has been
-> applied except excluding some patches from the previous version.  See
-> the changes below.
+On Wed, Jun 11, 2025, at 15:32, Masahiro Yamada wrote:
+> On Wed, Jun 11, 2025 at 4:55=E2=80=AFPM Heiko Carstens <hca@linux.ibm.=
+com> wrote:
+>>
+>> Don't get me wrong, I can address all of this trivial churn for s390,=
+ however
+>> enforcing so many extra warnings to everyone with W=3D1 builds doesn'=
+t look like
+>> the right approach to me.
+>
+> This is what W=3D1 is for.
+> 0day bot detects a new W=3D1 warning, so we can avoid new warnings com=
+ing in.
+>
+> People do not know which headers should be included when.
+> So, this warning must exist at least until we can get rid of
+> #include <linux/export.h> from include/linux/module.h,
+> include/linux/linkage.h etc.
 
-fwiw, I tried it with net_iov (zcrx), it didn't blow up during a
-short test.
+I think this makes sense in general, but the output here is
+excessive if it leads to users no longer wanting to enable W=3D1.
 
--- 
-Pavel Begunkov
+There are other warnings that I think should be enabled at the
+W=3D1 level (e.g. -Wformat-security) and eventually by default,
+but that are still too noisy at that level.
 
+My own cutoff would be at a few hundred warnings in allmodconfig
+builds if there is an effort to reduce it further, but it seems
+that this one is still at a few thousand, which does not seem ok.
+
+     Arnd
