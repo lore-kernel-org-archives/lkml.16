@@ -1,93 +1,219 @@
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CE6F79C0;
-	Wed, 11 Jun 2025 06:12:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D049C226D0E
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:14:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749622340; cv=none; b=pi7JsCpmbPo8dJLwGY54oyl6xIejVgHXz9cyyk2gflAoiDFjyYs1Xt5vj+261fcacUo2hYeB3atRlX/WdHWSPxXTMZTCACjRxXBCKKCm2rtktmmuymwumTmyDoT5cGkKKJLZguHH7gDjEybuEfg6jUQRI7DZW2iJcikbVtvVVdo=
+	t=1749622454; cv=none; b=SD6BsO78jHsx3PyZKTkqwNSkec0Va6gYw46m02zsUM3698JFaQspQgMX57PWGcal3xIhuRTk+eSQmiVRVSF3CgXFc2aIu/v0c+Oyvs3K0zRLN48XCvMZQI6NDHIovKhuGxefo4w+RGciAR3HS4vL/ZBbaLhtOh8FBEGTimobK+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749622340; c=relaxed/simple;
-	bh=KYZS6ylw0+j3rSwF0uF7DM6S2axrVeGj868QC7LIJOk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Pu210x95chFwUBCHl4GV20zAtpNbqpSPaac/tp9IE2q7AMicIu2ngW/pMaWkaI0F9Aqvp5r7DPxuw8nYw+dWp0xVWXKEElDsIP1ygJUeirdJKhA09sFlu63iYKVp4Dwt0YlV8OGjeT1QmctuFfpis7/+53Cb7Sl0J1q2Dr6hESE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-CSE-ConnectionGUID: lK3HUqeSQ8+0kLLglFpQqQ==
-X-CSE-MsgGUID: UCm3em/OQky6/StfTn71zg==
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 11 Jun 2025 15:12:13 +0900
-Received: from ubuntu.adwin.renesas.com (unknown [10.226.92.57])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id DA042401BEEC;
-	Wed, 11 Jun 2025 15:12:08 +0900 (JST)
-From: John Madieu <john.madieu.xa@bp.renesas.com>
-To: andrew+netdev@lunn.ch,
-	conor+dt@kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	geert+renesas@glider.be,
-	krzk+dt@kernel.org,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	prabhakar.mahadev-lad.rj@bp.renesas.com,
-	robh@kernel.org
-Cc: biju.das.jz@bp.renesas.com,
-	devicetree@vger.kernel.org,
-	john.madieu@gmail.com,
-	linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	magnus.damm@gmail.com,
-	netdev@vger.kernel.org,
-	John Madieu <john.madieu.xa@bp.renesas.com>
-Subject: [PATCH net-next] dt-bindings: net: renesas-gbeth: Add support for RZ/G3E (R9A09G047) SoC
-Date: Wed, 11 Jun 2025 08:12:04 +0200
-Message-ID: <20250611061204.15393-1-john.madieu.xa@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1749622454; c=relaxed/simple;
+	bh=jEd48vl9QSQfzJRNBpRv6p4cKnnNhkUJ4fLA7sMP4dg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=AbtFziQzrIuoDOEw14VB2agVUYPi5GWYT5otvEgW6aqHTWJ+JcC7+FFNd8kRM/kJeFpz6z0Bjq4Zk8zj3F8aL7fMY1bjkqSW4yqnslQXe+/biZH0k+QOc12Im5HHWuSBS15T0Yx6SEgcvnYiPUBtEmJR15FZOrFj/GL+dJ+cqhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uc7j3yv1; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uc7j3yv1"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a4eed70f24so3588f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 23:14:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749622450; x=1750227250; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rlyv04vogoughQAdjKFOOQI6+Za2bCSuZln2DyzNVIw=;
+        b=uc7j3yv1jJywtUPV0xhTVFvSohTeVN/mPSHeaQ9PniEBIUyAOdz3NfIyoV3vCvdRWR
+         De2ikoZgVYoab0atnKaGdvv+kB7ecRNUxwk3HdEZ+CURyNI3ehvyY8CNeWe3Clygn+Mm
+         YsID45WTgq4ZfXMoeP8X3OLxecBq8molDW/85PoEgJ6yUaYG6pBzwXq2XUw4hf+XlYbw
+         XZT+WmUdQEt2a/pq4exudYwFDfHnWbbgYI03qTrb1lR2cO8wp7GnA5H+FyrqWh49vvDD
+         SHXahlMFEk/ADTfdwG3WSnFomXaNcFwIQyI2gSIvDXlHP1zCL1cMSJwHYHWnAWSNFERw
+         hG3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749622450; x=1750227250;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rlyv04vogoughQAdjKFOOQI6+Za2bCSuZln2DyzNVIw=;
+        b=kujTNua2qzL8RLGgLM4YQ4+hat4WeQSkuUgZy88l91xE+LFHTxqN9IZb93igL+kasS
+         t9+ULKbL30CmmnhvV+YXn6UgA20gg7BKgLEHL8LzAu2wSZ85gxJDA9K8qgnjbZdhYocO
+         RXak3/9COMDllBA+XpKyMjI5tj2+beWnA+eIeW7Q8ENfocoZGG6Mu16agm9oLlTbkErA
+         R9nbgVl2CVthYpNfMFux8BTBQSN885+32j8SfqXU2WWSBYs0OwqpQCBhKKkFRY7OYEbe
+         TCUqLWKugAjnT3YiirDit7RgEW1sy3zasGs9qDHSoi7lweAW655yravFwdO4ZCML6hI/
+         wAvg==
+X-Forwarded-Encrypted: i=1; AJvYcCX264h4MCoagxMjqPG2/jnv7IKb2taDsz+uzwvji2nIgvNOHYvPVuCdafauYSk/wvStcDmy6ZDKb4E5wno=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzkfm3iVOw0uBQynLgtbmU/xvNbDCz5R0J/TVOcqKqejzcNHfad
+	SjvzVV0sIDY6CyKwQtCTkhhoWGcdqWUg91ua9RMcPQM5pO2HDnKGzq7blq43u67B8oU=
+X-Gm-Gg: ASbGncvVKD7kaxUCl81r5ze5QcTwkgXGn0rqKAEbYGcFCR7ShyGzySpggxD6x21NtVu
+	fxfYExarA85Sw1/0ejyoJGvFlV+RYo3ygSN9KJ2BVI80WWErDbomK+wAfBdBB/2BG1TkFzG6+JK
+	oO+nuPDovL/Svkz/HpKCMFM+1AM3jgIwg7zsubU+iQ/MSdYTFXCptmzNgY6b0X9HTuf8Jl0sDng
+	yU5OdWEhjwlU46asXSQmcJfX6ijWzRiJ1OIqylnehS8oR1rQyL2Ezfmm7x0IUyGv2G5TLT4VsTy
+	AhlvZEgcbGRXU7yN4f6HMmfHWeO4u00JXGbxZ9F47dLOMz4nmR274QfvMLVnwFuZyT57nWzuW7b
+	R+oLkrG4=
+X-Google-Smtp-Source: AGHT+IHdRXjfhWjLOdwo/Es6Crc9zuoJuSCwsTyx1a1IJmVOPmaXxFQNpnMjbvHQ6+89WTmnzm3cfA==
+X-Received: by 2002:a05:6000:288e:b0:3a5:2dae:970f with SMTP id ffacd0b85a97d-3a558821396mr547717f8f.13.1749622449979;
+        Tue, 10 Jun 2025 23:14:09 -0700 (PDT)
+Received: from [192.168.1.29] ([178.197.223.125])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53244f516sm14142791f8f.74.2025.06.10.23.14.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jun 2025 23:14:09 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v2 00/17] pinctrl: Constify pointers to 'pinctrl_desc' and
+ more
+Date: Wed, 11 Jun 2025 08:13:32 +0200
+Message-Id: <20250611-pinctrl-const-desc-v2-0-b11c1d650384@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIweSWgC/32NQQqDMBBFryKz7pQYTTWueo/iIsRRBySRiUiLe
+ PemHqDL9+C/f0AiYUrQFQcI7Zw4hgz6VoCfXZgIecgMWmmjjG5x5eA3WdDHkDYcKHmsXK2osuR
+ daSAPV6GR31f01WeeOW1RPtfHXv7s39xeosLmMZJtWmttbZ4LByfxHmWC/jzPL+k64GC1AAAA
+X-Change-ID: 20250528-pinctrl-const-desc-3a40e39eca15
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Basavaraj Natikar <Basavaraj.Natikar@amd.com>, 
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+ Andrew Jeffery <andrew@codeconstruct.com.au>, Joel Stanley <joel@jms.id.au>, 
+ Avi Fishman <avifishman70@gmail.com>, Tomer Maimon <tmaimon77@gmail.com>, 
+ Tali Perry <tali.perry1@gmail.com>, Patrick Venture <venture@google.com>, 
+ Nancy Yuen <yuenn@google.com>, Benjamin Fair <benjaminfair@google.com>, 
+ =?utf-8?q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
+ =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, 
+ David Rhodes <david.rhodes@cirrus.com>, 
+ Richard Fitzgerald <rf@opensource.cirrus.com>, 
+ Charles Keepax <ckeepax@opensource.cirrus.com>, 
+ Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
+ Jesper Nilsson <jesper.nilsson@axis.com>, 
+ Lars Persson <lars.persson@axis.com>, Damien Le Moal <dlemoal@kernel.org>, 
+ Vladimir Zapolskiy <vz@mleia.com>, Michal Simek <michal.simek@amd.com>, 
+ Emil Renner Berthing <kernel@esmil.dk>, 
+ Jianlong Huang <jianlong.huang@starfivetech.com>, 
+ Hal Feng <hal.feng@starfivetech.com>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Manivannan Sadhasivam <mani@kernel.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, 
+ linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
+ linux-sound@vger.kernel.org, patches@opensource.cirrus.com, 
+ linux-mediatek@lists.infradead.org, linux-arm-kernel@axis.com, 
+ linux-riscv@lists.infradead.org, linux-rtc@vger.kernel.org, 
+ linux-stm32@st-md-mailman.stormreply.com, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4396;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=jEd48vl9QSQfzJRNBpRv6p4cKnnNhkUJ4fLA7sMP4dg=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoSR6ZNJXNtzDS06LfmSN9fRLSYJEq6TBJKxjlO
+ 0BdYrKgNxuJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaEkemQAKCRDBN2bmhouD
+ 19wvD/49T/2W6MD/HM9DqX8B584NX/5doowuan1+HGbgL34Jkh+d7CgyP1/jT80yenqBpDEMWD3
+ Ck/IBEYyVtvu9+lBHSavpcGJimI3dvzrS2eIQEYHrv+Db8ILvy2SuVEHWV/SsYTwrQwOFnMpGvW
+ 9W/ZSKMpl9m4M9tAVHaDBbkMl+Tb5ncycLl6wFt/FsGS9t5Cx2rco/bWPa2MKncWcM9GcsA+2qs
+ 8E3IELZ63OxMUKovUR0i6iB6rfsJQdSP4qfVLCrHfQKh1mtC2RtQvtSTeTxCP4gOFwoOkDnqhxT
+ 15x4Pa3hOLuqGQQ07HCsCypN8/p1cAnUGs43CorB6AvmkX+W6f24hElt4yTdzuSXdIbkCoRJ0Ru
+ 5lhPuh5vXCcYpuGDSVgWG79t3dEa91VeieYekylNWvWQ2AJVwUWT0FUEI5MFevKXuqYvdRw3CKy
+ HWh6koZO844FafrzJBAEBAqai2FBax1mQOSMBRpLINtogb1nAKviRdDOWfjMbThMZYrnQhSDwv5
+ UPDEC+1fbQmFThXN6Yqbm40F/AyOypi0XO1oAdDCp5+Yscm14p2nyyP6+iZvOY2DWEROhfLuPMw
+ u5/9PfeVRutqtDCyfBbpoQgW2VkWNSctUpZgDM5ju51b2N7iqATLm08lXVHj/020ojBZ33Ew4L+
+ uvN7ZKqtl1zf1jQ==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Document support for the GBETH IP found on the Renesas RZ/G3E (R9A09G047) SoC.
-The GBETH block on RZ/G3E is equivalent in functionality to the GBETH found on
-RZ/V2H(P) (R9A09G057).
+Changes in v2:
+- Add Rb tags
+- Patch #1: rephrase commit msg (Geert)
+- Patch #2: fix/require dependency on OF
+- Link to v1: https://lore.kernel.org/r/20250528-pinctrl-const-desc-v1-0-76fe97899945@linaro.org
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviwed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
+Description:
+------------
+In several drivers pointers to 'struct pinctrl_desc' is not modified, so
+since core does not modify it, it can be made as const.
+
+Dependencies/merging:
+---------------------
+Patch #4 "pinctrl: Constify pointers to 'pinctrl_desc'" is a
+prerequisite for all further patches, including RTC patch, therefore
+probably everything should be via main pinctrl tree.
+
+I split several patches, although not all, per SoC-submaintainers, so
+reviewing will be easier.
+
+Best regards,
+Krzysztof
+
 ---
+Krzysztof Kozlowski (17):
+      pinctrl: starfive: Allow compile testing on other platforms
+      pinctrl: Allow compile testing for K210, TB10X and ZYNQ
+      pinctrl: amd: Constify pointers to 'pinctrl_desc'
+      pinctrl: Constify pointers to 'pinctrl_desc'
+      pinctrl: aspeed: Constify static 'pinctrl_desc'
+      pinctrl: nuvoton: Constify static 'pinctrl_desc'
+      pinctrl: bcm: Constify static 'pinctrl_desc'
+      pinctrl: bcm: cygnus-mux: Move fixed assignments to 'pinctrl_desc' definition
+      pinctrl: bcm: cygnus-ns2: Move fixed assignments to 'pinctrl_desc' definition
+      pinctrl: bcm: cygnus-nsp: Move fixed assignments to 'pinctrl_desc' definition
+      pinctrl: as3722: Move fixed assignments to 'pinctrl_desc' definition
+      pinctrl: max77620: Move fixed assignments to 'pinctrl_desc' definition
+      pinctrl: palmas: Move fixed assignments to 'pinctrl_desc' definition
+      pinctrl: renesas: Move fixed assignments to 'pinctrl_desc' definition
+      pinctrl: pistachio: Constify static 'pinctrl_desc'
+      pinctrl: Constify static 'pinctrl_desc'
+      rtc: stm32: Constify static 'pinctrl_desc'
 
-This patch is a split of this series [1] that originally added support
-for Gigabit Ethernet (GBETH) IPs found on RZ/G3E SoCs. As requested by
-Jakub [2], I send this as an individual patch to target net-next.
+ drivers/pinctrl/Kconfig                            |  9 +++++----
+ drivers/pinctrl/Makefile                           |  2 +-
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c         |  2 +-
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c         |  2 +-
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c         |  2 +-
+ drivers/pinctrl/aspeed/pinctrl-aspeed.c            |  2 +-
+ drivers/pinctrl/aspeed/pinctrl-aspeed.h            |  2 +-
+ drivers/pinctrl/bcm/pinctrl-bcm4908.c              |  2 +-
+ drivers/pinctrl/bcm/pinctrl-cygnus-mux.c           |  8 ++++----
+ drivers/pinctrl/bcm/pinctrl-ns.c                   |  2 +-
+ drivers/pinctrl/bcm/pinctrl-ns2-mux.c              |  8 ++++----
+ drivers/pinctrl/bcm/pinctrl-nsp-mux.c              |  8 ++++----
+ drivers/pinctrl/berlin/berlin.c                    |  2 +-
+ drivers/pinctrl/cirrus/pinctrl-cs42l43.c           |  2 +-
+ drivers/pinctrl/core.c                             | 13 +++++++------
+ drivers/pinctrl/core.h                             |  2 +-
+ drivers/pinctrl/mediatek/pinctrl-airoha.c          |  2 +-
+ drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c          |  2 +-
+ drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c          |  2 +-
+ drivers/pinctrl/nuvoton/pinctrl-wpcm450.c          |  2 +-
+ drivers/pinctrl/pinctrl-amd.c                      |  8 ++++----
+ drivers/pinctrl/pinctrl-artpec6.c                  |  2 +-
+ drivers/pinctrl/pinctrl-as3722.c                   |  4 ++--
+ drivers/pinctrl/pinctrl-bm1880.c                   |  2 +-
+ drivers/pinctrl/pinctrl-k210.c                     |  2 +-
+ drivers/pinctrl/pinctrl-lpc18xx.c                  |  2 +-
+ drivers/pinctrl/pinctrl-max77620.c                 |  9 ++++-----
+ drivers/pinctrl/pinctrl-mlxbf3.c                   |  2 +-
+ drivers/pinctrl/pinctrl-palmas.c                   |  4 ++--
+ drivers/pinctrl/pinctrl-pistachio.c                |  8 ++++----
+ drivers/pinctrl/pinctrl-tb10x.c                    |  2 +-
+ drivers/pinctrl/pinctrl-zynq.c                     |  2 +-
+ drivers/pinctrl/renesas/pinctrl-rzn1.c             |  4 ++--
+ drivers/pinctrl/starfive/pinctrl-starfive-jh7100.c |  2 +-
+ drivers/rtc/rtc-stm32.c                            |  2 +-
+ include/linux/pinctrl/pinctrl.h                    |  8 ++++----
+ 36 files changed, 70 insertions(+), 69 deletions(-)
+---
+base-commit: b27cc623e01be9de1580eaa913508b237a7a9673
+change-id: 20250528-pinctrl-const-desc-3a40e39eca15
 
-[1] - https://lore.kernel.org/all/20250604065200.163778-1-john.madieu.xa@bp.renesas.com/
-[2] - https://lore.kernel.org/all/20250609083008.0157fe47@kernel.org/
-
- .../devicetree/bindings/net/renesas,r9a09g057-gbeth.yaml        | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/net/renesas,r9a09g057-gbeth.yaml b/Documentation/devicetree/bindings/net/renesas,r9a09g057-gbeth.yaml
-index c498a9999289..9961253d1d41 100644
---- a/Documentation/devicetree/bindings/net/renesas,r9a09g057-gbeth.yaml
-+++ b/Documentation/devicetree/bindings/net/renesas,r9a09g057-gbeth.yaml
-@@ -14,6 +14,7 @@ select:
-     compatible:
-       contains:
-         enum:
-+          - renesas,r9a09g047-gbeth
-           - renesas,r9a09g056-gbeth
-           - renesas,r9a09g057-gbeth
-           - renesas,rzv2h-gbeth
-@@ -24,6 +25,7 @@ properties:
-   compatible:
-     items:
-       - enum:
-+          - renesas,r9a09g047-gbeth # RZ/G3E
-           - renesas,r9a09g056-gbeth # RZ/V2N
-           - renesas,r9a09g057-gbeth # RZ/V2H(P)
-       - const: renesas,rzv2h-gbeth
+Best regards,
 -- 
-2.25.1
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
