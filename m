@@ -1,185 +1,167 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1DEE25E824;
-	Wed, 11 Jun 2025 09:24:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749633864; cv=pass; b=BBIEjtRzh2JZ8O8yZcE/ILH7XBSEVM1dqOxZrOpVxJ9vsbKPg2Vay8wludguRqAPAhKJ6TtriJ1QOhWmpBzYQI8yzxZBVcIAki8clZ/1m1sRq6AAf7u/dbyhNOSOnMRs94PHOvYOxFe0K2LHcU4OKtiSwsMDIS4MUEnKFqQo7Kw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749633864; c=relaxed/simple;
-	bh=VnSbD1P4ZjAZCmO2ADIJNQ7jUY0E3k9VW+EXMPbQOn4=;
-	h=MIME-Version:From:To:In-Reply-To:Cc:Subject:Message-ID:Date:
-	 Content-Type; b=MAEkIK1k/hP04EyQ4nkmGR32/BqxPyxf4MxDjS265+srTYhAhOjrop5SKdgNzss4ap6BUbEeeZ9pkE6QOKyxuzzE6Y5raEnubiqwYNX6X8pjs/yn/Ct2AVjRz/B65mR+oDDp8z7y6TT7Vw1H/E8hDI1D8RIuzJ1p+SIifpYyibU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pigmoral.tech; spf=pass smtp.mailfrom=pigmoral.tech; dkim=pass (1024-bit key) header.d=pigmoral.tech header.i=junhui.liu@pigmoral.tech header.b=a+pYiCO4; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pigmoral.tech
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pigmoral.tech
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E76D25EF9F;
+	Wed, 11 Jun 2025 09:25:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749633931; cv=none; b=N701ygNN/CGXUQue8fNNF7aiuCmYgn1qRM65HkEo+mm5HtK8DuacdqWAbXuQfztN8a+rl6yqGRO0ahs0XirHfO5I/pFjzs2YvxDESTNUOb31gNTIwfkCkXvZom1SVklpJX2NRM/OGgSYDVeckgczHf8wKDB8KihotC31FPKBVA8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749633931; c=relaxed/simple;
+	bh=8aW8flzpOEdNvRpnopc7kcDgqLYryCWboV6UFdlDTtc=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N/6Z6ecdqwCkx9WQpxJ6woPGisuSbsLXX5qEdBzAkrWG0gamBZPfAI/UAW0RW9iPRW7/wV1l8g8PMTs1kcEdhkYHop+ejC8LzZGreJzJVwUd85YOY1dloNp6DApIreoJQKFbLg4RbdkswhCh0xuTc7fZULBWt4IVq9rxgQgu0Q0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Auw87Ly1; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=pigmoral.tech header.i=junhui.liu@pigmoral.tech header.b="a+pYiCO4"
-ARC-Seal: i=1; a=rsa-sha256; t=1749633823; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=kO7V+IP0kjxzIQrvpS/6WXoN0TFYQnAdYvQGYN+M9EESRHDfLx2LCr1edGpmh9cjbvAT5xwjplUUPKz+umH5NtVuLrTULPRkrGqrV7In1UfBxOqixKddCXdCIgW3NaauDabDKpWYmoZTfURa2Di7RLaEpcuxpdYs5lRG0cOfqOc=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1749633823; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=KzDcoJuyvrXRTjMEF0wU3nDIzXU2u1U4shVlfR4W+g0=; 
-	b=FE+KHIohmMpt4W6j3U8MwU1rB1n8R4l99wCSWzLGlsbxKUeyw9ZZze9ZOxdsUY/AYSoxbmBM7WfFx5sW3ZHAVzRNhe2uBX5hwN2IGwpBTrCrz4jpHiEpI7HWK3tUjBe7g3W4cki8S2aYUr0K8RRG3etZQ/chDm9qNKG7Q/N3VTY=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=pigmoral.tech;
-	spf=pass  smtp.mailfrom=junhui.liu@pigmoral.tech;
-	dmarc=pass header.from=<junhui.liu@pigmoral.tech>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749633823;
-	s=zmail; d=pigmoral.tech; i=junhui.liu@pigmoral.tech;
-	h=MIME-Version:From:From:To:To:In-Reply-To:Cc:Cc:Subject:Subject:Message-ID:Date:Date:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=KzDcoJuyvrXRTjMEF0wU3nDIzXU2u1U4shVlfR4W+g0=;
-	b=a+pYiCO4nqHRRMmAzxo1pgcIPNgGvRa5/G8eM0OyG/USjABXBKDmOp62M8xqS8bB
-	stmSILeijgOv1bjOGGKKYq7grIZS1kSuVn+yn/qK76nKny0gHR6FCgxnZF8X7UD9eH2
-	brtIG723Rdy5/3HT1CcNH7Ypk9dPzmd59RdcC/Kc=
-Received: by mx.zohomail.com with SMTPS id 1749633819809581.0689137008978;
-	Wed, 11 Jun 2025 02:23:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Auw87Ly1"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-55324062ea8so8300885e87.3;
+        Wed, 11 Jun 2025 02:25:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749633927; x=1750238727; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fXw9bUaSPUDIhkRTBLBFq1NYEmQDUusclN78B59JQTs=;
+        b=Auw87Ly1/lOQdIZRyhzXxLmzavFmZRtx7ZCswY+F/35S44246EE82M/0Dz4VIIl3Ey
+         oRNULPUvHqJRLlyrlkNLjQ/webv8L5DX35WE53JfvLj7r4pbBdq63PZ3Z/zsNx99iOmG
+         0Hue7AthQxXxSJqj2ncFb8+xUDeQyr8FelEW7vXpBKfptWmrXYO9kUsOGHCTq3kImkXF
+         D+B6yTsNRvUQ56F7LkVzJfVHKVhu/Ly+f5i13QcMghLADYkeHAWH3W5JdxjE/U/hkHyR
+         IpPUvex/vEBdLTp2WclARfZcM5j5ILImTHiA9r32LpCEVv8ugUN122xJk+jzR6h4mNGa
+         pWqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749633927; x=1750238727;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fXw9bUaSPUDIhkRTBLBFq1NYEmQDUusclN78B59JQTs=;
+        b=JfK0HalhwWMOa0F8Lh1tND01/T8q31mL1dypctZX4pNq4dE9Kbcdeyuu94Dp/2J3dl
+         DOEpbvEh26WVL3kx+3MuNuqBr1kUdsIC6O6zRRtD/N6/1Yhe2hAuY3AO2Wb41hwLCnuf
+         dPsP20qNqfiJQquN10ZpAtWIVN9R+Hp1z+1QiiaUOP1Y55hZihFyCoFjWiy/lLHKQmMZ
+         hJ0xayLnhlbnTYO8wHFC9Pnyv37ZA8JelCtb3i/mWFrue+ywSc/WZSioKOOlxyOQiJlZ
+         ODSuT+/eNz/VwVpoD7UWCmAKh6SZKPFVyLK7xmV1wmn8H1wQ3QzZZFOgeYtJUoqhrp2z
+         TGSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWld2KDkQdiGEXWfC+b7khgO0bfyv2NxNLRS4X+vxMYu4tayIPNCGqjT3vIxZTilNyMXYzF@vger.kernel.org, AJvYcCXcEzZPU9qQmL0i1b79bkXxxcnwZ4Sd/+LjEHGHvTfKhXS2S+RPocJVKIhAvCQ6Qse3wAWaXLM8KIGFX/0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQM8lDXMO+RGvVGU6B9W/XHEMCoWtqOfSPG2fs+97r6ijy3J8d
+	BBkjzyUsnsw3u9TshqENIiMWLQVEYQKUfAmvgcpfAUQOrLD6uAmwWkkU
+X-Gm-Gg: ASbGncvVMdKoq3a0k1ZFdbsMgHzgUF59HLVqs2JDQykAgowsuGh+qoymLCSpM1Rt/ki
+	XBLWkDd1OVeUDPuBCme85R0xzEF5EIKDoA6X2XlQxtwo4t7X6coUNnI0RoW2eVEbmkN+bYg/6lw
+	g/qRHJNqh8qYB4W4fesVfuULYRlxmBRyySi1FAyVWtzSYfaorg4wylZpvnCdoHsyAyj9LqTh8EV
+	jhxE+vtcbIwGxtNb5af6xF2x9YQnyLX3vQol3iXMXe4OE1sFWhfVQw29I3bzMCkqlG9W99vQnzL
+	qB+5zsAzoa4ZnSRnf/HYMpyUuey0y4mcPvW21g8QPrWUd6IZDkvSXaUhAPTRxcrRUgqJ+nUr3Fu
+	kGmoNaFcFxzU=
+X-Google-Smtp-Source: AGHT+IE4/yCpbfHpcXtf/o5H6UJTebK3DlLJ8pKrDj/PBzsS1Jglkar8iIrHhFY93Nv7YSqKZWm9mQ==
+X-Received: by 2002:a05:6512:3e14:b0:553:2ef3:f73d with SMTP id 2adb3069b0e04-5539c10ae42mr784428e87.14.1749633926976;
+        Wed, 11 Jun 2025 02:25:26 -0700 (PDT)
+Received: from pc636 (host-95-203-1-180.mobileonline.telia.com. [95.203.1.180])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5536773197asm1879585e87.213.2025.06.11.02.25.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 02:25:26 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Wed, 11 Jun 2025 11:25:24 +0200
+To: Joel Fernandes <joelagnelf@nvidia.com>
+Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
+	RCU <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
+Subject: Re: [PATCH 2/3] rcu: Enable rcu_normal_wake_from_gp on small systems
+Message-ID: <aElLhFVlf-p5YWaq@pc636>
+References: <20250610173450.107293-1-urezki@gmail.com>
+ <20250610173450.107293-2-urezki@gmail.com>
+ <d55a7d1b-d0c0-4c04-b69e-ca6737c98224@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Junhui Liu" <junhui.liu@pigmoral.tech>
-To: "Chen Wang" <unicorn_wang@outlook.com>, 
-	"Bjorn Andersson" <andersson@kernel.org>, 
-	"Mathieu Poirier" <mathieu.poirier@linaro.org>, 
-	"Rob Herring" <robh@kernel.org>, 
-	"Krzysztof Kozlowski" <krzk+dt@kernel.org>, 
-	"Conor Dooley" <conor+dt@kernel.org>, 
-	"Inochi Amaoto" <inochiama@gmail.com>, 
-	"Philipp Zabel" <p.zabel@pengutronix.de>, 
-	"Paul Walmsley" <paul.walmsley@sifive.com>, 
-	"Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>, 
-	"Alexandre Ghiti" <alex@ghiti.fr>
-In-Reply-To: <PN0P287MB22589781F2D49353E7C66C46FE75A@PN0P287MB2258.INDP287.PROD.OUTLOOK.COM>
-Cc: <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>, 
-	<sophgo@lists.linux.dev>, <linux-kernel@vger.kernel.org>, 
-	<linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH 1/2] dt-bindings: remoteproc: Add C906L rproc for Sophgo
-	 CV1800B SoC
-Message-ID: <1847f2ae7cdd9de8.639eddc348629bd0.78776f2b552d9090@Jude-Air.local>
-Date: Wed, 11 Jun 2025 09:23:31 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d55a7d1b-d0c0-4c04-b69e-ca6737c98224@nvidia.com>
 
+On Tue, Jun 10, 2025 at 02:34:10PM -0400, Joel Fernandes wrote:
+> 
+> 
+> On 6/10/2025 1:34 PM, Uladzislau Rezki (Sony) wrote:
+> > Automatically enable the rcu_normal_wake_from_gp parameter on
+> > systems with a small number of CPUs. The activation threshold
+> > is set to 16 CPUs.
+> > 
+> > This helps to reduce a latency of normal synchronize_rcu() API
+> > by waking up GP-waiters earlier and decoupling synchronize_rcu()
+> > callers from regular callback handling.
+> > 
+> > A benchmark running 64 parallel jobs invoking synchronize_rcu()
+> > demonstrates a notable latency reduction with the setting enabled.
+> > 
+> > Latency distribution (microseconds):
+> > 
+> > <default>
+> >  0      - 9999   : 1
+> >  10000  - 19999  : 4
+> >  20000  - 29999  : 399
+> >  30000  - 39999  : 3197
+> >  40000  - 49999  : 10428
+> >  50000  - 59999  : 17363
+> >  60000  - 69999  : 15529
+> >  70000  - 79999  : 9287
+> >  80000  - 89999  : 4249
+> >  90000  - 99999  : 1915
+> >  100000 - 109999 : 922
+> >  110000 - 119999 : 390
+> >  120000 - 129999 : 187
+> >  ...
+> > <default>
+> > 
+> > <rcu_normal_wake_from_gp>
+> >  0      - 9999  : 1
+> >  10000  - 19999 : 234
+> >  20000  - 29999 : 6678
+> >  30000  - 39999 : 33463
+> >  40000  - 49999 : 20669
+> >  50000  - 59999 : 2766
+> >  60000  - 69999 : 183
+> >  ...
+> > <rcu_normal_wake_from_gp>
+> > 
+> > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> > ---
+> >  kernel/rcu/tree.c | 7 ++++++-
+> >  1 file changed, 6 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > index 14d4499c6fc3..c0e0b38a08dc 100644
+> > --- a/kernel/rcu/tree.c
+> > +++ b/kernel/rcu/tree.c
+> > @@ -1625,7 +1625,9 @@ static void rcu_sr_put_wait_head(struct llist_node *node)
+> >  	atomic_set_release(&sr_wn->inuse, 0);
+> >  }
+> >  
+> > -/* Disabled by default. */
+> > +/* Enable rcu_normal_wake_from_gp automatically on small systems. */
+> > +#define WAKE_FROM_GP_CPU_THRESHOLD 16
+> > +
+> >  static int rcu_normal_wake_from_gp;
+> >  module_param(rcu_normal_wake_from_gp, int, 0644);
+> >  static struct workqueue_struct *sync_wq;
+> > @@ -4847,6 +4849,9 @@ void __init rcu_init(void)
+> >  	sync_wq = alloc_workqueue("sync_wq", WQ_MEM_RECLAIM, 0);
+> >  	WARN_ON(!sync_wq);
+> >  
+> > +	if (num_possible_cpus() <= WAKE_FROM_GP_CPU_THRESHOLD)
+> > +		WRITE_ONCE(rcu_normal_wake_from_gp, 1);
+> > +
+> I think this will get weird if user explictly specifies
+> rcutree.rcu_normal_wake_from_gp=0 ? Then we're silently overriding the param.
+> Maybe, initialize it to -1, and then if it was set 0 by user, don't override it.
+> But otherwise, set it to 1.  Per your third patch, '1' is a default, not a
+> forced value.
+> 
+Right. That case should be fixed.
 
-
-On 11/06/2025 17:01, Chen Wang wrote:
-> On 2025/6/8 10:37, Junhui Liu wrote:
->> Add C906L remote processor for CV1800B SoC, which is an asymmetric
->> processor typically running RTOS.
->=20
-> In the cover email, I saw that remoteproc also uses mailbox as the=20
-> underlying communication. So I guess some mailbox-related properties=20
-> will need to be added to the bindings? I suggest that these should be=20
-> determined before officially merging this bindings.
-
-Yes, thanks for your suggestion. I will try to add mailbox-related
-properties and functions in the bindings and driver in v2, since the
-mailbox driver has been merged. At the very least, I will ensure the
-mailbox-related properties are included in the bindings.
-
->=20
-> Thanks=EF=BC=8C
->=20
-> Chen
->=20
->>
->> Signed-off-by: Junhui Liu <junhui.liu@pigmoral.tech>
->> ---
->>   .../bindings/remoteproc/sophgo,cv1800b-c906l.yaml  | 68 +++++++++++++++=
-+++++++
->>   1 file changed, 68 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/remoteproc/sophgo,cv1800b-=
-c906l.yaml b/Documentation/devicetree/bindings/remoteproc/sophgo,cv1800b-c90=
-6l.yaml
->> new file mode 100644
->> index 0000000000000000000000000000000000000000..455e957dec01c16424c49ebe5=
-ef451883b0c3d4a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/remoteproc/sophgo,cv1800b-c906l.y=
-aml
->> @@ -0,0 +1,68 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/remoteproc/sophgo,cv1800b-c906l.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Sophgo C906L remote processor controller for CV1800B SoC
->> +
->> +maintainers:
->> +  - Junhui Liu <junhui.liu@pigmoral.tech>
->> +
->> +description:
->> +  Document the bindings for the C906L remoteproc component that loads an=
-d boots
->> +  firmwares on the CV1800B SoC.
->> +
->> +properties:
->> +  compatible:
->> +    const: sophgo,cv1800b-c906l
->> +
->> +  firmware-name:
->> +    $ref: /schemas/types.yaml#/definitions/string
->> +    description:
->> +      The name of the firmware file to load for this remote processor, r=
-elative
->> +      to the firmware search path (typically /lib/firmware/).
->> +
->> +  memory-region:
->> +    description:
->> +      Phandle to a reserved memory region that is used to load the firmw=
-are for
->> +      this remote processor. The remote processor will use this memory r=
-egion
->> +      as its execution memory.
->> +
->> +  resets:
->> +    maxItems: 1
->> +
->> +  sophgo,syscon:
->> +    $ref: /schemas/types.yaml#/definitions/phandle
->> +    description:
->> +      A phandle to the SEC_SYS region, used for configuration of the rem=
-ote processor.
->> +
->> +required:
->> +  - compatible
->> +  - firmware-name
->> +  - memory-region
->> +  - resets
->> +  - sophgo,syscon
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    reserved-memory {
->> +        #address-cells =3D <1>;
->> +        #size-cells =3D <1>;
->> +        ranges;
->> +
->> +        c906l_mem: region@83f40000 {
->> +            reg =3D <0x83f40000 0xc0000>;
->> +            no-map;
->> +        };
->> +    };
->> +
->> +    c906l-rproc {
->> +        compatible =3D "sophgo,cv1800b-c906l";
->> +        firmware-name =3D "c906l-firmware.elf";
->> +        memory-region =3D <&c906l_mem>;
->> +        resets =3D <&rst 294>;
->> +        sophgo,syscon =3D <&sec_sys>;
->> +    };
->>
-
---=20
-Best regards,
-Junhui Liu
+--
+Uladzislau Rezki
