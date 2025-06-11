@@ -1,160 +1,149 @@
-Received: from mail-oo1-f64.google.com (mail-oo1-f64.google.com [209.85.161.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC8F511185
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 03:21:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3377E1A28D;
+	Wed, 11 Jun 2025 03:24:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749612119; cv=none; b=Wugk1wWMTtp+6H0mn0al4ExPFouVAl69aWYodxxAnN3OBF8ZYoj+8XRRcPIuGIsjwd+eU+wVId1ZRciPG27w462eDc5smZaTyvtx3nL2hVQb9QKQ4N/LFh7oQpMDzHCergDFkLVIMLLolo6LJlSDl96xFHoUx/tVwZydbmLiDZI=
+	t=1749612285; cv=none; b=WcoQToMUN+kGxLLNgyjahRZ71MYSK93Sx0kgiG0EidLKIHwvDZ4BupvcPgvMPguZTU9wnjOFl3ZhTEm2kvyT9j1BldEbF8IVRbnWtbTWmYcvkQZ/MJdS1NziHKi7llg9LWqNF7OvJ5UryK65kkQMEAv2/jxJZq0Qy1hSy0jG0sY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749612119; c=relaxed/simple;
-	bh=tmjeg8SpgL1hjQHTHZJnA+Fd+TUsw5f+J/3EKKUDF74=;
-	h=Date:From:To:Cc:Message-Id:Subject:MIME-Version:Content-Type; b=sVcadMGlEh29QPCFM66hOecUIWY7B1S+TW5qPRLTDs8I053Wwaq6q3oyRr4+1IWXeppi1+9n6T0AMEWf94BSNRZ0QLOW9KXvHbrV/twtzr7B47+wO9EVu+hng6jroBAEdnqh7IM+z9DJh+Gv2TygYjeXLkQbke6fKM3vBfnlaes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ancd.us; spf=none smtp.mailfrom=ancd.us; dkim=pass (2048-bit key) header.d=ancd-us.20230601.gappssmtp.com header.i=@ancd-us.20230601.gappssmtp.com header.b=g+csuhdL; arc=none smtp.client-ip=209.85.161.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ancd.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ancd.us
+	s=arc-20240116; t=1749612285; c=relaxed/simple;
+	bh=fyPQ/mfs2CSaeT6RM8/3j9A3OgCvFV5ebkXfbNQ6tqA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=YHLQ4iUhwffyIN5l1gFM5kJFsYzUliawbWgGyKO08tk5O6EcLBHrgg/5CUfqT/FzlWSl6QNZ2Ty+fG2ze2VyLPwKjofFGyeGXDj6LY0D2zpyr/RoanHWJdrM3sBGA5eNSAWjcTV4MShkF3w1613KUZR8+E1C4xvc+fNBjRKy0Po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=PwqdEJBU; arc=none smtp.client-ip=18.194.254.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ancd-us.20230601.gappssmtp.com header.i=@ancd-us.20230601.gappssmtp.com header.b="g+csuhdL"
-Received: by mail-oo1-f64.google.com with SMTP id 006d021491bc7-605fb0efb94so40906eaf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 20:21:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ancd-us.20230601.gappssmtp.com; s=20230601; t=1749612116; x=1750216916; darn=vger.kernel.org;
-        h=mime-version:subject:message-id:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=qxLw98Ucxv1opdJhRPU28xqJUARGsE3f1mYIRtxQFQY=;
-        b=g+csuhdLRjSKHrtlE9/KCZxHdXOXso99H4d8l7QxeiUWdXOD/Q5nyTMrAczQ5tLlEq
-         VBOqknfXAHPmEeqNSZTZndzReoBnC7JVUcW/cSdSoLtiKygtqlxBhgXJqA/xf+PN0gGH
-         OID34q95ZA0JpGt4pxIrvy5RRMSX8QOhBbfSBfhHl58VrG0m5yXTGGn97BWhHnyW04gg
-         CXX8UPLATxWko8Ec/H86zekwirfpXVrSQ+ASWWaEYt0adnb1MKqSIcwhiznyM0TsCavO
-         9KDgSA9Qkv7AjFk8aG15l7fYO+AxS0VKLXtfSJ+Z+GMHLefqafKiIFeEoj4YkNU6l9CP
-         NAFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749612116; x=1750216916;
-        h=mime-version:subject:message-id:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qxLw98Ucxv1opdJhRPU28xqJUARGsE3f1mYIRtxQFQY=;
-        b=iPRFE6a5lVoSKKs0hH/gW9UbmmyDF4UyanIoqN4fdg7KH0VE7bUJ6sT1xJXQ8NYyIw
-         eHgaezNhYQM6ULtXxgSnlNdnkmDsNksiUW2gQS4+r/yua3zJ5GFMqI16wiLZzmAjcHpF
-         S7z2oXDizmgmUyim3DfkgDEfU8fy0FMwowDHlzbN33us8/opsd9fWcs53pfqy1bh9TG1
-         Q1nzqGoARCIwWeFP7eCDlvfRjpcIxfcAn+GfaSb/5G/QiUoaQl7eZJf+AfjxvLB5P1tq
-         1B03XWZ/cQOvwcjR6aGvu+6oFszfLDE3rEpzi8Re0DZaiYklAV1hnF54kNLfzzx9s40Q
-         hmxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVG03+ReE6z8VYFijJqp55P9t+PqA2qOBU7CpQuPHGFmMna9c+1vQMuuBdDZ3aM6cCeViwP9BJfh7HzpMA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhvoJapU776qsfXnpz49rxnTX3mID0OvgKPM4zSCfbAmFnd1IP
-	h2Q+WNKCH2cgwg3VWtCBoEoxwI/wPwTceAARZn87tEdoxyBMj7Cs38EKE0oqRLvWdl2Kx95Ddnn
-	kQCtnG03RYb+6oQ==
-X-Google-Smtp-Source: AGHT+IGGPAlWtjZGocdtPa4hRonFR9L1eeaoIfWpHlEamMSwCPc/vcC02AfB0cftQp8G/Dy+cjw6zSDTIQ==
-X-Received: by 2002:a05:6808:1b27:b0:406:682b:881b with SMTP id 5614622812f47-40a5d1f422fmr455555b6e.8.1749612116528;
-        Tue, 10 Jun 2025 20:21:56 -0700 (PDT)
-X-Google-Already-Archived: Yes
-X-Google-Already-Archived-Group-Id: 321edb17f5
-X-Google-Doc-Id: 425beb64bf9ed
-X-Google-Thread-Id: 5e9c549522688635
-X-Google-Message-Url: http://groups.google.com/a/ancd.us/group/aitanholmesdem/msg/425beb64bf9ed
-X-Google-Thread-Url: http://groups.google.com/a/ancd.us/group/aitanholmesdem/t/5e9c549522688635
-X-Google-Web-Client: true
-Date: Tue, 10 Jun 2025 20:21:55 -0700 (PDT)
-From: Email Marketing software <aitanholmesdem@ancd.us>
-To: Email Marketing software <aitanholmesdem@ancd.us>
-Cc: colinesoria@michaelreid.com.au, principaljac@tnau.ac.in,
-	amit65423@gmail.com, tkloke@doctors.org.uk, dkhurana@pu.ac.in,
-	communications@oriel.ox.ac.uk, admin@wandcareall.org.uk,
-	TRidley@kurbingui.org.au, techniques@techniques83.com.sg,
-	info@bacacharity.org.uk, media@museumofbrisbane.com.au,
-	execdir@rgd.ca, info@zipcourier.com, jane@jerichoroad.org.uk,
-	linux-kernel@vger.kernel.org, sanjiv@yfcaviation.com,
-	jamo@jamo.ind.br, info@lambtoncollege.ca, honcon@phconsulatesd.org,
-	lc-farhangian@iaps.info, commerciale@queenonline.it,
-	lodgepunjabno.129@gmail.com,  <Scottyjay13@hotmail.com>
-Message-Id: <0a51172d-f812-438d-9899-f56c7c9489f0n@ancd.us>
-Subject: =?UTF-8?Q?High-speed,_Bulk,_Multi-th?=
- =?UTF-8?Q?readed,_Built-in_Proxies_=EF=BC=8E=EF=BC=8E?=
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="PwqdEJBU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1749612238;
+	bh=A93XqZVqVhYz+KFT6k3LBe2oQch3w3UxJ0GXN9kjeh4=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=PwqdEJBU58xv2fN/GyFrVsY4q+yUzchYh1yQdyDbOkzOLW+gsmutc3EKCPmPRdo1M
+	 rK9l0TyIXN5xEF9I6iJ/vDFyQzvjEpBYWe8ugLfcU5ZI4aPiazt/TPy5NMd9iWF/oQ
+	 LTfN3b4KY2nM40MFZ1WGknFJvuhlDwUT8ZVFE51I=
+X-QQ-mid: zesmtpip3t1749612231t9eb799bf
+X-QQ-Originating-IP: zvO0QNl2WUmxFIua18O1d7WBy41GUoKiP/HGHAcVAK0=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 11 Jun 2025 11:23:49 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 12403305686698106879
+EX-QQ-RecipientCnt: 8
+From: tuhaowen <tuhaowen@uniontech.com>
+To: pavel@kernel.org,
+	rafael@kernel.org,
+	linux-pm@vger.kernel.org
+Cc: tuhaowen@uniontech.com,
+	huangbibo@uniontech.com,
+	len.brown@intel.com,
+	linux-kernel@vger.kernel.org,
+	wangyuli@uniontech.com
+Subject: [PATCH v4 RESEND] PM/console: Fix the black screen issue
+Date: Wed, 11 Jun 2025 11:23:45 +0800
+Message-Id: <20250611032345.29962-1-tuhaowen@uniontech.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20250603010157.19121-1-tuhaowen@uniontech.com>
+References: <20250603010157.19121-1-tuhaowen@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; 
-	boundary="----=_Part_38028_1604984270.1749612115996"
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: N4WhQbLQyIqSRHbDR+m8OJSMb1ieiFC7TYC7nNr51mi7zodg6KY3Muyh
+	bRixKaDRMGfFZxoROozMf2qcCuSQOaGhfT2ScCIYifWOCYdcf2DwhN9oS17/Ns4pRzxAcpk
+	+/xcAIikhvpsOAR3/402sskaYm12z9raPWsTkzeHER+JAufx+S+iXPCSvxw/KHxWyQRn1fR
+	1x5NJwjQR3GK8wwTRSnYH6vzfRrYpFYWoC5F+ZVRH+0IUis/vKq0SIZvLpLlfjKAXHL2I/J
+	jqf3G8yWOOKnbXHAWT5N9oAnT9UTo9mwJpFxdnvZS9stilP4rlop0IZx0MEszRyDVaiFomw
+	xfYk9KhLWPB2omFr6zki+5jgOpAHAEDffJH+lemyNJ7I/+nEsQTT3TiKdo6hNHmAwcQQM9y
+	q/IrykpJvK7HnoIp5FlmVx5X5EwHzPzd+YepwBUi3ByJDeTvGZCmrA1PpVpwSmb3zmK35Gm
+	je2r9HeMyvLXKc24MX90BTrUeAx995COlmwdkL5N5omBFII/b4YxxpwGNBvjyxeVEEsdKB1
+	tZNLBJveN3mMDIulGR2fIQFeWNpwsMPR3hIWhTFHm5VhmuKyszB4z/7+sakf547LiXVdodt
+	SP2puRPhyooZoL9+KJ2iyg9buSdDbZ/50719v6BH7MBANI3LbtKMa33wWHH1P1ppmm7gRRg
+	zYhxxsD0jV5Kh4mj9KNxJ+vR1QbQXNkZ7o6Wlm5okxltAO7Elz/+tXwIUbJD8w/e+C6XOSe
+	FMgiEJPo7zBO8RNXO42dSWWNAr0przYqk1ADDg2vsK8AjKV2s8JxvxjJct7IqV2zWf8bjpf
+	c+7tj/gs2GObOS0ktv1j49M/H1Xj/FAsPRkfTftKtMJLj+EpALDibdkOBkedRA2lGmhT09W
+	w8g9/QRaZM7hC2ETGs+QzxMUopT9pdLxuKRUUqvYytDCUFOBK4Hz/QSWnLyATPV+en9a5KF
+	1jzWClyHw+r69QycPfa1TyQ7pu9JvDPtnqwCb8GbsL0mUmb0BFmkZI5FLlL/Qyie+4XDuuF
+	6Kfg0u1/ei+VbEyxrrU/jiwlX+cTM=
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+X-QQ-RECHKSPAM: 0
 
-------=_Part_38028_1604984270.1749612115996
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_38029_1559734816.1749612115996"
+When the computer enters sleep status without a monitor
+connected, the system switches the console to the virtual
+terminal tty63(SUSPEND_CONSOLE).
 
-------=_Part_38029_1559734816.1749612115996
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+If a monitor is subsequently connected before waking up,
+the system skips the required VT restoration process
+during wake-up, leaving the console on tty63 instead of
+switching back to tty1.
 
+To fix this issue, a global flag vt_switch_done is introduced
+to record whether the system has successfully switched to
+the suspend console via vt_move_to_console() during suspend.
 
+If the switch was completed, vt_switch_done is set to 1.
+Later during resume, this flag is checked to ensure that
+the original console is restored properly by calling
+vt_move_to_console(orig_fgconsole, 0).
 
-=E2=9C=94. Thousands to hundreds of thousands of emails sent per day.=20
-=E2=9C=94. The only software on the market that uses Web mode + Http protoc=
-ol to=20
-send mail. It completely simulates the manual login and sending of Chrome=
-=20
-browser.=20
+This prevents scenarios where the resume logic skips console
+restoration due to incorrect detection of the console state,
+especially when a monitor is reconnected before waking up.
 
-=E2=9C=94. One-click start, Http protocol,Fully Automated, High-speed, Bulk=
-,=20
-Multi-threaded,Built-in Proxies.
+Signed-off-by: tuhaowen <tuhaowen@uniontech.com>
+---
+Changes in v4:
+- Moved `vt_switch_done = false;` below the `if (orig_fgconsole >= 0)`
+  block to ensure it is only reset after a console switch has occurred.
+- Link to v3: https://lore.kernel.org/all/20250526010854.7834-1-tuhaowen@uniontech.com
+- Link to v2: https://lore.kernel.org/all/20250516084011.29309-1-tuhaowen@uniontech.com
+- Link to v1: https://lore.kernel.org/all/20250516034643.22355-1-tuhaowen@uniontech.com
+---
+ kernel/power/console.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-=E2=9C=94. Free full-featured trial for 3 days.
+diff --git a/kernel/power/console.c b/kernel/power/console.c
+index fcdf0e14a47d..19c48aa5355d 100644
+--- a/kernel/power/console.c
++++ b/kernel/power/console.c
+@@ -16,6 +16,7 @@
+ #define SUSPEND_CONSOLE	(MAX_NR_CONSOLES-1)
+ 
+ static int orig_fgconsole, orig_kmsg;
++static bool vt_switch_done;
+ 
+ static DEFINE_MUTEX(vt_switch_mutex);
+ 
+@@ -136,17 +137,21 @@ void pm_prepare_console(void)
+ 	if (orig_fgconsole < 0)
+ 		return;
+ 
++	vt_switch_done = true;
++
+ 	orig_kmsg = vt_kmsg_redirect(SUSPEND_CONSOLE);
+ 	return;
+ }
+ 
+ void pm_restore_console(void)
+ {
+-	if (!pm_vt_switch())
++	if (!pm_vt_switch() && !vt_switch_done)
+ 		return;
+ 
+ 	if (orig_fgconsole >= 0) {
+ 		vt_move_to_console(orig_fgconsole, 0);
+ 		vt_kmsg_redirect(orig_kmsg);
+ 	}
++
++	vt_switch_done = false;
+ }
+-- 
+2.20.1
 
-SITE: psce.pw/softcenter
-
-TG: wowofrom2008
-
-=20
-
-*count penalisemock penaliseproofread penalisehypocrisy penalise.*
-
-------=_Part_38029_1559734816.1749612115996
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-<p><font color=3D"#800000"><font size=3D"5"><span style=3D'text-align: left=
-; color: rgb(0, 102, 0); text-transform: none; text-indent: 0px; letter-spa=
-cing: normal; font-family: "Microsoft YaHei"; font-size: medium; font-style=
-: normal; font-weight: 400; word-spacing: 0px; float: none; display: inline=
- !important; white-space: normal; orphans: 2; widows: 2; font-variant-ligat=
-ures: normal; font-variant-caps: normal; -webkit-text-stroke-width: 0px; te=
-xt-decoration-thickness: initial; text-decoration-style: initial; text-deco=
-ration-color: initial;'>=E2=9C=94. </span>Thousands to hundreds of thousand=
-s of emails sent per day. </font></font></p><font color=3D"#800000"><font s=
-ize=3D"5"><span style=3D'text-align: left; color: rgb(0, 102, 0); text-tran=
-sform: none; text-indent: 0px; letter-spacing: normal; font-family: "Micros=
-oft YaHei"; font-size: medium; font-style: normal; font-weight: 400; word-s=
-pacing: 0px; float: none; display: inline !important; white-space: normal; =
-orphans: 2; widows: 2; font-variant-ligatures: normal; font-variant-caps: n=
-ormal; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; =
-text-decoration-style: initial; text-decoration-color: initial;'>=E2=9C=94.=
- </span>The only software on the market that uses Web mode + Http protocol =
-to send mail. It completely simulates the manual login and sending of Chrom=
-e browser. </font></font><p><font color=3D"#800000"><font size=3D"5"><span =
-style=3D'text-align: left; color: rgb(0, 102, 0); text-transform: none; tex=
-t-indent: 0px; letter-spacing: normal; font-family: "Microsoft YaHei"; font=
--size: medium; font-style: normal; font-weight: 400; word-spacing: 0px; flo=
-at: none; display: inline !important; white-space: normal; orphans: 2; wido=
-ws: 2; font-variant-ligatures: normal; font-variant-caps: normal; -webkit-t=
-ext-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-=
-style: initial; text-decoration-color: initial;'>=E2=9C=94. </span>One-clic=
-k start, Http protocol,Fully Automated, High-speed, Bulk, Multi-threaded,Bu=
-ilt-in Proxies.</font></font></p><p><font size=3D"6"><font color=3D"red"><s=
-pan style=3D'text-align: left; color: rgb(0, 102, 0); text-transform: none;=
- text-indent: 0px; letter-spacing: normal; font-family: "Microsoft YaHei"; =
-font-size: medium; font-style: normal; font-weight: 400; word-spacing: 0px;=
- float: none; display: inline !important; white-space: normal; orphans: 2; =
-widows: 2; font-variant-ligatures: normal; font-variant-caps: normal; -webk=
-it-text-stroke-width: 0px; text-decoration-thickness: initial; text-decorat=
-ion-style: initial; text-decoration-color: initial;'>=E2=9C=94. </span><fon=
-t face=3D"Microsoft YaHei">Free full-featured trial for 3 days.</font></fon=
-t></font></p><p><font size=3D"4">SITE: <a href=3D"psce.pw/softcenter">psce.=
-pw/softcenter</a></font></p><p><font size=3D"4"><font color=3D"#333300">TG<=
-/font>: <font color=3D"#800000">wowofrom2008</font></font></p><p><font colo=
-r=3D"#800000" size=3D"4"></font>&nbsp;</p><p><strong>count penalisemock pen=
-aliseproofread penalisehypocrisy penalise.</strong><font color=3D"#0000ff">=
-<br /></font></p>
-------=_Part_38029_1559734816.1749612115996--
-
-------=_Part_38028_1604984270.1749612115996--
