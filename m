@@ -1,63 +1,63 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D5D023278D
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:25:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC73822CBC8
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749623153; cv=none; b=KMxb8CHKlLT+EB5jBSfAvKTx+0IvObTDEj69egfrWdCxQuDsb+tWqzUK9ha3wLbwsr/HcU0ZcVnuKsi/dN8VIeRMERxO/EsismEfr+BSRJ7SZx2tAPi2k+NfnOgd63ufNg9LT/zrK+680Cm8rm9Zd/ZrGLrZJWlojn+mdD4JD/w=
+	t=1749623162; cv=none; b=gxjCyufvs/yOe6Ai3iZsbtnfQP1CnSwOsNbA8P1LfdT3Z1SF9TDfgf8t0H4fbP6LEL+awrNRRP3ujniES0tKdwn4C4SEdGaYfByoBf4UxaLhSwMFG2onoCtJFbt2eQ7moqO36PhW47qySrVHNgoJMhRQnmJK1XqrmAe1dlxRlck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749623153; c=relaxed/simple;
-	bh=lpzOjHwOKGYG7no6pJ5n1oiI9rJzwvVEh/x0OT1aKgE=;
+	s=arc-20240116; t=1749623162; c=relaxed/simple;
+	bh=cQmAlJ5DFIrp9Ji0v7+dFRa1ZwSMWPgUy9FslwKC2dM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SW6ko+3EyvCmo8dtFMlwnIF8vtVPH1Lirh9ULXJh9QocGc+FG6c3YK7/zgj41/CJ3SKGiN/UgNtJ3WAls2TRhwB4Gac6I6Y0c4zmth+vlbzU2GygGPW3eEvaaJyN8x97duldkkksUOr0Lt+c1BkslgV+kTY/DqCAwD9EVF9JGVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=ivnoH9Yy; arc=none smtp.client-ip=209.85.214.179
+	 MIME-Version; b=GoIIyVMRAjMODlzQPfJ3dEmhT8Jk+bK327UH22rClgzEUcgkaIzSJsiFwNdj5W0ghygj/SU6fSCBf8NbVkz1sDHgT2/dpFpILqT1582cWWVK5a8pB7tQMjrU66eyFJoPw2XWRK3BP70UQ1z4gXXS4XngY7jqTSvnvUuy50VJyQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=hqrc5TNT; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="ivnoH9Yy"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-235e1d710d8so77539795ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 23:25:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="hqrc5TNT"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-23539a1a421so54448785ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 23:26:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1749623151; x=1750227951; darn=vger.kernel.org;
+        d=ventanamicro.com; s=google; t=1749623160; x=1750227960; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SHGP1kRF/SF7T23OiU1gKTpSZCj2TzVO0PDfKD5QgtI=;
-        b=ivnoH9Yyy6qF0hceVzhqQHkyiTFzYZxsz+C64hS31byNoW/KBMHHMW0hShm/LPzjdt
-         EnwEg3zCZY0fb7Tk2XAPlBiXuDkoSu2/nPaGCfZEVHY2SY8qGzUSqemnIdqGjH358x1e
-         zcJxyQ0a5KC9QlZV4dzd2ZJZkdxheTJSRBA+NyULKY646GwU/ZqiT6vP3B6/i38kkb38
-         Iuhoojrl1h25WpxuZBSVSyb+cv2DMrQrLUtf6WeErI6dCaxKFLY4kPfRVHJjkk4Gktc5
-         7t9wIw+S/RGvad0rLXCcTNJK8Pqn0tc7hZGpHtiXOAKW23VOMYWI9qEVeKhe3rweTtzl
-         49QA==
+        bh=YS9j9gcN2wQKo26dVWHCAmNvKNHMO5vB8LdZytpDdd4=;
+        b=hqrc5TNTS9M8+N8B0SE7yj2jD25tFsNRyQ3GJ0vXrKXZLUMhf25QjuXVJElNTQ55Ab
+         by6LrT+Y8/hLcuKrYJDD5XRTkYXxofMwbDnHajswEH/gc+cavqUj7inKxvciMmP5l2Wn
+         LMY+qmX7UXwWX5ZU8qkb+d3PYRQtPvrOqmMYzDs1gUDwWLWGoQ68+5CIEY4YgHiXwxTt
+         oTaKEPC929o0nBonjBmomiu+t9FPLkZwFvI9UBv17V/JWwOliPFIdmEig+wOxt2w0SuC
+         xH+fAuUQSbJDuQ+r3QxI+Gte7aLkVAX0zew16meSH2bYqVmkY6A/fkBXK8USTEEQO8Oj
+         LA2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749623151; x=1750227951;
+        d=1e100.net; s=20230601; t=1749623160; x=1750227960;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SHGP1kRF/SF7T23OiU1gKTpSZCj2TzVO0PDfKD5QgtI=;
-        b=qlmxEH5maHFdqrEjx/6OiQp6h3gp38V18f/FYs999cwryOiTqVjorEDD+DY/CVesE5
-         z7f6qQz3WNHiIc6C7xzYreNbwx6d08F/9lCQn+7tsT3pZgf3K3JRjl6saChF4Scr6Cdg
-         RmJP8GZiqhKaerWVSbRPe0Kbg60UIGmolhgINWc/TFTK9G6f4nLiLGhFmAP/5zXvTU5u
-         jC9KT3ih4r10ZHKfdkopy4sBW6YHQh+BSRYoHGYsaNMyOyYfqotAWV4LizkC1J9kF+la
-         UHbojEADazBQyOe2iuBpj/pvb398Ae0r1e1elMcb7/Fg9aAAR73meAxR5jUGwAzCz426
-         GpEA==
-X-Forwarded-Encrypted: i=1; AJvYcCW+z1m5g707tBaFOO6WYMdZtQ5m19UBM35lSw4MzfVGqZ/5rqYWgKy7FFTqjZsShgrWOquRPKpEZRG0Ul8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUMWhu+QDor6o7nDairnbsnSbuJWMMjuVWKE6z+XQYKfAjbnfP
-	A7Z5k+QKET2fG+4KKMJEJJ7pRxbr8cBAuie4vOwPFgTIJgbB0HGia5tWdMHCwNA/ZF8=
-X-Gm-Gg: ASbGncv4X1NPcLyvZlE7q+PxySJe+31FTg5hyGYvXZw0K0JoKPjqLP4i6i+jBjmd0k7
-	fTWLISb46L+Lqtzjz8dVLOdyIuaAWHRW7MqqmGmRnZgtuq83mAQFNps/jEaj269T58pIKgascnO
-	iywLKTQmzNddsAYHGAKDIaMtcn6uqnUF8P8taPWcBO7MTSfSQWMFIkjFhwYmORPnZbJqePX67cT
-	a/6A0i+UiKWB2B5hy2rzmuBjMEGm33X8AiEM6NayKKCqyXNh+AaklbZEQIAl5ykzfslqa8KPeMz
-	5WRehQz8+8dLwl5AGRAw3BXNpEAseqPgWOZPGg316Frc4hW3nu9PfmOp8VRqOR6NP6gFZeXvHgH
-	Ldvoi4qLnRUOLaaMR4uFQH+yGvg==
-X-Google-Smtp-Source: AGHT+IH6nfiBAkGOIya5bHfPvFUBz/4//w0r17J0S0KttXRyJ2RxRUT8VeWrU3bXJnI2eud8IG6zCQ==
-X-Received: by 2002:a17:902:e548:b0:235:779:edfe with SMTP id d9443c01a7336-23641b28c80mr32543345ad.43.1749623151173;
-        Tue, 10 Jun 2025 23:25:51 -0700 (PDT)
+        bh=YS9j9gcN2wQKo26dVWHCAmNvKNHMO5vB8LdZytpDdd4=;
+        b=ZxOmXtV1jC6GTIsaT6P69+59G8kiImO0jFoNNTLr/fPNHU15RLjj3KJlfhZ0gyolOr
+         jZ1na4rK9RoGs27z3C/vrW0wqkfNN2TaOiS8jWo+gFFKnHs5KTb3bEj4UI0gXej+6xx3
+         +OeaCQjoH3aXWzH3/HUoCFGGJQ1dtx+yPx9FFb1XHjwBoZ6VF71153tGOKEWaEuNeFlZ
+         b1ZEvL91D344JDP7YzVkk+iii3tHv/+Xq2vaVbLrFXm4L3ULvyO/fLQobvqvKmq6NjYB
+         8K+l71jNS/qciNM5+6/DJCSYy6rCgc82NP20tEWtagP5hocHbnBQHY6R8qtIICVBooAv
+         KNQA==
+X-Forwarded-Encrypted: i=1; AJvYcCUFZBnLE/duDODnhFHsg+7mUFz9YigpLy/ftir4qm7Zkam/jUNphdBWCd/erTdo4Jztf+cvenJ3B0DfTZY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfYCxhevWsCMltUZx5W81VzJz7wyr7c8SgydeQ9b6lLnanK8Fq
+	rDwYQl9xGWn9PObk3qFRF6GaHWqSjE3SYGdFYsx0gcK7U+tuMbE+gBg2ADkX61XqFsY=
+X-Gm-Gg: ASbGncslFzCBv/3tfNjoaBkogL2snwUfkGfqmozLIKuuC6pAYFgB9iJiLGzIa6wbtIf
+	ZwsxvklOLe96JvziZGB8a/JSfny0fB/ok0j8p56XmpHd3dd5XjySMQJyoRTTmUOrGIEMeIdzY0N
+	1KP73Bj0Aqexr9AKITmQu176Zw9xhVUsSRNypBG1g0b2xNAYKSsbyurjC10s5reC+hMhrBnIRyj
+	Hb1C6Fo1de1r4SlTnDtGBJYvmrGa5ZQrTDcXi6wMQfmPaDJ7QaDyLXSGD3t5auofb2KGwT6o77A
+	I9v9vFIIRArstDwXaUeH/Cg1tPUXaMAZudqqAZDWdeoX+QEQmajLEBEGfES8e6BzO/SxM/NTnFW
+	NJFJbehymT7fVaBMYma4ALRy+Bg==
+X-Google-Smtp-Source: AGHT+IGgdyPwstKE3+iWn8KD2dTBYhJpnWD6M3so2zeNZkFWSUS5/H3BXTX0WABWmKEEx/TX7p+X9A==
+X-Received: by 2002:a17:903:2a8d:b0:235:1962:1bf4 with SMTP id d9443c01a7336-23641a99d80mr28376795ad.14.1749623160046;
+        Tue, 10 Jun 2025 23:26:00 -0700 (PDT)
 Received: from anup-ubuntu-vm.localdomain ([103.97.166.196])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603092677sm79976295ad.64.2025.06.10.23.25.42
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603092677sm79976295ad.64.2025.06.10.23.25.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 23:25:50 -0700 (PDT)
+        Tue, 10 Jun 2025 23:25:59 -0700 (PDT)
 From: Anup Patel <apatel@ventanamicro.com>
 To: Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>,
@@ -87,9 +87,9 @@ Cc: Palmer Dabbelt <palmer@dabbelt.com>,
 	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Anup Patel <apatel@ventanamicro.com>
-Subject: [PATCH v5 20/23] mailbox/riscv-sbi-mpxy: Add ACPI support
-Date: Wed, 11 Jun 2025 11:52:35 +0530
-Message-ID: <20250611062238.636753-21-apatel@ventanamicro.com>
+Subject: [PATCH v5 21/23] irqchip/riscv-rpmi-sysmsi: Add ACPI support
+Date: Wed, 11 Jun 2025 11:52:36 +0530
+Message-ID: <20250611062238.636753-22-apatel@ventanamicro.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250611062238.636753-1-apatel@ventanamicro.com>
 References: <20250611062238.636753-1-apatel@ventanamicro.com>
@@ -103,49 +103,82 @@ Content-Transfer-Encoding: 8bit
 
 From: Sunil V L <sunilvl@ventanamicro.com>
 
-Add ACPI support for the RISC-V SBI message proxy (MPXY) based
-mailbox driver.
+Add ACPI support for the RISC-V RPMI system MSI based irqchip driver.
 
 Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
 Signed-off-by: Anup Patel <apatel@ventanamicro.com>
 ---
- drivers/mailbox/riscv-sbi-mpxy-mbox.c | 26 +++++++++++++++++++++++++-
- 1 file changed, 25 insertions(+), 1 deletion(-)
+ drivers/irqchip/Kconfig                 |  2 +-
+ drivers/irqchip/irq-riscv-rpmi-sysmsi.c | 46 +++++++++++++++++++++++--
+ 2 files changed, 44 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/mailbox/riscv-sbi-mpxy-mbox.c b/drivers/mailbox/riscv-sbi-mpxy-mbox.c
-index ead67345456e..dbc76a254c44 100644
---- a/drivers/mailbox/riscv-sbi-mpxy-mbox.c
-+++ b/drivers/mailbox/riscv-sbi-mpxy-mbox.c
-@@ -5,9 +5,11 @@
-  * Copyright (C) 2025 Ventana Micro Systems Inc.
-  */
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 96bf6aa55681..dfa8cc0e23dd 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -619,7 +619,7 @@ config RISCV_IMSIC
+ 
+ config RISCV_RPMI_SYSMSI
+ 	bool
+-	depends on MAILBOX
++	depends on RISCV && MAILBOX
+ 	select IRQ_DOMAIN_HIERARCHY
+ 	select GENERIC_MSI_IRQ
+ 	default RISCV
+diff --git a/drivers/irqchip/irq-riscv-rpmi-sysmsi.c b/drivers/irqchip/irq-riscv-rpmi-sysmsi.c
+index 06f64936802a..d424067d22a8 100644
+--- a/drivers/irqchip/irq-riscv-rpmi-sysmsi.c
++++ b/drivers/irqchip/irq-riscv-rpmi-sysmsi.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (C) 2025 Ventana Micro Systems Inc. */
  
 +#include <linux/acpi.h>
- #include <linux/cpu.h>
+ #include <linux/bits.h>
+ #include <linux/bug.h>
+ #include <linux/device.h>
+@@ -9,6 +10,7 @@
  #include <linux/errno.h>
- #include <linux/init.h>
+ #include <linux/irq.h>
+ #include <linux/irqdomain.h>
 +#include <linux/irqchip/riscv-imsic.h>
- #include <linux/mailbox_controller.h>
+ #include <linux/mailbox_client.h>
  #include <linux/mailbox/riscv-rpmi-message.h>
- #include <linux/mm.h>
-@@ -769,6 +771,7 @@ static int mpxy_mbox_probe(struct platform_device *pdev)
- 	u32 i, *channel_ids __free(kfree) = NULL;
+ #include <linux/module.h>
+@@ -211,6 +213,9 @@ static int rpmi_sysmsi_probe(struct platform_device *pdev)
+ {
  	struct device *dev = &pdev->dev;
- 	struct mpxy_mbox_channel *mchan;
+ 	struct rpmi_sysmsi_priv *priv;
 +	struct irq_domain *msi_domain;
- 	struct mpxy_mbox *mbox;
- 	int msi_idx, rc;
++	struct fwnode_handle *fwnode;
++	u32 id;
+ 	int rc;
  
-@@ -891,6 +894,8 @@ static int mpxy_mbox_probe(struct platform_device *pdev)
+ 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+@@ -241,6 +246,22 @@ static int rpmi_sysmsi_probe(struct platform_device *pdev)
+ 	}
+ 	priv->nr_irqs = rc;
  
- 	/* Set the MSI domain if not available */
- 	if (!dev_get_msi_domain(dev)) {
-+		struct fwnode_handle *fwnode = dev_fwnode(dev);
++	fwnode = dev_fwnode(dev);
++	if (is_acpi_node(fwnode)) {
++		u32 nr_irqs;
 +
++		rc = riscv_acpi_get_gsi_info(fwnode, &priv->gsi_base, &id,
++					     &nr_irqs, NULL);
++		if (rc) {
++			dev_err(dev, "failed to find GSI mapping\n");
++			return rc;
++		}
++
++		/* Update with actual GSI range */
++		if (nr_irqs != priv->nr_irqs)
++			riscv_acpi_update_gsi_range(priv->gsi_base, priv->nr_irqs);
++	}
++
+ 	/* Set the device MSI domain if not available */
+ 	if (!dev_get_msi_domain(dev)) {
  		/*
- 		 * The device MSI domain for OF devices is only set at the
- 		 * time of populating/creating OF device. If the device MSI
-@@ -898,8 +903,13 @@ static int mpxy_mbox_probe(struct platform_device *pdev)
+@@ -250,8 +271,13 @@ static int rpmi_sysmsi_probe(struct platform_device *pdev)
  		 * then we need to set it explicitly before using any platform
  		 * MSI functions.
  		 */
@@ -157,11 +190,11 @@ index ead67345456e..dbc76a254c44 100644
 +							      DOMAIN_BUS_PLATFORM_MSI);
 +			dev_set_msi_domain(dev, msi_domain);
 +		}
- 	}
  
- 	/* Setup MSIs for mailbox (if required) */
-@@ -944,6 +954,13 @@ static int mpxy_mbox_probe(struct platform_device *pdev)
- 		return rc;
+ 		if (!dev_get_msi_domain(dev)) {
+ 			mbox_free_channel(priv->chan);
+@@ -266,6 +292,13 @@ static int rpmi_sysmsi_probe(struct platform_device *pdev)
+ 		return dev_err_probe(dev, -ENOMEM, "failed to create MSI irq domain\n");
  	}
  
 +#ifdef CONFIG_ACPI
@@ -171,27 +204,29 @@ index ead67345456e..dbc76a254c44 100644
 +		acpi_dev_clear_dependencies(adev);
 +#endif
 +
- 	dev_info(dev, "mailbox registered with %d channels\n",
- 		 mbox->channel_count);
+ 	dev_info(dev, "%u system MSIs registered\n", priv->nr_irqs);
  	return 0;
-@@ -963,10 +980,17 @@ static const struct of_device_id mpxy_mbox_of_match[] = {
+ }
+@@ -275,10 +308,17 @@ static const struct of_device_id rpmi_sysmsi_match[] = {
+ 	{}
  };
- MODULE_DEVICE_TABLE(of, mpxy_mbox_of_match);
  
-+static const struct acpi_device_id mpxy_mbox_acpi_match[] = {
-+	{ "RSCV0005" },
++static const struct acpi_device_id acpi_rpmi_sysmsi_match[] = {
++	{ "RSCV0006" },
 +	{}
 +};
-+MODULE_DEVICE_TABLE(acpi, mpxy_mbox_acpi_match);
++MODULE_DEVICE_TABLE(acpi, acpi_rpmi_sysmsi_match);
 +
- static struct platform_driver mpxy_mbox_driver = {
+ static struct platform_driver rpmi_sysmsi_driver = {
  	.driver = {
- 		.name = "riscv-sbi-mpxy-mbox",
- 		.of_match_table = mpxy_mbox_of_match,
-+		.acpi_match_table = mpxy_mbox_acpi_match,
+-		.name		= "rpmi-sysmsi",
+-		.of_match_table	= rpmi_sysmsi_match,
++		.name			= "rpmi-sysmsi",
++		.of_match_table		= rpmi_sysmsi_match,
++		.acpi_match_table	= acpi_rpmi_sysmsi_match,
  	},
- 	.probe = mpxy_mbox_probe,
- 	.remove = mpxy_mbox_remove,
+ 	.probe = rpmi_sysmsi_probe,
+ };
 -- 
 2.43.0
 
