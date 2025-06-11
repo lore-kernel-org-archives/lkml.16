@@ -1,76 +1,99 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829D7226CFD;
-	Wed, 11 Jun 2025 09:35:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 020F426529B;
+	Wed, 11 Jun 2025 09:36:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749634558; cv=none; b=IIpDJQEwyElnVK0lcGMxPzmsSNR19W88Di6S+brUt2RicUkwwhA8jVAPn3a6Y+hVSlaNBNFLzaUXN4i1ies+nwwJFGCLcQvYLSvUXupdUn3x79RDgrzjuikFBkSzJ7nY3ROWnscwHf92FPXySwiXRbeapn+L21dUIM35Xdl8Vew=
+	t=1749634610; cv=none; b=N+qmMTBfeJxjej+dzVEvdY/Ks069n3HWaKMvflHlNeIyonU2gxO6pndMHeEQu0G+ByvcTdxr3zTNo8xVGVUZHq8b42GH6w+kSGJcgZNgGg4+8BQkd0FBl1Lt+utzU8AJKd3zSsNL1x0U4t1npJ0dwm/iH/T6vPxjuFZ4XVp04r0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749634558; c=relaxed/simple;
-	bh=PHp28NdvUeBD3fbfZq5M9v31nFQcf4Q3prt6y5YxJh8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bKWMb64NIuNFwXn1d+lDzQrJI0BpiEnVpZ7hjnuEcBh+0Uzob96Tl+8lIhij4QqtGWvNpomp+DzTEYz2KbtvijXiyaOuD2xKOi/OvxEsp6bu07D4T5AGcIpIlmo+O9QneASPK0BTIIEwOp/kyTXNPN+/PoMXdfDN1vXjtBz1bGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=VJ2BzTGQ; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1749634610; c=relaxed/simple;
+	bh=mVfyXIP9JLUrBFl7GsD5f1SXSqA4+C74McYsvCIxMFg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=VsT7o4tEbVgNxHB5FUGmWPJlkckn8zmHQa7CQEFaoqlog10eTOcMiOGBKQMAuoI7gJfSukA1QhIfigZbE+VLrI5Q7dbwpvHVHxP7VHfT2poH/4Ri5y7xVE/kihfdtuSujWlIk9Uf0wL0P8+m/CJRcDRfB9HSDjOMWc6oZ3MuRaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FdeFSPUb; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XEs1E128; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="VJ2BzTGQ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=PHp28NdvUeBD3fbfZq5M9v31nFQcf4Q3prt6y5YxJh8=;
-	t=1749634557; x=1750844157; b=VJ2BzTGQEghgQPZFmrEHAiSFBVse2ElWL7DmMvTzj8BIQ3c
-	/SepwkteovkgWKhV2X6inzVfVAB8Y+8LnwVk9iv9CXzRigaPP+rr/TkIPJH55E5G0kIzJf7A5FMl7
-	2LqDzxJCWBk8gDIivqdnAqgW3lamAT0Th5JgMUDjCtho+hgJnOmvRRKgsx1GQbrltdyrCjEbvgA9X
-	Iy3+pssxytS4agymJhOoZzHzyvY/Yw3B9FGN5HhFOGoRYjQevdgyDyzm+dcTiax98+IU96qnbD81t
-	OwRbc8ENRbHbKKZnuUjJ6PIvhmP1Xf7BYGw6bl/X+MuoPiUw/9v3F9umqCkLzZ+g==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.2)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1uPHrk-00000001iBw-17kH;
-	Wed, 11 Jun 2025 11:35:30 +0200
-Message-ID: <13332646e4c8b028504f6a7ec4a2aa9530c519f1.camel@sipsolutions.net>
-Subject: Re: [PATCH] wifi: zd1211rw: Fix potential data race in
- zd_mac_tx_to_dev()
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Daniil Dulov <d.dulov@aladdin.ru>
-Cc: Kees Cook <kees@kernel.org>, Emmanuel Grumbach
- <emmanuel.grumbach@intel.com>,  Miri Korenblit
- <miriam.rachel.korenblit@intel.com>, "John W. Linville"
- <linville@tuxdriver.com>, Daniel Drake	 <dsd@gentoo.org>,
- linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	lvc-project@linuxtesting.org
-Date: Wed, 11 Jun 2025 11:35:18 +0200
-In-Reply-To: <20250604101356.6292-1-d.dulov@aladdin.ru>
-References: <20250604101356.6292-1-d.dulov@aladdin.ru>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FdeFSPUb";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XEs1E128"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749634607;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=GFksH9LPMmP7bYyfX4IW1QhQb97MRGe7VJvXQH5Qf8E=;
+	b=FdeFSPUbQlIjY88c25kRBegK96msaEAPvepPEoyamCBClJGY9Oycct/bzJGK6BmgLVkYM0
+	LyE/Q7wHK+5ICZwADHqv7FQ1crjnD3M+eWbGlh9AQcB61C1ptdS6QTvnV3TePXi4E4jo3+
+	xWFKmaDksVQQ65uqqc1/5Dg47cexbY0vjJm5mU0eTd+WW/kcR1Bzs/tPbZaw8byIsgOYgE
+	X+nfiWMO/EhZHpdPfTjeYeSYPiIn6UWG0X+kP9k2E5d5ZJyypv7Ow/WMR6ZQ9MUyeFyCd9
+	vmF5uj8Ij4RC7oG9eNiDtYN5+lOI/bxc1DqT1o/D6qI2H+tK8FWY3F9moqK4lA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749634607;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=GFksH9LPMmP7bYyfX4IW1QhQb97MRGe7VJvXQH5Qf8E=;
+	b=XEs1E128R+ew11J/9X4/Dg7rMJNr6Mga4qU9oa91HKqgncmbaeIrB7zt+2mtr+l4V5Jyqj
+	OAY1ey/tJipwEPCQ==
+Date: Wed, 11 Jun 2025 11:36:35 +0200
+Subject: [PATCH] Documentation: kunit: fix argument of MODULE_IMPORT_NS()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250611-kunit-example-v1-1-cf2a1a80518f@linutronix.de>
+X-B4-Tracking: v=1; b=H4sIACJOSWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDM0ND3ezSvMwS3dSKxNyCnFTdFENL01QTw2SDJGMTJaCegqLUtMwKsHn
+ RsbW1AGflkKhfAAAA
+X-Change-ID: 20250611-kunit-example-d195e41c0b34
+To: Brendan Higgins <brendan.higgins@linux.dev>, 
+ David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>
+Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+ workflows@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749634606; l=1138;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=mVfyXIP9JLUrBFl7GsD5f1SXSqA4+C74McYsvCIxMFg=;
+ b=VPkKhJXccGFHvBS/kfawZMHVmi0l4KnKzIRjNgp8MsiNCqbezdx9nHFfBFaHE+m2nMW0wzW4F
+ zK1q8ktwjAACw60SLIrhyPnWJdze9N82/a858uSM0yWefP4Pyed4okv
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Hi,
+The argument to MODULE_IMPORT_NS() should be a string literal.
+See commit cdd30ebb1b9f ("module: Convert symbol namespace to string literal")
 
-So ... I have no idea why you're CC'ing all kinds of people who never
-had anything to do with this driver, or haven't worked on WiFi in like a
-decade or so ... Please don't. Even I should've been CC'ed with a
-different address, at most.
+Fixes: d208025db6d6 ("Documentation: kunit: improve example on testing static functions")
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+ Documentation/dev-tools/kunit/usage.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I also have no idea who's maintaining this driver now though, if anyone.
-I have hardware if someone wants it ;-)
+diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
+index 038f480074fd7aaa1f8e1b344bc74bf3426cc173..066ecda1dd98e73a01d50545e79c38a99a3e05a2 100644
+--- a/Documentation/dev-tools/kunit/usage.rst
++++ b/Documentation/dev-tools/kunit/usage.rst
+@@ -699,7 +699,7 @@ the template below.
+ 	#include <kunit/visibility.h>
+ 	#include <my_file.h>
+ 	...
+-	MODULE_IMPORT_NS(EXPORTED_FOR_KUNIT_TESTING);
++	MODULE_IMPORT_NS("EXPORTED_FOR_KUNIT_TESTING");
+ 	...
+ 	// Use do_interesting_thing() in tests
+ 
 
-> In order to avoid potential data races and leading dereference of a NULL
-> pointer, acquire the queue lock before any work with the queue is done an=
-d
-> replace all skb_* calls with their lockless version.
+---
+base-commit: f09079bd04a924c72d555cd97942d5f8d7eca98c
+change-id: 20250611-kunit-example-d195e41c0b34
 
-You should explain why the locking changes are OK.
+Best regards,
+-- 
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
-johannes
