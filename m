@@ -1,158 +1,175 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16F851FF1D5;
-	Wed, 11 Jun 2025 16:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17462E610F;
+	Wed, 11 Jun 2025 16:45:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749660225; cv=none; b=nRfKr3cB7yJtAVzgHclvmDTurdXBrwprrnKcFwM+6D80uyrKqrmtGKMdGJoeIAMtRi+KMnw6mzNp2GnQWP+p5oSMCJcLw0c+qvz/FHmnE7sqFbUa6Tuc1h+kcG3ibGHrK7PvTJ0xgNV8UNpg/RXSjopN0Vm3ay7QXeCN0HX90OA=
+	t=1749660345; cv=none; b=JtqoujcH5+cmfbcJuj9TBoM3iKOjeXYPLArwVT4Kp5qvHvLd8eKu43k+nH0eQrStPtB1TbMkQuIkyWuogiJ7OCzXu+SbEVt6XTCDXv3CeNjhgEQaeiuKLJDTWG9v5I3k2jC2HG/dMFaF1uIjnN8YzQZmAwRCc7t3y1zWM9akN5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749660225; c=relaxed/simple;
-	bh=Xjk6jlbvqJxFCXtvHLCcHfI2ncwIxhB0uF95GAVPX9o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PiQ4/IZiBf7ZX0gd0H6GNyjJjE7AWs59JPKJxaFfe3xQs4/ago4m9EKkBwp+KAVc6Tk56CS+tteoFODJe4sS4HfYa0kjjRoUiUDgOkH14JXTQ1AUomVDNEVVmfqySY3eiM57AvI0OKl5PIdZAr+/AFl53lH7a++R/9uicdy2rgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cVjhFvTz; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749660345; c=relaxed/simple;
+	bh=6YiYld9w2Hx+Iaj5LQHXe+nPaanJ0QWZp6uRgHqygvg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lqbPo8pK9woMxkbpi0auu+ivMHxP5rcbsS9a46Q7SPl7IRFS0Qry278MoRpkhZ8Z7Ifj8Ek7SysV6iIgiQMI7vu/6wXOtuIvgkR1Ak8LGkcRcJ33XSqh2luwsNXFTpp5maNaLUuXIOCdo4mF3ybVuuLCRlLN2C6oVaRqoxDpj/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uMVTcWwy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cVjhFvTz"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7426c44e014so105760b3a.3;
-        Wed, 11 Jun 2025 09:43:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749660222; x=1750265022; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7I0KZjZcuxlm3KvqwjQhi1svjF1BUWgM7RrOG1tQndc=;
-        b=cVjhFvTzQogpFMlmmXREXFT5Wg8BU/FcqMTehJ+RqtkVDCpV7P3+DFz2yLIpBH0uKQ
-         kHOqMyyWgKnN2REM2Wq5LnFJ8wXYsKbd1T1/kSh1cs8W0AAO2cQ0Pj/Lu8VgqcUSKpqR
-         Bcm1YeiCr06JVVR/jjxEewyjs8rwlNPpmHMcbdArZpDV+277AwILxytwMJg3qYsqawre
-         08wHQZtvvXF8P9u7Uxt81J9uX4Tnjk2j99k4N43zgLhYeWxBxieFKjrW2ojDISYK06eP
-         iOGlMFphsknOc7Z/27PI019lRWVLxOGWh7f3S/O8ZK1e8RxhhBcdSTkFjPzQYyYd4dW+
-         i6AA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749660222; x=1750265022;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7I0KZjZcuxlm3KvqwjQhi1svjF1BUWgM7RrOG1tQndc=;
-        b=Pbj9hQKBsoBIg3uBw4iiR9I2v8XU6YXViyqTvOCZ4SgIJyF9e8Fj6oFCFEuES5LOja
-         z6HT7PtBpXeTcSKcXPHF0dNq3XvnkilooA8CM+G8n18f09xAOxTZXkE/MfQr/Ft5XOCJ
-         ygE0yPYVTGlrIJpJwKh7Y2/nwvoE44CbPBrZUsDUGsfUoO8szEDSdNsp/uBNJ3fAp+3d
-         aKIec/cYVDx4xNaIV5FPDpBIVjvlBekFnkzJ80RpRO1796vzip23Vq86IwNKix+qQ3dw
-         wm6i7bLJx5I3mKbHsopdVhmSnL0qKJNhtfW2bW8fxrMeuePcamX6AdMm65Epk8ScAU46
-         mzdA==
-X-Forwarded-Encrypted: i=1; AJvYcCW3468zvrgQelsnaeZpkmiGssdfHCxsTSgjJSbiV1lquN3tks/i1GIPZpr+nQZqf6UMa8+MGCtscJbDZhA=@vger.kernel.org, AJvYcCW6B6i+Eta6W6ZzAvZtmLzhcJV7qYdjbZUFN/uH8pt6t8BiwHWKJ3cVQCV28GEL7HeYK8PBuXJm@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDOF7vgEuIkvJ87JMB3RA/+tU0WiFzu5JvaJF2B7xaU31gIDrp
-	dirSpurdbP5oIaSJ9FmN8u38Q/8YlTKJsCFLVcC+bF9OVR1/t1IFUIQ=
-X-Gm-Gg: ASbGncvlapYpt4X319apoinfMctJa3D2Lijh8TPIGtQbrIqFgEcJFh4qXpeHnzw1VJA
-	NIRxx7bHKVl3bNNwfW9RmQlrj+HX+WukFs9X+SeZHqsWRzUnGCTutZ84sAlci4z9Xu9i3kaqVAv
-	4v1zWXx9eSIAK9xPHHgSoJgm+gc7m7Dn9Fevf8gujjnYJHDB86Bn1QQ0f7YJCJE72YhnRyDP26e
-	5H7bnf87WFszmkC6Qb8VC5DEvhTkHSiDbqYaOAvkic7xHbKcUvXrhUpcPD+53YwBtzxqO6oRUxO
-	52li/dQj5VLFyQ2DhEFFBHRhzNRTHeGvCC6892U=
-X-Google-Smtp-Source: AGHT+IHK1hZHCZkZXsnAgHk1raXAb/+BFYH1b8S96weug7GKHBU9JBTLLWV5Ri0WxGqA+7TLEBKnow==
-X-Received: by 2002:a05:6a00:2d03:b0:736:5753:12f7 with SMTP id d2e1a72fcca58-7486cb44b36mr5627782b3a.3.1749660222115;
-        Wed, 11 Jun 2025 09:43:42 -0700 (PDT)
-Received: from fedora.. ([2601:647:6700:3390::c8d1])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b0c8a6bsm9702847b3a.142.2025.06.11.09.43.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 09:43:41 -0700 (PDT)
-From: Kuniyuki Iwashima <kuni1840@gmail.com>
-To: christian@heusel.eu
-Cc: davem@davemloft.net,
-	difrost.kernel@gmail.com,
-	dnaim@cachyos.org,
-	edumazet@google.com,
-	horms@kernel.org,
-	kuba@kernel.org,
-	kuni1840@gmail.com,
-	kuniyu@amazon.com,
-	linux-kernel@vger.kernel.org,
-	mario.limonciello@amd.com,
-	netdev@vger.kernel.org,
-	pabeni@redhat.com,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] af_unix: Introduce SO_PASSRIGHTS - break OpenGL
-Date: Wed, 11 Jun 2025 09:42:20 -0700
-Message-ID: <20250611164339.2828069-1-kuni1840@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <58be003a-c956-494b-be04-09a5d2c411b9@heusel.eu>
-References: <58be003a-c956-494b-be04-09a5d2c411b9@heusel.eu>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uMVTcWwy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEC1BC4CEE3;
+	Wed, 11 Jun 2025 16:45:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749660344;
+	bh=6YiYld9w2Hx+Iaj5LQHXe+nPaanJ0QWZp6uRgHqygvg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uMVTcWwy/s+ucZwaGP8pT9hxCeH3a3YxGDrchK3bts5ut5zRaDXovnEb0zDVpFYKJ
+	 YsTzZkpM0FK4qVF17OSvkGoXCqtdhzL0UNv0fGyqjtnwJP9Z+oLR54ZxtTvIc8BXSh
+	 XhEclKcOLqwZ//oqKFdVlwv5o6zfKyDU38LvX6LQ9q9MTecVWLx5iTv5YWKpbhXnVu
+	 PxWJCt3li6cKlcMv6clfO+y76bHU8jckGWcdM8psSNFRL713EH8q4PBHoZU3ZlTo9x
+	 TJSgxbup7/bumeblBTC8UZyySOEJ0H1SY3mohqGSRBTtd9cEodSUoGrbOy+syWBjHu
+	 Wl5gjiZ2AiAdA==
+Date: Wed, 11 Jun 2025 19:45:39 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Prachotan Bathi <prachotan.bathi@arm.com>
+Cc: Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Stuart Yoder <stuart.yoder@arm.com>,
+	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] tpm_crb_ffa: handle tpm busy return code
+Message-ID: <aEmys305qGjxa7G2@kernel.org>
+References: <20250610213505.3881352-1-prachotan.bathi@arm.com>
+ <20250610213505.3881352-2-prachotan.bathi@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250610213505.3881352-2-prachotan.bathi@arm.com>
 
-From: Christian Heusel <christian@heusel.eu>
-Date: Wed, 11 Jun 2025 13:46:01 +0200
-> On 25/06/10 09:22PM, Jacek Łuczak wrote:
-> > Hi,
+On Tue, Jun 10, 2025 at 04:35:05PM -0500, Prachotan Bathi wrote:
+> Platforms supporting direct message request v2 can
+> support SPs that support multiple services.
+> If the TPM service is sharing the SP with another service,
+> it could get an error code of BUSY if the other service is
+> in process.
+> This adds a parameterized variable (default 2000ms)
+>  that indicates the maximum time to keep retrying for.
+> When the TPM service returns a BUSY error code, we sleep
+>  50-100us before retrying again, until we are over the
+> busy timeout.
 > 
-> Hey,
+> Signed-off-by: Prachotan Bathi <prachotan.bathi@arm.com>
+> ---
+>  drivers/char/tpm/tpm_crb_ffa.c | 78 +++++++++++++++++++++++-----------
+>  1 file changed, 54 insertions(+), 24 deletions(-)
 > 
-> > Bisection points to:
-> > [3f84d577b79d2fce8221244f2509734940609ca6] af_unix: Inherit sk_flags
-> > at connect().
-> 
-> I'm also suffering from an issue that I have bisected to the same commit,
-> although in a totally different environment and with other reproduction
-> steps: For me the Xorg server crashes as soon as I re-plug my laptops
-> power chord and afterwards I can only switch to a TTY to debug. No
-> errors are logged in the dmesg.
-> 
-> This is the relevant excerpt from the Xorg log (full one is attached):
-> 
-> [    36.544] (EE) modeset(0): Failed to set CTM property: -13
-> [    36.544] (EE) modeset(0): Failed to set CTM property: -13
-> [    36.544] (II) modeset(0): EDID vendor "LEN", prod id 16553
-> [    36.544] (II) modeset(0): Printing DDC gathered Modelines:
-> [    36.544] (II) modeset(0): Modeline "1920x1080"x0.0  138.78  1920 1968 2000 2080  1080 1090 1096 1112 -hsync -vsync (66.7 kHz eP)
-> [    36.547] (EE) modeset(0): Failed to set CTM property: -13
-> [    36.547] (EE) modeset(0): Failed to set CTM property: -13
-> [    36.547] (II) modeset(0): EDID vendor "LEN", prod id 16553
-> [    36.547] (II) modeset(0): Printing DDC gathered Modelines:
-> [    36.547] (II) modeset(0): Modeline "1920x1080"x0.0  138.78  1920 1968 2000 2080  1080 1090 1096 1112 -hsync -vsync (66.7 kHz eP)
-> [    36.897] (WW) modeset(0): Present-unflip: queue flip during flip on CRTC 0 failed: Permission denied
-> [    37.196] (EE) modeset(0): Failed to set CTM property: -13
-> [    37.196] (EE) modeset(0): failed to set mode: No such file or directory
-> 
-> 
-> I can also confirm that reverting the patch on top of 6.16-rc1 fixes the
-> issue for me (thanks for coming up with the revert to Naim from the
-> CachyOS team!).
-> 
-> My xorg version is 21.1.16-1 on Arch Linux and I have attached the
-> revert, my xorg log from the crash and bisection log to this mail!
-> 
-> I'll also CC a few of the netdev people that might have further insights
-> for this issue!
-> 
-> > Reverting entire SO_PASSRIGHTS fixes the issue.
+> diff --git a/drivers/char/tpm/tpm_crb_ffa.c b/drivers/char/tpm/tpm_crb_ffa.c
+> index 4ead61f01299..122984e15971 100644
+> --- a/drivers/char/tpm/tpm_crb_ffa.c
+> +++ b/drivers/char/tpm/tpm_crb_ffa.c
+> @@ -10,6 +10,8 @@
+>  #define pr_fmt(fmt) "CRB_FFA: " fmt
+>  
+>  #include <linux/arm_ffa.h>
+> +#include <linux/delay.h>
+> +#include <linux/moduleparam.h>
+>  #include "tpm_crb_ffa.h"
+>  
+>  /* TPM service function status codes */
+> @@ -178,6 +180,17 @@ int tpm_crb_ffa_init(void)
+>  }
+>  EXPORT_SYMBOL_GPL(tpm_crb_ffa_init);
+>  
+> +static unsigned int busy_timeout = 2000;
+> +/**
+> + * busy_timeout - Maximum time to retry before giving up on busy
+> + *
+> + * This parameter defines the maximum time in milliseconds to retry
+> + * sending a message to the TPM service before giving up.
+> + */
+> +module_param(busy_timeout, uint, 0644);
+> +MODULE_PARM_DESC(busy_timeout,
+> +		 "Maximum time to retry before giving up on busy");
+> +
+>  static int __tpm_crb_ffa_send_recieve(unsigned long func_id,
+>  				      unsigned long a0,
+>  				      unsigned long a1,
+> @@ -191,34 +204,51 @@ static int __tpm_crb_ffa_send_recieve(unsigned long func_id,
+>  
+>  	msg_ops = tpm_crb_ffa->ffa_dev->ops->msg_ops;
+>  
+> -	if (ffa_partition_supports_direct_req2_recv(tpm_crb_ffa->ffa_dev)) {
+> -		memset(&tpm_crb_ffa->direct_msg_data2, 0x00,
+> -		       sizeof(struct ffa_send_direct_data2));
+> +	ktime_t start;
+> +	ktime_t stop;
+> +
+> +	start = ktime_get();
+> +	stop = ktime_add(start, ms_to_ktime(busy_timeout));
+> +
+> +	do {
+> +		if (ffa_partition_supports_direct_req2_recv(tpm_crb_ffa->ffa_dev)) {
+> +			memset(&tpm_crb_ffa->direct_msg_data2, 0x00,
+> +			       sizeof(struct ffa_send_direct_data2));
+>  
+> -		tpm_crb_ffa->direct_msg_data2.data[0] = func_id;
+> -		tpm_crb_ffa->direct_msg_data2.data[1] = a0;
+> -		tpm_crb_ffa->direct_msg_data2.data[2] = a1;
+> -		tpm_crb_ffa->direct_msg_data2.data[3] = a2;
+> +			tpm_crb_ffa->direct_msg_data2.data[0] = func_id;
+> +			tpm_crb_ffa->direct_msg_data2.data[1] = a0;
+> +			tpm_crb_ffa->direct_msg_data2.data[2] = a1;
+> +			tpm_crb_ffa->direct_msg_data2.data[3] = a2;
+>  
+> -		ret = msg_ops->sync_send_receive2(tpm_crb_ffa->ffa_dev,
+> +			ret = msg_ops->sync_send_receive2(tpm_crb_ffa->ffa_dev,
+>  				&tpm_crb_ffa->direct_msg_data2);
+> -		if (!ret)
+> -			ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data2.data[0]);
+> -	} else {
+> -		memset(&tpm_crb_ffa->direct_msg_data, 0x00,
+> -		       sizeof(struct ffa_send_direct_data));
+> -
+> -		tpm_crb_ffa->direct_msg_data.data1 = func_id;
+> -		tpm_crb_ffa->direct_msg_data.data2 = a0;
+> -		tpm_crb_ffa->direct_msg_data.data3 = a1;
+> -		tpm_crb_ffa->direct_msg_data.data4 = a2;
+> -
+> -		ret = msg_ops->sync_send_receive(tpm_crb_ffa->ffa_dev,
+> -				&tpm_crb_ffa->direct_msg_data);
+> -		if (!ret)
+> -			ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data.data1);
+> -	}
+> +			if (!ret)
+> +				ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data2.data[0]);
+> +		} else {
+> +			memset(&tpm_crb_ffa->direct_msg_data, 0x00,
+> +			       sizeof(struct ffa_send_direct_data));
+>  
+> +			tpm_crb_ffa->direct_msg_data.data1 = func_id;
+> +			tpm_crb_ffa->direct_msg_data.data2 = a0;
+> +			tpm_crb_ffa->direct_msg_data.data3 = a1;
+> +			tpm_crb_ffa->direct_msg_data.data4 = a2;
+> +
+> +			ret = msg_ops->sync_send_receive(tpm_crb_ffa->ffa_dev,
+> +				&tpm_crb_ffa->direct_msg_data);
+> +			if (!ret)
+> +				ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data.data1);
+> +		}
+> +		// Check if the TPM service returned busy
+> +		if (ret == -EBUSY)
+> +			pr_err("TPM says busy, trying again, value, ret: %d\n",
+> +			       ret);
+> +		else
+> +			// If TPM did not return busy, we are done, exit the loop
+> +			break;
+> +		// Sleep for a short time before retrying to avoid busy looping
+> +		usleep_range(50, 100);
+> +	} while (ktime_before(ktime_get(), stop));
+> +	// If we are here, we either got a valid response or we are over the busy timeout
 
-Thanks for the report.
+Please use "/* */". We don't use C++ comment style:
 
-Could you test the diff below ?
+https://www.kernel.org/doc/html/v6.14/process/coding-style.html#commenting
 
-look like some programs start listen()ing before setting
-SO_PASSCRED or SO_PASSPIDFD and there's a small race window.
-
----8<---
-diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
-index fd6b5e17f6c4..87439d7f965d 100644
---- a/net/unix/af_unix.c
-+++ b/net/unix/af_unix.c
-@@ -1971,7 +1971,8 @@ static void unix_maybe_add_creds(struct sk_buff *skb, const struct sock *sk,
- 	if (UNIXCB(skb).pid)
- 		return;
- 
--	if (unix_may_passcred(sk) || unix_may_passcred(other)) {
-+	if (unix_may_passcred(sk) || unix_may_passcred(other) ||
-+	    !other->sk_socket) {
- 		UNIXCB(skb).pid = get_pid(task_tgid(current));
- 		current_uid_gid(&UNIXCB(skb).uid, &UNIXCB(skb).gid);
- 	}
----8<---
+BR, Jarkko
