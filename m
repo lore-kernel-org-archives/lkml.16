@@ -1,53 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE81A27586B;
-	Wed, 11 Jun 2025 10:44:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ABEA2882A0
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 10:44:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749638677; cv=none; b=X4SmAvr9ezHpX+9lifhpCLygTM+zwhk/wXDdMuTRroEK7P0scZIfmI9Ra3MozKpsm9zT+1tHGbhYsC7/dMpztfRx2RITlk1mywGvg+JhgZ9/f1AuzL9j8EYB1gYsX4Jj7RZYBXaCQoEBhSTo8jDAd48UZrrqf+bUc5YfrLtr6qw=
+	t=1749638680; cv=none; b=Q+tQKO61imchAM1ZmEK4KP+eUwg/N84ItbHaCP3f+EYT2TDVJkwXkHibcBG/KFy/mGlv10j6tqyWQ7Z0BRSellBqgQb8tDm0liqeFCxO8Gwp7FLGCjkHGLWbJWTlnVhula5PFstS8iP0yopHcqWEeeq+tJ0A3Hot62yTtSCQA5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749638677; c=relaxed/simple;
-	bh=DFXb2Sd1AviR0meTWbNWr6As2FJfbh6fzCtv+oFGSEI=;
+	s=arc-20240116; t=1749638680; c=relaxed/simple;
+	bh=ZGWucHB5ib9wIAmp+jltch//8y7Q7viWPh80fKN9NEU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fGXjvgMmCEmeADZtctInqAZBcfd3msoY7ai19o9qr2xHqQjhH88LdRVQxjmfNblgobtJb2//dzdJrSCspn6nYzrtSAKCU6JPqFwzbBRbMfk6chv7KJjhcxFBAyDVqEwhfGv0DS9pTiRZuWGYhY2bvPuWJHBzh9M4ICi2rxYWFxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jxwd/KZP; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ughcT3DFvIzU2p6Q/D3X7J1AXA25V7wmKqBRSaxK7C6Jmsk+XzYaU2sEzcOF1ftnBra7hdJClTohlEpNz5dCXywvQBr2GPGJ/MG8HmdiNUb9VBUX7bDlcNqS2Miou69hvGGJr/cGl7obIcR5OyvBqKFB7hbrEmNBRe7TDsu+k6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LhsYik8E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jxwd/KZP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99AB5C4CEF3;
-	Wed, 11 Jun 2025 10:44:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LhsYik8E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5719C4CEEE;
+	Wed, 11 Jun 2025 10:44:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749638677;
-	bh=DFXb2Sd1AviR0meTWbNWr6As2FJfbh6fzCtv+oFGSEI=;
+	s=k20201202; t=1749638679;
+	bh=ZGWucHB5ib9wIAmp+jltch//8y7Q7viWPh80fKN9NEU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jxwd/KZPJJwG9Ywjh1/PhRGVdKW45Lk0qDePpntE/WGmu+0Cu+8m9ZsJhmwrjm15d
-	 pp0KgriTv6qpadEyjMj9KerrndYQbYAhprMi5SKtSuNmYGWRXdacFwBDwWd+S6CccU
-	 xqi2pRmxylUOrjjpZnm+QhpDOWYtok/3ghf8eiB3i2CckpHXr7l28hWPvOvng9giI8
-	 JHOqZZcVOEFSSG8xZdAYrrin2Ng2c/TGFsm72zZ6S7anjMveDsnWgTBpYoeS9KcUFk
-	 /O093vWRxY02LXlWByH+fKEDXWdRDV8IEaUzWwsu2fRxDZeuVcNLncmyA7dlrHU7Bu
-	 thZbbZf5ZCDFQ==
+	b=LhsYik8EhyigmtOGF6QcBgTDeKZHxEMMLt01kP8lidZNhRcxt5/67UUrWaFHYZnAA
+	 6V18JRPBo6/RIBKNPTSzOphjCGUoCz7GZtlneY/db20sVfLopbgIIfYAc9v94LRo3u
+	 LCNUSx0lL+UeP1Z7w7XfVY/kQVbma5K3WcbtFa6sShDzWJDXOzKlHd4aev+pL/hQ0P
+	 qsVPazrv73CJqua21HgSs8PFmUcu6aw8TsI0cjJbqBRPPzuNfS+6eqHvfOc34UlQ5O
+	 3b5pRSQfWSXnCXsS4h+NJy6iHOWTQCwYtKry2lIp7MxfEQh+x4touAeqJAqtn6iqFg
+	 y0fVVC4DW18Ug==
 From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: tglx@linutronix.de,
 	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Ludovic Desroches <ludovic.desroches@microchip.com>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev
-Subject: [PATCH] pinctrl: Use dev_fwnode()
-Date: Wed, 11 Jun 2025 12:43:45 +0200
-Message-ID: <20250611104348.192092-17-jirislaby@kernel.org>
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH] powerpc: Use dev_fwnode()
+Date: Wed, 11 Jun 2025 12:43:46 +0200
+Message-ID: <20250611104348.192092-18-jirislaby@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250611104348.192092-1-jirislaby@kernel.org>
 References: <20250611104348.192092-1-jirislaby@kernel.org>
@@ -66,75 +57,47 @@ using of_node with of_fwnode_handle().
 So use the dev_fwnode() helper.
 
 Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-Cc: Sean Wang <sean.wang@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-
---
-
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: Chen-Yu Tsai <wens@csie.org>
-Cc: Jernej Skrabec <jernej.skrabec@gmail.com>
-Cc: Samuel Holland <samuel@sholland.org>
-Cc: linux-mediatek@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-sunxi@lists.linux.dev
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Naveen N Rao <naveen@kernel.org>
+Cc: linuxppc-dev@lists.ozlabs.org
 ---
- drivers/pinctrl/mediatek/mtk-eint.c   | 4 ++--
- drivers/pinctrl/pinctrl-at91-pio4.c   | 6 +++---
- drivers/pinctrl/sunxi/pinctrl-sunxi.c | 2 +-
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ arch/powerpc/platforms/8xx/cpm1-ic.c | 3 +--
+ arch/powerpc/sysdev/fsl_msi.c        | 5 ++---
+ 2 files changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
-index d906a5e4101f..9f175c73613f 100644
---- a/drivers/pinctrl/mediatek/mtk-eint.c
-+++ b/drivers/pinctrl/mediatek/mtk-eint.c
-@@ -561,8 +561,8 @@ int mtk_eint_do_init(struct mtk_eint *eint, struct mtk_eint_pin *eint_pin)
- 			goto err_eint;
+diff --git a/arch/powerpc/platforms/8xx/cpm1-ic.c b/arch/powerpc/platforms/8xx/cpm1-ic.c
+index a49d4a9ab3bc..3292071e4da3 100644
+--- a/arch/powerpc/platforms/8xx/cpm1-ic.c
++++ b/arch/powerpc/platforms/8xx/cpm1-ic.c
+@@ -110,8 +110,7 @@ static int cpm_pic_probe(struct platform_device *pdev)
+ 
+ 	out_be32(&data->reg->cpic_cimr, 0);
+ 
+-	data->host = irq_domain_create_linear(of_fwnode_handle(dev->of_node),
+-					      64, &cpm_pic_host_ops, data);
++	data->host = irq_domain_create_linear(dev_fwnode(dev), 64, &cpm_pic_host_ops, data);
+ 	if (!data->host)
+ 		return -ENODEV;
+ 
+diff --git a/arch/powerpc/sysdev/fsl_msi.c b/arch/powerpc/sysdev/fsl_msi.c
+index 4fe8a7b1b288..2a007bfb038d 100644
+--- a/arch/powerpc/sysdev/fsl_msi.c
++++ b/arch/powerpc/sysdev/fsl_msi.c
+@@ -412,9 +412,8 @@ static int fsl_of_msi_probe(struct platform_device *dev)
  	}
+ 	platform_set_drvdata(dev, msi);
  
--	eint->domain = irq_domain_create_linear(of_fwnode_handle(eint->dev->of_node),
--						eint->hw->ap_num, &irq_domain_simple_ops, NULL);
-+	eint->domain = irq_domain_create_linear(dev_fwnode(eint->dev), eint->hw->ap_num,
-+						&irq_domain_simple_ops, NULL);
- 	if (!eint->domain)
- 		goto err_eint;
- 
-diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
-index ca8a54a43ff5..57f105ac962d 100644
---- a/drivers/pinctrl/pinctrl-at91-pio4.c
-+++ b/drivers/pinctrl/pinctrl-at91-pio4.c
-@@ -1212,9 +1212,9 @@ static int atmel_pinctrl_probe(struct platform_device *pdev)
- 		dev_dbg(dev, "bank %i: irq=%d\n", i, ret);
- 	}
- 
--	atmel_pioctrl->irq_domain = irq_domain_create_linear(of_fwnode_handle(dev->of_node),
--			atmel_pioctrl->gpio_chip->ngpio,
--			&irq_domain_simple_ops, NULL);
-+	atmel_pioctrl->irq_domain = irq_domain_create_linear(dev_fwnode(dev),
-+							     atmel_pioctrl->gpio_chip->ngpio,
-+							     &irq_domain_simple_ops, NULL);
- 	if (!atmel_pioctrl->irq_domain)
- 		return dev_err_probe(dev, -ENODEV, "can't add the irq domain\n");
- 
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-index bf8612d72daa..a090d78a3413 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-@@ -1646,7 +1646,7 @@ int sunxi_pinctrl_init_with_flags(struct platform_device *pdev,
- 		}
- 	}
- 
--	pctl->domain = irq_domain_create_linear(of_fwnode_handle(node),
-+	pctl->domain = irq_domain_create_linear(dev_fwnode(&pdev->dev),
- 						pctl->desc->irq_banks * IRQ_PER_BANK,
- 						&sunxi_pinctrl_irq_domain_ops, pctl);
- 	if (!pctl->domain) {
+-	msi->irqhost = irq_domain_create_linear(of_fwnode_handle(dev->dev.of_node),
+-				      NR_MSI_IRQS_MAX, &fsl_msi_host_ops, msi);
+-
++	msi->irqhost = irq_domain_create_linear(dev_fwnode(&dev->dev), NR_MSI_IRQS_MAX,
++						&fsl_msi_host_ops, msi);
+ 	if (msi->irqhost == NULL) {
+ 		dev_err(&dev->dev, "No memory for MSI irqhost\n");
+ 		err = -ENOMEM;
 -- 
 2.49.0
 
