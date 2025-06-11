@@ -1,210 +1,193 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E86A61B0412;
-	Wed, 11 Jun 2025 15:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40BBE22338
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:38:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749656248; cv=none; b=PBe6a1VZ0mxrZ6VTdittKI42HikrsEQWPgBHwN1DQ7broOQWj7TXAsnxuouLkJ4f71bTrloogNEPoIQR3YJyvgGK2l6aJvF8XwSQZwHc+wWw4F++8nGcCHjOZmPPvgBrkPzDSfPAb+205PNab9OhO+wtgVPGuJUftF3VBXmV3zU=
+	t=1749656321; cv=none; b=MhsWdnrUKwNr2kEXtup2EGQD9JvGsAyWuPkepP2IqBFYpf/K1U1ey+tH6D7e08I+fbuYNRYBiVp0zNJX2a3hfz4gg8hIQ4OR+Tii9YCCsGxlt2BXbT+pVvjqXAUwrjRIxhSH2J4LlFXpEQVNLu2+ShkjZg+vk7pBWXAjqa83Aew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749656248; c=relaxed/simple;
-	bh=zydGsoJ/S/NJH8WtNAq5YLFgUzXRJ6uRpo4oan+dE5A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=d27tCiXKWKBY5F/Nyzpd9g4UoJ0sH0MiHUPOesXmJXDbO6MHeAjtbOj10Bcl9Dsa1qvZKwYZmQ5r4GoKGfHFXYlHiVRyLyRf4LtFXTDj0ycJEYGMqcs96wbIvpADIk0hC6SbcMxToYsdB065SKrHjPHs1+sLMoATsG3Y6dei6nc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jDpVTmX0; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749656321; c=relaxed/simple;
+	bh=bZoP8z6K1sb/0mYz00sUANozCkNkO7ck8cCBM6hKPpc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SqOcbDFqLsumwbEBfQ9WIx2WsKtkzVMqoZ6dX9W1zrJa/Q3PfR44ijB2thvjJAkGOreB70OK4gCGHXv+GTuyIVy4Bhq3wmekUY4LUFwYt6WHihECQZRon+iFcvI2aVkMcFEiOwPpcVaqDOS2q3NBRzMIS/ue/1ItHlbg8075kJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SvjQGE8U; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=pzmUiJi/; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SvjQGE8U; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=pzmUiJi/; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jDpVTmX0"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-706e7babc4eso700157b3.2;
-        Wed, 11 Jun 2025 08:37:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749656246; x=1750261046; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Hju1JohcrRegQpVLjL1i+5W7BjQrb1wxNIxsFn7asag=;
-        b=jDpVTmX0+Tn3TG74BlVaQw2XhuKajuU5qva7LkPBMB+8HS+lOzkMoOC4r+PpfDAFwP
-         jB7lfLM9uq08dk22sWDoUHYcxn+VNfoijhwtAZdD+HfDoWj7UJE09qh4BvVOu2B9kP3F
-         TCqiqxYcxkBu/ZJwyc7lcNP4qzmYgyCWh5bNcRJ+L8UYabvG1xrutM62904FnhIt1xkC
-         jDvq6WN7IUcshINmkKJQEcsF1zb4oncwrz/qRJKQOe7h6PYcawnYjv/k1APzTYdcsMhI
-         sTHmz1pqRXWi9zHEuQbqMdO6F7d/3be9uKPQmCwvn5grDwKN5lj14euRRKaUBdfI12FV
-         rpYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749656246; x=1750261046;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Hju1JohcrRegQpVLjL1i+5W7BjQrb1wxNIxsFn7asag=;
-        b=grgGh8VJwzwHh7IB5S7KR4tW7L/jomuiCUSm121g4dKjvAUIzDNzjDrUh/Us3X/wRL
-         7go9HdW/VOUVULzgWjh3IFO6d9JZLh3XU/wYKA0kw2eNLah6lQDAqnbsn57Uv1J0NkdP
-         v+wipcWm8Bbr5AokTtrlwfhMpK79CgL6XQKJo2gFy8LFySa+qz6LjYZJ+Uga1/MDz/rc
-         d7AwY4diRUiUHir+tT4YcJxP9HVpcOQJFFNVo17AvoAn3zJXVxJbWpnO10tjDvbiOGum
-         SJ5+d1prHlqueCZL+1/nty3RIhBnxO24UY4HVcsUtEeI1vCQ/y+FLmX1jdwK/XowWQp9
-         1XfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVPnDhpdUOcXfSWCKWDtisb6tYab7RVJEF5c7nNkWErw4aaHDnhD6u6Wm0Jzz96NbzxbxKdg5oeppaQvMe9@vger.kernel.org, AJvYcCWy/vGwsT4BdoRWJJc20ebvsfdXPTwBcTpKC5IvaWWVe5XCnoKhpslVMz4xoEpX1+ZHOs0km3rhkBLg@vger.kernel.org, AJvYcCX+RbN8NiWe8yNiErbCmvARsXiW/NKT7qVudU9YJE1he8wKJOsJAbczcKyOHBTI5CeD7AUKzn6OmP8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOwYzD0OncYmgA0Bypz585sdb/QFcrcHTBN0EwnlDcysw/C0Rz
-	tytDyCrVWHYAHOmI4CwfjBlilgPch4NeSpFoHYkEsoGsPUJpssrlxwmsU8QV7vJn2sOrZERDCc6
-	NowiD1KIN4aGen9hJ3R9e6KVpbCCFnZq8PA==
-X-Gm-Gg: ASbGnctzfstlmKuTYMRjdGEVFb8cr0fHXhjxCjRwC6Ppqp+SzvGf4vApYgRhw1XXbKN
-	Cao13V4JJg3Jc2Mumm0IDHrcimThdfK+qdv+KeET9ucZ25CpfT+pgS59WoDjufGZaLA6Bsy8F3S
-	faNKz95L5gu+steyKQSshabxiAEbQjErvvqQyrOFjgpp97KKYjoNZ74w==
-X-Google-Smtp-Source: AGHT+IGeMZl5mUz14ekaIyfrS7U2592WmIdqit7bIWdFFD45YhUdnMs7zWOw2JShIWrSV+j10DNVlMgWixfip3MlpYw=
-X-Received: by 2002:a05:690c:45c1:b0:70e:4cdc:6e51 with SMTP id
- 00721157ae682-711409ee0f4mr24751957b3.1.1749656245706; Wed, 11 Jun 2025
- 08:37:25 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SvjQGE8U";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="pzmUiJi/";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SvjQGE8U";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="pzmUiJi/"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 23CDD218EB;
+	Wed, 11 Jun 2025 15:38:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749656315; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Dwhrw/EHSGZ+qlML6k1JAfb4u3M0ventqUmJA+/Di9A=;
+	b=SvjQGE8UppzZxpL7EVJXlU6S+nk4KnfHbjI7n0zZD3z+4njLtJTHljumo9EvFziAATt5ND
+	dF/gwvfxqLI+2J0Cy5F2TcUfTmNGBYdClz3HwphpPWSILZBWJBEZEglBaKKQ2ThVGULy01
+	WE5mQo/g+pUfToGZj5JiB3FpS4w30Fc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749656315;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Dwhrw/EHSGZ+qlML6k1JAfb4u3M0ventqUmJA+/Di9A=;
+	b=pzmUiJi/0DjIZjNK+zoQ2GBpNnQax7iIpEronpASwSBvtB5M+NZgT5rMpwOukHswZIYsle
+	wjSt2kVGbqMSOeAg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1749656315; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Dwhrw/EHSGZ+qlML6k1JAfb4u3M0ventqUmJA+/Di9A=;
+	b=SvjQGE8UppzZxpL7EVJXlU6S+nk4KnfHbjI7n0zZD3z+4njLtJTHljumo9EvFziAATt5ND
+	dF/gwvfxqLI+2J0Cy5F2TcUfTmNGBYdClz3HwphpPWSILZBWJBEZEglBaKKQ2ThVGULy01
+	WE5mQo/g+pUfToGZj5JiB3FpS4w30Fc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1749656315;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Dwhrw/EHSGZ+qlML6k1JAfb4u3M0ventqUmJA+/Di9A=;
+	b=pzmUiJi/0DjIZjNK+zoQ2GBpNnQax7iIpEronpASwSBvtB5M+NZgT5rMpwOukHswZIYsle
+	wjSt2kVGbqMSOeAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E1534139CE;
+	Wed, 11 Jun 2025 15:38:34 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ogynNfqiSWiqdwAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Wed, 11 Jun 2025 15:38:34 +0000
+Message-ID: <fb6d8eb9-cdc1-4d07-8a55-928282c9e7ad@suse.de>
+Date: Wed, 11 Jun 2025 17:38:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250601172139.59156-1-l.rubusch@gmail.com> <20250601172139.59156-9-l.rubusch@gmail.com>
- <CAHp75Vd=mzfVN_UBUHAkTyj2Ap_tz76AB0LtKEz28pR=WmNzog@mail.gmail.com>
-In-Reply-To: <CAHp75Vd=mzfVN_UBUHAkTyj2Ap_tz76AB0LtKEz28pR=WmNzog@mail.gmail.com>
-From: Lothar Rubusch <l.rubusch@gmail.com>
-Date: Wed, 11 Jun 2025 17:36:49 +0200
-X-Gm-Features: AX0GCFtIOlDEzKGW5nVeQK78ZYYesN_faqmntukiAD9GLJCKsmN4Zdvpv_ZvDus
-Message-ID: <CAFXKEHYP6o5vzsSP24SLUSs+Tu2Oqm=oVf71xy8EKKD5hoCQqg@mail.gmail.com>
-Subject: Re: [PATCH v4 08/11] iio: accel: adxl313: add inactivity sensing
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com, 
-	andy@kernel.org, corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de, 
-	Michael.Hennerich@analog.com, bagasdotme@gmail.com, linux-iio@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/ssd130x: fix ssd132x_clear_screen() columns
+To: Javier Martinez Canillas <javierm@redhat.com>,
+ John Keeping <jkeeping@inmusicbrands.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20250611111307.1814876-1-jkeeping@inmusicbrands.com>
+ <87y0tycumu.fsf@minerva.mail-host-address-is-not-set>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <87y0tycumu.fsf@minerva.mail-host-address-is-not-set>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linux.intel.com,kernel.org,gmail.com,ffwll.ch,lists.freedesktop.org,vger.kernel.org];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_DN_SOME(0.00)[]
+X-Spam-Level: 
 
-On Sun, Jun 1, 2025 at 9:46=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Sun, Jun 1, 2025 at 8:22=E2=80=AFPM Lothar Rubusch <l.rubusch@gmail.co=
-m> wrote:
-> >
-> > Extend the interrupt handler to process interrupts as inactivity events=
-.
-> > Add functions to set threshold and period registers for inactivity. Add
-> > functions to enable / disable inactivity. Extend the fake iio channel t=
-o
->
-> IIO
->
-> > deal with inactivity events on x, y and z combined with AND.
->
-> ...
->
-> > +static int adxl313_set_inact_time_s(struct adxl313_data *data,
-> > +                                   unsigned int val_s)
-> > +{
-> > +       unsigned int max_boundary =3D 255;
->
-> This is unclear how it's defined. What is the limit behind? Size of a
-> bit field? Decimal value from the datasheet?
->
-> The forms of (BIT(8) - 1) or GENMASK(7, 0) may be better depending on
-> the answers to the above questions.
->
-> > +       unsigned int val =3D min(val_s, max_boundary);
-> > +
-> > +       return regmap_write(data->regmap, ADXL313_REG_TIME_INACT, val);
-> > +}
->
-> ...
->
-> > -       axis_en =3D FIELD_GET(ADXL313_ACT_XYZ_EN, axis_ctrl);
-> > +       if (type =3D=3D ADXL313_ACTIVITY)
-> > +               axis_en =3D FIELD_GET(ADXL313_ACT_XYZ_EN, axis_ctrl);
-> > +       else
-> > +               axis_en =3D FIELD_GET(ADXL313_INACT_XYZ_EN, axis_ctrl);
->
-> Even with this change my previous comment stays.
->
-> ...
->
-> > +       en =3D cmd_en && threshold;
-> > +       if (type =3D=3D ADXL313_INACTIVITY) {
-> > +               ret =3D regmap_read(data->regmap, ADXL313_REG_TIME_INAC=
-T, &inact_time_s);
-> > +               if (ret)
-> > +                       return ret;
-> > +
-> > +               en =3D en && inact_time_s;
-> > +       }
->
-> ...
->
-> > -       if (info !=3D IIO_EV_INFO_VALUE)
-> > -               return -EINVAL;
-> > -
-> > -       /* Scale factor 15.625 mg/LSB */
-> > -       regval =3D DIV_ROUND_CLOSEST(MICRO * val + val2, 15625);
-> > -       switch (dir) {
-> > -       case IIO_EV_DIR_RISING:
-> > -               ret =3D regmap_write(data->regmap,
-> > -                                  adxl313_act_thresh_reg[ADXL313_ACTIV=
-ITY],
-> > -                                  regval);
->
-> Hmm... This was added by the previous patches, right? Why can't it be
-> done as a switch case to begin with? I remember one of the previous
-> versions had some nested switch-cases, perhaps you need to rethink on
-> how to split the code between functions to avoid too much nesting (add
-> some helper functions?).
+Hi
 
-The point here is, as I mentioned in the other mail:
-Initially, I wanted to build up the final switch/case struct i.e.
-going by MAG/MAG_ADAPTIVE, then INFO_VALUE -> RISING / FALLING and
-PERIOD.
+Am 11.06.25 um 14:47 schrieb Javier Martinez Canillas:
+> John Keeping <jkeeping@inmusicbrands.com> writes:
+>
+> Hello John,
+>
+>> The number of columns relates to the width, not the height.  Use the
+>> correct variable.
+>>
+>> Signed-off-by: John Keeping <jkeeping@inmusicbrands.com>
+>> ---
+>>   drivers/gpu/drm/solomon/ssd130x.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/gpu/drm/solomon/ssd130x.c b/drivers/gpu/drm/solomon/ssd130x.c
+>> index dd2006d51c7a2..eec43d1a55951 100644
+>> --- a/drivers/gpu/drm/solomon/ssd130x.c
+>> +++ b/drivers/gpu/drm/solomon/ssd130x.c
+>> @@ -974,7 +974,7 @@ static void ssd130x_clear_screen(struct ssd130x_device *ssd130x, u8 *data_array)
+>>   
+>>   static void ssd132x_clear_screen(struct ssd130x_device *ssd130x, u8 *data_array)
+>>   {
+>> -	unsigned int columns = DIV_ROUND_UP(ssd130x->height, SSD132X_SEGMENT_WIDTH);
+>> +	unsigned int columns = DIV_ROUND_UP(ssd130x->width, SSD132X_SEGMENT_WIDTH);
+>>   	unsigned int height = ssd130x->height;
+>>   
+> Ups, indeed. Thanks for fixing it!
+>
+> Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
 
-This will distinguish properties for four different types of events,
-of course it then also will use separate functions. As I uderstood
-your review, why starting with switch/case, do
-if (!MAG event) then, return right away. I implemented that as I
-understood. For further switch/case-ing, I did the same.
-Now, patch by patch, it grows. Thus the if-not-back-out lines will be
-moved out and replaced by switch/case. Worse, with every level switch
-case, all existing code needs indention, thus reading through the
-patches show (too) many changes.
+Could you please add a Fixes tag before merging the patch? Thanks!
 
-How can I improve to help you reviewing this or make the feedback more
-useful for me? Or is my approach wrong? I'd like to start with the
-switch case right away, then just add up what comes in with every
-other patch. If so, you'd only see the changes, since the final
-structure of this is already clear, because very similar to all
-iio/accel drivers at least (as you probably know better than me).
+Best regards
+Thomas
 
 >
-> > +       switch (info) {
-> > +       case IIO_EV_INFO_VALUE:
-> > +               /* Scale factor 15.625 mg/LSB */
-> > +               regval =3D DIV_ROUND_CLOSEST(MICRO * val + val2, 15625)=
-;
-> > +               switch (dir) {
-> > +               case IIO_EV_DIR_RISING:
-> > +                       ret =3D regmap_write(data->regmap,
-> > +                                          adxl313_act_thresh_reg[ADXL3=
-13_ACTIVITY],
-> > +                                          regval);
-> > +                       if (ret)
-> > +                               return ret;
-> > +                       return adxl313_set_measure_en(data, true);
-> > +               case IIO_EV_DIR_FALLING:
-> > +                       ret =3D regmap_write(data->regmap,
-> > +                                          adxl313_act_thresh_reg[ADXL3=
-13_INACTIVITY],
-> > +                                          regval);
-> > +                       if (ret)
-> > +                               return ret;
-> > +                       return adxl313_set_measure_en(data, true);
-> > +               default:
-> > +                       return -EINVAL;
-> > +               }
-> > +       case IIO_EV_INFO_PERIOD:
-> > +               ret =3D adxl313_set_inact_time_s(data, val);
-> >                 if (ret)
-> >                         return ret;
-> >                 return adxl313_set_measure_en(data, true);
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
+
