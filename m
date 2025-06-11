@@ -1,362 +1,332 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from rcdn-iport-2.cisco.com (rcdn-iport-2.cisco.com [173.37.86.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B50F22A1BF
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 18:30:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 327C51A5BAC;
+	Wed, 11 Jun 2025 18:31:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.37.86.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749666652; cv=none; b=hEcGQySwVjleDj1jJBn0YFN4SCD3PkUJd5ic3dQ9Ek/Q5q9vLfWOi4401bbhVCxSZ/ixcV0O4WcOyBqA+bqa1gxKL9szwRma99+OvpU2rbJWvavEF/6AdBMLe1HNuuzjJ1y1qSJGWDNhnB2AI2d4DvQbX2j1mL7I/j0QzYqx5k8=
+	t=1749666674; cv=none; b=m4Q5GXp8ZixvHd0+Z7emhtG+9xefJPvzFj7jhYpChQrfWa0ZKn631wPcuYWTbq2my3hPDj9secK4ol+FCJ0+NwfLbAKkSes5ZEna1Qg6w1QZQ0trdXrF9lHJToI7/oqSIVba0BgU2ubMSc6oNs3Gl1vn5/4cq+PGdUt5dj+IDgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749666652; c=relaxed/simple;
-	bh=zkvhFn1dvwpij2C+2+79I7Odk3udbvUK4Cuuv6jZ/sM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Pft1TggoND9ScICSvPWKl0Ahe1yxW2nGt2kp27ICBdWbpr2bP7MXlS6lAiXFRFoIYVIYqv3CQKp8qShA66zdPo3/6e2jAn9TuNYYJZ6GkWVtAHAGurVR6ws4OM5ZtKYf9pBSWDA7QCQ0nuWd+sojzPD/H2IE9XBw3NyMSl2YsuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xzMDeO2/; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1749666674; c=relaxed/simple;
+	bh=kg2LVp5JmyTHBKsD3DMILFj6hR4fnPV3slJOxt5PzhY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LYaQtesohsJhE8iHa6FqV54qA5QMBw4FQ7EIkQCpk7tA1dP/KgdmpiqTMoxAkP/V1WmYy9kLL2yx0+exfCgblzc6vohdmYyzwr7mqKP1oBdCAgxPu0SZh0iRG84JBkmMtEpbcTlj36x42Pr8uEq/PwtJSNoWy+mTStoR+3itA0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com; spf=pass smtp.mailfrom=cisco.com; dkim=pass (2048-bit key) header.d=cisco.com header.i=@cisco.com header.b=gXSMx6gq; arc=none smtp.client-ip=173.37.86.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cisco.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xzMDeO2/"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3ddc99e0b77so28315ab.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:30:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cisco.com header.i=@cisco.com header.b="gXSMx6gq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749666650; x=1750271450; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LUlFrf885uk7hWniA9ruK8KO9M4PebPn0BtPXR5B7Mc=;
-        b=xzMDeO2/D4dTBsAcah5vgkV5oyyA519exYMspKhDMC5MMz9Mx+J6TvXYWYEXk5saok
-         BDjfG61hiqLmNscLJny2igziXcpwgNDNDSJWD+7PnPIouYCmTf7EYLRmURkCbouS/u4s
-         lFkFJLoHKkMAFly3Hzd11xK6K3tEoSUND68UsLa2eKBrhDGhGhae62y2zXjYAQQLVZWa
-         Tsh7bvvRMpV4bAfOOk0dgQnWphN10+/ve2tOp0z0+V6NYaBe1Ca7DL+KHMLXYWCRzTFN
-         zZuYYpZUrL4LOl0TTwVVQBZaPWPT9EuQkQmjai8naJssWTJEngQ9Vl7uj0IOZGnE4zJI
-         sviw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749666650; x=1750271450;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LUlFrf885uk7hWniA9ruK8KO9M4PebPn0BtPXR5B7Mc=;
-        b=V/Qd1k6eZntVFsQ520EMNCoM+7Hy6hSDasTxfeSmc8VmyxRKEWA+pl8NO8vID/7s0P
-         lR9J2zx81xp4L/4qvB3a1QVdsJkpTaw5OOOUiZuCJZq9fLgprnLARzfbtgDMQjDII/ua
-         IgkWulD5yFmL/Dqw+/WCZAebmedrDIKrF/QrpXtKc0nRxd0YxOel+VbMtqkre2DZv4Rj
-         OMUuDzHkT8Xr3cJtvSFFKuXe8wZIu9o8i9bYdOGEbn3PTPg18j0bOM4RnXhkhCAywwu6
-         xDZGgpR4FHcMv9Ij8rD/YD1aBRS/0cCiRWfjAh4I5jyO1sqQoQZJ/bK8Svr0RAn2hbNy
-         fQgA==
-X-Forwarded-Encrypted: i=1; AJvYcCXSVKZ7xxzRRvZapy6ylxUAmmYErKYCXRYn6mjZRRSmNEErY1DPSE0DEvxsWgHL1BG6XaArAAtXKKJipOw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxivv0yxNgIL4kjNbjTiJgxhc1lTdVAYBR3CugwPn8s1GwaEzhD
-	e2exrTdFj6gTjj9+GehbpJPxlS7xrld7XPQZPZ1lkLMF5fVEuJ0QIF3h7h3LXP8QMcbJGnKZq1V
-	Zf+MsNijsNWVT44q0xr3Yi7WuYkf8pkGtNeIJ/MJa
-X-Gm-Gg: ASbGncuT/IpDj0wVdrRRNQPPwOQ068lVt/NuiZwf2IR5DrWsldOdaK/+O+4OcKKbF9v
-	wXTDEOmKY5xIih9w4JsfSgouPVf+9LwkziM7m7cFuGuWsRTN9kjIPDCm4Xtjeg4wnesWZTMaYq+
-	JIKrDo+nS9ZJA3YfPvjhURwsrrvapvex3mXjcs9l9dfYrGUB/qXUDa6wWfK1iw5OeUdekYg/zp
-X-Google-Smtp-Source: AGHT+IH/+QRsmw4yQlHvwXqxi/8a6kcY01H0TF3efMaj9RHNRIXHnvBFBU8jO4rnfXVJeDoBihVcBun5bRzKCqyEcDQ=
-X-Received: by 2002:a05:6e02:2292:b0:3da:7c33:509c with SMTP id
- e9e14a558f8ab-3ddfb312ed9mr130645ab.11.1749666649497; Wed, 11 Jun 2025
- 11:30:49 -0700 (PDT)
+  d=cisco.com; i=@cisco.com; l=7963; q=dns/txt;
+  s=iport01; t=1749666672; x=1750876272;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=izzQFPo/rU7YNoq8ZmZS4O5oHW8PR42NqnKXflpjBwk=;
+  b=gXSMx6gqZVDvrvn6uAGPtL0Yw3cgKNaMGJ8F3pJEZXlfFCOU5gKdQn2a
+   JYLJDK/IEpqfbQ2+9ezkLA0OQ2KXCZhzu5NT65oIEfSs8/DnWw0qdLdsT
+   IN4WYsDSuhIwZWib4Vwg2hnW/vAUbjwZUHluyC/dKbbJj9CSbyH3eZ9bN
+   8w173roV7G+ItPAiGvOovm4Bk+WxhHQXTscExsb7ljqCDZ/k+vmuq39v6
+   dB31iYn9J3q3KvSeICGHQPad1vcNJfUpt1FD8x7xxLrBQw5ATgCz60ScS
+   HKW3lCtgoWlJGLkw3hEQKrhBwcz4KcejWtltpW01RHQgdQtw8EyPAtgvt
+   Q==;
+X-CSE-ConnectionGUID: KAtlEn8AT9GHJ6qlxxyjQg==
+X-CSE-MsgGUID: mwquzFL5T8CSUj4g7IrhAg==
+X-IPAS-Result: =?us-ascii?q?A0ANAABcyklo/4sQJK1aGwEBAQEBAQEBBQEBARIBAQEDA?=
+ =?us-ascii?q?wEBAYF/BgEBAQsBgkqBUkMZMIxwhzSCIZg9hVyBJQNXDwEBAQ9RBAEBhQcCi?=
+ =?us-ascii?q?2YCJjQJDgECBAEBAQEDAgMBAQEBAQEBAQEBAQsBAQUBAQECAQcFgQ4ThgiGW?=
+ =?us-ascii?q?wIBAycLAUYQUVYZgwKCbwOvcYF5M4EB3jeBboFJAY1McIR3JxUGgUlEgRWDa?=
+ =?us-ascii?q?IFSiTUEgzqQIIRDjDFIgR4DWSwBVRMNCgsHBYFjAzUMCy4VMjwyHYINhRmCE?=
+ =?us-ascii?q?osHhEkrT4UhhQUkcg8HPUADCxgNSBEsNxQbBj5uB5gEgnR1B4EPE4IsHpMmk?=
+ =?us-ascii?q?jyBNZ9WhCWhUxozqmEuh2WQcak4gWg8gVkzGggbFYMiUhkPji0Wu1UmMjwCB?=
+ =?us-ascii?q?wsBAQMJkhQBAQ?=
+IronPort-Data: A9a23:DEGmfK1mc+OkMw9t8fbD5QNwkn2cJEfYwER7XKvMYLTBsI5bpzxUn
+ zccXzqOOa2INDb0Ktt2YI/i8BlUv5DWzYBgS1Fp3Hw8FHgiRegpqji6wuYcGwvIc6UvmWo+t
+ 512huHodZ5yFjmG4E70aNANlFEkvYmQXL3wFeXYDS54QA5gWU8JhAlq8wIDqtYAbeORXUXU5
+ 7sen+WFYAX4g2AtazpOg06+gEoHUMra6WtwUmMWPZinjHeG/1EJAZQWI72GLneQauF8Au6gS
+ u/f+6qy92Xf8g1FIovNfmHTKxBirhb6ZGBiu1IOM0SQqkEqSh8ajs7XAMEhhXJ/0F1lqTzeJ
+ OJl7vRcQS9xVkHFdX90vxNwS0mSNoUekFPLzOTWXcG7lyX7n3XQL/pGL2gqOaAeqs9LUE5u1
+ 6IBLCAdfxK6iLfjqF67YrEEasULJc3vOsYb/3pn1zycVaxgSpHYSKKM7thdtNsyrpkRRrCFO
+ YxAN3w2N0Wojx5nYj/7DLo9lf20h332cBVTqUmeouw85G27IAlZi+exb4OLIofVLSlTtkOHv
+ 3/U0UCkPkExD+GdlTXa02isr+CayEsXX6pXTtVU7MVCjFSVgGcaEgUbU0e2u9G9i0i3QdUZL
+ FYbkgIsoKo43EiqSMTtGRyypTiPuRt0c99ZCfE77keVx7bZ+R2UAEADVDdKbNFgv8gzLRQo0
+ 1KPktzpBBR1vbGVQG7b/bCRxRuoNDYYN3QqfyIITQIZpdLkpekbihPJU8YmE6OviNDxMS//z
+ irMryUkgbgXy8kR2M2T+VHBniLpvZPSTyYr6QjNGGGo9AV0YMiifYPA1LTAxf9EKIDcShyKu
+ 2IJ3pDEqusPFpqK0ieKRY3hAY2U2hpMCxWE6XYHInXr327FF6KLFWyI3AxDGQ==
+IronPort-HdrOrdr: A9a23:bD+MW6qpodqpSnUqc8qgMZ4aV5oEeYIsimQD101hICG9vPb1qy
+ nIpoV+6faaslgssR0b8+xofZPwIk80lqQFhLX5X43CYOCOggLBR72Kr7GSoQEIcBeQygcy78
+ pdWpk7IMHsDFR8kMbx6BS1HpId2tWdmZrY4ts2t00McemvAJsQljuQzW2gYytLeDU=
+X-Talos-CUID: 9a23:3Wajkm+jfLMYJOkU9FGVv209BsQIdC308Cb/A23mEGJ5WKyXcFDFrQ==
+X-Talos-MUID: 9a23:bB+9nwZ2eX3o7+BTsiD1mSNMEJpUs4+VNUJRnsonocmtOnkl
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-AV: E=Sophos;i="6.16,228,1744070400"; 
+   d="scan'208";a="374716037"
+Received: from alln-l-core-02.cisco.com ([173.36.16.139])
+  by rcdn-iport-2.cisco.com with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 11 Jun 2025 18:31:10 +0000
+Received: from fedora.lan?044cisco.com (unknown [10.188.19.134])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kartilak@cisco.com)
+	by alln-l-core-02.cisco.com (Postfix) with ESMTPSA id 7347A18000151;
+	Wed, 11 Jun 2025 18:31:08 +0000 (GMT)
+From: Karan Tilak Kumar <kartilak@cisco.com>
+To: sebaddel@cisco.com
+Cc: arulponn@cisco.com,
+	djhawar@cisco.com,
+	gcboffa@cisco.com,
+	mkai2@cisco.com,
+	satishkh@cisco.com,
+	aeasi@cisco.com,
+	jejb@linux.ibm.com,
+	martin.petersen@oracle.com,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	jmeneghi@redhat.com,
+	revers@redhat.com,
+	dan.carpenter@linaro.org,
+	Karan Tilak Kumar <kartilak@cisco.com>
+Subject: [PATCH 2/5] scsi: fnic: Fix crash in fnic_wq_cmpl_handler when FDMI times out
+Date: Wed, 11 Jun 2025 11:30:30 -0700
+Message-ID: <20250611183033.4205-2-kartilak@cisco.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250611183033.4205-1-kartilak@cisco.com>
+References: <20250611183033.4205-1-kartilak@cisco.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250513231813.13846-1-thomas.falcon@intel.com>
- <20250513231813.13846-2-thomas.falcon@intel.com> <a327dc2e5837a743a08403b5ad58dbe5e8c4f926.camel@intel.com>
- <aEiTrRNyeqFsYwR6@google.com> <94612a9d92f4d3820e8c293b0e184ab11971bf36.camel@intel.com>
-In-Reply-To: <94612a9d92f4d3820e8c293b0e184ab11971bf36.camel@intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 11 Jun 2025 11:30:38 -0700
-X-Gm-Features: AX0GCFtxRWButhz0X3DrX8soJFOSdnNuhj7TZWYTYYJcovCHYvEqaVc2ZT0qW24
-Message-ID: <CAP-5=fU9fz8-91eRH72r9GQYXOOoSQ9DZB9sJPZu5ZZOeu4QnQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2 v3] perf top: populate PMU capabilities data in perf_env
-To: "Falcon, Thomas" <thomas.falcon@intel.com>
-Cc: "namhyung@kernel.org" <namhyung@kernel.org>, 
-	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, 
-	"peterz@infradead.org" <peterz@infradead.org>, "acme@kernel.org" <acme@kernel.org>, 
-	"mingo@redhat.com" <mingo@redhat.com>, "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>, 
-	"Hunter, Adrian" <adrian.hunter@intel.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jolsa@kernel.org" <jolsa@kernel.org>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
-	"mark.rutland@arm.com" <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Authenticated-User: kartilak@cisco.com
+X-Outbound-SMTP-Client: 10.188.19.134, [10.188.19.134]
+X-Outbound-Node: alln-l-core-02.cisco.com
 
-On Wed, Jun 11, 2025 at 11:18=E2=80=AFAM Falcon, Thomas <thomas.falcon@inte=
-l.com> wrote:
->
-> On Tue, 2025-06-10 at 13:21 -0700, Namhyung Kim wrote:
-> > Hello,
-> >
-> > On Mon, Jun 09, 2025 at 04:21:39PM +0000, Falcon, Thomas wrote:
-> > > Ping?
-> >
-> > Sorry for the delay, I'll process the series as it's reviewed by Ian.
-> > Ian, it may clash with your perf_env cleanup though.
+When both the RHBA and RPA FDMI requests time out, fnic reuses a frame
+to send ABTS for each of them. On send completion, this causes an
+attempt to free the same frame twice that leads to a crash.
 
-Ack. Thanks Namhyung, I figured that would happen, Kan pointed out
-similar hence wanting the perf_env cleanup, I'll resolve the
-differences as and when.
+Fix crash by allocating separate frames for RHBA and RPA,
+and modify ABTS logic accordingly.
 
-Thanks,
-Ian
+Tested by checking MDS for FDMI information.
+Tested by using instrumented driver to:
+Drop PLOGI response
+Drop RHBA response
+Drop RPA response
+Drop RHBA and RPA response
+Drop PLOGI response + ABTS response
+Drop RHBA response + ABTS response
+Drop RPA response + ABTS response
+Drop RHBA and RPA response + ABTS response for both of them
 
-> > Also note that please don't mix patch versions.  The 1/2 is v1 and 2/2
-> > v3 - it makes b4 confused.
-> >
-> > Thanks,
-> > Namhyung
->
-> Thanks!
->
-> Tom
->
-> >
-> > >
-> > > On Tue, 2025-05-13 at 18:18 -0500, Thomas Falcon wrote:
-> > > > Calling perf top with branch filters enabled on Intel CPU's
-> > > > with branch counters logging (A.K.A LBR event logging [1]) support
-> > > > results in a segfault.
-> > > >
-> > > > Thread 27 "perf" received signal SIGSEGV, Segmentation fault.
-> > > > [Switching to Thread 0x7fffafff76c0 (LWP 949003)]
-> > > > perf_env__find_br_cntr_info (env=3D0xf66dc0 <perf_env>, nr=3D0x0, w=
-idth=3D0x7fffafff62c0) at util/env.c:653
-> > > > 653                       *width =3D env->cpu_pmu_caps ? env->br_cn=
-tr_width :
-> > > > (gdb) bt
-> > > >  #0  perf_env__find_br_cntr_info (env=3D0xf66dc0 <perf_env>, nr=3D0=
-x0, width=3D0x7fffafff62c0) at util/env.c:653
-> > > >  #1  0x00000000005b1599 in symbol__account_br_cntr (branch=3D0x7fff=
-cc3db580, evsel=3D0xfea2d0, offset=3D12, br_cntr=3D8) at util/annotate.c:34=
-5
-> > > >  #2  0x00000000005b17fb in symbol__account_cycles (addr=3D5658172, =
-start=3D5658160, sym=3D0x7fffcc0ee420, cycles=3D539, evsel=3D0xfea2d0, br_c=
-ntr=3D8) at util/annotate.c:389
-> > > >  #3  0x00000000005b1976 in addr_map_symbol__account_cycles (ams=3D0=
-x7fffcd7b01d0, start=3D0x7fffcd7b02b0, cycles=3D539, evsel=3D0xfea2d0, br_c=
-ntr=3D8) at util/annotate.c:422
-> > > >  #4  0x000000000068d57f in hist__account_cycles (bs=3D0x110d288, al=
-=3D0x7fffafff6540, sample=3D0x7fffafff6760, nonany_branch_mode=3Dfalse, tot=
-al_cycles=3D0x0, evsel=3D0xfea2d0) at util/hist.c:2850
-> > > >  #5  0x0000000000446216 in hist_iter__top_callback (iter=3D0x7fffaf=
-ff6590, al=3D0x7fffafff6540, single=3Dtrue, arg=3D0x7fffffff9e00) at builti=
-n-top.c:737
-> > > >  #6  0x0000000000689787 in hist_entry_iter__add (iter=3D0x7fffafff6=
-590, al=3D0x7fffafff6540, max_stack_depth=3D127, arg=3D0x7fffffff9e00) at u=
-til/hist.c:1359
-> > > >  #7  0x0000000000446710 in perf_event__process_sample (tool=3D0x7ff=
-fffff9e00, event=3D0x110d250, evsel=3D0xfea2d0, sample=3D0x7fffafff6760, ma=
-chine=3D0x108c968) at builtin-top.c:845
-> > > >  #8  0x0000000000447735 in deliver_event (qe=3D0x7fffffffa120, qeve=
-nt=3D0x10fc200) at builtin-top.c:1211
-> > > >  #9  0x000000000064ccae in do_flush (oe=3D0x7fffffffa120, show_prog=
-ress=3Dfalse) at util/ordered-events.c:245
-> > > >  #10 0x000000000064d005 in __ordered_events__flush (oe=3D0x7fffffff=
-a120, how=3DOE_FLUSH__TOP, timestamp=3D0) at util/ordered-events.c:324
-> > > >  #11 0x000000000064d0ef in ordered_events__flush (oe=3D0x7fffffffa1=
-20, how=3DOE_FLUSH__TOP) at util/ordered-events.c:342
-> > > >  #12 0x00000000004472a9 in process_thread (arg=3D0x7fffffff9e00) at=
- builtin-top.c:1120
-> > > >  #13 0x00007ffff6e7dba8 in start_thread (arg=3D<optimized out>) at =
-pthread_create.c:448
-> > > >  #14 0x00007ffff6f01b8c in __GI___clone3 () at ../sysdeps/unix/sysv=
-/linux/x86_64/clone3.S:78
-> > > >
-> > > > The cause is that perf_env__find_br_cntr_info tries to access a
-> > > > null pointer pmu_caps in the perf_env struct. A similar issue exist=
-s
-> > > > for homogeneous core systems which use the cpu_pmu_caps structure.
-> > > >
-> > > > Fix this by populating cpu_pmu_caps and pmu_caps structures with
-> > > > values from sysfs when calling perf top with branch stack sampling
-> > > > enabled.
-> > > >
-> > > > [1], LBR event logging introduced here:
-> > > > https://lore.kernel.org/all/20231025201626.3000228-5-kan.liang@linu=
-x.intel.com/
-> > > >
-> > > > Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
-> > > > ---
-> > > > v3: constify struct perf_pmu *pmu in __perf_env__read_core_pmu_caps=
-()
-> > > >     use perf_pmus__find_core_pmu() instead of perf_pmus__scan_core(=
-NULL)
-> > > >
-> > > > v2: update commit message with more meaningful stack trace from
-> > > >     gdb and indicate that affected systems are limited to CPU's
-> > > >     with LBR event logging support and that both hybrid and
-> > > >     non-hybrid core systems are affected.
-> > > > ---
-> > > >  tools/perf/builtin-top.c |   8 +++
-> > > >  tools/perf/util/env.c    | 114 +++++++++++++++++++++++++++++++++++=
-++++
-> > > >  tools/perf/util/env.h    |   1 +
-> > > >  3 files changed, 123 insertions(+)
-> > > >
-> > > > diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> > > > index f9f31391bddb..c9d679410591 100644
-> > > > --- a/tools/perf/builtin-top.c
-> > > > +++ b/tools/perf/builtin-top.c
-> > > > @@ -1729,6 +1729,14 @@ int cmd_top(int argc, const char **argv)
-> > > >   if (opts->branch_stack && callchain_param.enabled)
-> > > >           symbol_conf.show_branchflag_count =3D true;
-> > > >
-> > > > + if (opts->branch_stack) {
-> > > > +         status =3D perf_env__read_core_pmu_caps(&perf_env);
-> > > > +         if (status) {
-> > > > +                 pr_err("PMU capability data is not available\n");
-> > > > +                 goto out_delete_evlist;
-> > > > +         }
-> > > > + }
-> > > > +
-> > > >   sort__mode =3D SORT_MODE__TOP;
-> > > >   /* display thread wants entries to be collapsed in a different tr=
-ee */
-> > > >   perf_hpp_list.need_collapse =3D 1;
-> > > > diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-> > > > index 36411749e007..6735786a1d22 100644
-> > > > --- a/tools/perf/util/env.c
-> > > > +++ b/tools/perf/util/env.c
-> > > > @@ -416,6 +416,120 @@ static int perf_env__read_nr_cpus_avail(struc=
-t perf_env *env)
-> > > >   return env->nr_cpus_avail ? 0 : -ENOENT;
-> > > >  }
-> > > >
-> > > > +static int __perf_env__read_core_pmu_caps(const struct perf_pmu *p=
-mu,
-> > > > +                                   int *nr_caps, char ***caps,
-> > > > +                                   unsigned int *max_branches,
-> > > > +                                   unsigned int *br_cntr_nr,
-> > > > +                                   unsigned int *br_cntr_width)
-> > > > +{
-> > > > + struct perf_pmu_caps *pcaps =3D NULL;
-> > > > + char *ptr, **tmp;
-> > > > + int ret =3D 0;
-> > > > +
-> > > > + *nr_caps =3D 0;
-> > > > + *caps =3D NULL;
-> > > > +
-> > > > + if (!pmu->nr_caps)
-> > > > +         return 0;
-> > > > +
-> > > > + *caps =3D zalloc(sizeof(char *) * pmu->nr_caps);
-> > > > + if (!*caps)
-> > > > +         return -ENOMEM;
-> > > > +
-> > > > + tmp =3D *caps;
-> > > > + list_for_each_entry(pcaps, &pmu->caps, list) {
-> > > > +
-> > > > +         if (asprintf(&ptr, "%s=3D%s", pcaps->name, pcaps->value) =
-< 0) {
-> > > > +                 ret =3D -ENOMEM;
-> > > > +                 goto error;
-> > > > +         }
-> > > > +
-> > > > +         *tmp++ =3D ptr;
-> > > > +
-> > > > +         if (!strcmp(pcaps->name, "branches"))
-> > > > +                 *max_branches =3D atoi(pcaps->value);
-> > > > +
-> > > > +         if (!strcmp(pcaps->name, "branch_counter_nr"))
-> > > > +                 *br_cntr_nr =3D atoi(pcaps->value);
-> > > > +
-> > > > +         if (!strcmp(pcaps->name, "branch_counter_width"))
-> > > > +                 *br_cntr_width =3D atoi(pcaps->value);
-> > > > + }
-> > > > + *nr_caps =3D pmu->nr_caps;
-> > > > + return 0;
-> > > > +error:
-> > > > + while (tmp-- !=3D *caps)
-> > > > +         free(*tmp);
-> > > > + free(*caps);
-> > > > + *caps =3D NULL;
-> > > > + *nr_caps =3D 0;
-> > > > + return ret;
-> > > > +}
-> > > > +
-> > > > +int perf_env__read_core_pmu_caps(struct perf_env *env)
-> > > > +{
-> > > > + struct perf_pmu *pmu =3D NULL;
-> > > > + struct pmu_caps *pmu_caps;
-> > > > + int nr_pmu =3D 0, i =3D 0, j;
-> > > > + int ret;
-> > > > +
-> > > > + nr_pmu =3D perf_pmus__num_core_pmus();
-> > > > +
-> > > > + if (!nr_pmu)
-> > > > +         return -ENODEV;
-> > > > +
-> > > > + if (nr_pmu =3D=3D 1) {
-> > > > +         pmu =3D perf_pmus__find_core_pmu();
-> > > > +         if (!pmu)
-> > > > +                 return -ENODEV;
-> > > > +         ret =3D perf_pmu__caps_parse(pmu);
-> > > > +         if (ret < 0)
-> > > > +                 return ret;
-> > > > +         return __perf_env__read_core_pmu_caps(pmu, &env->nr_cpu_p=
-mu_caps,
-> > > > +                                               &env->cpu_pmu_caps,
-> > > > +                                               &env->max_branches,
-> > > > +                                               &env->br_cntr_nr,
-> > > > +                                               &env->br_cntr_width=
-);
-> > > > + }
-> > > > +
-> > > > + pmu_caps =3D zalloc(sizeof(*pmu_caps) * nr_pmu);
-> > > > + if (!pmu_caps)
-> > > > +         return -ENOMEM;
-> > > > +
-> > > > + while ((pmu =3D perf_pmus__scan_core(pmu)) !=3D NULL) {
-> > > > +         if (perf_pmu__caps_parse(pmu) <=3D 0)
-> > > > +                 continue;
-> > > > +         ret =3D __perf_env__read_core_pmu_caps(pmu, &pmu_caps[i].=
-nr_caps,
-> > > > +                                              &pmu_caps[i].caps,
-> > > > +                                              &pmu_caps[i].max_bra=
-nches,
-> > > > +                                              &pmu_caps[i].br_cntr=
-_nr,
-> > > > +                                              &pmu_caps[i].br_cntr=
-_width);
-> > > > +         if (ret)
-> > > > +                 goto error;
-> > > > +
-> > > > +         pmu_caps[i].pmu_name =3D strdup(pmu->name);
-> > > > +         if (!pmu_caps[i].pmu_name) {
-> > > > +                 ret =3D -ENOMEM;
-> > > > +                 goto error;
-> > > > +         }
-> > > > +         i++;
-> > > > + }
-> > > > +
-> > > > + env->nr_pmus_with_caps =3D nr_pmu;
-> > > > + env->pmu_caps =3D pmu_caps;
-> > > > +
-> > > > + return 0;
-> > > > +error:
-> > > > + for (i =3D 0; i < nr_pmu; i++) {
-> > > > +         for (j =3D 0; j < pmu_caps[i].nr_caps; j++)
-> > > > +                 free(pmu_caps[i].caps[j]);
-> > > > +         free(pmu_caps[i].caps);
-> > > > +         free(pmu_caps[i].pmu_name);
-> > > > + }
-> > > > + free(pmu_caps);
-> > > > + return ret;
-> > > > +}
-> > > > +
-> > > >  const char *perf_env__raw_arch(struct perf_env *env)
-> > > >  {
-> > > >   return env && !perf_env__read_arch(env) ? env->arch : "unknown";
-> > > > diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-> > > > index d90e343cf1fa..135a1f714905 100644
-> > > > --- a/tools/perf/util/env.h
-> > > > +++ b/tools/perf/util/env.h
-> > > > @@ -152,6 +152,7 @@ struct btf_node;
-> > > >
-> > > >  extern struct perf_env perf_env;
-> > > >
-> > > > +int perf_env__read_core_pmu_caps(struct perf_env *env);
-> > > >  void perf_env__exit(struct perf_env *env);
-> > > >
-> > > >  int perf_env__kernel_is_64_bit(struct perf_env *env);
-> > >
->
+Reviewed-by: Sesidhar Baddela <sebaddel@cisco.com>
+Reviewed-by: Arulprabhu Ponnusamy <arulponn@cisco.com>
+Reviewed-by: Gian Carlo Boffa <gcboffa@cisco.com>
+Tested-by: Arun Easi <aeasi@cisco.com>
+Co-developed-by: Arun Easi <aeasi@cisco.com>
+Signed-off-by: Arun Easi <aeasi@cisco.com>
+Tested-by: Karan Tilak Kumar <kartilak@cisco.com>
+Signed-off-by: Karan Tilak Kumar <kartilak@cisco.com>
+---
+ drivers/scsi/fnic/fdls_disc.c | 113 +++++++++++++++++++++++++---------
+ drivers/scsi/fnic/fnic_fdls.h |   1 +
+ 2 files changed, 86 insertions(+), 28 deletions(-)
+
+diff --git a/drivers/scsi/fnic/fdls_disc.c b/drivers/scsi/fnic/fdls_disc.c
+index c2b6f4eb338e..0ee1b74967b9 100644
+--- a/drivers/scsi/fnic/fdls_disc.c
++++ b/drivers/scsi/fnic/fdls_disc.c
+@@ -763,47 +763,69 @@ static void fdls_send_fabric_abts(struct fnic_iport_s *iport)
+ 	iport->fabric.timer_pending = 1;
+ }
+ 
+-static void fdls_send_fdmi_abts(struct fnic_iport_s *iport)
++static uint8_t *fdls_alloc_init_fdmi_abts_frame(struct fnic_iport_s *iport,
++		uint16_t oxid)
+ {
+-	uint8_t *frame;
++	struct fc_frame_header *pfdmi_abts;
+ 	uint8_t d_id[3];
++	uint8_t *frame;
+ 	struct fnic *fnic = iport->fnic;
+-	struct fc_frame_header *pfabric_abts;
+-	unsigned long fdmi_tov;
+-	uint16_t oxid;
+-	uint16_t frame_size = FNIC_ETH_FCOE_HDRS_OFFSET +
+-			sizeof(struct fc_frame_header);
+ 
+ 	frame = fdls_alloc_frame(iport);
+ 	if (frame == NULL) {
+ 		FNIC_FCS_DBG(KERN_ERR, fnic->host, fnic->fnic_num,
+ 				"Failed to allocate frame to send FDMI ABTS");
+-		return;
++		return NULL;
+ 	}
+ 
+-	pfabric_abts = (struct fc_frame_header *) (frame + FNIC_ETH_FCOE_HDRS_OFFSET);
++	pfdmi_abts = (struct fc_frame_header *) (frame + FNIC_ETH_FCOE_HDRS_OFFSET);
+ 	fdls_init_fabric_abts_frame(frame, iport);
+ 
+ 	hton24(d_id, FC_FID_MGMT_SERV);
+-	FNIC_STD_SET_D_ID(*pfabric_abts, d_id);
++	FNIC_STD_SET_D_ID(*pfdmi_abts, d_id);
++	FNIC_STD_SET_OX_ID(*pfdmi_abts, oxid);
++
++	return frame;
++}
++
++static void fdls_send_fdmi_abts(struct fnic_iport_s *iport)
++{
++	uint8_t *frame;
++	unsigned long fdmi_tov;
++	uint16_t frame_size = FNIC_ETH_FCOE_HDRS_OFFSET +
++			sizeof(struct fc_frame_header);
+ 
+ 	if (iport->fabric.fdmi_pending & FDLS_FDMI_PLOGI_PENDING) {
+-		oxid = iport->active_oxid_fdmi_plogi;
+-		FNIC_STD_SET_OX_ID(*pfabric_abts, oxid);
++		frame = fdls_alloc_init_fdmi_abts_frame(iport,
++						iport->active_oxid_fdmi_plogi);
++		if (frame == NULL)
++			return;
++
+ 		fnic_send_fcoe_frame(iport, frame, frame_size);
+ 	} else {
+ 		if (iport->fabric.fdmi_pending & FDLS_FDMI_REG_HBA_PENDING) {
+-			oxid = iport->active_oxid_fdmi_rhba;
+-			FNIC_STD_SET_OX_ID(*pfabric_abts, oxid);
++			frame = fdls_alloc_init_fdmi_abts_frame(iport,
++						iport->active_oxid_fdmi_rhba);
++			if (frame == NULL)
++				return;
++
+ 			fnic_send_fcoe_frame(iport, frame, frame_size);
+ 		}
+ 		if (iport->fabric.fdmi_pending & FDLS_FDMI_RPA_PENDING) {
+-			oxid = iport->active_oxid_fdmi_rpa;
+-			FNIC_STD_SET_OX_ID(*pfabric_abts, oxid);
++			frame = fdls_alloc_init_fdmi_abts_frame(iport,
++						iport->active_oxid_fdmi_rpa);
++			if (frame == NULL) {
++				if (iport->fabric.fdmi_pending & FDLS_FDMI_REG_HBA_PENDING)
++					goto arm_timer;
++				else
++					return;
++			}
++
+ 			fnic_send_fcoe_frame(iport, frame, frame_size);
+ 		}
+ 	}
+ 
++arm_timer:
+ 	fdmi_tov = jiffies + msecs_to_jiffies(2 * iport->e_d_tov);
+ 	mod_timer(&iport->fabric.fdmi_timer, round_jiffies(fdmi_tov));
+ 	iport->fabric.fdmi_pending |= FDLS_FDMI_ABORT_PENDING;
+@@ -2244,6 +2266,21 @@ void fdls_fabric_timer_callback(struct timer_list *t)
+ 	spin_unlock_irqrestore(&fnic->fnic_lock, flags);
+ }
+ 
++void fdls_fdmi_retry_plogi(struct fnic_iport_s *iport)
++{
++	struct fnic *fnic = iport->fnic;
++
++	iport->fabric.fdmi_pending = 0;
++	/* If max retries not exhausted, start over from fdmi plogi */
++	if (iport->fabric.fdmi_retry < FDLS_FDMI_MAX_RETRY) {
++		iport->fabric.fdmi_retry++;
++		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
++					 "Retry FDMI PLOGI. FDMI retry: %d",
++					 iport->fabric.fdmi_retry);
++		fdls_send_fdmi_plogi(iport);
++	}
++}
++
+ void fdls_fdmi_timer_callback(struct timer_list *t)
+ {
+ 	struct fnic_fdls_fabric_s *fabric = from_timer(fabric, t, fdmi_timer);
+@@ -2289,14 +2326,7 @@ void fdls_fdmi_timer_callback(struct timer_list *t)
+ 	FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
+ 		"fdmi timer callback : 0x%x\n", iport->fabric.fdmi_pending);
+ 
+-	iport->fabric.fdmi_pending = 0;
+-	/* If max retries not exhaused, start over from fdmi plogi */
+-	if (iport->fabric.fdmi_retry < FDLS_FDMI_MAX_RETRY) {
+-		iport->fabric.fdmi_retry++;
+-		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
+-					 "retry fdmi timer %d", iport->fabric.fdmi_retry);
+-		fdls_send_fdmi_plogi(iport);
+-	}
++	fdls_fdmi_retry_plogi(iport);
+ 	FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
+ 		"fdmi timer callback : 0x%x\n", iport->fabric.fdmi_pending);
+ 	spin_unlock_irqrestore(&fnic->fnic_lock, flags);
+@@ -3714,11 +3744,32 @@ static void fdls_process_fdmi_abts_rsp(struct fnic_iport_s *iport,
+ 	switch (FNIC_FRAME_TYPE(oxid)) {
+ 	case FNIC_FRAME_TYPE_FDMI_PLOGI:
+ 		fdls_free_oxid(iport, oxid, &iport->active_oxid_fdmi_plogi);
++
++		iport->fabric.fdmi_pending &= ~FDLS_FDMI_PLOGI_PENDING;
++		iport->fabric.fdmi_pending &= ~FDLS_FDMI_ABORT_PENDING;
+ 		break;
+ 	case FNIC_FRAME_TYPE_FDMI_RHBA:
++		iport->fabric.fdmi_pending &= ~FDLS_FDMI_REG_HBA_PENDING;
++
++		/* If RPA is still pending, don't turn off ABORT PENDING.
++		 * We count on the timer to detect the ABTS timeout and take
++		 * corrective action.
++		 */
++		if (!(iport->fabric.fdmi_pending & FDLS_FDMI_RPA_PENDING))
++			iport->fabric.fdmi_pending &= ~FDLS_FDMI_ABORT_PENDING;
++
+ 		fdls_free_oxid(iport, oxid, &iport->active_oxid_fdmi_rhba);
+ 		break;
+ 	case FNIC_FRAME_TYPE_FDMI_RPA:
++		iport->fabric.fdmi_pending &= ~FDLS_FDMI_RPA_PENDING;
++
++		/* If RHBA is still pending, don't turn off ABORT PENDING.
++		 * We count on the timer to detect the ABTS timeout and take
++		 * corrective action.
++		 */
++		if (!(iport->fabric.fdmi_pending & FDLS_FDMI_REG_HBA_PENDING))
++			iport->fabric.fdmi_pending &= ~FDLS_FDMI_ABORT_PENDING;
++
+ 		fdls_free_oxid(iport, oxid, &iport->active_oxid_fdmi_rpa);
+ 		break;
+ 	default:
+@@ -3728,10 +3779,16 @@ static void fdls_process_fdmi_abts_rsp(struct fnic_iport_s *iport,
+ 		break;
+ 	}
+ 
+-	timer_delete_sync(&iport->fabric.fdmi_timer);
+-	iport->fabric.fdmi_pending &= ~FDLS_FDMI_ABORT_PENDING;
+-
+-	fdls_send_fdmi_plogi(iport);
++	/*
++	 * Only if ABORT PENDING is off, delete the timer, and if no other
++	 * operations are pending, retry FDMI.
++	 * Otherwise, let the timer pop and take the appropriate action.
++	 */
++	if (!(iport->fabric.fdmi_pending & FDLS_FDMI_ABORT_PENDING)) {
++		timer_delete_sync(&iport->fabric.fdmi_timer);
++		if (!iport->fabric.fdmi_pending)
++			fdls_fdmi_retry_plogi(iport);
++	}
+ }
+ 
+ static void
+diff --git a/drivers/scsi/fnic/fnic_fdls.h b/drivers/scsi/fnic/fnic_fdls.h
+index 8e610b65ad57..531d0b37e450 100644
+--- a/drivers/scsi/fnic/fnic_fdls.h
++++ b/drivers/scsi/fnic/fnic_fdls.h
+@@ -394,6 +394,7 @@ void fdls_send_tport_abts(struct fnic_iport_s *iport,
+ bool fdls_delete_tport(struct fnic_iport_s *iport,
+ 		       struct fnic_tport_s *tport);
+ void fdls_fdmi_timer_callback(struct timer_list *t);
++void fdls_fdmi_retry_plogi(struct fnic_iport_s *iport);
+ 
+ /* fnic_fcs.c */
+ void fnic_fdls_init(struct fnic *fnic, int usefip);
+-- 
+2.47.1
+
