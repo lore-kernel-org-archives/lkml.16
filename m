@@ -1,97 +1,121 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF461714AC;
-	Wed, 11 Jun 2025 16:24:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E346819D8A7;
+	Wed, 11 Jun 2025 16:25:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749659072; cv=none; b=Ml1Y3XRP9BZ8SCF0VjLysGbOaCDi5A3GCU1+XFEsbfEJe/Gq0jtHQWKM4QhjNTFhkexvT1gVnU6BOiFDF2C5gGXqByY2zCGfTaIQdRWtqHX21ZrLyBcPDZQEUAk33u/t31pzm+Kg/rLgpXTvguV6pVp3NwXm41jpN9hz5awlfZE=
+	t=1749659108; cv=none; b=IvuEHCZOCnZsF4ykEW7EDT6H5v3bs0NBb8h5HFFXhAz6NQi/r6ewBpETHD6VPrmnOViRlMloJsYwNp9uc+4E647Q4ecgw+1XDAmJsrhr6KamHnvRdZ9RVh0ivvMXs/rG1E9n6Tqiw4olx72cR837CHo0jqo1ULtWOVcmBNJHJ0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749659072; c=relaxed/simple;
-	bh=U4V1yvfFMm5+yP4PtZjqE6qJ4IC5n46Xy8msyeZxs7Y=;
+	s=arc-20240116; t=1749659108; c=relaxed/simple;
+	bh=G+T8wW9Nt6f9EEFn99e/NM3xHauN4ohp03gUHIvPj4c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=plTrJtqPvnCvMQPOCKT7+kk2T7cx5pMDxLw1tEclozyyFher/Bx3ceKu4EyrDivZlW2fs7HnqR0DaadpNhkrTNVJRZHe1c6OEz74WqOcVnCWwjtEWjels/AumbWiEwOG+E2sH9wgDlsvSQ4rg+JMN4ufJrBc0uZk+A6sCIpkJWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FKyMGJ4+; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=UAOW/QCSAvz8mW+AlYxsxkrcDjZlXO216U/2UP+IHc0s213wW9j61pcUuKnhrLliWbXYKy9kVJ6C6PlkZvYoJVJs/IPCHv3njE1wPfkgEbWOLzdKADEgC6Re9oZ+naEexX9GLylzfRvDsy6mtrKJfrl+615qk6fRK4HJJWtlcdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m/WvkbOb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FKyMGJ4+"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-32b2e49b62fso19211fa.1;
-        Wed, 11 Jun 2025 09:24:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749659068; x=1750263868; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YUp5lrwPBRgOR2XCjQjyLScV5EWWrimUfSstox12GXQ=;
-        b=FKyMGJ4+e4M8JS4gp+QRgBRkeP36aQlHFeDl9H8vT2DoKwIymDSP9O8hd9Hj8xP6nd
-         oJ7RleOCszA/xMWwJ3vJPqJpeVCXeG4a3qIQDh3zF/litzpO2g/hDmcRKvuGXGMiw4AM
-         UT8N1y1nUbw8uStWrWbrOrC93/W2B+A/OvgNFqJI/nVavhqqMDCVKlS/NN2IC5VWkoFc
-         0zZEITabOli4T2c9ceRzwun6rcYfNJwK0GapL+Skj54Fh9sGbkppE7lA+H64IGf+ZJg9
-         E3NuPDETAPsv5jn71uNkGtiPR1qouZ1+aCEa515cLKErmZ0oVZiXST9JhfFCQwm4D6Eh
-         nF3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749659068; x=1750263868;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YUp5lrwPBRgOR2XCjQjyLScV5EWWrimUfSstox12GXQ=;
-        b=Xbu2k/3gsjQNCgdX4dzYM6PcBYStiBp6i4NDfTrvX+xSNxcM0GwgZwKgedejHlchAd
-         UMeFKmqPYgsZ3Af77JgQlwfXhF9znfLWtnTKEegSD8k5i5wd0jISdsw8xcl52C4EHdBy
-         0AT5a/uIsl9F5VEbcS5G+++X9mUitX0wEJ6u79Hu00n/TYnrWVekYF0LmC46iRtB5fkG
-         wEn4nXJqavVVmsYGiy0N6lGduYWhaxkFU5bSWqDPClX2/uqLFR+Lz9542Pxz/dQCA9PM
-         kZ6jreb4biKa6KAcxj24MQHbsJ+574AAuKhMMwV7Oc6DUJoKraZckUW4Q5aXYiMybs0E
-         bgAA==
-X-Forwarded-Encrypted: i=1; AJvYcCU5Kyt5JdXK48H4Kbd6vyUhZzafutZqCvYghXfNauRGiXr7z8+Ft4uX/ewasqIdJKCKl0pTO63LUB5N@vger.kernel.org, AJvYcCVhEfUKfAVrQFqytxg9FCCF7g5qJDUnxm0DU3U2hM/gsndesjeJHhmfWvalSuQgh5RcSeLaeHabF4+gnik=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwHue6JjbGc+yDoZpMN1Us8l6etjughIfiDIn8QdQRyoO6rqf5
-	m8aqTCzqwqbIAVSrlWKlRNUhKA7oRkEa2IxMs5K0rO5iD0EWd5gvoUvpXEnasfuP
-X-Gm-Gg: ASbGnctFQkimhANkR7hiJS/17FNm3nlO9eN6g9CjArUo9WMSxZKEwQxk4PUrSrNRPPw
-	3iG/00RP00UqFDYaBMMN/3IPJZEJSW9Mhv9Qk19GDPrGlSteI+CXHA4UFIpjTpHbfyzfZ+1sJh/
-	0dZMLSjVFgMstpN9tQh/zpsCP7aT2zpe5dFJWPeF24VRTvuPInH4oLyBci2vh/6VJMcSF8Ws6Sw
-	K70h3L5Q2wvgA3KMYqtQJzI8oDrdUOrAvneGQenmo4ynutRcjKp9IhIvSZu9GSrfd2zWB52iIfL
-	yiChLqg2Y8bsB4hGvHPmlJ8iMMk3awYxC0gOU1b2TPCN/DAzxNoFUcQp9reofWM/fBpENCfstAd
-	MmJybcYA1mrwrBQ==
-X-Google-Smtp-Source: AGHT+IGAUdeAXXaZBEpcyLB8BnKKUw/8CVgXWU/PQrAmrdCfzwp5aeKTUIdwug9osrsacNvwyZXWzQ==
-X-Received: by 2002:a05:651c:1a0c:b0:32a:689a:e9c6 with SMTP id 38308e7fff4ca-32b21dc6611mr13864511fa.26.1749659068196;
-        Wed, 11 Jun 2025 09:24:28 -0700 (PDT)
-Received: from SC-WS-02452.corp.sbercloud.ru ([46.159.66.227])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32ae1b34742sm18860331fa.32.2025.06.11.09.24.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 09:24:27 -0700 (PDT)
-Date: Wed, 11 Jun 2025 19:24:26 +0300
-From: Sergey Bashirov <sergeybashirov@gmail.com>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Christoph Hellwig <hch@infradead.org>, 
-	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
-	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Konstantin Evtushenko <koevtushenko@yandex.com>
-Subject: Re: [PATCH] nfsd: Use correct error code when decoding extents
-Message-ID: <2eq26bzisytieyfvad46uz5lr55msw6fdzs57lp5lcjmguuod2@nr2aryd6qaau>
-References: <20250611154445.12214-1-sergeybashirov@gmail.com>
- <5c8c207c-0844-492f-99e0-48b874b5404a@oracle.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m/WvkbOb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E01CAC4CEE3;
+	Wed, 11 Jun 2025 16:25:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749659107;
+	bh=G+T8wW9Nt6f9EEFn99e/NM3xHauN4ohp03gUHIvPj4c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=m/WvkbObsbjNbgbEriiSoaQKl/8tmYm0VWOix2l+jaU6aISJJ/jeU4XPGeiPg5ecr
+	 o9NIzLQh4Blqe5BtVC/JF9ULmsTdW6ESVq2KjPgTvv4ex0vGX849E/ZuVfz7mqOVOs
+	 f2PKfEQ/gdnBcd8WlJlgh19glj4Tks3/+5R6ZATk+p6io3uzrtmefSZSPx1jOi7O8h
+	 QLXNRFeDP9FqtS9il+mFfflReX29kL/C9p8NG3XsMRMezyP+7Uc3OtWG9APQXlKfa3
+	 cClW3aYu+/KJf9YA4zo/vjFVQtPLJ1rG3012zm/Y4cA8tB/y9WaVadgP+4yZVoTeaG
+	 hlsk3GsEB01FA==
+Date: Wed, 11 Jun 2025 18:25:04 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Joel Fernandes <joelagnelf@nvidia.com>
+Cc: linux-kernel@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+	Xiongfeng Wang <wangxiongfeng2@huawei.com>, rcu@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH 1/2] context_tracking: Provide helper to determine if
+ we're in IRQ
+Message-ID: <aEmt4Aa3-gULNtic@localhost.localdomain>
+References: <20250609180125.2988129-1-joelagnelf@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <5c8c207c-0844-492f-99e0-48b874b5404a@oracle.com>
-User-Agent: NeoMutt/20231103
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250609180125.2988129-1-joelagnelf@nvidia.com>
 
-I also have some doubts about this code:
-if (xdr_stream_decode_u64(&xdr, &bex.len))
-         return -NFS4ERR_BADXDR;
-if (bex.len & (block_size - 1))
-         return -NFS4ERR_BADXDR;
+Le Mon, Jun 09, 2025 at 02:01:23PM -0400, Joel Fernandes a écrit :
+> context_tracking keeps track of whether we're handling IRQ well after
+> the preempt masks give take it off their books. We need this
+> functionality in a follow-up patch to fix a bug. Provide a helper API
+> for the same.
+> 
+> Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
+> ---
+>  include/linux/context_tracking_irq.h |  2 ++
+>  kernel/context_tracking.c            | 12 ++++++++++++
+>  2 files changed, 14 insertions(+)
+> 
+> diff --git a/include/linux/context_tracking_irq.h b/include/linux/context_tracking_irq.h
+> index 197916ee91a4..35a5ad971514 100644
+> --- a/include/linux/context_tracking_irq.h
+> +++ b/include/linux/context_tracking_irq.h
+> @@ -9,6 +9,7 @@ void ct_irq_enter_irqson(void);
+>  void ct_irq_exit_irqson(void);
+>  void ct_nmi_enter(void);
+>  void ct_nmi_exit(void);
+> +bool ct_in_irq(void);
+>  #else
+>  static __always_inline void ct_irq_enter(void) { }
+>  static __always_inline void ct_irq_exit(void) { }
+> @@ -16,6 +17,7 @@ static inline void ct_irq_enter_irqson(void) { }
+>  static inline void ct_irq_exit_irqson(void) { }
+>  static __always_inline void ct_nmi_enter(void) { }
+>  static __always_inline void ct_nmi_exit(void) { }
+> +static inline bool ct_in_irq(void) { return false; }
+>  #endif
+>  
+>  #endif
+> diff --git a/kernel/context_tracking.c b/kernel/context_tracking.c
+> index fb5be6e9b423..d0759ef9a6bd 100644
+> --- a/kernel/context_tracking.c
+> +++ b/kernel/context_tracking.c
+> @@ -392,6 +392,18 @@ noinstr void ct_irq_exit(void)
+>  	ct_nmi_exit();
+>  }
+>  
+> +/**
+> + * ct_in_irq - check if CPU is in a context-tracked IRQ context.
+> + *
+> + * Returns true if ct_irq_enter() has been called and ct_irq_exit()
+> + * has not yet been called. This indicates the CPU is currently
+> + * processing an interrupt.
+> + */
+> +bool ct_in_irq(void)
+> +{
+> +	return ct_nmi_nesting() != 0;
 
-The first error code is clear to me, it is all about decoding. But should
-not we return -NFS4ERR_EINVAL in the second check? On one hand, we
-encountered an invalid value after successful decoding, but on the other
-hand, we stopped decoding the extent array, so we can say that this is
-also a decoding error.
+If rcu_is_watching() and not in an interrupt, ct_nmi_nesting()
+is actually CT_NESTING_IRQ_NONIDLE. If rcu_is_watching() and
+in an interrupt, ct_nmi_nesting() can be CT_NESTING_IRQ_NONIDLE + whatever.
 
---
-Sergey Bashirov
+So this doesn't work. I wish we could remove that CT_NESTING_IRQ_NONIDLE
+that is there for hysterical raisins but that doesn't fit in an urgent pile.
+
+So probably:
+
+bool ct_in_irq(void)
+{
+	long nesting = ct_nmi_nesting();
+
+	return (nesting && nesting != CT_NESTING_IRQ_NONIDLE);
+}
+
+Thanks.
+
+-- 
+Frederic Weisbecker
+SUSE Labs
