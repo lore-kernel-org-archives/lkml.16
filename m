@@ -1,150 +1,91 @@
-Received: from mxout5.mail.janestreet.com (mxout5.mail.janestreet.com [64.215.233.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 962372750ED
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 19:05:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.215.233.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4A920127D;
+	Wed, 11 Jun 2025 19:07:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749668723; cv=none; b=DrQC01hDukeR8323d6q6GSwnRqnidgwrCmHAYVNTnq6Vc39y4FGY0ZBld2KXwfRiRj9EY1oFi39QZ/hXpcKy0ufBCgaVwnQC2O+yks5C/aM6/r4DfzwEo/yfjNfpP8apEVRdvCVh+sHDi1Ua0v+4KIpTIVgbot67ieF94KzxGMI=
+	t=1749668828; cv=none; b=SsMgnMhSkDb9XKCX3nv1rN94KNK3xVvFz7vnDJ4rZfuSGEWPwnyTMogwadN/T3Yip3Wgn1p8LdWQ7/2YaDG6J6hoyT1AkEWCWXb4aZaRLCp0AWa+B+I8qESrrksouwNUAIWNGdHdxxNLyFe9SyPBO0LG2t0noj0aahbNSXKP8tY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749668723; c=relaxed/simple;
-	bh=1eacTEzFuKU/QCLoMNFUx9adZT3ri5aEptCBJeFczmE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rIWYNVepCafcER0z7ZhGrZhtNtk/7VwL8MLugxcJ+vrg9yH8kn0qHekFEqluoKviifbuKNDrfK2PNjB1bn7Ntz0ywFCEOCDkK7EtmPnOky1v7DR7hSNqfuD7ziunNlQaVmpN5k4OxYyO0Sa/sTZ8hbZAJ20l6r3H0o752nZqMo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=janestreet.com; spf=pass smtp.mailfrom=janestreet.com; dkim=pass (2048-bit key) header.d=janestreet.com header.i=@janestreet.com header.b=ssU3KQNe; arc=none smtp.client-ip=64.215.233.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=janestreet.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=janestreet.com
+	s=arc-20240116; t=1749668828; c=relaxed/simple;
+	bh=pdnpO1YxkWzXV5U9M40ePTBWbqEr3apcyjJa/6o3ZT4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cOyEzD0TR+6lD818uHgdIsU3iJcxX8/QQCAERJ5WUeg0KjewSg3n5IyUu1RB+dcPau3wRgzRJKjhuN0du90/TS/dOXN4Qz1wFqwPKdg+DRgyjYlPjrcGSczsHP2ni86WLwbAtX1HULJVDA5YN3l2iRORoRkOcUGFu/iscFGU+aw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CNsI87mp; arc=none smtp.client-ip=209.85.219.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=janestreet.com header.i=@janestreet.com header.b="ssU3KQNe"
-Date: Wed, 11 Jun 2025 15:05:20 -0400
-From: Nikhil Jha <njha@janestreet.com>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
- 	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
- 	Olga Kornievskaia <okorniev@redhat.com>,
- 	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
- 	"David S. Miller" <davem@davemloft.net>,
- 	Eric Dumazet <edumazet@google.com>,
- 	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- 	Simon Horman <horms@kernel.org>,
- 	Steven Rostedt <rostedt@goodmis.org>,
- 	Masami Hiramatsu <mhiramat@kernel.org>,
- 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- 	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- 	netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] fix gss seqno handling to be more rfc-compliant
-Message-ID: <20250611A1905207b67479b.njha@janestreet.com>
-References: <20250319-rfc2203-seqnum-cache-v2-0-2c98b859f2dd@janestreet.com>
-  <d78576c1-d743-4ec2-bf8c-d87603460ac1@oracle.com>
-  <20250611A18503192e946d6.njha@janestreet.com>
-  <81cd5e1e-218d-4e24-b127-c8d1757e4d99@oracle.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CNsI87mp"
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e818a572828so114987276.1;
+        Wed, 11 Jun 2025 12:07:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749668826; x=1750273626; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=1MF1dHTik4WYDT1dqFKnZOlAFt0Xaso+/EljV+ZdGk8=;
+        b=CNsI87mpzIyNTSX0NLELYbHVn/bqYdAISvCJwe9KCqavnHKrCsBpTP5mbecD4do1vZ
+         4NpbVyjlUlnLzTJKX2Jyy7nOTcdzz2VloZJebwnRaDTcdx6gxMvu7SjDBncA+PATSMrH
+         qD9dQotEDe0mS1iJRsnXe6VbB07lc+hfuqavi18PBfqb68y5UvekjE54TKvTnCWY14/Y
+         854TkIRN7rLGNNFxaTwG7IuPfCsOdysvMXxkGVems60H6/QIyHidXq0UT9N14DEuDKt+
+         mhSf2H0ixwcsggKVlNrIPAZFqfrNZ0g6+ZwRcJV1VE9vazMf7IBu+s0OO5jYV957YWNm
+         SAaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749668826; x=1750273626;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1MF1dHTik4WYDT1dqFKnZOlAFt0Xaso+/EljV+ZdGk8=;
+        b=BX8+7KOjEu0xfed20EqTeH6wBghZvh3sg+UympX+Pho0sQyNY2Q10CMfSpvZ7HPLou
+         pDXa0F7ipfN8egd7VSGwmYeusxChy2YD5P2tkhK+u2jGePJad4/9ac5rLlCfPq3yMppu
+         DD0vPGEtV2oJULj0GeqxUC0nGqUdYbCKfI3H+CAF/0t3TIdzu1F1jdqpV9LkZxIm4TNf
+         FWqmo02YJ6BqKGy7LwKd4uXZ0O318i63hMVy+0X4Z+gmS8RETCVGw9T0rKkpiXgNaD4P
+         3h5WYYbbVSwMmd3eZuq9fKEZSLsj3PkqEZpAThmqqPqDp9cmQp1Qk+1FJ3NQXO9+yTmp
+         jTdw==
+X-Forwarded-Encrypted: i=1; AJvYcCWYDc+5NMX3p+8GmOo4VxG/1cTMsieX/BsvSEQr7kZu9v2m6HFOfFraHLkODCmEDc+q2Ym8/RdBEVotaSyP@vger.kernel.org, AJvYcCXqagW9taD6+okOXUIiE1YXiSYHqfvyxHoMwr+7daxIDGS7p1HvsfjIPI+r+bRb92qtTaEWsZqW4I4M@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/CJdmutO+PUEMtdDfLq4iJcEhnmS/E0J+NiCMi9JNaV5oLbNp
+	DOLzABEMJTDS7vtO5pGk/r9/P4+q3JPOb7Zwe1ap7rRaG+6ITdP8zGEp9suKHrDFG/MYqCPTsVN
+	W8YDC6YdHH2svxS5JpzbSS3GygJ2NHvmA+A==
+X-Gm-Gg: ASbGncu6KTiMSoIuCpWhd9AnSbTKin6mqO0rfxyVCeqFqaxGuIvZpW0ZzZL/Qz9AV+7
+	O26Njj0hP4m3fjE8M8AEniPmcoz/flz5ns6CDaz2woAlBGPiz3oLQihPa6bhvwTSVSryNSdrT8s
+	FbonE4YLJmCp/Xp/wqtAt+t8aET5RE3VKq7D39nMNoNWWts9qxrKRzqfA=
+X-Google-Smtp-Source: AGHT+IFsZ3UIOk9VseJbWKxt8KvtKbfGOyN+aFYnhFj7EA+lzwyye2nE75imMRB1Spn6prKv90Mi/kjbFVIWTts4th0=
+X-Received: by 2002:a05:6902:250b:b0:e81:99cd:9be with SMTP id
+ 3f1490d57ef6-e820b64d1a3mr1175425276.14.1749668826227; Wed, 11 Jun 2025
+ 12:07:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <81cd5e1e-218d-4e24-b127-c8d1757e4d99@oracle.com>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=janestreet.com;
-  s=waixah; t=1749668720;
-  bh=TwBEfFFd7f2nQPQET57nFnHM2aPp4dA96MYxki19d+Q=;
-  h=Date:From:To:Cc:Subject:References:In-Reply-To;
-  b=ssU3KQNeguS8m7tmod/gMHjHRPy9SkIXKPiPaM/C9s0lvkpU5bahDlpA0HQsVUVBF
-  d++foJeXUhaOigaAc9L/JdW3ccztM2DEIEIKGlE8eYO9axp76tWnSWRbITM2E8/kKk
-  tUZ5LX2EPip0FrziAbOkl9/M2qBrZzRGyvpSWcOiDYWrQkC+WB84H/a3PGnpHfZ+hk
-  8EG0xhaZmTSvBQWGbfuhwcmlWDLZ12+IAlkRUCfDSdQJprkhx+OwVPFrLvy+PK2THo
-  wEs0nlMICyNmvUVTI17KqB2iEQRRHrDemIoCysY7bf3pTmlYxJD419uhbP11Q/9n16
-  6ivBLrZEOx3uw==
+References: <20250611-sgx-dt-v1-0-7a11f3885c60@gmail.com> <20250611-sgx-dt-v1-1-7a11f3885c60@gmail.com>
+ <edf14a64-decc-4392-a038-08b5dd942f8d@kernel.org>
+In-Reply-To: <edf14a64-decc-4392-a038-08b5dd942f8d@kernel.org>
+From: Sasha Finkelstein <fnkl.kernel@gmail.com>
+Date: Wed, 11 Jun 2025 21:06:55 +0200
+X-Gm-Features: AX0GCFvMeV5Ol-Irt1s6ubsKN_ZZGACBjoQJdDOoAp2hIzH0XLvrHdYRqZQPnT0
+Message-ID: <CAMT+MTRYybR=tFJrcUn43UK3iW-fqEH3rmCLUezq2eTrEK=nQw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: Add Apple SoC GPU
+To: Sven Peter <sven@kernel.org>
+Cc: asahi@lists.linux.dev, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Simona Vetter <simona@ffwll.ch>, 
+	David Airlie <airlied@gmail.com>, Neal Gompa <neal@gompa.dev>, Maxime Ripard <mripard@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, Janne Grunau <j@jannau.net>, 
+	linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jun 11, 2025 at 02:54:09PM -0400, Chuck Lever wrote:
-> On 6/11/25 2:50 PM, Nikhil Jha wrote:
-> > On Thu, Mar 20, 2025 at 09:16:15AM -0400, Chuck Lever wrote:
-> >> On 3/19/25 1:02 PM, Nikhil Jha via B4 Relay wrote:
-> >>> When the client retransmits an operation (for example, because the
-> >>> server is slow to respond), a new GSS sequence number is associated with
-> >>> the XID. In the current kernel code the original sequence number is
-> >>> discarded. Subsequently, if a response to the original request is
-> >>> received there will be a GSS sequence number mismatch. A mismatch will
-> >>> trigger another retransmit, possibly repeating the cycle, and after some
-> >>> number of failed retries EACCES is returned.
-> >>>
-> >>> RFC2203, section 5.3.3.1 suggests a possible solution... “cache the
-> >>> RPCSEC_GSS sequence number of each request it sends” and "compute the
-> >>> checksum of each sequence number in the cache to try to match the
-> >>> checksum in the reply's verifier." This is what FreeBSD’s implementation
-> >>> does (rpc_gss_validate in sys/rpc/rpcsec_gss/rpcsec_gss.c).
-> >>>
-> >>> However, even with this cache, retransmits directly caused by a seqno
-> >>> mismatch can still cause a bad message interleaving that results in this
-> >>> bug. The RFC already suggests ignoring incorrect seqnos on the server
-> >>> side, and this seems symmetric, so this patchset also applies that
-> >>> behavior to the client.
-> >>>
-> >>> These two patches are *not* dependent on each other. I tested them by
-> >>> delaying packets with a Python script hooked up to NFQUEUE. If it would
-> >>> be helpful I can send this script along as well.
-> >>>
-> >>> Signed-off-by: Nikhil Jha <njha@janestreet.com>
-> >>> ---
-> >>> Changes since v1:
-> >>>  * Maintain the invariant that the first seqno is always first in
-> >>>    rq_seqnos, so that it doesn't need to be stored twice.
-> >>>  * Minor formatting, and resending with proper mailing-list headers so the
-> >>>    patches are easier to work with.
-> >>>
-> >>> ---
-> >>> Nikhil Jha (2):
-> >>>       sunrpc: implement rfc2203 rpcsec_gss seqnum cache
-> >>>       sunrpc: don't immediately retransmit on seqno miss
-> >>>
-> >>>  include/linux/sunrpc/xprt.h    | 17 +++++++++++-
-> >>>  include/trace/events/rpcgss.h  |  4 +--
-> >>>  include/trace/events/sunrpc.h  |  2 +-
-> >>>  net/sunrpc/auth_gss/auth_gss.c | 59 ++++++++++++++++++++++++++----------------
-> >>>  net/sunrpc/clnt.c              |  9 +++++--
-> >>>  net/sunrpc/xprt.c              |  3 ++-
-> >>>  6 files changed, 64 insertions(+), 30 deletions(-)
-> >>> ---
-> >>> base-commit: 7eb172143d5508b4da468ed59ee857c6e5e01da6
-> >>> change-id: 20250314-rfc2203-seqnum-cache-52389d14f567
-> >>>
-> >>> Best regards,
-> >>
-> >> This seems like a sensible thing to do to me.
-> >>
-> >> Acked-by: Chuck Lever <chuck.lever@oracle.com>
-> >>
-> >> -- 
-> >> Chuck Lever
-> > 
-> > Hi,
-> > 
-> > We've been running this patch for a while now and noticed a (very silly
-> > in hindsight) bug.
-> > 
-> > maj_stat = gss_validate_seqno_mic(ctx, task->tk_rqstp->rq_seqnos[i], seq, p, len);
-> > 
-> > needs to be
-> > 
-> > maj_stat = gss_validate_seqno_mic(ctx, task->tk_rqstp->rq_seqnos[i++], seq, p, len);
-> > 
-> > Or the kernel gets stuck in a loop when you have more than two retries.
-> > I can resend this patch but I noticed it's already made its way into
-> > quite a few trees. Should this be a separate patch instead?
-> 
-> The course of action depends on what trees you found the patch in.
-> 
-> 
-> -- 
-> Chuck Lever
+On Wed, 11 Jun 2025 at 20:44, Sven Peter <sven@kernel.org> wrote:
+> > +      - description: Driver-opaque calibration blob
+> > +      - description: Calibration blob
+>
+> Like Alyssa mentioned, this description also raises more questions than
+> it answers for me. Do we know what these two blobs contain or why they
+> are two separate blobs?
 
-It shows up here, so I think it's in v6.16-rc1 already.
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=v6.16-rc1&id=08d6ee6d8a10aef958c2af16bb121070290ed589
-
-- Nikhil
-
-
+At some point in the gpu initialization process we give the firmware a bag
+of pointers to various stuff it needs. HwCalA and HwCalB are separate
+pointers, and they use separate gpu allocations. We do not fully know
+what is in there, but we know what some of the fields do and how to
+create the blobs based on data from apple device tree.
