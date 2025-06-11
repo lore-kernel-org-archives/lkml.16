@@ -1,130 +1,339 @@
-Received: from rcdn-iport-6.cisco.com (rcdn-iport-6.cisco.com [173.37.86.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FD5E380;
-	Wed, 11 Jun 2025 18:33:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.37.86.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B725380
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 18:34:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749666818; cv=none; b=AE7hZHSk4CY3bbJAPeCUAJ3BNVmKGx1wP8BNaxU9yQb1+goQDiFOdyAkAG3pih2clP1FT/fjKpN11tTo81/RINQXwO4HjVq8SmylKBbK+kZ/NruqQLordqrCTapnHCrrJcZhlTtLrBvi38J5R4f6NC+XMHNKhpX1rD+/ZrPA5a0=
+	t=1749666863; cv=none; b=spKUQO4DBi1vVCHg4AI4EH7xCx73+glAoC4RY4IIf/oEHNNgCqLLyU+8i0lMHrbVMYn6s1m/bnnss8MvSjZ780nN271nQyQBsEYGLK8lnjyT3zuZnRGc50vgG4cOZJYoA8OuslEoF2OHvLNYkYPxjYe7JAtWV8W9TOhMyXHlgyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749666818; c=relaxed/simple;
-	bh=W9TMtmNAQox4GJzmyGBKfQRvar8R3C9E12Rn9hMqO80=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=s9ysmsWnEXBgnySLOpid7RJksaosotZBF5ZTCRdtVt9jcW8borQTMvB4R0mtyM4evxxKC/9aTHcrBiEZxqMmDxmJ1HpcyQorrFR0XVf7NPKJ01p7fWnDkvvZom+ZwYPE3SC849JtPULuAOCc1Yna+UAPQ3md+fqvV+BNmh1Kgkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com; spf=pass smtp.mailfrom=cisco.com; dkim=pass (2048-bit key) header.d=cisco.com header.i=@cisco.com header.b=S21kekLs; arc=none smtp.client-ip=173.37.86.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cisco.com
+	s=arc-20240116; t=1749666863; c=relaxed/simple;
+	bh=GbW8vIi8sHcJtz0rWCiAkjJ9O24kUulgDNBzwNR5a/8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DEUh4w7c2bMDVAxlXaJm8DpMA32INhkneFzEo6dX8sM+6IfMVil+ix4Sf4k9X4iOpDH+FdgVEZ2EnZG1kuwST+4GA9ua2bts1Q4uM+/ASp5mR8kDvOkO4xjZZ8cO3VN4dH41n6uIpf15aE93/hrHGu4Nn+YOXzECEmWX3Wu04VI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Pp1YOKGU; arc=none smtp.client-ip=209.85.166.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cisco.com header.i=@cisco.com header.b="S21kekLs"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Pp1YOKGU"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3ddc99e0b77so28905ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:34:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=cisco.com; i=@cisco.com; l=785; q=dns/txt;
-  s=iport01; t=1749666816; x=1750876416;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=vebaEpidSVTCWaBHFi0jPYyqh1hFt65CsSfk9PGHd6Y=;
-  b=S21kekLsJMQQmQVdRDYd4XCIDqd19ELuDtThOM233ZZupA5YCrgmsMSn
-   WlnqNwV/ECFJ91zaLA7vIJVFveqZB4+RYWXZ+4cHmfs7rHr8SNvaIs6ow
-   xDGUEh2HGngXjKWbkWvhFPS4Cbg3J2Uie1C/bnDW8WNq6GN7Y6gPQ0jLM
-   oWE/wnLvJVNtWfVzH6QoCvZkr+vl8gxh4QVNSwCFUIqSwo7Y0ce6yrfzU
-   /ihEk6mPKw0+lpZNNAzoiySA3sOp5Zvw0PnooU/yEOfe2i+EzwweTlKrA
-   2edV1nNYT2h0TA45iS3ApY2El98hBvSXhjp9qaHROk3fR8ffl7Tm5VT8N
-   w==;
-X-CSE-ConnectionGUID: IcWTMjmiTt6Boz6kLlXIrQ==
-X-CSE-MsgGUID: bJkycYS0RuSt2/RuuRKzEg==
-X-IPAS-Result: =?us-ascii?q?A0AEAABIy0lo/4sQJK1aGgEBAQEBAQEBAQEDAQEBARIBA?=
- =?us-ascii?q?QEBAgIBAQEBgX8FAQEBAQsBgkqBUkMZMIxwhzSgOoElA1cPAQEBD1EEAQGFB?=
- =?us-ascii?q?wKLZgImNAkOAQIEAQEBAQMCAwEBAQEBAQEBAQEBCwEBBQEBAQIBBwWBDhOGC?=
- =?us-ascii?q?IZbAgEDMgFGEFFWGYMCgm8Dr3KCLIEB3jeBboFJAY1McIR3JxUGgUlEhH2BU?=
- =?us-ascii?q?oI4gQaFdwSCJIECFKEUSIEeA1ksAVUTDQoLBwWBYwM1DAsuFW4yHYINhRmCE?=
- =?us-ascii?q?osHhEkrT4UhhQUkcg8HPUADCxgNSBEsNxQbBj5uB5gEg3CBDoExgQ+mAKELh?=
- =?us-ascii?q?CWhUxozqmGZBKk4gWg8gVkzGggbFYMiUhkPyhgmMjwCBwsBAQMJkBeBfQEB?=
-IronPort-Data: A9a23:cgRjfa2heyIA61YV8/bD5QNwkn2cJEfYwER7XKvMYLTBsI5bpzdRz
- TdMDGHXM6qLYGXzL99xYIvg9R8Eu5HUmNNhHQY63Hw8FHgiRegpqji6wuYcGwvIc6UvmWo+t
- 512huHodZ5yFjmG4E70aNANlFEkvYmQXL3wFeXYDS54QA5gWU8JhAlq8wIDqtYAbeORXUXU5
- 7sen+WFYAX4g2AtazpOg06+gEoHUMra6WtwUmMWPZinjHeG/1EJAZQWI72GLneQauF8Au6gS
- u/f+6qy92Xf8g1FIovNfmHTKxBirhb6ZGBiu1IOM0SQqkEqSh8ajs7XAMEhhXJ/0F1lqTzeJ
- OJl7vRcQS9xVkHFdX90vxNwS0mSNoUekFPLzOTWXcG7lyX7n3XQL/pGLUoJAaga/+dLHT9k8
- u5GKxQJXjGZvrfjqF67YrEEasULJc3vOsYb/3pn1zycVaxgSpHYSKKM7thdtNsyrpkRRrCFO
- YxAN3w2N0Wojx5nYj/7DLo9lf20h332cBVTqUmeouw85G27IAlZi+i8aICPJofTLSlTtky6p
- XPNzl+hOAwhKIbY8yeYyFG+q+CayEsXX6pXTtVU7MVCjFSVgGcaEgUbU0e2u9G9i0i3QdUZL
- FYbkgIsoKo43EiqSMTtGRyypTiPuRt0c99ZCfE77keVx7bZ+R2UAEADVDdKbNFgv8gzLRQo0
- 1KPktzpBBR1vbGVQG7b/bCRxRuoNDYYN3QqfyIITQIZpdLkpekbihPJU8YmE6OviNDxMS//z
- irMryUkgbgXy8kR2M2T+VHBniLpvZPSTyYr6QjNGGGo9AV0YMiifYPA1LTAxf9EKIDcShyKu
- 2IJ3pDEqusPFpqK0ieKRY3hAY2U2hpMCxWE6XYHInXr327FF6KLFWyI3AxDGQ==
-IronPort-HdrOrdr: A9a23:UIEEFKgb1II/Pu3eB0X3c5TQO3BQXvUji2hC6mlwRA09TyVXra
- yTdZMgpHvJYVkqNk3I9errBEDEewK+yXcX2/h1AV7BZmjbUQKTRekI0WKh+UyDJ8SUzIFgPM
- lbHpRWOZnZEUV6gcHm4AOxDtoshOWc/LvAv5a4854Ud2FXg2UK1XYBNu5deXcGIjV7OQ==
-X-Talos-CUID: 9a23:HoH4I235okWOMPvPLyoThLxfO8saTljfyXbsPxGSDnQ3S5mReX6KwfYx
-X-Talos-MUID: 9a23:XpXraglFEd8jFEOtVKMDdnpoFsR56JWVUHoQqolc/POZKBZTKRqS2WE=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-AV: E=Sophos;i="6.16,228,1744070400"; 
-   d="scan'208";a="389022431"
-Received: from alln-l-core-02.cisco.com ([173.36.16.139])
-  by rcdn-iport-6.cisco.com with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 11 Jun 2025 18:32:24 +0000
-Received: from fedora.lan?044cisco.com (unknown [10.188.19.134])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kartilak@cisco.com)
-	by alln-l-core-02.cisco.com (Postfix) with ESMTPSA id D292818000151;
-	Wed, 11 Jun 2025 18:32:22 +0000 (GMT)
-From: Karan Tilak Kumar <kartilak@cisco.com>
-To: sebaddel@cisco.com
-Cc: arulponn@cisco.com,
-	djhawar@cisco.com,
-	gcboffa@cisco.com,
-	mkai2@cisco.com,
-	satishkh@cisco.com,
-	aeasi@cisco.com,
-	jejb@linux.ibm.com,
-	martin.petersen@oracle.com,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jmeneghi@redhat.com,
-	revers@redhat.com,
-	dan.carpenter@linaro.org,
-	Karan Tilak Kumar <kartilak@cisco.com>
-Subject: [PATCH 5/5] scsi: fnic: Increment driver version number
-Date: Wed, 11 Jun 2025 11:30:33 -0700
-Message-ID: <20250611183033.4205-5-kartilak@cisco.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250611183033.4205-1-kartilak@cisco.com>
-References: <20250611183033.4205-1-kartilak@cisco.com>
+        d=google.com; s=20230601; t=1749666861; x=1750271661; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oFEvHzR/X9XIwCUPCxEplfWyfIoa5hqq/0O3xWFKrL4=;
+        b=Pp1YOKGUbZWSDkWgxBL/u+Cy+U6A//PK/U/1NFVFWGs4+nk76LABWQN8QSChkS72Qh
+         /j0d3iC+qwfYjRuqg8UV3JgPxy3cvi+Wb9m2v3pvoi1ycDVE1/Drsqo4EqNIVe3TLaCq
+         gwvT1rI9aC1p0ay1tpLqAlQ2jQzRccX4p7iTHGcK+TRwDwbNYK42TybkZ9pUSBopsMHP
+         TDYVjCUoTKy0K/iMT9eTw6hZS2a1oEFCadmmKYhpsgLoL4WhJHrE9q5+J1WKt+yB0Jj6
+         6/Dxr5v4/Qr0ZRgU7S1hqj7Co7GQXEKBxU5R4iH/MCpfaUqcN5mGFYnwbDb18KNbxs+M
+         OldQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749666861; x=1750271661;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oFEvHzR/X9XIwCUPCxEplfWyfIoa5hqq/0O3xWFKrL4=;
+        b=h1Y6TnHmOsdZr8NiTMpERkybkbefzUKguIdYAwuimtHwEhELUQmL8LQJtdtBP3KkSx
+         hEjc8slqgcxTbcCkYOF1E85OzNXAYNvi7LikzrskQLfBjgs61M5j3GTXC3RaBIQXhKZ7
+         1ZK/3vwIDTY512YX6O8Xlnp4vEp09MvWI6zHA3BGaoWDo+E+qTBGWkoeRikRrI3+XYaG
+         VeO6duyXaSM+Iv7V+MYDldmF6iKrCUNsVXKeIP8QEmXvwqsi8DXcp101ZLWsGyoKtyZD
+         W70DkVVBV+dbUaWiGyHPDFzQ7Vm9qsXFV2V3cXjQZJH3kGKc8+8gU3cZ5k5kRY3Y9b/+
+         /yLw==
+X-Forwarded-Encrypted: i=1; AJvYcCW4OLjnSi4hkSwPgQN6QiCvdmXmzn+sDUjny2UftmvXoYtcLthj/RHdISyrxhMeG7dV5pVaUSwDq6tlfzI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDDNzT9IxmlfE7DcWW1nVLiiH8EnrbRSLH3EgRL5NnBCigWB6+
+	DiwH+SPaTdBbpqiHzhUa7NjUP5oCkF3NsncNBDhcFDocdt0OJAg9HtE4itiHNL7fce5P3lwQ3A1
+	wdVPK1a3JQoKvwW+OZvvK5JnBnrF+P2PWdG2U5xzC
+X-Gm-Gg: ASbGncudu9OYP1oMiqP/JtLWKbfXpy3bht/GK5diycCr7mvMii9uqfuF5sBr6BR2qey
+	uYp9enWVzpzQeUFNaEur6aBaYsCPXRpf56zPizEiuwoR/MlgfX2rxE3Td5jaPfVxo4agch8q52G
+	OabluNxuA/DL7Jom6e/ahUYbWg97gEqko/k71CENQnG0HbnROGqlZxw8KStkfthSSbw/8UptNU
+X-Google-Smtp-Source: AGHT+IHW3WD/+5EMCeUCm1LToMk4pqjQKTn5VJP1IfR9gBkY9l/ACbNUWe3Kj3oB3FFtojZ1X1P93xhG9i96lAN4U+Y=
+X-Received: by 2002:a05:6e02:218c:b0:3dd:f4d6:1bbb with SMTP id
+ e9e14a558f8ab-3ddfb30a850mr104465ab.3.1749666860570; Wed, 11 Jun 2025
+ 11:34:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authenticated-User: kartilak@cisco.com
-X-Outbound-SMTP-Client: 10.188.19.134, [10.188.19.134]
-X-Outbound-Node: alln-l-core-02.cisco.com
+References: <20250529044000.759937-1-irogers@google.com> <aEh3qcfleSr4B9j9@google.com>
+In-Reply-To: <aEh3qcfleSr4B9j9@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 11 Jun 2025 11:34:09 -0700
+X-Gm-Features: AX0GCFs-fQ3Dhl1mflJxLnE85HKM_UFcTuS6VEd2LnxZL2nYgK2a0dITob_fYAg
+Message-ID: <CAP-5=fUQ-9s2pzi1sLqonSOPAnhV+rsZL11bQcsco5_v7=TovQ@mail.gmail.com>
+Subject: Re: [PATCH v4 00/24] perf: Make code more generic with modern defaults
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
+	Leo Yan <leo.yan@linux.dev>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Colin Ian King <colin.i.king@gmail.com>, Andi Kleen <ak@linux.intel.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Graham Woodward <graham.woodward@arm.com>, 
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, Athira Rajeev <atrajeev@linux.ibm.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, Li Huafei <lihuafei1@huawei.com>, 
+	"Steinar H. Gunderson" <sesse@google.com>, Stephen Brennan <stephen.s.brennan@oracle.com>, 
+	Chun-Tse Shao <ctshao@google.com>, Yujie Liu <yujie.liu@intel.com>, 
+	"Dr. David Alan Gilbert" <linux@treblig.org>, Levi Yun <yeoreum.yun@arm.com>, 
+	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, Matt Fleming <matt@readmodwrite.com>, 
+	Veronika Molnarova <vmolnaro@redhat.com>, 
+	=?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>, 
+	Zixian Cai <fzczx123@gmail.com>, Steve Clevenger <scclevenger@os.amperecomputing.com>, 
+	Ben Gainey <ben.gainey@arm.com>, Chaitanya S Prakash <chaitanyas.prakash@arm.com>, 
+	Martin Liska <martin.liska@hey.com>, =?UTF-8?Q?Martin_Li=C5=A1ka?= <m.liska@foxlink.cz>, 
+	Song Liu <song@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Increment driver version number.
+On Tue, Jun 10, 2025 at 11:21=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> Hi Ian,
+>
+> On Wed, May 28, 2025 at 09:39:36PM -0700, Ian Rogers wrote:
+> > This patch series combines:
+> > "perf: Default use of build IDs and improvements"
+> > https://lore.kernel.org/lkml/20250428213409.1417584-1-irogers@google.co=
+m/
+> > "Remove global perf_env"
+> > https://lore.kernel.org/lkml/20250527064153.149939-1-irogers@google.com=
+/
+> > "Generic weight struct, use env for sort key and header"
+> > https://lore.kernel.org/lkml/20250521135500.677508-1-irogers@google.com=
+/
+> > This is done as the last 2 series depend on each other and the
+> > cleanups in the 1st have the potential to conflict with them.
+> >
+> > "perf: Default use of build IDs and improvements"
+> >
+> > Build ID mmap2 events have been available since Linux v5.12 and avoid
+> > certain races. Enable these by default as discussed in:
+> > https://lore.kernel.org/linux-perf-users/CAP-5=3DfXP7jN_QrGUcd55_QH5J-Y=
+-FCaJ6=3DNaHVtyx0oyNh8_-Q@mail.gmail.com/
+> >
+> > The dso_id is used to indentify a DSO that may change by being
+> > overwritten. The inode generation isn't present in /proc/pid/maps and
+> > so was already only optionally filled in. With build ID mmap events
+> > the other major, minor and inode varialbes aren't filled in. Change
+> > the dso_id implementation to make optional values explicit, rather
+> > than injecting a dso_id we want to improve it during find operations,
+> > add the buildid to the dso_id for sorting and so that matching fails
+> > when build IDs vary between DSOs.
+> >
+> > Mark the callchain for buildids and not just the sample IP, fixing
+> > missing DSOs.
+> >
+> > Fix sample__for_each_callchain_node to populate the map even when
+> > symbols aren't computed.
+> >
+> > Other minor bits of build_id clean up.
+>
+> I've tried to pick the build-id part, but I got a build error like this:
+>
+>   util/probe-finder.c: In function 'find_probe_point_lazy':
+>   util/probe-finder.c:863:25: error: implicit declaration of function 'bu=
+ild_id__sprintf';
+>   did you mean 'build_id__snprintf'? [-Werror=3Dimplicit-function-declara=
+tion]
+>     863 |                         build_id__sprintf(&bid, sbuild_id);
+>         |                         ^~~~~~~~~~~~~~~~~
+>   --
+>   util/probe-event.c: In function '__show_line_range':
+>   util/probe-event.c:1093:17: error: implicit declaration of function 'bu=
+ild_id__sprintf';
+>   did you mean 'build_id__snprintf'? [-Werror=3Dimplicit-function-declara=
+tion]
+>    1093 |                 build_id__sprintf(&bid, sbuild_id);
+>         |                 ^~~~~~~~~~~~~~~~~
+>   tests/sdt.c: In function 'build_id_cache__add_file':
+>   tests/sdt.c:40:9: error: implicit declaration of function 'build_id__sp=
+rintf';
+>   did you mean 'build_id__snprintf'? [-Werror=3Dimplicit-function-declara=
+tion]
+>      40 |         build_id__sprintf(&bid, sbuild_id);
+>         |         ^~~~~~~~~~~~~~~~~
+>
+> >
+> > "Remove global perf_env"
+> >
+> > The global perf_env is used to hold host information, but it is also
+> > used as a fallback in a number of cases where the information may be
+> > bogus. Restructure the code so that the perf_env of the session is
+> > accessed. When necessary a locally scoped host perf_env is created and
+> > used.
+> >
+> > Cleaning up the inconsistency was requested by Kan Liang in:
+> > https://lore.kernel.org/lkml/c56c9e23-cf6e-4040-aee8-da13d5157dcf@linux=
+.intel.com/
+>
+> And I got some conflicts here.
 
-Reviewed-by: Sesidhar Baddela <sebaddel@cisco.com>
-Reviewed-by: Arulprabhu Ponnusamy <arulponn@cisco.com>
-Reviewed-by: Gian Carlo Boffa <gcboffa@cisco.com>
-Reviewed-by: Arun Easi <aeasi@cisco.com>
-Signed-off-by: Karan Tilak Kumar <kartilak@cisco.com>
----
- drivers/scsi/fnic/fnic.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sorry for the build breakage and conflicts, I'll send a v5 to address
+them but it'll try to hang on for Thomas' perf top change:
+https://lore.kernel.org/lkml/20250513231813.13846-2-thomas.falcon@intel.com=
+/
+so as to not also need a v6.
 
-diff --git a/drivers/scsi/fnic/fnic.h b/drivers/scsi/fnic/fnic.h
-index 6c5f6046b1f5..86e293ce530d 100644
---- a/drivers/scsi/fnic/fnic.h
-+++ b/drivers/scsi/fnic/fnic.h
-@@ -30,7 +30,7 @@
- 
- #define DRV_NAME		"fnic"
- #define DRV_DESCRIPTION		"Cisco FCoE HBA Driver"
--#define DRV_VERSION		"1.8.0.0"
-+#define DRV_VERSION		"1.8.0.1"
- #define PFX			DRV_NAME ": "
- #define DFX                     DRV_NAME "%d: "
- 
--- 
-2.47.1
+Thanks,
+Ian
 
+> Please take a look, thanks!
+> Namhyung
+>
+> >
+> > "Generic weight struct, use env for sort key and header"
+> >
+> > The arch directory is a barrier to cross-platform development as files
+> > and behaviors within it are inherently platform specific. Sample
+> > parsing should be generic but the PERF_SAMPLE_WEIGHT_STRUCT handling
+> > was only present if building for x86 or powerpc. The sort key and
+> > headers should be specific to the session that is being executed and
+> > not to the machine perf is being run upon. These patches clean this
+> > and associated code up.
+> >
+> > v4: Shorten to "weight3" histogram and sample variable, but comment
+> >     its use (Namhyung). Fix evsel__env use in `perf trace` where no
+> >     session was present. Assert the session is never passed a NULL
+> >     host_env when there is no data file and its associated env.
+> >
+> > Ian Rogers (24):
+> >   perf callchain: Always populate the addr_location map when adding IP
+> >   perf build-id: Reduce size of "size" variable
+> >   perf build-id: Truncate to avoid overflowing the build_id data
+> >   perf build-id: Change sprintf functions to snprintf
+> >   perf build-id: Mark DSO in sample callchains
+> >   perf build-id: Ensure struct build_id is empty before use
+> >   perf dso: Move build_id to dso_id
+> >   perf jitdump: Directly mark the jitdump DSO
+> >   perf record: Make --buildid-mmap the default
+> >   perf session: Add accessor for session->header.env
+> >   perf session: Add an env pointer for the current perf_env
+> >   perf evlist: Change env variable to session
+> >   perf header: Clean up use of perf_env
+> >   perf test: Avoid use perf_env
+> >   perf session: Add host_env argument to perf_session__new
+> >   perf top: Make perf_env locally scoped
+> >   perf bench synthesize: Avoid use of global perf_env
+> >   perf machine: Explicitly pass in host perf_env
+> >   perf auxtrace: Pass perf_env from session through to mmap read
+> >   perf trace: Avoid global perf_env with evsel__env
+> >   perf env: Remove global perf_env
+> >   perf sample: Remove arch notion of sample parsing
+> >   perf test: Move PERF_SAMPLE_WEIGHT_STRUCT parsing to common test
+> >   perf sort: Use perf_env to set arch sort keys and header
+> >
+> >  tools/perf/arch/powerpc/util/Build            |   1 -
+> >  tools/perf/arch/powerpc/util/event.c          |  60 ------
+> >  tools/perf/arch/x86/include/arch-tests.h      |   1 -
+> >  tools/perf/arch/x86/tests/Build               |   1 -
+> >  tools/perf/arch/x86/tests/arch-tests.c        |   2 -
+> >  tools/perf/arch/x86/tests/sample-parsing.c    | 125 ------------
+> >  tools/perf/arch/x86/util/event.c              |  46 -----
+> >  tools/perf/bench/inject-buildid.c             |   2 +-
+> >  tools/perf/bench/synthesize.c                 |  30 +--
+> >  tools/perf/builtin-annotate.c                 |   6 +-
+> >  tools/perf/builtin-buildid-cache.c            |  22 +--
+> >  tools/perf/builtin-buildid-list.c             |  11 +-
+> >  tools/perf/builtin-c2c.c                      |  69 ++++---
+> >  tools/perf/builtin-diff.c                     |   2 +-
+> >  tools/perf/builtin-inject.c                   |  41 ++--
+> >  tools/perf/builtin-kallsyms.c                 |  21 +-
+> >  tools/perf/builtin-kmem.c                     |   2 +-
+> >  tools/perf/builtin-kvm.c                      |   4 +-
+> >  tools/perf/builtin-kwork.c                    |   2 +-
+> >  tools/perf/builtin-lock.c                     |   4 +-
+> >  tools/perf/builtin-mem.c                      |   2 +-
+> >  tools/perf/builtin-record.c                   |  63 +++---
+> >  tools/perf/builtin-report.c                   |  27 ++-
+> >  tools/perf/builtin-sched.c                    |   8 +-
+> >  tools/perf/builtin-script.c                   |  18 +-
+> >  tools/perf/builtin-stat.c                     |  23 +--
+> >  tools/perf/builtin-timechart.c                |   2 +-
+> >  tools/perf/builtin-top.c                      |  58 ++++--
+> >  tools/perf/builtin-trace.c                    |  38 ++--
+> >  tools/perf/include/perf/perf_dlfilter.h       |   2 +-
+> >  tools/perf/perf.c                             |   3 -
+> >  tools/perf/tests/code-reading.c               |   6 +-
+> >  tools/perf/tests/dlfilter-test.c              |  51 ++---
+> >  tools/perf/tests/dwarf-unwind.c               |  10 +-
+> >  tools/perf/tests/hists_cumulate.c             |   8 +-
+> >  tools/perf/tests/hists_filter.c               |   8 +-
+> >  tools/perf/tests/hists_link.c                 |   8 +-
+> >  tools/perf/tests/hists_output.c               |  10 +-
+> >  tools/perf/tests/mmap-thread-lookup.c         |   6 +-
+> >  tools/perf/tests/pe-file-parsing.c            |   2 +-
+> >  tools/perf/tests/sample-parsing.c             |  14 ++
+> >  tools/perf/tests/sdt.c                        |   2 +-
+> >  tools/perf/tests/symbols.c                    |  12 +-
+> >  tools/perf/tests/topology.c                   |  39 ++--
+> >  tools/perf/ui/browser.h                       |   4 +-
+> >  tools/perf/ui/browsers/header.c               |   4 +-
+> >  tools/perf/ui/browsers/hists.c                |   2 +-
+> >  tools/perf/util/amd-sample-raw.c              |   2 +-
+> >  tools/perf/util/arm-spe.c                     |   2 +-
+> >  tools/perf/util/auxtrace.c                    |  13 +-
+> >  tools/perf/util/auxtrace.h                    |   6 +-
+> >  tools/perf/util/bpf-event.c                   |   2 +-
+> >  tools/perf/util/branch.c                      |   2 +-
+> >  tools/perf/util/build-id.c                    |  63 +++---
+> >  tools/perf/util/build-id.h                    |   8 +-
+> >  tools/perf/util/data-convert-bt.c             |  16 +-
+> >  tools/perf/util/data-convert-json.c           |  36 ++--
+> >  tools/perf/util/debuginfo.c                   |   2 +-
+> >  tools/perf/util/disasm.c                      |   2 +-
+> >  tools/perf/util/dlfilter.c                    |   2 +-
+> >  tools/perf/util/dso.c                         | 111 ++++++-----
+> >  tools/perf/util/dso.h                         |  75 ++++----
+> >  tools/perf/util/dsos.c                        |  20 +-
+> >  tools/perf/util/env.c                         |   3 +-
+> >  tools/perf/util/env.h                         |   2 -
+> >  tools/perf/util/event.c                       |   2 +-
+> >  tools/perf/util/event.h                       |   5 -
+> >  tools/perf/util/evlist.h                      |   2 +-
+> >  tools/perf/util/evsel.c                       |  29 ++-
+> >  tools/perf/util/evsel.h                       |   1 +
+> >  tools/perf/util/header.c                      | 182 ++++++++++--------
+> >  tools/perf/util/hist.c                        |   4 +-
+> >  tools/perf/util/hist.h                        |   3 +-
+> >  tools/perf/util/intel-tpebs.c                 |   4 +-
+> >  tools/perf/util/jitdump.c                     |  21 +-
+> >  tools/perf/util/machine.c                     |  42 ++--
+> >  tools/perf/util/machine.h                     |   4 +-
+> >  tools/perf/util/map.c                         |  15 +-
+> >  tools/perf/util/map.h                         |   5 +-
+> >  tools/perf/util/probe-event.c                 |   8 +-
+> >  tools/perf/util/probe-file.c                  |   4 +-
+> >  tools/perf/util/probe-finder.c                |   3 +-
+> >  tools/perf/util/s390-cpumsf.c                 |   2 +-
+> >  tools/perf/util/sample-raw.c                  |   7 +-
+> >  tools/perf/util/sample-raw.h                  |   2 +-
+> >  tools/perf/util/sample.h                      |   6 +-
+> >  .../scripting-engines/trace-event-python.c    |   7 +-
+> >  tools/perf/util/session.c                     |  20 +-
+> >  tools/perf/util/session.h                     |   9 +-
+> >  tools/perf/util/sort.c                        |  95 +++++----
+> >  tools/perf/util/sort.h                        |   5 +-
+> >  tools/perf/util/symbol-minimal.c              |   2 +-
+> >  tools/perf/util/symbol.c                      |   7 +-
+> >  tools/perf/util/symbol_conf.h                 |   2 +-
+> >  tools/perf/util/synthetic-events.c            |  54 ++++--
+> >  tools/perf/util/thread.c                      |   8 +-
+> >  tools/perf/util/thread.h                      |   2 +-
+> >  tools/perf/util/tool.c                        |   2 +-
+> >  98 files changed, 919 insertions(+), 894 deletions(-)
+> >  delete mode 100644 tools/perf/arch/powerpc/util/event.c
+> >  delete mode 100644 tools/perf/arch/x86/tests/sample-parsing.c
+> >
+> > --
+> > 2.49.0.1204.g71687c7c1d-goog
+> >
