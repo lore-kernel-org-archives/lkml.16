@@ -1,94 +1,154 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7311428C2C1
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:09:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C76E127E7F0;
+	Wed, 11 Jun 2025 14:09:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749650952; cv=none; b=gCX8hpMPuhHhe5cOsEAjJ8t8kxqCdfOrJyHylSK4QqqdSVk/Vf47eqeSs3frijLB5WmDraQstlPyK/WY0mpEAhNyG/w2TqPI+JbUROdv/0kD5dhuaLaPzZz1s3We1ELCqP+XmUukzd8Mopd+/88F73x9ad6KefMvhX2hs8Dhyaw=
+	t=1749650988; cv=none; b=g8BVUNEE7nE7QuI29Plgp9ow8uVafyESZygDGv8tkaRCQgxZBuRIbSW+qdGE7TASfb5yHdXL8n7Y8XGQp18uWESPeC8hOPaFUCF4ERk0+xT6Dr9BMygqd4gFWQT60IxFskuLdERH4Cr0RKpBUJ+q1o06jEtmZftrxhoGH+9zUys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749650952; c=relaxed/simple;
-	bh=4dqNwAQYmy0EGh2tN9SAQfO1hbjPMfrvLNgwoYO1F+s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OPMe0kGT5E5Jelc1OINx5cHf9tV7Fq/qxCRxa394grBePX8QMBPxAkItBx1YVB90Z3ypXeMlgzFC250OQQ+8sRwBTfMvZRgl3DE7UPuvOn+Ff5s1AVvtdCvZxrAVx95zU5h8o1X4Bfk2hkOqhUUcpZUp3rU2+ImgHouoLEx/AKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Odn9UwMv; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1749650988; c=relaxed/simple;
+	bh=AK8EHYOYCq+SXbAg7Z3/UJ2hTdChIAXHjEBP1cncQwc=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=H9Jwxj6BFY33HERdMXY4Hr8Kf0BEApZ9TsAVs44zXx8Ly1005HI5KhCvFDb1t7uAmIcHhyO+xfkddRnOyi0Ynn+9+oAH9U+CH8eH10pYM0G56oxUB9uTktG1Va8exP8zFQU5zL1+5tnxAx+KJLjMvhu4FnQVTclefavJ/tavDwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=BsL1rm0l; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Odn9UwMv"
-Date: Wed, 11 Jun 2025 16:09:01 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749650945;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cKUNapIic7qcB73602nGRDfvP380aXrb6L7bSN67WMc=;
-	b=Odn9UwMvxjKy/QQm+4jej/I3CNptvQ3o060oWmenfpkhbV/QGd7dk84HzyM3XF6VsjI+V5
-	MsNXgE6jzkLmgABa+TWcBWwuz0Q6myVpuB6QFUymOBZYiOLNOVuKXvIvgxaqlclbiHSwSo
-	C0TZQfzUuQkfMQT2/WnZmpS0J3HpN+Q=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Nicolas Schier <nicolas.schier@linux.dev>
-To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>,
-	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
-	Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-	linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	workflows@vger.kernel.org
-Subject: Re: [PATCH v3 04/16] kbuild: userprogs: add nolibc support
-Message-ID: <20250611-horned-prudent-saluki-b5a5df@l-nschier-aarch64>
-References: <20250611-kunit-kselftests-v3-0-55e3d148cbc6@linutronix.de>
- <20250611-kunit-kselftests-v3-4-55e3d148cbc6@linutronix.de>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BsL1rm0l"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 17C582115191; Wed, 11 Jun 2025 07:09:46 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 17C582115191
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1749650986;
+	bh=11QiVZcZI7HpQy9zTwvvYDXhgBE3dYR024Si5/zihXI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=BsL1rm0lRBhLTVe8xwSQsnjJN3OAptJKwkNoU+LcAPvFp0UQcwr9aE4CbvB+1YfUw
+	 5Do84Mgv9/w1ewysOpHypiSiBacjohIaaRGYkzJ1nf3a9183LZAfNgO9K6yJO/idRj
+	 gom2c5DcaDfk0JpguLKUABzpU0zcYlTsalbDlgO4=
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: 
+Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Long Li <longli@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Rob Herring <robh@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=EF=BF=BD=7EDski?= <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Simon Horman <horms@kernel.org>,
+	Leon Romanovsky <leon@kernel.org>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	Paul Rosswurm <paulros@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: [PATCH v6 0/5] Allow dyn MSI-X vector allocation of MANA
+Date: Wed, 11 Jun 2025 07:09:44 -0700
+Message-Id: <1749650984-9193-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250611-kunit-kselftests-v3-4-55e3d148cbc6@linutronix.de>
-Organization: AVM GmbH
-X-Migadu-Flow: FLOW_OUT
 
-On Wed, Jun 11, 2025 at 09:38:10AM +0200, Thomas Weißschuh wrote:
-> Userprogs are built with the regular kernel compiler $CC.
-> A kernel compiler does not necessarily contain a libc which is required
-> for a normal userspace application.
-> However the kernel tree does contain a minimal libc implementation
-> "nolibc" which can be used to build userspace applications.
-> 
-> Introduce support to build userprogs against nolibc instead of the
-> default libc of the compiler, which may not exist.
-> 
-> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-> 
-> ---
-> This could probably be moved out of the generic kbuild makefiles.
-> I think the ergonimics would suffer and this functionality could be
-> used by other users of userprogs.
-> 
-> Also this does currently not support out-of-tree builds.
-> For that tools/include/nolibc/*.h and usr/include/*.h would need to be
-> installed into the build directory.
+In this patchset we want to enable the MANA driver to be able to
+allocate MSI-X vectors in PCI dynamically.
 
-Thanks!
+The first patch exports pci_msix_prepare_desc() in PCI to be able to
+correctly prepare descriptors for dynamically added MSI-X vectors.
 
-Reviewed-by: Nicolas Schier <n.schier@avm.de>
+The second patch adds the support of dynamic vector allocation in
+pci-hyperv PCI controller by enabling the MSI_FLAG_PCI_MSIX_ALLOC_DYN
+flag and using the pci_msix_prepare_desc() exported in first patch.
 
-Probably overkill, but might it make sense to abort *-nolibc compilation 
-requests for out-of-tree builds?
+The third patch adds a detailed description of the irq_setup(), to
+help understand the function design better.
 
-Kind regards,
-Nicolas
+The fourth patch is a preparation patch for mana changes to support
+dynamic IRQ allocation. It contains changes in irq_setup() to allow
+skipping first sibling CPU sets, in case certain IRQs are already
+affinitized to them.
+
+The fifth patch has the changes in MANA driver to be able to allocate
+MSI-X vectors dynamically. If the support does not exist it defaults to
+older behavior.
+
+Since this patchset has patches from PCI and net tree, I am not entirely
+sure what should be the target tree. Any suggestions/recommendations on
+the same are welcomed.
+
+---
+Changes in v6
+ * rebased to linux-next's v6.16-rc1 as per Jakub's suggestion
+---
+Changes in v5
+ * Added Yury as Author of the 3rd patch
+ * Fixed base commit information in the cover letter
+ * Correctly initialized start_irqs, so that it is cleaned properly
+ * rearranged the cpu_lock to minimize the critical section
+---
+ Change in v4
+ * add a patch describing the functionality of irq_setup() through a 
+   comment
+ * In irq_setup(), avoid using a label next_cpumask:
+ * modify the changes in MANA patch about restructuring the error
+   handling path in mana_gd_setup_dyn_irqs()
+ * modify the mana_gd_setup_irqs() to simplify handling around
+   start_irq_index
+ * add warning if an invalid gic is returned
+ * place the xa_destroy() cleanup in mana_gd_remove
+---
+ Changes in v3
+ * split the 3rd patch into preparation patch around irq_setup() and
+   changes in mana driver to allow dynamic IRQ allocation
+ * Add arm64 support for dynamic MSI-X allocation in pci_hyperv
+   controller
+---
+ Changes in v2
+ * split the first patch into two(exporting the preapre_desc
+   func and using the function and flag in pci-hyperv)
+ * replace 'pci vectors' by 'MSI-X vectors'
+ * Change the cover letter description to align with changes made
+---
+
+Shradha Gupta (4):
+  PCI/MSI: Export pci_msix_prepare_desc() for dynamic MSI-X allocations
+  PCI: hv: Allow dynamic MSI-X vector allocation
+  net: mana: Allow irq_setup() to skip cpus for affinity
+  net: mana: Allocate MSI-X vectors dynamically
+
+Yury Norov (1):
+  net: mana: explain irq_setup() algorithm
+
+ .../net/ethernet/microsoft/mana/gdma_main.c   | 366 ++++++++++++++----
+ drivers/pci/controller/pci-hyperv.c           |   3 +-
+ drivers/pci/msi/irqdomain.c                   |   5 +-
+ include/linux/msi.h                           |   2 +
+ include/net/mana/gdma.h                       |   8 +-
+ 5 files changed, 294 insertions(+), 90 deletions(-)
+
+
+base-commit: 19a60293b9925080d97f22f122aca3fc46dadaf9
+-- 
+2.34.1
+
