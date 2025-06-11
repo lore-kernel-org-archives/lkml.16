@@ -1,147 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B0623A99D;
-	Wed, 11 Jun 2025 14:46:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8612BB04
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:48:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749653197; cv=none; b=s0zbR/2p6/YRrYltCrI6jl2HPWtMYeaIgyZJBXqV6BZ78A3p6VQKrcBqkCl0EskmPEuqarJc44zW+RCGqpop9rSJFkrrtg2eU8jh4TBdGmlqxA8aUr8Zb7KUckNhKYXGv+3S6zxPYMYoxBrKz854oYHrXsyby9zwrYTmwf2RFC0=
+	t=1749653281; cv=none; b=bDE6bfZONVturRG2nNC+ELvujuISuoMFmMHzXW++QoENnatyubkCLziSJytL34YbP932NR8zT2s1ZAS6b5sUAf2mj4eEgCxbfXwF1cTBG+cSEUgwpsF9cdbG5E5MXdT9jMYRdJUgzmijP4I6mEAXP6ymw5/y9YPbtd7IQj5I2tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749653197; c=relaxed/simple;
-	bh=4/hh4YENcSHGUjgQwEQhru/Zqy1vGFCLZ+lEog3Di/o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C88Kb5/T8aZtiQrnKQgW/JKmwvHW061T0nsXCM+pJUO9T9F2tG8RuFrepvexkw8PqjMCw6jcDW8xLTirTFnBe/oosVrtCDF4bzpGqGybOGqcxysqohluxINE0gZYM+G0FFjTHf4BcZFjzyxt83we40ux1yDVJYI12Zz+PBFObR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j7kOC6M9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749653281; c=relaxed/simple;
+	bh=iz+OizN7XVthD9Q/2d9PTKzd9HNgXPy6LGiuaQnhNTU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CRYCPMv1m/zBQfwx/FEsIQIUtt9jl2YjkRTPBojqi6QSPtNO47y3e2plFHW9AInJGqIEU4m7NXB925GI7dhyTPcrRTpxCoSAjJWg47vrqkIGSuz42FH7hJMeLX6uLCy9h6zYWEYmW1xgjPukNiFLiBQzkz9yrBFmSKjK3halbYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=kCdoJZ6Q; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j7kOC6M9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D98F3C4CEEA;
-	Wed, 11 Jun 2025 14:46:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749653195;
-	bh=4/hh4YENcSHGUjgQwEQhru/Zqy1vGFCLZ+lEog3Di/o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j7kOC6M9BQy5wO8h6teMI1mbyDvpKlbgKXL7Wjl4Yn5ldM65KlFHsnK9CBh7fz/T2
-	 N5k5Ka7jG5l3i/gilNG0WVE6k17Oi6ef1yYsrDk0BhLS00+SAXaHuHihGlnYlI32rv
-	 sMWtrpmmzSYptMWLK9X1jNXSSqc12z/VVCoL8ZjpppSDp8MfnZwNgf+NAt8KW0fmf9
-	 P3g7TPZTB9BT4Aaqrro8IEVXsz3MnzZixRQzRGAqy3LxPDqZBBupn4TjJSq5eJG0yK
-	 QCiswNVxjHpa7l/A6s7k62RtfsQnm4y4LQHtEQ+RB1mXN+reXcqlhkqbiZqGuABMJO
-	 GJoW+M7Q52sFQ==
-Date: Wed, 11 Jun 2025 11:46:32 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Tomas Glozar <tglozar@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	John Kacur <jkacur@redhat.com>,
-	Luis Goncalves <lgoncalv@redhat.com>, Chang Yin <cyin@redhat.com>,
-	Costa Shulyupin <costa.shul@redhat.com>
-Subject: Re: [PATCH 0/8] rtla/timerlat: Support actions on threshold and on
- end
-Message-ID: <aEmWyPqQw2Ly7Jlu@x1>
-References: <20250611135644.219127-1-tglozar@redhat.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="kCdoJZ6Q"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55B9DD8u023918
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:47:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	+MCsGgV4BA2JmOczR66eafPa7KFX2QbYF7q1cbtZlPw=; b=kCdoJZ6Qc9UbAJMs
+	Gj8z79UTWrl3G05GkPEjVssNaashOFdweXr9KBdio7xSiOSdx5tJ+hBvNwwiMuO1
+	GvP/XKMeKOMhUXP/2fMCRlY5+oECde+ijpInOyUkB93wGEKPMgOhFa3SJ8bQh++T
+	swobWxtermoLQA7xmvUSJlhOp/988JZdYSVNw+VFRT76jRbsF3bxumrFBswwvMlg
+	B/O9i/j7dd6XfsDsJ6zb9bqITVAP5yBHuu0/Jj4Edg79PsljOxn9hOmSdVLANx9S
+	J38Yd5/YOWNraMj52pR9Kt6p7EW3WoTVejDuec6chHRcx3C+rvCCSDHwgh9TlZh9
+	W1Psyw==
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 475v2tfyrb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:47:59 +0000 (GMT)
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4a6f59d5ac6so1173541cf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:47:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749653278; x=1750258078;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+MCsGgV4BA2JmOczR66eafPa7KFX2QbYF7q1cbtZlPw=;
+        b=bIUHQBMDjg2vw4eWiihSTKvRvp3tS9GDWokoVVy/yeRu0TC1u4eSOzukhEkL9ipOZQ
+         t/Hf6S/+PHX8ansto2hbUgyzYS0F0684gnYItp8xOMCsNAjM0aAa2JjRmXsUgiXW/G8l
+         1lAFeFyPfYrNAl5qaQbgRaeC8uG9j+P4nptS34P+Vrqq5iFbI2wRRpu8v1EztdGGTPGD
+         /9FlNwSdPTcA4zaWwGn9Pl72wBy95Hhq6ss/qjEleM/HtXIsZF2p3BEKGkpjvd15zLPy
+         c/w1tK/+aRooZQYGTtlzKifJ+jPp+gWhJcOumhVUmt/Wf2w/0dM+o8IrU2xotsx1mS3D
+         pSwg==
+X-Forwarded-Encrypted: i=1; AJvYcCWkia6Gn675dLPlnLmiBeGVmqRT68xAVyyHUyTBQk2n+HNn+RqHtfSEKHGH844S9JY8yiVtB5YllKr3QH8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygRtU7lbS32zXXTkd3hQKR8ZSytJGVFbM8kHJAhT+DXhMtyBPj
+	Ob3s3WcHaSIW8v4ubvH4eSoty31sFWCh7Msf8w3EtvK/P0QQY7e7cYltuIpQl30qNkXb7/F8arQ
+	Kj7Lg4Ag2IYN9PK30pfOavK0HDxqVb7Jwhvb1vhvdwon4C8APYl137SuLAcs6s9ovLPc=
+X-Gm-Gg: ASbGncsAitIBcIQleGLtpnh5We7aDena5IXrN4cmjMCTAVTnrZT+fb1Zh8vw4mXP4k5
+	+vZ+fOIIWNrlwSxdp4OfacOtoxDTnIf3yQvabdNgCYRI0tx7bxu+2ckpUWUtR/TBTeHu/HUg6j7
+	ljRPh7ZORiNGiX8x5lRksTo8vRvyYN9w3f3nCwByc/BEb42yYNDTXSu4ZPZHmWvDuX7kWRCUdhu
+	6W/q+P00XN7U6yLMmJJQp9E7RU+EsU1g7XU9U1IHkIz1Fcn6fRJYY+LEeVLBjaVeFrI6qcfWfaK
+	+xoJNIVBmcG++Ffwsuof31WVxh5gIisNNmj60/GX0oJObovrwog8RQL/6oQobHqbupHbMzBkZDF
+	3Lvk=
+X-Received: by 2002:a05:622a:11d3:b0:494:b869:ac06 with SMTP id d75a77b69052e-4a713bb11cfmr21318931cf.6.1749653278339;
+        Wed, 11 Jun 2025 07:47:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEanE3mTJ72DEP0t2zfEf2C9EcYW5djouOXP46mq+RKNfmpPdg/k6AyZH23Z6+cCZkAPNaJDw==
+X-Received: by 2002:a05:622a:11d3:b0:494:b869:ac06 with SMTP id d75a77b69052e-4a713bb11cfmr21318761cf.6.1749653277863;
+        Wed, 11 Jun 2025 07:47:57 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-607783c051dsm7772513a12.41.2025.06.11.07.47.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Jun 2025 07:47:57 -0700 (PDT)
+Message-ID: <4a8df547-e625-4dbf-9c6e-44a3f793e602@oss.qualcomm.com>
+Date: Wed, 11 Jun 2025 16:47:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611135644.219127-1-tglozar@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: qcs615: Enable TSENS support for
+ QCS615 SoC
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Gaurav Kohli <quic_gkohli@quicinc.com>, amitk@kernel.org,
+        daniel.lezcano@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
+        andersson@kernel.org, konradybcio@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, quic_manafm@quicinc.com
+References: <cover.1744955863.git.gkohli@qti.qualcomm.com>
+ <1758b5c2d839d40a9cb1dd17c734f36c279ac81c.1744955863.git.gkohli@qti.qualcomm.com>
+ <74b017c2-7144-4446-969c-8502fb2cb74b@oss.qualcomm.com>
+ <x2avlatyjo7sgcjubefexsfk6gerdbhx5dcug2kszk2hukcusm@srs5dwuc2m22>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <x2avlatyjo7sgcjubefexsfk6gerdbhx5dcug2kszk2hukcusm@srs5dwuc2m22>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: l0pU6O9IqiMcVijefDXbah4MsTs4Ipf6
+X-Authority-Analysis: v=2.4 cv=GoxC+l1C c=1 sm=1 tr=0 ts=6849971f cx=c_pps
+ a=JbAStetqSzwMeJznSMzCyw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=btjPz7YbEsIzDNlJI7MA:9
+ a=QEXdDO2ut3YA:10 a=uxP6HrT_eTzRwkO_Te1X:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: l0pU6O9IqiMcVijefDXbah4MsTs4Ipf6
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjExMDEyMyBTYWx0ZWRfXxSlUqRSSPs0z
+ sfzDYzPiIfweujisHe6h9Y87hmagsrPrKKHnxFwKEt2TfzqpzpIiiGhxU3WkGVmmeDyoiZup2tN
+ pGOoeruVIoKWpRSjPLNPFpQogi/Vgr3JhYq2kpWMDPJgICoeP2WEVCgHq4LXk2K/HsBXSR8BKGw
+ RfUzBM5pq4flLvlNmQvfbrBKwQuSFa1xDtQngQ7AWD6mbFK8J2NlK2DCSCutKWDV6DICavMvnOc
+ WyfEAf8VUE2lguDTKxRclJvlKoDIYBWKxl+AmUGu16ommtELB4qlnTP143oLsJGwzF46536ZQVC
+ OA3wFGJyKFLq36shKqCT3exFhVaHbpI9tYXsOV5VfNo0hIFQuUWIgOn6o3bhVJU0vy6EoArvb+j
+ c1gKTa+HylWru83nbsAafUYFwMMglJ+CjdOsLYIJ+2A5Wk3eYlPkJAZ+Rg6kTtF0SLXZ8lfK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-11_05,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=746 adultscore=0 impostorscore=0 malwarescore=0 mlxscore=0
+ suspectscore=0 phishscore=0 priorityscore=1501 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506110123
 
-On Wed, Jun 11, 2025 at 03:56:36PM +0200, Tomas Glozar wrote:
-> This series adds a feature that allows to user to specify certain
-> kinds of "actions" to be executed at one of two places in the rtla
-> measurement: when tracing is stopped on latency threshold, and at the
-> end of tracing.
- 
-> Two new options are added: -A/--on-threshold, and -N/--on-end, taking
-> the action as an argument. For example:
-
-I wouldn't add -A and -N, leaving just the long options, as it documents
-scripts (and we should have autocomplete as well), leaving the one
-letter options for things that are used super frequently, which could be
-these new options, after a while, time will tell :-)
-
-But I see that "A"ction connection, and since you show it is used
-multiple times in a single command line, maybe its warranted the
-one-letter option.
- 
-> $ rtla timerlat hist -T 10 -A shell,command="echo Threshold" \
-> -N shell,command="echo Tracing stopped"
- 
-> will print "Threshold" if a thread latency higher than 10 microseconds
-> is reached, and "Tracing stopped" always at the end.
- 
-> The list of possible actions is extensible and is covered in
-> the commit messages. Later, a documentation patch series will be sent
-> with clear explanation of every action and its syntax.
-
-I think having the documentation together with the new options is
-desirable.
- 
-> Notably, a special action "continue" resumes tracing. For example:
- 
-> $ rtla timerlat hist -T 100 -A shell,command="echo Threshold" \
-> -A continue -d 10s
-
-so --on-threshold ends up being a list of things to do when the
-threshold is hit?
- 
-> will print "Threshold" as many times as tracing is stopped after
-> thread latency reaches 100us.
-
-> The feature was inspired by a case where collecting perf data on rtla
-> latency overflow was required, which can be done by sending a signal
-> to the perf process.
- 
-> Example of this with Intel PT aux buffer:
- 
-> $ perf record --cpu 0 -e intel_pt// -S -- rtla timerlat top -q -T 100 \
-> -c 0 -A signal,pid=parent,num=12 -A continue
- 
-> In general, the feature is aiming to allow integration with external
-> tooling. To implement even more flexibility, passing context to the
-> shell through environmental variables, or even an entire scripting
-> language with access to the rtla internals can be implemented if
-> needed.
-
-That is an interesting example of cross-tool integration using existing
-mechanisms for detecting special events and asking for hardware tracing
-snapshots, good stuff!
-
-At some point we need to have this signalling to not involve userspace,
-shortcircuiting the snapshot request closer to the event of interest,
-inside the kernel.
-
-- Arnaldo
- 
-> Tomas Glozar (8):
->   rtla/timerlat: Introduce enum timerlat_tracing_mode
->   rtla/timerlat: Add action on threshold feature
->   rtla/timerlat_bpf: Allow resuming tracing
->   rtla/timerlat: Add continue action
->   rtla/timerlat: Add action on end feature
->   rtla/tests: Check rtla output with grep
->   rtla/tests: Add tests for actions
->   rtla/tests: Limit duration to maximum of 10s
+On 6/11/25 4:19 PM, Dmitry Baryshkov wrote:
+> On Wed, Jun 11, 2025 at 04:08:57PM +0200, Konrad Dybcio wrote:
+>> On 6/11/25 8:37 AM, Gaurav Kohli wrote:
+>>> Add TSENS and thermal devicetree node for QCS615 SoC.
+>>>
+>>> Signed-off-by: Gaurav Kohli <quic_gkohli@quicinc.com>
+>>> ---
+>>
+>> [...]
+>>
+>>> +	thermal-zones {
+>>> +		aoss-thermal {
+>>> +			thermal-sensors = <&tsens0 0>;
+>>> +
+>>> +			trips {
+>>> +				trip-point0 {
+>>> +					temperature = <110000>;
+>>> +					hysteresis = <5000>;
+>>> +					type = "passive";
+>>
+>> All of the passive trip points you added that aren't bound to any
+>> cooling devices should be critical instead (otherwise they're not
+>> doing anything)
+>>
+>> otherwise, looks good
 > 
->  tools/tracing/rtla/src/Build           |   1 +
->  tools/tracing/rtla/src/actions.c       | 260 +++++++++++++++++++++++++
->  tools/tracing/rtla/src/actions.h       |  52 +++++
->  tools/tracing/rtla/src/timerlat.bpf.c  |  13 +-
->  tools/tracing/rtla/src/timerlat.c      |  24 ++-
->  tools/tracing/rtla/src/timerlat.h      |  24 ++-
->  tools/tracing/rtla/src/timerlat_bpf.c  |  13 ++
->  tools/tracing/rtla/src/timerlat_bpf.h  |   3 +
->  tools/tracing/rtla/src/timerlat_hist.c | 145 ++++++++++----
->  tools/tracing/rtla/src/timerlat_top.c  | 167 ++++++++++------
->  tools/tracing/rtla/tests/engine.sh     |  21 +-
->  tools/tracing/rtla/tests/hwnoise.t     |   8 +-
->  tools/tracing/rtla/tests/osnoise.t     |   4 +-
->  tools/tracing/rtla/tests/timerlat.t    |  36 +++-
->  14 files changed, 652 insertions(+), 119 deletions(-)
->  create mode 100644 tools/tracing/rtla/src/actions.c
->  create mode 100644 tools/tracing/rtla/src/actions.h
-> 
-> -- 
-> 2.49.0
+> Don't we need cooling-maps for CPU thermal zones?
+
+no, we have lmh
+
+Konrad
