@@ -1,92 +1,57 @@
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55E4C248F60;
-	Wed, 11 Jun 2025 07:54:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0382E29D19;
+	Wed, 11 Jun 2025 07:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749628489; cv=none; b=allfd6xcH6wyTthR/sbvpyrc40OMF5XF8GMJsoiNFWadbb7oAU+MJwaQ38zR6wwaN6NlazMT/VITaSZfa2G/Z7WI3cXJ0HiwhXVVq1uPjb3LP3T4MEPQkckl+5f54r3MoUpjsgu7oWhEgKhdNLLBRL0JRYiU1n1I13EtL1tPNdU=
+	t=1749628547; cv=none; b=CrgG8Kk+Yog/hwIC6B1UWvi+9+ZI7PBJPG0TxKWPN3h7xRM1T0ZfkWWSljuR9CQeKVtB3yLjsvuJOT0+JtO1iJKAmNyyL1G2MpW5/U5Ej/2dipWFsh+f2kokSfyLnMEQgaQMRJwxnrY1FLfbajaKdHqHNxBPPQNG8dTb2xq6UfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749628489; c=relaxed/simple;
-	bh=6W7L6mLae0Gwk7i/q8VTDrfQXggHDNqoAV/kISEHYUc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BSamdQjgqlsDKy3s44Ii2jx1aIniSAhEdv1Tv6DxfOfUpPmIsS7LVVltULMgBO016JFCYQOB+YAfa9wYd/FQomlX6kvApk5QyypBnb6/NCjRrK+UxG4aA/CK5KoaIJPVlEZPr53Y7odzoHdD078sma30SFQeMiBMOD1BnWvkq7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZF3340iL; arc=none smtp.client-ip=209.85.210.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749628547; c=relaxed/simple;
+	bh=7klCgbHcdnpc/FRIacQPzSTO7zTDa1Elo06y8mgwqAM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XisCV8yq+9v4imuAxlxVDdpQIKAgp29JSs5wTW2kO7CJbxl3v9HJ/5Kh3wcuDK5alOOVqU6akWDxt+u2Yz8kzulEAO2sVWUdDV5tzgPJNDbuEbd3GJ1oB34GGZg4pjUnPfC5/GT7yzvPMziroiS6Ja4ad1OpTMQ5MXqY2QV9Prg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Z90ms/Ok; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZF3340iL"
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-735a9e65471so3838761a34.1;
-        Wed, 11 Jun 2025 00:54:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749628487; x=1750233287; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hnz/0tuwhYz4DMu7YFaY4+MBrOn4ASwg3VdpZXlOjs0=;
-        b=ZF3340iLobIaiQQMLYfpKc5fbLjnW+1dxbS/6c0aOIfcAqi6s5gPydB5dVtbAyFGCK
-         0CYp6jONcHpqxwTzbUXBtb1ivRL3U98b+wCaOQevu5lFEaInNevBfsKcejNrscSd16+L
-         abs/IxMxvQrcHcUIJBu+dSdup8vp8mL38s5xQ+8db5nQMe+BcKiluOYCZs14Jou+op+k
-         WM0a6dFGK2IAlqJ2a5HE+kOyUFDs2+xyecdPi5DmAd4+bzf7YoX99XtfhE+fA20sNtN8
-         vi7Ta1eYbo2JnLj2SdZjlAVbWndkfFQrsluWBj6+SOSStv7yZ0UJQ5VmO13dNcpPkDuR
-         5n3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749628487; x=1750233287;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hnz/0tuwhYz4DMu7YFaY4+MBrOn4ASwg3VdpZXlOjs0=;
-        b=LqbcGVPu9tRKZDhFh9su1ZOrYv0B4HYOlaTY9zohtk4sJ84ma1O62N4/wiU/+jKuYH
-         Xw1NvTUkR+k0Td5nylLbnGuEqcXetiJBWVmlLDZgUqyr+1XEoEbPZjOo/cgPJytBMb8K
-         xEl6Cfa+QtsXqqMVjBvbj2cd+d6IpHed6Tw3q/w1ORMV2xgpwMLLTMQXI3g0fDxXFh+S
-         ARkXIWHFMh972/9egZT3uYhovKJoDAr4tAPfdkgdrZA6KKJdnarOQgStzNDcCuZ/4d7U
-         qpcBQYog60JmzoKBrsmhIxaKKSZpk1+Zv/6mGeRPN9/rgn8v2vrLts5O7fPQW+KFA7IE
-         U0wA==
-X-Forwarded-Encrypted: i=1; AJvYcCU65kTtKafD13e4Da2vdK6yHYPaYtMn6UodQTJAtSXkWACoEWMWzQB6CFrWhOrmGfNoO2kl7KznIoNO@vger.kernel.org, AJvYcCU6Sougu2tZXGvlUCwDOZuYIdZuzXu5LLw4yaHiOP/vxE+s/DyybbIyMkggnujZzHjWzHx3aLte5kZvwh9i@vger.kernel.org, AJvYcCW2gp/xkGBzE72NaSX4VxsmrSQYob2GN6aULZCpS+xdukZlmMjiFJk/wRepr+TbM8GO5DmrwxEsMN54@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+CRoZ5TuxdU0BXSLlRXlnvamcRBSTDfTRPuB1nt9S79P06tBg
-	OHKtGR75TgX4QmBJKblFswDP9h6Rd6iIamo/eeaubN8DjmWISYNikZ5OkQpvjsmp
-X-Gm-Gg: ASbGnctUMOk/lOGoeafGMXXHssXPzc2U+/zfeUsK/3ceS/PQjKZ/4+0piAmoVNxZYk0
-	NWRaKWcGB2bny4jtsWd85ICcusiohhx6FOpQC4KTjYihXSVCaGmSLXOz2QEk5zd18cHBycGNEDB
-	3OrABmNlgvQM5LTCdil1h7keIBmHX6rAuI7siS5n5h404Tn4npxn8goE1/FC16reXKMnxpa9W3m
-	uUuC4Gegdvlvrkkp3lWKelnOf8QikL/wZyJ30bBgPih8d7crIBZJmWwpmieNzBpZq3tjRfgLkso
-	0pSmbEHQEiYkNDLc4ojaZjrZ3AgXkeoWM5dBCrFZ9RHUs8kT
-X-Google-Smtp-Source: AGHT+IHeItzokrKWw9l9oyv6bnHcsz0dOO4Q14MZQ9wo4Ra1X7rEUiC3C9xPLLzARwfKUZ6RpDZSIw==
-X-Received: by 2002:a05:620a:288d:b0:7c5:af73:4f72 with SMTP id af79cd13be357-7d3a89330ebmr320142685a.42.1749628475059;
-        Wed, 11 Jun 2025 00:54:35 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6fb09b1d1d0sm79736646d6.77.2025.06.11.00.54.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 00:54:34 -0700 (PDT)
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Philipp Zabel <p.zabel@pengutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@gmail.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Vinod Koul <vkoul@kernel.org>,
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-	Yu Yuan <yu.yuan@sjtu.edu.cn>,
-	Ze Huang <huangze@whut.edu.cn>,
-	Thomas Bonnefille <thomas.bonnefille@bootlin.com>
-Cc: Junhui Liu <junhui.liu@pigmoral.tech>,
-	devicetree@vger.kernel.org,
-	sophgo@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	dmaengine@vger.kernel.org,
-	Yixun Lan <dlan@gentoo.org>,
-	Longbin Li <looong.bin@gmail.com>
-Subject: [PATCH v3 1/4] dt-bindings: reset: sophgo: Add CV1800B support
-Date: Wed, 11 Jun 2025 15:53:15 +0800
-Message-ID: <20250611075321.1160973-2-inochiama@gmail.com>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Z90ms/Ok"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1749628546; x=1781164546;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=7klCgbHcdnpc/FRIacQPzSTO7zTDa1Elo06y8mgwqAM=;
+  b=Z90ms/Oklus59q3uhQX/Syf/gaZcbR0SdiXtGHaoB8mkLG5jlIp0TpH/
+   XcpDeHJYx+LpBvLMzCYUFvQjOZVlskkIaDm0GJ37ISXXoM4olFRobJYrc
+   +ka1UXEvHEoY3hvSxQB9fSQ6K++RZi3a8UMErBei3L/lBMCa2bzHWpxol
+   yyHJEXmTkN6sT2FZuWO2fNnPUSVr7dwFp1dSS94DojX5H+jwnSmmV7KBl
+   2Py+R6EL7VnbzET3qg/JCQgIBfKx4laFRZr2qdaZL9NtgtoJe779T3qW3
+   emkAwLH2E3Quh5VtoXGq8urWB5FILOZIQSgxIct1CQ6T47spd/xIbyJRo
+   A==;
+X-CSE-ConnectionGUID: SyFxjzU6S2+ui+bvqltq4w==
+X-CSE-MsgGUID: 9ORByZ58QxymSLdZMDcnuA==
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="43238999"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 11 Jun 2025 00:55:45 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Wed, 11 Jun 2025 00:55:05 -0700
+Received: from archlinux.mchp-main.com (10.10.85.11) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.2507.44 via Frontend Transport; Wed, 11 Jun 2025 00:55:03 -0700
+From: Mihai Sain <mihai.sain@microchip.com>
+To: <stern@rowland.harvard.edu>, <gregkh@linuxfoundation.org>,
+	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+	<claudiu.beznea@tuxon.dev>, <linux-usb@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+CC: Mihai Sain <mihai.sain@microchip.com>
+Subject: [PATCH] usb: ohci-at91: Use dynamic device name for OHCI HCD creation
+Date: Wed, 11 Jun 2025 10:54:15 +0300
+Message-ID: <20250611075414.4239-2-mihai.sain@microchip.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250611075321.1160973-1-inochiama@gmail.com>
-References: <20250611075321.1160973-1-inochiama@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -94,28 +59,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Add bindings for the reset generator on the SOPHGO CV1800B
-RISC-V SoC.
+Use the dynamic device name instead of the hardcoded string "at91"
+when creating the OHCI host controller driver.
+This ensures that the device name is more flexible
+and correctly reflects the actual device in the system.
+This will be in sync with ehci at91 driver.
 
-Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+[root@sam9x75eb ~]$ dmesg | grep usb
+[    1.464487] usb usb1: Manufacturer: Linux 6.16.0-rc1 ehci_hcd
+[    1.470210] usb usb1: SerialNumber: 700000.usb-ehci
+[    1.595683] usb usb2: Manufacturer: Linux 6.16.0-rc1 ohci_hcd
+[    1.601406] usb usb2: SerialNumber: 600000.usb-ohci
+
+[root@sam9x75eb ~]$ cat /proc/iomem | grep usb
+00600000-006fffff : 600000.usb-ohci usb-ohci@600000
+00700000-007fffff : 700000.usb-ehci usb-ehci@700000
+
+Signed-off-by: Mihai Sain <mihai.sain@microchip.com>
 ---
- Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/host/ohci-at91.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml b/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml
-index 1d1b84575960..bd8dfa998939 100644
---- a/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml
-+++ b/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml
-@@ -17,6 +17,7 @@ properties:
-               - sophgo,sg2044-reset
-           - const: sophgo,sg2042-reset
-       - const: sophgo,sg2042-reset
-+      - const: sophgo,cv1800b-reset
+diff --git a/drivers/usb/host/ohci-at91.c b/drivers/usb/host/ohci-at91.c
+index 5df793dcb25d..12fdb18934cf 100644
+--- a/drivers/usb/host/ohci-at91.c
++++ b/drivers/usb/host/ohci-at91.c
+@@ -193,7 +193,7 @@ static int usb_hcd_at91_probe(const struct hc_driver *driver,
+ 	if (irq < 0)
+ 		return irq;
  
-   reg:
-     maxItems: 1
+-	hcd = usb_create_hcd(driver, dev, "at91");
++	hcd = usb_create_hcd(driver, dev, dev_name(dev));
+ 	if (!hcd)
+ 		return -ENOMEM;
+ 	ohci_at91 = hcd_to_ohci_at91_priv(hcd);
+
+base-commit: aef17cb3d3c43854002956f24c24ec8e1a0e3546
 -- 
 2.49.0
 
