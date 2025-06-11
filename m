@@ -1,142 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815672741A2;
-	Wed, 11 Jun 2025 10:44:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF9EF23D2B1;
+	Wed, 11 Jun 2025 10:44:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749638645; cv=none; b=Q9x0nox6mcY5ZMdxCafyTo6whNmuePUJUlysWQqDEhMRtHC6/HOnd74nWw9N11IBm14cR/sqLqufHBAU/KOjCoMnqXnsbjtJrzQjBx7Fl9TJkJ78qm40ASXWptezTn0mBEGYDFd4aCUkPUsPrJiAiMWyZ9KklQauxVNc6WmFmXg=
+	t=1749638648; cv=none; b=ZD5mWqLY7GIttPh2knYpx2orMWZAIvVD4zZO7+va+NI+5dCMYeKDp8ldbA7bln1ZbRjiAV+ym9YgXm+A+9z7AS5AE2/cYPjFX5KweDX9GAH2vLkZOuA2ZD+HrZvu7GWlFNpPxa9REtmiDm60XCyLYp7VgNm/u04fdaLaSLkUh1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749638645; c=relaxed/simple;
-	bh=Y+E0RernoPBy6Uu3TI84qynsG952E7mhrc4IsFrLBMw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ssse8i2HAk3q3K5ZkH838PXXJ5HjkpIpEws16umrv3lXihK5Ss9xVtMwJExoofubFwfnYX2f3DWZsioQLayAMD1ISz3fMeY1zMTEOEzpq0txEoivL4DZwjarBQEK79/RpjqoICSrD81I1zGHY7cC67afdK9SCtKMQVdFD31cUlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I5y97M6f; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I5y97M6f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F408C4CEF1;
-	Wed, 11 Jun 2025 10:44:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749638645;
-	bh=Y+E0RernoPBy6Uu3TI84qynsG952E7mhrc4IsFrLBMw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=I5y97M6f50cvQr9uKp0kUq+9BZMTImITmMRenueRNabxOzKVQyQnTLxbxmtTZxO5U
-	 MuDdYfxHemloZH4Cae0vXdincPivKew92K2fsYKBHvufaFJ/6hh27G0I3cVM3HsxR/
-	 12P5c9q3qgMr0wbH+6gYGusSngdMQNcdUaZ5O+VMO6WFUjTDstfcZjjKhCunYBUlR2
-	 iA/84eicv9QqagjXKqAOgVl4u17gVrqDc4fHejiYpneNgSaHf9RORlssoWb3SghNBz
-	 R27yj1lvJ5M7ad3VBUwV+z1ppAVFVDZFKOVd8PQjCyAgkHTt1rLqEelEff47K1kHdi
-	 y8iJweniGuBfQ==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Benno Lossin" <lossin@kernel.org>
-Cc: "Alice Ryhl" <aliceryhl@google.com>,  "Danilo Krummrich"
- <dakr@kernel.org>,  "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
- <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
- <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Trevor
- Gross" <tmgross@umich.edu>,  "Bjorn Helgaas" <bhelgaas@google.com>,
-  Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,  "Greg
- Kroah-Hartman"
- <gregkh@linuxfoundation.org>,  "Rafael J. Wysocki" <rafael@kernel.org>,
-  "Tamir Duberstein" <tamird@gmail.com>,  "Viresh Kumar"
- <viresh.kumar@linaro.org>,  <rust-for-linux@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>,  <linux-pci@vger.kernel.org>,
-  =?utf-8?Q?Ma=C3=ADra?=
- Canal <mcanal@igalia.com>
-Subject: Re: [PATCH v2] rust: types: add FOREIGN_ALIGN to ForeignOwnable
-In-Reply-To: <DAJHVMM9DND0.2FM0FJYN0XEFV@kernel.org> (Benno Lossin's message
-	of "Wed, 11 Jun 2025 08:36:50 +0200")
-References: <20250610-pointed-to-v2-1-fad8f92cf1e5@kernel.org>
-	<HCd56HpzAlpsTZWbmM8R3IN8MCXWW-kpIjIt_K1D8ZFN6DLqIGmpNRJdle94PGpHYS86rmmhCPci9TajHZCCrw==@protonmail.internalid>
-	<DAIV6MJAJ5R0.3TZ4IC2KO9MOL@kernel.org> <87v7p3znz6.fsf@kernel.org>
-	<CAH5fLgi3B_Wyz2OzBLhHHgWrg7hboyFUcQe-+GUrrvXiX9di=w@mail.gmail.com>
-	<GHUD6hpYDty0s_oTLGC6owDPKqrNepeGOL9F-XlvY6G50K8Zptjp4f8kVVnyoTjf-E_0QVeHfmUUvcN-p1i24Q==@protonmail.internalid>
-	<DAJHVMM9DND0.2FM0FJYN0XEFV@kernel.org>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Wed, 11 Jun 2025 12:43:56 +0200
-Message-ID: <87jz5izhg3.fsf@kernel.org>
+	s=arc-20240116; t=1749638648; c=relaxed/simple;
+	bh=gJ9pvMHHMZdtyEHvI20T7HG10qF8I0VjoKUThkWAfKI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=jRWprg3ur4VY0WGENNTtGIOvSDvPjg2VVIBJX5kbqao07TY4S0MKPh/MuljoVFwIUWFkniZo0Uwrn1GrZjkh8J7+yF4sOiwiCyOhHMi+3gUh20V4jv74ddfh4qUchmVqkXAR8MdDHDY570YckHn4UQyOxq+NDBNb+baTHGP4KgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bHMhT5gWYz6M50l;
+	Wed, 11 Jun 2025 18:43:37 +0800 (CST)
+Received: from frapeml100006.china.huawei.com (unknown [7.182.85.201])
+	by mail.maildlp.com (Postfix) with ESMTPS id EEF651404FD;
+	Wed, 11 Jun 2025 18:44:01 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (7.182.85.172) by
+ frapeml100006.china.huawei.com (7.182.85.201) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 11 Jun 2025 12:44:01 +0200
+Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
+ frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
+ Wed, 11 Jun 2025 12:44:01 +0200
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Li Ming <ming.li@zohomail.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
+	<dave.jiang@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"dan.j.williams@intel.com" <dan.j.williams@intel.com>
+CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/1] cxl/edac: Fix potential memory leak issues
+Thread-Topic: [PATCH 1/1] cxl/edac: Fix potential memory leak issues
+Thread-Index: AQHb2oIwmpZ4onuTlE2PS5sH4NovFbP9xXKg
+Date: Wed, 11 Jun 2025 10:44:01 +0000
+Message-ID: <d44aac6a202d4e1695a52ddc0e33a735@huawei.com>
+References: <20250611033542.96184-1-ming.li@zohomail.com>
+In-Reply-To: <20250611033542.96184-1-ming.li@zohomail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
-"Benno Lossin" <lossin@kernel.org> writes:
-
-> On Tue Jun 10, 2025 at 4:15 PM CEST, Alice Ryhl wrote:
->> On Tue, Jun 10, 2025 at 4:10=E2=80=AFPM Andreas Hindborg <a.hindborg@ker=
-nel.org> wrote:
->>>
->>> "Benno Lossin" <lossin@kernel.org> writes:
->>>
->>> > On Tue Jun 10, 2025 at 1:30 PM CEST, Andreas Hindborg wrote:
->>> >> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
->>> >> index 22985b6f6982..0ccef6b5a20a 100644
->>> >> --- a/rust/kernel/types.rs
->>> >> +++ b/rust/kernel/types.rs
->>> >> @@ -21,15 +21,11 @@
->>> >>  ///
->>> >>  /// # Safety
->>> >>  ///
->>> >> -/// Implementers must ensure that [`into_foreign`] returns a pointe=
-r which meets the alignment
->>> >> -/// requirements of [`PointedTo`].
->>> >> -///
->>> >> -/// [`into_foreign`]: Self::into_foreign
->>> >> -/// [`PointedTo`]: Self::PointedTo
->>> >> +/// Implementers must ensure that [`Self::into_foreign`] returns po=
-inters aligned to
->>> >> +/// [`Self::FOREIGN_ALIGN`].
->>> >>  pub unsafe trait ForeignOwnable: Sized {
->>> >> -    /// Type used when the value is foreign-owned. In practical ter=
-ms only defines the alignment of
->>> >> -    /// the pointer.
->>> >> -    type PointedTo;
->>> >> +    /// The alignment of pointers returned by `into_foreign`.
->>> >> +    const FOREIGN_ALIGN: usize;
->>> >>
->>> >>      /// Type used to immutably borrow a value that is currently for=
-eign-owned.
->>> >>      type Borrowed<'a>;
->>> >> @@ -39,18 +35,20 @@ pub unsafe trait ForeignOwnable: Sized {
->>> >>
->>> >>      /// Converts a Rust-owned object to a foreign-owned one.
->>> >>      ///
->>> >> +    /// The foreign representation is a pointer to void. Aside from=
- the guarantees listed below,
->>> >
->>> > I feel like this reads better:
->>> >
->>> > s/guarantees/ones/
->>> >
->>> >> +    /// there are no other guarantees for this pointer. For example=
-, it might be invalid, dangling
->>> >
->>> > We should also mention that it could be null. (or is that assumption
->>> > wrong?)
->>>
->>> It is probably not going to be null, but it is allowed to. I can add it.
->>>
->>> The list does not claim to be exhaustive, and a null pointer is just a
->>> special case of an invalid pointer.
->>
->> We probably should not allow null pointers. If we do, then
->> try_from_foreign does not make sense.
+>-----Original Message-----
+>From: Li Ming <ming.li@zohomail.com>
+>Sent: 11 June 2025 04:36
+>To: dave@stgolabs.net; Jonathan Cameron <jonathan.cameron@huawei.com>;
+>dave.jiang@intel.com; alison.schofield@intel.com; vishal.l.verma@intel.com=
+;
+>ira.weiny@intel.com; dan.j.williams@intel.com; Shiju Jose
+><shiju.jose@huawei.com>
+>Cc: linux-cxl@vger.kernel.org; linux-kernel@vger.kernel.org; Li Ming
+><ming.li@zohomail.com>
+>Subject: [PATCH 1/1] cxl/edac: Fix potential memory leak issues
 >
-> That's a good point. Then let's add that as a safety requirement for the
-> trait.
+>In cxl_store_rec_gen_media() and cxl_store_rec_dram(), use kmemdup() to
+>duplicate a cxl gen_media/dram event to store the event in a xarray by
+>xa_store(). The cxl gen_media/dram event allocated by kmemdup() should be
+>freed in the case that the xa_store() fails.
+>
+>Fixes: 0b5ccb0de1e2 ("cxl/edac: Support for finding memory operation
+>attributes from the current boot")
+>Signed-off-by: Li Ming <ming.li@zohomail.com>
 
-I disagree. It does not matter for the safety of the trait.
+Thanks Ming for fixing.=20
 
-From the point of the user, the pointer is opaque and can be any value.
-In fact, one could do a safe implementation where the returned value is
-a key into some mapping structure. Probably not super fast, but the user
-should not care.
+Tested-by: Shiju Jose <shiju.jose@huawei.com>=20
+Reviewed-by: Shiju Jose <shiju.jose@huawei.com>
 
-
-Best regards,
-Andreas Hindborg
-
+>---
+>base-commit: 87b42c114cdda76c8ad3002f2096699ad5146cb3 cxl/fixes
+>---
+> drivers/cxl/core/edac.c | 10 ++++++----
+> 1 file changed, 6 insertions(+), 4 deletions(-)
+>
+>diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c index
+>2cbc664e5d62..b4c5c23a45d4 100644
+>--- a/drivers/cxl/core/edac.c
+>+++ b/drivers/cxl/core/edac.c
+>@@ -1086,13 +1086,13 @@ static void cxl_del_overflow_old_recs(struct xarra=
+y
+>*rec_xarray)  int cxl_store_rec_gen_media(struct cxl_memdev *cxlmd, union
+>cxl_event *evt)  {
+> 	struct cxl_mem_err_rec *array_rec =3D cxlmd->err_rec_array;
+>-	struct cxl_event_gen_media *rec;
+> 	void *old_rec;
+>
+> 	if (!IS_ENABLED(CONFIG_CXL_EDAC_MEM_REPAIR) || !array_rec)
+> 		return 0;
+>
+>-	rec =3D kmemdup(&evt->gen_media, sizeof(*rec), GFP_KERNEL);
+>+	struct cxl_event_gen_media *rec __free(kfree) =3D
+>+		kmemdup(&evt->gen_media, sizeof(*rec), GFP_KERNEL);
+> 	if (!rec)
+> 		return -ENOMEM;
+>
+>@@ -1106,6 +1106,7 @@ int cxl_store_rec_gen_media(struct cxl_memdev
+>*cxlmd, union cxl_event *evt)
+>
+> 	cxl_del_expired_gmedia_recs(&array_rec->rec_gen_media, rec);
+> 	cxl_del_overflow_old_recs(&array_rec->rec_gen_media);
+>+	retain_and_null_ptr(rec);
+>
+> 	return 0;
+> }
+>@@ -1114,13 +1115,13 @@
+>EXPORT_SYMBOL_NS_GPL(cxl_store_rec_gen_media, "CXL");  int
+>cxl_store_rec_dram(struct cxl_memdev *cxlmd, union cxl_event *evt)  {
+> 	struct cxl_mem_err_rec *array_rec =3D cxlmd->err_rec_array;
+>-	struct cxl_event_dram *rec;
+> 	void *old_rec;
+>
+> 	if (!IS_ENABLED(CONFIG_CXL_EDAC_MEM_REPAIR) || !array_rec)
+> 		return 0;
+>
+>-	rec =3D kmemdup(&evt->dram, sizeof(*rec), GFP_KERNEL);
+>+	struct cxl_event_dram *rec __free(kfree) =3D
+>+		kmemdup(&evt->dram, sizeof(*rec), GFP_KERNEL);
+> 	if (!rec)
+> 		return -ENOMEM;
+>
+>@@ -1134,6 +1135,7 @@ int cxl_store_rec_dram(struct cxl_memdev *cxlmd,
+>union cxl_event *evt)
+>
+> 	cxl_del_expired_dram_recs(&array_rec->rec_dram, rec);
+> 	cxl_del_overflow_old_recs(&array_rec->rec_dram);
+>+	retain_and_null_ptr(rec);
+>
+> 	return 0;
+> }
+>--
+>2.34.1
 
