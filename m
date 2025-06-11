@@ -1,162 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lx20.hoststar.hosting (lx20.hoststar.hosting [168.119.41.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D5C1494A8;
-	Wed, 11 Jun 2025 07:13:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1016226D19;
+	Wed, 11 Jun 2025 07:13:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.41.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749625987; cv=none; b=hpZlzaaH9zypVepE0GTU/LH4HLl7h4a7OdS4gkw4eGrBOlstw2ZcPRb1RCqMGerH/MT52bm0WRprZIxOBEVjGt30Oo10R3qrjNYJzVzKe1h5+YotQQi0n0840w4Ocl/T9h76U6QGfc1E2bX9XHYk812s531V+f8f8uDHgeLFpB8=
+	t=1749626034; cv=none; b=Jw09intIfcmeQOgqeTx9K75u/GbAugG2TdNSvdiq37H/PghA49tpnMAhJAb9IRVMLWVzfvsifhlUgx49Gm67WSuyaTdlWmhJ3TzQcrS6cn8N9NK8nf7KUpL2o9mCwpEfcLjvLKVu7Yt6MI5/64Mt0uIojptUjuzbGYNvoQdcCj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749625987; c=relaxed/simple;
-	bh=BU/YIa0ZINv1YKgZsp2RiDxt77s+yheUVlOxVKJfnoI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l5Dd/EUntMLFlp8uOCBSboTZ04tmD3/bi8TzillrIwVVolEJWM46mr1Tfz2wC//hG3dV9rTeTKfFJzWZ6MhfNV0+cnyRKHwSD/uKlD6R9pvogz4q5lrI95LgUTRtiDZjlZvKo0oaDwSEsoKm4D3PQZ+ZTT5Jm0ek+PiOfaiRy70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ggpUFbak; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749626034; c=relaxed/simple;
+	bh=ocYLGrn4DKyRdjJkUqfv9yBG++qwjH8EOCZ0CFdAVIk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=I4FHIq4Q6z1iyekkSvpWtFXgDqPBNMBpsSSLr6YO7lbJMMTTVRwi5i/L06l7v1Wbk/xGjnaOufg5fGiJC7lrzkCJG0VWVFh8bMLXusOio+8JROfXP+p5ZSheKSz7bUBFHxAQFe8orUQ/eml+ZZEOgzZKmJKhOlLzAzaaSGRgFGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at; spf=pass smtp.mailfrom=emfend.at; dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b=LAjTGT3t; arc=none smtp.client-ip=168.119.41.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emfend.at
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ggpUFbak"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50B3EC4CEEE;
-	Wed, 11 Jun 2025 07:13:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749625986;
-	bh=BU/YIa0ZINv1YKgZsp2RiDxt77s+yheUVlOxVKJfnoI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ggpUFbakPeZUwoBwH3YDz6XB4SvzLcIv93QmM46YM+pk7TkxphJmt2AVm4vM4d2I4
-	 9YRikKRU79nDuRh9+COoO01myW8eoqucdmNmT0Ss1NCLtMRHoQi+mRpjdkuLVTi3YZ
-	 /K9HDQFxYSEToErX9mnDPVlsYlxvYn0ED1ktHAcIeATAh8ADHulLe6C8+BO+qvC+hx
-	 cfPS/DEEHI1kDaHTrdbqUBDDirhU5SFwmKEB38XR0R3eA24RPfN19S29wSdIYx2FOX
-	 wbcLBHbnidiJVTIn2ldh2CCZKuXrE2VsfLWS6K+Q3cnP9a/+ipMcSUyziEumMJXQnN
-	 2mnFPkDF9EUTw==
-Message-ID: <61e53f55-394d-422f-8600-9035eac40ff4@kernel.org>
-Date: Wed, 11 Jun 2025 09:13:01 +0200
+	dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b="LAjTGT3t"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=emfend.at;
+	 s=mail; h=Cc:To:Message-Id:Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Subject:Date:From:Sender:Reply-To:Content-ID:Content-Description
+	:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=Jbe15mnO9u7J7i3pEkARcJf909rCxy+rkEFHQHi+nn0=; b=LAjTGT3tp5Ne0I6Mw4XbIR6A7g
+	f4tuIxEeU7uC4SDXTie3Ez7K5CxWBoeCoHSPWXefZBXjQTfuYaL/hYu+3cHCgcqRr4WWybe30nTQ0
+	KJaonu35AWUjw6IR8tk3lOtblnmz629dmOw6Okx/N0DImDc0o+Bzfgh1/yPxaTIec5Go=;
+Received: from 194-208-208-245.tele.net ([194.208.208.245]:62424 helo=[127.0.1.1])
+	by lx20.hoststar.hosting with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <matthias.fend@emfend.at>)
+	id 1uPFeX-00GO9r-Ha; Wed, 11 Jun 2025 09:13:42 +0200
+From: Matthias Fend <matthias.fend@emfend.at>
+Date: Wed, 11 Jun 2025 09:13:33 +0200
+Subject: [PATCH] media: dw9714: add support for powerdown pin
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 1/2] dt-bindings: thermal: qcom-tsens: make ipq5018
- tsens standalone compatible
-To: George Moussalem <george.moussalem@outlook.com>,
- Amit Kucheria <amitk@kernel.org>, Thara Gopinath <thara.gopinath@gmail.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250611-ipq5018-tsens-v11-0-266566bfd16a@outlook.com>
- <20250611-ipq5018-tsens-v11-1-266566bfd16a@outlook.com>
- <17eaaad4-7713-4149-b66c-1c48db3ab42f@kernel.org>
- <DS7PR19MB8883034308D6642B6B567CAD9D75A@DS7PR19MB8883.namprd19.prod.outlook.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <DS7PR19MB8883034308D6642B6B567CAD9D75A@DS7PR19MB8883.namprd19.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250611-dw9714-sd-v1-1-fb47ef5e736c@emfend.at>
+X-B4-Tracking: v=1; b=H4sIAJwsSWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDM0ND3ZRyS3NDE93iFN20pETTRGNTkzRLYzMloPqCotS0zAqwWdGxtbU
+ AK9Q4mFsAAAA=
+X-Change-ID: 20250611-dw9714-sd-fba5a354f936
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ bsp-development.geo@leica-geosystems.com, 
+ Matthias Fend <matthias.fend@emfend.at>
+X-Mailer: b4 0.14.2
+X-Spam-Score: 
+X-Spam-Bar: 
+X-Spam-Report: 
 
-On 11/06/2025 09:06, George Moussalem wrote:
-> Hi Krzysztof,
-> 
-> On 6/11/25 10:51, Krzysztof Kozlowski wrote:
->> On 11/06/2025 07:12, George Moussalem via B4 Relay wrote:
->>> From: George Moussalem <george.moussalem@outlook.com>
->>>
->>> IPQ5018 tsens should not use qcom,tsens-v1 as fallback since it has no RPM
->>> and, as such, deviates from the standard v1 init routine in the driver.
->>> So let's make qcom,ipq5018-tsens a standalone compatible in the bindings.
->>>
->>> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
->>> ---
->>>   Documentation/devicetree/bindings/thermal/qcom-tsens.yaml | 5 ++++-
->>
->> You just added it recently with the fallback (in v9 of this patchset)
->> and now remove it?
->>
->> And what does it mean it has no RPM? How does it affect the driver? Does
->> fallback work or not?
-> 
-> IPQ5018 tsens IP is V1, but since it's got no RPM, it follows a 
-> different init routine for which VER_1_X_NO_RPM was created just like 
-> there is one for V2 without RPM, else the driver wouldn't probe. This 
-> was added as part of:
-> 
-> https://patchwork.kernel.org/project/linux-arm-msm/patch/DS7PR19MB8883C5D7974C7735E23923769DCC2@DS7PR19MB8883.namprd19.prod.outlook.com/
-> 
-> Since its introduction, I missed updating the bindings which caused a 
-> binding issue (as reported by Rob) on the compatible as it expects the 
-> qcom,tsens-v1 as a fallback. But we can't use that fallback, so that's 
-> why it needs to be a standalone compatible.
+Add support for the powerdown pin (xSD), which can be used to put the VCM
+driver into power down mode. This is useful, for example, if the VCM
+driver's power supply cannot be controlled.
+The use of the powerdown pin is optional.
 
+Signed-off-by: Matthias Fend <matthias.fend@emfend.at>
+---
+ drivers/media/i2c/Kconfig  |  2 +-
+ drivers/media/i2c/dw9714.c | 16 ++++++++++++++++
+ 2 files changed, 17 insertions(+), 1 deletion(-)
 
-So you need Fixes tag and explain what was buggy in previous patch.
+diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+index e45ba127069fc0848f1a06ceb789efd3c222c008..e923daeec9c574c5b8c7014b9e83fcbad47866c0 100644
+--- a/drivers/media/i2c/Kconfig
++++ b/drivers/media/i2c/Kconfig
+@@ -748,7 +748,7 @@ config VIDEO_AK7375
+ 
+ config VIDEO_DW9714
+ 	tristate "DW9714 lens voice coil support"
+-	depends on I2C && VIDEO_DEV
++	depends on GPIOLIB && I2C && VIDEO_DEV
+ 	select MEDIA_CONTROLLER
+ 	select VIDEO_V4L2_SUBDEV_API
+ 	select V4L2_ASYNC
+diff --git a/drivers/media/i2c/dw9714.c b/drivers/media/i2c/dw9714.c
+index 2ddd7daa79e28a2cde915b4173fa27e60d5a2b57..5b78c1848f80bc3e32df13d149f3865ff8defe6e 100644
+--- a/drivers/media/i2c/dw9714.c
++++ b/drivers/media/i2c/dw9714.c
+@@ -2,6 +2,7 @@
+ // Copyright (c) 2015--2017 Intel Corporation.
+ 
+ #include <linux/delay.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/i2c.h>
+ #include <linux/module.h>
+ #include <linux/pm_runtime.h>
+@@ -38,6 +39,7 @@ struct dw9714_device {
+ 	struct v4l2_subdev sd;
+ 	u16 current_val;
+ 	struct regulator *vcc;
++	struct gpio_desc *powerdown_gpio;
+ };
+ 
+ static inline struct dw9714_device *to_dw9714_vcm(struct v4l2_ctrl *ctrl)
+@@ -151,11 +153,20 @@ static int dw9714_probe(struct i2c_client *client)
+ 	if (IS_ERR(dw9714_dev->vcc))
+ 		return PTR_ERR(dw9714_dev->vcc);
+ 
++	dw9714_dev->powerdown_gpio = devm_gpiod_get_optional(&client->dev,
++							     "powerdown",
++							     GPIOD_OUT_LOW);
++	if (IS_ERR(dw9714_dev->powerdown_gpio))
++		return dev_err_probe(&client->dev,
++				     PTR_ERR(dw9714_dev->powerdown_gpio),
++				     "could not get powerdown gpio\n");
++
+ 	rval = regulator_enable(dw9714_dev->vcc);
+ 	if (rval < 0) {
+ 		dev_err(&client->dev, "failed to enable vcc: %d\n", rval);
+ 		return rval;
+ 	}
++	gpiod_set_value_cansleep(dw9714_dev->powerdown_gpio, 0);
+ 
+ 	usleep_range(1000, 2000);
+ 
+@@ -185,6 +196,7 @@ static int dw9714_probe(struct i2c_client *client)
+ 	return 0;
+ 
+ err_cleanup:
++	gpiod_set_value_cansleep(dw9714_dev->powerdown_gpio, 1);
+ 	regulator_disable(dw9714_dev->vcc);
+ 	v4l2_ctrl_handler_free(&dw9714_dev->ctrls_vcm);
+ 	media_entity_cleanup(&dw9714_dev->sd.entity);
+@@ -200,6 +212,7 @@ static void dw9714_remove(struct i2c_client *client)
+ 
+ 	pm_runtime_disable(&client->dev);
+ 	if (!pm_runtime_status_suspended(&client->dev)) {
++		gpiod_set_value_cansleep(dw9714_dev->powerdown_gpio, 1);
+ 		ret = regulator_disable(dw9714_dev->vcc);
+ 		if (ret) {
+ 			dev_err(&client->dev,
+@@ -234,6 +247,7 @@ static int __maybe_unused dw9714_vcm_suspend(struct device *dev)
+ 		usleep_range(DW9714_CTRL_DELAY_US, DW9714_CTRL_DELAY_US + 10);
+ 	}
+ 
++	gpiod_set_value_cansleep(dw9714_dev->powerdown_gpio, 1);
+ 	ret = regulator_disable(dw9714_dev->vcc);
+ 	if (ret)
+ 		dev_err(dev, "Failed to disable vcc: %d\n", ret);
+@@ -262,6 +276,8 @@ static int  __maybe_unused dw9714_vcm_resume(struct device *dev)
+ 		dev_err(dev, "Failed to enable vcc: %d\n", ret);
+ 		return ret;
+ 	}
++	gpiod_set_value_cansleep(dw9714_dev->powerdown_gpio, 0);
++
+ 	usleep_range(1000, 2000);
+ 
+ 	for (val = dw9714_dev->current_val % DW9714_CTRL_STEPS;
 
-> 
->>
->>
->>>   1 file changed, 4 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
->>> index 0e653bbe9884953b58c4d8569b8d096db47fd54f..73d722bda8adc2c930edfc3373e6011f19c7c491 100644
->>> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
->>> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
->>> @@ -36,10 +36,13 @@ properties:
->>>                 - qcom,msm8974-tsens
->>>             - const: qcom,tsens-v0_1
->>>   
->>> +      - description: v1 of TSENS
->>
->> So that's still v1... I don't understand.
-> 
-> As mentioned, the IP is still v1 but with a different init routine in 
-> the driver for IP v1 without RPM
-
-OK, just merge it into first enum and drop the description there.
+---
+base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
+change-id: 20250611-dw9714-sd-fba5a354f936
 
 Best regards,
-Krzysztof
+-- 
+Matthias Fend <matthias.fend@emfend.at>
+
