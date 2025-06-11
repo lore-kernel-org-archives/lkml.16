@@ -1,216 +1,237 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8941327466F
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 10:34:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6EF27605C;
+	Wed, 11 Jun 2025 10:34:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749638086; cv=none; b=h3UE9N4po078fiUyyTzxr5AjR5IPJdaMgojo8PdYLq9AreWhkU/vH+1fIXHPyn92Rmz0hzZ4UqfGdh/CnbBR8rMr/agRAJh3MrOPjzqTOfSt5IQR/jX2wTw3N+wvR4yBewKX0f4FiAnlXMVZRKJhrVqoD8FauVz7rW+G34MmCl0=
+	t=1749638095; cv=none; b=fXvswhKo09cnawczjHw9zO4JqbMJdxbWsyCiQ1I5g9QqrIPG6Ou3WdJyHJvdg+d+c2coPayLC+QtGm8kwt1ysrbvrvaPwtWFZAsjUViaJgtJw1KHVIdTDsP9DiLCOuGuOybfN5GnsZwLXrFpuXTIt5mmBPA3z0XYMHj07vPCUeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749638086; c=relaxed/simple;
-	bh=nEVwenXZZz5nM7DkAj/oakR9uk7yJuktxc9Q++SALQI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DSREf0FSZWnHptXBoJopb0YATAebcMgxg9ak3fjfXAPTqcHYfdjE+Erysjk4HNI41GtwqEi7Z+d/O3/Ct8yM83AbZWePqgo170kcKeFX/a4kC5XzUou194to9qcuurl92PPlrL1u6MguapZb6VLQyWUefGB80b2X57cl3id+MVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B2VPZxmn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749638095; c=relaxed/simple;
+	bh=ogpnT5Ct5eysAH74HW6uLq8kQrXagSiHRmkpMn3ObqI=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E0FnS4dpcO4ASxe0wXS7Wmkrq8k4/I55KeT21S/j7S3HaHoUwFIFsUBSRvyiEBtsxUCIYjCxDtyo2aLvOLZZwDTLu0rVYQ9Aal4tRrvgmX2rEssLUQNSu1oiRZSkP4lnTNlX/xwuWH2sNzkYx9j4TbdwvT6L1QjV6m1KbTqdmcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cFBh94E5; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B2VPZxmn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C1E2C4CEF2;
-	Wed, 11 Jun 2025 10:34:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749638086;
-	bh=nEVwenXZZz5nM7DkAj/oakR9uk7yJuktxc9Q++SALQI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=B2VPZxmnIj7RIjnIOyiDHfUNfdEod0jaCPx3WX3qLKIPISSkDHkeOgUz+gAByMQrn
-	 tp/PFs4R/ciMTbsz6an5eNIvWCcEMLhdiX9V9EVYdjRo/fSf970ls1xwCii5+A+qi2
-	 yI6qcsywwsiKrOATtFiZWzr7IzBZCUBoZVK2FR7MQB3UIv56GgXatBGV58G/Z3fafb
-	 MnOhOy6SAiFQdduxLcJTtqmNmDVTVj+C6zO9rrEbxsMCUNQ2fOG49EER76iWdmECvf
-	 8ZtMVQXuCTE33/HurXMwV0U3VXs/nvIhDZFWe8GvxLP8/hVDLRNFnWp+GXpC/ku8cy
-	 h9hCeps6TqmMA==
-From: Alexey Gladkov <legion@kernel.org>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Petr Pavlu <petr.pavlu@suse.com>,
-	Alexey Gladkov <legion@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] modpost: Create modalias for builtin modules
-Date: Wed, 11 Jun 2025 12:34:31 +0200
-Message-ID: <321947106ec997b5a2a9c93ec2229cb2f9eb377c.1749637146.git.legion@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1749637146.git.legion@kernel.org>
-References: <20250606041029.614348-1-masahiroy@kernel.org> <cover.1749637146.git.legion@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cFBh94E5"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-addfe17ec0bso151183966b.1;
+        Wed, 11 Jun 2025 03:34:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749638092; x=1750242892; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=x0uKW1VeGsneSncVbCyz+LkK6o18HmhOxqfXFR/PnMI=;
+        b=cFBh94E5DTlpPrBPyFbpAunYDuTcimiWv6KbSTKFbBTNakOgKXmJsnCWwK/Cs3lcCZ
+         Wo/DOwJ72ayhcAEwQk1iq3X3t2mK8H/RtQJa0ZBuD7gR6qHThmqCTnTe9ZElcTNBPyCm
+         T7yxfZGNWTo3OAMXRQOa56uWxPRsE2lWUd9uJhUHKwjszD+Nw/DN5effihL5CJqwl8BV
+         jd71shao+LuY9qqwNSeA9525Vmag5TnKi8JFZuReyz+wAmAplzHHXM7BMh9NXpAWn1oJ
+         6TWZLXiGJ1aGkEjag9LEAl6aV239TlgXWPN4dZ+CzWczYN89Bj4Q/PzLm4fnzG+I13+q
+         JSaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749638092; x=1750242892;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x0uKW1VeGsneSncVbCyz+LkK6o18HmhOxqfXFR/PnMI=;
+        b=PkBCH8C0pb6Kb4Dj6Hs+prhSHn+lLdnwZVBn+2TzvFbOwEEPVU/gMgfjZ/B708zonj
+         FBl1HqqCyLfaJljJaQb0Az6qOnKPNp/rDCCgtHeTYUGBHkG3E2w/a97AiqtmcjNo32GK
+         K2aqw6tzi1janxwziaM5Ue//FbmGXqiCPXWbBCKTEOBdY+rq8HcYX+ytXbiOrysP7v2W
+         E/TeiTk1+pgOj2rhHY3uOvFhoQebWKBbXZpaY7YpRGapiocSGUwHNUdZ35srKX2xB4hw
+         WojwJGDttvbORX0SkBhQdNeSnUas6gYMcqVH9L5Kcn5UhZDSymJ8SIVW4WXS0g61tSW6
+         nzHA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+YsqCCIiB1i/KfOL+vVQQZ4WLrDI/tlVayOue30Hml/1mc+z/dnM46DuXso3Yb0/MGz9Hpy5Us2ejSCgJ@vger.kernel.org, AJvYcCUFU1liK5V4n5dV++hY1SqoNFnK6KM5yz89g553PRsR+LWTTo39A4Wap52/KpcbVeOZnB46r7+m9KMb5vj/X3+w@vger.kernel.org, AJvYcCVNdcrdK3DE8uOw+gJjeTEx1daAGhNct5rOIlASv9NZyA2fLhB+HDxa0RWQvX/h9T1Kakk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxf8UfFVqz2Ys46S7vsRe8kDhrBrsbsfTLdBHTOZWwgRD6qGZjv
+	0nke/HIGQjjWFJ2LlzB9H+OLAScICUeHsQw/qnI5VaBeN7PYZy7MnCGC
+X-Gm-Gg: ASbGncuFNcPXZZMSwPKEGIaG9PcfougnGTS1NCPPCDZ5nlVMSqnl5QELCwV4XJykT9/
+	a2Q0y9f/8nFxu4fsdy5OHT1WE+91sZaNsiKiMSxSBdgGKinTMFLXWDfP2sHAz2DIelLUp12aL2x
+	3DyoQWsgN9fG9zA75NnrWLLGrbd0dcO+YTNVaPcE9JuXJfBp9F/EpR/kv0TR8XT8Rl4pilCdHSK
+	N+7mo7pTSrK//LUY80P6sBRwBxRQG/HzvLOxrhBKHbI7MJ4qWLKZeJ03EKUEUtMqm/5Hbdypfzr
+	UyGN6Pd3zKI3qbGakaTKZjfNkMEQJhgCPxbt0n1WVTADV0U0
+X-Google-Smtp-Source: AGHT+IE8SIVFSPxHy04F/nR2Xhi3uUbPpm4yM6gc7UZ2MMWfC9Kpbmt7MaJOGFiADTq+5YH+jRAfWw==
+X-Received: by 2002:a17:906:2442:b0:ade:9b52:4d79 with SMTP id a640c23a62f3a-ade9b525d84mr18040866b.1.1749638091955;
+        Wed, 11 Jun 2025 03:34:51 -0700 (PDT)
+Received: from krava ([173.38.220.55])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc1c7e2sm863976666b.73.2025.06.11.03.34.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 03:34:51 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 11 Jun 2025 12:34:49 +0200
+To: Blake Jones <blakejones@google.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Mykola Lysenko <mykolal@fb.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] libbpf: add support for printing BTF character
+ arrays as strings
+Message-ID: <aElbyWY-cIQNf4wp@krava>
+References: <20250603203701.520541-1-blakejones@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250603203701.520541-1-blakejones@google.com>
 
-For some modules, modalias is generated using the modpost utility and
-the section is added to the module file.
+On Tue, Jun 03, 2025 at 01:37:00PM -0700, Blake Jones wrote:
+> The BTF dumper code currently displays arrays of characters as just that -
+> arrays, with each character formatted individually. Sometimes this is what
+> makes sense, but it's nice to be able to treat that array as a string.
+> 
+> This change adds a special case to the btf_dump functionality to allow
+> 0-terminated arrays of single-byte integer values to be printed as
+> character strings. Characters for which isprint() returns false are
+> printed as hex-escaped values. This is enabled when the new ".emit_strings"
+> is set to 1 in the btf_dump_type_data_opts structure.
+> 
+> As an example, here's what it looks like to dump the string "hello" using
+> a few different field values for btf_dump_type_data_opts (.compact = 1):
+> 
+> - .emit_strings = 0, .skip_names = 0:  (char[6])['h','e','l','l','o',]
+> - .emit_strings = 0, .skip_names = 1:  ['h','e','l','l','o',]
+> - .emit_strings = 1, .skip_names = 0:  (char[6])"hello"
+> - .emit_strings = 1, .skip_names = 1:  "hello"
 
-When a module is added inside vmlinux, modpost does not generate
-modalias for such modules and the information is lost.
+hi,
+could this be used in bpftool map dump? ;-) I checked, but it looks like
+bpftool map dump is using something else to dump data.. I admit I haven't
+spent much on time that
 
-As a result kmod (which uses modules.builtin.modinfo in userspace)
-cannot determine that modalias is handled by a builtin kernel module.
+thanks,
+jirka
 
-$ cat /sys/devices/pci0000:00/0000:00:14.0/modalias
-pci:v00008086d0000A36Dsv00001043sd00008694bc0Csc03i30
 
-$ modinfo xhci_pci
-name:           xhci_pci
-filename:       (builtin)
-license:        GPL
-file:           drivers/usb/host/xhci-pci
-description:    xHCI PCI Host Controller Driver
-
-Missing modalias "pci:v*d*sv*sd*bc0Csc03i30*" which will be generated by
-modpost if the module is built separately.
-
-To fix this it is necessary to generate the same modalias for vmlinux as
-for the individual modules. Fortunately '.vmlinux.export.o' is already
-generated from which '.modinfo' can be extracted in the same way as for
-vmlinux.o.
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Signed-off-by: Alexey Gladkov <legion@kernel.org>
----
- include/linux/module.h   |  4 ----
- scripts/Makefile.vmlinux |  5 ++++-
- scripts/mksysmap         |  3 +++
- scripts/mod/file2alias.c | 16 ++++++++++++++++
- scripts/mod/modpost.c    | 17 ++++++++++++++++-
- scripts/mod/modpost.h    |  2 ++
- 6 files changed, 41 insertions(+), 6 deletions(-)
-
-diff --git a/include/linux/module.h b/include/linux/module.h
-index e0f826fab2ac..3aeee5d0a77c 100644
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -251,14 +251,10 @@ struct module_kobject *lookup_or_create_module_kobject(const char *name);
- 	__PASTE(type,			\
- 	__PASTE(__, name)))))
- 
--#ifdef MODULE
- /* Creates an alias so file2alias.c can find device table. */
- #define MODULE_DEVICE_TABLE(type, name)			\
- static typeof(name) __mod_device_table(type, name)	\
-   __attribute__ ((used, alias(__stringify(name))))
--#else  /* !MODULE */
--#define MODULE_DEVICE_TABLE(type, name)
--#endif
- 
- /* Version of form [<epoch>:]<version>[-<extra-version>].
-  * Or for CVS/RCS ID version, everything but the number is stripped.
-diff --git a/scripts/Makefile.vmlinux b/scripts/Makefile.vmlinux
-index fdab5aa90215..fcc188d26ead 100644
---- a/scripts/Makefile.vmlinux
-+++ b/scripts/Makefile.vmlinux
-@@ -89,8 +89,11 @@ endif
- remove-section-y                                   := .modinfo
- remove-section-$(CONFIG_ARCH_VMLINUX_NEEDS_RELOCS) += '.rel*'
- 
-+remove-symbols := -w --strip-symbol='__mod_device_table__*'
-+
- quiet_cmd_strip_relocs = OBJCOPY $@
--      cmd_strip_relocs = $(OBJCOPY) $(addprefix --remove-section=,$(remove-section-y)) $< $@
-+      cmd_strip_relocs = $(OBJCOPY) $(addprefix --remove-section=,$(remove-section-y)) \
-+                         $(remove-symbols) $< $@
- 
- targets += vmlinux
- vmlinux: vmlinux.unstripped FORCE
-diff --git a/scripts/mksysmap b/scripts/mksysmap
-index a607a0059d11..c4531eacde20 100755
---- a/scripts/mksysmap
-+++ b/scripts/mksysmap
-@@ -59,6 +59,9 @@
- # EXPORT_SYMBOL (namespace)
- / __kstrtabns_/d
- 
-+# MODULE_DEVICE_TABLE (symbol name)
-+/ __mod_device_table__/d
-+
- # ---------------------------------------------------------------------------
- # Ignored suffixes
- #  (do not forget '$' after each pattern)
-diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
-index 13021266a18f..7da9735e7ab3 100644
---- a/scripts/mod/file2alias.c
-+++ b/scripts/mod/file2alias.c
-@@ -1527,5 +1527,21 @@ void handle_moddevtable(struct module *mod, struct elf_info *info,
- 		}
- 	}
- 
-+	if (mod->is_vmlinux) {
-+		struct module_alias *alias;
-+
-+		/*
-+		 * If this is vmlinux, record the name of the builtin module.
-+		 * Traverse the linked list in the reverse order, and set the
-+		 * builtin_modname unless it has already been set in the
-+		 * previous call.
-+		 */
-+		list_for_each_entry_reverse(alias, &mod->aliases, node) {
-+			if (alias->builtin_modname)
-+				break;
-+			alias->builtin_modname = xstrndup(modname, modnamelen);
-+		}
-+	}
-+
- 	free(zeros);
- }
-diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index be89921d60b6..67668b159444 100644
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -2021,11 +2021,26 @@ static void write_if_changed(struct buffer *b, const char *fname)
- static void write_vmlinux_export_c_file(struct module *mod)
- {
- 	struct buffer buf = { };
-+	struct module_alias *alias, *next;
- 
- 	buf_printf(&buf,
--		   "#include <linux/export-internal.h>\n");
-+		   "#include <linux/export-internal.h>\n"
-+		   "#include <linux/module.h>\n");
- 
- 	add_exported_symbols(&buf, mod);
-+
-+	buf_printf(&buf,
-+		   "#undef __MODULE_INFO_PREFIX\n"
-+		   "#define __MODULE_INFO_PREFIX\n");
-+
-+	list_for_each_entry_safe(alias, next, &mod->aliases, node) {
-+		buf_printf(&buf, "MODULE_INFO(%s.alias, \"%s\");\n",
-+			   alias->builtin_modname, alias->str);
-+		list_del(&alias->node);
-+		free(alias->builtin_modname);
-+		free(alias);
-+	}
-+
- 	write_if_changed(&buf, ".vmlinux.export.c");
- 	free(buf.p);
- }
-diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
-index 9133e4c3803f..2aecb8f25c87 100644
---- a/scripts/mod/modpost.h
-+++ b/scripts/mod/modpost.h
-@@ -99,10 +99,12 @@ buf_write(struct buffer *buf, const char *s, int len);
-  * struct module_alias - auto-generated MODULE_ALIAS()
-  *
-  * @node: linked to module::aliases
-+ * @modname: name of the builtin module (only for vmlinux)
-  * @str: a string for MODULE_ALIAS()
-  */
- struct module_alias {
- 	struct list_head node;
-+	char *builtin_modname;
- 	char str[];
- };
- 
--- 
-2.49.0
-
+> 
+> Here's the string "h\xff", dumped with .compact = 1 and .skip_names = 1:
+> 
+> - .emit_strings = 0:  ['h',-1,]
+> - .emit_strings = 1:  "h\xff"
+> 
+> Signed-off-by: Blake Jones <blakejones@google.com>
+> ---
+>  tools/lib/bpf/btf.h      |  3 ++-
+>  tools/lib/bpf/btf_dump.c | 55 +++++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 56 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/lib/bpf/btf.h b/tools/lib/bpf/btf.h
+> index 4392451d634b..ccfd905f03df 100644
+> --- a/tools/lib/bpf/btf.h
+> +++ b/tools/lib/bpf/btf.h
+> @@ -326,9 +326,10 @@ struct btf_dump_type_data_opts {
+>  	bool compact;		/* no newlines/indentation */
+>  	bool skip_names;	/* skip member/type names */
+>  	bool emit_zeroes;	/* show 0-valued fields */
+> +	bool emit_strings;	/* print char arrays as strings */
+>  	size_t :0;
+>  };
+> -#define btf_dump_type_data_opts__last_field emit_zeroes
+> +#define btf_dump_type_data_opts__last_field emit_strings
+>  
+>  LIBBPF_API int
+>  btf_dump__dump_type_data(struct btf_dump *d, __u32 id,
+> diff --git a/tools/lib/bpf/btf_dump.c b/tools/lib/bpf/btf_dump.c
+> index 460c3e57fadb..7c2f1f13f958 100644
+> --- a/tools/lib/bpf/btf_dump.c
+> +++ b/tools/lib/bpf/btf_dump.c
+> @@ -68,6 +68,7 @@ struct btf_dump_data {
+>  	bool compact;
+>  	bool skip_names;
+>  	bool emit_zeroes;
+> +	bool emit_strings;
+>  	__u8 indent_lvl;	/* base indent level */
+>  	char indent_str[BTF_DATA_INDENT_STR_LEN];
+>  	/* below are used during iteration */
+> @@ -2028,6 +2029,52 @@ static int btf_dump_var_data(struct btf_dump *d,
+>  	return btf_dump_dump_type_data(d, NULL, t, type_id, data, 0, 0);
+>  }
+>  
+> +static int btf_dump_string_data(struct btf_dump *d,
+> +				const struct btf_type *t,
+> +				__u32 id,
+> +				const void *data)
+> +{
+> +	const struct btf_array *array = btf_array(t);
+> +	const char *chars = data;
+> +	__u32 i;
+> +
+> +	/* Make sure it is a NUL-terminated string. */
+> +	for (i = 0; i < array->nelems; i++) {
+> +		if ((void *)(chars + i) >= d->typed_dump->data_end)
+> +			return -E2BIG;
+> +		if (chars[i] == '\0')
+> +			break;
+> +	}
+> +	if (i == array->nelems) {
+> +		/* The caller will print this as a regular array. */
+> +		return -EINVAL;
+> +	}
+> +
+> +	btf_dump_data_pfx(d);
+> +	btf_dump_printf(d, "\"");
+> +
+> +	for (i = 0; i < array->nelems; i++) {
+> +		char c = chars[i];
+> +
+> +		if (c == '\0') {
+> +			/*
+> +			 * When printing character arrays as strings, NUL bytes
+> +			 * are always treated as string terminators; they are
+> +			 * never printed.
+> +			 */
+> +			break;
+> +		}
+> +		if (isprint(c))
+> +			btf_dump_printf(d, "%c", c);
+> +		else
+> +			btf_dump_printf(d, "\\x%02x", (__u8)c);
+> +	}
+> +
+> +	btf_dump_printf(d, "\"");
+> +
+> +	return 0;
+> +}
+> +
+>  static int btf_dump_array_data(struct btf_dump *d,
+>  			       const struct btf_type *t,
+>  			       __u32 id,
+> @@ -2055,8 +2102,13 @@ static int btf_dump_array_data(struct btf_dump *d,
+>  		 * char arrays, so if size is 1 and element is
+>  		 * printable as a char, we'll do that.
+>  		 */
+> -		if (elem_size == 1)
+> +		if (elem_size == 1) {
+> +			if (d->typed_dump->emit_strings &&
+> +			    btf_dump_string_data(d, t, id, data) == 0) {
+> +				return 0;
+> +			}
+>  			d->typed_dump->is_array_char = true;
+> +		}
+>  	}
+>  
+>  	/* note that we increment depth before calling btf_dump_print() below;
+> @@ -2544,6 +2596,7 @@ int btf_dump__dump_type_data(struct btf_dump *d, __u32 id,
+>  	d->typed_dump->compact = OPTS_GET(opts, compact, false);
+>  	d->typed_dump->skip_names = OPTS_GET(opts, skip_names, false);
+>  	d->typed_dump->emit_zeroes = OPTS_GET(opts, emit_zeroes, false);
+> +	d->typed_dump->emit_strings = OPTS_GET(opts, emit_strings, false);
+>  
+>  	ret = btf_dump_dump_type_data(d, NULL, t, id, data, 0, 0);
+>  
+> -- 
+> 2.49.0.1204.g71687c7c1d-goog
+> 
