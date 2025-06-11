@@ -1,43 +1,41 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD072C2C9
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 03:41:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FFC279C4;
+	Wed, 11 Jun 2025 03:42:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749613303; cv=none; b=Y7olDWX+jL/nDDaVM5rocXmtKew8+CKeJK1k9KRrHhLXX9UJLCdhfMjNzROrFFOjW4OcM3CxyO+2x+mQeoDZdW4aLYcESvMCzU4gynBCNxssfCPGGe+Unhdwuum1Ksxn51xTh1kzIE2SsFjtSsfJpW37fISG4uI0OwIXBsONq08=
+	t=1749613338; cv=none; b=OVqrccPDvUdeauwIpXGexFRWTteQTM7Um8wYTEvljX7UVOjcWkyBjPd8oAlaUlJ3GcYCx2WlqqM6VbRs3bhJo8r0vZABaKCm0gUefm2ucYQnXYaHN8H2ZssMAs3roA46SaA91SeqfVnmjjp1xt+Q6IsZ5jldEQz0alcOP8poQgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749613303; c=relaxed/simple;
-	bh=fWpvHug4KD46JDmNRZOMiqJkfXioXvNjgZ6P+4H2Pqc=;
+	s=arc-20240116; t=1749613338; c=relaxed/simple;
+	bh=uNoQLdguzPNx+xLQFyBZOY/z6kGjEQrY8f9jh6trlsE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MNBcOuKX9udyQbo6nluCnXnBuqg0sUn+4fVq1nffxxFp/Y7Ses8DGsJuS62lHabm6DfUDtGcmgjL9oWaI5U0mZk8PWsuv/1Qa9gLhyOwHeNggk60hBCMEGMmGxu14vnU43DTSkMxz+nwY1A+vpOZfdbrOsCB9CeBYUfKcsOFHW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=sPDei5hw; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=gzBHfwMNxzyCLnXL6ZOsH274sphvRFd2YXofvxJsUwT6X85QsD9oAyaBuIpaX+NXfGFgYTkoIi8aQ4n9/byx0ZIvSucdLXkKhssz9Is9/LCCcomNwtle4c2IAWmnWymETiClzV1QTorgH8OHWyXtd5ageOWgkQZ5kF0Et0B3DtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uzbMPoAQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="sPDei5hw"
-Date: Tue, 10 Jun 2025 23:41:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749613297;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FcbMdWL9nohzlfXyKkU5qmdIVkZuUvvMyKp/ZhqYUxQ=;
-	b=sPDei5hw1wxHO/c7GpPFFng4Z4B4Q2mjUKA09sRqeegIkAHF2HWzbE9gqLotIZpH32WPKx
-	BNbJB4xOq7CjLrSFybj5csBKEL8iO1ScqutkJ07iWWtBXHGMruLiXOvkc7S8QuCRVuT1jG
-	IdGyALOoF4unS5NnuNnqcIbPDZhqY6E=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Casey Chen <cachen@purestorage.com>, surenb@google.com, corbet@lwn.net, 
-	dennis@kernel.org, tj@kernel.org, cl@gentwo.org, vbabka@suse.cz, mhocko@suse.com, 
-	jackmanb@google.com, hannes@cmpxchg.org, ziy@nvidia.com, rientjes@google.com, 
-	roman.gushchin@linux.dev, harry.yoo@oracle.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, yzhong@purestorage.com
-Subject: Re: [PATCH] alloc_tag: add per-NUMA node stats
-Message-ID: <hvtuqyu6urtutdjfqvtowgjqf5psyubljqujwtq3exdm33a7sq@3nxcevou3pok>
-References: <20250610233053.973796-1-cachen@purestorage.com>
- <20250610182155.36090c78124e1f60f2959d8e@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uzbMPoAQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DDE5C4CEEE;
+	Wed, 11 Jun 2025 03:42:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749613335;
+	bh=uNoQLdguzPNx+xLQFyBZOY/z6kGjEQrY8f9jh6trlsE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uzbMPoAQI5Pazfb2ExYS5UAVhxDsOTISrRMmKA54smKbPcxvRFG60j++h74hkS41e
+	 Z/0n6ZbM/4KUHT3TMWIlDZiyxuDtoFs9DObElrOEGffA8ywT8tZREA8ombfozJshfz
+	 zhuz2ewqrjSzpE7iAAd0h0TgkIYatGWCTNX/zIyT7BhZz2ClTU5EiTKCGf6/6IAavk
+	 uI5r6YgnoLhKsanZCmScAkxTxMwgH0g2lCadk0k+fixyaCRUIxd0DPA+BHhaRfjWP5
+	 r9f2wjS+0eHLNbCuuh3coU0fbm25LUa6u0YchtK/HwVy6BsrO1C4gdwi7pmRpON5b8
+	 y11Edk/BQclRw==
+Date: Tue, 10 Jun 2025 22:42:13 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] clk: qcom: sm8450: Enable retention for usb controller
+ gdsc
+Message-ID: <sy33khkakjxi66amjbuugnypjnegvd4z4dyfzvrp72qkuv3roh@dxaymdc6cfad>
+References: <20250610092253.2998351-1-krishna.kurapati@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,146 +44,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250610182155.36090c78124e1f60f2959d8e@linux-foundation.org>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250610092253.2998351-1-krishna.kurapati@oss.qualcomm.com>
 
-On Tue, Jun 10, 2025 at 06:21:55PM -0700, Andrew Morton wrote:
-> On Tue, 10 Jun 2025 17:30:53 -0600 Casey Chen <cachen@purestorage.com> wrote:
+On Tue, Jun 10, 2025 at 02:52:53PM +0530, Krishna Kurapati wrote:
+> When USB controller enters runtime suspend while operating in host
+> mode, then wakeup because of cable disconnect or a button press of
+> a headset causes the following kind of errors:
 > 
-> > Add support for tracking per-NUMA node statistics in /proc/allocinfo.
-> > Previously, each alloc_tag had a single set of counters (bytes and
-> > calls), aggregated across all CPUs. With this change, each CPU can
-> > maintain separate counters for each NUMA node, allowing finer-grained
-> > memory allocation profiling.
-> > 
-> > This feature is controlled by the new
-> > CONFIG_MEM_ALLOC_PROFILING_PER_NUMA_STATS option:
-> > 
-> > * When enabled (=y), the output includes per-node statistics following
-> >   the total bytes/calls:
-> > 
-> > <size> <calls> <tag info>
-> > ...
-> > 315456       9858     mm/dmapool.c:338 func:pool_alloc_page
-> >         nid0     94912        2966
-> >         nid1     220544       6892
-> > 7680         60       mm/dmapool.c:254 func:dma_pool_create
-> >         nid0     4224         33
-> >         nid1     3456         27
-> > 
-> > * When disabled (=n), the output remains unchanged:
-> > <size> <calls> <tag info>
-> > ...
-> > 315456       9858     mm/dmapool.c:338 func:pool_alloc_page
-> > 7680         60       mm/dmapool.c:254 func:dma_pool_create
-> > 
-> > To minimize memory overhead, per-NUMA stats counters are dynamically
-> > allocated using the percpu allocator. PERCPU_DYNAMIC_RESERVE has been
-> > increased to ensure sufficient space for in-kernel alloc_tag counters.
-> > 
-> > For in-kernel alloc_tag instances, pcpu_alloc_noprof() is used to
-> > allocate counters. These allocations are excluded from the profiling
-> > statistics themselves.
+> Error after button press on a connected headset :
 > 
-> What is glaringly missing here is "why".
+> [  355.309260] usb 1-1: reset full-speed USB device number 2 using xhci-hcd
+> [  355.725844] usb 1-1: device not accepting address 2, error -108
 > 
-> What is the use case?  Why does Linux want this?  What benefit does
-> this bring to our users?  This is the most important part of the
-> changelog because it tells Andrew why he is even looking at this patch.
-
-In the last thread, I was pushing to get some input from other people
-working on userspace profiling - it seems like that's where we're going
-with this, so we need to make sure people working in the same area are
-talking to each other, and if we're building tools to export data we
-want to make sure it's relevant and useful.
-
-Steven Rostadt sent out some pings, but I don't think we've heard back
-from the relevant people, and I do want that to happen before (if) this
-goes in.
-
-And more basic than this, now that we've got the ability to map kernel
-address -> code that owns it, we should be seeing if that is relevant
-and interesting to the tooling people before we get fancier.
-
-Casey also mentioned that this was being used for some internal stuff at
-Pure, and I'd still like to hear more about that. If they already know
-interesting and cool stuff we can use this for - great, let's please
-hear what it is.
-
-But we definitely need some wider context before merging this.
-
-> Probably related to the above omission: why per-nid?  It would be more
-> flexible to present the per-cpu counts and let userspace aggregate that
-> into per-node info if that is desirable.
-
-Per nid makes more sense to me if this is for profiling, and since this
-is a text interface meant primarily for human consumption we don't want
-to bloat that excessively.
-
-We can always add multiple interfaces for viewing the same data, and
-there's nothing preventing us from adding that later if it turns out
-something else does want per-cpu counts.
-
-Per-cpu counts would, I believe, bloat the data structures quite a bit
-since the counters are internally percpu - would there then be counters
-in nr_cpus^2? I hope not :)
-
-> > +static inline struct alloc_tag_counters alloc_tag_read_nid(struct alloc_tag *tag, int nid)
-> > +{
-> > +	struct alloc_tag_counters v = { 0, 0 };
-> > +	struct alloc_tag_counters *counters;
-> > +	int cpu;
-> > +
-> > +	for_each_possible_cpu(cpu) {
+> Error on removal of headset device from usb port:
 > 
-> for_each_possible_cpu() is lame - potentially much more expensive than
-> for_each_online_cpu.  Is it impractical to use for_each_online_cpu()?
+> [  157.563136] arm-smmu 15000000.iommu: Unhandled context fault: fsr=0x402
+> ,iova=0xd65504710, fsynr=0x100011, cbfrsynra=0x0, cb=6
+> [  157.574842] arm-smmu 15000000.iommu: FSR    = 00000402 [Format=2 TF],
+> SID=0x0
+> [  157.582181] arm-smmu 15000000.iommu: FSYNR0 = 00100011 [S1CBNDX=16 WNR
+> PLVL=1]
+> [  157.589610] xhci-hcd xhci-hcd.0.auto: WARNING: Host Controller Error
+> [  157.596197] xhci-hcd xhci-hcd.0.auto: WARNING: Host Controller Error
 > 
-> Probably doesn't matter for a userspace displaying function but
-> userspace can do weird and unexpected things.
+> Enabling retention on usb controller GDSC fixes the above issues.
+> 
+> Signed-off-by: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
+> ---
+> 
+> Note:
+> The above mentioned issues pop up after I enabled runtime suspend after
+> applying [1].
+> [1]: https://lore.kernel.org/all/20250610091357.2983085-1-krishna.kurapati@oss.qualcomm.com/
+> 
 
-for_each_online_cpu() means having to think hard about cpu hotplug and
-possibly adding callbacks, no? I think simple and dumb is fine here.
+It makes sense that the BCR issue appears after the flattening of dwc3,
+but why would the suspend issue pop up?
 
-> > +	for (i = 0; i < kernel_tags.count; i++) {
-> > +		/* Each CPU has one alloc_tag_counters per numa node */
-> > +		kernel_tags.first_tag[i].counters =
-> > +			pcpu_alloc_noprof(pcpu_counters_size,
-> > +					  sizeof(struct alloc_tag_counters),
-> > +					  false, GFP_KERNEL | __GFP_ZERO);
-> > +		if (!kernel_tags.first_tag[i].counters) {
-> > +			while (--i >= 0)
-> > +				free_percpu(kernel_tags.first_tag[i].counters);
-> > +			pr_info("Failed to allocate per-cpu alloc_tag counters\n");
-> 
-> pr_err(), methinks.
-> 
-> > +			return;
-> 
-> And now what happens.  Will the kernel even work?
-> 
-> This code path is untestable unless the developer jumps through hoops
-> and it will never be tested again.
-> 
-> We assume that __init-time allocations always succeed, so a hearty
-> panic() here would be OK.
+The change matches what we do on many other platforms, but I've been
+hoping we either could drop the retention or clearly document why it's
+needed - so that we know if this should be on all or none of the SoCs.
 
-percpu allocations are more limited than normal allocations, and we did
-hit that when developing memory allocation profiling, so - maybe WARN()?
+Regards,
+Bjorn
 
-> > +				int nid;
+>  drivers/clk/qcom/gcc-sm8450.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> C99 definition.
+> diff --git a/drivers/clk/qcom/gcc-sm8450.c b/drivers/clk/qcom/gcc-sm8450.c
+> index 65d7d52bce03..f94da4a1c921 100644
+> --- a/drivers/clk/qcom/gcc-sm8450.c
+> +++ b/drivers/clk/qcom/gcc-sm8450.c
+> @@ -3141,7 +3141,7 @@ static struct gdsc usb30_prim_gdsc = {
+>  	.pd = {
+>  		.name = "usb30_prim_gdsc",
+>  	},
+> -	.pwrsts = PWRSTS_OFF_ON,
+> +	.pwrsts = PWRSTS_RET_ON,
+>  };
+>  
+>  static struct clk_regmap *gcc_sm8450_clocks[] = {
+> -- 
+> 2.34.1
 > 
-> > +				for (nid = 0; nid < pcpu_counters_num; nid++) {
-> 
-> If we're going to use C99 (is OK now) then it's better to go all the
-> way and give `i' loop scope.  "for (int i..".
-
-Yes please; variable reuse can lead to some nasties.
-
-Going full C99 has its own problems (you can't do it after labels, and
-only one of gcc or clang complains and I forget which - perpetual
-headache).
-
-But C99 for loops are a total no brainer.
