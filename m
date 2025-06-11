@@ -1,119 +1,187 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mta21.hihonor.com (mta21.hihonor.com [81.70.160.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A5FA923;
-	Wed, 11 Jun 2025 07:17:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2215A923
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:18:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.160.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749626269; cv=none; b=l9QZiEvasg1DCkIzAhwHxDjD2Kdy2Barqmb/6zjxEZSHcLeK6vL6bEr5nNHMPTsvmg+nSfnXW7KWFtDnPZU/j/uPUqCkYnaYx5aR+C0PKD72tUiXQ9gpde8fRhO3q5RxdzpKfWrq31WaUZ8Wp6AURtLrwuuqBqxmndW/lEv7I4w=
+	t=1749626282; cv=none; b=OpSS7KWlsGjP4T2uPVa3EWvd0EOwDyzTpNuF23zmBRpeKkLFZc+Z7CK73cUK/FGZFEbfgSfPUw3bmp0pIcj6+AtchbPJgSA+pbE7poSAvmDYooGPbSEeiHZYo/diMSFHrGo0XZcR2ABvNtIL/IttE1M2wGxnMp9hoDO+3tF8F3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749626269; c=relaxed/simple;
-	bh=iHrPvVx1WWrg1knUNOkgUot4HWCPgK9t4nazhE6gR8o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RZtLJKwD+Tsx2w1HEm6FZqXRiG4rGqlGqIXKRGN8ni6E7QBZ1QGfC5jalqDBjUIIQoCM4Y7A2pQqt4isDYELHojnD/tOrq0+9mQHKH65l13KPpyB+EODMO6l6Zh76LgwIRZ/z7Y1kwHmsVVLDta9KzNB/VrxCjoB371wjHBIAYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n37MAECU; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n37MAECU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7ADBC4CEEE;
-	Wed, 11 Jun 2025 07:17:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749626268;
-	bh=iHrPvVx1WWrg1knUNOkgUot4HWCPgK9t4nazhE6gR8o=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=n37MAECUXxjw+k6WTr221FhWxHuilUlwS7gxTQD6iKFT3Jmmkp8WHls+zxXLSq7Ih
-	 xQ/Ok+l05QGc+/wBuUXIgNAnRVbZzwv3FpO1CwIfFn6fCQTWYeOmTbbgS3rpdK3qzc
-	 YKhYoHMJs4VGnZe2Y7ZijjhuOem/e9CZfHOL659o6HaYM6sNmF2dABerp3N1ZcwgPg
-	 3NQ0jI1+AkIGMyRgR/MkV+U8OBlwHyU690V+qbUgil+NZeVgHQs86gw6DLaTMWnR+W
-	 Src1vabhPrSd/e5aXh6sbzOPt6ZYW4e6rxOXkaK+ZX5sH9bARo/U6JceNMyqLKq1IV
-	 7CuGSnp3SZY0Q==
-Message-ID: <b137e6bb-7380-4f4c-8469-422587d08c60@kernel.org>
-Date: Wed, 11 Jun 2025 09:17:42 +0200
+	s=arc-20240116; t=1749626282; c=relaxed/simple;
+	bh=HJsP7ADj8csgR3J7GogH9hoFV9ymJ0d0pPmCGkXcIa0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=UO/74ujFGrUr/QGuadjCx5ky4lIrlAcEasfGvN329vQW5mEbPApKFi5qhgYXGl/Z+Z8ixBP9reMxIpuX1aXCjY98OAJouP8D1Dtmd+xgwe0srFPrI/x4r3e0t859WAi9Cpvi5LJ7DU6pmIw+T1oQGTHZrDVXHKT3KIXPjtk8Yl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.160.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
+Received: from w011.hihonor.com (unknown [10.68.20.122])
+	by mta21.hihonor.com (SkyGuard) with ESMTPS id 4bHH4j6GWFzYmHcj;
+	Wed, 11 Jun 2025 15:15:49 +0800 (CST)
+Received: from a006.hihonor.com (10.68.23.242) by w011.hihonor.com
+ (10.68.20.122) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 11 Jun
+ 2025 15:17:57 +0800
+Received: from a007.hihonor.com (10.68.22.31) by a006.hihonor.com
+ (10.68.23.242) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 11 Jun
+ 2025 15:17:57 +0800
+Received: from a007.hihonor.com ([fe80::e866:83ac:f23b:c25c]) by
+ a007.hihonor.com ([fe80::e866:83ac:f23b:c25c%10]) with mapi id
+ 15.02.1544.011; Wed, 11 Jun 2025 15:17:57 +0800
+From: liuwenfang <liuwenfang@honor.com>
+To: 'Andrea Righi' <arighi@nvidia.com>
+CC: 'Tejun Heo' <tj@kernel.org>, 'David Vernet' <void@manifault.com>,
+	'Changwoo Min' <changwoo@igalia.com>, 'Ingo Molnar' <mingo@redhat.com>,
+	'Peter Zijlstra' <peterz@infradead.org>, 'Juri Lelli'
+	<juri.lelli@redhat.com>, 'Vincent Guittot' <vincent.guittot@linaro.org>,
+	'Dietmar Eggemann' <dietmar.eggemann@arm.com>, 'Steven Rostedt'
+	<rostedt@goodmis.org>, 'Ben Segall' <bsegall@google.com>, 'Mel Gorman'
+	<mgorman@suse.de>, 'Valentin Schneider' <vschneid@redhat.com>,
+	"'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] sched_ext: Fix NULL pointer dereferences in
+ put_prev_task_scx
+Thread-Topic: [PATCH] sched_ext: Fix NULL pointer dereferences in
+ put_prev_task_scx
+Thread-Index: AQHb2qD0e5nB9n8NLUKmUsA/aeb7GQ==
+Date: Wed, 11 Jun 2025 07:17:57 +0000
+Message-ID: <a04892df1ad94df2bbddd7378c39342a@honor.com>
+References: <dc2d908cd429473a9d46255272231f38@honor.com>
+ <aEbO3DmwY4Tg6HT1@gpd4> <4f5b6cf9dca0492aad16472cbd49a528@honor.com>
+ <aEkkPNKtS9tRnkgR@gpd4>
+In-Reply-To: <aEkkPNKtS9tRnkgR@gpd4>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/8] dt-bindings: serial: describe SA8255p
-To: Praveen Talari <quic_ptalari@quicinc.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
- devicetree@vger.kernel.org, psodagud@quicinc.com, djaggi@quicinc.com,
- quic_msavaliy@quicinc.com, quic_vtanuku@quicinc.com,
- quic_arandive@quicinc.com, quic_mnaresh@quicinc.com,
- quic_shazhuss@quicinc.com, Nikunj Kela <quic_nkela@quicinc.com>
-References: <20250606172114.6618-1-quic_ptalari@quicinc.com>
- <20250606172114.6618-2-quic_ptalari@quicinc.com>
- <20250610-tested-lilac-raccoon-6c59c4@kuoka>
- <d744b518-2ae9-4ca0-86ce-11cf74c945e6@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <d744b518-2ae9-4ca0-86ce-11cf74c945e6@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 10/06/2025 10:10, Praveen Talari wrote:
->>> +
->>> +  interrupts:
->>> +    minItems: 1
->>
->> Drop, this is not in sync with interrupt-names. You already received
->> comments on this. We talk about this since v4!
-> I hope you have reviewed the commit message and the description under 
-> interrupt-name regarding the optional wakeup IRQ. I believe that address 
-> your query.
-> 
-> I can include minItems:1 in the interrupt-name property in the next 
-> patch set to align/sync with interrupts property.
-Yes, then the interrupt-names needs minItems.
+>=20
+> Hi liuwenfang,
+>=20
+> On Tue, Jun 10, 2025 at 06:22:22AM +0000, liuwenfang wrote:
+> > Thanks for your feedback.
+> > This is triggered in kernel modules developed In the mobile scenario:
+> > tasks on rq are migrated while the current cpu should be halted for pow=
+er
+> saving policy.
+> > Its migration logic:
+> > drain_rq_cpu_stop -- migrate_all_tasks :
+> > for (;;) {
+> > 	if (rq->nr_running =3D=3D 1)
+> > 		break;
+> > 	for_each_class(class) {
+> > 		next =3D class->pick_next_task(rq);
+> > 		if (next) {
+> > 			next->sched_class->put_prev_task(rq, next, NULL);
+>=20
+> Can you do something like this instead?
+>=20
+>   next->sched_class->put_prev_task(rq, next, next);
+>=20
+> this should give you the same behavior you're relying on, without requiri=
+ng the
+> extra check in ext.c.
 
-Best regards,
-Krzysztof
+Yes, this can help me.
+
+>=20
+> > 			break;
+> > 		}
+> > 	}
+> > 	if (is_idle_task(next))
+> > 		break;
+> > 	dest_cpu =3D select_task_rq(next...);
+> > 	move_queued_task(rq, rf, next, dest_cpu);
+> > 	...
+> > }
+> >
+> > put_prev_task in this function is selected to update util and
+> > statistics info for each runnable tasks, here they are not dequeued yet=
+.
+>=20
+> I see, so it's an optimization/workaround to update utilization info with=
+out fully
+> dequeuing the tasks. Is this out-of-tree code, I guess?
+>=20
+
+Yes, this is out-of-tree code.=20
+
+> When you say the CPU is halted, we're not talking about CPU hotplugging, =
+right?
+> We're just migrating tasks off the CPU?
+>=20
+
+Yes, this is one power-saving method to control tasks placement by bypassin=
+g
+Certain CPUs in software, simply letting the halted CPU enter an idle state=
+.
+It replaces CPU hotplugging to reduce costs in mobile gaming scenario.=20
+
+> Also, if you're running sched_ext there are ways to exclude certain CPUs =
+at the
+> scheduler's level via ops.select_cpu() / ops.dispatch(). Do you think thi=
+s could be
+> a viable solution for your specific use case?
+>=20
+
+Yes, Thanks very much, This is exactly the approach we have implemented.
+
+Best regards
+
+> Thanks,
+> -Andrea
+>=20
+> PS https://subspace.kernel.org/etiquette.html#do-not-top-post-when-replyi=
+ng
+>=20
+> >
+> > Best regards,
+> >
+> > > On Mon, Jun 09, 2025 at 11:36:15AM +0000, liuwenfang wrote:
+> > > > As put_prev_task can be used in other kernel modules which can
+> > > > lead to a NULL pointer. Fix this by checking for a valid next.
+> > >
+> > > Actually, put_prev_task() should be used only within kernel/sched/
+> > > and, in theory, you should have done a dequeue_task() before
+> > > put_prev_task() in this scenario, so SCX_TASK_QUEUED shouldn't be set=
+ in
+> p->scx.flags.
+> > >
+> > > The change might still make sense, but can you clarify how you
+> > > triggered the NULL pointer dereference?
+> > >
+> > > Thanks,
+> > > -Andrea
+> > >
+> > > >
+> > > > Signed-off-by: l00013971 <l00013971@hihonor.com>
+> > > > ---
+> > > >  kernel/sched/ext.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c index
+> > > > f5133249f..6a579babd 100644
+> > > > --- a/kernel/sched/ext.c
+> > > > +++ b/kernel/sched/ext.c
+> > > > @@ -3262,7 +3262,7 @@ static void put_prev_task_scx(struct rq *rq,
+> > > > struct
+> > > task_struct *p,
+> > > >  		 * ops.enqueue() that @p is the only one available for this cpu,
+> > > >  		 * which should trigger an explicit follow-up scheduling event.
+> > > >  		 */
+> > > > -		if (sched_class_above(&ext_sched_class, next->sched_class)) {
+> > > > +		if (next && sched_class_above(&ext_sched_class,
+> > > > +next->sched_class)) {
+> > > >
+> 	WARN_ON_ONCE(!static_branch_unlikely(&scx_ops_enq_last));
+> > > >  			do_enqueue_task(rq, p, SCX_ENQ_LAST, -1);
+> > > >  		} else {
+> > > > --
+> > > > 2.17.1
