@@ -1,81 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903E11A83E8;
-	Wed, 11 Jun 2025 15:20:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BAB2170A37;
+	Wed, 11 Jun 2025 15:21:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749655229; cv=none; b=D33aeH1vSxSoSKZoG9TyR5n8kuEn3kgOsrEmSsclrlAcGAi+QC2XTnZtlw+p1mX/8HPBJ2kZDktwPKlRY91XuqXqN7b2d/nQJqXj6qRq8T8vgan4Xu9uHLHNxCvD2y7EzLeb299iGqz+tEIK3AWDFHSdbDKmKWxkihUUEdDiJrI=
+	t=1749655262; cv=none; b=XxuZsH92J2DOx7uzcfSmtvOEkcDDGXTb9ZzF7pqcYkTsm4EfzTjIz9rN675+BbFfaCFm+6cF913TdUVdek2niKvPjgkcpl2KpnrdPkCRas6CNI2fHxKeesdX59E15+2DidAjDFpM6ZYZbGKLHRD4zzp8iHNebrkSUxJW+v+Ht2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749655229; c=relaxed/simple;
-	bh=doqV80or5FFXZrFJ4XVxJqCcisBBjET6FQ2n9ahub0A=;
+	s=arc-20240116; t=1749655262; c=relaxed/simple;
+	bh=xaTNTPbxZsvpbqHtFS8+iQeMzvrXx92QdtUJnrQK0yk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hpWz0E36Ix8Hwk3kY9jVchwJmnGA06QllrurAk1YGt/VMoQjd2LJHasUBegMvEuDV19kfI1zgl0jZt86qZRJGb7KEJjJ/R/1Gsn99xPNQvbeG3eab2LMPK0bEqLdZ3u7UyIK+QYl0MYDX5P/qWsiF531bCEaVHS/rGKYPIbhOO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HBfaOG2d; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HBfaOG2d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34AAAC4CEEA;
-	Wed, 11 Jun 2025 15:20:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749655229;
-	bh=doqV80or5FFXZrFJ4XVxJqCcisBBjET6FQ2n9ahub0A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HBfaOG2dCW9MelJdcsJ7M7PJxO9mfCeNhStKdABckr06yt5avy4OZ9JbI9B+2JOFq
-	 oZKZx/6SQCU4g8bgG10/PyAOsU8wnCnvL6gu88omNVcfvFl/p0R5jQP5Ygfl2b3GLn
-	 vxhV0CI60qhadkL3doN/eC3pOjMuLJ34qJuA7wTVxVBP42KrwhccjUffIa2NzUbl5F
-	 eVDa3XsBm++zsKzJOen29QAwvzsiVW4McAbE/T6q/FjdEd7zKEug+aKb7f+J41Lesr
-	 +sPFvEOXwHchTcJ5IGHazcEt3P/dNDGtrpn7uPfe0gQggTdnUypApryeEu45PFztys
-	 k1QutgF3XktBA==
-Date: Wed, 11 Jun 2025 16:20:23 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: catalin.marinas@arm.com, pcc@google.com, will@kernel.org,
-	anshuman.khandual@arm.com, joey.gouly@arm.com,
-	yury.khrustalev@arm.com, maz@kernel.org, oliver.upton@linux.dev,
-	frederic@kernel.org, akpm@linux-foundation.org, surenb@google.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v7 5/9] kselftest/arm64/mte: check MTE_FAR feature is
- supported
-Message-ID: <319315bf-48f3-4482-99f0-e8cb03ce049b@sirena.org.uk>
-References: <20250611135818.31070-1-yeoreum.yun@arm.com>
- <20250611135818.31070-6-yeoreum.yun@arm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=cGWgEXLGYRTYfj0e5tHUFZPT0h7gChIcr9YvIn933x61LgrARxSLUaeVzFHHtgGYqV+M8Ij35UIvP+gWvawG5n7HRB1u4qI5WrqEmRCXVaeXOpETSUxiaynufBU3hgenXTyKtdO9wUsU8Vx2C1tjHPLntKwEoH5yERVKHQz4xY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: HgWc72P3S2a0aoZjpjRrPg==
+X-CSE-MsgGUID: g4Tmpv+ERemjI0e/53zgmw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="50910859"
+X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
+   d="scan'208";a="50910859"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 08:21:00 -0700
+X-CSE-ConnectionGUID: +0f4dEKlSdWXFUfamii2PQ==
+X-CSE-MsgGUID: kw5hmdTHROqrJFc2sVzi3Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
+   d="scan'208";a="178134571"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 08:20:57 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1uPNG1-00000005gNl-3Llj;
+	Wed, 11 Jun 2025 18:20:53 +0300
+Date: Wed, 11 Jun 2025 18:20:53 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
+	dlechner@baylibre.com, nuno.sa@analog.com, corbet@lwn.net,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, eraretuya@gmail.com
+Subject: Re: [PATCH v9 04/11] iio: accel: adxl345: simplify interrupt mapping
+Message-ID: <aEme1ZmmEHmNr0Pa@smile.fi.intel.com>
+References: <20250610215933.84795-1-l.rubusch@gmail.com>
+ <20250610215933.84795-5-l.rubusch@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="LLcsBgYhYhSy6VHW"
-Content-Disposition: inline
-In-Reply-To: <20250611135818.31070-6-yeoreum.yun@arm.com>
-X-Cookie: No skis take rocks like rental skis!
-
-
---LLcsBgYhYhSy6VHW
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250610215933.84795-5-l.rubusch@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Jun 11, 2025 at 02:58:14PM +0100, Yeoreum Yun wrote:
-> To run the MTE_FAR test when cpu supports MTE_FAR feature,
-> check the MTE_FAR feature is supported in mte test.
+On Tue, Jun 10, 2025 at 09:59:26PM +0000, Lothar Rubusch wrote:
+> Replace mapping all sensor interrupts to the corresponding interrupt
+> line using regmap_assign_bits() since it takes a boolean directly.
+> Further prefer the units.h identifier to cover the full register when bits
+> are set.
 
-Reviewed-by: Mark Brown <broonie@kernel.org>
+...
 
---LLcsBgYhYhSy6VHW
-Content-Type: application/pgp-signature; name="signature.asc"
+> -		regval = intio ? 0xff : 0;
+> -
+> -		ret = regmap_write(st->regmap, ADXL345_REG_INT_MAP, regval);
+> +		ret = regmap_assign_bits(st->regmap, ADXL345_REG_INT_MAP,
+> +					 U8_MAX, intio);
 
------BEGIN PGP SIGNATURE-----
+I'm wondering if GENMASK() is actually better to point out to the amount and
+exact bits in the bitfield? After all this is HW register we program, right?
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhJnrYACgkQJNaLcl1U
-h9DTogf/XEk8iMJBi79waQjbN4WVhdwRu16ZFgYl5bfzdpd2P2Wax05Rwfiy+Heb
-jCCSLf3+Z2KtUWm20Qavvb86/tnscSg72xIrc8piejxltT5yJeJwJzCv8tcRyJdf
-+s0LMSfwoNVePKIQkldVgUQ2Dxukz+0xVE/tN/62dgxRU+/fCKDuiU/K3zZphNfo
-Da8ps0g1pqHwm7ee45Q2AW62x83TYU2+Wfj0keaAj7rJ+EgAezJ8WybmtSQpA2XL
-SUhttLWjlqG0eHt4ljxpz+8raoXbClNu48CwJEVYCHQS1hUlBGOseUOOE6KNYNxN
-Z1bNUQVdjn7hzOSL1zCJ/iLOtOrDmQ==
-=jV/l
------END PGP SIGNATURE-----
+>  		if (ret)
+>  			return ret;
 
---LLcsBgYhYhSy6VHW--
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
