@@ -1,57 +1,57 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA4F25D1FC
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8030425DCF6
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:36:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749677790; cv=none; b=Q24PKtVnNLxkx6VYLbnUmyphxeW7TKlzkNDVnhC4cUzBiEPevsYH3GGg4ZCzN81Wg1RZPMOGEpRNgIDYW7eC9Y5mif9BJdfT2s6J8zWxE4azqO6UmnWtGEtChKATjVWU1A1kbVk+HXsWuE2j6oB36Q/rSrFm+7iDmbzfAEu/Rm8=
+	t=1749677791; cv=none; b=MyrPqzCBYHWNIdxTmBSEc7v3Y7w3NrmNzZsxLqMP0DlVRC7oobflLpO/VG1tGRNQmjJyX4SGZW4hqjjswnXIkWV0uFc+91ZryULhYbFq6w8avPb6AJomIMxeb1PzcEqlxDjtq4F1e/4lH00uupHHw4CFLfc8M1UtzfrkRWPpK9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749677790; c=relaxed/simple;
-	bh=pbzjMkYafGxcpLXLqdeS1eEDP6kDrKXYmWNpHPn0xGQ=;
+	s=arc-20240116; t=1749677791; c=relaxed/simple;
+	bh=npPjU5eEGnuKsT0xEaMcH1B9YlxW36/8MC9u3V1VB0o=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Yf6culoWvteGwKa3KcSlkA7baPKHJaF7aJifLaFuhDh30Vpz/Srh2HLYQ6XOibMb7jWVlhfawD5r0axWjSwNE4iGFkxmkDhuBr1Me+JIhwF/5CG1uJDrZ7Zb/KnhoqC4S8v86m3OK2ZLVv2YPJBmeSgkajziyo2gZQG12vb2oXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LkY8ERvl; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=hGXXNmSqR2WQ7Tw0SVMJbYlnXQt1RaSZ9vLQu+kM3G+UhyJgoUF8ry1pBK2oU04JCN/K75Fw7oDI3Pf8Xz+JQ3PuU104jI98e6dMtGXy7Qwo424tu8Iet2+Hmwnpf/ZLn1GBr9yaPvuPPPV7S1BYivPOKmpzh5QfYAB9P/0EO8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=scnox8Tw; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LkY8ERvl"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-31366819969so257427a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:36:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="scnox8Tw"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b2c36d3f884so124209a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:36:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749677787; x=1750282587; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749677789; x=1750282589; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xzs0IiSJuwZzmnPBx3wmk+iVHWs9BLQaD0Cp4OIfdsI=;
-        b=LkY8ERvlf3FnZ8ZUvjDgJuiVI4mII6ZvPbVgYoKvAr53Gr9Pf7Fbu4IaTCOkveE6v1
-         RoWHSaNfkg9VUbYRIzVdtCzBHQ1Ew4hUTjeYNJ5X7PjFdyGkrvYsuTpxLgNjujWaq13X
-         OnJk+ChHut6rduvNGeqep8UGAaXpLYzLFiAiHfL6TmC39FEz0vlFcKROeELyyapGJlBW
-         bAWUDauTVck17KkkApFtxODVrV4FMG0WAIUqJA9TUyaaK0OmIWHV0THMCnvabHDikuZw
-         WyHwnIKYlWzUlUHA1tFGNz3yHnUYrnq4n6M3LwKVXnYqjL5VLfyorYCcdbE1CXdO0n2V
-         OKuQ==
+        bh=0cQC/hkOLEWlnfZsN0A9UKbPGQtORyJ4/5SEvQ1tLM4=;
+        b=scnox8TwtuU3aC+ZpJwAqGDq3SqpyrUhIa5Ek0jpx6jbytTlVMrSmUyhycqz98+UYS
+         Q0ruCdOmwsxghoFTG4cuK4/mEinV5JEP72ukupZfPqpN17snCcFf9Q6eQyTa/rXrmKM9
+         F9hd2YSTgK1feLZa2N2zz6Bv866iLTC+pwC1EqldR2avrNNny/mmIpYyZqwf9ieFaoKp
+         QUhedXefmTbHdd+EN4r+ruh3wpse2SJXLsk0e/9Z2pwvSKymzFuugeOQ8vC9UBlGrfdg
+         Dq5MQ9ZoMWUztrTqNt8fImcVxPHn/Gke0u8Tg0pOG/xnBGQFwIiuAp+SkbSSO7zvtYdq
+         JCmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749677787; x=1750282587;
+        d=1e100.net; s=20230601; t=1749677789; x=1750282589;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Xzs0IiSJuwZzmnPBx3wmk+iVHWs9BLQaD0Cp4OIfdsI=;
-        b=O4B+SMXUqMMxFIaOkE4CrMlhwXqYem1h79x8/24cLM9AGwNnScb38FvlKVhBpB67ZE
-         AHhv8qvSjSVCWzwd2aq3pSb94wSE3kddxW1zYZwuvoDLf1V5YCkP+UTaBUo0/2PcE1zt
-         H7gxpH1cvH4V2Zp/GEEolZ5hMOWwFcLp2/FbRoDmI7H8UjMpgoNZD7vPONYqViiGS181
-         zG/8vs+erLL9ZVPSx+06ZTZPG2WDeCjXZUfjlZYEvDL55MZOLg2B6SoKxDlSTsq0b9sS
-         3tzGewK498hEaRlCGgfvc06xHi9E65cNkWZx4EvnFfSrm9d7ak6+ZkL//NzDwSOLvVMV
-         f/QA==
-X-Forwarded-Encrypted: i=1; AJvYcCV3FZT7nA7jeVVa8Lqqa0aAU6qDbE+48sTSmmrud1/Jx/omm511i1JAKET28cSf85Mma4aXK1nl8jK9AJI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNFxlWNiIzXeHy86mT0HdP2w+kD9uS8AwTIvFlBdYR8GHf4nQB
-	KkQOWG0c8yuEMTyEafhZEPaDnbp62gMdQykjKsHLZtrRiToJmUyfRNQlb2ZAQvz74rujV9/Ll7j
-	ltetNTQ==
-X-Google-Smtp-Source: AGHT+IHIvhKkqqWWcEQHXFR65K8FZLh/xEt/zChKvBvk4uS5J2RIxt1u9I6b9xAUE+S9NBqKiPkCbq7uF9c=
-X-Received: from pjv12.prod.google.com ([2002:a17:90b:564c:b0:313:2b27:3f90])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4a8f:b0:311:ed2:b758
- with SMTP id 98e67ed59e1d1-313af0fd2c3mr5826535a91.3.1749677787281; Wed, 11
- Jun 2025 14:36:27 -0700 (PDT)
+        bh=0cQC/hkOLEWlnfZsN0A9UKbPGQtORyJ4/5SEvQ1tLM4=;
+        b=pPVPF4i0Mz9doLVhnMqhUfFIpMkoxFqFT2pl8MW9PnI6C4REpybpy2cYM0VLBeTx4U
+         9mHmV7bhG/NTfqdio7Pbw6mmffg+OIYjvctt8Zht7MWTlJe4B5n+J/ogDux7+024cAqC
+         xfNz5uJXXK6fjwLgAeT/YioTkLF6hyp4TrG7StlgQuD/94Tlg8CcS/7zdlcamqwJDPT0
+         Eyox2Z7PLSXwhD2NgLkIn8JG1H22rrfTP5vjS9aXiwOcYGh3J3bRY87YHONYloZhka6K
+         vnDT9w4HhiuycoXXICEFXxdy0qCFyKZ+o1V6LufkJkZBr1njn/j9/iElD5POHfL1Bnh0
+         T9Ow==
+X-Forwarded-Encrypted: i=1; AJvYcCW4ViCVBs7NqaOrG0fC84MZYykwCv1uGXL6LuoZuLPF3fHbr5gDBLZJI2wCssQCPcCIUKlOnnyiQQqBhrU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwI+TkFw6foHl9gHetyGcDgtowd+jz0cm/nFwnFs/PYJH6qL/SQ
+	5s0ELGrISaHg/NYJT7wL2CslQat1+dA0N4uoRu47bNH1J7y7RZebZhCeKk/YKk53SH3gJSpJFdI
+	OCicCNQ==
+X-Google-Smtp-Source: AGHT+IHKomR4o60NTzsrusMmg+bCGTRAszO7F/K0fCz4Tv+qh1wlC/LNy7j0ZhMaZ9VffDciXgTipqOz6Do=
+X-Received: from pgls10.prod.google.com ([2002:a63:524a:0:b0:b2e:beba:356])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:729e:b0:204:695f:47e1
+ with SMTP id adf61e73a8af0-21f978a5ca6mr1864502637.23.1749677788807; Wed, 11
+ Jun 2025 14:36:28 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed, 11 Jun 2025 14:35:54 -0700
+Date: Wed, 11 Jun 2025 14:35:55 -0700
 In-Reply-To: <20250611213557.294358-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,8 +61,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250611213557.294358-1-seanjc@google.com>
 X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-Message-ID: <20250611213557.294358-16-seanjc@google.com>
-Subject: [PATCH v2 15/18] KVM: Squash two CONFIG_HAVE_KVM_IRQCHIP #ifdefs into one
+Message-ID: <20250611213557.294358-17-seanjc@google.com>
+Subject: [PATCH v2 16/18] KVM: selftests: Fall back to split IRQ chip if full
+ in-kernel chip is unsupported
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
 	Vitaly Kuznetsov <vkuznets@redhat.com>
@@ -70,39 +71,41 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Kai Huang <kai.huang@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Squash two #idef CONFIG_HAVE_KVM_IRQCHIP regions in KVM's trace events, as
-the only code outside of the #idefs depends on CONFIG_KVM_IOAPIC, and that
-Kconfig only exists for x86, which unconditionally selects HAVE_KVM_IRQCHIP.
-
-No functional change intended.
+Now that KVM x86 allows compiling out support for in-kernel I/O APIC (and
+PIC and PIT) emulation, i.e. allows disabling KVM_CREATE_IRQCHIP for all
+intents and purposes, fall back to a split IRQ chip for x86 if creating
+the full in-kernel version fails with ENOTTY.
 
 Acked-by: Kai Huang <kai.huang@intel.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- include/trace/events/kvm.h | 3 ---
- 1 file changed, 3 deletions(-)
+ tools/testing/selftests/kvm/lib/kvm_util.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/include/trace/events/kvm.h b/include/trace/events/kvm.h
-index 1065a81ca57f..0b6b79b1a1bc 100644
---- a/include/trace/events/kvm.h
-+++ b/include/trace/events/kvm.h
-@@ -82,7 +82,6 @@ TRACE_EVENT(kvm_set_irq,
- 	TP_printk("gsi %u level %d source %d",
- 		  __entry->gsi, __entry->level, __entry->irq_source_id)
- );
--#endif /* defined(CONFIG_HAVE_KVM_IRQCHIP) */
+diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+index a055343a7bf7..93a921deeb99 100644
+--- a/tools/testing/selftests/kvm/lib/kvm_util.c
++++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+@@ -1716,7 +1716,18 @@ void *addr_gpa2alias(struct kvm_vm *vm, vm_paddr_t gpa)
+ /* Create an interrupt controller chip for the specified VM. */
+ void vm_create_irqchip(struct kvm_vm *vm)
+ {
+-	vm_ioctl(vm, KVM_CREATE_IRQCHIP, NULL);
++	int r;
++
++	/*
++	 * Allocate a fully in-kernel IRQ chip by default, but fall back to a
++	 * split model (x86 only) if that fails (KVM x86 allows compiling out
++	 * support for KVM_CREATE_IRQCHIP).
++	 */
++	r = __vm_ioctl(vm, KVM_CREATE_IRQCHIP, NULL);
++	if (r && errno == ENOTTY && kvm_has_cap(KVM_CAP_SPLIT_IRQCHIP))
++		vm_enable_cap(vm, KVM_CAP_SPLIT_IRQCHIP, 24);
++	else
++		TEST_ASSERT_VM_VCPU_IOCTL(!r, KVM_CREATE_IRQCHIP, r, vm);
  
- #ifdef CONFIG_KVM_IOAPIC
- 
-@@ -93,8 +92,6 @@ TRACE_EVENT(kvm_set_irq,
- 
- #endif /* CONFIG_KVM_IOAPIC */
- 
--#if defined(CONFIG_HAVE_KVM_IRQCHIP)
--
- #ifdef kvm_irqchips
- #define kvm_ack_irq_string "irqchip %s pin %u"
- #define kvm_ack_irq_parm  __print_symbolic(__entry->irqchip, kvm_irqchips), __entry->pin
+ 	vm->has_irqchip = true;
+ }
 -- 
 2.50.0.rc1.591.g9c95f17f64-goog
 
