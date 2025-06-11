@@ -1,57 +1,57 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161ED23ABB2
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:36:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC1A248F4A
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:36:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749677767; cv=none; b=Jx5pSPx7Neqq6piMCc1rzyhr2ccawqOILfKE3H6COWCveW6LJ9Tin4NnNqGRBRjrUmRcB0uba507EgsRqijyaIygcK6cD9jvVwXlNGem5eNPGE+JZJmTQTPmHosRpNi0h3m0mnl/cStXWKgzqDXFEXCPsehjZ5x+GMcF8bO5ypw=
+	t=1749677769; cv=none; b=R8feY3mfSxaYZoeYZIGvd0WmQ7Dg85tNDpgXaS7cW/c5Ai11hYebV86lI+niAOboxT8CdO8dFOzSuxdMSkSo+26aFso10HYF0jkN09ATQn4H1cMmcDOj1ALvNmpWn+icELa9/H5VE0/quqx8CLOdU9mStbMJSNNA8JJfd1YUD+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749677767; c=relaxed/simple;
-	bh=sQoc0mSFqSf4AmjsbAJoaKmVVcniW3l9UwXr/qlENo8=;
+	s=arc-20240116; t=1749677769; c=relaxed/simple;
+	bh=2vrLJKj19OX456GsG99Naj+YqCT8eAfkbz2WrX4rr1w=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=D/+8bUqSM6NDbVVyV6dlYYYTCvY+cZeGZXth8DaBRT/DwCaQM1vSMTXfrd0fJ8zyM36Y1jiWMo8G2P0pDqy1c84LPOncd/p772/jcquZKNy6KP1FP51Be82Um3YhoqM4ZBJo2Z3q0QEZ/qqLO4ryE3pmR2QBIOpBAsXeUnuCvds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=umjqxFj8; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=IgQZfB8ucPxL0LV3Gvnu1rZT/u2U++SEnN2I5d/iJ4e7lTPWXP54qJ7oihwRQMxkQPryRNqTyTmVXbSJ7S/RdLpL8bEf7BEPUguxy97XaWyKvyP8ILF8C6wWXLKnuBIytg+XKXDQLXlypUT+p6lRf8nf4/74x1Ngm9G4h7yIIFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=v5c1bG6x; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="umjqxFj8"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-311a6b43ed7so270561a91.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:36:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v5c1bG6x"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b2f5a5da5efso58210a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:36:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749677765; x=1750282565; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749677766; x=1750282566; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=03EsK0XCZQ7bSC/xx33gLkDKNm/oHdhWEdLJr87/zMc=;
-        b=umjqxFj8xH/5UrRhciOwT3OvmX5mXzyHuDuxd3TODhCkPS/1nZnMje8n7eznVwNea/
-         3ZKtQsZPr/Dei7QY2uYn42wqI4pEsXEy2xUT38pL+jwFQwwweu8tffnhvUmRB3w+0kHH
-         okXLoD7tLKio1Jf815r2oOyy0fAAxTzFejmyyddLOYsioCql/UPAxwrNrZuix6yWKZVD
-         2enH37jToKlTDVGv1WDGYjljX4i8CQWHM/5Szq2zlr0e+GP1fcxjosCH2cWOMKvIfdxw
-         VZ8DLHmbWKvWI0uTXbz2S050zF0l2BB3ETgPcdsY57ZfMTpwqsRNI7GVuAlXV0cr0M/Z
-         Ziew==
+        bh=uHI3xCbsYOP2KWw/2eMjfu9hFT7kUbJEy5buHfIZCTM=;
+        b=v5c1bG6xrpbvnB6xSwz7/gZPOT67S/kThMBrz21kCI/m3N8eZVU9nFlwixhqULe721
+         4/KscdBGBy+H9087podLKaD7oIIh4qnLOES5Nfnqpmhxy6Mylm0EVdODG9BvMbZc+ewr
+         /QHkyAh8L5qMyU5IMRY3+/wL7KjfXioOuhbqAAzOuQ44l0S7yvFXGjcbNhz0hBKsfZYI
+         QCmVPmGynqR0CvncDynbx9p5cM/hDoNnpnPK8vrQr0dy4hsOqp+gRVtq+99b2GXmbQed
+         lHwBBb4nVkbiqe6J9l7zxxJ/9xd0sMnwbmgIajtLIDjJ2AAwvbhSaX0ioQXcPDKj+Zuc
+         4MJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749677765; x=1750282565;
+        d=1e100.net; s=20230601; t=1749677766; x=1750282566;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=03EsK0XCZQ7bSC/xx33gLkDKNm/oHdhWEdLJr87/zMc=;
-        b=jvysINlf1kiN7LswOfpgbtHC/24KZ3ILJ2O5oNqQp54WJ99xTpM1aKHAMKdCgspYBm
-         QI7mp2+mxT2U7cStdUs3jQ3eyt/lnYPHvfHsXFSvxtzYBuqH0DZpG3avolR3J4Atecv2
-         ldmtI10UVJGYJOGcuJXOKorPyU3QEywfxRpydMfM24JW3n1CUyBIp/iz+0GlxDlvqupv
-         w/iuEXBm6Prrv4kmj5IQfkT1VCTxXu8/kq3agaOAZq1ZexiDfCZkQsNqQSLMJJHMNtXj
-         wQKX9TAwMYWiANWeAoDmUZvQRiozoe456qzIl/CJLoB1o4ADfKK+vAS54LBdj+6tYvho
-         MhjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUsdoxua5tXZLgUUkTndX6HSHKZxOnfes5EpT9cSSYv78hvEtKgvT60di3w4KIKiczpd/fNQqn3ferN9X4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoZbTKn8PncJe/IrWMNUxTnDfdy77fxDzA/FPPbj0xG5yt6KNu
-	IJe8rIhJdgUvGZyeu8VD+kDC6TLRgjrqvrDS4A5gcB+9DRmdEjpHIdWkej2GshAG0Bz3QMLq4Kg
-	6l8pe6A==
-X-Google-Smtp-Source: AGHT+IENVmaNV+oSCi8pwtRJAQTeKuH5EAR+8VPfi82j/imfQfOzPW98WiMDU7ChOjR3QLEwXXUc68+xHjA=
-X-Received: from pjbqi5.prod.google.com ([2002:a17:90b:2745:b0:30a:31eb:ec8e])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:e70d:b0:311:df4b:4b8a
- with SMTP id 98e67ed59e1d1-313c068ac96mr830545a91.3.1749677765181; Wed, 11
- Jun 2025 14:36:05 -0700 (PDT)
+        bh=uHI3xCbsYOP2KWw/2eMjfu9hFT7kUbJEy5buHfIZCTM=;
+        b=tNaEZ9ni6Wcg6rDjW7a5jWeB4OfmWAqffDip3hbPMRYNIvYsi5dS4BuyQnWmOoRWWB
+         ZxECDuyYsIoYu3QVzHr9OZGiPUKJvcWRcjJHog2MLrp7ANzM+Ip3DwS0kTUgQgNgYwQV
+         nL1RHubMVZZQYXY+Dq2qGdnVPRsaPa75FQRdY/W1gGxYMB3TuHxLuy5kMTCAWNI28jQ4
+         Rqc4y+pCS4gB7p34x7mJWw/WM6TuHwfVu+N+clvBo+b6QYUMr1c3+1Clcn6pA9OGypj2
+         n648quVsv86f662oM0fO6Lmca/Rr/E3Nsovz5qdj9fDB2Mpzmhds9Ui5KN8cEVh1PvsR
+         WeXg==
+X-Forwarded-Encrypted: i=1; AJvYcCXh0CWI6/3QZEb1DOkm4CMu0ZI/C7M3WEYcqAlvyCavFafk8UoVUMQ6M87AEvJb2EF7SgjVF+LxUyVM9Q8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXOB52sQnejB/hqu0ty854v2VLwtBbJ/EkUqapNG4FL9E8nTZu
+	fW+xl647TekpkpQ0Ey27fpla70C/v2dm28BbWvJKnSLluil5YVOsg4a6lqY3cn7rYbRGFN+HgFr
+	vlXQKYA==
+X-Google-Smtp-Source: AGHT+IGhUDDedez1Ad1IXxuj+ld9CEuEoa6u2kh/UYMFajcgbRUQg7tQQlHdw5YhnDOJpsmI7+uKkGAssNU=
+X-Received: from pgar4.prod.google.com ([2002:a05:6a02:2e84:b0:b2c:4ef2:ca0e])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:7345:b0:21a:de8e:44b4
+ with SMTP id adf61e73a8af0-21f9b9f8536mr424572637.16.1749677766665; Wed, 11
+ Jun 2025 14:36:06 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed, 11 Jun 2025 14:35:42 -0700
+Date: Wed, 11 Jun 2025 14:35:43 -0700
 In-Reply-To: <20250611213557.294358-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,9 +61,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250611213557.294358-1-seanjc@google.com>
 X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-Message-ID: <20250611213557.294358-4-seanjc@google.com>
-Subject: [PATCH v2 03/18] KVM: x86: Drop superfluous kvm_set_ioapic_irq() =>
- kvm_ioapic_set_irq() wrapper
+Message-ID: <20250611213557.294358-5-seanjc@google.com>
+Subject: [PATCH v2 04/18] KVM: x86: Drop superfluous kvm_hv_set_sint() =>
+ kvm_hv_synic_set_irq() wrapper
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
 	Vitaly Kuznetsov <vkuznets@redhat.com>
@@ -71,82 +71,110 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Kai Huang <kai.huang@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Drop the superfluous and confusing kvm_set_ioapic_irq() and instead wire
-up ->set() directly to its final destination.
+Drop the superfluous kvm_hv_set_sint() and instead wire up ->set() directly
+to its final destination, kvm_hv_synic_set_irq().  Keep hv_synic_set_irq()
+instead of kvm_hv_set_sint() to provide some amount of consistency in the
+->set() helpers, e.g. to match kvm_pic_set_irq() and kvm_ioapic_set_irq().
+
+kvm_set_msi() is arguably the oddball, e.g. kvm_set_msi_irq() should be
+something like kvm_msi_to_lapic_irq() so that kvm_set_msi() can instead be
+kvm_set_msi_irq(), but that's a future problem to solve.
 
 No functional change intended.
 
-Acked-by: Kai Huang <kai.huang@intel.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Kai Huang <kai.huang@intel.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/ioapic.c   |  6 ++++--
- arch/x86/kvm/ioapic.h   |  5 +++--
- arch/x86/kvm/irq_comm.c | 11 +----------
- 3 files changed, 8 insertions(+), 14 deletions(-)
+ arch/x86/kvm/hyperv.c   | 10 +++++++---
+ arch/x86/kvm/hyperv.h   |  3 ++-
+ arch/x86/kvm/irq_comm.c | 18 +++---------------
+ 3 files changed, 12 insertions(+), 19 deletions(-)
 
-diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
-index 45dae2d5d2f1..8c8a8062eb19 100644
---- a/arch/x86/kvm/ioapic.c
-+++ b/arch/x86/kvm/ioapic.c
-@@ -479,9 +479,11 @@ static int ioapic_service(struct kvm_ioapic *ioapic, int irq, bool line_status)
+diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+index 24f0318c50d7..f316e11383aa 100644
+--- a/arch/x86/kvm/hyperv.c
++++ b/arch/x86/kvm/hyperv.c
+@@ -497,15 +497,19 @@ static int synic_set_irq(struct kvm_vcpu_hv_synic *synic, u32 sint)
  	return ret;
  }
  
--int kvm_ioapic_set_irq(struct kvm_ioapic *ioapic, int irq, int irq_source_id,
--		       int level, bool line_status)
-+int kvm_ioapic_set_irq(struct kvm_kernel_irq_routing_entry *e, struct kvm *kvm,
-+		       int irq_source_id, int level, bool line_status)
+-int kvm_hv_synic_set_irq(struct kvm *kvm, u32 vpidx, u32 sint)
++int kvm_hv_synic_set_irq(struct kvm_kernel_irq_routing_entry *e, struct kvm *kvm,
++			 int irq_source_id, int level, bool line_status)
  {
-+	struct kvm_ioapic *ioapic = kvm->arch.vioapic;
-+	int irq = e->irqchip.pin;
- 	int ret, irq_level;
+ 	struct kvm_vcpu_hv_synic *synic;
  
- 	BUG_ON(irq < 0 || irq >= IOAPIC_NUM_PINS);
-diff --git a/arch/x86/kvm/ioapic.h b/arch/x86/kvm/ioapic.h
-index aa8cb4ac0479..a86f59bbea44 100644
---- a/arch/x86/kvm/ioapic.h
-+++ b/arch/x86/kvm/ioapic.h
-@@ -111,8 +111,9 @@ void kvm_ioapic_update_eoi(struct kvm_vcpu *vcpu, int vector,
- 			int trigger_mode);
- int kvm_ioapic_init(struct kvm *kvm);
- void kvm_ioapic_destroy(struct kvm *kvm);
--int kvm_ioapic_set_irq(struct kvm_ioapic *ioapic, int irq, int irq_source_id,
--		       int level, bool line_status);
-+int kvm_ioapic_set_irq(struct kvm_kernel_irq_routing_entry *e, struct kvm *kvm,
-+		       int irq_source_id, int level, bool line_status);
+-	synic = synic_get(kvm, vpidx);
++	if (!level)
++		return -1;
 +
- void kvm_ioapic_clear_all(struct kvm_ioapic *ioapic, int irq_source_id);
- void kvm_get_ioapic(struct kvm *kvm, struct kvm_ioapic_state *state);
- void kvm_set_ioapic(struct kvm *kvm, struct kvm_ioapic_state *state);
++	synic = synic_get(kvm, e->hv_sint.vcpu);
+ 	if (!synic)
+ 		return -EINVAL;
+ 
+-	return synic_set_irq(synic, sint);
++	return synic_set_irq(synic, e->hv_sint.sint);
+ }
+ 
+ void kvm_hv_synic_send_eoi(struct kvm_vcpu *vcpu, int vector)
+diff --git a/arch/x86/kvm/hyperv.h b/arch/x86/kvm/hyperv.h
+index 913bfc96959c..6ce160ffa678 100644
+--- a/arch/x86/kvm/hyperv.h
++++ b/arch/x86/kvm/hyperv.h
+@@ -103,7 +103,8 @@ static inline bool kvm_hv_hypercall_enabled(struct kvm_vcpu *vcpu)
+ int kvm_hv_hypercall(struct kvm_vcpu *vcpu);
+ 
+ void kvm_hv_irq_routing_update(struct kvm *kvm);
+-int kvm_hv_synic_set_irq(struct kvm *kvm, u32 vcpu_id, u32 sint);
++int kvm_hv_synic_set_irq(struct kvm_kernel_irq_routing_entry *e, struct kvm *kvm,
++			 int irq_source_id, int level, bool line_status);
+ void kvm_hv_synic_send_eoi(struct kvm_vcpu *vcpu, int vector);
+ int kvm_hv_activate_synic(struct kvm_vcpu *vcpu, bool dont_zero_synic_pages);
+ 
 diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
-index 64f352e7bcb0..8dcb6a555902 100644
+index 8dcb6a555902..28a8555ab58b 100644
 --- a/arch/x86/kvm/irq_comm.c
 +++ b/arch/x86/kvm/irq_comm.c
-@@ -27,15 +27,6 @@
- #include "x86.h"
- #include "xen.h"
+@@ -127,18 +127,6 @@ int kvm_set_msi(struct kvm_kernel_irq_routing_entry *e,
+ 	return kvm_irq_delivery_to_apic(kvm, NULL, &irq, NULL);
+ }
  
--static int kvm_set_ioapic_irq(struct kvm_kernel_irq_routing_entry *e,
--			      struct kvm *kvm, int irq_source_id, int level,
--			      bool line_status)
+-#ifdef CONFIG_KVM_HYPERV
+-static int kvm_hv_set_sint(struct kvm_kernel_irq_routing_entry *e,
+-		    struct kvm *kvm, int irq_source_id, int level,
+-		    bool line_status)
 -{
--	struct kvm_ioapic *ioapic = kvm->arch.vioapic;
--	return kvm_ioapic_set_irq(ioapic, e->irqchip.pin, irq_source_id, level,
--				line_status);
--}
+-	if (!level)
+-		return -1;
 -
- int kvm_irq_delivery_to_apic(struct kvm *kvm, struct kvm_lapic *src,
- 		struct kvm_lapic_irq *irq, struct dest_map *dest_map)
- {
-@@ -293,7 +284,7 @@ int kvm_set_routing_entry(struct kvm *kvm,
- 		case KVM_IRQCHIP_IOAPIC:
- 			if (ue->u.irqchip.pin >= KVM_IOAPIC_NUM_PINS)
- 				return -EINVAL;
--			e->set = kvm_set_ioapic_irq;
-+			e->set = kvm_ioapic_set_irq;
- 			break;
- 		default:
- 			return -EINVAL;
+-	return kvm_hv_synic_set_irq(kvm, e->hv_sint.vcpu, e->hv_sint.sint);
+-}
+-#endif
+-
+ int kvm_arch_set_irq_inatomic(struct kvm_kernel_irq_routing_entry *e,
+ 			      struct kvm *kvm, int irq_source_id, int level,
+ 			      bool line_status)
+@@ -149,8 +137,8 @@ int kvm_arch_set_irq_inatomic(struct kvm_kernel_irq_routing_entry *e,
+ 	switch (e->type) {
+ #ifdef CONFIG_KVM_HYPERV
+ 	case KVM_IRQ_ROUTING_HV_SINT:
+-		return kvm_hv_set_sint(e, kvm, irq_source_id, level,
+-				       line_status);
++		return kvm_hv_synic_set_irq(e, kvm, irq_source_id, level,
++					    line_status);
+ #endif
+ 
+ 	case KVM_IRQ_ROUTING_MSI:
+@@ -302,7 +290,7 @@ int kvm_set_routing_entry(struct kvm *kvm,
+ 		break;
+ #ifdef CONFIG_KVM_HYPERV
+ 	case KVM_IRQ_ROUTING_HV_SINT:
+-		e->set = kvm_hv_set_sint;
++		e->set = kvm_hv_synic_set_irq;
+ 		e->hv_sint.vcpu = ue->u.hv_sint.vcpu;
+ 		e->hv_sint.sint = ue->u.hv_sint.sint;
+ 		break;
 -- 
 2.50.0.rc1.591.g9c95f17f64-goog
 
