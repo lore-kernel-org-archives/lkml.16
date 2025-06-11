@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A9427EC7D;
-	Wed, 11 Jun 2025 10:44:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD2E02820D0
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 10:44:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749638661; cv=none; b=DWTB2IUXPOqMSxPSl1jEgkdCmGpL9ZltbGfmdPrJny53zh/Cs6y6etf2jF1K1JksXquRe3obWZthyZMzhx2PVmPnGYo/vwITK6XLbZbp+B9rrS+TCeKpu+HIBlzv+p4et1EyXgz1FdUIEbhBXdawoBEnEDtfDADXFO0OWxKL4PA=
+	t=1749638667; cv=none; b=HCwpEAyzFSJzfozorKukmPXWEFnek6pxh7SjQB9n9fcAo/uvX/ghTfa1pmwDIZsfxwElRUndPxF6gCFgSPI/EIcePHjG/XE1CUlwAnAj4XW6pWqLgkQdNVeWE8EZ7R+dR4y8PChj6/ymoKvcyeF/jDA0KDe7S4T0VShf2zn/SFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749638661; c=relaxed/simple;
-	bh=1m2Q8hIBn+Ua23x8mriGzVypFmGIfzQl3Yw8iPhN654=;
+	s=arc-20240116; t=1749638667; c=relaxed/simple;
+	bh=aePQDmv3vLF644T6pCevC7rrNkNKgmE/HhtuoHVGd6g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QNoTBSOg/HP7+F8IJfhL9uI8LCZnNG0TWxvVrZXkI900O1V8dHrmCxmv2w2BbECHart4L4m8yr1YkacglyqJsGea2j7Xi/ftC6wh0m1xlhU1lSCZSMQN2Z2dwB+zimbS+AmaJvT5MXgsDr5MUinLiUyCCEPMunZ9o19KoA6qRfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KA2HLtZt; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=jlbRDAFjLh4gV8KXMZu3I9vwpdQqGJb7wB0SwFpM6Sn73DN6W9wvJvjCoud/RrPLk8i71Fmh16Z2SYZ3pLZTyWzOshTj7oHZ6ZkIOmcBVn2kep00G8S/dQKFdXwdqA/NS+2SCkIU5znlHWpYFNCiQNtCp2PP3lOOO3PxrGOmMoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H7/252Z7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KA2HLtZt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC286C4CEF1;
-	Wed, 11 Jun 2025 10:44:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H7/252Z7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 709ABC4CEF2;
+	Wed, 11 Jun 2025 10:44:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749638660;
-	bh=1m2Q8hIBn+Ua23x8mriGzVypFmGIfzQl3Yw8iPhN654=;
+	s=k20201202; t=1749638667;
+	bh=aePQDmv3vLF644T6pCevC7rrNkNKgmE/HhtuoHVGd6g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KA2HLtZtqZvyVi4u0KoXeBkEcfjAHOFk/fTpWM9iZcKy+U2uGRv/Gt/sLBxL0rG7r
-	 BD+2IjVpIAJzyWYEDxd9j5+IJjS7jgP/ubdHJ+1kFe9XumPKQr6BOZsUA9xtrM9WYZ
-	 gN7X3T6fdIliCGuClFvObcyyR5MA1UuE0oCvqlzuE5gDykp2zP0AEJLXpxXC3+1s3B
-	 Eq7oZq3+cBkjGKm9ZQ8U36TJGaSSe+39XOp2cEOCbNid0sSFVjd66+OMeMo/AC2PJJ
-	 XhDxGGL3B3UWwbd/YwCaU4hU5S8UYr7/+b2ThbYJsYQdSxZ54HJF8FtHXd71iVRVdf
-	 hcu4WlGr6euGg==
+	b=H7/252Z7e6XikFFlKorcfZWK16QErKTQIA6Ip2UJcjszjubJXCDyvx3BynLlZVUBU
+	 PETetc41Ntg3af/UfoUr2/EvhgjfQf9HwD+sx4MNmV1vpxn+gdDSzITwKEz7j1LMmX
+	 8N1IBx1jgYrXdAZJTFIvpNtBwV/MjO2mRXnEyQpxenHkW757u1ycJCRKURra3zqPOc
+	 2GvoCmXv7dxgJeCtG2qMzQJ8pWuW3abVqpPvpX+xO5BJImwMw9ipmclm63ybJ2EFvd
+	 b78Cb6IKXrCasFMik8FHe5FMtK1B9mXykhYSxpH9g9CDNR5LchQiFARnR3ulKKcxK6
+	 UCFX8V9G/bQjw==
 From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: tglx@linutronix.de,
 	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Roger Quadros <rogerq@kernel.org>,
-	Tony Lindgren <tony@atomide.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	linux-omap@vger.kernel.org
-Subject: [PATCH] memory: Use dev_fwnode()
-Date: Wed, 11 Jun 2025 12:43:40 +0200
-Message-ID: <20250611104348.192092-12-jirislaby@kernel.org>
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH] misc: Use dev_fwnode()
+Date: Wed, 11 Jun 2025 12:43:42 +0200
+Message-ID: <20250611104348.192092-14-jirislaby@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250611104348.192092-1-jirislaby@kernel.org>
 References: <20250611104348.192092-1-jirislaby@kernel.org>
@@ -55,29 +53,34 @@ using of_node with of_fwnode_handle().
 So use the dev_fwnode() helper.
 
 Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-Cc: Roger Quadros <rogerq@kernel.org>
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-omap@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/memory/omap-gpmc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/misc/hi6421v600-irq.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
-index 9c96eed00194..d9e13c1f9b13 100644
---- a/drivers/memory/omap-gpmc.c
-+++ b/drivers/memory/omap-gpmc.c
-@@ -1455,8 +1455,8 @@ static int gpmc_setup_irq(struct gpmc_device *gpmc)
- 	gpmc->irq_chip.irq_unmask = gpmc_irq_unmask;
- 	gpmc->irq_chip.irq_set_type = gpmc_irq_set_type;
+diff --git a/drivers/misc/hi6421v600-irq.c b/drivers/misc/hi6421v600-irq.c
+index 187c5bc91e31..5ba40222eb12 100644
+--- a/drivers/misc/hi6421v600-irq.c
++++ b/drivers/misc/hi6421v600-irq.c
+@@ -214,7 +214,6 @@ static void hi6421v600_irq_init(struct hi6421v600_irq *priv)
+ static int hi6421v600_irq_probe(struct platform_device *pdev)
+ {
+ 	struct device *pmic_dev = pdev->dev.parent;
+-	struct device_node *np = pmic_dev->of_node;
+ 	struct platform_device *pmic_pdev;
+ 	struct device *dev = &pdev->dev;
+ 	struct hi6421v600_irq *priv;
+@@ -254,8 +253,7 @@ static int hi6421v600_irq_probe(struct platform_device *pdev)
+ 	if (!priv->irqs)
+ 		return -ENOMEM;
  
--	gpmc_irq_domain = irq_domain_create_linear(of_fwnode_handle(gpmc->dev->of_node),
--						   gpmc->nirqs, &gpmc_irq_domain_ops, gpmc);
-+	gpmc_irq_domain = irq_domain_create_linear(dev_fwnode(gpmc->dev), gpmc->nirqs,
-+						   &gpmc_irq_domain_ops, gpmc);
- 	if (!gpmc_irq_domain) {
- 		dev_err(gpmc->dev, "IRQ domain add failed\n");
- 		return -ENODEV;
+-	priv->domain = irq_domain_create_simple(of_fwnode_handle(np),
+-						PMIC_IRQ_LIST_MAX, 0,
++	priv->domain = irq_domain_create_simple(dev_fwnode(pmic_dev), PMIC_IRQ_LIST_MAX, 0,
+ 						&hi6421v600_domain_ops, priv);
+ 	if (!priv->domain) {
+ 		dev_err(dev, "Failed to create IRQ domain\n");
 -- 
 2.49.0
 
