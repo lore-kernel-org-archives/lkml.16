@@ -1,85 +1,93 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F42F22CBD0
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 12:23:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5EB4276031;
+	Wed, 11 Jun 2025 12:23:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749644603; cv=none; b=MANBAONjKWcp4jlPplT0O8vJkfQnxDxWFpRd4c6TLUbKQZlwzRGcXMPMMwECaGNITxvlC/saQRStLdvJqaMpN8kKbHLcnMGbEKqFdIFdsyppkmHmFMpnl4j5nnKgpOTHe5rxNdr54uLtch6DrpfSgidJLT5qZrnsTzlBdLx7FsE=
+	t=1749644624; cv=none; b=FYokkZ0TxdHS2V3m/aYEpQFnebF59ALfVyZGAywciFjQDIpL3OAo66EnpnTwNRlWqBjS4AvvMp9wa40saX2rk12jyIqVlc9y/QMjBSGbkeYhUK902sIau71wasbQTp7MtNY2FFtz5K8sxJqZ50kJJL63SZPAwURjSaj9HCmk46g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749644603; c=relaxed/simple;
-	bh=qAIBoTbU/lac517I9f0eMnENz2xp/0peBDS5tMCiPa8=;
+	s=arc-20240116; t=1749644624; c=relaxed/simple;
+	bh=qU0EWVOHmyfXZmfiha9iuQgF+i0AoLy669DcGhO9gIA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bFlNOsCCz82LUvTVG687uOK9Ncg3ef9/1CivF4yv0LMUk4uQ0D58kKtBgK4gRmkkQHOd7Nzgg2fGqag1RNkq5IMvoA+EsWWm1sqj28L7i6DkWeU3pxtaohI5tVy3RDIOQPtGDJkEWxMdIMACjsDy3xe90tGll8yyk97qsaJcdjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gdrhmnIs; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=hu63T0L8YCsXSk3zUkqaZ2PQ2+hnPhJsx1tXGp/GZpGJPKkd1EErQ1I0kRIiMmkzYHB0rFKB7V4DcVYks3ZQzEr8xpSvmtrIrdimj1wSDq1Jrp82MFs1r3NwD/462apatzKK5gKvlPg0rgO4StHR9Z5hzTi97DIM1Cj843E+zCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=AgMQE4jt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gdrhmnIs"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=H3ise0VFG8pfLlwhh4aDRYm/oyQ+lfeQt6Rofx90ivg=; b=gdrhmnIsyC8BRbmMYK105bCcx2
-	0bxTfrt7cObwbW2wOoGgXjLSD/NfFS8g1G4chdbO/IdzPmmp5zRaU9wvrQFdIfK0kdbgwvxmfFR6A
-	arfoq729S4omQ5nOFZqNwzqmngvAc8mx+JIez02iUF90u3J4xj8JmJZVYLBzAoTFsu1hH2p5+QUlc
-	1WymyW6bAYwB2k/jwZ/bhIZ20g5YxeaPDDkBWUyzVHZN26paUZpZwjDoqeeF2tB4n6XW/pOorzJOP
-	1l4Y+MezkJeKrUmBXDhzZEfHIGgI90vSRIMmJ9L4fogD92hNOO8sbZ9D/LpnDmSGnHzer6ev60Vq5
-	ETSJRPAA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uPKUA-00000002O5z-3zmC;
-	Wed, 11 Jun 2025 12:23:19 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 238EC302F8E; Wed, 11 Jun 2025 14:23:17 +0200 (CEST)
-Date: Wed, 11 Jun 2025 14:23:17 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Alexandre Chartre <alexandre.chartre@oracle.com>
-Cc: linux-kernel@vger.kernel.org, mingo@kernel.org, jpoimboe@kernel.org
-Subject: Re: [RFC 03/13] objtool: Disassemble code with libopcodes instead of
- running objdump
-Message-ID: <20250611122317.GA2278213@noisy.programming.kicks-ass.net>
-References: <20250606153440.865808-1-alexandre.chartre@oracle.com>
- <20250606153440.865808-4-alexandre.chartre@oracle.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="AgMQE4jt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1424EC4CEEE;
+	Wed, 11 Jun 2025 12:23:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1749644623;
+	bh=qU0EWVOHmyfXZmfiha9iuQgF+i0AoLy669DcGhO9gIA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AgMQE4jtWqqtRUJxAK6BFIAAXJhbZkkrolQBU7+As75rDmuS0vyTQhCgUvTruVlHn
+	 43W3brK7eMurkPyu9Zp06nMoVqCTH2KjP3nHwwy2kLANVeX/HfM1p1cEmBYI6xHPe8
+	 WWOOlE1fHWTsu9YI2+yKj9bRzuDElqvFr/gaaM4s=
+Date: Wed, 11 Jun 2025 08:23:40 -0400
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Saravana Kannan <saravanak@google.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH] driver core: Prevent deferred probe loops
+Message-ID: <2025061147-squishier-oversleep-80cd@gregkh>
+References: <cb354fd2-bece-42ef-9213-de7512e80912@linux.dev>
+ <20250610183459.3395328-1-sean.anderson@linux.dev>
+ <CAGETcx-koKBvSXTHChYYF-qSU-r1cBUbLghJZcqtJOGQZjn3BA@mail.gmail.com>
+ <a52c513c-ff93-4767-a370-3f7c562df7bd@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250606153440.865808-4-alexandre.chartre@oracle.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a52c513c-ff93-4767-a370-3f7c562df7bd@linux.dev>
 
-On Fri, Jun 06, 2025 at 05:34:30PM +0200, Alexandre Chartre wrote:
-> objtool executes the objdump command to disassemble code. Use libopcodes
-> instead to have more control about the disassembly scope and output.
+On Tue, Jun 10, 2025 at 07:44:27PM -0400, Sean Anderson wrote:
+> On 6/10/25 19:32, Saravana Kannan wrote:
+> > On Tue, Jun 10, 2025 at 11:35 AM Sean Anderson <sean.anderson@linux.dev> wrote:
+> >>
+> >> A deferred probe loop can occur when a device returns EPROBE_DEFER after
+> >> registering a bus with children:
+> > 
+> > This is a broken driver. A parent device shouldn't register child
+> > devices unless it is fully read itself. It's not logical to say the
+> > child devices are available, if the parent itself isn't fully ready.
+> > So, adding child devices/the bus should be the last thing done in the
+> > parent's probe function.
+> >
+> > I know there are odd exceptions where the parent depends on the child,
+> > so they might add the child a bit earlier in the probe
 > 
-> Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
-> ---
->  tools/objtool/Makefile                  |   2 +-
->  tools/objtool/arch/loongarch/decode.c   |   6 +
->  tools/objtool/arch/powerpc/decode.c     |   6 +
->  tools/objtool/arch/x86/decode.c         |   7 +
->  tools/objtool/check.c                   |   4 +-
->  tools/objtool/disas.c                   | 186 +++++++++++++++---------
->  tools/objtool/include/objtool/arch.h    |   5 +
->  tools/objtool/include/objtool/check.h   |   5 +
->  tools/objtool/include/objtool/objtool.h |   4 +
->  9 files changed, 154 insertions(+), 71 deletions(-)
+> This is exactly the case here. So the bus probing cannot happen any
+> later than it already does.
+
+Please fix the driver not to do this.
+
+> > but in those cases, the parent's probe should still do all the checks
+> > ahead of time.
 > 
-> diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
-> index 8c20361dd100..00350fc7c662 100644
-> --- a/tools/objtool/Makefile
-> +++ b/tools/objtool/Makefile
-> @@ -34,7 +34,7 @@ INCLUDES := -I$(srctree)/tools/include \
->  # is passed here to match a legacy behavior.
->  WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed -Wno-nested-externs
->  OBJTOOL_CFLAGS := -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
-> -OBJTOOL_LDFLAGS := $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
-> +OBJTOOL_LDFLAGS := $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS) -lopcodes
+> Such as what? How is the parent going to know the resource is missing
+> without checking for it?
+>  
+> > Can you be more specific about the actual failure you are seeing?
+> 
+> MAC is looking for a PCS that's on its internal MDIO bus, but that PCS's
+> driver isn't loaded. The PCS has to be loaded at probe time because
+> phylink_create needs it, and phylink is necessary to register the
+> netdev. The latter situation is not ideal, but it would be quite a bit
+> of work to untangle.
 
-Would it be possible to make this optional? Such that when people do not
-have libopcodes installed they can still build the kernel.
+Please untangle, don't put stuff in the driver core for broken
+subsystems.  That is just pushing the maintaince of this from the driver
+authors to the driver core maintainers for the next 20+ years :(
 
-Or is libopcodes a mandatory part of any binutils installation?
+thanks,
+
+greg k-h
