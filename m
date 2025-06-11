@@ -1,101 +1,75 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7346726B084
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 18:13:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FF1C26A0AB;
+	Wed, 11 Jun 2025 18:14:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749665639; cv=none; b=U1xlJUiYheMqBZYBhRSykd9Es9oTk5VP+WhAueESDAs+OS51soAPnM0t5ijhsWLICqyidaauBppyu/EWB90xPRbNmnRVlK2ZRvPxAsOa19NpBX7UwLPepFW6XRO1MEJBinQ7bZT9ctE3MkM10FcRyJknUpSssmVmam0nQ8brjM8=
+	t=1749665662; cv=none; b=HAjWXCqk9rwDKc9EdWCL+/4/hdNwrx236Mbp7qwl+aSWfH6/eLuQOXa4zzLEtEAu0ZlOfdEFCDHTLH3UJRfXZMQ8oSUYmkA2xVyYNjYIn+nRvFfJnb16d04oze/jKKhHNIakwHmZfQOpV/l9TUgmrs3YnDMUG3T7HuXMgnplRs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749665639; c=relaxed/simple;
-	bh=IeatVXM/VPJssVAVzMs9KocuyEJiD/TQkBaPU8yqP9M=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=OHwyamdFttmI5MEDMd3Q+pR+YCDjVGBsQGTne4A9bMdsZPu2GPBh2RPNoMbFGTcPSxeoVM4ZXrincCqvPmCqwof8aZyEd2JNiTK257DMToKOFnNlypfyTYBSulQvAgrwYx/m4yBKrzBhPGSE0LIobaHJL7vHBoUxMmpyyB/la/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ndzXYe66; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1749665662; c=relaxed/simple;
+	bh=39w8P3oLG9ffQgwWHPAp3VRDQ3K39fpZMLKKuhazPaw=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=qg/Zg/qvYuEb6+CMKOVZj6F3t989Mvf7m92AEcVY6Bq3iWPePgLAsgGPflpEuNJ49UrwXTQBrsuSlVpIUZYd98d90uoUoCqszmWnRsy8ZIuI53lpgvLacERw/1RX5DD19TaclqdvDhU3d8pTG9EO3HeYMw8mpNR/kWfJ9HdxacM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=luzfbPO7; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ndzXYe66"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30a59538b17so121760a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:13:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749665636; x=1750270436; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9AP2CEelaM2vm+ln8/2uTSplrSdzavfE46dg+YRKF6M=;
-        b=ndzXYe668sooADCn2WBwnrVPfUuujajE2G/4oR3/zAGlUEJXQjNsMC57m+vsx6zntP
-         Kkr3mZVEOhYtnw3Di0PGZ7OI2MhRhckGWQHVqfDhE2HTZ6pYtSGMMXBKNNSj25nrzmP7
-         Lb9opzc1hVnkI9WT+kfkVMiM9pcIuVjSwmNP3j4gA3a/W65AE12OejD8Lt20wNE1tDY1
-         w04c2q2L+8f1xEPcajzCxHcwdtrEp0Rq43qJ9XpQKpsyRu7TDFwnyT4qfmwU7AqzOLVg
-         aeZYnW45LDcbO2Ewn5CJp0gTuZKLmaqnYtc2AvAYj3xw6OPmvieh8nk0PX9r/LSZ/2Jb
-         8lKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749665636; x=1750270436;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=9AP2CEelaM2vm+ln8/2uTSplrSdzavfE46dg+YRKF6M=;
-        b=EtFINc+/ggfgMklJHFlr6VKRL2iaRKle3sDnD5NiDLPTrICDXd69JNzP6RHeaet9WX
-         3wI0pxiFkoQR4FZH4FiVbH1j2tosJxpZ+ksvzzQlPmA3fIA6okYHyKBuFtT4x4adXmMf
-         Vvm32N2EHMMmhmzJCfy2EnrG5jtRXfUcxva7T3Tv6vpLUroOaMmG1jb7tsYJVxrwbpGB
-         y47NfK4Vu5pqBbhT6XiaSkshYNH5fOwWwJ/mZ6eIUczv4ARyzeaR4xmHWUBuJNML1niV
-         Ux9pLIRBjzoFdnRIPtKzXnvlSQdQ+NKtBJueqMzucnRq4Y17tGGtycq8Yt6etqgvuSEk
-         HOSA==
-X-Forwarded-Encrypted: i=1; AJvYcCXPs26MRm/XSdqK82im3XQ/fYWmqG+RqanC7eD37GRihiJGXT0tmXmhHkcTkaavew6NTRC7LGIxK+ZxezE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzy1iVUww5vUXlI43/IfF58AowZbBK9Yht7JmFx9MIjJdMp3m/T
-	uyUE//cb0PLuNEa4nzjUs0crpJYe4bBJ5cUsyopfRi/Fd2idRPHM4sROy8nsYpb1/9zjU5al9cv
-	BhZO4Rw==
-X-Google-Smtp-Source: AGHT+IFHVGTO4vjh2VGjTQJUjZQ7j92tMCP8tpw8KYudlqm/NMDL6qN15xcu4YOSiQLv7dKLIC6IDIM5PMg=
-X-Received: from pjcc3.prod.google.com ([2002:a17:90b:5743:b0:2fc:3022:36b8])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5410:b0:312:e6f1:c05d
- with SMTP id 98e67ed59e1d1-313af0fce66mr6663752a91.2.1749665635713; Wed, 11
- Jun 2025 11:13:55 -0700 (PDT)
-Date: Wed, 11 Jun 2025 11:13:54 -0700
-In-Reply-To: <089eeacb231f3afa04f81b9d5ddbb98b6d901565.camel@intel.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="luzfbPO7"
+Received: by linux.microsoft.com (Postfix, from userid 1223)
+	id 16A392115196; Wed, 11 Jun 2025 11:14:21 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 16A392115196
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1749665661;
+	bh=vifNDMqsOEqtxM1Hx9SKPQiYFcWKln6vrUqhXwYHPbM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=luzfbPO7gQxJnX6qW+RNraySb84sjEZ5PqpVDt3qZ+59nfiVORGrPyEXM5Pqu9Esz
+	 fzwHpnRysN8las/Mqna7MOplcla0Qypwj+vBMn1YQIgPrWUdkbD6urydh3yyU/G2QS
+	 r1DgZO1CmN+ofla3y/41Ku41k0tugQWCMKLKOQPE=
+From: Meagan Lloyd <meaganlloyd@linux.microsoft.com>
+To: alexandre.belloni@bootlin.com
+Cc: linux-rtc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	code@tyhicks.com,
+	Meagan Lloyd <meaganlloyd@linux.microsoft.com>
+Subject: [PATCH 0/2] Expand oscillator stop flag (OSF) validity check to ds1341
+Date: Wed, 11 Jun 2025 11:14:14 -0700
+Message-Id: <1749665656-30108-1-git-send-email-meaganlloyd@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250610021422.1214715-1-binbin.wu@linux.intel.com>
- <20250610021422.1214715-4-binbin.wu@linux.intel.com> <ff5fd57a-9522-448c-9ab6-e0006cb6b2ee@intel.com>
- <671f2439-1101-4729-b206-4f328dc2d319@linux.intel.com> <7f17ca58-5522-45de-9dae-6a11b1041317@intel.com>
- <aEmYqH_2MLSwloBX@google.com> <effb33d4277c47ffcc6d69b71348e3b7ea8a2740.camel@intel.com>
- <aEmuKII8FGU4eQZz@google.com> <089eeacb231f3afa04f81b9d5ddbb98b6d901565.camel@intel.com>
-Message-ID: <aEnHYjTGofgGiDTH@google.com>
-Subject: Re: [RFC PATCH 3/4] KVM: TDX: Exit to userspace for GetTdVmCallInfo
-From: Sean Christopherson <seanjc@google.com>
-To: Rick P Edgecombe <rick.p.edgecombe@intel.com>
-Cc: "mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kai Huang <kai.huang@intel.com>, 
-	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, Jiewen Yao <jiewen.yao@intel.com>, 
-	Xiaoyao Li <xiaoyao.li@intel.com>, Tony Lindgren <tony.lindgren@intel.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Reinette Chatre <reinette.chatre@intel.com>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, Yan Y Zhao <yan.y.zhao@intel.com>, 
-	Isaku Yamahata <isaku.yamahata@intel.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	Kirill Shutemov <kirill.shutemov@intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 11, 2025, Rick P Edgecombe wrote:
-> On Wed, 2025-06-11 at 09:26 -0700, Sean Christopherson wrote:
-> > > GetQuote is not part of the "Base" TDVMCALLs and so has a bit in
-> > > GetTdVmCallInfo. We could move it to base?
-> >=20
-> > Is GetQuote actually optional?=C2=A0 TDX without attestation seems rath=
-er
-> > pointless.
->=20
-> I don't know if that was a consideration for why it got added to the opti=
-onal
-> category. The inputs were gathered from more than just Linux.
+We would like to use CONFIG_RTC_HCTOSYS to sync a supercapacitor-backed
+DS1342 RTC to the kernel time early in boot. An obstacle is that the
+sync in rtc_hctosys() is unconditional as long as rtc_read_time()
+succeeds and in some power loss situations, our RTC comes up with either
+an unpredictable future time or the default 01/01/00 from the datasheet.
+Syncing a future time, followed by an NTP sync would not be desired as
+it would result in a backwards time jump. The sync feature is useful in
+boot scenarios where power is maintained so syncing only when the RTC
+data is valid would allow us to make use of the feature.
 
-If there's an actual use case for TDX without attestation, then by all mean=
-s,
-make it optional.  I'm genuinely curious if there's a hypervisor that plans=
- on
-productizing TDX without supporting attestation.  It's entirely possible (l=
-ikely?)
-I'm missing or forgetting something.
+The DS1342 has the oscillator stop flag (OSF) which is a status flag
+indicating that the oscillator stopped for a period of time. It can be
+set due to power loss. Some chip types in the ds1307 driver already use
+the OSF to determine whether .read_time should provide valid data or
+return -EINVAL. This patch series expands that handling to the ds1341
+chip type (DS1341 and DS1342 share a datasheet).
+
+These changes enable us to make use of CONFIG_RTC_HCTOSYS as they
+prevent the invalid time from getting synced to the kernel time. It will
+also prevent userspace programs from getting the invalid time as the fix
+cuts it off at the source - the .read_time function.
+
+Meagan Lloyd (2):
+  rtc: ds1307: remove clear of oscillator stop flag (OSF) in probe
+  rtc: ds1307: handle oscillator stop flag (OSF) for ds1341
+
+ drivers/rtc/rtc-ds1307.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
+
+
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+-- 
+2.49.0
+
