@@ -1,71 +1,95 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B4A52874EB;
-	Wed, 11 Jun 2025 13:19:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CF8228751C
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 13:20:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749647954; cv=none; b=YpHrdca1Jvp6Hh0Ainz/Ct4qNvtDtMepST+VhGnYqVMnVE/LeU5VHkYzE/R7JLITeOqyateRnCHcwYctL9ALq3qKW9iRei3pRxjUxDrB/TMnHlNjC0OQ1iHPy5Zvy/ulZNmG3dExhjE5EErI+ey+aF+W9XfZj+jHPMkss65m/x4=
+	t=1749648006; cv=none; b=s8dNOvmNEoDZjWc1OiT4uKQGuLS8DTVQfs0qhai0E2Elbn7sTugfLZrKsZ7yeR8ZmHe5lYuNvO29AIUGGM6iKpBKxqEpZ3KdS4nEbkrsLQdWFJ2/fg5KmHiNrmXzMtwFUzqfOPMS2ykI4KxDAYqDoEln6X+rM8yCAvZV8GE6bt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749647954; c=relaxed/simple;
-	bh=YnZHAH16ZCoZK3qgLn0+Hvc/WENmD4Pl8KAmSNL+Yb4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nGfVPqh4+qAyGW27gwAL+/a6eiqcylabUbZzFEp7/z3tPM07aceL/kzOgL++7fIToaJFIL/Ldhf623N5pUdQEI2yzmUpY+g/ixm84D1ImihVo3De3gg35ecSp1yCMevzola/x/zDHqBCMmrHYtb0FWJtrHvZJX8TmHIxZhHlmmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=hgTspcjg; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1749648006; c=relaxed/simple;
+	bh=UzJeNJW3RMDMtfEx3QPDFOmM9L8mS8UXAa35yr675nE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BYEzU9p5JttOO6Cs862rqwKmDVZssgocD7eTWMQ8W8W+ScqPxE9bu8Nid4XvwaRWrH1cxUv5uMn2+z4e4EnTChXMadafQ8WWIuuuOp121AGh9gsjDby4N5A7o8JKIHNAFws6hpD67h6umQ7i5mS7qSZIqSgqq2AORqz5IJ8JpPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pWAs19wN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="hgTspcjg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1749647950;
-	bh=YnZHAH16ZCoZK3qgLn0+Hvc/WENmD4Pl8KAmSNL+Yb4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hgTspcjgX5qjLaXGcb9UQ23SvAQx4tbGKCiiY8/fTGjJe9k1HOPJTTX9CgF7mEre5
-	 TN/wXhIC60siTNtw9EUYa7edrD966CThz8qEStNlBLsKXxFNQelpFiL+nvtcHqxbWq
-	 buacOZ8MqQkH35PC/p4BAWR8sdhJVlEU7OPGm69fMSlwbcYyqJblLqgsLP++z93uIU
-	 zWvR9ZQ1XHaxT1u2sIiPxyy+AbLoGn21ZuK4ZVXYPlfR62kcAl51hv87hTP0eb2/MV
-	 +XgbdyjEjnSAuWBL/vfbPjxWJ0q4sc6K1aIBYBfbIqZDO2gpvwLnSg54RPYGL0WlMF
-	 6w05HwFDBp43g==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 1230E17E0E3A;
-	Wed, 11 Jun 2025 15:19:10 +0200 (CEST)
-Message-ID: <313cea9f-f6c5-449a-bcf0-80eb5088b7f3@collabora.com>
-Date: Wed, 11 Jun 2025 15:19:09 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pWAs19wN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9644C4CEEE;
+	Wed, 11 Jun 2025 13:20:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749648005;
+	bh=UzJeNJW3RMDMtfEx3QPDFOmM9L8mS8UXAa35yr675nE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pWAs19wN6rphWarV0Tu4IiG2hpeYtuqQPID+BN4Q+yxvw215nxL3B//Rw4we/J+Qt
+	 kB/jcQhTiDtdss47vSFmPR8RfX8rsmjk69eHpSZkJUxqDE4Evb55GqZfx+NuT2id69
+	 GnJso48gs3GYq3rlnanjsLhMEORFva9HlsaMNwkxb4laTyOJUmRjs1TesWhxjr6J0R
+	 qgdr76hmSuWoquQkQ0W6OEdC1Mp2d8oqTRLzNKCoJ9kvNp1HXR1MwgtQ3X869SgeVY
+	 SIt4A3XthDtOBQy024bNS6KaMa51B+ytovl6psDsw+pqhJm/Z0GD9AaP4d5eV2PW6M
+	 /7hrC0cUUBYCg==
+Date: Wed, 11 Jun 2025 14:19:59 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: catalin.marinas@arm.com, pcc@google.com, will@kernel.org,
+	anshuman.khandual@arm.com, joey.gouly@arm.com, maz@kernel.org,
+	oliver.upton@linux.dev, frederic@kernel.org,
+	hardevsinh.palaniya@siliconsignals.io, samuel.holland@sifive.com,
+	palmer@rivosinc.com, charlie@rivosinc.com,
+	thiago.bauermann@linaro.org, bgray@linux.ibm.com,
+	tglx@linutronix.de, puranjay@kernel.org, david@redhat.com,
+	yang@os.amperecomputing.com, mbenes@suse.cz,
+	joel.granados@kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 3/7] arm64/kernel: support store-only mte tag check
+Message-ID: <3a0ed679-dfb0-4b10-a081-db56583bffbe@sirena.org.uk>
+References: <20250611094802.929332-1-yeoreum.yun@arm.com>
+ <20250611094802.929332-4-yeoreum.yun@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] dmaengine: mediatek: Fix a flag reuse error in
- mtk_cqdma_tx_status()
-To: Qiu-ji Chen <chenqiuji666@gmail.com>, sean.wang@mediatek.com,
- vkoul@kernel.org, matthias.bgg@gmail.com, eugen.hristev@linaro.org
-Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
- baijiaju1990@gmail.com, stable@vger.kernel.org,
- kernel test robot <lkp@intel.com>
-References: <20250606090017.5436-1-chenqiuji666@gmail.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250606090017.5436-1-chenqiuji666@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-
-Il 06/06/25 11:00, Qiu-ji Chen ha scritto:
-> Fixed a flag reuse bug in the mtk_cqdma_tx_status() function.
-> 
-> Fixes: 157ae5ffd76a ("dmaengine: mediatek: Fix a possible deadlock error in mtk_cqdma_tx_status()")
-> Cc: stable@vger.kernel.org
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202505270641.MStzJUfU-lkp@intel.com/
-> Signed-off-by: Qiu-ji Chen <chenqiuji666@gmail.com>
-
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="vUy5kMIj7urwy+MA"
+Content-Disposition: inline
+In-Reply-To: <20250611094802.929332-4-yeoreum.yun@arm.com>
+X-Cookie: No skis take rocks like rental skis!
 
 
+--vUy5kMIj7urwy+MA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Jun 11, 2025 at 10:47:58AM +0100, Yeoreum Yun wrote:
+
+> Introduce new flag -- MTE_CTRL_STORE_ONLY used to set store-only tag check.
+> This flag isn't overridden by prefered tcf flag setting but set together
+> with prefered setting of way to report tag check fault.
+
+There was a concern when adding asymmetric support that when adding new
+prctl() bits might cause issues when libraries linked into a program
+don't know about the new bits and miss enabling/disabling them.  That
+doesn't seem such an issue here since unlike with asymmetric mode store
+only mode doesn't turn MTE on or off entirely, it's more an
+optimisation.  There's some possibility that something could rely on
+only stores faulting but I'm struggling to think of a real use case.
+Assuming that's OK:
+
+Reviewed-by: Mark Brown <broonie@kernel.org>
+
+--vUy5kMIj7urwy+MA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhJgn4ACgkQJNaLcl1U
+h9DFKQf/UVQXyYeS0IFPcj1QrNsvziBeCEJJzwQDnkBmFFHJ/XPZo6wn7iQFHdL4
+zhZl4dz2MtmfyONRUsSfxxu15zotZI/oR7jkYXeqLoxflPYnT6iekVPaLESeg6af
+duXG5FnmCC9XLQRllCNzTiax8+WY6sHIvopvERPXijaVEsMwQo5lKs9SovoFz0I0
+LjerAQARmBHNChjcfzSD2pO1DriKYxG3QqGwCuDuYOmfGru8tqeDC3OaxqRPj0ND
+nvVJoUrzhnhamYVA9Y3XK/5oVlmF3niseb2vY6n7H1DORkJnRkxUrna/spVk16kP
+hSI5F/qT4iaPVE+W/dCTN4Q0ficqwQ==
+=UECi
+-----END PGP SIGNATURE-----
+
+--vUy5kMIj7urwy+MA--
