@@ -1,412 +1,163 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D902D280CC8
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA9082BDC19
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:53:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749653604; cv=none; b=aPsphAHTfTHy15mKYE6ffwfHKcxZ++PZuFz7Gn88BulkFSmCeTVXH8WXV6LrZxEzi/dsSJvq3l9HYmD+/FY6SaEmIVFQaJCe4yO0rfAwxllb1OlPceyxmdyX/THJYdKjpwxT0xXGYdrLruyncW3ZhHYOubTq9KnLTlBq6+NrhlY=
+	t=1749653612; cv=none; b=WeyQtdWIc77Q6TM/GY6KuLKZDuHtQIEgo5oZ5wugZ+Si/iMm0ZMQltJ7x5ta0uNGlw3fWEeBWP7XKynlbj89Yp6g/FQsE9e+fRdATIaVBbdMKHDkihWna0rjrD427H7vky4sJ5J2BYBHM2C2aTYQJ7mWm1RTS9m5ninTFxfUi/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749653604; c=relaxed/simple;
-	bh=z/i4/E5DOr+PEti0Bz8z+s8pDPkNo/Hyhatgsrlrrgw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X3G6v7vJBDpblwXBUPB3y6KxePaqssLfW5ghheWC5uJO1AkHVby57SoKPWcfselzAygD3R6yN3WUcqQMxPcn2UpLxPVNmq0eX04lqsxVV04iIZRMiygfpRXPpTdTeXPDTt63eWYX5+VZliva22HgIHcfGQzDhuYtzxSumCnZO3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cFbdiKu3; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749653612; c=relaxed/simple;
+	bh=Q/6vM8rFL8vGwZceGLj+Zt3SRB0C1Pbut8riw3f+MW8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=qWVYNkD4sm4ojHtSiR5BTjB04BFVPHgCf2i9qUWUs+sGziQGZx4YwpLSDxd0PvA/bDFtNd0Yo4DGUxA9S28+x9XzzYHWTBbx05sDjBR35ilN28b1z9qR8AwZ0RzG1iNMbzlfdeaF1Jaypdq82pe/K/2s9V0tCbYm2Ilgnz70PUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OBVtex+P; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cFbdiKu3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749653601;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OBVtex+P"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 07743431EB;
+	Wed, 11 Jun 2025 14:53:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1749653607;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lf9xzKCZ2Qn0juoDOpkczXBo7DHMysvOR4TsAgqr+cg=;
-	b=cFbdiKu344+g9i5gJ/a8qI1Bdm6kxZL5syc1FMNJ9+NzTIY26QiwUOomjdVyhdDNIq8PWa
-	WFPGItWd2PhmjjI4GZCmHfenBBd1NlSSkLHRK9ySJ1+QlEoFrluBJ23ZzPMjAFfRPdM8VY
-	dKTkK8zOXRL5ajXfMW7F3XD/bSf266I=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-441-KUg9oz4MOECje_c46v3jaA-1; Wed, 11 Jun 2025 10:53:18 -0400
-X-MC-Unique: KUg9oz4MOECje_c46v3jaA-1
-X-Mimecast-MFC-AGG-ID: KUg9oz4MOECje_c46v3jaA_1749653598
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7caef20a528so1658197485a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:53:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749653598; x=1750258398;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lf9xzKCZ2Qn0juoDOpkczXBo7DHMysvOR4TsAgqr+cg=;
-        b=RJF7q9LC7CpeJ9ALHdQJmhiObQSuq6GnlGhysCr4uGQU2VaAOMv+NQT1gZMPtFriFk
-         c4zHi32fe/+/uKemfO9ke2HSfiCM0hbMNZlIlguRJc8TAlxhYcUosp6XTzi2qucmsC+6
-         B0jSSSxKayw2LN7YWHybMRYRsoATVKcMhYnnlOoRlLIfyS7/ftN/lsaJRH5lNT6q/UL6
-         wSvcJM9KLoha0S9+l4MhyUue+XEvPRNdYdbFbs1SNuhsJlJmDij60nU8TqKH8cbpW4Vi
-         G6g9hHfcedSbNWJx5eNpWkcI3RoFGg9PcAwtosNDEVU82/0aVp1i14422Qd+1jgbv+GB
-         tKRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWXAJB3AVWeCmrLZ0D8UgzKHznWceqn2bym6Ska4cd1I3ySZAISCJ+XnZ4U6q25abhO2GYFYnRYjUI2czA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+R6Dvh2DkOeKSdVMbb+TQcifptXx6ix+VYcReOSKvkuZOFloG
-	BKK4WbZCtJ1e7lOkN4JhYb/PCL6wyc2bHVeIt2NQP8fhSOxDgHcVizSjMAtTlwFd/WNqlb2aLDF
-	/GJE4h54RnECJScIaflbey7PQfS+x+HlXZ7T9UVr4nNNTTa9smHdgekLUJs7krnUXyw==
-X-Gm-Gg: ASbGncv99MiUJXIZ8iQt1giQHgrd5G1Po4mlhovtHCWXWR+jQqc4G5VhEzjy4FS8CZx
-	8TjsL1A8HpG5I390JxQcvzHgJWdzLMOe4pKTRBAlZPqIDU68Ovr2/KMctb4IpMhNPcUO68X6CuT
-	8HHbkrXLxkCvpm1B7Qb12QJASmh9SU3/YsBgGWiuNNE6+rjAyqdMdF/i6Dg/x/ZODjA0HSfZigz
-	xMebDsa9mFWiCYpsOWQPKWgmg4DSXE8lEmh2rEUYKjttNzA6ca8HPP+rsFqU8UN8oM+VgsVdP4N
-	rbSvjSEsbz74w/9CxOnx3O86CpIl
-X-Received: by 2002:a05:620a:2984:b0:7ce:f3fd:cc69 with SMTP id af79cd13be357-7d3a9576ab1mr425909685a.19.1749653597746;
-        Wed, 11 Jun 2025 07:53:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHVvQXdBxvFGgQ4UAlmckh17KS2srASaNg+jQYfvx4Ww+gN7/Vyvgw8J9f72/KtbRIhgog87Q==
-X-Received: by 2002:a05:620a:2984:b0:7ce:f3fd:cc69 with SMTP id af79cd13be357-7d3a9576ab1mr425903885a.19.1749653597022;
-        Wed, 11 Jun 2025 07:53:17 -0700 (PDT)
-Received: from sgarzare-redhat ([193.207.148.235])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d25a61d725sm863276885a.88.2025.06.11.07.53.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 07:53:16 -0700 (PDT)
-Date: Wed, 11 Jun 2025 16:53:11 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Luigi Leonardi <leonardi@redhat.com>
-Cc: Michal Luczaj <mhal@rbox.co>, virtualization@lists.linux.dev, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Hyunwoo Kim <v4bel@theori.io>
-Subject: Re: [PATCH net-next v3] vsock/test: Add test for null ptr deref when
- transport changes
-Message-ID: <zpc6pbabs5m5snrsfubtl3wp4eb64w4qwqosywp7tsmrfnba3j@ybkgg2cnhqec>
-References: <20250611-test_vsock-v3-1-8414a2d4df62@redhat.com>
+	bh=sJu5NSgqNOml+9Lox7VvY57DB9A7wKSyNIB2QDnPsGk=;
+	b=OBVtex+PPJ9C5YrO63rD52e2cVGsu/uqOLAY/L5dVGBbk36SdtmKeU5z7a8gjyDMv+3FaT
+	TX/XWmjIZZOc04r1YF58J0UZmzld+Dkri6ScFCWleeIP6lbmHq868ldlq00T+fx8gJgkyI
+	k8hI2/zz6hZhcjDqGHWI3Vyphrs88/33hARFhOWkdMAty3Q8ddiC4Q71ZFC+WQw/ZvU7oL
+	ClgB+Dqt0esvCGIidbCkKPeUDdP7/pboiTDjIH1fcRy78yYoCwHyJMVFxSjAsdluxEF9cD
+	sKyqBcqTttiLXgUfWXVTiRLrRFVDpN5Ap4ZpdRVu8OAa/540HM9YNp4iXMGjYg==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: "Usyskin, Alexander" <alexander.usyskin@intel.com>
+Cc: Richard Weinberger <richard@nod.at>,  Guenter Roeck
+ <linux@roeck-us.net>,  Vignesh Raghavendra <vigneshr@ti.com>,  "De Marchi,
+ Lucas" <lucas.demarchi@intel.com>,  Thomas =?utf-8?Q?Hellstr=C3=B6m?=
+ <thomas.hellstrom@linux.intel.com>,  "Vivi, Rodrigo"
+ <rodrigo.vivi@intel.com>,  Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>,  Maxime Ripard <mripard@kernel.org>,
+  Thomas Zimmermann <tzimmermann@suse.de>,  David Airlie
+ <airlied@gmail.com>,  Simona Vetter <simona@ffwll.ch>,  Jani Nikula
+ <jani.nikula@linux.intel.com>,  Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>,  Tvrtko Ursulin <tursulin@ursulin.net>,
+  "Poosa, Karthik" <karthik.poosa@intel.com>,  "Abliyev, Reuven"
+ <reuven.abliyev@intel.com>,  "Weil, Oren jer" <oren.jer.weil@intel.com>,
+  linux-mtd <linux-mtd@lists.infradead.org>,  "DRI mailing list"
+ <dri-devel@lists.freedesktop.org>,  intel-gfx
+ <intel-gfx@lists.freedesktop.org>,  linux-kernel
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 01/11] mtd: core: always create master device
+In-Reply-To: <CY5PR11MB636692EFD9BB99B6F2D959BFED75A@CY5PR11MB6366.namprd11.prod.outlook.com>
+	(Alexander Usyskin's message of "Wed, 11 Jun 2025 10:52:36 +0000")
+References: <20250302140921.504304-1-alexander.usyskin@intel.com>
+	<CY5PR11MB63662D21B2C7B1A1C2E6BC4BED6BA@CY5PR11MB6366.namprd11.prod.outlook.com>
+	<2e5ebbdd-2a57-4f1f-85c6-7c2dff127b50@roeck-us.net>
+	<1176847729.134356549.1749504429656.JavaMail.zimbra@nod.at>
+	<CY5PR11MB6366B2B40E0C357D6C0935C2ED6AA@CY5PR11MB6366.namprd11.prod.outlook.com>
+	<130790886.134361099.1749560056731.JavaMail.zimbra@nod.at>
+	<c90c8bad-9c7a-4bf7-8282-ebefebba90a3@roeck-us.net>
+	<877c1ivcym.fsf@bootlin.com>
+	<1612313571.134371311.1749637592940.JavaMail.zimbra@nod.at>
+	<CY5PR11MB636692EFD9BB99B6F2D959BFED75A@CY5PR11MB6366.namprd11.prod.outlook.com>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Wed, 11 Jun 2025 16:53:24 +0200
+Message-ID: <87y0tytjmj.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250611-test_vsock-v3-1-8414a2d4df62@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduvdegkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefujghffgffkfggtgfgsehtqhertddtreejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepteehkeelvddvheehtdefkedtjeeutedthfegudekgeefleetkeettdekiefftdeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddvpdhrtghpthhtoheprghlvgigrghnuggvrhdruhhshihskhhinhesihhnthgvlhdrtghomhdprhgtphhtthhopehrihgthhgrrhgusehnohgurdgrthdprhgtphhtthhopehlihhnuhigsehrohgvtghkqdhushdrnhgvthdprhgtphhtthhopehvihhgnhgvshhhrhesthhirdgtohhmpdhrtghpthhtoheplhhutggrshdruggvmhgrrhgthhhisehin
+ hhtvghlrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhhvghllhhsthhrohhmsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheprhhoughrihhgohdrvhhivhhisehinhhtvghlrdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomh
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Wed, Jun 11, 2025 at 04:07:25PM +0200, Luigi Leonardi wrote:
->Add a new test to ensure that when the transport changes a null pointer
->dereference does not occur. The bug was reported upstream [1] and fixed
->with commit 2cb7c756f605 ("vsock/virtio: discard packets if the
->transport changes").
->
->KASAN: null-ptr-deref in range [0x0000000000000060-0x0000000000000067]
->CPU: 2 UID: 0 PID: 463 Comm: kworker/2:3 Not tainted
->Workqueue: vsock-loopback vsock_loopback_work
->RIP: 0010:vsock_stream_has_data+0x44/0x70
->Call Trace:
-> virtio_transport_do_close+0x68/0x1a0
-> virtio_transport_recv_pkt+0x1045/0x2ae4
-> vsock_loopback_work+0x27d/0x3f0
-> process_one_work+0x846/0x1420
-> worker_thread+0x5b3/0xf80
-> kthread+0x35a/0x700
-> ret_from_fork+0x2d/0x70
-> ret_from_fork_asm+0x1a/0x30
->
->Note that this test may not fail in a kernel without the fix, but it may
->hang on the client side if it triggers a kernel oops.
->
->This works by creating a socket, trying to connect to a server, and then
->executing a second connect operation on the same socket but to a
->different CID (0). This triggers a transport change. If the connect
->operation is interrupted by a signal, this could cause a null-ptr-deref.
->
->Since this bug is non-deterministic, we need to try several times. It
->is reasonable to assume that the bug will show up within the timeout
->period.
->
->If there is a G2H transport loaded in the system, the bug is not
->triggered and this test will always pass.
+Hello,
 
-Should we re-use what Michal is doing in 
-https://lore.kernel.org/virtualization/20250528-vsock-test-inc-cov-v2-0-8f655b40d57c@rbox.co/
-to print a warning?
+On 11/06/2025 at 10:52:36 GMT, "Usyskin, Alexander" <alexander.usyskin@inte=
+l.com> wrote:
 
+>> Subject: Re: [PATCH v6 01/11] mtd: core: always create master device
+>>=20
+>> ----- Urspr=C3=BCngliche Mail -----
+>> > Von: "Miquel Raynal" <miquel.raynal@bootlin.com>
+>> >> On 6/10/25 05:54, Richard Weinberger wrote:
+>> >>> ----- Urspr=C3=BCngliche Mail -----
+>> >>>> Von: "Alexander Usyskin" <alexander.usyskin@intel.com>
+>> >>>> Richard, I've reproduced your setup (modulo that I must load mtdram
+>> manually)
+>> >>>> and patch provided in this thread helps to fix the issue.
+>> >>>> Can you apply and confirm?
+>> >>> Yes, it fixes the issue here! :-)
+>> >>>
+>> >>
+>> >> It doesn't seem to fix the issue if the partition data is in
+>> >> devicetree.
+>> >
+>> > I had a look at the patch again. The whole mtd core makes assumptions =
+on
+>> > parenting, which is totally changed with this patch. There are so many
+>> > creative ways this can break, I don't believe we are going to continue
+>> > this route. I propose to revert the patch entirely for now. We need to
+>> > find another approach, I'm sorry.
+>>=20
+>> I think reverting is a valid option to consider if the issue turns out t=
+o be
+>> a "back to the drawing board" problem.
+>>=20
+>> > Alexander, can you please remind me what was your initial problem? I
+>> > believe you needed to anchor runtime PM on the master device. Can you
+>> > please elaborate again? Why taking the controller as source (the
+>> > default, before your change) did not work? Also why was selecting
+>> > MTD_PARTITIONED_MASTER not an option for you? I'm trying to get to the
+>> > root of this change again, so we can find a solution fixing "the world"
+>> > (fast) and in a second time a way to address your problem.
+>>=20
+>> IIRC the problem is that depending on CONFIG_MTD_PARTITIONED_MASTER
+>> won't fly as PM needs to work with any configuration.
+>> And enforcing CONFIG_MTD_PARTITIONED_MASTER will break existing
+>> setups because mtd id's will change.
+>>=20
+>> On the other hand, how about placing the master device at the end
+>> of the available mtd id space if CONFIG_MTD_PARTITIONED_MASTER=3Dn?
+>> A bit hacky but IMHO worth a thought.
+>>=20
+>> Thanks,
+>> //Richard
 >
->[1]https://lore.kernel.org/netdev/Z2LvdTTQR7dBmPb5@v4bel-B760M-AORUS-ELITE-AX/
+> The original problem was that general purpose OS never set
+> CONFIG_MTD_PARTITIONED_MASTER and we need valid device tree
+> to power management to work.
 >
->Suggested-by: Hyunwoo Kim <v4bel@theori.io>
->Suggested-by: Michal Luczaj <mhal@rbox.co>
->Signed-off-by: Luigi Leonardi <leonardi@redhat.com>
->---
->This series introduces a new test that checks for a null pointer
->dereference that may happen when there is a transport change[1]. This
->bug was fixed in [2].
+> We can return to V7 of this patch that only creates dummy master if
+> CONFIG_MTD_PARTITIONED_MASTER is off.
+> In this case the hierarchy remains the same.
 >
->Note that this test *cannot* fail, it hangs if it triggers a kernel
->oops. The intended use-case is to run it and then check if there is any
->oops in the dmesg.
->
->This test is based on Hyunwoo Kim's[3] and Michal's python
->reproducers[4].
->
->[1]https://lore.kernel.org/netdev/Z2LvdTTQR7dBmPb5@v4bel-B760M-AORUS-ELITE-AX/
->[2]https://lore.kernel.org/netdev/20250110083511.30419-1-sgarzare@redhat.com/
->[3]https://lore.kernel.org/netdev/Z2LvdTTQR7dBmPb5@v4bel-B760M-AORUS-ELITE-AX/#t
->[4]https://lore.kernel.org/netdev/2b3062e3-bdaa-4c94-a3c0-2930595b9670@rbox.co/
->---
->Sorry, this took waaay longer than expected.
->
->Changes in v3:
->Addressed Stefano's and Michal's comments:
->    - Added the splat text to the commit commessage.
->    - Introduced commit hash that fixes the bug.
->    - Not using perror anymore on pthread_* functions.
->    - Listener is just created once.
->
->- Link to v2:
->https://lore.kernel.org/r/20250314-test_vsock-v2-1-3c0a1d878a6d@redhat.com
->
->Changes in v2:
->- Addressed Stefano's comments:
->    - Timeout is now using current_nsec()
->    - Check for return values
->    - Style issues
->- Added Hyunwoo Kim to Suggested-by
->- Link to v1: https://lore.kernel.org/r/20250306-test_vsock-v1-0-0320b5accf92@redhat.com
->---
-> tools/testing/vsock/Makefile     |   1 +
-> tools/testing/vsock/vsock_test.c | 169 +++++++++++++++++++++++++++++++++++++++
-> 2 files changed, 170 insertions(+)
->
->diff --git a/tools/testing/vsock/Makefile b/tools/testing/vsock/Makefile
->index 6e0b4e95e230500f99bb9c74350701a037ecd198..88211fd132d23ecdfd56ab0815580a237889e7f2 100644
->--- a/tools/testing/vsock/Makefile
->+++ b/tools/testing/vsock/Makefile
->@@ -5,6 +5,7 @@ vsock_test: vsock_test.o vsock_test_zerocopy.o timeout.o control.o util.o msg_ze
-> vsock_diag_test: vsock_diag_test.o timeout.o control.o util.o
-> vsock_perf: vsock_perf.o msg_zerocopy_common.o
->
->+vsock_test: LDLIBS = -lpthread
-> vsock_uring_test: LDLIBS = -luring
-> vsock_uring_test: control.o util.o vsock_uring_test.o timeout.o msg_zerocopy_common.o
->
->diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
->index f669baaa0dca3bebc678d00eafa80857d1f0fdd6..1aed483e7e622d3623be07fcd7fe4295fcfce230 100644
->--- a/tools/testing/vsock/vsock_test.c
->+++ b/tools/testing/vsock/vsock_test.c
->@@ -22,6 +22,8 @@
-> #include <signal.h>
-> #include <sys/ioctl.h>
-> #include <linux/time64.h>
->+#include <pthread.h>
->+#include <fcntl.h>
->
-> #include "vsock_test_zerocopy.h"
-> #include "timeout.h"
->@@ -1811,6 +1813,168 @@ static void test_stream_connect_retry_server(const struct test_opts *opts)
-> 	close(fd);
-> }
->
->+#define TRANSPORT_CHANGE_TIMEOUT 2 /* seconds */
->+
->+static void *test_stream_transport_change_thread(void *vargp)
->+{
->+	pid_t *pid = (pid_t *)vargp;
->+	int ret;
->+
->+	/* We want this thread to terminate as soon as possible */
->+	ret = pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
->+	if (ret) {
->+		fprintf(stderr, "pthread_setcanceltype: %d\n", ret);
->+		exit(EXIT_FAILURE);
->+	}
->+
->+	while (true) {
->+		if (kill(*pid, SIGUSR1) < 0) {
->+			perror("kill");
->+			exit(EXIT_FAILURE);
->+		}
->+	}
->+	return NULL;
->+}
->+
->+static void test_transport_change_signal_handler(int signal)
->+{
->+	/* We need a custom handler for SIGUSR1 as the default one terminates the process. */
->+}
->+
->+static void test_stream_transport_change_client(const struct test_opts *opts)
->+{
->+	__sighandler_t old_handler;
->+	pid_t pid = getpid();
->+	pthread_t thread_id;
->+	time_t tout;
->+	int ret;
->+
->+	old_handler = signal(SIGUSR1, test_transport_change_signal_handler);
->+	if (old_handler == SIG_ERR) {
->+		perror("signal");
->+		exit(EXIT_FAILURE);
->+	}
->+
->+	ret = pthread_create(&thread_id, NULL, test_stream_transport_change_thread, &pid);
->+	if (ret) {
->+		fprintf(stderr, "pthread_create: %d\n", ret);
->+		exit(EXIT_FAILURE);
->+	}
->+
->+	control_expectln("LISTENING");
->+
->+	tout = current_nsec() + TRANSPORT_CHANGE_TIMEOUT * NSEC_PER_SEC;
->+	do {
->+		struct sockaddr_vm sa = {
->+			.svm_family = AF_VSOCK,
->+			.svm_cid = opts->peer_cid,
->+			.svm_port = opts->peer_port,
->+		};
->+		int s;
->+
->+		s = socket(AF_VSOCK, SOCK_STREAM, 0);
->+		if (s < 0) {
->+			perror("socket");
->+			exit(EXIT_FAILURE);
->+		}
->+
->+		ret = connect(s, (struct sockaddr *)&sa, sizeof(sa));
->+		/* The connect can fail due to signals coming from the thread.
->+		 * or because the receiver connection queue is full.
->+		 * Ignoring also the latter case because there is no way
->+		 * of synchronizing client's connect and server's accept when
->+		 * connect(s) are constantly being interrupted by signals.
->+		 */
->+		if (ret == -1 && (errno != EINTR && errno != ECONNRESET)) {
->+			perror("connect");
->+			exit(EXIT_FAILURE);
->+		}
->+
->+		/* Set CID to 0 cause a transport change. */
->+		sa.svm_cid = 0;
->+		/* This connect must fail. No-one listening on CID 0
->+		 * This connect can also be interrupted, ignore this error.
->+		 */
->+		ret = connect(s, (struct sockaddr *)&sa, sizeof(sa));
->+		if (ret != -1 && errno != EINTR) {
+> Miquel, can you re-review v7 and say if it worth to revert current versio=
+n and
+> put v7 instead?
 
-Should this condition be `ret != -1 || errno != EINTR` ?
+After taking inspiration from Richard's wisdom on IRC, we have another
+proposal. Let's drop the mtd_master class. We need an mtd device to be
+the master device, we already have one but we cannot keep *at the
+beginning* of the ID space under the CONFIG_MTD_PARTITIONED_MASTER=3Dn
+configuration to avoid breaking userspace. So let's keep the master
+anyway, with the following specificities in the problematic case:
+- id is allocated from the max value downwards (avoids messing with
+  numbering)
+- mtd device is simply hidden (same user experience as before)
 
+Apparently this second point, while not natively supported, is something
+the block world already does:
+https://elixir.bootlin.com/linux/v6.15.1/source/include/linux/blkdev.h#L88
 
->+			fprintf(stderr,
->+				"connect: expected a failure because of unused CID: %d\n", errno);
->+			exit(EXIT_FAILURE);
->+		}
->+
->+		close(s);
->+
->+		control_writeulong(CONTROL_CONTINUE);
->+
->+	} while (current_nsec() < tout);
->+
->+	control_writeulong(CONTROL_DONE);
->+
->+	ret = pthread_cancel(thread_id);
->+	if (ret) {
->+		fprintf(stderr, "pthread_cancel: %d\n", ret);
->+		exit(EXIT_FAILURE);
->+	}
->+
->+	/* Wait for the thread to terminate */
->+	ret = pthread_join(thread_id, NULL);
->+	if (ret) {
->+		fprintf(stderr, "pthread_join: %d\n", ret);
->+		exit(EXIT_FAILURE);
->+	}
->+
->+	/* Restore the old handler */
->+	if (signal(SIGUSR1, old_handler) == SIG_ERR) {
->+		perror("signal");
->+		exit(EXIT_FAILURE);
->+	}
->+}
->+
->+static void test_stream_transport_change_server(const struct test_opts *opts)
->+{
->+	int ret, s;
->+
->+	s = vsock_stream_listen(VMADDR_CID_ANY, opts->peer_port);
->+
->+	/* Set the socket to be nonblocking because connects that have been interrupted
->+	 * (EINTR) can fill the receiver's accept queue anyway, leading to connect failure.
->+	 * As of today (6.15) in such situation there is no way to understand, from the
->+	 * client side, if the connection has been queued in the server or not.
->+	 */
->+	ret = fcntl(s, F_SETFL, fcntl(s, F_GETFL, 0) | O_NONBLOCK);
->+	if (ret < 0) {
-
-nit: If you need to resend, I'd remove `ret` and check fcntl directly:
-	if (fcntl(...) < 0) {
-
->+		perror("fcntl");
->+		exit(EXIT_FAILURE);
->+	}
->+	control_writeln("LISTENING");
->+
->+	while (control_readulong() == CONTROL_CONTINUE) {
->+		struct sockaddr_vm sa_client;
->+		socklen_t socklen_client = sizeof(sa_client);
->+
->+		/* Must accept the connection, otherwise the `listen`
->+		 * queue will fill up and new connections will fail.
->+		 * There can be more than one queued connection,
->+		 * clear them all.
->+		 */
->+		while (true) {
->+			int client = accept(s, (struct sockaddr *)&sa_client, &socklen_client);
->+
->+			if (client < 0 && errno != EAGAIN) {
->+				perror("accept");
->+				exit(EXIT_FAILURE);
->+			} else if (client > 0) {
-
-0 in theory is a valid fd, so here we should check `client >= 0`.
-
->+				close(client);
->+			}
->+
->+			if (errno == EAGAIN)
->+				break;
-
-I think you can refactor in this way:
-			if (client < 0) {
-				if (errno == EAGAIN)
-					break;
-
-				perror("accept");
-				exit(EXIT_FAILURE);
-			}
-
-			close(client);
+What do you think?
 
 Thanks,
-Stefano
-
->+		}
->+	}
->+
->+	close(s);
->+}
->+
-> static void test_stream_linger_client(const struct test_opts *opts)
-> {
-> 	int fd;
->@@ -2051,6 +2215,11 @@ static struct test_case test_cases[] = {
-> 		.run_client = test_stream_nolinger_client,
-> 		.run_server = test_stream_nolinger_server,
-> 	},
->+	{
->+		.name = "SOCK_STREAM transport change null-ptr-deref",
->+		.run_client = test_stream_transport_change_client,
->+		.run_server = test_stream_transport_change_server,
->+	},
-> 	{},
-> };
->
->
->---
->base-commit: 5abc7438f1e9d62e91ad775cc83c9594c48d2282
->change-id: 20250306-test_vsock-3e77a9c7a245
->
->Best regards,
->-- 
->Luigi Leonardi <leonardi@redhat.com>
->
-
+Miqu=C3=A8l
