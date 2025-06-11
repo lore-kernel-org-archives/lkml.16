@@ -1,85 +1,135 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1803226533
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 09:39:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83529242D90;
+	Wed, 11 Jun 2025 09:39:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749634783; cv=none; b=rXYa3FsicZqZgh8hyfvBnTM+o4gG3mXXLEHmK8EZU/yoLKsWrjsn4FMpW/HijJuref16LlOWEz/Se6t5ooba9JFhEj7HC7Nvn4pwJCbrO8/u3mBzRALX/0hbwHzzaiKS9fawq60n8x1ryvbrmJ/0Dq3EfDfFqAqVXEX0yx6zI/w=
+	t=1749634800; cv=none; b=UvnVuTSfJahwxHPj3gXJKudMUu9H9RQXoseFtTAF+Wkff4gqdulX/xnD+fqzoZ6UDmGqgbzco6OupdgmOShgZ+kHIKW/x7gcQP9c+oovQ0l3T3GxSpmQNahYaJcnrPWC/737ukmF4AjtZNAneab4TAVUCjRJQPY+OHuWjkibLv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749634783; c=relaxed/simple;
-	bh=n58LCx0Q6HSsy3FLeeVAfZTIIHYr5jD+rxbWKbBG9rw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M0zcn05rJ20ZQ3RU3l1fnzCDTH35p5fBPA8cV45d1bnQRW/Y1HfyRjxTvBlMKCaNPhSG96XKhQeocGKo6RbZ/6LhOkvRy7NDLJ5AA23+bqF4Wcbp1JbU18r98ze75DGEqKDU520m5Tx2kS11nI4tS3AWrk4/r8xePMwK9FZnbsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dgYvIUAJ; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1749634800; c=relaxed/simple;
+	bh=WqoGafln+7FperWTCGCHOW05uCz41nHkE1cz45ZlgtA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=bXl85EiWj4ybNJye7nHs0sQDLYZqsrUo65iB5vUQn/0toUB66gcTVnGfDBD+eZuarMkVBB26wI7qOtyr9sY0s92xfsBPrVwYeel3TshFxJORmtrOzQftoL4vkm0udqAibZiJC7v5ELXaw1LHR/fw0nFiGZI3S7QcfPtEJtR50JU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=E5ZhuLox; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dgYvIUAJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Cxjr9KUCKMPOyF7AgQiT3i6Sz3Z2R7PLH7NkrcCxjKA=; b=dgYvIUAJObUSgZWCIiTrbnV8dC
-	vIBddDeHiXzBHK1rvjw4IRl4MLKy572HwtFSs1O59/+CXwZ4lure8KtqMIhCUar0dO6i/I7LdpiC3
-	OA6N9b8cf8RW341uFVa507aLgZIqgaC4gZoXnfFwWslqJoPBQka3eiMjYGPcCGFGf4Gg87QL93JyP
-	m2gfK+22WlzVY+irDIQt+gLO2n8QYuI11nDNq5aTjqCinBYh4gYRYcsEN1AyF0N9esRUmxOjMOsZB
-	DVCQYwIGhY7wZHyeq9pSWHNYaPO9ft0vP0Mxw4uHYet9tH5/+xpclWNZh+mM1TGr0lZL0jVTSijfs
-	ttvMSglg==;
-Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uPHvj-00000002EvT-1pzg;
-	Wed, 11 Jun 2025 09:39:35 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 123673021EF; Wed, 11 Jun 2025 11:39:34 +0200 (CEST)
-Date: Wed, 11 Jun 2025 11:39:34 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: mingo@redhat.com, juri.lelli@redhat.com, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com, clm@meta.com, linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCH 5/5] sched: Add ttwu_queue support for delayed tasks
-Message-ID: <20250611093934.GB2273038@noisy.programming.kicks-ass.net>
-References: <20250520094538.086709102@infradead.org>
- <20250520101727.984171377@infradead.org>
- <CAKfTPtDOQVEMRWaK9xEVqSDKcvUfai4CUck6G=oOdaeRBhZQUw@mail.gmail.com>
- <20250606153800.GB39944@noisy.programming.kicks-ass.net>
- <CAKfTPtDhC3nCcWcWSz08nadZDJ0OtbgZ0r3Usjcu6AagGqYcRA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="E5ZhuLox"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55B9DD82023919;
+	Wed, 11 Jun 2025 09:39:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	XwQM9qqqoO7U5Z+l4qQLkY9bopanOmB0vao/Vd7bkag=; b=E5ZhuLox5J5ocwv6
+	RC7jhwu5a+TvnimRGo+ZJdnAmVx2tlmbJDynk5AbCn3JGPNP0fzVFtUfdIqjAN6M
+	wXXV265ZbTBmvHFmz32QPMOOiq/jok+aS48BSFUootHj3szdUSVCboFnc1Nj9rWZ
+	Ix1KUypV7BVOF0d9c4/deWz2Hqj0Ia1HmO/URFD6/6arhzj54MmtBbHzo97BbrCR
+	KRx8IXuZfrY5OZbPXYLs0KUIIPGcN2W9ZuQhYNuuS6Isx/v2WVeL/tb7Aie9Q4e4
+	B7Ta3wRC3KhuXXkF5DQq98YauUYF+4nvyqj6jlakAkbQxR5DI8ujj9eAA+NZlcmh
+	TgL0ag==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 475v2tf2vf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 11 Jun 2025 09:39:52 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55B9dp00010846
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 11 Jun 2025 09:39:51 GMT
+Received: from [10.50.30.75] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 11 Jun
+ 2025 02:39:49 -0700
+Message-ID: <9485fe7a-49f3-8cd0-5085-76a9d133045a@quicinc.com>
+Date: Wed, 11 Jun 2025 15:09:46 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtDhC3nCcWcWSz08nadZDJ0OtbgZ0r3Usjcu6AagGqYcRA@mail.gmail.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] media: iris: Fix opp scaling of power domains
+Content-Language: en-US
+To: Akhil P Oommen <akhilpo@oss.qualcomm.com>,
+        Vikash Garodia
+	<quic_vgarodia@quicinc.com>,
+        Abhinav Kumar <abhinav.kumar@linux.dev>,
+        "Bryan
+ O'Donoghue" <bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab
+	<mchehab@kernel.org>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250611-iris-opp-fix-v1-1-424caec41158@oss.qualcomm.com>
+From: Dikshita Agarwal <quic_dikshita@quicinc.com>
+In-Reply-To: <20250611-iris-opp-fix-v1-1-424caec41158@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: -GuxHknpWWUj4nVCDumxsou2mEWezlmz
+X-Authority-Analysis: v=2.4 cv=GoxC+l1C c=1 sm=1 tr=0 ts=68494ee8 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8
+ a=COk6AnOGAAAA:8 a=cnNNxmBRD2D--d2aX-gA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: -GuxHknpWWUj4nVCDumxsou2mEWezlmz
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjExMDA4MiBTYWx0ZWRfXx89wAVd+NBgb
+ Uf0a4qNZf8EdsmXAmZPNK225+eL1Nwev8Ud5Pk8UbJUBm2INWbYq403F0b8tyTxIwIPjEQ6LWGP
+ v9fsxqrcjhuepUseyeohtEr+LVSDq9h5fQRy4fuHSbA5zMbnlUAyRttwPvMsXjAlYeTHeTo7wL9
+ SP0vIq/blx5VeIPkTc8mY/LJihtMZz8MnjljzGZK0ATf9Mf6yV1ibsEdzvx5XklEoUIusWg5/j2
+ 0TYDd9MdRRkIO9OUYM3ZUcHULt2C450mCZQx8TG/cHU0NOHS9zEjflNxR8HeCyzl1wF+e+psqCQ
+ 2iiqMRHufIeDfpNv4CFfWI5TR8H5Q0uVIYW6juKsLCIerQY2ilgelrhz+xJ65z7EwqDn1h0U0G+
+ S6Yw46DNKwD2qsMrC/kG/2fd1xJ2lDuXy7H80vb/O9hGdrAZPFEKiWom+DdCmBfJJUmKu6uq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-11_04,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=999 adultscore=0 impostorscore=0 malwarescore=0 mlxscore=0
+ suspectscore=0 phishscore=0 priorityscore=1501 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506110082
 
-On Fri, Jun 06, 2025 at 06:55:37PM +0200, Vincent Guittot wrote:
-> > > > @@ -3830,12 +3859,41 @@ void sched_ttwu_pending(void *arg)
-> > > >         update_rq_clock(rq);
-> > > >
-> > > >         llist_for_each_entry_safe(p, t, llist, wake_entry.llist) {
-> > > > +               struct rq *p_rq = task_rq(p);
-> > > > +               int ret;
-> > > > +
-> > > > +               /*
-> > > > +                * This is the ttwu_runnable() case. Notably it is possible for
-> > > > +                * on-rq entities to get migrated -- even sched_delayed ones.
-> > >
-> > > I haven't found where the sched_delayed task could migrate on another cpu.
-> >
-> > Doesn't happen often, but it can happen. Nothing really stops it from
-> > happening. Eg weight based balancing can do it. As can numa balancing
-> > and affinity changes.
+
+
+On 6/11/2025 11:13 AM, Akhil P Oommen wrote:
+> Pass PD_FLAG_REQUIRED_OPP flag to allow opp framework to scale the rpmpd
+> power domains.
 > 
-> Yes, I agree that delayed tasks can migrate because of load balancing
-> but not at wake up.
+> Signed-off-by: Akhil P Oommen <akhilpo@oss.qualcomm.com>
 
-Right, but this here is the case where wakeup races with load-balancing.
-Specifically, due to the wake_list, the wakeup can happen while the task
-is on CPU N, and by the time the IPI gets processed the task has moved
-to CPU M.
+Reviewed-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
 
-It doesn't happen often, but it was 'fun' chasing that fail around for a
-day :/
+Thanks,
+Dikshita
+> ---
+> Found this issue while reviewing the Iris source and only compile tested.
+> ---
+>  drivers/media/platform/qcom/iris/iris_probe.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/platform/qcom/iris/iris_probe.c b/drivers/media/platform/qcom/iris/iris_probe.c
+> index 9a7ce142f7007ffcda0bd422c1983f2374bb0d92..4e6e92357968d7419f114cc0ffa9b571bad19e46 100644
+> --- a/drivers/media/platform/qcom/iris/iris_probe.c
+> +++ b/drivers/media/platform/qcom/iris/iris_probe.c
+> @@ -53,7 +53,7 @@ static int iris_init_power_domains(struct iris_core *core)
+>  	struct dev_pm_domain_attach_data iris_opp_pd_data = {
+>  		.pd_names = core->iris_platform_data->opp_pd_tbl,
+>  		.num_pd_names = core->iris_platform_data->opp_pd_tbl_size,
+> -		.pd_flags = PD_FLAG_DEV_LINK_ON,
+> +		.pd_flags = PD_FLAG_DEV_LINK_ON | PD_FLAG_REQUIRED_OPP,
+>  	};
+>  
+>  	ret = devm_pm_domain_attach_list(core->dev, &iris_pd_data, &core->pmdomain_tbl);
+> 
+> ---
+> base-commit: d9946fe286439c2aeaa7953b8c316efe5b83d515
+> change-id: 20250527-iris-opp-fix-3ef2591c032a
+> 
+> Best regards,
