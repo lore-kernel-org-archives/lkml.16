@@ -1,123 +1,137 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F6D230BFC;
-	Wed, 11 Jun 2025 14:39:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7375427D782
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:39:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749652762; cv=none; b=IXgqG2jMfNnn8O4iNPg+Pna+LdUiV/4xgbMliEk3ogxb3DZpIwT5fXkjjG3JbukhEa7quKTH1OBJVqWbyuGqv5Iw6iyg8FBjvUCkzE03qd7X16sqID4wbYoCyFp41eEYKEHndiVDUfloKGxd864S5sBB3IT4sa23xfSLEFzI9Og=
+	t=1749652765; cv=none; b=Mf2ZqiboxD4NdNw4dUBiw5KXLTWzFzbm9Fmj3yhqBtQc+TboV4L2Q7G4wQu6gocoCwHBQvvinNOI7EubQkvLfwsePe5Xfl+fF4idxScKTR6NYqa5DZW71NOunjA8zFgGH7e6S/k+WxNymzMyv8zjwWa7cawVATKUUmqDF4N7SuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749652762; c=relaxed/simple;
-	bh=NT4yhlGXocscf1t4C1zlD9/UZuoRU9iB1+/1BodA9e8=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=JgONqmCgSrtJw2R+bvEtpNGlOLFQEJ49N7K5UJJf48lIHwSBK7H//i71IRej95L4/nQXgIOm6B48sZB61Df0Ac6Kzun00WipuAXtZm7s5yVCgXrU8ffYQu7GZB6a4fv5lF1S22e1Lxx0A2RHzYGzdvorIcsyW1GZejZF5UCNk6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YxpZXFvc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=C2ErQNxJ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1749652765; c=relaxed/simple;
+	bh=H8gsYADbFcrqyC2iiieOy0OPyzJacy+R+vXTaFgq3kQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tDW1sOOBW7cyiqMRLZ+DyaDMMuRb9Tfvr6+O76ClTYkQti1TPQ2bKJ9fjr1eetVWWErLmoRBo2H3cYBjWN9ixzEw4HHsstvoDFp665Op/O2r673U2Mk93yQK3MGL4ZBt7sLY2iqKHPCfVr5Xys80++4jUg4k9sceHhQyWd4c+xE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=VSVjXMwp; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YxpZXFvc";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="C2ErQNxJ"
-Date: Wed, 11 Jun 2025 14:39:16 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749652757;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mj4oYGVkdG1UcUnYYrQDLR7MSud5DamCI5zqztVORf4=;
-	b=YxpZXFvcLCZ0inU/DIOiYSpxWKqwmGabZh2VWIeghbdUd+8ibCw/jhXZwTirzU2B2xlHDv
-	ckXnli5tm8qKAP+qq019Nlbq55B8vNV++tNJlp7ZvFbAQNXCWp3cUGfjTtcb1ZmN9scv4A
-	Y5OXOaRlQFyp4GbrNgaU6LS10SKfEqX5LarYzhPe3cuXD+9N9N51iuZrhDtf5ZKyFPE4Dm
-	Sc5DfhCefY/84uNWZc2XaeLI/LFBemtWmRGJWpCr8eMWH45SoEO4g5+p6GFrLUNSqrL08o
-	CoK/EnO2nmTeR073b6c+/QL3PSDIWADB5POXHU/IJKIUCw/ls5yNURHh5Zq61w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749652757;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mj4oYGVkdG1UcUnYYrQDLR7MSud5DamCI5zqztVORf4=;
-	b=C2ErQNxJ38xU4NEcqL7ts5ylv+NG8Kduyygpodx/FwYrwuhYuMTjcl+z6JCOdbjZKXxcuk
-	BapDj9C3LW0Q0OAg==
-From: "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/urgent] futex: Allow to resize the private local hash
-Cc: "Lai, Yi" <yi1.lai@linux.intel.com>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250602110027.wfqbHgzb@linutronix.de>
-References: <20250602110027.wfqbHgzb@linutronix.de>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="VSVjXMwp"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-45024721cbdso58123335e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:39:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1749652762; x=1750257562; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dMuC13ZuL2H9XthVI7VqSTJSYoQbIcVMKBT1sR6CtOo=;
+        b=VSVjXMwpkeJU7215LtcMMaTzi5Z+d5K3YEkrrATUO4admLGqn21cZewxFIF40uiV5S
+         PRaltWSLn6RYfsvqugcHHuNeBWx7fES61f4NuKKsPhECJszwAd0YI50kLPa7kGX9Qt31
+         WMJmTvdpBPzM3yavw2P4w6b0g1Fk7xq13/ZSAU56AQQ33obmmMPW/QNLBCfpfDa+yNkU
+         LSlLKOTkDCU7fR0b6ONQ0EEnW2T/OUTZxzXHDTAgvGTdH735DQFTDOYMcR0T71aNlYa8
+         RFyjrrFj+TKCxbzMc/8gOtHoP3fbhaWk+UTBpC9bStjhEUOWicDbg7J95q080/7eWcgo
+         mKWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749652762; x=1750257562;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dMuC13ZuL2H9XthVI7VqSTJSYoQbIcVMKBT1sR6CtOo=;
+        b=CfGv9xyH3jYHvSE5w/E7pKi2SmpvGyhIUh7vYvrqjNTSLvXAvgBylwpPZPccHPz5E/
+         OOcj96RGgdU+ak6bXFh1wXN8pCxIoSzCfGl6sWKrBD3CqzDWkHBlResaVKVx/0hH0Y/u
+         IAoCWYBLq7ciBQuNDMShpuShM/yZrXqLNQgzhnuYyTmRr7dXKNFNdLiXp127d6cAdm7i
+         X633ZngXIcBxPOvh0d/931uuFWNpU/65abW7WFVyRvHUKQXznNINj4DHOJhJWxNh24eD
+         1sRa3O1oNsnOkLFF+4bPRZWDpT99GWVy+yfW/c9pn3dCt1/HD6TRgkq3/6EUaJi6p5E6
+         kPlw==
+X-Forwarded-Encrypted: i=1; AJvYcCUMAjb1dbua1B/dM7Lsdt9rpsVtDp7vP2IadcVZlVs8hRUyn76rbDkYyNmu0TdTz4OFnn8d4Xb0A0Fq2ps=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoiUiqawSJJhU5AR5Q+yh56O93YjB9/xYXFtjiV7doNv3LjE89
+	MbLc+83S+N1m0SkvPfNraFZqFX5/ugBAlSJaMyNdZFBna2Dw59gcJ+7X7oJ1O9xiy3s=
+X-Gm-Gg: ASbGncunSuzoKNDotUWv4SuWbrMbH2f8vcYoJr0oosH2N2WgcnrkfyAEnyxRVqRJgcH
+	mjQtw1hky6aiiE+9yD3oCpdcqyHiySAbe87L9ZO8ngHMcacncTBcPgicP32+gVhHSsbDC8Ub9Pt
+	OF353UEas/TH/wpd20YieAAuLpbyrCeXREtkGxKHu99PJslDndYw1ZQgaH71nbHRCV3oUrawVYh
+	OlmDuiL3MUlkJhT9dWRaMFOuT2T3DCVoQf/Z+s+RHe0LzgNFG+CZRShlkEDs06FT+4GrGDvvjR1
+	ipL6xCPFGX4hTRtQPRzN5yLHmgTI73kLzcVK4xV1C+NhMlvIf3g7/TErpmGjLx60OFXEhbGU2w=
+	=
+X-Google-Smtp-Source: AGHT+IFgabml/oB/zap3gijznKuefYyLzl72L15Zdx3U7B8qLlQYx/5lfGPCZwHGnJ1ITnCk8LVHwQ==
+X-Received: by 2002:a05:600c:1d87:b0:43c:ed61:2c26 with SMTP id 5b1f17b1804b1-453248c08e4mr33894775e9.17.1749652761663;
+        Wed, 11 Jun 2025 07:39:21 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:3994:acce:fbc8:2f34])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45325141245sm23208905e9.5.2025.06.11.07.39.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 07:39:21 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	stable@vger.kernel.org
+Subject: [PATCH] pinctrl: qcom: msm: mark certain pins as invalid for interrupts
+Date: Wed, 11 Jun 2025 16:39:11 +0200
+Message-ID: <20250611143911.48501-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174965275618.406.11364856155202390038.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the locking/urgent branch of tip:
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Commit-ID:     703b5f31aee5bda47868c09a3522a78823c1bb77
-Gitweb:        https://git.kernel.org/tip/703b5f31aee5bda47868c09a3522a78823c1bb77
-Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate:    Mon, 02 Jun 2025 13:00:27 +02:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 11 Jun 2025 16:26:44 +02:00
+When requesting pins whose intr_detection_width setting is not 1 or 2
+for interrupts (for example by running `gpiomon -c 0 113` on RB2), we'll
+hit a BUG() in msm_gpio_irq_set_type(). Potentially crashing the kernel
+due to an invalid request from user-space is not optimal, so let's go
+through the pins and mark those that would fail the check as invalid for
+the irq chip as we should not even register them as available irqs.
 
-futex: Allow to resize the private local hash
+This function can be extended if we determine that there are more
+corner-cases like this.
 
-Once the global hash is requested there is no way back to switch back to
-the per-task private hash. This is checked at the begin of the function.
-
-It is possible that two threads simultaneously request the global hash
-and both pass the initial check and block later on the
-mm::futex_hash_lock. In this case the first thread performs the switch
-to the global hash. The second thread will also attempt to switch to the
-global hash and while doing so, accessing the nonexisting slot 1 of the
-struct futex_private_hash.
-This has been reported by Yi Lai.
-
-Verify under mm_struct::futex_phash that the global hash is not in use.
-
-Fixes: bd54df5ea7cad ("futex: Allow to resize the private local hash")
-Closes: https://lore.kernel.org/all/aDwDw9Aygqo6oAx+@ly-workstation/
-Reported-by: "Lai, Yi" <yi1.lai@linux.intel.com>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20250602110027.wfqbHgzb@linutronix.de
+Fixes: f365be092572 ("pinctrl: Add Qualcomm TLMM driver")
+Cc: stable@vger.kernel.org
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- kernel/futex/core.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/pinctrl/qcom/pinctrl-msm.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/kernel/futex/core.c b/kernel/futex/core.c
-index b652d2f..33b3643 100644
---- a/kernel/futex/core.c
-+++ b/kernel/futex/core.c
-@@ -1629,6 +1629,16 @@ again:
- 		mm->futex_phash_new = NULL;
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index f012ea88aa22c..77e0c2f023455 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -1038,6 +1038,24 @@ static bool msm_gpio_needs_dual_edge_parent_workaround(struct irq_data *d,
+ 	       test_bit(d->hwirq, pctrl->skip_wake_irqs);
+ }
  
- 		if (fph) {
-+			if (cur && !cur->hash_mask) {
-+				/*
-+				 * If two threads simultaneously request the global
-+				 * hash then the first one performs the switch,
-+				 * the second one returns here.
-+				 */
-+				free = fph;
-+				mm->futex_phash_new = new;
-+				return -EBUSY;
-+			}
- 			if (cur && !new) {
- 				/*
- 				 * If we have an existing hash, but do not yet have
++static void msm_gpio_irq_init_valid_mask(struct gpio_chip *gc,
++					 unsigned long *valid_mask,
++					 unsigned int ngpios)
++{
++	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
++	const struct msm_pingroup *g;
++	int i;
++
++	bitmap_fill(valid_mask, ngpios);
++
++	for (i = 0; i < ngpios; i++) {
++		g = &pctrl->soc->groups[i];
++		if (g->intr_detection_width != 1 &&
++		    g->intr_detection_width != 2)
++			clear_bit(i, valid_mask);
++	}
++}
++
+ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+@@ -1441,6 +1459,7 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+ 	girq->default_type = IRQ_TYPE_NONE;
+ 	girq->handler = handle_bad_irq;
+ 	girq->parents[0] = pctrl->irq;
++	girq->init_valid_mask = msm_gpio_irq_init_valid_mask;
+ 
+ 	ret = gpiochip_add_data(&pctrl->chip, pctrl);
+ 	if (ret) {
+-- 
+2.48.1
+
