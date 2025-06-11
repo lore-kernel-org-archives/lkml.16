@@ -1,38 +1,37 @@
-Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.205])
+Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.166.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE874236457;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF11E23E336;
 	Wed, 11 Jun 2025 21:27:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.205
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749677260; cv=none; b=jpbIWWb4ZSMzBj+PYMqR358iyfoV8Ka6lZi18frg3EvbbGDZYF8fcN/ged0ebCOI6la+i/AnfAUfVpl0dLnHCiPgThp4csdHmTWXXzLeACtE2W/oMweGL/UQ/UyFGrBCCcHs28kQQLWt6ud2VGoausqgmbZi28iuVxdYxfvPRpY=
+	t=1749677261; cv=none; b=eZBx6ihXk9ryckS+Vqs9QO+3r7Pl3lZn4/XUksOIQyCIPb6sSyKmMZJcEpj9h1jDUvgNGZ/UUCOx2isEqLz6wh0R/ekgni6hcgshIaIT+BBn9cC2p+e+ibCn42xmY6FLp7SCFrzBajSL802RyuSIzEwA5ceG+TzpTdJvY9Wi+Jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749677260; c=relaxed/simple;
-	bh=zhY1k/sLMn4MWgTbf/3hZAY4Z5DhtE0MLr/4MyfmzAc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jVde4glo3mevWAjIr3LWnDw2kMKKgemYwsVb6znYQhQb2nOP6ro16V1BLE0m3sHY9ktkJnAhvx6f4ULo8DGsYNuY3/gaFOUM3CvNB+S8DCsn5+aUKIQ8i3iB87Ey9M/iwkaz0X/u8s+RjPEGcUhdMLQYrU//TZcMncoX67vepyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=SuBhTbwA; arc=none smtp.client-ip=192.19.144.205
+	s=arc-20240116; t=1749677261; c=relaxed/simple;
+	bh=w/qE2pwetIGNkIlmcH5nt44JyP/Q8xHENA6U8HkjNTA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=t1wXsc55mjK73gjiJ2qxy2nIzxjWu/KOE+BZ7vNib5pehsbEE/dgszOxuZLqjj3IRtOCgqdtFoHQhXKbP59bm3U4O+s7qXQOimyxYrRvMOGa5j4rmsMLA/ib+yBroMDwA4iPMKAuXCQ2pepeZNmGdT8AJgNW9c0mDXmXYWHzA3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=es1BCsef; arc=none smtp.client-ip=192.19.166.228
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="SuBhTbwA"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="es1BCsef"
 Received: from mail-lvn-it-01.broadcom.com (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 69389C000C61;
-	Wed, 11 Jun 2025 14:27:32 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 69389C000C61
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id F0489C004E6C;
+	Wed, 11 Jun 2025 14:27:31 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com F0489C004E6C
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
 	s=dkimrelay; t=1749677252;
-	bh=zhY1k/sLMn4MWgTbf/3hZAY4Z5DhtE0MLr/4MyfmzAc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SuBhTbwAdHVriXjE+upbYMpwh/lK3dzrOVhrdibZXpJYC3sCyWYykrABmOB0tDWDo
-	 VBlcp9V0NMnmmtemXv6YB6dRiNMBmy40ARGfynSlQ0J3yspcw2WQgVxXvrqNVzMKmk
-	 ESjWYeavhXin12FIslJan6dYld/daFIcKlyADnuA=
+	bh=w/qE2pwetIGNkIlmcH5nt44JyP/Q8xHENA6U8HkjNTA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=es1BCsefq9/JOnotMXE2D1FfgIzV+L6z9S2gfBXJsO+/0nlylS5OhABg0tn32U8se
+	 qKGRlGKf7XLyEOQogNGj0AQTNJfIwM8lEpczQlojhc9QRHBq3rf7PD0DNS1GR3TDvX
+	 qPxaDZ5+84SiBAV95ggZ7MnwkxQGF/g+K9KKKsDk=
 Received: from stbirv-lnx-1.igp.broadcom.net (stbirv-lnx-1.igp.broadcom.net [10.67.48.32])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id 18E8D1800051E;
-	Wed, 11 Jun 2025 14:27:32 -0700 (PDT)
+	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id CB6F91800051E;
+	Wed, 11 Jun 2025 14:27:31 -0700 (PDT)
 From: Florian Fainelli <florian.fainelli@broadcom.com>
 To: netdev@vger.kernel.org
 Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
@@ -44,12 +43,10 @@ Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
 	Paolo Abeni <pabeni@redhat.com>,
 	bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM ASP 2.0 ETHERNET DRIVER),
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next v2 2/2] net: bcmasp: enable GRO software interrupt coalescing by default
-Date: Wed, 11 Jun 2025 14:27:30 -0700
-Message-Id: <20250611212730.252342-3-florian.fainelli@broadcom.com>
+Subject: [PATCH net-next v2 0/2] net: bcmasp: add support for GRO
+Date: Wed, 11 Jun 2025 14:27:28 -0700
+Message-Id: <20250611212730.252342-1-florian.fainelli@broadcom.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250611212730.252342-1-florian.fainelli@broadcom.com>
-References: <20250611212730.252342-1-florian.fainelli@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,28 +55,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Utilize netdev_sw_irq_coalesce_default_on() to provide conservative
-default settings for GRO software interrupt coalescing.
+These two patches add support for GRO software interrupt coalescing,
+kudos to Zak for doing this on bcmgenet first.
 
-Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
-Reviewed-by: Justin Chen <justin.chen@broadcom.com>
----
- drivers/net/ethernet/broadcom/asp2/bcmasp_intf.c | 2 ++
- 1 file changed, 2 insertions(+)
+before:
 
-diff --git a/drivers/net/ethernet/broadcom/asp2/bcmasp_intf.c b/drivers/net/ethernet/broadcom/asp2/bcmasp_intf.c
-index 7dc28166d337..a6ea477bce3c 100644
---- a/drivers/net/ethernet/broadcom/asp2/bcmasp_intf.c
-+++ b/drivers/net/ethernet/broadcom/asp2/bcmasp_intf.c
-@@ -1279,6 +1279,8 @@ struct bcmasp_intf *bcmasp_interface_create(struct bcmasp_priv *priv,
- 	ndev->hw_features |= ndev->features;
- 	ndev->needed_headroom += sizeof(struct bcmasp_pkt_offload);
- 
-+	netdev_sw_irq_coalesce_default_on(ndev);
-+
- 	return intf;
- 
- err_free_netdev:
+00:03:31     CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal
+%guest   %idle
+00:03:32     all    0.00    0.00    1.51    0.00    0.50    7.29    0.00 0.00   90.70
+
+after:
+
+00:02:35     CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal
+%guest   %idle
+00:02:36     all    0.25    0.00    1.26    0.00    0.50    7.29    0.00 0.00   90.70
+
+Changes in v2:
+
+- corrected net_device variable in the scope
+
+Florian Fainelli (2):
+  net: bcmasp: Utilize napi_complete_done() return value
+  net: bcmasp: enable GRO software interrupt coalescing by default
+
+ drivers/net/ethernet/broadcom/asp2/bcmasp_intf.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
 -- 
 2.34.1
 
