@@ -1,141 +1,94 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A8832356B3;
-	Wed, 11 Jun 2025 08:39:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7D8F2D543C
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 08:39:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749631169; cv=none; b=NvFp+04iiMYaxUyBH6gogu3Ks01gzwg7In/wkrIMxmcwwhan1vYZUSmEWyVNfte9zdPIGpKRgkYImOMbCuXrHYhUVQdLgOtTjz9E+LfMDl9mliGOfLcWezUggCWDHurRQNT97jKxQk8lzFVu121DKAQDZQRQeAqFeHUcbgdJaso=
+	t=1749631189; cv=none; b=lAJI3NK9OEC9o0BZ0AFFf7A9j+QGxJu3R3P/7pWi/SYnX4i8MQhlQ65WJYH5/DECfCelGHlUMLq6Cs1l9+01XZDh+GGH+rFZ4koTO1bs87JcUjUsjRt2JfaZfdDSZsV+s9W+tqjxYqqEYMgIIERpbi5PFbJWlKmO7Kk24UIBIac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749631169; c=relaxed/simple;
-	bh=eP94DKa1bGgh8+jsHYYEwHFsK16PrWPSAXehlu4LTTw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VJA9tQWvHzwe5v6El3ZIqcvP0y8Te7HRJXMrxqU3IGdOjD+jmrN7gavgCwPVc88JQZsJ4ASbdjHdy8n7AGFC4ZkE+LLzgpJis1gVR3CL/TXr025wiimv22jQ/3+40yBUAz+whtq8qnhQlDzN7JRWvEObSnEaYHQNMJMoHuYsHCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=KLE3P8/3; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1749631189; c=relaxed/simple;
+	bh=sqlinEn+WadRkpr66v6lQ6O2iAs13ZkHYy7D1blDOqs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cLJnACXCRnl1h6VLltC6nI+NohUoimngUEzPWu2Z9QRN9XOfhD2aoGefnM8AXtvRF8dFXI2eimZzYDu197CEbmVT/hmxoKKCeRjJAJFNO9VSC4hDkm1+ZOJm6GeOH/johyP9ovKJMu/Y1wGT6td4eR3tv2osuBt+F5qlKQ7WjuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=neon.tech; spf=pass smtp.mailfrom=neon.tech; dkim=pass (1024-bit key) header.d=neon.tech header.i=@neon.tech header.b=c87wWJWR; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=neon.tech
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neon.tech
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="KLE3P8/3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=PksZhMl9JN4rPrIRu6s9JViPUrN3CPq4Uz9I+7xLHjQ=; b=KLE3P8/3OR/Go6Ck/x5tQyoe7i
-	b3qmYLjwwrb/PeJ2gvOWPC/AKpjqzCTFWzfMXrUUkSbMSDUgDMdSHWM5eMA16ld8ud5dxGHLCdf+Z
-	3PHQnit14ofoMsZja+uNXU3DevYTidgnXTNeRjATBqcam9CYpoyBLkXsQHDv4Y1skXXEeP4Rg1LVH
-	JzJ1Ob6f/Ky8rxerGZlkLGdK+qBkCACHUacIXmlgJkh1/jBhuM8edHqGlQDBH8z89Spy5kNqNiKGV
-	u3qtJ0ieX8kze6aeHdd0MbKnkWrYZGZJKpQX79z5UPYmewQRHbWWZ23PMNshrAKttNn9j4Lh0zYRV
-	AXcYk7GQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:57842)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1uPGzJ-0005rz-0t;
-	Wed, 11 Jun 2025 09:39:13 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1uPGzE-00085W-2w;
-	Wed, 11 Jun 2025 09:39:08 +0100
-Date: Wed, 11 Jun 2025 09:39:08 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Icenowy Zheng <uwu@icenowy.me>
-Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chaoyi Chen <chaoyi.chen@rock-chips.com>,
-	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v2] dt-bindings: net: ethernet-controller: Add
- informative text about RGMII delays
-Message-ID: <aElArNHIwm1--GUn@shell.armlinux.org.uk>
-References: <20250430-v6-15-rc3-net-rgmii-delays-v2-1-099ae651d5e5@lunn.ch>
- <e4db4e6f0a5a42ceacacc925adbe13747a6f948e.camel@icenowy.me>
- <debcb2e1-b7ef-493b-a4c4-e13d4aaf0223@lunn.ch>
- <2e42f2f7985fb036bec6ab085432a49961c8dc42.camel@icenowy.me>
- <aEFmNMSvffMvNA8I@shell.armlinux.org.uk>
- <84c534f9dbfa7c82300863cd40e5a9b6e6e29411.camel@icenowy.me>
- <ba7b290d-0cd1-4809-822a-bfe902684d7e@lunn.ch>
- <9ebe16a8d33e00c39c142748a1ea6fff96b9565a.camel@icenowy.me>
+	dkim=pass (1024-bit key) header.d=neon.tech header.i=@neon.tech header.b="c87wWJWR"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-607434e1821so7532428a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 01:39:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=neon.tech; s=google; t=1749631186; x=1750235986; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sozhA9SLLboh+8HTdUnRws+mKBzTVepTF173TS6LEE4=;
+        b=c87wWJWRGrfj7doXRccelH1NqoAAeYF6rv3Eo4d6F/DH3WUDGSOPD+NN44cHPCATKp
+         H88DQNHcmwT/6X1Xhy4buup4X9bQDQt2Hhk3OxQ7wixn+2xxxlbGpdP08P3NxgW9KyhP
+         TD7YE8x6+NnV3EWKzrZ91rKw8dcgfSmkPfhdI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749631186; x=1750235986;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sozhA9SLLboh+8HTdUnRws+mKBzTVepTF173TS6LEE4=;
+        b=wBiU5Ocl/NdTs+Qj2+P+IaWVauWiIqpnagW2OeM1FZIpf8uvFp1hHKvWqQEi9jUU83
+         e2qRuy4IkUEgGQJ0wglBimDwWnJGdkhX0cKalJowvWz99JnJxkev7dq432w/wI0+iIO9
+         kDD4nmtXpBD42ue4XbpaVltrjpyslSwZ0l/N80GyFv5emVaeUo7ulxaTt6PDPR6w2bzY
+         eiE+joo3RV/nZT1Rkku225IVgdspK2LrqlmeRaAwu9Nx6Pc68DhDFWLs/QMMZ4Y9e89i
+         bhdYc+nwRa0m156N7jvPrL1Y7UfOx2VATguYyTQWQ3nCwO1pfZySOsCjcLlMgo0bhXp8
+         OF4g==
+X-Forwarded-Encrypted: i=1; AJvYcCUX8uU+hskNBQyY+u15CmySq0eiv7XYhIhWWIVxsFQbFvPbsk3TnPOsd6MOElBKSWe3ich4yo3E1/UHtrE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YziQpl14UEEJ/hVlR2+0LdbBnvq6VURRNKwBC0ieFLnXVAZD7uA
+	JWFy3VvrzBPwv6asY5E++TXIgkkkxkuiwH8hKvDetrv4+60sLzWzvsaB2RLs0ojf7dHdJ2TRk/r
+	9+TxA/13YRA==
+X-Gm-Gg: ASbGncv56wcQWvTNVBZswYXmirBWOES46WC6eP5cOI5raeCb489HK6iXPUKwGSJzUue
+	qXmSawmx9KNdCwxSyGf72oafEcjfMIkA9kb/KB/r2+ruvw1TZLDlhWknDX59F14iVRmfS8p+r2K
+	Qx89m+OG3u8lacuS6hnee4cxN7MNCEcmnAIG1XVSJiZzVJCSjgiHWp6CcMhVFnvD6PVIKhnBtJZ
+	2SEa9U1PkDWYQ9IA6oXE57EBeM+YFvmA+df1XxnSdEMClQnuGK/YmfThZBssxExV8cSDvcezyMz
+	CO78VRoLBrS4gMOoIyp/BYwiIQGmZPG2qWIOWGJgRTPP/gT/s52ODYaTruMZRgJNzbVxSK+KO9f
+	t
+X-Google-Smtp-Source: AGHT+IGy/zHKkLoCqd0X2olDp98Qxa0qdVeeG437zq+tGKaNriTn7CidMfefy/lb+POVB1pfKAU92w==
+X-Received: by 2002:a17:907:7290:b0:ad5:a121:6ebc with SMTP id a640c23a62f3a-ade8c3a296dmr185909966b.0.1749631185945;
+        Wed, 11 Jun 2025 01:39:45 -0700 (PDT)
+Received: from [192.168.86.142] ([84.65.228.220])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1dc7c786sm874845866b.172.2025.06.11.01.39.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Jun 2025 01:39:45 -0700 (PDT)
+Message-ID: <876382a4-432c-42c0-adda-cc992d9ffcbb@neon.tech>
+Date: Wed, 11 Jun 2025 09:39:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9ebe16a8d33e00c39c142748a1ea6fff96b9565a.camel@icenowy.me>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] x86/mm: Handle alloc failure in phys_*_init()
+To: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-mm@kvack.org
+Cc: Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+ Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+ "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+ Oleg Vasilev <oleg@neon.tech>, Arthur Petukhovsky <arthur@neon.tech>,
+ Stefan Radig <stefan@neon.tech>, Misha Sakhnov <misha@neon.tech>
+References: <a31e3b89-5040-4426-9ce8-d674b8554aa1@neon.tech>
+ <a404d023-e0bb-4dc8-8952-accba299ab50@neon.tech>
+ <a43965e2-f0f2-40d5-b7cb-f79bd0261d06@intel.com>
+Content-Language: en-US
+From: Em Sharnoff <sharnoff@neon.tech>
+In-Reply-To: <a43965e2-f0f2-40d5-b7cb-f79bd0261d06@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 11, 2025 at 04:03:11PM +0800, Icenowy Zheng wrote:
-> 在 2025-06-05星期四的 15:48 +0200，Andrew Lunn写道：
-> > Which is theoretically fine. I've not looked at this driver in
-> > particular, but there are some MACs were you cannot disable the
-> > delay.
-> > The MAC always imposes 2ns delay. That would mean a PCB which also
-> > has
-> > extra long clock lines is simply FUBAR, cannot work, and 'rgmii' is
-> > invalid, so reject it.
+On 6/10/25 16:07, Dave Hansen wrote:
+
+>> +		 * phys_{ppmd,pud,p4d}_init return allocation errors via ERR_PTR.
 > 
-> BTW I found that in some case the assumption of PHY-side delay being
-> always better than MAC-side one is wrong -- modern MACs usually have
-> adjustable delay line, but Realtek 8211-series PHYs have only on/off
-> delay with a fixed 2ns value.
+> 			 ^ typo?
 
-The only time that MACs may implement delays based on the
-PHY_INTERFACE_MODE_RGMII* is if they also include code to pass
-PHY_INTERFACE_MODE_RGMII (no suffixes) to phylink / phylib to ensure
-that the PHY doesn't _also_ add delays. This isn't something we
-encourage because it's more code, more review, and a different way
-of implementing it - thus adding to maintainers workloads that are
-already high enough.
+Oh- yes, good catch, thanks!
 
-> > Just for a minute, consider your interpretation of the old text is
-> > wrong. Read the old text again and again, and see if you can find an
-> > interpretation which is the same as the new text. If you do:
-> > 
-> > * It proves our point that describing what this means is hard, and
-> >   developers will get it wrong.
-> > 
-> > * There is an interpretation of both the old and new where nothing
-> >   changed.
-> > 
-> > * You have to be careful looking at drivers, because some percent of
-> >   developers also interpreted it wrongly, and have broken
-> >   implementations as a result.  You cannot say the binding means X,
-> >   not Y, because there is a driver using meaning X.
-> > 
-> > My hope with the new text is that it focuses on hardware, which is
-> > what DT is about. You can look at the schematic, see if there is
-> > extra
-> > long clock lines or not, and then decided on 'rgmii-id' if there are
-> > not, and 'rgmii' is there are. The rest then follows from that.
-> 
-> Well I think "rgmii-*" shouldn't exist at all, if focusing on hardware.
-> I prefer only "rgmii" with properties describing the delay numbers.
-
-Yes, I think we as phylib maintainers have also come to the same
-conclusion with all the hassle this causes, but we can't get rid
-of this without breaking the kernel and breaking device-tree
-compatibility. So, we're stuck with it.
-
-> > You are not reading it carefully enough. The binding describes
-> > hardware, the board. phy.rst describes the phylib interface. They are
-> > different.
-> 
-> Well I can't find the reason of phy-mode being so designed except for
-> leaky abstraction from phylib.
-
-I have no idea what that sentence means, sorry.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Em
