@@ -1,77 +1,156 @@
-Received: from unicom146.biz-email.net (unicom146.biz-email.net [210.51.26.146])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB6925D90D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0150425D540;
 	Wed, 11 Jun 2025 09:00:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.26.146
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749632421; cv=none; b=qG8DgMBjYBgaCXRHXdoLKCVdoYdLeeYLRb84HpAdsQKh1k1wjkW1TAe/bshEYTazLtci2ZtH9a963N+1nsARqK0aaEWRjwVJKFWHc1CUw+LXeKjEm86+8sAWCFJ6rD5XDEPYt5oPwYeuOF5J/slFsOTP/i9cC+ULFgorBeYuZug=
+	t=1749632421; cv=none; b=QMpQvoa9DcEnaOhhgxRa+yE5wtspO1tv/DvyWutv33BHd35eXTp/S/7N8kYaC0mH00+HHvc2vq/3T3ZEZdNJs7u2wf3YYKzWDY2kYemCTPbwM+ieB46JFfrXh6lsQDUEsF/zNi1P6ovMJAfqyXSJDfAQp6r+/ANYQ+3/s5Gdpv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749632421; c=relaxed/simple;
-	bh=qMB0IVjf/eFcUbo2qir82IqBWxx2Dgb/e6s/DzeGxek=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DKcKmqls1QTryAVcMeQ3kFISaRVMgg9P3WbL8kcbLs9ExN4ws+4BOLgv5fDCTzmfW1LvizHgcue5KSDt4nUnrcgavY+Q9W23NX1qD4jefAYzPGRDSH8jz7PUGrKqluo+3caFhCiFt9vZiizi6scda9hfdxEcnymkCfQ4B0N4tmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.26.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
-Received: from Jtjnmail201618.home.langchao.com
-        by unicom146.biz-email.net ((D)) with ASMTP (SSL) id 202506111659021925;
-        Wed, 11 Jun 2025 16:59:02 +0800
-Received: from jtjnmail201607.home.langchao.com (10.100.2.7) by
- Jtjnmail201618.home.langchao.com (10.100.2.18) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Wed, 11 Jun 2025 16:59:03 +0800
-Received: from localhost.localdomain.com (10.94.12.179) by
- jtjnmail201607.home.langchao.com (10.100.2.7) with Microsoft SMTP Server id
- 15.1.2507.39; Wed, 11 Jun 2025 16:59:03 +0800
-From: chuguangqing <chuguangqing@inspur.com>
-To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>, Jean-Baptiste Maneyrol
-	<jmaneyrol@invensense.com>
-CC: <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>, chuguangqing
-	<chuguangqing@inspur.com>
-Subject: [PATCH 01/10] iio: chemical: bme680: convert to use maple tree register cache
-Date: Wed, 11 Jun 2025 16:58:29 +0800
-Message-ID: <20250611085838.4761-2-chuguangqing@inspur.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250611085838.4761-1-chuguangqing@inspur.com>
-References: <20250611085838.4761-1-chuguangqing@inspur.com>
+	bh=8HjtCRzmPU9oDI03LQRauWInLwTTqBwt/d7idD7nu0g=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=rJ6LGTNpO8M+8nO0hARdcPwwHV2QARDRy+Qx+qTeT1ESxpJmBZnHcBsp5zShLub6eMG/Qc80I1gM34cWOC20y8X2nPsA3tiVVuF93cJ6jocnXvOCD2vHJK7QQMtdbmSnNYetR9/d1w2zg8Mnztm5RNXYcSGs+6UH3u76OL8mT5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=lCJgdUOC; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="lCJgdUOC"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B9DC5439ED;
+	Wed, 11 Jun 2025 09:00:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1749632417;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VMjp1dRGcXDJQ44pKMzil4By3YRk8eex4ZUKlBuDEJ0=;
+	b=lCJgdUOC88OsPk+vktX3fqaLmDGN+jKRjQuzUVjGZmOyiTy6tGlR/yU93llM2yg/mviLVX
+	oh4723T08tAItIR9LmE6m31tD4Gd0oWtyH4BLpDcKOZVzsLZT3bAPvpd0HiKeJ99yORZNV
+	MnTWAPl2/j26abGF3KXlz0shFl0cpuscwukylEJP2q3LDKIwZ21+Kp936qrAt5c2YZMnHT
+	3ByVkjrAr+57qNC1MofG141hW8hpxqjGb+WHLu+9mwbgYdozGuFAXomwV8kr2beHQQ+0sO
+	hZtLMETrQh0pd25Yh35FlRdHVwa+Ld/pzBdVtR7MHnnPQDlUE9VuXCmCNYvJ3Q==
+From: Thomas Richard <thomas.richard@bootlin.com>
+Date: Wed, 11 Jun 2025 11:00:07 +0200
+Subject: [PATCH v8 02/10] gpio: aggregator: move GPIO forwarder allocation
+ in a dedicated function
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-tUid: 20256111659027ba150282aebe609eb8341d2ec05f679
-X-Abuse-Reports-To: service@corp-email.com
-Abuse-Reports-To: service@corp-email.com
-X-Complaints-To: service@corp-email.com
-X-Report-Abuse-To: service@corp-email.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250611-aaeon-up-board-pinctrl-support-v8-2-3693115599fe@bootlin.com>
+References: <20250611-aaeon-up-board-pinctrl-support-v8-0-3693115599fe@bootlin.com>
+In-Reply-To: <20250611-aaeon-up-board-pinctrl-support-v8-0-3693115599fe@bootlin.com>
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
+ Andy Shevchenko <andy@kernel.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
+ linux-hardening@vger.kernel.org, 
+ Thomas Richard <thomas.richard@bootlin.com>
+X-Mailer: b4 0.14.1
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduudeljecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpefvhhhomhgrshcutfhitghhrghrugcuoehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkedthedvieethedtleetffehudevleegledvteegvdeujeeghffhkeeggfefudevnecukfhppedvrgdtudemtggsudegmehfgedtmegsfhdttdemfhdtheegmegtlegtvdemvddutgefmeduheeiieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmehfgedtmegsfhdttdemfhdtheegmegtlegtvdemvddutgefmeduheeiiedphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepthhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedufedprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheprghnugihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrt
+ ghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvggvsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehgvggvrhhtodhrvghnvghsrghssehglhhiuggvrhdrsggvpdhrtghpthhtoheplhhinhhugidqhhgrrhguvghnihhnghesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: thomas.richard@bootlin.com
 
-The maple tree register cache is based on a much more modern data structure
-than the rbtree cache and makes optimisation choices which are probably
-more appropriate for modern systems than those made by the rbtree cache.
+Move the GPIO forwarder allocation and static initialization in a dedicated
+function.
 
-Signed-off-by: chuguangqing <chuguangqing@inspur.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 ---
- drivers/iio/chemical/bme680_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpio/gpio-aggregator.c | 50 +++++++++++++++++++++++++++---------------
+ 1 file changed, 32 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/iio/chemical/bme680_core.c b/drivers/iio/chemical/bme680_core.c
-index 3e850562ab00..61d446fd456c 100644
---- a/drivers/iio/chemical/bme680_core.c
-+++ b/drivers/iio/chemical/bme680_core.c
-@@ -158,7 +158,7 @@ const struct regmap_config bme680_regmap_config = {
- 	.val_bits = 8,
- 	.max_register = 0xef,
- 	.volatile_table = &bme680_volatile_table,
--	.cache_type = REGCACHE_RBTREE,
-+	.cache_type = REGCACHE_MAPLE,
- };
- EXPORT_SYMBOL_NS(bme680_regmap_config, "IIO_BME680");
+diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
+index 6f941db02c04..f79bb4e12b20 100644
+--- a/drivers/gpio/gpio-aggregator.c
++++ b/drivers/gpio/gpio-aggregator.c
+@@ -475,6 +475,35 @@ static int gpiochip_fwd_setup_delay_line(struct device *dev, struct gpio_chip *c
+ }
+ #endif	/* !CONFIG_OF_GPIO */
  
++static struct gpiochip_fwd *
++devm_gpiochip_fwd_alloc(struct device *dev, unsigned int ngpios)
++{
++	struct gpiochip_fwd *fwd;
++	struct gpio_chip *chip;
++
++	fwd = devm_kzalloc(dev, struct_size(fwd, tmp, fwd_tmp_size(ngpios)), GFP_KERNEL);
++	if (!fwd)
++		return ERR_PTR(-ENOMEM);
++
++	chip = &fwd->chip;
++
++	chip->label = dev_name(dev);
++	chip->parent = dev;
++	chip->owner = THIS_MODULE;
++	chip->get_direction = gpio_fwd_get_direction;
++	chip->direction_input = gpio_fwd_direction_input;
++	chip->direction_output = gpio_fwd_direction_output;
++	chip->get = gpio_fwd_get;
++	chip->get_multiple = gpio_fwd_get_multiple_locked;
++	chip->set_rv = gpio_fwd_set;
++	chip->set_multiple_rv = gpio_fwd_set_multiple_locked;
++	chip->to_irq = gpio_fwd_to_irq;
++	chip->base = -1;
++	chip->ngpio = ngpios;
++
++	return fwd;
++}
++
+ /**
+  * gpiochip_fwd_create() - Create a new GPIO forwarder
+  * @dev: Parent device pointer
+@@ -495,16 +524,14 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
+ 						struct gpio_desc *descs[],
+ 						unsigned long features)
+ {
+-	const char *label = dev_name(dev);
+ 	struct gpiochip_fwd *fwd;
+ 	struct gpio_chip *chip;
+ 	unsigned int i;
+ 	int error;
+ 
+-	fwd = devm_kzalloc(dev, struct_size(fwd, tmp, fwd_tmp_size(ngpios)),
+-			   GFP_KERNEL);
+-	if (!fwd)
+-		return ERR_PTR(-ENOMEM);
++	fwd = devm_gpiochip_fwd_alloc(dev, ngpios);
++	if (IS_ERR(fwd))
++		return fwd;
+ 
+ 	chip = &fwd->chip;
+ 
+@@ -526,19 +553,6 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
+ 			chip->set_config = gpio_fwd_set_config;
+ 	}
+ 
+-	chip->label = label;
+-	chip->parent = dev;
+-	chip->owner = THIS_MODULE;
+-	chip->get_direction = gpio_fwd_get_direction;
+-	chip->direction_input = gpio_fwd_direction_input;
+-	chip->direction_output = gpio_fwd_direction_output;
+-	chip->get = gpio_fwd_get;
+-	chip->get_multiple = gpio_fwd_get_multiple_locked;
+-	chip->set_rv = gpio_fwd_set;
+-	chip->set_multiple_rv = gpio_fwd_set_multiple_locked;
+-	chip->to_irq = gpio_fwd_to_irq;
+-	chip->base = -1;
+-	chip->ngpio = ngpios;
+ 	fwd->descs = descs;
+ 
+ 	if (chip->can_sleep)
+
 -- 
-2.31.1
+2.39.5
 
