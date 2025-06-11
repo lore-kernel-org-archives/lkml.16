@@ -1,76 +1,143 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 388AF27586A
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 18:02:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1F24C8FE;
+	Wed, 11 Jun 2025 18:07:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749664925; cv=none; b=Qcd/Wd8Ax4G06nnvlhigu+VKjOlFC8VZNfkTFydI9qiEWvssX+sCyAsTd3z/KiqZ7JqPRE5VeBMsfr8xspGG0GqTItj/JvhagZQLcAaK5lpkxrD/uchey5JO4ctocDYGsL7f4/Uck3YWP3adEuIAdyp0OBp3BEJaJT25X7ezrh0=
+	t=1749665264; cv=none; b=Ak9qV4TgHTA/oMnxPxZlhkOTNUG6IYDBMjtkh+d5Awr4+qiCB9lmr7/eGVexDYuVbh1h+rVJVu8K+QorHwbOgPFkQ9nkHzvWniVXlkaB9QXXecvIa5E5l8jnD4j+nIHPi5QrTFVeA+9HenvMGrDtiDBwfMGMwxpwJ5itUdtTakY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749664925; c=relaxed/simple;
-	bh=V1E7f5QusoelLMUHp3Yu2uLJI3CUAyfmQYr4cJCS8jM=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=CWncNJm3NnM5wZV8KA1AvkEPU2SsxNcuNpNlPH6hFz4Cg8fQ0E7pIEcmlHvTmzrV/po9gmMDPKtcXImSmHpIeCQxzhp/wmLy+bH0o4+38eZ3rb79AVxr/o74H5fHrZU8QrNCAx1tWM6ifrewpMUN4JWI48pxSmsLFo2F+2ZE3Nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3ddd03db24dso1157995ab.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:02:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749664923; x=1750269723;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DnYzrXJvnrK56gfoRm+seV41wic4hiIzCla9ZFzIcZQ=;
-        b=rHZ0ogFYsJFvlbl+mY1iSaQu5IWr2mVCPpvtH4y2xRl9huyyRsy2Z8DaHCjeHcW+Ls
-         8J3+oA++vNLVamgBbtKqF4OzZ00TYHHbMXo7cZYnGpB1u/il/q68fSwyR4+nVCA7MZZy
-         Ll+DOfPyhSIebgdq1HeJfUS7fM+JaNqlrH75oxnYpzVPN0zPCKFzH+s8W5wjkyd/5Iin
-         MTnfWdq/L0m5oy2y2MBUygbeEAwfBPE0ZWxaEHZcCL0VDmyjNjaS+CoZi01EcAxP9552
-         SpVdLUnvLY3CfgxNp1sAQ2aVFlFMOdORyc8WRpGT9yR1tZT4Tp7yovciEdQ3bZF69b3Y
-         tZ5g==
-X-Forwarded-Encrypted: i=1; AJvYcCWPK4gOiipJt7/vB8UeAZlVOvTmojoGGLO/cXoifnjmlkCGqdIsIMRmV/T5usv7TgnN7E0RjE88YZXlN6U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1UTuksz7Lx9oeDSTR6wD1BwuE2zF0DInyeUuim5Z6HLaGDve9
-	MzxdaaKLfk1sKIU2uFURox5D+Lf9v50HC0C68thMKHVQpYWX+WhyLRgxPR395HEoh9NjJocOXyZ
-	iilF6injtm97Q0TohFqxriV0wCQW7GXyFs6RCjArUHLDRSU0yRqdgFjZI6Ck=
-X-Google-Smtp-Source: AGHT+IG8FjKx8LRHz/LA6R14C5WI1KhK0i9zeWL0MvJYVAiFKjgXESDWMm2bojrctLpZZlo55eSEZzjkqthnuN/oJbHiKPzJYNvT
+	s=arc-20240116; t=1749665264; c=relaxed/simple;
+	bh=VqkaA4YALZASnopw1HEfpDUys2CTXSKsPzHBx/Rq97M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Y8E0hUl1zGU2SSTGzRD1ImFmZ7lpQ7iaU4ViADv7TGmPIt3x8/xpqFPzZGcAEY9A6sk/zLN0l5h3y1fzGsOoAi0evzx84X7eyqFCxQU17rNe+mEylHfNbx2WAvnWXLCGgXsNfEv7n+I+fmWAzy2hiOOXSbIuw6wHyzOIyJ3+NqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D5F4715A1;
+	Wed, 11 Jun 2025 11:07:20 -0700 (PDT)
+Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 478543F673;
+	Wed, 11 Jun 2025 11:07:38 -0700 (PDT)
+From: Yeoreum Yun <yeoreum.yun@arm.com>
+To: catalin.marinas@arm.com,
+	pcc@google.com,
+	will@kernel.org,
+	broonie@kernel.org,
+	anshuman.khandual@arm.com,
+	joey.gouly@arm.com,
+	yury.khrustalev@arm.com,
+	maz@kernel.org,
+	oliver.upton@linux.dev,
+	frederic@kernel.org,
+	akpm@linux-foundation.org,
+	surenb@google.com
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Yeoreum Yun <yeoreum.yun@arm.com>
+Subject: [PATCH v8 0/9] support FEAT_MTE_TAGGED_FAR feature
+Date: Wed, 11 Jun 2025 19:07:25 +0100
+Message-Id: <20250611180734.63657-1-yeoreum.yun@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:184a:b0:3dd:ceb0:f603 with SMTP id
- e9e14a558f8ab-3ddf42391cemr50493975ab.2.1749664923258; Wed, 11 Jun 2025
- 11:02:03 -0700 (PDT)
-Date: Wed, 11 Jun 2025 11:02:03 -0700
-In-Reply-To: <aEmnv69zbkinkDVs@pc636>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6849c49b.a00a0220.1eb5f5.00f2.GAE@google.com>
-Subject: Re: [syzbot] [bcachefs?] [rcu?] BUG: unable to handle kernel NULL
- pointer dereference in rcu_core (3)
-From: syzbot <syzbot+80e5d6f453f14a53383a@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, josh@joshtriplett.org, 
-	kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, paulmck@kernel.org, 
-	rcu@vger.kernel.org, syzkaller-bugs@googlegroups.com, urezki@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+The FEAT_MTE_TAGGED_FAR feature provides support for
+reporting all non-address bits during a synchronous MTE tag check fault.
 
-syzbot tried to test the proposed patch but the build/boot failed:
+This patchset extends the reporting tag to include
+not only the memory tag (logical tag) but also the address tag via
+si_addr when FEAT_MTE_TAGGED_FAR feature is supported.
 
-failed to apply patch:
-checking file kernel/rcu/tree.c
-patch: **** unexpected end of file in patch
+Patch Sequences
+================
 
+Patch #1 adds cpufeature FEAT_MTE_TAGGED_FAR
 
+Patch #2 adds MTE_FAR hwcaps and export address tag when it supports
 
-Tested on:
+Patch #3 adds mtefar hwcap test
 
-commit:         aef17cb3 Revert "mm/damon/Kconfig: enable CONFIG_DAMON..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=523d3ff8e053340a
-dashboard link: https://syzkaller.appspot.com/bug?extid=80e5d6f453f14a53383a
-compiler:       
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=17de99d4580000
+Patch #4 to #7 prepares to add mtefar testcase
+
+Patch #8 refactor check_mmap_option using general testcase pattern
+
+Patch #9 adds mtefar test cases corresponding to
+each testcase of check_mmap_options
+
+Patch History
+================
+v7 to v8:
+  - rewording some comment word.
+  - https://lore.kernel.org/all/20250611135818.31070-1-yeoreum.yun@arm.com/
+
+v6 to v7:
+  - fix some error on testcase.
+  - https://lore.kernel.org/all/20250611094107.928457-1-yeoreum.yun@arm.com/
+
+v5 to v6:
+  - split Patch #4.
+  - refactor check_mmap_option using general testcase pattern
+  - https://lore.kernel.org/linux-arm-kernel/20250610150144.2523945-1-yeoreum.yun@arm.com/
+
+v4 to v5:
+  - rebased on v6.16-rc1
+  - https://lore.kernel.org/linux-arm-kernel/20250507095757.1663684-1-yeoreum.yun@arm.com/
+
+v3 to v4:
+  - fix hwcap string for FEAT_MTE_TAGGED_FAR
+  - split cpufeature and hwcap modification and merge hwcap's
+    modification with exporting address tag patch
+  - add mtefar testcase on check_mmap_options
+  - https://lore.kernel.org/all/20250410074721.947380-1-yeoreum.yun@arm.com/
+
+v2 to v3:
+  - Rebase to 6.15-rc1
+  - https://lore.kernel.org/all/20250403172758.67106-1-yeoreum.yun@arm.com/
+
+v1 to v2:
+  - add hwcap test for MTE_FAR feature.
+  - add MTE_FAR doc into elf_hwcap.rst
+  - https://lore.kernel.org/all/20250403142707.26397-1-yeoreum.yun@arm.com/
+
+Yeoreum Yun (9):
+  arm64/cpufeature: add FEAT_MTE_TAGGED_FAR feature
+  arm64: report address tag when FEAT_MTE_TAGGED_FAR is supported
+  tools/kselftest: add MTE_FAR hwcap test
+  kselftest/arm64/mte: register mte signal handler with
+    SA_EXPOSE_TAGBITS
+  kselftest/arm64/mte: check MTE_FAR feature is supported
+  kselftest/arm64/mte: add address tag related macro and function
+  kselftest/arm64/mte: add verification for address tag in signal
+    handler
+  kselftest/arm64/mte: refactor check_mmap_option test
+  kselftest/arm64/mte: add mtefar tests on check_mmap_options
+
+ Documentation/arch/arm64/elf_hwcaps.rst       |   3 +
+ Documentation/arch/arm64/tagged-pointers.rst  |  11 +-
+ arch/arm64/include/asm/hwcap.h                |   1 +
+ arch/arm64/include/uapi/asm/hwcap.h           |   1 +
+ arch/arm64/kernel/cpufeature.c                |   9 +
+ arch/arm64/kernel/cpuinfo.c                   |   1 +
+ arch/arm64/mm/fault.c                         |   7 +-
+ arch/arm64/tools/cpucaps                      |   1 +
+ tools/testing/selftests/arm64/abi/hwcap.c     |   6 +
+ .../selftests/arm64/mte/check_buffer_fill.c   |   2 +-
+ .../selftests/arm64/mte/check_child_memory.c  |   4 +-
+ .../arm64/mte/check_hugetlb_options.c         |   4 +-
+ .../selftests/arm64/mte/check_ksm_options.c   |   4 +-
+ .../selftests/arm64/mte/check_mmap_options.c  | 551 +++++++++++++++---
+ .../arm64/mte/check_tags_inclusion.c          |   2 +-
+ .../selftests/arm64/mte/check_user_mem.c      |   2 +-
+ .../selftests/arm64/mte/mte_common_util.c     |  70 ++-
+ .../selftests/arm64/mte/mte_common_util.h     |   6 +-
+ tools/testing/selftests/arm64/mte/mte_def.h   |   8 +
+ 19 files changed, 593 insertions(+), 100 deletions(-)
+
+--
+LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
 
