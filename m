@@ -1,197 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671C22820D9
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 12:56:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658F4283154
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 12:56:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749646610; cv=none; b=jIA9+ZfKloEqtpKyGF0DzeWF+7yDLNe/xnv9Ru3UytnZpjyO6b65qOiON1BybwGuLzeS2/mZ6zhirH0j1yHZrpsqWGRaSirGbfDmOTxP3i31A4sfGdoz9ViewZXrVnof62s1PTfZ/AEEkosJN4X/86vn/nEC/iP0esA9ksFvXGo=
+	t=1749646620; cv=none; b=KTH7fYzNf5xvh+M3cl8xX7g564E1wWHX7UOC7XaPrNiqvfxWYnR06EwPODl4hOzvC6WHOGrUCkvlbiVmR3SbfECgbKH2a14AzwJPnrzHJl02dDngS7JWnB6+ew70kP9vww4XBvrGPjjv3aBUkrUIb+GRRZnLFxdM1d0PoR/t/BA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749646610; c=relaxed/simple;
-	bh=8buD8yDg3TR0fx8Q7bXACvJc4a/CvqRbB7CH+Pikfmk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sy3aTlrYPHhD9rFEhJMrnOkjpsBg0MRNGYfP+XYH9HhuwcnmHasU8IdfRkNRxfMFbmpBihE0BRYskWJa2VUBZZ9lvwZD3SxJqJxCKP6E+y8HO/Ry5Bzo7pLYP9ztDAEpyoO1yqKZT/hE62U4hbWGAET851+94geWNMgnTDr6Ci0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QvcvQhpl; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749646620; c=relaxed/simple;
+	bh=WFBUbKMMnKHZdjkqyPfepwRYRaY3PMbvKPZrZUg2BWM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VE8LcOzFaaQISFiK0iM7IloNM4ncV2WY78cQd9kmWJQxjQayE/RkZHUceZi22XN+Mrow0VnICZUcd8iUiIN4p1eRiNpIb1hIVHosfSEgwHZSEW3VDOoaLtOjZuU4g1cSnq0JCMBv2ytS/N0uRnyvB8kbg9HYQp4WujnzEOAHi7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=3SNeEW8J; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QvcvQhpl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749646607;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=A5Kas9xwQ+OPm3yoVaGIsnzULAQTcfMhc6nbP8S9fvE=;
-	b=QvcvQhplfihYlpgq4DVTicbMK50f+BQ2JmqC0nyS5vYk9jeMUf7l+0xXeijP7khPt6adrL
-	bPknNRf2j63k92IiTG5FBFy9JGcU6INKbq+2Em52kupa6sbIU0JEPiq4FdwM//2A7NmfVh
-	XxeGUHzCp8XMZ3WGdpt1VnqIWk3CY3o=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-301-V3TynnTyNGCEF-CRPPqqFQ-1; Wed, 11 Jun 2025 08:56:46 -0400
-X-MC-Unique: V3TynnTyNGCEF-CRPPqqFQ-1
-X-Mimecast-MFC-AGG-ID: V3TynnTyNGCEF-CRPPqqFQ_1749646605
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6fb32203ca6so5523736d6.3
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 05:56:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="3SNeEW8J"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3db7b3de375so55523405ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 05:56:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1749646617; x=1750251417; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BPGWj6XVqoqMlOowKe5NeP45YX5gIMyOrC/TyjewJiI=;
+        b=3SNeEW8JE6h/oz8q6m6QF2ImTL+tlmycebGzUU801zIFrCEDkbol5VveffiMdaCcVr
+         DR4DtdLs0b+1vL/7V92uya5ywuKnyqGYVSg0ovhGxi0LJoY7dxjooMAxjnoIBEzQXMr+
+         qMeCgAww9N0HEgBHk0ug5O3IF+BFEyTe1ylZYv+Y826rZiB61Q2HaxeJnbGKLVKmd7gE
+         Aeg10w+4veLhgu4Nb+O8L6MkAU1TZQkC7AhlyIGuZtpexzE1kEY4l5aPG9Hz/W2teHnY
+         49kehI159q8ArkYpHFN9doyq3ao1juv/h8HlhUTH3p4/xVB/T2oRSBlwS1sUivjQy8Bs
+         7uQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749646605; x=1750251405;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A5Kas9xwQ+OPm3yoVaGIsnzULAQTcfMhc6nbP8S9fvE=;
-        b=o5KHJGBacT4xMEsJ9I6SHtcWZBpzArvqXgkCePF7vDIcfYTxcMiusWAWWqqMKARo5i
-         lVhb8SN11qHtXvH1rjSG2/m/ReN5bwTBjHFIIcjevTJW2IJofLCShHOj5zqJ1IHGN4Ix
-         GPtbEspwlH/5BDnr9ZKkFm+et/tI2JDeprXSjsSlcfITXrPKewYQLVoZL/iw5DIiTFSV
-         N5YxwwlHFDGMts6a9Oimj3u7knxu5n+mxi6zFrztjK78CoguZ32zF9zoqN3RsIlnTXnD
-         EsqXC0VOYIYuJK4sBs8cLCLqkkUELxWw+4MkHjUbsC6F7ijj0MV4s3lz1CEfXmtyxtYG
-         HEgw==
-X-Forwarded-Encrypted: i=1; AJvYcCUbbDeWWTmifeFR5YdJPd5MH91XM1TO3uJ19u+lxhr67yzdKSBG2DJQrVLWDRSkIb9QJOrBxGXMSqMnaWo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoqwG89b8SCJkj67BQgR82AJiDZl17caklmZLyx8uK9pvVOV20
-	jY8PwAKqiFr3AiWnOOSDH/C37tyx4dBzTkvlbwMt3q79hwPae+cvZwrYsgLWUasYzYuN3mWCPe4
-	XWlFWta4v9O2ghHZx/AVX1dWW3sIf8Wc8hrw5t+XQq7fXfrDq8B2CX3hIIHIQAws62w==
-X-Gm-Gg: ASbGncvd+VD8lvDeIjWlVSRrwoIUkpuXAtPgwXKqk6oCQT+mP7xlKKMC0W0Wg8X8mSN
-	CUafecSQ0aLs4GLAJyMbMBTICzMzUxKFWgx/Nm5IuAibcipwpKKY+NcAyyQhYDN8b7FNswndO1q
-	qUYrNHcPy0sb2AIA9Wj4OIHVQK2ewhvtVdU+R+XEIIwTPPMAtt4/JyzrbMUX96i3+dFtJGhEpNT
-	2rms7UyaJ4u9sspqQ8vixUAvBjEDZN04i9Rcd8qJZln6uo135Mr23YzQt6sH9K6HuO45KCBt5XO
-	QV6YGBx4LBEbng==
-X-Received: by 2002:ad4:5de3:0:b0:6ea:d033:2846 with SMTP id 6a1803df08f44-6fb2d150f50mr46124766d6.25.1749646605464;
-        Wed, 11 Jun 2025 05:56:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHZ3II3J1nqirG0Y1l89AqC5v1uU5YGX748p4ie8CqW4+N2aTm8LOyMY61BMCGc48dang2fKg==
-X-Received: by 2002:ad4:5de3:0:b0:6ea:d033:2846 with SMTP id 6a1803df08f44-6fb2d150f50mr46124046d6.25.1749646604859;
-        Wed, 11 Jun 2025 05:56:44 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb09ab8a0esm82314846d6.25.2025.06.11.05.56.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 05:56:44 -0700 (PDT)
-Date: Wed, 11 Jun 2025 08:56:40 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Nikita Kalyazin <kalyazin@amazon.com>
-Cc: akpm@linux-foundation.org, pbonzini@redhat.com, shuah@kernel.org,
-	viro@zeniv.linux.org.uk, brauner@kernel.org, muchun.song@linux.dev,
-	hughd@google.com, kvm@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, jack@suse.cz,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
-	jannh@google.com, ryan.roberts@arm.com, david@redhat.com,
-	jthoughton@google.com, graf@amazon.de, jgowans@amazon.com,
-	roypat@amazon.co.uk, derekmn@amazon.com, nsaenz@amazon.es,
-	xmarcalx@amazon.com
-Subject: Re: [PATCH v3 1/6] mm: userfaultfd: generic continue for non
- hugetlbfs
-Message-ID: <aEl9CNGLY0Sil7nq@x1.local>
-References: <20250404154352.23078-1-kalyazin@amazon.com>
- <20250404154352.23078-2-kalyazin@amazon.com>
- <aEiwHjl4tsUt98sh@x1.local>
- <36d96316-fd9b-4755-bb35-d1a2cea7bb7e@amazon.com>
+        d=1e100.net; s=20230601; t=1749646617; x=1750251417;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BPGWj6XVqoqMlOowKe5NeP45YX5gIMyOrC/TyjewJiI=;
+        b=ktfp996W4tBvnb4HjJDqW1Ys8m1/fK2MVV77IMBCiJPwWAunx83L0B6Ol2OkQTmRIv
+         iF5y6r00lqvvzhD/YYTYebFdPAe26B/KuaGYUesW9zwMrr5CQZ75/omj/q+VF3/b/d54
+         2igOTdaV+TI+nIvltK7wxf4WYDXqKWIYOU5TNvNm4Rvatpt2KfxaLgE5huP9Pg2YYkQH
+         2mjPOoJaWFxThPl4Xf0nyeuM2Jc9fSXNpTQ2/RLYyCNSeh6rekG9cPgfRqrrTrwLQXER
+         kmRZxmqurGco2iTu2RPen1LRtRmjyC+C9SlvUZqZViDBOwWrp8NfufobYLt9+crNLlG1
+         KODg==
+X-Forwarded-Encrypted: i=1; AJvYcCVRuUuE6z69RYk5HhZzMoX40ReMhfRy2NUrsX34s4fdi0/PdLcT/20ANX0z6abU22xk4MN0ieP7UFoFkr4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3BkLrIpmIQWlEyKXi7rO8Uwu6621e1oTTKJ/MDZNjl+SBcXdH
+	7XGmF+BfGnFQ50srO/2r+yu4J4c4LOxDCx04OYYShph50/s2SPJMRRiKYqLDo4LOhzc=
+X-Gm-Gg: ASbGncv5+AiVgVzRcwyu97aI20xjxlgxntKQCFcnFEJuMy0f+bfGFKBk/1A2pfKysNH
+	ls/6CZQ090YMr4LKoRcqkR2FCnUvmG4SoR7ICckQzcnTCLNT8x28OZXoPVcECAHbJ3eQ5YV+jRP
+	g5hatzvimz5O1EbZSjnYhJuNV26BLlL2q6MyVbVTxxglGZtRYSG3GpNJguwvWihTRCUBYlRlVJx
+	Jfr7WtTqkVKeb0450PZbjhpPDjD6xQQEG7Hj1XGfftIUSdU+XJkj7LBAKb2nj06FMlvjcnYdgLf
+	+es1p5Y1QtKKHfyg9qUKnd544t3/dpFjWQ6gx8AVFc+TinKx3uDQD5RdPfsijMW26tMsQA==
+X-Google-Smtp-Source: AGHT+IERz9UEhN3gPoO6s9ZO+TGganlwoJirBS1zd34gle1XGHdmdK7NOLrIX/f0q//+H5iwkCSLYQ==
+X-Received: by 2002:a05:6e02:12e8:b0:3d9:668c:a702 with SMTP id e9e14a558f8ab-3ddf4d5d68emr25015895ab.9.1749646617386;
+        Wed, 11 Jun 2025 05:56:57 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3ddf4768c0dsm3851505ab.55.2025.06.11.05.56.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Jun 2025 05:56:56 -0700 (PDT)
+Message-ID: <ed33ffb7-31bf-490c-b1ae-304a6e4b9a0f@kernel.dk>
+Date: Wed, 11 Jun 2025 06:56:55 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <36d96316-fd9b-4755-bb35-d1a2cea7bb7e@amazon.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Revert "block: don't reorder requests in
+ blk_add_rq_to_plug"
+To: Hazem Mohamed Abuelfotoh <abuehaze@amazon.com>
+Cc: stable@vger.kernel.org, kernel test robot <oliver.sang@intel.com>,
+ Hagar Hemdan <hagarhem@amazon.com>, Shaoying Xu <shaoyi@amazon.com>,
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>,
+ =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Keith Busch <kbusch@kernel.org>,
+ Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ virtualization@lists.linux.dev, linux-nvme@lists.infradead.org
+References: <20250611121626.7252-1-abuehaze@amazon.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20250611121626.7252-1-abuehaze@amazon.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 11, 2025 at 01:09:32PM +0100, Nikita Kalyazin wrote:
+On 6/11/25 6:14 AM, Hazem Mohamed Abuelfotoh wrote:
+> This reverts commit e70c301faece15b618e54b613b1fd6ece3dd05b4.
 > 
-> 
-> On 10/06/2025 23:22, Peter Xu wrote:
-> > On Fri, Apr 04, 2025 at 03:43:47PM +0000, Nikita Kalyazin wrote:
-> > > Remove shmem-specific code from UFFDIO_CONTINUE implementation for
-> > > non-huge pages by calling vm_ops->fault().  A new VMF flag,
-> > > FAULT_FLAG_USERFAULT_CONTINUE, is introduced to avoid recursive call to
-> > > handle_userfault().
-> > 
-> > It's not clear yet on why this is needed to be generalized out of the blue.
-> > 
-> > Some mentioning of guest_memfd use case might help for other reviewers, or
-> > some mention of the need to introduce userfaultfd support in kernel
-> > modules.
-> 
-> Hi Peter,
-> 
-> Sounds fair, thank you.
-> 
-> > > 
-> > > Suggested-by: James Houghton <jthoughton@google.com>
-> > > Signed-off-by: Nikita Kalyazin <kalyazin@amazon.com>
-> > > ---
-> > >   include/linux/mm_types.h |  4 ++++
-> > >   mm/hugetlb.c             |  2 +-
-> > >   mm/shmem.c               |  9 ++++++---
-> > >   mm/userfaultfd.c         | 37 +++++++++++++++++++++++++++----------
-> > >   4 files changed, 38 insertions(+), 14 deletions(-)
-> > > 
-> > > diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> > > index 0234f14f2aa6..2f26ee9742bf 100644
-> > > --- a/include/linux/mm_types.h
-> > > +++ b/include/linux/mm_types.h
-> > > @@ -1429,6 +1429,9 @@ enum tlb_flush_reason {
-> > >    * @FAULT_FLAG_ORIG_PTE_VALID: whether the fault has vmf->orig_pte cached.
-> > >    *                        We should only access orig_pte if this flag set.
-> > >    * @FAULT_FLAG_VMA_LOCK: The fault is handled under VMA lock.
-> > > + * @FAULT_FLAG_USERFAULT_CONTINUE: The fault handler must not call userfaultfd
-> > > + *                                 minor handler as it is being called by the
-> > > + *                                 userfaultfd code itself.
-> > 
-> > We probably shouldn't leak the "CONTINUE" concept to mm core if possible,
-> > as it's not easy to follow when without userfault minor context.  It might
-> > be better to use generic terms like NO_USERFAULT.
-> 
-> Yes, I agree, can name it more generically.
-> 
-> > Said that, I wonder if we'll need to add a vm_ops anyway in the latter
-> > patch, whether we can also avoid reusing fault() but instead resolve the
-> > page faults using the vm_ops hook too.  That might be helpful because then
-> > we can avoid this new FAULT_FLAG_* that is totally not useful to
-> > non-userfault users, meanwhile we also don't need to hand-cook the vm_fault
-> > struct below just to suite the current fault() interfacing.
-> 
-> I'm not sure I fully understand that.  Calling fault() op helps us reuse the
-> FS specifics when resolving the fault.  I get that the new op can imply the
-> userfault flag so the flag doesn't need to be exposed to mm, but doing so
-> will bring duplication of the logic within FSes between this new op and the
-> fault(), unless we attempt to factor common parts out.  For example, for
-> shmem_get_folio_gfp(), we would still need to find a way to suppress the
-> call to handle_userfault() when shmem_get_folio_gfp() is called from the new
-> op.  Is that what you're proposing?
+> Commit <e70c301faece> ("block: don't reorder requests in
+> blk_add_rq_to_plug") reversed how requests are stored in the blk_plug
+> list, this had significant impact on bio merging with requests exist on
+> the plug list. This impact has been reported in [1] and could easily be
+> reproducible using 4k randwrite fio benchmark on an NVME based SSD without
+> having any filesystem on the disk.
 
-Yes it is what I was proposing.  shmem_get_folio_gfp() always has that
-handling when vmf==NULL, then vma==NULL and userfault will be skipped.
+Rather than revert this commit, why not just attempt a tail merge?
+Something ala this, totally untested.
 
-So what I was thinking is one vm_ops.userfaultfd_request(req), where req
-can be:
-
-  (1) UFFD_REQ_GET_SUPPORTED: this should, for existing RAM-FSes return
-      both MISSING/WP/MINOR.  Here WP should mean sync-wp tracking, async
-      was so far by default almost supported everywhere except
-      VM_DROPPABLE. For guest-memfd in the future, we can return MINOR only
-      as of now (even if I think it shouldn't be hard to support the rest
-      two..).
-
-  (2) UFFD_REQ_FAULT_RESOLVE: this should play the fault() role but well
-      defined to suite userfault's need on fault resolutions.  It likely
-      doesn't need vmf as the parameter, but likely (when anon isn't taking
-      into account, after all anon have vm_ops==NULL..) the inode and
-      offsets, perhaps some flag would be needed to identify MISSING or
-      MINOR faults, for example.
-
-Maybe some more.
-
-I was even thinking whether we could merge hugetlb into the picture too on
-generalize its fault resolutions.  Hugetlb was always special, maye this is
-a chance too to make it generalized, but it doesn't need to happen in one
-shot even if it could work.  We could start with shmem.
-
-So this does sound like slightly involved, and I'm not yet 100% sure this
-will work, but likely.  If you want, I can take a stab at this this week or
-next just to see whether it'll work in general.  I also don't expect this
-to depend on guest-memfd at all - it can be alone a refactoring making
-userfault module-ready.
-
-Thanks,
+diff --git a/block/blk-merge.c b/block/blk-merge.c
+index 3af1d284add5..708ded67d52a 100644
+--- a/block/blk-merge.c
++++ b/block/blk-merge.c
+@@ -998,6 +998,10 @@ bool blk_attempt_plug_merge(struct request_queue *q, struct bio *bio,
+ 	if (!plug || rq_list_empty(&plug->mq_list))
+ 		return false;
+ 
++	rq = plug->mq_list.tail;
++	if (rq->q == q)
++		return blk_attempt_bio_merge(q, rq, bio, nr_segs, false) == BIO_MERGE_OK;
++
+ 	rq_list_for_each(&plug->mq_list, rq) {
+ 		if (rq->q == q) {
+ 			if (blk_attempt_bio_merge(q, rq, bio, nr_segs, false) ==
 
 -- 
-Peter Xu
-
+Jens Axboe
