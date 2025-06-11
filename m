@@ -1,472 +1,364 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8905529ACF9
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749652296; cv=none; b=Yv2VeDdy80ON/vVPAStEFaTEvgTt241ezuVvKJXsDsYXBCrjKZ4TemTA+3flJu3EvchysOBRIRIOhmSNNNIhVNqahwiFmDU/Kh4zG5ive6QzI3j0mwiXLKLVjIC/27CxgAeOMVqeYjVB4rZ0AYzeOoquWcrXTveW7orpvY2zDtY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749652296; c=relaxed/simple;
-	bh=vBmDGM2VG9GXU1zyMI3BUGf/9ROVFJl2W1cRXfybvFw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YlA81Avd+bZ+g9snfRpy8gmhVZRtko0bgnO7AIjRS0pkzZsHJloHn803p3yznar/ulwaS/F1nbjoiKq8U7kkjhb5GqUY90rYLrx9Rv0vRKPRAffeWszWEt/CJvohv7+af1+iCPQDeSZ/5Dy8wNat9fdVcitna0ZlgsS0VnsyqA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=QKf07+Zg; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B972126E703;
+	Wed, 11 Jun 2025 14:32:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749652352; cv=fail; b=mJ0lJFeBCgZLE/+vv+mqOzNCAbmfk+u0T7XgRf4sDy1jSZyaWsuRhGPaJfj+Ws8/BtdMPyhFaGdbp4EsP0unQZngpd1MEbDQKcmVUxp1fl0jqX+r+O0hQtsSMCthOQ/1rmg5G+QVxDOFbc9RL1HBo4E1nPdjKzVwxjf1ihX/QO4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749652352; c=relaxed/simple;
+	bh=etgpiaQI6N7Qw/lysgdFd9XVvTVGZ8yn6fKLUimzNy0=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=FtSSt58ubre3nGhSUSsrDcPSkHv19Ziev5HNSTkogJ17anT4vAIplROmIIhLiwedf76OZd0UGZ0sN/Ew2OxN8KR00i1ZPIaVQowwp++1s+pY86fUnls6/1N4J062ScixjqHMov0qaGM/81bBX9k4aicSNF4N1cpucU7/toTTqsI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KdTwg6VM; arc=fail smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="QKf07+Zg"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55B9DMfv014218
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:31:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=s+mAy5hgpXrSdp6Ro8HHOn8e
-	lTPskdgVc2l8uVDrGHU=; b=QKf07+ZgJ7Zev/QfBj2zMDE2erG1rGQXiji15lKp
-	NqUySwecFM2keBf+DfzniBA978ADqSO5oqvIlL1YQQ6pZq4vCr0W6cAX8vR1aF7Z
-	h0JDiT5WvRo+LN6JgimY4/W4a5O8fDOUOkjHUfX4iyuTY2j/mrMa/wnRr2JbHYhH
-	r1CdySwEzRw8ZLw3dQokggfxpZgMOf25bseGrKhtTcuYVzwYIV57AYCvjj8xGsKY
-	JRdSoRwRH+DEqhBLOhR01a/+G6LTQFbineE4StJum08bamPmwhYL5pmkcsVf6IAC
-	+S63zj2H8nkWsbit4v7Te2W4/GX5JI4mkuKjRN4lVznvtg==
-Received: from mail-oi1-f199.google.com (mail-oi1-f199.google.com [209.85.167.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 476fmncvxc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:31:33 +0000 (GMT)
-Received: by mail-oi1-f199.google.com with SMTP id 5614622812f47-408da7cb857so1959067b6e.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:31:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749652292; x=1750257092;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=s+mAy5hgpXrSdp6Ro8HHOn8elTPskdgVc2l8uVDrGHU=;
-        b=YhQpG2reKeNMUgSJBUa6FB7/iTZJaNGkKKATjeD4cW16c0yEBwXV91Wb96dtEYavB9
-         gLm2HgxHRtzdKRIWcq2J7LKxa6soVeLziO4mh7mEtq92b5KLqMGT1sVlcKq+xJHhuDQE
-         rqCIT2TD31bQcyJnvsnjvFh0xb2RSar2q11JZc64sYq46snT41SGBYdxnp5Oao8aZnuA
-         AZae3rrNUHHPHRWwX5ooc7JGG0t8LLZcNSr0HyXH/3sZJYeoFZhrePyYqMM5REy+EB0d
-         wBXGdFnGgCIXo5pvztbW11Oex62y4LzlBXMLdRrVcuwfu/Yv1rJ5t0VMuAwpBGvjetpV
-         9U8g==
-X-Forwarded-Encrypted: i=1; AJvYcCU0iuhwzZnVdp0ZL/6fYXcFZxr1fqTJXYowrxMywxFkuEPsiMnn/tQ9DNHfko1uGj6+AaI9xJ/b8DjXpgI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRiQpiNplZwhwfZOpvVeD4WYYhYeN9kiGI8Af0iEynbjDEktgQ
-	ODD1DyCcMoJPTim9BsHX9OM7WIz7UXHbdwRmx1su9v4RKmvdMWcEq858Sp5ZxpbuWLR3asxfDEz
-	V5QWWmjZGCS4rwHZprCHG7b14lOBGHfU1w8TGdQzy9mLPNbTOdpf0XbdQxf+H8LdFPww=
-X-Gm-Gg: ASbGnctinDe8XnTLRt2lgvmER3HP3CEigi3zYiEb7dlkgE5PNWsk8gT//qSt21l9gYr
-	ECLRrv5MkOBlBEsbbSI6nLfOOS3YJVFKmrCUDSCxPJbV9nTbC0fEVxOrHdQyTiAtJZEmGjzPoa3
-	PdyFmFo+RWD1DR9bXLi1jp5JPDEFH+cvzPtVLVxsXrohbYomfo+HczbiNtTxectPCMAYp0G/PDL
-	HjJo0tjXVn/Vryj9oTdXRiJpGfTNowwvUDbWD//QPKC86PDvRe9BU1cHdPAUfk97FkKDHOrLTSf
-	2sScJIrNlO1iRGJdmDhdrTRp4qRITEyzPNhNXPLga3sdKLE9BfSPU/Gj28JWW/6TKlM1fMoL4oa
-	xSvfQwNUnfcUbHA6/VbZ4s4pXBZyFvHtAVJE=
-X-Received: by 2002:a05:6808:1a10:b0:406:6fd3:ff13 with SMTP id 5614622812f47-40a5d127d4amr2388271b6e.25.1749652291789;
-        Wed, 11 Jun 2025 07:31:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHBwhgMD2t1lWLdOJsLoYG9q83M3Y+HNlfbUhI7AgC+iOpcUhMkoJYWvVYmNFJCcuZ11LPMTg==
-X-Received: by 2002:a05:6808:1a10:b0:406:6fd3:ff13 with SMTP id 5614622812f47-40a5d127d4amr2388233b6e.25.1749652291300;
-        Wed, 11 Jun 2025 07:31:31 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5536773139csm1962595e87.208.2025.06.11.07.31.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 07:31:30 -0700 (PDT)
-Date: Wed, 11 Jun 2025 17:31:28 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Yongxing Mou <quic_yongmou@quicinc.com>
-Cc: Rob Clark <robin.clark@oss.qualcomm.com>,
-        Abhinav Kumar <abhinav.kumar@linux.dev>,
-        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>
-Subject: Re: [PATCH v2 29/38] drm/msm/dp: add connector abstraction for DP MST
-Message-ID: <njz3apifgcv2k3kzlmti5rjgqpl43v5yvjqpu6qhpe2kw3bzlu@pqvnrh6ff2um>
-References: <20250609-msm-dp-mst-v2-0-a54d8902a23d@quicinc.com>
- <20250609-msm-dp-mst-v2-29-a54d8902a23d@quicinc.com>
- <bmzte2ywtlygl4rru73efnfb4vpi3vkveeq32jhonrmxbogp5h@kqaukhzvcxx3>
- <2ab43ae7-12b6-4d41-9ffd-dbea70e2a662@quicinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KdTwg6VM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749652351; x=1781188351;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=etgpiaQI6N7Qw/lysgdFd9XVvTVGZ8yn6fKLUimzNy0=;
+  b=KdTwg6VMsEZYoPC7ZemNRBRNQspgFzQWWZmkTs8y71YsjGrsTAwj5FEV
+   7Ns+urelka38MGA5GWTQ5HNAbWMk6rh6eXgU1nIfxltv20cgXk5XdNbzh
+   +IYPSdH08jd6fENHtNSsJRyZhMllGed3a0Ifs2+e9/8+IKt4SK5dZbS3L
+   vl4U/lNEJGpiTkO9pQgJguowYhjpt67k80+2MOiskHzG03Z4l+TtUI3Km
+   bR7monNlngv6/UcMokao8D1Y0FNtfIzYjmbtEkvBYaJT+TVWMOdw2b7hX
+   c0lk0lTCFvQWANGqqn7PpSqlYb7NTKTl2gcvAEcfbQXMFjBl3ce1WMrra
+   Q==;
+X-CSE-ConnectionGUID: F40rkWQOT4GkX747Q29phg==
+X-CSE-MsgGUID: Z41p/tuLTRiwG9269i/Ikw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="62409364"
+X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
+   d="scan'208";a="62409364"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 07:32:29 -0700
+X-CSE-ConnectionGUID: 4mB8E5YGTNOIRCbyUdkHXg==
+X-CSE-MsgGUID: xKopCyxXRsmXE8gmDZf5zg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
+   d="scan'208";a="147095251"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 07:32:12 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 11 Jun 2025 07:32:11 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Wed, 11 Jun 2025 07:32:11 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (40.107.244.76)
+ by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 11 Jun 2025 07:32:10 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=eTSGZxg2VoliYQeODtaoyCrERmUIKM7NqeMI+uwVMZ55LqjPhzn3iyAUbEfHyxr7s++tam6iwSM9l+XOJumnrYapFUZkuucAwyCJd1sK4L7mJNwNEf+x4K8Zua1pjAp7mCq+ggx5Rc5FBK8y3x+LC8be0pqQsj9pZz/1N0fy0jzf7U+c5RpCHd+QIIpaTxda31F8TuEqVJrO0TFhfSA6vPoKdGDG50PauQx5KnfJG8u5oHKgTGbtFGK9HNBOl/9rey7KZiwsmhza/+ajADLPIFAKMtezzMD+3tidKV2c/fr67Hlk6m0mmbIMfkCLSu74ThzLWQmVeVfy3ahx5b89Ng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AdncaAFuMKMg/1OJK9BpBzkAjfkQaUdxXJ4waZnq0IA=;
+ b=PvFn0cwHTQojEO7p725xBlNE71HHdbD9WLy+7/pKjoha4wxwhab/SkWabLQoEYxZOMPis2EmH0xNkebIxpPop+IgjLIOcC3rw3KUzQHrl5ioZUFFOeB8oNuWXyvZ0MydVCECQ2nEeRcbFd0fmHlMg3+i241OxR2SuUB8+H4SzP0+yFdcm6nSIOiW0AGcGnBFfwVtmfrOf4bfMJ1svpH+wVsMgweW9mxPdvztefSuhdgPJU26H111g1G4cVb47No6T1rfqdtCSnDccVvSdJAKjH7ntHBkgiEU+ZzILviYCHB9TRElobiT61FIlacPAAdui8SpNzQ8q913tE3kKuzbDg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH3PPF9E162731D.namprd11.prod.outlook.com
+ (2603:10b6:518:1::d3c) by MW4PR11MB7125.namprd11.prod.outlook.com
+ (2603:10b6:303:219::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.31; Wed, 11 Jun
+ 2025 14:32:08 +0000
+Received: from PH3PPF9E162731D.namprd11.prod.outlook.com
+ ([fe80::19ef:ed1c:d30:468f]) by PH3PPF9E162731D.namprd11.prod.outlook.com
+ ([fe80::19ef:ed1c:d30:468f%4]) with mapi id 15.20.8835.018; Wed, 11 Jun 2025
+ 14:32:08 +0000
+Date: Wed, 11 Jun 2025 09:33:17 -0500
+From: Ira Weiny <ira.weiny@intel.com>
+To: Drew Fustini <drew@pdp7.com>, Rob Herring <robh@kernel.org>
+CC: Dan Williams <dan.j.williams@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+	<nvdimm@lists.linux.dev>, Oliver O'Halloran <oohall@gmail.com>, "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Conor Dooley
+	<conor.dooley@microchip.com>
+Subject: Re: [PATCH v3] dt-bindings: pmem: Convert binding to YAML
+Message-ID: <684993ad31c3_1e0a5129482@iweiny-mobl.notmuch>
+References: <20250606184405.359812-4-drew@pdp7.com>
+ <20250609133241.GA1855507-robh@kernel.org>
+ <aEh17S0VPqakdsEg@x1>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <aEh17S0VPqakdsEg@x1>
+X-ClientProxiedBy: MW4PR04CA0342.namprd04.prod.outlook.com
+ (2603:10b6:303:8a::17) To PH3PPF9E162731D.namprd11.prod.outlook.com
+ (2603:10b6:518:1::d3c)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2ab43ae7-12b6-4d41-9ffd-dbea70e2a662@quicinc.com>
-X-Proofpoint-ORIG-GUID: _PG8DdHBbITiJ5FWVIaSmams7YHOiee7
-X-Proofpoint-GUID: _PG8DdHBbITiJ5FWVIaSmams7YHOiee7
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjExMDEyMSBTYWx0ZWRfX1xgRp7mIFMdF
- sXIthz0nAtNuzULgVkOR8wR8+VMqZe80YDW30ikBm1lVj8CV/6oxVVdLY9Phf+rxSwPQAgi9Et2
- xTtxD9eWaymivXjneGOpFufBUB9gih+IADxxlAEnF92JJ+2hY2O72dyB6mXSkoeQd+i+dOybIBP
- xW0qvh32Giss/QlsBIwDPwl2xqCYqHZRNSdukBZn/PwW4B60JQujfcw8PV+LcaVsRH311N0HkcX
- TwEsdxIFGPGvo50TtiIV2lm4OkVLz2Psyr9S27whyHC/OtHbvbfiftsHfX3ZJSyDva1Jr58byHl
- NUgupkwv/rxgD8HAs5PXT5yHBG5HaY9Kad6mYYuuLk9fqVSg4BxozZpc+Y1LJPvL0a+2wX/Npmr
- fyE8XZQOhaOZcdN69HQXjoqMWv+ad4J54fenDYAwNWOW+hERPJygTI8/MOuMXFD4PAvPIMzS
-X-Authority-Analysis: v=2.4 cv=K8wiHzWI c=1 sm=1 tr=0 ts=68499345 cx=c_pps
- a=yymyAM/LQ7lj/HqAiIiKTw==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=TeuomRHYAdqe4Vjd-BQA:9 a=CjuIK1q_8ugA:10
- a=efpaJB4zofY2dbm2aIRb:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-11_05,2025-06-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 mlxscore=0 mlxlogscore=999 phishscore=0 lowpriorityscore=0
- malwarescore=0 adultscore=0 bulkscore=0 spamscore=0 impostorscore=0
- priorityscore=1501 suspectscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506110121
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH3PPF9E162731D:EE_|MW4PR11MB7125:EE_
+X-MS-Office365-Filtering-Correlation-Id: a5b6dd23-2572-41bd-3cb2-08dda8f4beb1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|13003099007|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?YsKGG/FGt/dTjebsxOPpjh66e8z1EELbl81xFa/OJlHZYiAQffZai0qNzCPR?=
+ =?us-ascii?Q?gONhzO+l8vzZqjE9ciKai4i5qYi5MKxSAYBnmEKOwxw/NuMLak0QUE1FGm8R?=
+ =?us-ascii?Q?5JPOQIoNUyKTaY2nLGWLP6b7jTSutob98JkbCsiNokKJO2dF6eWQpxI1HBBa?=
+ =?us-ascii?Q?BNP3NSeh0IFmA5jooZx3pZBBqOaO2ltrQd544A7gbXgB80cbER/oHpUV58dI?=
+ =?us-ascii?Q?y2W9EiHwEhEVCUgawDb5140D5vNGlK9n1cJxSx3NiyCEnhdfFduqJ2nmXPf5?=
+ =?us-ascii?Q?87MVTicVwpFSuY4U4Knh6hRkMOlibdlTkvLq7k6dyGSABRcmHIYInTtrOyKQ?=
+ =?us-ascii?Q?lrmFvVyzfF2fj2aeBPH5lafdOPS9LqpgFgo/tlZgRSJbo+QnqtMqVuD/tj7l?=
+ =?us-ascii?Q?aqjhYF15Hal2knOBKQlMalYM1gEpQ/3GpkJhZ0eqKN8XQedxwXSHaQ6bPjsG?=
+ =?us-ascii?Q?2y9f726bd156V3k5y2isk7WLam9aA7iFDZFl059G8O/Cx4T088CoXsQCMUmQ?=
+ =?us-ascii?Q?eNhqMeP+Ms3Txho0Xvd+MK5o+6lkHJJphrL9KHzMGoqHD4dHBXtJQC/xTwKJ?=
+ =?us-ascii?Q?braCBpdxESqRxpo5pG7RIPd0YsLYCXkr6lNQRYjty6UVAcf/wjuQSKVQwuaj?=
+ =?us-ascii?Q?vg7ls80+OIpKNF2uRsPLUxZeLkduJf97I3iIF44mCnnsih3rdOIXTl0ice9H?=
+ =?us-ascii?Q?T+X/TbplIOBHQHcnGdruX2fArWidRQlf8689bKJCiHBuuPg+xMDBFQFCzZBE?=
+ =?us-ascii?Q?sffcuxjz5DFbH7PfSO7KWOAXBNCPwfYcLXX3sfmShjDOBKlXPHAndieMgsMy?=
+ =?us-ascii?Q?6clfm2WPNeCE25mCfaiDSEKw6ch3A9vGbePwvdAI/uTaF7RYCMCwvAEYos+E?=
+ =?us-ascii?Q?0mnqmUYqZb/P9iICG5BLNB9WNNivpHKq0+8EAyx+iKralUCylSyK/K/NMe8m?=
+ =?us-ascii?Q?ky2HP9gBzN2FibZRtrcJvvJ9bcvklgWKN8n3PPXY8qPbadX5IGwL4yc6Bn+q?=
+ =?us-ascii?Q?W+4lhH2ageXjem59r2UTiprJQEpXUd3NEbR6k4Ubb0Sg6IVkENzkf6SB86L3?=
+ =?us-ascii?Q?MuIgJlt0en+yQDSz9JxCV7d2I+u0ZDQZIGlrlrlE2iqzXemU6yntWtVuvz8+?=
+ =?us-ascii?Q?CQ+NHrJBTGFznAWkQEiJVd+v786B0kcx/hy9rCcyAbxTbVUnfHVLQCgpn9Po?=
+ =?us-ascii?Q?IJm0sxS+Hg1+hnhfj7ekFg2TB9BuxyA5KKIwRJw7BVSYLyj7SeDFq5HbBR1f?=
+ =?us-ascii?Q?c38Hvdmeq8+G5tI2/f7IWfw07/VQYtCFkcpP4Xt3fbMJnU5oFXOKOTWeZhLC?=
+ =?us-ascii?Q?4f/amr9EkV5tm/Bpd3mBHF9AYTRSX4O5IxlcCfebKHr2tC66BSRxXYiEHdXB?=
+ =?us-ascii?Q?+DAsBK7QXAj1wgZ4HKqq/6iuKiTJ?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH3PPF9E162731D.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(13003099007)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?m+n2v83tfn49M8ZwbcHaS1Hr7Z97S5DGoC1evPXD5JvlYCT97keeWRh+C8so?=
+ =?us-ascii?Q?YiwnABd5u504kwgd3GTwVpQLtyCECzFAYiucfxgXYAv0urwq3PvNv6etx38C?=
+ =?us-ascii?Q?K8Frun4/aQIGxy7/KdvE1cUeN3prw2JV5GIq3+LNe2ygzJVewEV8QXEJH5oD?=
+ =?us-ascii?Q?Vn3Rx5uCaI7+wkC5ft3oFDrYsu/i3GQE1VHBaqoraW94HZ6jChg3OrZ9YyoG?=
+ =?us-ascii?Q?hjKXVjdUJ7DE6Q7TnRJsHLtpW0sjJT1O/ZsyeRIu+ooFizho0TInKLAXSSLj?=
+ =?us-ascii?Q?j1UIuxmibDnRCW3otjj6XbY7dgUfwooJdEaWDnTivfEwUxqZ4FRCg2suiazf?=
+ =?us-ascii?Q?otGuXRdt5lbbfyUxGG0DcNtrpsS0hFivBKC3LKg8z6giyJg08xjBRyMfntpH?=
+ =?us-ascii?Q?ZSD+UMp7zkZ+DfR2yY31UdfbNFJL+b8ArIqtuKqkuMKRK5H1nv2YRuq/gkQd?=
+ =?us-ascii?Q?ovNMXVItKp6cPTXxOs1oPsvefTZY3m75h0ucq3zzDMFknDDqBI2U+az2Odif?=
+ =?us-ascii?Q?P0AA5PKuX/o9hIcVgPz+Tf/A+yeEgqxe/k3+lnRIkciJH+Si4pBiOc+0APJr?=
+ =?us-ascii?Q?yC/kGYQTuEEHJbrYYplguvtaJJUSofHtFE6tVo3vqnjs9AkZr3CEOTPUQe8K?=
+ =?us-ascii?Q?r9zCPsku1HYrzTgxMnt5GwHEqaT0r6t2SNqb/gDbtoiVqMUiHKZg5yFYd2fb?=
+ =?us-ascii?Q?fN8PzHncwW/o+bTs5dhi+xqC2rqC7+of8bVr38PxQVF9rs1EEmqew2c6/gV7?=
+ =?us-ascii?Q?XfiAjbaRHRmiMMhIO+ZWZm2ILwpLBjPkdDZssztAgVM3vt00F/2EbeUkVrmW?=
+ =?us-ascii?Q?wmTkI8FfXf9eh/j1eFdezhWGeUPnRsXO7mVQFyD/U8fJtwBwQCVLU5oLd9d7?=
+ =?us-ascii?Q?J7k0VTJzjMNIOixPmCtw3kKevNAyXAL6TWf5a3JNniyq62NWAI96TBMEHzwh?=
+ =?us-ascii?Q?r6VW0NceexlQAXZwORCKWQZ6VjHfpkKfEIS5aZBmTOuPYwo/u1lNzsylQgz+?=
+ =?us-ascii?Q?WntL+OZJi/4vUneTpFNvckwwZajfYFVPvojsEucztYV8czeO5C2iTZRK+KOI?=
+ =?us-ascii?Q?VSrbMU55l4eQoF4t/6aVpjxAa1X6WOiNnNlHHtCZ/qQE0PIN9tKiPm4qaAdJ?=
+ =?us-ascii?Q?25hfF4I/KKJuKGV1KHNnnZqtFLC1001IewUKyeBGp8lP2qnQHZ8ZSxJOEZjh?=
+ =?us-ascii?Q?VEN4ENlLVCvpiMk867DLhdTdq4EY9neUIx65A2Hc/TkHO8/TN3P5/dbPLCnH?=
+ =?us-ascii?Q?LZTCmXxa+TZ/ey6P+Tz7wTtj1Oo+Lhm6MFox+IN4zAlEJ4IwdzBOmtOYbdp7?=
+ =?us-ascii?Q?PAgSGPgZTTSiaV15JftqR/CN637w9m01NTjccsLAhf+/7NLZBfHx9f7SZVNa?=
+ =?us-ascii?Q?yTrpDsGZrDyGcZesQJFBWBpRH1bq/Ar9SjaVy0+ss2cyCLh1roG2nSuaoED0?=
+ =?us-ascii?Q?CO+35v39oVptGINciAmw4wDej4vLmiE2Bp4+Fn9eizn67724n4lhj4npxVAz?=
+ =?us-ascii?Q?8PlbB5DaERAbtrrQYoJkn72mgSdB+t8aQNLQuM8w2T1TeWMKD8l2/d5ve7Aa?=
+ =?us-ascii?Q?g0hbV5uFsahvMf4zIdHqyabZDFmS6S2daKXXSVY7?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: a5b6dd23-2572-41bd-3cb2-08dda8f4beb1
+X-MS-Exchange-CrossTenant-AuthSource: PH3PPF9E162731D.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2025 14:32:08.2705
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6vSTKb5Dv4fVomq81wcj+JNFrq/b1gFywP43f0TMEiT8Onn/LKk7mSRmFWKvumT+Cl1g5Ava75QlojZaZjVkxA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB7125
+X-OriginatorOrg: intel.com
 
-On Wed, Jun 11, 2025 at 08:06:28PM +0800, Yongxing Mou wrote:
-> 
-> 
-> On 2025/6/9 23:44, Dmitry Baryshkov wrote:
-> > On Mon, Jun 09, 2025 at 08:21:48PM +0800, Yongxing Mou wrote:
-> > > From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Drew Fustini wrote:
+> On Mon, Jun 09, 2025 at 08:32:41AM -0500, Rob Herring wrote:
+> > On Fri, Jun 06, 2025 at 11:11:17AM -0700, Drew Fustini wrote:
+> > > Convert the PMEM device tree binding from text to YAML. This will allow
+> > > device trees with pmem-region nodes to pass dtbs_check.
 > > > 
-> > > Add connector abstraction for the DP MST. Each MST encoder
-> > > is connected through a DRM bridge to a MST connector and each
-> > > MST connector has a DP panel abstraction attached to it.
-> > > 
-> > > Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
-> > > Signed-off-by: Yongxing Mou <quic_yongmou@quicinc.com>
+> > > Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> > > Acked-by: Oliver O'Halloran <oohall@gmail.com>
+> > > Signed-off-by: Drew Fustini <drew@pdp7.com>
 > > > ---
-> > >   drivers/gpu/drm/msm/dp/dp_mst_drm.c | 515 ++++++++++++++++++++++++++++++++++++
-> > >   drivers/gpu/drm/msm/dp/dp_mst_drm.h |   3 +
-> > >   2 files changed, 518 insertions(+)
-> > 
-> > It generally feels liks 80% of this patch is a generic code. Please
-> > extract generic DP MST connector and push it under drm/display. Other DP
-> > MST drivers should be able to use it.
-> > 
+> > > Dan/Dave/Vishal: does it make sense for this pmem binding patch to go
+> > > through the nvdimm tree?
 > > > 
-> > > diff --git a/drivers/gpu/drm/msm/dp/dp_mst_drm.c b/drivers/gpu/drm/msm/dp/dp_mst_drm.c
-> > > index a3ea34ae63511db0ac920cbeebe30c4e2320b8c4..489fa46aa518ff1cc5f4769b2153fc5153c4cb41 100644
-> > > --- a/drivers/gpu/drm/msm/dp/dp_mst_drm.c
-> > > +++ b/drivers/gpu/drm/msm/dp/dp_mst_drm.c
-> > > @@ -25,8 +25,12 @@
-> > >    * OF THIS SOFTWARE.
-> > >    */
-> > > +#include <drm/drm_edid.h>
-> > > +#include <drm/drm_managed.h>
-> > >   #include "dp_mst_drm.h"
-> > > +#define MAX_DPCD_TRANSACTION_BYTES 16
+> > > Note: checkpatch complains about "DT binding docs and includes should
+> > > be a separate patch". Rob told me that this a false positive. I'm hoping
+> > > that I can fix the false positive at some point if I can remember enough
+> > > perl :)
+> > > 
+> > > v3:
+> > >  - no functional changes
+> > >  - add Oliver's Acked-by
+> > >  - bump version to avoid duplicate message-id mess in v2 and v2 resend:
+> > >    https://lore.kernel.org/all/20250520021440.24324-1-drew@pdp7.com/
+> > > 
+> > > v2 resend:
+> > >  - actually put v2 in the Subject
+> > >  - add Conor's Acked-by
+> > >    - https://lore.kernel.org/all/20250520-refract-fling-d064e11ddbdf@spud/
+> > > 
+> > > v2:
+> > >  - remove the txt file to make the conversion complete
+> > >  - https://lore.kernel.org/all/20250520021440.24324-1-drew@pdp7.com/
+> > > 
+> > > v1:
+> > >  - https://lore.kernel.org/all/20250518035539.7961-1-drew@pdp7.com/
+> > > 
+> > >  .../devicetree/bindings/pmem/pmem-region.txt  | 65 -------------------
+> > >  .../devicetree/bindings/pmem/pmem-region.yaml | 49 ++++++++++++++
+> > >  MAINTAINERS                                   |  2 +-
+> > >  3 files changed, 50 insertions(+), 66 deletions(-)
+> > >  delete mode 100644 Documentation/devicetree/bindings/pmem/pmem-region.txt
+> > >  create mode 100644 Documentation/devicetree/bindings/pmem/pmem-region.yaml
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/pmem/pmem-region.txt b/Documentation/devicetree/bindings/pmem/pmem-region.txt
+> > > deleted file mode 100644
+> > > index cd79975e85ec..000000000000
+> > > --- a/Documentation/devicetree/bindings/pmem/pmem-region.txt
+> > > +++ /dev/null
+> > > @@ -1,65 +0,0 @@
+> > > -Device-tree bindings for persistent memory regions
+> > > ------------------------------------------------------
+> > > -
+> > > -Persistent memory refers to a class of memory devices that are:
+> > > -
+> > > -	a) Usable as main system memory (i.e. cacheable), and
+> > > -	b) Retain their contents across power failure.
+> > > -
+> > > -Given b) it is best to think of persistent memory as a kind of memory mapped
+> > > -storage device. To ensure data integrity the operating system needs to manage
+> > > -persistent regions separately to the normal memory pool. To aid with that this
+> > > -binding provides a standardised interface for discovering where persistent
+> > > -memory regions exist inside the physical address space.
+> > > -
+> > > -Bindings for the region nodes:
+> > > ------------------------------
+> > > -
+> > > -Required properties:
+> > > -	- compatible = "pmem-region"
+> > > -
+> > > -	- reg = <base, size>;
+> > > -		The reg property should specify an address range that is
+> > > -		translatable to a system physical address range. This address
+> > > -		range should be mappable as normal system memory would be
+> > > -		(i.e cacheable).
+> > > -
+> > > -		If the reg property contains multiple address ranges
+> > > -		each address range will be treated as though it was specified
+> > > -		in a separate device node. Having multiple address ranges in a
+> > > -		node implies no special relationship between the two ranges.
+> > > -
+> > > -Optional properties:
+> > > -	- Any relevant NUMA associativity properties for the target platform.
+> > > -
+> > > -	- volatile; This property indicates that this region is actually
+> > > -	  backed by non-persistent memory. This lets the OS know that it
+> > > -	  may skip the cache flushes required to ensure data is made
+> > > -	  persistent after a write.
+> > > -
+> > > -	  If this property is absent then the OS must assume that the region
+> > > -	  is backed by non-volatile memory.
+> > > -
+> > > -Examples:
+> > > ---------------------
+> > > -
+> > > -	/*
+> > > -	 * This node specifies one 4KB region spanning from
+> > > -	 * 0x5000 to 0x5fff that is backed by non-volatile memory.
+> > > -	 */
+> > > -	pmem@5000 {
+> > > -		compatible = "pmem-region";
+> > > -		reg = <0x00005000 0x00001000>;
+> > > -	};
+> > > -
+> > > -	/*
+> > > -	 * This node specifies two 4KB regions that are backed by
+> > > -	 * volatile (normal) memory.
+> > > -	 */
+> > > -	pmem@6000 {
+> > > -		compatible = "pmem-region";
+> > > -		reg = < 0x00006000 0x00001000
+> > > -			0x00008000 0x00001000 >;
+> > > -		volatile;
+> > > -	};
+> > > -
+> > > diff --git a/Documentation/devicetree/bindings/pmem/pmem-region.yaml b/Documentation/devicetree/bindings/pmem/pmem-region.yaml
+> > > new file mode 100644
+> > > index 000000000000..a4aa4ce3318b
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/pmem/pmem-region.yaml
+> > > @@ -0,0 +1,49 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/pmem-region.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > > > +
-> > >   static struct drm_private_state *msm_dp_mst_duplicate_bridge_state(struct drm_private_obj *obj)
-> > >   {
-> > >   	struct msm_dp_mst_bridge_state *state;
-> > > @@ -79,6 +83,61 @@ static int msm_dp_mst_find_vcpi_slots(struct drm_dp_mst_topology_mgr *mgr, int p
-> > >   	return num_slots;
-> > >   }
-> > > +static int msm_dp_mst_get_mst_pbn_div(struct msm_dp_panel *msm_dp_panel)
-> > > +{
-> > > +	struct msm_dp_link_info *link_info;
-> > > +
-> > > +	link_info = &msm_dp_panel->link_info;
-> > > +
-> > > +	return link_info->rate * link_info->num_lanes / 54000;
-> > > +}
-> > > +
-> > > +static int msm_dp_mst_compute_config(struct drm_atomic_state *state,
-> > > +				      struct msm_dp_mst *mst, struct drm_connector *connector,
-> > > +				      struct drm_display_mode *mode)
-> > > +{
-> > > +	int slots = 0, pbn;
-> > > +	struct msm_dp_mst_connector *mst_conn = to_msm_dp_mst_connector(connector);
-> > > +	int rc = 0;
-> > > +	struct drm_dp_mst_topology_state *mst_state;
-> > > +	int pbn_div;
-> > > +	struct msm_dp *dp_display = mst->msm_dp;
-> > > +	u32 bpp;
-> > > +
-> > > +	bpp = connector->display_info.bpc * 3;
-> > > +
-> > > +	pbn = drm_dp_calc_pbn_mode(mode->clock, bpp << 4);
+> > > +maintainers:
+> > > +  - Bjorn Helgaas <bhelgaas@google.com>
 > > 
-> > Is this going to change if DSC is in place? Will it bring fractional BPP
-> > here?
+> > Drop Bjorn. He only did typo fixes on this.
 > > 
-> Actually, in this patch series, MST not support DSC. So we just don't
-> consider this scenario.
-
-But you still can answer the question.
-
-
-[...]
-
+> > > +  - Oliver O'Halloran <oohall@gmail.com>
 > > > +
-> > > +	return msm_dp_display_mode_valid(dp_display, &dp_display->connector->display_info, mode);
-> > > +}
+> > > +title: Persistent Memory Regions
 > > > +
-> > > +static struct drm_encoder *
-> > > +msm_dp_mst_atomic_best_encoder(struct drm_connector *connector, struct drm_atomic_state *state)
+> > > +description: |
+> > > +  Persistent memory refers to a class of memory devices that are:
+> > > +
+> > > +    a) Usable as main system memory (i.e. cacheable), and
+> > > +    b) Retain their contents across power failure.
+> > > +
+> > > +  Given b) it is best to think of persistent memory as a kind of memory mapped
+> > > +  storage device. To ensure data integrity the operating system needs to manage
+> > > +  persistent regions separately to the normal memory pool. To aid with that this
+> > > +  binding provides a standardised interface for discovering where persistent
+> > > +  memory regions exist inside the physical address space.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: pmem-region
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  volatile:
+> > > +    description: |
 > > 
-> > Do we need this callback? Don't we have a fixed relationship between
-> > connectors and encoders?
+> > Don't need '|' here.
+> 
+> Rob - Thanks for the feedback. Should I send a new revision with these
+> two changes?
 
-This was left unanswered.
+I can do a clean up as I have not sent to Linus yet.
 
-> > 
-> > > +{
-> > > +	struct msm_dp_mst_connector *mst_conn = to_msm_dp_mst_connector(connector);
-> > > +	struct msm_dp *dp_display = mst_conn->msm_dp;
-> > > +	struct msm_dp_mst *mst = dp_display->msm_dp_mst;
-> > > +	struct drm_encoder *enc = NULL;
-> > > +	struct msm_dp_mst_bridge_state *bridge_state;
-> > > +	u32 i;
-> > > +	struct drm_connector_state *conn_state = drm_atomic_get_new_connector_state(state,
-> > > +										    connector);
-> > > +
-> > 
+Here are the changes if you approve I'll change it and push to linux-next.
 
-[...]
+Ira
 
-> > > +	if (drm_atomic_crtc_needs_modeset(crtc_state)) {
-> > > +		if (WARN_ON(!old_conn_state->best_encoder)) {
-> > > +			rc = -EINVAL;
-> > > +			goto end;
-> > > +		}
-> > > +
-> > > +		drm_bridge = drm_bridge_chain_get_first_bridge(old_conn_state->best_encoder);
-> > 
-> > This really looks like this should be a bridge's callback.
-
-And this one
-
-> > 
-> > > +		if (WARN_ON(!drm_bridge)) {
-> > > +			rc = -EINVAL;
-> > > +			goto end;
-> > > +		}
-> > > +		bridge = to_msm_dp_mst_bridge(drm_bridge);
-> > > +
-> > > +		bridge_state = msm_dp_mst_br_priv_state(state, bridge);
-> > > +		if (IS_ERR(bridge_state)) {
-> > > +			rc = PTR_ERR(bridge_state);
-> > > +			goto end;
-> > > +		}
-> > > +
-> > > +		if (WARN_ON(bridge_state->connector != connector)) {
-> > > +			rc = -EINVAL;
-> > > +			goto end;
-> > > +		}
-> > > +
-> > > +		slots = bridge_state->num_slots;
-> > > +		if (slots > 0) {
-> > > +			rc = drm_dp_atomic_release_time_slots(state,
-> > > +							      &mst->mst_mgr,
-> > > +							      mst_conn->mst_port);
-> > > +			if (rc) {
-> > > +				DRM_ERROR("failed releasing %d vcpi slots %d\n", slots, rc);
-> > > +				goto end;
-> > > +			}
-> > > +			vcpi_released = true;
-> > > +		}
-> > > +
-> > > +		if (!new_conn_state->crtc) {
-> > > +			/* for cases where crtc is not disabled the slots are not
-> > > +			 * freed by drm_dp_atomic_release_time_slots. this results
-> > > +			 * in subsequent atomic_check failing since internal slots
-> > > +			 * were freed but not the dp mst mgr's
-> > > +			 */
-> > > +			bridge_state->num_slots = 0;
-> > > +			bridge_state->connector = NULL;
-> > > +			bridge_state->msm_dp_panel = NULL;
-> > > +
-> > > +			drm_dbg_dp(dp_display->drm_dev, "clear best encoder: %d\n", bridge->id);
-> > > +		}
-> > > +	}
-> > 
-> > This looks like there are several functions fused together. Please
-> > unfuse those into small and neat code blocks.
-
-And this :-D
-
-> > 
-> > > +
-> > > +mode_set:
-> > > +	if (!new_conn_state->crtc)
-> > > +		goto end;
-> > > +
-> > > +	crtc_state = drm_atomic_get_new_crtc_state(state, new_conn_state->crtc);
-> > > +
-> > > +	if (drm_atomic_crtc_needs_modeset(crtc_state) && crtc_state->active) {
-> > 
-> > Use of crtc_state->active doesn't look correct.
-
-
-...
-
-> > 
-> > > +		if (WARN_ON(!new_conn_state->best_encoder)) {
-> > > +			rc = -EINVAL;
-> > > +			goto end;
-> > > +		}
-> > > +
-> > > +		drm_bridge = drm_bridge_chain_get_first_bridge(new_conn_state->best_encoder);
-> > > +		if (WARN_ON(!drm_bridge)) {
-> > > +			rc = -EINVAL;
-> > > +			goto end;
-> > > +		}
-> > > +		bridge = to_msm_dp_mst_bridge(drm_bridge);
-> > > +
-> > > +		bridge_state = msm_dp_mst_br_priv_state(state, bridge);
-> > > +		if (IS_ERR(bridge_state)) {
-> > > +			rc = PTR_ERR(bridge_state);
-> > > +			goto end;
-> > > +		}
-> > > +
-> > > +		if (WARN_ON(bridge_state->connector != connector)) {
-> > > +			rc = -EINVAL;
-> > > +			goto end;
-> > > +		}
-> > 
-> > Can all of this actually happen?
-
-...
-
-> > 
-> > > +
-> > > +		/*
-> > > +		 * check if vcpi slots are trying to get allocated in same phase
-> > > +		 * as deallocation. If so, go to end to avoid allocation.
-> > > +		 */
-> > > +		if (vcpi_released) {
-> > > +			drm_dbg_dp(dp_display->drm_dev,
-> > > +				   "skipping allocation since vcpi was released in the same state\n");
-> > > +			goto end;
-> > > +		}
-> > > +
-> > > +		if (WARN_ON(bridge_state->num_slots)) {
-> > > +			rc = -EINVAL;
-> > > +			goto end;
-> > > +		}
-> > > +
-> > > +		slots = msm_dp_mst_compute_config(state, mst, connector, &crtc_state->mode);
-> > > +		if (slots < 0) {
-> > > +			rc = slots;
-> > > +			goto end;
-> > > +		}
-> > > +
-> > > +		bridge_state->num_slots = slots;
-> > > +	}
-> > > +
-> > > +end:
-> > > +	drm_dbg_dp(dp_display->drm_dev, "mst connector:%d atomic check ret %d\n",
-> > > +		   connector->base.id, rc);
-> > > +	return rc;
-> > > +}
-> > > +
-> > > +static void dp_mst_connector_destroy(struct drm_connector *connector)
-> > > +{
-> > > +	struct msm_dp_mst_connector *mst_conn = to_msm_dp_mst_connector(connector);
-> > > +
-> > > +	drm_connector_cleanup(connector);
-> > > +	drm_dp_mst_put_port_malloc(mst_conn->mst_port);
-> > > +}
-> > > +
-> > > +/* DRM MST callbacks */
-> > > +static const struct drm_connector_helper_funcs msm_dp_drm_mst_connector_helper_funcs = {
-> > > +	.get_modes =    msm_dp_mst_connector_get_modes,
-> > > +	.detect_ctx =   msm_dp_mst_connector_detect,
-> > > +	.mode_valid =   msm_dp_mst_connector_mode_valid,
-> > > +	.atomic_best_encoder = msm_dp_mst_atomic_best_encoder,
-> > > +	.atomic_check = msm_dp_mst_connector_atomic_check,
-> > > +};
-> > > +
-> > > +static const struct drm_connector_funcs msm_dp_drm_mst_connector_funcs = {
-> > > +	.reset = drm_atomic_helper_connector_reset,
-> > > +	.destroy = dp_mst_connector_destroy,
-> > > +	.fill_modes = drm_helper_probe_single_connector_modes,
-> > > +	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
-> > > +	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
-> > > +};
-> > > +
-> > > +static struct drm_connector *
-> > > +msm_dp_mst_add_connector(struct drm_dp_mst_topology_mgr *mgr,
-> > > +			 struct drm_dp_mst_port *port, const char *pathprop)
-> > > +{
-> > > +	struct msm_dp_mst *dp_mst;
-> > > +	struct drm_device *dev;
-> > > +	struct msm_dp *dp_display;
-> > > +	struct msm_dp_mst_connector *mst_connector;
-> > > +	struct drm_connector *connector;
-> > > +	int rc, i;
-> > > +
-> > > +	dp_mst = container_of(mgr, struct msm_dp_mst, mst_mgr);
-> > > +
-> > > +	dp_display = dp_mst->msm_dp;
-> > > +	dev = dp_display->drm_dev;
-> > > +
-> > > +	mst_connector = devm_kzalloc(dev->dev, sizeof(*mst_connector), GFP_KERNEL);
-> > 
-> > This shows that somebody doesn't understand the reason for drmm and the
-> > difference between devm and drmm and the lifetime of the objects. Do you
-> > see two issues in this line?
-> > 
-> > Let me help you. Please use normal (non-managed) memory here. It is the
-> > only correct way to allocate memory for MST connectors.
-> > 
-> Thanks for point it.. it will lead to mem leak.. so we need to use
-> kzalloc()...
-
-- Did you understand why devm is unsuitable here?
-- Why drmm is also unsutable?
-- What is the implication of using kzalloc() here?
-
-> > > +
-> > > +	drm_modeset_lock_all(dev);
-> > > +
-> > > +	rc = drm_connector_dynamic_init(dev, &mst_connector->connector,
-> > > +					&msm_dp_drm_mst_connector_funcs,
-> > > +					DRM_MODE_CONNECTOR_DisplayPort, NULL);
-> > > +	if (rc) {
-> > > +		drm_modeset_unlock_all(dev);
-> > > +		return NULL;
-> > > +	}
-> > > +
-> > > +	mst_connector->dp_panel = msm_dp_display_get_panel(dp_display);
-> > > +	if (!mst_connector->dp_panel) {
-> > > +		DRM_ERROR("failed to get dp_panel for connector\n");
-> > > +		drm_modeset_unlock_all(dev);
-> > > +		return NULL;
-> > > +	}
-> > > +
-> > > +	mst_connector->dp_panel->connector = &mst_connector->connector;
-> > > +	mst_connector->msm_dp = dp_display;
-> > > +	connector = &mst_connector->connector;
-> > > +	drm_connector_helper_add(&mst_connector->connector, &msm_dp_drm_mst_connector_helper_funcs);
-> > > +
-> > > +	if (connector->funcs->reset)
-> > > +		connector->funcs->reset(connector);
-> > > +
-> > > +	/* add all encoders as possible encoders */
-> > > +	for (i = 0; i < dp_mst->max_streams; i++) {
-> > > +		rc = drm_connector_attach_encoder(&mst_connector->connector,
-> > > +						  dp_mst->mst_bridge[i].encoder);
-> > > +		if (rc) {
-> > > +			DRM_ERROR("failed to attach encoder to connector, %d\n", rc);
-> > > +			drm_modeset_unlock_all(dev);
-> > > +			return NULL;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	mst_connector->mst_port = port;
-> > > +	drm_dp_mst_get_port_malloc(mst_connector->mst_port);
-> > > +
-> > > +	drm_object_attach_property(&mst_connector->connector.base,
-> > > +				   dev->mode_config.path_property, 0);
-> > > +	drm_object_attach_property(&mst_connector->connector.base,
-> > > +				   dev->mode_config.tile_property, 0);
-> > 
-> > subconnector? Or do we report the subconnector only for the main DP
-> > port?
-
-
-...
-
-> > 
-> > > +
-> > > +	drm_modeset_unlock_all(dev);
-> > > +
--- 
-With best wishes
-Dmitry
+diff --git a/Documentation/devicetree/bindings/pmem/pmem-region.yaml b/Documentation/devicetree/bindings/pmem/pmem-region.yaml
+index a4aa4ce3318b..bd0f0c793f03 100644
+--- a/Documentation/devicetree/bindings/pmem/pmem-region.yaml
++++ b/Documentation/devicetree/bindings/pmem/pmem-region.yaml
+@@ -5,7 +5,6 @@ $id: http://devicetree.org/schemas/pmem-region.yaml#
+ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ 
+ maintainers:
+-  - Bjorn Helgaas <bhelgaas@google.com>
+   - Oliver O'Halloran <oohall@gmail.com>
+ 
+ title: Persistent Memory Regions
+@@ -30,7 +29,7 @@ properties:
+     maxItems: 1
+ 
+   volatile:
+-    description: |
++    description:
+       Indicates the region is volatile (non-persistent) and the OS can skip
+       cache flushes for writes
+     type: boolean
