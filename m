@@ -1,364 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B972126E703;
-	Wed, 11 Jun 2025 14:32:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749652352; cv=fail; b=mJ0lJFeBCgZLE/+vv+mqOzNCAbmfk+u0T7XgRf4sDy1jSZyaWsuRhGPaJfj+Ws8/BtdMPyhFaGdbp4EsP0unQZngpd1MEbDQKcmVUxp1fl0jqX+r+O0hQtsSMCthOQ/1rmg5G+QVxDOFbc9RL1HBo4E1nPdjKzVwxjf1ihX/QO4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749652352; c=relaxed/simple;
-	bh=etgpiaQI6N7Qw/lysgdFd9XVvTVGZ8yn6fKLUimzNy0=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=FtSSt58ubre3nGhSUSsrDcPSkHv19Ziev5HNSTkogJ17anT4vAIplROmIIhLiwedf76OZd0UGZ0sN/Ew2OxN8KR00i1ZPIaVQowwp++1s+pY86fUnls6/1N4J062ScixjqHMov0qaGM/81bBX9k4aicSNF4N1cpucU7/toTTqsI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KdTwg6VM; arc=fail smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7526A26E703
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:32:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749652364; cv=none; b=oPjZZwsKjswVvNgKx8sUxCxXfhWIUQ2YrkPZy071i3CakzZfQ0e9wF+SrUntOThcDC5N6mCxtescul6cXJbDIBQ5sU2MAHhGA1r60G0VIWrPm7uHEJ4KY3Dyv0J5eQdmBquSpXdbgNiuOmgKcRiJcvXDJ6ZSAxy9kp3Abkdu+g8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749652364; c=relaxed/simple;
+	bh=LIJKwYSQIfaGc2pHLi1K+zxTkENHkvAhCuTT19zf1Cg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TAdG+Zn7YghYIzsPuySBxXat8fb16yG0hZi7NegyeZtwPmSPdG05pM4iu0nzoZR1kpYqwaE44RzlBD/enijxZCDBL1psyxBEhRvfH2Tz5vcA73TWVPVYWKggpde//gvvk6nbRNksXtpbPLszv9caFmcRw0SD/2n9jWMYZxfUzmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=tUgAHisK; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KdTwg6VM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749652351; x=1781188351;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=etgpiaQI6N7Qw/lysgdFd9XVvTVGZ8yn6fKLUimzNy0=;
-  b=KdTwg6VMsEZYoPC7ZemNRBRNQspgFzQWWZmkTs8y71YsjGrsTAwj5FEV
-   7Ns+urelka38MGA5GWTQ5HNAbWMk6rh6eXgU1nIfxltv20cgXk5XdNbzh
-   +IYPSdH08jd6fENHtNSsJRyZhMllGed3a0Ifs2+e9/8+IKt4SK5dZbS3L
-   vl4U/lNEJGpiTkO9pQgJguowYhjpt67k80+2MOiskHzG03Z4l+TtUI3Km
-   bR7monNlngv6/UcMokao8D1Y0FNtfIzYjmbtEkvBYaJT+TVWMOdw2b7hX
-   c0lk0lTCFvQWANGqqn7PpSqlYb7NTKTl2gcvAEcfbQXMFjBl3ce1WMrra
-   Q==;
-X-CSE-ConnectionGUID: F40rkWQOT4GkX747Q29phg==
-X-CSE-MsgGUID: Z41p/tuLTRiwG9269i/Ikw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="62409364"
-X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
-   d="scan'208";a="62409364"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 07:32:29 -0700
-X-CSE-ConnectionGUID: 4mB8E5YGTNOIRCbyUdkHXg==
-X-CSE-MsgGUID: xKopCyxXRsmXE8gmDZf5zg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
-   d="scan'208";a="147095251"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 07:32:12 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 11 Jun 2025 07:32:11 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Wed, 11 Jun 2025 07:32:11 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (40.107.244.76)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 11 Jun 2025 07:32:10 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=eTSGZxg2VoliYQeODtaoyCrERmUIKM7NqeMI+uwVMZ55LqjPhzn3iyAUbEfHyxr7s++tam6iwSM9l+XOJumnrYapFUZkuucAwyCJd1sK4L7mJNwNEf+x4K8Zua1pjAp7mCq+ggx5Rc5FBK8y3x+LC8be0pqQsj9pZz/1N0fy0jzf7U+c5RpCHd+QIIpaTxda31F8TuEqVJrO0TFhfSA6vPoKdGDG50PauQx5KnfJG8u5oHKgTGbtFGK9HNBOl/9rey7KZiwsmhza/+ajADLPIFAKMtezzMD+3tidKV2c/fr67Hlk6m0mmbIMfkCLSu74ThzLWQmVeVfy3ahx5b89Ng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AdncaAFuMKMg/1OJK9BpBzkAjfkQaUdxXJ4waZnq0IA=;
- b=PvFn0cwHTQojEO7p725xBlNE71HHdbD9WLy+7/pKjoha4wxwhab/SkWabLQoEYxZOMPis2EmH0xNkebIxpPop+IgjLIOcC3rw3KUzQHrl5ioZUFFOeB8oNuWXyvZ0MydVCECQ2nEeRcbFd0fmHlMg3+i241OxR2SuUB8+H4SzP0+yFdcm6nSIOiW0AGcGnBFfwVtmfrOf4bfMJ1svpH+wVsMgweW9mxPdvztefSuhdgPJU26H111g1G4cVb47No6T1rfqdtCSnDccVvSdJAKjH7ntHBkgiEU+ZzILviYCHB9TRElobiT61FIlacPAAdui8SpNzQ8q913tE3kKuzbDg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH3PPF9E162731D.namprd11.prod.outlook.com
- (2603:10b6:518:1::d3c) by MW4PR11MB7125.namprd11.prod.outlook.com
- (2603:10b6:303:219::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.31; Wed, 11 Jun
- 2025 14:32:08 +0000
-Received: from PH3PPF9E162731D.namprd11.prod.outlook.com
- ([fe80::19ef:ed1c:d30:468f]) by PH3PPF9E162731D.namprd11.prod.outlook.com
- ([fe80::19ef:ed1c:d30:468f%4]) with mapi id 15.20.8835.018; Wed, 11 Jun 2025
- 14:32:08 +0000
-Date: Wed, 11 Jun 2025 09:33:17 -0500
-From: Ira Weiny <ira.weiny@intel.com>
-To: Drew Fustini <drew@pdp7.com>, Rob Herring <robh@kernel.org>
-CC: Dan Williams <dan.j.williams@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
-	<nvdimm@lists.linux.dev>, Oliver O'Halloran <oohall@gmail.com>, "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Conor Dooley
-	<conor.dooley@microchip.com>
-Subject: Re: [PATCH v3] dt-bindings: pmem: Convert binding to YAML
-Message-ID: <684993ad31c3_1e0a5129482@iweiny-mobl.notmuch>
-References: <20250606184405.359812-4-drew@pdp7.com>
- <20250609133241.GA1855507-robh@kernel.org>
- <aEh17S0VPqakdsEg@x1>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <aEh17S0VPqakdsEg@x1>
-X-ClientProxiedBy: MW4PR04CA0342.namprd04.prod.outlook.com
- (2603:10b6:303:8a::17) To PH3PPF9E162731D.namprd11.prod.outlook.com
- (2603:10b6:518:1::d3c)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="tUgAHisK"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ade48b24c97so656698266b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:32:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1749652360; x=1750257160; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=60kjyrVoPLH2Ifa+97Mi20o2GvNQ5P+ZX0EZmjkoYqM=;
+        b=tUgAHisKiRkEnrM13+qfPjcfwWKF7MghM4GgRFvbWUnqysEyk6XZcs0AkDABqKPpGU
+         V/Ccpsi99HacuKGKeBGHEs6VaeKhX0+jDSyJ2MhSVa6hJLbssEXsbOXSaPYgu4tQijWT
+         NXzbTPWPoeEoYTY62p7dvsWuGvI3VJuZLkgngKii8zR2Y8Qbb0qvI6Bb6+vtR+ePQdjl
+         BNmhPAuaKoxbm8/ceJ0tWiYD6T6J6xrMyoz/iR5w08zEjyjrD6bivZshFmzxuvREYIOQ
+         PJWbrID9ZnZtCSIV/wleNEufIvaeWaSUEKENLopO/UDUj7hZjgxCuqvGkiyICgnUCSv9
+         XmSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749652360; x=1750257160;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=60kjyrVoPLH2Ifa+97Mi20o2GvNQ5P+ZX0EZmjkoYqM=;
+        b=eCVoEOdMzonvGMi9G+V77hlcfZhnU6bC3UNSAHFSLg7NSMW6sV5dtBTHooGZRRmzHK
+         Qv+NV8b8JVuPpINkmWVFQRZTaF/22em6DYaOpu1hjhGjVjSTFzE6mp/el07uHd9wz4vf
+         ePOz5vwF1p0LEgchnHSq3GAE2TJUVkTJ5bCFRMus0ehD6FVbVeAO1atihf7YGZSn8YNu
+         Pet2Pc/G4lB5xnTaDfn+bMJdd5vs+Jc+Paib5zK5lWNYLVzq+pSdb1cgq2uLC7X5+UUJ
+         II8jyxsmQA+QnoV1+UdmrQ4veD90Z0+t/H4O4DagmpJmkBSG6p0PoXqEjTNHpxTMGscD
+         HXKw==
+X-Forwarded-Encrypted: i=1; AJvYcCWmcauwhKkc9L0ZlvI670aiHTO2jwWaxtcLueAvKsEMmTKqNknJrDuaFFqqCmDUq58EsihJeBP5IOlA10w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBlEVswXEsisjCRkEX057Hw2zCd/Qd1SOzIYhs7IgGb3jvkP3H
+	Mizb5bEYC/IDRXl7UKmHtJVR/H18V/hGovQuKmW0xWL9LiQR3dHCWZLeRn3VutGMzXknewjkOnh
+	iVAfuvZWUcZ+wMl1rX9mKBkSCZN+3Oi6Ex/wkzrjsfQ==
+X-Gm-Gg: ASbGncuiHzRgwGSU8ddB/8CoIeGiFwnECKZB+DaiP2W+Be2xOJds6SX0UY/CKSdcWPI
+	e675FUwwBce7UBmDxXFT+d4FACBjYaTotjng9BbXgL/cG6nkXo4qYqHNvjTdeO4Kwzpy1etPDOl
+	XTkvVSiY0vKbtunBe18nXv5pXB0+Zq46Iv8/4cbbN3RzVo
+X-Google-Smtp-Source: AGHT+IEzETwYHx0nLbiFdWUeLmV4KrW57JrGro1I3zlSg5jafQBDwMDY2f+YekL/HJyWs+OOnv2PB4JAvv0sXW+xiFM=
+X-Received: by 2002:a17:907:3e1b:b0:ad2:4fa0:88cd with SMTP id
+ a640c23a62f3a-ade893e3192mr285970566b.9.1749652359722; Wed, 11 Jun 2025
+ 07:32:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH3PPF9E162731D:EE_|MW4PR11MB7125:EE_
-X-MS-Office365-Filtering-Correlation-Id: a5b6dd23-2572-41bd-3cb2-08dda8f4beb1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|13003099007|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?YsKGG/FGt/dTjebsxOPpjh66e8z1EELbl81xFa/OJlHZYiAQffZai0qNzCPR?=
- =?us-ascii?Q?gONhzO+l8vzZqjE9ciKai4i5qYi5MKxSAYBnmEKOwxw/NuMLak0QUE1FGm8R?=
- =?us-ascii?Q?5JPOQIoNUyKTaY2nLGWLP6b7jTSutob98JkbCsiNokKJO2dF6eWQpxI1HBBa?=
- =?us-ascii?Q?BNP3NSeh0IFmA5jooZx3pZBBqOaO2ltrQd544A7gbXgB80cbER/oHpUV58dI?=
- =?us-ascii?Q?y2W9EiHwEhEVCUgawDb5140D5vNGlK9n1cJxSx3NiyCEnhdfFduqJ2nmXPf5?=
- =?us-ascii?Q?87MVTicVwpFSuY4U4Knh6hRkMOlibdlTkvLq7k6dyGSABRcmHIYInTtrOyKQ?=
- =?us-ascii?Q?lrmFvVyzfF2fj2aeBPH5lafdOPS9LqpgFgo/tlZgRSJbo+QnqtMqVuD/tj7l?=
- =?us-ascii?Q?aqjhYF15Hal2knOBKQlMalYM1gEpQ/3GpkJhZ0eqKN8XQedxwXSHaQ6bPjsG?=
- =?us-ascii?Q?2y9f726bd156V3k5y2isk7WLam9aA7iFDZFl059G8O/Cx4T088CoXsQCMUmQ?=
- =?us-ascii?Q?eNhqMeP+Ms3Txho0Xvd+MK5o+6lkHJJphrL9KHzMGoqHD4dHBXtJQC/xTwKJ?=
- =?us-ascii?Q?braCBpdxESqRxpo5pG7RIPd0YsLYCXkr6lNQRYjty6UVAcf/wjuQSKVQwuaj?=
- =?us-ascii?Q?vg7ls80+OIpKNF2uRsPLUxZeLkduJf97I3iIF44mCnnsih3rdOIXTl0ice9H?=
- =?us-ascii?Q?T+X/TbplIOBHQHcnGdruX2fArWidRQlf8689bKJCiHBuuPg+xMDBFQFCzZBE?=
- =?us-ascii?Q?sffcuxjz5DFbH7PfSO7KWOAXBNCPwfYcLXX3sfmShjDOBKlXPHAndieMgsMy?=
- =?us-ascii?Q?6clfm2WPNeCE25mCfaiDSEKw6ch3A9vGbePwvdAI/uTaF7RYCMCwvAEYos+E?=
- =?us-ascii?Q?0mnqmUYqZb/P9iICG5BLNB9WNNivpHKq0+8EAyx+iKralUCylSyK/K/NMe8m?=
- =?us-ascii?Q?ky2HP9gBzN2FibZRtrcJvvJ9bcvklgWKN8n3PPXY8qPbadX5IGwL4yc6Bn+q?=
- =?us-ascii?Q?W+4lhH2ageXjem59r2UTiprJQEpXUd3NEbR6k4Ubb0Sg6IVkENzkf6SB86L3?=
- =?us-ascii?Q?MuIgJlt0en+yQDSz9JxCV7d2I+u0ZDQZIGlrlrlE2iqzXemU6yntWtVuvz8+?=
- =?us-ascii?Q?CQ+NHrJBTGFznAWkQEiJVd+v786B0kcx/hy9rCcyAbxTbVUnfHVLQCgpn9Po?=
- =?us-ascii?Q?IJm0sxS+Hg1+hnhfj7ekFg2TB9BuxyA5KKIwRJw7BVSYLyj7SeDFq5HbBR1f?=
- =?us-ascii?Q?c38Hvdmeq8+G5tI2/f7IWfw07/VQYtCFkcpP4Xt3fbMJnU5oFXOKOTWeZhLC?=
- =?us-ascii?Q?4f/amr9EkV5tm/Bpd3mBHF9AYTRSX4O5IxlcCfebKHr2tC66BSRxXYiEHdXB?=
- =?us-ascii?Q?+DAsBK7QXAj1wgZ4HKqq/6iuKiTJ?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH3PPF9E162731D.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(13003099007)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?m+n2v83tfn49M8ZwbcHaS1Hr7Z97S5DGoC1evPXD5JvlYCT97keeWRh+C8so?=
- =?us-ascii?Q?YiwnABd5u504kwgd3GTwVpQLtyCECzFAYiucfxgXYAv0urwq3PvNv6etx38C?=
- =?us-ascii?Q?K8Frun4/aQIGxy7/KdvE1cUeN3prw2JV5GIq3+LNe2ygzJVewEV8QXEJH5oD?=
- =?us-ascii?Q?Vn3Rx5uCaI7+wkC5ft3oFDrYsu/i3GQE1VHBaqoraW94HZ6jChg3OrZ9YyoG?=
- =?us-ascii?Q?hjKXVjdUJ7DE6Q7TnRJsHLtpW0sjJT1O/ZsyeRIu+ooFizho0TInKLAXSSLj?=
- =?us-ascii?Q?j1UIuxmibDnRCW3otjj6XbY7dgUfwooJdEaWDnTivfEwUxqZ4FRCg2suiazf?=
- =?us-ascii?Q?otGuXRdt5lbbfyUxGG0DcNtrpsS0hFivBKC3LKg8z6giyJg08xjBRyMfntpH?=
- =?us-ascii?Q?ZSD+UMp7zkZ+DfR2yY31UdfbNFJL+b8ArIqtuKqkuMKRK5H1nv2YRuq/gkQd?=
- =?us-ascii?Q?ovNMXVItKp6cPTXxOs1oPsvefTZY3m75h0ucq3zzDMFknDDqBI2U+az2Odif?=
- =?us-ascii?Q?P0AA5PKuX/o9hIcVgPz+Tf/A+yeEgqxe/k3+lnRIkciJH+Si4pBiOc+0APJr?=
- =?us-ascii?Q?yC/kGYQTuEEHJbrYYplguvtaJJUSofHtFE6tVo3vqnjs9AkZr3CEOTPUQe8K?=
- =?us-ascii?Q?r9zCPsku1HYrzTgxMnt5GwHEqaT0r6t2SNqb/gDbtoiVqMUiHKZg5yFYd2fb?=
- =?us-ascii?Q?fN8PzHncwW/o+bTs5dhi+xqC2rqC7+of8bVr38PxQVF9rs1EEmqew2c6/gV7?=
- =?us-ascii?Q?XfiAjbaRHRmiMMhIO+ZWZm2ILwpLBjPkdDZssztAgVM3vt00F/2EbeUkVrmW?=
- =?us-ascii?Q?wmTkI8FfXf9eh/j1eFdezhWGeUPnRsXO7mVQFyD/U8fJtwBwQCVLU5oLd9d7?=
- =?us-ascii?Q?J7k0VTJzjMNIOixPmCtw3kKevNAyXAL6TWf5a3JNniyq62NWAI96TBMEHzwh?=
- =?us-ascii?Q?r6VW0NceexlQAXZwORCKWQZ6VjHfpkKfEIS5aZBmTOuPYwo/u1lNzsylQgz+?=
- =?us-ascii?Q?WntL+OZJi/4vUneTpFNvckwwZajfYFVPvojsEucztYV8czeO5C2iTZRK+KOI?=
- =?us-ascii?Q?VSrbMU55l4eQoF4t/6aVpjxAa1X6WOiNnNlHHtCZ/qQE0PIN9tKiPm4qaAdJ?=
- =?us-ascii?Q?25hfF4I/KKJuKGV1KHNnnZqtFLC1001IewUKyeBGp8lP2qnQHZ8ZSxJOEZjh?=
- =?us-ascii?Q?VEN4ENlLVCvpiMk867DLhdTdq4EY9neUIx65A2Hc/TkHO8/TN3P5/dbPLCnH?=
- =?us-ascii?Q?LZTCmXxa+TZ/ey6P+Tz7wTtj1Oo+Lhm6MFox+IN4zAlEJ4IwdzBOmtOYbdp7?=
- =?us-ascii?Q?PAgSGPgZTTSiaV15JftqR/CN637w9m01NTjccsLAhf+/7NLZBfHx9f7SZVNa?=
- =?us-ascii?Q?yTrpDsGZrDyGcZesQJFBWBpRH1bq/Ar9SjaVy0+ss2cyCLh1roG2nSuaoED0?=
- =?us-ascii?Q?CO+35v39oVptGINciAmw4wDej4vLmiE2Bp4+Fn9eizn67724n4lhj4npxVAz?=
- =?us-ascii?Q?8PlbB5DaERAbtrrQYoJkn72mgSdB+t8aQNLQuM8w2T1TeWMKD8l2/d5ve7Aa?=
- =?us-ascii?Q?g0hbV5uFsahvMf4zIdHqyabZDFmS6S2daKXXSVY7?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: a5b6dd23-2572-41bd-3cb2-08dda8f4beb1
-X-MS-Exchange-CrossTenant-AuthSource: PH3PPF9E162731D.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2025 14:32:08.2705
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6vSTKb5Dv4fVomq81wcj+JNFrq/b1gFywP43f0TMEiT8Onn/LKk7mSRmFWKvumT+Cl1g5Ava75QlojZaZjVkxA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB7125
-X-OriginatorOrg: intel.com
+References: <20250611125723.181711-1-guodong@riscstar.com> <20250611125723.181711-7-guodong@riscstar.com>
+ <20250611135757-GYC125008@gentoo>
+In-Reply-To: <20250611135757-GYC125008@gentoo>
+From: Guodong Xu <guodong@riscstar.com>
+Date: Wed, 11 Jun 2025 22:32:27 +0800
+X-Gm-Features: AX0GCFsCOSkDRyqL6Nxt48HaUVxbrrOp5EdO9-GyXjMkq6GZqJ07_JcYpuCfhG4
+Message-ID: <CAH1PCMbt3wLbeomQ+kgR6yZZ18TZ=_LF-kCcnLqad55FSHBhDA@mail.gmail.com>
+Subject: Re: [PATCH 6/8] riscv: dts: spacemit: Enable PDMA0 controller on
+ Banana Pi F3
+To: Yixun Lan <dlan@gentoo.org>
+Cc: vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	alex@ghiti.fr, p.zabel@pengutronix.de, drew@pdp7.com, 
+	emil.renner.berthing@canonical.com, inochiama@gmail.com, 
+	geert+renesas@glider.be, tglx@linutronix.de, hal.feng@starfivetech.com, 
+	joel@jms.id.au, duje.mihanovic@skole.hr, elder@riscstar.com, 
+	dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	spacemit@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Drew Fustini wrote:
-> On Mon, Jun 09, 2025 at 08:32:41AM -0500, Rob Herring wrote:
-> > On Fri, Jun 06, 2025 at 11:11:17AM -0700, Drew Fustini wrote:
-> > > Convert the PMEM device tree binding from text to YAML. This will allow
-> > > device trees with pmem-region nodes to pass dtbs_check.
-> > > 
-> > > Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> > > Acked-by: Oliver O'Halloran <oohall@gmail.com>
-> > > Signed-off-by: Drew Fustini <drew@pdp7.com>
-> > > ---
-> > > Dan/Dave/Vishal: does it make sense for this pmem binding patch to go
-> > > through the nvdimm tree?
-> > > 
-> > > Note: checkpatch complains about "DT binding docs and includes should
-> > > be a separate patch". Rob told me that this a false positive. I'm hoping
-> > > that I can fix the false positive at some point if I can remember enough
-> > > perl :)
-> > > 
-> > > v3:
-> > >  - no functional changes
-> > >  - add Oliver's Acked-by
-> > >  - bump version to avoid duplicate message-id mess in v2 and v2 resend:
-> > >    https://lore.kernel.org/all/20250520021440.24324-1-drew@pdp7.com/
-> > > 
-> > > v2 resend:
-> > >  - actually put v2 in the Subject
-> > >  - add Conor's Acked-by
-> > >    - https://lore.kernel.org/all/20250520-refract-fling-d064e11ddbdf@spud/
-> > > 
-> > > v2:
-> > >  - remove the txt file to make the conversion complete
-> > >  - https://lore.kernel.org/all/20250520021440.24324-1-drew@pdp7.com/
-> > > 
-> > > v1:
-> > >  - https://lore.kernel.org/all/20250518035539.7961-1-drew@pdp7.com/
-> > > 
-> > >  .../devicetree/bindings/pmem/pmem-region.txt  | 65 -------------------
-> > >  .../devicetree/bindings/pmem/pmem-region.yaml | 49 ++++++++++++++
-> > >  MAINTAINERS                                   |  2 +-
-> > >  3 files changed, 50 insertions(+), 66 deletions(-)
-> > >  delete mode 100644 Documentation/devicetree/bindings/pmem/pmem-region.txt
-> > >  create mode 100644 Documentation/devicetree/bindings/pmem/pmem-region.yaml
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/pmem/pmem-region.txt b/Documentation/devicetree/bindings/pmem/pmem-region.txt
-> > > deleted file mode 100644
-> > > index cd79975e85ec..000000000000
-> > > --- a/Documentation/devicetree/bindings/pmem/pmem-region.txt
-> > > +++ /dev/null
-> > > @@ -1,65 +0,0 @@
-> > > -Device-tree bindings for persistent memory regions
-> > > ------------------------------------------------------
-> > > -
-> > > -Persistent memory refers to a class of memory devices that are:
-> > > -
-> > > -	a) Usable as main system memory (i.e. cacheable), and
-> > > -	b) Retain their contents across power failure.
-> > > -
-> > > -Given b) it is best to think of persistent memory as a kind of memory mapped
-> > > -storage device. To ensure data integrity the operating system needs to manage
-> > > -persistent regions separately to the normal memory pool. To aid with that this
-> > > -binding provides a standardised interface for discovering where persistent
-> > > -memory regions exist inside the physical address space.
-> > > -
-> > > -Bindings for the region nodes:
-> > > ------------------------------
-> > > -
-> > > -Required properties:
-> > > -	- compatible = "pmem-region"
-> > > -
-> > > -	- reg = <base, size>;
-> > > -		The reg property should specify an address range that is
-> > > -		translatable to a system physical address range. This address
-> > > -		range should be mappable as normal system memory would be
-> > > -		(i.e cacheable).
-> > > -
-> > > -		If the reg property contains multiple address ranges
-> > > -		each address range will be treated as though it was specified
-> > > -		in a separate device node. Having multiple address ranges in a
-> > > -		node implies no special relationship between the two ranges.
-> > > -
-> > > -Optional properties:
-> > > -	- Any relevant NUMA associativity properties for the target platform.
-> > > -
-> > > -	- volatile; This property indicates that this region is actually
-> > > -	  backed by non-persistent memory. This lets the OS know that it
-> > > -	  may skip the cache flushes required to ensure data is made
-> > > -	  persistent after a write.
-> > > -
-> > > -	  If this property is absent then the OS must assume that the region
-> > > -	  is backed by non-volatile memory.
-> > > -
-> > > -Examples:
-> > > ---------------------
-> > > -
-> > > -	/*
-> > > -	 * This node specifies one 4KB region spanning from
-> > > -	 * 0x5000 to 0x5fff that is backed by non-volatile memory.
-> > > -	 */
-> > > -	pmem@5000 {
-> > > -		compatible = "pmem-region";
-> > > -		reg = <0x00005000 0x00001000>;
-> > > -	};
-> > > -
-> > > -	/*
-> > > -	 * This node specifies two 4KB regions that are backed by
-> > > -	 * volatile (normal) memory.
-> > > -	 */
-> > > -	pmem@6000 {
-> > > -		compatible = "pmem-region";
-> > > -		reg = < 0x00006000 0x00001000
-> > > -			0x00008000 0x00001000 >;
-> > > -		volatile;
-> > > -	};
-> > > -
-> > > diff --git a/Documentation/devicetree/bindings/pmem/pmem-region.yaml b/Documentation/devicetree/bindings/pmem/pmem-region.yaml
-> > > new file mode 100644
-> > > index 000000000000..a4aa4ce3318b
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/pmem/pmem-region.yaml
-> > > @@ -0,0 +1,49 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/pmem-region.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +maintainers:
-> > > +  - Bjorn Helgaas <bhelgaas@google.com>
-> > 
-> > Drop Bjorn. He only did typo fixes on this.
-> > 
-> > > +  - Oliver O'Halloran <oohall@gmail.com>
-> > > +
-> > > +title: Persistent Memory Regions
-> > > +
-> > > +description: |
-> > > +  Persistent memory refers to a class of memory devices that are:
-> > > +
-> > > +    a) Usable as main system memory (i.e. cacheable), and
-> > > +    b) Retain their contents across power failure.
-> > > +
-> > > +  Given b) it is best to think of persistent memory as a kind of memory mapped
-> > > +  storage device. To ensure data integrity the operating system needs to manage
-> > > +  persistent regions separately to the normal memory pool. To aid with that this
-> > > +  binding provides a standardised interface for discovering where persistent
-> > > +  memory regions exist inside the physical address space.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: pmem-region
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  volatile:
-> > > +    description: |
-> > 
-> > Don't need '|' here.
-> 
-> Rob - Thanks for the feedback. Should I send a new revision with these
-> two changes?
+On Wed, Jun 11, 2025 at 9:58=E2=80=AFPM Yixun Lan <dlan@gentoo.org> wrote:
+>
+> Hi Guodong,
+>
+> On 20:57 Wed 11 Jun     , Guodong Xu wrote:
+> > Enable the Peripheral DMA controller (PDMA0) on the SpacemiT K1-based
+> > Banana Pi F3 board by setting its status to "okay". This board-specific
+> > configuration activates the PDMA controller defined in the SoC's base
+> > device tree.
+> >
+>   Although this series is actively developed under Bananapi-f3 board
+> but it should work fine with jupiter board, so I'd suggest to enable
+> it too, thanks
+>
 
-I can do a clean up as I have not sent to Linus yet.
+I'd be glad to include the Jupiter board as well. Since I don't have Jupite=
+r
+hardware for testing, could someone with access verify it works before I
+add it to the series?
 
-Here are the changes if you approve I'll change it and push to linux-next.
+-Guodong
 
-Ira
-
-diff --git a/Documentation/devicetree/bindings/pmem/pmem-region.yaml b/Documentation/devicetree/bindings/pmem/pmem-region.yaml
-index a4aa4ce3318b..bd0f0c793f03 100644
---- a/Documentation/devicetree/bindings/pmem/pmem-region.yaml
-+++ b/Documentation/devicetree/bindings/pmem/pmem-region.yaml
-@@ -5,7 +5,6 @@ $id: http://devicetree.org/schemas/pmem-region.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
- maintainers:
--  - Bjorn Helgaas <bhelgaas@google.com>
-   - Oliver O'Halloran <oohall@gmail.com>
- 
- title: Persistent Memory Regions
-@@ -30,7 +29,7 @@ properties:
-     maxItems: 1
- 
-   volatile:
--    description: |
-+    description:
-       Indicates the region is volatile (non-persistent) and the OS can skip
-       cache flushes for writes
-     type: boolean
+> > Signed-off-by: Guodong Xu <guodong@riscstar.com>
+> > ---
+> >  arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/ris=
+cv/boot/dts/spacemit/k1-bananapi-f3.dts
+> > index 2363f0e65724..115222c065ab 100644
+> > --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+> > +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
+> > @@ -45,3 +45,7 @@ &uart0 {
+> >       pinctrl-0 =3D <&uart0_2_cfg>;
+> >       status =3D "okay";
+> >  };
+> > +
+> > +&pdma0 {
+> > +     status =3D "okay";
+> > +};
+> > --
+> > 2.43.0
+> >
+> >
+>
+> --
+> Yixun Lan (dlan)
