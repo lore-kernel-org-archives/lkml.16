@@ -1,416 +1,195 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazolkn19010013.outbound.protection.outlook.com [52.103.20.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 630E42376FD;
-	Wed, 11 Jun 2025 23:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749683069; cv=none; b=dm+5HcT6TldnvZSvkdwweRG8WXrk6yg7Xx2zxDGhO/8WXOxrKhEtluHAXzb2xX5TFZ7XtpSgUbtMpipULKS5l6bMjvVxqpF3etrvNyX1qzCNiWeahmdEoatFpZtqWEeG2K60mb/eYhusZ7rF8lVHkdNXr8nqS2pKuNT03Qfh+zc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749683069; c=relaxed/simple;
-	bh=zUIdqFjWcpeOsPqBoYldO0ghVfuJCQ8JWJcKxAH7ph8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QyMLOPMsDSD8Meg8SEqVleWlV/6SjSuiTlKzOIm5WTMiNYs0VKqQKia5jO0Yyuhs57Rd6kVCPuPGEcgR5TY1QKr1bgUtQx46FNrlRVQUF9Nt7L5TuUqYZ1NGIM3JYp0EoIiJHUrQVUqcxHKTfMxZXHwkjWgmyMg4fFqcWFz7t0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=DqPJbtjR; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E590185B61;
+	Wed, 11 Jun 2025 23:06:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.20.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749683190; cv=fail; b=j/3YYdFLKwDmJK8nq0Ds1GBw4UNnqSTt8Pd4BCX91kJe8blmxCANNa1VnfeUyenWLdu0p98sMzqB1WFq9QSTiKvombh0+xpdE+j5QLA/s6DclPTK9tOIgXB27Mlm1djjcUIARZi5cxzRnw8DZufmltDCvv3PH+A9+AzH/1+zMTs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749683190; c=relaxed/simple;
+	bh=eXxAMpu63RKObhhAsda9lGKys48XGJ5eIBi87bTS2ZY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Ovcku8clvbgCQN1yfQxBWEsmadVfZhh3+HvU+P0QYCc4s/5SiiDbT69fpN3OID7dB4hAguBu9zZ2rN951DYur5l60Ri4FNCaBwtrVOWl3H2ThFHfKhAwQRk0DKJ8ctdMYSgvqj0V5ZIxNkVK9OoIgmP0U3pFNUk+Ythn1phv31I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=gXrB+rKs; arc=fail smtp.client-ip=52.103.20.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="DqPJbtjR"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 546E41D5;
-	Thu, 12 Jun 2025 01:04:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1749683056;
-	bh=zUIdqFjWcpeOsPqBoYldO0ghVfuJCQ8JWJcKxAH7ph8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DqPJbtjRACGYQ/DzQacCB41V7CBA6ClpQxa6LkamW5P6Wrp+R5T6nJ1/dugcU0nH5
-	 415pxvEg06NTBQxggjm/wUMirk+4cjwudMp4G4wAKk5JfQ//FdRqw0+KfXi9XgiUv7
-	 bUxXpQKQilt0p7QbOeAMkEDn+fNNuQoYUwt4jly4=
-Date: Thu, 12 Jun 2025 02:04:12 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
-	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/4] media: rcar-csi2: Add D-PHY support for V4H
-Message-ID: <20250611230412.GO24465@pendragon.ideasonboard.com>
-References: <20250611154445.123412-1-niklas.soderlund+renesas@ragnatech.se>
- <20250611154445.123412-5-niklas.soderlund+renesas@ragnatech.se>
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="gXrB+rKs"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Oz7qQ+Dc5+sWZ/GRNYrateKWsIP6cv/qBOKVrLMWSoC/PVDMc0GlWBB5029TPpWHkDM0mg+oStlWWiPW3AlOR3IUO8zVeTOxSXXnabhQFb0m0WJUkD3WswI/zkvEiPjV1XsNXir6WCp6qCJ1g0J0e8fMzTk1vQ3GldyFPxs4SWwPzS57u7CdJM98rCpYAMZfk0gHaczMtMPqaiO3B1nbyAlvtuW9XVKgHRZrS3pvBlCvYNGJWB5zSElPqgmH7Jq2Xl0EVTLRRVx02Kmj71Z1lHrMOyAgSJxV69VwjZRt/CO5UhnYCaYXVoRkKg9CVezejZu5j/g4OAriTbjgOM8RKQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0QHtX1cddaqH3j/8skVF2/ggDdvjPFWaFsy8Q+t/4e4=;
+ b=ZSLr1hYWlFl9p8kQfW7qjnVHCAOa8hJsVDSz4JnEDSHgQ5AfFguV1hivzC68yglqAi2q+ftQympiuxEf+NmwaeBaDv8ZcbZjoO+c35QWtpXGuCRdx0gCxcw0eczkRJE4yZYmYisQ9il7RNMFgVrDUV++cSJO6GWyeB7HlcQXEoXYTS8zXioFQQfOqGClODlVincavKo2t6hTBApQ6cCjce5RDdZPPhjSljMHuhJp854Zwr+kYl4UTNxnFLnR7GE7ZlVVrkgRC44m2x7p1Qe0jRZqk4xucOaq8gQdMV0oIJgo1bG1TCCFyfqrpoDTjybIufvtdO0UJxAzXTP9kZKbMg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0QHtX1cddaqH3j/8skVF2/ggDdvjPFWaFsy8Q+t/4e4=;
+ b=gXrB+rKsVTCSpHWoNhzJu44I+eTmw4Ql8Hk+rpa3HB1d2ltZ1j3Le0o7k8zkadIt+ATYCKqRWtH/Rjw9xoJehsIa8f3d7kuv/28OJDvMXSFODwGMVouB0c4VHhGSdEhGCZpcfMeCDZ+NTOeaTn2yTdASyBihkezTbqA5HYp6FPR7g8sxPhCuuXx3R/0D0/iw1RiwAoeG3Lc4fKFPNTCB88jDHoxysCgfkSxTeGTN0b7IyFv6zotv0yCxgPi89vrUQrUeSXdfWTpRRKAsQ1POSlyFn5ZlmfTmi5M85DNvy92qx8pllVNoyJUTEIKJWGewi5te8H7u6nraOgpaNZ/NDw==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by PH0PR02MB8488.namprd02.prod.outlook.com (2603:10b6:510:105::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.20; Wed, 11 Jun
+ 2025 23:06:24 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8835.018; Wed, 11 Jun 2025
+ 23:06:24 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>
+CC: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
+	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>, "catalin.marinas@arm.com"
+	<catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>,
+	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com"
+	<mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "hpa@zytor.com"
+	<hpa@zytor.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kw@linux.com" <kw@linux.com>, "manivannan.sadhasivam@linaro.org"
+	<manivannan.sadhasivam@linaro.org>, "robh@kernel.org" <robh@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>, "jinankjain@linux.microsoft.com"
+	<jinankjain@linux.microsoft.com>, "skinsburskii@linux.microsoft.com"
+	<skinsburskii@linux.microsoft.com>, "mrathor@linux.microsoft.com"
+	<mrathor@linux.microsoft.com>, "x86@kernel.org" <x86@kernel.org>
+Subject: RE: [PATCH 1/4] PCI: hv: Do not do vmbus initialization on baremetal
+Thread-Topic: [PATCH 1/4] PCI: hv: Do not do vmbus initialization on baremetal
+Thread-Index: AQHb2mKwkhWK8nhiHEutwLk7bVwxgLP9adOw
+Date: Wed, 11 Jun 2025 23:06:23 +0000
+Message-ID:
+ <SN6PR02MB41574163515870DB8E430C56D475A@SN6PR02MB4157.namprd02.prod.outlook.com>
+References:
+ <1749599526-19963-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1749599526-19963-2-git-send-email-nunodasneves@linux.microsoft.com>
+In-Reply-To:
+ <1749599526-19963-2-git-send-email-nunodasneves@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH0PR02MB8488:EE_
+x-ms-office365-filtering-correlation-id: ac4aec50-39d9-4f48-f1fc-08dda93c9647
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|19110799006|461199028|41001999006|8060799009|15080799009|8062599006|3412199025|440099028|52005399003|102099032;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?Wucyl29bX7aANrNgMMz47a6mvey6mO2tVjiJjl+ggBbvybK6Ktbu+RdId1vK?=
+ =?us-ascii?Q?FJ1w3Ew2oKHGpS798uJc4TGJxTOV48Tunj9r+hENrBU4aJHtmpoIYYS/Z9ph?=
+ =?us-ascii?Q?XgInTkVTkCk8b3W5px5xwonMHwjuX7fV7ecss346DGLqbZ14Kwp2jkUfkfCW?=
+ =?us-ascii?Q?ZAurX18K2YzEttsuDsHuytsYCoIadamESovssg8Z4kCNGdV80ls707gD1sWH?=
+ =?us-ascii?Q?wTkhaBk7r8vBNZzlEMNJKu7ecyivPKdGqTfU9fthgo4xIYJao/flE8k0hsBb?=
+ =?us-ascii?Q?JR1+ihcn120qk256EXq0/4XDBxtOj/XWX6zbc2GUfgvAFEZWzQm1/I7dqBEa?=
+ =?us-ascii?Q?ERRZlUk9dh1lZZ9y9Fz9LXH/ZmKgWzh5Of7IrvUuGsrr6i/Ul+kOY8oRRnYE?=
+ =?us-ascii?Q?EMruZRgP25Jip8MZjv5WM/BvLy8dGRf5NVEifmD4RMhqx7vKvQkRiVFWAPGe?=
+ =?us-ascii?Q?InJXKn/zAvAwDRWvOZpsrUxYCEtWfjCLAaz5ZXZhKKEWiRgdNukaECH/DKQp?=
+ =?us-ascii?Q?W/0UFIaJpWr1UsQdflZ+/OFoIPkKye1Y5XSRpA6GMpN8zFo20sy1bpFS4GuC?=
+ =?us-ascii?Q?2YKOUExRDpLbey5DwDMAZu/4THOII3AzJVp0c1ijO3+aa7+rcOUwID+IARmg?=
+ =?us-ascii?Q?hZoLsZNCy6J/Jn5vRQoJYCQZK54OnCVR3uo/gegZ/P+5rYSNTcVqtjFBpIQq?=
+ =?us-ascii?Q?u2hgEKgKkmuWJ1RiA3SqZ5zcffb4Z+9MH0nWUcx4pGfwm+5lfSiPTVlRs01i?=
+ =?us-ascii?Q?H4bte/1mmyqSLY0cRtuWVBViPyrcDMha/mjkX68DSb5WMJB13DWidvgaiHvT?=
+ =?us-ascii?Q?coP6hWx7LqiHcSVooi4fEwaM5K2e+IaWp8bX6Q+nVUx9bLZNwlxEURx0A3Bm?=
+ =?us-ascii?Q?LRuJxtOoiLFfd8zh8pJhc2Ss5KD8+E9yWO7hpv++cxYFXqQG3HZJ74WcYfXq?=
+ =?us-ascii?Q?MUUt3wXRxkjCRd0t7ge/fRaFpo/ECpYGQXoWAyarrsbRoPO+j8Fg3F05pP1j?=
+ =?us-ascii?Q?utcJrAfqjaotpP+J8lzhsLPDCJXdJthZp7dazjshJkmQAugti6loyj4f7jlF?=
+ =?us-ascii?Q?fVnpD4YPJ54ZV88169bjNpgSydR9E44irlzwiHX2Kp/ZbNksvtddoTBtecOO?=
+ =?us-ascii?Q?lPKOIl10Wp5oyHt1LgI+cs7vLUx78SiKbg=3D=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?tfjsxlNIurCJO+0F9M/OufRkv9J1WQ0tay7vpKKVEJK7j1fbJqHU8672cmHX?=
+ =?us-ascii?Q?i8amx8VPAxU3VfxacV6j9uGEAFArr8exF5V81OWiUt5E1HiZ39b6SKUH6mFr?=
+ =?us-ascii?Q?1BJzXz6ckhNPpR7GKg/Evzcqspb2XXFi50sWFzVXEJFixOWt6fQvK5VjH/so?=
+ =?us-ascii?Q?1RVUF+Nb2r3Q0gA9bqmEv00eF4HEiwfStF5ZLIdniWNM1VmkGdwvk5+pvvZ+?=
+ =?us-ascii?Q?vOXtNCND0QM2EYPV+Ha4+NEJGQGK0bpeGRP/t4OT6It83MLhG3ESJ7tVLMIr?=
+ =?us-ascii?Q?iblXT/pQuueSIFSW5BDsu4GczeBEWo3eGNzlV2ccuP0uVsJkHZYxU1l4NrJs?=
+ =?us-ascii?Q?4lyHnrUqFzc7l3W5Wa3ssNgpfxoI9uc0CnbNd8rHUJwm35gj0G438r0NNRWI?=
+ =?us-ascii?Q?ccZEyuRExN7NXGroTB6Yvo6m5c+b1XMrhROHXhhMXoreuoF+3quK9Z8s542/?=
+ =?us-ascii?Q?d3mZ0OurAZn8nwcoG4Zzm2OdeJUKGx5niHpXUb8l9L0ZN2J9biZg0BOr75in?=
+ =?us-ascii?Q?enJRNsljJYSI5aFbNqiMkulwrM9Pwl/w7frlb7YclgYQWRmFx4EwkpjS8MnA?=
+ =?us-ascii?Q?kOTdEkdQ5iKPQQzZ+ZYgjePwEnnQ+jXpyZRsmJ3+dGpE8oCOnVpFzj18Rc9z?=
+ =?us-ascii?Q?GbmktvOvLYFv5ZbTKjVYYsnXeAOJ7R1BML2yZ/qk3rzcZwZO+UitGM1KTPT9?=
+ =?us-ascii?Q?ZwUqIWp+KF51YKGyXJtINiwqvlOaPBbFp2CJGRK9DjUZ/6i2/7jLt4n5vx1P?=
+ =?us-ascii?Q?Os+1liv87LgUoPcG39TLSlqBOrwMWaxRbEl+um3Y763AxTLI94d0W7ZTlT5V?=
+ =?us-ascii?Q?hP0pokvjGE2JQnrz8FvpGJw96/gyhPqul0x32nKO9nSAHEnkgxaIAAeu5HvR?=
+ =?us-ascii?Q?M66RC5veCX53W7nsDIdF7gGqtWxyfk9wk4hpMQr0rFeQWqoMD0mjeel5V8Ui?=
+ =?us-ascii?Q?9LmVV8p2TcGAZUJ687Sz57kMD+G21SOWi1/SF99aFXgBLzWU2KZCtkqu97Qa?=
+ =?us-ascii?Q?P+T1u+Ug71uti9QS+pr+UKyj7pKbR2A1gd4ZJXLGErO3rsPZKacZMFKCnkUL?=
+ =?us-ascii?Q?2uJwjI8R55+2m484SWHnrDAwpAU4DdUHtQ0EfyyS08/bPQIft2Std0aOR1g+?=
+ =?us-ascii?Q?20TiRri3iEp5osGT3cXMj4jTKdzqULdY7I4mrgEhIoi2CxOH7n41IBmQmS8D?=
+ =?us-ascii?Q?KKrEodb0Q43vU9wYxPBgIIhdAAFWXqphXNf1BrOQrWTiUZbymJ7XkWk+UwE?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250611154445.123412-5-niklas.soderlund+renesas@ragnatech.se>
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: ac4aec50-39d9-4f48-f1fc-08dda93c9647
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2025 23:06:24.0533
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR02MB8488
 
-Hi Niklas,
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Tuesday, June=
+ 10, 2025 4:52 PM
+>=20
+> From: Mukesh Rathor <mrathor@linux.microsoft.com>
 
-Thank you for the patch.
+The patch Subject line is confusing to me. Perhaps this better captures
+the intent:
 
-On Wed, Jun 11, 2025 at 05:44:45PM +0200, Niklas Söderlund wrote:
-> Add D-PHY support for V4H in addition to the already support C-PHY
+ "PCI: hv: Don't load the driver for the root partition on a bare-metal hyp=
+ervisor"
 
-s/support C-PHY support/supported C-PHY/
+>=20
+> init_hv_pci_drv() is not relevant for root partition on baremetal as ther=
+e
+> is no vmbus. On nested (with a Windows L1 root), vmbus is present.
 
-> support. The common start-up procedure for C-PHY and D-PHY are shared,
+This needs more precision. init_hv_pci_drv() isn't what is
+"not relevant". It's the entire driver that doesn't need to be loaded
+because the root partition on a bare-metal hypervisor doesn't use
+VMBus. It's only when the root partition is running on a nested
+hypervisor that it uses VMBus, and hence may need the Hyper-V
+PCI driver to be loaded.
 
-s/are shared/is shared/
-
-> only PHY setup differ. Extend the V4H setup with D-PHY support as
-> documented in the datasheet (Rev.1.21).
-> 
-> Most of the start-up procedure is only documented as magic values in
-> tables, there is little documentation to make the settings more clear.
-> Wherever possible formulas or lookup tables are used as they are
-> documented in the datasheet.
-> 
-> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> Tested-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+>=20
+> Signed-off-by: Mukesh Rathor <mrathor@linux.microsoft.com>
+> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 > ---
-> * Fixes since v2
-> - Stire DESKEW settings in an array and loop over it instead of opene
->   coding it.
-> 
-> * Fixes since v1
-> - Init cphy  variables to not trigger false -Wmaybe-uninitialized
->   warning.
-> - Adjust line lengths.
-> ---
->  drivers/media/platform/renesas/rcar-csi2.c | 240 ++++++++++++++++++++-
->  1 file changed, 230 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/media/platform/renesas/rcar-csi2.c b/drivers/media/platform/renesas/rcar-csi2.c
-> index 7ba637d8683b..1fd36823c8e9 100644
-> --- a/drivers/media/platform/renesas/rcar-csi2.c
-> +++ b/drivers/media/platform/renesas/rcar-csi2.c
-> @@ -172,6 +172,7 @@ struct rcar_csi2;
->  #define V4H_PPI_RW_LPDCOCAL_TWAIT_CONFIG_REG		0x21c0a
->  #define V4H_PPI_RW_LPDCOCAL_VT_CONFIG_REG		0x21c0c
->  #define V4H_PPI_RW_LPDCOCAL_COARSE_CFG_REG		0x21c10
-> +#define V4H_PPI_RW_DDLCAL_CFG_n_REG(n)			(0x21c40 + ((n) * 2)) /* n = 0 - 7 */
->  #define V4H_PPI_RW_COMMON_CFG_REG			0x21c6c
->  #define V4H_PPI_RW_TERMCAL_CFG_0_REG			0x21c80
->  #define V4H_PPI_RW_OFFSETCAL_CFG_0_REG			0x21ca0
-> @@ -185,6 +186,13 @@ struct rcar_csi2;
->  #define V4H_CORE_DIG_IOCTRL_RW_AFE_CB_CTRL_2_REG(n)	(0x23840 + ((n) * 2)) /* n = 0 - 11 */
->  #define V4H_CORE_DIG_RW_COMMON_REG(n)			(0x23880 + ((n) * 2)) /* n = 0 - 15 */
->  #define V4H_CORE_DIG_ANACTRL_RW_COMMON_ANACTRL_REG(n)	(0x239e0 + ((n) * 2)) /* n = 0 - 3 */
-> +#define V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG	0x23fe0
+>  drivers/pci/controller/pci-hyperv.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>=20
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
+/pci-hyperv.c
+> index b4f29ee75848..4d25754dfe2f 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -4150,6 +4150,9 @@ static int __init init_hv_pci_drv(void)
+>  	if (!hv_is_hyperv_initialized())
+>  		return -ENODEV;
+>=20
+> +	if (hv_root_partition() && !hv_nested)
+> +		return -ENODEV;
 > +
-> +#define V4H_CORE_DIG_DLANE_l_RW_CFG_n_REG(l, n)		(0x26000 + ((l) * 0x400) + ((n) * 2))
-> +#define V4H_CORE_DIG_DLANE_l_RW_LP_n_REG(l, n)		(0x26080 + ((l) * 0x400) + ((n) * 2))
-> +#define V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, n)	(0x26100 + ((l) * 0x400) + ((n) * 2))
-> +#define V4H_CORE_DIG_DLANE_CLK_RW_LP_n_REG(n)		V4H_CORE_DIG_DLANE_l_RW_LP_n_REG(4, (n))
-> +#define V4H_CORE_DIG_DLANE_CLK_RW_HS_RX_n_REG(n)	V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(4, (n))
->  
->  /* V4H C-PHY */
->  #define V4H_CORE_DIG_RW_TRIO0_REG(n)			(0x22100 + ((n) * 2)) /* n = 0 - 3 */
-> @@ -1282,11 +1290,203 @@ rcsi2_c_phy_setting_v4h(struct rcar_csi2 *priv, int mbps)
->  	return conf;
->  }
->  
-> +struct rcsi2_d_phy_setting_v4h_lut_value {
-> +	unsigned int mbps;
-> +	unsigned char cfg_1;
-> +	unsigned char cfg_5_94;
-> +	unsigned char cfg_5_30;
-> +	unsigned char lane_ctrl_2_8;
-> +	unsigned char rw_hs_rx_3_83;
-> +	unsigned char rw_hs_rx_3_20;
-> +	unsigned char rw_hs_rx_6;
-> +	unsigned char rw_hs_rx_1;
-> +};
-> +
-> +static const struct rcsi2_d_phy_setting_v4h_lut_value *
-> +rcsi2_d_phy_setting_v4h_lut_lookup(int mbps)
-> +{
-> +	static const struct rcsi2_d_phy_setting_v4h_lut_value values[] = {
-> +		{ 4500, 0x3f, 0x07, 0x00, 0x01, 0x02, 0x01, 0x0d, 0x10 },
-> +		{ 4000, 0x47, 0x08, 0x01, 0x01, 0x05, 0x01, 0x0f, 0x0d },
-> +		{ 3600, 0x4f, 0x09, 0x01, 0x01, 0x06, 0x01, 0x10, 0x0b },
-> +		{ 3230, 0x57, 0x0a, 0x01, 0x01, 0x06, 0x01, 0x12, 0x09 },
-> +		{ 3000, 0x47, 0x08, 0x00, 0x00, 0x03, 0x01, 0x0f, 0x0c },
-> +		{ 2700, 0x4f, 0x09, 0x01, 0x00, 0x06, 0x01, 0x10, 0x0b },
-> +		{ 2455, 0x57, 0x0a, 0x01, 0x00, 0x06, 0x01, 0x12, 0x09 },
-> +		{ 2250, 0x5f, 0x0b, 0x01, 0x00, 0x08, 0x01, 0x13, 0x08 },
-> +		{ 2077, 0x67, 0x0c, 0x01, 0x00, 0x06, 0x02, 0x15, 0x0d },
-> +		{ 1929, 0x6f, 0x0d, 0x02, 0x00, 0x06, 0x02, 0x17, 0x0d },
-> +		{ 1800, 0x77, 0x0e, 0x02, 0x00, 0x06, 0x02, 0x18, 0x0d },
-> +		{ 1688, 0x7f, 0x0f, 0x02, 0x00, 0x08, 0x02, 0x1a, 0x0d },
-> +		{ 1588, 0x87, 0x10, 0x02, 0x00, 0x08, 0x02, 0x1b, 0x0d },
-> +		{ 1500, 0x8f, 0x11, 0x03, 0x00, 0x08, 0x02, 0x1d, 0x0c },
-> +	};
-> +
-> +	for (unsigned int i = 0; i < ARRAY_SIZE(values); i++)
-> +		if (values[i].mbps >= mbps)
+>  	ret =3D hv_pci_irqchip_init();
+>  	if (ret)
+>  		return ret;
+> --
+> 2.34.1
 
-I think this should be <=. Or
-
-		if (mbps >= values[i].mbps)
-
-> +			return &values[i];
-> +
-> +	return NULL;
-> +}
-> +
-> +static int rcsi2_d_phy_setting_v4h(struct rcar_csi2 *priv, int mbps)
-> +{
-> +	const struct rcsi2_d_phy_setting_v4h_lut_value *lut =
-> +		rcsi2_d_phy_setting_v4h_lut_lookup(mbps);
-> +	u16 val;
-> +
-> +	rcsi2_write16(priv, V4H_CORE_DIG_RW_COMMON_REG(7), 0x0000);
-> +	rcsi2_write16(priv, V4H_PPI_STARTUP_RW_COMMON_DPHY_REG(7), mbps > 1500 ? 0x0028 : 0x0068);
-> +	rcsi2_write16(priv, V4H_PPI_STARTUP_RW_COMMON_DPHY_REG(8), 0x0050);
-> +	rcsi2_write16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(0), 0x0063);
-> +	rcsi2_write16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(7), 0x1132);
-> +	rcsi2_write16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(1), 0x1340);
-> +	rcsi2_write16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(2), 0x4b13);
-> +	rcsi2_write16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(4), 0x000a);
-> +	rcsi2_write16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(6), 0x800a);
-> +	rcsi2_write16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(7), 0x1109);
-> +
-> +	if (mbps > 1500) {
-> +		val = roundup(5 * mbps / 64, 1);
-
-roundup(..., 1) seems weird. I think you meant
-
-		val = DIV_ROUND_UP(5 * mbps, 64);
-
-> +		rcsi2_write16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(3), val);
-> +	}
-> +
-> +	if (lut) {
-> +		rcsi2_modify16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(1),
-> +			       lut->cfg_1, 0x00ff);
-> +		rcsi2_modify16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(5),
-> +			       lut->cfg_5_94 << 4, 0x03f0);
-> +		rcsi2_modify16(priv, V4H_PPI_RW_DDLCAL_CFG_n_REG(5),
-> +			       lut->cfg_5_30 << 0, 0x000f);
-> +
-> +		for (unsigned int l = 0; l < 5; l++)
-> +			rcsi2_modify16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(l, 8),
-> +				       lut->lane_ctrl_2_8 << 12, 0x1000);
-> +	}
-> +
-> +	for (unsigned int l = 0; l < 4; l++)
-> +		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_LP_n_REG(l, 0), 0x463c);
-> +
-> +	rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(0, 2), 0x0000);
-> +	rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(1, 2), 0x0000);
-> +	rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(2, 2), 0x0001);
-> +	rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(3, 2), 0x0000);
-> +	rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(4, 2), 0x0000);
-> +
-> +	rcsi2_write16(priv, V4H_CORE_DIG_RW_COMMON_REG(6), 0x0009);
-> +
-> +	val = mbps > 1500 ? 0x0800 : 0x0802;
-> +	for (unsigned int l = 0; l < 5; l++)
-> +		rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(l, 12), val);
-> +
-> +	val = mbps > 1500 ? 0x0000 : 0x0002;
-> +	for (unsigned int l = 0; l < 5; l++)
-> +		rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(l, 13), val);
-> +
-> +	if (mbps >= 80) {
-> +		if (mbps >= 2560)
-> +			val = 6;
-> +		else if (mbps >= 1280)
-> +			val = 5;
-> +		else if (mbps >= 640)
-> +			val = 4;
-> +		else if (mbps >= 320)
-> +			val = 3;
-> +		else if (mbps >= 160)
-> +			val = 2;
-> +		else if (mbps >= 80)
-> +			val = 1;
-
-You could possibly replace this with
-
-		val = ilog2(mbps / 80) + 1;
-
-Up to you.
-
-> +
-> +		rcsi2_modify16(priv,
-> +			       V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(2, 9),
-> +			       val << 5, 0xe0);
-> +	}
-> +
-> +	rcsi2_write16(priv, V4H_CORE_DIG_DLANE_CLK_RW_HS_RX_n_REG(0), 0x091c);
-> +	rcsi2_write16(priv, V4H_CORE_DIG_DLANE_CLK_RW_HS_RX_n_REG(7), 0x3b06);
-> +
-> +	val = roundup(1200 / mbps, 1) + 12;
-
-And here
-
-	val = DIV_ROUND_UP(1200, mbps) + 12;
-
-> +	for (unsigned int l = 0; l < 4; l++)
-> +		rcsi2_modify16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 0), val << 8, 0xf0);
-> +
-> +	val = mbps > 1500 ? 0x0004 : 0x0008;
-> +	for (unsigned int l = 0; l < 4; l++)
-> +		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_CFG_n_REG(l, 1), val);
-> +
-> +	val = mbps > 2500 ? 0x669a : mbps > 1500 ? 0xe69a : 0xe69b;
-> +	for (unsigned int l = 0; l < 4; l++)
-> +		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 2), val);
-> +
-> +	for (unsigned int l = 0; l < 4; l++)
-> +		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_LP_n_REG(l, 0), 0x163c);
-> +	rcsi2_write16(priv, V4H_CORE_DIG_DLANE_CLK_RW_LP_n_REG(0), 0x163c);
-> +
-> +	if (lut) {
-> +		for (unsigned int l = 0; l < 4; l++)
-> +			rcsi2_modify16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 1),
-> +				       lut->rw_hs_rx_1, 0xff);
-> +	}
-> +
-> +	for (unsigned int l = 0; l < 4; l++)
-> +		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 3), 0x9209);
-> +
-> +	for (unsigned int l = 0; l < 4; l++)
-> +		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 4), 0x0096);
-> +
-> +	for (unsigned int l = 0; l < 4; l++)
-> +		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 5), 0x0100);
-> +
-> +	for (unsigned int l = 0; l < 4; l++)
-> +		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 6), 0x2d02);
-> +
-> +	for (unsigned int l = 0; l < 4; l++)
-> +		rcsi2_write16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 7), 0x1b06);
-> +
-> +	if (lut) {
-> +		/* Documentation LUT have two values but document writing both
-
-		/*
-		 * Documentation LUT have two values but document writing both
-
-> +		 * values in a single write.
-> +		 */
-> +		for (unsigned int l = 0; l < 4; l++)
-> +			rcsi2_modify16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 3),
-> +				       lut->rw_hs_rx_3_83 << 3 | lut->rw_hs_rx_3_20, 0x1ff);
-> +
-> +		for (unsigned int l = 0; l < 4; l++)
-> +			rcsi2_modify16(priv, V4H_CORE_DIG_DLANE_l_RW_HS_RX_n_REG(l, 6),
-> +				       lut->rw_hs_rx_6 << 8, 0xff00);
-> +	}
-> +
-> +	static const u16 deskew_fine[] = {
-> +		0x0404, 0x040c, 0x0414, 0x041c, 0x0423, 0x0429, 0x0430, 0x043a,
-> +		0x0445, 0x044a, 0x0450, 0x045a, 0x0465, 0x0469, 0x0472, 0x047a,
-> +		0x0485, 0x0489, 0x0490, 0x049a, 0x04a4, 0x04ac, 0x04b4, 0x04bc,
-> +		0x04c4, 0x04cc, 0x04d4, 0x04dc, 0x04e4, 0x04ec, 0x04f4, 0x04fc,
-> +		0x0504, 0x050c, 0x0514, 0x051c, 0x0523, 0x0529, 0x0530, 0x053a,
-> +		0x0545, 0x054a, 0x0550, 0x055a, 0x0565, 0x0569, 0x0572, 0x057a,
-> +		0x0585, 0x0589, 0x0590, 0x059a, 0x05a4, 0x05ac, 0x05b4, 0x05bc,
-> +		0x05c4, 0x05cc, 0x05d4, 0x05dc, 0x05e4, 0x05ec, 0x05f4, 0x05fc,
-> +		0x0604, 0x060c, 0x0614, 0x061c, 0x0623, 0x0629, 0x0632, 0x063a,
-> +		0x0645, 0x064a, 0x0650, 0x065a, 0x0665, 0x0669, 0x0672, 0x067a,
-> +		0x0685, 0x0689, 0x0690, 0x069a, 0x06a4, 0x06ac, 0x06b4, 0x06bc,
-> +		0x06c4, 0x06cc, 0x06d4, 0x06dc, 0x06e4, 0x06ec, 0x06f4, 0x06fc,
-> +		0x0704, 0x070c, 0x0714, 0x071c, 0x0723, 0x072a, 0x0730, 0x073a,
-> +		0x0745, 0x074a, 0x0750, 0x075a, 0x0765, 0x0769, 0x0772, 0x077a,
-> +		0x0785, 0x0789, 0x0790, 0x079a, 0x07a4, 0x07ac, 0x07b4, 0x07bc,
-> +		0x07c4, 0x07cc, 0x07d4, 0x07dc, 0x07e4, 0x07ec, 0x07f4, 0x07fc,
-> +	};
-> +
-> +	for (unsigned int i = 0; i < ARRAY_SIZE(deskew_fine); i++) {
-> +		rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG,
-> +			      deskew_fine[i]);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int rcsi2_start_receiver_v4h(struct rcar_csi2 *priv,
->  				    struct v4l2_subdev_state *state)
->  {
-> +	const struct rcsi2_cphy_setting *cphy = NULL;
->  	const struct rcar_csi2_format *format;
-> -	const struct rcsi2_cphy_setting *cphy;
->  	const struct v4l2_mbus_framefmt *fmt;
->  	unsigned int lanes;
->  	int mbps;
-> @@ -1318,7 +1518,8 @@ static int rcsi2_start_receiver_v4h(struct rcar_csi2 *priv,
->  	rcsi2_write(priv, V4H_FLDC_REG, 0);
->  	rcsi2_write(priv, V4H_FLDD_REG, 0);
->  	rcsi2_write(priv, V4H_IDIC_REG, 0);
-> -	rcsi2_write(priv, V4H_PHY_MODE_REG, V4H_PHY_MODE_CPHY);
-> +	rcsi2_write(priv, V4H_PHY_MODE_REG,
-> +		    priv->cphy ? V4H_PHY_MODE_CPHY : V4H_PHY_MODE_DPHY);
->  	rcsi2_write(priv, V4H_N_LANES_REG, lanes - 1);
->  
->  	rcsi2_write(priv, V4M_FRXM_REG,
-> @@ -1361,9 +1562,15 @@ static int rcsi2_start_receiver_v4h(struct rcar_csi2 *priv,
->  	rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_CB_CTRL_2_REG(5), 0x4000);
->  
->  	/* T3: PHY settings */
-> -	cphy = rcsi2_c_phy_setting_v4h(priv, mbps);
-> -	if (!cphy)
-> -		return -ERANGE;
-> +	if (priv->cphy) {
-> +		cphy = rcsi2_c_phy_setting_v4h(priv, mbps);
-> +		if (!cphy)
-> +			return -ERANGE;
-> +	} else {
-> +		ret = rcsi2_d_phy_setting_v4h(priv, mbps);
-> +		if (ret)
-> +			return ret;
-> +	}
->  
->  	/* T4: Leave Shutdown mode */
->  	rcsi2_write(priv, V4H_DPHY_RSTZ_REG, BIT(0));
-> @@ -1376,11 +1583,23 @@ static int rcsi2_start_receiver_v4h(struct rcar_csi2 *priv,
->  	}
->  
->  	/* T6: Analog programming */
-> -	for (unsigned int l = 0; l < 3; l++) {
-> -		rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(l, 9),
-> -			      cphy->lane29);
-> -		rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(l, 7),
-> -			      cphy->lane27);
-> +	if (priv->cphy) {
-> +		for (unsigned int l = 0; l < 3; l++) {
-> +			rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(l, 9),
-> +				      cphy->lane29);
-> +			rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(l, 7),
-> +				      cphy->lane27);
-> +		}
-> +	} else {
-> +		u16 val_2_9 = mbps > 2500 ? 0x14 : mbps > 1500 ? 0x04 : 0x00;
-> +		u16 val_2_15 = mbps > 1500 ? 0x03 : 0x00;
-> +
-> +		for (unsigned int l = 0; l < 5; l++) {
-> +			rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(l, 9),
-> +				      val_2_9);
-> +			rcsi2_write16(priv, V4H_CORE_DIG_IOCTRL_RW_AFE_LANEl_CTRL_2_REG(l, 15),
-> +				      val_2_15);
-> +		}
->  	}
->  
->  	/* T7: Wait for stop state */
-> @@ -2245,6 +2464,7 @@ static const struct rcar_csi2_info rcar_csi2_info_r8a779g0 = {
->  	.start_receiver = rcsi2_start_receiver_v4h,
->  	.use_isp = true,
->  	.support_cphy = true,
-> +	.support_dphy = true,
->  };
->  
->  static const struct rcsi2_register_layout rcsi2_registers_v4m = {
-
--- 
-Regards,
-
-Laurent Pinchart
