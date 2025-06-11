@@ -1,163 +1,178 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA9082BDC19
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:53:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE6727E7C6
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:54:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749653612; cv=none; b=WeyQtdWIc77Q6TM/GY6KuLKZDuHtQIEgo5oZ5wugZ+Si/iMm0ZMQltJ7x5ta0uNGlw3fWEeBWP7XKynlbj89Yp6g/FQsE9e+fRdATIaVBbdMKHDkihWna0rjrD427H7vky4sJ5J2BYBHM2C2aTYQJ7mWm1RTS9m5ninTFxfUi/A=
+	t=1749653676; cv=none; b=MNnOWzQ5pdw1BUefY+QVzB2sZRqcN+3l57WL03GJc8gBvOpSibN6N4EdDkbbA4zfOVzNguImeG+W1X70e8/VKEGMcO1QM8U/8BsQnamKow2T2N65tdgxGlzbPggl4XSOWjpu19oapmxdOIV9md79ILrIEJCA4K2Ow4F09p+aC5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749653612; c=relaxed/simple;
-	bh=Q/6vM8rFL8vGwZceGLj+Zt3SRB0C1Pbut8riw3f+MW8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=qWVYNkD4sm4ojHtSiR5BTjB04BFVPHgCf2i9qUWUs+sGziQGZx4YwpLSDxd0PvA/bDFtNd0Yo4DGUxA9S28+x9XzzYHWTBbx05sDjBR35ilN28b1z9qR8AwZ0RzG1iNMbzlfdeaF1Jaypdq82pe/K/2s9V0tCbYm2Ilgnz70PUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OBVtex+P; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1749653676; c=relaxed/simple;
+	bh=zCBUsmQCNtzpOKb3kzZfDwL9Y2XTMaJp4Ho4TyPBe+8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=KgagsfdEg2/A6yjn1jHfw60MmvpuZ5LXJhWTdYXlph0rwoQO23KS9YaYHLadu/YjDiFElZk+BlqEcNOI6yHUE2GGPnoMD7zYFtsBxXi3ONlfdVDDNmkpt+l0L1z7WthcFwPIeO/jqqxi7mvy6ndmv6NUX1TBXrTRQON5CaXy3Z0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Pt6KqQMd; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OBVtex+P"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 07743431EB;
-	Wed, 11 Jun 2025 14:53:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1749653607;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sJu5NSgqNOml+9Lox7VvY57DB9A7wKSyNIB2QDnPsGk=;
-	b=OBVtex+PPJ9C5YrO63rD52e2cVGsu/uqOLAY/L5dVGBbk36SdtmKeU5z7a8gjyDMv+3FaT
-	TX/XWmjIZZOc04r1YF58J0UZmzld+Dkri6ScFCWleeIP6lbmHq868ldlq00T+fx8gJgkyI
-	k8hI2/zz6hZhcjDqGHWI3Vyphrs88/33hARFhOWkdMAty3Q8ddiC4Q71ZFC+WQw/ZvU7oL
-	ClgB+Dqt0esvCGIidbCkKPeUDdP7/pboiTDjIH1fcRy78yYoCwHyJMVFxSjAsdluxEF9cD
-	sKyqBcqTttiLXgUfWXVTiRLrRFVDpN5Ap4ZpdRVu8OAa/540HM9YNp4iXMGjYg==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: "Usyskin, Alexander" <alexander.usyskin@intel.com>
-Cc: Richard Weinberger <richard@nod.at>,  Guenter Roeck
- <linux@roeck-us.net>,  Vignesh Raghavendra <vigneshr@ti.com>,  "De Marchi,
- Lucas" <lucas.demarchi@intel.com>,  Thomas =?utf-8?Q?Hellstr=C3=B6m?=
- <thomas.hellstrom@linux.intel.com>,  "Vivi, Rodrigo"
- <rodrigo.vivi@intel.com>,  Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>,  Maxime Ripard <mripard@kernel.org>,
-  Thomas Zimmermann <tzimmermann@suse.de>,  David Airlie
- <airlied@gmail.com>,  Simona Vetter <simona@ffwll.ch>,  Jani Nikula
- <jani.nikula@linux.intel.com>,  Joonas Lahtinen
- <joonas.lahtinen@linux.intel.com>,  Tvrtko Ursulin <tursulin@ursulin.net>,
-  "Poosa, Karthik" <karthik.poosa@intel.com>,  "Abliyev, Reuven"
- <reuven.abliyev@intel.com>,  "Weil, Oren jer" <oren.jer.weil@intel.com>,
-  linux-mtd <linux-mtd@lists.infradead.org>,  "DRI mailing list"
- <dri-devel@lists.freedesktop.org>,  intel-gfx
- <intel-gfx@lists.freedesktop.org>,  linux-kernel
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 01/11] mtd: core: always create master device
-In-Reply-To: <CY5PR11MB636692EFD9BB99B6F2D959BFED75A@CY5PR11MB6366.namprd11.prod.outlook.com>
-	(Alexander Usyskin's message of "Wed, 11 Jun 2025 10:52:36 +0000")
-References: <20250302140921.504304-1-alexander.usyskin@intel.com>
-	<CY5PR11MB63662D21B2C7B1A1C2E6BC4BED6BA@CY5PR11MB6366.namprd11.prod.outlook.com>
-	<2e5ebbdd-2a57-4f1f-85c6-7c2dff127b50@roeck-us.net>
-	<1176847729.134356549.1749504429656.JavaMail.zimbra@nod.at>
-	<CY5PR11MB6366B2B40E0C357D6C0935C2ED6AA@CY5PR11MB6366.namprd11.prod.outlook.com>
-	<130790886.134361099.1749560056731.JavaMail.zimbra@nod.at>
-	<c90c8bad-9c7a-4bf7-8282-ebefebba90a3@roeck-us.net>
-	<877c1ivcym.fsf@bootlin.com>
-	<1612313571.134371311.1749637592940.JavaMail.zimbra@nod.at>
-	<CY5PR11MB636692EFD9BB99B6F2D959BFED75A@CY5PR11MB6366.namprd11.prod.outlook.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Wed, 11 Jun 2025 16:53:24 +0200
-Message-ID: <87y0tytjmj.fsf@bootlin.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Pt6KqQMd"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-311b6d25163so5817060a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:54:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749653674; x=1750258474; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=d7dU2XMq7cH0BFFGQ+DgqIHQtmep1TbKLe5KJJmPBu4=;
+        b=Pt6KqQMdzHfULXCcrfX4BbWmWnZn7NgcfvZp/hGl8FCPbgv4WgJNh7mUN3EEP/wyAI
+         AIh4mLWs1sC/ZdI6Pfcz+kXr3ucywqBqUjknrybwSjzyV9fhB/Odj5RdBRLA2WxxSFBD
+         vj6tVnbwG8/SK38nyD5J+glCQfeKkwa28D0xolxHWnxugsF8onx9qTkCGKvSlWkUuE4q
+         v7MdmZ8C378CuxEfvpth90GFE1Ptr9dQ5G0d7PBWXCQtEykxqSOxHbdJ6hoHm+qj0KWz
+         A8CJyJRq7ZAun5wtxsBhOY/BXTbITOBhXr+66HzGqW97ok8Qc0lY3tppyfR2N4jslFyH
+         3ibg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749653674; x=1750258474;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=d7dU2XMq7cH0BFFGQ+DgqIHQtmep1TbKLe5KJJmPBu4=;
+        b=SYGoKRNTJ5vRamj4VLC14TRpwbW3xx2Qu3oh+TsYfI1ctZuhPX+ZbjGgHguQbaCECJ
+         YEzQGeCj+C95Owt79jGqzIhHkZrDb1WbtcYYp9FM7JmRoD300+D9bQUdojrp5/Xx68OW
+         PC7fWna3omDvHMWCBp7V6tuAo41aHOWTLB6p4Zga+L5UWBYw9bxUXMzBa6i87eX24kdc
+         OIaSyGkRR1kK6CQ+nPsQBtFfl9OdKyeQwDW5ursZd9HvOGajdXHy5u3bGZYjUfKBSM45
+         xEnepX8tvFeyGvzFTVWWWYuulViJjweAjtPambfEu3DdwhfY8JHU/Nt8YwbtrEJiCrbh
+         xjPg==
+X-Forwarded-Encrypted: i=1; AJvYcCXMNWGCkd67KhIGw+rKqNWqUVjx4ytNSvnhSuqrpKdoI/e1nbrip20oDeX87N758AgTgiOZ484lQgbwiqc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyu/KOsLtZjdKvcN+8fhuxFQBdZSCxw6+zDkQv+kjnJCNcZ0riy
+	WDQmwmNShQt0QGfPAncYt5Ic4F/RxmMBa23gq+dCoXKXoXdplDbS/cB6SIIeCW/rXPKVb8g+nKB
+	O0QfacQ==
+X-Google-Smtp-Source: AGHT+IHjT9+x0VCM9Pw4MWr32hSRzkY7bgSAUFaQJkT6BKWZAAEydapOPokmqOEJAXru1zHxzAthq+kZwNQ=
+X-Received: from pjbqo13.prod.google.com ([2002:a17:90b:3dcd:b0:311:a4ee:7c3d])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3802:b0:312:1ae9:1525
+ with SMTP id 98e67ed59e1d1-313b1ee6608mr4132239a91.8.1749653673748; Wed, 11
+ Jun 2025 07:54:33 -0700 (PDT)
+Date: Wed, 11 Jun 2025 07:54:32 -0700
+In-Reply-To: <7f17ca58-5522-45de-9dae-6a11b1041317@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Mime-Version: 1.0
+References: <20250610021422.1214715-1-binbin.wu@linux.intel.com>
+ <20250610021422.1214715-4-binbin.wu@linux.intel.com> <ff5fd57a-9522-448c-9ab6-e0006cb6b2ee@intel.com>
+ <671f2439-1101-4729-b206-4f328dc2d319@linux.intel.com> <7f17ca58-5522-45de-9dae-6a11b1041317@intel.com>
+Message-ID: <aEmYqH_2MLSwloBX@google.com>
+Subject: Re: [RFC PATCH 3/4] KVM: TDX: Exit to userspace for GetTdVmCallInfo
+From: Sean Christopherson <seanjc@google.com>
+To: Xiaoyao Li <xiaoyao.li@intel.com>
+Cc: Binbin Wu <binbin.wu@linux.intel.com>, rick.p.edgecombe@intel.com, 
+	pbonzini@redhat.com, kvm@vger.kernel.org, kai.huang@intel.com, 
+	adrian.hunter@intel.com, reinette.chatre@intel.com, tony.lindgren@intel.com, 
+	isaku.yamahata@intel.com, yan.y.zhao@intel.com, mikko.ylinen@linux.intel.com, 
+	linux-kernel@vger.kernel.org, kirill.shutemov@intel.com, jiewen.yao@intel.com
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduvdegkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefujghffgffkfggtgfgsehtqhertddtreejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepteehkeelvddvheehtdefkedtjeeutedthfegudekgeefleetkeettdekiefftdeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddvpdhrtghpthhtoheprghlvgigrghnuggvrhdruhhshihskhhinhesihhnthgvlhdrtghomhdprhgtphhtthhopehrihgthhgrrhgusehnohgurdgrthdprhgtphhtthhopehlihhnuhigsehrohgvtghkqdhushdrnhgvthdprhgtphhtthhopehvihhgnhgvshhhrhesthhirdgtohhmpdhrtghpthhtoheplhhutggrshdruggvmhgrrhgthhhisehin
- hhtvghlrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhhvghllhhsthhrohhmsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheprhhoughrihhgohdrvhhivhhisehinhhtvghlrdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomh
-X-GND-Sasl: miquel.raynal@bootlin.com
 
-Hello,
+On Wed, Jun 11, 2025, Xiaoyao Li wrote:
+> On 6/11/2025 9:37 AM, Binbin Wu wrote:
+> > On 6/10/2025 5:16 PM, Xiaoyao Li wrote:
+> > > On 6/10/2025 10:14 AM, Binbin Wu wrote:
+> > > > Exit to userspace for TDG.VP.VMCALL<GetTdVmCallInfo> via a new KVM =
+exit
+> > > > reason to allow userspace to provide information about the support =
+of
+> > > > TDVMCALLs when r12 is 1 for the TDVMCALLs beyond the GHCI base API.
+> > > >=20
+> > > > GHCI spec defines the GHCI base TDVMCALLs: <GetTdVmCallInfo>, <MapG=
+PA>,
+> > > > <ReportFatalError>, <Instruction.CPUID>, <#VE.RequestMMIO>,
+> > > > <Instruction.HLT>, <Instruction.IO>, <Instruction.RDMSR> and
+> > > > <Instruction.WRMSR>. They must be supported by VMM to support
+> > > > TDX guests.
+> > > >=20
+> > > > For GetTdVmCallInfo
+> > > > - When leaf (r12) to enumerate TDVMCALL functionality is set to 0,
+> > > > =C2=A0=C2=A0 successful execution indicates all GHCI base TDVMCALLs=
+ listed
+> > > > above are
+> > > > =C2=A0=C2=A0 supported.
+> > > >=20
+> > > > =C2=A0=C2=A0 Update the KVM TDX document with the set of the GHCI b=
+ase APIs.
+> > > >=20
+> > > > - When leaf (r12) to enumerate TDVMCALL functionality is set to 1, =
+it
+> > > > =C2=A0=C2=A0 indicates the TDX guest is querying the supported TDVM=
+CALLs beyond
+> > > > =C2=A0=C2=A0 the GHCI base TDVMCALLs.
+> > > > =C2=A0=C2=A0 Exit to userspace to let userspace set the TDVMCALL
+> > > > sub-function bit(s)
+> > > > =C2=A0=C2=A0 accordingly to the leaf outputs.=C2=A0 KVM could set t=
+he TDVMCALL bit(s)
+> > > > =C2=A0=C2=A0 supported by itself when the TDVMCALLs don't need supp=
+ort
+> > > > from userspace
+> > > > =C2=A0=C2=A0 after returning from userspace and before entering gue=
+st.
+> > > > Currently, no
+> > > > =C2=A0=C2=A0 such TDVMCALLs implemented, KVM just sets the values r=
+eturned from
+> > > > =C2=A0=C2=A0 userspace.
+> > > >=20
+> > > > =C2=A0=C2=A0 A new KVM exit reason KVM_EXIT_TDX_GET_TDVMCALL_INFO a=
+nd its
+> > > > structure
+> > > > =C2=A0=C2=A0 are added. Userspace is required to handle the exit re=
+ason as
+> > > > the initial
+> > > > =C2=A0=C2=A0 support for TDX.
+> > >=20
+> > > It doesn't look like a good and correct design.
+> > >=20
+> > > Consider the case that userspace supports SetupEventNotifyInterrupt
+> > > and returns bit 1 of leaf_output[0] as 1 to KVM, and KVM returns it
+> > > to TD guest for TDVMCALL_GET_TD_VM_CALL_INFO. So TD guest treats it
+> > > as SetupEventNotifyInterrupt is support. But when TD guest issues
+> > > this TDVMCALL, KVM doesn't support the exit to userspace for this
+> > > specific leaf and userspace doesn't have chance to handle it.
+> > Previously, I also had the idea of setting the information based on
+> > userspace's opt-ins.
+> >=20
+> > But for simplicity, this patch set doesn't adopt the opt-in mechanism f=
+or
+> > KVM exit reasons due to TDVMCALLs.
+> >=20
+> > To resolve the issue you mentions that userspace could set a bit that K=
+VM
+> > doesn't support the exit to userspace, KVM could mask off the bit(s) no=
+t
+> > supported by KVM before returning back to guest.
+>=20
+> silently mask off the value provided from userspace is not a stable ABI f=
+rom
+> userspace perspective. A kvm cap to report what value is allowed/supporte=
+d
+> is still helpful.
+>=20
+> > If we agree that it's the right time to have the opt-in, we could go th=
+e
+> > opt-in way and KVM could set the information based on userspace's opt-i=
+ns
+> > without exit to userspace for GetTdVmCallInfo.
+>=20
+> Let's see what Paolo and Sean will say.
 
-On 11/06/2025 at 10:52:36 GMT, "Usyskin, Alexander" <alexander.usyskin@inte=
-l.com> wrote:
+Kicking this to userspace seems premature.  AIUI, no "optional" VMCALL feat=
+ures
+are defined at this time, i.e. there's nothing to enumerate.  And there's n=
+o
+guarantee that there will ever be capabilties that require enumeration from=
+=20
+*userspace*.  E.g. if fancy feature XYZ requires enumeration, but that feat=
+ure
+requires explicit KVM support, then forcing userspace will be messy.
 
->> Subject: Re: [PATCH v6 01/11] mtd: core: always create master device
->>=20
->> ----- Urspr=C3=BCngliche Mail -----
->> > Von: "Miquel Raynal" <miquel.raynal@bootlin.com>
->> >> On 6/10/25 05:54, Richard Weinberger wrote:
->> >>> ----- Urspr=C3=BCngliche Mail -----
->> >>>> Von: "Alexander Usyskin" <alexander.usyskin@intel.com>
->> >>>> Richard, I've reproduced your setup (modulo that I must load mtdram
->> manually)
->> >>>> and patch provided in this thread helps to fix the issue.
->> >>>> Can you apply and confirm?
->> >>> Yes, it fixes the issue here! :-)
->> >>>
->> >>
->> >> It doesn't seem to fix the issue if the partition data is in
->> >> devicetree.
->> >
->> > I had a look at the patch again. The whole mtd core makes assumptions =
-on
->> > parenting, which is totally changed with this patch. There are so many
->> > creative ways this can break, I don't believe we are going to continue
->> > this route. I propose to revert the patch entirely for now. We need to
->> > find another approach, I'm sorry.
->>=20
->> I think reverting is a valid option to consider if the issue turns out t=
-o be
->> a "back to the drawing board" problem.
->>=20
->> > Alexander, can you please remind me what was your initial problem? I
->> > believe you needed to anchor runtime PM on the master device. Can you
->> > please elaborate again? Why taking the controller as source (the
->> > default, before your change) did not work? Also why was selecting
->> > MTD_PARTITIONED_MASTER not an option for you? I'm trying to get to the
->> > root of this change again, so we can find a solution fixing "the world"
->> > (fast) and in a second time a way to address your problem.
->>=20
->> IIRC the problem is that depending on CONFIG_MTD_PARTITIONED_MASTER
->> won't fly as PM needs to work with any configuration.
->> And enforcing CONFIG_MTD_PARTITIONED_MASTER will break existing
->> setups because mtd id's will change.
->>=20
->> On the other hand, how about placing the master device at the end
->> of the available mtd id space if CONFIG_MTD_PARTITIONED_MASTER=3Dn?
->> A bit hacky but IMHO worth a thought.
->>=20
->> Thanks,
->> //Richard
->
-> The original problem was that general purpose OS never set
-> CONFIG_MTD_PARTITIONED_MASTER and we need valid device tree
-> to power management to work.
->
-> We can return to V7 of this patch that only creates dummy master if
-> CONFIG_MTD_PARTITIONED_MASTER is off.
-> In this case the hierarchy remains the same.
->
-> Miquel, can you re-review v7 and say if it worth to revert current versio=
-n and
-> put v7 instead?
-
-After taking inspiration from Richard's wisdom on IRC, we have another
-proposal. Let's drop the mtd_master class. We need an mtd device to be
-the master device, we already have one but we cannot keep *at the
-beginning* of the ID space under the CONFIG_MTD_PARTITIONED_MASTER=3Dn
-configuration to avoid breaking userspace. So let's keep the master
-anyway, with the following specificities in the problematic case:
-- id is allocated from the max value downwards (avoids messing with
-  numbering)
-- mtd device is simply hidden (same user experience as before)
-
-Apparently this second point, while not natively supported, is something
-the block world already does:
-https://elixir.bootlin.com/linux/v6.15.1/source/include/linux/blkdev.h#L88
-
-What do you think?
-
-Thanks,
-Miqu=C3=A8l
+So I don't see why KVM should anything other than return '0' to the guest (=
+or
+whatever value says "there's nothing here").
