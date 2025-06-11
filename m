@@ -1,74 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0926EDF49;
-	Wed, 11 Jun 2025 22:33:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F508DF49;
+	Wed, 11 Jun 2025 22:35:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749681229; cv=none; b=jQ64Ot0cvZgGVD+x7FSw2eM/VABBRVTbY9YFrorUkRvqP2g1+G3GrHv8u0ZrNjUpvYNg2fOeJUm4vxnlcCUWLrO68g3Mhi2CFlVtcLm3Hcp6E8Ip+1i25Ro/8QUmmtYzQL5jq+vQ3LKL9QGeW/61onx/HcMWOVt9NO/XCu0Xq1s=
+	t=1749681327; cv=none; b=Z/UNiuUP+roRGRKOsoBZiRme/k4uqNFGqRpd4TPGOSVcI4JMMFcjRBN0WwJst4V0Wcb8YDBFBzQ+sLGmzgD4xVRP+oPwJzkZ0KX1//BuFf51cZamMzMXlVWLzCc3EB7qeX76JdGz4sF/3FH0O1zb0fy2MZF8LHo89LkZTlIlhIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749681229; c=relaxed/simple;
-	bh=5UEeqiOjSmvi1tWwRW73hCHk9IrJ+ZliNy+2Uj/YD44=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=HoblTcaQYYKxNQz0Anr2ElhWvgfpVgTw6m4808NcPH1VrBobEzymoUoPGgY4U3mKOxAvGMWoDlam+CoqXk4xCAIPt7SWXUBNwWcv4rkBeHWY2BT1mMDJGovi6V78LRjILnd7f5awG6uzA29obeyqIvB9YIX5uO4RYbd205TgO0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=YHNKn7F9; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="YHNKn7F9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BABF9C4CEE3;
-	Wed, 11 Jun 2025 22:33:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1749681228;
-	bh=5UEeqiOjSmvi1tWwRW73hCHk9IrJ+ZliNy+2Uj/YD44=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=YHNKn7F9z2ZIRtxiNDxDltHkn4RbwhiaHn4fgKIsZ+x4sgolSwPSiETwYDPStlyoN
-	 ssRmu5vJrw9zU2gPyg4wJ8v25YGYWIdFdX1JaN5WFzaCxX0ioKrG/jtEfS1WAGXWBD
-	 mqzy863DzE9Y56wYen8iqYcAKH9nPRsFAedgRAgI=
-Date: Wed, 11 Jun 2025 15:33:47 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Charlemagne Lasse
- <charlemagnelasse@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, Michal
- Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Muchun Song <muchun.song@linux.dev>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Clark Williams
- <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Alexei
- Starovoitov <ast@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jakub
- Kicinski <kuba@kernel.org>, "Peter Zijlstra (Intel)"
- <peterz@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>, LKML
- <linux-kernel@vger.kernel.org>, "open list:CONTROL GROUP (CGROUP)"
- <cgroups@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
- linux-rt-devel@lists.linux.dev
-Subject: Re: locking/local_lock, mm: sparse warnings about shadowed variable
-Message-Id: <20250611153347.779ae8c66be1aa806dbeb816@linux-foundation.org>
-In-Reply-To: <CAADnVQK+wjvxmBM7WJOGNK=AqeJ7UHBO4tUZR3Gjc4kfgux1sw@mail.gmail.com>
-References: <CAFGhKbwVyxCwYSNrPaQ-GkuP008+uvDg-wNA5syWLLzODCfpcA@mail.gmail.com>
-	<68c0649d-d9b3-44f4-9a92-7f72c51a5013@suse.cz>
-	<CAADnVQK+wjvxmBM7WJOGNK=AqeJ7UHBO4tUZR3Gjc4kfgux1sw@mail.gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749681327; c=relaxed/simple;
+	bh=uyJxGwz+QLoecVnaEMoet+qzKUja57qNfLOrfhR8XE8=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=IqMW8+4E4QiAoJj2H85vlshFjmGFwHyMKjO5K974NrkFrFMl+KsetrTeKzBNBaSJw0j9rkfxQVj8pTE0bG1tzJt/re2YLvzFj7YYwbZl41OzhJepIKEcCur+5g3SedV11i1xpjbvI71Q12f3xwEHo1BJfaSvNnd4DabiHqU1/ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1uPU2J-008NYe-Fs;
+	Wed, 11 Jun 2025 22:35:11 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+From: "NeilBrown" <neil@brown.name>
+To: "Christian Brauner" <brauner@kernel.org>
+Cc: "Alexander Viro" <viro@zeniv.linux.org.uk>, "Jan Kara" <jack@suse.cz>,
+ "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Amir Goldstein" <amir73il@gmail.com>, "Jan Harkes" <jaharkes@cs.cmu.edu>,
+ "David Howells" <dhowells@redhat.com>, "Tyler Hicks" <code@tyhicks.com>,
+ "Miklos Szeredi" <miklos@szeredi.hu>, "Carlos Maiolino" <cem@kernel.org>,
+ linux-fsdevel@vger.kernel.org, coda@cs.cmu.edu, codalist@coda.cs.cmu.edu,
+ linux-nfs@vger.kernel.org, netfs@lists.linux.dev, ecryptfs@vger.kernel.org,
+ linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH 0/5] Minor cleanup preparation for some dir-locking API changes
+In-reply-to: <20250611-ihnen-gehackt-39b5a2c24db4@brauner>
+References: <20250608230952.20539-1-neil@brown.name>,
+ <20250611-ihnen-gehackt-39b5a2c24db4@brauner>
+Date: Thu, 12 Jun 2025 08:35:10 +1000
+Message-id: <174968131051.608730.6876830326454616279@noble.neil.brown.name>
 
-On Wed, 11 Jun 2025 11:20:16 -0700 Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
-
-> > diff --git a/include/linux/local_lock_internal.h b/include/linux/local_lock_internal.h
-> > index 8d5ac16a9b17..075338f270d0 100644
-> > --- a/include/linux/local_lock_internal.h
-> > +++ b/include/linux/local_lock_internal.h
-> > @@ -97,17 +97,17 @@ do {                                                                \
-> >  #define __local_lock_acquire(lock)                                     \
-> >         do {                                                            \
-> >                 local_trylock_t *tl;                                    \
-> > -               local_lock_t *l;                                        \
-> > +               local_lock_t *ll;                                       \
+On Wed, 11 Jun 2025, Christian Brauner wrote:
+> On Mon, Jun 09, 2025 at 09:09:32AM +1000, NeilBrown wrote:
+> > The following 5 patches provide further cleanup that serves as
+> > preparation for some dir-locking API changes that I want to make.  The
+> > most interesting is the last which makes another change to vfs_mkdir().
+> > As well as returning the dentry or consuming it on failure (a recent
+> > change) it now also unlocks on failure.  This will be needed when we
+> > transition to locking just the dentry, not the whole directory.
 > 
-> I wouldn't bother messing with the code because of sparse.
-> Compilers don't warn here.
+> All of the patches except the vfs_mkdir() one that Al is looking at
+> make sense as independent cleanups imho. So I'd take them unless I hear
+> screams.
+> 
 
-There's some value in not cluttering up the sparse output in this
-fashion.  sparse does often find things which we choose to fix.
+Thanks.  I'm glad you didn't include the vfs_mkdir() change as I found a
+problem in the overlayfs code.  I'm make sure I really understand that
+code before trying that one again.
+
+Meanwhile I noticed I have a couple of other mostly-independent
+cleanups.  I'll send those.
+
+NeilBrown
