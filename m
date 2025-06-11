@@ -1,98 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229292620E5;
-	Wed, 11 Jun 2025 10:05:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8958F2620CA;
+	Wed, 11 Jun 2025 10:05:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749636312; cv=none; b=m6Gpm+eL+n3qevxqZprAFL15hMOJIex+HV8ikoE/V2OiMrzBmD4ibEjiEnaQ5XdOtAf7h/r9seQFc4TqmwRzBxRtSmo38Q5F5soeufVsgcvG2ImDy7YAViqlAf3wI5Le/T6fYu//gBHOVcb+Lhtukp90eaFXOqseGvnQPWROxlk=
+	t=1749636313; cv=none; b=dh+JwU7veS93i8Km6A3E/SBlkJwUnnnlNPwuMNPlLkPQwo09lSudM9OGbV3v7X511Juhf0HXijuaKfC1r0P3e72AhxzYOk/1TQeo4oMECQUlH87YTQ7II5MHnu4To2UVV9uftji0eYrtrtlLMz1N03EJWDAyK1w1zu6DWcxDs/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749636312; c=relaxed/simple;
-	bh=gPaP3WMO/RLExljCqXnu0HKGZ3gE4EOR9JfvXxizfI8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oGYJ4yvM/SvAA1x3onnDLBBuHSUxN7BBSG6iwBXEzRqf087NHJkflbes3JUFGVMu8HCHGdyQvurNYoU8jxTmd/kwGLKBjYszTNQHlW5pNRONJmToG6V20VK1bB9hE9SpQPaq2rCbQeRqQmzUN8kIvIWIiYBYMvDqTiCJ6WB0Ixo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mz9x0vgP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749636313; c=relaxed/simple;
+	bh=TeLI3Lddts0BIYHmBS0TtowM9nVihM9glw/C2T0j7XM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uytTF1zh73FuMbWatoRXIwZBrZqZWIhAx4pPrlUWUDI47HVzh5eLk/V50GZevv8UOQnwZ0d9nGDM0Fwf4c9ClvI0xnQY8uh/+Cu1/BVhIvsTRoltmjs+PFy7ncLwPlWILyU6SSo/hw0ptZ50QWUl7Ecln/DtgEf2gdZ62iBmNh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=NkO+L4no; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mz9x0vgP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4A8AC4CEEE;
-	Wed, 11 Jun 2025 10:05:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749636312;
-	bh=gPaP3WMO/RLExljCqXnu0HKGZ3gE4EOR9JfvXxizfI8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mz9x0vgPlloUBypKgcgmt2mjSkqPYSOoGHVjZmP7Yv8KIOEI6Eu3meYJucSkiN13d
-	 +8V3DlRC9nacOJMZqzHsQCHTCp6KbTrO8nSIYykx5Rsl/yGzsF7K6Zcu8gi6ZpF4Cr
-	 3vC6SaTgwqIiCM3txQRb4OukbNP6lkAxKBpBjiaf7Wke5Fdq4EeKCmHU+EXmYJ8+XT
-	 hrINlG12Fn27HOZayF3IO7QaEcZzdqc6fK8eyoL37aiEi3ygI6ZT77nGQtgVJz4lDN
-	 rZuAuAOBl/eIXAyikuRsApL7TK0rhxiyaUNikxIGnUGKGmI5m90nqT+1EIVo0ow2C3
-	 cw8qWT9nCvgZQ==
-Date: Wed, 11 Jun 2025 12:05:07 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Paul Moore <paul@paul-moore.com>
-Cc: linux-fsdevel@vger.kernel.org, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Collin Funk <collin.funk1@gmail.com>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, linux-kernel@vger.kernel.org, selinux@vger.kernel.org, 
-	eggert@cs.ucla.edu, bug-gnulib@gnu.org
-Subject: Re: [PATCH] fs/xattr.c: fix simple_xattr_list()
-Message-ID: <20250611-gepunktet-umkurven-5482b6f39958@brauner>
-References: <20250605164852.2016-1-stephen.smalley.work@gmail.com>
- <CAHC9VhQ-f-n+0g29MpBB3_om-e=vDqSC3h+Vn_XzpK2zpqamdQ@mail.gmail.com>
- <CAHC9VhRUqpubkuFFVCfiMN4jDiEhXQvJ91vHjrM5d9e4bEopaw@mail.gmail.com>
- <87plfhsa2r.fsf@gmail.com>
- <CAHC9VhRSAaENMnEYXrPTY4Z4sPO_s4fSXF=rEUFuEEUg6Lz21Q@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="NkO+L4no"
+Received: from DESKTOP-RSFL4TU.corp.microsoft.com (unknown [167.220.238.139])
+	by linux.microsoft.com (Postfix) with ESMTPSA id E878B2115188;
+	Wed, 11 Jun 2025 03:05:01 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E878B2115188
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1749636311;
+	bh=iFH/A224Q7Iky4IKjuP9TxBCXGPTpQ+mWawcgol9EaM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=NkO+L4noU0fsiOO/C7biOMxA6iMyK/EamuP/4x0qx+xMoA4wcnRKwpXYB6GBSXnyS
+	 8XpgrGCgIkGGbl0cadlbp0unuMHuYlREdNsRhXOp27/vWCp2T6ZcnSUCcMJ3IbzZAM
+	 Zk5vBoLeQmK9m+OUqW1a7AnaUtSJT/mdUrSy875g=
+From: Naman Jain <namjain@linux.microsoft.com>
+To: "K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Long Li <longli@microsoft.com>,
+	Shiraz Saleem <shirazsaleem@microsoft.com>,
+	Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: [PATCH 0/6] Fix warning for missing export.h in Hyper-V drivers
+Date: Wed, 11 Jun 2025 15:34:53 +0530
+Message-Id: <20250611100459.92900-1-namjain@linux.microsoft.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHC9VhRSAaENMnEYXrPTY4Z4sPO_s4fSXF=rEUFuEEUg6Lz21Q@mail.gmail.com>
 
-On Tue, Jun 10, 2025 at 07:50:10PM -0400, Paul Moore wrote:
-> On Fri, Jun 6, 2025 at 1:39 AM Collin Funk <collin.funk1@gmail.com> wrote:
-> > Paul Moore <paul@paul-moore.com> writes:
-> > >> <stephen.smalley.work@gmail.com> wrote:
-> > >> >
-> > >> > commit 8b0ba61df5a1 ("fs/xattr.c: fix simple_xattr_list to always
-> > >> > include security.* xattrs") failed to reset err after the call to
-> > >> > security_inode_listsecurity(), which returns the length of the
-> > >> > returned xattr name. This results in simple_xattr_list() incorrectly
-> > >> > returning this length even if a POSIX acl is also set on the inode.
-> > >> >
-> > >> > Reported-by: Collin Funk <collin.funk1@gmail.com>
-> > >> > Closes: https://lore.kernel.org/selinux/8734ceal7q.fsf@gmail.com/
-> > >> > Reported-by: Paul Eggert <eggert@cs.ucla.edu>
-> > >> > Closes: https://bugzilla.redhat.com/show_bug.cgi?id=2369561
-> > >> > Fixes: 8b0ba61df5a1 ("fs/xattr.c: fix simple_xattr_list to always include security.* xattrs")
-> > >> >
-> > >> > Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-> > >> > ---
-> > >> >  fs/xattr.c | 1 +
-> > >> >  1 file changed, 1 insertion(+)
-> > >>
-> > >> Reviewed-by: Paul Moore <paul@paul-moore.com>
-> > >
-> > > Resending this as it appears that Stephen's original posting had a
-> > > typo in the VFS mailing list.  The original post can be found in the
-> > > SELinux archives:
-> > >
-> > > https://lore.kernel.org/selinux/20250605164852.2016-1-stephen.smalley.work@gmail.com/
-> >
-> > Hi, responding to this message since it has the correct lists.
-> >
-> > I just booted into a kernel with this patch applied and confirm that it
-> > fixes the Gnulib tests that were failing.
-> >
-> > Reviewed-by: Collin Funk <collin.funk1@gmail.com>
-> > Tested-by: Collin Funk <collin.funk1@gmail.com>
-> >
-> > Thanks for the fix.
-> 
-> Al, Christian, are either of you going to pick up this fix to send to
-> Linus?  If not, any objection if I send this up?
+When the kernel is compiled with W=1 option, a warning is reported
+if a .c file exports a symbol but does not include export.h header
+file. This warning was added in below patch, which merged recently:
+commit a934a57a42f6 ("scripts/misc-check: check missing #include <linux/export.h> when W=1")
 
-It's been in vfs.fixes for some time already and it'll go out with the
-first round of post -rc1 fixes this week.
+Fix this issue in Hyper-V drivers. This does not bring any
+functional changes.
+
+The one in drivers/hv/vmbus_drv.c is going to be fixed with 
+https://lore.kernel.org/all/20250611072704.83199-2-namjain@linux.microsoft.com/
+so it is not included in this series.
+
+Naman Jain (6):
+  Drivers: hv: Fix warnings for missing export.h header inclusion
+  x86/hyperv: Fix warnings for missing export.h header inclusion
+  KVM: x86: hyper-v: Fix warnings for missing export.h header inclusion
+  clocksource: hyper-v: Fix warnings for missing export.h header
+    inclusion
+  PCI: hv: Fix warnings for missing export.h header inclusion
+  net: mana: Fix warnings for missing export.h header inclusion
+
+ arch/x86/hyperv/hv_init.c                       | 1 +
+ arch/x86/hyperv/irqdomain.c                     | 1 +
+ arch/x86/hyperv/ivm.c                           | 1 +
+ arch/x86/hyperv/nested.c                        | 1 +
+ arch/x86/kvm/hyperv.c                           | 1 +
+ arch/x86/kvm/kvm_onhyperv.c                     | 1 +
+ drivers/clocksource/hyperv_timer.c              | 1 +
+ drivers/hv/channel.c                            | 1 +
+ drivers/hv/channel_mgmt.c                       | 1 +
+ drivers/hv/hv_proc.c                            | 1 +
+ drivers/hv/mshv_common.c                        | 1 +
+ drivers/hv/mshv_root_hv_call.c                  | 1 +
+ drivers/hv/ring_buffer.c                        | 1 +
+ drivers/net/ethernet/microsoft/mana/gdma_main.c | 1 +
+ drivers/net/ethernet/microsoft/mana/mana_en.c   | 1 +
+ drivers/pci/controller/pci-hyperv-intf.c        | 1 +
+ 16 files changed, 16 insertions(+)
+
+
+base-commit: 475c850a7fdd0915b856173186d5922899d65686
+-- 
+2.34.1
+
