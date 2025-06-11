@@ -1,228 +1,176 @@
-Received: from mx0b-00206402.pphosted.com (mx0b-00206402.pphosted.com [148.163.152.16])
+Received: from fout-a1-smtp.messagingengine.com (fout-a1-smtp.messagingengine.com [103.168.172.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B3B247DF9;
-	Wed, 11 Jun 2025 21:49:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.152.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266FC2E610F;
+	Wed, 11 Jun 2025 21:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749678581; cv=none; b=qHF8hKI9oyWkGxiCKRpzIcXR7bNDpVkgxi2jXWV7izp/Y3blWDoDfrgrOS2zH+CpLf8XhjO8FIlRspbrQHmWG1SMVhrKhj3IhtX4FL7OUlenZ3I7Jey6VOXDvn4/5AgYhUZuEEX1L33koksgDY/nVHg/j4NPJgT66flE5pRDTa4=
+	t=1749678584; cv=none; b=O1VpyL7YZamEv1qEzhRi+CLZxDcmiiJhekw2X9D3YWQjUpE2jXYCXDcRChQfE3Liv698BtK+YVq+DtqIbokKOGhO/o3DtscBhG+ZqhExr2t/BaclhOJYFXTKIZHYpmhJji558jaM7OLQv7pHD5wPLVKhXW+ZhYhZkANH+nT2qZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749678581; c=relaxed/simple;
-	bh=OtDz+EVCzM/AZL6dZm9vgoBTwCYbhlzoU3pVGOM3SQ8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TDbzNzSdzn4H5kmYAky5VQ/nWdVs2ZcCodfYKT6/+OIZeB86s47tUV69eEmf19lpFf2x4JXBHPD74Z0bXIitFv6G/9jm3mGGg3/kCN4/GAb7tKF91L14bdggyaVAZlAkgSUZv7qPDlI2E+RoHRRYo6Se7MRzoFVVUujTk7IyVAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com; spf=pass smtp.mailfrom=crowdstrike.com; dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b=jUf+PHhC; arc=none smtp.client-ip=148.163.152.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crowdstrike.com
+	s=arc-20240116; t=1749678584; c=relaxed/simple;
+	bh=0Luy/GZTvOJxbPT9HRmWme4ywxjUebdc3U2uMURoMxU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q/8rc0LTCrl7cJc9T8/NtLDhaAY/EaaGWWmn3KYHrbTiw+uybVvEhQWnnBPtuNDth4GGUgji+hEpR74cIrbSy5YQz9naJUnIow7uKZADuG3bgq1e8O7n6h6z1qNMRXQndgyOuUEsaiHGk/v7cbHUbJYejKwBJZ4pAHepPXCd8kM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net; spf=pass smtp.mailfrom=jannau.net; dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b=CkNekZTx; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Ant+dIKY; arc=none smtp.client-ip=103.168.172.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jannau.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b="jUf+PHhC"
-Received: from pps.filterd (m0354653.ppops.net [127.0.0.1])
-	by mx0b-00206402.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55BGUBYc023981;
-	Wed, 11 Jun 2025 21:06:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crowdstrike.com;
-	 h=cc:content-transfer-encoding:content-type:date:from
-	:in-reply-to:message-id:mime-version:references:subject:to; s=
-	default; bh=SnGev3U/yD8kg9SDWZeTHMimn/M3rVYK94ITsbFxIR8=; b=jUf+
-	PHhC61HkOauLm/IHn1MrMfklj66WPTUyVwKVrrnjGYbyLsOJUa3I1oBGYIO3tnES
-	4falPcmwRgXzCZMs1KR37H3WPJ4WgyNa69LXtbChVUy50FqTGyzlUUfATRHz3ozd
-	kStvB0TP8Zw21ASY7GItvLH4FEXEZdAWKTTZGbUWzX5nqrUov52ZKcOeGN1Fcgty
-	b3e/XsQn0hjPymzgaHUQkPRjDsYcxzrTGAV+9VcPM4kRz771sEIxyl2LZNO9cdvr
-	0D4tlQv7hdvK4eDeCwsXE55DwATxmME3K/neD1Dj12wl8G1RXKvdv6SvkIfx7Urr
-	GOu9hyKqReB2egUcNA==
-Received: from mail.crowdstrike.com (dragosx.crowdstrike.com [208.42.231.60] (may be forged))
-	by mx0b-00206402.pphosted.com (PPS) with ESMTPS id 476ps7r7n7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 11 Jun 2025 21:06:41 +0000 (GMT)
-Received: from ML-CTVHTF21DX.crowdstrike.sys (10.100.11.122) by
- 04WPEXCH007.crowdstrike.sys (10.100.11.74) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 11 Jun 2025 21:06:36 +0000
-From: Slava Imameev <slava.imameev@crowdstrike.com>
-To: <qmo@kernel.org>
-CC: <andrii@kernel.org>, <ast@kernel.org>, <bpf@vger.kernel.org>,
-        <daniel@iogearbox.net>, <eddyz87@gmail.com>, <haoluo@google.com>,
-        <john.fastabend@gmail.com>, <jolsa@kernel.org>,
-        <justin.deschamp@crowdstrike.com>, <kpsingh@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <mark.fontana@crowdstrike.com>, <martin.lau@linux.dev>,
-        <mykolal@fb.com>, <sdf@fomichev.me>, <shuah@kernel.org>,
-        <slava.imameev@crowdstrike.com>, <song@kernel.org>,
-        <yonghong.song@linux.dev>
-Subject: Re: [PATCH bpf-next v2 1/2] bpftool: Use appropriate permissions for map access
-Date: Thu, 12 Jun 2025 07:06:33 +1000
-Message-ID: <20250611210633.92084-1-slava.imameev@crowdstrike.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <c3b403f5-4849-44f3-82cb-b0b506b10138@kernel.org>
-References: <c3b403f5-4849-44f3-82cb-b0b506b10138@kernel.org>
+	dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b="CkNekZTx";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ant+dIKY"
+Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
+	by mailfout.phl.internal (Postfix) with ESMTP id 219C313804DF;
+	Wed, 11 Jun 2025 17:49:41 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-03.internal (MEProxy); Wed, 11 Jun 2025 17:49:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jannau.net; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1749678581; x=1749764981; bh=y1uszv6YuO
+	g7iXkALbp8AWMQ97qKkEmgUUlVgFz7u14=; b=CkNekZTxGSrPDNFW85kwvoRH/0
+	SEUP/xNDPmAhXmFMr/Wpin5NGjzqcID9l3RwDKpgUwygn/08nF4CjT//PHs3DK+E
+	6peA+qscBI71W830jYYnioR2n4QC+iPKAKJtZB1KlAD0K46xktFsymu2zFofR9CA
+	SqrgVY1bVnupP8e/eab5kkY6GRzHzZPrBR7qcjkaQTQ/vD1BTvxIMmeWUC9U0ovl
+	v/nfpqm6pfzf31R8I4RokiOOXIF5eFY8G8p1rpiB2EUyp46nPbXPAgRjGup2dAxH
+	xpFpl2jcpm0dh9KPTtR1uFEAPQhzX7tHGoktozdwSDCyZFdAgTNhS5tm+hMw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1749678581; x=1749764981; bh=y1uszv6YuOg7iXkALbp8AWMQ97qKkEmgUUl
+	VgFz7u14=; b=Ant+dIKYLfq0AD1oHGVibCDhOFd8mcpdEerSRQbaxBM32DHCefh
+	cR7aORIl3W6J8EoSK3OZmWoHksavhPQr9mpEiLoU32afs69OHOJpRA1Azj0snK+u
+	MUBOq8HIfkyN02BwxH7Q9KG71WCtG8cG7llc3IFUKEkiaPhfq5u0cgb8rkyatMXw
+	Dhy7S5Vb/5hsdNppjrxqzuYmyxjNu24HRKb4oZG9tZ4aoY+ujaDOI72/VU946pQy
+	ZMk9ctqTbmuQ1yMUbWthfAgdKxc2vv1pb/fEGPvCmQhMUVzlQ4sgcsbK+ZXxX0JX
+	77NFIrT3KpoxeyLHauIGzHuEabpgXowYSIw==
+X-ME-Sender: <xms:9PlJaKudVxquCH7_4r3Y1BeoIEJ49suMGftNvKEy8S4yJOcXHSIWvA>
+    <xme:9PlJaPffj9qQv1LLLA72rcmy2EHQLAME7CxZ26nWVxSP-xehrhL-OCGjhS5SPQ03v
+    ptfrhdfpubnowu8_ZU>
+X-ME-Received: <xmr:9PlJaFyejvOjoJxqPka68BOO7cBzp1H4y8dGka4wD_CJ_5OSoEDAO0_nuzhKGj_zVJmbkpAx5qslCTEbWFmJM-bDTyNUkMfROnQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddufeefudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttdej
+    necuhfhrohhmpeflrghnnhgvucfirhhunhgruhcuoehjsehjrghnnhgruhdrnhgvtheqne
+    cuggftrfgrthhtvghrnhepgfdvffevleegudejfeefheehkeehleehfefgjefffeetudeg
+    tefhuedufeehfeetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+    hfrhhomhepjhesjhgrnhhnrghurdhnvghtpdhnsggprhgtphhtthhopeduvddpmhhouggv
+    pehsmhhtphhouhhtpdhrtghpthhtohepshhvvghnsehkvghrnhgvlhdrohhrghdprhgtph
+    htthhopegrlhihshhsrgesrhhoshgvnhiifigvihhgrdhiohdprhgtphhtthhopehnvggr
+    lhesghhomhhprgdruggvvhdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpd
+    hrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptgho
+    nhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehfnhhklhdrkhgvrhhnvg
+    hlsehgmhgrihhlrdgtohhmpdhrtghpthhtohepthhofihinhgthhgvnhhmihesghhmrghi
+    lhdrtghomhdprhgtphhtthhopegrshgrhhhisehlihhsthhsrdhlihhnuhigrdguvghv
+X-ME-Proxy: <xmx:9PlJaFOBs99OoFiBNi-CXRmGeMsqDoGh4kJpz2Bg9bWmXFTZJqRX7A>
+    <xmx:9PlJaK9mZvTTmeT2mcoIq7OhhD4wGAiGi_kE30yjBinKj6Nb73T46Q>
+    <xmx:9PlJaNWOFfwDpHV85nZVncClUot-bl6mFPS6u-PDJPFc8NcBA0L8eQ>
+    <xmx:9PlJaDfAeohEKGZ5QihTgkr0uD4OGdko8_y45z-FRT8Y9evXrMdthA>
+    <xmx:9flJaD_0sbA4UmwT--1OstRHr2Mw_fbWWMwiex02gQrwMtPZTpFzEX8t>
+Feedback-ID: i47b949f6:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 11 Jun 2025 17:49:40 -0400 (EDT)
+Date: Wed, 11 Jun 2025 23:49:38 +0200
+From: Janne Grunau <j@jannau.net>
+To: Sven Peter <sven@kernel.org>
+Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sasha Finkelstein <fnkl.kernel@gmail.com>,
+	Nick Chan <towinchenmi@gmail.com>, asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: apple: Move touchbar mipi
+ {address,size}-cells from dtsi to dts
+Message-ID: <20250611214938.GD3141695@robin.jannau.net>
+References: <20250611-display-pipe-mipi-warning-v1-1-bd80ba2c0eea@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: 04WPEXCH006.crowdstrike.sys (10.100.11.70) To
- 04WPEXCH007.crowdstrike.sys (10.100.11.74)
-X-Disclaimer: USA
-X-Proofpoint-ORIG-GUID: ApAh2UNTX3bCMpO1EKz6kR3-5nHK5-ov
-X-Proofpoint-GUID: ApAh2UNTX3bCMpO1EKz6kR3-5nHK5-ov
-X-Authority-Analysis: v=2.4 cv=OeyYDgTY c=1 sm=1 tr=0 ts=6849efe1 cx=c_pps
- a=1d8vc5iZWYKGYgMGCdbIRA==:117 a=1d8vc5iZWYKGYgMGCdbIRA==:17
- a=EjBHVkixTFsA:10 a=6IFa9wvqVegA:10 a=pl6vuDidAAAA:8 a=j6b8ci30a58VJQJFYksA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjExMDE3OCBTYWx0ZWRfX1mcB1tCRvOqP
- 2JrS/+x3UxZWySTQe5gosarprNVi12I2fnWaZ2dL7d6+RphZkr4hlcgEcesYwLDiIZTDKBf/iKy
- gx/nPYISkHZ8EQh7ACp6KtnkVL8q40wRqx7gK/VBa0Jw3RGe5wJ4AmFNnbQABEypkC/6um/6hwU
- Wk9BPQVTe6c1oL/AwR5m/ZykB3rBzEVwmJO9MNfeQAXVs4OlVVJX31pYDfuhx+ic925lwuBVmB4
- 7xdTow7zBVmgicFLZZDg5tGRTk5TKzBvxk9K0xjmarPe93yqSKAOnKqWr15cmfLeQZBcd92xTBE
- VEd5/cuKA3PK63cN+dJ7zYlu6TBBhlXeQmFCQ7P+9DRxXhkHIkJ2ny+NlqXRY1IwMMEld2yohng
- zjReRLJ1P8MFpiMsBPBlgmU3AMAKnf5LRZ2AGTj7BIAHe5EZ3Zi0fosabjwrdQL1PiPVLI4A
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-11_09,2025-06-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 mlxlogscore=999 spamscore=0 bulkscore=0 suspectscore=0
- malwarescore=0 priorityscore=1501 lowpriorityscore=0 phishscore=0
- impostorscore=0 mlxscore=0 clxscore=1015 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506110178
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250611-display-pipe-mipi-warning-v1-1-bd80ba2c0eea@kernel.org>
 
-> > Modify several functions in tools/bpf/bpftool/common.c to allow
-> > specification of requested access for file descriptors, such as
-> > read-only access.
-> >
-> > Update bpftool to request only read access for maps when write
-> > access is not required. This fixes errors when reading from maps
-> > that are protected from modification via security_bpf_map.
-> >
-> > Signed-off-by: Slava Imameev <slava.imameev@crowdstrike.com>
->
->
-> Thanks for this!
->
-> I think the topic of map access in bpftool has been discussed in the
-> path, but I can't remember what we said or find it again - maybe I don't
-> remember correctly. Looks good to me overall.
->
-> One question: How thoroughly have you tested that write permissions are
-> necessary for the different cases? I'm asking because I'm wondering
-> whether we could restrict to read-only in a couple more cases, see
-> below. (At the end of the day it doesn't matter too much, it's fine
-> being conservative and conserving write permissions for now, we can
-> always refine later; it's already an improvement to do read-only for the
-> dump/list cases).
+On Wed, Jun 11, 2025 at 03:18:53PM +0000, Sven Peter wrote:
+> Move the {address,size}-cells property from the (disabled) touchbar screen
+> mipi node inside the dtsi file to the model-specific dts file where it's
+> enabled to fix the following W=1 warnings:
+> 
+> t8103.dtsi:404.34-433.5: Warning (avoid_unnecessary_addr_size): /soc/dsi@228600000: unnecessary #address-cells/#size-cells without "ranges", "dma-ranges" or child "reg" property
+> t8112.dtsi:419.34-448.5: Warning (avoid_unnecessary_addr_size): /soc/dsi@228600000: unnecessary #address-cells/#size-cells without "ranges", "dma-ranges" or child "reg" property
+> 
+> Fixes: 7275e795e520 ("arm64: dts: apple: Add touchbar screen nodes")
+> Signed-off-by: Sven Peter <sven@kernel.org>
+> ---
+>  arch/arm64/boot/dts/apple/t8103-j293.dts | 2 ++
+>  arch/arm64/boot/dts/apple/t8103.dtsi     | 2 --
+>  arch/arm64/boot/dts/apple/t8112-j493.dts | 2 ++
+>  arch/arm64/boot/dts/apple/t8112.dtsi     | 2 --
+>  4 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/apple/t8103-j293.dts b/arch/arm64/boot/dts/apple/t8103-j293.dts
+> index e2d9439397f71a93c28b75a7eea589f4bcb3e374..5b3c42e9f0e6776241bf746d3458766e44e3639a 100644
+> --- a/arch/arm64/boot/dts/apple/t8103-j293.dts
+> +++ b/arch/arm64/boot/dts/apple/t8103-j293.dts
+> @@ -100,6 +100,8 @@ dfr_mipi_out_panel: endpoint@0 {
+>  
+>  &displaydfr_mipi {
+>  	status = "okay";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+>  
+>  	dfr_panel: panel@0 {
+>  		compatible = "apple,j293-summit", "apple,summit";
+> diff --git a/arch/arm64/boot/dts/apple/t8103.dtsi b/arch/arm64/boot/dts/apple/t8103.dtsi
+> index 20faf0c0d80927b2e18dd966a61b5507b322c72f..3a204845b85befb093dd470b4280e778c2894b09 100644
+> --- a/arch/arm64/boot/dts/apple/t8103.dtsi
+> +++ b/arch/arm64/boot/dts/apple/t8103.dtsi
+> @@ -405,8 +405,6 @@ displaydfr_mipi: dsi@228600000 {
+>  			compatible = "apple,t8103-display-pipe-mipi", "apple,h7-display-pipe-mipi";
+>  			reg = <0x2 0x28600000 0x0 0x100000>;
+>  			power-domains = <&ps_mipi_dsi>;
+> -			#address-cells = <1>;
+> -			#size-cells = <0>;
+>  			status = "disabled";
+>  
+>  			ports {
+> diff --git a/arch/arm64/boot/dts/apple/t8112-j493.dts b/arch/arm64/boot/dts/apple/t8112-j493.dts
+> index be86d34c6696cb47d31696541266e504cee8ce10..fb8ad7d4c65a8fe7966f5541f24f03a379143cfb 100644
+> --- a/arch/arm64/boot/dts/apple/t8112-j493.dts
+> +++ b/arch/arm64/boot/dts/apple/t8112-j493.dts
+> @@ -63,6 +63,8 @@ dfr_mipi_out_panel: endpoint@0 {
+>  
+>  &displaydfr_mipi {
+>  	status = "okay";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+>  
+>  	dfr_panel: panel@0 {
+>  		compatible = "apple,j493-summit", "apple,summit";
+> diff --git a/arch/arm64/boot/dts/apple/t8112.dtsi b/arch/arm64/boot/dts/apple/t8112.dtsi
+> index e95711d8337f6cea898e88a3d564caf2c4f94404..f68354194355807dae9b5922bb8aff74da3c29e6 100644
+> --- a/arch/arm64/boot/dts/apple/t8112.dtsi
+> +++ b/arch/arm64/boot/dts/apple/t8112.dtsi
+> @@ -420,8 +420,6 @@ displaydfr_mipi: dsi@228600000 {
+>  			compatible = "apple,t8112-display-pipe-mipi", "apple,h7-display-pipe-mipi";
+>  			reg = <0x2 0x28600000 0x0 0x100000>;
+>  			power-domains = <&ps_mipi_dsi>;
+> -			#address-cells = <1>;
+> -			#size-cells = <0>;
+>  			status = "disabled";
+>  
+>  			ports {
+> 
 
+This looks a little odd and the two qcom devicetrees I've looked at have
+the same "issue". Fixing warnings is welcome and the resulting dtbs are
+unchanged.
 
-The goal of this patch was to fix bpftool errors we experienced on our systems.
-The efforts were focused only on changes to the affected subset of map commands.
+Reviewed-by: Janne Grunau <j@jannau.net>
 
-
-> > +		/* Get an fd with the requested options. */
-> > +		close(fd);
-> > +		fd = bpf_map_get_fd_by_id_opts(id, opts);
-> > +		if (fd < 0) {
-> > +			p_err("can't get map by id (%u): %s", id,
-> > +			      strerror(errno));
-> > +			goto err_close_fds;
-> > +		}
->
->
-> We could maybe skip this step if the requested options are read-only, no
-> need to close and re-open a fd in that case?
-
-
-I agree. The change will be submitted with version 3.
-
-
-> > -int map_parse_fds(int *argc, char ***argv, int **fds)
-> > +int map_parse_fds(int *argc, char ***argv, int **fds, __u32 open_flags)
-> >  {
-> > +	LIBBPF_OPTS(bpf_get_fd_by_id_opts, opts);
-> > +
-> > +	if (open_flags & ~BPF_F_RDONLY) {
-> > +		p_err("invalid open_flags: %x", open_flags);
-> > +		return -1;
-> > +	}
->
->
-> I don't think we need this check, the flag is never passed by users. If
-> you want to catch a bug, use an assert() instead?
-
-
-I agree. This check is replaced with an assert and will be submitted with v3.
-
-
-> > diff --git a/tools/bpf/bpftool/iter.c b/tools/bpf/bpftool/iter.c
-> > index 5c39c2ed36a2..ad318a8667a4 100644
-> > --- a/tools/bpf/bpftool/iter.c
-> > +++ b/tools/bpf/bpftool/iter.c
-> > @@ -37,7 +37,7 @@ static int do_pin(int argc, char **argv)
-> >  				return -1;
-> >  			}
-> >  
-> > -			map_fd = map_parse_fd(&argc, &argv);
-> > +			map_fd = map_parse_fd(&argc, &argv, 0);
->
->
-> Do you need write permissions here? (I don't remember.)
-
-
-Iterator requires only read access. I changed it to BPF_F_RDONLY for v3.
-An iterator test is added to v3.
-
-
-> > -	fd = map_parse_fd_and_info(&argc, &argv, &info, &len);
-> > +	fd = map_parse_fd_and_info(&argc, &argv, &info, &len, BPF_F_RDONLY);
->
->
-> This one is surprising, don't you need write permissions to delete an
-> element from the map? Please double-check if you haven't already, I
-> wouldn't want to break "bpftool map delete".
->
-> I note you don't test items deletion in your tests, by the way.
-
-
-Right, the delete command requires write access. I changed it and added
-an item deletion test to v3.
-
-
-> >  static int do_pin(int argc, char **argv)
-> >  {
-> >  	int err;
-> >  
-> > -	err = do_pin_any(argc, argv, map_parse_fd);
-> > +	err = do_pin_any(argc, argv, map_parse_read_only_fd);
-> >  	if (!err && json_output)
-> >  		jsonw_null(json_wtr);
-> >  	return err;
-> > @@ -1319,7 +1329,7 @@ static int do_create(int argc, char **argv)
-> >  			if (!REQ_ARGS(2))
-> >  				usage();
-> >  			inner_map_fd = map_parse_fd_and_info(&argc, &argv,
-> > -							     &info, &len);
-> > +							     &info, &len, 0);
->
->
-> Do you need write permissions for the inner map's fd? This is something
-> that could be worth checking in the tests, as well.
-
-The inner map fd can be created with read only access. I changed it and added
-a test for map-of-maps creation to v3.
-
-
-> > @@ -128,7 +128,8 @@ int do_event_pipe(int argc, char **argv)
-> >  	int err, map_fd;
-> >  
-> >  	map_info_len = sizeof(map_info);
-> > -	map_fd = map_parse_fd_and_info(&argc, &argv, &map_info, &map_info_len);
-> > +	map_fd = map_parse_fd_and_info(&argc, &argv, &map_info, &map_info_len,
-> > +				       0);
->
->
-> This one might be worth checking, too.
-
-
-An event pipe map fd requires write access as the map is updated by bpf_map_update_elem
-inside __perf_buffer__new .
-
-
+Janne
