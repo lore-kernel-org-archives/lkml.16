@@ -1,220 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5401DF73C;
-	Wed, 11 Jun 2025 16:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0C2A1A725A;
+	Wed, 11 Jun 2025 16:13:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749658370; cv=none; b=Q7S1YYHibA8vGMh9nA+ul911wYb9h64OZZv2EyVKhGqsRpvG4+OXUDkY7JfMQ+r7hnjj+qSnBRV15DWsuowsQ8/WFiieqgHl+jfWVe99thJHgVKwcbIY69bLun7Cx8oOld/CiaSnCw785M7Ega6eCHHjpOxetf3KRteVbDfBC18=
+	t=1749658398; cv=none; b=HbwHRjvUm0Yo9NlUBNX7uYih8uhM03vnUWS2QNA2OzgeudM44I3U41QGlVoeSj2wfbwI9ig8trY3daP5jMm6jlwrkYcAF96rBNPnxuXJPClWY0IQMunHBTjKqcgy4D0iaTtHtEv2cejdiJVs3isPjlgWWJ6lFrjJoLzeg1WFAEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749658370; c=relaxed/simple;
-	bh=c7580VFEVaIrkP10tSaLkEKRkoibaOLPCDVANW0F3Lc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FhyuVUgq3CpOn0G9N3A7/2ReZkJNaRvpD2K4ZirIcPXZ3dJ4iQvpoHJ5s85pkGWH6BlyEQPOeR77TXSRvltHC0tdgqSVgIPwavxqxLLKDnXfIddOqJYPRtWOl/W1KYJflLFogZzg1XGOg/WGE8+BIUkPPyaTiws6SAja69KKxic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EG1JcfRq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749658398; c=relaxed/simple;
+	bh=ADdy1oX/BGm/0yfMjA6C1xUCsUR3Il5JAfLEmSkSbpY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D4RWi2Z3AQDin3Y3WhNc//ErMqa5aduA+ZS4RoUPx3kI+vlG0Ferz0yPzip5EAHdTEtY+uiSCGfwcU0JwMebn73Z8cnL0YimqCOjdEKAe52ANz22t6ojCjY+SVSLSir8L7VHcPZDbmbfcNViqgBHQIeLINCzzv2S8kFptvNkQgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=nHNSOBGb; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EG1JcfRq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54D37C4CEE3;
-	Wed, 11 Jun 2025 16:12:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749658369;
-	bh=c7580VFEVaIrkP10tSaLkEKRkoibaOLPCDVANW0F3Lc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=EG1JcfRq6q3wNE33n9fOaw3EvH1Uu1AIiDQYfIYb4zbz21O5nbckx6gtToYpYtUbp
-	 7FRwdg4JXS2UExrtTAtRNHW+ZRHBeci9PcNZP6sjepoJp3/gkOKufpcoCyA0aHbcbI
-	 uRs4RoH22od68UFbItKBsnIuVA6Ed28gbH4fXIXUrDn2qMYVLDpmLDXcJbIqVy59cu
-	 KbZYEr9KqZmX/FDjcqGrCWEL3LAVrIpdk2sYa1O7vDOj6m/H9+T+FFeZJW/9/8SAU0
-	 eNJlY4Z0qIU6xJwQW3lgB/Cy5x0FvpFkNJNaPvl0jMaSaPeQDt5AlzIyJGuq24BjlU
-	 aLglAsW8xa7dg==
-Date: Wed, 11 Jun 2025 17:12:41 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: <Marius.Cristea@microchip.com>
-Cc: <dlechner@baylibre.com>, <nuno.sa@analog.com>, <broonie@kernel.org>,
- <linux-iio@vger.kernel.org>, <robh@kernel.org>,
- <linux-kernel@vger.kernel.org>, <andy@kernel.org>, <krzk+dt@kernel.org>,
- <conor+dt@kernel.org>, <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v3 2/2] iio: adc: adding support for PAC194X
-Message-ID: <20250611171241.2c5c9319@jic23-huawei>
-In-Reply-To: <a2d9c24e2f72378d445b40d24bd808f29b87d122.camel@microchip.com>
-References: <20250606093929.100118-1-marius.cristea@microchip.com>
-	<20250606093929.100118-3-marius.cristea@microchip.com>
-	<20250607162721.0142ba42@jic23-huawei>
-	<a2d9c24e2f72378d445b40d24bd808f29b87d122.camel@microchip.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="nHNSOBGb"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=5Pah9/CBtffo+lrIVkKDlsrLYUZHo+PGjMuqf3Dti3w=; b=nHNSOBGbRNP8l8/sOdiLU3RC5W
+	7oIdZKQsC3Yyg5Nz4H1AsjKFQSG3miVUFKAYqSkGkVKLxk6roKXNElCQHyV3Q91pTENKucD11UZcX
+	zfZoyNJ4Cl0yj+fZJaNFXs0pDjXUuAFYQhvO9hovm+8deePxRYep9qk7Y/OlwVxg6auM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uPO4S-00FQMS-G7; Wed, 11 Jun 2025 18:13:00 +0200
+Date: Wed, 11 Jun 2025 18:13:00 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Inochi Amaoto <inochiama@gmail.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, Yixun Lan <dlan@gentoo.org>,
+	Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH net-next 2/2] net: mdio-mux: Add MDIO mux driver for
+ Sophgo CV1800 SoCs
+Message-ID: <eb419ffa-055f-48db-8c6a-60bf240fbb9d@lunn.ch>
+References: <20250611080228.1166090-1-inochiama@gmail.com>
+ <20250611080228.1166090-3-inochiama@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611080228.1166090-3-inochiama@gmail.com>
 
-On Tue, 10 Jun 2025 15:58:13 +0000
-<Marius.Cristea@microchip.com> wrote:
+On Wed, Jun 11, 2025 at 04:02:00PM +0800, Inochi Amaoto wrote:
+> Add device driver for the mux driver for Sophgo CV18XX/SG200X
+> series SoCs.
+> 
+> @@ -0,0 +1,119 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Sophgo CV1800 MDIO multiplexer driver
+> + *
+> + * Copyright (C) 2025 Inochi Amaoto <inochiama@gmail.com>
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/bits.h>
+> +#include <linux/delay.h>
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/mdio-mux.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +
+> +#define EPHY_PAGE_SELECT		0x07c
+> +#define EPHY_CTRL			0x800
+> +#define EPHY_REG_SELECT			0x804
+> +
+> +#define EPHY_PAGE_SELECT_SRC		GENMASK(12, 8)
+> +
+> +#define EPHY_CTRL_ANALOG_SHUTDOWN	BIT(0)
+> +#define EPHY_CTRL_USE_EXTPHY		BIT(7)
+> +#define EPHY_CTRL_PHYMODE		BIT(8)
+> +#define EPHY_CTRL_PHYMODE_SMI_RMII	1
+> +#define EPHY_CTRL_EXTPHY_ID		GENMASK(15, 11)
 
-> On Sat, 2025-06-07 at 16:27 +0100, Jonathan Cameron wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you
-> > know the content is safe
-> >=20
-> > On Fri, 6 Jun 2025 12:39:29 +0300
-> > <marius.cristea@microchip.com> wrote:
-> >  =20
-> > > From: Marius Cristea <marius.cristea@microchip.com>
-> > >=20
-> > > This is the iio driver for Microchip PAC194X and PAC195X series of
-> > > Power Monitors with Accumulator. The PAC194X family supports 9V
-> > > Full-Scale Range and the PAC195X supports 32V Full-Scale Range.
-> > >=20
-> > > There are two versions of the PAC194X/5X: the PAC194X/5X-1 devices
-> > > are for high-side current sensing and the PAC194X/5X-2 devices are
-> > > for low-side current sensing or floating VBUS applications. The
-> > > PAC194X/5X-1 is named shortly PAC194X/5X.
-> > >=20
-> > > Signed-off-by: Marius Cristea <marius.cristea@microchip.com> =20
-> > Hi Marius,
-> >=20
-> > I entirely agree with David on this wanting splitting up into
-> > a base driver + patches that add features to that in order to
-> > make it easier to review.=C2=A0 That also potentially allows me to pick=
- up
-> > the basic support whilst any more controversial parts are still under
-> > discussion.
-> >=20
-> > Jonathan =20
->=20
-> I will try to make it smaller and build on that.
->=20
-> >  =20
-> > > diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-> > > index 09ae6edb2650..ee47d880babf 100644
-> > > --- a/drivers/iio/adc/Makefile
-> > > +++ b/drivers/iio/adc/Makefile
-> > > @@ -103,6 +103,7 @@ obj-$(CONFIG_NCT7201) +=3D nct7201.o
-> > > =C2=A0obj-$(CONFIG_NPCM_ADC) +=3D npcm_adc.o
-> > > =C2=A0obj-$(CONFIG_PAC1921) +=3D pac1921.o
-> > > =C2=A0obj-$(CONFIG_PAC1934) +=3D pac1934.o
-> > > +obj-$(CONFIG_PAC1944) +=3D pac1944.o
-> > > =C2=A0obj-$(CONFIG_PALMAS_GPADC) +=3D palmas_gpadc.o
-> > > =C2=A0obj-$(CONFIG_QCOM_PM8XXX_XOADC) +=3D qcom-pm8xxx-xoadc.o
-> > > =C2=A0obj-$(CONFIG_QCOM_SPMI_ADC5) +=3D qcom-spmi-adc5.o
-> > > diff --git a/drivers/iio/adc/pac1944.c b/drivers/iio/adc/pac1944.c
-> > > new file mode 100644
-> > > index 000000000000..ce09334b076a
-> > > --- /dev/null
-> > > +++ b/drivers/iio/adc/pac1944.c
-> > > @@ -0,0 +1,2841 @@ =20
-> >=20
-> >  =20
-> > > +/* Available Sample Modes */
-> > > +static const char * const pac1944_frequency_avail[] =3D {
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0 "1024_ADAP",
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0 "256_ADAP", =20
-> >=20
-> > This adaptive mode shouldn't be controlled via this standard
-> > ABI.=C2=A0 That needs to be considered separately.
-> >  =20
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0 "64_ADAP",
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0 "8_ADAP",
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0 "1024",
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0 "256",
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0 "64",
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0 "8", =20
-> > This does not look even close to ABI complaint.
-> >=20
-> > The numbers cases are fine. The others not really. =20
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0 "single_shot_1x", =20
-> >=20
-> > That has nothing directly to do with the sampling frequency.
-> > Some others look suspicious.=C2=A0 I'd stick to normal
-> > sampling_frequency handling and have the discussion about the other
-> > modes in here at a later date.
-> >  =20
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0 "single_shot_8x",
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0 "fast",
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0 "burst",
-> > > +}; =20
->=20
-> The adaptive mode is used to lower the power consumption of the device
-> and keep the "same" calculation into the driver. I will try to look
-> over an ABI to put the device into a low power mode and in this way I
-> could change the frequency to ADAPTIVE.
+There are a lot of defines here which are not used, but as far as i
+see, there is one 8bit register, where bit 7 controls the mux.
 
-We deliberately don't support 'mode' type switches for power saving in
-the ABI. They are just too varied for userspace to 'generically'
-know when to turn them on. Snag here is that it is a straight
-trade off between a clever algorithm which will introduce some error
-and straight forward sampling at high frequency. I don't currently
-have a good idea on how we'd control that.  If we also had
-a dataready trigger involved (rather than accumulating etc) then
-maybe we'd do it via trigger selection, but that's not appropriate
-here given this is about driving the accumulators, not a dataready
-style readback of data (if we did that, we could just accumulate
-in user space instead of the device - a very different thing!).
+It looks like you can throw this driver away and just use
+mdio-mux-mmioreg.c. This is from the binding documentation with a few
+tweaks:
 
+   mdio-mux@3009000 {
+        compatible = "mdio-mux-mmioreg", "mdio-mux";
+        mdio-parent-bus = <&xmdio0>;
+        #address-cells = <1>;
+        #size-cells = <0>;
+        reg = <0x3009000 1>;
+        mux-mask = <128>;
 
->=20
-> The "single_shot_1x" and "single_shot_8x" is a special case when the
-> user could take only one measurement and that measurement could be
-> triggered/synched.
+        mdio@0 {
+            reg = <0>;
+            #address-cells = <1>;
+            #size-cells = <0>;
 
-8x seems to be about oversampling - but on a single trigger.
-In that sense it is a bit unusual.  Looks like we could only do
-it effectively on an external IIO trigger? e.g. hrtimer or something
-like that?
+            phy_xgmii_slot1: ethernet-phy@4 {
+                compatible = "ethernet-phy-ieee802.3-c45";
+                reg = <4>;
+            };
+        };
 
-single shot 1x looks like a similar mode to use only on an external
-trigger (or a sysfs read).  Can we just enable that only if we aren't
-using this devices own trigger?
+        mdio@128 {
+            reg = <128>;
+            #address-cells = <1>;
+            #size-cells = <0>;
 
-fast vs burst is an open question but taking just say fast
-that ends up being just another sampling frequency, be it one that
-changes with number of enabled channels.
+            ethernet-phy@4 {
+                compatible = "ethernet-phy-ieee802.3-c45";
+                reg = <4>;
+            };
+        };
+    };
 
-
-
->=20
-> > >=20
-> > >  =20
-> ...
->=20
-> >=20
-> >=20
-> >=20
-> >=20
-> >  =20
-> > > +static struct attribute *pac1944_power_acc_attr[] =3D {
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0 &iio_dev_attr_in_energy1_raw.dev_attr.attr,
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0 &iio_dev_attr_in_energy2_raw.dev_attr.attr,
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0 &iio_dev_attr_in_energy3_raw.dev_attr.attr,
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0 &iio_dev_attr_in_energy4_raw.dev_attr.attr,
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0 &iio_dev_attr_in_energy1_scale.dev_attr.att=
-r,
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0 &iio_dev_attr_in_energy2_scale.dev_attr.att=
-r,
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0 &iio_dev_attr_in_energy3_scale.dev_attr.att=
-r,
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0 &iio_dev_attr_in_energy4_scale.dev_attr.att=
-r, =20
-> >=20
-> > These look like standard read_raw / info_mask based attributes will
-> > work.
-> > So do that, not custom attributes that are both harder to review and
-> > don't work with in kernel consumers (which we may well see for a
-> > power
-> > monitoring chip).
-> >  =20
->=20
-> Because the device could support different modes of operation for the
-> same accumulator, but only one at a time. I was trying to add to the
-> sysfs only the mode that was set from the device tree.
-
-Create the iio_chan_spec dynamically instead of the attributes added.
-
-Jonathan
-
-
->=20
-> >=20
-> >  =20
-
+    Andrew
