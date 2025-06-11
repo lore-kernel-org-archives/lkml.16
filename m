@@ -1,65 +1,67 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1089C248861
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 09:34:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17C1D242D90
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 09:34:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749634475; cv=none; b=RaQTEWjluiOOONR0/+uWMgxyE2w8WT9F8M3FwqBklgq1tIZpPFQS88UT5oiNowPhK0UPjaKf5o93VWlzrL02ji7qdpmjtVV148nh0iVCunOSP905szZ92MKMt6YmSDpCWUJUmpK2jkyNVqFWquvDR0G/OwE7Ry5vj0bqoSw8qVc=
+	t=1749634477; cv=none; b=VyUm+bZWbax8j2NxKoXwwWN2pHQkn+ifxLCHkdD0P71Di32HAcB9M4xNq6KaWrc2rom1HQIJPpfpA4Qk85pnbWq4MTtRsQ1NByxqGbkc3eu3iGx4uFPbsOOR+3kZtXC7qif9Nm8qluBGWuAsBvV3apugDTefseXoCLQsF5qJM9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749634475; c=relaxed/simple;
-	bh=GKoJGEPtGbWX3S6SDM1+Marr1BzItueAulEfS+IMNmo=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=RfggcORHV7wEtOt3D2Jn+IspPI6A/Gy1FWNKu25eldn2LfIEgMblepinxWbZN4UC5uJ26JOTK9izCSmg15lNYb0BJq04/Z/U0i5ZqPrPpQHtRkO5o/ZnzDop3cben0klDNJBPNPu0AOhgZ2VfDnptOBFe77mq/NySjT8QlZV/xM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WAv9o0ld; arc=none smtp.client-ip=209.85.221.43
+	s=arc-20240116; t=1749634477; c=relaxed/simple;
+	bh=JRh4yWQSKvPb+HTPm3KU+z0OTAcK+vDeUqT7eLU7d7E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=goJaBshPVMv/m0hHRACJNC2nDAJetICVUWvgwj5iih1lT8puEEnGM+I72Vte9a0BnJiL8hYzy7oiwEeyiutDx6bPpKRUl/YuWO9nu5dRDrveN1TEd4I2sCVWxi/ZilD+a81weC05VzuUlVME6OO0B1HWMseLAEvPPtNDn0uoYoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RIbrROf2; arc=none smtp.client-ip=209.85.221.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WAv9o0ld"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a54700a46eso2495343f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 02:34:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RIbrROf2"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a507e88b0aso5773547f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 02:34:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749634472; x=1750239272; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ee00Hv2n6pfIABOlHh41RgmvlkFZztRqY8NW1iNthOU=;
-        b=WAv9o0ldOts9ZS3mMAvRQNUW1DAFH6aBIzBXkh3v5wU7e2nSi8HM0HX0yrAu0i7BTF
-         UaYpEmWLxnsQeHYy9svhEWnotMkAf0ANw+DNBUKsZFkmXg7pDeHRvA2rgh1kd0PNn4rC
-         3q9EAHsVcd3JEnwX6dhclEoO91mJbtizdSDCfDJJPWMGhHpYPKcT3FQ7g7+vdM77Bg1F
-         lmMf5hu57DJckE/1WZfzZCCsMQL/mM+IYVwGLCppIHg7b2Rb0EPKYlpAUzPan6Hb+4Ws
-         YNt+LgEgiSzD9GqqOIW2Lkd56GvVNQ5inLCn94gOeOWtBpA8tEHk6CQwFzScKENrzdXB
-         9Gog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749634472; x=1750239272;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1749634474; x=1750239274; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ee00Hv2n6pfIABOlHh41RgmvlkFZztRqY8NW1iNthOU=;
-        b=M9Z/O1QpXdo6PuJv3F2ayulZMNFKG6o5BstIKJotTLEvaFUISP0kqKLOzVgJ81YgmJ
-         qITlukp/2dDf+L23dGo6SEeXrkjshC3hed/G46FL14QUGJa5CHWsh9MyCyr6figzUDkJ
-         h9g7+Cni4A+paGafEdQayDQyqyW9bYyv93wYIawGH0aIIWtPipjor+LYa82leHemMp4b
-         fxiyYOn29ykQ92Tp/uC9hWRCpuW2iJIEp++KOfxiHrhA7YVwNcRngR/6fWuOl+KpDc2w
-         CyrzHEFK9kZeHUyuLCYOd5BUTWQrkcvuO21XxiBlQKlsqx3pnmipXgzW+U0z6L1nOmZs
-         /ZqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX+LSKdhISj/Xvgy5lVUGbeS4NNhXU3DSJnbCfep1s6bJwFwleQNlXbRo20f5qI1T3CXlBLUxdsRYuzD6w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVQiZ+oGKRnZ+UT4DKbR/v4DapsqbGuC7dyESswQI0EZPIsESE
-	fTRAQSqMMwTdX52Wm1QszrRARpl/yTFjwWwDN0Xll+GUW1XBLUm8AfnfYQdwfHixhzk=
-X-Gm-Gg: ASbGncup/10WXCCzvl73b70Uw0eQ7Xfa098QCQnqqhxjLnHxxYnKaNtuavgftegkZSp
-	6uOU+R9WL/eoO/lhfzZIyiLcOA/TQdwQHo7YisM0daSJyjNx2Bef2P8XbAX7T4Za6IZEr3432zF
-	FL5Ptjy7eoSuVt8bIfE2e99tFlo9JlfwH5+YaL+1PmM/fDNtyr1q+dB0Rw5C686samc1Niw0U2C
-	hv7QkkZEivcqqMXvF7Xp0ENppzFMfky0FenAU2d5L3IIe/VEEYR4ssdoDPsmPDulWdRYE9cF2Kh
-	tfCspDw9zUEwQ1jjLRw6T0JQ6g3eUxrvGqlS2zeQ3PIGuxzhjRHpfZH5mTErn5yGZM1BuvtYS8C
-	OlKneA5UHiyTbTTs=
-X-Google-Smtp-Source: AGHT+IEDfONFcz3C9oPCAFFX7yDk+W3ZbpOIarlrBc0Cek5xrML9ciwnj6IGvkq3dbXA+yuDleTE6g==
-X-Received: by 2002:a5d:6101:0:b0:3a5:58a5:6a83 with SMTP id ffacd0b85a97d-3a558a56a92mr1506354f8f.13.1749634472342;
-        Wed, 11 Jun 2025 02:34:32 -0700 (PDT)
+        bh=umjNWPKDERjTwunqlhctbYZ5OjrmC9Gy7QVgvFKys+c=;
+        b=RIbrROf2fvWfWIAX0B2WMEi3bCl0s8v0iaia9XJCYBey+AnGF8EizYBbgtx1k3sYQU
+         Zmsadauk0E4kiqUIGQISVrW55tF1CgiVecx65M0X5PTbH1auN/ECA3C37N6ERYEwgnR4
+         4VQWfOwTRT7KJi/qn5savJcIQ7gLeb+BTizbwPKpI1iBLZclFwHWWecSSZCNT/a7sUrX
+         E/5H4ge3NaX40cTzf72XhXxpE7BhXw4mM+KzuO2C/eDL7Nxg78Mc+zH/ddYJWNpitE00
+         aL6pJgtnh98L2tWY2CymZ3xRff5cDkwUm2RyOdwGCTyv7yFoXWi7YDKODgd0TXAOcrIp
+         XEgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749634474; x=1750239274;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=umjNWPKDERjTwunqlhctbYZ5OjrmC9Gy7QVgvFKys+c=;
+        b=i29ZM4pzFhxvyxr9oW7Xs2STimpFaNqvubxOsHVUw37dYX1TLmyExvPTx28yjqj8uI
+         XHxiCpLXjSVXkZZIlLss97CFEn9ldkkxr57uYX02OJyaMVBKtD1Ui1MmOaJo4pu9U+bh
+         34/Bxq+Sg40N/Sa1QQWfa62F9jwapxVeDkaon2mVl/eZLqGORh2DCxF9SnfSkX5PpyuJ
+         dAiNGshS7ro/i8jyrPr/haE4uwQi9i3Ob28dl79S8rDl3gFq9ZTT4mTFGZSOQNORD1Du
+         1PgtD2jasZkA2iNhjr/LxhA69pnbDGGwBhKUJbSuTebA0maLkiaNuK2ywccfl5qVyp5V
+         D8hA==
+X-Forwarded-Encrypted: i=1; AJvYcCUQzFMffTdZvxXZWOhezW5xwfejZWVakiHxv6lp25Z6hOEvxdPyMTTRc//q80pogLrk1grf1nH3a6jTh3Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1Nv5a7b5tpCTnbrus9riraNFRo03aZPQIemOfTjQYA9zUgOZw
+	SW9xek+BCWAUFEaDAuY4A4214OCXCLuf3ACIcOUizG7m2TgC7ABXHMh9/CWN7dmcFf4=
+X-Gm-Gg: ASbGncvYajb1e0VHNrvQv0PtF26sxXaqwGBRaIIj5KkolmEi0NLWoXV9oTLiL5f91Sd
+	8Wj8l0j5LiPR/jbIMN72CpEVgJ/kCEaFYeGQDhLIR++kXVdS6W1AKzaT7rAvyOHJ08WVmMzQiYg
+	wQRLe5HBTB7Xar+2MA40FDjVarJNRc3s6w2OUEMSKawS8J71u4OWQLv6xKq8o6chqzzQpWhNDVb
+	yxNzKcn76A6AJZ66qd5GJrkILXCiYUfADwjmFir3lgbvD/RWFlQYDJy4Nulab3+g1b9ljVAAJVB
+	Ower7fXAM7VwrXZIaIwp6Sz8dK49kSGYrtwSbZ7cjEt+n4hcLgR2mFSdIq1uaykKk9OwGY8alcw
+	d+L58Ru8wzcOnJo0=
+X-Google-Smtp-Source: AGHT+IEWBMj7CqwS07MNQkBH5I2Kfcy9sAeVsKYwFR/3Yu7E4iKy8d8DQwqF6l9GtrYs6FgzlssFCA==
+X-Received: by 2002:a05:6000:2913:b0:3a3:6e85:a529 with SMTP id ffacd0b85a97d-3a558af7c26mr1878681f8f.51.1749634474379;
+        Wed, 11 Jun 2025 02:34:34 -0700 (PDT)
 Received: from gpeter-l.roam.corp.google.com ([145.224.65.90])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453251a2303sm15467005e9.31.2025.06.11.02.34.29
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453251a2303sm15467005e9.31.2025.06.11.02.34.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 02:34:31 -0700 (PDT)
+        Wed, 11 Jun 2025 02:34:33 -0700 (PDT)
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v2 0/2] Enable CPU Idle for gs101
-Date: Wed, 11 Jun 2025 10:34:24 +0100
-Message-Id: <20250611-gs101-cpuidle-v2-0-4fa811ec404d@linaro.org>
+Date: Wed, 11 Jun 2025 10:34:25 +0100
+Subject: [PATCH v2 1/2] arm64: dts: exynos: gs101: Add 'local-timer-stop'
+ to cpuidle nodes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,10 +70,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAKBNSWgC/3XMQQ6DIBCF4auYWZcGiIp21Xs0LiYw4iRGDLSkj
- eHupe67/F/yvgMSRaYEt+aASJkTh62GvjRgF9w8CXa1QUvdyU63wicllbD7i91KwuJsx965oR0
- d1M8eaeb36T2m2gunZ4ifk8/qt/6TshJSIKExaIZWY39fecMYriF6mEopX0EpP56rAAAA
-X-Change-ID: 20250524-gs101-cpuidle-cafc96dd849d
+Message-Id: <20250611-gs101-cpuidle-v2-1-4fa811ec404d@linaro.org>
+References: <20250611-gs101-cpuidle-v2-0-4fa811ec404d@linaro.org>
+In-Reply-To: <20250611-gs101-cpuidle-v2-0-4fa811ec404d@linaro.org>
 To: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
  Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -85,79 +86,71 @@ Cc: William Mcvicker <willmcvicker@google.com>,
  Will Deacon <willdeacon@google.com>, 
  Youngmin Nam <youngmin.nam@samsung.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2240;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2031;
  i=peter.griffin@linaro.org; h=from:subject:message-id;
- bh=GKoJGEPtGbWX3S6SDM1+Marr1BzItueAulEfS+IMNmo=;
- b=owEBbQKS/ZANAwAKAc7ouNYCNHK6AcsmYgBoSU2kMagcpLknWWW7k11DizyPziU2/a8+js0Pu
- 9KZxxegILKJAjMEAAEKAB0WIQQO/I5vVXh1DVa1SfzO6LjWAjRyugUCaElNpAAKCRDO6LjWAjRy
- utAqD/40EU+hi1XmIgZg+0irXTE/wDqmf+2p7hDECqt8sXZCZ1fyVhtVKyn5Y2/s3cCxl7gRyYs
- pT+ZIR33kahPtdf42bQ77nuvZQcC9mFfnWp63DlEecZJbp3vA7nzubISj6HCT5DQuzognZrwWat
- hwvU/3bMBi1kEv8ps9F35MYRDcv8I+PKzd4PP6nABxCCQpq/W1KoAVCzV7fo9Z3eDi50p74DKKQ
- ARxuGIS5gix2ERxxD0q/7HtuQPeTZUOW8tg2dUQ/d5Kaxmyofy1KcHyxL5oLXQ+VW8U0cueBXSv
- OnSsFvRWSFI0EWenF6m2eXOWKhvWcmihRaOCY34ho7M4e+1rHPOT7y7tZIs6jm9Tb/wwaWXykfR
- RlSxd1Aua+24Y3tF0LMfYYVP4y3heeXi7B5xxaHlXi93JEbtTu4qPtxYBIAb8lfq4eUgf7BlsoX
- 0N2mY1ZjS7fYz84IlktzuF2DGm3eOFPrtL45V9mivm1ZangwJsHSUTTig92G5rX5oL71S6CtCKm
- kM93dPK4eir4K5aYbXGB4VB3BjZ0mE9dxm0CRyivIE5aRyNaq94N8Pp8X/MXorkc/U8bS6JOHZb
- nab9eZuV+F6e0D7UaAeBklm6uFSdKdLQrarsHrsrFwXIzkkIdiSs7edhHt8sfUv8G+NZNCfoJga
- VsRqDK8JBJHyPPg==
+ bh=GNkE/x3QELPf9uEv5AeKZxVXHxNGOdHNzMbUcWU+Scg=;
+ b=owEBbQKS/ZANAwAKAc7ouNYCNHK6AcsmYgBoSU2k/uEPXjihPn+w3dlTSEkJlfoWeDSKU0p9w
+ 37LXIXg2GqJAjMEAAEKAB0WIQQO/I5vVXh1DVa1SfzO6LjWAjRyugUCaElNpAAKCRDO6LjWAjRy
+ uoFuD/4rGwT+igTL4ZuLmclGc7CRg4Sw/1TwTnyN/BTh71f9GewP9YV0B5cusbH9f98FQClTs3t
+ wlhpRQ5saF4lj4s9lSZqT9xYZvQ3Hh4gEBANrlSHI9jnXEFC9JNHy3JquCOrca1+a42gelFj9sb
+ Gwu8TyFvQAepHFY2wcimsvIge+tM2W30YChXX3EPhlIrCLyqS1d5FwrI7j+1mt/OQpPBTaoKqFU
+ ysYc9R9aFw6gnrpcAMNEH1Bvn5AhE60ANyd+o31h1vsELt8qaXTZF9GLhX3H9kDN8wowQnEg3MX
+ iWjNvc4j7U4jLJ6RgQHVuk/jy0KodAYRcG4LcygKwimHECJFP8KYpg/SKV80OC1rSm6hWTL3PlZ
+ AOFlU121+clnRJpOrm0BF9qIqDCqiAg/cO2V/X1stE7AoGqwTpEg0Df4zhhtDS3Zmvpw77XlsYT
+ xxt41j0W2Q9AtOtn2qzPZ18SKm5mgWJA1xpYqxolsUIowr5acU7awSS58TA2RNoT9LizOZira5S
+ sUQLhrud89K8X86RnjbzXCu+fmNwUFxJ711+rPE2rblTKwO7YakhcPKGHIUQyFo3ehSfGYMnmcr
+ YbgwwmBbfsaChKEWGs8WHBP8caa8+CcpJpodG/ZfdNCpFsm3R1o6l3gak+Ohm2qCH/WG2bN3ctV
+ fCxBW9dBst6tT8Q==
 X-Developer-Key: i=peter.griffin@linaro.org; a=openpgp;
  fpr=0EFC8E6F5578750D56B549FCCEE8B8D6023472BA
 
-Hi folks,
+From: Will Deacon <willdeacon@google.com>
 
-This series adds support for CPU Idle on gs101. In particular it
-achieves this by registerring a cpu pm notifier and programming
-a ACPM hint to enter the c2 idle state. With the hint programmed
-the system now enters c2 idle state.
+In preparation for switching to the architected timer as the primary
+clockevents device, mark the cpuidle nodes with the 'local-timer-stop'
+property to indicate that an alternative clockevents device must be
+used for waking up from the "c2" idle state.
 
-Note: the driver patch has a runtime dependency on the device tree
-change to add `local-timer-stop` DT property to the CPU nodes.
-Without this DT patch the system will hang in early boot as the
-local timer is shutdown. The DT patch was originally sent along
-with Wills MCT series in [1] but it can be merged independently
-of the rest of the MCT changes, so I've included it here to
-(hopefully!) make things clearer and easier as it has a strong
-dependency with this patch.
-
-We can measure the impact of these changes upstream using the fuel
-gauge series from Thomas Antoine [2]. With the ACPM hint now
-programmed /sys/class/power_supply/max77759-fg/current_avg is a
-postive number around 150000 microamps meaning we are charging the
-battery (assuming it isn't already full).
-
-Prior to programming the hint this would report a negative number
-around -150000 microamps meaning the battery was discharing.
-
-Thanks,
-
-Peter
-
-[1] https://lore.kernel.org/lkml/20250402233407.2452429-5-willmcvicker@google.com/
-[2] https://lore.kernel.org/lkml/20250421-b4-gs101_max77759_fg-v3-0-50cd8caf9017@uclouvain.be/
-
+Signed-off-by: Will Deacon <willdeacon@google.com>
+[Original commit from https://android.googlesource.com/kernel/gs/+/a896fd98638047989513d05556faebd28a62b27c]
+Signed-off-by: Will McVicker <willmcvicker@google.com>
+Reviewed-by: Youngmin Nam <youngmin.nam@samsung.com>
+Tested-by: Youngmin Nam <youngmin.nam@samsung.com>
+Fixes: ea89fdf24fd9 ("arm64: dts: exynos: google: Add initial Google gs101 SoC support")
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 ---
-Changes in v2:
- * rebase onto next-20250610
- * Add #ifdef CONFIG_PM_SLEEP to avoid
-   Fix warning: unused variable 'cpupm_pm_ops' [-Wunused-const-variable] (0-day)
-- Link to v1: https://lore.kernel.org/r/20250524-gs101-cpuidle-v1-0-aea77a7842a6@linaro.org
+ arch/arm64/boot/dts/exynos/google/gs101.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
----
-Peter Griffin (1):
-      soc: samsung: exynos-pmu: Enable CPU Idle for gs101
+diff --git a/arch/arm64/boot/dts/exynos/google/gs101.dtsi b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+index 48c691fd0a3ae430b5d66b402610d23b72b144d7..94aa0ffb9a9760c58818c0417001fd187b048ea8 100644
+--- a/arch/arm64/boot/dts/exynos/google/gs101.dtsi
++++ b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+@@ -155,6 +155,7 @@ ananke_cpu_sleep: cpu-ananke-sleep {
+ 				idle-state-name = "c2";
+ 				compatible = "arm,idle-state";
+ 				arm,psci-suspend-param = <0x0010000>;
++				local-timer-stop;
+ 				entry-latency-us = <70>;
+ 				exit-latency-us = <160>;
+ 				min-residency-us = <2000>;
+@@ -164,6 +165,7 @@ enyo_cpu_sleep: cpu-enyo-sleep {
+ 				idle-state-name = "c2";
+ 				compatible = "arm,idle-state";
+ 				arm,psci-suspend-param = <0x0010000>;
++				local-timer-stop;
+ 				entry-latency-us = <150>;
+ 				exit-latency-us = <190>;
+ 				min-residency-us = <2500>;
+@@ -173,6 +175,7 @@ hera_cpu_sleep: cpu-hera-sleep {
+ 				idle-state-name = "c2";
+ 				compatible = "arm,idle-state";
+ 				arm,psci-suspend-param = <0x0010000>;
++				local-timer-stop;
+ 				entry-latency-us = <235>;
+ 				exit-latency-us = <220>;
+ 				min-residency-us = <3500>;
 
-Will Deacon (1):
-      arm64: dts: exynos: gs101: Add 'local-timer-stop' to cpuidle nodes
-
- arch/arm64/boot/dts/exynos/google/gs101.dtsi |   3 +
- drivers/soc/samsung/exynos-pmu.c             | 137 ++++++++++++++++++++++++++-
- 2 files changed, 136 insertions(+), 4 deletions(-)
----
-base-commit: b27cc623e01be9de1580eaa913508b237a7a9673
-change-id: 20250524-gs101-cpuidle-cafc96dd849d
-
-Best regards,
 -- 
-Peter Griffin <peter.griffin@linaro.org>
+2.50.0.rc1.591.g9c95f17f64-goog
 
