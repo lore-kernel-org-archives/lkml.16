@@ -1,201 +1,262 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E162D541D;
-	Wed, 11 Jun 2025 08:22:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F2D62D541D
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 08:23:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749630171; cv=none; b=QF6/Sj0AlYA8a7RnOnIl0IxUKrzGsPfu9uI8w0XSx0coBc21KW0hnlEIDIFX9XmLfjKAWUMxRMdEHJu7YmqS6gQ2+ZmNjFme5AwzHbS2uFIorFdfCtIjNqCgH06kuXzDIy8x0bYU4Ttezkg5ketAApjQcDi0A+IL7Qe4IcyqFOQ=
+	t=1749630208; cv=none; b=EoJGU2RlIjemIUIglbxkXZFyEO01fIqo8jOTdhJAPAu+zeYfmpQkD65bLBNyrpPrrLF228UJGoTBEo9VGIRZD5jaScCZb1VI+VhzC1aEnHrh9uWIGVECLUvwr3U7Qig9eUA2JDO2niChLSpJgODFVoiCRxoHob2uhbDJz+QXY2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749630171; c=relaxed/simple;
-	bh=Eo3gGOsaeogOSd/B6wfv4eqHEcclQbrt5eDMWhBHswU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U6t06zlZcMXKBnU8QELAlMm11ZNUswuZ8N02Q62K1H0IiZ+G29cfj4hlT4whEhMaTgn4ZojDb0yjVZDxhmPEFrkNp56V5Zcfpmdn6FfpWqGSrt3Zj5ME2Gv/BtqogLnSJDr6v+12L0u62GPHjS0v7wvoiSk9fcxHvBvOjg8aok0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=of2E4Pry; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1749630208; c=relaxed/simple;
+	bh=N+1Zyr69TubqXEDAnwbvEj/99HAszavDxb96c48/dgE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U9Wj92pWGB77eHJUhUUGJ9A2N/4vJOJSQgcKngtZMFzyknuKh3CEYGYrMhtooQbO7EZ6xLndzhmdWbEUxvUuLZOXkG1e31UwnxvvyWhRNaKHHUDWweeFUlkYDHqC6F4FkABqT+mZDHnBNGFUFYwCmUbVgKSuE+PB1xWC3rrsy+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IFVnOR5F; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="of2E4Pry"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55B2UifU031658;
-	Wed, 11 Jun 2025 08:22:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=TMLSkA
-	JYZHdO/aYQ3gEehXA8/ELikz3XVMG52xpfMPE=; b=of2E4PryhsOvxq/vBi3wO0
-	spZS8CVvDqD/3tjhNiG/UfrWVOgf2O40EzsYiL3p/G1WK/tb/Yg/djUukCwuKm95
-	m3aI8KqtvvZH22PfGUNxnBQZAOJJwcS0Q8SCIBCH9gJi09U3ToWcaev4qILtjTU/
-	X4NIYnzvCyw9HqlqW/oFZ0CGkcBk3SuTXzG4CdC/rxHvOy8GoKotoD13gWgivaG2
-	A1cZEfijN5BokrHBTHIpiApfH1V+JtsdrjsYnHz0lMlOsCjXeWkaHN3tdNW19C5C
-	NguxLEZhRIUPQ2NLoQ21FVGSS4hcwHeOFME3p18f+e5j05zhiizmsVWYo8LlVThg
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 474x4m8ce8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 11 Jun 2025 08:22:36 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55B4toTm015006;
-	Wed, 11 Jun 2025 08:22:36 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4750rp6rc5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 11 Jun 2025 08:22:35 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55B8MY0846858616
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 11 Jun 2025 08:22:34 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EC5022004E;
-	Wed, 11 Jun 2025 08:22:33 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C819720040;
-	Wed, 11 Jun 2025 08:22:31 +0000 (GMT)
-Received: from li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com (unknown [9.39.26.218])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 11 Jun 2025 08:22:31 +0000 (GMT)
-Date: Wed, 11 Jun 2025 13:52:29 +0530
-From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-To: Baokun Li <libaokun1@huawei.com>
-Cc: linux-ext4@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
-        jack@suse.cz, linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
-        yangerkun@huawei.com
-Subject: Re: [PATCH 0/4] ext4: better scalability for ext4 block allocation
-Message-ID: <aEk8xcy9Zykrx3m3@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
-References: <20250523085821.1329392-1-libaokun@huaweicloud.com>
- <aDchmYDc_OOAu2yC@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
- <f21507f9-ebc6-43ce-97c4-cd055c53747e@huawei.com>
- <aEgfwKvcJzt9gkGq@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
- <bff134da-e056-4eaf-b5ac-cace99208e40@huawei.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IFVnOR5F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749630205;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=KGAJqXmjc8jwedunIap6ts3bHN4LjX3nvKHTfy1OSMc=;
+	b=IFVnOR5F41j0f6z2DPbq5Jars9MwWfAcSS0Z5iyCwdksjK3c4klV7NQQiZtKnqZjxMPd2E
+	098khv/7WRvpSdghemRYN/kvk/dILFZGx8KohAglIVmNiuJQksweeSW8u6GJkG1kScW4TB
+	rs0cWFnnKj76tkfZ5jJrQF7MaIGCcV4=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-391--YYnjFCSM4Wry9m4f4qU-A-1; Wed, 11 Jun 2025 04:23:24 -0400
+X-MC-Unique: -YYnjFCSM4Wry9m4f4qU-A-1
+X-Mimecast-MFC-AGG-ID: -YYnjFCSM4Wry9m4f4qU-A_1749630203
+Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-607ecda10fcso2618290a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 01:23:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749630203; x=1750235003;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=KGAJqXmjc8jwedunIap6ts3bHN4LjX3nvKHTfy1OSMc=;
+        b=DGru7q0QgCa8f+YKasR4ryscvAjumdFvjA00aWnTumccEMpc7wu2ZRR/fKRt0qJ1ul
+         94oLiPj5QR5Jtojn/OQhtg/2fk13MEI/DaojjBF6nDMBSvdPAn3EnJErbh/i9VLXxHv4
+         99BxJAuVwd1Zdww7H4GFeqtcfBjM1NodvjG1Q7rlPyTdAbLoL/igNU16DX5tFKm4Tgu5
+         Xxpq6WZaMVOQqgYeBhX/wZekurWKRfpCHSLd1qQS/9OSdfR+uAW2Gn60thyZQalMEKxT
+         diZACfD+Hd2VNv71bknuw9BigZ8TSNwxvLcWcCMGN/KZfF5aWWSOgdvvhWSQpJvk3TaW
+         8AwA==
+X-Forwarded-Encrypted: i=1; AJvYcCXJDzzZOR34pHCo8a+1gJJZrhwI0Fy0+pAVdfzwPV4hombCHzbAiapC/+C7iZVdgjOrcRRpT2/TTi+8Auk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeTwYu2PCemEIrOVTaosfTTuNVDHSod9sKn8y5HkM/SQpGYW50
+	ZagleO+qVcTNQCXhdxOQv97Xq7ZkN5T4Rb3ZXMe6EeWaa0HvoGgtN8I7YVxnyROeY8gJiZwDMCz
+	qulHhYu9cLEZtbIPgOen8JDh2vDNGDnqGehZpVtlq6dHRFDL4wTMNdI6g6FVjeF02Sg==
+X-Gm-Gg: ASbGncsU+GAE1d5aDEPlhFW1K2LsOy8f9l1EAQ/kLjl8uqVEyN49JDCP6ZmO4G5GPDl
+	qyfNgOZFjq7Gvim2baZEiHbmOx29TOB52wqg3NvoyVObybL7EJAO86br3YYBzkVNJ2O3hSMhhAa
+	qAe/uW43JiWlcB9P7dpjF8isNFwPQoIzb5oUEU+KDtpTKIV5Njl9f4ELBJ1x8x1atkAh8yvuK7X
+	KNa14iKD9cLGwo/4/ZSsjXdS5oCJGm0I3DgxEytzdw5JTeVU3EfLTKjnh8LqydOKnr339HaBcs5
+	/azuXmuMILwkGy0w+mFh2igzoc9XPeDx317hrdmyMuUc
+X-Received: by 2002:a05:6402:1941:b0:607:6619:1092 with SMTP id 4fb4d7f45d1cf-60846af42f2mr1953064a12.13.1749630202701;
+        Wed, 11 Jun 2025 01:23:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHMuPw8p1asPs6tLBDeVr1B8/KBQgjzliFlrJF7qnKZsYXTm7qlYtGdvn70FWDxJ38ed58fDQ==
+X-Received: by 2002:a05:6402:1941:b0:607:6619:1092 with SMTP id 4fb4d7f45d1cf-60846af42f2mr1953043a12.13.1749630202282;
+        Wed, 11 Jun 2025 01:23:22 -0700 (PDT)
+Received: from [10.32.64.156] (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-607783dccbdsm7104469a12.54.2025.06.11.01.23.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Jun 2025 01:23:21 -0700 (PDT)
+Message-ID: <52b746ae-82cc-428e-8e88-a05a6b738cd0@redhat.com>
+Date: Wed, 11 Jun 2025 10:23:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bff134da-e056-4eaf-b5ac-cace99208e40@huawei.com>
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Y4X4sgeN c=1 sm=1 tr=0 ts=68493ccc cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=8nJEP1OIZ-IA:10 a=6IFa9wvqVegA:10 a=AiHppB-aAAAA:8 a=bUqMBbjT_IMJPAd7GqYA:9 a=3ZKOabzyN94A:10 a=wPNLvfGTeEIA:10
- a=pguttIyuptPycXpC454v:22
-X-Proofpoint-GUID: ChutF85oazqB0v7BXrsN-eH07Gd4TOo9
-X-Proofpoint-ORIG-GUID: ChutF85oazqB0v7BXrsN-eH07Gd4TOo9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjExMDA3MiBTYWx0ZWRfX46KwahOGIW8r WBajov8OVPeJhkldfEc7LLP6kuiVW1J2ZEHVV15M4zqFK/VCse4ApgxOMpMveZWAyNajx6FFo5K az24xtMeaXiZBOjc4WCnDd57GuiKlGBpMtw3pnoXG/qdvMfb3zQfW4tbcOeZlmGirrMy+TXMZqT
- l/0EPMHRvIeIQy3xmDAN+Z7JSheXXn0NQna8d6stDp44QtjI61H/S6XX2tlT1ofDtwRchPVt1Mr wce7wcB1hCy6LIapAHSbR3inNL1ElyZwnSJmgEXdzcVSS+9gq17zPj6WoQcBQZmH63O2uAF6b4W /Ivki3P00bC/OkomjywDDEEWP/2Mb5To9uZ4IqJmUig+mOX1tDsliR+UMI7oMBs9mHF5uprLs8s
- iIrGJz8FNHyb3zpkswPncLLLuDvj8P4W5VX0oJaEmYI8c3eVANsbBpjRbwzwpZ39N1Lh1nkh
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-11_03,2025-06-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=822 spamscore=0
- clxscore=1015 lowpriorityscore=0 malwarescore=0 bulkscore=0 adultscore=0
- impostorscore=0 suspectscore=0 phishscore=0 mlxscore=0 priorityscore=1501
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506110072
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm: Remove PFN_MAP, PFN_SPECIAL, PFN_SG_CHAIN and
+ PFN_SG_LAST
+To: Marek Szyprowski <m.szyprowski@samsung.com>,
+ Alistair Popple <apopple@nvidia.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org,
+ "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+ Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@nvidia.com>,
+ gerald.schaefer@linux.ibm.com, dan.j.williams@intel.com, jgg@ziepe.ca,
+ willy@infradead.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+ jhubbard@nvidia.com, zhang.lyra@gmail.com, debug@rivosinc.com,
+ bjorn@kernel.org, balbirs@nvidia.com, lorenzo.stoakes@oracle.com,
+ John@groves.net
+References: <20250604032145.463934-1-apopple@nvidia.com>
+ <CGME20250610161811eucas1p18de4ba7b320b6d6ff7da44786b350b6e@eucas1p1.samsung.com>
+ <957c0d9d-2c37-4d5f-a8b8-8bf90cd0aedb@samsung.com>
+ <hczxxu3txopjnucjrttpcqtkkfnzrqh6sr4v54dfmjbvf2zcfs@ocv6gqddyavn>
+ <1daeaf4e-5477-40cb-bca0-e4cd5ad8a224@samsung.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <1daeaf4e-5477-40cb-bca0-e4cd5ad8a224@samsung.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 10, 2025 at 09:48:30PM +0800, Baokun Li wrote:
-> On 2025/6/10 20:06, Ojaswin Mujoo wrote:
-> > On Thu, May 29, 2025 at 08:24:14PM +0800, Baokun Li wrote:
-> > > On 2025/5/28 22:53, Ojaswin Mujoo wrote:
-> > > > On Fri, May 23, 2025 at 04:58:17PM +0800, libaokun@huaweicloud.com wrote:
-> > > 
-> > > ----------------------------------------------------------
-> > >                       |       base      |      patched    |
-> > > ---------------------|--------|--------|--------|--------|
-> > > mb_optimize_scan     | linear |opt_scan| linear |opt_scan|
-> > > ---------------------|--------|--------|--------|--------|
-> > > bw(MiB/s)            | 217    | 219    | 5685   | 5670   |
-> > > Avg. free extent size| 1943732| 1943728| 1439608| 1368328|
-> > > Avg. extents per file| 261879 | 262039 | 744    | 2084   |
-> > > Avg. size per extent | 4      | 4      | 1408   | 503    |
-> > > Fragmentation score  | 100    | 100    | 2      | 6      |
-> > > ----------------------------------------------------------
-> > Hi Baokun,
-> > 
-> > Thanks for the info and data and apologies for being late, I caught a
-> > viral last week :/
-> Hi Ojaswin,
+On 11.06.25 10:03, Marek Szyprowski wrote:
+> On 11.06.2025 04:38, Alistair Popple wrote:
+>> On Tue, Jun 10, 2025 at 06:18:09PM +0200, Marek Szyprowski wrote:
+>>> On 04.06.2025 05:21, Alistair Popple wrote:
+>>>> The PFN_MAP flag is no longer used for anything, so remove it.
+>>>> The PFN_SG_CHAIN and PFN_SG_LAST flags never appear to have been
+>>>> used so also remove them. The last user of PFN_SPECIAL was removed
+>>>> by 653d7825c149 ("dcssblk: mark DAX broken, remove FS_DAX_LIMITED
+>>>> support").
+>>>>
+>>>> Signed-off-by: Alistair Popple <apopple@nvidia.com>
+>>>> Acked-by: David Hildenbrand <david@redhat.com>
+>>>> Reviewed-by: Christoph Hellwig <hch@lst.de>
+>>>> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+>>>> Cc: gerald.schaefer@linux.ibm.com
+>>>> Cc: dan.j.williams@intel.com
+>>>> Cc: jgg@ziepe.ca
+>>>> Cc: willy@infradead.org
+>>>> Cc: david@redhat.com
+>>>> Cc: linux-kernel@vger.kernel.org
+>>>> Cc: nvdimm@lists.linux.dev
+>>>> Cc: jhubbard@nvidia.com
+>>>> Cc: hch@lst.de
+>>>> Cc: zhang.lyra@gmail.com
+>>>> Cc: debug@rivosinc.com
+>>>> Cc: bjorn@kernel.org
+>>>> Cc: balbirs@nvidia.com
+>>>> Cc: lorenzo.stoakes@oracle.com
+>>>> Cc: John@Groves.net
+>>>>
+>>>> ---
+>>>>
+>>>> Splitting this off from the rest of my series[1] as a separate clean-up
+>>>> for consideration for the v6.16 merge window as suggested by Christoph.
+>>>>
+>>>> [1] - https://lore.kernel.org/linux-mm/cover.541c2702181b7461b84f1a6967a3f0e823023fcc.1748500293.git-series.apopple@nvidia.com/
+>>>> ---
+>>>>     include/linux/pfn_t.h             | 31 +++----------------------------
+>>>>     mm/memory.c                       |  2 --
+>>>>     tools/testing/nvdimm/test/iomap.c |  4 ----
+>>>>     3 files changed, 3 insertions(+), 34 deletions(-)
+>>> This patch landed in today's linux-next as commit 28be5676b4a3 ("mm:
+>>> remove PFN_MAP, PFN_SPECIAL, PFN_SG_CHAIN and PFN_SG_LAST"). In my tests
+>>> I've noticed that it breaks operation of all RISC-V 64bit boards on my
+>>> test farm (VisionFive2, BananaPiF3 as well as QEMU's Virt machine). I've
+>>> isolated the changes responsible for this issue, see the inline comments
+>>> in the patch below. Here is an example of the issues observed in the
+>>> logs from those machines:
+>> Thanks for the report. I'm really confused by this because this change should
+>> just be removal of dead code - nothing sets any of the removed PFN_* flags
+>> AFAICT.
+>>
+>> I don't have access to any RISC-V hardwdare but you say this reproduces under
+>> qemu - what do you run on the system to cause the error? Is it just a simple
+>> boot and load a module or are you running selftests or something else?
 > 
-> Being sick really takes a toll.
-> Please get some good rest and take care of yourself.
+> It fails a simple boot test. Here is a detailed instruction how to
+> reproduce this issue with the random Debian rootfs image found on the
+> internet (tested on Ubuntu 22.04, with next-20250610
+> kernel source):
 
-Thanks Baokun!
+riscv is one of the archs where pte_mkdevmap() will *not* set the pte as special. (I
+raised this recently in the original series, it's all a big mess)
 
-<snip>
+So, before this change here, pfn_t_devmap() would have returned "false" if only
+PFN_DEV was set, now it would return "true" if only PFN_DEV is set.
 
-> > 
-> > > Another reason is that opt_scan tends to allocate from groups that have
-> > > just received freed blocks, causing it to constantly "jump around"
-> > > between certain groups.
-> > > 
-> > > This leads to intense contention between allocation and release, and even
-> > > between release events. In contrast, linear traversal always moves forward
-> > > without revisiting groups, resulting in less contention between allocation
-> > > and release.
-> > By just received free blocks, you mean the blocks got freed in the group
-> > right?
-> Yes.
-> > I was under the impression that when we free blocks and the group's
-> > largest order/ avg fragment changes, the group is added to the end of
-> > the free fragment list/order list so it should be the last to be picked.
-> > Is that not the case?
-> Yes, we are indeed adding the group to the list tail. However, because
-> we traverse all ordered lists from low to high, a group might end up
-> "bouncing" repeatedly between order_0 and order_1 here.
-> 
-> For instance, if order_1 only contains group 1, linear traversal would
-> rarely revisit it after the initial pass. However, after a non-linear
-> allocation, this group is moved from the order_1 list to the order_0 list.
-> When blocks are freed, it's moved back to the order_1 list, and then
-> non-linear traversal prioritizes allocation in this same group again...
+Consequently, in insert_pfn() we would have done a pte_mkspecial(), now we do a
+pte_mkdevmap() -- again, which does not imply "special" on riscv.
 
-Right, I get what you mean now. Thanks.
+riscv selects CONFIG_ARCH_HAS_PTE_SPECIAL, so if !pte_special(), it's considered as
+normal.
 
-> > 
-> > > However, because linear involves more groups in allocation, journal
-> > > becomes a bottleneck. If opt_scan first attempts to traverse block groups
-> > > to the right from the target group in all lists, and then from index 0 to
-> > > the left in all lists, competition between block groups would be
-> > > significantly reduced.
-> > > 
-> > > To enable ordered traversal, we attempted to convert list_head to an
-> > > ordered xarray. This ordering prevents "bouncing" during retries.
-> > > Additionally, traversing all right-side groups before left-side groups
-> > > significantly reduced contention. Performance improved from 10430 to 17730.
-> > Do you maybe have some code you can share of this?
-> Yes, V2 will include those changes.
+Would the following fix your issue?
 
-Okay sure
 
-<snip
+diff --git a/mm/memory.c b/mm/memory.c
+index 8eba595056fe3..0e972c3493692 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -589,6 +589,10 @@ struct page *vm_normal_page(struct vm_area_struct *vma, unsigned long addr,
+  {
+         unsigned long pfn = pte_pfn(pte);
+  
++       /* TODO: remove this crap and set pte_special() instead. */
++       if (pte_devmap(pte))
++               return NULL;
++
+         if (IS_ENABLED(CONFIG_ARCH_HAS_PTE_SPECIAL)) {
+                 if (likely(!pte_special(pte)))
+                         goto check_pfn;
+@@ -598,16 +602,6 @@ struct page *vm_normal_page(struct vm_area_struct *vma, unsigned long addr,
+                         return NULL;
+                 if (is_zero_pfn(pfn))
+                         return NULL;
+-               if (pte_devmap(pte))
+-               /*
+-                * NOTE: New users of ZONE_DEVICE will not set pte_devmap()
+-                * and will have refcounts incremented on their struct pages
+-                * when they are inserted into PTEs, thus they are safe to
+-                * return here. Legacy ZONE_DEVICE pages that set pte_devmap()
+-                * do not have refcounts. Example of legacy ZONE_DEVICE is
+-                * MEMORY_DEVICE_FS_DAX type in pmem or virtio_fs drivers.
+-                */
+-                       return NULL;
+  
+                 print_bad_pte(vma, addr, pte, NULL);
+                 return NULL;
 
-> > > In a single container, create a file, then repeatedly append 8KB using
-> > > fallocate until the file reaches 1MB. After that, truncate the file to
-> > > 0 and continue appending 8KB with fallocate. The 64 containers will
-> > > occupy a maximum of 64MB of disk space in total, so they won't fill the
-> > > entire file system.
-> > Also, as per your theory, if we do similar experiments in a fragmented
-> > FS we should see opt_scan perform better right? I'd like to test this as
-> > well. I'll try to play with the scripts you have shared.
-> > 
-> Yes, mb_optimize_scan performs well when free space fragmentation is
-> severe. We have a 600TB disk array where the write bandwidth is
-> approximately 5 GB/s when empty. When space utilization reaches 95%,
-> linear traversal drops bandwidth to 1 GB/s, whereas enabling
-> mb_optimize_scan restores it to 4.2 GB/s.
 
-Got it, thanks for confirming. Seems like in mostly empty FS linear
-traversal seems to do better. Makes me wonder if we should use some
-heurestic to switch between linear and opt_scan based allocation, for
-example opt_scan can be used if FS is 60% full or has a fragmentation 
-score of X. (or something like that..)
+But, I would have thought the later patches in Alistairs series would sort that out
+(where we remove pte_devmap() ... )
 
-But Im also curious about your improved optimize scan implementation
-with ordered traversal, so lets see how that goes first.
+-- 
+Cheers,
 
-> 
-> 
-> Cheers,
-> Baokun
-> 
+David / dhildenb
+
