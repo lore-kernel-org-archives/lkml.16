@@ -1,83 +1,118 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1BFC17E
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 04:37:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8D51B0411;
+	Wed, 11 Jun 2025 04:38:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749616673; cv=none; b=G6+ARshmTqbkBtazZJDQeaFriedqyiTEfUuR8Gf9sghsL0zB/2mmKrquoyVrrpKEm09iBveXK1uNIVhLkkbOS0VQS7m0Rp74AJt+3Pvvjtt4O7OlnPqo5+Rl4sseVe34nlfiuVWQ4/tmNqjniIKfiSKnLvhc4VCSPFm3zwO/3Hg=
+	t=1749616705; cv=none; b=GhzAESjWGDo7ApqYg8scbCzyW9kz1wPJEQSv0noZn3chGsdzKD9Hl9DMrX1fSX4yq0XZ+bFcgoPlboMrYKuE0CBhRk5nS+JSwWU0GDeTpvsxALKrbATPkveW9byWJhQdSTz/8ga2A4Tamb/oWuENPzlXBCe1CgwTrOAp3bbwMYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749616673; c=relaxed/simple;
-	bh=TfZ07W2uCkBNI9p2iHLuOlIUrxn9e1xYgknUoZFI+hE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F6XFTdXZu1EEQ68DlwOIOXaBc24aHHsjA8p0X/KKMkOkSMHsQpetwmyjstEQO3F2eiyIzHBs+xtwx3Wkhxjpj20IuyN71LNbBJRSu2vfy8Wb8TAmb15ZkMnNWpow1gc6pco5VEViiUYNmF8TYAyoC1/pWtmEOALke6e2fGK7+Y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=j5Hx88Ko; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1749616705; c=relaxed/simple;
+	bh=KbXg0HmLXdWM4zba+PsRTH5m51SW5Hsv6pxMUcnQ9o0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hzjJPD249Mu6A3xbeKmPs8qN/plFa3vpaCOdmwQZj+wyaeXI8L1W/SVpItykUXnZsfO4QTo9wdomvsJ0/zA9Uc/bXRY+uUK+k+2fpDhMt18TuVbRLs8wrovxrkS16zop6UbtX5P8MyTG+7yi4lYrlJjjEcO8oIevtB0dJrXqx2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cJzUcKiF; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j5Hx88Ko"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-234fcadde3eso72947615ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 21:37:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1749616671; x=1750221471; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FE1cAWbg11FBslkXTnrUJG3ETee3kwzfdEhvTNzCUjg=;
-        b=j5Hx88KoSICauE7LHZgBDDf1nljkDh7ihDMZDxP/b+tVds4tZhxR3UO9kgiPc246lG
-         xxeKvFlHn0ZCsMXEhJtAfaJBkgNY+3AHE89r+3J8Uy9pOXrm+EEimF73a9IcAtM+Vlm+
-         y7FIKusQXLROG4bdc7J8ASrAYoaVs7T6ZsMo0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749616671; x=1750221471;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FE1cAWbg11FBslkXTnrUJG3ETee3kwzfdEhvTNzCUjg=;
-        b=N6Bbko+pNPKVu6zFIzHz5rTgWRKvP5PIp9zgM3tHUekDSM03NliSfhc/r/+Rxg7Nva
-         g3+ogzCZi1rrsFwfdBKmvxC3Aobjf/pMh59YBeNfAsWDVvzjRQnj0IMXa1bM88DbcAPt
-         Xk20Gsjtj4iP26ZtTjXtyvk5LwuT3D6y8n3tmXlzmylhXK+WaL0YBroWWshC3VTbevgZ
-         hFQXxrsFBjN+5qCaPpCYB54cwks7ECnnubNWEmpu+1c7Pjs1b4lehh6Jc3yI3EmgjtPe
-         N61GJDFo8n6KiVlldcDNNHtw+dMhkrVPWVSwXkJSd4M9XR5b7Bz/UOUtyfa5fO4EuB0s
-         N7IQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWxDWx5vjBBVaSyV6OoysPgi63tIc8zdXb27CsQvGBRfxs1BdmtXCtGD9SMwOSTkE7ggjX6uhKjJdFfVSY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdOQIdcnhCR5bJ2FYVAozOLv0GKIgFgyxCJrLhawVaV60HkLh8
-	E2ZvVHkqu3rDFZY6xG/qsWyYRAtqFeeUHsnW4g0PbVHDDS8Hp5033ga6GocCFoMcRQ==
-X-Gm-Gg: ASbGncvtmsNCL7cb8wHx7HSY0vHTkQyf4KF3wpecK8DeHsxSgMTA9jzCILLtZlKpVDP
-	lMiFCIxZ4VIRSh+wGmLpYt2dwXiObtNxtquCeBOux7JnuRU+KY2d9BjkTj6Xv4v6czZcgDK1tqQ
-	btIeRvLk4gvUa6a70fzSRHWSu7SamGeq2k+vcape8RrGV5nToA34NsVD8a+ftIHrzQVEXDLXa/w
-	vZZiEPTktf5aDviP5O4Pzmzr4P9CfA4Ln9fcSAiYY8vXqay+ISVlGHlFn3BYgLVLQRas4RXfq6O
-	8QqP3QnpYruo5w99976wiEH312IZYibk0AXVgJpzXzMYSkc2ege0qob1+mTLhAjCO1fjzG2UisC
-	u
-X-Google-Smtp-Source: AGHT+IFM8NgLpiLIoUkojJ3i2pht8cBR3G2XAm5m39HTWlGcYeBr0M+6D9ErnNi2+LitOkchPJZG1g==
-X-Received: by 2002:a17:903:32c1:b0:235:a9b:21e7 with SMTP id d9443c01a7336-23641b2654bmr26834905ad.48.1749616671102;
-        Tue, 10 Jun 2025 21:37:51 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:eac8:ff09:e566:df3a])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23603077eb7sm78450355ad.39.2025.06.10.21.37.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 21:37:50 -0700 (PDT)
-Date: Wed, 11 Jun 2025 13:37:46 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Jeff Johnson <jjohnson@kernel.org>
-Cc: linux-wireless@vger.kernel.org, ath11k@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: Re: [PATCHv2] wifi: ath11k: mark reset srng lists as uninitialized
-Message-ID: <74caimlaibla7rge2eoiubeesp6pz7e6u7ifvbw57t4e6q4qso@iypz4pqd7kpr>
-References: <20250529035708.3136232-1-senozhatsky@chromium.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cJzUcKiF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749616703; x=1781152703;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=KbXg0HmLXdWM4zba+PsRTH5m51SW5Hsv6pxMUcnQ9o0=;
+  b=cJzUcKiFGuL2hl0QZF4Od/USSFBgrIiqfxPy0leIXIlsRE424vxUbS4I
+   EcI7cD9uA1yPX6b44xgENGTQshyEuSw8EbVhgoT9WYuR8OHmzKX67vLLa
+   QMQJDDmUTapClrGK7t07mdpCEy0zBTXaJkL0GbGYfwBYlA2eT6bQEceHD
+   gx0eFiTe15jaoPtY/5hDJ+l0hv4zrI9I7bi7qOi73136XTWnJa65KBqcg
+   nMhwhXc94W5x5vPFuPCoSIXMD15XqmnPVbJr0sIi5HKrYGRleD7zQpGkS
+   n7MEuu265J2L9mQueEY1W+Xetcyuf37LQb5apBJ8xvYW/nYmvlsLnpMb1
+   g==;
+X-CSE-ConnectionGUID: trMvHVKJTiq1iyh8LDZIVg==
+X-CSE-MsgGUID: uPaEP4FkSlm79uXB+YLWbA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="62783169"
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="62783169"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 21:38:23 -0700
+X-CSE-ConnectionGUID: l8HYpvXbRQKXDyxRt2LbEw==
+X-CSE-MsgGUID: p0kOdQ4iQf2sNB4pZGSuBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="147619193"
+Received: from unknown (HELO [10.238.0.239]) ([10.238.0.239])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 21:38:20 -0700
+Message-ID: <629e0dc3-49b4-45f5-aeaa-8a9109e81d14@linux.intel.com>
+Date: Wed, 11 Jun 2025 12:38:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250529035708.3136232-1-senozhatsky@chromium.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/32] KVM: SVM: Disable interception of SPEC_CTRL iff
+ the MSR exists for the guest
+To: Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Chao Gao <chao.gao@intel.com>, Borislav Petkov <bp@alien8.de>,
+ Xin Li <xin@zytor.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>,
+ Francesco Lavra <francescolavra.fl@gmail.com>,
+ Manali Shukla <Manali.Shukla@amd.com>
+References: <20250610225737.156318-1-seanjc@google.com>
+ <20250610225737.156318-2-seanjc@google.com>
+Content-Language: en-US
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <20250610225737.156318-2-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On (25/05/29 12:56), Sergey Senozhatsky wrote:
-> ath11k_hal_srng_deinit() frees rdp and wrp which are used
-> by srng lists.  Mark srng lists as not-initialized.  This
-> makes sense, for instance, when device fails to resume
-> and the driver calls ath11k_hal_srng_deinit() from
-> ath11k_core_reconfigure_on_crash().
-[..]
 
-Gentle ping.
+
+On 6/11/2025 6:57 AM, Sean Christopherson wrote:
+> Disable interception of SPEC_CTRL when the CPU virtualizes (i.e. context
+> switches) SPEC_CTRL if and only if the MSR exists according to the vCPU's
+> CPUID model.  Letting the guest access SPEC_CTRL is generally benign, but
+> the guest would see inconsistent behavior if KVM happened to emulate an
+> access to the MSR.
+>
+> Fixes: d00b99c514b3 ("KVM: SVM: Add support for Virtual SPEC_CTRL")
+> Reported-by: Chao Gao <chao.gao@intel.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>   arch/x86/kvm/svm/svm.c | 9 ++++++---
+>   1 file changed, 6 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> index 0ad1a6d4fb6d..21e745acebc3 100644
+> --- a/arch/x86/kvm/svm/svm.c
+> +++ b/arch/x86/kvm/svm/svm.c
+> @@ -1362,11 +1362,14 @@ static void init_vmcb(struct kvm_vcpu *vcpu)
+>   	svm_recalc_instruction_intercepts(vcpu, svm);
+>   
+>   	/*
+> -	 * If the host supports V_SPEC_CTRL then disable the interception
+> -	 * of MSR_IA32_SPEC_CTRL.
+> +	 * If the CPU virtualizes MSR_IA32_SPEC_CTRL, i.e. KVM doesn't need to
+> +	 * manually context switch the MSR, immediately configure interception
+> +	 * of SPEC_CTRL, without waiting for the guest to access the MSR.
+>   	 */
+>   	if (boot_cpu_has(X86_FEATURE_V_SPEC_CTRL))
+> -		set_msr_interception(vcpu, svm->msrpm, MSR_IA32_SPEC_CTRL, 1, 1);
+> +		set_msr_interception(vcpu, svm->msrpm, MSR_IA32_SPEC_CTRL,
+> +				     guest_has_spec_ctrl_msr(vcpu),
+> +				     guest_has_spec_ctrl_msr(vcpu));
+Side topic, not related to this patch directly.
+
+Setting to 1 for set_msr_interception() means to disable interception.
+The name of the function seems a bit counterintuitive to me.
+Maybe some description for the function can help people not familiar with
+SVM code without further checking the implementation?
+
+
+>   
+>   	if (kvm_vcpu_apicv_active(vcpu))
+>   		avic_init_vmcb(svm, vmcb);
+
