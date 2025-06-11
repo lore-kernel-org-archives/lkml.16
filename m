@@ -1,71 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104C71DFF7;
-	Wed, 11 Jun 2025 20:40:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D727A1B0F19;
+	Wed, 11 Jun 2025 20:40:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749674414; cv=none; b=qwfyiaQo8YcKCoBu4XGdJcBKP+hJqHgBUORMvAnwInsg+okuMROoX/r2CZ9M2VGw2rj7lM+ztgPAkflNK4Eiv7ttHKucDnwP94nw1SfIwaAz/fzQTX9FZZg5a6MwaU/K7X0340b4Kcp+4Q4I7MVJFRKF2+jIzHnpy3J9m6GgvSA=
+	t=1749674441; cv=none; b=l8BAfxhjRbbm3MKfAo1clgGKanGi1qTSF4vRTW986CzksK0pVdLxW9YybK6GU5rzyB4IusR0xxgjATMt3ixt3pUJb1DtqyeB9MdMXmV3IsWd+Y5d6eBhYQGx3TeTBWaRA2SfPjLfLxvawA+1qnFDZftALAt216ZOSNcDL50eKdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749674414; c=relaxed/simple;
-	bh=mQLKS30Z6vR6WwMjMGflKrh9mxDkr15j29E5YXjDj1w=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=B8zmAzLw/UX2ckInkQDZrcaere/m2/VCIB8RLd5VX359wwR66+3pT4uzzqLzzyVIyhGH0f8/m/A5VJcUoNXVnSPCQ2TLR9jlVTFG9vvYp1BuD5doFNAcPiG0NLxVoXgttdQ6PVbK6ZLzzjCBwtw4y0cbn1Hewl7IY9osyyBOwbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZIR4E2sB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749674441; c=relaxed/simple;
+	bh=uirVWt9rb13ek5yxqU0kG0tBN6Zipa/a8Qss9K4NP08=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sYLkj8p22gexdD3ndHVdiOLsxhAD1s5GoSKA71lVPBmMUyOx0EDF9+Ib0TQbeLD9rX8KJ/xspfa2zOfHzfWmmKi3BLsUnzj4dwhF2PPe9VyQAau1nkq3lXZHoX6+cnkC2OH+mPNRbWa0hZIpaa4zlAAVdwhOvKnQj1xPvHPfmJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Az4TPHLm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZIR4E2sB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 361C2C4CEE3;
-	Wed, 11 Jun 2025 20:40:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Az4TPHLm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40462C4CEE3;
+	Wed, 11 Jun 2025 20:40:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749674413;
-	bh=mQLKS30Z6vR6WwMjMGflKrh9mxDkr15j29E5YXjDj1w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ZIR4E2sBlFOtizgD9NhhRSzSMnCCv5U7vZSPz9d63UN2UUoQVFcgRg87wB5WWwATu
-	 NAF+8ekqy1N0i7Dy0Zqb/FFuS8FPiR6Dvj7+VcjV6rByQeMKnyiRhh450uvFvpl18C
-	 ks4vfD6t7bX5QHW8yAva+w7y8ja94g2u922G2LrggzpyJ9GoXN9IfMVZFsk+q1UZsZ
-	 cJdkaM1o8u7bvZeqXo6dmeWLJBsMMTwkKHGoxTLZCjwQxaoinoAhy54DRcX+TbFhsy
-	 eN7yiKCfLZGFGpExTmvSoyJbgwtGg1rIEoOyYcVim6caysk9lqdZl7+G8iL+T0O2oy
-	 kPIAKRCOW0lbA==
-Date: Wed, 11 Jun 2025 15:40:11 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: lpieralisi@kernel.org, bhelgaas@google.com, mani@kernel.org,
-	kwilczynski@kernel.org, robh@kernel.org, jingoohan1@gmail.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/13] PCI: dwc: Refactor register access with
- dw_pcie_clear_and_set_dword helper
-Message-ID: <20250611204011.GA868320@bhelgaas>
+	s=k20201202; t=1749674440;
+	bh=uirVWt9rb13ek5yxqU0kG0tBN6Zipa/a8Qss9K4NP08=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Az4TPHLmHMfaLzHXZZo1Ngmr/4uyeu35qgcp/QJLbYVTof+ctGIwnYQII+473UU81
+	 snqTDX411u4Qf52NN/iOnkE0GkniFLRFXWNmLbhfhmiRmxMVpfraywXku9yF42fAsX
+	 ymWu2ZIu2sByBs2WZl+8x+sEJXUQHyvGHtpz4ZsrluO2E7jRgMvuL0qpTPSFgKVFDS
+	 a+15vqcdnu0XbEVRHXMrUny0/XUiwkoy0omczR7bWl9S1feBi1JybNMP+WE8BEqSQr
+	 07Truc8Xzm4WbDzDmWHLvfDGODPVlwqJwoDUyl0QESBR/e+KVjUoVabO/UXN3gvZfx
+	 QLcdHkEkCErsg==
+Date: Wed, 11 Jun 2025 13:40:39 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Gustavo Luiz Duarte <gustavold@gmail.com>, Andrew Lunn
+ <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Shuah Khan
+ <shuah@kernel.org>, Simon Horman <horms@kernel.org>, Jonathan Corbet
+ <corbet@lwn.net>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH net-next 3/5] netconsole: append msgid to sysdata
+Message-ID: <20250611134039.6f5430fe@kernel.org>
+In-Reply-To: <aEmhA0QoZy3LbAu+@gmail.com>
+References: <20250611-netconsole-msgid-v1-0-1784a51feb1e@gmail.com>
+	<20250611-netconsole-msgid-v1-3-1784a51feb1e@gmail.com>
+	<aEmhA0QoZy3LbAu+@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611163047.860247-1-18255117159@163.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 12, 2025 at 12:30:47AM +0800, Hans Zhang wrote:
-> Register bit manipulation in DesignWare PCIe controllers currently
-> uses repetitive read-modify-write sequences across multiple drivers.
-> This pattern leads to code duplication and increases maintenance
-> complexity as each driver implements similar logic with minor variations.
+On Wed, 11 Jun 2025 08:30:11 -0700 Breno Leitao wrote:
+> >  static int prepare_extradata(struct netconsole_target *nt)
+> >  {
+> > -	u32 fields = SYSDATA_CPU_NR | SYSDATA_TASKNAME;
+> > +	u32 fields = SYSDATA_CPU_NR | SYSDATA_TASKNAME | SYSDATA_MSGID;  
+> 
+> This might be gone now, according to your last patch.,
 
-When you repost this, can you fix whatever is keeping this series from
-being threaded?  All the patches should be responses to the 00/13
-cover letter.  Don't repost until at least a couple of days have
-elapsed and you make non-trivial changes.
-
-My preference is to make the subject lines like:
-
-  PCI: dra7xx: Refactor ...
-  PCI: imx6: Refactor ...
-
-etc.  I think including both dwc and dra7xx is overkill.
-
-You can find the prevailing style with:
-
-  git log --no-merges --oneline --pretty=format:"%h (\"%s\")" drivers/pci/controller/dwc
-
-Whoever applies this series can trivially squash patches together if
-that seems better.
+Right, please wait until tomorrow afternoon (Pacific Time), then rebase
+and repost. We will merge the net tree into net-next after we send the
+pending fixes to Linus. Otherwise by the time we try to merge this it
+will no longer apply..
