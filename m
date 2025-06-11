@@ -1,35 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92632254848;
-	Wed, 11 Jun 2025 23:10:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1B226FD97;
+	Wed, 11 Jun 2025 23:10:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749683416; cv=none; b=fIPW5kvnirsUQ7VNeB4UL6/kCTSeNgVTPbl5Vbajy9YpN4VT3yKu0ActJQS11TkBvHiRf6hcqPm3Rv54vDSJKMALHWgl/KQdlwHG07ach2RlpvHwRUdg1AO8lZ2Nuv+ggMxyU65ig2cs4GgItj9XGI7i+gxtmchNY2pg30T4wOE=
+	t=1749683455; cv=none; b=IMRAPIWRehdC6pYxbYv9RIhn0KoLhAtQKyCoBvvd9I9nEsdy+o7fJVrZ0MlU+A0O8k2S9CN/dKPpYpKm2N9VpA/3ZXZ+xWp4XGAqY0xwEifnfZg3quMykZPC96+YcKnl7WiYHZktGkkamfsO3OAUzoPG4d5y9h4ETlyulMXKwp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749683416; c=relaxed/simple;
-	bh=S/zN57o/a580ZWcuxntqq1DlFtuBBkxLAkhEXK6n3Kk=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=pYNEx1yp9OrOQ5sqBkyyjUu2r1a0vVxgxYiw3sdLSVA01GFST9LVNnbZX5QX9x81tPSmfgv++wqFVLE13XMRzTyvOuz2nel+mAJlWwXdDNfsl/DrxvCt4auWTnjGXyqbCKi+Qwhr0wI7Swh/e6KeSPL3mClPGbHX8oCDiV8YOtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O9YySEnf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749683455; c=relaxed/simple;
+	bh=OIY5YVjtFzYqxOGxmvGSX1Uxhgo9qPd7dxtB7RYtYSE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LbaZSLyHbzpSX7ChGi8VhtB9W82ylXL6NHMV15G7syoQDvE0feSCNw+g5dI9gbZS7ca/v5HxjKkZ1B4eqSWNt/WWk5GlNkMBzzpxm/eBnBPSwXJ0BI9qD+1hc4sH/9hr7C56LXsirk0sP6W2VLw1gYDvjENygLQuMS3pm2M/vag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XfJrw0ux; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O9YySEnf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29C9BC4CEE3;
-	Wed, 11 Jun 2025 23:10:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XfJrw0ux"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3680AC4CEE3;
+	Wed, 11 Jun 2025 23:10:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749683415;
-	bh=S/zN57o/a580ZWcuxntqq1DlFtuBBkxLAkhEXK6n3Kk=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=O9YySEnfyfXm93lZDKpUcZMnK3Owl7UPmVV0M8tXmrmbnorwXuG+Dp5MLA7NxNwj2
-	 lNpLJyFdz96APUeAyJL3DyuBP+zIcdJ24PxejExWwu+px2PR3bz/d2RKQIQObNiF4c
-	 2ZSzYr68ItHZO2U45eN6eMSP/XMYLQ509OFf9FXfHhkZWvbNGWAEiolYmudGdcWjyo
-	 qRq329a6V+jRBXNTlkh0z+28NxFuIR+R0B80ABP+71ojQ0eBWvwCUCJjzp25x0ZEMe
-	 uFA88+OHxYOWgyKlMQsNRbt3VWHm48vkYL4xWTeI8mSBmb/ztBtkJ0OhG/9+i7Cdlc
-	 1Wa+VeL+lmZ2Q==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70C97380DBE9;
-	Wed, 11 Jun 2025 23:10:46 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1749683454;
+	bh=OIY5YVjtFzYqxOGxmvGSX1Uxhgo9qPd7dxtB7RYtYSE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=XfJrw0uxApuIyuxeUrqgxV/fX9I0dbo3P9FLM8QSExrPx+0k85O0mxd0JdH9r1ijX
+	 ofSU4rwUnf/DfPGtX2LO7zQuGoaSO5z8YtwOOBIddxG529U/rhm9s5H5tMiIXI6/US
+	 JnJFSjkLtPg4SVEnNTk8a37hvUpY+kcfBpntL/6+u9/2OPWVcRR6WDN6SOVX6kTD0A
+	 KVzlLt/U3JqHJkfgMikYS/umlcIfgzL8wY4fN9EigfS6U4GRjQDjkefTiVxa4nuTPo
+	 qazTUx4yo/ihHHZduEAfCKVQXl1xNBXU1GCWn/7S1QwauOTskJmd0IywN8v43c5+OS
+	 vsXY8hNgOBBkg==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Andreas Kemnade <andreas@kemnade.info>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Roger Quadros <rogerq@kernel.org>,
+	Tony Lindgren <tony@atomide.com>
+Cc: linux-crypto@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] dt-bindings: crypto: Convert ti,omap2-aes to DT schema
+Date: Wed, 11 Jun 2025 18:10:45 -0500
+Message-ID: <20250611231047.1400566-1-robh@kernel.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,49 +49,126 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next] bpf: Fix state use-after-free on push_stack()
- err
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174968344511.3524559.6735332386842029341.git-patchwork-notify@kernel.org>
-Date: Wed, 11 Jun 2025 23:10:45 +0000
-References: <20250611210728.266563-1-luis.gerhorst@fau.de>
-In-Reply-To: <20250611210728.266563-1-luis.gerhorst@fau.de>
-To: Luis Gerhorst <luis.gerhorst@fau.de>
-Cc: ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
- andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, jolsa@kernel.org, memxor@gmail.com,
- henriette.herzog@rub.de, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- syzbot+b5eb72a560b8149a1885@syzkaller.appspotmail.com
 
-Hello:
+Convert the TI OMAP AES binding to DT schema format. It's a straight
+forward conversion.
 
-This patch was applied to bpf/bpf-next.git (master)
-by Alexei Starovoitov <ast@kernel.org>:
+Make "ti,hwmods" not required as it is deprecated and only used on
+OMAP2.
 
-On Wed, 11 Jun 2025 23:07:28 +0200 you wrote:
-> Without this, `state->speculative` is used after the cleanup cycles in
-> push_stack() or push_async_cb() freed `env->cur_state` (i.e., `state`).
-> Avoid this by relying on the short-circuit logic to only access `state`
-> if the error is recoverable (and make sure it never is after push_*()
-> failed).
-> 
-> push_*() callers must always return an error for which
-> error_recoverable_with_nospec(err) is false if push_*() returns NULL,
-> otherwise we try to recover and access the stale `state`. This is only
-> violated by sanitize_ptr_alu(), thus also fix this case to return
-> -ENOMEM.
-> 
-> [...]
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+---
+v2:
+ - Drop ti,hwmods from required
+ - Fix filename to be omap2, not omap4.
+---
+ .../devicetree/bindings/crypto/omap-aes.txt   | 31 ----------
+ .../bindings/crypto/ti,omap2-aes.yaml         | 58 +++++++++++++++++++
+ 2 files changed, 58 insertions(+), 31 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/crypto/omap-aes.txt
+ create mode 100644 Documentation/devicetree/bindings/crypto/ti,omap2-aes.yaml
 
-Here is the summary with links:
-  - [bpf-next] bpf: Fix state use-after-free on push_stack() err
-    https://git.kernel.org/bpf/bpf-next/c/1c66f4a3612c
-
-You are awesome, thank you!
+diff --git a/Documentation/devicetree/bindings/crypto/omap-aes.txt b/Documentation/devicetree/bindings/crypto/omap-aes.txt
+deleted file mode 100644
+index fd9717653cbb..000000000000
+--- a/Documentation/devicetree/bindings/crypto/omap-aes.txt
++++ /dev/null
+@@ -1,31 +0,0 @@
+-OMAP SoC AES crypto Module
+-
+-Required properties:
+-
+-- compatible : Should contain entries for this and backward compatible
+-  AES versions:
+-  - "ti,omap2-aes" for OMAP2.
+-  - "ti,omap3-aes" for OMAP3.
+-  - "ti,omap4-aes" for OMAP4 and AM33XX.
+-  Note that the OMAP2 and 3 versions are compatible (OMAP3 supports
+-  more algorithms) but they are incompatible with OMAP4.
+-- ti,hwmods: Name of the hwmod associated with the AES module
+-- reg : Offset and length of the register set for the module
+-- interrupts : the interrupt-specifier for the AES module.
+-
+-Optional properties:
+-- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
+-	Documentation/devicetree/bindings/dma/dma.txt
+-- dma-names: DMA request names should include "tx" and "rx" if present.
+-
+-Example:
+-	/* AM335x */
+-	aes: aes@53500000 {
+-		compatible = "ti,omap4-aes";
+-		ti,hwmods = "aes";
+-		reg = <0x53500000 0xa0>;
+-		interrupts = <102>;
+-		dmas = <&edma 6>,
+-		       <&edma 5>;
+-		dma-names = "tx", "rx";
+-	};
+diff --git a/Documentation/devicetree/bindings/crypto/ti,omap2-aes.yaml b/Documentation/devicetree/bindings/crypto/ti,omap2-aes.yaml
+new file mode 100644
+index 000000000000..90e92050ad2e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/crypto/ti,omap2-aes.yaml
+@@ -0,0 +1,58 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/ti,omap2-aes.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: OMAP SoC AES crypto Module
++
++maintainers:
++  - Aaro Koskinen <aaro.koskinen@iki.fi>
++  - Andreas Kemnade <andreas@kemnade.info>
++  - Kevin Hilman <khilman@baylibre.com>
++  - Roger Quadros <rogerq@kernel.org>
++  - Tony Lindgren <tony@atomide.com>
++
++properties:
++  compatible:
++    enum:
++      - ti,omap2-aes
++      - ti,omap3-aes
++      - ti,omap4-aes
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  dmas:
++    maxItems: 2
++
++  dma-names:
++    items:
++      - const: tx
++      - const: rx
++
++  ti,hwmods:
++    description: Name of the hwmod associated with the AES module
++    const: aes
++    deprecated: true
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    aes@53500000 {
++        compatible = "ti,omap4-aes";
++        reg = <0x53500000 0xa0>;
++        interrupts = <102>;
++        dmas = <&edma 6>,
++               <&edma 5>;
++        dma-names = "tx", "rx";
++    };
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.47.2
 
