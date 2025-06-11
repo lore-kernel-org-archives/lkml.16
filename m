@@ -1,77 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA96E24729E;
-	Wed, 11 Jun 2025 21:40:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E95247298;
+	Wed, 11 Jun 2025 21:40:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749678008; cv=none; b=CVhujg4skSxcZbvQ721poF5I+fBCYpmv6OYYey3PqwZ2OWOgqpNcgAXL758zvvTex4R/Pe+Tx2N7Ke2mVURyYvERfoet3sRTggjexuLY2zeBFNMN3PwoIWvG3nl90najvhdyU9FIV4+ioFPbFQvQ5JLM46gEf/ISlwByudUu6rU=
+	t=1749678013; cv=none; b=XgaLdpl0j85F2NsvU/ganVyexo1H5onaLUDLQKCm8B5jFZIxkLsFdGjmAzVLSLBVXArddeRWPzq66hozkd9hSrW6dBvZe203CQok0amT0vAxwsRtikBzV5WEylLs1YuJTTLH3HkWFCMuLn2IzFhMQXqchmjC7j7V0ApO11RWyK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749678008; c=relaxed/simple;
-	bh=Y+7SL6a/uxFt7I+KV9WCZREo8uPTpjZfddI9p4MFulM=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=TNPGdASswUjjN6sg8acFS8UB+jjzjZRe6swlTcLS5tefAuvAOXVvQ5UT3zr+KlWBN+Gb4elrztONKCHQkY5YCi2Sm3qUngf3K7eo8aIo1/5SMh7Y6foTKCsspJp9zvlf2VM2/rroT5xtYaoFDOMmXHX3XuFXfqZ9L6aapEBxER0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iUvJI7S5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749678013; c=relaxed/simple;
+	bh=il4KkmPSp4Fb2vFI0Nud+eB0w5K1JXPkAcThSVRtqXs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WyxjSdBWVV8t8OTve+dAojY7i+UzhrWxecRjcWWaEZcOpT4MIjjl24eXMT4KuIGuDNDW2lBb34qXUu9pFXbQxa6YEolSHU2ldYFcYKqiGI4fxx4XZQ4/sPI3jVndvnGbhUkRtVZgPxAIfXZanY32exV6Bl6g1JhJXGr1dXbj1zI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ul/pH/Vd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iUvJI7S5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 225AEC4CEE3;
-	Wed, 11 Jun 2025 21:40:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ul/pH/Vd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69DCBC4CEE3;
+	Wed, 11 Jun 2025 21:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749678008;
-	bh=Y+7SL6a/uxFt7I+KV9WCZREo8uPTpjZfddI9p4MFulM=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=iUvJI7S5GJR10XfPc7psiaRJE6zOte5It8SuYmRBOFsKRfaQtt3mp+oT4JYRoG13W
-	 spgscnroKaG7h7Y3ligWv4j5DF80jd6EBRvhMQZsUjFaOc95VgSA04fd9uVu4L9XMm
-	 ikEZGmzH54wp8SrLLGsjc0e0ZA+1/d2zVFPvuUnFXdDTx1Tyx08oxLdE1LJOUNl/EH
-	 2IrFOR+O7EHpJzTIROxkKPUBhWfEkZFdgr7OVkA61o3KN3ZvIDNUrMYIC67uZ9PBJ0
-	 5/M1t4OezF2ZV6zbU8U5j8udBbEOgbK+5z5TuQwefHCiqf90OJzah/12CSznYmBIVS
-	 WDvYg5eBF8/6A==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 71989380DBE9;
-	Wed, 11 Jun 2025 21:40:39 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1749678013;
+	bh=il4KkmPSp4Fb2vFI0Nud+eB0w5K1JXPkAcThSVRtqXs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ul/pH/VdW3zjV04CmcPn0dQwIY7Zk9GSrp2vtfUgtilxgvC0NaIWEanM7vv9CAIjs
+	 iGcajw86J/8O99xS9LFzhqevP4RNrowMSxAEBTk84F4S7S7yUM5pKN4txdfUz8omyL
+	 6eRcBX6BmLos5dBTApx6oT+W4xCZCCR+w46BI9OFf1ucEA9L7Img+JeXRAUDTM9LFJ
+	 Ye0u9tcIqrqgnJime/R6AYLrDlslp1I7UX0u/0kQq1KbC7Cf139EOjRGoUKVLRZvWq
+	 4Q9d/VoRqa4njOZG66QWUwO2H4XEcPMQSB8HI0YRzIfNU1NshrCX3TGfHgH+FC9K8u
+	 JeIBwGhVeI2fQ==
+Date: Wed, 11 Jun 2025 23:40:06 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Igor Korotin <igor.korotin.linux@gmail.com>
+Cc: ojeda@kernel.org, alex.gaynor@gmail.com, rafael@kernel.org,
+	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-acpi@vger.kernel.org,
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
+	tmgross@umich.edu, lenb@kernel.org, wedsonaf@gmail.com,
+	viresh.kumar@linaro.org, alex.hung@amd.com,
+	dingxiangfei2009@gmail.com
+Subject: Re: [PATCH v5 5/6] rust: cpufreq: Remove unnecessary `of` dependency
+ in cpufreq example
+Message-ID: <aEn3tqAZ1U7AQBvb@cassiopeiae>
+References: <20250611174034.801460-1-igor.korotin.linux@gmail.com>
+ <20250611175353.803835-1-igor.korotin.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 1/1] net: fman_memac: Don't use of_property_read_bool on
- non-boolean property managed
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174967803798.3496159.17632265399572187192.git-patchwork-notify@kernel.org>
-Date: Wed, 11 Jun 2025 21:40:37 +0000
-References: <20250610114057.414791-1-alexander.stein@ew.tq-group.com>
-In-Reply-To: <20250610114057.414791-1-alexander.stein@ew.tq-group.com>
-To: Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: madalin.bucur@nxp.com, sean.anderson@seco.com, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- linux@armlinux.org.uk, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611175353.803835-1-igor.korotin.linux@gmail.com>
 
-Hello:
-
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Tue, 10 Jun 2025 13:40:56 +0200 you wrote:
-> 'managed' is a non-boolean property specified in ethernet-controller.yaml.
-> Since commit c141ecc3cecd7 ("of: Warn when of_property_read_bool() is
-> used on non-boolean properties") this raises a warning. Use the
-> replacement of_property_present() instead.
+On Wed, Jun 11, 2025 at 06:53:53PM +0100, Igor Korotin wrote:
+> Drop the explicit `use of` and `OF_ID_TABLE = None` assignment in the
+> cpufreq driver registration example.
 > 
-> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-> 
-> [...]
+> Since `Adapter::OF_ID_TABLE` now defaults to `None`, drivers that do
+> not require OpenFirmware matching no longer need to import `of` or
+> define the constant explicitly.
 
-Here is the summary with links:
-  - [1/1] net: fman_memac: Don't use of_property_read_bool on non-boolean property managed
-    https://git.kernel.org/netdev/net-next/c/7781c4f70305
+This is slightly outside of the scope of this patch series and given that it
+doesn't add immediate value it's usually better to wait with such patches until
+the prerequisite is in Linus' tree.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+However, if Viresh is fine with the patch and with taking it through the
+driver-core tree and does not expect any conflicts, I'm fine picking it up.
