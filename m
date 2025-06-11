@@ -1,124 +1,103 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CAC325E816;
-	Wed, 11 Jun 2025 09:20:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 377B425394C
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 09:22:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749633613; cv=none; b=ecxeiVKxIw7Y7Q2FE9Nyz/aO7nIMSF5uiLHyy+l/oFvZnBWkB2TPkZVRNDSab3FarL1jSt/IZ99HUQF10qLrYQuilUKHK3Vas6wLx2x6nVcwbBHauvVvRRJRHoxoxLoEDRxcuShEBJxNMVjiZw8PHZPNglbno7Xr569rylOfgB8=
+	t=1749633747; cv=none; b=F9qyxdrNQZlJbFNbiPi2RltmP683IR4mYJ6t4raetThdNf1tMlqNfeR1orCaTpV6S3nTJZL4flxubOQ7SRItR2SPiX+cMAkV5W5GkQbbN+Yu7DwWtFH8gHoA7dpDv/HEzNFI3ItMCMKRGwV7+GjI9Pa2J8OW4XOeQOYY4rvsXsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749633613; c=relaxed/simple;
-	bh=IZUBoDPDJVn6kZGguxb22ZJQbFB/Don4EW0i9D3f9kM=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=HqYIXLChISS91g2ZnqdWSBTjS/49wXIkyBthHxgx7INBjVdQ4vFodX4j/B1Jm4+ElEJLnVKQ0yOzE994Z4o9aEM/VgVD1gO7jzSgJ6dI2rJr9Yb2XD8ayywUmgz5O0dFsZFLbuz4v46PDCpoGdY9nd+MmsPBGk16YfaLqfDAhTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=T670aH/F; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0SOi2mUB; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1749633747; c=relaxed/simple;
+	bh=OzIhnUie/Ctxfm+QEMkyUANhfsCLwQddvZkNgATaxKY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=TYFrwO68G0T7KIUkFwe0bHweRuWAI9AjmyaQoCeODvwcuN40hRXKnB/4iKmPxishFFXxCABY91VZvrrPEBt7cDMCFIWJ+IDkSXerhhoB1t4KvvP0Q2NvF3BOFBFCylqxA1GyhqT/P+YG4FiHuwvVYvdKKs6r+xjHsBBiOKwaX1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ozsJbD3Z; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zQIT3kbf; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="T670aH/F";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0SOi2mUB"
-Date: Wed, 11 Jun 2025 09:20:09 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ozsJbD3Z";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zQIT3kbf"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749633610;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
+	s=2020; t=1749633744;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xg8VDoiQasilCrJVdWOzVDyqJuvuup/lC46XCCU9ZdI=;
-	b=T670aH/FQvWMnRRStBaI7cZH81GrQ6sfgYnel4fgsbrQe+bMu9AmgK/WshqL/pNNdIPMYT
-	zBKEVWoC8KOd1pSNLc9aNpUsCh431R3EM3fQgr9KcC3Gyzlvxq4IkpUwJSGvXKFPo5Infj
-	Uo4Dh6Eg+/f823QgsunTtY4IOz5JTKHWTcB75Q4fs5p7r1QPHryj5q467pSeYbQRZ0hc7e
-	S9AmV1F2lVJgL0HDM8mADV54EMntBIS0hw6tcTG8ptyWib6hf0K7Tsz+kyE+JTqVCm1g7S
-	DvkSmyy3XrUO/pWVSkyQZjTjsOKGb72Ab+pRTOkyzy54AZL7ohs5aPvDHpvYng==
+	bh=3HNZsp0JlEkXQwt3qtPmvEy68Xqh0vFAuSqvlPQb0tk=;
+	b=ozsJbD3ZX1b1TkGONklwnRC0Ny/GSAJX3OYVI2fzjIY09e9Qll0amtsZ9Xjm8U1SjSQy7I
+	gOKqJ/zoKv4EjJgrFsJQ64y4n256ijE1hDSKDqxEXZmbAXTVU/pUt4TNXWew1aJ3p155IN
+	/9Xl5Qmo6F2LcYDF2fI5w+3WzRpOYDCKlbmjaC4Lhrl3FuZMbTuXGuftDMJR6DIl0ErsuC
+	Fg0HI3rpR37M1bhnLWifsYAguK2vPpQGZ94K93n7e7gCTA4xbgVoREGrzONkF0ZoNAAsJZ
+	qIzSYy4j6l6mf06OI6YpzYD+4o23q/yN5V0mrupshSzA9a109J3BDcwUfZzznA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749633610;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
+	s=2020e; t=1749633744;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xg8VDoiQasilCrJVdWOzVDyqJuvuup/lC46XCCU9ZdI=;
-	b=0SOi2mUBEafLeinnlfds3OSHnvxcTeNV1CIJBFR9qj1hJ8B096jiyqF9ts+6at2k9bpaUR
-	UwmdcEocQEbafoAg==
-From: "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: locking/urgent] selftests/futex: getopt() requires int as return value.
-Cc: Mark Brown <broonie@kernel.org>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250528085521.1938355-2-bigeasy@linutronix.de>
-References: <20250528085521.1938355-2-bigeasy@linutronix.de>
+	bh=3HNZsp0JlEkXQwt3qtPmvEy68Xqh0vFAuSqvlPQb0tk=;
+	b=zQIT3kbfh9XJgCN+qaxlUHW7+ex3ON7H/WPvvQYs1eD7SwosJIekGb6djwQYLbfgUwzAou
+	RM9OkwLNLwiFfuBg==
+Date: Wed, 11 Jun 2025 11:22:12 +0200
+Subject: [PATCH v3 1/3] riscv: vdso: Deduplicate CFLAGS_REMOVE_* variables
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174963360947.406.3789042411341487780.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250611-vdso-absolute-reloc-v3-1-47897d73784b@linutronix.de>
+References: <20250611-vdso-absolute-reloc-v3-0-47897d73784b@linutronix.de>
+In-Reply-To: <20250611-vdso-absolute-reloc-v3-0-47897d73784b@linutronix.de>
+To: Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Alexandre Ghiti <alex@ghiti.fr>, Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ llvm@lists.linux.dev, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749633741; l=1184;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=OzIhnUie/Ctxfm+QEMkyUANhfsCLwQddvZkNgATaxKY=;
+ b=SugqQlUcXcgVYUV2XtDiRrHWg6Doywxp9o305XEyBXMEA9Un62vvg09cf86xsaWlEwuAbkgFS
+ LdMCSp/k8ELAG8PmZTTud1hV41V8Jio68n3rixW1dpWRLbEL1HwCdhO
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-The following commit has been merged into the locking/urgent branch of tip:
+All vDSO objects need the same treatment.
+To make changes to both the list of objects and the list of removed flags
+easier, introduce a helper variable.
 
-Commit-ID:     1a9dcf69c7a97e733aa2fc026db22f22928ca7b7
-Gitweb:        https://git.kernel.org/tip/1a9dcf69c7a97e733aa2fc026db22f22928ca7b7
-Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate:    Wed, 28 May 2025 10:55:19 +02:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Thu, 05 Jun 2025 14:37:58 +02:00
-
-selftests/futex: getopt() requires int as return value.
-
-Mark reported that futex_priv_hash fails on ARM64.
-It turns out that the command line parsing does not terminate properly
-and ends in the default case assuming an invalid option was passed.
-
-Use an int as the return type for getopt().
-
-Closes: https://lore.kernel.org/all/31869a69-063f-44a3-a079-ba71b2506cce@sirena.org.uk/
-Fixes: 3163369407baf ("selftests/futex: Add futex_numa_mpol")
-Fixes: cda95faef7bcf ("selftests/futex: Add futex_priv_hash")
-Reported-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20250528085521.1938355-2-bigeasy@linutronix.de
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- tools/testing/selftests/futex/functional/futex_numa_mpol.c | 2 +-
- tools/testing/selftests/futex/functional/futex_priv_hash.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/riscv/kernel/vdso/Makefile | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/futex/functional/futex_numa_mpol.c b/tools/testing/selftests/futex/functional/futex_numa_mpol.c
-index 20a9d3e..564dbd0 100644
---- a/tools/testing/selftests/futex/functional/futex_numa_mpol.c
-+++ b/tools/testing/selftests/futex/functional/futex_numa_mpol.c
-@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
- 	struct futex32_numa *futex_numa;
- 	int mem_size, i;
- 	void *futex_ptr;
--	char c;
-+	int c;
+diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
+index 9ebb5e590f93a3228c451dca58e6d5cfbbc03ff7..c19c3c76f7c9f6b2f7523a59269de3b683656323 100644
+--- a/arch/riscv/kernel/vdso/Makefile
++++ b/arch/riscv/kernel/vdso/Makefile
+@@ -49,9 +49,10 @@ CPPFLAGS_vdso.lds += -DHAS_VGETTIMEOFDAY
+ endif
  
- 	while ((c = getopt(argc, argv, "chv:")) != -1) {
- 		switch (c) {
-diff --git a/tools/testing/selftests/futex/functional/futex_priv_hash.c b/tools/testing/selftests/futex/functional/futex_priv_hash.c
-index 2dca18f..24a92dc 100644
---- a/tools/testing/selftests/futex/functional/futex_priv_hash.c
-+++ b/tools/testing/selftests/futex/functional/futex_priv_hash.c
-@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
- 	pthread_mutexattr_t mutex_attr_pi;
- 	int use_global_hash = 0;
- 	int ret;
--	char c;
-+	int c;
+ # Disable -pg to prevent insert call site
+-CFLAGS_REMOVE_vgettimeofday.o = $(CC_FLAGS_FTRACE) $(CC_FLAGS_SCS)
+-CFLAGS_REMOVE_getrandom.o = $(CC_FLAGS_FTRACE) $(CC_FLAGS_SCS)
+-CFLAGS_REMOVE_hwprobe.o = $(CC_FLAGS_FTRACE) $(CC_FLAGS_SCS)
++CFLAGS_REMOVE_VDSO = $(CC_FLAGS_FTRACE) $(CC_FLAGS_SCS)
++CFLAGS_REMOVE_vgettimeofday.o = $(CFLAGS_REMOVE_VDSO)
++CFLAGS_REMOVE_getrandom.o = $(CFLAGS_REMOVE_VDSO)
++CFLAGS_REMOVE_hwprobe.o = $(CFLAGS_REMOVE_VDSO)
  
- 	while ((c = getopt(argc, argv, "cghv:")) != -1) {
- 		switch (c) {
+ # Force dependency
+ $(obj)/vdso.o: $(obj)/vdso.so
+
+-- 
+2.49.0
+
