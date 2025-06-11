@@ -1,350 +1,118 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 045EC1B392B;
-	Wed, 11 Jun 2025 16:33:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF5817597;
+	Wed, 11 Jun 2025 16:34:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749659627; cv=none; b=gUoesJIZ1MYtK3xyBSzpKcEI8UXfcsDnNwPUEPCLYyOgYSqR+d3OJi10QcxzPsACOcLTreaDeOVc0oXvNJfM7tBO0ZzigEXPviQegA9B/LZDwRd324RsRH6IbKjk6hrVG4lBZSWglDd4NEwSVtOYPnSJJRtqu16NVXbVBKwwYUg=
+	t=1749659642; cv=none; b=cTnOAqZXQjaPa2rLIhJNahEzbGkN3iU/w8Q1kyLAnJAfCmoHzQA7xRZ+HyP5zOBQgcJYTJ4fMcGxflkNluCnvPF+0hGktJ0/0hx5rMIyf6Fp2Bq7DwQEDp9dl4RYHVrI6pFDKVBVl5O33Ctn2UHhuLpCF3y4KdZQbRm0XZHg/30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749659627; c=relaxed/simple;
-	bh=faM7ArohF9ySz3He9yNCX6OKTYTs+8Y3O0FLFiCc2vc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EH/tKkUTV/cY7ppA7Gw9ifobuc/goJndAvfzCumwYWWm4ThvLZYOhpnZOG8yg5RsmB9/z7MkjoeCmCg1mikrJCJbclHKJAsg1MqpsDgtohUySlc+Sk1i2HNniWsFXnRBsGeJCgrr1W0GOUcm2KsuSrObT+2BKfHuHIjKVCX3rG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=iq2n9jiK; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1749659642; c=relaxed/simple;
+	bh=MTf/rXDUfXQ+M0fFpjuXZS6A1tPRdx76oitjXzouatU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=A77W1VsFPEY1N3ar4bsuz+ICjCJf+tBZqpvLHC50mdNEiJaT2w2hEth9Cazj5p/iYMOekjw/E94J5/iwyHOVWx+pwfemoVe0pWy31+9KoicIK5wDTjWXH71AmtS3GVyrRc+cHKxRHyExHEKfQKB1PyITEZ+LTgYlnEx7Ts0Y4wE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=ZhNMOlCS; arc=none smtp.client-ip=128.199.32.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="iq2n9jiK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=5q
-	XqETQd2PNkfZLHj4KgigghIhxiyg3po4s7tKNm+fg=; b=iq2n9jiKwB0qrenGKB
-	fqRl3zY9CD6R8DYjgom+pRi5Qpq3cpi3gYLV+ZLzOpGd61qgGC13jbFnTJEalb2Y
-	MFn+mPd0VpmAUENeU38QaVHwDUELcIWTvx5UB8fkfo08s9ZPKlfpwearIgwktPuL
-	SbgxsRxl2+E9mTGbfjvJBSI/c=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wAXX9acr0loM3FIHg--.22533S2;
-	Thu, 12 Jun 2025 00:32:29 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org,
-	bhelgaas@google.com,
-	mani@kernel.org,
-	kwilczynski@kernel.org
-Cc: robh@kernel.org,
-	jingoohan1@gmail.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH 13/13] PCI: dwc: Refactor tegra194 to use dw_pcie_clear_and_set_dword()
-Date: Thu, 12 Jun 2025 00:32:27 +0800
-Message-Id: <20250611163227.861403-1-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="ZhNMOlCS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
+	t=1749659638; bh=MTf/rXDUfXQ+M0fFpjuXZS6A1tPRdx76oitjXzouatU=;
+	h=From:Subject:Date:To:Cc;
+	b=ZhNMOlCS/TNaV5B6wJtvWtG6fguZt8tPfHYXXLoBB/L412OULYuHQystdTLX3C79a
+	 ycJD7N36yQnUi2JFsYFd5hKrybwCBDXpphNTNDUlJaTOu8BBMnKtSmV7beOzhhqVDm
+	 DTnlolGoh2o1GLZuPTxR8XegFoesG/Q2+Ld2Fx3w=
+From: Luca Weiss <luca@lucaweiss.eu>
+Subject: [PATCH v4 0/4] Add display support for Fairphone 3 smartphone
+Date: Wed, 11 Jun 2025 18:33:14 +0200
+Message-Id: <20250611-fp3-display-v4-0-ef67701e7687@lucaweiss.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wAXX9acr0loM3FIHg--.22533S2
-X-Coremail-Antispam: 1Uf129KBjvAXoW3ur47Xw15Gr1xXry3AFy5urg_yoW8JF4UZo
-	ZrJ3WkW3W7Jr1xta4YyFn3Kry7Jr4YvayrArZ2y3yj9as7KF15A393Kas8Aw12kr4fC34f
-	Xw4kG3W3AFW7XryUn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjTRZ6pBUUUUU
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhBpo2hJr1AHmgAAsj
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMqvSWgC/23OQQ6CMBCF4auQrq3pTG0RV97DuChlkCYESCsoI
+ dzdwkYxLN8k35+ZWCDvKLBLMjFPgwuubeI4HRJmK9M8iLsiboYClUBEXnaSFy50tRl5nmY2lzI
+ jrXIWReepdO+1drvHXbnwbP24xgdYrvudAbjg1hZnQAKdKbzWvTUvciEcqWdLasBfrrYcIxc5l
+ EJloEpDO1x+uQax5TJySilVGtYP/vg8zx+7qSVcJwEAAA==
+X-Change-ID: 20250222-fp3-display-b79cb339e65b
+To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ Luca Weiss <luca@lucaweiss.eu>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+ Dmitry Baryshkov <lumag@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1694; i=luca@lucaweiss.eu;
+ h=from:subject:message-id; bh=MTf/rXDUfXQ+M0fFpjuXZS6A1tPRdx76oitjXzouatU=;
+ b=owEBbQKS/ZANAwAKAXLYQ7idTddWAcsmYgBoSa/OnS9o2peAoDaQ0ANIrY318cgpqfn0RiiNi
+ JE34aiFcb+JAjMEAAEKAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCaEmvzgAKCRBy2EO4nU3X
+ VtD3D/9+GYx+hEjt37D/F8AUy7ISdiUfhSeAOK79GT4mAqKSnuHnpsQpk7OozqNhxMTbo2qemAl
+ MTu5AwyW9dWhSJ7aFhCvKn2Nw54rezkiAF3GXetOlq/qKTmUC4lzMd3DCSYKX2WcPIlqpujgdWc
+ 8Xc+p1eUkl4w3DmZUulCaAYdnC/mfbTlyLPfN4k8Uzj1fiipVoEf+OBmBgE5DhFOMgWnyJBzqUf
+ RQbdQWTZxkxjygaSYld0CAKWw+OhkW1gBX/I7tHranxi7cJU8dVLJ40eaN4rbm9J1RB6GJ8d7FO
+ QsrWBM7pCABzaGXXaM3jsPCTQnYcJpyLqDv28D/EuSjwm/TPGFS+kzjB+ENJzrcNBZ/ywTmPrVC
+ TBUtXYs5/9lTv9HJguxoL2jk75utW4+end+9BC/UYCQwNbeNJzW9LKAH8HzQw5nDDnuWp3SSoum
+ S+e090293NItavuB74d4KH7Y8qlHzGptQULpfO6PqiWJsgjnxkXWWVvUiK52XwxeynFesNpgVM4
+ jJ7KM+K62J/XbWZo6Ri0ILL1f8FNaEvQTqppGqIonal+6E8qEVWq1gtZ2YxW2hJzQOTwpudR0wP
+ SaspRmRoCWVUEF8YlEKles+soqr6fx04/gkcwn+l6amZwla/dT/hCzTvKoJ/iNVLalAsI9YrDhA
+ 1U+jHXAoFtfeD/g==
+X-Developer-Key: i=luca@lucaweiss.eu; a=openpgp;
+ fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
-Tegra194 PCIe driver contains extensive manual bit manipulation across
-interrupt handling, ASPM configuration, and controller initialization.
-The driver implements complex read-modify-write sequences with explicit
-bit masking, leading to verbose and hard-to-maintain code.
+Add a driver for the HX83112B-based panel, and enable it on Fairphone 3
+to enable display output, and enable GPU as well.
 
-Refactor interrupt handling, ASPM setup, capability configuration, and
-controller initialization using dw_pcie_clear_and_set_dword(). Replace
-multi-step register modifications with single helper calls, eliminating
-intermediate variables and reducing code size by ~100 lines. For CDMA
-error handling, initialize the value variable to zero before setting
-status bits.
-
-This comprehensive refactoring significantly improves code readability
-and maintainability. Standardizing on the helper ensures consistent
-register access patterns across all driver components and reduces the
-risk of bit manipulation errors in this complex controller driver.
-
-Signed-off-by: Hans Zhang <18255117159@163.com>
+Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
 ---
- drivers/pci/controller/dwc/pcie-tegra194.c | 155 +++++++++------------
- 1 file changed, 64 insertions(+), 91 deletions(-)
+Changes in v4:
+- Drop "port: true" from bindings (Krzysztof)
+- Use devm_drm_panel_alloc (Dmitry)
+- Pick up tags
+- Link to v3: https://lore.kernel.org/r/20250610-fp3-display-v3-0-e7e7561812e1@lucaweiss.eu
 
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index 4f26086f25da..c6f5c35a4be4 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -378,9 +378,8 @@ static irqreturn_t tegra_pcie_rp_irq_handler(int irq, void *arg)
- 			val |= APPL_CAR_RESET_OVRD_CYA_OVERRIDE_CORE_RST_N;
- 			appl_writel(pcie, val, APPL_CAR_RESET_OVRD);
- 
--			val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
--			val |= PORT_LOGIC_SPEED_CHANGE;
--			dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
-+			dw_pcie_clear_and_set_dword(pci, PCIE_LINK_WIDTH_SPEED_CONTROL,
-+						    0, PORT_LOGIC_SPEED_CHANGE);
- 		}
- 	}
- 
-@@ -412,7 +411,7 @@ static irqreturn_t tegra_pcie_rp_irq_handler(int irq, void *arg)
- 
- 	if (status_l0 & APPL_INTR_STATUS_L0_CDM_REG_CHK_INT) {
- 		status_l1 = appl_readl(pcie, APPL_INTR_STATUS_L1_18);
--		val = dw_pcie_readl_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS);
-+		val = 0;
- 		if (status_l1 & APPL_INTR_STATUS_L1_18_CDM_REG_CHK_CMPLT) {
- 			dev_info(pci->dev, "CDM check complete\n");
- 			val |= PCIE_PL_CHK_REG_CHK_REG_COMPLETE;
-@@ -425,7 +424,8 @@ static irqreturn_t tegra_pcie_rp_irq_handler(int irq, void *arg)
- 			dev_err(pci->dev, "CDM Logic error\n");
- 			val |= PCIE_PL_CHK_REG_CHK_REG_LOGIC_ERROR;
- 		}
--		dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS, val);
-+		dw_pcie_clear_and_set_dword(pci, PCIE_PL_CHK_REG_CONTROL_STATUS,
-+					    PORT_LOGIC_SPEED_CHANGE, val);
- 		val = dw_pcie_readl_dbi(pci, PCIE_PL_CHK_REG_ERR_ADDR);
- 		dev_err(pci->dev, "CDM Error Address Offset = 0x%08X\n", val);
- 	}
-@@ -610,34 +610,27 @@ static struct pci_ops tegra_pci_ops = {
- #if defined(CONFIG_PCIEASPM)
- static void disable_aspm_l11(struct tegra_pcie_dw *pcie)
- {
--	u32 val;
--
--	val = dw_pcie_readl_dbi(&pcie->pci, pcie->cfg_link_cap_l1sub);
--	val &= ~PCI_L1SS_CAP_ASPM_L1_1;
--	dw_pcie_writel_dbi(&pcie->pci, pcie->cfg_link_cap_l1sub, val);
-+	dw_pcie_clear_and_set_dword(&pcie->pci, pcie->cfg_link_cap_l1sub,
-+				    PCI_L1SS_CAP_ASPM_L1_1, 0);
- }
- 
- static void disable_aspm_l12(struct tegra_pcie_dw *pcie)
- {
--	u32 val;
--
--	val = dw_pcie_readl_dbi(&pcie->pci, pcie->cfg_link_cap_l1sub);
--	val &= ~PCI_L1SS_CAP_ASPM_L1_2;
--	dw_pcie_writel_dbi(&pcie->pci, pcie->cfg_link_cap_l1sub, val);
-+	dw_pcie_clear_and_set_dword(&pcie->pci, pcie->cfg_link_cap_l1sub,
-+				    PCI_L1SS_CAP_ASPM_L1_2, 0);
- }
- 
- static inline u32 event_counter_prog(struct tegra_pcie_dw *pcie, u32 event)
- {
--	u32 val;
-+	u32 val = 0;
- 
--	val = dw_pcie_readl_dbi(&pcie->pci, pcie->ras_des_cap +
--				PCIE_RAS_DES_EVENT_COUNTER_CONTROL);
--	val &= ~(EVENT_COUNTER_EVENT_SEL_MASK << EVENT_COUNTER_EVENT_SEL_SHIFT);
- 	val |= EVENT_COUNTER_GROUP_5 << EVENT_COUNTER_GROUP_SEL_SHIFT;
- 	val |= event << EVENT_COUNTER_EVENT_SEL_SHIFT;
- 	val |= EVENT_COUNTER_ENABLE_ALL << EVENT_COUNTER_ENABLE_SHIFT;
--	dw_pcie_writel_dbi(&pcie->pci, pcie->ras_des_cap +
--			   PCIE_RAS_DES_EVENT_COUNTER_CONTROL, val);
-+	dw_pcie_clear_and_set_dword(&pcie->pci, pcie->ras_des_cap +
-+				    PCIE_RAS_DES_EVENT_COUNTER_CONTROL,
-+				    EVENT_COUNTER_EVENT_SEL_MASK << EVENT_COUNTER_EVENT_SEL_SHIFT,
-+				    val);
- 	val = dw_pcie_readl_dbi(&pcie->pci, pcie->ras_des_cap +
- 				PCIE_RAS_DES_EVENT_COUNTER_DATA);
- 
-@@ -697,18 +690,20 @@ static void init_host_aspm(struct tegra_pcie_dw *pcie)
- 			   PCIE_RAS_DES_EVENT_COUNTER_CONTROL, val);
- 
- 	/* Program T_cmrt and T_pwr_on values */
--	val = dw_pcie_readl_dbi(pci, pcie->cfg_link_cap_l1sub);
--	val &= ~(PCI_L1SS_CAP_CM_RESTORE_TIME | PCI_L1SS_CAP_P_PWR_ON_VALUE);
-+	val = 0;
- 	val |= (pcie->aspm_cmrt << 8);
- 	val |= (pcie->aspm_pwr_on_t << 19);
--	dw_pcie_writel_dbi(pci, pcie->cfg_link_cap_l1sub, val);
-+	dw_pcie_clear_and_set_dword(pci, pcie->cfg_link_cap_l1sub,
-+				    PCI_L1SS_CAP_CM_RESTORE_TIME |
-+				    PCI_L1SS_CAP_P_PWR_ON_VALUE,
-+				    val);
- 
- 	/* Program L0s and L1 entrance latencies */
--	val = dw_pcie_readl_dbi(pci, PCIE_PORT_AFR);
--	val &= ~PORT_AFR_L0S_ENTRANCE_LAT_MASK;
-+	val = 0;
- 	val |= (pcie->aspm_l0s_enter_lat << PORT_AFR_L0S_ENTRANCE_LAT_SHIFT);
- 	val |= PORT_AFR_ENTER_ASPM;
--	dw_pcie_writel_dbi(pci, PCIE_PORT_AFR, val);
-+	dw_pcie_clear_and_set_dword(pci, PCIE_PORT_AFR,
-+				    PORT_AFR_L0S_ENTRANCE_LAT_MASK, val);
- }
- 
- static void init_debugfs(struct tegra_pcie_dw *pcie)
-@@ -860,31 +855,26 @@ static void config_gen3_gen4_eq_presets(struct tegra_pcie_dw *pcie)
- 		dw_pcie_writeb_dbi(pci, offset + i, val);
- 	}
- 
--	val = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
--	val &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
--	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, val);
-+	dw_pcie_clear_and_set_dword(pci, GEN3_RELATED_OFF,
-+				    GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK, 0);
- 
--	val = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
--	val &= ~GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC;
--	val |= FIELD_PREP(GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC, 0x3ff);
--	val &= ~GEN3_EQ_CONTROL_OFF_FB_MODE;
--	dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, val);
-+	dw_pcie_clear_and_set_dword(pci, GEN3_EQ_CONTROL_OFF,
-+				    GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC |
-+				    GEN3_EQ_CONTROL_OFF_FB_MODE,
-+				    FIELD_PREP(GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC, 0x3ff));
- 
--	val = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
--	val &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
--	val |= (0x1 << GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT);
--	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, val);
-+	dw_pcie_clear_and_set_dword(pci, GEN3_RELATED_OFF,
-+				    GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK,
-+				    0x1 << GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT);
- 
--	val = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
--	val &= ~GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC;
--	val |= FIELD_PREP(GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC,
--			  pcie->of_data->gen4_preset_vec);
--	val &= ~GEN3_EQ_CONTROL_OFF_FB_MODE;
--	dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, val);
-+	dw_pcie_clear_and_set_dword(pci, GEN3_EQ_CONTROL_OFF,
-+				    GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC |
-+				    GEN3_EQ_CONTROL_OFF_FB_MODE,
-+				    FIELD_PREP(GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC,
-+					       pcie->of_data->gen4_preset_vec));
- 
--	val = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
--	val &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
--	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, val);
-+	dw_pcie_clear_and_set_dword(pci, GEN3_RELATED_OFF,
-+				    GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK, 0);
- }
- 
- static int tegra_pcie_dw_host_init(struct dw_pcie_rp *pp)
-@@ -892,7 +882,6 @@ static int tegra_pcie_dw_host_init(struct dw_pcie_rp *pp)
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
- 	struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
- 	u32 val;
--	u16 val_16;
- 
- 	pp->bridge->ops = &tegra_pci_ops;
- 
-@@ -900,32 +889,25 @@ static int tegra_pcie_dw_host_init(struct dw_pcie_rp *pp)
- 		pcie->pcie_cap_base = dw_pcie_find_capability(&pcie->pci,
- 							      PCI_CAP_ID_EXP);
- 
--	val = dw_pcie_readl_dbi(pci, PCI_IO_BASE);
--	val &= ~(IO_BASE_IO_DECODE | IO_BASE_IO_DECODE_BIT8);
--	dw_pcie_writel_dbi(pci, PCI_IO_BASE, val);
-+	dw_pcie_clear_and_set_dword(pci, PCI_IO_BASE,
-+				    IO_BASE_IO_DECODE | IO_BASE_IO_DECODE_BIT8, 0);
- 
--	val = dw_pcie_readl_dbi(pci, PCI_PREF_MEMORY_BASE);
--	val |= CFG_PREF_MEM_LIMIT_BASE_MEM_DECODE;
--	val |= CFG_PREF_MEM_LIMIT_BASE_MEM_LIMIT_DECODE;
--	dw_pcie_writel_dbi(pci, PCI_PREF_MEMORY_BASE, val);
-+	dw_pcie_clear_and_set_dword(pci, PCI_PREF_MEMORY_BASE, 0,
-+				    CFG_PREF_MEM_LIMIT_BASE_MEM_DECODE |
-+				    CFG_PREF_MEM_LIMIT_BASE_MEM_LIMIT_DECODE);
- 
- 	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 0);
- 
- 	/* Enable as 0xFFFF0001 response for RRS */
--	val = dw_pcie_readl_dbi(pci, PORT_LOGIC_AMBA_ERROR_RESPONSE_DEFAULT);
--	val &= ~(AMBA_ERROR_RESPONSE_RRS_MASK << AMBA_ERROR_RESPONSE_RRS_SHIFT);
--	val |= (AMBA_ERROR_RESPONSE_RRS_OKAY_FFFF0001 <<
--		AMBA_ERROR_RESPONSE_RRS_SHIFT);
--	dw_pcie_writel_dbi(pci, PORT_LOGIC_AMBA_ERROR_RESPONSE_DEFAULT, val);
-+	dw_pcie_clear_and_set_dword(pci, PORT_LOGIC_AMBA_ERROR_RESPONSE_DEFAULT,
-+				    AMBA_ERROR_RESPONSE_RRS_MASK << AMBA_ERROR_RESPONSE_RRS_SHIFT,
-+				    AMBA_ERROR_RESPONSE_RRS_OKAY_FFFF0001 <<
-+				    AMBA_ERROR_RESPONSE_RRS_SHIFT);
- 
- 	/* Clear Slot Clock Configuration bit if SRNS configuration */
--	if (pcie->enable_srns) {
--		val_16 = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base +
--					   PCI_EXP_LNKSTA);
--		val_16 &= ~PCI_EXP_LNKSTA_SLC;
--		dw_pcie_writew_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA,
--				   val_16);
--	}
-+	if (pcie->enable_srns)
-+		dw_pcie_clear_and_set_dword(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA,
-+					    PCI_EXP_LNKSTA_SLC, 0);
- 
- 	config_gen3_gen4_eq_presets(pcie);
- 
-@@ -937,17 +919,13 @@ static int tegra_pcie_dw_host_init(struct dw_pcie_rp *pp)
- 		disable_aspm_l12(pcie);
- 	}
- 
--	if (!pcie->of_data->has_l1ss_exit_fix) {
--		val = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
--		val &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
--		dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, val);
--	}
-+	if (!pcie->of_data->has_l1ss_exit_fix)
-+		dw_pcie_clear_and_set_dword(pci, GEN3_RELATED_OFF,
-+					    GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL, 0);
- 
--	if (pcie->update_fc_fixup) {
--		val = dw_pcie_readl_dbi(pci, CFG_TIMER_CTRL_MAX_FUNC_NUM_OFF);
--		val |= 0x1 << CFG_TIMER_CTRL_ACK_NAK_SHIFT;
--		dw_pcie_writel_dbi(pci, CFG_TIMER_CTRL_MAX_FUNC_NUM_OFF, val);
--	}
-+	if (pcie->update_fc_fixup)
-+		dw_pcie_clear_and_set_dword(pci, CFG_TIMER_CTRL_MAX_FUNC_NUM_OFF,
-+					    0, 0x1 << CFG_TIMER_CTRL_ACK_NAK_SHIFT);
- 
- 	clk_set_rate(pcie->core_clk, GEN4_CORE_CLK_FREQ);
- 
-@@ -1018,9 +996,8 @@ static int tegra_pcie_dw_start_link(struct dw_pcie *pci)
- 		reset_control_deassert(pcie->core_rst);
- 
- 		offset = dw_pcie_find_ext_capability(pci, PCI_EXT_CAP_ID_DLF);
--		val = dw_pcie_readl_dbi(pci, offset + PCI_DLF_CAP);
--		val &= ~PCI_DLF_EXCHANGE_ENABLE;
--		dw_pcie_writel_dbi(pci, offset + PCI_DLF_CAP, val);
-+		dw_pcie_clear_and_set_dword(pci, offset + PCI_DLF_CAP,
-+					    PCI_DLF_EXCHANGE_ENABLE, 0);
- 
- 		tegra_pcie_dw_host_init(pp);
- 		dw_pcie_setup_rc(pp);
-@@ -1847,11 +1824,9 @@ static void pex_ep_event_pex_rst_deassert(struct tegra_pcie_dw *pcie)
- 
- 	reset_control_deassert(pcie->core_rst);
- 
--	if (pcie->update_fc_fixup) {
--		val = dw_pcie_readl_dbi(pci, CFG_TIMER_CTRL_MAX_FUNC_NUM_OFF);
--		val |= 0x1 << CFG_TIMER_CTRL_ACK_NAK_SHIFT;
--		dw_pcie_writel_dbi(pci, CFG_TIMER_CTRL_MAX_FUNC_NUM_OFF, val);
--	}
-+	if (pcie->update_fc_fixup)
-+		dw_pcie_clear_and_set_dword(pci, CFG_TIMER_CTRL_MAX_FUNC_NUM_OFF,
-+					    0, 0x1 << CFG_TIMER_CTRL_ACK_NAK_SHIFT);
- 
- 	config_gen3_gen4_eq_presets(pcie);
- 
-@@ -1863,11 +1838,9 @@ static void pex_ep_event_pex_rst_deassert(struct tegra_pcie_dw *pcie)
- 		disable_aspm_l12(pcie);
- 	}
- 
--	if (!pcie->of_data->has_l1ss_exit_fix) {
--		val = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
--		val &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
--		dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, val);
--	}
-+	if (!pcie->of_data->has_l1ss_exit_fix)
-+		dw_pcie_clear_and_set_dword(pci, GEN3_RELATED_OFF,
-+					    GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL, 0);
- 
- 	pcie->pcie_cap_base = dw_pcie_find_capability(&pcie->pci,
- 						      PCI_CAP_ID_EXP);
+Changes in v3:
+- Pick up tags
+- Rebase on v6.16-rc1
+- Link to v2: https://lore.kernel.org/r/20250225-fp3-display-v2-0-0b1f05915fae@lucaweiss.eu
+
+Changes in v2:
+- Change compatible to "djn,98-03057-6598b-i" based on other docs I
+  found
+- Pick up tags
+- Link to v1: https://lore.kernel.org/r/20250222-fp3-display-v1-0-ccd812e16952@lucaweiss.eu
+
+---
+Luca Weiss (4):
+      dt-bindings: vendor-prefixes: document Shenzhen DJN Optronics Technology
+      dt-bindings: display: panel: Add Himax HX83112B
+      drm/panel: Add driver for DJN HX83112B LCD panel
+      arm64: dts: qcom: sdm632-fairphone-fp3: Enable display and GPU
+
+ .../bindings/display/panel/himax,hx83112b.yaml     |  73 ++++
+ .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+ arch/arm64/boot/dts/qcom/msm8953.dtsi              |   2 +-
+ arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts  |  62 +++
+ drivers/gpu/drm/panel/Kconfig                      |  10 +
+ drivers/gpu/drm/panel/Makefile                     |   1 +
+ drivers/gpu/drm/panel/panel-himax-hx83112b.c       | 430 +++++++++++++++++++++
+ 7 files changed, 579 insertions(+), 1 deletion(-)
+---
+base-commit: c8a9a1ae369c60953b27c01162eb72b0422b9532
+change-id: 20250222-fp3-display-b79cb339e65b
+
+Best regards,
 -- 
-2.25.1
+Luca Weiss <luca@lucaweiss.eu>
 
