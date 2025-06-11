@@ -1,155 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AB4D189B91;
-	Wed, 11 Jun 2025 15:32:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A8B1A8404;
+	Wed, 11 Jun 2025 15:33:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749655951; cv=none; b=RdF6jYkrQZBF8pcdyhlyMRlBAnpIP47SeVl9iEAH5RFs1Id8P0gXvmH7SMc8XPk5goGwhLpu7/b7aKwJH7qXn/V6Bug0Mz50OR2AcNQoSf3qGAFW5sKf1825piN2sz9JpMQ6478VwEp8PZs6pWtGo0SaIfPx7aXR/fQZfurUVVk=
+	t=1749656007; cv=none; b=pjGOcF60IW37meOVNec5jVeAWuKLQJllGb27yD3dyTnwV1ohpSj4XxkIVVvpcCE1stBZnKceyB+VGhHiZeCxzgXXf3v8kBlUKYPyHedOcDVCC1smEYk35YKCp/jy9JxLsdO7wr3Yw+cTzwB3H3HmnD8MhfLUAEktGcJV/s6JCMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749655951; c=relaxed/simple;
-	bh=wyORKykEhxu3HxEky3H3KWL4Pst5ul6jgrJKEYkWToc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CvriNakI1jlmt3euV6pvUZwIQ/ZlNgKfW46hS16bowuiYfW2k0ae6b2u3oQ5b/ytiqFg0t7iQ/aqtjLEBJPWh7B73lwrr9xIpqyMZiPXb4gbFuHB+ikO8834EcdAVxwt4Td/ci0AHvx/Fxm18hIqbwQivbLACubOWJPqsN7OCTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g5LbLylM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749656007; c=relaxed/simple;
+	bh=rHdWhg+1tRJ8pdNXFOs6DUEIeNHlwGzTwvSNZrMPbo0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X3WY5QrQXYKrXR0x+dZx/l+tKdEUsetI/Jxy/IgKX6WsRfFVseR8+c3Qt0g/4P1Av52yIoYUjOvrWJBmMbXrJ70y7sVINgXBPn2kOJMiGK4hzWZjKO7Kiqgo1UGfzAKnqGwe4wy87wsprZRm9Y0eJZnqLANFSJCr3V1Kyv2eSTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BCqoz7zu; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g5LbLylM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEFB5C4CEE3;
-	Wed, 11 Jun 2025 15:32:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749655951;
-	bh=wyORKykEhxu3HxEky3H3KWL4Pst5ul6jgrJKEYkWToc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g5LbLylMgDrTABeXSsL1rJM23sHGOq3I5MDpYQxZ8jHqLpLEQUzoa3U3krtosfpZ5
-	 ilyC7zaB/DhuLToP6mlcsk0vmnNSEfzpT0FkSIEoVfO9ZZ8RlO7D8ZYT4xdR6Hqt+t
-	 I0x6yE4ErgCP07WLT4QGNb+43VHHa5WpAzfdXnuJBpI8GP9U1GMVsEhRFQkl9N1zPA
-	 mPxV9bNr7nzIwksW3B4MqkxE/Bm3UH1m/uLc8HyvuSNPztqvv1mmbWZpzzgsATBXI7
-	 ql8NGyvTiLFbFzZQowVVh3PwwcPBSg5mdVv718wVMY5XjijAbBgMH2fAkfVAYH7T+p
-	 J4I0RF1GYqX+A==
-Date: Wed, 11 Jun 2025 10:32:28 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: Hiago De Franco <hiagofranco@gmail.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, linux-pm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Hiago De Franco <hiago.franco@toradex.com>, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Peng Fan <peng.fan@oss.nxp.com>, daniel.baluta@nxp.com, 
-	iuliana.prodan@oss.nxp.com, "Rafael J . Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v4 1/3] pmdomain: core: introduce dev_pm_genpd_is_on
-Message-ID: <iuotfsnaft3623lchzop6sbu5ox56scdr57uia56qm6ummcvzt@yisczcdzbc3b>
-References: <20250602131906.25751-1-hiagofranco@gmail.com>
- <20250602131906.25751-2-hiagofranco@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BCqoz7zu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749656005; x=1781192005;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=rHdWhg+1tRJ8pdNXFOs6DUEIeNHlwGzTwvSNZrMPbo0=;
+  b=BCqoz7zu2POseJcFiWXxAfPBC2Vhj3tu8gQfgDdevHdtoQuoGsD36YQL
+   OYBTwVyj+OgiE8kolp5xwJQxb0bHBPOonpZlRYtvqq9R6QP2l/fGPDb28
+   WdvB+RhR3tirzIjZJdTapI3vIIOmGEyDgVUPoNwh/SiUPibMZSbYzZu/7
+   BaNQqVWCjL/bdcH+FVNCbbJVtK4a4AW0yFKyZnahzE1idPmNbm2qfREef
+   suYGl1azJh63F3sAMOKWyZ6RKGeQhCqTVZmxmbSQ3uwbQhml/+2C5LS8I
+   8lEE3McomItFcKuJcMkebbSXr3GqlNDETXq5IcJB8V+dQ6DQ9Y3kv4wYW
+   g==;
+X-CSE-ConnectionGUID: TNeozDW7QGKdn1HY8pP2Uw==
+X-CSE-MsgGUID: rZ4hxHaRQiOHNPOzFN/Fzg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="77205331"
+X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
+   d="scan'208";a="77205331"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 08:33:25 -0700
+X-CSE-ConnectionGUID: zTeiCBArR7qm9y0XLQQFLg==
+X-CSE-MsgGUID: YzgO8cNLQsS+jXVw2sVciw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
+   d="scan'208";a="178181372"
+Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.124.241.118]) ([10.124.241.118])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 08:33:22 -0700
+Message-ID: <ba611f52-9817-46ff-b16b-a9ef7404a51d@linux.intel.com>
+Date: Wed, 11 Jun 2025 23:33:19 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250602131906.25751-2-hiagofranco@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 4/4] KVM: TDX: Check KVM exit on KVM_HC_MAP_GPA_RANGE
+ when TD finalize
+To: Sean Christopherson <seanjc@google.com>
+Cc: Rick P Edgecombe <rick.p.edgecombe@intel.com>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "pbonzini@redhat.com" <pbonzini@redhat.com>,
+ "mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>,
+ Kai Huang <kai.huang@intel.com>, Jiewen Yao <jiewen.yao@intel.com>,
+ Xiaoyao Li <xiaoyao.li@intel.com>, Tony Lindgren <tony.lindgren@intel.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Reinette Chatre <reinette.chatre@intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Yan Y Zhao <yan.y.zhao@intel.com>, Isaku Yamahata
+ <isaku.yamahata@intel.com>, Kirill Shutemov <kirill.shutemov@intel.com>
+References: <20250610021422.1214715-1-binbin.wu@linux.intel.com>
+ <20250610021422.1214715-5-binbin.wu@linux.intel.com>
+ <936ccea77b474fbad1bde799ee92139356f91c5f.camel@intel.com>
+ <aEh0oGeh96n9OvCT@google.com>
+ <31c4ab96-55bf-4f80-a6fd-3478cc1d1117@linux.intel.com>
+ <aEmGTZbMpZhtlkIh@google.com>
+Content-Language: en-US
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <aEmGTZbMpZhtlkIh@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 02, 2025 at 10:19:03AM -0300, Hiago De Franco wrote:
-> From: Hiago De Franco <hiago.franco@toradex.com>
-> 
-> This helper function returns the current power status of a given generic
-> power domain.
-> 
 
-Please correct me if I'm wrong, but this returns the momentary status of
-the device's associated genpd, and as genpds can be shared among devices
-wouldn't there be a risk that you think the genpd is on but then that
-other device powers it off?
 
-> As example, remoteproc/imx_rproc.c can now use this function to check
-> the power status of the remote core to properly set "attached" or
-> "offline" modes.
+On 6/11/2025 9:36 PM, Sean Christopherson wrote:
+> On Wed, Jun 11, 2025, Binbin Wu wrote:
+>> On 6/11/2025 3:58 AM, Sean Christopherson wrote:
+>>> On Tue, Jun 10, 2025, Rick P Edgecombe wrote:
+>>>> It seems like the reasoning could be just to shrink the possible configurations
+>>>> KVM has to think about, and that we only have the option to do this now before
+>>>> the ABI becomes harder to change.
+>>>>
+>>>> Did you need any QEMU changes as a result of this patch?
+>>>>
+>>>> Wait, actually I think the patch is wrong, because KVM_CAP_EXIT_HYPERCALL could
+>>>> be called again after KVM_TDX_FINALIZE_VM. In which case userspace could get an
+>>>> exit unexpectedly. So should we drop this patch?
+>>> Yes, drop it.
+>>>
+>> So, when the TDX guest calls MapGPA and KVM finds userspace doesn't opt-in
+>> KVM_HC_MAP_GPA_RANGE, just return error to userspace?
+> Why can't KVM just do what it already does, and return an error to the guest?
+>
+> 	if (!user_exit_on_hypercall(vcpu->kvm, KVM_HC_MAP_GPA_RANGE)) {
+> 		ret = TDVMCALL_STATUS_INVALID_OPERAND;
+> 		goto error;
+> 	}
+>
+My previous thought was MapGpa is in base GHIC API.
+Userspace is required to opt-in KVM_HC_MAP_GPA_RANGE.
+If not, it's userspace's responsibility, so I thought exit to userspace with
+error may be better.
 
-I presume this example works because there is a dedicated, single usage,
-genpd for the remoteproc instance?
+If return an error code is preferred, now it has a new status code
+TDVMCALL_STATUS_SUBFUNC_UNSUPPORTED to use.
 
-> 
-> Suggested-by: Ulf Hansson <ulf.hansson@linaro.org>
-> Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
-> ---
-> v4: New patch.
-> ---
->  drivers/pmdomain/core.c   | 27 +++++++++++++++++++++++++++
->  include/linux/pm_domain.h |  6 ++++++
->  2 files changed, 33 insertions(+)
-> 
-> diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
-> index ff5c7f2b69ce..bcb74d10960c 100644
-> --- a/drivers/pmdomain/core.c
-> +++ b/drivers/pmdomain/core.c
-> @@ -758,6 +758,33 @@ int dev_pm_genpd_rpm_always_on(struct device *dev, bool on)
->  }
->  EXPORT_SYMBOL_GPL(dev_pm_genpd_rpm_always_on);
->  
-> +/**
-> + * dev_pm_genpd_is_on - Get device's power status
-
-Functions in kernel-doc should have () prefix
-
-> + *
-> + * @dev: Device to get the current power status
-> + *
-> + * This function checks whether the generic power domain is on or not by
-> + * verifying if genpd_status_on equals GENPD_STATE_ON.
-> + *
-
-If my understanding is correct, I'd like a warning here saying that this
-is dangerous if the underlying genpd is shared.
-
-Regards,
-Bjorn
-
-> + * Return: 'true' if the device's power domain is on, 'false' otherwise.
-> + */
-> +bool dev_pm_genpd_is_on(struct device *dev)
-> +{
-> +	struct generic_pm_domain *genpd;
-> +	bool is_on;
-> +
-> +	genpd = dev_to_genpd_safe(dev);
-> +	if (!genpd)
-> +		return false;
-> +
-> +	genpd_lock(genpd);
-> +	is_on = genpd_status_on(genpd);
-> +	genpd_unlock(genpd);
-> +
-> +	return is_on;
-> +}
-> +EXPORT_SYMBOL_GPL(dev_pm_genpd_is_on);
-> +
->  /**
->   * pm_genpd_inc_rejected() - Adjust the rejected/usage counts for an idle-state.
->   *
-> diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
-> index 0b18160901a2..c12580b6579b 100644
-> --- a/include/linux/pm_domain.h
-> +++ b/include/linux/pm_domain.h
-> @@ -301,6 +301,7 @@ void dev_pm_genpd_synced_poweroff(struct device *dev);
->  int dev_pm_genpd_set_hwmode(struct device *dev, bool enable);
->  bool dev_pm_genpd_get_hwmode(struct device *dev);
->  int dev_pm_genpd_rpm_always_on(struct device *dev, bool on);
-> +bool dev_pm_genpd_is_on(struct device *dev);
->  
->  extern struct dev_power_governor simple_qos_governor;
->  extern struct dev_power_governor pm_domain_always_on_gov;
-> @@ -393,6 +394,11 @@ static inline int dev_pm_genpd_rpm_always_on(struct device *dev, bool on)
->  	return -EOPNOTSUPP;
->  }
->  
-> +static inline bool dev_pm_genpd_is_on(struct device *dev)
-> +{
-> +	return false;
-> +}
-> +
->  #define simple_qos_governor		(*(struct dev_power_governor *)(NULL))
->  #define pm_domain_always_on_gov		(*(struct dev_power_governor *)(NULL))
->  #endif
-> -- 
-> 2.39.5
-> 
+Basically, if the MapGpa is not support, either choice will stop VM from
+execution. But had a second thought, returning an error code to guest allows
+guest to choose to continue or not if MapGpa failed, though I can't
+imagine what case it is.
