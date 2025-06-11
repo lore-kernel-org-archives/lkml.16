@@ -1,41 +1,39 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.135])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E91C727CCDB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71341225413;
 	Wed, 11 Jun 2025 19:25:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.135
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749669926; cv=none; b=JTdBgd0/w6/kENaHqUByDsRgytqSk5fHqbfYiEiPdJCONTWXAzOS9yjZXFiEcSNyWTfT0in5U0qoCkEKpCiXZ3QPD6R4UMq/SAV9t5GyVaFRBm2LPO+mRQfsyZY0NM7cqdJBwTJI5DXllIcyIlOJRyPIX3AMDF1GR+vCxiZSLlw=
+	t=1749669926; cv=none; b=qIflX7OiUjR8qzv1K6ToxCEGQ0swxHAn0802oW7o1TF+Eu2wZL6MP8emSpFmnXzJOlWufMa9EH2sMZNPtYmxJPKP+ms52EhfckxZRQo8ffCwI6Kj9J5mJsrebYKY9SmdW+H2wqWriKQF65hDTWjDWK/duDbMwU6YQTZNbpxRYuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749669926; c=relaxed/simple;
-	bh=rMrecsMLV05QJATkaLBYEZHt+MUdO5IkweZcLHHNWPU=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=GjrI6ywXUjODMnp09nwd2vpILPYTIuwovmy5Zfzpditu+xEypo5LHLd2/+vWd4CSZ6ORfPBTlNtRMvq3gMxqVBJ9y9l+4NzB1FMAmhJlm84BEzQdW0kWhgOat9p04wySpwRWfkZGrG1r3kEtm6PFZG/3HorrkcLAKAVxooo9heE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz; spf=pass smtp.mailfrom=oldschoolsolutions.biz; dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b=RNavwkus; arc=none smtp.client-ip=212.227.126.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oldschoolsolutions.biz
+	bh=eKDVnxG3E/blRCYO5ls5suxXi9vDUdZMPz72lIAk2Ew=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=momNKekLk6rO+6AxMzkBCNZOHLuSNDxmHcv0Pz3MP5r2Tk22Yb26XT7tZmOcU6RMKLrxKPQ16QTlOUgdo4gU07uZwoKnFUVdHYy+y8T9d70RZv4a9f5NXSqtBTXZAgaTtDmUQs1hPF7LnyWpRb5f18ypJvLR46a3AVm8TIQSJeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=B+qiX3gY; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b="RNavwkus"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=oldschoolsolutions.biz; s=s1-ionos; t=1749669921; x=1750274721;
-	i=jens.glathe@oldschoolsolutions.biz;
-	bh=rMrecsMLV05QJATkaLBYEZHt+MUdO5IkweZcLHHNWPU=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:From:Subject:To:
-	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=RNavwkusowpDrsPNRnGLUItYxG1uNkOcG3yrpdLMEhYpIvP2DpzlUqpIJPqLG6Jf
-	 DKyhS14JO+tjDNe/AsDHXYL+rNMHKs4ypt/sTjfE0u6DcuoStSJL7P0kzNzmNgPpX
-	 NQAZzwgtm3cqJMRXh2QDjxcT1r9kez/IRLPJhSfvljls7cUuUf9nOo4NFrBKBBIVx
-	 nsN+2apwe4yT3pCtltvKI9EJQ1ZtHKf61iHkGuzjYmnJ5Nemj24qz8FvH5qmRn+Wq
-	 sDhgPrEGaUOuJW63G0fyCeprq78r44gyuhP60O2XqV9m4rWGchriQntvJFnWccijZ
-	 bIR6jG+gvipHT9VQIA==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from [192.168.0.174] ([91.64.235.193]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1Mum2d-1uh6iQ2xSV-00z90C; Wed, 11 Jun 2025 21:25:21 +0200
-Message-ID: <64d963bd-b38c-4f14-bb1d-f7e89dad999a@oldschoolsolutions.biz>
-Date: Wed, 11 Jun 2025 21:25:20 +0200
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="B+qiX3gY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=AWz/6xHsZld+TcrIo3vA7x/JVCIMknVrwxwjNiRLZaA=; b=B+qiX3gYW6ScfiYm1I+7Tl5dKT
+	j8tr4vzPtqByvw3heukk7BmS3imXnZu3HLFEt/yXsBG2A6URzWx5FOaMv2DVnZrB2a2ADrKaBczhR
+	shEPrglMy3b3OmwXoSjPMQU+Ap8oKAASWnWupFm32zmjoTwrhbSM3sb6S7rR9lgtRqp4gfCFp3Wrh
+	5pGtH/fIZhzu+rfHeeCuOc81GzB2izsBBHqRfuqtYn8s1PnTobtvMbnj1vKMKQ+bnqr3NM72lagRH
+	lPDen7TqYywD3g4oajnWDSYGNmpNl5j8oZOr5Rj4FraUL6A2WBtolOxIWvxcH+Z0uGQo2ga4rE/ry
+	aekrejPA==;
+Received: from [191.204.192.64] (helo=[192.168.15.100])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uPR4F-002Kw8-2w; Wed, 11 Jun 2025 21:24:59 +0200
+Message-ID: <ee678dee-e003-41dc-86fe-c35c18a6171d@igalia.com>
+Date: Wed, 11 Jun 2025 16:24:53 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,82 +41,59 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
-Subject: Re: [PATCH v2] dt: arm64: qcom: sc8280xp-x13s: amend usb0-sbu-mux
- enable gpio
-To: Johan Hovold <johan@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Johan Hovold <johan+linaro@kernel.org>
-References: <20250610-x13s-usb0-mux-v2-1-598454e6ad64@oldschoolsolutions.biz>
- <aEffYQND8eUgJbua@hovoldconsulting.com>
+Subject: Re: [REGRESSION] af_unix: Introduce SO_PASSRIGHTS - break OpenGL
+To: Kuniyuki Iwashima <kuni1840@gmail.com>, christian@heusel.eu
+Cc: davem@davemloft.net, difrost.kernel@gmail.com, dnaim@cachyos.org,
+ edumazet@google.com, horms@kernel.org, kuba@kernel.org, kuniyu@amazon.com,
+ linux-kernel@vger.kernel.org, mario.limonciello@amd.com,
+ netdev@vger.kernel.org, pabeni@redhat.com, regressions@lists.linux.dev,
+ Tvrtko Ursulin <tursulin@igalia.com>
+References: <58be003a-c956-494b-be04-09a5d2c411b9@heusel.eu>
+ <20250611164339.2828069-1-kuni1840@gmail.com>
 Content-Language: en-US
-In-Reply-To: <aEffYQND8eUgJbua@hovoldconsulting.com>
+From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
+In-Reply-To: <20250611164339.2828069-1-kuni1840@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:+BhG55VDLfj/+sqJDIgRGg/xEIZuxqkARB81LAmByP2KY+VvmwX
- KbxPjrXWTlmUZAEMU7pQDVK828BKjt2i6RiCmh/RUONusVBym3XRDQ3HZc/HC9w6PmqmHBk
- Xs+X4KawGhyM4AB3K2noTmfFsm1+HPy4r8qBRLiVO+cgWcHow3Rg8q/whOPnYbV2/bmm38o
- umPbLH2OXC3SZV04lSRsQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:gHbHn8FrmBY=;4+vtrRykcxVoC5UInwTgKOlID5D
- k8WcsuUZC2Zo1K/b2Ee6q32HE36RplDskMb2TNuJ9F6wmWrmgKKsv2jbX4D1/9MzQ7lGTW16f
- z0bQnot+f+iMuhA+XecQbuRr8ZctysUjOlCISJFJSwdgwqiMUm97fUwPMBaCTtHwC8KaYSOiR
- +Ht9aRM/LWXaIJcwxnG6+NX7ylBtpVBNvfUIaNZ6UY9Ofy2RP0xBuATgEKuuUdr9FCO4dwPy3
- y7TsGcqrqx6/MsrIF9hSSfNr+c8ANPL6T32C/+fBsm7Z1UA3zCpbp4I34rAWsIocKT32W8J0R
- Myiiz6QI41VvdMAV7fzCLwtpZmgpLZQLY/8PtbgFL9C25P9bnAYpFKxCdLFrIsYF6gBaCR+l4
- eQ15KzoxUOuF3SXo0B2ETUhhTizNFnsI6h9SS4SP7YxUCHzxxlbr0Y3XCtSRUKkOi1fNoufkb
- qUO8F5+/MD92kMYcNBadTNl/oJk1riaX7YMQIpsJm4XRCO5UR0iQkO34J7ak8Do6CwXLkoczJ
- Ge8q3VJknFH/gbhhWdsVASg3wUzNpverYFTf9HH6je25wVHsFA8936vNmnTl06G5xWzrh9iCe
- KhKTzovNGVWfHnaNPEE+rpsEK+Cty3qpnWC2cR+hogHnV7v/7IoQa0lEAxwQaSdJqKiym9HPM
- Dy1agpSIwx0becGHzAKNgHOId1gVZ5PjokeG1uD8wSh3+hkodlShKccXPdYgvxXIaUKOBwFD0
- 0SZDa2dQFfF18/bo86dAxrat4nDwuNUcvI/NI69jgFw5kNnJJflFadxXyEBLnLiDD/58QBKDS
- ha+LZIfF6kKuWnC9K164JaNox/FU2AxYGHHBs7wD9dawRO9/832c7g/gnU/zGE9kgMUhs/uTh
- gSZ/2LZUigBxlX7Qw4U5koVfcIePAlJXQ2ndSTIC+VO0qjM30K7xMzwpzUqD4AMVZw+K1lkSa
- 2Zt8sIQFr4+/EbgzOWcp4UBI3+DDXpxYIZahfWBbOsy2kydGDRHWMHHa7NqxtGbAI0e1Fgcht
- 58i6LrVCeuuQAusrf3+rTNKYGEIDQaYV8YagL9u4Il7CgYJLbSV8qULxI4TcpRioSYHvPgnnD
- aToxUU4SSjIPIXm2ynAfeknoD83FNRgz9rrZg6CABRKfJtMOdm58fhfUZC3+8E+VtbDrXmP4k
- YbhlNUjfX3yWCfl/AOPsKJLcXqXUm5Wi2aM3znUdFfrQsxdfnvZ9Pp/cOEDzv2DYQi6BX1nQs
- koPv/mjSPAU6WN2cn9OlU+rNYH8QjsrKQ1phPQJBm5dagVSSkQSAKpxfOGnvUFz8RGsL6c5S3
- 6211vtMTDaTnLBGTzg3a1gPU93ILZtAr8nNH302BNidiEJ0KiVVoFMu2/PYCC/F2G4I0QUva9
- aNZDbR49NZCOqaB/4O/+cA2RXfHWTDxTZA3tVSSbPXlnk6xCB669htflOx
+Content-Transfer-Encoding: 8bit
 
+Hi Kuniyuki,
 
-On 6/10/25 09:31, Johan Hovold wrote:
-> On Tue, Jun 10, 2025 at 07:04:46AM +0200, Jens Glathe via B4 Relay wrote=
-:
-> DP alt mode works on both ports of the X13s and "resulted in
-> gpio165" makes little sense so this commit message would need to be
-> extended.
+Em 11/06/2025 13:42, Kuniyuki Iwashima escreveu:
+> From: Christian Heusel <christian@heusel.eu>
+> Date: Wed, 11 Jun 2025 13:46:01 +0200
+>> On 25/06/10 09:22PM, Jacek Łuczak wrote:
 
-Well, that was the problem. It didn't on USB0. without and with the 4=20
-lanes patch.
+[...]
 
-Observed on Windows Dev Kit 2023 and X13s, what prompted me to look deeper=
-.
+>>> Reverting entire SO_PASSRIGHTS fixes the issue.
+> 
+> Thanks for the report.
+> 
+> Could you test the diff below ?
+> 
+> look like some programs start listen()ing before setting
+> SO_PASSCRED or SO_PASSPIDFD and there's a small race window.
+> 
+> ---8<---
+> diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+> index fd6b5e17f6c4..87439d7f965d 100644
+> --- a/net/unix/af_unix.c
+> +++ b/net/unix/af_unix.c
+> @@ -1971,7 +1971,8 @@ static void unix_maybe_add_creds(struct sk_buff *skb, const struct sock *sk,
+>   	if (UNIXCB(skb).pid)
+>   		return;
+>   
+> -	if (unix_may_passcred(sk) || unix_may_passcred(other)) {
+> +	if (unix_may_passcred(sk) || unix_may_passcred(other) ||
+> +	    !other->sk_socket) {
+>   		UNIXCB(skb).pid = get_pid(task_tgid(current));
+>   		current_uid_gid(&UNIXCB(skb).uid, &UNIXCB(skb).gid);
+>   	}
+> ---8<---
+> 
 
-> GPIO 101 *is* the OE_N pin, while GPIO 165 is not even connected
-> according to the schematics. The mux may still work after this change,
-> but you'd be relying on it having been enabled by the boot firmware.
->
-Schematics trump any other data, of course. After a lot of tests and=20
-some wild
-results I could narrow it down to the display I used for testing, iiyama=
-=20
-XUB2792QSN.
-It works with HDMI adapters on ~all other displays I have - with and=20
-without any
-4-lanes, lttpr patches. And the original GPIO.=C2=A0The issue with the=20
-display appears to
-be something linked to how negotiation is done by it on that specific port=
-.
+I confirm that this fixes 6.16-rc1 for me as well. Whenever you send the 
+proper patch please CC me so I can give a Tested-by tag.
 
-Do I need to do anything since its already NAK?
-
-with best regards
-
-Jens
-
+Thanks!
+	André
