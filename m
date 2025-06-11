@@ -1,209 +1,205 @@
-Received: from PNYPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19010008.outbound.protection.outlook.com [52.103.68.8])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45602609C6;
-	Wed, 11 Jun 2025 09:54:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.8
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749635650; cv=fail; b=fRMIN5e56u1bFBSEUbJ6RI/HxyT3hFy8LT3tMniGT5cgcyyNkJRUeTdPrLLqWjNbUpnUSn972F9K4TUPxb2aLj0zWHUGw+cq1iBXbEyjpItCaMLQ39Ocur64ytd0zslBO7bGe3rLHjdbVHV94vvao5z0pSMdl8Hrwna8lpOgB0s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749635650; c=relaxed/simple;
-	bh=KiBUrs1/VCxq8ZNGp5OIt53fyKePPpWJWdwuRvvu8EU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=QKbt4tECygydBzxkf0n2QQjkXAEUjWq93zEhvh5RJ9Xgy4XsmqMXnISkg0tWZSX55nmuMutLG/ZSGDQ/M//hfSxoOFgUvJjyJIbFvEuw3kYqT2Aom8Jnx6OlFeW27zWWf0Mw1to3aqW9VJyiSdT2ecld5brDGlCkXPEcmfovEVQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=F43anofT; arc=fail smtp.client-ip=52.103.68.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="F43anofT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lTGxgZYzwH1neMM2YB+0BAMcmleZX8OTZyrmHHeJJUMQw1kIqx/absS/8w4MNnVjnQ7Q8b+VR7eejXY9/1zoLIEb64kkrPAtcrXgzNbEMg7vttcj1i64NuUJ1AaW4rVmu8APbqvc0ee8HALRUESWHwEhUn/QiLGRJdrplMLd2aMb2VGzL9dvHUaM/9I10qf/C92ujmUAGADQc9kzBTuFS2YerwgyAt9E6iq7FgOYvg5PqL0+IjMfqq49OKLGzYtBOqH7RZx8ce+0OVnuFHPfqgnp3lx21guyaGrAIU7EYFwQaBUxcSy9vrr7OqP8abfrfokNMpSmUSK6mpQ6ifYj/Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ySZYBIjpGAQdtRc2xZ4ebPQMnX2efCp8IBjwigWG5mY=;
- b=NxWZeCek/CwCjHIkLUZtqOxRF6xbswsFkxbl3mjis7nd3O0+wsY7K46yEU1wuB2MXcfSBpAHpzHotg6gTW458MJd9ZgTus5DECcfG4PH3ErNHTY/jTc8PomQ+L4+LGFlcuj9424roxzLCm6tY27cOR85fxS3liVgaB+sNCX9U0omccp60clXLegEuTPelvVz7nzNdyss4rA4LdyaWMhP6sVCPaj2ef9pVWhaKfkwaErc69i4jUipydnW69aWR0QoFQfSjWnm8Evb7rF+zSha5ArCEA8JlMvUBZaxo4fMK89SvaIH6LYDsObxPCjFcfZbcgI99raKpfS3C6EQbWLGtw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ySZYBIjpGAQdtRc2xZ4ebPQMnX2efCp8IBjwigWG5mY=;
- b=F43anofThBmwjIuSXM4z+HC2Ycbs4YOmgblnuglaV/jXGiA25WA3OY3aZsRGkp8YySYf6P1dNiIkGhWh02dV8zI13bPe0pb5vYhAa532XwUXTlMRUy/NDCfsqntyOMnLfPckY8Bs6d0H25OXxn0mPdu3tjitkTp+UiTO5AtVrgxa20PDFuopnEXGfl/k/Rque/LN8nsIr+GSl+qFiSfWpDDj8oBEARJV1VAaX7FT4+cyu0YKslCdKhjdsWiadhKgpLETj0ZnZRPcCIvVOeMgrhrQ1V088VAKvqmSVmEH5ve6Eda0yXPZsZ3DXK5qKlPK2D5X+pB7Kee9SItvcamAcQ==
-Received: from PN0P287MB2258.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:1c0::8)
- by PNYP287MB4069.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:287::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Wed, 11 Jun
- 2025 09:54:01 +0000
-Received: from PN0P287MB2258.INDP287.PROD.OUTLOOK.COM
- ([fe80::b63f:e256:4db1:2e9f]) by PN0P287MB2258.INDP287.PROD.OUTLOOK.COM
- ([fe80::b63f:e256:4db1:2e9f%6]) with mapi id 15.20.8813.024; Wed, 11 Jun 2025
- 09:54:00 +0000
-Message-ID:
- <PN0P287MB2258F2BB409F70955D6EE248FE75A@PN0P287MB2258.INDP287.PROD.OUTLOOK.COM>
-Date: Wed, 11 Jun 2025 17:53:54 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/11] riscv: dts: sophgo: add pwm controller for SG2044
-To: Inochi Amaoto <inochiama@gmail.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Richard Cochran <richardcochran@gmail.com>,
- Longbin Li <looong.bin@gmail.com>
-Cc: Han Gao <rabenda.cn@gmail.com>, devicetree@vger.kernel.org,
- linux-riscv@lists.infradead.org, sophgo@lists.linux.dev,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- Yixun Lan <dlan@gentoo.org>
-References: <20250608232836.784737-1-inochiama@gmail.com>
- <20250608232836.784737-12-inochiama@gmail.com>
-From: Chen Wang <unicorn_wang@outlook.com>
-In-Reply-To: <20250608232836.784737-12-inochiama@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SG2PR04CA0184.apcprd04.prod.outlook.com
- (2603:1096:4:14::22) To PN0P287MB2258.INDP287.PROD.OUTLOOK.COM
- (2603:1096:c01:1c0::8)
-X-Microsoft-Original-Message-ID:
- <39096efa-a3e2-4d31-a7e4-43a13484a137@outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F2325E448;
+	Wed, 11 Jun 2025 09:55:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749635714; cv=none; b=dQi8Tul+qPyDAT5PpIEsDmQKbsXiM97NQilLbcd7ydxQ47VmYpEMKy2oU0L6bAMNhcpTA9XJfymFyQbYQgf0EGdG4HTNM8xFkC/u0fDSHuboCy4FFjKguoCfFjI+mCWpqraSOUZvKFG7V/JHGilMtq/3A4vu7+O7dRsXG5Z2ksg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749635714; c=relaxed/simple;
+	bh=zTtNa9u3miJvvq4tYJwTLl2HITw6xg3ryiY0JwCVhyc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tIJ7CdZk8kkznbwcSa/26Wd5tz7pPvcROvoVTdOBDH5eX3GPtgZi0W89BtUSjTxPudeyQtYtSEUjrsmCgML84Pe+lUVXj/u/UJGFaLAshlBoHC89lJqJ6UBM6vIXBhkAZjJlrRdeydmmKYWx1QchKAmR3QCD//z/QDRKa5Wobx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bHLcY6XHnzYQvRf;
+	Wed, 11 Jun 2025 17:55:09 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id E306C1A0842;
+	Wed, 11 Jun 2025 17:55:08 +0800 (CST)
+Received: from [10.67.109.184] (unknown [10.67.109.184])
+	by APP4 (Coremail) with SMTP id gCh0CgDHKF17UkloXOW4PA--.40312S2;
+	Wed, 11 Jun 2025 17:55:08 +0800 (CST)
+Message-ID: <0dc9c413-c979-4d18-b804-00ed2aaa3d3c@huaweicloud.com>
+Date: Wed, 11 Jun 2025 17:55:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PN0P287MB2258:EE_|PNYP287MB4069:EE_
-X-MS-Office365-Filtering-Correlation-Id: c013136d-04c7-4a3d-c819-08dda8cde40d
-X-MS-Exchange-SLBlob-MailProps:
-	Cq7lScuPrnqTDjd4Fy0PN0HVJKAgc5hFtHC/ptq2/B1XzN9fSXJqzO+4xixLBbK9OujE8EFb88Bb4VOczjSF+kYkcsSLkGe36HzeiV3AWkpPj4nMOHLtze9lG8BndpEkKRWGc9pASS++baLHOpG+Q0mN3w0d6XC+cN8c2beruMelrnngkEMdsui77lzpYBNUT2WGeBqyEIKke6rrLQTM9BatnAKg0AFhDhP17Wpzwpn1gZBlym7KSEd0t+xx+2mj56sZBrZWfBAMj9FlkYkym5rBSOcIyk7fobt+5FNyZBYympPnbzl3KDxhoRrJswpiHcdoitOqwALFl9Aa/xvhcJNlsAoEisJbnmzFBHEzEWGHbhYaQYRvkcBDwHXeAdTHCsbdA1YKsjUmBhN7iMKm0aZS4mPI+6vK8/tKZJ4Z1D75GgPRTIAVm+zwE2dQu3RatxQO8YLS0Qf2bWdvIF9mDCT1RF6brzAJCD4eQdmt7HWjfG6/RrnJI2HE39bIYEsL5teFo5r+WF4ef37kOA+FzfB4vypDueiCY1hfUMZMQu+dd5Lox8xsarvSzCDp0w54X3EumUmse25Lrsd+XIFIshIjlgZ8fbzkUiYeCwfmTxa+oDvNqLoip87dkKcy4SRfXAjE8IwlHEeEjJjn51Ym1aT0qhMF9IYNo0Mh59CNLaRy6EqF3GIWykdR829645uX5n8x4QABGymZRNEidvgsu2gLaUfJYCro1+iamw+fuglQhpZNhJZEn3Srnu9DJvHTlz/7P2i7/j0=
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|6090799003|461199028|19110799006|7092599006|8060799009|5072599009|15080799009|3412199025|440099028;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NE0vVE5KMzVHZTQyZWMvV0tkemp0alE1SW9jRFNjcnlVSlUzWGFBZkQ3RDJr?=
- =?utf-8?B?NjhkNEkvMHZudE5IaHZERjVzMUZjQ0JhZCtHajF4QlBTclRvRG9FSnZHWEpU?=
- =?utf-8?B?S01SQ2hmRHRUQUpycmd2b0JwWFFsdU1aQ2ViNndnS0pOMm91ZGd1MnU1dzhP?=
- =?utf-8?B?MW43S1pnMXdKS2IvTE5ldTlYdTc5VGR4aWluVzhuWmxCSGJreTJBZzBrTTBP?=
- =?utf-8?B?VVYyMzdBc1lDbk9EQ0EvdllxaGFpakI2bjJ0ZlNscndxZFhraXZSVnNVK0pj?=
- =?utf-8?B?TW80VlRWeEJUYjlmY3FSb1JoOU1XWUlpZFE4a05SZjBzcXR4bFRaZ3VPRG1E?=
- =?utf-8?B?TS9JOC92VFlkOXdQQ2ZXSkhseXZFZk8ybUhoeEJlM0svRDAvYko2bDg1aHlx?=
- =?utf-8?B?SHd0eHlKSmUrUEFmTmgyeEFoMUJIMzJ4L2U4MFRCZ3N5VTFNbnBQdHBsSnhr?=
- =?utf-8?B?azczWnlXVFd0VkhBMEZqeTdPV3IwemxIa1AyMGlwbWdnSHlaWnJYLzlKRmFz?=
- =?utf-8?B?WGhFakNWdms0VE45cDJ2eDJyOTM1bDNtbzNWMU5nRFNZSVorVlJZdkxTNTRm?=
- =?utf-8?B?V3crWXdNeWM2Z01kM1lrYXI5Q2Q4MDJST3ZaV0o4UHVhd3A5Qkk4K2c4WDE2?=
- =?utf-8?B?TmVSN0gyZ3NoNUdad0YvdFI1R0d5VkhNdGV4VTZyd1ZPMkc1RW9NZW9vM1or?=
- =?utf-8?B?NWE5Qmd3bWZEbERkVzBLcWRXeTdQaW5zNWNEZHdqa1VjTUZWV041emVoTGZT?=
- =?utf-8?B?dXpsNFR6Zk5Rcjl6TkxsZzFQdWZLajU0WncxK0JkdDA3SzdzaW5TbFdyZ3pT?=
- =?utf-8?B?Z3d2VnVEOXMxSGZhemIyQ3N1SGtJdmxlLy9paEM5dWJ2WFBpbVgxYjEwMTZU?=
- =?utf-8?B?QVhReUtKd2pZRTZKK1VYOXMrblNsWmsyR3psRGRmNWlQbHBCU05mRTBpc1lx?=
- =?utf-8?B?NmZWRE9tSW9rOURNUVpYMGhnUHFyd0YwblFCMDZUbzR4WjRxNmVlVGpOa21B?=
- =?utf-8?B?bWhwS292NGhiNTdaUW41L2RrVzZ1QjVzQlltUVk1bDFjK2NPajduS0hCQUQr?=
- =?utf-8?B?a0N3S1VnejNadFFjaklPOU5idldpL1BSR0dncWQzeGYxcGVaZGFrR1dUNkZx?=
- =?utf-8?B?a0RYTlZ3dHNUZnNHWWx2bXZnbFVpVTJDK3FuZS91akpzWUo0WlNKeFpLaDB2?=
- =?utf-8?B?enlrUDRYYVV3ckZOdG8rVWJ2cjMvM2tZMS9ZZVBuV0MwTkU4d2tBdi85NTNM?=
- =?utf-8?B?MnV3K0JYMXl1YlRXeEpYWnJWbGlGM3B2a3E4RUlyTElYbFVGQWJFTU1IRkJQ?=
- =?utf-8?B?SW1TbkhWaUhyYUtwN0RWWnJnKzRTcnY2eWo4NnhZVmc1V016Wms0T2wrU0Fp?=
- =?utf-8?B?b0pGTHRkRGZrNDlaMXpGNkxPL3JVRnVJY1lBcTRMZmZOZlRleHJTaVlzanVT?=
- =?utf-8?B?bDU0VmhLbVlib1REaXdtcGlQalNaeXF0UFZmRWRvdzZIMFZob3RjOHRXMFBv?=
- =?utf-8?B?eUxDeStuV2hrTEtXYU5nbEFWbjBadjl2WnFFYUVpUytITXNEbnR6RUM3YWZq?=
- =?utf-8?B?ODlhZz09?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?L1MzdjBSQTh2SStFRzVQRmxrNmlQZ29lRi91bUdpNFRjb1FmbFpienhsUUV5?=
- =?utf-8?B?WS9iSHJsYlQ4ajllRXkrc1YwOCs4dXpYMmxmNlBxN1ZzM0Q5bVRoeVU2OC9L?=
- =?utf-8?B?RW5QcGpFUFI5N21xem9ieUgrbnVZUXgrWmtJazVNM05wVHFydFVPSTVjM215?=
- =?utf-8?B?UmhHVFFnYlMyNVlLMGxLNDdmc1pYTUcrQ0t1V3YveHhwbk5sWFJOTXEzTFU2?=
- =?utf-8?B?eGErMllVZG54WWc3cmw3WlVna1Z0MTRFUlh6dVNoQWx1YTBzK0d1cmRTT0xY?=
- =?utf-8?B?TW9pUDh3RC9wbDJFMmdkYmxRdm5sbHZ1WStUNURwSUpoNG9aS2VMRHd4NWJC?=
- =?utf-8?B?cnkzaUs4QTlxc2JRcEhPcmxHUFB2WFp5djMxdHBYTk92ci9TZ2RwRmRmZjkr?=
- =?utf-8?B?SWdlZ0piWWNKZ1BqZ2tXMm0zUUVnWllkRmR3anFIclhSNkl1SHVpVE45NjlX?=
- =?utf-8?B?a1hwM3pFK2pUUVY1MkZxQy8zYTJjV1dyS05lZVpETXMvTnFLVUpIcHZpVG1I?=
- =?utf-8?B?cWZDdWZjbHRDWHBYNVoxUUxBMWFGU2FrTE1mSnNFTjFMM1ByYjFDeFlxVVpu?=
- =?utf-8?B?OUJ5Z1d1VG1oWm1TaEdnVk9wa1h6cTVhemNQbjBSRnM2TmREQ3pJZzZLY0pn?=
- =?utf-8?B?bWI2RmFnOGNQZkowMCtFQjJaNXhaQmtIaXgxQWxYWFk5a3o1MllVYUNCd09P?=
- =?utf-8?B?VWtjMGZ0QVkwd3JGbWdpcVpBYndhZXNqZmpKMTMybEtZVkh4SStCM0RueS9n?=
- =?utf-8?B?Z1ZDWGExSlQxb3FIZi9QSlRlSTBOTDE0bDZrb2hxWGR6RzcvUEd2RFNhZXln?=
- =?utf-8?B?SE9BRXA0MHNIWjBmV1l3MTNVVTRnSWhSVnY1L21iMHZtTi93TDNNQzI1ZEJx?=
- =?utf-8?B?ZDBJdk0rOG0reEJPS3VKQjJSTDBmYUlqcm5zcmo5eFFmQjREQTBzZVR1WlBU?=
- =?utf-8?B?MWFhZzJsc1NJYy9PdjJPdGtsY0V6T3B4VStnbVZjQXdoR3JRb1lLQ2pYWC9y?=
- =?utf-8?B?SWk3eXU1M1RZeFVnQVR0WTJjek1iZFJkSXA1dzRqelc1bEczcE5qQTZmM1Nj?=
- =?utf-8?B?V2pHa0YxL0NDbG9SbDFEZkdjZVVIMis2eEVka0ZSL21TSFhoVjdHZ1MvQjRn?=
- =?utf-8?B?QmtuSXBHbEFHc0lPS2krVU9zdHE1TEg2a25qNFIxdWFnN2JZa3prOFZodFF5?=
- =?utf-8?B?cGJnZ2c5OUhiVVQ0L1FJdGlYTUNTQ1FISXFPVkJlUm5OMjVoQ0s0RDNwRHZk?=
- =?utf-8?B?Ly9mQndsQkNJZVlaWmtlM201ZVRJY29kaXlITElGYS9OZVd4MU5JQ1lyOWJE?=
- =?utf-8?B?aHpjWjkxK1VOV2dnMG1QaHkyai9DcWN0VmhTbjdEMW45RkR2TGNQQmhnL2l1?=
- =?utf-8?B?VmxERGx3MGc5VFVRenY2WGc3TmJTQnBMdzZRVi92OFg1ejVNcDZ5TWlkQXp3?=
- =?utf-8?B?NWVNYzNHbFZCN3JGZDRJeTYvdmhWRU9DcVNaRnBrQ2lPOFRDWnVzd2FwTVlj?=
- =?utf-8?B?VUNZM2FTN0lNdFVVL1ZUK2g2YjVyVmpNYXlCQnBrU0NHaWovUWEzWFRiOWRu?=
- =?utf-8?B?RGVSZmFiaDhBS3N3a0tjbnRvVE82K2pMV1p1NGZJNit3VjhtZFZ5OTFGa2pZ?=
- =?utf-8?B?WTdleEVZYlUrQUdtRlV4bFRHM0VMejh1b3l2ZDg5R2JRQzV4YjFZaHhxQkRI?=
- =?utf-8?B?Z21TeVB0U0w4TkhMekNqdjliZ0JHWVdDOEEzZGJoYnR2K0NFK2RsSjE3VHpR?=
- =?utf-8?Q?RSE8uBFSHhOzCmIzPF4Etpk7L6njiZqwLXvU13S?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c013136d-04c7-4a3d-c819-08dda8cde40d
-X-MS-Exchange-CrossTenant-AuthSource: PN0P287MB2258.INDP287.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2025 09:54:00.7195
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PNYP287MB4069
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests/mm: Use generic read_sysfs in thuge-gen test
+Content-Language: en-US
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: akpm@linux-foundation.org, shuah@kernel.org, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ pulehui@huawei.com
+References: <20250611084011.1047132-1-pulehui@huaweicloud.com>
+ <caad6357-a4a3-469f-a824-4d7a36a0e629@lucifer.local>
+ <097fa60d-cb5c-4f0b-a2b1-db22b26cc49b@huaweicloud.com>
+ <1fad971c-dd57-4fa9-b951-10f749829c10@lucifer.local>
+From: Pu Lehui <pulehui@huaweicloud.com>
+In-Reply-To: <1fad971c-dd57-4fa9-b951-10f749829c10@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:gCh0CgDHKF17UkloXOW4PA--.40312S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxXFy5trW7KFyfXFWrKFWDtwb_yoWrWFW8pF
+	s5JFyjkF40qryUGryjqFn09r1Yyr4UtFW8Xw4xA34UZr1DtF9IgF4xJryUG3WkurWxWr4f
+	Z3y3Grsa9r15JaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUylb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
+	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUwxhLUUUUU
+X-CM-SenderInfo: psxovxtxl6x35dzhxuhorxvhhfrp/
 
-"sophgo,sg2044-pwm" should have not been in 6.16, submit this after that?
 
-Others. LGTM.
 
-Reviewed-by: Chen Wang <unicorn_wang@outlook.com>
+On 2025/6/11 17:48, Lorenzo Stoakes wrote:
+> On Wed, Jun 11, 2025 at 05:40:06PM +0800, Pu Lehui wrote:
+>>
+>>
+>> On 2025/6/11 17:18, Lorenzo Stoakes wrote:
+>>> On Wed, Jun 11, 2025 at 08:40:11AM +0000, Pu Lehui wrote:
+>>>> From: Pu Lehui <pulehui@huawei.com>
+>>>>
+>>>> As generic read_sysfs is available in vm_utils, let's
+>>>> use is in thuge-gen test.
+>>>>
+>>>> Signed-off-by: Pu Lehui <pulehui@huawei.com>
+> 
+> With the fix below:
+> 
+> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-Thanks
+will send new soon, thanks!
 
-On 2025/6/9 7:28, Inochi Amaoto wrote:
-> From: Longbin Li <looong.bin@gmail.com>
->
-> Add pwm device node for SG2044.
->
-> Signed-off-by: Longbin Li <looong.bin@gmail.com>
-> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-> ---
->   arch/riscv/boot/dts/sophgo/sg2044-sophgo-srd3-10.dts |  4 ++++
->   arch/riscv/boot/dts/sophgo/sg2044.dtsi               | 10 ++++++++++
->   2 files changed, 14 insertions(+)
->
-> diff --git a/arch/riscv/boot/dts/sophgo/sg2044-sophgo-srd3-10.dts b/arch/riscv/boot/dts/sophgo/sg2044-sophgo-srd3-10.dts
-> index 01340f21848f..b50c3a872d8b 100644
-> --- a/arch/riscv/boot/dts/sophgo/sg2044-sophgo-srd3-10.dts
-> +++ b/arch/riscv/boot/dts/sophgo/sg2044-sophgo-srd3-10.dts
-> @@ -63,6 +63,10 @@ mcu: syscon@17 {
->   	};
->   };
->   
-> +&pwm {
-> +	status = "okay";
-> +};
-> +
->   &sd {
->   	bus-width = <4>;
->   	no-sdio;
-> diff --git a/arch/riscv/boot/dts/sophgo/sg2044.dtsi b/arch/riscv/boot/dts/sophgo/sg2044.dtsi
-> index b65e491deb8f..f88cabe75790 100644
-> --- a/arch/riscv/boot/dts/sophgo/sg2044.dtsi
-> +++ b/arch/riscv/boot/dts/sophgo/sg2044.dtsi
-> @@ -347,6 +347,16 @@ portc: gpio-controller@0 {
->   			};
->   		};
->   
-> +		pwm: pwm@704000c000 {
-> +			compatible = "sophgo,sg2044-pwm";
-> +			reg = <0x70 0x4000c000 0x0 0x1000>;
-> +			#pwm-cells = <3>;
-> +			clocks = <&clk CLK_GATE_APB_PWM>;
-> +			clock-names = "apb";
-> +			resets = <&rst RST_PWM>;
-> +			status = "disabled";
-> +		};
-> +
->   		syscon: syscon@7050000000 {
->   			compatible = "sophgo,sg2044-top-syscon", "syscon";
->   			reg = <0x70 0x50000000 0x0 0x1000>;
+> 
+>>>
+>>> It generally looks good, just one point about a warning below to address.
+>>>
+>>>> ---
+>>>>    tools/testing/selftests/mm/thuge-gen.c | 37 +++++++-------------------
+>>>>    1 file changed, 9 insertions(+), 28 deletions(-)
+>>>>
+>>>> diff --git a/tools/testing/selftests/mm/thuge-gen.c b/tools/testing/selftests/mm/thuge-gen.c
+>>>> index 95b6f043a3cb..e11dfbfa661b 100644
+>>>> --- a/tools/testing/selftests/mm/thuge-gen.c
+>>>> +++ b/tools/testing/selftests/mm/thuge-gen.c
+>>>> @@ -77,40 +77,19 @@ void show(unsigned long ps)
+>>>>    	system(buf);
+>>>>    }
+>>>>
+>>>> -unsigned long thuge_read_sysfs(int warn, char *fmt, ...)
+>>>> +unsigned long read_free(unsigned long ps)
+>>>>    {
+>>>> -	char *line = NULL;
+>>>> -	size_t linelen = 0;
+>>>> -	char buf[100];
+>>>> -	FILE *f;
+>>>> -	va_list ap;
+>>>>    	unsigned long val = 0;
+>>>> +	char buf[100];
+>>>>
+>>>> -	va_start(ap, fmt);
+>>>> -	vsnprintf(buf, sizeof buf, fmt, ap);
+>>>> -	va_end(ap);
+>>>> +	snprintf(buf, sizeof(buf),
+>>>> +		 "/sys/kernel/mm/hugepages/hugepages-%lukB/free_hugepages",
+>>>> +		 ps >> 10);
+>>>> +	read_sysfs(buf, &val);
+>>>
+>>> We're losing all of the 'warn' logic here so if we can't find
+>>> /sys/kernel/mm/hugepages/hugepages-%lukB/free_hugepages when ps != getpagesize()
+>>> we no longer print a message about it.
+>>
+>>
+>> Hi Lorenzo,
+>>
+>> Thanks for review. Right, we should explicit that warning when ps !=
+>> getpagesize(). How about the following modify?
+> 
+> Looks good to me!
+> 
+>>
+>> diff --git a/tools/testing/selftests/mm/thuge-gen.c
+>> b/tools/testing/selftests/mm/thuge-gen.c
+>> index e11dfbfa661b..8e2b08dc5762 100644
+>> --- a/tools/testing/selftests/mm/thuge-gen.c
+>> +++ b/tools/testing/selftests/mm/thuge-gen.c
+>> @@ -85,7 +85,8 @@ unsigned long read_free(unsigned long ps)
+>>          snprintf(buf, sizeof(buf),
+>>                   "/sys/kernel/mm/hugepages/hugepages-%lukB/free_hugepages",
+>>                   ps >> 10);
+>> -       read_sysfs(buf, &val);
+>> +       if (read_sysfs(buf, &val) && ps != getpagesize())
+>> +               ksft_print_msg("missing %s\n", buf);
+>>
+>>          return val;
+>>   }
+>>
+>>>
+>>> Should we reinstate that?
+>>>
+>>> Other than this, we're ignoring errors, which by default means we return 0, but
+>>> this is what we were doing anyway. It's only this case I think that matters.
+>>>
+>>>>
+>>>> -	f = fopen(buf, "r");
+>>>> -	if (!f) {
+>>>> -		if (warn)
+>>>> -			ksft_print_msg("missing %s\n", buf);
+>>>> -		return 0;
+>>>> -	}
+>>>> -	if (getline(&line, &linelen, f) > 0) {
+>>>> -		sscanf(line, "%lu", &val);
+>>>> -	}
+>>>> -	fclose(f);
+>>>> -	free(line);
+>>>>    	return val;
+>>>>    }
+>>>>
+>>>> -unsigned long read_free(unsigned long ps)
+>>>> -{
+>>>> -	return thuge_read_sysfs(ps != getpagesize(),
+>>>> -			  "/sys/kernel/mm/hugepages/hugepages-%lukB/free_hugepages",
+>>>> -			  ps >> 10);
+>>>> -}
+>>>> -
+>>>>    void test_mmap(unsigned long size, unsigned flags)
+>>>>    {
+>>>>    	char *map;
+>>>> @@ -173,6 +152,7 @@ void test_shmget(unsigned long size, unsigned flags)
+>>>>    void find_pagesizes(void)
+>>>>    {
+>>>>    	unsigned long largest = getpagesize();
+>>>> +	unsigned long shmmax_val = 0;
+>>>>    	int i;
+>>>>    	glob_t g;
+>>>>
+>>>> @@ -195,7 +175,8 @@ void find_pagesizes(void)
+>>>>    	}
+>>>>    	globfree(&g);
+>>>>
+>>>> -	if (thuge_read_sysfs(0, "/proc/sys/kernel/shmmax") < NUM_PAGES * largest)
+>>>> +	read_sysfs("/proc/sys/kernel/shmmax", &shmmax_val);
+>>>> +	if (shmmax_val < NUM_PAGES * largest)
+>>>>    		ksft_exit_fail_msg("Please do echo %lu > /proc/sys/kernel/shmmax",
+>>>>    				   largest * NUM_PAGES);
+>>>>
+>>>> --
+>>>> 2.34.1
+>>>>
+>>
+
