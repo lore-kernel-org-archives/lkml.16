@@ -1,163 +1,153 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3EC32405E4;
-	Wed, 11 Jun 2025 08:56:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE665227E89;
+	Wed, 11 Jun 2025 08:57:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749632165; cv=none; b=q72Ft5LYgJ9M+BhwtPOb3uf7FS5jMKGUsb8Uy3cGWZBqV8OQZkqv+jMTEpsOjSn3JiY4NAeYZc4kwAFbEK74IR3ZsE+rKTm/XFZFUgEZ/eivs6LgBoUiBGOxy1snkK0SsWiQqcQ9WCcITENZ8EqPqRvN3Ms9w7ga7m0hb7sm6TQ=
+	t=1749632232; cv=none; b=R2MCh09Q8T/3+zh2/j27wurlCreof53x2mq84i9uBxEiCCwOJ4LNNIMJEljuqw+w+9v3v+Q2j103iAu2KYDjt7XhB7ijy9ui7AHFnp4nl1DfISuTrvtdIEDI+tLGJESVZgyoxW9VgraEUau6Au06HS0NFJ5p92an2hzV5r7rZ2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749632165; c=relaxed/simple;
-	bh=0fXEzlKGR7uRK1gsrzE4/HNTgAhDwUJtxaGb1K0SYYs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LQH8YtclwKVte484RUp5rtYGPXUkzPK975a9pdCcuu9XRy5PYO3F9olAfw7z5mn9saKKoIDlCHcupiRV0CJrMajN8r4SIRg/Jz8t6axjo/l5uvdP9APkVPPcQBLl6hLCGtTS0Pv8cT+zY47bBfZuKv04pzt2OIyvsXm/CUrFjHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ypb5VC8M; arc=none smtp.client-ip=209.85.128.169
+	s=arc-20240116; t=1749632232; c=relaxed/simple;
+	bh=okRb+jpW5D0E91oWQVVeKHSrMMNUpIBRDxJa/aXt66Q=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oLtX8+YihJnwSACyGTSis0qpKhfScjYsiiMHp6Xy5jOpVT3cHDOluTpBLiBDe1iCVY7o6+q3HJBqj1whUN8BLsS0aHwQ0YjRtqTTyJwfHoTviP06hbZE4dlZPvSz/CWb7MoUoo4RZuXzBtpb4Uu++B9MFsYH506+SFnydlQmL4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gmjV8ZPI; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ypb5VC8M"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-70cb9ae5479so353287b3.2;
-        Wed, 11 Jun 2025 01:56:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gmjV8ZPI"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-450cfb790f7so44708195e9.0;
+        Wed, 11 Jun 2025 01:57:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749632162; x=1750236962; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jr7af8u/djfaVEFtDVz1sFAL1KZvVfAMjhhIxlcv8Us=;
-        b=Ypb5VC8MH95LAJz+WBdTW7hG2jDC3fjePE3L/tQL8mzp0lo7KPSy/98Ddpgnx8z7hA
-         acNxxfvEvOwkwppYEYNUriGNddB+wx0tDqVxQ9mOFCJ4lcI1+CxCwHsoSy7qQAjvC56T
-         EJz41U85IeSwWcV5y0qDYLMmEuxMWUoyGWr4rsxPV7B6ciogSVJxg3+IC8FFXWqKvOZP
-         G5GXAmH5C5YA+OVaBMw+NXi1RM/cQZNOSC3KPo1MS9vX2dW6HuowBJ6POgivLyNy/0A+
-         ygYCqzeEJlRggI1vb/vKs5Dvd3QIxzJ+zQye3sdb/0O95wlzBaFmXMFGVbIJCo4nmPS1
-         ERpA==
+        d=gmail.com; s=20230601; t=1749632229; x=1750237029; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hK5p+aM5p9zTdGEnYk9xc8yZpbtJix3a1Tf3VuioEy4=;
+        b=gmjV8ZPIHVyGQl1BJ98zkqTf7GX8GgFF4zcaPjTzXs9mzJj/KnFNKVQ/K/ecBslV/0
+         +Stmp3LbQFyeJLaasQKgiUeBUznRQWzW/R/zI8yTNHRLPEC0ukhamFMfQfjXHw1cjdPb
+         lz/s35O0wfGd4QJdNdXjpZTYn768qFLBf7H4j3H/+nPwit6CaejBcvPCLK7p3aQ3QKfe
+         95KnwjYS1Z13BUUS7naZ84NBHEfjushKY8+qMWi2ORSDhDOKKt4AhJYRQjE5Uivjiikj
+         3WOSmkOboX524YJMDMvzN4I9pJc/h67Wl/NIX//tLi5xb5g0bqLfWfYb9ENiArf3ggDr
+         rV2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749632162; x=1750236962;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jr7af8u/djfaVEFtDVz1sFAL1KZvVfAMjhhIxlcv8Us=;
-        b=GMFGk8N6CPVJDcl1Tact/L2IUBu07POzJ78pIr+T7+nGTJJvZuc3DnJQMFEc8CrQit
-         WQUUuKKkHrjKVRi4UNFmKEtVzKmgjG9Wbw5ZSjPnefYlmNZPXEP5pDjewj8NO22kIogN
-         XdyxBQwyiIv+CqMTb7lODo+ITdKXAIDSnJABoOCXird/OuuRPFaEigEn14Y7FzIBlBx2
-         SO30W0H8r1FDpwEw5YWSZkBgFb5p5eDSfQnzvVNCfqQmDur2oIMxh4bsFLUY1e0wVMK0
-         kND2eKqln153kVsEAB5mIHTliX93hcFCu7cio8zx20PH/zdXKEdxuvhuC5NGy/XAgw7D
-         RuRg==
-X-Forwarded-Encrypted: i=1; AJvYcCUarD5coAMMQyu8KQpJETBkUTI/gGbgP8ALhr527Gy5HE7mrf2v+EKVyXkEs0BAKAOZIyAhnvs7kmVxTrY2@vger.kernel.org, AJvYcCUpF43ORCIC6l8JAljNbbOXI2nhIizmT6MyNclybGgR92NKgIf6ErkzazwkTtZ/7Un+0ZmYwOOuu5c=@vger.kernel.org, AJvYcCXEjRIwrm+d6nCgPwxmtXyrtKsj6llKf2uEy9tVgrtBGfpcWizIOLTOfuVSuBsu0F2iEDI1xWkp1vDC@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbN3c2X84u6upRfvjF/Ok0cMjOvMPsCfHAtbZC3sqkpipjIW0A
-	88kgo5C7M5oIw+SnbIqlGmXeq8N5nerqf9UalD50IV28uxt8w4TM27owwo4RuWFocuKa0SfxH23
-	ZSa7knaprgvTgog6lzK3Ye1qw9TxkmXU=
-X-Gm-Gg: ASbGncuvCrG9gXOB5tO33j4HBjtM21sI/d12mJacV+4KIdjhngAjv4rpEbQexJ9tVfU
-	YJaReNsgall1r/wfX9ePn94yrP0C9GyWGMpulV2B27NNsmWI678SFDa51ck+wrJ9i6Rp2rbxddK
-	19KgfYSVLQXOQN5fbUHNen8xBx+J1FnfB7exfHHuMKVk8=
-X-Google-Smtp-Source: AGHT+IHQshvzaNfy3bNjdRFH2yuU1qV8IQJUoInmY8JcSy/11DFg74rdFUbgCEsdVvOxd36y+j03qwTnrUKK/Llr8YA=
-X-Received: by 2002:a05:690c:620a:b0:70f:7bea:5dd with SMTP id
- 00721157ae682-71140b18ed9mr14745547b3.9.1749632162358; Wed, 11 Jun 2025
- 01:56:02 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749632229; x=1750237029;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hK5p+aM5p9zTdGEnYk9xc8yZpbtJix3a1Tf3VuioEy4=;
+        b=E2dYLEQm9vg8I88hrWp8QdQBRrvo3t/znIdGYwIRx35m9U5BCLr1BNvoiWK4XT3SVS
+         fp2AdHH1tcJHcJEFgY6tPh6pEmal0X2ylw4Nv0a4SHbeuAsFTKn9FZCFrcKMtNjI8rnE
+         JDVDrpuCtxgqUeexmWgh7VYVCYnPqqHm+CstMulFuD+zaDDHxFIsq6HiCLhEt2VTwmEd
+         c6P0KcxDvq52BgSdpJFExDtfjLaCqBfkyolykpA8isAf0bnptGbM0kfBN/pDSINF/Kdo
+         wzQeHmsJsG/4JUxWbH/vYjix8hSKrSlQs6m+2Cq4txisnD+V3rRPIkNhHiQ9iN9M04et
+         s0Jw==
+X-Forwarded-Encrypted: i=1; AJvYcCUFtLG3nkgL3e0TG+CZsk7vOjoAMcFqMjG+gvDbMnlGg/vX+zmaEUVmVjITm7Yg96AymKxcgC5B/0dfS7I15EtUJHYZ@vger.kernel.org, AJvYcCX8v6N4IXYXgfAB/f2W7qFhdSs6A1/zwP4vqaBc4mNGhnm7nV7qklhOrEKWydp4gEgaNQf/etkM6sSd/jY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYvjBgMsOmfW/TkthU6CoI8HARMjcLf+xmkZo/IaOG2Lkn7gUr
+	KRptSoyFniE8rYnCIhswSGZIVKbSaBj6vLIYNvasrT9CPe+BDCTBrOyn
+X-Gm-Gg: ASbGncuke6OzzqQMf05i/WDBNhNl4F6ohJvgrbIKpC2ol/OzF3liJQzuYZ/0BBljKGI
+	pKHFVUQr8q+U/75JzgCFuV7+45KHJIj1+8tO0Nz4MPPfSZYlaoQ50CEgHO6aCZcodx/WYYZlB+/
+	e8IqkbzUYyI+V/zVJClBqN1cOlFPgfSBQHara8d+/rsvE/6Yj76lTrD2H+BtK88b6DQ12i2iU8r
+	MLy92JBzwZl4HT5/NU8qhiXviEyobRlOomBttUgdnHkltDJOTbsgbhMNg924Y9X5fwfQgo3FpYZ
+	jB++JivXzrdp9epI3nk8PTuUX62uJBimflI=
+X-Google-Smtp-Source: AGHT+IGByvgBwv+VNZh8jCpcrqDFKuoReMI8rJVrw6jtzmtTeyre3bwD7REwXew+cg/aQW00obZrtw==
+X-Received: by 2002:a05:6000:2dc4:b0:3a4:ef00:a7b9 with SMTP id ffacd0b85a97d-3a5586dcd53mr1558301f8f.12.1749632228815;
+        Wed, 11 Jun 2025 01:57:08 -0700 (PDT)
+Received: from krava ([2a02:8308:a00c:e200::42b7])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5322aa3c0sm14429994f8f.22.2025.06.11.01.57.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 01:57:08 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 11 Jun 2025 10:57:06 +0200
+To: Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 mm-stable] uprobes: Revert ref_ctr_offset in
+ uprobe_unregister error path
+Message-ID: <aElE4r21ZYhLWTZz@krava>
+References: <20250514101809.2010193-1-jolsa@kernel.org>
+ <aECseBOkQynCpnfK@krava>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250601172139.59156-1-l.rubusch@gmail.com> <20250601172139.59156-5-l.rubusch@gmail.com>
- <20250608162738.407c7d20@jic23-huawei>
-In-Reply-To: <20250608162738.407c7d20@jic23-huawei>
-From: Lothar Rubusch <l.rubusch@gmail.com>
-Date: Wed, 11 Jun 2025 10:55:26 +0200
-X-Gm-Features: AX0GCFtErc9t4ORFe67lg4US4jiRG_9OYZGh8UYacK5QGDW6gTjheKx4y-gYpF4
-Message-ID: <CAFXKEHZgvoHVigGcDOchkAsYcs_cpYzfXstRBa_OzS_LEkvNXg@mail.gmail.com>
-Subject: Re: [PATCH v4 04/11] iio: accel: adxl313: add function to enable measurement
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net, 
-	lucas.p.stankus@gmail.com, lars@metafoo.de, Michael.Hennerich@analog.com, 
-	bagasdotme@gmail.com, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aECseBOkQynCpnfK@krava>
 
-On Sun, Jun 8, 2025 at 5:27=E2=80=AFPM Jonathan Cameron <jic23@kernel.org> =
-wrote:
->
-> On Sun,  1 Jun 2025 17:21:32 +0000
-> Lothar Rubusch <l.rubusch@gmail.com> wrote:
->
-> > Rework controlling measurement and standby of the sensor. Therefore,
-> > replace writing the register directly by encapsulating this and dealing
-> > with the return value in a separte function to enable and disable
-> > measurement. This will help to avoid redundant code in all locations
-> > where the sensor configuration needs to be adjusted, thus measurement w=
-ill
-> > be set to standby, in follow up patches.
-> >
-> > Further, reduce the control mask to only the measurement bit. The sleep=
- bit
-> > actually controls a different behavior (not just putting the sensor to
-> > standby for configuration, but turning it into sleep mode) and it is no=
-t
-> > used so far. In consequence, there is no need to cover sleep bit and
-> > measurement with the same mask.
-> >
-> > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
-> This is a good bit to have as a precursor patch (as you have done)
-> because it is refactoring the existing code.  It doesn't stand on it's
-> own though given for now there is only one caller, so I won't pick it up
-> until the patch that uses it is ready to go.
->
+hi, ping ;-)
 
-So, I'll leave this patch (in case I might refrase the commit message,
-and I hope this is ok). I'm going to merge [v4 02/11] [v4 05/11] and
-[v4 06/11] for a v5. Let me know if I got this wrong.
-
-> Jonathan
->
+On Wed, Jun 04, 2025 at 10:28:42PM +0200, Jiri Olsa wrote:
+> On Wed, May 14, 2025 at 12:18:09PM +0200, Jiri Olsa wrote:
+> > From: Jiri Olsa <olsajiri@gmail.com>
+> > 
+> > There's error path that could lead to inactive uprobe:
+> > 
+> >   1) uprobe_register succeeds - updates instruction to int3 and
+> >      changes ref_ctr from 0 to 1
+> >   2) uprobe_unregister fails  - int3 stays in place, but ref_ctr
+> >      is changed to 0 (it's not restored to 1 in the fail path)
+> >      uprobe is leaked
+> >   3) another uprobe_register comes and re-uses the leaked uprobe
+> >      and succeds - but int3 is already in place, so ref_ctr update
+> >      is skipped and it stays 0 - uprobe CAN NOT be triggered now
+> >   4) uprobe_unregister fails because ref_ctr value is unexpected
+> > 
+> > Fixing this by reverting the updated ref_ctr value back to 1 in step 2),
+> > which is the case when uprobe_unregister fails (int3 stays in place),
+> > but we have already updated refctr.
+> > 
+> > The new scenario will go as follows:
+> > 
+> >   1) uprobe_register succeeds - updates instruction to int3 and
+> >      changes ref_ctr from 0 to 1
+> >   2) uprobe_unregister fails  - int3 stays in place and ref_ctr
+> >      is reverted to 1..  uprobe is leaked
+> >   3) another uprobe_register comes and re-uses the leaked uprobe
+> >      and succeds - but int3 is already in place, so ref_ctr update
+> >      is skipped and it stays 1 - uprobe CAN be triggered now
+> >   4) uprobe_unregister succeeds
+> > 
+> > Fixes: 1cc33161a83d ("uprobes: Support SDT markers having reference count (semaphore)")
+> > Acked-by: David Hildenbrand <david@redhat.com>
+> > Acked-by: Oleg Nesterov <oleg@redhat.com>
+> > Suggested-by: Oleg Nesterov <oleg@redhat.com>
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> 
+> hi,
+> I can't find this in any related tree, was this pulled in?
+> 
+> thanks,
+> jirka
+> 
+> 
 > > ---
-> >  drivers/iio/accel/adxl313.h      |  3 +--
-> >  drivers/iio/accel/adxl313_core.c | 10 +++++++---
-> >  2 files changed, 8 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/iio/accel/adxl313.h b/drivers/iio/accel/adxl313.h
-> > index fc937bdf83b6..9bf2facdbf87 100644
-> > --- a/drivers/iio/accel/adxl313.h
-> > +++ b/drivers/iio/accel/adxl313.h
-> > @@ -36,8 +36,7 @@
-> >  #define ADXL313_RATE_MSK             GENMASK(3, 0)
-> >  #define ADXL313_RATE_BASE            6
-> >
-> > -#define ADXL313_POWER_CTL_MSK                GENMASK(3, 2)
-> > -#define ADXL313_MEASUREMENT_MODE     BIT(3)
-> > +#define ADXL313_POWER_CTL_MSK                BIT(3)
-> >
-> >  #define ADXL313_RANGE_MSK            GENMASK(1, 0)
-> >  #define ADXL313_RANGE_MAX            3
-> > diff --git a/drivers/iio/accel/adxl313_core.c b/drivers/iio/accel/adxl3=
-13_core.c
-> > index 0c893c286017..6170c9daa30f 100644
-> > --- a/drivers/iio/accel/adxl313_core.c
-> > +++ b/drivers/iio/accel/adxl313_core.c
-> > @@ -63,6 +63,12 @@ bool adxl313_is_volatile_reg(struct device *dev, uns=
-igned int reg)
-> >  }
-> >  EXPORT_SYMBOL_NS_GPL(adxl313_is_volatile_reg, "IIO_ADXL313");
-> >
-> > +static int adxl313_set_measure_en(struct adxl313_data *data, bool en)
-> > +{
-> > +     return regmap_assign_bits(data->regmap, ADXL313_REG_POWER_CTL,
-> > +                               ADXL313_POWER_CTL_MSK, en);
-> > +}
-> > +
-> >  static int adxl312_check_id(struct device *dev,
-> >                           struct adxl313_data *data)
-> >  {
-> > @@ -410,9 +416,7 @@ static int adxl313_setup(struct device *dev, struct=
- adxl313_data *data,
-> >       }
-> >
-> >       /* Enables measurement mode */
-> > -     return regmap_update_bits(data->regmap, ADXL313_REG_POWER_CTL,
-> > -                               ADXL313_POWER_CTL_MSK,
-> > -                               ADXL313_MEASUREMENT_MODE);
-> > +     return adxl313_set_measure_en(data, true);
-> >  }
-> >
-> >  /**
->
+> > v2 changes:
+> > - adding proper Fixes tag and acks
+> > 
+> >  kernel/events/uprobes.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> > index 4c965ba77f9f..84ee7b590861 100644
+> > --- a/kernel/events/uprobes.c
+> > +++ b/kernel/events/uprobes.c
+> > @@ -581,8 +581,8 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+> >  
+> >  out:
+> >  	/* Revert back reference counter if instruction update failed. */
+> > -	if (ret < 0 && is_register && ref_ctr_updated)
+> > -		update_ref_ctr(uprobe, mm, -1);
+> > +	if (ret < 0 && ref_ctr_updated)
+> > +		update_ref_ctr(uprobe, mm, is_register ? -1 : 1);
+> >  
+> >  	/* try collapse pmd for compound page */
+> >  	if (ret > 0)
+> > -- 
+> > 2.49.0
+> > 
