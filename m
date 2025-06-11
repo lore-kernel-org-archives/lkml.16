@@ -1,247 +1,240 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352F72609C6;
-	Wed, 11 Jun 2025 10:23:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8706A2609C6
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 10:24:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749637433; cv=none; b=VjZbOmky3DVXxlNWhzhX13gwG5R/3ecn3NCFqZc+6T/EMkVV4WYbGJuQtq3coJuMaUpc3JY7TaVCUV4oYyH+Jq5Sppw7HeWxNrgZ4Okzsmp+Vvo1hWYW+CJdmy8dVYvKR2NMCRZhnu2FMTD2KAY5/I+sw2TMeXRR31duEqujePk=
+	t=1749637454; cv=none; b=YZF3kSLJRH10atTpCFvUWdQH+Uj+W3IMfp+mH7JwYdTxTXa16v7n52DPkV8KMgcg3/IHYD8E1VMXuk5zCphyG7T8UUMec214jAQHX1+x15pI0wNlbnLUe0NJd1dQP6IZSDy68ubH8r0LYvg9cfAm/Xnpo+pgcdann9wup8HSPnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749637433; c=relaxed/simple;
-	bh=zE7akQ9I/itqlcJaWHyvSN6SxMbWvWntxwwUGa4zOrw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RoBh4Xo/4k1n6vw/r5CfhyPAbU7K0pcLqCQhojTufR3nYp5BLA+5UI1pnxtDRCpkoRHfzl14lCCMScWtGo/Z2KQUuAd4m/oNUYTBVzTnUjJRosdRFG7F2jGPA8dIkiAruPVv1hC8wMuenGfajL7roPYG1VT5FJNlIw8BWv8eBe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SeGV9yVk; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749637454; c=relaxed/simple;
+	bh=HcgoTLAfHeJFUpaLy0Qtf0ddGHc6Ei2KwGMl7zeFXi8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=J1fVH0yDzek/b/w3SS6lDzH/6Ysu7CDRzwQtSZVOp9BFlZ6R69P5YEYO/9RmpyHI0vbKaJM6qKYrbs+Ie2YAHHd153DW1IiOx6CA4zEgY8cOFRvwVHldzouTMvcLhfWSN87n9nbbb9nFH9mlgEuPFKIWoxQuoY1uq65LyB3hy1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HeQmBsr7; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SeGV9yVk"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4a58b120bedso83445991cf.2;
-        Wed, 11 Jun 2025 03:23:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HeQmBsr7"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-451e2f0d9c2so6344755e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 03:24:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749637430; x=1750242230; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=b2miWcRt7MptMpkkpbvEAaiGbbGDGe5gQtbWu3GJa1w=;
-        b=SeGV9yVkAA88uERIY5vSDKF6APT18YweXGNQa1DafSZuP4NcXWHB6XLVG96KNaNzVg
-         +HwqWWFqW2wiEMAjtkbzi4ULIcrdyfTJxLHFlzAJCKDbQRpj4VTXNhdYjYW4I6sCUx9G
-         GSWAQqf1RhlR0P9cmji3CrFEIVvCcm35WSx7fFqiTR9fwjYp534muQmlivXjaykQ3D/p
-         N0BW2ZJLX3QdOgYYs0yrUvcc18FgUtnyJZUWad9+19seCP0ag26jbKrddhfzDSspes6f
-         g8ejm8AS4/vuDs5f5DLpjgIfY49+rgk3WcoVMG0QFn4Cp0FNI79PR2FpJzBaa5mw6Pvw
-         KBNQ==
+        d=linaro.org; s=google; t=1749637450; x=1750242250; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=HcgoTLAfHeJFUpaLy0Qtf0ddGHc6Ei2KwGMl7zeFXi8=;
+        b=HeQmBsr7c+SkScccNJ/dlNDTisyK3tsOIHmadYsJY3DoBERaNuRCp9GvmBhOip6vol
+         vIMjyTNc/yTUSF/XmlqD4d3o7RnsvSySbIvpLHyfniikAj5Qmejqq9N5vKMV0zGXR1Gt
+         0JrJtz50R6aOkgBjGj7qMFnhLuTJMIWcfGk05JjvUv5ripqyJ/AHRS+BxJZdWVtNw5bM
+         /7BcHzoUmwlPFeUfWPPzXJlfUImHf/ztgTy1eJFsR7+EFWG7SHXN8mcZU7QE/EF6y9S0
+         0NXFxHWatrUpqdfU3KGBYDMymhrs3K+fmMd5tj9l1TFIUnFo/sSHhmZ5Q7sWi7+X7IhT
+         N5Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749637430; x=1750242230;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=b2miWcRt7MptMpkkpbvEAaiGbbGDGe5gQtbWu3GJa1w=;
-        b=rAn4K/jsLiIGbX9kvtonoB6XgeBgY4FmZMpjM3cLhZzRH5dVnbHH0Xg13+uhIg7r4j
-         bSMofUYNiLNz6a8cPr5zopi/Cmwbw8HSflsszHhcA2V1LzkIaI212KkjmemTaOdwXXhl
-         oKAIKq+ABzc4yBtwBxA7CZXk30liKOzs+7L5CMRgErAIKWuqwYyD9riBCynxhqYNARMO
-         YSuEf5fjAu9+IaDaykzLKJTrr50oeLV0KuUTjxc3nM4nkzNSNF5u2Uz64nn93/s94rlo
-         J+xvxy3t3X/PuCiLDEMBnL5rlZQNVmKOrUteMVa2MWJTeQEIWC+YR8nWy2U1eS+Xk6u2
-         yXEw==
-X-Forwarded-Encrypted: i=1; AJvYcCV13042mt5Lrd+2+pYJALLDX1Z7byNCuJUZK7ZWwiWtCKBv5sbMFz1GIYbQsbP/wfic7E0UccDl0dE8kDqUMyc=@vger.kernel.org, AJvYcCV43LfHFiZ4kLHD+nqDt7qGfDAyWrfagmJy5mb7JE3DS4xJGN4RJjHlpIEhScPcA3yrothsGqQ0Buet@vger.kernel.org, AJvYcCVI07HhEfJCtill7FlX1W8cF97bAYYATW18f1qPIkP6Gi5YAEj6OrAX6D+FOkTaQKpHoNVCpBNM@vger.kernel.org, AJvYcCVjXZgMSYiE1XvJnz0Zy0dmOKAlaojAcPQk4VhH9g1VypYjuqKJxvbA+NqVK+mavLjuIxYF4ikWnCUA@vger.kernel.org, AJvYcCWPDNYEUywWB8nZxN5Q2upF7wOjZRGdYWIy4oQZUcGinLc95i4IVuQETHw3nGRUGeIsWgDkK7ephAR2XU22@vger.kernel.org, AJvYcCXZE4mf4YbZv06BSoTqp0N4h6GOS9MOqKWJxVYxzp+y7Xv3CAHnWd6lbh8JLZGkUgHBIGWWwSEteOHY57PwbEBt@vger.kernel.org, AJvYcCXzMyGmJAQ1vzMzQUD2fycMIWyruo7uY+huaZm6cdYvfJjEZZPEAat/0eklT0cPq7VOWopfwQTpeOmqEyM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywwjv1ioY57pXMQb5ebMpk/3bWhXr/0YpxWW7uEb2sawjo1JHMX
-	thvyhog5dGPj1ComY0dP0pAlvIdQV4l0rmLT8ISayOlxACJSwVfxxH/o
-X-Gm-Gg: ASbGncu8VxblY+gvenqS5onW2GLT/cVxDqX05zlxrDiktw6hq7hzcDhfC345s5glylw
-	nHQniFLLdYXOVZU5Xvr4bRTXbUvZlWnSVn3B0dOCtpNqEoYHTYC9NjJhyr/vDmtIayHN5DdfK1V
-	YlRDeehjsZ5ftVY/0GlnEhgcstYy/bN4eSFoRJWMEwPoZCyt6LrgOrr4kiczHj36Qa+RjomyIkb
-	geCrHeUkleVlZCW+lbS94FbbSK1wa9Nqle6oZnRM0m9KZiKMLygMTBkmaUm4V2Rp+besnxYmVZr
-	34cnMqG+UXJm63p2WIrSUlNl2tw+AAYsaFT6iSKUGcwAewdm0GwfQ10D49RtO6leO7Y=
-X-Google-Smtp-Source: AGHT+IF1XN3p+FQVDqgsmvti47aZkI6r5GH+zjxKG5ndYXkmsax9t4EzbKDR8hTM8xrA7++NbyrCMw==
-X-Received: by 2002:a05:622a:4288:b0:494:7e91:eb4d with SMTP id d75a77b69052e-4a713c65d30mr41371881cf.51.1749637430010;
-        Wed, 11 Jun 2025 03:23:50 -0700 (PDT)
-Received: from 1.0.0.127.in-addr.arpa ([204.93.149.208])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a61114ff18sm85664341cf.6.2025.06.11.03.23.47
+        d=1e100.net; s=20230601; t=1749637450; x=1750242250;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HcgoTLAfHeJFUpaLy0Qtf0ddGHc6Ei2KwGMl7zeFXi8=;
+        b=nzadS9HmRrl2f6PaWJmUA4uHtrY6zBKJPOzxbVUZJWk1/UJHpNiyTkG/5LUrSvdKHc
+         fR6W4azcJaQNgAOvTJ3i/QK778i+nUK0zjfR0E0IEbmYpQKlq8weNid5pm7kbEOwAfRH
+         YlN/iDLXz8FPDHMRxhkXG8pt9U8WAQoDpyU76i2yQvFuoaxHn7yh7Ika4QhGEBOyNSCJ
+         g73DcgB9OygkyyIhLMwYPwH1ULhI5hrz7+KPU0fPgi6MnFi0iv9LPm5wxM7M0xd6J0AQ
+         WCYEjJVW2dqgPlkL+xFY42zHuhPRCdzZKmEhncO8XHvaacd5exZdYItNCD+zy99MN6TO
+         unWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXCdTeRQMiDUA2bpznkeMf3Qh6+HyacB/JP5DBKl0t/08AEdfSSn5U0rkUMgk2o8NgWe+8f1LF/ThCtGOE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKZqbeIhkVRO+Cnu8jOHWNNHXqQOQ8CN1EMrk/0jG5Ca5ukzIM
+	cHc+leYUOGr6YitFtKljzrJdZqbHRnAOlZhA9fro5CjRsvsD6k1lTNJAMejcEH+FCac=
+X-Gm-Gg: ASbGncsk8UQsyvH0/4DiqvwnzyddGEp0wW2VeMCZ7Vw0Yx3ZdSseOH2GUQZL3wY8pcG
+	DMsSN9mfu7/HV48PxchpymlmtCKlX8DgeTqtfDkIveUiLBSMa9RRZ+iZSVb9p4XjswFrEgoajbn
+	Eo08FYBXPu5C6NxcUa6xGjEW6Eqpx7Rt3G1LrqVrecRpzZaVkHAwZe31sfpV3WQ1H4D9OlkQi0z
+	YztkLumWMBa+bYDimxVaD6UnmC9lkOjDwkp2elWEEVMFAz9brZ6bJrBUvh8Svj3ZiVH7xlLmv47
+	1/NeJkGdZOL7AkATuHUnRz/gDCSpjgB8BxfSy4M5Oi/xOSoG3D4JQNu8Vu/DFpMbng==
+X-Google-Smtp-Source: AGHT+IG9m+kxWKjGRtPwO1sYhhzUEaX5KsBy8nQtuB2u3NbqDTwQEhMKuqK7uGhNPxTPQU1llC5yLw==
+X-Received: by 2002:a05:600c:a016:b0:450:d79d:3b16 with SMTP id 5b1f17b1804b1-453241fb5a6mr26538495e9.14.1749637449759;
+        Wed, 11 Jun 2025 03:24:09 -0700 (PDT)
+Received: from draszik.lan ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a53229d9adsm14638751f8f.9.2025.06.11.03.24.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 03:23:49 -0700 (PDT)
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Wed, 11 Jun 2025 06:23:30 -0400
-Subject: [PATCH v11 6/6] rust: enable `clippy::ref_as_ptr` lint
+        Wed, 11 Jun 2025 03:24:09 -0700 (PDT)
+Message-ID: <cee62201bbebecd6082dd097b87670fcb2cdb9c7.camel@linaro.org>
+Subject: Re: [PATCH v2 03/17] regulator: dt-bindings: add s2mpg11-pmic
+ regulators
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>,  Lee Jones <lee@kernel.org>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski	 <brgl@bgdev.pl>, Peter
+ Griffin <peter.griffin@linaro.org>, Will McVicker	
+ <willmcvicker@google.com>, kernel-team@android.com, 
+	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Date: Wed, 11 Jun 2025 11:24:08 +0100
+In-Reply-To: <20250611-spectral-bullfrog-of-perfection-cb8e01@kuoka>
+References: <20250606-s2mpg1x-regulators-v2-0-b03feffd2621@linaro.org>
+	 <20250606-s2mpg1x-regulators-v2-3-b03feffd2621@linaro.org>
+	 <20250611-spectral-bullfrog-of-perfection-cb8e01@kuoka>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250611-ptr-as-ptr-v11-6-ce5b41c6e9c6@gmail.com>
-References: <20250611-ptr-as-ptr-v11-0-ce5b41c6e9c6@gmail.com>
-In-Reply-To: <20250611-ptr-as-ptr-v11-0-ce5b41c6e9c6@gmail.com>
-To: Masahiro Yamada <masahiroy@kernel.org>, 
- Nathan Chancellor <nathan@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Brendan Higgins <brendan.higgins@linux.dev>, 
- David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
- Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
- Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
- Saravana Kannan <saravanak@google.com>, 
- Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
- Daniel Almeida <daniel.almeida@collabora.com>, 
- Robin Murphy <robin.murphy@arm.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- FUJITA Tomonori <fujita.tomonori@gmail.com>, 
- Nicolas Schier <nicolas.schier@linux.dev>, 
- Frederic Weisbecker <frederic@kernel.org>, Lyude Paul <lyude@redhat.com>, 
- Thomas Gleixner <tglx@linutronix.de>, 
- Anna-Maria Behnsen <anna-maria@linutronix.de>, 
- Benno Lossin <lossin@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
- Nicolas Schier <nicolas.schier@linux.dev>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
- rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, 
- linux-block@vger.kernel.org, devicetree@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, linux-mm@kvack.org, 
- Tamir Duberstein <tamird@gmail.com>, Benno Lossin <lossin@kernel.org>
-X-Mailer: b4 0.15-dev
 
-In Rust 1.78.0, Clippy introduced the `ref_as_ptr` lint [1]:
+Hi Krzysztof,
 
-> Using `as` casts may result in silently changing mutability or type.
+Thanks for your review!
 
-While this doesn't eliminate unchecked `as` conversions, it makes such
-conversions easier to scrutinize.  It also has the slight benefit of
-removing a degree of freedom on which to bikeshed. Thus apply the
-changes and enable the lint -- no functional change intended.
+On Wed, 2025-06-11 at 10:57 +0200, Krzysztof Kozlowski wrote:
+> On Fri, Jun 06, 2025 at 04:02:59PM GMT, Andr=C3=A9 Draszik wrote:
+> > The S2MPG11 PMIC is a Power Management IC for mobile applications with
+> > buck converters, various LDOs, power meters, and additional GPIO
+> > interfaces. It typically complements an S2MPG10 PMIC in a main/sub
+> > configuration as the sub-PMIC.
+> >=20
+> > S2MPG11 has 12 buck, 1 buck-boost, and 15 LDO rails. Several of these
+> > can either be controlled via software or via external signals, e.g.
+> > input pins connected to a main processor's GPIO pins.
+> >=20
+> > Add documentation related to the regulator (buck & ldo) parts like
+> > devicetree definitions, regulator naming patterns, and additional
+> > properties.
+> >=20
+> > Since S2MPG11 is typically used as the sub-PMIC together with an
+> > S2MPG10 as the main-PMIC, the datasheet and the binding both suffix the
+> > rails with an 's'.
+> >=20
+> > Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+> >=20
+> > ---
+> > Note: checkpatch suggests to update MAINTAINERS, but the new file is
+> > covered already due to using a wildcard.
+> >=20
+> > v2:
+> > - fix commit message typos: s2mp1 -> s2mpg1
+> > - mention GPIOs in commit message
+> > ---
+> > =C2=A0.../regulator/samsung,s2mpg11-regulator.yaml=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 | 150 +++++++++++++++++++++
+> > =C2=A0.../regulator/samsung,s2mpg10-regulator.h=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 18 +++
+> > =C2=A02 files changed, 168 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/regulator/samsung,s2mpg1=
+1-regulator.yaml
+> > b/Documentation/devicetree/bindings/regulator/samsung,s2mpg11-regulator=
+.yaml
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..f2d596642501c197e2911ee=
+3b9caac189cf541a4
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/regulator/samsung,s2mpg11-regul=
+ator.yaml
+> > @@ -0,0 +1,150 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/regulator/samsung,s2mpg11-regulator=
+.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Samsung S2MPG11 Power Management IC regulators
+> > +
+> > +maintainers:
+> > +=C2=A0 - Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+> > +
+> > +description: |
+> > +=C2=A0 This is part of the device tree bindings for the S2MG11 Power M=
+anagement IC
+> > +=C2=A0 (PMIC).
+> > +
+> > +=C2=A0 The S2MPG11 PMIC provides 12 buck, 1 buck-boost, and 15 LDO reg=
+ulators.
+> > +
+> > +=C2=A0 See also Documentation/devicetree/bindings/mfd/samsung,s2mps11.=
+yaml for
+> > +=C2=A0 additional information and example.
+> > +
+> > +definitions:
+> > +=C2=A0 s2mpg11-ext-control:
+> > +=C2=A0=C2=A0=C2=A0 properties:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 samsung,ext-control:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 description: |
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 These rails can=
+ be controlled via one of several possible external
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (hardware) sign=
+als. If so, this property configures the signal the PMIC
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 should monitor.=
+ The following values generally corresponding to the
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 respective on-c=
+hip pin are valid:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 0=
+ # S2MPG11_PCTRLSEL_ON - always on
+>=20
+> Use regulator-always-on
 
-Link: https://rust-lang.github.io/rust-clippy/master/index.html#ref_as_ptr [1]
-Suggested-by: Benno Lossin <benno.lossin@proton.me>
-Link: https://lore.kernel.org/all/D8PGG7NTWB6U.3SS3A5LN4XWMN@proton.me/
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Tamir Duberstein <tamird@gmail.com>
----
- Makefile                 | 1 +
- rust/bindings/lib.rs     | 1 +
- rust/kernel/device_id.rs | 2 +-
- rust/kernel/fs/file.rs   | 2 +-
- rust/kernel/str.rs       | 4 ++--
- rust/kernel/uaccess.rs   | 4 ++--
- rust/uapi/lib.rs         | 1 +
- 7 files changed, 9 insertions(+), 6 deletions(-)
+Yes, the end-result would be the same. I still added this one for
+completeness, because they all describe the hardware. I can leave
+this one out and thereby force use of the regulator-always-on
+property instead.
 
-diff --git a/Makefile b/Makefile
-index 29cf39be14de..1a855f42a34a 100644
---- a/Makefile
-+++ b/Makefile
-@@ -489,6 +489,7 @@ export rust_common_flags := --edition=2021 \
- 			    -Wclippy::no_mangle_with_rust_abi \
- 			    -Wclippy::ptr_as_ptr \
- 			    -Wclippy::ptr_cast_constness \
-+			    -Wclippy::ref_as_ptr \
- 			    -Wclippy::undocumented_unsafe_blocks \
- 			    -Wclippy::unnecessary_safety_comment \
- 			    -Wclippy::unnecessary_safety_doc \
-diff --git a/rust/bindings/lib.rs b/rust/bindings/lib.rs
-index 7631c9f6708d..474cc98c48a3 100644
---- a/rust/bindings/lib.rs
-+++ b/rust/bindings/lib.rs
-@@ -27,6 +27,7 @@
- #[allow(dead_code)]
- #[allow(clippy::cast_lossless)]
- #[allow(clippy::ptr_as_ptr)]
-+#[allow(clippy::ref_as_ptr)]
- #[allow(clippy::undocumented_unsafe_blocks)]
- #[cfg_attr(CONFIG_RUSTC_HAS_UNNECESSARY_TRANSMUTES, allow(unnecessary_transmutes))]
- mod bindings_raw {
-diff --git a/rust/kernel/device_id.rs b/rust/kernel/device_id.rs
-index f9d55ac7b9e6..3dc72ca8cfc2 100644
---- a/rust/kernel/device_id.rs
-+++ b/rust/kernel/device_id.rs
-@@ -136,7 +136,7 @@ impl<T: RawDeviceId, U, const N: usize> IdTable<T, U> for IdArray<T, U, N> {
-     fn as_ptr(&self) -> *const T::RawType {
-         // This cannot be `self.ids.as_ptr()`, as the return pointer must have correct provenance
-         // to access the sentinel.
--        (self as *const Self).cast()
-+        core::ptr::from_ref(self).cast()
-     }
- 
-     fn id(&self, index: usize) -> &T::RawType {
-diff --git a/rust/kernel/fs/file.rs b/rust/kernel/fs/file.rs
-index e9bfbad00755..35fd5db35c46 100644
---- a/rust/kernel/fs/file.rs
-+++ b/rust/kernel/fs/file.rs
-@@ -366,7 +366,7 @@ fn deref(&self) -> &LocalFile {
-         //
-         // By the type invariants, there are no `fdget_pos` calls that did not take the
-         // `f_pos_lock` mutex.
--        unsafe { LocalFile::from_raw_file((self as *const Self).cast()) }
-+        unsafe { LocalFile::from_raw_file(core::ptr::from_ref(self).cast()) }
-     }
- }
- 
-diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
-index 43597eb7c5c1..cbc8b459ed41 100644
---- a/rust/kernel/str.rs
-+++ b/rust/kernel/str.rs
-@@ -29,7 +29,7 @@ pub const fn is_empty(&self) -> bool {
-     #[inline]
-     pub const fn from_bytes(bytes: &[u8]) -> &Self {
-         // SAFETY: `BStr` is transparent to `[u8]`.
--        unsafe { &*(bytes as *const [u8] as *const BStr) }
-+        unsafe { &*(core::ptr::from_ref(bytes) as *const BStr) }
-     }
- 
-     /// Strip a prefix from `self`. Delegates to [`slice::strip_prefix`].
-@@ -290,7 +290,7 @@ pub const fn from_bytes_with_nul(bytes: &[u8]) -> Result<&Self, CStrConvertError
-     #[inline]
-     pub unsafe fn from_bytes_with_nul_unchecked_mut(bytes: &mut [u8]) -> &mut CStr {
-         // SAFETY: Properties of `bytes` guaranteed by the safety precondition.
--        unsafe { &mut *(bytes as *mut [u8] as *mut CStr) }
-+        unsafe { &mut *(core::ptr::from_mut(bytes) as *mut CStr) }
-     }
- 
-     /// Returns a C pointer to the string.
-diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
-index 6d70edd8086a..4ef13cf13a78 100644
---- a/rust/kernel/uaccess.rs
-+++ b/rust/kernel/uaccess.rs
-@@ -240,7 +240,7 @@ pub fn read_raw(&mut self, out: &mut [MaybeUninit<u8>]) -> Result {
-     pub fn read_slice(&mut self, out: &mut [u8]) -> Result {
-         // SAFETY: The types are compatible and `read_raw` doesn't write uninitialized bytes to
-         // `out`.
--        let out = unsafe { &mut *(out as *mut [u8] as *mut [MaybeUninit<u8>]) };
-+        let out = unsafe { &mut *(core::ptr::from_mut(out) as *mut [MaybeUninit<u8>]) };
-         self.read_raw(out)
-     }
- 
-@@ -355,7 +355,7 @@ pub fn write<T: AsBytes>(&mut self, value: &T) -> Result {
-         let res = unsafe {
-             bindings::_copy_to_user(
-                 self.ptr as *mut c_void,
--                (value as *const T).cast::<c_void>(),
-+                core::ptr::from_ref(value).cast::<c_void>(),
-                 len,
-             )
-         };
-diff --git a/rust/uapi/lib.rs b/rust/uapi/lib.rs
-index 08e68ebef606..31c2f713313f 100644
---- a/rust/uapi/lib.rs
-+++ b/rust/uapi/lib.rs
-@@ -16,6 +16,7 @@
-     clippy::all,
-     clippy::cast_lossless,
-     clippy::ptr_as_ptr,
-+    clippy::ref_as_ptr,
-     clippy::undocumented_unsafe_blocks,
-     dead_code,
-     missing_docs,
+>=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 1=
+ # S2MPG11_PCTRLSEL_PWREN - PWREN pin
+>=20
+> That's duplicating regulator in standby properties.
 
--- 
-2.49.0
+OK, I'll double-check this.
 
+>=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 2=
+ # S2MPG11_PCTRLSEL_PWREN_TRG - PWREN_TRG bit in MIMICKING_CTRL
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 3=
+ # S2MPG11_PCTRLSEL_PWREN_MIF - PWREN_MIF pin
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 4=
+ # S2MPG11_PCTRLSEL_PWREN_MIF_TRG - PWREN_MIF_TRG bit in MIMICKING_CTRL
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 5=
+ # S2MPG11_PCTRLSEL_AP_ACTIVE_N - ~AP_ACTIVE_N pin
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 6=
+ # S2MPG11_PCTRLSEL_AP_ACTIVE_N_TRG - ~AP_ACTIVE_N_TRG bit in MIMICKING_CTR=
+L
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 7=
+ # S2MPG11_PCTRLSEL_G3D_EN - G3D_EN pin
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 8=
+ # S2MPG11_PCTRLSEL_G3D_EN2 - G3D_EN & ~AP_ACTIVE_N pins
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 9=
+ # S2MPG11_PCTRLSEL_AOC_VDD - AOC_VDD pin
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 1=
+0 # S2MPG11_PCTRLSEL_AOC_RET - AOC_RET pin
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 1=
+1 # S2MPG11_PCTRLSEL_UFS_EN - UFS_EN pin
+>=20
+> Now I have doubts these are real signals. Are you saying that S2MPG11
+> has a pin named UFS_EN (such pin on ballmap)?
+
+Yes. I used the generic term 'external signal' in the descriptions above
+rather than the more specific pin, because some of these are bits in
+some registers, and most are indeed input pins, or a combination. Not all
+of the pins are connected to actual GPIOs on the AP, though.
+
+>=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 1=
+2 # S2MPG11_PCTRLSEL_LDO13S_EN - VLDO13S_EN pin
+> > +
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 $ref: /schemas/types.yaml#/=
+definitions/uint32
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 minimum: 0
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 maximum: 12
+> > +
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 samsung,ext-control-gpios:
+>=20
+> Same comments as previous patch.
+
+I used this one to align with s2mps14, but will switch to enable-gpios.
+
+Cheers,
+Andre'
