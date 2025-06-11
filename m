@@ -1,167 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0C1270ED5;
-	Wed, 11 Jun 2025 13:09:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416AD2750ED
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 13:09:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749647358; cv=none; b=uzepgmWNF/2x/PU0VGSJ0jOfnEHSS/xvI8QBJkcXWjVCH2YIkav4EuHtBpN+sloXTCZ+RyYLs2MkBVCczt+FvMIeemsFaZ5Gbnn/yk5E5ac24JfMmdoXNKhpDAvKh4NzmvgAB2Jb77dG7ubPcZD3DEml0fIOS8pPWV0a+02eN/I=
+	t=1749647393; cv=none; b=bRhSobncqB9SXklX/QG7WRW6Y1OkE5BX3TKRByWjsT8ejOERWJs0YC8+FC1Ht3QDvYBa0uWCEyAw/zNazFJlfIzYh+MFtkFDWJ4JwSHNgrxka9iYK+urhLc9vMpTwL82T/Xt8btorxtojdyOhSszVRPPdpQ5YVN/GusXjhbjIjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749647358; c=relaxed/simple;
-	bh=4GuMQVvjJS+NeB3GJxegmcVN/9iZnCKz1igcJRBGrsA=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=EssJkPTW2T7NvaRhd0llXvd9n/AS2P4UGpipiCU0IlwRPKmpveVUFGg1yMLjDPhhBpr1MqfAumZuJTdgvf4NzW+11nwfhM5X/R7SL7BnVlt7+r3JI5IkFqb0RC8n+BZcW7yzfXON/0AtgKpPXUcNS+dn3V6LCyWtsWwn4yklfTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fylOoAU4; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749647393; c=relaxed/simple;
+	bh=L2yruaMlTjnh6snqZlpt4phoeh5TVI4kMDcp31WpKUw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=P25yBjN0/4TjgtJf4PnXOjgpms3ac0tXe7x1m/5HlmS7PZCg4NYEX1w6Rf007ntEURty5pCPSR56C1NCF74zJOLynHmY9gFMQCoHwmDMM24UeKYzPN9J0C8FzN8HxE4Rw6O2+wLQabc91Wo2UlGY0yB6wHJFyzhHmYgVEGWVgPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L3KnW3Uh; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fylOoAU4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749647356; x=1781183356;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=4GuMQVvjJS+NeB3GJxegmcVN/9iZnCKz1igcJRBGrsA=;
-  b=fylOoAU40VYt50ltQLfWZ0m5VbZuAZrkJtm/pBd/5SUJQE//X2+q6sHt
-   2mRyHjxP0p6YDiLXapzEolKXd33TNgBWHMMWFyH5tOk3j03hS/wNTFB1a
-   boSdQ7CTqwA2jrLs+gJK/5KCLFj1S+f8cr7KB25jbRpZI0C4aYEAlmXNL
-   EiKZyOzZr26/Pc2QejBExfX5ROutAoIkD4tuaDnl+mVooDH9/aMcLZ7QX
-   jZ6IDrSg9Bs7mTC0pAmrwLs2AuZu9gqBTCoagJk7BhSw0jYar0I0M8bQN
-   c0r5TT9pK7cRh6twd1+27IBqUw/qfcgOGzFSs8UoLYeAnSJbL/m8S3CSP
-   g==;
-X-CSE-ConnectionGUID: NZl30J/MQuGKSEZ2IWiD/w==
-X-CSE-MsgGUID: zxW1jIg1Qu+lWPZarn740g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="63136515"
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="63136515"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 06:09:14 -0700
-X-CSE-ConnectionGUID: bPiJ05nwTp2jgdyNqmSUxw==
-X-CSE-MsgGUID: dobCd6EtTnOOFwmJm3PNUQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="148103401"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.183])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 06:09:13 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 11 Jun 2025 16:09:08 +0300 (EEST)
-To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    linux-serial <linux-serial@vger.kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 27/33] serial: 8250: extract
- serial_get_or_create_irq_info()
-In-Reply-To: <20250611100319.186924-28-jirislaby@kernel.org>
-Message-ID: <5643b834-b9be-a70b-7669-a54be24845ad@linux.intel.com>
-References: <20250611100319.186924-1-jirislaby@kernel.org> <20250611100319.186924-28-jirislaby@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L3KnW3Uh"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-441d437cfaaso42609455e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:09:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749647389; x=1750252189; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gZtQA0IihRFr37LmrEZeXl1GzobVsfcdH49oAK/210w=;
+        b=L3KnW3UhmSOCJ6NAkkrydI6OhuvBQlJ7G3QK54wpYUZzW1wCelUqiscAOSqkCACntn
+         zvIv/vnKO5gynA35/c/IPrpNt65kXIMc+GdWoikR0Kn6ZNMpzYLNciqHJ49U/EhU/S59
+         IouqO1dFu86kadaRqSI604ybwh+w534FqyohYGG9usoFIs30XHMX0LUSBIzwpxZGnY9f
+         ArhnNMjfnO0aMmx1Z6Wh4xTaAqZRevqTMYtOCG1GwQq379dHg5RPzdZDWVPEUHgYXISq
+         Myh1B1Dj6DOVoD69p9E07cOyMvMfAU1BK8ED4R6s9Le+/Ol0UvGykGwoAsLrUf/8XRbS
+         h3TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749647389; x=1750252189;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gZtQA0IihRFr37LmrEZeXl1GzobVsfcdH49oAK/210w=;
+        b=EvKiknbDwxOepD6C73m1t77UvACWScg67V7uUgoBflQteuuLH0hGX3nUkYB1rTg4/a
+         eagWwavXN84v/EzV+5fJbriq4XCOzf+GIOV4Yua7fUHY3ZxMZ+6JRk2JnERBBUg/igvE
+         pM/rNx53MbRJNqeq1Wc1CP8mTiZGrBdan4RUIepQ7Dg/4c6suWTh8AkKrlZ/fwfMxKqn
+         mUKFcLX5jEHPA2ZOXt5//wlL8CXmZjnV+FZAYGLxjxrNalOSkMwXA0kiwBXG4Dgh3F1T
+         1WGtQNjIx1uONfSXzSRSVW0PekI2Lv68q1v2c0cpE3W+EZ7YMgw3MvFiLE7HBNQvBwmo
+         X7jA==
+X-Forwarded-Encrypted: i=1; AJvYcCUGgWqpZUoge+N5QLL3tPoDuobnBMgUIVj0RKCoWbwjooTfOt3DFfZndxyWPkPXItE0zfx0Om7sYzMlAxU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtDaqdE6TMUJfxMcedF9cVQ4R5pMfUN4Bt2iFNndqrhHxLMTF2
+	J6lVrtVgd9qhPhd09a8oV4/OYDZFUxjwWNPkviJ4F0BlK2IQ9fQ2D3LeP88ShwqZBHg=
+X-Gm-Gg: ASbGncshkQoa5X/Mu/PDVTfOvyYoNrkyj55stbhGghAQ9T4Fw74K9Cau3Cvz/5b9Rao
+	6t4489ztABWAjZ/OZMuT3zk1F9bUSgvpVWpnMBS9pHolGoVXH95TKRKsD6Sv9h/so+EaGrDKiq9
+	C6ArXDbmwwcvaSmIh+4U49oks/E8eo/aHrce7PXRqSnlStrb9bBmx5pbABEP7clzTbpSzTTO0HX
+	S5GB0ZpY2D+vs7FMz4BUsOVbWte6pwwXnxzGP6j+ka0/w1N2pZCY9yRocznczfaPNXz5bPin7xp
+	QqVo8ZKGSqzVU6JxFD7KVw/19RgG4TN1nYc407dWxK19b/9s2RgE3T0XcAp4po2+0JI=
+X-Google-Smtp-Source: AGHT+IEBRO+SagBJ4t0nPcz40k+JfMlWO7SvxBp7cy9P/imnH5Z03hsajw0WU0mj5IxyTgoNyCPJNA==
+X-Received: by 2002:a05:6000:2204:b0:3a4:fc0a:33ca with SMTP id ffacd0b85a97d-3a558a926a5mr2258868f8f.4.1749647389545;
+        Wed, 11 Jun 2025 06:09:49 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a53246b678sm15078061f8f.101.2025.06.11.06.09.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 06:09:49 -0700 (PDT)
+Date: Wed, 11 Jun 2025 16:09:45 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Patrice Chotard <patrice.chotard@foss.st.com>
+Cc: Mark Brown <broonie@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>, linux-spi@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH next] spi: stm32-ospi: clean up on error in probe()
+Message-ID: <aEmAGTUzzKZlLe3K@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1724197455-1749647348=:957"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+If reset_control_acquire() fails, then we can't return directly.
+We need to do a little clean up first.
 
---8323328-1724197455-1749647348=:957
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Fixes: cf2c3eceb757 ("spi: stm32-ospi: Make usage of reset_control_acquire/release() API")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+ drivers/spi/spi-stm32-ospi.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-On Wed, 11 Jun 2025, Jiri Slaby (SUSE) wrote:
+diff --git a/drivers/spi/spi-stm32-ospi.c b/drivers/spi/spi-stm32-ospi.c
+index db6b1cfc970f..4ab7e86f4bd5 100644
+--- a/drivers/spi/spi-stm32-ospi.c
++++ b/drivers/spi/spi-stm32-ospi.c
+@@ -937,8 +937,10 @@ static int stm32_ospi_probe(struct platform_device *pdev)
+ 		goto err_pm_enable;
+ 
+ 	ret = reset_control_acquire(ospi->rstc);
+-	if (ret)
+-		return dev_err_probe(dev, ret, "Can not acquire reset %d\n", ret);
++	if (ret) {
++		dev_err_probe(dev, ret, "Can not acquire reset %d\n", ret);
++		goto err_pm_resume;
++	}
+ 
+ 	reset_control_assert(ospi->rstc);
+ 	udelay(2);
+-- 
+2.47.2
 
-> This find-or-create-irq part of the serial_link_irq_chain()'s code is
-> logically bounded and self-standing. For easier-to-follow code flow,
-> extract the code to a separate function:
-> serial_get_or_create_irq_info().
->=20
-> This allows for an easier found-an-irq handling -- simple jump to the
-> 'unlock' label and return. That results in one less 'if' levels.
->=20
-> Note when using guard()s in the upcoming patchset, the label can dropped
-> altogether.
->=20
-> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-> ---
->  drivers/tty/serial/8250/8250_core.c | 37 ++++++++++++++++++++---------
->  1 file changed, 26 insertions(+), 11 deletions(-)
->=20
-> diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/825=
-0/8250_core.c
-> index 7a6050f1c094..d42ceb6ffdc2 100644
-> --- a/drivers/tty/serial/8250/8250_core.c
-> +++ b/drivers/tty/serial/8250/8250_core.c
-> @@ -129,11 +129,15 @@ static void serial_do_unlink(struct irq_info *i, st=
-ruct uart_8250_port *up)
->  =09}
->  }
-> =20
-> -static int serial_link_irq_chain(struct uart_8250_port *up)
-> +/*
-> + * Either:
-> + * - find the corresponding info in the hashtable and return it, or
-> + * - allocate a new one, add it to the hashtable and return it.
-> + */
-> +static struct irq_info *serial_get_or_create_irq_info(const struct uart_=
-8250_port *up)
->  {
->  =09struct hlist_head *h;
->  =09struct irq_info *i;
-> -=09int ret;
-> =20
->  =09mutex_lock(&hash_mutex);
-> =20
-> @@ -141,20 +145,31 @@ static int serial_link_irq_chain(struct uart_8250_p=
-ort *up)
-> =20
->  =09hlist_for_each_entry(i, h, node)
->  =09=09if (i->irq =3D=3D up->port.irq)
-> -=09=09=09break;
-> +=09=09=09goto unlock;
-> =20
-> +=09i =3D kzalloc(sizeof(*i), GFP_KERNEL);
->  =09if (i =3D=3D NULL) {
-> -=09=09i =3D kzalloc(sizeof(struct irq_info), GFP_KERNEL);
-> -=09=09if (i =3D=3D NULL) {
-> -=09=09=09mutex_unlock(&hash_mutex);
-> -=09=09=09return -ENOMEM;
-> -=09=09}
-> -=09=09spin_lock_init(&i->lock);
-> -=09=09i->irq =3D up->port.irq;
-> -=09=09hlist_add_head(&i->node, h);
-> +=09=09i =3D ERR_PTR(-ENOMEM);
-> +=09=09goto unlock;
->  =09}
-> +=09spin_lock_init(&i->lock);
-> +=09i->irq =3D up->port.irq;
-> +=09hlist_add_head(&i->node, h);
-> +unlock:
->  =09mutex_unlock(&hash_mutex);
-> =20
-> +=09return i;
-> +}
-> +
-> +static int serial_link_irq_chain(struct uart_8250_port *up)
-> +{
-> +=09struct irq_info *i;
-> +=09int ret;
-> +
-> +=09i =3D serial_get_or_create_irq_info(up);
-> +=09if (IS_ERR(i))
-> +=09=09return PTR_ERR(i);
-> +
->  =09spin_lock_irq(&i->lock);
-> =20
->  =09if (i->head) {
->=20
-
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
-Unrelated to the patch, I didn't like the use of 'i' as a variable name=20
-to store a struct pointer.
-
---=20
- i.
-
---8323328-1724197455-1749647348=:957--
