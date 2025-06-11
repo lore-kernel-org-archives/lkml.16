@@ -1,81 +1,37 @@
-Received: from flow-a3-smtp.messagingengine.com (flow-a3-smtp.messagingengine.com [103.168.172.138])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4608479DA;
-	Wed, 11 Jun 2025 00:23:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F15EC4;
+	Wed, 11 Jun 2025 00:24:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749601437; cv=none; b=bhtltWMCd88NQ6YpTF7gnsQ7SA/ZDKJIfhnDoa/wwP0XfNPH9WUHCDobIbSMd7+qyrc84XJHGwjH9aqKUWoNpyiEn+/IvO0Kk0DFx0lvzhpyRDQYRHakoLPSqYIiqv7WZjYiQp/hxe1vIxux5Ne4tJ+ttdg6bLpDPnq+aRsHYRo=
+	t=1749601461; cv=none; b=cnkWNli/gN9ShUHExAj+9dXtPC/M/d4kVc9Yxqlh1MC1RSXLfhvUt1mvD5Idq3o4sayP906gZRx2JDm4JNmrYkmwhScQCxQlaASV5tYdWDk3yXzUHfCvkvCKOI0gxHJMPLJCbj5kVxpuzh9Fe0lGURoPJAOhv9IwumFSy5aHA6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749601437; c=relaxed/simple;
-	bh=qgHubdTxv57bGTk1of/rJdqy+LmbhQpEv1QKoORclIA=;
+	s=arc-20240116; t=1749601461; c=relaxed/simple;
+	bh=IVm0goz3CniBVUljGLrw4V1pfZi1rYq3L/LJlF3nFms=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LDPN/LFPk6ABd7M7l+g6ZbETPlv5cf8JKu+mBcVQc3LUvxHapspUlblqI3CuB42Vs3te81HPdVTBCCziSnFa29ZG2nEA/hm6JMda7wk1ISd0ZT9pj0FJEAj4gKepDNIEjuqPDoqANJDdNIUK4/uOt/rnD1ksgBg2sImzRXqrSfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=maowtm.org; spf=pass smtp.mailfrom=maowtm.org; dkim=pass (2048-bit key) header.d=maowtm.org header.i=@maowtm.org header.b=M72LdKSz; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=j9ldIW/d; arc=none smtp.client-ip=103.168.172.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=maowtm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maowtm.org
+	 In-Reply-To:Content-Type; b=Gmc1Chc1jq6v7KppqrdAXow/Xt9RbIKnxGr3QBTKDVnKMcZBQJ97c3HlER5ql/Ef+BWUzYgUaC2Y/tl0vtkKkPkKm9H9TEOadc/JMIP4sdFykjsiqK8mYr41+wREx6ThT2tFYYQPWmRTdJASWre6FZfCaCyhNe+UoKfXXONFPIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=OERa/DC2; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=maowtm.org header.i=@maowtm.org header.b="M72LdKSz";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="j9ldIW/d"
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailflow.phl.internal (Postfix) with ESMTP id 1A61220069B;
-	Tue, 10 Jun 2025 20:23:54 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-06.internal (MEProxy); Tue, 10 Jun 2025 20:23:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maowtm.org; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1749601434;
-	 x=1749608634; bh=pW98W2lJtLiwekAVVtO/Jv1f0oaMGloSBkI5n6j43Js=; b=
-	M72LdKSzFi6AhpmBdMfq0W92Tm4F+b23EOtvf0QijTWVEEzc0L3GHw7lBU/A5AI6
-	SEi0ySR9D4xPY/vwXiwC5EKE1rfMoNXuJdQ2QcGfot5UKBa0INCsAumLTyRKLcX5
-	9DMTKU6JNYQQ5Wv4u91A5D7ADSc+y4j0kJb47MZZ0qff2QZhX+HPZ2GTQlVZH5QX
-	cOG5PVcfwEvxIfUamVSscQRx85h2wmsYxg0G4PLSAEd/ebem334b01AJIX63yqi7
-	+qBw4bJYHhPF/FHH3EKTVNaAQwgRqdUzW+WKw+k3lJYiX+A6GesQDqZrpGVQAl82
-	q64MHqH8w+Gp3DZpxLSCmg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749601434; x=
-	1749608634; bh=pW98W2lJtLiwekAVVtO/Jv1f0oaMGloSBkI5n6j43Js=; b=j
-	9ldIW/dQiRlFRacP1GEB2LIcOnmifUwPDSlREdtYRAvBAPp/3IE8aaIXYgCnq/B3
-	1aOExY2rgxuymZlMsermw/8hopiuKsqIBRqx7iTydfSZUMTr0NnpeQWBeYEcgX/r
-	DMfsUtxfodWCGuup77mN3faaVYw4nQrxAejUEuSck371wkla1fH0Nss3R9iUQv27
-	1prglVnUFQ00M3RbWQVkKuEUav60ra90J2JH9heTkswJcNZPHNpAEtk2S9UHpT4S
-	LIqyhNgUcwHOHQfTMdkNkmW3Q5pcbBjxGQJusAqjMkd5CNIUjUPAox8HQRwPvT4c
-	Ha81AU2AeAJeKUL1vshQg==
-X-ME-Sender: <xms:mMxIaM-J3F-UveY-ExtQ-LI_cm_-T7vD1fIINkoxPcoFrKQDp8KdDg>
-    <xme:mMxIaEvDgMloit5gffJYIgsHdGK9MK6gzyBrmJX_KPt_OTPf1KBzOMaYtgHlw1Zyd
-    lr_PNJfD4XS2ZJbM64>
-X-ME-Received: <xmr:mMxIaCDhzIUhVoROK8Bgx_cE-tDllChgeYkk1rxXXc8Jq4Ly8V0lttf46cDL1_l5ssJv9NinuToeLFOSIErgcVjk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduudeghecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddv
-    jeenucfhrhhomhepvfhinhhgmhgrohcuhggrnhhguceomhesmhgrohifthhmrdhorhhgqe
-    enucggtffrrghtthgvrhhnpedukeevhfegvedvveeihedvvdeghfeglefgudegfeetvdek
-    iefgledtheeggefhgfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
-    hlfhhrohhmpehmsehmrghofihtmhdrohhrghdpnhgspghrtghpthhtohepvddvpdhmohgu
-    vgepshhmthhpohhuthdprhgtphhtthhopehsohhngheskhgvrhhnvghlrdhorhhgpdhrtg
-    hpthhtohepmhhitgesughighhikhhougdrnhgvthdprhgtphhtthhopegsphhfsehvghgv
-    rhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqfhhsuggvvhgvlhesvh
-    hgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhes
-    vhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhsvggtuhhrih
-    hthidqmhhoughulhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgv
-    rhhnvghlqdhtvggrmhesmhgvthgrrdgtohhmpdhrtghpthhtoheprghnughrihhisehkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopegvugguhiiikeejsehgmhgrihhlrdgtohhm
-X-ME-Proxy: <xmx:mcxIaMcG4phxurxcpgZhcwQnMUYOVP1L-m2qOXuRG_pDAYedkj53sQ>
-    <xmx:mcxIaBNxCzhiR5pOWCz2vzWj4oHDvvM0w5lEWlfOGiqC2VcdbndfTA>
-    <xmx:mcxIaGnT4FwAHpwEbgBatl1A3ISJHAwnimz_wBUWFK4R56p0b6zOCg>
-    <xmx:mcxIaDvrE-9NZcas-megW6Igl_E1VPR6QSAlGKQNKEts2hseFcIO5Q>
-    <xmx:msxIaLeTqSY8DMUIwV40taV0eTdtJIqtHiprr-cO9XnZdq990jByXRvn>
-Feedback-ID: i580e4893:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 10 Jun 2025 20:23:50 -0400 (EDT)
-Message-ID: <fd995e37-9369-4375-8718-8338e732860f@maowtm.org>
-Date: Wed, 11 Jun 2025 01:23:49 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OERa/DC2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=W5WmDo95Xn51VsMSBY51s9wgDJb9kKGLVAW/HIReidM=; b=OERa/DC2pVQ24dez9qLd4fEZXV
+	xbHcmzcTQIiAtuZgqOEVeEpVeYpbV0Ip9cqWX4Ltb9wXKFHxi0zdmbpa8fp8kRhVOrA0wqXPPhXuF
+	HvWoc2ZjeLyLgMR68HBCDjR+grb26BcZwMxn+ZjzjajnkXJPqf7A4MkTN1VFo+J5nKK3k3yBTVKga
+	3o9vK1gGOnmFxWkKRbpLsD3yKT7BuDuym7foawp7ahAP1CIyvu9I1VCmYzbUyKPIzhkovhRNsSfTE
+	gedhvIqaA1lRhfcwmhuq0BvQyM72DwQ626JIsaK5KtK6M9quPiwx+EgNAnt4pHLODLNqTSYEzSVbN
+	l9z8xQrQ==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uP9GH-000000022uX-1BI3;
+	Wed, 11 Jun 2025 00:24:13 +0000
+Message-ID: <f5b16bd6-01b6-45c0-9668-41ccf90445a3@infradead.org>
+Date: Tue, 10 Jun 2025 17:24:08 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,94 +39,157 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 bpf-next 1/5] namei: Introduce new helper function
- path_walk_parent()
-To: Song Liu <song@kernel.org>
-Cc: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
- bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
- kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org,
- daniel@iogearbox.net, martin.lau@linux.dev, viro@zeniv.linux.org.uk,
- brauner@kernel.org, jack@suse.cz, kpsingh@kernel.org,
- mattbobrowski@google.com, amir73il@gmail.com, repnop@google.com,
- jlayton@kernel.org, josef@toxicpanda.com, gnoack@google.com
-References: <20250606213015.255134-1-song@kernel.org>
- <20250606213015.255134-2-song@kernel.org> <20250610.rox7aeGhi7zi@digikod.net>
- <CAPhsuW5G0Th+9dRSmxDjo5E7CxV1E9N8AiKjw3cKyEhOBVWJFw@mail.gmail.com>
- <d7d755ea-5942-440b-8154-21198cb6a0f1@maowtm.org>
- <CAPhsuW75h3efyXmCcYE_UEmZGXR5KMSEw8h-_vrZH82BYU=WVw@mail.gmail.com>
+Subject: Re: [net-next PATCH v6 03/10] net: pcs: Add subsystem
+To: Sean Anderson <sean.anderson@linux.dev>, netdev@vger.kernel.org,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Russell King <linux@armlinux.org.uk>
+Cc: Vineeth Karumanchi <vineeth.karumanchi@amd.com>,
+ Heiner Kallweit <hkallweit1@gmail.com>, linux-kernel@vger.kernel.org,
+ Kory Maincent <kory.maincent@bootlin.com>,
+ Daniel Golle <daniel@makrotopia.org>, Simon Horman <horms@kernel.org>,
+ Christian Marangi <ansuelsmth@gmail.com>, Lei Wei <quic_leiwei@quicinc.com>,
+ Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+References: <20250610233134.3588011-1-sean.anderson@linux.dev>
+ <20250610233134.3588011-4-sean.anderson@linux.dev>
 Content-Language: en-US
-From: Tingmao Wang <m@maowtm.org>
-In-Reply-To: <CAPhsuW75h3efyXmCcYE_UEmZGXR5KMSEw8h-_vrZH82BYU=WVw@mail.gmail.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250610233134.3588011-4-sean.anderson@linux.dev>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 6/11/25 00:08, Song Liu wrote:
-> On Tue, Jun 10, 2025 at 3:26 PM Tingmao Wang <m@maowtm.org> wrote:
-> [..]
->>>
->>>                 if (!choose_mountpoint(real_mount(path->mnt), root, &p))
->>>                         return false;
->>>                 path_put(path);
->>>                 *path = p;
->>>                 ret = true;
->>>         }
->>>
->>>         if (unlikely(IS_ROOT(path->dentry)))
->>>                 return ret;
->>
->> Returning true here would be the wrong semantic right?  This whole thing
->> is only possible when some mount shadows "/".  Say if you have a landlock
->> rule on the old "/", but then we mount a new "/" and chroot into it (via
->> "/.."), the landlock rule on the old "/" should not apply, but if we
->> change *path and return true here then this will "expose" that old "/" to
->> landlock.
-> 
-> Could you please provide more specific information about this case?
+Hi,
 
-Apologies, it looks like I was mistaken in the above statement.
 
-I was thinking of something like
+> diff --git a/Documentation/networking/pcs.rst b/Documentation/networking/pcs.rst
+> new file mode 100644
+> index 000000000000..4b41ba884160
+> --- /dev/null
+> +++ b/Documentation/networking/pcs.rst
+> @@ -0,0 +1,102 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=============
+> +PCS Subsystem
+> +=============
+> +
+> +The PCS (Physical Coding Sublayer) subsystem handles the registration and lookup
+> +of PCS devices. These devices contain the upper sublayers of the Ethernet
+> +physical layer, generally handling framing, scrambling, and encoding tasks. PCS
+> +devices may also include PMA (Physical Medium Attachment) components. PCS
+> +devices transfer data between the Link-layer MAC device, and the rest of the
+> +physical layer, typically via a serdes. The output of the serdes may be
+> +connected more-or-less directly to the medium when using fiber-optic or
+> +backplane connections (1000BASE-SX, 1000BASE-KX, etc). It may also communicate
+> +with a separate PHY (such as over SGMII) which handles the connection to the
+> +medium (such as 1000BASE-T).
+> +
+> +Looking up PCS Devices
+> +----------------------
+> +
+> +There are generally two ways to look up a PCS device. If the PCS device is
+> +internal to a larger device (such as a MAC or switch), and it does not share an
+> +implementation with an existing PCS, then it does not need to be registered with
+> +the PCS subsystem. Instead, you can populate a :c:type:`phylink_pcs`
+> +in your probe function. Otherwise, you must look up the PCS.
+> +
+> +If your device has a :c:type:`fwnode_handle`, you can add a PCS using the
+> +``pcs-handle`` property::
+> +
+> +    ethernet-controller {
+> +        // ...
+> +        pcs-handle = <&pcs>;
+> +        pcs-handle-names = "internal";
+> +    };
+> +
+> +Then, during your probe function, you can get the PCS using :c:func:`pcs_get`::
 
-# mount --mkdir -t tmpfs none tmproot
-# cp busybox tmproot/ && chmod +x tmproot/busybox
-# mount --move tmproot /
-# env LL_FS_RW=/ LL_FS_RO=/.. ./sandboxer chroot /.. /busybox sh
-  # echo can write to root > /a
-  sh: can't create /a: Permission denied
-  ^^^^ this does not work, but I was mistakenly thinking it would
+It's preferable to use                               PCS using pcs_get()::
+instead of the :c:func: notation to make the .rst file more human-readable.
+They produce the same generated output.
 
-I think because choose_mountpoint_rcu only returns true if
-    if (mountpoint != m->mnt.mnt_root)
-passes, this situation won't cause ret to be true in your code.
+> +
+> +    mac->pcs = pcs_get(dev, "internal");
+> +    if (IS_ERR(mac->pcs)) {
+> +        err = PTR_ERR(mac->pcs);
+> +        return dev_err_probe(dev, "Could not get PCS\n");
+> +    }
+> +
+> +If your device doesn't have a :c:type:`fwnode_handle`, you can get the PCS
+> +based on the providing device using :c:func:`pcs_get_by_dev`. Typically, you
 
-But then I can't think of when
-      if (unlikely(IS_ROOT(path->dentry)))
-          return ret;
-would ever return true, unless somehow d_parent is corrupted?  Maybe I'm
-just missing something obvious here.
+ditto.
 
-Anyway, since there's a suggestion from Neil to refactor this, this might
-not be too important, so feel free to ignore for now.
+> +will create the device and bind your PCS driver to it before calling this
+> +function. This allows reuse of an existing PCS driver.
+> +
+> +Once you are done using the PCS, you must call :c:func:`pcs_put`.
 
-> 
-> Thanks,
-> Song
-> 
->> A quick suggestion although I haven't tested anything - maybe we should do
->> a special case check for IS_ROOT inside the
->>     if (unlikely(path->dentry == path->mnt->mnt_root))
->> ? Before "path_put(path);", if IS_ROOT(p.dentry) then we just path_get(p)
->> and return false.
->>
->>>
->>>         parent = dget_parent(path->dentry);
->>>         dput(path->dentry);
->>>         path->dentry = parent;
->>>         return true;
->>> }
->>>
->>> Thanks,
->>> Song
->>
+ditto.
+
+> +
+> +Using PCS Devices
+> +-----------------
+> +
+> +To select the PCS from a MAC driver, implement the ``mac_select_pcs`` callback
+> +of :c:type:`phylink_mac_ops`. In this example, the PCS is selected for SGMII
+> +and 1000BASE-X, and deselected for other interfaces::
+> +
+> +    static struct phylink_pcs *mac_select_pcs(struct phylink_config *config,
+> +                                              phy_interface_t iface)
+> +    {
+> +        struct mac *mac = config_to_mac(config);
+> +
+> +        switch (iface) {
+> +        case PHY_INTERFACE_MODE_SGMII:
+> +        case PHY_INTERFACE_MODE_1000BASEX:
+> +            return mac->pcs;
+> +        default:
+> +            return NULL;
+> +        }
+> +    }
+> +
+> +To do the same from a DSA driver, implement the ``phylink_mac_select_pcs``
+> +callback of :c:type:`dsa_switch_ops`.
+> +
+> +Writing PCS Drivers
+> +-------------------
+> +
+> +To write a PCS driver, first implement :c:type:`phylink_pcs_ops`. Then,
+> +register your PCS in your probe function using :c:func:`pcs_register`. If you
+
+ditto
+
+> +need to provide multiple PCSs for the same device, then you can pass specific
+> +firmware nodes using :c:macro:`pcs_register_full`.
+> +
+> +You must call :c:func:`pcs_unregister` from your remove function. You can avoid
+
+ditto.
+
+> +this step by registering with :c:func:`devm_pcs_unregister`.
+> +
+> +API Reference
+> +-------------
+> +
+> +.. kernel-doc:: include/linux/phylink.h
+> +   :identifiers: phylink_pcs phylink_pcs_ops pcs_validate pcs_inband_caps
+> +      pcs_enable pcs_disable pcs_pre_config pcs_post_config pcs_get_state
+> +      pcs_config pcs_an_restart pcs_link_up pcs_disable_eee pcs_enable_eee
+> +      pcs_pre_init
+> +
+> +.. kernel-doc:: include/linux/pcs.h
+> +   :internal:
+> +
+> +.. kernel-doc:: drivers/net/pcs/core.c
+> +   :export:
+> +
+> +.. kernel-doc:: drivers/net/pcs/core.c
+> +   :internal:
+
+Thanks.
+
+-- 
+~Randy
 
