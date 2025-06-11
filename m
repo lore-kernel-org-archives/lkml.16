@@ -1,82 +1,123 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26710185920;
-	Wed, 11 Jun 2025 15:02:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0B1185920;
+	Wed, 11 Jun 2025 15:03:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749654157; cv=none; b=oTE6WxMZbo9F9rP7nxOu3RTIDYBd849nGTRZ/w0nl33AJ7MBt8QRy4smqK+RlNWMAkqIjxRYX7UD7OLhEiZSZvC1jubQ/P8k4BA8KU6e8vDZSem1YhZPMJuPugfkwHPbEXNVyRYsFraHrbNNyUuk1dabzyWF1XoLGiTIWNnhUto=
+	t=1749654207; cv=none; b=iMRpHEBQ0Je7LXyK2hgwROatc8qIKvGzosSNZTQnW4zpPqx6R38y9rK+cBbkw3/OFd/VOhadX8UEsa2goIIn7Z8u0qDcmmf7EvuTIXqgEJNxMzC1YVRnPhOTjRM0Twhhj/1B2clHFQNug6vIgcYBjSrhhamfPu33H+6wsTLma/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749654157; c=relaxed/simple;
-	bh=R51eJwT5fuIM/kOLvJJLfDor4mLaTCANFivMFtewIu0=;
+	s=arc-20240116; t=1749654207; c=relaxed/simple;
+	bh=WLyNWYf5IcSY3WxP84heQHYPfpvQ58JTRkFiVKTi2uM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nvUCrb+OPxlrmzR1vT4tiEFallIevjm2kEUsELeax9HmN6BTcnyMYA2fntG4iTMOuAPf1sbbTNTUYAVgQiPihyglVwcFvYR0zQD3j05dXM4jwvJTZTjDPu5p0eVr7QS/998bgMS1Tu5JqK95XoDRuhqoi4SGcPd7YQpci8Q7l4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from localhost (unknown [116.232.147.71])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id BBBDC340D21;
-	Wed, 11 Jun 2025 15:02:34 +0000 (UTC)
-Date: Wed, 11 Jun 2025 15:02:27 +0000
-From: Yixun Lan <dlan@gentoo.org>
-To: Guodong Xu <guodong@riscstar.com>
-Cc: vkoul@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
-	aou@eecs.berkeley.edu, alex@ghiti.fr, p.zabel@pengutronix.de,
-	drew@pdp7.com, emil.renner.berthing@canonical.com,
-	inochiama@gmail.com, geert+renesas@glider.be, tglx@linutronix.de,
-	hal.feng@starfivetech.com, joel@jms.id.au, duje.mihanovic@skole.hr,
-	elder@riscstar.com, dmaengine@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
-Subject: Re: [PATCH 6/8] riscv: dts: spacemit: Enable PDMA0 controller on
- Banana Pi F3
-Message-ID: <20250611150227-GYA127466@gentoo>
-References: <20250611125723.181711-1-guodong@riscstar.com>
- <20250611125723.181711-7-guodong@riscstar.com>
- <20250611135757-GYC125008@gentoo>
- <CAH1PCMbt3wLbeomQ+kgR6yZZ18TZ=_LF-kCcnLqad55FSHBhDA@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=b4zeqI2YCNNJCk9FItV5/rwERUqIVyWe/Zc7Mi2IoAd96EYqijMYAO9M0zgNKCSgpssH3rh29CwXX8EwWD7dFxlufonQM5jWFbrexJY9rX0Ccg8AlhyK3NlBBXNmC4uHY9Sz0A6A9+FtT2Xy7YhQ24lBbENKJw6epQkYkf8fsfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SfZVUgB5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SfZVUgB5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9E13C4CEE3;
+	Wed, 11 Jun 2025 15:03:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749654206;
+	bh=WLyNWYf5IcSY3WxP84heQHYPfpvQ58JTRkFiVKTi2uM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SfZVUgB5ZeAy5mtLSI8+wD9clA43KAFlxujPll6yOjNwux6F1FKL/ebETxgexXAlQ
+	 d/FNUCTjp6Yq/5vLRu7ztNSwKh2xvPSPFxuhrvW4mvtYVCF7DJny6OPYd8sC5pvUVE
+	 MQ/lSc5TTmaPdMqckddgbOr7xFcet/yUCxPwWfzeddj7TxANixgyOzc1X77jjGC7dk
+	 1cf6HWYJQuI3oFtKdhw1O8K/exQp+ZYzs/m31mryQF9cw7jgUi4jfMKheUaji97Kz4
+	 jgpvIItLlrCJReybJRikJFgKIRYO67Rs1wG+UBSY6270T3T59S25ve+lrVQ2SVBzuD
+	 75DilNsWkJJUA==
+Date: Wed, 11 Jun 2025 10:03:23 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, stable@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: qcom: msm: mark certain pins as invalid for
+ interrupts
+Message-ID: <3i6ni6jfq7vzij5cj4h35sy4ceegeekuv3lr5b3nmyqtheky6q@mlrspoyavfwt>
+References: <20250611143911.48501-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH1PCMbt3wLbeomQ+kgR6yZZ18TZ=_LF-kCcnLqad55FSHBhDA@mail.gmail.com>
+In-Reply-To: <20250611143911.48501-1-brgl@bgdev.pl>
 
-Hi Guodong,
-
-On 22:32 Wed 11 Jun     , Guodong Xu wrote:
-> On Wed, Jun 11, 2025 at 9:58 PM Yixun Lan <dlan@gentoo.org> wrote:
-> >
-> > Hi Guodong,
-> >
-> > On 20:57 Wed 11 Jun     , Guodong Xu wrote:
-> > > Enable the Peripheral DMA controller (PDMA0) on the SpacemiT K1-based
-> > > Banana Pi F3 board by setting its status to "okay". This board-specific
-> > > configuration activates the PDMA controller defined in the SoC's base
-> > > device tree.
-> > >
-> >   Although this series is actively developed under Bananapi-f3 board
-> > but it should work fine with jupiter board, so I'd suggest to enable
-> > it too, thanks
-> >
+On Wed, Jun 11, 2025 at 04:39:11PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> I'd be glad to include the Jupiter board as well. Since I don't have Jupiter
-> hardware for testing, could someone with access verify it works before I
-> add it to the series?
+> When requesting pins whose intr_detection_width setting is not 1 or 2
+> for interrupts (for example by running `gpiomon -c 0 113` on RB2), we'll
+> hit a BUG() in msm_gpio_irq_set_type(). Potentially crashing the kernel
+> due to an invalid request from user-space is not optimal, so let's go
+> through the pins and mark those that would fail the check as invalid for
+> the irq chip as we should not even register them as available irqs.
 > 
-Do you have any suggestion how to test? like if any test cases there?
 
-I would assume it work fine on jupiter since it's a SoC level feature?
-instead of board specific..
+I had to go dig into the code to understand why there is a problem with
+GPIO 113 on RB2 (i.e. UFS_RESET on SM6115)... I think it would have been
+better to document the actual reason for the problem, which is:
 
--- 
-Yixun Lan (dlan)
+"The UFS_RESET pin doesn't have interrupt logic, but is registered as a
+GPIO. Requesting the interrupt of this pin hits a BUG() in
+msm_gpio_irq_set_type() because intr_detection_width is invalid"
+
+> This function can be extended if we determine that there are more
+> corner-cases like this.
+> 
+
+Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+
+Regards,
+Bjorn
+
+> Fixes: f365be092572 ("pinctrl: Add Qualcomm TLMM driver")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  drivers/pinctrl/qcom/pinctrl-msm.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+> index f012ea88aa22c..77e0c2f023455 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+> @@ -1038,6 +1038,24 @@ static bool msm_gpio_needs_dual_edge_parent_workaround(struct irq_data *d,
+>  	       test_bit(d->hwirq, pctrl->skip_wake_irqs);
+>  }
+>  
+> +static void msm_gpio_irq_init_valid_mask(struct gpio_chip *gc,
+> +					 unsigned long *valid_mask,
+> +					 unsigned int ngpios)
+> +{
+> +	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
+> +	const struct msm_pingroup *g;
+> +	int i;
+> +
+> +	bitmap_fill(valid_mask, ngpios);
+> +
+> +	for (i = 0; i < ngpios; i++) {
+> +		g = &pctrl->soc->groups[i];
+> +		if (g->intr_detection_width != 1 &&
+> +		    g->intr_detection_width != 2)
+> +			clear_bit(i, valid_mask);
+> +	}
+> +}
+> +
+>  static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+>  {
+>  	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> @@ -1441,6 +1459,7 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+>  	girq->default_type = IRQ_TYPE_NONE;
+>  	girq->handler = handle_bad_irq;
+>  	girq->parents[0] = pctrl->irq;
+> +	girq->init_valid_mask = msm_gpio_irq_init_valid_mask;
+>  
+>  	ret = gpiochip_add_data(&pctrl->chip, pctrl);
+>  	if (ret) {
+> -- 
+> 2.48.1
+> 
