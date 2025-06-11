@@ -1,140 +1,179 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375CA21B19D;
-	Wed, 11 Jun 2025 06:33:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FD5F17A300;
+	Wed, 11 Jun 2025 06:35:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749623633; cv=none; b=L4ot+KloroqEc0IXgEd/XRYMtvcc5MN8jtVupeoacxHMMFcSp2O1hYlbg6JyR561cZm05tDYD5zH2b9uFlhytdV11CQsZOi9IHm4bhHCRaN4Xioimz0qy+Wu2fLqLvtlHeUo6+bNJzyDMQRtm8hczRY/O6EoAZYa6OgZ9n2OeDY=
+	t=1749623724; cv=none; b=cpexiIZryKEDI7EmeoVwr6C0lRKLsLwnkJ1xQVVWMSRFzk4PDITCotBdMCp2t+nm9i5UdenbPLinht1QJQghA4jV4Mxkw8DMeQuLAepRN0V19Ov/Oz5hbnrpqi9YBL2uAtf4lKGHjLAlRxNiQj+k5aU/Ia4xommnEtrK04HrIbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749623633; c=relaxed/simple;
-	bh=Mh3IBAJJLPsihFnUd8lzghlKsY+ledSbMenVLAl8F7Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oRMXc4qhnulW4xk71ZPDNl5IGeZHHZ+dufNPasjggpGuwmwSqXvOf7rbmc9i31V666u+7kvWYoeFX7+CUs0N0BW4PLiXokNpykZ4qgpl7rhRi79yiLt553VSZM3ItPY6+rFPwGz7VKlUaj8mseFW/FhLibqc7d4eTaWK3vi9fIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CoHhrVry; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749623724; c=relaxed/simple;
+	bh=ELB3hJiU1T7xtJltoyGn8FsVokJlMe8K24HTgDOgpWE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X3ma6yEbwSNvl8tnwVbKp042UZh0E2PdKMc5AfCCtecrn0UVTMYi8SxXbZIOEz+rFSYQpECEsp6SB9p0yYyBk3fj1dT/BIxfsqrdyvyPJToOD8ff4CekCcB0SAUeLuP+3sUHJ8SpTy4+z9xsbt86hW+v9187W/mh+c6Jp7IZnm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lFHm5ll2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CoHhrVry"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a4f7865b22so26283f8f.0;
-        Tue, 10 Jun 2025 23:33:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749623630; x=1750228430; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Xi53fMKD3cKJk5G9CvrhErtFN8YzIqzdTSF68BonW+Q=;
-        b=CoHhrVryH+2OkpVXuk0orGcliGcNQOJiMXp9G5QCwtaF4z3MOTAAUL7ncijbzDk70o
-         spZAa5CLVPPhUm2NQHB5XTnmd0cMvYnAs35UwZxx5YKLczRYmzX2+xEs4HeA3Yr9inXY
-         XrDy17n75s3VZ+1b3MPyRRbGwNzZwI3jtJ0u7mtdhTnUjuUYA1okBGiQcao0Yc/QQ3LJ
-         GTFelb1yN9pVWfEHYjjrsxXi2hMCPPz/Cf47jy522UwcOqpe0+YCLaNRcE4ooZEeqgIN
-         gY4O3xqqpEJ1RTAyHY/P9t4n4NCLmmuq/abnhM8DvsMRBCKG9Gcwr9ioT+bLGAOG85Hj
-         DQhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749623630; x=1750228430;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Xi53fMKD3cKJk5G9CvrhErtFN8YzIqzdTSF68BonW+Q=;
-        b=H2cF5RtKWoRP+cfveezahMJTlVwTjZXcpFOBdg9jXGR/ybIkX30TkVbTnbS4PU2prv
-         xG8pPzw9aAO+sVAvos+rP5RlQiaNCrB6EbPdtA/0yt0hPd/SRITPvjSrlQseUHb4Rp61
-         9xLr/7Gx1gwdW6zeMRhk8OzThoyXrL1ubTIKh5emnZnty/MNDWc1HrY7OmV31FDc2YQ+
-         4s62GWy49g7VueRnuaAS/DQ2JRRmhsCTsZggb9v5cJy9PjWw03XENv7aNkSaQJoaShri
-         K7uh1mGBRFrWj/KuSdgawzxQRyv/jxDHyoUDqGHMQxisU0DnZkvmGRfWT7LtyG/Yst0N
-         NHfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVR2ZmYy4LVJXhIKgMCoXg5AgvT8FAD0GB6yGF0bWtiZYJ04vjtI2zXTjK6/Ap+dL/YRJTwbe3J/2GbA1k=@vger.kernel.org, AJvYcCXBYP3quec7Y3tU8HtHDHACo5w87Z1+mAIMAyaXaFWP7ymgg6wQr3UWiMBvulZF5obaqDTdi3rMZHaDurIg@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzffa3vC3FXhCcHAty34YpIt/DEQ9iFQUlHYx0dbBNhtZCtiXiv
-	Knp6fuADtFAqUhmUCy7XzbawU5+SWxyEOosiwNl4QHtmVTvweul+vc/1
-X-Gm-Gg: ASbGncsqck1fYpsqgG2ZFz03DeL0x7DZg0fumG+ciARwA1vBoMyeq/uGZJtifnLmHw5
-	e86aecyDqWBOKNp1rlb13nPvwmgQ8axFjrD4W/sEWZlY5Of1fMc/ewzTrToxIS2RRIOYh4mKKy8
-	+7vJ0/Ae/MnItF4C47EvysMz/cJVxd9bjzC7y5M40XIzFc/XMiMp+QOspJ3sDesXJuzLL2u6ilM
-	PCYnh5ggQJrXFJD48S6ZWX2NEUZSkqh2uZprlcoShU5AM4I5jvIDkM0l7CTGdMHwyM+5T50XRhl
-	S3tH5qtUSovqJs8NRZrLzG2HSCcmq+jwhV1adeXrhmXI5PvVa5Bg8qZWHuveOOqhWaFltA4iSfS
-	ijNO2g9M=
-X-Google-Smtp-Source: AGHT+IHqzA22qfVooFHgPHYXbsp7freFm89h/OzXJ7nibh5EChOXLAXLUwkTVzWLKe8uuREBQYZA1Q==
-X-Received: by 2002:a05:6000:208a:b0:3a4:f7ae:77cd with SMTP id ffacd0b85a97d-3a5586bd8e1mr443311f8f.1.1749623630296;
-        Tue, 10 Jun 2025 23:33:50 -0700 (PDT)
-Received: from DESKTOP-LCRLR8G.localdomain ([102.186.42.58])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5323b653dsm14364226f8f.39.2025.06.10.23.33.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 23:33:49 -0700 (PDT)
-From: Marwan Seliem <marwanmhks@gmail.com>
-To: jirislaby@kernel.org
-Cc: gregkh@linuxfoundation.org,
-	akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: Re: [PATCH] tty: sysrq: Introduce compile-time crash-only mode
-Date: Wed, 11 Jun 2025 09:33:49 +0300
-Message-Id: <20250611063349.25187-1-marwanmhks@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250607151957.222347-1-marwanmhks@gmail.com>
-References: <20250607151957.222347-1-marwanmhks@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lFHm5ll2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 111FFC4CEEE;
+	Wed, 11 Jun 2025 06:35:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749623724;
+	bh=ELB3hJiU1T7xtJltoyGn8FsVokJlMe8K24HTgDOgpWE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lFHm5ll299wjWXF5XOP4i0kYFF9keEvryTuaaUjWbmYkj3djGLqkFczJlmvu0h+rJ
+	 /1oGNE/VjC63Djq8s4JfQYe1oks96ILDO+uTMctBrtpEo7kQ7RDqLHSd0u9OHZgR9B
+	 I2gqJ05+gmN4xrqF9dOWvheUuZgweSp9ZRpR4+vL9AKqjZZ99EL7WcUKgJS/1alr2n
+	 fI/1kcr9y+z99/DdffbEjzlYDHHAJp+ou3UDA8DC070k0dicUMn8OoFZ+aNSYhShJu
+	 DScHxfTzGZoG3n2/3xl0PjQA0sa9LP5+RhczYhLaK9r1wbQ1rj0ElaglspSTEaJvhd
+	 DZFapxLD3CNew==
+Message-ID: <42a0b7ab-d85d-4d52-a263-4a4648c7ff05@kernel.org>
+Date: Wed, 11 Jun 2025 08:35:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=y
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/9] ARM: dts: stm32: add Hardware debug port (HDP) on
+ stm32mp13
+To: Clement LE GOFFIC <clement.legoffic@foss.st.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250523-hdp-upstream-v3-0-bd6ca199466a@foss.st.com>
+ <20250523-hdp-upstream-v3-5-bd6ca199466a@foss.st.com>
+ <5b7a2102-ff68-4aab-a88d-0c4f9195ef95@kernel.org>
+ <3c868c4b-8a0e-44b5-9d6e-3a0526d9deeb@foss.st.com>
+ <3ba588ed-1614-4877-b6fc-b5aa853b8c2e@kernel.org>
+ <714ad17d-53f1-4703-8e13-61c290a8da89@foss.st.com>
+ <7000f63e-5e68-465d-9d7f-1a6ca0524222@kernel.org>
+ <a49d0af2-07b7-4f51-941b-fa25b2879720@foss.st.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <a49d0af2-07b7-4f51-941b-fa25b2879720@foss.st.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Jiri,
+On 10/06/2025 15:33, Clement LE GOFFIC wrote:
+> On 6/10/25 14:38, Krzysztof Kozlowski wrote:
+>> On 10/06/2025 14:02, Clement LE GOFFIC wrote:
+>>> On 5/29/25 11:01, Krzysztof Kozlowski wrote:
+>>>> On 28/05/2025 14:14, Clement LE GOFFIC wrote:
+>>>>>>
+>>>>>>> +		};
+>>>>>>> +
+>>>>>>> +		hdp: pinctrl@5002a000 {
+>>>>>>> +			compatible = "st,stm32mp131-hdp";
+>>>>>>> +			reg = <0x5002a000 0x400>;
+>>>>>>> +			clocks = <&rcc HDP>;
+>>>>>>>     			status = "disabled";
+>>>>>>
+>>>>>> Why are you disabling it? What is missing?
+>>>>>
+>>>>> Nothing is missing just disabled by default.
+>>>>> The node is then enabled when needed in board's dts file.
+>>>> Nodes should not be disabled by default if they are complete. That's why
+>>>> I asked what is missing. Drop.
+>>>
+>>> Hi Krzysztof, OK I better understand now.
+>>> So yes the 'pinctrl-*' properties which are board dependent are lacking.
+>>
+>> These are not properties of this node.
+> 
+> Does this mean I should add 'pinctrl-*' properties in bindings yaml file ?
+> I don't get it..
 
-Thank you for your review and feedback. Let me address your comments and provide more context about the use case for this change.
+These properties have no meaning here, so the hardware description is
+complete. You claim that you miss them thus device is incomplete is just
+not correct: these properties do not belong here! They belong to the
+board but even there they are totally optional. Why would they be a
+required resource?
 
-> I must admit I don't much understand the purpose of this. It can be
-> spelled as: you can crash the system only by sysrq-c from now on. Don't
-> use sysrq-r or others. Who did ask for this?
+To remind: we talk here ONLY about required resources.
 
-This change was created with embedded systems that have external subsystems in mind (like modems/co-processors) where we need:
-    - The ability to trigger a full system crash (via sysrq-c) to collect subsystem crash dumps
-    - While explicitly disabling all other sysrq functionality for security reasons
+> 
+>>>
+>>> In the last patch of my serie I add them (only for stm32mp157f-dk2) but
+>>> keep it disabled because the pin is on an external connector (the
+>>> Arduino connector of the board).
+>>> This prevent any issue with a possible connected module.
+>>
+>> Not relevant. Pin control for connector are board specific, but pinctrl
+>> SoC part is SoC.
+> 
+> I think we don't understand each other here too. I don't understand the 
+> end of your sentence "pinctrl SoC part is SoC".
 
-In these environments:
-    - Crash dumps are essential for debugging
-	- Other sysrq commands pose unnecessary security risks
+Please read first how DTS is organized.
 
-> These inline #ifdefs are horrid.
+The pin controller device is part of SoC not part of a board.
 
-Agreed. I will restructure this.
+Pins configuration for devices on the board are not part of the SoC.
+What is not clear here? We talk here in terms how DTS is supposed to be
+organized.
 
-> This can be invoked from userspace. So you can nicely DoS the machine by
-> the added warn, right? Hint: use ratelimiting.
+> 
+> Maybe some informations that could help:
+> The 'pinctrl-*' properties are used in the HDP case to select the 
+> internal signal to output AND the alternate function on the pin to 
+> output the HDP function.
 
-Good point. I'll add ratelimiting to the pr_warn() calls or we can consider reducing these to pr_debug()?
+We all know this.
 
-> No need for this return ^^.
+> 
+>> Best regards,
+>> Krzysztof
+> 
 
-You're right, the second return is redundant. I'll clean this up.
 
-> Is it for real?
-
-From a pure security viewpoint, expert advice is to remove this Magic Sysrq functionality, 
-either with kernel.sysrq=0 in sysctl config file, or with a full kernel rebuild 
-with n value for CONFIG_MAGIC_SYSRQ parameter.
-This patch provides a middle ground that:
-    1) Resolves the Core Security Conflict
-		The CRASH_ONLY mode provides the minimal debug capability while eliminating:
-            - Register dumps (disables 'p' command)
-            - Filesystem operations (disables 'u'/sync commands)
-            - All other privileged operations
-    2) Security Architecture Benefits
-	
-		Traditional: All-or-nothing  
-		│─────────────┬─────────────│  
-			Full disable			Full enable  
-
-		Our Approach: Principle of Least Privilege  
-		│─────┬───────┬─────────────│  
-			Off	Crash-only		Full enable  
-
-For v2 of the patch, I'll make these improvements:
-    1) Restructure to minimize #ifdef fiasco
-	2) Add proper rate limiting on pr_warn/change it to pr_debug
-	3) Clean up redundant return
-
-Thank you again for your valuable feedback. I appreciate you taking the time to review this.
-
-Warmest regards,
-Marwan Seliem
+Best regards,
+Krzysztof
