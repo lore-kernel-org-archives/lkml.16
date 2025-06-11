@@ -1,136 +1,175 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5155AEEA8
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:06:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827C71A28D
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:07:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749621973; cv=none; b=Bc9LOeXaaxcXOCFr8rMEpP2CTBBKrUb6L40/Qj8i18VaAH5YunBw9r/N9Aw40SkldrYDq20DpnxgE7YI27O4BeP4V9yl3p87Fn6w9mB++7fjow1r4VnbwTLEuxP16xm0HGOZtzE/ymrYh5cIbZD3w8n1nT6tT5RqJTUg0Ye6hes=
+	t=1749622026; cv=none; b=tdXDoeMdaXotJfBxSGessqJCCzTRiwVux9cwTfRT6A6AGToIZQGDmCnzAC4elIgPAkzayJHcuN1mAQvVHvUqh4sWw9ZeNaTy71Gtz6eU4SGvg0j1STTssLYaBGp+OjbAHDJ/600T7XjeW6EI7G+g4DJF2He/MbYv2SNVVfFuuVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749621973; c=relaxed/simple;
-	bh=HfwNEhg1gc9tswMtIbxoYWByWEOI/wYjO9dPwchD2y8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EAx4XLhtGsTAZ0bkuHoozivDzsJIDTaHO9DqnXpujkSGmOuaNv0r7Ug7TVsorCCtTifXE8z+9fFcYxc5n8YBFvX7uDBumIU5+cxBm6XUK6fqTM4if2IqTlzn7eR4xX+JPHt4H0c2mYSktCxLcgZY74CgahH+ufx9S8WKIgExKdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V9dIaPBx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749622026; c=relaxed/simple;
+	bh=XvaWqgGFHD8E8hWRNsclo9DOi2AH3hXAefuTklKXJ0Q=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=jtNmbncjcoYYQJ4Rzo5Y65srTeqPn0bx0bWIv1L3CuJkqb+rX7W3B4VHL+HDXAHbL+UtYDAK8X6JyhmXU7PELm5MdyXaZyQtoEsCLcuxjgSrlUUnYcSiDbOurV8vcAhMAYz8Zv2Kw8EWiDxRA2mfAa64IW/Qc4g+65uRTektdN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vCQujmde; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V9dIaPBx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FCDFC4CEEE;
-	Wed, 11 Jun 2025 06:06:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vCQujmde"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B9D5C4CEEE;
+	Wed, 11 Jun 2025 06:07:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749621972;
-	bh=HfwNEhg1gc9tswMtIbxoYWByWEOI/wYjO9dPwchD2y8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V9dIaPBx044woqRWAZfhrHCMgUt5X2chaTPvCCu0aJDFIibF+KclvR/GVlDJl+tjs
-	 FIPLgQi7MDN0GCnhHqkoY2tKs+TsS7FX4Tx5aX+mutujvy2qKfXITsgQpV8cU+OsCN
-	 CeGorDlZuT9+zCeAYNIan61SelqKdkuhtifAlVXxHiGDgXeUNV7qToORqlf9/9wND6
-	 HW6FyCj67gTegKoJzAdN6KrdjOIRrtG1PsC+L0jnpBulSZspLahUrSwZQyk+Zn/0gg
-	 li3nCZHfBfdxHtS4xlu7qSfniK4y+Wi3hQBZ9QWOxLQDrT8MngTG+Jy75XKiTGOi7m
-	 ngW0Z648pd3fQ==
-Date: Wed, 11 Jun 2025 09:06:07 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Steve Wahl <steve.wahl@hpe.com>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	Vishal Chourasia <vishalc@linux.ibm.com>,
-	samir <samir@linux.ibm.com>,
-	Naman Jain <namjain@linux.microsoft.com>,
-	Saurabh Singh Sengar <ssengar@linux.microsoft.com>,
-	srivatsa@csail.mit.edu, Michael Kelley <mhklinux@outlook.com>,
-	Russ Anderson <rja@hpe.com>, Dimitri Sivanich <sivanich@hpe.com>
-Subject: Re: [PATCH v4 1/2] sched/topology: improve topology_span_sane speed
-Message-ID: <20250611060607.GM10669@unreal>
-References: <20250304160844.75373-1-steve.wahl@hpe.com>
- <20250304160844.75373-2-steve.wahl@hpe.com>
- <20250610110701.GA256154@unreal>
- <a5da2e4d-c042-4d01-bfc3-f50ca674247b@amd.com>
- <20250610123618.GB10669@unreal>
- <4110e533-6cab-4845-bd11-11279ebc9150@app.fastmail.com>
- <aEiKCqoaEWnZvlCI@swahl-home.5wahls.com>
+	s=k20201202; t=1749622025;
+	bh=XvaWqgGFHD8E8hWRNsclo9DOi2AH3hXAefuTklKXJ0Q=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=vCQujmdeOR+5Aa5t8311gviiz/aJCqpq5LQI4Yi3NmRDsd0I9v5bVZimVid/PF3+q
+	 spIcQ37kz2xGU+ur+ZinkqxRCyh+2KFtrWICYo7e2zKUG/FhS77RqXKyOLVQntyRot
+	 fMiOujf3czYCIy8LICRdhYQ/2Rqpbf07J9U6SwVz1UB0S3134+5XT1ztflmcdiWFh+
+	 sjIfKUL0vc42o3QmmSpJpIYijaNcuS0xJK1kP+e3GQyLzAvxeYxKNtuxbncXi4EMqp
+	 10Da87xwNiQCqJ56I2sZs+7qMN2z6Lgv6v2p8Ph5p2EPYuTQRMLmQqnBQBzscbC1sp
+	 YeeaWHaP3diqA==
+Message-ID: <5c1da066-0c76-42f4-8c46-a99f60a900bf@kernel.org>
+Date: Wed, 11 Jun 2025 14:07:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEiKCqoaEWnZvlCI@swahl-home.5wahls.com>
+User-Agent: Mozilla Thunderbird
+Cc: chao@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ linux-kernel@vger.kernel.org, niuzhiguo84@gmail.com, ke.wang@unisoc.com,
+ Hao_hao.Wang@unisoc.com, baocong.liu@unisoc.com
+Subject: Re: [PATCH v3] f2fs: compress: fix UAF of f2fs_inode_info in
+ f2fs_free_dic
+To: Jaegeuk Kim <jaegeuk@kernel.org>, Zhiguo Niu <zhiguo.niu@unisoc.com>
+References: <1749107920-17958-1-git-send-email-zhiguo.niu@unisoc.com>
+ <aEhYfYrknbNzT8Or@google.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <aEhYfYrknbNzT8Or@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 10, 2025 at 02:39:54PM -0500, Steve Wahl wrote:
-> On Tue, Jun 10, 2025 at 04:09:52PM +0300, Leon Romanovsky wrote:
-> > 
-> > 
-> > On Tue, Jun 10, 2025, at 15:36, Leon Romanovsky wrote:
-> > > On Tue, Jun 10, 2025 at 05:03:14PM +0530, K Prateek Nayak wrote:
-> > >> Hello Leon,
-> > >> 
-> > >> On 6/10/2025 4:37 PM, Leon Romanovsky wrote:
-> > >> 
-> > >> [..snip..]
-> > >> 
-> > >> > > +	if (WARN_ON(!topology_span_sane(cpu_map)))
-> > >> > > +		goto error;
-> > >> > 
-> > >> > Hi,
+On 6/11/25 00:08, Jaegeuk Kim wrote:
+> Hi Zhiguo,
+> 
+> This patch causes CPU hang when running fsstress on compressed/non-compressed
+> files. Please check.
 
-<...>
+Oh, seems it may cause below deadlock:
 
-> > [    0.032233] [mem 0xc0000000-0xfed1bfff] available for PCI devices
-> > [    0.032237] Booting paravirtualized kernel on KVM
-> > [    0.032238] clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645519600211568 ns
-> > [    0.036921] setup_percpu: NR_CPUS:512 nr_cpumask_bits:10 nr_cpu_ids:10 nr_node_ids:5
-> > [    0.038074] percpu: Embedded 53 pages/cpu s177240 r8192 d31656 u1048576
-> > [    0.038108] Kernel command line: BOOT_IMAGE=(hd0,msdos1)/boot/vmlinuz-6.16.0-rc1_for_upstream_min_debug_2025_06_09_14_44 root=UUID=49650207-5673-41e8-9f3b-5572de97a271 ro selinux=0 kasan_multi_shot net.ifnames=0 biosdevname=0 console=tty0 console=ttyS1,115200 audit=0 systemd.unified_cgroup_hierarchy=0 sched_verbose
-> > [    0.038222] Unknown kernel command line parameters "kasan_multi_shot BOOT_IMAGE=(hd0,msdos1)/boot/vmlinuz-6.16.0-rc1_for_upstream_min_debug_2025_06_09_14_44 selinux=0 biosdevname=0 audit=0", will be passed to user space.
+CPU0
+process A
+- spin_lock(i_lock)
+software IRQ
+- end_io
+ - igrab
+  - spin_lock(i_lock)
 
-<...>
+Thanks,
 
 > 
-> I don't think that's the full dmesg output, maybe a console capture
-> with reduced levels?  I'm not finding the output of sched_domain_debug() and
-> sched_domain_debug_one() here.
+> On 06/05, Zhiguo Niu wrote:
+>> The decompress_io_ctx may be released asynchronously after
+>> I/O completion. If this file is deleted immediately after read,
+>> and the kworker of processing post_read_wq has not been executed yet
+>> due to high workloads, It is possible that the inode(f2fs_inode_info)
+>> is evicted and freed before it is used f2fs_free_dic.
+>>
+>>     The UAF case as below:
+>>     Thread A                                      Thread B
+>>     - f2fs_decompress_end_io
+>>      - f2fs_put_dic
+>>       - queue_work
+>>         add free_dic work to post_read_wq
+>>                                                    - do_unlink
+>>                                                     - iput
+>>                                                      - evict
+>>                                                       - call_rcu
+>>     This file is deleted after read.
+>>
+>>     Thread C                                 kworker to process post_read_wq
+>>     - rcu_do_batch
+>>      - f2fs_free_inode
+>>       - kmem_cache_free
+>>      inode is freed by rcu
+>>                                              - process_scheduled_works
+>>                                               - f2fs_late_free_dic
+>>                                                - f2fs_free_dic
+>>                                                 - f2fs_release_decomp_mem
+>>                                       read (dic->inode)->i_compress_algorithm
+>>
+>> This patch use igrab before f2fs_free_dic and iput after free the dic when dic free
+>> action is done by kworker.
+>>
+>> Cc: Daeho Jeong <daehojeong@google.com>
+>> Fixes: bff139b49d9f ("f2fs: handle decompress only post processing in softirq")
+>> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+>> Signed-off-by: Baocong Liu <baocong.liu@unisoc.com>
+>> ---
+>> v3: use igrab to replace __iget
+>> v2: use __iget/iput function
+>> ---
+>>  fs/f2fs/compress.c | 14 +++++++++-----
+>>  1 file changed, 9 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+>> index b3c1df9..729ad16 100644
+>> --- a/fs/f2fs/compress.c
+>> +++ b/fs/f2fs/compress.c
+>> @@ -1687,7 +1687,7 @@ static void f2fs_release_decomp_mem(struct decompress_io_ctx *dic,
+>>  }
+>>  
+>>  static void f2fs_free_dic(struct decompress_io_ctx *dic,
+>> -		bool bypass_destroy_callback);
+>> +		bool bypass_destroy_callback, bool late_free);
+>>  
+>>  struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc)
+>>  {
+>> @@ -1743,12 +1743,12 @@ struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc)
+>>  	return dic;
+>>  
+>>  out_free:
+>> -	f2fs_free_dic(dic, true);
+>> +	f2fs_free_dic(dic, true, false);
+>>  	return ERR_PTR(ret);
+>>  }
+>>  
+>>  static void f2fs_free_dic(struct decompress_io_ctx *dic,
+>> -		bool bypass_destroy_callback)
+>> +		bool bypass_destroy_callback, bool late_free)
+>>  {
+>>  	int i;
+>>  
+>> @@ -1775,6 +1775,8 @@ static void f2fs_free_dic(struct decompress_io_ctx *dic,
+>>  	}
+>>  
+>>  	page_array_free(dic->inode, dic->rpages, dic->nr_rpages);
+>> +	if (late_free)
+>> +		iput(dic->inode);
+>>  	kmem_cache_free(dic_entry_slab, dic);
+>>  }
+>>  
+>> @@ -1783,16 +1785,18 @@ static void f2fs_late_free_dic(struct work_struct *work)
+>>  	struct decompress_io_ctx *dic =
+>>  		container_of(work, struct decompress_io_ctx, free_work);
+>>  
+>> -	f2fs_free_dic(dic, false);
+>> +	f2fs_free_dic(dic, false, true);
+>>  }
+>>  
+>>  static void f2fs_put_dic(struct decompress_io_ctx *dic, bool in_task)
+>>  {
+>>  	if (refcount_dec_and_test(&dic->refcnt)) {
+>>  		if (in_task) {
+>> -			f2fs_free_dic(dic, false);
+>> +			f2fs_free_dic(dic, false, false);
+>>  		} else {
+>>  			INIT_WORK(&dic->free_work, f2fs_late_free_dic);
+>> +			/* use igrab to avoid inode is evicted simultaneously */
+>> +			f2fs_bug_on(F2FS_I_SB(dic->inode), !igrab(dic->inode));
+>>  			queue_work(F2FS_I_SB(dic->inode)->post_read_wq,
+>>  					&dic->free_work);
+>>  		}
+>> -- 
+>> 1.9.1
 
-It is not reduced, but standard debug level log, where KERN_DEBUG prints
-aren't printed.
-
-I don't know why sched_verbose is implemented how it is implemented,
-but all these KERN_DEBUG prints in sched_domain_debug_one() are not controlled
-through sched_verbose.
-
-Thanks
-
-> 
-> Thanks,
-> 
-> Steve Wahl
-> 
-> > >
-> > > Thanks
-> > >
-> > >> 
-> > >> -- 
-> > >> Thanks and Regards,
-> > >> Prateek
-> > >> 
-> > >> > 
-> > >> > Thanks
-> > >> > 
-> > >> > > +
-> > >> > >   	/* Build the groups for the domains */
-> > >> > >   	for_each_cpu(i, cpu_map) {
-> > >> > >   		for (sd = *per_cpu_ptr(d.sd, i); sd; sd = sd->parent) {
-> > >> > > -- 
-> > >> > > 2.26.2
-> > >> > > 
-> > >>
-> 
-> -- 
-> Steve Wahl, Hewlett Packard Enterprise
