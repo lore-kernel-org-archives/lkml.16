@@ -1,130 +1,137 @@
-Received: from esa11.hc1455-7.c3s2.iphmx.com (esa11.hc1455-7.c3s2.iphmx.com [207.54.90.137])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5A1EAF9;
-	Wed, 11 Jun 2025 02:35:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.137
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1111C36;
+	Wed, 11 Jun 2025 02:37:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749609361; cv=none; b=TBQz/XLVACAlgRWBbx8FSwuCW+BrPwtdOWu8NZbgXlLFRQ92MjzOr1obJXuMLLtDutm7Jf/O+ogGuyFelQclU2MFHDkAnXlVUEZIoITcqkW76gyjGiJnO+Xx1tjVlgn51+ezROElQ9u/43wi/O98zVkduEcOPlCdy25yVK4IlaA=
+	t=1749609444; cv=none; b=obe+cxraFFTD0sltgeIJIx2i5YIMoiI6Bc/WlvEWUo8gCVqdYRGT9YV0T9dJDFuBomwNkYJFbpOohKFkGclL2HHwuqfasUD3IWz0uau6kCSCnx+WosAI0SVbuiu3dFb7L6BX4CCsq89JGQO+jNe7jq4cV+s9jS75jX398Xcj2Gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749609361; c=relaxed/simple;
-	bh=+iHAyZuQxdh1hnR8AoXUzwExgpbgBZ9kpS3GBDKs3NU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QBP6zVsx1vQgKP7GCF2Wa96Zjk8GOca4mYlLexHwiBkdgeTAM4p9ggULxNsLmnpqOmKAURUAF/sIJ377zNgPAEwMAJBa4mnB2h7O0sz6jf1MczVu3baX6glfaezUwFTsZmGImoXIc8ZQwm4q0O75lhe0NXrCfmoo/InKxO93tdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=Gi4X5Lv0; arc=none smtp.client-ip=207.54.90.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1749609444; c=relaxed/simple;
+	bh=CHjX7LjrVc1K8jWvxmmWhYpBK+58rdw4xWXA9O0KHXA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HxAdbvL1tPDf4MBB2RaUat0QgDptBRYwcvbHwndwREdNqPABMV8XOGs8k4g9fMXB27uNpG+YdhP7Nh/kZQHFWTBAnDp+MaZaRBCye8zGnQMSjqF818lE1xXmSAhvZRI+wRjbR02uDxh1RggyGrw1pVbRTlk2gmlOKuexXOmHN3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cu0ockHa; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="Gi4X5Lv0"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1749609359; x=1781145359;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=+iHAyZuQxdh1hnR8AoXUzwExgpbgBZ9kpS3GBDKs3NU=;
-  b=Gi4X5Lv0UtEr08CGJtqvmlQ2D7xY0lAHw/A3/7HYeUy82sNZlbqCHVlN
-   IlIi2fGLnYXUI5Y61+YgiSCetphE5xxZHovmx18RcmArhGbVKjoItYzV9
-   em0W00y7XrrmUGnB5W/hwrR79g0mencskTNwRoX8o75fNIHdTQsZUJTpZ
-   hMzaBTKGt9xgJSJ7g9LcLyJlqp+2jsAqAdmCmkha+r1G6iXvh1JxkAFNd
-   zCNZPK2hnW0vuhEZW/gO9ub/BJJz2yqPt282FFIGKgtxVKOlHWfi20uls
-   w9SxoYDNWhunxTxf1MTPrBeCEMi0S5Tj+fteddXn51d/LmbDfdgMHn9bo
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cu0ockHa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749609443; x=1781145443;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=CHjX7LjrVc1K8jWvxmmWhYpBK+58rdw4xWXA9O0KHXA=;
+  b=cu0ockHaO4mf2Ho8EpfLu6zjmSGtThwMCdaABljhvRUi468BAzxs+olL
+   Qvw8PKX2QwY2BbxgFSg2064egKNwkrwktaa/i+s8RbywZIvzClmEQ/zm9
+   Y0Qnk4N+NhMye2p32TL7B/ddSbQ4SWHCLa7Pgm/bFt5YRwRXJdNsq9leR
+   jHVTCp1M34Aej6FVj0Jlcn6wCjsFJRNBHggcdFh3TpC5pNNns9uvA0eFb
+   CMBoW5A5Go2GwxH3WO/zmpGedGBDHEeo/Q+SY8pDIDqAk+jARcGvEVd7u
+   wxfOjpJExFhBMKL3rzDDwcL/vfwwomnRzs2cl0RMW5taEfzF5HzapzgS0
    Q==;
-X-CSE-ConnectionGUID: 5pHxzLLGSO+AJAu5HfJrOg==
-X-CSE-MsgGUID: evajQBnKS1yiSWenIxrbaQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="181824685"
-X-IronPort-AV: E=Sophos;i="6.16,226,1744038000"; 
-   d="scan'208";a="181824685"
-Received: from unknown (HELO oym-r4.gw.nic.fujitsu.com) ([210.162.30.92])
-  by esa11.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 11:34:47 +0900
-Received: from oym-m4.gw.nic.fujitsu.com (oym-nat-oym-m4.gw.nic.fujitsu.com [192.168.87.61])
-	by oym-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id EB94ED8E1D;
-	Wed, 11 Jun 2025 11:34:44 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by oym-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id 90CE8D4C03;
-	Wed, 11 Jun 2025 11:34:44 +0900 (JST)
-Received: from FNSTPC.g08.fujitsu.local (unknown [10.167.135.44])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 38BE01A0071;
-	Wed, 11 Jun 2025 10:34:41 +0800 (CST)
-From: Li Zhijian <lizhijian@fujitsu.com>
-To: linux-mm@kvack.org
-Cc: akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org,
-	Li Zhijian <lizhijian@fujitsu.com>,
-	stable@vger.kernel.org,
-	Huang Ying <ying.huang@linux.alibaba.com>,
-	Balbir Singh <balbirs@nvidia.com>,
-	Donet Tom <donettom@linux.ibm.com>,
-	Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH v2] mm/memory-tier: Fix abstract distance calculation overflow
-Date: Wed, 11 Jun 2025 10:34:39 +0800
-Message-ID: <20250611023439.2845785-1-lizhijian@fujitsu.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20250610062751.2365436-1-lizhijian@fujitsu.com>
-References: <20250610062751.2365436-1-lizhijian@fujitsu.com>
+X-CSE-ConnectionGUID: nY4BMTBqQ0O1N74c+dznPA==
+X-CSE-MsgGUID: Hs0w/OtUQXSvw9oMAt0Yyw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51598336"
+X-IronPort-AV: E=Sophos;i="6.16,226,1744095600"; 
+   d="scan'208";a="51598336"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 19:37:22 -0700
+X-CSE-ConnectionGUID: 54CNzDzuTFuPzi88b46LBw==
+X-CSE-MsgGUID: uSvh9rSpT7m/2HVtlDWWdA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,226,1744095600"; 
+   d="scan'208";a="152169469"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 19:37:17 -0700
+Message-ID: <d53d6131-bf99-4bb0-8d25-00834864402d@intel.com>
+Date: Wed, 11 Jun 2025 10:37:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 3/4] KVM: TDX: Exit to userspace for GetTdVmCallInfo
+To: Binbin Wu <binbin.wu@linux.intel.com>,
+ "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+ "pbonzini@redhat.com" <pbonzini@redhat.com>,
+ "seanjc@google.com" <seanjc@google.com>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Cc: "mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>,
+ "Huang, Kai" <kai.huang@intel.com>, "Yao, Jiewen" <jiewen.yao@intel.com>,
+ "Chatre, Reinette" <reinette.chatre@intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "Zhao, Yan Y" <yan.y.zhao@intel.com>,
+ "Lindgren, Tony" <tony.lindgren@intel.com>,
+ "Shutemov, Kirill" <kirill.shutemov@intel.com>,
+ "Hunter, Adrian" <adrian.hunter@intel.com>,
+ "Yamahata, Isaku" <isaku.yamahata@intel.com>
+References: <20250610021422.1214715-1-binbin.wu@linux.intel.com>
+ <20250610021422.1214715-4-binbin.wu@linux.intel.com>
+ <ff5fd57a-9522-448c-9ab6-e0006cb6b2ee@intel.com>
+ <9421ffccdc40fb5a75921e758626354996abb8a9.camel@intel.com>
+ <d4285aa9adb60b774ca1491e2a0be573e6c82c07.camel@intel.com>
+ <e2e7f3d0-1077-44c6-8a1d-add4e1640d32@linux.intel.com>
+Content-Language: en-US
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <e2e7f3d0-1077-44c6-8a1d-add4e1640d32@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-In mt_perf_to_adistance(), the calculation of abstract distance (adist)
-involves multiplying several int values including MEMTIER_ADISTANCE_DRAM.
-```
-*adist = MEMTIER_ADISTANCE_DRAM *
-		(perf->read_latency + perf->write_latency) /
-		(default_dram_perf.read_latency + default_dram_perf.write_latency) *
-		(default_dram_perf.read_bandwidth + default_dram_perf.write_bandwidth) /
-		(perf->read_bandwidth + perf->write_bandwidth);
-```
-Since these values can be large, the multiplication may exceed the maximum
-value of an int (INT_MAX) and overflow (Our platform did), leading to an
-incorrect adist.
+On 6/11/2025 10:04 AM, Binbin Wu wrote:
+> 
+> 
+> On 6/11/2025 12:54 AM, Edgecombe, Rick P wrote:
+>> On Tue, 2025-06-10 at 09:50 -0700, Rick Edgecombe wrote:
+>>> Why do we need an opt-in interface instead of a way to expose which 
+>>> exit's are
+>>> supported by KVM? I would think the need for a TDVMCALL opt-in 
+>>> interface would
+>>> only come up if there was a bad guest that was making TDVMCALLs that 
+>>> it did not
+>>> see in GetTdVmCallInfo.
+> 
+> The opt-in interface can eliminate some requirements for userspace.
+> E.g, for GetQuote, this patch set enforces userspace to handle the exit 
+> reason
+> due to GetQuote as the initial support, because KVM doesn't know if 
+> userspace
+> is able to handle the exit reason or not without userspace's opt-in, unless
+> it's handled by default in userspace.
 
-User-visible impact:
-The memory tiering subsystem will misinterpret slow memory (like CXL)
-as faster than DRAM, causing inappropriate demotion of pages from
-CXL (slow memory) to DRAM (fast memory).
+Beside it.
 
-For example, we will see the following demotion chains from the dmesg, where
-Node0,1 are DRAM, and Node2,3 are CXL node:
- Demotion targets for Node 0: null
- Demotion targets for Node 1: null
- Demotion targets for Node 2: preferred: 0-1, fallback: 0-1
- Demotion targets for Node 3: preferred: 0-1, fallback: 0-1
+opt-in is not needed if we only care about <getquote> for now since KVM 
+makes <getquote> exit to userspace unconditionally.
 
-Change MEMTIER_ADISTANCE_DRAM to be a long constant by writing it with the
-'L' suffix. This prevents the overflow because the multiplication will then
-be done in the long type which has a larger range.
+But to support any new TDVMCALL leaf that needs to exit userspace, we 
+will have to use opt-in. So to me, implement the opt-in at the first 
+place as a common interface for all the optional tdvmcall leafs instead 
+of making <getquote> specific is not a bad idea to me, especially the 
+opt-in implementation doesn't look complicated.
 
-Fixes: 3718c02dbd4c ("acpi, hmat: calculate abstract distance with HMAT")
-Cc: stable@vger.kernel.org
-Reviewed-by: Huang Ying <ying.huang@linux.alibaba.com>
-Acked-by: Balbir Singh <balbirs@nvidia.com>
-Reviewed-by: Donet Tom <donettom@linux.ibm.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
----
-V2:
-  Document the 'User-visible impact' # Andrew Morton <akpm@linux-foundation.org>
----
- include/linux/memory-tiers.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>>>   So that we would actually require an opt-in is not
+>>> guaranteed.
+>>>
+>>> Another consideration could be how to handle GetQuote for an eventual 
+>>> TDVMCALL
+>>> opt-in interface, should it be needed. The problem would be GetQuote 
+>>> would be
+>>> opted in by default and make the interface weird. But we may not want 
+>>> to have a
+>>> TDVMCall specific opt-in interface. There could be other TDX 
+>>> behaviors that we
+>>> need to opt-in around. In which case the opt-in interface could be 
+>>> more generic,
+>>> and by implementing the TDVMCall opt-in interface ahead of time we 
+>>> would end up
+>>> with two opt-in interfaces instead of one.
+> 
+> Maybe we can use a TDX specific opt-in interface instead of TDVMCALL 
+> specific
+> interface.
+> But not sure we should add it now or later.
 
-diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.h
-index 0dc0cf2863e2..7a805796fcfd 100644
---- a/include/linux/memory-tiers.h
-+++ b/include/linux/memory-tiers.h
-@@ -18,7 +18,7 @@
-  * adistance value (slightly faster) than default DRAM adistance to be part of
-  * the same memory tier.
-  */
--#define MEMTIER_ADISTANCE_DRAM	((4 * MEMTIER_CHUNK_SIZE) + (MEMTIER_CHUNK_SIZE >> 1))
-+#define MEMTIER_ADISTANCE_DRAM	((4L * MEMTIER_CHUNK_SIZE) + (MEMTIER_CHUNK_SIZE >> 1))
- 
- struct memory_tier;
- struct memory_dev_type {
--- 
-2.41.0
+For simplicity, I prefer separate opt-in interfaces, it makes code simpler.
 
