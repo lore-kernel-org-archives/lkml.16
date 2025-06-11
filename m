@@ -1,48 +1,46 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ABC91779B8;
-	Wed, 11 Jun 2025 02:18:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF9F4A0F;
+	Wed, 11 Jun 2025 02:20:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749608317; cv=none; b=qAyAbmmpI7l5ZztvfbGiGmUrm++EK9k0kaeSKQu2ljAxO+AuP57nyZxKtvORaQg16sc+GI6kbufT6B96wK4LqeXPqvRi5Cg3Ki7ApEqf9D9lsLLGOhKmg/NwwVr1CuRRnnLy8Omh3291Wk/32Nqh/2fJRKqH+xNEixbRtCKi2YE=
+	t=1749608402; cv=none; b=CHj5kQI/SGxsTDZeJLKiVL4PoT2N5MkvzAHdKLZXIz9DCXTcFjWvybGO3ay4mrmRxXldAIzOPcWc9z0GyRagE9yadpmrv5YcsBucwxqH7gMCukbZy90PB7a7qU89TOKvTIbutoXFyTCVc9wOz2y05+KLh58OzqQHhyo9tzYGyC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749608317; c=relaxed/simple;
-	bh=nJg3fXUbanYONt65/Z46lxZ+uzpCMjnN9glGRCq6Zjc=;
+	s=arc-20240116; t=1749608402; c=relaxed/simple;
+	bh=uV7LB5me5Ipfl0vRIQU42uYhgDD+Orq+kiYw389Ufsg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oZGorSCc1ekXCI+yUN66yiV7DTnA9ixgZwZacMWD6lDKqpBsP+GQoZdlHDDuQIIwr1kOYsXxcz5s8hJHl7lU6cTR/UwpZPBpJI1zVh1/C3ZlhmBauSbXGjNSkmMNOYJV1Y11KjB9lbRrm5OA+keTLWeRU0UPKsQmb9bll/NUc1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=kN/3bCIW; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	 Content-Type:Content-Disposition:In-Reply-To; b=RLINq3WuKj7QMZGD3IMCgnaqUmA3uKzW/lOayg6ULUJ3azLBJu37DfDiGpV7BGclxiIVroMr53LYbQDiE9Db+KX4xdruicvGZg++LeJskUd2JyLnCXUL27AwsLmXe3/kkoJ4V5ZsunO/A8ZS6d2BW0d5GvAnWxRRtT1Tt/maAyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kte6d/wZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="kN/3bCIW"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=IuJnBGEYZBtUaLzm2eemejs/8BeVNWawSMjHXM7ac88=; b=kN/3bCIW6AY93L70XwzPH7HP7r
-	wZMCRsITAyj5WrFsPNQ0f/iodF0cOs8EERsIV2OnWLKw4JtfrmhYkmCIx3rWudv434CuQi8qdL8L0
-	L7q3IUy4FEKN9cECKnKPOdRMbNkDx8kRlW4AcPUmYty9U+IPMuBXk8XT4VGH2PTBu/T/ZWO7P+jRv
-	zzMiXEkBMFpCf7lDjOBQLOo5NX6zTHV0FF0tmLeFrTeVJyITAqLMXEh/+6hIZnf9zdHW2mlG9nPmj
-	8It70Uk4QG/bRISzrSjgJ0BcXT7wrY/gIqbR2IBtJS3rZ5uN3jCanVSQI68EWbK4QpTrhXpXv6p6B
-	VXUJQfTg==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uPB2j-00CEh7-1S;
-	Wed, 11 Jun 2025 10:18:22 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 11 Jun 2025 10:18:21 +0800
-Date: Wed, 11 Jun 2025 10:18:21 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Cc: Kristen Accardi <kristen.c.accardi@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Tom Zanussi <tom.zanussi@linux.intel.com>,
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: iaa - Fix race condition when probing IAA devices
-Message-ID: <aEjnbdoqzLoMifRn@gondor.apana.org.au>
-References: <20250603235531.159711-1-vinicius.gomes@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kte6d/wZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88B40C4CEED;
+	Wed, 11 Jun 2025 02:20:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749608402;
+	bh=uV7LB5me5Ipfl0vRIQU42uYhgDD+Orq+kiYw389Ufsg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kte6d/wZ35xg7tLBmqdrbep/LadAF33nuWzZ3hNVZxuk8dSI5kELrdgyx4Bsc5+PD
+	 MLQ2YQj9pNXsnjP2PSgHijD344hTDotNKDTrVbfymkrfYEqRoCFoJHvFhZ8p7WEamv
+	 iE2dy308nODevXQIc4dtLixAcopdhzfetPOEimpYMk8AYEGx0ovrS5vYtdBUJGaZKo
+	 kxEccz4aVOu0omcUja7q4HzVpSyLaKoCIIaoN977XE++wRD5bSwwkeDjf3x54muD6u
+	 AXEOjcxGjd4Xj4JuMQL73on1hjFGhkj4RgHZxqyX3ej1AA9IXJaqTvSvvQVKiI0OCe
+	 21vCoGGk2zhsQ==
+Date: Wed, 11 Jun 2025 02:19:58 +0000
+From: Tzung-Bi Shih <tzungbi@kernel.org>
+To: Tomasz Michalec <tmichalec@google.com>
+Cc: Benson Leung <bleung@chromium.org>,
+	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+	Jameson Thies <jthies@google.com>,
+	Andrei Kuchynski <akuchynski@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>,
+	Konrad Adamczyk <konrada@google.com>,
+	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
+	chromeos-krk-upstreaming@google.com
+Subject: Re: [PATCH] platform/chrome: cros_ec_typec: Defer probe on missing
+ EC parent
+Message-ID: <aEjnznB6dKqT5DYO@google.com>
+References: <20250610153748.1858519-1-tmichalec@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,40 +49,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250603235531.159711-1-vinicius.gomes@intel.com>
+In-Reply-To: <20250610153748.1858519-1-tmichalec@google.com>
 
-On Tue, Jun 03, 2025 at 04:55:31PM -0700, Vinicius Costa Gomes wrote:
->
-> diff --git a/drivers/crypto/intel/iaa/iaa_crypto_main.c b/drivers/crypto/intel/iaa/iaa_crypto_main.c
-> index 23f585219fb4..2185c101bef3 100644
-> --- a/drivers/crypto/intel/iaa/iaa_crypto_main.c
-> +++ b/drivers/crypto/intel/iaa/iaa_crypto_main.c
-> @@ -35,28 +35,39 @@ static unsigned int cpus_per_iaa;
->  
->  /* Per-cpu lookup table for balanced wqs */
->  static struct wq_table_entry __percpu *wq_table;
-> +static DEFINE_SPINLOCK(wq_table_lock);
+On Tue, Jun 10, 2025 at 05:37:47PM +0200, Tomasz Michalec wrote:
+> If cros_typec_probe is called before EC device is registered,
+> cros_typec_probe will fail. It may happen when cros-ec-typec.ko is
+> loaded before EC bus layer module (e.g. cros_ec_lpcs.ko,
+> cros_ec_spi.ko).
+> 
+> Return -EPROBE_DEFER when cros_typec_probe doesn't get EC device, so
+> the probe function can be called again after EC device is registered.
+> 
+> [...]
 
-This can be called in BH context so you need to disable BH when
-taking the spinlock.
+Applied to
 
->  static struct idxd_wq *wq_table_next_wq(int cpu)
->  {
-> -	struct wq_table_entry *entry = per_cpu_ptr(wq_table, cpu);
-> +	struct wq_table_entry *entry;
-> +	struct idxd_wq *wq;
-> +	int id;
-> +
-> +	guard(spinlock)(&wq_table_lock);
-> +
-> +	entry = per_cpu_ptr(wq_table, cpu);
+    https://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git for-next
 
-You're taking a global spinlock around a per-cpu variable.  In that
-case you might as well get rid of the per-cpu variable and use the
-spinlock only.
+[1/1] platform/chrome: cros_ec_typec: Defer probe on missing EC parent
+      commit: 8866f4e557eba43e991f99711515217a95f62d2e
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Thanks!
