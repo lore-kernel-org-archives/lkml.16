@@ -1,146 +1,143 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86FDF28C855;
-	Wed, 11 Jun 2025 14:18:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65082E6108;
+	Wed, 11 Jun 2025 14:19:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749651494; cv=none; b=CpX4cuS1btVwYk7xhQrXqP0662AuZiiu/q6Y2XmmSs2fPjLGrnqMohwjW7K4a2tl3fkqj1CfTjYmzI4UuK37jCv6lcXFSkThP2YOXIyXctC+h+QGOJc7W22WqtpMz9Qp7C6n5lvh2UAUAkqFJ6guQtWWfHHUrpoYnjh3M4uU4wQ=
+	t=1749651550; cv=none; b=Sgg34T0fl5v72UFfOG9SWapEQqPt1CDpNsfBjc3bj5ba8xgDBFjz7hvrxq93AHF/zQjn+kbBPW2stWjxPt6POPx9r9QPJ6Bj3O3l4ccoOkB104wiAaxF9I+cH4pUudSaD/nUE37MYjITgbMDFF7urMXr0lJZHDUEitNWyzlA1Tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749651494; c=relaxed/simple;
-	bh=lQ5H38hc2yWWodWSuje7NKKY2ujQtmIDJ1T3piilQ3M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C3Z1MGHdDGUQDpy9Ah4tJdi819c+5HUD6P8GbaBBVSF2nsv33eT8m79g0folw3s6Tqz7kwPVKsGKzyx9KMCOhhz1rFUJpYBy5ccjSBxViyMcugv9VWHt3uff5QUobtbpOt5K6Z4/U0QTGQC0nV1Sejg97gpX2EsuQd7hht32jXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cfSHsSaz; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1749651550; c=relaxed/simple;
+	bh=X4yR9SQrkQy8lHFnfWIIxbFQEOqZ/7ogBROBwNzUJOs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Z1BWKrAUymMqmV8tcZ5Y5EhDF7zubaX/2xgb8UeeUAq6AraUGdpdzNeGv+yHBqbuOL4g6X8030XG/RblHzsnVlQarig1Md0+tUOgQCBNibCCmCdiXwqpL9Cz928+N1EBrAEEsdtKYZd4tz4rtSEIhPjysw8ryI/Ohf9rC0RETco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cfSHsSaz"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-32addf54a00so48052601fa.1;
-        Wed, 11 Jun 2025 07:18:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749651491; x=1750256291; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1JHyDDVL96PT69+HIUFTlQwzyTVvaxPDQBDHlKvb0lw=;
-        b=cfSHsSaziohxAORUBJWsJ3VhdhDK80i7gVXEJBdgTax8Vzk9H4n1m+gVt1LGEE2uq9
-         SSyCMlhB0/ybEKoNJuWN5ed40cInJCTUtbmcrtZJ1Z3x+rG6n1r3RRAUkf+pkh8Mm4pc
-         PT1wMIKupgRO3Rw/Dy9hNQeSiwCXzaOQ9AoWOACrw+W8ekCQ3P6+V5sNB8Gnsa1NVh75
-         LuWnmKf8VThSuQAhTzjcFyzDokX2u3SzKA13EUAEYwM/FLHXwHeJGVwj2XOCTMoci8wp
-         ZXxmQw5tAwKUUZTsqoTAuVHfM15CwyEnI+Rp1aMv1bzCdz61ZA49nt2MSjHXXoMDIgLd
-         YI2g==
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-60780d74c85so8292459a12.2;
+        Wed, 11 Jun 2025 07:19:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749651491; x=1750256291;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1JHyDDVL96PT69+HIUFTlQwzyTVvaxPDQBDHlKvb0lw=;
-        b=gz5f6MIQn1MdWpRkEraC7/Wsz9wJ6OHjLaFSBB1k2fGhnawlI+hyX2MXV/VAxuWPlL
-         CJVfwCh5hLFTiQKNKis08n9FMt/Hxv1uw03mF/NNeLA9FetytRhKEv3pSso+fWXkvOm5
-         B6ADmcJgSQtzdcHMk2gWLGjNDKncG6dB14YTPNYDdLjX7ll2TT421Ct0t1KeO7jj6vvl
-         7k1XCOL+fqTCK/lnwr3DY1d3n1dn0wrIlbiyqAnCF0JeAcfR5fvUe977VQeRx3qCtvSa
-         NbK4PGGQSK1FgJFYAVe1sKXQfj2d2BdzP6sZKzI9Dd6N1NYIrceax36EGPCnCoFqB7en
-         cWDw==
-X-Forwarded-Encrypted: i=1; AJvYcCW/Ebx7iZuHwApnf3dtPPOukyWvcbtwAKMItS8/RmNdBdZSK5wsrbLtr2H966Q4EYcD//0BqkpD9zRPYCYm@vger.kernel.org, AJvYcCWJiLblyGaCZXN11l0CHjeJhgEcyex1x6Rw7jUYdudGuN3bwUojRyyHhZkdMKrmGsBNMLNdXQ87ToCShAIT@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2xdApu4Gq6FuDKMlxeolQ3vui2OUdlenVvcg3fmUUTbWWjvsG
-	R/cgx9w4iUXwdSX9MuUHsTe++yIpyjqnsioVCcg56GPrBeBMXlQDjkcqj664xPEMI1gWx9iDjRZ
-	wL/5FCJoaWHs2aq5snCeUrO/WRXjxxLtSYL/H1a8=
-X-Gm-Gg: ASbGncsk6FoSHz0vq+wA7vDoaolUZpq6rGuAtMfKWaRIhptVIewirFN/RByW0DlDM2T
-	UTB+8bEIgT7T7/gyH+CBklSE/ER474r4BluW2VLuVTAkgcrc7Ks/LJ2nfMARujHiyJ43qetDAKZ
-	ixvwMecN38re9EOvbv2vWxXyj3s2hyCK9thLMuUy3vHvRjbAOiV39f4JJlvqMX/2RhZpBWrhIVM
-	rusWA==
-X-Google-Smtp-Source: AGHT+IEw99JZ3Ni2MxwdgIFYpOqtbrPsWWAib83ZR7Rw9sZS3Aa6YYdAkawHMQmcsqGznXxBoTb+QwWK6QtF+QGgKHM=
-X-Received: by 2002:a05:651c:221f:b0:32a:74db:fe73 with SMTP id
- 38308e7fff4ca-32b21de3f22mr11802421fa.28.1749651490434; Wed, 11 Jun 2025
- 07:18:10 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749651547; x=1750256347;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CIinT2SIgTziz1viNL6oRRdjX3djEg9Ov01XppuG91E=;
+        b=hVNvPBBOT5PeA58R4ZoXUBVCf9NzBtAL+5djyZFdOHQzzDs5/xZgVsj3Xc60azKDqv
+         d8qWyfy0QMekggY00RQi/QA8of1rzcyZA12hEpnMa4sGaprV3+Zgu4tg6R/1yxlwpiYW
+         SYb6F++ggihRGGSF4H4FtxylrbraFxABDmqPKuwi/ZZRbdLn2pqQ6/s+h9yvrBd3QOCX
+         diWVUhWgEjxvRkCDNf35AeM21YAQik7cjFR/eQe4L1c07xgs89m/pGvhutJoLF4Aoyn/
+         TxPTx9ud+3Islza0o8PKMO6JX7XEOEE+N2k5i1dhJezYY/uTRZQYw5cf5qPtIz22slHe
+         4n2A==
+X-Forwarded-Encrypted: i=1; AJvYcCUbyk1vcTM5G9uDXQfDmvBQ1b0RLVXcDyA4U4JCftu/tucsXMHBqN6z+ovJrhzduSEQC6RIoE6tpomYBtSRBH21@vger.kernel.org, AJvYcCV5p1K2eztAAgDVTYx+sAGUavrDVKmUTwvyk1ekXVQy7M1Q1yo4HzognW+W39326mlgiDQKB3uWNgp9oYA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhBW62TX2ySGNeEaB2cFhEjhaL2Hb4Ouc8z72SrjxxZBqOIFZu
+	N8RK6vFPHtzLSoT2AOHcNaqZSsrvSTKJbGlHnVum52L9KdoVSsz0O6s4
+X-Gm-Gg: ASbGnctux8CHzfedkjDY5IrnEmtmBhzMsW2Vn0tKGw0elXRjrExck67wlHatGGrKRcY
+	KH2S8tURnCKMqAEFWRuGcPPchJh/uZVbU2wZpd3TQyiAMAPSnbNFL4oVIcJy+P5lIudlLuGLlCU
+	Vc3WE+uursXIhPu2WEBStkh/nUmcd1l/SiEXvrhmnF4SC3bxK1Dvc+mHA7YaU7YYEKj55QVHM75
+	Mswa0aUo1Bu+ZKtNIzv440fqh2O9rKwEDX2RPFI3cTC6actGhZwr0BBPkmqMqLQoiu0c3V0WC6D
+	E2cqW1bnlWjtbDLvdwDlO22rGytGUGBbHlzTYJmyEVucHnA3Z+sfCg==
+X-Google-Smtp-Source: AGHT+IFzUJoywpTHPudWC/GZ6du/khG/9ZL7dbUEeZ45ypUoENUVoIAFYM9Vb6fU0/XrcyoSS/npLA==
+X-Received: by 2002:a05:6402:27c6:b0:607:f61f:cc1c with SMTP id 4fb4d7f45d1cf-60845c8bd53mr3130429a12.0.1749651547108;
+        Wed, 11 Jun 2025 07:19:07 -0700 (PDT)
+Received: from localhost ([2a03:2880:30ff:72::])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-607783c0549sm7738559a12.47.2025.06.11.07.19.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 07:19:06 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+Subject: [PATCH net-next v2 0/7] netpoll: Untangle netconsole and netpoll
+Date: Wed, 11 Jun 2025 07:18:49 -0700
+Message-Id: <20250611-rework-v2-0-ab1d92b458ca@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250607082844.8779-1-pranav.tyagi03@gmail.com>
- <202506092053.827AD89DC5@keescook> <decv7f4drznbeoyjjm7ixlsgmu7ust4fltwwlnbltdjcvmhtbk@5qreij76z7jn>
-In-Reply-To: <decv7f4drznbeoyjjm7ixlsgmu7ust4fltwwlnbltdjcvmhtbk@5qreij76z7jn>
-From: Pranav Tyagi <pranav.tyagi03@gmail.com>
-Date: Wed, 11 Jun 2025 19:47:58 +0530
-X-Gm-Features: AX0GCFu4sDFJ8r-fSsh6QpnCWFxzSyxmgew_3nZ6MvQ-4CtPA9tGvltGmTDudag
-Message-ID: <CAH4c4jKD1TdpyfUXxvz1F_-ONTbKC=4z2V0iH4rGCBgYv0-Kxg@mail.gmail.com>
-Subject: Re: [PATCH] binfmt_elf: use check_mul_overflow() for size calc
-To: Jan Kara <jack@suse.cz>
-Cc: Kees Cook <kees@kernel.org>, viro@zeniv.linux.org.uk, brauner@kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org, 
-	linux-kernel-mentees@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEqQSWgC/zXNTQqDMBBA4auEWZuSjPUHV71HcWGTUYdCUibBW
+ sS7F1K6fvC9AxIJU4JBHSC0ceIYYFBYKXDrFBbS7GFQgAYb05paC72jPLWzXeMm33tEgkrBS2j
+ mvUB3CJR1oD3DWClYOeUon3LYbOk/zJo/tlltdOdmT9jXM17bm6cHT+ESZYHxPM8vDgSFnacAA
+ AA=
+X-Change-ID: 20250603-rework-c175cad8d22e
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, Breno Leitao <leitao@debian.org>, 
+ kernel-team@meta.com
+X-Mailer: b4 0.15-dev-42535
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2481; i=leitao@debian.org;
+ h=from:subject:message-id; bh=X4yR9SQrkQy8lHFnfWIIxbFQEOqZ/7ogBROBwNzUJOs=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBoSZBZbrxdRAfgKoGRA36Q/dLDzoe2v7zwF/+6K
+ wngzZLd9LmJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaEmQWQAKCRA1o5Of/Hh3
+ bW9oEACC9JH7SImQs/lVPOBGPO0W2aaajB3MQ8ghNDyAABXg7hjW+d6TRF9p+aZlqIsJ7h8aanS
+ mdEMpSQCl/jcB0Rm4yU8i85K9m4LE/WoEhMDNk0UOWlutcZlPxBBmVPYIWY00EbAf3908MrakX3
+ nAun7mQmVlv1NkeHai6DwVLVEcSdgY0e2Xw6ftFcrIJu0mrXeAfB/chBh5QSpAL6FXid+WjPEzb
+ uH/+ynJxsoaGzeHHqgqppgk3tQHLuBL6F4Bxy2Dk37FvfrWvUMENOuPJUdXoqnX2iiq6pmwGvkQ
+ 7KHw7ioAwVzPTcq+RN1RqKGYaq8bJfC5YZE01Iqi+lXrd9ZwGzz+nVhVM98Tqn/FFOq+P41gP1R
+ xd0VdJeANgngHWEpnyXGQTxJVkHn09mk/B4pnurHzjQIK1DfmGWsimIqJkiMDzz/K5mz52ZdrVg
+ h0zY88ztYXjtRXIjnD3e2aN6yXzgg78SRFxXHMixH6+BcesYMNoeGbF3OG3lElSuNs86rc+OLvn
+ bOlkBvpC3yx19A8M5ta4h9/KY7s19H4IIRfw5wZ7iRrJ3dh/VXcRmRxgyQeuNflO9kEr29nHKol
+ lxvxUC5td+uoHQ3CrzXao2h75xRlmzncv4l4/LIplFfHW8+ULEOdzs5Xn3yLV1YuZrr3fWpPzSL
+ 8gzHV6XUUkDT0Zw==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 
-On Tue, Jun 10, 2025 at 1:29=E2=80=AFPM Jan Kara <jack@suse.cz> wrote:
->
-> On Mon 09-06-25 21:04:36, Kees Cook wrote:
-> > On Sat, Jun 07, 2025 at 01:58:44PM +0530, Pranav Tyagi wrote:
-> > > Use check_mul_overflow() to safely compute the total size of ELF prog=
-ram
-> > > headers instead of relying on direct multiplication.
-> > >
-> > > Directly multiplying sizeof(struct elf_phdr) with e_phnum risks integ=
-er
-> > > overflow, especially on 32-bit systems or with malformed ELF binaries
-> > > crafted to trigger wrap-around. If an overflow occurs, kmalloc() coul=
-d
-> > > allocate insufficient memory, potentially leading to out-of-bound
-> > > accesses, memory corruption or security vulnerabilities.
-> > >
-> > > Using check_mul_overflow() ensures the multiplication is performed
-> > > safely and detects overflows before memory allocation. This change ma=
-kes
-> > > the function more robust when handling untrusted or corrupted binarie=
-s.
-> > >
-> > > Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
-> > > Link: https://github.com/KSPP/linux/issues/92
-> > > ---
-> > >  fs/binfmt_elf.c | 5 ++++-
-> > >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-> > > index a43363d593e5..774e705798b8 100644
-> > > --- a/fs/binfmt_elf.c
-> > > +++ b/fs/binfmt_elf.c
-> > > @@ -518,7 +518,10 @@ static struct elf_phdr *load_elf_phdrs(const str=
-uct elfhdr *elf_ex,
-> > >
-> > >     /* Sanity check the number of program headers... */
-> > >     /* ...and their total size. */
-> > > -   size =3D sizeof(struct elf_phdr) * elf_ex->e_phnum;
-> >
-> > size is unsigned int, which has a maximum value of 4,294,967,295.
-> >
-> > elf_ex->e_phnum is a u16 (2 bytes) and will not be changing:
-> >
-> > $ pahole -C elf64_hdr */fs/binfmt_elf.o
-> > struct elf64_hdr {
-> >       ...
-> >         Elf64_Half                 e_phnum;              /*    56     2=
- */
-> >       ...
->
-> Ah, what confused me was that I somehow thought Elf64_Half is u32 without
-> checking it's definition which clearly shows its actually u16. Thanks for
-> checking it! You're right that the patch is pointless then.
->
->                                                                 Honza
-> --
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
+Initially netpoll and netconsole were created together, and some
+functions are in the wrong file. Seperate netconsole-only functions
+in netconsole, avoiding exports.
 
-Hi,
+1. Expose netpoll logging macros in the public header to enable consistent
+   log formatting across netpoll consumers.
 
-I understand that the patch is actually pointless. I am still
-new to kernel dev and learnt a lot from your comments. I will keep
-this in mind while sending patches in the future.
+2. Relocate netconsole-specific functions from netpoll to the netconsole
+   module where they are actually used, reducing unnecessary coupling.
 
-Regards
+3. Remove unnecessary function exports
 
-Pranav Tyagi
+4. Rename netpoll parsing functions in netconsole to better reflect their
+   specific usage.
+
+5. Create a test to check that cmdline works fine. This was in my todo
+   list since [1], this was a good time to add it here to make sure this
+   patchset doesn't regress.
+
+PS: The code was split in a way that it is easy to review. When copying
+the functions from netpoll to netconsole, I do not change than other
+than adding `static`. This will make checkpatch unhappy, but, further
+patches will address the issues. It is done this way to make it easy for
+reviewers.
+
+Link: https://lore.kernel.org/netdev/Z36TlACdNMwFD7wv@dev-ushankar.dev.purestorage.com/ [1]
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+Changes in v2:
+- No change in the code. Just rebased the patches onto netnext/main
+- Link to v1: https://lore.kernel.org/r/20250610-rework-v1-0-7cfde283f246@debian.org
+
+---
+Breno Leitao (7):
+      netpoll: remove __netpoll_cleanup from exported API
+      netpoll: expose netpoll logging macros in public header
+      netpoll: relocate netconsole-specific functions to netconsole module
+      netpoll: move netpoll_print_options to netconsole
+      netconsole: rename functions to better reflect their purpose
+      netconsole: improve code style in parser function
+      selftest: netconsole: add test for cmdline configuration
+
+ drivers/net/netconsole.c                           | 137 ++++++++++++++++++++-
+ include/linux/netpoll.h                            |  10 +-
+ net/core/netpoll.c                                 | 136 +-------------------
+ tools/testing/selftests/drivers/net/Makefile       |   1 +
+ .../selftests/drivers/net/lib/sh/lib_netcons.sh    |  39 +++++-
+ .../selftests/drivers/net/netcons_cmdline.sh       |  52 ++++++++
+ 6 files changed, 228 insertions(+), 147 deletions(-)
+---
+base-commit: 0097c4195b1d0ca57d15979626c769c74747b5a0
+change-id: 20250603-rework-c175cad8d22e
+
+Best regards,
+-- 
+Breno Leitao <leitao@debian.org>
+
