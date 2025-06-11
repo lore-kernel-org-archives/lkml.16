@@ -1,120 +1,131 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2CE328313F
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 12:54:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66958283141;
+	Wed, 11 Jun 2025 12:55:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749646501; cv=none; b=fuE8/T8pFg6dFvfeKghZf7GHEtFAy0lBiWZByIQ5fTCtqFb3entZV+pKYKecBsFvZJM0t+kdoX+R0auOuBmkroZxTNnU40X37wdFJ7wAuXF9snmCC7fEOg9csyFVEoFn/ECAM2/wPVtcM+4FuWRQcVg71S/b91yujMpFQgHy4SA=
+	t=1749646517; cv=none; b=uj6ezA6LJk088KdhiSf2Pevzjh7b3j2/F6HIdz4pzAHU34RILAoV1KbKgVLnmuWDyJ3tLuR5lNCepqlOQ/FZHPJxPWl6LRptMsoQpIuRc4mFz2SHNZ7mfIyvm8jfGEjNhQdcw0+f+Xdri4/12bk2FDzJXkCuaRjmhFCMNrbSvjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749646501; c=relaxed/simple;
-	bh=3ri1uUjaDZUWtMHwL3zfVgz31FSGDnI7PcdIF9QQGUs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ekk28Vo8N9kdMCPtLs9Qvx3VwgNJcltLYWVbfZPp6OSCKQ4FsQEo6pEyOH/4RQY+wwgtAWGwWOk27wTNvqom3G6cvGeyZCqzTPrFNGBj2hXkl67QIoh1C+FTN9EaQ2QyjZQg5meR2gmBQZ8uhzI+qh+NAls203FtLoqxR+4+CL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4bHQW662QszRk36;
-	Wed, 11 Jun 2025 20:50:42 +0800 (CST)
-Received: from dggemv706-chm.china.huawei.com (unknown [10.3.19.33])
-	by mail.maildlp.com (Postfix) with ESMTPS id 24A2A180B64;
-	Wed, 11 Jun 2025 20:54:56 +0800 (CST)
-Received: from kwepemq100007.china.huawei.com (7.202.195.175) by
- dggemv706-chm.china.huawei.com (10.3.19.33) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 11 Jun 2025 20:54:55 +0800
-Received: from [10.159.166.136] (10.159.166.136) by
- kwepemq100007.china.huawei.com (7.202.195.175) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 11 Jun 2025 20:54:55 +0800
-Message-ID: <1de56e48-2104-4181-8b94-20c97001a81c@huawei.com>
-Date: Wed, 11 Jun 2025 20:54:53 +0800
+	s=arc-20240116; t=1749646517; c=relaxed/simple;
+	bh=QkhZi3FU1sey8L3Wa1mNnXtLz2q7e9LWK29b8Qyi1lM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BqF5X9rPFu63RGQmb6aYJrfNU9src6Fz/7iYYcSHU7uaBYXSmv6Ud8CK1y28LjSzX8tMSivK3kMLJn65ujF0glk3Mpn+El8+5f0twSl3Wx2ax2Tj1ULN49aQ8DNIEfLNzJrB4LgHuCtSrWh8+M8uZa0YhAh5QXRMc2tTNoC4NMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=PAl+gLGd; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PAl+gLGd"
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id EE46C211518E; Wed, 11 Jun 2025 05:55:09 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EE46C211518E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1749646509;
+	bh=Ri1hYdHfAQj4ltRI0jgAUTpeJneNKRaFwaxSP5kdq+A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PAl+gLGd6fFsNagRHPk9zMpkXGnli0J7ihpPQgTIjCdhKYquI5MoY/V/4kjL+B7Vz
+	 hZnOCuCNpf7iCZc2gxjzlDfOE620JhDc0Fz7/PKjVGBO3lAUGmKOXjyeLelIyG0Sgx
+	 5XVHatwQdWSMjY0/zP0mKyWlRGy8j6bnjFog1nEE=
+Date: Wed, 11 Jun 2025 05:55:09 -0700
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	kotaranov@microsoft.com, longli@microsoft.com, horms@kernel.org,
+	shirazsaleem@microsoft.com, leon@kernel.org,
+	shradhagupta@linux.microsoft.com, schakrabarti@linux.microsoft.com,
+	rosenp@gmail.com, sdf@fomichev.me, linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Subject: Re: [PATCH net-next 1/4] net: mana: Fix potential deadlocks in mana
+ napi ops
+Message-ID: <20250611125509.GA22813@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1749631576-2517-1-git-send-email-ernis@linux.microsoft.com>
+ <1749631576-2517-2-git-send-email-ernis@linux.microsoft.com>
+ <20250611110352.GA31913@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH drm-dp 09/10] drm/hisilicon/hibmc: fix HPD no showing with
- VGA para of GRUB
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-CC: <xinliang.liu@linaro.org>, <tiantao6@hisilicon.com>,
-	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
-	<kong.kongxinwei@hisilicon.com>, <liangjian010@huawei.com>,
-	<chenjianmin@huawei.com>, <lidongming5@huawei.com>, <libaihan@huawei.com>,
-	<shenjian15@huawei.com>, <shaojijie@huawei.com>,
-	<jani.nikula@linux.intel.com>, <dri-devel@lists.freedesktop.org>,
-	<linux-kernel@vger.kernel.org>, <shiyongbang@huawei.com>
-References: <20250530095432.1206966-1-shiyongbang@huawei.com>
- <20250530095432.1206966-10-shiyongbang@huawei.com>
- <5nansqkys4d3wlsefql6itgnpdoxhgjo7kkmovpm3gfbphxcs6@4anxx7hzoimh>
-From: Yongbang Shi <shiyongbang@huawei.com>
-In-Reply-To: <5nansqkys4d3wlsefql6itgnpdoxhgjo7kkmovpm3gfbphxcs6@4anxx7hzoimh>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemq100007.china.huawei.com (7.202.195.175)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611110352.GA31913@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
+On Wed, Jun 11, 2025 at 04:03:52AM -0700, Saurabh Singh Sengar wrote:
+> On Wed, Jun 11, 2025 at 01:46:13AM -0700, Erni Sri Satya Vennela wrote:
+> > When net_shaper_ops are enabled for MANA, netdev_ops_lock
+> > becomes active.
+> > 
+> > The netvsc sets up MANA VF via following call chain:
+> > 
+> > netvsc_vf_setup()
+> >         dev_change_flags()
+> > 		...
+> >          __dev_open() OR __dev_close()
+> > 
+> > dev_change_flags() holds the netdev mutex via netdev_lock_ops.
+> > 
+> > During this process, mana_create_txq() and mana_create_rxq()
+> > invoke netif_napi_add_tx(), netif_napi_add_weight(), and napi_enable(),
+> > all of which attempt to acquire the same lock,
+> > leading to a potential deadlock.
+> 
+> commit message could be better oriented.
+> 
+> > 
+> > Similarly, mana_destroy_txq() and mana_destroy_rxq() call
+> > netif_napi_disable() and netif_napi_del(), which also contend
+> > for the same lock.
+> > 
+> > Switch to the _locked variants of these APIs to avoid deadlocks
+> > when the netdev_ops_lock is held.
+> > 
+> > Fixes: d4c22ec680c8 ("net: hold netdev instance lock during ndo_open/ndo_stop")
+> > Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+> > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> > Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> > ---
+> >  drivers/net/ethernet/microsoft/mana/mana_en.c | 39 ++++++++++++++-----
+> >  1 file changed, 30 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> > index ccd2885c939e..3c879d8a39e3 100644
+> > --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> > +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> > @@ -1911,8 +1911,13 @@ static void mana_destroy_txq(struct mana_port_context *apc)
+> >  		napi = &apc->tx_qp[i].tx_cq.napi;
+> >  		if (apc->tx_qp[i].txq.napi_initialized) {
+> >  			napi_synchronize(napi);
+> > -			napi_disable(napi);
+> > -			netif_napi_del(napi);
+> > +			if (netdev_need_ops_lock(napi->dev)) {
+> > +				napi_disable_locked(napi);
+> > +				netif_napi_del_locked(napi);
+> > +			} else {
+> > +				napi_disable(napi);
+> > +				netif_napi_del(napi);
+> > +			}
+> 
+> Instead of using if-else, we can used netdev_lock_ops(), followed by *_locked api-s.
+> Same for rest of the patch.
+> 
 
-> On Fri, May 30, 2025 at 05:54:31PM +0800, Yongbang Shi wrote:
->> From: Baihan Li <libaihan@huawei.com>
->>
->> In early OS versions， there is a bug in hibmc-drm driver previously,
-> Which OS? What does that mean? Why do we need to workaround userspace
-> issues in the kernel?
+I later realized that what we actually need is:
 
-We use OpenEuler 22.03, there is a VGA cfg(video=VGA-1:640x480-32@60me) in GRUB args.
-If it exists, it will affect DP HPD.
+  if (!netdev_need_ops_lock(napi->dev))
+	netdev_lock(dev);
 
+not
 
->> so some OS add a VGA parameter in GRUB(video=VGA-1:640x480-32@60me) to
->> fix the bug, that will config a force VGA mode to drm driver. However, the
->> HPD problem exists that mentioned in previous patch, so change VGA's status
->> in force() to compatible with some older OS versions.
->>
->> Fixes: f9698f802e50 ("drm/hisilicon/hibmc: Restructuring the header dp_reg.h")
->> Signed-off-by: Baihan Li <libaihan@huawei.com>
->> ---
->>   drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c | 14 ++++++++++++++
->>   1 file changed, 14 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
->> index 73dd3d5fc26c..d609ccda2f2a 100644
->> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
->> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
->> @@ -61,6 +61,19 @@ static int hibmc_vdac_detect(struct drm_connector *connector, struct drm_modeset
->>   	return connector_status_connected;
->>   }
->>   
->> +static void hibmc_vdac_force(struct drm_connector *connector)
->> +{
->> +	struct hibmc_drm_private *priv = to_hibmc_drm_private(connector->dev);
->> +	struct hibmc_dp *dp = &priv->dp;
->> +
->> +	if (dp->hpd_status) {
->> +		connector->status = connector_status_disconnected;
->> +		return;
->> +	}
->> +
->> +	connector->status = connector_status_connected;
-> You are again trying to tie VGA and DP status, so NAK.
->
->> +}
->> +
->>   static void hibmc_connector_destroy(struct drm_connector *connector)
->>   {
->>   	struct hibmc_vdac *vdac = to_hibmc_vdac(connector);
->> @@ -81,6 +94,7 @@ static const struct drm_connector_funcs hibmc_connector_funcs = {
->>   	.reset = drm_atomic_helper_connector_reset,
->>   	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
->>   	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
->> +	.force = hibmc_vdac_force,
->>   };
->>   
->>   static void hibmc_encoder_mode_set(struct drm_encoder *encoder,
->> -- 
->> 2.33.0
->>
+  if (netdev_need_ops_lock(napi->dev))
+        netdev_lock(dev);
+
+Hence, netdev_lock_ops() is not appropriate. Instead, netdev_lock_ops_to_full()
+seems to be a better choice.
+
+> Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> 
+> - Saurabh
+> 
