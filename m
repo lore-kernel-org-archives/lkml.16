@@ -1,168 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from esa11.hc1455-7.c3s2.iphmx.com (esa11.hc1455-7.c3s2.iphmx.com [207.54.90.137])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F592D540B;
-	Wed, 11 Jun 2025 02:35:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5A1EAF9;
+	Wed, 11 Jun 2025 02:35:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749609333; cv=none; b=Z2WKmoLC/UxBvCVr6J7LV9iuIzJIDBJM78pGjjn1sWCm3MSwu4dVJKJMQFvrwGKcusFpIix20r31wJNdZ80aixBbLuRzruDqysPSIjnKQvGP9K2BDitnz9EL7+tjYZYLIFD/IaUWyV/KFLooBOdVzotJ5NW1kwVt4u2kam3YmAk=
+	t=1749609361; cv=none; b=TBQz/XLVACAlgRWBbx8FSwuCW+BrPwtdOWu8NZbgXlLFRQ92MjzOr1obJXuMLLtDutm7Jf/O+ogGuyFelQclU2MFHDkAnXlVUEZIoITcqkW76gyjGiJnO+Xx1tjVlgn51+ezROElQ9u/43wi/O98zVkduEcOPlCdy25yVK4IlaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749609333; c=relaxed/simple;
-	bh=DuYa7ouVX0jvgihAaCsa131PXtTGMbKKKSQldyZooIk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AzhSpdAyhIWwna93TJjswIAEj0yqT2RTtR7akeGvCLxCK/UkCbs9YX8gcr2Bgs07qPYUQa46ufobVmKyEl5/LLf6K502jaVultgULTofLj6fo22PDIFr3avi35a6Z2aVs6kfDf8NqTDp7JNB7BWCeB94A7n4fsmv+KGxpNSnIPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fGiYhYmC; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749609361; c=relaxed/simple;
+	bh=+iHAyZuQxdh1hnR8AoXUzwExgpbgBZ9kpS3GBDKs3NU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=QBP6zVsx1vQgKP7GCF2Wa96Zjk8GOca4mYlLexHwiBkdgeTAM4p9ggULxNsLmnpqOmKAURUAF/sIJ377zNgPAEwMAJBa4mnB2h7O0sz6jf1MczVu3baX6glfaezUwFTsZmGImoXIc8ZQwm4q0O75lhe0NXrCfmoo/InKxO93tdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=Gi4X5Lv0; arc=none smtp.client-ip=207.54.90.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fGiYhYmC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749609331; x=1781145331;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=DuYa7ouVX0jvgihAaCsa131PXtTGMbKKKSQldyZooIk=;
-  b=fGiYhYmChwK1AuMFbVWsuxVOWPljJf5O2r13dM9k8SAF5zmUWt74/4r7
-   ZMiVXxaXtFOMZu/ULx2E+tZjN31RNrUpXR2o1rVbEqOl1+fDIsSLwlbeh
-   7I/e84VaUMh+rT5/hM3rHw0BJri/PPMHMp1NKt1TGCi21BEFwyZf3nSA+
-   F0OgwuHmconXxr6ARoal1rm1IvbicrwpFF53ubArbWiHjC2DScKHGVV/2
-   70WYLOwSTeQ+VO3GYWZ1Z+AadjWM38dK2yoMRKmz/cHPOeigYYHF5ROXa
-   LQ+CM2zUzywgR2e2tbwV7zOwCnjwv7cdkLBdFyQDL4THdZVnPd66ZnXDv
-   w==;
-X-CSE-ConnectionGUID: lljja/fdTC2uJ2NNyj4CAg==
-X-CSE-MsgGUID: uSSSgLVeSBy0q4oxno0z5w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="50964447"
-X-IronPort-AV: E=Sophos;i="6.16,226,1744095600"; 
-   d="scan'208";a="50964447"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 19:35:31 -0700
-X-CSE-ConnectionGUID: ql+0J15VSBeI9ksKw36QMg==
-X-CSE-MsgGUID: rTCBjoGuTyOJyrJIT1DCMQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,226,1744095600"; 
-   d="scan'208";a="147395886"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.144]) ([10.124.245.144])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 19:35:29 -0700
-Message-ID: <8f71ad94-034c-4282-85eb-abedda49ece4@linux.intel.com>
-Date: Wed, 11 Jun 2025 10:35:26 +0800
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="Gi4X5Lv0"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1749609359; x=1781145359;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=+iHAyZuQxdh1hnR8AoXUzwExgpbgBZ9kpS3GBDKs3NU=;
+  b=Gi4X5Lv0UtEr08CGJtqvmlQ2D7xY0lAHw/A3/7HYeUy82sNZlbqCHVlN
+   IlIi2fGLnYXUI5Y61+YgiSCetphE5xxZHovmx18RcmArhGbVKjoItYzV9
+   em0W00y7XrrmUGnB5W/hwrR79g0mencskTNwRoX8o75fNIHdTQsZUJTpZ
+   hMzaBTKGt9xgJSJ7g9LcLyJlqp+2jsAqAdmCmkha+r1G6iXvh1JxkAFNd
+   zCNZPK2hnW0vuhEZW/gO9ub/BJJz2yqPt282FFIGKgtxVKOlHWfi20uls
+   w9SxoYDNWhunxTxf1MTPrBeCEMi0S5Tj+fteddXn51d/LmbDfdgMHn9bo
+   Q==;
+X-CSE-ConnectionGUID: 5pHxzLLGSO+AJAu5HfJrOg==
+X-CSE-MsgGUID: evajQBnKS1yiSWenIxrbaQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="181824685"
+X-IronPort-AV: E=Sophos;i="6.16,226,1744038000"; 
+   d="scan'208";a="181824685"
+Received: from unknown (HELO oym-r4.gw.nic.fujitsu.com) ([210.162.30.92])
+  by esa11.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 11:34:47 +0900
+Received: from oym-m4.gw.nic.fujitsu.com (oym-nat-oym-m4.gw.nic.fujitsu.com [192.168.87.61])
+	by oym-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id EB94ED8E1D;
+	Wed, 11 Jun 2025 11:34:44 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by oym-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id 90CE8D4C03;
+	Wed, 11 Jun 2025 11:34:44 +0900 (JST)
+Received: from FNSTPC.g08.fujitsu.local (unknown [10.167.135.44])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 38BE01A0071;
+	Wed, 11 Jun 2025 10:34:41 +0800 (CST)
+From: Li Zhijian <lizhijian@fujitsu.com>
+To: linux-mm@kvack.org
+Cc: akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org,
+	Li Zhijian <lizhijian@fujitsu.com>,
+	stable@vger.kernel.org,
+	Huang Ying <ying.huang@linux.alibaba.com>,
+	Balbir Singh <balbirs@nvidia.com>,
+	Donet Tom <donettom@linux.ibm.com>,
+	Oscar Salvador <osalvador@suse.de>
+Subject: [PATCH v2] mm/memory-tier: Fix abstract distance calculation overflow
+Date: Wed, 11 Jun 2025 10:34:39 +0800
+Message-ID: <20250611023439.2845785-1-lizhijian@fujitsu.com>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20250610062751.2365436-1-lizhijian@fujitsu.com>
+References: <20250610062751.2365436-1-lizhijian@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 31/32] KVM: x86: Simplify userspace filter logic when
- disabling MSR interception
-To: Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- Chao Gao <chao.gao@intel.com>, Borislav Petkov <bp@alien8.de>,
- Xin Li <xin@zytor.com>, Francesco Lavra <francescolavra.fl@gmail.com>,
- Manali Shukla <Manali.Shukla@amd.com>
-References: <20250610225737.156318-1-seanjc@google.com>
- <20250610225737.156318-32-seanjc@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20250610225737.156318-32-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+In mt_perf_to_adistance(), the calculation of abstract distance (adist)
+involves multiplying several int values including MEMTIER_ADISTANCE_DRAM.
+```
+*adist = MEMTIER_ADISTANCE_DRAM *
+		(perf->read_latency + perf->write_latency) /
+		(default_dram_perf.read_latency + default_dram_perf.write_latency) *
+		(default_dram_perf.read_bandwidth + default_dram_perf.write_bandwidth) /
+		(perf->read_bandwidth + perf->write_bandwidth);
+```
+Since these values can be large, the multiplication may exceed the maximum
+value of an int (INT_MAX) and overflow (Our platform did), leading to an
+incorrect adist.
 
-On 6/11/2025 6:57 AM, Sean Christopherson wrote:
-> Refactor {svm,vmx}_disable_intercept_for_msr() to simplify the handling of
-> userspace filters that disallow access to an MSR.  The more complicated
-> logic is no longer needed or justified now that KVM recalculates all MSR
-> intercepts on a userspace MSR filter change, i.e. now that KVM doesn't
-> need to also update shadow bitmaps.
->
-> No functional change intended.
->
-> Suggested-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  arch/x86/kvm/svm/svm.c | 24 ++++++++++--------------
->  arch/x86/kvm/vmx/vmx.c | 24 ++++++++++--------------
->  2 files changed, 20 insertions(+), 28 deletions(-)
->
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index e3c49c763225..5453478d1ca3 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -691,24 +691,20 @@ void svm_disable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type)
->  	void *msrpm = svm->msrpm;
->  
->  	/* Don't disable interception for MSRs userspace wants to handle. */
-> -	if ((type & MSR_TYPE_R) &&
-> -	    !kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_READ)) {
-> -		svm_set_msr_bitmap_read(msrpm, msr);
-> -		type &= ~MSR_TYPE_R;
-> +	if (type & MSR_TYPE_R) {
-> +		if (kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_READ))
-> +			svm_clear_msr_bitmap_read(msrpm, msr);
-> +		else
-> +			svm_set_msr_bitmap_read(msrpm, msr);
->  	}
->  
-> -	if ((type & MSR_TYPE_W) &&
-> -	    !kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_WRITE)) {
-> -		svm_set_msr_bitmap_write(msrpm, msr);
-> -		type &= ~MSR_TYPE_W;
-> +	if (type & MSR_TYPE_W) {
-> +		if (kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_WRITE))
-> +			svm_clear_msr_bitmap_write(msrpm, msr);
-> +		else
-> +			svm_set_msr_bitmap_write(msrpm, msr);
->  	}
->  
-> -	if (type & MSR_TYPE_R)
-> -		svm_clear_msr_bitmap_read(msrpm, msr);
-> -
-> -	if (type & MSR_TYPE_W)
-> -		svm_clear_msr_bitmap_write(msrpm, msr);
-> -
->  	svm_hv_vmcb_dirty_nested_enlightenments(vcpu);
->  	svm->nested.force_msr_bitmap_recalc = true;
->  }
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index bdff81f8288d..277c6b5b5d5f 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -3962,23 +3962,19 @@ void vmx_disable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type)
->  
->  	vmx_msr_bitmap_l01_changed(vmx);
->  
-> -	if ((type & MSR_TYPE_R) &&
-> -	    !kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_READ)) {
-> -		vmx_set_msr_bitmap_read(msr_bitmap, msr);
-> -		type &= ~MSR_TYPE_R;
-> +	if (type & MSR_TYPE_R) {
-> +		if (kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_READ))
-> +			vmx_clear_msr_bitmap_read(msr_bitmap, msr);
-> +		else
-> +			vmx_set_msr_bitmap_read(msr_bitmap, msr);
->  	}
->  
-> -	if ((type & MSR_TYPE_W) &&
-> -	    !kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_WRITE)) {
-> -		vmx_set_msr_bitmap_write(msr_bitmap, msr);
-> -		type &= ~MSR_TYPE_W;
-> +	if (type & MSR_TYPE_W) {
-> +		if (kvm_msr_allowed(vcpu, msr, KVM_MSR_FILTER_WRITE))
-> +			vmx_clear_msr_bitmap_write(msr_bitmap, msr);
-> +		else
-> +			vmx_set_msr_bitmap_write(msr_bitmap, msr);
->  	}
-> -
-> -	if (type & MSR_TYPE_R)
-> -		vmx_clear_msr_bitmap_read(msr_bitmap, msr);
-> -
-> -	if (type & MSR_TYPE_W)
-> -		vmx_clear_msr_bitmap_write(msr_bitmap, msr);
->  }
->  
->  void vmx_enable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int type)
+User-visible impact:
+The memory tiering subsystem will misinterpret slow memory (like CXL)
+as faster than DRAM, causing inappropriate demotion of pages from
+CXL (slow memory) to DRAM (fast memory).
 
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+For example, we will see the following demotion chains from the dmesg, where
+Node0,1 are DRAM, and Node2,3 are CXL node:
+ Demotion targets for Node 0: null
+ Demotion targets for Node 1: null
+ Demotion targets for Node 2: preferred: 0-1, fallback: 0-1
+ Demotion targets for Node 3: preferred: 0-1, fallback: 0-1
 
+Change MEMTIER_ADISTANCE_DRAM to be a long constant by writing it with the
+'L' suffix. This prevents the overflow because the multiplication will then
+be done in the long type which has a larger range.
+
+Fixes: 3718c02dbd4c ("acpi, hmat: calculate abstract distance with HMAT")
+Cc: stable@vger.kernel.org
+Reviewed-by: Huang Ying <ying.huang@linux.alibaba.com>
+Acked-by: Balbir Singh <balbirs@nvidia.com>
+Reviewed-by: Donet Tom <donettom@linux.ibm.com>
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
+---
+V2:
+  Document the 'User-visible impact' # Andrew Morton <akpm@linux-foundation.org>
+---
+ include/linux/memory-tiers.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.h
+index 0dc0cf2863e2..7a805796fcfd 100644
+--- a/include/linux/memory-tiers.h
++++ b/include/linux/memory-tiers.h
+@@ -18,7 +18,7 @@
+  * adistance value (slightly faster) than default DRAM adistance to be part of
+  * the same memory tier.
+  */
+-#define MEMTIER_ADISTANCE_DRAM	((4 * MEMTIER_CHUNK_SIZE) + (MEMTIER_CHUNK_SIZE >> 1))
++#define MEMTIER_ADISTANCE_DRAM	((4L * MEMTIER_CHUNK_SIZE) + (MEMTIER_CHUNK_SIZE >> 1))
+ 
+ struct memory_tier;
+ struct memory_dev_type {
+-- 
+2.41.0
 
