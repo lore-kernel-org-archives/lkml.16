@@ -1,43 +1,53 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56FE028A714
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 10:49:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B9822BD584;
+	Wed, 11 Jun 2025 10:49:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749638973; cv=none; b=fJeFcCdH8rWv+MEcTGHS50M3x/ha/MUCu9NeF1574TVEktgf0q2Z2o6x0T3dnlkXSW2+WEgupGMlHXy01dG7z2X5SFutvK6tsgixwiwBw6KONjARkQWHeXRpkZCFCFyWp2tz1+ezfVQfToBdfnRaKTf19v09mlUG4SlaP4BZJkA=
+	t=1749638974; cv=none; b=FkWTYAPAc4uywU1nKbuTRoV1ZN9hQsnc73WTpkbWJkvtuBVSPYqzZsu5oivllF9Bgzm4yWN4mxbDIpOsuNZLZMlw4zhfNbHx3AVQNMTgBC17YVuGzEGYfDv4B2DOy01xUkY0Gh+TpYesweB9j5Zbr5Tshvw5br/8E8IsAYJjrHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749638973; c=relaxed/simple;
-	bh=1Pq3fWCbMme7can5L1VXxkKY/ixp6vJKLVRm1fVwo3g=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sQscgs0/rlQKGUO1eDKIph0IRMHFF8ywZjbL7oYAust/AY30DeL2MDETQy+Ep5IjdU+oIuBAq0IleLEMH1nctuAN/mY0W1Po7P8VtdLUfUDjkEyLivky0uCaVVSXuvPAlQmOpwZZonaAakMj2ouh99+oNqRplmNRCyTIFIu46mI=
+	s=arc-20240116; t=1749638974; c=relaxed/simple;
+	bh=QQi3P50nAtwufWjGWgcmWkcVO7VWt3g1Qtl7/nTkwdA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JdDYMcut2vkS4a+pKBs/SJtVDRxkZO434hPhvza/mzrUYU39aKGtTjnQ0OMaLeVfSBZgTsWhYNe5C1Qs7Y2ARfhHfaxvJJeLzg1XHMYtuRNRJktHVkzRvIhF2oiutwFEJdPzcr9NFFERncXw/z/6dTEON8+CiN7WC8pvZL9FG54=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 54BAE1688;
-	Wed, 11 Jun 2025 03:49:11 -0700 (PDT)
-Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 109A83F77D;
-	Wed, 11 Jun 2025 03:49:28 -0700 (PDT)
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: catalin.marinas@arm.com,
-	will@kernel.org,
-	broonie@kernel.org,
-	maz@kernel.org,
-	oliver.upton@linux.dev,
-	ardb@kernel.org,
-	frederic@kernel.org,
-	james.morse@arm.com,
-	joey.gouly@arm.com,
-	scott@os.amperecomputing.com
-Cc: linux-arm-kernel@lists.infradead.org,
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0A7115A1;
+	Wed, 11 Jun 2025 03:49:12 -0700 (PDT)
+Received: from e122027.arm.com (unknown [10.57.67.107])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 75DAE3F673;
+	Wed, 11 Jun 2025 03:49:29 -0700 (PDT)
+From: Steven Price <steven.price@arm.com>
+To: kvm@vger.kernel.org,
+	kvmarm@lists.linux.dev
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Yeoreum Yun <yeoreum.yun@arm.com>
-Subject: [PATCH 5/6] arm64/asm: introduce lsui.h
-Date: Wed, 11 Jun 2025 11:49:15 +0100
-Message-Id: <20250611104916.10636-6-yeoreum.yun@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250611104916.10636-1-yeoreum.yun@arm.com>
-References: <20250611104916.10636-1-yeoreum.yun@arm.com>
+	Joey Gouly <joey.gouly@arm.com>,
+	Alexandru Elisei <alexandru.elisei@arm.com>,
+	Christoffer Dall <christoffer.dall@arm.com>,
+	Fuad Tabba <tabba@google.com>,
+	linux-coco@lists.linux.dev,
+	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+	Gavin Shan <gshan@redhat.com>,
+	Shanker Donthineni <sdonthineni@nvidia.com>,
+	Alper Gun <alpergun@google.com>,
+	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
+	Emi Kisanuki <fj0570is@fujitsu.com>,
+	Steven Price <steven.price@arm.com>
+Subject: [PATCH v9 08/43] kvm: arm64: Don't expose debug capabilities for realm guests
+Date: Wed, 11 Jun 2025 11:48:05 +0100
+Message-ID: <20250611104844.245235-9-steven.price@arm.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250611104844.245235-1-steven.price@arm.com>
+References: <20250611104844.245235-1-steven.price@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,60 +56,59 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch introduces lsui.h header file for applying runtime patch
-to use load/store unprevileged instructions when cpu supports
-FEAT_LSUI otherwise uses method implemented via ll/sc way with
-clearing PSTATE.PAN bit
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+RMM v1.0 provides no mechanism for the host to perform debug operations
+on the guest. So don't expose KVM_CAP_SET_GUEST_DEBUG and report 0
+breakpoints and 0 watch points.
+
+Reviewed-by: Gavin Shan <gshan@redhat.com>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- arch/arm64/include/asm/lsui.h | 37 +++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 arch/arm64/include/asm/lsui.h
+Changes since v7:
+ * Remove the helper functions and inline the kvm_is_realm() check with
+   a ternary operator.
+ * Rewrite the commit message to explain this patch.
+---
+ arch/arm64/kvm/arm.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/include/asm/lsui.h b/arch/arm64/include/asm/lsui.h
-new file mode 100644
-index 000000000000..39bf232f3eb7
---- /dev/null
-+++ b/arch/arm64/include/asm/lsui.h
-@@ -0,0 +1,37 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2025 Arm Ltd.
-+ */
-+#ifndef __ASM_LSUI_H
-+#define __ASM_LSUI_H
-+
-+#define LL_SC_MAX_LOOPS	128 /* What's the largest number you can think of? */
-+
-+#include <asm/futex_ll_sc_u.h>
-+
-+#ifdef CONFIG_AS_HAS_LSUI
-+
-+#define __LSUI_PREAMBLE	".arch_extension lsui\n"
-+
-+#include <linux/compiler_types.h>
-+#include <linux/export.h>
-+#include <linux/stringify.h>
-+#include <asm/alternative.h>
-+#include <asm/alternative-macros.h>
-+#include <asm/cpucaps.h>
-+
-+#include <asm/futex_lsui.h>
-+
-+#define __lsui_ll_sc_u_body(op, ...)					\
-+({									\
-+	alternative_has_cap_likely(ARM64_HAS_LSUI) ?		\
-+		__lsui_##op(__VA_ARGS__) :				\
-+		__ll_sc_u_##op(__VA_ARGS__);				\
-+})
-+
-+#else	/* CONFIG_AS_HAS_LSUI */
-+
-+#define __lsui_ll_sc_u_body(op, ...)		__ll_sc_u_##op(__VA_ARGS__)
-+
-+#endif	/* CONFIG_AS_HAS_LSUI */
-+#endif	/* __ASM_LSUI_H */
+diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+index d1f9ab08c5ac..8080443d24af 100644
+--- a/arch/arm64/kvm/arm.c
++++ b/arch/arm64/kvm/arm.c
+@@ -331,7 +331,6 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 	case KVM_CAP_ARM_IRQ_LINE_LAYOUT_2:
+ 	case KVM_CAP_ARM_NISV_TO_USER:
+ 	case KVM_CAP_ARM_INJECT_EXT_DABT:
+-	case KVM_CAP_SET_GUEST_DEBUG:
+ 	case KVM_CAP_VCPU_ATTRIBUTES:
+ 	case KVM_CAP_PTP_KVM:
+ 	case KVM_CAP_ARM_SYSTEM_SUSPEND:
+@@ -340,6 +339,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 	case KVM_CAP_ARM_WRITABLE_IMP_ID_REGS:
+ 		r = 1;
+ 		break;
++	case KVM_CAP_SET_GUEST_DEBUG:
++		r = !kvm_is_realm(kvm);
++		break;
+ 	case KVM_CAP_SET_GUEST_DEBUG2:
+ 		return KVM_GUESTDBG_VALID_MASK;
+ 	case KVM_CAP_ARM_SET_DEVICE_ADDR:
+@@ -391,10 +393,10 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 		r = cpus_have_final_cap(ARM64_HAS_HCR_NV1);
+ 		break;
+ 	case KVM_CAP_GUEST_DEBUG_HW_BPS:
+-		r = get_num_brps();
++		r = kvm_is_realm(kvm) ? 0 : get_num_brps();
+ 		break;
+ 	case KVM_CAP_GUEST_DEBUG_HW_WPS:
+-		r = get_num_wrps();
++		r = kvm_is_realm(kvm) ? 0 : get_num_wrps();
+ 		break;
+ 	case KVM_CAP_ARM_PMU_V3:
+ 		r = kvm_supports_guest_pmuv3();
 -- 
-LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+2.43.0
 
