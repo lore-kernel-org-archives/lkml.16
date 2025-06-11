@@ -1,115 +1,91 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BE912E610F;
-	Wed, 11 Jun 2025 16:47:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44C972E610F;
+	Wed, 11 Jun 2025 16:47:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749660455; cv=none; b=qLWQ1WMPbDWwxPo1R10233dSlt3btBDFuaod3Wt3Elr8oyteeZUk7Ye3pkDF0fMpReCip5200RF+DsIttfQV+EtadS5sw//pWE+VheOUJNLdj6x9mZlx/bXr4c6sPAxbs/SwlUd3ke3Em9JNI+JRzkhDltjO4CJawQOEg1aNymc=
+	t=1749660463; cv=none; b=kHkshG5z1kAHnaSWAkXvJcrRzzT0WVd+6Dc3bwoYx9XzraQGC9bPIXQVSkmEJUjKHwj05SG+/wM1Kq/un201Ww2+5EAiLKw1m5mGkj/+toaoD4u75Bo8D6ooG/qBi2vfnEv7+XkWmpiysXQH6mAQ6wSzrjw2R+drNwPvUPCDUQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749660455; c=relaxed/simple;
-	bh=U6sLFAnNN8QkT6mXpZ5wVrd2IHHgNj6ewk8t7QwkI18=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HD3QneeO7A1lQUspd+FB5KRRUtdvdeQ1bnhtpirh/2AFA3cN6aRSudsYpnDgd42cIVY2uvZYdE/PxUkoGQJvHqqlrwX8vo6TzM4rBXzP7pwb2+nByilqkTLFKAiwJN0N312RopRpkuWQenW+x6ZIG0g6YRU2H7qiVvRmjJ2K18g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Tu/SRJo6; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1749660463; c=relaxed/simple;
+	bh=ATrbfAkxfXBN7T6ZyMKbNj8vLHFLN6YtT6rOvmO5aG8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RrlOFe3qJdKUVfgmtQVbwsWFYpe3Mn41+ykXpxokhRujue23A9NKQckQU7An9HHn2yLWC5vg6jYpi/vKN+dk1ljBOTox2ld8we3tzQDfFTdQO3LXWiFzD7D8ZvHGisgyenNTUwhXCIiV1vjerJ6QDJIoydq2/J5LfoOENdEFO4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qvlw2CSX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Tu/SRJo6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Re
-	dA2VYCsCry1H9Vk53UVO0f37h0GmgLmt8VnAMRk+M=; b=Tu/SRJo6xMhY/W5C8a
-	sK3GZKEIfn+3zM/0Yr1xrZiS6ornJuSGAkFZdh0xArUpmL3+w50vP2V2M+Nufi2/
-	mYo9dvXXw9Dk4pvxJnuy8mBIW1ZYA6nBJnGDZJzvX1mFO4s6Kl2cuaG7lpztsNfK
-	T8EYYLwm7ufAHA9mxWG9uopIM=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wD3f1U8r0loaGtLHw--.58832S2;
-	Thu, 12 Jun 2025 00:30:53 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org,
-	bhelgaas@google.com,
-	mani@kernel.org,
-	kwilczynski@kernel.org
-Cc: robh@kernel.org,
-	jingoohan1@gmail.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH 00/13] PCI: dwc: Refactor register access with dw_pcie_clear_and_set_dword helper
-Date: Thu, 12 Jun 2025 00:30:47 +0800
-Message-Id: <20250611163047.860247-1-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qvlw2CSX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F724C4CEE3;
+	Wed, 11 Jun 2025 16:47:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749660461;
+	bh=ATrbfAkxfXBN7T6ZyMKbNj8vLHFLN6YtT6rOvmO5aG8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Qvlw2CSX3aAkzEft0go9oT9ndvFJxfQGgKRPZP3YQ/RCO7I0zOIcQFgGoutcVkHuY
+	 JzyMlnw6WfR9KWtTb6FNboSdG0wLI1rXjuJPPw+lIVnq4XombBSoOhdvpzguvUp8j7
+	 29htLOaPHYUZaJ2K4ySGgQWZd1nu456+II1VORfcjBaJOFtMr0Vfgi38vg35KuEV61
+	 JOUbn/ePxyBY8BUgD8m2lJ/e4X0G4VaKpqnBDkDtCgMoWDYrY9/yjEWI61JUiAXqBR
+	 2zNNV8YF4Lv6fgjyxyinkmYx5Kvlsa0C29vAp6O2KeQMPAkaHp0CxKyGed+0CGa3FM
+	 gzfxEH5tg8Upw==
+Date: Wed, 11 Jun 2025 19:47:38 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Paul Moore <paul@paul-moore.com>
+Cc: David Howells <dhowells@redhat.com>, torvalds@linux-foundation.org,
+	Herbert Xu <herbert@gondor.apana.org.au>, keyrings@vger.kernel.org,
+	linux-security-module@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KEYS: Invert FINAL_PUT bit
+Message-ID: <aEmzKhXJ_nc4que3@kernel.org>
+References: <301015.1748434697@warthog.procyon.org.uk>
+ <CAHC9VhRn=EGu4+0fYup1bGdgkzWvZYpMPXKoARJf2N+4sy9g2w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3f1U8r0loaGtLHw--.58832S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxGr1kJFW8ZF1DAw43AFW8JFb_yoW5CF47pa
-	yYqFW3AF1xtrsI9w17Xay09r15KF95ArZrGws3Ga4IgF1xAF9Fqryrtryfta47KrW0q3W2
-	9r1jqa1xGrn3AFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pEMKZJUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDx1po2hJrMw-CwAAst
+In-Reply-To: <CAHC9VhRn=EGu4+0fYup1bGdgkzWvZYpMPXKoARJf2N+4sy9g2w@mail.gmail.com>
 
-Register bit manipulation in DesignWare PCIe controllers currently
-uses repetitive read-modify-write sequences across multiple drivers.
-This pattern leads to code duplication and increases maintenance
-complexity as each driver implements similar logic with minor variations.
+On Tue, Jun 10, 2025 at 08:22:59PM -0400, Paul Moore wrote:
+> On Wed, May 28, 2025 at 8:19 AM David Howells <dhowells@redhat.com> wrote:
+> >
+> > Hi Linus,
+> >
+> > Could you apply this, please?  There shouldn't be any functional change,
+> > rather it's a switch to using combined bit-barrier ops and lesser barriers.
+> > A better way to do this might be to provide set_bit_release(), but the end
+> > result would be much the same.
+> >
+> > Thanks,
+> > David
+> > ---
+> > From: Herbert Xu <herbert@gondor.apana.org.au>
+> >
+> > KEYS: Invert FINAL_PUT bit
+> >
+> > Invert the FINAL_PUT bit so that test_bit_acquire and clear_bit_unlock
+> > can be used instead of smp_mb.
+> >
+> > Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+> > Signed-off-by: David Howells <dhowells@redhat.com>
+> > Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+> > cc: keyrings@vger.kernel.org
+> > cc: linux-security-module@vger.kernel.org
+> > cc: linux-crypto@vger.kernel.org
+> > cc: linux-integrity@vger.kernel.org
+> > ---
+> >  include/linux/key.h |    2 +-
+> >  security/keys/gc.c  |    4 ++--
+> >  security/keys/key.c |    5 +++--
+> >  3 files changed, 6 insertions(+), 5 deletions(-)
+> 
+> It doesn't look like this has made its way to Linus.  David or Jarkko,
+> do one of you want to pick this up into a tree and send this to Linus
+> properly?
 
-This series introduces dw_pcie_clear_and_set_dword() to centralize atomic
-register modification. The helper performs read-clear-set-write operations
-in a single function, replacing open-coded implementations. Subsequent
-patches refactor individual drivers to use this helper, eliminating
-redundant code and ensuring consistent bit handling.
+I'm open for anything but need comment from David at first. It is up to
+him as he carries the torch ATM for this one :-)
 
-The change reduces overall code size by ~350 lines while improving
-maintainability. Each controller driver is updated in a separate
-patch to preserve bisectability and simplify review.
-
----
-Hi all,
-
-At the beginning, two patches were made, 0001*.patch, and the others were
-one patch. After consideration, I still split the patches. If splitting
-is not necessary, I will recombine them into two patches in future
-versions.
----
-
-Hans Zhang (13):
-  PCI: dwc: Add dw_pcie_clear_and_set_dword() for register bit
-    manipulation
-  PCI: dwc: Refactor dwc to use dw_pcie_clear_and_set_dword()
-  PCI: dwc: Refactor dra7xx to use dw_pcie_clear_and_set_dword()
-  PCI: dwc: Refactor imx6 to use dw_pcie_clear_and_set_dword()
-  PCI: dwc: Refactor meson to use dw_pcie_clear_and_set_dword()
-  PCI: dwc: Refactor armada8k to use dw_pcie_clear_and_set_dword()
-  PCI: dwc: Refactor bt1 to use dw_pcie_clear_and_set_dword()
-  PCI: dwc: Refactor rockchip to use dw_pcie_clear_and_set_dword()
-  PCI: dwc: Refactor fu740 to use dw_pcie_clear_and_set_dword()
-  PCI: dwc: Refactor qcom common to use dw_pcie_clear_and_set_dword()
-  PCI: dwc: Refactor qcom-ep to use dw_pcie_clear_and_set_dword()
-  PCI: dwc: Refactor rcar-gen4 to use dw_pcie_clear_and_set_dword()
-  PCI: dwc: Refactor tegra194 to use dw_pcie_clear_and_set_dword()
-
- drivers/pci/controller/dwc/pci-dra7xx.c       |  10 +-
- drivers/pci/controller/dwc/pci-imx6.c         |  26 ++-
- drivers/pci/controller/dwc/pci-meson.c        |  22 +--
- drivers/pci/controller/dwc/pcie-armada8k.c    |  48 ++----
- drivers/pci/controller/dwc/pcie-bt1.c         |   5 +-
- .../controller/dwc/pcie-designware-debugfs.c  |  67 +++-----
- .../pci/controller/dwc/pcie-designware-ep.c   |  20 +--
- .../pci/controller/dwc/pcie-designware-host.c |  27 ++-
- drivers/pci/controller/dwc/pcie-designware.c  |  74 ++++-----
- drivers/pci/controller/dwc/pcie-designware.h  |  27 +--
- drivers/pci/controller/dwc/pcie-dw-rockchip.c |   7 +-
- drivers/pci/controller/dwc/pcie-fu740.c       |   5 +-
- drivers/pci/controller/dwc/pcie-qcom-common.c |  59 ++++---
- drivers/pci/controller/dwc/pcie-qcom-ep.c     |  14 +-
- drivers/pci/controller/dwc/pcie-rcar-gen4.c   |  23 +--
- drivers/pci/controller/dwc/pcie-tegra194.c    | 155 ++++++++----------
- 16 files changed, 239 insertions(+), 350 deletions(-)
-
-
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
--- 
-2.25.1
-
+BR, Jarkko
