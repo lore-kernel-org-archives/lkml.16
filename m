@@ -1,165 +1,185 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA51D18C002
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:06:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C59B7E0FF;
+	Wed, 11 Jun 2025 15:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749654394; cv=none; b=e4cfp/FyAmRMqwth+X1wXkG/l3FiAV8I84i2yHolmGFSEuwKmXVPUN3t2nwtWJ2/L8xPbIg5R25RNj1zOG9s5nFcoJj+CwSOnAIDPqtt314X1KrKlSVX0gqb22mAsgk8ej71ZVTooi1UHqzTQniASnZFx2a7Wa/cJnn5a7lGr1k=
+	t=1749654415; cv=none; b=WSobzUhMokwrVyBRn+ixWhBeTM5jgP0SYUhWeBO9Qk/B5/0n8xTnmB/Ipy0LeRpwrDNI1Y4RPcziGajZvXc2W4wzMmhBhV0Nf0I6vuGO6VtYCTtVmtAvhCp/wXuexLf4TmQfY6cNHJnAKb0k4GO6Yz9z4mrI2q+LtaDqPVcBckg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749654394; c=relaxed/simple;
-	bh=ajchxbU7+AMklteL9pZzSBbNZx9h7w3GcNr0Mwics1U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eODO4FwS2txv8zmZWsp1LD7bOlPAV5YbeBj5G7ugkwEHkRqiSwnnE4JDidZFcXXScak67KojmYpHvAlwoQ+kh0KWBDuah9QUtbkXSc1qHfUobYGhcilTN2lVr9RuCKTyxgSwYHqyxV5LRXtAwTwFvr4/mzeeV5H6uykOLF8TTJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ku62Iyur; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1749654415; c=relaxed/simple;
+	bh=rZvstCIx0930gy+FitWy2h9ieXUWIADy6nD/O8Xen/w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MkxBqDLCgkscW37zVslbE7/RSIqt1XJirtiSmBB2ot6DdUYEmxU7G/iraP1JpQcmLSpFiOvjoHlPJ7ompnrkOz/KdXB2AnhGmYDgn6GV9KDusdKihi9G9jlMQBxmqEXCK+s1t6nROAGOrV0HiTq+fpnWyA1Jt8vyueZkHK07qg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VbXcj3Ey; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ku62Iyur"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55BAndl3002628
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:06:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	77fKbdkYmtPlwXrxnM32o82p7ovrXrSQy4ozw1UOaUo=; b=ku62IyurvRzF4bk4
-	miTbSYf251eZWFjTfr6u4uUEDRIOVhUQFH131bvCOhz1uizHvyiGNOTU7ynprf+J
-	kB0XZbCw6RrLi5v4IKpF/bZdpbMBVPNr5s2WvBa0q+IGaASUwiiVEWW7IewbJp83
-	8EU3/2PTb6mKCS5Ox8dvEnI2EUaxsfGflGZeKcmO5kMR+ZgOIr2VkNEgYQZqYAui
-	+C8MfH8+btFfrKcV1sXLxVplJGc1Kokb02gIB70OniLMyh11sezM9VLFpDb4IcEO
-	BwZtcJcHRu4aZpXqT5auropA6UsThPHsU7KQsapqdhB7JX+h06NWKIFT+g7nEeHs
-	7I1Sxw==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4778cwgqcp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:06:30 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7d0976a24ceso21156385a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 08:06:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VbXcj3Ey"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a54700a46eso2828288f8f.1;
+        Wed, 11 Jun 2025 08:06:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749654411; x=1750259211; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rZvstCIx0930gy+FitWy2h9ieXUWIADy6nD/O8Xen/w=;
+        b=VbXcj3EyokysKu81565iUWb7QAdwC0kM4Lmi+8rJ9KVaZwXNPRNUDmsM38C/9mVezO
+         YrOAL4B5UwJEA0bx5gFC4yoPY/x9rK/MvCL8w/EJlIyIOxGZc2LChRdMhh52sPtysDKf
+         jBiHvRWkEBOQwI5y6RGHpijLMuVnK5utbsdPUu7Kv2aAvMei47WgjFCt3sbqjrIFb6IP
+         uWGvolxiwWuEFWOCzVlHCrlM02JBos/2AQIkPLsA3JXhsfXaOIMeJz5xWq0/wrxbm1rj
+         s6+gKjbpccOcIaK1gelIg1Tk4TDoyCsyNHE6u5oA2EHasPj544kpnap+dDYgIvnigbsu
+         Nqdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749654390; x=1750259190;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=77fKbdkYmtPlwXrxnM32o82p7ovrXrSQy4ozw1UOaUo=;
-        b=SsBbsQAf9hzpcv1dEAFPIak9qJQushq9Q6s0M4PBDYMMw7BmljzuYcruURTcalK1Mf
-         X99sL5dPN0kG3nC5TD7T+qu90XjLyexM8wcAUXVtjFydMStDTTUa83rKiUzXH4DG3fBN
-         Huhl52Or37n+dSu+tby28wuhJ1EXm4ZjYTQhbDMsa1Tu2qg6xSaheMG92dHcPn43VLo/
-         zSRXRJQoyaXcBGEBWHpL4ZFbCRyiG4ebPpkNXbT+zWamLUMSPU9aNAKK+VG/qPb2mmS1
-         d+m/bUHEdQj+a9GEXj3jcDUVuTG/GMNN1rXCUcQ/KOwsuSRdLf6JP3PK5UkEiZX3vlmN
-         /aAw==
-X-Forwarded-Encrypted: i=1; AJvYcCWpouj6ZlE9bQX/UpF250eU9cD4Am/Ke6YZD16TvGXW15w69gOjswfGZncrvktHioEBXypNBXhst4Ntu6E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIjfXMx11XvnZQvblUldRRWKCGoYxMl6w00B57HWbQE3Uiw5w6
-	pWsyoGTeditksQHLr/mkcebUQd1Tuj4C9dFC9WsNifs05hqWf6TWdhPpGeqpsBq0ZrQhKXnx18/
-	4fM3XjXB6m68Ca+EzpxRzM7LOA7s32aOjaDfuGg4YsQGGXZJ7dGIlRlzXCVDVDWUdHv8=
-X-Gm-Gg: ASbGncvZsUEu45DuLB7kwg/9mTiik7z0ErTp+BO8nM8Gn9I8jT6Jtb/onp68zUnbxyq
-	Ta9neGIBUADTbeGsxhw73O0XNVtXpbgNtS2Z4KjYifR1gG8F8mnOGlyEQ8ZdUFe33ul/ONX7Faz
-	vUCggpi/E0CTB0kpnVax/ZpZLNwJlW83qyD5HLwvQnVEmbpzXqKJkieMi4dI6mOjzQa5MqFF3ej
-	9RQ/uEtlKOen8QPE3GlhbPlokxlUv34ClDGbfCW1kuCYK4jL83bxKf2/ZdfN3QB5XupnbeVvSh8
-	EV9swiQJj/gOhOlSlcGMBw2QqwdBjs/c5TrCw8aMR7UUHytspCUch9lYPymzygTA0s2vBhE09kp
-	QhgM=
-X-Received: by 2002:a05:620a:2a04:b0:7d2:89c2:eddb with SMTP id af79cd13be357-7d3a87bfb10mr208044185a.2.1749654389704;
-        Wed, 11 Jun 2025 08:06:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGFQcyeTIefOmtTUXQ/DK1/6HF+P0px0MJoBSIH1JUCYT215zZQycMHgB/rDMBR3Qjc3+Rx8g==
-X-Received: by 2002:a05:620a:2a04:b0:7d2:89c2:eddb with SMTP id af79cd13be357-7d3a87bfb10mr208041085a.2.1749654389233;
-        Wed, 11 Jun 2025 08:06:29 -0700 (PDT)
-Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade31cc25b7sm832539666b.66.2025.06.11.08.06.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jun 2025 08:06:27 -0700 (PDT)
-Message-ID: <9d966b32-d5ce-4262-b99e-900085648230@oss.qualcomm.com>
-Date: Wed, 11 Jun 2025 17:06:21 +0200
+        d=1e100.net; s=20230601; t=1749654411; x=1750259211;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rZvstCIx0930gy+FitWy2h9ieXUWIADy6nD/O8Xen/w=;
+        b=jNlTdYOW6pp2d0mEG21X9LAwfkV77wd4Evmn6F642dyz1xnQbxbzGUMNAiow3dTgHU
+         Ist9uPtsafTPdg/2N2q0uIwYnXbfeRRLaJOEQlKqIxvaYa8nyi3PSBVEz7JsTDrK8yHU
+         3wuD6AhF/eBtJ/V5LXkBkQeb+6goIpRUSyW0OkE2GZdHvwrohADVH3Fe5XMgN219PGdy
+         ZqI2gmhI7cTccCrWlK4pZUNU7xg6024gBB3cYrvzi6L54pqjb1gzEMEzHexvMILneUUK
+         ThoWun4+04Fw4Jro01FVvFOJNNgUkE9Xpn8qCIVXLwohwEM5x6AJ/f4V4u80mMQPJxzc
+         r8bQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVs4Vyun2t6sQdSdoDfMHaPV4XW+busURG1VBrgQeQCT0/8AQXC4N6cQnvqKQ3Xo5XohXdFO+82McKzhkRb@vger.kernel.org, AJvYcCX5ezX2xtnQNgRfZoaSaXwM+BLTVn3yKh2M4RJNsMNlrzkpZvEpgtLB4hQRytaAVwk8t70r+StfXIVw@vger.kernel.org, AJvYcCXNETrkC21f229r1PBcLpEzomZtMNJyC5IaZjg/A2S68sRemgWB3hjnk02/XbGA6VhMrDE7BR2BvXL3aGk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMf+IF20mU7ZS5zl5nUSeaBB4ucMoL9bIbG3J8TLaaqElg3bpq
+	zHSVlEetwxv26aaAaNRyKEheDAsY2frExDc8o0D4yHBVW/tXPylpA8T3
+X-Gm-Gg: ASbGncuBFEGNo+NWQekDSxMbZBYFreK/CGSoIzRQQQ9WWzwEBSuPub5Mfnzv8Je4ajI
+	/m6TPAbpQkGbvZWgDu4v5hI+1i639RsHU111ewAlqadT18mL8jbUIpJlrn+13/o7MNr+TwSYxVo
+	cYbLc8tsx1WfxjDlZWDfD6zVn8HVVlgyf0nwKsxMKAaIP3mwGL7uNILKHwtLollJdeaZQv0AnFq
+	WtBDfBAh8+e1sL/hqeLKLfmfdLqhn5exJR1RIQvdT97F6E63r242bZxZcYIiYkD3TyiNAcJyaTq
+	LYYhg9Bq+V/jnBfMt/unffrODaJIcNZnswB0g9lyA2dXdhGtLHLWQFuIU9hoyvX+aw1eeljGPdK
+	Uw02ewq0daZc8LgmmZqhyfpbiYFVgCfR30sILmf/UN4i8CS2e
+X-Google-Smtp-Source: AGHT+IH7gCL0A1jwyehirZD75wEUOdI2MNoMc6qGX53PjwOW0K3sU25NqW7e29pI1Cuyu7enpaum4w==
+X-Received: by 2002:a05:6000:2304:b0:3a4:f50b:ca2 with SMTP id ffacd0b85a97d-3a558689146mr2940381f8f.8.1749654410702;
+        Wed, 11 Jun 2025 08:06:50 -0700 (PDT)
+Received: from orome (p200300e41f281b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1b00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532436871sm15373810f8f.49.2025.06.11.08.06.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 08:06:49 -0700 (PDT)
+Date: Wed, 11 Jun 2025 17:06:47 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
+Cc: Mikko Perttunen <cyndis@kapsi.fi>, 
+	Mikko Perttunen <mperttunen@nvidia.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 0/3] NVIDIA Tegra210 NVJPG support
+Message-ID: <4cibh66elviiatataa45lsfcyeovkqyxe4fjvfh7uqddhsbe6z@svt2dgeafrdh>
+References: <20250606-diogo-nvjpg-v1-0-5f2c36feeb39@tecnico.ulisboa.pt>
+ <mz5sytol6aw7ouwiimmrd7lqhtvq6nj7pqpxq4ie6em6nwvvkh@2cux3no33gre>
+ <621a9459-f2dd-4b19-a083-0e62f1a42f50@kapsi.fi>
+ <96b721cd-7223-4b28-a3fd-a4d92c9d5142@tecnico.ulisboa.pt>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 2/2] arm64: dts: qcom: ipq5018: Add tsens node
-To: george.moussalem@outlook.com, Amit Kucheria <amitk@kernel.org>,
-        Thara Gopinath <thara.gopinath@gmail.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Sricharan Ramabadhran <quic_srichara@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dmitry Baryshkov <lumag@kernel.org>
-References: <20250611-ipq5018-tsens-v12-0-a61374a5517d@outlook.com>
- <20250611-ipq5018-tsens-v12-2-a61374a5517d@outlook.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250611-ipq5018-tsens-v12-2-a61374a5517d@outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=AaixH2XG c=1 sm=1 tr=0 ts=68499b76 cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8
- a=UqCG9HQmAAAA:8 a=TIMhQzKtEeIAjNMpRogA:9 a=QEXdDO2ut3YA:10
- a=PEH46H7Ffwr30OY-TuGO:22 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: PFkvls_OYmA1xLyFUffnAkT0dQbD-AOO
-X-Proofpoint-GUID: PFkvls_OYmA1xLyFUffnAkT0dQbD-AOO
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjExMDEyNiBTYWx0ZWRfX+46YrD5syY3I
- EcNJAabl3TtSFBzGdsTTZlIBexCJpHtQiv5a00sHggU/G+suwbxYYn4ihMurkOlYxE9+jycbiU/
- 53ZG6SvVo9kQ5IpEc+qKhHXsrfS9fyMIS5oQQYVxLkQKsAabgV4I/PWjiWOmtTOEgKUWpBIxIer
- /BTNd15A/nmuJVFmyP5W9mtqxpklZw2dHNmAEvL9dAGTLA7ukvWvEajuiQql7mS/kwKtSimf7Re
- yPdAxHIoF2Ozgbo2ay/bdlgSpZIQqdiU2a2SDO3n5dR4rYCeUZHofxYfQxLkLbE+ZdGPxLGZmhv
- uJrvbQSkEF3JiWSGKEGxuWXrcEN5ZqQru4cds0Xp8jNVIZqDygaCLpm7yrDWm2ACe7AhAvvtMmt
- WXWyeDXo+CW1x0o1E/rJNBYnpW0v8DhJzmSBg5Vhkg5OSdBMOUQd6zZj+ZXfpMMjNzgWHsoS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-11_05,2025-06-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 lowpriorityscore=0 suspectscore=0 spamscore=0 phishscore=0
- adultscore=0 clxscore=1015 priorityscore=1501 malwarescore=0 impostorscore=0
- bulkscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506110126
-
-On 6/11/25 11:33 AM, George Moussalem via B4 Relay wrote:
-> From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-> 
-> IPQ5018 has tsens V1.0 IP with 5 sensors, though 4 are in use.
-> There is no RPM, so tsens has to be manually enabled. Adding the tsens
-> and nvmem nodes and adding 4 thermal sensors (zones). The critical trip
-> temperature is set to 120'C with an action to reboot.
-> 
-> In addition, adding a cooling device to the CPU thermal zone which uses
-> CPU frequency scaling.
-> 
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
-> ---
-
-[...]
-
-> +		cpu-thermal {
-> +			polling-delay-passive = <0>;
-
-0 is also the default value for polling-delay-passive
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ahdzzbv4aoxgwn2z"
+Content-Disposition: inline
+In-Reply-To: <96b721cd-7223-4b28-a3fd-a4d92c9d5142@tecnico.ulisboa.pt>
 
 
-> +			thermal-sensors = <&tsens 2>;
-> +
-> +			trips {
-> +				cpu-critical {
-> +					temperature = <120000>;
-> +					hysteresis = <2>;
-> +					type = "critical";
-> +				};
-> +
-> +				cpu_alert: cpu-passive {
-> +					temperature = <100000>;
-> +					hysteresis = <2>;
+--ahdzzbv4aoxgwn2z
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 0/3] NVIDIA Tegra210 NVJPG support
+MIME-Version: 1.0
 
-that's 2 milicelcius, consider x1000
+On Wed, Jun 11, 2025 at 01:05:40PM +0100, Diogo Ivo wrote:
+>=20
+>=20
+> On 6/10/25 10:52 AM, Mikko Perttunen wrote:
+> > On 6/10/25 6:05 PM, Thierry Reding wrote:
+> > > On Fri, Jun 06, 2025 at 11:45:33AM +0100, Diogo Ivo wrote:
+> > > > Hello,
+> > > >=20
+> > > > This series adds support for the NVJPG hardware accelerator found i=
+n the
+> > > > Tegra210 SoC.
+> > > >=20
+> > > > The kernel driver is essentially a copy of the NVDEC driver as both
+> > > > engines are Falcon-based.
+> > > >=20
+> > > > For the userspace part I have written a Mesa Gallium backend [1] th=
+at,
+> > > > while still very much experimental, works in decoding images
+> > > > with VA- API.
+> > > >=20
+> > > > I have been using ffmpeg to call VA-API with the following command:
+> > > >=20
+> > > > ffmpeg -v verbose -hwaccel vaapi -hwaccel_device
+> > > > /dev/dri/renderD129 -i <input.jpg> -pix_fmt bgra -f fbdev
+> > > > /dev/fb0
+> > > >=20
+> > > > which decodes <input.jpg> and shows the result in the framebuffer.
+> > > >=20
+> > > > The firmware for the engine can be obtained from a Linux for Tegra
+> > > > distribution.
+> > >=20
+> > > By the way, have you tried running this on anything newer than Tegra2=
+10?
+> > > Given your progress on this, we can probably start thinking about
+> > > submitting the binaries to linux-firmware.
+> >=20
+> > FWIW, the impression I have is that NVJPG is basically unchanged all the
+> > way to Tegra234. So if we add stream ID support and the firmwares, it'll
+> > probably just work. Tegra234 has the quirk that it has two instances of
+> > NVJPG -- these have to be distinguished by their different class IDs.
+> > But we should go ahead with the T210 support first.
+>=20
+> I have a question here, what exactly are the stream IDs? While working
+> on the driver this came up and I didn't manage to figure it out.
 
-Konrad
+Stream IDs are a way to identify memory transactions as belonging to a
+certain device. This comes into play when working with the IOMMU (which
+is a Tegra SMMU on Tegra210 and earlier, and an ARM SMMU on Tegra) and
+is used to isolate DMA capable devices. Basically for every stream ID
+you get a separate I/O address space. NVJPG will have its own address
+space, and so will VIC. Each device can only access whatever has been
+mapped to it's I/O address space. That means NVJPG can't interfere with
+VIC and vice-versa. And neither can any of these engines read from or
+write to random system memory if badly programmed.
 
+For Tegra SMMU there's no such thing as programmable stream IDs, so the
+stream ID is fixed for the given device.
+
+On newer chips (Tegra186 and later, or maybe it wasn't until Tegra194),
+certain IP blocks have special registers that can be used to override
+the stream ID. There's also a way to set the stream ID via command
+streams, which means that you can have different I/O address spaces (I
+think we call them memory context) per engine, which means that you can
+isolate different processes using the same engine from each other.
+
+Again, for Tegra210 that's nothing we need to worry about. For newer
+chips it's probably just a matter of adding .get_streamid_offset() and
+=2Ecan_use_memory_ctx() implementations.
+
+Thierry
+
+--ahdzzbv4aoxgwn2z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmhJm4MACgkQ3SOs138+
+s6FNWBAAtJCLRWy3HnLpatC3L34V9NYYS65LIc6i75tLGDS4+bBBVllqqYZrDaMc
+2QXib+yx+tG3P1z43Nq+Cp26YfjIRVdLqlOiQ89bURxrCas6jTBg4o8N8mYIkS62
+s9p/Q+YO58bNDfPVGhXOfSLTLciU5i/ull7kAkJMYmAsI31Bt1HywLimUCwHwdlC
+sSzGKK38fIZdwKYqR1yAEmtKzc04lOZGXN74/OW8o+h77WrLUlcwIpKb8mF3Q4Sc
+wzGX3IJah5vmZHWBnWvWo3ans257qlqz7B6P6lEe3jgPhhs1yL1TD4ii7X8T/sc2
+l6wHexytUYYPgWYOV+nIzqrL+F2SU+52YDVng4ADB1HtvdH4X/ransteUoo59MEc
+9glcqy40Y6PCAwXwQGGizpQ88Tlg6ttBru0npckcN44iJuHksyca9JO1crBlWoMs
+OiRpu8/YOzVGKHlolwhNfFdcJ77C1UP/UoHSnCndgVuTx14ZoFZVjhCpBqwlviU2
+7luQxXj5LZdk3sxnlP+q054H8udEC9PDavNwwO4jpH+0mcFZH06lpSGad67nOVgA
+dVTI15W89MocI4CDrbq8wLOlDJijKz5ztoLwm+e5V0BXgu4SrdvbuCvcnRlxvphV
+wX0oNHG2ZZ6OZFZQ2eaWAxWniSkNKFfuV3lnVMlz7B4bR6hmD1E=
+=pPIb
+-----END PGP SIGNATURE-----
+
+--ahdzzbv4aoxgwn2z--
