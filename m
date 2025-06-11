@@ -1,54 +1,35 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6022113635E;
-	Wed, 11 Jun 2025 12:50:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51DC12E611B;
+	Wed, 11 Jun 2025 12:52:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749646245; cv=none; b=P2yLRvxIlLD+hHGfpFHiYFSU6uyPFyl4368NBJpa7oieBu0alsjY+VJs0UpYxYQ+vWOWX5iWe2itM0QjTTLL9O8tIjt1BRpZQVH856YDPwehKuvkV/TqAV4nf6k5xzj4Y38l2mz2k4YFPsgMH2U4y8jVkAJLJLshCV0GuV/7NBg=
+	t=1749646360; cv=none; b=j38siWr90ntewciwTiNqKWrB92IuhnrKLNTrBaTt/jE0sFNybqa0yO7Vm8ThsNL5CVa0sXlJEBpe4ctLj2SVPVf8pMRx4W4VNoI6pE3v0vGP3HyrwLtdDCAy//oz2XugL8cQ/NbnPgCK1rCltgfvtWPUD99cjPATJkFCteJNO0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749646245; c=relaxed/simple;
-	bh=a4Pe6Hrx1bmJT+ddJQdiMkCsR84XUPzU0+wqpELBmE4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ZYhUGBCK5SG+Gko2oO5b3CIFGfPzBfZI6YuYjbXEQpKLcA6e8KYCVEf704I9wMkc3RpdJImoRLSq/d6wL07hf+5BL0GeMioKqDUGSN8zGFLO5K1yQ8N5xotIVo4JRifZhagdQFnjUM0kMvS1jQXg2dmvCbQFVcQ9/Xky9XPV0cI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=Wobpye/t; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="Wobpye/t"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net DE47941ECC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1749646237; bh=a4Pe6Hrx1bmJT+ddJQdiMkCsR84XUPzU0+wqpELBmE4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Wobpye/tfQSWG2Ji0OTS32YWOvaq1VmgIsYRUYO4x8ntQ+kTDgq0vaPHrnttixcAV
-	 +yhxVyxLsO4XKAQfd+299rOQt+la03SDy9qA1TvmxZ/D7L/2nmpAT/xdw170imnbLl
-	 MyB1eMCswaUXq7W6OSg94oP/UikzkV/YOqP0a3nXjNCGiVMc+gBR0m0zpVsBf5srPB
-	 eEIkdBHX1a1Iwklq3ZvKL5MxRenFK1Lj+E/sK3QUO0DCZjFK8jqUqmfY+CkkKJaR04
-	 awqhKgF1hh/ncaoo0+pTaBusd4iVi83Lc1hmu7h9XfPotU23S3sffLwE/FszJaeU0F
-	 i9rojaGKfMgfw==
-Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id DE47941ECC;
-	Wed, 11 Jun 2025 12:50:36 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Hanne-Lotta =?utf-8?B?TcOkZW5ww6TDpA==?= <hannelotta@gmail.com>, Bagas
- Sanjaya
- <bagasdotme@gmail.com>, mchehab@kernel.org, ribalda@chromium.org,
- hverkuil@xs4all.nl, hljunggr@cisco.com, dave.jiang@intel.com,
- jgg@ziepe.ca, saeedm@nvidia.com, Jonathan.Cameron@huawei.com,
- ilpo.jarvinen@linux.intel.com, mario.limonciello@amd.com, W_Armin@gmx.de,
- mpearson-lenovo@squebb.ca, skhan@linuxfoundation.org
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH v2 1/4] docs: Improve grammar in Userspace API/DVB API
-In-Reply-To: <5dad612b-495b-4f1c-82ff-e8ed4ef34c07@gmail.com>
-References: <20250522115255.137450-1-hannelotta@gmail.com>
- <aDAOhl7gKhkcTEjk@archie.me>
- <5dad612b-495b-4f1c-82ff-e8ed4ef34c07@gmail.com>
-Date: Wed, 11 Jun 2025 06:50:36 -0600
-Message-ID: <87v7p230ir.fsf@trenco.lwn.net>
+	s=arc-20240116; t=1749646360; c=relaxed/simple;
+	bh=8Y8aFpQ7P9CqeElr3wG1ncqhXpdcddPA6PvcJhmS7cg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bbapnJoqaP6B2BE/McFLvnpv3GI1c0fgq9cUXR4erA8EfBRmrsCO7uLWeSyVMtvl4BXS6iOMAy1X7zXRmCrN8OmjbqnB9qgTALL22IXlddBO91x0RIdwlUNryEDyZSW4PNXZVki8JjP63lqnOXak+wY4ST+GPd27XB1e2diyrhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA7B415A1;
+	Wed, 11 Jun 2025 05:52:16 -0700 (PDT)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F2503F59E;
+	Wed, 11 Jun 2025 05:52:34 -0700 (PDT)
+Date: Wed, 11 Jun 2025 13:52:32 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Roman Kisel <romank@linux.microsoft.com>
+Cc: anirudh@anirudhrb.com, linux-arm-kernel@lists.infradead.org,
+	Sudeep Holla <sudeep.holla@arm.com>, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, lpieralisi@kernel.org,
+	mark.rutland@arm.com
+Subject: Re: [PATCH] firmware: smccc: support both conduits for getting hyp
+ UUID
+Message-ID: <20250611-wandering-juicy-magpie-ed7f46@sudeepholla>
+References: <20250605-kickass-cerulean-honeybee-aa0cba@sudeepholla>
+ <20250610160656.11984-1-romank@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,20 +37,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250610160656.11984-1-romank@linux.microsoft.com>
 
-Hanne-Lotta M=C3=A4enp=C3=A4=C3=A4 <hannelotta@gmail.com> writes:
+On Tue, Jun 10, 2025 at 09:06:48AM -0700, Roman Kisel wrote:
+> > (sorry for the delay, found the patch in the spam 🙁)
+> 
+> "b4" shows the the mail server used for the patch submission
+> doesn't pass the DKIM check, so finding the patch in the spam seems
+> expected :) Thanks for your help!
+> 
 
-> On 5/23/25 08:58, Bagas Sanjaya wrote:
-> What is the best way to send an update on this patch, now that patches=20
-> 3/4 and 4/4 have been applied, but 1/4 and 2/4 have not been applied?
->
-> Do I send v3 for the first two only?
+Thought so looking at the header but I just have very basic knowledge
+there, so couldn't comment.
 
-Yes, it has been long enough that you resend the two unapplied patches.
-They are media-subsystem patches, so the media folks need to pick them
-up.
+> >
+> > On Wed, May 21, 2025 at 09:40:48AM +0000, Anirudh Rayabharam wrote:
+> >> From: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+> >>
+> >> When Linux is running as the root partition under Microsoft Hypervisor
+> >> (MSHV) a.k.a Hyper-V, smc is used as the conduit for smc calls.
+> >>
+> >> Extend arm_smccc_hypervisor_has_uuid() to support this usecase. Use
+> >> arm_smccc_1_1_invoke to retrieve and use the appropriate conduit instead
+> >> of supporting only hvc.
+> >>
+> >> Boot tested on MSHV guest, MSHV root & KVM guest.
+> >>
+> >
+> > Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+> >
+> > Are they any dependent patches or series using this ? Do you plan to
+> > route it via KVM tree if there are any dependency. Or else I can push
+> > it through (arm-)soc tree. Let me know.
+> 
+> Anirudh had been OOF for some time and would be for another
+> week iiuc so I thought I'd reply.
+> 
+> The patch this depends on is 13423063c7cb
+> ("arm64: kvm, smccc: Introduce and use API for getting hypervisor UUID"),
+> and this patch has already been pulled into the Linus'es tree.
+> 
 
-Thanks,
+Had a quick look at the commit to refresh my memory and as you mentioned
+it is new feature. I was checking to see if this is a fix.
 
-jon
+> As for routing, (arm-)soc should be good it appears as the change
+> is contained within the firmware drivers path. Although I'd trust more to your,
+> Arnd's or Wei's opinion than mine!
+> 
+
+I will queue this once I start collecting patches for v6.17 in 1/2 weeks'
+time, so expect silence until then 😄.
+
+-- 
+Regards,
+Sudeep
