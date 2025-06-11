@@ -1,68 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E95247298;
-	Wed, 11 Jun 2025 21:40:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D54A254875;
+	Wed, 11 Jun 2025 21:40:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749678013; cv=none; b=XgaLdpl0j85F2NsvU/ganVyexo1H5onaLUDLQKCm8B5jFZIxkLsFdGjmAzVLSLBVXArddeRWPzq66hozkd9hSrW6dBvZe203CQok0amT0vAxwsRtikBzV5WEylLs1YuJTTLH3HkWFCMuLn2IzFhMQXqchmjC7j7V0ApO11RWyK8=
+	t=1749678015; cv=none; b=cwEB6jFfdMCpah2yX7SWyNjm41Zj7t7wp6jfLQzahqc2TIFoyThd0cDNMeMxBY834MstkHxLxp9206/aOLeQ2QseGGAMyYeoXLetLqzEfPrFCb8hnv58ZQGlvhXhJCJNxtY5IkLeAALN+7tu/++A04kN1iOrH4NDMdPK/Bg+cfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749678013; c=relaxed/simple;
-	bh=il4KkmPSp4Fb2vFI0Nud+eB0w5K1JXPkAcThSVRtqXs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WyxjSdBWVV8t8OTve+dAojY7i+UzhrWxecRjcWWaEZcOpT4MIjjl24eXMT4KuIGuDNDW2lBb34qXUu9pFXbQxa6YEolSHU2ldYFcYKqiGI4fxx4XZQ4/sPI3jVndvnGbhUkRtVZgPxAIfXZanY32exV6Bl6g1JhJXGr1dXbj1zI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ul/pH/Vd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749678015; c=relaxed/simple;
+	bh=vvy6FSk8l33Uu1F3F45El0IAo4jPqdVFkYUIUcguYQA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GJ0ZEfiDW4rtAHFDHXBfvSg9Veibgo2eaLwv9XmIrWnCuhkas3xN9EGWoWWX9NtbDG7xo7h051O8TAyEDCuPho09vIOVEt/tW6vZt9dsQSimi+JHCyE2fa5usoN4zsA3AdG+8HVxNIElH157aRTMl8ywsvquWRLrRdkG+oZ4fBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UxjNGa0b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ul/pH/Vd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69DCBC4CEE3;
-	Wed, 11 Jun 2025 21:40:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UxjNGa0b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A24B5C4CEE3;
+	Wed, 11 Jun 2025 21:40:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749678013;
-	bh=il4KkmPSp4Fb2vFI0Nud+eB0w5K1JXPkAcThSVRtqXs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ul/pH/VdW3zjV04CmcPn0dQwIY7Zk9GSrp2vtfUgtilxgvC0NaIWEanM7vv9CAIjs
-	 iGcajw86J/8O99xS9LFzhqevP4RNrowMSxAEBTk84F4S7S7yUM5pKN4txdfUz8omyL
-	 6eRcBX6BmLos5dBTApx6oT+W4xCZCCR+w46BI9OFf1ucEA9L7Img+JeXRAUDTM9LFJ
-	 Ye0u9tcIqrqgnJime/R6AYLrDlslp1I7UX0u/0kQq1KbC7Cf139EOjRGoUKVLRZvWq
-	 4Q9d/VoRqa4njOZG66QWUwO2H4XEcPMQSB8HI0YRzIfNU1NshrCX3TGfHgH+FC9K8u
-	 JeIBwGhVeI2fQ==
-Date: Wed, 11 Jun 2025 23:40:06 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Igor Korotin <igor.korotin.linux@gmail.com>
-Cc: ojeda@kernel.org, alex.gaynor@gmail.com, rafael@kernel.org,
-	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-acpi@vger.kernel.org,
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
-	tmgross@umich.edu, lenb@kernel.org, wedsonaf@gmail.com,
-	viresh.kumar@linaro.org, alex.hung@amd.com,
-	dingxiangfei2009@gmail.com
-Subject: Re: [PATCH v5 5/6] rust: cpufreq: Remove unnecessary `of` dependency
- in cpufreq example
-Message-ID: <aEn3tqAZ1U7AQBvb@cassiopeiae>
-References: <20250611174034.801460-1-igor.korotin.linux@gmail.com>
- <20250611175353.803835-1-igor.korotin.linux@gmail.com>
+	s=k20201202; t=1749678015;
+	bh=vvy6FSk8l33Uu1F3F45El0IAo4jPqdVFkYUIUcguYQA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=UxjNGa0beJItVVMaEM45Yf9geagTYTp4u6opx6O+drjXdAUth/BXlhC/Z7SXlXKlu
+	 4+9el668sdeSuCwxDzDwbPh4dj+afFlRvSC1UqGWRqXgIc2bJuuv6Huggzuup2CLof
+	 MOKmrwZxKwioYezl/DLPDPEwqkZvvSwmKvLpYKhV1xk/fifbIwuyXf8dthT9zCvRha
+	 QT6fJimA+DWQi8ldJ8etw7ajXCHmwnD+vrDaDhWHJZRZ1gaP4l66Y60SKcxWQN2M3+
+	 NeiH6zdW0JM1tn+ao5hVP9Kk4dswAttIpALY79WB2Cww90GqTJ+c4YOjCYqOOFkvZU
+	 mLUmRzsx7JZOg==
+Date: Wed, 11 Jun 2025 14:40:13 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Mark Bloch <mbloch@nvidia.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Paolo Abeni
+ <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "Andrew Lunn"
+ <andrew+netdev@lunn.ch>, Simon Horman <horms@kernel.org>,
+ <saeedm@nvidia.com>, <gal@nvidia.com>, <leonro@nvidia.com>,
+ <tariqt@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
+ <netdev@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net 7/9] net/mlx5e: Properly access RCU protected
+ qdisc_sleeping variable
+Message-ID: <20250611144013.300c79ea@kernel.org>
+In-Reply-To: <20250610151514.1094735-8-mbloch@nvidia.com>
+References: <20250610151514.1094735-1-mbloch@nvidia.com>
+	<20250610151514.1094735-8-mbloch@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611175353.803835-1-igor.korotin.linux@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 11, 2025 at 06:53:53PM +0100, Igor Korotin wrote:
-> Drop the explicit `use of` and `OF_ID_TABLE = None` assignment in the
-> cpufreq driver registration example.
+On Tue, 10 Jun 2025 18:15:12 +0300 Mark Bloch wrote:
+> qdisc_sleeping variable is declared as "struct Qdisc __rcu" and
+> as such needs proper annotation while accessing it.
 > 
-> Since `Adapter::OF_ID_TABLE` now defaults to `None`, drivers that do
-> not require OpenFirmware matching no longer need to import `of` or
-> define the constant explicitly.
+> Without rtnl_dereference(), the following error is generated by smatch:
 
-This is slightly outside of the scope of this patch series and given that it
-doesn't add immediate value it's usually better to wait with such patches until
-the prerequisite is in Linus' tree.
+sparse ?
 
-However, if Viresh is fine with the patch and with taking it through the
-driver-core tree and does not expect any conflicts, I'm fine picking it up.
+> 
+> drivers/net/ethernet/mellanox/mlx5/core/en/qos.c:377:40: warning:
+>   incorrect type in initializer (different address spaces)
+> drivers/net/ethernet/mellanox/mlx5/core/en/qos.c:377:40:    expected
+>   struct Qdisc *qdisc
+> drivers/net/ethernet/mellanox/mlx5/core/en/qos.c:377:40:    got struct
+>   Qdisc [noderef] __rcu *qdisc_sleeping
+> 
+> Fixes: 214baf22870c ("net/mlx5e: Support HTB offload")
+
+I don't think this is a functional change? We don't treat silencing
+compiler warnings as fixes, not for sparse or W=1 warnings.
+
+> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
+> Signed-off-by: Mark Bloch <mbloch@nvidia.com>
+> ---
+>  drivers/net/ethernet/mellanox/mlx5/core/en/qos.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/qos.c b/drivers/net/ethernet/mellanox/mlx5/core/en/qos.c
+> index f0744a45db92..2f32111210f8 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en/qos.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en/qos.c
+> @@ -374,7 +374,9 @@ void mlx5e_reactivate_qos_sq(struct mlx5e_priv *priv, u16 qid, struct netdev_que
+>  void mlx5e_reset_qdisc(struct net_device *dev, u16 qid)
+>  {
+>  	struct netdev_queue *dev_queue = netdev_get_tx_queue(dev, qid);
+> -	struct Qdisc *qdisc = dev_queue->qdisc_sleeping;
+> +	struct Qdisc *qdisc;
+> +
+> +	qdisc = rtnl_dereference(dev_queue->qdisc_sleeping);
+>  
+>  	if (!qdisc)
+
+nit: no new line between action and error check
