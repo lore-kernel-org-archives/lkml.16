@@ -1,211 +1,239 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2088.outbound.protection.outlook.com [40.107.212.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E179E20EB;
-	Wed, 11 Jun 2025 23:51:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.88
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749685885; cv=fail; b=A1pGVqaz37TKx3a0Jbky03bXEg5I8ii+DPLLilOyJKIK3L7GgOI5FW25Je2T9eQW6ifl0Kd138KhCKzdZ2LVPXcV4oofEYJ4aEOHU83Cythf91kqV3R5b0945slBzQrKBJR5wIJTpOgjKs5OKpEXsQHLdUzphmzj1yI56Wu2cEI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749685885; c=relaxed/simple;
-	bh=yK55R/JoO9v6zZrQ2Cj70kN9QfLIoGlayO0FAiFx3fo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ts57UjgatdE+cb6L2TlSjsmKQEB1bWRuLdMIiFP/lFmBkndBbolvE1LCKMO8efHJeJ7uPP3s3y4rREpbPnBParihRvI+Kcy5s3Rc2vA60jC4j6D73pDdcK+fEeFCnE/uvVPoLMe0Vj5rKRKXYvUKl3wg9jcK2wO1/bp0v0w2Q1k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=nBn9pV+Y; arc=fail smtp.client-ip=40.107.212.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E06520EB
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 23:52:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749685946; cv=none; b=rGXDJiHWzfDXv3Y4cO1TVH8bFc9mr3nl9GR6nxxwNsRWxGhIDrba87JzkSd39SLf0OYKNvu6R4iv7ealRKA1c6hIY1OK2iMm7KHERZBEXjxwqo+e1VgM5KuOB1Sui9fthy4RY7qL8iCDZYnA1zz1URyp1WP6FBGE6d8DX8pVesw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749685946; c=relaxed/simple;
+	bh=sVzmrh+Xj7m9JqoL9XUk0ved4SUObimi1V5uzxwwRzE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DgLozdfHUVDC89sF2oqgM4SO5b+52Qazn0XyGqhpuLV21KFZ7KYA1eQCWP+VE6ox+htvyjxmU6erNrQ7y5IkUad5z26Vrtt6uG/mRA0wLSQ58pjnD32Br1P/zwSRQe4uMNPSARnd92s9k0/3+5K2w/v9Ry0xKJHjyyK37GXrkhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=UCilMB5a; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="nBn9pV+Y"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rJyfnyVNV1MbXmfFestTgjlzn5x9G66bZ8Vmg1/wYsyDRtvKRcnTyZT4NYyxRe03MPvADO3k1L4/z1+0XgPUVDT8bIr0jT+qqY0lUFlKLbYLnR05sq1003C7t49GR+o/B69Sh05sCGxie8+PQyEWEenDmHqj9/EIoTIiQrBHdKOU3oJqJgIS86QPumXyQylo3vUycN1+b03Xp1nGuWkw4K0WAHn7reNtg1/pmWH0AHS4xRSha15QNq4TY4g1F2d2hJ014vxF1fyVzckeA60to9SnAJtVPzbkW3F49WktKSix8XAIp8l6h56w5zQznsjccNquThTN6ZIHvpnWPR7g/w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=L80+9jLGigqnZ5R9adAKfkGWBNVDGLyTD+gVYgaK4aA=;
- b=TMUQbr0r968A9M/y2et0WsBM5JhRi3B3x9LX4x77iCVXT+9IyShXuOFtS5lHeI5WUdzCoS+2KqMCQSymXm0rAsk6GScNmboEdKFNwl893M46/U09ib5VCpTEaAvRqy7pxpP9xzm09kjqoZaPTrIo5l291GaFZHjSkkbzmBJCFjYLmoxXXAW0gDC0wDAxoZN+GHDXZntnYBlMSgCFrOkFG4Kzzaoj6fvtUJBUNs/p5e7I1ZZcQ31lgSzcTsxUIuYtFEVcVmDJU77caEmb+RKp3IGAQkS7wqnu9LfeOTMU3Jb10c7DB32Yik05AMfHjofxpRPzCOAN+w/WOor0i89Juw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L80+9jLGigqnZ5R9adAKfkGWBNVDGLyTD+gVYgaK4aA=;
- b=nBn9pV+Y4cdY98OOxvvbgv0rSlw176r5yv9sPnCy7lo14JwV+5Xyst+ANQobq0iag/PiZ8MR/MkMF3rqkQ1ymlRHgzLFa3qbTeogMvchFNxs8BpOHt0W8i1jZ1QIp9OBXSFU//1AsjX+3vBnevNMMrOTFzbL2ItELQGNou3G7h3Wp6ftpnOt3QmUeOnpAqrHSNnLemHzx3VSf/OLWCWvNU5qP7nQSck+p54+vMS2bSaGm8NEhlU2SrMeWYhogQ8JFim+/NzY+UmnTwdHiXra+/Phu5rDrGMUeLfy0RsiYgxOiYB38egTNGXc9zAI0/y7sZkfhORywMMegQ+WW9OMlQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by SA3PR12MB7951.namprd12.prod.outlook.com (2603:10b6:806:318::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.31; Wed, 11 Jun
- 2025 23:51:19 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%6]) with mapi id 15.20.8792.038; Wed, 11 Jun 2025
- 23:51:19 +0000
-Date: Wed, 11 Jun 2025 20:51:17 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
-	Shuah Khan <shuah@kernel.org>,
-	Shuah Khan <skhan@linuxfoundation.org>, Willy Tarreau <w@1wt.eu>,
-	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	Kees Cook <kees@kernel.org>, Andy Lutomirski <luto@amacapital.net>,
-	Will Drewry <wad@chromium.org>, Mark Brown <broonie@kernel.org>,
-	Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v4 09/14] selftests: harness: Move teardown conditional
- into test metadata
-Message-ID: <20250611235117.GR543171@nvidia.com>
-References: <aEfVYQaid5uOHB+Y@nvidia.com>
- <20250610130817-253d2b2d-030a-4eda-91fc-3edb58a4f549@linutronix.de>
- <20250610120902.GB543171@nvidia.com>
- <aEh+DNmbZrqg6rHR@nvidia.com>
- <20250610234657.GO543171@nvidia.com>
- <aEkqtfcOJDrxAAcs@nvidia.com>
- <20250611093942-f6c65a06-c72a-4451-aa1e-8cb8de0d69cb@linutronix.de>
- <aEm6tuzy7WK12sMh@nvidia.com>
- <aEn5jmXZbC5hARGv@nvidia.com>
- <aEoUhPYIAizTLADq@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEoUhPYIAizTLADq@nvidia.com>
-X-ClientProxiedBy: YT2PR01CA0030.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:38::35) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="UCilMB5a"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7376dd56f8fso562581b3a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 16:52:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1749685944; x=1750290744; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ds26m+OEVEHtTwY8L13PNjwlyxHGQ40Hrmpl5kY1WfM=;
+        b=UCilMB5ads5kOuNOzI71W//PeFsFMDueqyG8H0jodz1cg372vFoI51CA5fx8VJNn/U
+         rzqT8oyAam9qQradqfDTeDKG6ZHm8/M+NypyQfSauRpZYQtRjSpgFgtqCzaJglD8yyxk
+         1taLszMNHJ3yPg5pqSvZXUkIWNkQfS8To21bIhePWvFhwLNq+bZGv/Q3iM5EVQ2vicT2
+         tnV2Gp2dc0kUk+S3jJG59sbdB4Gmqpsrkm/bgTaNWMJ0EsOhWEBOranswjOTMDaFsQKj
+         Q9CmwVgKB2U9xknmtmDO1Da0R5Rzlb4bxNz8zRpquv3C5r4F98K71sXzMx7ltoLkUQLD
+         eNXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749685944; x=1750290744;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ds26m+OEVEHtTwY8L13PNjwlyxHGQ40Hrmpl5kY1WfM=;
+        b=v69AZ2xQR7uA/iukkzZEBcIF7SdiqyCCdVCOQFE4AS7bv88E06L442S5LhGRfA2d4Q
+         KaMAZdijQTYiM1TJFVDfz83VyM324bVaykHFBqZ2bOu0gW6tGkhFgyVwi/+w1cYcpOpy
+         jjpCbwFDc1tedo44T/c7jUw7UKGYMB7poxcqWWZnIS4z+DQySI68wEvtlRlkCFKRjvhY
+         4VgKzSBz1C25ftzjkKuyCUdRRiM/8o0tx42C2f9K+1bYKIhSaLGYvQyD3ozaILYTMSz2
+         uqZVy+LSGivXcjiP5grD2epap+JbOjkgreDGSX2+EQ1wNDXFeNA/Bx9CgtacsFbmeRHa
+         fNUw==
+X-Forwarded-Encrypted: i=1; AJvYcCWl3/6dgybEMmku+ORUB7nh/gbMfcLIKn2HM2rhLj4fOjrfu5dHItTBLmLo/pQOCz8fEfmf6rpj2Bh4x5g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDgHn2/2Bus1I4FgdRRoAHYp9EEGrXKIt1+daQg5bRHpMJ6/p6
+	hYXrmDuY3IL/5Rs0n6lDgMDSSxmaATAeR5PkzbFg/YNyCS7N/WNAlisn0l6Hf4JxQ0I=
+X-Gm-Gg: ASbGncvWtAo0qmg/zRntl8GlAXkxVBUIn0ohCCPDBleB47qnN4vg5UweZ4d+FiDHqOa
+	n1J+o+YK4ydilEcYHqmSm0Qlp7LUMsFG38Mr7pC3n3uG4XO4w74tqyebXK0+tB4thVjAiDxZU0S
+	MAIjAh5xwhLJ4IEZtuO4kcHCA4NkUGBFZcXYp06M/YIIqZbjF2arNTrBzfhs5JIcOb5KnamtOyz
+	LyKkG7ZNpShR3Ma/vK632Ve+ChAAW05e31ljjsk0fNrKNelj3Wj/xWi36jYqpqtD43jA4Ljg3yk
+	iDPziVUI+GFONLFmEgR2hQUKe1j+3ElzOp5RPZJMgJ7GBJIunAj4//6ahg6H/+fNjTkvv82baQ=
+	=
+X-Google-Smtp-Source: AGHT+IFS+0RpPDsIJ7Pc4hAG+1bB0h9nua2v+kKuA7YHahR/7bpKq5ETyy2eU0pRRy9UZ+rORXm+hw==
+X-Received: by 2002:a05:6a20:2587:b0:21f:53e4:1930 with SMTP id adf61e73a8af0-21f86725dfemr7771431637.22.1749685944426;
+        Wed, 11 Jun 2025 16:52:24 -0700 (PDT)
+Received: from x1 (97-120-245-201.ptld.qwest.net. [97.120.245.201])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fd62a4e59sm121567a12.55.2025.06.11.16.52.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 16:52:24 -0700 (PDT)
+Date: Wed, 11 Jun 2025 16:52:22 -0700
+From: Drew Fustini <drew@pdp7.com>
+To: Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, Guo Ren <guoren@kernel.org>,
+	Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org
+Subject: Re: [PATCH v2 0/7] Rust Abstractions for PWM subsystem with TH1520
+ PWM driver
+Message-ID: <aEoWtviFl0vYATXe@x1>
+References: <CGME20250610125330eucas1p2a573627ca8f124fe11e725c2d75bdcc9@eucas1p2.samsung.com>
+ <20250610-rust-next-pwm-working-fan-for-sending-v2-0-753e2955f110@samsung.com>
+ <aEifXZnLxKd2wa0w@x1>
+ <6ca6016e-3b17-48a0-ad8d-bb05317aa100@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|SA3PR12MB7951:EE_
-X-MS-Office365-Filtering-Correlation-Id: ac1a5cba-641e-4d72-c280-08dda942dc91
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?jtxc0Oo0sRHNuR+zCIC+y2hfr6aCCTAx8tu2vVJBYws//TX/A517wozmWVkN?=
- =?us-ascii?Q?3ziXT//neClS5Rr+Hap08OaBDABXYlfV9rVjT8Zl146ah4aeKt/iorAxoBve?=
- =?us-ascii?Q?dtxtjUpSgIUmParBMb24pPqKkanXgpYU6CVkEIlBdD4hrsnX02bBVpMnZXp6?=
- =?us-ascii?Q?BEvl62m0AXof3FuHB/o5KeCF8zzza1TJMYXvKfuKX+kipAPqk0Ws1dET2DKF?=
- =?us-ascii?Q?qHpcqLxi90Pq8Yns9/bP1dJdRmhZViztLvoGpUkkgoCf9rvYF18lihbONRmz?=
- =?us-ascii?Q?zqpELrFAQ2CpylTuz3HMogk4l5s6az7ZHdZsKenQSmmGUW/HQDk4Q3IWLYns?=
- =?us-ascii?Q?r+r88aZiyrzB358QetDnLW7wmz5lfFKq7yRQNAxprwZ46V0MoXdH9G1BnwT4?=
- =?us-ascii?Q?D5Jl4b37R/jIag7S3Z5lWKy12bCUrqU+vi19Fi1ihw6+4ooRxwbomimCg0MU?=
- =?us-ascii?Q?/LkkVfgI8o6VYpdKsN5/F2+FFeJPrEQYdiwBSh6GkYWxQV9Vp0ZveX/1maYr?=
- =?us-ascii?Q?Eypvn3+nREpaGXLPpnN35IPRr84zvE1dH5tzZuj+5+77rSbCH+74qT8KLBEe?=
- =?us-ascii?Q?bEbJZ09saWQwQDXU+OLxX5NtS7xWB0HONMJdLfYS9BOJ89+v9WI0kYtM10cU?=
- =?us-ascii?Q?rMzlFQp1nz8OZKPch0luiv5rRz6rz8CRuGexkts3V1yC31AAtPY7zbIC0TiF?=
- =?us-ascii?Q?9ilCLPIbDvMTlESQRtZof2YWmUVeZSTBN+5Kr77K+mR/Jbxk2kFwIRFBDSBZ?=
- =?us-ascii?Q?czhOhOpTVnS0NopjFlOynx1T6y9lws/qwUPvis9PBJlG87136IMELwTC02N2?=
- =?us-ascii?Q?jA4fRCHXU7LhO8HO6GdMtFfbOqO7m3iTI9pftTpl6rhVEjzyEHOiPwxc/RM8?=
- =?us-ascii?Q?nsxGWUQ/Rz8y30fOhmDNGa7Lnvs5anqzGKf1r4SsbmaSnvyQ1xauI9E+GDAU?=
- =?us-ascii?Q?OjZmXIJT+uXfkYa5LgtEjDkA5z1gqkAcNFDoWfYFpEBkd0v8GFVKpE1JufZB?=
- =?us-ascii?Q?gmu15bZJ1qes8mwTQO7GUBxLKNLzlb3CpDYKlyRCLiXg5bNGP9PQhIfO6X43?=
- =?us-ascii?Q?IX9dcmk9Kwo3MRAs1nWrvnRFaqCgCYJlx4Satj6O53JVGmcn1vKKSB7SGa/o?=
- =?us-ascii?Q?RVKpzZOJ/5HV1ModW8vP0TWhhS10mC5VuiKi8Kq7ZlcDmtLhNXvxIghLUgTZ?=
- =?us-ascii?Q?QexCtcYeczO3576e9536Uh75moud53UwsIJ4EXZuquNvKoQCtPzTIitYCO6G?=
- =?us-ascii?Q?hzy+T/BHEbGj65n8kDB0Wh0BWc+HHVUlIpGhrBajALs5yh1VDwVw4lz3UsII?=
- =?us-ascii?Q?a6iKIpS8ELNfl4WumEAtQZ3NliFtaFalPB7WIqV+N8gyYAgo1EY7T8+SBdUP?=
- =?us-ascii?Q?fSkUxooA+P4yOvU/NvO2C/MPNjpAArTMt0JH2shs47mld972M7iSfoM5OC/n?=
- =?us-ascii?Q?4MaHwfw4I78=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Onoij8w6skCca5S74XUFO7UV4q2PVoPOaNZ8rHVKTr1E+82Hmd683lkX/q4E?=
- =?us-ascii?Q?biV1f3cNwES54JDd7OV2QER952VjZcNpSVj2b7pxaBiq23BrECY9gihODbZH?=
- =?us-ascii?Q?vQ1BXJv069J2lEqXPZ3typHNUk/1Ii8P4nMq0pq9AwIxSev6tQtlAPJ3UUV+?=
- =?us-ascii?Q?ygicDbXZ3cWHYKgTZAxIbXub8nT22cTbIVC6s2JZXm6gvXBJSqBqD2OdM4I2?=
- =?us-ascii?Q?mspzwjNOWIu3No17DBHsjFgDPM/4AlM2rQ0s3u/kBgJC76Z/pTx7UbseQmZY?=
- =?us-ascii?Q?BbCeC2mEmmkVM1AzbX4/k6OJvHeAkPh6uQOnlnLxygd5rvMpUpNStaIswsAH?=
- =?us-ascii?Q?2A4VnJ8g9ZDEJp/sCk7jC+g/5M2355L5lQOgEq8XW331+7kSbn6gLsj+604A?=
- =?us-ascii?Q?XzyTqqSDQYDhB06ZKHDFJ16GbZW0lrGG7sbc8tR2uWdBz7LAe16KduTGOu47?=
- =?us-ascii?Q?vPfPi5m3rK+eFOGm2g2CMulpvyjFmTypUlrE7A4d6k6ww87nZrmYfAMF5tkp?=
- =?us-ascii?Q?769bj/Jlj3z6TcB/K2ny5N5BwYglXe7OUpYeRKgECtWz0GG89yhUyOPvlEY/?=
- =?us-ascii?Q?ODfyYyy49G/8YivnIClydgcfXfiucKUsbSOts5+VJY8xKvDhPxS3HXF3KnAy?=
- =?us-ascii?Q?Kd0KG8q4g2riESZrLIDtQ/dCk8jABL5ziQ+7r9gu0pUdl0CqEWIldEIyOk7S?=
- =?us-ascii?Q?gUB4bepWfAnadyQqJqo+ffrWa5Kluuu7uy4UkSEf4RLM4/5aom2b42KZGlDw?=
- =?us-ascii?Q?/TWp1esr0JdHjh1UO+2k8qPI1ocvcr48pHc+oHHxwi2nvXVhwhsYGHpLKB84?=
- =?us-ascii?Q?Ql5/UgFoB2w72stTuzbiwsiGLnx23mDMTIjchiZzvMBNdjFDpJaiBAylzrTd?=
- =?us-ascii?Q?zBGo+ZoRIhKcLFtedea09OVYKSyzzrg4wZ4KELvNEPgdjMuP2LhqnEWZXhPf?=
- =?us-ascii?Q?DUEMCY6rlZlh2SnQMQo+6n1jHwhl1PNhHgxK3Id3RnA8rBy+S8KazlHEm9NV?=
- =?us-ascii?Q?JR9cZmGsyofDXYi6DZy7Agc+/5dJ/nHih1T67Zit4BWyppjsz+mv+fF59LgX?=
- =?us-ascii?Q?W1QCm8pkrDPO7XqQulk526ZK2sFS1+iInjEW3KTaQU0RTV3ts/1jH2XH9xO+?=
- =?us-ascii?Q?EKOsiZLawDF9ru3NzmI0HLAfy0Y0vLhYWEsxh36ZhxTI4duQNAcf4yAcoJcM?=
- =?us-ascii?Q?/UQxrHiah/2AlejR3SGWROgwOtbCzzB3BthzQrL+Gq0P1rXOv/OAdAk4jh8y?=
- =?us-ascii?Q?RRMK8Nk7xKLURr/SE5sN2VytQPVzn3JbdlnMRdDI53YYUXy7vfzDaZga3VES?=
- =?us-ascii?Q?c8FeTUxCiips2OhX7vodHwyHxH8LNopiyuZzqpmpNcYxp34Bp1q94KMWSXmp?=
- =?us-ascii?Q?fZORFd5RK3ItElgKuYce7xXGqV9wcn0aBvO4gS/Av4imdebWcTSxA+XCHyyN?=
- =?us-ascii?Q?zoRjGtziJYvReqbScwjLhABL4005/56SAUiV83TR2JyP9M8BZ/fIrcqL40Ns?=
- =?us-ascii?Q?RVjYDrd/U9H0hj7mCH5PES3cnzeSkHDmdbLy9WXYsE3DdwGAtKjDpgN6GtHj?=
- =?us-ascii?Q?uzv72+GGI6pthKqZjJ0=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ac1a5cba-641e-4d72-c280-08dda942dc91
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2025 23:51:19.1759
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WcEFbcrOlg9Fsx2Ec8Jy29WiiSu4bv+hnjHyj4O1s+hvySMZ2+THC/UUBQlkQsVx
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7951
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6ca6016e-3b17-48a0-ad8d-bb05317aa100@samsung.com>
 
-On Wed, Jun 11, 2025 at 04:43:00PM -0700, Nicolin Chen wrote:
-> So, the test case sets an alignment with HUGEPAGE_SIZE=512MB while
-> allocating buffer_size=64MB:
-> 	rc = posix_memalign(&self->buffer, HUGEPAGE_SIZE, variant->buffer_size);
-> 	vrc = mmap(self->buffer, variant->buffer_size, PROT_READ | PROT_WRITE,
-> this gives the self->buffer a location that is 512MB aligned, but
-> only mmap part of one 512MB huge page.
+On Wed, Jun 11, 2025 at 05:14:40PM +0200, Michal Wilczynski wrote:
 > 
-> On the other hand, _metadata->no_teardown was mmap() outside the
-> range of the [self->buffer, self->buffer + 64MB), but within the
-> range of [self->buffer, self->buffer + 512MB).
 > 
-> E.g.
->    _metadata->no_teardown = 0xfffbfc610000 // inside range2 below
->    buffer=[0xfffbe0000000, fffbe4000000) // range1
->    buffer=[0xfffbe0000000, fffc00000000) // range2
+> On 6/10/25 23:10, Drew Fustini wrote:
+> > On Tue, Jun 10, 2025 at 02:52:48PM +0200, Michal Wilczynski wrote:
+> >> This patch series introduces Rust support for the T-HEAD TH1520 PWM
+> >> controller and demonstrates its use for fan control on the Sipeed Lichee
+> >> Pi 4A board.
+> >>
+> >> The primary goal of this patch series is to introduce a basic set of
+> >> Rust abstractions for the Linux PWM subsystem. As a first user and
+> >> practical demonstration of these abstractions, the series also provides
+> >> a functional PWM driver for the T-HEAD TH1520 SoC. This allows control
+> >> of its PWM channels and ultimately enables temperature controlled fan
+> >> support for the Lichee Pi 4A board. This work aims to explore the use of
+> >> Rust for PWM drivers and lay a foundation for potential future
+> >> Rust based PWM drivers.
+> >>
+> >> The core of this series is a new rust/kernel/pwm.rs module that provides
+> >> abstractions for writing PWM chip provider drivers in Rust. This has
+> >> been significantly reworked from v1 based on extensive feedback. The key
+> >> features of the new abstraction layer include:
+> >>
+> >>  - Ownership and Lifetime Management: The pwm::Chip wrapper is managed
+> >>    by ARef, correctly tying its lifetime to its embedded struct device
+> >>    reference counter. Chip registration is handled by a pwm::Registration
+> >>    RAII guard, which guarantees that pwmchip_add is always paired with
+> >>    pwmchip_remove, preventing resource leaks.
+> >>
+> >>  - Modern and Safe API: The PwmOps trait is now based on the modern
+> >>    waveform API (round_waveform_tohw, write_waveform, etc.) as recommended
+> >>    by the subsystem maintainer. It is generic over a driver's
+> >>    hardware specific data structure, moving all unsafe serialization logic
+> >>    into the abstraction layer and allowing drivers to be written in 100%
+> >>    safe Rust.
+> >>
+> >>  - Ergonomics: The API provides safe, idiomatic wrappers for other PWM
+> >>    types (State, Args, Device, etc.) and uses standard kernel error
+> >>    handling patterns.
+> >>
+> >> The series is structured as follows:
+> >>  - Rust PWM Abstractions: The new safe abstraction layer.
+> >>  - TH1520 PWM Driver: A new Rust driver for the TH1520 SoC, built on
+> >>    top of the new abstractions.
+> >>  - Clock Fix: A necessary fix to the TH1520 clock driver to ensure bus
+> >>    clocks remain enabled.
+> >>  - Device Tree Bindings & Nodes: The remaining patches add the necessary
+> >>    DT bindings and nodes for the TH1520 PWM controller, a thermal
+> >>    sensor, and the PWM fan configuration for the Lichee Pi 4A board.
+> >>
+> >> Testing:
+> >> Tested on the TH1520 SoC. The fan works correctly. The duty/period
+> >> calculaties are correct. Fan starts slow when the chip is not hot and
+> >> gradually increases the speed when PVT reports higher temperatures.
+> >>
+> >> The patches are based on mainline, with some dependencies which are not
+> >> merged yet - platform Io support [1] and math wrapper [2].
+> >>
+> >> Reference repository with all the patches together can be found on
+> >> github [3].
+> > 
+> > I'm trying to build your rust-next-pwm-working-fan-for-sending-v4 branch
+> > but I get this error:
+> > 
+> > $ make W=1 LLVM=1 ARCH=riscv -j16
+> >   CALL    scripts/checksyscalls.sh
+> > .pylintrc: warning: ignored by one of the .gitignore files
+> >   UPD     include/generated/utsversion.h
+> >   CC      init/version-timestamp.o
+> >   KSYMS   .tmp_vmlinux0.kallsyms.S
+> >   AS      .tmp_vmlinux0.kallsyms.o
+> >   LD      .tmp_vmlinux1
+> > ld.lld: error: undefined symbol: rust_build_error
+> >     referenced by pwm_th1520.4789668fc0b4e501-cgu.0
+> >                   drivers/pwm/pwm_th1520.o:(<pwm_th1520::Th1520PwmDriverData as kernel::pwm::PwmOps>::get_state) in archive vmlinux.a
+> >     referenced by pwm_th1520.4789668fc0b4e501-cgu.0
+> >                   drivers/pwm/pwm_th1520.o:(<pwm_th1520::Th1520PwmDriverData as kernel::pwm::PwmOps>::write_waveform) in archive vmlinux.a
+> >     referenced by pwm_th1520.4789668fc0b4e501-cgu.0
+> >                   drivers/pwm/pwm_th1520.o:(<pwm_th1520::Th1520PwmDriverData as kernel::pwm::PwmOps>::write_waveform) in archive vmlinux.a
+> > make[2]: *** [scripts/Makefile.vmlinux:91: vmlinux] Error 1
+> > make[1]: *** [/home/pdp7/linux/Makefile:1241: vmlinux] Error 2
+> > make: *** [Makefile:248: __sub-make] Error 2
 > 
-> Then ,the "vrc = mmap(..." overwrites the _metadata->no_teardown
-> location to NULL..
+> Hi,
 > 
-> The following change can fix, though it feels odd that the buffer
-> has to be preserved with the entire huge page:
-> ---------------------------------------------------------------
-> @@ -2024,3 +2027,4 @@ FIXTURE_SETUP(iommufd_dirty_tracking)
+> Thanks for testing !
+> I can reproduce the issue with your config.
 > 
-> -       rc = posix_memalign(&self->buffer, HUGEPAGE_SIZE, variant->buffer_size);
-> +       rc = posix_memalign(&self->buffer, HUGEPAGE_SIZE,
-> +                           __ALIGN_KERNEL(variant->buffer_size, HUGEPAGE_SIZE));
->         if (rc || !self->buffer) {
-> ---------------------------------------------------------------
+> The root of the problem was a failing compile time assertion
+> (build_assert!) in the underlying Rust abstracions, I think IoMem since
+> get_state and write_waveform functions are impacted. My development
+> configuration was accidentally hiding this issue, but your configuration
+> correctly exposed it.
 > 
-> Any thought?
+> The kernel config option that is different on my setup is:
+> CONFIG_RUST_BUILD_ASSERT_ALLOW=y
 
-This seems like something, variant->buffer_size should not
-be less than HUGEPAGE_SIZE I guess that is possible on 64K ARM64
+Thanks for the explanation. I wanted to see how far I could get so I
+also have set CONFIG_RUST_BUILD_ASSERT_ALLOW=y for now.
 
-But I still don't quite get it..
+I also enabled the pwm fan driver. However, there is a probe failure:
 
-        rc = posix_memalign(&self->buffer, HUGEPAGE_SIZE, variant->buffer_size);
+[    1.250921] pwm-fan pwm-fan: Failed to configure PWM: -524
+[    1.256546] pwm-fan pwm-fan: probe with driver pwm-fan failed with error -524
 
-Should allocate buffer_size
+This seems to be the result `set_pwm(ctx, initial_pwm)` failing.
 
-        mmap_flags = MAP_SHARED | MAP_ANONYMOUS | MAP_FIXED;
-                mmap_flags |= MAP_HUGETLB | MAP_POPULATE;
-        vrc = mmap(self->buffer, variant->buffer_size, PROT_READ | PROT_WRITE,
-                   mmap_flags, -1, 0);
+It seems like the TH1520 PWM driver loaded okay:
 
-Should fail if buffer_size is not a multiple of HUGEPAGE_SIZE? 
+# cat /sys/class/pwm/pwmchip0/npwm 
+6
+# ls -l /sys/class/pwm/pwmchip0/device
+lrwxrwxrwx 1 root root 0 Jun 12 07:37 /sys/class/pwm/pwmchip0/device -> ../../../ffec01c000.pwm
+# ls -l /sys/class/pwm/pwmchip0/device/driver
+lrwxrwxrwx 1 root root 0 Feb 28  2023 /sys/class/pwm/pwmchip0/device/driver -> ../../../../bus/platform/drivers/pwm-th1520
 
-It certainly shouldn't mmap past the provided buffer_size!!!
+I'm using your mwilczy/rust-next-pwm-working-fan-for-sending-v4 branch:
 
-Are you seeing the above mmap succeed and also map beyond buffer -> buffer + buffer_size?
+7ec07c93dbac riscv: dts: thead: Add PWM fan and thermal control
+c8a6138b2a13 riscv: dts: thead: Add PVT node
+14e2f1bfd26b riscv: dts: thead: Add PWM controller node
+afe06057030e dt-bindings: pwm: thead: Add T-HEAD TH1520 PWM controller
+fe75d1ab60c9 clk: thead: Mark essential bus clocks as CLK_IGNORE_UNUSED
+47dc6a551376 pwm: Add Rust driver for T-HEAD TH1520 SoC
+9370bdd31cdc rust: Add basic PWM abstractions
+f077d5bf0be8 Rust Abstractions for PWM subsystem with TH1520 PWM driver
+f153d0d0221f rust: math: Add KernelMathExt trait with a mul_div helper
+51c4a2e7d48a Fix for Device<Bound>
+4847fa4f7ac8 rust: platform: allow ioremap of platform resources
+929c56df82e5 rust: io: mem: add a generic iomem abstraction
+09dfabb4677c rust: io: add resource abstraction
 
-I think that would be a kernel bug in MAP_HUGETLB!
+I uploaded the kconfig [1] and boot log [2]. Any ideas?
 
-Jason
+Thanks,
+Drew
+
+[1] https://gist.github.com/pdp7/58ca1f543898daeb281c013facb79aed
+[2] https://gist.github.com/pdp7/e263b1b928a17d499f94fa5be7b3a7f8
