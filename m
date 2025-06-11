@@ -1,126 +1,231 @@
-Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D580F1AAA11;
-	Wed, 11 Jun 2025 15:24:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D17719CCFA
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:24:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749655452; cv=none; b=ekdA43jcJ8YPFHuimBTnBR1GiI+mjqoY5Eqm4l6fOJay6zlg3jXAO3CZZvF/y0uo2O5JFzElRqTp+JOYncFysDGMinollTJs90TjTx7MZ9EL79t1XSkaHppUo4YYjaFEUV0io4rTHYeupaoYdfNel6DFOK4255897AVqGrELyzo=
+	t=1749655491; cv=none; b=j28HLpHCFABvpPX2GT9EJPZRN65FInwROlIgpFRq91TonzxSqQ0+sPBFx2cmbv3JwZHlAk3NhMV3XCohWlREERnAZYoLS1nuR/rcvOTDwBe7HSVUrBMJ95cqbm5u3FtxzDKZXECHp37gW+/o4SOOR6cgKO8CSBfm2yXAAXL2X54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749655452; c=relaxed/simple;
-	bh=4ZJrxbQD7Wq1zQl7il+htYlEl74rivfaeLej9OYZtSY=;
-	h=Subject:Message-ID:Date:MIME-Version:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=XlrYQSRdAulNCcvpwKF2wUWllhwvo4tleLOh6RyTOLThNA6hUCPz45qWVxI5OyRwaH5QDOdEgv0vmIOkIgMn9nZ+5vYi0P9X7H6BOb9QOmnSi+HnpqjHWykgANtafL64ThqTBTrEOxvWs5MSoj0szz8zBhsH3BOnL020RxJ2MSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=W/Qwl9S2; arc=none smtp.client-ip=52.119.213.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1749655491; c=relaxed/simple;
+	bh=oRacMQtM2NPT2AZUEHlFJ1X7njDLyMI4YFQZ53xaNdU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DijoiNfsqNpeXGvJhVTzFGx/GXKSzS9G0okA/65pPTymbFyXu3u5g4T3QcUq4Ss2z2B9pUM6eNkrEfUoBWn0pgfTw3oavxYb1elFuZ6yVUK1mMy8yK9gsqX+5K1CqFX0eGayl5P+WYWzhQvwru15qirP4NooPor2wQmGvcELvlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kBj4nRBp; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="W/Qwl9S2"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kBj4nRBp"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-47e9fea29easo388581cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 08:24:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1749655450; x=1781191450;
-  h=message-id:date:mime-version:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:subject;
-  bh=T4o6YcPRF1U1tvznrJTs87/iT7vaJoRM/tUg+dY5ocQ=;
-  b=W/Qwl9S2MnJkQDuXGkdsmWpSZMK5NJ/YC8vch2AQMsHRbGReoo8Obl4P
-   piq2FyNxWgKe1w+uiEaGsNDlKcnQ2BTApg9lxVJs+pSIu/lglkdLg4WSp
-   3kYjkwv7OCo7OQK5DLYaWOL4kLyfnn1ZeDBvffPySRNHJjehb2HDzi7xA
-   EC46aMEIStFkz8Fdgnc8uaPCCRASyIcY8pZuCDLWMt+hfpRDDWATduJ4B
-   4GyD/OIuqnsC6KOo52J541bq1u12EPUZ/V8t52zFn4kHeoL5DReiHZtSI
-   fy/9KjC0wEr8WKjlzl3yBBo1lRHe3wsSO+ZKtGnZRwT2q2O3upB0lhzAf
-   g==;
-X-IronPort-AV: E=Sophos;i="6.16,228,1744070400"; 
-   d="scan'208";a="754310820"
-Subject: Re: [PATCH] Revert "block: don't reorder requests in blk_add_rq_to_plug"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 15:24:08 +0000
-Received: from EX19MTAEUC001.ant.amazon.com [10.0.43.254:34556]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.8.92:2525] with esmtp (Farcaster)
- id 3f9813e5-609c-48b8-930f-26a74422b933; Wed, 11 Jun 2025 15:24:08 +0000 (UTC)
-X-Farcaster-Flow-ID: 3f9813e5-609c-48b8-930f-26a74422b933
-Received: from EX19D018EUA004.ant.amazon.com (10.252.50.85) by
- EX19MTAEUC001.ant.amazon.com (10.252.51.155) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 11 Jun 2025 15:24:08 +0000
-Received: from [192.168.11.154] (10.106.82.32) by
- EX19D018EUA004.ant.amazon.com (10.252.50.85) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 11 Jun 2025 15:24:07 +0000
-Message-ID: <32c83d67-1d69-4d69-8d00-274cf0d0ff62@amazon.com>
-Date: Wed, 11 Jun 2025 16:24:06 +0100
+        d=google.com; s=20230601; t=1749655486; x=1750260286; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vCaCBzkui1UDzyO3kyUbEuaCu0ZsnJ9BO/eNavHEABw=;
+        b=kBj4nRBpxuVHNxUlY+AUAmYd8XQK/kULXNTMFS9mNytDh1oF1RvpmpLugOSYP89s7a
+         nNbZIaEu/ElaHtoGLUX3odifkz2gBQ5A/xVbs5s/1w3NCtFGTlgvXYx6ay8PE+LBvAsG
+         8cn2o14YSD6tOlT0prVN7KSKwC/yaFAPAsCBDZa0dtksPmL42vdb/BAatV3zyT6BWmLJ
+         FzRRbPBptDs29AXE2Ux6IRNbkj0jLIMEh7ReqlfV/Kg9ngP0UWlrta8zppiGCc4Zqm+y
+         5QgoBGpulmNb6ULMKkryADs6/iSNGi+dpZzE1JwN/MnAz3BP3LCgfLjp0BID1djFl9S0
+         V0Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749655486; x=1750260286;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vCaCBzkui1UDzyO3kyUbEuaCu0ZsnJ9BO/eNavHEABw=;
+        b=BkdbgvPR8s/XIVNe3kYiugsOGql5Pby59AXlTz9Q2wE66p7DpiM158kN/vTz0KKXrR
+         JMddGJhlSKElKY7UVQ6v9mArfkCgzugBa9xDWGTyt5Hd4B8EL8JGImXTjbqu6QosbhEe
+         94lJjgTd6YaUb2w47vyNzoGyjWErYnojCRlOtAquEkxIwLoGgDeAQ+B7up0b5vWT2+MY
+         n/A/2PxFalPvroYDm6XYpOihFyeQq3XTmNWwCtbDJQ7bvw0HzWYiwJQiXtHjCsrmi9f8
+         CdctJCF0ad5cQA78hDV0+1iy0S1OPMmoxRhtTJw9VYtRrhZd3NsGpGyfJ5saTl2tirdb
+         IbCA==
+X-Forwarded-Encrypted: i=1; AJvYcCXIwa0mETuOOkzGKnGbasxaY6Aphf/+e1xIaNbBGGtgmCXaKNz2cYfXKJU0PlXeoPlV5IK+tob5KEoBalc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyig9u4qIye0UYh9Wxti26jr9pLQRoNWZVa3A2JNlkpT/m5FxRM
+	Kl0+miNlhqvNjcJFUf3LoTRB7UCg3+oK/VARxYLgsFn5Hw6f7aaqrQa8LkQ8Q0/eqC7U2EXPLvW
+	eetznWrfEvnjzEVPb5MluLQwglYeNfTzM0DI51ipD
+X-Gm-Gg: ASbGncvVdJaui+U6v/J6pQbj4ossplPb90gdLggGRnR3qBVECCykoQ8ufivu49c3SpB
+	i3Y4RYvTgnzGquBsRNZgQVG1DvBA4kEgb7N0bOkVW6aYocuFo6hmRKqDWtJRKZoDD411AMN1Buw
+	kzlq4LIVDcNrc7f2v/EGL48wMhTeKYmHJV9VMZcgBY+mHYl7dPNqBZZdlKr0kCbzeSfXfcj+22g
+	g==
+X-Google-Smtp-Source: AGHT+IGaALA5HOLF2Qc8q+0m2dcXfrcmFj7afCc+J9p/TZJhNBKTdOqSEIlLEe7fCAwa46Vm7qJA5ZayuJKteVEOWUI=
+X-Received: by 2002:ac8:59c6:0:b0:4a6:f525:e35a with SMTP id
+ d75a77b69052e-4a71739dc8dmr3158121cf.9.1749655485134; Wed, 11 Jun 2025
+ 08:24:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Ming Lei <ming.lei@redhat.com>
-CC: <stable@vger.kernel.org>, kernel test robot <oliver.sang@intel.com>, Hagar
- Hemdan <hagarhem@amazon.com>, Shaoying Xu <shaoyi@amazon.com>, "Jens Axboe"
-	<axboe@kernel.dk>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang
-	<jasowang@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>, Stefan Hajnoczi
-	<stefanha@redhat.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Keith Busch <kbusch@kernel.org>,
-	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-	<linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<virtualization@lists.linux.dev>, <linux-nvme@lists.infradead.org>,
-	<linux-fsdevel@vger.kernel.org>
-References: <20250611121626.7252-1-abuehaze@amazon.com>
- <aEmcZLGtQFWMDDXZ@fedora>
-Content-Language: en-US
-From: "Mohamed Abuelfotoh, Hazem" <abuehaze@amazon.com>
-In-Reply-To: <aEmcZLGtQFWMDDXZ@fedora>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EX19D006EUC003.ant.amazon.com (10.252.51.252) To
- EX19D018EUA004.ant.amazon.com (10.252.50.85)
+References: <20250529073537.563107-1-hao.ge@linux.dev> <177e1f6b-50f0-4c0a-bb0b-514283e009a2@linux.dev>
+ <CAJuCfpE9Y6iMt5sDd+NUuXAeqXiQXaYZOobGDvi7LYRqm=7-KA@mail.gmail.com> <b132dd1f-984b-452e-b19b-18cdecb2842a@linux.dev>
+In-Reply-To: <b132dd1f-984b-452e-b19b-18cdecb2842a@linux.dev>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Wed, 11 Jun 2025 08:24:33 -0700
+X-Gm-Features: AX0GCFthPV7_LeBFMNGhB_8jSOnMn-WFI9CR8rdaYFAYdBGzvtcRNw3_DpDvzmg
+Message-ID: <CAJuCfpGueFFKwyhG6Lz44dtJOZbicFoB5S=44GV_oyLUn8oQtA@mail.gmail.com>
+Subject: Re: [PATCH] mm/alloc_tag: add the ARCH_NEEDS_WEAK_PER_CPU macro when
+ statically defining the percpu variable alloc_tag_counters.
+To: Hao Ge <hao.ge@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, Hao Ge <gehao@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 11/06/2025 16:10, Ming Lei wrote:
-> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
-> 
-> 
-> 
-> On Wed, Jun 11, 2025 at 12:14:54PM +0000, Hazem Mohamed Abuelfotoh wrote:
->> This reverts commit e70c301faece15b618e54b613b1fd6ece3dd05b4.
->>
->> Commit <e70c301faece> ("block: don't reorder requests in
->> blk_add_rq_to_plug") reversed how requests are stored in the blk_plug
->> list, this had significant impact on bio merging with requests exist on
->> the plug list. This impact has been reported in [1] and could easily be
->> reproducible using 4k randwrite fio benchmark on an NVME based SSD without
->> having any filesystem on the disk.
->>
->> My benchmark is:
->>
->>      fio --time_based --name=benchmark --size=50G --rw=randwrite \
->>        --runtime=60 --filename="/dev/nvme1n1" --ioengine=psync \
->>        --randrepeat=0 --iodepth=1 --fsync=64 --invalidate=1 \
->>        --verify=0 --verify_fatal=0 --blocksize=4k --numjobs=4 \
->>        --group_reporting
->>
->> On 1.9TiB SSD(180K Max IOPS) attached to i3.16xlarge AWS EC2 instance.
->>
->> Kernel        |  fio (B.W MiB/sec)  | I/O size (iostat)
->> --------------+---------------------+--------------------
->> 6.15.1        |   362               |  2KiB
->> 6.15.1+revert |   660 (+82%)        |  4KiB
->> --------------+---------------------+--------------------
-> 
-> I just run one quick test in my test VM, but can't reproduce it.
+On Tue, Jun 10, 2025 at 10:27=E2=80=AFPM Hao Ge <hao.ge@linux.dev> wrote:
+>
+>
+> On 2025/6/10 00:39, Suren Baghdasaryan wrote:
+> > On Sun, Jun 8, 2025 at 11:08=E2=80=AFPM Hao Ge <hao.ge@linux.dev> wrote=
+:
+> >>
+> >> On 2025/5/29 15:35, Hao Ge wrote:
+> >>> From: Hao Ge <gehao@kylinos.cn>
+> >>>
+> >>> Recently discovered this entry while checking kallsyms on ARM64:
+> >>> ffff800083e509c0 D _shared_alloc_tag
+> >>>
+> >>> If ARCH_NEEDS_WEAK_PER_CPU is not defined,there's no need to statical=
+ly
+> >>> define the percpu variable alloc_tag_counters.
+> >>>
+> >>> Therefore,add therelevant macro guards at the appropriate location.
+> >>>
+> >>> Fixes: 22d407b164ff ("lib: add allocation tagging support for memory =
+allocation profiling")
+> >>> Signed-off-by: Hao Ge <gehao@kylinos.cn>
+> >>> ---
+> >>>    lib/alloc_tag.c | 2 ++
+> >>>    1 file changed, 2 insertions(+)
+> >>>
+> >>> diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
+> >>> index c7f602fa7b23..d1dab80b70ad 100644
+> >>> --- a/lib/alloc_tag.c
+> >>> +++ b/lib/alloc_tag.c
+> >>> @@ -24,8 +24,10 @@ static bool mem_profiling_support;
+> >>>
+> >>>    static struct codetag_type *alloc_tag_cttype;
+> >>>
+> >>> +#ifdef ARCH_NEEDS_WEAK_PER_CPU
+> >>>    DEFINE_PER_CPU(struct alloc_tag_counters, _shared_alloc_tag);
+> >>>    EXPORT_SYMBOL(_shared_alloc_tag);
+> >>> +#endif /* ARCH_NEEDS_WEAK_PER_CPU */
+> >>>
+> >>>    DEFINE_STATIC_KEY_MAYBE(CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFA=
+ULT,
+> >>>                        mem_alloc_profiling_key);
+> >> Hi Suren
+> >>
+> >>
+> >> I'm sorry to bother you. As mentioned in my commit message,
+> >>
+> >> in fact, on the ARM64 architecture, the _shared_alloc_tag percpu
+> >> variable is not needed.
+> >>
+> >> In my understanding, it will create a copy for each CPU.
+> >>
+> >>    The alloc_tag_counters variable will occupy 16 bytes,
+> >>
+> >> and as the number of CPUs increases, more and more memory will be wast=
+ed
+> >> in this segment.
+> >>
+> >> I realized that this modification was a mistake. It resulted in a buil=
+d
+> >> error, and the link is as follows:
+> >>
+> >> https://lore.kernel.org/all/202506080448.KWN8arrX-lkp@intel.com/
+> >>
+> >> After I studied the comments of DECLARE_PER_CPU_SECTION, I roughly
+> >> understood why this is the case.
+> >>
+> >> But so far, I haven't come up with a good way to solve this problem. D=
+o
+> >> you have any suggestions?
+> > Hi Hao,
+> > The problem here is that ARCH_NEEDS_WEAK_PER_CPU is not a Kconfig
+> > option, it gets defined only on 2 architectures and only when building
+> > modules here https://elixir.bootlin.com/linux/v6.15.1/source/arch/alpha=
+/include/asm/percpu.h#L14
+> > and here https://elixir.bootlin.com/linux/v6.15.1/source/arch/s390/incl=
+ude/asm/percpu.h#L21.
+> > A nicer way to deal with that is to make if a Kconfig option which is
+> > enabled only for alpha and s390 and then do something like this:
+> >
+> >   #if defined(MODULE) && defined(ARCH_NEEDS_WEAK_PER_CPU)
+> > #define MODULE_NEEDS_WEAK_PER_CPU
+> > #endif
+> >
+> > and change all the usages of ARCH_NEEDS_WEAK_PER_CPU with
+> > MODULE_NEEDS_WEAK_PER_CPU.
+> > Did I explain the idea clearly?
+> > Thanks,
+> > Suren.
+> >
+> Hi Suren
 
-Possibly you aren't hitting the Disk IOPS limit because you are using 
-more powerful SSD? In this case I am using i3.16xlarge EC2 instance 
-running AL2023 or may be fio has different behavior across Distribution. 
-In AL2023 we have fio-3.32
+Hi Hao,
 
-> Also be curious, why does writeback produce so many 2KiB bios?
+>
+> Thanks for your guidance.
+> I understand this train of thought.
+>
+> I've been thinking about a problem: I only added the
+> ARCH_NEEDS_WEAK_PER_CPU
+>
+> macro to isolate the definition of _shared_alloc_tag.
+>
+> Since s390 defines this macro, why did this build error occur?
 
-Good question unfortunately I don't have a good answer on why we have
-2KB bios although I am specifying 4K as I/O size in fio, this is 
-something we probably should explore further.
+The problem is that ARCH_NEEDS_WEAK_PER_CPU is not a Kconfig option,
+it's just a definition, for s390 it's here:
+https://elixir.bootlin.com/linux/v6.15.1/source/arch/s390/include/asm/percp=
+u.h#L21
+So, even for s390 if you are building core kernel code (not a module),
+ARCH_NEEDS_WEAK_PER_CPU will be undefined, however if you are building
+a module on s390 then it is defined. So, your change effectively
+results in _shared_alloc_tag being compiled out in the core kernel
+while it's used when you build a module. Therefore during linking
+modules can't link to that symbol in the core kernel. Hope this
+explains the issue.
 
-Hazem
+The way I would fix this is by making ARCH_NEEDS_WEAK_PER_CPU a
+Kconfig option and enable it for s390 and alpha, would replace old
+definitions from
+https://elixir.bootlin.com/linux/v6.15.1/source/arch/s390/include/asm/percp=
+u.h#L21
+and https://elixir.bootlin.com/linux/v6.15.1/source/arch/alpha/include/asm/=
+percpu.h#L14
+with:
 
+#if defined(MODULE) && defined(ARCH_NEEDS_WEAK_PER_CPU)
+#define MODULE_NEEDS_WEAK_PER_CPU
+#endif
 
+Then use MODULE_NEEDS_WEAK_PER_CPU instead of ARCH_NEEDS_WEAK_PER_CPU
+in all the current places in the kernel code. Lastly, to compile out
+_shared_alloc_tag your current patch should work fine because on s390
+and alpha ARCH_NEEDS_WEAK_PER_CPU will be defined after all these
+changes.
+Does that make sense?
 
+>
+> Could you please help explain it again?
+>
+> Thanks
+> Best Regards
+> Hao
+>
+> >>
+> >> Thanks
+> >>
+> >> Best Regards
+> >>
+> >> Hao
+> >>
+> >>
+> >>
+> >>
