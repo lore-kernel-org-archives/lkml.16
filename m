@@ -1,85 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC1A5236430;
-	Wed, 11 Jun 2025 12:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024062E610F;
+	Wed, 11 Jun 2025 12:14:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749644054; cv=none; b=gtWJEL3sP3TWMQlzwStge/KgO5K2BdvCZT/0RWEudu5W398m/7Ew7wrj2D1nY056W8+zlTcCujtYC66Er3dPO2yNzQgFzdWn9trhsX2KBLMEEQCemkrU1eeo8IPT4jPmkQqfJVY0ROb4UtMr31VFJEfg7YKvRnVlVmb4lp2L7wA=
+	t=1749644054; cv=none; b=NPq95zsDvHieWyHGSQmiLhWRgFYucF+aSMllNXbb49N4UieVzJdBn4e/ndtTWkAJsx7UNfT3uCIa23twRqoeMYEBapvqyK3O2FK2086tnRnAsFgCpC929UgmY6aluVl0UYUZ9F32ssGPlLE3BYnFGmn1c2n2BISvyqvt40B6EqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749644054; c=relaxed/simple;
-	bh=8W7y2ug/7YME7PexfXOiPUIhgjLNDFmxSgAqpvaKdEY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mLbRSYsA3SsU6vx7BQ0PGDsKYDVZ9WlUUaP1RvgS4Is105/9it/GPvdpdE1WDgiiOgCQGg04H+kOU54+/WxI0oJiDYDgyvdxI8lR8+F7hfKc6vGbRirByBoYKHWfzlq5h383MLbeOpJ1A9jZsDXJwo+IF0T87KcwpLvQRc/gj7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jypLM2ze; arc=none smtp.client-ip=10.30.226.201
+	bh=61aDTTnt0gfL98ranD6ViaA9Dly6+I5sCCKE6B8cKY4=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=eTQHlPBRJWdJ2KN5a9RWC1MpiLB56J2PeKunYq7bPwGhE6LyNkCZ/WNuXVNeeclnr+dmdb9WLPPs9JXrS0JMJk5ipkrAJDr1AKMapAkNUeljwYGSvcVCKUScuycb8fcdr+p3svC/kfoxAiksOvMVIqxzJlW4gDEVvzk5IYcda1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zWnJIqUG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=msODc+dw; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jypLM2ze"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A064C4CEF1;
-	Wed, 11 Jun 2025 12:14:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749644054;
-	bh=8W7y2ug/7YME7PexfXOiPUIhgjLNDFmxSgAqpvaKdEY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jypLM2ze7j8YPZmlgol3splyOSTyUY06tVScc/UnutpEaakTmXWCMEsK9FI2XoHCC
-	 Ty3qaMoBueEyk0eWQIFLRGt5lPlJsfO5E0/xboOoP/Hqk59eOtgo11Vq3Ps4USYcDY
-	 wgoZCqsdHec51pavWnBUPc0pIodd29stmHHxfHOD1iO1QylZOTP82mFBgqnQGcxlr8
-	 h2tPPFOnzZbVGVs/Y7bcHEKw3InScxojSOC999YdXwQKZgmqPNC3egeLVgvjXd2xCs
-	 2bDipvYUMXWABjKyxYLSunuxYldLjNrPDRsov3ecvHZ1KFvDoI7AAyARiJIemli4Ko
-	 KTwYZO1XHCk1g==
-Date: Wed, 11 Jun 2025 13:14:10 +0100
-From: Mark Brown <broonie@kernel.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>, linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] selftests/mm: Convert some cow error reports to
- ksft_perror()
-Message-ID: <4ae56ed1-c25d-4ace-aeff-f97884246c41@sirena.org.uk>
-References: <20250610-selftest-mm-cow-tweaks-v1-0-43cd7457500f@kernel.org>
- <20250610-selftest-mm-cow-tweaks-v1-2-43cd7457500f@kernel.org>
- <e88999e6-8c79-4273-9f6f-df28d016cc6e@redhat.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zWnJIqUG";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="msODc+dw"
+Date: Wed, 11 Jun 2025 12:14:09 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749644050;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aLJNjzkKV5KVhwn3VgBgmvy6SLBgBFWTT2d+yJKRMmo=;
+	b=zWnJIqUGIaJ9UfuYZuufe1JjFVu5ef9W8mgCp7EOsMIDc/I64QMRdkoObY9ImPy7jZdyAM
+	2SiZn2c9kTjtY/+Oi9NiykprQ1CwNuRlWQqqhtbA4d1DpKN9581PNHBoK64Lh/lx0LLQZI
+	tLuEa3pZWb6KOGD6SkjMV5E+2aJ377vV7otv4eTiKiNkFil7XvoV2QK2rhJBog1u1p6BSu
+	P3b7AOidw9UJJjQlRI02RsN8kzQirJJKI4c66coXN5z/T7SqOXrx840fMfL9ddqV2mVnDY
+	podn0VZx/oLcFuFmcRpXSmf60rAhZJjK62l/GGvBueqgb8MWe8lnChG7cgiL9Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749644050;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aLJNjzkKV5KVhwn3VgBgmvy6SLBgBFWTT2d+yJKRMmo=;
+	b=msODc+dwqXZWqQiKthJCXOGTiwJHVR2z2gYfcyVV4Z056CgvxPMC7IqfezpMGoprDQDAtD
+	p+vvh0peTO0B70Dw==
+From: "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/urgent] perf: Fix the throttle error of some clock events
+Cc: Leo Yan <leo.yan@arm.com>, Aishwarya TCV <aishwarya.tcv@arm.com>,
+ Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
+ Vince Weaver <vincent.weaver@maine.edu>,
+ Kan Liang <kan.liang@linux.intel.com>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Ian Rogers <irogers@google.com>, x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250606192546.915765-1-kan.liang@linux.intel.com>
+References: <20250606192546.915765-1-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="2u5g+dpnZc+yRuyy"
-Content-Disposition: inline
-In-Reply-To: <e88999e6-8c79-4273-9f6f-df28d016cc6e@redhat.com>
-X-Cookie: No skis take rocks like rental skis!
+Message-ID: <174964404970.406.8430049755633286598.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
+The following commit has been merged into the perf/urgent branch of tip:
 
---2u5g+dpnZc+yRuyy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Commit-ID:     bc4394e5e79cdda1b0997e0be1d65e242f523f02
+Gitweb:        https://git.kernel.org/tip/bc4394e5e79cdda1b0997e0be1d65e242f523f02
+Author:        Kan Liang <kan.liang@linux.intel.com>
+AuthorDate:    Fri, 06 Jun 2025 12:25:46 -07:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Wed, 11 Jun 2025 14:05:08 +02:00
 
-On Wed, Jun 11, 2025 at 02:10:20PM +0200, David Hildenbrand wrote:
-> On 10.06.25 16:13, Mark Brown wrote:
-> > This prints the errno and a string decode of it.
-> >=20
-> > Reported-by: David Hildenbrand <david@redhat.com>
->=20
-> Probably not "Reported-by". Did you mean "Suggested-by" like for the othe=
-rs?
+perf: Fix the throttle error of some clock events
 
-Probably. I'm sure I was thinking something there but not sure what.
+Both ARM and IBM CI reports RCU stall, which can be reproduced by the
+below perf command.
+  perf record -a -e cpu-clock -- sleep 2
 
---2u5g+dpnZc+yRuyy
-Content-Type: application/pgp-signature; name="signature.asc"
+The issue is introduced by the generic throttle patch set, which
+unconditionally invoke the event_stop() when throttle is triggered.
 
------BEGIN PGP SIGNATURE-----
+The cpu-clock and task-clock are two special SW events, which rely on
+the hrtimer. The throttle is invoked in the hrtimer handler. The
+event_stop()->hrtimer_cancel() waits for the handler to finish, which is
+a deadlock. Instead of invoking the stop(), the HRTIMER_NORESTART should
+be used to stop the timer.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhJcxEACgkQJNaLcl1U
-h9DfwQf/SzWod9RbWKqPK86WfL2gkBooCAQCzXdR56dwvobuGo/74De4ozPz/NNT
-5FRwmDEewKWDV6NVZ9v+J93OC4d1/owoecZ5hBPCAi39pYQ/3U0k2tYio8LklcUh
-o6zzMPaPtsXmVyZLqwCgdl69yFkAQNvdED1bjATnRDcI3rGzOXjXe6SGWS2LIQuS
-nxJecqJ/pqUaZRWdGawzl3b5GYfZtG+ujOKF7RNj5rd7geSqSrJaNa55p/cS3GpN
-nrPaIzZAdW01FenWBZ61RCSW2es+UZaXIfBO2G1b8nQgNz1ttUHCQ9Z2+3W/MEM/
-qRS9UCBJesVOoRXQJxynyDvGBrP/XA==
-=Xt5+
------END PGP SIGNATURE-----
+There may be two ways to fix it:
+ - Introduce a PMU flag to track the case. Avoid the event_stop in
+   perf_event_throttle() if the flag is detected.
+   It has been implemented in the
+   https://lore.kernel.org/lkml/20250528175832.2999139-1-kan.liang@linux.intel.com/
+   The new flag was thought to be an overkill for the issue.
+ - Add a check in the event_stop. Return immediately if the throttle is
+   invoked in the hrtimer handler. Rely on the existing HRTIMER_NORESTART
+   method to stop the timer.
 
---2u5g+dpnZc+yRuyy--
+The latter is implemented here.
+
+Move event->hw.interrupts = MAX_INTERRUPTS before the stop(). It makes
+the order the same as perf_event_unthrottle(). Except the patch, no one
+checks the hw.interrupts in the stop(). There is no impact from the
+order change.
+
+When stops in the throttle, the event should not be updated,
+stop(event, 0). But the cpu_clock_event_stop() doesn't handle the flag.
+In logic, it's wrong. But it didn't bring any problems with the old
+code, because the stop() was not invoked when handling the throttle.
+Checking the flag before updating the event.
+
+Fixes: 9734e25fbf5a ("perf: Fix the throttle logic for a group")
+Closes: https://lore.kernel.org/lkml/20250527161656.GJ2566836@e132581.arm.com/
+Closes: https://lore.kernel.org/lkml/djxlh5fx326gcenwrr52ry3pk4wxmugu4jccdjysza7tlc5fef@ktp4rffawgcw/
+Closes: https://lore.kernel.org/lkml/8e8f51d8-af64-4d9e-934b-c0ee9f131293@linux.ibm.com/
+Closes: https://lore.kernel.org/lkml/4ce106d0-950c-aadc-0b6a-f0215cd39913@maine.edu/
+Reported-by: Leo Yan <leo.yan@arm.com>
+Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
+Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+Reported-by: Vince Weaver <vincent.weaver@maine.edu>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Ian Rogers <irogers@google.com>
+Link: https://lkml.kernel.org/r/20250606192546.915765-1-kan.liang@linux.intel.com
+---
+ kernel/events/core.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index d7cf008..1f74646 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2674,8 +2674,8 @@ static void perf_event_unthrottle(struct perf_event *event, bool start)
+ 
+ static void perf_event_throttle(struct perf_event *event)
+ {
+-	event->pmu->stop(event, 0);
+ 	event->hw.interrupts = MAX_INTERRUPTS;
++	event->pmu->stop(event, 0);
+ 	if (event == event->group_leader)
+ 		perf_log_throttle(event, 0);
+ }
+@@ -11774,7 +11774,12 @@ static void perf_swevent_cancel_hrtimer(struct perf_event *event)
+ {
+ 	struct hw_perf_event *hwc = &event->hw;
+ 
+-	if (is_sampling_event(event)) {
++	/*
++	 * The throttle can be triggered in the hrtimer handler.
++	 * The HRTIMER_NORESTART should be used to stop the timer,
++	 * rather than hrtimer_cancel(). See perf_swevent_hrtimer()
++	 */
++	if (is_sampling_event(event) && (hwc->interrupts != MAX_INTERRUPTS)) {
+ 		ktime_t remaining = hrtimer_get_remaining(&hwc->hrtimer);
+ 		local64_set(&hwc->period_left, ktime_to_ns(remaining));
+ 
+@@ -11829,7 +11834,8 @@ static void cpu_clock_event_start(struct perf_event *event, int flags)
+ static void cpu_clock_event_stop(struct perf_event *event, int flags)
+ {
+ 	perf_swevent_cancel_hrtimer(event);
+-	cpu_clock_event_update(event);
++	if (flags & PERF_EF_UPDATE)
++		cpu_clock_event_update(event);
+ }
+ 
+ static int cpu_clock_event_add(struct perf_event *event, int flags)
+@@ -11907,7 +11913,8 @@ static void task_clock_event_start(struct perf_event *event, int flags)
+ static void task_clock_event_stop(struct perf_event *event, int flags)
+ {
+ 	perf_swevent_cancel_hrtimer(event);
+-	task_clock_event_update(event, event->ctx->time);
++	if (flags & PERF_EF_UPDATE)
++		task_clock_event_update(event, event->ctx->time);
+ }
+ 
+ static int task_clock_event_add(struct perf_event *event, int flags)
