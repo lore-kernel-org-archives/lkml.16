@@ -1,31 +1,31 @@
 Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF24C17BBF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2457C1B808;
 	Wed, 11 Jun 2025 01:03:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749603785; cv=none; b=TDXzjFZhZtOX+lebCCY3GewnvtES7RVqmlsbcLNiddKqPtz8r0O4JGe3xiPLPUfZrGzQtvNCV+Q+OkgYFmQNevSgFLXcfGUjI/1XE1SI3OeR+R4thIWviKQJ+CI56ms1Cda0Mkasc+NAul8+2+ymU2iDYKqDtRQ9NdPXjT7yWFk=
+	t=1749603785; cv=none; b=tGo7y6Q0ybSNRWwk6L04Wri13135G2xZPVafPBsQ57AVx/op4bhJlSzwXdOANBULnB9Wjm9iUpM5j0zrXmJFbl/qme5mlW3ZrilJAv0GBkQPUUZGzhPuGsAf5lhhcSCoqndxebyaB/75M21crRaRmeOuPcYK/0wQntw8kilJTys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749603785; c=relaxed/simple;
-	bh=/aoScwYOkCF4fLnSJ9PusAogYx2TOp0qIdg16G+Yb7Q=;
+	bh=FsBpRUG9mO01SDgziP1KqYDkNXwIMvIjJjcG/j181qo=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=jcsslRK1lrycvLR2MgW9vwvXdUgNhreqZhIinEPFNxtOchCFfIc5CXrLu8TAwE9cFMsAO9f4/halm83D06DBA9Vt4K1c0xD73H3l7OsUFx4Nmj6dbJelKOrkFfHNzDQZuTbqH4Ppxj0tgggoVASCiS7aT3o1ZLkTsxgcNCiPJlQ=
+	 Content-Type; b=jDXoAByvUkXai90Lp3s7T40EU6uvN3I0AC86JXgDuWFTTCW5cKzEfWQKAASSWXchFO46fy2YT0FnF249GIa4CiKxCVqJ5NCugxHj08IxevOYf5JREWwwwVy1BWuUPTBMC3yA5kkTFjjuHPTLMRXbhfhV96J6VafwTiz92zUErdE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id D3DFC1A14A7;
+Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id 5E672161483;
 	Wed, 11 Jun 2025 01:03:00 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id DBBE920025;
+Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 6240060009;
 	Wed, 11 Jun 2025 01:02:57 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uP9tF-00000000vD8-3vh3;
+	id 1uP9tF-00000000vBf-1mVG;
 	Tue, 10 Jun 2025 21:04:29 -0400
-Message-ID: <20250611010429.786324495@goodmis.org>
+Message-ID: <20250611010429.274682576@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 10 Jun 2025 20:54:33 -0400
+Date: Tue, 10 Jun 2025 20:54:30 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -46,7 +46,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Jens Remus <jremus@linux.ibm.com>,
  Linus Torvalds <torvalds@linux-foundation.org>,
  Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v10 12/14] unwind_user/x86: Enable frame pointer unwinding on x86
+Subject: [PATCH v10 09/14] unwind deferred: Use SRCU unwind_deferred_task_work()
 References: <20250611005421.144238328@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -55,57 +55,144 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Rspamd-Queue-Id: DBBE920025
-X-Stat-Signature: frtwck145zhd97i5iktdexifwkfoc7zz
-X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 6240060009
+X-Stat-Signature: dt5tmn58ihicz5p8idskysj4amfx3z6y
+X-Rspamd-Server: rspamout06
 X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18M8zasJQDjxJt8HH0+pZyYzYAqEiZSnH8=
-X-HE-Tag: 1749603777-828293
-X-HE-Meta: U2FsdGVkX1/+Fw78fgA36RGKZ4XEgHBKz9V393shKSBjR40Ny7hwWcjlr4tSJZWNsSN1IeobvXb/hUzQDGaonmjEjEbvW0v0DPcL7DZy2ml9EYCF04ILU+H1zahHZlvCtsL7yw0syvEUMRrla9nWGdng7lZV9S/kIrzpXMoFtabYUL3YZWKwa01ccKsBRIRsS7zamfSCBzCp98DPXsHFkTMBAjKstEuollM+IdwUWgLLnImzOxDI2yzEYwixv4nS2XaFps67DLOMtIB8MsOA0FCafPKh4uEuoEfqAxbuRRbSaaIjCLbfKi5srLIoOeBKMinlcuRp8UdfUrylpaupJBhCBXK6k6IAykZ0Z5M/1I+E/RXrN722PFxbgtn8kw1YrdNM2u+GedX8KoG3NQqzg9k9NMfI1ifo7bvwYsBDCwE=
+X-Session-ID: U2FsdGVkX1/z9/lilI4oan58reBSJkvqzJyIm0ANZTc=
+X-HE-Tag: 1749603777-714072
+X-HE-Meta: U2FsdGVkX18F1GndJ4MsaZwcZTkiwymhcSzlC32dYaGbcH34MXUm3bsVx4aMVJySzo1QIUnjN7tSgIayhxT8qI9eD29p6HF+Gubz18a6STGzo+Bqj4DAn3ks5DtYjc3IaB4PUrQZSmO/F7q7wlR+UquGIMy2ZHMv2Ap8Y2mwu1UEX9vZ6mrjSHKxaBec45KJh+ZxPUd32zpH93KJi37jgiSt/ED9xrFZwCuNHfkh+bONFggIlGZu7Jo20EpQyPGVdY6cnEc/1K+pYmBwTQhLTeuisFE5dLGnXc3ioHMwR0Ql1eNwXXHZNMmvctL87Ydpxdg35CDSjCEc0tw46TUyh7umy3CSHj+jX22rUCmuLAUHwmssV9nU2JBI2qXnJrMuGYF8KiDWWbZ+DdUl2qU9MXVlkd56ijwaHSHNUePI0mfvIimmlms/QYrkH7ubJFir4Q5MbFgin8Iy/HDKeRi2cyoN0K8tG/YZHKgcsTD+zyk=
 
-From: Josh Poimboeuf <jpoimboe@kernel.org>
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Use ARCH_INIT_USER_FP_FRAME to describe how frame pointers are unwound
-on x86, and enable CONFIG_HAVE_UNWIND_USER_FP accordingly so the
-unwind_user interfaces can be used.
+Instead of using the callback_mutex to protect the link list of callbacks
+in unwind_deferred_task_work(), use SRCU instead. This gets called every
+time a task exits that has to record a stack trace that was requested.
+This can happen for many tasks on several CPUs at the same time. A mutex
+is a bottleneck and can cause a bit of contention and slow down performance.
 
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+As the callbacks themselves are allowed to sleep, regular RCU cannot be
+used to protect the list. Instead use SRCU, as that still allows the
+callbacks to sleep and the list can be read without needing to hold the
+callback_mutex.
+
+Link: https://lore.kernel.org/all/ca9bd83a-6c80-4ee0-a83c-224b9d60b755@efficios.com/
+
+Suggested-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- arch/x86/Kconfig                   |  1 +
- arch/x86/include/asm/unwind_user.h | 11 +++++++++++
- 2 files changed, 12 insertions(+)
- create mode 100644 arch/x86/include/asm/unwind_user.h
+ kernel/unwind/deferred.c | 33 +++++++++++++++++++++++++--------
+ 1 file changed, 25 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 340e5468980e..2cdb5cf91541 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -302,6 +302,7 @@ config X86
- 	select HAVE_SYSCALL_TRACEPOINTS
- 	select HAVE_UACCESS_VALIDATION		if HAVE_OBJTOOL
- 	select HAVE_UNSTABLE_SCHED_CLOCK
-+	select HAVE_UNWIND_USER_FP		if X86_64
- 	select HAVE_USER_RETURN_NOTIFIER
- 	select HAVE_GENERIC_VDSO
- 	select VDSO_GETRANDOM			if X86_64
-diff --git a/arch/x86/include/asm/unwind_user.h b/arch/x86/include/asm/unwind_user.h
-new file mode 100644
-index 000000000000..8597857bf896
---- /dev/null
-+++ b/arch/x86/include/asm/unwind_user.h
-@@ -0,0 +1,11 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_X86_UNWIND_USER_H
-+#define _ASM_X86_UNWIND_USER_H
+diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
+index 268afae31ba4..e44538a2be6c 100644
+--- a/kernel/unwind/deferred.c
++++ b/kernel/unwind/deferred.c
+@@ -13,10 +13,11 @@
+ 
+ #define UNWIND_MAX_ENTRIES 512
+ 
+-/* Guards adding to and reading the list of callbacks */
++/* Guards adding to or removing from the list of callbacks */
+ static DEFINE_MUTEX(callback_mutex);
+ static LIST_HEAD(callbacks);
+ static unsigned long unwind_mask;
++DEFINE_STATIC_SRCU(unwind_srcu);
+ 
+ /*
+  * Read the task context timestamp, if this is the first caller then
+@@ -107,6 +108,7 @@ static void unwind_deferred_task_work(struct callback_head *head)
+ 	struct unwind_stacktrace trace;
+ 	struct unwind_work *work;
+ 	u64 timestamp;
++	int idx;
+ 
+ 	if (WARN_ON_ONCE(!info->pending))
+ 		return;
+@@ -132,13 +134,15 @@ static void unwind_deferred_task_work(struct callback_head *head)
+ 
+ 	timestamp = info->timestamp;
+ 
+-	guard(mutex)(&callback_mutex);
+-	list_for_each_entry(work, &callbacks, list) {
++	idx = srcu_read_lock(&unwind_srcu);
++	list_for_each_entry_srcu(work, &callbacks, list,
++				 srcu_read_lock_held(&unwind_srcu)) {
+ 		if (info->unwind_mask & BIT(work->bit)) {
+ 			work->func(work, &trace, timestamp);
+ 			clear_bit(work->bit, &info->unwind_mask);
+ 		}
+ 	}
++	srcu_read_unlock(&unwind_srcu, idx);
+ }
+ 
+ static int unwind_deferred_request_nmi(struct unwind_work *work, u64 *timestamp)
+@@ -215,6 +219,7 @@ int unwind_deferred_request(struct unwind_work *work, u64 *timestamp)
+ {
+ 	struct unwind_task_info *info = &current->unwind_info;
+ 	int pending;
++	int bit;
+ 	int ret;
+ 
+ 	*timestamp = 0;
+@@ -226,12 +231,17 @@ int unwind_deferred_request(struct unwind_work *work, u64 *timestamp)
+ 	if (in_nmi())
+ 		return unwind_deferred_request_nmi(work, timestamp);
+ 
++	/* Do not allow cancelled works to request again */
++	bit = READ_ONCE(work->bit);
++	if (WARN_ON_ONCE(bit < 0))
++		return -EINVAL;
 +
-+#define ARCH_INIT_USER_FP_FRAME							\
-+	.cfa_off	= (s32)sizeof(long) *  2,				\
-+	.ra_off		= (s32)sizeof(long) * -1,				\
-+	.fp_off		= (s32)sizeof(long) * -2,				\
-+	.use_fp		= true,
+ 	guard(irqsave)();
+ 
+ 	*timestamp = get_timestamp(info);
+ 
+ 	/* This is already queued */
+-	if (info->unwind_mask & BIT(work->bit))
++	if (info->unwind_mask & BIT(bit))
+ 		return 1;
+ 
+ 	/* callback already pending? */
+@@ -257,19 +267,26 @@ int unwind_deferred_request(struct unwind_work *work, u64 *timestamp)
+ void unwind_deferred_cancel(struct unwind_work *work)
+ {
+ 	struct task_struct *g, *t;
++	int bit;
+ 
+ 	if (!work)
+ 		return;
+ 
+ 	guard(mutex)(&callback_mutex);
+-	list_del(&work->list);
++	list_del_rcu(&work->list);
++	bit = work->bit;
 +
-+#endif /* _ASM_X86_UNWIND_USER_H */
++	/* Do not allow any more requests and prevent callbacks */
++	work->bit = -1;
++
++	clear_bit(bit, &unwind_mask);
+ 
+-	clear_bit(work->bit, &unwind_mask);
++	synchronize_srcu(&unwind_srcu);
+ 
+ 	guard(rcu)();
+ 	/* Clear this bit from all threads */
+ 	for_each_process_thread(g, t) {
+-		clear_bit(work->bit, &t->unwind_info.unwind_mask);
++		clear_bit(bit, &t->unwind_info.unwind_mask);
+ 	}
+ }
+ 
+@@ -286,7 +303,7 @@ int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func)
+ 	work->bit = ffz(unwind_mask);
+ 	unwind_mask |= BIT(work->bit);
+ 
+-	list_add(&work->list, &callbacks);
++	list_add_rcu(&work->list, &callbacks);
+ 	work->func = func;
+ 	return 0;
+ }
 -- 
 2.47.2
 
