@@ -1,50 +1,37 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57E8826AAA3;
-	Wed, 11 Jun 2025 10:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31FCF3B280
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 10:30:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749637806; cv=none; b=AGczJSjh6FlI1BMG1kLiEbCVduRAHqyuGt4okxWz43OZLzg0noZDkjc8oAk6MOr9WwQyEr7yvD0QTGsPsaPa4BzRwymdX5mBCuduVPXoJFNiksu7X7N6PaHVN0d0vL+r3a3D9fGdtjVlAFwM7NBVnPPeDmef1Lp7RZVkaOZvDdQ=
+	t=1749637834; cv=none; b=fNWVb6ZVHE10jOlSTdQALQNO9MAXKCvMiu5iOnkwF3rNZ5IOItzvntwLN3uhxbm1W+m3R/42Unv1+tfxTlZwM8sztiQakmJYNMYF88/EnGtrVyFWiE6QGpBFk8bwNgTjjGZEQYgUllnjGoH8xiu2yEQ9PTIdmNljJNJEktTW5xg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749637806; c=relaxed/simple;
-	bh=R/L1yz/OFtaKsGYyJS6vXs8rb7mCAM3V5P4qgQyt1eg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=u2kXIMM8/Mvc9J0dHZe8cwVKlwV387VWHKL+o2d1jW8pFKJR42tUIm1vFqEtz6pVLWC/yE0XMDIZqQbaV7xq0EZjIzsy4TpdbAOr1Qsz+NfoAV5TNLefPd+joNPbkB334mkN2DPw2PNBAuvoUsYsriropVY8ad5yubixrJuLkfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4bHMNn6Z3sz9tQS;
-	Wed, 11 Jun 2025 12:30:01 +0200 (CEST)
-From: Remo Senekowitsch <remo@buenzli.dev>
-To: Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Dirk Behme <dirk.behme@de.bosch.com>,
-	Remo Senekowitsch <remo@buenzli.dev>
-Cc: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: [PATCH v8 9/9] samples: rust: platform: Add property read examples
-Date: Wed, 11 Jun 2025 12:29:08 +0200
-Message-ID: <20250611102908.212514-10-remo@buenzli.dev>
-In-Reply-To: <20250611102908.212514-1-remo@buenzli.dev>
-References: <20250611102908.212514-1-remo@buenzli.dev>
+	s=arc-20240116; t=1749637834; c=relaxed/simple;
+	bh=USka3TDKhs7gGZ6XsFbj3JDn+DE/JHdWVzj5QEio0mU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gN2BHzz7v/Hf1iOqqbXCGLKXfxXsVZIYyrR5rv3E1M79F03iXKuw1GAqGqkuZAQEHPBjpGG0Cf4BOVfT5MaW+Sb6DmYlz7ip94+FbcIrQDufQs+QDFfaPmwBELWWh5J/QjdXqmRoImERPm2h+/JldkDGw4+mlQHBMlftzl1w9q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF94315A1;
+	Wed, 11 Jun 2025 03:30:11 -0700 (PDT)
+Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 08A723F673;
+	Wed, 11 Jun 2025 03:30:29 -0700 (PDT)
+From: Yeoreum Yun <yeoreum.yun@arm.com>
+To: suzuki.poulose@arm.com,
+	mike.leach@linaro.org,
+	james.clark@linaro.org,
+	alexander.shishkin@linux.intel.com,
+	leo.yan@arm.com
+Cc: coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Yeoreum Yun <yeoreum.yun@arm.com>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH v2] coresight: fix indentation error in cscfg_remove_owned_csdev_configs()
+Date: Wed, 11 Jun 2025 11:30:25 +0100
+Message-Id: <20250611103025.939020-1-yeoreum.yun@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,118 +39,34 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4bHMNn6Z3sz9tQS
 
-Add some example usage of the device property read methods for
-DT/ACPI/swnode properties.
+Fix wrong indentation in cscfg_remove_owned_csdev_configs()
 
-Tested-by: Dirk Behme <dirk.behme@de.bosch.com>
-Co-developed-by: Rob Herring (Arm) <robh@kernel.org>
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202506102238.XQfScl5x-lkp@intel.com/
+Fixes: 53b9e2659719 ("coresight: holding cscfg_csdev_lock while removing cscfg from csdev")
+Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
 ---
- drivers/of/unittest-data/tests-platform.dtsi |  3 +
- samples/rust/rust_driver_platform.rs         | 60 +++++++++++++++++++-
- 2 files changed, 62 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/of/unittest-data/tests-platform.dtsi b/drivers/of/unittest-data/tests-platform.dtsi
-index 4171f43cf01cc..50a51f38afb60 100644
---- a/drivers/of/unittest-data/tests-platform.dtsi
-+++ b/drivers/of/unittest-data/tests-platform.dtsi
-@@ -37,6 +37,9 @@ dev@100 {
- 			test-device@2 {
- 				compatible = "test,rust-device";
- 				reg = <0x2>;
-+
-+				test,u32-prop = <0xdeadbeef>;
-+				test,i16-array = /bits/ 16 <1 2 (-3) (-4)>;
- 			};
- 		};
- 
-diff --git a/samples/rust/rust_driver_platform.rs b/samples/rust/rust_driver_platform.rs
-index 8b42b3cfb363a..c0abf78d0683b 100644
---- a/samples/rust/rust_driver_platform.rs
-+++ b/samples/rust/rust_driver_platform.rs
-@@ -2,7 +2,14 @@
- 
- //! Rust Platform driver sample.
- 
--use kernel::{c_str, device::Core, of, platform, prelude::*, types::ARef};
-+use kernel::{
-+    c_str,
-+    device::{self, Core},
-+    of, platform,
-+    prelude::*,
-+    str::CString,
-+    types::ARef,
-+};
- 
- struct SampleDriver {
-     pdev: ARef<platform::Device>,
-@@ -31,12 +38,63 @@ fn probe(
-             dev_info!(pdev.as_ref(), "Probed with info: '{}'.\n", info.0);
-         }
- 
-+        Self::properties_parse(pdev.as_ref())?;
-+
-         let drvdata = KBox::new(Self { pdev: pdev.into() }, GFP_KERNEL)?;
- 
-         Ok(drvdata.into())
-     }
- }
- 
-+impl SampleDriver {
-+    fn properties_parse(dev: &device::Device) -> Result {
-+        let fwnode = dev.fwnode().ok_or(ENOENT)?;
-+
-+        if let Ok(idx) =
-+            fwnode.property_match_string(c_str!("compatible"), c_str!("test,rust-device"))
-+        {
-+            dev_info!(dev, "matched compatible string idx = {}\n", idx);
-+        }
-+
-+        let name = c_str!("compatible");
-+        let prop = fwnode.property_read::<CString>(name).required_by(dev)?;
-+        dev_info!(dev, "'{name}'='{prop:?}'\n");
-+
-+        let name = c_str!("test,bool-prop");
-+        let prop = fwnode.property_read_bool(c_str!("test,bool-prop"));
-+        dev_info!(dev, "'{name}'='{prop}'\n");
-+
-+        if fwnode.property_present(c_str!("test,u32-prop")) {
-+            dev_info!(dev, "'test,u32-prop' is present\n");
-+        }
-+
-+        let name = c_str!("test,u32-optional-prop");
-+        let prop = fwnode.property_read::<u32>(name).or(0x12);
-+        dev_info!(dev, "'{name}'='{prop:#x}' (default = 0x12)\n",);
-+
-+        // A missing required property will print an error. Discard the error to
-+        // prevent properties_parse from failing in that case.
-+        let name = c_str!("test,u32-required-prop");
-+        let _ = fwnode.property_read::<u32>(name).required_by(dev);
-+
-+        let name = c_str!("test,u32-prop");
-+        let prop: u32 = fwnode.property_read(name).required_by(dev)?;
-+        dev_info!(dev, "'{name}'='{prop:#x}'\n");
-+
-+        let name = c_str!("test,i16-array");
-+        let prop: [i16; 4] = fwnode.property_read(name).required_by(dev)?;
-+        dev_info!(dev, "'{name}'='{prop:?}'\n");
-+        let len = fwnode.property_count_elem::<u16>(name)?;
-+        dev_info!(dev, "'{name}' length is {len}\n",);
-+
-+        let name = c_str!("test,i16-array");
-+        let prop: KVec<i16> = fwnode.property_read_array_vec(name, 4)?.required_by(dev)?;
-+        dev_info!(dev, "'{name}'='{prop:?}' (KVec)\n");
-+
-+        Ok(())
-+    }
-+}
-+
- impl Drop for SampleDriver {
-     fn drop(&mut self) {
-         dev_dbg!(self.pdev.as_ref(), "Remove Rust Platform driver sample.\n");
--- 
-2.49.0
+Sorry for my bad forgetting to run checkpatch.pl...
+
+---
+ drivers/hwtracing/coresight/coresight-syscfg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/hwtracing/coresight/coresight-syscfg.c b/drivers/hwtracing/coresight/coresight-syscfg.c
+index 83dad24e0116..6836b05986e8 100644
+--- a/drivers/hwtracing/coresight/coresight-syscfg.c
++++ b/drivers/hwtracing/coresight/coresight-syscfg.c
+@@ -395,7 +395,7 @@ static void cscfg_remove_owned_csdev_configs(struct coresight_device *csdev, voi
+ 	if (list_empty(&csdev->config_csdev_list))
+ 		return;
+
+-  guard(raw_spinlock_irqsave)(&csdev->cscfg_csdev_lock);
++	guard(raw_spinlock_irqsave)(&csdev->cscfg_csdev_lock);
+
+ 	list_for_each_entry_safe(config_csdev, tmp, &csdev->config_csdev_list, node) {
+ 		if (config_csdev->config_desc->load_owner == load_owner)
+--
+LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
 
