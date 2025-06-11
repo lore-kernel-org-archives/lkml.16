@@ -1,73 +1,128 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.17])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A927485;
-	Wed, 11 Jun 2025 09:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57BC7485;
+	Wed, 11 Jun 2025 09:18:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749633440; cv=none; b=rivdZVNcio2R9FyE6DCKZjH2trI3iGqCkKZo6a1LXgNH5cw8SZ2jRNpOB3BtavvdzCMrdqdyVfUdNyrzIS0YTZ9bEPg84K2rO5Ze+Dv+jXd73GXq+OaxV93qvYYMOlOjDDv5z8djRoIEWKt4jhz8XWyaOWuhIVPdz5C5dvTdaFs=
+	t=1749633519; cv=none; b=J63aMmx5y4AnrKQvBjoVC/fjl0OPI9KIGTnpaiSSoyJV6+EAo3M8fmRVNV3jK2VvBV4HXqAZawZz1fLy4GDznWxXupwRowTt/ZHFWCGvqKHjQZ95n+htnlXbyxAwnpoys6dyekaVGQ4BSEk2B5nKx6HbvUt5n7vhLkHgOH9jryY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749633440; c=relaxed/simple;
-	bh=fMGPFgE0q2P8lCWuIVwRyssHEn2zFzKizX286K8ppeI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L+r6fHtlulMnqdCM3EJa3kE3EJUuzlAeR99UBDrKBWXg2vMk7C03kYUga8b98wifb6YC8zDeL/snLYvPHyMwafSTQEvUrl1O7ZfYi858KynBQxuUFxQ2vTW/hYzRZyjQdq3ucAafkZif2hGgH8NMEEyJmkKlWChoJWAdoLoA4HQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=J7t5U1Ss; arc=none smtp.client-ip=1.95.21.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1749633519; c=relaxed/simple;
+	bh=zuFDS2qosc9+A7o4k2d3GK8Kqp19epuzkmMM1ayLgZA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=Ydoj/3A+aYoETOew+gSE+aJUdgE3uBhpmyf8yKyhwnSO19q6lPKafsNJmqw07fBIFr0lGKQJSdJUJR/ZRojGxPHs0xUm1uBBLx08tymF5D/t0kYxloFgpQQFCEkrbvbxeKDp95kmqRuDFjvakU5ykTaRZBOPvbaeYnZ5+7zf5VI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=uaPaRmT+; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="J7t5U1Ss"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=rBVOc7vHR4kZtKiuQ4qQXxVIUQWSopJjHkdge+9ZyYI=;
-	b=J7t5U1Ss6cae1xR6YupFxGGc+qxjQdL+pQRIcP5Im26N2vSFZReBnh6wVRGzwn
-	+3L47mgAfHX002ize/lKWOogiYY1mC6NOONmsu3EllAhGn+8aTKXgGqTeZbh0oM0
-	MFA/U67SqzDHLaXQD9EH0eiG3dxYlrsj6W4t9sFPjbdSM=
-Received: from dragon (unknown [])
-	by gzsmtp1 (Coremail) with SMTP id Mc8vCgC3zlJqSUlopYxpAA--.30940S3;
-	Wed, 11 Jun 2025 17:16:27 +0800 (CST)
-Date: Wed, 11 Jun 2025 17:16:25 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Martin =?utf-8?Q?Kepplinger-Novakovi=C4=87?= <martink@posteo.de>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-	festevam@gmail.com, devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: imx8mp: Enable gpu passive throttling
-Message-ID: <aElJaVxqUUNi1rfC@dragon>
-References: <20250508101802.489712-1-martink@posteo.de>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="uaPaRmT+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1749633517; x=1781169517;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:to:cc;
+  bh=zuFDS2qosc9+A7o4k2d3GK8Kqp19epuzkmMM1ayLgZA=;
+  b=uaPaRmT+KnUkd8NkGMVaMZ3FU0umkIilveMuB6Nld/w85/WWjt+yju6f
+   TPArCr4UzI5N6a/77oil311qc/81FAfIMxbejIhIC0xSrDdF26CeV4VGP
+   zMc7WXVxAZoZescm2xKbJJfJvmd8RS+Fxwftr2SkaL/jRqevVgMiYmeir
+   omUCpqHgq9HHEdaao3HwL7FofZ4SYxB1XU3YZOY/dIFKd0zmuVxGf4N/g
+   LjChT05AQxZL3LBrXoFRwqNGMmL9zvxVJfn+4iCKz43LqkFOXonZlJhG8
+   uEKJBPAI6Bb6J4sUpD+KCa4UiIy3gmMzbOAxQJl+C6CGc107qRNVY768K
+   g==;
+X-CSE-ConnectionGUID: jk5dQVZ/Qu6+T4XW2CUDVQ==
+X-CSE-MsgGUID: YqaT/sAxRnyFlEkltMC/hg==
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="47643071"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 11 Jun 2025 02:18:31 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Wed, 11 Jun 2025 02:18:03 -0700
+Received: from [127.0.0.1] (10.10.85.11) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
+ Transport; Wed, 11 Jun 2025 02:17:59 -0700
+From: Dharma Balasubiramani <dharma.b@microchip.com>
+Date: Wed, 11 Jun 2025 14:47:59 +0530
+Subject: [PATCH] ARM: dts: microchip: sam9x7: Add HLCD controller
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250508101802.489712-1-martink@posteo.de>
-X-CM-TRANSID:Mc8vCgC3zlJqSUlopYxpAA--.30940S3
-X-Coremail-Antispam: 1Uf129KBjvdXoW7Xr47Zry5JF13JFyrCr4Durg_yoWxurb_Ca
-	y7C3Wqg345A3W8K3Wak39xuwsI9anFvry7Jr17Zr97XrWjqr9xZw18Cry5ur1kWr4I9rn7
-	Zas8Xw4aka4I9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xR_hL0UUUUUU==
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiAQxpZWhJP1YspAAAsB
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250611-sam9x7-dts-v1-1-7f52fcb488ad@microchip.com>
+X-B4-Tracking: v=1; b=H4sIAMZJSWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDM0ND3eLEXMsKc92UkmJdsySTFAMzk8REE2MLJaCGgqLUtMwKsGHRsbW
+ 1AMNWB/ZcAAAA
+To: Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni
+	<alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Dharma Balasubiramani
+	<dharma.b@microchip.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1749633480; l=1485;
+ i=dharma.b@microchip.com; s=20240209; h=from:subject:message-id;
+ bh=zuFDS2qosc9+A7o4k2d3GK8Kqp19epuzkmMM1ayLgZA=;
+ b=uKEcjxIheBSQni50Lhuk3q3FLrjHNUkiZFFh1uxs1zX7Myw26b2DJW4fpcVHYENS6HKenUsre
+ 2TKrvjoHKV6Bfx/h3zEG2MT1CjAOZP2z1XOm+7T2swbycJ1r4eQvr+u
+X-Developer-Key: i=dharma.b@microchip.com; a=ed25519;
+ pk=kCq31LcpLAe9HDfIz9ZJ1U7T+osjOi7OZSbe0gqtyQ4=
 
-On Thu, May 08, 2025 at 10:18:02AM +0000, Martin Kepplinger-Novaković wrote:
-> Hook up the gpu as a passive cooling device to the thermal zones' alert
-> trip point just like the cpu.
-> 
-> The gpu here consists of 3D GPU, 2D GPU and NPU.
-> 
-> One way to test would be to set one "alert" trip point low enough
-> and watch the cooling device state increase:
-> 
-> echo 10000 > /sys/class/thermal/thermal_zone0/trip_point_0_temp
-> watch cat /sys/class/thermal/cooling_device*/cur_state
-> 
-> And of course set the trip point back to its original value and watch
-> the cooling device states jump to 0 again.
-> 
-> Signed-off-by: Martin Kepplinger-Novaković <martink@posteo.de>
+Add support for HLCD controller.
 
-Applied, thanks!
+Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
+---
+ arch/arm/boot/dts/microchip/sam9x7.dtsi | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/arch/arm/boot/dts/microchip/sam9x7.dtsi b/arch/arm/boot/dts/microchip/sam9x7.dtsi
+index b217a908f525..d7b4b1310f31 100644
+--- a/arch/arm/boot/dts/microchip/sam9x7.dtsi
++++ b/arch/arm/boot/dts/microchip/sam9x7.dtsi
+@@ -983,6 +983,32 @@ pwm0: pwm@f8034000 {
+ 			status = "disabled";
+ 		};
+ 
++		hlcdc: hlcdc@f8038000 {
++			compatible = "microchip,sam9x75-xlcdc";
++			reg = <0xf8038000 0x4000>;
++			interrupts = <25 IRQ_TYPE_LEVEL_HIGH 0>;
++			clocks = <&pmc PMC_TYPE_PERIPHERAL 25>, <&pmc PMC_TYPE_GCK 25>, <&clk32k 1>;
++			clock-names = "periph_clk", "sys_clk", "slow_clk";
++			status = "disabled";
++
++			display-controller {
++				compatible = "atmel,hlcdc-display-controller";
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					reg = <0>;
++				};
++			};
++
++			pwm {
++				compatible = "atmel,hlcdc-pwm";
++				#pwm-cells = <3>;
++			};
++		};
++
+ 		flx9: flexcom@f8040000 {
+ 			compatible = "microchip,sam9x7-flexcom", "atmel,sama5d2-flexcom";
+ 			reg = <0xf8040000 0x200>;
+
+---
+base-commit: 19a60293b9925080d97f22f122aca3fc46dadaf9
+change-id: 20250611-sam9x7-dts-6b4d064aa438
+
+Best regards,
+-- 
+Dharma Balasubiramani <dharma.b@microchip.com>
 
