@@ -1,262 +1,204 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F2D62D541D
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 08:23:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87579238144;
+	Wed, 11 Jun 2025 08:23:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749630208; cv=none; b=EoJGU2RlIjemIUIglbxkXZFyEO01fIqo8jOTdhJAPAu+zeYfmpQkD65bLBNyrpPrrLF228UJGoTBEo9VGIRZD5jaScCZb1VI+VhzC1aEnHrh9uWIGVECLUvwr3U7Qig9eUA2JDO2niChLSpJgODFVoiCRxoHob2uhbDJz+QXY2E=
+	t=1749630231; cv=none; b=K4Tr1yUJi7EpPgwBo2GyXhhMdtN4E23JKQ/ENssGEfPiLqvPLwhJ0WL3kqQvUo1YSnU74c3PBcY7lXBOiHihrJxkjASZ/Jw5ywgsDWUK6q0PrtxVSwLMVp6ZVfv4hmAz+nHhjTR42BiAN89hgVc7QLgGgMUjGUag0qJ82IdUEF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749630208; c=relaxed/simple;
-	bh=N+1Zyr69TubqXEDAnwbvEj/99HAszavDxb96c48/dgE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U9Wj92pWGB77eHJUhUUGJ9A2N/4vJOJSQgcKngtZMFzyknuKh3CEYGYrMhtooQbO7EZ6xLndzhmdWbEUxvUuLZOXkG1e31UwnxvvyWhRNaKHHUDWweeFUlkYDHqC6F4FkABqT+mZDHnBNGFUFYwCmUbVgKSuE+PB1xWC3rrsy+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IFVnOR5F; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749630231; c=relaxed/simple;
+	bh=h7WpXxo70UJLYX5/Z3xfT7hyHwyHuDuPmHeLXuHqpV8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LxHWoAwyr13HmetLOAJpI+7Q5WHppHGa6W6vy/uJZir1LmnDGux0mXu1xW9q+c3BcZ96XpOXJV0ORe5A0GmGKacbQRDstyOtXOFnJcz3jEnx/GdJH1084Hb9B6dv1szpmXWo8R56nG59o1qEqOV7pCkaAZrHOXPo0Xo1HJ6wPtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CX66FWCb; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IFVnOR5F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749630205;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=KGAJqXmjc8jwedunIap6ts3bHN4LjX3nvKHTfy1OSMc=;
-	b=IFVnOR5F41j0f6z2DPbq5Jars9MwWfAcSS0Z5iyCwdksjK3c4klV7NQQiZtKnqZjxMPd2E
-	098khv/7WRvpSdghemRYN/kvk/dILFZGx8KohAglIVmNiuJQksweeSW8u6GJkG1kScW4TB
-	rs0cWFnnKj76tkfZ5jJrQF7MaIGCcV4=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-391--YYnjFCSM4Wry9m4f4qU-A-1; Wed, 11 Jun 2025 04:23:24 -0400
-X-MC-Unique: -YYnjFCSM4Wry9m4f4qU-A-1
-X-Mimecast-MFC-AGG-ID: -YYnjFCSM4Wry9m4f4qU-A_1749630203
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-607ecda10fcso2618290a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 01:23:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749630203; x=1750235003;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=KGAJqXmjc8jwedunIap6ts3bHN4LjX3nvKHTfy1OSMc=;
-        b=DGru7q0QgCa8f+YKasR4ryscvAjumdFvjA00aWnTumccEMpc7wu2ZRR/fKRt0qJ1ul
-         94oLiPj5QR5Jtojn/OQhtg/2fk13MEI/DaojjBF6nDMBSvdPAn3EnJErbh/i9VLXxHv4
-         99BxJAuVwd1Zdww7H4GFeqtcfBjM1NodvjG1Q7rlPyTdAbLoL/igNU16DX5tFKm4Tgu5
-         Xxpq6WZaMVOQqgYeBhX/wZekurWKRfpCHSLd1qQS/9OSdfR+uAW2Gn60thyZQalMEKxT
-         diZACfD+Hd2VNv71bknuw9BigZ8TSNwxvLcWcCMGN/KZfF5aWWSOgdvvhWSQpJvk3TaW
-         8AwA==
-X-Forwarded-Encrypted: i=1; AJvYcCXJDzzZOR34pHCo8a+1gJJZrhwI0Fy0+pAVdfzwPV4hombCHzbAiapC/+C7iZVdgjOrcRRpT2/TTi+8Auk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeTwYu2PCemEIrOVTaosfTTuNVDHSod9sKn8y5HkM/SQpGYW50
-	ZagleO+qVcTNQCXhdxOQv97Xq7ZkN5T4Rb3ZXMe6EeWaa0HvoGgtN8I7YVxnyROeY8gJiZwDMCz
-	qulHhYu9cLEZtbIPgOen8JDh2vDNGDnqGehZpVtlq6dHRFDL4wTMNdI6g6FVjeF02Sg==
-X-Gm-Gg: ASbGncsU+GAE1d5aDEPlhFW1K2LsOy8f9l1EAQ/kLjl8uqVEyN49JDCP6ZmO4G5GPDl
-	qyfNgOZFjq7Gvim2baZEiHbmOx29TOB52wqg3NvoyVObybL7EJAO86br3YYBzkVNJ2O3hSMhhAa
-	qAe/uW43JiWlcB9P7dpjF8isNFwPQoIzb5oUEU+KDtpTKIV5Njl9f4ELBJ1x8x1atkAh8yvuK7X
-	KNa14iKD9cLGwo/4/ZSsjXdS5oCJGm0I3DgxEytzdw5JTeVU3EfLTKjnh8LqydOKnr339HaBcs5
-	/azuXmuMILwkGy0w+mFh2igzoc9XPeDx317hrdmyMuUc
-X-Received: by 2002:a05:6402:1941:b0:607:6619:1092 with SMTP id 4fb4d7f45d1cf-60846af42f2mr1953064a12.13.1749630202701;
-        Wed, 11 Jun 2025 01:23:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHMuPw8p1asPs6tLBDeVr1B8/KBQgjzliFlrJF7qnKZsYXTm7qlYtGdvn70FWDxJ38ed58fDQ==
-X-Received: by 2002:a05:6402:1941:b0:607:6619:1092 with SMTP id 4fb4d7f45d1cf-60846af42f2mr1953043a12.13.1749630202282;
-        Wed, 11 Jun 2025 01:23:22 -0700 (PDT)
-Received: from [10.32.64.156] (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-607783dccbdsm7104469a12.54.2025.06.11.01.23.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jun 2025 01:23:21 -0700 (PDT)
-Message-ID: <52b746ae-82cc-428e-8e88-a05a6b738cd0@redhat.com>
-Date: Wed, 11 Jun 2025 10:23:20 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CX66FWCb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749630229; x=1781166229;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=h7WpXxo70UJLYX5/Z3xfT7hyHwyHuDuPmHeLXuHqpV8=;
+  b=CX66FWCbXZLbqz+O/Rt2t02CsFIwWFA+8nzMD79fFGTgnkdoW2NbkNsp
+   ZZkf+8zlJnVOiDSNQEMMn/JGkcux/4L+WdkMrgvIDBm09I4SdJhlaJW4U
+   Z+/ap6jNgC5fmK/aofjgR2PAVEiYJKZOmk0Jm+uFpje9XEFUeLYCUZE/U
+   s7U/L6pI4dlXRqYNtmd9ZWSyt0b8Bkz/uyf72/oh9yAqoTzrCk+k27Usv
+   4a2CEVfLdYbB7//OpuLLs9bNUgwmvkP6TvJtv2Mu+nnjRT6WOpjsvjaWm
+   6LIgc5htIc0F2JLTzY7w4Rpxj4Ib4Xtfd7hHHVwa3hhsvKR58CPrAiQO0
+   g==;
+X-CSE-ConnectionGUID: nnZmx6KlRCiTcwL6MfWRmQ==
+X-CSE-MsgGUID: j8qFfX2bSsCGbUDF1wTa/g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="63111652"
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="63111652"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 01:23:49 -0700
+X-CSE-ConnectionGUID: rmDENUhWStuVjFMmiFaTDg==
+X-CSE-MsgGUID: YgxAeiPaQnyPDxy83xmGaQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="178040297"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 01:23:42 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uPGkE-00000005aFn-0c0H;
+	Wed, 11 Jun 2025 11:23:38 +0300
+Date: Wed, 11 Jun 2025 11:23:37 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Anup Patel <apatel@ventanamicro.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
+	Rahul Pathak <rpathak@ventanamicro.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Atish Patra <atish.patra@linux.dev>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 07/23] mailbox: Add RISC-V SBI message proxy (MPXY)
+ based mailbox driver
+Message-ID: <aEk9CetUHxK9OqQV@smile.fi.intel.com>
+References: <20250525084710.1665648-1-apatel@ventanamicro.com>
+ <20250525084710.1665648-8-apatel@ventanamicro.com>
+ <aDbrBFcgaJxgBRVZ@smile.fi.intel.com>
+ <CAK9=C2XJwgsC5AK-eVOHQqN1tPxtrsTjVoKdHgALbREv=sb8zQ@mail.gmail.com>
+ <aEc-SHvL187xdj-m@smile.fi.intel.com>
+ <CAK9=C2VjOZ22smYdxDg1bjnx-+wwjngEN3c-iOpdtaADFcQ0+w@mail.gmail.com>
+ <aEgBGup553Pki98e@smile.fi.intel.com>
+ <CAK9=C2Ww0Mt91x_r0VTffse-AiWcOyBYvWpxxK7p5=+EDUEoMw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm: Remove PFN_MAP, PFN_SPECIAL, PFN_SG_CHAIN and
- PFN_SG_LAST
-To: Marek Szyprowski <m.szyprowski@samsung.com>,
- Alistair Popple <apopple@nvidia.com>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org,
- "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
- Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@nvidia.com>,
- gerald.schaefer@linux.ibm.com, dan.j.williams@intel.com, jgg@ziepe.ca,
- willy@infradead.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
- jhubbard@nvidia.com, zhang.lyra@gmail.com, debug@rivosinc.com,
- bjorn@kernel.org, balbirs@nvidia.com, lorenzo.stoakes@oracle.com,
- John@groves.net
-References: <20250604032145.463934-1-apopple@nvidia.com>
- <CGME20250610161811eucas1p18de4ba7b320b6d6ff7da44786b350b6e@eucas1p1.samsung.com>
- <957c0d9d-2c37-4d5f-a8b8-8bf90cd0aedb@samsung.com>
- <hczxxu3txopjnucjrttpcqtkkfnzrqh6sr4v54dfmjbvf2zcfs@ocv6gqddyavn>
- <1daeaf4e-5477-40cb-bca0-e4cd5ad8a224@samsung.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <1daeaf4e-5477-40cb-bca0-e4cd5ad8a224@samsung.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK9=C2Ww0Mt91x_r0VTffse-AiWcOyBYvWpxxK7p5=+EDUEoMw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 11.06.25 10:03, Marek Szyprowski wrote:
-> On 11.06.2025 04:38, Alistair Popple wrote:
->> On Tue, Jun 10, 2025 at 06:18:09PM +0200, Marek Szyprowski wrote:
->>> On 04.06.2025 05:21, Alistair Popple wrote:
->>>> The PFN_MAP flag is no longer used for anything, so remove it.
->>>> The PFN_SG_CHAIN and PFN_SG_LAST flags never appear to have been
->>>> used so also remove them. The last user of PFN_SPECIAL was removed
->>>> by 653d7825c149 ("dcssblk: mark DAX broken, remove FS_DAX_LIMITED
->>>> support").
->>>>
->>>> Signed-off-by: Alistair Popple <apopple@nvidia.com>
->>>> Acked-by: David Hildenbrand <david@redhat.com>
->>>> Reviewed-by: Christoph Hellwig <hch@lst.de>
->>>> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
->>>> Cc: gerald.schaefer@linux.ibm.com
->>>> Cc: dan.j.williams@intel.com
->>>> Cc: jgg@ziepe.ca
->>>> Cc: willy@infradead.org
->>>> Cc: david@redhat.com
->>>> Cc: linux-kernel@vger.kernel.org
->>>> Cc: nvdimm@lists.linux.dev
->>>> Cc: jhubbard@nvidia.com
->>>> Cc: hch@lst.de
->>>> Cc: zhang.lyra@gmail.com
->>>> Cc: debug@rivosinc.com
->>>> Cc: bjorn@kernel.org
->>>> Cc: balbirs@nvidia.com
->>>> Cc: lorenzo.stoakes@oracle.com
->>>> Cc: John@Groves.net
->>>>
->>>> ---
->>>>
->>>> Splitting this off from the rest of my series[1] as a separate clean-up
->>>> for consideration for the v6.16 merge window as suggested by Christoph.
->>>>
->>>> [1] - https://lore.kernel.org/linux-mm/cover.541c2702181b7461b84f1a6967a3f0e823023fcc.1748500293.git-series.apopple@nvidia.com/
->>>> ---
->>>>     include/linux/pfn_t.h             | 31 +++----------------------------
->>>>     mm/memory.c                       |  2 --
->>>>     tools/testing/nvdimm/test/iomap.c |  4 ----
->>>>     3 files changed, 3 insertions(+), 34 deletions(-)
->>> This patch landed in today's linux-next as commit 28be5676b4a3 ("mm:
->>> remove PFN_MAP, PFN_SPECIAL, PFN_SG_CHAIN and PFN_SG_LAST"). In my tests
->>> I've noticed that it breaks operation of all RISC-V 64bit boards on my
->>> test farm (VisionFive2, BananaPiF3 as well as QEMU's Virt machine). I've
->>> isolated the changes responsible for this issue, see the inline comments
->>> in the patch below. Here is an example of the issues observed in the
->>> logs from those machines:
->> Thanks for the report. I'm really confused by this because this change should
->> just be removal of dead code - nothing sets any of the removed PFN_* flags
->> AFAICT.
->>
->> I don't have access to any RISC-V hardwdare but you say this reproduces under
->> qemu - what do you run on the system to cause the error? Is it just a simple
->> boot and load a module or are you running selftests or something else?
+On Wed, Jun 11, 2025 at 10:51:15AM +0530, Anup Patel wrote:
+> On Tue, Jun 10, 2025 at 3:25 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Tue, Jun 10, 2025 at 10:05:27AM +0530, Anup Patel wrote:
+> > > On Tue, Jun 10, 2025 at 1:34 AM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > On Mon, Jun 09, 2025 at 05:59:40PM +0530, Anup Patel wrote:
+> > > > > On Wed, May 28, 2025 at 4:23 PM Andy Shevchenko
+> > > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > > On Sun, May 25, 2025 at 02:16:54PM +0530, Anup Patel wrote:
+
+...
+
+> > > > > > > +     if (mbox->msi_count)
+> > > > > >
+> > > > > > Is this check really needed?
+> > > > >
+> > > > > MSIs are optional for the SBI MPXY mailbox so we should only use
+> > > > > platform_device_msi_xyz() APIs only when MSIs are available.
+> > > >
+> > > > > > > +             platform_device_msi_free_irqs_all(mbox->dev);
+> > > >
+> > > > Hmm... I am not sure why. Do you have any Oops or warnings if the check
+> > > > is not there and no MSI provided?
+> > >
+> > > We don't see any oops or warnings. This check is to avoid unnecessary
+> > > work (such as acquiring lock, checking default domain, etc) in the
+> > > msi_domain_free_irqs_all() called by platform_device_msi_free_irqs_all().
+> > >
+> > > I don't mind dropping the check so I will update in the next revision.
+> >
+> > Perhaps you can rather add this check into the callee? Seems to me that
+> > you have a justification for it. Usual pattern in the kernel that freeing
+> > resources should be aware of the NULL pointers or optional resources
+> > so we may call it unconditionally from the user(s).
+> >
 > 
-> It fails a simple boot test. Here is a detailed instruction how to
-> reproduce this issue with the random Debian rootfs image found on the
-> internet (tested on Ubuntu 22.04, with next-20250610
-> kernel source):
+> Unconditionally calling platform_device_msi_free_irqs_all() when there
+> were no MSIs allocated causes the below crash because "dev->msi.data"
+> is non-NULL only when:
+> 
+> [    1.355735] Unable to handle kernel NULL pointer dereference at
+> virtual address 0000000000000008
+> [    1.358212] Current swapper/0 pgtable: 4K pagesize, 57-bit VAs,
+> pgdp=0x0000000081a2b000
+> [    1.360632] [0000000000000008] pgd=0000000000000000
+> [    1.363132] Oops [#1]
+> [    1.363748] Modules linked in:
+> [    1.364768] CPU: 3 UID: 0 PID: 1 Comm: swapper/0 Not tainted
+> 6.16.0-rc1-00037-gab55e1c1d97a-dirty #7 NONE
+> [    1.368325] epc : mutex_lock+0x0/0x28
+> [    1.369796]  ra : __msi_lock_descs+0x32/0x3c
+> [    1.370234] epc : ffffffff80af96e8 ra : ffffffff800038e6 sp :
+> ff2000000004ba90
+> [    1.372412]  gp : ffffffff81819c00 tp : ff60000001dc0000 t0 :
+> 6900000000000000
+> [    1.373527]  t1 : 0000000000000072 t2 : 6962732d76637369 s0 :
+> ff2000000004bab0
+> [    1.376628]  s1 : ff6000000241c410 a0 : 0000000000000008 a1 :
+> ffffffff8168ca58
+> [    1.379110]  a2 : 0000000000000010 a3 : 00000000000000a3 a4 :
+> 0000000000000000
+> [    1.380410]  a5 : 0000000000000000 a6 : 0000000000000000 a7 :
+> 000000004442434e
+> [    1.381019]  s2 : 0000000000000000 s3 : ff6000003fff30a0 s4 :
+> ff6000000241c410
+> [    1.381579]  s5 : ff600000039f9320 s6 : ff6000000241c400 s7 :
+> 0000000000000002
+> [    1.382242]  s8 : ffffffff81821fa0 s9 : 0000000000000000 s10:
+> 0000000000000000
+> [    1.384018]  s11: 0000000000000000 t3 : ffffffff81830a37 t4 :
+> ffffffff81830a37
+> [    1.385958]  t5 : ffffffff81830a38 t6 : ff2000000004b7c8
+> [    1.387306] status: 0000000200000120 badaddr: 0000000000000008
+> cause: 000000000000000d
+> [    1.388407] [<ffffffff80af96e8>] mutex_lock+0x0/0x28
+> [    1.389333] [<ffffffff80003dba>] msi_domain_free_irqs_all+0x2a/0x48
+> [    1.390275] [<ffffffff80714e86>] platform_device_msi_free_irqs_all+0x16/0x2c
+> [    1.391715] [<ffffffff808d8114>] mpxy_mbox_probe+0x6dc/0x750
+> [    1.392522] [<ffffffff806f1706>] platform_probe+0x4e/0xb4
+> [    1.393169] [<ffffffff806eef58>] really_probe+0x84/0x230
+> [    1.393789] [<ffffffff806ef160>] __driver_probe_device+0x5c/0xdc
+> [    1.394282] [<ffffffff806ef2a4>] driver_probe_device+0x2c/0xf8
+> [    1.396577] [<ffffffff806ef4ac>] __driver_attach+0x6c/0x15c
+> [    1.397634] [<ffffffff806ed146>] bus_for_each_dev+0x62/0xb0
+> [    1.399060] [<ffffffff806eea9a>] driver_attach+0x1a/0x24
+> [    1.399792] [<ffffffff806ee31e>] bus_add_driver+0xce/0x1d8
+> [    1.400363] [<ffffffff806f020c>] driver_register+0x40/0xdc
+> [    1.400832] [<ffffffff806f1414>] __platform_driver_register+0x1c/0x24
+> [    1.401551] [<ffffffff80c3df7e>] mpxy_mbox_driver_init+0x1a/0x24
+> [    1.402328] [<ffffffff800108b2>] do_one_initcall+0x56/0x1d8
+> [    1.403674] [<ffffffff80c01236>] kernel_init_freeable+0x266/0x2d0
+> [    1.404956] [<ffffffff80af549a>] kernel_init+0x1e/0x13c
+> [    1.405422] [<ffffffff80012266>] ret_from_fork_kernel+0xe/0xcc
+> [    1.405870] [<ffffffff80aff042>] ret_from_fork_kernel_asm+0x16/0x18
+> 
+> It is better to have the check on "mbox->msi_count" before calling
+> platform_device_msi_free_irqs_all().
 
-riscv is one of the archs where pte_mkdevmap() will *not* set the pte as special. (I
-raised this recently in the original series, it's all a big mess)
-
-So, before this change here, pfn_t_devmap() would have returned "false" if only
-PFN_DEV was set, now it would return "true" if only PFN_DEV is set.
-
-Consequently, in insert_pfn() we would have done a pte_mkspecial(), now we do a
-pte_mkdevmap() -- again, which does not imply "special" on riscv.
-
-riscv selects CONFIG_ARCH_HAS_PTE_SPECIAL, so if !pte_special(), it's considered as
-normal.
-
-Would the following fix your issue?
-
-
-diff --git a/mm/memory.c b/mm/memory.c
-index 8eba595056fe3..0e972c3493692 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -589,6 +589,10 @@ struct page *vm_normal_page(struct vm_area_struct *vma, unsigned long addr,
-  {
-         unsigned long pfn = pte_pfn(pte);
-  
-+       /* TODO: remove this crap and set pte_special() instead. */
-+       if (pte_devmap(pte))
-+               return NULL;
-+
-         if (IS_ENABLED(CONFIG_ARCH_HAS_PTE_SPECIAL)) {
-                 if (likely(!pte_special(pte)))
-                         goto check_pfn;
-@@ -598,16 +602,6 @@ struct page *vm_normal_page(struct vm_area_struct *vma, unsigned long addr,
-                         return NULL;
-                 if (is_zero_pfn(pfn))
-                         return NULL;
--               if (pte_devmap(pte))
--               /*
--                * NOTE: New users of ZONE_DEVICE will not set pte_devmap()
--                * and will have refcounts incremented on their struct pages
--                * when they are inserted into PTEs, thus they are safe to
--                * return here. Legacy ZONE_DEVICE pages that set pte_devmap()
--                * do not have refcounts. Example of legacy ZONE_DEVICE is
--                * MEMORY_DEVICE_FS_DAX type in pmem or virtio_fs drivers.
--                */
--                       return NULL;
-  
-                 print_bad_pte(vma, addr, pte, NULL);
-                 return NULL;
-
-
-But, I would have thought the later patches in Alistairs series would sort that out
-(where we remove pte_devmap() ... )
+Right, thanks for confirming. But my point that this check should be made
+inside the callee and not the caller. Can it be done once for all?
 
 -- 
-Cheers,
+With Best Regards,
+Andy Shevchenko
 
-David / dhildenb
 
