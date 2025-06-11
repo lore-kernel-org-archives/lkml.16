@@ -1,162 +1,153 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7105EC8FE;
-	Wed, 11 Jun 2025 19:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D46BC27CCF8;
+	Wed, 11 Jun 2025 20:00:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749671955; cv=none; b=djQER8+uH8uYEk0xz0T3xouvmQlBJNgQ9eC2+xM9Iw+m377H/frILjjReLwwnbO7iCi2ipGh8ChN/pmLwxzKHk23xFMKWFlp3yxuF6MGFmClu3lrDzfa7vuwvBqShSwOYhVXCzbYFmVgB9RkxAaj44YrBbEtHXwDkHqOMB6ItXc=
+	t=1749672009; cv=none; b=AjqFC7eCUHeewVAdtacTF6JzcyyMzexW2jb8cCC7GpctJuHm9Uo62sknqUQks90SOQ5pfwEFiof7fBZsKFi5BzHRxynOHqoM+8U8bl+A156MvLza7TL3MAueA73qUVnBLvmGkbBCknDlNTa2ZAXBPV22Ag86SDQ3omAZHD60WcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749671955; c=relaxed/simple;
-	bh=g5ZYbYOK1aUC0FTjWb74OVx65hmXOJFd6WWlyHG+nsE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U6qPDbmCyFkmUneaqg0nNjqZiReQ2lwjQWFdzg/q/USIlAjlD4gI9+C8TKRsab0uuSO8DfEx71FtSGqAkjQSlLQ78YWtycD3h917olbEtU4dInFLJCvRy5RRo5LLyrrxgiT0R+tjdCrDOvWSlR1yi8Qonn7CrgwooDbFiD/fS60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PEOoeZ7g; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749672009; c=relaxed/simple;
+	bh=Nz4Tvj/LIZAayZJlopA1FhMyN0NiRoAdpLcFaGl5b9s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ADA9OaR1Dbe7N7J4XmjFbtbLDQMwnQoa1tMSrEixd4KFz1WMG2sRcCNO+M38NNOMQGcX7h8tvsfbfoTO5dAOQPMtacnyDmW8L4pa4ICr/PFFMp1eW+MmZwCdvHmoXyqFLvUO5nWt6B26wXCd3rSbWZfj0poJ32utgHN6ZS460ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net; spf=pass smtp.mailfrom=jannau.net; dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b=DbpyhmQy; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=AaQCpqQv; arc=none smtp.client-ip=103.168.172.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jannau.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PEOoeZ7g"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-70b684670e7so216857b3.2;
-        Wed, 11 Jun 2025 12:59:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749671952; x=1750276752; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gxFme6q2BwhARk9P34NIeJ60XrHXGwqFtKOjSld0rp4=;
-        b=PEOoeZ7gaLVjb/OaWMqDSwuaNAoCif3iRcbQsq+R+wxKqSQ5+TO7zwvsocTyihgby3
-         Ek3Dzc2u2BNF17bUzsHGPWHgV918OOftsuBXRAryEhvu+MGjXZBEUWCPp56idHP5vHrO
-         RaZX2FwWY7v1ZcYxz+rhFC0zsnpjihr9MrUN+63D5hWELUkvEi/bzKcCNGgwVcZsvD34
-         6TJycGxwIWR5zGoVgB/CNG3wrZom8Lqt+3OMetJX+EP9fsLvKjaY5YHJSACKEZXZbiu1
-         /72tFYasPzjwIgplkNQSUs6YPEAtHt+YELew3x36ySgCzr9A6BU3aemekFz37XW+JJnu
-         E4aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749671952; x=1750276752;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gxFme6q2BwhARk9P34NIeJ60XrHXGwqFtKOjSld0rp4=;
-        b=m3FIQ3JHoWFZAa0mWPjsDhBkwaVZfGkGCL+YzuGze54LJuJH1zSOzAV92Fg1ZY/EFi
-         HOB6ePydVvvjUN8IGKglB/uCO3kcLJpCOftvct0Qn9Ezb/sIslCK+b9hye/s4DiveIdZ
-         uBhaPcTO6BD3DU3NZS8WJRxrq4AMq294czu3V/ejBRsJO3lWYoTZHAyIfKMDiEETPsch
-         W2bxNUVpaTkqbuk+GiV2Bcpf8jFxgJ59YFgHlbcWZg8m5ioMNWXvCyYz6Y0psMTfKn1W
-         9aoYTqbfVnbETPJD9mJaICM6LALKmD61VvuM9jdmPTM40rFb3abjQi3nlsXf2OGo96/o
-         gdGA==
-X-Forwarded-Encrypted: i=1; AJvYcCUBP3wUGfJuZgPMi22lmKcxDa4jqYUb0z+lvHAHKv/w1Jd6ArB0nC0TtDvP8ITPdxXKHM5S0NwHBhk=@vger.kernel.org, AJvYcCVjtezlUz0T70aepLpSsqeN2kfYvkuluTKRsH4NboER7rN7HWWWBhln2MlfKWZOkBa2GmGVyzAk8Rwg@vger.kernel.org, AJvYcCXGlhA9TU4YDNwi+RQtC/UkW8pbpsmKZVKxjg4DZPO6POIHsyJajQbcZsY8pdzEh5OgMAy6vip7tMuF0CKg@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5hKmPz9q0+AHWG9bEJj2ZPsjOSgcIEl+n4d4bUVYeyQXKtKh1
-	699xe4jPv0I9gAjS4A/p1Cqcr5lhCP9rXHAjySrE7+hQpR2MGyYrXGbyYHBIDmUJo0EuCzmOkeL
-	lMd3xrjIOSUSKHJFhw1OXywEjQsRT8R0=
-X-Gm-Gg: ASbGncsuvAt9oCdqfyFNSulfzk5D2yjmdudSJLJP7/8usD8ATrEd9WH+jXJdZDLfYiz
-	5Byb89Po6QLeiO9LhXx+nDG0bdkGEs8cRvr0b6lLYwwNqXCU5MUevFuGOTo8FO+4QPN2NbEB9nT
-	QqX+Cw5r+Fyyw9wZJTlI7H1Oqqd5evURQHbTLzT4WqEt+4NpMGYj4ezg==
-X-Google-Smtp-Source: AGHT+IGgnTLD9FiBr75NlfKlcMt5VyjwhnQidVERWleFWbPgSYjaA7xYm8HM59m3DuvQF61FZiTrWS8pj8XuscbbkK0=
-X-Received: by 2002:a05:690c:60c4:b0:70e:86a2:9b3a with SMTP id
- 00721157ae682-7114089c3cemr31099857b3.0.1749671952314; Wed, 11 Jun 2025
- 12:59:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b="DbpyhmQy";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AaQCpqQv"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id E70121140228;
+	Wed, 11 Jun 2025 16:00:05 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-05.internal (MEProxy); Wed, 11 Jun 2025 16:00:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jannau.net; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1749672005; x=1749758405; bh=h3f2xmewGr
+	A2fiX+ijKnJQ24Xtnklc8qk5NEda4Ofj4=; b=DbpyhmQyaU9k/kzsc8fDWHz7Q/
+	tFXOLIszNs4w1FKCJL/iKWQ32T2lUaMZkl2pXirI6tg1SOP7putL45MH/v3r003+
+	5eZCpm6yMwXRmZKkjw0bYQrOxI3NmTdaLloe3ci62ATNf3xvCa2LzPnZVTIW4ucj
+	OKGiivPhABrsVQ2i/UHegmZog/KGHk4gp722C1mtA22+0e3t1PXo+F/VWyuwsUBt
+	I9S8YG46jVvFtcCKRHQTPAehl2tr3svetVRs3zQC+AcQk8+qvTxYXSwh8mzNVdie
+	rc6bQaF2+a/yDyldnuvFXVyyh/4dchyQwxBA5sNixmzG1h19QvFC6i50WEyw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1749672005; x=1749758405; bh=h3f2xmewGrA2fiX+ijKnJQ24Xtnklc8qk5N
+	Eda4Ofj4=; b=AaQCpqQvaSmk7bfdLerLYRC3XDoNohomgNAmhV2CcfADUxqLX8F
+	CMPymDI7MQR5GL8X1RkObHQsedOnLrEqCtXSGKDKtN3INYI7Uk9glbNLEmSmi9My
+	vec+UE1W4QGbZcg44BGFU3rbT3S3Q/Pm3Ae9+WtN2ko/WplwFjZxEun7RXdSH/tR
+	/GPD/8ZAMH/BpXbn2asIRx6HuN0hpXe60agEqRDMMW47OG7vtAmodz644bwJP4Tz
+	xBWKEG4lmc18FUap5kL0WHsUEYh4XEd/fj9dss1S/TM2rwjVmrRqK2rJFbY6nnE6
+	RXPnaX3kAuslqZ8K3ucsoPxtCsI7yobyeHA==
+X-ME-Sender: <xms:ReBJaAcGqIsC-WnIsspIousoe8lBV7IfHHwvlbQXhz0apIfG6GN1xA>
+    <xme:ReBJaCP3XlSnD-q8LQp3JJtFDXSwiG-8sbJLQIDxjX8MmCyD9Gu1FH3j9YuQaILyO
+    U5YrImxWCIVePu4hZc>
+X-ME-Received: <xmr:ReBJaBgEHWQDdgOwGw60AaZYDOtSmjCn7XEFzF1TLAO1G3EcCElTmpeBewvPp2eBlvSOdApXVkFir8Qd0jou5gLmIQszIxaVTuA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddufedtlecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttdej
+    necuhfhrohhmpeflrghnnhgvucfirhhunhgruhcuoehjsehjrghnnhgruhdrnhgvtheqne
+    cuggftrfgrthhtvghrnhepgfdvffevleegudejfeefheehkeehleehfefgjefffeetudeg
+    tefhuedufeehfeetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+    hfrhhomhepjhesjhgrnhhnrghurdhnvghtpdhnsggprhgtphhtthhopedujedpmhhouggv
+    pehsmhhtphhouhhtpdhrtghpthhtohepfhhnkhhlrdhkvghrnhgvlhesghhmrghilhdrtg
+    homhdprhgtphhtthhopehsvhgvnheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghl
+    hihsshgrsehrohhsvghniiifvghighdrihhopdhrtghpthhtohepnhgvrghlsehgohhmph
+    grrdguvghvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphht
+    thhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtohepmhgrrghrthgvnhdrlh
+    grnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhi
+    phgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnse
+    hsuhhsvgdruggv
+X-ME-Proxy: <xmx:ReBJaF-6C433O2_kPVtGT8tI1M-ODmgZGHNPuDzmhB1aPHrFG2uouA>
+    <xmx:ReBJaMt4RwWye9hTEOOSVRJ4Shst3gl5IA3CGfLWjWOl-4qIiNn-MQ>
+    <xmx:ReBJaMFs_1tSbjWqcLHBeEltbf_qsTNjbLJxByaNVXiFHpfRH5Wp6w>
+    <xmx:ReBJaLNFALoQnckxNUfiTJKIhQ05vbyJckSyprsvOo-lTPBaIk80VA>
+    <xmx:ReBJaNocCudOOzWtPPAj_j3L7S_yIWYfm86-yUNumJElYoIZ7chKcont>
+Feedback-ID: i47b949f6:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 11 Jun 2025 16:00:03 -0400 (EDT)
+Date: Wed, 11 Jun 2025 21:59:59 +0200
+From: Janne Grunau <j@jannau.net>
+To: fnkl.kernel@gmail.com
+Cc: Sven Peter <sven@kernel.org>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Neal Gompa <neal@gompa.dev>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] arm64: dts: Add Apple SoC GPU
+Message-ID: <20250611195959.GA3141695@robin.jannau.net>
+References: <20250611-sgx-dt-v1-0-7a11f3885c60@gmail.com>
+ <20250611-sgx-dt-v1-2-7a11f3885c60@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250601172139.59156-1-l.rubusch@gmail.com> <20250601172139.59156-11-l.rubusch@gmail.com>
- <20250608172317.63473b9b@jic23-huawei>
-In-Reply-To: <20250608172317.63473b9b@jic23-huawei>
-From: Lothar Rubusch <l.rubusch@gmail.com>
-Date: Wed, 11 Jun 2025 21:58:36 +0200
-X-Gm-Features: AX0GCFskRJiUUFIn6P0la-7-85XS-DoiKPtts1BFZLCEPQ5xBxG18pp3MvgD2mg
-Message-ID: <CAFXKEHZj7nYOJA7Ztxh8xiOcPpwDNBzNyN830tiKL=7rL0fiug@mail.gmail.com>
-Subject: Re: [PATCH v4 10/11] iio: accel: adxl313: add AC coupled
- activity/inactivity events
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net, 
-	lucas.p.stankus@gmail.com, lars@metafoo.de, Michael.Hennerich@analog.com, 
-	bagasdotme@gmail.com, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250611-sgx-dt-v1-2-7a11f3885c60@gmail.com>
 
-Hi Jonathan,
+On Wed, Jun 11, 2025 at 07:32:17PM +0200, Sasha Finkelstein via B4 Relay wrote:
+> From: Sasha Finkelstein <fnkl.kernel@gmail.com>
+> 
+> Add device tree entries for GPUs in M-series SoCs
+> 
+> Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
+> ---
+>  arch/arm64/boot/dts/apple/t6000.dtsi        |  4 ++++
+>  arch/arm64/boot/dts/apple/t6001.dtsi        |  4 ++++
+>  arch/arm64/boot/dts/apple/t6002.dtsi        |  4 ++++
+>  arch/arm64/boot/dts/apple/t600x-common.dtsi | 34 ++++++++++++++++++++++++++++++++++
+>  arch/arm64/boot/dts/apple/t600x-die0.dtsi   | 28 ++++++++++++++++++++++++++++
+>  arch/arm64/boot/dts/apple/t8103.dtsi        | 62 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  arch/arm64/boot/dts/apple/t8112.dtsi        | 62 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  7 files changed, 198 insertions(+)
 
-On Sun, Jun 8, 2025 at 6:23=E2=80=AFPM Jonathan Cameron <jic23@kernel.org> =
-wrote:
->
-> On Sun,  1 Jun 2025 17:21:38 +0000
-> Lothar Rubusch <l.rubusch@gmail.com> wrote:
->
-> > Add AC coupling activity and inactivity as MAG_ADAPTIVE events. This ad=
-ds
-> > up an additional set of threshold and period handles, verifies matching
-> > disabling functionality and extends setting the link bit to complementa=
-ry
-> > event configurations.
-> >
-> > This means, e.g. either ACTIVITY or ACTIVITY_AC can be enabled. The mos=
-t
-> > recent set will remain configured. Disabling ACTIVITY where ACTIVITY_AC=
- was
-> > enabled is ignored, since it does not match (should be disabling
-> > ACTIVITY_AC). When INACTIVITY or INACTIVITY_AC is also enabled, the lin=
-k
-> > bit will be set. Note, having the link bit and auto-sleep in place acti=
-vity
-> > and inactivity indicate the power save state change and thus will only =
-be
-> > triggered once a state transition occurs. Since there is a separate AC =
-bit
-> > for ACTIVITY and for INACTIVITY, events can be linked independently fro=
-m
-> > each other i.e. ACTIVITY can be linked to INACTIVITY_AC for instance.
-> >
-> > When one of both is disabled, the link bit will be removed. Hence, the
-> > remaining event will not indicate a plain state change anymore, but occ=
-ur
-> > as a periodically triggered inactivity event or for each activity event
-> > above the threshold.
-> >
-> > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
->
-> Minor thought on rereading this.  If we don't have the link bit set
-> (and the paired event) the AC events are more accurately described as
-> MAG_REFERENCED as they are referenced simply to whatever acceleration
-> was going on when they were first enabled.   Only with the link bit
-> set (and the other event type enabled) are they actually adapting
-> (so MAG_ADAPTIVE).
->
+...
 
-Going by examples, I can follow you as practically I'm aware of the
-difference between a plain inactivity setup and a link-bit enabled
-inactivity(and activity) setup. Initially I thought of MAG and the
-AC-coupled equivalent being MAG_REFERENCED. By your explanation I
-understand why you preferred MAG_ADAPTIVE rather. But still all three
-configurations are possible.
+> diff --git a/arch/arm64/boot/dts/apple/t600x-common.dtsi b/arch/arm64/boot/dts/apple/t600x-common.dtsi
+> index 87dfc13d74171f62bf3087401918d9d41eaac560..329bd084b63e3688547166a8d0c3d9ace5d6d937 100644
+> --- a/arch/arm64/boot/dts/apple/t600x-common.dtsi
+> +++ b/arch/arm64/boot/dts/apple/t600x-common.dtsi
+> @@ -11,6 +11,10 @@ / {
+>  	#address-cells = <2>;
+>  	#size-cells = <2>;
+>  
+> +	aliases {
+> +		gpu = &gpu;
+> +	};
+> +
+>  	cpus {
+>  		#address-cells = <2>;
+>  		#size-cells = <0>;
+> @@ -378,4 +382,34 @@ nco_clkref: clock-ref-nco {
+>  		#clock-cells = <0>;
+>  		clock-output-names = "nco_ref";
+>  	};
+> +
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		gpu_globals: globals {
+> +			reg = <0x0 0 0 0>;
 
-My idea is, the driver implementation supports all cases in parallel,
-at least to a certain extent. I mean, at the current implementation
-someone can configure plain activity, or AC-coupled activity, or
-respectively, their inactivity equivalents - when both, an activity
-type together with an inactivity type are enabled, they will be linked
-counter events. I.e. "adaptive" - and auto-sleep will be turned on for
-the inactivity periods. Built on using just plain IIO API w/o custom
-API calls.
+all memory-regions with invalid address should be disabled. iirc the
+kernel and/or u-boot will try to map those which does not end well.
 
-Due to all the possible combinations, this comes at a certain
-complexity. In terms of configuration and for instance mapping to MAG,
-MAG_REFERNCED or MAG_ADAPTIVE. Here I rely on your feedback. On my
-side, I'll try to recycle the automation setup to verify registers are
-configured as I like them to be using the sysfs handles (that's btw
-the reason why I'm glad to have debugfs on board). So, if you tell me,
-to change it rather to MAG_REFERENCED, I'll do it, but then AC-coupled
-events will be all MAG_REFRENCED w/ or w/o link bit. Or we come up
-with a total different approach, like putting link-bit AC on
-MAG_ADAPTIVE and plain AC-coupled on MAG_REFERENCED, but then what
-about MAG events w/ or w/o link-bit? hmm, I think current approach
-seems to be a good compromise. Let me know what you think.
-
-Best,
-L
-
->
-> Maybe there is room to use that to ultimately control whether the
-> link bit is set or not (putting aside the power aspect of that).
->
+Janne
