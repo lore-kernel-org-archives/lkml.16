@@ -1,107 +1,187 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 672115D8F0
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 16:01:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A73FB5D8F0
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 16:02:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749657663; cv=none; b=GKqjl1drHWrTE75nqktiDHu97wu5jj9P/KdE1r44HpVgDBB1mhOeHvq5BCuzYY/uzOsf70BfTdFFq3crcS0UUmC4AYmTt6Xx/hU5JTxAgao9+idli6M54AuxM60nTKi7lRQXJSVY77QXdxU33enEpRcg/zAEHopkFOj40j/XsPM=
+	t=1749657732; cv=none; b=POZERfC9Lc75zUcl2OCaDqPtcvf1SwiTzOL03q9onCOZrnhMaxUc9FrjiK1EdZTC3x0DoN4NUTJtVP7h795LTuLwnTq3sNeJHHQgkbwO65DB+99o8jVSOO31sSDw8BlYdvFhUMB/ip3J9uyNiVTzYmhyJsB49kB6ScAQgI46jYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749657663; c=relaxed/simple;
-	bh=TtsDf/QJtlDN97fwoDr+yit/yyQ3hDoNpMF9dQzmtRA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m4Pu7xVzi/wJoMH+fw742+JtAEI2UZ22smPR0e0XZRTv4sU2jcsa41J2vRtZTizAjVJnDVqYC7T9AhT4yMofERIZ15CHODOtzSv9UzVdh96uWo2KOCBaZvfHLcj9X1yeM1J6PD/BRCJqLdZrUbF3CvcUBhGWhsNI+oDG24oNjis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=sihKVevr; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1749657732; c=relaxed/simple;
+	bh=znvhDvTA1BJf0cBqZdVezqV2z5dtsbF5RwqcL3qLCRU=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=qjejaJ9fY7/QpYxJfRNQ60yoOWejeg6Kja12C1ZYyPJvHOQgiD28J7xmngDnPC6Ch7AxzRreieGRcIytWc9fw0IYDnwKTyTGb0dj7saog+EWlYMyA3ac6TYWusIVMx6ZjuVApwVA4yCp9SHwFC3y6q+MYklY4fTLHF7/AqSfbac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rj/IJOiL; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="sihKVevr"
-Message-ID: <3beaf713-a08d-42d9-8543-c6df4ce4215b@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1749657658;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VSLOy4Sh83qorJq2r4e1MAb74f+zk1NYPpgD2kVl1Sk=;
-	b=sihKVevrQ7PdW+C7Hw8Wv/FGhnuPkd3YnU6gwCfN1Fk/K7fEgK8hwYw9HYomfvbNFBcqBG
-	/ooZF9aYWviHW0O/XeU24ldbHSTFrglgV6zII4SltjYMXYDNWHqG1juL703X8/ewvY+QFK
-	KtsXZOeOwEU5pWOJB8+xBabuvVvL2Ec=
-Date: Wed, 11 Jun 2025 09:00:49 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rj/IJOiL"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7377139d8b1so39571b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 09:02:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749657730; x=1750262530; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=VvBM1i8NXfL7mOxsWT454fX7megUt2b8d725v+ousD4=;
+        b=rj/IJOiLwMMthvWacVGRt/p4eeAfX9GadnmiZj7tYPUI2NF2uVI4s3zOEJLnrFdvh9
+         ww6cqYXaU8k/LQJDuIDEGuXSVChmlXg2RYG/GgiF3XrlnuKJuRoiWgRylH6jbbf0g3/+
+         tg0TdBMVNYwK5B279KnC+H/Xtjnb7I3DR/QnHoq/KtHvlSMNoP5oBb0BD7q7hFt9Da0u
+         zYhMjumXTJXJAvntg0GPJceiYW/nags0+f9+TudijyAXgs1sAH0ph+w/sQ2tplzInHBB
+         7fF1RMFkVWNaHLAtDH+yUdb0x8oXSCMh3gnX7oRI4L54FLy0aRxKHsvycKEz4KZpzy8+
+         NQmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749657730; x=1750262530;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VvBM1i8NXfL7mOxsWT454fX7megUt2b8d725v+ousD4=;
+        b=Fd3Mb8XMra/wQCApSOSDRVB4AOb7UesQapcvaMub/onpLeedtN2DHGCbeblTasXlHZ
+         2C9HVVgj/6ncNSzIOfww8DtCdeIPn3683Xx8ARcldTTvv/hCFEHP/6Dzt5VQ2YtlmzLb
+         GJbdJf1hCfrrBtQLqfe2SWzMjST/C3vMvWYyG41o/3dBaEEl9Cj6cW+2rWuGIF1qeoLF
+         /m/SfEViNo5Pk5ABOP7eP+t1FOHX4xUGPaa3NYePddAVY53wyhlJXf+Cr0dOZ+jxVJQS
+         nnJ6u0/Add1tvmX67BgnCaaYzRi9K7spx9vwDAxpegBkh6VXP+6GC8fSO8ce/t8LqhhL
+         09Pw==
+X-Forwarded-Encrypted: i=1; AJvYcCU2kfXqhI3KXF03RcUHn/45C8MFOLQYum4r4VR53Xk9h/kItCJr4qlhJAmlMVDyBNL8Yb+/w/CrH/JvGWU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8k1W3eKsriPshwd8nHqpCiGqigphbQ59EyLziHfC1B/8faUz+
+	sSEbZn/2pyZCEidxQJPmtUYcO11MgIksHYjnwtHTBH1BSG6Mf1QzW1WPkX3P+/e6xBWOIdk0M5H
+	kqZ1qQ1llGw==
+X-Google-Smtp-Source: AGHT+IHBzEuO3GTJ/9QMTDMXpNjitW0SZZV+SmnXhzalRJjSSa163nbGGWjt9fXIDYI2lK9vIDh8Phda1/C0
+X-Received: from pfkq19.prod.google.com ([2002:a05:6a00:853:b0:746:2b90:bbe5])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:854:b0:748:2d1d:f7b3
+ with SMTP id d2e1a72fcca58-7486ce17f89mr4746167b3a.22.1749657729939; Wed, 11
+ Jun 2025 09:02:09 -0700 (PDT)
+Date: Wed, 11 Jun 2025 09:01:51 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Subject: Re: [PATCH net V1] veth: prevent NULL pointer dereference in
- veth_xdp_rcv
-To: Jesper Dangaard Brouer <hawk@kernel.org>, netdev@vger.kernel.org
-Cc: Eric Dumazet <eric.dumazet@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel-team@cloudflare.com
-References: <da1f2506-5cb0-446c-b623-dc8f74c53462@kernel.org>
- <174964557873.519608.10855046105237280978.stgit@firesoul>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Ihor Solodrai <ihor.solodrai@linux.dev>
-In-Reply-To: <174964557873.519608.10855046105237280978.stgit@firesoul>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.rc0.642.g800a2b2222-goog
+Message-ID: <20250611160206.552030-1-irogers@google.com>
+Subject: [PATCH v2 00/15] New perf ilist app
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Xu Yang <xu.yang_2@nxp.com>, John Garry <john.g.garry@oracle.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Howard Chu <howardchu95@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	Andi Kleen <ak@linux.intel.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	Gautam Menghani <gautam@linux.ibm.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 6/11/25 5:40 AM, Jesper Dangaard Brouer wrote:
-> The veth peer device is RCU protected, but when the peer device gets
-> deleted (veth_dellink) then the pointer is assigned NULL (via
-> RCU_INIT_POINTER).
-> 
-> This patch adds a necessary NULL check in veth_xdp_rcv when accessing
-> the veth peer net_device.
-> 
-> This fixes a bug introduced in commit dc82a33297fc ("veth: apply qdisc
-> backpressure on full ptr_ring to reduce TX drops"). The bug is a race
-> and only triggers when having inflight packets on a veth that is being
-> deleted.
-> 
-> Reported-by: Ihor Solodrai <ihor.solodrai@linux.dev>
-> Closes: https://lore.kernel.org/all/fecfcad0-7a16-42b8-bff2-66ee83a6e5c4@linux.dev/
-> Reported-by: syzbot+c4c7bf27f6b0c4bd97fe@syzkaller.appspotmail.com
-> Closes: https://lore.kernel.org/all/683da55e.a00a0220.d8eae.0052.GAE@google.com/
-> Fixes: dc82a33297fc ("veth: apply qdisc backpressure on full ptr_ring to reduce TX drops")
-> Signed-off-by: Jesper Dangaard Brouer <hawk@kernel.org>
-> ---
-> Commit dc82a33297fc have reached Linus'es tree in v6.16-rc1~132^2~208^2.
-> Thus, we can correct this before the release of v6.16.
-> 
->   drivers/net/veth.c |    4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/veth.c b/drivers/net/veth.c
-> index e58a0f1b5c5b..a3046142cb8e 100644
-> --- a/drivers/net/veth.c
-> +++ b/drivers/net/veth.c
-> @@ -909,7 +909,7 @@ static int veth_xdp_rcv(struct veth_rq *rq, int budget,
->   
->   	/* NAPI functions as RCU section */
->   	peer_dev = rcu_dereference_check(priv->peer, rcu_read_lock_bh_held());
-> -	peer_txq = netdev_get_tx_queue(peer_dev, queue_idx);
-> +	peer_txq = peer_dev ? netdev_get_tx_queue(peer_dev, queue_idx) : NULL;
->   
->   	for (i = 0; i < budget; i++) {
->   		void *ptr = __ptr_ring_consume(&rq->xdp_ring);
-> @@ -959,7 +959,7 @@ static int veth_xdp_rcv(struct veth_rq *rq, int budget,
->   	rq->stats.vs.xdp_packets += done;
->   	u64_stats_update_end(&rq->stats.syncp);
->   
-> -	if (unlikely(netif_tx_queue_stopped(peer_txq)))
-> +	if (peer_txq && unlikely(netif_tx_queue_stopped(peer_txq)))
->   		netif_tx_wake_queue(peer_txq);
->   
->   	return done;
-> 
-> 
+This patch series builds up to the addition of a new ilist app written
+in python using textual [1] for the UI. The app presents perf PMUs and
+events, displays the event information as in `perf list` while at the
+bottom of the console showing recent activity of the event in total
+and across all CPUs.
 
-Acked-by: Ihor Solodrai <ihor.solodrai@linux.dev>
+The first part of the patches are a few perf and perf python C API
+fixes, most importantly the counter reading in python supports tool
+PMUs.
 
-Thank you!
+The second part of the patches adds event json for the software PMU
+and makes the tracepoint PMU support iteration of events and the
+like. Without these improvements the tracepoint and software PMUs will
+appear to have no events in the ilist app. As the software PMU moves
+parsing to json, the legacy hard coded parsing is removed. This has
+proven controversial for hardware events and so that cleanup isn't
+done here.
+
+The final patch adds the ilist command. To run it you need the updated
+perf.cpython.so in your PYTHONPATH and then execute the
+script. Expanding PMUs and then selecting events will cause event
+informatin to be displayed in the top-right and the counters values to
+be displayed as sparklines and counts in the bottom half of the
+screen.
+
+Some thoughts on the series:
+
+ - The PMU changes will conflict with the addition of the DRM PMU:
+   https://lore.kernel.org/lkml/20250403202439.57791-1-irogers@google.com/
+   when these two are merged together ilist will show yet more
+   counters. It'd be nice if the DRM stuff could land and then I can
+   rebase these patches.
+
+ - The parse-events clean up of the software and tracepoint PMU. The
+   software PMU hard coding to be legacy first has similar issues and
+   will conflict with the clean up in:
+   https://lore.kernel.org/lkml/20250416045117.876775-1-irogers@google.com/
+   Moving the software work to json means we don't need special parse
+   events terms for software events, etc. We can just treat things
+   like regular PMUs with json, etc. I'd much rather we had less
+   special case logic so that series is best rebased on top of this
+   work and it should drop the changes for software terms, etc. which
+   this series removes. Maybe one day the whole event parsing can be
+   much more regular in how PMUs are treated but there's always
+   "cycles".
+
+ - Should python libraries have feature tests? How does this get
+   packaged outside the kernel tree? I think these are open
+   questions. Clearly textual is kind of a big dependency and we've
+   largely been moving in the direction of fewer dependencies
+   recently. Hopefully the app makes it clear why I think this one is
+   worth carrying. We carry libslang as a dependency and I think
+   textual clearly far surpasses it.
+
+ - How to launch? Currently I run tools/perf/python/ilist.py but it
+   would be much nicer if we could do `perf ilist` much as we do for
+   perf-archive.sh. There are probably other scripts that should be
+   perf commands like flamegraph and gecko. It'd be nice to follow up
+   the series with something to make using these commands easy.
+
+[1] https://textual.textualize.io/
+
+v2: In the jevents event description duplication, some minor changes
+    accidentally missed from v1 meaning that in v1 the descriptions
+    were still duplicated. Expand the cover letter with some thoughts
+    on the series.
+
+Ian Rogers (15):
+  perf hwmon_pmu: Avoid shortening hwmon PMU name
+  perf parse-events: Minor tidy up of event_type helper
+  perf python: In str(evsel) use the evsel__pmu_name helper
+  perf python: Fix thread check in pyrf_evsel__read
+  perf python: Correct pyrf_evsel__read for tool PMUs
+  perf python: Add basic PMU abstraction and pmus sequence
+  perf python: Add function returning dictionary of all events on a PMU
+  perf jevents: If the long_desc and desc are identical then drop the
+    long_desc
+  perf jevents: Add common software event json
+  perf pmu: Tolerate failure to read the type for wellknown PMUs
+  perf parse-events: Remove non-json software events
+  perf tp_pmu: Factor existing tracepoint logic to new file
+  perf tp_pmu: Add event APIs
+  perf list: Remove tracepoint printing code
+  perf ilist: Add new python ilist command
+
+ tools/perf/builtin-list.c                     |  47 ++--
+ .../arch/common/common/software.json          |  92 ++++++
+ tools/perf/pmu-events/empty-pmu-events.c      | 266 +++++++++++-------
+ tools/perf/pmu-events/jevents.py              |  18 +-
+ tools/perf/python/ilist.py                    | 238 ++++++++++++++++
+ tools/perf/util/Build                         |   1 +
+ tools/perf/util/evsel.c                       |  21 +-
+ tools/perf/util/hwmon_pmu.c                   |   2 +-
+ tools/perf/util/parse-events.c                | 225 +++++----------
+ tools/perf/util/parse-events.h                |   3 +-
+ tools/perf/util/parse-events.l                |  38 +--
+ tools/perf/util/parse-events.y                |  29 +-
+ tools/perf/util/pmu.c                         |  44 ++-
+ tools/perf/util/print-events.c                |  95 -------
+ tools/perf/util/print-events.h                |   1 -
+ tools/perf/util/python.c                      | 248 +++++++++++++++-
+ tools/perf/util/tp_pmu.c                      | 209 ++++++++++++++
+ tools/perf/util/tp_pmu.h                      |  19 ++
+ 18 files changed, 1144 insertions(+), 452 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/common/common/software.json
+ create mode 100755 tools/perf/python/ilist.py
+ create mode 100644 tools/perf/util/tp_pmu.c
+ create mode 100644 tools/perf/util/tp_pmu.h
+
+-- 
+2.50.0.rc0.642.g800a2b2222-goog
+
