@@ -1,88 +1,176 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from flow-a3-smtp.messagingengine.com (flow-a3-smtp.messagingengine.com [103.168.172.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8192D540B
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 00:23:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4608479DA;
+	Wed, 11 Jun 2025 00:23:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749601417; cv=none; b=Eu//me6tWxwyiGScW0pbhSu/nBL3UR1JitoOoFgG+JKRR8rH+aMzQKq+6OukDLoJ45aQgE9ubt6tqKsdsaphsmRbUnTWrm0qmKCfg75ZYHVO+pHczj32IDFcb25IK8ztqbaLP+DC4h+/GorsIueAWKftOEC7TfkVBZVVesYBCEw=
+	t=1749601437; cv=none; b=bhtltWMCd88NQ6YpTF7gnsQ7SA/ZDKJIfhnDoa/wwP0XfNPH9WUHCDobIbSMd7+qyrc84XJHGwjH9aqKUWoNpyiEn+/IvO0Kk0DFx0lvzhpyRDQYRHakoLPSqYIiqv7WZjYiQp/hxe1vIxux5Ne4tJ+ttdg6bLpDPnq+aRsHYRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749601417; c=relaxed/simple;
-	bh=dvK1RdwWb1CQsf+37pV/ByhW/qenOogBXreLlC1KfCU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=eMCzUFRSXyaLWKVkyrI8ypsQTWYgkqyScX6CYecg7jk4C/w/FX2EHN10F7mFefxrkYrNoLoPl9mN9YJMRNDcFLz6s4xUQ+OKp8xfBi9nf+4E35+iR+o/id+bs1e7LwATMJ84HcFnSrB4UotKeZfOxUE9+H2TrlPTYJLLauRZkwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id D4FCD1612BD;
-	Wed, 11 Jun 2025 00:23:27 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id 291AF20025;
-	Wed, 11 Jun 2025 00:23:26 +0000 (UTC)
-Date: Tue, 10 Jun 2025 20:24:57 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, iommu@lists.linux.dev
-Subject: [RFC][PATCH] iommu/dma: Do not call swiotlb tracepoint when not
- defined
-Message-ID: <20250610202457.5a599336@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749601437; c=relaxed/simple;
+	bh=qgHubdTxv57bGTk1of/rJdqy+LmbhQpEv1QKoORclIA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LDPN/LFPk6ABd7M7l+g6ZbETPlv5cf8JKu+mBcVQc3LUvxHapspUlblqI3CuB42Vs3te81HPdVTBCCziSnFa29ZG2nEA/hm6JMda7wk1ISd0ZT9pj0FJEAj4gKepDNIEjuqPDoqANJDdNIUK4/uOt/rnD1ksgBg2sImzRXqrSfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=maowtm.org; spf=pass smtp.mailfrom=maowtm.org; dkim=pass (2048-bit key) header.d=maowtm.org header.i=@maowtm.org header.b=M72LdKSz; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=j9ldIW/d; arc=none smtp.client-ip=103.168.172.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=maowtm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maowtm.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=maowtm.org header.i=@maowtm.org header.b="M72LdKSz";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="j9ldIW/d"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailflow.phl.internal (Postfix) with ESMTP id 1A61220069B;
+	Tue, 10 Jun 2025 20:23:54 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-06.internal (MEProxy); Tue, 10 Jun 2025 20:23:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maowtm.org; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1749601434;
+	 x=1749608634; bh=pW98W2lJtLiwekAVVtO/Jv1f0oaMGloSBkI5n6j43Js=; b=
+	M72LdKSzFi6AhpmBdMfq0W92Tm4F+b23EOtvf0QijTWVEEzc0L3GHw7lBU/A5AI6
+	SEi0ySR9D4xPY/vwXiwC5EKE1rfMoNXuJdQ2QcGfot5UKBa0INCsAumLTyRKLcX5
+	9DMTKU6JNYQQ5Wv4u91A5D7ADSc+y4j0kJb47MZZ0qff2QZhX+HPZ2GTQlVZH5QX
+	cOG5PVcfwEvxIfUamVSscQRx85h2wmsYxg0G4PLSAEd/ebem334b01AJIX63yqi7
+	+qBw4bJYHhPF/FHH3EKTVNaAQwgRqdUzW+WKw+k3lJYiX+A6GesQDqZrpGVQAl82
+	q64MHqH8w+Gp3DZpxLSCmg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749601434; x=
+	1749608634; bh=pW98W2lJtLiwekAVVtO/Jv1f0oaMGloSBkI5n6j43Js=; b=j
+	9ldIW/dQiRlFRacP1GEB2LIcOnmifUwPDSlREdtYRAvBAPp/3IE8aaIXYgCnq/B3
+	1aOExY2rgxuymZlMsermw/8hopiuKsqIBRqx7iTydfSZUMTr0NnpeQWBeYEcgX/r
+	DMfsUtxfodWCGuup77mN3faaVYw4nQrxAejUEuSck371wkla1fH0Nss3R9iUQv27
+	1prglVnUFQ00M3RbWQVkKuEUav60ra90J2JH9heTkswJcNZPHNpAEtk2S9UHpT4S
+	LIqyhNgUcwHOHQfTMdkNkmW3Q5pcbBjxGQJusAqjMkd5CNIUjUPAox8HQRwPvT4c
+	Ha81AU2AeAJeKUL1vshQg==
+X-ME-Sender: <xms:mMxIaM-J3F-UveY-ExtQ-LI_cm_-T7vD1fIINkoxPcoFrKQDp8KdDg>
+    <xme:mMxIaEvDgMloit5gffJYIgsHdGK9MK6gzyBrmJX_KPt_OTPf1KBzOMaYtgHlw1Zyd
+    lr_PNJfD4XS2ZJbM64>
+X-ME-Received: <xmr:mMxIaCDhzIUhVoROK8Bgx_cE-tDllChgeYkk1rxXXc8Jq4Ly8V0lttf46cDL1_l5ssJv9NinuToeLFOSIErgcVjk>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduudeghecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddv
+    jeenucfhrhhomhepvfhinhhgmhgrohcuhggrnhhguceomhesmhgrohifthhmrdhorhhgqe
+    enucggtffrrghtthgvrhhnpedukeevhfegvedvveeihedvvdeghfeglefgudegfeetvdek
+    iefgledtheeggefhgfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
+    hlfhhrohhmpehmsehmrghofihtmhdrohhrghdpnhgspghrtghpthhtohepvddvpdhmohgu
+    vgepshhmthhpohhuthdprhgtphhtthhopehsohhngheskhgvrhhnvghlrdhorhhgpdhrtg
+    hpthhtohepmhhitgesughighhikhhougdrnhgvthdprhgtphhtthhopegsphhfsehvghgv
+    rhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqfhhsuggvvhgvlhesvh
+    hgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhes
+    vhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhsvggtuhhrih
+    hthidqmhhoughulhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgv
+    rhhnvghlqdhtvggrmhesmhgvthgrrdgtohhmpdhrtghpthhtoheprghnughrihhisehkvg
+    hrnhgvlhdrohhrghdprhgtphhtthhopegvugguhiiikeejsehgmhgrihhlrdgtohhm
+X-ME-Proxy: <xmx:mcxIaMcG4phxurxcpgZhcwQnMUYOVP1L-m2qOXuRG_pDAYedkj53sQ>
+    <xmx:mcxIaBNxCzhiR5pOWCz2vzWj4oHDvvM0w5lEWlfOGiqC2VcdbndfTA>
+    <xmx:mcxIaGnT4FwAHpwEbgBatl1A3ISJHAwnimz_wBUWFK4R56p0b6zOCg>
+    <xmx:mcxIaDvrE-9NZcas-megW6Igl_E1VPR6QSAlGKQNKEts2hseFcIO5Q>
+    <xmx:msxIaLeTqSY8DMUIwV40taV0eTdtJIqtHiprr-cO9XnZdq990jByXRvn>
+Feedback-ID: i580e4893:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 10 Jun 2025 20:23:50 -0400 (EDT)
+Message-ID: <fd995e37-9369-4375-8718-8338e732860f@maowtm.org>
+Date: Wed, 11 Jun 2025 01:23:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 291AF20025
-X-Stat-Signature: uhqfc8ahmknazqw9ayr1uzuucf59k9iu
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/XhJVWvkRYvxlRf7t2Kf7y9hhbGWBZiCY=
-X-HE-Tag: 1749601406-69543
-X-HE-Meta: U2FsdGVkX1/fhFxzNrLk0/RbXv5SL2V3zCR9XcPPGui/aa1Hd6CqiYX7ePU1Dfryo9c3OvaDu4suarjYO+masLYrUWq+YsxFaiVWcuS0rQxXu9DJi8SVFs8+DFB/fhqsDLxlwDi572uX+Kt8iQWULL0EghBlP2Y13oPCK4oAgjOLBvuBJzLX75AeG8UHMwil4zCVfhxTMZwbDrE7VkIX9dvW+0z+J+Zz18snl+xYjqN+ZiDsvP/goWvQRxdb43U3ciffdBn6Jp3GfwGTSQx6FdEtdMHe5xGsPKA78kJLQ+xtY26onCezWc4bJflBj16tTE994bqS3Z9qbPzpuWpHh3nXMOWH+IPwKr5YlRKKsety72Uc2+Wpa0sww86I+kVMi2ew9gt8jkqqrzkrjoQg/QJ7RFWTTUfGprsJR9SsqTM=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 bpf-next 1/5] namei: Introduce new helper function
+ path_walk_parent()
+To: Song Liu <song@kernel.org>
+Cc: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+ bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+ kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org,
+ daniel@iogearbox.net, martin.lau@linux.dev, viro@zeniv.linux.org.uk,
+ brauner@kernel.org, jack@suse.cz, kpsingh@kernel.org,
+ mattbobrowski@google.com, amir73il@gmail.com, repnop@google.com,
+ jlayton@kernel.org, josef@toxicpanda.com, gnoack@google.com
+References: <20250606213015.255134-1-song@kernel.org>
+ <20250606213015.255134-2-song@kernel.org> <20250610.rox7aeGhi7zi@digikod.net>
+ <CAPhsuW5G0Th+9dRSmxDjo5E7CxV1E9N8AiKjw3cKyEhOBVWJFw@mail.gmail.com>
+ <d7d755ea-5942-440b-8154-21198cb6a0f1@maowtm.org>
+ <CAPhsuW75h3efyXmCcYE_UEmZGXR5KMSEw8h-_vrZH82BYU=WVw@mail.gmail.com>
+Content-Language: en-US
+From: Tingmao Wang <m@maowtm.org>
+In-Reply-To: <CAPhsuW75h3efyXmCcYE_UEmZGXR5KMSEw8h-_vrZH82BYU=WVw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+On 6/11/25 00:08, Song Liu wrote:
+> On Tue, Jun 10, 2025 at 3:26 PM Tingmao Wang <m@maowtm.org> wrote:
+> [..]
+>>>
+>>>                 if (!choose_mountpoint(real_mount(path->mnt), root, &p))
+>>>                         return false;
+>>>                 path_put(path);
+>>>                 *path = p;
+>>>                 ret = true;
+>>>         }
+>>>
+>>>         if (unlikely(IS_ROOT(path->dentry)))
+>>>                 return ret;
+>>
+>> Returning true here would be the wrong semantic right?  This whole thing
+>> is only possible when some mount shadows "/".  Say if you have a landlock
+>> rule on the old "/", but then we mount a new "/" and chroot into it (via
+>> "/.."), the landlock rule on the old "/" should not apply, but if we
+>> change *path and return true here then this will "expose" that old "/" to
+>> landlock.
+> 
+> Could you please provide more specific information about this case?
 
-I'm working on code that will warn when a tracepoint is defined but not
-used. As the TRACE_EVENT() logic still creates all the code regardless if
-something calls the trace_<event>() function. It wastes around 5K per trace
-event (less for tracepoints).
+Apologies, it looks like I was mistaken in the above statement.
 
-But it seems that the code in drivers/iommu/dma-iommu.c does the opposite.
-It calls the trace_swiotlb_bounced() tracepoint without it being defined.
-The tracepoint is defined in kernel/dma/swiotlb.c when CONFIG_SWIOTLB is
-defined, but this code exists when that config is not defined.
+I was thinking of something like
 
-This now fails with my work because I have all the callers reference the
-tracepoint that they will call.
+# mount --mkdir -t tmpfs none tmproot
+# cp busybox tmproot/ && chmod +x tmproot/busybox
+# mount --move tmproot /
+# env LL_FS_RW=/ LL_FS_RO=/.. ./sandboxer chroot /.. /busybox sh
+  # echo can write to root > /a
+  sh: can't create /a: Permission denied
+  ^^^^ this does not work, but I was mistakenly thinking it would
 
-Thanks to the kernel test robot, it found this:
+I think because choose_mountpoint_rcu only returns true if
+    if (mountpoint != m->mnt.mnt_root)
+passes, this situation won't cause ret to be true in your code.
 
-  https://lore.kernel.org/all/202506091015.7zd87kI7-lkp@intel.com/
+But then I can't think of when
+      if (unlikely(IS_ROOT(path->dentry)))
+          return ret;
+would ever return true, unless somehow d_parent is corrupted?  Maybe I'm
+just missing something obvious here.
 
-Currently, I made this patch and it makes it build. But I don't like the
-patch. It's in the middle of a function that has a lot of things called
-swiotlb which seems like the #ifdef should be around much more than the
-tracepoint hook that has no tracepoint attached to it.
+Anyway, since there's a suggestion from Neil to refactor this, this might
+not be too important, so feel free to ignore for now.
 
-Hopefully someone else can make a proper patch. I will be pushing my work
-to linux-next during this cycle.
+> 
+> Thanks,
+> Song
+> 
+>> A quick suggestion although I haven't tested anything - maybe we should do
+>> a special case check for IS_ROOT inside the
+>>     if (unlikely(path->dentry == path->mnt->mnt_root))
+>> ? Before "path_put(path);", if IS_ROOT(p.dentry) then we just path_get(p)
+>> and return false.
+>>
+>>>
+>>>         parent = dget_parent(path->dentry);
+>>>         dput(path->dentry);
+>>>         path->dentry = parent;
+>>>         return true;
+>>> }
+>>>
+>>> Thanks,
+>>> Song
+>>
 
-Not-signed-off-by: Steven Rostedt <rostedt@goodmis.org>
----
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index ea2ef53bd4fe..7c0ada27e66f 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -1153,8 +1153,9 @@ static phys_addr_t iommu_dma_map_swiotlb(struct device *dev, phys_addr_t phys,
- 		return (phys_addr_t)DMA_MAPPING_ERROR;
- 	}
- 
-+#ifdef CONFIG_SWIOTLB
- 	trace_swiotlb_bounced(dev, phys, size);
--
-+#endif
- 	phys = swiotlb_tbl_map_single(dev, phys, size, iova_mask(iovad), dir,
- 			attrs);
- 
