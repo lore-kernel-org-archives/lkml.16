@@ -1,72 +1,89 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A09942D542C
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 03:07:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0DA3C1F;
+	Wed, 11 Jun 2025 03:07:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749611226; cv=none; b=ezjeYb+H//Eh1gTi0NDK00x6qcZYgIap3ULk8qnrM6yJhC+rcmUH1uDfbDIueGkjgd6NCg9i38GwZL7gJ68aRRI8Ta9MeQaLAr/6AxDuzXgUlxICKTGFXXyaGhsQeGS2xxFZ20iwvsxcSnE1BxF2TkFz6+Yvbd9ieCO9toqasZo=
+	t=1749611259; cv=none; b=WOsvl76fKHITGsIiqs9cuuzIoFJwbYYx9guRyAqpu6+Gc38J2Vm+KdvAwZKnGMuYQiuQq9RbviV3mRZ1ttqPqaNVz5xrvImjGFSIHMhVnTkcd3y1g1VtljjLdNdHrap9TWZdI+vz4Vivdao0yS+dDZQ0EEFzebhNj/vFQPUlUZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749611226; c=relaxed/simple;
-	bh=1ZuY1GnIBDjTIqTPZ+T3pXiz6GL/0r4E/QmJ73FWffs=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=ckXJ0MTvNKiku0mC1UeEUMo27ofkq3wwIimETq7ccCGM9BnSU+KidfOeOyKy9ce2p43AykGWIFJidveVSIzjSkucf2WzA9huqEU1lW7XNilaw2lA40Jc1D0EHR7eKM5ykTjeSCf/QmVwYnnfhPeuq5V0Y0ipciZi5cNOIHnzJDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ddc9ee4794so80076385ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 20:07:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749611224; x=1750216024;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KmGmNAhrD689ukVKK2fUOboMN2+3ljOerd7zbg7nsfw=;
-        b=eZXqdauLNJOKRySjLcGHRha3zuZcy8rmfm1iD15w+hURd8DkIgRbb1uzKgq6cqI2fs
-         KYsvU5iQIzYwce92YSlNeXWUw6fVL987ynz3/nNlyQGmVFxAD/OTqOCjc/WTjv0sdJE8
-         Os79LVRnykS1GKWfS2RbkEvd2m1PHVJIMCTB8ZaEseWqgkELgs1nCDj+9ozFh3ijB0Pr
-         h/2BpGcQ++RXaOq9kqMQ91P72OyXSxf37ge57egpvJvd+gQ7Q2HebhJOtD+IIMAyNvQD
-         bk3QouIFYQSSCfvd5jNt1ERD88ybahfOHVU+OTjY3fhv6cNKiO9T6UlV2fwWA0jTXgsL
-         TgQw==
-X-Forwarded-Encrypted: i=1; AJvYcCVKAUfOqgs4we5sABirS8+mgyAg+m4cTg5MtfUQUB5Bj8r64coK81CU0za/GNUlCgLNFpll9/e3BlS2DqI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxv/8cs75IviNGVBfTwG1mYrn6MolsdWUhkC+KjzVZxcJzrtQ7E
-	FVYNX6LcD9spDttuslDJlceestHktauSq+UwArTnVVVqwrt2A6XT9g1DPWjIFRVPLlZAnYnJYQ8
-	M+V0MVdMmFGD1hLM9dI3io1LqGuxkK4px3vNsEPRNl7t+tlbKuw8zHi/Yrsk=
-X-Google-Smtp-Source: AGHT+IH5/VT8czT6oFeQixpNu6oaa5/lUJKAcxCoO5A7Bxfg0YXwuVMZ1UXUwOO2rurWxNwUqPeW6H7KflQQbHQHutkBJ9vuRrIN
+	s=arc-20240116; t=1749611259; c=relaxed/simple;
+	bh=E7xUWJdloB33WGP7xJW69ab7nUE7dxZpE2Truv488Wk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HOh7oVENgfxmVTFX7B5XSn2qRwL40uz/EtiYeK9cAqWzJoqGqbHrclUS1VI1ewqjtl+9RQQYOzaXEObkNz68A0MJzM6m0dMvOlAJXNOmy2sUOkawCokOxUibZE/e3D16+iyrCpWbgmxAW8ymyrO+/+VRQ3XtAjtj31Rp5zmruXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UFGe5HZt; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UFGe5HZt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75056C4CEED;
+	Wed, 11 Jun 2025 03:07:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749611254;
+	bh=E7xUWJdloB33WGP7xJW69ab7nUE7dxZpE2Truv488Wk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UFGe5HZtpguRl7KnGkQKWWmdbNR0OPYVANJOhcFYgHmciOAtYa+/T6xohWUIQ5vux
+	 azoWbjaTo+7PfyxIq46/d7uAJv7lVJwOtrT+b0Gt+2dci+bx+y5LeK8uFC+xNrBFe4
+	 x979qPkNcSt23pGifxttXx8J7qL/WYBeAqBqZTDAAftbn0jkKDOmURUostnbV+GN5s
+	 llujLI4slPim8UKEMSZ6aZUGcvxBSsTNbJ1w849mjOWrR5YHI9OmnVh+3zscP+gCS2
+	 OA2uv5IJ+f1huxAJ+kE6G9O01Ydq+R2YrSW58QQg6uygJSo1iB9jrYd3mJt3oo0ZN7
+	 Th0zFAjX51GWw==
+Date: Tue, 10 Jun 2025 22:07:32 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, 
+	linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH] rpmsg: Use strscpy() instead of strscpy_pad()
+Message-ID: <nvzbo6dq3pf7dupelmksd3y4kxynre3qgblqlxbfcx4aza4p4t@o7gf63u4jjd4>
+References: <20250429104543.66927-2-thorsten.blum@linux.dev>
+ <CANLsYkxBxt-fE-kV3yS7WDQuF4o7OSL045fMmXrTvfx3P=A+1A@mail.gmail.com>
+ <1F19F750-E9CF-4AC8-B14E-78C957869F75@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:144a:b0:3d9:6485:39f0 with SMTP id
- e9e14a558f8ab-3ddf4263abcmr16769075ab.9.1749611223836; Tue, 10 Jun 2025
- 20:07:03 -0700 (PDT)
-Date: Tue, 10 Jun 2025 20:07:03 -0700
-In-Reply-To: <3c5860a7-6772-4ea2-bd74-82ba8df4b242@gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6848f2d7.a70a0220.27c366.006b.GAE@google.com>
-Subject: Re: [syzbot] [bluetooth?] KASAN: vmalloc-out-of-bounds Read in hci_devcd_dump
-From: syzbot <syzbot+ac3c79181f6aecc5120c@syzkaller.appspotmail.com>
-To: ipravdin.official@gmail.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1F19F750-E9CF-4AC8-B14E-78C957869F75@linux.dev>
 
-Hello,
+On Tue, Jun 10, 2025 at 12:38:14PM +0200, Thorsten Blum wrote:
+> Hi Mathieu,
+> 
+> On 30. Apr 2025, at 16:59, Mathieu Poirier wrote:
+> > On Tue, 29 Apr 2025 at 04:46, Thorsten Blum wrote:
+> >> 
+> >> kzalloc() already zero-initializes the destination buffer, making
+> >> strscpy() sufficient for safely copying the name. The additional NUL-
+> >> padding performed by strscpy_pad() is unnecessary.
+> >> 
+> >> The size parameter is optional, and strscpy() automatically determines
+> >> the size of the destination buffer using sizeof() when the argument is
+> >> omitted. RPMSG_NAME_SIZE is equal to sizeof(rpdev->id.name) and can be
+> >> removed - remove it.
+> >> 
+> >> No functional changes intended.
+> >> 
+> >> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> >> ---
+> >> drivers/rpmsg/qcom_glink_native.c | 2 +-
+> >> drivers/rpmsg/qcom_smd.c          | 2 +-
+> >> 2 files changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > 
+> > I will let Bjorn take care of this one.
+> 
+> This one didn't make it into the last merge window, did it?
+> 
+> Could you or Bjorn take care of it or should I resend it?
+> 
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+I looked at it, but needed to convince myself that there were no side
+effects, and then missed pulling it. It's still in the queue, so I'm
+taking another look, no need to resend it.
 
-Reported-by: syzbot+ac3c79181f6aecc5120c@syzkaller.appspotmail.com
-Tested-by: syzbot+ac3c79181f6aecc5120c@syzkaller.appspotmail.com
+Thanks,
+Bjorn
 
-Tested on:
-
-commit:         aef17cb3 Revert "mm/damon/Kconfig: enable CONFIG_DAMON..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=156619d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c4c8362784bb7796
-dashboard link: https://syzkaller.appspot.com/bug?extid=ac3c79181f6aecc5120c
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1140a60c580000
-
-Note: testing is done by a robot and is best-effort only.
+> Thanks,
+> Thorsten
+> 
