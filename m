@@ -1,210 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7AD4380;
-	Wed, 11 Jun 2025 18:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C4023643F
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 18:44:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749667455; cv=none; b=B1Ln1ctxOclVegCBbCVah4hXWTWJuOj20p8aJ+ihmFutks6Y6WJwLaUrWt1G40+m0YAIMkE8FGtff79+Cs82he80cKIJtC5uzD0oOtFdJbKw2bqLuD48juI7omiueBUDZXHxxiofupQwScMk9EFzzrJ5Sol70S6LMoikwJOAObU=
+	t=1749667466; cv=none; b=bz2NHx8AgZ22fEXtKj8d3HPvBLz26FRxxW3XmdeRCx8XNzci3z4brE/AWKaC6RRaO6tlnh+pUUVQO+s/1c67B140b6UrJlJI08spfAtnyCDg928M6K7+620aXC8OLAn+cAClCYomcL3m+hLVrS+6IESIKYiRifB844WxpmF32qA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749667455; c=relaxed/simple;
-	bh=0Y19FOGk8myMlwMfTdM5H4mSwwbBsWo93rX/f568q98=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gHt+xTzH39Rnw4FGTPqqh1Rf0u1Mjxn+6e3uExK21ceF2jXlRTceUxrV2XCNIeY7PRHze53hATg2Tcd1rtwx+Ur2wr+padfHaHaxtL4Ir4D63e0VIHAStQsD3IZ5KjbSc4wHy5uqeHsy/c1k+LtWZfD39viytL59+Xt/SY1bfRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iGFCpCTZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749667466; c=relaxed/simple;
+	bh=rW9AYnao7epI6DSNNsNbXeG46uk1hDnvTmVoKXHljtI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FNViUKyV8s58yYg5cHE/I4E15P0QXLseolk6J1JxqL9fFCGfQnf5bNixTs3B8pcA/1QyPIrRLD13DcqTbrAXjsZwd2XybxXmsKYM1H72u0yYNZICPl8mhqWOmwe3lif189fXasBxhscn2mQZinEt8CJnd6F0OKf+2XGu8v4A06s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mfZDiv2f; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iGFCpCTZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD052C4CEE3;
-	Wed, 11 Jun 2025 18:44:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749667454;
-	bh=0Y19FOGk8myMlwMfTdM5H4mSwwbBsWo93rX/f568q98=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iGFCpCTZrsKYC0IDwdrcQGmr2hkdhm76Z12iG/RVLXRUwzJLlv5whVhXsO9glSuj9
-	 o2BjpFodlGHdnApf3jNLl6wITOX+8yzJJWx1/rLf0/jC7z0O0y3VqTjBVEHSzYJjzv
-	 DfwuPsSX8WZZ8o0J/fp29CrVhpgevZ+9CmjW1oCPPMxBGhEB1+InoTaPIXO2uGug6d
-	 itwWjXBk0rFPZdN+dfjxs1W81OE3cuS0stSFH8vA4lCcojy5uSIkc9EqSa+Qon1Lct
-	 E78HEYcj6+2h7hqrZgs7+TpheNARFAzG66QFu6kkUS388sWteGaBMH+NyjQ2jCV+b3
-	 dWqZNCzmsHmaw==
-Message-ID: <edf14a64-decc-4392-a038-08b5dd942f8d@kernel.org>
-Date: Wed, 11 Jun 2025 20:44:08 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mfZDiv2f"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-450dd065828so752605e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:44:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1749667463; x=1750272263; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=b8Z7wa9sbPXA5dzp8SGUkYWXsK6DxzHA1Tojy5Vy9ow=;
+        b=mfZDiv2fFm+ACiWLDuOXvI4+iJQJBIWPo7yKU8UK55o0P+Xd8iven6WI7No0EW91AS
+         2FaJc3OxwU6D7sd7wZt2A962Ge77twubdXeBMYTBC87tYVNp+OjmSr9sQnK/K5Ask+gx
+         fZon7+vZaIcJFJ07ZOoHbJ12/1ifHsUSHpSX45h6agTn9jDnr+QOiahuwlw36kVGyGeZ
+         7WpIAY2z4Wv/+vKPIwHPjTyyOAoPKp7MBpgxQ4x5bA1iXn/y8GkFhAZ088oL5T1xnqPX
+         WrfpelGwhWRTVMtPCWiSpVkS1SAiUXFNKRo+aLW0Mc+Xj+ac7B7QeDPA6vn4V3xTTqw3
+         6jDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749667463; x=1750272263;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b8Z7wa9sbPXA5dzp8SGUkYWXsK6DxzHA1Tojy5Vy9ow=;
+        b=STlfChDL0RvXuAhbMBbLDGNI+ZjItZQTCbv5cB4CKBP5Oon59yqM13hM3jSNCl8pZY
+         ljZrX1h8GhkEO7hu5XGBQZeCKNwz+GeCKKixyBScrArQGFjufiBPEqkMr+4zaNMn1TaI
+         RLugp7Me8oIo0Iafc8G9hhk8qnk8ztWJI2AcqmvUA4FTKk8qDyYKDXwe0vu/vXnMb3hT
+         ta5M6rJRj42DPnsUjziAbuXz/h2dSe8vNKnT23H29XK1KAS/hg0UCO88TR828h7DqXpl
+         J4i5ccTaD5l4RPDhpIIJfjFtDSROWDjs8Qy+nhlP/7zZYqnmTRb957lv7SaOZwXkHOkq
+         JEGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVJkUK9KgGWzX8GHP/okOJq+2BRjwKTorJJvjoeW+hCE27JcYTBHmvHk2eXDk7XCxnMRWsnr0b4GpXGDWA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVlYtbP4bD56gs2lVUvawwCh2seqTw3NltOjzFsIBlGiOhaMNv
+	aBXWJZGYTg1C4HtfdwnGL2qLxxCRCTjDEqCNmQVAHEAKTDMocowNqaqZyCgZVUEAank=
+X-Gm-Gg: ASbGnctM0oUDz81QzspzkwHuj7VVGbgozJcme3K+P9UtFe2uzg7GPlTWNvpKlrMs3R1
+	n8XbuMdjHA6Cp1zFzcW0bJnuCQhzWxSAyUY4gPTjQpDN3+ldXBKqjkHlalOy7Qr+LHEbBwqnZyF
+	DaW1ASRD6REZRew63SJkvrakH8DtA7M8dfT6R2bnSS+m8Y5QRuv7DnMd0SmVlpnPNMMxGUEfbYz
+	8M7XtFXXYGTfxuZck7VHzwnub0EvgRKAHL7oe3RAlxdGKmRLNguTdQvqXYeNawLpIrm/CJvlQGl
+	aD8nlpRwVDVlrI5CTU0+ug+yC2CAZEnvHqKQ0TT4utHGbuJ4Cw9S7YNlzLpyR+WE7Rk=
+X-Google-Smtp-Source: AGHT+IFG5n+JZ+POBoHmw+qc3E80yBwZHeBiwkYm45+ICWtt0Wje2BpvjDKUU1DHUI4PN2DGbGjVOw==
+X-Received: by 2002:a05:600c:8b26:b0:450:d367:c385 with SMTP id 5b1f17b1804b1-4532b9079cdmr10409495e9.16.1749667462950;
+        Wed, 11 Jun 2025 11:44:22 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4532513e27fsm29150025e9.1.2025.06.11.11.44.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 11:44:22 -0700 (PDT)
+Date: Wed, 11 Jun 2025 21:44:19 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Karan Tilak Kumar <kartilak@cisco.com>
+Cc: sebaddel@cisco.com, arulponn@cisco.com, djhawar@cisco.com,
+	gcboffa@cisco.com, mkai2@cisco.com, satishkh@cisco.com,
+	aeasi@cisco.com, jejb@linux.ibm.com, martin.petersen@oracle.com,
+	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	jmeneghi@redhat.com, revers@redhat.com
+Subject: Re: [PATCH 4/5] scsi: fnic: Turn off FDMI ACTIVE flags on link down
+Message-ID: <aEnOg5B0tYOQIuME@stanley.mountain>
+References: <20250611183033.4205-1-kartilak@cisco.com>
+ <20250611183033.4205-4-kartilak@cisco.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: Add Apple SoC GPU
-To: fnkl.kernel@gmail.com
-Cc: asahi@lists.linux.dev,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Simona Vetter <simona@ffwll.ch>, David Airlie <airlied@gmail.com>,
- Neal Gompa <neal@gompa.dev>, Maxime Ripard <mripard@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>,
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, Janne Grunau <j@jannau.net>,
- linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250611-sgx-dt-v1-0-7a11f3885c60@gmail.com>
- <20250611-sgx-dt-v1-1-7a11f3885c60@gmail.com>
-Content-Language: en-US
-From: Sven Peter <sven@kernel.org>
-In-Reply-To: <20250611-sgx-dt-v1-1-7a11f3885c60@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611183033.4205-4-kartilak@cisco.com>
 
-Hi,
-
-
-I think there's a "gpu: " missing in the subject.
-
-On 11.06.25 19:32, Sasha Finkelstein via B4 Relay wrote:
-> From: Sasha Finkelstein <fnkl.kernel@gmail.com>
+On Wed, Jun 11, 2025 at 11:30:32AM -0700, Karan Tilak Kumar wrote:
+> When the link goes down and comes up, FDMI requests are not sent out
+> anymore.
+> Fix bug by turning off FNIC_FDMI_ACTIVE when the link goes down.
 > 
-> Add bindings for the GPU present in Apple SoCs
-> 
-> Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
+> Reviewed-by: Sesidhar Baddela <sebaddel@cisco.com>
+> Reviewed-by: Arulprabhu Ponnusamy <arulponn@cisco.com>
+> Reviewed-by: Gian Carlo Boffa <gcboffa@cisco.com>
+> Reviewed-by: Arun Easi <aeasi@cisco.com>
+> Tested-by: Karan Tilak Kumar <kartilak@cisco.com>
+> Signed-off-by: Karan Tilak Kumar <kartilak@cisco.com>
 > ---
->   Documentation/devicetree/bindings/gpu/apple,agx.yaml | 95 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->   MAINTAINERS                                          |  1 +
->   2 files changed, 96 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpu/apple,agx.yaml b/Documentation/devicetree/bindings/gpu/apple,agx.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..23df3ebd689b1e885eb99ca573343fe7f2d09dc4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpu/apple,agx.yaml
-> @@ -0,0 +1,95 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpu/apple,agx.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Apple SoC GPU
-> +
-> +maintainers:
-> +  - Sasha Finkelstein <fnkl.kernel@gmail.com>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - const: apple,agx-g13g
-> +      - items:
-> +          - enum:
-> +              - apple,agx-g13s
-> +              - apple,agx-g13c
-> +              - apple,agx-g13d
-> +          - const: apple,agx-g13x
-> +      - items:
-> +          - const: apple,agx-g14g
-> +  reg:
-> +    items:
-> +      - description: ASC coprocessor control
 
-Apple calls these co-processors ASC but I'm not sure that's really 
-helpful to describe them. Maybe just "GPU coprocessor control registers"?
+Fixes tag etc.
 
-
-> +      - description: GPU block MMIO registers
-> +
-> +  reg-names:
-> +    items:
-> +      - const: asc
-> +      - const: sgx
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  mboxes:
-> +    maxItems: 1
-> +
-> +  memory-region:
-> +    items:
-> +      - description: Region containing GPU MMU TTBs
-> +      - description: Region containing GPU MMU page tables
-> +      - description:
-> +          Region containing a shared handoff structure for VM
-> +          management coordination
-> +      - description: Driver-opaque calibration blob
-> +      - description: Calibration blob
-
-Like Alyssa mentioned, this description also raises more questions than 
-it answers for me. Do we know what these two blobs contain or why they 
-are two separate blobs?
-
-> +      - description: Shared global variables with GPU firmware
-> +
-> +  memory-region-names:
-> +    items:
-> +      - const: ttbs
-> +      - const: pagetables
-> +      - const: handoff
-> +      - const: hw-cal-a
-> +      - const: hw-cal-b
-> +      - const: globals
-> +
-> +  apple,firmware-compat:
-Nit: I'd prefer something like apple,firmware-abi here.
-
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    minItems: 3
-> +    description:
-> +      MacOS version the current firmware is paired with, used to pick
-> +      the version of firmware ABI to be used.
-> +      Bootloader will overwrite this
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - mboxes
-> +  - memory-region
-> +  - apple,firmware-compat
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/apple-aic.h>
-
-No need for the include for this example.
-
-> +    gpu@6400000 {
-> +        compatible = "apple,agx-g13g";
-> +        reg = <0x6400000 0x40000>,
-> +              <0x4000000 0x1000000>;
-> +        reg-names = "asc", "sgx";
-> +        mboxes = <&agx_mbox>;
-> +        power-domains = <&ps_gfx>;
-> +        memory-region = <&uat_ttbs>, <&uat_pagetables>, <&uat_handoff>,
-> +                        <&gpu_hw_cal_a>, <&gpu_hw_cal_b>, <&gpu_globals>;
-> +        memory-region-names = "ttbs", "pagetables", "handoff",
-> +                              "hw-cal-a", "hw-cal-b", "globals";
-> +
-> +        apple,firmware-compat = <0 0 0>;
-> +    };
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index a92290fffa163f9fe8fe3f04bf66426f9a894409..2a32c9c4ee355a1109a3e2031ea3663c39cc8c68 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2331,6 +2331,7 @@ F:	Documentation/devicetree/bindings/arm/apple/*
->   F:	Documentation/devicetree/bindings/clock/apple,nco.yaml
->   F:	Documentation/devicetree/bindings/cpufreq/apple,cluster-cpufreq.yaml
->   F:	Documentation/devicetree/bindings/dma/apple,admac.yaml
-> +F:	Documentation/devicetree/bindings/gpu/apple,agx.yaml
->   F:	Documentation/devicetree/bindings/i2c/apple,i2c.yaml
->   F:	Documentation/devicetree/bindings/input/touchscreen/apple,z2-multitouch.yaml
->   F:	Documentation/devicetree/bindings/interrupt-controller/apple,*
-> 
-
-
-Best,
-
-
-Sven
-
+regards,
+dan carpenter
 
