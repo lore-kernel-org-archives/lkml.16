@@ -1,183 +1,218 @@
-Received: from flow-a1-smtp.messagingengine.com (flow-a1-smtp.messagingengine.com [103.168.172.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8400199FB2;
-	Wed, 11 Jun 2025 17:50:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ACEA1CF7AF;
+	Wed, 11 Jun 2025 17:50:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749664231; cv=none; b=l8oO1+FtPcvSKaXCX2ISZ9eOZuh5sOBlGXHY+7i08swpK/wIHpZ2qzO7vMU56BMNQ2w+K73345ykQPEE7TSH3+m8LD3zMFaKgKFV28OjpFg10dOUO+RFyItJmtMDpsv9JiyRcoKwkHK0+LLYXr63eipjheBL11dtwjk7vW9yAO0=
+	t=1749664255; cv=none; b=Q4tXuJOs1qzhvKKRDs0uzG+5tznrhgu0CZNGaRCukKSwpvUtFc55FB2r/fjC5456na1rAygT6OJydI/OyDRJ0edGP9MnJ9yagATsgZnuOQfBJuGRcWVnQ/gRj7qZfSMiErMAHzxkq51aCjBLfU+5jv0CXA02tGrRl6LNCLKfDaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749664231; c=relaxed/simple;
-	bh=FvaJG3csRIhufY2j9Z5lBoDXVgGGG2u7OOkcIKKSgaI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BhXy9fm49Yb9UKzSMhlMO2eWnPEGfPrwdNTM5tNIg6YnxZJzaidezxpzxORBn4+RgQhOG52iETG+XV5F+mYxLJUMuGXt1fjKa8hbgSuHgHe2K7R4gAyGh0wRUNk3AGhe/bxIBVeYEgmdjvku9ABUw3FIo0jeXL2yVHHU8dKKNzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=maowtm.org; spf=pass smtp.mailfrom=maowtm.org; dkim=pass (2048-bit key) header.d=maowtm.org header.i=@maowtm.org header.b=gEUXmPkr; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=iCCdAfDC; arc=none smtp.client-ip=103.168.172.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=maowtm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maowtm.org
+	s=arc-20240116; t=1749664255; c=relaxed/simple;
+	bh=1Hy3ujJXBqxV9lfXBO++FN2/fZmpMCZpJfkWT5aJ4iQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=S6ZsIuRgmdAVHbzeqJt7ZsRf1aP+v7LPMuLhHH0bAMSBng83+ZOJuduNHtxeIChBu6pbkSYSqedzgnetJ0cq+pSnqW68jQ34TWYcpMLf2w9Yaj5a/78jD6uLxhf45918RREOTKsvcVXM0QGfPEKUB+efW2ujrvzkWIChTs/HP18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aSQGRtlV; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=maowtm.org header.i=@maowtm.org header.b="gEUXmPkr";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iCCdAfDC"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailflow.phl.internal (Postfix) with ESMTP id 8EBFE200464;
-	Wed, 11 Jun 2025 13:50:28 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Wed, 11 Jun 2025 13:50:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maowtm.org; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1749664228;
-	 x=1749671428; bh=eA33SKebzGAA9s0Ux6MuIF8txMGk1s/MAbhi7UZZs/s=; b=
-	gEUXmPkrFq9V98viX0NjAtkbyoNrEQh+xcTb93v67xHjoNyQ9hdKvbrabw1lcwZe
-	N+GzpjGjE6KFnbi+yM4ziRPRNc2yQiPGHPI2rLDefvrW139SMUeiO5hOzoSkTLb3
-	kTPvFpChPgFDhQ/7rKAi+Ahp7cbMwp3XHfAgcEvUruYPNW1s+3AfgZme7hDlf1/U
-	JQw5IqER5l42oKuYBBNwx/Mtw9lBbX8xJlPlhMht9r2DbYSl+NItHSjSyS+Ttj0H
-	dSaZ50e2optbDVMdrdOf+2mL6zC3osYKj2LArJ5pdxoPVO8zSwmBqQ2p+ui0LmmY
-	mhRKeugKHFgDEF5WYy3Y0g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749664228; x=
-	1749671428; bh=eA33SKebzGAA9s0Ux6MuIF8txMGk1s/MAbhi7UZZs/s=; b=i
-	CCdAfDClQMCvMnxQpHHf7gc6rrr3Cso7caXsZ1B+Eps455aGm7XTKE4yMUf/IOLW
-	xDtcgUElEu9K54HfEGkW8E39YRmwe7tRuOE7xvmD8hO8PHwhuUFs8Y3MF+jyiSpY
-	vsRlNJUVhWOBj13d54Reyd3/eJfXVNwVgx1+SBldWAettFBkU/vtVgCUU7bjEHtE
-	ZMlmDwNVsnq5hkbnxLdhCVkTcj0UNit9UnFhltuQ8dt1sAZUVV7xRhF3qJx9U/ws
-	X8hAv3h/xSKtInPMesF5FhkEhlHprvKk5bPfNjfLrFUOfUGD7LpubN1KfUdG24CK
-	GA5puyee+xYVFeGyjp12w==
-X-ME-Sender: <xms:48FJaGgmgCT8NrqyzPRMUCTZ3MJwm2cwwuGJR-FyBe_ZFYA6PLuV_A>
-    <xme:48FJaHDm54wmkWBIkAFDb8rjCAVewfj6x8mP-G_VLAihuLaktvC-V4dlK93ZVAFI7
-    H8xmsxgymO3kdjmZxM>
-X-ME-Received: <xmr:48FJaOEVZt6w7nVDWazjth9bwyQ9-19zwHjb4JpvGFeJmn88Gd3fxWzPp4CjL-7Leofx-fY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduvdekfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddv
-    jeenucfhrhhomhepvfhinhhgmhgrohcuhggrnhhguceomhesmhgrohifthhmrdhorhhgqe
-    enucggtffrrghtthgvrhhnpedukeevhfegvedvveeihedvvdeghfeglefgudegfeetvdek
-    iefgledtheeggefhgfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
-    hlfhhrohhmpehmsehmrghofihtmhdrohhrghdpnhgspghrtghpthhtohepvdefpdhmohgu
-    vgepshhmthhpohhuthdprhgtphhtthhopehsohhngheskhgvrhhnvghlrdhorhhgpdhrtg
-    hpthhtohepmhhitgesughighhikhhougdrnhgvthdprhgtphhtthhopehnvghilhessghr
-    ohifnhdrnhgrmhgvpdhrtghpthhtohepjhgrtghksehsuhhsvgdrtgiipdhrtghpthhtoh
-    epsghpfhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhf
-    shguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugi
-    dqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhu
-    gidqshgvtghurhhithihqdhmohguuhhlvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprh
-    gtphhtthhopehkvghrnhgvlhdqthgvrghmsehmvghtrgdrtghomh
-X-ME-Proxy: <xmx:48FJaPTibvdXpRf4dEbBHjP2j_m4Q4HywL1rb6Md14zdoofmnkQCtg>
-    <xmx:48FJaDyeUQduz7FMROkkZ7htsreGZDlxessxM_n_yig_sIKGi0AeoA>
-    <xmx:48FJaN7jINoJbi6cH1rZWjmajmqKTzvmwGXYM-MgOdVe1VsKDkWlKA>
-    <xmx:48FJaAwLAHSVgjBViOU1_M8IQf0ozZwS9SRisCPHjj3zWkaIy7EAbA>
-    <xmx:5MFJaD67w1xy9KHUjplsFvQqyTSjOu_mdjGVuEn997plgYw5XDIQyHc0>
-Feedback-ID: i580e4893:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 11 Jun 2025 13:50:25 -0400 (EDT)
-Message-ID: <e7115b18-84fc-4e8f-afdb-0d3d3e574497@maowtm.org>
-Date: Wed, 11 Jun 2025 18:50:24 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aSQGRtlV"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a503d9ef59so130184f8f.3;
+        Wed, 11 Jun 2025 10:50:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749664251; x=1750269051; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f7KlnwZB+CxVWmAEV673+n7G11D71TLYbf9q51R/jMw=;
+        b=aSQGRtlVp15y590zOGhLrOTa9AG1LutadaePKtdJMJ3OCCPVGhraosTXwIHpSOvKFo
+         2g/LhyLJOJ0WFW7X7h60X/0AI7g/GFry6EaVWIRwHnPmZzuxSH96GYhWU1capO+Nyn3R
+         SKtcyyaS3L4+KEsYuxyNkVoi+FXcgRDlD3YfKI3YoK1lwhHGUSyu5rvFBAz0t2ZubW7d
+         K7MfXWC+3A7wx67EIOfg44K8oWn6yPdfvckoUueAYLTk+JiLLgRaWINq6R2JWNUXLFSW
+         c1dQECkXMGL8nILQOmr4OD8HdTeDiMSO+i6L1lvw1gAtuvao4VPPJlxPwLuJ/gHhqDOy
+         2gwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749664252; x=1750269052;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=f7KlnwZB+CxVWmAEV673+n7G11D71TLYbf9q51R/jMw=;
+        b=LvQBBw5HmLfZUXEPmZfuN40HC4T7ifneUfcJYn4+iEYOxa8fIp8gNOINXSCzSwLRh8
+         c3DBtiHxmPESGvnGcJm1kxdOfhqKbRbypFD68sYOgs+IYPqbLFStnbZA855mcQy15ngX
+         dYk4VlCT3PDyKBvDZUBmUfYL8sjTJ+UzT3hlHdVhRUVR6pIWXABKRfSE+KCV4R6cZkD7
+         pIVaXtzc2Lb3AzBpWKhNHghvcLrcrIHo6AGw6kOmmohVjP87MczV4eEf67V6DDv3tMWv
+         V6MbFnXg2hKuwGRIAEuqgInqBgs6acfmUSENbNkfCa0GxklaisjcN34oG7UPgisAOHzv
+         uiOA==
+X-Forwarded-Encrypted: i=1; AJvYcCUqw5H93k+j3WTrtkX/Pc1rg60rJ/2P0gackKOfNbOAccVZuwk9AS3AbO4PGV6fcotX66ydfBZdxT3QKycTcuQ=@vger.kernel.org, AJvYcCW9HNnAbXyywX/zBVQHHepcqlYhnkE+S+Xo5tTZxU4CBSfKeS/RPqS0JMrEuNTgXNu+g2L3a6qZ1XYj@vger.kernel.org, AJvYcCXbGgVW9l07Ps03TUicfSx99/yyu5LrsqlDRwmMZQKWA0BX2f8kOfSbdd49G4CJF1gIBldisW/hXDou8ECY@vger.kernel.org
+X-Gm-Message-State: AOJu0YypXQODh5IweWSANOeMflCwweb3jaRo7HYo0fI4uRZsmcDinTIw
+	iRDh5Pf9cU38goY8TllTpwo/vFrB+KPJ4wgBAS/5yRzIZvOHcY0WAqze
+X-Gm-Gg: ASbGncvWPNrw4zoedQO63RiQ5yWOIrNWv4yfEK4OpMtqscr+S3A5Jar2LMRYuWiZx88
+	R90FWFSPyQVBuxkTZaUUDWUVIf99/GBpoArhF+/Pu7o7Einag5rbtHR9htsJeb4xzBuJgVaqXv8
+	q1510lgSAum24NwaKMbvAEiwDdYJ85KC1BBlon1x+eOLdgmsY5sq0c4Zg48rLN1ab8JjRRpJfcf
+	iERHsUZNGLPidjgVxmY1WYCXfISuDh3OTCZthbZer6RY46zZRBsnkseUw/ItiyjT6iHpd0IQxgC
+	OMSxf1D+AvvoQ39nxO1WpoJNF/kIaCNu29JVVufrMhCzBV4uO0q6pUZy3OxA4Oc7q1IYEqwAYq5
+	+aRJCnG6aXys+OHYjShdYqrOwXElAt21KE47X
+X-Google-Smtp-Source: AGHT+IEPDg33JpYVf5j0B125l1p0dMB8jKVW3wBukaaW8ms6rL5iY2qDPIvs/t5k1jjA+Pax7owafg==
+X-Received: by 2002:a05:6000:2283:b0:3a5:2e9c:edb with SMTP id ffacd0b85a97d-3a558a1f6acmr3423559f8f.47.1749664251298;
+        Wed, 11 Jun 2025 10:50:51 -0700 (PDT)
+Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532461211sm15744491f8f.86.2025.06.11.10.50.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 10:50:50 -0700 (PDT)
+Sender: Igor Korotin <igorkor.3vium@gmail.com>
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+To: ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	rafael@kernel.org,
+	gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Cc: boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	dakr@kernel.org,
+	lenb@kernel.org,
+	wedsonaf@gmail.com,
+	viresh.kumar@linaro.org,
+	alex.hung@amd.com,
+	dingxiangfei2009@gmail.com
+Subject: [PATCH v5 3/6] rust: driver: Add ACPI id table support to Adapter trait
+Date: Wed, 11 Jun 2025 18:48:48 +0100
+Message-ID: <20250611174848.802947-1-igor.korotin.linux@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250611174034.801460-1-igor.korotin.linux@gmail.com>
+References: <20250611174034.801460-1-igor.korotin.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 bpf-next 1/5] namei: Introduce new helper function
- path_walk_parent()
-To: Song Liu <song@kernel.org>, =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?=
- <mic@digikod.net>
-Cc: NeilBrown <neil@brown.name>, Jan Kara <jack@suse.cz>,
- bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
- kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org,
- daniel@iogearbox.net, martin.lau@linux.dev, viro@zeniv.linux.org.uk,
- brauner@kernel.org, kpsingh@kernel.org, mattbobrowski@google.com,
- amir73il@gmail.com, repnop@google.com, jlayton@kernel.org,
- josef@toxicpanda.com, gnoack@google.com
-References: <20250606213015.255134-1-song@kernel.org>
- <20250606213015.255134-2-song@kernel.org>
- <174959847640.608730.1496017556661353963@noble.neil.brown.name>
- <CAPhsuW6oet8_LbL+6mVi7Lc4U_8i7O-PN5F1zOm5esV52sBu0A@mail.gmail.com>
- <20250611.Bee1Iohoh4We@digikod.net>
- <CAPhsuW6jZxRBEgz00KV4SasiMhBGyMHoP5dMktoyCOeMbJwmgg@mail.gmail.com>
-Content-Language: en-US
-From: Tingmao Wang <m@maowtm.org>
-In-Reply-To: <CAPhsuW6jZxRBEgz00KV4SasiMhBGyMHoP5dMktoyCOeMbJwmgg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 6/11/25 17:31, Song Liu wrote:
-> On Wed, Jun 11, 2025 at 8:42 AM Mickaël Salaün <mic@digikod.net> wrote:
-> [...]
->>> We can probably call this __path_walk_parent() and make it static.
->>>
->>> Then we can add an exported path_walk_parent() that calls
->>> __path_walk_parent() and adds extra logic.
->>>
->>> If this looks good to folks, I can draft v4 based on this idea.
->>
->> This looks good but it would be better if we could also do a full path
->> walk within RCU when possible.
-> 
-> I think we will need some callback mechanism for this. Something like:
-> 
-> for_each_parents(starting_path, root, callback_fn, cb_data, bool try_rcu) {
->    if (!try_rcu)
->       goto ref_walk;
-> 
->    __read_seqcount_begin();
->     /* rcu walk parents, from starting_path until root */
->    walk_rcu(starting_path, root, path) {
->     callback_fn(path, cb_data);
->   }
->   if (!read_seqcount_retry())
->     return xxx;  /* successful rcu walk */
-> 
-> ref_walk:
->   /* ref walk parents, from starting_path until root */
->    walk(starting_path, root, path) {
->     callback_fn(path, cb_data);
->   }
->   return xxx;
-> }
-> 
-> Personally, I don't like this version very much, because the callback
-> mechanism is not very flexible, and it is tricky to use it in BPF LSM.
+Extend the `Adapter` trait to support ACPI device identification.
 
-Aside from the "exposing mount seqcounts" problem, what do you think about
-the parent_iterator approach I suggested earlier?  I feel that it is
-better than such a callback - more flexible, and also fits in right with
-the BPF API you already designed (i.e. with a callback you might then have
-to allow BPF to pass a callback?).  There are some specifics that I can
-improve - Mickaël suggested some in our discussion:
+This mirrors the existing Open Firmware (OF) support (`of_id_table`) and
+enables Rust drivers to match and retrieve ACPI-specific device data
+when `CONFIG_ACPI` is enabled.
 
-- Letting the caller take rcu_read_lock outside rather than doing it in
-path_walk_parent_start
+To avoid breaking compilation, a stub implementation of `acpi_id_table()`
+is added to the Platform adapter; the full implementation will be provided
+in a subsequent patch.
 
-- Instead of always requiring a struct parent_iterator, allow passing in
-NULL for the iterator to path_walk_parent to do a reference walk without
-needing to call path_walk_parent_start - this way might be simpler and
-path_walk_parent_start/end can just be for rcu case.
+Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
+---
+ rust/bindings/bindings_helper.h |  1 +
+ rust/kernel/driver.rs           | 41 ++++++++++++++++++++++++++++++++-
+ rust/kernel/platform.rs         |  6 ++++-
+ 3 files changed, 46 insertions(+), 2 deletions(-)
 
-but what do you think about the overall shape of it?
-
-And while it is technically doing two separate things (rcu walk and
-reference walk), so is this callback to some extent.  The pro of callback
-however is that the retry on ref walk failure is automatic, but the user
-still has to be aware and detect such cases.  For example, landlock needs
-to re-initialize the layer masks previously collected if parent walk is
-restarting.
-
-(and of course, this also hides the seqcounts from non VFS code, but I'm
-wondering if there are other ways to make the seqcounts in the
-parent_iterator struct private, if that is the only issue with it?)
-
-Also, if the common logic with follow_dotdot is extracted out to
-__path_walk_parent, path_walk_parent might just defer to that for the
-non-rcu case, and so the complexity of that function is further reduced.
-
-> 
-> Thanks,
-> Song
+diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
+index bc494745f67b..dfb2dd500ef6 100644
+--- a/rust/bindings/bindings_helper.h
++++ b/rust/bindings/bindings_helper.h
+@@ -28,6 +28,7 @@
+  */
+ #include <linux/hrtimer_types.h>
+ 
++#include <linux/acpi.h>
+ #include <drm/drm_device.h>
+ #include <drm/drm_drv.h>
+ #include <drm/drm_file.h>
+diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
+index cb62b75a0c0e..8389c122a047 100644
+--- a/rust/kernel/driver.rs
++++ b/rust/kernel/driver.rs
+@@ -6,7 +6,7 @@
+ //! register using the [`Registration`] class.
+ 
+ use crate::error::{Error, Result};
+-use crate::{device, of, str::CStr, try_pin_init, types::Opaque, ThisModule};
++use crate::{acpi, device, of, str::CStr, try_pin_init, types::Opaque, ThisModule};
+ use core::pin::Pin;
+ use pin_init::{pin_data, pinned_drop, PinInit};
+ 
+@@ -141,6 +141,40 @@ pub trait Adapter {
+     /// The type holding driver private data about each device id supported by the driver.
+     type IdInfo: 'static;
+ 
++    /// The [`acpi::IdTable`] of the corresponding driver
++    fn acpi_id_table() -> Option<acpi::IdTable<Self::IdInfo>>;
++
++    /// Returns the driver's private data from the matching entry in the [`acpi::IdTable`], if any.
++    ///
++    /// If this returns `None`, it means there is no match with an entry in the [`acpi::IdTable`].
++    fn acpi_id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
++        #[cfg(not(CONFIG_ACPI))]
++        {
++            let _ = dev;
++            return None;
++        }
++
++        #[cfg(CONFIG_ACPI)]
++        {
++            let table = Self::acpi_id_table()?;
++
++            // SAFETY:
++            // - `table` has static lifetime, hence it's valid for read,
++            // - `dev` is guaranteed to be valid while it's alive, and so is `pdev.as_ref().as_raw()`.
++            let raw_id = unsafe { bindings::acpi_match_device(table.as_ptr(), dev.as_raw()) };
++
++            if raw_id.is_null() {
++                None
++            } else {
++                // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper of `struct of_device_id` and
++                // does not add additional invariants, so it's safe to transmute.
++                let id = unsafe { &*raw_id.cast::<acpi::DeviceId>() };
++
++                Some(table.info(<acpi::DeviceId as crate::device_id::RawDeviceId>::index(id)))
++            }
++        }
++    }
++
+     /// The [`of::IdTable`] of the corresponding driver.
+     fn of_id_table() -> Option<of::IdTable<Self::IdInfo>>;
+ 
+@@ -180,6 +214,11 @@ fn of_id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
+     /// If this returns `None`, it means that there is no match in any of the ID tables directly
+     /// associated with a [`device::Device`].
+     fn id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
++        let id = Self::acpi_id_info(dev);
++        if id.is_some() {
++            return id;
++        }
++
+         let id = Self::of_id_info(dev);
+         if id.is_some() {
+             return id;
+diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
+index 5b21fa517e55..5923d29a0511 100644
+--- a/rust/kernel/platform.rs
++++ b/rust/kernel/platform.rs
+@@ -5,7 +5,7 @@
+ //! C header: [`include/linux/platform_device.h`](srctree/include/linux/platform_device.h)
+ 
+ use crate::{
+-    bindings, container_of, device, driver,
++    acpi, bindings, container_of, device, driver,
+     error::{to_result, Result},
+     of,
+     prelude::*,
+@@ -94,6 +94,10 @@ impl<T: Driver + 'static> driver::Adapter for Adapter<T> {
+     fn of_id_table() -> Option<of::IdTable<Self::IdInfo>> {
+         T::OF_ID_TABLE
+     }
++
++    fn acpi_id_table() -> Option<acpi::IdTable<Self::IdInfo>> {
++        None
++    }
+ }
+ 
+ /// Declares a kernel module that exposes a single platform driver.
+-- 
+2.43.0
 
