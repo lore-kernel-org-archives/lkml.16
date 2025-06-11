@@ -1,208 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361892236F7;
-	Wed, 11 Jun 2025 05:13:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C9B817BB6;
+	Wed, 11 Jun 2025 05:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749618785; cv=none; b=Np8jKnhH1/UvOu7BLPWi9QBs0KTqqETlQ4wuup2aJiH9NM52GVSgXHZyOc7DbZhG8wqAXN4l0Pe9wYayPR9aLijUYdgkdD/VaWBgvepFUfIS7ad+5///h+qRCbGpBNg1WNnu9uFVDsR2MQRTlg0f9SwqHuuHUmnWVQYasuzB2Z4=
+	t=1749618979; cv=none; b=iLZmsoIdOCH0s7/DlshIFWHYCEOFHY+7wMxUE6YCJeg/1WUfNAzV6IRHvy1TLPRW4qz+spFXo8bhrVMT32cJU/lQGn/mNEi8/QAIlP5Y8pVrreJ/jxydSmh6BCg869WGgMeLcx8iGX1/TMbWLVbre1GHYaDq/Xzi0Lr0U1LbSRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749618785; c=relaxed/simple;
-	bh=FZ77rZmKrowroBjfFiCTpiqeBpzxShU0u3fUrllz5rc=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=gPmiVrY51MrsL8eRYg/BDHFuYjNKGRMzSaQ3kl1hD7ru7jrTz/jhILrMMqtdnq1hPuB6B9RD31lVMdd5mz/4O1C9qpcnTGTo2+m3Y8gBhV/o+zzDjX87hvb/m/M2Igk52+VhhzQBaZMFucGvTNgDYNSgZmti9sSlZGYSzA1Tjj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T60vkEcj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749618979; c=relaxed/simple;
+	bh=wlCPxC6nysb+Pxhesmb97fuUGPr/QfECgPqmZ3FlWjs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pwIQwDJWug/8SzqK871jTkH20Ep8nq7FgLpjOlot10/3W/+rp8Pn4x9xfDGKLp5NgysDxgVz+WPJpwgWu0MxNikID0faTWd/Ww6EL1Ygms3J26VUTBM+Ao7rHUMtKTFUx/HDKZDy4aY5P85JgRGpRcZAwpa+u5iYQZ3Lr+k/Nw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WpUZ9M3/; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T60vkEcj"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A2860C4CEEE;
-	Wed, 11 Jun 2025 05:13:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749618784;
-	bh=FZ77rZmKrowroBjfFiCTpiqeBpzxShU0u3fUrllz5rc=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=T60vkEcjW3Ji7yHb76wuCLVsfLYxkVTT7KQ1I3TEr8FD//G/Vi46FxOFREMNcsb9/
-	 6Tik4xQQpUhWWfdH0rETrQu8gJ8c+3PWAFXsf8v6pyS6HPftowdxBd3CrIgMSpZGi6
-	 61shhB2OZJ7ElPC+YEM9XjlhFodlduSo6WIt2gb0VBWaE+LuR9Nc0b4VhWh4k8atRi
-	 c99taU0qb2b9CavoXohjQWGcSiaBkZC2HqlSYZAFVjH6S9kD7XsVXHfprhUDBQpDBr
-	 SI15vnMT6yhAoWB3mn09uLlDI/itdQog5L6EU41biLEXcUq9WGr4fmSSMkZSQuEsHm
-	 I5UTRXgbOHZUg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 903A0C677C4;
-	Wed, 11 Jun 2025 05:13:04 +0000 (UTC)
-From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
-Subject: [PATCH v11 0/2] Add support for IPQ5018 tsens
-Date: Wed, 11 Jun 2025 09:12:44 +0400
-Message-Id: <20250611-ipq5018-tsens-v11-0-266566bfd16a@outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WpUZ9M3/"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3ddc5084952so25050545ab.2;
+        Tue, 10 Jun 2025 22:16:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749618977; x=1750223777; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NZesgBl46zE6tXS+j7KyjhCxsxKgNitfmh/eZ0BBEw4=;
+        b=WpUZ9M3/19VqiOhKB245R6IS8uqys4jDlXbIbRTHMwbRrIHQxNflRyE/sGquaFSaBY
+         g5ryNRRr7gyEXs9/f6AnNAWDgTEytjlHInSZomkIJTlrZCnMfPQ3dXTCLiYws6J9XcIH
+         4hndLa6z35hAXMxMO24s6wD3UDoEBXY8ZoINVcn7cIVoz4c/OBOSwzp7Z7bo0GW+c0bg
+         Le0/heEwRLJVlj4gV/6r/eUoIt2i/Qs7BbXIxazbHt23R/6xPViH4Gg5tyTllzTzCBS1
+         yGW1G+b/OwLo+/NU8pAA8Ngzvc/YQa43A6flOoWHzvkmwGShjtxhrwJpnDEkzhz9v58i
+         dDWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749618977; x=1750223777;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NZesgBl46zE6tXS+j7KyjhCxsxKgNitfmh/eZ0BBEw4=;
+        b=Rn7Ab5XyElLKIBx/k4/Zyly9PzeuM10G3S8dwPqpBlbf+/CLG1RiEUhgN6LsGGjEG4
+         L9CFV+k8mBZ71WJrgR2HQmFY1t6B5BT1V4AzFXmhv9QX/QQmTtm6xjUm+IYmK08hPccr
+         vdZvAK3jO51ItL5dYuIHILK2Vqbn0Vv7uk/6BNrhtfKAro6B+T/6159FgJd+pH0ATE7Z
+         236H13LKUd/nfZVAHeX7CxDpT50iBVibGNQDh/BOODp0yOK0AWBAQZMphHyEEN2uzfh9
+         PUHmZxn+tOLDz8jXBhmeuEpb/iNUG70Y+OU8x44+8/olQBbwfeaHqGvzJCBFjzKwJsrB
+         kXvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVbggO8V1hktwbw1PGOFLAD4pivr2lvKhSZYkCoBgZRxv/OCzmB4np7tIfQnDQwxk0HAwbiGinYZBWY8w==@vger.kernel.org, AJvYcCWdlrcnyxH+IkBn4PFQEOI0+FU6ZhWeTWKKCgSUsoUp9mNH4Mf5C1AUDNTGKUV6dCEKvvfe0cP4xvMD03nJL2Bq0U6A@vger.kernel.org, AJvYcCXFCt4imfUqgPV2YeN4p40/IHOhcsCUea+nW4s+ipmtTLfs5eNrIVdjxzjA07Pk+qTY9CcjYISxsmM7lYdH@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4nPeVk22FPeVew283FGibTNMtenDpMGUF3lWbWWXCymJ20N0Q
+	qnElL3qABP/EuUob2D2RH+Q5DbNPgciV0kWmOabHUrBYNt0sA9b3idxmEqc7vWw5ILL/jb6RON7
+	xvZPM0nye7Z4goq/oNuwOBcZAfzf2xmc=
+X-Gm-Gg: ASbGncs6PzIlUU5Fivw+k1rgi9dvpoz8+8qxAUxXVzd2Rl/lm6ydJJ7PcWH2EKtSv0v
+	pcgJVZUTbZ44mtaIPd8Mj6PoRZdzD/GMJFBtFhWlfgeMI/ux8e7UMw6fBbEScXO+aRGgxgdDGui
+	i8e//nLmWznfRvpLwU7/vSwrDBcuSf/yra3BOmYvMl5Gk=
+X-Google-Smtp-Source: AGHT+IHQ182d3wwKSf9DtAyyoa6zoQyiigAylXfIEGJY0yChHhYFf6EZGcBQKjg3qJXH0CODyAvyDT8qQD7k3JAMoRA=
+X-Received: by 2002:a05:6e02:3b07:b0:3db:86fc:d328 with SMTP id
+ e9e14a558f8ab-3ddf4224b37mr23369385ab.5.1749618977137; Tue, 10 Jun 2025
+ 22:16:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAEwQSWgC/12PwQ6CMBBEf8X0bEm30EI9EcCjidGj8VChSKNQb
- NFoDP9uxYt6nN3ZN7NP5JTVyqHF7ImsummnTecFwHyGykZ2R4V15QeIEspIRCKs+wsjkODBqc5
- hHh1qweoqDCFG/qa3qtb3Cbjbe11b0+KhsUpOlGIbrzcgVlmSJCEvci44Y8CWQIuYZBnNRZHnN
- P2xBZ1se1uBCHprqsBch7Mxp6A07Tuw0W4w9jE9cAPyzv105UD+uvo1BhxKIJJJyiNapt+w/Ti
- OL7VNnDcQAQAA
-X-Change-ID: 20250404-ipq5018-tsens-64bf95fd3317
-To: Amit Kucheria <amitk@kernel.org>, 
- Thara Gopinath <thara.gopinath@gmail.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
- Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- George Moussalem <george.moussalem@outlook.com>, 
- Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
- Dmitry Baryshkov <lumag@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749618782; l=5954;
- i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
- bh=FZ77rZmKrowroBjfFiCTpiqeBpzxShU0u3fUrllz5rc=;
- b=YiF93byp3tuckD8J//y9zG+sqcwWVOio+dOVJ+6UNAF9EyQs/Dr56aLYcmPkQsSwQ4gnE9Nve
- GXJhWEew1rJCa49XjkxxENVjyLcEi1jDaa5CEn6UUXfsvhjCsOZ9814
-X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
- pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
-X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
- with auth_id=364
-X-Original-From: George Moussalem <george.moussalem@outlook.com>
-Reply-To: george.moussalem@outlook.com
+References: <20250610004844.66688-5-kerneljasonxing@gmail.com> <202506102340.uo7QDaVk-lkp@intel.com>
+In-Reply-To: <202506102340.uo7QDaVk-lkp@intel.com>
+From: Jason Xing <kerneljasonxing@gmail.com>
+Date: Wed, 11 Jun 2025 13:15:40 +0800
+X-Gm-Features: AX0GCFvLGUUBleBgjthzU8tNmG3C8w7G2enscnE2vmODxHCKzCz7BeEkbxQED_o
+Message-ID: <CAL+tcoARvQVgd68HGoXXiK=+RSH12WQ_rc47B4rgtt2Eb05c0w@mail.gmail.com>
+Subject: Re: [PATCH v4 4/5] blktrace: use rbuf->stats.full as a drop indicator
+ in relayfs
+To: kernel test robot <lkp@intel.com>
+Cc: axboe@kernel.dk, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org, 
+	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Jason Xing <kernelxing@tencent.com>, Yushan Zhou <katrinzhou@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-IPQ5018 has tsens V1.0 IP with 5 sensors, of which 4 are in use,
-and 1 interrupt. There is no RPM present in the soc to do tsens early
-enable. Adding support for the same here.
+On Wed, Jun 11, 2025 at 9:42=E2=80=AFAM kernel test robot <lkp@intel.com> w=
+rote:
+>
+> Hi Jason,
+>
+> kernel test robot noticed the following build warnings:
+>
+> [auto build test WARNING on axboe-block/for-next]
+> [also build test WARNING on drm-i915/for-linux-next drm-i915/for-linux-ne=
+xt-fixes akpm-mm/mm-everything linus/master v6.16-rc1 next-20250610]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>
+> url:    https://github.com/intel-lab-lkp/linux/commits/Jason-Xing/relayfs=
+-abolish-prev_padding/20250610-085150
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block=
+.git for-next
+> patch link:    https://lore.kernel.org/r/20250610004844.66688-5-kerneljas=
+onxing%40gmail.com
+> patch subject: [PATCH v4 4/5] blktrace: use rbuf->stats.full as a drop in=
+dicator in relayfs
+> config: arc-randconfig-001-20250610
+> compiler: arc-linux-gcc (GCC) 12.4.0
+> reproduce (this is a W=3D1 build):
+>
+> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
+ion of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202506102340.uo7QDaVk-lkp=
+@intel.com/
+>
+> All warnings (new ones prefixed by >>):
+>
+>    kernel/trace/blktrace.c: In function 'blk_dropped_read':
+> >> kernel/trace/blktrace.c:421:39: warning: format '%lu' expects argument=
+ of type 'long unsigned int', but argument 4 has type 'size_t' {aka 'unsign=
+ed int'} [-Wformat=3D]
+>      421 |         snprintf(buf, sizeof(buf), "%lu\n", dropped);
+>          |                                     ~~^     ~~~~~~~
+>          |                                       |     |
+>          |                                       |     size_t {aka unsign=
+ed int}
+>          |                                       long unsigned int
+>          |                                     %u
 
-Last patch series sent by Qualcomm dates back to Sep 22, 2023.
-Since I'm working on OpenWrt support for IPQ5018 based boards (routers)
-and Sricharan Ramabadhran <quic_srichara@quicinc.com> in below email
-confirmed this SoC is still active, I'm continuing the efforts to send
-patches upstream for Linux kernel support.
-https://lore.kernel.org/all/63dc4054-b1e2-4e7a-94e7-643beb26a6f3@quicinc.com/
+Well, I suppose I will fix it in the re-spin after receiving more
+comments so that I don't need to quickly respond to this minor issue.
 
-[v11]
-	*) Dropped polling-delay property as its value of 0 is the default value
-	*) Removed comments for TM and SROT in tsens node
-	*) Replace underscore by hyphen in node name of top-glue-critical trip
-	*) Added cooling device using CPU freq scaling making use of the passive
-	   trip defined under the CPU trips
-	*) Make qcom,ipq5018-tsens a standalone compatible in the bindings as it
-	   should not use qcom,tsens-v1 as a fallback. This also fixes the issue
-	   reported by Rob's bot
+Thanks,
+Jason
 
-[v10]
-	*) Rebased onto updated pull of master to resolve merge conflicts in the
-	   DTS patch
-	*) Link to v9: https://lore.kernel.org/all/DS7PR19MB88836DC6965515E12D70BB2C9DCC2@DS7PR19MB8883.namprd19.prod.outlook.com/
-
-[v9]
-	*) Updated checks in tsens to more strictly evaluate for v2+ upon enabling
-	   v2 features as suggsted by Dmitry.
-	*) Split patch 3 into two, one to update conditional statements as
-	   mentioned above and the other to implement tsens IP v1 without RPM.
-	*) Added back Dmitry's RB tag on patch 6 which wasn't carried over
-	   from v7 to v8
-	*) Link to v8: https://lore.kernel.org/all/DS7PR19MB88833F7A9C8F4FC484977BA69DCD2@DS7PR19MB8883.namprd19.prod.outlook.com/
-
-[v8]
-	*) Tsens V1 uses v1 interrupts and watchdog is not present (only on v2.3+).
-	   As such, replaced VER_1_X with VER_1_X_NO_RPM in conditons to ensure
-	   v1 interrupts are set and watchdog isn't enabled.
-	*) Tested on Linksys MX2000 and SPNMX56
-	*) Link to v7: https://lore.kernel.org/all/DS7PR19MB88831624F11516945C63400F9DC22@DS7PR19MB8883.namprd19.prod.outlook.com/
-
-[v7]
-	*) Updated cover letter
-	*) Replaced patch 3 with a new one to add support for tsens v1.0 with
-	   no RPM and removed Dmitry's 'Reviewed-by tag
-	*) Refactored patch 4 and split support for IPQ5018 from support for
-	   tsens v1.0 without RPM. As such, also removed Dmitry's RB tag.
-	*) Depends on patch 1 and 2 from patch series to add support for
-	   IQP5332 and IPQ5424 applied on Feb 11 2025:
-	   https://patchwork.kernel.org/project/linux-arm-msm/cover/20250210120436.821684-1-quic_mmanikan@quicinc.com/
-	*) Link to v6: https://lore.kernel.org/all/DS7PR19MB88838833C0A3BFC3C7FC481F9DC02@DS7PR19MB8883.namprd19.prod.outlook.com/
-
-[v6]
-	*) Include (this) cover letter
-	*) Picked up Dmitry's Reviewed-by tag on patch 5
-	*) Link to v5: https://lore.kernel.org/all/DS7PR19MB88832FDED68D3EBB0EE7E99F9DC72@DS7PR19MB8883.namprd19.prod.outlook.com/
-
-[v5]
-	*) Adjusted commit messages to indicate IPQ5018 has 5 sensors of
-	   which 4 are described and in use as per downstream driver and dts.
-	*) Padded addresses of tsens and qfprom nodes with leading zeros.
-	*) Link to v4: https://lore.kernel.org/all/DS7PR19MB8883BE38C2B500D03213747A9DC72@DS7PR19MB8883.namprd19.prod.outlook.com/
-
-[v4]
-	*) Documented ipq5018 in qcom,qfprom bindings
-	*) Constrained ipq5018-tsens to one interrupt with description
-	*) Added Rob's Acked-by tag
-	*) Added Dmitry's Reviewed-by tag
-	*) Fixed modpost warning: added __init to init_common
-	*) Sorted tsens nodes by address
-	*) Sorted thermal-zones nodes by name
-	*) Link to v3: https://lore.kernel.org/all/20230922115116.2748804-1-srichara@win-platform-upstream01.qualcomm.com/
-
-[v3]
-	*) Added the tsens-ipq5018 as  new binding without rpm
-	*) Added Dmitry's Reviewed tag
-	*) Fixed Dmitry's comments for error checks in init_ipq5018
-	*) Ordered the qfprom device node properties
-	*) Link to v2: https://lore.kernel.org/all/20230915121504.806672-1-quic_srichara@quicinc.com/
-
-[v2]
-	*) Sorted the compatible and removed example
-	*) Fixed the name for new tsens_feature
-	*) Used tsend_calibrate_common instead of legacy
-	   and addressed comments from Dmitry.
-	*) Squashed patch 3 & 4
-	*) Fixed node names, order and added qfprom cells
-            for points seprately
-	*) Squashed patch 6 & 7
-	*) Link to v1: https://lore.kernel.org/all/1693250307-8910-1-git-send-email-quic_srichara@quicinc.com/
-
-George Moussalem (2):
-  thermal: qcom: tsens: update conditions to strictly evaluate for IP
-    v2+
-  thermal: qcom: tsens: add support for tsens v1 without RPM
-
-Sricharan Ramabadhran (4):
-  dt-bindings: nvmem: Add compatible for IPQ5018
-  dt-bindings: thermal: qcom-tsens: Add ipq5018 compatible
-  thermal: qcom: tsens: Add support for IPQ5018 tsens
-  arm64: dts: qcom: ipq5018: Add tsens node
-
- .../bindings/nvmem/qcom,qfprom.yaml           |   1 +
- .../bindings/thermal/qcom-tsens.yaml          |   2 +
- arch/arm64/boot/dts/qcom/ipq5018.dtsi         | 169 ++++++++++++++++++
- drivers/thermal/qcom/tsens-v1.c               |  62 +++++++
- drivers/thermal/qcom/tsens.c                  |  27 ++-
- drivers/thermal/qcom/tsens.h                  |   4 +
- 6 files changed, 256 insertions(+), 9 deletions(-)
-
---
-2.48.1
-
----
----
-George Moussalem (1):
-      dt-bindings: thermal: qcom-tsens: make ipq5018 tsens standalone compatible
-
-Sricharan Ramabadhran (1):
-      arm64: dts: qcom: ipq5018: Add tsens node
-
- .../devicetree/bindings/thermal/qcom-tsens.yaml    |   5 +-
- arch/arm64/boot/dts/qcom/ipq5018.dtsi              | 182 +++++++++++++++++++++
- 2 files changed, 186 insertions(+), 1 deletion(-)
----
-base-commit: afc582fb6563b8eb5cd73f9eca52e55da827567f
-change-id: 20250404-ipq5018-tsens-64bf95fd3317
-
-Best regards,
--- 
-George Moussalem <george.moussalem@outlook.com>
-
-
+>
+>
+> vim +421 kernel/trace/blktrace.c
+>
+>    413
+>    414  static ssize_t blk_dropped_read(struct file *filp, char __user *b=
+uffer,
+>    415                                  size_t count, loff_t *ppos)
+>    416  {
+>    417          struct blk_trace *bt =3D filp->private_data;
+>    418          size_t dropped =3D relay_stats(bt->rchan, RELAY_STATS_BUF=
+_FULL);
+>    419          char buf[16];
+>    420
+>  > 421          snprintf(buf, sizeof(buf), "%lu\n", dropped);
+>    422
+>    423          return simple_read_from_buffer(buffer, count, ppos, buf, =
+strlen(buf));
+>    424  }
+>    425
+>
+> --
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
