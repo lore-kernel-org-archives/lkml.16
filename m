@@ -1,205 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73335136996;
-	Wed, 11 Jun 2025 08:52:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95592BD11;
+	Wed, 11 Jun 2025 08:55:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749631963; cv=none; b=ZEo7dLK38YIHkKuM8yv4/bBnFOURioZpzNnj5XgAKF7DmwUGKKSx6CCNAhglst7g9V3CLjtRVl6MTLm5m6AdgIPLEmO3nhh/PSvoKecU5r/P+XhA965WZVFU/UNco5zcl2Nxnc85TwS3E5fdDl25uwFqG5KL3H/dVykPtrEVGJk=
+	t=1749632139; cv=none; b=GVOStwQ1MPgga4MqNB5LSUCUe50IBqDlJMxqDU5Hi4kSJ0jbCZhawmwAdzNtPyOD6WFFMkMVeuWnOh77/M7odxP1hjVxNyFARsEMrg9IqMoZeezjUNl2Cmxc0Q8O1SG7cB7Y0cP9B7XHEdn5+7SYV95yaReu1+Z15SrXLLKs6GA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749631963; c=relaxed/simple;
-	bh=fA14+yQbBTNWTTTLTwDKlOFpxLOZyO3p8kAVr5QkUTg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ncDT6slDQA2z16BBSWqiPNM3yli+50aS3mpxaQ+7ndqdlG9k+qm3jY0UjPzeXRbSZsS7pQkRlN6OZwkxo4Ui5CN41X/6tUHVztrRYc0sf3RVgCm0XG6G/74roCphGeP9ia5U100lQckYqXs5wfF2zm1IPMK6mC8fdVrwOaBUXLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J+rzgP9G; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749632139; c=relaxed/simple;
+	bh=0DZmRSZvljrpWkJwb291+ZV4LAGXR6iZSBRZw7lLpjs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mVGa7i9aDEQ0kEI0MIZms6UcYVp7+aFgudL63TS/Qk9VHB7MQ2qBCf8qvrS3S5GRRupO4fX9H2n/2auWUwtcGBlPAqkKpM3K+aTXgXtWZjhIANGFTozsDvG8r6u7lvORB7jqiHW1Qa070QVMb+1VwkjNG8tYZImMx5535Fyl2Xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V0agl7UH; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J+rzgP9G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B519CC4CEEE;
-	Wed, 11 Jun 2025 08:52:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749631962;
-	bh=fA14+yQbBTNWTTTLTwDKlOFpxLOZyO3p8kAVr5QkUTg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J+rzgP9GKMRCFYPB1kMXbx+rJW+H+c2Rmzvt0899go5VOmNppl4gAd7Xp1zMpQHIF
-	 06YDvHILjOF0tpIsUOjFcecrr6xBzVTiNxMbqe7dco5f/DufaWVUvRFKCW2X9rkLzV
-	 im8U8gUOm0TY7xUnqTGyA9jI9OnMDFBKj6y4XIbyIIDb64QME354rxwH2p8IiY4ung
-	 0U1E8+q+m+jwvRSPyTTiQJ/9kmABJ8Ed2y02oLynEFZX8lsBXSBkcQDlBtrSULt6dZ
-	 KaT1LO4DYAXEJB/oltBSR/jeNh3d1kDP/bQF2Gsd8Mlm5n9JAuO+gAVRKtNijt9xEE
-	 IzG3/pgRmIq6w==
-Date: Wed, 11 Jun 2025 10:52:37 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-man@vger.kernel.org, 
-	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>, Darren Hart <dvhart@infradead.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Valentin Schneider <vschneid@redhat.com>, 
-	Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v4 3/4] man/man2/prctl.2, PR_FUTEX_HASH_GET_SLOTS.2const:
- Document PR_FUTEX_HASH_GET_SLOTS
-Message-ID: <k6m7trn4dr3g7yacpw3a6ze4nhcrdkfqmib75sbti4mtv53o3m@o523ifdqzikz>
-References: <20250602140104.2769223-1-bigeasy@linutronix.de>
- <20250602140104.2769223-4-bigeasy@linutronix.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V0agl7UH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749632138; x=1781168138;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=0DZmRSZvljrpWkJwb291+ZV4LAGXR6iZSBRZw7lLpjs=;
+  b=V0agl7UHVmI/1G7zc26vwk61n9LwM2/rK9GWKG53bfUU/LSo2FLKiFm+
+   VIRPN0OR4QvzcfrH/khOSBglRk0IgOXzNnqbgOuWU6x1lBKfLOLvrTkRF
+   cP8yhoCCmXh3yDdxDXbh2MtIYwYKdQgF10SbsgrP+L7BNMz6LrpG0YAq7
+   uUfqyHZqFNWdS/Ry+OW06LiL1fcz0rUGAx8KnAZUqK5K6+DkwcBTtuuF4
+   XlMemjlwU4MOg9+R2K3Ua6YeWs9Yc+qD4sn6kIMcxi8iprrS+T9LdK7Wy
+   dcaKA76ZmYKJaBVQKAS2kTeu2pB+1Kf2mKVVudp3I0wT53Gv8h3ENAl3D
+   g==;
+X-CSE-ConnectionGUID: zrp//KAdT8aFP62Azfpttg==
+X-CSE-MsgGUID: iPHEGwsyRSGU7sSAbge+Gw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="39385139"
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="39385139"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 01:55:37 -0700
+X-CSE-ConnectionGUID: VmO353wCQ7qxFE7k2Oh1xA==
+X-CSE-MsgGUID: 9Lr0CUiUTA2HNgRQukFE0w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="147625598"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.144]) ([10.124.245.144])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 01:55:35 -0700
+Message-ID: <44de2c92-3969-471a-970c-fcc751a0415a@linux.intel.com>
+Date: Wed, 11 Jun 2025 16:55:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="a43a2w5iocg3orf6"
-Content-Disposition: inline
-In-Reply-To: <20250602140104.2769223-4-bigeasy@linutronix.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 5/8] KVM: VMX: Extract checking of guest's DEBUGCTL
+ into helper
+To: Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Adrian Hunter <adrian.hunter@intel.com>, Maxim Levitsky <mlevitsk@redhat.com>
+References: <20250610232010.162191-1-seanjc@google.com>
+ <20250610232010.162191-6-seanjc@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20250610232010.162191-6-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
---a43a2w5iocg3orf6
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-man@vger.kernel.org, 
-	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>, Darren Hart <dvhart@infradead.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Valentin Schneider <vschneid@redhat.com>, 
-	Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v4 3/4] man/man2/prctl.2, PR_FUTEX_HASH_GET_SLOTS.2const:
- Document PR_FUTEX_HASH_GET_SLOTS
-References: <20250602140104.2769223-1-bigeasy@linutronix.de>
- <20250602140104.2769223-4-bigeasy@linutronix.de>
-MIME-Version: 1.0
-In-Reply-To: <20250602140104.2769223-4-bigeasy@linutronix.de>
-
-Hi Sebastian,
-
-On Mon, Jun 02, 2025 at 04:01:03PM +0200, Sebastian Andrzej Siewior wrote:
-> Reviewed-by: Alejandro Colomar <alx@kernel.org>
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+On 6/11/2025 7:20 AM, Sean Christopherson wrote:
+> Move VMX's logic to check DEBUGCTL values into a standalone helper so that
+> the code can be used by nested VM-Enter to apply the same logic to the
+> value being loaded from vmcs12.
+>
+> KVM needs to explicitly check vmcs12->guest_ia32_debugctl on nested
+> VM-Enter, as hardware may support features that KVM does not, i.e. relying
+> on hardware to detect invalid guest state will result in false negatives.
+> Unfortunately, that means applying KVM's funky suppression of BTF and LBR
+> to vmcs12 so as not to break existing guests.
+>
+> No functional change intended.
+>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
 > ---
->  man/man2const/PR_FUTEX_HASH_GET_SLOTS.2const | 37 ++++++++++++++++++++
->  man/man2const/PR_FUTEX_HASH_SET_SLOTS.2const |  7 ++--
->  2 files changed, 40 insertions(+), 4 deletions(-)
->  create mode 100644 man/man2const/PR_FUTEX_HASH_GET_SLOTS.2const
->=20
-> diff --git a/man/man2const/PR_FUTEX_HASH_GET_SLOTS.2const b/man/man2const=
-/PR_FUTEX_HASH_GET_SLOTS.2const
-> new file mode 100644
-> index 0000000000000..f5c6380ef1fe7
-> --- /dev/null
-> +++ b/man/man2const/PR_FUTEX_HASH_GET_SLOTS.2const
-> @@ -0,0 +1,37 @@
-> +.\" Copyright, the authors of the Linux man-pages project
-> +.\"
-> +.\" SPDX-License-Identifier: Linux-man-pages-copyleft
-> +.\"
-> +.TH PR_FUTEX_HASH_GET_SLOTS 2const (date) "Linux man-pages (unreleased)"
-> +.SH NAME
-> +PR_FUTEX_HASH_GET_SLOTS
-> +\-
-> +return the size of the private hash
-> +.SH LIBRARY
-> +Standard C library
-> +.RI ( libc ,\~ \-lc )
-> +.SH SYNOPSIS
-> +.nf
-> +.BR "#include <linux/prctl.h>" "  /* Definition of " PR_* " constants */"
-> +.B #include <sys/prctl.h>
-> +.P
-> +.B int prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_GET_SLOTS);
-> +.fi
-> +.SH DESCRIPTION
-> +Return the current size of the private hash.
-> +.SH RETURN VALUE
-> +A value of 0 means that a private hash has not been allocated
-> +and the global hash is in use.
-> +A value >0 specifies the size of the private hash.
-> +On error, \-1 is returned, and
-> +.I errno
-> +is set to indicate the error.
-> +.SH STANDARDS
-> +Linux.
-> +.SH HISTORY
-> +Linux 6.16.
-> +.SH SEE ALSO
-> +.BR prctl (2),
-> +.BR PR_FUTEX_HASH (2const),
-> +.BR PR_FUTEX_HASH_GET_IMMUTABLE (2const),
-> +.BR PR_FUTEX_HASH_SET_SLOTS (2const)
-> diff --git a/man/man2const/PR_FUTEX_HASH_SET_SLOTS.2const b/man/man2const=
-/PR_FUTEX_HASH_SET_SLOTS.2const
-> index 1f08d1bb30485..531e3bcca112d 100644
-> --- a/man/man2const/PR_FUTEX_HASH_SET_SLOTS.2const
-> +++ b/man/man2const/PR_FUTEX_HASH_SET_SLOTS.2const
-> @@ -29,7 +29,7 @@ Specifies the size of private hash to allocate.
->  Use the global hash.
->  This is the behaviour used before 6.16.
->  The operation implies the
-> -.I FH_FLAG_IMMUTABLE
-> +.B FH_FLAG_IMMUTABLE
+>  arch/x86/kvm/vmx/vmx.c | 29 +++++++++++++++++------------
+>  1 file changed, 17 insertions(+), 12 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index ab5c742db140..358c7036272a 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -2191,6 +2191,19 @@ static u64 vmx_get_supported_debugctl(struct kvm_vcpu *vcpu, bool host_initiated
+>  	return debugctl;
+>  }
+>  
+> +static bool vmx_is_valid_debugctl(struct kvm_vcpu *vcpu, u64 data,
+> +				  bool host_initiated)
+> +{
+> +	u64 invalid;
+> +
+> +	invalid = data & ~vmx_get_supported_debugctl(vcpu, host_initiated);
+> +	if (invalid & (DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR)) {
+> +		kvm_pr_unimpl_wrmsr(vcpu, MSR_IA32_DEBUGCTLMSR, data);
+> +		invalid &= ~(DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR);
 
-This seems like a rebase accident.  This does not belong in this patch.
-A few others below too.
+nit: add spaces around "|".
+
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
 
-Cheers,
-Alex
-
->  flag.
->  .TP
->  .I >0
-> @@ -38,7 +38,7 @@ The value must be power of two and the lowest possible =
-value is 2.
->  The upper limit depends on the available memory in the system.
->  Each slot requires 64bytes of memory.
->  Kernels compiled with
-> -.I CONFIG_PROVE_LOCKING
-> +.B CONFIG_PROVE_LOCKING
->  will consume more than that.
->  .RE
->  .TP
-> @@ -46,7 +46,7 @@ will consume more than that.
->  .RS
->  The following flags can be specified:
->  .TP
-> -.I FH_FLAG_IMMUTABLE
-> +.B FH_FLAG_IMMUTABLE
->  The private hash can no longer be changed.
->  By using an immutable private hash
->  the kernel can avoid some accounting for the data structure.
-> @@ -54,7 +54,6 @@ This accounting is visible in benchmarks if many
->  .BR futex (2)
->  operations are invoked in parallel on different CPUs.
->  .RE
-> -.RE
->  .SH RETURN VALUE
->  On success,
->  0 is returned.
-> --=20
-> 2.49.0
->=20
-
---=20
-<https://www.alejandro-colomar.es/>
-
---a43a2w5iocg3orf6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmhJQ9UACgkQ64mZXMKQ
-wqmPZA/+ImCMFAJMrWDbqxisqZab69+wzr6X27yUthBmvOrFHHFE0ABWX4YQsfsU
-wysNpPC1nGE8cDKBNOZKNQGnH0DlHsFTyI0cJH2Ssgw2wcJq+0zTbA2jQM1KSA1w
-RJ4WZ/1WfwsdPsFQGOkir+KvncSMHaKj0Rro61tPeWGVYTCy0YOFTDdMWAcq8Y4m
-wOEAqtkPQz4wfD+Irz1x/zmQSkYTRC4C9bKg91BVLR9emX+CgJJBSnJU17rclWN6
-aB4SJe8tB7SRoprowdbSieafvSfzrNxQurotmL3FNthsDWNPMJ3aQBTUaqI8tviM
-2ouZOiZ6FJUdjn8v7EMKfc6MFZR/+VIRwLCxQIi5lH0mm5lWbVmY7MYykr69t9Qd
-ONF+xj4vrumfNGjRMiApiicFf6vFnLTX3jqn+8XpOZrB4A//sGt0MGifPTodxcAx
-PPJOmBIfJv4M7dXdYSVJRJi/nBMEwr4SGdwGT3PBAcZ9TQ95AFiAllyHAJ70/Yr7
-2Cc9Jey8nHb4/dTm/BDxVp9wOy9MPC2axIC8KMHSu0QfCWm2SMMwLCMXywy5pP83
-OMOZO2GHH99lGl6sT5SLfHQL0CrfAAeuM00n9L05j9X8bQpOqqGCRqef8SYdZWMv
-M0WueqAWPLM+BeRb65uVGI2Y2UAi5xGts/Cv5WsX6Es+CG79gIY=
-=4dmv
------END PGP SIGNATURE-----
-
---a43a2w5iocg3orf6--
+> +	}
+> +	return !invalid;
+> +}
+> +
+>  /*
+>   * Writes msr value into the appropriate "register".
+>   * Returns 0 on success, non-0 otherwise.
+> @@ -2259,19 +2272,12 @@ int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  		}
+>  		vmcs_writel(GUEST_SYSENTER_ESP, data);
+>  		break;
+> -	case MSR_IA32_DEBUGCTLMSR: {
+> -		u64 invalid;
+> -
+> -		invalid = data & ~vmx_get_supported_debugctl(vcpu, msr_info->host_initiated);
+> -		if (invalid & (DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR)) {
+> -			kvm_pr_unimpl_wrmsr(vcpu, msr_index, data);
+> -			data &= ~(DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR);
+> -			invalid &= ~(DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR);
+> -		}
+> -
+> -		if (invalid)
+> +	case MSR_IA32_DEBUGCTLMSR:
+> +		if (!vmx_is_valid_debugctl(vcpu, data, msr_info->host_initiated))
+>  			return 1;
+>  
+> +		data &= vmx_get_supported_debugctl(vcpu, msr_info->host_initiated);
+> +
+>  		if (is_guest_mode(vcpu) && get_vmcs12(vcpu)->vm_exit_controls &
+>  						VM_EXIT_SAVE_DEBUG_CONTROLS)
+>  			get_vmcs12(vcpu)->guest_ia32_debugctl = data;
+> @@ -2281,7 +2287,6 @@ int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  		    (data & DEBUGCTLMSR_LBR))
+>  			intel_pmu_create_guest_lbr_event(vcpu);
+>  		return 0;
+> -	}
+>  	case MSR_IA32_BNDCFGS:
+>  		if (!kvm_mpx_supported() ||
+>  		    (!msr_info->host_initiated &&
