@@ -1,60 +1,60 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DCED22689C
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 03:10:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12376227E8E
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 03:10:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749611448; cv=none; b=MEVP4ImWtghpWqMTAwj2KLL+e7eeCIyf1tYqiUkMXuLVc/NVS2OJxRsetw4O8qrm4FFDNV7ymst0tDo05FQLblrNoRg8OcbQwiUC0wVAno5DGHihj9b+VdZ7LrpurzHDFYFgHC77GH7aHLoMqiLgyUOeafW4ShzzqYB2l0u2CPI=
+	t=1749611452; cv=none; b=hssEWZ7xf04goJOwpXVUKXkOko+83nQWJpzHY2iAyllTil9Rc1MtualOtV455KZUwuA6E0nFbUWcNL8Suhifw23lhAfwwasAAYzf3H1ai4BhgG9L1jaY9LZiN7RdNB8hYl7N2qc75D1ZiTV31UPEbhv0JxWd4X1bRbtwXxfYwXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749611448; c=relaxed/simple;
-	bh=KrEgTlTKNYpqIt4xZ0P452kHDiRYhHzjwpzLwEUokjE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=DwBGXr/RscY9AjUDqKkSB7MplIeAJO4QK8hQY3KKWP5nDTRZJ+gOKjQWowjXHMlrdC9pHYwiHs3YP0lbEKWoZlyOuZ3pr5v4AbLbFxpkwUWXc9I6ZviWrRcDNghtaZAZDlcjkk8yRZGOBLorW+EbZ1UFGNkzlvWmaKeU3RPr9+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=W2XyUIum; arc=none smtp.client-ip=209.85.214.175
+	s=arc-20240116; t=1749611452; c=relaxed/simple;
+	bh=ezs1yVD1qWrbfIWXSnxmuxGlazdXg0gy9Hw4rcIv6x4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=qvI4GuXWslzBKwGHXHLwG0oof4eo4FVlkFj940yXLzRxFILoEM6BgduF67WfjHrWqg3RJfSETMf5GTFYtX/KlQptz7/LHOZoGBNkTD+VeSjTu7E9zH++lin+vHrnPbslv+3JwXGX8O0H/oPB9ccu2y1O176kYvh2oZmKd2vgKDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=ZBMY8787; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="W2XyUIum"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-234d366e5f2so70039675ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 20:10:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ZBMY8787"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-234bfe37cccso75080935ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 20:10:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1749611446; x=1750216246; darn=vger.kernel.org;
+        d=sifive.com; s=google; t=1749611450; x=1750216250; darn=vger.kernel.org;
         h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=d1JqEGYxVH+Ie0t+M4xdy6Q//NYQPkO37iVKF4LgSqk=;
-        b=W2XyUIumYJ8WJWVO2hcxqnqFsixtTnsU0aQp6EhJc0OckOY4i6posrezgi9cP4RSrg
-         2Ibv++myFxCL6ZCBHsrH3kJyhmyaqtWnWVIjLHNE3S4zv1TxG2bU/0mbmV8m3gQ6aTMP
-         RUcMuMCeDgYse/WS61FdiNfWrYtYM1L7xrW3kkimM9LQoFPHyF5XspLFwZTcjznsW7Ul
-         SdgfZ4GXGcGxAUsvuj4g9+uorgRURymfSJmHaVVEksOPdNO42wfqdeGM5uXv0tcCC46i
-         JtVKmAc4TrjCcMGMh2uR8JxbgGlAwRwKxyEo7kBWgVxA7nAsdnrjO6peyUOVyi01jRtU
-         mFmw==
+        bh=OKliCGksR6+ULOCTOHx3A9pUuY8LclRcFBEc4eLZfck=;
+        b=ZBMY87875OYYsz8xUp9Th+H9YPYEl2tts+Aa5FEEu8w1ta2QUvq4AmodGGF15a2NBw
+         jiybxhQTZqX9zciLU8KbNOwqdLsfVZpjL0zb2ORPGQ3TjNZE10FDCO7g812durV5hdun
+         oQXcvuq1XCWAlANzmWbH5urj0KPbqpkwmYNEp46DUwOG7gJYFqwgNabdb0zWooHMT8OS
+         CwOzH94wGABe4lsw+GP3hxnev6u2s70X8xzjCkyO4X1gm5POAGWJI0lG8+026TfV7Ss2
+         rP+Zr4MRQslfLn5S4jlGHw0YuNpIn22w8ROcLZ2rwuz0pvtIocVm67tD0G1P/Lzq4Ivr
+         vHMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749611446; x=1750216246;
+        d=1e100.net; s=20230601; t=1749611450; x=1750216250;
         h=references:in-reply-to:message-id:date:subject:cc:to:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=d1JqEGYxVH+Ie0t+M4xdy6Q//NYQPkO37iVKF4LgSqk=;
-        b=RcXeMa9JVdJg3/FMPhJTnUcYs2slUtYNFHyPeuUl0CdyNLc0sf6F3R448/qN7byX1s
-         5v0bhOXVhxSRZqbLyGzuBo4qRdbo2BnW20U/7kVE22cNlFMtZfzLUcHqKEAQI7qjLOeU
-         yL1blD4b5m8I4Uk/c5l1iATWl+9K1vx6BBIzS8WlfkK8X3NHfFtv2jqrURuTuo6NH8zF
-         cl6l88eVIxBeoqRAnWPLD/0C3z8Vhes4m2XO387N9mD2mzsyP5Vd4/thT36RKtiPQB7e
-         BKcFf4q8rV9Y4QVlQ8tL89u/fLWAq5DAGo136PjbY3p4QG02g7E75KD/jsculXCS0qzS
-         CyGg==
-X-Forwarded-Encrypted: i=1; AJvYcCWtxI1mOP7szxgnErdssJVvht7Xncg26ake1C7OA0B6yI49Bn4WGzH+WcZBgAVf1R96MRLCFB3X/hZ9QVA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCfGZGBfroOHoCflFOCKDsR1+wmmfIBSb6RaJzTDJVZo+q8w6p
-	OabdCwTaknsYvUp7tESjLGCu2xe+VY5+OSXdnBZO9MvBqRgqReNd8TjsgAOQK7BmA48=
-X-Gm-Gg: ASbGncs59HxhZfHUAO7cHa135lR16+3/03NxadEKMW44KZGpT5owU4gUD3GrULVpHnp
-	kXEjv7Kqq3NzDeQUMd0rdoVfjdl+wfUonfNtLPubTn/PP5354r+FI44GkqFAIgfTTcxqCt0xv+T
-	ChZQ3YHfolO/82/UIq8DG4q9CLO06dUnfcy5mC96NVNCxhifxamI0Y0T0SudRVwd4kKCDbATwIg
-	twIey+rYFT0Fcx6bWOswQrcszeJ/JS09ri3wB9e3B8RwsU+Go9KhO0txDoPAfLtuy2SaQO5SyG1
-	FDLZb47pAcsanSiEh33W1XDFPQ4Y5Lqkdc9t3W9ur1k+Vz9se8/mIXxXwQG0hL9BpjwXhMI6a5c
-	fYr++jT/zFTX9lwSonIU=
-X-Google-Smtp-Source: AGHT+IG0HUndhOWNBFfl4fKV1QgjHGpPPezok587Gqjk8idox7vCs0ZKIJPZwB64MsRnAjYqekYvnA==
-X-Received: by 2002:a17:903:2390:b0:234:e7aa:5d9b with SMTP id d9443c01a7336-23641ab511amr21843485ad.23.1749611446469;
-        Tue, 10 Jun 2025 20:10:46 -0700 (PDT)
+        bh=OKliCGksR6+ULOCTOHx3A9pUuY8LclRcFBEc4eLZfck=;
+        b=nBCeQVIdgsVG/s57TNAXONWMGe8GP0uhvKmshHrAgM/KACTJWSj1FbgBLjg3o+RAPZ
+         xP8P5f91YwUs72JkkoYP7bWtxkO1sQPHMkpGrIiM3a0HZazOu8Ld8bt8qLPfeA6l5gDn
+         /a2iSC326fGovT/g0HqSPHsDu8gnWrXiZq3tOSZ7kCKpcW+8vLUf+thEiGIBbWveaSS8
+         J8D3yjXokgwc41o1iMrH95P1o6koLPX2vVH0NQQLslHvV2i1UNos/fYRonnESAK405Yw
+         Q4CAgCSF7QC/INpdJq6qcHvjzj1bKj5+NQX/LBGyrfqsDhZ8tfaoZXJOTRUpF/ReHNZh
+         YLlA==
+X-Forwarded-Encrypted: i=1; AJvYcCUpVD+5ZjuMmPgyCreFGYnJZq7Y8aww6cz8P7ZVapbxyKuRXWyKX8kK3eVZNbXLTpQaddbxnTW0kLM88iQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbS6d4vj4d7TdAIcLvjsWFI3Ovf3Jx8TjqeDlgN7YtnM5LEqyc
+	IzjTXC7WCvONs2PtsnlCPf4oCrJ4etPAlQsSKnWDBnYGUTrFtkVghA9YMWVhfudqYlM=
+X-Gm-Gg: ASbGnctiQdWIlWSM4apfMTBhb9UwVS4Ai5KxVYf2Za58d7arPCqz8+yZcEkrDUxr6YD
+	SRM+xh+gis+kQ2lspLxYx4L66dNg3Ug/PZ2ipgvcAiwnfhptttzhZh1yj8Re2RQ1b7fWE6ItX6x
+	pgIG5QuAja36fcnSHeMA4ADFjQlLQc4a7ustuz8F7eafJXLSyNWyh1MeA7VHDWs4TB/UImuW9+h
+	asgVbC2cOeNl+VNNYeLLzjCIPULY8sgFHalZpFgyzL/tR9DHtfwMzmoGuiPWaGx8Es/uKBsVFS0
+	VpLOke5M/HkAj+GCpu81go12qsLJSWQWkEdc0/J0H886BmIkmcVyYycI9z5oZLKwAtk6Dka97cn
+	0ewj5FhWY
+X-Google-Smtp-Source: AGHT+IFPno+Zu2I5qZ202mkGD/8XfyJVIJyg5/3MgZXAw5pnr/jUfcVT8Ys4xo+b9DSKEUYG3e62jw==
+X-Received: by 2002:a17:902:dacf:b0:234:986c:66f9 with SMTP id d9443c01a7336-23642621cf9mr18955565ad.22.1749611450426;
+        Tue, 10 Jun 2025 20:10:50 -0700 (PDT)
 Received: from hsinchu26.internal.sifive.com ([210.176.154.34])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236030789c2sm77669035ad.29.2025.06.10.20.10.44
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236030789c2sm77669035ad.29.2025.06.10.20.10.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 20:10:46 -0700 (PDT)
+        Tue, 10 Jun 2025 20:10:50 -0700 (PDT)
 From: Nick Hu <nick.hu@sifive.com>
 To: conor+dt@kernel.org,
 	krzk+dt@kernel.org,
@@ -63,16 +63,15 @@ To: conor+dt@kernel.org,
 	linux-pm@vger.kernel.org,
 	linux-riscv@lists.infradead.org
 Cc: Nick Hu <nick.hu@sifive.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>,
 	"Rafael J. Wysocki" <rafael@kernel.org>,
 	Daniel Lezcano <daniel.lezcano@linaro.org>,
 	Paul Walmsley <paul.walmsley@sifive.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Subject: [PATCH v2 2/3] cpuidle: riscv-sbi: Work with the external pmdomain driver
-Date: Wed, 11 Jun 2025 11:10:21 +0800
-Message-Id: <20250611031023.28769-3-nick.hu@sifive.com>
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Samuel Holland <samuel.holland@sifive.com>
+Subject: [PATCH v2 3/3] cpuidle: Add SiFive power provider
+Date: Wed, 11 Jun 2025 11:10:22 +0800
+Message-Id: <20250611031023.28769-4-nick.hu@sifive.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20250611031023.28769-1-nick.hu@sifive.com>
 References: <20250611031023.28769-1-nick.hu@sifive.com>
@@ -82,103 +81,157 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-To work with the external pmdomain driver, exposing the
-`sbi_cpuidle_pd_power_off` and `sbi_dt_parse_state_node` so the external
-pmdomain driver can parse the riscv idle state data and set the domain
-idle state where powering off. In addition, defer the driver without
-error message when the parent domain is not ready.
+The SiFive DMC is the power provider of the devices that inside the
+SiFive CPU power domains, which include Tile, Cluster and Core Complex
+power domains. Before the cpu entering the firmware-based idle state,
+each devices that inside the corresponding domain should be suspended
+properly. So this driver will create the power provider and set the
+correct idle state.
 
-Co-developed-by: Samuel Holland <samuel.holland@sifive.com>
-Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
 Signed-off-by: Nick Hu <nick.hu@sifive.com>
 ---
- drivers/cpuidle/cpuidle-riscv-sbi.c | 17 +++++++++++------
- drivers/cpuidle/cpuidle-riscv-sbi.h | 20 ++++++++++++++++++++
- 2 files changed, 31 insertions(+), 6 deletions(-)
- create mode 100644 drivers/cpuidle/cpuidle-riscv-sbi.h
+ drivers/cpuidle/Kconfig.riscv           |  11 +++
+ drivers/cpuidle/Makefile                |   1 +
+ drivers/cpuidle/cpuidle-sifive-dmc-pd.c | 102 ++++++++++++++++++++++++
+ 3 files changed, 114 insertions(+)
+ create mode 100644 drivers/cpuidle/cpuidle-sifive-dmc-pd.c
 
-diff --git a/drivers/cpuidle/cpuidle-riscv-sbi.c b/drivers/cpuidle/cpuidle-riscv-sbi.c
-index 0fe1ece9fbdc..d53254601522 100644
---- a/drivers/cpuidle/cpuidle-riscv-sbi.c
-+++ b/drivers/cpuidle/cpuidle-riscv-sbi.c
-@@ -27,6 +27,7 @@
- #include <asm/suspend.h>
- 
- #include "cpuidle.h"
-+#include "cpuidle-riscv-sbi.h"
- #include "dt_idle_states.h"
- #include "dt_idle_genpd.h"
- 
-@@ -188,7 +189,7 @@ static const struct of_device_id sbi_cpuidle_state_match[] = {
- 	{ },
- };
- 
--static int sbi_dt_parse_state_node(struct device_node *np, u32 *state)
-+int sbi_dt_parse_state_node(struct device_node *np, u32 *state)
- {
- 	int err = of_property_read_u32(np, "riscv,sbi-suspend-param", state);
- 
-@@ -325,8 +326,9 @@ static int sbi_cpuidle_init_cpu(struct device *dev, int cpu)
- 	/* Initialize idle states from DT. */
- 	ret = sbi_cpuidle_dt_init_states(dev, drv, cpu, state_count);
- 	if (ret) {
--		pr_err("HART%ld: failed to init idle states\n",
--		       cpuid_to_hartid_map(cpu));
-+		if (ret != -EPROBE_DEFER)
-+			pr_err("HART%ld: failed to init idle states\n",
-+			       cpuid_to_hartid_map(cpu));
- 		return ret;
- 	}
- 
-@@ -356,7 +358,7 @@ static void sbi_cpuidle_domain_sync_state(struct device *dev)
- 
- #ifdef CONFIG_DT_IDLE_GENPD
- 
--static int sbi_cpuidle_pd_power_off(struct generic_pm_domain *pd)
-+int sbi_cpuidle_pd_power_off(struct generic_pm_domain *pd)
- {
- 	struct genpd_power_state *state = &pd->states[pd->state_idx];
- 	u32 *pd_state;
-@@ -533,8 +535,11 @@ static int sbi_cpuidle_probe(struct platform_device *pdev)
- 	for_each_present_cpu(cpu) {
- 		ret = sbi_cpuidle_init_cpu(&pdev->dev, cpu);
- 		if (ret) {
--			pr_debug("HART%ld: idle driver init failed\n",
--				 cpuid_to_hartid_map(cpu));
-+			if (ret == -EPROBE_DEFER)
-+				pr_debug("idle driver probe deferred\n");
-+			else
-+				pr_debug("HART%ld: idle driver init failed\n",
-+					 cpuid_to_hartid_map(cpu));
- 			goto out_fail;
- 		}
- 	}
-diff --git a/drivers/cpuidle/cpuidle-riscv-sbi.h b/drivers/cpuidle/cpuidle-riscv-sbi.h
+diff --git a/drivers/cpuidle/Kconfig.riscv b/drivers/cpuidle/Kconfig.riscv
+index 78518c26af74..af802afefa21 100644
+--- a/drivers/cpuidle/Kconfig.riscv
++++ b/drivers/cpuidle/Kconfig.riscv
+@@ -13,3 +13,14 @@ config RISCV_SBI_CPUIDLE
+ 	  Select this option to enable RISC-V SBI firmware based CPU idle
+ 	  driver for RISC-V systems. This drivers also supports hierarchical
+ 	  DT based layout of the idle state.
++
++config SIFIVE_DMC_PD_CPUIDLE
++	bool "SiFive DMC SBI PD Provider Driver"
++	depends on ARCH_SIFIVE
++	select PM_GENERIC_DOMAINS_OF
++	select RISCV_SBI_CPUIDLE
++	default y
++	help
++	  Select this option to enable SiFive DMC SBI PD Provider driver.
++	  This driver will create the genpd provider and work with the
++	  RISC-V SBI firmware based CPU idle driver.
+diff --git a/drivers/cpuidle/Makefile b/drivers/cpuidle/Makefile
+index 1de9e92c5b0f..1f8e01b415e8 100644
+--- a/drivers/cpuidle/Makefile
++++ b/drivers/cpuidle/Makefile
+@@ -42,3 +42,4 @@ obj-$(CONFIG_POWERNV_CPUIDLE)		+= cpuidle-powernv.o
+ ###############################################################################
+ # RISC-V drivers
+ obj-$(CONFIG_RISCV_SBI_CPUIDLE)		+= cpuidle-riscv-sbi.o
++obj-$(CONFIG_SIFIVE_DMC_PD_CPUIDLE)	+= cpuidle-sifive-dmc-pd.o
+diff --git a/drivers/cpuidle/cpuidle-sifive-dmc-pd.c b/drivers/cpuidle/cpuidle-sifive-dmc-pd.c
 new file mode 100644
-index 000000000000..f39186b65a10
+index 000000000000..1c6b2131e573
 --- /dev/null
-+++ b/drivers/cpuidle/cpuidle-riscv-sbi.h
-@@ -0,0 +1,20 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __CPUIDLE_RISCV_SBI
-+#define __CPUIDLE_RISCV_SBI
++++ b/drivers/cpuidle/cpuidle-sifive-dmc-pd.c
+@@ -0,0 +1,102 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * SiFive CPUIDLE SBI PD driver
++ */
 +
-+#ifdef CONFIG_DT_IDLE_GENPD
++#define pr_fmt(fmt) "sifive_cpuidle_sbi_pd: " fmt
 +
-+int sbi_cpuidle_pd_power_off(struct generic_pm_domain *pd);
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/pm_domain.h>
++#include <linux/pm_runtime.h>
 +
-+#else
++#include "cpuidle-riscv-sbi.h"
++#include "dt_idle_genpd.h"
 +
-+static inline int sbi_cpuidle_pd_power_off(struct generic_pm_domain *pd)
++static void sifive_dmc_remove(struct platform_device *pdev)
 +{
-+	return 0;
++	struct generic_pm_domain *pd = platform_get_drvdata(pdev);
++	struct device *dev = &pdev->dev;
++
++	pm_runtime_disable(dev);
++	of_genpd_del_provider(dev->of_node);
++	pm_genpd_remove(pd);
++	dt_idle_pd_free(pd);
 +}
 +
-+#endif
++static int sifive_dmc_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
++	struct generic_pm_domain *pd;
++	struct of_phandle_args child, parent;
++	int ret = -ENOMEM;
 +
-+int sbi_dt_parse_state_node(struct device_node *np, u32 *state);
++	pd = dt_idle_pd_alloc(np, sbi_dt_parse_state_node);
++	if (!pd)
++		goto fail;
 +
-+#endif
++	pd->flags |= GENPD_FLAG_IRQ_SAFE | GENPD_FLAG_CPU_DOMAIN;
++	pd->power_off = sbi_cpuidle_pd_power_off;
++
++	ret = pm_genpd_init(pd, &pm_domain_cpu_gov, false);
++	if (ret)
++		goto free_pd;
++
++	ret = of_genpd_add_provider_simple(np, pd);
++	if (ret)
++		goto remove_pd;
++
++	if (of_parse_phandle_with_args(np, "power-domains",
++				       "#power-domain-cells", 0,
++				       &parent) == 0) {
++		child.np = np;
++		child.args_count = 0;
++
++		if (of_genpd_add_subdomain(&parent, &child))
++			pr_warn("%pOF failed to add subdomain: %pOF\n",
++				parent.np, child.np);
++		else
++			pr_debug("%pOF has a child subdomain: %pOF.\n",
++				 parent.np, child.np);
++	}
++
++	platform_set_drvdata(pdev, pd);
++	pm_runtime_enable(dev);
++	pr_info("%s create success\n", pd->name);
++	return 0;
++
++remove_pd:
++	pm_genpd_remove(pd);
++free_pd:
++	dt_idle_pd_free(pd);
++fail:
++	pr_info("%s create fail\n", pd->name);
++
++	return ret;
++}
++
++static const struct of_device_id sifive_dmc_of_match[] = {
++	{ .compatible = "sifive,tmc1", },
++	{ .compatible = "sifive,tmc0", },
++	{ .compatible = "sifive,smc1", },
++	{ .compatible = "sifive,smc0", },
++	{ .compatible = "sifive,cmc2", },
++	{}
++};
++
++static struct platform_driver sifive_dmc_driver = {
++	.probe = sifive_dmc_probe,
++	.remove = sifive_dmc_remove,
++	.driver = {
++		.name = "sifive_dmc",
++		.of_match_table = sifive_dmc_of_match,
++		.suppress_bind_attrs = true,
++	},
++};
++
++static int __init sifive_dmc_init(void)
++{
++	return platform_driver_register(&sifive_dmc_driver);
++}
++arch_initcall(sifive_dmc_init);
 -- 
 2.17.1
 
