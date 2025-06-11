@@ -1,56 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1CE25F961;
-	Wed, 11 Jun 2025 09:29:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EA30262FD5;
+	Wed, 11 Jun 2025 09:29:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749634177; cv=none; b=FMiZyza3lRV0HnuK0UBUOnx1iR7Fz7hxmBAS3ZY23QTPlzILZ8Us3IBMkwAz5BTc0WIuoE8D6d1DN/DlC2kkDD34csywuFVn57SgwEej4SlEjIiGSWv8ZGCy9/spyKUV7nzzxulWDfU6nYN4+VJ/9Hhe1mMH3/wvWZF7b3J3kjU=
+	t=1749634180; cv=none; b=R0kmz6SqYtKV9wTsOu7eLC+dLBrEmZydNLOSC7C7hjPzdXz2znQfmSa2N1AyV+m3y2m+dwrGN7yT1ntymKQSGe1YrU/tJ0PaLg9QaraW+5gv2QO6grDg/bf2l7KYr0fq2FpY6MWf9H96HBxZ9f2/vwcTnq68FMWhShmD/v2/vcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749634177; c=relaxed/simple;
-	bh=5dwCQjNjMH42aS4jIHosjBujMf4n3go+V5xUVlRCoDg=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=Z3tevCpqYeE+4bQrLFLzmDALcF5JaRTmVHQki+qcR9Qk7jPjPZtekboZmCjXw2hht1u1+7X+30aa+DMDTPmkFa0TbOgFJu8KXSdwjJ98FrykPCXS5IS2o3vUcf33cKM7SkdwG+PNyd1mL5uK5B8RWKjpG1fjkb5L3p2qQtpfvHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3jidW1O9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uNm0x3U0; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1749634180; c=relaxed/simple;
+	bh=ApP2xVT1JDMhyFDVbwKlugsvaAOTO5ZFwEMrvwDEe4I=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=EoSzv8htdEL4jsGcmjIis0KQU+QIs5epI/YJeWCxSJgeQ/QBCCYZI9GIeJd6E5Ks7AiTJzg+t7AhPE8+4Q74yponXG7Fj4IXh7iN1yV6NgTCq906fRtAkLjvd9MXugWUhGn675IDmZ84pB6L+SBUXtbUpYdvp0MkvBf8Ih3ejGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=V7kX1Xz/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2UcE2QNB; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3jidW1O9";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uNm0x3U0"
-Date: Wed, 11 Jun 2025 09:29:32 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="V7kX1Xz/";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2UcE2QNB"
+Date: Wed, 11 Jun 2025 09:29:34 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749634173;
+	s=2020; t=1749634175;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=Q8v3ysy2MYIH9NfrH+JmEPIDbQpb54oQ4uGytFSVgrg=;
-	b=3jidW1O9i4KuR6IXYQ0Y6/pHVR6EyFkcveYiwZBabS0704yM6dSgKCBxMm1824IRg7mFNV
-	rDYSJ+uYF74XT0Gg+NmVQTjQ4flSIIcXW9sDYx1W9iiYgmmd2PKizqLsjd9sfJLJxQY7wj
-	6UvB8Eaq+1/mDXe8TImQn3yRnwWrxFjPpI2ZUBLoXrx1rx5UERAlPUmrQsUIubt+u1CFJB
-	0YabJAOMRC80Pn9pnHmpkqzeGRoDY407+e2Tewq1Fu5Xm5sacrFcrY0JOS5OYLwWsbkZoZ
-	GUpbkVLfBSuI1gwLK4mJ1B8gnWCKkr8TjUCk6imE9HCDEyKdZIZcaHs4SpGV8Q==
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oAEPbkdSZWXru0frI7PbKRk+RoOpPTEwTBjv9Z4n4pQ=;
+	b=V7kX1Xz/1HZQszzeRgh90RozUQUre8GBYcypLTs4E8Nb4u0Vrkg68gDhVGqMDgotHGzIuz
+	aW/4nW5LrZEl5Bzbi1xdhf3rdeqxIoSy8mSe6yuj56XJVggkLaqf/EtrfQCyHohp/wcvMH
+	VD4GFQW5qao7y0bZnhOKlQmWrWxptSqW/7xwy4pymKCRr7/yNK66yqY5twaafprd33NN+E
+	ZCxOPj5sRn0twpCRXoP0l/GMjvj2Kxab/auD9RnmvQCWHwE8wOxPXgRZcyK1D5B+BKq5Nu
+	odydViiOGlsAmoC+kpUinygrKJJ74fRcc+cidEG5MF2lrwfI0MvZiqw7moO6Xg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749634173;
+	s=2020e; t=1749634175;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=Q8v3ysy2MYIH9NfrH+JmEPIDbQpb54oQ4uGytFSVgrg=;
-	b=uNm0x3U01mdp32T3nr/xiDBwG9Dk8iiQ2DAzLXZMQW5AzGATbJ0OiWFuv9dzcdEsYmLwvB
-	4uEhcwOlKH//STBA==
-From: "tip-bot2 for Yeoreum Yun" <tip-bot2@linutronix.de>
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oAEPbkdSZWXru0frI7PbKRk+RoOpPTEwTBjv9Z4n4pQ=;
+	b=2UcE2QNBmPvpt8q/X83rxJq3+ETCQTeGZmDecCbMWhAyYILbcCcAka/NIqlbEHk3i6Ebdi
+	czcn8LZfqIxrC1AA==
+From: "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf: Fix dangling cgroup pointer in cpuctx
-Cc: Yeoreum Yun <yeoreum.yun@arm.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- David Wang <00107082@163.com>, x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: [tip: perf/urgent] perf: Fix sample vs do_exit()
+Cc: Baisheng Gao <baisheng.gao@unisoc.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250605110815.GQ39944@noisy.programming.kicks-ass.net>
+References: <20250605110815.GQ39944@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174963417288.406.5121901251939787406.tip-bot2@tip-bot2>
+Message-ID: <174963417460.406.17594659379657563345.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,69 +68,101 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     3b7a34aebbdf2a4b7295205bf0c654294283ec82
-Gitweb:        https://git.kernel.org/tip/3b7a34aebbdf2a4b7295205bf0c654294283ec82
-Author:        Yeoreum Yun <yeoreum.yun@arm.com>
-AuthorDate:    Mon, 02 Jun 2025 19:40:49 +01:00
+Commit-ID:     4f6fc782128355931527cefe3eb45338abd8ab39
+Gitweb:        https://git.kernel.org/tip/4f6fc782128355931527cefe3eb45338abd8ab39
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Thu, 05 Jun 2025 12:31:45 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Thu, 05 Jun 2025 14:37:52 +02:00
+CommitterDate: Thu, 05 Jun 2025 14:37:51 +02:00
 
-perf: Fix dangling cgroup pointer in cpuctx
+perf: Fix sample vs do_exit()
 
-Commit a3c3c6667("perf/core: Fix child_total_time_enabled accounting
-bug at task exit") moves the event->state update to before
-list_del_event(). This makes the event->state test in list_del_event()
-always false; never calling perf_cgroup_event_disable().
+Baisheng Gao reported an ARM64 crash, which Mark decoded as being a
+synchronous external abort -- most likely due to trying to access
+MMIO in bad ways.
 
-As a result, cpuctx->cgrp won't be cleared properly; causing havoc.
+The crash further shows perf trying to do a user stack sample while in
+exit_mmap()'s tlb_finish_mmu() -- i.e. while tearing down the address
+space it is trying to access.
 
-Fixes: a3c3c6667("perf/core: Fix child_total_time_enabled accounting bug at task exit")
-Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+It turns out that we stop perf after we tear down the userspace mm; a
+receipie for disaster, since perf likes to access userspace for
+various reasons.
+
+Flip this order by moving up where we stop perf in do_exit().
+
+Additionally, harden PERF_SAMPLE_CALLCHAIN and PERF_SAMPLE_STACK_USER
+to abort when the current task does not have an mm (exit_mm() makes
+sure to set current->mm = NULL; before commencing with the actual
+teardown). Such that CPU wide events don't trip on this same problem.
+
+Fixes: c5ebcedb566e ("perf: Add ability to attach user stack dump to sample")
+Reported-by: Baisheng Gao <baisheng.gao@unisoc.com>
+Suggested-by: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Tested-by: David Wang <00107082@163.com>
-Link: https://lore.kernel.org/all/aD2TspKH%2F7yvfYoO@e129823.arm.com/
+Link: https://lkml.kernel.org/r/20250605110815.GQ39944@noisy.programming.kicks-ass.net
 ---
- kernel/events/core.c | 21 ++++++---------------
- 1 file changed, 6 insertions(+), 15 deletions(-)
+ kernel/events/core.c |  7 +++++++
+ kernel/exit.c        | 17 +++++++++--------
+ 2 files changed, 16 insertions(+), 8 deletions(-)
 
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 1cc98b9..d786083 100644
+index f34c99f..26dec1d 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -2120,18 +2120,6 @@ list_del_event(struct perf_event *event, struct perf_event_context *ctx)
- 	if (event->group_leader == event)
- 		del_event_from_groups(event, ctx);
+@@ -7439,6 +7439,10 @@ perf_sample_ustack_size(u16 stack_size, u16 header_size,
+ 	if (!regs)
+ 		return 0;
+ 
++	/* No mm, no stack, no dump. */
++	if (!current->mm)
++		return 0;
++
+ 	/*
+ 	 * Check if we fit in with the requested stack size into the:
+ 	 * - TASK_SIZE
+@@ -8150,6 +8154,9 @@ perf_callchain(struct perf_event *event, struct pt_regs *regs)
+ 	const u32 max_stack = event->attr.sample_max_stack;
+ 	struct perf_callchain_entry *callchain;
+ 
++	if (!current->mm)
++		user = false;
++
+ 	if (!kernel && !user)
+ 		return &__empty_callchain;
+ 
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 3864503..1883150 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -944,6 +944,15 @@ void __noreturn do_exit(long code)
+ 	taskstats_exit(tsk, group_dead);
+ 	trace_sched_process_exit(tsk, group_dead);
+ 
++	/*
++	 * Since sampling can touch ->mm, make sure to stop everything before we
++	 * tear it down.
++	 *
++	 * Also flushes inherited counters to the parent - before the parent
++	 * gets woken up by child-exit notifications.
++	 */
++	perf_event_exit_task(tsk);
++
+ 	exit_mm();
+ 
+ 	if (group_dead)
+@@ -959,14 +968,6 @@ void __noreturn do_exit(long code)
+ 	exit_task_work(tsk);
+ 	exit_thread(tsk);
  
 -	/*
--	 * If event was in error state, then keep it
--	 * that way, otherwise bogus counts will be
--	 * returned on read(). The only way to get out
--	 * of error state is by explicit re-enabling
--	 * of the event
+-	 * Flush inherited counters to the parent - before the parent
+-	 * gets woken up by child-exit notifications.
+-	 *
+-	 * because of cgroup mode, must be called before cgroup_exit()
 -	 */
--	if (event->state > PERF_EVENT_STATE_OFF) {
--		perf_cgroup_event_disable(event, ctx);
--		perf_event_set_state(event, PERF_EVENT_STATE_OFF);
--	}
+-	perf_event_exit_task(tsk);
 -
- 	ctx->generation++;
- 	event->pmu_ctx->nr_events--;
- }
-@@ -2488,11 +2476,14 @@ __perf_remove_from_context(struct perf_event *event,
- 		state = PERF_EVENT_STATE_EXIT;
- 	if (flags & DETACH_REVOKE)
- 		state = PERF_EVENT_STATE_REVOKED;
--	if (flags & DETACH_DEAD) {
--		event->pending_disable = 1;
-+	if (flags & DETACH_DEAD)
- 		state = PERF_EVENT_STATE_DEAD;
--	}
-+
- 	event_sched_out(event, ctx);
-+
-+	if (event->state > PERF_EVENT_STATE_OFF)
-+		perf_cgroup_event_disable(event, ctx);
-+
- 	perf_event_set_state(event, min(event->state, state));
+ 	sched_autogroup_exit_task(tsk);
+ 	cgroup_exit(tsk);
  
- 	if (flags & DETACH_GROUP)
