@@ -1,106 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A669253F08;
-	Wed, 11 Jun 2025 12:39:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90723253F08;
+	Wed, 11 Jun 2025 12:39:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749645567; cv=none; b=cjwC4iD6PX4NlcnpPDZcQC4EoCPIAkEzUTov4FPqjqJ9UmPQ5y1byKIhpTQ7F8EKgX2cWxeOA0LsC7HZTK9sRXZ/XND5MS7H3jT2lJgxMVLWti1ZN1QFe642W+0rYY0cA5ieanWTQw25OXUiM3R9cwUvU1vo4JewsVXG+Tc/ovs=
+	t=1749645585; cv=none; b=eMUZ6E+Jzp0ZW+105PIHecJBhGu6cHqljjCUfrYA5+8MIixBToOpuQvS0PRndMCDUEyWcfTCvPrDKmtXxxwRTEk8ib52kaagaaLQsT736LJEIPa0STUy+P/dc0aJYtX7hq98ayYDNXd40IfVJ08o/2dextEjnoeufSK+SDsRGsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749645567; c=relaxed/simple;
-	bh=OuFVXbIWmWJvGOj5ECS98GbcO0BbdJQump2TJj6s/1U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y5CxbRm3zmgqbStWWcCDyzj/905NazJYUHoQeqShgSMFYU+UE6mU8un0zzdBC5Cszl5brSXZWs99/6uM+kjmRk0/mZFJqCTnG+7WAenG7uoEWNUvGe53pRvLPPYCi4C6x7IPJ8qs/aQcIrBbiMwifiyHrWKZVJZ6I7kSwLCV2H4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pypKI3Ia; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749645585; c=relaxed/simple;
+	bh=x4MivqVOz+jtZ681vyuC1Ele+akf1aAotf2Sx94R0ac=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NFNd/l1AmkvRWFxH0hbPdTOi+/ywjqCumzGDYKVQSwPIRGT8MwJhlfRSRqgzQDhlVVgqkQhFAI8muiTX0uUqsJfE/pDuJIfN+TIZk+wM8vOmNAKTNU1MfBhUU98xCG8xOpDmN6VFbjxdjX6Tj7t1JfsaWdMyB5E9RcfEX4wsXl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CPV5R1dT; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pypKI3Ia"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A387DC4CEEE;
-	Wed, 11 Jun 2025 12:39:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749645567;
-	bh=OuFVXbIWmWJvGOj5ECS98GbcO0BbdJQump2TJj6s/1U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pypKI3IadYZZ+Exqnu92P70tL6RYFiAd+Fx+g1v09JhS7HAuioJpp778S5zDamWGS
-	 jIC/UxnIR8dktqlpa5yxWBIAsVqRuAfNbdehHaxmvIXcS85a/DTfSLjU6PSLaJwmpM
-	 /J/OcE9vDzrYdtllI995p5la13a1UAzSIb/XLjcutGhZ8SorM2ILffyjP5Cs5fuvSG
-	 /K3kb1JnptIGKxssmO9c20B5zARkOPVBZIwcZXheX/RBDIb7tUbETj/3oh/6seVTXq
-	 rplR9diwAyvUHhMRvltjhro9lmZ9fYQSpNkPKdXPqX6G4SaGOjQXO8qoo5wjM/C447
-	 x0qqs2PYThB2g==
-Date: Wed, 11 Jun 2025 18:09:18 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Marek Vasut <marek.vasut+renesas@mailbox.org>
-Cc: devicetree@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Conor Dooley <conor+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH] schemas: pci: bridge: Document clocks
-Message-ID: <advhonmqnxm4s6r3cl7ll5y3jfc566fcjvetvlzvy7bztzetev@t75xmo5fktde>
-References: <20250607194353.79124-1-marek.vasut+renesas@mailbox.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CPV5R1dT"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-313290ea247so50287a91.3;
+        Wed, 11 Jun 2025 05:39:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749645584; x=1750250384; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SPptyJtkdt3bR0imyRTv5uUbfy/9H4Z05Yj4r4qt7Zo=;
+        b=CPV5R1dTdI6knDTrMfBPECgoCZRGvCpzHQiZa7qx/UtLl6MalZ/Evlz8JIC+otslk2
+         5FmUUzZi5DzOn33l7dBZ4+81VBAvgqEHOCC6rAuSJ6VVhR717QrEBbhApvna7brvblNs
+         TdR4aiecSovvwef+FF4afFGZBUNRIY2BVMq1xdJYHJhX/GfOR13mbhZ7yIC95U4m/1ah
+         uHtBzG23pNtmlyXyk6dGPTrCGKGl5+a38ent2SiXMAeEj1IVcgeF9IwazLBC9Q92THR1
+         TwhkV6AtEY9izF6I8tiRQu59OFUiq0YIn15cDe3AlJ3mMZESNfwcDE+X0jyyh3CKI8JD
+         DKjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749645584; x=1750250384;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SPptyJtkdt3bR0imyRTv5uUbfy/9H4Z05Yj4r4qt7Zo=;
+        b=gB6wAE9DUjhSEaLZ7Xmi6Bt3SgJgkvFMWhi6GZ6HjJCQTlS0IYAEMwGb1O5nfNbafl
+         jzk7GPsRETlgy6J0fcwxZ94/v7CQXIislofufNISw3g6EgqjhKomqw8Z47+zzo/YRkHi
+         K5UOfq83IdMVut7FXJniibT5A/IGVPZJIzQHw50wzB4lraLJB6/clxEWh0evhy4lmy/n
+         QF6JULsFkO28vehtd6JwGeoMB03HmwT37H2jWMCcPzC7bbvcmUOqfLJldCUc3vdC8hKi
+         +HZT9nP7UYbcNCtrrEQyOioYFuSceaR5uj3bwWs8pWP9YFFAR89y2v22WXhMVk2OSgse
+         O00A==
+X-Forwarded-Encrypted: i=1; AJvYcCUz0btZXvJ2QIIVfcFQ804YugqxJsvwRBMnR68m1PHshbZcXNVsZUJAXQmz2BI6o2hpaR1oyDUd8VoYVmXF@vger.kernel.org, AJvYcCVxP9GjFa4eo1ZUvBCTjAwOh637Xnag3txe2BGEF2P4BeLByRz9UKVnAc2muQK+Gt9o3zvU8xV5Fx7Yy7lfwA==@vger.kernel.org, AJvYcCWQUbF/7Db3zPw5Hp8/UU0Tz9Pv5SeHbbqg08nxhzPBbREMuLbbQKXsNRq1FCuY2zkmBaYLUb/xGeDtSIKZRHo=@vger.kernel.org, AJvYcCXBAeG/msltYkYEKzbNBWDZc+Fxwc6IkPhNI74cQSIpXEaOAJCkx5ROL2E9dk9CzSUKTcaUobg1ulZo7l4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTZAJC79La1mXJoARuEqTwIpMO3pgqIVCFSPG8PmFAKq4Q/89j
+	thZ48SRqsVqWHeqSfKsEYYyWmcwqA7tCMAz9bdAWNtFD1MrcP3lBv9UXLSHEVzSfTXP3pg0fGFY
+	XCf0YN7Mu3AxzlR6eSwFPp7rLXFJaVUs=
+X-Gm-Gg: ASbGncsKSmKdwJO1O4IDvXajvjxmecOLgS9R6VfKK02PLbEvwE12Yj4sDH7lJv3fgi6
+	9mSt4mAGwW7gjpFwXFA2/cmjoUL7IhxxNxMmQZGR9qYKGl7SvPichUhwdoUlRmfaGhIBWe3gGBo
+	C94ZEsrd0H8XVJYt7Rh9ZY6oAB2u7olPSmgDuJNP8E4QA=
+X-Google-Smtp-Source: AGHT+IH+bQyEyq6sDsXwbDZZg89F+RW6fj++1an3yE4uvHwTMd4PMVVY6ZhYj3V5tERWpXQvQ0G9A/5t5fijdnpQRdk=
+X-Received: by 2002:a17:90b:3ec5:b0:311:c939:c855 with SMTP id
+ 98e67ed59e1d1-313af1a5f6dmr1615584a91.3.1749645583832; Wed, 11 Jun 2025
+ 05:39:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250607194353.79124-1-marek.vasut+renesas@mailbox.org>
+References: <20250506-module-params-v3-v12-0-c04d80c8a2b1@kernel.org>
+ <20250506-module-params-v3-v12-2-c04d80c8a2b1@kernel.org> <D9PW1NI2S6FV.8LA53J87VCML@kernel.org>
+In-Reply-To: <D9PW1NI2S6FV.8LA53J87VCML@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 11 Jun 2025 14:39:31 +0200
+X-Gm-Features: AX0GCFsVvNoeNo5dJVKQqiHYIICApoPQ7dENSopl4E8cSOlBnUT1aSNuB4syId4
+Message-ID: <CANiq72kwj9f8EZJocJx=ZtV4otaexbu1_vgDdTU_oy812yAJAg@mail.gmail.com>
+Subject: Re: [PATCH v12 2/3] rust: add parameter support to the `module!` macro
+To: Benno Lossin <lossin@kernel.org>
+Cc: Andreas Hindborg <a.hindborg@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, Trevor Gross <tmgross@umich.edu>, 
+	Adam Bratschi-Kaye <ark.email@gmail.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
+	Daniel Gomez <da.gomez@samsung.com>, Simona Vetter <simona.vetter@ffwll.ch>, 
+	Greg KH <gregkh@linuxfoundation.org>, Fiona Behrens <me@kloenk.dev>, 
+	Daniel Almeida <daniel.almeida@collabora.com>, linux-modules@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jun 07, 2025 at 09:43:24PM +0200, Marek Vasut wrote:
-> The PCIe slot may have clocks which are explicitly controlled
-> by the OS, describe the clocks property.
+On Wed, May 7, 2025 at 1:23=E2=80=AFPM Benno Lossin <lossin@kernel.org> wro=
+te:
+>
+> > +unsafe extern "C" fn set_param<T>(
+> > +    val: *const kernel::ffi::c_char,
+> > +    param: *const crate::bindings::kernel_param,
+> > +) -> core::ffi::c_int
 
-The slot can only have 'REFCLK' as per the spec, not any other random clocks.
+New instance of `core::ffi::` (and both these `c_*` should be unqualified).
 
-> 
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
-
-With that fixed,
-
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-- Mani
-
-> ---
-> Related to https://lore.kernel.org/all/CAMuHMdUFHKHKfymqa6jwfNnxZTAuH3kbj5WL+-zN=TR6XGd0eA@mail.gmail.com/
-> ---
-> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Conor Dooley <conor+dt@kernel.org>
-> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
-> Cc: Magnus Damm <magnus.damm@gmail.com>
-> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-renesas-soc@vger.kernel.org
-> ---
->  dtschema/schemas/pci/pci-bus-common.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/dtschema/schemas/pci/pci-bus-common.yaml b/dtschema/schemas/pci/pci-bus-common.yaml
-> index ca97a00..3c512cf 100644
-> --- a/dtschema/schemas/pci/pci-bus-common.yaml
-> +++ b/dtschema/schemas/pci/pci-bus-common.yaml
-> @@ -82,6 +82,8 @@ properties:
->      items:
->        maximum: 255
->  
-> +  clocks: true
-> +
->    external-facing:
->      description:
->        When present, the port is externally facing. All bridges and endpoints
-> -- 
-> 2.47.2
-> 
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
+Cheers,
+Miguel
