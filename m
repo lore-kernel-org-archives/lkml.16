@@ -1,114 +1,199 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5255E2690FB;
-	Wed, 11 Jun 2025 14:01:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C58C2E6138
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:01:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749650480; cv=none; b=ix9sl2Y3+V+3Np20xGbb+WpJZGiwYbktLtPMhodp/b4QQc5i5YmB8BoZLuYyoMOMlV69Phc6K9IVQo+wNHZvLQEYRB8Wt0r1iO1cEyfyWrb6gvhv2ZZhrEQXPsP774YX2FwsjpMQT4WqtUk7s31fc2cIlziUzekdy8fLU32iCAU=
+	t=1749650516; cv=none; b=NN4MjCxXh48Grne0fd4YxHDyyM1TkjIIaMpQErFrfVHFMQvEbT4vhJqMTADz70Tu50Gzs+jjGn4xg45VXfXEIjH3xywob4kpYTubHtNfmkeOWxA4w8anhEusCDcvpxnQhmVBgpmm7mfYpsk5rGe2OO7LVmMdpvfTuNNdxsvtjto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749650480; c=relaxed/simple;
-	bh=O0xtyNWz6yzJ/v9TJy03FqVKbNcI/0B/yaZJDxxjJrA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MWtmuPzvOlwTHuZo2IoGbEH8faSg0hgPFQcV7EQ5KnNvneBXcJ9uYBGiqahyTwYs9Qyf+8uPFYJMsmOnDh9EwYbut6pNGs6CiC0QrMfF8clCbMQ9MwOArHyIBRXaSGJXzMxvk2CFY4kvFCd2WBM+LAuADT97vntC9GKLVsTasPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PG2oUHNb; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749650516; c=relaxed/simple;
+	bh=BAePymoebK5BBu7o01vZEw+cupxxDzaeyWOs5m+KQ88=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=pB5pskGVKXOr6m20hjPTM0BTDhob6+Z9UdRMyLQerPUJGE1pir7RVTVNR1S6xlP6Jrejq/PF2xw2bwidVlOuKWwynABWyYhBgIpD6c3P++W+lD/vkVEWseNAazpvE7J1+Z9XoKi2SuWwjPsyzZqv0B4vWSq2hyY5atoyCgBDJlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LkVVIMiP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PG2oUHNb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749650478; x=1781186478;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=O0xtyNWz6yzJ/v9TJy03FqVKbNcI/0B/yaZJDxxjJrA=;
-  b=PG2oUHNbC9eWqUgOxrGy8EkT2LKr+BPsNcKbpgtlpFuhLAiPs3q9VPiG
-   GnLyxltv+RwQUWV1qXnQZduM6L55XrjY2Vii7pO18bJmqV36zmh0mPt83
-   xsHCgTGdigvPzS1cxW2lLuItiieA2dZAKhQv+Mmxr+RfvSjjP02LZxNzh
-   gOrhMmnI7q0848XbP145SzNxrXrhDaTnUYhTq/OQVAtKoLaG938Lpn6r6
-   /ULmSFRO7mq4rPpVtyWOouoXXoLd06sFqWdDYk1HbtA7UDPnH59sYo+s+
-   rrAJW1k6RHXOgJC2vfcLkUBo+ObIoynKOqho/NFFsabvloTu7uqGQhRL4
-   w==;
-X-CSE-ConnectionGUID: aiWPhCqQTpKanQ9w2NmK3g==
-X-CSE-MsgGUID: +dL2UhAdTm+RjScetZXO/Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="51017006"
-X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
-   d="scan'208";a="51017006"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 07:01:15 -0700
-X-CSE-ConnectionGUID: YjoTA+f/QkGOj+1MoCvdnA==
-X-CSE-MsgGUID: TNPILqvQTdapTvwDBlLKaw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
-   d="scan'208";a="170380882"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 07:01:10 -0700
-Message-ID: <ac62541b-185a-47aa-86a7-d4425a98699d@intel.com>
-Date: Wed, 11 Jun 2025 22:01:07 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LkVVIMiP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C5C1C4CEEA;
+	Wed, 11 Jun 2025 14:01:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749650515;
+	bh=BAePymoebK5BBu7o01vZEw+cupxxDzaeyWOs5m+KQ88=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=LkVVIMiPzy53gbOuXhKkB5rkSfCB6l8PYd0O1935ufYN+sE6BR/l5ZtC8aRX+EBfp
+	 zYoEEYFmX15KBnpmwgjI8/CgvxJ5laOEhekSnSfUhKDNV7J9Xn2c4KU7ofEKZL4Ndu
+	 YHcR347Nr7dzll7S6ZtAA0BO7e0cUyrs5X4LJo5ErgCskyeA9p7Cde+iGGzeInSymH
+	 6xlAff7qBC3TLFz00pINbaQLC9F10uUu4hXfmdh/QVRf8tLYRaGY2zjNcVdcea5p11
+	 yblDWSKZOrThyD8FdUnTWw/KFM/dPoKO+HNMFAQ2M/zf3pf6ofWt5pBlADThokceIP
+	 5ULBXZsx/q3Vw==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,  Pratyush Yadav
+ <pratyush@kernel.org>,  Alexander Graf <graf@amazon.com>,  Changyuan Lyu
+ <changyuanl@google.com>,  Andrew Morton <akpm@linux-foundation.org>,
+  Baoquan He <bhe@redhat.com>,  kexec@lists.infradead.org,
+  linux-kernel@vger.kernel.org,  linux-mm@kvack.org,  Michal Clapinski
+ <mclapinski@google.com>
+Subject: Re: [PATCH] kho: initialize tail pages for higher order folios
+ properly
+In-Reply-To: <aEmGMNL9v9djgrGz@kernel.org>
+References: <aEKhF3HcrvG77Ogb@kernel.org> <mafs0jz5osutx.fsf@kernel.org>
+	<aEc30BoLE9HRxiZm@kernel.org>
+	<CA+CK2bAAbZjS2Og79xxLcDtNf-eM0up-8fwhd4fg_dp0j_TahA@mail.gmail.com>
+	<aEfGTXrsEL5-DuF1@kernel.org>
+	<CA+CK2bDXOWzrTsNtbCCK2rabNysf0JFQT5VfAjYrX5oSoiLmSQ@mail.gmail.com>
+	<aEhgNU80Dr9iRwoD@kernel.org>
+	<CA+CK2bD3n=JDuSsMGvsyMnVbPhGdhdf6zWFDa3KpzRGEXygdgQ@mail.gmail.com>
+	<mafs0qzzqo2bg.fsf@kernel.org>
+	<CA+CK2bBoMfJuUCV6sL80kwzYPnENnt7fDk2jRMPV0iPn1jCJdw@mail.gmail.com>
+	<aEmGMNL9v9djgrGz@kernel.org>
+Date: Wed, 11 Jun 2025 16:01:52 +0200
+Message-ID: <mafs0ikl2nzqn.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 4/4] KVM: TDX: Check KVM exit on KVM_HC_MAP_GPA_RANGE
- when TD finalize
-To: Sean Christopherson <seanjc@google.com>,
- Binbin Wu <binbin.wu@linux.intel.com>
-Cc: Rick P Edgecombe <rick.p.edgecombe@intel.com>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- "pbonzini@redhat.com" <pbonzini@redhat.com>,
- "mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>,
- Kai Huang <kai.huang@intel.com>, Jiewen Yao <jiewen.yao@intel.com>,
- Tony Lindgren <tony.lindgren@intel.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Reinette Chatre <reinette.chatre@intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Yan Y Zhao <yan.y.zhao@intel.com>, Isaku Yamahata
- <isaku.yamahata@intel.com>, Kirill Shutemov <kirill.shutemov@intel.com>
-References: <20250610021422.1214715-1-binbin.wu@linux.intel.com>
- <20250610021422.1214715-5-binbin.wu@linux.intel.com>
- <936ccea77b474fbad1bde799ee92139356f91c5f.camel@intel.com>
- <aEh0oGeh96n9OvCT@google.com>
- <31c4ab96-55bf-4f80-a6fd-3478cc1d1117@linux.intel.com>
- <aEmGTZbMpZhtlkIh@google.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <aEmGTZbMpZhtlkIh@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 6/11/2025 9:36 PM, Sean Christopherson wrote:
-> On Wed, Jun 11, 2025, Binbin Wu wrote:
->> On 6/11/2025 3:58 AM, Sean Christopherson wrote:
->>> On Tue, Jun 10, 2025, Rick P Edgecombe wrote:
->>>> It seems like the reasoning could be just to shrink the possible configurations
->>>> KVM has to think about, and that we only have the option to do this now before
->>>> the ABI becomes harder to change.
->>>>
->>>> Did you need any QEMU changes as a result of this patch?
->>>>
->>>> Wait, actually I think the patch is wrong, because KVM_CAP_EXIT_HYPERCALL could
->>>> be called again after KVM_TDX_FINALIZE_VM. In which case userspace could get an
->>>> exit unexpectedly. So should we drop this patch?
->>> Yes, drop it.
->>>
->> So, when the TDX guest calls MapGPA and KVM finds userspace doesn't opt-in
->> KVM_HC_MAP_GPA_RANGE, just return error to userspace?
-> 
-> Why can't KVM just do what it already does, and return an error to the guest?
+On Wed, Jun 11 2025, Mike Rapoport wrote:
 
-Because GHCI requires it must be supported. No matter with the old GHCI 
-that only allows <GetTdVmCallInfo> to succeed and the success of 
-<GetTdVmCallInfo> means all the TDVMCALL leafs are support, or the 
-proposed updated GHCI that defines <MapGpa> as one of the base API/leaf, 
-and the base API must be supported by VMM.
+> On Wed, Jun 11, 2025 at 09:14:55AM -0400, Pasha Tatashin wrote:
+>> On Wed, Jun 11, 2025 at 9:06=E2=80=AFAM Pratyush Yadav <pratyush@kernel.=
+org> wrote:
+>> >
+>> > On Tue, Jun 10 2025, Pasha Tatashin wrote:
+>> >
+>> > >> > > I think it should be the other way around, KHO should depend on
+>> > >> > > !DEFERRED_STRUCT_PAGE_INIT.
+>> > >> >
+>> > >> > Agreed, and this is what I first tried, but that does not work, t=
+here
+>> > >> > is some circular dependency breaking the build. If you feel
+>> > >> > adventurous you can try that :-)
+>> > >>
+>> > >> Hmm, weird, worked for me :/
+>> >
+>> > Worked for me as well.
+>> >
+>> > >
+>> > > I am super confused, it did not work for me over weekend, and now it
+>> > > is working. Even `make menuconfig` would not work. Anyways, I will p=
+ut
+>> > > it in the appropriate place.
+>> > >
+>> > >>
+>> > >> > > > We will need to teah KHO to work with deferred struct page in=
+it. I
+>> > >> > > > suspect, we could init preserved struct pages and then skip o=
+ver them
+>> > >> > > > during deferred init.
+>> > >> > >
+>> > >> > > We could, but with that would mean we'll run this before SMP an=
+d it's not
+>> > >> > > desirable. Also, init_deferred_page() for a random page requires
+>> > >> >
+>> > >> > We already run KHO init before smp_init:
+>> > >> > start_kernel() -> mm_core_init() -> kho_memory_init() ->
+>> > >> > kho_restore_folio() -> struct pages must be already initialized h=
+ere!
+>> > >> >
+>> > >> > While deferred struct pages are initialized:
+>> > >> > start_kernel() -> rest_init() -> kernel_init() ->
+>> > >> > kernel_init_freeable() -> page_alloc_init_late() ->
+>> > >> > deferred_init_memmap()
+>> > >> >
+>> > >> > If the number of preserved pages that is needed during early boot=
+ is
+>> > >> > relatively small, that it should not be an issue to pre-initialize
+>> > >> > struct pages for them before deferred struct pages are initialize=
+d. We
+>> > >> > already pre-initialize some  "struct pages" that are needed during
+>> > >> > early boot before the reset are initialized, see deferred_grow_zo=
+ne()
+>> > >>
+>> > >> deferred_grow_zone() takes a chunk in the beginning of uninitialize=
+d range,
+>> > >> with kho we are talking about some random pages. If we preinit them=
+ early,
+>> > >> deferred_init_memmap() will overwrite them.
+>> > >
+>> > > Yes, this is why I am saying that we would need to skip the KHO
+>> > > initialized "struct pages" somehow during deferred initialization. If
+>> > > we create an ordered by PFN list of early-initialized KHO struct
+>> > > pages, skipping during deferred initialization could be done
+>> > > efficiently.
+>> >
+>> > Or keep things simple and don't use any KHO struct pages during early
+>> > init. You can access the page itself, just don't use its struct page.
+>> >
+>> > Currently the only user of kho_restore_folio() during init is
+>> > kho_memory_init(). The FDT is accessed by doing
+>> > phys_to_virt(kho_in.fdt_phys) anyway, so there is really no need for
+>> > restoring the folio so early. It can be done later, for example when L=
+UO
+>> > does the finish event, to clean up and free the folio.
+>>=20
+>> Good suggestion, however, KHO does not have any sophisticated users
+>> that we are going to be adding as part of the live update work in the
+>> future: IR, KVM, early VCPU threads, and so on. So, while today, this
+>> might work, in the future, I am not sure if we should expect struct
+>> pages are not accessed until after deferred initialization or simply
+>> fix it once and for all.
+>
+> KHO already accesses stuct page early and uses page->private for order.
+> Since preserved memory is reserved in memblock, deferred init of struct
+> pages won't touch those pages, we just need to make sure they are properl=
+y=20
 
-Binbin wants to honor it.
+Not strictly true. Some of them might have been initialized from
+free_area_init() -> memmap_init() (the ones not eligible for deferred
+init), which happens before KHO makes its memblock reservations.
 
-> 	if (!user_exit_on_hypercall(vcpu->kvm, KVM_HC_MAP_GPA_RANGE)) {
-> 		ret = TDVMCALL_STATUS_INVALID_OPERAND;
-> 		goto error;
-> 	}
+> initialized at some point. If we don't expect many kho_restore_folio()
+> before page_alloc_init_late() we can use init_deferred_page() for early
+> accesses.
 
+I tried doing this when looking into this initially, but it doesn't work
+for some reason.
+
+    static void kho_restore_page(struct page *page, unsigned int order)
+    {
+    	unsigned int i, nr_pages =3D (1 << order);
+=20=20=20=20
+    	/* Head page gets refcount of 1. */
+    	init_deferred_page(page_to_pfn(page), NUMA_NO_NODE);
+    	set_page_count(page, 1);
+=20=20=20=20
+    	/* For higher order folios, tail pages get a page count of zero. */
+    	for (i =3D 1; i < nr_pages; i++) {
+    		init_deferred_page(page_to_pfn(page + i), NUMA_NO_NODE);
+    		set_page_count(page + i, 0);
+    	}
+=20=20=20=20
+    [...]
+
+results in:
+
+    [    0.644032] page:(____ptrval____) is uninitialized and poisoned
+    [    0.644679] page dumped because: VM_BUG_ON_PAGE(PagePoisoned(page))
+    [    0.645376] ------------[ cut here ]------------
+    [    0.645883] kernel BUG at ./include/linux/mm.h:1512!
+    [...]
+    [    0.647924] RIP: 0010:__pageblock_pfn_to_page+0x166/0x180
+    [...]
+    [    0.647924]  <TASK>
+    [    0.647924]  set_zone_contiguous+0x6b/0x90
+    [    0.647924]  page_alloc_init_late+0x356/0x370
+    [    0.647924]  kernel_init_freeable+0x12d/0x190
+    [    0.647924]  ? __pfx_kernel_init+0x10/0x10
+    [    0.647924]  kernel_init+0x1a/0x130
+
+didn't dig any deeper on why it happens...
+
+--=20
+Regards,
+Pratyush Yadav
