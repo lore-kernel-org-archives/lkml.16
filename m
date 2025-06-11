@@ -1,113 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F14535897;
-	Wed, 11 Jun 2025 13:33:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F208E2BD593;
+	Wed, 11 Jun 2025 13:33:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749648785; cv=none; b=pDNoS2qdDDPN3bMTJp8HLL/hgWJ778RSIB6FdqrvXk4BY95GKDJPSoz8PTuE1N1cDUtqL01EeCrj18eJRnwBL0+okEp2DX1oKjzJSo/q4w/0YVlD23I7rOd4qrBE0B4YqbxdBdUB6C8ntUDbKo68HiH4xZddXbrR7D/IJROU4Pw=
+	t=1749648839; cv=none; b=kPHBYLyXGnhSLxyc1Ruq+FkVuXLwpuaBUBZRH8KpfivfvE++zbur5dli2cffOTSsOMUvQRzxRbcdSsHVCR16A1rxYA47Lu51PU+yUPEtFZQILqHebVUp1Vsvnz2wqpkSvBOMyxa0mEaNOF2Lk4OoTILcbEDLTVXgFlm5jARousg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749648785; c=relaxed/simple;
-	bh=joeF+vcWw9jF2hVUV2wLUIYdu3wA0qlKcnITq1MB8Ng=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OnYP8A6lz5ga0tiM+EYACq9VpMVseBu+CwwPTZlO0PNi8eXKboBLJMgY5AraS4kGfBJgoTOcjMxm7leRmsHHcSoRE7yJ8cQC5/NLseYgtTsX+IP6deNtEgVQWmgms7qlSIqkBdjyFmU3BWAetxEfLWOKTkg79n26u/biNzI1ZDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=izdWAQ9y; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="izdWAQ9y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0996DC4CEF0;
-	Wed, 11 Jun 2025 13:33:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749648785;
-	bh=joeF+vcWw9jF2hVUV2wLUIYdu3wA0qlKcnITq1MB8Ng=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=izdWAQ9yIMMRAb8osi6/jac08Tcx8sCXgwCZvX4vZoN3SbZZdt0B40+r+hvncRUAk
-	 dAy+VTSEh8uSGAShYdZUW0htisB0HAj9mjs43tlVgj9TVvf3Ydyp+oCwx248mGFXOI
-	 l+6im02n+Cyiz6/3ZIK5ff7HQPZwjtr0eGmXQXItkddBT/AMIgeiAv5OsGuAo9s3DL
-	 9v0C58abDmdDvFJE8r2GUX+SgK9b7FN9l4G6ns/XpQ1FW7K/J+ysDg3Dne5A/6AAvf
-	 0RM+TbyilD8bXCZNjkDud1DJo6ASBggonSicmTvUlTFJaNpAlnhMYIX1JFhG3ObuGr
-	 jreZDT3VBwqDw==
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-55351af2fc6so8030513e87.0;
-        Wed, 11 Jun 2025 06:33:04 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVU1D6+/8TiRWiqZCN220tvnIrHKxH27ckErJxa8q45TXIQM8GLDV+F4v7yaZkjlDGp/amG3bqb+Zun3r8=@vger.kernel.org, AJvYcCWp7/m//vc+Mqo6Q8QfHzBE+Nl5hDHBaNg8xxhKVihYl/Kwn8b0SF4azdli7KEXPsieRviHOB6u58fpnU9g@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyqw8j40xCsARjIRfoGsrJDNFhgH+0ZoGEooFG2ICr+O4YboS/W
-	cfL7pF8F/uAWU9FaDKn/6D+gHsJz1FN0nCPpyt4YtwJR/mW/f5pD3sOh/F8MpNToiy/g8hMz2lV
-	Tb+98KrRF6QhY0KWqN/bq0xMPOqkfyzc=
-X-Google-Smtp-Source: AGHT+IFNVUN7XuIjpfYPJwgta4Gjv8qv2eyOJbAM/h6iUR3e1inIgTF4rSFilLfAOPCrklG0evUg7R4g3PK9YR6GrL8=
-X-Received: by 2002:a05:6512:3e22:b0:553:20f2:2e77 with SMTP id
- 2adb3069b0e04-5539d55dc4cmr801852e87.55.1749648783718; Wed, 11 Jun 2025
- 06:33:03 -0700 (PDT)
+	s=arc-20240116; t=1749648839; c=relaxed/simple;
+	bh=YEOpV0Qscs7CcXXj9sDb8chGC69grwKgyG3krO9d6vo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XcKBb+xSaJTFQ+svEtKLxySD+dRzPuCRKwF9n6xy3sF6KAPC3szK2aJb5bvackORnrfQoIljnATDp/Caxew4r+iqxroTBCNNZCK/FEjmWdUdOu/2K7qU6/zSFU5aL1A/v/h3JhGS6S98h5+F80MZl4al2yW9EjAL+rNoD9xI+jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 39E1D15A1;
+	Wed, 11 Jun 2025 06:33:37 -0700 (PDT)
+Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 54F023F59E;
+	Wed, 11 Jun 2025 06:33:55 -0700 (PDT)
+Date: Wed, 11 Jun 2025 14:33:37 +0100
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>, arm-scmi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH 0/3] firmware: arm_scmi: perf/cpufreq: Enable
+ notification only if supported by platform
+Message-ID: <aEmFnJVG8lXTDNmO@pluto>
+References: <20250611-scmi-perf-v1-0-df2b548ba77c@nxp.com>
+ <20250611-cherubic-solemn-toucanet-aac5af@sudeepholla>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAK7LNAQunzxOHR+vMZLf8kqxyRtLx-Z2G2VZquJmndrT9TZjiQ@mail.gmail.com>
- <20250611075533.8102A57-hca@linux.ibm.com>
-In-Reply-To: <20250611075533.8102A57-hca@linux.ibm.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Wed, 11 Jun 2025 22:32:26 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASSeuZWAXS6tDGL1T8S1N9fmg4DND616BL6uco4gnYFqA@mail.gmail.com>
-X-Gm-Features: AX0GCFv0jbbR-vbqIHzHbknTnj-UPv7EfuyqK0wlyWTgl-XQejmGq6KCE6rdppc
-Message-ID: <CAK7LNASSeuZWAXS6tDGL1T8S1N9fmg4DND616BL6uco4gnYFqA@mail.gmail.com>
-Subject: Re: [GIT PULL] Kbuild updates for v6.16-rc1
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611-cherubic-solemn-toucanet-aac5af@sudeepholla>
 
-On Wed, Jun 11, 2025 at 4:55=E2=80=AFPM Heiko Carstens <hca@linux.ibm.com> =
-wrote:
+On Wed, Jun 11, 2025 at 01:17:11PM +0100, Sudeep Holla wrote:
+> On Wed, Jun 11, 2025 at 03:52:42PM +0800, Peng Fan (OSS) wrote:
+> > PERFORMANCE_NOTIFY_LIMITS and PERFORMANCE_NOTIFY_LEVEL are optional
+> > commands. If use these commands on platforms that not support the two,
+> > there is error log:
+> >   SCMI Notifications - Failed to ENABLE events for key:13000008 !
+> >   scmi-cpufreq scmi_dev.4: failed to register for limits change notifier for domain 8
+> > 
+> 
+
+Hi,
+
+I had a quick look/refresh to this stuff from years ago...
+
+...wont be so short to explain :P
+
+In general when you register a notifier_block for some SCMI events,
+the assumption was that a driver using proto_X_ops could want to register
+NOT only for proto_X events BUT also for other protos...in such a case you
+are NOT guaranteed that such other proto_Y was initialized when your
+driver probes and tries to register the notifier...indeed it could be
+that such proto_Y could be a module that has still to be loaded !
+
+...in this scenario you can end-up quickly in a hell of probe-dependency
+if you write a driver asking for SCMI events that can or cannot be still
+readily available when the driver probes...
+
+....so the decision was to simply place such notifier registration requests
+on hold on a pending list...whenever the needed missing protocol is
+loaded/inialized the notifier registration is completed...if the proto_Y
+never arrives nothing happens...and your driver caller can probe
+successfully anyway...
+
+This means in such a corner-case the notifier registration is sort of
+asynchonous and eventual errors detected later, when the protocol is
+finally initialized and notifiers finalized, cannot be easily reported
+(BUT I think we could improve on this ... thinking about this...)
+
+...BUT....
+
+....this is NOT our case NOR the most common case...the usual scenario,
+like cpufreq, is that a driver using proto_X_ops tries to register for
+that same proto_X events and in such a case we can detect that such
+domain is unsupported and fail while avoiding to send any message indeed....
+
+....so....:P...while I was going through this rabbit-hole....this issues
+started to feel familiar...O_o....
+
+... indeed I realized that the function that you (Peng) now invoke to
+set the per-domain perf_limit_notify flag was introduced just for these
+reasons to check and avoid such situation for all protocols in the core:
+
+
+commit 8733e86a80f5a7abb7b4b6ca3f417b32c3eb68e3
+Author: Cristian Marussi <cristian.marussi@arm.com>
+Date:   Mon Feb 12 12:32:23 2024 +0000
+
+    firmware: arm_scmi: Check for notification support
+    
+    When registering protocol events, use the optional .is_notify_supported
+    callback provided by the protocol to check if that specific notification
+    type is available for that particular resource on the running system,
+    marking it as unsupported otherwise.
+    
+    Then, when a notification enable request is received, return an error if
+    it was previously marked as unsuppported, so avoiding to send a needless
+    notification enable command and check the returned value for failure.
+    
+    Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+    Link: https://lore.kernel.org/r/20240212123233.1230090-2-cristian.marussi@arm.com
+    Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+
+
+...so my suspect is that we are ALREADY avoiding to send unneeded
+messages when a domain does NOT support notifications for ALL
+protocols...it is just that we are a bit too noisy...
+
+@Peng do you observe the message being sent instead ? (so maybe the
+above has a bug...) or it is just the message ?
+
+> I wonder if it makes sense to quiesce the warnings from the core if the
+> platform doesn't support notifications. I prefer to not add if notification
+> supported in all the protocols.
+> 
+
+yes
+
+> If the interface can return -EOPNOTSUPP(equivalent to SCMI_ERR_SUPPORT),
+> the caller must handle it appropriately(i.e. continue if it can handle
+> absence of notification or propagate error).
+> 
+
+This is what we do indeed....
+
+> Cristian, Thoughts/opinions ?
 >
-> On Sun, Jun 08, 2025 at 01:41:18AM +0900, Masahiro Yamada wrote:
-> > Kbuild updates for v6.16
-> >
-> >  - Add support for the EXPORT_SYMBOL_GPL_FOR_MODULES() macro, which exp=
-orts a
-> >    symbol only to specified modules
-> >
-> >  - Improve ABI handling in gendwarfksyms
-> >
-> >  - Forcibly link lib-y objects to vmlinux even if CONFIG_MODULES=3Dn
-> >
-> >  - Add checkers for redundant or missing <linux/export.h> inclusion
->
-> As you write in commit a934a57a42f6 ("scripts/misc-check: check missing
-> #include <linux/export.h> when W=3D1") this adds now 4000+ extra warnings
-> for W=3D1 builds, which makes such builds more or less useless for me.
->
-> Also the commit only describes what you want to achieve, but not why.
-> I can only guess that you want to reduce header dependencies(?).
+ 
+too many :D ....
 
-Yes.
+> > If platforms not support perf notification, saving some cpu cycles
+> > by introducing notify_supported ops.
+> > 
+> 
+> Sure, makes sense to improve where ever possible.
+> 
 
-Here, more numbers.
-There are around 32000 *.c files in the tree, but only about 6000 of them
-actually export symbols.
-However, most of them end up including <linux/export.h>,
-even though only 20% of them truly need it.
+Should be solved as above...
 
-Header dependency cleanup is necessary.
-Many a little makes a mickle.
-
-> Don't get me wrong, I can address all of this trivial churn for s390, how=
-ever
-> enforcing so many extra warnings to everyone with W=3D1 builds doesn't lo=
-ok like
-> the right approach to me.
-
-This is what W=3D1 is for.
-0day bot detects a new W=3D1 warning, so we can avoid new warnings coming i=
-n.
-
-People do not know which headers should be included when.
-So, this warning must exist at least until we can get rid of
-#include <linux/export.h> from include/linux/module.h,
-include/linux/linkage.h etc.
-
-
---=20
-Best Regards
-Masahiro Yamada
+Thanks,
+Cristian
