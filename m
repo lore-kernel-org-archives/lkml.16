@@ -1,48 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 758E927145D;
-	Wed, 11 Jun 2025 10:43:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8FD02777FD;
+	Wed, 11 Jun 2025 10:44:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749638638; cv=none; b=USRMaLp8aha+BD/Bd0rlEkjofUOBoEGOoVCyiWyJv0yEwkL89ph2In2ZMEry67adBCFyfW7vEDxv3rliZ69gHyfLNZSj26f880Ke69IOKFW02/yOllfgvFlkuqMk2d+4Mhu5FXVXjWljB8ue+tNRrFHhUnJF4hweJY7GEJomQEw=
+	t=1749638640; cv=none; b=Huj4WTAydPd+0qh36azE7SgR3zgKPmHvVUNhNiuH/Iy6VG0VSagYF99EFxFc02nE3SkuqpZR/zo+qity/IQwddtkNhWBpf8F6Zf4QdlCGtHXlhhCxm4LvCa9DqkerDniSsMwIwa13S4HFJUZ3rDhBHw4hQTzXv1vD3i3on2Q7xM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749638638; c=relaxed/simple;
-	bh=SxVgloiedDddTuoCzwRU31NMinDlF8gzHdqvxB0Y+0A=;
+	s=arc-20240116; t=1749638640; c=relaxed/simple;
+	bh=3eZ2gqR32m+KtInlYfTGSiD+DJ8C8ADbkP60LHZgtRo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LBakMritTZPVSkIU0GHU+cieJlx9REQZ9axDR6jcgkyjBndi+pgUfuGFc/lc5QJdO6mpa8f4jw3DSjfcYy1aaHFyMIqInRUf4QxLD4uSIz2evN5nL1WEH4EM/DsBYeF+yTE0tBCnlbU3L5m2akE5/+zdo68XFYv52qBu6L19bMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ixQg2U+2; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=uydaFxZCiu4ll4hrNkfay1btC7Y1oEnQqaZ00VdnPIZZbr/qNJblrqUbefCatSKMxRLtlJxhZ/bmRwUgWTNrUgadC+Ts9b0HBWknkdb+a/kSMI4nhSbwW7k52D4uqYhlvcV+Cc9Y1guSq5B/LV0OZKqKlwaPPIMRUaqLHWDROyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nzo7ocgf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ixQg2U+2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CFDCC4CEF2;
-	Wed, 11 Jun 2025 10:43:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nzo7ocgf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83030C4CEEE;
+	Wed, 11 Jun 2025 10:43:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749638638;
-	bh=SxVgloiedDddTuoCzwRU31NMinDlF8gzHdqvxB0Y+0A=;
+	s=k20201202; t=1749638640;
+	bh=3eZ2gqR32m+KtInlYfTGSiD+DJ8C8ADbkP60LHZgtRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ixQg2U+29+/lnRxdF08lMlWPo4ehb0oLFJRyRMG0Fcn9ALezaO55pnUfGSRXrbK6o
-	 KYvWB+fLAJH64xlX/dLoX1WFTSnRw0HYZF2x4t3Z/W4A2uN/FukIf8uAFf9OsX9DJi
-	 LOXpLPH7ILsPFvT9V0G1wfX7+ML0D22Nlt7swPZpZi1hblDMmtoVN00pZ0vvEyzU5Q
-	 SSAnAzEe4/p0aJvFypqdFuUx6odQMI2dzrJ4WMdcn7qFRptN7ndahRvGvudArxSBzW
-	 X4BWbE33XgyvbI2NTp2CgSs8YhJdlBM9bsXDI9Ue53YCeIxhx7boy3F03CaY2UI8wj
-	 5+CzdgU64CGrw==
+	b=Nzo7ocgf5sl3wopNxoF5k8Qj60baVPBNIRwmU6GEY8nl8ANIutdVY6jp8tGRbrjX8
+	 apd/kjsuNdnA5GZ92sxC8XS5Ae8dYp+rd7j+AjIxh/G2/A1P+am7dFEAP8RluRqj8q
+	 JTssHFSzFELdRXnZ6t/yMAnkeJ3U+I2mTRc3SDXUaz8Uj6Ps8v90DjNzmGJ5Cb90nQ
+	 3P2cII6DRokPsaLwhDvxAVUtMEJov4lgANhbzyZShKTT8pYlr4O2zYqUaaXgf4UJB8
+	 aZ52yapKn9h30hJVeJkkMi6sVvR+juQQTOUHNz12zmVG5rBX9r7xLkTllqjF8/HzqP
+	 28VdlbhCqLxUA==
 From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: tglx@linutronix.de,
 	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Rob Clark <robdclark@gmail.com>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	linux-arm-msm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	freedreno@lists.freedesktop.org
-Subject: [PATCH] drm/msm: use dev_fwnode()
-Date: Wed, 11 Jun 2025 12:43:32 +0200
-Message-ID: <20250611104348.192092-4-jirislaby@kernel.org>
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Tony Luck <tony.luck@intel.com>,
+	James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>,
+	linux-edac@vger.kernel.org
+Subject: [PATCH] edac: Use dev_fwnode()
+Date: Wed, 11 Jun 2025 12:43:33 +0200
+Message-ID: <20250611104348.192092-5-jirislaby@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250611104348.192092-1-jirislaby@kernel.org>
 References: <20250611104348.192092-1-jirislaby@kernel.org>
@@ -61,37 +58,34 @@ using of_node with of_fwnode_handle().
 So use the dev_fwnode() helper.
 
 Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-Cc: Rob Clark <robdclark@gmail.com>
-Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>
-Cc: Dmitry Baryshkov <lumag@kernel.org>
-Cc: Sean Paul <sean@poorly.run>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>
-Cc: David Airlie <airlied@gmail.com>
-Cc: Simona Vetter <simona@ffwll.ch>
+Cc: Dinh Nguyen <dinguyen@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Robert Richter <rric@kernel.org>
 
 ---
-
-Cc: linux-arm-msm@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: freedreno@lists.freedesktop.org
+Cc: linux-edac@vger.kernel.org
 ---
- drivers/gpu/drm/msm/msm_mdss.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/edac/altera_edac.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_mdss.c b/drivers/gpu/drm/msm/msm_mdss.c
-index 709979fcfab6..5ea2a2241246 100644
---- a/drivers/gpu/drm/msm/msm_mdss.c
-+++ b/drivers/gpu/drm/msm/msm_mdss.c
-@@ -150,8 +150,7 @@ static int _msm_mdss_irq_domain_add(struct msm_mdss *msm_mdss)
- 
- 	dev = msm_mdss->dev;
- 
--	domain = irq_domain_create_linear(of_fwnode_handle(dev->of_node), 32,
--			&msm_mdss_irqdomain_ops, msm_mdss);
-+	domain = irq_domain_create_linear(dev_fwnode(dev), 32, &msm_mdss_irqdomain_ops, msm_mdss);
- 	if (!domain) {
- 		dev_err(dev, "failed to add irq_domain\n");
- 		return -EINVAL;
+diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+index cae52c654a15..cfd17a8e5865 100644
+--- a/drivers/edac/altera_edac.c
++++ b/drivers/edac/altera_edac.c
+@@ -2131,8 +2131,8 @@ static int altr_edac_a10_probe(struct platform_device *pdev)
+ 	edac->irq_chip.name = pdev->dev.of_node->name;
+ 	edac->irq_chip.irq_mask = a10_eccmgr_irq_mask;
+ 	edac->irq_chip.irq_unmask = a10_eccmgr_irq_unmask;
+-	edac->domain = irq_domain_create_linear(of_fwnode_handle(pdev->dev.of_node),
+-						64, &a10_eccmgr_ic_ops, edac);
++	edac->domain = irq_domain_create_linear(dev_fwnode(&pdev->dev), 64, &a10_eccmgr_ic_ops,
++						edac);
+ 	if (!edac->domain) {
+ 		dev_err(&pdev->dev, "Error adding IRQ domain\n");
+ 		return -ENOMEM;
 -- 
 2.49.0
 
