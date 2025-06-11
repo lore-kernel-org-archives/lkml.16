@@ -1,167 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525BE17A300;
-	Wed, 11 Jun 2025 02:22:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D7513CA97;
+	Wed, 11 Jun 2025 02:22:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749608552; cv=none; b=CCimwyQj7Vih7P5ixOdsoOftB5RflNwoGNlaVSNWypyYZMHEmxSaLhHvG6o2P0k7YfdxS7a77M/shqjHb0ldY+qXjZJu5wl+M8iingVFP85xU+NpIfiyb5F6veCBVuI+AewtEpyc7f7xGOxeEPptweB0/29aVCJwBlSIZfLG6so=
+	t=1749608575; cv=none; b=jvxbl+lWH7VnLP2Z2BALf+ZLuCYoXpkbYflj6agzEoh7BBnOCdxNPTyL7L9q0FuereQpywGab9DbqxBTATQTA3CaQwnpMmv3uAx0dKwP9MWBw14DmwvBQLek+6kmY0p9rKaAQeEUxAOBB/oanlrxvjM+Xqn+tBlg1JUYoYxlEss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749608552; c=relaxed/simple;
-	bh=Ed1is4dFFQcnJqd890TF8mEHkJbOWmhg5Z6sN2kKXiY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jZuTjuLOVwiY3iK3UdOEGdOM1F362yb61+N/z8vkXQJJyhAl2xLLcxUFk5vMSVBEqJ/BiBkEwy8aXMlh+MHca91e3/EsAr+NpmsPglWpuFtydBGAyPuLwLxFrAbtk2Yzy7Q2+cxxR7GQPnQ1JJ8RA4J7b5vgx6TeiU7dc2lbfcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y774YWLF; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749608575; c=relaxed/simple;
+	bh=4/xi1WH0V/dSUbIa0AQ7R2NNrAZCgNU0NjolVoDz8Qo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PSSY6KpJr6uzHquZrXEmZ/atJ2pFTcyhDTXlqjrwMLQHKmVUlZDnfqi7qt61Tcp5PvocKgvOZpX456MF8XGrNmKFIV8ncYPCKzZ3Kd6vNivW3z/QZfgkWGWY3JJM5Rj8Hid0vLwlPfiOAEq4kYozuHmuO4m1a8O/V3Cyo1lonkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=d6/hfQze; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y774YWLF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749608550; x=1781144550;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Ed1is4dFFQcnJqd890TF8mEHkJbOWmhg5Z6sN2kKXiY=;
-  b=Y774YWLFaKsJX89L0SKPAXjWE/vbRA/r3y+V6kZE2FsMxDi0/AkywvIJ
-   NyVsE8P5nzC2ejh/6H5+PHhZ66iPRsvuATO6oVWTjBtu0B/wwYN4gx0jR
-   kHjAg6x/sMDk/SQ6JmNwF0CYM4Q3+jryxnB4Ohi/nyUj4EILmVnUWqlDh
-   IadhaMxQ9IE0l0rGozj1J1uM7bT/V/UwQoLAIjeWjEhpWogdidhPLMpt/
-   xY0eadXZfkRsa6oGVFq14W0UxHc4QxrhprL9oCU7uJ2D2AbNsXa/5KtXE
-   zI39bjUiJ303sShfnITwF7E6Xgkg/XnQiKYWnO2j2JRIWZL/NN6D36MDJ
-   Q==;
-X-CSE-ConnectionGUID: dUbSLDQkTP++75Bn+J5GHw==
-X-CSE-MsgGUID: 0z3bxPUrR8+HLm3jI8Nq/w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="50963429"
-X-IronPort-AV: E=Sophos;i="6.16,226,1744095600"; 
-   d="scan'208";a="50963429"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 19:22:29 -0700
-X-CSE-ConnectionGUID: cJqF3sT6R0+zK3350hbcPg==
-X-CSE-MsgGUID: 2yNrwdHTT6ScKhzYCoIr8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,226,1744095600"; 
-   d="scan'208";a="177931736"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.144]) ([10.124.245.144])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2025 19:22:27 -0700
-Message-ID: <6ca40a71-fd4e-49f7-af45-5855ccbb857b@linux.intel.com>
-Date: Wed, 11 Jun 2025 10:22:24 +0800
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="d6/hfQze"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1749608569;
+	bh=LxD5HQJOJ7DxFFENLP6r2586LhCQdCVtdN/m1q6Pzmk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=d6/hfQzeeCnw6q+/7oW9h0f3PtRwGWa1DZDOmYojFKMNUiRoq/Q8YQc3LPl5sok5I
+	 ReEYxu3+PuIaodFnrXrATnCmOGjNl3K4XFo88ZNKaU4rDQ00DyU5nerD9vExGk6vfp
+	 3ijCBLvNx2kNTIdpLCHdfxA4diTGdVWPKL9pPGNO4MsWGer6JAhBy1qvk2ODsMQGSH
+	 9CySwn5vuX323k3JRFCT5ZUOBErCOfF+YmV8DBPuW/ltUfUpC3fMdyPTol0wWozA2Y
+	 zu1U+ZZcI0ov4AVt/V84GE/d9NDP8X1BggmFLT2prRgcCDUtEiBSSBgCqT7bIMkPnw
+	 bmAKlW4QyfAYA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bH8Zd2Vwfz4wvb;
+	Wed, 11 Jun 2025 12:22:49 +1000 (AEST)
+Date: Wed, 11 Jun 2025 12:22:48 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Simona Vetter <simona.vetter@ffwll.ch>
+Cc: Intel Graphics <intel-gfx@lists.freedesktop.org>, DRI
+ <dri-devel@lists.freedesktop.org>, Dmitry Baryshkov
+ <dmitry.baryshkov@linaro.org>, Dmitry Baryshkov
+ <dmitry.baryshkov@oss.qualcomm.com>, Gabriel Dalimonte
+ <gabriel.dalimonte@gmail.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Maxime Ripard <mripard@kernel.org>
+Subject: Re: linux-next: manual merge of the drm-misc tree with the
+ drm-misc-fixes tree
+Message-ID: <20250611122248.67996245@canb.auug.org.au>
+In-Reply-To: <20250611120801.48566070@canb.auug.org.au>
+References: <20250611120801.48566070@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 08/32] KVM: SVM: Massage name and param of helper that
- merges vmcb01 and vmcb12 MSRPMs
-To: Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- Chao Gao <chao.gao@intel.com>, Borislav Petkov <bp@alien8.de>,
- Xin Li <xin@zytor.com>, Francesco Lavra <francescolavra.fl@gmail.com>,
- Manali Shukla <Manali.Shukla@amd.com>
-References: <20250610225737.156318-1-seanjc@google.com>
- <20250610225737.156318-9-seanjc@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20250610225737.156318-9-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/9DUQGyY1RqU=7u0EUYh6I+w";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
+--Sig_/9DUQGyY1RqU=7u0EUYh6I+w
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 6/11/2025 6:57 AM, Sean Christopherson wrote:
-> Rename nested_svm_vmrun_msrpm() to nested_svm_merge_msrpm() to better
-> capture its role, and opportunistically feed it @vcpu instead of @svm, as
-> grabbing "svm" only to turn around and grab svm->vcpu is rather silly.
+Hi all,
+
+On Wed, 11 Jun 2025 12:08:01 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
 >
-> No functional change intended.
->
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  arch/x86/kvm/svm/nested.c | 15 +++++++--------
->  arch/x86/kvm/svm/svm.c    |  2 +-
->  2 files changed, 8 insertions(+), 9 deletions(-)
->
-> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-> index 8427a48b8b7a..89a77f0f1cc8 100644
-> --- a/arch/x86/kvm/svm/nested.c
-> +++ b/arch/x86/kvm/svm/nested.c
-> @@ -189,8 +189,9 @@ void recalc_intercepts(struct vcpu_svm *svm)
->   * is optimized in that it only merges the parts where KVM MSR permission bitmap
->   * may contain zero bits.
->   */
-> -static bool nested_svm_vmrun_msrpm(struct vcpu_svm *svm)
-> +static bool nested_svm_merge_msrpm(struct kvm_vcpu *vcpu)
->  {
-> +	struct vcpu_svm *svm = to_svm(vcpu);
->  	int i;
->  
->  	/*
-> @@ -205,7 +206,7 @@ static bool nested_svm_vmrun_msrpm(struct vcpu_svm *svm)
->  	if (!svm->nested.force_msr_bitmap_recalc) {
->  		struct hv_vmcb_enlightenments *hve = &svm->nested.ctl.hv_enlightenments;
->  
-> -		if (kvm_hv_hypercall_enabled(&svm->vcpu) &&
-> +		if (kvm_hv_hypercall_enabled(vcpu) &&
->  		    hve->hv_enlightenments_control.msr_bitmap &&
->  		    (svm->nested.ctl.clean & BIT(HV_VMCB_NESTED_ENLIGHTENMENTS)))
->  			goto set_msrpm_base_pa;
-> @@ -230,7 +231,7 @@ static bool nested_svm_vmrun_msrpm(struct vcpu_svm *svm)
->  
->  		offset = svm->nested.ctl.msrpm_base_pa + (p * 4);
->  
-> -		if (kvm_vcpu_read_guest(&svm->vcpu, offset, &value, 4))
-> +		if (kvm_vcpu_read_guest(vcpu, offset, &value, 4))
->  			return false;
->  
->  		svm->nested.msrpm[p] = svm->msrpm[p] | value;
-> @@ -937,7 +938,7 @@ int nested_svm_vmrun(struct kvm_vcpu *vcpu)
->  	if (enter_svm_guest_mode(vcpu, vmcb12_gpa, vmcb12, true))
->  		goto out_exit_err;
->  
-> -	if (nested_svm_vmrun_msrpm(svm))
-> +	if (nested_svm_merge_msrpm(vcpu))
->  		goto out;
->  
->  out_exit_err:
-> @@ -1819,13 +1820,11 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
->  
->  static bool svm_get_nested_state_pages(struct kvm_vcpu *vcpu)
->  {
-> -	struct vcpu_svm *svm = to_svm(vcpu);
-> -
->  	if (WARN_ON(!is_guest_mode(vcpu)))
->  		return true;
->  
->  	if (!vcpu->arch.pdptrs_from_userspace &&
-> -	    !nested_npt_enabled(svm) && is_pae_paging(vcpu))
-> +	    !nested_npt_enabled(to_svm(vcpu)) && is_pae_paging(vcpu))
->  		/*
->  		 * Reload the guest's PDPTRs since after a migration
->  		 * the guest CR3 might be restored prior to setting the nested
-> @@ -1834,7 +1833,7 @@ static bool svm_get_nested_state_pages(struct kvm_vcpu *vcpu)
->  		if (CC(!load_pdptrs(vcpu, vcpu->arch.cr3)))
->  			return false;
->  
-> -	if (!nested_svm_vmrun_msrpm(svm)) {
-> +	if (!nested_svm_merge_msrpm(vcpu)) {
->  		vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
->  		vcpu->run->internal.suberror =
->  			KVM_INTERNAL_ERROR_EMULATION;
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index ec97ea1d7b38..854904a80b7e 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -3137,7 +3137,7 @@ static int svm_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
->  		 *
->  		 * For nested:
->  		 * The handling of the MSR bitmap for L2 guests is done in
-> -		 * nested_svm_vmrun_msrpm.
-> +		 * nested_svm_merge_msrpm().
->  		 * We update the L1 MSR bit as well since it will end up
->  		 * touching the MSR anyway now.
->  		 */
+> Today's linux-next merge of the drm-misc tree got a conflict in:
+>=20
+>   drivers/gpu/drm/vc4/vc4_hdmi.c
+>=20
+> between commit:
+>=20
+>   c0317ad44f45 ("drm/vc4: fix infinite EPROBE_DEFER loop")
+>=20
+> from the drm-misc-fixes tree and commit:
+>=20
+>   d9f9bae6752f ("drm/bridge: allow limiting I2S formats")
+>=20
+> from the drm-misc tree.
+>=20
+> I fixed it up (the former removes code updated by the latter, so I just
+> removed the code) and can carry the fix as necessary. This is now fixed
+> as far as linux-next is concerned, but any non trivial conflicts should
+> be mentioned to your upstream maintainer when your tree is submitted for
+> merging.  You may also want to consider cooperating with the maintainer
+> of the conflicting tree to minimise any particularly complex conflicts.
 
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Actually, the code was moved, not removed, so it needs the below merge
+fix up.
 
+--=20
+Cheers,
+Stephen Rothwell
 
+diff --cc drivers/gpu/drm/vc4/vc4_hdmi.c
+index 163d092bd973,4797ed1c21f4..000000000000
+--- a/drivers/gpu/drm/vc4/vc4_hdmi.c
++++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+@@@ -2285,12 -2291,6 +2285,12 @@@ static int vc4_hdmi_audio_init(struct v
+  		return ret;
+  	}
+ =20
+ +	ret =3D drm_connector_hdmi_audio_init(&vc4_hdmi->connector, dev,
+- 					    &vc4_hdmi_audio_funcs, 8, false,
+++					    &vc4_hdmi_audio_funcs, 8, 0, false,
+ +					    -1);
+ +	if (ret)
+ +		return ret;
+ +
+  	dai_link->cpus		=3D &vc4_hdmi->audio.cpu;
+  	dai_link->codecs	=3D &vc4_hdmi->audio.codec;
+  	dai_link->platforms	=3D &vc4_hdmi->audio.platform;
+
+--Sig_/9DUQGyY1RqU=7u0EUYh6I+w
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhI6HgACgkQAVBC80lX
+0GwF+wf/bAJ+afUr5JN1mtlUDnctvxXxxlSAZF6J8WJ8pb0zZ1YvfbkfC7w4NObX
+bQy0hejCIOhhBT4X+nujtWD4NjzcsmPrUhuEc19T7aqz9loDn4HH2Pz9/WXFtjMA
+5jWgS8xu+LrCo1IMfM7qzI0kyZ/DFCfxIyIIq+mjmaeWe3+DD6sEr7yn5bientRI
+ezbSmYcrPpfL2932+MezuIFO7DKox6nvjnjOy2zz8B20sz3t3nd1oHkCYJi+vmiB
+GRTPM28NQDhFPlRbOVy1woZYS6nS4jZxfgABF5VsUr7vkQRqgXgohZNNWPvbY7TT
+T21wsPAj5kgZLRMLYrA5X87Ll6gQEQ==
+=PpFa
+-----END PGP SIGNATURE-----
+
+--Sig_/9DUQGyY1RqU=7u0EUYh6I+w--
