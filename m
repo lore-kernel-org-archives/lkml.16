@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EBF528FD;
-	Wed, 11 Jun 2025 06:30:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAF1A21B19D;
+	Wed, 11 Jun 2025 06:32:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749623439; cv=none; b=lUVGAuAou0iyXEBZc+4RC3AYTb7jFQzP+MIN2K+dZprnaNmjmicikoIH2MK9yD/LtQUL+oLr981h8QJYDKfRYNSPOJObDQqtkbs4/S7pw/BYqCzC7YnnmRbiMi6T0AvBzUdHAtn3BYozTu+IyhRcO3AkUwa2ovuKa1FKDvSan7s=
+	t=1749623537; cv=none; b=gRpYShnjmpx2Y//HeCod/NBsIMgDiuLoIEQX2RRQysYBfK+gADEPxf67dLzPOymfQZAk2mqatDIIksgeYk/CS+fVjX6jifm84oNAxP5S9wIc3jnZa8HymOJWHXZSKwoNpQakOitKL5ft9mfkjroywsPz906MGUnamcRaDZ9Pso4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749623439; c=relaxed/simple;
-	bh=Eqwe71FwB2joW1I6Xy4GZaN1pBqXDrm63lZSn17aIOo=;
+	s=arc-20240116; t=1749623537; c=relaxed/simple;
+	bh=J3UGwgi7fwDEC+FexveDUmJHugoo+CsBZ5+yIQEJbUU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KhoB4Cdx5bGYAijgxBDGFR1uT+wSP/25LP44UAPAi6hEqADtGUONAJD+jLTJNzUOQ7r7zgc5C57y2NenjmmIWf8d3NL58NwDEdpHcIKCIA5T3opSJWH1sl6ZONGmr0fsaoxw7CfjwZt671s+wOD58v0SMJmixSUq1B6VdudgdQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rCik9PTQ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=StFT4G2z3S3s3H3mL/OIOjNyh22LAtu/LjvnKBQPFXy19b29K8Opb9kYazz/h1iKQG/pbujMQhGzE/Ly2sawZa3BzNrXcgBtjMOnLsy1a3/7wsxbb1yVHMZ+W0u1iuxy8dGg1x8LrcpT270GA5PZkRg6meVLNQMubaYL+AUUJV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IVMQlmEW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rCik9PTQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B25CC4CEEE;
-	Wed, 11 Jun 2025 06:30:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IVMQlmEW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3228EC4CEEF;
+	Wed, 11 Jun 2025 06:32:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749623439;
-	bh=Eqwe71FwB2joW1I6Xy4GZaN1pBqXDrm63lZSn17aIOo=;
+	s=k20201202; t=1749623535;
+	bh=J3UGwgi7fwDEC+FexveDUmJHugoo+CsBZ5+yIQEJbUU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rCik9PTQe0mWY83smq5T3YIS7kM2Q/SPiH0W/FEWNOq+eEq7xNl5k9ymbATz+Nq3x
-	 10lRHm6KGjmIjspzqdlJm+4qK44ONtntHQubEGxoO0+CYswAA78HdJqpNi9fAF6fLy
-	 HSYjK1rkJU/Cs7Ok+TnyMedLj10k2aFRmm6syUhlHhMQrKrhDVFCLmdq/XAlD3TT2d
-	 u/3AFj15snkMwLA8qvOLtKXaqcB5BE3VBe61hXJAsz02clJs6puPFI30YHCIiYHHcS
-	 pi40wIgZjYGiYGpL992HL+1khEMhZxGx8+FspmVu26hG2khWFYWwbSjNgCLIXxJ0Vf
-	 dIc9J6lmyTM1g==
-Message-ID: <717e3f5f-1753-4715-b569-3d7567508d76@kernel.org>
-Date: Wed, 11 Jun 2025 08:30:33 +0200
+	b=IVMQlmEW+ijtbmKTyDHg7FCcoEq+Ygux3RaWTquf9ajIdFOIyWuDPGwkXWQHq2CMg
+	 UYEa9GibvvAX8tnfxrnEF75PAfSAmSAoy6kJr0tzrhzOMLjkYLsbJdI1fHYITTtdKK
+	 mZNL/v+w3w2hSt6ysmnYfEN46Zg0AgwHi0fsaSqm5z5JuPtWzAQQdeSulwKJgtcQr0
+	 8euWoK08HuDq/25lCI4IodeWSQmv+X0OKwPZoc5ajfrx5QI0lEwpJxnsvIFbB24Rmp
+	 D9j0q8Az7Ga9g9AciHKYlvTvVOpKK+AsD18Ztr5aEi5XvfhQeUE4rC0nAjrmHfkoae
+	 ungWZ97qQvReQ==
+Message-ID: <d0b13867-9aa4-4fb1-8492-0cc58e92c61d@kernel.org>
+Date: Wed, 11 Jun 2025 08:32:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,26 +35,21 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] dt-bindings: mailbox: qcom,apcs: Add separate node
- for clock-controller
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Stephan Gerhold <stephan.gerhold@linaro.org>,
- Saravana Kannan <saravanak@google.com>, Rob Herring <robh@kernel.org>,
- Jassi Brar <jassisinghbrar@gmail.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-clk@vger.kernel.org, Georgi Djakov <djakov@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-References: <20250506-qcom-apcs-mailbox-cc-v1-0-b54dddb150a5@linaro.org>
- <20250506-qcom-apcs-mailbox-cc-v1-1-b54dddb150a5@linaro.org>
- <7vszdea2djl43oojvw3vlrip23f7cfyxkyn6jw3wc2f7yowht5@bgsc2pqscujc>
- <aCNGSwL7043GoJBz@linaro.org> <20250514160841.GA2427890-robh@kernel.org>
- <aCUHTJGktLFhXq4Q@linaro.org> <20250521-psychedelic-cute-grouse-ee1291@kuoka>
- <aC-AqDa8cjq2AYeM@linaro.org>
- <20250523-markhor-of-fortunate-experience-1f575e@kuoka>
- <jvsdn67x2qm2avaktnpqzoixcd46xuuf6i5kpeolsnewgoqt6q@jid7unlmmu65>
+Subject: Re: [PATCH v3 1/1] dt-bindings: net: convert qca,qca7000.txt yaml
+ format
+To: Frank Li <Frank.li@nxp.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Stefan Wahren <wahrenst@gmx.net>,
+ "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+ imx@lists.linux.dev
+References: <20250606155118.1355413-1-Frank.Li@nxp.com>
+ <20250610-thick-gifted-tuna-7eab4f@kuoka>
+ <aEhPTXHHulIP5MqG@lizhi-Precision-Tower-5810>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -100,138 +95,41 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <jvsdn67x2qm2avaktnpqzoixcd46xuuf6i5kpeolsnewgoqt6q@jid7unlmmu65>
+In-Reply-To: <aEhPTXHHulIP5MqG@lizhi-Precision-Tower-5810>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 11/06/2025 05:31, Bjorn Andersson wrote:
-> On Fri, May 23, 2025 at 11:06:04AM +0200, Krzysztof Kozlowski wrote:
->> On Thu, May 22, 2025 at 09:53:12PM GMT, Stephan Gerhold wrote:
->>> +Saravana
->>>
->>> On Wed, May 21, 2025 at 11:20:40AM +0200, Krzysztof Kozlowski wrote:
->>>> On Wed, May 14, 2025 at 10:12:44PM GMT, Stephan Gerhold wrote:
->>>>>>>>> The mailbox itself does not need any clocks and should probe early to
->>>>
->>>> ... so probe it early.
->>>>
->>>>>>>>> unblock the rest of the boot process. The "clocks" are only needed for the
->>>>>>>>> separate clock controller. In Linux, these are already two separate drivers
->>>>>>>>> that can probe independently.
->>>>
->>>> They can probe later, no problem and DT does not stop that. Linux, not
->>>> DT, controls the ways of probing of devices and their children.
->>>>
->>>>>>>>>
->>>>>>>>
->>>>>>>> Why does this circular dependency need to be broken in the DeviceTree
->>>>>>>> representation?
->>>>>>>>
->>>>>>>> As you describe, the mailbox probes and register the mailbox controller
->>>>>>>> and it registers the clock controller. The mailbox device isn't affected
->>>>>>>> by the clock controller failing to find rpmcc...
->>>>>>>>
->>>>>>>
->>>>>>> That's right, but the problem is that the probe() function of the
->>>>>>> mailbox driver won't be called at all. The device tree *looks* like the
->>>>>>> mailbox depends on the clock, so fw_devlink tries to defer probing until
->>>>>>> the clock is probed (which won't ever happen, because the mailbox is
->>>>>>> needed to make the clock available).
->>>>>>>
->>>>>>> I'm not sure why fw_devlink doesn't detect this cycle and tries to probe
->>>>>>> them anyway, but fact is that we need to split this up in order to avoid
->>>>>>> warnings and have the supplies/consumers set up properly. Those device
->>>>>>> links are created based on the device tree and not the drivers.
->>>>>>
->>>>>> Does "post-init-providers" providers solve your problem?
->>>>>>
->>>>>
->>>>> I would expect that it does, but it feels like the wrong solution to the
->>>>> problem to me. The clock is not really a post-init provider: It's not
->>>>> consumed at all by the mailbox and needed immediately to initialize the
->>>>> clock controller. The real problem in my opinion is that we're
->>>>> describing two essentially distinct devices/drivers in a single device
->>>>> node, and there is no way to distinguish that.
->>>>>
->>>>> By splitting up the two distinct components into separate device tree
->>>>> nodes, the relation between the providers/consumers is clearly
->>>>> described.
->>>>
->>>> You can split devices without splitting the nodes. I do not see reason
->>>> why the DT is the problem here.
->>>>
->>>
->>> The Linux drivers for this particular mailbox/clock controller already
->>> work exactly the way you propose. They are split into two devices that
->>> can probe independently.
->>>
->>> The problem is outside of the drivers, because fw_devlink in Linux
->>> blocks probing until all resources specified in the device tree nodes
->>> become available. fw_devlink has no knowledge that the mailbox described
->>> by this peculiar device tree node does not actually need the clocks:
->>>
->>> 	apcs1_mbox: mailbox@b011000 {
->>> 		compatible = "qcom,msm8939-apcs-kpss-global", "syscon";
->>> 		reg = <0x0b011000 0x1000>;
->>> 		#mbox-cells = <1>;
->>> 		clocks = <&a53pll_c1>, <&gcc GPLL0_VOTE>, <&rpmcc RPM_SMD_XO_CLK_SRC>;
->>> 		clock-names = "pll", "aux", "ref";
->>> 		#clock-cells = <0>;
->>> 	};
->>>
->>> Without device-specific quirks in fw_devlink, the fact that these clocks
->>> are only used by an unrelated clock controller only becomes clear if we
->>> split the device tree node like I propose in this series:
->>>
->>> 	apcs1_mbox: mailbox@b011000 {
->>> 		compatible = "qcom,msm8939-apcs-kpss-global", "syscon";
->>> 		reg = <0x0b011000 0x1000>;
->>> 		#mbox-cells = <1>;
->>>
->>> 		apcs1_clk: clock-controller {
->>> 			clocks = <&a53pll_c1>, <&gcc GPLL0_VOTE>, <&rpmcc RPM_SMD_XO_CLK_SRC>;
->>> 			clock-names = "pll", "aux", "ref";
->>> 			#clock-cells = <0>;
->>> 		};
->>> 	};
+On 10/06/2025 17:29, Frank Li wrote:
 >>
->> Above code suggests that clocks are not needed for the mailbox at all.
->> You need to be really sure of that. If that's the case, then this
->> description looks like correct hardware description, more detailed then
->> the first case, though.
+>>> +      $ref: /schemas/types.yaml#/definitions/flag
+>>> +      description:
+>>> +        Set the SPI data transfer of the QCA7000 to legacy mode.
+>>> +        In this mode the SPI master must toggle the chip select
+>>> +        between each data word. In burst mode these gaps aren't
+>>> +        necessary, which is faster. This setting depends on how
+>>> +        the QCA7000 is setup via GPIO pin strapping. If the
+>>> +        property is missing the driver defaults to burst mode.
+>>> +
+>>> +  allOf:
+>>> +    - $ref: /schemas/spi/spi-peripheral-props.yaml#
 >>
+>> This should be part of top-level allOf.
+>>
+>>> +
+>>> +else:
+>>> +  properties:
+>>> +    current-speed:
+>>> +      default: 115200
+>>> +
+>>> +  allOf:
+>>> +    - $ref: /schemas/serial/serial-peripheral-props.yaml#
+>>
+>> Same here.
 > 
-> I'm still sceptical here.
-> 
-> In the first snippet above, we describe a single IP block which provides
-> mailboxes and clocks.
-> 
-> In the second snippet we're saying that the IP block is a mailbox, and
-> then it somehow have a subcomponent which is a clock provider.
-> 
-> It seems to me that we're choosing the second option because it better
-> fits the Linux implementation, rather than that it would be a better
-
-I initially commented in similar way, however some more explanations
-were provided.
-
-> representation of the hardware. To the point that we can't even describe
-> the register range of the subcomponent...
-
-I did not check in any manual, so all my comments here are based on
-above explanations and DTS.
-
-Subnodes are allowed if they come with their own resources. You are
-right there is no separate address space, so that's argument against
-subnode. But there is separate clock, not needed for the parent (!!!),
-which is an argument in favor.
-
-> 
-> 
-> Can you confirm that this is the path we want to go here?
-
-It is an acceptable solution to me, but I am not saying that every
-device should be converted that way.
+> If it is one top, how to disable all properties in serial-peripheral-props.yaml
+> if it connect to spi (reg exist).
+You do not have to disallow them. If this is somehow useful, it can stay
+here, although the earlier properties still need to be defined in top level.
 
 Best regards,
 Krzysztof
