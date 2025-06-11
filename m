@@ -1,149 +1,129 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1546226188;
-	Wed, 11 Jun 2025 08:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526C023ED68
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 08:50:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749631791; cv=none; b=o4l2LM4gj06MBP3zgW9M+tGa3GBjMz8rvjLZ6oLMO5sZXAXYByRLN3QRUG24UOpoCmgzSVgQ+Ma3WOPr20qPLXaI7z8Y+KfWKFX1fGAQUMJdeFr7tQiDOwTvXlcUuuLAgx+31kchtp2cldr5cfDwcbPb962QdwioSvqw30piMP8=
+	t=1749631836; cv=none; b=qhss3icujnoxG3U3HZ6H60Kpr5xXHAfw0jdnIuVkZf9AVqakh6wNlfKdVPJec++LK3XJxEk9R98FoZ8EIw8+8mZLfVvUVyWk9zIc+EchW/ZKIsr7tByS+6Jf5U8cIM7ynCL0DRxw7/pnm+MJoMFP1P1RylN1F9Wk37DESCd2RPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749631791; c=relaxed/simple;
-	bh=Yw0tSDhx4H5PFErf8hbWoAVIowk3O6olILFwOUlhlsg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=JEbVStL1PBV9aKK7vIvwuOw4kAwF4rJ5v4+0q4O78RLV8fuSP8lUPCshNaZk1uJg/mUl2t6h/HlyALhjmoO+QWeTt5IWP3/wY/6kGaCyaQ01QySrARKIAoJ6etiPD0QUesigmEHyQkIBL8tQF0PlWHhmjAP8QNXcOvRtzJREKY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=ZUv3eQIo; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1749631836; c=relaxed/simple;
+	bh=1+FTgQ2k/v9CsNTrmMmzRrd5L9KTPbODH6XvYB/Exds=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=XDYK8ctp9CwROhkoTyItjIuzM5RS93zCsZVs9toZkzW+y1MyIyfnA9mmkgmi3Y0be1STMvRG77jvI24Fu2gqxOru5WO5sSyia5OCyLgDVJf84OH5xnpNeFjoTcV9mnZ2D3DDz2NufkoYHipNBx4aHTLLc1TfPOZ+lHvVS1hJxSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1Ql7efyO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rV7lTmie; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="ZUv3eQIo"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55B8FXVc030672;
-	Wed, 11 Jun 2025 10:49:35 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	i3kIoHJXGkGuAMMHqDrHAUZaowwR9S+c63q8sx6H2l8=; b=ZUv3eQIoB4zoMOay
-	nOsZpq7b4iVUzL0EusvBbR1d5EPJ6lbxMz6+NrbI1Nr8L64/4j1Iamnx9opo5H5W
-	y4Ogd2JmKFjQm4Btwbi9QQfXgotnKrhClbXUpjyP8tGDnKwuyKQAk7X95GYR+Cf1
-	AqD+HbRHuDCZtmmaz0GB7fM1mWa0wtXtzrxQ9yAKFkKVIGt+51/zpdRgwaRD0UhZ
-	LKPsZceoz85kecTeRTMtZol1TpSNrNQOJGWlTojTKxSmQt0RE7E7jW5m/7YfuJR+
-	wOJIEXmXQZiF2+01oCsqUt3f/E2Zo2OPT5Urj88vDd4jviDgUkXNHU7ZejBH0pIu
-	pl8vLw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4750cnx3ph-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 11 Jun 2025 10:49:34 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 0A80C40089;
-	Wed, 11 Jun 2025 10:48:52 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BF3E3AFF5E4;
-	Wed, 11 Jun 2025 10:48:41 +0200 (CEST)
-Received: from localhost (10.252.5.102) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 11 Jun
- 2025 10:48:41 +0200
-From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-Date: Wed, 11 Jun 2025 10:48:33 +0200
-Subject: [PATCH v3 4/4] media: i2c: vd55g1: Use first index of mbus codes
- array as default
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1Ql7efyO";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rV7lTmie"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1749631833;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D2dAUCbtbULwlDtsxR4Qw7f9wBvQhtdPC/TSEC7o+qo=;
+	b=1Ql7efyOhiVggZEyVZYhBlV/r3uXS2FpL12LNRxN0PJXK8R0cTJeycUGV0KUaRkhh8dQC/
+	GSROEJWZ/TA/Ddlrd9OeIM8Tjs0IPYpRSZ82088BD5mWpceTgbR/L/Ony9cAK+EOjDvFyH
+	jHpDIhnmQmh3xwGJz3gHR+YVhsbm8hofLSODuq3lTaKwew2dMSIpeFhZHwmbz21OrxQ3D4
+	Gyw59sEq3bRo3QcR/zRlRq/woMi0jAE8XQytwmQQ1/uViCTXoQOKmWEjR0x1FZx4yIAGup
+	vNe5Eg32VZlryZ6RIBHL0cIMwx+M20WU8EmFp34ClVdtEe4L2hF87YyRQfJ0eQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1749631833;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D2dAUCbtbULwlDtsxR4Qw7f9wBvQhtdPC/TSEC7o+qo=;
+	b=rV7lTmie2kRxoYTF1mtht1y4ueAFEXIv0ol2K3koWmCa0/aZY60nKV6Qav/wfM0nRyMGiZ
+	7UD6Mc9y05/8SQDw==
+To: Brian Norris <briannorris@chromium.org>, Aleksandrs Vinarskis
+ <alex.vinarskis@gmail.com>
+Cc: Tsai Sung-Fu <danielsftsai@google.com>, Douglas Anderson
+ <dianders@chromium.org>, linux-kernel@vger.kernel.org, Johan Hovold
+ <johan@kernel.org>
+Subject: Re: [PATCH v2 1/2] genirq: Retain depth for managed IRQs across CPU
+ hotplug
+In-Reply-To: <87qzzqojpt.ffs@tglx>
+References: <20250514201353.3481400-1-briannorris@chromium.org>
+ <20250514201353.3481400-2-briannorris@chromium.org>
+ <24ec4adc-7c80-49e9-93ee-19908a97ab84@gmail.com>
+ <aEcWTM3Y1roOf4Ph@google.com>
+ <CAMcHhXqq9DHgip3rr0=24Y-LEBq5n4rDrE6AsWyjyBmsS7s+-A@mail.gmail.com>
+ <aEiQitCsXq9XSBcZ@google.com> <87qzzqojpt.ffs@tglx>
+Date: Wed, 11 Jun 2025 10:50:32 +0200
+Message-ID: <87o6uuoe5j.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250611-fix_vd55g1-v3-4-ef4ecf15ddbc@foss.st.com>
-References: <20250611-fix_vd55g1-v3-0-ef4ecf15ddbc@foss.st.com>
-In-Reply-To: <20250611-fix_vd55g1-v3-0-ef4ecf15ddbc@foss.st.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Sylvain Petinot
-	<sylvain.petinot@foss.st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-CC: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Benjamin
- Mugnier <benjamin.mugnier@foss.st.com>
-X-Mailer: b4 0.14.2
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-11_03,2025-06-10_01,2025-03-28_01
+Content-Type: text/plain
 
-Factorize code and prevent future errors in case of media bus codes
-change. Rename VD55G1_DEFAULT_MODE to VD55G1_MODE_DEF to mimic other
-macros and reduce vd55g1_update_img_pad_format() name to
-vd55g1_update_pad_fmt() to stay within the 80 characters limit.
+On Wed, Jun 11 2025 at 08:50, Thomas Gleixner wrote:
+> On Tue, Jun 10 2025 at 13:07, Brian Norris wrote:
+>> On Mon, Jun 09, 2025 at 08:19:58PM +0200, Aleksandrs Vinarskis wrote:
+>>  
+>>  void irq_startup_managed(struct irq_desc *desc)
+>>  {
+>> +	struct irq_data *d = irq_desc_get_irq_data(desc);
+>> +
+>>  	/*
+>>  	 * Only start it up when the disable depth is 1, so that a disable,
+>>  	 * hotunplug, hotplug sequence does not end up enabling it during
+>>  	 * hotplug unconditionally.
+>>  	 */
+>>  	desc->depth--;
+>> +	irqd_clr_managed_shutdown(d);
+>
+> If depth > 0, then it's still shutdown and the subsequent enable
+> operation which brings it down to 0 will take care of it. So what are
+> you trying to solve here?
 
-Signed-off-by: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
----
- drivers/media/i2c/vd55g1.c | 21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+I found the previous version which has an explanation for this. That
+makes sense. You really want this to be:
 
-diff --git a/drivers/media/i2c/vd55g1.c b/drivers/media/i2c/vd55g1.c
-index dec6e3e231d54a742bdd08ff2a506c152bb89429..c0754fd03b1d5e947dc5e24e9f54d98a67a23376 100644
---- a/drivers/media/i2c/vd55g1.c
-+++ b/drivers/media/i2c/vd55g1.c
-@@ -111,9 +111,9 @@
- 
- #define VD55G1_WIDTH					804
- #define VD55G1_HEIGHT					704
--#define VD55G1_DEFAULT_MODE				0
-+#define VD55G1_MODE_DEF					0
- #define VD55G1_NB_GPIOS					4
--#define VD55G1_MEDIA_BUS_FMT_DEF			MEDIA_BUS_FMT_Y8_1X8
-+#define VD55G1_MBUS_CODE_DEF				0
- #define VD55G1_DGAIN_DEF				256
- #define VD55G1_AGAIN_DEF				19
- #define VD55G1_EXPO_MAX_TERM				64
-@@ -883,10 +883,9 @@ static int vd55g1_apply_cold_start(struct vd55g1 *sensor,
- 	return ret;
- }
- 
--static void vd55g1_update_img_pad_format(struct vd55g1 *sensor,
--					 const struct vd55g1_mode *mode,
--					 u32 code,
--					 struct v4l2_mbus_framefmt *fmt)
-+static void vd55g1_update_pad_fmt(struct vd55g1 *sensor,
-+				  const struct vd55g1_mode *mode, u32 code,
-+				  struct v4l2_mbus_framefmt *fmt)
- {
- 	fmt->code = code;
- 	fmt->width = mode->width;
-@@ -1229,8 +1228,8 @@ static int vd55g1_set_pad_fmt(struct v4l2_subdev *sd,
- 					  width, height, sd_fmt->format.width,
- 					  sd_fmt->format.height);
- 
--	vd55g1_update_img_pad_format(sensor, new_mode, sd_fmt->format.code,
--				     &sd_fmt->format);
-+	vd55g1_update_pad_fmt(sensor, new_mode, sd_fmt->format.code,
-+			      &sd_fmt->format);
- 
- 	/*
- 	 * Use binning to maximize the crop rectangle size, and centre it in the
-@@ -1260,7 +1259,6 @@ static int vd55g1_set_pad_fmt(struct v4l2_subdev *sd,
- static int vd55g1_init_state(struct v4l2_subdev *sd,
- 			     struct v4l2_subdev_state *sd_state)
- {
--	unsigned int def_mode = VD55G1_DEFAULT_MODE;
- 	struct vd55g1 *sensor = to_vd55g1(sd);
- 	struct v4l2_subdev_format fmt = { 0 };
- 	struct v4l2_subdev_route routes[] = {
-@@ -1277,8 +1275,9 @@ static int vd55g1_init_state(struct v4l2_subdev *sd,
- 	if (ret)
- 		return ret;
- 
--	vd55g1_update_img_pad_format(sensor, &vd55g1_supported_modes[def_mode],
--				     VD55G1_MEDIA_BUS_FMT_DEF, &fmt.format);
-+	vd55g1_update_pad_fmt(sensor, &vd55g1_supported_modes[VD55G1_MODE_DEF],
-+			      vd55g1_mbus_codes[VD55G1_MBUS_CODE_DEF].code,
-+			      &fmt.format);
- 
- 	return vd55g1_set_pad_fmt(sd, sd_state, &fmt);
- }
+	struct irq_data *d = irq_desc_get_irq_data(desc);
 
--- 
-2.25.1
+        /* Proper comment */
+	irqd_clr_managed_shutdown(d);
 
+  	/*
+  	 * Only start it up when the disable depth is 1, so that a disable,
+  	 * hotunplug, hotplug sequence does not end up enabling it during
+  	 * hotplug unconditionally.
+  	 */
+  	desc->depth--;
+
+...
+
+>>  	if (!desc->depth)
+>>  		irq_startup(desc, IRQ_RESEND, IRQ_START_COND);
+>>  }
+>> diff --git a/kernel/irq/cpuhotplug.c b/kernel/irq/cpuhotplug.c
+>> index f07529ae4895..755346ea9819 100644
+>> --- a/kernel/irq/cpuhotplug.c
+>> +++ b/kernel/irq/cpuhotplug.c
+>> @@ -210,13 +210,6 @@ static void irq_restore_affinity_of_irq(struct irq_desc *desc, unsigned int cpu)
+>>  	    !irq_data_get_irq_chip(data) || !cpumask_test_cpu(cpu, affinity))
+>>  		return;
+>>  
+>> -	/*
+>> -	 * Don't restore suspended interrupts here when a system comes back
+>> -	 * from S3. They are reenabled via resume_device_irqs().
+>> -	 */
+>> -	if (desc->istate & IRQS_SUSPENDED)
+>> -		return;
+>> -
+>
+> Huch? Care to read:
+>
+> a60dd06af674 ("genirq/cpuhotplug: Skip suspended interrupts when restoring affinity")
+
+Never mind. After staring long enough at it, this should work because
+suspend increments depth and shutdown does too.
+
+Thanks,
+
+        tglx
