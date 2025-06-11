@@ -1,72 +1,72 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8580B273D68
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 12:10:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA35273D68
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 12:11:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749643856; cv=none; b=sDMn+7iNnsKoO53ie8ph4Xtq1U4Mbqos/XT7odoQFfIzPtBWGL8t6DwtaJrjawBUQ0p0Fcw3mCxXqmNfIFE59jmCwUfqXB02VdhZgb+F7/68OuNcbOF/SUa+9iGfvNNcjMLhJ11HJz9bqIarjBE9OGopVteacTRU1MDOrLYJsZ8=
+	t=1749643889; cv=none; b=uqAThxM+CH5+KmK5JF7GI9rEyvMQuPlj0d6Jg0kwO7PfeEFWERDUQ6RYz5kHuN6DHsY+3GFm/5bL1Py4GseSdDDtbizHJhU/Y2M1t7TikyLpy/80R0Eqarafj9ew0/LnQrXu9jY/SuFNLxsXPsUKDrZmfNHQ7t3DL7iBR0iQzeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749643856; c=relaxed/simple;
-	bh=Xk1ddhx77cHWw9Ct61TDaPE3Rg8dzF9dzOF3Dpji2DY=;
+	s=arc-20240116; t=1749643889; c=relaxed/simple;
+	bh=wj+Lp1JIKeXO6eLYNmD4JrguUF/hcBihPWj9REmfNk4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ahUOTsJHayhYKcxZqt+ZRx2KyfTShtF6TisCDpqR5vqpTvKto/Q43PYaSEfuOGM7uKs0AljmsyVCAMHfgw3E/TxyGcEzX96MgA6myOVf9cxIAtUQB8sI/MuN5I1B/lsIoa+8GAXxK/2iqL1FGoh9icJ/keAawbQeXfQ5oGXqFx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RBsY8dSQ; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=lQW7EUGv0dKWn8KZ+G6fy18KNusIiTwhPjgf7NZshtEdkN7ucO2nWcRk/YIpv4B3R9ZuBbkTtqD5AKgOwdv4N/tSoigRv3pc4X/BGQld7IyYHt88hCii2mIG5FqqW4dkLz4P/0Cl7AAO1fKNIBQUYILlmwih2owkJSkzVPwdFS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PtchNwoM; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RBsY8dSQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PtchNwoM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749643853;
+	s=mimecast20190719; t=1749643886;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=h9u/BB+Pg7diLVSz+P1K4APpZKD4S0kyw+YGrKVNC4M=;
-	b=RBsY8dSQJx4Ay+BOJi+ouRSA3e7GpcTlkyBZWSrrYajVkzXG69wewhrrOoA+DZK93QTbCE
-	illuW094qAehmUrl9tyk24qG9WvmKT7MYUo5Mmz7EE7pzHn2jOkJ08oBqmKo6dAjOV8WLb
-	DGCAUm8/mRb+PIuCBuYqrPpcdGE9kss=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=94fGjpgENkGfz8xm/0/MvEIE16LMoVi1/Ag2K5nPavY=;
+	b=PtchNwoMxxSf37mmQkGDcTul0BjYjLl4nlP3jqTtDw1jN2IkoW7pr3CWBTIsDCaZdeewcl
+	P+xJ28j/QUKOKzZ3nLQkJW5//EG6cAr5Zmip6Hh2B3ZckszzUaKXZTWAVjbfMMi0X9Bc2C
+	T7aT/vncRmgE7rx4TtCiCmk+8O/uAVw=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-186-cm_su2isOfStbhqvIBxr9g-1; Wed, 11 Jun 2025 08:10:52 -0400
-X-MC-Unique: cm_su2isOfStbhqvIBxr9g-1
-X-Mimecast-MFC-AGG-ID: cm_su2isOfStbhqvIBxr9g_1749643852
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5e28d0cc0so1007194785a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 05:10:52 -0700 (PDT)
+ us-mta-70-AbTr5uFPMN-ycS8CHIcBhw-1; Wed, 11 Jun 2025 08:11:26 -0400
+X-MC-Unique: AbTr5uFPMN-ycS8CHIcBhw-1
+X-Mimecast-MFC-AGG-ID: AbTr5uFPMN-ycS8CHIcBhw_1749643885
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6fad9167e4cso136384046d6.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 05:11:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749643852; x=1750248652;
+        d=1e100.net; s=20230601; t=1749643885; x=1750248685;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=h9u/BB+Pg7diLVSz+P1K4APpZKD4S0kyw+YGrKVNC4M=;
-        b=P0n2wPv+kVq4nGoW1rh2lzyxfO/jCmbabtESSN5NQDl0H93wzEWCPZKw6jDFQxTo+H
-         QajR7gGCQPH9FufjdFbGgR0sT1s6Psyidj94Mx4weRsIi1DSD8w4I5OXJrDzl+THQHjj
-         w6WvBhH9mEDGtgDeMYk7MTKuwKyih/OQAM7d+YRdAik7CD4O0uhx9e4SyH3clSc85488
-         toTNzWAGbG2m+0c8Kq4e0EqcsFBsULdNryq3llBH+UL6nXuwCTNFYjENn9FwkZ+GqR+Z
-         20XxbCCcd6SSif263ySHHS5r7Z4e/iqfF1l6RYNlTGzYfzF9fxKR5mtgZOd2CM4yinaE
-         Ikpw==
-X-Forwarded-Encrypted: i=1; AJvYcCWpdUw7KI4c3pU6sO4ONC7crDZzh93qSE0md/FEOnIVjZD3yIULx/Z8y24OzTwZgrzyeUumfiBJqylEGY4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywmjbk2UrmdNjtVebnB9LkCVr3oP7ibYGiSumya8ANxw440nkBL
-	8JapKghNyQGneVoX/prrFUoi23I4N3zglV7Yj5otrmhY2ksj+65uewndO91u7v2HMMcHorz+bZG
-	I/ncQntDDDwtwD5WD6AcEaeacYp7e9I6kfanyAg6BTW3pv6vq+M1dlqgT54ii0McJug==
-X-Gm-Gg: ASbGncvxGEfgT5AiUZhvSofiRthloDYKPpYqJltqhOmdTK7jEYGms3NCaSUbXZTcdHs
-	EHA7o9ppEbsmsZcKfqporus+Y8EvT2GSz9diM1eVadmYPwFT6E6chcF/ffb7WgRgDkWbkpX+PJi
-	0PEXgANB0dXiJ1AeGAqo9wTRofO/ZRi1uCEdcDJeN+/4u9uP19I9ZjjwLHP8iPUJzdV7uAlB8zR
-	hRkDe19Pbt78fc6txkGusytLvnd7QVLrr6rPkEa2MHXf/N2LUvfhmTD76pFcIwMo5y9CNeepHH6
-	iwWH5r8R0YyoMrkRqv07KC2Ygbs+px8TA650PBJgmUrG
-X-Received: by 2002:a05:6214:20c1:b0:6e8:8798:275d with SMTP id 6a1803df08f44-6fb2c251fc2mr50983896d6.0.1749643851793;
-        Wed, 11 Jun 2025 05:10:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEpQQObiAAO/LAoeVrc+vGFwd3Oi28mcq0/hlnDd2TbOd9ncS9NKhQhbvQU/ipsx2Ddq/pZBg==
-X-Received: by 2002:a05:6214:20c1:b0:6e8:8798:275d with SMTP id 6a1803df08f44-6fb2c251fc2mr50983586d6.0.1749643851477;
-        Wed, 11 Jun 2025 05:10:51 -0700 (PDT)
+        bh=94fGjpgENkGfz8xm/0/MvEIE16LMoVi1/Ag2K5nPavY=;
+        b=COQYkcWBHuiEq13rn96ucLxgJBUCw9bW/ulecLvQIlPJX/N9+CnHqBxMtATCFM0lJ2
+         wie9q18a/czjmVTXAlWtk2IlhcKptzCnAwMBn3+2InvdcVzW+x3Cj0hT7PUQJaTDJH1R
+         gN8JmWo0+HVfLS3ujkU++vsbB8our5Vh0IT6kbOpOKLxQoleEI46mtsk5Qwh95Y53LCs
+         S4K14mjG78xPumuV3n3U8USjq9RZsqxi92KYMNkob1k1zsrA0ugSihPl5jMY+6hc0dC5
+         3m2OL8hrreJdF6uRC5qlXxEVWHRhNBEgjKUBnGrzGhkoxlMovnsj2ThM86ZgkdKClMTG
+         543Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV8TrYI9dUMzuf2XI/H6rzl3hu2lXWOBaGIjY/8QZqXXhVkwyFOCW444gK/Te7XTfa5/1MjktoGA0j1hLo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHd/SE93Ox6AbQaBgTaD+GBOAeVDyJOgsEJRlu0aIjlbCQvICw
+	4h1nPlhUqLLGjIN+Ss2OZ2WbFTqvVU0pSPv9D9g91TpBLukzlNrbK2G8TDKfh6o+iybDVFGHsTu
+	HGZ+AyZi3jzm4JRpygE6ATbR+IXt/xFyCfqqkewCyZq8WxAYDfoQkInzi2shsDLOstw==
+X-Gm-Gg: ASbGncuvQryq6OStRegriaw+G6aEXxcqzZo0RG+KmnSefu0vcxfK+o/yl+TKMvvsXO9
+	OoyhgkZt42i/b59lHs54DBNSgaX9+146NIghV2in28KvDxxNOwpUdL/SY5TWwpYZrfmZQDIi0MX
+	5OC+7HtveMGFtRwTf8Uiqa3I2cVGKJyqmYmxyUN6zMhYGJpyxmanY17bPoLL/VEM5HZNhjjPKMF
+	TQ41yyL99S1Z4DOSEYUEOfycj3rtGFIa12BImTZ2bttrmeJSOw44bVdaEize3o5S51rM+QZ+eAV
+	6HQ3Z5qWCcabXhvdIP7t1tJBWr4/IcuYyZEFuS5z8h/D
+X-Received: by 2002:a05:6214:76d:b0:6fa:cb72:955a with SMTP id 6a1803df08f44-6fb2d12a834mr42742476d6.4.1749643885338;
+        Wed, 11 Jun 2025 05:11:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGHphM2A40eqISPXj3+oqaa57yngTVVZHDTfJeB5+KzJ+lXgUMEjIOP5dF/qLwW0Zst1IP4Yw==
+X-Received: by 2002:a05:6214:76d:b0:6fa:cb72:955a with SMTP id 6a1803df08f44-6fb2d12a834mr42742096d6.4.1749643884976;
+        Wed, 11 Jun 2025 05:11:24 -0700 (PDT)
 Received: from [10.32.64.156] (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3916f3318sm510764485a.10.2025.06.11.05.10.50
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d38f4cc6e3sm556234185a.42.2025.06.11.05.11.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jun 2025 05:10:51 -0700 (PDT)
-Message-ID: <b21349dd-6020-4b8a-b34a-f4085e040908@redhat.com>
-Date: Wed, 11 Jun 2025 14:10:49 +0200
+        Wed, 11 Jun 2025 05:11:24 -0700 (PDT)
+Message-ID: <34a650a6-6885-4d86-8162-567ddf98fd02@redhat.com>
+Date: Wed, 11 Jun 2025 14:11:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,13 +74,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] selftests/mm: Don't compare return values to in cow
+Subject: Re: [PATCH 4/4] selftests/mm: Add messages about test errors to the
+ cow tests
 To: Mark Brown <broonie@kernel.org>, Andrew Morton
  <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>
 Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
  linux-kernel@vger.kernel.org
 References: <20250610-selftest-mm-cow-tweaks-v1-0-43cd7457500f@kernel.org>
- <20250610-selftest-mm-cow-tweaks-v1-3-43cd7457500f@kernel.org>
+ <20250610-selftest-mm-cow-tweaks-v1-4-43cd7457500f@kernel.org>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -128,18 +129,19 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <20250610-selftest-mm-cow-tweaks-v1-3-43cd7457500f@kernel.org>
+In-Reply-To: <20250610-selftest-mm-cow-tweaks-v1-4-43cd7457500f@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 10.06.25 16:13, Mark Brown wrote:
-> Tweak the coding style for checking for non-zero return values.
-> While we're at it also remove a now redundant oring of the madvise()
-> return code.
+> It is not sufficiently clear what the individual tests in the cow test
+> program are checking so add messages for the failure cases.
 > 
 > Suggested-by: David Hildenbrand <david@redhat.com>
 > Signed-off-by: Mark Brown <broonie@kernel.org>
 > ---
+
+Thanks!
 
 Acked-by: David Hildenbrand <david@redhat.com>
 
