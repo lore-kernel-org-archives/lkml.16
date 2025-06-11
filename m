@@ -1,57 +1,55 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F880244660
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:16:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F046246778
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749676621; cv=none; b=Ul1IKknV/PF2Y/s8NyrHs4H04eb8kM4OiWA4RpSyUPlcX3CiWgCWT8ef314uFoTSF0gjPj/XQCKoCAB0sPhcWAphOv5Rel8I71tey1Mu8pFM+608w7EwBBYzKD0fZfAd2iUPn0ilTgKLrNgxtO9FEALpGW3E9s5E/lHAsM2qa3M=
+	t=1749676622; cv=none; b=TlW4ssVPhFfT1oLJ46CG7DnRUz/9f5chnWHxzlLzJ0ENKHs17wa5VZwGX4ePBrvNX5yzV2CpIe8NDLiD+KUDGKh6EjU/WXFzSoBFf7fp04py1opZ4zLqfffF8DWce+C+hA3ZUQRZ7vPgpd/jn1kB1NHUWzilDq+DVu/2HLX4s2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749676621; c=relaxed/simple;
-	bh=b4VA2RGdpApRaSDkLmIRrxzmznFdKL/sDPXrbgY9dp8=;
+	s=arc-20240116; t=1749676622; c=relaxed/simple;
+	bh=EliRXJasvagyPsAst5/DK5fV9+Nz9GPWmMU52maUMAU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=j4QYeJPk+S31B2lkeeDneAHFp0nuaio14o9b+PlSFyXw9ujpjiWsbcbTEk76CD2dXsTweeVlrPf4ASo90v0Kpe1YRWEwqLJnoyZGz3nAgmr8lM8mGUQISRbqHZn3RYDobegl7kF6N+XsrDIWXIMR6zpxwVSuxw1qW613MpuaU/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--afranji.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cm1llxK3; arc=none smtp.client-ip=209.85.215.201
+	 To:Cc:Content-Type; b=aR+Y1aujjI1l1qyCrjPIXMKut2WTQOoLdy8pDaw3xs1OzC81XzaL9RjzHxLLNdTPGqBSXJIXbmtqOY0Ko6jKmArvnN7TUpBzwtPqf7keIPHIJT0Nhzrl5larldInA0ymvEsnLsMU4X+SZgCMXZA+YVK3VZ+RhAnnPmIOwL8hPg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--afranji.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qZ+shGyL; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--afranji.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cm1llxK3"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b2f4c436301so159924a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:16:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qZ+shGyL"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-747d394f45fso216530b3a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:17:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749676619; x=1750281419; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zir2Z2BYD9TVMhA71zOuRqts4XDUJGWDctYBYtUWNnI=;
-        b=cm1llxK3nvYST9jiAVqkkidlRCmrAXeSYqwy5PPrNaWKYbh+8JqYpvcGN3lgsTf/Wc
-         ozOIWGOnoc3hfQTF0B6lXe3+itn5k30LD3dLFa4w4HfC5LGDLbWXOVRs+IXdnlE1Z98Q
-         mJ6ntD92WvBTZ/ut1U/0QlZcolXoKaZa8e641SZ+cebYF2uEvRFg7j2FaC4+JXDpMKbp
-         HBqnC5tMXLi16unbvBxg/+CzaOhV09X5+Or0itEx7ufRKimATNBtoHrmhh7F+viWJSz8
-         FrO+aSNBa/wQGiIXEyLzUIFtM3fVraFwQk2o3P65osGSVPAnfM3WFKUENx0utPSoZV5j
-         flYw==
+        d=google.com; s=20230601; t=1749676620; x=1750281420; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sBfca3HTQRqrJJwA201rhl29YEXxOvfPcejKdAe4i9w=;
+        b=qZ+shGyLSQDl3spdrL0FFV3vW8iGhGw1Z4h2wPqXxeuGsCLcQ83MZ8ue9g2j+X11kA
+         z4f2FeAxrBjXCuL4LI1Kg1+KYbESqQMmvL8jLkkPTxWAR6ZW2Q6/UnkSxArJMqajDHyt
+         9qus/WWX/IdL0fyCnsrbg2U6v746JoU7MwQ1wurBfJP2vMY73ehVDrAeJPPXN6dQfK5k
+         Nn+FGefxQTSUJWI4TZuMcNKTV/94VEbZ8wG9wIpFGIO5prdLP8gGGVIB5j5cOWTLUBkU
+         GvIRC8K0EkDvz5yImlGoUJLt0rIqKbN7g3XXsS4ZnaaVHbvFTSVZ+nNRiZ1Sf6avuKPa
+         JutA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749676619; x=1750281419;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=zir2Z2BYD9TVMhA71zOuRqts4XDUJGWDctYBYtUWNnI=;
-        b=Dx/1djyk40+pPhAaaL7/WxjHHC4n7960q1NNKYVMDXgxrNR9ZR8rtpd++o/wnTs9Cb
-         LNIPwBZONBpw4KE3rrVXvMb8cSznUlKlwJlKlnNV6+qVmz1TT8CVLhpzPUvsrhI23t3G
-         orVqxrSedZ3jV5Z5K16IGaqCJ75x4Gv60xBSUHgeqqxGYBq0tLQqlRjcnGVr793c6UUJ
-         vox5rkzTk6XFJlHCc9fTxUQ6DAGnb007eTymKUHSFUdgpnHBppuB0y+nYEDUyL2PeZH7
-         pyUylcYfKzXafGMVQfAhlfxDHv/wPE5589Q6P9YQ5s/8ODNWy2lagRL+cId0p+P1ZLKl
-         e4DA==
-X-Forwarded-Encrypted: i=1; AJvYcCWCCFauB20jOJl7dgR7aywwwAwyd+2ZVn5NxPrCarxqoXmzirvYNx3W8B5+7j19bzrXi095KGNXH1TKI9g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeccEGej3s/L5lkB14CoFPGhb6FDbjuEaSgrShR5Eg9SM84sV9
-	q8p0qr4D7166vMr2A0j0ctQwsrk40SYf6s9qYvAFr1yraEUJVoWrB28ITA8GYAVKIhSExdTJWTM
-	D1PIvy9bgpA==
-X-Google-Smtp-Source: AGHT+IFEdzwI0hLX7jOjgrsvuEtZ1pf59QC5BkheGfaBuI5bKPz0+MMRvkX5eBM8K7fT56stpLxx97K0L1P1
-X-Received: from pjbof7.prod.google.com ([2002:a17:90b:39c7:b0:312:e5dd:9248])
- (user=afranji job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5866:b0:311:b5ac:6f7d
- with SMTP id 98e67ed59e1d1-313bfd90b31mr1285824a91.6.1749676618837; Wed, 11
- Jun 2025 14:16:58 -0700 (PDT)
-Date: Wed, 11 Jun 2025 21:16:29 +0000
+        d=1e100.net; s=20230601; t=1749676620; x=1750281420;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sBfca3HTQRqrJJwA201rhl29YEXxOvfPcejKdAe4i9w=;
+        b=F2QfjI1Ym26uRuQYJEF+JzF3UEmFiHSoUy3CyoOmOJsX3FWgjEYg89PRFDmLMXS3/P
+         tAHSLJDWQikax3xeBKV+8kgt4lWnpi4qRjP4DLzXROADgPu46wPHFQUcfGnCwyAFbYB1
+         ftVNsNYKhJOWuShVQqIn29bDNilfSSYklqAdzh7j2coB5Sx+FIKyoh1hVorukW0SIh/e
+         Fl8uQXd9Y3+YKd+gx/vc9HLKf8X8MlX2xg770EkzZ25bDnWN8rGFeA4JtDwsCBffvzzZ
+         g9PzA9q8imVnPZ0lE6V+i0P9Iy59XbFaFiOb6nH07vZhO+Xw3eW/hj4ONYehI5DjYJXa
+         iosg==
+X-Forwarded-Encrypted: i=1; AJvYcCXThDFfbM0PxXCRwYUR14WtatKlj92Nxxnhj7iNV0WAkWAgdzj8D+BB7tWLdegAgPI5ge8aFKC1zkPIRWY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhTYFB69fjFjnzFhkbY9/vDq8zuT6P71CVUuD4gWlK/zSRZspL
+	zp2fX3Ywb7WVwjBlSWLqSW0zWsdkD2PMqV58I1DlNLtpu0o2M2AHddMXRVimK49jH7wLNoKgWEp
+	VJGU6Xslxdw==
+X-Google-Smtp-Source: AGHT+IEwt8NGYhwzS0nUmHsR7Wm0KUS2I53PheVpr9xT2i86QWOhPPHtzrsha444DVNmTlDTkv6MnyHBFveF
+X-Received: from pfblm9.prod.google.com ([2002:a05:6a00:3c89:b0:746:3244:f1e6])
+ (user=afranji job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:194b:b0:748:3485:b99d
+ with SMTP id d2e1a72fcca58-7487c338367mr1420302b3a.18.1749676620423; Wed, 11
+ Jun 2025 14:17:00 -0700 (PDT)
+Date: Wed, 11 Jun 2025 21:16:30 +0000
 In-Reply-To: <cover.1749672978.git.afranji@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1749672978.git.afranji@google.com>
 X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-Message-ID: <ee22d844512a828dc5285a93676699d1aca0e0ed.1749672978.git.afranji@google.com>
-Subject: [RFC PATCH v2 02/10] KVM: x86: Adjust locking order in move_enc_context_from
+Message-ID: <c55644ec81c22e7239d52f97e744eb4bafeccac3.1749672978.git.afranji@google.com>
+Subject: [RFC PATCH v2 03/10] KVM: TDX: Add base implementation for tdx_vm_move_enc_context_from
 From: Ryan Afranji <afranji@google.com>
 To: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
 Cc: sagis@google.com, bp@alien8.de, chao.p.peng@linux.intel.com, 
@@ -75,93 +73,100 @@ Cc: sagis@google.com, bp@alien8.de, chao.p.peng@linux.intel.com,
 	yan.y.zhao@intel.com, rick.p.edgecombe@intel.com, 
 	Ryan Afranji <afranji@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Previously, the order for acquiring the locks required for the migration
-function move_enc_context_from() was: 1) memslot lock 2) vCPU lock. This
-can trigger a deadlock warning because a vCPU IOCTL modifying memslots
-will acquire the locks in reverse order: 1) vCPU lock 2) memslot lock.
+From: Sagi Shahar <sagis@google.com>
 
-This patch adjusts move_enc_context_from() to match vCPU IOCTL=E2=80=99s lo=
-cking
-order to prevent deadlock warnings.
+This should mostly match the logic in sev_vm_move_enc_context_from.
 
+Signed-off-by: Sagi Shahar <sagis@google.com>
 Signed-off-by: Ryan Afranji <afranji@google.com>
 ---
- arch/x86/kvm/svm/sev.c | 13 +------------
- arch/x86/kvm/x86.c     | 14 +++++++++++++-
- 2 files changed, 14 insertions(+), 13 deletions(-)
+ arch/x86/kvm/vmx/main.c    | 12 +++++++++++-
+ arch/x86/kvm/vmx/tdx.c     | 24 ++++++++++++++++++++++++
+ arch/x86/kvm/vmx/x86_ops.h |  1 +
+ 3 files changed, 36 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index 402543994b0b..380d5951f8dd 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -1961,26 +1961,15 @@ int sev_vm_move_enc_context_from(struct kvm *kvm, s=
-truct kvm *source_kvm)
- 		charged =3D true;
- 	}
-=20
--	ret =3D kvm_lock_all_vcpus(kvm);
--	if (ret)
--		goto out_dst_cgroup;
--	ret =3D kvm_lock_all_vcpus(source_kvm);
--	if (ret)
--		goto out_dst_vcpu;
--
- 	ret =3D sev_check_source_vcpus(kvm, source_kvm);
- 	if (ret)
--		goto out_source_vcpu;
-+		goto out_dst_cgroup;
-=20
- 	sev_migrate_from(kvm, source_kvm);
- 	kvm_vm_dead(source_kvm);
- 	cg_cleanup_sev =3D src_sev;
- 	ret =3D 0;
-=20
--out_source_vcpu:
--	kvm_unlock_all_vcpus(source_kvm);
--out_dst_vcpu:
--	kvm_unlock_all_vcpus(kvm);
- out_dst_cgroup:
- 	/* Operates on the source on success, on the destination on failure.  */
- 	if (charged)
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index b1672379a16b..c28fa28a8e42 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -6743,10 +6743,18 @@ static int kvm_vm_move_enc_context_from(struct kvm =
-*kvm, unsigned int source_fd)
- 	if (r)
- 		goto out_mark_migration_done;
-=20
--	r =3D kvm_lock_vm_memslots(kvm, source_kvm);
-+	r =3D kvm_lock_all_vcpus(kvm);
- 	if (r)
- 		goto out_unlock;
-=20
-+	r =3D kvm_lock_all_vcpus(source_kvm);
-+	if (r)
-+		goto out_unlock_vcpus;
+diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
+index d1e02e567b57..125af25fd09a 100644
+--- a/arch/x86/kvm/vmx/main.c
++++ b/arch/x86/kvm/vmx/main.c
+@@ -879,6 +879,14 @@ static int vt_gmem_private_max_mapping_level(struct kvm *kvm, kvm_pfn_t pfn)
+ 	return 0;
+ }
+ 
++static int vt_move_enc_context_from(struct kvm *kvm, struct kvm *source_kvm)
++{
++	if (!is_td(kvm))
++		return -ENOTTY;
 +
-+	r =3D kvm_lock_vm_memslots(kvm, source_kvm);
-+	if (r)
-+		goto out_unlock_source_vcpus;
++	return tdx_vm_move_enc_context_from(kvm, source_kvm);
++}
 +
- 	r =3D kvm_move_memory_ctxt_from(kvm, source_kvm);
- 	if (r)
- 		goto out_unlock_memslots;
-@@ -6762,6 +6770,10 @@ static int kvm_vm_move_enc_context_from(struct kvm *=
-kvm, unsigned int source_fd)
-=20
- out_unlock_memslots:
- 	kvm_unlock_vm_memslots(kvm, source_kvm);
-+out_unlock_source_vcpus:
-+	kvm_unlock_all_vcpus(source_kvm);
-+out_unlock_vcpus:
-+	kvm_unlock_all_vcpus(kvm);
- out_unlock:
- 	kvm_unlock_two_vms(kvm, source_kvm);
- out_mark_migration_done:
---=20
+ #define vt_op(name) vt_##name
+ #define vt_op_tdx_only(name) vt_##name
+ #else /* CONFIG_KVM_INTEL_TDX */
+@@ -1044,7 +1052,9 @@ struct kvm_x86_ops vt_x86_ops __initdata = {
+ 	.mem_enc_ioctl = vt_op_tdx_only(mem_enc_ioctl),
+ 	.vcpu_mem_enc_ioctl = vt_op_tdx_only(vcpu_mem_enc_ioctl),
+ 
+-	.private_max_mapping_level = vt_op_tdx_only(gmem_private_max_mapping_level)
++	.private_max_mapping_level = vt_op_tdx_only(gmem_private_max_mapping_level),
++
++	.vm_move_enc_context_from = vt_move_enc_context_from
+ };
+ 
+ struct kvm_x86_init_ops vt_init_ops __initdata = {
+diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+index b952bc673271..07583a11d6e3 100644
+--- a/arch/x86/kvm/vmx/tdx.c
++++ b/arch/x86/kvm/vmx/tdx.c
+@@ -626,6 +626,7 @@ int tdx_vm_init(struct kvm *kvm)
+ 	kvm->arch.has_protected_state = true;
+ 	kvm->arch.has_private_mem = true;
+ 	kvm->arch.disabled_quirks |= KVM_X86_QUIRK_IGNORE_GUEST_PAT;
++	kvm->arch.use_vm_enc_ctxt_op = true;
+ 
+ 	/*
+ 	 * Because guest TD is protected, VMM can't parse the instruction in TD.
+@@ -3524,3 +3525,26 @@ int __init tdx_bringup(void)
+ 	enable_tdx = 0;
+ 	return 0;
+ }
++
++static __always_inline bool tdx_finalized(struct kvm *kvm)
++{
++	struct kvm_tdx *tdx_kvm = to_kvm_tdx(kvm);
++
++	return tdx_kvm->state == TD_STATE_RUNNABLE;
++}
++
++static int tdx_migrate_from(struct kvm *dst, struct kvm *src)
++{
++	return -EINVAL;
++}
++
++int tdx_vm_move_enc_context_from(struct kvm *kvm, struct kvm *src_kvm)
++{
++	if (!is_td(kvm) || !is_td(src_kvm))
++		return -EINVAL;
++
++	if (tdx_finalized(kvm) || !tdx_finalized(src_kvm))
++		return -EINVAL;
++
++	return tdx_migrate_from(kvm, src_kvm);
++}
+diff --git a/arch/x86/kvm/vmx/x86_ops.h b/arch/x86/kvm/vmx/x86_ops.h
+index b4596f651232..001f1540a560 100644
+--- a/arch/x86/kvm/vmx/x86_ops.h
++++ b/arch/x86/kvm/vmx/x86_ops.h
+@@ -164,6 +164,7 @@ void tdx_flush_tlb_current(struct kvm_vcpu *vcpu);
+ void tdx_flush_tlb_all(struct kvm_vcpu *vcpu);
+ void tdx_load_mmu_pgd(struct kvm_vcpu *vcpu, hpa_t root_hpa, int root_level);
+ int tdx_gmem_private_max_mapping_level(struct kvm *kvm, kvm_pfn_t pfn);
++int tdx_vm_move_enc_context_from(struct kvm *kvm, struct kvm *source_kvm);
+ #endif
+ 
+ #endif /* __KVM_X86_VMX_X86_OPS_H */
+-- 
 2.50.0.rc1.591.g9c95f17f64-goog
 
