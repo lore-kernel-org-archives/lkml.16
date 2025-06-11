@@ -1,153 +1,195 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E6C12E6112
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:16:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C01262FD9;
+	Wed, 11 Jun 2025 11:16:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749640572; cv=none; b=f2SK65pa3v68oKTsFB7gdzdpqZ4xTKVinV18ZPM10cM232bJ/mf6u553UrttFIKIHXNsXw/GD4hNWOBfow7PVa1WybHsElO5kJdX7lXyneKwPWZ9CN+S4DOuzdsJFDYp/kKFge1iUKxkUiMk+iGPmWEg6HUu/fsGjuvU3SDAXEg=
+	t=1749640573; cv=none; b=NGJ0/+caxUKeZLAopY16ZNuNIpHfFCGx6B4bcTtOBJQRnSkiCZyYpe1zHEze4bzkDMgo6zgShxfIfy71ju/7EKe7JekT8qzhVwA3wxd97QfQxx8KYELfdN9WWbZDyfkXC0XYdogtjqgr0d9d3m+zUFnEDqr9v4kUKzDILp35d8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749640572; c=relaxed/simple;
-	bh=nMF9K7Auph9cWiGh0kXvvupbMizZQhoAr4irrlKWwzA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Qq4BAoPMoHI+6QKKhsmH669ITYKqFhUpxnDsXnGp/l/RgNJiL8G2rugItrJnGflcF8/b3zlsjxZp2gB/l3p4kzrZdrLHiTxy8eZmac/LZeDxX+gj7Me5fW6SnEbLqJm2+nkdCOx/2bxlJZs7at+gdQVm0F7O+/qkhyslYNk3FWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Q28xpXfR; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1749640573; c=relaxed/simple;
+	bh=eEuprULSjDVVLT+zB/HbzjMEOf6OXIWRVXtO+cApelo=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=V0Q+lGlhCb3gYGYqzH4cT0N8QybgHuHpFVR75s4vzY1HQ5CFoRwEorv5xJcV/72/Bk/9q2JcJyk0AKHBHkadKgqQE0AWK2uGPAHYLUF/Q0wgZESpYe3bkc6DoM60LkFJYWoTwhfZWA35nYFo+7Zm/BRY/o7KCf5MpyfHTQzsQTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I50QKmE9; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Q28xpXfR"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55B9DEZu026004
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:16:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	kptoO2Aza1llV+rVNxYt5GCzthVJqYhfomZaXMsN2c8=; b=Q28xpXfRIXoriJML
-	Pq8K026dk+buY4vrjTM7ND/qPGRZkUVeQUMmmN8KUd7+V1NWxuBzgALPEDv+Qj0c
-	mHDvxjax79lLC7M4JMXkpMJT5+GkCT1DA0JNV5wHbhwbVfP4km5SCnr9JDYjLC2A
-	vAXtuVnUczmrWgP5k6P04mpxaR9TeCpTMxfaDdbDA2gnCtJ2p1Vq3Wae2QKJwEOt
-	XSva5CT4tHh7X6CWxENiqepWGq3qDbpDw8yVYroLxeyoS3LefwlbbMVcMbGRGdDQ
-	90nYCx2olBY4aOrQuyv9q4+Lw7E60wmPgYCEUQ3E6PGo0dDtKOBBadp4cR0iJTRh
-	tKd7DQ==
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 475v2y7jny-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:16:09 +0000 (GMT)
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-74620e98ec8so791847b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 04:16:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749640569; x=1750245369;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kptoO2Aza1llV+rVNxYt5GCzthVJqYhfomZaXMsN2c8=;
-        b=KWCqfkSK82sb/eDeN/1mV8lkn6bwGJfv1RMztGp1cQkN3eCdBjachXnNkfxnme9vdS
-         XFDQjS1E82qw8W9gVz++Apr8Jre4MAAHfMWSWACnICGCDKmiJOPgP4fcaVR7LEidWhZ/
-         9tzGQWbmcuf+uQNHx4pr4fGimiTHECX/rfhDLIB+eWQFKF40/DCEQ1CGoGRNT1pmgjQt
-         DDvYG4PgF5y/NUSiCvg19aPmL5+8A2qMtdMAwn4te/DU5DgIsSSJkuexM+LjqWyk+qSO
-         x3vdpUqj65l7iL4PcWBWmnoGUqsS4Ha9+pstFpLUg2Axo6usGUlq8DfDAKT76Xg4zPP+
-         Mzyw==
-X-Forwarded-Encrypted: i=1; AJvYcCVm05P3C655Gw872WvE5BsyFPc9sO3pWwjCnh9CCT9mC3fomWCdHXpSpPqDtJgGFzYVCplkum+PUe8YR3Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwaixWgJrd/XmB3lYJeCd06aWZuvjUQ7D4yb+tV0PcDd/TorCdR
-	NSJ2kXuuEOfhYZrCTN5kU8kM2kV7BQWEZDB1xbm+6NFh+NcHJlTUlObPSW/9Wgm4M+9T4Y+dJwz
-	1b/3tWXsoseomZeeg75FZM2XSAQqywX44DLFX46m2lrsHAorBbOnQ5gfNDVWKPvsdg7Y=
-X-Gm-Gg: ASbGncuJEdNcbnG7x8NbI6wYaGS/wtMkPXvMApaQl0btOK12VUyNhuxI0/ZSdA7IcDr
-	BfgBoAGq7leF/bDxpsGk5CM+O1Wiq5XJMXIDrcJcTDKeREke1UTN0uQ/KmUygPLYlYAgn6Z8gk2
-	JjgsN4B/dQuI6NoSln1o7wQPVFgC3UVj0oxDk6HrPCuToorscLHDHA04cMhI38ZgppHHEXpNLZV
-	SREhsCeBjZOZtXZDf6pe/Cu+8hVAJhCYz1Ldh4sYrnwBHXgfGtx0cSJ90lT/eQTSeIaAvboI9mB
-	SeS6xd0Ri1jKEUXjdHFRHqqWFmtWv/Bs
-X-Received: by 2002:a05:6a00:4642:b0:73b:ac3d:9d6b with SMTP id d2e1a72fcca58-7486d2bfd99mr4480436b3a.4.1749640568937;
-        Wed, 11 Jun 2025 04:16:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFQv2oR9AKeWi6BvBwm3nl0UvCjpE79XpYL9hXCh5jA1F6NZ0xrqYz3otpm2s5qxPpHx5fcxA==
-X-Received: by 2002:a05:6a00:4642:b0:73b:ac3d:9d6b with SMTP id d2e1a72fcca58-7486d2bfd99mr4480395b3a.4.1749640568511;
-        Wed, 11 Jun 2025 04:16:08 -0700 (PDT)
-Received: from [10.213.111.143] ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b0e9d57sm8820772b3a.160.2025.06.11.04.16.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 04:16:08 -0700 (PDT)
-From: Akhil P Oommen <akhilpo@oss.qualcomm.com>
-Date: Wed, 11 Jun 2025 16:45:32 +0530
-Subject: [PATCH v2 2/4] arm64: defconfig: Enable X1P42100_GPUCC driver
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I50QKmE9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749640572; x=1781176572;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=eEuprULSjDVVLT+zB/HbzjMEOf6OXIWRVXtO+cApelo=;
+  b=I50QKmE9tEkgzxrIhQDj++G8iIzuObs0f9XwDqeInPFr8tfO2sCTdBI4
+   mm4RtHXoUYxukj3uCijrrU4/6lOwRoU20zjYf/JOcxho0j3sz19tgSSs3
+   D1sG8dWfJOMZrPoL+DiQ1Jvq9HcIrEJnb1Bltc4SzYTz3ABczqbKxy+XO
+   12eLwJIu07VT61I4bMaa3a2/Jp7tudB0eqjgVH8/nuimKvMrNZvjJju6F
+   c9eQpy4L0hkBLmJHkmshLGOuRUYHJCMaTqvcJGdiT+dYEfOsUAI24oGol
+   8GyVX5fJ7JEKHfTCWUe1wt5QrfaXfuDhnZmI87jHpqn7X5P2huYNzg3/g
+   g==;
+X-CSE-ConnectionGUID: E7ixhMAlSS+L4MRVh7sh7A==
+X-CSE-MsgGUID: Hti3FJ7LQ1uKTS3KBvnVKQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="51771628"
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="51771628"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 04:16:07 -0700
+X-CSE-ConnectionGUID: Oio9/DKCSBqXcbPQylrduw==
+X-CSE-MsgGUID: 8dq+FMXgTL+6hzXPi2hQyw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="147044556"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.183])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 04:16:03 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 11 Jun 2025 14:15:59 +0300 (EEST)
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    linux-serial <linux-serial@vger.kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    Madhavan Srinivasan <maddy@linux.ibm.com>, 
+    Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+    Christophe Leroy <christophe.leroy@csgroup.eu>, 
+    linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 02/33] powerpc/legacy_serial: cache serial port and info
+ in add_legacy_port()
+In-Reply-To: <20250611100319.186924-3-jirislaby@kernel.org>
+Message-ID: <17b17aa3-dfd9-0e8d-b2a1-010637db29d7@linux.intel.com>
+References: <20250611100319.186924-1-jirislaby@kernel.org> <20250611100319.186924-3-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250611-x1p-adreno-v2-2-5074907bebbd@oss.qualcomm.com>
-References: <20250611-x1p-adreno-v2-0-5074907bebbd@oss.qualcomm.com>
-In-Reply-To: <20250611-x1p-adreno-v2-0-5074907bebbd@oss.qualcomm.com>
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-        Rob Clark <robin.clark@oss.qualcomm.com>, Sean Paul <sean@poorly.run>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Abhinav Kumar <abhinav.kumar@linux.dev>,
-        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-pm@vger.kernel.org, Akhil P Oommen <akhilpo@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749640547; l=821;
- i=akhilpo@oss.qualcomm.com; s=20240726; h=from:subject:message-id;
- bh=nMF9K7Auph9cWiGh0kXvvupbMizZQhoAr4irrlKWwzA=;
- b=agOSO7dfGn8dIa7XVbLlt4oDG1hgwGxcPdJ+VerIynmrzAOr5Zglz547UxQuM47URqq26uh55
- 1s+Uje4N5aqC8m4jFOukj8M61J+FVNVu7dbTpIXOsh6xEwxxDjWEE5g
-X-Developer-Key: i=akhilpo@oss.qualcomm.com; a=ed25519;
- pk=lmVtttSHmAUYFnJsQHX80IIRmYmXA4+CzpGcWOOsfKA=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjExMDA5NiBTYWx0ZWRfX4gLwb2okR1j0
- EyAc5xr1FZuaQGkjh9QhEM4/4jnhkBrRMXdrtqGNSqNE8WDsir+IjpjPmmgE5aNBXbA0Gg1jcMA
- 3I6fY0zdNBFUTLr7zSV4/x8JejaY8kVTQGHoX7JXy6QFHnBXZxHheAuATaKpYhbXjgTJ0y2OWO1
- 4UKWN13K2q8Sziy+BRbL07HcrzTG2bciNmUW+vHZRtQCXKF6f9eIEDtbbwr1IVMISsE/awqFNGJ
- atmRnzTGmI9Eyxx7k92/kq5gQ5Idxuj1T/oj2NVBrsqDfm00GHTGPaeHvxeyeeJ6JOKLX8c7OoB
- kaUXTNk4VvReogy5K1Dq6KmQ25GTQ9mNPauHJfy+DMGepI4Q/HJK8XkDOeVvCjPelCnuejkJFFt
- GnRWT2xd9Sn0vE01uOaFCCYjBNUMtPxXAfI/24ELIRBDmd9S0aNpAfu3dcrUBnDQaYnVoQso
-X-Proofpoint-GUID: e3b6hm3FQcebEU6Efe-a8oEcVUenENsl
-X-Proofpoint-ORIG-GUID: e3b6hm3FQcebEU6Efe-a8oEcVUenENsl
-X-Authority-Analysis: v=2.4 cv=f+BIBPyM c=1 sm=1 tr=0 ts=68496579 cx=c_pps
- a=WW5sKcV1LcKqjgzy2JUPuA==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=-EtVc9J5eg0rhuNXUfoA:9
- a=QEXdDO2ut3YA:10 a=OpyuDcXvxspvyRM73sMx:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-11_04,2025-06-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 spamscore=0 mlxlogscore=650 bulkscore=0 impostorscore=0
- lowpriorityscore=0 priorityscore=1501 adultscore=0 phishscore=0 mlxscore=0
- malwarescore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506110096
+Content-Type: multipart/mixed; boundary="8323328-1944227453-1749640559=:957"
 
-In order to enable GPU support in Snapdragon X1P42100
-(8 CPU core version found on Asus Zenbook A14 and other
-similar laptops), enable X1P42100 GPUCC driver as a module.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Signed-off-by: Akhil P Oommen <akhilpo@oss.qualcomm.com>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+--8323328-1944227453-1749640559=:957
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 62d3c87858e1817bac291780dff3823dacd72510..9cc473fd0d3308f7869d00425e17b114c87093b2 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -1350,6 +1350,7 @@ CONFIG_CLK_X1E80100_CAMCC=m
- CONFIG_CLK_X1E80100_DISPCC=m
- CONFIG_CLK_X1E80100_GCC=y
- CONFIG_CLK_X1E80100_GPUCC=m
-+CONFIG_CLK_X1P42100_GPUCC=m
- CONFIG_CLK_X1E80100_TCSRCC=y
- CONFIG_CLK_QCM2290_GPUCC=m
- CONFIG_QCOM_A53PLL=y
+On Wed, 11 Jun 2025, Jiri Slaby (SUSE) wrote:
 
--- 
-2.48.1
+> Caching the port and info in local variables makes the code more compact
+> and easier to understand.
+>=20
+> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Cc: linuxppc-dev@lists.ozlabs.org
 
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
+--
+ i.
+
+> ---
+>  arch/powerpc/kernel/legacy_serial.c | 52 ++++++++++++++---------------
+>  1 file changed, 26 insertions(+), 26 deletions(-)
+>=20
+> diff --git a/arch/powerpc/kernel/legacy_serial.c b/arch/powerpc/kernel/le=
+gacy_serial.c
+> index 1da2f6e7d2a1..d9080189c28c 100644
+> --- a/arch/powerpc/kernel/legacy_serial.c
+> +++ b/arch/powerpc/kernel/legacy_serial.c
+> @@ -77,6 +77,8 @@ static int __init add_legacy_port(struct device_node *n=
+p, int want_index,
+>  =09=09=09=09  phys_addr_t taddr, unsigned long irq,
+>  =09=09=09=09  upf_t flags, int irq_check_parent)
+>  {
+> +=09struct plat_serial8250_port *legacy_port;
+> +=09struct legacy_serial_info *legacy_info;
+>  =09const __be32 *clk, *spd, *rs;
+>  =09u32 clock =3D BASE_BAUD * 16;
+>  =09u32 shift =3D 0;
+> @@ -110,16 +112,17 @@ static int __init add_legacy_port(struct device_nod=
+e *np, int want_index,
+>  =09if (index >=3D legacy_serial_count)
+>  =09=09legacy_serial_count =3D index + 1;
+> =20
+> +=09legacy_port =3D &legacy_serial_ports[index];
+> +=09legacy_info =3D &legacy_serial_infos[index];
+> +
+>  =09/* Check if there is a port who already claimed our slot */
+> -=09if (legacy_serial_infos[index].np !=3D NULL) {
+> +=09if (legacy_info->np !=3D NULL) {
+>  =09=09/* if we still have some room, move it, else override */
+>  =09=09if (legacy_serial_count < MAX_LEGACY_SERIAL_PORTS) {
+>  =09=09=09printk(KERN_DEBUG "Moved legacy port %d -> %d\n",
+>  =09=09=09       index, legacy_serial_count);
+> -=09=09=09legacy_serial_ports[legacy_serial_count] =3D
+> -=09=09=09=09legacy_serial_ports[index];
+> -=09=09=09legacy_serial_infos[legacy_serial_count] =3D
+> -=09=09=09=09legacy_serial_infos[index];
+> +=09=09=09legacy_serial_ports[legacy_serial_count] =3D *legacy_port;
+> +=09=09=09legacy_serial_infos[legacy_serial_count] =3D *legacy_info;
+>  =09=09=09legacy_serial_count++;
+>  =09=09} else {
+>  =09=09=09printk(KERN_DEBUG "Replacing legacy port %d\n", index);
+> @@ -127,36 +130,33 @@ static int __init add_legacy_port(struct device_nod=
+e *np, int want_index,
+>  =09}
+> =20
+>  =09/* Now fill the entry */
+> -=09memset(&legacy_serial_ports[index], 0,
+> -=09       sizeof(struct plat_serial8250_port));
+> +=09memset(legacy_port, 0, sizeof(*legacy_port));
+>  =09if (iotype =3D=3D UPIO_PORT)
+> -=09=09legacy_serial_ports[index].iobase =3D base;
+> +=09=09legacy_port->iobase =3D base;
+>  =09else
+> -=09=09legacy_serial_ports[index].mapbase =3D base;
+> -
+> -=09legacy_serial_ports[index].iotype =3D iotype;
+> -=09legacy_serial_ports[index].uartclk =3D clock;
+> -=09legacy_serial_ports[index].irq =3D irq;
+> -=09legacy_serial_ports[index].flags =3D flags;
+> -=09legacy_serial_ports[index].regshift =3D shift;
+> -=09legacy_serial_infos[index].taddr =3D taddr;
+> -=09legacy_serial_infos[index].np =3D of_node_get(np);
+> -=09legacy_serial_infos[index].clock =3D clock;
+> -=09legacy_serial_infos[index].speed =3D spd ? be32_to_cpup(spd) : 0;
+> -=09legacy_serial_infos[index].irq_check_parent =3D irq_check_parent;
+> +=09=09legacy_port->mapbase =3D base;
+> +
+> +=09legacy_port->iotype =3D iotype;
+> +=09legacy_port->uartclk =3D clock;
+> +=09legacy_port->irq =3D irq;
+> +=09legacy_port->flags =3D flags;
+> +=09legacy_port->regshift =3D shift;
+> +=09legacy_info->taddr =3D taddr;
+> +=09legacy_info->np =3D of_node_get(np);
+> +=09legacy_info->clock =3D clock;
+> +=09legacy_info->speed =3D spd ? be32_to_cpup(spd) : 0;
+> +=09legacy_info->irq_check_parent =3D irq_check_parent;
+> =20
+>  =09if (iotype =3D=3D UPIO_TSI) {
+> -=09=09legacy_serial_ports[index].serial_in =3D tsi_serial_in;
+> -=09=09legacy_serial_ports[index].serial_out =3D tsi_serial_out;
+> +=09=09legacy_port->serial_in =3D tsi_serial_in;
+> +=09=09legacy_port->serial_out =3D tsi_serial_out;
+>  =09}
+> =20
+> -=09printk(KERN_DEBUG "Found legacy serial port %d for %pOF\n",
+> -=09       index, np);
+> +=09printk(KERN_DEBUG "Found legacy serial port %d for %pOF\n", index, np=
+);
+>  =09printk(KERN_DEBUG "  %s=3D%llx, taddr=3D%llx, irq=3D%lx, clk=3D%d, sp=
+eed=3D%d\n",
+>  =09       (iotype =3D=3D UPIO_PORT) ? "port" : "mem",
+>  =09       (unsigned long long)base, (unsigned long long)taddr, irq,
+> -=09       legacy_serial_ports[index].uartclk,
+> -=09       legacy_serial_infos[index].speed);
+> +=09       legacy_port->uartclk, legacy_info->speed);
+> =20
+>  =09return index;
+>  }
+>=20
+--8323328-1944227453-1749640559=:957--
