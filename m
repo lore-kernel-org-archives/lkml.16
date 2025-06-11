@@ -1,192 +1,217 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570BD246BCD
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749677946; cv=none; b=AN6O8bGqEO9v6Z9pug50BERb70FUkpn07kBvmd4j64xbQfMXdfGgM/Mq980/+TgBjf9lFlvDnvpPHAo6Aqg46m0LPuhXdy+yOQaajg1MgjdqHpox+yPFNqoQjotf7d/jVj/wMA7dwpnzMOGOzqJ/8U4uDbd5eBFa0mJywHyDeog=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749677946; c=relaxed/simple;
-	bh=7wfgut9r0z2URNp/r0dotLN2fdcorVv7r5QCCeI6kmw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZNwOAPpaL66CCEs8Py9Y+RPGnCkdy0xTiVzqtSFGEhQ4Mijs1j04OnPAliSpgrtoxSa1jmNLl/y14hnQJvJzdmItZIDEr0x0l3xWWivzkd/T17eEQQ3j4Xcjbq6ucXiwrKO0f9iMwn4SuCKOn9+p0RfdNEHNOX4NzJnUIxcFWyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Vz8MtQgR; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCEE024BD0C;
+	Wed, 11 Jun 2025 21:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749677952; cv=fail; b=FJNwueA5FvG5jny1bxFJqlHCmPfHAc0/pmIlfq8o2mIgB/0CTB6FiLIhKY3YJvrl+4ssQRnM+fsFYHDvo9OmJvDHTaiBD5IyPTy2kHpMvq0d/bKHXTrdsHVdPcm/E6iYf58E1NgpQCsUG6XXMw7DXzsjqJuuYI6ZQUxtdVa+EUc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749677952; c=relaxed/simple;
+	bh=JCdLOf9c2jdrqvNT+a5/WzzcKxbO8RF5t+a3lcJiRcg=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=EIBeRu825lInjigNT9yZ+7b4rSgyRVbs4KS1hWfCVrXlVm9bwrRNFo27GLNECEntSyuPIGbPDYe/mWqqMdPyxe46Z1efCp3HPEjH6PljK+HUUniMVeRPcsconxSQHQk6pNkNnaudAkNfZjS8Eb/TusGTZcku7DnjYYCS+YMOGCs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V5RmWnVh; arc=fail smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Vz8MtQgR"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-747d59045a0so313333b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:39:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1749677938; x=1750282738; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dWt7b+ImqtoWAiZlh6Cce7mreaqBJVy9uH7u+QDcU9Q=;
-        b=Vz8MtQgRCLkaPak/86IaDkq/EqwCESy4KlX5wE+gbdQ8K2daOADeci07nUSmAOQgVA
-         C6DISf0e5PdoEtKh1DeMrGG2EMc+qrWJV4xDpqfMwl8RgvLP+lt6+fazcKenYkimYcge
-         ITN5jH3WetMOWk8RqH3SiGMr4QyrhhmmicZU4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749677938; x=1750282738;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dWt7b+ImqtoWAiZlh6Cce7mreaqBJVy9uH7u+QDcU9Q=;
-        b=WxYGfnONIfZvNmZdrGpQhwNiojzVQeyoGKUE4IjMIKtfPFGHLEDeuHmi/2alT2hxZU
-         ygpR9HrSlbSwvYIb4ddEMmGPmEShq6p2XFiOMwvA/2Q1E52aCyhYzHMUtAv3fKpPxzzL
-         FWEVvtFuworT6UjafkBur2D4Zqauc8nCZ6LT3DKKZxbXXD8BBTOPjm8ihCSkP404RzHa
-         y13/KYyjTDwTUpuOuNgUNWf7wz9nv3VLr7g155eX+xAqNeUiHpYF7xDgZAtxE2Hv0YMK
-         lefFYFpkdKTB3i9nolyUK540GER9OSpOp0yYTOQAE6A+XQnN4wFNUBbzDqi3wr9mDgdG
-         APnA==
-X-Forwarded-Encrypted: i=1; AJvYcCUqwz8GYREW2h1iF3Z3qao0G51YmeC7Gv10KvyKt0L28MD6FK1cu1X8NKj0+FxeLSY4eRHrYn7HJUlOcYE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6OXetOp/NMxDRS6ns0qcV0QiK5cJUd/mYyDgCE+n3zOor9Fcd
-	5JYUSaMFLspX96q0VJ67GjWjsNPqZtxJcLO3R9EcLCcuL2EkS0E7+UvrpBNbWGCdAtTGFBtd0V4
-	Tid0=
-X-Gm-Gg: ASbGncthXLRjh8FCUM18YyqY+HJgalE1UqFKkhPLly3TJLy2GDHczqP965v2s2kiRYu
-	Jgh+CsbdbLrpqmdf8yWK2ugn6B1LiMCDqABlgX2Bxip1glza4ZN7HErtoAMdp0snGQqSHOZLqkd
-	fKNXr4uOll+8f7GtWGs5DfUky33mmi/RlrFllANm6zSL8tItk0/Uw0JLjRsIQr2ca9aN4il0kRg
-	JJmQtCJ5sCzGC7L/gQgE4rnOVcZ0DlWfhc6PaaKWcyt+domCh02WHFOXmoP8fCa5IOjbyQOzAJ9
-	nE9uYqa0kd3bkefF6CExNJiRb/zxQEOvlG3ECi3eoOy6JB2fDF/BSNkkpnpNGOC4c2tod/7ooBb
-	Oa5gkRHCdC0deVCENo4oLpXySL+doGA==
-X-Google-Smtp-Source: AGHT+IErcmU9Uw9BkpNNOX2JyJtmHzLyo2BwaVfhUpXyyRA6fjvgqEfNzSp/cZwrJPGiI4PlyqnDRw==
-X-Received: by 2002:a05:6a20:549c:b0:20d:df67:4921 with SMTP id adf61e73a8af0-21f97752d7bmr2039348637.4.1749677938492;
-        Wed, 11 Jun 2025 14:38:58 -0700 (PDT)
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com. [209.85.215.177])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fd6140120sm70468a12.29.2025.06.11.14.38.56
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jun 2025 14:38:57 -0700 (PDT)
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b2fca9dc5f8so178996a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:38:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUrxNxcCllMySTxN6MlHquDFwKyZpWqz42v4LasSGDmAUaj2Pxb3zXHuW8XWz7RhJAVjAYKyney6ePMNWo=@vger.kernel.org
-X-Received: by 2002:a17:90b:3d87:b0:313:2adc:b4c4 with SMTP id
- 98e67ed59e1d1-313bfbdb37bmr1609467a91.24.1749677935135; Wed, 11 Jun 2025
- 14:38:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V5RmWnVh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749677951; x=1781213951;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=JCdLOf9c2jdrqvNT+a5/WzzcKxbO8RF5t+a3lcJiRcg=;
+  b=V5RmWnVhVEAEOxwj+Vz45/IVcPzfqZfbVnpRaHEG1HAJRTZsGXtv/LlW
+   K1v7ZSVkVQ6zF6KLXO19IRnPwUAUjf6Fvz0ERYCdn31um+ofLoXWRGgPY
+   2OGhzL7Ak4/7Mey6fsZyOcA4skz/ZaxRsX2GCOYaJPUlkMErMpL5GaKYe
+   xYW5PXLXwaEvpewOa5MhgNp3Mq+eXNkKfNJOWayUXDsGbHCuCY41f8qI4
+   mTZr76KC/3Oh8aoQYFsIBeqEaxhAYcQoCu/bd+8Nck1PlByrlBkN5W9bc
+   X4ZMVxYmDJ/iH7DTYXjgHrUi1lPuJ5EhektybiQ/9RHouPz11OVaGR4tN
+   w==;
+X-CSE-ConnectionGUID: oC30ZyPGTCWwUL35KWZpSw==
+X-CSE-MsgGUID: UxfyAKUqSPKXpTh+eiXBug==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="63244369"
+X-IronPort-AV: E=Sophos;i="6.16,229,1744095600"; 
+   d="scan'208";a="63244369"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 14:39:10 -0700
+X-CSE-ConnectionGUID: HSamITpwS56DKQI2tCrNGw==
+X-CSE-MsgGUID: EjlzY4CaSd+U+SaoOgDQZw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,229,1744095600"; 
+   d="scan'208";a="152466550"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 14:39:09 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 11 Jun 2025 14:39:07 -0700
+Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Wed, 11 Jun 2025 14:39:07 -0700
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (40.107.101.77)
+ by edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 11 Jun 2025 14:39:07 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nhv2fEOIgoeGcRopsHsjhdpPOOUeowm4dpDjpI/i2aoMgcS3FN4bndIuZFZhMeSrJ+C6+EVCrm9sX0wQ3HmG3VGUyKp1sX1cE8SCV8DqxMDWNtc4LviJnH31GBP6olhs1wP3YoBaf50R5LoDLOYD/ni42hCTi+LN7hje9k0y16MvBwGBgVbDKSziiWw8dYku7d0vPX8GS7dMqBokW/ZUSJP9TK4Q6bz/SD9mUpliCm1RfVUgM2fNhEpgjrkqkeZ2tZF2fqTevdNMtdJKQPd/D3wnKEUFMehE/fWT9MdSqHj3NYnXgr/NrKFcAXbMK/w3BO0LzEhS2M/scW4A2Bw1ZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JCdLOf9c2jdrqvNT+a5/WzzcKxbO8RF5t+a3lcJiRcg=;
+ b=QukFfdqOeQK6v4Crk1PQK1rBfN8S3kbV71cEqL8jIy5bxZRSetgPZwCn/I6Ax97kwkzNwAp3yX3Loz9ICMKiRrex0Q8K5JcmbXWN0+mJLiEqRPKHpK3S/YFqsHgkN5KM429LsBkzRUDdLKmRijfBpx3gad8ZEdmhgLXNB96fOfN+pPXHUeFZEtZw3hdBzBQLz6P1pvP9POKCYIYZd11CEkGBWvBiTKLzTg2BPFpNlxBp5w0/qyFNK0+Ut4UgsGy0MynDOvq3DYuq6J6AXzjZOT1rhTyU3TkWz43A34MFCh9XZsg6FUq60SLldnIGQw2k3o1yA1l5N4hIkuyeb/okHQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from BYAPR11MB3320.namprd11.prod.outlook.com (2603:10b6:a03:18::25)
+ by SJ5PPF183C9380E.namprd11.prod.outlook.com (2603:10b6:a0f:fc02::815) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Wed, 11 Jun
+ 2025 21:39:04 +0000
+Received: from BYAPR11MB3320.namprd11.prod.outlook.com
+ ([fe80::e8c4:59e3:f1d5:af3b]) by BYAPR11MB3320.namprd11.prod.outlook.com
+ ([fe80::e8c4:59e3:f1d5:af3b%4]) with mapi id 15.20.8813.024; Wed, 11 Jun 2025
+ 21:39:04 +0000
+Message-ID: <7abb2bf8-be36-41b1-bb6e-e23a984a4ab6@intel.com>
+Date: Wed, 11 Jun 2025 14:39:01 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 9/9] x86/nmi: Print source information with the unknown
+ NMI console message
+Content-Language: en-US
+To: "H. Peter Anvin" <hpa@zytor.com>, Xin Li <xin@zytor.com>,
+	<x86@kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, "Sean
+ Christopherson" <seanjc@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Tony Luck <tony.luck@intel.com>,
+	"Zhang Rui" <rui.zhang@intel.com>, Steven Rostedt <rostedt@goodmis.org>,
+	"Andrew Cooper" <andrew.cooper3@citrix.com>, "Kirill A . Shutemov"
+	<kirill.shutemov@linux.intel.com>, Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>, "Sandipan
+ Das" <sandipan.das@amd.com>, <linux-perf-users@vger.kernel.org>,
+	<linux-edac@vger.kernel.org>, <kvm@vger.kernel.org>,
+	<linux-pm@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
+References: <20250513203803.2636561-1-sohil.mehta@intel.com>
+ <20250513203803.2636561-10-sohil.mehta@intel.com>
+ <31507dc8-b1dc-4df3-bc0c-6958b4218746@zytor.com>
+ <fa948d41-3f95-4385-86c1-5c115561b939@intel.com>
+ <8035D788-0F60-48B8-8B98-DC352EC9AE62@zytor.com>
+From: Sohil Mehta <sohil.mehta@intel.com>
+In-Reply-To: <8035D788-0F60-48B8-8B98-DC352EC9AE62@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BY5PR04CA0015.namprd04.prod.outlook.com
+ (2603:10b6:a03:1d0::25) To BYAPR11MB3320.namprd11.prod.outlook.com
+ (2603:10b6:a03:18::25)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611052947.5776-1-j-choudhary@ti.com>
-In-Reply-To: <20250611052947.5776-1-j-choudhary@ti.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Wed, 11 Jun 2025 14:38:43 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WvH73d78De3PrbiG7b6OaS_BysGtxQ=mJTj4z-h0LYWA@mail.gmail.com>
-X-Gm-Features: AX0GCFt8rakO8gJRiwfAIPFbP6QcoyCGjlAjSHLBCdKw389Bce6LPh81MDUm4uI
-Message-ID: <CAD=FV=WvH73d78De3PrbiG7b6OaS_BysGtxQ=mJTj4z-h0LYWA@mail.gmail.com>
-Subject: Re: [PATCH v4] drm/bridge: ti-sn65dsi86: Add HPD for DisplayPort
- connector type
-To: Jayesh Choudhary <j-choudhary@ti.com>
-Cc: andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org, 
-	Laurent.pinchart@ideasonboard.com, dri-devel@lists.freedesktop.org, 
-	tomi.valkeinen@ideasonboard.com, max.krummenacher@toradex.com, 
-	ernestvanhoecke@gmail.com, jonas@kwiboo.se, jernej.skrabec@gmail.com, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
-	airlied@gmail.com, simona@ffwll.ch, kieran.bingham+renesas@ideasonboard.com, 
-	linux-kernel@vger.kernel.org, max.oss.09@gmail.com, devarsht@ti.com, 
-	geert@linux-m68k.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR11MB3320:EE_|SJ5PPF183C9380E:EE_
+X-MS-Office365-Filtering-Correlation-Id: d07eb428-7ac0-45ee-9237-08dda93062fc
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?T2NQRGJER2JIYUQzOXRBRlhKRHlFYnJMaHBqc2RGOFI3NUF0Z25IWmlUY09G?=
+ =?utf-8?B?b2RaaVIvUnlTYUVrbkVqV3VrZDFSR2ZiMlFYeWJlQjBsVWVoSk80bFViUXpS?=
+ =?utf-8?B?RTVpNFhxdVpIUkdreGl2cW9wN3AwMVgvY0VoU1g2ZjFUelFFYUxqSHlUdVoy?=
+ =?utf-8?B?QjRtUFFPcHE5bDZQWFROMkF4WElyS1hDUFNLeTFiVGYySFE4Y2lMalRkcVNB?=
+ =?utf-8?B?UCs0YzNGQnFhVGVTLys1V3l6TWZqQlV5WFkwelpIV2F5dDBBSFdHLytTOUZ2?=
+ =?utf-8?B?MUY5ekEwWVh4eFNlczF5ZXFHNTI2UFBmcS9JWDFGNDIrRmpmUGxVdXo0ci82?=
+ =?utf-8?B?MGI4bXU1UW1JSEpFTGdYM0JzcUVOaDNaWThIOVlhSWJPZERBU2lrN09GZksv?=
+ =?utf-8?B?ZGhodXZUV3VPT3lQOURrbThQcEVTOUQzdG1BT3RWb1d3eS9vQzNwN1g4Zm9n?=
+ =?utf-8?B?c3ZDbGpha2ZvclBsUmZJbTJBS3R5QmlCQkFDcW40b05MK1I0clJ2MXVSUjd5?=
+ =?utf-8?B?R3B6bk83RXpsalJ6ZDBzZWttR0tLVE84NGlQaUJLWlNWYUs5MEtOVkdLczkz?=
+ =?utf-8?B?c2tFb0xxUzRBS3BERWVEQVgwYWlSSks4Zkw2ZDRzcmhCdjFEcFZhRlJxZ2NF?=
+ =?utf-8?B?ZEs2L1RIaVdpeUlOZ3dQZnh4Vm9vUUV2RUpNMG53UXZabUJSYlhETmpZTWh5?=
+ =?utf-8?B?UEVEdldPak1QZjE3TlkySGpycjc1eE5zdFdxa2hBM3NRQ3pOTEx2clBpS3NE?=
+ =?utf-8?B?TU5WR2hibW50akh6T0JtZkpwbmJ4UllHc2txTFZaendmYWpEenlkQVV3M1dC?=
+ =?utf-8?B?VHBjMGdzMGlPTWtyVlJObUI0MlZjTGxDL1h1aEhuV1Nmbjh3UVlmcDMvblEz?=
+ =?utf-8?B?Q0JSSFJqQkJseGxMM3dTM1BVZmlocUZpa2tNamlvYk5aU3Vjak9LdjBmQzlC?=
+ =?utf-8?B?NURWL29mbkFuS25EcEcwa2x0aUtvamVZRUtEOXdjRk1hNDNoZHpjTEF0WGFB?=
+ =?utf-8?B?OUEvYTJ5ZmQ0aDZUTGk0aHJDYlU5cFcyMFN6clVyREpsb3RVQUFnRE1sRXVu?=
+ =?utf-8?B?MmgzMWhuT3FyMys0ZzB5MW5VV2RoaGhuSWVNR3BWTS9SdzFhSFg0MmQ5Ynho?=
+ =?utf-8?B?dzlvOE1HREU3SkNUOVBRV1lnTFcrcHMwcnhSQTQ4NnNZUlUveTRKVlVwTWhx?=
+ =?utf-8?B?T2JhbFUxbkw0QkJuYUtrdnJoZXNvVWxxSzd0UC9Yc2JVUVNNTlUyMEtuN1lZ?=
+ =?utf-8?B?Vldwdjgzc001ZUh2dUZXc2tXdWtoSE1QTG8wZnJiSmxseXk3ZG9pMHhmczR5?=
+ =?utf-8?B?VVVKUWNLanBhbzFZTUlKT1F5cUxUeDVHNEQxRWFWRU9nSHZtNysrWmV2N0FM?=
+ =?utf-8?B?Q2ZINU9tY1VJSTR3OU8zZzNmQWdacE5xWGRGSk5TWW8wb0NvZGVJTWJJdjVT?=
+ =?utf-8?B?bVZrTEExaHNYVk05bENTVzJrd0ZvWXROQXJVR1JkSkF6UnJQbUdTN2NNeEwz?=
+ =?utf-8?B?RXA2Z0Jmd2dSblVWY3Bid3Q1Q0w0UzRla2hoc2VweE5vYVJ6MXNuNmY0K2RC?=
+ =?utf-8?B?clFnZzdHZWVpeXFLVXVGZDUraDNDYWNjamlScVgyQ2kvQ3QwVU5TZnRGNFFJ?=
+ =?utf-8?B?WDIxN0JRT2lrbTJrOWRCL3dodEk4WU53V2R0c29CczVaRDE3L284dVpGZk8y?=
+ =?utf-8?B?VHVCdjdMdzBRdGZDV2tSZWcvYUpnVi9xNUJmUlBYQmhzRmJ5eTc1cTB4aUlE?=
+ =?utf-8?B?Z2JOTGhEcXU1dHZSOUlxbTVXTlV2NWxmUnZmQjgySnlJbXJzaXltSTgrVzRy?=
+ =?utf-8?B?UThYaUsrRmsyUlkrcFdGUlV5aFBJNzdjSnNDNFFzOGtJaUtCaUdZRkl5aElm?=
+ =?utf-8?B?RkRraW9QN1hzdnRHbERWUmRuR1JtYmxZdkJBOG5lNXViRGtxT1Yxb1JRclJE?=
+ =?utf-8?Q?g8vRiQgtMrY=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3320.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TDA3bE0vdzRqMDV2aDBnQVFNdmxNanlBRDBuVVJNL0pHSVVIcC9kSTdxYmJx?=
+ =?utf-8?B?emVKK2FzVXExRlJ2RWNIcmdYVkYydnQ2bEdhbTU2NkRqZTRnUVpLQkRCbVh0?=
+ =?utf-8?B?UGJsbktFa0dDd1p1VWlJWFZsYTI3V0NXSHFtT0JjalFUWFlTVXQvQWUzMEZK?=
+ =?utf-8?B?cE02TUNhd0lDQzAzY2IrU3V1Yk9sdVNLYUNGcTJJQXpPZ2JHbGVNZHlGV3FJ?=
+ =?utf-8?B?cVFRMSs2bysvV3Jlam5DZFNnU0FvV3hDbW9WN2ZHTGVYSUxPd1dyMVJ2cWFs?=
+ =?utf-8?B?ODBCMkVaNFhISEt1dWZnbC9mcWVtM3lZMGJxOTgvNll1NW8yazBqeWFMZUdk?=
+ =?utf-8?B?eVJxWFlQbDJrVEVaS0dmSGhvblp2K0t4TXdBcFlqbjJCSy9TYnNiTklwVHdt?=
+ =?utf-8?B?TVhNNzJHNVU5RE82TFNVOFV1MHZNc0ZBUkhNV3U5UDhxcEo0Nmlrc3lkckZR?=
+ =?utf-8?B?cWFITVFraDZRdmRoNEFIUkUzbzQ4ODM0TFhiRTU1QnNsdVpDcW92MDJxTVRj?=
+ =?utf-8?B?amgzYmVlUFpXdm1jWHEvTDdaaDdGL3c0a1dmNXdNSGRWMncxdjhUcDZoeW1Q?=
+ =?utf-8?B?bHBLcE9oYnlMM0VCeEd5WExOM0NBR0pXc0JONS8wanJEQUN0empYbDhNNHdZ?=
+ =?utf-8?B?bWVUYjlGNGZ4RkpmcVVHbm9TaDZaeWJVTDRPWmN3aXNmTzVqQVhtUzhwWktI?=
+ =?utf-8?B?WE1kL0xFcW5oM3Z1QktGL2pxejJpTkdhVUhqSnpLMGdRWDdvc3BXakFzbkRa?=
+ =?utf-8?B?bWNVVktTN3RUTllNZDZTKy9XNWJrVUdtRGgvSEdTWHZUc0FPTTRRdUlhU2ty?=
+ =?utf-8?B?Y1hoMloyWjlEenhTMDBHZmI3QWkxMXRuUGg0Z0tra0puZGIwNjdzaHYxWVhF?=
+ =?utf-8?B?Z1NBc1ZPck1WckZTNTFOdHRrbEpzZUpaWnZjMUdzdFljODRnakpLM0h0eFJC?=
+ =?utf-8?B?bWFSU1Jrd01XdzhnT0EyMk8zdEYybUovT0ROaU9hWEtqZnlXMVE5cldIcC81?=
+ =?utf-8?B?YllVQllmYyt3Vk1tbXgzczJ6TGtNQ0xwNWRiYjdLbGpJNFppS01rTE1UZXJ1?=
+ =?utf-8?B?eDJwZ1M0WG5GMTNiajJReGZ5dHhuNGhIRWwvNm40ckN1WjFsWXBreU9zOSs0?=
+ =?utf-8?B?QjVuNEEzV0ZMdG5NZEIxQlhhK3B6KzNoTUZ6djRNYWxEemRuM1BVTUNzaTBm?=
+ =?utf-8?B?bzhjRFZydVo4cEt4U1drOFBXb1NoNWNQWlRmOFhUck9OSUlGemxuM3ZoMUhj?=
+ =?utf-8?B?WGkycXNraXJVdEFkVXBXYlJXNUJ3WVZDM2RoUXg3M2k5a1l3MWVsa3FrSC9I?=
+ =?utf-8?B?elZyNDRvRS9ONjBmRzR3dDcxWGhNY0ZrbnF4RGJmWjBtdzViRFR3SUV6RkQ5?=
+ =?utf-8?B?U1JRVGhyR0E1b1k5OENScDkvV1o0dElZWitXQnNITlAvZWJNYWN6YmhRT2lq?=
+ =?utf-8?B?YTZSUlhWOFpqeHNWWlVmKzJoN0lYdXlNKzY4LzcvTGJCMENuRVZ6aXFvcEZC?=
+ =?utf-8?B?VDIzSWJWRFZOM1RqNjc0S09QMGlyZHpqUW9QaVZGTGJMbXROcDF5dkNYSkIy?=
+ =?utf-8?B?cFNOYkZKZDV5TUZUQlk5d1drY1pPRU96emVNbDQyaHhGWnBPdHBCa0NucFBk?=
+ =?utf-8?B?Y2JXQXhHWXF0aU52RHRNMVZuYm5wMU1FRHNrZ1lDUlU3TUl2YjkzVi9jZldv?=
+ =?utf-8?B?dERvWUZzeU1nZmlJVC80NzJoaVZRak01bUNjb3JCbWNyR0xncE4yUDRJNlJM?=
+ =?utf-8?B?ZlM0UGk2WUpzSFlqcUVhczlYeFZrY2hBeGhhdjlWRmQ2WlhZZ3lKSlpsYlNC?=
+ =?utf-8?B?eksvdFRhNTNKRzc3MzNJdWdXdTdnTFRldjcrSGZqMjQwQmZ0NkRsTnA2TllT?=
+ =?utf-8?B?MU1Ib2dOczVjSmNlRU1WUS81akU1eVViYW5BSW1WUkFiWVl3Yy9BT3dMd3FV?=
+ =?utf-8?B?VlBDR3cxZE1XSU5vUitFbHZ3QTdxVzNXTjJhSUoxT2NsYklFdFMwbnQwUjhH?=
+ =?utf-8?B?dkZBQ3BEelowcGx4VCtBT2t4MjZXNmZhbEdKMXNEVktKWCtwKzVuRXkvZGVw?=
+ =?utf-8?B?UTM2V0JBcDFoMU0xKzdNWXZzUldsUWREdzEybXNDVCtKVmNkR2RYNTc3UU02?=
+ =?utf-8?Q?i2WeAWDhFwYe9yHt9+0j0UnfX?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: d07eb428-7ac0-45ee-9237-08dda93062fc
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3320.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2025 21:39:04.2146
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: BceAS6U6F9dwyGCIXD6WA/rqbQ+UuFlytG5+LP2YWbxCn2oEZKh0Y9XudnX1PKcmSpbi2P8CdSucVeKUeQK7PQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF183C9380E
+X-OriginatorOrg: intel.com
 
-Hi,
-
-On Tue, Jun 10, 2025 at 10:29=E2=80=AFPM Jayesh Choudhary <j-choudhary@ti.c=
-om> wrote:
->
-> @@ -1195,9 +1203,17 @@ static enum drm_connector_status ti_sn_bridge_dete=
-ct(struct drm_bridge *bridge)
->         struct ti_sn65dsi86 *pdata =3D bridge_to_ti_sn65dsi86(bridge);
->         int val =3D 0;
->
-> -       pm_runtime_get_sync(pdata->dev);
-> +       /*
-> +        * The chip won't report HPD right after being powered on as
-> +        * HPD_DEBOUNCED_STATE reflects correct state only after the
-> +        * debounce time (~100-400 ms).
-> +        * So having pm_runtime_get_sync() and immediately reading
-> +        * the register in detect() won't work, and adding delay()
-> +        * in detect will have performace impact in display.
-> +        * So remove runtime calls here.
-
-That last sentence makes sense in a commit message, but not long term.
-Someone reading the code later won't understand what "remove" means.
-If you change "remove" to "omit" then it all makes sense, though. You
-could also say that a pm_runtime reference will be grabbed by
-ti_sn_bridge_hpd_enable().
+On 6/4/2025 8:41 AM, H. Peter Anvin wrote:
+> I think printing the bitmap is fine for unknown bits set... after
+> all, you might have surprise vectors. Maybe a list would be cleaner
+> by some definition, but we already print bitmaps all over the place.
+> It is not critical as long as the information necessary for
+> debugging is there. In fact, it is often better for the information
+> to be compact so users don't get tempted to abbreviate a bug report.
+Sure, will print the full bitmap here. Since this is the unknown NMI
+message, it may have unexpected bits set in the bitmap.
 
 
-> +        */
-> +
->         regmap_read(pdata->regmap, SN_HPD_DISABLE_REG, &val);
-> -       pm_runtime_put_autosuspend(pdata->dev);
->
->         return val & HPD_DEBOUNCED_STATE ? connector_status_connected
->                                          : connector_status_disconnected;
-> @@ -1220,6 +1236,20 @@ static void ti_sn65dsi86_debugfs_init(struct drm_b=
-ridge *bridge, struct dentry *
->         debugfs_create_file("status", 0600, debugfs, pdata, &status_fops)=
-;
->  }
->
-> +static void ti_sn_bridge_hpd_enable(struct drm_bridge *bridge)
-> +{
-> +       struct ti_sn65dsi86 *pdata =3D bridge_to_ti_sn65dsi86(bridge);
-> +
-> +       pm_runtime_get_sync(pdata->dev);
-> +}
-> +
-> +static void ti_sn_bridge_hpd_disable(struct drm_bridge *bridge)
-> +{
-> +       struct ti_sn65dsi86 *pdata =3D bridge_to_ti_sn65dsi86(bridge);
-> +
-> +       pm_runtime_put_sync(pdata->dev);
-> +}
-> +
->  static const struct drm_bridge_funcs ti_sn_bridge_funcs =3D {
->         .attach =3D ti_sn_bridge_attach,
->         .detach =3D ti_sn_bridge_detach,
-> @@ -1234,6 +1264,8 @@ static const struct drm_bridge_funcs ti_sn_bridge_f=
-uncs =3D {
->         .atomic_duplicate_state =3D drm_atomic_helper_bridge_duplicate_st=
-ate,
->         .atomic_destroy_state =3D drm_atomic_helper_bridge_destroy_state,
->         .debugfs_init =3D ti_sn65dsi86_debugfs_init,
-> +       .hpd_enable =3D ti_sn_bridge_hpd_enable,
-> +       .hpd_disable =3D ti_sn_bridge_hpd_disable,
->  };
->
->  static void ti_sn_bridge_parse_lanes(struct ti_sn65dsi86 *pdata,
-> @@ -1322,7 +1354,8 @@ static int ti_sn_bridge_probe(struct auxiliary_devi=
-ce *adev,
->                            ? DRM_MODE_CONNECTOR_DisplayPort : DRM_MODE_CO=
-NNECTOR_eDP;
->
->         if (pdata->bridge.type =3D=3D DRM_MODE_CONNECTOR_DisplayPort)
-> -               pdata->bridge.ops =3D DRM_BRIDGE_OP_EDID | DRM_BRIDGE_OP_=
-DETECT;
-> +               pdata->bridge.ops =3D DRM_BRIDGE_OP_EDID | DRM_BRIDGE_OP_=
-DETECT |
-> +                                   DRM_BRIDGE_OP_HPD;
-
-I think you also need this in the "DRM_MODE_CONNECTOR_DisplayPort" if test:
-
-/*
- * If comms were already enabled they would have been enabled
- * with the wrong value of HPD_DISABLE. Update it now. Comms
- * could be enabled if anyone is holding a pm_runtime reference
- * (like if a GPIO is in use). Note that in most cases nobody
- * is doing AUX channel xfers before the bridge is added so
- * HPD doesn't _really_ matter then. The only exception is in
- * the eDP case where the panel wants to read the EDID before
- * the bridge is added. We always consistently have HPD disabled
- * for eDP.
- */
-mutex_lock(&pdata->comms_mutex);
-if (pdata->comms_enabled)
-  regmap_update_bits(pdata->regmap, SN_HPD_DISABLE_REG,
-    HPD_DISABLE, 0);
-mutex_unlock(&pdata->comms_mutex);
-
-Does that sound right?
