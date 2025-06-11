@@ -1,44 +1,80 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD6C17736;
-	Wed, 11 Jun 2025 08:29:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E85234964;
+	Wed, 11 Jun 2025 08:30:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749630588; cv=none; b=QE6MV9KflixYkoBh61PIba/CRm/LeHGIoKfg0X9ROGvaFpEC+CGyUBG0ORcj5jn1AQhBjM3IlIDZCYodxW7I6ZLi02TlPFRlBqA5sEHelt178CrRxWj+WtqvrYmQJTGnfTtk+CWnCc7HRTTySYUsV8fP7fQd/Vmy6TbXYxHWYmA=
+	t=1749630619; cv=none; b=REDNDT2I4GmLm+y5cfninUXBcZjSyyK30cRC7OTxAle0uJVHt2p2UX9RRQ3/eVSwVu8KJNdnfZtft3W5vlaFHW/Di1SERq6Q7Mjfkm+fTWDY3Jq+t+RHyQ/vBZ8bd5clWTaQ/axIpgBi7Hl709U5gKGAI5Lmn65GdU6wBFauHm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749630588; c=relaxed/simple;
-	bh=K01kD1CXP4y2QvIDW79/rq2TlSMRwkIQQVW462JBFmA=;
+	s=arc-20240116; t=1749630619; c=relaxed/simple;
+	bh=jZ9Hv45HUZkteVQv6ya9VOMC0pxuG2odAMafRrZj2qI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CkGM4km3JPvod+Kk8fi5L/2lbPRHRYyeA6Va1dd0M5S1sbtVmeSlytyyD+Hg4uOLHuu0I4QjQFnnzwNgVdQrnvXHeQBbeCkbroRq5El2OvUuNqPYcKIb12gdr3cQqQKdazQan1OjIOKIM8A2aTKdYH7xRLX1migTGeEQTsEE49Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=cXeBc1fD; arc=none smtp.client-ip=220.197.32.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=t0Lb1eg6E+RKuBDENvB0oWP8Zzhxuw6z7hOC2JAjxlC4XiWFNPP7LP/TzvC2tSUJtzES0sUQOLE8cjSoUfEVFKt86l2bKfmOjyOKWWLdwzorY0HzYh6Je5zu0z1XpoBOkAeLE21w7d6rz0miisLmnELax4BafWT4ZGU1f5n2mzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HfqRcl/D; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="cXeBc1fD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=ahMwYnzAqR2ccux8pEM9neDBaxqHAvqHao7Hj/i4BgE=;
-	b=cXeBc1fDyuCnOgI1P/kEJBnpW0hvRhbh+DUKSFrRLqp798QPGZtjWM+AleqnS4
-	UdkB0yM0B0UpZBk9YL8Rbs0oTRvlDIO1pBFdLatlmPSDattVvdTbGkqcJedj5W18
-	NobAAPqqAYTnn4oMeK9oYqLLdhK5J4UYwTCPYMCAaytbY=
-Received: from dragon (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id Ms8vCgA3180UPkloM8lpAA--.43803S3;
-	Wed, 11 Jun 2025 16:28:06 +0800 (CST)
-Date: Wed, 11 Jun 2025 16:28:04 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: carlos.song@nxp.com
-Cc: miquel.raynal@bootlin.com, Frank.Li@nxp.com,
-	alexandre.belloni@bootlin.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-	kernel@pengutronix.de, festevam@gmail.com,
-	conor.culhane@silvaco.com, linux-i3c@lists.infradead.org,
-	imx@lists.linux.dev, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH V4 3/3] arm64: dts: imx95: correct i3c node in imx95
-Message-ID: <aEk+FEq+Ivj5wfVW@dragon>
-References: <20250427083230.3325700-1-carlos.song@nxp.com>
- <20250427083230.3325700-4-carlos.song@nxp.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HfqRcl/D"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7d3862646eeso220134685a.2;
+        Wed, 11 Jun 2025 01:30:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749630616; x=1750235416; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qcSP2lVjFJ/bu0C3VkfzSJDndgidRs2bj0/IW68A3/k=;
+        b=HfqRcl/DIq0pEUqS+MFGATn8ec+U1Y+bKQiSbrJu7oHVQExgo/lMXlmpIEfxrgIuEB
+         V3VxFLApqvJgv1wfGof9mXeVK3gY/YhzBj8cWCffp+XEUwalaOLci0mUuBT3uroxYvKJ
+         0bhEAQwGs6+NxEyFISxAX2772plxzh6XKtSO28B9KOqhqT7RI0P5fiNWR40ZSFbAhVQJ
+         FvOEOQMZdFlYCsDdHzhxx9p+oAIuOB1HNqDDgHbEV/uioRy1lMSPsZ01B6h5Qrc6neRd
+         7Uw7EoHpvWEwQbuQcHAFLgZDWX5mSgqBZSuEbp/NqovMvxM2XdiPk7IfDRLJdVpPsXBA
+         hrhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749630616; x=1750235416;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qcSP2lVjFJ/bu0C3VkfzSJDndgidRs2bj0/IW68A3/k=;
+        b=U+54/Bttd6CagRgqtfUJZY7c4AmBdnsIAVQ/WEuQRcNJVFY18o6LiFtLWW2cMGv61J
+         Wn1h9tpZy1cTf6xiiL5JDJcPi4KvvhFnlRSbq3J0JwCK7LFc0LGYb75MrAb0iejk6wz+
+         VOSTkchiKgWxOscg6zn1E2+xBNOJNfpeYfRKoVhjNXMTH0nwllkoZRYVrn/0mE04kEUV
+         TxgWBZb8Gq1CHKsX17PbNFsxab7altRjh7PZvGtJy6wiTyMk6+BStfBGKGb6KubOCkDP
+         FCdsVUM0zyzwl+aigasr3Gx2x8LUfQqodbmD+0CQc0aeLBq9TvilNjrtYpuxebGMUTCh
+         gGbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVK11/wROIWXFIcSSu3zx1Zg5ShhvTFFlsNpLDWAFNLJCuElnZBmg2UmAKJwRrONpkdYjpywZB2QOF04ksh@vger.kernel.org, AJvYcCXRs4kSRSsFIUz7F9ONn//+qBLItaIfzalbV3vP8pwJrcxXr8ZTwiBn8xIe128Lhk0BIRZcGOQ9H69V@vger.kernel.org, AJvYcCXoYCcRsNDDIVs1V2lfTaxKqhKhUoRg3YJ4a5vDDX1uaMfNwwAiCiQtiQWSEWtiID49qT6VXs8spXQ8@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyay4kU51ZsSRU1jxHMbB0LRsytRneGMRjBpKsxfhaETSsE7qfF
+	wgHiIJM4xqzfoTqavsJe0YCce23B6zU0KR2VKRFBA2ZFRJSYv7JwMIyr
+X-Gm-Gg: ASbGncu7gcUn43TgNnEjP0lfMDmQe/mR2TIelgt1IGeGDWyUFHRmbuCcLtmDHC2Pf+t
+	jukcg0xnYv5DxHmAAzWcFDubJnxA9NAPdndDHSi3w4nICt1qJwtYFtYo6hQPCGwuhBfNrFWnmX2
+	h27BjxWJAYcBgtiOXIGnm2RQEchQOT1wrrzNrg/n5x13maYdhtaZoH+9IlCOLFSvWLjkcboUMPx
+	OxDB1Ousqv87+q4j5US0yJU1hglDFpXxxJW8Crdtqs3Dx5MwyRAI8zwBVkYub7wbVIZPE1/gNOI
+	vQivOVrUyBoogltNfvzFK0L3uOvbfcy2/n1re1jgFEicBKJC
+X-Google-Smtp-Source: AGHT+IGCumupGFYJr2miTmB5pZGshAqhyq5KGLzPXAmspYahxEndxqWSVq6p8juUyI8Wq6JrkTAl1w==
+X-Received: by 2002:a05:620a:2489:b0:7d3:99db:c4c with SMTP id af79cd13be357-7d3a8805820mr382875185a.6.1749630615951;
+        Wed, 11 Jun 2025 01:30:15 -0700 (PDT)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6fb09b2a085sm78890866d6.82.2025.06.11.01.30.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 01:30:15 -0700 (PDT)
+Date: Wed, 11 Jun 2025 16:29:07 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+	Inochi Amaoto <inochiama@gmail.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen Wang <unicorn_wang@outlook.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Vinod Koul <vkoul@kernel.org>, 
+	Alexander Sverdlin <alexander.sverdlin@gmail.com>, Yu Yuan <yu.yuan@sjtu.edu.cn>, Ze Huang <huangze@whut.edu.cn>, 
+	Thomas Bonnefille <thomas.bonnefille@bootlin.com>, Junhui Liu <junhui.liu@pigmoral.tech>, 
+	devicetree@vger.kernel.org, sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, dmaengine@vger.kernel.org, Yixun Lan <dlan@gentoo.org>, 
+	Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: reset: sophgo: Add CV1800B support
+Message-ID: <2v4hfzqgz22k6s776onexnhd5cnhfr7s7ggvcmh4mfiviigq66@a2ehkwbv7oll>
+References: <20250611075321.1160973-1-inochiama@gmail.com>
+ <20250611075321.1160973-2-inochiama@gmail.com>
+ <20250611-brown-turtle-of-election-87c324@kuoka>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,19 +83,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250427083230.3325700-4-carlos.song@nxp.com>
-X-CM-TRANSID:Ms8vCgA3180UPkloM8lpAA--.43803S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUOKsjUUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiIBYBZmhJPhYL6gAA35
+In-Reply-To: <20250611-brown-turtle-of-election-87c324@kuoka>
 
-On Sun, Apr 27, 2025 at 04:32:30PM +0800, carlos.song@nxp.com wrote:
-> From: Carlos Song <carlos.song@nxp.com>
+On Wed, Jun 11, 2025 at 10:19:49AM +0200, Krzysztof Kozlowski wrote:
+> On Wed, Jun 11, 2025 at 03:53:15PM GMT, Inochi Amaoto wrote:
+> > Add bindings for the reset generator on the SOPHGO CV1800B
+> > RISC-V SoC.
+> > 
+> > Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+> > Acked-by: Rob Herring (Arm) <robh@kernel.org>
+> > ---
+> >  Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml b/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml
+> > index 1d1b84575960..bd8dfa998939 100644
+> > --- a/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml
+> > +++ b/Documentation/devicetree/bindings/reset/sophgo,sg2042-reset.yaml
+> > @@ -17,6 +17,7 @@ properties:
+> >                - sophgo,sg2044-reset
+> >            - const: sophgo,sg2042-reset
+> >        - const: sophgo,sg2042-reset
+> > +      - const: sophgo,cv1800b-reset
 > 
-> I.MX95 I3C only need two clocks so add clock fix. Add "nxp,imx95-i3c"
-> compatible string for all imx95 i3c nodes.
+> Keep alphabetical order. That's enum with previous entry, btw.
 > 
-> Signed-off-by: Carlos Song <carlos.song@nxp.com>
 
-Applied, thanks!
+There is a small question for this: should I move this before the entry
+"const: sophgo,sg2042-reset", or before the first item entry?
 
+Regards,
+Inochi
