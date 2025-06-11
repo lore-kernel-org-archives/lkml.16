@@ -1,98 +1,76 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C09422068E
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 17:51:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA12F190497
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 17:52:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749664268; cv=none; b=F4hbL9s6/YBy73i2kakttIAgI26q0Miv9AnNHRmotvx5xSfIRTMYZUQDxEG/+3qXn96QaWOFMJFlTM0eRV63f0gvSaLLHIz+LmLvrSirQJ2Wwc2VAEBAs4YKmrW85LPLM/hvQw5ikRX1Pd/+7QVweaG+2y51NjFkiKVAbEE0ZdI=
+	t=1749664359; cv=none; b=nUxTurVhPMfUNE4sGLtvCXXPxLK3M6z8eicNZKl8fUCy9yAKUMWXOmJyGTR7JW85eaZYJbrrOmsmtClghvDX1c/7qdBkVHO+KWc0AdAFlxIHqWcubL6k4nwm0XGCpFB5Exff+lqT5Y0KXNojSjOLHwC67l9N8dBkrcnOm8ri/HU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749664268; c=relaxed/simple;
-	bh=eGNFqynuBIFAxQfgXXE+O2+YXzwRJnVxUyYET5WrhRM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tPPevGIhpwbVO/ev49hJ0JW9OEtb8Wq1ROHzpWXIzcUsI53qVcz5X4pwWenPdkoNNm3VqJ6C4k6NAgy0O15s8sUALXm9lXp+4Pc/AisBJPKQ2Um0Gc2of8OIIqk/ctlSRtPrmx4fxwiQqsbB70LCModZLdLcFsysCt9dXElSUyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=eeP5QqJ1; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1749664359; c=relaxed/simple;
+	bh=v3gfeWhWlgNnRcklEzn20GE/Y5B0cBsP/hP0KM4rXYk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NRrXO/CuRadzIHhTH5gvQx6OvFd7Q7MkeDQVCTw+APvvuahouufR7OJdBNnVaCYy3gpEMYTBQP6c7k/f2IVev+jGQeBMAMpoy1X5CTwUtXrx+zFqKKLrjdkN6e3Ql3h0mJSxuZ2GaDxxXw/fut+WE2i/jCcObD9fWexUryiif4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=WkGh9g68; arc=none smtp.client-ip=91.218.175.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="eeP5QqJ1"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ad51ba0af48so239302466b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 10:51:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1749664264; x=1750269064; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=sNMRIvDjI5OxxkQoJ1BipcgVGMNLMdRP7oKxRHfqUb4=;
-        b=eeP5QqJ1b6ERSQKr1GBNBQKslYpzvk9LwnkRhPaZ2m5glIcw0t4tByAVZqWGmTNz5U
-         3fxh5rBma6XHiwkNFKO22zyl6S2YDaIdl6cF8pG8HRSa3jVE8y129w90mfIoBLTgOgQg
-         n3yagfjaBDWlnqiDPpvR4LQi39Et18L9gGh9U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749664264; x=1750269064;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sNMRIvDjI5OxxkQoJ1BipcgVGMNLMdRP7oKxRHfqUb4=;
-        b=oDBvOG6BjdYjY4zmTAppknLK710zH9uKzKnW1eSueFeFwvbyRtyIxAjnClkmZ/iuQK
-         gpxjF0m0e3ABr+Fb1d5rWymtUZm8hhOLKHYxzwKDtI+COdgU6lzGmVwfGM3JdEk+8s+X
-         4a3QKvvxJS6R1u5KDQD+17HI6skKOIRPDT+FnYjvYSBq8Jv2XHfgtyXgf4CevMH5w3e0
-         Afo6/foQn9PuO+HEzG76Mn6BiKFdIN7dx+XNWd+7FoRp4B+Y/3jhAwN4gNe0j+z8K9lq
-         q5y3/s6tue1wyKQzh0VNBCwz9QdYqMq1Q/sWvgpUmYa0+5dwy7NDBttp2nBzPNhCSpcf
-         OO/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXg82Pno5IFCi/X7+0Duj8cwXOtwc8WTSno1kWJII4ujd8Y0xpkUFTHZbeVjYyCqzeUvC8vEsqDvzYCt0Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywo290n5vFjZ7aEdfRrqXuBg7ynHJFWkoXAQ1k7pbYHk1INLoFy
-	gUXRYEJrAfAfZtupF3NgiKhT8kuO3q54iznnW4+o3kqQmuv3JI8O1ZN/ZaWK0jHsJcFfG08I6bl
-	GNuZgR2c=
-X-Gm-Gg: ASbGnctHEi4AUUZ2uWwakcv//ldXB96sLSj852cnJCglBHZey1sUyZBbw8ypFdanR1L
-	iZ0rOpqptLYLFPmVbifkGiGtakWX9F9paBnrWUOalY68ZV4xZG8SEpbWc99B8wz5FUQanp/gELN
-	F+dlWn2QItccGz6Ww+w7/ATMPh6kVvhaqP2DewCXse6lAMgye+qwYNQrOptdCmKjvDWfZyPxCxh
-	Q7ziegacscQfAn9fpcyaYyFw9NxwbpRZg8X9uDOT52MNUp8R8ah/cUi4J6rM4QHSejVvuHZzvyN
-	SoggF9WNB1rJ3UZ7ka3kFiE8bsHF+msEuvCR/mapoHGNsLNKGl/KGNlHc2jzXb4J4WTXigJ7DoC
-	48sKjds4F3youwEA/41SuqJBTImkwT1y8acCY
-X-Google-Smtp-Source: AGHT+IGZzZFy1Jki9DAkpLrrlFJK1sfzukmcf19iLozvmlbmz+M5goMrJ9J4Pvcf1qljeo4VdqSOqw==
-X-Received: by 2002:a17:907:94d3:b0:add:fb1c:a9c3 with SMTP id a640c23a62f3a-adea56c718dmr36021966b.28.1749664264451;
-        Wed, 11 Jun 2025 10:51:04 -0700 (PDT)
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com. [209.85.208.41])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade1db5768asm924201566b.54.2025.06.11.10.51.03
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jun 2025 10:51:03 -0700 (PDT)
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-60780d74bbaso171969a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 10:51:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWTJmuC6C5VJSDqK21YBZZlX0b/yB0trnkgI+b1H5swtU1AeFtG4+vlZ9s3YUVEU2CzIErg79kE7SlECAo=@vger.kernel.org
-X-Received: by 2002:a05:6402:430a:b0:602:a0:1f2c with SMTP id
- 4fb4d7f45d1cf-608666342e7mr349953a12.9.1749664263059; Wed, 11 Jun 2025
- 10:51:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="WkGh9g68"
+Date: Wed, 11 Jun 2025 13:52:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
+	s=key1; t=1749664344;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4xFAvj2G5VnN2oADUrjOMQLWSOzD8+mWMWxdA4/gXps=;
+	b=WkGh9g68gWOHLnoNJXve7+hzhqKiQAdR0Rj2NXjDUlGVWZX161sjbqguO+g/sxHPJ0Hpq+
+	KLWaJQh0bx6ndqXMpvcQP/Y3tnZVGEU7ZheePnFoegfMFq5p2wn/CraG//QBRUH032nazx
+	HTPz8t4b+NrczcM3aEMNBf8xZeAaVnxIioyk+5t9SolpoofK9fGl/v4RJIFSe/+Y4FSz/S
+	xCJ7tetaSPzQk7U4usSIJCroH6cbYALUSXstGLeSR+/Fk4t3usc3vWWZRoHdfMjy19Od98
+	jql7hgU2r+FswNQ0YiQY7H7YD4ArtkVbBjV1RA2krIu5r0TsjfqMsKByaXa+GQ==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+To: fnkl.kernel@gmail.com
+Cc: Sven Peter <sven@kernel.org>, Janne Grunau <j@jannau.net>,
+	Neal Gompa <neal@gompa.dev>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: Add Apple SoC GPU
+Message-ID: <aEnCUycX_x1zNN1D@blossom>
+References: <20250611-sgx-dt-v1-0-7a11f3885c60@gmail.com>
+ <20250611-sgx-dt-v1-1-7a11f3885c60@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <301015.1748434697@warthog.procyon.org.uk> <CAHC9VhRn=EGu4+0fYup1bGdgkzWvZYpMPXKoARJf2N+4sy9g2w@mail.gmail.com>
-In-Reply-To: <CAHC9VhRn=EGu4+0fYup1bGdgkzWvZYpMPXKoARJf2N+4sy9g2w@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 11 Jun 2025 10:50:46 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjY7b0gDcXiecsimfmOgs0q+aUp_ZxPHvMfdmAG_Ex_1Q@mail.gmail.com>
-X-Gm-Features: AX0GCFvhYmOiGos_n7MIyKSpEE5Y2P1Gb8BenhLqBoBcFZYUdrTRYSzOg_XV1WU
-Message-ID: <CAHk-=wjY7b0gDcXiecsimfmOgs0q+aUp_ZxPHvMfdmAG_Ex_1Q@mail.gmail.com>
-Subject: Re: [PATCH] KEYS: Invert FINAL_PUT bit
-To: Paul Moore <paul@paul-moore.com>
-Cc: David Howells <dhowells@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	Jarkko Sakkinen <jarkko@kernel.org>, keyrings@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611-sgx-dt-v1-1-7a11f3885c60@gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, 10 Jun 2025 at 17:23, Paul Moore <paul@paul-moore.com> wrote:
->
-> It doesn't look like this has made its way to Linus.
+> +      - description: Driver-opaque calibration blob
+> +      - description: Calibration blob
+...
+> +      - const: hw-cal-a
+> +      - const: hw-cal-b
 
-Bah. It "made it" in the sense that sure, it's in my inbox.
+For me these descriptions raise more questions than what they're meant
+to describe... Maybe "First hardware calibration blob" and "Second
+hardware calibration blob" or something. I don't fully get why A is
+opaque and B is not, I don't think there's really such a distinction in
+reality.
 
-But particularly during the the early merge window I end up heavily
-limiting my emails to pull requests. And then it ended up composted at
-the bottom of my endless pile of emails.
+> +    description:
+> +      MacOS version the current firmware is paired with, used to pick
 
-I guess I can still take it if people just say "do it".
-
-            Linus
+macOS
