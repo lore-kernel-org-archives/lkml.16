@@ -1,61 +1,63 @@
-Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA62F2777F2
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 13:14:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C95288509
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 13:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749647702; cv=none; b=moEW29y2hgSXMvUvFp5IK3vQ9giHpnk9hthW/It4NDN5M6dpsQG2EQ0hbCvrRL5mTZMKpJHbjoNDBWVUfTZiQtYwqWq1uejE6bF1AQeSAXkPKWY4NSdg+nh+S7f8I+pJJ9Mev8XCDQFBFdzSQUIGfCyMPMZY0HPSEm5d8Xf0mHI=
+	t=1749647706; cv=none; b=uSekQDes4ajDsnQekHMjq97720GohnG3ghadkxi1rcggIXouiX9XcA7f36XFYA71lMlIeRWGEMT5oikXyIgBPvHR7/Pm/27S6BEDyqirJHgfJQ3cVACuQ8IE1snuXBrtvJ+5Gq2EAV6ZlPIXG5aG+S668kciGDB784tJ/t7ufXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749647702; c=relaxed/simple;
-	bh=Qe+iqZ/TC8FPp2cyltZ6C8lWNC5lhKpSlueCTV8uSr4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Y0kFpcdLKDOEeKGSEUrQz11NfRi0j1TkwXYXSEw38uvt/cQrXXQ1K3pHM1WIcyGOCXaILSvVSUAwmz8K7Tc5cmWdajDnbEFKQC2WDo7pkVZQgwzrcM/LFHwFzOv+uo9mkCqOtRUVXZuwyrZFMAYV7qBTMkd0lXuPCzlZraPAW7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=O7+VDq1u; arc=none smtp.client-ip=209.85.128.65
+	s=arc-20240116; t=1749647706; c=relaxed/simple;
+	bh=I0s2uAfRrrOBXFUp+oRkV1puEUQ1g73uAbMrdXd+JRg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mar3H1e7ah1o2KuwVKzSVwnUGgmXY9Ax/3u6+a0IXs+s1qYE1fhCVgE9KG/jGHJ7luhRSNag/cMppYTemTe8I6K3q5pTRMZQ9d4b4kGa4q1QumFiAhcpRIOE5ATtJJ1mFWhe/jbMQ5V2JjhlFKnn10c+q0Ta/fSY1fS8Te9sbFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=QjSf0hhL; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="O7+VDq1u"
-Received: by mail-wm1-f65.google.com with SMTP id 5b1f17b1804b1-451d3f72391so86361275e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:14:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="QjSf0hhL"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-451dbe494d6so81431535e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:15:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749647696; x=1750252496; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bFUYcxVcY+OIgmc/ZflMcjZ0nQ+5DMI5Ky8d14vaVsY=;
-        b=O7+VDq1upg3kHc0arAFwHGovj9631vhtm6y/65rQWl7L0ci4cp4gaUk2YifkF2ZeWB
-         8NzrJqBC0Pwng1wL/cLmzmdFBhYe4njGjDp6LERqS1JkrZ9Ndtga25RuP8DXn3dRjTZs
-         7BcgUFL+bQUaLYGB215UtXBVOgO2pypD7Wykblp7OlXSDhjP89iAeLdQbBXR8IaVqXBC
-         H6XFYYiUx2Kd76qky3RVLBaPnXp011S2Mp6f+DqlApfEzOvtZYS8zkAnWnHnsByVcd88
-         u4FMCFyg1rSi4q4JQY1L2SztQEmr01jimNPvdUM1ETeiSt5w6wBlKBbzqo5FitvVlDPU
-         Vldg==
+        d=suse.com; s=google; t=1749647702; x=1750252502; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XG09UlTT2qkrPeVKFCZEFXdQGhOhS31B67YwSP+RxWI=;
+        b=QjSf0hhLb9Uu2iD4//pHDttyf3tYSMuEl6+kaYHSvy4fFXC/SAZiCm004upN/uIj4O
+         hoSBxhYYpej4Gd+QzyWCiyzXlCvh7uVrdZ4JhC4MyKINeoqjv9z/alQkANgfofwC3aFz
+         L7bQ2AHGz7hkc9QK+1zcXCByFITLpStYcDW8PFb6b8dP3TfkR5pmpv/RU0Bcad0R9Fk3
+         OqyP03enEnsAcvoDL/6QhHhylSrQASaPL5SI1z4qsmYqweJxpsnLlkZm0KAqVUEyXvoX
+         IhXupZI5d0TdXPfZvFyuutt2LNXVBjp/XcqbOhZcdz5nhpbLAAKRqYOhsU9XH88e931T
+         KcaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749647696; x=1750252496;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bFUYcxVcY+OIgmc/ZflMcjZ0nQ+5DMI5Ky8d14vaVsY=;
-        b=Mt33cfTAJyhpZkkb0vOVtfWLFi3sO7508OAGNqDSbLtmFDgCVojkR+OJLp5Wfab6HF
-         Jgxf1WAhoQw2JxrRdSDxNbE7tXew81L4GvvtR5nAc3qRFhQU3K/mHoSkU1FXWkvAgHMC
-         3Zm2yDHRouHLdNUZmSqlhnzqU9ZnQ2UwJonsN2E5KWEKmD4WMUqvRyU6zS8ZAPNbE2w0
-         PDRwUApwDX5PFyqQO7/KuPVWVGw1hEMGyidgbcv2B3b9oNpXfSVDJtd9/tHH9PZH/0Lb
-         Empefg9zcdIJ/16AAhYkIVD+h2pjFdHVmxX2WnAh9EcVgm9hk3VT66MDPi/AmWrbLhRG
-         ptvQ==
-X-Gm-Message-State: AOJu0YyndpfRSl6CgxfKYecCV8Aj+xfMDnf9MCxSCVV9kkfvvB2PHD3n
-	Xe2Of5otKP2LtkC89KM0d3RnszDWaMGGjbkwlzRi8dpuXJ2ftddn4DXbXBWdezOs7xPa1pvJlVB
-	eqaMSCabj9Q==
-X-Gm-Gg: ASbGnctxWrw1doH8I1yViLohj7UnmBbR2OtisTkM1dC8C3nIquv1//hwoJPQ3FsTSGj
-	uQ7nCr8gh3V/rPEfoQdbqKGv42sGwUBm/m6U9LCNsTTjDWhcXBifXogIzB36bth0cLRHjFi/u93
-	nLhdB+6fHzUbUILUyELmO1RfOB4wJHM1CZ1CP0HI8Xzqlm9VkubLoN6efE3AcQfrN1MzOBrD2Be
-	vPyxmEPtEUwuMEjcV/LqhRoUEOcj+cuuwPioEnslMGX9TbCLPtCkQ/mvl9uHAt1A2esfxJphpdQ
-	JzHU+EgKvu9pf4JTJ5S8a6vJqFbMa9Fnz+HiC30WEPm3ncj6m0fKq2O/JXU5uX9ERJiGLPDN8FH
-	+axkuy5t/6pk=
-X-Google-Smtp-Source: AGHT+IHFiR5hCqNGhr1+2dZJHH5/CYqgPsxy7e0CeIZgZsJ1Mio/kOMboxUY/0l2kng+8go8N5+wyA==
-X-Received: by 2002:a05:600c:3485:b0:453:b44:eb69 with SMTP id 5b1f17b1804b1-45324ee6abfmr30529885e9.13.1749647695537;
-        Wed, 11 Jun 2025 06:14:55 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1749647702; x=1750252502;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XG09UlTT2qkrPeVKFCZEFXdQGhOhS31B67YwSP+RxWI=;
+        b=LrJ3EwaF4xrAXk6IxxvNLucy611lTzQrKIp0rz+Ln8VA6BGHddoovaFxfEiylGfnTN
+         VP2+nHUFpVetXgeYdyM494Q5q6w7Hg3kehvGY3eKc5wp3z7eyljzfNlhEsKKI0jW7Xm7
+         N86VKLvb+YeP95jaIdRyFefKqRBOM5QuQZ05BUo8hjsLrfMnN1dph46sfnAZnwmz9CtO
+         LkLB+JdP9MpnsMGB/N5MA0rf2qfHnAaaCplGfO4Jq0E2wCwBGrb6TKaHLyMz3OrYUeyW
+         nIiLVDgvWstx8jHYwlQVpbUK0aTTCpkyyPNfxUiMdDOHuogfAL+uUh0pZ5WNjziG75yr
+         bXfw==
+X-Gm-Message-State: AOJu0YxR3afCUQ2Rdbka8d5d8CXj9QHOqHgP1yZbbPEptz+4Zr8XKYv/
+	lLBmF7K556j8tu9HMr4lsjk2U3IXXTO4/68dQ8zXApDs7J3tbRmSdTmPT4Bu93X2WWZRp2p9XUB
+	C83pQBJk=
+X-Gm-Gg: ASbGncuinzsJ6j+OrxW4d1XeJTCXgoiS6TOS5hyb7+LlHh5mtbfuuh/9y4cxV8jNi9u
+	hTyvyHlSQO36umg4d8BeCmwf5dXvHLSYC/++LlK8Mn0wE/U7j5n/nKILsWLA7W+Yj1mnBjG5KyQ
+	e3EKPHhSAXqkyYY7ZekAp6lVxjYNmDasJ7rnGSpzHWdR+pTaEJZczAGz7Y0tQU76dIPFUzvX5vK
+	qhCtiA2F2p0HmQGBV/lyA47k+3ovc+L6OV7YWhHV6o316Hyn4tjk0WYmt9VhcUucpXVbUebz9JF
+	6dOFPM99W3w++5NrBHNH2N8D5CU7BfGSKceLOqyKmSyHKz79lbJ4SYaXVAfAlqUX0LxceuaOoRZ
+	r
+X-Google-Smtp-Source: AGHT+IGv4CK6E/BAUsRUc9k1+gjo4Q85e8ZEOWr6DfTes7NlOGCS8WWz7JN3lUnXISJ5WlrnMXJrSg==
+X-Received: by 2002:a05:600c:608d:b0:450:cf00:20f5 with SMTP id 5b1f17b1804b1-453248820admr27849545e9.9.1749647702083;
+        Wed, 11 Jun 2025 06:15:02 -0700 (PDT)
 Received: from linux.fritz.box ([2a00:6d43:105:c401:e307:1a37:2e76:ce91])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5323b67ccsm15300103f8f.40.2025.06.11.06.14.54
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5323b67ccsm15300103f8f.40.2025.06.11.06.15.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 06:14:55 -0700 (PDT)
+        Wed, 11 Jun 2025 06:15:01 -0700 (PDT)
 From: Marco Crivellari <marco.crivellari@suse.com>
 To: linux-kernel@vger.kernel.org
 Cc: Tejun Heo <tj@kernel.org>,
@@ -65,10 +67,12 @@ Cc: Tejun Heo <tj@kernel.org>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
 	Marco Crivellari <marco.crivellari@suse.com>,
 	Michal Hocko <mhocko@suse.com>
-Subject: [PATCH v3 0/9] Workqueue: rename system workqueue and add WQ_PERCPU
-Date: Wed, 11 Jun 2025 15:14:29 +0200
-Message-ID: <20250611131438.651493-1-marco.crivellari@suse.com>
+Subject: [PATCH v3 7/9] Workqueue: fs: WQ_PERCPU added to alloc_workqueue users
+Date: Wed, 11 Jun 2025 15:14:36 +0200
+Message-ID: <20250611131438.651493-8-marco.crivellari@suse.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250611131438.651493-1-marco.crivellari@suse.com>
+References: <20250611131438.651493-1-marco.crivellari@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,501 +82,448 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi!
-
-Below is a summary of a discussion about the Workqueue API and cpu isolation
-considerations. Details and more information are available here:
-
-	"workqueue: Always use wq_select_unbound_cpu() for WORK_CPU_UNBOUND."
-	https://lore.kernel.org/all/20250221112003.1dSuoGyc@linutronix.de/
-
-=== Current situation: problems ===
-
-Let's consider a nohz_full system with isolated CPUs: wq_unbound_cpumask is
-set to the housekeeping CPUs, for !WQ_UNBOUND the local CPU is selected.
-
-This leads to different scenarios if a work item is scheduled on an isolated
-CPU where "delay" value is 0 or greater then 0:
-	schedule_delayed_work(, 0);
-
-This will be handled by __queue_work() that will queue the work item on the
-current local (isolated) CPU, while:
-
-	schedule_delayed_work(, 1);
-
-Will move the timer on an housekeeping CPU, and schedule the work there.
-
 Currently if a user enqueue a work item using schedule_delayed_work() the
 used wq is "system_wq" (per-cpu wq) while queue_delayed_work() use
 WORK_CPU_UNBOUND (used when a cpu is not specified). The same applies to
 schedule_work() that is using system_wq and queue_work(), that makes use
 again of WORK_CPU_UNBOUND.
-
 This lack of consistentcy cannot be addressed without refactoring the API.
 
-=== Plan and future plans ===
+alloc_workqueue() treats all queues as per-CPU by default, while unbound
+workqueues must opt-in via WQ_UNBOUND.
 
-This patchset is the first stone on a refactoring needed in order to
-address the points aforementioned; it will have a positive impact also
-on the cpu isolation, in the long term, moving away percpu workqueue in
-favor to an unbound model.
+This default is suboptimal: most workloads benefit from unbound queues,
+allowing the scheduler to place worker threads where they’re needed and
+reducing noise when CPUs are isolated.
 
-These are the main steps:
-1)  API refactoring (that this patch is introducing)
-	-	Make more clear and uniform the system wq names, both per-cpu and
-		unbound. This to avoid any possible confusion on what should be
-		used.
+This default is suboptimal: most workloads benefit from unbound queues,
+allowing the scheduler to place worker threads where they’re needed and
+reducing noise when CPUs are isolated.
 
-	-	Introduction of WQ_PERCPU: this flag is the complement of WQ_UNBOUND,
-		introduced in this patchset and used on all the callers that are not
-		currently using WQ_UNBOUND.
+This patch adds a new WQ_PERCPU flag to all the fs subsystem users to
+explicitly request the use of the per-CPU behavior. Both flags coexist
+for one release cycle to allow callers to transition their calls.
 
-		WQ_UNBOUND will be removed in a future release cycle.
+Once migration is complete, WQ_UNBOUND can be removed and unbound will
+become the implicit default.
 
-		Most users don't need to be per-cpu, because they don't have
-		locality requirements, because of that, a next future step will be
-		make "unbound" the default behavior.
-2)  Check who really needs to be per-cpu
-	-	Remove the WQ_PERCPU flag when is not strictly required.
+With the introduction of the WQ_PERCPU flag (equivalent to !WQ_UNBOUND),
+any alloc_workqueue() caller that doesn’t explicitly specify WQ_UNBOUND
+must now use WQ_PERCPU.
 
-3)  Add a new API (prefer local cpu)
-	-	There are users that don't require a local execution, like mentioned
-		above; despite that, local execution yeld to performance gain.
+All existing users have been updated accordingly.
 
-		This new API will prefer the local execution, without requiring it.
-
-=== Introduced Changes by this patchset ===
-
-1)  [P 1-2-3] system workqueue rename:
-
-		system_wq is a per-CPU workqueue, but his name is not clear.
-		system_unbound_wq is to be used when locality is not required.
-
-		Because of that, system_wq has been renamed in system_percpu_wq,
-		while system_unbound_wq is now system_dfl_wq.
-
-		The old wq are still around, but if used in queue_work(), a pr_warn_once()
-		will be printed and the wq used is automatically assigned to the new
-		default (system_dfl_wq or system_percpu_wq).
-
-2)  [P 4] Introduction of WQ_PERCPU.
-
-		This patch adds the new WQ_PERCPU flag to explicitly require to be per-cpu.
-
-		Every alloc_workqueue() caller should use one among WQ_PERCPU or
-		WQ_UNBOUND. This is actually enforced warning if both or none of them
-		are present at the same time.
-
-		WQ_UNBOUND will be removed in a next release cycle.
-	
-	[P 5-6-7-8] WQ_PERCPU to alloc_workqueue callers
-		This patches adds to every alloc_workqueue() caller that require it,
-		the new WQ_PERCPU flag. This is done in separate patches for 3 different
-		subsystem: mm, fs, net.
-		P 7 introduce the change to all the remaining callers.
-
-3)  [P 9] WQ_PERCPU documented in workqueue.rst
-
-		Added a short section about WQ_PERCPU and a Note under WQ_UNBOUND
-		mentioning that it will be removed in the future.
-
+Suggested-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
 ---
-Changes in v3:
--	The introduction of the new wq(s) and the WQ_PERCPU flag have been moved
-	in separated patches (1 for wq(s) and 1 for WQ_PERCPU).
--	WQ_PERCPU is now added to all the alloc_workqueue callers in separated patches
-	addressing few subsystems first (fs, mm, net).
+ fs/afs/main.c                  |  4 ++--
+ fs/bcachefs/super.c            | 10 +++++-----
+ fs/btrfs/async-thread.c        |  3 +--
+ fs/btrfs/disk-io.c             |  2 +-
+ fs/ceph/super.c                |  2 +-
+ fs/dlm/lowcomms.c              |  2 +-
+ fs/dlm/main.c                  |  2 +-
+ fs/fs-writeback.c              |  2 +-
+ fs/gfs2/main.c                 |  5 +++--
+ fs/gfs2/ops_fstype.c           |  6 ++++--
+ fs/ocfs2/dlm/dlmdomain.c       |  3 ++-
+ fs/ocfs2/dlmfs/dlmfs.c         |  3 ++-
+ fs/smb/client/cifsfs.c         | 16 +++++++++++-----
+ fs/smb/server/ksmbd_work.c     |  2 +-
+ fs/smb/server/transport_rdma.c |  3 ++-
+ fs/super.c                     |  3 ++-
+ fs/verity/verify.c             |  2 +-
+ fs/xfs/xfs_log.c               |  3 +--
+ fs/xfs/xfs_mru_cache.c         |  3 ++-
+ fs/xfs/xfs_super.c             | 15 ++++++++-------
+ 20 files changed, 52 insertions(+), 39 deletions(-)
 
-Changes in v2:
--	Introduction of WQ_PERCPU change has been merged with the alloc_workqueue()
-	patch that pass the WQ_PERCPU flag explicitly to every caller.
--	(2 drivers) in the code not matched by Coccinelle; WQ_PERCPU added also there.
--	WQ_PERCPU added to __WQ_BH_ALLOWS.
--	queue_work() now prints a warning (pr_warn_once()) if a user is using the
-	old wq and redirect the wrong / old wq to the new one.
--	Changes to workqueue.rst about the WQ_PERCPU flag and a Note about the
-	future of WQ_UNBOUND.
-
-Marco Crivellari (9):
-  Workqueue: add system_percpu_wq and system_dfl_wq
-  Workqueue: replace use of system_wq with system_percpu_wq
-  Workqueue: replace use of system_unbound_wq with system_dfl_wq
-  Workqueue: add new WQ_PERCPU flag
-  Workqueue: net: WQ_PERCPU added to alloc_workqueue users
-  Workqueue: mm: WQ_PERCPU added to alloc_workqueue users
-  Workqueue: fs: WQ_PERCPU added to alloc_workqueue users
-  Workqueue: WQ_PERCPU added to all the remaining users
-  [Doc] Workqueue: add WQ_PERCPU
-
- Documentation/core-api/workqueue.rst          | 10 +++
- arch/s390/kernel/diag/diag324.c               |  4 +-
- arch/s390/kernel/hiperdispatch.c              |  2 +-
- block/bio-integrity-auto.c                    |  5 +-
- block/bio.c                                   |  3 +-
- block/blk-core.c                              |  3 +-
- block/blk-throttle.c                          |  3 +-
- block/blk-zoned.c                             |  3 +-
- crypto/cryptd.c                               |  3 +-
- drivers/accel/ivpu/ivpu_hw_btrs.c             |  2 +-
- drivers/accel/ivpu/ivpu_ipc.c                 |  2 +-
- drivers/accel/ivpu/ivpu_job.c                 |  2 +-
- drivers/accel/ivpu/ivpu_mmu.c                 |  2 +-
- drivers/accel/ivpu/ivpu_pm.c                  |  4 +-
- drivers/acpi/ec.c                             |  3 +-
- drivers/acpi/osl.c                            |  6 +-
- drivers/acpi/scan.c                           |  2 +-
- drivers/acpi/thermal.c                        |  3 +-
- drivers/ata/libata-sff.c                      |  3 +-
- drivers/base/core.c                           |  2 +-
- drivers/base/dd.c                             |  2 +-
- drivers/base/devcoredump.c                    |  2 +-
- drivers/block/aoe/aoemain.c                   |  2 +-
- drivers/block/nbd.c                           |  2 +-
- drivers/block/rbd.c                           |  2 +-
- drivers/block/rnbd/rnbd-clt.c                 |  2 +-
- drivers/block/sunvdc.c                        |  4 +-
- drivers/block/virtio_blk.c                    |  2 +-
- drivers/block/zram/zram_drv.c                 |  2 +-
- drivers/bus/mhi/ep/main.c                     |  2 +-
- drivers/char/random.c                         |  8 +--
- drivers/char/tpm/tpm-dev-common.c             |  3 +-
- drivers/char/xillybus/xillybus_core.c         |  2 +-
- drivers/char/xillybus/xillyusb.c              |  4 +-
- drivers/cpufreq/tegra194-cpufreq.c            |  3 +-
- drivers/crypto/atmel-i2c.c                    |  2 +-
- drivers/crypto/cavium/nitrox/nitrox_mbx.c     |  2 +-
- drivers/crypto/intel/qat/qat_common/adf_aer.c |  4 +-
- drivers/crypto/intel/qat/qat_common/adf_isr.c |  3 +-
- .../crypto/intel/qat/qat_common/adf_sriov.c   |  3 +-
- .../crypto/intel/qat/qat_common/adf_vf_isr.c  |  3 +-
- drivers/cxl/pci.c                             |  2 +-
- drivers/extcon/extcon-intel-int3496.c         |  4 +-
- drivers/firewire/core-transaction.c           |  3 +-
- drivers/firewire/ohci.c                       |  3 +-
- drivers/gpio/gpiolib-cdev.c                   |  4 +-
- drivers/gpu/drm/amd/amdgpu/aldebaran.c        |  2 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c    |  6 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_reset.c     |  2 +-
- drivers/gpu/drm/amd/amdkfd/kfd_process.c      |  3 +-
- drivers/gpu/drm/bridge/analogix/anx7625.c     |  3 +-
- drivers/gpu/drm/bridge/ite-it6505.c           |  2 +-
- drivers/gpu/drm/bridge/ti-tfp410.c            |  2 +-
- drivers/gpu/drm/drm_atomic_helper.c           |  6 +-
- drivers/gpu/drm/drm_probe_helper.c            |  2 +-
- drivers/gpu/drm/drm_self_refresh_helper.c     |  2 +-
- drivers/gpu/drm/exynos/exynos_hdmi.c          |  2 +-
- .../drm/i915/display/intel_display_driver.c   |  3 +-
- .../drm/i915/display/intel_display_power.c    |  2 +-
- drivers/gpu/drm/i915/display/intel_tc.c       |  4 +-
- drivers/gpu/drm/i915/gem/i915_gem_ttm_move.c  |  2 +-
- drivers/gpu/drm/i915/gt/uc/intel_guc.c        |  4 +-
- drivers/gpu/drm/i915/gt/uc/intel_guc_ct.c     |  4 +-
- .../gpu/drm/i915/gt/uc/intel_guc_submission.c |  6 +-
- drivers/gpu/drm/i915/i915_active.c            |  2 +-
- drivers/gpu/drm/i915/i915_driver.c            |  5 +-
- drivers/gpu/drm/i915/i915_drv.h               |  2 +-
- drivers/gpu/drm/i915/i915_sw_fence_work.c     |  2 +-
- drivers/gpu/drm/i915/i915_vma_resource.c      |  2 +-
- drivers/gpu/drm/i915/pxp/intel_pxp.c          |  2 +-
- drivers/gpu/drm/i915/pxp/intel_pxp_irq.c      |  2 +-
- .../gpu/drm/i915/selftests/i915_sw_fence.c    |  2 +-
- .../gpu/drm/i915/selftests/mock_gem_device.c  |  2 +-
- drivers/gpu/drm/nouveau/dispnv50/disp.c       |  2 +-
- drivers/gpu/drm/nouveau/nouveau_drm.c         |  2 +-
- drivers/gpu/drm/nouveau/nouveau_sched.c       |  3 +-
- drivers/gpu/drm/radeon/radeon_display.c       |  3 +-
- .../gpu/drm/rockchip/dw_hdmi_qp-rockchip.c    |  4 +-
- drivers/gpu/drm/rockchip/rockchip_drm_vop.c   |  2 +-
- drivers/gpu/drm/scheduler/sched_main.c        |  2 +-
- drivers/gpu/drm/tilcdc/tilcdc_crtc.c          |  2 +-
- drivers/gpu/drm/vc4/vc4_hdmi.c                |  4 +-
- drivers/gpu/drm/xe/xe_devcoredump.c           |  2 +-
- drivers/gpu/drm/xe/xe_device.c                |  4 +-
- drivers/gpu/drm/xe/xe_execlist.c              |  2 +-
- drivers/gpu/drm/xe/xe_ggtt.c                  |  2 +-
- drivers/gpu/drm/xe/xe_gt_tlb_invalidation.c   |  6 +-
- drivers/gpu/drm/xe/xe_guc_ct.c                |  4 +-
- drivers/gpu/drm/xe/xe_hw_engine_group.c       |  3 +-
- drivers/gpu/drm/xe/xe_oa.c                    |  2 +-
- drivers/gpu/drm/xe/xe_pt.c                    |  2 +-
- drivers/gpu/drm/xe/xe_sriov.c                 |  2 +-
- drivers/gpu/drm/xe/xe_vm.c                    |  4 +-
- drivers/greybus/operation.c                   |  2 +-
- drivers/hid/hid-nintendo.c                    |  3 +-
- drivers/hte/hte.c                             |  2 +-
- drivers/hv/mshv_eventfd.c                     |  2 +-
- drivers/i3c/master.c                          |  2 +-
- drivers/iio/adc/pac1934.c                     |  2 +-
- drivers/infiniband/core/cm.c                  |  2 +-
- drivers/infiniband/core/device.c              |  4 +-
- drivers/infiniband/core/ucma.c                |  2 +-
- drivers/infiniband/hw/hfi1/init.c             |  3 +-
- drivers/infiniband/hw/hfi1/opfn.c             |  3 +-
- drivers/infiniband/hw/mlx4/cm.c               |  2 +-
- drivers/infiniband/hw/mlx5/odp.c              |  4 +-
- drivers/infiniband/sw/rdmavt/cq.c             |  3 +-
- drivers/infiniband/ulp/iser/iscsi_iser.c      |  2 +-
- drivers/infiniband/ulp/isert/ib_isert.c       |  2 +-
- drivers/infiniband/ulp/rtrs/rtrs-clt.c        |  2 +-
- drivers/infiniband/ulp/rtrs/rtrs-srv.c        |  2 +-
- drivers/input/keyboard/gpio_keys.c            |  2 +-
- drivers/input/misc/palmas-pwrbutton.c         |  2 +-
- drivers/input/mouse/psmouse-smbus.c           |  2 +-
- drivers/input/mouse/synaptics_i2c.c           |  8 +--
- drivers/isdn/capi/kcapi.c                     |  2 +-
- drivers/leds/trigger/ledtrig-input-events.c   |  2 +-
- drivers/md/bcache/btree.c                     |  3 +-
- drivers/md/bcache/super.c                     | 30 ++++----
- drivers/md/bcache/writeback.c                 |  2 +-
- drivers/md/dm-bufio.c                         |  3 +-
- drivers/md/dm-cache-target.c                  |  3 +-
- drivers/md/dm-clone-target.c                  |  3 +-
- drivers/md/dm-crypt.c                         |  6 +-
- drivers/md/dm-delay.c                         |  4 +-
- drivers/md/dm-integrity.c                     | 15 ++--
- drivers/md/dm-kcopyd.c                        |  3 +-
- drivers/md/dm-log-userspace-base.c            |  3 +-
- drivers/md/dm-mpath.c                         |  5 +-
- drivers/md/dm-raid1.c                         |  5 +-
- drivers/md/dm-snap-persistent.c               |  3 +-
- drivers/md/dm-stripe.c                        |  2 +-
- drivers/md/dm-verity-target.c                 |  4 +-
- drivers/md/dm-writecache.c                    |  3 +-
- drivers/md/dm.c                               |  3 +-
- drivers/md/md.c                               |  4 +-
- drivers/media/pci/ddbridge/ddbridge-core.c    |  2 +-
- .../platform/mediatek/mdp3/mtk-mdp3-core.c    |  6 +-
- .../platform/synopsys/hdmirx/snps_hdmirx.c    |  8 +--
- drivers/message/fusion/mptbase.c              |  7 +-
- drivers/mmc/core/block.c                      |  3 +-
- drivers/mmc/host/mtk-sd.c                     |  4 +-
- drivers/mmc/host/omap.c                       |  2 +-
- drivers/net/can/spi/hi311x.c                  |  3 +-
- drivers/net/can/spi/mcp251x.c                 |  3 +-
- .../net/ethernet/cavium/liquidio/lio_core.c   |  2 +-
- .../net/ethernet/cavium/liquidio/lio_main.c   |  8 ++-
- .../ethernet/cavium/liquidio/lio_vf_main.c    |  3 +-
- .../cavium/liquidio/request_manager.c         |  2 +-
- .../cavium/liquidio/response_manager.c        |  3 +-
- .../net/ethernet/freescale/dpaa2/dpaa2-eth.c  |  2 +-
- .../hisilicon/hns3/hns3pf/hclge_main.c        |  3 +-
- drivers/net/ethernet/intel/fm10k/fm10k_main.c |  2 +-
- drivers/net/ethernet/intel/i40e/i40e_main.c   |  2 +-
- .../net/ethernet/marvell/octeontx2/af/cgx.c   |  2 +-
- .../marvell/octeontx2/af/mcs_rvu_if.c         |  2 +-
- .../ethernet/marvell/octeontx2/af/rvu_cgx.c   |  2 +-
- .../ethernet/marvell/octeontx2/af/rvu_rep.c   |  2 +-
- .../marvell/octeontx2/nic/cn10k_ipsec.c       |  3 +-
- .../ethernet/marvell/prestera/prestera_main.c |  2 +-
- .../ethernet/marvell/prestera/prestera_pci.c  |  2 +-
- drivers/net/ethernet/mellanox/mlxsw/core.c    |  4 +-
- drivers/net/ethernet/netronome/nfp/nfp_main.c |  2 +-
- drivers/net/ethernet/qlogic/qed/qed_main.c    |  3 +-
- drivers/net/ethernet/sfc/efx_channels.c       |  2 +-
- drivers/net/ethernet/sfc/siena/efx_channels.c |  2 +-
- drivers/net/ethernet/wiznet/w5100.c           |  2 +-
- drivers/net/fjes/fjes_main.c                  |  5 +-
- drivers/net/macvlan.c                         |  2 +-
- drivers/net/netdevsim/dev.c                   |  6 +-
- drivers/net/phy/sfp.c                         | 12 ++--
- drivers/net/wireguard/device.c                |  6 +-
- drivers/net/wireless/ath/ath6kl/usb.c         |  2 +-
- drivers/net/wireless/intel/ipw2x00/ipw2100.c  |  6 +-
- drivers/net/wireless/intel/ipw2x00/ipw2200.c  |  2 +-
- drivers/net/wireless/intel/iwlwifi/fw/dbg.c   |  4 +-
- .../net/wireless/intel/iwlwifi/iwl-trans.h    |  2 +-
- drivers/net/wireless/intel/iwlwifi/mvm/tdls.c |  6 +-
- .../net/wireless/marvell/libertas/if_sdio.c   |  3 +-
- .../net/wireless/marvell/libertas/if_spi.c    |  3 +-
- .../net/wireless/marvell/libertas_tf/main.c   |  2 +-
- .../net/wireless/mediatek/mt76/mt7921/init.c  |  2 +-
- .../net/wireless/mediatek/mt76/mt7925/init.c  |  2 +-
- drivers/net/wireless/quantenna/qtnfmac/core.c |  3 +-
- drivers/net/wireless/realtek/rtlwifi/base.c   |  2 +-
- drivers/net/wireless/realtek/rtw88/usb.c      |  3 +-
- drivers/net/wireless/silabs/wfx/main.c        |  2 +-
- drivers/net/wireless/st/cw1200/bh.c           |  4 +-
- drivers/net/wwan/t7xx/t7xx_hif_dpmaif_rx.c    |  3 +-
- drivers/net/wwan/wwan_hwsim.c                 |  2 +-
- drivers/nvdimm/security.c                     |  4 +-
- drivers/nvme/host/tcp.c                       |  2 +
- drivers/nvme/target/admin-cmd.c               |  2 +-
- drivers/nvme/target/core.c                    |  5 +-
- drivers/nvme/target/fabrics-cmd-auth.c        |  2 +-
- drivers/nvme/target/fc.c                      |  6 +-
- drivers/nvme/target/tcp.c                     |  2 +-
- drivers/pci/endpoint/functions/pci-epf-mhi.c  |  2 +-
- drivers/pci/endpoint/functions/pci-epf-ntb.c  |  5 +-
- drivers/pci/endpoint/functions/pci-epf-test.c |  3 +-
- drivers/pci/endpoint/functions/pci-epf-vntb.c |  5 +-
- drivers/pci/endpoint/pci-ep-cfs.c             |  2 +-
- drivers/pci/hotplug/pnv_php.c                 |  3 +-
- drivers/pci/hotplug/shpchp_core.c             |  3 +-
- drivers/phy/allwinner/phy-sun4i-usb.c         | 14 ++--
- .../platform/cznic/turris-omnia-mcu-gpio.c    |  2 +-
- .../surface/aggregator/ssh_packet_layer.c     |  2 +-
- .../surface/aggregator/ssh_request_layer.c    |  2 +-
- .../platform/surface/surface_acpi_notify.c    |  2 +-
- drivers/platform/x86/gpd-pocket-fan.c         |  4 +-
- .../x86/x86-android-tablets/vexia_atla10_ec.c |  2 +-
- drivers/power/supply/ab8500_btemp.c           |  3 +-
- drivers/power/supply/bq2415x_charger.c        |  2 +-
- drivers/power/supply/bq24190_charger.c        |  2 +-
- drivers/power/supply/bq27xxx_battery.c        |  6 +-
- drivers/power/supply/ipaq_micro_battery.c     |  3 +-
- drivers/power/supply/rk817_charger.c          |  6 +-
- drivers/power/supply/ucs1002_power.c          |  2 +-
- drivers/power/supply/ug3105_battery.c         |  6 +-
- drivers/rapidio/rio.c                         |  2 +-
- drivers/ras/cec.c                             |  2 +-
- drivers/regulator/irq_helpers.c               |  2 +-
- drivers/regulator/qcom-labibb-regulator.c     |  4 +-
- drivers/s390/char/tape_3590.c                 |  2 +-
- drivers/scsi/be2iscsi/be_main.c               |  3 +-
- drivers/scsi/bnx2fc/bnx2fc_fcoe.c             |  2 +-
- drivers/scsi/device_handler/scsi_dh_alua.c    |  2 +-
- drivers/scsi/fcoe/fcoe.c                      |  2 +-
- drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c      |  3 +-
- drivers/scsi/lpfc/lpfc_init.c                 |  2 +-
- drivers/scsi/pm8001/pm8001_init.c             |  2 +-
- drivers/scsi/qedf/qedf_main.c                 | 15 ++--
- drivers/scsi/qedi/qedi_main.c                 |  2 +-
- drivers/scsi/qla2xxx/qla_os.c                 |  4 +-
- drivers/scsi/qla2xxx/qla_target.c             |  2 +-
- drivers/scsi/qla2xxx/tcm_qla2xxx.c            |  2 +-
- drivers/scsi/qla4xxx/ql4_os.c                 |  3 +-
- drivers/scsi/scsi_transport_fc.c              |  7 +-
- drivers/scsi/scsi_transport_iscsi.c           |  2 +-
- drivers/soc/fsl/qbman/qman.c                  |  2 +-
- drivers/soc/xilinx/zynqmp_power.c             |  6 +-
- drivers/staging/greybus/sdio.c                |  2 +-
- drivers/target/sbp/sbp_target.c               |  8 +--
- drivers/target/target_core_transport.c        |  4 +-
- drivers/target/target_core_xcopy.c            |  2 +-
- drivers/target/tcm_fc/tfc_conf.c              |  2 +-
- drivers/thunderbolt/tb.c                      |  2 +-
- drivers/tty/serial/8250/8250_dw.c             |  4 +-
- drivers/tty/tty_buffer.c                      |  8 +--
- drivers/usb/core/hub.c                        |  2 +-
- drivers/usb/dwc3/gadget.c                     |  2 +-
- drivers/usb/gadget/function/f_hid.c           |  3 +-
- drivers/usb/host/xhci-dbgcap.c                |  8 +--
- drivers/usb/host/xhci-ring.c                  |  2 +-
- drivers/usb/storage/uas.c                     |  2 +-
- drivers/usb/typec/anx7411.c                   |  3 +-
- drivers/vdpa/vdpa_user/vduse_dev.c            |  3 +-
- drivers/virt/acrn/irqfd.c                     |  3 +-
- drivers/virtio/virtio_balloon.c               |  3 +-
- drivers/xen/events/events_base.c              |  6 +-
- drivers/xen/privcmd.c                         |  3 +-
- fs/afs/callback.c                             |  4 +-
- fs/afs/main.c                                 |  4 +-
- fs/afs/write.c                                |  2 +-
- fs/aio.c                                      |  2 +-
- fs/bcachefs/btree_write_buffer.c              |  2 +-
- fs/bcachefs/io_read.c                         | 12 ++--
- fs/bcachefs/journal_io.c                      |  2 +-
- fs/bcachefs/super.c                           | 10 +--
- fs/btrfs/async-thread.c                       |  3 +-
- fs/btrfs/block-group.c                        |  2 +-
- fs/btrfs/disk-io.c                            |  2 +-
- fs/btrfs/extent_map.c                         |  2 +-
- fs/btrfs/space-info.c                         |  4 +-
- fs/btrfs/zoned.c                              |  2 +-
- fs/ceph/super.c                               |  2 +-
- fs/dlm/lowcomms.c                             |  2 +-
- fs/dlm/main.c                                 |  2 +-
- fs/ext4/mballoc.c                             |  2 +-
- fs/fs-writeback.c                             |  4 +-
- fs/fuse/dev.c                                 |  2 +-
- fs/fuse/inode.c                               |  2 +-
- fs/gfs2/main.c                                |  5 +-
- fs/gfs2/ops_fstype.c                          |  6 +-
- fs/netfs/objects.c                            |  2 +-
- fs/netfs/read_collect.c                       |  2 +-
- fs/netfs/write_collect.c                      |  2 +-
- fs/nfs/namespace.c                            |  2 +-
- fs/nfs/nfs4renewd.c                           |  2 +-
- fs/nfsd/filecache.c                           |  2 +-
- fs/notify/mark.c                              |  4 +-
- fs/ocfs2/dlm/dlmdomain.c                      |  3 +-
- fs/ocfs2/dlmfs/dlmfs.c                        |  3 +-
- fs/quota/dquot.c                              |  2 +-
- fs/smb/client/cifsfs.c                        | 16 +++--
- fs/smb/server/ksmbd_work.c                    |  2 +-
- fs/smb/server/transport_rdma.c                |  3 +-
- fs/super.c                                    |  3 +-
- fs/verity/verify.c                            |  2 +-
- fs/xfs/xfs_log.c                              |  3 +-
- fs/xfs/xfs_mru_cache.c                        |  3 +-
- fs/xfs/xfs_super.c                            | 15 ++--
- include/drm/gpu_scheduler.h                   |  2 +-
- include/linux/closure.h                       |  2 +-
- include/linux/workqueue.h                     | 69 ++++++++++++++-----
- io_uring/io_uring.c                           |  4 +-
- kernel/bpf/cgroup.c                           |  5 +-
- kernel/bpf/cpumap.c                           |  2 +-
- kernel/bpf/helpers.c                          |  4 +-
- kernel/bpf/memalloc.c                         |  2 +-
- kernel/bpf/syscall.c                          |  2 +-
- kernel/cgroup/cgroup-v1.c                     |  2 +-
- kernel/cgroup/cgroup.c                        |  4 +-
- kernel/module/dups.c                          |  4 +-
- kernel/padata.c                               |  9 +--
- kernel/power/main.c                           |  2 +-
- kernel/rcu/tasks.h                            |  4 +-
- kernel/rcu/tree.c                             |  4 +-
- kernel/sched/core.c                           |  4 +-
- kernel/sched/ext.c                            |  4 +-
- kernel/smp.c                                  |  2 +-
- kernel/trace/trace_events_user.c              |  2 +-
- kernel/umh.c                                  |  2 +-
- kernel/workqueue.c                            | 56 ++++++++++-----
- mm/backing-dev.c                              |  6 +-
- mm/kfence/core.c                              |  6 +-
- mm/memcontrol.c                               |  4 +-
- mm/slub.c                                     |  3 +-
- mm/vmstat.c                                   |  3 +-
- net/bridge/br_cfm.c                           |  6 +-
- net/bridge/br_mrp.c                           |  8 +--
- net/ceph/messenger.c                          |  3 +-
- net/ceph/mon_client.c                         |  2 +-
- net/core/link_watch.c                         |  4 +-
- net/core/skmsg.c                              |  2 +-
- net/core/sock_diag.c                          |  2 +-
- net/devlink/core.c                            |  2 +-
- net/ipv4/inet_fragment.c                      |  2 +-
- net/netfilter/nf_conntrack_ecache.c           |  2 +-
- net/openvswitch/dp_notify.c                   |  2 +-
- net/rds/ib_rdma.c                             |  3 +-
- net/rfkill/input.c                            |  2 +-
- net/rxrpc/rxperf.c                            |  2 +-
- net/smc/af_smc.c                              |  6 +-
- net/smc/smc_core.c                            |  4 +-
- net/tls/tls_device.c                          |  2 +-
- net/unix/garbage.c                            |  2 +-
- net/vmw_vsock/af_vsock.c                      |  2 +-
- net/vmw_vsock/virtio_transport.c              |  2 +-
- net/vmw_vsock/vsock_loopback.c                |  2 +-
- net/wireless/core.c                           |  4 +-
- net/wireless/sysfs.c                          |  2 +-
- rust/kernel/workqueue.rs                      | 12 ++--
- sound/soc/codecs/aw88081.c                    |  2 +-
- sound/soc/codecs/aw88166.c                    |  2 +-
- sound/soc/codecs/aw88261.c                    |  2 +-
- sound/soc/codecs/aw88395/aw88395.c            |  2 +-
- sound/soc/codecs/aw88399.c                    |  2 +-
- sound/soc/codecs/cs42l43-jack.c               |  6 +-
- sound/soc/codecs/cs42l43.c                    |  4 +-
- sound/soc/codecs/es8326.c                     | 12 ++--
- sound/soc/codecs/rt5663.c                     |  6 +-
- sound/soc/codecs/wm_adsp.c                    |  2 +-
- sound/soc/intel/boards/sof_es8336.c           |  2 +-
- sound/soc/sof/intel/cnl.c                     |  2 +-
- sound/soc/sof/intel/hda-ipc.c                 |  2 +-
- virt/kvm/eventfd.c                            |  2 +-
- 367 files changed, 770 insertions(+), 593 deletions(-)
-
+diff --git a/fs/afs/main.c b/fs/afs/main.c
+index c845c5daaeba..6b7aab6abd78 100644
+--- a/fs/afs/main.c
++++ b/fs/afs/main.c
+@@ -168,13 +168,13 @@ static int __init afs_init(void)
+ 
+ 	printk(KERN_INFO "kAFS: Red Hat AFS client v0.1 registering.\n");
+ 
+-	afs_wq = alloc_workqueue("afs", 0, 0);
++	afs_wq = alloc_workqueue("afs", WQ_PERCPU, 0);
+ 	if (!afs_wq)
+ 		goto error_afs_wq;
+ 	afs_async_calls = alloc_workqueue("kafsd", WQ_MEM_RECLAIM | WQ_UNBOUND, 0);
+ 	if (!afs_async_calls)
+ 		goto error_async;
+-	afs_lock_manager = alloc_workqueue("kafs_lockd", WQ_MEM_RECLAIM, 0);
++	afs_lock_manager = alloc_workqueue("kafs_lockd", WQ_MEM_RECLAIM | WQ_PERCPU, 0);
+ 	if (!afs_lock_manager)
+ 		goto error_lockmgr;
+ 
+diff --git a/fs/bcachefs/super.c b/fs/bcachefs/super.c
+index a58edde43bee..8bba5347a36e 100644
+--- a/fs/bcachefs/super.c
++++ b/fs/bcachefs/super.c
+@@ -909,15 +909,15 @@ static struct bch_fs *bch2_fs_alloc(struct bch_sb *sb, struct bch_opts opts)
+ 	if (!(c->btree_update_wq = alloc_workqueue("bcachefs",
+ 				WQ_HIGHPRI|WQ_FREEZABLE|WQ_MEM_RECLAIM|WQ_UNBOUND, 512)) ||
+ 	    !(c->btree_io_complete_wq = alloc_workqueue("bcachefs_btree_io",
+-				WQ_HIGHPRI|WQ_FREEZABLE|WQ_MEM_RECLAIM, 1)) ||
++				WQ_HIGHPRI | WQ_FREEZABLE | WQ_MEM_RECLAIM | WQ_PERCPU, 1)) ||
+ 	    !(c->copygc_wq = alloc_workqueue("bcachefs_copygc",
+-				WQ_HIGHPRI|WQ_FREEZABLE|WQ_MEM_RECLAIM|WQ_CPU_INTENSIVE, 1)) ||
++				WQ_HIGHPRI | WQ_FREEZABLE | WQ_MEM_RECLAIM | WQ_CPU_INTENSIVE | WQ_PERCPU, 1)) ||
+ 	    !(c->btree_read_complete_wq = alloc_workqueue("bcachefs_btree_read_complete",
+-				WQ_HIGHPRI|WQ_FREEZABLE|WQ_MEM_RECLAIM, 512)) ||
++				WQ_HIGHPRI | WQ_FREEZABLE | WQ_MEM_RECLAIM | WQ_PERCPU, 512)) ||
+ 	    !(c->btree_write_submit_wq = alloc_workqueue("bcachefs_btree_write_sumit",
+-				WQ_HIGHPRI|WQ_FREEZABLE|WQ_MEM_RECLAIM, 1)) ||
++				WQ_HIGHPRI | WQ_FREEZABLE | WQ_MEM_RECLAIM | WQ_PERCPU, 1)) ||
+ 	    !(c->write_ref_wq = alloc_workqueue("bcachefs_write_ref",
+-				WQ_FREEZABLE, 0)) ||
++				WQ_FREEZABLE | WQ_PERCPU, 0)) ||
+ #ifndef BCH_WRITE_REF_DEBUG
+ 	    percpu_ref_init(&c->writes, bch2_writes_disabled,
+ 			    PERCPU_REF_INIT_DEAD, GFP_KERNEL) ||
+diff --git a/fs/btrfs/async-thread.c b/fs/btrfs/async-thread.c
+index f3bffe08b290..0a84d86a942d 100644
+--- a/fs/btrfs/async-thread.c
++++ b/fs/btrfs/async-thread.c
+@@ -109,8 +109,7 @@ struct btrfs_workqueue *btrfs_alloc_workqueue(struct btrfs_fs_info *fs_info,
+ 		ret->thresh = thresh;
+ 	}
+ 
+-	ret->normal_wq = alloc_workqueue("btrfs-%s", flags, ret->current_active,
+-					 name);
++	ret->normal_wq = alloc_workqueue("btrfs-%s", flags, ret->current_active, name);
+ 	if (!ret->normal_wq) {
+ 		kfree(ret);
+ 		return NULL;
+diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
+index 3dd555db3d32..f817b29a43de 100644
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -1963,7 +1963,7 @@ static int btrfs_init_workqueues(struct btrfs_fs_info *fs_info)
+ {
+ 	u32 max_active = fs_info->thread_pool_size;
+ 	unsigned int flags = WQ_MEM_RECLAIM | WQ_FREEZABLE | WQ_UNBOUND;
+-	unsigned int ordered_flags = WQ_MEM_RECLAIM | WQ_FREEZABLE;
++	unsigned int ordered_flags = WQ_MEM_RECLAIM | WQ_FREEZABLE | WQ_PERCPU;
+ 
+ 	fs_info->workers =
+ 		btrfs_alloc_workqueue(fs_info, "worker", flags, max_active, 16);
+diff --git a/fs/ceph/super.c b/fs/ceph/super.c
+index f3951253e393..a0302a004157 100644
+--- a/fs/ceph/super.c
++++ b/fs/ceph/super.c
+@@ -862,7 +862,7 @@ static struct ceph_fs_client *create_fs_client(struct ceph_mount_options *fsopt,
+ 	fsc->inode_wq = alloc_workqueue("ceph-inode", WQ_UNBOUND, 0);
+ 	if (!fsc->inode_wq)
+ 		goto fail_client;
+-	fsc->cap_wq = alloc_workqueue("ceph-cap", 0, 1);
++	fsc->cap_wq = alloc_workqueue("ceph-cap", WQ_PERCPU, 1);
+ 	if (!fsc->cap_wq)
+ 		goto fail_inode_wq;
+ 
+diff --git a/fs/dlm/lowcomms.c b/fs/dlm/lowcomms.c
+index 70abd4da17a6..6ced1fa90209 100644
+--- a/fs/dlm/lowcomms.c
++++ b/fs/dlm/lowcomms.c
+@@ -1702,7 +1702,7 @@ static int work_start(void)
+ 		return -ENOMEM;
+ 	}
+ 
+-	process_workqueue = alloc_workqueue("dlm_process", WQ_HIGHPRI | WQ_BH, 0);
++	process_workqueue = alloc_workqueue("dlm_process", WQ_HIGHPRI | WQ_BH | WQ_PERCPU, 0);
+ 	if (!process_workqueue) {
+ 		log_print("can't start dlm_process");
+ 		destroy_workqueue(io_workqueue);
+diff --git a/fs/dlm/main.c b/fs/dlm/main.c
+index 4887c8a05318..a44d16da7187 100644
+--- a/fs/dlm/main.c
++++ b/fs/dlm/main.c
+@@ -52,7 +52,7 @@ static int __init init_dlm(void)
+ 	if (error)
+ 		goto out_user;
+ 
+-	dlm_wq = alloc_workqueue("dlm_wq", 0, 0);
++	dlm_wq = alloc_workqueue("dlm_wq", WQ_PERCPU, 0);
+ 	if (!dlm_wq) {
+ 		error = -ENOMEM;
+ 		goto out_plock;
+diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
+index cf51a265bf27..4b1a53a3266b 100644
+--- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -1180,7 +1180,7 @@ void cgroup_writeback_umount(struct super_block *sb)
+ 
+ static int __init cgroup_writeback_init(void)
+ {
+-	isw_wq = alloc_workqueue("inode_switch_wbs", 0, 0);
++	isw_wq = alloc_workqueue("inode_switch_wbs", WQ_PERCPU, 0);
+ 	if (!isw_wq)
+ 		return -ENOMEM;
+ 	return 0;
+diff --git a/fs/gfs2/main.c b/fs/gfs2/main.c
+index 0727f60ad028..9d65719353fa 100644
+--- a/fs/gfs2/main.c
++++ b/fs/gfs2/main.c
+@@ -151,7 +151,8 @@ static int __init init_gfs2_fs(void)
+ 
+ 	error = -ENOMEM;
+ 	gfs2_recovery_wq = alloc_workqueue("gfs2_recovery",
+-					  WQ_MEM_RECLAIM | WQ_FREEZABLE, 0);
++					  WQ_MEM_RECLAIM | WQ_FREEZABLE | WQ_PERCPU,
++					  0);
+ 	if (!gfs2_recovery_wq)
+ 		goto fail_wq1;
+ 
+@@ -160,7 +161,7 @@ static int __init init_gfs2_fs(void)
+ 	if (!gfs2_control_wq)
+ 		goto fail_wq2;
+ 
+-	gfs2_freeze_wq = alloc_workqueue("gfs2_freeze", 0, 0);
++	gfs2_freeze_wq = alloc_workqueue("gfs2_freeze", WQ_PERCPU, 0);
+ 
+ 	if (!gfs2_freeze_wq)
+ 		goto fail_wq3;
+diff --git a/fs/gfs2/ops_fstype.c b/fs/gfs2/ops_fstype.c
+index e83d293c3614..0dccb5882ef6 100644
+--- a/fs/gfs2/ops_fstype.c
++++ b/fs/gfs2/ops_fstype.c
+@@ -1189,13 +1189,15 @@ static int gfs2_fill_super(struct super_block *sb, struct fs_context *fc)
+ 
+ 	error = -ENOMEM;
+ 	sdp->sd_glock_wq = alloc_workqueue("gfs2-glock/%s",
+-			WQ_MEM_RECLAIM | WQ_HIGHPRI | WQ_FREEZABLE, 0,
++			WQ_MEM_RECLAIM | WQ_HIGHPRI | WQ_FREEZABLE | WQ_PERCPU,
++			0,
+ 			sdp->sd_fsname);
+ 	if (!sdp->sd_glock_wq)
+ 		goto fail_free;
+ 
+ 	sdp->sd_delete_wq = alloc_workqueue("gfs2-delete/%s",
+-			WQ_MEM_RECLAIM | WQ_FREEZABLE, 0, sdp->sd_fsname);
++			WQ_MEM_RECLAIM | WQ_FREEZABLE | WQ_PERCPU, 0,
++			sdp->sd_fsname);
+ 	if (!sdp->sd_delete_wq)
+ 		goto fail_glock_wq;
+ 
+diff --git a/fs/ocfs2/dlm/dlmdomain.c b/fs/ocfs2/dlm/dlmdomain.c
+index 2018501b2249..2347a50f079b 100644
+--- a/fs/ocfs2/dlm/dlmdomain.c
++++ b/fs/ocfs2/dlm/dlmdomain.c
+@@ -1876,7 +1876,8 @@ static int dlm_join_domain(struct dlm_ctxt *dlm)
+ 	dlm_debug_init(dlm);
+ 
+ 	snprintf(wq_name, O2NM_MAX_NAME_LEN, "dlm_wq-%s", dlm->name);
+-	dlm->dlm_worker = alloc_workqueue(wq_name, WQ_MEM_RECLAIM, 0);
++	dlm->dlm_worker = alloc_workqueue(wq_name, WQ_MEM_RECLAIM | WQ_PERCPU,
++					  0);
+ 	if (!dlm->dlm_worker) {
+ 		status = -ENOMEM;
+ 		mlog_errno(status);
+diff --git a/fs/ocfs2/dlmfs/dlmfs.c b/fs/ocfs2/dlmfs/dlmfs.c
+index 5130ec44e5e1..0b730535b2c8 100644
+--- a/fs/ocfs2/dlmfs/dlmfs.c
++++ b/fs/ocfs2/dlmfs/dlmfs.c
+@@ -595,7 +595,8 @@ static int __init init_dlmfs_fs(void)
+ 	}
+ 	cleanup_inode = 1;
+ 
+-	user_dlm_worker = alloc_workqueue("user_dlm", WQ_MEM_RECLAIM, 0);
++	user_dlm_worker = alloc_workqueue("user_dlm",
++					  WQ_MEM_RECLAIM | WQ_PERCPU, 0);
+ 	if (!user_dlm_worker) {
+ 		status = -ENOMEM;
+ 		goto bail;
+diff --git a/fs/smb/client/cifsfs.c b/fs/smb/client/cifsfs.c
+index a08c42363ffc..3d3a76fa7210 100644
+--- a/fs/smb/client/cifsfs.c
++++ b/fs/smb/client/cifsfs.c
+@@ -1883,7 +1883,9 @@ init_cifs(void)
+ 		cifs_dbg(VFS, "dir_cache_timeout set to max of 65000 seconds\n");
+ 	}
+ 
+-	cifsiod_wq = alloc_workqueue("cifsiod", WQ_FREEZABLE|WQ_MEM_RECLAIM, 0);
++	cifsiod_wq = alloc_workqueue("cifsiod",
++				     WQ_FREEZABLE | WQ_MEM_RECLAIM | WQ_PERCPU,
++				     0);
+ 	if (!cifsiod_wq) {
+ 		rc = -ENOMEM;
+ 		goto out_clean_proc;
+@@ -1911,28 +1913,32 @@ init_cifs(void)
+ 	}
+ 
+ 	cifsoplockd_wq = alloc_workqueue("cifsoplockd",
+-					 WQ_FREEZABLE|WQ_MEM_RECLAIM, 0);
++					 WQ_FREEZABLE | WQ_MEM_RECLAIM | WQ_PERCPU,
++					 0);
+ 	if (!cifsoplockd_wq) {
+ 		rc = -ENOMEM;
+ 		goto out_destroy_fileinfo_put_wq;
+ 	}
+ 
+ 	deferredclose_wq = alloc_workqueue("deferredclose",
+-					   WQ_FREEZABLE|WQ_MEM_RECLAIM, 0);
++					   WQ_FREEZABLE | WQ_MEM_RECLAIM | WQ_PERCPU,
++					   0);
+ 	if (!deferredclose_wq) {
+ 		rc = -ENOMEM;
+ 		goto out_destroy_cifsoplockd_wq;
+ 	}
+ 
+ 	serverclose_wq = alloc_workqueue("serverclose",
+-					   WQ_FREEZABLE|WQ_MEM_RECLAIM, 0);
++					   WQ_FREEZABLE | WQ_MEM_RECLAIM | WQ_PERCPU,
++					   0);
+ 	if (!serverclose_wq) {
+ 		rc = -ENOMEM;
+ 		goto out_destroy_deferredclose_wq;
+ 	}
+ 
+ 	cfid_put_wq = alloc_workqueue("cfid_put_wq",
+-				      WQ_FREEZABLE|WQ_MEM_RECLAIM, 0);
++				      WQ_FREEZABLE | WQ_MEM_RECLAIM | WQ_PERCPU,
++				      0);
+ 	if (!cfid_put_wq) {
+ 		rc = -ENOMEM;
+ 		goto out_destroy_serverclose_wq;
+diff --git a/fs/smb/server/ksmbd_work.c b/fs/smb/server/ksmbd_work.c
+index 72b00ca6e455..4a71f46d7020 100644
+--- a/fs/smb/server/ksmbd_work.c
++++ b/fs/smb/server/ksmbd_work.c
+@@ -78,7 +78,7 @@ int ksmbd_work_pool_init(void)
+ 
+ int ksmbd_workqueue_init(void)
+ {
+-	ksmbd_wq = alloc_workqueue("ksmbd-io", 0, 0);
++	ksmbd_wq = alloc_workqueue("ksmbd-io", WQ_PERCPU, 0);
+ 	if (!ksmbd_wq)
+ 		return -ENOMEM;
+ 	return 0;
+diff --git a/fs/smb/server/transport_rdma.c b/fs/smb/server/transport_rdma.c
+index 4998df04ab95..43b7062335fa 100644
+--- a/fs/smb/server/transport_rdma.c
++++ b/fs/smb/server/transport_rdma.c
+@@ -2198,7 +2198,8 @@ int ksmbd_rdma_init(void)
+ 	 * for lack of credits
+ 	 */
+ 	smb_direct_wq = alloc_workqueue("ksmbd-smb_direct-wq",
+-					WQ_HIGHPRI | WQ_MEM_RECLAIM, 0);
++					WQ_HIGHPRI | WQ_MEM_RECLAIM | WQ_PERCPU,
++					0);
+ 	if (!smb_direct_wq)
+ 		return -ENOMEM;
+ 
+diff --git a/fs/super.c b/fs/super.c
+index 97a17f9d9023..0a9af48f30dd 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -2174,7 +2174,8 @@ int sb_init_dio_done_wq(struct super_block *sb)
+ {
+ 	struct workqueue_struct *old;
+ 	struct workqueue_struct *wq = alloc_workqueue("dio/%s",
+-						      WQ_MEM_RECLAIM, 0,
++						      WQ_MEM_RECLAIM | WQ_PERCPU,
++						      0,
+ 						      sb->s_id);
+ 	if (!wq)
+ 		return -ENOMEM;
+diff --git a/fs/verity/verify.c b/fs/verity/verify.c
+index 4fcad0825a12..b8f53d1cfd20 100644
+--- a/fs/verity/verify.c
++++ b/fs/verity/verify.c
+@@ -357,7 +357,7 @@ void __init fsverity_init_workqueue(void)
+ 	 * latency on ARM64.
+ 	 */
+ 	fsverity_read_workqueue = alloc_workqueue("fsverity_read_queue",
+-						  WQ_HIGHPRI,
++						  WQ_HIGHPRI | WQ_PERCPU,
+ 						  num_online_cpus());
+ 	if (!fsverity_read_workqueue)
+ 		panic("failed to allocate fsverity_read_queue");
+diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+index 6493bdb57351..3fecb066eeb3 100644
+--- a/fs/xfs/xfs_log.c
++++ b/fs/xfs/xfs_log.c
+@@ -1489,8 +1489,7 @@ xlog_alloc_log(
+ 	log->l_iclog->ic_prev = prev_iclog;	/* re-write 1st prev ptr */
+ 
+ 	log->l_ioend_workqueue = alloc_workqueue("xfs-log/%s",
+-			XFS_WQFLAGS(WQ_FREEZABLE | WQ_MEM_RECLAIM |
+-				    WQ_HIGHPRI),
++			XFS_WQFLAGS(WQ_FREEZABLE | WQ_MEM_RECLAIM | WQ_HIGHPRI | WQ_PERCPU),
+ 			0, mp->m_super->s_id);
+ 	if (!log->l_ioend_workqueue)
+ 		goto out_free_iclog;
+diff --git a/fs/xfs/xfs_mru_cache.c b/fs/xfs/xfs_mru_cache.c
+index d0f5b403bdbe..152032f68013 100644
+--- a/fs/xfs/xfs_mru_cache.c
++++ b/fs/xfs/xfs_mru_cache.c
+@@ -293,7 +293,8 @@ int
+ xfs_mru_cache_init(void)
+ {
+ 	xfs_mru_reap_wq = alloc_workqueue("xfs_mru_cache",
+-			XFS_WQFLAGS(WQ_MEM_RECLAIM | WQ_FREEZABLE), 1);
++			XFS_WQFLAGS(WQ_MEM_RECLAIM | WQ_FREEZABLE | WQ_PERCPU),
++			1);
+ 	if (!xfs_mru_reap_wq)
+ 		return -ENOMEM;
+ 	return 0;
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index b2dd0c0bf509..38584c5618f4 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -565,19 +565,19 @@ xfs_init_mount_workqueues(
+ 	struct xfs_mount	*mp)
+ {
+ 	mp->m_buf_workqueue = alloc_workqueue("xfs-buf/%s",
+-			XFS_WQFLAGS(WQ_FREEZABLE | WQ_MEM_RECLAIM),
++			XFS_WQFLAGS(WQ_FREEZABLE | WQ_MEM_RECLAIM | WQ_PERCPU),
+ 			1, mp->m_super->s_id);
+ 	if (!mp->m_buf_workqueue)
+ 		goto out;
+ 
+ 	mp->m_unwritten_workqueue = alloc_workqueue("xfs-conv/%s",
+-			XFS_WQFLAGS(WQ_FREEZABLE | WQ_MEM_RECLAIM),
++			XFS_WQFLAGS(WQ_FREEZABLE | WQ_MEM_RECLAIM | WQ_PERCPU),
+ 			0, mp->m_super->s_id);
+ 	if (!mp->m_unwritten_workqueue)
+ 		goto out_destroy_buf;
+ 
+ 	mp->m_reclaim_workqueue = alloc_workqueue("xfs-reclaim/%s",
+-			XFS_WQFLAGS(WQ_FREEZABLE | WQ_MEM_RECLAIM),
++			XFS_WQFLAGS(WQ_FREEZABLE | WQ_MEM_RECLAIM | WQ_PERCPU),
+ 			0, mp->m_super->s_id);
+ 	if (!mp->m_reclaim_workqueue)
+ 		goto out_destroy_unwritten;
+@@ -589,13 +589,14 @@ xfs_init_mount_workqueues(
+ 		goto out_destroy_reclaim;
+ 
+ 	mp->m_inodegc_wq = alloc_workqueue("xfs-inodegc/%s",
+-			XFS_WQFLAGS(WQ_FREEZABLE | WQ_MEM_RECLAIM),
++			XFS_WQFLAGS(WQ_FREEZABLE | WQ_MEM_RECLAIM | WQ_PERCPU),
+ 			1, mp->m_super->s_id);
+ 	if (!mp->m_inodegc_wq)
+ 		goto out_destroy_blockgc;
+ 
+ 	mp->m_sync_workqueue = alloc_workqueue("xfs-sync/%s",
+-			XFS_WQFLAGS(WQ_FREEZABLE), 0, mp->m_super->s_id);
++			XFS_WQFLAGS(WQ_FREEZABLE | WQ_PERCPU), 0,
++			mp->m_super->s_id);
+ 	if (!mp->m_sync_workqueue)
+ 		goto out_destroy_inodegc;
+ 
+@@ -2499,8 +2500,8 @@ xfs_init_workqueues(void)
+ 	 * AGs in all the filesystems mounted. Hence use the default large
+ 	 * max_active value for this workqueue.
+ 	 */
+-	xfs_alloc_wq = alloc_workqueue("xfsalloc",
+-			XFS_WQFLAGS(WQ_MEM_RECLAIM | WQ_FREEZABLE), 0);
++	xfs_alloc_wq = alloc_workqueue("xfsalloc", XFS_WQFLAGS(WQ_MEM_RECLAIM | WQ_FREEZABLE | WQ_PERCPU),
++			0);
+ 	if (!xfs_alloc_wq)
+ 		return -ENOMEM;
+ 
 -- 
 2.49.0
 
