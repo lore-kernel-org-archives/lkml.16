@@ -1,111 +1,113 @@
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9170C8FE;
-	Wed, 11 Jun 2025 03:59:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373B31D61A3
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 04:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749614399; cv=none; b=oInLwA4/Hn4MHNHXYMElENngffNy2B1CemH2LW2uXeTx4NyWF+satmMk1LvZLHvA4yPCwSCs6OomXg+njyfhSJDD4zUI4CXFlRf2Lb2/QC7Ce0WUg33lZYiLo/ShwJ2W9lA4+hFsOKSFDRfSy7oYkHYH1tBHu1EjR/R+upls5Nk=
+	t=1749614415; cv=none; b=JHIGUzZq+jSKqYp5OX25FuD4I5ip9I8ZsyMetrR3mLuEggD3jxOSWD/iN5mhkqvHiaPKGmowzin7GbJmdPQCnhDadTx2aVuMMNe8fNL9Y1Az6WmSO7XSx//gUWEuoe6jA1gI6AXXIV3KhKN/8+K8Ozg+3NygEjIZnyWkpCWr714=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749614399; c=relaxed/simple;
-	bh=6Bv1xt+Ulsxs3ZANi+lB4WzocuIuNfvDq3Y/oLo/j/0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IPEJk88d0K4n00K5iA9ZJ42mAazhmElXPy3RGG04xuBJCWe9GLZOEVliYs2HWZAfzzvod+g4fU0wVLjhWxFb4VFMNoAG/uvVnkRYH5CMSDZTcq5CCxnXFoCg+1CladGgZGo7d4QQP1nHYL7dT6emIWTDmdnyn+Ge8UMTcL+iOrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AluZbev8; arc=none smtp.client-ip=209.85.221.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AluZbev8"
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-5311cfb975aso311959e0c.1;
-        Tue, 10 Jun 2025 20:59:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749614396; x=1750219196; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pj6z2aRKvHtITq4Z+f1qO93pmK8lNGG0j4aMXrIWEqE=;
-        b=AluZbev8p6LHon9Qi8g0JjsjoqMaio4KkXWWEOvLm+3dPNmNNDIDXXbrYVtRkMlSlI
-         6eovcKpfloO/PZX6jvC7TJ+4Tb3YXUBpqOwLEtiBVfdlu6qAxOrcssDnTCuJFXs+ZSrC
-         9hBlMhw25gxTpZYN0U17tlFADOdxfA+VffGsx3j5wiquURSKDFuRb+a60JDi+4ju3Kt9
-         5TiafS5iPCe/GaRNWthVof8zHht76GMuOS0431JFazLjwGdMA1Gm7YZjfhYjHSK+BIIa
-         a2KiMqZ3HSaXxZoRC2K0uYMa15inEfr2cq+SSN9jy7KHMxHtTsgIhaj+tjXGHEs7/QMe
-         pufw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749614396; x=1750219196;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pj6z2aRKvHtITq4Z+f1qO93pmK8lNGG0j4aMXrIWEqE=;
-        b=X/qghanupnh5YQFNMQBzRKC60w65zmAXqBsg56RVYHeDT/ccAQZJTC4al058FJUSJe
-         lo6SrX9juEzJclTFPubamy83OsCib22xEkxA+8NuLyL4Q69/dbfoK/D7kEknun2suLiJ
-         orMJY+kqWOdevDkK/7g/4/Cfg9rZbVL/KLMMGUy8LYSzpys+S4BqsGv+RcRzsZo2RV9C
-         Lk98thJy8zSaqDxm/QhBCqE4F5T9F8urkayBgqG3wf0ruKLkuJXEKTaneAmPfk1F4Rqb
-         5pUz7rtKERplnM88hdEjr2edZhBgRbqZJQpk0d+jjb6jeRddvhR4uTQWHa95rGpF2xWw
-         6iAA==
-X-Forwarded-Encrypted: i=1; AJvYcCV1veIsgzOZIYqfSJL6QiLttJKJFD+YQzwqKVS3WumeT0Z/uqPYrKagfjfds++n72Az87bZKmWuoROc6gg=@vger.kernel.org, AJvYcCVi/lus0nmY2/LuZYDzhQW0l0cdUegaiPuuF/a85qzLd/Om8li+oHJ0D8oxiURXZ3MC8ar07B5JLkzH@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmAkyvo6gT9e36XstEBy225u0OsspojkdG3wyeXjeAoPivdi/F
-	6mALoSGTTqyTprjb6pWkvplUSI4f1VpKXFVp3aEdh8aSFDRwsoCaGXoL
-X-Gm-Gg: ASbGnct2WW9s+pTkdzWJofwd6ZXT+P4x+9Obrzuv1rULD83kUiJhB9pjnbYGxbuqyMu
-	enUSzai8jJWLAGwQcq4SZFPVyVvSHM572orlnqUUYfZ7wVVL6q+inLCmwz2miM7XjZ6Piw2TGRx
-	3mJaz5G5ooxY3U+sP9p2wEjkD9QfbUxbKpuDFomClRv/ZSqd+29s/Kki5vJLge9LITYTUk3Rs4D
-	Wbnu6ElpDY/z5OxvKsjR8O6rHzlbs8Qb/PFXR777IHw/SfXKTVXrXZBZMCpLMma8t9FjP3ZOwhg
-	5qtD8qiz6idVGzq/1HlpOLGVqLj7IDGeeONUPajrYa+RGDgHDgT7kp+ih/V5
-X-Google-Smtp-Source: AGHT+IGUDa7JtBq2dvoPFRpR8Ucsyx6ySznxILJ7IulGOvVCBM169/ICR1GV4mTL56zEZimS2JYQug==
-X-Received: by 2002:a05:6122:119c:b0:52d:cc6f:81a2 with SMTP id 71dfb90a1353d-53121e8cdeamr1223105e0c.6.1749614396582;
-        Tue, 10 Jun 2025 20:59:56 -0700 (PDT)
-Received: from geday ([2804:7f2:800b:5f6a::dead:c001])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-53113c0ee7fsm2411261e0c.41.2025.06.10.20.59.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 20:59:55 -0700 (PDT)
-Date: Wed, 11 Jun 2025 00:59:48 -0300
-From: Geraldo Nascimento <geraldogabriel@gmail.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-rockchip@lists.infradead.org,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/4] PCI: pcie-rockchip: add bits for Target Link
- Speed in LCS_2
-Message-ID: <aEj_NDgaFJT-oceR@geday>
-References: <aEQb5kEOCJNQJMin@geday>
- <20250610200744.GA820589@bhelgaas>
- <aEj7-6fMGKSXQb3J@geday>
+	s=arc-20240116; t=1749614415; c=relaxed/simple;
+	bh=rhu5cC4ghVBpa9vn/6ZN4Nc/bR6KUWlM03H+8o/sF60=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=U1KNqjIPiqCng82WGOCfeWHzzAamDO+WDp/aNAQZHeZ1oVT97tRar2XOq9D9sBSp5/ZP4xzAJOKQyttZ8hiaSLmtNbhrS7UtICPAP4GJUQKdspo4ZneYBa5V88pIlPwjCEWSPzc1uLvWUPfInth+5De9XKU2oUs6WbypmP9YZSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 8fd1bd76467811f0b29709d653e92f7d-20250611
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_MISS
+	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
+	IP_UNTRUSTED, SRC_UNTRUSTED, IP_LOWREP, SRC_LOWREP, DN_TRUSTED
+	SRC_TRUSTED, SA_EXISTED, SN_UNTRUSTED, SN_UNFAMILIAR, SPF_NOPASS
+	DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD, CIE_GOOD_SPF
+	GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_T1, AMN_GOOD
+	AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:1cfe3516-2fb8-4f97-81b5-b482af2bb543,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:5
+X-CID-INFO: VERSION:1.1.45,REQID:1cfe3516-2fb8-4f97-81b5-b482af2bb543,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:5
+X-CID-META: VersionHash:6493067,CLOUDID:58c2d1ee552dfe9c43982710503f523b,BulkI
+	D:250610171445IFDGA2P6,BulkQuantity:4,Recheck:0,SF:17|19|25|38|45|66|78|10
+	2,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:40,QS:nil,BE
+	C:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_FSI,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-UUID: 8fd1bd76467811f0b29709d653e92f7d-20250611
+X-User: duanchenghao@kylinos.cn
+Received: from localhost.localdomain [(223.104.40.103)] by mailgw.kylinos.cn
+	(envelope-from <duanchenghao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 684370023; Wed, 11 Jun 2025 12:00:07 +0800
+From: Chenghao Duan <duanchenghao@kylinos.cn>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	yangtiezhu@loongson.cn,
+	hengqi.chen@gmail.com,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	linux-kernel@vger.kernel.org
+Cc: guodongtai@kylinos.cn,
+	duanchenghao@kylinos.cn,
+	youling.tang@linux.dev,
+	jianghaoran@kylinos.cn
+Subject: [PATCH v1 0/5] Support trampoline for LoongArch
+Date: Wed, 11 Jun 2025 11:59:47 +0800
+Message-Id: <20250611035952.111182-1-duanchenghao@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEj7-6fMGKSXQb3J@geday>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 11, 2025 at 12:46:10AM -0300, Geraldo Nascimento wrote:
-> Hi again Bjorn,
-> 
-> Your message reminded me of something that may be important.
-> 
-> During my debugging I had the mild impression L0s capability is not
-> being cleared from Link Capabilities Register in the presence of
-> "aspm-no-l0s" DT property.
-> 
-> I can't confirm it right now but I might revisit this later on. From
-> what I've seen it can only be cleared from inside the port init
-> in pcie-rockchip.c and does nothing in present form.
-> 
-> Not a clear, confirmable report but something to watch out for...
+v1: Support trampoline for LoongArch. The following feature tests
+have been completed:
+1. fentry
+2. fexit
+3. fmod_ret
 
-Not correct. ASPM bit for L0s is being properly cleared according
-to my printk's.
+TODO: The support for the struct_ops feature will be provided in
+subsequent patches.
 
-Should have checked before creating noise. Sorry.
-Geraldo Nascimento
+Chenghao Duan (4):
+  LoongArch: BPF: The operation commands needed to add a trampoline
+  LoongArch: BPF: Add bpf_arch_text_poke support for Loongarch
+  LoongArch: BPF: Add bpf trampoline support for Loongarch
+  LoongArch: BPF: Update the code to rename validate_code to
+    validate_ctx.
 
-> 
-> Regards,
-> Geraldo Nascimento
+George Guo (1):
+  LoongArch: Support fixmap
+
+ arch/loongarch/include/asm/fixmap.h |   2 +
+ arch/loongarch/include/asm/inst.h   |  19 ++
+ arch/loongarch/kernel/inst.c        |  85 +++++
+ arch/loongarch/kernel/setup.c       |   1 +
+ arch/loongarch/mm/init.c            | 111 ++++++-
+ arch/loongarch/net/bpf_jit.c        | 497 +++++++++++++++++++++++++++-
+ arch/loongarch/net/bpf_jit.h        |   6 +
+ 7 files changed, 714 insertions(+), 7 deletions(-)
+
+Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
+
+-- 
+2.25.1
+
