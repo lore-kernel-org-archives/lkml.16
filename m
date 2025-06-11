@@ -1,109 +1,128 @@
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDECA198A08
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:21:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D043B1632D7;
+	Wed, 11 Jun 2025 15:22:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749655322; cv=none; b=EfsYcpzziJFCs3kCCyyuKajNVzQJ2sQs7RMIoXJSCImgkokB0Jglob4HzaCYqXP8Dh6C0yGHwR6D3dPAi3mUAHkJ4TwOEcHHxaBPSrHb3JKkilgZchNUyOB1FA+sHA2i2moLmmNPFbyl7CCdj0DH0ubkyZzIKZNn66ZBGJB6JBQ=
+	t=1749655341; cv=none; b=pcha1xyiwHM1Di8MH4IwvsyPzOXNBc4nW/KriGNguZUfLYrjfoBBJrFZ2lNqtNkaTGTwp+INdfWC0JHLRFHCLNGmdXHdjDNLwmdYU92OcHQRybnxBw5fue5F7kfNLtpNnGofUc3O99svuhICTAGC0y5NwATB0hAtvq/5N3LFxtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749655322; c=relaxed/simple;
-	bh=n3FIuLuKqif1KExLRabmovZHhue7y0ojxGEe3NwRxXs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mvTR6dNIScafSlORCLmfW/ov2X/ceFGBl20nltUUAokHP/HV8xqUiKpzIT/WH81eRV0TAT1aaotgqwcO8p7HyBXjwPILrJ6JyOzERvAcJ8BhTCSlzP7J3u30wE3780qZo50pCFGeefJkqSaRbOLOFR+F13/GLQzmfeJkpFti5cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=jULf+8cM; arc=none smtp.client-ip=209.85.160.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1749655341; c=relaxed/simple;
+	bh=nLyTLw3X4zqEgVxTxIWmgt4SSnc21bPbXLZbJ7pGNls=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ke0EH4pRmI31wot+sHrnN4ZcwpoAR67l34QhtzWR7wJsI7zmRsvamxavKMVlt40x2aGWGrsEZYfI5iOs3Hlf44zXqzrou/VeFiy9Rm7wTJ+pYj8UyVNaKyHpzqSQZ1+x1Ux+C0hj9xDvytWJoPhMwko5BHh9D17oNrXlzIa0ZW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JU7sK9xS; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="jULf+8cM"
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-2d4f8c42f49so562931fac.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 08:21:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749655319; x=1750260119; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6ni1bRS8N4SwYP8j3tmW1ofRjVUzlSftGXXllzoEq6s=;
-        b=jULf+8cM6m/TbcfixaF0rhXbns9HlnuZDKCJTnNKdhMLUIgezCBMiH17zKcRf9A+WB
-         Ouz08KGx0yM3rbZsey4DUTLHK6vvITO6a1S919NXAknpX1bb16fPMDEtdYoNg7UIbfQY
-         BUkhoUfiUNKrkC6EkblFxu5ih9/uY5HbWLKy71S1V5VOtVS3TdokY0I7E2BlSQbBsuhN
-         D1Zt7ghWqtnuwIHcmV2aF7jpL68TObu9GFQnRFJt9DdgFm3lVUCH70UT9F/kx9hgwb67
-         j1ytpMePrxG5rq7TNLVp6l5RsjIWsrgELzEjRFh7SHA8P+yeJTkIrWO2bIISTl3dQGFb
-         gc+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749655319; x=1750260119;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6ni1bRS8N4SwYP8j3tmW1ofRjVUzlSftGXXllzoEq6s=;
-        b=i1czc/6QH+kUA9uvOCtBra+BSXHXwSwGBFaU+Kg9RDCGMKHSsekLiD8JIRdNOs+3zh
-         6HOoOwGORMiHqAK2BCUhKllOwDy6yZHLcdCAx5YwD7SdunJ6JTkUFiecOXbsxMlaIMJa
-         z4nlR4Y3L7wER5ddL0n94TBEv64R583dQfr4YsTkhmIbXIZk4nL+vaCEcOtGmY56h2Gt
-         x7pwNc7tEwQjRYmBc3dHakQfZFmje+DPBiEX2MREQKTqBwq8zAG1aJkS2EC+L2c19M+y
-         MEYGgTqfc0z2CQk3npWh+KAx0rmzfx/V5HIeWWRW+YcaKbUxtJbVCcpz2SQi5JBe/BqI
-         ih0g==
-X-Forwarded-Encrypted: i=1; AJvYcCWvFzWqDjj1vKqRFt+WlqJ4dJuF08pwizYidCuUauBaJh7Dpo1pg9ww3Hn5Qlxw5jQp3NuPZLCdsCctAzA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwK2yHrdpHnYpwehckDvI1P9DKowERtWXdq4NXvV2b3G7ODn/7m
-	s7h6vyByzjPNaQx/zY657IkzXotDMGdtRWK4ZeI1jtTOCSmZWYUlke46zqif0GZBS6fPjUUQrgI
-	kS7sR
-X-Gm-Gg: ASbGncudDcCou3KLQ4QmUsUP4Di8hzIh/LA6JRlgkkD3a2y9UyYINCoTqrBbA7M/j2J
-	wLxO1NkFMV3bCk6plYnjov08uceAIZod5Pp4RdNpEDj/3DovCayIq7fEcg9PjSeLrqe01oMHV89
-	BAFRRVqKAZ/slpLE9BU7tl9XMCVYkYSMUijmHHM9RA75Y7M/01s++DKV/1FGiK9VCALt1KvfRlu
-	AnN6qosl2D3kv01A+qst6AWX1yGSQGbr0AF2R1TqxRPBCmEsU8K4+H2x1AQ5WX+RaN5o88wdTtT
-	scRD6VhrG6t8bzXTLs6+/o5ed9TGKv2n+ojLbvqZOW3kjtuk1nyu48cJ57CpgvtD44jDnUgOCXA
-	N+Zmh5ZzHtZQ8c6NbiLAVI/ryRBb66qbHhQ84
-X-Google-Smtp-Source: AGHT+IFMlCBuWrdSbRxuwu2djovc+7uWlkauXqh9E527VuU0BvMxRjpCUjzMoKCENhmWc+eyP/kJqA==
-X-Received: by 2002:a05:6871:4688:b0:2c1:4d18:383a with SMTP id 586e51a60fabf-2ea96314d03mr1622210fac.3.1749655318938;
-        Wed, 11 Jun 2025 08:21:58 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:eb6c:30d1:632b:494? ([2600:8803:e7e4:1d00:eb6c:30d1:632b:494])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2ea072e5d0fsm2891474fac.24.2025.06.11.08.21.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jun 2025 08:21:58 -0700 (PDT)
-Message-ID: <851b7d08-3e77-4344-97d1-9d60f1fb8762@baylibre.com>
-Date: Wed, 11 Jun 2025 10:21:56 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JU7sK9xS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749655340; x=1781191340;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=nLyTLw3X4zqEgVxTxIWmgt4SSnc21bPbXLZbJ7pGNls=;
+  b=JU7sK9xSS0/OescAGs9zA7wjFlbibfo29ROvlWnPa+69v1vR9unUnYLN
+   DxuxAM8lnKsVPfDTc82OXQXfQe7ZWS00Vdr+kf/IRwk77esr0Tfe0yqGV
+   fUNrg6bUWhCtBq8U2yqgXPrP7Gr58N7xzoHd0aZ4Im465XiimOfG4LiT0
+   dZ9JR76aq3BfnncfPeZrz5ev/KRBTK3eeIR68axY+LWiLYoEKiKF5ebs4
+   +fEPRp/jjbrRwlMxbctnlvZ6r93VixRnTlX/Erh1ZVNCFEbt7XBNpnHao
+   5dwNL5Qsrks3C2kH8hSRANl1FSmHALJxbabDQXRof55RxMV9bUhr3HXPp
+   Q==;
+X-CSE-ConnectionGUID: BR6lHDagRDejpkwtyTPnNw==
+X-CSE-MsgGUID: 4sGP0AZ4RJiiftqMu9Nbxg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="51683115"
+X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
+   d="scan'208";a="51683115"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 08:22:20 -0700
+X-CSE-ConnectionGUID: u9bzbMWdQqeO7GUioZzDog==
+X-CSE-MsgGUID: ExX/Dka9SDKwCxt7YVLaOg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
+   d="scan'208";a="151019509"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 08:07:49 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uPN3K-00000005gC7-476M;
+	Wed, 11 Jun 2025 18:07:46 +0300
+Date: Wed, 11 Jun 2025 18:07:46 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>,
+	Jelle van der Waa <jvanderwaa@redhat.com>,
+	Hans de Goede <hdegoede@redhat.com>, ikepanhc@gmail.com,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Armin Wolf <W_Armin@gmx.de>,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+	ibm-acpi-devel@lists.sourceforge.net,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 2/2] platform/x86: Move Lenovo files into lenovo subdir
+Message-ID: <aEmbwiciy81fL58O@smile.fi.intel.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20250610192830.1731454-1-mpearson-lenovo@squebb.ca>
+ <20250610192830.1731454-2-mpearson-lenovo@squebb.ca>
+ <aEiVHXI4vS9BDOPW@smile.fi.intel.com>
+ <002d39fe-44ed-45a4-9410-4fecf1c2163f@app.fastmail.com>
+ <b8af4da0-bd7f-1d65-8645-73dbd08ff3a8@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iio: adc: ad7949: use spi_is_bpw_supported()
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Michael Hennerich <Michael.Hennerich@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Da Xue <da@libre.computer>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250611-iio-adc-ad7949-use-spi_is_bpw_supported-v1-1-c4e15bfd326e@baylibre.com>
- <aEmdhV0ATRuUeGaL@smile.fi.intel.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <aEmdhV0ATRuUeGaL@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b8af4da0-bd7f-1d65-8645-73dbd08ff3a8@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 6/11/25 10:15 AM, Andy Shevchenko wrote:
-> On Wed, Jun 11, 2025 at 10:04:58AM -0500, David Lechner wrote:
->> Use spi_is_bpw_supported() instead of directly accessing spi->controller
->> ->bits_per_word_mask. bits_per_word_mask may be 0, which implies that
->> 8-bits-per-word is supported. spi_is_bpw_supported() takes this into
->> account while spi_ctrl_mask == SPI_BPW_MASK(8) does not.
+On Wed, Jun 11, 2025 at 06:01:36PM +0300, Ilpo Järvinen wrote:
+> On Tue, 10 Jun 2025, Mark Pearson wrote:
+> > On Tue, Jun 10, 2025, at 4:27 PM, Andy Shevchenko wrote:
+> > > On Tue, Jun 10, 2025 at 03:28:25PM -0400, Mark Pearson wrote:
+> > >> Create lenovo subdirectory for holding Lenovo specific drivers.
+> > >
+> > > Assuming Kconfig entries have mostly been copied'n'pasted, the rest LGTM,
+> > 
+> > Yes - no changes from what they were previously.
 > 
->> Closes: https://lore.kernel.org/linux-spi/c8b8a963-6cef-4c9b-bfef-dab2b7bd0b0f@sirena.org.uk/
-> 
-> Reported-by yourself. I'm wondering if the Closes adds a value in this case.
-> Otherwise I can do the same to maybe 10% of my patches, for instance. But
-> I don't think I put Closes tag on whatever improvement potential bug fix
-> I do report (read: notice) myself.
+> Indeed, no changes, too bad that the addition "depends on DMI" was missed 
+> because of that ;-). I've fixed this for you to not delay this patch 
+> further.
 
-I included it so that Da Xue will know that this has been resolved and
-doesn't need to do anything more. Normally I would have not included
-it though.
+Oh, thanks!
 
+> A diff-of-pre/post magic trick helps to validate while preparing and 
+> review move changes like this:
 > 
->> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> diff -u <(grep '^[-]' patch.patch | cut -b 2- | sort) <(grep '^[+]' patch.patch | cut -b 2- | sort)
+
+AFAIK Git can do something like this for you (patch to the patch) or `b4`.
+Never used personally, but interested to try if somebody tells me what to
+do :-)
+
+> The sorting is not always needed if no core reordering is done in the 
+> patch but regardless of sorting or not, the unexpected differences are 
+> usually pretty easy to spot from the output of that command. It's how I 
+> found out the lack of depends on DMI on the post side and have found 
+> plenty of similar issue when changes are rebased/reordered in a series 
+> that does contain a move change.
 > 
-> Code wise LGTM,
-> Reviewed-by: Andy Shevchenko <andy@kernel.org>
+> While applying this, I realized I'd taken Jelle's ideapad patch which 
+> resulted in this move patch not applying cleanly, so I ended up moving 
+> Jelle's patch after this change to make things easier for me.
 > 
+> > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > >
+> > Thanks for the reviews and help with both patches
+> 
+> Thanks for doing this, hopefully LKP will be okay with this change too
+> and we can once again focus on less conflict prone work. :-)
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
