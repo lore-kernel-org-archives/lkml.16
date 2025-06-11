@@ -1,89 +1,72 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F697A92E;
-	Wed, 11 Jun 2025 15:54:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209AE1B4F1F;
+	Wed, 11 Jun 2025 15:54:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749657247; cv=none; b=SOYVPUNRoT60FT62rqRdukw7OM0z5P68Eb4/yj27i4RODJuB740C7bgZDURr68zct4LPiXonz9b8CHjWtsqovqQ8b3GAO/25JYx6+Eb92d85ujUG8APo2zD6s4CiCbZKCt0yw5nYcaC1cpvKYkFufDz86EQr5NhCapXkq8EnEjU=
+	t=1749657258; cv=none; b=HcZsgWW1bsOK+wtqZIWu8+U6wp/3UJUBEmsIbwpKiF7bBqbBHUSdzTyzGZWRj5Q+fJDmLmLSgE3IGVKkzDuUvdBwVQ6/7wUc5gjfjSBxqUiUx/t3yV7pyJ8ouTEKNPxEqJC0ioJPC0jKcOWeKmZXBQMafK2PBqKEsL41mvLGgUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749657247; c=relaxed/simple;
-	bh=zGhDwsxwPz5TdzYzoNwFBeSmkUhU977bhXoE3/WrOp4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DWKU+7KdfXFp+KKUsXBCazIjYuOpJMWIBftcPly/zT1QoAgN5rLbeJLJfsV90haJfRrrXLP/xKByPZ20YM1hX8hBITMysMDEGTNXizye8eQkx9yTJIaHGdYVv4H1/1s3rrB2S42MjXIjXYAO/xbJq8lZ2qzZ6q/R8tLgY4tJY+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92F67C4CEE3;
-	Wed, 11 Jun 2025 15:54:04 +0000 (UTC)
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Jian Shen <shenjian15@huawei.com>,
-	Salil Mehta <salil.mehta@huawei.com>,
-	Jijie Shao <shaojijie@huawei.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Andrew Lunn <andrew@lunn.ch>
-Subject: [PATCH v2 net-next] net: hns3: Demote load and progress messages to debug level
-Date: Wed, 11 Jun 2025 17:53:59 +0200
-Message-ID: <c2ac6f20f85056e7b35bd56d424040f996d32109.1749657070.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1749657258; c=relaxed/simple;
+	bh=UYXVFykziYf4HlZyi1nlqGaFI0VW+AOph8trUZpswK0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Z+tpnYAhHaORx5K0gmcb2n6ihQK4ygqp0F/+JHh/9eFLxflkDkZ2htmXcToSSK8v2NjTaSg7C872aI9pM/gRKL6qeRIKGxhsnAJwkKlnp3Hzwg4oGsg1UXCzxjkW3BnFwC56HBU0kDzY7VcqiZHg6VKb8nig7i3xqWvvVPVzk5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HibdP8nS; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HibdP8nS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4EFFC4CEF4;
+	Wed, 11 Jun 2025 15:54:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749657257;
+	bh=UYXVFykziYf4HlZyi1nlqGaFI0VW+AOph8trUZpswK0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=HibdP8nSrHQpNR03veiQzsIlfXwCqLr9bZDKhe5xHwwfGAT9keM4D1YuPNjpdh8c9
+	 b0dcCYMmsQpg/lXsRM2umnqf0jxW84aM8SReJN4infHzTrizuOad/BtzD/3wFPTHNE
+	 Dhr8lRchehLFq+Q8f8MQOIwuPJVFyQd2TYYuPBLAGghQoAzazUwUwrxcLfUMP5L4zM
+	 p0S+tGW4vOMVCoFwnegCbiiPs9pgLYPwaGE7X+1XDNEze/aX3GYavFCL1erjnFISk2
+	 x4jSwTXx0lxhbbPcBrMRIxE719JCHe4gJvy7cz6FN6k11Wxs5iH8mNA4Ti9pyp9MAe
+	 Ey6oE9JkxCbZQ==
+Date: Wed, 11 Jun 2025 08:54:16 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>, Yury Norov
+ <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>, Jonathan Cameron
+ <Jonathan.Cameron@huwei.com>, Anna-Maria Behnsen
+ <anna-maria@linutronix.de>, Kevin Tian <kevin.tian@intel.com>, Long Li
+ <longli@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, Bjorn Helgaas
+ <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>, Krzysztof =?UTF-8?B?V2lsY3p577+9fkRz?=
+ =?UTF-8?B?a2k=?= <kw@linux.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Haiyang
+ Zhang <haiyangz@microsoft.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Konstantin Taranov <kotaranov@microsoft.com>, Simon
+ Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>, Maxim
+ Levitsky <mlevitsk@redhat.com>, Erni Sri Satya Vennela
+ <ernis@linux.microsoft.com>, Peter Zijlstra <peterz@infradead.org>,
+ netdev@vger.kernel.org, linux-rdma@vger.kernel.org, Paul Rosswurm
+ <paulros@microsoft.com>, Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH v6 0/5] Allow dyn MSI-X vector allocation of MANA
+Message-ID: <20250611085416.2e09b8cd@kernel.org>
+In-Reply-To: <1749650984-9193-1-git-send-email-shradhagupta@linux.microsoft.com>
+References: <1749650984-9193-1-git-send-email-shradhagupta@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-No driver should spam the kernel log when merely being loaded.
-The message in hclge_init() is clearly a debug message.
+On Wed, 11 Jun 2025 07:09:44 -0700 Shradha Gupta wrote:
+> Changes in v6
+>  * rebased to linux-next's v6.16-rc1 as per Jakub's suggestion
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Jijie Shao<shaojijie@huawei.com>
----
-Alternatively, the printing in hns3_init_module() could be removed
-completely, but that would make hns3_driver_string[] and
-hns3_copyright[] unused, which HiSilicon legal may object against?
-
-v2:
-  - Add Reviewed-by.
----
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c         | 4 ++--
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index b03b8758c7774ec2..5c8c62ea6ac0429f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -5961,8 +5961,8 @@ static int __init hns3_init_module(void)
- {
- 	int ret;
- 
--	pr_info("%s: %s - version\n", hns3_driver_name, hns3_driver_string);
--	pr_info("%s: %s\n", hns3_driver_name, hns3_copyright);
-+	pr_debug("%s: %s - version\n", hns3_driver_name, hns3_driver_string);
-+	pr_debug("%s: %s\n", hns3_driver_name, hns3_copyright);
- 
- 	client.type = HNAE3_CLIENT_KNIC;
- 	snprintf(client.name, HNAE3_CLIENT_NAME_LENGTH, "%s",
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index a7de67699a013c1d..a5b480d59fbf408c 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -12904,7 +12904,7 @@ static struct hnae3_ae_algo ae_algo = {
- 
- static int __init hclge_init(void)
- {
--	pr_info("%s is initializing\n", HCLGE_NAME);
-+	pr_debug("%s is initializing\n", HCLGE_NAME);
- 
- 	hclge_wq = alloc_workqueue("%s", WQ_UNBOUND, 0, HCLGE_NAME);
- 	if (!hclge_wq) {
--- 
-2.43.0
-
+I meant a branch, basically apply the patches on the v6.16-rc1 tag
+and push it out to GitHub, kernel.org or somewhere else public.
+Then we can pull it in and maintain the stable commit IDs.
+No need to repost the patches, FWIW, just share the branch here
+once you pushed it out..
