@@ -1,81 +1,59 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E6162405E1;
-	Wed, 11 Jun 2025 10:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F77282FA;
+	Wed, 11 Jun 2025 10:21:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749637207; cv=none; b=XrwOzit/pUDqxd91+Lc5PuG28e6zPvwD9MpsLXxKP+6W1eG+QsRP229EdNt2WU45gMuuBmur8/WeK3aaKwuWoGsYSyxnTVJBIM3jqskHE5jgTpeA/R9orhjX98gyx4AekRixxnrOfPboSbUOvEgprdCiPy7EP0j+N04h+LegLqk=
+	t=1749637282; cv=none; b=KZ+aa4LoWE0co3OviVWtRCz+3XjNa/fHSdAmAzLDQ/xxLQh3mpOplCh3tWb8ha2gAkD0IKrLaqAel8QsKsyWKQmL1QVm1nz/PHfVZEiARV7HvJmLtWVB4EBP0+s18m1g7BBszDkU65ATA6mhvuO7HhTenD5GMJySvv2cCvStii0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749637207; c=relaxed/simple;
-	bh=nJF7CuwWBB1gORKLW/+1mTNYW7d4oFxecsfF9IbnXEg=;
+	s=arc-20240116; t=1749637282; c=relaxed/simple;
+	bh=T9VrFQv/NeLSLK+q9Ecj7niBwwBsl1o+NOb3R8Du03Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ag3J5HFMmFYo8CcGWefCtlRaUkAfGkx4BdhRvGsisRvGChkCmi3cCyOZr2U1O+yURqvR1PceOoWeu3jmD9LSOaWVtNgEhmGNrkbbKGWi2zlXDEQJNLIdSSjV55ylkaCqQk7hGV0oush8yS0ewkqgcuqRSivf7LCUnP0J+dRvSvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jxfldX1H; arc=none smtp.client-ip=209.85.222.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=gdEFX8EGkzvlAau4k+wV+X4+2ly75xuTHs+R4i5/e6IFBChtFTut71Yl0p5PWtTq3RcZtp2wsl+60SivuZp4rH3v9idcp8W4tGkNmeLf/Ac6kzHJILE+KvXZmcUrAH1tjGmKWYDSNBA+tJOT6RryXRrPkx7PrLhuzBp/eHnG/0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XJ0YgZSU; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jxfldX1H"
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7d219896edeso633461585a.1;
-        Wed, 11 Jun 2025 03:20:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749637205; x=1750242005; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CMngYw0p0kJljlRaE+vGqGJX3Zi/z2Oh3oWxYgFvc0E=;
-        b=jxfldX1H1gJe+Z4MYHwaTRre1V93x4EzYHRbDep62yPjIb6Zen+/pE/di9t0tGatuk
-         3Cvtc0rQZaZV6xornzewR1uOFcKRAWmc26IQB9sb0u9umL8uRX5JllCJ16tTlH4kelZf
-         8wW8GpwhlX7A2pQYBfx3Nhb2FOmMbzr5dWURmd7iPOSNE1CooMvK0U6tS8bGBSpT3gcn
-         4giWLky8S+xRQUaoRbk+TQywsXr6utmeMf0M6tfZol7yQ3x9P9KyAXtcoKnmmqcto0ql
-         sRyCY9eCdW0l5ADpxMjhz59xcrz6FLTT8XI1DI9q5H+Z/KHxpdYUzhDQPRtEAKjM2EHy
-         8AMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749637205; x=1750242005;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CMngYw0p0kJljlRaE+vGqGJX3Zi/z2Oh3oWxYgFvc0E=;
-        b=lUrdzoxpn6bNFnoe7bRHEyqsSvjdKawq9Rx2d1CzCWRsvOC3zvCLjmvMKaIvQLA2d5
-         hb50uIzZoGvmhxXqtVh3kbR4hufXD4MgZ2bUx1pt/i3SDjnu9zAd7cFmCqqfea50r/KW
-         oidqy0QUdfLl2K4RHT4TQL0ajp3wSijYf3sSNkdY2iDkSpL7oXLz06tVPx3pi3l3R7wm
-         JxyANF6Fr+zHfM5U7pwtFWA2Lr2VUwCfhI5ijhOlgyPA/Pr9Ax6opVzOntjBoO1VvBPw
-         m6ShKQxIXeHhHpUD8zFfA7lOOluYooCflgJb5pvxtYAEjSE7i6MMWv8vCaOw65qGWS7j
-         5ayA==
-X-Forwarded-Encrypted: i=1; AJvYcCUDPOnWzIS7JEYu6G7UAYoXMzZXXgGEhEvOFJwGxu/8zFxUcVnSyHygNpxYg5YYfeePsSmiW4BV5T0M8LFg@vger.kernel.org, AJvYcCWpjMaengXGEjHTV4AqAIxQ2cxpbWrkW1ix41u0eTtP6Mja5obwmkXoQyjR9eprEBSNasIdXioUNBON@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMAWZORgid54Xd0OqhWASWL6JUi/lzu1Ua0Kld2DanTJsBkxeW
-	rUDpoJGXPokWmZAX7SlgDJp3FlH7k/piRQN3XeBKpnlLVP6XeXJqPtu2
-X-Gm-Gg: ASbGncvVkK5ztB4argoZuYsegNzYTZnBL03G+Tg0LjErpAHJYk37bcE1tsjpCEslWdX
-	K+Itx6hW2ZprFSfQ5jKL87vvEpUn2mSb3vFv6k9P0FfHLqeZo6iprt+sMUB3l495hBasyqtFSAR
-	x/oLVg9tcO0Y2qvEVbK9pbHC6tnA7exvSTKcv/WuoYGaNc9kfqR0cXcgBnspC4QNayghOflgv6D
-	KWUgvNXkvyVLs+LBtaybmXBTKxUKH59CqQcfhkDXxX6Vjy0hjT5FyAdzUpALc1QJ4bVONeS5VQU
-	bSKwKEv5HnSekjIWAg4hkQxAN2Ytkssh/+Iisg==
-X-Google-Smtp-Source: AGHT+IGwWvOgxGgwWmHI6DFqSfjr/uyZDHPorlij65HU+xBh5KwHFJsTWak5AN3OsIOGWsf82thA1Q==
-X-Received: by 2002:a05:620a:2482:b0:7c5:49b7:237c with SMTP id af79cd13be357-7d3a88e40a4mr411224185a.27.1749637204812;
-        Wed, 11 Jun 2025 03:20:04 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7d25a536b57sm837492185a.44.2025.06.11.03.20.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 03:20:04 -0700 (PDT)
-Date: Wed, 11 Jun 2025 18:18:55 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Chen Wang <unicorn_wang@outlook.com>, 
-	Inochi Amaoto <inochiama@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Richard Cochran <richardcochran@gmail.com>, Alexander Sverdlin <alexander.sverdlin@gmail.com>, 
-	Yixun Lan <dlan@gentoo.org>, Thomas Bonnefille <thomas.bonnefille@bootlin.com>, 
-	Ze Huang <huangze@whut.edu.cn>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, 
-	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH net-next RFC 0/3] riscv: dts: sophgo: Add ethernet
- support for cv18xx
-Message-ID: <jhw5maxfyowusq4ik24zrvlpjpj6vk5wqpfj6rhgb6b3muftec@5pumwwambikx>
-References: <20250611080709.1182183-1-inochiama@gmail.com>
- <PN0P287MB225839D83F1A65D65D3EA6B9FE75A@PN0P287MB2258.INDP287.PROD.OUTLOOK.COM>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XJ0YgZSU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749637281; x=1781173281;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=T9VrFQv/NeLSLK+q9Ecj7niBwwBsl1o+NOb3R8Du03Y=;
+  b=XJ0YgZSUrS50B/qespSNLdWixehhDrG6hcDSDCLFZylLOssqeaHWwIm8
+   wCdVwVwJlJJNRikf74eK2MaD071P5OubkIfcY/3deg9f3JrcrMhLrSFiC
+   vKdkqpDNeV8hIvmII4AVLkxUF2JMykM+t3pr6q0AJcjcfk3chMMfGCPXt
+   U0Ph/rB+1UdVXwNRCssrmf7IVMRy80cWiZY6EWmVlwsX58y5NeP3xusGC
+   BYGzLTFMmpUWUeC+drKE3NPPpW36f7sGJaAIlL0wWAdeT+FDBvLVmY01c
+   aaAI/XZPO+IiNsMSXFHSY/L95aTzP3NJa5ibau7lehgqEqpAjuxQFLdIR
+   Q==;
+X-CSE-ConnectionGUID: 6dULxx1XRDKec37zlXFtbA==
+X-CSE-MsgGUID: mlnB3qGDRPaYBgDzs1o3fw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="69215072"
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="69215072"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 03:21:20 -0700
+X-CSE-ConnectionGUID: o1L4NfMpQvm7DoQPy7hncg==
+X-CSE-MsgGUID: C6eYI9dvRfSlyUXXVpZidg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="184357097"
+Received: from kuha.fi.intel.com ([10.237.72.152])
+  by orviesa001.jf.intel.com with SMTP; 11 Jun 2025 03:21:18 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 11 Jun 2025 13:21:16 +0300
+Date: Wed, 11 Jun 2025 13:21:16 +0300
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Tomasz Michalec <tmichalec@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Konrad Adamczyk <konrada@google.com>, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, chromeos-krk-upstreaming@google.com
+Subject: Re: [PATCH] usb: typec: intel_pmc_mux: Defer probe if SCU IPC isn't
+ present
+Message-ID: <aElYnJOpoGbrg-6u@kuha.fi.intel.com>
+References: <20250610154058.1859812-1-tmichalec@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,14 +62,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <PN0P287MB225839D83F1A65D65D3EA6B9FE75A@PN0P287MB2258.INDP287.PROD.OUTLOOK.COM>
+In-Reply-To: <20250610154058.1859812-1-tmichalec@google.com>
 
-On Wed, Jun 11, 2025 at 06:12:54PM +0800, Chen Wang wrote:
-> Is it should be v2? I see an old one https://lore.kernel.org/linux-riscv/20241028011312.274938-1-inochiama@gmail.com/.
+On Tue, Jun 10, 2025 at 05:40:58PM +0200, Tomasz Michalec wrote:
+> If pmc_usb_probe is called before SCU IPC is registered, pmc_usb_probe
+> will fail.
 > 
+> Return -EPROBE_DEFER when pmc_usb_probe doesn't get SCU IPC device, so
+> the probe function can be called again after SCU IPC is initialized.
+> 
+> Signed-off-by: Tomasz Michalec <tmichalec@google.com>
 
-I think it is OK to treat as v1, as this is originally designed to 
-be submit with the mdio driver. I split it due to the dependency.
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-Regards,
-Inochi
+> ---
+>  drivers/usb/typec/mux/intel_pmc_mux.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/typec/mux/intel_pmc_mux.c b/drivers/usb/typec/mux/intel_pmc_mux.c
+> index 65dda9183e6f..1698428654ab 100644
+> --- a/drivers/usb/typec/mux/intel_pmc_mux.c
+> +++ b/drivers/usb/typec/mux/intel_pmc_mux.c
+> @@ -754,7 +754,7 @@ static int pmc_usb_probe(struct platform_device *pdev)
+>  
+>  	pmc->ipc = devm_intel_scu_ipc_dev_get(&pdev->dev);
+>  	if (!pmc->ipc)
+> -		return -ENODEV;
+> +		return -EPROBE_DEFER;
+>  
+>  	pmc->dev = &pdev->dev;
+>  
+> -- 
+> 2.50.0.rc0.604.gd4ff7b7c86-goog
+
+-- 
+heikki
