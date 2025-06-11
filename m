@@ -1,66 +1,65 @@
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BEDA24679B
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:33:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6997E248888
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 21:33:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749677633; cv=none; b=CgskKT75hRdguSPAyJguiiOPH8nfwVrZYPSXBf3B4qcWVgATV4IcxSv7s67OoH0743BhNd5bFTtaBOPMtiZjOkQ/SdBmYdME81eKakRKglJu3AK2T4RZKoOTrHdPlrkZR1UlcsN3P7NWu4qeYfA5d6yu5TKWcjIHNZHYyP4FV/8=
+	t=1749677635; cv=none; b=pxrW82mojMhHRYz8psTjftFBaa65i9BCNGQdElQpSIUiNhUO6gc1421FzbdRd1XGYfOuMUw3xTnbk4CY81EbZ8zNFkECfTcdklZoimwiJPS8x6Ly34RtdqazWvcb8kKJKwCieHOdvxaaRTxVaUNh3x2muonZJDCsQuMtixDHjpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749677633; c=relaxed/simple;
-	bh=LlWi7e9nfRBdZldq8Xrczi7rWR0APRpPRo7NBynoOIM=;
+	s=arc-20240116; t=1749677635; c=relaxed/simple;
+	bh=+UrdvpKib6PZ15hVhO/T6ICol7iFeKJg7nNENfElKdg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eI/E077k02rUPULHnkNx9t1fTg4XQwgEvYKIav/EoBZUzt3P8w+tlO5WyQXOAJHygKDwHTXteEuXt9DGTUmzOY2n+gMuPkczl3rsLUEsQCAHsNTAraV4mgW34i6NDRjJFnwRwzZsQrtn7/5SKWxCNT3gshDikaq1Kg4Jwm//rN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=DCjWpjJi; arc=none smtp.client-ip=209.85.167.176
+	 In-Reply-To:To:Cc; b=lEh75jaZ8E/Wy03hpj/9R3Xhyq/jb6Nfh1hz6Ez42xTJ7sIQP1CB1Kz+GiBdF+ZHSVK+MpUIYR2t4IplTDRQmq3k7OhtHJabH5DLGxqaU4dhMy35hPgSqtQ4DlPhUSfZcNH3nnSORqCqduyNBDTgEsSr1tRuCDlxkOHV1QS2yxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=i0HX7Xye; arc=none smtp.client-ip=209.85.167.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="DCjWpjJi"
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-408d7e2ad03so188232b6e.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:33:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="i0HX7Xye"
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-407aaace4daso149168b6e.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:33:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749677631; x=1750282431; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1749677632; x=1750282432; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Z4SaXSyEnDBgBJat/vCjlAxTbS9Xx4wchBNLXn8gtEQ=;
-        b=DCjWpjJia/yjAe+sOB/UyMTZrT6vczMvTqoXb52DkGNqNX+WOciA078zvXCT5eYkHQ
-         aLFbQEFMgkaibkbUPpitYVEIiqErSyfAgRaLMbagTPxiPENWAxfv7YnlXBhx+KhDiYKA
-         hQoKJH/IUXTh88kXEulj4uxKA69PsraFHdZ47xZtswAGZP4N0KPlEA/gBzfzmN9+7oiN
-         HJBcv1rTEGNl18CC/sEZSbNgx6HJjiUDiMrMYqH3mSq8UGCHA2BlhVa3ezFbxD19499q
-         iym2DVXPhxDg33MfndvYEdQ0MoETnVwfztywqEqF1NdInfDusHOoxqfZxAgvo/OSBQJY
-         aFNw==
+        bh=8OTSXfEM4NzvQUr9h5Q4lURNoh1I+2//AZVGJRIuPek=;
+        b=i0HX7Xyeq3GOLWAIAqB2C9YDN5SoksCfwsYpgrMJuvhXyooi0O5LkpKrqZVdxGjKqD
+         K5siStGPAvRu6akKaxLbusA/PCEqB2ibFIO6Wzvm6LMCBqpe3tzX36ia7OlWE/fZsdQy
+         Df3Gpy2iHQ3zOXi3W2RAFfc7l47eIe9wUpXmh3hiu7gpM2fnb7QgtD+cIUU26BmGo27X
+         d6AzvQdtHSlD/jNRrZrWmODwmTSw9o88f30LwSOGxTDAYuIAnEF2Wj36NZD8LIarCStN
+         4VFPKAk7gv9LMkJcvHuBxT7/RFQW9wjcFMP0DlhHsK25aYqAFwjnI0NTf37Wx3S0em2i
+         ZTEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749677631; x=1750282431;
+        d=1e100.net; s=20230601; t=1749677632; x=1750282432;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Z4SaXSyEnDBgBJat/vCjlAxTbS9Xx4wchBNLXn8gtEQ=;
-        b=aZYKPnD4J76EftBkcCEYB+DqdD5LYp8WbEl6Fqfv/Pil/Aljb5cv1gLdDqJMWsRgd/
-         efJDPXxBXMVnWxE2rvR1W0JeM5Dh1kOBpj3iwH8rM8XZTe465O1BX7LShrXJ22DvLiyW
-         7ioAG5mrcpMhTYUC9MFgc043ZWTujCGrYcHMpztyTGluVesK9KJOngMRuqNtgkI+tQp5
-         MITPXI62AB6AZ0ZOEuurlIg2FwHFM5gL43F1VcIx3jEFBEKoyCF+/OmpgSgGJtou5JSg
-         XYEskJwBhHtT69MlS7A2MM25oG3v1vwMQQgTpyAPVuBeXOVuLMVurw2dUwit5sXYgWdP
-         Jt+w==
-X-Forwarded-Encrypted: i=1; AJvYcCWbgc5RHbftyvLBDjkjkC7lHCcjoRzB6qXjK8hFz1FxilVo9R2gNAHhGjJK/rbmMh9xzD6Nb3fVVctPlos=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzft28GMuGuDDDtvt+rrXXjBrRrxWhDuIWfLz65UEh/NEGtnuJA
-	O0dVFyMLV+jXEwGpb9vTD6i9ZazDACUQxciw4GMUME8eqOSp8ut3UDiIfVRn/TKxoqg=
-X-Gm-Gg: ASbGncuhQUqwvXGj8D5gd39sy2RJzb2Y7GwWruFieCBBhUNHDKGGNFQ0WoNcafVt4RG
-	k2AjgrHUyxYTjtLXJnVDrHiuo75PBHeWldi8TDn2Hs8tPfVq0cebOjWce3lRHjE8qI3/eLuLtee
-	zOKTUB7tntIjAEz55NwD7zDo5RxqcV8BLY4vTjGZa6/adc91rv3C0fr1z8AScQNrHXGlOMyB5tN
-	BR0k3mMO1cQBEDQWsfAxPnOENfSuJLHsk49vlXucJ4D9Eyqa1d/8nI9SQpU2fI0c+JsMyRcSow2
-	rTjPnzoCGPUsCJaK7FBLtuhrKpVwbYnBRMdNSFBBY+9bIuVfp6rGg47B2mbFmFVN4m7BC4PeNNn
-	LpHE=
-X-Google-Smtp-Source: AGHT+IEinQKOQJo+bthrujO46CMI/J1E68B/eqmJGPvBJm1AVFdFm9iBX53E523/hJ1j1GrhDFz2jQ==
-X-Received: by 2002:a05:6808:3190:b0:404:1898:c82 with SMTP id 5614622812f47-40a660a144dmr869806b6e.32.1749677630714;
-        Wed, 11 Jun 2025 14:33:50 -0700 (PDT)
+        bh=8OTSXfEM4NzvQUr9h5Q4lURNoh1I+2//AZVGJRIuPek=;
+        b=RQR5nH/k0VQmVlToMFq3hMeWsfKtajSb7StFQVNYupgRmwbScN1fWitTSFgL4xsiR0
+         qkHTxcoqVdLhN1p7ggM75wVqBajOSt/fpbO2/e0jjHLr3jBZ0lKL/Ko+0ZpSyEHw4Hw/
+         sUwvMl4W4zLieSGkq44wFVjJTJOVccR0gJgRIyRg9Lcc3ywj6TxBf02I/vBSQWpSFag5
+         xnqHi6dxtSIcGCt/6ZD2XLMlQ+5kI5FrQuF6xPl/PbYNT5OCIPriRJQR2q2ffDIEggP8
+         /TpJa1ajJc4/dMUigfGUQR7kNcOkqK3cA6mzk9ABnOOC6qL1toXTDTJpQH0BMeW7BSPW
+         K0HQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWfu3lpymGIsbPHZtQbfqcIzlvOnZ9GtEBwyt/rNxidi+JGzn5FFFILU5tGuEACvXgsUZQ2XI0KHW0EHl0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzt/jvRuKfYiRYPF7gjyTFy1nA2Ql8OgkIzN8Abu+K/Bpj51Xvn
+	Y5pkQtBRkC+sOaBdgEiPJO/0VYKtFdrw4xTm86QquIZBPoFbKDtf8rOvjdTl3HN2LT8=
+X-Gm-Gg: ASbGncu9F7+6dlHsNmFsauKYGGY0NElSBYZBw4XU5jA3YBgyld+ub479XJxKhk1ecuR
+	9r7fGJQ+GweXKxDZX1Ek1civaCftcvuhkKeAajhqXiFEYx5z1/e4lfV00x1yP0qOlRPBaj4iywP
+	SoeDheWYp+vmqaLS5Kgz/LjcVD6z0sjfKspnof4mIAkcw5NfyVZWeWTCr//Id0RY4z6r+4NU8Ml
+	Yfz6xZ5AR9X0Quwkvwep7PDeKmPFXhxrjurhfwPeKRQ956Ikjoyv8xPLYOSvnn314nG4xvEivfB
+	J4agCAVLzJg7cd2kTTLwqb7paHfb3vE5eVu9BppSRObtYTpfLQxnbFQVNXKSLaVWxb/x
+X-Google-Smtp-Source: AGHT+IHHvkHFsG56i79uH3ZJj0ZX2FQ7Uce2eVoVKngIj1ZD4gf1DWEsuu9YbaODZNdOFjLj6X/oSw==
+X-Received: by 2002:a05:6808:3510:b0:3fe:af0b:22f7 with SMTP id 5614622812f47-40a66a70dffmr413438b6e.11.1749677632567;
+        Wed, 11 Jun 2025 14:33:52 -0700 (PDT)
 Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:4753:719f:673f:547c])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40a682fb0bdsm2262b6e.23.2025.06.11.14.33.48
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40a682fb0bdsm2262b6e.23.2025.06.11.14.33.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 14:33:50 -0700 (PDT)
+        Wed, 11 Jun 2025 14:33:51 -0700 (PDT)
 From: David Lechner <dlechner@baylibre.com>
-Date: Wed, 11 Jun 2025 16:33:04 -0500
-Subject: [PATCH v3 4/5] iio: amplifiers: ada4250: move offset_uv in struct
+Date: Wed, 11 Jun 2025 16:33:05 -0500
+Subject: [PATCH v3 5/5] iio: amplifiers: ada4250: use dev_err_probe()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +68,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250611-iio-amplifiers-ada4250-simplify-data-buffer-in-init-v3-4-bf85ddea79f2@baylibre.com>
+Message-Id: <20250611-iio-amplifiers-ada4250-simplify-data-buffer-in-init-v3-5-bf85ddea79f2@baylibre.com>
 References: <20250611-iio-amplifiers-ada4250-simplify-data-buffer-in-init-v3-0-bf85ddea79f2@baylibre.com>
 In-Reply-To: <20250611-iio-amplifiers-ada4250-simplify-data-buffer-in-init-v3-0-bf85ddea79f2@baylibre.com>
 To: Lars-Peter Clausen <lars@metafoo.de>, 
@@ -80,41 +79,42 @@ To: Lars-Peter Clausen <lars@metafoo.de>,
  Andy Shevchenko <andy@kernel.org>
 Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=843; i=dlechner@baylibre.com;
- h=from:subject:message-id; bh=LlWi7e9nfRBdZldq8Xrczi7rWR0APRpPRo7NBynoOIM=;
- b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoSfYpEfFW7bxJ7cb0xHYFKY86SyYWWpIEWzPc+
- 2wFe2i12x6JATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaEn2KQAKCRDCzCAB/wGP
- wMZSB/9SYHpDxEcALA6ygZ6HAblzs7li7WWy2wEqtsjhSHzE5BqETXVQmyuHfqZqN/uxsnpYGQH
- xyLwxxT3wq1+a8PUn442ON1x4iRSGj8RPycUBF06CsRf7yU0Ipm5fvicC2pOLsL1C/wyj1tSdq6
- daNjsLbxatI6LfvIEN7Xmo4mCyu2f8fu2LfYNM8yBKh11PUUbVppywpcZxkBiQXXw/qFyX8d7eZ
- JRWmY5l++mFCSy5U9eNNEI8t2/zSltkgF2gdFgX8ukjnQQRfTpse8EsUQxHbTGwGg/GHEzW3HiE
- Fksx2xtB2iONCEfs+lMfXv0dFniVASBAQKBbLDeKR0rHZS4L
+X-Developer-Signature: v=1; a=openpgp-sha256; l=856; i=dlechner@baylibre.com;
+ h=from:subject:message-id; bh=+UrdvpKib6PZ15hVhO/T6ICol7iFeKJg7nNENfElKdg=;
+ b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoSfYwMFTQ8L5z5An13XpNpztYa/Fsr66xfTjAO
+ aTNC8++IIaJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaEn2MAAKCRDCzCAB/wGP
+ wMYCCACFpuIYSrVhrd9L04vPaIBden76mfr11q1AdvBFTtXXtj4AJawZ9JNmpDY+PjEqr2pdgP2
+ 8HFjGcGdpEhu0C9femdF5pHA447DPZSo3DaVwB9Trmcxpe7AMvkwIu1JAt38FUwNGqTtfWclV1o
+ XJIKiVnOLc1Dw33HdOC/BWUL0/z1epeigIVUTk6X7VkaGcwRUiIBHtkicx5uK3E6Zuqa5ZSNIWU
+ 52C8AxvgCS7jcGO6ZgoPWw7mXBLBsGLWC6SO3cROfhu32SU0I6oaMKJGoNf8dFld5fwGawlWRue
+ L1AjDSHH+p5SozGvPlfUUpsBlzdI2FQyh3KRNVUyX52ZyxXv
 X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
  fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
 
-Move offset_uv in struct ada4250_state. This keeps things logically
-grouped and reduces holes in the struct.
+Use dev_err_probe() when returning an error in the probe function.
 
 Signed-off-by: David Lechner <dlechner@baylibre.com>
 ---
- drivers/iio/amplifiers/ada4250.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iio/amplifiers/ada4250.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/iio/amplifiers/ada4250.c b/drivers/iio/amplifiers/ada4250.c
-index c367c53a075b26327a221e0c3a9dc8e788891f32..d20ca410c506226fce7f172632d46b2ebb140a12 100644
+index d20ca410c506226fce7f172632d46b2ebb140a12..40f396ea906950ab79bf72cdb162794e95f76094 100644
 --- a/drivers/iio/amplifiers/ada4250.c
 +++ b/drivers/iio/amplifiers/ada4250.c
-@@ -59,9 +59,9 @@ struct ada4250_state {
- 	/* Protect against concurrent accesses to the device and data content */
- 	struct mutex		lock;
- 	int			avdd_uv;
-+	int			offset_uv;
- 	u8			bias;
- 	u8			gain;
--	int			offset_uv;
- 	bool			refbuf_en;
- 	__le16			reg_val_16 __aligned(IIO_DMA_MINALIGN);
- };
+@@ -351,10 +351,8 @@ static int ada4250_probe(struct spi_device *spi)
+ 	mutex_init(&st->lock);
+ 
+ 	ret = ada4250_init(st);
+-	if (ret) {
+-		dev_err(&spi->dev, "ADA4250 init failed\n");
+-		return ret;
+-	}
++	if (ret)
++		return dev_err_probe(&spi->dev, ret, "ADA4250 init failed\n");
+ 
+ 	return devm_iio_device_register(&spi->dev, indio_dev);
+ }
 
 -- 
 2.43.0
