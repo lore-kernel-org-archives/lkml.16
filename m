@@ -1,178 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 655C7231A41;
-	Wed, 11 Jun 2025 07:32:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2531822CBFA
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 07:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749627124; cv=none; b=LA+FUy3Urm26SOUUe/iDu/yV5qmu3rKBi6speqsAXnzUp22NFK4QOUSEZZn0hF3c1f7vDTsTjymL/itrIZ+VL2AsWROjYaXGnw+dvX9dmPJx1jkOiU/h1R1dBuL0Xt1zXjn0TVxEsIWz1QhovS7UlanRRKdf448UB/wpws4K+70=
+	t=1749627186; cv=none; b=PkfYw0xQbz3CQ2W2Yz96v5106GpqYVkRCJmw7ZR0cTFqLsMSeOQdbWh4o3rpfBJ0MARWVO6eWdfpyEDbtL03f6H7PqdQ3vpcNGduQKtNMAl1gD9WPBS4vwhLFbKuJb0iruj53irWvBbsqYM0VovWnbjB+pFgSGaOT0RukyT04U0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749627124; c=relaxed/simple;
-	bh=mcs2Gho/gf2h14rpJHCrwPe28KQkUL6hXKPCa0ALDxQ=;
-	h=Content-Type:Date:Message-Id:From:To:Subject:References:
-	 In-Reply-To; b=EexQN0j/3lBogq1ZJpub7FpSsg0OeLyRyMP6X5O8FTzxZicDd5X6I5oW8BqH4Gx50mrVKOnWcXqY8YzJVzFEuf5t64XLjsZ4pyH/Ph44rntzpztfwFZyHTt1a21RzQz91UcgjtzGrHYJX4+zRSom45AVG3U3o/GnhxV2QI/VxUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nBWyQW8h; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nBWyQW8h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 604FBC4CEEE;
-	Wed, 11 Jun 2025 07:32:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749627123;
-	bh=mcs2Gho/gf2h14rpJHCrwPe28KQkUL6hXKPCa0ALDxQ=;
-	h=Date:From:To:Subject:References:In-Reply-To:From;
-	b=nBWyQW8h29cFfSv/z/4jGHtlbhBwY9wMDtAQQtUGNi8WzQkGAP7OXXDN99JSIBBnS
-	 D3j7k9mwG74jeuALaoYhwle01X9Y0595EQ4l7iXIZxzxtGCVWWfaHVf7//XjjQqi4M
-	 5bPKamPPjt/gN2CFQbaC9v92pBpKPDwJ//qSM5HGFof9te2Qfi7P6iu+U4wUxxHsAD
-	 rmZVYIxvDQPnajlf2aRosJlIjO0/qFL9e8NRqdDoRy1u4WFIhwNuhK6ZavFSlHYXAO
-	 +JQ85kA0lCbLAbEFCmBy9OfmgOYQgqTbLUPSxS+Rjyj72ZwjJC3vjFtVksFgdOcFs1
-	 vN2iBFsTf9wsQ==
-Content-Type: multipart/signed;
- boundary=8a3e323f28b4897e5ad249081ea4429b39cc85565426c3d93fcfc253e353;
- micalg=pgp-sha384; protocol="application/pgp-signature"
-Date: Wed, 11 Jun 2025 09:31:59 +0200
-Message-Id: <DAJJ1UHCLV0M.2GGHO5PDRWMYH@kernel.org>
-From: "Michael Walle" <mwalle@kernel.org>
-To: <Manikandan.M@microchip.com>, <tudor.ambarus@linaro.org>,
- <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
- <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
- <claudiu.beznea@tuxon.dev>, <pratyush@kernel.org>,
- <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
- <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>
-Subject: Re: [PATCH v3 3/3] ARM: dts: microchip: sama5d27_wlsom1: Add
- nvmem-layout in QSPI for EUI48 MAC Address
-X-Mailer: aerc 0.16.0
-References: <20250521070336.402202-1-manikandan.m@microchip.com>
- <20250521070336.402202-4-manikandan.m@microchip.com>
- <a15fd377-1828-4cb5-8c7b-7d26ea2a7733@linaro.org>
- <759e4a1e-6af4-4bf9-9a95-01a7f6faaf46@microchip.com>
-In-Reply-To: <759e4a1e-6af4-4bf9-9a95-01a7f6faaf46@microchip.com>
+	s=arc-20240116; t=1749627186; c=relaxed/simple;
+	bh=EDJlGD4wfKphKeMYD141vWBxv2UxlZLo8grwzYmcu7U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sLPf7EZDFqJ2HikAL6vu9blr/+HQBH4hxKjjvO+peSx+kPCSQuqVsG/XctWkWYri6mIoviFASIcwrPY4piUMZkBI2f+cH9JcYxsGxlXZMdxrKc6DeUV3bxhe9nfRn1uBiWvv4jtt8JQMqQvv3oNI9ZALlnf4tzArW68bkDpicRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <sha@pengutronix.de>)
+	id 1uPFwv-0007lf-9R; Wed, 11 Jun 2025 09:32:41 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <sha@pengutronix.de>)
+	id 1uPFwt-002uFg-1G;
+	Wed, 11 Jun 2025 09:32:39 +0200
+Received: from sha by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <sha@pengutronix.de>)
+	id 1uPFwt-006l8F-0q;
+	Wed, 11 Jun 2025 09:32:39 +0200
+Date: Wed, 11 Jun 2025 09:32:39 +0200
+From: Sascha Hauer <s.hauer@pengutronix.de>
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>,
+	MyungJoo Ham <myungjoo.ham@samsung.com>,
+	Kyungmin Park <kyungmin.park@samsung.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	kernel@collabora.com, linux-pm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] PM / devfreq: rockchip-dfi: add support for LPDDR5
+Message-ID: <aEkxF2Q2lBdfmUuJ@pengutronix.de>
+References: <20250530-rk3588-dfi-improvements-v1-0-6e077c243a95@collabora.com>
+ <20250530-rk3588-dfi-improvements-v1-2-6e077c243a95@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250530-rk3588-dfi-improvements-v1-2-6e077c243a95@collabora.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
---8a3e323f28b4897e5ad249081ea4429b39cc85565426c3d93fcfc253e353
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+On Fri, May 30, 2025 at 03:38:09PM +0200, Nicolas Frattaroli wrote:
+> The Rockchip RK3588 SoC can also support LPDDR5 memory. This type of
+> memory needs some special case handling in the rockchip-dfi driver.
+> 
+> Add support for it in rockchip-dfi, as well as the needed GRF register
+> definitions.
+> 
+> This has been tested as returning both the right cycle count and
+> bandwidth on a LPDDR5 board where the CKR bit is 1. I couldn't test
+> whether the values are correct on a system where CKR is 0, as I'm not
+> savvy enough with the Rockchip tooling to know whether this can be set
+> in the DDR init blob.
+> 
+> Downstream has some special case handling for a hardware version where
+> not just the control bits differ, but also the register. Since I don't
+> know whether that hardware version is in any production silicon, it's
+> left unimplemented for now, with an error message urging users to report
+> if they have such a system.
+> 
+> There is a slight change of behaviour for non-LPDDR5 systems: instead of
+> writing 0 as the control flags to the control register and pretending
+> everything is alright if the memory type is unknown, we now explicitly
+> return an error.
+> 
+> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> ---
+>  drivers/devfreq/event/rockchip-dfi.c | 84 ++++++++++++++++++++++++++++--------
+>  include/soc/rockchip/rk3588_grf.h    |  8 +++-
+>  include/soc/rockchip/rockchip_grf.h  |  1 +
+>  3 files changed, 73 insertions(+), 20 deletions(-)
+> 
+> @@ -147,21 +200,7 @@ static int rockchip_dfi_enable(struct rockchip_dfi *dfi)
+>  			       DDRMON_CTRL_SOFTWARE_EN | DDRMON_CTRL_HARDWARE_EN),
+>  			       dfi_regs + i * dfi->ddrmon_stride + DDRMON_CTRL);
+>  
+> -		/* set ddr type to dfi */
+> -		switch (dfi->ddr_type) {
+> -		case ROCKCHIP_DDRTYPE_LPDDR2:
+> -		case ROCKCHIP_DDRTYPE_LPDDR3:
+> -			ctrl = DDRMON_CTRL_LPDDR23;
+> -			break;
+> -		case ROCKCHIP_DDRTYPE_LPDDR4:
+> -		case ROCKCHIP_DDRTYPE_LPDDR4X:
+> -			ctrl = DDRMON_CTRL_LPDDR4;
+> -			break;
+> -		default:
+> -			break;
+> -		}
+> -
+> -		writel_relaxed(HIWORD_UPDATE(ctrl, DDRMON_CTRL_DDR_TYPE_MASK),
+> +		writel_relaxed(HIWORD_UPDATE(ctrl, ctrl_mask),
+>  			       dfi_regs + i * dfi->ddrmon_stride + DDRMON_CTRL);
 
-Hi,
+You could move the HIWORD_UPDATE(ctrl, ctrl_mask) to
+rockchip_dfi_ddrtype_to_ctrl() and by that you only have to pass one
+u32* to that function.
 
-On Mon Jun 9, 2025 at 11:27 AM CEST, Manikandan.M wrote:
-> >> Add nvmem-layout in QSPI to read the EUI48 Mac address by the
-> >> net drivers using the nvmem property.The offset is set to 0x0
-> >> since the factory programmed address is available in the
-> >> resource managed space and the size determine if the requested
-> >> address is of EUI48 (0x6) or EUI-64 (0x8) type.
-> >> This is useful for cases where U-Boot is skipped and the Ethernet
-> >> MAC address is needed to be configured by the kernel
-> >>
-> >> Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
-> >> ---
-> >>   .../boot/dts/microchip/at91-sama5d27_wlsom1.dtsi    | 13 +++++++++++=
-++
-> >>   1 file changed, 13 insertions(+)
-> >>
-> >> diff --git a/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi b/a=
-rch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
-> >> index b34c5072425a..be06df1b7d66 100644
-> >> --- a/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
-> >> +++ b/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
-> >> @@ -210,6 +210,9 @@ &macb0 {
-> >>        #size-cells =3D <0>;
-> >>        phy-mode =3D "rmii";
-> >>
-> >> +     nvmem-cells =3D <&mac_address_eui48>;
-> >> +     nvmem-cell-names =3D "mac-address";
-> >> +
-> >>        ethernet-phy@0 {
-> >>                reg =3D <0x0>;
-> >>                interrupt-parent =3D <&pioA>;
-> >> @@ -238,6 +241,16 @@ qspi1_flash: flash@0 {
-> >>                m25p,fast-read;
-> >>                status =3D "disabled";
-> >>
-> >> +             nvmem-layout {
+That's just nitpicking though, so for the series:
 
-IMHO this should be "sfdp {".
+Reviewed-by: Sascha Hauer <s.hauer@pengutronix.de>
 
-> >> +                     compatible =3D "fixed-layout";
+Sascha
 
-Please read my feedback on the first version again..
-
-For the DT maintainers. The SFDP is a small table based content that
-provide basic information about the flash. There are standard tables
-which are specified by the JEDEC standard and there are vendor
-tables, most of the time without proper documentation (or none at
-all).
-
-Somehow we need to specify at what table we want to look at. I'd
-like to see a binding which can potentially expose anything inside
-the SFDP.
-
-So I've suggested to use "compatible =3D jedec,sfdp-vendor-table-NNNN"
-where NNNN is the table parameter id. Additionally, the standard ids
-could have names like "jedec,sfdp-bfpt" (basic flash parameter table).
-
-So in your case that would be:
-
-flash {
-	sfdp {
-		mac_address: table-1 {
-			compatible =3D "jedec,sfdp-idNNNN";
-		};
-	};
-};
-
-I don't know what NNNN is. Could you please provide a dump of the
-sfdp of your flash.
-
--michael
-
-> >> +                     #address-cells =3D <1>;
-> >> +                     #size-cells =3D <1>;
-> >> +
-> >> +                     mac_address_eui48: mac-address@0 {
-> >> +                             reg =3D <0x0 0x6>;
-> >> +                     };
-> >=20
-> > How would this work if in the future the mchp vendor table adds some
-> > other info that needs to be referenced as nvmem? How do you distinguish
-> > the info from the table?
-> > Would it be possible to have some kind of address and size to reference
-> > the SFDP?
->
-> I was previously advised not to hardcode the offset in the Device Tree=20
-> [1]. In the current implementation (patch 1/3), the read callback for=20
-> the MCHP vendor table distinguishes between EUI-48 and EUI-64 MAC=20
-> addresses based on the nvmem size, which corresponds to the size of the=
-=20
-> respective MAC address.
->
-> [1] --> https://lore.kernel.org/lkml/D889HZF97H8U.1UUX54BAVLAC3@kernel.or=
-g/
->
-> >=20
-> >> +             };
-> >> +
-> >>                partitions {
-> >>                        compatible =3D "fixed-partitions";
-> >>                        #address-cells =3D <1>;
-> >=20
-
-
---8a3e323f28b4897e5ad249081ea4429b39cc85565426c3d93fcfc253e353
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCaEkw7xIcbXdhbGxlQGtl
-cm5lbC5vcmcACgkQEic87j4CH/iI/AF7BJfA+KSiLsV4fBajupPz4g9JyqM/HMiU
-1Rmr20pIB/NGVrLU83A6cm2FAmW2fG05AYDdp52UY6901PGPiSuBwRsDzWnehg6M
-2zDhEhT7U7QBOD0n2PXk/uiGr5PakohwicQ=
-=N4uq
------END PGP SIGNATURE-----
-
---8a3e323f28b4897e5ad249081ea4429b39cc85565426c3d93fcfc253e353--
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
