@@ -1,139 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D30199E8D;
-	Wed, 11 Jun 2025 19:12:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4030922DA13;
+	Wed, 11 Jun 2025 19:15:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749669162; cv=none; b=C/+IfHS1KttjCexia2GJopxWkAHssGaRoqpSAxZYYSlAeRz5o8ipdI38ZNEHwlaDFEoDh25jfw77vzTT40H7UpCSpHlxBCTYuayS/uPm7fY974H38P7MH6GZXSNW+1sHXPDDYjafPCBbWU2cQMTgIkE3SV520y9vZGPNwidij+o=
+	t=1749669314; cv=none; b=RnyPfC22EJ1tnGGQKcqxw8qHt9hvTH56TK7dZuxuRIpI8gJu8U1J0dy0sohRN/RSp6/rvoEnu9+ymBB9bJ8iXa0/dobTj5pBYUZ++2WIfvIWCF8KXk7JglNc78itLMFfQBpYmYMTfS6vBld58fKpcJs2NQdcTG26t9A9XvmONHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749669162; c=relaxed/simple;
-	bh=MnB19TOfh+7ykleBocTv6CizHYIdFED5uoDIM0y6n9k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lJTBExV6f2PGdIh4PwpWCPvLDAjzpWrvQZYVCIRjEe3E+1vrmk/8V6GgHmlHPpEoyptMF5McIbeA/2x+V2LmzUt/l0mhxqP36dQlEkl5NWpl5tkNFdJ1Et5fdWyFBc86GsD0nZVPB4YVuCzm2A75/aGNYrQIcE6TrX+441gyZi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XqIX/i3f; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749669314; c=relaxed/simple;
+	bh=XDRjqbU5DtsKUsO3In3OMiwl7SJE7t5mIqtUFNA8LDU=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YLl8LndZ629dC+660viMUFx5ac/LTB1pp+VWBvxXJXh+6SmW+SbNnQl3Z2kdY5AxGyjFaFx8jGn46sEx07TF5PqOY1R5aomk/NKMuISM1NrrBMMfBEggPOwq04YF2fLviuYyGCWhSTUpA/AmOJYQ42XYI73DcE3LoaOBTreqhQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ERN7Dz6e; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XqIX/i3f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 775F2C4CEEA;
-	Wed, 11 Jun 2025 19:12:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749669161;
-	bh=MnB19TOfh+7ykleBocTv6CizHYIdFED5uoDIM0y6n9k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XqIX/i3fZR55ETgbwAWPhI0j5uEDBeW4vjrvwLkM2E1Tge9X2zRXHpj0sAFMSHd3J
-	 Kkaz0/TEmOasYiFG6a4lG6VJsLZh4glznnYUrsgP7/in94ur0D9faWikDPXyDPOtZK
-	 6eLG0cWS1X9i1+v2+HAqVhQ0ihjAqK1UhfCwqqk1WlEAYkrUQ9eDx8f8cdO+KXqGis
-	 vghYhn3FjVleOrD4smgdM/CfM/Rjyx8WEMuFquUBQ+S+C+A6UlXlNB6u/lurJ7LUMF
-	 xPWVRUpsHPIvTm42xXMaue+X3TKer3G2M+8nbet7moPc/V3VqZ5mSJzSmrmenLVt+9
-	 LteSgWdVkHlqQ==
-Message-ID: <47bcce06-9c08-40ee-a22a-bc168952b74a@kernel.org>
-Date: Wed, 11 Jun 2025 21:12:35 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ERN7Dz6e"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54d98aa5981so163488e87.0;
+        Wed, 11 Jun 2025 12:15:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749669310; x=1750274110; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ol/LB2Q3E1f7WEUHvJurPIDYLj8oiAF6d8R35khMIPY=;
+        b=ERN7Dz6e6ZFYwE31nE953PkBSfdkEktcHc4bym8f5AkpBiDRj/9QKei1RgmFhp73af
+         fYRojo+xmyOQInFbJ44mjjUIyZkNuMcPu4JKnzrFaQkbmcHfwklYKbeiUXRNYCyke8fl
+         d33b+/ofwTaoFsy4peLQqvgeHkYfgOKiPNp10pVoMwrrs+XXlT277KFcTP67gcRfcbTV
+         uPcifKuUJeozM6SWDUhBTCaaKDuB2TzXqQ1BvwBZ3vhZQ5DE/dOT13p/PjKVeb47NHtb
+         sZ/LT1U19/ECi+7Dri94pmcct0W2pu0SiFHVkhA4XclHUCMkn7KMkkZi8MO/yI3PohSS
+         vEBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749669310; x=1750274110;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ol/LB2Q3E1f7WEUHvJurPIDYLj8oiAF6d8R35khMIPY=;
+        b=ACmcsxbFzMEK5y03NjTY6Mh9R75tDetlNV3iQJmSnEFktXpoDdmG06wo/HqrAWkmoz
+         Zg6tUUqGbnicOC6qjkm3Zuz3HN2hrBT/5dmLNKZZqG9ckeFvtxj+e0Fr0Cq1N1k9taxN
+         tTIliUr84LlhyLexoRhSAotNtfReeEhd1ml50iqHoPEwxV/Gqlwv4GEVjzCkQWtMupBm
+         eK0pO679U7qSv1ufK/tpusJLBfGlAeh2JjOQ7o/NRmCUigYSSOlNpVY5nDraKES1h3QS
+         DmwvqCO5JowALC8uiASORrHpkxH2zaMcQd0jUkk7t1dS3l3716qTHavcnR099NnXchiV
+         5gpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUQB1tTBUFPrPRcwnNsKy56cuukpJPfwX4II7+OMkYJyFSuPcDwAXTTmivCu9E62zEEQfZUjXTf4BsKbOKT@vger.kernel.org, AJvYcCVOACUVwrVOLGmGQjVczBizSmkQvRcZHwzDjAlVW4+uRc81b+z3VPE+VflwJlkdG12JarWF@vger.kernel.org, AJvYcCVw+jOMl4YfTp40IMMWWGHYKFgseNi9dTacbXiD6Uy13WybgVWJVyDQcjS12QLnviw5B4lXl709ih3eB4sFeg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzS6JTMjV/SczX2DKs9wzQe+wmVr7s0arFBr/x0/6e+QzC1Jnwd
+	MsVzhlyGACEbHJoBq3tRgk0PdR0GR6lcasWkoKCiZrjlHInYYqL8P1YE
+X-Gm-Gg: ASbGncsYxNx4xBzY3/FoeNcIfTgq5CqPhiQHgOf+2tqnmBGhjKMdpqXD7ZHWbGbAFBa
+	ItcGApblSWeRriR6TN/b4wPbgo68JYVZIdSGSDhfwa+YRPcqlieuvt9xPb9zqjg5ypHFu37Gbhj
+	uHWdCZmSnDCObrmh+hCnju7cLWk6a3idwynMmwKoEGIwOhh1ITAmoCXsuJoBs1RxRRU8FKTHKO1
+	ulUEqj34S9ybNU8IPIdM8tJhjQNjpirDAgCL71erZ0c8UePMyERIUfbKqyUG0/xiHf2GU3PX0BN
+	uI2ucJEqVOXtZYut/DnFhRBIWrlAp92K4nD5Xxw=
+X-Google-Smtp-Source: AGHT+IHq6XcXyLVADx8RMzuVH5BPRhqzjkxeGqAjeZYBld0fa47RxN7jl9HZCkyGPvl7+TMeaaK4OA==
+X-Received: by 2002:a05:6512:a82:b0:549:887b:253f with SMTP id 2adb3069b0e04-553a6535b3emr24943e87.51.1749669309866;
+        Wed, 11 Jun 2025 12:15:09 -0700 (PDT)
+Received: from pc636 ([2001:9b1:d5a0:a500::800])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55384f3deeesm1408927e87.62.2025.06.11.12.15.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 12:15:09 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Wed, 11 Jun 2025 21:15:07 +0200
+To: syzbot <syzbot+80e5d6f453f14a53383a@syzkaller.appspotmail.com>
+Cc: akpm@linux-foundation.org, josh@joshtriplett.org,
+	kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	paulmck@kernel.org, rcu@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com, urezki@gmail.com
+Subject: Re: [syzbot] [bcachefs?] [rcu?] BUG: unable to handle kernel NULL
+ pointer dereference in rcu_core (3)
+Message-ID: <aEnVuzK7VhGSizWj@pc636>
+References: <aEmnv69zbkinkDVs@pc636>
+ <6849c49b.a00a0220.1eb5f5.00f2.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm64: dts: Add Apple SoC GPU
-To: fnkl.kernel@gmail.com
-Cc: asahi@lists.linux.dev,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Neal Gompa <neal@gompa.dev>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
- Janne Grunau <j@jannau.net>, linux-arm-kernel@lists.infradead.org,
- Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
- Maxime Ripard <mripard@kernel.org>, dri-devel@lists.freedesktop.org,
- Simona Vetter <simona@ffwll.ch>, David Airlie <airlied@gmail.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Thomas Zimmermann <tzimmermann@suse.de>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>
-References: <20250611-sgx-dt-v1-0-7a11f3885c60@gmail.com>
- <20250611-sgx-dt-v1-2-7a11f3885c60@gmail.com>
-Content-Language: en-US
-From: Sven Peter <sven@kernel.org>
-In-Reply-To: <20250611-sgx-dt-v1-2-7a11f3885c60@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6849c49b.a00a0220.1eb5f5.00f2.GAE@google.com>
 
-Hi,
-
-On 11.06.25 19:32, Sasha Finkelstein via B4 Relay wrote:
-> From: Sasha Finkelstein <fnkl.kernel@gmail.com>
+On Wed, Jun 11, 2025 at 11:02:03AM -0700, syzbot wrote:
+> Hello,
 > 
-> Add device tree entries for GPUs in M-series SoCs
+> syzbot tried to test the proposed patch but the build/boot failed:
 > 
-> Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
-> ---
->   arch/arm64/boot/dts/apple/t6000.dtsi        |  4 ++++
->   arch/arm64/boot/dts/apple/t6001.dtsi        |  4 ++++
->   arch/arm64/boot/dts/apple/t6002.dtsi        |  4 ++++
->   arch/arm64/boot/dts/apple/t600x-common.dtsi | 34 ++++++++++++++++++++++++++++++++++
->   arch/arm64/boot/dts/apple/t600x-die0.dtsi   | 28 ++++++++++++++++++++++++++++
->   arch/arm64/boot/dts/apple/t8103.dtsi        | 62 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->   arch/arm64/boot/dts/apple/t8112.dtsi        | 62 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->   7 files changed, 198 insertions(+)
+> failed to apply patch:
+> checking file kernel/rcu/tree.c
+> patch: **** unexpected end of file in patch
 > 
-> diff --git a/arch/arm64/boot/dts/apple/t6000.dtsi b/arch/arm64/boot/dts/apple/t6000.dtsi
-> index 89c3b211b116e96ee0a5ea0c923c3ab824008307..3b60842045d4c3277e9530a13ef2811774209697 100644
-> --- a/arch/arm64/boot/dts/apple/t6000.dtsi
-> +++ b/arch/arm64/boot/dts/apple/t6000.dtsi
-> @@ -16,3 +16,7 @@ / {
->   };
->   
+> 
+> 
+> Tested on:
+> 
+> commit:         aef17cb3 Revert "mm/damon/Kconfig: enable CONFIG_DAMON..
+> git tree:       upstream
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=523d3ff8e053340a
+> dashboard link: https://syzkaller.appspot.com/bug?extid=80e5d6f453f14a53383a
+> compiler:       
+> patch:          https://syzkaller.appspot.com/x/patch.diff?x=17de99d4580000
+> 
+#syz test
 
-[....]
-
->   	};
-> +
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		gpu_globals: globals {
-> +			reg = <0x0 0 0 0>;
-> +		};
-> +
-> +		gpu_hw_cal_a: hw-cal-a {
-> +			reg = <0x0 0 0 0>;
-> +		};
-> +
-> +		gpu_hw_cal_b: hw-cal-b {
-> +			reg = <0x0 0 0 0>;
-> +		};
-> +
-> +		uat_handoff: uat-handoff {
-> +			reg = <0x0 0 0 0>;
-> +		};
-> +
-> +		uat_pagetables: uat-pagetables {
-> +			reg = <0x0 0 0 0>;
-> +		};
-> +
-> +		uat_ttbs: uat-ttbs {
-> +			reg = <0x0 0 0 0>;
-> +		};
-
-With W=1 this results in a bunch of new warnings like
-
-arch/arm64/boot/dts/apple/t600x-common.dtsi:391.24-394.5: Warning
-(unit_address_vs_reg): /reserved-memory/globals: node has a reg or
-ranges property, but no unit name
-
-but I'm not sure it's possible to fix that without making up fake
-addresses that then get overwritten here. Would be nice to fix this some
-other way but I'm not sure how and so far we don't enforce "no
-additional W=1 warnings", so:
-
-
-Reviewed-by: Sven Peter <sven@kernel.org>
-
-
-
-Best,
-
-
-Sven
-
-
-
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index e8a4b720d7d2..14d4499c6fc3 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -3072,6 +3072,10 @@ __call_rcu_common(struct rcu_head *head, rcu_callback_t func, bool lazy_in)
+ 	/* Misaligned rcu_head! */
+ 	WARN_ON_ONCE((unsigned long)head & (sizeof(void *) - 1));
+ 
++	/* Avoid NULL dereference if callback is NULL. */
++	if (WARN_ON_ONCE(!func))
++		return;
++
+ 	if (debug_rcu_head_queue(head)) {
+ 		/*
+ 		 * Probable double call_rcu(), so leak the callback.
