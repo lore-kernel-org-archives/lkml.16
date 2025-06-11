@@ -1,211 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634212E6122;
-	Wed, 11 Jun 2025 11:46:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B651025BEF5;
+	Wed, 11 Jun 2025 11:46:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749642402; cv=none; b=W4hWz4smOPp6WRnLGxvtC8pjXbtvAGh7Om/8Yd8IlFFWTl9sWryZhYs9+pH3wvY5oZ3Gi51wpxvRS7RPDoKR6zFU7+0x1l/XiMEpbYQWmGUIukhavomXTq8GZuH+7HGvim269ffUbewKZkoe2yf5JntAYLeNFJbAZS9hFQBsAjA=
+	t=1749642416; cv=none; b=oZy2sk9nLGSgTVTUJzHtegiXO7JcDJqNIUNF3QzgXuvtp6Sz9fz/NfBnUIcCucqj+PbLkKeNP8eBHh2X7p9m/fpjtk/H9K80VBhvqAR4BTjrW5hgocdSahKafZju8sg6lEG/UKsTzwH5SesJ6zrCEkL6YIiZ7I+xk0SIsNHdWlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749642402; c=relaxed/simple;
-	bh=ZUlVFcUAC/pCaM5x+TevXdecSEVUqfUzanokBPqQUzY=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=qFk06tmoKFXaLltdQ59DypGUAcf6c9jmarzG6uHizqHgNqI15yz+GY3BmjLA84fYy22V6t/owRlsvfi3OO+V78U0f0fVSe/kixMXdGgjCDpwspflhEafHAZo4tYfzltRcRg303zdPkFXH5zi3+Dtvz4IlTnKADfVOfCJM7bb7/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LOBIM0P/; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749642416; c=relaxed/simple;
+	bh=1Vmq0G5G0jKDHDGJXI6e/ZacBmMDzC6HHXD4ZTz+mhs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=g6KViy6Xra+azBq8Hk/Sm33jRq2HybIxNg9/Yi2ZSQIve8YxzJjkN4xrTAsQYF1Nwg0HHc4rtqwr+3EpV5a+IL/3gM865zFFdGm1IyhnjHRgnrNdU1koMIP1zBTFGDk/kGTyj70w6WIVspbq76kjrNx3VOGVZWD3R6iR/rAcCA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lZE12aPi; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LOBIM0P/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749642400; x=1781178400;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ZUlVFcUAC/pCaM5x+TevXdecSEVUqfUzanokBPqQUzY=;
-  b=LOBIM0P/08vqRHDejOi4otruILXZsa9Cny9qj/Mgb9QH7f4DAlCEQbPy
-   Yz8i7XPoCU7APhNxcIYuLM6nDFMWWwyIiVTvH9qtGhHL73ZPbaxztJkYM
-   1duzxKF4Vy9ljonq6qJLrDH7ZytQiQ1aTTGzqaYxJ1DfO1DwhqQ9zC1jt
-   8NfiKharUSJso1m/GqgJIM+ojLAIz+KexOVKYGA3s37SZqo7vO7RYu3Ae
-   iUnM06tUur1dzJI8h7yNKwWF+Z6tE7Pqzk4kfNORb6d/RI4NEcdUL9RZu
-   M46thWZ14ntlOJBeZncDEd+yplPPzGoz7VQu5+EQie+qKoQOLL7RMwumK
-   g==;
-X-CSE-ConnectionGUID: X6HnY10dTQaEgYT+HE832Q==
-X-CSE-MsgGUID: T4WGC75ASGyPVnhYqNNt7w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="62434413"
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="62434413"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 04:46:40 -0700
-X-CSE-ConnectionGUID: GzZ1AoAWTkSRB75O7rUf/w==
-X-CSE-MsgGUID: /E7l+tARS7+Mk7ucpVjQlw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="152066028"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.183])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 04:46:37 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 11 Jun 2025 14:46:33 +0300 (EEST)
-To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    linux-serial <linux-serial@vger.kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 09/33] serial: 8250: remove CONFIG_SERIAL_8250_RSA inline
- macros from code
-In-Reply-To: <20250611100319.186924-10-jirislaby@kernel.org>
-Message-ID: <43385fba-407a-418a-d3df-ac50eaa761f8@linux.intel.com>
-References: <20250611100319.186924-1-jirislaby@kernel.org> <20250611100319.186924-10-jirislaby@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lZE12aPi"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-234a45e69c8so482135ad.2;
+        Wed, 11 Jun 2025 04:46:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749642413; x=1750247213; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fjWqiBDm0nvwj9CkSqR8k0GoBN5tkJezIwfnIgfr1fE=;
+        b=lZE12aPiurji4j4oPecweq2Wk3q/7W3cpMzxXUUsrGGnydAPpVyRrBA2JlxHTXLDKC
+         jPdP+SPkmDqvwNGBMlpzNU8kvtrLkZB1A1/TUyBhKh5D3PBmMN2fQmvc2z+LSeJVlOhN
+         vqTy3ox31b6Jr/LStjbGmKFGb0AO41qmxcvEhroLh506AeN590r6ExLoUcJy/BRAezVA
+         YBfQceHHOI+piUEZpQJpkvop+YV6ZYYTmFyrob6T7/OzFXglFOMcT2xILPNHKkA/ILvD
+         Eo8eEdRd2oWnU2L3E5cE0IfXdxXCkzXCUVcQKEsHWJ2+fzwG2W9XQrjYMLBpkbgEkSHd
+         TdpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749642413; x=1750247213;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fjWqiBDm0nvwj9CkSqR8k0GoBN5tkJezIwfnIgfr1fE=;
+        b=U7sD8vdP600EcyBEqE9o6yhzN1phW4jRLBG5HC5dqh8TO1dK950/JQWG5HtXFkPsbY
+         52g3/T+UVWPPBpQbTn6vSRg3sNjeA4GeLrZwXom14DtKXDbwemus4/rg7N5NOICip1ZJ
+         xvJniem0TdO+WyFCU0qNnCraMJkfmkVuoDL0GwuCh3gDFVwatTlDY0DzUy4sN5fPgs0h
+         q0P9+IFfm+lQrNZSqt1KvgShQLLa75/2UDhb4vJ4QyDpxz9nYXQw+deQkPyaw08ca02g
+         O/680Y4VEiSdjGd05fDdO7WoygQz8nyHudtiDuQX/XpTUcwscJ8trINKPOcUlF2l1p0W
+         cWew==
+X-Forwarded-Encrypted: i=1; AJvYcCUNvH1dyzJA5yfgvgRws2OZTw4LprE7pfAgkz4vUYtp8LuWYHNKcS31wQnwd5kTINSb/H7nAsE8GSLhXEU=@vger.kernel.org, AJvYcCUff1ry4mqgnu3l0OaAC0PFgyuGJt1nW6hQu7YHGhFEwzECI6ixgmJ5F8ZhQ5uKCTrXH5AbYftzzz+3rkYL9EE=@vger.kernel.org, AJvYcCWIuX36vDwN/ndo0VmSwy1+s+kie2BwhgEpFtPZH7884fo3nRsy0R8KxDzAE1u4yMLcIsP5arnqmAE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0BV0TYIVtPnz2S11V2UQFyiEZDghH7Fl/k1INtuvmM9cOmzbE
+	Lnq8hlscdsJhy3gWlsZdFoku5nCsyJDDtSkruFkntdDw7Cg75vUZWE7jzQ33jW9jL0s2GscBHx/
+	m8LijpmnKHEPWWIc46jWvNIsPsPwHx1E=
+X-Gm-Gg: ASbGncsLYteOuawNw2PMJEyYbcrz882AEfhItAaH03LMEvAove9rmepf8sddQ2MxYxd
+	Gm/nL4io9bHJBWbKA9i7oB3Ir5EK+pEdpQhgljrs91iWv30FqYvOombJ3qt1oYz1+zlAv2DxXKx
+	04rWoTuxNAWjUoVhYCu+GGBnYzm1r33YKVjd/N5jTMTDI=
+X-Google-Smtp-Source: AGHT+IEAkOiZNEkNpkBzHS7JLVKeGLFvXjY3JtxvmbIO55yJyWwHo+gCFBtPANQRLKT9IZ5Svvxp3Xsu3zCbP9CRHxo=
+X-Received: by 2002:a17:903:1a6f:b0:234:bfe3:c4b8 with SMTP id
+ d9443c01a7336-23641a8b1f2mr13819255ad.2.1749642412877; Wed, 11 Jun 2025
+ 04:46:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-462843366-1749642393=:957"
+References: <4823a58093c6dfa20df62b5c18da613621b9716e.1749554599.git.viresh.kumar@linaro.org>
+In-Reply-To: <4823a58093c6dfa20df62b5c18da613621b9716e.1749554599.git.viresh.kumar@linaro.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 11 Jun 2025 13:46:40 +0200
+X-Gm-Features: AX0GCFtUQb1VuES-5s_8BtAuzHpz1VaP_GiqWmmS9tyONSLXXcQH_X0BPBTkrdQ
+Message-ID: <CANiq72mP7tGzZM_f2gRSVcBw5a5Y7vMM3eOSvuAOK=yJeEmFBg@mail.gmail.com>
+Subject: Re: [PATCH] cpufreq: Convert `/// SAFETY` lines to `# Safety` sections
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, linux-pm@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, Jun 10, 2025 at 1:23=E2=80=AFPM Viresh Kumar <viresh.kumar@linaro.o=
+rg> wrote:
+>
+> Replace `/// SAFETY` comments in doc comments with proper `# Safety`
+> sections, as per rustdoc conventions.
+>
+> Also mark the C FFI callbacks as `unsafe` to correctly reflect their
+> safety requirements.
 
---8323328-462843366-1749642393=:957
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
++1 I guess the Clippy lint triggered when writing the section, right?
 
-On Wed, 11 Jun 2025, Jiri Slaby (SUSE) wrote:
+I think it would be nice to have a lint to catch this other case, i.e.
+using `// SAFETY`, so opened:
 
-> All these:
->   #ifdef CONFIG_SERIAL_8250_RSA
->   ...
->   #endif
->=20
-> in the 8250 generic code distract the reader. Introduce empty inlines to
-> handle the !CONFIG_SERIAL_8250_RSA case and handle the '#if's around the
-> RSA functions definitions.
->=20
-> This means rsa_autoconfig() and rsa_reset() functions were introduced to
-> contain the particular code.
+    https://github.com/rust-lang/rust-clippy/issues/15033
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+I also found a possible false negative (or positive, depends) related
+to this, so opened:
 
---=20
- i.
+    https://github.com/rust-lang/rust-clippy/issues/15034
 
-> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-> ---
->  drivers/tty/serial/8250/8250_port.c | 54 ++++++++++++++---------------
->  1 file changed, 27 insertions(+), 27 deletions(-)
->=20
-> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/825=
-0/8250_port.c
-> index f5407832e8a7..233316a88df2 100644
-> --- a/drivers/tty/serial/8250/8250_port.c
-> +++ b/drivers/tty/serial/8250/8250_port.c
-> @@ -738,6 +738,9 @@ static int __enable_rsa(struct uart_8250_port *up)
->  =09return result;
->  }
-> =20
-> +/*
-> + * If this is an RSA port, see if we can kick it up to the higher speed =
-clock.
-> + */
->  static void enable_rsa(struct uart_8250_port *up)
->  {
->  =09if (up->port.type =3D=3D PORT_RSA) {
-> @@ -752,10 +755,9 @@ static void enable_rsa(struct uart_8250_port *up)
->  }
-> =20
->  /*
-> - * Attempts to turn off the RSA FIFO.  Returns zero on failure.
-> - * It is unknown why interrupts were disabled in here.  However,
-> - * the caller is expected to preserve this behaviour by grabbing
-> - * the spinlock before calling this function.
-> + * Attempts to turn off the RSA FIFO and resets the RSA board back to 11=
-5kbps compat mode. It is
-> + * unknown why interrupts were disabled in here. However, the caller is =
-expected to preserve this
-> + * behaviour by grabbing the spinlock before calling this function.
->   */
->  static void disable_rsa(struct uart_8250_port *up)
->  {
-> @@ -780,6 +782,25 @@ static void disable_rsa(struct uart_8250_port *up)
->  =09=09uart_port_unlock_irq(&up->port);
->  =09}
->  }
-> +
-> +static void rsa_autoconfig(struct uart_8250_port *up)
-> +{
-> +=09/* Only probe for RSA ports if we got the region. */
-> +=09if (up->port.type =3D=3D PORT_16550A && up->probe & UART_PROBE_RSA &&
-> +=09    __enable_rsa(up))
-> +=09=09up->port.type =3D PORT_RSA;
-> +}
-> +
-> +static void rsa_reset(struct uart_8250_port *up)
-> +{
-> +=09if (up->port.type =3D=3D PORT_RSA)
-> +=09=09serial_out(up, UART_RSA_FRR, 0);
-> +}
-> +#else
-> +static inline void enable_rsa(struct uart_8250_port *up) {}
-> +static inline void disable_rsa(struct uart_8250_port *up) {}
-> +static inline void rsa_autoconfig(struct uart_8250_port *up) {}
-> +static inline void rsa_reset(struct uart_8250_port *up) {}
->  #endif /* CONFIG_SERIAL_8250_RSA */
-> =20
->  /*
-> @@ -1267,14 +1288,7 @@ static void autoconfig(struct uart_8250_port *up)
->  =09=09break;
->  =09}
-> =20
-> -#ifdef CONFIG_SERIAL_8250_RSA
-> -=09/*
-> -=09 * Only probe for RSA ports if we got the region.
-> -=09 */
-> -=09if (port->type =3D=3D PORT_16550A && up->probe & UART_PROBE_RSA &&
-> -=09    __enable_rsa(up))
-> -=09=09port->type =3D PORT_RSA;
-> -#endif
-> +=09rsa_autoconfig(up);
-> =20
->  =09serial_out(up, UART_LCR, save_lcr);
-> =20
-> @@ -1289,10 +1303,7 @@ static void autoconfig(struct uart_8250_port *up)
->  =09/*
->  =09 * Reset the UART.
->  =09 */
-> -#ifdef CONFIG_SERIAL_8250_RSA
-> -=09if (port->type =3D=3D PORT_RSA)
-> -=09=09serial_out(up, UART_RSA_FRR, 0);
-> -#endif
-> +=09rsa_reset(up);
->  =09serial8250_out_MCR(up, save_mcr);
->  =09serial8250_clear_fifos(up);
->  =09serial_in(up, UART_RX);
-> @@ -2248,13 +2259,7 @@ int serial8250_do_startup(struct uart_port *port)
->  =09=09=09=09UART_DA830_PWREMU_MGMT_FREE);
->  =09}
-> =20
-> -#ifdef CONFIG_SERIAL_8250_RSA
-> -=09/*
-> -=09 * If this is an RSA port, see if we can kick it up to the
-> -=09 * higher speed clock.
-> -=09 */
->  =09enable_rsa(up);
-> -#endif
-> =20
->  =09/*
->  =09 * Clear the FIFO buffers and disable them.
-> @@ -2521,12 +2526,7 @@ void serial8250_do_shutdown(struct uart_port *port=
-)
->  =09=09=09serial_port_in(port, UART_LCR) & ~UART_LCR_SBC);
->  =09serial8250_clear_fifos(up);
-> =20
-> -#ifdef CONFIG_SERIAL_8250_RSA
-> -=09/*
-> -=09 * Reset the RSA board back to 115kbps compat mode.
-> -=09 */
->  =09disable_rsa(up);
-> -#endif
-> =20
->  =09/*
->  =09 * Read data port to reset things, and then unlink from
->=20
---8323328-462843366-1749642393=:957--
+Cheers,
+Miguel
