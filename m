@@ -1,57 +1,57 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA702C1780
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 22:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13070277C94
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 22:48:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749682094; cv=none; b=HeiQowO5U7M2bkBlGCe/f2+SSIlMwJnL3L2jmu663+iB55gfF1Gl9QfJFBKk5ipmo50Luwj618PY9EltwKZG7LNt7eNpgXN1diHgKzHHIiJMbo06Gqd48XAdszbocMusWcykiaf2XpbVd82TqSpPMnY+XlCSAKdGFjg7xkjv33k=
+	t=1749682095; cv=none; b=MRGtEHzBd/J5D1NSvIAyRuZzi5j2fwyKJ6f3+Y7yyWcxaQDlux7g/8M7lq9tHkvlk6b6f7ijbVFTZ1BQPbCzxsjQJwtKw/zxcXkZ83VrE9Cag57o1wCHuYf2knAMRKVYuKgZWgM1qkxKEMhTFdzOMbDKYR7BTQKrBcL1i4w1gkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749682094; c=relaxed/simple;
-	bh=yZZtRbcWnuqwQyat4VhI1SVpbjBljsz8F13Q0oWxmXQ=;
+	s=arc-20240116; t=1749682095; c=relaxed/simple;
+	bh=5uhQSLawC2qU5tV2gH8Qd+5+MUnVHTVb+tyLOzTBT7E=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=LO2Lbn85WX3qmQSabAC0HVhSUMDpPN7Ct8iq+QcILdqK6oi6ArwOMr/sgtZ6vYEIgV7XQN2DteJO/A+P7EjG9C6uiu3R89u3rmZDk0kKsihEm9AwUj4dltgi2C0j/6GB/nyXijvymSfNpRxi7tphiOmGIxiO32DG9BS+4xpdHJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NM7FSFpZ; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=aB3xUnr5DtkOiXioRQHctxpRI+WeUbd2IBYU1qMzmIBWKXWlUhdOHgNXK8usnGnzTbC4C2MzUcgi5bC4pTFKcPyQ3br98+sGRa9YBW5talbiowYPJtjZEuA8BxxCRzoMIZHgj2ALBcQRRY1rpTp135lIHyCmokxCCzx+JHfpZp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Jv2mxpLJ; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NM7FSFpZ"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3132e7266d3so340393a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:48:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jv2mxpLJ"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3121cffd7e8so290385a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:48:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749682092; x=1750286892; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749682093; x=1750286893; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=mEZsLhf6SxJ64ydA6t/wQOktcm5LeFVwzcPjAJ4nCGM=;
-        b=NM7FSFpZACrG9/GxFQXCLHBdXshvzL6X91spdB9znvOj4Tn3YdJp3h8NPfhzhvt+fr
-         +DgbY3XYSwdtZKtMwL92STSTLFqFP0TjwzSMzYoJC0nzQ5MvjH3Nj5f9VL6W9RpccUft
-         alYluvITlj/dx0ADOSiy4xgz4bLn7z7whzfypwN1nvCORH+jdLM5HBc50NYY9AqKXA0G
-         ySvJlzPBtgI9vbmUXTw4tR9xnZ5uqfMPnvMyQN1yaOw9Yfg+F9aakmQgDSRNnPFzFw4q
-         FbnvZyKR+bTqFbZ5oIe22bSGPtAxPnZjZgomniu7Sk4bN3a7qnclQmGeS2jibHR0RJfT
-         Pckg==
+        bh=xaTt4Giap+1J1lFwTOaDaJBf68Rv5IWBO561HkZo+gI=;
+        b=Jv2mxpLJPxEcfB2K31MlC6K6CNw/yQqTHfNxZlQtDtR1OtR+BE2dW8/0P97EWLD4BN
+         qQKf4AYnxwwrzgx1IyaoNOmiu3sXy2dHfQbW0ZfICT7R8O1IAlkJKTN1D3oFFO23EO0g
+         BHrF7eLRmW8+6F+nsClWUQChBJEUYs2ODfUv34v2lKCrL1nsJtd0oUf+Cu9egF84MATI
+         HeNAvaGaSwcJJPEAPkn6tlzfzHRY3gxaWqG4Q04xjwPPeWSJ5Y2N5rn89OXRWMSBPHRy
+         dWvT2dfgr7Diul+N7EdGBBr1dDkbvfzovOpi487zhLeHFX6MVXwf8G4xaNv4Vcv6XJJz
+         tK2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749682092; x=1750286892;
+        d=1e100.net; s=20230601; t=1749682093; x=1750286893;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=mEZsLhf6SxJ64ydA6t/wQOktcm5LeFVwzcPjAJ4nCGM=;
-        b=qrnsip1/SUOsrUw6kFZmQGq7dY/Vq+Lqwa+krZpzNhp1+KOFAY+gC+V4wGy08OBVbG
-         fXVIdojlHtRbpBRu3sLdE7zZR3LLyDYAZnzUVIg8pihVWW+Ir6VMp/Akjij5ZO7BdkzP
-         7+YpZf9gS3nMc9RM6WImjIPZ/TrHO8UNVbkOWUggHP8D3Lpl92FwWop6WCWlzs7ksHxK
-         86hUSYtXbY7knkffTubFT5SAZjY3U+IsTC8Zx+aW7/ffaJvh/1+Yl8aZifmiPBbC98gW
-         stEgWzHae0zH1pEsq6Hw1lnHT46LuUywwc6gCCI30B+K99q9p75aDov7scWJKZ4Iv68K
-         axbg==
-X-Forwarded-Encrypted: i=1; AJvYcCVECKmeycoVYE7w0oqXhd24GkFjvOyZTAO5R0spPd9UVNzG4MKWxirjveiOpuuYdoLd1YLrq3WxKid4zMQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpVe7pTda5ESRc74VeKO5+B2sN0AxtlAlm5/TiwKn9FmQsubO7
-	i/ArKnKATi+KBJVi1if2zniEpLOn8VRvS1kqfEBTjwiDWhnMDhK8ZLryYI9F0VO/XdFacyVlU+J
-	4SD77Jg==
-X-Google-Smtp-Source: AGHT+IFg24zPNL3KiBl4z/DNOHqd2KhvvGrjl3yLgrTD6GwXkCuqSf7mQ8rAwENd7T74FPlQ31IQOCRlfVY=
-X-Received: from pjwx3.prod.google.com ([2002:a17:90a:c2c3:b0:2fc:c98:ea47])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:c2d0:b0:312:def0:e2dc
- with SMTP id 98e67ed59e1d1-313c068d18amr1292249a91.7.1749682091962; Wed, 11
- Jun 2025 15:48:11 -0700 (PDT)
+        bh=xaTt4Giap+1J1lFwTOaDaJBf68Rv5IWBO561HkZo+gI=;
+        b=hgiKsuTx3T+CEZNG4b8Ix2e0EXm3149r6x/Rj8pEeE3+cPWcc/Zj9gyqv6ZMD32hFK
+         NASTYV4EF8xsOlvqFhikuMt/q/FCGAIosuGu7UOWO3TPbMErcXrO04bLnMRynTjJcaK+
+         JsTa+Lb7YevBkl+loo7b1atqWLWvYpC/hCB1WTLmI7yc9qU2w0To2yjDT5a1FkAEGkCx
+         d2pEkVoORJzuhhovefXfejufJ0gveEoElndp+p9hsWwUegYCo1jWvdfXbAav908hemIQ
+         uuUbpGnon/R6odkR6afUvqfogwkdMi4F/L+c2kh0OHeN3pVRuWlyV8kn1JmhECi67YC3
+         aKzg==
+X-Forwarded-Encrypted: i=1; AJvYcCWVnz9Vhq8ne6GKcFfVIz94ZFtEZGdPxGB1VlmLTBYzIBE3RyI1AOx+mb/7CLOU6/aiM+guraHB2ZNy7gw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4Vgu4GGbARXruboSqQ8H2bif7Bkvgrw2awiYRKZi1Ty9b/S/n
+	9/fkcksKTvmPMePcP1WuKZb/5nCHRmcSddQnGPqwHAwO/dSjlPXhVlM/YCZWQ6FEZuiFZKsllE0
+	9IGRREQ==
+X-Google-Smtp-Source: AGHT+IGf03w35WpWXu537xHWr4U/N7R14xnxNpvZmT8HfbsZ9X3mUH7UkRwX/TiEroCP15FbAA6qEaYzrj4=
+X-Received: from pjtd16.prod.google.com ([2002:a17:90b:50:b0:312:dbc:f731])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5408:b0:311:9c9a:58ca
+ with SMTP id 98e67ed59e1d1-313c0688525mr1173665a91.8.1749682093424; Wed, 11
+ Jun 2025 15:48:13 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed, 11 Jun 2025 15:45:47 -0700
+Date: Wed, 11 Jun 2025 15:45:48 -0700
 In-Reply-To: <20250611224604.313496-2-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,9 +61,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250611224604.313496-2-seanjc@google.com>
 X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-Message-ID: <20250611224604.313496-46-seanjc@google.com>
-Subject: [PATCH v3 44/62] KVM: SVM: Don't check for assigned device(s) when
- updating affinity
+Message-ID: <20250611224604.313496-47-seanjc@google.com>
+Subject: [PATCH v3 45/62] KVM: SVM: Don't check for assigned device(s) when
+ activating AVIC
 From: Sean Christopherson <seanjc@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
 	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, 
@@ -75,9 +75,11 @@ Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
 	Francesco Lavra <francescolavra.fl@gmail.com>, David Matlack <dmatlack@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Don't bother checking if a VM has an assigned device when updating AVIC
-vCPU affinity, querying ir_list is just as cheap and nothing prevents
-racing with changes in device assignment.
+Don't short-circuit IRTE updating when (de)activating AVIC based on the
+VM having assigned devices, as nothing prevents AVIC (de)activation from
+racing with device (de)assignment.  And from a performance perspective,
+bailing early when there is no assigned device doesn't add much, as
+ir_list_lock will never be contended if there's no assigned device.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
@@ -85,12 +87,12 @@ Signed-off-by: Sean Christopherson <seanjc@google.com>
  1 file changed, 3 deletions(-)
 
 diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
-index 2e3a8fda0355..dadd982b03c0 100644
+index dadd982b03c0..ab7fb8950cc0 100644
 --- a/arch/x86/kvm/svm/avic.c
 +++ b/arch/x86/kvm/svm/avic.c
-@@ -847,9 +847,6 @@ static inline int avic_update_iommu_vcpu_affinity(struct kvm_vcpu *vcpu, int cpu
- 
- 	lockdep_assert_held(&svm->ir_list_lock);
+@@ -732,9 +732,6 @@ static int avic_set_pi_irte_mode(struct kvm_vcpu *vcpu, bool activate)
+ 	struct vcpu_svm *svm = to_svm(vcpu);
+ 	struct kvm_kernel_irqfd *irqfd;
  
 -	if (!kvm_arch_has_assigned_device(vcpu->kvm))
 -		return 0;
