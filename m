@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0DD279327
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 10:44:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1AA52797B1;
+	Wed, 11 Jun 2025 10:44:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749638647; cv=none; b=ESDsTGaAezkXf0Kh4Q98CHFpYRMT54OJdQtnht9AOthZ8q0BKgeiFzyV4IB2z8983cR6NRO4vUTTHK4crHSVdO2mQDzLMi+bB2Ebbw76xFpD7j1tjxxWarCw7Htd3p9qv5YoImtwupoo4P7PxobqD9ldSqT7JH7X/sWSaylLIiw=
+	t=1749638650; cv=none; b=aR6AgmIGsF4Fw0dd316gJgaX3NpKRdUAC4o+FLDVjgn8cGeq6j+Mf5LfxPmsUjeErFLSSj5s/6nCIRE+QLwpXUKEKWrbV/GMVluBEHKa0/Txil6u5ZeHR5X7Y8yV6TtwW8ktA+TJ9q8SCNyfYdV6iBC2OPWiTsrcbdTHe14uh3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749638647; c=relaxed/simple;
-	bh=bHrCHOgwGjRWRvrwMBlrDMz/V9EnLCSbaj497+WUi0w=;
+	s=arc-20240116; t=1749638650; c=relaxed/simple;
+	bh=OsPoEo89oPEE3YhpaNAnMLcwzLCd/Xe4gBktqw3j3oU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=P9luZJm5uDiA31XjuIzTXMlHXPK1N4nLGyprGPBFrGwYrmGUa9Z2IrJbiO0ZzTqcXpH35JM18v075bJMw8F23ZVSCSPRCHJPgZJIXigvPqQLzltwoe9mKKhaEmtXTPy32WEK/pXYfHw5DZEQwOFMxcfUUea3nan00tfnFClZGBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dcEwfu98; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=pUSJ3JR1G8EZTkVdJI+OjMDaP9gnDMV/1lZhrKxUTGLOFxtp07N9l8lhZdysObmnmPe1GuQm0oHT5YRihgTTHo7FsZRbSqngkBIPd7Oidg1FUrYa14Sl8xINiL06LY0NgNLliqLGUJzpzrFaEntpmfH2aoXexGxvIgNWddeTnKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F96wIN2Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dcEwfu98"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27FF4C4CEFC;
-	Wed, 11 Jun 2025 10:44:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F96wIN2Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AC8DC4CEF2;
+	Wed, 11 Jun 2025 10:44:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749638647;
-	bh=bHrCHOgwGjRWRvrwMBlrDMz/V9EnLCSbaj497+WUi0w=;
+	s=k20201202; t=1749638649;
+	bh=OsPoEo89oPEE3YhpaNAnMLcwzLCd/Xe4gBktqw3j3oU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dcEwfu98nkqqSB4o90Y1qUZh4uFBn2FsNk7WKVDGMNQjYKUtIx46sJdEH75+a+wjt
-	 1IZdXMLJmtD8V9Y6ErkWJbKuuFqcdFF5/ZpokfbIrY4WQVRyE8HcUAoMqRAFrKJAuj
-	 N0L9EPAXBGjCVnp0oe2ijFYQuAnZP0LYObKfzD8T+o7rfO01cuGbT2ED6XjX5qUBwp
-	 jEJPI48YsSRsHZf/om8yqplMfUWG5aH1BFGy/QFE2da5ZJ2cNqClCPjBe/UjLhjgG7
-	 DbpP6VgrVsfW2eqY3cBqIOzP9KD4naEdzkgP+lBEtbSydY6w5adZFoUvD4dudBs2WR
-	 iTRpojUVDiIuA==
+	b=F96wIN2Y+3tUQeXbxBXrZ7uT+F/ZkStofVE1B8oRrukXF0nZmB1y1mjhPQvMjxrut
+	 AZocqHcA5qlAiSB8KEj/Sz8fi5xw6fxRLQxnpgcbATNLXha1qbND/crReNx3u/Dx9o
+	 TGJkkT4AdFRIvnsILDYPcWVa0EY1CHsNYSVK4BX7AI2K8r1TkoliFZCA+XyU5oeEb5
+	 xGi6Wgu5di4Y8AqjC6Ucvn/BLIzxs1o1P67qDGT63UjNAz/DDUqp7F1joRhmYwzm5Z
+	 XNreDS1lb65ds4Paj6++EF1RJQoG7B8BcPaOVd4OBk/WiawOgcOpzjG2zjQx15EPNF
+	 1Pdvv9Byaw8OA==
 From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: tglx@linutronix.de,
 	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH] gpu: ipu-v3: Use dev_fwnode()
-Date: Wed, 11 Jun 2025 12:43:35 +0200
-Message-ID: <20250611104348.192092-7-jirislaby@kernel.org>
+	Peter Rosin <peda@axentia.se>,
+	linux-i2c@vger.kernel.org
+Subject: [PATCH] i2c: Use dev_fwnode()
+Date: Wed, 11 Jun 2025 12:43:36 +0200
+Message-ID: <20250611104348.192092-8-jirislaby@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250611104348.192092-1-jirislaby@kernel.org>
 References: <20250611104348.192092-1-jirislaby@kernel.org>
@@ -55,27 +53,26 @@ using of_node with of_fwnode_handle().
 So use the dev_fwnode() helper.
 
 Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: David Airlie <airlied@gmail.com>
-Cc: Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org
+Cc: Peter Rosin <peda@axentia.se>
+Cc: linux-i2c@vger.kernel.org
 ---
- drivers/gpu/ipu-v3/ipu-common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/i2c/muxes/i2c-mux-pca954x.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/ipu-v3/ipu-common.c b/drivers/gpu/ipu-v3/ipu-common.c
-index 333f36e0a715..521d7ec10d85 100644
---- a/drivers/gpu/ipu-v3/ipu-common.c
-+++ b/drivers/gpu/ipu-v3/ipu-common.c
-@@ -1169,7 +1169,7 @@ static int ipu_irq_init(struct ipu_soc *ipu)
- 	};
- 	int ret, i;
+diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
+index 5bb26af0f532..b9f370c9f018 100644
+--- a/drivers/i2c/muxes/i2c-mux-pca954x.c
++++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
+@@ -442,8 +442,7 @@ static int pca954x_irq_setup(struct i2c_mux_core *muxc)
  
--	ipu->domain = irq_domain_create_linear(of_fwnode_handle(ipu->dev->of_node), IPU_NUM_IRQS,
-+	ipu->domain = irq_domain_create_linear(dev_fwnode(ipu->dev), IPU_NUM_IRQS,
- 					       &irq_generic_chip_ops, ipu);
- 	if (!ipu->domain) {
- 		dev_err(ipu->dev, "failed to add irq domain\n");
+ 	raw_spin_lock_init(&data->lock);
+ 
+-	data->irq = irq_domain_create_linear(of_fwnode_handle(client->dev.of_node),
+-					     data->chip->nchans,
++	data->irq = irq_domain_create_linear(dev_fwnode(&client->dev), data->chip->nchans,
+ 					     &irq_domain_simple_ops, data);
+ 	if (!data->irq)
+ 		return -ENODEV;
 -- 
 2.49.0
 
