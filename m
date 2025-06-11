@@ -1,25 +1,25 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4E3A262FEA;
-	Wed, 11 Jun 2025 10:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A80262FF8;
+	Wed, 11 Jun 2025 10:29:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749637791; cv=none; b=LImrUitUIafmwIpzk9vey6/MqpyGwFXJwH9aqtMhQ0w5ExDMe4cdF+bZ6oZvFlMoLmKr1bM/rCdd89eOFgKPZZ+ydjTetgIjT2Ntm+YLc7G5M+q+M4HNTpgrMQHHQq3PfZnEpoajyOU0Ty566hMtlTXowLR3+JNMtEWBIJzrTw8=
+	t=1749637792; cv=none; b=jCNO+IZoS5kaIaMsuXZtrRlYmwnATl3ADv1+8L1Lq4si0TF75kb3sKArdasw9ZaLcUlMZrLNCvPVsUPHFEPnLR2wyit4ve+nXawXTQYkBA8JfZC6+1gsEpJVaQ873LRaXMWRGNSXHhp/qOCFlxWXnTo18jYqo0f2rv/B18ZXXXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749637791; c=relaxed/simple;
-	bh=QkMlQTTUIeB2daj1wKpftXyVVqXYCZwwM5eWfLCXFeI=;
+	s=arc-20240116; t=1749637792; c=relaxed/simple;
+	bh=oH/N2sg5h5okYpIq7ww7V/12H2KDUPswj9/GQjgDL8g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=f+eNNmFyHC9hSazjbtxKGA1xeqSkc/gLrGwEajamoRMMia6W4FBSrGhf4xdo3iDiCebHruQQAG4DZ5YU43zaGOcIAl9gsPavLdz8omXcEu2ORz4Gt+yrLVV4y3cFeB9TlT73VwK9OtcDa4pSsRJYfYeKACTVZ+tPKfWmEYPIniQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.161
+	 MIME-Version; b=IEvYyWVDa5M+lbHRZRNAmtV8sQx8OtnxPA6/OXN64mGR7RDen+xQ7tYhVDFeRq7/CseQDQmpiTPe4xG3QwvBvlfjZ5rty1f0Puo2+M+EyFotGaxncwLRhDYSaA5AOe9KQgCOn+8hLnI2qjGPZPMgivcZXpZBevkFxMdHtXOhi/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.151
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
 Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4bHMNM687vz9tMg;
-	Wed, 11 Jun 2025 12:29:39 +0200 (CEST)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4bHMNV4cctz9sWc;
+	Wed, 11 Jun 2025 12:29:46 +0200 (CEST)
 From: Remo Senekowitsch <remo@buenzli.dev>
 To: Rob Herring <robh@kernel.org>,
 	Saravana Kannan <saravanak@google.com>,
@@ -40,9 +40,9 @@ To: Rob Herring <robh@kernel.org>,
 Cc: linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	rust-for-linux@vger.kernel.org
-Subject: [PATCH v8 3/9] rust: device: Move property_present() to FwNode
-Date: Wed, 11 Jun 2025 12:29:02 +0200
-Message-ID: <20250611102908.212514-4-remo@buenzli.dev>
+Subject: [PATCH v8 5/9] rust: device: Introduce PropertyGuard
+Date: Wed, 11 Jun 2025 12:29:04 +0200
+Message-ID: <20250611102908.212514-6-remo@buenzli.dev>
 In-Reply-To: <20250611102908.212514-1-remo@buenzli.dev>
 References: <20250611102908.212514-1-remo@buenzli.dev>
 Precedence: bulk
@@ -52,88 +52,91 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4bHMNM687vz9tMg
+X-Rspamd-Queue-Id: 4bHMNV4cctz9sWc
 
-The new FwNode abstraction will be used for accessing all device
-properties.
+This abstraction is a way to force users to specify whether a property
+is supposed to be required or not. This allows us to move error
+logging of missing required properties into core, preventing a lot of
+boilerplate in drivers.
 
-It would be possible to duplicate the methods on the device itself, but
-since some of the methods on Device would have different type sigatures
-as the ones on FwNode, this would only lead to inconsistency and
-confusion. For this reason, property_present is removed from Device and
-existing users are updated.
+It will be used by upcoming methods for reading device properties.
 
+Tested-by: Dirk Behme <dirk.behme@de.bosch.com>
 Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
 ---
- drivers/cpufreq/rcpufreq_dt.rs | 3 ++-
- rust/kernel/device.rs          | 7 -------
- rust/kernel/device/property.rs | 7 +++++++
- 3 files changed, 9 insertions(+), 8 deletions(-)
+ rust/kernel/device/property.rs | 59 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
-diff --git a/drivers/cpufreq/rcpufreq_dt.rs b/drivers/cpufreq/rcpufreq_dt.rs
-index 94ed81644fe1c..4eb240dc9fdc8 100644
---- a/drivers/cpufreq/rcpufreq_dt.rs
-+++ b/drivers/cpufreq/rcpufreq_dt.rs
-@@ -20,7 +20,8 @@
- /// Finds exact supply name from the OF node.
- fn find_supply_name_exact(dev: &Device, name: &str) -> Option<CString> {
-     let prop_name = CString::try_from_fmt(fmt!("{}-supply", name)).ok()?;
--    dev.property_present(&prop_name)
-+    dev.fwnode()?
-+        .property_present(&prop_name)
-         .then(|| CString::try_from_fmt(fmt!("{name}")).ok())
-         .flatten()
- }
-diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
-index b69f03a7f8d30..241a395d529a1 100644
---- a/rust/kernel/device.rs
-+++ b/rust/kernel/device.rs
-@@ -6,7 +6,6 @@
- 
- use crate::{
-     bindings,
--    str::CStr,
-     types::{ARef, Opaque},
- };
- use core::{fmt, marker::PhantomData, ptr};
-@@ -219,12 +218,6 @@ pub fn fwnode(&self) -> Option<&property::FwNode> {
-         // defined as a `#[repr(transparent)]` wrapper around `fwnode_handle`.
-         Some(unsafe { &*fwnode_handle.cast() })
-     }
--
--    /// Checks if property is present or not.
--    pub fn property_present(&self, name: &CStr) -> bool {
--        // SAFETY: By the invariant of `CStr`, `name` is null-terminated.
--        unsafe { bindings::device_property_present(self.as_raw().cast_const(), name.as_char_ptr()) }
--    }
- }
- 
- // SAFETY: `Device` is a transparent wrapper of a type that doesn't depend on `Device`'s generic
 diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/property.rs
-index 03850b7bb8087..50c61aa056e6b 100644
+index 4cac335bad78c..a10033d310e60 100644
 --- a/rust/kernel/device/property.rs
 +++ b/rust/kernel/device/property.rs
-@@ -8,6 +8,7 @@
- 
- use crate::{
-     bindings,
-+    str::CStr,
-     types::{ARef, Opaque},
- };
- 
-@@ -55,6 +56,12 @@ unsafe fn from_raw(raw: *mut bindings::fwnode_handle) -> ARef<Self> {
-     pub(crate) fn as_raw(&self) -> *mut bindings::fwnode_handle {
-         self.0.get()
+@@ -105,6 +105,65 @@ unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
      }
-+
-+    /// Checks if property is present or not.
-+    pub fn property_present(&self, name: &CStr) -> bool {
-+        // SAFETY: By the invariant of `CStr`, `name` is null-terminated.
-+        unsafe { bindings::fwnode_property_present(self.as_raw().cast_const(), name.as_char_ptr()) }
-+    }
  }
  
- // SAFETY: Instances of `FwNode` are always reference-counted.
++/// A helper for reading device properties.
++///
++/// Use [`Self::required_by`] if a missing property is considered a bug and
++/// [`Self::optional`] otherwise.
++///
++/// For convenience, [`Self::or`] and [`Self::or_default`] are provided.
++pub struct PropertyGuard<'fwnode, 'name, T> {
++    /// The result of reading the property.
++    inner: Result<T>,
++    /// The fwnode of the property, used for logging in the "required" case.
++    fwnode: &'fwnode FwNode,
++    /// The name of the property, used for logging in the "required" case.
++    name: &'name CStr,
++}
++
++impl<T> PropertyGuard<'_, '_, T> {
++    /// Access the property, indicating it is required.
++    ///
++    /// If the property is not present, the error is automatically logged. If a
++    /// missing property is not an error, use [`Self::optional`] instead. The
++    /// device is required to associate the log with it.
++    pub fn required_by(self, dev: &super::Device) -> Result<T> {
++        if self.inner.is_err() {
++            dev_err!(
++                dev,
++                "{}: property '{}' is missing\n",
++                self.fwnode,
++                self.name
++            );
++        }
++        self.inner
++    }
++
++    /// Access the property, indicating it is optional.
++    ///
++    /// In contrast to [`Self::required_by`], no error message is logged if
++    /// the property is not present.
++    pub fn optional(self) -> Option<T> {
++        self.inner.ok()
++    }
++
++    /// Access the property or the specified default value.
++    ///
++    /// Do not pass a sentinel value as default to detect a missing property.
++    /// Use [`Self::required_by`] or [`Self::optional`] instead.
++    pub fn or(self, default: T) -> T {
++        self.inner.unwrap_or(default)
++    }
++}
++
++impl<T: Default> PropertyGuard<'_, '_, T> {
++    /// Access the property or a default value.
++    ///
++    /// Use [`Self::or`] to specify a custom default value.
++    pub fn or_default(self) -> T {
++        self.inner.unwrap_or_default()
++    }
++}
++
+ enum Node<'a> {
+     Borrowed(&'a FwNode),
+     Owned(ARef<FwNode>),
 -- 
 2.49.0
 
