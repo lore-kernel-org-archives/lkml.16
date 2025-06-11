@@ -1,152 +1,150 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59D82236E5
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 05:44:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97EDF43151
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 05:47:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749620662; cv=none; b=pijuUNiYpNACmoBwCbAAnPp+JPcA/Pd/WodPPbd+UevxVRM6XrPRhit9FMNVIYW7nkRTxG7EWPzwT43PALBiqu6B1P4fLkkqV8U5IFcRxoQRwXxKXmuxY4DBiiJXYvhg/dXRytto9Rc/ZNZP59hMNjTK85lfJdktXzckWKmN280=
+	t=1749620826; cv=none; b=YQ20+umzwkH0cHUf5XPh/L6saZzfth5jhXy9SiG7D2MGFj34WJF966WJgPhnmw1ZiC0wry0C11mqhwbMuWUNVSWQdsI/UEa1+W+IUUEotN+PT3JBdRZ3BGO3ZpDBcW2x+Y10WSdlUwtfn0Gfsf1F0Mvbl/6tpRDRxhPGgpZC3ks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749620662; c=relaxed/simple;
-	bh=4bPODOzNV1J1Wag20WqHQpC7iwILRqUaFidO5fo7Wj8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=SikpMv2pHDYD+BRMjii/eFy0etJVquflvw3MbJUvKmwSBJzJjwU9PvEaJ/yCma0KYQVmnxzv8wZFgs9A/lI3140snLyBjd15NjiEOy4R+DxphkeJIPVU/g8nbQRo6+gvNuvNnbzDBOmKl4jh6yi1Z4ujMg51HmKM/88PPr1nRnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=SXRSRZdE; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1749620826; c=relaxed/simple;
+	bh=K4YpENB7iNEnnpJGzBtoAAXxiexPDlVW+dNKiACP+N0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AlnDpggFsUsRFrfH3CTMANBhjVzaq+jQAZ3HnFSt/h/jP0i1fTn2bf0qg0jZ+6+/M/kPsMsdVkgeWnX/F9/siBPKX5sOalr+Q/mDbXRxI7CE0cAIbo33wNcu7y2LQMAD3UD7bAQ8/BT5HIXJJk1TL2CH4IHbAOhVLh9EeEPV9TU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b/EDo4GE; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="SXRSRZdE"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55AIPuMK027438
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 05:44:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=Z2paThcjo4kV5rlHhG4CJt
-	0FpfCXVKHmPjNjUTqWvJw=; b=SXRSRZdEgdV0prrcKjzTTowChbnivKHrZeLDPb
-	WL7MhNdZGWFmcDVzAA4ABDh/Va9NzJdysQn/Dm4TvUjFni2GWj7nsOh9iWxMKVGU
-	o9NK3ZFP5knGhGE9DHyAR2W5QbGLZ8GyMBRoPzMcf6YEOpFLQawHrqrT+UsL4bR4
-	/bKZA2ZYXjy3IhdbRLl7tbI17s/J26UCcV7soTCGIA06akVZayXyZzJhGSWxccsT
-	AdAqQ+tIAdM29u/KlQvEgvrQWXXrrBfCEx4QRRROanC8TNBBnJFep6eeq3wny2UK
-	IW08dnWVRIxkk1BwlhW2wML3k5FRSSK68ffmS3dHdR5Q680Q==
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4766mcmg8s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 05:44:19 +0000 (GMT)
-Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-b26e4fe0c08so4014772a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:44:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b/EDo4GE"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-306b6ae4fb2so5359867a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 22:47:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749620824; x=1750225624; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=+TU59eKRSCrO5cELvPyG4AtCwG0gwydsdZ1KPBC29Bc=;
+        b=b/EDo4GEybK+9GO2wEPFPF/GYYAwyZ16OpcIGOIpHpOGXXwwpG4qymvkbWRzZ8ORFK
+         Ri3uU7karbd9EhLPrdtZKpnVJOyIZzDNLViaBSDX3vBKbTFtdM4V4zPi1/gFKBa9Dgwb
+         4TyCcQmSmaIH46wNNJRlpaLQ6Y3mZImf/XTF3YOHPJWdOx7/+Bqqj3pPiWt4FHrYnbLw
+         Jj5VnxYeu1VBTUimAo2+3uYEDxnLJEgv8WtNUeo96QtenRoICigWhrNqaTsMRQl5249v
+         KV6u15f5lreZS6YzAx3NvA9bKw4YbqlgjsBnrLdZkH1CT2G2NdAQi/gZTKMlPnTJ2u46
+         Dn7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749620658; x=1750225458;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Z2paThcjo4kV5rlHhG4CJt0FpfCXVKHmPjNjUTqWvJw=;
-        b=kA4bXMRGcPQ4nKTfiY5iESqFBTqHeQss7h9sUOwwMg+EAZf7Azhf3X5qoiqKX9RBl6
-         XS8m2IqDwDl3kKxPUP3O+mMgdoNwwNiiv6NFeQe86HOcd3lIzjOjgN+gVGaU1DcUb4Np
-         6D8KQbA8LGxA4O8qA6ckFj3PavxRYPbRKE3DBwaMXFx0C35ew+wLA/cs71Cmqmusy8Uq
-         DEbGiHUiwOOg/C2lR5+4X7mVZxIacmGflM3vvViynY/eOVR8NPbLgUk5Ymp2D4HcYog+
-         MPLHqfUTo2xtmD5utakakLL3IWJy76qYPIzlx+yAJYg1wQqOJOcwmMXXE7welhMTFq5p
-         49fw==
-X-Forwarded-Encrypted: i=1; AJvYcCUxoadj4UfR1HSScSyCLKBsea8ANGQO6kJvxid5ECE4gEiYvmA0c4Sa2EWqm9gT/vjRUaB7Y0svGA5Wc68=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjfTs7h9FXGCwvD+ribRJYw9NpEgOlgLqvO8qLqDChqhbKCt7H
-	EufqEaH9be2/Rioe5OFUfLYhVeVhxIHTU7rTwHdSeEDp6Ttb9IE7vcYzlJOyGq3pRpp3Ro/+PRQ
-	C6CP65r0gj4FEUqF7UJ1Vz/xoYDcrIFjnp7gnz1oP9yXtn9WsNFbdtNEnLWyb1tL4dZM=
-X-Gm-Gg: ASbGnct0KZNiCtBI+/WOY/H5ln1XlG0O5VFyHtaoU4jQuRPVckMakgOOf9vs3b9OQAT
-	azZmp/SSOdbUBFovhD6gh/9ULZmeHwwStE46FCzj3vy0dyyTjV56X1JL3VRZ5rlseiNN7wES3nl
-	OxLtr4Lr9PiModjed6XK6rt9eUQE+xthMUVi1mL53z8Bjx6UxBv4gA/FitPz1MwrQ5OFjjyxdV+
-	8iVnVwKeOyTGBQb4SawnHFtOYJvjn6m/pPyo+PDSc6ix3t3d91brVuwne68GKgJfThGBRZm99gP
-	oIR55HK7dq+9rxKheQ7D3gMf8qLDwJJR
-X-Received: by 2002:a05:6a20:2589:b0:21f:53a9:b72c with SMTP id adf61e73a8af0-21f86754dbemr3178021637.38.1749620658384;
-        Tue, 10 Jun 2025 22:44:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE5RTYJPaD19g1+QKXGXvxhjvcmz9N0P/Wo4pkBLGPiOVS4sBLpqjPb8UTr/LDjbvr/4AnFYw==
-X-Received: by 2002:a05:6a20:2589:b0:21f:53a9:b72c with SMTP id adf61e73a8af0-21f86754dbemr3177998637.38.1749620657998;
-        Tue, 10 Jun 2025 22:44:17 -0700 (PDT)
-Received: from [10.213.111.143] ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7482b0eb0dasm8629697b3a.170.2025.06.10.22.44.15
+        d=1e100.net; s=20230601; t=1749620824; x=1750225624;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+TU59eKRSCrO5cELvPyG4AtCwG0gwydsdZ1KPBC29Bc=;
+        b=WQ+tj44J+wEiNghTeBk7QJGXFZGu+zdhdtYiQd4EYEuDI38K0ZvEsdxJ5MR+ISnqAZ
+         mJWwVkGnv9d2/LhRmP8EDzoHJYYljsm/hCdWTyIsvQYwcGGNjtwyAih4Xfl10sCl8rrQ
+         ivdFQFsQygWCR7Nvg2W9ym0azIgYDlr2rqzyJGPRITMEgQ6hMTLpmni+se0dh+N5vV/g
+         qKLUB1OiyDYkWffwt9K6Q5sq984nvSVoI6b2kmpQrtN25mGOvnnbs3Qic0Lq6Xzyc0mE
+         bhXOg90DpHHVb4NYkhvKd44WQluqQw8I5xR3NBWimy7X/GI0wMFsiHOPBBM9tAiGvpfQ
+         NTkw==
+X-Forwarded-Encrypted: i=1; AJvYcCW/MWvmfDoA7ioETF4equQnA8AJj1i51CnIxAQVBuPQcdp520Qgq310WU4CzoLZ9P2qy7YmiLSzUrOcAnw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkcCkYnF7WoFRiqgcGnYXLCYEEmqO2o18i2+m3Ctz27pd9LB5l
+	R0RGu+DVhu5hRiz7tWz3ZSpIkbH0fCzpbELmsyV0UB0EpU5CnxFlDbkX
+X-Gm-Gg: ASbGncuUaGPDagQ1YxIduoQInNECDDYUOC/pUQhlEa9qgJIDM8H3R/z+7KYav5jG2Xv
+	3a6hkPkhsbjM5sz/0qeFycM6gXnw/jbH6kO5JLdREVXnQHEeiLzMYGjmRF6St3yePPkvsd4u6+B
+	9XwGc9GOF2tJzQbXp6afxqUJhnm5SYfm6jNm4wDK+qYKP9TC7IBgcI4xhpTv79yJY2L0lcAyiGZ
+	bJ6q2xVcCIMetVPoyJpXEVdmb+K47PL2Ifg/USFSayWPTAJIMiHxUj/buCPT2n6vIOaK5L6tWog
+	cIRxjX3AWIk/dB2ZgQNkBW1m1fTDnjKdp/5EiWgjp2tSYZ7MNXRwit80rUvxCbjrFrtJ6Wc9vl4
+	=
+X-Google-Smtp-Source: AGHT+IF2uAUARXMreM1pRjUHzUOuPeAwpmuQxMZLWN1mBJvLCmBcqtagsD+JLZcC907KxwQEmum+nQ==
+X-Received: by 2002:a17:90b:3902:b0:311:df4b:4b8a with SMTP id 98e67ed59e1d1-313af0dd7e0mr2849783a91.3.1749620823736;
+        Tue, 10 Jun 2025 22:47:03 -0700 (PDT)
+Received: from vaxr-BM6660-BM6360 ([2001:288:7001:2703:1:3903:b29e:43c0])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313b201a6d0sm520831a91.21.2025.06.10.22.47.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 22:44:17 -0700 (PDT)
-From: Akhil P Oommen <akhilpo@oss.qualcomm.com>
-Date: Wed, 11 Jun 2025 11:13:44 +0530
-Subject: [PATCH] media: iris: Fix opp scaling of power domains
+        Tue, 10 Jun 2025 22:47:03 -0700 (PDT)
+Date: Wed, 11 Jun 2025 13:46:54 +0800
+From: I Hsin Cheng <richard120310@gmail.com>
+To: John Stultz <jstultz@google.com>
+Cc: tglx@linutronix.de, sboyd@kernel.org, linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev,
+	jserv@ccns.ncku.edu.tw
+Subject: Re: [PATCH v2] clocksource: Replace loop within
+ clocks_calc_mult_shift() with clz-based calculation for sftacc
+Message-ID: <aEkYTq5JdwGwWcCF@vaxr-BM6660-BM6360>
+References: <20250611033001.707396-1-richard120310@gmail.com>
+ <CANDhNCrez0=fKoH=1Kg6SG08yPmZ3q3N7rD+Dm3e8=-hHoj_6w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250611-iris-opp-fix-v1-1-424caec41158@oss.qualcomm.com>
-X-B4-Tracking: v=1; b=H4sIAI8XSWgC/yWMQQ6CMBAAv9Ls2TVtSTHyFcOh1EX3AK27SEwIf
- 6eR40wys4GSMCl0ZgOhlZXzXMFdDKR3nF+E/KwM3vpgg78hCyvmUnDkHzY0+nB3yTY+Qk2KUNX
- /3aM/WejzrdfllDBEJUx5mnjpzNpeXYuSHPT7fgAkGRzpiwAAAA==
-X-Change-ID: 20250527-iris-opp-fix-3ef2591c032a
-To: Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Dikshita Agarwal <quic_dikshita@quicinc.com>,
-        Abhinav Kumar <abhinav.kumar@linux.dev>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Akhil P Oommen <akhilpo@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749620655; l=1267;
- i=akhilpo@oss.qualcomm.com; s=20240726; h=from:subject:message-id;
- bh=4bPODOzNV1J1Wag20WqHQpC7iwILRqUaFidO5fo7Wj8=;
- b=GW1VPWKI/sCUGw/lmdjcfb1/v1p4eeE2hxIHDUz6r0uc8ZG6Nh6B1h6ZjF1CXCVBjg7JskGvw
- jcYo3SVzHEYBjKshveIrasbrGRIJ9GRxGQPohIyCG7g/J+DEMY0SQcC
-X-Developer-Key: i=akhilpo@oss.qualcomm.com; a=ed25519;
- pk=lmVtttSHmAUYFnJsQHX80IIRmYmXA4+CzpGcWOOsfKA=
-X-Authority-Analysis: v=2.4 cv=T8KMT+KQ c=1 sm=1 tr=0 ts=684917b3 cx=c_pps
- a=oF/VQ+ItUULfLr/lQ2/icg==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=Bqk5Gw0CwUaqKlFR4NYA:9
- a=QEXdDO2ut3YA:10 a=3WC7DwWrALyhR5TkjVHa:22
-X-Proofpoint-ORIG-GUID: 2j2xA0KdJneNjNqrutgtWE3D7HVMKVQ3
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjExMDA0OSBTYWx0ZWRfX00u+lqEKp/PB
- M9nYwih6svUkPpJjG7IBC8p5ZPFMxfcpxAOafOp9rMJT600VAYS34os/GIWJg2DmG6qfo3CZ/2+
- z9emBu74mbzsRbIkN32aWvWpNy6ml4W+78ZYU4gYGLAFL6pRy55cZrCnwhdSYfQ6IhGk6BkXtHJ
- zBpdg0ixtMrGad9pNoGL2+UNCS2UcG8Hfy2/7mL4Uh/KKxAhNKpHgsZcU0K0OezQoIeRmaA3CSw
- OjFCictZK9ls4woWrtUfYa8kq013vYKBsReSY3bjyiV+y52MVJa40ty5J5wwYwB6COGgf0wb7xm
- c2EYoQMiI8qWmkX3+M98/6A9/Xwam2E/Z0Uodn2KcgyHXhE07/b0NZ5Bj63ADcf8rb8CNpmGuPL
- u/MKcmOqY3w9MpJf4vCJSoah+lugetr4LugY7Ty83xv012e1qFUv1OENZ5DqSaY9BEGVagPw
-X-Proofpoint-GUID: 2j2xA0KdJneNjNqrutgtWE3D7HVMKVQ3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-11_02,2025-06-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 bulkscore=0 clxscore=1015 malwarescore=0 impostorscore=0
- spamscore=0 priorityscore=1501 lowpriorityscore=0 mlxscore=0 phishscore=0
- mlxlogscore=999 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506110049
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANDhNCrez0=fKoH=1Kg6SG08yPmZ3q3N7rD+Dm3e8=-hHoj_6w@mail.gmail.com>
 
-Pass PD_FLAG_REQUIRED_OPP flag to allow opp framework to scale the rpmpd
-power domains.
+On Tue, Jun 10, 2025 at 09:31:49PM -0700, John Stultz wrote:
+> On Tue, Jun 10, 2025 at 8:30 PM I Hsin Cheng <richard120310@gmail.com> wrote:
+> >
+> > v1 -> v2:
+> >         - Refine commit message to explain more about "why"
+> >         - Check the frequency of "clocks_calc_mult_shift()" get called,
+> >           it's not in hotpath on my machine, refine the commit message
+> >       to avoid overselling it
+> >         - Add comments for the code to explain the implementation in
+> >           more detail
+> >         - Handle case for "tmp == 0" to avoid undefined behavior
+> >     - Experiment using ffs() but it's used for finding the LSB of
+> >       a number, which isn't MSB as we want. It would still need
+> >       looping when intended to use ffs() in this scenario
+> 
+> Oh, apologies for mixing that up and leading you astray!
+> 
+> 
+> > diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
+> > index 2a7802ec480c..59145d762f1e 100644
+> > --- a/kernel/time/clocksource.c
+> > +++ b/kernel/time/clocksource.c
+> > @@ -66,10 +66,20 @@ clocks_calc_mult_shift(u32 *mult, u32 *shift, u32 from, u32 to, u32 maxsec)
+> >          * range:
+> >          */
+> >         tmp = ((u64)maxsec * from) >> 32;
+> > -       while (tmp) {
+> > -               tmp >>=1;
+> > -               sftacc--;
+> > -       }
+> > +
+> > +       /*
+> > +        * Decrement "sftacc" by the number of bits needed to represent "tmp".
+> > +        * Using (32 - __builtin_clz(tmp)) to ge the bit width:
+> > +        * - __builtin_clz(tmp) returns the count of leading zero bits
+> > +        * - (32 - __builtin_clz(tmp)) gives us the number of significant bits
+> > +        *
+> > +        * Note: It use 32 instead of 31 because we want bit width (0-index MSB
+> > +        * position + 1), not just the MSB position itself.
+> > +        *
+> > +        * Handle tmp == 0 separately since __builtin_clz(0) has undefined behavior.
+> > +        */
+> > +       if (tmp)
+> > +               sftacc -= (32 - __builtin_clz(tmp));
+> 
+> Still think the detail that __builtin_clz only works on the bottom
+> 32bits is good to highlight in the comment.
+> Though maybe, would explicitly casting tmp to a u32 help it be more clear here?
+> 
+> thanks
+> -john
+>
 
-Signed-off-by: Akhil P Oommen <akhilpo@oss.qualcomm.com>
----
-Found this issue while reviewing the Iris source and only compile tested.
----
- drivers/media/platform/qcom/iris/iris_probe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi John,
 
-diff --git a/drivers/media/platform/qcom/iris/iris_probe.c b/drivers/media/platform/qcom/iris/iris_probe.c
-index 9a7ce142f7007ffcda0bd422c1983f2374bb0d92..4e6e92357968d7419f114cc0ffa9b571bad19e46 100644
---- a/drivers/media/platform/qcom/iris/iris_probe.c
-+++ b/drivers/media/platform/qcom/iris/iris_probe.c
-@@ -53,7 +53,7 @@ static int iris_init_power_domains(struct iris_core *core)
- 	struct dev_pm_domain_attach_data iris_opp_pd_data = {
- 		.pd_names = core->iris_platform_data->opp_pd_tbl,
- 		.num_pd_names = core->iris_platform_data->opp_pd_tbl_size,
--		.pd_flags = PD_FLAG_DEV_LINK_ON,
-+		.pd_flags = PD_FLAG_DEV_LINK_ON | PD_FLAG_REQUIRED_OPP,
- 	};
- 
- 	ret = devm_pm_domain_attach_list(core->dev, &iris_pd_data, &core->pmdomain_tbl);
+Sure thing, sorry I missed the part to mention it onlys works on the
+lower 32 bits of "tmp". I'll amend that ASAP.
 
----
-base-commit: d9946fe286439c2aeaa7953b8c316efe5b83d515
-change-id: 20250527-iris-opp-fix-3ef2591c032a
+Btw I just realized it's more appropriate to use "find_last_bit()"
+instead of __builtin_clz(). Most of the in-tree use cases utilize
+find_last_bit() as it support more optimization. I'll cc to bitmap's
+maintainer in the next version and see what suggestion he gives so we
+can make sure we consider everything as much as possible.
+
+Thanks !
 
 Best regards,
--- 
-Akhil P Oommen <akhilpo@oss.qualcomm.com>
-
+I Hsin Cheng
