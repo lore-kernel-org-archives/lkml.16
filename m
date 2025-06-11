@@ -1,211 +1,128 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BDFF1FDE02
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:12:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 613F91FCFE2;
+	Wed, 11 Jun 2025 15:12:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749654738; cv=none; b=hjsuFoJRw7BB0ROBecpQSBcN5ECBsI/K1qA7ZhQRH6qVAgi6kSGuy5MF7ovWhAE7isItKOW9ZT2f273NHrLhaDUymALDTvQkIuHB2yg2LY8vO1iT0LeT3Z00hAW+zEW9Bnd9s/g9XX3hH2igEamujjtT6c4fzuAcp6XvUKVeBK8=
+	t=1749654738; cv=none; b=ls3fgqyeWcvCsNPoATTI1RDaKMUP7BA7+sUC9N/TP0qHCZuGIIPdWTZaIE3FP4tCNSd1CS6cdmQIMeQlN7anaTb7iBfQa1r23whChZbvCa/N8+CzsNb3vqSWjsYWs8LworDr6dL075hoISXfyIam8MahQucAJfq5puSHUMY70k0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749654738; c=relaxed/simple;
-	bh=CCsMW2Y4vgWxPuHdWABQb40IsOOZLbjksJf8mcF8rtI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=vGj/BTfiwlElSA4qOOp86qdsRWL/Oe9qWFtK29L+uMrClbfwsUZaIcJBAgtKUkHMqloiI86sN4KpuQAOlkExpEYqH419LZWzkvEvqGuOWcSytZLXqLEhuTTPKO2C/m0bfUScBBdnTmP2ZzoxMjde2vX40n/iqUx7AQuI39VArng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F7761BCB;
-	Wed, 11 Jun 2025 08:11:56 -0700 (PDT)
-Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id ED4E03F59E;
-	Wed, 11 Jun 2025 08:12:13 -0700 (PDT)
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: catalin.marinas@arm.com,
-	will@kernel.org,
-	broonie@kernel.org,
-	maz@kernel.org,
-	oliver.upton@linux.dev,
-	ardb@kernel.org,
-	frederic@kernel.org,
-	james.morse@arm.com,
-	joey.gouly@arm.com,
-	scott@os.amperecomputing.com
-Cc: linux-arm-kernel@lists.infradead.org,
+	bh=w50J13DoDa3ztdz0aJJJjIaFHSClneyL/iYpIIag/qs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=avk6j+j3Pm7PazoWSrPYpojowSA6RUOGwgCtkzpH2enOJpVC04WgWcOVZ5yVH7RgtzxirLNcgrz3V63xF5b0p8Mthdn3o0W0CqKm1MZpE81xrAoqKqM0gKPtBZI/OVB+G9KGtU2x3ZCYws7M3Yn+oEv5Ut2/w9H+KXL19RcnLVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kgd+Vblx; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kgd+Vblx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749654737; x=1781190737;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=w50J13DoDa3ztdz0aJJJjIaFHSClneyL/iYpIIag/qs=;
+  b=Kgd+VblxihFI310XgdLAOWXQbVvaedBb5LDTfigC73D8zc2a4K+JcIou
+   yPU8zyCLmbNolyqnySLo5EIZY/+VqufEVBF7AwnPLyxrzCH4Rz12S21Wm
+   4SChe6Sfvii/y9FnST34uTvxCXt3dk4jGXS6sv/fqv8H1Xs7CxLH2Jm4I
+   fxTIAevHVJiLIKWa3SxzdrDc3jCHKGMZwsj3KYfMEzolc2nqT3tMMTe15
+   ML+JmA5c7UzEk6Gr0TGjOXNMIznVXZDy5AfGtMtow3N2AQQNF5ryp+M14
+   1DhPNYjHjEajJgpNJQV97ahCHx0OPWvggXcXoG2p1C072xwkzNXSSz8cJ
+   A==;
+X-CSE-ConnectionGUID: b7ZwbKNXSxKanmVOnYG4gg==
+X-CSE-MsgGUID: Ax1Qv9TkQE2nwWoXsLIK7g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="62083554"
+X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
+   d="scan'208";a="62083554"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 08:12:16 -0700
+X-CSE-ConnectionGUID: y29W/3r0RkKpTtbZaK2+RQ==
+X-CSE-MsgGUID: h+7CkrccS1exPpWmkCy9FA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
+   d="scan'208";a="184427637"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 08:12:12 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uPN7X-00000005gGG-2dL9;
+	Wed, 11 Jun 2025 18:12:07 +0300
+Date: Wed, 11 Jun 2025 18:12:07 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+Cc: gregkh@linuxfoundation.org, linux-serial@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Yeoreum Yun <yeoreum.yun@arm.com>
-Subject: [PATCH v2 6/6] arm64/futex: support futex with FEAT_LSUI
-Date: Wed, 11 Jun 2025 16:11:54 +0100
-Message-Id: <20250611151154.46362-7-yeoreum.yun@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250611151154.46362-1-yeoreum.yun@arm.com>
-References: <20250611151154.46362-1-yeoreum.yun@arm.com>
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Paul Cercueil <paul@crapouillou.net>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linuxppc-dev@lists.ozlabs.org, linux-mips@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 08/33] serial: 8250: sanitize
+ uart_port::serial_{in,out}() types
+Message-ID: <aEmcxySiXun--YZs@smile.fi.intel.com>
+References: <20250611100319.186924-1-jirislaby@kernel.org>
+ <20250611100319.186924-9-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250611100319.186924-9-jirislaby@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Since Armv9.6, FEAT_LSUI supplies load/store unprevileged instructions
-for kernel to access user memory without clearing PSTATE.PAN.
+On Wed, Jun 11, 2025 at 12:02:54PM +0200, Jiri Slaby (SUSE) wrote:
+> uart_port::{serial_in,serial_out} (and plat_serial8250_port::* likewise)
+> historically use:
+> * 'unsigned int' for 32-bit register values in reads and writes, and
+> * 'int' for offsets.
+> 
+> Make them sane such that:
+> * 'u32' is used for register values, and
+> * 'unsigned int' is used for offsets.
+> 
+> While at it, name hooks' parameters, so it is clear what is what.
 
-This patch makes futex use futex_atomic operations implemented with these
-instruction when cpu supports FEAT_LSUI otherwise they work with
-ldxr/stlxr with clearing PSTATE.PAN bit.
+At a glance this looks just mechanical change. Have you used coccinelle for
+that?
 
-Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
----
- arch/arm64/include/asm/futex.h | 99 +++++++++++-----------------------
- 1 file changed, 31 insertions(+), 68 deletions(-)
+As for the whole idea, I like it,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-diff --git a/arch/arm64/include/asm/futex.h b/arch/arm64/include/asm/futex.h
-index bc06691d2062..ed4586776655 100644
---- a/arch/arm64/include/asm/futex.h
-+++ b/arch/arm64/include/asm/futex.h
-@@ -9,71 +9,60 @@
- #include <linux/uaccess.h>
- 
- #include <asm/errno.h>
-+#include <asm/lsui.h>
- 
--#define FUTEX_MAX_LOOPS	128 /* What's the largest number you can think of? */
--
--#define __futex_atomic_op(insn, ret, oldval, uaddr, tmp, oparg)		\
--do {									\
--	unsigned int loops = FUTEX_MAX_LOOPS;				\
--									\
--	uaccess_enable_privileged();					\
--	asm volatile(							\
--"	prfm	pstl1strm, %2\n"					\
--"1:	ldxr	%w1, %2\n"						\
--	insn "\n"							\
--"2:	stlxr	%w0, %w3, %2\n"						\
--"	cbz	%w0, 3f\n"						\
--"	sub	%w4, %w4, %w0\n"					\
--"	cbnz	%w4, 1b\n"						\
--"	mov	%w0, %w6\n"						\
--"3:\n"									\
--"	dmb	ish\n"							\
--	_ASM_EXTABLE_UACCESS_ERR(1b, 3b, %w0)				\
--	_ASM_EXTABLE_UACCESS_ERR(2b, 3b, %w0)				\
--	: "=&r" (ret), "=&r" (oldval), "+Q" (*uaddr), "=&r" (tmp),	\
--	  "+r" (loops)							\
--	: "r" (oparg), "Ir" (-EAGAIN)					\
--	: "memory");							\
--	uaccess_disable_privileged();					\
--} while (0)
-+#define FUTEX_ATOMIC_OP(op)										\
-+static __always_inline int										\
-+__futex_atomic_##op(int oparg, u32 __user *uaddr, int *oval)	\
-+{									\
-+	return __lsui_ll_sc_u_body(futex_atomic_##op, oparg, uaddr, oval);					\
-+}
-+
-+FUTEX_ATOMIC_OP(add)
-+FUTEX_ATOMIC_OP(or)
-+FUTEX_ATOMIC_OP(and)
-+FUTEX_ATOMIC_OP(eor)
-+FUTEX_ATOMIC_OP(set)
-+
-+#undef FUTEX_ATOMIC_OP
-+
-+static __always_inline int
-+__futex_cmpxchg(u32 __user *uaddr, u32 oldval, u32 newval, u32 *oval)
-+{
-+	return __lsui_ll_sc_u_body(futex_cmpxchg, uaddr, oldval, newval, oval);
-+}
- 
- static inline int
- arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *_uaddr)
- {
--	int oldval = 0, ret, tmp;
--	u32 __user *uaddr = __uaccess_mask_ptr(_uaddr);
-+	int ret;
-+	u32 __user *uaddr;
- 
- 	if (!access_ok(_uaddr, sizeof(u32)))
- 		return -EFAULT;
- 
-+	uaddr = __uaccess_mask_ptr(_uaddr);
-+
- 	switch (op) {
- 	case FUTEX_OP_SET:
--		__futex_atomic_op("mov	%w3, %w5",
--				  ret, oldval, uaddr, tmp, oparg);
-+		ret = __futex_atomic_set(oparg, uaddr, oval);
- 		break;
- 	case FUTEX_OP_ADD:
--		__futex_atomic_op("add	%w3, %w1, %w5",
--				  ret, oldval, uaddr, tmp, oparg);
-+		ret = __futex_atomic_add(oparg, uaddr, oval);
- 		break;
- 	case FUTEX_OP_OR:
--		__futex_atomic_op("orr	%w3, %w1, %w5",
--				  ret, oldval, uaddr, tmp, oparg);
-+		ret = __futex_atomic_or(oparg, uaddr, oval);
- 		break;
- 	case FUTEX_OP_ANDN:
--		__futex_atomic_op("and	%w3, %w1, %w5",
--				  ret, oldval, uaddr, tmp, ~oparg);
-+		ret = __futex_atomic_and(~oparg, uaddr, oval);
- 		break;
- 	case FUTEX_OP_XOR:
--		__futex_atomic_op("eor	%w3, %w1, %w5",
--				  ret, oldval, uaddr, tmp, oparg);
-+		ret = __futex_atomic_eor(oparg, uaddr, oval);
- 		break;
- 	default:
- 		ret = -ENOSYS;
- 	}
- 
--	if (!ret)
--		*oval = oldval;
--
- 	return ret;
- }
- 
-@@ -81,40 +70,14 @@ static inline int
- futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *_uaddr,
- 			      u32 oldval, u32 newval)
- {
--	int ret = 0;
--	unsigned int loops = FUTEX_MAX_LOOPS;
--	u32 val, tmp;
- 	u32 __user *uaddr;
- 
- 	if (!access_ok(_uaddr, sizeof(u32)))
- 		return -EFAULT;
- 
- 	uaddr = __uaccess_mask_ptr(_uaddr);
--	uaccess_enable_privileged();
--	asm volatile("// futex_atomic_cmpxchg_inatomic\n"
--"	prfm	pstl1strm, %2\n"
--"1:	ldxr	%w1, %2\n"
--"	sub	%w3, %w1, %w5\n"
--"	cbnz	%w3, 4f\n"
--"2:	stlxr	%w3, %w6, %2\n"
--"	cbz	%w3, 3f\n"
--"	sub	%w4, %w4, %w3\n"
--"	cbnz	%w4, 1b\n"
--"	mov	%w0, %w7\n"
--"3:\n"
--"	dmb	ish\n"
--"4:\n"
--	_ASM_EXTABLE_UACCESS_ERR(1b, 4b, %w0)
--	_ASM_EXTABLE_UACCESS_ERR(2b, 4b, %w0)
--	: "+r" (ret), "=&r" (val), "+Q" (*uaddr), "=&r" (tmp), "+r" (loops)
--	: "r" (oldval), "r" (newval), "Ir" (-EAGAIN)
--	: "memory");
--	uaccess_disable_privileged();
--
--	if (!ret)
--		*uval = val;
- 
--	return ret;
-+	return __futex_cmpxchg(uaddr, oldval, newval, uval);
- }
- 
- #endif /* __ASM_FUTEX_H */
+> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+
+...
+
+> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Cc: "Ilpo Järvinen" <ilpo.jarvinen@linux.intel.com>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Paul Cercueil <paul@crapouillou.net>
+> Cc: Vladimir Zapolskiy <vz@mleia.com>
+> Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+
+These also can be moved under '---' :-)
+
+> ---
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-mips@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> ---
+
 -- 
-LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+With Best Regards,
+Andy Shevchenko
+
 
