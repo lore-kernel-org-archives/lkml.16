@@ -1,178 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8A326FD97;
-	Wed, 11 Jun 2025 23:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEBD0266588;
+	Wed, 11 Jun 2025 23:11:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749683462; cv=none; b=f80ebQundTOXeVNbbbqVMj1G/8i/AEEwU80snyYh6nNIodAq7aTeJOInpbRRwK/pur2dpHP4FYBWkTsDCQ0JKU5mbwLDp7YKHOymP71+XMGaEU2usxDGiJhxmExpfXe5EL70vmsesqzMpIYjDggNn/PpmDPsXW5gFM/xp4diZog=
+	t=1749683509; cv=none; b=DR/0ByRbuFTzPH//DUVX/xgAZQ7dGkIaAf2Oa/T0a2Va2oNeNWz85DqVyrbPJ/nK4qjIcuxovqVz67ueCJ6lSxgSEvMCq4dm4uOJMZzozNptYZyx0NAIDne06TVK6WCPxOvPBDtKuo3bO5A6n2AcVoB4gkQXNuMRBHD6pXdWCJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749683462; c=relaxed/simple;
-	bh=PPOQ2Yu36v3jhlsfz9cZWbbLLvrpvc/LawIo3AJ6cPo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mjOHbzypbfmxI7Qh5090TS4NvpQ1hTfFRw2WWFGccjTZbti5QgmBs7izVhPaDq7doRvEGRFPx+BtwfzBk6fCG+s4D2TOxBAjAHQkUf2kYdJd+jtCMRS+fYmgtWtzoI0FPjl7Hn9sXrJWnusvzda+h1DSd1H4PmtCSR/qvob5Ljs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gE1zqRQq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749683509; c=relaxed/simple;
+	bh=Xi7Bn8Dl4dzWWpiOeR/DTKrcXEYcYeIJC7prsjMVDnk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=urEoh0Swp+f5uZ5zhV+HZyH8EZi4elhkL65ThF8R57G1JOclD0WEo+tzOB6cmLb30JjsNidQ/hFirNrhO3M7lEE9jXtoFwNBnE8qsS4dAm8GMNL2SGNarGbuXPi84RzjrH/DyjemQIOIEA6kHqwVwygaS6Rqz1oBNL9T8ajuFfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aq7OfoyP; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gE1zqRQq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADA65C4CEE3;
-	Wed, 11 Jun 2025 23:11:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749683462;
-	bh=PPOQ2Yu36v3jhlsfz9cZWbbLLvrpvc/LawIo3AJ6cPo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=gE1zqRQqOa7N6l9dV/03MJkX+Cl5osC9V+hLyghQpUvn4YMbAa77sdL9LxW/UlCpo
-	 HO8Qy+YW9CcB19sviPM5uxKd13cl0bFYDzphLxKg/KTl/9/65iRn85ZAd7Izj2xU9t
-	 Vufa0ogXbaKWtm9Rmga79EKTPD+ORw8WFZgC9zeaf6yicJxLJ2v9dpYCoplKatNE1g
-	 e0KqL3lXaBN6j5beWA0q1ABWzgsDGiAF8Zqnmsf1bX6XnTLYecoCBC8AxMrGnlknWt
-	 VATEx/SErN+NmTHE9cHPJN6HRl5o0WmX7f/yxGJkUWQeXibzk+FW1JPoEqHfR3fww8
-	 V0d1YmT++gP9A==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Andreas Kemnade <andreas@kemnade.info>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Roger Quadros <rogerq@kernel.org>,
-	Tony Lindgren <tony@atomide.com>
-Cc: linux-crypto@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] dt-bindings: crypto: Convert ti,omap4-des to DT schema
-Date: Wed, 11 Jun 2025 18:10:56 -0500
-Message-ID: <20250611231058.1402457-1-robh@kernel.org>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aq7OfoyP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749683508; x=1781219508;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Xi7Bn8Dl4dzWWpiOeR/DTKrcXEYcYeIJC7prsjMVDnk=;
+  b=aq7OfoyPryAYOwh+xcGnofJuEsfLy5kTNBOxfAHnjiT2+aEvmdNNlHI8
+   sDvzNHmSATEL+X/SCSA42rBHnK8wyJdEDi2x2VRlQ9WKkjT2d8eKljTRc
+   c5WD4GzK4KeF7g+YPXEccqfd9rKUV8G5gC+2AaSnAroWL0CpxrL5i/o7Z
+   L68KjXAokt2h0GXy8xbgLsIGJ6pghoQqA1mzMysuDQOG37pKHPjDEpDMz
+   dKOhkIiV8tBrlbosp1WprIJscishmuYZ3x4vbC4dqzSm+BbWFaXsy69KK
+   PaiCjibWk9gnEknddr+cNh+kUat/GmZR7RraKCT1bhd9ss2RbLvDRR/41
+   w==;
+X-CSE-ConnectionGUID: KsIHq3oqTrG5M2SFIS061w==
+X-CSE-MsgGUID: g3x1LF1QTAO3L2BUDojOJg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="51063181"
+X-IronPort-AV: E=Sophos;i="6.16,229,1744095600"; 
+   d="scan'208";a="51063181"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 16:11:47 -0700
+X-CSE-ConnectionGUID: WCKpKM7NRfePmN8CCfTQuw==
+X-CSE-MsgGUID: jVTruJE9RbKw+bqDvkvdzg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,229,1744095600"; 
+   d="scan'208";a="178245955"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 11 Jun 2025 16:11:43 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uPUbc-000Av4-1y;
+	Wed, 11 Jun 2025 23:11:40 +0000
+Date: Thu, 12 Jun 2025 07:11:17 +0800
+From: kernel test robot <lkp@intel.com>
+To: Nick Hu <nick.hu@sifive.com>, conor+dt@kernel.org, krzk+dt@kernel.org,
+	Alexandre Ghiti <alex@ghiti.fr>, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org
+Cc: Paul Gazzillo <paul@pgazz.com>,
+	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+	oe-kbuild-all@lists.linux.dev, Nick Hu <nick.hu@sifive.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Samuel Holland <samuel.holland@sifive.com>
+Subject: Re: [PATCH v2 3/3] cpuidle: Add SiFive power provider
+Message-ID: <202506120735.Ek7I6Nze-lkp@intel.com>
+References: <20250611031023.28769-4-nick.hu@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611031023.28769-4-nick.hu@sifive.com>
 
-Convert the TI OMAP DES binding to DT schema format.
+Hi Nick,
 
-Drop "ti,hwmods" as it is not actually used for this binding. Only
-OMAP2 platforms are using it.
+kernel test robot noticed the following build warnings:
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
----
-v2:
- - Drop ti,hwmods from required too
----
- .../devicetree/bindings/crypto/omap-des.txt   | 30 ---------
- .../bindings/crypto/ti,omap4-des.yaml         | 65 +++++++++++++++++++
- 2 files changed, 65 insertions(+), 30 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/crypto/omap-des.txt
- create mode 100644 Documentation/devicetree/bindings/crypto/ti,omap4-des.yaml
+[auto build test WARNING on rafael-pm/linux-next]
+[also build test WARNING on rafael-pm/bleeding-edge robh/for-next linus/master v6.16-rc1 next-20250611]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/Documentation/devicetree/bindings/crypto/omap-des.txt b/Documentation/devicetree/bindings/crypto/omap-des.txt
-deleted file mode 100644
-index e8c63bf2e16d..000000000000
---- a/Documentation/devicetree/bindings/crypto/omap-des.txt
-+++ /dev/null
-@@ -1,30 +0,0 @@
--OMAP SoC DES crypto Module
--
--Required properties:
--
--- compatible : Should contain "ti,omap4-des"
--- ti,hwmods: Name of the hwmod associated with the DES module
--- reg : Offset and length of the register set for the module
--- interrupts : the interrupt-specifier for the DES module
--- clocks : A phandle to the functional clock node of the DES module
--           corresponding to each entry in clock-names
--- clock-names : Name of the functional clock, should be "fck"
--
--Optional properties:
--- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
--	Documentation/devicetree/bindings/dma/dma.txt
--	Each entry corresponds to an entry in dma-names
--- dma-names: DMA request names should include "tx" and "rx" if present
--
--Example:
--	/* DRA7xx SoC */
--	des: des@480a5000 {
--		compatible = "ti,omap4-des";
--		ti,hwmods = "des";
--		reg = <0x480a5000 0xa0>;
--		interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
--		dmas = <&sdma 117>, <&sdma 116>;
--		dma-names = "tx", "rx";
--		clocks = <&l3_iclk_div>;
--		clock-names = "fck";
--	};
-diff --git a/Documentation/devicetree/bindings/crypto/ti,omap4-des.yaml b/Documentation/devicetree/bindings/crypto/ti,omap4-des.yaml
-new file mode 100644
-index 000000000000..f02f1e141218
---- /dev/null
-+++ b/Documentation/devicetree/bindings/crypto/ti,omap4-des.yaml
-@@ -0,0 +1,65 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/ti,omap4-des.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: OMAP4 DES crypto Module
-+
-+maintainers:
-+  - Aaro Koskinen <aaro.koskinen@iki.fi>
-+  - Andreas Kemnade <andreas@kemnade.info>
-+  - Kevin Hilman <khilman@baylibre.com>
-+  - Roger Quadros <rogerq@kernel.org>
-+  - Tony Lindgren <tony@atomide.com>
-+
-+properties:
-+  compatible:
-+    const: ti,omap4-des
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  dmas:
-+    maxItems: 2
-+
-+  dma-names:
-+    items:
-+      - const: tx
-+      - const: rx
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: fck
-+
-+dependencies:
-+  dmas: [ dma-names ]
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    des@480a5000 {
-+        compatible = "ti,omap4-des";
-+        reg = <0x480a5000 0xa0>;
-+        interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&l3_iclk_div>;
-+        clock-names = "fck";
-+        dmas = <&sdma 117>, <&sdma 116>;
-+        dma-names = "tx", "rx";
-+    };
+url:    https://github.com/intel-lab-lkp/linux/commits/Nick-Hu/cpuidle-riscv-sbi-Work-with-the-external-pmdomain-driver/20250611-121115
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
+patch link:    https://lore.kernel.org/r/20250611031023.28769-4-nick.hu%40sifive.com
+patch subject: [PATCH v2 3/3] cpuidle: Add SiFive power provider
+config: riscv-kismet-CONFIG_RISCV_SBI_CPUIDLE-CONFIG_SIFIVE_DMC_PD_CPUIDLE-0-0 (https://download.01.org/0day-ci/archive/20250612/202506120735.Ek7I6Nze-lkp@intel.com/config)
+reproduce: (https://download.01.org/0day-ci/archive/20250612/202506120735.Ek7I6Nze-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506120735.Ek7I6Nze-lkp@intel.com/
+
+kismet warnings: (new ones prefixed by >>)
+>> kismet: WARNING: unmet direct dependencies detected for RISCV_SBI_CPUIDLE when selected by SIFIVE_DMC_PD_CPUIDLE
+   WARNING: unmet direct dependencies detected for PM_GENERIC_DOMAINS_OF
+     Depends on [n]: PM_GENERIC_DOMAINS [=n] && OF [=y]
+     Selected by [y]:
+     - SIFIVE_DMC_PD_CPUIDLE [=y] && CPU_IDLE [=y] && RISCV [=y] && ARCH_SIFIVE [=y]
+   
+   WARNING: unmet direct dependencies detected for RISCV_SBI_CPUIDLE
+     Depends on [n]: CPU_IDLE [=y] && RISCV [=y] && RISCV_SBI [=n]
+     Selected by [y]:
+     - SIFIVE_DMC_PD_CPUIDLE [=y] && CPU_IDLE [=y] && RISCV [=y] && ARCH_SIFIVE [=y]
+
 -- 
-2.47.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
