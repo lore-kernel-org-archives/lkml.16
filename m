@@ -1,190 +1,181 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DC6A25A344
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:53:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B740425BF12;
+	Wed, 11 Jun 2025 11:53:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749642785; cv=none; b=QAVY8xGLoRT3BpikS14Qmh/Cy4x6W+VZ/SKgMJZ1ET/wao7WgsO+lnzHyGtuEOynbK6AsT0proWmLh8wLyBnmk+9fNnh4AOghy6bhYQNo7SaquujDjChLTtBDht0Y7CFUPGWvl/MSICMRW8t+kgucbCWUJOhM6zNTYvniq1rUYA=
+	t=1749642819; cv=none; b=Bn1T3ZHaBF0RhAgs0sMF8HqBQd6Ogk8j1sBZqDR0pswp8qj0wnVdn0/z1AImjIE4o0LH96EbjEe27Or/vau4l9VQBLeuI7zlLzLVd9GKYoll/5ZZONXZfAIruERS2gEyFSuEZV1L8fYiKWq0aEqG4RYzkCYYh+k8c9TTDENsyFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749642785; c=relaxed/simple;
-	bh=sJipJo+MtLn51jVIbl+mdvj6cXJVhBJaNM2xOHZT7UU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dxfzUz7mtVTm29ZdMVJJBZG9nXwYiq1cyOCB4LhLXqqyj2zQA1wG+ZLKz88XAzpGMp1OazT5cE4I8Xx0Qa44rTzmYi6vKnWPmfxPlcIartyB/oKi04FLorKQxd/7Oq1LyQGlC6RjVqIKVAiDIo0XAlG7XZvfUEb1apnDTdeq24M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EFDA415A1;
-	Wed, 11 Jun 2025 04:52:42 -0700 (PDT)
-Received: from [10.57.28.131] (unknown [10.57.28.131])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C12823F673;
-	Wed, 11 Jun 2025 04:53:00 -0700 (PDT)
-Message-ID: <9e56971a-f025-4fce-8cc8-f7609bda3f49@arm.com>
-Date: Wed, 11 Jun 2025 12:52:52 +0100
+	s=arc-20240116; t=1749642819; c=relaxed/simple;
+	bh=3YgcALv5UpDU1VP62yB8oELOF/CrA0zK5VxMJcKE3rM=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=IL+0a0VoL9yzJylrQH88hDCtSRaSJw0r80fapQgSCjCZtuo/j0sSxggQKXYXb7yGhuP1zqRZajWRjCEnp7liL2F2IpLkzwxsRHP8hHC+Vxp16XxxHfXw5SgtTQoxXogqMD4d7tDKjaW1leG0fEybOnsXBpzU4VQNQwh9hDnJ2WM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PHz4HI9n; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PHz4HI9n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749642818; x=1781178818;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=3YgcALv5UpDU1VP62yB8oELOF/CrA0zK5VxMJcKE3rM=;
+  b=PHz4HI9nWug3XMiGdlLfu2n+O8n5BWw64WVUnykYRb/lD+Re+4czh08J
+   xAj/RSeobi/UB1UI9l2SR153djfgLNb/JDW/6ZSzNvqDkp4AEzb00VF2B
+   iJYe7bK0wWUep6vlMgiIcc4Ufet7Wt1JObqw25w7WzLc91F8fouIGqIDb
+   UzvrrGqhyoVof+rUz/0ag22qDfWaEkCOJV16gxkc/aMvOVzhyVM0A4L7L
+   jFWAWlC65YgLNE28tK9CtonZ0hZQPei0QHiuiyt8yWQDVCMvQKux5MX3a
+   aWetkkHIhC3gFd4aALNlmszCRNK4Z/PFhkb4ZjOXYNvjJqDk/KVtfytCA
+   A==;
+X-CSE-ConnectionGUID: VFfkB+2TRV+yI/Fs0Yw2oQ==
+X-CSE-MsgGUID: 9LjJaR3xSqe1zfVP9ShGmg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="62435105"
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="62435105"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 04:53:37 -0700
+X-CSE-ConnectionGUID: /j7CDHu7Q+Geh5V6ikVv5A==
+X-CSE-MsgGUID: YrZFgKFqR4Gur9l41DnglA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="178082141"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.183])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 04:53:35 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 11 Jun 2025 14:53:30 +0300 (EEST)
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    linux-serial <linux-serial@vger.kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 13/33] serial: 8250: extract
+ serial8250_startup_special()
+In-Reply-To: <20250611100319.186924-14-jirislaby@kernel.org>
+Message-ID: <397ab91c-c05c-4dad-db94-866f500458fb@linux.intel.com>
+References: <20250611100319.186924-1-jirislaby@kernel.org> <20250611100319.186924-14-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC] arm64/mm: Lift the cma address limit when
- CONFIG_DMA_NUMA_CMA=y
-To: Feng Tang <feng.tang@linux.alibaba.com>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Will Deacon <will@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
- Yang Shi <yang@os.amperecomputing.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Baruch Siach <baruch@tkos.co.il>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250521014701.73046-1-feng.tang@linux.alibaba.com>
- <aEhnELJQLw8S8Bho@arm.com> <98c0b70a-0cbd-46fd-b481-7663905bb8dc@arm.com>
- <aEkBOqvxXaVXU0fQ@U-2FWC9VHC-2323.local>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <aEkBOqvxXaVXU0fQ@U-2FWC9VHC-2323.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="8323328-1727677288-1749642810=:957"
 
-On 2025-06-11 5:08 am, Feng Tang wrote:
-> Add Marek Szyprowski
-> 
-> Thanks Catalin and Robin for the comments and suggestions!
-> 
-> On Tue, Jun 10, 2025 at 08:46:38PM +0100, Robin Murphy wrote:
->> On 2025-06-10 6:10 pm, Catalin Marinas wrote:
->>> On Wed, May 21, 2025 at 09:47:01AM +0800, Feng Tang wrote:
->>>> When porting an cma related usage from x86_64 server to arm64 server,
->>>> the "cma=4G" setup failed on arm64, and the reason is arm64 has 4G (32bit)
->>>> address limit for cma reservation.
->>>>
->>>> The limit is reasonable due to device DMA requirement, but for NUMA
->>>> servers which have CONFIG_DMA_NUMA_CMA enabled, the limit is not required
->>>> as that config already allows cma area to be reserved on different NUMA
->>>> nodes whose memory very likely goes beyond 4G limit.
->>>>
->>>> Lift the cma limit for platform with such configuration.
->>>
->>> I don't think that's the right fix. Those devices that have a NUMA node
->>> associated may be ok to address memory beyond 4GB. The default for
->>> NUMA_NO_NODE devices is still dma_contiguous_default_area. I also don't
->>> like to make such run-time decisions on the config option.
->>
->> Indeed, the fact that the kernel was built with the option enabled says
->> nothing at all about the needs of whatever system we're actually running on,
->> so that's definitely wrong. This one is also the kind of option which may
->> well be enabled in a multi-platform distro kernel, since it only adds a tiny
->> amount of code with no functional impact on systems which don't explicitly
->> opt in, but offers a useful benefit to those which can and do.
-> 
-> Yep, the analysis from you two make sense to me. Will drop this patch.
-> 
->> Furthermore, the justification doesn't add up at all - if the relevant
->> devices could use the per-NUMA-node CMA areas, then... why not just have
->> them use the per-NUMA-node CMA areas, no kernel change needed (and maybe a
->> slight performance bonus too)? On the other hand, where those areas may or
->> may not be allocated is entirely meaningless to NUMA_NO_NODE devices which
->> wouldn't use them anyway.
-> 
-> The usage model ported from x86_64 is use "cma=4G@4G" in cmdline, and use
-> something like dma_alloc_from_continguous(NULL, 1 << 18, 18, false) to
-> get a huge buffer from 'dma_contiguous_default_area'
-> 
-> btw, I really like the 'numa_cma=' cmdline option, which helps our cma
-> usage a lot.
-> 
->>> That said, maybe we should make the under-4G CMA allocation a best
->>> effort. In the arch code, if that failed, attempt the allocation again
->>> with a limit of 0 and maybe do a pr_notice() that CMA allocation in the
->>> DMA zone failed.
->>
->> TBH given that the command-line parameter can specify placement as well as
->> size, I think it would make a lot of sense to allow that to override the
->> default limit provided by the arch code. That would give users the most
->> flexibility, at the minor cost of having to accept the consequences if they
->> do specify something which ends up not working for some devices. Otherwise I
->> fear that any attempt to make the code itself cleverer will just lead down a
->> rabbit-hole of trying to second-guess the user's intent - if the size
->> doesn't fit the limit, who says it's right to increase the limit rather than
->> reduce the size? And so on...
-> 
-> Strongly agree. Some platforms may have the 32bit limit, and many other
-> platforms which don't have to suffer from the limit. This kind of
-> flexibility should benefit users widely.
-> 
-> Something like below?
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Pretty much, although personally I wouldn't even bother with the message 
-- if the user has gone out of their way to override the default 
-behaviour on their system, then logically it's because they know what 
-that default is and why it didn't suit them, so it seems unlikely that 
-they need reminding of that in one particular subset of override 
-conditions. We still report the actual address where the CMA region ends 
-up being allocated, and that's what really matters in the end.
+--8323328-1727677288-1749642810=:957
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Thanks,
-Robin.
+On Wed, 11 Jun 2025, Jiri Slaby (SUSE) wrote:
+
+> Let the serial8250_do_startup() code handle the special ports (16C950,
+> DA830, RSA) startup in a separate function:
+> serial8250_startup_special().
+>=20
+> And instead of multiple if-else-if, use switch-case. So that it can be
+> easily checked for PORT_RSA now too.
+>=20
+> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+
+Another very nice cleanup for old cruft.
+
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
+--=20
+ i.
 
 > ---
-> diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
-> index 8df0dfaaca18..6a93ad3e024d 100644
-> --- a/kernel/dma/contiguous.c
-> +++ b/kernel/dma/contiguous.c
-> @@ -222,7 +222,12 @@ void __init dma_contiguous_reserve(phys_addr_t limit)
->   	if (size_cmdline != -1) {
->   		selected_size = size_cmdline;
->   		selected_base = base_cmdline;
-> -		selected_limit = min_not_zero(limit_cmdline, limit);
+>  drivers/tty/serial/8250/8250_port.c | 53 +++++++++++++++++------------
+>  1 file changed, 32 insertions(+), 21 deletions(-)
+>=20
+> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/825=
+0/8250_port.c
+> index 476f5fc50237..21ff56a31b56 100644
+> --- a/drivers/tty/serial/8250/8250_port.c
+> +++ b/drivers/tty/serial/8250/8250_port.c
+> @@ -2111,27 +2111,13 @@ static void serial8250_put_poll_char(struct uart_=
+port *port,
+> =20
+>  #endif /* CONFIG_CONSOLE_POLL */
+> =20
+> -int serial8250_do_startup(struct uart_port *port)
+> +static void serial8250_startup_special(struct uart_port *port)
+>  {
+>  =09struct uart_8250_port *up =3D up_to_u8250p(port);
+>  =09unsigned long flags;
+> -=09unsigned char iir;
+> -=09int retval;
+> -=09u16 lsr;
+> -
+> -=09if (!port->fifosize)
+> -=09=09port->fifosize =3D uart_config[port->type].fifo_size;
+> -=09if (!up->tx_loadsz)
+> -=09=09up->tx_loadsz =3D uart_config[port->type].tx_loadsz;
+> -=09if (!up->capabilities)
+> -=09=09up->capabilities =3D uart_config[port->type].flags;
+> -=09up->mcr =3D 0;
+> -
+> -=09if (port->iotype !=3D up->cur_iotype)
+> -=09=09set_io_from_upio(port);
+> =20
+> -=09serial8250_rpm_get(up);
+> -=09if (port->type =3D=3D PORT_16C950) {
+> +=09switch (port->type) {
+> +=09case PORT_16C950:
+>  =09=09/*
+>  =09=09 * Wake up and initialize UART
+>  =09=09 *
+> @@ -2148,9 +2134,8 @@ int serial8250_do_startup(struct uart_port *port)
+>  =09=09serial_port_out(port, UART_EFR, UART_EFR_ECB);
+>  =09=09serial_port_out(port, UART_LCR, 0);
+>  =09=09uart_port_unlock_irqrestore(port, flags);
+> -=09}
+> -
+> -=09if (port->type =3D=3D PORT_DA830) {
+> +=09=09break;
+> +=09case PORT_DA830:
+>  =09=09/*
+>  =09=09 * Reset the port
+>  =09=09 *
+> @@ -2167,9 +2152,35 @@ int serial8250_do_startup(struct uart_port *port)
+>  =09=09=09=09UART_DA830_PWREMU_MGMT_UTRST |
+>  =09=09=09=09UART_DA830_PWREMU_MGMT_URRST |
+>  =09=09=09=09UART_DA830_PWREMU_MGMT_FREE);
+> +=09=09break;
+> +=09case PORT_RSA:
+> +=09=09rsa_enable(up);
+> +=09=09break;
+>  =09}
+> +}
 > +
-> +		selected_limit = limit_cmdline ?: limit;
-> +		if (limit_cmdline > limit)
-> +			pr_notice("User set cma limit [0x%llx] bigger than architectual value [0x%llx], will use the former\n",
-> +				limit_cmdline, limit);
+> +int serial8250_do_startup(struct uart_port *port)
+> +{
+> +=09struct uart_8250_port *up =3D up_to_u8250p(port);
+> +=09unsigned long flags;
+> +=09unsigned char iir;
+> +=09int retval;
+> +=09u16 lsr;
 > +
->   		if (base_cmdline + size_cmdline == limit_cmdline)
->   			fixed = true;
->   	} else {
-> 
-> 
-> Thanks,
-> Feng
-> 
->>
->> Thanks,
->> Robin.
->>
->>>
->>> Adding Robin in case he has a different view.
->>>
->>>> Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
->>>> ---
->>>>    arch/arm64/mm/init.c | 9 ++++++++-
->>>>    1 file changed, 8 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
->>>> index b99bf3980fc6..661758678cc4 100644
->>>> --- a/arch/arm64/mm/init.c
->>>> +++ b/arch/arm64/mm/init.c
->>>> @@ -312,6 +312,7 @@ void __init arm64_memblock_init(void)
->>>>    void __init bootmem_init(void)
->>>>    {
->>>>    	unsigned long min, max;
->>>> +	phys_addr_t cma_limit;
->>>>    	min = PFN_UP(memblock_start_of_DRAM());
->>>>    	max = PFN_DOWN(memblock_end_of_DRAM());
->>>> @@ -343,8 +344,14 @@ void __init bootmem_init(void)
->>>>    	/*
->>>>    	 * Reserve the CMA area after arm64_dma_phys_limit was initialised.
->>>> +	 *
->>>> +	 * When CONFIG_DMA_NUMA_CMA is enabled, system may have CMA reserved
->>>> +	 * area in different NUMA nodes, which likely goes beyond the 32bit
->>>> +	 * limit, thus use (PHYS_MASK+1) as cma limit.
->>>>    	 */
->>>> -	dma_contiguous_reserve(arm64_dma_phys_limit);
->>>> +	cma_limit = IS_ENABLED(CONFIG_DMA_NUMA_CMA) ?
->>>> +			(PHYS_MASK + 1) : arm64_dma_phys_limit;
->>>> +	dma_contiguous_reserve(cma_limit);
->>>>    	/*
->>>>    	 * request_standard_resources() depends on crashkernel's memory being
->>>> -- 
->>>> 2.39.5 (Apple Git-154)
-
+> +=09if (!port->fifosize)
+> +=09=09port->fifosize =3D uart_config[port->type].fifo_size;
+> +=09if (!up->tx_loadsz)
+> +=09=09up->tx_loadsz =3D uart_config[port->type].tx_loadsz;
+> +=09if (!up->capabilities)
+> +=09=09up->capabilities =3D uart_config[port->type].flags;
+> +=09up->mcr =3D 0;
+> +
+> +=09if (port->iotype !=3D up->cur_iotype)
+> +=09=09set_io_from_upio(port);
+> +
+> +=09serial8250_rpm_get(up);
+> =20
+> -=09rsa_enable(up);
+> +=09serial8250_startup_special(port);
+> =20
+>  =09/*
+>  =09 * Clear the FIFO buffers and disable them.
+>=20
+--8323328-1727677288-1749642810=:957--
