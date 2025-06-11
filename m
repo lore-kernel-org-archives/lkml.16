@@ -1,404 +1,1542 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C380919A297
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749654751; cv=fail; b=Aalq+9BhIft9bRb39d+maxEcQpK8Ni1ziOm7ickIU37+M5+E4Sqid3M/k49j1oTTLfKYuik/EQVQgK2EZOQOoYAWuY68ikl4jCdWhZGH1JMwtbotFNKyKfSA/agUKSK+/qUKZdPRN0nAZhDL3gUecT9Cdljothw1C3oJ5nxHCV4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749654751; c=relaxed/simple;
-	bh=Fa4zrgWpZKodkZvHHHMnxsBTHHRLxYhwRdVkFIFh/O8=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZuegotBqcaRGrC1Xqq+3eJBWEKxpXdWZTGR2Ie9YQ7okNyqy5BR0FnF9RZfyBD/mKT5C/8/YY1C77vwQRjf67FCaca1CIv0BD+gRzAQKT5jV1nteBaHNcZ5vywVMfanl1FdYpzcec+J+6M3EmZHh5O8MgJxZyTYaVukc4j7xE7o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=H6RsdcIP; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=JDrK97Gu; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 133EC1E51EC
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 15:12:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749654762; cv=none; b=QmkeSfIrVK0P0ultsMkKB7ervnfUdqgItsbbFXs2yQhtOwW8XvCW71Mwoh3SktCVqPiG+xdDBuv9fx/zpE6g/S0zYZlHuwlYr3EZFKsnpUT+vfR0LVXnQgNtXu40cQw2XwxDu7+YQO/Ft55Q7h1P/DZaWdqwUIJHUv9/w+44VY8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749654762; c=relaxed/simple;
+	bh=G4XMhSFu+LuQAzX5F16ZJjGqigE3Ld9WmzbMOCpaXMk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UTThdMRAzfo+WLrDmOZcg4Wyr0Zbz/X7W2yGw7xTh9EPKp86l7WjyVhmIhbHtkfxzd4WHSZ78Iodoh77QZ3hF/68So2N6KIs6XJodNf8iyDJf93EeC19DWfvLmlVWZOXBsbRK1SY4XpOxAhvTBYKmMmMka5jU9Eww4IlmoPk4SE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ccaONr6a; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="H6RsdcIP";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="JDrK97Gu"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55BEfX31000308;
-	Wed, 11 Jun 2025 15:12:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=KMqkZ9gQuQpnsR5TNOaYqgIbWHVESxdGGkQMcmghdi4=; b=
-	H6RsdcIPTy+XrIMi/gQFHspv3xufnORUZUy7Mrq6kSWjFrJjXzMDfzVjyoJyb+xp
-	34vMmL6u5RyFhgJC5JMj5yKCsUHuRAKn9M7YXeZShEPWziWK8hhUKI094gt293zv
-	p6J26B4Qoc6szve3ZMQsBLTXmwP6DMTeDq5ozRsgtsEY91XX5VXnXXnxmiJc/7ZF
-	p7aAPJVzvev7pQL/7hpdUTFPsBHelLGRLbB+wZ3TEj02Oxs0/MOzOxVaC8b2szLB
-	GcGVHCoOLWJBOqkzB/u+7jffAuREVFXm1I+W2JKIjXueQURNES+t9R9Y750OJBvP
-	Czx3NOn0usPpm79i/vovYQ==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 474d1v7u0b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 11 Jun 2025 15:12:10 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55BEXMKP003302;
-	Wed, 11 Jun 2025 15:12:10 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10on2083.outbound.protection.outlook.com [40.107.93.83])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 474bvab09n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 11 Jun 2025 15:12:09 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=O19YettGEklJfBTJ2jQv9W/WLjhtmzQS+mLY6H2sbx9wUR6hWyhnoU+715cL15MFpXexRApOcn5EFMP3sK3fUXocVMI7itYbJTf0KHoh9X6GQJht5Boo4hEWbScsyxzu8wr0abAqu1V/aAumKzPqY9IH8Nd5np1SKhw3Kdi5Gye6VTu6kk50veizWBFZcfCv6YSRDxkPzKQvbGMAxjNr0Fgzl48/UN7tmfvqnurWM/8T0u6W35VSbkvqv3f4jOQHgd8Sv3lAr5fPfAt0yK/Yclz0Dk8RlgMgjoxX41Qq7WBeyTM6ZRxdZHfFU8UjXMVMM4+8opMGaRgq9DyXpcqyyg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KMqkZ9gQuQpnsR5TNOaYqgIbWHVESxdGGkQMcmghdi4=;
- b=qk1b/+RF3wnhFMEcsl05Q/JmfVn4Ua5ta3CjU4n8iorzKwDsgqXM3eNAfw6LB1Iik1+f+JbFWeYvGh+MjnY3TJhwRl6LRU4Ruy2q2xBg5orc2FsgpcLaUiw7NSFpJk1JF8+svMfhjl8k+NMHGM213I5GvlhLTNuQZ34/vJ3AzPj8FzyfagNf0BGh/waqhKKX6S50Su+wk7ApI3EvHcZn8PazbLC5qY4PzWSfdc686enOJfjk+MZ4EWBdL4vu2Cmde2ZQWWowVrzIme4llD8uCqmHq0w2mwkkKpUJjdh8/TG+A79iO+M7O/FF9N7vyP6nIP0fejbIWw6yndKyU9ZgNw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ccaONr6a"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4a58197794eso186761cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 08:12:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KMqkZ9gQuQpnsR5TNOaYqgIbWHVESxdGGkQMcmghdi4=;
- b=JDrK97Gudt2IKIbTZhWlLagxoybFvUD1whcZVtEU6/ZLcYkArlLBgxOur2GABm1KXVoySjHHujvnbworQu+matvGT6tjIwDBqqBIAaBcpwYciXUe79/aWFAhc4Mpl1RYZPqzAkEPrlTeb5lBQ8YaAxhdlpRm6H44Kx/8bS0/6Mk=
-Received: from LV8PR10MB7750.namprd10.prod.outlook.com (2603:10b6:408:1ed::7)
- by DS0PR10MB6797.namprd10.prod.outlook.com (2603:10b6:8:13d::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8813.33; Wed, 11 Jun
- 2025 15:12:07 +0000
-Received: from LV8PR10MB7750.namprd10.prod.outlook.com
- ([fe80::29ba:4f0c:1a08:e3d4]) by LV8PR10MB7750.namprd10.prod.outlook.com
- ([fe80::29ba:4f0c:1a08:e3d4%6]) with mapi id 15.20.8813.024; Wed, 11 Jun 2025
- 15:12:06 +0000
-From: Chris Hyser <chris.hyser@oracle.com>
-To: Dhaval Giani <dhaval@gianis.ca>
-CC: Peter Zijlstra <peterz@infradead.org>,
-        Mel Gorman
-	<mgorman@techsingularity.net>,
-        "longman@redhat.com" <longman@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] sched/numa: Add ability to override task's
- numa_preferred_nid.
-Thread-Topic: [PATCH 1/2] sched/numa: Add ability to override task's
- numa_preferred_nid.
-Thread-Index: AQHbrabQw/kcdGpt50+BsIplhbwksLP9EGeAgAFWtg4=
-Date: Wed, 11 Jun 2025 15:12:06 +0000
-Message-ID:
- <LV8PR10MB77501C85728C246911CFAFB29B75A@LV8PR10MB7750.namprd10.prod.outlook.com>
-References: <20250415013625.3922497-1-chris.hyser@oracle.com>
- <aEh57Evd4WmrrvJx@fedora>
-In-Reply-To: <aEh57Evd4WmrrvJx@fedora>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: LV8PR10MB7750:EE_|DS0PR10MB6797:EE_
-x-ms-office365-filtering-correlation-id: 1b2889d3-512b-4860-807f-08dda8fa5407
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?09vTpGK3TZjNx2FuSRzN5yaXcz1reJV6EyBt1mdpMtRtz6cRAqrAxFQV/y?=
- =?iso-8859-1?Q?rzrUTvE2i2JskotlYamq5d/NUBmd3eHE3yw3ycOYzwY+42FYIfbfUeN/mq?=
- =?iso-8859-1?Q?CZs83VSdLwskq6nupwgHNk5CRcJ2UcbU6P2n8gUrZHJMprDQ3swL7uyPtl?=
- =?iso-8859-1?Q?hvR+S5M+m1Cj20qjuFB/EeZ+EGdP1DRJ/OlSoCTxmQaPUTtv/w8GdC1N5F?=
- =?iso-8859-1?Q?C2ctzf2EhcLSApjCgdDbLUoX4Kt/hR70WPypezMAWJPRkENgtvw8KBAc4A?=
- =?iso-8859-1?Q?lZvMRYRsaH2U8VkmbHHcterS59c3DFo5NanapJAtleJOGqbmMztz6fnEEk?=
- =?iso-8859-1?Q?Ru/j6CUCAc/8ZhIveAkWMxyDT8kXRoOXKiO/GvxpUqJchl31HFurocrF4f?=
- =?iso-8859-1?Q?Q45+Kb0EQkhTxWvyZQDBNoghdswrxp8bm/k4WsIkzgrtGri/n1H18VD8Nw?=
- =?iso-8859-1?Q?yiGHyao+HCTY4DyTNoyUMLU8vsCiCj05fAuQNk2YgZPgWRJve2dwaTsZ+8?=
- =?iso-8859-1?Q?1J8ab9XaShJtv1HC4f1FV7ZTpuQH6q1phC1L97HwEml4wNW4CYHyv2qsGW?=
- =?iso-8859-1?Q?cx2LXmb3YZAU/K12O/9rMujXT2mIb6kGniSDNXo7J7qHexEeoAMmpQcnwN?=
- =?iso-8859-1?Q?wIxLxhBxMgL4gWB+QoI2AErWDWcsbZHxFiZ+cP1QdtYPWyBUFpQ4HSNav7?=
- =?iso-8859-1?Q?ecenlnDDXRBWg1KKug4njNmOgloogaPiP4jQlvw0d0X2Y1vpBzcGPmP8JY?=
- =?iso-8859-1?Q?dwygWH9LcXX0nta+FK7pN0haVXwXcqvkwk5PeVxjcYYXSRKW0b+bPFhuti?=
- =?iso-8859-1?Q?nCCKo7/CG8E5ZUfckn1hMg2jYiHgGQliviK1w792C5Jqsmz5qi0t1XNVX+?=
- =?iso-8859-1?Q?NZMfEa8QDsX3G7plNYkpeBWVzZHrfHgT8friVMu4l1p6ILmf5+Sop1ZhcY?=
- =?iso-8859-1?Q?mfgFVl4ztfCc9B3kuhqC/tl8WsuSwWQBYfhQ/xumEn/hcuP51ZDFgAVsmD?=
- =?iso-8859-1?Q?ljTLeXKS9TSJZR3gBnUfmzLpxjrN6zoeLGTvDcdk8CNl+NUOpwwYOyJ00/?=
- =?iso-8859-1?Q?Eu1kqMKlA/DEs3yC9lvaJVFa01/tOBvSw2KP+pASMNv0Vn/d8+SGXRYA7L?=
- =?iso-8859-1?Q?FVNZdDimZKDZpQtY7y05syA4q0Ii2jF39ns24/d9OG85PtMddLd77RsVij?=
- =?iso-8859-1?Q?WtDPKU7tZWW0eobhn+EpuSOVGq3ezvMiSI7NxgL24lhVOtVQWfYrElACt4?=
- =?iso-8859-1?Q?87LtqFqcRMZkfpntbTwTR6bT9Pf6LgCKCwBHAh0YjcNVPInVtbnpq1oHH2?=
- =?iso-8859-1?Q?yngwywKOScVP92gy1iBGgAPfVVmr7PxeaDm/woNFNbhmdbeQ69xMW96zMG?=
- =?iso-8859-1?Q?GUdkKB6uz7D3ga5HZ3BItLOkYSdy6bvGZEqB3DVuSYq6MVqzO1j0qFkIYh?=
- =?iso-8859-1?Q?JPdFR9o+fxiaTDm8RFMScG+1vLcR3MJiY0auCq6X8GBKjjMoPb2Gc4Q1F0?=
- =?iso-8859-1?Q?iXPbyZpCSYlIPnfcp2igFihdiTLflUsULjG0iTfSTmNA=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR10MB7750.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?d4D4mPK3MJ8u0XC/J3l7LbhfM+h/371ZZwLrI/nbXqJ74Wz6WeF1iZpnjT?=
- =?iso-8859-1?Q?twuh//ATuAudzp2cOzpz51SNbkxKTQu+hwHLC/RzcutjO/PcYgDfmzN5Rq?=
- =?iso-8859-1?Q?SL8jHv6XE7gNJ8TYWlzab+ZPhQ5oWErgtR1bSwqETUKT8xDbdOOk2aDzvG?=
- =?iso-8859-1?Q?pduD8d7AqNTqy5FSour8Ml5efOrhyPhiYLzgw11tyM8s40EZFpgLkeL5lC?=
- =?iso-8859-1?Q?W6bfqELCMWJzcaWw3RblfEuF+cdt+oEnu0TmxlR2XZI0zDmSarWyEYl6jF?=
- =?iso-8859-1?Q?8xiMrEC6R+cE2SpsYMXWOXp5JNXllOxQb9KZtIp7KTTRRKonDXRefBCJen?=
- =?iso-8859-1?Q?MjZIT+bZV+3LgCDsUFJ+hFFpSbwdCAirbjj6TZQVGqZWeXybRBHz9jGyO6?=
- =?iso-8859-1?Q?RIAVoNj19VW8pDunAsSJKK3ol11JYAgrb2er+huNHpAvLDCBoqgzUkrL+S?=
- =?iso-8859-1?Q?haUCa/3a468/lMfQ31OHti+TAOvTBwS+LLvQuREGLE+VuaQ99m00pzpAW0?=
- =?iso-8859-1?Q?XWZUT5qIyBLOnUkW9RWT2ApketXQ+6Ng5VZKN2SNCgULKxevVfxvY2A9Rp?=
- =?iso-8859-1?Q?+rpVysHFLhAbiONkRQHe9DJ96D43S5weaMiXn/oDu6ZriArv0v+egkCn7T?=
- =?iso-8859-1?Q?wDrPV19RYq3Vqy+tNxBoZU+WrCcKiZbnQOq6VPSrh+sdvQcHqz7DsfHitx?=
- =?iso-8859-1?Q?KdYnFbnjwL9L4vUfZXIqNZ2i12JWfJzNPmCxZWVG1aR84pJITW5DYkVzJL?=
- =?iso-8859-1?Q?8GKECz6CvF6J36tsmKwK1CSUiJiMR5LI5FVbEK/w7aSPv2QIjc2/y5ZRcL?=
- =?iso-8859-1?Q?8u+iDYXLRC4dyc0AE1UqxAiG3gI5C1X/XMB87+iSeXIMaSgosmxlblLlUZ?=
- =?iso-8859-1?Q?+LRvChX2VqG2lyacYi7efcJNTrPB3OKeBiyGEVNSyQgy0zvbs+jW5zWyfH?=
- =?iso-8859-1?Q?Su0u9OhIutn0aVNJyIWFoKSYxeMGR/Wsokyvdrxnxrx6Yh51fXoV93iKnN?=
- =?iso-8859-1?Q?BFuMIblmNv/WdTvJDktQ9JRnRW/FrWig0hihpq6KbIrib/D3wY6ESd7+aP?=
- =?iso-8859-1?Q?U4OGi1diHcWCrmmT3ANnWrqfiu7xywE1D6+jobygYsA5sfZHZWWZC0KmLt?=
- =?iso-8859-1?Q?TnQ+/ERFlCJg0et9WhgjylYAOcZyWHTez1nd4uJgWN6wqKSLPHoaC4lW51?=
- =?iso-8859-1?Q?cuoBRzeUsxVGx5CscU7s33a8wex//vhaL1LWLfcsIc2mz9lXOG+FIsAvdR?=
- =?iso-8859-1?Q?EQaV2fqUBggtJTsoukKEcuaFlRKcPuP60L7B6KxL0EOo9DWr64g+KZ3pSY?=
- =?iso-8859-1?Q?kTcAqa2TcCHlt9jOYVyY5mZoOnoJ1CrLRESQksONH26LUNqfHyGpFHlFjd?=
- =?iso-8859-1?Q?XVEuQhEgncZgWzkGqa907cRLJ5C7gOg1UsAwMnw0chs6dtKbJEs/lqGX0W?=
- =?iso-8859-1?Q?qyvmgdqoM39G13wI+l4EDopW4m8CvbYt8gJKta6Qi5UC+OXc6EI0pu2mMM?=
- =?iso-8859-1?Q?8TdbXpWw1ZQ1gPCSgJejVWyl3RyPxyjvR/xdkaObe1cCjUyEbl9nju6GgS?=
- =?iso-8859-1?Q?GZxW7qBQGE5GyNW9npF5mT/Cg1/JjzN4FAX/x4AI7MyJUjp4fSQdHbePum?=
- =?iso-8859-1?Q?eYayOMHf+VSjI=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=google.com; s=20230601; t=1749654758; x=1750259558; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Vt93IEYu7V8NK/RtbCF2C3IoFoTGFK732QMojhQJ/7A=;
+        b=ccaONr6anPNh+8DtOAOSYXL9sy3xSQE3+Ung5aS2vuY9XIKRDYCnDSedQpKXrHNnc5
+         cKg5wIGQHXCJ3hO3jVjVkmkTtNSfwwO0CZS/UYQMkjOPpjaRmZyug2MXHfTcZxsIzXwW
+         Dd9tOmQ/PJgddLXV6wOFcSqZODI11gagAcHDKc5Wk7rjhQaQfjjrRsfY0xoEaeYAfwE6
+         9JGPGDrLKBbKUWAglZPKk1AuxLFRayjjfz3GPdfbooO5reLQvNfksLQr3oJeRdd/3PNn
+         OjY3j7T30ux+ubUccCCso9djescDkBE7BohNrc+zE8/DB91WcLuNen5JjXiPf7/88DAf
+         1Vdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749654758; x=1750259558;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Vt93IEYu7V8NK/RtbCF2C3IoFoTGFK732QMojhQJ/7A=;
+        b=lRYb8hKVQ9Vy6VlNP29fnFsZqWAM7DopR2utEtBcf+LUEgfP8vZlZ8erLhX6m4BFAV
+         nbsAsRjeoNyJJw2ZRHpM6j2sr2+MDCuxZlgL6OuT662/e1fEL4+59KgrAIao3LvlOuSr
+         vWv2CcOZyxTay7AtZUclxpRbF9LAsfkpO84NLTpBaUf67GhRRF9cP8QY2Gktr+dvyg8q
+         /Teb89Vp6s9WXX6YrWqyVG/nETsor42qrIP/tINWu0ZywAQEnSdfthf4I7zLpY4HiM6U
+         UzYYqe9qyhLaOqthxlmFhWR1n1zTAbIqzp4+nJnOlvGw2tnZgYIaLSXrql3x5bIiuop3
+         16Zw==
+X-Forwarded-Encrypted: i=1; AJvYcCXuz5wubUhJXwRfB2LAEVMRBSAQ2ZfIIvjjvRVaF0ICGKmUc/UpvWRmAj0rImOhRJq7V2pcm5PtOevKPBw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOJXXCsd8Rm74AX96u0e3VxTGlx5s7ec/pRPhJtTVB9i+Vd5ep
+	9l0Q6jfetEbP7lyxwZVaEGQRfmDiyAy28nMSF2P/xnUR53vxqJe58EqXT5ptmw/4avRuDg+Egu0
+	ATACT3fROdmIkMVUQbATS5n+EBHcbuRIZ8FdEXnxs
+X-Gm-Gg: ASbGncsrpHrT0Sh3f5KPdcL6KuZNbHAPkm0mSGifiGjzALSc7keRmLCCxVt1lZ70X0U
+	vYWlRBUt+mwFQEcFxJs/g+UqrWjudnbp9wPEHaCn8LofyVHGvcroj/QD2zj4tdsnseL/qUuHkk5
+	gBt51YnQncePHJH4Yy/gAlFYs38tie2cDMqKoNhivBPsyxcayFOxrNAUBLtHGRg+EZOsw03xBaa
+	Q==
+X-Google-Smtp-Source: AGHT+IHzGFYAKWUalwhKzmDr6f/BedYikR7yGqBbr732z5Cnr0bZ64KCIEuuQhGsdvSdig6aLpOEi3il7VE4cwmKtQ4=
+X-Received: by 2002:ac8:5887:0:b0:49d:88d0:145 with SMTP id
+ d75a77b69052e-4a7173d3c2dmr2610771cf.23.1749654756878; Wed, 11 Jun 2025
+ 08:12:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	GRHKSiSqpMyvx0JV9JvbZ12grWV9H6dOoFbU6vgdHVnc3SHcuHBTAKvxr8oMzvh/xGSJ/DBOqMijZrb0UF0sebTiQ40iMYvgdJTKYHJ4HnptVgR5C66NfXxivp5QbUL7BEG937YqIdk/b0vJQQqe7s5U0RrF7MXwVAGbocqOnYlk2dbLv00GV22/VpYDYZconjYzweySZsI194PPAR3q30RReLPBZEL9Ns260DFevNMVKVJSu9m9Y6uIpBPq3/oLXqXdYKC1OLlIi4qmJoXjyvJLfK1utnkCx+2JxcrQFR72csLksEcnD5gffL4+MuVt+P03ExHvLLC458TIrX4cT81JO37MkeBTwqEcjjPfj0iK52SAoEMPK4TGDF2Z0DpFb6ty5Wze15sEXdQm+RlWhnPzJtNFnoZn1vc9VXfRKRGd9MdpULNmgXujARkImkopC/gnDDpjXyDdSrt52z+diIIjKf2viUIZnYq5XrjypiUG946fd2K2OIsQAea5twt4c9jpDQKyj3n1gjErDvBJNfFoJ4ivdTBIZYSdjVLN1Q8XQh8J4R5quR64gGq0EJDnu6bUf6B+VCQq7zL5gDqpLRJP6PcOPM5l/ksUBll/pko=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR10MB7750.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b2889d3-512b-4860-807f-08dda8fa5407
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2025 15:12:06.1050
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BCACTx7eRomLVaiD26TQVrfrZIj4H358UOdZY9Zud17IEsNWpFAwx8SCm1aI990uq8Suzno2fkXmdLxvCpz7uA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB6797
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-11_05,2025-06-10_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 mlxscore=0
- mlxlogscore=999 phishscore=0 spamscore=0 suspectscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2506110127
-X-Proofpoint-GUID: eFsscp3hYQSeWrAXBDJWHH-tV0Pc-eQC
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjExMDEyNyBTYWx0ZWRfX2O2lgcovQUkc crJjZLZoGso0K+N2CoqW+n4Mhkg+kR6NNFTAt14HfgcGSGQ1Bm2PfKky6z5UE4e2jTyww4aCMV1 5kQLAG9TH8ixOpsO/BT8clXNibpW/Afon39Jp0hBhxl1pBeMzsjxZsD2EZQ6gbCn4V3LH6NtQQ+
- SO8i0MOolEz4Z3ZfrudV9Qb1JJU0//gsD88kUqX9izM/IbiYbeNKt3Mt843b0zFdnw+7ir7f2C0 fcvMpqEJF1hikU9SY1rhXhWen1zzZi+fOfq8rez8q7Xe27yxqTZjrsx7eWL+eKbQ6lL+b8mER1j WTASVEEv67jmyqRSChF7aKXMqJo4mWgicF/R5APMJEU8A61kbDf6vHAjm9Q3dtjRrNvr7G5APW+
- g3Sut8+PKkDA/DCqdVQI3nzhzXzU//nwpWdVJfb5IKYq+TAy93WwiO5LUmuJMtu0Iy4+Pc/O
-X-Proofpoint-ORIG-GUID: eFsscp3hYQSeWrAXBDJWHH-tV0Pc-eQC
-X-Authority-Analysis: v=2.4 cv=d731yQjE c=1 sm=1 tr=0 ts=68499cca b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
- a=xqWC_Br6kY4A:10 a=8nJEP1OIZ-IA:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=lUgs-vawAAAA:8 a=20KFwNOVAAAA:8 a=VwQbUJbxAAAA:8 a=yPCof4ZbAAAA:8 a=bEw1srbDHN52RG-8EvYA:9 a=wPNLvfGTeEIA:10 a=xL-1ee0MYBJLPPLh-8cM:22 cc=ntf awl=host:14714
+References: <20250604231151.799834-1-surenb@google.com> <20250604231151.799834-7-surenb@google.com>
+ <4cefe058-d67b-491c-83ac-293544385e84@lucifer.local> <CAJuCfpGxTdnEgKj1Mgu2bGK_6rxnBd=Sk5HiKKdp38uMtEHu3A@mail.gmail.com>
+ <6364468a-ca45-4e21-8c4d-3d9c4e6396b8@lucifer.local> <CAJuCfpFb4Ky0Hw71KePuMPi5_pPPgK-9rDQ6HRAf39CfcWc6cw@mail.gmail.com>
+ <7a26aae6-8695-4bbc-b00d-47d0c56b9cd6@lucifer.local>
+In-Reply-To: <7a26aae6-8695-4bbc-b00d-47d0c56b9cd6@lucifer.local>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Wed, 11 Jun 2025 08:12:25 -0700
+X-Gm-Features: AX0GCFvfGZ34IUv4v4zbL6UM3U4g9Jv_CMrms2rpyD8Xh11Gd5rOuYywDfythSY
+Message-ID: <CAJuCfpFGZpQhSAh3gYv95AtJjxGjBC+uM0zoBwDTTrpOHZnb4g@mail.gmail.com>
+Subject: Re: [PATCH v4 6/7] mm/maps: read proc/pid/maps under per-vma lock
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com, david@redhat.com, 
+	vbabka@suse.cz, peterx@redhat.com, jannh@google.com, hannes@cmpxchg.org, 
+	mhocko@kernel.org, paulmck@kernel.org, shuah@kernel.org, adobriyan@gmail.com, 
+	brauner@kernel.org, josef@toxicpanda.com, yebin10@huawei.com, 
+	linux@weissschuh.net, willy@infradead.org, osalvador@suse.de, 
+	andrii@kernel.org, ryan.roberts@arm.com, christophe.leroy@csgroup.eu, 
+	tjmercier@google.com, kaleshsingh@google.com, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Dhaval Giani <dhaval@gianis.ca>=0A=
-Sent: Tuesday, June 10, 2025 2:31 PM=0A=
-To: Chris Hyser=0A=
-Cc: Peter Zijlstra; Mel Gorman; longman@redhat.com; linux-kernel@vger.kerne=
-l.org=0A=
-Subject: Re: [PATCH 1/2] sched/numa: Add ability to override task's numa_pr=
-eferred_nid.=0A=
-=0A=
->On Mon, Apr 14, 2025 at 09:35:51PM -0400, Chris Hyser wrote:=0A=
->> From: chris hyser <chris.hyser@oracle.com>=0A=
->>=0A=
->> This patch allows directly setting and subsequent overriding of a task's=
-=0A=
->> "Preferred Node Affinity" by setting the task's numa_preferred_nid and=
-=0A=
->> relying on the existing NUMA balancing infrastructure.=0A=
->>=0A=
->> NUMA balancing introduced the notion of tracking and using a task's=0A=
->> preferred memory node for both migrating/consolidating the physical page=
-s=0A=
->> accessed by a task and to assist the scheduler in making NUMA aware=0A=
->> placement and load balancing decisions.=0A=
->>=0A=
->> The existing mechanism for determining this, Auto NUMA Balancing, relies=
-=0A=
->> on periodic removal of virtual mappings for blocks of a task's address=
-=0A=
->> space. The resulting faults can indicate a preference for an accessed=0A=
->> node.=0A=
->>=0A=
->> This has two issues that this patch seeks to overcome:=0A=
->>=0A=
->> - there is a trade-off between faulting overhead and the ability to dete=
-ct=0A=
->>   dynamic access patterns. In cases where the task or user understand th=
-e=0A=
->>   NUMA sensitivities, this patch can enable the benefits of setting a=0A=
->>   preferred node used either in conjunction with Auto NUMA Balancing's=
-=0A=
->>   default parameters or adjusting the NUMA balance parameters to reduce =
-the=0A=
->>   faulting rate (potentially to 0).=0A=
->>=0A=
->> - memory pinned to nodes or to physical addresses such as RDMA cannot be=
-=0A=
->>   migrated and have thus far been excluded from the scanning. Not taking=
-=0A=
->>   those faults however can prevent Auto NUMA Balancing from reliably=0A=
->>   detecting a node preference with the scheduler load balancer then=0A=
->>   possibly operating with incorrect NUMA information.=0A=
->>=0A=
->> The following results were from TPCC runs on an Oracle Database. The sys=
-tem=0A=
->> was a 2-node Intel machine with a database running on each node with loc=
-al=0A=
->> memory allocations. No tasks or memory were pinned.=0A=
->>=0A=
->> There are four scenarios of interest:=0A=
->>=0A=
->> - Auto NUMA Balancing OFF.=0A=
->>     base value=0A=
->>=0A=
->> - Auto NUMA Balancing ON.=0A=
->>     1.2% - ANB ON better than ANB OFF.=0A=
->>=0A=
->> - Use the prctl(), ANB ON, parameters set to prevent faulting.=0A=
->>     2.4% - prctl() better then ANB OFF.=0A=
->>     1.2% - prctl() better than ANB ON.=0A=
->>=0A=
->> - Use the prctl(), ANB parameters normal.=0A=
->>     3.1% - prctl() and ANB ON better than ANB OFF.=0A=
->>     1.9% - prctl() and ANB ON better than just ANB ON.=0A=
->>     0.7% - prctl() and ANB ON better than prctl() and ANB ON/faulting of=
-f=0A=
->>=0A=
->> In benchmarks pinning large regions of heavily accessed memory, the=0A=
->> advantages of the prctl() over Auto NUMA Balancing alone is significantl=
-y=0A=
->> higher.=0A=
->>=0A=
->> Signed-off-by: Chris Hyser <chris.hyser@oracle.com>=0A=
->> ---=0A=
->>  include/linux/sched.h |  1 +=0A=
->>  init/init_task.c      |  1 +=0A=
->>  kernel/sched/core.c   |  5 ++++-=0A=
->>  kernel/sched/debug.c  |  1 +=0A=
->>  kernel/sched/fair.c   | 15 +++++++++++++--=0A=
->>  5 files changed, 20 insertions(+), 3 deletions(-)=0A=
->>=0A=
->> diff --git a/include/linux/sched.h b/include/linux/sched.h=0A=
->> index f96ac1982893..373046c82b35 100644=0A=
->> --- a/include/linux/sched.h=0A=
->> +++ b/include/linux/sched.h=0A=
->> @@ -1350,6 +1350,7 @@ struct task_struct {=0A=
->>       short                           pref_node_fork;=0A=
->>  #endif=0A=
->>  #ifdef CONFIG_NUMA_BALANCING=0A=
->> +     int                             numa_preferred_nid_force;=0A=
->>       int                             numa_scan_seq;=0A=
->>       unsigned int                    numa_scan_period;=0A=
->>       unsigned int                    numa_scan_period_max;=0A=
->> diff --git a/init/init_task.c b/init/init_task.c=0A=
->> index e557f622bd90..1921a87326db 100644=0A=
->> --- a/init/init_task.c=0A=
->> +++ b/init/init_task.c=0A=
->> @@ -184,6 +184,7 @@ struct task_struct init_task __aligned(L1_CACHE_BYTE=
-S) =3D {=0A=
->>       .vtime.state    =3D VTIME_SYS,=0A=
->>  #endif=0A=
->>  #ifdef CONFIG_NUMA_BALANCING=0A=
->> +     .numa_preferred_nid_force =3D NUMA_NO_NODE,=0A=
->>       .numa_preferred_nid =3D NUMA_NO_NODE,=0A=
->>       .numa_group     =3D NULL,=0A=
->>       .numa_faults    =3D NULL,=0A=
->> diff --git a/kernel/sched/core.c b/kernel/sched/core.c=0A=
->> index 79692f85643f..7d1532f35d15 100644=0A=
->> --- a/kernel/sched/core.c=0A=
->> +++ b/kernel/sched/core.c=0A=
->> @@ -7980,7 +7980,10 @@ void sched_setnuma(struct task_struct *p, int nid=
-)=0A=
->>       if (running)=0A=
->>               put_prev_task(rq, p);=0A=
->>=0A=
->> -     p->numa_preferred_nid =3D nid;=0A=
->> +     if (p->numa_preferred_nid_force !=3D NUMA_NO_NODE)=0A=
->> +             p->numa_preferred_nid =3D p->numa_preferred_nid_force;=0A=
->> +     else=0A=
->> +             p->numa_preferred_nid =3D nid;=0A=
->>=0A=
->>       if (queued)=0A=
->>               enqueue_task(rq, p, ENQUEUE_RESTORE | ENQUEUE_NOCLOCK);=0A=
->> diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c=0A=
->> index 56ae54e0ce6a..4cba21f5d24d 100644=0A=
->> --- a/kernel/sched/debug.c=0A=
->> +++ b/kernel/sched/debug.c=0A=
->> @@ -1154,6 +1154,7 @@ static void sched_show_numa(struct task_struct *p,=
- struct seq_file *m)=0A=
->>               P(mm->numa_scan_seq);=0A=
->>=0A=
->>       P(numa_pages_migrated);=0A=
->> +     P(numa_preferred_nid_force);=0A=
->>       P(numa_preferred_nid);=0A=
->>       P(total_numa_faults);=0A=
->>       SEQ_printf(m, "current_node=3D%d, numa_group_id=3D%d\n",=0A=
->> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c=0A=
->> index 0c19459c8042..79d3d0840fb2 100644=0A=
->> --- a/kernel/sched/fair.c=0A=
->> +++ b/kernel/sched/fair.c=0A=
->> @@ -2642,9 +2642,15 @@ static void numa_migrate_preferred(struct task_st=
-ruct *p)=0A=
->>       unsigned long interval =3D HZ;=0A=
->>=0A=
->>       /* This task has no NUMA fault statistics yet */=0A=
->> -     if (unlikely(p->numa_preferred_nid =3D=3D NUMA_NO_NODE || !p->numa=
-_faults))=0A=
->> +     if (unlikely(p->numa_preferred_nid =3D=3D NUMA_NO_NODE))=0A=
->>               return;=0A=
->>=0A=
->> +     /* Execute rest of function if forced PNID */=0A=
->=0A=
->This comment had me confused, expecially since you check for=0A=
->NUMA_NO_NODE and exit right after. Move it to after please.=0A=
-=0A=
-Sure=0A=
-=0A=
-> +     if (p->numa_preferred_nid_force =3D=3D NUMA_NO_NODE) {=0A=
-> +             if (unlikely(!p->numa_faults))=0A=
-> +                     return;=0A=
-> +     }=0A=
-> +=0A=
->=0A=
->I am in two minds with this one here -> Why the unlikely for=0A=
->p->numa_faults, and can we just make it one single if function?=0A=
-=0A=
-A single if statement will work fine.=0A=
-=0A=
->>       /* Periodically retry migrating the task to the preferred node */=
-=0A=
->>       interval =3D min(interval, msecs_to_jiffies(p->numa_scan_period) /=
- 16);=0A=
->>       p->numa_migrate_retry =3D jiffies + interval;=0A=
->> @@ -3578,6 +3584,7 @@ void init_numa_balancing(unsigned long clone_flags=
-, struct task_struct *p)=0A=
->>=0A=
->>       /* New address space, reset the preferred nid */=0A=
->>       if (!(clone_flags & CLONE_VM)) {=0A=
->> +             p->numa_preferred_nid_force =3D NUMA_NO_NODE;=0A=
->>               p->numa_preferred_nid =3D NUMA_NO_NODE;=0A=
->>               return;=0A=
->>       }=0A=
->> @@ -9301,7 +9308,11 @@ static long migrate_degrades_locality(struct task=
-_struct *p, struct lb_env *env)=0A=
->>       if (!static_branch_likely(&sched_numa_balancing))=0A=
->>               return 0;=0A=
->>=0A=
->> -     if (!p->numa_faults || !(env->sd->flags & SD_NUMA))=0A=
->> +     /* Execute rest of function if forced PNID */=0A=
->=0A=
->Same here.=0A=
-=0A=
-Sure.=0A=
-=0A=
->> +     if (p->numa_preferred_nid_force =3D=3D NUMA_NO_NODE && !p->numa_fa=
-ults)=0A=
->> +             return 0;=0A=
->> +=0A=
->> +     if (!(env->sd->flags & SD_NUMA))=0A=
->>               return 0;=0A=
->>=0A=
->>       src_nid =3D cpu_to_node(env->src_cpu);=0A=
->> --=0A=
->> 2.43.5=
+On Wed, Jun 11, 2025 at 3:25=E2=80=AFAM Lorenzo Stoakes
+<lorenzo.stoakes@oracle.com> wrote:
+>
+> Thanks for your patient replies :)
+>
+> OK to save us both time in such a huuuuge back-and-forth - I agree broadl=
+y
+> with your comments below and I think we are aligned on everything now.
+>
+> I will try to get you a list of merge scenarios and ideally have a look a=
+t
+> the test code too if I have time this week.
+>
+> But otherwise hopefully we are good for a respin here?
+
+Ack. Working on it.
+
+>
+> Cheers, Lorenzo
+>
+> On Tue, Jun 10, 2025 at 05:16:36PM -0700, Suren Baghdasaryan wrote:
+> > On Tue, Jun 10, 2025 at 10:43=E2=80=AFAM Lorenzo Stoakes
+> > <lorenzo.stoakes@oracle.com> wrote:
+> > >
+> > > On Sat, Jun 07, 2025 at 06:41:35PM -0700, Suren Baghdasaryan wrote:
+> > > > On Sat, Jun 7, 2025 at 10:43=E2=80=AFAM Lorenzo Stoakes
+> > > > <lorenzo.stoakes@oracle.com> wrote:
+> > > > >
+> > > > > Hi Suren,
+> > > > >
+> > > > > Forgive me but I am going to ask a lot of questions here :p just =
+want to
+> > > > > make sure I'm getting everything right here.
+> > > >
+> > > > No worries and thank you for reviewing!
+> > >
+> > > No problem!
+> > >
+> > > >
+> > > > >
+> > > > > On Wed, Jun 04, 2025 at 04:11:50PM -0700, Suren Baghdasaryan wrot=
+e:
+> > > > > > With maple_tree supporting vma tree traversal under RCU and per=
+-vma
+> > > > > > locks, /proc/pid/maps can be read while holding individual vma =
+locks
+> > > > > > instead of locking the entire address space.
+> > > > >
+> > > > > Nice :)
+> > > > >
+> > > > > > Completely lockless approach would be quite complex with the ma=
+in issue
+> > > > > > being get_vma_name() using callbacks which might not work corre=
+ctly with
+> > > > > > a stable vma copy, requiring original (unstable) vma.
+> > > > >
+> > > > > Hmmm can you expand on what a 'completely lockless' design might =
+comprise of?
+> > > >
+> > > > In my previous implementation
+> > > > (https://lore.kernel.org/all/20250418174959.1431962-1-surenb@google=
+.com/)
+> > > > I was doing this under RCU while checking mmap_lock seq counter to
+> > > > detect address space changes. That's what I meant by a completely
+> > > > lockless approach here.
+> > >
+> > > Oh did that approach not even use VMA locks _at all_?
+> >
+> > Correct, it was done under RCU protection.
+> >
+> > >
+> > > >
+> > > > >
+> > > > > It's super un-greppable and I've not got clangd set up with an al=
+lmod kernel to
+> > > > > triple-check but I'm seeing at least 2 (are there more?):
+> > > > >
+> > > > > gate_vma_name() which is:
+> > > > >
+> > > > >         return "[vsyscall]";
+> > > > >
+> > > > > special_mapping_name() which is:
+> > > > >
+> > > > >          return ((struct vm_special_mapping *)vma->vm_private_dat=
+a)->name;
+> > > > >
+> > > > > Which I'm guessing is the issue because it's a double pointer der=
+ef...
+> > > >
+> > > > Correct but in more general terms, depending on implementation of t=
+he
+> > > > vm_ops.name callback, vma->vm_ops->name(vma) might not work correct=
+ly
+> > > > with a vma copy. special_mapping_name() is an example of that.
+> > >
+> > > Yeah, this is a horrible situation to be in for such a trivial thing.=
+ But I
+> > > guess unavoidable for now.
+> > >
+> > > >
+> > > > >
+> > > > > Seems such a silly issue to get stuck on, I wonder if we can't ju=
+st change
+> > > > > this to function correctly?
+> > > >
+> > > > I was thinking about different ways to overcome that but once I
+> > > > realized per-vma locks result in even less contention and the
+> > > > implementation is simpler and more robust, I decided that per-vma
+> > > > locks direction is better.
+> > >
+> > > Ack well in that case :)
+> > >
+> > > But still it'd be nice to somehow restrict the impact of this callbac=
+k.
+> >
+> > With VMA locked we are back in a safe place, I think.
+> >
+> > >
+> > > >
+> > > > >
+> > > > > > When per-vma lock acquisition fails, we take the mmap_lock for =
+reading,
+> > > > > > lock the vma, release the mmap_lock and continue. This guarante=
+es the
+> > > > > > reader to make forward progress even during lock contention. Th=
+is will
+> > > > >
+> > > > > Ah that fabled constant forward progress ;)
+> > > > >
+> > > > > > interfere with the writer but for a very short time while we ar=
+e
+> > > > > > acquiring the per-vma lock and only when there was contention o=
+n the
+> > > > > > vma reader is interested in.
+> > > > > > One case requiring special handling is when vma changes between=
+ the
+> > > > > > time it was found and the time it got locked. A problematic cas=
+e would
+> > > > > > be if vma got shrunk so that it's start moved higher in the add=
+ress
+> > > > > > space and a new vma was installed at the beginning:
+> > > > > >
+> > > > > > reader found:               |--------VMA A--------|
+> > > > > > VMA is modified:            |-VMA B-|----VMA A----|
+> > > > > > reader locks modified VMA A
+> > > > > > reader reports VMA A:       |  gap  |----VMA A----|
+> > > > > >
+> > > > > > This would result in reporting a gap in the address space that =
+does not
+> > > > > > exist. To prevent this we retry the lookup after locking the vm=
+a, however
+> > > > > > we do that only when we identify a gap and detect that the addr=
+ess space
+> > > > > > was changed after we found the vma.
+> > > > >
+> > > > > OK so in this case we have
+> > > > >
+> > > > > 1. Find VMA A - nothing is locked yet, but presumably we are unde=
+r RCU so
+> > > > >    are... safe? From unmaps? Or are we? I guess actually the deta=
+ch
+> > > > >    mechanism sorts this out for us perhaps?
+> > > >
+> > > > Yes, VMAs are RCU-safe and we do detect if it got detached after we
+> > > > found it but before we locked it.
+> > >
+> > > Ack I thought so.
+> > >
+> > > >
+> > > > >
+> > > > > 2. We got unlucky and did this immediately prior to VMA A having =
+its
+> > > > >    vma->vm_start, vm_end updated to reflect the split.
+> > > >
+> > > > Yes, the split happened after we found it and before we locked it.
+> > > >
+> > > > >
+> > > > > 3. We lock VMA A, now position with an apparent gap after the pri=
+or VMA
+> > > > > which, in practice does not exist.
+> > > >
+> > > > Correct.
+> > >
+> > > Ack
+> > >
+> > > >
+> > > > >
+> > > > > So I am guessing that by observing sequence numbers you are able =
+to detect
+> > > > > that a change has occurred and thus retry the operation in this s=
+ituation?
+> > > >
+> > > > Yes, we detect the gap and we detect that address space has changed=
+,
+> > > > so to endure we did not miss a split we fall back to mmap_read_lock=
+,
+> > > > lock the VMA while holding mmap_read_lock, drop mmap_read_lock and
+> > > > retry.
+> > > >
+> > > > >
+> > > > > I know we previously discussed the possibility of this retry mech=
+anism
+> > > > > going on forever, I guess I will see the resolution to this in th=
+e code :)
+> > > >
+> > > > Retry in this case won't go forever because we take mmap_read_lock
+> > > > during the retry. In the worst case we will be constantly falling b=
+ack
+> > > > to mmap_read_lock but that's a very unlikely case (the writer shoul=
+d
+> > > > be constantly splitting the vma right before the reader locks it).
+> > >
+> > > It might be worth adding that to commit message to underline that thi=
+s has
+> > > been considered and this is the resolution.
+> > >
+> > > Something like:
+> > >
+> > >         we guarantee forward progress by always resolving contention =
+via a
+> > >         fallback to an mmap-read lock.
+> > >
+> > >         We shouldn't see a repeated fallback to mmap read locks in
+> > >         practice, as this require a vanishingly unlikely series of lo=
+ck
+> > >         contentions (for instance due to repeated VMA split
+> > >         operations). However even if this did somehow happen, we woul=
+d
+> > >         still progress.
+> >
+> > Ack.
+> >
+> > >
+> > > >
+> > > > >
+> > > > > > This change is designed to reduce mmap_lock contention and prev=
+ent a
+> > > > > > process reading /proc/pid/maps files (often a low priority task=
+, such
+> > > > > > as monitoring/data collection services) from blocking address s=
+pace
+> > > > > > updates. Note that this change has a userspace visible disadvan=
+tage:
+> > > > > > it allows for sub-page data tearing as opposed to the previous =
+mechanism
+> > > > > > where data tearing could happen only between pages of generated=
+ output
+> > > > > > data. Since current userspace considers data tearing between pa=
+ges to be
+> > > > > > acceptable, we assume is will be able to handle sub-page data t=
+earing
+> > > > > > as well.
+> > > > >
+> > > > > By tearing do you mean for instance seeing a VMA more than once d=
+ue to
+> > > > > e.g. a VMA expanding in a racey way?
+> > > >
+> > > > Yes.
+> > > >
+> > > > >
+> > > > > Pedantic I know, but it might be worth goiing through all the mer=
+ge case,
+> > > > > split and remap scenarios and explaining what might happen in eac=
+h one (or
+> > > > > perhaps do that as some form of documentation?)
+> > > > >
+> > > > > I can try to put together a list of all of the possibilities if t=
+hat would
+> > > > > be helpful.
+> > > >
+> > > > Hmm. That might be an interesting exercise. I called out this
+> > > > particular case because my tests caught it. I spent some time think=
+ing
+> > > > about other possible scenarios where we would report a gap in a pla=
+ce
+> > > > where there are no gaps but could not think of anything else.
+> > >
+> > > todo++; :)
+> > >
+> > > >
+> > > > >
+> > > > > >
+> > > > > > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> > > > > > ---
+> > > > > >  fs/proc/internal.h |   6 ++
+> > > > > >  fs/proc/task_mmu.c | 177 +++++++++++++++++++++++++++++++++++++=
+++++++--
+> > > > > >  2 files changed, 175 insertions(+), 8 deletions(-)
+> > > > >
+> > > > > I really hate having all this logic in the proc/task_mmu.c file.
+> > > > >
+> > > > > This is really delicate stuff and I'd really like it to live in m=
+m if
+> > > > > possible.
+> > > > >
+> > > > > I reallise this might be a total pain, but I'm quite worried abou=
+t us
+> > > > > putting super-delicate, carefully written VMA handling code in di=
+fferent
+> > > > > places.
+> > > > >
+> > > > > Also having stuff in mm/vma.c opens the door to userland testing =
+which,
+> > > > > when I finally have time to really expand that, would allow for s=
+ome really
+> > > > > nice stress testing here.
+> > > >
+> > > > That would require some sizable refactoring. I assume code for smap=
+s
+> > > > reading and PROCMAP_QUERY would have to be moved as well?
+> > >
+> > > Yeah, I know, and apologies for that, but I really oppose us having t=
+his
+> > > super delicate VMA logic in an fs/proc file, one we don't maintain fo=
+r that
+> > > matter.
+> > >
+> > > I know it's a total pain, but this just isn't the right place to be d=
+oing
+> > > such a careful dance.
+> > >
+> > > I'm not saying relocate code that belongs here, but find a way to abs=
+tract
+> > > the operations.
+> >
+> > Ok, I'll take a stab at refactoring purely mm-related code and will
+> > see how that looks.
+> >
+> > >
+> > > Perhaps could be a walker or something that does all the state transi=
+tion
+> > > stuff that you can then just call from the walker functions here?
+> > >
+> > > You could then figure out something similar for the PROCMAP_QUERY log=
+ic.
+> > >
+> > > We're not doing this VMA locking stuff for smaps are we? As that is w=
+alking
+> > > page tables anyway right? So nothing would change for that.
+> >
+> > Yeah, smaps would stay as they are but refactoring might affect its
+> > code portions as well.
+> >
+> > >
+> > > >
+> > > > >
+> > > > > >
+> > > > > > diff --git a/fs/proc/internal.h b/fs/proc/internal.h
+> > > > > > index 96122e91c645..3728c9012687 100644
+> > > > > > --- a/fs/proc/internal.h
+> > > > > > +++ b/fs/proc/internal.h
+> > > > > > @@ -379,6 +379,12 @@ struct proc_maps_private {
+> > > > > >       struct task_struct *task;
+> > > > > >       struct mm_struct *mm;
+> > > > > >       struct vma_iterator iter;
+> > > > > > +     loff_t last_pos;
+> > > > > > +#ifdef CONFIG_PER_VMA_LOCK
+> > > > > > +     bool mmap_locked;
+> > > > > > +     unsigned int mm_wr_seq;
+> > > > >
+> > > > > Is this the _last_ sequence number observed in the mm_struct? or =
+rather,
+> > > > > previous? Nitty but maybe worth renaming accordingly.
+> > > >
+> > > > It's a copy of the mm->mm_wr_seq. I can add a comment if needed.
+> > >
+> > > Right, of course. But I think the problem is the 'when' it refers to.=
+ It's
+> > > the sequence number associatied with the mm here sure, but when was i=
+t
+> > > snapshotted? How do we use it?
+> > >
+> > > Something like 'last_seen_seqnum' or 'mm_wr_seq_start' or something p=
+lus a
+> > > comment would be helpful.
+> > >
+> > > This is nitty I know... but this stuff is very confusing and I think =
+every
+> > > little bit we do to help explain things is helpful here.
+> >
+> > Ok, I'll add a comment that mm_wr_seq is a snapshot of mm->mm_wr_seq
+> > before we started the VMA lookup.
+> >
+> > >
+> > > >
+> > > > >
+> > > > > > +     struct vm_area_struct *locked_vma;
+> > > > > > +#endif
+> > > > > >  #ifdef CONFIG_NUMA
+> > > > > >       struct mempolicy *task_mempolicy;
+> > > > > >  #endif
+> > > > > > diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+> > > > > > index 27972c0749e7..36d883c4f394 100644
+> > > > > > --- a/fs/proc/task_mmu.c
+> > > > > > +++ b/fs/proc/task_mmu.c
+> > > > > > @@ -127,13 +127,172 @@ static void release_task_mempolicy(struc=
+t proc_maps_private *priv)
+> > > > > >  }
+> > > > > >  #endif
+> > > > > >
+> > > > > > -static struct vm_area_struct *proc_get_vma(struct proc_maps_pr=
+ivate *priv,
+> > > > > > -                                             loff_t *ppos)
+> > > > > > +#ifdef CONFIG_PER_VMA_LOCK
+> > > > > > +
+> > > > > > +static struct vm_area_struct *trylock_vma(struct proc_maps_pri=
+vate *priv,
+> > > > > > +                                       struct vm_area_struct *=
+vma,
+> > > > > > +                                       unsigned long last_pos,
+> > > > > > +                                       bool mm_unstable)
+> > > > >
+> > > > > This whole function is a bit weird tbh, you handle both the
+> > > > > mm_unstable=3Dtrue and mm_unstable=3Dfalse cases, in the latter w=
+e don't try to
+> > > > > lock at all...
+> > > >
+> > > > Why do you think so? vma_start_read() is always called but in case
+> > > > mm_unstable=3Dtrue we double check for the gaps to take care of the=
+ case
+> > > > I mentioned in the changelog.
+> > >
+> > > Well the read lock will always succeed if mmap read lock is held righ=
+t?
+> > > Actually... no :)
+> > >
+> > > I see your point below about vma_start_read_locked() :>)
+> > >
+> > > I see below you suggest splitting into two functions, that seems to b=
+e a
+> > > good way forward.
+> >
+> > Ack.
+> >
+> > >
+> > > I _think_ we won't even need the checks re: mm and last_pos in that c=
+ase
+> > > right? As holding the mmap lock we should be able to guarantee? Or at=
+ least
+> > > the mm check?
+> >
+> > Correct. These checks are needed only if we are searching the VMA
+> > under RCU protection before locking it. If we are holding mmap_lock
+> > then all this is not needed.
+> >
+> > >
+> > > >
+> > > > >
+> > > > > Nitty (sorry I know this is mildly irritating review) but maybe n=
+eeds to be
+> > > > > renamed, or split up somehow?
+> > > > >
+> > > > > This is only trylocking in the mm_unstable case...
+> > > >
+> > > > Nope, I think you misunderstood the intention, as I mentioned above=
+.
+> > > >
+> > > > >
+> > > > > > +{
+> > > > > > +     vma =3D vma_start_read(priv->mm, vma);
+> > > > >
+> > > > > Do we want to do this with mm_unstable =3D=3D false?
+> > > >
+> > > > Yes, always. mm_unstable=3Dtrue only indicates that we are already
+> > > > holding mmap_read_lock, so we don't need to double-check for gaps.
+> > > > Perhaps I should add some comments to clarify what purpose this
+> > > > parameter serves...
+> > > >
+> > > > >
+> > > > > I know (from my own documentation :)) taking a VMA read lock whil=
+e holding
+> > > > > an mmap read lock is fine (the reverse isn't) but maybe it's subo=
+ptimal?
+> > > >
+> > > > Ah, right. I should use vma_start_read_locked() instead when we are
+> > > > holding mmap_read_lock. That's why that function was introduced. Wi=
+ll
+> > > > change.
+> > >
+> > > Yeah, I'll pretend this is what I meant to sound smart :P but this is=
+ a
+> > > really good point!
+> > >
+> > > >
+> > > > >
+> > > > > > +     if (IS_ERR_OR_NULL(vma))
+> > > > > > +             return NULL;
+> > > > >
+> > > > > Hmm IS_ERR_OR_NULL() is generally a code smell (I learned this so=
+me years
+> > > > > ago from people moaning at me on code review :)
+> > > > >
+> > > > > Sorry I know that's annoying but perhaps its indicative of an iss=
+ue in the
+> > > > > interface? That's possibly out of scope here however.
+> > > >
+> > > > lock_vma_under_rcu() returns NULL or EAGAIN to signal
+> > > > lock_vma_under_rcu() that it should retry the VMA lookup. In here i=
+n
+> > > > either case we retry under mmap_read_lock, that's why EAGAIN is
+> > > > ignored.
+> > >
+> > > Yeah indeed you're right. I guess I'm just echoing previous review tr=
+aumas
+> > > here :P
+> > >
+> > > >
+> > > > >
+> > > > > Why are we ignoring errors here though? I guess because we don't =
+care if
+> > > > > the VMA got detached from under us, we don't bother retrying like=
+ we do in
+> > > > > lock_vma_under_rcu()?
+> > > >
+> > > > No, we take mmap_read_lock and retry in either case. Perhaps I shou=
+ld
+> > > > split trylock_vma() into two separate functions - one for the case
+> > > > when we are holding mmap_read_lock and another one when we don't? I
+> > > > think that would have prevented many of your questions. I'll try th=
+at
+> > > > and see how it looks.
+> > >
+> > > Yeah that'd be helpful. I think this should also simplify things?
+> >
+> > Yes. Will try that.
+> >
+> > >
+> > > >
+> > > > >
+> > > > > Should we just abstract that part of lock_vma_under_rcu() and use=
+ it?
+> > > >
+> > > > trylock_vma() is not that similar to lock_vma_under_rcu() for that
+> > > > IMO. Also lock_vma_under_rcu() is in the pagefault path which is ve=
+ry
+> > > > hot, so I would not want to add conditions there to make it work fo=
+r
+> > > > trylock_vma().
+> > >
+> > > Right sure.
+> > >
+> > > But I'm just wondering why we don't do the retry stuff, e.g.:
+> > >
+> > >                 /* Check if the VMA got isolated after we found it */
+> > >                 if (PTR_ERR(vma) =3D=3D -EAGAIN) {
+> > >                         count_vm_vma_lock_event(VMA_LOCK_MISS);
+> > >                         /* The area was replaced with another one */
+> > >                         goto retry;
+> > >                 }
+> > >
+> > > I mean do we need to retry under mmap lock in that case? Can we just =
+retry
+> > > the lookup? Or is this not a worthwhile optimisation here?
+> >
+> > Hmm. That might be applicable here as well. Let me think some more
+> > about it. Theoretically that might affect our forward progress
+> > guarantee but for us to retry infinitely the VMA we find has to be
+> > knocked out from under us each time we find it. So, quite unlikely to
+> > happen continuously.
+> >
+> > >
+> > > >
+> > > > >
+> > > > > > +
+> > > > > > +     /* Check if the vma we locked is the right one. */
+> > > > >
+> > > > > Well it might not be the right one :) but might still belong to t=
+he right
+> > > > > mm, so maybe better to refer to the right virtual address space.
+> > > >
+> > > > Ack. Will change to "Check if the vma belongs to the right address =
+space. "
+> > >
+> > > Thanks!
+> > >
+> > > >
+> > > > >
+> > > > > > +     if (unlikely(vma->vm_mm !=3D priv->mm))
+> > > > > > +             goto err;
+> > > > > > +
+> > > > > > +     /* vma should not be ahead of the last search position. *=
+/
+> > > > >
+> > > > > You mean behind the last search position? Surely a VMA being _ahe=
+ad_ of it
+> > > > > is fine?
+> > > >
+> > > > Yes, you are correct. "should not" should have been "should".
+> > >
+> > > Thanks!
+> > >
+> > > >
+> > > > >
+> > > > > > +     if (unlikely(last_pos >=3D vma->vm_end))
+> > > > >
+> > > > > Should that be >=3D? Wouldn't an =3D=3D just be an adjacent VMA? =
+Why is that
+> > > > > problematic? Or is last_pos inclusive?
+> > > >
+> > > > last_pos is inclusive and vma->vm_end is not inclusive, so if last_=
+pos
+> > > > =3D=3D vma->vm_end that would mean the vma is behind the last_pos. =
+Since
+> > > > we are searching forward from the last_pos, we should not be findin=
+g a
+> > > > vma before last_pos unless it mutated.
+> > >
+> > > Ahhh that explains it. Thanks.
+> > >
+> > > >
+> > > > >
+> > > > > > +             goto err;
+> > > > >
+> > > > > Am I correct in thinking thi is what is being checked?
+> > > > >
+> > > > >           last_pos
+> > > > >              |
+> > > > >              v
+> > > > > |---------|
+> > > > > |         |
+> > > > > |---------|
+> > > > >         vm_end
+> > > > >    <--- vma 'next'??? How did we go backwards?
+> > > >
+> > > > Exactly.
+> > > >
+> > > > >
+> > > > > When last_pos gets updated, is it possible for a shrink to race t=
+o cause
+> > > > > this somehow?
+> > > >
+> > > > No, we update last_pos only after we locked the vma and confirmed i=
+t's
+> > > > the right one.
+> > >
+> > > Ack.
+> > >
+> > > >
+> > > > >
+> > > > > Do we treat this as an entirely unexpected error condition? In wh=
+ich case
+> > > > > is a WARN_ON_ONCE() warranted?
+> > > >
+> > > > No, the VMA might have mutated from under us before we locked it. F=
+or
+> > > > example it might have been remapped to a higher address.
+> > > >
+> > > > >
+> > > > > > +
+> > > > > > +     /*
+> > > > > > +      * vma ahead of last search position is possible but we n=
+eed to
+> > > > > > +      * verify that it was not shrunk after we found it, and a=
+nother
+> > > > > > +      * vma has not been installed ahead of it. Otherwise we m=
+ight
+> > > > > > +      * observe a gap that should not be there.
+> > > > > > +      */
+> > > > >
+> > > > > OK so this is the juicy bit.
+> > > >
+> > > > Yep, that's the case singled out in the changelog.
+> > >
+> > > And rightly so!
+> > >
+> > > >
+> > > > >
+> > > > >
+> > > > > > +     if (mm_unstable && last_pos < vma->vm_start) {
+> > > > > > +             /* Verify only if the address space changed since=
+ vma lookup. */
+> > > > > > +             if ((priv->mm_wr_seq & 1) ||
+> > > > >
+> > > > > Can we wrap this into a helper? This is a 'you just have to know =
+that odd
+> > > > > seq number means a write operation is in effect'. I know you have=
+ a comment
+> > > > > here, but I think something like:
+> > > > >
+> > > > >         if (has_mm_been_modified(priv) ||
+> > > > >
+> > > > > Would be a lot clearer.
+> > > >
+> > > > Yeah, I was thinking about that. I think an even cleaner way would =
+be
+> > > > to remember the return value of mmap_lock_speculate_try_begin() and
+> > > > pass it around. I was hoping to avoid that extra parameter but soun=
+ds
+> > > > like for the sake of clarity that would be preferable?
+> > >
+> > > You know, it's me so I might have to mention a helper struct here :P =
+it's
+> > > the two most Lorenzo things - helper sructs and churn...
+> > >
+> > > >
+> > > > >
+> > > > > Again this speaks to the usefulness of abstracting all this logic=
+ from the
+> > > > > proc code, we are putting super delicate VMA stuff here and it's =
+just not
+> > > > > the right place.
+> > > > >
+> > > > > As an aside, I don't see coverage in the process_addrs documentat=
+ion on
+> > > > > sequence number odd/even or speculation?
+> > > > >
+> > > > > I think we probably need to cover this to maintain an up-to-date
+> > > > > description of how the VMA locking mechanism works and is used?
+> > > >
+> > > > I think that's a very low level technical detail which I should not
+> > > > have exposed here. As I mentioned, I should simply store the return
+> > > > value of mmap_lock_speculate_try_begin() instead of doing these tri=
+cky
+> > > > mm_wr_seq checks.
+> > >
+> > > Right yeah I'm all for simplifying if we can! Sounds sensible.
+> > >
+> > > >
+> > > > >
+> > > > > > +                 mmap_lock_speculate_retry(priv->mm, priv->mm_=
+wr_seq)) {
+> > > > >
+> > > > > Nit, again unrelated to this series, but would be useful to add a=
+ comment
+> > > > > to mmap_lock_speculate_retry() to indicate that a true return val=
+ue
+> > > > > indicates a retry is needed, or renaming it.
+> > > >
+> > > > This is how seqcount API works in general. Note that
+> > > > mmap_lock_speculate_retry() is just a wrapper around
+> > > > read_seqcount_retry().
+> > >
+> > > Yeah, I guess I can moan to PeterZ about that :P
+> > >
+> > > It's not a big deal honestly, but it was just something I found confu=
+sing.
+> > >
+> > > I think adjusting the comment above to something like:
+> > >
+> > >                 /*
+> > >                  * Verify if the address space changed since vma look=
+up, or if
+> > >                  * the speculative lock needs to be retried.
+> > >                  */
+> > >
+> > > Or perhaps somethig more in line with the description you give below?
+> >
+> > Ack.
+> >
+> > >
+> > > >
+> > > > >
+> > > > > Maybe mmap_lock_speculate_needs_retry()? Also I think that functi=
+on needs a
+> > > > > comment.
+> > > >
+> > > > See https://elixir.bootlin.com/linux/v6.15.1/source/include/linux/s=
+eqlock.h#L395
+> > >
+> > > Yeah I saw that, but going 2 levels deep to read a comment isn't grea=
+t.
+> > >
+> > > But again this isn't the end of the world.
+> > >
+> > > >
+> > > > >
+> > > > > Naming is hard :P
+> > > > >
+> > > > > Anyway the totality of this expression is 'something changed' or =
+'read
+> > > > > section retry required'.
+> > > >
+> > > > Not quite. The expression is "something is changed from under us or
+> > > > something was changing even before we started VMA lookup". Or in mo=
+re
+> > > > technical terms, mmap_write_lock was acquired while we were locking
+> > > > the VMA or mmap_write_lock was already held even before we started =
+the
+> > > > VMA search.
+> > >
+> > > OK so read section retry required =3D the seq num changes from under =
+us
+> > > (checked carefully with memory barriers and carefully considered and
+> > > thought out such logic), and the priv->mm_wr_seq check before it is t=
+he
+> > > 'was this changed even before we began?'
+> > >
+> > > I wonder btw if we could put both into a single helper function to ch=
+eck
+> > > whether that'd be clearer.
+> >
+> > So this will look something like this:
+> >
+> > priv->can_speculate =3D mmap_lock_speculate_try_begin();
+> > ...
+> > if (!priv->can_speculate || mmap_lock_speculate_retry()) {
+> >     // fallback
+> > }
+> >
+> > Is that descriptive enough?
+> >
+> > >
+> > > >
+> > > > >
+> > > > > Under what circumstances would this happen?
+> > > >
+> > > > See my previous comment and I hope that clarifies it.
+> > >
+> > > Thanks!
+> > >
+> > > >
+> > > > >
+> > > > > OK so we're into the 'retry' logic here:
+> > > > >
+> > > > > > +                     vma_iter_init(&priv->iter, priv->mm, last=
+_pos);
+> > > > >
+> > > > > I'd definitely want Liam to confirm this is all above board and c=
+orrect, as
+> > > > > these operations are pretty sensitive.
+> > > > >
+> > > > > But assuming this is safe, we reset the iterator to the last posi=
+tion...
+> > > > >
+> > > > > > +                     if (vma !=3D vma_next(&priv->iter))
+> > > > >
+> > > > > Then assert the following VMA is the one we seek.
+> > > > >
+> > > > > > +                             goto err;
+> > > > >
+> > > > > Might this ever be the case in the course of ordinary operation? =
+Is this
+> > > > > really an error?
+> > > >
+> > > > This simply means that the VMA we found before is not at the place =
+we
+> > > > found it anymore. The locking fails and we should retry.
+> > >
+> > > I know it's pedantic but feels like 'err' is not a great name for thi=
+s.
+> > >
+> > > Maybe 'nolock' or something? Or 'lock_failed'?
+> >
+> > lock_failed sounds good.
+> >
+> >
+> > >
+> > > >
+> > > > >
+> > > > > > +             }
+> > > > > > +     }
+> > > > > > +
+> > > > > > +     priv->locked_vma =3D vma;
+> > > > > > +
+> > > > > > +     return vma;
+> > > > > > +err:
+> > > > >
+> > > > > As queried above, is this really an error path or something we mi=
+ght expect
+> > > > > to happen that could simply result in an expected fallback to mma=
+p lock?
+> > > >
+> > > > It's a failure to lock the VMA, which is handled by retrying under
+> > > > mmap_read_lock. So, trylock_vma() failure does not mean a fault in =
+the
+> > > > logic. It's expected to happen occasionally.
+> > >
+> > > Ack yes understood thanks!
+> > >
+> > > >
+> > > > >
+> > > > > > +     vma_end_read(vma);
+> > > > > > +     return NULL;
+> > > > > > +}
+> > > > > > +
+> > > > > > +
+> > > > > > +static void unlock_vma(struct proc_maps_private *priv)
+> > > > > > +{
+> > > > > > +     if (priv->locked_vma) {
+> > > > > > +             vma_end_read(priv->locked_vma);
+> > > > > > +             priv->locked_vma =3D NULL;
+> > > > > > +     }
+> > > > > > +}
+> > > > > > +
+> > > > > > +static const struct seq_operations proc_pid_maps_op;
+> > > > > > +
+> > > > > > +static inline bool lock_content(struct seq_file *m,
+> > > > > > +                             struct proc_maps_private *priv)
+> > > > >
+> > > > > Pedantic I know but isn't 'lock_content' a bit generic?
+> > > > >
+> > > > > He says, not being able to think of a great alternative...
+> > > > >
+> > > > > OK maybe fine... :)
+> > > >
+> > > > Yeah, I struggled with this myself. Help in naming is appreciated.
+> > >
+> > > This is where it gets difficult haha so easy to point out but not so =
+easy
+> > > to fix...
+> > >
+> > > lock_vma_range()?
+> >
+> > Ack.
+> >
+> > >
+> > > >
+> > > > >
+> > > > > > +{
+> > > > > > +     /*
+> > > > > > +      * smaps and numa_maps perform page table walk, therefore=
+ require
+> > > > > > +      * mmap_lock but maps can be read with locked vma only.
+> > > > > > +      */
+> > > > > > +     if (m->op !=3D &proc_pid_maps_op) {
+> > > > >
+> > > > > Nit but is there a neater way of checking this? Actually I imagin=
+e not...
+> > > > >
+> > > > > But maybe worth, instead of forward-declaring proc_pid_maps_op, f=
+orward declare e.g.
+> > > > >
+> > > > > static inline bool is_maps_op(struct seq_file *m);
+> > > > >
+> > > > > And check e.g.
+> > > > >
+> > > > > if (is_maps_op(m)) { ... in the above.
+> > > > >
+> > > > > Yeah this is nitty not a massive del :)
+> > > >
+> > > > I'll try that and see how it looks. Thanks!
+> > >
+> > > Thanks!
+> > >
+> > > >
+> > > > >
+> > > > > > +             if (mmap_read_lock_killable(priv->mm))
+> > > > > > +                     return false;
+> > > > > > +
+> > > > > > +             priv->mmap_locked =3D true;
+> > > > > > +     } else {
+> > > > > > +             rcu_read_lock();
+> > > > > > +             priv->locked_vma =3D NULL;
+> > > > > > +             priv->mmap_locked =3D false;
+> > > > > > +     }
+> > > > > > +
+> > > > > > +     return true;
+> > > > > > +}
+> > > > > > +
+> > > > > > +static inline void unlock_content(struct proc_maps_private *pr=
+iv)
+> > > > > > +{
+> > > > > > +     if (priv->mmap_locked) {
+> > > > > > +             mmap_read_unlock(priv->mm);
+> > > > > > +     } else {
+> > > > > > +             unlock_vma(priv);
+> > > > > > +             rcu_read_unlock();
+> > > > >
+> > > > > Does this always get called even in error cases?
+> > > >
+> > > > What error cases do you have in mind? Error to lock a VMA is handle=
+d
+> > > > by retrying and we should be happily proceeding. Please clarify.
+> > >
+> > > Well it was more of a question really - can the traversal through
+> > > /proc/$pid/maps result in some kind of error that doesn't reach this
+> > > function, thereby leaving things locked mistakenly?
+> > >
+> > > If not then happy days :)
+> > >
+> > > I'm guessing there isn't.
+> >
+> > There is EINTR in m_start() but unlock_content() won't be called in
+> > that case, so I think we are good.
+> >
+> > >
+> > > >
+> > > > >
+> > > > > > +     }
+> > > > > > +}
+> > > > > > +
+> > > > > > +static struct vm_area_struct *get_next_vma(struct proc_maps_pr=
+ivate *priv,
+> > > > > > +                                        loff_t last_pos)
+> > > > >
+> > > > > We really need a generalised RCU multi-VMA locking mechanism (we'=
+re looking
+> > > > > into madvise VMA locking atm with a conservative single VMA lock =
+at the
+> > > > > moment, but in future we probably want to be able to span multipl=
+e for
+> > > > > instance) and this really really feels like it doesn't belong in =
+this proc
+> > > > > code.
+> > > >
+> > > > Ok, I guess you are building a case to move more code into vma.c? I
+> > > > see what you are doing :)
+> > >
+> > > Haha damn it, my evil plans revealed :P
+> > >
+> > > >
+> > > > >
+> > > > > >  {
+> > > > > > -     struct vm_area_struct *vma =3D vma_next(&priv->iter);
+> > > > > > +     struct vm_area_struct *vma;
+> > > > > > +     int ret;
+> > > > > > +
+> > > > > > +     if (priv->mmap_locked)
+> > > > > > +             return vma_next(&priv->iter);
+> > > > > > +
+> > > > > > +     unlock_vma(priv);
+> > > > > > +     /*
+> > > > > > +      * Record sequence number ahead of vma lookup.
+> > > > > > +      * Odd seqcount means address space modification is in pr=
+ogress.
+> > > > > > +      */
+> > > > > > +     mmap_lock_speculate_try_begin(priv->mm, &priv->mm_wr_seq)=
+;
+> > > > >
+> > > > > Hmm we're discarding the return value I guess we don't really car=
+e about
+> > > > > that at this stage? Or do we? Do we want to assert the read criti=
+cal
+> > > > > section state here?
+> > > >
+> > > > Yeah, as I mentioned, instead of relying on priv->mm_wr_seq being o=
+dd
+> > > > I should record the return value of mmap_lock_speculate_try_begin()=
+.
+> > > > In the functional sense these two are interchangeable.
+> > >
+> > > Ack, thanks!
+> > >
+> > > >
+> > > > >
+> > > > > I guess since we have the mm_rq_seq which we use later it's the s=
+ame thing
+> > > > > and doesn't matter.
+> > > >
+> > > > Yep.
+> > >
+> > > Ack
+> > >
+> > > >
+> > > > >
+> > > > > ~~(off topic a bit)~~
+> > > > >
+> > > > > OK so off-topic again afaict we're doing something pretty horribl=
+y gross here.
+> > > > >
+> > > > > We pass &priv->mm_rw_seq as 'unsigned int *seq' field to
+> > > > > mmap_lock_speculate_try_begin(), which in turn calls:
+> > > > >
+> > > > >         return raw_seqcount_try_begin(&mm->mm_lock_seq, *seq);
+> > > > >
+> > > > > And this is defined as a macro of:
+> > > > >
+> > > > > #define raw_seqcount_try_begin(s, start)                         =
+       \
+> > > > > ({                                                               =
+       \
+> > > > >         start =3D raw_read_seqcount(s);                          =
+         \
+> > > > >         !(start & 1);                                            =
+       \
+> > > > > })
+> > > > >
+> > > > > So surely this expands to:
+> > > > >
+> > > > >         *seq =3D raw_read_seqcount(&mm->mm_lock_seq);
+> > > > >         !(*seq & 1) // return true if even, false if odd
+> > > > >
+> > > > > So we're basically ostensibly passing an unsigned int, but becaus=
+e we're
+> > > > > calling a macro it's actually just 'text' and we're instead able =
+to then
+> > > > > reassign the underlying unsigned int * ptr and... ugh.
+> > > > >
+> > > > > ~~(/off topic a bit)~~
+> > > >
+> > > > Aaaand we are back...
+> > >
+> > > :)) yeah this isn't your fault, just a related 'wtf' moan :P we can p=
+retend
+> > > like it never happened *ahem*
+> > >
+> > > >
+> > > > >
+> > > > > > +     vma =3D vma_next(&priv->iter);
+> > > > >
+> > > > >
+> > > > >
+> > > > > > +     if (!vma)
+> > > > > > +             return NULL;
+> > > > > > +
+> > > > > > +     vma =3D trylock_vma(priv, vma, last_pos, true);
+> > > > > > +     if (vma)
+> > > > > > +             return vma;
+> > > > > > +
+> > > > >
+> > > > > Really feels like this should be a boolean... I guess neat to res=
+et vma if
+> > > > > not locked though.
+> > > >
+> > > > I guess I can change trylock_vma() to return boolean. We always ret=
+urn
+> > > > the same vma or NULL I think.
+> > >
+> > > Ack, I mean I guess you're looking at reworking it in general so can =
+take
+> > > this into account.
+> >
+> > Ack.
+> >
+> > >
+> > > >
+> > > > >
+> > > > > > +     /* Address space got modified, vma might be stale. Re-loc=
+k and retry */
+> > > > >
+> > > > > > +     rcu_read_unlock();
+> > > > >
+> > > > > Might we see a VMA possibly actually legit unmapped in a race her=
+e? Do we
+> > > > > need to update last_pos/ppos to account for this? Otherwise we mi=
+ght just
+> > > > > fail on the last_pos >=3D vma->vm_end check in trylock_vma() no?
+> > > >
+> > > > Yes, it can happen and trylock_vma() will fail to lock the modified
+> > > > VMA. That's by design. In such cases we retry the lookup from the s=
+ame
+> > > > last_pos.
+> > >
+> > > OK and then we're fine with it because the gap we report will be an a=
+ctual
+> > > gap.
+> >
+> > Yes, either the actual gap or a VMA newly mapped at that address.
+> >
+> > >
+> > > >
+> > > > >
+> > > > > > +     ret =3D mmap_read_lock_killable(priv->mm);
+> > > > >
+> > > > > Shouldn't we set priv->mmap_locked here?
+> > > >
+> > > > No, we will drop the mmap_read_lock shortly. priv->mmap_locked
+> > > > indicates the overall mode we operate in. When priv->mmap_locked=3D=
+false
+> > > > we can still temporarily take the mmap_read_lock when retrying and
+> > > > then drop it after we found the VMA.
+> > >
+> > > Right yeah, makes sense.
+> > >
+> > > >
+> > > > >
+> > > > > I guess not as we are simply holding the mmap lock to definitely =
+get the
+> > > > > next VMA.
+> > > >
+> > > > Correct.
+> > >
+> > > Ack
+> > >
+> > > >
+> > > > >
+> > > > > > +     rcu_read_lock();
+> > > > > > +     if (ret)
+> > > > > > +             return ERR_PTR(ret);
+> > > > > > +
+> > > > > > +     /* Lookup the vma at the last position again under mmap_r=
+ead_lock */
+> > > > > > +     vma_iter_init(&priv->iter, priv->mm, last_pos);
+> > > > > > +     vma =3D vma_next(&priv->iter);
+> > > > > > +     if (vma) {
+> > > > > > +             vma =3D trylock_vma(priv, vma, last_pos, false);
+> > > > >
+> > > > > Be good to use Liam's convention of /* mm_unstable =3D */ false t=
+o make this
+> > > > > clear.
+> > > >
+> > > > Yeah, I'm thinking of splitting trylock_vma() into two separate
+> > > > functions for mm_unstable=3Dtrue and mm_unstable=3Dfalse cases.
+> > >
+> > > Yes :) thanks!
+> > >
+> > > >
+> > > > >
+> > > > > Find it kinda weird again we're 'trylocking' something we already=
+ have
+> > > > > locked via the mmap lock but I already mentioend this... :)
+> > > > >
+> > > > > > +             WARN_ON(!vma); /* mm is stable, has to succeed */
+> > > > >
+> > > > > I wonder if this is really useful, at any rate seems like there'd=
+ be a
+> > > > > flood here so WARN_ON_ONCE()? Perhaps VM_WARN_ON_ONCE() given thi=
+s really
+> > > > > really ought not happen?
+> > > >
+> > > > Well, I can't use BUG_ON(), so WARN_ON() is the next tool I have :)=
+ In
+> > > > reality this should never happen, so
+> > > > WARN_ON/WARN_ON_ONCE/WARN_ON_RATELIMITED/or whatever does not matte=
+r
+> > > > much.
+> > >
+> > > I think if you refactor into two separate functions this becomes even=
+ more
+> > > unnecessary because then you are using a vma lock function that can n=
+ever
+> > > fail etc.
+> > >
+> > > I mean maybe just stick a VM_ in front if it's not going to happen bu=
+t for
+> > > debug/dev/early stabilisation purposes we want to keep an eye on it.
+> >
+> > Yeah, I think after refactoring we won't need any warnings here.
+> >
+> > >
+> > > >
+> > > > >
+> > > > > > +     }
+> > > > > > +     mmap_read_unlock(priv->mm);
+> > > > > > +
+> > > > > > +     return vma;
+> > > > > > +}
+> > > > > > +
+> > > > > > +#else /* CONFIG_PER_VMA_LOCK */
+> > > > > >
+> > > > > > +static inline bool lock_content(struct seq_file *m,
+> > > > > > +                             struct proc_maps_private *priv)
+> > > > > > +{
+> > > > > > +     return mmap_read_lock_killable(priv->mm) =3D=3D 0;
+> > > > > > +}
+> > > > > > +
+> > > > > > +static inline void unlock_content(struct proc_maps_private *pr=
+iv)
+> > > > > > +{
+> > > > > > +     mmap_read_unlock(priv->mm);
+> > > > > > +}
+> > > > > > +
+> > > > > > +static struct vm_area_struct *get_next_vma(struct proc_maps_pr=
+ivate *priv,
+> > > > > > +                                        loff_t last_pos)
+> > > > > > +{
+> > > > > > +     return vma_next(&priv->iter);
+> > > > > > +}
+> > > > > > +
+> > > > > > +#endif /* CONFIG_PER_VMA_LOCK */
+> > > > > > +
+> > > > > > +static struct vm_area_struct *proc_get_vma(struct seq_file *m,=
+ loff_t *ppos)
+> > > > > > +{
+> > > > > > +     struct proc_maps_private *priv =3D m->private;
+> > > > > > +     struct vm_area_struct *vma;
+> > > > > > +
+> > > > > > +     vma =3D get_next_vma(priv, *ppos);
+> > > > > > +     if (IS_ERR(vma))
+> > > > > > +             return vma;
+> > > > > > +
+> > > > > > +     /* Store previous position to be able to restart if neede=
+d */
+> > > > > > +     priv->last_pos =3D *ppos;
+> > > > > >       if (vma) {
+> > > > > > -             *ppos =3D vma->vm_start;
+> > > > > > +             /*
+> > > > > > +              * Track the end of the reported vma to ensure po=
+sition changes
+> > > > > > +              * even if previous vma was merged with the next =
+vma and we
+> > > > > > +              * found the extended vma with the same vm_start.
+> > > > > > +              */
+> > > > >
+> > > > > Right, so observing repetitions is acceptable in such circumstanc=
+es? I mean
+> > > > > I agree.
+> > > >
+> > > > Yep, the VMA will be reported twice in such a case.
+> > >
+> > > Ack.
+> > >
+> > > >
+> > > > >
+> > > > > > +             *ppos =3D vma->vm_end;
+> > > > >
+> > > > > If we store the end, does the last_pos logic which resets the VMA=
+ iterator
+> > > > > later work correctly in all cases?
+> > > >
+> > > > I think so. By resetting to vma->vm_end we will start the next sear=
+ch
+> > > > from the address right next to the last reported VMA, no?
+> > >
+> > > Yeah, I was just wondering whether there were any odd corner case tha=
+t
+> > > might be problematic.
+> > >
+> > > But since we treat last_pos as inclusive as you said in a response ab=
+ove,
+> > > and of course vma->vm_end is exclusive, then this makes sense.
+> > >
+> > > >
+> > > > >
+> > > > > >       } else {
+> > > > > >               *ppos =3D -2UL;
+> > > > > >               vma =3D get_gate_vma(priv->mm);
+> > > > >
+> > > > > Is it always the case that !vma here implies a gate VMA (yuck yuc=
+k)? I see
+> > > > > this was the original logic, but maybe put a comment about this a=
+s it's
+> > > > > weird and confusing? (and not your fault obviously :P)
+> > > >
+> > > > What comment would you like to see here?
+> > >
+> > > It's so gross this. I guess something about the inner workings of gat=
+e VMAs
+> > > and the use of -2UL as a weird sentinel etc.
+> >
+> > Ok, I'll try to add a meaningful comment here.
+> >
+> > >
+> > > But this is out of scope here.
+> > >
+> > > >
+> > > > >
+> > > > > Also, are all locks and state corectly handled in this case? Seem=
+s like one
+> > > > > of this nasty edge case situations that could have jagged edges..=
+.
+> > > >
+> > > > I think we are fine. get_next_vma() returned NULL, so we did not lo=
+ck
+> > > > any VMA and priv->locked_vma should be NULL.
+> > > >
+> > > > >
+> > > > > > @@ -163,19 +322,21 @@ static void *m_start(struct seq_file *m, =
+loff_t *ppos)
+> > > > > >               return NULL;
+> > > > > >       }
+> > > > > >
+> > > > > > -     if (mmap_read_lock_killable(mm)) {
+> > > > > > +     if (!lock_content(m, priv)) {
+> > > > >
+> > > > > Nice that this just slots in like this! :)
+> > > > >
+> > > > > >               mmput(mm);
+> > > > > >               put_task_struct(priv->task);
+> > > > > >               priv->task =3D NULL;
+> > > > > >               return ERR_PTR(-EINTR);
+> > > > > >       }
+> > > > > >
+> > > > > > +     if (last_addr > 0)
+> > > > >
+> > > > > last_addr is an unsigned long, this will always be true.
+> > > >
+> > > > Not unless last_addr=3D=3D0. That's what I'm really checking here: =
+is this
+> > > > the first invocation of m_start(), in which case we are starting fr=
+om
+> > > > the beginning and not restarting from priv->last_pos. Should I add =
+a
+> > > > comment?
+> > >
+> > > Yeah sorry I was being an idiot, I misread this as >=3D 0 obviously.
+> > >
+> > > I had assumed you were checking for the -2 and -1 cases (though -1 ea=
+rly
+> > > exits above).
+> > >
+> > > So in that case, are you handling the gate VMA correctly here? Surely=
+ we
+> > > should exclude that? Wouldn't setting ppos =3D last_addr =3D priv->la=
+st_pos be
+> > > incorrect if this were a gate vma?
+> >
+> > You are actually right. last_addr can be -2UL here and we should not
+> > override it. I'll fix it. Thanks!
+> >
+> > >
+> > > Even if we then call get_gate_vma() we've changed these values? Or is=
+ that
+> > > fine?
+> > >
+> > > And yeah a comment would be good thanks!
+> > >
+> > > >
+> > > > >
+> > > > > You probably want to put an explicit check for -1UL, -2UL here or=
+?
+> > > > >
+> > > > > God I hate this mechanism for indicating gate VMA... yuck yuck (a=
+gain, this
+> > > > > bit not your fault :P)
+> > > >
+> > > > No, I don't care here about -1UL, -2UL, just that last_addr=3D=3D0 =
+or not.
+> > >
+> > > OK, so maybe above concerns not a thing.
+> > >
+> > > >
+> > > > >
+> > > > > > +             *ppos =3D last_addr =3D priv->last_pos;
+> > > > > >       vma_iter_init(&priv->iter, mm, last_addr);
+> > > > > >       hold_task_mempolicy(priv);
+> > > > > >       if (last_addr =3D=3D -2UL)
+> > > > > >               return get_gate_vma(mm);
+> > > > > >
+> > > > > > -     return proc_get_vma(priv, ppos);
+> > > > > > +     return proc_get_vma(m, ppos);
+> > > > > >  }
+> > > > > >
+> > > > > >  static void *m_next(struct seq_file *m, void *v, loff_t *ppos)
+> > > > > > @@ -184,7 +345,7 @@ static void *m_next(struct seq_file *m, voi=
+d *v, loff_t *ppos)
+> > > > > >               *ppos =3D -1UL;
+> > > > > >               return NULL;
+> > > > > >       }
+> > > > > > -     return proc_get_vma(m->private, ppos);
+> > > > > > +     return proc_get_vma(m, ppos);
+> > > > > >  }
+> > > > > >
+> > > > > >  static void m_stop(struct seq_file *m, void *v)
+> > > > > > @@ -196,7 +357,7 @@ static void m_stop(struct seq_file *m, void=
+ *v)
+> > > > > >               return;
+> > > > > >
+> > > > > >       release_task_mempolicy(priv);
+> > > > > > -     mmap_read_unlock(mm);
+> > > > > > +     unlock_content(priv);
+> > > > > >       mmput(mm);
+> > > > > >       put_task_struct(priv->task);
+> > > > > >       priv->task =3D NULL;
+> > > > > > --
+> > > > > > 2.49.0.1266.g31b7d2e469-goog
+> > > > > >
+> > > > >
+> > > > > Sorry to add to workload by digging into so many details here, bu=
+t we
+> > > > > really need to make sure all the i's are dotted and t's are cross=
+ed given
+> > > > > how fiddly and fragile this stuff is :)
+> > > > >
+> > > > > Very much appreciate the work, this is a significant improvement =
+and will
+> > > > > have a great deal of real world impact!
+> > > >
+> > > > Thanks for meticulously going over the code! This is really helpful=
+.
+> > > > Suren.
+> > >
+> > > No problem!
+> > >
+> > > >
+> > > > >
+> > > > > Cheers, Lorenzo
