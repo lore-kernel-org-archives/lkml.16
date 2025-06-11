@@ -1,169 +1,311 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2067.outbound.protection.outlook.com [40.107.223.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6E624339D;
-	Wed, 11 Jun 2025 08:57:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749632276; cv=none; b=iLb3mFaK1T7OWuDlu0bItrgNbCb9RFFj/iuNMXrZ5UaKOm4ZAJU1ioA0pbstoNcp8dQq9H3db8Yv9KyGzV1z2VCM2Yl5pemGB4b/ebzjDMhp4VSnL3dTkrkXKc2mbq+hpeQhsikr2NdLPqW7g6uje8Dg4iazT2ncTV41cZiFgpc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749632276; c=relaxed/simple;
-	bh=oCz3V+7ZTi4hFmVrBJWM7NCWZDfRFBK/IEiwC/HpnyI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dkiVSZSjWnWs1rGRk7lUtG3Q8oTotxIVMKWYUpZpHlzToH+e6E1CJGwam+kQm27I6DaFcgA/gYhj3d/l4vEfjzAPgviyq/y8ZBAolBaVtOr7E9sbKx1yAWG44VeTbrW3nAewjJDdXsVHZxs4P8XO4qJnGcmahbgxSONXrU0lneo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ry/wUV//; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9E47262C
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 08:58:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749632321; cv=fail; b=kqBqbIod7NsFdUM/wCab246k26pBxyXFmQZN+06qlphnfZczHteiv1iIghvLv1nt25xBdzIsdnWZbjPvcs0lS92vkCC5ZcSztyWTx+tSL99QjonGbTl0qUNNtt2/owNwc9eSm/H4TsAGaIkZONzMF54p0LjE6XXyBNjFfzOCqx4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749632321; c=relaxed/simple;
+	bh=eDrkrWAyRxRLnIgvlEDSnuwRFw++BgDhOA9EvOj0Y78=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=REfqtxvNfQnymskprNcr+Ajb60NJ3qhdYUmFKyrLLFe9kkp9FJ6jjPqAkvH2RUzi4LD9SAKJL7oqwKvUaUWUxSCyvlMxBx4X3EbNoufOBmCYpdKsyweurxz57GUpkDMcRIwtYbw0lrU29+5puBDFfC5yuOlfP1NJVw9ngiuqyXc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=fail (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=iUXmMnFR reason="signature verification failed"; arc=fail smtp.client-ip=40.107.223.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ry/wUV//"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FE43C4CEEF;
-	Wed, 11 Jun 2025 08:57:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749632276;
-	bh=oCz3V+7ZTi4hFmVrBJWM7NCWZDfRFBK/IEiwC/HpnyI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ry/wUV///yloc7ZH6Z3DbDtkoWmr7OVO/u0DivsYbyhoZBnaBorMu9v5hUhXBncNC
-	 YoxHmILhOHrEfJTJi0nHycFYs0UF0JcddVe3oB/pN4P7zz17WOTVk+KbvIOlNb9myu
-	 ZW0Hlant5vbqQnPMJDnN4ewgVxmw3geWBQP3BkyDtrq8zeJoh0mdV2luoHm9sOpnHT
-	 X5m/7JqIF5vcvfqNeYMeCUlvkque0Bc+1nmQ6L6uIEiAeJSQ2p+pKhiZVkJT52E0uS
-	 SuuZ1pg1RU391hCzzdzM67q0tYp1DfBLnKyVQ+5oMURIFdL5U+vYL3fzjeA77sX7wR
-	 Sfc8KkK5zWsIA==
-Date: Wed, 11 Jun 2025 10:57:53 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: =?utf-8?B?QW5kcsOp?= Draszik <andre.draszik@linaro.org>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Lee Jones <lee@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Peter Griffin <peter.griffin@linaro.org>, Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 03/17] regulator: dt-bindings: add s2mpg11-pmic
- regulators
-Message-ID: <20250611-spectral-bullfrog-of-perfection-cb8e01@kuoka>
-References: <20250606-s2mpg1x-regulators-v2-0-b03feffd2621@linaro.org>
- <20250606-s2mpg1x-regulators-v2-3-b03feffd2621@linaro.org>
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="iUXmMnFR"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XZi32YSPr1Z2Q0qgnwRWquMBGKlYLRvgxLmtTjQQKC9CWkMXGm96oTQWkOgbHNr8zfgywBQq+MWTu0c12wSTfKlBPrFBc+d+6Y81smAHJOtvwG857IhxZilbiXr22qu+0EJ2NFLYEBuJB8RwveUQfoIAr1l2pRypV6Q8t9Y5mx7+v5drJXGSjkoMrwAe+Shiq/dk1zWCBvUs6XV9uPVy0pU21f8PkobVlGUowgIHJ46YK6eK8IwNJ8b6ufqJf85LRqLX65j9nZi9mgMtqp0qd7g5WndKeEj1KInETTwG3qeztkwV2M0USJcdxTLGPRK5bkIwwYvDonlBapW1jMz7bg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VFw/DJGbEp1zukbUOtjMNWw5Vw9Wi6JZj63DZ+/F9EQ=;
+ b=iGVXwp4eo4X/HvLu8RL8ZxjBcKbH6K2dxE08kAGcuh9pjFQ6ZgO4JeIQe/mWDeiLpyyuWPJqPLQDOuTUiAsQs9uiwGUj0xuU+UF+SiDzW6uFWCoI6l1Hd21nD76rf9PPi3HyD+7VWU7a7ev4PAmEOlZ5GQS1fPDJwU+PMGAUfJFRNdQ+YdfV0f9mDeAdvaIkk53goPKA14rqPDOw6utygaTl7EMfvqQ8m9EfBL2g6entbRuuku8IyHlfDUpS855GWwZRGD6bmh4tAsFysCzyj78f1ha8o1gqzPLZhzf4HD3WQh8JW4iQsfjvI7cqvJBzcJFbv2z0qwMxCeTtvL4B+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VFw/DJGbEp1zukbUOtjMNWw5Vw9Wi6JZj63DZ+/F9EQ=;
+ b=iUXmMnFRMHkVNlIQtiIiXfOdJTMu8XeFACwyU/qQMilcd5wZuxy8FVhg6E5qM8+/PBXi2n+9SMmr6A3aLaGxZ4cNfn+hvBocHwoN6FiMzAHKUA+sQ+aSjXhHdbAD53irUmEI4OVc1U1r64tNATQ5f3KeFBd9R87xlr68mjsuyjjiH1Gj3e9px7vGB6AJG01li2tCt6XD1k+ovrQYIgvDVSoR4OPmXThOXxZvQObHjYk8R0lbYQcuY2BEIk5neYHAESmVSnKn62E5pew+pgJRFwctymDiAsGKP5VuehScQHb/wZeyRb3PxgSdxolv45d+DdCv3FLb1SlYxu+ML7ftGQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from IA0PR12MB7723.namprd12.prod.outlook.com (2603:10b6:208:431::10)
+ by MN2PR12MB4357.namprd12.prod.outlook.com (2603:10b6:208:262::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.41; Wed, 11 Jun
+ 2025 08:58:34 +0000
+Received: from IA0PR12MB7723.namprd12.prod.outlook.com
+ ([fe80::ef74:9335:2c5b:2bc7]) by IA0PR12MB7723.namprd12.prod.outlook.com
+ ([fe80::ef74:9335:2c5b:2bc7%5]) with mapi id 15.20.8792.034; Wed, 11 Jun 2025
+ 08:58:34 +0000
+Date: Wed, 11 Jun 2025 18:58:29 +1000
+From: Alistair Popple <apopple@nvidia.com>
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: David Hildenbrand <david@redhat.com>, linux-mm@kvack.org, 
+	akpm@linux-foundation.org, 
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@nvidia.com>, 
+	gerald.schaefer@linux.ibm.com, dan.j.williams@intel.com, jgg@ziepe.ca, willy@infradead.org, 
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, jhubbard@nvidia.com, 
+	zhang.lyra@gmail.com, debug@rivosinc.com, bjorn@kernel.org, balbirs@nvidia.com, 
+	lorenzo.stoakes@oracle.com, John@groves.net
+Subject: Re: [PATCH] mm: Remove PFN_MAP, PFN_SPECIAL, PFN_SG_CHAIN and
+ PFN_SG_LAST
+Message-ID: <tnaqespmxakrudv6qg5d73fbts6kfvixourtab7wsfigcfx4cc@ep6elmkephtd>
+References: <20250604032145.463934-1-apopple@nvidia.com>
+ <CGME20250610161811eucas1p18de4ba7b320b6d6ff7da44786b350b6e@eucas1p1.samsung.com>
+ <957c0d9d-2c37-4d5f-a8b8-8bf90cd0aedb@samsung.com>
+ <hczxxu3txopjnucjrttpcqtkkfnzrqh6sr4v54dfmjbvf2zcfs@ocv6gqddyavn>
+ <1daeaf4e-5477-40cb-bca0-e4cd5ad8a224@samsung.com>
+ <52b746ae-82cc-428e-8e88-a05a6b738cd0@redhat.com>
+ <4e53d612-534c-46b5-9746-a4a9814d41c3@samsung.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4e53d612-534c-46b5-9746-a4a9814d41c3@samsung.com>
+X-ClientProxiedBy: SY2PR01CA0033.ausprd01.prod.outlook.com
+ (2603:10c6:1:15::21) To IA0PR12MB7723.namprd12.prod.outlook.com
+ (2603:10b6:208:431::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250606-s2mpg1x-regulators-v2-3-b03feffd2621@linaro.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA0PR12MB7723:EE_|MN2PR12MB4357:EE_
+X-MS-Office365-Filtering-Correlation-Id: d4a7e29d-7173-4056-a480-08dda8c62548
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?iso-8859-1?Q?45LbaGknEPPx2C9mhlHJdHBpvrwfEvjMWWTg1U8ibp3XFvrAmkHvrfOaiD?=
+ =?iso-8859-1?Q?mJKXruKhrTAzpLmWLKM8hIXP/FA93sAe0YP+h42pDK8IJATsvO6e+mf7j/?=
+ =?iso-8859-1?Q?u3x7kduwFuQ0uLCgH0j5UZxLuCxx1WyuQmXxxk0jKq/HLs+BanFNWJqYCL?=
+ =?iso-8859-1?Q?g9MhYe8bs+bklFnQ3cySdOVNBzniSemEa7r+eUDkykSFslo/AvFAOsk7Wf?=
+ =?iso-8859-1?Q?5+0fnFqcJnVKTaNtn9/muocwk6L6DX4JGW8+HgXQ/YRmR24pnrE9QJ4WZQ?=
+ =?iso-8859-1?Q?1vinvEP908HUS6TuCctlcOK1bOprf24b7JG7wTEfRuHLJTLM5JhNVyuUUC?=
+ =?iso-8859-1?Q?wEXOHedPIkl21Lt9eddc3BG7PxtypIx5VQ2EixEkZLLf/Z8Dq0snyeBlZJ?=
+ =?iso-8859-1?Q?rwO5dJACvUOKikUxHPqeUmvZh8K329l8cNS0y2TeQ0ZZN58GHiCI1w6IkK?=
+ =?iso-8859-1?Q?tIYw4PqYslb65AHo+RiW7a/rRpUIxx4MUmhZlYNepp8Lj3zvD6+PzxvauF?=
+ =?iso-8859-1?Q?dnxy9ZW94EmnjCrmTMLy1oKZi7uVqUQk9XfdrkZW5vi6oNDqjts12DBCnA?=
+ =?iso-8859-1?Q?A+MNsk2Mi8DTcX+pORxIX2D45jOrNoHc8+tIShicHU+ThgZTujTppE0tv3?=
+ =?iso-8859-1?Q?Xu6DiOjPILUJMwVUiUHU6VoLPnUgg8hxYQgeMHHE1dCFzywOr0Dsc1rcds?=
+ =?iso-8859-1?Q?aTcbPNEx6t2AbnXK6fbE2iNHlbDjFcbLMolX0Df2MGvPH7C41XJWq4wyUT?=
+ =?iso-8859-1?Q?tDsaiSel1OhT0JL2eOXFSvkoeBNNdyK9gcEYHhL+08eolzvqvUX7DguWpR?=
+ =?iso-8859-1?Q?+vk0yVg7c3KH1YPQaaRZ0U0U4NXg+peV3ha9XZ55fGBQnL7/wkMnLk+RDb?=
+ =?iso-8859-1?Q?fRyMrrodbTyxhPPME5f5o1raSXclF0G4bAkShSGSGLmjygRctCgQOfaeVW?=
+ =?iso-8859-1?Q?0yg+sGzvd9rrgzP/CsYQ03io3gHfYOWPRsCWl6xplA2B2hYdTvvE+/6Q7z?=
+ =?iso-8859-1?Q?xvJ8KwlzuX0xQngTtAf6mRwW3BcyUNisF/S3dp4qjsas2m4pelgzhHTkmG?=
+ =?iso-8859-1?Q?AMaiZrj7McyRrpyl8vnKGMuw7mZa2jhygEBb7ArJJmCrRE2NcgfCEZqDvs?=
+ =?iso-8859-1?Q?gRmrj82hZpP0GE6YrY3XYuljZxhvi9PI7F2zRVNPOnt6LufVhhwlEuyGM3?=
+ =?iso-8859-1?Q?VQqfjkMJNQfODgXucO99HM/74dNA1o8JpSwvnB6hd7sUJgg2Pl3d0YDa8I?=
+ =?iso-8859-1?Q?p8dY/rlJZOZh7UFhC39a7fALj+z8O/34YE4o9dMjgrWZojSotxyvTtVhD2?=
+ =?iso-8859-1?Q?9fZklhnGs3Kx3p1ZeBM/6qC/GmBvxn6uFDZNfgECle/G/jraDe1cX4FpiK?=
+ =?iso-8859-1?Q?VUv5Hm80sB/p/GegRe7ZFGA/3wjqY7CPZDZSc5NzyYBQeYVPUYS9992IIK?=
+ =?iso-8859-1?Q?dJSD2Tv3LSx7uWyyJ2gcRK6+Oi5U5Tfe6V2t2g=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB7723.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?iso-8859-1?Q?r7JsrDrVEPBqJU/nomcAYtbf4+Ki7mOjhqdAkEnRlYiE4dkEkpIlMFk6mc?=
+ =?iso-8859-1?Q?2EjHW0gFd/OCft9AjNElYnBP4vl568/6KO319Yf3m5pM0LtkhE0/wgeD/N?=
+ =?iso-8859-1?Q?3FLIkK85+yNq3uLOWggkqinXGVH73Xl3rQMI1WXCZJJy7sxsBzcNUQBOYr?=
+ =?iso-8859-1?Q?6HdGBKgLypiX4G7uZp8fcP4hCUnD5Ips7siqL2LNUyBPGtjr091jq/ZbEj?=
+ =?iso-8859-1?Q?9nHT1SssGUSLs5NYCROIGvC6NkKEYJbiqcRFpKOwqCNOKIWgmb6mE66gxx?=
+ =?iso-8859-1?Q?u7V6ky7A5rC2AQeQ6Wl/OII+MB0Ky3P6+TOx4xcN/2n2UL0iopvVn2f+8d?=
+ =?iso-8859-1?Q?ZirvPHU6YLTLPRoVuEakHrxXQ402CnmWogv+GXyhPVFmRNtan3RCSFX6X3?=
+ =?iso-8859-1?Q?F8NQNyc2jOzPIQoocFhVvUplCe2V7ZniNFo30HQ/2DqwDcztGnySN8wgjj?=
+ =?iso-8859-1?Q?bRQQELZUBJaBWx3IfAAxcLO2r0QwpLIldxRLFp1o/b+Je70nEalf8qOzT1?=
+ =?iso-8859-1?Q?N1Q0lC36Io/M5R9Z7FprxDL+/64+OcaLT5klulwvCaRc0xAUUib4S/atZv?=
+ =?iso-8859-1?Q?eZ7B29aJNCx8IVaWDd1yp37is9G/SmDcjF+hQbnJ+9JLd1IVPBBp0AZHjo?=
+ =?iso-8859-1?Q?hAQnorb0OnVwLZYlH2qPfMNnzM27lZ5NdNRa+47xtZsWOI4E3yqrTiqgIC?=
+ =?iso-8859-1?Q?4IsSorMozo61PMdffQjQDET8lOvJoGXSUgv6YVySsp1qqCHJoiJkIt44ER?=
+ =?iso-8859-1?Q?I6f0vBHkB8M/E4/At2GCxQ62ShbRqQIGALCVRTRpKKptZEw2NMaM6dZvpp?=
+ =?iso-8859-1?Q?yG1UD965u9a/e3TXlf0crtJjZvyDr0sHEgoWNj9y/fDwLCgA/I84XjtX09?=
+ =?iso-8859-1?Q?nesPfRqjU1UyAa3U9lXLRGPGmDqxO+mKIibXsOXUb1VgOVHpR8FCTe6OPF?=
+ =?iso-8859-1?Q?RHG61WOsE7RoUb9kfWsdARBGpDCQoXvjsyQ6FIfCwXuiNHL97T1GexY+kk?=
+ =?iso-8859-1?Q?4WYEkrVIqTVE12/KGA8+fh7CQoDaTCh1ea+a+PjjgU4S7FqMD1MhPkA87Y?=
+ =?iso-8859-1?Q?I1qwGEpwgd2/QDvidqVjp2BRfSrvXNtzDW9yNGb4j8YX40FdRH04Z8n7Tx?=
+ =?iso-8859-1?Q?fU4Y8C0AtS2iio1nqsAMxjp5gglJp6+P5RcvTGJRBJU9pXmV5nHBezjtBC?=
+ =?iso-8859-1?Q?hwO0mJ5ihfKHNz556rsqZDsBRdqCVwlIFaZEnxHMAOBQNpXleV9Nx8qNxm?=
+ =?iso-8859-1?Q?h4ZZILG9PXe/nIPcpw/d9MhpSeiPWsgQ0YHrrFVSgHQx0uVS+oRg1OVWMp?=
+ =?iso-8859-1?Q?XglJhm2+0vkxC6OGW1ur9Mvr+YXmYh8RJJVQqxrCj/99u90yflNGXJXDyz?=
+ =?iso-8859-1?Q?LbRb3517DAJCUIoo/638Yv/YQIfalARQ05gYhPM7dD9jUaN/xWLEspNWTb?=
+ =?iso-8859-1?Q?H4cvvzsEZyF/xqiXdDdTwpy80ka7XL89CF4QV0kXxMUMpFY4KOL4BeeAB8?=
+ =?iso-8859-1?Q?RBSg/JeAQY0Grp57exTBijf39JAFsdojYUstZscgspVqV7cB1bTNuzP6UC?=
+ =?iso-8859-1?Q?bzxT1uSrxIG4Kq4VGDf9XaTKF2l+zGJGY+/1ldK958fx+MOvJvc/QvGE6P?=
+ =?iso-8859-1?Q?JBnUeIOSI64m7qOxpKHKezi6xl6yH2gNs8?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d4a7e29d-7173-4056-a480-08dda8c62548
+X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB7723.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2025 08:58:34.2581
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KpNlhhxsytJGe/DRqdfpIyMowXTZ40g5aioU5ijD9DqgdIvs/c5eqmMmutBfl7LOJkj0QHTCloafeKFbCYP/Qw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4357
 
-On Fri, Jun 06, 2025 at 04:02:59PM GMT, Andr=C3=A9 Draszik wrote:
-> The S2MPG11 PMIC is a Power Management IC for mobile applications with
-> buck converters, various LDOs, power meters, and additional GPIO
-> interfaces. It typically complements an S2MPG10 PMIC in a main/sub
-> configuration as the sub-PMIC.
->=20
-> S2MPG11 has 12 buck, 1 buck-boost, and 15 LDO rails. Several of these
-> can either be controlled via software or via external signals, e.g.
-> input pins connected to a main processor's GPIO pins.
->=20
-> Add documentation related to the regulator (buck & ldo) parts like
-> devicetree definitions, regulator naming patterns, and additional
-> properties.
->=20
-> Since S2MPG11 is typically used as the sub-PMIC together with an
-> S2MPG10 as the main-PMIC, the datasheet and the binding both suffix the
-> rails with an 's'.
->=20
-> Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
->=20
-> ---
-> Note: checkpatch suggests to update MAINTAINERS, but the new file is
-> covered already due to using a wildcard.
->=20
-> v2:
-> - fix commit message typos: s2mp1 -> s2mpg1
-> - mention GPIOs in commit message
-> ---
->  .../regulator/samsung,s2mpg11-regulator.yaml       | 150 +++++++++++++++=
-++++++
->  .../regulator/samsung,s2mpg10-regulator.h          |  18 +++
->  2 files changed, 168 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/regulator/samsung,s2mpg11-=
-regulator.yaml b/Documentation/devicetree/bindings/regulator/samsung,s2mpg1=
-1-regulator.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..f2d596642501c197e2911ee3b=
-9caac189cf541a4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/samsung,s2mpg11-regulat=
-or.yaml
-> @@ -0,0 +1,150 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/regulator/samsung,s2mpg11-regulator.y=
-aml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Samsung S2MPG11 Power Management IC regulators
-> +
-> +maintainers:
-> +  - Andr=C3=A9 Draszik <andre.draszik@linaro.org>
-> +
-> +description: |
-> +  This is part of the device tree bindings for the S2MG11 Power Manageme=
-nt IC
-> +  (PMIC).
-> +
-> +  The S2MPG11 PMIC provides 12 buck, 1 buck-boost, and 15 LDO regulators.
-> +
-> +  See also Documentation/devicetree/bindings/mfd/samsung,s2mps11.yaml for
-> +  additional information and example.
-> +
-> +definitions:
-> +  s2mpg11-ext-control:
-> +    properties:
-> +      samsung,ext-control:
-> +        description: |
-> +          These rails can be controlled via one of several possible exte=
-rnal
-> +          (hardware) signals. If so, this property configures the signal=
- the PMIC
-> +          should monitor. The following values generally corresponding t=
-o the
-> +          respective on-chip pin are valid:
-> +            - 0 # S2MPG11_PCTRLSEL_ON - always on
+On Wed, Jun 11, 2025 at 10:42:16AM +0200, Marek Szyprowski wrote:
+> On 11.06.2025 10:23, David Hildenbrand wrote:
+> > On 11.06.25 10:03, Marek Szyprowski wrote:
+> >> On 11.06.2025 04:38, Alistair Popple wrote:
+> >>> On Tue, Jun 10, 2025 at 06:18:09PM +0200, Marek Szyprowski wrote:
+> >>>> On 04.06.2025 05:21, Alistair Popple wrote:
+> >>>>> The PFN_MAP flag is no longer used for anything, so remove it.
+> >>>>> The PFN_SG_CHAIN and PFN_SG_LAST flags never appear to have been
+> >>>>> used so also remove them. The last user of PFN_SPECIAL was removed
+> >>>>> by 653d7825c149 ("dcssblk: mark DAX broken, remove FS_DAX_LIMITED
+> >>>>> support").
+> >>>>>
+> >>>>> Signed-off-by: Alistair Popple <apopple@nvidia.com>
+> >>>>> Acked-by: David Hildenbrand <david@redhat.com>
+> >>>>> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> >>>>> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+> >>>>> Cc: gerald.schaefer@linux.ibm.com
+> >>>>> Cc: dan.j.williams@intel.com
+> >>>>> Cc: jgg@ziepe.ca
+> >>>>> Cc: willy@infradead.org
+> >>>>> Cc: david@redhat.com
+> >>>>> Cc: linux-kernel@vger.kernel.org
+> >>>>> Cc: nvdimm@lists.linux.dev
+> >>>>> Cc: jhubbard@nvidia.com
+> >>>>> Cc: hch@lst.de
+> >>>>> Cc: zhang.lyra@gmail.com
+> >>>>> Cc: debug@rivosinc.com
+> >>>>> Cc: bjorn@kernel.org
+> >>>>> Cc: balbirs@nvidia.com
+> >>>>> Cc: lorenzo.stoakes@oracle.com
+> >>>>> Cc: John@Groves.net
+> >>>>>
+> >>>>> ---
+> >>>>>
+> >>>>> Splitting this off from the rest of my series[1] as a separate 
+> >>>>> clean-up
+> >>>>> for consideration for the v6.16 merge window as suggested by 
+> >>>>> Christoph.
+> >>>>>
+> >>>>> [1] - 
+> >>>>> https://lore.kernel.org/linux-mm/cover.541c2702181b7461b84f1a6967a3f0e823023fcc.1748500293.git-series.apopple@nvidia.com/
+> >>>>> ---
+> >>>>>     include/linux/pfn_t.h             | 31 
+> >>>>> +++----------------------------
+> >>>>>     mm/memory.c                       |  2 --
+> >>>>>     tools/testing/nvdimm/test/iomap.c |  4 ----
+> >>>>>     3 files changed, 3 insertions(+), 34 deletions(-)
+> >>>> This patch landed in today's linux-next as commit 28be5676b4a3 ("mm:
+> >>>> remove PFN_MAP, PFN_SPECIAL, PFN_SG_CHAIN and PFN_SG_LAST"). In my 
+> >>>> tests
+> >>>> I've noticed that it breaks operation of all RISC-V 64bit boards on my
+> >>>> test farm (VisionFive2, BananaPiF3 as well as QEMU's Virt machine). 
+> >>>> I've
+> >>>> isolated the changes responsible for this issue, see the inline 
+> >>>> comments
+> >>>> in the patch below. Here is an example of the issues observed in the
+> >>>> logs from those machines:
+> >>> Thanks for the report. I'm really confused by this because this 
+> >>> change should
+> >>> just be removal of dead code - nothing sets any of the removed PFN_* 
+> >>> flags
+> >>> AFAICT.
+> >>>
+> >>> I don't have access to any RISC-V hardwdare but you say this 
+> >>> reproduces under
+> >>> qemu - what do you run on the system to cause the error? Is it just 
+> >>> a simple
+> >>> boot and load a module or are you running selftests or something else?
+> >>
+> >> It fails a simple boot test. Here is a detailed instruction how to
+> >> reproduce this issue with the random Debian rootfs image found on the
+> >> internet (tested on Ubuntu 22.04, with next-20250610
+> >> kernel source):
+> >
+> > riscv is one of the archs where pte_mkdevmap() will *not* set the pte 
+> > as special. (I
+> > raised this recently in the original series, it's all a big mess)
+> >
+> > So, before this change here, pfn_t_devmap() would have returned 
+> > "false" if only
+> > PFN_DEV was set, now it would return "true" if only PFN_DEV is set.
 
-Use regulator-always-on
+Ugh, what a mess. Thanks for pointing that out (I had seen your earlier response
+to the original series but hadn't found the time to look into it more deeply).
 
-> +            - 1 # S2MPG11_PCTRLSEL_PWREN - PWREN pin
+> > Consequently, in insert_pfn() we would have done a pte_mkspecial(), 
+> > now we do a
+> > pte_mkdevmap() -- again, which does not imply "special" on riscv.
+> >
+> > riscv selects CONFIG_ARCH_HAS_PTE_SPECIAL, so if !pte_special(), it's 
+> > considered as
+> > normal.
+> >
+> > Would the following fix your issue?
+> >
+> >
+> > diff --git a/mm/memory.c b/mm/memory.c
+> > index 8eba595056fe3..0e972c3493692 100644
+> > --- a/mm/memory.c
+> > +++ b/mm/memory.c
+> > @@ -589,6 +589,10 @@ struct page *vm_normal_page(struct vm_area_struct 
+> > *vma, unsigned long addr,
+> >  {
+> >         unsigned long pfn = pte_pfn(pte);
+> >
+> > +       /* TODO: remove this crap and set pte_special() instead. */
+> > +       if (pte_devmap(pte))
+> > +               return NULL;
+> > +
+> >         if (IS_ENABLED(CONFIG_ARCH_HAS_PTE_SPECIAL)) {
+> >                 if (likely(!pte_special(pte)))
+> >                         goto check_pfn;
+> > @@ -598,16 +602,6 @@ struct page *vm_normal_page(struct vm_area_struct 
+> > *vma, unsigned long addr,
+> >                         return NULL;
+> >                 if (is_zero_pfn(pfn))
+> >                         return NULL;
+> > -               if (pte_devmap(pte))
+> > -               /*
+> > -                * NOTE: New users of ZONE_DEVICE will not set 
+> > pte_devmap()
+> > -                * and will have refcounts incremented on their struct 
+> > pages
+> > -                * when they are inserted into PTEs, thus they are 
+> > safe to
+> > -                * return here. Legacy ZONE_DEVICE pages that set 
+> > pte_devmap()
+> > -                * do not have refcounts. Example of legacy 
+> > ZONE_DEVICE is
+> > -                * MEMORY_DEVICE_FS_DAX type in pmem or virtio_fs 
+> > drivers.
+> > -                */
+> > -                       return NULL;
+> >
+> >                 print_bad_pte(vma, addr, pte, NULL);
+> >                 return NULL;
+> >
+> >
+> > But, I would have thought the later patches in Alistairs series would 
+> > sort that out
+> > (where we remove pte_devmap() ... )
+> >
 
-That's duplicating regulator in standby properties.
+Yes, I think Marek confirmed that it did in his earlier reply.
 
-> +            - 2 # S2MPG11_PCTRLSEL_PWREN_TRG - PWREN_TRG bit in MIMICKIN=
-G_CTRL
-> +            - 3 # S2MPG11_PCTRLSEL_PWREN_MIF - PWREN_MIF pin
-> +            - 4 # S2MPG11_PCTRLSEL_PWREN_MIF_TRG - PWREN_MIF_TRG bit in =
-MIMICKING_CTRL
-> +            - 5 # S2MPG11_PCTRLSEL_AP_ACTIVE_N - ~AP_ACTIVE_N pin
-> +            - 6 # S2MPG11_PCTRLSEL_AP_ACTIVE_N_TRG - ~AP_ACTIVE_N_TRG bi=
-t in MIMICKING_CTRL
-> +            - 7 # S2MPG11_PCTRLSEL_G3D_EN - G3D_EN pin
-> +            - 8 # S2MPG11_PCTRLSEL_G3D_EN2 - G3D_EN & ~AP_ACTIVE_N pins
-> +            - 9 # S2MPG11_PCTRLSEL_AOC_VDD - AOC_VDD pin
-> +            - 10 # S2MPG11_PCTRLSEL_AOC_RET - AOC_RET pin
-> +            - 11 # S2MPG11_PCTRLSEL_UFS_EN - UFS_EN pin
+> The above change fixes the issues observed on RISCV boards.
 
-Now I have doubts these are real signals. Are you saying that S2MPG11
-has a pin named UFS_EN (such pin on ballmap)?
+Thanks for testing. Andrew has already removed this from the -mm tree so I'll
+reincorporate this back into the series and see if I can figure something out
+when I respin it.
 
-> +            - 12 # S2MPG11_PCTRLSEL_LDO13S_EN - VLDO13S_EN pin
-> +
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        minimum: 0
-> +        maximum: 12
-> +
-> +      samsung,ext-control-gpios:
+- Alistair
 
-Same comments as previous patch.
-
-Best regards,
-Krzysztof
-
+> Best regards
+> -- 
+> Marek Szyprowski, PhD
+> Samsung R&D Institute Poland
+> 
