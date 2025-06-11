@@ -1,44 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ABEA2882A0
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 10:44:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78AB728850E;
+	Wed, 11 Jun 2025 10:44:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749638680; cv=none; b=Q+tQKO61imchAM1ZmEK4KP+eUwg/N84ItbHaCP3f+EYT2TDVJkwXkHibcBG/KFy/mGlv10j6tqyWQ7Z0BRSellBqgQb8tDm0liqeFCxO8Gwp7FLGCjkHGLWbJWTlnVhula5PFstS8iP0yopHcqWEeeq+tJ0A3Hot62yTtSCQA5o=
+	t=1749638682; cv=none; b=AbtcxnF8WmEBf9F7pGXStHPMSvuTQUcUWOWoA7Z+26CCBvwQPKVYOxIfL/R7GFYbL55JgUjsSZ4QCF6euKqjLAQ0k6fdN119jaLUpILb7LmtaXc1uiD0f+C12/CnDSX0lVDBaOAYp7qSqsHF2o+zsR/6fH+FD96/BIis26Xk224=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749638680; c=relaxed/simple;
-	bh=ZGWucHB5ib9wIAmp+jltch//8y7Q7viWPh80fKN9NEU=;
+	s=arc-20240116; t=1749638682; c=relaxed/simple;
+	bh=NLnT5+LOFbAWdUD6OEeMhq8wMEwsqTEbDWDE/LB5oWI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ughcT3DFvIzU2p6Q/D3X7J1AXA25V7wmKqBRSaxK7C6Jmsk+XzYaU2sEzcOF1ftnBra7hdJClTohlEpNz5dCXywvQBr2GPGJ/MG8HmdiNUb9VBUX7bDlcNqS2Miou69hvGGJr/cGl7obIcR5OyvBqKFB7hbrEmNBRe7TDsu+k6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LhsYik8E; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=TrZBBiA+5D+VfrOoDryOk70RtqQDO0iQ/W4k/FY7w2LCPfYV7YQK/K/vFA5MHVis7OqRDQEELMcmTMRKwIUsGegkoSjDBceLQgkC9jeGxIzjAl2DUohvfSweKjkQWYO3h7ql1ccrL2hMEKPqsf+830Y23SMB+NClZEE1352J4kA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bhJu2rvf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LhsYik8E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5719C4CEEE;
-	Wed, 11 Jun 2025 10:44:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bhJu2rvf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FC8EC4CEF2;
+	Wed, 11 Jun 2025 10:44:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749638679;
-	bh=ZGWucHB5ib9wIAmp+jltch//8y7Q7viWPh80fKN9NEU=;
+	s=k20201202; t=1749638682;
+	bh=NLnT5+LOFbAWdUD6OEeMhq8wMEwsqTEbDWDE/LB5oWI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LhsYik8EhyigmtOGF6QcBgTDeKZHxEMMLt01kP8lidZNhRcxt5/67UUrWaFHYZnAA
-	 6V18JRPBo6/RIBKNPTSzOphjCGUoCz7GZtlneY/db20sVfLopbgIIfYAc9v94LRo3u
-	 LCNUSx0lL+UeP1Z7w7XfVY/kQVbma5K3WcbtFa6sShDzWJDXOzKlHd4aev+pL/hQ0P
-	 qsVPazrv73CJqua21HgSs8PFmUcu6aw8TsI0cjJbqBRPPzuNfS+6eqHvfOc34UlQ5O
-	 3b5pRSQfWSXnCXsS4h+NJy6iHOWTQCwYtKry2lIp7MxfEQh+x4touAeqJAqtn6iqFg
-	 y0fVVC4DW18Ug==
+	b=bhJu2rvffdhuDVYngs0/mJHh/Ii4qb2QtctIipm4DBUJclR7bsCSEQGuTxOzsfrfd
+	 Tn7OMefVMV6axO7RrfvnO8OMXp5QKHdplyCFpuiVX3N9XIeci0hEtQCurRRXEoNS47
+	 5oZjNV8VHM9DH7/3p/qvdnQz1P7LRnMlqmILblb6ZJAW41cFP8LhyauvBLQrtkAfWY
+	 nm5aGIbCO8SY0LuJpQe5iQZ1I9feFo0r+Vho7MCYLp7c6CU4howsxj+6Yr+olrWmg6
+	 evu2rEF7aJz8wsiiOu7o+21ahm9P3mc3P2Ioqhcq69dKyjhSWfLsmpSZ15C0ivm/ty
+	 yuu2qvRW95l+A==
 From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: tglx@linutronix.de,
 	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+	Qiang Zhao <qiang.zhao@nxp.com>,
 	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Naveen N Rao <naveen@kernel.org>,
-	linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH] powerpc: Use dev_fwnode()
-Date: Wed, 11 Jun 2025 12:43:46 +0200
-Message-ID: <20250611104348.192092-18-jirislaby@kernel.org>
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-tegra@vger.kernel.org
+Subject: [PATCH] soc: Use dev_fwnode()
+Date: Wed, 11 Jun 2025 12:43:47 +0200
+Message-ID: <20250611104348.192092-19-jirislaby@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250611104348.192092-1-jirislaby@kernel.org>
 References: <20250611104348.192092-1-jirislaby@kernel.org>
@@ -57,47 +58,55 @@ using of_node with of_fwnode_handle().
 So use the dev_fwnode() helper.
 
 Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+Cc: Qiang Zhao <qiang.zhao@nxp.com>
 Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Naveen N Rao <naveen@kernel.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: Jonathan Hunter <jonathanh@nvidia.com>
+Cc: linux-arm-kernel@lists.infradead.org
 Cc: linuxppc-dev@lists.ozlabs.org
----
- arch/powerpc/platforms/8xx/cpm1-ic.c | 3 +--
- arch/powerpc/sysdev/fsl_msi.c        | 5 ++---
- 2 files changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/arch/powerpc/platforms/8xx/cpm1-ic.c b/arch/powerpc/platforms/8xx/cpm1-ic.c
-index a49d4a9ab3bc..3292071e4da3 100644
---- a/arch/powerpc/platforms/8xx/cpm1-ic.c
-+++ b/arch/powerpc/platforms/8xx/cpm1-ic.c
-@@ -110,8 +110,7 @@ static int cpm_pic_probe(struct platform_device *pdev)
+---
+Cc: linux-tegra@vger.kernel.org
+---
+ drivers/soc/fsl/qe/qe_ic.c | 3 +--
+ drivers/soc/tegra/pmc.c    | 3 +--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/soc/fsl/qe/qe_ic.c b/drivers/soc/fsl/qe/qe_ic.c
+index 4068b501a3a3..943911053af6 100644
+--- a/drivers/soc/fsl/qe/qe_ic.c
++++ b/drivers/soc/fsl/qe/qe_ic.c
+@@ -407,7 +407,6 @@ static int qe_ic_init(struct platform_device *pdev)
+ 	void (*high_handler)(struct irq_desc *desc);
+ 	struct qe_ic *qe_ic;
+ 	struct resource *res;
+-	struct device_node *node = pdev->dev.of_node;
  
- 	out_be32(&data->reg->cpic_cimr, 0);
- 
--	data->host = irq_domain_create_linear(of_fwnode_handle(dev->of_node),
--					      64, &cpm_pic_host_ops, data);
-+	data->host = irq_domain_create_linear(dev_fwnode(dev), 64, &cpm_pic_host_ops, data);
- 	if (!data->host)
- 		return -ENODEV;
- 
-diff --git a/arch/powerpc/sysdev/fsl_msi.c b/arch/powerpc/sysdev/fsl_msi.c
-index 4fe8a7b1b288..2a007bfb038d 100644
---- a/arch/powerpc/sysdev/fsl_msi.c
-+++ b/arch/powerpc/sysdev/fsl_msi.c
-@@ -412,9 +412,8 @@ static int fsl_of_msi_probe(struct platform_device *dev)
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (res == NULL) {
+@@ -441,7 +440,7 @@ static int qe_ic_init(struct platform_device *pdev)
+ 		high_handler = NULL;
  	}
- 	platform_set_drvdata(dev, msi);
  
--	msi->irqhost = irq_domain_create_linear(of_fwnode_handle(dev->dev.of_node),
--				      NR_MSI_IRQS_MAX, &fsl_msi_host_ops, msi);
--
-+	msi->irqhost = irq_domain_create_linear(dev_fwnode(&dev->dev), NR_MSI_IRQS_MAX,
-+						&fsl_msi_host_ops, msi);
- 	if (msi->irqhost == NULL) {
- 		dev_err(&dev->dev, "No memory for MSI irqhost\n");
- 		err = -ENOMEM;
+-	qe_ic->irqhost = irq_domain_create_linear(of_fwnode_handle(node), NR_QE_IC_INTS,
++	qe_ic->irqhost = irq_domain_create_linear(dev_fwnode(&pdev->dev), NR_QE_IC_INTS,
+ 						  &qe_ic_host_ops, qe_ic);
+ 	if (qe_ic->irqhost == NULL) {
+ 		dev_err(dev, "failed to add irq domain\n");
+diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+index e0d67bfe955c..9543bee0c321 100644
+--- a/drivers/soc/tegra/pmc.c
++++ b/drivers/soc/tegra/pmc.c
+@@ -2500,8 +2500,7 @@ static int tegra_pmc_irq_init(struct tegra_pmc *pmc)
+ 	pmc->irq.irq_set_type = pmc->soc->irq_set_type;
+ 	pmc->irq.irq_set_wake = pmc->soc->irq_set_wake;
+ 
+-	pmc->domain = irq_domain_create_hierarchy(parent, 0, 96,
+-						  of_fwnode_handle(pmc->dev->of_node),
++	pmc->domain = irq_domain_create_hierarchy(parent, 0, 96, dev_fwnode(pmc->dev),
+ 						  &tegra_pmc_irq_domain_ops, pmc);
+ 	if (!pmc->domain) {
+ 		dev_err(pmc->dev, "failed to allocate domain\n");
 -- 
 2.49.0
 
