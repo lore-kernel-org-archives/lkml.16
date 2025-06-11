@@ -1,121 +1,174 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44B992E6106;
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB0A82E6107;
 	Wed, 11 Jun 2025 11:12:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749640359; cv=none; b=A2xwUOwgHKSWRy+DGUPS3UwDl19IvL6Q5Zq9KPM2R2c6JCnS58qIvbGpazxERVSRktkIfMj6bvtIDI+zRRQgGRW4ewArulBdgKfIEW9lI381+WrBZHZ0Vn/6j4VHbjfZi22DGtgmxvFxpjpb5gBaiU6ceZtbKe8RmCI+OtbnML8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749640359; c=relaxed/simple;
-	bh=wOLHNC3mM1hvT6HYztFKZ2PDx4KcHzQ0D5Kk5tU14B4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QMrYtLGuqYL6Dh/wznWfwEwAqG55qOkyKSupuoh3REf9NAsaTWpCqBgOcPoO2xCjFGFIseHg2eARy5W1h5N9nnBFYKAMu6tfn7vlyuA+/mZSebiRI7WkovgD4KEclIDtlCzi4ljFJ0CGiYTbF9tvHrdn/3lzIZunSnGKR86qnbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=rlhglbRt; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749640360; cv=pass; b=qX3V8hypHbB6ZoezQGaHzg9sHuon96VzyG2tqKwRs3B8YYz15Y7lcJtYIXsQh9eQqGPOfhOHnK71TZFUDKuRWKNAqrphBGkysajduRhf/A+2gRYVJ7jGHBmt0yqmEkiCKCa6GINAryVG1TctM6PwNKHbCrb9aq/8zIDZGT5RJXM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749640360; c=relaxed/simple;
+	bh=EefSXwOg6EnlDbaCsRdSPLkeXbRTPj72FblAFX989Pg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=krv01QXHZV0RgnCFYzOW1fIxo33kBb5HvYzPZ9qfUj/+iPZlqnpRu7c+9Eaups7N+ZslJwyjpAMItDP1gNTOFNfkalkwVeKtykzSeInoWTvOicbfGlo6fnae9z+mvbLnkgokZUxmOZytfpkYcxjJsH69LwCKhmiTfsNndPnIzXU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=louisalexis.eyraud@collabora.com header.b=bfUeNl7I; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rlhglbRt"
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-	id 9DA822115190; Wed, 11 Jun 2025 04:12:35 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9DA822115190
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1749640355;
-	bh=qWcwbrk1B9AwSLw+kibnueNoD1DZ6goIu7GiCM6Qlu0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rlhglbRtbt0Hbe+n51t1Jn72RUoWF3RpnwuZftUvtNku2mGleh3PsB7Ete2wnwVQX
-	 totONy0JEUXLVQ9Ik1KKGghpirw600tO8i8259mmKIVjMKnnA4WPgd/mExswV1pxYR
-	 18e7gfJe3yFADKmvYLOa41ksZ4zFzNef8IiwfWCA=
-Date: Wed, 11 Jun 2025 04:12:35 -0700
-From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To: Naman Jain <namjain@linux.microsoft.com>
-Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Leon Romanovsky <leon@kernel.org>, Long Li <longli@microsoft.com>,
-	Shiraz Saleem <shirazsaleem@microsoft.com>,
-	Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH 0/6] Fix warning for missing export.h in Hyper-V drivers
-Message-ID: <20250611111235.GB31913@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <20250611100459.92900-1-namjain@linux.microsoft.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=louisalexis.eyraud@collabora.com header.b="bfUeNl7I"
+ARC-Seal: i=1; a=rsa-sha256; t=1749640329; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=QG5faVQFbIILrQTW0ZBXfFI76UtWGMdYguxmkoNxLeYGZxz5CYct0Yx9iNLeae3/tCHH2I4N5a6bsxQ4mRDVLOBAlg/IZNk4PeTxILhhlr/u2hG/nICo8JhnfZa73EWj3mgeWLCpQLOQfNBv142DEpwNxQBscR6Rpe0r8P8wW4Y=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1749640329; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=YGZIHHTdUio4mkdGxDuE5j03JDM6UM0QavShcW0kz4s=; 
+	b=OJ4Q9V8NQwUR04DQtcMguwUsuXp0JconZeDK71kK+3VwSMwd78fbknjfvi5uSAH0v8UO8FZuG5s1UZhNPzRWtQW0erifIJEhOcYwZWf8q730GpGYjQmRQzJqSDy9nd7rmdw78CBZ0dJLkJpJbdwoeXBm4lY6rEYw6XENBFPJ09Q=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=louisalexis.eyraud@collabora.com;
+	dmarc=pass header.from=<louisalexis.eyraud@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749640329;
+	s=zohomail; d=collabora.com; i=louisalexis.eyraud@collabora.com;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
+	bh=YGZIHHTdUio4mkdGxDuE5j03JDM6UM0QavShcW0kz4s=;
+	b=bfUeNl7IIh2Pr0yrDjsQ+LpveA1vvUP5D3xOghqP6cidbjLzkL8vOt0OtQHTLlqM
+	pFooA2LJg3iteB8yqobdy0VEnFFKR130gk7YxuCBNZpKqLUMOFYjvhPax9hnDm73bJv
+	6OAMhPUge9VeaEgSM/kl1OC4xsXVfwjRAVNFLxSg=
+Received: by mx.zohomail.com with SMTPS id 1749640327308121.2139749325595;
+	Wed, 11 Jun 2025 04:12:07 -0700 (PDT)
+Message-ID: <8e551fad9bd1627b9ed6f20be7d88bdc3438d482.camel@collabora.com>
+Subject: Re: [PATCH v4 01/10] ASoC: mediatek: common: modify mtk afe
+ platform driver for mt8196
+From: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+To: "Darren.Ye" <darren.ye@mediatek.com>, Liam Girdwood
+ <lgirdwood@gmail.com>,  Mark Brown <broonie@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,  Conor Dooley
+ <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno	 <angelogioacchino.delregno@collabora.com>,
+ Jaroslav Kysela <perex@perex.cz>,  Takashi Iwai <tiwai@suse.com>, Linus
+ Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
+Date: Wed, 11 Jun 2025 13:12:01 +0200
+In-Reply-To: <20250610092852.21986-2-darren.ye@mediatek.com>
+References: <20250610092852.21986-1-darren.ye@mediatek.com>
+	 <20250610092852.21986-2-darren.ye@mediatek.com>
+Organization: Collabora Ltd
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611100459.92900-1-namjain@linux.microsoft.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-ZohoMailClient: External
 
-On Wed, Jun 11, 2025 at 03:34:53PM +0530, Naman Jain wrote:
-> When the kernel is compiled with W=1 option, a warning is reported
-> if a .c file exports a symbol but does not include export.h header
-> file. This warning was added in below patch, which merged recently:
-> commit a934a57a42f6 ("scripts/misc-check: check missing #include <linux/export.h> when W=1")
-> 
-> Fix this issue in Hyper-V drivers. This does not bring any
-> functional changes.
-> 
-> The one in drivers/hv/vmbus_drv.c is going to be fixed with 
-> https://lore.kernel.org/all/20250611072704.83199-2-namjain@linux.microsoft.com/
-> so it is not included in this series.
-> 
-> Naman Jain (6):
->   Drivers: hv: Fix warnings for missing export.h header inclusion
->   x86/hyperv: Fix warnings for missing export.h header inclusion
->   KVM: x86: hyper-v: Fix warnings for missing export.h header inclusion
->   clocksource: hyper-v: Fix warnings for missing export.h header
->     inclusion
->   PCI: hv: Fix warnings for missing export.h header inclusion
->   net: mana: Fix warnings for missing export.h header inclusion
-> 
->  arch/x86/hyperv/hv_init.c                       | 1 +
->  arch/x86/hyperv/irqdomain.c                     | 1 +
->  arch/x86/hyperv/ivm.c                           | 1 +
->  arch/x86/hyperv/nested.c                        | 1 +
->  arch/x86/kvm/hyperv.c                           | 1 +
->  arch/x86/kvm/kvm_onhyperv.c                     | 1 +
->  drivers/clocksource/hyperv_timer.c              | 1 +
->  drivers/hv/channel.c                            | 1 +
->  drivers/hv/channel_mgmt.c                       | 1 +
->  drivers/hv/hv_proc.c                            | 1 +
->  drivers/hv/mshv_common.c                        | 1 +
->  drivers/hv/mshv_root_hv_call.c                  | 1 +
->  drivers/hv/ring_buffer.c                        | 1 +
->  drivers/net/ethernet/microsoft/mana/gdma_main.c | 1 +
->  drivers/net/ethernet/microsoft/mana/mana_en.c   | 1 +
->  drivers/pci/controller/pci-hyperv-intf.c        | 1 +
->  16 files changed, 16 insertions(+)
-> 
-> 
-> base-commit: 475c850a7fdd0915b856173186d5922899d65686
-> -- 
-> 2.34.1
->
+On Tue, 2025-06-10 at 17:27 +0800, Darren.Ye wrote:
+> From: Darren Ye <darren.ye@mediatek.com>
+>=20
+> Mofify the pcm pointer interface to support 64-bit address access.
+>=20
+> Signed-off-by: Darren Ye <darren.ye@mediatek.com>
+> ---
+> =C2=A0.../mediatek/common/mtk-afe-platform-driver.c | 47 ++++++++++++----=
+-
+> --
+> =C2=A0.../mediatek/common/mtk-afe-platform-driver.h |=C2=A0 2 +
+> =C2=A02 files changed, 33 insertions(+), 16 deletions(-)
+>=20
+> diff --git a/sound/soc/mediatek/common/mtk-afe-platform-driver.c
+> b/sound/soc/mediatek/common/mtk-afe-platform-driver.c
+> index 6b6330583941..a86594dca2b7 100644
+> --- a/sound/soc/mediatek/common/mtk-afe-platform-driver.c
+> +++ b/sound/soc/mediatek/common/mtk-afe-platform-driver.c
+> @@ -86,29 +86,44 @@ snd_pcm_uframes_t mtk_afe_pcm_pointer(struct
+> snd_soc_component *component,
+> =C2=A0	const struct mtk_base_memif_data *memif_data =3D memif->data;
+> =C2=A0	struct regmap *regmap =3D afe->regmap;
+> =C2=A0	struct device *dev =3D afe->dev;
+> -	int reg_ofs_base =3D memif_data->reg_ofs_base;
+> -	int reg_ofs_cur =3D memif_data->reg_ofs_cur;
+> -	unsigned int hw_ptr =3D 0, hw_base =3D 0;
+> -	int ret, pcm_ptr_bytes;
+> -
+> -	ret =3D regmap_read(regmap, reg_ofs_cur, &hw_ptr);
+> -	if (ret || hw_ptr =3D=3D 0) {
+> -		dev_err(dev, "%s hw_ptr err\n", __func__);
+> -		pcm_ptr_bytes =3D 0;
+> +	unsigned int hw_ptr_lower32 =3D 0, hw_ptr_upper32 =3D 0;
+> +	unsigned int hw_base_lower32 =3D 0, hw_base_upper32 =3D 0;
+> +	unsigned long long hw_ptr =3D 0, hw_base =3D 0;
+> +	int ret;
+> +	unsigned long long pcm_ptr_bytes =3D 0;
+> +
+> +	ret =3D regmap_read(regmap, memif_data->reg_ofs_cur,
+> &hw_ptr_lower32);
+> +	if (ret || hw_ptr_lower32 =3D=3D 0) {
+> +		dev_err(dev, "%s hw_ptr_lower32 err\n", __func__);
+> =C2=A0		goto POINTER_RETURN_FRAMES;
+> =C2=A0	}
+> =C2=A0
+> -	ret =3D regmap_read(regmap, reg_ofs_base, &hw_base);
+> -	if (ret || hw_base =3D=3D 0) {
+> -		dev_err(dev, "%s hw_ptr err\n", __func__);
+> -		pcm_ptr_bytes =3D 0;
+> -		goto POINTER_RETURN_FRAMES;
+> +	if (memif_data->reg_ofs_cur_msb) {
+> +		ret =3D regmap_read(regmap, memif_data-
+> >reg_ofs_cur_msb, &hw_ptr_upper32);
+> +		if (ret) {
+> +			dev_err(dev, "%s hw_ptr_upper32 err\n",
+> __func__);
+> +			goto POINTER_RETURN_FRAMES;
+> +		}
+> =C2=A0	}
+> =C2=A0
+> -	pcm_ptr_bytes =3D hw_ptr - hw_base;
+> +	ret =3D regmap_read(regmap, memif_data->reg_ofs_base,
+> &hw_base_lower32);
+> +	if (ret || hw_base_lower32 =3D=3D 0) {
+> +		dev_err(dev, "%s hw_base_lower32 err\n", __func__);
+> +		goto POINTER_RETURN_FRAMES;
+> +	}
+> +	if (memif_data->reg_ofs_base_msb) {
+> +		ret =3D regmap_read(regmap, memif_data-
+> >reg_ofs_base_msb, &hw_base_upper32);
+> +		if (ret) {
+> +			dev_err(dev, "%s hw_base_upper32 err\n",
+> __func__);
+> +			goto POINTER_RETURN_FRAMES;
+> +		}
+> +	}
+> +	hw_ptr =3D ((unsigned long long)hw_ptr_upper32 << 32) +
+> hw_ptr_lower32;
+> +	hw_base =3D ((unsigned long long)hw_base_upper32 << 32) +
+> hw_base_lower32;
+> =C2=A0
+> =C2=A0POINTER_RETURN_FRAMES:
+> -	return bytes_to_frames(substream->runtime, pcm_ptr_bytes);
+> +	pcm_ptr_bytes =3D MTK_WORD_SIZE_ALIGN(hw_ptr - hw_base);
+> +	return bytes_to_frames(substream->runtime,
+> (ssize_t)pcm_ptr_bytes);
+> =C2=A0}
+> =C2=A0EXPORT_SYMBOL_GPL(mtk_afe_pcm_pointer);
+> =C2=A0
+> diff --git a/sound/soc/mediatek/common/mtk-afe-platform-driver.h
+> b/sound/soc/mediatek/common/mtk-afe-platform-driver.h
+> index fcc923b88f12..9809e60db511 100644
+> --- a/sound/soc/mediatek/common/mtk-afe-platform-driver.h
+> +++ b/sound/soc/mediatek/common/mtk-afe-platform-driver.h
+> @@ -12,6 +12,8 @@
+> =C2=A0#define AFE_PCM_NAME "mtk-afe-pcm"
+> =C2=A0extern const struct snd_soc_component_driver mtk_afe_pcm_platform;
+> =C2=A0
+> +#define MTK_WORD_SIZE_ALIGN(x) ((x) & (0xfffffffff0))
+> +
+> =C2=A0struct mtk_base_afe;
+> =C2=A0struct snd_pcm;
+> =C2=A0struct snd_soc_component;
 
-For the series,
-Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com> 
+Tested-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com> # on
+Mediatek Genio 510 EVK and Genio 1200 EVK
