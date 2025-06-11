@@ -1,77 +1,241 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A015D29ACED
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8F0935897;
+	Wed, 11 Jun 2025 14:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749651305; cv=none; b=PDx3Kv1M8KxmNMLgEn57eJy646s/K5uEh1ExWjyovRqPOMozkjR9lZDcxQ63pIUxAP5U1aG4+K8Iu4lnBlpUS6MAYxHHOY+S2OgC6cJkuZnRo9n3NDj9iG0JjpS+9mXtnoERqCDghf5nNoBrhZqT4QcdTMQxw+uKbWep1axeA7A=
+	t=1749651305; cv=none; b=N79b60YC0aWP5ox+5MuLrC2fIegczqoO2SaGV/uIfX2T+ZbgZn8KexRl3VvRL6Mn5CNs1AXJ+xZJUodf4HPdoFiD1BWL+0mJE8wYaTAtC8TdZST4soxJ7BO1cbk6J7hs9M1lN7Jnw+8v9wW+0dXhhEMMPPHtnAk4+C6uvtWNAOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749651305; c=relaxed/simple;
-	bh=pFxx+C/5QWV40QbrKzTdzefhgo5GIRyytsEQA9i/6/Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=s4FHEy+XZwSH9lI8Jc1bPBmeYf8YWFly3OKo01cy5CqPu58mQzhSkzr8HDbs8DuCRIkYgEpTE9b7GBtWCJ5eVMX2dntFYCE7a48Pbz6YcvZq3mgB/j4i76KspkPG3qon+d1KCHI0FGqug3nLQh9gS2F1ula6t+gj4zgkXmbczVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id ABE241D7240;
-	Wed, 11 Jun 2025 14:15:00 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 5C6D920033;
-	Wed, 11 Jun 2025 14:14:58 +0000 (UTC)
-Date: Wed, 11 Jun 2025 10:14:57 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- linux-kernel@vger.kernel.org, Ben Segall <bsegall@google.com>, Dietmar
- Eggemann <dietmar.eggemann@arm.com>, Ingo Molnar <mingo@redhat.com>, Juri
- Lelli <juri.lelli@redhat.com>, Mel Gorman <mgorman@suse.de>, Thomas
- Gleinxer <tglx@linutronix.de>, Valentin Schneider <vschneid@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH v2] sched: Remove a preempt-disable section in
- rt_mutex_setprio()
-Message-ID: <20250611101457.13ea44f5@batman.local.home>
-In-Reply-To: <20250611090306.GA2273038@noisy.programming.kicks-ass.net>
-References: <20250610144700.uBK6RS95@linutronix.de>
-	<20250611090306.GA2273038@noisy.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	bh=gPozdbI3xpmxAv+kXn407bfUh6hLjnr47SUlGsJ5RY0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LFdVMXxyUoUYqkdmaQ3g37f4JClsnxyScr9mlOcmDmk9vmqJwln4Cs6SjfDSjiF6DWioaWPQOsVLSVgJ214hz/Tb9Lh7oCcgG/5SBXgbHMPlykrVek3mbhl4O7AT/ttOpvmDMuFh0KOgw/3RApqthsD192oK/sF8bu0d9Ds1jag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=UOt6HpUk; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="UOt6HpUk"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 53EAC526;
+	Wed, 11 Jun 2025 16:14:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1749651293;
+	bh=gPozdbI3xpmxAv+kXn407bfUh6hLjnr47SUlGsJ5RY0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UOt6HpUk9flKVzBrV8edTT7seyKAKmte8Yfx+4gNSJ9azP9NzWTKbG/MmcfOLgDMX
+	 1rdkMDvcCLkiMrNuyccUiei49CSOPbo3TzWOuCHYOfESslReCu16XrFQBBpa6DcliV
+	 Wz/VZY3TuNfK79OPX5bo1LospmsQOFtdHjLUcmR8=
+Date: Wed, 11 Jun 2025 17:14:49 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Frank Li <Frank.li@nxp.com>, Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Rui Miguel Silva <rmfrfs@gmail.com>,
+	Martin Kepplinger <martink@posteo.de>,
+	Purism Kernel Team <kernel@puri.sm>, linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Robert Chiras <robert.chiras@nxp.com>,
+	"Guoniu.zhou" <guoniu.zhou@nxp.com>
+Subject: Re: [PATCH v4 04/13] media: nxp: imx8-isi: Use
+ devm_clk_bulk_get_all() to fetch clocks
+Message-ID: <20250611141449.GA24607@pendragon.ideasonboard.com>
+References: <20250408-8qxp_camera-v4-0-ef695f1b47c4@nxp.com>
+ <20250408-8qxp_camera-v4-4-ef695f1b47c4@nxp.com>
+ <20250421211438.GN17813@pendragon.ideasonboard.com>
+ <aBQZjFsExJh2uRfK@lizhi-Precision-Tower-5810>
+ <20250502155747.GB20093@pendragon.ideasonboard.com>
+ <aBylKcZyFInlKQAR@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 5C6D920033
-X-Stat-Signature: jfpkggf699s5uq3t8z8iukopfwho48gx
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/WvrBFQsv3gRwMyZGvufRM72PtMU2aDtY=
-X-HE-Tag: 1749651298-720991
-X-HE-Meta: U2FsdGVkX18MuulUrPufGWjBco2mf9EefcB2MFUtAED5qZCkZckI1+jdoixvFikw+D9j4rhy+pZAeE0Osm9OzscW+0mEoVxG3ZW/44EBCVBhNTRnx76SU8EDBidHUU/y/T/oCkfb0Y8vEL3gPp8Rq0mBxG8vbH7o6y7YISHIsWxjmNAu4oCEsjvrOIlBcIC+gHJ2n9AKKX+LBeIBCZ4bECKivTQNfnjvRNj6jN68a1IYnHUBKjdVM+3u1XUwUKBp1Yz6e2XkyLUGpRQ2Xr8HENiv96uOzIl0Bp981i0bGNcjh33uFXLmWgu3ArFpTHCb13yu3XgJ4kVJGAN1TL5kCh649f0AjS9hXRvOJEJYG/lo9MUox1YwQjJ0JfZqkxIGoXS0E9Vt+kIFOd8V43wfog==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aBylKcZyFInlKQAR@lizhi-Precision-Tower-5810>
 
-On Wed, 11 Jun 2025 11:03:06 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+Hi Rob,
 
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -7292,14 +7292,10 @@ void rt_mutex_setprio(struct task_struct *p, struct task_struct *pi_task)
-> >  
-> >  	check_class_changed(rq, p, prev_class, oldprio);
-> >  out_unlock:
-> > -	/* Avoid rq from going away on us: */
-> > -	preempt_disable();  
+On Thu, May 08, 2025 at 08:35:53AM -0400, Frank Li wrote:
+> On Fri, May 02, 2025 at 06:57:47PM +0300, Laurent Pinchart wrote:
+> > On Thu, May 01, 2025 at 09:02:04PM -0400, Frank Li wrote:
+> > > On Tue, Apr 22, 2025 at 12:14:38AM +0300, Laurent Pinchart wrote:
+> > > > On Tue, Apr 08, 2025 at 05:53:02PM -0400, Frank Li wrote:
+> > > > > Use devm_clk_bulk_get_all() helper to simplify clock handle code.
+> > > > >
+> > > > > No functional changes intended.
+> > > > >
+> > > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > > > ---
+> > > > >  .../media/platform/nxp/imx8-isi/imx8-isi-core.c    | 46 +++-------------------
+> > > > >  .../media/platform/nxp/imx8-isi/imx8-isi-core.h    |  3 +-
+> > > > >  2 files changed, 6 insertions(+), 43 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
+> > > > > index ecfc95882f903..015350c6f2784 100644
+> > > > > --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
+> > > > > +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
+> > > > > @@ -275,11 +275,6 @@ static const struct mxc_isi_set_thd mxc_imx8_isi_thd_v1 = {
+> > > > >  	.panic_set_thd_v = { .mask = 0xf0000, .offset = 16, .threshold = 0x7 },
+> > > > >  };
+> > > > >
+> > > > > -static const struct clk_bulk_data mxc_imx8mn_clks[] = {
+> > > > > -	{ .id = "axi" },
+> > > > > -	{ .id = "apb" },
+> > > > > -};
+> > > > > -
+> > > > >  static const struct mxc_isi_plat_data mxc_imx8mn_data = {
+> > > > >  	.model			= MXC_ISI_IMX8MN,
+> > > > >  	.num_ports		= 1,
+> > > > > @@ -287,8 +282,6 @@ static const struct mxc_isi_plat_data mxc_imx8mn_data = {
+> > > > >  	.reg_offset		= 0,
+> > > > >  	.ier_reg		= &mxc_imx8_isi_ier_v1,
+> > > > >  	.set_thd		= &mxc_imx8_isi_thd_v1,
+> > > > > -	.clks			= mxc_imx8mn_clks,
+> > > > > -	.num_clks		= ARRAY_SIZE(mxc_imx8mn_clks),
+> > > > >  	.buf_active_reverse	= false,
+> > > > >  	.gasket_ops		= &mxc_imx8_gasket_ops,
+> > > > >  	.has_36bit_dma		= false,
+> > > > > @@ -301,8 +294,6 @@ static const struct mxc_isi_plat_data mxc_imx8mp_data = {
+> > > > >  	.reg_offset		= 0x2000,
+> > > > >  	.ier_reg		= &mxc_imx8_isi_ier_v2,
+> > > > >  	.set_thd		= &mxc_imx8_isi_thd_v1,
+> > > > > -	.clks			= mxc_imx8mn_clks,
+> > > > > -	.num_clks		= ARRAY_SIZE(mxc_imx8mn_clks),
+> > > > >  	.buf_active_reverse	= true,
+> > > > >  	.gasket_ops		= &mxc_imx8_gasket_ops,
+> > > > >  	.has_36bit_dma		= true,
+> > > > > @@ -315,8 +306,6 @@ static const struct mxc_isi_plat_data mxc_imx8ulp_data = {
+> > > > >  	.reg_offset		= 0x0,
+> > > > >  	.ier_reg		= &mxc_imx8_isi_ier_v2,
+> > > > >  	.set_thd		= &mxc_imx8_isi_thd_v1,
+> > > > > -	.clks			= mxc_imx8mn_clks,
+> > > > > -	.num_clks		= ARRAY_SIZE(mxc_imx8mn_clks),
+> > > > >  	.buf_active_reverse	= true,
+> > > > >  	.has_36bit_dma		= false,
+> > > > >  };
+> > > > > @@ -328,8 +317,6 @@ static const struct mxc_isi_plat_data mxc_imx93_data = {
+> > > > >  	.reg_offset		= 0,
+> > > > >  	.ier_reg		= &mxc_imx8_isi_ier_v2,
+> > > > >  	.set_thd		= &mxc_imx8_isi_thd_v1,
+> > > > > -	.clks			= mxc_imx8mn_clks,
+> > > > > -	.num_clks		= ARRAY_SIZE(mxc_imx8mn_clks),
+> > > > >  	.buf_active_reverse	= true,
+> > > > >  	.gasket_ops		= &mxc_imx93_gasket_ops,
+> > > > >  	.has_36bit_dma		= false,
+> > > > > @@ -386,7 +373,7 @@ static int mxc_isi_runtime_suspend(struct device *dev)
+> > > > >  {
+> > > > >  	struct mxc_isi_dev *isi = dev_get_drvdata(dev);
+> > > > >
+> > > > > -	clk_bulk_disable_unprepare(isi->pdata->num_clks, isi->clks);
+> > > > > +	clk_bulk_disable_unprepare(isi->num_clks, isi->clks);
+> > > > >
+> > > > >  	return 0;
+> > > > >  }
+> > > > > @@ -396,7 +383,7 @@ static int mxc_isi_runtime_resume(struct device *dev)
+> > > > >  	struct mxc_isi_dev *isi = dev_get_drvdata(dev);
+> > > > >  	int ret;
+> > > > >
+> > > > > -	ret = clk_bulk_prepare_enable(isi->pdata->num_clks, isi->clks);
+> > > > > +	ret = clk_bulk_prepare_enable(isi->num_clks, isi->clks);
+> > > > >  	if (ret) {
+> > > > >  		dev_err(dev, "Failed to enable clocks (%d)\n", ret);
+> > > > >  		return ret;
+> > > > > @@ -414,27 +401,6 @@ static const struct dev_pm_ops mxc_isi_pm_ops = {
+> > > > >   * Probe, remove & driver
+> > > > >   */
+> > > > >
+> > > > > -static int mxc_isi_clk_get(struct mxc_isi_dev *isi)
+> > > > > -{
+> > > > > -	unsigned int size = isi->pdata->num_clks
+> > > > > -			  * sizeof(*isi->clks);
+> > > > > -	int ret;
+> > > > > -
+> > > > > -	isi->clks = devm_kmemdup(isi->dev, isi->pdata->clks, size, GFP_KERNEL);
+> > > > > -	if (!isi->clks)
+> > > > > -		return -ENOMEM;
+> > > > > -
+> > > > > -	ret = devm_clk_bulk_get(isi->dev, isi->pdata->num_clks,
+> > > > > -				isi->clks);
+> > > > > -	if (ret < 0) {
+> > > > > -		dev_err(isi->dev, "Failed to acquire clocks: %d\n",
+> > > > > -			ret);
+> > > > > -		return ret;
+> > > > > -	}
+> > > > > -
+> > > > > -	return 0;
+> > > > > -}
+> > > > > -
+> > > > >  static int mxc_isi_probe(struct platform_device *pdev)
+> > > > >  {
+> > > > >  	struct device *dev = &pdev->dev;
+> > > > > @@ -457,11 +423,9 @@ static int mxc_isi_probe(struct platform_device *pdev)
+> > > > >  	if (!isi->pipes)
+> > > > >  		return -ENOMEM;
+> > > > >
+> > > > > -	ret = mxc_isi_clk_get(isi);
+> > > > > -	if (ret < 0) {
+> > > > > -		dev_err(dev, "Failed to get clocks\n");
+> > > > > -		return ret;
+> > > > > -	}
+> > > > > +	isi->num_clks = devm_clk_bulk_get_all(dev, &isi->clks);
+> > > >
+> > > > This prevents validating that the DT contains the expected clocks, which
+> > > > could cause hard to debug issues. Isn't it a problem ?
+> > >
+> > > It is checked by dt-binding. Now no warning by DTB_CHECK under arm64 freecale.
+> > > CHECK_DTB should be enough to find expected clocks.
+> >
+> > Yes, the DTB check will catch issues at build time, but the driver will
+> > not enforce that. I'm not sure if there's a clear policy here, and if
+> > ensuring at runtime in drivers that the expected clocks are present is
+> > considered as a good practice by the DT maintainers. Rob, Krzysztof,
+> > Conor, do you have an opinion ?
 > 
-> Perhaps add:
-> 
-> 	/* IRQs are still disabled */
-> 
-> or something to that effect such that it is obvious from reading the
-> code that dropping the lock will not enable preemption?
+> Rob:
+> 	can you comment this?
 
-Hmm, wouldn't lockdep_assert_irqs_disabled() be better than a comment.
-It lets people know that interrupts are disabled and when lockdep is
-enabled it also makes sure they are.
+Rob, any comment on this ?
 
--- Steve
+> Laurent:
+> 	Many driver already switch to devm_clk_bulk_get_all() such as qcom/imx6
+> pci drivers recently.
+> 
+> > > > > +	if (isi->num_clks < 0)
+> > > > > +		return dev_err_probe(dev, isi->num_clks, "Failed to get clocks\n");
+> > > > >
+> > > > >  	isi->regs = devm_platform_ioremap_resource(pdev, 0);
+> > > > >  	if (IS_ERR(isi->regs)) {
+> > > > > diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
+> > > > > index e7534a80af7b4..bd3cfe5fbe063 100644
+> > > > > --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
+> > > > > +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
+> > > > > @@ -169,8 +169,6 @@ struct mxc_isi_plat_data {
+> > > > >  	const struct mxc_isi_ier_reg  *ier_reg;
+> > > > >  	const struct mxc_isi_set_thd *set_thd;
+> > > > >  	const struct mxc_gasket_ops *gasket_ops;
+> > > > > -	const struct clk_bulk_data *clks;
+> > > > > -	unsigned int num_clks;
+> > > > >  	bool buf_active_reverse;
+> > > > >  	bool has_36bit_dma;
+> > > > >  };
+> > > > > @@ -282,6 +280,7 @@ struct mxc_isi_dev {
+> > > > >
+> > > > >  	void __iomem			*regs;
+> > > > >  	struct clk_bulk_data		*clks;
+> > > > > +	int				num_clks;
+> > > > >  	struct regmap			*gasket;
+> > > > >
+> > > > >  	struct mxc_isi_crossbar		crossbar;
+
+-- 
+Regards,
+
+Laurent Pinchart
