@@ -1,55 +1,55 @@
 Received: from mail-oa1-f73.google.com (mail-oa1-f73.google.com [209.85.160.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D30B221DB9
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 16:02:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC39221DB7
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 16:02:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749657761; cv=none; b=qilil8IMMiMMIZYXlKYKZQMEsBepLM3OM3NwK6ZskS2Tpe0poC1Vttzor/irjsBO1zwtQ/bEmHr7J1jy+R2adYre5T0LZxVZlLrVJDlS7xqIK2y5MfRmpm9Ifv5gIOZprEo6/eh0OUecQUD7qCVWZxkQWc/MD2qUc8QUUO/V5CI=
+	t=1749657763; cv=none; b=WWrpr33kGm4LC9cQmnxqNr9E/VCy92H+jHyfryDBwSfI24YbyxAhSzu9+L+TyKXhu+4g3p52tkHtbaQe60Q+q3t99H9pe+8602NxTkJocgQ+XzdSE1M1UFgUOsokJPv9IAGYPe0KexLjlWIcHi/4CUnwE37nfQ5seVyDYABxEAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749657761; c=relaxed/simple;
-	bh=602ge3IrvdJSofX4xh1knJK45sEHTF1Dit0ZKjT/Lhw=;
+	s=arc-20240116; t=1749657763; c=relaxed/simple;
+	bh=Ilu0pfW95eCi+XNUYUm0SMsqNchioRMCFHPr0UmvjTs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=aDTwnzagNxFrGh5jbpEBVjstdxcZy4ayyS+0deJhrVXGQ8y3dB3hgfNmJMi4xrZRvx/WnhQe8CLm67WBUp4xgMI/w66oBHTxyjfk6pSCf33dq2rflfhid9oEIFGeETRGfp/uwjHyYctP1zTXYF2oN6qlWaKX2M/r7Y3taYg53CY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VDv5aEQS; arc=none smtp.client-ip=209.85.160.73
+	 To:Content-Type; b=lPIfMHBbrV9Job/NC/vzPyzBJx2QdtZcaJ5S+50ZYoHX0UxeIFzO6iPU0yDiQd2kD5w8G3QJCH83AzlbtAiKu50uc0UFKVyuO95VqBLRP0pBjhpwm+5o3U6oUa+aVQjyquNS/JCXgn/JKgMl5hYfs/kdFDNjPwfe/0a0PdVTPXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jTyUiPQI; arc=none smtp.client-ip=209.85.160.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VDv5aEQS"
-Received: by mail-oa1-f73.google.com with SMTP id 586e51a60fabf-2e990e17650so5930267fac.3
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 09:02:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jTyUiPQI"
+Received: by mail-oa1-f73.google.com with SMTP id 586e51a60fabf-2da39af344aso5643348fac.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 09:02:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749657758; x=1750262558; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749657760; x=1750262560; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=uIN5+vkHhMcm+fkAqxWl28Hu3H95tNrgpyamWZkdrg0=;
-        b=VDv5aEQSjuFQ9OiDOZVrRZKdhDosn9hyskqmMKvTppFTHrNoMpCLhIxl+35ABGfvPm
-         ugFNWYn25AnaWecJ7qd9Xds5E1ROPVYlCue6FlWCuK9dlGgNKzSHlewEul74Db4GAPMx
-         A6klGskDHV048UFhE+R9+7/sbAI2biWeRUzzKnivJLUfPuo04eEgA62jqXtb6Hh4VnoF
-         4cTb9aw/LO8j17OwV3w7TgbYiz7DG6hvky5kfqpNzBeBk617tvlfeW/UK+vA8aIZ7ae6
-         ywXeer1DFtogxIprKucqklP6DMfClsGNiXVJYd6UnNU4FqKsx8qub2AXn8W1YRkXciIE
-         2UMg==
+        bh=ECJI+ztP6T0WT3mWUPAVAPewDDMI1gS570KEoWhhnTs=;
+        b=jTyUiPQISv7mudRUdFGdJLn1bRP28HgCAaOxWtEeESjW/jQqUUDla0vu5FR2AjwHJJ
+         QTngRi1kPtvPTXNFLEcsB50mr36WRqwFlXK8OOBqLhNeQYdft/PiU2kR/aqCg60s6Aq/
+         BatgFFmJnLq8MmNAn9opdRciZbjEf3lnQoM97J7uS49JoED7mSqI90q7XYrBnh3+SOhc
+         sqRq5xf8JJOQh8m4UibbpyYrQgX7JI2yZAhKHHrmm77P5GjOY7WaXxyf7kB2g81otCpF
+         UvES4gpo53LmcXlLkvouRFWBkxwW2xvQsiz6DeSy5xZjLAf/o5j80aSV4265s6Xk5fnP
+         Y0xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749657758; x=1750262558;
+        d=1e100.net; s=20230601; t=1749657761; x=1750262561;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uIN5+vkHhMcm+fkAqxWl28Hu3H95tNrgpyamWZkdrg0=;
-        b=WIOa3mmvDc4ZtPiniI7+sGVmFAdls7dlYxquvF88zhrpIHv00q64/s/84oYvwYvZde
-         yjENrP2MUsZ7eKjDIFIpbrVcs70CAj9lMx5BGgCQhnGhhhwlqPVNjaUSdNLpi4H9Y9DW
-         roP57IUMmg9XXZglRqL8GZYwn1VVgP2I70EMRNG0hnphrarfCLr5tbdZwIizTiLeYx/H
-         2aXsUUp0eHIRo+0WRjMCAgx2DkENCK3LF76i3wzBgJQ86Onx4rOQ535sshiG0nGjChYD
-         zfCyhhz9c2/6DLp4/wBZR40gpzuaoDX7yxtyiG/O1XsyIoRHfQG5asdEamUFLos0F9xk
-         rsYA==
-X-Forwarded-Encrypted: i=1; AJvYcCUO4DO+bIzhsFt+R2Fkpk1m++T4gkMsqjSbLmQF2xSqvOUwAbC8BG6KV7+PZSZTqXXYhMaHaikMHgWkbZI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywba2Fp6nINBaQbWzg4+9rMgVY2QYTJMTe8kESEi46rJ+NMhdii
-	Ikc45KD3x8GhfSlehkXGG+BPX/jwmWwOD0GeEfE4Sr18GjxwlB4VNSRvQa4J1sBMOImZMZiKA15
-	CMIkS3vmR5w==
-X-Google-Smtp-Source: AGHT+IG8EvxoBrhRCfCuSTRnNtgvx75KUOuEpE8OOdJJGRi8eXmIoS6SGA1c9Cq1mvsyVU+ErGl/9Vaq2/C2
-X-Received: from oabrd3.prod.google.com ([2002:a05:6871:6203:b0:2d6:1436:180b])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6871:e495:b0:2d4:d9d6:c8e0
- with SMTP id 586e51a60fabf-2ea96e5e524mr2241683fac.20.1749657758513; Wed, 11
- Jun 2025 09:02:38 -0700 (PDT)
-Date: Wed, 11 Jun 2025 09:02:05 -0700
+        bh=ECJI+ztP6T0WT3mWUPAVAPewDDMI1gS570KEoWhhnTs=;
+        b=So1Q8WfZNLfGi57S8o2Hu2/P/BSiWNilr/U6xWhQr90qtO79FAdkjt+RWECHrTyh+i
+         4uvrrZFX2N9C/93wbqwk81qSwCvJXrgICKYG59hCKBifc09st2ZhHpts80t/SGBNZ8Ge
+         wRE30cwNUOenzwUsQODa3WefmpXpxZjgOW8YCE/9sZCLmF3MDt9kjWlEIDxrF51Gl8PM
+         FVXlmsioW2RmMKC9zYQgQ/gtG0i3Y3rK26I6kUjaJ6L2awhd+JBW+LN72yUVrqOI9Abw
+         cQUuQ+pIJsmELRkKvXQVVAyRy+kf1/DAiB1C1KpOEf1QXpCy/9uDpEcq8FdR6ZvIcr1q
+         SooQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXa68lp1m6pehcmZjwA07E/tr3k8iIiYJG7cxzR2WNPNTuIy+zEPOBd/xdOrFEOPdWG2Khf6K/jQumvclI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOSGk4q1ls/rWlO8f1XSbpR3y6nBSK5lG/HK8BRmsVqOq5n5sd
+	Tmo8Gp/bwzVLJLRK7SzkHu1w/U+7mu3IVEVq4uUEwgfiqEtw/+8EgbldwFTknOsfiT846PDAhbe
+	uKBD8HSwX2w==
+X-Google-Smtp-Source: AGHT+IHLYajxvOqRq5zbkfdNH6b1AKZ/+4OnD+k/3bHDorR3n9GmNEjx5mmoq4AY/sDBzallhHd8YzS0UwSk
+X-Received: from oabgu16.prod.google.com ([2002:a05:6870:ab10:b0:2b8:45b4:8afc])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:7183:b0:2d0:3078:e730
+ with SMTP id 586e51a60fabf-2ea96bae0c5mr2087973fac.3.1749657760567; Wed, 11
+ Jun 2025 09:02:40 -0700 (PDT)
+Date: Wed, 11 Jun 2025 09:02:06 -0700
 In-Reply-To: <20250611160206.552030-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250611160206.552030-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.rc0.642.g800a2b2222-goog
-Message-ID: <20250611160206.552030-15-irogers@google.com>
-Subject: [PATCH v2 14/15] perf list: Remove tracepoint printing code
+Message-ID: <20250611160206.552030-16-irogers@google.com>
+Subject: [PATCH v2 15/15] perf ilist: Add new python ilist command
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,205 +76,275 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Now that the tp_pmu can iterate and describe events remove the custom
-tracepoint printing logic, this avoids perf list showing the
-tracepoint events twice.
+The perf ilist command is a textual app [1] similar to perf list. In
+the top-left pane a tree of PMUs is displayed. Selecting a PMU expands
+the events within it. Selecting an event displays the `perf list`
+style event information in the top-right pane.
+
+When an event is selected it is opened and the counters on each CPU
+the event is for are periodically read. The bottom of the screen
+contains a scrollable set of sparklines showing the events in total
+and on each CPU. Scrolling below the sparklines shows the same data as
+raw counts. The sparklines are small graphs where the height of the
+bar is in relation to maximum of the other counts in the graph.
+
+By default the counts are read with an interval of 0.1 seconds (10
+times per second). A -I/--interval command line option allows the
+interval to be changed. The oldest read counts are dropped when the
+counts fill the line causing the sparkline to move from right to left.
+
+[1] https://textual.textualize.io/
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-list.c      | 28 +++++++---
- tools/perf/util/print-events.c | 93 ----------------------------------
- tools/perf/util/print-events.h |  1 -
- 3 files changed, 22 insertions(+), 100 deletions(-)
+ tools/perf/python/ilist.py | 238 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 238 insertions(+)
+ create mode 100755 tools/perf/python/ilist.py
 
-diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index 674bb0afbf93..3216be404f27 100644
---- a/tools/perf/builtin-list.c
-+++ b/tools/perf/builtin-list.c
-@@ -614,9 +614,18 @@ int cmd_list(int argc, const char **argv)
- 	for (i = 0; i < argc; ++i) {
- 		char *sep, *s;
- 
--		if (strcmp(argv[i], "tracepoint") == 0)
--			print_tracepoint_events(&print_cb, ps);
--		else if (strcmp(argv[i], "hw") == 0 ||
-+		if (strcmp(argv[i], "tracepoint") == 0) {
-+			char *old_pmu_glob = default_ps.pmu_glob;
+diff --git a/tools/perf/python/ilist.py b/tools/perf/python/ilist.py
+new file mode 100755
+index 000000000000..30cc70435f7e
+--- /dev/null
++++ b/tools/perf/python/ilist.py
+@@ -0,0 +1,238 @@
++#!/usr/bin/env python3
++# SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
++"""Interactive perf list."""
 +
-+			default_ps.pmu_glob = strdup("tracepoint");
-+			if (!default_ps.pmu_glob) {
-+				ret = -1;
-+				goto out;
-+			}
-+			perf_pmus__print_pmu_events(&print_cb, ps);
-+			zfree(&default_ps.pmu_glob);
-+			default_ps.pmu_glob = old_pmu_glob;
-+		} else if (strcmp(argv[i], "hw") == 0 ||
- 			 strcmp(argv[i], "hardware") == 0)
- 			print_symbol_events(&print_cb, ps, PERF_TYPE_HARDWARE,
- 					event_symbols_hw, PERF_COUNT_HW_MAX);
-@@ -658,6 +667,7 @@ int cmd_list(int argc, const char **argv)
- #endif
- 		else if ((sep = strchr(argv[i], ':')) != NULL) {
- 			char *old_pmu_glob = default_ps.pmu_glob;
-+			char *old_event_glob = default_ps.event_glob;
- 
- 			default_ps.event_glob = strdup(argv[i]);
- 			if (!default_ps.event_glob) {
-@@ -665,13 +675,20 @@ int cmd_list(int argc, const char **argv)
- 				goto out;
- 			}
- 
--			print_tracepoint_events(&print_cb, ps);
-+			default_ps.pmu_glob = strdup("tracepoint");
-+			if (!default_ps.pmu_glob) {
-+				zfree(&default_ps.event_glob);
-+				ret = -1;
-+				goto out;
-+			}
-+			perf_pmus__print_pmu_events(&print_cb, ps);
-+			default_ps.pmu_glob = old_pmu_glob;
- 			print_sdt_events(&print_cb, ps);
- 			default_ps.metrics = true;
- 			default_ps.metricgroups = true;
- 			metricgroup__print(&print_cb, ps);
- 			zfree(&default_ps.event_glob);
--			default_ps.pmu_glob = old_pmu_glob;
-+			default_ps.event_glob = old_event_glob;
- 		} else {
- 			if (asprintf(&s, "*%s*", argv[i]) < 0) {
- 				printf("Critical: Not enough memory! Trying to continue...\n");
-@@ -682,7 +699,6 @@ int cmd_list(int argc, const char **argv)
- 					event_symbols_hw, PERF_COUNT_HW_MAX);
- 			print_hwcache_events(&print_cb, ps);
- 			perf_pmus__print_pmu_events(&print_cb, ps);
--			print_tracepoint_events(&print_cb, ps);
- 			print_sdt_events(&print_cb, ps);
- 			default_ps.metrics = true;
- 			default_ps.metricgroups = true;
-diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
-index 362e93fc33d2..8e629409f45e 100644
---- a/tools/perf/util/print-events.c
-+++ b/tools/perf/util/print-events.c
-@@ -44,97 +44,6 @@ static const char * const event_type_descriptors[] = {
- 	"Hardware breakpoint",
- };
- 
--/*
-- * Print the events from <debugfs_mount_point>/tracing/events
-- */
--void print_tracepoint_events(const struct print_callbacks *print_cb __maybe_unused, void *print_state __maybe_unused)
--{
--	char *events_path = get_tracing_file("events");
--	int events_fd = open(events_path, O_PATH);
--	struct dirent **sys_namelist = NULL;
--	int sys_items;
--
--	if (events_fd < 0) {
--		pr_err("Error: failed to open tracing events directory\n");
--		pr_err("%s: %s\n", events_path, strerror(errno));
--		return;
--	}
--	put_tracing_file(events_path);
--
--	sys_items = tracing_events__scandir_alphasort(&sys_namelist);
--
--	for (int i = 0; i < sys_items; i++) {
--		struct dirent *sys_dirent = sys_namelist[i];
--		struct dirent **evt_namelist = NULL;
--		int dir_fd;
--		int evt_items;
--
--		if (sys_dirent->d_type != DT_DIR ||
--		    !strcmp(sys_dirent->d_name, ".") ||
--		    !strcmp(sys_dirent->d_name, ".."))
--			goto next_sys;
--
--		dir_fd = openat(events_fd, sys_dirent->d_name, O_PATH);
--		if (dir_fd < 0)
--			goto next_sys;
--
--		evt_items = scandirat(events_fd, sys_dirent->d_name, &evt_namelist, NULL, alphasort);
--		for (int j = 0; j < evt_items; j++) {
--			/*
--			 * Buffer sized at twice the max filename length + 1
--			 * separator + 1 \0 terminator.
--			 */
--			char buf[NAME_MAX * 2 + 2];
--			/* 16 possible hex digits and 22 other characters and \0. */
--			char encoding[16 + 22];
--			struct dirent *evt_dirent = evt_namelist[j];
--			struct io id;
--			__u64 config;
--
--			if (evt_dirent->d_type != DT_DIR ||
--			    !strcmp(evt_dirent->d_name, ".") ||
--			    !strcmp(evt_dirent->d_name, ".."))
--				goto next_evt;
--
--			snprintf(buf, sizeof(buf), "%s/id", evt_dirent->d_name);
--			io__init(&id, openat(dir_fd, buf, O_RDONLY), buf, sizeof(buf));
--
--			if (id.fd < 0)
--				goto next_evt;
--
--			if (io__get_dec(&id, &config) < 0) {
--				close(id.fd);
--				goto next_evt;
--			}
--			close(id.fd);
--
--			snprintf(buf, sizeof(buf), "%s:%s",
--				 sys_dirent->d_name, evt_dirent->d_name);
--			snprintf(encoding, sizeof(encoding), "tracepoint/config=0x%llx/", config);
--			print_cb->print_event(print_state,
--					/*topic=*/NULL,
--					/*pmu_name=*/NULL, /* really "tracepoint" */
--					/*event_name=*/buf,
--					/*event_alias=*/NULL,
--					/*scale_unit=*/NULL,
--					/*deprecated=*/false,
--					"Tracepoint event",
--					/*desc=*/NULL,
--					/*long_desc=*/NULL,
--					encoding);
--next_evt:
--			free(evt_namelist[j]);
--		}
--		close(dir_fd);
--		free(evt_namelist);
--next_sys:
--		free(sys_namelist[i]);
--	}
--
--	free(sys_namelist);
--	close(events_fd);
--}
--
- void print_sdt_events(const struct print_callbacks *print_cb, void *print_state)
- {
- 	struct strlist *bidlist, *sdtlist;
-@@ -418,8 +327,6 @@ void print_events(const struct print_callbacks *print_cb, void *print_state)
- 			/*long_desc=*/NULL,
- 			/*encoding_desc=*/NULL);
- 
--	print_tracepoint_events(print_cb, print_state);
--
- 	print_sdt_events(print_cb, print_state);
- 
- 	metricgroup__print(print_cb, print_state);
-diff --git a/tools/perf/util/print-events.h b/tools/perf/util/print-events.h
-index 8f19c2bea64a..02511ed6ecad 100644
---- a/tools/perf/util/print-events.h
-+++ b/tools/perf/util/print-events.h
-@@ -37,7 +37,6 @@ void print_sdt_events(const struct print_callbacks *print_cb, void *print_state)
- void print_symbol_events(const struct print_callbacks *print_cb, void *print_state,
- 			 unsigned int type, const struct event_symbol *syms,
- 			 unsigned int max);
--void print_tracepoint_events(const struct print_callbacks *print_cb, void *print_state);
- bool is_event_supported(u8 type, u64 config);
- 
- #endif /* __PERF_PRINT_EVENTS_H */
++import argparse
++from typing import Dict
++import perf
++from textual import on
++from textual.app import App, ComposeResult
++from textual.binding import Binding
++from textual.containers import Horizontal, HorizontalGroup, Vertical, VerticalScroll
++from textual.screen import ModalScreen
++from textual.widgets import Button, Footer, Header, Label, Sparkline, Static, Tree
++
++class ErrorScreen(ModalScreen[bool]):
++    """Pop up dialog for errors."""
++
++    CSS="""
++    ErrorScreen {
++        align: center middle;
++    }
++    """
++    def __init__(self, error: str):
++        self.error = error
++        super().__init__()
++
++    def compose(self) -> ComposeResult:
++        yield Button(f"Error: {self.error}", variant="primary", id="error")
++
++    def on_button_pressed(self, event: Button.Pressed) -> None:
++        self.dismiss(True)
++
++
++class Counter(HorizontalGroup):
++    """Two labels for a CPU and its counter value."""
++
++    CSS="""
++    Label {
++        gutter: 1;
++    }
++    """
++
++    def __init__(self, cpu: int) -> None:
++        self.cpu = cpu
++        super().__init__()
++
++    def compose(self) -> ComposeResult:
++        label = f"cpu{self.cpu}" if self.cpu >= 0 else "total"
++        yield Label(label + " ")
++        yield Label("0", id=f"counter_{label}")
++
++
++class CounterSparkline(HorizontalGroup):
++    """A Sparkline for a performance counter."""
++
++    def __init__(self, cpu: int) -> None:
++        self.cpu = cpu
++        super().__init__()
++
++    def compose(self) -> ComposeResult:
++        label = f"cpu{self.cpu}" if self.cpu >= 0 else "total"
++        yield Label(label)
++        yield Sparkline([], summary_function=max, id=f"sparkline_{label}")
++
++
++class IListApp(App):
++    TITLE = "Interactive Perf List"
++
++    BINDINGS = [
++        Binding(key="q", action="quit", description="Quit the app")
++    ]
++
++    # Make the 'total' sparkline a different color.
++    CSS = """
++        #sparkline_total > .sparkline--min-color {
++            color: $accent;
++        }
++        #sparkline_total > .sparkline--max-color {
++            color: $accent 30%;
++        }
++    """
++
++    def __init__(self, interval: float) -> None:
++        self.interval = interval
++        self.evlist = None
++        super().__init__()
++
++
++    def update_counts(self) -> None:
++        if not self.evlist:
++            return
++
++        def update_count(cpu: int, count: int):
++            # Update the raw count display.
++            counter: Label = self.query(f"#counter_cpu{cpu}" if cpu >= 0 else "#counter_total")
++            if not counter:
++                return
++            counter = counter.first(Label)
++            counter.update(str(count))
++
++            # Update the sparkline.
++            line: Sparkline = self.query(f"#sparkline_cpu{cpu}" if cpu >= 0 else "#sparkline_total")
++            if not line:
++                return
++            line = line.first(Sparkline)
++            # If there are more events than the width, remove the front event.
++            if len(line.data) > line.size.width:
++                line.data.pop(0)
++            line.data.append(count)
++            line.mutate_reactive(Sparkline.data)
++
++        # Update the total and each CPU counts, assume there's just 1 evsel.
++        total = 0
++        self.evlist.disable()
++        for evsel in self.evlist:
++            for cpu in evsel.cpus():
++                aggr = 0
++                for thread in evsel.threads():
++                    counts = evsel.read(cpu, thread)
++                    aggr += counts.val
++                update_count(cpu, aggr)
++                total += aggr
++        update_count(-1, total)
++        self.evlist.enable()
++
++
++    def on_mount(self) -> None:
++        """When App starts set up periodic event updating."""
++        self.update_counts()
++        self.set_interval(self.interval, self.update_counts)
++
++
++    def set_pmu_and_event(self, pmu: str, event: str) -> None:
++        # Remove previous event information.
++        if self.evlist:
++            self.evlist.disable()
++            self.evlist.close()
++            lines = self.query(CounterSparkline)
++            for line in lines:
++                line.remove()
++            lines = self.query(Counter)
++            for line in lines:
++                line.remove()
++
++        def pmu_event_description(pmu: str, event: str) -> str:
++            """Find and format event description for {pmu}/{event}/."""
++            def get_info(info: Dict[str, str], key: str):
++                return (info[key] + "\n") if key in info else ""
++
++            for p in perf.pmus():
++                if p.name() != pmu:
++                    continue
++                for info in p.events():
++                    if "name" not in info or info["name"] != event:
++                        continue
++
++                    desc = get_info(info, "topic")
++                    desc += get_info(info, "event_type_desc")
++                    desc += get_info(info, "desc")
++                    desc += get_info(info, "long_desc")
++                    desc += get_info(info, "encoding_desc")
++                    return desc
++            return "description"
++
++        # Parse event, update event text and description.
++        full_name = event if event.startswith(pmu) or ':' in event else f"{pmu}/{event}/"
++        self.query_one("#event_name", Label).update(full_name)
++        self.query_one("#event_description", Static).update(pmu_event_description(pmu, event))
++
++        # Open the event.
++        try:
++            self.evlist = perf.parse_events(full_name)
++            if self.evlist:
++                self.evlist.open()
++                self.evlist.enable()
++        except:
++            self.evlist = None
++
++        if not self.evlist:
++            self.push_screen(ErrorScreen(f"Failed to open {full_name}"))
++            return
++
++        # Add spark lines for all the CPUs. Note, must be done after
++        # open so that the evlist CPUs have been computed by propagate
++        # maps.
++        lines = self.query_one("#lines")
++        line = CounterSparkline(cpu=-1)
++        lines.mount(line)
++        for cpu in self.evlist.all_cpus():
++            line = CounterSparkline(cpu)
++            lines.mount(line)
++        line = Counter(cpu=-1)
++        lines.mount(line)
++        for cpu in self.evlist.all_cpus():
++            line = Counter(cpu)
++            lines.mount(line)
++
++
++    def compose(self) -> ComposeResult:
++        def pmu_event_tree() -> Tree:
++            """Create tree of PMUs with events under."""
++            tree: Tree[str] = Tree("PMUs")
++            tree.root.expand()
++            for pmu in perf.pmus():
++                pmu_name = pmu.name()
++                pmu_node = tree.root.add(pmu_name, data=pmu_name)
++                for event in sorted(pmu.events(), key=lambda x: x["name"]):
++                    if "name" in event:
++                        e = event["name"]
++                        if "alias" in event:
++                            pmu_node.add_leaf(f'{e} ({event["alias"]})', data=e)
++                        else:
++                            pmu_node.add_leaf(e, data=e)
++            return tree
++
++        yield Header()
++        yield Horizontal(Vertical(pmu_event_tree(), id="events"),
++                         Vertical(Label("event name", id="event_name"),
++                                  Static("description", markup=False, id="event_description")
++                                  ))
++        yield VerticalScroll(id="lines")
++        yield Footer()
++
++
++    @on(Tree.NodeSelected)
++    def on_tree_node_selected(self, event: Tree.NodeSelected[None]) -> None:
++        if event.node.parent and event.node.parent.parent:
++            assert event.node.parent.data is not None
++            assert event.node.data is not None
++            self.set_pmu_and_event(event.node.parent.data, event.node.data)
++
++
++if __name__ == "__main__":
++    ap = argparse.ArgumentParser()
++    ap.add_argument('-I', '--interval', help="Counter update interval in seconds", default=0.1)
++    args = ap.parse_args()
++    app = IListApp(float(args.interval))
++    app.run()
 -- 
 2.50.0.rc0.642.g800a2b2222-goog
 
