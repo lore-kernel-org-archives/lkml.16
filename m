@@ -1,149 +1,141 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2191B23E359;
-	Wed, 11 Jun 2025 08:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A8832356B3;
+	Wed, 11 Jun 2025 08:39:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749631114; cv=none; b=LSeGNaZUoS7p+Ww7X+wZ8q2Yxbkd3mnuLg6Vsllki7YmfTWgjfZ1TEhTjsJISK3X6jV5OdWCzLmN/1gLUvvETslkHwx/d85Nz2eF5joSjnbLqwREPV8YTrxD0uihXVxcDwp9pIyWvZV/7ECyZasdfqX6b5ThyiEzclJi+XmKqWk=
+	t=1749631169; cv=none; b=NvFp+04iiMYaxUyBH6gogu3Ks01gzwg7In/wkrIMxmcwwhan1vYZUSmEWyVNfte9zdPIGpKRgkYImOMbCuXrHYhUVQdLgOtTjz9E+LfMDl9mliGOfLcWezUggCWDHurRQNT97jKxQk8lzFVu121DKAQDZQRQeAqFeHUcbgdJaso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749631114; c=relaxed/simple;
-	bh=aHulynXRVVHWpUyUXomIsK4Ep2mEimLnrKrGIEb43Rk=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=IpntorObZGYSFdnbIR94x+5IE7j8ouJ9sRXC+gbucb4hAPoJcA0BBPGtXbWdb8NxMcnjl7anmCs5mBhIBoICmdNIzVgtYe2D6sjL7f9rX/BVyeewEP/+CTmmzaVDjQU7T2vhDafjD8B29QH+jVTJfXKBtEsBVBebaL2l0uF/jaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bHJw52mcJzYQvTS;
-	Wed, 11 Jun 2025 16:38:29 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 5DDFD1A0A6C;
-	Wed, 11 Jun 2025 16:38:28 +0800 (CST)
-Received: from [10.174.99.169] (unknown [10.174.99.169])
-	by APP2 (Coremail) with SMTP id Syh0CgCXoGOCQEloTNk1PA--.4547S2;
-	Wed, 11 Jun 2025 16:38:28 +0800 (CST)
-Subject: Re: [PATCH 1/7] mm: shmem: correctly pass alloced parameter to
- shmem_recalc_inode() to avoid WARN_ON()
-To: Baolin Wang <baolin.wang@linux.alibaba.com>, hughd@google.com,
- willy@infradead.org, akpm@linux-foundation.org
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org
-References: <20250605221037.7872-1-shikemeng@huaweicloud.com>
- <20250605221037.7872-2-shikemeng@huaweicloud.com>
- <3d07c68f-da11-43d8-a2da-6b200b2fa40a@linux.alibaba.com>
- <994283d9-2dc4-6887-5d46-247b834879b5@huaweicloud.com>
- <9e59f1f0-db3b-2182-4485-887ac7036bfd@huaweicloud.com>
- <cf70cde3-b4a4-4596-aefa-a510e082e129@linux.alibaba.com>
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-Message-ID: <1ded199d-149f-d64c-536d-21ce158a09d6@huaweicloud.com>
-Date: Wed, 11 Jun 2025 16:38:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1749631169; c=relaxed/simple;
+	bh=eP94DKa1bGgh8+jsHYYEwHFsK16PrWPSAXehlu4LTTw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VJA9tQWvHzwe5v6El3ZIqcvP0y8Te7HRJXMrxqU3IGdOjD+jmrN7gavgCwPVc88JQZsJ4ASbdjHdy8n7AGFC4ZkE+LLzgpJis1gVR3CL/TXr025wiimv22jQ/3+40yBUAz+whtq8qnhQlDzN7JRWvEObSnEaYHQNMJMoHuYsHCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=KLE3P8/3; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="KLE3P8/3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=PksZhMl9JN4rPrIRu6s9JViPUrN3CPq4Uz9I+7xLHjQ=; b=KLE3P8/3OR/Go6Ck/x5tQyoe7i
+	b3qmYLjwwrb/PeJ2gvOWPC/AKpjqzCTFWzfMXrUUkSbMSDUgDMdSHWM5eMA16ld8ud5dxGHLCdf+Z
+	3PHQnit14ofoMsZja+uNXU3DevYTidgnXTNeRjATBqcam9CYpoyBLkXsQHDv4Y1skXXEeP4Rg1LVH
+	JzJ1Ob6f/Ky8rxerGZlkLGdK+qBkCACHUacIXmlgJkh1/jBhuM8edHqGlQDBH8z89Spy5kNqNiKGV
+	u3qtJ0ieX8kze6aeHdd0MbKnkWrYZGZJKpQX79z5UPYmewQRHbWWZ23PMNshrAKttNn9j4Lh0zYRV
+	AXcYk7GQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:57842)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1uPGzJ-0005rz-0t;
+	Wed, 11 Jun 2025 09:39:13 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1uPGzE-00085W-2w;
+	Wed, 11 Jun 2025 09:39:08 +0100
+Date: Wed, 11 Jun 2025 09:39:08 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Icenowy Zheng <uwu@icenowy.me>
+Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chaoyi Chen <chaoyi.chen@rock-chips.com>,
+	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v2] dt-bindings: net: ethernet-controller: Add
+ informative text about RGMII delays
+Message-ID: <aElArNHIwm1--GUn@shell.armlinux.org.uk>
+References: <20250430-v6-15-rc3-net-rgmii-delays-v2-1-099ae651d5e5@lunn.ch>
+ <e4db4e6f0a5a42ceacacc925adbe13747a6f948e.camel@icenowy.me>
+ <debcb2e1-b7ef-493b-a4c4-e13d4aaf0223@lunn.ch>
+ <2e42f2f7985fb036bec6ab085432a49961c8dc42.camel@icenowy.me>
+ <aEFmNMSvffMvNA8I@shell.armlinux.org.uk>
+ <84c534f9dbfa7c82300863cd40e5a9b6e6e29411.camel@icenowy.me>
+ <ba7b290d-0cd1-4809-822a-bfe902684d7e@lunn.ch>
+ <9ebe16a8d33e00c39c142748a1ea6fff96b9565a.camel@icenowy.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <cf70cde3-b4a4-4596-aefa-a510e082e129@linux.alibaba.com>
 Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgCXoGOCQEloTNk1PA--.4547S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxWryfuFyxur1xtryxZw4fXwb_yoW5try5pr
-	W8Gas0yFZ8Jry0yFn2qF18Z3yaq3yrJa1UXrW5CFyxCan0qr1SgrWUKrWj9ryUCrWkGw4j
-	qF47K3srZryUZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
-	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUFB
-	T5DUUUU
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+In-Reply-To: <9ebe16a8d33e00c39c142748a1ea6fff96b9565a.camel@icenowy.me>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
+On Wed, Jun 11, 2025 at 04:03:11PM +0800, Icenowy Zheng wrote:
+> 在 2025-06-05星期四的 15:48 +0200，Andrew Lunn写道：
+> > Which is theoretically fine. I've not looked at this driver in
+> > particular, but there are some MACs were you cannot disable the
+> > delay.
+> > The MAC always imposes 2ns delay. That would mean a PCB which also
+> > has
+> > extra long clock lines is simply FUBAR, cannot work, and 'rgmii' is
+> > invalid, so reject it.
+> 
+> BTW I found that in some case the assumption of PHY-side delay being
+> always better than MAC-side one is wrong -- modern MACs usually have
+> adjustable delay line, but Realtek 8211-series PHYs have only on/off
+> delay with a fixed 2ns value.
 
+The only time that MACs may implement delays based on the
+PHY_INTERFACE_MODE_RGMII* is if they also include code to pass
+PHY_INTERFACE_MODE_RGMII (no suffixes) to phylink / phylib to ensure
+that the PHY doesn't _also_ add delays. This isn't something we
+encourage because it's more code, more review, and a different way
+of implementing it - thus adding to maintainers workloads that are
+already high enough.
 
-on 6/11/2025 3:29 PM, Baolin Wang wrote:
+> > Just for a minute, consider your interpretation of the old text is
+> > wrong. Read the old text again and again, and see if you can find an
+> > interpretation which is the same as the new text. If you do:
+> > 
+> > * It proves our point that describing what this means is hard, and
+> >   developers will get it wrong.
+> > 
+> > * There is an interpretation of both the old and new where nothing
+> >   changed.
+> > 
+> > * You have to be careful looking at drivers, because some percent of
+> >   developers also interpreted it wrongly, and have broken
+> >   implementations as a result.  You cannot say the binding means X,
+> >   not Y, because there is a driver using meaning X.
+> > 
+> > My hope with the new text is that it focuses on hardware, which is
+> > what DT is about. You can look at the schematic, see if there is
+> > extra
+> > long clock lines or not, and then decided on 'rgmii-id' if there are
+> > not, and 'rgmii' is there are. The rest then follows from that.
 > 
-> 
-> On 2025/6/10 09:02, Kemeng Shi wrote:
->>
->>
->> on 6/9/2025 8:46 AM, Kemeng Shi wrote:
->>>
->>>
->>> on 6/7/2025 2:11 PM, Baolin Wang wrote:
->>>>
->>>>
->>>> On 2025/6/6 06:10, Kemeng Shi wrote:
->>>>> As noted in the comments, we need to release block usage for swap entry
->>>>> which was replaced with poisoned swap entry. However, no block usage is
->>>>> actually freed by calling shmem_recalc_inode(inode, -nr_pages, -nr_pages).
->>>>> Instead, call shmem_recalc_inode(inode, 0, -nr_pages) can correctly release
->>>>> the block usage.
->>>>>
->>>>> Fixes: 6cec2b95dadf7 ("mm/shmem: fix infinite loop when swap in shmem error at swapoff time")
->>>>> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
->>>>> ---
->>>>>    mm/shmem.c | 2 +-
->>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/mm/shmem.c b/mm/shmem.c
->>>>> index 4b42419ce6b2..e27d19867e03 100644
->>>>> --- a/mm/shmem.c
->>>>> +++ b/mm/shmem.c
->>>>> @@ -2145,7 +2145,7 @@ static void shmem_set_folio_swapin_error(struct inode *inode, pgoff_t index,
->>>>>         * won't be 0 when inode is released and thus trigger WARN_ON(i_blocks)
->>>>>         * in shmem_evict_inode().
->>>>>         */
->>>>> -    shmem_recalc_inode(inode, -nr_pages, -nr_pages);
->>>>> +    shmem_recalc_inode(inode, 0, -nr_pages);
->>>>>        swap_free_nr(swap, nr_pages);
->>>>>    }
->>>>
->>>> Have you tested your patch? When I inject an error to test your patch, the following issue will be triggered:As all issues are hard to trigger, I only run some simple test to ensure normal
->>> process is fine. Could you share how to inject the error to trigger following
->>> issue. I will have a deep look. Thanks
->> Sorry that the message is truncated. I mean I only test normal process is fine.
-> 
-> Please also test the swapin error case you try to fix. Obviously your current patch is incorrect.
-> 
->> Besides, I think there is another long-standing issue which could trigger the
->> following issue. Here is the issue which is possible to blame:
->> When swap entry is replaced with error entry in shmem_set_folio_swapin_error(),
->> we will reduce info->swapped. Afterwards, error entry could be deleted in
->> shmem_undo_range() and the info->swapped is reduced again. As a result, we
->> reduce info->swapped twice for a single swap entry.
-> 
-> OK. So you should do something like in shmem_find_swap_entries() to avoid decreasing info->swapped again.
-> 
-> entry = radix_to_swp_entry(folio);
-> /*
-> * swapin error entries can be found in the mapping. But they're
-> * deliberately ignored here as we've done everything we can do.
-> */
-> if (swp_type(entry) != type)
->     continue;
-> 
->> A simple way to confirm this is injecting error to original code. Could you
->> share how to trigger the issue or could you do the same test to original code?
-> 
-> Yes, original code is good.
-I still suspect that it's another long-standing issue which is triggerd by
-this by accident.
-> 
-> A simple test procedure is to allocate some shmem memory and swap them out, then swap in the shmem while injecting an error to trigger the swap-in error case, and finally unmap the program.
-> 
-Sure, will fix the mentiond long-standing issue first and try to run this
-test.
-I will appreciate if you can share your test code if it's convenient.
+> Well I think "rgmii-*" shouldn't exist at all, if focusing on hardware.
+> I prefer only "rgmii" with properties describing the delay numbers.
 
-Thanks
+Yes, I think we as phylib maintainers have also come to the same
+conclusion with all the hassle this causes, but we can't get rid
+of this without breaking the kernel and breaking device-tree
+compatibility. So, we're stuck with it.
 
+> > You are not reading it carefully enough. The binding describes
+> > hardware, the board. phy.rst describes the phylib interface. They are
+> > different.
+> 
+> Well I can't find the reason of phy-mode being so designed except for
+> leaky abstraction from phylib.
+
+I have no idea what that sentence means, sorry.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
