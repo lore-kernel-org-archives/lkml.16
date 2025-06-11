@@ -1,98 +1,99 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90723253F08;
-	Wed, 11 Jun 2025 12:39:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67ABA27FB27;
+	Wed, 11 Jun 2025 12:40:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749645585; cv=none; b=eMUZ6E+Jzp0ZW+105PIHecJBhGu6cHqljjCUfrYA5+8MIixBToOpuQvS0PRndMCDUEyWcfTCvPrDKmtXxxwRTEk8ib52kaagaaLQsT736LJEIPa0STUy+P/dc0aJYtX7hq98ayYDNXd40IfVJ08o/2dextEjnoeufSK+SDsRGsQ=
+	t=1749645609; cv=none; b=nqWX6WUHRQDHZVCxpLVzhli5RvPgxC7jYL4AuQuA8G9gmuoJDd2TkLl/XJIQG4XCL5UQJaD2kWTHEGzVb338hkXTmfO1SUHFEtfcak+aTx84ZUFIa7Ct9XkwBypxo2sj/XurVerwtdnP/0F4jchQemhMcuZdNP8CjZhf/+R+ZH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749645585; c=relaxed/simple;
-	bh=x4MivqVOz+jtZ681vyuC1Ele+akf1aAotf2Sx94R0ac=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NFNd/l1AmkvRWFxH0hbPdTOi+/ywjqCumzGDYKVQSwPIRGT8MwJhlfRSRqgzQDhlVVgqkQhFAI8muiTX0uUqsJfE/pDuJIfN+TIZk+wM8vOmNAKTNU1MfBhUU98xCG8xOpDmN6VFbjxdjX6Tj7t1JfsaWdMyB5E9RcfEX4wsXl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CPV5R1dT; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749645609; c=relaxed/simple;
+	bh=QMz39jfjPK2ufabsT8w+kRc6MrabZprer18jWGDdHJQ=;
+	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aJF7gLFYRF/I7ahiF5HnkcWUkzF6rm4L41T7g219/oJ8vu6IPlhkAPm8wGh0KIM1mzFdURvdCrEF4qJ0qoAvy4nuo3/Esaa1VcxDSahEe85brgj/nluclp0XQ2k/1WsRZWJCx/ZcNwVrSSNlgO5WhNdhabhfVNWRcfzV057rjCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oM/zWhpM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CPV5R1dT"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-313290ea247so50287a91.3;
-        Wed, 11 Jun 2025 05:39:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749645584; x=1750250384; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SPptyJtkdt3bR0imyRTv5uUbfy/9H4Z05Yj4r4qt7Zo=;
-        b=CPV5R1dTdI6knDTrMfBPECgoCZRGvCpzHQiZa7qx/UtLl6MalZ/Evlz8JIC+otslk2
-         5FmUUzZi5DzOn33l7dBZ4+81VBAvgqEHOCC6rAuSJ6VVhR717QrEBbhApvna7brvblNs
-         TdR4aiecSovvwef+FF4afFGZBUNRIY2BVMq1xdJYHJhX/GfOR13mbhZ7yIC95U4m/1ah
-         uHtBzG23pNtmlyXyk6dGPTrCGKGl5+a38ent2SiXMAeEj1IVcgeF9IwazLBC9Q92THR1
-         TwhkV6AtEY9izF6I8tiRQu59OFUiq0YIn15cDe3AlJ3mMZESNfwcDE+X0jyyh3CKI8JD
-         DKjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749645584; x=1750250384;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SPptyJtkdt3bR0imyRTv5uUbfy/9H4Z05Yj4r4qt7Zo=;
-        b=gB6wAE9DUjhSEaLZ7Xmi6Bt3SgJgkvFMWhi6GZ6HjJCQTlS0IYAEMwGb1O5nfNbafl
-         jzk7GPsRETlgy6J0fcwxZ94/v7CQXIislofufNISw3g6EgqjhKomqw8Z47+zzo/YRkHi
-         K5UOfq83IdMVut7FXJniibT5A/IGVPZJIzQHw50wzB4lraLJB6/clxEWh0evhy4lmy/n
-         QF6JULsFkO28vehtd6JwGeoMB03HmwT37H2jWMCcPzC7bbvcmUOqfLJldCUc3vdC8hKi
-         +HZT9nP7UYbcNCtrrEQyOioYFuSceaR5uj3bwWs8pWP9YFFAR89y2v22WXhMVk2OSgse
-         O00A==
-X-Forwarded-Encrypted: i=1; AJvYcCUz0btZXvJ2QIIVfcFQ804YugqxJsvwRBMnR68m1PHshbZcXNVsZUJAXQmz2BI6o2hpaR1oyDUd8VoYVmXF@vger.kernel.org, AJvYcCVxP9GjFa4eo1ZUvBCTjAwOh637Xnag3txe2BGEF2P4BeLByRz9UKVnAc2muQK+Gt9o3zvU8xV5Fx7Yy7lfwA==@vger.kernel.org, AJvYcCWQUbF/7Db3zPw5Hp8/UU0Tz9Pv5SeHbbqg08nxhzPBbREMuLbbQKXsNRq1FCuY2zkmBaYLUb/xGeDtSIKZRHo=@vger.kernel.org, AJvYcCXBAeG/msltYkYEKzbNBWDZc+Fxwc6IkPhNI74cQSIpXEaOAJCkx5ROL2E9dk9CzSUKTcaUobg1ulZo7l4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTZAJC79La1mXJoARuEqTwIpMO3pgqIVCFSPG8PmFAKq4Q/89j
-	thZ48SRqsVqWHeqSfKsEYYyWmcwqA7tCMAz9bdAWNtFD1MrcP3lBv9UXLSHEVzSfTXP3pg0fGFY
-	XCf0YN7Mu3AxzlR6eSwFPp7rLXFJaVUs=
-X-Gm-Gg: ASbGncsKSmKdwJO1O4IDvXajvjxmecOLgS9R6VfKK02PLbEvwE12Yj4sDH7lJv3fgi6
-	9mSt4mAGwW7gjpFwXFA2/cmjoUL7IhxxNxMmQZGR9qYKGl7SvPichUhwdoUlRmfaGhIBWe3gGBo
-	C94ZEsrd0H8XVJYt7Rh9ZY6oAB2u7olPSmgDuJNP8E4QA=
-X-Google-Smtp-Source: AGHT+IH+bQyEyq6sDsXwbDZZg89F+RW6fj++1an3yE4uvHwTMd4PMVVY6ZhYj3V5tERWpXQvQ0G9A/5t5fijdnpQRdk=
-X-Received: by 2002:a17:90b:3ec5:b0:311:c939:c855 with SMTP id
- 98e67ed59e1d1-313af1a5f6dmr1615584a91.3.1749645583832; Wed, 11 Jun 2025
- 05:39:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oM/zWhpM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 601E5C4CEEE;
+	Wed, 11 Jun 2025 12:40:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749645609;
+	bh=QMz39jfjPK2ufabsT8w+kRc6MrabZprer18jWGDdHJQ=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=oM/zWhpMXKBBeGMVtlS6JO0dal+aeKnYIcfhUuTdZrf+RMTSSsiqljLtG0tlpBZsl
+	 MApzGlFq6lGU2aCaj75sYW9/hP7PeXoFkWnURRL7rG0evIcddUbRwl0dG3kMDhYsl/
+	 roF/9EOXbUJvn2Whzv336o1VoEPrqcOxnqFghLe0ja8ioiY0SW6zWyag0ZEQarD95e
+	 UsUDvRb4mDWDpc2Ty3COpSFQ41aS7VsuF+GmyzmoipQxyroCvs8FRHRWaGkQrTlVS8
+	 KgdKnt7wVT2odTelhy4f73dhWXJs+GgQLy+BbFMDIWq4golgr3HHIHHTjT737QEXzG
+	 1qc4WWUCt64hw==
+Subject: [PATCH net V1] veth: prevent NULL pointer dereference in veth_xdp_rcv
+From: Jesper Dangaard Brouer <hawk@kernel.org>
+To: netdev@vger.kernel.org, ihor.solodrai@linux.dev
+Cc: Jesper Dangaard Brouer <hawk@kernel.org>,
+ Eric Dumazet <eric.dumazet@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel-team@cloudflare.com
+Date: Wed, 11 Jun 2025 14:40:04 +0200
+Message-ID: <174964557873.519608.10855046105237280978.stgit@firesoul>
+In-Reply-To: <da1f2506-5cb0-446c-b623-dc8f74c53462@kernel.org>
+References: <da1f2506-5cb0-446c-b623-dc8f74c53462@kernel.org>
+User-Agent: StGit/1.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506-module-params-v3-v12-0-c04d80c8a2b1@kernel.org>
- <20250506-module-params-v3-v12-2-c04d80c8a2b1@kernel.org> <D9PW1NI2S6FV.8LA53J87VCML@kernel.org>
-In-Reply-To: <D9PW1NI2S6FV.8LA53J87VCML@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 11 Jun 2025 14:39:31 +0200
-X-Gm-Features: AX0GCFsVvNoeNo5dJVKQqiHYIICApoPQ7dENSopl4E8cSOlBnUT1aSNuB4syId4
-Message-ID: <CANiq72kwj9f8EZJocJx=ZtV4otaexbu1_vgDdTU_oy812yAJAg@mail.gmail.com>
-Subject: Re: [PATCH v12 2/3] rust: add parameter support to the `module!` macro
-To: Benno Lossin <lossin@kernel.org>
-Cc: Andreas Hindborg <a.hindborg@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
-	Nicolas Schier <nicolas.schier@linux.dev>, Trevor Gross <tmgross@umich.edu>, 
-	Adam Bratschi-Kaye <ark.email@gmail.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
-	Daniel Gomez <da.gomez@samsung.com>, Simona Vetter <simona.vetter@ffwll.ch>, 
-	Greg KH <gregkh@linuxfoundation.org>, Fiona Behrens <me@kloenk.dev>, 
-	Daniel Almeida <daniel.almeida@collabora.com>, linux-modules@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 7, 2025 at 1:23=E2=80=AFPM Benno Lossin <lossin@kernel.org> wro=
-te:
->
-> > +unsafe extern "C" fn set_param<T>(
-> > +    val: *const kernel::ffi::c_char,
-> > +    param: *const crate::bindings::kernel_param,
-> > +) -> core::ffi::c_int
+The veth peer device is RCU protected, but when the peer device gets
+deleted (veth_dellink) then the pointer is assigned NULL (via
+RCU_INIT_POINTER).
 
-New instance of `core::ffi::` (and both these `c_*` should be unqualified).
+This patch adds a necessary NULL check in veth_xdp_rcv when accessing
+the veth peer net_device.
 
-Cheers,
-Miguel
+This fixes a bug introduced in commit dc82a33297fc ("veth: apply qdisc
+backpressure on full ptr_ring to reduce TX drops"). The bug is a race
+and only triggers when having inflight packets on a veth that is being
+deleted.
+
+Reported-by: Ihor Solodrai <ihor.solodrai@linux.dev>
+Closes: https://lore.kernel.org/all/fecfcad0-7a16-42b8-bff2-66ee83a6e5c4@linux.dev/
+Reported-by: syzbot+c4c7bf27f6b0c4bd97fe@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/all/683da55e.a00a0220.d8eae.0052.GAE@google.com/
+Fixes: dc82a33297fc ("veth: apply qdisc backpressure on full ptr_ring to reduce TX drops")
+Signed-off-by: Jesper Dangaard Brouer <hawk@kernel.org>
+---
+Commit dc82a33297fc have reached Linus'es tree in v6.16-rc1~132^2~208^2.
+Thus, we can correct this before the release of v6.16.
+
+ drivers/net/veth.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/veth.c b/drivers/net/veth.c
+index e58a0f1b5c5b..a3046142cb8e 100644
+--- a/drivers/net/veth.c
++++ b/drivers/net/veth.c
+@@ -909,7 +909,7 @@ static int veth_xdp_rcv(struct veth_rq *rq, int budget,
+ 
+ 	/* NAPI functions as RCU section */
+ 	peer_dev = rcu_dereference_check(priv->peer, rcu_read_lock_bh_held());
+-	peer_txq = netdev_get_tx_queue(peer_dev, queue_idx);
++	peer_txq = peer_dev ? netdev_get_tx_queue(peer_dev, queue_idx) : NULL;
+ 
+ 	for (i = 0; i < budget; i++) {
+ 		void *ptr = __ptr_ring_consume(&rq->xdp_ring);
+@@ -959,7 +959,7 @@ static int veth_xdp_rcv(struct veth_rq *rq, int budget,
+ 	rq->stats.vs.xdp_packets += done;
+ 	u64_stats_update_end(&rq->stats.syncp);
+ 
+-	if (unlikely(netif_tx_queue_stopped(peer_txq)))
++	if (peer_txq && unlikely(netif_tx_queue_stopped(peer_txq)))
+ 		netif_tx_wake_queue(peer_txq);
+ 
+ 	return done;
+
+
