@@ -1,57 +1,57 @@
 Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E94832C8B
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 00:10:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3563713F434
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 00:10:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749600654; cv=none; b=Kq23PyRh/9GaIOoumSrXK3Ex3UfvbQqSM98ew8VGGS+qK+NGue9DEEWPfXGmJo+lpWD0pH/jjH1Sj6CaoCJS5B6B2IYCpoiki+0CjCrSwsbOmZrbekeFe/xPh3MuHOHD8gzrmnLMxPzkNB3sNKyOXDLotoHosYdwdIjAskJYvR0=
+	t=1749600657; cv=none; b=l2N5JV6C/baGMXzpKzgQOs7XYFASMaORwUn3dBvvtNr3/RmXIsCNttYuGIn3I5uSjn/JXNbpWEP8dhTQZvd+xfrcWCfxSIBPd46RPM6TfkTU/C0p2BoPomX6Myv//TOjIc3Th7ydlF5OJGxyPqX3ug1ouSowK4Hfo5qScQ1wnZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749600654; c=relaxed/simple;
-	bh=DpElpv38Km3z88hWj7L7ltQkAiroQboKh3ua23RYJns=;
+	s=arc-20240116; t=1749600657; c=relaxed/simple;
+	bh=tIVAjv0R6pUZqeCBUMOqA6Hwa6RH3vUVAalxmKoMGQM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=cd2+0gE/rXMvMP9aCKygLsejzNpAxaY8KbygHugbHP1gLMRnSEsTOLPH42ptsHxufWaEOlWDFlSe38aCniH3Sf7fo0nASpvWnQmfK09b+/v5T31AYG2xNDwC5mLC8TVoL8GdZan7FTkiG7nfmuNeZO0Gt/4o3logUPhm1DAuP24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HRJNnWok; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=L9rDn1bNT44nBJDPevYF7PavbmN6CzxjYGFdupwoEN8B0OLAIj9Wm9ZJ1JFygIjIj8WvgCOC7nVTUDxdi8e+YHzn/FXr9zSHl3rofp/yZnWoiCQPr6+E3D7oWMUAQyLaP4lHKyYeqgCLwySwyojn0z+8WsotsrovxWgvxh6pu9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UONvifDn; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HRJNnWok"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-311ae2b6647so4603656a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 17:10:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UONvifDn"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3121cffd7e8so5032562a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 17:10:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749600652; x=1750205452; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1749600655; x=1750205455; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=2yZMyl9DsHgqKNlFS7xPspHEMiNKaL3c340/uFTvPNQ=;
-        b=HRJNnWokiNxA+oSoz5xpwZFj6zjCZPCDx8INqKLIQsrmgQsl75pv61QUTtTw4LLeYl
-         kDaEOmvE/Hxjhonx3OBmYfwdiXCQ1LTDPMis/4hoadTY/uw7w0h1E7vlCmljZrJ3XlMB
-         yDo5Uo6p8V1/iFy+jojWmy5r9EJsOTCbv7EsifrHzhzPxrfDlGkXnnYL+DEZ96WveXyE
-         XGiXT/iq3tjA/giN6LoBO0p0Fzfc/bpkDsLqqFiNhkxF2HyL602gvzuJL/aADSZGTko3
-         KMDn7FG0cPhvWi54kGcuuL7k7daGs5QoXI9ClpHa5Q/RlZ5RdV7uoBAXL0CgbWwP6uVu
-         HeOw==
+        bh=zss/ktKZQOB/zxYHcr8l4OJbiGy6+R3+c8NDOsBeWew=;
+        b=UONvifDnMtjMIaxMJh9oZe3DF6FlKFGr4F//EyCbLN7vQx4FcCJF4Qlri85UcuhXvN
+         tnSFwmKBPwrC59Fb1j9s4s/w/YhzzG8XaSVUoFlNDxt/uFuDTD0J2ZR8t9Ka2xm7HouS
+         NgjNwqiW06s3RHXtO8LaH2264N0zMv1Cb2Tmk6Z1Z4o/uei3djKB0nbb0DuunwHlOmDn
+         GZaGChPglu3v/ihuijZJgDZbX80b69xDeWWakRHKiXFWfE/PYgQq0v0QWTja6ldPEdBD
+         6I9n94e2xFImzSz8U085n3rggC0q/anXrqiGvsWEEJXtTd0vtnCh1jObNFz85PO3t4Vh
+         7FDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749600652; x=1750205452;
+        d=1e100.net; s=20230601; t=1749600655; x=1750205455;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=2yZMyl9DsHgqKNlFS7xPspHEMiNKaL3c340/uFTvPNQ=;
-        b=ZXwvswUMg+zOu/hCkUPHXGIQ2TCeyaN8S4Gy0pd/MOl2I4lClrmUlZRRnNguBfHGZR
-         b1lFlrgU3QEm9d1w2Ephlr5bDMt9MYsKkAOd4XBvEiJ2kTDiWkair3be95KcXuVC4UtF
-         RGkltkuqso6Lkd3dAPAqywaP9OUCV80gfMRpLmxMaB+z6E24gE3wHz5ulXENCKe3yOj+
-         F633GGoHpLpuaVa12romTiBK4KSBcE70lGcilOnuQKfQcStSfX2nlNmYHqJR6m3RLDzO
-         Tb/qU1gHu180wp/Ws4cYYBgEWWf6Rz04Z4nFdHh7QhDqs8c3+1l/5MhbuG3d5HTQbZiN
-         W7Lg==
-X-Forwarded-Encrypted: i=1; AJvYcCWR1h8IuCppvn8jxtGx3Q959c2k3jQ8le9Q2TcFYYXIy0G5cj/5+0lUG8Esiq0isO8WxkJ0gKt4x/raw7M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZnUTuGOUYpVRKDBILx0UnLAPD4Y1Ye18tPeiBiVrsCY84wISE
-	iyFxujqMdXOWYhrUNrGpAXsEbvADqxS6QgLFusVhJM6MWlN3vh9X4MNpZNyUdbdnMA5P7IsdWsC
-	DzjlHVw==
-X-Google-Smtp-Source: AGHT+IEQs2JsVTUXveb/V9I06jm4zaYAh3wZWMzb/QDiH8+SAZVfaf+ke/+9FbLvW15z7wPEbMAuKp579iM=
-X-Received: from pjboh5.prod.google.com ([2002:a17:90b:3a45:b0:2fb:fa85:1678])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2dc1:b0:313:28e7:af14
- with SMTP id 98e67ed59e1d1-313b1fdabadmr842732a91.19.1749600651929; Tue, 10
- Jun 2025 17:10:51 -0700 (PDT)
+        bh=zss/ktKZQOB/zxYHcr8l4OJbiGy6+R3+c8NDOsBeWew=;
+        b=WLCSBD6uQ9SbB3V8yW32R7+rEfwriVdlt5cOfQgKm85dqxYAQr+fPjLhJ7ZC9XEXQ8
+         FG2+nb30PzExJN3/i1qBGjnf7AJu7gD38xK+uZ5cS0rujNC/w+XsuPBkBIPs8e27jYIz
+         KqZMbrWFEIJGyXOLlvltdcmJIcOBtW2FsRIZx5O+tJdDqxpWLyDNgPcwP99zgUgC31Hc
+         j+6ngv1GD5Q9fRHS2Hq4FxkNkA5UVyaFpk6yx95YcJELU17RvjwUGfyiIivVvMRsToeJ
+         6vdvw+mFbN9i7aZgJt4HRLBoqNqUB/QFeh+XEjMs1kVCyuXoVOUfV822uFAwJHHPdFa0
+         PxpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWmgghcJ5waVIDP23YonGr+DUsHwLMU6T5agQUHODtH4zsheqUmnvWdxiOMHAiehsJQ7qx5LHxtdjr7nlc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDbMvAGsToTM31muz3wAZOukILolNmrNxCeoIreENCAB4BSodi
+	3efRlnReg7t22+q5GJlMqOU4TKLcOnAcfFGEASumt49eJbmWu7Qj7IditgqDgoA195BFfiyJkZB
+	5ikxyEw==
+X-Google-Smtp-Source: AGHT+IFPf4zAcxMmKYyJF/0q0QWOeyyNBeEfAEV8gqM1cGbYGy338sgO6izo7nZMoEiNEzX0yDZpDSCyFlg=
+X-Received: from pjbpx2.prod.google.com ([2002:a17:90b:2702:b0:313:230:89ed])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:384d:b0:311:f30b:c21
+ with SMTP id 98e67ed59e1d1-313af243a50mr1534626a91.26.1749600655513; Tue, 10
+ Jun 2025 17:10:55 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Tue, 10 Jun 2025 17:10:38 -0700
+Date: Tue, 10 Jun 2025 17:10:40 -0700
 In-Reply-To: <20250611001042.170501-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,8 +61,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250611001042.170501-1-seanjc@google.com>
 X-Mailer: git-send-email 2.50.0.rc0.642.g800a2b2222-goog
-Message-ID: <20250611001042.170501-5-seanjc@google.com>
-Subject: [PATCH 4/8] KVM: Move include/kvm/iodev.h to include/linux as kvm_iodev.h
+Message-ID: <20250611001042.170501-7-seanjc@google.com>
+Subject: [PATCH 6/8] KVM: PPC: Stop adding virt/kvm to the arch include path
 From: Sean Christopherson <seanjc@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
 	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
@@ -80,314 +80,30 @@ Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
 	Thomas Huth <thuth@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Move iodev.h, the last remaining holdout in include/kvm, to the standard
-include/linux directory as kvm_iodev.h and delete include/kvm.
+Don't add virt/kvm to KVM PPC's include path, the headers in virt/kvm are
+intended to be used only by other code in virt/kvm, i.e. are "private" to
+the core KVM code.  It's not clear that PPC *ever* included a header from
+virt/kvm, i.e. odds are good the "-Ivirt/kvm" was copied from a different
+architecture's Makefile when PPC support was first added.
 
-Acked-by: Anup Patel <anup@brainfault.org>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- MAINTAINERS                                | 1 -
- arch/arm64/include/asm/kvm_vgic.h          | 2 +-
- arch/arm64/kvm/vgic/vgic-mmio-v2.c         | 2 +-
- arch/arm64/kvm/vgic/vgic-mmio-v3.c         | 2 +-
- arch/arm64/kvm/vgic/vgic-mmio.c            | 2 +-
- arch/loongarch/include/asm/kvm_eiointc.h   | 2 +-
- arch/loongarch/include/asm/kvm_ipi.h       | 2 +-
- arch/loongarch/include/asm/kvm_pch_pic.h   | 2 +-
- arch/mips/include/asm/kvm_host.h           | 3 +--
- arch/powerpc/kvm/mpic.c                    | 2 +-
- arch/riscv/kvm/aia_aplic.c                 | 2 +-
- arch/riscv/kvm/aia_imsic.c                 | 2 +-
- arch/x86/kvm/i8254.h                       | 2 +-
- arch/x86/kvm/ioapic.h                      | 2 +-
- arch/x86/kvm/irq.h                         | 2 +-
- arch/x86/kvm/lapic.h                       | 2 +-
- include/{kvm/iodev.h => linux/kvm_iodev.h} | 0
- virt/kvm/coalesced_mmio.c                  | 3 +--
- virt/kvm/eventfd.c                         | 2 +-
- virt/kvm/kvm_main.c                        | 3 +--
- 20 files changed, 18 insertions(+), 22 deletions(-)
- rename include/{kvm/iodev.h => linux/kvm_iodev.h} (100%)
+ arch/powerpc/kvm/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 10cf54c8f727..a2cd432273e5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13011,7 +13011,6 @@ W:	http://www.linux-kvm.org
- T:	git git://git.kernel.org/pub/scm/virt/kvm/kvm.git
- F:	Documentation/virt/kvm/
- F:	include/asm-generic/kvm*
--F:	include/kvm/iodev.h
- F:	include/linux/kvm*
- F:	include/trace/events/kvm.h
- F:	include/uapi/asm-generic/kvm*
-diff --git a/arch/arm64/include/asm/kvm_vgic.h b/arch/arm64/include/asm/kvm_vgic.h
-index 4a34f7f0a864..09d7f628fa3b 100644
---- a/arch/arm64/include/asm/kvm_vgic.h
-+++ b/arch/arm64/include/asm/kvm_vgic.h
-@@ -14,7 +14,7 @@
- #include <linux/static_key.h>
- #include <linux/types.h>
- #include <linux/xarray.h>
--#include <kvm/iodev.h>
-+#include <linux/kvm_iodev.h>
- #include <linux/list.h>
- #include <linux/jump_label.h>
- 
-diff --git a/arch/arm64/kvm/vgic/vgic-mmio-v2.c b/arch/arm64/kvm/vgic/vgic-mmio-v2.c
-index d00c8a74fad6..889440a8b129 100644
---- a/arch/arm64/kvm/vgic/vgic-mmio-v2.c
-+++ b/arch/arm64/kvm/vgic/vgic-mmio-v2.c
-@@ -6,9 +6,9 @@
- #include <linux/irqchip/arm-gic.h>
- #include <linux/kvm.h>
- #include <linux/kvm_host.h>
-+#include <linux/kvm_iodev.h>
- #include <linux/nospec.h>
- 
--#include <kvm/iodev.h>
- #include <asm/kvm_vgic.h>
- 
- #include "vgic.h"
-diff --git a/arch/arm64/kvm/vgic/vgic-mmio-v3.c b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-index 505d4e389885..db95d3ccbd14 100644
---- a/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-+++ b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-@@ -7,8 +7,8 @@
- #include <linux/irqchip/arm-gic-v3.h>
- #include <linux/kvm.h>
- #include <linux/kvm_host.h>
-+#include <linux/kvm_iodev.h>
- #include <linux/interrupt.h>
--#include <kvm/iodev.h>
- 
- #include <asm/kvm_emulate.h>
- #include <asm/kvm_arm.h>
-diff --git a/arch/arm64/kvm/vgic/vgic-mmio.c b/arch/arm64/kvm/vgic/vgic-mmio.c
-index ec1b13abc728..de689e0e881f 100644
---- a/arch/arm64/kvm/vgic/vgic-mmio.c
-+++ b/arch/arm64/kvm/vgic/vgic-mmio.c
-@@ -9,7 +9,7 @@
- #include <linux/irq.h>
- #include <linux/kvm.h>
- #include <linux/kvm_host.h>
--#include <kvm/iodev.h>
-+#include <linux/kvm_iodev.h>
- #include <asm/kvm_arch_timer.h>
- #include <asm/kvm_vgic.h>
- 
-diff --git a/arch/loongarch/include/asm/kvm_eiointc.h b/arch/loongarch/include/asm/kvm_eiointc.h
-index a3a40aba8acf..0049b0b79477 100644
---- a/arch/loongarch/include/asm/kvm_eiointc.h
-+++ b/arch/loongarch/include/asm/kvm_eiointc.h
-@@ -6,7 +6,7 @@
- #ifndef __ASM_KVM_EIOINTC_H
- #define __ASM_KVM_EIOINTC_H
- 
--#include <kvm/iodev.h>
-+#include <linux/kvm_iodev.h>
- 
- #define EIOINTC_IRQS			256
- #define EIOINTC_ROUTE_MAX_VCPUS		256
-diff --git a/arch/loongarch/include/asm/kvm_ipi.h b/arch/loongarch/include/asm/kvm_ipi.h
-index 060163dfb4a3..3956b230f087 100644
---- a/arch/loongarch/include/asm/kvm_ipi.h
-+++ b/arch/loongarch/include/asm/kvm_ipi.h
-@@ -6,7 +6,7 @@
- #ifndef __ASM_KVM_IPI_H
- #define __ASM_KVM_IPI_H
- 
--#include <kvm/iodev.h>
-+#include <linux/kvm_iodev.h>
- 
- #define LARCH_INT_IPI			12
- 
-diff --git a/arch/loongarch/include/asm/kvm_pch_pic.h b/arch/loongarch/include/asm/kvm_pch_pic.h
-index e6df6a4c1c70..4b37e3134e52 100644
---- a/arch/loongarch/include/asm/kvm_pch_pic.h
-+++ b/arch/loongarch/include/asm/kvm_pch_pic.h
-@@ -6,7 +6,7 @@
- #ifndef __ASM_KVM_PCH_PIC_H
- #define __ASM_KVM_PCH_PIC_H
- 
--#include <kvm/iodev.h>
-+#include <linux/kvm_iodev.h>
- 
- #define PCH_PIC_SIZE			0x3e8
- 
-diff --git a/arch/mips/include/asm/kvm_host.h b/arch/mips/include/asm/kvm_host.h
-index c14b10821817..0d7dd89ca5bf 100644
---- a/arch/mips/include/asm/kvm_host.h
-+++ b/arch/mips/include/asm/kvm_host.h
-@@ -16,6 +16,7 @@
- #include <linux/interrupt.h>
- #include <linux/types.h>
- #include <linux/kvm.h>
-+#include <linux/kvm_iodev.h>
- #include <linux/kvm_types.h>
- #include <linux/threads.h>
- #include <linux/spinlock.h>
-@@ -24,8 +25,6 @@
- #include <asm/inst.h>
- #include <asm/mipsregs.h>
- 
--#include <kvm/iodev.h>
--
- /* MIPS KVM register ids */
- #define MIPS_CP0_32(_R, _S)					\
- 	(KVM_REG_MIPS_CP0 | KVM_REG_SIZE_U32 | (8 * (_R) + (_S)))
-diff --git a/arch/powerpc/kvm/mpic.c b/arch/powerpc/kvm/mpic.c
-index 23e9c2bd9f27..b25a03251544 100644
---- a/arch/powerpc/kvm/mpic.c
-+++ b/arch/powerpc/kvm/mpic.c
-@@ -26,6 +26,7 @@
- #include <linux/slab.h>
- #include <linux/mutex.h>
- #include <linux/kvm_host.h>
-+#include <linux/kvm_iodev.h>
- #include <linux/errno.h>
- #include <linux/fs.h>
- #include <linux/anon_inodes.h>
-@@ -33,7 +34,6 @@
- #include <asm/mpic.h>
- #include <asm/kvm_para.h>
- #include <asm/kvm_ppc.h>
--#include <kvm/iodev.h>
- 
- #define MAX_CPU     32
- #define MAX_SRC     256
-diff --git a/arch/riscv/kvm/aia_aplic.c b/arch/riscv/kvm/aia_aplic.c
-index f59d1c0c8c43..bf163724aec5 100644
---- a/arch/riscv/kvm/aia_aplic.c
-+++ b/arch/riscv/kvm/aia_aplic.c
-@@ -9,10 +9,10 @@
- 
- #include <linux/irqchip/riscv-aplic.h>
- #include <linux/kvm_host.h>
-+#include <linux/kvm_iodev.h>
- #include <linux/math.h>
- #include <linux/spinlock.h>
- #include <linux/swab.h>
--#include <kvm/iodev.h>
- 
- struct aplic_irq {
- 	raw_spinlock_t lock;
-diff --git a/arch/riscv/kvm/aia_imsic.c b/arch/riscv/kvm/aia_imsic.c
-index 29ef9c2133a9..ae3c0807baa9 100644
---- a/arch/riscv/kvm/aia_imsic.c
-+++ b/arch/riscv/kvm/aia_imsic.c
-@@ -11,10 +11,10 @@
- #include <linux/bitmap.h>
- #include <linux/irqchip/riscv-imsic.h>
- #include <linux/kvm_host.h>
-+#include <linux/kvm_iodev.h>
- #include <linux/math.h>
- #include <linux/spinlock.h>
- #include <linux/swab.h>
--#include <kvm/iodev.h>
- #include <asm/csr.h>
- 
- #define IMSIC_MAX_EIX	(IMSIC_MAX_ID / BITS_PER_TYPE(u64))
-diff --git a/arch/x86/kvm/i8254.h b/arch/x86/kvm/i8254.h
-index a768212ba821..4de7a0b88e4f 100644
---- a/arch/x86/kvm/i8254.h
-+++ b/arch/x86/kvm/i8254.h
-@@ -4,7 +4,7 @@
- 
- #include <linux/kthread.h>
- 
--#include <kvm/iodev.h>
-+#include <linux/kvm_iodev.h>
- 
- struct kvm_kpit_channel_state {
- 	u32 count; /* can be 65536 */
-diff --git a/arch/x86/kvm/ioapic.h b/arch/x86/kvm/ioapic.h
-index aa8cb4ac0479..cb36c36affd3 100644
---- a/arch/x86/kvm/ioapic.h
-+++ b/arch/x86/kvm/ioapic.h
+diff --git a/arch/powerpc/kvm/Makefile b/arch/powerpc/kvm/Makefile
+index 4bd9d1230869..1a575db2666e 100644
+--- a/arch/powerpc/kvm/Makefile
++++ b/arch/powerpc/kvm/Makefile
 @@ -3,7 +3,7 @@
- #define __KVM_IO_APIC_H
+ # Makefile for Kernel-based Virtual Machine module
+ #
  
- #include <linux/kvm_host.h>
--#include <kvm/iodev.h>
-+#include <linux/kvm_iodev.h>
- #include "irq.h"
+-ccflags-y := -Ivirt/kvm -Iarch/powerpc/kvm
++ccflags-y := -Iarch/powerpc/kvm
  
- struct kvm;
-diff --git a/arch/x86/kvm/irq.h b/arch/x86/kvm/irq.h
-index 76d46b2f41dd..b21b03aa2ee7 100644
---- a/arch/x86/kvm/irq.h
-+++ b/arch/x86/kvm/irq.h
-@@ -13,9 +13,9 @@
- #include <linux/mm_types.h>
- #include <linux/hrtimer.h>
- #include <linux/kvm_host.h>
-+#include <linux/kvm_iodev.h>
- #include <linux/spinlock.h>
+ include $(srctree)/virt/kvm/Makefile.kvm
  
--#include <kvm/iodev.h>
- #include "lapic.h"
- 
- #define PIC_NUM_PINS 16
-diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-index 4ce30db65828..43ffbded5f72 100644
---- a/arch/x86/kvm/lapic.h
-+++ b/arch/x86/kvm/lapic.h
-@@ -2,7 +2,7 @@
- #ifndef __KVM_X86_LAPIC_H
- #define __KVM_X86_LAPIC_H
- 
--#include <kvm/iodev.h>
-+#include <linux/kvm_iodev.h>
- 
- #include <linux/kvm_host.h>
- 
-diff --git a/include/kvm/iodev.h b/include/linux/kvm_iodev.h
-similarity index 100%
-rename from include/kvm/iodev.h
-rename to include/linux/kvm_iodev.h
-diff --git a/virt/kvm/coalesced_mmio.c b/virt/kvm/coalesced_mmio.c
-index 375d6285475e..d0f84e3611da 100644
---- a/virt/kvm/coalesced_mmio.c
-+++ b/virt/kvm/coalesced_mmio.c
-@@ -9,8 +9,7 @@
-  *
-  */
- 
--#include <kvm/iodev.h>
--
-+#include <linux/kvm_iodev.h>
- #include <linux/kvm_host.h>
- #include <linux/slab.h>
- #include <linux/kvm.h>
-diff --git a/virt/kvm/eventfd.c b/virt/kvm/eventfd.c
-index 11e5d1e3f12e..35786d59b233 100644
---- a/virt/kvm/eventfd.c
-+++ b/virt/kvm/eventfd.c
-@@ -26,7 +26,7 @@
- #include <linux/irqbypass.h>
- #include <trace/events/kvm.h>
- 
--#include <kvm/iodev.h>
-+#include <linux/kvm_iodev.h>
- 
- #ifdef CONFIG_HAVE_KVM_IRQCHIP
- 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index eec82775c5bf..a401ba32ecaa 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -10,9 +10,8 @@
-  *   Yaniv Kamay  <yaniv@qumranet.com>
-  */
- 
--#include <kvm/iodev.h>
--
- #include <linux/kvm_host.h>
-+#include <linux/kvm_iodev.h>
- #include <linux/kvm.h>
- #include <linux/module.h>
- #include <linux/errno.h>
 -- 
 2.50.0.rc0.642.g800a2b2222-goog
 
