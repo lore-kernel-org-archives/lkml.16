@@ -1,129 +1,191 @@
-Received: from mail-lj1-f194.google.com (mail-lj1-f194.google.com [209.85.208.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C15717A58F
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 06:16:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.194
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED578229B29;
+	Wed, 11 Jun 2025 06:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749622578; cv=none; b=gxwHk2rw8nn1qmepbPG/JoH3HqrwTv548HdToENok1e2zGvS7a5Fv0ACKUHuM+aEZPFIc4rEhxBVf47BqVRV0FdjsdgAQCA2W/LulhELLcLvC0u93JBnAFectmLFkAW8oMM/Dr48CZpeKxilptCqpN6yKsGa/5cVEsG1gDX71FM=
+	t=1749622582; cv=none; b=nz6MuEwygRMBBH/O7hGmhpl/ZOtnXmZqdf6RdHPpW17JSc9WB8elVvUJNOg7eBDr18FIDgZPv/lTfJLn2reMI8AXv39uiVZrKNzNubFr4Gk0GN6aDViXThu+qVdPP8R8hDRzAONofAgSiHlPAqsC1HgHFuhF6OwD3Ffsj8ND7Eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749622578; c=relaxed/simple;
-	bh=msWRTN1Pd68Kddfew//Fbs5bL/LIs12Y4h6U9dPY/Zk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p4UmdJQfG+O4yRqgSdEez2o2rMg/Jxc3de7jahDgD+zgtO8+M7udSkrJm66ab/LPhi9pw9T0gMox6GZzG4NNekTadq5qklzxxGDo0BlSd3efUrF+s7tg77EWKPdTl8eBsCXLho31l0wD5MfvmmeAODwjw+2dIJo1G8cjrUn0rDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=haVibpTb; arc=none smtp.client-ip=209.85.208.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="haVibpTb"
-Received: by mail-lj1-f194.google.com with SMTP id 38308e7fff4ca-32a658c4cc4so52603861fa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Jun 2025 23:16:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749622573; x=1750227373; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=msWRTN1Pd68Kddfew//Fbs5bL/LIs12Y4h6U9dPY/Zk=;
-        b=haVibpTbqpwlWtUSwzUIVae23cG/xfcsPuQ4kWRnzQ7u5itAzgUoStJ4roA0Ip3Nps
-         UjHbP+e75ZkamsMp/5diHSBohjJLz+fNjwXSs+LPR2dOGvIwrMz5P/j344iVqBc8nVTT
-         NZSs2pFVNZSrmm65ZCRITXgEVo/o8bjjcHlL9WATXzWxQiLdTSGLe4TH0Is0YjsqzMtW
-         mtatTmH7eXe0x7SoOo2pC7TBahL/jzMD0jTz3tNq+DY7oDRzqOlE3sagM2RXiNZagXfU
-         bcIjjDmv6urLkfqfqqrcDFGIb0N+xN8XpMfJa0aoh0ni1NZyzRbNTlujo9blOgBHomcc
-         sSPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749622573; x=1750227373;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=msWRTN1Pd68Kddfew//Fbs5bL/LIs12Y4h6U9dPY/Zk=;
-        b=PgZdH6uSQiO/8rNzkVje7ldLbRdx0LH3l87JW3P7TRDZm5i25vq6JTTZMr64HLlkR4
-         s8YRhgmKcxcWy3cLH2LH9Tqg+rgv89KgEVYJxbKvlZTARUt3u3BkpfRAbrzGTMJU5YXZ
-         KD4M6Qm5+c9otyL8DCDf4ceiCkdtBq4Ymd3P0BlWmkbx/7PqM+kAuAT9TJENGDYoae/X
-         uQ9sMzfpa1pC7RYE63olov8VktA96+3mKC7Wg5WOlcWbYUNgxqveQA8TLjO/mruyzyPc
-         qWyS+Rt7wvyr74b0Vv4zcILXgQzSuTIz/FTPdyB4Csbnt4gKXhBRY9IFTR/OTSeslIwh
-         Vndg==
-X-Forwarded-Encrypted: i=1; AJvYcCXvw9GMipYmQv0iDaQQ6kSlxX6jZcpjiLgGGZEN1G016s2a8binEgxT8YdrN9AaXWZnHmg/cnlEufqEbw8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+fg2acUBmNjwyqHnyKMcuLh10OIOTmBUu09ZCgX0ovy9BuozZ
-	SbBKSGJCVrW5qrZhZy/2F4klfbtiC4ItDHWZIR8b/AaVyC7NgvcIy+XvCPVvSFkiVL/a4lR2FUi
-	iDEReh7FEi9T0Gzk9JBndFDG7UMNGaBE=
-X-Gm-Gg: ASbGncvsPGMvUv65JUMED+e2n6ZUYuXlAqxQEqyuhfJYRTJ0QD2Bw0t4sNalBYlRAQU
-	n6FFX98hhT8FxdMsf3x4lAlzsKyCGVUyO2p4U1YfkOv4M/cF1IKQ/TJeueFS26HE8kz9al2B9y9
-	BVuCHxD+hg1Rs7y6iRiYuGQd5r7RaV4mKt5YOC4eLnNIERtp7mt9KIcmY=
-X-Google-Smtp-Source: AGHT+IEBU9TZ9Mi9o3rgI1uI6Pmk3EX/JHblRMOk8+n2Q+nREohu9jIDALkZywBxO/03UHNfzZIsmnbcBosjY+e9YHU=
-X-Received: by 2002:a2e:80cf:0:b0:32a:83b4:c13f with SMTP id
- 38308e7fff4ca-32b21d29062mr4056221fa.9.1749622572969; Tue, 10 Jun 2025
- 23:16:12 -0700 (PDT)
+	s=arc-20240116; t=1749622582; c=relaxed/simple;
+	bh=UmcTjyhURFUAMzA1vxl82sDQgOEzA48b6GXzMra6QqM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F5gAoYmVNADCWyGs5DMBsgrfQnZ5yEqR2boVFYv7+44jkdrL2yt7QT2UoWoM1jCyMrgzG2vXDj03pxYfOc2r5Pb0KyP9pp+NKIqX9nI98uEU57R7GngkFVf9JWGi+lCr6vEh0xanSN1Z06G6BRoJlRWGH00qnWeFBly5VMFDiZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-CSE-ConnectionGUID: gCztYyDAQZWt4OhruGE2vA==
+X-CSE-MsgGUID: 4PhhLOi8SIeSBaNqymp0MQ==
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 11 Jun 2025 15:16:16 +0900
+Received: from ubuntu.adwin.renesas.com (unknown [10.226.92.57])
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id C8DCB401BEEC;
+	Wed, 11 Jun 2025 15:16:11 +0900 (JST)
+From: John Madieu <john.madieu.xa@bp.renesas.com>
+To: andrew+netdev@lunn.ch,
+	conor+dt@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	geert+renesas@glider.be,
+	krzk+dt@kernel.org,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	prabhakar.mahadev-lad.rj@bp.renesas.com,
+	robh@kernel.org
+Cc: biju.das.jz@bp.renesas.com,
+	devicetree@vger.kernel.org,
+	john.madieu@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	magnus.damm@gmail.com,
+	netdev@vger.kernel.org,
+	John Madieu <john.madieu.xa@bp.renesas.com>
+Subject: [PATCH v2 0/3] Add support for GBETH IPs found on RZ/G3E SoCs
+Date: Wed, 11 Jun 2025 08:16:06 +0200
+Message-ID: <20250611061609.15527-1-john.madieu.xa@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407134712.93062-1-hupu.gm@gmail.com> <CANDhNCosvML9XKH8HV1QBXKzxt3zMWxzsPSUfYxoyPCORf6Krw@mail.gmail.com>
- <CADHxFxS+qpmD8r1uxru+VWLj=K616=jLKbBgUR3Ed7ZBY1gidg@mail.gmail.com>
- <CANDhNCqgCGtWubkuMpn=GdfLwP6d5kMEvbhoQL4oef5yf_74ug@mail.gmail.com>
- <CANDhNCqv0iFMJanxj4uTyOHGUGxfCqb18Ku+w5y9JFKRm0M=Rg@mail.gmail.com>
- <CADHxFxQoNOBCOMDsh0iNrdD=ke=YweVZgZrTWbBQRA8SYy9McA@mail.gmail.com>
- <CADHxFxRd66FB6=wgY2-NLxqiMGZui+um+h2LUe4+hwXabdUpVg@mail.gmail.com>
- <CANDhNCq+xE4dpecHio2x6TJXMXxhQjrDk1oCon=NR2b+k0Y9yQ@mail.gmail.com>
- <CADHxFxSVdt_oG=J=aJDfkOcYEBScUxKV=NZNUvgtkAj6sbWvGA@mail.gmail.com>
- <CADHxFxQ8GqndiKGT2z2aUFU5qQQSU1QxQR1CrHsaa8ShrJ6D+Q@mail.gmail.com>
- <CADHxFxRN5yPwk6jVcnz9dpsZaFk8=91Jto9euBiOnrYzqncfdQ@mail.gmail.com> <CANDhNCoLYSFfry3bKhdC+YC1JYhtcgDpGLHTt-5v_4yDtR9QQw@mail.gmail.com>
-In-Reply-To: <CANDhNCoLYSFfry3bKhdC+YC1JYhtcgDpGLHTt-5v_4yDtR9QQw@mail.gmail.com>
-From: hupu <hupu.gm@gmail.com>
-Date: Wed, 11 Jun 2025 14:16:00 +0800
-X-Gm-Features: AX0GCFthRjFyl940oixLk1X-rN3FVyXWe_SxuAfiFKXKMKu_FCi8LXInyGw8x9M
-Message-ID: <CADHxFxSiHJANrsXaOiSoUoBh8Z5Btrc4dRGHJwzLj4ebvy6ktg@mail.gmail.com>
-Subject: Re: [RFC 1/1] sched: Skip redundant operations for proxy tasks
- needing return migration
-To: John Stultz <jstultz@google.com>
-Cc: peterz@infradead.org, linux-kernel@vger.kernel.org, juri.lelli@redhat.com, 
-	vschneid@redhat.com, mingo@redhat.com, vincent.guittot@linaro.org, 
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
-	mgorman@suse.de, hupu@transsion.com, Suleiman Souhlal <suleiman@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi John
-Thank you for your response.
+Hi all,
 
-On Wed, Jun 11, 2025 at 1:05=E2=80=AFPM John Stultz <jstultz@google.com> wr=
-ote:
->
-> On Tue, Jun 10, 2025 at 7:32=E2=80=AFPM hupu <hupu.gm@gmail.com> wrote:
-> >
-> > Hi John,
-> > It has been a few days without any response to this email. I'm
-> > resending it for further discussion.
->
-> Apologies, I'm swamped at the moment with some other items and haven't
-> had time to give your suggestions enough serious thought to reply. :(
->
-> I have made some slow progress on a few items. Suggested by Suleiman,
-> I've reworked the migration logic to be considered after the owner
-> on_rq check, so we avoid migrating tasks to only realize they are
-> waiting on a sleeping owner and pulling them off the rq. This should
-> help reduce the number of migrations we make.
->
-> Unfortunately I've also been tripping over a crash with the full
-> series (not the portion I'm currently submitting upstream) that often
-> takes 30+ hours to reproduce and extra debugging logic seems to make
-> it even harder to hit. With all the other tasks, keeping enough
-> context in my head to make progress on this has been frustratingly
-> slow.
->
+This series adds support for the two Gigabit Ethernet (GBETH) interfaces on the
+Renesas RZ/G3E (R9A09G047) SoCs and their enablement on the SMARC-II EVK. This
+is achieved by integrating the necessary clock/reset signals prior to defining
+common DTS nodes, and enabling both GBETH ports at the board level.
 
-If you'd like, I'd be happy to help investigate this crash issue. :)
+Here are pach dependencies:
 
-To do that, I would need some additional information, such as the
-vmlinux file, coredump, and the source code at the point where the
-crash is triggered.
+ - Patch 1/3 is based on renesas-drivers tree, on top of renesas-clk-for-v6.17
+ branch
+ - Patches [2,3]/3  are based on renesas-devel tree, on top of
+ renesas-dts-for-v6.17 branch
 
-> I'll hopefully have something to share soon and I can
->
+V1 of this series is located here [1]. It originaly included a patch for binding
+documentation, which, in response to Jakub [2], has been resubmited as a
+standalone patch for net-next.
 
-Look forward to hearing from you with good news.
+Changes in v2:
+ - Appart from resending the patches and some collected tags, there is no changes in V2.
+ - Separated binding patch send as standalone patch can be found here [3]
 
+Below are some test logs, involving pings, then unbind/bind, then pings again:
 
-Thanks.
-hupu
+```
+root@smarc-rzg3e:~# ping -I eth0 google.com
+PING google.com (172.217.20.174) from 192.168.1.245 eth0: 56(84) bytes of data.
+64 bytes from waw02s07-in-f14.1e100.net (172.217.20.174): icmp_seq=1 ttl=117 time=4.42 ms
+64 bytes from waw02s07-in-f14.1e100.net (172.217.20.174): icmp_seq=2 ttl=117 time=3.87 ms
+64 bytes from waw02s07-in-f14.1e100.net (172.217.20.174): icmp_seq=3 ttl=117 time=3.68 ms
+64 bytes from waw02s07-in-f14.1e100.net (172.217.20.174): icmp_seq=4 ttl=117 time=3.83 ms
+^C
+--- google.com ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3005ms
+rtt min/avg/max/mdev = 3.680/3.949/4.415/0.278 ms
+root@smarc-rzg3e:~# 
+
+root@smarc-rzg3e:~# ping -I eth1 google.com
+PING google.com (142.250.75.238) from 192.168.1.242 eth1: 56(84) bytes of data.
+64 bytes from par10s41-in-f14.1e100.net (142.250.75.238): icmp_seq=1 ttl=251 time=4.72 ms
+64 bytes from par10s41-in-f14.1e100.net (142.250.75.238): icmp_seq=2 ttl=251 time=4.34 ms
+64 bytes from par10s41-in-f14.1e100.net (142.250.75.238): icmp_seq=3 ttl=251 time=5.66 ms
+^C
+--- google.com ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 4.338/4.904/5.659/0.555 ms
+root@smarc-rzg3e:~# 
+root@smarc-rzg3e:~# 
+root@smarc-rzg3e:~# 
+root@smarc-rzg3e:~# echo "15c40000.ethernet" > /sys/bus/platform/drivers/renesas-gbeth/bind
+[  413.422009] renesas-gbeth 15c40000.ethernet: IRQ sfty not found
+[  413.429570] renesas-gbeth 15c40000.ethernet: User ID: 0x0, Synopsys ID: 0x52
+[  413.436749] renesas-gbeth 15c40000.ethernet:         DWMAC4/5
+[  413.441974] renesas-gbeth 15c40000.ethernet: DMA HW capability register supported
+[  413.449536] renesas-gbeth 15c40000.ethernet: RX Checksum Offload Engine supported
+[  413.457098] renesas-gbeth 15c40000.ethernet: Wake-Up On Lan supported
+[  413.463617] renesas-gbeth 15c40000.ethernet: Enable RX Mitigation via HW Watchdog Timer
+[  413.471807] renesas-gbeth 15c40000.ethernet: Enabled L3L4 Flow TC (entries=8)
+[  413.478982] renesas-gbeth 15c40000.ethernet: Enabled RFS Flow TC (entries=10)
+[  413.486148] renesas-gbeth 15c40000.ethernet: Using 32/32 bits DMA host/device width
+[  413.523040] renesas-gbeth 15c40000.ethernet eth0: Register MEM_TYPE_PAGE_POOL RxQ-0
+[  413.534875] renesas-gbeth 15c40000.ethernet eth0: Register MEM_TYPE_PAGE_POOL RxQ-1
+[  413.546218] renesas-gbeth 15c40000.ethernet eth0: Register MEM_TYPE_PAGE_POOL RxQ-2
+[  413.556666] renesas-gbeth 15c40000.ethernet eth0: Register MEM_TYPE_PAGE_POOL RxQ-3
+[  413.633799] renesas-gbeth 15c40000.ethernet eth0: PHY [stmmac-1:07] driver [Microchip KSZ9131 Gigabit PHY] (irq=27)
+[  413.659645] dwmac4: Master AXI performs fixed burst length
+[  413.666549] renesas-gbeth 15c40000.ethernet eth0: No Safety Features support found
+[  413.674263] renesas-gbeth 15c40000.ethernet eth0: IEEE 1588-2008 Advanced Timestamp supported
+[  413.683733] renesas-gbeth 15c40000.ethernet eth0: registered PTP clock
+[  413.695546] renesas-gbeth 15c40000.ethernet eth0: configuring for phy/rgmii-id link mode
+[  416.576645] renesas-gbeth 15c40000.ethernet eth0: Link is Up - 1Gbps/Full - flow control off
+root@smarc-rzg3e:~#
+root@smarc-rzg3e:~# echo "15c30000.ethernet" > /sys/bus/platform/drivers/renesas-gbeth/bind
+[  430.269771] renesas-gbeth 15c30000.ethernet: IRQ sfty not found
+[  430.277347] renesas-gbeth 15c30000.ethernet: User ID: 0x1, Synopsys ID: 0x52
+[  430.284525] renesas-gbeth 15c30000.ethernet:         DWMAC4/5
+[  430.289753] renesas-gbeth 15c30000.ethernet: DMA HW capability register supported
+[  430.297317] renesas-gbeth 15c30000.ethernet: RX Checksum Offload Engine supported
+[  430.304880] renesas-gbeth 15c30000.ethernet: Wake-Up On Lan supported
+[  430.311400] renesas-gbeth 15c30000.ethernet: Enable RX Mitigation via HW Watchdog Timer
+[  430.319598] renesas-gbeth 15c30000.ethernet: Enabled L3L4 Flow TC (entries=8)
+[  430.326774] renesas-gbeth 15c30000.ethernet: Enabled RFS Flow TC (entries=10)
+[  430.333942] renesas-gbeth 15c30000.ethernet: Using 32/32 bits DMA host/device width
+[  430.360549] renesas-gbeth 15c30000.ethernet eth1: Register MEM_TYPE_PAGE_POOL RxQ-0
+[  432.366627] renesas-gbeth 15c30000.ethernet eth1: Register MEM_TYPE_PAGE_POOL RxQ-1
+[  432.377218] renesas-gbeth 15c30000.ethernet eth1: Register MEM_TYPE_PAGE_POOL RxQ-2
+[  432.386450] renesas-gbeth 15c30000.ethernet eth1: Register MEM_TYPE_PAGE_POOL RxQ-3
+[  432.461470] renesas-gbeth 15c30000.ethernet eth1: PHY [stmmac-0:07] driver [Microchip KSZ9131 Gigabit PHY] (irq=23)
+[  432.487523] dwmac4: Master AXI performs fixed burst length
+[  432.494429] renesas-gbeth 15c30000.ethernet eth1: No Safety Features support found
+[  432.502149] renesas-gbeth 15c30000.ethernet eth1: IEEE 1588-2008 Advanced Timestamp supported
+[  432.511638] renesas-gbeth 15c30000.ethernet eth1: registered PTP clock
+[  432.523033] renesas-gbeth 15c30000.ethernet eth1: configuring for phy/rgmii-id link mode
+[  435.489601] renesas-gbeth 15c30000.ethernet eth1: Link is Up - 1Gbps/Full - flow control off
+root@smarc-rzg3e:~# 
+root@smarc-rzg3e:~# 
+root@smarc-rzg3e:~# ping -I eth0 google.com
+PING google.com (142.250.75.238) from 192.168.1.242 eth0: 56(84) bytes of data.
+64 bytes from par10s41-in-f14.1e100.net (142.250.75.238): icmp_seq=1 ttl=251 time=4.62 ms
+64 bytes from par10s41-in-f14.1e100.net (142.250.75.238): icmp_seq=2 ttl=251 time=4.19 ms
+64 bytes from par10s41-in-f14.1e100.net (142.250.75.238): icmp_seq=3 ttl=251 time=4.49 ms
+64 bytes from par10s41-in-f14.1e100.net (142.250.75.238): icmp_seq=4 ttl=251 time=4.76 ms
+^C
+--- google.com ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3005ms
+rtt min/avg/max/mdev = 4.189/4.514/4.758/0.210 ms
+root@smarc-rzg3e:~# ping -I eth1 google.com
+PING google.com (142.250.75.238) from 192.168.1.245 eth1: 56(84) bytes of data.
+64 bytes from par10s41-in-f14.1e100.net (142.250.75.238): icmp_seq=1 ttl=251 time=4.45 ms
+64 bytes from par10s41-in-f14.1e100.net (142.250.75.238): icmp_seq=2 ttl=251 time=4.79 ms
+64 bytes from par10s41-in-f14.1e100.net (142.250.75.238): icmp_seq=3 ttl=251 time=4.42 ms
+64 bytes from par10s41-in-f14.1e100.net (142.250.75.238): icmp_seq=4 ttl=251 time=4.47 ms
+^C
+--- google.com ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3005ms
+rtt min/avg/max/mdev = 4.417/4.530/4.787/0.149 ms
+root@smarc-rzg3e:~# 
+```
+
+[1] - https://lore.kernel.org/all/20250604065200.163778-1-john.madieu.xa@bp.renesas.com/
+[2] - https://lore.kernel.org/all/20250609083008.0157fe47@kernel.org/
+[3] - https://lore.kernel.org/all/20250611061204.15393-1-john.madieu.xa@bp.renesas.com/
+
+Regards,
+John Madieu
+
+John Madieu (3):
+  clk: renesas: r9a09g047: Add clock and reset signals for the GBETH IPs
+  arm64: dts: renesas: r9a09g047: Add GBETH nodes
+  arm64: dts: renesas: rzg3e-smarc-som: Enable eth{0-1} (GBETH)
+    interfaces
+
+ arch/arm64/boot/dts/renesas/r9a09g047.dtsi    | 207 ++++++++++++++++++
+ .../boot/dts/renesas/rzg3e-smarc-som.dtsi     | 106 +++++++++
+ drivers/clk/renesas/r9a09g047-cpg.c           |  64 ++++++
+ 3 files changed, 377 insertions(+)
+
+-- 
+2.25.1
+
