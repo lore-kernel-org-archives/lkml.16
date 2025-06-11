@@ -1,126 +1,336 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23861A5B99;
-	Wed, 11 Jun 2025 16:11:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA23185920;
+	Wed, 11 Jun 2025 16:11:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749658265; cv=none; b=sK/unnk1vNILlkHkvdaca/Ya5kH3GOcImFHOBiKBrsWsE0JQNX/tv2BVxrJ85h0ToYU0FTP1TmFQ7YDMgm76KEeXGFKXslpXZajuycF2pAgNB08o/2dh4FA3ZPx/YtW2Il5U5BBplQgQEqF6qFJt5bXD340lqpdqf/ZujyMICLc=
+	t=1749658318; cv=none; b=glvdJWRAUlhomtdZOUDXRrnrzrrR/2F+/+CZhE8WNRoj1Kd3lIsjAqsJXBnJ7LxErEQU2qL97NBS6m4r71dNgVODwh7dk+zzR7t0WPcgUWtd5zrMsbOqkUWntdbA+IMx5zD0KnBRfMcK/0qJF/0nJ6siKZobwYI6d8FEGfz0lm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749658265; c=relaxed/simple;
-	bh=dZ8l0HjmwfhJtitEaf6kw6c4ZQY523g8u3AvC2TJ93A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mgaUesONdmHxQPxGjFbRlizKrG+cQZRYFp+gIng/sc1frNcfrhO4AtAIc9J9LvdcbkOOhoJ2c/MPuIe4LYLLNbEK3hobDQ3YASYH5uPS8lxCHuco7w/oysezgQTUWPmJFnKoXqcvt3xSwArBDFNBuQHJ8nfT1c76h4gttUCC9M0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jy6IT4ki; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749658318; c=relaxed/simple;
+	bh=r9gVpsnHpGrtoJrWmUf0sGMNrOTRnLBmf2zx4bQB6zA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JcXPeZbw29Iobtw6Nalg34/li/Y443vdLZhW6VJBsxjTx0GDUoUd07kyDCMMhDS0Nv7O5ji/n80PIF5gogEwMDps1Qq2Csn42GZHHn6oAj18TnnGnfc7mLsXfdGhn3UgA0E6h8G5lUUVmibmdN3Lr74AZfKgjqQBkubqjT0XaEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J+q718xY; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jy6IT4ki"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 007BEC4CEE3;
-	Wed, 11 Jun 2025 16:10:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749658264;
-	bh=dZ8l0HjmwfhJtitEaf6kw6c4ZQY523g8u3AvC2TJ93A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jy6IT4kiD2lDYe71W7diDiGt7oL1e/xuNhWSoXCCAtj4caCgRHLRqPdmYvYW0PiRI
-	 JU/i/Csy6gD8wNDGapjxU9VaUk4rfzlXsP7nOW74W1Jeq1gqes+i5e5I3jsafmU3xv
-	 OR4zg1wvmNKL9bItwL/Sz95VxD1D1hxCXh00OkDsfBDfZvLytbwFD8QO/9dImO9tEb
-	 EAC3SYvvn6DuYJ0ueHh8NNuitcZcf2HP1E6QglBZYOh3TI1kMLoOjCgdZ4yZFTg5XJ
-	 GD87oKR3rk08/4zSSO8ZZmL1RbKPuxwuVORjYwDN8svITdJw7XtZnCg7PfNLmzaL0j
-	 XBdqKJN8dmhjA==
-Date: Wed, 11 Jun 2025 18:10:56 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Donald Hunter <donald.hunter@gmail.com>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, "Jonathan Corbet"
- <corbet@lwn.net>, "Akira Yokosawa" <akiyks@gmail.com>, "Breno Leitao"
- <leitao@debian.org>, "David S. Miller" <davem@davemloft.net>, "Ignacio
- Encinas Rubio" <ignacio@iencinas.com>, "Marco Elver" <elver@google.com>,
- "Shuah Khan" <skhan@linuxfoundation.org>, Eric Dumazet
- <edumazet@google.com>, Jan Stancek <jstancek@redhat.com>, Paolo Abeni
- <pabeni@redhat.com>, Ruben Wauters <rubenru09@aol.com>,
- joel@joelfernandes.org, linux-kernel-mentees@lists.linux.dev,
- linux-kernel@vger.kernel.org, lkmm@lists.linux.dev, netdev@vger.kernel.org,
- peterz@infradead.org, stern@rowland.harvard.edu
-Subject: Re: [PATCH 4/4] docs: netlink: store generated .rst files at
- Documentation/output
-Message-ID: <20250611181056.6543e71e@sal.lan>
-In-Reply-To: <m24iwmpl0m.fsf@gmail.com>
-References: <cover.1749551140.git.mchehab+huawei@kernel.org>
-	<5183ad8aacc1a56e2dce9cc125b62905b93e83ca.1749551140.git.mchehab+huawei@kernel.org>
-	<m24iwmpl0m.fsf@gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J+q718xY"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a365a6804eso42188f8f.3;
+        Wed, 11 Jun 2025 09:11:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749658314; x=1750263114; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jReI8KhNKfigh70b3JHArUDIBFvLt+THCjYcLez/QDE=;
+        b=J+q718xYPAZi5osLMbVMeLE9oLnPlqXpbDrw8/ODrFa0XjvzlRkEs7sLiKxJp7nBPQ
+         znTmrtUnwcEAdxDcFCUPX2Gox2bl8ood0eHBCAMhsDCGfX4un1/6zvUdj7ULUMN+mRLR
+         /zygfWNBevgWtMEt4v+VIQdIdBvL4yzDtrTlrNvFC25ITNR2tDjuqBCSpGMlOgdg/2I7
+         XQm0GvXIpEgeZCMZvUglQ9Mf5ujPbxHNnrBn4K3MtTRPFlDep+aBrid0RncbzbnSAr5/
+         pK88SeiO4kKWXmRNA5naUIgCxD/JdeOPMHWxaBlkx2cG+1sTVEoYL1cyGIHmKd0M8gMP
+         6DFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749658314; x=1750263114;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jReI8KhNKfigh70b3JHArUDIBFvLt+THCjYcLez/QDE=;
+        b=Zp8pJjISwDDKVpDyhiqwjB6ct6sxeZb/5u67Z8xfF6FPCrJkw4tsU0fXh2xjXOdFpt
+         7/kWPQwWHzUR9LGyBgOiXTrS0nqRDPHR4TRJKYIGNz+OcRiLIqOB17f3M55ALhoSiM1c
+         yO48VXbeHpNHVRVXQYFHvObh/6Uo6dhvKlzJsh6359GoBBzzrdJ6lg0QoZmhynlejphm
+         EA5JMQXmGfy6YY8XJAtSvbgTNQA7/aI94Uak1CoZZiQII/TW3eZx5amhORD21snYafms
+         FLEmRJam+XX1ID277LJZcNTEARlvUhrqlrr5lPoRunXrciZqiTIjPH9oViJ6V/78NvF7
+         vSjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUAXnrogi09B5R+tGKr5CdmSvNdQ92aLhR+OTqj6yLJYa+8ilYOwFY3h+UIxuOGcsb6ulQ=@vger.kernel.org, AJvYcCW+iJq7tK8chJwQHJagvIzWrgSpvo7MUh73OmX/eoTXqahNX2Hj/UTVuFJhnY2ZRLXgqFdXIUrKfSd+MA5Z@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGoL4f2D3LHePIXA2hn57D7sqzuPQN4EZgID0+xQYibHEA7g3p
+	khbliohB2H0tIyWGPUKAYUMYLt7kWExW3J7pkXUoye99yO1yb3QDWdlA8GvJX96fdjpiP/HUPZ7
+	cLdfVqn4KcUP/utKmFTrqirTh3w4W+oc=
+X-Gm-Gg: ASbGnctRw/ijBoLRVeWxNvJa/lR/oIyx6+yRl7kjLHAuZgeWelsbpNI9H97AidOLOVV
+	y1FctPTbZl7kltcElIraUsoBH2K33/cVXQVWWgyJdnfaBPIc4tpq/cj7DHCoImIrxmU14wXETkC
+	7f5dBWGOZaywxH1HJUOQnMYACzxt//WCuxakZ8l6PWU8fF0psDppyi18eGzNmzKGnKyJeCkfky
+X-Google-Smtp-Source: AGHT+IHbC4H+NNf3XUowh5H15YVnQIo+YOGW6Dam9XQa/7o5vMFzAsasiWLW7RxwHhsyc9iqAHGwwtbMufPIiBlK68I=
+X-Received: by 2002:a5d:688c:0:b0:3a3:63d3:369a with SMTP id
+ ffacd0b85a97d-3a55869cdf9mr2574215f8f.25.1749658313973; Wed, 11 Jun 2025
+ 09:11:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250528034712.138701-1-dongml2@chinatelecom.cn>
+ <CAADnVQ+G+mQPJ+O1Oc9+UW=J17CGNC5B=usCmUDxBA-ze+gZGw@mail.gmail.com> <CADxym3YhE23r0p31xLE=UHay7mm3DJ8+n6GcaP7Va8BaKCxRfA@mail.gmail.com>
+In-Reply-To: <CADxym3YhE23r0p31xLE=UHay7mm3DJ8+n6GcaP7Va8BaKCxRfA@mail.gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Wed, 11 Jun 2025 09:11:41 -0700
+X-Gm-Features: AX0GCFsMyM94LIHgtmrz8f8L9g5wVRcpXekQSU_dzyT0N5hOrlD2IaVAnlN0xBQ
+Message-ID: <CAADnVQ+Qn5H7idVv-ae84NSMpPHKyKRYbrn30bVRoq=nnPq-pw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 00/25] bpf: tracing multi-link support
+To: Menglong Dong <menglong8.dong@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Jiri Olsa <jolsa@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	Menglong Dong <dongml2@chinatelecom.cn>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Em Wed, 11 Jun 2025 12:36:57 +0100
-Donald Hunter <donald.hunter@gmail.com> escreveu:
-
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
-> 
-> > It is not a good practice to store build-generated files
-> > inside $(srctree), as one may be using O=<BUILDDIR> and even
-> > have the Kernel on a read-only directory.
+On Wed, Jun 11, 2025 at 5:59=E2=80=AFAM Menglong Dong <menglong8.dong@gmail=
+.com> wrote:
+>
+> On 6/11/25 11:32, Alexei Starovoitov wrote:
+> > On Tue, May 27, 2025 at 8:49=E2=80=AFPM Menglong Dong <menglong8.dong@g=
+mail.com> wrote:
+> >>
+> >> 1. Add per-function metadata storage support.
+> >> 2. Add bpf global trampoline support for x86_64.
+> >> 3. Add bpf global trampoline link support.
+> >> 4. Add tracing multi-link support.
+> >> 5. Compatibility between tracing and tracing_multi.
 > >
-> > Change the YAML generation for netlink files to be inside
-> > the documentation output directory.
+> > ...
 > >
-> > This solution is not perfect, though, as sphinx-build only produces
-> > html files only for files inside the source tree. As it is desired
-> > to have one netlink file per family, it means that one template
-> > file is required for every file inside Documentation/netlink/specs.
-> > Such template files are simple enough. All they need is:
+> >> ... and I think it will be a
+> >> liberation to split it out to another series :/
 > >
-> > 	# Template for Documentation/netlink/specs/<foo>.yaml
-> > 	.. kernel-include:: $BUILDDIR/networking/netlink_spec/<foo>.rst  
-> 
-> I am not a fan of this approach because it pollutes the
-> Documentation/output dir with source files and the kernel-include
-> directive is a bit of a hacky workaround.
-> 
-> > A better long term solution is to have an extension at
-> > Documentation/sphinx that parses *.yaml files for netlink files,
-> > which could internally be calling ynl_gen_rst.py. Yet, some care
-> > needs to be taken, as yaml extensions are also used inside device
-> > tree.  
-> 
-> The extension does seem like a better approach, but as mentioned by
-> Jakub, we'd want to add stub creation to the YNL regen.
-> 
-> The only other approach I can think of to avoid generating files in the
-> source tree or polluting the Documentation/output dir is to stage all of
-> the Documentation/ tree into BUILDDIR before adding generated files
-> there, then running:
-> 
->   sphinx-build BUILDDIR/Documentation BUILDDIR/Documentation/output
+> > There are lots of interesting ideas here and you know
+> > already what the next step should be...
+> > Split it into small chunks.
+> > As presented it's hard to review and even if maintainers take on
+> > that challenge the set is unlandable, since it spans various
+> > subsystems.
+> >
+> > In a small reviewable patch set we can argue about
+> > approach A vs B while the current set has too many angles
+> > to argue about.
+>
+>
+> Hi, Alexei.
+>
+>
+> You are right. In the very beginning, I planned to make the kernel functi=
+on
+> metadata to be the first series. However, it's hard to judge if the funct=
+ion
+> metadata is useful without the usage of the BPF tracing multi-link. So I
+> kneaded them together in this series.
+>
+>
+> The features in this series can be split into 4 part:
+> * kernel function metadata
+> * BPF global trampoline
+> * tracing multi-link support
+> * gtramp work together with trampoline
+>
+>
+> I was planning to split out the 4th part out of this series. And now, I'm
+> not sure if we should split it in the following way:
+>
+> * series 1: kernel function metadata
+> * series 2: BPF global trampoline + tracing multi-link support
+> * series 3: gtramp work together with trampoline
 
-I did some tests here adding yaml to conf.py:
+Neither. First thing is to understand benchmark numbers.
+We're not there yet.
 
-	-source_suffix = '.rst'
-	+source_suffix = ['.rst', '.yaml']
+> >
+> > Like the new concept of global trampoline.
+> > It's nice to write bpf_global_caller() in asm
+> > compared to arch_prepare_bpf_trampoline() that emits asm
+> > on the fly, but it seems the only thing where it truly
+> > needs asm is register save/restore. The rest can be done in C.
+>
+>
+> We also need to get the function ip from the stack and do the origin
+> call with asm.
+>
+>
+> >
+> > I suspect the whole gtramp can be written in C.
+> > There is an attribute(interrupt) that all compilers support...
+> > or use no attributes and inline asm for regs save/restore ?
+> > or attribute(naked) and more inline asm ?
+>
+>
+> That's a nice shot, which will make the bpf_global_caller() much easier.
+> I believe it worth a try.
+>
+>
+> >
+> >> no-mitigate + hash table mode
+> >> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> >> nop     | fentry    | fm_single | fm_all    | km_single | km_all
+> >> 9.014ms | 162.378ms | 180.511ms | 446.286ms | 220.634ms | 1465.133ms
+> >> 9.038ms | 161.600ms | 178.757ms | 445.807ms | 220.656ms | 1463.714ms
+> >> 9.048ms | 161.435ms | 180.510ms | 452.530ms | 220.943ms | 1487.494ms
+> >> 9.030ms | 161.585ms | 178.699ms | 448.167ms | 220.107ms | 1463.785ms
+> >> 9.056ms | 161.530ms | 178.947ms | 445.609ms | 221.026ms | 1560.584ms
+> >
+> > ...
+> >
+> >> no-mitigate + function padding mode
+> >> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> >> nop     | fentry    | fm_single | fm_all    | km_single | km_all
+> >> 9.320ms | 166.454ms | 184.094ms | 193.884ms | 227.320ms | 1441.462ms
+> >> 9.326ms | 166.651ms | 183.954ms | 193.912ms | 227.503ms | 1544.634ms
+> >> 9.313ms | 170.501ms | 183.985ms | 191.738ms | 227.801ms | 1441.284ms
+> >> 9.311ms | 166.957ms | 182.086ms | 192.063ms | 410.411ms | 1489.665ms
+> >> 9.329ms | 166.332ms | 182.196ms | 194.154ms | 227.443ms | 1511.272ms
+> >>
+> >> The overhead of fentry_multi_all is a little higher than the
+> >> fentry_multi_single. Maybe it is because the function
+> >> ktime_get_boottime_ns(), which is used in bpf_testmod_bench_run(), is =
+also
+> >> traced? I haven't figured it out yet, but it doesn't matter :/
+> >
+> > I think it matters a lot.
+> > Looking at patch 25 the fm_all (in addition to fm_single) only
+> > suppose to trigger from ktime_get_boottime,
+> > but for hash table mode the difference is huge.
+> > 10M bpf_fentry_test1() calls are supposed to dominate 2 calls
+> > to ktime_get and whatever else is called there,
+> > but this is not what numbers tell.
+> >
+> > Same discrepancy with kprobe_multi. 7x difference has to be understood,
+> > since it's a sign that the benchmark is not really measuring
+> > what it is supposed to measure. Which casts doubts on all numbers.
+>
+>
+> I think there is some misunderstand here. In the hash table mode, we trac=
+e
+> all the kernel function for fm_all and km_all. Compared to fm_single and
+> km_single, the overhead of fm_all and km_all suffer from the hash lookup,
+> as we traced 40k+ functions in these case.
+>
+>
+> The overhead of kprobe_multi has a linear relation with the total kernel
+> function number in fprobe, so the 7x difference is reasonable. The same
+> to fentry_multi in hash table mode.
 
-Such change made the extension to automatically generate one file per 
-each existing yaml without the need of adding any template. I tested on 
-a brand new tree with just Sphinx + netlink files + Breno's original
-extension (untouched). Such empty tree was generated with 
-sphinx-quickstart (sent a reply to Breno with a patch with all inside
-it).
+No, it's not. More below...
 
-When applying it to the Kernel, we can do this change at
-Documentation/conf.py, together with:
+> NOTE: The hash table lookup is not O(1) if the function number that we
+> traced more than 1k. According to my research, the loop count that we use
+> to find bpf_fentry_test1() with hlist_for_each_entry() is about 35 when
+> the functions number in the hash table is 47k.
+>
+> BTW, the array length of the hash table that we use is 1024.
 
-	-exclude_patterns = ['output']
-	+exclude_patterns = ['output', 'devicetree/bindings/**.yaml']
+and that's the bug.
+You added 47k functions to a htab with 1k bucket and
+argue it's performance is slow?!
+That's a pointless baseline.
+Use rhashtable or size up buckets to match the number of functions
+being traced, so that hash lookup is O(1).
 
-(glob pattern not tested)
+>
+> The CPU I used for the testing is:
+> AMD Ryzen 9 7940HX with Radeon Graphics
+>
+>
+> >
+> > Another part is how come fentry is 20x slower than nop.
+> > We don't see it in the existing bench-es. That's another red flag.
+>
+>
+> I think this has a strong relation with the Kconfig I use. When I do the
+> testing with "make tinyconfig" as the base, the fentry is ~9x slower than
+> nop. I do this test with the Kconfig of debian12 (6.1 kernel), and I thin=
+k
+> there is more overhead to rcu_read_lock, migrate_disable, etc, in this
+> Kconfig.
 
-As we don't want DT yaml files to be processed as netlink families.
+It shouldn't make any difference if hashtable is properly used.
 
-After such tests, it sounds to me that the Sphinx extension approach 
-may work without requiring templates. Tested here with Sphinx 8.1.3.
+>
+>
+> >
+> > You need to rethink benchmarking strategy. The bench itself
+> > should be spotless. Don't invent new stuff. Add to existing benchs.
+> > They already measure nop, fentry, kprobe, kprobe-multi.
+>
+>
+> Great! It seems that I did so many useless works on the bench testing :/
+>
+>
+> >
+> > Then only introduce a global trampoline with a simple hash tab.
+> > Compare against current numbers for fentry.
+> > fm_single has to be within couple percents of fentry.
+> > Then make fm_all attach to everything except funcs that bench trigger c=
+alls.
+> > fm_all has to be exactly equal to fm_single.
+> > If the difference is 2.5x like here (180 for fm_single vs 446 for fm_al=
+l)
+> > something is wrong. Investigate it and don't proceed without full
+> > understanding.
+>
+>
+> Emm......Like what I explain above, the 2.5X difference is reasonable, an=
+d
+> this is exact the reason why we need the function padding based metadata,
+> which is able to make fentry_multi and kprobe_multi(in the feature) out o=
+f
+> overhead of the hash lookup.
 
-Regards,
-Mauro
+Absolutely not. It only points into an implementation issue with hashtab.
+
+>
+> >
+> > And only then introduce 5 byte special insn that indices into
+> > an array for fast access to metadata.
+> > Your numbers are a bit suspicious, but they show that fm_single
+> > with hash tab is the same speed as the special kfunc_md_arch_support().
+> > Which is expected.
+> > With fm_all that triggers small set of kernel function
+> > in a tight benchmark loop the performance of hashtab vs special
+> > should _also_ be the same, because hashtab will perform O(1) lookup
+> > that is hot in the cache (or hashtab has bad collisions and should be f=
+ixed).
+>
+>
+> I think this is the problem. The kernel function number is much more than
+> the array length, which makes the hash lookup not O(1) anymore.
+>
+> Sorry that I wanted to show the performance of function padding based
+> metadata, and made the kernel function number that we traced huge, which
+> is ~47k.
+>
+>
+> When the function number less than 2k, the performance of fm_single and
+> fm_all don't have much difference, according to my previous testing :/
+
+Sigh. You should have said that in the beginning that your hashtab
+is fixed size. All the comparisons and reasons are bogus.
+
+>
+> >
+> > fm_all should have the same speed as fm_single too,
+> > because bench will only attach to things outside of the tight bench loo=
+p.
+> > So attaching to thousands of kernel functions that are not being
+> > triggered by the benchmark should not affect results.
+>
+>
+> This is 47k kernel functions in this testing :/
+>
+>
+> > The performance advantage of special kfunc_md_arch_support()
+> > can probably only be seen in production when fentry.multi attaches
+> > to thousands of kernel functions and random functions are called.
+> > Then hash tab cache misses will be noticeable vs direct access.
+> > There will be cache misses in both cases, but significantly more misses
+> > for hash tab. Only then we can decide where special stuff is truly nece=
+ssary.
+> > So patches 2 and 3 are really last. After everything had already landed=
+.
+>
+>
+> Emm......The cache miss is something I didn't expect. The only thing I
+> concerned before is just the overhead of the hash lookup. To my utter
+> astonishment, this actually helps with cache misses as well!
+>
+>
+> BTW, should I still split out the function padding based metadata in
+> the last series?
+
+No. First make sure fm_single and fm_all has the same performance
+with hashtable and demonstrate that with existing selftests/bpf/benchs/
