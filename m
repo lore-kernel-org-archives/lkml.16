@@ -1,185 +1,362 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C59B7E0FF;
-	Wed, 11 Jun 2025 15:06:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5175F18C002;
+	Wed, 11 Jun 2025 15:06:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749654415; cv=none; b=WSobzUhMokwrVyBRn+ixWhBeTM5jgP0SYUhWeBO9Qk/B5/0n8xTnmB/Ipy0LeRpwrDNI1Y4RPcziGajZvXc2W4wzMmhBhV0Nf0I6vuGO6VtYCTtVmtAvhCp/wXuexLf4TmQfY6cNHJnAKb0k4GO6Yz9z4mrI2q+LtaDqPVcBckg=
+	t=1749654415; cv=none; b=QfMvk2PQPtugtSpZWxVEJ3tiHWSdMh2U9b00Jqf5vYByZp6XwGZG+tsfkFKK74CBg2P8IjypLu4jkqSnBbpmSf9X2UsQh4kMv7Pv0RN1JN0nOc8vzpNiqDPTHyjyTkvd1YTU/YJNreUHnYMQuqmP30UCjMgnRhH6sBobYgE/NRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749654415; c=relaxed/simple;
-	bh=rZvstCIx0930gy+FitWy2h9ieXUWIADy6nD/O8Xen/w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MkxBqDLCgkscW37zVslbE7/RSIqt1XJirtiSmBB2ot6DdUYEmxU7G/iraP1JpQcmLSpFiOvjoHlPJ7ompnrkOz/KdXB2AnhGmYDgn6GV9KDusdKihi9G9jlMQBxmqEXCK+s1t6nROAGOrV0HiTq+fpnWyA1Jt8vyueZkHK07qg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VbXcj3Ey; arc=none smtp.client-ip=209.85.221.43
+	bh=jPhJqp12YmPheYt5k7tMyxHFPWQAYjyoax+vbBjRYCc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=n2+MWH2uRuIWTIlF6LpSKBf9h/zgFpugsh5EMmrGk261s0k4umWMTu8B4HLJoVgM4gLjdSTh4BR+VK5iHH9sxgb3yiTTXkxq405VnEC4x5BG2nZdoS4JzjKx7w0z1b/KMLtZPXn9Xmli0FVnvIFgIUNVMBr9mDvex2alLF/EBeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HAdY3x31; arc=none smtp.client-ip=209.85.128.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VbXcj3Ey"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a54700a46eso2828288f8f.1;
-        Wed, 11 Jun 2025 08:06:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HAdY3x31"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-7111c6b0f1dso697777b3.1;
+        Wed, 11 Jun 2025 08:06:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749654411; x=1750259211; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rZvstCIx0930gy+FitWy2h9ieXUWIADy6nD/O8Xen/w=;
-        b=VbXcj3EyokysKu81565iUWb7QAdwC0kM4Lmi+8rJ9KVaZwXNPRNUDmsM38C/9mVezO
-         YrOAL4B5UwJEA0bx5gFC4yoPY/x9rK/MvCL8w/EJlIyIOxGZc2LChRdMhh52sPtysDKf
-         jBiHvRWkEBOQwI5y6RGHpijLMuVnK5utbsdPUu7Kv2aAvMei47WgjFCt3sbqjrIFb6IP
-         uWGvolxiwWuEFWOCzVlHCrlM02JBos/2AQIkPLsA3JXhsfXaOIMeJz5xWq0/wrxbm1rj
-         s6+gKjbpccOcIaK1gelIg1Tk4TDoyCsyNHE6u5oA2EHasPj544kpnap+dDYgIvnigbsu
-         Nqdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749654411; x=1750259211;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1749654412; x=1750259212; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rZvstCIx0930gy+FitWy2h9ieXUWIADy6nD/O8Xen/w=;
-        b=jNlTdYOW6pp2d0mEG21X9LAwfkV77wd4Evmn6F642dyz1xnQbxbzGUMNAiow3dTgHU
-         Ist9uPtsafTPdg/2N2q0uIwYnXbfeRRLaJOEQlKqIxvaYa8nyi3PSBVEz7JsTDrK8yHU
-         3wuD6AhF/eBtJ/V5LXkBkQeb+6goIpRUSyW0OkE2GZdHvwrohADVH3Fe5XMgN219PGdy
-         ZqI2gmhI7cTccCrWlK4pZUNU7xg6024gBB3cYrvzi6L54pqjb1gzEMEzHexvMILneUUK
-         ThoWun4+04Fw4Jro01FVvFOJNNgUkE9Xpn8qCIVXLwohwEM5x6AJ/f4V4u80mMQPJxzc
-         r8bQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVs4Vyun2t6sQdSdoDfMHaPV4XW+busURG1VBrgQeQCT0/8AQXC4N6cQnvqKQ3Xo5XohXdFO+82McKzhkRb@vger.kernel.org, AJvYcCX5ezX2xtnQNgRfZoaSaXwM+BLTVn3yKh2M4RJNsMNlrzkpZvEpgtLB4hQRytaAVwk8t70r+StfXIVw@vger.kernel.org, AJvYcCXNETrkC21f229r1PBcLpEzomZtMNJyC5IaZjg/A2S68sRemgWB3hjnk02/XbGA6VhMrDE7BR2BvXL3aGk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMf+IF20mU7ZS5zl5nUSeaBB4ucMoL9bIbG3J8TLaaqElg3bpq
-	zHSVlEetwxv26aaAaNRyKEheDAsY2frExDc8o0D4yHBVW/tXPylpA8T3
-X-Gm-Gg: ASbGncuBFEGNo+NWQekDSxMbZBYFreK/CGSoIzRQQQ9WWzwEBSuPub5Mfnzv8Je4ajI
-	/m6TPAbpQkGbvZWgDu4v5hI+1i639RsHU111ewAlqadT18mL8jbUIpJlrn+13/o7MNr+TwSYxVo
-	cYbLc8tsx1WfxjDlZWDfD6zVn8HVVlgyf0nwKsxMKAaIP3mwGL7uNILKHwtLollJdeaZQv0AnFq
-	WtBDfBAh8+e1sL/hqeLKLfmfdLqhn5exJR1RIQvdT97F6E63r242bZxZcYIiYkD3TyiNAcJyaTq
-	LYYhg9Bq+V/jnBfMt/unffrODaJIcNZnswB0g9lyA2dXdhGtLHLWQFuIU9hoyvX+aw1eeljGPdK
-	Uw02ewq0daZc8LgmmZqhyfpbiYFVgCfR30sILmf/UN4i8CS2e
-X-Google-Smtp-Source: AGHT+IH7gCL0A1jwyehirZD75wEUOdI2MNoMc6qGX53PjwOW0K3sU25NqW7e29pI1Cuyu7enpaum4w==
-X-Received: by 2002:a05:6000:2304:b0:3a4:f50b:ca2 with SMTP id ffacd0b85a97d-3a558689146mr2940381f8f.8.1749654410702;
-        Wed, 11 Jun 2025 08:06:50 -0700 (PDT)
-Received: from orome (p200300e41f281b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1b00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a532436871sm15373810f8f.49.2025.06.11.08.06.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 08:06:49 -0700 (PDT)
-Date: Wed, 11 Jun 2025 17:06:47 +0200
-From: Thierry Reding <thierry.reding@gmail.com>
-To: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
-Cc: Mikko Perttunen <cyndis@kapsi.fi>, 
-	Mikko Perttunen <mperttunen@nvidia.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 0/3] NVIDIA Tegra210 NVJPG support
-Message-ID: <4cibh66elviiatataa45lsfcyeovkqyxe4fjvfh7uqddhsbe6z@svt2dgeafrdh>
-References: <20250606-diogo-nvjpg-v1-0-5f2c36feeb39@tecnico.ulisboa.pt>
- <mz5sytol6aw7ouwiimmrd7lqhtvq6nj7pqpxq4ie6em6nwvvkh@2cux3no33gre>
- <621a9459-f2dd-4b19-a083-0e62f1a42f50@kapsi.fi>
- <96b721cd-7223-4b28-a3fd-a4d92c9d5142@tecnico.ulisboa.pt>
+        bh=tLHvyD7wJsO2e0WWywcAFLyk62IHbmBBYHcPAMpcN1g=;
+        b=HAdY3x31SQhNmmV/wsGABbzMvYmZwn2iWrEHDnz5nq0rT3tR+4HB2bdtR53h/xEWme
+         9ys5KXIquTB+SV5NtzO0iQSbnZpZAWmnoHiqjm3nM4/OAD01ttFJtEr65oAgSfQxdamX
+         roHml8YCTtPMMgixiAzflkMfXayy7EBsIi1t6WdEbvo7mFes+TQt7HYMXlpc68SP22vn
+         v66zR5oJGyI/joxv6h/s+5+6/K6gqraLlx1EAPcfO6I/hJFhxHmIodYJ2kUW9L3MPoeJ
+         FQ4hHuv2HQCUf5MJ6Vo5/bIpcXjWQQ8dl98s552bcqmMBAZC/173LRm4Nx2fqzLITiBf
+         Celg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749654412; x=1750259212;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tLHvyD7wJsO2e0WWywcAFLyk62IHbmBBYHcPAMpcN1g=;
+        b=L3M0QgM2pzQA0plwsQcPHdDj2C2B1NiuE6i22SncNS7EoEubb2iGtKw2b3C1qrsXe+
+         u9rWzaovnWKdZDX+wNFhdtZJKCiwKm2YrTnzCSU7a7JkrnZyd2mSswv1p0L8mFVd/BK7
+         xPt53YHrwLZa8HXIHMN8hKRXokilD1uiblWW2e8aQgYOoiJ/3u+ySy6w5tBICcIQ0MLb
+         C7VRtlcfvGFtx0LgaISEYL9Ootwdvkdhz+139B5oZVyMw99IvhKybMbOV22acCLYCGGD
+         VSQ4RUaiEMVehOjnUQ7lLeGegPhyRlWVd74ij3DLpkw0XEaFy1ouGir9b5PIXfPXk3KC
+         Jedw==
+X-Forwarded-Encrypted: i=1; AJvYcCUtIdg8XqDcuH1sbDPyZd18mshWOF7NvGyVPUUOO1A5KLyugVvkyE8LttyrM6Hy553TcR/jwmyJAZXYQJxE@vger.kernel.org, AJvYcCVEJURIB0I4B3Y20pmYwXhiNs+e2OZrXJH4DGVpxLwjfGLEgCwCIfX++t0VyuqoWTxGcoFTctU4Gto=@vger.kernel.org, AJvYcCWvbq7UZNhzLk5VEsJAMff6Q6aZpcek3GlCogXMojUgYRKW0ZDKTbrxpmZgQcLOyJf8q6UOmdIn6Rz6@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzV2c1w8NF5lI3UYfrnN8q0CL4cDIZrozkTS2JHEpPCqc8+TKr
+	MB+OcXWMK90kNg5/e7y1HzS6MLpS2iZXg+9Fu2Wa52R+/y3DbTB60MqiNP7E3TLtI7vf6X1pCEf
+	Mr8vAM3l7XpllLYkZ3RkQunZFEA1LpRc=
+X-Gm-Gg: ASbGnct72ws7iNRAlBpBgqPoMNLwV2DBeeARVK9s2tMnkOu1lAcuGDqpKEr6impVXaA
+	AAylJlWoHCiGh0bj/eNAsGjVi5ap4ODH/j6f08SeUkUPCnWkp7hJlmke7R7JluIbELY5/4pJclq
+	GZy8BwiyzOLdEWhuWkE1bDRfIDuq1UqyTJVfdv/FHQCJs=
+X-Google-Smtp-Source: AGHT+IFbQLnI2vz/oiNY1COQzxJhUVbqRGawrm/dMsYImtWVEPaoOknPmYCUXamI/DvWQoEzlduGx7o3Evn447cPeTs=
+X-Received: by 2002:a05:690c:6:b0:70e:2b16:da55 with SMTP id
+ 00721157ae682-71140b0e06fmr20437497b3.8.1749654412061; Wed, 11 Jun 2025
+ 08:06:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ahdzzbv4aoxgwn2z"
-Content-Disposition: inline
-In-Reply-To: <96b721cd-7223-4b28-a3fd-a4d92c9d5142@tecnico.ulisboa.pt>
-
-
---ahdzzbv4aoxgwn2z
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
+References: <20250601172139.59156-1-l.rubusch@gmail.com> <20250601172139.59156-8-l.rubusch@gmail.com>
+ <20250608170819.3de87f4e@jic23-huawei>
+In-Reply-To: <20250608170819.3de87f4e@jic23-huawei>
+From: Lothar Rubusch <l.rubusch@gmail.com>
+Date: Wed, 11 Jun 2025 17:06:16 +0200
+X-Gm-Features: AX0GCFuTVi7RxGRPJfn0Gv9q-EHUvv0Eu_vNbspgREgDzgdXDG7ZneTmwMGfrBk
+Message-ID: <CAFXKEHaRupFmFQ9ixTT_3p_XaoorJP=y4asYjw3dSMpxXhbOwQ@mail.gmail.com>
+Subject: Re: [PATCH v4 07/11] iio: accel: adxl313: add activity sensing
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net, 
+	lucas.p.stankus@gmail.com, lars@metafoo.de, Michael.Hennerich@analog.com, 
+	bagasdotme@gmail.com, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 0/3] NVIDIA Tegra210 NVJPG support
-MIME-Version: 1.0
 
-On Wed, Jun 11, 2025 at 01:05:40PM +0100, Diogo Ivo wrote:
->=20
->=20
-> On 6/10/25 10:52 AM, Mikko Perttunen wrote:
-> > On 6/10/25 6:05 PM, Thierry Reding wrote:
-> > > On Fri, Jun 06, 2025 at 11:45:33AM +0100, Diogo Ivo wrote:
-> > > > Hello,
-> > > >=20
-> > > > This series adds support for the NVJPG hardware accelerator found i=
-n the
-> > > > Tegra210 SoC.
-> > > >=20
-> > > > The kernel driver is essentially a copy of the NVDEC driver as both
-> > > > engines are Falcon-based.
-> > > >=20
-> > > > For the userspace part I have written a Mesa Gallium backend [1] th=
-at,
-> > > > while still very much experimental, works in decoding images
-> > > > with VA- API.
-> > > >=20
-> > > > I have been using ffmpeg to call VA-API with the following command:
-> > > >=20
-> > > > ffmpeg -v verbose -hwaccel vaapi -hwaccel_device
-> > > > /dev/dri/renderD129 -i <input.jpg> -pix_fmt bgra -f fbdev
-> > > > /dev/fb0
-> > > >=20
-> > > > which decodes <input.jpg> and shows the result in the framebuffer.
-> > > >=20
-> > > > The firmware for the engine can be obtained from a Linux for Tegra
-> > > > distribution.
-> > >=20
-> > > By the way, have you tried running this on anything newer than Tegra2=
-10?
-> > > Given your progress on this, we can probably start thinking about
-> > > submitting the binaries to linux-firmware.
-> >=20
-> > FWIW, the impression I have is that NVJPG is basically unchanged all the
-> > way to Tegra234. So if we add stream ID support and the firmwares, it'll
-> > probably just work. Tegra234 has the quirk that it has two instances of
-> > NVJPG -- these have to be distinguished by their different class IDs.
-> > But we should go ahead with the T210 support first.
->=20
-> I have a question here, what exactly are the stream IDs? While working
-> on the driver this came up and I didn't manage to figure it out.
+On Sun, Jun 8, 2025 at 6:08=E2=80=AFPM Jonathan Cameron <jic23@kernel.org> =
+wrote:
+>
+> On Sun,  1 Jun 2025 17:21:35 +0000
+> Lothar Rubusch <l.rubusch@gmail.com> wrote:
+>
+> > Add possibilities to set a threshold for activity sensing. Extend the
+> > interrupt handler to process activity interrupts. Provide functions to =
+set
+> > the activity threshold and to enable/disable activity sensing. Further =
+add
+> > a fake channel for having x, y and z axis anded on the iio channel.
+> >
+> > This is a preparatory patch. Some of the definitions and functions are
+> > supposed to be extended for inactivity later on.
+> >
+> > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+>
+> Hi Lothar,
+>
+> My main question from this read through is whether we need to be quite
+> so careful on disabling measurement when configuring events.  It is rathe=
+r
+> unusual if that is necessary and I'm not sure that's what the datasheet
+> is implying with the vague bit of advice.
+>
+> >  static const unsigned long adxl313_scan_masks[] =3D {
+> > @@ -297,6 +331,68 @@ static int adxl313_read_freq_avail(struct iio_dev =
+*indio_dev,
+> >       }
+> >  }
+> >
+> > +static int adxl313_is_act_inact_en(struct adxl313_data *data,
+> > +                                enum adxl313_activity_type type)
+> > +{
+> > +     unsigned int axis_ctrl;
+> > +     unsigned int regval;
+> > +     int axis_en, int_en, ret;
+> > +
+> > +     ret =3D regmap_read(data->regmap, ADXL313_REG_ACT_INACT_CTL, &axi=
+s_ctrl);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     /* Check if axis for activity are enabled */
+> > +     if (type !=3D ADXL313_ACTIVITY)
+>
+> As below - only one value possible, so don't check it.
+>
+> > +             return 0;
+> > +
+> > +     axis_en =3D FIELD_GET(ADXL313_ACT_XYZ_EN, axis_ctrl);
+> > +
+> > +     /* The axis are enabled, now check if specific interrupt is enabl=
+ed */
+> > +     ret =3D regmap_read(data->regmap, ADXL313_REG_INT_ENABLE, &regval=
+);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     int_en =3D adxl313_act_int_reg[type] & regval;
+> > +
+> > +     return axis_en && int_en;
+> > +}
+> > +
+> > +static int adxl313_set_act_inact_en(struct adxl313_data *data,
+> > +                                 enum adxl313_activity_type type,
+> > +                                 bool cmd_en)
+> > +{
+> > +     unsigned int axis_ctrl;
+> > +     unsigned int threshold;
+> > +     int ret;
+> > +
+> > +     if (type !=3D ADXL313_ACTIVITY)
+>
+> As the enum only has one value you can drop this check.
+> Obviously it's dropped in next patch anyway but better to never
+> introduce it.
+>
+> > +             return 0;
+> > +
+> > +     axis_ctrl =3D ADXL313_ACT_XYZ_EN;
+> > +
+> > +     ret =3D adxl313_set_measure_en(data, false);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     ret =3D regmap_assign_bits(data->regmap, ADXL313_REG_ACT_INACT_CT=
+L,
+> > +                              axis_ctrl, cmd_en);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     ret =3D regmap_read(data->regmap, adxl313_act_thresh_reg[type], &=
+threshold);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     ret =3D regmap_assign_bits(data->regmap, ADXL313_REG_INT_ENABLE,
+> > +                              adxl313_act_int_reg[type],
+> > +                              cmd_en && threshold);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     return adxl313_set_measure_en(data, true);
+> > +}
+> > +
+> >  static int adxl313_read_raw(struct iio_dev *indio_dev,
+> >                           struct iio_chan_spec const *chan,
+> >                           int *val, int *val2, long mask)
+> > @@ -370,6 +466,113 @@ static int adxl313_write_raw(struct iio_dev *indi=
+o_dev,
+> >       }
+> >  }
+>
+> > +
+> > +static int adxl313_read_event_value(struct iio_dev *indio_dev,
+> > +                                 const struct iio_chan_spec *chan,
+> > +                                 enum iio_event_type type,
+> > +                                 enum iio_event_direction dir,
+> > +                                 enum iio_event_info info,
+> > +                                 int *val, int *val2)
+> > +{
+> > +     struct adxl313_data *data =3D iio_priv(indio_dev);
+> > +     unsigned int act_threshold;
+> > +     int ret;
+> > +
+> > +     /* Measurement stays enabled, reading from regmap cache */
+>
+> If it isn't safe to read whilst measurements are in progress (as opposed
+> to maybe getting a small variation in timing) then this seems more
+> fragile than I'd like (to future code changes for example).
+>
+> Might need an explicit check on it being cached regcache_reg_cached()
+> for example though that is very rarely used which makes me dubious
+> about using it here.
+>
+>
+> > +
+> > +     if (type !=3D IIO_EV_TYPE_MAG)
+> > +             return -EINVAL;
+> > +
+> > +     if (info !=3D IIO_EV_INFO_VALUE)
+> > +             return -EINVAL;
+> > +
+> > +     switch (dir) {
+> > +     case IIO_EV_DIR_RISING:
+> > +             ret =3D regmap_read(data->regmap,
+> > +                               adxl313_act_thresh_reg[ADXL313_ACTIVITY=
+],
+> > +                               &act_threshold);
+> > +             if (ret)
+> > +                     return ret;
+> > +             *val =3D act_threshold * 15625;
+> > +             *val2 =3D MICRO;
+> > +             return IIO_VAL_FRACTIONAL;
+> > +     default:
+> > +             return -EINVAL;
+> > +     }
+> > +}
+> > +
+> > +static int adxl313_write_event_value(struct iio_dev *indio_dev,
+> > +                                  const struct iio_chan_spec *chan,
+> > +                                  enum iio_event_type type,
+> > +                                  enum iio_event_direction dir,
+> > +                                  enum iio_event_info info,
+> > +                                  int val, int val2)
+> > +{
+> > +     struct adxl313_data *data =3D iio_priv(indio_dev);
+> > +     unsigned int regval;
+> > +     int ret;
+> > +
+> > +     ret =3D adxl313_set_measure_en(data, false);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     if (type !=3D IIO_EV_TYPE_MAG)
+> > +             return -EINVAL;
+> > +
+> > +     if (info !=3D IIO_EV_INFO_VALUE)
+> > +             return -EINVAL;
+> > +
+> > +     /* Scale factor 15.625 mg/LSB */
+> > +     regval =3D DIV_ROUND_CLOSEST(MICRO * val + val2, 15625);
+> > +     switch (dir) {
+> > +     case IIO_EV_DIR_RISING:
+> > +             ret =3D regmap_write(data->regmap,
+> > +                                adxl313_act_thresh_reg[ADXL313_ACTIVIT=
+Y],
+> > +                                regval);
+>
+> I'm surprised this can only be set with measurement disabled.
+> Maybe a spec reference.   It's common to tweak event values as events
+> come in and we generally don't have to stop data flow whilst we do.
+>
+> There are a few specific bits where the datasheet suggests updating
+> them has unwanted side effects in measurement mode.  + there is a general
+> suggestion to do configuration before enabling measurement mode.
+> I don't see anything saying it is a problem for this register.
+>
 
-Stream IDs are a way to identify memory transactions as belonging to a
-certain device. This comes into play when working with the IOMMU (which
-is a Tegra SMMU on Tegra210 and earlier, and an ARM SMMU on Tegra) and
-is used to isolate DMA capable devices. Basically for every stream ID
-you get a separate I/O address space. NVJPG will have its own address
-space, and so will VIC. Each device can only access whatever has been
-mapped to it's I/O address space. That means NVJPG can't interfere with
-VIC and vice-versa. And neither can any of these engines read from or
-write to random system memory if badly programmed.
+AFAIK there is no issue, nor a big side effect. Changing config
+registers might lead to initially wrong measurements. Just the first
+measurements might be wrong. I guess this could be a problem if the
+sensor had more features and, say, any kind of threshold for some
+event then triggered an event wrongly. In case of the ADXL313, there
+should not be such a risk. It's then rather about initial wrong
+measurements. (Exception: changing the FIFO modes, where turning to
+standby is explicitely recommended).
 
-For Tegra SMMU there's no such thing as programmable stream IDs, so the
-stream ID is fixed for the given device.
+Unfortunately, I could not recall the exact page in the datasheet, but
+it matched pretty much my observation also with the ADXL345. So, I'll
+give it a try and remove turning off measurement for the
+write_event_config()
 
-On newer chips (Tegra186 and later, or maybe it wasn't until Tegra194),
-certain IP blocks have special registers that can be used to override
-the stream ID. There's also a way to set the stream ID via command
-streams, which means that you can have different I/O address spaces (I
-think we call them memory context) per engine, which means that you can
-isolate different processes using the same engine from each other.
 
-Again, for Tegra210 that's nothing we need to worry about. For newer
-chips it's probably just a matter of adding .get_streamid_offset() and
-=2Ecan_use_memory_ctx() implementations.
+> > +             if (ret)
+> > +                     return ret;
+> > +             return adxl313_set_measure_en(data, true);
+> > +     default:
+> > +             return -EINVAL;
+> > +     }
+> > +}
+> > +
+> >  static int adxl313_set_watermark(struct iio_dev *indio_dev, unsigned i=
+nt value)
+> >  {
+> >       struct adxl313_data *data =3D iio_priv(indio_dev);
+> > @@ -502,19 +705,32 @@ static int adxl313_fifo_push(struct iio_dev *indi=
+o_dev, int samples)
+> >
+> >  static int adxl313_push_event(struct iio_dev *indio_dev, int int_stat)
+>
+> Ah. This does not also have events.  Still it's a mix, so maybe
+> adxl313_handle_interrupts() or something like that.
 
-Thierry
+I also could break it up into:
+- handle interrupt source register events
+- drain fifo watermark samples
+?
 
---ahdzzbv4aoxgwn2z
-Content-Type: application/pgp-signature; name="signature.asc"
+> >  {
+> > +     s64 ts =3D iio_get_time_ns(indio_dev);
+> >       struct adxl313_data *data =3D iio_priv(indio_dev);
+> >       int samples;
+> > +     int ret =3D -ENOENT;
+> > +
+> > +     if (FIELD_GET(ADXL313_INT_ACTIVITY, int_stat)) {
+> > +             ret =3D iio_push_event(indio_dev,
+> > +                                  IIO_MOD_EVENT_CODE(IIO_ACCEL, 0,
+> > +                                                     IIO_MOD_X_OR_Y_OR=
+_Z,
+> > +                                                     IIO_EV_TYPE_MAG,
+> > +                                                     IIO_EV_DIR_RISING=
+),
+> > +                                  ts);
+> > +             if (ret)
+> > +                     return ret;
+> > +     }
+> >
+> >       if (FIELD_GET(ADXL313_INT_WATERMARK, int_stat)) {
+> >               samples =3D adxl313_get_samples(data);
+> >               if (samples < 0)
+> >                       return samples;
+> >
+> > -             return adxl313_fifo_push(indio_dev, samples);
+> > +             ret =3D adxl313_fifo_push(indio_dev, samples);
+> >       }
+> >
+> >       /* Return error if no event data was pushed to the IIO channel. *=
+/
+> > -     return -ENOENT;
+> > +     return ret;
+> This handling works, but as Andy observed maybe the comment is now confus=
+ing
+> given ret is mostly not an error.  Perhaps put that where ret is declared
+> instead, or use a separate mask check at the start to quickly
+> error out if no bits that we handle are set.
+> >  }
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmhJm4MACgkQ3SOs138+
-s6FNWBAAtJCLRWy3HnLpatC3L34V9NYYS65LIc6i75tLGDS4+bBBVllqqYZrDaMc
-2QXib+yx+tG3P1z43Nq+Cp26YfjIRVdLqlOiQ89bURxrCas6jTBg4o8N8mYIkS62
-s9p/Q+YO58bNDfPVGhXOfSLTLciU5i/ull7kAkJMYmAsI31Bt1HywLimUCwHwdlC
-sSzGKK38fIZdwKYqR1yAEmtKzc04lOZGXN74/OW8o+h77WrLUlcwIpKb8mF3Q4Sc
-wzGX3IJah5vmZHWBnWvWo3ans257qlqz7B6P6lEe3jgPhhs1yL1TD4ii7X8T/sc2
-l6wHexytUYYPgWYOV+nIzqrL+F2SU+52YDVng4ADB1HtvdH4X/ransteUoo59MEc
-9glcqy40Y6PCAwXwQGGizpQ88Tlg6ttBru0npckcN44iJuHksyca9JO1crBlWoMs
-OiRpu8/YOzVGKHlolwhNfFdcJ77C1UP/UoHSnCndgVuTx14ZoFZVjhCpBqwlviU2
-7luQxXj5LZdk3sxnlP+q054H8udEC9PDavNwwO4jpH+0mcFZH06lpSGad67nOVgA
-dVTI15W89MocI4CDrbq8wLOlDJijKz5ztoLwm+e5V0BXgu4SrdvbuCvcnRlxvphV
-wX0oNHG2ZZ6OZFZQ2eaWAxWniSkNKFfuV3lnVMlz7B4bR6hmD1E=
-=pPIb
------END PGP SIGNATURE-----
-
---ahdzzbv4aoxgwn2z--
+Yes. Andy also pointed out here. I already developed a feeling for
+"something's smelly" with this code, but cannot really think of a
+better approach. Actually it works, and for me it is somehow logical.
+Probably there are better ways to solve this situation in a cleaner
+way?
