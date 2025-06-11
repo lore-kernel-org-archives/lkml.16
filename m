@@ -1,50 +1,39 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480CB221F1C;
-	Wed, 11 Jun 2025 19:51:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6115E221F1C
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 19:52:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749671517; cv=none; b=uz/SZrRUpkh2zVJh967zCmInm739kDY0MTyciAqbOvHUn3n6LrpM/CWZJXmpyIY9j6lJe5O8JZCtz9Owjo7xgAjbxDOWMUM5w+ZeB73OKOHgtRO85XBIYbB14x1t0TAd60tBuTJcYDQMLZzU9r6hpvNRiLswW8Tk2dpTPY1imUg=
+	t=1749671528; cv=none; b=nNe32HgucOcUxIVnpJwAi4RdJo4NvR7q2zHUBHofsUyesf+tpN2Ho1jtARgQDkJTqRtL//2sqXATO6Nbbr4rMFXcKRMfvKQaGXrWyQ8a9canN9mg/BpCNRtGEB34pG79T1Emssr47UTHGzewYnbpm+Gsz7Yvj3k2yuQWMiIDoIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749671517; c=relaxed/simple;
-	bh=0JxLNWRlX6k+uwatmqej4dYDRJCNBxE+haXmVURsNd0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=E9zUgDeZPqPfAQWm8EejMXHxN7EqtbTyevmMMNoRrxhZl/B9k5nybudcRi++ooQpr7P/Zt+RsdVmSpt0HrHwZlfKc9h89Icn29+Z1+CBx+zSt22+D7kToww8T7Sc0UOwwuXE7EP8NYZPUxbFAcDU1q/TEpZWfx4aEs3qXhrTJ3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=zrmGE8V/; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1749671528; c=relaxed/simple;
+	bh=lJqK/OJW42i8EsH/BnzgMJ2/Ju1YgBn2HHm2aspMDos=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=en5FWyefujBOdNwm6lMEM9+vCSEhjahYzZga9W2fiFdu3TXD6DEOSAHxKRT5rSH8YfEvMLNIWjXAPjAfU4UiuecGq4ux4w5+A3W2B2XfyouKpEPcDvas9ncU5cut+DP0qCAYrmyaZNBTD8IyhX0l5FLnDCwMBpNz2olC2LUg5/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=BSsuewaC; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="zrmGE8V/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1749671513; x=1781207513;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=0JxLNWRlX6k+uwatmqej4dYDRJCNBxE+haXmVURsNd0=;
-  b=zrmGE8V/viznWBjRaVCW7EXc4JXs6uPztzNTiM213L7V12dHP888hvxa
-   2jFxJ764o0NwXoUr1/OxRNXssP2zg4PW9EEV7nl7o2W+gYAnNDH8DPzcS
-   ANctnnwJFB0aMelamjpAO+g5yFTakIllfvA+Q+DJeCj29dIHf3slcBXbd
-   jsHQ/NSd/XhLFkWZLd3nDUTFgp9WEbLmYqpB1UJLtU7v903ZUcySNbjMg
-   e2qd5jdgeIMnrLTbz6gb2dabloxg8omxJPorRSW4t7ZhauDzJqjd/6Mbo
-   AowfRSc2LnFcPZnlGB72s/Hz0x3AjhQFXbmALHbZXNc5K2V4v2U63Mt/Z
-   w==;
-X-CSE-ConnectionGUID: PFE2adCJQrWAEgiYnjIERA==
-X-CSE-MsgGUID: 5eHzcbFMTH+pyjY0H6lqDQ==
-X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
-   d="scan'208";a="210175217"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 11 Jun 2025 12:51:52 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Wed, 11 Jun 2025 12:51:21 -0700
-Received: from [10.10.179.162] (10.10.85.11) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
- Transport; Wed, 11 Jun 2025 12:51:21 -0700
-Message-ID: <5373558c-d075-4a35-a941-623e385cdc22@microchip.com>
-Date: Wed, 11 Jun 2025 12:51:22 -0700
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="BSsuewaC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=yuHqs9EnI0m/8KmCLjpcjeiwaERqEqTbJ5BxU9D0QFY=; b=BSsuewaCfoouBF0OJdhn3IgQPx
+	3TiGq7chukdaZ4S97xnSIY1s/e9e8A+13zB9ibwXvsWhMf+fi8f887BnCZkXYcDq4USQQVgTBmrh8
+	JD3qShd1HkXYEe58bXOEOOPPASsPmfuNmpky3CMcTenrWeHk23LgC/EQ2HQksieWD4+ULW/IDqFt8
+	t2bLCEBdgJaNCwXSoQX8/qwkpVhjK/VAeAfH4SvcgmcsA8tWjQGqFd6H85376nyCRz5GOks944jBG
+	hF57+KQogMmDMzPPFMxj2OiJexSYmybyuIorWYC1Cp/++72EGArnHS/RfNPIfr/NhZtX7KTa76RfM
+	82UnBaBw==;
+Received: from [187.36.208.198] (helo=[192.168.1.111])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uPRU7-002LR5-Ux; Wed, 11 Jun 2025 21:51:44 +0200
+Message-ID: <04450359-4f94-4ce6-a2ef-e8b3551d0761@igalia.com>
+Date: Wed, 11 Jun 2025 16:51:32 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,72 +41,279 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] ARM: dts: microchip: sama7d65: Add clock name
- property
-To: Claudiu Beznea <claudiu.beznea@tuxon.dev>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <nicolas.ferre@microchip.com>,
-	<alexandre.belloni@bootlin.com>
-CC: <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-References: <cover.1748030737.git.Ryan.Wanner@microchip.com>
- <f6ae8a38a005e1a4e025b25ddb29113c5e65dead.1748030737.git.Ryan.Wanner@microchip.com>
- <dc0c2777-ed5b-4729-8ae3-6563d8996e2e@tuxon.dev>
-From: Ryan Wanner <ryan.wanner@microchip.com>
+Subject: Re: [PATCH v4 1/8] drm/vkms: Create helpers macro to avoid code
+ duplication in format callbacks
+To: Louis Chauvet <louis.chauvet@bootlin.com>,
+ Melissa Wen <melissa.srw@gmail.com>, =?UTF-8?Q?Ma=C3=ADra_Canal?=
+ <mairacanal@riseup.net>, Haneen Mohammed <hamohammed.sa@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Rodrigo Siqueira <siqueira@igalia.com>,
+ Simona Vetter <simona.vetter@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, arthurgrillo@riseup.net,
+ linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
+ miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
+ seanpaul@google.com, nicolejadeyee@google.com
+References: <20250530-b4-new-color-formats-v4-0-ef5f9f48376c@bootlin.com>
+ <20250530-b4-new-color-formats-v4-1-ef5f9f48376c@bootlin.com>
 Content-Language: en-US
-In-Reply-To: <dc0c2777-ed5b-4729-8ae3-6563d8996e2e@tuxon.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
+Autocrypt: addr=mcanal@igalia.com; keydata=
+ xsBNBGcCwywBCADgTji02Sv9zjHo26LXKdCaumcSWglfnJ93rwOCNkHfPIBll85LL9G0J7H8
+ /PmEL9y0LPo9/B3fhIpbD8VhSy9Sqz8qVl1oeqSe/rh3M+GceZbFUPpMSk5pNY9wr5raZ63d
+ gJc1cs8XBhuj1EzeE8qbP6JAmsL+NMEmtkkNPfjhX14yqzHDVSqmAFEsh4Vmw6oaTMXvwQ40
+ SkFjtl3sr20y07cJMDe++tFet2fsfKqQNxwiGBZJsjEMO2T+mW7DuV2pKHr9aifWjABY5EPw
+ G7qbrh+hXgfT+njAVg5+BcLz7w9Ju/7iwDMiIY1hx64Ogrpwykj9bXav35GKobicCAwHABEB
+ AAHNIE1hw61yYSBDYW5hbCA8bWNhbmFsQGlnYWxpYS5jb20+wsCRBBMBCAA7FiEE+ORdfQEW
+ dwcppnfRP/MOinaI+qoFAmcCwywCGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQ
+ P/MOinaI+qoUBQgAqz2gzUP7K3EBI24+a5FwFlruQGtim85GAJZXToBtzsfGLLVUSCL3aF/5
+ O335Bh6ViSBgxmowIwVJlS/e+L95CkTGzIIMHgyUZfNefR2L3aZA6cgc9z8cfow62Wu8eXnq
+ GM/+WWvrFQb/dBKKuohfBlpThqDWXxhozazCcJYYHradIuOM8zyMtCLDYwPW7Vqmewa+w994
+ 7Lo4CgOhUXVI2jJSBq3sgHEPxiUBOGxvOt1YBg7H9C37BeZYZxFmU8vh7fbOsvhx7Aqu5xV7
+ FG+1ZMfDkv+PixCuGtR5yPPaqU2XdjDC/9mlRWWQTPzg74RLEw5sz/tIHQPPm6ROCACFls7A
+ TQRnAsMsAQgAxTU8dnqzK6vgODTCW2A6SAzcvKztxae4YjRwN1SuGhJR2isJgQHoOH6oCItW
+ Xc1CGAWnci6doh1DJvbbB7uvkQlbeNxeIz0OzHSiB+pb1ssuT31Hz6QZFbX4q+crregPIhr+
+ 0xeDi6Mtu+paYprI7USGFFjDUvJUf36kK0yuF2XUOBlF0beCQ7Jhc+UoI9Akmvl4sHUrZJzX
+ LMeajARnSBXTcig6h6/NFVkr1mi1uuZfIRNCkxCE8QRYebZLSWxBVr3h7dtOUkq2CzL2kRCK
+ T2rKkmYrvBJTqSvfK3Ba7QrDg3szEe+fENpL3gHtH6h/XQF92EOulm5S5o0I+ceREwARAQAB
+ wsB2BBgBCAAgFiEE+ORdfQEWdwcppnfRP/MOinaI+qoFAmcCwywCGwwACgkQP/MOinaI+qpI
+ zQf+NAcNDBXWHGA3lgvYvOU31+ik9bb30xZ7IqK9MIi6TpZqL7cxNwZ+FAK2GbUWhy+/gPkX
+ it2gCAJsjo/QEKJi7Zh8IgHN+jfim942QZOkU+p/YEcvqBvXa0zqW0sYfyAxkrf/OZfTnNNE
+ Tr+uBKNaQGO2vkn5AX5l8zMl9LCH3/Ieaboni35qEhoD/aM0Kpf93PhCvJGbD4n1DnRhrxm1
+ uEdQ6HUjWghEjC+Jh9xUvJco2tUTepw4OwuPxOvtuPTUa1kgixYyG1Jck/67reJzMigeuYFt
+ raV3P8t/6cmtawVjurhnCDuURyhUrjpRhgFp+lW8OGr6pepHol/WFIOQEg==
+In-Reply-To: <20250530-b4-new-color-formats-v4-1-ef5f9f48376c@bootlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 6/7/25 04:57, Claudiu Beznea wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+On 5/30/25 11:05, Louis Chauvet wrote:
+> The callback functions for line conversion are almost identical for
+> some format. The generic READ_LINE macro generate all the required
+> boilerplate to process a line.
 > 
-> Hi, Ryan,
+> Two overrides of this macro have been added to avoid duplication of
+> the same arguments every time.
 > 
-> On 23.05.2025 23:24, Ryan.Wanner@microchip.com wrote:
->> From: Ryan Wanner <Ryan.Wanner@microchip.com>
->>
->> Add clock-output-names to the xtal nodes, so the driver can correctly
->> register the main and slow xtal.
->>
->> This fixes the issue of the SoC clock driver not being able to find
->> the main xtal and slow xtal correctly causing a bad clock tree.
->>
->> Fixes: 261dcfad1b59 ("ARM: dts: microchip: add sama7d65 SoC DT")
-> 
-> Can you please prepare a similar fix for sam9x7. It is also affected by
-> this, right?
-The driver looks for the xtal differently in the sam9x75 than in the
-SAMA7 clock drivers, so it is not immediately affected. But I will add a
-sam9x7 in the v2 of the patch since in the future it will be needed.
+> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 
-Thank you,
-Ryan
+Reviewed-by: Maíra Canal <mcanal@igalia.com>
+
+Best Regards,
+- Maíra
+
+> ---
+>   drivers/gpu/drm/vkms/vkms_formats.c | 186 ++++++++++++------------------------
+>   1 file changed, 59 insertions(+), 127 deletions(-)
 > 
-> Thank you,
-> Claudiu
-> 
->> Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
->> ---
->>  arch/arm/boot/dts/microchip/sama7d65.dtsi | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/microchip/sama7d65.dtsi b/arch/arm/boot/dts/microchip/sama7d65.dtsi
->> index b6710ccd4c36..7b1dd28a2cfa 100644
->> --- a/arch/arm/boot/dts/microchip/sama7d65.dtsi
->> +++ b/arch/arm/boot/dts/microchip/sama7d65.dtsi
->> @@ -38,11 +38,13 @@ cpu0: cpu@0 {
->>       clocks {
->>               main_xtal: clock-mainxtal {
->>                       compatible = "fixed-clock";
->> +                     clock-output-names = "main_xtal";
->>                       #clock-cells = <0>;
->>               };
->>
->>               slow_xtal: clock-slowxtal {
->>                       compatible = "fixed-clock";
->> +                     clock-output-names = "slow_xtal";
->>                       #clock-cells = <0>;
->>               };
->>       };
+> diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
+> index 6d0227c6635a..a9c624081dac 100644
+> --- a/drivers/gpu/drm/vkms/vkms_formats.c
+> +++ b/drivers/gpu/drm/vkms/vkms_formats.c
+> @@ -292,6 +292,58 @@ VISIBLE_IF_KUNIT struct pixel_argb_u16 argb_u16_from_yuv888(u8 y, u8 channel_1,
+>   }
+>   EXPORT_SYMBOL_IF_KUNIT(argb_u16_from_yuv888);
+>   
+> +/**
+> + * READ_LINE() - Generic generator for a read_line function which can be used for format with one
+> + * plane and a block_h == block_w == 1.
+> + *
+> + * @function_name: Function name to generate
+> + * @pixel_name: Temporary pixel name used in the @__VA_ARGS__ parameters
+> + * @pixel_type: Used to specify the type you want to cast the pixel pointer
+> + * @callback: Callback to call for each pixels. This fonction should take @__VA_ARGS__ as parameter
+> + *            and return a pixel_argb_u16
+> + * @__VA_ARGS__: Argument to pass inside the callback. You can use @pixel_name to access current
+> + *  pixel.
+> + */
+> +#define READ_LINE(function_name, pixel_name, pixel_type, callback, ...)				\
+> +static void function_name(const struct vkms_plane_state *plane, int x_start,			\
+> +			      int y_start, enum pixel_read_direction direction, int count,	\
+> +			      struct pixel_argb_u16 out_pixel[])				\
+> +{												\
+> +	struct pixel_argb_u16 *end = out_pixel + count;						\
+> +	int step = get_block_step_bytes(plane->frame_info->fb, direction, 0);			\
+> +	u8 *src_pixels;										\
+> +												\
+> +	packed_pixels_addr_1x1(plane->frame_info, x_start, y_start, 0, &src_pixels);		\
+> +												\
+> +	while (out_pixel < end) {								\
+> +		pixel_type *(pixel_name) = (pixel_type *)src_pixels;				\
+> +		*out_pixel = (callback)(__VA_ARGS__);						\
+> +		out_pixel += 1;									\
+> +		src_pixels += step;								\
+> +	}											\
+> +}
+> +
+> +/**
+> + * READ_LINE_ARGB8888() - Generic generator for ARGB8888 formats.
+> + * The pixel type used is u8, so pixel_name[0]..pixel_name[n] are the n components of the pixel.
+> + *
+> + * @function_name: Function name to generate
+> + * @pixel_name: temporary pixel to use in @a, @r, @g and @b parameters
+> + * @a, @r, @g, @b: value of each channel
+> + */
+> +#define READ_LINE_ARGB8888(function_name, pixel_name, a, r, g, b) \
+> +	READ_LINE(function_name, pixel_name, u8, argb_u16_from_u8888, a, r, g, b)
+> +/**
+> + * READ_LINE_le16161616() - Generic generator for ARGB16161616 formats.
+> + * The pixel type used is u16, so pixel_name[0]..pixel_name[n] are the n components of the pixel.
+> + *
+> + * @function_name: Function name to generate
+> + * @pixel_name: temporary pixel to use in @a, @r, @g and @b parameters
+> + * @a, @r, @g, @b: value of each channel
+> + */
+> +#define READ_LINE_le16161616(function_name, pixel_name, a, r, g, b) \
+> +	READ_LINE(function_name, pixel_name, __le16, argb_u16_from_le16161616, a, r, g, b)
+> +
+>   /*
+>    * The following functions are read_line function for each pixel format supported by VKMS.
+>    *
+> @@ -378,138 +430,18 @@ static void R4_read_line(const struct vkms_plane_state *plane, int x_start,
+>   	Rx_read_line(plane, x_start, y_start, direction, count, out_pixel);
+>   }
+>   
+> -static void R8_read_line(const struct vkms_plane_state *plane, int x_start,
+> -			 int y_start, enum pixel_read_direction direction, int count,
+> -			 struct pixel_argb_u16 out_pixel[])
+> -{
+> -	struct pixel_argb_u16 *end = out_pixel + count;
+> -	u8 *src_pixels;
+> -	int step = get_block_step_bytes(plane->frame_info->fb, direction, 0);
+>   
+> -	packed_pixels_addr_1x1(plane->frame_info, x_start, y_start, 0, &src_pixels);
+> +READ_LINE_ARGB8888(XRGB8888_read_line, px, 0xFF, px[2], px[1], px[0])
+>   
+> -	while (out_pixel < end) {
+> -		*out_pixel = argb_u16_from_gray8(*src_pixels);
+> -		src_pixels += step;
+> -		out_pixel += 1;
+> -	}
+> -}
+> +READ_LINE_ARGB8888(ARGB8888_read_line, px, px[3], px[2], px[1], px[0])
+> +READ_LINE_ARGB8888(ABGR8888_read_line, px, px[3], px[0], px[1], px[2])
+>   
+> -static void ARGB8888_read_line(const struct vkms_plane_state *plane, int x_start, int y_start,
+> -			       enum pixel_read_direction direction, int count,
+> -			       struct pixel_argb_u16 out_pixel[])
+> -{
+> -	struct pixel_argb_u16 *end = out_pixel + count;
+> -	u8 *src_pixels;
+> -
+> -	packed_pixels_addr_1x1(plane->frame_info, x_start, y_start, 0, &src_pixels);
+> +READ_LINE_le16161616(ARGB16161616_read_line, px, px[3], px[2], px[1], px[0])
+> +READ_LINE_le16161616(XRGB16161616_read_line, px, cpu_to_le16(0xFFFF), px[2], px[1], px[0])
+>   
+> -	int step = get_block_step_bytes(plane->frame_info->fb, direction, 0);
+> +READ_LINE(RGB565_read_line, px, __le16, argb_u16_from_RGB565, px)
+>   
+> -	while (out_pixel < end) {
+> -		u8 *px = (u8 *)src_pixels;
+> -		*out_pixel = argb_u16_from_u8888(px[3], px[2], px[1], px[0]);
+> -		out_pixel += 1;
+> -		src_pixels += step;
+> -	}
+> -}
+> -
+> -static void XRGB8888_read_line(const struct vkms_plane_state *plane, int x_start, int y_start,
+> -			       enum pixel_read_direction direction, int count,
+> -			       struct pixel_argb_u16 out_pixel[])
+> -{
+> -	struct pixel_argb_u16 *end = out_pixel + count;
+> -	u8 *src_pixels;
+> -
+> -	packed_pixels_addr_1x1(plane->frame_info, x_start, y_start, 0, &src_pixels);
+> -
+> -	int step = get_block_step_bytes(plane->frame_info->fb, direction, 0);
+> -
+> -	while (out_pixel < end) {
+> -		u8 *px = (u8 *)src_pixels;
+> -		*out_pixel = argb_u16_from_u8888(255, px[2], px[1], px[0]);
+> -		out_pixel += 1;
+> -		src_pixels += step;
+> -	}
+> -}
+> -
+> -static void ABGR8888_read_line(const struct vkms_plane_state *plane, int x_start, int y_start,
+> -			       enum pixel_read_direction direction, int count,
+> -			       struct pixel_argb_u16 out_pixel[])
+> -{
+> -	struct pixel_argb_u16 *end = out_pixel + count;
+> -	u8 *src_pixels;
+> -
+> -	packed_pixels_addr_1x1(plane->frame_info, x_start, y_start, 0, &src_pixels);
+> -
+> -	int step = get_block_step_bytes(plane->frame_info->fb, direction, 0);
+> -
+> -	while (out_pixel < end) {
+> -		u8 *px = (u8 *)src_pixels;
+> -		/* Switch blue and red pixels. */
+> -		*out_pixel = argb_u16_from_u8888(px[3], px[0], px[1], px[2]);
+> -		out_pixel += 1;
+> -		src_pixels += step;
+> -	}
+> -}
+> -
+> -static void ARGB16161616_read_line(const struct vkms_plane_state *plane, int x_start,
+> -				   int y_start, enum pixel_read_direction direction, int count,
+> -				   struct pixel_argb_u16 out_pixel[])
+> -{
+> -	struct pixel_argb_u16 *end = out_pixel + count;
+> -	u8 *src_pixels;
+> -
+> -	packed_pixels_addr_1x1(plane->frame_info, x_start, y_start, 0, &src_pixels);
+> -
+> -	int step = get_block_step_bytes(plane->frame_info->fb, direction, 0);
+> -
+> -	while (out_pixel < end) {
+> -		u16 *px = (u16 *)src_pixels;
+> -		*out_pixel = argb_u16_from_u16161616(px[3], px[2], px[1], px[0]);
+> -		out_pixel += 1;
+> -		src_pixels += step;
+> -	}
+> -}
+> -
+> -static void XRGB16161616_read_line(const struct vkms_plane_state *plane, int x_start,
+> -				   int y_start, enum pixel_read_direction direction, int count,
+> -				   struct pixel_argb_u16 out_pixel[])
+> -{
+> -	struct pixel_argb_u16 *end = out_pixel + count;
+> -	u8 *src_pixels;
+> -
+> -	packed_pixels_addr_1x1(plane->frame_info, x_start, y_start, 0, &src_pixels);
+> -
+> -	int step = get_block_step_bytes(plane->frame_info->fb, direction, 0);
+> -
+> -	while (out_pixel < end) {
+> -		__le16 *px = (__le16 *)src_pixels;
+> -		*out_pixel = argb_u16_from_le16161616(cpu_to_le16(0xFFFF), px[2], px[1], px[0]);
+> -		out_pixel += 1;
+> -		src_pixels += step;
+> -	}
+> -}
+> -
+> -static void RGB565_read_line(const struct vkms_plane_state *plane, int x_start,
+> -			     int y_start, enum pixel_read_direction direction, int count,
+> -			     struct pixel_argb_u16 out_pixel[])
+> -{
+> -	struct pixel_argb_u16 *end = out_pixel + count;
+> -	u8 *src_pixels;
+> -
+> -	packed_pixels_addr_1x1(plane->frame_info, x_start, y_start, 0, &src_pixels);
+> -
+> -	int step = get_block_step_bytes(plane->frame_info->fb, direction, 0);
+> -
+> -	while (out_pixel < end) {
+> -		__le16 *px = (__le16 *)src_pixels;
+> -
+> -		*out_pixel = argb_u16_from_RGB565(px);
+> -		out_pixel += 1;
+> -		src_pixels += step;
+> -	}
+> -}
+> +READ_LINE(R8_read_line, px, u8, argb_u16_from_gray8, *px)
+>   
+>   /*
+>    * This callback can be used for YUV formats where U and V values are
 > 
 
