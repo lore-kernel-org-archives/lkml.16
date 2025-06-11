@@ -1,127 +1,87 @@
-Received: from mx-rz-3.rrze.uni-erlangen.de (mx-rz-3.rrze.uni-erlangen.de [131.188.11.22])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD6AA2253E8;
-	Wed, 11 Jun 2025 14:14:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05FD2E6138
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 14:14:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749651249; cv=none; b=GkJCdrWcYH28p03TdeMRqqUbKhYpZxJ6kS0+o/eU+n5RJUV1gnM7ttgH/sfXcM8rlu04xtfuFxlO+KVesj2xXfT5LJyqci85QoQtzcspYy/QgJ+qC0iiZLyZlCv8dqNzKiORve8NGnrBuPJm6mpYAkq7pe3rhs0jcokZT0owZn0=
+	t=1749651262; cv=none; b=jvnkCE7lPxYWYya/bcMM/e0HKAhzYUowcpuN9kfghDvXFXsYDWPG1jOu3Gni2ACEk86sDJt2Ieh2WNwMfuqQ0GXypr9OFvn+WmsrJwtUm11lH/0o5rqYSGrce0G6/zfS+tcoNUIjdGF1W4Xs7PdUlQa8Ag0jKdmuV4VfvSlOm/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749651249; c=relaxed/simple;
-	bh=jwlEb9ApPh5TY4JhPoXeYC7ccEQS1p8l4dqq+cESvoc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=JxhSGbd9GDsAZP6jhC424pfaq1+zPIG/9zSsSJjNPVu8p7StKXzOEyEJxo78DJ1Gqo/OkULAbYafD9MibSbmdCNGcDvpUPlCuooS1DeWJSC/zGtPeYqcbEaodziMMCz+vdMxEYvt/Xa6Bd0UDjvqfpMtZPCAgI5/yc3emHU1+GY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=jrbUQog9; arc=none smtp.client-ip=131.188.11.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
+	s=arc-20240116; t=1749651262; c=relaxed/simple;
+	bh=3ltj/FmqAZ7QuNyBZnXsvt0qatnm/T9l1m84EX22EFg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LP4yxzwCPQ6WqDKc1T7HCuQ5A6KUqXReTT4aXnd6z8QbTNEyyibWma3sG8i68Zo+GJZq3v54C/0IbiWxgQ2k9dxyrfMVDUmpRZpyQlq+hRr9Y+VQP4XujPlB8q2YJ31Ml+cOoCcGJ3Zxg7ck/IOaDKwZpYDCwq7TCIVlop5W030=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BsDUsth1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="jrbUQog9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
-	t=1749650643; bh=DmSXTFFqNu+tSRSDtP3K415illKbtXwDagR+sb8PWSM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From:To:CC:
-	 Subject;
-	b=jrbUQog9z+HQ/Dp8kigG9nQddbldTgzkGJpnK8R3LEp5sueblPULIGXu3rrBgx9V2
-	 /Ex8J3jFh9zxcEQIvyUH/XBELAgpzRmq51NcyqHgig4FQ74Smm5FlkuVQluwfheuuF
-	 4GfQ5THwT8Y5W1K5HW28bEKB7WXozWULCD6QGJONSNrnw8/yCtK2b9pkImjXSjnKRF
-	 mu6hjphxfw0NAs7O0wHE/HvOKbqMvfHr0xfpHNDQPfCcJkCklbe/+9T6a3aj/ciA4l
-	 1OY1yf35bmh7pMei0j2QC26MxXiDUieru8kKZ/z63Ztl7tJPPjdZxweZLFyWZTBsag
-	 dp7SgfJjQWOYQ==
-Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-rz-3.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4bHS7l1DmQz1yBD;
-	Wed, 11 Jun 2025 16:04:03 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at boeck5.rrze.uni-erlangen.de (RRZE)
-X-RRZE-Flag: Not-Spam
-X-RRZE-Submit-IP: 10.188.34.184
-Received: from localhost (i4laptop33.informatik.uni-erlangen.de [10.188.34.184])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: U2FsdGVkX18wRjiQhny3JMlHlBPKhYTTZ8dQUFezhPw=)
-	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4bHS7g31Hyz1xw7;
-	Wed, 11 Jun 2025 16:03:59 +0200 (CEST)
-From: Luis Gerhorst <luis.gerhorst@fau.de>
-To: Eduard Zingerman <eddyz87@gmail.com>
-Cc: andrii@kernel.org,  ast@kernel.org,  bpf@vger.kernel.org,
-  daniel@iogearbox.net,  haoluo@google.com,  john.fastabend@gmail.com,
-  jolsa@kernel.org,  kpsingh@kernel.org,  linux-kernel@vger.kernel.org,
-  martin.lau@linux.dev,  sdf@fomichev.me,  song@kernel.org,
-  syzkaller-bugs@googlegroups.com,  yonghong.song@linux.dev
-Subject: Re: [syzbot] [bpf?] KASAN: slab-use-after-free Read in do_check
-In-Reply-To: <38862a832b91382cddb083dddd92643bed0723b8.camel@gmail.com>
-	(Eduard Zingerman's message of "Wed, 11 Jun 2025 06:02:55 -0700")
-References: <68497853.050a0220.33aa0e.036a.GAE@google.com>
-	<38862a832b91382cddb083dddd92643bed0723b8.camel@gmail.com>
-User-Agent: mu4e 1.12.8; emacs 30.1
-Date: Wed, 11 Jun 2025 16:03:59 +0200
-Message-ID: <87frg6gysw.fsf@fau.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BsDUsth1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16783C4CEE3;
+	Wed, 11 Jun 2025 14:14:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749651262;
+	bh=3ltj/FmqAZ7QuNyBZnXsvt0qatnm/T9l1m84EX22EFg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BsDUsth10QpiJL7THtTgD+ziLCgb8HxBK1eqLm6Ove4ilnd/7Z27eninlqd/814rv
+	 5NHPjyF7+vpMTnHbgI6TMBf4r8nsAig8dlSl/BZRLBua+KUUGjuoVGbil49dpYZZ1r
+	 6fSDhype/+BRl0pKAkbaoYCSdOgYmGM7ah439NDO5A62XYQyzodpfr3V7PufY5RGaA
+	 bxWATM45OCT1/FfUE4amKvXEKzT6xvmGsCLek+pY7f0a+vfP0DCKaLr3gyxbAV4Zgq
+	 Lf1vCXRibWWFeTM9geYd8dOaCY1uOgo4Hp4UeGq6on4WXXbHa5p7/MCuZv2MeeQ8hu
+	 Ihni+XdsEhhvQ==
+Date: Wed, 11 Jun 2025 15:14:15 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: catalin.marinas@arm.com, pcc@google.com, will@kernel.org,
+	anshuman.khandual@arm.com, joey.gouly@arm.com, maz@kernel.org,
+	oliver.upton@linux.dev, frederic@kernel.org,
+	hardevsinh.palaniya@siliconsignals.io, samuel.holland@sifive.com,
+	palmer@rivosinc.com, charlie@rivosinc.com,
+	thiago.bauermann@linaro.org, bgray@linux.ibm.com,
+	tglx@linutronix.de, puranjay@kernel.org, david@redhat.com,
+	yang@os.amperecomputing.com, mbenes@suse.cz,
+	joel.granados@kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/7] arm64/cpufeature: add MTE_STORE_ONLY feature
+Message-ID: <ea76d2f7-897a-42cf-b327-7391478cc486@sirena.org.uk>
+References: <20250611094802.929332-1-yeoreum.yun@arm.com>
+ <20250611094802.929332-2-yeoreum.yun@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="hHmyzTM6zYC1FDH5"
+Content-Disposition: inline
+In-Reply-To: <20250611094802.929332-2-yeoreum.yun@arm.com>
+X-Cookie: No skis take rocks like rental skis!
 
-Eduard Zingerman <eddyz87@gmail.com> writes:
 
-> Accessed memory is freed at an error path in push_stack():
->
->   static struct bpf_verifier_state *push_stack(...)
->   {
->   	...
->   err:
->   	free_verifier_state(env->cur_state, true); // <-- KASAN points here
->   	...
->   }
->
-> And is accessed after being freed here:
->
->   static int do_check(struct bpf_verifier_env *env)
->   {
->   	...
-> 		err = do_check_insn(env, &do_print_state);
-> KASAN -->	if (state->speculative && error_recoverable_with_nospec(err)) ...
->   	...
->   }
->   
-> [...]
->
-> Either 'state = env->cur_state' is needed after 'do_check_insn()' or
-> error path should not free env->cur_state (seems logical).
+--hHmyzTM6zYC1FDH5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Sorry, this was my error from [1]. Thanks for the pointer.
+On Wed, Jun 11, 2025 at 10:47:56AM +0100, Yeoreum Yun wrote:
+> Since ARMv8.9, FEAT_MTE_STORE_ONLY can be used to restrict raise of tag
+> check fault on store operation only.
+>=20
+> add MTE_STORE_ONLY feature.
 
-Yes, I think the former makes sense (with the respective `state &&`
-added to the if).
+Reviewed-by: Mark Brown <broonie@kernel.org>
 
-The latter might also be possible, but I guess it would require more
-significant changes.
+--hHmyzTM6zYC1FDH5
+Content-Type: application/pgp-signature; name="signature.asc"
 
-state->speculative does not make sense if the error path of push_stack()
-ran. In that case, `state->speculative &&
-error_recoverable_with_nospec(err)` as a whole should already never
-evaluate to true (because all cases where push_stack() fails also return
-a non-recoverable error -ENOMEM/-EFAULT).
+-----BEGIN PGP SIGNATURE-----
 
-Alternatively to adding `state = env->cur_state` and `state &&`, turning
-the check around would avoid the use-after-free. However, I think your
-idea is better because it is more explicit compared to this:
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhJjzYACgkQJNaLcl1U
+h9DLewf7Br2u+NGtNFaA7jt2w7hoA9uhEO1bpq25k9ho86z7V7zRqjFHJQ+dDyHL
+V7VIXqnh92lmnJRWh8ZvGDKM25FxUBAQzql+DCeHdi3xC3RX9Vu37WXMJr5b0LZz
+oDCUHpszIOsmX/DMYlhQ9Af4ioEYoi+xdCn2jUb6JdO1jAbPcTKRPIZVqv64JVQ7
+jaEhM+49KtZ+KXoDxKe/bJoiV9YD4SP6/wVNLM/xY3ZBf/8zwcfUgFNOwXdED96b
+KOhHvX6NVj+MOR0Sa39p8PF8kRVccDqux7eouE77egS1r+IDlOdrDgBnI6KelVeM
+ilLlU8bkZfN6pWCNlIRsO0cWwDCeSA==
+=zCgO
+-----END PGP SIGNATURE-----
 
-	if (error_recoverable_with_nospec(err) && state->speculative) ...
-
-Does this make sense to you? If yes I can send the fix later today.
-
-I will also check that all other paths calling free_verifier_state() are
-sane. So far it looks good.
-
-The later
-
-	if (state->speculative && cur_aux(env)->nospec_result) {
-
-should already be fine, because !env->cur_state should imply that the
-previous if raises the error.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/commit/?id=d6f1c85f22534d2d9fea9b32645da19c91ebe7d2
+--hHmyzTM6zYC1FDH5--
