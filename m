@@ -1,202 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF63621FF2B;
-	Wed, 11 Jun 2025 11:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18302620CA
+	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:42:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749642133; cv=none; b=kva0TejKrz53HvcsFmwdMM4rr5F6zcn/MSLA1KRFiy8iya6I7KCmuFmZsFIOLYBR82/b0QxMxgkvm7X3WFJIdldW5xPbFtU6Ttrxba8eqvienIOLIVaCBFXzApuZfSOmIrt4uwWJm55fj3+GG0ASTwx62MNU7kBvOczpEPtHjac=
+	t=1749642150; cv=none; b=rrXiR879QaqDdc5Rr0N9JLekLNzD/WR5M5EpWWDQZwsfrcZXwRIjA24uowa+gpH27FjsAChmgi6jN7D8Gth31qn40mexYj7U3ItzotwNhRjmPbHP+3qP0xK3LUlNJT9+toegKcxeWj5r8Agthau/2UfvK+mGCHOHsGp+M6ql+vc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749642133; c=relaxed/simple;
-	bh=BdA4orRIE/XEYkCx+1v0rqbPNwUeA6DfeerQ3gnz6tw=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=fylDCioJRq/qJcmrtrnfDJF1cZhc5UHZ+HBJwDeT1AZSxEp76SdvWvV9+fYlekYHgXZBPsdeo60GN8/NVzqgK6ccKilgPpfkGr7u7WeLVhs6O+pP4WQlkt1uVPsY92b6ST1UtVpnyifHtifYUQxDszLa8oT1RiYAp9sj8UKe3VM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Sf1TqoWS; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1749642150; c=relaxed/simple;
+	bh=FUStS5c3S65wbp+fBe9+etII96TDwKJ+V/CIWybxzdg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mbioHcSl0pJ+h3S9B0zw9FLmU5jU70nGzI+HFDN1WtzVWz0++WpExXjPY7bYB4uVJEdk6diLFdigUs1pAsnAYNDrgt49ZTXFtAV8Y8itiNxJIQviK/pVxTKaG/STmFDPzl0YTIyjVIYuhIuQJ6Gx+wsQjl9PRqR1N3VvBwNkJa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1+fRgEjw; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sf1TqoWS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749642132; x=1781178132;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=BdA4orRIE/XEYkCx+1v0rqbPNwUeA6DfeerQ3gnz6tw=;
-  b=Sf1TqoWSIOMWhIP8Yi2U9Yc3gZ3tfdSqe72l29PBrB7Lv9p/vScfQvjm
-   D96tpDbRkmVhJwJZG/PBrtL620tlPVQv19tlmV7s/0AImjQQXMsqrqSsS
-   BshDe+K6jYcyUrMEnYzpcVbyB6eoh+300Q8M/EMoOjaOxKGmLtSpe9+7/
-   yd1D0BFPFUsIN3Atl7BlX08m6OIR5YMZu4lj3RpSevD9LVs634aXVzm7A
-   o4N19Z3lxXb4851R+I289I3ReuyjWICZaYK7at3/vc1nnNDvkruog90G0
-   7rJzbZRVjQGhJiPTRvNbwGBEefXbTQP3e1zzpTUIiODQ6RHkOipSUYsKU
-   g==;
-X-CSE-ConnectionGUID: 0yTYt+u6QDiazi3lWy7Q7w==
-X-CSE-MsgGUID: 5oeuFTerQBqIANT/wVOaQQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="55586751"
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="55586751"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 04:42:11 -0700
-X-CSE-ConnectionGUID: GwQfmCBYT+GN4xnP2MbbfA==
-X-CSE-MsgGUID: CH5V+7WrQqiZDlCCuKZpSw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
-   d="scan'208";a="152065771"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.183])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 04:42:09 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 11 Jun 2025 14:42:05 +0300 (EEST)
-To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    linux-serial <linux-serial@vger.kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 09/33] serial: 8250: remove CONFIG_SERIAL_8250_RSA inline
- macros from code
-In-Reply-To: <20250611100319.186924-10-jirislaby@kernel.org>
-Message-ID: <95e65501-7096-045f-db52-26e90683a003@linux.intel.com>
-References: <20250611100319.186924-1-jirislaby@kernel.org> <20250611100319.186924-10-jirislaby@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1+fRgEjw"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a525eee2e3so4952571f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 04:42:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1749642144; x=1750246944; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zkdBvM+Fb7Q1QR2EpzlOjG7jKFxnJ+dE1eIZu+8hsIw=;
+        b=1+fRgEjwIu7wrploo/zU+xvh34Uq7pvkznfXdYPXCfhXc3ff9/X04wBCJUdLzkLpcE
+         8ihcOwT/3+esM8Hm2DJxmZ0qP31oa7+tFQXBkL8Lrz4THM+7kqvlYMPrZxWxQJbaEuYI
+         Esy6zjEojcPhug82yoXXeDYuSRH75YKvc70g+Yy3BMFpx7eNGbSwaiz2/4vVKZuNbWHT
+         mZFsseLaIH5ek5++wZsLTCNrYeeJhH7eRfDdu60LkMitCzyTKCCez3zEECi1AtebecBp
+         mN6AwC++JbZBztiNOp73RGje1MySwRusyzXfxgefOv8pJmUF6+piaBkN+9E8EYEQd2Q2
+         F7iA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749642144; x=1750246944;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zkdBvM+Fb7Q1QR2EpzlOjG7jKFxnJ+dE1eIZu+8hsIw=;
+        b=L91Z8fVhBbGqlPoAyOY9aE7RsjeSzlIgeeV21NSP1n4P47PINIcnukfIa+D6rRyq6P
+         ZDbGZScdFLtpwsoo5F9FBUkkvV2PxYQAtIUfXPJQTEWMABGjSuuvj4yRm8/jqMKdZS+/
+         79Pwy/RGMh/+DAlomgp9pbDDoN/Ooaof12MW5Qi0bm0x9wpq8dkH6WlBcVLvYg8g9oFb
+         SZLWKk//JKKvOftKVbTowKJz4STxfwdLX8VjW1T3BMs9YZ/MMNWhvNzLBWUW2ubQU9W4
+         ukuaQFObj9op00XDcvPklQeqPyPUlkj51T4mkmkGhwn3Mr5sz4W4LhvpikBJiohUTCYO
+         iXNg==
+X-Forwarded-Encrypted: i=1; AJvYcCWc66gzFG5f8xLqRbVvBEBBM3wEt3NjhM6xHfl0O58j5Vea2QuZy4V2npQqQ4QI6dpoiRBYseXreTgrMts=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXtPCS/JOLf9zVrQn8jGdpoB0UrhzXEtG4GNra6TgxUoglSGmR
+	IifDLJU5JvJ2LkF84Xn+871fqYzPyHIflO6XbIbk/dVBmuuN4mPACWbrSyXQG44R3dGgY5pmMxV
+	4qwl7ANwYo1koF87xGVFDHD/bwpxtWcsOTYrmRn5h
+X-Gm-Gg: ASbGncumHp/L3fOwxtTOwQQPl72xSoZDxzp9kUcxKf773vl2y9+QPMYnadQPJ1wd3p7
+	eu4dcE1uWwDnc7ckLFTXcB4QUav/mcQeeEJoIZE1STqKgy89ZV/IhvgLfDSnwHXP1pc1MAQNPxA
+	mmGDha0+MsfWS1KZQE2iGft+pgIitWgtEuNhHkfuFbyPFOxKfMSF2DGAL7EBkOXf5q2U1cjgjSB
+	w==
+X-Google-Smtp-Source: AGHT+IHWnc6SnzYf5mCJ2L3k+/PpxAJt0+Ab4vhOBcR5j5AmdvMvBATf9J2AGm9g8sffFijJPWPxsb9hnwgMMAouVKw=
+X-Received: by 2002:a5d:64c3:0:b0:3a5:3b15:ef52 with SMTP id
+ ffacd0b85a97d-3a558a9248emr2046677f8f.8.1749642144124; Wed, 11 Jun 2025
+ 04:42:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20250611-correct-type-cast-v1-1-06c1cf970727@gmail.com>
+In-Reply-To: <20250611-correct-type-cast-v1-1-06c1cf970727@gmail.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Wed, 11 Jun 2025 13:42:10 +0200
+X-Gm-Features: AX0GCFtbudxgpt1gl3GgxMZalwn9053z-4e3UEi2jcJlC65c2iByUhUylvF5NLo
+Message-ID: <CAH5fLghomO3znaj14ZSR9FeJSTAtJhLjR=fNdmSQ0MJdO+NfjQ@mail.gmail.com>
+Subject: Re: [PATCH] rust: cast to the proper type
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: FUJITA Tomonori <fujita.tomonori@gmail.com>, Trevor Gross <tmgross@umich.edu>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, "David S. Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>, 
+	netdev@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 11 Jun 2025, Jiri Slaby (SUSE) wrote:
+On Wed, Jun 11, 2025 at 12:28=E2=80=AFPM Tamir Duberstein <tamird@gmail.com=
+> wrote:
+>
+> Use the ffi type rather than the resolved underlying type.
+>
+> Fixes: f20fd5449ada ("rust: core abstractions for network PHY drivers")
 
-> All these:
->   #ifdef CONFIG_SERIAL_8250_RSA
->   ...
->   #endif
-> 
-> in the 8250 generic code distract the reader. Introduce empty inlines to
-> handle the !CONFIG_SERIAL_8250_RSA case and handle the '#if's around the
-> RSA functions definitions.
-> 
-> This means rsa_autoconfig() and rsa_reset() functions were introduced to
-> contain the particular code.
-> 
-> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-> ---
->  drivers/tty/serial/8250/8250_port.c | 54 ++++++++++++++---------------
->  1 file changed, 27 insertions(+), 27 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-> index f5407832e8a7..233316a88df2 100644
-> --- a/drivers/tty/serial/8250/8250_port.c
-> +++ b/drivers/tty/serial/8250/8250_port.c
-> @@ -738,6 +738,9 @@ static int __enable_rsa(struct uart_8250_port *up)
->  	return result;
->  }
->  
-> +/*
-> + * If this is an RSA port, see if we can kick it up to the higher speed clock.
-> + */
->  static void enable_rsa(struct uart_8250_port *up)
->  {
->  	if (up->port.type == PORT_RSA) {
+Does this need to be backported? If not, I wouldn't include a Fixes tag.
 
-In general, a good change but it would also be nice to reverse all these 
-type check because then it would be immediately obvious the function does 
-nothing if it's not PORT_RSA.
+> +            DuplexMode::Full =3D> bindings::DUPLEX_FULL,
+> +            DuplexMode::Half =3D> bindings::DUPLEX_HALF,
+> +            DuplexMode::Unknown =3D> bindings::DUPLEX_UNKNOWN,
+> +        } as crate::ffi::c_int;
 
-> @@ -752,10 +755,9 @@ static void enable_rsa(struct uart_8250_port *up)
->  }
->  
->  /*
-> - * Attempts to turn off the RSA FIFO.  Returns zero on failure.
-> - * It is unknown why interrupts were disabled in here.  However,
-> - * the caller is expected to preserve this behaviour by grabbing
-> - * the spinlock before calling this function.
-> + * Attempts to turn off the RSA FIFO and resets the RSA board back to 115kbps compat mode. It is
-> + * unknown why interrupts were disabled in here. However, the caller is expected to preserve this
-> + * behaviour by grabbing the spinlock before calling this function.
->   */
->  static void disable_rsa(struct uart_8250_port *up)
->  {
-> @@ -780,6 +782,25 @@ static void disable_rsa(struct uart_8250_port *up)
->  		uart_port_unlock_irq(&up->port);
->  	}
->  }
-> +
-> +static void rsa_autoconfig(struct uart_8250_port *up)
-> +{
-> +	/* Only probe for RSA ports if we got the region. */
-> +	if (up->port.type == PORT_16550A && up->probe & UART_PROBE_RSA &&
-> +	    __enable_rsa(up))
-> +		up->port.type = PORT_RSA;
-> +}
-> +
-> +static void rsa_reset(struct uart_8250_port *up)
-> +{
-> +	if (up->port.type == PORT_RSA)
-> +		serial_out(up, UART_RSA_FRR, 0);
-> +}
-> +#else
-> +static inline void enable_rsa(struct uart_8250_port *up) {}
-> +static inline void disable_rsa(struct uart_8250_port *up) {}
-> +static inline void rsa_autoconfig(struct uart_8250_port *up) {}
-> +static inline void rsa_reset(struct uart_8250_port *up) {}
->  #endif /* CONFIG_SERIAL_8250_RSA */
->  
->  /*
-> @@ -1267,14 +1288,7 @@ static void autoconfig(struct uart_8250_port *up)
->  		break;
->  	}
->  
-> -#ifdef CONFIG_SERIAL_8250_RSA
-> -	/*
-> -	 * Only probe for RSA ports if we got the region.
-> -	 */
-> -	if (port->type == PORT_16550A && up->probe & UART_PROBE_RSA &&
-> -	    __enable_rsa(up))
-> -		port->type = PORT_RSA;
-> -#endif
-> +	rsa_autoconfig(up);
->  
->  	serial_out(up, UART_LCR, save_lcr);
->  
-> @@ -1289,10 +1303,7 @@ static void autoconfig(struct uart_8250_port *up)
->  	/*
->  	 * Reset the UART.
->  	 */
-> -#ifdef CONFIG_SERIAL_8250_RSA
-> -	if (port->type == PORT_RSA)
-> -		serial_out(up, UART_RSA_FRR, 0);
-> -#endif
-> +	rsa_reset(up);
->  	serial8250_out_MCR(up, save_mcr);
->  	serial8250_clear_fifos(up);
->  	serial_in(up, UART_RX);
-> @@ -2248,13 +2259,7 @@ int serial8250_do_startup(struct uart_port *port)
->  				UART_DA830_PWREMU_MGMT_FREE);
->  	}
->  
-> -#ifdef CONFIG_SERIAL_8250_RSA
-> -	/*
-> -	 * If this is an RSA port, see if we can kick it up to the
-> -	 * higher speed clock.
-> -	 */
->  	enable_rsa(up);
-> -#endif
->  
->  	/*
->  	 * Clear the FIFO buffers and disable them.
-> @@ -2521,12 +2526,7 @@ void serial8250_do_shutdown(struct uart_port *port)
->  			serial_port_in(port, UART_LCR) & ~UART_LCR_SBC);
->  	serial8250_clear_fifos(up);
->  
-> -#ifdef CONFIG_SERIAL_8250_RSA
-> -	/*
-> -	 * Reset the RSA board back to 115kbps compat mode.
-> -	 */
->  	disable_rsa(up);
-> -#endif
->  
->  	/*
->  	 * Read data port to reset things, and then unlink from
-> 
+This file imports the prelude, so this can just be c_int without the
+crate::ffI:: path.
 
--- 
- i.
-
+Alice
