@@ -1,153 +1,335 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1D625BEED
-	for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 11:49:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18E32E611B;
+	Wed, 11 Jun 2025 11:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749642542; cv=none; b=pQ0Zzq9k94JP2aXO6ThEwWdluhfkMTpZnvoMw9erwhtQDG4IHv8GKgA6mypKIgib/Zy1GLFhucfa8Bg/EmkUETv1DniyZ5ijuumfNRvbl//2LBQDpop/ynY/+9kfHbscgm0QdFh9LJI1EbbMr3gMWx6ty0rTCwidOYBv08XW7Q0=
+	t=1749642571; cv=none; b=UwyDpRlUOnC+XthCrpx0tM86LRB1YQ3ibCfd37aOO5WTin2XBfEJm/2+mXDY3ZyaYrG3KZwfyHYMzNVYp4JcC+TGgJbv/Viy7Z8snPz4bwgCu5WDLCe+wCcAegzaNXB8Nevrc9AGfDPt6MTfEJmqmwxTOx0K9nzmXC5RUzWpSzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749642542; c=relaxed/simple;
-	bh=35M5gOyWlSaqL6iH1KU+YV0U7S6wgKSwxLGbs4KIhfE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OA9nYEqdFDOlKCHun0emcd42hxOjpekNdc1mbWQxUnoIiVvqb8DTfdfkA1mE263ASX4YZwRjL8uXoVfrNrBlN4Gw94vr7llPOXgxUOjnzPu/0EYywzqfagE2QDaXEfkLIgsu37Ywn4cose6NvCh5GC81VdCMR15/MpfNNvtlH38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C9ghENme; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749642571; c=relaxed/simple;
+	bh=AuV1sbkvV6me8J9YURc/SUOK6IBHhelqaiEVy4c4ZEM=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ENRUgUoYNNQ6IC0abG34gkhOlwhK/xHX3Cxys3szvY5cC7+vF3D17n3R3EWt4Fq9IgqAjwdSO6iVUprpRU3A9Ii2OKc2QH9hyC78s2Neuw7zQd2pUJ6TcOtnO7Q+7AWstg8PpD80mCzXSSZrW4GavIJY+iv0Ct8cNoprrQR0ldc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iV43ZDb6; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C9ghENme"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-60794c43101so6871108a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 04:49:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749642539; x=1750247339; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LSRjpysjkvUqzPQa+4DtR1H7++BicgArTKa2t6hjtGY=;
-        b=C9ghENmeToVUF/KYUew990rIk9SrUTkgGjpP12pJl7qXlQLp+y4NweVUlamKaSsMjr
-         2zHl013HMcukEUKqOBOUlE9DmJJ8K1NADum6QEgjHFr3+Xsxl7EaWr1KCTc7earcwBAv
-         TXh+0iU/lcd87q9yNkTaWDFu4/5jDw4Dfl6CyToMhlie0Mi7S7Xn1Ndc85AwJdLJEMcC
-         /IBWDysgXbsDwiJcYR9JSOajoncc8ZdHrRc4+w+VXT3SeRG9tmBpLluEpvVcNliYEugi
-         T7hsNKFhcr1OUQIcPilvxsG6fuM4BHNHcb5PLMPnDr6s03EpAPRb9DjldjbsfO3NtyKx
-         H2hQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749642539; x=1750247339;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LSRjpysjkvUqzPQa+4DtR1H7++BicgArTKa2t6hjtGY=;
-        b=ikQTvjnZjVaoFLzUmS8C4Kx0EY6QzpkAOWBXZRsteobeeg98djJg8Yk20+5ef6QRaV
-         lYrFc+Z+KwYHo1CjJDyqGt3xwTEPLo6dD5mcVH13X+9rSdJ/dhM7EMIA3YFYYSlnMaTK
-         MROTPEdOZFHUoRvkCwRMuTaJ0py692GWQslgm9As+4VxsrKssDwBNV28X9b7DGGku/a2
-         cj31E9oRT0lRWJf41Z75m5USgEJtIbkzrlH8kQF7c7CN1IVeaulje7H78NhuMiPxTd4T
-         Hkx+JvCiYUzVIaytC1iTrWp556wDY/e/Pidp8PBHuIw0bb728EzSMU8BoB5zFPhFmB0y
-         YqzQ==
-X-Gm-Message-State: AOJu0YwBGwHZLAgTE+yFK6ViHuCiB2pPlXnNsA8dN9Gn/Kq85ScxrRQ9
-	Qwncf9BmHLxpAz+/M3JUQJLjbtUGkz4Vfo+KyXJx+uCy92hC0HisFi0z
-X-Gm-Gg: ASbGncsnnssYYBBUZz/hYUJdoKgOOGowmvEbiymvHFjMJn0Lp0UKmRSfbipQKEww2Ie
-	sgdLJ0CdIb+3tC4heexlHAcIR8kuXUfmWzrZKTrpVjmrhgOVt1vdKz3ML4Ri9lHKSr88QyIDASr
-	66ogneBYMwA6+2udKRC15xhprfrCf9on7JH9kebfzs7F7dFUGrXqJT6NRoiyqBC3yUZ/T7ya+VI
-	ExN+m0HhPOI2DNu4O0REV/gzE2+KrXDGlzC1Kg5t9ev2wymez6IEzaO9/nbagSFuAsOQRqY3tX0
-	5OBxrhItobUoySeJ5ezQJXgbIEJu9QgM3Zyku4sVCbUdSbE7UjFZGIAHS4taHaEcnAVMH//l/WZ
-	iag==
-X-Google-Smtp-Source: AGHT+IFvMMhhCIH4jalpWwB+920r18WVhja2oWWNtYf6uMWbIL0d0FmohQk/xL8AYQFH9BE5Ruxc9w==
-X-Received: by 2002:a17:906:f581:b0:ad2:15c4:e23f with SMTP id a640c23a62f3a-ade8946222dmr282933066b.13.1749642538835;
-        Wed, 11 Jun 2025 04:48:58 -0700 (PDT)
-Received: from localhost.localdomain ([41.79.198.22])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ade33c09594sm787588566b.97.2025.06.11.04.48.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 04:48:58 -0700 (PDT)
-From: Khalid Ali <khaliidcaliy@gmail.com>
-X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
-To: tglx@linutronix.de,
-	peterz@infradead.org,
-	luto@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Khalid Ali <khaliidcaliy@gmail.com>
-Subject: [PATCH] kernel/entry: Remove some redundancy checks on syscall works
-Date: Wed, 11 Jun 2025 11:43:53 +0000
-Message-ID: <20250611114810.785-1-khaliidcaliy@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iV43ZDb6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749642570; x=1781178570;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=AuV1sbkvV6me8J9YURc/SUOK6IBHhelqaiEVy4c4ZEM=;
+  b=iV43ZDb6YpxkV2ca6W7kn2eLtvf7SdDLLmbpryq+gFHxUOw+792KQX2k
+   0/aS1nBpzImgHuYseqjIdK4tjWs0hBTuXcAkcsU5C+wggQvnQ5Vqa6QBD
+   DAUzidojhBctG5bpcJTO7IWljiTkrAKdCW4JNwZU6K9RjSXdOVZeLd8BV
+   6lb3qBGZmqBL6uIGuo0pceojYKb8wXDf0EDcDWJt5cxNsbWGi3ThQnHqs
+   yfQMX7nYb5207oG0efszX1XSjdjzju0VoePCr5r3Z/NjQofLPl/zUvbnV
+   udcGjOs5gEQI5CdEEIJTxwBK4yRAo23Q54uNxernn3mOaCApOzCQp9DBx
+   w==;
+X-CSE-ConnectionGUID: pzYPZGT1RTmAyClB6GrQAA==
+X-CSE-MsgGUID: 4hFHfO5gSAKtvLRX+6wsDw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11460"; a="39400851"
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="39400851"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 04:49:17 -0700
+X-CSE-ConnectionGUID: uhaPBnlMRNCWDnv1/G+TvA==
+X-CSE-MsgGUID: 4HFYnJJZT3aRwg3UQNPX6A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,227,1744095600"; 
+   d="scan'208";a="147089132"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.183])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 04:49:16 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 11 Jun 2025 14:49:11 +0300 (EEST)
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+cc: gregkh@linuxfoundation.org, linux-serial@vger.kernel.org, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 12/33] serial: 8250: move RSA functions to 8250_rsa.c
+In-Reply-To: <20250611100319.186924-13-jirislaby@kernel.org>
+Message-ID: <12af3273-a8b3-d88e-3c5a-290595e346a2@linux.intel.com>
+References: <20250611100319.186924-1-jirislaby@kernel.org> <20250611100319.186924-13-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8323328-1686644607-1749642551=:957"
 
-There is a redundant checks of thread syscall work.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-After we read thread syscall work we are checking the work bits using
-SYSCALL_WORK_ENTER and SYSCALL_WORK_EXIT on syscall entry and exit
-respectively, and at the same time syscall_trace_enter() and
-syscall_exit_work() checking bits one by one, the bits we already checked.
-This is redundancy. So either we need to check the work bits one by one as I
-did, or check as whole. On my prespective, i think the way code is
-implemented now checking work bits one by one is simpler and gives us
-more granular control.
+--8323328-1686644607-1749642551=:957
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-I also checking if SYSCALL_WORK_SYSCALL_AUDIT is set on work as other
-part. Thus we don't need SYSCALL_WORK_ENTER and SYSCALL_WORK_EXIT
-anymore. We may need on the future, so we can safely let them be there.
+On Wed, 11 Jun 2025, Jiri Slaby (SUSE) wrote:
 
-Signed-off-by: Khalid Ali <khaliidcaliy@gmail.com>
----
- include/linux/entry-common.h | 9 ++-------
- kernel/entry/common.c        | 8 +++++---
- 2 files changed, 7 insertions(+), 10 deletions(-)
+> They are RSA-specific, so should live in a preexisting 8250_rsa.c. Move
+> them there.
+>=20
+> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
 
-diff --git a/include/linux/entry-common.h b/include/linux/entry-common.h
-index f94f3fdf15fc..60a6741d5c5a 100644
---- a/include/linux/entry-common.h
-+++ b/include/linux/entry-common.h
-@@ -165,11 +165,7 @@ long syscall_trace_enter(struct pt_regs *regs, long syscall,
- static __always_inline long syscall_enter_from_user_mode_work(struct pt_regs *regs, long syscall)
- {
- 	unsigned long work = READ_ONCE(current_thread_info()->syscall_work);
--
--	if (work & SYSCALL_WORK_ENTER)
--		syscall = syscall_trace_enter(regs, syscall, work);
--
--	return syscall;
-+	return  syscall_trace_enter(regs, syscall, work);
- }
- 
- /**
-@@ -408,8 +404,7 @@ static __always_inline void syscall_exit_to_user_mode_work(struct pt_regs *regs)
- 	 * enabled, we want to run them exactly once per syscall exit with
- 	 * interrupts enabled.
- 	 */
--	if (unlikely(work & SYSCALL_WORK_EXIT))
--		syscall_exit_work(regs, work);
-+	syscall_exit_work(regs, work);
- 	local_irq_disable_exit_to_user();
- 	exit_to_user_mode_prepare(regs);
- }
-diff --git a/kernel/entry/common.c b/kernel/entry/common.c
-index e774dc9e7eaf..9accf5fde8e7 100644
---- a/kernel/entry/common.c
-+++ b/kernel/entry/common.c
-@@ -64,8 +64,9 @@ long syscall_trace_enter(struct pt_regs *regs, long syscall,
- 		 */
- 		syscall = syscall_get_nr(current, regs);
- 	}
--
--	syscall_enter_audit(regs, syscall);
-+	
-+	if (work & SYSCALL_WORK_SYSCALL_AUDIT)
-+		syscall_enter_audit(regs, syscall);
- 
- 	return ret ? : syscall;
- }
-@@ -162,7 +163,8 @@ void syscall_exit_work(struct pt_regs *regs, unsigned long work)
- 		}
- 	}
- 
--	audit_syscall_exit(regs);
-+	if (work & SYSCALL_WORK_SYSCALL_AUDIT)
-+		audit_syscall_exit(regs);
- 
- 	if (work & SYSCALL_WORK_SYSCALL_TRACEPOINT)
- 		trace_sys_exit(regs, syscall_get_return_value(current, regs));
--- 
-2.49.0
+No unexpected change found in the diff-of-diffs,
 
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
+--=20
+ i.
+
+> ---
+>  drivers/tty/serial/8250/8250.h      |  8 +++
+>  drivers/tty/serial/8250/8250_port.c | 99 -----------------------------
+>  drivers/tty/serial/8250/8250_rsa.c  | 92 +++++++++++++++++++++++++++
+>  3 files changed, 100 insertions(+), 99 deletions(-)
+>=20
+> diff --git a/drivers/tty/serial/8250/8250.h b/drivers/tty/serial/8250/825=
+0.h
+> index 18530c31a598..cfe6ba286b45 100644
+> --- a/drivers/tty/serial/8250/8250.h
+> +++ b/drivers/tty/serial/8250/8250.h
+> @@ -318,8 +318,16 @@ static inline void serial8250_pnp_exit(void) { }
+> =20
+>  #ifdef CONFIG_SERIAL_8250_RSA
+>  void univ8250_rsa_support(struct uart_ops *ops);
+> +void rsa_enable(struct uart_8250_port *up);
+> +void rsa_disable(struct uart_8250_port *up);
+> +void rsa_autoconfig(struct uart_8250_port *up);
+> +void rsa_reset(struct uart_8250_port *up);
+>  #else
+>  static inline void univ8250_rsa_support(struct uart_ops *ops) { }
+> +static inline void rsa_enable(struct uart_8250_port *up) {}
+> +static inline void rsa_disable(struct uart_8250_port *up) {}
+> +static inline void rsa_autoconfig(struct uart_8250_port *up) {}
+> +static inline void rsa_reset(struct uart_8250_port *up) {}
+>  #endif
+> =20
+>  #ifdef CONFIG_SERIAL_8250_FINTEK
+> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/825=
+0/8250_port.c
+> index d8a90818f431..476f5fc50237 100644
+> --- a/drivers/tty/serial/8250/8250_port.c
+> +++ b/drivers/tty/serial/8250/8250_port.c
+> @@ -713,105 +713,6 @@ static void serial8250_clear_IER(struct uart_8250_p=
+ort *up)
+>  =09=09serial_out(up, UART_IER, 0);
+>  }
+> =20
+> -#ifdef CONFIG_SERIAL_8250_RSA
+> -/*
+> - * Attempts to turn on the RSA FIFO.  Returns zero on failure.
+> - * We set the port uart clock rate if we succeed.
+> - */
+> -static int __rsa_enable(struct uart_8250_port *up)
+> -{
+> -=09unsigned char mode;
+> -=09int result;
+> -
+> -=09mode =3D serial_in(up, UART_RSA_MSR);
+> -=09result =3D mode & UART_RSA_MSR_FIFO;
+> -
+> -=09if (!result) {
+> -=09=09serial_out(up, UART_RSA_MSR, mode | UART_RSA_MSR_FIFO);
+> -=09=09mode =3D serial_in(up, UART_RSA_MSR);
+> -=09=09result =3D mode & UART_RSA_MSR_FIFO;
+> -=09}
+> -
+> -=09if (result)
+> -=09=09up->port.uartclk =3D SERIAL_RSA_BAUD_BASE * 16;
+> -
+> -=09return result;
+> -}
+> -
+> -/*
+> - * If this is an RSA port, see if we can kick it up to the higher speed =
+clock.
+> - */
+> -static void rsa_enable(struct uart_8250_port *up)
+> -{
+> -=09if (up->port.type !=3D PORT_RSA)
+> -=09=09return;
+> -
+> -=09if (up->port.uartclk !=3D SERIAL_RSA_BAUD_BASE * 16) {
+> -=09=09uart_port_lock_irq(&up->port);
+> -=09=09__rsa_enable(up);
+> -=09=09uart_port_unlock_irq(&up->port);
+> -=09}
+> -=09if (up->port.uartclk =3D=3D SERIAL_RSA_BAUD_BASE * 16)
+> -=09=09serial_out(up, UART_RSA_FRR, 0);
+> -}
+> -
+> -/*
+> - * Attempts to turn off the RSA FIFO and resets the RSA board back to 11=
+5kbps compat mode. It is
+> - * unknown why interrupts were disabled in here. However, the caller is =
+expected to preserve this
+> - * behaviour by grabbing the spinlock before calling this function.
+> - */
+> -static void rsa_disable(struct uart_8250_port *up)
+> -{
+> -=09unsigned char mode;
+> -=09int result;
+> -
+> -=09if (up->port.type !=3D PORT_RSA)
+> -=09=09return;
+> -
+> -=09if (up->port.uartclk !=3D SERIAL_RSA_BAUD_BASE * 16)
+> -=09=09return;
+> -
+> -=09uart_port_lock_irq(&up->port);
+> -=09mode =3D serial_in(up, UART_RSA_MSR);
+> -=09result =3D !(mode & UART_RSA_MSR_FIFO);
+> -
+> -=09if (!result) {
+> -=09=09serial_out(up, UART_RSA_MSR, mode & ~UART_RSA_MSR_FIFO);
+> -=09=09mode =3D serial_in(up, UART_RSA_MSR);
+> -=09=09result =3D !(mode & UART_RSA_MSR_FIFO);
+> -=09}
+> -
+> -=09if (result)
+> -=09=09up->port.uartclk =3D SERIAL_RSA_BAUD_BASE_LO * 16;
+> -=09uart_port_unlock_irq(&up->port);
+> -}
+> -
+> -static void rsa_autoconfig(struct uart_8250_port *up)
+> -{
+> -=09/* Only probe for RSA ports if we got the region. */
+> -=09if (up->port.type !=3D PORT_16550A)
+> -=09=09return;
+> -=09if (!(up->probe & UART_PROBE_RSA))
+> -=09=09return;
+> -
+> -=09if (__rsa_enable(up))
+> -=09=09up->port.type =3D PORT_RSA;
+> -}
+> -
+> -static void rsa_reset(struct uart_8250_port *up)
+> -{
+> -=09if (up->port.type !=3D PORT_RSA)
+> -=09=09return;
+> -
+> -=09serial_out(up, UART_RSA_FRR, 0);
+> -}
+> -#else
+> -static inline void rsa_enable(struct uart_8250_port *up) {}
+> -static inline void rsa_disable(struct uart_8250_port *up) {}
+> -static inline void rsa_autoconfig(struct uart_8250_port *up) {}
+> -static inline void rsa_reset(struct uart_8250_port *up) {}
+> -#endif /* CONFIG_SERIAL_8250_RSA */
+> -
+>  /*
+>   * This is a quickie test to see how big the FIFO is.
+>   * It doesn't work at all the time, more's the pity.
+> diff --git a/drivers/tty/serial/8250/8250_rsa.c b/drivers/tty/serial/8250=
+/8250_rsa.c
+> index 4c8b9671bd41..59d2ecf23068 100644
+> --- a/drivers/tty/serial/8250/8250_rsa.c
+> +++ b/drivers/tty/serial/8250/8250_rsa.c
+> @@ -107,6 +107,98 @@ void univ8250_rsa_support(struct uart_ops *ops)
+>  module_param_hw_array(probe_rsa, ulong, ioport, &probe_rsa_count, 0444);
+>  MODULE_PARM_DESC(probe_rsa, "Probe I/O ports for RSA");
+> =20
+> +/*
+> + * Attempts to turn on the RSA FIFO.  Returns zero on failure.
+> + * We set the port uart clock rate if we succeed.
+> + */
+> +static int __rsa_enable(struct uart_8250_port *up)
+> +{
+> +=09unsigned char mode;
+> +=09int result;
+> +
+> +=09mode =3D serial_in(up, UART_RSA_MSR);
+> +=09result =3D mode & UART_RSA_MSR_FIFO;
+> +
+> +=09if (!result) {
+> +=09=09serial_out(up, UART_RSA_MSR, mode | UART_RSA_MSR_FIFO);
+> +=09=09mode =3D serial_in(up, UART_RSA_MSR);
+> +=09=09result =3D mode & UART_RSA_MSR_FIFO;
+> +=09}
+> +
+> +=09if (result)
+> +=09=09up->port.uartclk =3D SERIAL_RSA_BAUD_BASE * 16;
+> +
+> +=09return result;
+> +}
+> +
+> +/*
+> + * If this is an RSA port, see if we can kick it up to the higher speed =
+clock.
+> + */
+> +void rsa_enable(struct uart_8250_port *up)
+> +{
+> +=09if (up->port.type !=3D PORT_RSA)
+> +=09=09return;
+> +
+> +=09if (up->port.uartclk !=3D SERIAL_RSA_BAUD_BASE * 16) {
+> +=09=09uart_port_lock_irq(&up->port);
+> +=09=09__rsa_enable(up);
+> +=09=09uart_port_unlock_irq(&up->port);
+> +=09}
+> +=09if (up->port.uartclk =3D=3D SERIAL_RSA_BAUD_BASE * 16)
+> +=09=09serial_out(up, UART_RSA_FRR, 0);
+> +}
+> +
+> +/*
+> + * Attempts to turn off the RSA FIFO and resets the RSA board back to 11=
+5kbps compat mode. It is
+> + * unknown why interrupts were disabled in here. However, the caller is =
+expected to preserve this
+> + * behaviour by grabbing the spinlock before calling this function.
+> + */
+> +void rsa_disable(struct uart_8250_port *up)
+> +{
+> +=09unsigned char mode;
+> +=09int result;
+> +
+> +=09if (up->port.type !=3D PORT_RSA)
+> +=09=09return;
+> +
+> +=09if (up->port.uartclk !=3D SERIAL_RSA_BAUD_BASE * 16)
+> +=09=09return;
+> +
+> +=09uart_port_lock_irq(&up->port);
+> +=09mode =3D serial_in(up, UART_RSA_MSR);
+> +=09result =3D !(mode & UART_RSA_MSR_FIFO);
+> +
+> +=09if (!result) {
+> +=09=09serial_out(up, UART_RSA_MSR, mode & ~UART_RSA_MSR_FIFO);
+> +=09=09mode =3D serial_in(up, UART_RSA_MSR);
+> +=09=09result =3D !(mode & UART_RSA_MSR_FIFO);
+> +=09}
+> +
+> +=09if (result)
+> +=09=09up->port.uartclk =3D SERIAL_RSA_BAUD_BASE_LO * 16;
+> +=09uart_port_unlock_irq(&up->port);
+> +}
+> +
+> +void rsa_autoconfig(struct uart_8250_port *up)
+> +{
+> +=09/* Only probe for RSA ports if we got the region. */
+> +=09if (up->port.type !=3D PORT_16550A)
+> +=09=09return;
+> +=09if (!(up->probe & UART_PROBE_RSA))
+> +=09=09return;
+> +
+> +=09if (__rsa_enable(up))
+> +=09=09up->port.type =3D PORT_RSA;
+> +}
+> +
+> +void rsa_reset(struct uart_8250_port *up)
+> +{
+> +=09if (up->port.type !=3D PORT_RSA)
+> +=09=09return;
+> +
+> +=09serial_out(up, UART_RSA_FRR, 0);
+> +}
+> +
+>  #ifdef CONFIG_SERIAL_8250_DEPRECATED_OPTIONS
+>  #ifndef MODULE
+>  /*
+>=20
+--8323328-1686644607-1749642551=:957--
