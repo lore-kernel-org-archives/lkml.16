@@ -1,79 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84E310A3E;
-	Wed, 11 Jun 2025 15:15:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7B5B1A5BA4;
+	Wed, 11 Jun 2025 15:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749654926; cv=none; b=aG0WkVrc4bhToah/IRMegBjE4Ir9xPEHS4OeBPpwmvj0OtLP/TLtXvnruYU+jVGCJE0P6f1qo3xHETVQ2nfX2eEtjk2xm8cHRE3KrBL5eaY330na7KTzQUdFZuGWFpbZWjx+66wyncYeybDPiF3An5QyN33j0JADvuweZ4De2oc=
+	t=1749654935; cv=none; b=kma3IL2kiJJJWbdlwiDUAHJVuVeB0UWfRMUkv+hPaH52I8mrLtEz+/TUDQ+pVISy58wlu6ZSqoeiBt3vk81zMX64j82qu7lbS7BFVymDXNDJilqPzVWKhWtzjb7sADIkCsX2k6vs7C/7BBow2gHpH9MMao/Kkv9AOHr21JVnmU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749654926; c=relaxed/simple;
-	bh=Xra69tmZS3fpjJeBgHc+1iBGy9hoV7GWfvRxN9zoVv0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ImXv1IUVRbo4VElkRTKu32g4Ph1MaqPfw0qYiu9SI3DQ4W9k5apFlNicwtsM1D5WHtdEOVIwN3kF0GHx76yZBph32dXKs+t9A2Z7raalINqzE2pFTzU7JTZkV00aV3JNhpr710P24pwm8sSEHTeYtDTqVLHiSu1P0Pyq+NOnP7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: G542xsPTTw2gO9RUH7Pr9w==
-X-CSE-MsgGUID: CfArInyYQo6B/diLnnB29Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="62083977"
-X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
-   d="scan'208";a="62083977"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 08:15:25 -0700
-X-CSE-ConnectionGUID: RqDJS5oZTUGG50MctG74ug==
-X-CSE-MsgGUID: aX1+3EfSR7K7nKqxctsySA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,228,1744095600"; 
-   d="scan'208";a="184428915"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2025 08:15:20 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1uPNAb-00000005gIz-18f5;
-	Wed, 11 Jun 2025 18:15:17 +0300
-Date: Wed, 11 Jun 2025 18:15:17 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Da Xue <da@libre.computer>, linux-iio@vger.kernel.org,
+	s=arc-20240116; t=1749654935; c=relaxed/simple;
+	bh=SkmWsUzdGujwGykgrZxaYqoTD2t/kuu5qyKPRe6ASK8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HiFzgEm6tNk7VAijATwFrprK4Ca0XXMEZEdnNbeoPzxRfFZOLpt97dlGuqBXNfeGNRM/iGxUlDxLZ4iUnNBA56ID22xDwJwlRGMaW3OxZvmOe5CFJ+8EvDSPPdP6sxJUlvYeYGapBikXWllkpLjUoiSzMz+ARXshcJGEk195qnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost.localdomain (unknown [116.232.147.71])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id E9846340824;
+	Wed, 11 Jun 2025 15:15:27 +0000 (UTC)
+From: Yixun Lan <dlan@gentoo.org>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Yixun Lan <dlan@gentoo.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>,
+	linux-mmc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	spacemit@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: adc: ad7949: use spi_is_bpw_supported()
-Message-ID: <aEmdhV0ATRuUeGaL@smile.fi.intel.com>
-References: <20250611-iio-adc-ad7949-use-spi_is_bpw_supported-v1-1-c4e15bfd326e@baylibre.com>
+Subject: Re: [PATCH] riscv: dts: spacemit: enable eMMC for K1 SoC
+Date: Wed, 11 Jun 2025 23:15:07 +0800
+Message-ID: <174965447661.1611186.10400081292030756093.b4-ty@gentoo.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250523-22-k1-sdhci-v1-1-6e0adddf7494@gentoo.org>
+References: <20250523-22-k1-sdhci-v1-1-6e0adddf7494@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611-iio-adc-ad7949-use-spi_is_bpw_supported-v1-1-c4e15bfd326e@baylibre.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 11, 2025 at 10:04:58AM -0500, David Lechner wrote:
-> Use spi_is_bpw_supported() instead of directly accessing spi->controller
-> ->bits_per_word_mask. bits_per_word_mask may be 0, which implies that
-> 8-bits-per-word is supported. spi_is_bpw_supported() takes this into
-> account while spi_ctrl_mask == SPI_BPW_MASK(8) does not.
 
-> Closes: https://lore.kernel.org/linux-spi/c8b8a963-6cef-4c9b-bfef-dab2b7bd0b0f@sirena.org.uk/
+On Fri, 23 May 2025 21:21:04 +0800, Yixun Lan wrote:
+> Enable eMMC support for SpacemiT K1 SoC, successfully tested on
+> Bananapi-F3 board which shipped with a 16GB eMMC chip - KLMAG1JETD-B041.
+> 
+> 
 
-Reported-by yourself. I'm wondering if the Closes adds a value in this case.
-Otherwise I can do the same to maybe 10% of my patches, for instance. But
-I don't think I put Closes tag on whatever improvement potential bug fix
-I do report (read: notice) myself.
+Applied, thanks!
 
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
+[1/1] riscv: dts: spacemit: enable eMMC for K1 SoC
+      https://github.com/spacemit-com/linux/commit/37df56ac500222384d6a6a13c69c489e01fb686c
 
-Code wise LGTM,
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
-
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Yixun Lan <dlan@gentoo.org>
