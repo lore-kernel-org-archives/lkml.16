@@ -1,158 +1,82 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0B32F4333;
-	Thu, 12 Jun 2025 11:37:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9120AEC2;
+	Thu, 12 Jun 2025 11:37:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749728268; cv=none; b=hSOPXz5xcMHpNfbiAjyc7+Vn1XBdowCH7ua2uQxaozNkhGH+sjdAaF8UjMO7MPeoLdN4V9pXmJDjYD6WSCQapfhPiPdc2Uo19Mz+Iw91LDgTQ30ILvQwqrOH3foIW2hCzOXlu/1mOCSAofDOk6kj+pMPjeoWKBBBLC+dmuTBcmw=
+	t=1749728271; cv=none; b=hpnjNZtSL+dD+NklP9VWjGpAM57H8odvCMHAigv1FwtGJNhwMry3LdwzL7mz/+V9ohQkV3qjN6VWF1uM+B9j0B+ZIfdWrrM4A0r27lRFrPdrIjZUPG1bH3sB0Ego85Vs5fQ51C7qDJ3Aq/OkKYV3gJu4TQguOdmIm23n1tvoIH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749728268; c=relaxed/simple;
-	bh=1hME+q7q5I+jjLm/t72QKjRqfoHtJN7hkve8S00L+WE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iW4W95KG9jb9KG8+tASQF0M91Z9u0VrjAaAr/YvGnA/tVpdNTsObEouIkzhMPwgRSQx1RziF1GKWg1ZlA3Kt3W+9aXxbd2+3t4qi+x3NK4RQBO+RKnRH5QYrwhKpw54ojqd+wOi2cnESBGbw4pVSXVTGztvlWxPm21imrK3fhZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bJ0rR4SwYzKHN95;
-	Thu, 12 Jun 2025 19:37:43 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id ECED01A01A4;
-	Thu, 12 Jun 2025 19:37:41 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP4 (Coremail) with SMTP id gCh0CgAXe18DvEpoJoUoPQ--.21926S3;
-	Thu, 12 Jun 2025 19:37:41 +0800 (CST)
-Message-ID: <b14aaa15-9d41-45cf-9bd8-fe92d256070d@huaweicloud.com>
-Date: Thu, 12 Jun 2025 19:37:39 +0800
+	s=arc-20240116; t=1749728271; c=relaxed/simple;
+	bh=RC6e67q4bD7RzUdBsPC19A7/O1+Ylly3nWUTzq8H6C0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=usGvXV6dmIgCuiYWR78MlC1fV5ADpotvMBAq788jkm6nqOhPoCewFMU/8D5V6vifaz05xJOTulXBnLddjnDCL4v4Bhzr07fZk9a7Pja/h2pWkKetmdQ6MdZfQhCmEBiKmyVzrmu6OwXQMqHXTv8QxQXaHquaiWds7ZK/LfDLrH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LfKNkqMJ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LfKNkqMJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFDB6C4CEEA;
+	Thu, 12 Jun 2025 11:37:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749728271;
+	bh=RC6e67q4bD7RzUdBsPC19A7/O1+Ylly3nWUTzq8H6C0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LfKNkqMJ230N0EmQJ6n6F5hxs2eDHc2gDzUqnaFqxjR2BzP+se/A2VupzCMhrI4gb
+	 9NYBUQi6O74YbTU15kOTP7LtYwDO6nlpekDG4/rRf81shqTxXz5puLtCfFMvrC1Ez8
+	 lC0MdZSRw4aOzUbAy3MWk4X+otN1Bl7AvHQP+2SamIX9i1DphEmtbMo4CBHyTrmcS0
+	 MUdzc/iYg1tYTc5iGlJ+oeZUq/maoaBSzH0FDgLo2Lkc4GZua4eYLruLegRywdBiqV
+	 mpLSscXiDGCpK6qASc0UCBqdRsHIBwtAVRWHdD2/UFkcmRUXp26vKsR4TOHPK4TG94
+	 WUZI4sxPL5xPQ==
+Date: Thu, 12 Jun 2025 13:37:48 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Cc: Joel Fernandes <joelagnelf@nvidia.com>, linux-kernel@vger.kernel.org,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>, rcu@vger.kernel.org,
+	bpf@vger.kernel.org, xiqi2@huawei.com
+Subject: Re: [PATCH 2/2] rcu: Fix lockup when RCU reader used while IRQ
+ exiting
+Message-ID: <aEq8DAHY0ycCOmoN@localhost.localdomain>
+References: <20250609180125.2988129-1-joelagnelf@nvidia.com>
+ <20250609180125.2988129-2-joelagnelf@nvidia.com>
+ <aEgjvGkYB0RoQFvg@localhost.localdomain>
+ <5568ff6b-6d5c-ea63-3c4a-c0714103aa9d@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 07/10] fs: introduce FALLOC_FL_WRITE_ZEROES to fallocate
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
- linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
- linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de,
- tytso@mit.edu, john.g.garry@oracle.com, bmarzins@redhat.com,
- chaitanyak@nvidia.com, shinichiro.kawasaki@wdc.com, brauner@kernel.org,
- martin.petersen@oracle.com, yi.zhang@huawei.com, chengzhihao1@huawei.com,
- yukuai3@huawei.com, yangerkun@huawei.com, linux-api@vger.kernel.org
-References: <20250604020850.1304633-1-yi.zhang@huaweicloud.com>
- <20250604020850.1304633-8-yi.zhang@huaweicloud.com>
- <20250611150555.GB6134@frogsfrogsfrogs>
-Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <20250611150555.GB6134@frogsfrogsfrogs>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgAXe18DvEpoJoUoPQ--.21926S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxGrykKF4xGr1UuryUJryUAwb_yoWrWF45pF
-	W3Ca4UKr4kGFyfC3s3Z3Z7Cry5Zws3Kr43ZrW2gr1jvr15Wr1fKFsFgryYva4xJrs7Aa1Y
-	qr40vFy3ua4DZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
-	wI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUIa
-	0PDUUUU
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5568ff6b-6d5c-ea63-3c4a-c0714103aa9d@huawei.com>
 
-On 2025/6/11 23:05, Darrick J. Wong wrote:
-> [cc linux-api about a fallocate uapi change]
+Le Thu, Jun 12, 2025 at 11:06:07AM +0800, Xiongfeng Wang a écrit :
+> +cc (Qi, my colleague who helps testing the modification)
 > 
-> On Wed, Jun 04, 2025 at 10:08:47AM +0800, Zhang Yi wrote:
->> From: Zhang Yi <yi.zhang@huawei.com>
->>
->> With the development of flash-based storage devices, we can quickly
->> write zeros to SSDs using the WRITE_ZERO command if the devices do not
->> actually write physical zeroes to the media. Therefore, we can use this
->> command to quickly preallocate a real all-zero file with written
->> extents. This approach should be beneficial for subsequent pure
->> overwriting within this file, as it can save on block allocation and,
->> consequently, significant metadata changes, which should greatly improve
->> overwrite performance on certain filesystems.
->>
->> Therefore, introduce a new operation FALLOC_FL_WRITE_ZEROES to
->> fallocate. This flag is used to convert a specified range of a file to
->> zeros by issuing a zeroing operation. Blocks should be allocated for the
->> regions that span holes in the file, and the entire range is converted
->> to written extents. If the underlying device supports the actual offload
->> write zeroes command, the process of zeroing out operation can be
->> accelerated. If it does not, we currently don't prevent the file system
->> from writing actual zeros to the device. This provides users with a new
->> method to quickly generate a zeroed file, users no longer need to write
->> zero data to create a file with written extents.
->>
->> Users can determine whether a disk supports the unmap write zeroes
->> operation through querying this sysfs interface:
->>
->>     /sys/block/<disk>/queue/write_zeroes_unmap
->>
->> Finally, this flag cannot be specified in conjunction with the
->> FALLOC_FL_KEEP_SIZE since allocating written extents beyond file EOF is
->> not permitted. In addition, filesystems that always require out-of-place
->> writes should not support this flag since they still need to allocated
->> new blocks during subsequent overwrites.
->>
->> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
->> Reviewed-by: Christoph Hellwig <hch@lst.de>
->> ---
->>  fs/open.c                   |  1 +
->>  include/linux/falloc.h      |  3 ++-
->>  include/uapi/linux/falloc.h | 18 ++++++++++++++++++
->>  3 files changed, 21 insertions(+), 1 deletion(-)
->>
-[...]
->> diff --git a/include/uapi/linux/falloc.h b/include/uapi/linux/falloc.h
->> index 5810371ed72b..265aae7ff8c1 100644
->> --- a/include/uapi/linux/falloc.h
->> +++ b/include/uapi/linux/falloc.h
->> @@ -78,4 +78,22 @@
->>   */
->>  #define FALLOC_FL_UNSHARE_RANGE		0x40
->>  
->> +/*
->> + * FALLOC_FL_WRITE_ZEROES is used to convert a specified range of a file to
->> + * zeros by issuing a zeroing operation. Blocks should be allocated for the
->> + * regions that span holes in the file, and the entire range is converted to
->> + * written extents.
+> On 2025/6/10 20:23, Frederic Weisbecker wrote:
+> > Le Mon, Jun 09, 2025 at 02:01:24PM -0400, Joel Fernandes a écrit :
+> >> During rcu_read_unlock_special(), if this happens during irq_exit(), we
 > 
-> I think you could simplify this a bit by talking only about the end
-> state after a successful call:
+> ...skipped...
 > 
-> "FALLOC_FL_WRITE_ZEROES zeroes a specified file range in such a way that
-> subsequent writes to that range do not require further changes to file
-> mapping metadata."
-> 
-> Note that we don't say how the filesystem gets to this goal.  Presumably
-> the first implementations will send a zeroing operation to the block
-> device during allocation and the fs will create written mappings, but
-> there are other ways to get there -- a filesystem could maintain a pool
-> of pre-zeroed space and hand those out; or it could zero space on
-> freeing and mounting such that all new mappings can be created as
-> written even without the block device zeroing operation.
-> 
-> Or you could be running on some carefully engineered system where you
-> know the storage will always be zeroed at allocation time due to some
-> other aspect of the system design, e.g. a single-use throwaway cloud vm
-> where you allocate to the end of the disk and reboot the node.
+> We have tested the below modification without the modification written by Joel
+> using the previous syzkaller benchmark. The kernel still panic.
+> The dmesg log is attached.
 
-Indeed, it makes sense to me. It appears to be more generic and obscures
-the methods by which different file systems may achieve this goal. Thank
-you for the suggestion.
+Yes, it's a cleanup that doesn't include Joel's change yet. So this is
+expected.
 
-Best regards,
-Yi.
+Thanks.
 
+-- 
+Frederic Weisbecker
+SUSE Labs
