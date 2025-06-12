@@ -1,236 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED82E29B8CE
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 17:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB6838B;
+	Thu, 12 Jun 2025 17:46:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749750116; cv=none; b=K64+kjDHSUnnkQ+8OeNUQx+OJ69JgHZNs2a/fJq+ukypcttLyfgL3kLLPCIQAbEHmqWCMr6KvCJP3uFP/UbikRmxFr6WmFsb7ucxkySMIrW+tkVx5km/C7xjS0KJVM85Md5F7knpuDfttGULCX/nTVxwGQ+wkhOVgibTptcIZzs=
+	t=1749750380; cv=none; b=VnmWqciUTH6vDaij83FhR52ZDuc4w6Nzj/xlQlbxlLwpPt/seBGEyjxiYbfyjn0JRX/tHEXmwriZAuQsMoKj3/cnv69FxPelXgEVYJ+rt7U1sAaGCVPyhUK+8xEH6OVcmhy2Jb18B9I1q2gYdmpyl8xfHSl3f+sPV9cd/MjD8YM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749750116; c=relaxed/simple;
-	bh=B8VpAHwfvI8i7kBnmQPWL24V95l1cq9qu0i03mzZkrE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J2IN8qWjgU2x9VhafT1Xz9mAx+nw/BkX9FBjj9RNOnjS6pM7kPJxyUvaffba13yAr4f6kKX99Y7PXPamtUeKnX0E0BfH+mMlpSGp89WMp78UHf4ieStAbhdAnUpuso1bWAp/mqvz4CYHWfU78qPtHFVMdri+sa5IcbDxKqOXYHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PEi7bVcU; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749750380; c=relaxed/simple;
+	bh=21WuvrE1X3trk287V3DrJa6NKcmuKe5icltvLlC8sM8=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PW45BhAfAIAm1ijtVX3nxSiiFF8ou32M/lNExQK0ogf1zi9XO+KTNQYp4RE3i/Y/pJ70mUk8VWH4caEiV3Xim9Hc8FQOH86DiNXG5KwosyZ4LgMHULA0f/xZM9Bpj72xUKLQgftL1QPNMMdkr05GVsg5udPv5SS6QTN34AhuWtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Es62Chpm; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PEi7bVcU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749750113;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Nd1EHOKRplIldRLyZRvXL96+1haDOUsvq+XwVjIOUoA=;
-	b=PEi7bVcU1yWIgyUYlnVQMmtCTNWN76PPYsuJhnk8udrkiZjNGCSe37jZvwFwCPVScZGaO6
-	en2Okf+W61ibKD5Vv4P+J68NsBgCEa634a88/LFegO6vmvUH1Ivyooqf2m6iu/opy9uGas
-	Cj7xXTB+BPygeABZDPYfHt5DjOBgLnE=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-609-TDYwJTYBMM6vu7aWKI6HCQ-1; Thu, 12 Jun 2025 13:41:50 -0400
-X-MC-Unique: TDYwJTYBMM6vu7aWKI6HCQ-1
-X-Mimecast-MFC-AGG-ID: TDYwJTYBMM6vu7aWKI6HCQ_1749750110
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a4edf5bb4dso1021262f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 10:41:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Es62Chpm"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-55220699ba8so1335951e87.2;
+        Thu, 12 Jun 2025 10:46:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749750377; x=1750355177; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=aJyXy9pxvVxSP5k59NygtSiv9DiWthCoWbffsOf+IxI=;
+        b=Es62Chpm2JPKM7lPthIRcBLFnnftb7gwxK1g43YMUaWtSo6voeqRROx5d5OTYgnkoa
+         81gp/2WERoZ7tBQY31GfXU86F9cpDNqyZpvI1MAjP8oFc/lLbTwXI9T3zo1lex6c8n5h
+         xaAW+CYovZmXAa6TvmIVdQLvF/PWSS/7OVIqWAiG5l7oWqFURDeReV+JuI+Hy9RU7F4r
+         CwKnFm2m/yrqI+V0TgxWD9+hsdoBH4B4/Pz4mwgL1zp89eRw0mtbT1FohKK2xawMM3ud
+         hDNHQZdQmwfWkJ8fYKu31R1Sk91CCxe9ZPQX7X3VYblJ1CyJgi+PebYXckyD1EJV75QO
+         nr8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749750109; x=1750354909;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Nd1EHOKRplIldRLyZRvXL96+1haDOUsvq+XwVjIOUoA=;
-        b=RoYtKhFFi2RyOSKy/i0Oy+F6ZgPkU0VfNqcRDmn/QI327sxL+rXHmrhIPYCR5XsM+q
-         mmTx+/eeJGZVrUbLUu2Rls4kFVD6QjDqqBQkR1fWqqKlgDH0FPKcSpYR1Hr7Dzgi8CC3
-         Ys3wlwlT6iHAIHYBvghSDq9FTHuQaS79lSw/Ruccl1ycT0ClqL0YBH9OI3rOQvj5FKz/
-         cxI7D/C/NVSWqMLoV37uxXU/0p1oc5IDm9hOXgzwFeuKTLQ9OQ0301HZb9RMy/77fZPP
-         FIxJcpEZz7snVzI/V13BE7EQhYlNrbtec+lhmcLgsbMuic9nLM7ETLiKVqdLy+KoMVOP
-         E03A==
-X-Gm-Message-State: AOJu0Yy4GBQdf4eebXuW76/b+kMjGMBuCZm4J+nrcAs6YiTWigRdSSiB
-	9/6DA7Rt9wdHKIeVnUwmiD8KMYITHkR97jA++t8NnxbYnmTI5EaRuC6fEBUE36lNyCw8ZFQA/cc
-	YSG6tKWRHyIDdj84BL/FPzLWJyuH9ekoqw/CUIXnwZbLTiijd49slAFy9RJ0fi0W2Nw==
-X-Gm-Gg: ASbGncuRs4ypI6apZZUcz1OwH8GnybDe43xalyOmUBIIHJ9D44QgS49gB/QYGWx2lo7
-	tLGknuzNqqsgYLs5BIXr9lxmXedKIbSnCWP5esHHjoJtxfmur7WHjYmZwrtV/T9jGYFIHsy8sCz
-	qHgwuccG2x2jmCRUkgc7DvaM7B4t6xHv8NhygQzgSiSqAZhy9mvM1/JcunnzIIxdQ6blwwUc65Z
-	NaD1OvA2+kdnguHhIFrDSwxsCtm/D8UvMe0/qjI1jK09A4U70zfDCCZfDqvrNFwO4zMxAqGsU/R
-	Zoi/1zbqlxfjfPwT5JQQuKmlXAPA7rNE00g6vK3SdHqmTdFQytvyhmVq+wTYy2RxcX9BwFvuQn5
-	tampueHhtphNM2LUs5wn0CDE4LNwAP4DhILCSTJokvXWaQtvoEg==
-X-Received: by 2002:a05:6000:288b:b0:3a4:fe9d:1b10 with SMTP id ffacd0b85a97d-3a56873d3a8mr158684f8f.45.1749750109572;
-        Thu, 12 Jun 2025 10:41:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHfpBKp7WSfATvU5HWRVC3xGg1b8tBhRVQX2JrvbDdW+mk61yVjqSa2K+6CTbQGfcAM+wsqmg==
-X-Received: by 2002:a05:6000:288b:b0:3a4:fe9d:1b10 with SMTP id ffacd0b85a97d-3a56873d3a8mr158669f8f.45.1749750109173;
-        Thu, 12 Jun 2025 10:41:49 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f2c:1e00:1e1e:7a32:e798:6457? (p200300d82f2c1e001e1e7a32e7986457.dip0.t-ipconnect.de. [2003:d8:2f2c:1e00:1e1e:7a32:e798:6457])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a56199aa52sm2613251f8f.36.2025.06.12.10.41.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 10:41:48 -0700 (PDT)
-Message-ID: <a4c900e1-76ad-4d25-88c2-2c86f7ca2055@redhat.com>
-Date: Thu, 12 Jun 2025 19:41:47 +0200
+        d=1e100.net; s=20230601; t=1749750377; x=1750355177;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aJyXy9pxvVxSP5k59NygtSiv9DiWthCoWbffsOf+IxI=;
+        b=RC+9M2PLJ2HBVuXZs1nmgOTOWBTpPqCJhUN0U5fFjqghlpmqiDH/CLLj0s2Y9/8GHn
+         9m8Lpwozd8h4fKzXfz3LKiGxab30efugxrCxA3jSHte3BntlvTHGzlYrruZooItAkMup
+         ham3NIQd12JzSbjG9oLZBa8MNmrTMbWtMz2FX8HQ6Rsw271Eupiuw/J+NMW+fIPbm3xs
+         MvixkOlKTsXt/TfsqTVFlOSLyBCtz/TBH6Pr1+4WXxDW7Zx2Qgqx50dngO8J/c+8Uh/5
+         rSYPQeXhjEUdm36bkTWJJ0NwjQgKL2xFvTRGYhAGsTcVR8uRFYShnCmaoY4EsMm7axoF
+         xgxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV78V4/JZB2K9HZMF8kZsxR/rnb+0qr07ZBoQtNbfqOdqHfLWnNg3dKQcHM/s3BVTEn/iBBjX50SLfMIL0=@vger.kernel.org, AJvYcCXXxHYPVwzPiX8W1zwVUFRhJ/ZnkM2QZ/a8LlcElz59t3mxvc8SAYtRLGZgAsn8h1PgyZRG@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7Wker9aUgTtk7GosoXtJiE1EmifPhwbh4wK3aokpoQUZy58oH
+	I1i4alG6w1NXOoHjdwgiJjLbfl6k15mPtbOvYAMw+CyV1yWILvcOksWP
+X-Gm-Gg: ASbGnctUGlEB6vfxD+WnHYsdHueBsobzfS6tDUUkUGvhtg+881Z9tymG+jXwnqsRu2U
+	k8TAHiHfBcfwWdRzfU+1dQDgUnbvoHayrqwdQpfYbrEwZkcKPtTCBOhB0X90qGHFfObEWNaT9l6
+	SLpe6EW9dz86Xomfx5WKucEc1nu8NPJQir9KxaQm6oMa10NFKZPoCp0985zxHEnGu3dtjOVho++
+	iZmZ27h8bc9Ajl9H8252VuhOrnkSRqG3KmwT/+L7qLc8HU3glIwfIo8cJi4iXcIawFFFFYIMvTX
+	fhVx8TbE8iZlf9D+DFtYNIOAsCE9SJkiDtr8JRlZIff2/8nY/wbLLOxflPNtg6Eqsbtu8YKTXCl
+	BFsaGt/h6Zzo=
+X-Google-Smtp-Source: AGHT+IEOLs0ANK0wIjBQ0PWafYupTNOMRcsj3meFgFn09HrO720u4tTVZ/ojA1Yq9X0LK9efb7KyLQ==
+X-Received: by 2002:a05:6512:1598:b0:553:296b:a62 with SMTP id 2adb3069b0e04-553af92f3b5mr16886e87.12.1749750376611;
+        Thu, 12 Jun 2025 10:46:16 -0700 (PDT)
+Received: from pc636 (host-95-203-1-180.mobileonline.telia.com. [95.203.1.180])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac11692fsm176902e87.24.2025.06.12.10.46.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 10:46:15 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Thu, 12 Jun 2025 19:46:12 +0200
+To: Boqun Feng <boqun@fixme.name>, "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Joel Fernandes <joelagnelf@nvidia.com>,
+	"Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>,
+	RCU <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
+Subject: Re: [PATCH 1/3] rcu: Return early if callback is not specified
+Message-ID: <aEsSZINUrRvy1g4F@pc636>
+References: <20250610173450.107293-1-urezki@gmail.com>
+ <4bc63cf3-29a4-4a64-be65-30f7bd55e31c@nvidia.com>
+ <0caf7054-140e-4b6c-abd4-2ec2ebe79b2c@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] mm/huge_memory: don't mark refcounted folios
- special in vmf_insert_folio_pud()
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, nvdimm@lists.linux.dev,
- linux-cxl@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Alistair Popple <apopple@nvidia.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Dan Williams <dan.j.williams@intel.com>,
- Oscar Salvador <osalvador@suse.de>
-References: <20250611120654.545963-1-david@redhat.com>
- <20250611120654.545963-4-david@redhat.com>
- <177cb5d1-4fde-4fa0-adbc-8e295fba403b@lucifer.local>
- <11d1ff4d-3f75-42a5-968e-8f4bad84ab78@redhat.com>
- <43e2b05f-c499-48c3-b8e4-a23ef5efc818@lucifer.local>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <43e2b05f-c499-48c3-b8e4-a23ef5efc818@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0caf7054-140e-4b6c-abd4-2ec2ebe79b2c@app.fastmail.com>
 
-On 12.06.25 19:08, Lorenzo Stoakes wrote:
-> On Thu, Jun 12, 2025 at 07:00:01PM +0200, David Hildenbrand wrote:
->> On 12.06.25 18:49, Lorenzo Stoakes wrote:
->>> On Wed, Jun 11, 2025 at 02:06:54PM +0200, David Hildenbrand wrote:
->>>> Marking PUDs that map a "normal" refcounted folios as special is
->>>> against our rules documented for vm_normal_page().
->>>
->>> Might be worth referring to specifically which rule. I'm guessing it's the
->>> general one of special == don't touch (from vm_normal_page() comment):
->>>
->>> /*
->>>    * vm_normal_page -- This function gets the "struct page" associated with a pte.
->>>    *
->>>    * "Special" mappings do not wish to be associated with a "struct page" (either
->>>    * it doesn't exist, or it exists but they don't want to touch it). In this
->>>    * case, NULL is returned here. "Normal" mappings do have a struct page.
->>>    *
->>>    * ...
->>>    *
->>>    */
->>
->> Well, yes, the one vm_normal_page() is all about ... ? :)
+On Thu, Jun 12, 2025 at 10:30:38AM -0700, Boqun Feng wrote:
 > 
-> Lol yes to be fair that is pretty obvious...
 > 
->>
->>>
->>> But don't we already violate this E.g.:
->>>
->>> 		if (vma->vm_ops && vma->vm_ops->find_special_page)
->>> 			return vma->vm_ops->find_special_page(vma, addr);
->>>> I mean this in itself perhaps means we should update this comment to say
->> 'except
->>> when file-backed and there is a find_special_page() hook'.
->>
->> I rather hope we severely break this case such that we can remove that hack.
->>
->> Read as in: I couldn't care less about this XEN hack, in particular, not
->> documenting it.
->>
->> I was already wondering about hiding it behind a XEN config so not each and
->> every sane user of this function has to perform this crappy-hack check.
+> On Tue, Jun 10, 2025, at 12:33 PM, Joel Fernandes wrote:
+> > On 6/10/2025 1:34 PM, Uladzislau Rezki (Sony) wrote:
+> >> Currently the call_rcu() API does not check whether a callback
+> >> pointer is NULL. If NULL is passed, rcu_core() will try to invoke
+> >> it, resulting in NULL pointer dereference and a kernel crash.
+> >> 
+> >> To prevent this and improve debuggability, this patch adds a check
+> >> for NULL and emits a kernel stack trace to help identify a faulty
+> >> caller.
+> >> 
+> >> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> >
+> > Reviewed-by: Joel Fernandes <joelagnelf@nvidia.com>
+> >
 > 
-> Yeah, I'm not a fan of generalised hooks if they can be avoided, especially ones
-> where you pass critical data structures like VMAs.
+> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
 > 
-> It means you can, in theory, make no assumptions about what the caller does and
-> yeah.
-> 
-> To do this for such a stupid edge case is ridiculous.
+Thank you for review, Boqun!
 
-Also, I am not sure if this works at all as intended. I want to look 
-into cleaning that up ...
-
-When we inserted the page, we sure must have taken a reference, but when 
-we inserted it we set pte_special() and ... didn't take a reference? Hmmmm
-
+> > I will add this first one (only this one since we're discussing the others) to a
+> > new rcu/fixes-for-6.16 branch, but let me know if any objections.
+> >
 > 
->>
->> [...]
->>
->>>>    	}
->>>>
->>>> -	entry = pud_mkhuge(pfn_t_pud(pfn, prot));
->>>> -	if (pfn_t_devmap(pfn))
->>>> -		entry = pud_mkdevmap(entry);
->>>> -	else
->>>> -		entry = pud_mkspecial(entry);
->>>> +	if (fop.is_folio) {
->>>> +		entry = folio_mk_pud(fop.folio, vma->vm_page_prot);
->>>> +
->>>> +		folio_get(fop.folio);
->>>> +		folio_add_file_rmap_pud(fop.folio, &fop.folio->page, vma);
->>>> +		add_mm_counter(mm, mm_counter_file(fop.folio), HPAGE_PUD_NR);
->>>
->>> Nit, but might be nice to abstract for PMD/PUD.
->>
->> Which part exactly? Likely a follow-up if it should be abstracted.
+> Not sure it’s urgent enough given the current evidence.
 > 
-> Ah on second thoughts it doesn't matter, because you're using pud variants of
-> everything such that it wouldn't be worth it.
-> 
-> Disregard this ;)
+Let me clarify it a bit. My point is that, we get a kernel crash in a
+subsystem we are responsible for, i.e. no matter if there are faulty
+users of it(third party applications), the point is users can crash it.
 
-Ah, I was already suspecting that you might have missed the sneaky _pud :)
+The kernel robot reports it and it is already a strong indication that
+the subsystem is not hardened against invalid inputs:
 
--- 
-Cheers,
+"BUG: unable to handle kernel NULL pointer dereference in rcu_core (3)"
 
-David / dhildenb
+so this in the rcu_core() which is part of RCU.
 
+But, anyway Joel should decide. I shared my opinion :)
+
+--
+Uladzislau Rezki
