@@ -1,107 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C30D444C77;
-	Thu, 12 Jun 2025 00:57:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D11344C77;
+	Thu, 12 Jun 2025 00:58:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749689861; cv=none; b=bBfrxXp5vCB0WkLXt6lCmOCdcnuMmsTHme+zRiZPW9m8vcdsqFdlKmz0aBtmMll5F6i0LCxGzHxWjkYiL4wT6JUjCkKgrFkG7PYQhzqgPIKQT50ziY0YzFGsirKTIC2LQu8Fs5yuEi2glMlvrV3GmZDgSI6F4oEAdjeFEthvfho=
+	t=1749689898; cv=none; b=qmSMm3ocEkc9xqfy3hT1SwY2M62m2PmVh4TfFcHm6Hgdhptbwz0ttaSsckUVWKsaflIXKDQ1izZaqVbC2rSWtYI4BKwJCPWW8Y7ovlAH56i+7iyC+lQ9bJc2BxOcX3g3T7HtImSTRo06kErh6H2h0cyM3WzlCI063aNjOJBJsdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749689861; c=relaxed/simple;
-	bh=+pBOia5bLDm5o6g/thWQR//IYb1Ob0VFiM5/8EF7+gY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lkspoDWaM9p3rOKduhM6DgURzQPBUmMejTXkp8qbjKtL804PaX8Jog0lzc+Z9DXY/VDAyCXLQWUmLWgHxzYdv92K2O7RYtydmp9MVeY23BjUdR0iv6Kwv539C0VPvNRd5KDe5kWMoGNAGBiv3cXtynwAz2AM8mXd3YbKaeTrhgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DqEKGNLk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749689898; c=relaxed/simple;
+	bh=Co1a1Nm2sB+Th7aev5P7Jvlh9qoQfqU992/CpUH4hro=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I/h1UenPhCtqLpHMd6EwQ/Ur3EPePbmiElbsXzovXRNXQ1JHUf2wgbpX62OoZxxRaRMi/IosmAbPNtoikFSDtYo4by7GwUzBLS41Eh1AokGwVxwMXDai8EAg9WTkyP2IoFQV7oEMGuOUmfeK1d9hRu+3pLdkECb6hKHPPb0QdBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L/QWduL8; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DqEKGNLk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DE09C4CEE3;
-	Thu, 12 Jun 2025 00:57:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749689861;
-	bh=+pBOia5bLDm5o6g/thWQR//IYb1Ob0VFiM5/8EF7+gY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DqEKGNLktAmnG45+h3EpK+23slsoAVvPBtfnALmZgWa0kcCUwb69mKpmnfnJ38Bza
-	 +bRW4x5cC+SD8hO05vORvex1GsbnYTZ0SIvYnnmCNO5rMNVI/ZgiF42ahXAqTndPxP
-	 UlzqKfGFVgEGs47YlWfuYtRLZeR+xynlTIK/s/+zy1W4Hi5QOf5nhfa5n9zLRPPMj0
-	 rr0Wba1LtsrDVW1u8UsuIAr6Efw3/3g2TLP5iiTeSyFEA3YnV9hUPkV6qmaQIKuZoN
-	 lNZX82OIbqvwRrWb9tReCVq6VCy2ltkqx3zotVDKfRz7Rc1itygAqBHvNPslV/yx5C
-	 048MpIQ7bY46Q==
-Date: Thu, 12 Jun 2025 02:57:36 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Akhil R <akhilrajeev@nvidia.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	thierry.reding@gmail.com, jonathanh@nvidia.com, ldewangan@nvidia.com, digetx@gmail.com, 
-	p.zabel@pengutronix.de, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 2/3] i2c: tegra: make reset an optional property
-Message-ID: <7sncphuidgiz6orsocixgybm2npcsjrdm7gnl3e52vfms2polu@4mmhdtc4zg5x>
-References: <20250603153022.39434-1-akhilrajeev@nvidia.com>
- <20250603153022.39434-2-akhilrajeev@nvidia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L/QWduL8"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a376ba6f08so253829f8f.1;
+        Wed, 11 Jun 2025 17:58:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749689895; x=1750294695; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Co1a1Nm2sB+Th7aev5P7Jvlh9qoQfqU992/CpUH4hro=;
+        b=L/QWduL8QC+K8aqNGWmtha9N/uPUxLT12eYhITPlfVWQf0/0uIsj/ea9NxwGuvYndq
+         cSM/DPDxeU1mLWsMvH8da/k5m4JnC8UBVhOf9p7gCYODHX9xc7LffpTkiSj3izrcmpDb
+         HAAVmkMnxftINuiIBem/K3cQu+vGrqmIfX5RI++8a4tu7p+ZR8DsOO1+9xgGT4wM3kul
+         yxg0yBaa31qrOFuT4lF4EsCVrj6+ov1ZTKPV+EnqnE/W/CFTPuGu+7b2Qu5SaGFYDWNY
+         LdE9Wu+PPxTDhUug1cv3DbbXtUy07pE1TkZaxGLpzej4QIDaxMmTQnL+D4mBlx4VKnRn
+         InPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749689895; x=1750294695;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Co1a1Nm2sB+Th7aev5P7Jvlh9qoQfqU992/CpUH4hro=;
+        b=BtAhMLkDWhozCT3hTpp/u6pphh7AVrDqXwcwD9ukOTq9KtdbnmUWfqBQOlw2gCWhXB
+         7kay/GV1io1ZUHChFfLNjwsa+QKSgRjGEKRH441sWa+qk/0gUbACkw4YUDyidzZW8yug
+         gTAs5YfS8AfsguzPQxSEE9NATzfs6hqO1yNzX9IFwc3Mu4gO1JR0CP7l82tbi7MYvUao
+         5azJnPBz2X2pOuLb/l82fOH3C18N77cbW+KrYFWeLfhVrUhd7dis8J4lOLaSgVWfYO+i
+         S8mI9A5JaALEc7xIa2wkA0JwjJAbDT4jTsm32VJgnRoUmqN33ZqGBs8LRmSfb9x/fwND
+         u+bg==
+X-Forwarded-Encrypted: i=1; AJvYcCWGqo0VeJHy9E5lsWiWhUtpHr0Co/6RoVCP34AT0mz/Xw5uPO0n5kAHbpddCgdVmWDqmYk=@vger.kernel.org, AJvYcCWXVWNP23OYNTqQ+Xuv/YNKBynb6kNYxgsxC3UeTO8GefJUe7hg4cK7Y2DbssMe6jnXNuCF5tpb1G3iI9gq@vger.kernel.org
+X-Gm-Message-State: AOJu0YzifTg+HqxPDlcXsyB3d62KvZbQFKdZ5pgek3Xgt6eo8HSb9ug8
+	QGHV3fl/na9ZbSwWpP1ueQD7wrBgpCb9hrmbleUavfP0j8XKtOk7mYfhpITyZK1wQ0lw9qzxN4y
+	EWYjrLku0tLm+/JQv/as/AeZyBuzFctp60CV7
+X-Gm-Gg: ASbGncurn2DJlRxFI4aMOqfqjIOuvCcArJxwPFGcoJGL31qhyVb5PJObXeW/y1qLJpO
+	W7G+v6K6d9qdyvZpMFs1EhucsjrySA8Fyw09tAIzdAwsQVn2j9jEYEWhi0t7Sb8i/sQYE3gOIYi
+	8UuowhlVxoYFoFIyMbCJKc0PeBywbrH9QdeJrn/y2c3dzgyowDgzPpYaEft7pZIcmP0mQK0i83
+X-Google-Smtp-Source: AGHT+IG8bP66zkPjeab0be/H5Oj+O0xU9qOWtLM8bQKXl/v0wHM+9jp8tnsjve2EMxkdYWshbLmqpE1g2xLuV3LS6ZU=
+X-Received: by 2002:a05:6000:1889:b0:3a4:f66a:9d31 with SMTP id
+ ffacd0b85a97d-3a56130a030mr585050f8f.16.1749689894468; Wed, 11 Jun 2025
+ 17:58:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250603153022.39434-2-akhilrajeev@nvidia.com>
+References: <20250528034712.138701-1-dongml2@chinatelecom.cn>
+ <CAADnVQ+G+mQPJ+O1Oc9+UW=J17CGNC5B=usCmUDxBA-ze+gZGw@mail.gmail.com>
+ <CADxym3YhE23r0p31xLE=UHay7mm3DJ8+n6GcaP7Va8BaKCxRfA@mail.gmail.com>
+ <CAADnVQ+Qn5H7idVv-ae84NSMpPHKyKRYbrn30bVRoq=nnPq-pw@mail.gmail.com> <CADxym3bK503vi+rGxHm5hj814b8aaxbQW17=vwLYszFncXMXhQ@mail.gmail.com>
+In-Reply-To: <CADxym3bK503vi+rGxHm5hj814b8aaxbQW17=vwLYszFncXMXhQ@mail.gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Wed, 11 Jun 2025 17:58:03 -0700
+X-Gm-Features: AX0GCFuNC73Sxxm0G72Uvl2Fd1CSOpCdiqgwtirOZTPLJo9-hgwO3d2JpZcMId8
+Message-ID: <CAADnVQL1KBYE3ev6b1gvve_miDhfxSV=6y5QYWEhG5ynPwti-g@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 00/25] bpf: tracing multi-link support
+To: Menglong Dong <menglong8.dong@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Jiri Olsa <jolsa@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	Menglong Dong <dongml2@chinatelecom.cn>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Andy,
+On Wed, Jun 11, 2025 at 5:07=E2=80=AFPM Menglong Dong <menglong8.dong@gmail=
+.com> wrote:
+>
+> Hi Alexei, thank you for your explanation, and now I realize the
+> problem is my hash table :/
+>
+> My hash table made reference to ftrace and fprobe, whose
+> max budget length is 1024.
+>
+> It's interesting to make the hash table O(1) by using rhashtable
+> or sizing up the budgets, as you said. I suspect we even don't
+> need the function padding part if the hash table is random
+> enough.
 
-...
-
-> @@ -184,6 +186,9 @@ enum msg_end_type {
->   * @has_mst_fifo: The I2C controller contains the new MST FIFO interface that
->   *		provides additional features and allows for longer messages to
->   *		be transferred in one go.
-> + * @has_mst_reset: The I2C controller contains MASTER_RESET_CTRL register which
-> + *		provides an alternative to controller reset when configured as
-> + *		I2C master
->   * @quirks: I2C adapter quirks for limiting write/read transfer size and not
->   *		allowing 0 length transfers.
->   * @supports_bus_clear: Bus Clear support to recover from bus hang during
-> @@ -213,6 +218,7 @@ struct tegra_i2c_hw_feature {
->  	bool has_multi_master_mode;
->  	bool has_slcg_override_reg;
->  	bool has_mst_fifo;
-> +	bool has_mst_reset;
->  	const struct i2c_adapter_quirks *quirks;
->  	bool supports_bus_clear;
->  	bool has_apb_dma;
-> @@ -604,6 +610,20 @@ static int tegra_i2c_wait_for_config_load(struct tegra_i2c_dev *i2c_dev)
->  	return 0;
->  }
->  
-> +static int tegra_i2c_master_reset(struct tegra_i2c_dev *i2c_dev)
-> +{
-> +	if (!i2c_dev->hw->has_mst_reset)
-> +		return -EOPNOTSUPP;
-> +
-> +	i2c_writel(i2c_dev, 0x1, I2C_MASTER_RESET_CNTRL);
-> +	udelay(2);
-> +
-> +	i2c_writel(i2c_dev, 0x0, I2C_MASTER_RESET_CNTRL);
-> +	udelay(2);
-> +
-> +	return 0;
-> +}
-> +
->  static int tegra_i2c_init(struct tegra_i2c_dev *i2c_dev)
->  {
->  	u32 val, clk_divisor, clk_multiplier, tsu_thd, tlow, thigh, non_hs_mode;
-> @@ -621,8 +641,10 @@ static int tegra_i2c_init(struct tegra_i2c_dev *i2c_dev)
->  	 */
->  	if (handle)
->  		err = acpi_evaluate_object(handle, "_RST", NULL, NULL);
-> -	else
-> +	else if (i2c_dev->rst)
->  		err = reset_control_reset(i2c_dev->rst);
-> +	else
-> +		err = tegra_i2c_master_reset(i2c_dev);
-
-Can you please take a look here? Should the reset happen in ACPI?
-
-Thanks,
-Andi
+I suggest starting with rhashtable. It's used in many
+performance critical places, and when rhashtable_params are
+constant the compiler optimizes everything nicely.
+lookup is lockless and only needs RCU, so safe to use
+from fentry_multi.
