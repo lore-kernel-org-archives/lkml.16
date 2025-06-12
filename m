@@ -1,69 +1,78 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9787523027C
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 10:11:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A06BB22DA0A;
+	Thu, 12 Jun 2025 10:11:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749723083; cv=none; b=lg2WzGri6oW0LxethLdVbhT3jd0G0RqMHWBhPn1k13riH6zh9eBhq76hBLqysuVHRP/dsSChgPfqswZ75EVHVj8dlaaAGSJthu1lfmfbm7SEPgnyQzMNtooeTBGP5UUEIDAAFhsW+/o2KiistI3dtp4XuogvHsBpXo3tJUPzj10=
+	t=1749723117; cv=none; b=b0gFe6SZZjOWcfDxd4iZVDHB5SR18Rsko0aQO1SK0jzm+KAn0CxGsXXw4HO/DNCxd9V67Y0fSZVjbSTkg+evSuggXrBH6dWawfDbCqIkKBWORB20PdB2xaGf2JVQebITGIuWOIltr+hu4BBGhWvHb1pQyyRDOLwphBdy6TiI3U4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749723083; c=relaxed/simple;
-	bh=0e4k4P4C/MFFrOkfxYQtEsZCb9pEL2JyFtAlMCvfg18=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=azmq5N8vq1LtZ1JUnIFlST56pioNFm/vOoNb7K4sbRrdfL6woe9yFHvwRx5YkF5PR28Bo+4Rd6TfcJ8mDeNIhxf4Kr9UWe6B3Hh6kS96PAeOzuQREg6ICDjb6JLSMKTZ+kTANTAVoA9Lq/1SfjWSXQB7UI8BLSwEoppxu9BRzKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=3GxPco8F; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=VtKoCqHS; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=3GxPco8F; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=VtKoCqHS; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1749723117; c=relaxed/simple;
+	bh=kj9FfFdmVqffZwcuU+9zHjczBYVwY6pNvH0oJ0fttd4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vvky0L6HEuvwD/l4AAS6kCCdDbDhpg6TpSfNdt2uM9Eo9vzoigd9E3+mqsEwugf7LR79lFHwHruHdRLPAYngIYE7ZaslvtLWWIQlqmvDIC8LKROwTShHrJQC4daxEhETRngB95IfLcDoeSwwgaL9OPsPusAHvzyhMUqucsM0J+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O07r+H0j; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="3GxPco8F";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="VtKoCqHS";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="3GxPco8F";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="VtKoCqHS"
-Received: from localhost (unknown [10.100.12.32])
-	by smtp-out1.suse.de (Postfix) with ESMTP id 9C90C211AD;
-	Thu, 12 Jun 2025 10:11:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749723079; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=235N1r216Y4gt83LncqEbLZ3GuC11ur0UQtPbyf3pi8=;
-	b=3GxPco8FwKweWzkZrHtRpXQ2bI+yP35opo0TeKuXJtG4rkQmmYP4zMYtS7qZy2EiBy+gZ9
-	YmW3g6CxTWzqEQy5nHSKxaO3s5V+PCu1OBQ9UcycwxwFHNnQ3WAV3W7HwRbgdfcYfA34ru
-	h8T+Hwk28Rw4sOSib2BHwaiLmeLMjvU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749723079;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=235N1r216Y4gt83LncqEbLZ3GuC11ur0UQtPbyf3pi8=;
-	b=VtKoCqHSn017kwnlVAlt2h+lBjmFTxlif8sEjD7H7JgJTlvWgylCvyspLdXmgGS4wmy9Q7
-	6dBVtoQziFKimwCw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749723079; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=235N1r216Y4gt83LncqEbLZ3GuC11ur0UQtPbyf3pi8=;
-	b=3GxPco8FwKweWzkZrHtRpXQ2bI+yP35opo0TeKuXJtG4rkQmmYP4zMYtS7qZy2EiBy+gZ9
-	YmW3g6CxTWzqEQy5nHSKxaO3s5V+PCu1OBQ9UcycwxwFHNnQ3WAV3W7HwRbgdfcYfA34ru
-	h8T+Hwk28Rw4sOSib2BHwaiLmeLMjvU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749723079;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=235N1r216Y4gt83LncqEbLZ3GuC11ur0UQtPbyf3pi8=;
-	b=VtKoCqHSn017kwnlVAlt2h+lBjmFTxlif8sEjD7H7JgJTlvWgylCvyspLdXmgGS4wmy9Q7
-	6dBVtoQziFKimwCw==
-Date: Thu, 12 Jun 2025 12:11:19 +0200
-From: Jiri Bohac <jbohac@suse.cz>
-To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
-	akpm@linux-foundation.org
-Cc: Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
-	Pingfan Liu <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	David Hildenbrand <dhildenb@redhat.com>,
-	Michal Hocko <mhocko@suse.cz>
-Subject: [PATCH v5 0/5] kdump: crashkernel reservation from CMA
-Message-ID: <aEqnxxfLZMllMC8I@dwarf.suse.cz>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O07r+H0j"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-742c46611b6so968397b3a.1;
+        Thu, 12 Jun 2025 03:11:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749723115; x=1750327915; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1dV1WkFt8//wQcRbuu/MoLupyoxfpDCIHcenSXkrPrs=;
+        b=O07r+H0jZYCSem8fmNWql4rY4zjrrIUpQj6Xiai76MHLSlaTdZxS4WGnZEPlW7fjKP
+         evzUO8eTLTGqsM6bfnS5KFBJfCBQtmyohmOhLAkbymC8DD8Iyp7bs7YvYKGgPjqxiXuI
+         FPfMYWzSmjfE6Bj7td2LBR+2nwY7yjzcW7yj+Eef+iDEobYpRtaUMQv0Y/zFnnT5JZXm
+         QvZ/w0zI68LC+klyymuwD+Tq6LrtgQmUNWAuDYcoHO1yq+r3mb9t/VP2XraA9coOkqra
+         S6i1G1vnwg/QvbyqoU3t1Cm0FB/fDQojhkL20q7cox0Y9jvRwdkR9nhZ5Niop6z5B3QB
+         4QJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749723115; x=1750327915;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1dV1WkFt8//wQcRbuu/MoLupyoxfpDCIHcenSXkrPrs=;
+        b=baJtqIlXyF0KzBJq8YzPMhGUo6zn1puP2jYBNP5W8ffTpAs2bUZuts9Q5Kw1yAgcNe
+         PxgBdY0rsbuLGW2EOfoMfXiuRh6tg8ZwdGwVaZ9xnm2aLr9l84q9rG41YyMN/VaM6x1N
+         eswl31+Yhie+XgQxVNNsM9EKDGByP9R9xkR03ASmGSFJVp0WvtB+5CRvHgJ1REmeL6CU
+         2TbUt3bdGFKNiv4Qqy1nYxWha0ToeZxNO6DLmiiHW6aeWDmMIdJyE/5vF5l71UeOW6Mx
+         xBKKA0xdyuabfFHbbOXO3WapI4UPu76jUgDMLRBVHG32gGo2zT8Nh+MUBpMkt8BcptjH
+         oaWg==
+X-Forwarded-Encrypted: i=1; AJvYcCUIQRmgN8rtgBkemZMfXlcg/B6Jk1mihH9ymhnX8VNqz1hL69JGq6/kyoq7os9mr+R8CNII959SGfVf@vger.kernel.org, AJvYcCULAofj4er0RbNL7kgkj9UEo2rQm4kIlDshtVyAbCHdkphuwke0NE8qCkVRTwQ9TqqZFpUKLDKJWMMu@vger.kernel.org, AJvYcCVVGEufJ5zuJMy8dO6GkHWBZvs6NKQJlVCHq88etBGHV7JNwePO+Xn/5mkzFXzNF1+wxa5RIJ3mQRR9@vger.kernel.org, AJvYcCWv3+278wXIWcrcDC9cPNpDY58GXOoCJd4IbheKDKwUAASQ7GB/dv6Kc9R/osGOKrFcItoWXwfHo4VC@vger.kernel.org, AJvYcCXWqtzT9AKyQ5RhTdeyGiFM7WdryZLCn4rhEmnKQsA4HjxZqdJrFFjG9EdMJe82qlblLAHZXNDN44wNtf1/@vger.kernel.org
+X-Gm-Message-State: AOJu0Yye3mXiHEpcyXevC5/I+40THQsTsPD+pUdepMjSJtzTD6JMLYsX
+	Xw9JO4sdHBSEeod/nIF2B/5KWHic98Zh7x0rMGM2/xFNFwUYDRbazkLD
+X-Gm-Gg: ASbGncsVB5wohk6D8pJa+J733iNop7aYtS6jT11onSMxheIoPiDqqCCnlX/mHJxAuL2
+	Vx+0neAplm+856wByD2IXpBXJM614NdfHTEaAW8RDEBrTwOV3VmVEAo5lqh7HlkVxPdlpX3QLhA
+	Q1QEmN9mTpKe4c8V4xA+j7Hljj92AKPa3GgRd8TjKINi6ukSdF+UYCXoHtlp6X4FPgJmLJ91Ped
+	ieyp0iuUdbtXNlS+1buJh+kpDwgYnnupFGq8ytMk2Q/JB5wpaTruy1VFLpaWYkWYd2acfeRlJSz
+	2BrXTjtKot4MIQ+Hz/DAbFaGrxJqlXu2Hiv4hYCKYOTfzVnhZrr3BmWutp4TucrQAzpEymtpJG0
+	EN/UIoQ==
+X-Google-Smtp-Source: AGHT+IHmSaieR8BqpFsfXfxghNOUxzQUeq4pW392aZGXLAFQ7UuANU5To4YQRORsLo7bRL6zZ3DDUg==
+X-Received: by 2002:a05:6a20:3d8a:b0:1f5:9330:29fe with SMTP id adf61e73a8af0-21f977a489fmr4924476637.17.1749723114721;
+        Thu, 12 Jun 2025 03:11:54 -0700 (PDT)
+Received: from HYB-DlYm71t3hSl.ad.analog.com ([137.71.226.91])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7488087e634sm1065629b3a.33.2025.06.12.03.11.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 03:11:54 -0700 (PDT)
+Date: Thu, 12 Jun 2025 12:11:41 +0200
+From: Jorge Marques <gastmaier@gmail.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Jorge Marques <jorge.marques@analog.com>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	David Lechner <dlechner@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v3 2/8] dt-bindings: iio: adc: Add adi,ad4052
+Message-ID: <xqkr3rq6ikuiz5wcbxmto4gp7wnccmmogklf2ux2edauotufim@pcuhddxdzjxi>
+References: <20250610-iio-driver-ad4052-v3-0-cf1e44c516d4@analog.com>
+ <20250610-iio-driver-ad4052-v3-2-cf1e44c516d4@analog.com>
+ <20250611181818.14d147c7@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,185 +81,307 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	RCVD_COUNT_ZERO(0.00)[0];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost:helo]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
+In-Reply-To: <20250611181818.14d147c7@jic23-huawei>
 
-Hi,
+On Wed, Jun 11, 2025 at 06:18:18PM +0100, Jonathan Cameron wrote:
+> On Tue, 10 Jun 2025 09:34:35 +0200
+> Jorge Marques <jorge.marques@analog.com> wrote:
+> 
+> > Add dt-bindings for AD4052 family, devices AD4050/AD4052/AD4056/AD4058,
+> > low-power with monitor capabilities SAR ADCs. Each variant of the family
+> > differs in speed and resolution, resulting in different scan types and
+> > spi word sizes, that are matched by the compatible with the chip_info.
+> 
+> The bit about what the drive does with this doesn't really belong in a DT
+> binding patch description. Stick to just something like.
+> 
+> Each variant of the family differs in speed and resolution, reflected
+> in word size for SPI messages.
+> 
+> > The device contains one input (cnv) and two outputs (gp0, gp1).
+> > The outputs can be configured for range of options, such as threshold
+> > and data ready.
+> > The spi-max-frequency refers to the configuration mode maximum access
+> > speed. The ADC mode speed depends on the vio input voltage.
+> > 
+> > Signed-off-by: Jorge Marques <jorge.marques@analog.com>
+> > ---
+> >  .../devicetree/bindings/iio/adc/adi,ad4052.yaml    | 167 +++++++++++++++++++++
+> >  MAINTAINERS                                        |   6 +
+> >  include/dt-bindings/iio/adc/adi,ad4052.h           |  17 +++
+> >  3 files changed, 190 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4052.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad4052.yaml
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..2cf197e2d872d9a3d4f7210121a1e38f784f92dc
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4052.yaml
+> > @@ -0,0 +1,167 @@
+> > +
+> > +  interrupts:
+> > +    items:
+> > +      - description: Signal coming from the GP0 pin.
+> Description would be better in interrupt-names than here.
+> > +      - description: Signal coming from the GP1 pin.
+> 
+> Also minItems should be specified to allow for just one of these
+> being wired I think.
+> 
+Ack, then maxItems is also required, or dt_binding_check complains
 
-this series implements a way to reserve additional crash kernel
-memory using CMA.
+  > "interrupts: [[...], [...]] is too long"
 
-Link to the v1 discussion:
-https://lore.kernel.org/lkml/ZWD_fAPqEWkFlEkM@dwarf.suse.cz/
-See below for the changes since v1 and how concerns from the 
-discussion have been addressed.
+since I don't have the items to infer length, that means, the updated
+yaml is:
 
-Currently, all the memory for the crash kernel is not usable by
-the 1st (production) kernel. It is also unmapped so that it can't
-be corrupted by the fault that will eventually trigger the crash.
-This makes sense for the memory actually used by the kexec-loaded
-crash kernel image and initrd and the data prepared during the
-load (vmcoreinfo, ...). However, the reserved space needs to be
-much larger than that to provide enough run-time memory for the
-crash kernel and the kdump userspace. Estimating the amount of
-memory to reserve is difficult. Being too careful makes kdump
-likely to end in OOM, being too generous takes even more memory
-from the production system. Also, the reservation only allows
-reserving a single contiguous block (or two with the "low"
-suffix). I've seen systems where this fails because the physical
-memory is fragmented.
+  interrupts:
+    minItems: 1
+    maxItems: 2
 
-By reserving additional crashkernel memory from CMA, the main
-crashkernel reservation can be just large enough to fit the
-kernel and initrd image, minimizing the memory taken away from
-the production system. Most of the run-time memory for the crash
-kernel will be memory previously available to userspace in the
-production system. As this memory is no longer wasted, the
-reservation can be done with a generous margin, making kdump more
-reliable. Kernel memory that we need to preserve for dumping is
-normally not allocated from CMA, unless it is explicitly
-allocated as movable. Currently this is only the case for memory
-ballooning and zswap. Such movable memory will be missing from
-the vmcore. User data is typically not dumped by makedumpfile.
-When dumping of user data is intended this new CMA reservation
-cannot be used.
+  interrupt-names:
+    items:
+      - const: gp0
+        description: Signal coming from the GP0 pin.
+      - const: gp1
+        description: Signal coming from the GP1 pin.
 
-There are five patches in this series:
+> > +
+> > +  interrupt-names:
+> > +    items:
+> > +      - const: gp0
+> > +      - const: gp1
+> > +
+> > +  cnv-gpios:
+> > +    description: The Convert Input (CNV). If omitted, CNV is tied to SPI CS.
+> > +    maxItems: 1
+> > +
+> > +  pwms:
+> > +    maxItems: 1
+> > +    description: PWM connected to the CNV pin.
+> > +
+> > +  trigger-sources:
+> > +    minItems: 1
+> > +    maxItems: 2
+> > +    description:
+> > +      Describes the output pin and event associated.
+> > +
+> > +  "#trigger-source-cells":
+> > +    const: 2
+> > +    description: |
+> > +      Output pins used as trigger source.
+> > +
+> > +      Cell 0 defines the event:
+> > +      * 0 = Data ready
+> > +      * 1 = Min threshold
+> > +      * 2 = Max threshold
+> > +      * 3 = Either threshold
+> > +      * 4 = CHOP control
+> > +      * 5 = Device enable
+> > +      * 6 = Device ready (only GP1)
+> 
+> Hmm. I'm a bit dubious on why 'what the offload trigger is'
+> is a DT thing?  Is that because the IP needs to comprehend
+> this?  I guess only data ready is actually supported in
+> practice? 
 
-The first adds a new ",cma" suffix to the recenly introduced generic
-crashkernel parsing code. parse_crashkernel() takes one more
-argument to store the cma reservation size.
+A trigger can be connected to trigger something other than a spi
+offload, it is in the DT because it describes how the device is
+connected. When using spi offload, the trigger-source at the spi handle
+describes which gpio and event is routed to the offload trigger input.
+At the ADC node, trigger-source-cells describe the source gpio and event
+for the device driver.
 
-The second patch implements reserve_crashkernel_cma() which
-performs the reservation. If the requested size is not available
-in a single range, multiple smaller ranges will be reserved.
+In practice, in this series, one gpio is Data ready, triggering offload
+when buffer enabled, and raw reads, when disabled. And the other is
+Either threshold, propagated as an IIO event. Fancy logic can be added
+to the driver in future patches to allow other combinations.
 
-The third patch updates Documentation/, explicitly mentioning the
-potential DMA corruption of the CMA-reserved memory.
+It is also worth to mention that the trigger-source is duplicated for
+each node that uses it, as seen in the second dts example:
 
-The fourth patch adds a short delay before booting the kdump
-kernel, allowing pending DMA transfers to finish.
+   &adc AD4052_TRIGGER_EVENT_DATA_READY AD4052_TRIGGER_PIN_GP1
 
-The fifth patch enables the functionality for x86 as a proof of
-concept. There are just three things every arch needs to do:
-- call reserve_crashkernel_cma()
-- include the CMA-reserved ranges in the physical memory map
-- exclude the CMA-reserved ranges from the memory available
-  through /proc/vmcore by excluding them from the vmcoreinfo
-  PT_LOAD ranges.
+Is repeated on both adc and spi node.
 
-Adding other architectures is easy and I can do that as soon as
-this series is merged.
+One last thing, on the driver, for v3, I should handle -ENOENT:
 
-With this series applied, specifying
-	crashkernel=100M craskhernel=1G,cma
-on the command line will make a standard crashkernel reservation
-of 100M, where kexec will load the kernel and initrd.
+  ret = of_parse_phandle_with_args(np, "trigger-sources",
+  				   "#trigger-source-cells", i,
+  				   &trigger_sources);
+  if (ret)
+  	return ret == -ENOENT ? 0 : ret;
 
-An additional 1G will be reserved from CMA, still usable by the
-production system. The crash kernel will have 1.1G memory
-available. The 100M can be reliably predicted based on the size
-of the kernel and initrd.
+To assert only when present, since the nodes are not required.
+Or, in the driver,
+require AD4052_TRIGGER_PIN_GP0 if irq_get_byname finds gp0, and
+require AD4052_TRIGGER_PIN_GP1 if irq_get_byname finds gp1?
+(I would go with the first option).
+> 
+> What would the use of Device enable or device ready or chop
+> control actually be?
+> 
+Device enable is the default register value, it could signal the
+conclusion of the reset or exit of low power mode. The CHOP signal is
+used to synchronize an auto-zero amplifier's chopping and the adc's
+sampling and is an example of when the trigger is connected to something
+other than spi. In that particular topology, the user would then set at
+the devicetree to use the gpio for that, at the hypothetical chop
+consumer node. Still, in the driver of this series, only the Data ready
+and Either threshold is supported.
 
-The new cma suffix is completely optional. When no
-crashkernel=size,cma is specified, everything works as before.
+Best regards,
+Jorge
 
----
-Changes since v4:
-
-- v5 is identical to v4 for all patches except patch 4/5,
-  where v5 incorporates feedback from David Hildenbrand
-
----
-Changes since v3:
-
-- updated for 6.15
-- reworked the delay patch:
-  - delay changed to 10 s based on David Hildenbrand's comments
-  - constant changed to variable so that the delay can be easily made
-    configurable in the future
-- made reserve_crashkernel_cma() return early when cma_size == 0
-  to avoid printing out the 0-sized cma allocation
-
----
-Changes since v2:
-
-based on feedback from Baoquan He and David Hildenbrand:
-- kept original formatting of suffix_tbl[]
-- updated documentation to mention movable pages missing from vmcore
-- fixed whitespace in documentation
-- moved the call crash_cma_clear_pending_dma() after
-  machine_crash_shutdown() so that non-crash CPUs and timers are
-  shut down before the delay
-
----
-Changes since v1:
-
-The key concern raised in the v1 discussion was that pages in the
-CMA region may be pinned and used for a DMA transfer, potentially
-corrupting the new kernel's memory. When the cma suffix is used, kdump
-may be less reliable and the corruption hard to debug
-
-This v2 series addresses this concern in two ways:
-
-1) Clearly stating the potential problem in the updated
-Documentation and setting the expectation (patch 3/5)
-
-Documentation now explicitly states that:
-- the risk of kdump failure is increased
-- the CMA reservation is intended for users who can not or don't
-  want to sacrifice enough memory for a standard crashkernel reservation
-  and who prefer less reliable kdump to no kdump at all
-
-This is consistent with the documentation of the
-crash_kexec_post_notifiers option, which can also increase the
-risk of kdump failure, yet may be the only way to use kdump on
-some systems. And just like the crash_kexec_post_notifiers
-option, the cma crashkernel suffix is completely optional:
-the series has zero effect when the suffix is not used.
-
-2) Giving DMA time to finish before booting the kdump kernel
-   (patch 4/5)
-
-Pages can be pinned for long term use using the FOLL_LONGTERM
-flag. Then they are migrated outside the CMA region. Pinning
-without this flag shows that the intent of their user is to only
-use them for short-lived DMA transfers. 
-
-Delay the boot of the kdump kernel when the CMA reservation is
-used, giving potential pending DMA transfers time to finish.
-
-Other minor changes since v1:
-- updated for 6.14-rc2
-- moved #ifdefs and #defines to header files
-- added __always_unused in parse_crashkernel() to silence a false
-  unused variable warning
- 
-
--- 
-Jiri Bohac <jbohac@suse.cz>
-SUSE Labs, Prague, Czechia
-
--- 
-Jiri Bohac <jbohac@suse.cz>
-SUSE Labs, Prague, Czechia
-
+> The thresholds are unusual but those I can sort of understand.
+> 
+> Jonathan
+> 
+> > +
+> > +      Cell 1 defines which pin:
+> > +      * 0 = GP0
+> > +      * 1 = GP1
+> > +
+> > +      For convenience, macros for these values are available in
+> > +      dt-bindings/iio/adc/adi,ad4052.h.
+> > +
+> > +  spi-max-frequency:
+> > +    maximum: 83333333
+> > +
+> > +  vdd-supply:
+> > +    description: Analog power supply.
+> > +
+> > +  vio-supply:
+> > +    description: Digital interface logic power supply.
+> > +
+> > +  ref-supply:
+> > +    description: |
+> 
+> Don't need the | as no need to preserve anything about formatting of
+> a single paragraph like this.
+> 
+Ack.
+> 
+> > +      Reference voltage to set the ADC full-scale range. If not present,
+> > +      vdd-supply is used as the reference voltage.
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - vdd-supply
+> > +  - vio-supply
+> > +
+> > +allOf:
+> > +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
+> > +
+> > +unevaluatedProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/gpio/gpio.h>
+> > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > +    #include <dt-bindings/iio/adc/adi,ad4052.h>
+> > +
+> > +    spi {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        adc@0 {
+> > +            compatible = "adi,ad4052";
+> > +            reg = <0>;
+> > +            vdd-supply = <&vdd>;
+> > +            vio-supply = <&vio>;
+> > +            ref-supply = <&ref>;
+> > +            spi-max-frequency = <83333333>;
+> > +
+> > +            #trigger-source-cells = <2>;
+> > +            trigger-sources = <&adc AD4052_TRIGGER_EVENT_EITHER_THRESH
+> > +                                    AD4052_TRIGGER_PIN_GP0
+> > +                               &adc AD4052_TRIGGER_EVENT_DATA_READY
+> > +                                    AD4052_TRIGGER_PIN_GP1>;
+> > +            interrupt-parent = <&gpio>;
+> > +            interrupts = <0 0 IRQ_TYPE_EDGE_RISING>,
+> > +                         <0 1 IRQ_TYPE_EDGE_FALLING>;
+> > +            interrupt-names = "gp0", "gp1";
+> > +            cnv-gpios = <&gpio 2 GPIO_ACTIVE_HIGH>;
+> > +        };
+> > +    };
+> > +  - |
+> > +    #include <dt-bindings/gpio/gpio.h>
+> > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > +    #include <dt-bindings/iio/adc/adi,ad4052.h>
+> > +
+> > +    rx_dma {
+> > +            #dma-cells = <1>;
+> > +    };
+> > +
+> > +    spi {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        dmas = <&rx_dma 0>;
+> > +        dma-names = "offload0-rx";
+> > +        trigger-sources = <&adc AD4052_TRIGGER_EVENT_DATA_READY
+> > +                                AD4052_TRIGGER_PIN_GP1>;
+> > +
+> > +        adc@0 {
+> > +            compatible = "adi,ad4052";
+> > +            reg = <0>;
+> > +            vdd-supply = <&vdd>;
+> > +            vio-supply = <&vio>;
+> > +            spi-max-frequency = <83333333>;
+> > +            pwms = <&adc_trigger 0 10000 0>;
+> > +
+> > +            #trigger-source-cells = <2>;
+> > +            trigger-sources = <&adc AD4052_TRIGGER_EVENT_EITHER_THRESH
+> > +                                    AD4052_TRIGGER_PIN_GP0
+> > +                               &adc AD4052_TRIGGER_EVENT_DATA_READY
+> > +                                    AD4052_TRIGGER_PIN_GP1>;
+> > +            interrupt-parent = <&gpio>;
+> > +            interrupts = <0 0 IRQ_TYPE_EDGE_RISING>,
+> > +                         <0 1 IRQ_TYPE_EDGE_FALLING>;
+> > +            interrupt-names = "gp0", "gp1";
+> > +            cnv-gpios = <&gpio 2 GPIO_ACTIVE_HIGH>;
+> > +        };
+> > +    };
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index c02d83560058f7ea75e24509b4d87ef293df6773..d000c7de7ff9eba390f87593bc2b1847f966f48b 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -1337,6 +1337,12 @@ F:	Documentation/devicetree/bindings/iio/adc/adi,ad4030.yaml
+> >  F:	Documentation/iio/ad4030.rst
+> >  F:	drivers/iio/adc/ad4030.c
+> >  
+> > +ANALOG DEVICES INC AD4052 DRIVER
+> > +M:	Jorge Marques <jorge.marques@analog.com>
+> > +S:	Supported
+> > +W:	https://ez.analog.com/linux-software-drivers
+> > +F:	Documentation/devicetree/bindings/iio/adc/adi,ad4052.yaml
+> > +
+> >  ANALOG DEVICES INC AD4080 DRIVER
+> >  M:	Antoniu Miclaus <antoniu.miclaus@analog.com>
+> >  L:	linux-iio@vger.kernel.org
+> > diff --git a/include/dt-bindings/iio/adc/adi,ad4052.h b/include/dt-bindings/iio/adc/adi,ad4052.h
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..37db5d9d10e788d5e7fb715c4ba9077e555131d5
+> > --- /dev/null
+> > +++ b/include/dt-bindings/iio/adc/adi,ad4052.h
+> > @@ -0,0 +1,17 @@
+> > +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+> > +
+> > +#ifndef _DT_BINDINGS_ADI_AD4052_H
+> > +#define _DT_BINDINGS_ADI_AD4052_H
+> > +
+> > +#define AD4052_TRIGGER_EVENT_DATA_READY		0
+> > +#define AD4052_TRIGGER_EVENT_MIN_THRESH		1
+> > +#define AD4052_TRIGGER_EVENT_MAX_THRESH		2
+> > +#define AD4052_TRIGGER_EVENT_EITHER_THRESH	3
+> > +#define AD4052_TRIGGER_EVENT_CHOP		4
+> > +#define AD4052_TRIGGER_EVENT_DEV_ENABLED	5
+> > +#define AD4052_TRIGGER_EVENT_DEV_READY		6
+> > +
+> > +#define AD4052_TRIGGER_PIN_GP0		0
+> > +#define AD4052_TRIGGER_PIN_GP1		1
+> > +
+> > +#endif /* _DT_BINDINGS_ADI_AD4052_H */
+> > 
+> 
