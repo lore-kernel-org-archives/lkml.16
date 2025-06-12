@@ -1,170 +1,269 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2045.outbound.protection.outlook.com [40.107.92.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F7A1E25F2
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:20:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749709250; cv=none; b=UEx/t7NFnPHmVB03SZn3O5PblYreykfKEuurxUjb8BpRZ7g5h9RJMfAfoSzX+q4550+ygsgzkUzRkfDcL3WrTYCgzTHZgioeoIp1za5JcOuhxDbT/OxBos0LLyUdNOYQLpXc9OelqCl6xrazUwyWAmLcC+BVmrQ041QE7m6SibE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749709250; c=relaxed/simple;
-	bh=UjKVWN7uen5QtJlj47WJo7MSZiaiu10pJfZXyVbBjLQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tjmtw2kvvaLS5j6xwN6HJW2hsVCR+NsuHo18yaPLNkfMnZQDA+Cp9VbO9OKH1jqYAqwDhb6wu/Gn3ViyWvS7P5fB7h8/XhPKpmsUCykgj5DEaqzbYMUx6cl/k7jD2S/5yaPtnbLburM+Xj7I02qgV/ok3dh4q2V8zhdIts+xw/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PJPjyxJE; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971A114A8B;
+	Thu, 12 Jun 2025 06:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749709293; cv=fail; b=fv73xDE//RCTHcCa1YZR/yDAvfJa4xpYsto22XbXNo5HTIG1B0q2rjDgD/pWVqOMPoQCOpnEAhP49cp7aL2PJiytGrrxZr/c4jiLl7xwBXJv9M/iJAEoMr6lTBf1BBMI20rjuCxhN7jht2JsJz5XqYNdWahmaUoaXFvgkrVOodU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749709293; c=relaxed/simple;
+	bh=0EVw5iEaORvrShqCWJi9bKWYiL7z4yBzXjHFFVnmrLY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DgYvoK9SCxPwjaSCpYAv6MJTM1QUD3OGcPBqiPhze6/iDa3ZTDryfrbCH0S/uHq1FwG55L3LTK6fjW1r770+PRmkMkzNxnnTmklwohyI/ZMw2s4+m50YwbS8X54q2WeXS4qjgGxl6eHB1BFBc+EYBUMxXIrBSidaQq3OR5JDk3Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=1RA11Q7b; arc=fail smtp.client-ip=40.107.92.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PJPjyxJE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749709247;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=piaS+IvVA5BU5uoyHWio7NQXE3J6rbJilCTVKgCGvkw=;
-	b=PJPjyxJEZH6N+jp60tdq7eDjUsXCHix79YpXahvuIbSCGFY7cJMThElBwkvEjmAzrhKJXG
-	ldAHxb80YOJGk1eZc+t4dG4qlbcr9EeoyMD8pNpH8u/SkaK6sf96ul7KRlSGVmMsQ1TU9X
-	QqcUdzbozHO1tCx4DJGOGwd/5fu6JAA=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-596-OxQPsz7jMqK0-9ZVmPEwwQ-1; Thu, 12 Jun 2025 02:20:46 -0400
-X-MC-Unique: OxQPsz7jMqK0-9ZVmPEwwQ-1
-X-Mimecast-MFC-AGG-ID: OxQPsz7jMqK0-9ZVmPEwwQ_1749709245
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a4f8fd1856so245969f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 23:20:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749709245; x=1750314045;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=piaS+IvVA5BU5uoyHWio7NQXE3J6rbJilCTVKgCGvkw=;
-        b=FP6KSw2VFSLVkVJMzAsntUXVQMqxCoV3GhpLMM2BuKaZwCvq/RqZbywbEnWa1Jk6cw
-         fA78QpibvBqxVyBuvBNXym+yD0Ze8lX+z0YBggcd0e9iOG92cUD35GQGhm4KF9h/5Iz0
-         XtD8oOl6imK4VJFMT8CZw0i3iAZKWlvic/zuPsF8v4aLF2Xeuag8FuqvFU8QT60yUIgp
-         wsRQuevmQaqcEzj9zaH7LTe2oxDMwPGLiI3TkAcXZG/5FOXzfLQLwGnY1NUcTneKe+mn
-         qtmO1UFWbHeag6wNxJPQyyNp6/8zyui9iFlSCImzJn1+qkOrseWjqur+Pa/3m7Ua+eW3
-         Lv+w==
-X-Forwarded-Encrypted: i=1; AJvYcCWJWfE82q/iPfgrmCI3TV30lFVgN+nLuxlNfKM/dpKNA+S4H7zCUS0k1Dx/EanpJjIBrkegtOLf/iRjM+Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPea14Hj3V/GY17l5xOVWLTDt0R6IfQV7FdjdDxTwesFJ8Aq1X
-	3ZzW9pmD54en6gv3d5F9ijr8JcU14PwduDSEzfd+HQQ/IWuO9JmhP9bAA7UVCy7akxqUxoVzjxi
-	liv9pmoP/Wz3C/pNr37jd0KGnYnuS2D8wfNUUH6RJfc2dO9DbmD4lO5ctefdYgJldrg==
-X-Gm-Gg: ASbGncsS1kQer9mCFlUylYrTei1CS6y2rWh4rXDcqOj6nP14GjDcOgMQJ6aKgfz9PxC
-	AyQsvq82xycObrJxSXAhN54jtDju2oXfxOC1uHPtbB5g9t3ssEWEJpCMi6iV5YuiK75GzmAz/Jh
-	zVJGBqu0bg3JQGiz3UYF9IVteQdo0yN4v0/XtU4rhxwL/7xbQU8YkNhTUEYUwWdyJ5qEbabmDVV
-	bZOlKCLCTlA9l3Mo4QqBWVMkB0MdQBtVywhhZdwu53KVvHiadouCje4/dXm2c2Syjnqw1P/Fe7e
-	vp2uvL2xsL3ZbLhE
-X-Received: by 2002:a05:6000:2210:b0:3a4:f6ba:51da with SMTP id ffacd0b85a97d-3a561309d4bmr1368858f8f.15.1749709244935;
-        Wed, 11 Jun 2025 23:20:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF2RtRKGSbUvUXqFG5RCVEOgWfBzpJ3ZXPuVL/rUgYKBarLIkU9OJETs4KF/dDE8YU6wvHsPw==
-X-Received: by 2002:a05:6000:2210:b0:3a4:f6ba:51da with SMTP id ffacd0b85a97d-3a561309d4bmr1368835f8f.15.1749709244571;
-        Wed, 11 Jun 2025 23:20:44 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a56198a3b4sm980497f8f.21.2025.06.11.23.20.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 23:20:44 -0700 (PDT)
-Date: Thu, 12 Jun 2025 02:20:41 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Cindy Lu <lulu@redhat.com>
-Cc: jasowang@redhat.com, michael.christie@oracle.com, sgarzare@redhat.com,
-	linux-kernel@vger.kernel.org,
-	virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v11 0/3] vhost: Add support of kthread API
-Message-ID: <20250612022012-mutt-send-email-mst@kernel.org>
-References: <20250609073430.442159-1-lulu@redhat.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="1RA11Q7b"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=F/QpRJq3qQq5La8NiUfp6YHfmNDktscM9wUao6Sq9PGPur+Rd+9zY7TxYUA0/+1IhsiT95d7RXR0BaDMhgrmA0FpLDPJF2RyLaVMy6dxpaElmPIrBWuugwa+72ZEj8cOxom+zIImyOjb4JPZ8RqdTXm8+iGNCB2mZaVG5/X5mfSLVOnSbPA1kcObbrYUP9TE5/DetDH2aRqf5QhvGIVadtZMmOGrn8CWyDgsy4i3WHs2AMeUlEMNI8S6mcOdZjEMUM5JIuozEKhBuMqRbUmh4g/Gjypn/gogQFc7sLsMuPdlXBfoKtVXOTjykDQxuaga5HHww0fPlcv1QqocrW9W6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4gOgozVtpOCSn2Pi7L9sAfxZS/xQb4q/SbhlxKF3dnU=;
+ b=dFh/JOF4/4/OAdsKWmzwc/nvtgA8BEamDTrd+fvdQbHRgQEg9kZwSIYs/DTdSdwr/iCTMyFp7P9Ye9gmsYDD+LOlI/VVnhVY+Mx6c3E8fjo0V3OmTPEMymx9jx6/vM7aEUfpY+aMxMCHUvUXCK4ImXAsoWgParl8QylWnBfCf9w0nY6F5TDhmCET/pJz7OMA5gC3AK0UEOc1+cVMiRPh6/e/ljguDpCyBh89HYv2Y1EBYGNJM922XAwN/3pccW3kkNCWZMTnHOvi6wPAixn8nrQt9OKey1C4V28cczmzmaG7Dhel6YraNRCe7L5v+JOasv+hpsfilp2V3wMXDnMGsA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4gOgozVtpOCSn2Pi7L9sAfxZS/xQb4q/SbhlxKF3dnU=;
+ b=1RA11Q7bbzyUAX/gtFf3dREDAr2rm1WQC1upwRPLS9yijjYIVDf6QOnIYHUZ9wa/LVwUUME+msD3NcZl2Em+tx1q9XfsZImoWK9CoPzepzFI9mqOqPvx4aK77nWvLxUXmQkarBqaRrBGKuCk3cG6POvre9NlMsV3ZcAuPyDiTXg=
+Received: from SJ0PR03CA0117.namprd03.prod.outlook.com (2603:10b6:a03:333::32)
+ by IA1PR12MB8467.namprd12.prod.outlook.com (2603:10b6:208:448::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Thu, 12 Jun
+ 2025 06:21:25 +0000
+Received: from CO1PEPF000044EF.namprd05.prod.outlook.com
+ (2603:10b6:a03:333:cafe::fb) by SJ0PR03CA0117.outlook.office365.com
+ (2603:10b6:a03:333::32) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.19 via Frontend Transport; Thu,
+ 12 Jun 2025 06:21:24 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000044EF.mail.protection.outlook.com (10.167.241.69) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8835.15 via Frontend Transport; Thu, 12 Jun 2025 06:21:24 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 12 Jun
+ 2025 01:21:23 -0500
+Received: from xhdthippesw40.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Thu, 12 Jun 2025 01:21:22 -0500
+From: Devendra K Verma <devverma@amd.com>
+To: <devverma@amd.com>
+CC: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<manivannan.sadhasivam@linaro.org>, <vkoul@kernel.org>
+Subject: [PATCH] dmaengine: dw-edma: Add Simple Mode Support
+Date: Thu, 12 Jun 2025 11:50:26 +0530
+Message-ID: <20250612062026.1261724-1-devverma@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250609073430.442159-1-lulu@redhat.com>
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB04.amd.com: devverma@amd.com does not designate
+ permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044EF:EE_|IA1PR12MB8467:EE_
+X-MS-Office365-Filtering-Correlation-Id: 77ed16a9-c306-463a-719e-08dda9795b8d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?PjU/K5jiKh5NXWg2T8Nh6m3rD25HymzVSIHExzyZK+CGK9FRfAta36S/H5NU?=
+ =?us-ascii?Q?JaqvUOIPq9Ozk81/vRLa1QUAZKiCijElKpyWX/oSiJ1/KfCXcNRwFBczD9yP?=
+ =?us-ascii?Q?cyJCFiDLjLGaHbGF73/qn5YMxC9qAmeKzW/wlibQmyVYgD9KD6OeUqt1cHeB?=
+ =?us-ascii?Q?BwjHSZwO22v0HD/15n6XFdZ/VnH8YhLazzWG+nsY3bzd+skqysJtTJ+YKbq0?=
+ =?us-ascii?Q?igKEFEtc1Eh+DTxS7tTrvzc9hby5M/wKzlwKWETP/sHStYre3SmjHqgSrosd?=
+ =?us-ascii?Q?z1KNYvfmYZoQQmfJBG17DC8efqepPBAUVqANiEkIecXvr1WFtqgUwBbM9wse?=
+ =?us-ascii?Q?66WzOeWu3D+ppEpotgX84wJP8b80s/qhbwMmi5m4fegM1abZ7Lpwc1Pa+F78?=
+ =?us-ascii?Q?Fh991OgRFHBz/FMs2VnKLx5AQiHAvntsP1aRWQenC4eDdvGVzIdKJRX8ASZH?=
+ =?us-ascii?Q?lxoY/uJ99edeQp2i25mD+4nM0t+BOZ/+GkBfchj5WcAwx9oB5nhdVj6/p8tY?=
+ =?us-ascii?Q?N8JZPWqlZqCcMf3nT1d+yPiBkqsvz3HkYg70ERzPMHClf1E84SdQ0HUp5tN6?=
+ =?us-ascii?Q?hWB3ukFjWVHbMgKUgTjFskSl1vfwy9iQ0itzOUE1nLrvZiRnuiIf5askyrnh?=
+ =?us-ascii?Q?0uV7uwOs0GQOvhJRIW3GXZur9zDElZ7N+Os96Ff33lovKF7O815cGv1pMY4D?=
+ =?us-ascii?Q?idXPJEl6N2owaTRSzKAQjdFrnDPGG4DjqtZAewcxrSonzZN/Bb8kiPBrzAKe?=
+ =?us-ascii?Q?rYthlY8RJqdo/ItEx0o0FXUsDNllaDoGgeKVmd4R8L/vHHtS0Sjur5TxID0k?=
+ =?us-ascii?Q?Sdcu7OyKUSXTURHoI/YcHhYhQv5KjWUXuJ9Swf2y1+7wFzFWgMOYPIgGYylk?=
+ =?us-ascii?Q?X0hauyisBrdBowY717nuMokDorVNZ5jHt8GK3vYR++aAIJsiddNeLXhL2BS9?=
+ =?us-ascii?Q?nc6J46ngz2bJOkPZRb7RAJujs+XfR7rLv6qF9aRPWYiB3lP7ynNNWVoS5Ak2?=
+ =?us-ascii?Q?ZEbqOAiiwuD+2eKnsDpkyDAAZZRjG/G9w8yGiiPkVShX408YewhrdFL2DjEq?=
+ =?us-ascii?Q?3hfhMDkNzZZ55m2At+ieRmDapukLTgu2sM21DaSaPswkvbmLY2cj6Bpd2Jl2?=
+ =?us-ascii?Q?DSnnEHvPcl3HqonQmqACd1sS8muBHNzjEg3o7I0k9bSUpZATVLEMe8h8fgnq?=
+ =?us-ascii?Q?yJvm1OjXb96Hd7hUQ8XMhQHUyZDPBbxUDoms9oL/B15B5KFE7zdatbDiGDxe?=
+ =?us-ascii?Q?MG13ztdr8u/jj2eSYz+gOFZzJQE5Ne00cyS5vhA7P9z3gGroAAOh73FnKQIC?=
+ =?us-ascii?Q?yMsSftT6Ydt/gTg6uYahVIYXiLrKg+9Pm3YyaYl/klclOzN8ml/jIZpHSElz?=
+ =?us-ascii?Q?eZg35P6iOQZmviAVXyfQDw8/eonVZAenZfyVFwbYKT5bkmLKPtypXxx6AhmK?=
+ =?us-ascii?Q?IqzMTFEgy+ZGcdbMps764+3ArsSduouAtb6SaQ4VT6/PeW8gok0RYAt/kEl6?=
+ =?us-ascii?Q?MQRsJ3aS+VcCNNrkJ7vWi6gFHgDIRtjjENlK?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 06:21:24.7025
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 77ed16a9-c306-463a-719e-08dda9795b8d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000044EF.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8467
 
-On Mon, Jun 09, 2025 at 03:33:06PM +0800, Cindy Lu wrote:
-> In this series, a new UAPI is implemented to allow   
-> userspace applications to configure their thread mode.
+The HDMA IP supports the simple mode (non-linked list).
+In this mode the channel registers are configured to initiate
+a single DMA data transfer. The channel can be configured in
+simple mode via peripheral param of dma_slave_config param.
 
+Signed-off-by: Devendra K Verma <devverma@amd.com>
+---
+ drivers/dma/dw-edma/dw-edma-core.c    | 10 +++++
+ drivers/dma/dw-edma/dw-edma-core.h    |  2 +
+ drivers/dma/dw-edma/dw-hdma-v0-core.c | 53 ++++++++++++++++++++++++++-
+ include/linux/dma/edma.h              |  8 ++++
+ 4 files changed, 72 insertions(+), 1 deletion(-)
 
-> Changelog v2:
->  1. Change the module_param's name to enforce_inherit_owner, and the default value is true.
->  2. Change the UAPI's name to VHOST_SET_INHERIT_FROM_OWNER.
-> 
-> Changelog v3:
->  1. Change the module_param's name to inherit_owner_default, and the default value is true.
->  2. Add a structure for task function; the worker will select a different mode based on the value inherit_owner.
->  3. device will have their own inherit_owner in struct vhost_dev
->  4. Address other comments
-> 
-> Changelog v4:
->  1. remove the module_param, only keep the UAPI
->  2. remove the structure for task function; change to use the function pointer in vhost_worker
->  3. fix the issue in vhost_worker_create and vhost_dev_ioctl
->  4. Address other comments
-> 
-> Changelog v5:
->  1. Change wakeup and stop function pointers in struct vhost_worker to void.
->  2. merging patches 4, 5, 6 in a single patch
->  3. Fix spelling issues and address other comments.
-> 
-> Changelog v6:
->  1. move the check of VHOST_NEW_WORKER from vhost_scsi to vhost
->  2. Change the ioctl name VHOST_SET_INHERIT_FROM_OWNER to VHOST_FORK_FROM_OWNER
->  3. reuse the function __vhost_worker_flush
->  4. use a ops sturct to support worker relates function
->  5. reset the value of inherit_owner in vhost_dev_reset_owner.
->  
-> Changelog v7: 
->  1. add a KConfig knob to disable legacy app support
->  2. Split the changes into two patches to separately introduce the ops and add kthread support.
->  3. Utilized INX_MAX to avoid modifications in __vhost_worker_flush
->  4. Rebased on the latest kernel
->  5. Address other comments
->  
-> Changelog v8: 
->  1. Rebased on the latest kernel
->  2. Address some other comments 
->  
-> Changelog v9:
->  1. Rebased on the latest kernel. 
->  2. Squashed patches 6‑7. 
->  3. Squashed patches 2‑4. 
->  4. Minor fixes in commit log
->  
-> Changelog v10:
->  1.Add support for the module_param.
->  2.Squash patches 3 and 4.
->  3.Make minor fixes in the commit log.
->  4.Fix the mismatched tabs in Kconfig.
->  5.Rebase on the latest kernel.
-> 
-> Changelog v11:
->  1.make the module_param under Kconfig
->  2.Make minor fixes in the commit log.
->  3.change the name inherit_owner to fork_owner
->  4.add NEW ioctl VHOST_GET_FORK_FROM_OWNER
->  5.Rebase on the latest kernel
->      
-> Tested with QEMU with kthread mode/task mode/kthread+task mode
-> 
-> Cindy Lu (3):
->   vhost: Add a new parameter in vhost_dev to allow user select kthread
->   vhost: Reintroduce kthread mode support in vhost
->   vhost: Add configuration controls for vhost worker's mode
-
-
-All of this should be squashed in a single patch.
-
-> 
->  drivers/vhost/Kconfig      |  17 +++
->  drivers/vhost/vhost.c      | 234 ++++++++++++++++++++++++++++++++++---
->  drivers/vhost/vhost.h      |  22 ++++
->  include/uapi/linux/vhost.h |  25 ++++
->  4 files changed, 280 insertions(+), 18 deletions(-)
-> 
-> -- 
-> 2.45.0
+diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+index c2b88cc99e5d..4dafd6554277 100644
+--- a/drivers/dma/dw-edma/dw-edma-core.c
++++ b/drivers/dma/dw-edma/dw-edma-core.c
+@@ -235,9 +235,19 @@ static int dw_edma_device_config(struct dma_chan *dchan,
+ 				 struct dma_slave_config *config)
+ {
+ 	struct dw_edma_chan *chan = dchan2dw_edma_chan(dchan);
++	struct dw_edma_peripheral_config *pconfig = config->peripheral_config;
++	unsigned long flags;
++
++	if (WARN_ON(config->peripheral_config &&
++		    config->peripheral_size != sizeof(*pconfig)))
++		return -EINVAL;
+ 
++	spin_lock_irqsave(&chan->vc.lock, flags);
+ 	memcpy(&chan->config, config, sizeof(*config));
++
++	chan->non_ll_en = pconfig ? pconfig->non_ll_en : false;
+ 	chan->configured = true;
++	spin_unlock_irqrestore(&chan->vc.lock, flags);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
+index 71894b9e0b15..c0266976aa22 100644
+--- a/drivers/dma/dw-edma/dw-edma-core.h
++++ b/drivers/dma/dw-edma/dw-edma-core.h
+@@ -86,6 +86,8 @@ struct dw_edma_chan {
+ 	u8				configured;
+ 
+ 	struct dma_slave_config		config;
++
++	bool				non_ll_en;
+ };
+ 
+ struct dw_edma_irq {
+diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+index e3f8db4fe909..3237c807a18e 100644
+--- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
++++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+@@ -225,7 +225,7 @@ static void dw_hdma_v0_sync_ll_data(struct dw_edma_chunk *chunk)
+ 		readl(chunk->ll_region.vaddr.io);
+ }
+ 
+-static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
++static void dw_hdma_v0_ll_start(struct dw_edma_chunk *chunk, bool first)
+ {
+ 	struct dw_edma_chan *chan = chunk->chan;
+ 	struct dw_edma *dw = chan->dw;
+@@ -263,6 +263,57 @@ static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+ 	SET_CH_32(dw, chan->dir, chan->id, doorbell, HDMA_V0_DOORBELL_START);
+ }
+ 
++static void dw_hdma_v0_non_ll_start(struct dw_edma_chunk *chunk)
++{
++	struct dw_edma_chan *chan = chunk->chan;
++	struct dw_edma *dw = chan->dw;
++	struct dw_edma_burst *child;
++	u32 val;
++
++	list_for_each_entry(child, &chunk->burst->list, list) {
++		SET_CH_32(dw, chan->dir, chan->id, ch_en, BIT(0));
++
++		/* Source address */
++		SET_CH_32(dw, chan->dir, chan->id, sar.lsb, lower_32_bits(child->sar));
++		SET_CH_32(dw, chan->dir, chan->id, sar.msb, upper_32_bits(child->sar));
++
++		/* Destination address */
++		SET_CH_32(dw, chan->dir, chan->id, dar.lsb, lower_32_bits(child->dar));
++		SET_CH_32(dw, chan->dir, chan->id, dar.msb, upper_32_bits(child->dar));
++
++		/* Transfer size */
++		SET_CH_32(dw, chan->dir, chan->id, transfer_size, child->sz);
++
++		/* Interrupt setup */
++		val = GET_CH_32(dw, chan->dir, chan->id, int_setup) |
++				HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK |
++				HDMA_V0_LOCAL_STOP_INT_EN | HDMA_V0_LOCAL_ABORT_INT_EN;
++
++		if (!(dw->chip->flags & DW_EDMA_CHIP_LOCAL))
++			val |= HDMA_V0_REMOTE_STOP_INT_EN | HDMA_V0_REMOTE_ABORT_INT_EN;
++
++		SET_CH_32(dw, chan->dir, chan->id, int_setup, val);
++
++		/* Channel control setup */
++		val = GET_CH_32(dw, chan->dir, chan->id, control1);
++		val &= ~HDMA_V0_LINKLIST_EN;
++		SET_CH_32(dw, chan->dir, chan->id, control1, val);
++
++		/* Ring the doorbell */
++		SET_CH_32(dw, chan->dir, chan->id, doorbell, HDMA_V0_DOORBELL_START);
++	}
++}
++
++static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
++{
++	struct dw_edma_chan *chan = chunk->chan;
++
++	if (!chan->non_ll_en)
++		dw_hdma_v0_ll_start(chunk, first);
++	else
++		dw_hdma_v0_non_ll_start(chunk);
++}
++
+ static void dw_hdma_v0_core_ch_config(struct dw_edma_chan *chan)
+ {
+ 	struct dw_edma *dw = chan->dw;
+diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
+index 3080747689f6..82d808013a66 100644
+--- a/include/linux/dma/edma.h
++++ b/include/linux/dma/edma.h
+@@ -101,6 +101,14 @@ struct dw_edma_chip {
+ 	struct dw_edma		*dw;
+ };
+ 
++/**
++ * struct dw_edma_peripheral_config - peripheral spicific configurations
++ * @non_ll_en:		 enable non-linked list mode of operations
++ */
++struct dw_edma_peripheral_config {
++	bool			non_ll_en;
++};
++
+ /* Export to the platform drivers */
+ #if IS_REACHABLE(CONFIG_DW_EDMA)
+ int dw_edma_probe(struct dw_edma_chip *chip);
+-- 
+2.43.0
 
