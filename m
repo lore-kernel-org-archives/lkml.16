@@ -1,87 +1,219 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B59F1F92E;
-	Thu, 12 Jun 2025 09:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE651F92E;
+	Thu, 12 Jun 2025 09:47:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749721619; cv=none; b=qKaALhyxqLhpbLWpX63FeXOJ/ZVYedpFEj+Y+5nWDyT80iQaq7T6VlUV0U/lnQR3e5Oj7iD3v8C0VWsYCz9a7qg/+MDrWuELz1tuCb+oaWSz4bBZ+mBs0+1oPMogT2u58bPO/FOeEAl2wBJUhby7MduvAsFV3GlPnFuxj1fv/hU=
+	t=1749721658; cv=none; b=fHpWgLVpc+GRatHLEruMPZLhRZrcjGT3ASC7ggNI4oWTR10suWxpBvQcsdHOoVl53Bv+j1JTVWBmBMEzDVgcelJE0owl9OAGOStvNlYc2e6kS6/A4tvC4vlTpepGqpiITZgIx84QAbvb77oWiLlTnNngApodeofyOujXqKORAaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749721619; c=relaxed/simple;
-	bh=R+bE56ypbZBkGlHIlv3Cr3WEiW5cqDAMlUzTaz9EWiw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J3+FvLZGQOuopgC4NOe+MV8rvdwePSo4lwlbJmSy4yhl9fh9tLXOPa2OGYM8UBZVZL1unWPCInpN72QevGMdoik195SdWHmNh8LFRr0nNooQ4hIInSnfuBIr7lTXlVNGEOOPFaiVNOjPZvNvIltlg3Ym/b6uZ69oVVvIyYeip80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=XXuVRmap; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1749721658; c=relaxed/simple;
+	bh=4RfTLzjwFzvRBVIbLwlDB8bIxZi8DpBfKPn88UHuL6o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D02CYJC8cs1nmiyz1sbM1Lq0nL3kLNtJMEdZRcWxStXYJNZcp54a/GYP/Ri6IwardD8Y/cRlfvVXVo8UgyLzbf0tIQf3lsOnxiAvH0lW0f2yJ3OHOygYR7Fyf4l7LSelLDxw5Bc5WJCK7lEkJl7Az6DwucbnUfFKl2wUbqhNiYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iV5cmDb5; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="XXuVRmap"
-Received: from ideasonboard.com (93-61-96-190.ip145.fastwebnet.it [93.61.96.190])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 41C42B5;
-	Thu, 12 Jun 2025 11:46:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1749721605;
-	bh=R+bE56ypbZBkGlHIlv3Cr3WEiW5cqDAMlUzTaz9EWiw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XXuVRmapqT6rFu40ersf+ioMHVvW0neoj2B7NpA5dCSMpojWoK+uAm+t6CUeNSKo3
-	 xDYCX65+/4YjwRs9GwmopkEDuJM70qhbsPpcoe8RhGFtXFkSQ+S6gvSA8CD1NMXIiL
-	 EUekjF5daoJb+9gEIEacJRwyuxlv0+NAVATCXO+s=
-Date: Thu, 12 Jun 2025 11:46:50 +0200
-From: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, 
-	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Koji Matsuoka <koji.matsuoka.xm@renesas.com>, 
-	LUU HOAI <hoai.luu.ub@renesas.com>
-Subject: Re: [PATCH 2/3] media: vsp1: Reset FCP for VSPD
-Message-ID: <4ieuh56kqcx47mqcp3m3gwusazyklsm73cftkb5cxry5en2gh2@rrsjmkd5qwcz>
-References: <20250609-vspx-reset-v1-0-9f17277ff1e2@ideasonboard.com>
- <20250609-vspx-reset-v1-2-9f17277ff1e2@ideasonboard.com>
- <20250611232956.GQ24465@pendragon.ideasonboard.com>
- <CAMuHMdVU0JJDff539YBMhM8xNQVf5Ufiw1D9TXitzsGWXPBMAg@mail.gmail.com>
- <20250612093757.GA4533@pendragon.ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iV5cmDb5"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-236470b2dceso7454975ad.0;
+        Thu, 12 Jun 2025 02:47:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749721656; x=1750326456; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4anYW4XgKhWdrFwLZ/0tNA4p/6Y7eRGkWV12xDwi+ws=;
+        b=iV5cmDb55mzaixKMQ7JKf/HptcG3fqeC0c4GxUXmu+sGg4twWbv5px5ynPgFQiK1QE
+         SYKs+EbRuvtTgx8dsmBi1D3/QEHaR4TbHkqpqhfgyXyyK7OvgvF3UC5MW4HTkDYSYpHP
+         EdKtMpO8YP1L4u6UERgEe6SnNs4YfS/uZI0qexWL8W+XsMlCIbB5L3i0oo4Vo34T4irj
+         K3O6Q+GT4Rt6BGRwaqPbGZdMhQx6Zv/FnfChaPZqUH3fQ8hUHjNublt98GncIgzvT9ek
+         /JJiUSoroD0PswvPytNSI7tlCz9ESTWexmVWTAhb3D1GdqqMyY//1JfUO92ykqGQhsse
+         AUlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749721656; x=1750326456;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4anYW4XgKhWdrFwLZ/0tNA4p/6Y7eRGkWV12xDwi+ws=;
+        b=sJzl7fojVk3L+iQyFKG+ti9vf6iv5IHVNSlxQ+niWqe7es1cS96okuOD+Y0VMYYZCT
+         /h8HkswQMhZg3XW5WNC5kM6P2O+6J+IkmraIWnQDE6ar0xiV9GZotI6e7b8wd+N1dvjZ
+         nKvery7s32mj9gpWLsyhPjn5Wm1uNgFJng4TebveUanBA+a8OmqMeol0gv6atNV5jzUf
+         D0Na0Btrn2jTVW1jUBpc10dGnwoLv0UU0Bbia0yVcTnCfcGou0W4Qn/RQXaOjq+cdI/g
+         fa8axfctNm7hWOHfhKxSXaZHs3Akxflh/bQAWLZOluHl6diSl5GXUHuxeAahmhswNeTn
+         qylg==
+X-Forwarded-Encrypted: i=1; AJvYcCVLsvjtaXQcM6DCU0DwsRk0fNsKWlqyms4Pk5tid4YKDscJJMkF0ebiw9OLXnupvmVCCttwfTAzq1HtpJk=@vger.kernel.org, AJvYcCVM7FP/49+uEeFYer2KnyV/FfZAvfDzeum2jI7jkz+6i5r8FWJAraGJKoe/HHU68iL+TEm4RKJW@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2FTnUEg6CWDTNHOW4KNIDmqLE7EBgDqZuHdg58rvLldMfAAs9
+	q7IYQg5K6jzoQIhcPyAFC+Oc3SIH/VSq2HphDEsjy6fD/c4sEv9ZqoDS8xe/BFnkSZ7hHS6/1Zg
+	SNhogJRMm1xgp5Eg69xKdeiEWPbaeU0Y=
+X-Gm-Gg: ASbGncsgxGRG/Zz0arxSqKsuWyPElQtxLZ0hjN9JehRe2IQLC5bjfxEcnZ0oh55TBw+
+	PFdQM4zvB04ThUu9my+obLwOkSUjVj94hIRE749UXTGgFqMjZQl0hZjPko8X14sqC12VhuzBp5y
+	8dUDpf4mMzthfa6ac8DrYB9ZylRhDmUJ7KqWVR14OJPOuzzkA+zitmYRri610S75Na/P/Rv++QP
+	kgHlQ==
+X-Google-Smtp-Source: AGHT+IEn/yEuL+ZT1F+q5GVdc8O0V6/puSbAUJHNnsnmlV8IC38r0eOnzkKfa3MMKLGaKZ+m3C9HsssmyMgcw1fuDvk=
+X-Received: by 2002:a17:902:ce81:b0:235:eb8d:800b with SMTP id
+ d9443c01a7336-2364d8b7ec8mr33520145ad.26.1749721656497; Thu, 12 Jun 2025
+ 02:47:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250612093757.GA4533@pendragon.ideasonboard.com>
+References: <20250612083747.26531-1-noltari@gmail.com> <20250612083747.26531-5-noltari@gmail.com>
+ <CAOiHx=kxcMNDrmzz5Bqd337YrZ23sYNWP0-nZrUynPJXdt4LLg@mail.gmail.com>
+In-Reply-To: <CAOiHx=kxcMNDrmzz5Bqd337YrZ23sYNWP0-nZrUynPJXdt4LLg@mail.gmail.com>
+From: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
+Date: Thu, 12 Jun 2025 11:47:03 +0200
+X-Gm-Features: AX0GCFve23f_zwO-L2nFeZiFWzohYflBoyr99dafg6h7XIq29CrUZEHbnOB-Q1E
+Message-ID: <CAKR-sGeJ3FWM_0FyuSF=esuvrSDX5w9zwfs7Peof1XDx=sHSpA@mail.gmail.com>
+Subject: Re: [PATCH net-next v3 04/14] net: dsa: b53: detect BCM5325 variants
+To: Jonas Gorski <jonas.gorski@gmail.com>
+Cc: florian.fainelli@broadcom.com, andrew@lunn.ch, olteanv@gmail.com, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	horms@kernel.org, vivien.didelot@gmail.com, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, dgcbueu@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi
+Hi Jonas,
 
-On Thu, Jun 12, 2025 at 12:37:57PM +0300, Laurent Pinchart wrote:
-> On Thu, Jun 12, 2025 at 11:33:39AM +0200, Geert Uytterhoeven wrote:
-> > On Thu, 12 Jun 2025 at 09:19, Laurent Pinchart wrote:
-> > > On Mon, Jun 09, 2025 at 09:01:43PM +0200, Jacopo Mondi wrote:
-> > > > From: Koji Matsuoka <koji.matsuoka.xm@renesas.com>
-> > > >
-> > > > According to H/W manual v1.00, VSPD must be excecuted
-> > > > FCP_RST.SOFTRST after VI6_SRESET.SRST. So this patch adds it.
-> > > > VSPDL is not applicable.
-> > >
-> > > According to the R-Car Gen3 H/W manual v1.00, the FCP must be reset
-> > > after resetting the VSPD, except for the VSPDL. Do so.
-> >
-> > "Rev.1.00"
-> >
-> > Stil, that is a very old version. "Rev.2.40" is 6 years younger...
+El jue, 12 jun 2025 a las 11:17, Jonas Gorski
+(<jonas.gorski@gmail.com>) escribi=C3=B3:
 >
-> The good thing is that both document the reset procedure the same way
-> :-)
+> On Thu, Jun 12, 2025 at 10:37=E2=80=AFAM =C3=81lvaro Fern=C3=A1ndez Rojas
+> <noltari@gmail.com> wrote:
+> >
+> > Older BCM5325M switches lack some registers that newer BCM5325E have, s=
+o
+> > we need to be able to differentiate them in order to check whether the
+> > registers are available or not.
+>
+> Did you test this with a BCM5325M?
 
-I didn't want to modify Matsuoka-san original commit message, but if
-it's appropriate to do so I will
-
-Thanks
-  j
+Nope, I don't have any device with a BCM5325M.
 
 >
-> --
+> > Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+> > ---
+> >  drivers/net/dsa/b53/b53_common.c | 34 ++++++++++++++++++++++++++------
+> >  drivers/net/dsa/b53/b53_priv.h   | 16 +++++++++++++--
+> >  2 files changed, 42 insertions(+), 8 deletions(-)
+> >
+> >  v3: detect BCM5325 variants as requested by Florian.
+> >
+> > diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53=
+_common.c
+> > index 222107223d109..2975dab6ee0bb 100644
+> > --- a/drivers/net/dsa/b53/b53_common.c
+> > +++ b/drivers/net/dsa/b53/b53_common.c
+> > @@ -2490,8 +2490,18 @@ struct b53_chip_data {
+> >
+> >  static const struct b53_chip_data b53_switch_chips[] =3D {
+> >         {
+> > -               .chip_id =3D BCM5325_DEVICE_ID,
+> > -               .dev_name =3D "BCM5325",
+> > +               .chip_id =3D BCM5325M_DEVICE_ID,
+> > +               .dev_name =3D "BCM5325M",
+> > +               .vlans =3D 16,
+>
+> Are you sure about BCM5325M supporting VLANs at all? All the
+> documentation I can find implies it does not. And if it does not, not
+> sure if it makes sense to support it.
+
+Since Florian suggested that we should be able to differentiate them I
+assumed we were supporting it, but if it doesn't make sense to support
+it at all we can drop this patch entirely and not check for 5325m in
+B53_VLAN_ID_IDX access of the next patch (5/14).
+
+>
+> > +               .enabled_ports =3D 0x3f,
+> > +               .arl_bins =3D 2,
+> > +               .arl_buckets =3D 1024,
+> > +               .imp_port =3D 5,
+> > +               .duplex_reg =3D B53_DUPLEX_STAT_FE,
+> > +       },
+> > +       {
+> > +               .chip_id =3D BCM5325E_DEVICE_ID,
+> > +               .dev_name =3D "BCM5325E",
+> >                 .vlans =3D 16,
+> >                 .enabled_ports =3D 0x3f,
+> >                 .arl_bins =3D 2,
+> > @@ -2938,10 +2948,22 @@ int b53_switch_detect(struct b53_device *dev)
+> >                 b53_write16(dev, B53_VLAN_PAGE, B53_VLAN_TABLE_ACCESS_2=
+5, 0xf);
+> >                 b53_read16(dev, B53_VLAN_PAGE, B53_VLAN_TABLE_ACCESS_25=
+, &tmp);
+> >
+> > -               if (tmp =3D=3D 0xf)
+> > -                       dev->chip_id =3D BCM5325_DEVICE_ID;
+> > -               else
+> > +               if (tmp =3D=3D 0xf) {
+> > +                       u32 phy_id;
+> > +                       int val;
+> > +
+> > +                       val =3D b53_phy_read16(dev->ds, 0, MII_PHYSID1)=
+;
+> > +                       phy_id =3D (val & 0xffff) << 16;
+> > +                       val =3D b53_phy_read16(dev->ds, 0, MII_PHYSID2)=
+;
+> > +                       phy_id |=3D (val & 0xffff);
+>
+> You should ignore the least significant nibble, as it encodes the chip re=
+vision.
+
+So the correct would be:
+val =3D b53_phy_read16(dev->ds, 0, MII_PHYSID2);
+phy_id |=3D (val & 0xfff0);
+Right?
+
+>
+> > +
+> > +                       if (phy_id =3D=3D 0x0143bc30)
+> > +                               dev->chip_id =3D BCM5325E_DEVICE_ID;
+> > +                       else
+> > +                               dev->chip_id =3D BCM5325M_DEVICE_ID;
+> > +               } else {
+> >                         dev->chip_id =3D BCM5365_DEVICE_ID;
+> > +               }
+> >                 break;
+> >         case BCM5389_DEVICE_ID:
+> >         case BCM5395_DEVICE_ID:
+> > @@ -2975,7 +2997,7 @@ int b53_switch_detect(struct b53_device *dev)
+> >                 }
+> >         }
+> >
+> > -       if (dev->chip_id =3D=3D BCM5325_DEVICE_ID)
+> > +       if (is5325(dev))
+> >                 return b53_read8(dev, B53_STAT_PAGE, B53_REV_ID_25,
+> >                                  &dev->core_rev);
+> >         else
+> > diff --git a/drivers/net/dsa/b53/b53_priv.h b/drivers/net/dsa/b53/b53_p=
+riv.h
+> > index a5ef7071ba07b..deea4d83f0e93 100644
+> > --- a/drivers/net/dsa/b53/b53_priv.h
+> > +++ b/drivers/net/dsa/b53/b53_priv.h
+> > @@ -60,7 +60,8 @@ struct b53_io_ops {
+> >
+> >  enum {
+> >         BCM4908_DEVICE_ID =3D 0x4908,
+> > -       BCM5325_DEVICE_ID =3D 0x25,
+> > +       BCM5325M_DEVICE_ID =3D 0x25,
+> > +       BCM5325E_DEVICE_ID =3D 0x25e,
+>
+> Maybe we should have a b53_priv::variant_id field or so. Other chips
+> also can have variants, so we might want to avoid polluting the chip
+> id space. We currently don't care about them, but might in the future
+> as they have different feature support (e.g. there are bcm531x5
+> variants with and without CFP support).
+
+That makes sense.
+I can rework this patch with a new variant field if differentiating
+the BCM5325M is finally needed.
+
+>
 > Regards,
->
-> Laurent Pinchart
+> Jonas
+
+Best regards,
+=C3=81lvaro.
