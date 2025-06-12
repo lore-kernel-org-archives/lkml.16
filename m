@@ -1,177 +1,105 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BDCA15AF6;
-	Thu, 12 Jun 2025 11:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D10A223C50F;
+	Thu, 12 Jun 2025 11:20:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749727243; cv=none; b=cnV+uWCMnDk5pHvMaL7W7ZGF79/YfLaAzi8AclABC3TZ1pAQngF3lMq4coUxuGiAuvBr16AY3hT6aOb2sYbAPJ8g1boU6EOJCPw5Rg5cXGa25LTAeFb5E26iQXFfX4DDPTrdHfLKq1AhajRBkFQkVXco4xWlzE7rKopmKGNhQyE=
+	t=1749727258; cv=none; b=Z7xZoI2xYVuaBD090gV8KG6rtO4c7eSvIOUrNKRnFFLjVx069TSOLnJ6SCRoWBh4AsOfiy46KfUNoS2IugRPEYCu96f5QhyXBCkTGAny5k71G8minB9Z7AzdkNakSEAsGz/rn4oFDKqhMkembNDnhouAnL4qTlNEje7QjDN86P8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749727243; c=relaxed/simple;
-	bh=GaXqXVwUsIU7UmgzAQOYhKFu77e6O4GnESGiJfK2u1U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tEhv6Tw+WK88eEh+4qTa4VrpyLlXQgGBwu9jxoS6mh7h+1SfGcgNeOKu2lLukXE4emRIzKqkmlfV2e/0RCGNqkXF/EHcUMo4u9twnqKF4ArDTKet8lXvPFONmlgZ9YQmng6f7i99TzcTtfJPi4q1kT0G3RgjmbDiWLA/0WwhpZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4bHzq03Hthz9sr6;
-	Thu, 12 Jun 2025 12:51:24 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id dg_5twlGnpsf; Thu, 12 Jun 2025 12:51:24 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4bHzpz3RrHz9sl0;
-	Thu, 12 Jun 2025 12:51:23 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 7086E8B77C;
-	Thu, 12 Jun 2025 12:51:23 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id 4-fZd9TrsfPF; Thu, 12 Jun 2025 12:51:23 +0200 (CEST)
-Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id EF89C8B769;
-	Thu, 12 Jun 2025 12:51:22 +0200 (CEST)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-sound@vger.kernel.org,
-	Herve Codina <herve.codina@bootlin.com>,
-	Mark Brown <broonie@kernel.org>
-Subject: [RFC PATCH 1/3] ALSA: pcm: refactor copy from/to user in SNDRV_PCM_IOCTL_SYNC_PTR
-Date: Thu, 12 Jun 2025 12:51:03 +0200
-Message-ID: <7baa34d4046c7750799b11830d38a46f8b581765.1749724478.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.47.0
+	s=arc-20240116; t=1749727258; c=relaxed/simple;
+	bh=h6YOaSQV04KhF5kytS5KZKyKtH/gn74YtvcnSW9T1LE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GM/QpzjrqiVSx1TFxc8FDfRevTLxE2WOql1NgjQZhpW8Of/EMRmCVTNZpYq1tK+P46xKkfMVNQ+IIyroyd2NeWLTLRdWNg15moZ3ntPZZnwShvQvuMrDT89oiFamOe8AoLmjKEqU40QVUZEIxvgiEt1uEwrkKtM1VfWLNb3H2jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bJ0Sw65TCzYQvR7;
+	Thu, 12 Jun 2025 19:20:48 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id CB8261A0F13;
+	Thu, 12 Jun 2025 19:20:47 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP4 (Coremail) with SMTP id gCh0CgB3218NuEpot0onPQ--.37716S3;
+	Thu, 12 Jun 2025 19:20:47 +0800 (CST)
+Message-ID: <41c21e20-5439-4157-ad73-6f133df42d28@huaweicloud.com>
+Date: Thu, 12 Jun 2025 19:20:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1749725466; l=5409; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=GaXqXVwUsIU7UmgzAQOYhKFu77e6O4GnESGiJfK2u1U=; b=Az5YNZGtIsW8hWr4mYdHUuE5EbICMzIRwgIZofwFLoY4ITCzBcf0WtmwTHGpbGX++KKsHcuQl av4/RBGeo17ArQeJ8pv12kH2P+eXa0Uvf8Ph5O+kQX3VVsmb3uw0n0C
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/10] block: introduce BLK_FEAT_WRITE_ZEROES_UNMAP to
+ queue limits features
+To: Christoph Hellwig <hch@lst.de>
+Cc: linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
+ linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+ linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, tytso@mit.edu,
+ djwong@kernel.org, john.g.garry@oracle.com, bmarzins@redhat.com,
+ chaitanyak@nvidia.com, shinichiro.kawasaki@wdc.com, brauner@kernel.org,
+ martin.petersen@oracle.com, yi.zhang@huawei.com, chengzhihao1@huawei.com,
+ yukuai3@huawei.com, yangerkun@huawei.com
+References: <20250604020850.1304633-1-yi.zhang@huaweicloud.com>
+ <20250604020850.1304633-2-yi.zhang@huaweicloud.com>
+ <20250611060900.GA4613@lst.de>
+ <343f7f06-9bf6-442f-8e77-0a774203ec3f@huaweicloud.com>
+ <20250612044744.GA12828@lst.de>
+Content-Language: en-US
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+In-Reply-To: <20250612044744.GA12828@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:gCh0CgB3218NuEpot0onPQ--.37716S3
+X-Coremail-Antispam: 1UD129KBjvdXoWruF1UZFyxCrWxtF1DCr45Jrb_yoWkAwc_ur
+	s5JwsrZw1kJryxt34ftrs8Grsxuwsru3yxKw1xWr1rK3s8JF4xA3ykuwnFvw15tFsIgry2
+	9ry0qF4SkFW2gjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbxxYFVCjjxCrM7AC8VAFwI0_Xr0_Wr1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
+	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x02
+	67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
+	wI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUIa
+	0PDUUUU
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-In an effort of optimising SNDRV_PCM_IOCTL_SYNC_PTR ioctl which
-is a hot path, lets first refactor the copy from and to user
-with macros.
+On 2025/6/12 12:47, Christoph Hellwig wrote:
+> On Wed, Jun 11, 2025 at 03:31:21PM +0800, Zhang Yi wrote:
+>>>> +/* supports unmap write zeroes command */
+>>>> +#define BLK_FEAT_WRITE_ZEROES_UNMAP	((__force blk_features_t)(1u << 17))
+>>>
+>>>
+>>> Should this be exposed through sysfs as a read-only value?
+>>
+>> Uh, are you suggesting adding another sysfs interface to expose
+>> this feature?
+> 
+> That was the idea.  Or do we have another way to report this capability?
+> 
 
-This is done with macros and not static inline fonctions because
-types differs between the different versions of snd_pcm_sync_ptr()
-like functions.
+Exposing this feature looks useful, but I think adding a new interface
+might be somewhat redundant, and it's also difficult to name the new
+interface. What about extend this interface to include 3 types? When
+read, it exposes the following:
 
-First step is to refactor only snd_pcm_ioctl_sync_ptr_compat() and
-snd_pcm_ioctl_sync_ptr_x32() as it would be a performance
-regression for snd_pcm_sync_ptr() and snd_pcm_ioctl_sync_ptr_buggy()
-for now. They may be refactored after next patch.
+ - none     : the device doesn't support BLK_FEAT_WRITE_ZEROES_UNMAP.
+ - enabled  : the device supports BLK_FEAT_WRITE_ZEROES_UNMAP, but the
+              BLK_FLAG_WRITE_ZEROES_UNMAP_DISABLED is not set.
+ - disabled : the device supports BLK_FEAT_WRITE_ZEROES_UNMAP, and the
+              BLK_FLAG_WRITE_ZEROES_UNMAP_DISABLED is set.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- sound/core/pcm_compat.c | 14 ++------------
- sound/core/pcm_native.c | 42 +++++++++++++++++++++++++++++------------
- 2 files changed, 32 insertions(+), 24 deletions(-)
+Users can write '0' and '1' to disable and enable this operation if it
+is not 'none', thoughts?
 
-diff --git a/sound/core/pcm_compat.c b/sound/core/pcm_compat.c
-index a42ec7f5a1da..17540020ac2f 100644
---- a/sound/core/pcm_compat.c
-+++ b/sound/core/pcm_compat.c
-@@ -418,9 +418,7 @@ static int snd_pcm_ioctl_sync_ptr_x32(struct snd_pcm_substream *substream,
- 	if (snd_BUG_ON(!runtime))
- 		return -EINVAL;
- 
--	if (get_user(sflags, &src->flags) ||
--	    get_user(scontrol.appl_ptr, &src->c.control.appl_ptr) ||
--	    get_user(scontrol.avail_min, &src->c.control.avail_min))
-+	if (snd_pcm_sync_ptr_get_user(sflags, scontrol, src))
- 		return -EFAULT;
- 	if (sflags & SNDRV_PCM_SYNC_PTR_HWSYNC) {
- 		err = snd_pcm_hwsync(substream);
-@@ -450,15 +448,7 @@ static int snd_pcm_ioctl_sync_ptr_x32(struct snd_pcm_substream *substream,
- 	}
- 	if (!(sflags & SNDRV_PCM_SYNC_PTR_APPL))
- 		snd_pcm_dma_buffer_sync(substream, SNDRV_DMA_SYNC_DEVICE);
--	if (put_user(sstatus.state, &src->s.status.state) ||
--	    put_user(sstatus.hw_ptr, &src->s.status.hw_ptr) ||
--	    put_user(sstatus.tstamp.tv_sec, &src->s.status.tstamp_sec) ||
--	    put_user(sstatus.tstamp.tv_nsec, &src->s.status.tstamp_nsec) ||
--	    put_user(sstatus.suspended_state, &src->s.status.suspended_state) ||
--	    put_user(sstatus.audio_tstamp.tv_sec, &src->s.status.audio_tstamp_sec) ||
--	    put_user(sstatus.audio_tstamp.tv_nsec, &src->s.status.audio_tstamp_nsec) ||
--	    put_user(scontrol.appl_ptr, &src->c.control.appl_ptr) ||
--	    put_user(scontrol.avail_min, &src->c.control.avail_min))
-+	if (snd_pcm_sync_ptr_put_user(sstatus, scontrol, src))
- 		return -EFAULT;
- 
- 	return 0;
-diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
-index ecb71bf1859d..2ea31df0c46d 100644
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -3052,6 +3052,34 @@ static inline int snd_pcm_hwsync(struct snd_pcm_substream *substream)
- 	return snd_pcm_delay(substream, NULL);
- }
- 
-+#define snd_pcm_sync_ptr_get_user(__f, __c, __ptr) ({				\
-+	int err = 0;								\
-+	typeof(*__ptr) __user *__src = (__ptr);					\
-+										\
-+	if (get_user(__f, &src->flags) ||					\
-+	    get_user(__c.appl_ptr, &__src->c.control.appl_ptr) ||		\
-+	    get_user(__c.avail_min, &__src->c.control.avail_min))		\
-+		err = -EFAULT;							\
-+	err;									\
-+})
-+
-+#define snd_pcm_sync_ptr_put_user(__s, __c, __ptr) ({				\
-+	int err = 0;								\
-+	typeof(*__ptr) __user *__src = (__ptr);					\
-+										\
-+	if (put_user(__s.state, &__src->s.status.state) ||			\
-+	    put_user(__s.hw_ptr, &__src->s.status.hw_ptr) ||			\
-+	    put_user(__s.tstamp.tv_sec, &__src->s.status.tstamp_sec) ||	\
-+	    put_user(__s.tstamp.tv_nsec, &__src->s.status.tstamp_nsec) ||	\
-+	    put_user(__s.suspended_state, &__src->s.status.suspended_state) ||\
-+	    put_user(__s.audio_tstamp.tv_sec, &__src->s.status.audio_tstamp_sec) ||\
-+	    put_user(__s.audio_tstamp.tv_nsec, &__src->s.status.audio_tstamp_nsec) ||\
-+	    put_user(__c.appl_ptr, &__src->c.control.appl_ptr) ||		\
-+	    put_user(__c.avail_min, &__src->c.control.avail_min))		\
-+		err = -EFAULT;							\
-+	err;									\
-+})
-+
- static int snd_pcm_sync_ptr(struct snd_pcm_substream *substream,
- 			    struct snd_pcm_sync_ptr __user *_sync_ptr)
- {
-@@ -3165,9 +3193,7 @@ static int snd_pcm_ioctl_sync_ptr_compat(struct snd_pcm_substream *substream,
- 	if (snd_BUG_ON(!runtime))
- 		return -EINVAL;
- 
--	if (get_user(sflags, &src->flags) ||
--	    get_user(scontrol.appl_ptr, &src->c.control.appl_ptr) ||
--	    get_user(scontrol.avail_min, &src->c.control.avail_min))
-+	if (snd_pcm_sync_ptr_get_user(sflags, scontrol, src))
- 		return -EFAULT;
- 	if (sflags & SNDRV_PCM_SYNC_PTR_HWSYNC) {
- 		err = snd_pcm_hwsync(substream);
-@@ -3200,15 +3226,7 @@ static int snd_pcm_ioctl_sync_ptr_compat(struct snd_pcm_substream *substream,
- 	}
- 	if (!(sflags & SNDRV_PCM_SYNC_PTR_APPL))
- 		snd_pcm_dma_buffer_sync(substream, SNDRV_DMA_SYNC_DEVICE);
--	if (put_user(sstatus.state, &src->s.status.state) ||
--	    put_user(sstatus.hw_ptr, &src->s.status.hw_ptr) ||
--	    put_user(sstatus.tstamp.tv_sec, &src->s.status.tstamp_sec) ||
--	    put_user(sstatus.tstamp.tv_nsec, &src->s.status.tstamp_nsec) ||
--	    put_user(sstatus.suspended_state, &src->s.status.suspended_state) ||
--	    put_user(sstatus.audio_tstamp.tv_sec, &src->s.status.audio_tstamp_sec) ||
--	    put_user(sstatus.audio_tstamp.tv_nsec, &src->s.status.audio_tstamp_nsec) ||
--	    put_user(scontrol.appl_ptr, &src->c.control.appl_ptr) ||
--	    put_user(scontrol.avail_min, &src->c.control.avail_min))
-+	if (snd_pcm_sync_ptr_put_user(sstatus, scontrol, src))
- 		return -EFAULT;
- 
- 	return 0;
--- 
-2.47.0
+Best regards,
+Yi.
 
