@@ -1,134 +1,302 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EBF1A9B52
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 20:44:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43614299A82
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 20:47:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749761099; cv=none; b=YTg+icxlvC1II2gBYqwM9kwwAiN3EVJVVyPdP1TheL0Uw+Md3GPdTf1MRbgKQ1Rpw87thw/SV0g4deuOFlR/YUXgP/VBK9an/5gTyfvzFK1AKH7UvuDNR4wggX3FLNbzbmPPoNEEaElwS+gFI76qjBlHdrjc4UtatCcSMl9vyZk=
+	t=1749761257; cv=none; b=fnN4S9ZBMWMcPexMVyhlmpcHVxc7onZmKbwyVjsHzCISZp1LRSIPglEijqoQ7femI84NhBAHhAtRX/3ZBJpmTUpNYzvzEzYgyqytb3GT7HLfsNPEDIaIgLiUUKkXuZqXjfgkqTAkgwRweS0xpunpaGsSWBvue89LadZsZfM0sdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749761099; c=relaxed/simple;
-	bh=0shdeU3Nmns13gIvSpekGMtrKZaAuIpc2PTkyCP2Tbc=;
+	s=arc-20240116; t=1749761257; c=relaxed/simple;
+	bh=3Psga/p5lz/YOSfalIj0yEB2dAXEZdgpkSDHeU2x6GQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jRlNRXm5RX6dJ2LwP3i/gnq/XBoE0HMT7ynmhLJgP/gXWmcGdwCwNeLdYUOsnUFC2eNT3EdOVuRBhYhSHfhknZjou9Ow2U6mZQjea2osx9XTzyFr+u4a0dZ0bRFjass39Hct8hCyk2MBhHunApjmC8209zXEFAHYr0MT8ukP3iU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I2iLAhFz; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=fGBd42XsQ4rsKyxICaHtRb+VvQ/oQPLbWjnKAqfLRFNUC0DR9IMefftHq3VSExhtDc/iRoEOH+BlpCDWD7aAnFenL+xtXqdh9KY72qr69fkXOzm51ieH0zqwcdTbp51G1b89bxrTGOQkDADEAgnuSJW7p/PuQ6MrpBBbhueM4w8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=G6LzZjZ/; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I2iLAhFz"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2348ac8e0b4so18365ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:44:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1749761097; x=1750365897; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0shdeU3Nmns13gIvSpekGMtrKZaAuIpc2PTkyCP2Tbc=;
-        b=I2iLAhFzijgdQ1YNvUeyvqvftSrEFW1ueLbsQMK8NMgetrYBJj7Fs12MvPJ7zbLifs
-         yq0SZMlQb66p/GwBtC96c2S/vj+n/byGC/IwccATCNzh3ECLtciyKj+5tVyn/TePniAb
-         R52oTb2kv0+g3xSj3bL1ANoWy1SFuhWqTi7ISqoArdOjj0I9pH8A+izFsDGdvhE6JEHn
-         9VbBRTuGnjqfK23IPzFhmuNgtxCyzw75erN4u18qqlrQraVBNIsnzFgTBYg6oke6I9lB
-         6hqiGgR8nCGG9NZU7zwDzKG4NDYaBt9nPoPJnwTCHEJ9Cry7Xe1VuDmfs4DW1a6Hf1zh
-         oB9Q==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="G6LzZjZ/"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55CI72SR027902
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 20:47:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:to; s=
+	qcppdkim1; bh=OUQqiN0h+KOF+AItufskcppy5j1/Jr2ZlesKUzp3WRQ=; b=G6
+	LzZjZ/n6W6y8ayTp8bsV5O9LWgFCZ5fmjMwfBUAJjzr1eB8/WGsC/oWETj4bZS0f
+	Ty53xsV6hIn4hBQAMT61HUVQPRQyd0TBLOkW/bd5Qrwca4Jhw8Ps/Lh0nYBB7T8t
+	lRDXSX+cCPTVmEfJOPXI/DUt8KIz6a6Q83aeEgfRlIdbei9UmHGgJrTwPxblX36y
+	OzdjcW1Iba1iaWEjCYpNHPOUxU4VbFlSFBzEAQmaljR2F0U6LIu7LRfWaC1aXm6J
+	HCiqcIWiPZIVLntKb42/1mGL9Rki0HIb3Rwju/Vht8E18E/qZSVHvFed2fMuWEAO
+	BZWRxeDrJ3KvMZhAmILA==
+Received: from mail-oa1-f69.google.com (mail-oa1-f69.google.com [209.85.160.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 476jrhgqvr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 20:47:33 +0000 (GMT)
+Received: by mail-oa1-f69.google.com with SMTP id 586e51a60fabf-2da80e525e3so1389933fac.1
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:47:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749761097; x=1750365897;
+        d=1e100.net; s=20230601; t=1749761252; x=1750366052;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0shdeU3Nmns13gIvSpekGMtrKZaAuIpc2PTkyCP2Tbc=;
-        b=dFWYsWef5tqRUPqWQuNSDWUGz6jBLzpYkSnvbx/C9KSbiOKqJdxaEz79s1RKnswlcT
-         fMAO50UeUff0mkW6vpPapKYWYwreIUdGelKQ5eUZbnAXUKAkK1w6ZtpL7ua2owtpPBbT
-         lb6EJ4zizvChWKellWfC7J0VRSD+o1Vi6JBAI/75dPWKD5Szcg+6AI4gHnzAkpTXwavf
-         p8kWZBecSth9BrKI3ONxx7jLBVtxydr6q5vsgUB2fbd4X3sZ9PPg18aa2WkbJNnJL8pQ
-         jtj9dqNa3QaZISsjX6RFHGvPC5caycehBDQDw0uXs1zQWfA5ikS2DKGV146Ecfk6pvlk
-         ANjA==
-X-Forwarded-Encrypted: i=1; AJvYcCUQvZQ9uQJL+DamyCWaF+7uqDHf09ZB4smXwCINBvHwCpgkRrxrJF68OdrqFEcRANkZEFIWUKz1MIRnLZk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvEPLegv2QgT87R40Aqp8Pejf464V7MfQhjNtcCyeQuehvXhzU
-	bU0JlswXwFvGAoM9Pn6IIUCmewxbV1vQjo3ry38BF1Q8lKg54i493uZktnN37cE6FscvNJmKvVj
-	bvS3bGi0FFOO8VPQw/SsUsoYx2t62vr9I8TOZcaGo
-X-Gm-Gg: ASbGncuN3sXruJ8Ri3lARoFkUDnMSDZjdRCrj6tASIuXj9SbBwpCacQNLkGIVTHy9h0
-	CPyZow9rfZqBAwOjLpMy9/QlVrg8xY5Klt5/Ey+NlZGZx8DyFMppst/ZmhE95ucVvDGLK/c/nqn
-	0l8t/P+wMfYh1lZoAgZbCs2CBwSeHc168UbURmMA2zo9NPUrMOeupdhxLFcbM9zDoQauupQciO0
-	Q==
-X-Google-Smtp-Source: AGHT+IFQpp/hgcePI2xWrpQ53G9VWOawnMErUaqEJq2tPNn7M+/QfKB23VjAX85ytCeOgogiZvSGZYySA5m/hlCuyso=
-X-Received: by 2002:a17:902:d48d:b0:223:ff93:322f with SMTP id
- d9443c01a7336-2365e8c8cf4mr545805ad.2.1749761096753; Thu, 12 Jun 2025
- 13:44:56 -0700 (PDT)
+         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OUQqiN0h+KOF+AItufskcppy5j1/Jr2ZlesKUzp3WRQ=;
+        b=BI6OdPXK6S+2oQdGrWP1U0eL9OAbkWPIQU4VF7Ajh/TQA+iSPerDQXnNjZbFkuvczW
+         Sszx5iV9ePZlqv/zBPHCAX/ZCiT/GMaI+khPExEg9GDhYouE+3XTF/nyPDZH/fUKK8dT
+         bUaCHrHAOMYwDb9WC41pqkCUropuJcRplwz20X4WWxfhD9mlWD1k5pwdOgrVRzFMg6xS
+         89Bx4Dx2rsMNbThNKB1VrQQ9rPb4cowoGBNmUESd0XkExOHoF9PqtBraHqVIQsdPFAqb
+         pCYMQzQazfDstRkvbBrW02a2rAfeIgsBPuq3O6kTVpmRTtrZ184GVMvqjRK4yazdZEZa
+         Bv6w==
+X-Forwarded-Encrypted: i=1; AJvYcCU/sab2Q7CkQMQaeg17zSaKl9TXk9rQZa3o6unME6/6HHrJrgPvUupssT+X/LejM0NWYGPajc5Pg/1h3DY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUE/QJz3tPq/QRuAkfsMI68ApdMCDk5r6x0yyLquKCmiBj4e5t
+	84M9/lgprJABWK+sg1wl3GLoMqTnLua5seID4XppZzbpv/yRXVg4NbwiNxGqTRdJaEOymy+2v+/
+	lyypjXNlxL8giZ9G5yUr95X19fzPa/f8jvfXh4Umo4MrP9bdVh1VLjfXDUShe/jdl9lXKRuaa+I
+	zLZkUsogvvuJvuMz8kkQtKh5ErwKeAx25JluhKm0l/Sj9eFPgyQA==
+X-Gm-Gg: ASbGncvZ3T66cxoG4V9zlKbuYRbwcEl1Z2CKrvNzzJbLMw4yMxnt7yTT2UfJbd/O7bA
+	ohLMLTwOLtTblu5PkDk/8N48sz9UJ4lrHfi9tIUxU/PbIRzaxByMtL6s6ulKzl7ZCdOYtJwtO2m
+	6onRopv6gnX5+HjP6Iu6/k0tCnBB324DxfBBs=
+X-Received: by 2002:a05:6871:4002:b0:2ea:736c:2b08 with SMTP id 586e51a60fabf-2ead5178353mr351834fac.29.1749761251997;
+        Thu, 12 Jun 2025 13:47:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFo4t3zZYDyUT3FmlpIHipzv8NT4Dibo+WvhB3zcMygU2qylNFs4x1N+vPpadMlaGiNB2orLt5ziP1Mj7CpG3M=
+X-Received: by 2002:a05:6871:4002:b0:2ea:736c:2b08 with SMTP id
+ 586e51a60fabf-2ead5178353mr351812fac.29.1749761251594; Thu, 12 Jun 2025
+ 13:47:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250609145833.990793-1-mbloch@nvidia.com> <20250609145833.990793-11-mbloch@nvidia.com>
- <CAHS8izOX8t-Xu+mseiRBvLDYmk6G+iH=tX6t4SWY2TKBau7r-Q@mail.gmail.com> <9107e96e488a741c79e0f5de33dd73261056c033.camel@nvidia.com>
-In-Reply-To: <9107e96e488a741c79e0f5de33dd73261056c033.camel@nvidia.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Thu, 12 Jun 2025 13:44:44 -0700
-X-Gm-Features: AX0GCFsbgTfnHYCyryWuORz2W8YB0hxZo0nQDPNGkYposr4yQdjwdikAQJMpVe0
-Message-ID: <CAHS8izOG+LoJ-GvyRu6zSVCUvoW4VzYX5CEdDhCdVLimOSP0KQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v3 10/12] net/mlx5e: Implement queue mgmt ops and
- single channel swap
-To: Cosmin Ratiu <cratiu@nvidia.com>
-Cc: Mark Bloch <mbloch@nvidia.com>, Dragos Tatulea <dtatulea@nvidia.com>, 
-	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>, "hawk@kernel.org" <hawk@kernel.org>, 
-	"davem@davemloft.net" <davem@davemloft.net>, "john.fastabend@gmail.com" <john.fastabend@gmail.com>, 
-	"leon@kernel.org" <leon@kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>, 
-	"ast@kernel.org" <ast@kernel.org>, "richardcochran@gmail.com" <richardcochran@gmail.com>, 
-	Leon Romanovsky <leonro@nvidia.com>, 
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>, "edumazet@google.com" <edumazet@google.com>, 
-	"horms@kernel.org" <horms@kernel.org>, "kuba@kernel.org" <kuba@kernel.org>, 
-	"daniel@iogearbox.net" <daniel@iogearbox.net>, Tariq Toukan <tariqt@nvidia.com>, 
-	Saeed Mahameed <saeedm@nvidia.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
-	Gal Pressman <gal@nvidia.com>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+References: <20250609182439.28432-1-robin.clark@oss.qualcomm.com>
+ <20250609182439.28432-4-robin.clark@oss.qualcomm.com> <DAKOKYU9O323.M7OSA1CFHQWX@linaro.org>
+ <1bf920c8-245b-40c3-bce1-ec5194b30fd9@oss.qualcomm.com>
+In-Reply-To: <1bf920c8-245b-40c3-bce1-ec5194b30fd9@oss.qualcomm.com>
+Reply-To: rob.clark@oss.qualcomm.com
+From: Rob Clark <rob.clark@oss.qualcomm.com>
+Date: Thu, 12 Jun 2025 13:47:20 -0700
+X-Gm-Features: AX0GCFuxTx9pgxu_i4KrKSjSeKFBX6EzOI1MTSGy4XpCql4QPO4U0LlgB52T-48
+Message-ID: <CACSVV01ZsrLsLZstnwyH89-gM7KGd3dZYR_AieQYmXeqZPossw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] drm/msm/adreno: Check for recognized GPU before bind
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Alexey Klimov <alexey.klimov@linaro.org>, dri-devel@lists.freedesktop.org,
+        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Authority-Analysis: v=2.4 cv=EovSrTcA c=1 sm=1 tr=0 ts=684b3ce5 cx=c_pps
+ a=zPxD6eHSjdtQ/OcAcrOFGw==:117 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
+ a=EUspDBNiAAAA:8 a=4MAclHcQAAAA:8 a=wlZFfpuQTLNucttZ8HoA:9 a=QEXdDO2ut3YA:10
+ a=y8BKWJGFn5sdPF1Y92-H:22 a=6vtlOZhwcO7ZS_iRoh4Z:22
+X-Proofpoint-ORIG-GUID: VSh1oklG1h8mESMPpj5pjCzSIn7pb4xb
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDE2MCBTYWx0ZWRfX2NarEQWTKFoh
+ vIdYwu+vLfPeokBGShVUKjTrRN4TBcL9fE6torVUEIamkMaFFvFkPDafIod4AxD0q87T82NpLyi
+ Kkf8njwJ+QRRr9e+kaYc73070bd92aREgG32DcCwq5Az0cCR4LywL2v6nsVCwfssmMXhywfpz4O
+ S9ImXVof7H/vSlO8mOLLTIem+FFBxlhrolo2Ia/vboAGiYkiyKiZMLMdv9GPxLmDY3kZWONzX0X
+ LbjA0bLXvFCqn8jzDCeq9VzMJv+WJhXnvAF2clC0o7QBnk9ZvHsVXE1OumpTfWmjPIYclz8dJy1
+ DGSaTF/0DE7NkWg9KvOkQK2AkF1VV+TtLLf+AV0gXBv73z/L8CCgrWXqX7gH2U0znThWq18qjBK
+ 2kSN9XYhX37g3FUy2UpqyGl1yCDFdUPCuQ9kR+gZNOFa81crjJ8RyUkjCWUx89P1p+4Ce3Nh
+X-Proofpoint-GUID: VSh1oklG1h8mESMPpj5pjCzSIn7pb4xb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-12_10,2025-06-12_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 spamscore=0 suspectscore=0 priorityscore=1501 mlxlogscore=999
+ mlxscore=0 clxscore=1015 malwarescore=0 adultscore=0 lowpriorityscore=0
+ phishscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506120160
 
-On Thu, Jun 12, 2025 at 2:05=E2=80=AFAM Cosmin Ratiu <cratiu@nvidia.com> wr=
-ote:
+On Thu, Jun 12, 2025 at 9:08=E2=80=AFAM Konrad Dybcio
+<konrad.dybcio@oss.qualcomm.com> wrote:
 >
-> On Wed, 2025-06-11 at 22:33 -0700, Mina Almasry wrote:
-> > Is this really better than maintaining uniformity of behavior between
-> > the drivers that support the queue mgmt api and just doing the
-> > mlx5e_deactivate_priv_channels and mlx5e_close_channel in the stop
-> > like core sorta expects?
+> On 6/12/25 6:04 PM, Alexey Klimov wrote:
+> > On Mon Jun 9, 2025 at 7:24 PM BST, Rob Clark wrote:
+> >> If we have a newer dtb than kernel, we could end up in a situation whe=
+re
+> >> the GPU device is present in the dtb, but not in the drivers device
+> >> table.  We don't want this to prevent the display from probing.  So
+> >> check that we recognize the GPU before adding the GPU component.
+> >>
+> >> v2: use %pOF
+> >>
+> >> Signed-off-by: Rob Clark <robin.clark@oss.qualcomm.com>
+> >> ---
+> >>  drivers/gpu/drm/msm/adreno/adreno_device.c | 29 ++++++++++++++++++---=
+-
+> >>  drivers/gpu/drm/msm/msm_drv.c              |  2 +-
+> >>  drivers/gpu/drm/msm/msm_gpu.h              |  1 +
+> >>  3 files changed, 26 insertions(+), 6 deletions(-)
+> >>
+> >> diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/=
+drm/msm/adreno/adreno_device.c
+> >> index 778e6ae7f137..0d12454b1f2e 100644
+> >> --- a/drivers/gpu/drm/msm/adreno/adreno_device.c
+> >> +++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
+> >> @@ -178,6 +178,26 @@ static int find_chipid(struct device_node *node, =
+uint32_t *chipid)
+> >>      return 0;
+> >>  }
+> >>
+> >> +bool adreno_has_gpu(struct device_node *node)
+> >> +{
+> >> +    const struct adreno_info *info;
+> >> +    uint32_t chip_id;
+> >> +    int ret;
+> >> +
+> >> +    ret =3D find_chipid(node, &chip_id);
+> >> +    if (ret)
+> >> +            return false;
+> >> +
+> >> +    info =3D adreno_info(chip_id);
+> >> +    if (!info) {
+> >> +            pr_warn("%pOF: Unknown GPU revision: %"ADRENO_CHIPID_FMT"=
+\n",
+> >> +                    node, ADRENO_CHIPID_ARGS(chip_id));
+> >> +            return false;
+> >> +    }
+> >> +
+> >> +    return true;
+> >> +}
+> >> +
+> >>  static int adreno_bind(struct device *dev, struct device *master, voi=
+d *data)
+> >>  {
+> >>      static struct adreno_platform_config config =3D {};
+> >> @@ -188,18 +208,17 @@ static int adreno_bind(struct device *dev, struc=
+t device *master, void *data)
+> >>      int ret;
+> >>
+> >>      ret =3D find_chipid(dev->of_node, &config.chip_id);
+> >> -    if (ret)
+> >> +    /* We shouldn't have gotten this far if we can't parse the chip_i=
+d */
+> >> +    if (WARN_ON(ret))
+> >>              return ret;
 > >
-> > We currently use the ndos to restart a queue, but I'm imagining in
-> > the
-> > future we can expand it to create queues on behalf of the queues. The
-> > stop queue API may be reused in other contexts, like maybe to kill a
-> > dynamically created devmem queue or something, and this specific
-> > driver may stop working because stop actually doesn't do anything?
+> > I just hit this with linux-next on qrb2210 RB1 [1].
 > >
+> > Is it expected an warning now or do we miss some device tree updates on
+> > linux-next for RB1?
+> >
+> > I don't recall seeing such warnings previously.
+> >
+> > Thanks,
+> > Alexey
+> >
+> > [1]:
+> >
+> >  msm_dpu 5e01000.display-controller: bound 5e94000.dsi (ops dsi_ops [ms=
+m])
+> >  ------------[ cut here ]------------
+> >  WARNING: CPU: 0 PID: 242 at drivers/gpu/drm/msm/adreno/adreno_device.c=
+:224 adreno_bind+0x90/0x120 [msm]
+> >  Modules linked in: q6asm_dai q6routing q6afe_dai q6adm q6asm q6afe_clo=
+cks snd_q6dsp_common q6afe q6core apr pdr_interface qrtr_smd qcom_pd_mapper=
+ qcom_pdr_msg mcp251xfd ath10k_snoc snd_soc_wsa881x_i2c snd_soc_wsa881x_com=
+mon can_dev lontium_lt9611uxc(+) ath10k_core ath mac80211 hci_uart btqca bt=
+bcm libarc4 msm snd_soc_sm8250 qrtr bluetooth drm_exec snd_soc_qcom_sdw qco=
+m_q6v5_pas llcc_qcom snd_soc_qcom_common lmh qcom_wdt ocmem cfg80211 ecdh_g=
+eneric qcom_pil_info pinctrl_sm6115_lpass_lpi gpu_sched ecc drm_display_hel=
+per rfkill qcom_q6v5 pinctrl_lpass_lpi qcom_sysmon pwrseq_core lpasscc_sm61=
+15 dispcc_qcm2290 qcom_common snd_soc_lpass_va_macro cec snd_soc_lpass_rx_m=
+acro drm_dp_aux_bus snd_soc_lpass_tx_macro qcom_glink_smem gpucc_qcm2290 sn=
+d_soc_pm4125 mdt_loader snd_soc_lpass_macro_common qmi_helpers snd_soc_pm41=
+25_sdw soundwire_qcom regmap_sdw slimbus qcom_pmic_tcpm qcom_usb_vbus_regul=
+ator drm_client_lib tcpm rtc_pm8xxx snd_soc_wcd_mbhc aux_hpd_bridge qcom_po=
+n qcrypto soundwire_bus sha256 qcom_stats gpi
+> >   spi_geni_qcom i2c_qcom_geni rpmsg_ctrl libsha256_generic libsha256 rp=
+msg_char qcom_rng sha256_arm64 authenc icc_bwmon phy_qcom_qmp_usbc libdes t=
+ypec phy_qcom_qusb2 display_connector i2c_gpio rmtfs_mem drm_kms_helper soc=
+info fuse drm backlight dm_mod ip_tables x_tables ipv6
+> >  CPU: 0 UID: 0 PID: 242 Comm: (udev-worker) Not tainted 6.16.0-rc1-next=
+-20250612-00025-g0ce0d3974333-dirty #2 PREEMPT
+> >  Hardware name: Qualcomm Technologies, Inc. Robotics RB1 (DT)
+> >  pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=3D--)
+> >  pc : adreno_bind+0x90/0x120 [msm]
+> >  lr : adreno_bind+0x50/0x120 [msm]
+> >  sp : ffff8000813f3580
+> >  x29: ffff8000813f3580 x28: ffff000008ae8800 x27: ffff000007c63700
+> >  x26: ffffca4a2814b860 x25: ffff000008b26880 x24: ffffca4a24922000
+> >  x23: ffffca4a249229d8 x22: ffff000009838800 x21: ffff000008b26880
+> >  x20: ffff000002ce4410 x19: ffffca4a2495a710 x18: 0000000000000006
+> >  x17: 6f5f697364207370 x16: 6f28206973642e30 x15: 0720072007200720
+> >  x14: 0000000000000000 x13: 0000000000000000 x12: 0101010101010101
+> >  x11: 7f7f7f7f7f7f7f7f x10: ffffca4a2866e1b2 x9 : 0000000000000002
+> >  x8 : 0101010101010101 x7 : 7f7f7f7f7f7f7f7f x6 : fefefeff2f383131
+> >  x5 : ffff00007fc1b968 x4 : 0000000000000000 x3 : 000000000000001e
+> >  x2 : 0000000000000001 x1 : 0000000007000200 x0 : ffffca4a2495a710
+> >  Call trace:
+> >   adreno_bind+0x90/0x120 [msm] (P)
+> >   component_bind_all+0x100/0x23c
+> >   msm_drm_bind+0x148/0x3e0 [msm]
+> >   try_to_bring_up_aggregate_device+0x16c/0x1e0
+> >   __component_add+0xa4/0x174
+> >   component_add+0x14/0x20
+> >   dsi_dev_attach+0x20/0x34 [msm]
+> >   dsi_host_attach+0x58/0x98 [msm]
+> >   devm_mipi_dsi_attach+0x34/0x90
+> >   lt9611uxc_attach_dsi.isra.0+0x94/0x124 [lontium_lt9611uxc]
+> >   lt9611uxc_probe+0x568/0x604 [lontium_lt9611uxc]
+> >   i2c_device_probe+0x158/0x32c
+> >   really_probe+0xbc/0x2b4
+> >   __driver_probe_device+0x78/0x120
+> >   driver_probe_device+0x3c/0x154
+> >   __driver_attach+0x90/0x1a0
+> >   bus_for_each_dev+0x68/0xb8
+> >   driver_attach+0x24/0x30
+> >   bus_add_driver+0xe4/0x208
+> >   driver_register+0x68/0x124
+> >   i2c_register_driver+0x48/0xcc
+> >   lt9611uxc_driver_init+0x20/0x1000 [lontium_lt9611uxc]
+> >   do_one_initcall+0x60/0x1d4
+> >   do_init_module+0x54/0x23c
+> >   load_module+0x1730/0x1cc0
+> >   init_module_from_file+0x74/0xa0
+> >   __arm64_sys_finit_module+0x130/0x2f8
+> >   invoke_syscall+0x48/0x104
+> >   el0_svc_common.constprop.0+0xc0/0xe0
+> >   do_el0_svc+0x1c/0x28
+> >   el0_svc+0x2c/0x80
+> >   el0t_64_sync_handler+0x10c/0x138
+> >   el0t_64_sync+0x198/0x19c
+> >  ---[ end trace 0000000000000000 ]---
+> >  adreno 5900000.gpu: supply vdd not found, using dummy regulator
+> >  adreno 5900000.gpu: supply vddcx not found, using dummy regulator
+> >  msm_dpu 5e01000.display-controller: bound 5900000.gpu (ops a3xx_ops [m=
+sm])
+> >  [drm:dpu_kms_hw_init:1173] dpu hardware revision:0x60050000
+> >  dummy 1-0045: No cache used with register defaults set!
+> >  [drm] Initialized msm 1.12.0 for 5e01000.display-controller on minor 0
+> >  msm_dpu 5e01000.display-controller: [drm:adreno_request_fw [msm]] load=
+ed qcom/a702_sqe.fw from new location
 >
-> The .ndo_queue_stop operation doesn't make sense by itself for mlx5,
-> because the current mlx5 architecture is to atomically swap in all of
-> the channels.
-> The scenario you are describing, with a hypothetical ndo_queue_stop for
-> dynamically created devmem queues would leave all of the queues stopped
-> and the old channel deallocated in the channel array. Worse problems
-> would happen in that state than with today's approach, which leaves the
-> driver in functional state.
+> Looks like we should be doing this instead
 >
-> Perhaps Saeed can add more details to this?
+> diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm=
+/msm/adreno/adreno_device.c
+> index 5e7307567239..16e7ac444efd 100644
+> --- a/drivers/gpu/drm/msm/adreno/adreno_device.c
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
+> @@ -221,7 +221,7 @@ static int adreno_bind(struct device *dev, struct dev=
+ice *master, void *data)
+>
+>         info =3D adreno_info(config.chip_id);
+>         /* We shouldn't have gotten this far if we don't recognize the GP=
+U: */
+> -       if (!WARN_ON(info))
+> +       if (WARN_ON(!info))
+>                 return -ENXIO;
+>
+>         config.info =3D info;
 
-I see, so essentially mlx5 supports restarting a queue but not
-necessarily stopping and starting a queue as separate actions?
+Oh, yes, indeed
 
-If so, can maybe the comment on the function be reworded to more
-strongly indicate that this is a limitation? Just asking because
-future driver authors interested in implementing the queue API will
-probably look at one of mlx5/gve/bnxt to see what an existing
-implementation looks like, and I would rather them follow bnxt/gve
-that is more in line with core's expectations if possible. But that's
-a minor concern; I'm fine with this patch.
-
-FWIW this may break in the future if core decides to add code that
-actually uses the stop operation as a 'stop', not as a stepping stone
-to 'restart', but I'm not sure we can do anything about that if it's a
-driver limitation.
-
---=20
-Thanks,
-Mina
+BR,
+-R
