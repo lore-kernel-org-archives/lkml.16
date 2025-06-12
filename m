@@ -1,145 +1,76 @@
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 740B52744D;
-	Thu, 12 Jun 2025 13:17:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B852A23D285
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749734223; cv=none; b=djPz2oHq1kZLa2wFGWs6d4bgnSJJzm6izmkMtaCtK6E18KRMbVKrzVfwtVcXjV9P1DfywkJVaHJGBreOR5g7OGB6ltXhlM/hvI0JfRTM4gKZhdSsjcTxl9qO2qlQjZbQRAhBajhSmanjTUgUNwwkqLluLy7PDNrNhsmqJywOAhw=
+	t=1749734224; cv=none; b=Z+8/h/WzRm23yuT/Mfk75Eo2eZnS3foxwCLms2MJq6UCl+4N2PolAIU6LAmH4ciBIRvzFVKUZVBUMMDA9CnKnzKr73BHSSBy5C8cONSBzyPVisNgpTgF546R9gCJQUwL/U1Ezf88g5zotyTetFb5vcsnJz7zAEkvNYcqVGqCfEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749734223; c=relaxed/simple;
-	bh=k4w6XpEXch4GCu7oMZGMsN4hvcVpxo8CKqiDW6bTfUA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qWOjLKnbiiUlXkWCkkZGirarBaOeyuN3m9Ramrv/d5cuEG/2RQWTs33KblpDuVsAv5nPysHNszMtllImfbfF4Vv3rSs7phBJXL96o7ZMUwd8fBw99Mz+Wbq69tCSFEL9ht2zV+I5qfnmJ6m7bg95O7p35pC9c03/e7uiVr88wmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2cc57330163so624481fac.2;
-        Thu, 12 Jun 2025 06:17:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749734219; x=1750339019;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TNonWCq6tQmbQ5Q8JG6wz2OIxHKwlgX2o++VTeBoqTY=;
-        b=EoTNoCSz0afw5lpwbcGC0ld79ohtzQg3hXSS3EIdYiu/JObsI5otdeeJ8kjJ5cDA7K
-         Kav5kazRlypZxpt9iH+skpvbvpF6FEP1FJKFu4v115+bZfVAUiHyNDugZsY879bOjnxI
-         /rmiGqEOXAkpATd2iLEQG/CzzXEMf0Z0IAbdMLOKdQvZe/q6VF7n5aHsM+hP+E7Onc/u
-         wIpdl0dHiPeZO3TS4p/ixgE8fTcnZrZkWkm8VGsWCSfg7q7QhBVkN0xIPHDJG0cB+nYE
-         N7YGIARZo6KqKfbBUoxC7GU5eiXsA09KGsRian9a9oakNpRcCF1KQEYlWCxfmDmh1Cem
-         WPjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUH+FvWR02nRqke880uBC8fM5abm6XI8w4ijY+hDp/aj0M+b+1YzSovrrbZ19adYXDrJu2zyhxWKHy6m0zmvIdU+yo=@vger.kernel.org, AJvYcCUf3fAj83kpQ++KfeZVmGDMJUsKM/Ja6gFckeWbvp/XoLIJePVALN/RrAPvVZwdbtuJ3pvNmPmftTQH@vger.kernel.org, AJvYcCVHNPLSURwmh/bTx1AWsJid7CXx2lgnjhI1Ysh4PrlnRpekHsg7rxxZZUHam6/72uM+xS3y5c2ELKWv@vger.kernel.org, AJvYcCX0ZxZvl40gNv6oVcNF6nrC8i1KM9mFUNC9lGkfyC/Sx2FY0/dKd6adlJhek38XLQr05w7JyN+hW8YHsGOm@vger.kernel.org
-X-Gm-Message-State: AOJu0YxggYUxDTghCT93JLvq0uGdfR15TQL+JE0MvAombKQ+cJL6tQHq
-	4u9LPccvA4malAaaPdip6T6OKTKJgWHWTr0FkG7tBYoELd1IH7S3sB5pmMy8yx8F
-X-Gm-Gg: ASbGncs4Xseb3tFFpYoUEX3aJ6JxuOiFbzIJdmUk34IGbGmXYzLU9cv0qYOq7pdQ0C5
-	9Y2Fi4bjPD3xxH5RIDo5GaBoT5ZMz+YtYTb/PtTdd0xKJGtnbYnErGKOl1xuTt31iK8FwMsGIST
-	cfGFN1HvvtPTjTITNmx8D2sBqexPzcdjeHhDIPCY5o2WJB15QXu3+0jZRWdcddGDkdK3LfaiIea
-	L+epG7YKK6Olh6OuAMyO1eHT7HV208+gN1b7ac+5s6XgXCdFcN2mIl23mI6NkRoxhwLyuWTdCAy
-	6WxPoeQ2FFYgyiGtanf6Ou7uUtNZbbXvRBo3GkmpiMth4FVZWr904BcOzjuXll/mv1Mqwwky5TT
-	/XaNekJOGmJXGIgEkPqN5zczpJdcD
-X-Google-Smtp-Source: AGHT+IFrc2S7d8JXsxh6+5kpeaxchbVsS6LjK7xsAVK86NxxgIJvIS7pTe2FPklIeBdpO1mSSQXc/w==
-X-Received: by 2002:a05:6870:d68b:b0:2d5:2955:aa6b with SMTP id 586e51a60fabf-2ea96b7aee4mr4294786fac.5.1749734219489;
-        Thu, 12 Jun 2025 06:16:59 -0700 (PDT)
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com. [209.85.167.177])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2eab8e6cdbasm291000fac.38.2025.06.12.06.16.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 06:16:59 -0700 (PDT)
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-4066a0d0256so593029b6e.3;
-        Thu, 12 Jun 2025 06:16:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUnAEC3Ao9uHOeCTwb3roLaguny9bhdWOj2AtKHSFhg6A4h5riFRk5AiOdaAr40PwGeH2dGDoepx0ni/xWYY195UOo=@vger.kernel.org, AJvYcCVt+i/lAzvxxZiFJy/2fDAo8R91zfgOvVKqsFSUQLhVSfN/X2P5Nyh4NW1XUIvdK1FXr5pPhHssRdOj@vger.kernel.org, AJvYcCXYDlM4qHE7LYXao/2bFM/fTX0ydW+IYjqsG5Go3N91HZ715ybzUgTWISFo9uQzlKhZ3vGFdBaXHo2+@vger.kernel.org, AJvYcCXmUon39oCc6wzPb4tx4yoqZwyPUC63/sCzgSzJ7dL98x1nRBKYv2pxbsL+mVrvx0vd7U3LITgSuwvl9FM6@vger.kernel.org
-X-Received: by 2002:a05:6808:1794:b0:406:6e31:18a1 with SMTP id
- 5614622812f47-40a5d05f586mr5488096b6e.2.1749734218150; Thu, 12 Jun 2025
- 06:16:58 -0700 (PDT)
+	s=arc-20240116; t=1749734224; c=relaxed/simple;
+	bh=RHhiRFKcHKgeRTnfo5JIZcEtHjLnVz8NV9ckZjMrgUo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=idi3od46ts/cV/higXEU4l95t4156YMEgwnGXCcCgs6+Vm3sjD9dZq/+947aTXUPlP8PsMhp2K+awBoc5PY1K5ohd6imGY0yFgTrnaaAnjsyRUyRZjz+I4YpaPlu+yjWGcjMRAkemHrgEkLZfMA99H8mfuGprjLxhRqhqVgjM9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uPhnS-0002jo-Lp; Thu, 12 Jun 2025 15:16:46 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uPhnS-00389B-1F;
+	Thu, 12 Jun 2025 15:16:46 +0200
+Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uPhnS-008vXS-0v;
+	Thu, 12 Jun 2025 15:16:46 +0200
+Date: Thu, 12 Jun 2025 15:16:46 +0200
+From: Marco Felsch <m.felsch@pengutronix.de>
+To: Adam Ford <aford173@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, aford@beaconembedded.com,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 4/4] arm64: dts: imx8mp: Configure VPU clocks for
+ overdrive
+Message-ID: <20250612131646.be2mad2hqeh33wqx@pengutronix.de>
+References: <20250612003924.178251-1-aford173@gmail.com>
+ <20250612003924.178251-5-aford173@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250607194541.79176-1-marek.vasut+renesas@mailbox.org>
-In-Reply-To: <20250607194541.79176-1-marek.vasut+renesas@mailbox.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 12 Jun 2025 15:16:45 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdW_89naftFMo881zp=7QGJDznFzzqLQ-kLEuyJ=KJWQnA@mail.gmail.com>
-X-Gm-Features: AX0GCFuXLlnarexsZjEK1q0rakNUWi7gsoLxdkLO2FqaNoBwunA3MuELiFSEafs
-Message-ID: <CAMuHMdW_89naftFMo881zp=7QGJDznFzzqLQ-kLEuyJ=KJWQnA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] PCI/pwrctrl: Add optional slot clock to pwrctrl
- driver for PCI slots
-To: Marek Vasut <marek.vasut+renesas@mailbox.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-arm-kernel@lists.infradead.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Anand Moon <linux.amoon@gmail.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250612003924.178251-5-aford173@gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Sat, 7 Jun 2025 at 21:46, Marek Vasut
-<marek.vasut+renesas@mailbox.org> wrote:
-> Add the ability to enable optional slot clock into the pwrctrl driver.
-> This is used to enable slot clock in split-clock topologies, where the
-> PCIe host/controller supply and PCIe slot supply are not provided by
-> the same clock. The PCIe host/controller clock should be described in
-> the controller node as the controller clock, while the slot clock should
-> be described in controller bridge/slot subnode.
->
-> Example DT snippet:
-> &pcicontroller {
->     clocks = <&clk_dif 0>;             /* PCIe controller clock */
->
->     pci@0,0 {
->         #address-cells = <3>;
->         #size-cells = <2>;
->         reg = <0x0 0x0 0x0 0x0 0x0>;
->         compatible = "pciclass,0604";
->         device_type = "pci";
->         clocks = <&clk_dif 1>;         /* PCIe slot clock */
->         vpcie3v3-supply = <&reg_3p3v>;
->         ranges;
->     };
-> };
->
-> Example clock topology:
->  ____________                    ____________
-> |  PCIe host |                  | PCIe slot  |
-> |            |                  |            |
-> |    PCIe RX<|==================|>PCIe TX    |
-> |    PCIe TX<|==================|>PCIe RX    |
-> |            |                  |            |
-> |   PCIe CLK<|======..  ..======|>PCIe CLK   |
-> '------------'      ||  ||      '------------'
->                     ||  ||
->  ____________       ||  ||
-> |  9FGV0441  |      ||  ||
-> |            |      ||  ||
-> |   CLK DIF0<|======''  ||
-> |   CLK DIF1<|==========''
-> |   CLK DIF2<|
-> |   CLK DIF3<|
-> '------------'
->
-> Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> Reviewed-by: Anand Moon <linux.amoon@gmail.com>
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
+On 25-06-11, Adam Ford wrote:
+> The defaults for this SoC are configured for overdrive mode, but
+> the VPU clocks are currently configured for nominal mode.
+> Increase VPU_G1_CLK_ROOT to 800MHZ from 600MHz,
+> Increase VPU_G2_CLK_ROOT to 700MHZ from 500MHz, and
+> Increase VPU_BUS_CLK_ROOT to 800MHz from 600MHz.
+> 
+> This requires adjusting the clock parents. Since there is already
+> 800MHz clock references, move the VPU_BUS and G1 clocks to it.
+> This frees up the VPU_PLL to be configured at 700MHz to run
+> the G2 clock at 700MHz.
+> 
+> Signed-off-by: Adam Ford <aford173@gmail.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Bartosz: Any chance you can apply this patch to an immutable branch,
-so I can merge that before taking the other two patches?
-The alternative is to postpone the DTS patches for one cycle.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Reviewed-by: Marco Felsch <m.felsch@pengutronix.de>
