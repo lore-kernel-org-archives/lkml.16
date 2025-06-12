@@ -1,132 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27AA2F4322;
-	Thu, 12 Jun 2025 12:31:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6CA62F432A;
+	Thu, 12 Jun 2025 12:31:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749731494; cv=none; b=DrgnrRqCxMmptPvEPEG/fWf8Kifhx3CoRAAKWn1GoWPNoPy9gfnr+r/R5eX/jNnoePtVbbTZv6egDwZR08ePr4/jkdchb3JbPpaKCQr8xX7A3fyraQFcDG3meLPXIEddJm6Pjk2uFAjhd7RI5IBAMF+SGSL1lMxJ0yhSgQf9404=
+	t=1749731507; cv=none; b=ormSlg/7nZGBwaOMjq6YdlnbMWNqn/cmqh6rdv/w3sEVchVCmiKINONTKbogO0Bm2WISBnJ/0bDkVoG42x3a7Ip171mVTvaAnNWKcIXfAjI/ZTM0bxLNV2K0VKLnjfBNoSNNXcv4iFLNp5CCUPQ34YWesM0gx5G4UAaVe2Ux+qQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749731494; c=relaxed/simple;
-	bh=plOimjf1Hornox4olvLgJ3RBchkKjUgxZh9h3lWIBkY=;
+	s=arc-20240116; t=1749731507; c=relaxed/simple;
+	bh=q8t9IE1xat95XEHUqLu5tzXkvhvOsB1fDhOchG1+/Ug=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lnc+jN3cvdtWk3NLebcc/ZpaiOIEByggQW9B+4OqaUxp7CnmoKGekP7yTwxw18DvttnYnlq0RgM5kSY6OdUTA0bp4yBaSDeofO4svuTP3jRWJMyvfPlN3lH80lcnWVDU340YRvYLMUyBN8zjLzh8JmIEomJTz4qowllAYgZ42ZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W7wHX6gx; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=l8rEnjO80a8MN9EF5YHFHkp96tFWOamjyCMMIWkIHvf+51nNCMl5wOC686nyONbHOAm/rWVaGEZNzzdrCLIoLhbNL6eMQLoCgrl/l50qq5EugPI7nxQE1FJzpQAlpa3sXr0nDvFO79ct7AwE5Rv+tQVJYdPDLeh2GZKdB3442wo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qlr28VjV; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W7wHX6gx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79AF6C4CEEA;
-	Thu, 12 Jun 2025 12:31:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749731493;
-	bh=plOimjf1Hornox4olvLgJ3RBchkKjUgxZh9h3lWIBkY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W7wHX6gxBmrU2wVsFjdyFIS3aQp5X1snRh9Mmvs9UQs24DxYXjh4+w2zD0C+IzxV6
-	 KDHsCn1xEmU9LVqAjZDT/06LgNn9uS6XHzyO8O+VWC1movfClioKVy2A4q9zqkuR3A
-	 IZeWpvA8+FjveKr+MsPa+LNnCzolLDhJVT46+v8Am+FUohlXKgIbbMuGVw0NY3qEzF
-	 b5ppPTucCtnsjdYAyKcZISOXRUlVPIGm6GDtu3K9+r9GTCaKcdVThiDqroxFnHsQHF
-	 4jPcXwQdvVZCQbdY9X0Gw5U34gin+DUTkDAFkBU9HHL1XJsGW2n5eyT4iB+HyK8xS+
-	 qCtpkkiKZpD2w==
-Date: Thu, 12 Jun 2025 14:31:25 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Jan Kara <jack@suse.cz>
-Cc: Song Liu <song@kernel.org>, Tingmao Wang <m@maowtm.org>, 
-	=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, NeilBrown <neil@brown.name>, bpf@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, 
-	ast@kernel.org, daniel@iogearbox.net, martin.lau@linux.dev, 
-	viro@zeniv.linux.org.uk, kpsingh@kernel.org, mattbobrowski@google.com, amir73il@gmail.com, 
-	repnop@google.com, jlayton@kernel.org, josef@toxicpanda.com, gnoack@google.com
-Subject: Re: [PATCH v3 bpf-next 1/5] namei: Introduce new helper function
- path_walk_parent()
-Message-ID: <20250612-erraten-bepacken-42675dfcfa82@brauner>
-References: <20250606213015.255134-1-song@kernel.org>
- <20250606213015.255134-2-song@kernel.org>
- <174959847640.608730.1496017556661353963@noble.neil.brown.name>
- <CAPhsuW6oet8_LbL+6mVi7Lc4U_8i7O-PN5F1zOm5esV52sBu0A@mail.gmail.com>
- <20250611.Bee1Iohoh4We@digikod.net>
- <CAPhsuW6jZxRBEgz00KV4SasiMhBGyMHoP5dMktoyCOeMbJwmgg@mail.gmail.com>
- <e7115b18-84fc-4e8f-afdb-0d3d3e574497@maowtm.org>
- <CAPhsuW4LfhtVCe8Kym4qM6s-7n5rRMY-bBkhwoWU7SPGQdk=bw@mail.gmail.com>
- <csh2jbt5gythdlqps7b4jgizfeww6siuu7de5ftr6ygpnta6bd@umja7wbmnw7j>
- <zlpjk36aplguzvc2feyu4j5levmbxlzwvrn3bo5jpsc5vjztm2@io27pkd44pow>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qlr28VjV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749731505; x=1781267505;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=q8t9IE1xat95XEHUqLu5tzXkvhvOsB1fDhOchG1+/Ug=;
+  b=Qlr28VjV+WhiKlg359AELx7JSfwUh9clsmDJQCP7QlzNh36LESQJ0HTW
+   r+S94QpYYYvWHVgzAImzWJNVrHWzhUegdgb/6zYS5djXXIK6k6NQ6AIsy
+   kEl8ll4ix1Ycq+FAuKkKwz2RRyiysj+U2dyAzIPfg2A8Kyw3wzWXCn2A5
+   8GCMgtxQASDDEp94VfB1XbFjSp5KrR1r/Sv2YHwD81wtv9EYOW7jzOSY8
+   uoeS3SYgHsK+dRbiY0WSmP/4KvFJRY3yfiwfKIFYun3dRfI9RyQKPbi1N
+   E+oFgtnH9HZGuBzv2q8Zdu/AL4gIeTmBX+9HC1CPXtvGuY/G0KgnKdGS3
+   w==;
+X-CSE-ConnectionGUID: ZsbSdjFFSy2VOnd1fwE/Mw==
+X-CSE-MsgGUID: mGITkd7FT2W76QnDDrXLIA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="63252414"
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="63252414"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 05:31:45 -0700
+X-CSE-ConnectionGUID: /y8wygsjQ6Sxewy2Wxt2Cw==
+X-CSE-MsgGUID: SjT3GP9MTB6DaVvHEkcFIg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
+   d="scan'208";a="147356647"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 05:31:42 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uPh5n-00000005wqx-21Vy;
+	Thu, 12 Jun 2025 15:31:39 +0300
+Date: Thu, 12 Jun 2025 15:31:39 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 1/1] pinctrl: intel: fix build warnings about export.h
+Message-ID: <aErIqz1osBfLeNFH@smile.fi.intel.com>
+References: <20250611180956.2780365-1-andriy.shevchenko@linux.intel.com>
+ <20250612051258.GH2063270@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <zlpjk36aplguzvc2feyu4j5levmbxlzwvrn3bo5jpsc5vjztm2@io27pkd44pow>
+In-Reply-To: <20250612051258.GH2063270@black.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Thu, Jun 12, 2025 at 11:49:08AM +0200, Jan Kara wrote:
-> On Thu 12-06-25 11:01:16, Jan Kara wrote:
-> > On Wed 11-06-25 11:08:30, Song Liu wrote:
-> > > On Wed, Jun 11, 2025 at 10:50 AM Tingmao Wang <m@maowtm.org> wrote:
-> > > [...]
-> > > > > I think we will need some callback mechanism for this. Something like:
-> > > > >
-> > > > > for_each_parents(starting_path, root, callback_fn, cb_data, bool try_rcu) {
-> > > > >    if (!try_rcu)
-> > > > >       goto ref_walk;
-> > > > >
-> > > > >    __read_seqcount_begin();
-> > > > >     /* rcu walk parents, from starting_path until root */
-> > > > >    walk_rcu(starting_path, root, path) {
-> > > > >     callback_fn(path, cb_data);
-> > > > >   }
-> > > > >   if (!read_seqcount_retry())
-> > > > >     return xxx;  /* successful rcu walk */
-> > > > >
-> > > > > ref_walk:
-> > > > >   /* ref walk parents, from starting_path until root */
-> > > > >    walk(starting_path, root, path) {
-> > > > >     callback_fn(path, cb_data);
-> > > > >   }
-> > > > >   return xxx;
-> > > > > }
-> > > > >
-> > > > > Personally, I don't like this version very much, because the callback
-> > > > > mechanism is not very flexible, and it is tricky to use it in BPF LSM.
-> > > >
-> > > > Aside from the "exposing mount seqcounts" problem, what do you think about
-> > > > the parent_iterator approach I suggested earlier?  I feel that it is
-> > > > better than such a callback - more flexible, and also fits in right with
-> > > > the BPF API you already designed (i.e. with a callback you might then have
-> > > > to allow BPF to pass a callback?).  There are some specifics that I can
-> > > > improve - Mickaël suggested some in our discussion:
-> > > >
-> > > > - Letting the caller take rcu_read_lock outside rather than doing it in
-> > > > path_walk_parent_start
-> > > >
-> > > > - Instead of always requiring a struct parent_iterator, allow passing in
-> > > > NULL for the iterator to path_walk_parent to do a reference walk without
-> > > > needing to call path_walk_parent_start - this way might be simpler and
-> > > > path_walk_parent_start/end can just be for rcu case.
-> > > >
-> > > > but what do you think about the overall shape of it?
-> > > 
-> > > Personally, I don't have strong objections to this design. But VFS
-> > > folks may have other concerns with it.
+On Thu, Jun 12, 2025 at 08:12:58AM +0300, Mika Westerberg wrote:
+> On Wed, Jun 11, 2025 at 09:09:56PM +0300, Andy Shevchenko wrote:
+> > After commit a934a57a42f64a4 ("scripts/misc-check: check missing #include
+> > <linux/export.h> when W=1") and 7d95680d64ac8e836c ("scripts/misc-check:
+> > check unnecessary #include <linux/export.h> when W=1"), we get some build
+> > warnings with W=1:
 > > 
-> > From what I've read above I'm not sure about details of the proposal but I
-> > don't think mixing of RCU & non-RCU walk in a single function / iterator is
-> > a good idea. IMHO the code would be quite messy. After all we have
-> > follow_dotdot_rcu() and follow_dotdot() as separate functions for a reason.
-> > Also given this series went through several iterations and we don't yet
-> > have an acceptable / correct solution suggests getting even the standard
-> > walk correct is hard enough. RCU walk is going to be only worse. So I'd
-> > suggest to get the standard walk finished and agreed on first and
-> > investigate feasibility of RCU variant later.
+> > pinctrl-intel.c: warning: EXPORT_SYMBOL() is used, but #include <linux/export.h> is missing
+> > 
+> > So fix these build warnings for the driver code.
 > 
-> OK, I've now read some of Tingmaon's and Christian's replies which I've
-> missed previously so I guess I now better understand why you complicate
-> things with RCU walking but still I'm of the opinion that we should start
-> with getting the standard walk working. IMHO pulling in RCU walk into the
-> iterator will bring it to a completely new complexity level...
+> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-I would not want it in the first place. But I have a deep seated
-aversion to exposing two different variants. Especially if the second
-variant wants or needs access to internal details such as mount or
-dentry sequence counts. I'm not at all in favor of that.
+Pushed to my review and testing queue, thanks!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
