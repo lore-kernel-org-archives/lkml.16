@@ -1,133 +1,225 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE702E2F1B;
-	Thu, 12 Jun 2025 20:03:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7511B2E2F1A
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 20:03:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749758605; cv=none; b=su12do5IIc5e2DWTnX0C00qqW2vFPfSdB1mxaU07uApWkvIP9qVaNrNekUnjaBTdH0tY5sK8O0xCebHE/mPQRYmbG5TQTGUaM0blKBBty4rgXQwXh5iAbBl33IBxycYOqvjhVlgAMkgoOltqKKfirBKU+wHKTwpg8GdImXsJShQ=
+	t=1749758605; cv=none; b=cB81llOgtkewdGG0IKQFqi3fkhnpEiEgBYFGvgiRl317JHdRYOJU2sqJ/Kr10vQn24gsHbzdQaxKeMR37Cj1gL/NhJCoJdte9zFscGaLEL/uJGGY9OZ/feGeOeigbDq9OnCAXk4tmr2tFkWFOdMb0QPyofXLzTIzV0f6wwdcwP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749758605; c=relaxed/simple;
-	bh=nhD7nQP1armvamJAdav9d2T+px7RNCdUFLeEb9HZweo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lZNQDkyw9QZwIkhchDYuG6nms7W+a+hieqZ5Ef7Qbim3WG9mgDE983q4UGaZTfjCNNRGN+olINscVUA/YM7qBwRNLIEU877XKXCdlaB25/s1UWJjv90SS39QzqJCIsuxiMqRCE9coLjPZHPJ5PZ0dUasOdZdlf1bEg45aU6/Sco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cMwlhDGW; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=tM0vZi4EGoH8SDInWlDfZxuDZF2xzefLNRyH9phpt/s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=UrFBsy5AJ9Ch9qJHVKYgPXvyCftb6cguhALE9ai5Hm4lhGz6RjrwOCRfG4OLqmNtS7wluxv8x9ShU6veRj/TlCFylERNXY2M2SeNCc/N8gju6E4YamWTNABKy5Y9gjV3FUDduKoTOjJOuszhqWPPssuCT5J0OOya2KH8ENKAYlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Vh098kwG; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cMwlhDGW"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6fb0ac80aaaso409946d6.3;
-        Thu, 12 Jun 2025 13:03:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749758602; x=1750363402; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ss/uhQhN6lUEhvR/FJ2esBhszQQF0E4wT4q6/teIq64=;
-        b=cMwlhDGW//LYV29l/hO/0NhoWb1BjmsBQzLdmLyr2K9+gI3Z4F2v3iAYfqFOMKWSHZ
-         KFctZUFz+4Fnc1Yh5LQcdjo2oMSB9hB8TasfJ/+R5OAB5Wx6dX0eFvF97uXX+SO1c6n1
-         ogTSTO/LC5KWo7D6UDA+n94+j1CGYW2U75/5mKC5mROqdMsWxzU38QHOEA59L/Ws8wTj
-         J+9sW/+KLw/Y9pXhFQSQEqUUom2znq5l/0DSL5m0jatvxLN2hLL0LTldVvxN9/Th0cNn
-         SOwc5WMuScDCeX16HOzgRTKk36htkEpzBFmz5Y3mO7lkt3rB6kpHUXiZ2yR3md2NqBsS
-         cAAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749758602; x=1750363402;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ss/uhQhN6lUEhvR/FJ2esBhszQQF0E4wT4q6/teIq64=;
-        b=uH1sSgdWXWu7vai6Hx8FRTJ9JuyNLPZYJemP09PcgwHXP/0UUZr+g3A0WgyjS4IHX7
-         qDC6m0nq2ZOzqnxtf5O5kW6STvRi6in0uCNLwnrhNhEzqT2hPIIxA9TJGRbFGpec2mS9
-         m82+dkWaf460T/kj0N8gCP2VNc3pTbo/LOw+seBqMzI8bdVa3QLf5bUewxG+7P/ka3Kh
-         7aD4g+LpWujc65/k/HGYMzA5dmAQyWfcQ/dnWo683xpIae251eGnxHhJKSy+hE4qAC+a
-         qecf5bvV9AFbKdM63TSJiQeDCKk/v984wSkA2h5u745K4BjN+pLQIgkAPoXC0XXsBpSw
-         6TQA==
-X-Forwarded-Encrypted: i=1; AJvYcCUQtIwBroEqnkpN91qQcSkFCxFLm5aVwVV8z513obOuwfGclbk8MdZzVM6qpBUloUXCST1Xv0+cUv18H65a@vger.kernel.org, AJvYcCWUPYMYsGY6LWWp18QBoDOHgmEPp4RBlUbdGXGhZsDgBbe36mQZbc3S5RyCqogqKg122X8ZmaNRmtcbhHXc2dY3@vger.kernel.org, AJvYcCWnFQ2STlBi0HbF6Po+mdmRYjHuKjZ+FOOsymvYM9sHRonbslRnyxXpjj12joxP8xYbJv7nVjqYEGY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3xUQOnm/QPOky7o81I6LBwmgrEBc9gcvoBf3vZMSMfXNoSYxO
-	Ex+AxbyOKBAJ2gvV2kzYUkdvupCFw29dzpoFUO+626i78BVFGpHxmrgixjr0OzcecCQ=
-X-Gm-Gg: ASbGncsKiC5qn6Vwb4sHgoN8OHAFoqlLNWxkPVxCK5gX3EMO8FQwHW2T6fOYKZKI1+K
-	9LfmmRepd6E5kWdPc41foLEW3td39TosaW1gsGgy2Efj3sjbuV/GvF4hOIZPh5EEd81P5XmUV5K
-	bMWtmKGZo02HLqJpZ0pdAzlO5ulFjkXyjVewdEK4HGaPdeQR6PqtFYk9pV8vALKOisZXoJnIwwJ
-	f0UuPBPDabEu1eDziBouNrapYjzwQOVjwKaxorwn+fjMOfAP6UYU67Pl4lu0+C7NPdllETdhE5H
-	GD3wg0sFsTOoT2D7WkZLbfTRMRln04R9pyAWYrQ/+D58dXDR7qBE+EY=
-X-Google-Smtp-Source: AGHT+IH9GjdEeMuR/Q5I7mjdit9VX01tOQlZz5H6NKrZw+S6Pvq9hyczKt6X5IFUSwrczAifaz1J0A==
-X-Received: by 2002:a05:6214:2462:b0:6fa:c22c:f10c with SMTP id 6a1803df08f44-6fb3e665ea8mr837136d6.7.1749758602131;
-        Thu, 12 Jun 2025 13:03:22 -0700 (PDT)
-Received: from localhost ([2a03:2880:20ff:5::])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb35b20f5csm13824086d6.21.2025.06.12.13.03.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 13:03:21 -0700 (PDT)
-From: Gustavo Luiz Duarte <gustavold@gmail.com>
-Date: Thu, 12 Jun 2025 13:02:16 -0700
-Subject: [PATCH net-next v2 3/5] netconsole: append msgid to sysdata
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vh098kwG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749758602;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KaQ+4bmkcoN3WHpFGMeg8xUggTJ0A5UaZ9LvgWgxbgg=;
+	b=Vh098kwGif2oYNYxogyW+QSUDcjanCCWqe/RiWMFrcSOBIe9FuWMExmvow/2zjYRWQGEid
+	Zpn3wRKY0UTeLodfufj7JkUc77l2sR/dmJ8tb2A8H2GHlgrVT8vgshBZkBChMjX2ofA1av
+	ZEamSL1jsisfYZpzpMZFf0vwKSgZRlo=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-402-R0LqxreaNEuU1Cd9Q-NgfA-1; Thu,
+ 12 Jun 2025 16:03:17 -0400
+X-MC-Unique: R0LqxreaNEuU1Cd9Q-NgfA-1
+X-Mimecast-MFC-AGG-ID: R0LqxreaNEuU1Cd9Q-NgfA_1749758595
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CB6AA19560A7;
+	Thu, 12 Jun 2025 20:03:14 +0000 (UTC)
+Received: from p16v.redhat.com (unknown [10.45.224.169])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 66C9018003FC;
+	Thu, 12 Jun 2025 20:03:08 +0000 (UTC)
+From: Ivan Vecera <ivecera@redhat.com>
+To: netdev@vger.kernel.org
+Cc: Prathosh Satish <Prathosh.Satish@microchip.com>,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Shannon Nelson <shannon.nelson@amd.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Michal Schmidt <mschmidt@redhat.com>,
+	Petr Oros <poros@redhat.com>
+Subject: [PATCH net-next v9 11/14] dpll: zl3073x: Add support to get/set priority on input pins
+Date: Thu, 12 Jun 2025 22:01:42 +0200
+Message-ID: <20250612200145.774195-12-ivecera@redhat.com>
+In-Reply-To: <20250612200145.774195-1-ivecera@redhat.com>
+References: <20250612200145.774195-1-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250612-netconsole-msgid-v2-3-d4c1abc84bac@gmail.com>
-References: <20250612-netconsole-msgid-v2-0-d4c1abc84bac@gmail.com>
-In-Reply-To: <20250612-netconsole-msgid-v2-0-d4c1abc84bac@gmail.com>
-To: Breno Leitao <leitao@debian.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Shuah Khan <shuah@kernel.org>, Simon Horman <horms@kernel.org>, 
- Jonathan Corbet <corbet@lwn.net>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org, 
- Gustavo Luiz Duarte <gustavold@gmail.com>
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Add msgcounter to the netconsole_target struct to generate message IDs.
-If the msgid_enabled attribute is true, increment msgcounter and append
-msgid=<msgcounter> to sysdata buffer before sending the message.
+Add support for getting and setting input pin priority. Implement
+required callbacks and set appropriate capability for input pins.
+Although the pin priority make sense only if the DPLL is running in
+automatic mode we have to expose this capability unconditionally because
+input pins (references) are shared between all DPLLs where one of them
+can run in automatic mode while the other one not.
 
-Signed-off-by: Gustavo Luiz Duarte <gustavold@gmail.com>
+Co-developed-by: Prathosh Satish <Prathosh.Satish@microchip.com>
+Signed-off-by: Prathosh Satish <Prathosh.Satish@microchip.com>
+Signed-off-by: Ivan Vecera <ivecera@redhat.com>
 ---
- drivers/net/netconsole.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/dpll/zl3073x/dpll.c | 88 +++++++++++++++++++++++++++++++++++++
+ drivers/dpll/zl3073x/prop.c |  1 +
+ 2 files changed, 89 insertions(+)
 
-diff --git a/drivers/net/netconsole.c b/drivers/net/netconsole.c
-index 3bf8777fcd01..baa9862c1bc3 100644
---- a/drivers/net/netconsole.c
-+++ b/drivers/net/netconsole.c
-@@ -155,6 +155,8 @@ struct netconsole_target {
- 	size_t			userdata_length;
- 	/* bit-wise with sysdata_feature bits */
- 	u32			sysdata_fields;
-+	/* protected by target_list_lock */
-+	u32			msgcounter;
- #endif
- 	struct netconsole_target_stats stats;
- 	bool			enabled;
-@@ -1345,6 +1347,14 @@ static int sysdata_append_release(struct netconsole_target *nt, int offset)
- 			 init_utsname()->release);
+diff --git a/drivers/dpll/zl3073x/dpll.c b/drivers/dpll/zl3073x/dpll.c
+index 21b9e34d5ab0a..e731b17c69394 100644
+--- a/drivers/dpll/zl3073x/dpll.c
++++ b/drivers/dpll/zl3073x/dpll.c
+@@ -287,6 +287,56 @@ zl3073x_dpll_ref_prio_get(struct zl3073x_dpll_pin *pin, u8 *prio)
+ 	return rc;
  }
  
-+static int sysdata_append_msgid(struct netconsole_target *nt, int offset)
++/**
++ * zl3073x_dpll_ref_prio_set - set priority for given input pin
++ * @pin: pointer to pin
++ * @prio: place to store priority
++ *
++ * Sets priority for the given input pin.
++ *
++ * Return: 0 on success, <0 on error
++ */
++static int
++zl3073x_dpll_ref_prio_set(struct zl3073x_dpll_pin *pin, u8 prio)
 +{
-+	wrapping_assign_add(nt->msgcounter, 1);
-+	return scnprintf(&nt->extradata_complete[offset],
-+			 MAX_EXTRADATA_ENTRY_LEN, " msgid=%u\n",
-+			 nt->msgcounter);
++	struct zl3073x_dpll *zldpll = pin->dpll;
++	struct zl3073x_dev *zldev = zldpll->dev;
++	u8 ref, ref_prio;
++	int rc;
++
++	guard(mutex)(&zldev->multiop_lock);
++
++	/* Read DPLL configuration into mailbox */
++	rc = zl3073x_mb_op(zldev, ZL_REG_DPLL_MB_SEM, ZL_DPLL_MB_SEM_RD,
++			   ZL_REG_DPLL_MB_MASK, BIT(zldpll->id));
++	if (rc)
++		return rc;
++
++	/* Read reference priority - one value shared between P&N pins */
++	ref = zl3073x_input_pin_ref_get(pin->id);
++	rc = zl3073x_read_u8(zldev, ZL_REG_DPLL_REF_PRIO(ref / 2), &ref_prio);
++	if (rc)
++		return rc;
++
++	/* Update nibble according pin type */
++	if (zl3073x_dpll_is_p_pin(pin)) {
++		ref_prio &= ~ZL_DPLL_REF_PRIO_REF_P;
++		ref_prio |= FIELD_PREP(ZL_DPLL_REF_PRIO_REF_P, prio);
++	} else {
++		ref_prio &= ~ZL_DPLL_REF_PRIO_REF_N;
++		ref_prio |= FIELD_PREP(ZL_DPLL_REF_PRIO_REF_N, prio);
++	}
++
++	/* Update reference priority */
++	rc = zl3073x_write_u8(zldev, ZL_REG_DPLL_REF_PRIO(ref / 2), ref_prio);
++	if (rc)
++		return rc;
++
++	/* Commit configuration */
++	return zl3073x_mb_op(zldev, ZL_REG_DPLL_MB_SEM, ZL_DPLL_MB_SEM_WR,
++			     ZL_REG_DPLL_MB_MASK, BIT(zldpll->id));
 +}
 +
- /*
-  * prepare_extradata - append sysdata at extradata_complete in runtime
-  * @nt: target to send message to
-@@ -1367,6 +1377,8 @@ static int prepare_extradata(struct netconsole_target *nt)
- 		extradata_len += sysdata_append_taskname(nt, extradata_len);
- 	if (nt->sysdata_fields & SYSDATA_RELEASE)
- 		extradata_len += sysdata_append_release(nt, extradata_len);
-+	if (nt->sysdata_fields & SYSDATA_MSGID)
-+		extradata_len += sysdata_append_msgid(nt, extradata_len);
+ /**
+  * zl3073x_dpll_ref_state_get - get status for given input pin
+  * @pin: pointer to pin
+@@ -400,6 +450,42 @@ zl3073x_dpll_input_pin_state_on_dpll_set(const struct dpll_pin *dpll_pin,
+ 	return rc;
+ }
  
- 	WARN_ON_ONCE(extradata_len >
- 		     MAX_EXTRADATA_ENTRY_LEN * MAX_EXTRADATA_ITEMS);
-
++static int
++zl3073x_dpll_input_pin_prio_get(const struct dpll_pin *dpll_pin, void *pin_priv,
++				const struct dpll_device *dpll, void *dpll_priv,
++				u32 *prio, struct netlink_ext_ack *extack)
++{
++	struct zl3073x_dpll_pin *pin = pin_priv;
++
++	*prio = pin->prio;
++
++	return 0;
++}
++
++static int
++zl3073x_dpll_input_pin_prio_set(const struct dpll_pin *dpll_pin, void *pin_priv,
++				const struct dpll_device *dpll, void *dpll_priv,
++				u32 prio, struct netlink_ext_ack *extack)
++{
++	struct zl3073x_dpll_pin *pin = pin_priv;
++	int rc;
++
++	if (prio > ZL_DPLL_REF_PRIO_MAX)
++		return -EINVAL;
++
++	/* If the pin is selectable then update HW registers */
++	if (pin->selectable) {
++		rc = zl3073x_dpll_ref_prio_set(pin, prio);
++		if (rc)
++			return rc;
++	}
++
++	/* Save priority */
++	pin->prio = prio;
++
++	return 0;
++}
++
+ static int
+ zl3073x_dpll_output_pin_state_on_dpll_get(const struct dpll_pin *dpll_pin,
+ 					  void *pin_priv,
+@@ -474,6 +560,8 @@ zl3073x_dpll_mode_get(const struct dpll_device *dpll, void *dpll_priv,
+ 
+ static const struct dpll_pin_ops zl3073x_dpll_input_pin_ops = {
+ 	.direction_get = zl3073x_dpll_pin_direction_get,
++	.prio_get = zl3073x_dpll_input_pin_prio_get,
++	.prio_set = zl3073x_dpll_input_pin_prio_set,
+ 	.state_on_dpll_get = zl3073x_dpll_input_pin_state_on_dpll_get,
+ 	.state_on_dpll_set = zl3073x_dpll_input_pin_state_on_dpll_set,
+ };
+diff --git a/drivers/dpll/zl3073x/prop.c b/drivers/dpll/zl3073x/prop.c
+index c3224e78cbf01..4cf7e8aefcb37 100644
+--- a/drivers/dpll/zl3073x/prop.c
++++ b/drivers/dpll/zl3073x/prop.c
+@@ -205,6 +205,7 @@ struct zl3073x_pin_props *zl3073x_pin_props_get(struct zl3073x_dev *zldev,
+ 	if (dir == DPLL_PIN_DIRECTION_INPUT) {
+ 		props->dpll_props.type = DPLL_PIN_TYPE_EXT;
+ 		props->dpll_props.capabilities =
++			DPLL_PIN_CAPABILITIES_PRIORITY_CAN_CHANGE |
+ 			DPLL_PIN_CAPABILITIES_STATE_CAN_CHANGE;
+ 	} else {
+ 		props->dpll_props.type = DPLL_PIN_TYPE_GNSS;
 -- 
-2.47.1
+2.49.0
 
