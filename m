@@ -1,124 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73FCF17A2EA;
-	Thu, 12 Jun 2025 11:10:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E3E23C4E1;
+	Thu, 12 Jun 2025 11:10:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749726652; cv=none; b=Bi9zFm7uZla1dPSWviB2HASddwAXSkn6tZJpPHDt2pW2/eO3imsJ3YtRphlWZB7/TV+TixG1xpqbCkanPtkZw9jytYut/0ZBeM+N+h7TDAtmU7ivml/sPfg0eulnJtfMLem1WYcPSkAJbmA20u9HQWi6CcDOdFJaHnGuW6zEKvE=
+	t=1749726655; cv=none; b=Do720y++mDgQKCZ20h1viCijBWY/f1oeuJ4NFTysjspgSHBhkoVnu8dQgUE5cTo9UGnzc9+kMPpQCzEvOOyAT2NCQ+H3RqC35/bAAmQyXBucsWfvsAC1pJPZAea4bu0s59JYryaagMfeqHTHK79LZqOvahC6MrMd5eGCe1ebv38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749726652; c=relaxed/simple;
-	bh=KOsYsfHPzJUa01W4Ouw+7CCGtCRvFtwxmvmgsXHNiaw=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=iLy99jjLRYaXeHEcZkopYlQWT9Y6Pbyjl0Ei5OkzjMP4RXcC06eSPasufqrg+li5oCwi6RvDJpm5OzXzzkb90eLDcIMzcSw2lXFbdNCQfIbaoq8A7GMcrNfu8OwUa3zf4hf/rfUKZD5LhXdDFhwgPC7yQlk3pAywA+5zfbVmInk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gr6J8A1I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749726655; c=relaxed/simple;
+	bh=9nBrpMK9zZeZHFNOhk7Yg3FOCL/mJbGGTtA0TEp4ISs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mWipY7Gj1P0iBai63NVgsByk91TsHi3hYpXJZerApVI/slihpJZFoz8eyzwkllL4GDiw2YUau9gDhutn1otE/YQF+kpKFtK3NnGMsm4bxOAFE9FpAPkmxqhvkHt3vstTmu4XYoB1uDdPj1C1AyVnTghYMD1e+Gv5vNAa6gUZE3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q45cTnMW; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gr6J8A1I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 867C6C4CEED;
-	Thu, 12 Jun 2025 11:10:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749726652;
-	bh=KOsYsfHPzJUa01W4Ouw+7CCGtCRvFtwxmvmgsXHNiaw=;
-	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
-	b=gr6J8A1I+Dxj5CkYzHtj1Ftyd5kY+Wb7p/XBZtdOwnozGEVsMia7fIGsm577/dD6c
-	 gT+v+MAnAl1YRAuCO+uprc3Ip5GevSCD3fdy1MH8yLt7qRVvpU8IUuR5H7In2XoNIV
-	 Fpojgv9osfgcqnhTgYPa+sC//cdety58sOOFnD6N4ubPNUFcZjijLCd8k7n4df9JbU
-	 e4Xf2vuFRCm6ezspk6nsdWyU/TybGh2hHF38bRe6jg9fQIkiZ7uIezqWTNv0B8wz+h
-	 c+oVqNy5WPv9kRexn3u8P7UDEn1uJfJnGJIGcUb0zcbx9TiA1PsAA40nJscmRl0H6j
-	 9e/pUF+ekFi7A==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q45cTnMW"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-acae7e7587dso124691366b.2;
+        Thu, 12 Jun 2025 04:10:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749726652; x=1750331452; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9nBrpMK9zZeZHFNOhk7Yg3FOCL/mJbGGTtA0TEp4ISs=;
+        b=Q45cTnMW6M14BzyHymT7nYYg4t6x9BGdEF9ruN7/wgYyxXo4Tlylon5otQ4YZQ2Sc9
+         g/fsr0NtQvk/Etw0ossoeTHN5Cfeae/FY77K+/hghcbUHaHmOpEZQ0QfIC54ELk89me5
+         EBgOWoQq1e94sLb+w6ZhJiPIJqPQkeOe2ZawGAVkKUk0u4IwUvzbs9mvTc+zgI2EEhWV
+         PGOLGYDT83nHRbq8q1GqlAQnlaQHiOD0LpzhRwXdqYNIxtoKrSayGXBNK5OhJr55b+79
+         SORsFrLhL182smO44kfOdktCOFsoScdh5f38OKEwjH75O4ojvNwuU8hPnzj5H/SmbNCv
+         +Lzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749726652; x=1750331452;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9nBrpMK9zZeZHFNOhk7Yg3FOCL/mJbGGTtA0TEp4ISs=;
+        b=bELuWToe0XVxZWlrcTkxavKMdL0MFQyUjScPQ1pg91aQZL3zKvLiKgFqlbm3+4a8As
+         WeWXlDIxcqIYIt7UIwIfJ4B+l4C7xmJfKkXq7/R9nUKU35ssrOtVuWMvppQr+Y7Kc2vl
+         LekwDtI4vlxtGg3GiOG6va7TloeGu0AdznSLOpwZmokfv75bkcaYqsyntWk/gLLmripo
+         jt7dx/p7akRQ0gtX32vSWTFgPxbc7n3pGyRA2WV16f3LOxczeMCBqQUucufUt+aImDS7
+         xzWa3bH/CDMc36uZQE0bHPB8bxlhhcTgOPAUl1lEVJH6d2NwPXMlAxtcU/OPL1lhVEN6
+         8PIg==
+X-Forwarded-Encrypted: i=1; AJvYcCUN2/qpgkwIG246rcWkdFL5deXpx4GCN5qxQHhk/07t20elpOKE8gUso5+yE9DhYTCPKi4BFhMq/DXHWPth@vger.kernel.org, AJvYcCV1GKG+kHsF4n5I2gK90GR6LiYWn39EDXUZekx03xJIV+baxXMprxX07VyobFgCznO7uig=@vger.kernel.org, AJvYcCWGXzs+dFV2GyY3E0yV4zOWR3G/TNaMtqKUrNIbBXAbtI9I4JaH2vctoLgJHUPJ8bJjDZQJjH1x+9vM@vger.kernel.org, AJvYcCXSYtdOMlxqqKl+ZVGHFrfEJMLiTQIJYazh/Sq3vNSVy3mWobMC1QYakv0t0nNK5FNRjpYI7/n4L3Stpw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YymOdIutmqtabbKfGQiOrdoLCxolZvrE2ld2Lu2LUmXMj4EJNnq
+	mgNOgbSXzNv39WSD4TMmcwQNCr/4XXJs6d+MkM/SpCFOi5QahQNg0UwKGPfawZ2NuQo4410N3Qs
+	e8tDPI9zf5RIqEf3d+DfzkPDQS3OFJNc=
+X-Gm-Gg: ASbGnctdy4c7+GN+CO8Gy5mG3BMWkNtkjy46cni4wnAOoGi24oqYfju6gBuEE8HP08p
+	F/ED+LuyHg4gSAu8nQCI+1QmdWBnbjUjg11kHRS55rvWoMR/lxcTYncc4W1IheVbCGoFt1ubotK
+	A/n6e3KmxH90wx0rffNSE2FztOtajAOHWPMTyR8bEwrtc=
+X-Google-Smtp-Source: AGHT+IFrX17XfYVkjVnepz8BihCrbdN9elHb1a1FwyoMbX0yLjH2EltV5lWsECJ7oLshTrIE21PMDORFUypei4zXNLs=
+X-Received: by 2002:a17:907:980f:b0:ad8:a515:767f with SMTP id
+ a640c23a62f3a-adea9464061mr258576566b.51.1749726651742; Thu, 12 Jun 2025
+ 04:10:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250612093228.7655-1-chengzhenghan@uniontech.com> <84b14425-03e4-42be-8bd5-9bc010ebecda@suse.com>
+In-Reply-To: <84b14425-03e4-42be-8bd5-9bc010ebecda@suse.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Thu, 12 Jun 2025 14:10:15 +0300
+X-Gm-Features: AX0GCFubP_i495cQIkoSGfjK4G9pwjz7TYfQyvgZfj4JA8pwuaopIL7tecp4u7I
+Message-ID: <CAHp75Vc7AO_sRgB1Nj6CevbseMFyv5ku8ZS3PwzAuAgysKVxNg@mail.gmail.com>
+Subject: Re: [PATCH] x86: Fix build warnings about export.h
+To: Juergen Gross <jgross@suse.com>
+Cc: Zhenghan Cheng <chengzhenghan@uniontech.com>, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	mario.limonciello@amd.com, yazen.ghannam@amd.com, jpoimboe@kernel.org, 
+	tony.luck@intel.com, jarkko@kernel.org, bhelgaas@google.com, 
+	pbonzini@redhat.com, oleg@redhat.com, jbaron@akamai.com, ning.sun@intel.com, 
+	seanjc@google.com, luto@kernel.org, andy@kernel.org, jim.cromie@gmail.com, 
+	kirill.shutemov@linux.intel.com, hpa@zytor.com, 
+	pawan.kumar.gupta@linux.intel.com, vkuznets@redhat.com, rostedt@goodmis.org, 
+	ardb@kernel.org, thomas.lendacky@amd.com, nikunj@amd.com, 
+	ashish.kalra@amd.com, kees@kernel.org, alexandre.chartre@oracle.com, 
+	rppt@kernel.org, steve.wahl@hpe.com, jirislaby@kernel.org, 
+	apatel@ventanamicro.com, bvanassche@acm.org, ptsm@linux.microsoft.com, 
+	Jonathan.Cameron@huawei.com, beata.michalska@arm.com, xin@zytor.com, 
+	davydov-max@yandex-team.ru, ravi.bangoria@amd.com, joel.granados@kernel.org, 
+	ffmancera@riseup.net, kprateek.nayak@amd.com, akpm@linux-foundation.org, 
+	bhe@redhat.com, brgerst@gmail.com, coxu@redhat.com, dmaluka@chromium.org, 
+	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, 
+	linux-sgx@vger.kernel.org, kvm@vger.kernel.org, 
+	virtualization@lists.linux.dev, tboot-devel@lists.sourceforge.net, 
+	nouveau@lists.freedesktop.org, linux-coco@lists.linux.dev, 
+	xen-devel@lists.xenproject.org, Huacai Chen <chenhuacai@loongson.cn>, 
+	Zhenghan Cheng <your_email@example.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 12 Jun 2025 13:10:48 +0200
-Message-Id: <DAKIBXCX5OZ1.2ACJKVK1K4TER@kernel.org>
-To: "Michal Wilczynski" <m.wilczynski@samsung.com>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
- "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>,
- "Marek Szyprowski" <m.szyprowski@samsung.com>,
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH] rust: math: Add KernelMathExt trait with a mul_div
- helper
-From: "Benno Lossin" <lossin@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <CGME20250609215523eucas1p22f6d7d84b403badfb77af7df973b97a9@eucas1p2.samsung.com> <20250609-math-rust-v1-v1-1-285fac00031f@samsung.com> <DAICPWRW9TCE.356EEFQOHYWFN@kernel.org> <86f1ca2b-ccd1-4470-a05d-47497f3bf2f5@samsung.com>
-In-Reply-To: <86f1ca2b-ccd1-4470-a05d-47497f3bf2f5@samsung.com>
 
-On Thu Jun 12, 2025 at 1:00 PM CEST, Michal Wilczynski wrote:
-> On 6/10/25 00:21, Benno Lossin wrote:
->> On Mon Jun 9, 2025 at 11:53 PM CEST, Michal Wilczynski wrote:
->>> +    /// * None if the divisor is zero.
->>> +    fn mul_div(self, multiplier: Self, divisor: Self) -> Option<Self>;
->>> +}
->>> +
->>> +impl KernelMathExt for u64 {
->>=20
->> Can you also implement this for the other types that have a
->> `mul_..._div` function in the kernel?
+On Thu, Jun 12, 2025 at 1:19=E2=80=AFPM Juergen Gross <jgross@suse.com> wro=
+te:
 >
-> +Uwe
+> On 12.06.25 11:32, Zhenghan Cheng wrote:
+> > After commit a934a57a42f64a4 ("scripts/misc-check:
+> > check missing #include <linux/export.h> when W=3D1")
+> > and commit 7d95680d64ac8e836c ("scripts/misc-check:
+> > check unnecessary #include <linux/export.h> when W=3D1"),
+> > we get some build warnings with W=3D1,such as:
+> >
+> > arch/x86/coco/sev/core.c: warning: EXPORT_SYMBOL() is used, but #includ=
+e <linux/export.h> is missing
+> > arch/x86/crypto/aria_aesni_avx2_glue.c: warning: EXPORT_SYMBOL() is use=
+d, but #include <linux/export.h> is missing
+> > arch/x86/kernel/unwind_orc.c: warning: EXPORT_SYMBOL() is used, but #in=
+clude <linux/export.h> is missing
+> > arch/x86/kvm/hyperv.c: warning: EXPORT_SYMBOL() is used, but #include <=
+linux/export.h> is missing
+> > arch/x86/events/intel/core.c: warning: EXPORT_SYMBOL() is not used, but=
+ #include <linux/export.h> is present
+> > arch/x86/events/zhaoxin/core.c: warning: EXPORT_SYMBOL() is not used, b=
+ut #include <linux/export.h> is present
+> > arch/x86/kernel/crash.c: warning: EXPORT_SYMBOL() is not used, but #inc=
+lude <linux/export.h> is present
+> > arch/x86/kernel/devicetree.c: warning: EXPORT_SYMBOL() is not used, but=
+ #include <linux/export.h> is present
+> >
+> > so fix these build warnings for x86.
+> >
+> > Signed-off-by: "Zhenghan Cheng" <chengzhenghan@uniontech.com>
+> > Suggested-by: "Huacai Chen" <chenhuacai@loongson.cn>
 >
-> Hi Benno,
+> For Xen and paravirt:
 >
-> Thank you for the review and feedback on the patch.
+> Acked-by: Juergen Gross <jgross@suse.com>
 >
-> Regarding your suggestion to implement the trait for other types, I've
-> taken a closer look at the existing kernel helpers (e.g., in
-> lib/math/div64.c). My finding is that while some signed division helpers
-> exist, there don't appear to be standard, exported mul_sX_sX_div_sX
-> functions that are direct equivalents of the u64 version. This makes the
-> generic trait idea less broadly applicable than I initially hoped.
->
-> Furthermore, a more significant issue has come to my attention regarding
-> the u64 C function itself. The x86-specific static inline implementation
-> uses assembly that triggers a #DE (Divide Error) exception if the final
-> quotient overflows the 64-bit result. This would lead to a kernel panic.
->
-> /*
->  * Will generate an #DE when the result doesn't fit u64, could fix with a=
-n
->  * __ex_table[] entry when it becomes an issue.
->  */
-> static inline u64 mul_u64_u64_div_u64(...)
->
-> Given that a direct FFI binding would expose this potentially panicking
-> behavior to safe Rust, I am now reconsidering if binding this function
-> is the right approach.
->
-> Perhaps this should be handled in pure Rust. For my specific case with
-> the PWM driver, it's likely that a simple checked_mul would be
-> sufficient. In practice, many drivers use this function for calculations
-> like the following, where one of the multiplicands is not a full 64-bit
-> value:
-> wf->duty_offset_ns =3D DIV64_U64_ROUND_UP((u64)wfhw->duty_offset_cnt * NS=
-EC_PER_SEC,
->                                         ddata->clk_rate_hz);
->
-> In this common pattern, the intermediate multiplication often does not
-> risk overflowing a u64. Using checked_mul would be completely safe and
-> avoid the FFI complexity and the overflow risk entirely.
->
-> Given these points, do you still think pursuing the general-purpose
-> KernelMathExt trait via an FFI wrapper is the desired direction? Or
-> would you prefer that I pivot to a simpler, safer, pure-Rust approach
-> using checked_mul directly within the PWM driver where it is needed?
+> Your patch is looking a little bit strange, as the list of modified files
+> is located between the patch hunks, followed by another "Signed-off-by:".
 
-My understanding was that your use-case required the multiplication &
-division operation to work even if `a * b` would overflow and only the
-division by `c` would bring it back into u64 range. If you don't need
-that, then I would just use `checked_mul` as it is much simpler.
+Indeed.
+And at bare minimum please split at least to two:
+1) adding export.h;
+2) removing export.h.
 
-We can always reintroduce a `KernelMathExt` trait later when the need
-arises.
 
----
-Cheers,
-Benno
+--=20
+With Best Regards,
+Andy Shevchenko
