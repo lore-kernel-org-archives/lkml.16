@@ -1,144 +1,157 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 616E82DCBEB
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 21:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C021D90C8
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 21:10:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749762514; cv=none; b=PFGIVqh4cTGKx82bczLwpdwBvlyMOhk3twrkidQMUxJN42GdDdD/2ig+tEiZQd+KaNqEj8h3oVHBsJeTUlbUtGraBXEy6wN+cWB0o3AT/eW3smn2BlrgNtfqtw1A3LC+7GUq6+FoJ2Hh1LjncyDK3SW0cTTRSQeJYJ1RTJVqO5U=
+	t=1749762605; cv=none; b=BgjEVt95mkBF/Ap9+9dPZy2YrdPLSCGs8L0TdvrPSMOV8l5OYRglWlqoGeYyQi/GDFvIdevqeRbv87ctDusopHSrzz/fy47L1yUg24QBwMFzPzg1ePFuQ9LUqNrHHjNMI9YtMtfVWxnBQ9PC1zq0Yup6fRRsjF/y+FQ+eZRItWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749762514; c=relaxed/simple;
-	bh=yuBTQ6WiTrDaU4CchSedx0qrGzFBNNBHaQ/8F3M6QTc=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=jKMaMxqii9Mw1yAZTzl51cwGj8ExtTgqK08JRYn/8Olx0N+nQ6poeu3IQuotPbO2UyWfL/kGVlSwz5Uiy0beeBhHBvWsUoGQdqG6cVzOgtJTArmsP7jtCwAU6wS4UWx8cVT/FiZ3BHWjJxYLjYYcIHpjjvCH/ZpYOSqS1JRiLE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3da6fe2a552so30341185ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:08:32 -0700 (PDT)
+	s=arc-20240116; t=1749762605; c=relaxed/simple;
+	bh=vxuvJTjNZqMB2tsW+Gf45ICIGKCz2E/kBypfMf8Tk/0=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
+	 Content-Type; b=RzfwXw4liL5Ct4FvNccrM64qu7k919Y2WZHJyk2JPzkjawc+48+7oSK9bbt4hYha59Cmc3AL/vixWLVbSUEgd5weZ6p1UPTDvI9TzOqFhXTtj0QKeGn47q7oa+PMq2yLK+Vb6IUrHcVMU7e7I0VdnHX2TBrPO09iTwD9K7VnsKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=g7REbKfF; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="g7REbKfF"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-236377f00a1so14129445ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 14:10:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1749762603; x=1750367403; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PexcpAOOtkiKpS0ImSN7hb8qJkrQBZztkR4qfhcbAPg=;
+        b=g7REbKfF+msloaZ+zCwP8+nQ/ttT+zv9+6Ms6Yt4gcY3oZ0IA7XQvwdhQ7rgx3XFVN
+         T0DK1ZoSaJcC889H7Tn2HNcF3mRlTjRPDsJbtTBWlkkEgD0cB3faWblGrRQgNVPeb4eM
+         XRRb42ZRA3WNuv2Cypflk89nQj06kgnIiG/P6iu2bWVnrBULz5W6vukunCcOiFy+8QXw
+         nqx6L0oB49LhCRZvjZvmZlQQiba/HvbBFmsk5OMGg/6eMx/Qa6iXN7vSzxh+4oOk1r9s
+         UG/RICKbGih0J6cGmyetab/culDYmigWT0koJ+GmCMrvWwc4XRrtoQKtoVoxA6m1iFV3
+         I+NQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749762511; x=1750367311;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Gk29RHFC4M3kIeA0h8yMNCoYnyK1cf68Px8okUDLfg8=;
-        b=Nh4f8nqoT03yhoX5QYELxi0/blngrBZtB2OU+uwlkcm2A/UmCc9F/Q6biBBpSEgOdB
-         YUhPxR/ZueANmXtqtnpgoyNeqXFFVX4h4l2WL5jQcLGzSwnZ7dKbsbabVy9uDBWIPbBr
-         0H7ZuF/LLdefqF98UV/Yi+WyF8DcKVfW/fWdDjvJqbeqHAWu57yYTKuhMeIp3F59CwX9
-         4pj1JWg/IkafsWKG4m5vcaBrntUVv1HkkAa4brm+ngGYk/+urov3zHa6o21R7LZ/qZle
-         KQU5QK9kc7oUzGwxuz/caSVlUbd2b0PNzYWAS13pX3edQDa8RYwAj3dYzzHzzgGWCK1O
-         2VNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWp6UTS1hPRR4u+b9kuGJibiGfOT5YN42tfCWnSdwccaUD+PJFQxXWkfHL8Jy3Gcv4mceasomUsBPM3JZ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWkqr0HgEh7jwgMKnrMtohVEej0MIP98daWorwsnBTKOLqmK1g
-	ia6lsYSikpD3M4i7bM8sJ5mxR18s+kPTr60xo32GaNamXo4TuNXm9dVvy/b26HCF1DLGC++IKdf
-	XFOdzP83NGZKMHiKihrdd7H+AYw2MvfhD1n0MHljA4OlYaL503BgtmdYm41M=
-X-Google-Smtp-Source: AGHT+IFpRSV+o0VdZ2ADjEv8JE9Vhcg9FBZTlorBv5/RMH8DkJw5J7xlEfMsvL2YQ9KhggeWJ6cmRI1zG7FfczeFGTz7wfOW7AZz
+        d=1e100.net; s=20230601; t=1749762603; x=1750367403;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PexcpAOOtkiKpS0ImSN7hb8qJkrQBZztkR4qfhcbAPg=;
+        b=M8JziBKERMAzIbOJgUIzzVsm1kUdiBlwgWX2xNjg+OzjTIouT2toP1RRrMPzgUGjSA
+         sGoVkVEbqVQBytBB4V4h4nAjaSSwIrm+OTfKl910PI+eR0z5EHvvZl966E2a1BUKson9
+         00t2OW7U5fYY7zvZOl6o3YteimLYe3ZOksZrp4yyVcTL0SQLHGqwykkqFXcEQ0w8H/HP
+         qBNPBuEa50SM0BX/2x7VK9ofe3dcwoaXivCpsWQJEXnj6Z1g4XGbX0An3DECoFSo2JYW
+         rssCUZ73PAOKzS5eyuBOzHCM/T9XPnAYnPoBAVixSHCGj+3LYcTsC3GGjPsV/h2q4BCG
+         r8zQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU/RXRVi/S8WKAN1/JnltIiPis1N1GPko/HBOWHwkVSCQKqEGehrGp90mANGQL9cDK3RnNZjx3JnNUQxj4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygM1zzeYxB8frfLwXIt8H00/CELxDBgYNkSkAbXqXJnx3DOCe1
+	di16kPbNwreOm021dVLXaTIGLYr9pFXAK3cHCSgZ4ZTzOr4g1spbXGdA+MhbRc6ntkg=
+X-Gm-Gg: ASbGncsL+l24fTeDKqY9njm6M8QvbY/1maj6r0VTs7KwSFaI3U1NjeDnmDKtMAFywNo
+	P1Q0M3FGtUW2ZleuIIjJ005KlBuxVE6G6QoOWdlLhzyoP2bvmdmUQPNvWbpANwgSHDhI16HyNTp
+	8/PMTVAYdmMyn07ScF+h46IOYBJOc6yqVGZTDOmPsbBik0+DrsPKYLHqC0drEHRR0qHiCiINFSu
+	lD0vDzqLoyRnPy8cTM71Ql0VqyQWV7ZFO7L+AYapCu1N1j83OxdlY6Ah49fLxA8lE10vX1eKZ/g
+	lnH7D8RA40MHOSghe6e0Aocq7PdnoSaNFlPOG+jezMHSX5BOhJqfWm0ryUkjLIVxMZ1DxO0=
+X-Google-Smtp-Source: AGHT+IGL4tPRfvomS0QOENtAAhRSPdcbA0I2fW+JHeZhytSPqTuXvc5dEq7vCmd0bf7++ELPpHr/nQ==
+X-Received: by 2002:a17:902:ce87:b0:231:9902:1519 with SMTP id d9443c01a7336-2365dc2fde1mr7281095ad.39.1749762602989;
+        Thu, 12 Jun 2025 14:10:02 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:500::7:116a])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2365decb5f9sm1602845ad.194.2025.06.12.14.10.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 14:10:02 -0700 (PDT)
+Date: Thu, 12 Jun 2025 14:10:02 -0700 (PDT)
+X-Google-Original-Date: Thu, 12 Jun 2025 14:09:58 PDT (-0700)
+Subject:     Re: [PATCH] drm/amd/pm: Avoid more large frame warnings
+In-Reply-To: <c3cc254a-4018-49e1-bb6e-25b245d62f4e@amd.com>
+CC: alexander.deucher@amd.com, kenneth.feng@amd.com, christian.koenig@amd.com,
+  airlied@gmail.com, simona@ffwll.ch, asad.kamal@amd.com, amd-gfx@lists.freedesktop.org,
+  dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: lijo.lazar@amd.com
+Message-ID: <mhng-9A9FE10C-6479-4B2F-8FE0-2467BB76681E@palmerdabbelt-mac>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2782:b0:3dd:b7da:5256 with SMTP id
- e9e14a558f8ab-3de00bce3e1mr5539445ab.19.1749762511554; Thu, 12 Jun 2025
- 14:08:31 -0700 (PDT)
-Date: Thu, 12 Jun 2025 14:08:31 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <684b41cf.a00a0220.1eb5f5.0109.GAE@google.com>
-Subject: [syzbot] [net?] [nfs?] WARNING in remove_proc_entry (8)
-From: syzbot <syzbot+a4cc4ac22daa4a71b87c@syzkaller.appspotmail.com>
-To: Dai.Ngo@oracle.com, anna@kernel.org, chuck.lever@oracle.com, 
-	davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
-	jlayton@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, neil@brown.name, netdev@vger.kernel.org, 
-	okorniev@redhat.com, pabeni@redhat.com, syzkaller-bugs@googlegroups.com, 
-	tom@talpey.com, trondmy@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hello,
+On Thu, 12 Jun 2025 05:29:55 PDT (-0700), lijo.lazar@amd.com wrote:
+>
+>
+> On 6/11/2025 10:30 AM, Lazar, Lijo wrote:
+>>
+>>
+>> On 6/11/2025 2:51 AM, Palmer Dabbelt wrote:
+>>> From: Palmer Dabbelt <palmer@dabbelt.com>
+>>>
+>>> 9KiB frames seem pretty big, but without this I'm getting some warnings
+>>> as of 6.16-rc1
+>>>
+>>>       CC [M]  drivers/gpu/drm/amd/amdgpu/../pm/swsmu/smu13/smu_v13_0_6_ppt.o
+>>>     drivers/gpu/drm/amd/amdgpu/../pm/swsmu/smu13/smu_v13_0_6_ppt.c: In function 'smu_v13_0_6_get_gpu_metrics':
+>>>     drivers/gpu/drm/amd/amdgpu/../pm/swsmu/smu13/smu_v13_0_6_ppt.c:2885:1: error: the frame size of 8304 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]
+>>>      2885 | }
+>>>           | ^
+>>>     cc1: all warnings being treated as errors
+>>>
+>>
+>> Could you also provide your build environment details?
+>>
+>> With below in Makefile + gcc 11.4.0, stack frame size is 168 bytes.
 
-syzbot found the following issue on:
+I'm on GCC 12 on RISC-V (though looks like it showed up somewhere else, 
+too).
 
-HEAD commit:    2c4a1f3fe03e Merge tag 'bpf-fixes' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1432610c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c4c8362784bb7796
-dashboard link: https://syzkaller.appspot.com/bug?extid=a4cc4ac22daa4a71b87c
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1126ed70580000
+>>
+>> ccflags-y += -fstack-usage
+>>
+>> smu_v13_0_6_ppt.c:2667:16:smu_v13_0_6_get_gpu_metrics   168     static
+>>
+>> Thanks,
+>> Lijo
+>>
+>
+> Was able to see this issue in one of our systems. This patch fixed that
+> -  https://patchwork.freedesktop.org/patch/658216/
+>
+> Please try and let me know if it works for your config.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/cd1ec81a3ab8/disk-2c4a1f3f.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/992d9b6a25bf/vmlinux-2c4a1f3f.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/85a9bf583faa/bzImage-2c4a1f3f.xz
+Thanks, I just threw it at the tester.  I'll go post a Reviewed-by at 
+https://lore.kernel.org/all/20250612122321.801690-1-lijo.lazar@amd.com/ 
+if it works...
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a4cc4ac22daa4a71b87c@syzkaller.appspotmail.com
-
-WARNING: CPU: 0 PID: 6182 at fs/proc/generic.c:727 remove_proc_entry+0x45e/0x530 fs/proc/generic.c:727
-Modules linked in:
-CPU: 0 UID: 0 PID: 6182 Comm: syz.1.75 Not tainted 6.16.0-rc1-syzkaller-00010-g2c4a1f3fe03e #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:remove_proc_entry+0x45e/0x530 fs/proc/generic.c:727
-Code: 3c 02 00 0f 85 85 00 00 00 48 8b 93 d8 00 00 00 4d 89 f0 4c 89 e9 48 c7 c6 40 ba a2 8b 48 c7 c7 60 b9 a2 8b e8 33 81 1d ff 90 <0f> 0b 90 90 e9 5f fe ff ff e8 04 69 5e ff 90 48 b8 00 00 00 00 00
-RSP: 0018:ffffc90003e5fb08 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: ffff88804e6568c0 RCX: ffffffff817a92c8
-RDX: ffff88803046da00 RSI: ffffffff817a92d5 RDI: 0000000000000001
-RBP: ffff8880353bde80 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000001 R12: ffff8880353bddc0
-R13: ffff8880353bdea4 R14: ffff88802556cae4 R15: dffffc0000000000
-FS:  0000555562486500(0000) GS:ffff888124962000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000c0024fb070 CR3: 000000006b39a000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- sunrpc_exit_net+0x46/0x90 net/sunrpc/sunrpc_syms.c:76
- ops_exit_list net/core/net_namespace.c:200 [inline]
- ops_undo_list+0x2eb/0xab0 net/core/net_namespace.c:253
- setup_net+0x2e1/0x510 net/core/net_namespace.c:457
- copy_net_ns+0x2a6/0x5f0 net/core/net_namespace.c:574
- create_new_namespaces+0x3ea/0xa90 kernel/nsproxy.c:110
- unshare_nsproxy_namespaces+0xc0/0x1f0 kernel/nsproxy.c:218
- ksys_unshare+0x45b/0xa40 kernel/fork.c:3121
- __do_sys_unshare kernel/fork.c:3192 [inline]
- __se_sys_unshare kernel/fork.c:3190 [inline]
- __x64_sys_unshare+0x31/0x40 kernel/fork.c:3190
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x490 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f239858e929
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffd08ac9b18 EFLAGS: 00000246 ORIG_RAX: 0000000000000110
-RAX: ffffffffffffffda RBX: 00007f23987b5fa0 RCX: 00007f239858e929
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000040000080
-RBP: 00007f2398610b39 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007f23987b5fa0 R14: 00007f23987b5fa0 R15: 0000000000000001
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+>
+> Thanks,
+> Lijo
+>
+>>> Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
+>>> ---
+>>>  drivers/gpu/drm/amd/pm/swsmu/smu13/Makefile | 10 ++++++++++
+>>>  1 file changed, 10 insertions(+)
+>>>
+>>> diff --git a/drivers/gpu/drm/amd/pm/swsmu/smu13/Makefile b/drivers/gpu/drm/amd/pm/swsmu/smu13/Makefile
+>>> index 51f1fa9789ab..9824b7f4827f 100644
+>>> --- a/drivers/gpu/drm/amd/pm/swsmu/smu13/Makefile
+>>> +++ b/drivers/gpu/drm/amd/pm/swsmu/smu13/Makefile
+>>> @@ -23,9 +23,19 @@
+>>>  # Makefile for the 'smu manager' sub-component of powerplay.
+>>>  # It provides the smu management services for the driver.
+>>>
+>>> +ifneq ($(CONFIG_FRAME_WARN),0)
+>>> +    frame_warn_limit := 9216
+>>> +    ifeq ($(call test-lt, $(CONFIG_FRAME_WARN), $(frame_warn_limit)),y)
+>>> +        frame_warn_flag := -Wframe-larger-than=$(frame_warn_limit)
+>>> +    endif
+>>> +endif
+>>> +
+>>>  SMU13_MGR = smu_v13_0.o aldebaran_ppt.o yellow_carp_ppt.o smu_v13_0_0_ppt.o smu_v13_0_4_ppt.o \
+>>>  	    smu_v13_0_5_ppt.o smu_v13_0_7_ppt.o smu_v13_0_6_ppt.o smu_v13_0_12_ppt.o
+>>>
+>>>  AMD_SWSMU_SMU13MGR = $(addprefix $(AMD_SWSMU_PATH)/smu13/,$(SMU13_MGR))
+>>>
+>>>  AMD_POWERPLAY_FILES += $(AMD_SWSMU_SMU13MGR)
+>>> +
+>>> +CFLAGS_$(AMD_SWSMU_PATH)/smu13/smu_v13_0_12_ppt.o := $(frame_warn_flag)
+>>> +CFLAGS_$(AMD_SWSMU_PATH)/smu13/smu_v13_0_6_ppt.o := $(frame_warn_flag)
+>>
