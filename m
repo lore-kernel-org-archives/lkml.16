@@ -1,62 +1,64 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB26F1EA65;
-	Thu, 12 Jun 2025 12:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8431C2F4338;
+	Thu, 12 Jun 2025 12:15:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749730525; cv=none; b=c1l7IasFm0k2D/7u0uv2T60z6Ib3fIhUru6ukvtLqh4MLym9r3ec35eQj/5iTucKL2h3mFsHkTVOuazjMwPsnpzkQEOc1mzMbtv5XYDBt2+q7ZFvQH3l0Y5K5Fp+gVEYV6db3i9PImehmVTpp0uDsG+LDnrDqfuBmTGz+X6fB/k=
+	t=1749730524; cv=none; b=d4e25pEN4s5D7WK7bRLknO4DX/wAsiYzw6C7IMm+wPILnxpEVsR1uoo/3tjUM3eULc2Q2bUqxvscRd6NHp9kBxgvDxppo/1VhCBCOth4y/b5bpUiWRU+4Nnvs8pkithOWbM1//t7HvSbjGbCYaZA1VRudySny3T66qFiUJV58V8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749730525; c=relaxed/simple;
-	bh=oUg64Lp4ouK6DMtf4tzr73t1t8m/jAYlfcW8PGJ+fzw=;
+	s=arc-20240116; t=1749730524; c=relaxed/simple;
+	bh=SEs2j+fKgl/2ov7h4rZaMSfSjXIEe+/fSs1zEnX0EuY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bc0W0lpd9O9STtsi2YbPjpEXt6JU7Vm3cGbImkKcmCxNyXTHsnidc5uSQQYMdwkTyffE+T9hs697YccA68nzFM5/P4/OArcCFkC28+TgczuhEqPGS7f9WqVyzzclHbZ3HUCSO/BAuIk4LxscXJWmYP8iLbaFPDNHCttxeyqleXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gudvIHpO; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=GR5Q0JINEcqSqPi8DNS+nbVNIrsVhF/1r7lJ1kfs27bfOeBxZivLDKceUvdqFdRal5gvCG/ZTrZUVC7QaaKzY5WqnEsFwz5qShAsCv7SAfOIxoXgZgRoUAx5mXB6OWPsefGgjNIaBA7kZ+sAd042VlrxEJgA/SccqfRCKTVIxi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dqbsgbss; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gudvIHpO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dqbsgbss"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749730524; x=1781266524;
+  t=1749730523; x=1781266523;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=oUg64Lp4ouK6DMtf4tzr73t1t8m/jAYlfcW8PGJ+fzw=;
-  b=gudvIHpOogvJ1oomOzmJdDXea5Ro5u6WnR0mgTA1uDZouSKWvXKxuI0Z
-   3/ZSiZBaRIpt6HNYrXkjyWKXoT0VwIWjyoHJWvuBzHR7gyr07MwDTqhxG
-   vIxvmz5hv8sCEpW/pxhezMNdJ5d04UJW1U7BI6avTmLswH0Y3jwDji9ec
-   JZM/BuToiFEDBAkMaJpZiRkCniO1Je53ItJ70U1erS3E5bOOCfNEmlHSo
-   NMtpoRGemPNGMFSQJ2EU1DNuO0B0sZlRqLECDracHXoZEiC6uKTIpQ7SM
-   2J+uq2zS8YixhNQQk1Oqi9eQey7VxtrBL7qevWbFKAhwjSKDl36XBXfjP
-   w==;
-X-CSE-ConnectionGUID: DUucQXSYQ0eqOfs9SBM8ZA==
-X-CSE-MsgGUID: OIUHbBCaRpaG9471qKIDMA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="51993046"
+  bh=SEs2j+fKgl/2ov7h4rZaMSfSjXIEe+/fSs1zEnX0EuY=;
+  b=DqbsgbssxtFJlbegxMJXfTrk09uUaAuEl5W/cEl3ck4kDno+9aOgbz/o
+   eCRUW0Ri0bHopQWa8NTY8mWlW5S0wsKBOzZxjDixFfJtIuMaRKCoUxvoK
+   Tw0espqJIh1XWkpZjBhl2VkIrB1XCHK2laPcSfv+9ZXqxlSZo7++qomYr
+   bkiXxj8PnpWr2UcOC5JUsqK5X/g+MmZFMm1+RFj92yXkxJHEZFs8zUX9h
+   /o6E8JJgTKJHlgcp9/m3upD/dSL5MDXuzp3IiJXqmqdrkikLZRt7tupZ9
+   C644JmevJZRuXgX1HN0cUTnUGlYemlUNxc01Vfe+JwwxmNU2Jvo8DR2Se
+   Q==;
+X-CSE-ConnectionGUID: o25NS/IqTvSmGrqIwR33BA==
+X-CSE-MsgGUID: b19mZ9IaRAC0E91BpaBqNQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11461"; a="55579483"
 X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
-   d="scan'208";a="51993046"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 05:15:23 -0700
-X-CSE-ConnectionGUID: b6K50vP/RgyjqUsunZmkZw==
-X-CSE-MsgGUID: mi6lf1KhQBeM98UX02mCJg==
+   d="scan'208";a="55579483"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 05:15:22 -0700
+X-CSE-ConnectionGUID: mlZxuIRSQL6AppBv1TJt+w==
+X-CSE-MsgGUID: K9pnUkGYRBOhmJ7qtqpzIA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,230,1744095600"; 
-   d="scan'208";a="152412828"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO mdjait-mobl) ([10.245.244.205])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 05:15:19 -0700
-Date: Thu, 12 Jun 2025 14:15:10 +0200
-From: Mehdi Djait <mehdi.djait@linux.intel.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: sakari.ailus@linux.intel.com, tomi.valkeinen@ideasonboard.com, 
-	jacopo.mondi@ideasonboard.com, hverkuil@xs4all.nl, kieran.bingham@ideasonboard.com, 
-	naush@raspberrypi.com, mchehab@kernel.org, hdegoede@redhat.com, 
-	dave.stevenson@raspberrypi.com, arnd@arndb.de, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v5] media: v4l2-common: Add a helper for obtaining
- the clock producer
-Message-ID: <hgczrxw25a7jn6ubuwijga7yn7epek4yhtya2gnd77awsgxdgs@lv2oxey567hu>
-References: <20250521104115.176950-1-mehdi.djait@linux.intel.com>
- <mwh7xx675kulx6tdebuvqtdjfa4ih3ehi2brrcdxfemfnvxsrs@i5nxkvfskfhe>
- <20250521110944.GG12514@pendragon.ideasonboard.com>
+   d="scan'208";a="147410548"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 05:15:19 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uPgpv-00000005wdj-3Lmw;
+	Thu, 12 Jun 2025 15:15:15 +0300
+Date: Thu, 12 Jun 2025 15:15:15 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
+	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+	corbet@lwn.net, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	eraretuya@gmail.com
+Subject: Re: [PATCH v9 08/11] iio: accel: adxl345: add inactivity feature
+Message-ID: <aErE0xmlm4qBHg03@smile.fi.intel.com>
+References: <20250610215933.84795-1-l.rubusch@gmail.com>
+ <20250610215933.84795-9-l.rubusch@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,63 +67,235 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250521110944.GG12514@pendragon.ideasonboard.com>
+In-Reply-To: <20250610215933.84795-9-l.rubusch@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Hi Laurent,
-
-Thank you for the review!
-
-A very small question below.
-
-On Wed, May 21, 2025 at 01:09:44PM +0200, Laurent Pinchart wrote:
-> On Wed, May 21, 2025 at 12:52:08PM +0200, Mehdi Djait wrote:
-
-> > > +struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id)
-> > > +{
-> > > +	const char *clk_id __free(kfree) = NULL;
-> > > +	struct clk_hw *clk_hw;
-> > > +	struct clk *clk;
-> > > +	u32 rate;
-> > > +	int ret;
-> > > +
-> > > +	clk = devm_clk_get_optional(dev, id);
-> > > +	ret = device_property_read_u32(dev, "clock-frequency", &rate);
-> > > +
-> > > +	if (clk) {
-> > > +		if (!ret) {
-> > > +			ret = clk_set_rate(clk, rate);
-> > > +			if (ret)
-> > > +				dev_warn(dev, "Failed to set clock rate: %u\n",
-> > > +					 rate);
+On Tue, Jun 10, 2025 at 09:59:30PM +0000, Lothar Rubusch wrote:
+> Add the inactivity feature of the sensor to the driver. When activity
+> and inactivity are enabled, a link bit will be set linking activity and
+> inactivity handling. Additionally, the auto-sleep mode will be enabled.
+> Due to the link bit the sensor is going to auto-sleep when inactivity
+> was detected.
 > 
-> I would return ERR_PTR(ret) here.
+> Inactivity detection needs a threshold to be configured and a period of
+> time in seconds. After, it will transition to inactivity state, if
+> measurements stay below inactivity threshold.
 > 
-> > > +		}
-> > > +
-> > > +		return clk;
-> > > +	}
-> > > +
-> > > +	if (ret)
-> > > +		return ERR_PTR(ret);
+> When a ODR is configured the period for inactivity is adjusted with a
+> corresponding reasonable default value, in order to have higher
+> frequencies, lower inactivity times, and lower sample frequency but
+> give more time until inactivity. Both with reasonable upper and lower
+> boundaries, since many of the sensor's features (e.g. auto-sleep) will
+> need to operate between 12.5 Hz and 400 Hz. This is a default setting
+> when actively changing sample frequency, explicitly setting the time
+> until inactivity will overwrite the default.
 > 
-> And here, return a fixed error code, maybe -ENOENT, as propagating the
-> device_property_read_u32() error could result in strange error code for
-> the user.
+> Similarly, setting the g-range will provide a default value for the
+> activity and inactivity thresholds. Both are implicit defaults, but
+> equally can be overwritten to be explicitly configured.
 
-device_property_read_u32() returns the following:
+...
 
-Return: number of values if @val was %NULL,
-        %0 if the property was found (success),
-          %-EINVAL if given arguments are not valid,
-          %-ENODATA if the property does not have a value,
-          %-EPROTO if the property is not an array of numbers,
-          %-EOVERFLOW if the size of the property is not as expected.
-          %-ENXIO if no suitable firmware interface is present.
+> +static const struct iio_event_spec adxl345_fake_chan_events[] = {
+> +	{
+> +		/* inactivity */
+> +		.type = IIO_EV_TYPE_MAG,
+> +		.dir = IIO_EV_DIR_FALLING,
+> +		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
+> +		.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE) |
+> +			BIT(IIO_EV_INFO_PERIOD),
 
-Don't you think it is better to keep the return value and not overshadow
-it ? The function is well documented and this may help understand where
-the problem comes from if getting the clk fails.
+Slightly better
 
---
-Kind Regards
-Mehdi Djait
+		.mask_shared_by_type =
+			BIT(IIO_EV_INFO_VALUE) |
+			BIT(IIO_EV_INFO_PERIOD),
+
+> +	},
+> +};
+
+And the same for other similar cases.
+
+...
+
+> +/**
+> + * adxl345_set_inact_time - Configure inactivity time explicitly or by ODR.
+> + * @st: The sensor state instance.
+> + * @val_s: A desired time value, between 0 and 255.
+> + *
+> + * Inactivity time can be configured between 1 and 255 sec. If a val_s of 0
+> + * is configured by a user, then a default inactivity time will be computed.
+> + *
+> + * In such case, it should take power consumption into consideration. Thus it
+> + * shall be shorter for higher frequencies and longer for lower frequencies.
+> + * Hence, frequencies above 255 Hz shall default to 10 s and frequencies below
+> + * 10 Hz shall result in 255 s to detect inactivity.
+> + *
+> + * The approach simply subtracts the pre-decimal figure of the configured
+> + * sample frequency from 255 s to compute inactivity time [s]. Sub-Hz are thus
+> + * ignored in this estimation. The recommended ODRs for various features
+> + * (activity/inactivity, sleep modes, free fall, etc.) lie between 12.5 Hz and
+> + * 400 Hz, thus higher or lower frequencies will result in the boundary
+> + * defaults or need to be explicitly specified via val_s.
+> + *
+> + * Return: 0 or error value.
+> + */
+> +static int adxl345_set_inact_time(struct adxl345_state *st, u32 val_s)
+> +{
+> +	unsigned int max_boundary = 255;
+> +	unsigned int min_boundary = 10;
+> +	unsigned int val = min(val_s, max_boundary);
+> +	enum adxl345_odr odr;
+> +	unsigned int regval;
+> +	int ret;
+> +
+> +	if (val == 0) {
+> +		ret = regmap_read(st->regmap, ADXL345_REG_BW_RATE, &regval);
+> +		if (ret)
+> +			return ret;
+> +
+> +		odr = FIELD_GET(ADXL345_BW_RATE_MSK, regval);
+
+> +		val = (adxl345_odr_tbl[odr][0] > max_boundary)
+> +			? min_boundary : max_boundary -	adxl345_odr_tbl[odr][0];
+
+clamp() ?
+
+> +	}
+> +
+> +	return regmap_write(st->regmap, ADXL345_REG_TIME_INACT, val);
+> +}
+
+...
+
+>  	if (type == ADXL345_ACTIVITY) {
+>  		axis_ctrl = ADXL345_ACT_X_EN | ADXL345_ACT_Y_EN |
+>  				ADXL345_ACT_Z_EN;
+>  	} else {
+> -		axis_ctrl = 0x00;
+> +		axis_ctrl = ADXL345_INACT_X_EN | ADXL345_INACT_Y_EN |
+> +				ADXL345_INACT_Z_EN;
+>  	}
+
+Now this can be as simple as
+
+	axis_ctrl = ADXL345_ACT_X_EN;
+	if (type == ADXL345_ACTIVITY)
+		axis_ctrl |= ADXL345_ACT_Y_EN | ADXL345_ACT_Z_EN;
+	else
+		axis_ctrl |= ADXL345_INACT_Y_EN | ADXL345_INACT_Z_EN;
+
+Yeah, I don't know how to make the diff better (it gets worse), but the end
+result is better.
+
+One way, which I don't like much is to previously have this conditional written as:
+
+	axis_ctrl = ADXL345_ACT_X_EN;
+	if (type == ADXL345_ACTIVITY)
+		axis_ctrl |= ADXL345_ACT_Y_EN | ADXL345_ACT_Z_EN;
+	else
+		axis_ctrl = 0;
+
+...
+
+> +	ret = regmap_assign_bits(st->regmap, ADXL345_REG_POWER_CTL,
+> +				 (ADXL345_POWER_CTL_AUTO_SLEEP | ADXL345_POWER_CTL_LINK),
+
+Unneeded parentheses.
+
+> +				 en);
+>  	if (ret)
+>  		return ret;
+
+...
+
+>  static int adxl345_set_odr(struct adxl345_state *st, enum adxl345_odr odr)
+>  {
+> -	return regmap_update_bits(st->regmap, ADXL345_REG_BW_RATE,
+> +	int ret;
+> +
+> +	ret = regmap_update_bits(st->regmap, ADXL345_REG_BW_RATE,
+>  				 ADXL345_BW_RATE_MSK,
+>  				 FIELD_PREP(ADXL345_BW_RATE_MSK, odr));
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* update inactivity time by ODR */
+> +	return adxl345_set_inact_time(st, 0);
+
+Okay, in this case the initial form of
+
+	int ret;
+
+	ret = ...
+	if (ret)
+		return ret;
+
+	return 0;
+
+
+will be better with the respectful comment (as Jonathan suggested) in that
+change that this is not optimal as standalone change, but it will help reduce
+churn in the next change(s).
+
+>  }
+
+...
+
+>  static int adxl345_set_range(struct adxl345_state *st, enum adxl345_range range)
+>  {
+> -	return regmap_update_bits(st->regmap, ADXL345_REG_DATA_FORMAT,
+
+Same here.
+
+> +	unsigned int act_threshold, inact_threshold;
+> +	unsigned int range_old;
+> +	unsigned int regval;
+> +	int ret;
+> +
+> +	ret = regmap_read(st->regmap, ADXL345_REG_DATA_FORMAT, &regval);
+> +	if (ret)
+> +		return ret;
+> +	range_old = FIELD_GET(ADXL345_DATA_FORMAT_RANGE, regval);
+> +
+> +	ret = regmap_read(st->regmap,
+> +			  adxl345_act_thresh_reg[ADXL345_ACTIVITY],
+> +			  &act_threshold);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_read(st->regmap,
+> +			  adxl345_act_thresh_reg[ADXL345_INACTIVITY],
+> +			  &inact_threshold);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_update_bits(st->regmap, ADXL345_REG_DATA_FORMAT,
+>  				 ADXL345_DATA_FORMAT_RANGE,
+>  				 FIELD_PREP(ADXL345_DATA_FORMAT_RANGE, range));
+> +	if (ret)
+> +		return ret;
+> +
+> +	act_threshold = act_threshold * adxl345_range_factor_tbl[range_old]
+> +		/ adxl345_range_factor_tbl[range];
+> +	act_threshold = min(U8_MAX, max(1, act_threshold));
+> +
+> +	inact_threshold = inact_threshold * adxl345_range_factor_tbl[range_old]
+> +		/ adxl345_range_factor_tbl[range];
+> +	inact_threshold = min(U8_MAX, max(1, inact_threshold));
+> +
+> +	ret = regmap_write(st->regmap, adxl345_act_thresh_reg[ADXL345_ACTIVITY],
+> +			   act_threshold);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return regmap_write(st->regmap, adxl345_act_thresh_reg[ADXL345_INACTIVITY],
+> +			   inact_threshold);
+>  }
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
