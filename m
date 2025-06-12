@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC3B22FF37;
-	Thu, 12 Jun 2025 10:14:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA413C1F;
+	Thu, 12 Jun 2025 10:16:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749723288; cv=none; b=FWR+LofdwzoDr9NmSlLiOjXS8rSSem/QzRuQmk5H5zhZcQXHyfXp2p5INrYZNLprf6nLAEt5FUttASjvTpH+v7Gzyv8tLqDpT10W9xDl6yCbrAPnOFr+O8oHOPF0bfTxMlYTWbkiaa+01eVQ3jID8ClD07jIQvseBzyOhWhbp4U=
+	t=1749723363; cv=none; b=hkS5oaHcqd7FrC5bb/pGHbDwTMHWAZ0YkqM63J6WW88N/v9HRiD1nx8F1SPC+gehs2r517j1Q7MVg0grWklpEnhUn1VVnOY2xzKviaBzbmpblxUfIeB0SAnymlJgzRI4GBYoqhnPNlOiQo46PLEomyxe+Brx3yOiPyYGNtKfThY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749723288; c=relaxed/simple;
-	bh=i2cHV/Yqlp5Wqq3ytl1FXkrfZHTvJKGGxfV2IqHWh3Y=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=IpYhUk2DNphSz5AXNPPHJdTHS24e8MnF88hlDkvq2nbXHqI8+Zm0TbGsgmodI+DYLtdY3XyEx/gQfurIaz1ENfebMXjBYuRS5+7FIlnQPqG4Aq8QS9LORzlCwlTqaCcToSgL9B7WU96BY82o+b2LMyIJUBc4J8weXJWyHV7spQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vAcrUhXd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749723363; c=relaxed/simple;
+	bh=7FGoClZ0ml34gXc4dFPqG8zZERR14btnitxt2Mt6UNs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=U6MvKa2Jopq5guVdZjSq/MyyfdJZWTRTPaolijJ7RvEViaG8H3K9inyQ4LugJf2v/R51H8Aqo7HLjBg6VODJdElPaRDL2TmgHMbhl33NY+ybW8v71OzXPCtRjj1QnaEAfGjzkBr6JMNHw9NJY9VjB1mhud4ekqJ4N6S9rmwQtoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LfakI3ex; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vAcrUhXd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAE77C4CEEA;
-	Thu, 12 Jun 2025 10:14:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LfakI3ex"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B768EC4CEEA;
+	Thu, 12 Jun 2025 10:15:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749723288;
-	bh=i2cHV/Yqlp5Wqq3ytl1FXkrfZHTvJKGGxfV2IqHWh3Y=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=vAcrUhXd6EcHsF0iKvHsD3Y5X6hl+NdM9KDJMh4DLnOgu2j7J/aaLaEJycI7wPEOR
-	 EvylEAEpKln6BP5S30djNorLdSXiYMcdW0LOAynlrPkn+p7sMqGYSJnq327Kmdzp5Z
-	 bv7sipOQg95+hFJqd4vdXf1ne2kvpNtrEC5e02M/UGZpFtnBMt2scFmUNzgqxActkm
-	 p8eelP3YfvcQwekC9vs4u+oLvq5ufnNFQ0QlVLjEHJ0EkOcyPujRiiz701mm7T8uCh
-	 hvmbyMfI0FYedCNm7R/+zlZXfmpQLFYV1xIZgruS+LjWDwTiAEQiJ91Brvtvo1U/g9
-	 7kZr1jjkuL8FQ==
-Message-ID: <0b404d5c-2315-45cd-b25e-d5ab92040887@kernel.org>
-Date: Thu, 12 Jun 2025 12:14:39 +0200
+	s=k20201202; t=1749723362;
+	bh=7FGoClZ0ml34gXc4dFPqG8zZERR14btnitxt2Mt6UNs=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=LfakI3expq8CouXdOICpLytc1xOKKFqPeAcib0tnQ4dxZ588j99YPtCQU9Nv6XYG3
+	 AfkbW8PJrf3dCXCh6DksHTAwRb/r3jnKGFTvRLicPKl4hw1lZKuCwZ16WPsA6nbr6Y
+	 Ydb6lH7vKUnJuHWCDKhypq3Qme8UPbHK7ob3+luuhBpR2nZuLN7Z0AVhqeEdwftOIj
+	 kqj+rXEXWcbjaFx8NCVwH82WaNGs8eb/0xxvHPKqq5/PxPHThId4LW5BI/K0COoD/z
+	 /o2em6nIJCHD0c9nfTuySDNMDOxEURanK96KYz54R0Yj44eOE8gUeZGWCA1QmftrYf
+	 Ifu6KJAGoIqnA==
+Message-ID: <278193c2-7061-4cd3-88e3-402ac85eddf7@kernel.org>
+Date: Thu, 12 Jun 2025 12:15:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v0 4/5] arm64: dts: aspeed: Add AST2700 EVB device tree
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v0 1/5] dt-bindings: arm: aspeed: Add AST2700 board
+ compatible
 To: Ryan Chen <ryan_chen@aspeedtech.com>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
@@ -56,8 +56,8 @@ To: Ryan Chen <ryan_chen@aspeedtech.com>, Rob Herring <robh@kernel.org>,
  wthai@nvidia.com, leohu@nvidia.com, dkodihalli@nvidia.com,
  spuranik@nvidia.com
 References: <20250612100933.3007673-1-ryan_chen@aspeedtech.com>
- <20250612100933.3007673-5-ryan_chen@aspeedtech.com>
- <7d4d4c53-d18b-421b-8279-6325771a1cb9@kernel.org>
+ <20250612100933.3007673-2-ryan_chen@aspeedtech.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -102,32 +102,22 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <7d4d4c53-d18b-421b-8279-6325771a1cb9@kernel.org>
+In-Reply-To: <20250612100933.3007673-2-ryan_chen@aspeedtech.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 12/06/2025 12:14, Krzysztof Kozlowski wrote:
-> On 12/06/2025 12:09, Ryan Chen wrote:
->> - Add ast2700-evb.dts for the ASPEED AST2700 Evaluation Board.
->> - Set board model and compatible strings: "aspeed,ast2700-evb",
->> "aspeed,ast2700".
->> - Reference the common AST2700 SoC device tree aspeed-g7.dtsi.
->> - Define memory layout and reserved-memory regions for
->> MCU firmware, ATF, and OP-TEE.
->> - Add OP-TEE firmware node with SMC method.
->> - Set up serial12 as the default console.
->>
->> Signed-off-by: Ryan Chen <ryan_chen@aspeedtech.com>
+On 12/06/2025 12:09, Ryan Chen wrote:
+> Add device tree compatible string for AST2700 based boards
+> ("aspeed,ast2700-evb" and "aspeed,ast2700") to the Aspeed SoC
+> board bindings. This allows proper schema validation and
+> enables support for AST2700 platforms.
 > 
-> How this can be patch 0?
-> 
+> Signed-off-by: Ryan Chen <ryan_chen@aspeedtech.com>
+> ---
+Align with your colleagues. This is not v0, but vX+1. And X was already
+3 since you sent it!
 
-I meant: v0.
-
-> You need to start using standard tools: git and b4 (see submitting
-> patches and other process docs).
-> 
-> 
+https://lore.kernel.org/all/20241212155237.848336-4-kevin_chen@aspeedtech.com/
 
 Best regards,
 Krzysztof
