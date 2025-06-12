@@ -1,182 +1,147 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E4C93C1F
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 10:17:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF0E231825;
+	Thu, 12 Jun 2025 10:17:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749723463; cv=none; b=hfyIsLR2dQrhRh1+mbNgs8FLcixixwC60gKIyTLH4uGOvYDIBlfzxobcYHy3UQzJU3VYuQkgvmxKannMU2oCcn4ynsBM9TgR6C7vMzaK6kEnz+KD9n1yow1TYgtH6u4GkquIKP0oc3pV0KRxvW1qOht2usjJR+7pDHp5L+sBoi0=
+	t=1749723467; cv=none; b=gh+1S58YfNXyvXzvfU2hIVsBE+7mSPj9tcmK3Mkxuxlf48KZkiIejc5WCYtU38iSVVrbZrITBvnbf5bRYnKzVIuwV5f+UgWPMjD2eLfrXGg43+xFLZEEO74LbQyLXIPum1njlxLDWonXVXZtiwB2ELaQXtSZCtWRsIcAYwQfrGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749723463; c=relaxed/simple;
-	bh=3VS2CXhVqpFrEmQU9HpV0X8mS7in4Erpbb/MLjMw30Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kyyhFVphV6P7liYC2GtHHKHcxxvlUAgpzw7ckrMXcbib70GKJ+SoK72tzcHwlWN7t3yuj6G0z8BzCOKBarAm1RPktpEybQBBuj6yLszqnU5ZeyHduXuRLkJId++OAMzm38giMvx8tq9x9Xcr1rk5QnO6HLEGNFdC7N73Ykncsyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=yuSN7z6D; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Q8TprLYy; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=yuSN7z6D; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Q8TprLYy; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1749723467; c=relaxed/simple;
+	bh=nH0ZbGBKHPf5MFpT38ALZh/nq/TUB3USQxhADgIOh0U=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=jp5ORqhb1XQgZCN55CkzIfmm7Vk0+ldNdGIvG0Xc2xNHljyRDO+83h8AA2rTMtsgfjxdwwXl8NuhSRFhmmY3VtECnTIxmoAm5zaSH2fPtm4sz1aCX5e2Bu9LH/JE59FHX78HGdpQvGLaMZ6UUOQSxGE64B1PtSriMTaCX/EJ5ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BeaF14EX; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="yuSN7z6D";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Q8TprLYy";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="yuSN7z6D";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Q8TprLYy"
-Received: from localhost (unknown [10.100.12.32])
-	by smtp-out2.suse.de (Postfix) with ESMTP id A81151F7EC;
-	Thu, 12 Jun 2025 10:17:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749723459; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V683jXcvBO/wNHAZuQXuIAcraBnYtRvfHmOlvfeKHUA=;
-	b=yuSN7z6DhLLed/W2OioNoE2AXN+M+85NxG1sRDtk5jG/P3iOQ+MRpHKEiQuOqsMV5kNdTS
-	eo5keclbNrj6Be3KaV+T7qKUJN78TyivfDTRU/5yU/63sVCITxV1yHtwmdCPl5ooBiADxD
-	2W2pSlfB54kzszBPRUksSNEWcdlgXO4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749723459;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V683jXcvBO/wNHAZuQXuIAcraBnYtRvfHmOlvfeKHUA=;
-	b=Q8TprLYymlMK5MppTEwWlQMn3nQMmWfTBB6lgrzTzx/K6ixAqeOk+7Zv9cyP36zuD72ozJ
-	WxUeKMMK0oAc0hDw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749723459; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V683jXcvBO/wNHAZuQXuIAcraBnYtRvfHmOlvfeKHUA=;
-	b=yuSN7z6DhLLed/W2OioNoE2AXN+M+85NxG1sRDtk5jG/P3iOQ+MRpHKEiQuOqsMV5kNdTS
-	eo5keclbNrj6Be3KaV+T7qKUJN78TyivfDTRU/5yU/63sVCITxV1yHtwmdCPl5ooBiADxD
-	2W2pSlfB54kzszBPRUksSNEWcdlgXO4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749723459;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V683jXcvBO/wNHAZuQXuIAcraBnYtRvfHmOlvfeKHUA=;
-	b=Q8TprLYymlMK5MppTEwWlQMn3nQMmWfTBB6lgrzTzx/K6ixAqeOk+7Zv9cyP36zuD72ozJ
-	WxUeKMMK0oAc0hDw==
-Date: Thu, 12 Jun 2025 12:17:39 +0200
-From: Jiri Bohac <jbohac@suse.cz>
-To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
-	akpm@linux-foundation.org
-Cc: Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
-	Pingfan Liu <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	David Hildenbrand <dhildenb@redhat.com>,
-	Michal Hocko <mhocko@suse.cz>
-Subject: [PATCH v5 3/5] kdump, documentation: describe craskernel CMA
- reservation
-Message-ID: <aEqpQwUy6gqSiUkV@dwarf.suse.cz>
-References: <aEqnxxfLZMllMC8I@dwarf.suse.cz>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BeaF14EX"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55C88vWi026067;
+	Thu, 12 Jun 2025 10:17:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=0mjt7j2US1dgiwZAzjj32e
+	dM35HUp9TmrTsIXRNxYZA=; b=BeaF14EXJGvLkaK4TJM3SCxiRPajWJBzAuoUEQ
+	jZK8VhjDlve2Xw8bDmJZrqZIewM4dZd20qfAmWhrWMHz2evOmhL9CXQWf2ZTUJ6X
+	ixy8CZ66DDMK9ovlUfZxSr+CRoMlyfHS8mXA/EVUOLO2zxCvWHg1Azwt18x70LHH
+	wgv3AAr5S/tfGFEsAAfX2dpecM9ZilNpYzGF9c+FTWbo5hu4HxlyRBZmG9qmurfj
+	cLjKyz7Igfb+UcnRykgRNqGZWUB6yfEWLB5A0Fef/C0/ZAbfPkK8gPrJgOsKym0J
+	OwKRp5SEU1dvO983LWejvbIoMzOQG5PYBpx/zfJiNfr6wONQ==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 475v2yaxn8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Jun 2025 10:17:43 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55CAHgJ4005524
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Jun 2025 10:17:42 GMT
+Received: from hu-tdas-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 12 Jun 2025 03:17:38 -0700
+From: Taniya Das <quic_tdas@quicinc.com>
+Subject: [PATCH v3 0/2] Add support for clock controllers and CPU scaling
+ for QCS615
+Date: Thu, 12 Jun 2025 15:47:19 +0530
+Message-ID: <20250612-qcs615-mm-cpu-dt-v3-v3-0-721d5db70342@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEqnxxfLZMllMC8I@dwarf.suse.cz>
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.998];
-	MIME_GOOD(-0.10)[text/plain];
-	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_ZERO(0.00)[0];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[dwarf.suse.cz:mid,localhost:helo]
-X-Spam-Level: 
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAC+pSmgC/03NzW7DIBAE4FexOHcrfhxsrKjqe0Q5wLK0qMYk4
+ FiRorx7SdJDjzPSfHNjlUqkyqbuxgptsca8tKDeOobfdvkiiL5lJrnccS0EnLFqsYOUAE8X8Ct
+ sCoIjGmjsER1nbXkqFOL1qR6Or1zofGn4+ipZolrtE5+6/Z8t/9mbAZwz/gDmZS15nqnUR8nBq
+ d7jMHpNwn02E+OC75jTx+PY2UptklJcp04Yq7k0yhnT/JF7MwQpg5DSolUBe+2tt8Gw4/3+C5f
+ TUmEIAQAA
+X-Change-ID: 20250611-qcs615-mm-cpu-dt-v3-fbee7e84ccb0
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik
+	<quic_imrashai@quicinc.com>,
+        Jagadeesh Kona <quic_jkona@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Taniya Das <quic_tdas@quicinc.com>,
+        "Konrad
+ Dybcio" <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.15-dev-aa3f6
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDA3OSBTYWx0ZWRfX4HQbdjYYfO06
+ SHOzKC+2zdxY1bc6c/IbiKIA9O5yP8W7jNDHXXaDSkKGuz42fsByvltXT/bybNYNJLW4mlfif4A
+ SJFZ4M437XhHsH+csTNRkcgGds8aGtR0ThWFbqfuCdRltEyq7Ho53bGPOM9IlXv/yrIjq+JZoUM
+ c5VYfJa+N61zFpTGCrPfOFo7QCoOcNDoLwI1KX7Uc0ivhph66uFzWv5Gam06YTNUoRJA29keqgC
+ cUiLN+tIb10REKPXrEQGJwiAnkdHtHVuqMiNTAOYRQmzvKArouEnUNE0NZeAjbRbx6QIBvomO6u
+ Q9rHrskjueQkvO24bKQyWzgDwBStMSOT7FXgYCW49zl8FE5K0dr1rauDZisq1YGeIkG6iqd1ada
+ iZ74B+BDLYAV1WU1c0qX52P3kucdLJLR0fqSV19dPVKULHwAFV7I23SCDpD5GKnmi6RsCZWk
+X-Proofpoint-GUID: DISlMIodEt1B90BpA_6ZAVVTDy1PE5wi
+X-Proofpoint-ORIG-GUID: DISlMIodEt1B90BpA_6ZAVVTDy1PE5wi
+X-Authority-Analysis: v=2.4 cv=f+BIBPyM c=1 sm=1 tr=0 ts=684aa947 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=ukys1PUpxxTaYa5xlC8A:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-12_07,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 spamscore=0 mlxlogscore=728 bulkscore=0 impostorscore=0
+ lowpriorityscore=0 priorityscore=1501 adultscore=0 phishscore=0 mlxscore=0
+ malwarescore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506120079
 
-Describe the new crashkernel ",cma" suffix in Documentation/
+Add the video, camera, display and gpu clock controller nodes and the
+cpufreq-hw node to support cpu scaling.
 
-Signed-off-by: Jiri Bohac <jbohac@suse.cz>
+Clock Dependency:
+https://lore.kernel.org/all/20250119-qcs615-mm-v4-clockcontroller-v4-0-5d1bdb5a140c@quicinc.com/
+
+Changes in v3:
+- Move the cpufreq-hw node under /soc {}
+- Add the RB-tag on (v2) from [Konrad]
+
+Changes in v2:
+- pad address field to 8 digits [Dmitry]
+- Replace cpu/CPU in commit [Dmitry]
+- Update the binding to use SC7180 compatible, as QCS615 uses the same
+  hardware version.
+- Link to v1: https://lore.kernel.org/r/20241108-qcs615-mm-dt-nodes-v1-0-b2669cac0624@quicinc.com
+
+Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
 ---
- Documentation/admin-guide/kdump/kdump.rst     | 21 ++++++++++++++++++
- .../admin-guide/kernel-parameters.txt         | 22 +++++++++++++++++++
- 2 files changed, 43 insertions(+)
+Taniya Das (2):
+      arm64: dts: qcom: qcs615: Add clock nodes for multimedia clock
+      arm64: dts: qcom: qcs615: Add CPU scaling clock node
 
-diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-index 1f7f14c6e184..089665731509 100644
---- a/Documentation/admin-guide/kdump/kdump.rst
-+++ b/Documentation/admin-guide/kdump/kdump.rst
-@@ -311,6 +311,27 @@ crashkernel syntax
- 
-             crashkernel=0,low
- 
-+4) crashkernel=size,cma
-+
-+	Reserve additional crash kernel memory from CMA. This reservation is
-+	usable by the first system's userspace memory and kernel movable
-+	allocations (memory balloon, zswap). Pages allocated from this memory
-+	range will not be included in the vmcore so this should not be used if
-+	dumping of userspace memory is intended and it has to be expected that
-+	some movable kernel pages may be missing from the dump.
-+
-+	A standard crashkernel reservation, as described above, is still needed
-+	to hold the crash kernel and initrd.
-+
-+	This option increases the risk of a kdump failure: DMA transfers
-+	configured by the first kernel may end up corrupting the second
-+	kernel's memory.
-+
-+	This reservation method is intended for systems that can't afford to
-+	sacrifice enough memory for standard crashkernel reservation and where
-+	less reliable and possibly incomplete kdump is preferable to no kdump at
-+	all.
-+
- Boot into System Kernel
- -----------------------
- 1) Update the boot loader (such as grub, yaboot, or lilo) configuration
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index ea81784be981..ee6be52dd8a5 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -983,6 +983,28 @@
- 			0: to disable low allocation.
- 			It will be ignored when crashkernel=X,high is not used
- 			or memory reserved is below 4G.
-+	crashkernel=size[KMG],cma
-+			[KNL, X86] Reserve additional crash kernel memory from
-+			CMA. This reservation is usable by the first system's
-+			userspace memory and kernel movable allocations (memory
-+			balloon, zswap). Pages allocated from this memory range
-+			will not be included in the vmcore so this should not
-+			be used if dumping of userspace memory is intended and
-+			it has to be expected that some movable kernel pages
-+			may be missing from the dump.
-+
-+			A standard crashkernel reservation, as described above,
-+			is still needed to hold the crash kernel and initrd.
-+
-+			This option increases the risk of a kdump failure: DMA
-+			transfers configured by the first kernel may end up
-+			corrupting the second kernel's memory.
-+
-+			This reservation method is intended for systems that
-+			can't afford to sacrifice enough memory for standard
-+			crashkernel reservation and where less reliable and
-+			possibly incomplete kdump is preferable to no kdump at
-+			all.
- 
- 	cryptomgr.notests
- 			[KNL] Disable crypto self-tests
+ arch/arm64/boot/dts/qcom/qcs615.dtsi | 80 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 80 insertions(+)
+---
+base-commit: 19a60293b9925080d97f22f122aca3fc46dadaf9
+change-id: 20250611-qcs615-mm-cpu-dt-v3-fbee7e84ccb0
+prerequisite-message-id: <20250612-qcs615-mm-v9-clock-controllers-v9-0-b34dc78d6e1b@quicinc.com>
+prerequisite-patch-id: 90315d53ce2ec33b6503433068dd9a3ecdba8e8c
+prerequisite-patch-id: 6414e91724ba90fe820c3d2bb5caa720c99cf3be
+prerequisite-patch-id: b9e3a2663e27dc60be0eff97baf3739db8516eeb
+prerequisite-patch-id: 23062409b23977940c958bf22a215ae5dc45e93a
+prerequisite-patch-id: faf0d569634dad432f67acd073343e47add0ee68
+prerequisite-patch-id: 9a0caaaa8d25634dd0db5edffbc939eb7e734c6c
+prerequisite-patch-id: 1a1dbf7144745dfbc60c0f2efcad188d1fc26779
+prerequisite-patch-id: 2327271def3656283d53dadb2ce9f8cd561249d1
+prerequisite-patch-id: b12e39a6a0763b8ec23c99c82f3ac6acdca26f85
+prerequisite-patch-id: 71f0eb0fb98c3177dcbe6736c120cba4efef0c33
 
+Best regards,
 -- 
-Jiri Bohac <jbohac@suse.cz>
-SUSE Labs, Prague, Czechia
-
+Taniya Das <quic_tdas@quicinc.com>
 
