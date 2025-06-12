@@ -1,250 +1,184 @@
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.229.168.213])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD8B523AB9F;
-	Thu, 12 Jun 2025 10:48:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.229.168.213
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C307E223339;
+	Thu, 12 Jun 2025 10:49:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749725309; cv=none; b=Xn15GS4ywfps/hCGjzVAnjtN0gmfQpFOjDriT/mymcwLzY1sHRUnnZFRTyWYCI264cZFc08kj3Zbj8wzLYacNdl/3dMfTPJOHS1y3GuSUsavmfkpZwDlWU2BzRpqmac4FFcSSg3Tgbj9DuWbaDTLMrUoZqEUL1ry+DddyF9eI+8=
+	t=1749725356; cv=none; b=Qyd1GRCBUgSW/CKO3/2DxjyoGXcLMXBDgWSpusN3xu8V+yP+Z9qlV6tpv4qqjIM2o5YN2lCXexfGNZEAgKB3PXSD0BZPNCm+b6lZ3uRhCVYXehZ5snSvZkgitraU/rOiIQd5oLUmS+ytKaSNt5C0GpXVUEohD3M3t6NsPwU5zZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749725309; c=relaxed/simple;
-	bh=E++j0VEKWl4vXpOMr+jNQnxTUhTcRw3k4Jgt5LDWoPA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KdFwiqpuNid49Yzk/VAX+XqmuuJv5djyiWEDfcdoFvmtLl8s2H5XxW1mUJ+HMUSty7WYgL08fwNKIw/d/cssXGKDOJ4ELOjuepm1kDcy9/d3SNJjjEqbwDMZtesBMry1EmnuVxkYJqTKxIB+ghcScdbb3/sTrpoTM6QkFEUC9MU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=52.229.168.213
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from E0006800LT.eswin.cn (unknown [10.12.96.77])
-	by app1 (Coremail) with SMTP id TAJkCgBXexFusEpo9nueAA--.22791S2;
-	Thu, 12 Jun 2025 18:48:16 +0800 (CST)
-From: Yulin Lu <luyulin@eswincomputing.com>
-To: linus.walleij@linaro.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kees@kernel.org,
-	gustavoars@kernel.org,
-	brgl@bgdev.pl,
-	linux-hardening@vger.kernel.org
-Cc: ningyu@eswincomputing.com,
-	linmin@eswincomputing.com,
-	zhengyu@eswincomputing.com,
-	huangyifeng@eswincomputing.com,
-	fenglin@eswincomputing.com,
-	lianghujun@eswincomputing.com,
-	Yulin Lu <luyulin@eswincomputing.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v5 1/2] dt-bindings: pinctrl: eswin: Document for EIC7700 SoC
-Date: Thu, 12 Jun 2025 18:48:11 +0800
-Message-Id: <20250612104811.1206-1-luyulin@eswincomputing.com>
-X-Mailer: git-send-email 2.31.1.windows.1
-In-Reply-To: <20250612104539.2011-1-luyulin@eswincomputing.com>
-References: <20250612104539.2011-1-luyulin@eswincomputing.com>
+	s=arc-20240116; t=1749725356; c=relaxed/simple;
+	bh=/p2+oAN4N9RGll1iL8VgjWS6CIl6MG8l1wXxzcHOKdM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=R9shbjv/mOGg0rmSSIqtCuIqQflEIF5v0QJPeZNY+xHtOVJw/wbFGZ8tUZT5jYU5iWB8xnNK0mAb0xbjaRvB+OWb8v6xttD+Xbj+Iq3luPcTAgtfQ5g1kKcZuPSjLMJcwXgxjIa95uw0TrjOUkAthuL69TunW3EDpKh9NdGd4yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UiCPzLXp; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UiCPzLXp"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55C9IMav002515;
+	Thu, 12 Jun 2025 10:49:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	xAru5tL6A9/kwMmGSI/WjuX5wDfBZY9BmkF91WMW9as=; b=UiCPzLXpMWtN2Ugk
+	DqKrYrijt5dQFy7Ygvj22hHCzfHRMPNK2bCMpXV/cpzRIAlXh8jyak3zyhfCGbJh
+	NoCPK4WQuR7W5fnCuO683hXjCKaGsWRcKppLNNIM03c8zf0+aw6GrF2z262R5xN7
+	YuhFbmZZLHlbh6ZrF0ysWtexueuGzbW1e0MoEdhkD/Bedgw1OeFuUhJdiVIaNhIQ
+	3NO9CCCEnYlD0G23bu2wqSSDSSy+scYSrmw3db605l44on9EpSqNtSkb2pnP5jd8
+	GXJ4WDVnbBf606MqCFS2q4JlXhX/T4qGPIhfrsGLa+0j1MDATueSb0U1aFqvKS49
+	CJdcrA==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 477jbphqav-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Jun 2025 10:49:08 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55CAn83P014123
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Jun 2025 10:49:08 GMT
+Received: from [10.231.195.67] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 12 Jun
+ 2025 03:49:06 -0700
+Message-ID: <73c6cd0a-9c15-421e-afa4-27fe173bb428@quicinc.com>
+Date: Thu, 12 Jun 2025 18:49:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:TAJkCgBXexFusEpo9nueAA--.22791S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3XFW8KrWDGw45GryUZry7ZFb_yoW7Kr1xpF
-	43W34fJF1qqr1xGa9Ivw109F1fJan7AF9xAFyjyry3Xw1Yq3WSyr4ayr45WFWUWr4kJ343
-	Xayjqa4jqF4UCrJanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9C14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Wrv_ZF1lc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMx
-	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
-	wI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
-	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxK
-	x2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI
-	0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRna93UUUUU=
-X-CM-SenderInfo: pox13z1lq6v25zlqu0xpsx3x1qjou0bp/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv3] wifi: ath11k: clear initialized flag for deinit-ed srng
+ lists
+To: Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Jeff Johnson
+	<jjohnson@kernel.org>
+CC: <linux-wireless@vger.kernel.org>, <ath11k@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250612084551.702803-1-senozhatsky@chromium.org>
+Content-Language: en-US
+From: Baochen Qiang <quic_bqiang@quicinc.com>
+In-Reply-To: <20250612084551.702803-1-senozhatsky@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 6qqAZqvnHHzwNlWHZf_PLk18dmzfKXJ5
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDA4MiBTYWx0ZWRfX8kM+9n60IL4u
+ OE6AH0e9Q1JP9zlu2pjJKMN8I/hf0ZoR//ultXwmcjuD0jpjifZA63IsPL7S/sYVcURj5hoRcvI
+ 26L9zO4Q/kbpGbYq4CEWtZ5JWjPfuidrgbpKBkaWapYDoFaYCTyGd96IJCD9M7lhQ0AHtIjWmlS
+ TnNhsx0ITTRkHNIRJQ56KJr1I4wrx3VxVww80X2mLYjyKYVSgzkcubGVsTTNcSOCYGKXCfKGaNq
+ VdqGQxany70ywfd9o8AbmQWT8O+nUPtuFMfJBXaZzOdQhtpFrr+IvcnO9XOsUebA7vXiGEoTYzn
+ jxW0C6hpwZBTRTl8IwOWR+5D4t7ZYNSE82w4l+Bwlsw9NreXv5L1AU5x8Mji7s11Zb8FQxWcGpx
+ iM/zJTQoL/uRFRQs+4liN1I2PDJ/hvLnBY9g5w0LV9CFw6eMyG2K0PDugbqgGfodufklenmJ
+X-Proofpoint-ORIG-GUID: 6qqAZqvnHHzwNlWHZf_PLk18dmzfKXJ5
+X-Authority-Analysis: v=2.4 cv=OLgn3TaB c=1 sm=1 tr=0 ts=684ab0a5 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=cm27Pg_UAAAA:8
+ a=COk6AnOGAAAA:8 a=B3OtxjWztyHNNZvo7z4A:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-12_07,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 priorityscore=1501 impostorscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 mlxlogscore=999 suspectscore=0 adultscore=0
+ malwarescore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506120082
 
-Add EIC7700 pinctrl device for all configurable pins.
-For the EIC7700 pinctrl registers, each register (32 bits)
-controls the characteristics of a single pin.
-It supports setting function multiplexing, Schmitt trigger,
-drive strength, pull-up/pull-down, and input enable.
 
-Co-developed-by: Samuel Holland <samuel.holland@sifive.com>
-Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
-Signed-off-by: Yulin Lu <luyulin@eswincomputing.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- .../pinctrl/eswin,eic7700-pinctrl.yaml        | 156 ++++++++++++++++++
- 1 file changed, 156 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
-new file mode 100644
-index 000000000000..d46e7ee6372d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
-@@ -0,0 +1,156 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/eswin,eic7700-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Eswin Eic7700 Pinctrl
-+
-+maintainers:
-+  - Yulin Lu <luyulin@eswincomputing.com>
-+
-+allOf:
-+  - $ref: pinctrl.yaml#
-+
-+description: |
-+  eic7700 pin configuration nodes act as a container for an arbitrary number of
-+  subnodes. Each of these subnodes represents some desired configuration for one or
-+  more pins. This configuration can include the mux function to select on those pin(s),
-+  and various pin configuration parameters, such as input-enable, pull-up, etc.
-+
-+properties:
-+  compatible:
-+    const: eswin,eic7700-pinctrl
-+
-+  reg:
-+    maxItems: 1
-+
-+  vrgmii-supply:
-+    description:
-+      Regulator supply for the RGMII interface IO power domain.
-+      This property should reference a regulator that provides either 1.8V or 3.3V,
-+      depending on the board-level voltage configuration required by the RGMII interface.
-+
-+patternProperties:
-+  '-grp$':
-+    type: object
-+    additionalProperties: false
-+
-+    patternProperties:
-+      '-pins$':
-+        type: object
-+
-+        properties:
-+          pins:
-+            description:
-+              For eic7700, specifies the name(s) of one or more pins to be configured by
-+              this node.
-+            items:
-+              enum: [ chip_mode, mode_set0, mode_set1, mode_set2, mode_set3, xin,
-+                      rst_out_n, key_reset_n, gpio0, por_sel, jtag0_tck, jtag0_tms,
-+                      jtag0_tdi, jtag0_tdo, gpio5, spi2_cs0_n, jtag1_tck, jtag1_tms,
-+                      jtag1_tdi, jtag1_tdo, gpio11, spi2_cs1_n, pcie_clkreq_n,
-+                      pcie_wake_n, pcie_perst_n, hdmi_scl, hdmi_sda, hdmi_cec,
-+                      jtag2_trst, rgmii0_clk_125, rgmii0_txen, rgmii0_txclk,
-+                      rgmii0_txd0, rgmii0_txd1, rgmii0_txd2, rgmii0_txd3, i2s0_bclk,
-+                      i2s0_wclk, i2s0_sdi, i2s0_sdo, i2s_mclk, rgmii0_rxclk,
-+                      rgmii0_rxdv, rgmii0_rxd0, rgmii0_rxd1, rgmii0_rxd2, rgmii0_rxd3,
-+                      i2s2_bclk, i2s2_wclk, i2s2_sdi, i2s2_sdo, gpio27, gpio28, gpio29,
-+                      rgmii0_mdc, rgmii0_mdio, rgmii0_intb, rgmii1_clk_125, rgmii1_txen,
-+                      rgmii1_txclk, rgmii1_txd0, rgmii1_txd1, rgmii1_txd2, rgmii1_txd3,
-+                      i2s1_bclk, i2s1_wclk, i2s1_sdi, i2s1_sdo, gpio34, rgmii1_rxclk,
-+                      rgmii1_rxdv, rgmii1_rxd0, rgmii1_rxd1, rgmii1_rxd2, rgmii1_rxd3,
-+                      spi1_cs0_n, spi1_clk, spi1_d0, spi1_d1, spi1_d2, spi1_d3, spi1_cs1_n,
-+                      rgmii1_mdc, rgmii1_mdio, rgmii1_intb, usb0_pwren, usb1_pwren,
-+                      i2c0_scl, i2c0_sda, i2c1_scl, i2c1_sda, i2c2_scl, i2c2_sda,
-+                      i2c3_scl, i2c3_sda, i2c4_scl, i2c4_sda, i2c5_scl, i2c5_sda,
-+                      uart0_tx, uart0_rx, uart1_tx, uart1_rx, uart1_cts, uart1_rts,
-+                      uart2_tx, uart2_rx, jtag2_tck, jtag2_tms, jtag2_tdi, jtag2_tdo,
-+                      fan_pwm, fan_tach, mipi_csi0_xvs, mipi_csi0_xhs, mipi_csi0_mclk,
-+                      mipi_csi1_xvs, mipi_csi1_xhs, mipi_csi1_mclk, mipi_csi2_xvs,
-+                      mipi_csi2_xhs, mipi_csi2_mclk, mipi_csi3_xvs, mipi_csi3_xhs,
-+                      mipi_csi3_mclk, mipi_csi4_xvs, mipi_csi4_xhs, mipi_csi4_mclk,
-+                      mipi_csi5_xvs, mipi_csi5_xhs, mipi_csi5_mclk, spi3_cs_n, spi3_clk,
-+                      spi3_di, spi3_do, gpio92, gpio93, s_mode, gpio95, spi0_cs_n,
-+                      spi0_clk, spi0_d0, spi0_d1, spi0_d2, spi0_d3, i2c10_scl,
-+                      i2c10_sda, i2c11_scl, i2c11_sda, gpio106, boot_sel0, boot_sel1,
-+                      boot_sel2, boot_sel3, gpio111, lpddr_ref_clk ]
-+
-+          function:
-+            description:
-+              Specify the alternative function to be configured for the
-+              given pins.
-+            enum: [ disabled, boot_sel, chip_mode, emmc, fan_tach,
-+                    gpio, hdmi, i2c, i2s, jtag, ddr_ref_clk_sel,
-+                    lpddr_ref_clk, mipi_csi, osc, pcie, pwm,
-+                    rgmii, reset, sata, sdio, spi, s_mode, uart, usb ]
-+
-+          input-schmitt-enable: true
-+
-+          input-schmitt-disable: true
-+
-+          bias-disable: true
-+
-+          bias-pull-down: true
-+
-+          bias-pull-up: true
-+
-+          input-enable: true
-+
-+          input-disable: true
-+
-+          drive-strength-microamp: true
-+
-+        required:
-+          - pins
-+
-+        additionalProperties: false
-+
-+        allOf:
-+          - $ref: pincfg-node.yaml#
-+          - $ref: pinmux-node.yaml#
-+
-+          - if:
-+              properties:
-+                pins:
-+                  anyOf:
-+                    - pattern: '^rgmii'
-+                    - const: lpddr_ref_clk
-+            then:
-+              properties:
-+                drive-strength-microamp:
-+                  enum: [3000, 6000, 9000, 12000, 15000, 18000, 21000, 24000]
-+            else:
-+              properties:
-+                drive-strength-microamp:
-+                  enum: [6000, 9000, 12000, 15000, 18000, 21000, 24000, 27000]
-+
-+required:
-+  - compatible
-+  - reg
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    pinctrl@51600080 {
-+      compatible = "eswin,eic7700-pinctrl";
-+      reg = <0x51600080 0x1fff80>;
-+      vrgmii-supply = <&vcc_1v8>;
-+
-+      dev-active-grp {
-+        /* group node defining 1 standard pin */
-+        gpio10-pins {
-+          pins = "jtag1_tdo";
-+          function = "gpio";
-+          input-enable;
-+          bias-pull-up;
-+        };
-+
-+        /* group node defining 2 I2C pins */
-+        i2c6-pins {
-+          pins = "uart1_cts", "uart1_rts";
-+          function = "i2c";
-+        };
-+      };
-+    };
--- 
-2.25.1
+On 6/12/2025 4:45 PM, Sergey Senozhatsky wrote:
+> In a number of cases we see kernel panics on resume due
+> to ath11k kernel page fault, which happens under the
+> following circumstances:
+> 
+> 1) First ath11k_hal_dump_srng_stats() call
+> 
+>  Last interrupt received for each group:
+>  ath11k_pci 0000:01:00.0: group_id 0 22511ms before
+>  ath11k_pci 0000:01:00.0: group_id 1 14440788ms before
+>  [..]
+>  ath11k_pci 0000:01:00.0: failed to receive control response completion, polling..
+>  ath11k_pci 0000:01:00.0: Service connect timeout
+>  ath11k_pci 0000:01:00.0: failed to connect to HTT: -110
+>  ath11k_pci 0000:01:00.0: failed to start core: -110
+>  ath11k_pci 0000:01:00.0: firmware crashed: MHI_CB_EE_RDDM
+>  ath11k_pci 0000:01:00.0: already resetting count 2
+>  ath11k_pci 0000:01:00.0: failed to wait wlan mode request (mode 4): -110
+>  ath11k_pci 0000:01:00.0: qmi failed to send wlan mode off: -110
+>  ath11k_pci 0000:01:00.0: failed to reconfigure driver on crash recovery
+>  [..]
+> 
+> 2) At this point reconfiguration fails (we have 2 resets) and
+>   ath11k_core_reconfigure_on_crash() calls ath11k_hal_srng_deinit()
+>   which destroys srng lists.  However, it does not reset per-list
+>   ->initialized flag.
+> 
+> 3) Second ath11k_hal_dump_srng_stats() call sees stale ->initialized
+>   flag and attempts to dump srng stats:
+> 
+>  Last interrupt received for each group:
+>  ath11k_pci 0000:01:00.0: group_id 0 66785ms before
+>  ath11k_pci 0000:01:00.0: group_id 1 14485062ms before
+>  ath11k_pci 0000:01:00.0: group_id 2 14485062ms before
+>  ath11k_pci 0000:01:00.0: group_id 3 14485062ms before
+>  ath11k_pci 0000:01:00.0: group_id 4 14780845ms before
+>  ath11k_pci 0000:01:00.0: group_id 5 14780845ms before
+>  ath11k_pci 0000:01:00.0: group_id 6 14485062ms before
+>  ath11k_pci 0000:01:00.0: group_id 7 66814ms before
+>  ath11k_pci 0000:01:00.0: group_id 8 68997ms before
+>  ath11k_pci 0000:01:00.0: group_id 9 67588ms before
+>  ath11k_pci 0000:01:00.0: group_id 10 69511ms before
+>  BUG: unable to handle page fault for address: ffffa007404eb010
+>  #PF: supervisor read access in kernel mode
+>  #PF: error_code(0x0000) - not-present page
+>  PGD 100000067 P4D 100000067 PUD 10022d067 PMD 100b01067 PTE 0
+>  Oops: 0000 [#1] PREEMPT SMP NOPTI
+>  RIP: 0010:ath11k_hal_dump_srng_stats+0x2b4/0x3b0 [ath11k]
+>  Call Trace:
+>  <TASK>
+>  ? __die_body+0xae/0xb0
+>  ? page_fault_oops+0x381/0x3e0
+>  ? exc_page_fault+0x69/0xa0
+>  ? asm_exc_page_fault+0x22/0x30
+>  ? ath11k_hal_dump_srng_stats+0x2b4/0x3b0 [ath11k (HASH:6cea 4)]
+>  ath11k_qmi_driver_event_work+0xbd/0x1050 [ath11k (HASH:6cea 4)]
+>  worker_thread+0x389/0x930
+>  kthread+0x149/0x170
+> 
+> Clear per-list ->initialized flag in ath11k_hal_srng_deinit().
+> 
+> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> ---
+> 
+> v3:
+> - updated commit message and subject line (Baochen Qiang)
+> 
+>  drivers/net/wireless/ath/ath11k/hal.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/net/wireless/ath/ath11k/hal.c b/drivers/net/wireless/ath/ath11k/hal.c
+> index 8cb1505a5a0c..cab11a35f911 100644
+> --- a/drivers/net/wireless/ath/ath11k/hal.c
+> +++ b/drivers/net/wireless/ath/ath11k/hal.c
+> @@ -1346,6 +1346,10 @@ EXPORT_SYMBOL(ath11k_hal_srng_init);
+>  void ath11k_hal_srng_deinit(struct ath11k_base *ab)
+>  {
+>  	struct ath11k_hal *hal = &ab->hal;
+> +	int i;
+> +
+> +	for (i = 0; i < HAL_SRNG_RING_ID_MAX; i++)
+> +		ab->hal.srng_list[i].initialized = 0;
+>  
+>  	ath11k_hal_unregister_srng_key(ab);
+>  	ath11k_hal_free_cont_rdp(ab);
+
+Reviewed-by: Baochen Qiang <quic_bqiang@quicinc.com>
+
 
