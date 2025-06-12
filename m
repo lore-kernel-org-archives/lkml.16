@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68062367AD
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 10:44:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE90F239E97
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 10:44:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749725051; cv=none; b=CTINxMSmDW4LfrtOtuix8pc/6nIzUQfkP1kVbrRBVlNYw457WcDCsumfQq6v2LGMYMj0jwI27deSxdVQTw3rBiEnm3pYNJ62j57+QM8ucJYmSqld3oGAMYTi3KD/xH0Z6jrACTqFEJMXeHovF/9jIWg24/EvmFwkA/KBLxCZouU=
+	t=1749725053; cv=none; b=DKfwlB9k6FnaUsaXDSpdT9Fu4tdbU8ztgHaCAylfgohm92YjDy7sKU/ZSsRXvhANwoW0GEx1sWruONd8QK6QKktCeTdZquWtL0RxlHweBDHZsubWx00Kt0XKGHqLjoiQIJIhFzmzch7mQAZ6P+YxaZVcuu0chbrk/JxYe+SyabE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749725051; c=relaxed/simple;
-	bh=NjET1/I4O6qCg36+3IxGKU8QMjap42X3AuiGirl/J5s=;
+	s=arc-20240116; t=1749725053; c=relaxed/simple;
+	bh=2T7OvIvbXQpz1az1cTon17qTeu5hxE6aNMsf4Szhn7c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZRQRU2ndNygXwtwUbH0xtOOv0dJlabkbw9tIbdPng2jnl530d42eh0e72umEmKV/pQORW6IqmUAPdFw8LkhO9L4ygP47TJQT2nY3qmvPorZxMiCEoUIjZOaw1deWZ/6bjYNccH3exxivsisDeWdabV2qHO/xaa5EDiyCeheeyx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q/yNlFbf; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=UPGStUaqNs09wnDSSrrAAyT3l6f5mMqHNKtD9bSs2+c8q6XdiEODEpG7ggdf0IrjcCQsE9qRlFHlM6by1RG9pFoLroYpz6JeHmqoh0eF0aHdrhg18Euuw82wpMdwoDJyRZkXumFKzPLXI+OpDu8nBXc9X2Jl1eWtcmUpLziFfXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GM/96B9O; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q/yNlFbf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GM/96B9O"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749725048;
+	s=mimecast20190719; t=1749725050;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=SyzDax2CaJs/CotN5bZehEF7cSARdOrtLu036UBz6Qk=;
-	b=Q/yNlFbfKfYOpVybOXuZaEfiqMZInsUPMvMqXMuDWywQYy5q31aVdjFPunagewSNdp9+er
-	E5uMvM1bhjUes/Ak6dxd1RvQt4qAU1LM3nxhNR6rUuqh3Gk6x0qsemJsV5QL2CoF8al1T4
-	Uz0OjX/OS/yuwM87AqQYPWCDmb+93CI=
+	bh=mv1uqkDZHNNjQcmTQAzf5MMmJ3eI0GyQ5KwebHi6ukY=;
+	b=GM/96B9OjbHbCQxAMHGwGdm7//jcEB/YPGyacZjDfUHhQH3EUnam6uTJXv+DeDlr8FcIKt
+	kTUB3Rt9Gndo5/bwOfBBixCPG0w2yCpIzYe/tUPU02A7XNSqcPOX1JZp7QNgErMYujmYxD
+	f4tE188i/KdOGbfzGbMEDBnx6iJQVbQ=
 Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-619-suRnNhvqPFC6gSG21ZKhWg-1; Thu,
- 12 Jun 2025 06:44:05 -0400
-X-MC-Unique: suRnNhvqPFC6gSG21ZKhWg-1
-X-Mimecast-MFC-AGG-ID: suRnNhvqPFC6gSG21ZKhWg_1749725044
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-596-tKtALmS2PBKkTbNK5PcTxw-1; Thu,
+ 12 Jun 2025 06:44:09 -0400
+X-MC-Unique: tKtALmS2PBKkTbNK5PcTxw-1
+X-Mimecast-MFC-AGG-ID: tKtALmS2PBKkTbNK5PcTxw_1749725048
 Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 98C0F180029E;
-	Thu, 12 Jun 2025 10:44:04 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 455AF1800283;
+	Thu, 12 Jun 2025 10:44:08 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.45.242.17])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7828C19560B2;
-	Thu, 12 Jun 2025 10:44:01 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5B58B19560B2;
+	Thu, 12 Jun 2025 10:44:04 +0000 (UTC)
 From: Gabriele Paoloni <gpaoloni@redhat.com>
 To: rostedt@goodmis.org,
 	mhiramat@kernel.org,
@@ -51,9 +51,9 @@ To: rostedt@goodmis.org,
 Cc: acarmina@redhat.com,
 	chuck.wolber@boeing.com,
 	Gabriele Paoloni <gpaoloni@redhat.com>
-Subject: [RFC PATCH 1/2] tracing: fixes of ftrace_enable_fops
-Date: Thu, 12 Jun 2025 12:43:48 +0200
-Message-ID: <20250612104349.5047-2-gpaoloni@redhat.com>
+Subject: [RFC PATCH 2/2] tracing: add testable specifications for event_enable_write/read
+Date: Thu, 12 Jun 2025 12:43:49 +0200
+Message-ID: <20250612104349.5047-3-gpaoloni@redhat.com>
 In-Reply-To: <20250612104349.5047-1-gpaoloni@redhat.com>
 References: <20250612104349.5047-1-gpaoloni@redhat.com>
 Precedence: bulk
@@ -65,62 +65,104 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Currently there are different issues associated with ftrace_enable_fops
-- event_enable_write: *ppos is increased while not used at all in the
-  write operation itself (following a write, this could lead a read to
-  fail or report a corrupted event status);
-- event_enable_read: cnt < strlen(buf) is allowed and this can lead to
-  reading an incomplete event status (i.e. not all status characters
-  are retrieved) and/or reading the status in a non-atomic way (i.e.
-  the status could change between two consecutive reads);
-- .llseek is set to default_llseek: this is wrong since for this
-  type of files it does not make sense to reposition the ppos offset.
-  Hence this should be set instead to noop_llseek.
-
-This patch fixes all the issues listed above.
+This patch implements the documentation of event_enable_write and
+event_enable_read in the form of testable function's expectations.
 
 Signed-off-by: Gabriele Paoloni <gpaoloni@redhat.com>
-Tested-by: Alessandro Carminati <acarmina@redhat.com>
 ---
- kernel/trace/trace_events.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ kernel/trace/trace_events.c | 72 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
 
 diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 120531268abf..5e84ef01d0c8 100644
+index 5e84ef01d0c8..eb3c5e6e557d 100644
 --- a/kernel/trace/trace_events.c
 +++ b/kernel/trace/trace_events.c
-@@ -1798,6 +1798,13 @@ event_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
+@@ -1771,6 +1771,46 @@ static void p_stop(struct seq_file *m, void *p)
+ 	mutex_unlock(&event_mutex);
+ }
  
- 	strcat(buf, "\n");
- 
-+	/*
-+	 * A requested cnt less than strlen(buf) could lead to a wrong
-+	 * event status being reported.
-+	 */
-+	if (cnt < strlen(buf))
-+		return -EINVAL;
-+
++/**
++ * event_enable_read - read from a trace event file to retrieve its status.
++ * @filp: file pointer associated with the target trace event;
++ * @ubuf: user space buffer where the event status is copied to;
++ * @cnt: number of bytes to be copied to the user space buffer;
++ * @ppos: the current position in the buffer.
++ *
++ * This is a way for user space executables to retrieve the status of a
++ * specific event
++ *
++ * Function's expectations:
++ * - This function shall lock the global event_mutex before performing any
++ *   operation on the target event file and unlock it after all operations on
++ *   the target event file have completed;
++ * - This function shall retrieve the status flags from the file associated
++ *   with the target event;
++ * - This function shall format the string to report the event status to user
++ *   space:
++ *   - The first character of the string to be copied to user space shall be
++ *     set to "1" if the enabled flag is set AND the soft_disabled flag is not
++ *     set, else it shall be set to "0";
++ *   - The second character of the string to be copied to user space shall be
++ *     set to "*" if either the soft_disabled flag or the soft_mode flag is
++ *     set, else it shall be set to "\n";
++ *   - The third character of the string to be copied to user space shall b
++ *     set to "\n" if either the soft_disabled flag or the soft_mode flag is
++ *     set, else it shall be set to "0";
++ *   - Any other character in the string to be copied to user space shall be
++ *     set to "0";
++ * - This function shall check if the requested cnt bytes are equal or greater
++ *   than the length of the string to be copied to user space (else a
++ *   corrupted event status could be reported);
++ * - This function shall invoke simple_read_from_buffer() to perform the copy
++ *   of the kernel space string to ubuf.
++ *
++ * Returns the number of copied bytes on success, -ENODEV if the event file
++ * cannot be retrieved from the input filp, -EINVAL if cnt is less than the
++ * length of the string to be copied to ubuf, any error returned by
++ * simple_read_from_buffer
++ */
+ static ssize_t
+ event_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
+ 		  loff_t *ppos)
+@@ -1808,6 +1848,38 @@ event_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
  	return simple_read_from_buffer(ubuf, cnt, ppos, buf, strlen(buf));
  }
  
-@@ -1833,8 +1840,6 @@ event_enable_write(struct file *filp, const char __user *ubuf, size_t cnt,
- 		return -EINVAL;
- 	}
- 
--	*ppos += cnt;
--
- 	return cnt;
- }
- 
-@@ -2557,7 +2562,7 @@ static const struct file_operations ftrace_enable_fops = {
- 	.read = event_enable_read,
- 	.write = event_enable_write,
- 	.release = tracing_release_file_tr,
--	.llseek = default_llseek,
-+	.llseek = noop_llseek,
- };
- 
- static const struct file_operations ftrace_event_format_fops = {
++/**
++ * event_enable_write - write to a trace event file to enable/disable it.
++ * @filp: file pointer associated with the target trace event;
++ * @ubuf: user space buffer where the enable/disable value is copied from;
++ * @cnt: number of bytes to be copied from the user space buffer;
++ * @ppos: the current position in the buffer.
++ *
++ * This is a way for user space executables to enable or disable event
++ * recording.
++ *
++ * Function's expectations:
++ * - This function shall copy cnt bytes from the input ubuf buffer to a kernel
++ *   space buffer (or the whole input ubuf if cnt is larger than ubuf size)
++ *   and shall convert the string within the kernel space buffer into a decimal
++ *   base format number;
++ * - This function shall lock the global event_mutex before performing any
++ *   operation on the target event file and unlock it after all operations on
++ *   the target event file have completed;
++ * - This function shall check the size of the per-cpu ring-buffers used for
++ *   the event trace data and, if smaller than TRACE_BUF_SIZE_DEFAULT, expand
++ *   them to TRACE_BUF_SIZE_DEFAULT bytes (sizes larger than
++ *   TRACE_BUF_SIZE_DEFAULT are not allowed);
++ * - This function shall invoke ftrace_event_enable_disable to enable or
++ *   disable the target trace event according to the value read from user space
++ *   (0 - disable, 1 - enable);
++ *
++ * Returns 0 on success, any error returned by kstrtoul_from_user, -ENODEV if
++ * the event file cannot be retrieved from the input filp, any error returned by
++ * tracing_update_buffers, any error returned by ftrace_event_enable_disable,
++ * -EINVAL if the value copied from the user space ubuf is different from 0 or
++ *  1.
++ */
+ static ssize_t
+ event_enable_write(struct file *filp, const char __user *ubuf, size_t cnt,
+ 		   loff_t *ppos)
 -- 
 2.48.1
 
