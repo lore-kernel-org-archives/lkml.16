@@ -1,199 +1,212 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90EA920C485
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 12:09:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749730171; cv=none; b=oLaPtCiSzj+vm50HwsaJfayXgKuDMBVB2jDb/8KYanWiRH/oV2E0aWYDe1Nwx/lrXAt6kawTMr5mPII/7zh32/orv2d1EuWyWqTpgfeqSF5VKKx4hQqOzc22iipmtuj5jlY6DOvEzwakuWGQqNtJ7WMlN6D0vtjfdvPwkx9tp6E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749730171; c=relaxed/simple;
-	bh=CQTMBqrwO1xjHlPpoOYlHzVJJtakGvEfnnp4M+O0iR0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MxeFTZ8BIEq4BnFduJT+bD65bnTAsFYUwEhukJlOUnK/VhOL5AbIZ825N5gclilgOT1NZQDhyudKVBu6tIU3He6pvh1JaQXHt4WEBnQ9yoLa5aQYFuNGRZvl1zmCnynMpi968Pe8Fx2CUBWxyWZSei4EDxEFqSWuDvEd9Q5xQUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MNEG8Gq8; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52CCA2F432A;
+	Thu, 12 Jun 2025 12:12:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749730380; cv=pass; b=i/5ktvIVLpKsKbXa2RSPONNdq+DHkqdiE/LLW6P19PwuT2KbK6PLOXKtrMwrLwX83EbS4UQat9tyAnN1Fh1AXYQ4xukvSSXv+kNM8l/73Tsevn4sdqP6T8cZB8DzOZmF74bET2vaVG2Q2IsUYd8DbQtji/EnmXOWPw5axyTO82o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749730380; c=relaxed/simple;
+	bh=+kdiXiiHozxtvIIE7QcPklTRBLEyuoJrKDGLNl7vclA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jhlVHwGs0atC6wFTydq3STswYSrQKfBnrM5VzawB5s4JJ02elAHbydRlrbz4fw+J29ItNU/3G9/hMGxV/EgmDh1LZdNURwnz/ssi/cCmlPpzhss89Mz/ritDJFU7cQFajHoj9NijkjcBS0w6Deg1UPD/8eaTWqQMQeioovuJen8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=SK7OXUzc; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MNEG8Gq8"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-234f17910d8so8793375ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 05:09:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749730169; x=1750334969; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qc+fJ5kUSUbKMuOdmwlhqgXfGsc4A0Ke0MUmskDWchg=;
-        b=MNEG8Gq8uOZIE+OedMYVDGDTT+cgrIVG7DBuCeMIey8JcqFyv6vvnMyslgyAfTwInT
-         /r1wdnZS09xyz7faPwnu3WPhMQowPivumFmkr+NXUKZ+xE1LiQo4Yovi5SXI0ikhJOkq
-         nWBKxfw4Fp/SFTnp5vw6Rw5SampV0JZKh/0tvkkNkcy76rujrWG2dsysCIQOf4N4346M
-         JaCk3QulNlkZktDok76flJhlDiEvXJ+a1APwgwwF+tfHi4GyA2r3RtkzkxRieEwD4DWI
-         pmDCwhcWnuNMOwMqF5aCxessYGmnS4SqeyDLMrySgZnVmNdVxlbvIB3fuOxVbVJ7B6qR
-         +uVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749730169; x=1750334969;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Qc+fJ5kUSUbKMuOdmwlhqgXfGsc4A0Ke0MUmskDWchg=;
-        b=G60p9FyTcPfy8IV5hrXNcAYbSd0ZcBByDbSRFnLdymXm6nFtZpF4Qkvn/DmAf+qexe
-         Flcim0zmNBp7g0hkmjFybBBA6WmQPvIwiJihNv2gYx3pPEXchlsx4rjSVmSQhGenN6DX
-         s9y18uzSkZCJ+NrdvaMq+L3OGozYxuergI4MG0lI+FjKlRfA0RqlSQvTcCWRnYsBJOpC
-         C58N/SK+Dd9r7lv6OmXB8/8imf8PjTXr79ekiQkdq4YjnrLGr+o+Hq+pBKYux8X5tDfH
-         NpIKucudLouYG+13PAQ4fpkBko9ttn9YUrXjj41YPixu8ibIfS2m8oDfJXT9Dsr7odlN
-         qO6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVhPrijO3sJTUMG85Vhi/ftl3rhjY8/gUyCLC6Qk8FvCoRA+pkK4EFkm8EhmQmHUar9dMdHrz2OLD61QOA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzq6LUTRw1Mm9lAH05oaQrO9STklwucNFuBaiEKtSaqAZ4hJsUl
-	MmIAZC0SbtpAqoSUZ40Vtr6j6mFvbebE2wJa/4W2o4uJPf29LjqBHt39
-X-Gm-Gg: ASbGncs6igseOmw3VPQ0m/NRA907mwX+T6yN5RWJnV1FP75eFiIVZ4TwcPYHpVClQFi
-	OyKxKVqEuLtQ+ZEH6Ly+rHdmL8M/tDXE2mdtUTQxS70SnShpF4qOk7PJ8J05D2ejnVYuSvgwD3a
-	vtFzIjZnEwj2ubMkEro64AWnLe5LJW1QOo3vZ6yE1eQEIu40uVtUtVYgOOKu1qSYJItT1Nf9gGs
-	hQ+lNVYc5ktKS+ePj4SlyuBZLS0DAsc9kdICirTqi34E7zAvseEcLzAp+NpuPe2D2EQVRGyPnth
-	Dss/PIQzkexLlr/f3Yaa1Em3rptQQO18FtWRBf1Cfd1pSYQPEBFs+Wt+trPv4Elq3McMNEgCiVn
-	0
-X-Google-Smtp-Source: AGHT+IG8kP612PZkW6Rpi0Vr/xRiBqYfLilslNPiXK39tjv65V4A6ZdWSeLlYYC8zylzgPFdEa1c2Q==
-X-Received: by 2002:a17:902:d58f:b0:235:ef79:2997 with SMTP id d9443c01a7336-2364cabaa7fmr44325705ad.47.1749730168776;
-        Thu, 12 Jun 2025 05:09:28 -0700 (PDT)
-Received: from localhost.localdomain ([43.225.59.120])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2364e717293sm12166515ad.196.2025.06.12.05.09.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 05:09:28 -0700 (PDT)
-From: peng li <peng8420.li@gmail.com>
-To: david@redhat.com
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	peng li <peng8420.li@gmail.com>
-Subject: [PATCH] mm/pagewalk: Clean up folio_walk_start() by removing expose_page
-Date: Thu, 12 Jun 2025 20:09:03 +0800
-Message-Id: <20250612120903.2678910-1-peng8420.li@gmail.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="SK7OXUzc"
+ARC-Seal: i=1; a=rsa-sha256; t=1749730279; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=gLVUSH8whkjznJ84HhEKxxnjU2XuDwX04WtVl7Ke0k/VtxuyHepvYyZFEsDsuRxdsOR+mZGQaf6prN0Jl3RFazK5tsm20vUPJNrfC7uMH7EkaAb8x+J6/uAl/jUVupirBlfKqcEg9lOnbR3b7+HuupT2MjpmNEg4RkgTVsrnDEU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1749730279; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=anKlnwbFl0i8atiPf5c4Ks2L7I/qYyoFEOqCpl8Xjz4=; 
+	b=NnYk+ho5QsNnUw/GyWrBWAlNSFdprVwt/SMpMEjygvo543BdEKRBHtfoDB0IlobqSRFj3aQKnfuW61HRwi3mlbyo7MjKlqvXIxcbmt1jg1nM3R/1ZxeziAGckm4SGc4esonsJ/LIuXqmUTX6AGNZ7pwSisvbKzWfbHfGMTWV5H8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1749730279;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=anKlnwbFl0i8atiPf5c4Ks2L7I/qYyoFEOqCpl8Xjz4=;
+	b=SK7OXUzcTO6J2OvgkAoNUrfYDQNfzeYE74UjS+nOX7vgUkpRNbgyTF8jQkg2hh0D
+	dUAV/oN8qsLxpnK+Y+fEssRjHR7B+gVr7b2h2PGccmdr2X9JotCuSJJ08Fv1WSCt0fN
+	YQykWtOBwsZmWFYSR+CE0ujPPquYI14ZwNERJFwc=
+Received: by mx.zohomail.com with SMTPS id 1749730276781981.6042234328434;
+	Thu, 12 Jun 2025 05:11:16 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: David Lechner <dlechner@baylibre.com>, linux-rockchip@lists.infradead.org
+Cc: Michael Hennerich <michael.hennerich@analog.com>,
+ Lars-Peter Clausen <lars@metafoo.de>, Jonathan Cameron <jic23@kernel.org>,
+ Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
+ Andy Shevchenko <andy@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Heiko Stuebner <heiko@sntech.de>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Francesco Dolcini <francesco@dolcini.it>,
+ =?UTF-8?B?Sm/Do28gUGF1bG8gR29uw6dhbHZlcw==?=
+ <jpaulo.silvagoncalves@gmail.com>,
+ Leonard =?UTF-8?B?R8O2aHJz?= <l.goehrs@pengutronix.de>,
+ kernel@pengutronix.de, Oleksij Rempel <o.rempel@pengutronix.de>,
+ Roan van Dijk <roan@protonic.nl>,
+ Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+ Jacopo Mondi <jacopo@jmondi.org>,
+ Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>,
+ Mudit Sharma <muditsharma.info@gmail.com>,
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+ =?UTF-8?B?T25kxZllag==?= Jirman <megi@xff.cz>,
+ Andreas Klinger <ak@it-klinger.de>,
+ Petre Rodan <petre.rodan@subdimension.ro>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-stm32@st-md-mailman.stormreply.com, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 00/28] iio: zero init stack with { } instead of memset()
+Date: Thu, 12 Jun 2025 14:11:08 +0200
+Message-ID: <2243943.irdbgypaU6@workhorse>
+In-Reply-To: <aEqbQPvz0FsLXt0Z@duo.ucw.cz>
+References:
+ <20250611-iio-zero-init-stack-with-instead-of-memset-v1-0-ebb2d0a24302@baylibre.com>
+ <aEqbQPvz0FsLXt0Z@duo.ucw.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-The name expose_page is confusing to understand. From the code logic, it is
-probably meant to express "belongs to the normal page and get offset from
-the mapped page"?
-Perhaps changing "expose_page" to "normal_mapped_page" can better express
-its behavior? But perhaps its existence is meaningless, because fw->page
-can be directly confirmed and obtained from the page type without the need
-for a separate flag.
+Hello,
 
-Key changes:
-1. Remove expose_page and its conditional logic
-2. Always set fw->page when a valid page is found
-3. Add clarifying comments about offset calculation
-4. Initialize fw->page to NULL at PMD/PTE levels
+I thought I'd chime in as someone uninvolved because this seemed
+interesting.
 
-Signed-off-by: peng li <peng8420.li@gmail.com>
----
- mm/pagewalk.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+On Thursday, 12 June 2025 11:17:52 Central European Summer Time Pavel Machek wrote:
+> Hi!
+> 
+> > Jonathan mentioned recently that he would like to get away from using
+> > memset() to zero-initialize stack memory in the IIO subsystem. And we
+> > have it on good authority that initializing a struct or array with = { }
+> > is the preferred way to do this in the kernel [1]. So here is a series
+> > to take care of that.
+> 
+> 1) Is it worth the churn?
+> 
+> 2) Will this fail to initialize padding with some obscure compiler?
 
-diff --git a/mm/pagewalk.c b/mm/pagewalk.c
-index e478777c86e1..15150c27b9cf 100644
---- a/mm/pagewalk.c
-+++ b/mm/pagewalk.c
-@@ -831,7 +831,6 @@ struct folio *folio_walk_start(struct folio_walk *fw,
- 		folio_walk_flags_t flags)
- {
- 	unsigned long entry_size;
--	bool expose_page = true;
- 	struct page *page;
- 	pud_t *pudp, pud;
- 	pmd_t *pmdp, pmd;
-@@ -884,6 +883,9 @@ struct folio *folio_walk_start(struct folio_walk *fw,
- 		 * support PUD mappings in VM_PFNMAP|VM_MIXEDMAP VMAs.
- 		 */
- 		page = pud_page(pud);
-+
-+		/* Note: Offset from the mapped page, not the folio start. */
-+		fw->page = nth_page(page, (addr & (entry_size - 1)) >> PAGE_SHIFT);
- 		goto found;
- 	}
- 
-@@ -902,6 +904,7 @@ struct folio *folio_walk_start(struct folio_walk *fw,
- 		fw->level = FW_LEVEL_PMD;
- 		fw->pmdp = pmdp;
- 		fw->pmd = pmd;
-+		fw->page = NULL;
- 
- 		if (pmd_none(pmd)) {
- 			spin_unlock(ptl);
-@@ -912,11 +915,12 @@ struct folio *folio_walk_start(struct folio_walk *fw,
- 		} else if (pmd_present(pmd)) {
- 			page = vm_normal_page_pmd(vma, addr, pmd);
- 			if (page) {
-+				/* Note: Offset from the mapped page, not the folio start. */
-+				fw->page = nth_page(page, (addr & (entry_size - 1)) >> PAGE_SHIFT);
- 				goto found;
- 			} else if ((flags & FW_ZEROPAGE) &&
- 				    is_huge_zero_pmd(pmd)) {
- 				page = pfn_to_page(pmd_pfn(pmd));
--				expose_page = false;
- 				goto found;
- 			}
- 		} else if ((flags & FW_MIGRATION) &&
-@@ -924,7 +928,6 @@ struct folio *folio_walk_start(struct folio_walk *fw,
- 			swp_entry_t entry = pmd_to_swp_entry(pmd);
- 
- 			page = pfn_swap_entry_to_page(entry);
--			expose_page = false;
- 			goto found;
- 		}
- 		spin_unlock(ptl);
-@@ -942,15 +945,18 @@ struct folio *folio_walk_start(struct folio_walk *fw,
- 	fw->level = FW_LEVEL_PTE;
- 	fw->ptep = ptep;
- 	fw->pte = pte;
-+	fw->page = NULL;
- 
- 	if (pte_present(pte)) {
- 		page = vm_normal_page(vma, addr, pte);
--		if (page)
-+		if (page) {
-+			/* Note: Offset from the mapped page, not the folio start. */
-+			fw->page = nth_page(page, (addr & (entry_size - 1)) >> PAGE_SHIFT);
- 			goto found;
-+		}
- 		if ((flags & FW_ZEROPAGE) &&
- 		    is_zero_pfn(pte_pfn(pte))) {
- 			page = pfn_to_page(pte_pfn(pte));
--			expose_page = false;
- 			goto found;
- 		}
- 	} else if (!pte_none(pte)) {
-@@ -959,7 +965,6 @@ struct folio *folio_walk_start(struct folio_walk *fw,
- 		if ((flags & FW_MIGRATION) &&
- 		    is_migration_entry(entry)) {
- 			page = pfn_swap_entry_to_page(entry);
--			expose_page = false;
- 			goto found;
- 		}
- 	}
-@@ -968,11 +973,6 @@ struct folio *folio_walk_start(struct folio_walk *fw,
- 	vma_pgtable_walk_end(vma);
- 	return NULL;
- found:
--	if (expose_page)
--		/* Note: Offset from the mapped page, not the folio start. */
--		fw->page = nth_page(page, (addr & (entry_size - 1)) >> PAGE_SHIFT);
--	else
--		fw->page = NULL;
- 	fw->ptl = ptl;
- 	return page_folio(page);
- }
+as of right now, the only two C compilers that are supported are
+GCC >= 8.1, and Clang >= 13.0.1. If anyone even manages to get the kernel
+to finish a build with something else, I think the compiler not
+implementing the C standard correctly is the least of their worries.
 
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
--- 
-2.25.1
+My bigger worry is that = { } is only guaranteed to be as correct as
+memset on C23, and the kernel's standard right now is C11. For that
+reason alone, I don't think memset should be moved away from for now,
+unless someone can verify that every GCC release >= 8.1 and every
+Clang release >= 13.0.1 does the right thing here regardless.
+
+> 
+> 3) Why do you believe that {} is the preffered way? All we have is
+> Kees' email that explains that = {} maybe works in configs he tested.
+
+= { } is guaranteed to work in C23, as per the standard, but again we're
+not on C23.
+
+The reason to prefer this is likely that it's easier for static analysis
+to see the struct as initialised, but that's me making assumptions here.
+
+A more human-centric argument is that once we're on a C standards version
+where = { } is guaranteed to be correct, then = { } is much more obviously
+correct to a reader than a memset with a value and a size somewhere later
+in the code. This argument is evident from the number of patches in this
+series where the memset and the declaration are not in the same hunk.
+That's the kind of stuff that keeps me awake at night, sweating profusely.
+
+Kind regards,
+Nicolas Frattaroli
+
+> 
+> BR,
+> 								Pavel
+> 
+> > [1]:
+> > https://lore.kernel.org/linux-iio/202505090942.48EBF01B@keescook/
+> 
+> 
+> 
+> > ---
+> > David Lechner (28):
+> >       iio: accel: adxl372: use = { } instead of memset()
+> >       iio: accel: msa311: use = { } instead of memset()
+> >       iio: adc: dln2-adc: use = { } instead of memset()
+> >       iio: adc: mt6360-adc: use = { } instead of memset()
+> >       iio: adc: rockchip_saradc: use = { } instead of memset()
+> >       iio: adc: rtq6056: use = { } instead of memset()
+> >       iio: adc: stm32-adc: use = { } instead of memset()
+> >       iio: adc: ti-ads1015: use = { } instead of memset()
+> >       iio: adc: ti-ads1119: use = { } instead of memset()
+> >       iio: adc: ti-lmp92064: use = { } instead of memset()
+> >       iio: adc: ti-tsc2046: use = { } instead of memset()
+> >       iio: chemical: scd4x: use = { } instead of memset()
+> >       iio: chemical: scd30: use = { } instead of memset()
+> >       iio: chemical: sunrise_co2: use = { } instead of memset()
+> >       iio: dac: ad3552r: use = { } instead of memset()
+> >       iio: imu: inv_icm42600: use = { } instead of memset()
+> >       iio: imu: inv_mpu6050: use = { } instead of memset()
+> >       iio: light: bh1745: use = { } instead of memset()
+> >       iio: light: ltr501: use = { } instead of memset()
+> >       iio: light: opt4060: use = { } instead of memset()
+> >       iio: light: veml6030: use = { } instead of memset()
+> >       iio: magnetometer: af8133j: use = { } instead of memset()
+> >       iio: pressure: bmp280: use = { } instead of memset()
+> >       iio: pressure: mpl3115: use = { } instead of memset()
+> >       iio: pressure: mprls0025pa: use = { } instead of memset()
+> >       iio: pressure: zpa2326: use = { } instead of memset()
+> >       iio: proximity: irsd200: use = { } instead of memset()
+> >       iio: temperature: tmp006: use = { } instead of memset()
+> > 
+> >  drivers/iio/accel/adxl372.c                       | 3 +--
+> >  drivers/iio/accel/msa311.c                        | 4 +---
+> >  drivers/iio/adc/dln2-adc.c                        | 4 +---
+> >  drivers/iio/adc/mt6360-adc.c                      | 3 +--
+> >  drivers/iio/adc/rockchip_saradc.c                 | 4 +---
+> >  drivers/iio/adc/rtq6056.c                         | 4 +---
+> >  drivers/iio/adc/stm32-adc.c                       | 3 +--
+> >  drivers/iio/adc/ti-ads1015.c                      | 4 +---
+> >  drivers/iio/adc/ti-ads1119.c                      | 4 +---
+> >  drivers/iio/adc/ti-lmp92064.c                     | 4 +---
+> >  drivers/iio/adc/ti-tsc2046.c                      | 3 +--
+> >  drivers/iio/chemical/scd30_core.c                 | 3 +--
+> >  drivers/iio/chemical/scd4x.c                      | 3 +--
+> >  drivers/iio/chemical/sunrise_co2.c                | 6 ++----
+> >  drivers/iio/dac/ad3552r.c                         | 3 +--
+> >  drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c | 5 ++---
+> >  drivers/iio/imu/inv_icm42600/inv_icm42600_gyro.c  | 5 ++---
+> >  drivers/iio/imu/inv_mpu6050/inv_mpu_acpi.c        | 4 +---
+> >  drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c        | 6 ++----
+> >  drivers/iio/light/bh1745.c                        | 4 +---
+> >  drivers/iio/light/ltr501.c                        | 4 +---
+> >  drivers/iio/light/opt4060.c                       | 4 +---
+> >  drivers/iio/light/veml6030.c                      | 4 +---
+> >  drivers/iio/magnetometer/af8133j.c                | 4 +---
+> >  drivers/iio/pressure/bmp280-core.c                | 5 +----
+> >  drivers/iio/pressure/mpl3115.c                    | 3 +--
+> >  drivers/iio/pressure/mprls0025pa_i2c.c            | 5 +----
+> >  drivers/iio/pressure/zpa2326.c                    | 4 +---
+> >  drivers/iio/proximity/irsd200.c                   | 3 +--
+> >  drivers/iio/temperature/tmp006.c                  | 4 +---
+> >  30 files changed, 34 insertions(+), 85 deletions(-)
+> > ---
+> > base-commit: 4c6073fec2fee4827fa0dd8a4ab4e6f7bbc05ee6
+> > change-id: 20250611-iio-zero-init-stack-with-instead-of-memset-0d12d41a7ecb
+> > 
+> > Best regards,
+> 
+> 
+
+
+
 
