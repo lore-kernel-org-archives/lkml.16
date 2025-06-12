@@ -1,119 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED36E79D2;
-	Thu, 12 Jun 2025 00:04:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68A8979D2;
+	Thu, 12 Jun 2025 00:04:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749686656; cv=none; b=p+6n5RuChP/WoTt+bDiVoVkgBndlI1c7ri4goZ1HD/2tbV5EEqhFVzh6JW/xiXxuXsVD62WEha8/jeuDYeAl5a4uOqe/CTuHXAMG/s1MAkhs6i9Jz5ksJOOxhXu+dj38YUpt0Kl18dS9sVtmt06tpqs8CLe6mHDkbpAKiDkOAQc=
+	t=1749686666; cv=none; b=eUu7dP6G/mxzvEM4fgn0NZzxAoFyqJ7m7rtOtxn2Q2i+QZT+Jux7hzl2hYswevbmdniz/1TFnsk0U5nWaXAzDenzOO7lplctuZiLW+WlQs1iLx6KMDhoXk0zS4aVtJIW6JOzP4RHi2HNpoJqwk4pkThwTkDPw6vaYor7xYDRCMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749686656; c=relaxed/simple;
-	bh=bNiddbebwxgrO+T2YxvgJlpp7XYCaOnNp2ptHJCxou8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ZKZecASLvCeAvpIVDgqRv9JWDfy/xf2G32R34yZoUFMhT90fkMpbNrIDBPe9qZYMnFpp3UzW1bitYso80JvFQ4RwXDq58L+cG4j/HMhHXk6SrNtvDHkdfG+79Ivu9m7HGO2TJ+DZcwB0id2ibnIFyz2mB+OncGe7I13kGjttM2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JeWBbH4N; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749686666; c=relaxed/simple;
+	bh=chdl8KTqcIxWtQmwJA4bH1QKh2idYqYeJmh8PFK8vxc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=G3iZgXqO9UTmGGWrGa/0ejuXwsLvrRIfF8jF20706A2qHEjWUvjBpwjgZqDVi4c/Tyvcy+x7xZg+bhp+jHqcx9u+K3mJ0nyzJbmLXDRztmWrvj/rxbuFsgbWMysh4fi9bo/+ovoycpvow2mswJfctDloiwWj4tYyi14mW9DxmcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B5/2KZ4L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JeWBbH4N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AD72C4CEE3;
-	Thu, 12 Jun 2025 00:04:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B5/2KZ4L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B320C4CEE3;
+	Thu, 12 Jun 2025 00:04:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749686655;
-	bh=bNiddbebwxgrO+T2YxvgJlpp7XYCaOnNp2ptHJCxou8=;
+	s=k20201202; t=1749686666;
+	bh=chdl8KTqcIxWtQmwJA4bH1QKh2idYqYeJmh8PFK8vxc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=JeWBbH4NIbAluoyWqsLBvZcssk1mVO4c9x2vHAvkGTYjC11VLW4n68jQReiDS1TXo
-	 aTGWcYJq13beLyiTK6sSL+MkspAbu7av9QNHFRv5rHDFgOlXXfAPF0/HI7i1TEfVoK
-	 pD1S7881KP5PIAEcfpvB+hZWG8xH7X/+jO/rVehOFqF0gJVcm9R5gLRFSi7uJelx+b
-	 Z5lyx9F1VcnGe4G5gpSjrc3h/XVIPERnVinRGF1HVkvkHsm3BGBh8qXcPvGqzh4839
-	 ZfdYFY1i6pZieUhJdN8wvZ3/Dm8DnkO+wPOPsHFnPHhJhBcDU7BxvzwqVaFi2NILRI
-	 YUJyRgPjUOCzg==
-Date: Thu, 12 Jun 2025 09:04:11 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Naresh Kamboju
- <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>,
- Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
- lkft-triage@lists.linaro.org, Stephen Rothwell <sfr@canb.auug.org.au>, Arnd
- Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, Anders
- Roxell <anders.roxell@linaro.org>
-Subject: Re: [RFC PATCH 2/2] x86: alternative: Invalidate the cache for
- updated instructions
-Message-Id: <20250612090411.fe1cf10c61be1db40920dac8@kernel.org>
-In-Reply-To: <20250611114243.43a9e3e2@batman.local.home>
-References: <20250610234307.c675969e83ce53bb856e94d7@kernel.org>
-	<174956686826.1494782.11512582667456262594.stgit@mhiramat.tok.corp.google.com>
-	<20250610115030.0d60da65@gandalf.local.home>
-	<20250611192610.6edf9713f6ee84c26f653ea5@kernel.org>
-	<20250611102010.1bf7c264@batman.local.home>
-	<20250611114243.43a9e3e2@batman.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	b=B5/2KZ4LKzIbYCV/9zcadAirye+IEmF41mZUQfHhcVxh4rA/Fxp9ERRj/mDlZF1LP
+	 m3KVDlqWNr0HSKC+ngAL1ritfNN8ewZQVv72tAAxuHt5XKk4gj+iQcQMHkUri79mMB
+	 kp8J0tjHjn/mb/KA+KyTKyLYUvGFQIbWc/DH58QSnG7lpZUA1sc7md+0cV1iykUo6f
+	 YGN8fU/RLy16ULNnAd5ctjCEAjdQbJgyAjW9Y9PN3B5a8zxQFO1ARQZK++27dxQDW9
+	 AD6LdhqCgKioNt8K9OjEbumpEwU+iu7kQ1xTpUEVdXIso31Vb2Vm5rJTY2vl/Xb2vH
+	 lBi6UGDpUwHCQ==
+Date: Wed, 11 Jun 2025 17:04:24 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Himanshu Mittal <h-mittal1@ti.com>
+Cc: <pabeni@redhat.com>, <edumazet@google.com>, <davem@davemloft.net>,
+ <andrew+netdev@lunn.ch>, <linux-kernel@vger.kernel.org>,
+ <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <srk@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>, Roger Quadros
+ <rogerq@kernel.org>, <danishanwar@ti.com>, <m-malladi@ti.com>,
+ <pratheesh@ti.com>, <prajith@ti.com>
+Subject: Re: [PATCH net-next] net: ti: icssg-prueth: Add prp offload support
+ to ICSSG driver
+Message-ID: <20250611170424.08e47f1a@kernel.org>
+In-Reply-To: <20250610061638.62822-1-h-mittal1@ti.com>
+References: <20250610061638.62822-1-h-mittal1@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 11 Jun 2025 11:42:43 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Wed, 11 Jun 2025 10:20:10 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+On Tue, 10 Jun 2025 11:46:38 +0530 Himanshu Mittal wrote:
+> Add support for ICSSG PRP mode which supports offloading of:
+>  - Packet duplication and PRP trailer insertion
+>  - Packet duplicate discard and PRP trailer removal
 > 
-> > If interrupts are enabled when the break point hits and just enters the
-> > int3 handler, does that also mean it can schedule?
+> Signed-off-by: Himanshu Mittal <h-mittal1@ti.com>
+> ---
+>  drivers/net/ethernet/ti/icssg/icssg_prueth.c | 23 +++++++++++++++++++-
+>  drivers/net/ethernet/ti/icssg/icssg_prueth.h |  3 +++
+>  2 files changed, 25 insertions(+), 1 deletion(-)
 > 
-> I added this:
-> 
-> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-> index c5c897a86418..0f3153322ad2 100644
-> --- a/arch/x86/kernel/traps.c
-> +++ b/arch/x86/kernel/traps.c
-> @@ -854,6 +854,8 @@ static bool do_int3(struct pt_regs *regs)
->  {
->  	int res;
+> diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth.c b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
+> index 86fc1278127c..65883c7851c5 100644
+> --- a/drivers/net/ethernet/ti/icssg/icssg_prueth.c
+> +++ b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
+> @@ -138,6 +138,19 @@ static struct icssg_firmwares icssg_hsr_firmwares[] = {
+>  	}
+>  };
 >  
-> +	if (!irqs_disabled())
-> +		printk("IRQS NOT DISABLED\n");
->  #ifdef CONFIG_KGDB_LOW_LEVEL_TRAP
->  	if (kgdb_ll_trap(DIE_INT3, "int3", regs, 0, X86_TRAP_BP,
->  			 SIGTRAP) == NOTIFY_STOP)
-> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-> index ecfe7b497cad..2856805d9ed1 100644
-> --- a/arch/x86/kernel/alternative.c
-> +++ b/arch/x86/kernel/alternative.c
-> @@ -2728,6 +2728,12 @@ noinstr int smp_text_poke_int3_handler(struct pt_regs *regs)
->  	int ret = 0;
->  	void *ip;
->  
-> +	if (!irqs_disabled()) {
-> +		instrumentation_begin();
-> +		printk("IRQS NOT DISABLED\n");
-> +		instrumentation_end();
+> +static struct icssg_firmwares icssg_prp_firmwares[] = {
+> +	{
+> +		.pru = "ti-pruss/am65x-sr2-pru0-pruprp-fw.elf",
+> +		.rtu = "ti-pruss/am65x-sr2-rtu0-pruprp-fw.elf",
+> +		.txpru = "ti-pruss/am65x-sr2-txpru0-pruprp-fw.elf",
+> +	},
+> +	{
+> +		.pru = "ti-pruss/am65x-sr2-pru1-pruprp-fw.elf",
+> +		.rtu = "ti-pruss/am65x-sr2-rtu1-pruprp-fw.elf",
+> +		.txpru = "ti-pruss/am65x-sr2-txpru1-pruprp-fw.elf",
 > +	}
-> +
->  	if (user_mode(regs))
->  		return 0;
->  
-> 
-> 
-> And it didn't trigger when enabling function tracing. Are you sure
-> interrupts are enabled here?
+> +};
 
-Oops, I saw Xen's code. I confirmed that the asm_exc_int3 is
-registered as GATE_INTERRUPT. Hmm. Thus this might be a qemu
-bug as Peter said, because there is no chance to interrupt
-the IPI after hitting #BP.
+AFAIU your coworker is removing the static names, please wait until 
+the dust is settled on that:
 
-Thank you,
-
-> 
-> -- Steve
-> 
-
-
+https://lore.kernel.org/all/20250610052501.3444441-1-danishanwar@ti.com/
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+pw-bot: cr
