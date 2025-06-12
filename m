@@ -1,267 +1,182 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65CC82D660A
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 20:03:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C68B2D6626;
+	Thu, 12 Jun 2025 20:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749758626; cv=none; b=hNhnZHsxyFUg82ZCYWHuUk/jECDVmf64fvCYd091QHL7+LFVksPaiEYH+IZnRER5PTyrLhasRLqpHFIoINp4UIpsxrgvfvg3qL1oGtO5BlwGFmhahWcZY7OTXRuyY1EIDu6oJgbW6PLgAXNhiKvfZZNmUEqU7/lPCwnXnBw1Xv8=
+	t=1749758710; cv=none; b=BCEqVfkcKhcYbd5fUuSN2XmfzME2zVMVV3mNpU62427nu8sPnco0Qj/morh5NdQYX5bpdzmNqs9miR03WdSkyHPsVNbRrBjheBbJJV6B6JtLGjR94gU+9uLlvwdz3pLiozWEYgHLIZJ9TtLnQQAFJH+zEX29hCaq2iiWtOwYeOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749758626; c=relaxed/simple;
-	bh=9zblmUgJtWIkKos6+zpNQ9d4+qjoBrYkzw8znx9DyTA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CamHNZfQxfU8eGEYcICAdJy8Z7YI4MsKQ86QaW2UQ3pnfTwullejE9T36b67pmC7a4ExXd5qsNGDr4rIOG3FmdyAbkHe8Obq+1JO28EmNqrOJYkdxnUZFhAffnjOBjxt0SBwhK66oc5S5YmudrtaxFb2Af4Vn5Y8aczH7Lc4tpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GBVJbsu2; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749758710; c=relaxed/simple;
+	bh=fD/NnX816hgjKube9yvfb+JWWN6f4VcImV0sIZEIMeU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=klM4lao1jd3yKpPuYKq7qQIfV6E3nCuj+HvZuc/5ZU9qTOH/pfp25OPNSjjV5gNxhN3OfKIpuJP5zPgWvTUThukAnfm1smd1S8e2XKZx3N0Jc02KvSAnVskjx3CLaLdYKl/FqmRPi86/hCZJzm4m+LVBBb3oyN0EF++GP+0Sk1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G0d9AOEA; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GBVJbsu2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749758623;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BkHZHBWuBTB8Pv5EbGd/otlclSLolWJa7Gh+KIrTNFo=;
-	b=GBVJbsu2JnrS/FqQR7uVWneuK89TFp9vqNgiYAVEWMjJhZv4OsAHp/heAun6m+2348y/Wg
-	BTzLOeqFeu98aWaE4JkMWEPcsHj3mHCyVHVuKc2AKEXnYRbOWuJKXY8aI0iVKzqHeVxvqP
-	p1HT0G33uSRQzKSkBC7pgKLCmkdIzdg=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-557-2s7XAF63NoGMVM-pJdq-eA-1; Thu,
- 12 Jun 2025 16:03:31 -0400
-X-MC-Unique: 2s7XAF63NoGMVM-pJdq-eA-1
-X-Mimecast-MFC-AGG-ID: 2s7XAF63NoGMVM-pJdq-eA_1749758608
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9139419560B2;
-	Thu, 12 Jun 2025 20:03:28 +0000 (UTC)
-Received: from p16v.redhat.com (unknown [10.45.224.169])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 21B5C180045B;
-	Thu, 12 Jun 2025 20:03:21 +0000 (UTC)
-From: Ivan Vecera <ivecera@redhat.com>
-To: netdev@vger.kernel.org
-Cc: Prathosh Satish <Prathosh.Satish@microchip.com>,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Shannon Nelson <shannon.nelson@amd.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Michal Schmidt <mschmidt@redhat.com>,
-	Petr Oros <poros@redhat.com>
-Subject: [PATCH net-next v9 13/14] dpll: zl3073x: Add support to get/set frequency on input pins
-Date: Thu, 12 Jun 2025 22:01:44 +0200
-Message-ID: <20250612200145.774195-14-ivecera@redhat.com>
-In-Reply-To: <20250612200145.774195-1-ivecera@redhat.com>
-References: <20250612200145.774195-1-ivecera@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G0d9AOEA"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7d38b84984dso210859685a.0;
+        Thu, 12 Jun 2025 13:05:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749758708; x=1750363508; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/v8Wi9pmLbzK2fVR/8wTPHTfFlRGupAggALw4VZWcDE=;
+        b=G0d9AOEAACmauQ22y8hkW79aTKoUuThVoKelZUVjnDs7zu+yYfMpouqd1kOGjpav+p
+         hRc1er93aBk6gYJuMcLg1lBFMIq7rkWhvT8+Uycglntwhjo81oTPh8jQYWgp5oO37GBt
+         usDIDtwxRwji1Gzo/3r0AbSIb1sxjGcGGA72T6tHXIEzh3vh/DC71D6qzf+/BHeVaFeT
+         Dlac8Lu7q4InsFtj6O3X9tV8ltZgq11QR3NsFfPqNY6WAHtUTBZSS1WwRgn34zUqwTw/
+         A/BQwBmf4h8R5NQPI9bQUf+MUksGj760RYTJkHOTkDKipO3ojxqjqkeBsJbjfLuSxCeK
+         tTbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749758708; x=1750363508;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/v8Wi9pmLbzK2fVR/8wTPHTfFlRGupAggALw4VZWcDE=;
+        b=K9ARBx7gocsj0/UhcGWJt/bE7GyrDYwbHPpYCC1PuCPNJbZ63Vf6+EAe0bjHwH0xwN
+         g15Ekzw+Q99ZDF4KqKJw/0Oo0mBheXG1ltExkd/wBRt5uuw3FTvecrSIZccpRWoi1jEx
+         2DIegh0+pCRea7tE/azfDYj1GMYHgGslMk+dFOqttSGyVJP49Cq91gllX3ZfCzZef4cl
+         DhhlvXhgR3ZerJLmbvLB9yO+pxmMh9LsRhQmR+yDen5c6iEp/e3spKX3EwCfMwBL0wzO
+         XMPgloJNj4+8oeOyoZMRHHxddxIE1mu2tRfoklP5lJ9wCsts0YzXDYj1wp+xBWRw9mDn
+         7jXg==
+X-Forwarded-Encrypted: i=1; AJvYcCXUmjxAuAZV2OGfM0ylujzF7LSreWcIYisux/Vk7LIuwC+25Mv/3QtGUyBPEIbjRxzo9U2RfvJdI5K9pqVfLjQ=@vger.kernel.org, AJvYcCXW669PTUFj+joLUQo91sy2Ej1k+Wiep0ZVlRGjIQYlpo40yPz9qjJdsVlu5BK1T9N9myBnKOi5ZYGFfPc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVFjoc1qDigbq6cdNneGbHzsy7Qs5dprRzuMyU0qOxL2eEz2yw
+	D1+G43o/n7Q2bBZY2o1s8eJiyGJA2QCmNHG1hJXvoatmgfAE8Rln2xWd
+X-Gm-Gg: ASbGncvD3cuNpd3rlMZgpUNaIUxyg5e5/t3Jsil/8bsN014OHVzeYMih7ZIT2BqyQT5
+	YZuZLI3u4FKKnFZ7Rg6mIF5Hekj69bD4Qh70TxjKGBDq3H4xCOnZsPCK41SVebXR5hphcT5I6Ol
+	EUoHHCH752t+vUxjtgNXnZosGj8E/lC/FfsWmz6oVQMYf6zIhGmPMpRc7mY6X0Qw9afqdz09VCf
+	Gm4tGiSfEz9HzFBD0ANrmN4xA1jxgsC6Mjziao6z6hmzU/EjGJWJaYn2fEzqujShYLvEWJFBTiH
+	3zRluGUoehYu0aFRACrnQJT4DY0aEfZkkUBX2bCJ8e4hm2V2NjwpKIpiO76S9truwN9un2taFlq
+	H6AqCbT6mUk32LcaivnPOpQDT4mdB+Mo+8/FB7J/rc4Ksb1Dwx2Tg
+X-Google-Smtp-Source: AGHT+IGPvbhYn1lrn4qrmeoqzJFjK9J0A7QGgbiWc7FHysFCIXuha98d9b++ZX/ELwLmeM9pGf4jzg==
+X-Received: by 2002:a05:620a:28c5:b0:7cc:fddb:74d9 with SMTP id af79cd13be357-7d3bc3aa135mr102342385a.22.1749758707841;
+        Thu, 12 Jun 2025 13:05:07 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8e014dcsm78864185a.34.2025.06.12.13.05.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 13:05:07 -0700 (PDT)
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfauth.phl.internal (Postfix) with ESMTP id A02B01200069;
+	Thu, 12 Jun 2025 16:05:06 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-11.internal (MEProxy); Thu, 12 Jun 2025 16:05:06 -0400
+X-ME-Sender: <xms:8jJLaDKg1c-9WrSx28hWxxjLGRPk-oC9LXUQXrH7iYPsPfmRxfKG6g>
+    <xme:8jJLaHI98L03KajeyCOFSEhjpbfFLEDSLmvOCQZ0RfDaBO4JoiHAt_1ovxTbHdkCD
+    8foDAuobfUGm_rjtQ>
+X-ME-Received: <xmr:8jJLaLvt9i59zBXEyTt_YbiW5XQE0leVQffWjB_jhVQ7AWkwHLZNU40kESA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduheelkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
+    necuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilh
+    drtghomheqnecuggftrfgrthhtvghrnhephedugfduffffteeutddvheeuveelvdfhleel
+    ieevtdeguefhgeeuveeiudffiedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghl
+    ihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepgh
+    hmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopedvhedpmhho
+    uggvpehsmhhtphhouhhtpdhrtghpthhtohepjhhhuhgssggrrhgusehnvhhiughirgdrtg
+    homhdprhgtphhtthhopegrtghouhhrsghothesnhhvihguihgrrdgtohhmpdhrtghpthht
+    ohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnh
+    horhesghhmrghilhdrtghomhdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgv
+    thdprhgtphhtthhopegsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtghomhdprh
+    gtphhtthhopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
+    rghlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepthhmghhrohhssh
+    esuhhmihgthhdrvgguuh
+X-ME-Proxy: <xmx:8jJLaMamAHDz7-udyNIXaRAnQ5xED8QoPEp7Vi9OM1U-oarB-YAKnQ>
+    <xmx:8jJLaKaq6PRdbPepVJaW_bsaSLlxn2oAo5ggiqXbd9brNEG7wnkirA>
+    <xmx:8jJLaABpUBZ_vC7o5pmrsbmXztk0Mv4neO5_MKsYE9cNAfEfp-lrzw>
+    <xmx:8jJLaIZGMP1bP5oyTJkZ5v-KBjTvfqzJBLQlOLYji6S0FsvmZRB56g>
+    <xmx:8jJLaOo3I22I0K7cjp0hS0Av5MFGXjhucJXIc_y_asDa0_aC3TqKWFek>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 12 Jun 2025 16:05:06 -0400 (EDT)
+Date: Thu, 12 Jun 2025 13:05:05 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: John Hubbard <jhubbard@nvidia.com>
+Cc: Alexandre Courbot <acourbot@nvidia.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Benno Lossin <lossin@kernel.org>, Ben Skeggs <bskeggs@nvidia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v5 04/23] rust: add new `num` module with `PowerOfTwo`
+ type
+Message-ID: <aEsy8XDy6JW8zb6v@tardis.local>
+References: <20250612-nova-frts-v5-0-14ba7eaf166b@nvidia.com>
+ <20250612-nova-frts-v5-4-14ba7eaf166b@nvidia.com>
+ <aErtL6yxLu3Azbsm@tardis.local>
+ <f8d9af76-fc1d-4f7a-8dfb-a0606e44c56b@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f8d9af76-fc1d-4f7a-8dfb-a0606e44c56b@nvidia.com>
 
-Add support to get/set frequency on input pins. The frequency for input
-pins (references) is computed in the device according this formula:
+On Thu, Jun 12, 2025 at 01:00:12PM -0700, John Hubbard wrote:
+> On 6/12/25 8:07 AM, Boqun Feng wrote:
+> > On Thu, Jun 12, 2025 at 11:01:32PM +0900, Alexandre Courbot wrote:
+> ...
+> >> +                #[inline(always)]
+> >> +                pub const fn align_down(self, value: $t) -> $t {
+> > 
+> > I'm late to party, but could we instead implement:
+> > 
+> >     pub const fn round_down<i32>(value: i32, shift: i32) -> i32 {
+> >         value & !((1 << shift) - 1)
+> >     }
+> > 
+> >     pub const fn round_up<i32>(value: i32, shift: i32) -> i32 {
+> >         let mask = (1 << shift) - 1;
+> >         value.wrapping_add(mask) & !mask
+> >     }
+> 
+> Just a naming concern here.
+> 
+> The function name, and the "shift" argument is extremely odd there.
+> And that's because it is re-inventing the concept of align_down()
+> and align_up(), but with a misleading name and a hard to understand
+> "shift" argument.
+> 
+> If you are "rounding" to a power of two, that's normally called
+> alignment, at least in kernel code. And if you are rounding to the
+> nearest...integer, for example, that's rounding.
+> 
+> But "rounding" with a "shift" argument? That's a little too 
+> creative! :) 
+> 
 
- freq = base_freq * multiplier * (nominator / denominator)
+Oh, sorry, I should have mentioned where I got these names, see
+round_up() and round_down() in include/linux/math.h. But no objection to
+find a better name for "shift".
 
-where the base_freq comes from the list of supported base frequencies
-and other parameters are arbitrary numbers. All these parameters are
-16-bit unsigned integers.
+Regards,
+Boqun
 
-Co-developed-by: Prathosh Satish <Prathosh.Satish@microchip.com>
-Signed-off-by: Prathosh Satish <Prathosh.Satish@microchip.com>
-Signed-off-by: Ivan Vecera <ivecera@redhat.com>
----
- drivers/dpll/zl3073x/dpll.c | 124 ++++++++++++++++++++++++++++++++++++
- drivers/dpll/zl3073x/regs.h |   5 ++
- 2 files changed, 129 insertions(+)
-
-diff --git a/drivers/dpll/zl3073x/dpll.c b/drivers/dpll/zl3073x/dpll.c
-index 1f44910958781..8bd0e3e66e7f1 100644
---- a/drivers/dpll/zl3073x/dpll.c
-+++ b/drivers/dpll/zl3073x/dpll.c
-@@ -8,6 +8,7 @@
- #include <linux/dpll.h>
- #include <linux/err.h>
- #include <linux/kthread.h>
-+#include <linux/math64.h>
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
- #include <linux/netlink.h>
-@@ -84,6 +85,127 @@ zl3073x_dpll_pin_direction_get(const struct dpll_pin *dpll_pin, void *pin_priv,
- 	return 0;
- }
- 
-+/**
-+ * zl3073x_dpll_input_ref_frequency_get - get input reference frequency
-+ * @zldpll: pointer to zl3073x_dpll
-+ * @ref_id: reference id
-+ * @frequency: pointer to variable to store frequency
-+ *
-+ * Reads frequency of given input reference.
-+ *
-+ * Return: 0 on success, <0 on error
-+ */
-+static int
-+zl3073x_dpll_input_ref_frequency_get(struct zl3073x_dpll *zldpll, u8 ref_id,
-+				     u32 *frequency)
-+{
-+	struct zl3073x_dev *zldev = zldpll->dev;
-+	u16 base, mult, num, denom;
-+	int rc;
-+
-+	guard(mutex)(&zldev->multiop_lock);
-+
-+	/* Read reference configuration */
-+	rc = zl3073x_mb_op(zldev, ZL_REG_REF_MB_SEM, ZL_REF_MB_SEM_RD,
-+			   ZL_REG_REF_MB_MASK, BIT(ref_id));
-+	if (rc)
-+		return rc;
-+
-+	/* Read registers to compute resulting frequency */
-+	rc = zl3073x_read_u16(zldev, ZL_REG_REF_FREQ_BASE, &base);
-+	if (rc)
-+		return rc;
-+	rc = zl3073x_read_u16(zldev, ZL_REG_REF_FREQ_MULT, &mult);
-+	if (rc)
-+		return rc;
-+	rc = zl3073x_read_u16(zldev, ZL_REG_REF_RATIO_M, &num);
-+	if (rc)
-+		return rc;
-+	rc = zl3073x_read_u16(zldev, ZL_REG_REF_RATIO_N, &denom);
-+	if (rc)
-+		return rc;
-+
-+	/* Sanity check that HW has not returned zero denominator */
-+	if (!denom) {
-+		dev_err(zldev->dev,
-+			"Zero divisor for ref %u frequency got from device\n",
-+			ref_id);
-+		return -EINVAL;
-+	}
-+
-+	/* Compute the frequency */
-+	*frequency = base * mult * num / denom;
-+
-+	return rc;
-+}
-+
-+static int
-+zl3073x_dpll_input_pin_frequency_get(const struct dpll_pin *dpll_pin,
-+				     void *pin_priv,
-+				     const struct dpll_device *dpll,
-+				     void *dpll_priv, u64 *frequency,
-+				     struct netlink_ext_ack *extack)
-+{
-+	struct zl3073x_dpll *zldpll = dpll_priv;
-+	struct zl3073x_dpll_pin *pin = pin_priv;
-+	u32 ref_freq;
-+	u8 ref;
-+	int rc;
-+
-+	/* Read and return ref frequency */
-+	ref = zl3073x_input_pin_ref_get(pin->id);
-+	rc = zl3073x_dpll_input_ref_frequency_get(zldpll, ref, &ref_freq);
-+	if (!rc)
-+		*frequency = ref_freq;
-+
-+	return rc;
-+}
-+
-+static int
-+zl3073x_dpll_input_pin_frequency_set(const struct dpll_pin *dpll_pin,
-+				     void *pin_priv,
-+				     const struct dpll_device *dpll,
-+				     void *dpll_priv, u64 frequency,
-+				     struct netlink_ext_ack *extack)
-+{
-+	struct zl3073x_dpll *zldpll = dpll_priv;
-+	struct zl3073x_dev *zldev = zldpll->dev;
-+	struct zl3073x_dpll_pin *pin = pin_priv;
-+	u16 base, mult;
-+	u8 ref;
-+	int rc;
-+
-+	/* Get base frequency and multiplier for the requested frequency */
-+	rc = zl3073x_ref_freq_factorize(frequency, &base, &mult);
-+	if (rc)
-+		return rc;
-+
-+	guard(mutex)(&zldev->multiop_lock);
-+
-+	/* Load reference configuration */
-+	ref = zl3073x_input_pin_ref_get(pin->id);
-+	rc = zl3073x_mb_op(zldev, ZL_REG_REF_MB_SEM, ZL_REF_MB_SEM_RD,
-+			   ZL_REG_REF_MB_MASK, BIT(ref));
-+
-+	/* Update base frequency, multiplier, numerator & denominator */
-+	rc = zl3073x_write_u16(zldev, ZL_REG_REF_FREQ_BASE, base);
-+	if (rc)
-+		return rc;
-+	rc = zl3073x_write_u16(zldev, ZL_REG_REF_FREQ_MULT, mult);
-+	if (rc)
-+		return rc;
-+	rc = zl3073x_write_u16(zldev, ZL_REG_REF_RATIO_M, 1);
-+	if (rc)
-+		return rc;
-+	rc = zl3073x_write_u16(zldev, ZL_REG_REF_RATIO_N, 1);
-+	if (rc)
-+		return rc;
-+
-+	/* Commit reference configuration */
-+	return zl3073x_mb_op(zldev, ZL_REG_REF_MB_SEM, ZL_REF_MB_SEM_WR,
-+			     ZL_REG_REF_MB_MASK, BIT(ref));
-+}
-+
- /**
-  * zl3073x_dpll_selected_ref_get - get currently selected reference
-  * @zldpll: pointer to zl3073x_dpll
-@@ -592,6 +714,8 @@ zl3073x_dpll_mode_get(const struct dpll_device *dpll, void *dpll_priv,
- 
- static const struct dpll_pin_ops zl3073x_dpll_input_pin_ops = {
- 	.direction_get = zl3073x_dpll_pin_direction_get,
-+	.frequency_get = zl3073x_dpll_input_pin_frequency_get,
-+	.frequency_set = zl3073x_dpll_input_pin_frequency_set,
- 	.prio_get = zl3073x_dpll_input_pin_prio_get,
- 	.prio_set = zl3073x_dpll_input_pin_prio_set,
- 	.state_on_dpll_get = zl3073x_dpll_input_pin_state_on_dpll_get,
-diff --git a/drivers/dpll/zl3073x/regs.h b/drivers/dpll/zl3073x/regs.h
-index 34e905053a1ef..09dd314663dff 100644
---- a/drivers/dpll/zl3073x/regs.h
-+++ b/drivers/dpll/zl3073x/regs.h
-@@ -135,6 +135,11 @@
- #define ZL_REF_MB_SEM_WR			BIT(0)
- #define ZL_REF_MB_SEM_RD			BIT(1)
- 
-+#define ZL_REG_REF_FREQ_BASE			ZL_REG(10, 0x05, 2)
-+#define ZL_REG_REF_FREQ_MULT			ZL_REG(10, 0x07, 2)
-+#define ZL_REG_REF_RATIO_M			ZL_REG(10, 0x09, 2)
-+#define ZL_REG_REF_RATIO_N			ZL_REG(10, 0x0b, 2)
-+
- #define ZL_REG_REF_CONFIG			ZL_REG(10, 0x0d, 1)
- #define ZL_REF_CONFIG_ENABLE			BIT(0)
- #define ZL_REF_CONFIG_DIFF_EN			BIT(2)
--- 
-2.49.0
-
+> > 
+> > ? It's much harder to pass an invalid alignment with this.
+> 
+> Hopefully we can address argument validation without blowing up
+> the usual naming conventions.
+> 
+> 
+> thanks,
+> -- 
+> John Hubbard
+> 
