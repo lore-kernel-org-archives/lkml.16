@@ -1,95 +1,128 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB2B7299A90
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 15:27:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B349299AAB;
+	Thu, 12 Jun 2025 15:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749742044; cv=none; b=B5f5srmefnf7yAf08hgroP9ju9O2FsGpltMOzmAIU9Ho8AL6VcnaRLs+VDTSwzKKQAHThBAzBH/DKnXZ8bvVS1TBxxGDy7WuOFi7by++lb92ie05YG9mNLpam3UAU1nc9x4I7xUVpnQNqJHgORewpDHfzMh6bZHdD1KohINRTzU=
+	t=1749742045; cv=none; b=K415Xp6kXuPmw1LroICloesczO6A+Uo3pNSsvXqNonhyuYv3wlZ9LWrLAzfsOrupOYON5m7P5c3/94jUL0vrQNhuDR4EWF+rUY5OmX5zw1HJRMlzJE6H4Azxcvzgd8POybfERyaFXV2prq5nz85G3xvYnaBxL03qXEhq85OBfqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749742044; c=relaxed/simple;
-	bh=P5a+/vRfejKC43Dn9JI5fxo6bMhv1S+e3Kc5pPSYgbI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S71h9+YOp+9HO9MfE9bCtH7RifNWv1WkMSuzvGleXu7xJAhZeIH2QhLeqaxfE8K+Rc43zMsAeDuRp6KraEj35Vbs4EtYSLrmS941qe5gPDLU2yu7YRWt5jOjuPkmlPHJWAfwiOziYKZSp9MBCc9gBUDSKxjkd3DhoYylKHKB39M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Mcrad/iC; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1749742045; c=relaxed/simple;
+	bh=TvKPFY9PN30dftdt4TdDN4waIsgGAY0x6eO7C/osMvc=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=gfK+8fxRfpvyNb/h20q3xA8sJmJ/aId2eCO65Or9j/OYoy3TT1nyL4nw3IE4uFdQVH0iNUTRGYXy72B64voxJdc4N07uouLBUDMOmpw9KGD+ifOvxJ+w+kcGPXFVykUpxugsM+LKyVJiCqsN+6gyXaZAaKgll10GpwdZq2/YET8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=O4xLsFKn; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=o+mUcqWj; arc=none smtp.client-ip=103.168.172.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Mcrad/iC"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ad8826c05f2so207112566b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 08:27:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1749742039; x=1750346839; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z4Pqtv5A7DN8Mx6FTwFxLJlKUKCl+g5TgC+f5BBxIp8=;
-        b=Mcrad/iC5DpNyd+l9O9r/wxZjSFTF4Rl8WPRRjd8ouJuHJuc1p7yGzFdmRwd6Hy0TL
-         nbleahHRpubY+ng1tOC2/Obf9gfGtnmDlL2elZAyOOXM68ypQnc3LwB15IhAtjvfXHYr
-         Fkl1XEsWe7aZTz2iKE5PQG9CqXoKqTeVrWhr8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749742039; x=1750346839;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Z4Pqtv5A7DN8Mx6FTwFxLJlKUKCl+g5TgC+f5BBxIp8=;
-        b=ZP2YHJs2vsDPiDCE2fVdzdI2eA5MpTMl+0qMP+c+LnTM5OqkhIRMLkTtSPPZfj3ql7
-         ydXBYK0Q7a0179r+TOJ93GA3/8xcIzlPWmidC7W/EmemOockjbOZpipJ1S0mgc4NKtY7
-         4CWxoLNPlTe39pEPhz29fyEdewrvst39NVVHR32k2qs6OnQIoDILgQsWylAQjndzANqb
-         FDi+3vG4T2VVZjlqW/8ArgOE0Y0Eq1LWzP1R7gh4FLLIFQ13Y3LpLQP2uThLhPA926yS
-         kxvZK/XGOUqZkoluRiZY7HpppjrkdywpUxVqf39fFuOwUmEvXowU3pa8DxrfjO46TDJM
-         odbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVU8ddTzJnQvYVlXyrtaxzEkdYoNIlxbp3V03NUdHm+8FepHpInAkDk1sqEZWSc2Ul5BtBIydLSvPzJIUI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyIeEDaTjEt33mGs25yPpzvUG8jRGMGJ3LxLJLJOvee7djxK4q
-	XJiE2TpISiN781yKvj8ky9XBUGY+eMwgbiIiCSROkbfbuiXBjvPr364O7VEstbv07DXBsZ6WGIp
-	SB6QdkMg=
-X-Gm-Gg: ASbGncu/P9wplnHd/oPgFoNfeUV0ZbxbpxDCUQwX7N35a/+yjTbN1qrkP9mfTn1ijYY
-	vE4m9iub2s9Do7JURXMRup436TEvMCT6EN3RHae0iXQSh3cE9w1T4TTcJDZL4hU1enCuUG4uzVv
-	rgK3LeUiEok2htO9Wlx9Sur0g2ILHHBAnQOvRCokkJzNCSgu+v4psWes37D1WVmMOoLWTi22MI1
-	OkTobe8uV2wt6Y0c7cnRUrCO4MR+KaFhwx1pk7Mxk/u1W1vCYv1RWh3VgIlUzpbpBBqCx2frDna
-	YDYRIIG4At8X5jYNHiatrTFrNexe3MwoUYpXtDMIz5Wbjei5IWAsXeX+9LcBGs80XRDtA8BWGo0
-	uzOTMEj1eVU+yp3Xz7buWVebLGpgERQwnR7tc
-X-Google-Smtp-Source: AGHT+IEhHXEHhMCB8n+hItcLfGtfWs35UFsWJq8suFohBHvRl5x1bCyVgRPPFfwPKPcsnRPagV7q1w==
-X-Received: by 2002:a17:906:c153:b0:ad8:93a3:29ba with SMTP id a640c23a62f3a-adea2e7f096mr414684066b.17.1749742038567;
-        Thu, 12 Jun 2025 08:27:18 -0700 (PDT)
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com. [209.85.208.47])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adeadb22476sm149239066b.90.2025.06.12.08.27.17
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 08:27:18 -0700 (PDT)
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-604bff84741so2476413a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 08:27:17 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVNyVsqpRTFQlXjF5Uh75Zsqz8pFL94o1Tjw05DXQ0aCGmbsaccyO5jBKVcRY9RVlgAovldgUoaluG/iAo=@vger.kernel.org
-X-Received: by 2002:a05:6402:42d6:b0:608:3b9d:a1b with SMTP id
- 4fb4d7f45d1cf-60863ae566emr4109366a12.19.1749742037587; Thu, 12 Jun 2025
- 08:27:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="O4xLsFKn";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="o+mUcqWj"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 8349711401C3;
+	Thu, 12 Jun 2025 11:27:23 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Thu, 12 Jun 2025 11:27:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1749742043;
+	 x=1749828443; bh=kSW5V3qXM0uMitihH5rTOGEmJIp6Xt/2AQPY8NBwQuY=; b=
+	O4xLsFKnAeFgLx5yVsYToH1PR4lWdwbJs+D12Nkyn3b5evb7GZsdOrtPAF73euTT
+	ej7h/SLdZfifHrimExeuSQOJBh8K9NUHfh6/NFoKIhd3KrQJQt1S7DTNImPXmZjF
+	A7eDOyPmVWChYj0stWxriIXKpSSlzTLpqgc2DXAYxvFft7Mi1whSsS4s7jz+HovJ
+	Yoom+HhOycj6lyiuLUh56SRRzk6c7cV/wcWn6S1iDMu7RMWnCzGdWPCSPvcJAV/q
+	bqmOXDwMaFBPeJpilVtHa1zjcCf9ZbkYrUn8Vq3ZE1MsH8huKKGf38F4bSmIC/o3
+	5mbuqu18qmQsxvznFd3Vaw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1749742043; x=
+	1749828443; bh=kSW5V3qXM0uMitihH5rTOGEmJIp6Xt/2AQPY8NBwQuY=; b=o
+	+mUcqWjCMuyJdri6K1m9pnbg9LBJxcU8JFFSsMZ5ByHbKyErIgMTt86bU0JRSzQj
+	q10wHZT07uYWhiWGAdbSh8wMmB3LuN49V6oUfA3w7UZuNwz8mkoE0mE0UF+FvA4v
+	dhJ9/4qUMFe3fOmKZY+z/231IZDvfn7D9q8a5h0BkMMevEHjR6xAOywVtywN54U2
+	pmGDKMbxhe0pKEscichLCLBdxB9pSTaKbPNF289gR+mtcsyWMeBixKS/y4k46kXw
+	r3o5oqeer96BQg8EtFsvdFc7erc9dJRNEN2WbYR4zJba5ZJMkVTZ2SNcyS0LT53J
+	gow+1OjCyTgMRJ/VV21Mw==
+X-ME-Sender: <xms:2vFKaMqZkCIfBSLPtxLo0h7Mtu29IHtDNWViYPtF0lWqhBFfBDLekw>
+    <xme:2vFKaCoT69sRLlNcXeTATN_E3P0yei_ZduX3dHbr76bzRdcexjp9_jKLGbO5rK4SA
+    fVKtLPwY2_hBJLzWIE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugdduheegfecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
+    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
+    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
+    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopedu
+    kedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhloh
+    hfthdrnhgvthdprhgtphhtthhopehnihgtkhdruggvshgruhhlnhhivghrshdolhhkmhhl
+    sehgmhgrihhlrdgtohhmpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtg
+    homhdprhgtphhtthhopehjuhhsthhinhhsthhithhtsehgohhoghhlvgdrtghomhdprhgt
+    phhtthhopehmohhrsghosehgohhoghhlvgdrtghomhdprhgtphhtthhopehlrghnhhgroh
+    eshhhurgifvghirdgtohhmpdhrtghpthhtohepshgrlhhilhdrmhgvhhhtrgeshhhurgif
+    vghirdgtohhmpdhrtghpthhtohepshhhrghojhhijhhivgeshhhurgifvghirdgtohhmpd
+    hrtghpthhtohepshhhvghnjhhirghnudehsehhuhgrfigvihdrtghomh
+X-ME-Proxy: <xmx:2vFKaBM9Z-Q8gr-tmBPDoMDP8GbRhRG9QMB_HzQ9r5rGIdNMPmMrGg>
+    <xmx:2vFKaD5_Ow3HpbiaKUKjKUE8-3mY39X2eqWKZTXBy6j8anOhvtx_RQ>
+    <xmx:2vFKaL6lEmQBWJLWqoO2gNf7YGBNqSlEDqkOjT9g6xtGiCid6LRGSw>
+    <xmx:2vFKaDji52x8-CIjQypUTj2oT63JwrGHTnyb2kCq_3096IdzxJQkyw>
+    <xmx:2_FKaAVxPqEBRH2g4nVvNzhMrlgtTKU3C_uTLT91QnV4XvFDx_YOwn5W>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 581E3700063; Thu, 12 Jun 2025 11:27:22 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <4cb508de-3af3-4796-ac74-2c082a578588@kernel.org>
-In-Reply-To: <4cb508de-3af3-4796-ac74-2c082a578588@kernel.org>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 12 Jun 2025 08:26:59 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgda=j0VNdx1gTos_4DL986Z2cKotgpVsn36T-JmNshXg@mail.gmail.com>
-X-Gm-Features: AX0GCFvnTy6cYDrHALlLp1FFvPxTrHkuO-bgQbsdY4gmWtxJ4h-gyShDoTWTgGY
-Message-ID: <CAHk-=wgda=j0VNdx1gTos_4DL986Z2cKotgpVsn36T-JmNshXg@mail.gmail.com>
-Subject: Re: [GIT PULL] ARC updates for 6.16
-To: Vineet Gupta <vgupta@kernel.org>
-Cc: arcml <linux-snps-arc@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, 
-	Jason Gunthorpe <jgg@nvidia.com>, Yu-Chun Lin <eleanor15x@gmail.com>, Thomas Huth <thuth@redhat.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>
-Content-Type: text/plain; charset="UTF-8"
+X-ThreadId: T0988381ff57d4bb7
+Date: Thu, 12 Jun 2025 17:27:02 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Jakub Kicinski" <kuba@kernel.org>
+Cc: "Jijie Shao" <shaojijie@huawei.com>, "Arnd Bergmann" <arnd@kernel.org>,
+ "Jian Shen" <shenjian15@huawei.com>, "Salil Mehta" <salil.mehta@huawei.com>,
+ "Andrew Lunn" <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Paolo Abeni" <pabeni@redhat.com>,
+ "Nathan Chancellor" <nathan@kernel.org>,
+ "Nick Desaulniers" <nick.desaulniers+lkml@gmail.com>,
+ "Bill Wendling" <morbo@google.com>, "Justin Stitt" <justinstitt@google.com>,
+ "Hao Lan" <lanhao@huawei.com>, "Guangwei Zhang" <zhangwangwei6@huawei.com>,
+ Netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev
+Message-Id: <ad6c3eb7-22d9-4f81-8656-a1f62aba3b4d@app.fastmail.com>
+In-Reply-To: <20250612073253.2abdd54e@kernel.org>
+References: <20250610092113.2639248-1-arnd@kernel.org>
+ <41f14b66-f301-45cb-bdfd-0192afe588ec@huawei.com>
+ <a029763b-6a5c-48ed-b135-daf1d359ac24@app.fastmail.com>
+ <34d9d8f7-384e-4447-90e2-7c6694ecbb05@huawei.com>
+ <20250612073253.2abdd54e@kernel.org>
+Subject: Re: [PATCH] hns3: work around stack size warning
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Wed, 11 Jun 2025 at 20:29, Vineet Gupta <vgupta@kernel.org> wrote:
+On Thu, Jun 12, 2025, at 16:32, Jakub Kicinski wrote:
+> On Thu, 12 Jun 2025 21:09:40 +0800 Jijie Shao wrote:
+>> > The normal way of doing this would be to use the infrastructure
+>> > from seq_file and then seq_printf() and not have any extra buffers
+>> > on top of that.
+>> 
+>> seq_file is good. But the change is quite big.
+>> I need to discuss it internally, and it may not be completed so quickly.
+>> I will also need consider the maintainer's suggestion.
 >
->   git://git.kernel.org/pub/scm/linux/kernel/git/vgupta/arc.git/ tags/arc-6.16-rc1
+> Arnd, do you mind waiting? We can apply your patch as is if the warning
+> is a nuisance.
 
-So this is signed and I pulled, but your key has expired. And I don't
-find a new key on kernel.org or the normal keyservers.
+It's not urgent, as the current warning limit is still 2048 bytes
+for 64-bit targets. I am hoping to have all patches in place for
+the next merge window to be able to reduce the default limit to
+1280 bytes and I can just carry my local fix for my own testing
+until then.
 
-Please don't put expiration dates on your keys and then not refresh
-them. Or tell me where to find updated key/.
-
-                  Linus
+    Arnd
