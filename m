@@ -1,123 +1,142 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD5A23D2B3
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 13:29:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1416623E229;
+	Thu, 12 Jun 2025 13:30:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749734977; cv=none; b=insV1SQUR00q+Lb2ifBNYc/k04LuIwxTu7nPwq+R2Aawn7hcaJzXkiVTDjsoTM++30K6RA5WJS7HoTTJrd5MEjtkL0N9PjcI9y0iQogwJlOR9jiPNnm+6eJpesPUq7+f+bZwd1jhMoJSLzkjIFUQl4UjHO+SuJHhZ7ci6l1u/sE=
+	t=1749735009; cv=none; b=VBuDZyE9AcAo3hRg/mww0og+EOrsCetrU3J2n9PwsmMIh9FcdxRMK3zmzZJoU06IasrwN6lZhcnHVC372R3jJ+KCrDmkMecSzhrMPKCRGNDPao6BNRVlRpOfvCriwyTPEgojXRd4Oy2SqU6ym5r/T4o44gsHyaZ3fmpn4WcSl8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749734977; c=relaxed/simple;
-	bh=tyaWXuJEscIM/pRJvevrANS+YajaEw5h4VbmA0cjUGQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pFqrs6sJ4qZHUjLXzKtWCiU+m/4kRwzJYTamb92QndYgSylxs4FkdU1PrC5SaxTpVBH2bgkNUaD9wMhXDp7glBJ1lFgqUKm0sEfYWi6/zb/cWbnbL3HMlT7oNa0Lf7/eTua3IVPPj2DIQ6MwOF+XJAM6QJWupjrczcxa5WY91X4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=N7QTZ2sl; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="N7QTZ2sl"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ad89333d603so199015066b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:29:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749734973; x=1750339773; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=OaCbwYcyztgsQSk4M0vxeNKM8wXA6XHC0XWXp5bFZsc=;
-        b=N7QTZ2sl2heJpBsAnlU70B3xw5MkCUVa2MvooNCUhE7Ln74hN5Lc+G1rCcPnc/LHuV
-         IuJwAqMvqFfqg1NeOMIoS3HMXSPyDg87dvTKRUdA1NbEj8Kz3lLhdscP2+z6eFkpD3vi
-         8rDMzQ/0PMfD74Ck1F20lzQAQWo/ajiyft6XINiThKOOTBBxh/7se28A3wNUdo6ez72I
-         slNe3nW7UvTVGOIWd1ryncu+5tBXvNGnNNXxZpmSTmErX0hGjtE3aoG0PrlvIZD4tynP
-         brCAClikq8iRuhxBoEjlalPkospjrnH5HfpGeIwr/xpQFyIF7fqVcvh+lkXpKZtUZqXL
-         5fAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749734973; x=1750339773;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OaCbwYcyztgsQSk4M0vxeNKM8wXA6XHC0XWXp5bFZsc=;
-        b=LC2cvT8+82CjGvhJf4LMdm0kTzg5kUrWj1ea9zjT9NbyrFMof0yWkNGmYqdvHpdWxc
-         33ocpqTJAO1m0FS9dWmSDN0iwjLLdflkqiKfajqme8waZLvCyfMuSllAz0kmbL0BolSH
-         Oe5uAURVJsdcce9/PZBiJCkDjlqog1ViZEtnVlpdoJ5PymdfIgzKw0MwEzCCOQcMr42k
-         oxjHzBALeH7Ep+PRhGnKFSDbikQmJW+g29armEUYiWl+rXEmdgMG2ourGGexM2YOFteF
-         SqrIAa2w1SLyZfYnMu2iHbIlLG/r/mp/ip/Nnr9+nu5mrawYHQI+gSvcetUXJeyyIL0B
-         Dyng==
-X-Forwarded-Encrypted: i=1; AJvYcCXUbcIy93piSP0yhrRfkSISmH51XUITaBLnKEASRIsmCDBTosxCx2vM1pWAUiKVq80T19xdsUahV07E7MU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPcgz69r6LtN6EjcfhNMef6ygFYgeiQOZ780zEG9cskEQciK7P
-	Hywk77CUcDjc0BOM54UlxC9YA9xvCCE+zBAsaY5Ne79VJ2eVjGqk/19XLG9Npl006FC6bonX0xx
-	BWHz4LHXSu92TPkuSLOBqj29aT/vrFuNybCRqObd/qQ==
-X-Gm-Gg: ASbGncuwHlZJx9/9E+BTBb9TZpDJN7ENO0P9RaUkcPcdgUO2kLdQ47uvucm9bxArqE1
-	Gmh6YaqXTf2UitHub6NP1TeucvHx616e2BBmqGZl+9Stqe0+SQ3JVb+txcgyvQA+KSxoYrS+lL7
-	vqr+FktLGZPg52Gh5TQwY6n9nCZh24X6g60RPhOfgkpg==
-X-Google-Smtp-Source: AGHT+IFGzGuDldvCwIGTPyVY/Q1f+5J2pGNKIoR0uw4vF1eEfVN2+qQHJPAY5DSSkd6e4ABDxQQq7ZK6AMhN3exyrJM=
-X-Received: by 2002:a17:906:4796:b0:ad5:78ca:2126 with SMTP id
- a640c23a62f3a-ade89855d42mr727863366b.59.1749734973378; Thu, 12 Jun 2025
- 06:29:33 -0700 (PDT)
+	s=arc-20240116; t=1749735009; c=relaxed/simple;
+	bh=xX9ZZLz6dt8kHVgaW+ZLN6eqeYZjADOTT+Qoes0duhQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cSxpBxceuXIXGdyH4zDwMQAgqMF4inLQoDoFwcxvOQEar0/slfbot/btL0ir551byDQO6VQ7PRiE0YEUc1TbRFE9zP7sOLsaYe1IzyIxGRgCNSnuVViuCpO3acZU+2R9NuDHGn0bMROr3NgiR7Q4R73qrJXj9Cmnz/Q5ARv0WHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bJ3L437VszKHNP7;
+	Thu, 12 Jun 2025 21:30:04 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id C31E81A1232;
+	Thu, 12 Jun 2025 21:30:02 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgBXul5Z1kpoBZgwPQ--.19631S4;
+	Thu, 12 Jun 2025 21:30:02 +0800 (CST)
+From: Zheng Qixing <zhengqixing@huaweicloud.com>
+To: josef@toxicpanda.com,
+	axboe@kernel.dk,
+	xiubli@redhat.com,
+	prasanna.kalever@redhat.com,
+	ming.lei@redhat.com
+Cc: linux-block@vger.kernel.org,
+	nbd@other.debian.org,
+	linux-kernel@vger.kernel.org,
+	yukuai3@huawei.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com,
+	zhengqixing@huawei.com
+Subject: [PATCH] nbd: fix uaf in nbd_genl_connect() error path
+Date: Thu, 12 Jun 2025 21:24:05 +0800
+Message-Id: <20250612132405.364904-1-zhengqixing@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250602155320.1854888-1-neelx@suse.com> <20250602155320.1854888-3-neelx@suse.com>
- <20250602172904.GE4037@twin.jikos.cz>
-In-Reply-To: <20250602172904.GE4037@twin.jikos.cz>
-From: Daniel Vacek <neelx@suse.com>
-Date: Thu, 12 Jun 2025 15:29:21 +0200
-X-Gm-Features: AX0GCFsfTbBiHDmM72eeEGEjMZ4pxvPRrfO66llnHwT1xiVFoRv5Mu6oDVr90v0
-Message-ID: <CAPjX3FdyMGKGFch-k=CmOD7wP_as_iaB9hmnbbui5=off+m+iQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] btrfs: harden parsing of compress mount options
-To: dsterba@suse.cz
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
-	Nick Terrell <terrelln@fb.com>, linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgBXul5Z1kpoBZgwPQ--.19631S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxGFWktw4ktr4Uuw4DZry5urg_yoW5ZF18pF
+	sxGFZ7CrW8ua40gFWkAw18ZFy5t3W5Xry7Kr97Gw1YvryfAr4j9F9YkF90qF98KryrCF9r
+	AF1qqry8KF1UGrDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0E
+	n4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
+	0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
+	tVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
+	CY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAF
+	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
+	7IU0rhL5UUUUU==
+X-CM-SenderInfo: x2kh0wptl0x03j6k3tpzhluzxrxghudrp/
 
-On Mon, 2 Jun 2025 at 19:29, David Sterba <dsterba@suse.cz> wrote:
->
-> On Mon, Jun 02, 2025 at 05:53:19PM +0200, Daniel Vacek wrote:
-> > Btrfs happily but incorrectly accepts the `-o compress=zlib+foo` and similar
-> > options with any random suffix.
-> >
-> > Fix that by explicitly checking the end of the strings.
-> >
-> > Signed-off-by: Daniel Vacek <neelx@suse.com>
-> > ---
-> > v3 changes: Split into two patches to ease backporting,
-> >             no functional changes.
-> >
-> >  fs/btrfs/super.c | 26 +++++++++++++++++++-------
-> >  1 file changed, 19 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
-> > index 6291ab45ab2a5..4510c5f7a785e 100644
-> > --- a/fs/btrfs/super.c
-> > +++ b/fs/btrfs/super.c
-> > @@ -270,9 +270,20 @@ static inline blk_mode_t btrfs_open_mode(struct fs_context *fc)
-> >       return sb_open_mode(fc->sb_flags) & ~BLK_OPEN_RESTRICT_WRITES;
-> >  }
-> >
-> > +static bool btrfs_match_compress_type(char *string, char *type, bool may_have_level)
->
-> const also here, string, type
->
-> > +{
-> > +     int len = strlen(type);
-> > +
-> > +     return strncmp(string, type, len) == 0 &&
-> > +             ((may_have_level && string[len] == ':') ||
-> > +                                 string[len] == '\0');
-> > +}
-> > +
-> >  static int btrfs_parse_compress(struct btrfs_fs_context *ctx,
-> >                               struct fs_parameter *param, int opt)
-> >  {
-> > +     char *string = param->string;
->
-> and here
+From: Zheng Qixing <zhengqixing@huawei.com>
 
-Can be done at merge time. Or do you want a re-send?
+There is a use-after-free issue in nbd:
 
+block nbd6: Receive control failed (result -104)
+block nbd6: shutting down sockets
+==================================================================
+BUG: KASAN: slab-use-after-free in recv_work+0x694/0xa80 drivers/block/nbd.c:1022
+Write of size 4 at addr ffff8880295de478 by task kworker/u33:0/67
 
-> > +
-> >       /*
-> >        * Provide the same semantics as older kernels that don't use fs
-> >        * context, specifying the "compress" option clears
+CPU: 2 UID: 0 PID: 67 Comm: kworker/u33:0 Not tainted 6.15.0-rc5-syzkaller-00123-g2c89c1b655c0 #0 PREEMPT(full)
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Workqueue: nbd6-recv recv_work
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0xc3/0x670 mm/kasan/report.c:521
+ kasan_report+0xe0/0x110 mm/kasan/report.c:634
+ check_region_inline mm/kasan/generic.c:183 [inline]
+ kasan_check_range+0xef/0x1a0 mm/kasan/generic.c:189
+ instrument_atomic_read_write include/linux/instrumented.h:96 [inline]
+ atomic_dec include/linux/atomic/atomic-instrumented.h:592 [inline]
+ recv_work+0x694/0xa80 drivers/block/nbd.c:1022
+ process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c2/0x780 kernel/kthread.c:464
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+nbd_genl_connect() does not properly stop the device on certain
+error paths after nbd_start_device() has been called. This causes
+the error path to put nbd->config while recv_work continue to use
+the config after putting it, leading to use-after-free in recv_work.
+
+This patch moves nbd_start_device() after the backend file creation.
+
+Reported-by: syzbot+48240bab47e705c53126@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/all/68227a04.050a0220.f2294.00b5.GAE@google.com/T/
+Fixes: 6497ef8df568 ("nbd: provide a way for userspace processes to identify device backends")
+Signed-off-by: Zheng Qixing <zhengqixing@huawei.com>
+---
+ drivers/block/nbd.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index 7bdc7eb808ea..2592bd19ebc1 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -2198,9 +2198,7 @@ static int nbd_genl_connect(struct sk_buff *skb, struct genl_info *info)
+ 				goto out;
+ 		}
+ 	}
+-	ret = nbd_start_device(nbd);
+-	if (ret)
+-		goto out;
++
+ 	if (info->attrs[NBD_ATTR_BACKEND_IDENTIFIER]) {
+ 		nbd->backend = nla_strdup(info->attrs[NBD_ATTR_BACKEND_IDENTIFIER],
+ 					  GFP_KERNEL);
+@@ -2216,6 +2214,8 @@ static int nbd_genl_connect(struct sk_buff *skb, struct genl_info *info)
+ 		goto out;
+ 	}
+ 	set_bit(NBD_RT_HAS_BACKEND_FILE, &config->runtime_flags);
++
++	ret = nbd_start_device(nbd);
+ out:
+ 	mutex_unlock(&nbd->config_lock);
+ 	if (!ret) {
+-- 
+2.39.2
+
