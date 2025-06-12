@@ -1,117 +1,149 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC291BC2A;
-	Thu, 12 Jun 2025 13:37:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D0F415624B;
+	Thu, 12 Jun 2025 13:38:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749735457; cv=none; b=gwCntKOaAXrUc26t/kSUohLrMyxOGKXU7gOhnptcgdMpsU6NzsCGLBuHmQIp06vP8yPXXbfdE96Dlric6PeMXwkikqEh3Ngj83IN2JEQRicrk90ykBXf9EG7Z7GIKEx2NTJr1E8m2rn2+iuALEP0ZG9UMv6ue5/ck0U39PRn+Gc=
+	t=1749735494; cv=none; b=gbMsuDgGtY6CysxolW18586INq/AH+5kQ9Mn7Jom5DwcB2ZtmKcQaWBRlAMPnLMpBuuOR4wv2h9RXj8e0JIjsc/8WYW8P6bxvxh7m23OahZfhsNwBnp9orWg8sac7SFLRUzVPrXCxn7rQzJboHa+3TrBOpNpaJiuuP+m8/ibRz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749735457; c=relaxed/simple;
-	bh=aaey3Uz+j7q0vSfDmUJZDjBRcZyVcuXCOVxqyQYZO8E=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=nP0zLt2q+UX8Cm6lQPraJLGxaQJF+giqFwTUE8gHA1nPy6ZZd1Cq4ARGO8tlOOChmx334f3LRHYYp968QMaZSBLDJuWkoDQKcY1JxSTSk6AZKQzI3gkrjJoF71jQXvYFaGbWBKqf+ABI90vRJ5GfoL2tvIQwfSUzTPVg56HTaeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bJ3Vh6zBWzYQvMX;
-	Thu, 12 Jun 2025 21:37:32 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id E8DB21A0D5D;
-	Thu, 12 Jun 2025 21:37:31 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgCnCl8a2Epo7CMxPQ--.16770S3;
-	Thu, 12 Jun 2025 21:37:31 +0800 (CST)
-Subject: Re: [PATCH] nbd: fix uaf in nbd_genl_connect() error path
-To: Zheng Qixing <zhengqixing@huaweicloud.com>, josef@toxicpanda.com,
- axboe@kernel.dk, xiubli@redhat.com, prasanna.kalever@redhat.com,
- ming.lei@redhat.com
-Cc: linux-block@vger.kernel.org, nbd@other.debian.org,
- linux-kernel@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- zhengqixing@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20250612132405.364904-1-zhengqixing@huaweicloud.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <c12c045b-fba4-c03d-1d2e-db90f6a5d76b@huaweicloud.com>
-Date: Thu, 12 Jun 2025 21:37:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1749735494; c=relaxed/simple;
+	bh=szU490pY/xtwR8j/yoCyjtlrIVxHF7cdPSe2QLHVMf0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=DUWjQCwqVOJB6oWm9CnMk8UpPIU0mM27pYfr10N+sFzpZEhiJSNBEYhOGFjF6uyAznGsNaq7GJUzZXn0f8xiNzU/lYDIkMt5yqtVH9KgqGezsglk7o1bhfpHZLzMHfHTdwepdMrPG3G1A/oyguDu9qT9146rWpgA34fNDm11a38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 6120E5B400;
+	Thu, 12 Jun 2025 13:38:04 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 9E84A17;
+	Thu, 12 Jun 2025 13:38:02 +0000 (UTC)
+Date: Thu, 12 Jun 2025 09:38:02 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>,
+ Mark Rutland <mark.rutland@arm.com>, Valentin Schneider
+ <vschneid@redhat.com>
+Subject: [PATCH] tracing/ipi: Hide ARM specific IPI trace events from other
+ architectures
+Message-ID: <20250612093802.77cdcc9c@batman.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250612132405.364904-1-zhengqixing@huaweicloud.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCnCl8a2Epo7CMxPQ--.16770S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxGFWkKr13JFW8ZFyxXw1fZwb_yoW5GrWDpa
-	nxG3s7CrW8u34vy395A3W8CFy8JF43Xr4fGryxJw13uFW3Ar4j9r9Y93Z8WFyDGry0vFy5
-	AF9Fqry8K3WUJ3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Ib4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
-	e2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4I
-	kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
-	WwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr
-	0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWU
-	JVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJb
-	IYCTnIWIevJa73UjIFyTuYvjxUOBMKDUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 9E84A17
+X-Stat-Signature: of9cdjmkm34d8mn47z5ss4s5f1kzzb3s
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18lwVEvWrQ8W0t+uSfL2Sw31sYeE07hWtU=
+X-HE-Tag: 1749735482-515476
+X-HE-Meta: U2FsdGVkX19RG2c28YS+jzUwsVxPN6BgeLy+uYYqrKJoCA8x2JMOxdz+yLPs6JOYVFsvo2WDoqefcjXvLPJLQr+hRDQT/414xh20Qb3K/kJb3YG+uavlhZD0braKYV289hiR4UbM14bPtouqkQdlwf5Jr0rE0UzCeWSoJMMGdQ+0XKO5kJ9sEvqWV+tTYwKJhvuz8mKJhlDncHRMG7y26U13rlilD/nop9NTEo+ClNb5SUOY5PSmNCmlr+1cnOBDoNYpeIaV50pACSKzq87z7pD//TF/37kU956X9NggJCL8piYM7ziXet6smsU5Q+4IUEuF/SxizyHm+KlZlTdXPYSQ1TPoSUWI2JUIeK4STP3JuyUd4Lnuidj04YzdRP1M
 
-ÔÚ 2025/06/12 21:24, Zheng Qixing Ð´µÀ:
-> From: Zheng Qixing<zhengqixing@huawei.com>
-> 
-> There is a use-after-free issue in nbd:
-> 
-> block nbd6: Receive control failed (result -104)
-> block nbd6: shutting down sockets
-> ==================================================================
-> BUG: KASAN: slab-use-after-free in recv_work+0x694/0xa80 drivers/block/nbd.c:1022
-> Write of size 4 at addr ffff8880295de478 by task kworker/u33:0/67
-> 
-> CPU: 2 UID: 0 PID: 67 Comm: kworker/u33:0 Not tainted 6.15.0-rc5-syzkaller-00123-g2c89c1b655c0 #0 PREEMPT(full)
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-> Workqueue: nbd6-recv recv_work
-> Call Trace:
->   <TASK>
->   __dump_stack lib/dump_stack.c:94 [inline]
->   dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
->   print_address_description mm/kasan/report.c:408 [inline]
->   print_report+0xc3/0x670 mm/kasan/report.c:521
->   kasan_report+0xe0/0x110 mm/kasan/report.c:634
->   check_region_inline mm/kasan/generic.c:183 [inline]
->   kasan_check_range+0xef/0x1a0 mm/kasan/generic.c:189
->   instrument_atomic_read_write include/linux/instrumented.h:96 [inline]
->   atomic_dec include/linux/atomic/atomic-instrumented.h:592 [inline]
->   recv_work+0x694/0xa80 drivers/block/nbd.c:1022
->   process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
->   process_scheduled_works kernel/workqueue.c:3319 [inline]
->   worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
->   kthread+0x3c2/0x780 kernel/kthread.c:464
->   ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
->   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
->   </TASK>
-> 
-> nbd_genl_connect() does not properly stop the device on certain
-> error paths after nbd_start_device() has been called. This causes
-> the error path to put nbd->config while recv_work continue to use
-> the config after putting it, leading to use-after-free in recv_work.
-> 
-> This patch moves nbd_start_device() after the backend file creation.
-> 
-> Reported-by:syzbot+48240bab47e705c53126@syzkaller.appspotmail.com
-> Closes:https://lore.kernel.org/all/68227a04.050a0220.f2294.00b5.GAE@google.com/T/
-> Fixes: 6497ef8df568 ("nbd: provide a way for userspace processes to identify device backends")
-> Signed-off-by: Zheng Qixing<zhengqixing@huawei.com>
-> ---
->   drivers/block/nbd.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Reviewed-by: Yu Kuai <yukuai3@huawei.com>
+The IPI trace events ipi_raise, ipi_handler, ipi_entry and ipi_exit are
+only used by the arm and arm64 architectures. As each trace event can take
+up to 5K in size, regardless if they are used or not, add #ifdef around
+these events so that they are only defined for arm and they do not waste
+memory in other architectures.
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Note, I'll be adding code soon that will make unused events cause a warning.
+
+ include/trace/events/ipi.h | 58 ++++++++++++++++++++------------------
+ 1 file changed, 30 insertions(+), 28 deletions(-)
+
+diff --git a/include/trace/events/ipi.h b/include/trace/events/ipi.h
+index 3de9bfc982ce..e5c7998f636c 100644
+--- a/include/trace/events/ipi.h
++++ b/include/trace/events/ipi.h
+@@ -7,34 +7,6 @@
+ 
+ #include <linux/tracepoint.h>
+ 
+-/**
+- * ipi_raise - called when a smp cross call is made
+- *
+- * @mask: mask of recipient CPUs for the IPI
+- * @reason: string identifying the IPI purpose
+- *
+- * It is necessary for @reason to be a static string declared with
+- * __tracepoint_string.
+- */
+-TRACE_EVENT(ipi_raise,
+-
+-	TP_PROTO(const struct cpumask *mask, const char *reason),
+-
+-	TP_ARGS(mask, reason),
+-
+-	TP_STRUCT__entry(
+-		__bitmask(target_cpus, nr_cpumask_bits)
+-		__field(const char *, reason)
+-	),
+-
+-	TP_fast_assign(
+-		__assign_bitmask(target_cpus, cpumask_bits(mask), nr_cpumask_bits);
+-		__entry->reason = reason;
+-	),
+-
+-	TP_printk("target_mask=%s (%s)", __get_bitmask(target_cpus), __entry->reason)
+-);
+-
+ TRACE_EVENT(ipi_send_cpu,
+ 
+ 	TP_PROTO(const unsigned int cpu, unsigned long callsite, void *callback),
+@@ -79,6 +51,35 @@ TRACE_EVENT(ipi_send_cpumask,
+ 		  __get_cpumask(cpumask), __entry->callsite, __entry->callback)
+ );
+ 
++#if defined(CONFIG_ARM) || defined(CONFIG_ARM64)
++/**
++ * ipi_raise - called when a smp cross call is made
++ *
++ * @mask: mask of recipient CPUs for the IPI
++ * @reason: string identifying the IPI purpose
++ *
++ * It is necessary for @reason to be a static string declared with
++ * __tracepoint_string.
++ */
++TRACE_EVENT(ipi_raise,
++
++	TP_PROTO(const struct cpumask *mask, const char *reason),
++
++	TP_ARGS(mask, reason),
++
++	TP_STRUCT__entry(
++		__bitmask(target_cpus, nr_cpumask_bits)
++		__field(const char *, reason)
++	),
++
++	TP_fast_assign(
++		__assign_bitmask(target_cpus, cpumask_bits(mask), nr_cpumask_bits);
++		__entry->reason = reason;
++	),
++
++	TP_printk("target_mask=%s (%s)", __get_bitmask(target_cpus), __entry->reason)
++);
++
+ DECLARE_EVENT_CLASS(ipi_handler,
+ 
+ 	TP_PROTO(const char *reason),
+@@ -127,6 +128,7 @@ DEFINE_EVENT(ipi_handler, ipi_exit,
+ 
+ 	TP_ARGS(reason)
+ );
++#endif /* defined(CONFIG_ARM) || defined(CONFIG_ARM64) */
+ 
+ #endif /* _TRACE_IPI_H */
+ 
+-- 
+2.47.2
 
