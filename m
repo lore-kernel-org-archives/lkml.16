@@ -1,220 +1,155 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B615B221572
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 07:49:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97335221543;
+	Thu, 12 Jun 2025 07:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749714584; cv=none; b=Npd8BbUAQVsjyTSH7SJPQcLlRTIqHDZEMCTXLDbhhKOGjqhLbEReWYmg5oVWytQ/KI3AbU7mWbrog/vLpMI/UIXUYk6AeZ/M/gkpsmQh+hBuOK4j67MNrpSiQ+ANS+4zBBPUXB7cWprZZrxi8qEVHJoM7Hv6a1ezvGtMGC5b1xI=
+	t=1749714595; cv=none; b=qEpvWtGXwQUt/Ks7G5fshkLAGiYpDnRO64Vv1CkZ/F3OEcEc2rW5w4zbjnH0yAxpShIlE9S9iGMxxgJbYS4f+CWyk5NKStE6OHaQp52ajdRu/SdpmyLFn+QE0nXs1CYtdE3VyUWWWUIElD3c+FcrndzZ6eHGUI0i9XNBGghc+a0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749714584; c=relaxed/simple;
-	bh=mgKRPAxHp5lw/IYW6/80BbNLOKQ1CXL+sHNydAPoR2M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jZZ+ycWxwOQJ+ygKVKZeQiVcq1rIDYJ2lafumE1aHrt9VVbgmY2lvy1M1VXl24N7gBC3loXRkTHl31UfKpJ4Qi+RRF2zxLNVUoACGaJgYEFKk8y7NZnTAIKiXGbiq8doyTKhJhOoTA/GgIRnejSmuxzl8ks60ugB4vkKgJj4p1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QPt4ys4Q; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1749714595; c=relaxed/simple;
+	bh=z1txkkcsPtDNvxgOoTa1iBz32cpkiJc/UP2ZbJMccPs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=NqVBkTOvsfnl1NfGM9WDo/5oH7St7xiIjFJoG5cIyo1VtssTx2HjZPM7l7Ixoa4FEz7h7EKCC9ZNshHbLpEXTFooat8tYICsm83FOhE1PyJk6c052urJynQ+Mh8LqAy1rqOowZUwxA7K1KlPXsUV7W+bXlTaSINALQxuTBrs4NY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Pso88brr; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QPt4ys4Q"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-23602481460so6730035ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 00:49:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1749714582; x=1750319382; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ddcn6csaeeV+h8a6qan45mbc5QA320UytwqG7KT7p5k=;
-        b=QPt4ys4QNYwt3/Sh66gUaxGP1JRYAyslYTdNE+iyZdAmRIMMLVBo3dCrDQ8A0Ax6MJ
-         VNZ59azg0FB5MMBBaH6Kp0XtIgSPXw0cqsIcszhTtwBVNUJKDWBtvzeoX4tWWcc21Piw
-         aF6fltV3kQuEZbFmnpfb1qFCvBN7Lgy3b6448=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749714582; x=1750319382;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ddcn6csaeeV+h8a6qan45mbc5QA320UytwqG7KT7p5k=;
-        b=Ao7dhjm/NjUMzZ7rTfDG5lPLWIpyJHdVi0oRUwPblbudLjWErdqGKf/UDJNWHl04P9
-         nupsCNfA4v2VilW21R3pk2WJ590v9ITEnQM3XgpbApaAOZDXSC8+Cc8oGazVn6YyP8M3
-         e/MrMKc/9k90KCBqmqll+uXWk2O1wXIWzFp/bpPyvWdTgFpOl7hhsbZ+FijO0bUBOAZ4
-         8Z8tI5eSzOZCtypv9hJxVEjBhuL8/yfW4cJ+I/XSP//XRh5PKnHUAutawmofcVDvxloe
-         CemKjs6EQXI9Y+mP/exr0iD1pLVbT9sjd42PICJmZKHazS0H36RhClqDJR3r4sW2kD9e
-         EDfw==
-X-Forwarded-Encrypted: i=1; AJvYcCXlcSPxTLdVxG11RtvuNKyXFw46BDSrU9DCazEMp1OhkAD0DTjepoX/WBJdvew3LHgjQsIw3989T0d5KGw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAIz5fW+R/1HJnZTtx29+yNd29RaGuTcUiUUFlG7QNN3ptQIVK
-	wweIclqZ0QjBCQdFz+2m1f8OxeqWtDwejO1doWOAbRNhAzguPPHDYLO7bnW9glu4nQ==
-X-Gm-Gg: ASbGncvQ4xo0tAt+yZg8J+xe4qIcsAp/gRcY+XuQUSyaT0IjUwieAFgV69rnfUWl3Qb
-	IwRhp460w+AaKfprmk7/uzssM1Y1xchRfVkjJUpwKs3VGxLFQFeGmgAmN68QMih/TbRwqqATNV7
-	6HKYrtu6fUapuRyqe+SqkEyXpgiluHB3kPogg7sCKxeJy1JhqajKDthV/2R6roF42Iu/UlldO6m
-	Qu9tyS2Wck9O5Nu5XC5kRvrl1gh76HYOpjeIfm5EYcxB5Grm4p2XtxZ6yMWEHr7pidF7n1aTISh
-	9je0DBifNcvk/Lx2um+RX5FNi8Xpx31nYCs9VXubo0r2Fv57uO9zsS5CnTE5uF6Vd4ETtt69X64
-	hpTQ=
-X-Google-Smtp-Source: AGHT+IGBp6g9KafxxLhpwpCbKXrP6FojB0bp0d+xTc5kKarZApwn/2KeJhM/CNXIUtiGxu8HhD0Ecw==
-X-Received: by 2002:a17:902:f684:b0:234:b41e:37a2 with SMTP id d9443c01a7336-23641aa223amr95318655ad.11.1749714581947;
-        Thu, 12 Jun 2025 00:49:41 -0700 (PDT)
-Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:5b9:e73a:2e58:5a47])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2364e63d42esm7893295ad.74.2025.06.12.00.49.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 00:49:41 -0700 (PDT)
-From: Chen-Yu Tsai <wenst@chromium.org>
-To: Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>
-Cc: Chen-Yu Tsai <wenst@chromium.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jiaxin Yu <jiaxin.yu@mediatek.com>,
-	linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 9/9] ASoC: mediatek: mt8183-afe-pcm: use local `dev` pointer in driver callbacks
-Date: Thu, 12 Jun 2025 15:49:00 +0800
-Message-ID: <20250612074901.4023253-10-wenst@chromium.org>
-X-Mailer: git-send-email 2.50.0.rc1.591.g9c95f17f64-goog
-In-Reply-To: <20250612074901.4023253-1-wenst@chromium.org>
-References: <20250612074901.4023253-1-wenst@chromium.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Pso88brr"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55BKDHox027198;
+	Thu, 12 Jun 2025 07:49:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	i0DFzH1CWJKbI7tcV1MijTTXBL6R9YvoBS65P0+WZO8=; b=Pso88brrYyw2FNtV
+	+ucKM07hOsc5icp2wd2fHqYlNFulE/2zzQRn87/wGo/p+apvBd0e/h18HdZXkXtr
+	t3EoiwvPM3B6ZHf8KXT0dvjGfMO3cIqBywSITTa8hecZp7e4iGhDc2HPO2G+xclj
+	elLjTqS88bVPenpj6cbbLm4c2FnJOV67wWMlmU3xjmr0NvCvQ5ngEt9McSxvemW9
+	b5fiQwskJmqigT5lGi+QCuP1gxwhkKsYIhP9BbwI5oPn2cvnpl5wB75yaKnyRt/D
+	3hwn319qx7VTe6d2Z9TU9D1qS/2DgEUnx1OSOqDOsVI+8vTuASsOVFA+BW9YJ0+e
+	cLFLmA==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 474ccvfk96-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Jun 2025 07:49:48 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55C7nlSp030521
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Jun 2025 07:49:47 GMT
+Received: from [10.231.195.67] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 12 Jun
+ 2025 00:49:46 -0700
+Message-ID: <ce3c0e51-4df0-4164-adcd-e98f2edee454@quicinc.com>
+Date: Thu, 12 Jun 2025 15:49:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv2] wifi: ath11k: mark reset srng lists as uninitialized
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+CC: Jeff Johnson <jjohnson@kernel.org>, <linux-wireless@vger.kernel.org>,
+        <ath11k@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20250529035708.3136232-1-senozhatsky@chromium.org>
+ <5857380e-ced9-4118-b9a0-ce926b25c11c@quicinc.com>
+ <rxaibpgtf37w3th5lnt3w574w443yononqjoglyfktlcxe26qg@jpmtkckrotzp>
+ <2f77045c-6763-4fc4-bf09-50fd9b76a394@quicinc.com>
+ <xr3n5pbohquhaloonctfqvpb2r3eu6fi5jly7ms4pgcotqmqzh@msrgbaawafsj>
+Content-Language: en-US
+From: Baochen Qiang <quic_bqiang@quicinc.com>
+In-Reply-To: <xr3n5pbohquhaloonctfqvpb2r3eu6fi5jly7ms4pgcotqmqzh@msrgbaawafsj>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: rgMrJ6vwbmgimnlQHWAS1h2kisqDrQLV
+X-Authority-Analysis: v=2.4 cv=TsLmhCXh c=1 sm=1 tr=0 ts=684a869c cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
+ a=Er88retq1L1mZmvwAMoA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: rgMrJ6vwbmgimnlQHWAS1h2kisqDrQLV
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjEyMDA1OSBTYWx0ZWRfX200IIP6yTpiY
+ 4zIQ2hlrU4hRWaVDH8vJszYngNzsqdRAgY8aAqg69jWgop+6ojIdmpMxY887oxcUi2GZ5SXLZet
+ zZNlBypaQetD82zjX1R3EoOkzNAf1f/Cp3E8alHXe+Q+/5Fn9PQNIoseHMskUzzNWnRBBf7aQ2v
+ MdEUhlYIOqc9Xk6mwVOXKY31PpQ+6iUzli/GqlNWGxS8FyP3l27ejZISDF2XINPa4/ilcSd0f0n
+ /W2jT+oS4kD1ugTFYU1V+v+/6KnfJxEITK6qmn9G5oUQWU0ogJgboZaxfyHXRYW1rrE341uMUJV
+ EJK7+FCo+WaYSHXfmECfEeBNP2dDx4t8qKHV0jN8jwv4FWnmNLtp6NMdn9l46IEf9nd1bmP+e1U
+ fPP9iq2uS+6zjP2nWXnFqwFvM2GeR18ZNLAaelk27eAedA7shXYR6mycczraxCsOJl+J8fsq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-12_05,2025-06-10_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 impostorscore=0
+ priorityscore=1501 bulkscore=0 adultscore=0 clxscore=1015 mlxscore=0
+ malwarescore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506120059
 
-The probe and remove functions in the mt8183-afe-pcm driver repeatedly uses
-`&pdev->dev` for |struct device *|, but then assigns this value to
-`afe->dev` and uses that in other places in the same function.
 
-Store `&pdev->dev` in a local pointer and use that exclusively to avoid
-the numerous dereferences and to make the code more consistent. Lines
-are reflowed where it makes sense.
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
----
- sound/soc/mediatek/mt8183/mt8183-afe-pcm.c | 37 ++++++++++------------
- 1 file changed, 17 insertions(+), 20 deletions(-)
+On 6/12/2025 3:02 PM, Sergey Senozhatsky wrote:
+> On (25/06/12 13:47), Baochen Qiang wrote:
+>>> [..]
+>>>>> diff --git a/drivers/net/wireless/ath/ath11k/hal.c b/drivers/net/wireless/ath/ath11k/hal.c
+>>>>> index 8cb1505a5a0c..cab11a35f911 100644
+>>>>> --- a/drivers/net/wireless/ath/ath11k/hal.c
+>>>>> +++ b/drivers/net/wireless/ath/ath11k/hal.c
+>>>>> @@ -1346,6 +1346,10 @@ EXPORT_SYMBOL(ath11k_hal_srng_init);
+>>>>>  void ath11k_hal_srng_deinit(struct ath11k_base *ab)
+>>>>>  {
+>>>>>  	struct ath11k_hal *hal = &ab->hal;
+>>>>> +	int i;
+>>>>> +
+>>>>> +	for (i = 0; i < HAL_SRNG_RING_ID_MAX; i++)
+>>>>> +		ab->hal.srng_list[i].initialized = 0;
+>>>>
+>>>> With this flag reset, srng stats would not be dumped in ath11k_hal_dump_srng_stats().
+>>>
+>>> I think un-initialized lists should not be dumped.
+>>>
+>>> ath11k_hal_srng_deinit() releases wrp.vaddr and rdp.vaddr, which are
+>>> accessed, as far as I understand it, in ath11k_hal_dump_srng_stats()
+>>> as *srng->u.src_ring.tp_addr and *srng->u.dst_ring.hp_addr, presumably,
+>>> causing things like:
+>>
+>> But ath11k_hal_dump_srng_stats() is called before ath11k_hal_srng_deinit(), right?
+>>
+>> The sequence is ath11k_hal_dump_srng_stats() is called in reset process, then restart_work
+>> is queued and in ath11k_core_restart() we call ath11k_core_reconfigure_on_crash(), there
+>> ath11k_hal_srng_deinit() is called, right?
+> 
+> My understanding is that the driver first fails to reconfigure
+> 
+> <4>[163874.555825] ath11k_pci 0000:01:00.0: already resetting count 2
+> <4>[163884.606490] ath11k_pci 0000:01:00.0: failed to wait wlan mode request (mode 4): -110
+> <4>[163884.606508] ath11k_pci 0000:01:00.0: qmi failed to send wlan mode off: -110
+> <3>[163884.606550] ath11k_pci 0000:01:00.0: failed to reconfigure driver on crash recovery
+> 
+> so ath11k_core_reconfigure_on_crash() calls ath11k_hal_srng_deinit(),
+> which destroys the srng lists, but leaves the stale initialized flag.
+> So next time ath11k_hal_dump_srng_stats() is called everything looks ok,
+> but in fact everything is not quite ok.
 
-diff --git a/sound/soc/mediatek/mt8183/mt8183-afe-pcm.c b/sound/soc/mediatek/mt8183/mt8183-afe-pcm.c
-index 7383184097a4..a7fef772760a 100644
---- a/sound/soc/mediatek/mt8183/mt8183-afe-pcm.c
-+++ b/sound/soc/mediatek/mt8183/mt8183-afe-pcm.c
-@@ -770,27 +770,25 @@ static int mt8183_afe_pcm_dev_probe(struct platform_device *pdev)
- {
- 	struct mtk_base_afe *afe;
- 	struct mt8183_afe_private *afe_priv;
--	struct device *dev;
-+	struct device *dev = &pdev->dev;
- 	struct reset_control *rstc;
- 	int i, irq_id, ret;
- 
--	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(34));
-+	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(34));
- 	if (ret)
- 		return ret;
- 
--	afe = devm_kzalloc(&pdev->dev, sizeof(*afe), GFP_KERNEL);
-+	afe = devm_kzalloc(dev, sizeof(*afe), GFP_KERNEL);
- 	if (!afe)
- 		return -ENOMEM;
- 	platform_set_drvdata(pdev, afe);
- 
--	afe->platform_priv = devm_kzalloc(&pdev->dev, sizeof(*afe_priv),
--					  GFP_KERNEL);
-+	afe->platform_priv = devm_kzalloc(dev, sizeof(*afe_priv), GFP_KERNEL);
- 	if (!afe->platform_priv)
- 		return -ENOMEM;
- 
- 	afe_priv = afe->platform_priv;
--	afe->dev = &pdev->dev;
--	dev = afe->dev;
-+	afe->dev = dev;
- 
- 	ret = of_reserved_mem_device_init(dev);
- 	if (ret) {
-@@ -835,7 +833,7 @@ static int mt8183_afe_pcm_dev_probe(struct platform_device *pdev)
- 
- 	/* enable clock for regcache get default value from hw */
- 	afe_priv->pm_runtime_bypass_reg_ctl = true;
--	pm_runtime_get_sync(&pdev->dev);
-+	pm_runtime_get_sync(dev);
- 
- 	ret = regmap_reinit_cache(afe->regmap, &mt8183_afe_regmap_config);
- 	if (ret) {
-@@ -843,7 +841,7 @@ static int mt8183_afe_pcm_dev_probe(struct platform_device *pdev)
- 		goto err_pm_disable;
- 	}
- 
--	pm_runtime_put_sync(&pdev->dev);
-+	pm_runtime_put_sync(dev);
- 	afe_priv->pm_runtime_bypass_reg_ctl = false;
- 
- 	regcache_cache_only(afe->regmap, true);
-@@ -901,7 +899,7 @@ static int mt8183_afe_pcm_dev_probe(struct platform_device *pdev)
- 	for (i = 0; i < ARRAY_SIZE(dai_register_cbs); i++) {
- 		ret = dai_register_cbs[i](afe);
- 		if (ret) {
--			dev_warn(afe->dev, "dai register i %d fail, ret %d\n",
-+			dev_warn(dev, "dai register i %d fail, ret %d\n",
- 				 i, ret);
- 			goto err_pm_disable;
- 		}
-@@ -910,8 +908,7 @@ static int mt8183_afe_pcm_dev_probe(struct platform_device *pdev)
- 	/* init dai_driver and component_driver */
- 	ret = mtk_afe_combine_sub_dai(afe);
- 	if (ret) {
--		dev_warn(afe->dev, "mtk_afe_combine_sub_dai fail, ret %d\n",
--			 ret);
-+		dev_warn(dev, "mtk_afe_combine_sub_dai fail, ret %d\n", ret);
- 		goto err_pm_disable;
- 	}
- 
-@@ -923,16 +920,14 @@ static int mt8183_afe_pcm_dev_probe(struct platform_device *pdev)
- 	afe->runtime_suspend = mt8183_afe_runtime_suspend;
- 
- 	/* register component */
--	ret = devm_snd_soc_register_component(&pdev->dev,
--					      &mtk_afe_pcm_platform,
-+	ret = devm_snd_soc_register_component(dev, &mtk_afe_pcm_platform,
- 					      NULL, 0);
- 	if (ret) {
- 		dev_warn(dev, "err_platform\n");
- 		goto err_pm_disable;
- 	}
- 
--	ret = devm_snd_soc_register_component(afe->dev,
--					      &mt8183_afe_pcm_dai_component,
-+	ret = devm_snd_soc_register_component(dev, &mt8183_afe_pcm_dai_component,
- 					      afe->dai_drivers,
- 					      afe->num_dai_drivers);
- 	if (ret) {
-@@ -943,15 +938,17 @@ static int mt8183_afe_pcm_dev_probe(struct platform_device *pdev)
- 	return ret;
- 
- err_pm_disable:
--	pm_runtime_disable(&pdev->dev);
-+	pm_runtime_disable(dev);
- 	return ret;
- }
- 
- static void mt8183_afe_pcm_dev_remove(struct platform_device *pdev)
- {
--	pm_runtime_disable(&pdev->dev);
--	if (!pm_runtime_status_suspended(&pdev->dev))
--		mt8183_afe_runtime_suspend(&pdev->dev);
-+	struct device *dev = &pdev->dev;
-+
-+	pm_runtime_disable(dev);
-+	if (!pm_runtime_status_suspended(dev))
-+		mt8183_afe_runtime_suspend(dev);
- }
- 
- static const struct of_device_id mt8183_afe_pcm_dt_match[] = {
--- 
-2.50.0.rc1.591.g9c95f17f64-goog
+OK, we have a second crash while the first crash is still in recovering. And guess the
+first recovery fails such that srng is not reinitialized. Then after a
+wait-for-first-recovery time out, the second recovery starts, this results in
+ath11k_hal_dump_srng_stats() getting called and hence the kernel crash.
+
+Could you please share complete verbose kernel log? you may enable it with
+
+	modprobe ath11k debug_mask=0xffffffff
+	modprobe ath11k_pci
+
+> 
+> Regardless of that, I do think that resetting the initialized flag
+> when srng list is de-initialized/destroyed is the right thing to do.
+
+Yeah, correct.
+
 
