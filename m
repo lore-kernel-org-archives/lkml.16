@@ -1,169 +1,268 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2057.outbound.protection.outlook.com [40.107.96.57])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2562F4325
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 06:58:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749711521; cv=none; b=Uzb6+BtDl2EEDR8fUZ19f7+zPdlqfAtozsAZZMuRLvxws3eJWnt6m773IUTkQo3j5jrYcvS5PDvWD28/JLLO7Nxdqha3ZFO4UVxb9ot4JC7Xm4S13dEsEM1Gki+8IKQt2m5pEs5R/WXUeY47NuwKJfOPTngDYjAD++hf8mhBIoA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749711521; c=relaxed/simple;
-	bh=m/lcmjebGIfc8bR30PsxXVtMxU3UnCh95wBX5+3pcGE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dKM15xc0/1fTaq/nVQ5bYMQ5X1+AWQjYkyZogoIywDkP4cnh0On5imhZYwFDAu56gLhdEkWo6yDzWWF/SezDtiXDjP27yAc6zvpifdA9A8/19St5qzkgirqVJ0hy8u4/iGnst3F+KWiBVaxw7ZKji+rILDiS/N2kBZnMhppg+xU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=UlkPN2pI; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B3E2F4325;
+	Thu, 12 Jun 2025 06:59:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1749711564; cv=fail; b=jset51R8W/Vp6zMmRGywlQX1sF/+sFhxiCFHVwoAEuLJPhK3Zg0Uhw9gPq0NEVRmS+K6MPMCDkcTRzirj2INK7CChkzzCBZlT2CinVNgnz/Rl98jPFo5khgwO5fK+fyw2+qoya4hQ90HrcMFisfZCnJaqkwhGdZf3y6UI4Yqa54=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1749711564; c=relaxed/simple;
+	bh=E8z54I/oG2chlRnaYB0wdEujAIeipHt3K9YzGib9doU=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z+wHH8lKerQsOyP4mFdl/JzW6A0b5l+601J9zZy0imDhVFjNCQL4zc0897/b/HviRYIQn420bgePx+rOWERUjJgSrWnhSE4Asd1s2pai3JgNpxPXGU/otVp5HH2tafjTZ6YYljM/pxMpsAP4m9eB6hQMXPqv5UW0rSCa/yREMQ0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=fQnpRuFw; arc=fail smtp.client-ip=40.107.96.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="UlkPN2pI"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ad891bb0957so96906266b.3
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Jun 2025 23:58:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1749711517; x=1750316317; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=1U1YDmli0q/E+71Ju80ahEU4Ppqicy9FI3KyEE9K0Lo=;
-        b=UlkPN2pIjYQY/OyYAS2b29taQOYDZe3He0nF//dCugvZX0ACce/lcn3S164EBthaZ8
-         AQY5T2amuBYiL2nVajOG88hIuoBCfFjsHvJcQ8oSV81mzy9Vy9kPyfV9o9r1ZzEUbD6r
-         0WUS8PJ3MKuAj45I7BGS5PDYcDfxpKsWD5YyxDvQ3OJO4xQxNh8jHIn8dPtORdBRIpd5
-         hjkeugOxernP7rwm/SaeZJnLWukWObqdeuuoG7VGG7cTKLVPrsFhWflbkliTwKMoDTkb
-         /bzsbtjhmx9ppv3YyvfpDnZJs+c4jJHiBfW/ngOcDTmBAdgPiXIjr3/UyYpx9jWJQjfa
-         sXhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749711517; x=1750316317;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1U1YDmli0q/E+71Ju80ahEU4Ppqicy9FI3KyEE9K0Lo=;
-        b=wDNZE5TUwe2UyiaWLaVtQFI5NWZkQftDfI60JH0Qud/uotJgeuSA5JTi16U+swIt/w
-         MXpiU9BjaC6d347z2WWQXta01akZIBu5D3PcOk0Hg7vsv8AzaXy6+ShdQBni4FLYLCT8
-         0fGynIOw6u/5qHVx+YCSjDz3jRKYKyTLG7QhWFurCmwQk69OXwhDq+EIfiz7Is8p6JQe
-         QWCGnqCeCwHgzayImwkyi5q1jDdrUk0TOGqj68XjN1PcoAifU3EzjoSUEi2JjdHbRRsV
-         KJ738qrJvzJuYKB6mYsrb+bj7DhuZmTz3g1hPpp/wR/exEUGEvXB4HUhN3cuIZ8UO7yT
-         L7sA==
-X-Gm-Message-State: AOJu0Ywb29oCE8e9xleCNaB5xiPw33w50yd62+KxL6vOJfvQSSh01Kd/
-	sblJIfT6mFXBPdXjpLZlflSIlkctIdkcyJnExDThTwDwFDE6AuUnZB9bzMYis3/eX2fF4bvOoU+
-	yHkDE
-X-Gm-Gg: ASbGnctORr4bcpTCZbVn8AGe0lhCtWBa6hesv0+EQD5BF8vIhEiVIec2qibXNd+5L2M
-	kYodyIkjQiXf/7U3JP7MNk3H8GukqI+qvui9yhu2qgmfqA0igl2d5+j0njB9kzKxAr8RmpOKFIH
-	90NlWVsmfkZ1IVV+OBQrDCp7qgCBaiLtyFwj7lRh8I6243rKrAH2N76nlyKRZdqKtyAfuKTccRO
-	BqszPWTitG4nJrcMSXyRIlN0gTV7FakZaFamEHxmfmIUG7a3eD13Cxqi83Ux8BuOmThNaEaBeKF
-	PvfNkw/vyr1AUeQXqAqDqrW1NYyIcUyFsj6HcRtWHHanO7kd/ixkLgf2j48BUusT83xE1V5wY3q
-	3o47g1J5kBa+L
-X-Google-Smtp-Source: AGHT+IFbkI+ew7X3F7vPw3QRy41qUPh/GkkEoeMmcRDCBYjm6Fudj+rkaNYMUv7N3Uwd7J1AiHEcHg==
-X-Received: by 2002:a17:907:6d1c:b0:ad8:8621:9268 with SMTP id a640c23a62f3a-ade898349c5mr682901666b.59.1749711517197;
-        Wed, 11 Jun 2025 23:58:37 -0700 (PDT)
-Received: from [192.168.0.20] (nborisov.ddns.nbis.net. [109.121.142.22])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adeaded78ecsm81112466b.156.2025.06.11.23.58.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jun 2025 23:58:36 -0700 (PDT)
-Message-ID: <f9e2dcaa-6eff-4eda-8c7c-0d19c2d11e73@suse.com>
-Date: Thu, 12 Jun 2025 09:58:35 +0300
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="fQnpRuFw"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=E31myXa5io/xd/sySBQOUkE8O+Dfk2l0K/qNkYuO084WJl45xybriQw1W+8zo9Q5M77cB2k9XW8HayBjMqgvSau1A5+vx/A7Z07f3Ov9b7QsE/XVm8qq/gc1+ddhpxvpFzCYgQYjn4vb+OFBPYu4rWxHPddLYowTzRvbRO5e/W6BVoje3ScH49GnYm/q5wdomxvdS32ayW4HbVg+MNNKCBHUqUTjXICLm9txvaVYGtz74BtGDk9b7Ept6mK9BkgGL8t5WS2yZ8KmXo75Gwj3LXxtiH8NTFFvsc2Px9nraFOD/SenJNozSzzQoA5SGLuXLAKurxxG+BTRE913PCzhoQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9PY+sZaBhyO3Tq0GrqOr1l1NZDcnM8+dXDEoQNdYhnA=;
+ b=oZyzZyZK2uxaL/JPpK3hu/c0RCUg8g2qVza2QnntylGe1mlrAiH0mP+8dbr/YWdOwBCSLlDmatsFbhUV45ou0iTmwlzqKv1ThB871D5TFpnnpzhrYDT9tpq5ZDV8/m1aH7gzjqZnc3ORucF1+6t+DvQoULkOmJIj8CuX5hxfHMMNlJvbs6yC/AUD4K8eOOMG4AgIRFp7FT4yi2LQ8rSzwM08iQXKjToQsNPvKR7PRdB8/Z0NNzdDwP7sj6IipAalTAxmdnls7/95sfNlnjQwjLASEqJTCwM/iMwKapySFGAmlMoDciX9xZ1XCaVa8fUAq+tIXI55guBNu5NjuuEnjA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=linutronix.de smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9PY+sZaBhyO3Tq0GrqOr1l1NZDcnM8+dXDEoQNdYhnA=;
+ b=fQnpRuFwlgTfvQUNlYFC1Rand6sM6FC5tkzc+9vBQNdstCwW8XK5wSYfRONDgFP7b73Wr49F9/QSDO1K6K21zos79I49NSf690n4gdd7Lt3j+0IIwU0OdNma/3MAvd5pwCNLxfaovFujS/XEs63FX5iD5l1D5DQAUJWBAR9XGLFOuALOF+HNxXlrt7YaSKjNQAlefdfX69OjX1dYYGpUAat8JVjk3EsywwEItuQCQoNjPOkeuNjemwgHppECkENn+UyVpUHP8iZZHoi4qeyeUSFUf2vYnZPyc23BKkk2qCfU0+o8h+T2HLNOn/A3F3SAzGzNB9xSjOvPqY60/Sd4FA==
+Received: from MW4P222CA0012.NAMP222.PROD.OUTLOOK.COM (2603:10b6:303:114::17)
+ by DM4PR12MB7600.namprd12.prod.outlook.com (2603:10b6:8:108::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.19; Thu, 12 Jun
+ 2025 06:59:18 +0000
+Received: from SJ5PEPF00000209.namprd05.prod.outlook.com
+ (2603:10b6:303:114:cafe::c3) by MW4P222CA0012.outlook.office365.com
+ (2603:10b6:303:114::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.19 via Frontend Transport; Thu,
+ 12 Jun 2025 06:59:18 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ SJ5PEPF00000209.mail.protection.outlook.com (10.167.244.42) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8835.15 via Frontend Transport; Thu, 12 Jun 2025 06:59:17 +0000
+Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 11 Jun
+ 2025 23:59:06 -0700
+Received: from drhqmail201.nvidia.com (10.126.190.180) by
+ drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Wed, 11 Jun 2025 23:59:06 -0700
+Received: from nvidia.com (10.127.8.12) by mail.nvidia.com (10.126.190.180)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Wed, 11 Jun 2025 23:59:03 -0700
+Date: Wed, 11 Jun 2025 23:59:00 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, "Willy
+ Tarreau" <w@1wt.eu>, Thomas =?iso-8859-1?Q?Wei=DFschuh?=
+	<linux@weissschuh.net>, Kees Cook <kees@kernel.org>, Andy Lutomirski
+	<luto@amacapital.net>, Will Drewry <wad@chromium.org>, Mark Brown
+	<broonie@kernel.org>, Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	<linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH v4 09/14] selftests: harness: Move teardown conditional
+ into test metadata
+Message-ID: <aEp6tGUEFCQz1prh@nvidia.com>
+References: <20250610130817-253d2b2d-030a-4eda-91fc-3edb58a4f549@linutronix.de>
+ <20250610120902.GB543171@nvidia.com>
+ <aEh+DNmbZrqg6rHR@nvidia.com>
+ <20250610234657.GO543171@nvidia.com>
+ <aEkqtfcOJDrxAAcs@nvidia.com>
+ <20250611093942-f6c65a06-c72a-4451-aa1e-8cb8de0d69cb@linutronix.de>
+ <aEm6tuzy7WK12sMh@nvidia.com>
+ <aEn5jmXZbC5hARGv@nvidia.com>
+ <aEoUhPYIAizTLADq@nvidia.com>
+ <20250611235117.GR543171@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/its: Warn when microcode is old
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org
-Cc: linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
- Josh Poimboeuf <jpoimboe@kernel.org>
-References: <20250611-its-warn-v1-1-02eb9a75ce9c@linux.intel.com>
-From: Nikolay Borisov <nik.borisov@suse.com>
-Content-Language: en-US
-Autocrypt: addr=nik.borisov@suse.com; keydata=
- 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
-In-Reply-To: <20250611-its-warn-v1-1-02eb9a75ce9c@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250611235117.GR543171@nvidia.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF00000209:EE_|DM4PR12MB7600:EE_
+X-MS-Office365-Filtering-Correlation-Id: 84dd5f9d-0bf3-4ec1-7b68-08dda97ea654
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|376014|7416014|82310400026|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?X8qhOCb063KEz4n+ZG91mZGpzvc5YJpnFDko2FN9JOoa9UEM3z2/wYU3TZzE?=
+ =?us-ascii?Q?e5pKwgIStFUJ5XH8hYfpUGgTdeAWUxEKutbjFc4ka+cRvL3iblXQl1u8lFDA?=
+ =?us-ascii?Q?ipIK4HTig7hPKV0PzrigFBLvYFagvgmcS4nRc9xx0YnVnDWv2SfaQZykgDKs?=
+ =?us-ascii?Q?DlDVf9Glup0n80ROQ+Y8JOg7jJ7E2BWs+NnXJ+9HiekrMKOPvQ4wZQOBur2q?=
+ =?us-ascii?Q?bPIxnp8V7GtFFI3OqHEvcKpD+tbL0QnnPTFtIYToUu/CSZmy2WoQ7jXJ6zum?=
+ =?us-ascii?Q?JU3JPfYfEJ3+lwyYWBBSqKtmeM/dnKdamlfvZWU1/sqb4eJPRvPszx4M8NK1?=
+ =?us-ascii?Q?MCVjreGn/NI6SAFJreRq3YMOD+kPwDhpJQhZ2mXttoawGoDSIaCEUCLHI+hr?=
+ =?us-ascii?Q?NuSFU7X4LbZZPsN2KoxCRebPEej67A/vTuVHLr3GypdpDyo1nZNvRh6pGPew?=
+ =?us-ascii?Q?AKEZlZq5hRDnhNq90+l3PofaRY3Mm+Zmv1YUFg8EzT81J7Og52+XrKxACiGS?=
+ =?us-ascii?Q?xrOnlojBtTKk6WxWZE0uAz1h4Be+Lgl8PeCvl07vc3EMln9XDAz0iuKZSgEE?=
+ =?us-ascii?Q?KcZ14jjryXJ3JDWz75kKk8E7hmbzxviHHXl63ogPYgOtvzMbM2rjkfC4VWSS?=
+ =?us-ascii?Q?ZwOX/Y124R8MhUjnTFnTTmHlHF3mTVB1cXcPHnyHvEB61QuG+5/TVnk3Wq7q?=
+ =?us-ascii?Q?S6uOVtb9vz4KY/CqWXyfQQZl/swyntMjciNq7ZEpxTkdpHPvjnJ3oj7PypXf?=
+ =?us-ascii?Q?nGO3sh7ZhxyWTKM3enqQnWPKzyD2EHHzhCuerHhyiCAPDU01tmv8OXFytSwt?=
+ =?us-ascii?Q?JmP/I5Sfi5QL/SVOsPNmjKK+98sDpzKZbdfNgQAV9KtXk763vCf6A0coKpC9?=
+ =?us-ascii?Q?sIghyp2IH5VYL4rpr/uzix6zTigEdZYIOU5VH0I4OrFDAE//FPPzahv8hIhV?=
+ =?us-ascii?Q?zBlKiTOvCwOaaooD1hKGUJdK6nCUp4ZsG9fQ3knVHvkTTFwEuNYhYfaZe0nS?=
+ =?us-ascii?Q?Q+cOOQg6IXGWeSHJ5O9WNA0MMHxrFVB1fEDZSl3G2ajLccYahZZITemOWi+e?=
+ =?us-ascii?Q?aiLzLWEiFMZ5v/xUKoj+ifpYRPNjMNWtACq4SobDCglbWv6B7xuniZNmQfBZ?=
+ =?us-ascii?Q?MNXrSmTVhE5/Gi2yCaqp08dvxvGqbOxca9ee1LjZSB4JLr2hfcOBn1B9u8dk?=
+ =?us-ascii?Q?ML3hnTwoAuzNLrqnY4qd6TePYaSztaYM24YTN8FBeCIWMajgoEQVTXRFdzLk?=
+ =?us-ascii?Q?/WbDBiF5M19DJnibc95gs23Z9xYRLuGZHJ14Jn6rvszjRvYyr+mJZVDIVoR4?=
+ =?us-ascii?Q?lWgA29s+YLgaZD+lX+ArT/p0NNzcfEpObNIRGRsKhN7WCLLoW/8z0XHXZOXk?=
+ =?us-ascii?Q?fark1eoD/Z0o/cXHxtHyK4/92+eg9FTB79oUxKk9wiZ2mrQjwVd0LTIrnYM3?=
+ =?us-ascii?Q?LtWRwNBHpLyGLo5+Cnn+3fPu54c4W/53BJtqjzsEYyDa/oNC9dDIWsTm4ehn?=
+ =?us-ascii?Q?w6TUVqKui5Ubo48lrQ1MZVxzRtnZosWEb3YYMjunq71oIijqA+dcnC5eGQ?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(7416014)(82310400026)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2025 06:59:17.7830
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 84dd5f9d-0bf3-4ec1-7b68-08dda97ea654
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF00000209.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7600
 
-
-
-On 6/12/25 03:08, Pawan Gupta wrote:
-> A microcode update is required for IBPB to be effective against ITS. On
-> Intel, X86_BUG_OLD_MICROCODE is set already when old microcode is detected.
-> In such a case system is tainted and a warning is issued.
+On Wed, Jun 11, 2025 at 08:51:17PM -0300, Jason Gunthorpe wrote:
+> On Wed, Jun 11, 2025 at 04:43:00PM -0700, Nicolin Chen wrote:
+> > So, the test case sets an alignment with HUGEPAGE_SIZE=512MB while
+> > allocating buffer_size=64MB:
+> > 	rc = posix_memalign(&self->buffer, HUGEPAGE_SIZE, variant->buffer_size);
+> > 	vrc = mmap(self->buffer, variant->buffer_size, PROT_READ | PROT_WRITE,
+> > this gives the self->buffer a location that is 512MB aligned, but
+> > only mmap part of one 512MB huge page.
+> > 
+> > On the other hand, _metadata->no_teardown was mmap() outside the
+> > range of the [self->buffer, self->buffer + 64MB), but within the
+> > range of [self->buffer, self->buffer + 512MB).
+> > 
+> > E.g.
+> >    _metadata->no_teardown = 0xfffbfc610000 // inside range2 below
+> >    buffer=[0xfffbe0000000, fffbe4000000) // range1
+> >    buffer=[0xfffbe0000000, fffc00000000) // range2
+> > 
+> > Then ,the "vrc = mmap(..." overwrites the _metadata->no_teardown
+> > location to NULL..
+> > 
+> > The following change can fix, though it feels odd that the buffer
+> > has to be preserved with the entire huge page:
+> > ---------------------------------------------------------------
+> > @@ -2024,3 +2027,4 @@ FIXTURE_SETUP(iommufd_dirty_tracking)
+> > 
+> > -       rc = posix_memalign(&self->buffer, HUGEPAGE_SIZE, variant->buffer_size);
+> > +       rc = posix_memalign(&self->buffer, HUGEPAGE_SIZE,
+> > +                           __ALIGN_KERNEL(variant->buffer_size, HUGEPAGE_SIZE));
+> >         if (rc || !self->buffer) {
+> > ---------------------------------------------------------------
+> > 
+> > Any thought?
 > 
-> Also warn that userspace could be vulnerable to ITS.
+> This seems like something, variant->buffer_size should not
+> be less than HUGEPAGE_SIZE I guess that is possible on 64K ARM64
 > 
-> Suggested-by: Borislav Petkov <bp@alien8.de>
-> Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-> ---
->   arch/x86/kernel/cpu/bugs.c | 4 ++++
->   1 file changed, 4 insertions(+)
+> But I still don't quite get it..
 > 
-> diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-> index 7f94e6a5497d9a2d312a76095e48d6b364565777..7aa3ae00e6b4daa5e42217b66c50cd46d6bcc115 100644
-> --- a/arch/x86/kernel/cpu/bugs.c
-> +++ b/arch/x86/kernel/cpu/bugs.c
-> @@ -1427,6 +1427,10 @@ static void __init its_select_mitigation(void)
->   		return;
->   	}
->   
-> +	/* For IBPB to be effective against ITS */
-> +	if (boot_cpu_has_bug(X86_BUG_OLD_MICROCODE))
-> +		pr_warn("Old microcode, userspace may be vulnerable to ITS\n");
-> +
-
-That check is too coarse and probably has a high chance of false 
-positive, i.e
-
-Latest firmware for your CPU is version Z as defined in 
-intel-ucode-defs.h, current running version is X which is older than Z , 
-but it already contains IBPB fixups for ITS. Then it will trigger a 
-false positive.
-
->   	if (its_mitigation == ITS_MITIGATION_RETPOLINE_STUFF &&
->   	    !IS_ENABLED(CONFIG_MITIGATION_CALL_DEPTH_TRACKING)) {
->   		pr_err("RSB stuff mitigation not supported, using default\n");
+>         rc = posix_memalign(&self->buffer, HUGEPAGE_SIZE, variant->buffer_size);
 > 
-> ---
-> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-> change-id: 20250611-its-warn-b292b10896e3
+> Should allocate buffer_size
 > 
+>         mmap_flags = MAP_SHARED | MAP_ANONYMOUS | MAP_FIXED;
+>                 mmap_flags |= MAP_HUGETLB | MAP_POPULATE;
+>         vrc = mmap(self->buffer, variant->buffer_size, PROT_READ | PROT_WRITE,
+>                    mmap_flags, -1, 0);
+> 
+> Should fail if buffer_size is not a multiple of HUGEPAGE_SIZE? 
 
+Yea, I think you are right. But..
+
+> It certainly shouldn't mmap past the provided buffer_size!!!
+> 
+> Are you seeing the above mmap succeed and also map beyond buffer -> buffer + buffer_size?
+> 
+> I think that would be a kernel bug in MAP_HUGETLB!
+
+..I did some bpftrace:
+
+ksys_mmap_pgoff() addr=ffff80000000, len=4000000
+    hugetlb_file_setup(): size=0x20000000
+        hugetlb_reserve_pages() from=0, to=1
+        hugetlb_reserve_pages() returned: ret=1
+    hugetlb_file_setup() returned: size=0x20000000 ret=-281471746619776
+    vm_mmap_pgoff() addr=ffff80000000, len=20000000
+        do_mmap() addr=ffff80000000, len=20000000
+            hugetlb_reserve_pages() from=0, to=1
+            hugetlb_reserve_pages() returned: ret=1
+        do_mmap() returned: addr=0xffff80000000 ret=ffff80000000, pop=20000000
+    vm_mmap_pgoff() returned: addr=0xffff80000000 ret=ffff80000000
+ksys_mmap_pgoff() returned: addr=0xffff80000000 ret=ffff80000000
+
+We can see the 64MB was rounded up to 512MB by ksys_mmap_pgoff()
+when being passed in to hugetlb_file_setup() at:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/mm/mmap.c?h=v6.16-rc1#n594
+"		len = ALIGN(len, huge_page_size(hs));  "
+
+By looking at the comments here..:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/fs/hugetlbfs/inode.c#n1521
+"
+/*
+ * Note that size should be aligned to proper hugepage size in caller side,
+ * otherwise hugetlb_reserve_pages reserves one less hugepages than intended.
+ */
+struct file *hugetlb_file_setup(const char *name, size_t size,
+"
+
+..I guess this function was supposed to fail the not-a-multiple
+case as you remarked? But it certainly can't do that, when that
+size passed in is already hugepage-aligned..
+
+It feels like a kernel bug as you suspect :-/
+
+
+And I just found one more weird thing...
+
+In iommufd.c selftest code, we have:
+"static __attribute__((constructor)) void setup_sizes(void)"
+where it does another pair of posix_memalign/mmap, although this
+one doesn't flag MAP_HUGETLB and shouldn't impact what is coming
+to the next...
+
+If I keep this code, the first hugepage test case can pass (64MB
+buffer_size; 512MB THP), but all the following cases will fail,
+as I reported here:
+https://lore.kernel.org/all/aEm6tuzy7WK12sMh@nvidia.com/
+
+If I remove this code, the hugepage test case will fail from the
+first case with signal 11. But this time, it is not because the
+mmap() overwrites the _metadata->no_teardown, it's because mmap()
+call itself crashed...
+
+And, in either a failed case (crashed) or a passed case, the top
+kernel function ksys_mmap_pgoff() returned successfully, which
+means it seemingly crashed inside the libc?
+
+Thanks
+Nicolin
