@@ -1,242 +1,169 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63CDF29993B
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 16:04:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC7B5298CDD;
+	Thu, 12 Jun 2025 16:04:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749744288; cv=none; b=c+xoDsfsNSlfKIox12KEVSi5g7F8i6Fnam6cQ3czwjd00BU0+MlloNBhUdh45JJeQMJaBWnlSDquJ+o22CmE4Gq3RELHEU2IBmB9sfFtDU+v3euFWDLyrqWql8NZZhofVY+Xjl25Bant0IK7vytt1W7J2+gsdPsiyZJDx1M2NZY=
+	t=1749744293; cv=none; b=brZcyoa1VUnRHI3lbV5LUJoOxjrZ0tyyrJ1hBkO42x54wR5Y0SU2QSGgCyDWSyKYl4ePmxTT003pj4hIWwkxYdtrWmMDPchIc4a0Gj8XhJnfT4Tf+c8bfCmgXuhhoHxK0aq+ppycIUVXC14JtXAACSimW07ZLypoOJfp97iXhOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749744288; c=relaxed/simple;
-	bh=1swm+qRP4rEjYhsWtFX5dlTgsOkPhwCfkrUE/ZbOmaM=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=LG0pLKFFJoIWcAPln27BPBy83QCIt1v3ehMsKndQKnn6y8nxOCuG7cwfk/i3QNNEba8PiAXOJUIwtSoUB8znFJvFz0QPFEceQQ+xpS4tdYXdsHlJ0q2rk/5/D2WtgQtM6BEw222s62T5Tu6sAJD4yVn6a6bJzfzOCbG8dfsDLUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WkBSKmxg; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1749744293; c=relaxed/simple;
+	bh=COIWAD9Jakpzo0yFDTumEeGqKLB4OHO2BnSyyumsKRI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VLm5ZnQI2fiU6r0SycUnIxal1Abl43ds9TFQWaGmltGUb1T3XQYkwJ3sL4e8Wngce4qWI29Prp1f3TDk+IPwDqqF1XNFYA4ujsg/5omp/k+W66WAD6XHmqA3cgOd/aDjv+pJRrydZXkRJvrNEos2nOiPn/DgxoZbSn7j32iNhiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uFNDjx0X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WkBSKmxg"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so14286475e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 09:04:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749744285; x=1750349085; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yVt7yi9oobDjgSWlzKDtexUp1A9xv8eXiTMakhYwEZ8=;
-        b=WkBSKmxgkk3qGDrm4k58QsytUFYM6QUJfcINZA5ySzylVARMVf4Nn+oT9WXUbIyUHk
-         Wx+oIHZE2cMjMME1nJSrK0LRRHlY9IKripzszijwRGI2UC0baKBM5EQtVbJEfeTnB7lv
-         JgoDnUpzPd/XllsKVRpjhZEUhGUCyGQb5yfxORIGvLaT+TQpOsarsqVnhaSZsylVWFTO
-         qWovD+8A94vW80A0yivOPJlb8KC5Vfk6XZ10qZdX9sDgO3j4Nytw0rQOuPhLj7lYjitD
-         UlvDB/mviT3UNUR0jGfgDn3W3w4hMEWz5z+quDNJEcPJrxzL7S8O+M0c/SGZKkLqGnRZ
-         e8TQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749744285; x=1750349085;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=yVt7yi9oobDjgSWlzKDtexUp1A9xv8eXiTMakhYwEZ8=;
-        b=n1aRzmBz4Qze9G3kNDkYUYHFQM2gCVarnSX/5pLpej8zGmEtyQ3sjR1xnZ9jR25UXD
-         z+W15SONB1l4O7H+PP93ZerOEAJmdLcjupMoZwZCH6NZ+RcYRr2rqMHUAvR/YP6JkYBV
-         6ap+Ci0GuGNuGCavxrHX7jf20bdoqxjVK4qBTO3hTyDAeUCy8/co9gpRTzqciS1TEQdC
-         HzQrz6eb5xWe8Q8SjButQNbFQSnltYV1ZHfvvQaXzq1ttvfJ+dkcDKYaWqff7uPOLti1
-         jayKjxzY2ayXA01Lsoj9ydg2pAqbmdz0Mk0qX671cX5GWwbwE0dVsjTdM0amz1ZPo0Ik
-         uJGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWv4uJKWx9lMk7NszCrjBNDJibQvvY/r7KZhyWFSQeELs/Fi/NTcm4KILEbs20ZQBJ/6Jyjhkd5cNjYz2o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYPkWtrQdq4cdxhcnUjxpafn3mZfCOhPf0agLnJQz/l1iEK7hK
-	D8hXamIlMl0MRVRiRrykMrsPJuBSMm66BMz8V5LuEq1mn/+IeUmFGJTApub9+LzUAIk=
-X-Gm-Gg: ASbGncvk+8f5BALz2vSHf7cFq9zHo6VMqXlZuBZOKD3hYDcfFcG8ADQ3MUGveXtEBYQ
-	BrbOQu2X8VmgUULsU/mnbFU2bwz4Y8PjDihRsHs7XqlIiACiB+8OyMgR4VzS0O9M010Tr45gu6k
-	3XyiCrFdFnfaF6fzVp1rzhQGVCVK+JccC11rxna6ZDkqoqr3wwMoj06F56q7U3Nv6Zp9wd7STjW
-	hcBRRemWkv+lu2lpNDOPazoKU2h/0LRXCnZybPsXFMnvE3x/3ZOJpezf0CKjlEIsY9VW7Z5AWHa
-	DPqhymglquLTTs7KjDNF8bmghhmiNGL1nNJwR2TEAeB1Tu4N/ZPt5KjYYefRYK4QnLc=
-X-Google-Smtp-Source: AGHT+IFJV6N61R7eQMpTQxieQIe+uvVO8hNtuqS1gL43rMcL+iiwLE0vyR8mjdp5Mfj8xXlJDzQq4w==
-X-Received: by 2002:a05:600c:83c6:b0:453:2433:1c5b with SMTP id 5b1f17b1804b1-4532486c53emr75837335e9.5.1749744284644;
-        Thu, 12 Jun 2025 09:04:44 -0700 (PDT)
-Received: from localhost ([2a00:2381:fd67:101:6c39:59e6:b76d:825])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a5619762dcsm2359430f8f.20.2025.06.12.09.04.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jun 2025 09:04:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uFNDjx0X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD165C4CEEA;
+	Thu, 12 Jun 2025 16:04:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749744292;
+	bh=COIWAD9Jakpzo0yFDTumEeGqKLB4OHO2BnSyyumsKRI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uFNDjx0X0nL62Q4iwIJDDPvVYY1lg8EPQ7a55Rg1ntWkbImh+4q9SBxg5s+21koyD
+	 +xxlh7EfQXwsnxFgaPV6RIMDVndj3aXe2G3jyGdLmz9me6HQeyenSPnQaZGk/U3Z/d
+	 fQk0vL+mB+pVIPnJoxv/iGsoMnotOT2DZPz1ENaGKpqJvZmUrUMRD7cuucMI0Zn9LE
+	 LFfV3VdV9OUNgthpGqjQaKCYMgvr5GebfwYH6SQnf20ATPuzVUihOg6NfFkJUd3IZ7
+	 IQlKojesNrBwsYPMgXkX0LfnFJbzG2pmvb5SxyvogRVivvwYQQrE1gdreM5QpUqBGJ
+	 RL72qJ18+weJg==
+Date: Thu, 12 Jun 2025 17:04:46 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Inochi Amaoto <inochiama@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+	Yu Yuan <yu.yuan@sjtu.edu.cn>, Yixun Lan <dlan@gentoo.org>,
+	Ze Huang <huangze@whut.edu.cn>,
+	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
+	devicetree@vger.kernel.org, sophgo@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH RFC 1/3] dt-bindings: soc: sophgo: add TOP syscon for
+ CV18XX/SG200X series SoC
+Message-ID: <20250612-culpable-roman-295df1360198@spud>
+References: <20250611082452.1218817-1-inochiama@gmail.com>
+ <20250611082452.1218817-2-inochiama@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="vDGa67YNy/FrbwY3"
+Content-Disposition: inline
+In-Reply-To: <20250611082452.1218817-2-inochiama@gmail.com>
+
+
+--vDGa67YNy/FrbwY3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 12 Jun 2025 17:04:43 +0100
-Message-Id: <DAKOKYU9O323.M7OSA1CFHQWX@linaro.org>
-Cc: <linux-arm-msm@vger.kernel.org>, <freedreno@lists.freedesktop.org>,
- "Dmitry Baryshkov" <dmitry.baryshkov@oss.qualcomm.com>, "Rob Clark"
- <robdclark@gmail.com>, "Sean Paul" <sean@poorly.run>, "Konrad Dybcio"
- <konradybcio@kernel.org>, "Abhinav Kumar" <quic_abhinavk@quicinc.com>,
- "Dmitry Baryshkov" <lumag@kernel.org>, "Marijn Suijten"
- <marijn.suijten@somainline.org>, "David Airlie" <airlied@gmail.com>,
- "Simona Vetter" <simona@ffwll.ch>, "open list"
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 3/3] drm/msm/adreno: Check for recognized GPU before
- bind
-From: "Alexey Klimov" <alexey.klimov@linaro.org>
-To: "Rob Clark" <robin.clark@oss.qualcomm.com>,
- <dri-devel@lists.freedesktop.org>
-X-Mailer: aerc 0.20.0
-References: <20250609182439.28432-1-robin.clark@oss.qualcomm.com>
- <20250609182439.28432-4-robin.clark@oss.qualcomm.com>
-In-Reply-To: <20250609182439.28432-4-robin.clark@oss.qualcomm.com>
 
-On Mon Jun 9, 2025 at 7:24 PM BST, Rob Clark wrote:
-> If we have a newer dtb than kernel, we could end up in a situation where
-> the GPU device is present in the dtb, but not in the drivers device
-> table.  We don't want this to prevent the display from probing.  So
-> check that we recognize the GPU before adding the GPU component.
->
-> v2: use %pOF
->
-> Signed-off-by: Rob Clark <robin.clark@oss.qualcomm.com>
+On Wed, Jun 11, 2025 at 04:24:49PM +0800, Inochi Amaoto wrote:
+> The Sophgo CV1800/SG2000 SoC top misc system controller provides register
+> access to configure related modules. It includes a usb2 phy and a dma
+> multiplexer.
+>=20
+> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
 > ---
->  drivers/gpu/drm/msm/adreno/adreno_device.c | 29 ++++++++++++++++++----
->  drivers/gpu/drm/msm/msm_drv.c              |  2 +-
->  drivers/gpu/drm/msm/msm_gpu.h              |  1 +
->  3 files changed, 26 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm=
-/msm/adreno/adreno_device.c
-> index 778e6ae7f137..0d12454b1f2e 100644
-> --- a/drivers/gpu/drm/msm/adreno/adreno_device.c
-> +++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
-> @@ -178,6 +178,26 @@ static int find_chipid(struct device_node *node, uin=
-t32_t *chipid)
->  	return 0;
->  }
-> =20
-> +bool adreno_has_gpu(struct device_node *node)
-> +{
-> +	const struct adreno_info *info;
-> +	uint32_t chip_id;
-> +	int ret;
+>  .../soc/sophgo/sophgo,cv1800b-top-syscon.yaml | 57 +++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/sophgo/sophgo,c=
+v1800b-top-syscon.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800b-=
+top-syscon.yaml b/Documentation/devicetree/bindings/soc/sophgo/sophgo,cv180=
+0b-top-syscon.yaml
+> new file mode 100644
+> index 000000000000..e8093a558c4e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800b-top-sys=
+con.yaml
+> @@ -0,0 +1,57 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/soc/sophgo/sophgo,cv1800b-top-syscon.=
+yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +	ret =3D find_chipid(node, &chip_id);
-> +	if (ret)
-> +		return false;
+> +title: Sophgo CV18XX/SG200X SoC top system controller
 > +
-> +	info =3D adreno_info(chip_id);
-> +	if (!info) {
-> +		pr_warn("%pOF: Unknown GPU revision: %"ADRENO_CHIPID_FMT"\n",
-> +			node, ADRENO_CHIPID_ARGS(chip_id));
-> +		return false;
-> +	}
+> +maintainers:
+> +  - Inochi Amaoto <inochiama@outlook.com>
 > +
-> +	return true;
-> +}
+> +description:
+> +  The Sophgo CV18XX/SG200X SoC top misc system controller provides
+> +  register access to configure related modules.
 > +
->  static int adreno_bind(struct device *dev, struct device *master, void *=
-data)
->  {
->  	static struct adreno_platform_config config =3D {};
-> @@ -188,18 +208,17 @@ static int adreno_bind(struct device *dev, struct d=
-evice *master, void *data)
->  	int ret;
-> =20
->  	ret =3D find_chipid(dev->of_node, &config.chip_id);
-> -	if (ret)
-> +	/* We shouldn't have gotten this far if we can't parse the chip_id */
-> +	if (WARN_ON(ret))
->  		return ret;
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - const: sophgo,cv1800b-top-syscon
+> +          - const: syscon
+> +          - const: simple-mfd
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 1
+> +
+> +patternProperties:
+> +  "dma-router@[0-9a-f]+$":
+> +    $ref: /schemas/dma/sophgo,cv1800b-dmamux.yaml#
 
-I just hit this with linux-next on qrb2210 RB1 [1].
+I think you're supposed to add "unevaluatedProperties: false" to each of
+these nodes.
 
-Is it expected an warning now or do we miss some device tree updates on
-linux-next for RB1?
+> +
+> +  "phy@[0-9a-f]+$":
+> +    $ref: /schemas/phy/sophgo,cv1800b-usb2-phy.yaml#
 
-I don't recall seeing such warnings previously.
+Why are these permitting random addresses? Are they not at fixed
+addreses given that you only support one platform (modulo the rebrand)?
 
-Thanks,
-Alexey
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    syscon@3000000 {
+> +      compatible =3D "sophgo,cv1800b-top-syscon", "syscon", "simple-mfd";
+> +      reg =3D <0x03000000 0x1000>;
+> +      #address-cells =3D <1>;
+> +      #size-cells =3D <1>;
+> +    };
+> +
+> +...
+> --=20
+> 2.49.0
+>=20
 
-[1]:
+--vDGa67YNy/FrbwY3
+Content-Type: application/pgp-signature; name="signature.asc"
 
- msm_dpu 5e01000.display-controller: bound 5e94000.dsi (ops dsi_ops [msm])
- ------------[ cut here ]------------
- WARNING: CPU: 0 PID: 242 at drivers/gpu/drm/msm/adreno/adreno_device.c:224=
- adreno_bind+0x90/0x120 [msm]
- Modules linked in: q6asm_dai q6routing q6afe_dai q6adm q6asm q6afe_clocks =
-snd_q6dsp_common q6afe q6core apr pdr_interface qrtr_smd qcom_pd_mapper qco=
-m_pdr_msg mcp251xfd ath10k_snoc snd_soc_wsa881x_i2c snd_soc_wsa881x_common =
-can_dev lontium_lt9611uxc(+) ath10k_core ath mac80211 hci_uart btqca btbcm =
-libarc4 msm snd_soc_sm8250 qrtr bluetooth drm_exec snd_soc_qcom_sdw qcom_q6=
-v5_pas llcc_qcom snd_soc_qcom_common lmh qcom_wdt ocmem cfg80211 ecdh_gener=
-ic qcom_pil_info pinctrl_sm6115_lpass_lpi gpu_sched ecc drm_display_helper =
-rfkill qcom_q6v5 pinctrl_lpass_lpi qcom_sysmon pwrseq_core lpasscc_sm6115 d=
-ispcc_qcm2290 qcom_common snd_soc_lpass_va_macro cec snd_soc_lpass_rx_macro=
- drm_dp_aux_bus snd_soc_lpass_tx_macro qcom_glink_smem gpucc_qcm2290 snd_so=
-c_pm4125 mdt_loader snd_soc_lpass_macro_common qmi_helpers snd_soc_pm4125_s=
-dw soundwire_qcom regmap_sdw slimbus qcom_pmic_tcpm qcom_usb_vbus_regulator=
- drm_client_lib tcpm rtc_pm8xxx snd_soc_wcd_mbhc aux_hpd_bridge qcom_pon qc=
-rypto soundwire_bus sha256 qcom_stats gpi
-  spi_geni_qcom i2c_qcom_geni rpmsg_ctrl libsha256_generic libsha256 rpmsg_=
-char qcom_rng sha256_arm64 authenc icc_bwmon phy_qcom_qmp_usbc libdes typec=
- phy_qcom_qusb2 display_connector i2c_gpio rmtfs_mem drm_kms_helper socinfo=
- fuse drm backlight dm_mod ip_tables x_tables ipv6
- CPU: 0 UID: 0 PID: 242 Comm: (udev-worker) Not tainted 6.16.0-rc1-next-202=
-50612-00025-g0ce0d3974333-dirty #2 PREEMPT=20
- Hardware name: Qualcomm Technologies, Inc. Robotics RB1 (DT)
- pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=3D--)
- pc : adreno_bind+0x90/0x120 [msm]
- lr : adreno_bind+0x50/0x120 [msm]
- sp : ffff8000813f3580
- x29: ffff8000813f3580 x28: ffff000008ae8800 x27: ffff000007c63700
- x26: ffffca4a2814b860 x25: ffff000008b26880 x24: ffffca4a24922000
- x23: ffffca4a249229d8 x22: ffff000009838800 x21: ffff000008b26880
- x20: ffff000002ce4410 x19: ffffca4a2495a710 x18: 0000000000000006
- x17: 6f5f697364207370 x16: 6f28206973642e30 x15: 0720072007200720
- x14: 0000000000000000 x13: 0000000000000000 x12: 0101010101010101
- x11: 7f7f7f7f7f7f7f7f x10: ffffca4a2866e1b2 x9 : 0000000000000002
- x8 : 0101010101010101 x7 : 7f7f7f7f7f7f7f7f x6 : fefefeff2f383131
- x5 : ffff00007fc1b968 x4 : 0000000000000000 x3 : 000000000000001e
- x2 : 0000000000000001 x1 : 0000000007000200 x0 : ffffca4a2495a710
- Call trace:
-  adreno_bind+0x90/0x120 [msm] (P)
-  component_bind_all+0x100/0x23c
-  msm_drm_bind+0x148/0x3e0 [msm]
-  try_to_bring_up_aggregate_device+0x16c/0x1e0
-  __component_add+0xa4/0x174
-  component_add+0x14/0x20
-  dsi_dev_attach+0x20/0x34 [msm]
-  dsi_host_attach+0x58/0x98 [msm]
-  devm_mipi_dsi_attach+0x34/0x90
-  lt9611uxc_attach_dsi.isra.0+0x94/0x124 [lontium_lt9611uxc]
-  lt9611uxc_probe+0x568/0x604 [lontium_lt9611uxc]
-  i2c_device_probe+0x158/0x32c
-  really_probe+0xbc/0x2b4
-  __driver_probe_device+0x78/0x120
-  driver_probe_device+0x3c/0x154
-  __driver_attach+0x90/0x1a0
-  bus_for_each_dev+0x68/0xb8
-  driver_attach+0x24/0x30
-  bus_add_driver+0xe4/0x208
-  driver_register+0x68/0x124
-  i2c_register_driver+0x48/0xcc
-  lt9611uxc_driver_init+0x20/0x1000 [lontium_lt9611uxc]
-  do_one_initcall+0x60/0x1d4
-  do_init_module+0x54/0x23c
-  load_module+0x1730/0x1cc0
-  init_module_from_file+0x74/0xa0
-  __arm64_sys_finit_module+0x130/0x2f8
-  invoke_syscall+0x48/0x104
-  el0_svc_common.constprop.0+0xc0/0xe0
-  do_el0_svc+0x1c/0x28
-  el0_svc+0x2c/0x80
-  el0t_64_sync_handler+0x10c/0x138
-  el0t_64_sync+0x198/0x19c
- ---[ end trace 0000000000000000 ]---
- adreno 5900000.gpu: supply vdd not found, using dummy regulator
- adreno 5900000.gpu: supply vddcx not found, using dummy regulator
- msm_dpu 5e01000.display-controller: bound 5900000.gpu (ops a3xx_ops [msm])
- [drm:dpu_kms_hw_init:1173] dpu hardware revision:0x60050000
- dummy 1-0045: No cache used with register defaults set!
- [drm] Initialized msm 1.12.0 for 5e01000.display-controller on minor 0
- msm_dpu 5e01000.display-controller: [drm:adreno_request_fw [msm]] loaded q=
-com/a702_sqe.fw from new location
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaEr6ngAKCRB4tDGHoIJi
+0l2QAPwNaWEYplXDLHYU0BTmmeZDi2+B04/jYyy1li16HuxyqQEA/PaboP5bnjt0
+CzDx5GBKh23TZLwdXLtMNxFSH3ZKTws=
+=Bne3
+-----END PGP SIGNATURE-----
 
+--vDGa67YNy/FrbwY3--
