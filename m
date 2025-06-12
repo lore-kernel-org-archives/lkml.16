@@ -1,94 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6A529992E;
-	Thu, 12 Jun 2025 16:08:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F05B3299A83
+	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 16:08:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749744514; cv=none; b=LOpc/LtTn1H7zaUNeVQwp8k4DZ2Sc2lAlwtVYTQNx3I/Xoy7incamkJPZDWjdKFYhWGWrXPiD/43SMQuBJ0o9RYCpzQE5FA/Bz3RJWymNyn0o1X6FwpSDJ19T3sLJL8RlLRrB1RcJD8HJNUF1VuHV36vgmg1jJSDP7jWNCT/fa4=
+	t=1749744516; cv=none; b=HFmWNSSWTOqgQLiDkdHIguG4jrL4BZi1dSuzZ4KqygDGG3V/cbHp8F1PAmzKWDCi4rIEaOAAF7dKwtoC1ZrYTPKpeaGMkwvJnxtw9K4f9vY2inRcSNoa6PxO8cpE+5k5nGzyIGQzTiogfVRVXvFX6oAitfBfo5Ps+jKGr/aZdxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749744514; c=relaxed/simple;
-	bh=B03z8gxJK+nx661YS+WD6BW1buv5G9KGZfmtmKssNPc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f1LaLTmniKIsqsU+0/jTmKHFpA6vAoluFY9BO8jA+WW0Lxll2F31dBlic+7Osxp8/D7GLbndZwxgALK5MPAZLd9OwSrQOA504tO/58kgEv/JNuwghySKCN5cxvWH9IOT4ANCvyPndbHH9qGUfiMfS460JwcTqU1J5RWxkpRREC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AcZaMQWY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749744516; c=relaxed/simple;
+	bh=3YHe0k+PHvEsag+VHa9+YZ2Q28Kjv6z7VRpUu0X/shE=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Jngp7LsmE9z548ot4SfDGssOvdERaZ8aUAz/2xSg+TqDjnFwYwyVPVeShF2SSuhrir8DfbjUGkU4FarHOla4Jz465qSiUk9kXh9c6oVCu3ZrrgXy5kMlL5br861zzlBGJVpXdZAKAmNd6kkgShy1+zw6CBHXKZECeAuvYgeVYVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=M4bFyDfH; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AcZaMQWY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6EB2C4CEEA;
-	Thu, 12 Jun 2025 16:08:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749744514;
-	bh=B03z8gxJK+nx661YS+WD6BW1buv5G9KGZfmtmKssNPc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AcZaMQWYYfcHZvJtoDAV5b9/0sFDY52tAweeM6mjMw3BnjKC6EQvBGMhvxRO5s7T+
-	 ydFT6HVpInq0VQTLJQ3I7CnhHZwRYtAN9RStGLb0lmmrloAyYdU6WSCRmmEtV3L13F
-	 gRRlW5dixUdTTMze1ujaTXh6TRGaLE0bXoesygVCne0TUXajO8aYJvuCIJlTif0uwa
-	 nwOems3Jcsfa0XUfRSuUDYVqKUeYLehRdq7Y+arH+y+6ORaHG7Pzzr2jfU25Yka2HL
-	 MXdfVoMwt7FBL5/wEFOS4B+nwXyhcfYR9RycsPhcpRgemPFfI7zlaomLXp3LETADE7
-	 iWRI7dK/Bh+Ag==
-Date: Thu, 12 Jun 2025 17:08:27 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Inochi Amaoto <inochiama@gmail.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-	Yixun Lan <dlan@gentoo.org>,
-	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
-	Ze Huang <huangze@whut.edu.cn>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, sophgo@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH net-next RFC 1/3] dt-bindings: net: Add support for
- Sophgo CV1800 dwmac
-Message-ID: <20250612-maturely-pony-a6fb8f9cb163@spud>
-References: <20250611080709.1182183-1-inochiama@gmail.com>
- <20250611080709.1182183-2-inochiama@gmail.com>
+	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="M4bFyDfH"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7d0a47f6692so117801285a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 09:08:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=maine.edu; s=google; t=1749744513; x=1750349313; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Dx0ZwLJ3SW0Kae1Wt1XXglLI6wwCOsqp87Ybf6szzLc=;
+        b=M4bFyDfHOqJwPpeqpWCF/I0k4egrkQcdtKlGytp19E+D7SO3nvnrOzBtVtj9L4dJw+
+         Flr0melE01T0xju2qND+PWyiMSRBmC2pvInu/HvdBwX9yzzHt1ngavdQV/EC0p1PvNFm
+         /5UH5Ri79WDQg1IM+TftiGuHJQx/5oYwZ+aG4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749744513; x=1750349313;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Dx0ZwLJ3SW0Kae1Wt1XXglLI6wwCOsqp87Ybf6szzLc=;
+        b=R6+BT2LCr3qSbFOWPHQdv91Qp2nYzrhP2uhRfDELiw+bcEQT7Yd1FwejZ0p+oNbI11
+         87GYh1xqhLNJAjv2qW+da3mvukVup5H7Bm8bvS1b5IW5qQdUpjsaWNRyVoRy6jx4mQtC
+         8H0MjovWAVsjWAdpb8t6n7y9pdAmRU5PK3X9Fh4q5na+bPKTKgcmdM0jpZ2VJc+1ZqTf
+         FkRF5s9CsZ/lQxyfvrAjvMaTRPR9mmC0UApJ9NvX7mnXJfklbbxKg0c+S5OUndAPZ5PV
+         ssRbDwlEdEXYeL+Rl1+CmnXXAxRbKDjZCY80K0VTY6QGhR7cR5Ao0fM8PZlrOQ32LVIs
+         M6fA==
+X-Forwarded-Encrypted: i=1; AJvYcCUSOiLlnU85ayEXqznvBaC+58GV/DXuRCqKJweGD1ZuJdnqvpfgGh+/s3A2yocD7TOrnbfXr3dY5hyOcTw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwW0RmwGqA9PPjVl7E0iZsCWhe2YGkRSfgPQs4C0VzQXrLANy6r
+	jecfssZLLD7WXMGGCOlLCmKToL0aZ58vtKti2fqlGDMS+fEZGgEiaTzpSO01nXXMfg==
+X-Gm-Gg: ASbGncvgbQ8J3+STAAKZUCDFF1Sxg2EdzaVnRmaJH0PVp6JdHzvJynugvHgyEcg/18x
+	HvccRyUq7hZoLJVHpBjNgwUBpBTktultCQurnj1eQdGMzlXbFySFr8Y6QoP2dAy09UldLKua+KW
+	NyOmZT2ggDqYjFZdJ0HqtGjn8bh70WwyDL1ERa9tWsyN2tip7BEKNPWyUbQm5AunnX75ePEhwkW
+	Nj662DSLvl6lfm56mAMIj9hs0Xx98nJPjnGwCJr+8H/n3sbLX0tqK1dVtlw48Zl/2lnshDspwhL
+	zlcavGXpnPcHtDDEJzswuG/Is9O8bxcbPXn6o4qQ2suXfGXk7UPWDejG/39y90jEaQ7FgDswPsf
+	Wgpd9Cw==
+X-Google-Smtp-Source: AGHT+IEHqON53lM97qPneT55hkPQsjRWeaUbxv+fl45+n0nHgfZowZNRP5w89fJGFEh4vv6YXv/+Vw==
+X-Received: by 2002:a05:620a:c50:b0:7ce:e010:88bb with SMTP id af79cd13be357-7d3a883450amr1156220985a.22.1749744512722;
+        Thu, 12 Jun 2025 09:08:32 -0700 (PDT)
+Received: from [192.168.8.146] (weaver.eece.maine.edu. [130.111.218.23])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8eacbc7sm55688585a.62.2025.06.12.09.08.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jun 2025 09:08:32 -0700 (PDT)
+From: Vince Weaver <vincent.weaver@maine.edu>
+X-Google-Original-From: Vince Weaver <vince@maine.edu>
+Date: Thu, 12 Jun 2025 12:08:30 -0400 (EDT)
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+cc: Vince Weaver <vincent.weaver@maine.edu>, linux-kernel@vger.kernel.org, 
+    linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+    Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+    Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+    Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+    Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [perf] crashing bug in icl_update_topdown_event
+In-Reply-To: <36b65ee5-4bce-4b15-91bc-52604bc8a046@linux.intel.com>
+Message-ID: <da4d8a9a-66a4-32b4-0283-ef4687357349@maine.edu>
+References: <352f0709-f026-cd45-e60c-60dfd97f73f3@maine.edu> <080706b6-ed21-540d-dfae-ae27d130d796@maine.edu> <d8c64a21-ed4e-4d37-8d4b-9d3a9857b7fd@linux.intel.com> <704f6604-547b-f7ca-ad45-2afd2dd70456@maine.edu>
+ <36b65ee5-4bce-4b15-91bc-52604bc8a046@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="zSWjS4FDrlJ7AUsz"
-Content-Disposition: inline
-In-Reply-To: <20250611080709.1182183-2-inochiama@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
 
+On Thu, 12 Jun 2025, Liang, Kan wrote:
 
---zSWjS4FDrlJ7AUsz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Thanks for the test. I've posted a fix to LKML.
+> https://lore.kernel.org/linux-perf-users/20250612143818.2889040-1-kan.liang@linux.intel.com/
+> 
+> It's a little bit different from the one tested. Please check and
+> provide a 'tested-by' on the new patch if it works.Thanks,Kan
 
-On Wed, Jun 11, 2025 at 04:07:06PM +0800, Inochi Amaoto wrote:
-> The GMAC IP on CV1800 series SoC is a standard Synopsys
-> DesignWare MAC (version 3.70a).
->=20
-> Add necessary compatible string for this device.
->=20
-> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+I've tested the new patch and it also runs my testcase without crashing.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
---zSWjS4FDrlJ7AUsz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaEr7ewAKCRB4tDGHoIJi
-0geVAQDLc3KgdxScF0+JMYwJ7R+YQeW94eK+OREQoU5WmclyjgEArisbfSvY76Q6
-pihw3ebbOH5q91hjm5goo6nl6L6UhwI=
-=1G8F
------END PGP SIGNATURE-----
-
---zSWjS4FDrlJ7AUsz--
+Tested-by: Vince Weaver <vincent.weaver@maine.edu>
