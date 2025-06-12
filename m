@@ -1,101 +1,195 @@
-Received: from relay16.mail.gandi.net (relay16.mail.gandi.net [217.70.178.236])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F3E1A3172
-	for <linux-kernel@vger.kernel.org>; Thu, 12 Jun 2025 08:13:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.236
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0890618DB2A;
+	Thu, 12 Jun 2025 08:13:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749716003; cv=none; b=EpNrcEnrC+9lr8v+LzEK8ZgoB7VG6eVA5AOTNKS9w0T/r5/5IB715fdpiCsh94cluwoHTdd143IaWnqRJO+QjeIPr3Tg17SFWyWmB8DVn5gdtNKbweou4lMN1iWvbbPSVupMFs150LDel9NRl16La/GdtGPULz7enHJlB6G2Kto=
+	t=1749716014; cv=none; b=u/GJbui3PDBvl8T0M8d3D7Aunk4evCgCXDyWjffZFQ6dDcv2PA2+g2npY3FrybJCgzmkMIrls8AngT8ANk6/+Vbc4vfh+03UNSowCNyaqQvpAN/MV7Asefbdp1JjiUcUgXCOBvqffrf0zIfSfrbLyXJvBR/JwtmjPhCpFtBCiAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749716003; c=relaxed/simple;
-	bh=FY0ptxIFdJAKLBVqEx+fcS/yAuyyGIbRo8Fu4UGhM9I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TCeVOA7dRETdPwVkY6pUHZotlngdef4SfJTzC/mOnw3bU3qbzb6GU7rrd5hb+ZWLo4TA7X8e7wNY5pHEmQaZ57Nvuq4JqVcwK1jVjl4B38uUxlADQ26m1Rwm2i1AtyX/CrIi+GrUDwQxC4btohYlhpwpVdGQ0OhiIV+fghwClEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.178.236
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C9DC24386A;
-	Thu, 12 Jun 2025 08:13:16 +0000 (UTC)
-Message-ID: <0d80cd92-4d4f-4862-a2b3-a881a7368b08@ghiti.fr>
-Date: Thu, 12 Jun 2025 10:13:16 +0200
+	s=arc-20240116; t=1749716014; c=relaxed/simple;
+	bh=nDMS9g+Bk/QeVRgWt7heX7r7uo+JtLzV4PyG8up0zxk=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=Q+/A1DO94yYaAU8ZyVTgLGhlOfDCPoe5M8u1I7LRGIYAT7C8J1SCWmHlwFv9NREoD4jkah/LVGNOButV+3hcq1DfHHf65BfXgbexrJIRUl4rQiVmhujoHpOJGgNR9e+UwIk6kylJyJ3fbHF5FmeOBC0KfFbqsrseGjb/zOXCjfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UOBfFPAk; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UOBfFPAk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D74B1C4CEF0;
+	Thu, 12 Jun 2025 08:13:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749716013;
+	bh=nDMS9g+Bk/QeVRgWt7heX7r7uo+JtLzV4PyG8up0zxk=;
+	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
+	b=UOBfFPAkqn0/5Qa8ozLrbc6kw5oNKd9Ls0uO1HhhhBOMhj2zxZTuuVJjIQqX94DBx
+	 +KgVinLXMZvTf0PLPZaXlLuH5nyLfMFuwoClSslkNl7UxSljNMpjdjlw6UEevXj72Y
+	 n9hkmKOExgvActWN43YnGocNlRH1Gzip2fBravrXYHid1jKtYEaxCzndzkQWqxskda
+	 WUwDSGGY1wsmyOaBFiMwDUZXnlHrbdE1iS+YWdKNPKbL6kEJchz5Gz6SEfsWACpUFO
+	 tmRWELy6CPa3kjRBDZGNuH2y8YQEHAwoUUXQ1qdCxjjy4aOU+Ne9jeDlol+t8X7/qn
+	 mDWnnSYD2Cikg==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] riscv: vdso: Deduplicate CFLAGS_REMOVE_* variables
-To: Nathan Chancellor <nathan@kernel.org>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev
-References: <20250611-vdso-absolute-reloc-v3-0-47897d73784b@linutronix.de>
- <20250611-vdso-absolute-reloc-v3-1-47897d73784b@linutronix.de>
- <20250611184018.GA2192624@ax162>
-Content-Language: en-US
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20250611184018.GA2192624@ax162>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddugeehiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnhepuefffedvleetleetjefhjeehudejteetvedtvddvtdfhieetffelvdffgefgieeinecuffhomhgrihhnpehinhhfrhgruggvrggurdhorhhgnecukfhppedvtddtudemkeeiudemfeefkedvmegvfheltdemfhduvggsmehfugelrgemrgguudgumeeifhehsgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvtddtudemkeeiudemfeefkedvmegvfheltdemfhduvggsmehfugelrgemrgguudgumeeifhehsgdphhgvlhhopeglkffrggeimedvtddtudemkeeiudemfeefkedvmegvfheltdemfhduvggsmehfugelrgemrgguudgumeeifhehsggnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepudegpdhrtghpthhtohepnhgrthhhrghnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrfigvihhsshhstghhuhhhsehlihhnuhhtrhhonhhigidruggvp
- dhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtoheprghouhesvggvtghsrdgsvghrkhgvlhgvhidrvgguuhdprhgtphhtthhopehnihgtkhdruggvshgruhhlnhhivghrshdolhhkmhhlsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhhorhgsohesghhoohhglhgvrdgtohhmpdhrtghpthhtohepjhhushhtihhnshhtihhtthesghhoohhglhgvrdgtohhm
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 12 Jun 2025 10:13:29 +0200
+Message-Id: <DAKEK5YPNCAU.3LQGI98GGG4KF@kernel.org>
+To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
+ <rafael@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
+ <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
+ <benno.lossin@proton.me>, <a.hindborg@kernel.org>, <aliceryhl@google.com>,
+ <tmgross@umich.edu>, <chrisi.schrefl@gmail.com>
+Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] rust: devres: fix race in Devres::drop()
+From: "Benno Lossin" <lossin@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250603205416.49281-1-dakr@kernel.org>
+ <20250603205416.49281-4-dakr@kernel.org>
+In-Reply-To: <20250603205416.49281-4-dakr@kernel.org>
 
-Hi Thomas,
-
-On 6/11/25 20:40, Nathan Chancellor wrote:
-> On Wed, Jun 11, 2025 at 11:22:12AM +0200, Thomas Weißschuh wrote:
->> All vDSO objects need the same treatment.
->> To make changes to both the list of objects and the list of removed flags
->> easier, introduce a helper variable.
->>
->> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-
-
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-
-Thanks,
-
-Alex
-
-
+On Tue Jun 3, 2025 at 10:48 PM CEST, Danilo Krummrich wrote:
+> In Devres::drop() we first remove the devres action and then drop the
+> wrapped device resource.
 >
->> ---
->>   arch/riscv/kernel/vdso/Makefile | 7 ++++---
->>   1 file changed, 4 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
->> index 9ebb5e590f93a3228c451dca58e6d5cfbbc03ff7..c19c3c76f7c9f6b2f7523a59269de3b683656323 100644
->> --- a/arch/riscv/kernel/vdso/Makefile
->> +++ b/arch/riscv/kernel/vdso/Makefile
->> @@ -49,9 +49,10 @@ CPPFLAGS_vdso.lds += -DHAS_VGETTIMEOFDAY
->>   endif
->>   
->>   # Disable -pg to prevent insert call site
->> -CFLAGS_REMOVE_vgettimeofday.o = $(CC_FLAGS_FTRACE) $(CC_FLAGS_SCS)
->> -CFLAGS_REMOVE_getrandom.o = $(CC_FLAGS_FTRACE) $(CC_FLAGS_SCS)
->> -CFLAGS_REMOVE_hwprobe.o = $(CC_FLAGS_FTRACE) $(CC_FLAGS_SCS)
->> +CFLAGS_REMOVE_VDSO = $(CC_FLAGS_FTRACE) $(CC_FLAGS_SCS)
->> +CFLAGS_REMOVE_vgettimeofday.o = $(CFLAGS_REMOVE_VDSO)
->> +CFLAGS_REMOVE_getrandom.o = $(CFLAGS_REMOVE_VDSO)
->> +CFLAGS_REMOVE_hwprobe.o = $(CFLAGS_REMOVE_VDSO)
->>   
->>   # Force dependency
->>   $(obj)/vdso.o: $(obj)/vdso.so
->>
->> -- 
->> 2.49.0
->>
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> The design goal is to give the owner of a Devres object control over when
+> the device resource is dropped, but limit the overall scope to the
+> corresponding device being bound to a driver.
+>
+> However, there's a race that was introduced with commit 8ff656643d30
+> ("rust: devres: remove action in `Devres::drop`"), but also has been
+> (partially) present from the initial version on.
+>
+> In Devres::drop(), the devres action is removed successfully and
+> subsequently the destructor of the wrapped device resource runs.
+> However, there is no guarantee that the destructor of the wrapped device
+> resource completes before the driver core is done unbinding the
+> corresponding device.
+>
+> If in Devres::drop(), the devres action can't be removed, it means that
+> the devres callback has been executed already, or is still running
+> concurrently. In case of the latter, either Devres::drop() wins revoking
+> the Revocable or the devres callback wins revoking the Revocable. If
+> Devres::drop() wins, we (again) have no guarantee that the destructor of
+> the wrapped device resource completes before the driver core is done
+> unbinding the corresponding device.
+
+I don't understand the exact sequence of events here. Here is what I got
+from your explanation:
+
+* the driver created a `Devres<T>` associated to their device.
+* their physical device gets disconnected and thus the driver core
+  starts unbinding the device.
+* simultaneously, the driver drops the `Devres<T>` (eg because the
+  driver initiated the physical removal)
+* now `devres_callback` is being called from both `Devres::Drop` (which
+  calls `Devres::remove_action`) and from the driver core.
+* they both call `inner.data.revoke()`, but only one wins, in our
+  example `Devres::drop`.
+* but now the driver core has finished running `devres_callback` and
+  finalizes unbinding the device, even though the `Devres` still exists
+  though is almost done being dropped.
+
+I don't see a race here. Also the `dev: ARef<Device>` should keep the
+device alive until the `Devres` is dropped, no?
+
+> Depending on the specific device resource, this can potentially lead to
+> user-after-free bugs.
+>
+> In order to fix this, implement the following logic.
+>
+> In the devres callback, we're always good when we get to revoke the
+> device resource ourselves, i.e. Revocable::revoke() returns true.
+>
+> If Revocable::revoke() returns false, it means that Devres::drop(),
+> concurrently, already drops the device resource and we have to wait for
+> Devres::drop() to signal that it finished dropping the device resource.
+>
+> Note that if we hit the case where we need to wait for the completion of
+> Devres::drop() in the devres callback, it means that we're actually
+> racing with a concurrent Devres::drop() call, which already started
+> revoking the device resource for us. This is rather unlikely and means
+> that the concurrent Devres::drop() already started doing our work and we
+> just need to wait for it to complete it for us. Hence, there should not
+> be any additional overhead from that.
+>
+> (Actually, for now it's even better if Devres::drop() does the work for
+> us, since it can bypass the synchronize_rcu() call implied by
+> Revocable::revoke(), but this goes away anyways once I get to implement
+> the split devres callback approach, which allows us to first flip the
+> atomics of all registered Devres objects of a certain device, execute a
+> single synchronize_rcu() and then drop all revocable objects.)
+>
+> In Devres::drop() we try to revoke the device resource. If that is *not*
+> successful, it means that the devres callback already did and we're good.
+>
+> Otherwise, we try to remove the devres action, which, if successful,
+> means that we're good, since the device resource has just been revoked
+> by us *before* we removed the devres action successfully.
+>
+> If the devres action could not be removed, it means that the devres
+> callback must be running concurrently, hence we signal that the device
+> resource has been revoked by us, using the completion.
+>
+> This makes it safe to drop a Devres object from any task and at any point
+> of time, which is one of the design goals.
+>
+> Fixes: 8ff656643d30 ("rust: devres: remove action in `Devres::drop`") [1]
+> Reported-by: Alice Ryhl <aliceryhl@google.com>
+> Closes: https://lore.kernel.org/lkml/aD64YNuqbPPZHAa5@google.com/
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> ---
+>  rust/kernel/devres.rs | 33 ++++++++++++++++++++++++++-------
+>  1 file changed, 26 insertions(+), 7 deletions(-)
+
+> @@ -161,7 +166,12 @@ fn remove_action(this: &Arc<Self>) {
+>          //         `DevresInner::new`.
+>          let inner =3D unsafe { Arc::from_raw(ptr) };
+> =20
+> -        inner.data.revoke();
+> +        if !inner.data.revoke() {
+> +            // If `revoke()` returns false, it means that `Devres::drop`=
+ already started revoking
+> +            // `inner.data` for us. Hence we have to wait until `Devres:=
+:drop()` signals that it
+> +            // completed revoking `inner.data`.
+> +            inner.revoke.wait_for_completion();
+> +        }
+>      }
+>  }
+> =20
+> @@ -232,6 +242,15 @@ fn deref(&self) -> &Self::Target {
+> =20
+>  impl<T> Drop for Devres<T> {
+>      fn drop(&mut self) {
+> -        DevresInner::remove_action(&self.0);
+> +        // SAFETY: When `drop` runs, it is guaranteed that nobody is acc=
+essing the revocable data
+> +        // anymore, hence it is safe not to wait for the grace period to=
+ finish.
+> +        if unsafe { self.revoke_nosync() } {
+> +            // We revoked `self.0.data` before the devres action did, he=
+nce try to remove it.
+> +            if !DevresInner::remove_action(&self.0) {
+
+Shouldn't this not be inverted? (ie 's/!//')
+
+Otherwise this will return `true`, get negated and we don't run the code
+below and the `inner.data.revoke()` in `devres_callback` will return
+`false` which will get negated and thus it will never return.
+
+---
+Cheers,
+Benno
+
+> +                // We could not remove the devres action, which means th=
+at it now runs concurrently,
+> +                // hence signal that `self.0.data` has been revoked succ=
+essfully.
+> +                self.0.revoke.complete_all();
+> +            }
+> +        }
+>      }
+>  }
+
